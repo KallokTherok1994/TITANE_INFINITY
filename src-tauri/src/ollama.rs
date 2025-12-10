@@ -48,10 +48,7 @@ pub async fn query_ollama(prompt: String) -> Result<String, String> {
 
     let status = response.status();
     if !status.is_success() {
-        let error_payload = response
-            .text()
-            .await
-            .unwrap_or_else(|_| "".to_string());
+        let error_payload = response.text().await.unwrap_or_else(|_| "".to_string());
 
         return Err(format_ollama_error(status, error_payload));
     }

@@ -10,12 +10,12 @@
 // ============================================================================
 
 export type PromptCategory =
-  | 'system'      // Prompts système de base
-  | 'persona'     // Personnalités IA
-  | 'task'        // Tâches spécifiques
-  | 'context'     // Contexte additionnel
-  | 'format'      // Formatage des réponses
-  | 'safety';     // Consignes de sécurité
+  | 'system' // Prompts système de base
+  | 'persona' // Personnalités IA
+  | 'task' // Tâches spécifiques
+  | 'context' // Contexte additionnel
+  | 'format' // Formatage des réponses
+  | 'safety'; // Consignes de sécurité
 
 export interface Prompt {
   id: string;

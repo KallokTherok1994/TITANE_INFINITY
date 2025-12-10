@@ -128,7 +128,12 @@ export interface EngineState {
 // ═══════════════════════════════════════════════════════════════
 
 export type IncidentSeverity = 'low' | 'medium' | 'high' | 'critical';
-export type HealingAction = 'ClearSTM' | 'RestartEngine' | 'ResetState' | 'Fallback' | 'NoOp';
+export type HealingAction =
+  | 'ClearSTM'
+  | 'RestartEngine'
+  | 'ResetState'
+  | 'Fallback'
+  | 'NoOp';
 
 export interface Incident {
   id: string;

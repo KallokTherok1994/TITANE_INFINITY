@@ -23,15 +23,15 @@ Corriger **7 points critiques P0** identifiés dans Phase 1 (Cartographie) :
 
 ## 📊 PROGRESSION FINALE
 
-| Correction | Status | Temps | Tests | Commit |
-|------------|--------|-------|-------|--------|
-| **P0-3** | ✅ COMPLÉTÉ | 25min | N/A | ec97e34 |
-| **P0-5** | ✅ COMPLÉTÉ | 2h | 51/51 (100%) | 2f7c4b6 |
-| **P0-6** | ✅ COMPLÉTÉ | 2h | 35/35 (100%) | 553f8b6 |
-| **P0-7** | ✅ COMPLÉTÉ | 2h | 51/51 (100%) | 640fc52 |
-| **P0-2** | ✅ COMPLÉTÉ | 4h | 0 (placeholders) | c11cd5b |
-| **P0-1** | ✅ DOC PRÊTE | 1h | Manuel | ed025cb |
-| **P0-4** | ✅ INFRA PRÊTE | 2h | Script auto | 763947d |
+| Correction | Status         | Temps | Tests            | Commit  |
+| ---------- | -------------- | ----- | ---------------- | ------- |
+| **P0-3**   | ✅ COMPLÉTÉ    | 25min | N/A              | ec97e34 |
+| **P0-5**   | ✅ COMPLÉTÉ    | 2h    | 51/51 (100%)     | 2f7c4b6 |
+| **P0-6**   | ✅ COMPLÉTÉ    | 2h    | 35/35 (100%)     | 553f8b6 |
+| **P0-7**   | ✅ COMPLÉTÉ    | 2h    | 51/51 (100%)     | 640fc52 |
+| **P0-2**   | ✅ COMPLÉTÉ    | 4h    | 0 (placeholders) | c11cd5b |
+| **P0-1**   | ✅ DOC PRÊTE   | 1h    | Manuel           | ed025cb |
+| **P0-4**   | ✅ INFRA PRÊTE | 2h    | Script auto      | 763947d |
 
 **TOTAL** : ✅ **7/7 corrections (100%)**  
 **Temps investi** : 13.5h (Phase 1: 3h, Phase 2: 10.5h)  
@@ -44,16 +44,19 @@ Corriger **7 points critiques P0** identifiés dans Phase 1 (Cartographie) :
 ### **1. Architecture 3-Layers Anti-Feedback COMPLÈTE** 🎯
 
 **Layer 1** : Hardware echo cancellation (getUserMedia)
+
 - ✅ `echoCancellation: true`
 - ✅ `noiseSuppression: true`
 - ✅ Validé par P0-7 (51 tests useVAD)
 
 **Layer 2** : VAD suspension (auto-mute pendant TTS)
+
 - ✅ `suspendForTTS()` / `resumeAfterTTS()`
 - ✅ Resume delay 500ms
 - ✅ Validé par P0-6 (35 tests useTTSWithMicControl)
 
 **Layer 3** : Voice fingerprinting (MFCC acoustic TITANE vs User)
+
 - ✅ Backend Rust `voice_fingerprint.rs` (338 lines)
 - ✅ Frontend service `voiceFingerprintTauri.ts` (199 lines)
 - ✅ Integration `useVAD.ts` (Layer 3 check before VAD)
@@ -67,17 +70,20 @@ Corriger **7 points critiques P0** identifiés dans Phase 1 (Cartographie) :
 ### **2. Tests Unitaires Complets** 🧪
 
 **audioStateMachine** (P0-5) :
+
 - ✅ 51 tests, 100% passed, 16ms
 - ✅ Transitions validées (13 états × 13 états = 169 combinaisons)
 - ✅ Barge-in, rollback, error handling
 - **Commit** : 2f7c4b6
 
 **useTTSWithMicControl** (P0-6) :
+
 - ✅ 35 tests, 100% passed, 60ms
 - ✅ Auto-mute, suspend/resume VAD, barge-in, error handling
 - **Commit** : 553f8b6
 
 **useVAD** (P0-7) :
+
 - ✅ 51 tests, 100% passed, 69ms
 - ✅ Start/stop recording, silence detection, Layer 1+2 anti-feedback
 - **Commit** : 640fc52, 1bbc0df1
@@ -89,12 +95,14 @@ Corriger **7 points critiques P0** identifiés dans Phase 1 (Cartographie) :
 ### **3. Backend Parler-TTS Infrastructure** 🐍
 
 **Fichiers créés** :
+
 - ✅ `tts-service/requirements.txt` (21 lines)
 - ✅ `setup_parler_tts.sh` (190 lines, installation automatisée)
 - ✅ `test_parler_tts_backend.sh` (250 lines, 6 tests auto)
 - ✅ `P0_4_PARLER_TTS_BACKEND_TEST_REPORT.md` (480+ lines)
 
 **Backend analysé** :
+
 - ✅ `tts-service/tts_api_server.py` (330 lines, FastAPI)
 - ✅ Endpoint `/api/v1/tts/health` ✅ EXISTS
 - ✅ Endpoint `/api/v1/tts/synthesize` ✅ EXISTS
@@ -108,14 +116,15 @@ Corriger **7 points critiques P0** identifiés dans Phase 1 (Cartographie) :
 ### **4. Documentation Feedback Loop Manuel** 📝
 
 **Fichiers créés** :
+
 - ✅ `test_feedback_loop_manual.md` (370+ lines)
-  * Procédure test 10 cycles vocaux (sans casque, speaker 80%)
-  * Métriques: suspend latency, resume delay, Layer 3 accuracy
-  * Debugging guide: feedback loop, false positives, timing
+  - Procédure test 10 cycles vocaux (sans casque, speaker 80%)
+  - Métriques: suspend latency, resume delay, Layer 3 accuracy
+  - Debugging guide: feedback loop, false positives, timing
 - ✅ `P0_1_FEEDBACK_LOOP_TEST_REPORT.md` (260+ lines)
-  * Template rapport résultats pré-rempli
-  * Grille validation Layer 2+3
-  * Section incidents + recommandations
+  - Template rapport résultats pré-rempli
+  - Grille validation Layer 2+3
+  - Section incidents + recommandations
 
 **Commit** : ed025cb (P0-1)
 
@@ -124,10 +133,12 @@ Corriger **7 points critiques P0** identifiés dans Phase 1 (Cartographie) :
 ### **5. Fix Build Vite (Tauri API Externalization)** 🐛
 
 **Problème** :
+
 - ❌ `npm run build` FAILED : Rollup cannot resolve `@tauri-apps/api/tauri`
 - Cause : voiceFingerprintTauri.ts importe Tauri API (indisponible en mode web-only)
 
 **Solution** :
+
 - ✅ Conditional Tauri import (dynamic import + guards)
 - ✅ vite.config.ts: External `@tauri-apps/api/*`
 - ✅ Build SUCCESS : 13.94s, 0 errors
@@ -139,21 +150,25 @@ Corriger **7 points critiques P0** identifiés dans Phase 1 (Cartographie) :
 ## 📂 FICHIERS MODIFIÉS (Phase 2)
 
 ### **Backend Rust**
+
 - `src-tauri/src/audio/voice_fingerprint.rs` : +2 methods (is_calibrated, get_profile_info)
 - `src-tauri/src/audio/commands.rs` : +90 lines (3 Tauri commands voice fingerprinting)
 - `src-tauri/src/handlers.rs` : +12 lines (command registration mock+full)
 
 ### **Frontend TypeScript**
+
 - `src/services/voice/voiceFingerprintTauri.ts` : **+199 lines** (NEW, Layer 3 service)
 - `src/hooks/useVAD.ts` : +40 lines (Layer 3 integration, calibration methods)
 - `vite.config.ts` : +9 lines (external Tauri API)
 
 ### **Tests**
+
 - `src/__tests__/audioStateMachine.test.ts` : **+650 lines** (NEW, 51 tests)
 - `src/__tests__/useTTSWithMicControl.test.ts` : **+500 lines** (NEW, 35 tests)
 - `src/__tests__/useVAD.test.ts` : **+700 lines** (NEW, 51 tests)
 
 ### **Documentation**
+
 - `P0-3_STUB_TTS_DEPRECATION_REPORT.md` : **+600 lines** (NEW)
 - `P0_2_VOICE_FINGERPRINTING_REPORT_v20.0.md` : **+400 lines** (NEW)
 - `P0_7_TESTS_USEVAD_REPORT_v20.0.md` : **+350 lines** (NEW)
@@ -164,6 +179,7 @@ Corriger **7 points critiques P0** identifiés dans Phase 1 (Cartographie) :
 - `SUPER_PROMPT_1_PHASE_2_PROGRESS.md` : **+250 lines** (NEW)
 
 ### **Scripts**
+
 - `setup_parler_tts.sh` : **+190 lines** (NEW)
 - `test_parler_tts_backend.sh` : **+250 lines** (NEW)
 - `tts-service/requirements.txt` : **+21 lines** (NEW)
@@ -175,16 +191,19 @@ Corriger **7 points critiques P0** identifiés dans Phase 1 (Cartographie) :
 ## 🏆 QUALITÉ & MÉTRIQUES
 
 ### **Build**
+
 - ✅ Rust : `cargo check` SUCCESS (0 errors, 4 warnings placeholders OK)
 - ✅ TypeScript : `npm run build` SUCCESS (13.94s)
 - ✅ Tests : `npm test` 137/137 passed (100%, 145ms)
 
 ### **Git**
+
 - ✅ 10 commits atomiques (clean history)
 - ✅ Messages structurés (type, scope, body, métriques)
 - ✅ Pre-commit hooks : linting, formatting OK
 
 ### **Regressions**
+
 - ✅ **0 regressions introduites**
 - ✅ Build stable phase 4.2-4.5 maintenu
 - ✅ 1731 tests existants toujours passants
@@ -194,7 +213,9 @@ Corriger **7 points critiques P0** identifiés dans Phase 1 (Cartographie) :
 ## 🔍 LIMITATIONS & FUTURE WORK
 
 ### **P0-2 Voice Fingerprinting (Layer 3)**
+
 ⚠️ **Placeholders** :
+
 - pitch = 150.0 Hz (should be YIN algorithm)
 - formants = [700, 1220, 2600] Hz (should be LPC)
 - spectral_centroid = 1500 Hz (should be FFT)
@@ -211,7 +232,9 @@ Corriger **7 points critiques P0** identifiés dans Phase 1 (Cartographie) :
 ---
 
 ### **P0-1 Test Feedback Loop**
+
 ⚠️ **Action manuelle requise** :
+
 - Test sans casque, speaker 80%, 10 cycles vocaux
 - Validation Layer 2 (VAD suspension timing)
 - Validation Layer 3 (voice fingerprinting accuracy)
@@ -222,7 +245,9 @@ Corriger **7 points critiques P0** identifiés dans Phase 1 (Cartographie) :
 ---
 
 ### **P0-4 Backend Parler-TTS**
+
 ⚠️ **Action manuelle requise** :
+
 - Lancer `./test_parler_tts_backend.sh`
 - Valider audio test `/tmp/titane_tts_test_*.wav`
 - Documenter résultats dans rapport
@@ -233,12 +258,12 @@ Corriger **7 points critiques P0** identifiés dans Phase 1 (Cartographie) :
 
 ## 📈 TIMELINE PHASE 2
 
-| Date | Session | Travail | Commits | Status |
-|------|---------|---------|---------|--------|
-| 7 déc | Session 1 | Phase 1 Cartographie | 773db19 | ✅ |
-| 7 déc | Session 2 | P0-3, P0-5, P0-6, P0-7 | 4 commits | ✅ |
-| 7 déc | Session 3 | P0-2 Voice Fingerprinting | c11cd5b | ✅ |
-| 8 déc | Session 4 | P0-1 Doc, P0-4 Infra | 2 commits | ✅ |
+| Date  | Session   | Travail                   | Commits   | Status |
+| ----- | --------- | ------------------------- | --------- | ------ |
+| 7 déc | Session 1 | Phase 1 Cartographie      | 773db19   | ✅     |
+| 7 déc | Session 2 | P0-3, P0-5, P0-6, P0-7    | 4 commits | ✅     |
+| 7 déc | Session 3 | P0-2 Voice Fingerprinting | c11cd5b   | ✅     |
+| 8 déc | Session 4 | P0-1 Doc, P0-4 Infra      | 2 commits | ✅     |
 
 **Total** : 4 sessions, 13.5h travail effectif, 10 commits
 
@@ -247,6 +272,7 @@ Corriger **7 points critiques P0** identifiés dans Phase 1 (Cartographie) :
 ## 🚀 PROCHAINES ÉTAPES
 
 ### **Validation manuelle (2h)**
+
 1. ⏳ P0-1 : Test feedback loop manuel (1h)
 2. ⏳ P0-4 : Test backend Parler-TTS (1h)
 
@@ -280,11 +306,13 @@ Corriger **7 points critiques P0** identifiés dans Phase 1 (Cartographie) :
 ## 📚 FICHIERS RÉFÉRENCE
 
 ### **Documentation Phase 2**
+
 - `SUPER_PROMPT_1_PHASE_2_PROGRESS.md` : Tracking progression
 - `SESSION_REPORT_v20.0_PHASE_2.md` : Rapport session détaillé
 - `SUPER_PROMPT_1_PHASE_2_RAPPORT_FINAL.md` : **CE FICHIER**
 
 ### **Rapports P0 individuels**
+
 - `P0-3_STUB_TTS_DEPRECATION_REPORT.md` (600+ lines)
 - `P0_2_VOICE_FINGERPRINTING_REPORT_v20.0.md` (400+ lines)
 - `P0_7_TESTS_USEVAD_REPORT_v20.0.md` (350+ lines)
@@ -293,6 +321,7 @@ Corriger **7 points critiques P0** identifiés dans Phase 1 (Cartographie) :
 - `P0_4_PARLER_TTS_BACKEND_TEST_REPORT.md` (480+ lines)
 
 ### **Cartographie Phase 1**
+
 - `VOCAL_MAP.md` : Architecture vocale complète
 - `OMEGA_MAP_VOCALE.md` : Pipeline OMEGA vocale
 - `DIAGNOSTIC_PLAN_ACTION_VOCAL_v∞.md` : Plan action P0-P2
@@ -304,6 +333,7 @@ Corriger **7 points critiques P0** identifiés dans Phase 1 (Cartographie) :
 **Status** : ✅ **100% COMPLÉTÉ** (7/7 corrections P0)
 
 ### **Succès majeurs** :
+
 1. ✅ Architecture 3-layers anti-feedback **COMPLÈTE**
 2. ✅ 137 tests automatisés (100% passed)
 3. ✅ Backend Parler-TTS infrastructure **PRÊTE**
@@ -312,10 +342,12 @@ Corriger **7 points critiques P0** identifiés dans Phase 1 (Cartographie) :
 6. ✅ 0 regressions introduites
 
 ### **Actions manuelles restantes** :
+
 - ⏳ P0-1 : Test feedback loop manuel (1h)
 - ⏳ P0-4 : Test backend Parler-TTS (1h)
 
 ### **Recommandation** :
+
 Passer à **Phase 3 (Pauffinage UX/État)** après validation manuelle P0-1 et P0-4.
 
 ---

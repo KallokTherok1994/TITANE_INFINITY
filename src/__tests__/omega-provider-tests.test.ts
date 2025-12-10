@@ -31,7 +31,9 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 1: Gemini Provider Down', () => {
 
   it('should handle Gemini 401 unauthorized gracefully', async () => {
     // Mock HTTP 401 error
-    const mockFetch = vi.fn().mockRejectedValue(new Error('Gemini unauthorized: Invalid API key'));
+    const mockFetch = vi
+      .fn()
+      .mockRejectedValue(new Error('Gemini unauthorized: Invalid API key'));
     vi.stubGlobal('fetch', mockFetch);
 
     const result = await aiOrchestrator.generate('Test message', []);
@@ -43,14 +45,16 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 1: Gemini Provider Down', () => {
   });
 
   it('should handle Gemini 429 rate limit and retry', async () => {
-    const mockFetch = vi.fn()
+    const mockFetch = vi
+      .fn()
       .mockRejectedValueOnce(new Error('Gemini rate_limit: Rate limit exceeded'))
       .mockRejectedValueOnce(new Error('Gemini rate_limit: Rate limit exceeded'))
       .mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({
-          candidates: [{ content: { parts: [{ text: 'Rate limit recovered' }] } }]
-        })
+        json: () =>
+          Promise.resolve({
+            candidates: [{ content: { parts: [{ text: 'Rate limit recovered' }] } }],
+          }),
       } as Response);
 
     vi.stubGlobal('fetch', mockFetch);
@@ -63,7 +67,9 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 1: Gemini Provider Down', () => {
   });
 
   it('should handle Gemini 500 server errors with fallback', async () => {
-    const mockFetch = vi.fn().mockRejectedValue(new Error('Gemini server_error: Gemini server error'));
+    const mockFetch = vi
+      .fn()
+      .mockRejectedValue(new Error('Gemini server_error: Gemini server error'));
     vi.stubGlobal('fetch', mockFetch);
 
     const result = await aiOrchestrator.generate('Test server error', []);
@@ -112,9 +118,9 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 2: Tauri Backend Down', () => {
     vi.mock('../../../core/commands/TAURI_COMMANDS', () => ({
       TAURI_COMMANDS: {
         CHAT_SEND_MESSAGE: 'chat_send_message',
-        CHAT_GET_PROVIDERS_STATUS: 'chat_get_providers_status'
+        CHAT_GET_PROVIDERS_STATUS: 'chat_get_providers_status',
       },
-      invokeTauri: mockInvoke
+      invokeTauri: mockInvoke,
     }));
 
     const result = await aiOrchestrator.generate('Test tauri timeout', []);
@@ -125,7 +131,9 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 2: Tauri Backend Down', () => {
   });
 
   it('should disable Tauri backend after max errors', async () => {
-    const resettableProvider = tauriChatProvider as unknown as { resetErrors?: () => void };
+    const resettableProvider = tauriChatProvider as unknown as {
+      resetErrors?: () => void;
+    };
     resettableProvider.resetErrors?.();
 
     // Simulate multiple failures
@@ -171,10 +179,11 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 3: Ollama Offline', () => {
 
   it('should handle Ollama connection timeout', async () => {
     // Mock slow/timeout response
-    const mockFetch = vi.fn().mockImplementation(() =>
-      new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Ollama: Network/connection error')), 100);
-      })
+    const mockFetch = vi.fn().mockImplementation(
+      () =>
+        new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('Ollama: Network/connection error')), 100);
+        })
     );
     vi.stubGlobal('fetch', mockFetch);
 
@@ -195,7 +204,9 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 3: Ollama Offline', () => {
     expect(result).toBeDefined();
     expect(result.content).toBeTruthy();
     // Should use titane-local as ultimate fallback
-    expect(['titane-local', 'tauri-local', 'gemini'].includes(result.provider)).toBe(true);
+    expect(['titane-local', 'tauri-local', 'gemini'].includes(result.provider)).toBe(
+      true
+    );
   });
 
   it('should track Ollama health status correctly', async () => {
@@ -222,12 +233,15 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 4: Long History Stability', () => {
       longHistory.push({
         role: i % 2 === 0 ? 'user' : 'assistant',
         content: `Message ${i + 1}: This is a test message with sufficient length to simulate real conversation flow and token usage.`,
-        timestamp: Date.now() - (200 - i) * 1000
+        timestamp: Date.now() - (200 - i) * 1000,
       });
     }
 
     const startTime = Date.now();
-    const result = await aiOrchestrator.generate('Summarize our long conversation', longHistory);
+    const result = await aiOrchestrator.generate(
+      'Summarize our long conversation',
+      longHistory
+    );
     const endTime = Date.now();
 
     expect(result).toBeDefined();
@@ -238,13 +252,32 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 4: Long History Stability', () => {
 
   it('should maintain context coherence with deep history', async () => {
     const contextHistory: AIMessage[] = [
-      { role: 'user', content: 'My name is Alice and I work as a developer', timestamp: Date.now() - 10000 },
-      { role: 'assistant', content: 'Nice to meet you Alice! Software development is fascinating.', timestamp: Date.now() - 9000 },
-      { role: 'user', content: 'I specialize in TypeScript and React', timestamp: Date.now() - 8000 },
-      { role: 'assistant', content: 'Great choice! TypeScript provides excellent type safety.', timestamp: Date.now() - 7000 }
+      {
+        role: 'user',
+        content: 'My name is Alice and I work as a developer',
+        timestamp: Date.now() - 10000,
+      },
+      {
+        role: 'assistant',
+        content: 'Nice to meet you Alice! Software development is fascinating.',
+        timestamp: Date.now() - 9000,
+      },
+      {
+        role: 'user',
+        content: 'I specialize in TypeScript and React',
+        timestamp: Date.now() - 8000,
+      },
+      {
+        role: 'assistant',
+        content: 'Great choice! TypeScript provides excellent type safety.',
+        timestamp: Date.now() - 7000,
+      },
     ];
 
-    const result = await aiOrchestrator.generate('What did I tell you about my job?', contextHistory);
+    const result = await aiOrchestrator.generate(
+      'What did I tell you about my job?',
+      contextHistory
+    );
 
     expect(result).toBeDefined();
     expect(result.content.toLowerCase()).toMatch(/(developer|typescript|react|alice)/);
@@ -257,14 +290,19 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 4: Long History Stability', () => {
     for (let i = 0; i < 1000; i++) {
       massiveHistory.push({
         role: i % 2 === 0 ? 'user' : 'assistant',
-        content: `Very long message ${i + 1}: `.repeat(50) + 'This simulates token-heavy conversations.',
-        timestamp: Date.now() - (1000 - i) * 100
+        content:
+          `Very long message ${i + 1}: `.repeat(50) +
+          'This simulates token-heavy conversations.',
+        timestamp: Date.now() - (1000 - i) * 100,
       });
     }
 
     // Should not crash with massive history
     expect(async () => {
-      const result = await aiOrchestrator.generate('Handle massive history', massiveHistory);
+      const result = await aiOrchestrator.generate(
+        'Handle massive history',
+        massiveHistory
+      );
       expect(result).toBeDefined();
     }).not.toThrow();
   });
@@ -296,7 +334,7 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 5: Empty/Invalid Input', () => {
       'javascript:void(0)',
       '<?php system("rm -rf /"); ?>',
       'data:text/html,<script>alert(1)</script>',
-      'vbscript:msgbox("test")'
+      'vbscript:msgbox("test")',
     ];
 
     for (const input of dangerousInputs) {
@@ -320,7 +358,8 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 5: Empty/Invalid Input', () => {
   });
 
   it('should handle special unicode characters', async () => {
-    const unicodeMessage = '🟣 TITANE∞ test with émojis and spéciàl châractërs: 中文 العربية русский 🚀🤖✨';
+    const unicodeMessage =
+      '🟣 TITANE∞ test with émojis and spéciàl châractërs: 中文 العربية русский 🚀🤖✨';
 
     const result = await aiOrchestrator.generate(unicodeMessage, []);
 
@@ -352,7 +391,7 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 6: Invalid Response Recovery', () =>
     // Mock fetch returning invalid JSON
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
-      json: () => Promise.reject(new Error('Invalid JSON'))
+      json: () => Promise.reject(new Error('Invalid JSON')),
     });
     vi.stubGlobal('fetch', mockFetch);
 
@@ -377,7 +416,9 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 6: Invalid Response Recovery', () =>
   it('should handle provider throwing unexpected errors', async () => {
     // Mock provider throwing weird error
     const originalGenerate = titaneLocalProvider.generate;
-    titaneLocalProvider.generate = vi.fn().mockRejectedValue(new TypeError('Unexpected error'));
+    titaneLocalProvider.generate = vi
+      .fn()
+      .mockRejectedValue(new TypeError('Unexpected error'));
 
     const result = await aiOrchestrator.generate('Test unexpected error', []);
 
@@ -402,17 +443,20 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 7: UI Crash Protection', () => {
       { content: 'Test' }, // Missing role
       { role: 'user', content: null },
       { role: 'user', content: '', timestamp: 'invalid' },
-      { role: 'invalid', content: 'Test', timestamp: Date.now() }
+      { role: 'invalid', content: 'Test', timestamp: Date.now() },
     ];
 
     // Should not crash when processing corrupted messages
     expect(() => {
       corruptedMessages.forEach(msg => {
         // Simulate message validation logic
-        if (msg && typeof msg === 'object' &&
-            typeof msg.role === 'string' &&
-            typeof msg.content === 'string' &&
-            msg.content.length > 0) {
+        if (
+          msg &&
+          typeof msg === 'object' &&
+          typeof msg.role === 'string' &&
+          typeof msg.content === 'string' &&
+          msg.content.length > 0
+        ) {
           // Valid message
         } else {
           // Invalid message - should be filtered out
@@ -425,7 +469,7 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 7: UI Crash Protection', () => {
     const oversizedMessage = {
       role: 'user' as const,
       content: 'A'.repeat(200000), // 200k characters
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     // Should reject oversized messages
@@ -440,7 +484,7 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 7: UI Crash Protection', () => {
       messages.push({
         role: i % 2 === 0 ? 'user' : 'assistant',
         content: `Rapid message ${i}`,
-        timestamp: Date.now() + i
+        timestamp: Date.now() + i,
       });
     }
 
@@ -462,7 +506,7 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 8: Complete Offline Mode', () => {
 
     // Mock Tauri backend unavailable
     vi.mock('../../../core/commands/TAURI_COMMANDS', () => ({
-      invokeTauri: vi.fn().mockRejectedValue(new Error('Backend unavailable'))
+      invokeTauri: vi.fn().mockRejectedValue(new Error('Backend unavailable')),
     }));
   });
 
@@ -480,7 +524,7 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 8: Complete Offline Mode', () => {
       'What is TypeScript?',
       'Explain React hooks',
       'How does async/await work?',
-      'What is TITANE∞?'
+      'What is TITANE∞?',
     ];
 
     for (const question of questions) {
@@ -490,16 +534,28 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 8: Complete Offline Mode', () => {
       expect(result.content).toBeTruthy();
       expect(result.provider).toBe('titane-local');
       expect(result.content.toLowerCase()).toContain(
-        question.toLowerCase().includes('titane') ? 'titane' :
-        question.toLowerCase().split(' ').find(word => word.length > 3) || 'test'
+        question.toLowerCase().includes('titane')
+          ? 'titane'
+          : question
+              .toLowerCase()
+              .split(' ')
+              .find(word => word.length > 3) || 'test'
       );
     }
   });
 
   it('should maintain conversation context offline', async () => {
     const context: AIMessage[] = [
-      { role: 'user', content: 'My favorite color is blue', timestamp: Date.now() - 5000 },
-      { role: 'assistant', content: 'Blue is a beautiful color!', timestamp: Date.now() - 4000 }
+      {
+        role: 'user',
+        content: 'My favorite color is blue',
+        timestamp: Date.now() - 5000,
+      },
+      {
+        role: 'assistant',
+        content: 'Blue is a beautiful color!',
+        timestamp: Date.now() - 4000,
+      },
     ];
 
     const result = await aiOrchestrator.generate('What is my favorite color?', context);
@@ -593,12 +649,12 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 9: Concurrent Requests', () => {
   it('should properly queue requests when providers are busy', async () => {
     // Mock slow provider responses
     const originalGenerate = titaneLocalProvider.generate;
-    titaneLocalProvider.generate = vi.fn().mockImplementation(async (message) => {
+    titaneLocalProvider.generate = vi.fn().mockImplementation(async message => {
       await new Promise(resolve => setTimeout(resolve, 100)); // 100ms delay
       return {
         content: `Queued response for: ${message}`,
         provider: 'titane-local' as const,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
     });
 
@@ -654,13 +710,15 @@ describe('🟣 OMEGA Phase 7Ω - Integration: Complete System', () => {
       'Who are you?',
       'Tell me about yourself',
       'What is your purpose?',
-      'How do you work?'
+      'How do you work?',
     ];
 
     for (const test of personalityTests) {
       const result = await aiOrchestrator.generate(test, []);
 
-      expect(result.content.toLowerCase()).toMatch(/(titane|intelligence|cognitive|évolution|système)/);
+      expect(result.content.toLowerCase()).toMatch(
+        /(titane|intelligence|cognitive|évolution|système)/
+      );
     }
   });
 
@@ -674,7 +732,7 @@ describe('🟣 OMEGA Phase 7Ω - Integration: Complete System', () => {
     const error = new Error('Integration test error');
     await autoHealEngine.heal('integration-test', error, 'validation', {
       test: 'omega-integration',
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
 
     const updatedStats = autoHealEngine.getStats();

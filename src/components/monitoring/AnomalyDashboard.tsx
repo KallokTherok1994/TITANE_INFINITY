@@ -130,9 +130,7 @@ export const AnomalyDashboard: React.FC<AnomalyDashboardProps> = ({
             <span className="text-sm text-gray-400">Total Anomalies</span>
           </div>
           <div className="text-2xl font-bold text-white">{stats.total}</div>
-          <div className="text-xs text-gray-500 mt-1">
-            {stats.last24h} dernières 24h
-          </div>
+          <div className="text-xs text-gray-500 mt-1">{stats.last24h} dernières 24h</div>
         </div>
 
         {/* Critical */}
@@ -177,9 +175,7 @@ export const AnomalyDashboard: React.FC<AnomalyDashboardProps> = ({
         <div className="px-6 py-4 border-b border-gray-700 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Activity className="w-5 h-5 text-blue-500" />
-            <h3 className="text-lg font-semibold text-white">
-              Anomalies Détectées
-            </h3>
+            <h3 className="text-lg font-semibold text-white">Anomalies Détectées</h3>
             <span className="text-sm text-gray-400">({anomalies.length})</span>
           </div>
         </div>
@@ -259,8 +255,8 @@ export const AnomalyDashboard: React.FC<AnomalyDashboardProps> = ({
                             100
                           ).toFixed(1)}
                           %
-                        </span>
-                        {' '}de la moyenne
+                        </span>{' '}
+                        de la moyenne
                       </div>
                     </div>
 

@@ -4,8 +4,8 @@
 //! ═══════════════════════════════════════════════════════════════════════════
 
 use super::{
-    Conclusion, HyperIntelligenceEngine, HyperIntelligenceState, HyperMetrics,
-    Imagination, IntelligenceMode, Insight, Thought,
+    Conclusion, HyperIntelligenceEngine, HyperIntelligenceState, HyperMetrics, Imagination,
+    Insight, IntelligenceMode, Thought,
 };
 use crate::utils::AppError;
 use once_cell::sync::Lazy;
@@ -209,10 +209,7 @@ pub async fn hyper_get_report() -> Result<HyperIntelligenceReport, AppError> {
 
             let summary = format!(
                 "Hyper-Intelligence: {:?} mode, {:?} consciousness, {} thoughts, {} insights",
-                state.mode,
-                state.consciousness_level,
-                state.thought_count,
-                state.insight_count
+                state.mode, state.consciousness_level, state.thought_count, state.insight_count
             );
 
             Ok(HyperIntelligenceReport {

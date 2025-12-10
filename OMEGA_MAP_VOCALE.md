@@ -30,7 +30,7 @@ sequenceDiagram
     participant TTS as TTS Engine
     participant SPEAKER as 🔊 Speaker
     participant HALO as Halo Visualizer
-    
+
     %% PHASE 1: USER PARLE
     U->>MIC: Parle ("Bonjour TITANE")
     MIC->>VAD: Raw audio stream
@@ -39,9 +39,9 @@ sequenceDiagram
     STATE->>STATE: Transition: idle → user_speaking
     STATE->>HALO: Update state (breathing)
     HALO->>U: Animation bleue (user parle)
-    
+
     Note over VAD,STATE: État: USER_SPEAKING
-    
+
     %% PHASE 2: SILENCE DÉTECTÉ
     VAD->>VAD: Detect silence (500ms)
     VAD->>STATE: Event: VAD_SPEECH_END
@@ -50,9 +50,9 @@ sequenceDiagram
     ASR->>ASR: Whisper.cpp transcription
     ASR-->>VAD: TranscriptionResult {text, confidence}
     VAD->>OMEGA: Text: "Bonjour TITANE"
-    
+
     Note over STATE,OMEGA: État: PROCESSING
-    
+
     %% PHASE 3: OMEGA PIPELINE
     OMEGA->>OMEGA: Stage 1: Input Validation
     OMEGA->>MEM: Stage 2: Memory Retrieval
@@ -71,12 +71,12 @@ sequenceDiagram
     COH-->>OMEGA: Validation OK
     OMEGA->>MEM: Stage 8: Memory Save
     MEM->>MEM: Store (Core + Semantic + Goals)
-    
+
     Note over AI,OMEGA: État: AI_THINKING → AI_SPEAKING
     STATE->>STATE: Transition: processing → ai_speaking
     STATE->>HALO: Update state (shimmer)
     HALO->>U: Animation dorée (AI parle)
-    
+
     %% PHASE 4: TTS PLAYBACK
     OMEGA->>TTS: Response text
     TTS->>VAD: Signal: suspendForTTS()
@@ -84,9 +84,9 @@ sequenceDiagram
     TTS->>TTS: Generate audio (Parler/espeak)
     TTS->>SPEAKER: Stream audio
     SPEAKER->>U: "Bonjour Kevin ! Comment..."
-    
+
     Note over TTS,SPEAKER: État: AI_SPEAKING (Micro MUTED)
-    
+
     %% PHASE 5: TTS TERMINÉ
     TTS->>TTS: Audio playback complete
     TTS->>VAD: Signal: resumeAfterTTS(500ms)
@@ -95,7 +95,7 @@ sequenceDiagram
     STATE->>STATE: Transition: ai_speaking → idle
     STATE->>HALO: Update state (idle)
     HALO->>U: Animation bleue statique (idle)
-    
+
     Note over STATE,HALO: État: IDLE (Ready for next input)
 ```
 
@@ -108,29 +108,31 @@ sequenceDiagram
 **Fichier** : `src/hooks/useVAD.ts` → `orchestrator_OMNIS_v1.ts`
 
 **Flow** :
+
 ```typescript
 // useVAD.ts (ligne ~250)
 const handleSilence = () => {
   const transcript = await stopRecording(); // TranscriptionResult
-  
+
   // ✅ INJECTION OMEGA
   const response = await aiOrchestrator.generateResponse({
     message: transcript.text,
     conversationId: currentConversationId,
     useVoiceMode: true, // ⚠️ Flag important
   });
-  
+
   // Continue to TTS
   await tts.speak(response.content);
 };
 ```
 
 **Paramètres OMEGA** :
+
 ```typescript
 interface GenerateResponseParams {
-  message: string;          // Transcript from ASR
-  conversationId: string;   // Session ID
-  useVoiceMode?: boolean;   // ✅ Enables voice-specific optimizations
+  message: string; // Transcript from ASR
+  conversationId: string; // Session ID
+  useVoiceMode?: boolean; // ✅ Enables voice-specific optimizations
   context?: {
     previousMessages?: Message[];
     emotions?: EmotionalState;
@@ -140,6 +142,7 @@ interface GenerateResponseParams {
 ```
 
 **Optimisations Voice Mode** :
+
 - Réponses plus courtes (max 3 phrases)
 - Ton conversationnel
 - Pas de markdown (TTS ne lit pas le markdown)
@@ -152,12 +155,13 @@ interface GenerateResponseParams {
 **Fichier** : `orchestrator_OMNIS_v1.ts` → `UnifiedMemory.ts`
 
 **Stage 2 : Memory Retrieval**
+
 ```typescript
 // orchestrator_OMNIS_v1.ts (ligne ~180)
 async processMessage(input: string): Promise<string> {
   // Stage 1: Validation
   const validated = await this.validateInput(input);
-  
+
   // Stage 2: Memory Retrieval
   const memoryBundle = await unifiedMemory.recall({
     query: input,
@@ -167,20 +171,21 @@ async processMessage(input: string): Promise<string> {
     includeSemantic: true, // Include facts/knowledge
     includeGoals: true,    // Include user goals
   });
-  
+
   // Attach to context
   const context = this.buildContext(input, memoryBundle);
-  
+
   // Continue pipeline...
 }
 ```
 
 **Memory Bundle Structure** :
+
 ```typescript
 interface MemoryBundle {
-  episodic: Memory[];    // Recent conversation (STM/MTM)
-  semantic: Memory[];    // Facts, knowledge (LTM)
-  goals: Goal[];         // User goals/intentions
+  episodic: Memory[]; // Recent conversation (STM/MTM)
+  semantic: Memory[]; // Facts, knowledge (LTM)
+  goals: Goal[]; // User goals/intentions
   metadata: {
     retrievalTime: number;
     totalMemories: number;
@@ -196,6 +201,7 @@ interface MemoryBundle {
 **Fichier** : `orchestrator_OMNIS_v1.ts` → `coherence.rs`
 
 **Stage 3 : Pre-Consistency Check**
+
 ```typescript
 // Before AI generation
 const preCheck = await coherenceEngine.validateInput({
@@ -210,6 +216,7 @@ if (preCheck.score < 0.5) {
 ```
 
 **Stage 7 : Post-Consistency Check**
+
 ```typescript
 // After AI generation
 const postCheck = await coherenceEngine.validateResponse({
@@ -225,6 +232,7 @@ if (postCheck.score < 0.6) {
 ```
 
 **Coherence Checks** :
+
 - **Consistency** : Response cohérente avec context
 - **Relevance** : Response répond à la question
 - **Factuality** : Pas de contradiction avec memories
@@ -237,6 +245,7 @@ if (postCheck.score < 0.6) {
 **Fichier** : `orchestrator_OMNIS_v1.ts` → `system_health.rs`
 
 **Stage 4 : Health Check**
+
 ```typescript
 const healthStatus = await systemHealth.getStatus();
 
@@ -254,14 +263,15 @@ console.log('[OMEGA] System Health:', {
 ```
 
 **Health Metrics** :
+
 ```typescript
 interface SystemHealthStatus {
   overall: 'HEALTHY' | 'WARNING' | 'CRITICAL';
-  cpu: number;       // 0-100%
-  ram: number;       // 0-100%
-  disk: number;      // 0-100%
+  cpu: number; // 0-100%
+  ram: number; // 0-100%
+  disk: number; // 0-100%
   coherence: number; // 0-1 (Nexus coherence score)
-  uptime: number;    // Seconds
+  uptime: number; // Seconds
   lastCheck: number; // Timestamp
 }
 ```
@@ -273,17 +283,19 @@ interface SystemHealthStatus {
 **Fichier** : `orchestrator_OMNIS_v1.ts` (internal)
 
 **Stage 6 : AI Generation**
+
 ```typescript
 const aiResponse = await this.aiOrchestrator.generate({
   prompt: finalPrompt,
   temperature: 0.7,
-  maxTokens: 150,      // ⚠️ Shorter for voice mode
+  maxTokens: 150, // ⚠️ Shorter for voice mode
   stopSequences: ['\n\n'], // Stop at paragraph break
-  provider: 'auto',    // Auto-select Gemini/Ollama
+  provider: 'auto', // Auto-select Gemini/Ollama
 });
 ```
 
 **Provider Selection** :
+
 1. Check health map (`providerHealth`)
 2. Select best available (Gemini > Ollama > Fallback)
 3. Timeout protection (10s max)
@@ -296,11 +308,12 @@ const aiResponse = await this.aiOrchestrator.generate({
 **Fichier** : `orchestrator_OMNIS_v1.ts` → `hybridTTS.ts`
 
 **Stage 9 : TTS Playback**
+
 ```typescript
 // After generation complete
 if (params.useVoiceMode) {
   await tts.speak(aiResponse.content, {
-    useOnline: false,  // Local TTS (espeak/piper)
+    useOnline: false, // Local TTS (espeak/piper)
     rate: 1.0,
     pitch: 1.0,
     volume: 0.8,
@@ -309,6 +322,7 @@ if (params.useVoiceMode) {
 ```
 
 **TTS Flow** :
+
 ```
 OMEGA Response Text
   ↓
@@ -327,19 +341,20 @@ Audio Output → Speaker
 
 ## 🔄 CYCLE COMPLET (Temps Estimés)
 
-| Phase | Étape | Durée | Cumul |
-|-------|-------|-------|-------|
-| 1 | VAD détection parole | 50ms | 50ms |
-| 2 | ASR transcription (Whisper) | 1200ms | 1250ms |
-| 3 | OMEGA Stage 1-2 (validation + memory) | 100ms | 1350ms |
-| 4 | OMEGA Stage 3-4 (coherence + health) | 50ms | 1400ms |
-| 5 | OMEGA Stage 5-6 (prompt + AI) | 2000ms | 3400ms |
-| 6 | OMEGA Stage 7-8 (post-check + save) | 100ms | 3500ms |
-| 7 | TTS génération (espeak) | 800ms | 4300ms |
-| 8 | Audio playback | 3000ms | 7300ms |
-| **TOTAL** | **User parle → TITANE répond** | **7.3s** | - |
+| Phase     | Étape                                 | Durée    | Cumul  |
+| --------- | ------------------------------------- | -------- | ------ |
+| 1         | VAD détection parole                  | 50ms     | 50ms   |
+| 2         | ASR transcription (Whisper)           | 1200ms   | 1250ms |
+| 3         | OMEGA Stage 1-2 (validation + memory) | 100ms    | 1350ms |
+| 4         | OMEGA Stage 3-4 (coherence + health)  | 50ms     | 1400ms |
+| 5         | OMEGA Stage 5-6 (prompt + AI)         | 2000ms   | 3400ms |
+| 6         | OMEGA Stage 7-8 (post-check + save)   | 100ms    | 3500ms |
+| 7         | TTS génération (espeak)               | 800ms    | 4300ms |
+| 8         | Audio playback                        | 3000ms   | 7300ms |
+| **TOTAL** | **User parle → TITANE répond**        | **7.3s** | -      |
 
 **Objectifs optimisation** :
+
 - ASR : 1200ms → 800ms (Whisper tiny model)
 - AI : 2000ms → 1500ms (Ollama local optimisé)
 - TTS : 800ms → 500ms (Parler-TTS streaming)
@@ -355,32 +370,32 @@ Audio Output → Speaker
 const VOICE_MODE_CONFIG = {
   // Memory Retrieval
   memory: {
-    limit: 3,              // Top 3 memories (vs 10 text mode)
-    minSimilarity: 0.7,    // Higher threshold
+    limit: 3, // Top 3 memories (vs 10 text mode)
+    minSimilarity: 0.7, // Higher threshold
     includeEpisodic: true,
     includeSemantic: true,
     includeGoals: true,
   },
-  
+
   // AI Generation
   generation: {
-    maxTokens: 150,        // Shorter responses (vs 500 text mode)
-    temperature: 0.7,      // Slightly higher (more natural)
+    maxTokens: 150, // Shorter responses (vs 500 text mode)
+    temperature: 0.7, // Slightly higher (more natural)
     stopSequences: ['\n\n', '---'], // Stop at breaks
   },
-  
+
   // Coherence
   coherence: {
-    preCheckThreshold: 0.5,   // Stricter pre-check
-    postCheckThreshold: 0.6,  // Stricter post-check
+    preCheckThreshold: 0.5, // Stricter pre-check
+    postCheckThreshold: 0.6, // Stricter post-check
   },
-  
+
   // Timeouts
   timeouts: {
-    memoryRetrieval: 500,   // 500ms max
-    coherenceCheck: 200,    // 200ms max
-    aiGeneration: 10000,    // 10s max
-    totalPipeline: 15000,   // 15s max
+    memoryRetrieval: 500, // 500ms max
+    coherenceCheck: 200, // 200ms max
+    aiGeneration: 10000, // 10s max
+    totalPipeline: 15000, // 15s max
   },
 };
 ```
@@ -391,33 +406,33 @@ const VOICE_MODE_CONFIG = {
 
 ### Test 1: Full Voice Cycle
 
-```typescript
+````typescript
 describe('OMEGA Voice Integration', () => {
   it('should process voice input through full OMEGA pipeline', async () => {
     // 1. Simulate VAD voice detection
     const transcript = 'Bonjour TITANE';
-    
+
     // 2. Inject into OMEGA
     const response = await aiOrchestrator.generateResponse({
       message: transcript,
       conversationId: 'test-session',
       useVoiceMode: true,
     });
-    
+
     // 3. Verify OMEGA stages executed
     expect(response.metadata).toMatchObject({
       memoryRetrievalTime: expect.any(Number),
       coherenceScore: expect.any(Number),
       aiGenerationTime: expect.any(Number),
     });
-    
+
     // 4. Verify response suitable for TTS
     expect(response.content.length).toBeLessThan(500); // Short
-    expect(response.content).not.toContain('```');     // No code
-    expect(response.content).not.toContain('##');      // No markdown
+    expect(response.content).not.toContain('```'); // No code
+    expect(response.content).not.toContain('##'); // No markdown
   });
 });
-```
+````
 
 ### Test 2: Memory Injection
 
@@ -429,13 +444,13 @@ it('should inject voice context into memory retrieval', async () => {
     type: 'semantic',
     importance: 0.8,
   });
-  
+
   // Trigger voice input
   const response = await aiOrchestrator.generateResponse({
     message: 'Explique moi la relativité',
     useVoiceMode: true,
   });
-  
+
   // Verify short response (memory applied)
   expect(response.content.split(' ').length).toBeLessThan(50);
 });
@@ -449,7 +464,7 @@ it('should validate coherence in voice mode', async () => {
     message: 'Quel est mon nom?',
     useVoiceMode: true,
   });
-  
+
   // Verify coherence check ran
   expect(response.metadata.coherenceScore).toBeGreaterThan(0.6);
   expect(response.metadata.coherenceViolations).toEqual([]);
@@ -465,25 +480,25 @@ it('should validate coherence in voice mode', async () => {
 ```typescript
 interface VoiceOMEGAMetrics {
   // Latency
-  asrLatency: number;           // Whisper transcription time
+  asrLatency: number; // Whisper transcription time
   memoryRetrievalLatency: number; // Memory recall time
-  coherenceCheckLatency: number;  // Coherence validation time
-  aiGenerationLatency: number;    // AI generation time
-  ttsLatency: number;             // TTS synthesis time
-  totalLatency: number;           // End-to-end time
-  
+  coherenceCheckLatency: number; // Coherence validation time
+  aiGenerationLatency: number; // AI generation time
+  ttsLatency: number; // TTS synthesis time
+  totalLatency: number; // End-to-end time
+
   // Quality
-  coherenceScore: number;         // 0-1
-  memoryRelevance: number;        // 0-1 (avg similarity)
+  coherenceScore: number; // 0-1
+  memoryRelevance: number; // 0-1 (avg similarity)
   transcriptionConfidence: number; // 0-1
-  
+
   // System
-  cpuUsage: number;               // 0-100%
-  ramUsage: number;               // 0-100%
+  cpuUsage: number; // 0-100%
+  ramUsage: number; // 0-100%
   providerUsed: 'gemini' | 'ollama' | 'fallback';
-  
+
   // Errors
-  errorRate: number;              // 0-1
+  errorRate: number; // 0-1
   timeoutCount: number;
   fallbackCount: number;
 }

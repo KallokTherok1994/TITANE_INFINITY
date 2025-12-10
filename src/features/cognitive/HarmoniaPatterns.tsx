@@ -57,7 +57,11 @@ export const HarmoniaPatterns = ({
   selectedPattern,
   onPatternSelect,
 }: HarmoniaPatternsProps): JSX.Element => {
-  const { shouldReduceMotion: _shouldReduceMotion, shouldThrottle: _shouldThrottle, animationConfig: _animationConfig } = useAnimation();
+  const {
+    shouldReduceMotion: _shouldReduceMotion,
+    shouldThrottle: _shouldThrottle,
+    animationConfig: _animationConfig,
+  } = useAnimation();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {

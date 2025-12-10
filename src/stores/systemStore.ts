@@ -51,7 +51,7 @@ const initialState = {
 export const useSystemStore = create<SystemStore>()(
   devtools(
     persist(
-      (set) => ({
+      set => ({
         ...initialState,
 
         fetchHelios: async () => {
@@ -60,9 +60,9 @@ export const useSystemStore = create<SystemStore>()(
             const helios = await backendV17.helios.getState();
             set({ helios, loading: false, lastUpdate: Date.now() });
           } catch (error) {
-            set({ 
+            set({
               error: error instanceof Error ? error.message : 'Failed to fetch Helios',
-              loading: false 
+              loading: false,
             });
           }
         },
@@ -73,9 +73,9 @@ export const useSystemStore = create<SystemStore>()(
             const nexus = await backendV17.system.getNexusState();
             set({ nexus, loading: false, lastUpdate: Date.now() });
           } catch (error) {
-            set({ 
+            set({
               error: error instanceof Error ? error.message : 'Failed to fetch Nexus',
-              loading: false 
+              loading: false,
             });
           }
         },
@@ -86,9 +86,9 @@ export const useSystemStore = create<SystemStore>()(
             const harmonia = await backendV17.system.getHarmoniaState();
             set({ harmonia, loading: false, lastUpdate: Date.now() });
           } catch (error) {
-            set({ 
+            set({
               error: error instanceof Error ? error.message : 'Failed to fetch Harmonia',
-              loading: false 
+              loading: false,
             });
           }
         },
@@ -99,9 +99,9 @@ export const useSystemStore = create<SystemStore>()(
             const sentinel = await backendV17.system.getSentinelState();
             set({ sentinel, loading: false, lastUpdate: Date.now() });
           } catch (error) {
-            set({ 
+            set({
               error: error instanceof Error ? error.message : 'Failed to fetch Sentinel',
-              loading: false 
+              loading: false,
             });
           }
         },
@@ -112,9 +112,9 @@ export const useSystemStore = create<SystemStore>()(
             const health = await backendV17.helios.getHealth();
             set({ health, loading: false, lastUpdate: Date.now() });
           } catch (error) {
-            set({ 
+            set({
               error: error instanceof Error ? error.message : 'Failed to fetch Health',
-              loading: false 
+              loading: false,
             });
           }
         },
@@ -122,7 +122,7 @@ export const useSystemStore = create<SystemStore>()(
         fetchAll: async () => {
           try {
             set({ loading: true, error: null });
-            
+
             const [helios, nexus, harmonia, sentinel, health] = await Promise.all([
               backendV17.helios.getState(),
               backendV17.system.getNexusState(),
@@ -131,19 +131,20 @@ export const useSystemStore = create<SystemStore>()(
               backendV17.helios.getHealth(),
             ]);
 
-            set({ 
-              helios, 
-              nexus, 
-              harmonia, 
-              sentinel, 
+            set({
+              helios,
+              nexus,
+              harmonia,
+              sentinel,
               health,
               loading: false,
               lastUpdate: Date.now(),
             });
           } catch (error) {
-            set({ 
-              error: error instanceof Error ? error.message : 'Failed to fetch system state',
-              loading: false 
+            set({
+              error:
+                error instanceof Error ? error.message : 'Failed to fetch system state',
+              loading: false,
             });
           }
         },
@@ -152,7 +153,7 @@ export const useSystemStore = create<SystemStore>()(
       }),
       {
         name: 'titane-system-store',
-        partialize: (state) => ({
+        partialize: state => ({
           helios: state.helios,
           nexus: state.nexus,
           harmonia: state.harmonia,

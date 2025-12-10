@@ -16,16 +16,15 @@ type PlainObject = { [key: string]: unknown };
 const isPlainObject = (value: unknown): value is PlainObject =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 
-export type DeepPartial<T> =
-  T extends (infer U)[]
-    ? Array<DeepPartial<U>>
-    : T extends Map<infer K, infer V>
-      ? Map<DeepPartial<K>, DeepPartial<V>>
-      : T extends Set<infer U>
-        ? Set<DeepPartial<U>>
-        : T extends object
-          ? { [P in keyof T]?: DeepPartial<T[P]> }
-          : T;
+export type DeepPartial<T> = T extends (infer U)[]
+  ? Array<DeepPartial<U>>
+  : T extends Map<infer K, infer V>
+    ? Map<DeepPartial<K>, DeepPartial<V>>
+    : T extends Set<infer U>
+      ? Set<DeepPartial<U>>
+      : T extends object
+        ? { [P in keyof T]?: DeepPartial<T[P]> }
+        : T;
 
 /**
  * Calculate diff between two objects (shallow comparison per field)
@@ -72,7 +71,9 @@ export function stateDiff<T extends object>(
     }
 
     if (!Object.is(oldValue, newValue)) {
-      (delta as Record<keyof T, DeepPartial<T[keyof T]>>)[key] = newValue as DeepPartial<T[typeof key]>;
+      (delta as Record<keyof T, DeepPartial<T[keyof T]>>)[key] = newValue as DeepPartial<
+        T[typeof key]
+      >;
       hasChanges = true;
     }
   }
@@ -169,7 +170,10 @@ export function isDeltaSignificant<T>(
  */
 function countChangedFields<T>(obj: DeepPartial<T>): number {
   if (Array.isArray(obj)) {
-    return obj.reduce<number>((total, item) => total + countChangedFields(item as DeepPartial<unknown>), 0);
+    return obj.reduce<number>(
+      (total, item) => total + countChangedFields(item as DeepPartial<unknown>),
+      0
+    );
   }
 
   if (!isPlainObject(obj)) {
@@ -221,6 +225,11 @@ export function exampleDeltaSync() {
   console.log('Merged:', merged); // => newState
 
   // Check payload reduction
-  const { fullSize, deltaSize, reductionPercent } = calculatePayloadReduction(newState, delta);
-  console.log(`Payload reduced: ${fullSize} bytes to ${deltaSize} bytes (-${reductionPercent}%)`);
+  const { fullSize, deltaSize, reductionPercent } = calculatePayloadReduction(
+    newState,
+    delta
+  );
+  console.log(
+    `Payload reduced: ${fullSize} bytes to ${deltaSize} bytes (-${reductionPercent}%)`
+  );
 }

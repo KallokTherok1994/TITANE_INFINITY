@@ -135,8 +135,8 @@ export async function sendMessage(
   // SECURITY: Extract user input for sanitization
   // ============================================================
   const userInput = messages
-    .filter((m) => m.role === 'user')
-    .map((m) => m.content)
+    .filter(m => m.role === 'user')
+    .map(m => m.content)
     .join('\n');
 
   if (!userInput.trim()) {
@@ -162,9 +162,13 @@ export async function sendMessage(
   // ============================================================
   const secureRequest: SecureAIRequest = {
     input: userInput,
-    provider: model.includes('gpt') ? 'openai' :
-              model.includes('claude') ? 'anthropic' :
-              model.includes('gemini') ? 'google' : 'ollama',
+    provider: model.includes('gpt')
+      ? 'openai'
+      : model.includes('claude')
+        ? 'anthropic'
+        : model.includes('gemini')
+          ? 'google'
+          : 'ollama',
     model,
     userId: 'system', // TODO: Get from auth context
     metadata: {
@@ -181,35 +185,30 @@ export async function sendMessage(
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
       const secureResult: SecureAIResponse<ChatResponse> =
-        await SecureAIService.executeSecureChat(
-          secureRequest,
-          async (sanitizedInput) => {
-            // Rebuild messages with sanitized input
-            const sanitizedMessages = messages.map((m) =>
-              m.role === 'user'
-                ? { ...m, content: sanitizedInput }
-                : m
-            );
+        await SecureAIService.executeSecureChat(secureRequest, async sanitizedInput => {
+          // Rebuild messages with sanitized input
+          const sanitizedMessages = messages.map(m =>
+            m.role === 'user' ? { ...m, content: sanitizedInput } : m
+          );
 
-            // API call via tauriBridge
-            const response = await sendChatMessage(sanitizedMessages, {
+          // API call via tauriBridge
+          const response = await sendChatMessage(sanitizedMessages, {
+            model,
+            temperature,
+            maxTokens,
+          });
+
+          // Convert CoreResponse<string> to ChatResponse
+          return {
+            content: response.data || '',
+            role: 'assistant' as const,
+            timestamp: Date.now(),
+            metadata: {
               model,
-              temperature,
-              maxTokens,
-            });
-
-            // Convert CoreResponse<string> to ChatResponse
-            return {
-              content: response.data || '',
-              role: 'assistant' as const,
-              timestamp: Date.now(),
-              metadata: {
-                model,
-                tokens: maxTokens,
-              },
-            };
-          }
-        );
+              tokens: maxTokens,
+            },
+          };
+        });
 
       // ============================================================
       // SECURITY VALIDATION CHECK
@@ -258,7 +257,6 @@ export async function sendMessage(
         attempt,
         duration: Date.now() - startTime,
       };
-
     } catch (error) {
       console.warn(`[ChatClient] Attempt ${attempt}/${retries} failed:`, error);
 
@@ -278,8 +276,8 @@ export async function sendMessage(
       const fallbackRequest = { ...secureRequest, model: fallbackModel };
       const fallbackResult = await SecureAIService.executeSecureChat(
         fallbackRequest,
-        async (sanitizedInput) => {
-          const sanitizedMessages = messages.map((m) =>
+        async sanitizedInput => {
+          const sanitizedMessages = messages.map(m =>
             m.role === 'user' ? { ...m, content: sanitizedInput } : m
           );
 

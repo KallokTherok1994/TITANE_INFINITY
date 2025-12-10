@@ -148,7 +148,7 @@ export class ContextCollector {
       layerId: 'cognitive',
       nodeType: 'memory',
       collect: async () => this.collectMemorySession(),
-      transform: (data) => this.transformMemory(data, 'memory_session'),
+      transform: data => this.transformMemory(data, 'memory_session'),
     });
 
     // Mémoire Résumée
@@ -157,7 +157,7 @@ export class ContextCollector {
       layerId: 'cognitive',
       nodeType: 'memory',
       collect: async () => this.collectMemorySummarized(),
-      transform: (data) => this.transformMemory(data, 'memory_summarized'),
+      transform: data => this.transformMemory(data, 'memory_summarized'),
     });
 
     // Mémoire Long Terme
@@ -166,7 +166,7 @@ export class ContextCollector {
       layerId: 'cognitive',
       nodeType: 'memory',
       collect: async () => this.collectMemoryLongterm(),
-      transform: (data) => this.transformMemory(data, 'memory_longterm'),
+      transform: data => this.transformMemory(data, 'memory_longterm'),
     });
 
     // Résultats d'outils
@@ -175,7 +175,7 @@ export class ContextCollector {
       layerId: 'cognitive',
       nodeType: 'tool',
       collect: async () => this.collectToolsResults(),
-      transform: (data) => this.transformToolsResults(data),
+      transform: data => this.transformToolsResults(data),
     });
 
     // État des outils
@@ -184,7 +184,7 @@ export class ContextCollector {
       layerId: 'physical',
       nodeType: 'state',
       collect: async () => this.collectToolsState(),
-      transform: (data) => this.transformToolsState(data),
+      transform: data => this.transformToolsState(data),
     });
 
     // Résultats de recherche
@@ -193,7 +193,7 @@ export class ContextCollector {
       layerId: 'cognitive',
       nodeType: 'search',
       collect: async () => this.collectSearchResults(),
-      transform: (data) => this.transformSearchResults(data),
+      transform: data => this.transformSearchResults(data),
     });
 
     // Cache de recherche
@@ -202,7 +202,7 @@ export class ContextCollector {
       layerId: 'cognitive',
       nodeType: 'search',
       collect: async () => this.collectSearchCache(),
-      transform: (data) => this.transformSearchCache(data),
+      transform: data => this.transformSearchCache(data),
     });
 
     // Vitals CPU
@@ -211,7 +211,7 @@ export class ContextCollector {
       layerId: 'physical',
       nodeType: 'vital',
       collect: async () => this.collectVitalsCPU(),
-      transform: (data) => this.transformVitals(data, 'vitals_cpu'),
+      transform: data => this.transformVitals(data, 'vitals_cpu'),
     });
 
     // Vitals RAM
@@ -220,7 +220,7 @@ export class ContextCollector {
       layerId: 'physical',
       nodeType: 'vital',
       collect: async () => this.collectVitalsRAM(),
-      transform: (data) => this.transformVitals(data, 'vitals_ram'),
+      transform: data => this.transformVitals(data, 'vitals_ram'),
     });
 
     // Vitals Disk
@@ -229,7 +229,7 @@ export class ContextCollector {
       layerId: 'physical',
       nodeType: 'vital',
       collect: async () => this.collectVitalsDisk(),
-      transform: (data) => this.transformVitals(data, 'vitals_disk'),
+      transform: data => this.transformVitals(data, 'vitals_disk'),
     });
 
     // Vitals Network
@@ -238,7 +238,7 @@ export class ContextCollector {
       layerId: 'physical',
       nodeType: 'vital',
       collect: async () => this.collectVitalsNetwork(),
-      transform: (data) => this.transformVitals(data, 'vitals_network'),
+      transform: data => this.transformVitals(data, 'vitals_network'),
     });
 
     // Profil utilisateur
@@ -247,7 +247,7 @@ export class ContextCollector {
       layerId: 'adaptive',
       nodeType: 'profile',
       collect: async () => this.collectUserProfile(),
-      transform: (data) => this.transformUserProfile(data),
+      transform: data => this.transformUserProfile(data),
     });
 
     // Préférences utilisateur
@@ -256,7 +256,7 @@ export class ContextCollector {
       layerId: 'adaptive',
       nodeType: 'preference',
       collect: async () => this.collectUserPreferences(),
-      transform: (data) => this.transformUserPreferences(data),
+      transform: data => this.transformUserPreferences(data),
     });
 
     // Configuration IA
@@ -265,7 +265,7 @@ export class ContextCollector {
       layerId: 'meta',
       nodeType: 'rule',
       collect: async () => this.collectIAConfig(),
-      transform: (data) => this.transformIAConfig(data),
+      transform: data => this.transformIAConfig(data),
     });
 
     // État Self-Healing
@@ -274,7 +274,7 @@ export class ContextCollector {
       layerId: 'physical',
       nodeType: 'state',
       collect: async () => this.collectSelfHealingStatus(),
-      transform: (data) => this.transformSelfHealingStatus(data),
+      transform: data => this.transformSelfHealingStatus(data),
     });
 
     // État TTS
@@ -283,7 +283,7 @@ export class ContextCollector {
       layerId: 'physical',
       nodeType: 'state',
       collect: async () => this.collectTTSState(),
-      transform: (data) => this.transformTTSState(data),
+      transform: data => this.transformTTSState(data),
     });
 
     // Données XP
@@ -292,7 +292,7 @@ export class ContextCollector {
       layerId: 'adaptive',
       nodeType: 'profile',
       collect: async () => this.collectXPData(),
-      transform: (data) => this.transformXPData(data),
+      transform: data => this.transformXPData(data),
     });
 
     // Données Evolution
@@ -301,7 +301,7 @@ export class ContextCollector {
       layerId: 'adaptive',
       nodeType: 'profile',
       collect: async () => this.collectEvolutionData(),
-      transform: (data) => this.transformEvolutionData(data),
+      transform: data => this.transformEvolutionData(data),
     });
 
     // État système
@@ -310,7 +310,7 @@ export class ContextCollector {
       layerId: 'physical',
       nodeType: 'state',
       collect: async () => this.collectSystemState(),
-      transform: (data) => this.transformSystemState(data),
+      transform: data => this.transformSystemState(data),
     });
   }
 
@@ -333,17 +333,26 @@ export class ContextCollector {
     const results = new Map<LayerId, ContextNode[]>();
 
     // Initialiser les couches
-    const layers: LayerId[] = ['physical', 'cognitive', 'symbolic', 'adaptive', 'meta', 'singularity'];
+    const layers: LayerId[] = [
+      'physical',
+      'cognitive',
+      'symbolic',
+      'adaptive',
+      'meta',
+      'singularity',
+    ];
     for (const layer of layers) {
       results.set(layer, []);
     }
 
     // Filtrer les sources autorisées pour ce mode
-    const allowedSources = this.config.sources.filter(
-      source => isSourceAllowedForMode(source, mode)
+    const allowedSources = this.config.sources.filter(source =>
+      isSourceAllowedForMode(source, mode)
     );
 
-    console.log(`[ContextCollector] 🔍 Collecting from ${allowedSources.length} sources for mode: ${mode}`);
+    console.log(
+      `[ContextCollector] 🔍 Collecting from ${allowedSources.length} sources for mode: ${mode}`
+    );
 
     // Collecter en parallèle ou séquentiellement
     let collectionResults: CollectionResult[];
@@ -372,7 +381,9 @@ export class ContextCollector {
       (this.stats.averageCollectionTime * (this.stats.totalCollections - 1) + duration) /
       this.stats.totalCollections;
 
-    console.log(`[ContextCollector] ✅ Collected ${this.countNodes(results)} nodes in ${duration.toFixed(2)}ms`);
+    console.log(
+      `[ContextCollector] ✅ Collected ${this.countNodes(results)} nodes in ${duration.toFixed(2)}ms`
+    );
 
     return results;
   }
@@ -387,7 +398,14 @@ export class ContextCollector {
     const filteredSources = sources.filter(s => isSourceAllowedForMode(s, mode));
 
     const results = new Map<LayerId, ContextNode[]>();
-    const layers: LayerId[] = ['physical', 'cognitive', 'symbolic', 'adaptive', 'meta', 'singularity'];
+    const layers: LayerId[] = [
+      'physical',
+      'cognitive',
+      'symbolic',
+      'adaptive',
+      'meta',
+      'singularity',
+    ];
     for (const layer of layers) {
       results.set(layer, []);
     }
@@ -417,7 +435,9 @@ export class ContextCollector {
   /**
    * Collecte en parallèle avec timeout
    */
-  private async collectParallel(sources: ContextSourceType[]): Promise<CollectionResult[]> {
+  private async collectParallel(
+    sources: ContextSourceType[]
+  ): Promise<CollectionResult[]> {
     const promises = sources.map(source => this.collectFromSource(source));
 
     const results = await Promise.allSettled(
@@ -448,7 +468,9 @@ export class ContextCollector {
   /**
    * Collecte séquentielle
    */
-  private async collectSequential(sources: ContextSourceType[]): Promise<CollectionResult[]> {
+  private async collectSequential(
+    sources: ContextSourceType[]
+  ): Promise<CollectionResult[]> {
     const results: CollectionResult[] = [];
 
     for (const source of sources) {
@@ -739,184 +761,95 @@ export class ContextCollector {
     if (!data || typeof data !== 'object') return [];
 
     const content = JSON.stringify(data);
-    return [this.createNode(
-      'memory',
-      'cognitive',
-      sourceType,
-      data,
-      0.8,
-      'high',
-      content
-    )];
+    return [
+      this.createNode('memory', 'cognitive', sourceType, data, 0.8, 'high', content),
+    ];
   }
 
   private transformToolsResults(data: unknown): ContextNode[] {
     if (!data || typeof data !== 'object') return [];
 
-    return [this.createNode(
-      'tool',
-      'cognitive',
-      'tools_result',
-      data,
-      0.7,
-      'medium'
-    )];
+    return [this.createNode('tool', 'cognitive', 'tools_result', data, 0.7, 'medium')];
   }
 
   private transformToolsState(data: unknown): ContextNode[] {
     if (!data || typeof data !== 'object') return [];
 
-    return [this.createNode(
-      'state',
-      'physical',
-      'tools_state',
-      data,
-      0.5,
-      'low'
-    )];
+    return [this.createNode('state', 'physical', 'tools_state', data, 0.5, 'low')];
   }
 
   private transformSearchResults(data: unknown): ContextNode[] {
     if (!data || typeof data !== 'object') return [];
 
-    return [this.createNode(
-      'search',
-      'cognitive',
-      'search_result',
-      data,
-      0.75,
-      'high'
-    )];
+    return [this.createNode('search', 'cognitive', 'search_result', data, 0.75, 'high')];
   }
 
   private transformSearchCache(data: unknown): ContextNode[] {
     if (!data || typeof data !== 'object') return [];
 
-    return [this.createNode(
-      'search',
-      'cognitive',
-      'search_cache',
-      data,
-      0.5,
-      'low'
-    )];
+    return [this.createNode('search', 'cognitive', 'search_cache', data, 0.5, 'low')];
   }
 
   private transformVitals(data: unknown, sourceType: ContextSourceType): ContextNode[] {
     if (!data || typeof data !== 'object') return [];
 
-    return [this.createNode(
-      'vital',
-      'physical',
-      sourceType,
-      data,
-      0.6,
-      'medium'
-    )];
+    return [this.createNode('vital', 'physical', sourceType, data, 0.6, 'medium')];
   }
 
   private transformUserProfile(data: unknown): ContextNode[] {
     if (!data || typeof data !== 'object') return [];
 
-    return [this.createNode(
-      'profile',
-      'adaptive',
-      'user_profile',
-      data,
-      0.95,
-      'critical'
-    )];
+    return [
+      this.createNode('profile', 'adaptive', 'user_profile', data, 0.95, 'critical'),
+    ];
   }
 
   private transformUserPreferences(data: unknown): ContextNode[] {
     if (!data || typeof data !== 'object') return [];
 
-    return [this.createNode(
-      'preference',
-      'adaptive',
-      'user_preferences',
-      data,
-      0.85,
-      'high'
-    )];
+    return [
+      this.createNode('preference', 'adaptive', 'user_preferences', data, 0.85, 'high'),
+    ];
   }
 
   private transformIAConfig(data: unknown): ContextNode[] {
     if (!data || typeof data !== 'object') return [];
 
-    return [this.createNode(
-      'rule',
-      'meta',
-      'ia_config',
-      data,
-      0.9,
-      'critical'
-    )];
+    return [this.createNode('rule', 'meta', 'ia_config', data, 0.9, 'critical')];
   }
 
   private transformSelfHealingStatus(data: unknown): ContextNode[] {
     if (!data || typeof data !== 'object') return [];
 
-    return [this.createNode(
-      'state',
-      'physical',
-      'selfhealing_status',
-      data,
-      0.7,
-      'high'
-    )];
+    return [
+      this.createNode('state', 'physical', 'selfhealing_status', data, 0.7, 'high'),
+    ];
   }
 
   private transformTTSState(data: unknown): ContextNode[] {
     if (!data || typeof data !== 'object') return [];
 
-    return [this.createNode(
-      'state',
-      'physical',
-      'tts_state',
-      data,
-      0.4,
-      'low'
-    )];
+    return [this.createNode('state', 'physical', 'tts_state', data, 0.4, 'low')];
   }
 
   private transformXPData(data: unknown): ContextNode[] {
     if (!data || typeof data !== 'object') return [];
 
-    return [this.createNode(
-      'profile',
-      'adaptive',
-      'xp_data',
-      data,
-      0.6,
-      'medium'
-    )];
+    return [this.createNode('profile', 'adaptive', 'xp_data', data, 0.6, 'medium')];
   }
 
   private transformEvolutionData(data: unknown): ContextNode[] {
     if (!data || typeof data !== 'object') return [];
 
-    return [this.createNode(
-      'profile',
-      'adaptive',
-      'evolution_data',
-      data,
-      0.55,
-      'medium'
-    )];
+    return [
+      this.createNode('profile', 'adaptive', 'evolution_data', data, 0.55, 'medium'),
+    ];
   }
 
   private transformSystemState(data: unknown): ContextNode[] {
     if (!data || typeof data !== 'object') return [];
 
-    return [this.createNode(
-      'state',
-      'physical',
-      'system_state',
-      data,
-      0.65,
-      'medium'
-    )];
+    return [this.createNode('state', 'physical', 'system_state', data, 0.65, 'medium')];
   }
 
   // ─────────────────────────────────────────────────────────────────────────

@@ -2,10 +2,10 @@
  * ═══════════════════════════════════════════════════════════════════════════
  * TITANE INFINITY v16.1 - CLOUD API CONFIRMATION SYSTEM
  * ═══════════════════════════════════════════════════════════════════════════
- * 
+ *
  * Système de confirmation utilisateur pour les appels API cloud
  * Garantit le respect du principe OFFLINE FIRST
- * 
+ *
  * @module cloudAPIConfirmation
  * @version 16.1.0
  * @date 2025-11-21
@@ -25,7 +25,7 @@ interface ConfirmationState {
 const confirmationState: ConfirmationState = {
   lastAsked: null,
   sessionApproved: new Set(),
-  permanentApproved: new Set()
+  permanentApproved: new Set(),
 };
 
 /**
@@ -59,7 +59,7 @@ function savePermanentApprovals(): void {
 
 /**
  * Affiche une boîte de dialogue modale pour confirmer l'utilisation d'une API cloud
- * 
+ *
  * @param provider - Nom du provider API (Gemini, OpenAI, etc.)
  * @param reason - Raison optionnelle de l'appel API
  * @returns Promise<boolean> - true si approuvé, false sinon
@@ -99,7 +99,7 @@ async function showConfirmationDialog(
   provider: string,
   reason?: string
 ): Promise<boolean> {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     // Créer la modale
     const modal = document.createElement('div');
     modal.className = 'cloud-api-confirmation-modal';
@@ -270,7 +270,7 @@ export function getApprovalStatus(): {
 } {
   return {
     session: Array.from(confirmationState.sessionApproved),
-    permanent: Array.from(confirmationState.permanentApproved)
+    permanent: Array.from(confirmationState.permanentApproved),
   };
 }
 

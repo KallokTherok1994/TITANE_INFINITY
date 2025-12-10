@@ -451,7 +451,6 @@ export class ToolsEngine {
       console.log(`[ToolsEngine] ✅ ${tool.name} completed in ${executionTime}ms`);
 
       return result;
-
     } catch (error) {
       clearTimeout(timeoutId);
 
@@ -475,7 +474,6 @@ export class ToolsEngine {
       console.error(`[ToolsEngine] ❌ ${tool.name} failed:`, error);
 
       return result;
-
     } finally {
       this.state.isExecuting = false;
       this.state.currentInvocationId = null;
@@ -773,9 +771,7 @@ export class ToolsEngine {
             .replace(/&quot;/g, '"');
         case 'hex':
           return new TextDecoder().decode(
-            new Uint8Array(
-              inputStr.match(/.{2}/g)?.map(byte => parseInt(byte, 16)) ?? []
-            )
+            new Uint8Array(inputStr.match(/.{2}/g)?.map(byte => parseInt(byte, 16)) ?? [])
           );
         default:
           throw new Error(`Unknown format: ${format}`);
@@ -924,10 +920,7 @@ export class ToolsEngine {
   /**
    * Formate un résultat selon le format spécifié
    */
-  formatResult(
-    result: unknown,
-    format?: OutputFormat
-  ): FormattedResult {
+  formatResult(result: unknown, format?: OutputFormat): FormattedResult {
     const outputFormat = format ?? this.config.formatter.defaultFormat;
     const startTime = Date.now();
 
@@ -967,7 +960,8 @@ export class ToolsEngine {
     const maxLength = this.config.formatter.maxLength ?? 10000;
     const truncated = content.length > maxLength;
     if (truncated) {
-      content = content.substring(0, maxLength) +
+      content =
+        content.substring(0, maxLength) +
         (this.config.formatter.truncateWith ?? '...[truncated]');
     }
 
@@ -1001,7 +995,10 @@ export class ToolsEngine {
     }
     if (typeof result === 'object' && result !== null) {
       return `<dl>${Object.entries(result)
-        .map(([k, v]) => `<dt>${this.escapeHtml(k)}</dt><dd>${this.escapeHtml(JSON.stringify(v))}</dd>`)
+        .map(
+          ([k, v]) =>
+            `<dt>${this.escapeHtml(k)}</dt><dd>${this.escapeHtml(JSON.stringify(v))}</dd>`
+        )
         .join('')}</dl>`;
     }
     return `<p>${this.escapeHtml(String(result))}</p>`;
@@ -1020,8 +1017,9 @@ export class ToolsEngine {
     const keys = Object.keys(firstItem);
     const header = `| ${keys.join(' | ')} |`;
     const separator = `| ${keys.map(() => '---').join(' | ')} |`;
-    const rows = result.map(item =>
-      `| ${keys.map(k => String((item as Record<string, unknown>)[k] ?? '')).join(' | ')} |`
+    const rows = result.map(
+      item =>
+        `| ${keys.map(k => String((item as Record<string, unknown>)[k] ?? '')).join(' | ')} |`
     );
 
     return [header, separator, ...rows].join('\n');
@@ -1055,11 +1053,7 @@ export class ToolsEngine {
     return () => this.resultCallbacks.delete(callback);
   }
 
-  private notifyProgress(
-    invocationId: string,
-    progress: number,
-    message: string
-  ): void {
+  private notifyProgress(invocationId: string, progress: number, message: string): void {
     for (const callback of this.progressCallbacks) {
       try {
         callback(invocationId, progress, message);

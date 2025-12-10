@@ -74,14 +74,23 @@ export interface AutonomyLayer {
 
 export interface AutonomousAction {
   id: string;
-  action_type: 'scan' | 'detect' | 'fix' | 'heal' | 'optimize' | 'evolve' | 'test' | 'shield' | 'analyse' | 'report';
+  action_type:
+    | 'scan'
+    | 'detect'
+    | 'fix'
+    | 'heal'
+    | 'optimize'
+    | 'evolve'
+    | 'test'
+    | 'shield'
+    | 'analyse'
+    | 'report';
   timestamp: number;
   duration_ms: number;
   success: boolean;
   details: string;
   impact_score: number; // 0-1
 }
-
 
 // ═══════════════════════════════════════════════════════════════════
 // PHYSICAL LAYER
@@ -286,4 +295,3 @@ export interface DevOpsLayer {
   session_id: string | null;
   session_duration_ms: number;
 }
-

@@ -7,6 +7,7 @@
 ## Core Visual Engine (3 files)
 
 ### `/src/visual-engine/TitaneVisualEngine.ts` (400+ lines)
+
 - Main orchestrator for visual system
 - WebSocket integration
 - Performance monitoring
@@ -14,6 +15,7 @@
 - Event emission system
 
 ### `/src/visual-engine/StateManager.ts` (350+ lines)
+
 - State transition management
 - 500ms smooth interpolation
 - State history tracking (100 entries)
@@ -21,6 +23,7 @@
 - Transition validation
 
 ### `/src/visual-engine/index.ts` (10 lines)
+
 - Central exports for visual engine
 
 ---
@@ -28,6 +31,7 @@
 ## Particle System (3 files)
 
 ### `/src/particles/ParticleSystem.ts` (400+ lines)
+
 - Particle pool management
 - Canvas rendering with GPU acceleration
 - 4 contextual patterns (spiral, focused, dispersed, chaotic)
@@ -35,6 +39,7 @@
 - Performance optimization (600 particles @ 60fps)
 
 ### `/src/particles/Particle.ts` (200+ lines)
+
 - Individual particle physics
 - Force simulation (gravity, attraction, repulsion, drag)
 - Life cycle management
@@ -42,6 +47,7 @@
 - Boundary handling
 
 ### `/src/particles/index.ts` (5 lines)
+
 - Central exports for particle system
 
 ---
@@ -49,6 +55,7 @@
 ## Design System (2 files)
 
 ### `/src/design-system/visual-states.ts` (360 lines)
+
 - 11 visual state configurations
 - Color schemes per state
 - Particle density/speed settings
@@ -56,6 +63,7 @@
 - Transition interpolation logic
 
 ### `/src/styles/animations.css` (500+ lines)
+
 - 30+ CSS keyframe animations
 - Smooth transitions (500ms baseline)
 - Pulse animations (slow/medium/fast)
@@ -74,6 +82,7 @@
 ## UI Components - Adaptive Panels (5 files)
 
 ### `/src/components/panels/ChatPanel.tsx` (150+ lines)
+
 - Chat interface with particle background
 - Adapts to visual states
 - Smooth state indicator
@@ -81,6 +90,7 @@
 - Responsive design
 
 ### `/src/components/panels/MemoryPanel.tsx` (180+ lines)
+
 - Memory metrics visualization
 - Animated progress bars
 - Shimmer effects on active bars
@@ -88,6 +98,7 @@
 - Color-coded metrics
 
 ### `/src/components/panels/DevToolsPanel.tsx` (200+ lines)
+
 - OMEGA engine status cards
 - Grid layout with auto-fill
 - Engine metrics display
@@ -95,6 +106,7 @@
 - Hover effects
 
 ### `/src/components/panels/SelfHealingPanel.tsx` (250+ lines)
+
 - Healing phases visualization
 - Real-time progress tracking
 - Phase-based status (pending/active/completed/failed)
@@ -102,6 +114,7 @@
 - Healing wave animations
 
 ### `/src/components/panels/index.ts` (10 lines)
+
 - Central exports for panels
 
 ---
@@ -109,6 +122,7 @@
 ## Visual Effects (6 files)
 
 ### `/src/effects/EnergyArcs.tsx` (150+ lines)
+
 - SVG-based energy arcs
 - Animated flow effects
 - Multiple arcs support
@@ -116,6 +130,7 @@
 - Glow filters
 
 ### `/src/effects/HealingWaves.tsx` (80+ lines)
+
 - Concentric ripple waves
 - Fade out animations
 - Customizable wave count
@@ -123,6 +138,7 @@
 - Self-cleanup
 
 ### `/src/effects/AudioWaveform.tsx` (90+ lines)
+
 - Audio visualization bars
 - Staggered animations
 - Real-time audio data support
@@ -130,6 +146,7 @@
 - Smooth transitions
 
 ### `/src/effects/GlitchEffect.tsx` (120+ lines)
+
 - RGB split glitch effect
 - Intensity levels (low/medium/high)
 - Continuous or triggered mode
@@ -137,6 +154,7 @@
 - Performance optimized
 
 ### `/src/effects/SpiralPattern.tsx` (130+ lines)
+
 - Rotating spiral visualization
 - SVG-based generation
 - Multiple arms support
@@ -144,6 +162,7 @@
 - Glow effects
 
 ### `/src/effects/index.ts` (10 lines)
+
 - Central exports for effects
 
 ---
@@ -151,6 +170,7 @@
 ## React Hooks (2 files)
 
 ### `/src/hooks/useVisualState.ts` (140+ lines)
+
 - Subscribe to visual state changes
 - Real-time visuals configuration
 - Transition progress tracking
@@ -158,6 +178,7 @@
 - RAF-based updates
 
 ### `/src/hooks/useParticles.ts` (120+ lines)
+
 - Particle system lifecycle management
 - Automatic canvas setup
 - Resize handling
@@ -169,6 +190,7 @@
 ## State Management (1 file)
 
 ### `/src/stores/visualStateStore.ts` (150+ lines)
+
 - Zustand global store
 - Singleton engine instance
 - State management actions
@@ -180,6 +202,7 @@
 ## Demo & Documentation (3 files)
 
 ### `/src/components/VisualEngineDemo.tsx` (300+ lines)
+
 - Complete system demonstration
 - All visual states showcase
 - All panels integration
@@ -188,6 +211,7 @@
 - Interactive state controls
 
 ### `/docs/VISUAL_ENGINE_README.md` (400+ lines)
+
 - Complete API reference
 - Architecture overview
 - Usage examples
@@ -196,6 +220,7 @@
 - Browser support matrix
 
 ### `/VISUAL_ENGINE_IMPLEMENTATION_COMPLETE.md` (300+ lines)
+
 - Implementation summary
 - Phase-by-phase breakdown
 - Technical specifications
@@ -260,17 +285,17 @@ TITANE_INFINITY/
 
 ## Statistics
 
-| Category              | Files | Lines  | Status |
-|-----------------------|-------|--------|--------|
-| Visual Engine Core    | 3     | 750+   | ✅     |
-| Particle System       | 3     | 600+   | ✅     |
-| Design System         | 2     | 860+   | ✅     |
-| UI Panels             | 5     | 780+   | ✅     |
-| Visual Effects        | 6     | 570+   | ✅     |
-| React Hooks           | 2     | 260+   | ✅     |
-| State Management      | 1     | 150+   | ✅     |
-| Demo & Docs           | 3     | 1000+  | ✅     |
-| **TOTAL**             | **25**| **5500+** | **✅** |
+| Category           | Files  | Lines     | Status |
+| ------------------ | ------ | --------- | ------ |
+| Visual Engine Core | 3      | 750+      | ✅     |
+| Particle System    | 3      | 600+      | ✅     |
+| Design System      | 2      | 860+      | ✅     |
+| UI Panels          | 5      | 780+      | ✅     |
+| Visual Effects     | 6      | 570+      | ✅     |
+| React Hooks        | 2      | 260+      | ✅     |
+| State Management   | 1      | 150+      | ✅     |
+| Demo & Docs        | 3      | 1000+     | ✅     |
+| **TOTAL**          | **25** | **5500+** | **✅** |
 
 ---
 
@@ -306,10 +331,21 @@ import { visualStates, getStateVisuals } from '@/design-system/visual-states';
 import { tokens, colors, spacing } from '@/design-system/tokens';
 
 // Panels
-import { ChatPanel, MemoryPanel, DevToolsPanel, SelfHealingPanel } from '@/components/panels';
+import {
+  ChatPanel,
+  MemoryPanel,
+  DevToolsPanel,
+  SelfHealingPanel,
+} from '@/components/panels';
 
 // Effects
-import { EnergyArcs, HealingWaves, AudioWaveform, GlitchEffect, SpiralPattern } from '@/effects';
+import {
+  EnergyArcs,
+  HealingWaves,
+  AudioWaveform,
+  GlitchEffect,
+  SpiralPattern,
+} from '@/effects';
 
 // Hooks
 import { useVisualState } from '@/hooks/useVisualState';

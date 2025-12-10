@@ -268,8 +268,10 @@ impl MetaOrchestrator {
         // Enregistrer les engines connus
         state.active_engines = self.discover_engines().await;
 
-        log::info!("[MetaOrchestrator] ✅ Initialization complete - {} engines registered",
-            state.active_engines.len());
+        log::info!(
+            "[MetaOrchestrator] ✅ Initialization complete - {} engines registered",
+            state.active_engines.len()
+        );
 
         Ok(())
     }
@@ -402,7 +404,11 @@ impl MetaOrchestrator {
         // Ajuster les ressources selon le mode
         self.resource_governor.apply_mode(mode).await?;
 
-        log::info!("[MetaOrchestrator] Mode changed: {:?} → {:?}", old_mode, mode);
+        log::info!(
+            "[MetaOrchestrator] Mode changed: {:?} → {:?}",
+            old_mode,
+            mode
+        );
         Ok(())
     }
 

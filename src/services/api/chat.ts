@@ -173,10 +173,16 @@ class ChatService {
         {},
         { ...LONG_COMMAND_OPTIONS, context: 'StartConversation' }
       );
-      console.log('[ChatService-OMEGA] ✅ Conversation créée avec ID:', response.conversation_id);
+      console.log(
+        '[ChatService-OMEGA] ✅ Conversation créée avec ID:',
+        response.conversation_id
+      );
       return response.conversation_id;
     } catch (error) {
-      console.error('[ChatService-OMEGA] ❌ Erreur lors de la création de la conversation:', error);
+      console.error(
+        '[ChatService-OMEGA] ❌ Erreur lors de la création de la conversation:',
+        error
+      );
       throw new Error('Impossible de démarrer une nouvelle conversation.');
     }
   }
@@ -320,7 +326,10 @@ class ChatService {
     let targetMessageId: string | null = config?.messageId ?? null;
 
     const registerIds = (conversationId?: string | null, messageId?: string | null) => {
-      if (conversationId && (!targetConversationId || targetConversationId === conversationId)) {
+      if (
+        conversationId &&
+        (!targetConversationId || targetConversationId === conversationId)
+      ) {
         targetConversationId = conversationId;
       }
       if (messageId && (!targetMessageId || targetMessageId === messageId)) {
@@ -329,10 +338,15 @@ class ChatService {
     };
 
     const isMatchingChunk = (payload: StreamChunkEvent): boolean => {
-      const payloadConversation = payload.conversation_id ?? payload.conversationId ?? null;
+      const payloadConversation =
+        payload.conversation_id ?? payload.conversationId ?? null;
       const payloadMessage = payload.message_id ?? payload.messageId ?? null;
 
-      if (targetConversationId && payloadConversation && payloadConversation !== targetConversationId) {
+      if (
+        targetConversationId &&
+        payloadConversation &&
+        payloadConversation !== targetConversationId
+      ) {
         return false;
       }
       if (targetMessageId && payloadMessage && payloadMessage !== targetMessageId) {
@@ -346,7 +360,11 @@ class ChatService {
         return false;
       }
 
-      if (targetConversationId && payload.conversationId && payload.conversationId !== targetConversationId) {
+      if (
+        targetConversationId &&
+        payload.conversationId &&
+        payload.conversationId !== targetConversationId
+      ) {
         return false;
       }
       if (targetMessageId && payload.messageId && payload.messageId !== targetMessageId) {
@@ -358,7 +376,10 @@ class ChatService {
     const processChunk = (payload: StreamChunkEvent) => {
       const chunkText = this.extractChunkText(payload);
 
-      if (typeof payload.accumulated === 'string' && payload.accumulated.length >= accumulated.length) {
+      if (
+        typeof payload.accumulated === 'string' &&
+        payload.accumulated.length >= accumulated.length
+      ) {
         accumulated = payload.accumulated;
       } else if (chunkText) {
         accumulated += chunkText;
@@ -413,9 +434,10 @@ class ChatService {
         completed = true;
 
         const effectiveChunkCount = chunkCount || normalized.chunkCount || 0;
-        const finalContent = normalized.content && normalized.content.length > 0
-          ? normalized.content
-          : accumulated;
+        const finalContent =
+          normalized.content && normalized.content.length > 0
+            ? normalized.content
+            : accumulated;
 
         const response = this.normalizeStreamCompletion(
           finalContent,
@@ -519,11 +541,12 @@ class ChatService {
           messageId: streamResult.messageId,
         };
 
-        const finalContent = fallbackCompletion.content && fallbackCompletion.content.length > 0
-          ? fallbackCompletion.content
-          : accumulated.length > 0
-            ? accumulated
-            : streamResult.content;
+        const finalContent =
+          fallbackCompletion.content && fallbackCompletion.content.length > 0
+            ? fallbackCompletion.content
+            : accumulated.length > 0
+              ? accumulated
+              : streamResult.content;
 
         const effectiveChunkCount = chunkCount || fallbackCompletion.chunkCount || 0;
 
@@ -541,7 +564,10 @@ class ChatService {
         try {
           onComplete(response);
         } catch (callbackError) {
-          console.warn('[ChatService] onComplete callback error (fallback):', callbackError);
+          console.warn(
+            '[ChatService] onComplete callback error (fallback):',
+            callbackError
+          );
         }
 
         cleanup();
@@ -633,7 +659,9 @@ class ChatService {
       );
     } catch (error) {
       console.error('[ChatService] Erreur effacement:', error);
-      throw new Error(`Effacement échoué: ${error instanceof Error ? error.message : String(error)}`);
+      throw new Error(
+        `Effacement échoué: ${error instanceof Error ? error.message : String(error)}`
+      );
     }
   }
 
@@ -665,7 +693,9 @@ class ChatService {
       );
     } catch (error) {
       console.error('[ChatService] Erreur export:', error);
-      throw new Error(`Export échoué: ${error instanceof Error ? error.message : String(error)}`);
+      throw new Error(
+        `Export échoué: ${error instanceof Error ? error.message : String(error)}`
+      );
     }
   }
 
@@ -674,7 +704,11 @@ class ChatService {
 
     for (let i = messages.length - 1; i >= 0; i -= 1) {
       const message = messages[i];
-      if (!message || typeof message.content !== 'string' || message.content.trim().length === 0) {
+      if (
+        !message ||
+        typeof message.content !== 'string' ||
+        message.content.trim().length === 0
+      ) {
         continue;
       }
 
@@ -735,13 +769,14 @@ class ChatService {
     }
 
     const tokens = backend.message.tokens;
-    const usage = typeof tokens === 'number'
-      ? {
-          promptTokens: 0,
-          completionTokens: tokens,
-          totalTokens: tokens,
-        }
-      : undefined;
+    const usage =
+      typeof tokens === 'number'
+        ? {
+            promptTokens: 0,
+            completionTokens: tokens,
+            totalTokens: tokens,
+          }
+        : undefined;
 
     return {
       content: backend.message.content,
@@ -752,9 +787,10 @@ class ChatService {
       latencyMs: backend.latency_ms,
       metadata: {
         messageId: backend.message.id,
-        timestamp: typeof backend.message.timestamp === 'number'
-          ? new Date(backend.message.timestamp * 1000).toISOString()
-          : backend.message.timestamp,
+        timestamp:
+          typeof backend.message.timestamp === 'number'
+            ? new Date(backend.message.timestamp * 1000).toISOString()
+            : backend.message.timestamp,
         success: backend.success,
       },
       omegaMetadata: backend.omega_metadata,
@@ -769,9 +805,12 @@ class ChatService {
     conversationId: string | null = null,
     messageId: string | null = null
   ): ChatResponse {
-    const hasUsage = typeof payload?.tokens === 'number' || typeof payload?.promptTokens === 'number';
-    const completionTokens = typeof payload?.tokens === 'number' ? payload.tokens : undefined;
-    const promptTokens = typeof payload?.promptTokens === 'number' ? payload.promptTokens : undefined;
+    const hasUsage =
+      typeof payload?.tokens === 'number' || typeof payload?.promptTokens === 'number';
+    const completionTokens =
+      typeof payload?.tokens === 'number' ? payload.tokens : undefined;
+    const promptTokens =
+      typeof payload?.promptTokens === 'number' ? payload.promptTokens : undefined;
     const usage = hasUsage
       ? {
           promptTokens: promptTokens ?? 0,
@@ -891,7 +930,8 @@ class ChatService {
     if (data.done === true && typeof data.content === 'string') {
       const nested = this.normalizeCompleteEvent(data.content);
       if (nested) {
-        nested.conversationId = nested.conversationId ?? getString('conversation_id', 'conversationId');
+        nested.conversationId =
+          nested.conversationId ?? getString('conversation_id', 'conversationId');
         nested.messageId = nested.messageId ?? getString('message_id', 'messageId');
         if (!nested.chunkCount) {
           const ordinal = getNumber('ordinal');
@@ -944,7 +984,11 @@ class ChatService {
       return payload.chunk;
     }
 
-    if (payload.done !== true && typeof payload.content === 'string' && payload.content.length > 0) {
+    if (
+      payload.done !== true &&
+      typeof payload.content === 'string' &&
+      payload.content.length > 0
+    ) {
       return payload.content;
     }
 
@@ -956,4 +1000,3 @@ class ChatService {
  * Instance singleton
  */
 export const chatService = new ChatService();
-

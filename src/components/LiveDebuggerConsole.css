@@ -40,7 +40,8 @@
 }
 
 @keyframes pulse-red {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
   }
   50% {
@@ -160,7 +161,8 @@
 }
 
 @keyframes pulse-listening {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }
@@ -318,7 +320,7 @@
   user-select: none;
 }
 
-.checkbox-label input[type="checkbox"] {
+.checkbox-label input[type='checkbox'] {
   cursor: pointer;
 }
 
@@ -401,7 +403,8 @@
 }
 
 @keyframes pulse-analyzing {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -472,7 +475,8 @@
 }
 
 @keyframes critical-pulse {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 0 rgba(255, 0, 0, 0);
   }
   50% {
@@ -652,7 +656,8 @@
 }
 
 @keyframes pulse-listening-btn {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 4px 15px rgba(0, 255, 0, 0.3);
   }
   50% {

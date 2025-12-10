@@ -212,11 +212,11 @@ export const useEffectsStore = create<EffectsStore>()(
         // SYNC AVEC EFFECTS ORCHESTRATOR
         // ═══════════════════════════════════════════════════════════
 
-        syncActiveEffects: (effects) => {
+        syncActiveEffects: effects => {
           set({ activeEffects: effects });
         },
 
-        syncMetrics: (metrics) => {
+        syncMetrics: metrics => {
           set({ metrics });
 
           // Update stats quand metrics change
@@ -227,8 +227,8 @@ export const useEffectsStore = create<EffectsStore>()(
         // HISTORY MANAGEMENT
         // ═══════════════════════════════════════════════════════════
 
-        addToHistory: (entry) => {
-          set((state) => {
+        addToHistory: entry => {
+          set(state => {
             const newHistory = [...state.history, entry];
 
             // Garder seulement les 100 derniers
@@ -247,11 +247,11 @@ export const useEffectsStore = create<EffectsStore>()(
           set({ history: [] });
         },
 
-        getHistoryByType: (type) => {
-          return get().history.filter((entry) => entry.type === type);
+        getHistoryByType: type => {
+          return get().history.filter(entry => entry.type === type);
         },
 
-        getRecentHistory: (count) => {
+        getRecentHistory: count => {
           const { history } = get();
           return history.slice(-count);
         },
@@ -260,8 +260,8 @@ export const useEffectsStore = create<EffectsStore>()(
         // PREFERENCES
         // ═══════════════════════════════════════════════════════════
 
-        setEffectsEnabled: (enabled) => {
-          set((state) => ({
+        setEffectsEnabled: enabled => {
+          set(state => ({
             preferences: {
               ...state.preferences,
               effectsEnabled: enabled,
@@ -269,9 +269,9 @@ export const useEffectsStore = create<EffectsStore>()(
           }));
         },
 
-        setIntensity: (intensity) => {
+        setIntensity: intensity => {
           const clamped = Math.max(0, Math.min(1, intensity));
-          set((state) => ({
+          set(state => ({
             preferences: {
               ...state.preferences,
               intensity: clamped,
@@ -279,8 +279,8 @@ export const useEffectsStore = create<EffectsStore>()(
           }));
         },
 
-        setAutoAdapt: (enabled) => {
-          set((state) => ({
+        setAutoAdapt: enabled => {
+          set(state => ({
             preferences: {
               ...state.preferences,
               autoAdapt: enabled,
@@ -288,8 +288,8 @@ export const useEffectsStore = create<EffectsStore>()(
           }));
         },
 
-        setMaxActiveOverride: (max) => {
-          set((state) => ({
+        setMaxActiveOverride: max => {
+          set(state => ({
             preferences: {
               ...state.preferences,
               maxActiveOverride: max,
@@ -297,9 +297,9 @@ export const useEffectsStore = create<EffectsStore>()(
           }));
         },
 
-        setCooldownMultiplier: (multiplier) => {
+        setCooldownMultiplier: multiplier => {
           const clamped = Math.max(0.1, Math.min(10, multiplier));
-          set((state) => ({
+          set(state => ({
             preferences: {
               ...state.preferences,
               cooldownMultiplier: clamped,
@@ -307,8 +307,8 @@ export const useEffectsStore = create<EffectsStore>()(
           }));
         },
 
-        toggleEffectType: (type) => {
-          set((state) => {
+        toggleEffectType: type => {
+          set(state => {
             const newEnabled = new Set(state.preferences.enabledEffects);
             if (newEnabled.has(type)) {
               newEnabled.delete(type);
@@ -325,8 +325,8 @@ export const useEffectsStore = create<EffectsStore>()(
           });
         },
 
-        enableEffectType: (type) => {
-          set((state) => {
+        enableEffectType: type => {
+          set(state => {
             const newEnabled = new Set(state.preferences.enabledEffects);
             newEnabled.add(type);
 
@@ -339,8 +339,8 @@ export const useEffectsStore = create<EffectsStore>()(
           });
         },
 
-        disableEffectType: (type) => {
-          set((state) => {
+        disableEffectType: type => {
+          set(state => {
             const newEnabled = new Set(state.preferences.enabledEffects);
             newEnabled.delete(type);
 
@@ -372,11 +372,11 @@ export const useEffectsStore = create<EffectsStore>()(
           if (history.length === 0) return;
 
           // Total triggered/blocked depuis historique
-          const totalTriggered = history.filter((e) => !e.wasBlocked).length;
-          const totalBlocked = history.filter((e) => e.wasBlocked).length;
+          const totalTriggered = history.filter(e => !e.wasBlocked).length;
+          const totalBlocked = history.filter(e => e.wasBlocked).length;
 
           // Average duration (effets non-bloqués uniquement)
-          const completedEffects = history.filter((e) => !e.wasBlocked && e.duration > 0);
+          const completedEffects = history.filter(e => !e.wasBlocked && e.duration > 0);
           const averageDuration =
             completedEffects.length > 0
               ? completedEffects.reduce((sum, e) => sum + e.duration, 0) /
@@ -385,7 +385,7 @@ export const useEffectsStore = create<EffectsStore>()(
 
           // Most used effect
           const typeCounts = new Map<EffectType, number>();
-          history.forEach((entry) => {
+          history.forEach(entry => {
             if (!entry.wasBlocked) {
               typeCounts.set(entry.type, (typeCounts.get(entry.type) || 0) + 1);
             }
@@ -400,7 +400,7 @@ export const useEffectsStore = create<EffectsStore>()(
             }
           });
 
-          set((state) => ({
+          set(state => ({
             stats: {
               ...state.stats,
               totalTriggered,
@@ -427,12 +427,12 @@ export const useEffectsStore = create<EffectsStore>()(
         // HELPERS
         // ═══════════════════════════════════════════════════════════
 
-        isEffectActive: (type) => {
-          return get().activeEffects.some((effect) => effect.type === type);
+        isEffectActive: type => {
+          return get().activeEffects.some(effect => effect.type === type);
         },
 
-        getActiveEffectsByType: (type) => {
-          return get().activeEffects.filter((effect) => effect.type === type);
+        getActiveEffectsByType: type => {
+          return get().activeEffects.filter(effect => effect.type === type);
         },
 
         getTotalActiveCount: () => {
@@ -443,7 +443,7 @@ export const useEffectsStore = create<EffectsStore>()(
         name: 'titane-effects-store',
         // Utiliser sessionStorage au lieu de localStorage
         storage: {
-          getItem: (name) => {
+          getItem: name => {
             const str = sessionStorage.getItem(name);
             if (!str) return null;
 
@@ -472,10 +472,10 @@ export const useEffectsStore = create<EffectsStore>()(
             };
             sessionStorage.setItem(name, JSON.stringify(data));
           },
-          removeItem: (name) => sessionStorage.removeItem(name),
+          removeItem: name => sessionStorage.removeItem(name),
         },
         // Ne persister que preferences et stats (pas activeEffects/metrics/history)
-        partialize: (state) => ({
+        partialize: state => ({
           ...state,
           activeEffects: [], // Reset active effects on reload
           history: [], // Reset history on reload
@@ -537,8 +537,7 @@ export const useEffectsMetrics = () => useEffectsStore(effectsSelectors.metrics)
 /**
  * Hook helper pour les préférences
  */
-export const useEffectsPreferences = () =>
-  useEffectsStore(effectsSelectors.preferences);
+export const useEffectsPreferences = () => useEffectsStore(effectsSelectors.preferences);
 
 /**
  * Hook helper pour les stats
@@ -549,4 +548,4 @@ export const useEffectsStats = () => useEffectsStore(effectsSelectors.stats);
  * Hook helper pour vérifier si un effet est actif
  */
 export const useIsEffectActive = (type: EffectType) =>
-  useEffectsStore((state) => state.isEffectActive(type));
+  useEffectsStore(state => state.isEffectActive(type));

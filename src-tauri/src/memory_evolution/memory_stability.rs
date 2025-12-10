@@ -125,12 +125,21 @@ impl Default for StabilityConfig {
 
 impl MemoryStabilityEngine {
     pub fn new(config: StabilityConfig, backup_path: PathBuf) -> Self {
-        Self { config, backup_path }
+        Self {
+            config,
+            backup_path,
+        }
     }
 
     /// Vérifie la stabilité de la mémoire
-    pub fn check_stability(&self, items: &[MemoryItem]) -> Result<StabilityCheckResult, MemoryEvolutionError> {
-        info!("[MemoryStability] Checking stability of {} items", items.len());
+    pub fn check_stability(
+        &self,
+        items: &[MemoryItem],
+    ) -> Result<StabilityCheckResult, MemoryEvolutionError> {
+        info!(
+            "[MemoryStability] Checking stability of {} items",
+            items.len()
+        );
 
         let mut issues = Vec::new();
 
@@ -143,12 +152,14 @@ impl MemoryStabilityEngine {
 
         // Calculer le score de stabilité
         let stability_score = self.calculate_stability_score(&issues, items.len());
-        let is_stable = stability_score >= self.config.min_stability_threshold &&
-                        !issues.iter().any(|i| i.severity == IssueSeverity::Critical);
+        let is_stable = stability_score >= self.config.min_stability_threshold
+            && !issues.iter().any(|i| i.severity == IssueSeverity::Critical);
 
         info!(
             "[MemoryStability] Check complete: score={:.2}, issues={}, stable={}",
-            stability_score, issues.len(), is_stable
+            stability_score,
+            issues.len(),
+            is_stable
         );
 
         Ok(StabilityCheckResult {
@@ -163,7 +174,10 @@ impl MemoryStabilityEngine {
     }
 
     /// Vérifie et répare la mémoire
-    pub fn check_and_repair(&self, items: &mut Vec<MemoryItem>) -> Result<StabilityCheckResult, MemoryEvolutionError> {
+    pub fn check_and_repair(
+        &self,
+        items: &mut Vec<MemoryItem>,
+    ) -> Result<StabilityCheckResult, MemoryEvolutionError> {
         let mut result = self.check_stability(items)?;
 
         if !result.is_stable && self.config.auto_repair {
@@ -194,7 +208,10 @@ impl MemoryStabilityEngine {
     }
 
     /// Vérifie les IDs dupliqués
-    fn check_duplicate_ids(&self, items: &[MemoryItem]) -> Result<Vec<StabilityIssue>, MemoryEvolutionError> {
+    fn check_duplicate_ids(
+        &self,
+        items: &[MemoryItem],
+    ) -> Result<Vec<StabilityIssue>, MemoryEvolutionError> {
         let mut issues = Vec::new();
         let mut seen: HashMap<String, Vec<usize>> = HashMap::new();
 
@@ -219,12 +236,17 @@ impl MemoryStabilityEngine {
     }
 
     /// Vérifie la cohérence des niveaux
-    fn check_level_consistency(&self, items: &[MemoryItem]) -> Result<Vec<StabilityIssue>, MemoryEvolutionError> {
+    fn check_level_consistency(
+        &self,
+        items: &[MemoryItem],
+    ) -> Result<Vec<StabilityIssue>, MemoryEvolutionError> {
         let mut issues = Vec::new();
 
         for item in items {
             // LT doit avoir un résumé
-            if (item.level == MemoryLevel::LT || item.level == MemoryLevel::ELT) && item.summary.is_none() {
+            if (item.level == MemoryLevel::LT || item.level == MemoryLevel::ELT)
+                && item.summary.is_none()
+            {
                 issues.push(StabilityIssue {
                     id: uuid::Uuid::new_v4().to_string(),
                     issue_type: StabilityIssueType::LevelInconsistency,
@@ -252,7 +274,10 @@ impl MemoryStabilityEngine {
     }
 
     /// Vérifie les timestamps
-    fn check_timestamps(&self, items: &[MemoryItem]) -> Result<Vec<StabilityIssue>, MemoryEvolutionError> {
+    fn check_timestamps(
+        &self,
+        items: &[MemoryItem],
+    ) -> Result<Vec<StabilityIssue>, MemoryEvolutionError> {
         if !self.config.check_timestamps {
             return Ok(vec![]);
         }
@@ -276,7 +301,7 @@ impl MemoryStabilityEngine {
             // Vérifier cohérence created < updated
             if let (Ok(created), Ok(updated)) = (
                 chrono::DateTime::parse_from_rfc3339(&item.created_at),
-                chrono::DateTime::parse_from_rfc3339(&item.updated_at)
+                chrono::DateTime::parse_from_rfc3339(&item.updated_at),
             ) {
                 if created > updated {
                     issues.push(StabilityIssue {
@@ -295,13 +320,19 @@ impl MemoryStabilityEngine {
     }
 
     /// Vérifie la cohérence des clusters
-    fn check_cluster_consistency(&self, items: &[MemoryItem]) -> Result<Vec<StabilityIssue>, MemoryEvolutionError> {
+    fn check_cluster_consistency(
+        &self,
+        items: &[MemoryItem],
+    ) -> Result<Vec<StabilityIssue>, MemoryEvolutionError> {
         let mut issues = Vec::new();
         let mut cluster_members: HashMap<String, Vec<String>> = HashMap::new();
 
         for item in items {
             if let Some(cluster_id) = &item.cluster_id {
-                cluster_members.entry(cluster_id.clone()).or_default().push(item.id.clone());
+                cluster_members
+                    .entry(cluster_id.clone())
+                    .or_default()
+                    .push(item.id.clone());
             }
         }
 
@@ -323,7 +354,10 @@ impl MemoryStabilityEngine {
     }
 
     /// Vérifie l'intégrité des données
-    fn check_data_integrity(&self, items: &[MemoryItem]) -> Result<Vec<StabilityIssue>, MemoryEvolutionError> {
+    fn check_data_integrity(
+        &self,
+        items: &[MemoryItem],
+    ) -> Result<Vec<StabilityIssue>, MemoryEvolutionError> {
         let mut issues = Vec::new();
 
         for item in items {
@@ -345,7 +379,10 @@ impl MemoryStabilityEngine {
                     id: uuid::Uuid::new_v4().to_string(),
                     issue_type: StabilityIssueType::DataCorruption,
                     severity: IssueSeverity::Medium,
-                    description: format!("Confiance invalide ({}) pour: {}", item.confidence, item.id),
+                    description: format!(
+                        "Confiance invalide ({}) pour: {}",
+                        item.confidence, item.id
+                    ),
                     affected_items: vec![item.id.clone()],
                     auto_fixable: true,
                 });
@@ -357,7 +394,10 @@ impl MemoryStabilityEngine {
                     id: uuid::Uuid::new_v4().to_string(),
                     issue_type: StabilityIssueType::DataCorruption,
                     severity: IssueSeverity::Medium,
-                    description: format!("Importance invalide ({}) pour: {}", item.importance, item.id),
+                    description: format!(
+                        "Importance invalide ({}) pour: {}",
+                        item.importance, item.id
+                    ),
                     affected_items: vec![item.id.clone()],
                     auto_fixable: true,
                 });
@@ -389,7 +429,11 @@ impl MemoryStabilityEngine {
     }
 
     /// Applique les réparations
-    fn apply_repairs(&self, items: &mut Vec<MemoryItem>, issues: &[StabilityIssue]) -> Result<Vec<RepairAction>, MemoryEvolutionError> {
+    fn apply_repairs(
+        &self,
+        items: &mut Vec<MemoryItem>,
+        issues: &[StabilityIssue],
+    ) -> Result<Vec<RepairAction>, MemoryEvolutionError> {
         let mut repairs = Vec::new();
 
         for issue in issues {
@@ -424,7 +468,11 @@ impl MemoryStabilityEngine {
         Ok(repairs)
     }
 
-    fn repair_duplicate_ids(&self, items: &mut Vec<MemoryItem>, affected: &[String]) -> Result<Option<RepairAction>, MemoryEvolutionError> {
+    fn repair_duplicate_ids(
+        &self,
+        items: &mut Vec<MemoryItem>,
+        affected: &[String],
+    ) -> Result<Option<RepairAction>, MemoryEvolutionError> {
         for id in affected {
             let mut found_first = false;
             for item in items.iter_mut() {
@@ -448,7 +496,11 @@ impl MemoryStabilityEngine {
         }))
     }
 
-    fn repair_timestamps(&self, items: &mut Vec<MemoryItem>, affected: &[String]) -> Result<Option<RepairAction>, MemoryEvolutionError> {
+    fn repair_timestamps(
+        &self,
+        items: &mut Vec<MemoryItem>,
+        affected: &[String],
+    ) -> Result<Option<RepairAction>, MemoryEvolutionError> {
         let now = chrono::Utc::now().to_rfc3339();
 
         for item in items.iter_mut() {
@@ -462,7 +514,7 @@ impl MemoryStabilityEngine {
                 // Corriger created > updated
                 if let (Ok(created), Ok(updated)) = (
                     chrono::DateTime::parse_from_rfc3339(&item.created_at),
-                    chrono::DateTime::parse_from_rfc3339(&item.updated_at)
+                    chrono::DateTime::parse_from_rfc3339(&item.updated_at),
                 ) {
                     if created > updated {
                         item.updated_at = item.created_at.clone();
@@ -481,7 +533,11 @@ impl MemoryStabilityEngine {
         }))
     }
 
-    fn repair_data_corruption(&self, items: &mut Vec<MemoryItem>, affected: &[String]) -> Result<Option<RepairAction>, MemoryEvolutionError> {
+    fn repair_data_corruption(
+        &self,
+        items: &mut Vec<MemoryItem>,
+        affected: &[String],
+    ) -> Result<Option<RepairAction>, MemoryEvolutionError> {
         for item in items.iter_mut() {
             if affected.contains(&item.id) {
                 // Clamp confiance et importance
@@ -500,7 +556,11 @@ impl MemoryStabilityEngine {
         }))
     }
 
-    fn repair_cluster_inconsistency(&self, items: &mut Vec<MemoryItem>, affected: &[String]) -> Result<Option<RepairAction>, MemoryEvolutionError> {
+    fn repair_cluster_inconsistency(
+        &self,
+        items: &mut Vec<MemoryItem>,
+        affected: &[String],
+    ) -> Result<Option<RepairAction>, MemoryEvolutionError> {
         // Retirer les items des clusters singletons
         for item in items.iter_mut() {
             if affected.contains(&item.id) {
@@ -518,7 +578,11 @@ impl MemoryStabilityEngine {
         }))
     }
 
-    fn repair_level_inconsistency(&self, items: &mut Vec<MemoryItem>, affected: &[String]) -> Result<Option<RepairAction>, MemoryEvolutionError> {
+    fn repair_level_inconsistency(
+        &self,
+        items: &mut Vec<MemoryItem>,
+        affected: &[String],
+    ) -> Result<Option<RepairAction>, MemoryEvolutionError> {
         for item in items.iter_mut() {
             if affected.contains(&item.id) {
                 // Core doit avoir haute importance
@@ -543,7 +607,9 @@ impl MemoryStabilityEngine {
         std::fs::create_dir_all(&self.backup_path)?;
 
         let timestamp = chrono::Utc::now().format("%Y%m%d_%H%M%S").to_string();
-        let backup_file = self.backup_path.join(format!("memory_backup_{}.json", timestamp));
+        let backup_file = self
+            .backup_path
+            .join(format!("memory_backup_{}.json", timestamp));
 
         let content = serde_json::to_string_pretty(items)?;
         std::fs::write(&backup_file, content)?;
@@ -557,11 +623,17 @@ impl MemoryStabilityEngine {
     }
 
     /// Restaure depuis un backup
-    pub fn restore_from_backup(&self, backup_path: &PathBuf) -> Result<Vec<MemoryItem>, MemoryEvolutionError> {
+    pub fn restore_from_backup(
+        &self,
+        backup_path: &PathBuf,
+    ) -> Result<Vec<MemoryItem>, MemoryEvolutionError> {
         let content = std::fs::read_to_string(backup_path)?;
         let items: Vec<MemoryItem> = serde_json::from_str(&content)?;
 
-        info!("[MemoryStability] Restored {} items from backup", items.len());
+        info!(
+            "[MemoryStability] Restored {} items from backup",
+            items.len()
+        );
         Ok(items)
     }
 

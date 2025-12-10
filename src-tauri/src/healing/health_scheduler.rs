@@ -126,7 +126,9 @@ impl HealthScheduler {
                 }
                 match check.last_run {
                     None => true,
-                    Some(last) => now.duration_since(last).as_millis() as u64 >= check.config.interval_ms,
+                    Some(last) => {
+                        now.duration_since(last).as_millis() as u64 >= check.config.interval_ms
+                    }
                 }
             })
             .map(|(id, _)| id.clone())

@@ -3,12 +3,7 @@
  * Politique de sécurité et accessibilité
  */
 
-import type {
-  PolicyDecision,
-  PolicyContext,
-  UIContext,
-  AdaptationState,
-} from '../types';
+import type { PolicyDecision, PolicyContext, UIContext, AdaptationState } from '../types';
 
 /**
  * Contraintes de sécurité
@@ -59,7 +54,10 @@ export class SafetyPolicy {
   /**
    * Évalue l'accessibilité
    */
-  private evaluateAccessibility(context: UIContext, state: AdaptationState): PolicyDecision[] {
+  private evaluateAccessibility(
+    context: UIContext,
+    state: AdaptationState
+  ): PolicyDecision[] {
     const decisions: PolicyDecision[] = [];
 
     // Contraste élevé requis par le système
@@ -108,7 +106,10 @@ export class SafetyPolicy {
   /**
    * Évalue la sécurité des interactions
    */
-  private evaluateInteractionSafety(context: UIContext, state: AdaptationState): PolicyDecision[] {
+  private evaluateInteractionSafety(
+    context: UIContext,
+    state: AdaptationState
+  ): PolicyDecision[] {
     const decisions: PolicyDecision[] = [];
 
     // Sur touch, garantir des cibles suffisantes
@@ -116,8 +117,10 @@ export class SafetyPolicy {
       const currentIconSize = state.density.iconSize;
       const currentButtonSize = state.density.buttonSize;
 
-      if (currentIconSize < SAFETY_CONSTRAINTS.minTouchTarget ||
-          (currentButtonSize === 'sm')) {
+      if (
+        currentIconSize < SAFETY_CONSTRAINTS.minTouchTarget ||
+        currentButtonSize === 'sm'
+      ) {
         decisions.push({
           policy: this.name,
           action: 'enforce_touch_targets',
@@ -159,7 +162,10 @@ export class SafetyPolicy {
   /**
    * Évalue la sécurité motion
    */
-  private evaluateMotionSafety(context: UIContext, state: AdaptationState): PolicyDecision[] {
+  private evaluateMotionSafety(
+    context: UIContext,
+    state: AdaptationState
+  ): PolicyDecision[] {
     const decisions: PolicyDecision[] = [];
 
     // Limiter la durée des animations
@@ -174,7 +180,7 @@ export class SafetyPolicy {
             transitionDuration: SAFETY_CONSTRAINTS.maxAnimationDuration,
           },
         },
-        reason: 'Durée d\'animation maximum dépassée',
+        reason: "Durée d'animation maximum dépassée",
         overridable: false,
       });
     }
@@ -203,42 +209,44 @@ export class SafetyPolicy {
    * Force le mode accessibilité complet
    */
   private enforceAccessibilityMode(state: AdaptationState): PolicyDecision[] {
-    return [{
-      policy: this.name,
-      action: 'accessibility_mode',
-      priority: this.priority + 20,
-      adaptation: {
-        density: {
-          ...state.density,
-          fontSize: 'large',
-          lineHeight: 2.0,
-          padding: 'loose',
-          iconSize: 28,
-          buttonSize: 'lg',
+    return [
+      {
+        policy: this.name,
+        action: 'accessibility_mode',
+        priority: this.priority + 20,
+        adaptation: {
+          density: {
+            ...state.density,
+            fontSize: 'large',
+            lineHeight: 2.0,
+            padding: 'loose',
+            iconSize: 28,
+            buttonSize: 'lg',
+          },
+          motion: {
+            animationsEnabled: false,
+            transitionDuration: 0,
+            parallaxEnabled: false,
+            loadingAnimations: 'none',
+            hoverEffects: false,
+            scrollBehavior: 'auto',
+          },
+          theme: {
+            ...state.theme,
+            contrastMode: 'high',
+            surfaceOpacity: 1.0,
+          },
+          visibility: {
+            ...state.visibility,
+            labelsVisible: true,
+            tooltipsEnabled: true,
+            helpersVisible: true,
+          },
         },
-        motion: {
-          animationsEnabled: false,
-          transitionDuration: 0,
-          parallaxEnabled: false,
-          loadingAnimations: 'none',
-          hoverEffects: false,
-          scrollBehavior: 'auto',
-        },
-        theme: {
-          ...state.theme,
-          contrastMode: 'high',
-          surfaceOpacity: 1.0,
-        },
-        visibility: {
-          ...state.visibility,
-          labelsVisible: true,
-          tooltipsEnabled: true,
-          helpersVisible: true,
-        },
+        reason: 'Mode accessibilité activé',
+        overridable: false,
       },
-      reason: 'Mode accessibilité activé',
-      overridable: false,
-    }];
+    ];
   }
 
   /**
@@ -252,15 +260,25 @@ export class SafetyPolicy {
 
     // Vérifier la densité
     if (adaptation.density) {
-      if (adaptation.density.iconSize && adaptation.density.iconSize < SAFETY_CONSTRAINTS.minTouchTarget) {
-        violations.push(`Icônes trop petites (${adaptation.density.iconSize}px < ${SAFETY_CONSTRAINTS.minTouchTarget}px)`);
+      if (
+        adaptation.density.iconSize &&
+        adaptation.density.iconSize < SAFETY_CONSTRAINTS.minTouchTarget
+      ) {
+        violations.push(
+          `Icônes trop petites (${adaptation.density.iconSize}px < ${SAFETY_CONSTRAINTS.minTouchTarget}px)`
+        );
       }
     }
 
     // Vérifier le motion
     if (adaptation.motion) {
-      if (adaptation.motion.transitionDuration && adaptation.motion.transitionDuration > SAFETY_CONSTRAINTS.maxAnimationDuration) {
-        violations.push(`Animation trop longue (${adaptation.motion.transitionDuration}ms)`);
+      if (
+        adaptation.motion.transitionDuration &&
+        adaptation.motion.transitionDuration > SAFETY_CONSTRAINTS.maxAnimationDuration
+      ) {
+        violations.push(
+          `Animation trop longue (${adaptation.motion.transitionDuration}ms)`
+        );
       }
     }
 
@@ -273,7 +291,10 @@ export class SafetyPolicy {
   /**
    * Génère un rapport d'accessibilité
    */
-  generateAccessibilityReport(state: AdaptationState, context: UIContext): {
+  generateAccessibilityReport(
+    state: AdaptationState,
+    context: UIContext
+  ): {
     score: number;
     issues: string[];
     recommendations: string[];
@@ -303,7 +324,7 @@ export class SafetyPolicy {
 
     // Vérifier la lisibilité
     if (state.density.lineHeight < 1.5) {
-      recommendations.push('Augmentez l\'interligne pour une meilleure lisibilité');
+      recommendations.push("Augmentez l'interligne pour une meilleure lisibilité");
       score -= 5;
     }
 

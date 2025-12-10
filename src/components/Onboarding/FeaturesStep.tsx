@@ -101,8 +101,8 @@ export const FeaturesStep: React.FC = () => {
       >
         <div className="features-footer-icon">⚡</div>
         <p>
-          Et ce n'est que le début ! TITANE∞ évolue constamment avec 20+ engines IA
-          qui travaillent en harmonie pour vous offrir la meilleure expérience possible.
+          Et ce n'est que le début ! TITANE∞ évolue constamment avec 20+ engines IA qui
+          travaillent en harmonie pour vous offrir la meilleure expérience possible.
         </p>
       </motion.div>
     </div>

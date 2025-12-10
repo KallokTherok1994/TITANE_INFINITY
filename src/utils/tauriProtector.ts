@@ -185,7 +185,8 @@ export class TauriInvokeProtector {
   private readonly CACHE_DURATION = 5000; // 5s cache
   private readonly isTestEnv: boolean =
     (typeof process !== 'undefined' && Boolean(process.env?.VITEST_WORKER_ID)) ||
-    (typeof globalThis !== 'undefined' && Boolean((globalThis as { __vitest_worker__?: unknown }).__vitest_worker__));
+    (typeof globalThis !== 'undefined' &&
+      Boolean((globalThis as { __vitest_worker__?: unknown }).__vitest_worker__));
 
   static getInstance(): TauriInvokeProtector {
     if (!TauriInvokeProtector.instance) {
@@ -219,7 +220,9 @@ export class TauriInvokeProtector {
       }
 
       const tauriGlobal = getTauriGlobal();
-      const internals = (window as typeof window & { __TAURI_INTERNALS__?: { invoke?: unknown } }).__TAURI_INTERNALS__;
+      const internals = (
+        window as typeof window & { __TAURI_INTERNALS__?: { invoke?: unknown } }
+      ).__TAURI_INTERNALS__;
       const hasInvoke =
         typeof tauriGlobal?.core?.invoke === 'function' ||
         typeof internals?.invoke === 'function';
@@ -248,13 +251,19 @@ export class TauriInvokeProtector {
     if (command === 'start_recording' || command === 'stop_recording') {
       const pending = this.pendingInvokes.get(command);
       if (pending) {
-        console.warn(`[TauriProtector] ${command} already in progress, returning existing promise`);
+        console.warn(
+          `[TauriProtector] ${command} already in progress, returning existing promise`
+        );
         return pending as Promise<T>;
       }
     }
 
     // Check cache first pour éviter appels répétés (skip for recording commands)
-    if (command !== 'start_recording' && command !== 'stop_recording' && command !== 'cancel_recording') {
+    if (
+      command !== 'start_recording' &&
+      command !== 'stop_recording' &&
+      command !== 'cancel_recording'
+    ) {
       const cached = this.checkCache[cacheKey];
       if (cached && Date.now() - cached.timestamp < this.CACHE_DURATION) {
         return cached.result;
@@ -274,7 +283,6 @@ export class TauriInvokeProtector {
       }
 
       return await invokePromise;
-
     } catch (error) {
       // Cleanup pending invokes on error
       if (command === 'start_recording' || command === 'stop_recording') {
@@ -293,7 +301,12 @@ export class TauriInvokeProtector {
   /**
    * Perform the actual invoke (separated for anti-debounce)
    */
-  private async performInvoke<T>(command: string, args: any, timeoutMs: number, cacheKey: string): Promise<T> {
+  private async performInvoke<T>(
+    command: string,
+    args: any,
+    timeoutMs: number,
+    cacheKey: string
+  ): Promise<T> {
     // Import dynamique avec protection (détermine disponibilité réelle)
     const tauriModule = await this.safeTauriImport();
     if (!tauriModule || !tauriModule.invoke) {
@@ -309,14 +322,18 @@ export class TauriInvokeProtector {
     // Appel avec timeout
     const result = await Promise.race([
       tauriModule.invoke<T>(command, args),
-      this.createTimeoutPromise<T>(timeoutMs)
+      this.createTimeoutPromise<T>(timeoutMs),
     ]);
 
     // Cache du résultat positif (skip for recording commands)
-    if (command !== 'start_recording' && command !== 'stop_recording' && command !== 'cancel_recording') {
+    if (
+      command !== 'start_recording' &&
+      command !== 'stop_recording' &&
+      command !== 'cancel_recording'
+    ) {
       this.checkCache[cacheKey] = {
         result,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
     }
 
@@ -326,7 +343,9 @@ export class TauriInvokeProtector {
   /**
    * Import sécurisé du module Tauri
    */
-  private async safeTauriImport(): Promise<{ invoke: typeof import('@tauri-apps/api/core').invoke } | null> {
+  private async safeTauriImport(): Promise<{
+    invoke: typeof import('@tauri-apps/api/core').invoke;
+  } | null> {
     try {
       const module = await import('@tauri-apps/api/core');
       if (module && typeof module.invoke === 'function') {
@@ -392,13 +411,16 @@ export class TauriInvokeProtector {
       return false as T;
     }
 
-    if (safeCommand.includes('chat_get_providers_status') || safeCommand.includes('providers')) {
+    if (
+      safeCommand.includes('chat_get_providers_status') ||
+      safeCommand.includes('providers')
+    ) {
       return {
         success: false,
         providers: [],
         error: errorMessage,
         fallback: true,
-        message: 'Backend offline - using local AI fallback'
+        message: 'Backend offline - using local AI fallback',
       } as T;
     }
 
@@ -412,18 +434,23 @@ export class TauriInvokeProtector {
           id: `fallback-${Date.now()}`,
           content: 'Backend unavailable. Please try again or use local mode.',
           role: 'assistant',
-          timestamp: Date.now()
-        }
+          timestamp: Date.now(),
+        },
       } as T;
     }
 
-    if (command && (command.includes('status') || command.includes('health') || command.includes('state'))) {
+    if (
+      command &&
+      (command.includes('status') ||
+        command.includes('health') ||
+        command.includes('state'))
+    ) {
       return {
         status: 'offline',
         available: false,
         error: errorMessage,
         fallback: true,
-        health: 'degraded'
+        health: 'degraded',
       } as T;
     }
 
@@ -432,7 +459,7 @@ export class TauriInvokeProtector {
       success: false,
       error: errorMessage,
       fallback: true,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     } as T;
   }
 
@@ -453,7 +480,11 @@ export const tauriProtector = TauriInvokeProtector.getInstance();
  * Fonction utilitaire pour invoke protégé
  * Remplace directement les appels invokeTauri problématiques
  */
-export async function safeInvokeTauri<T>(command: string, args?: any, timeoutMs?: number): Promise<T> {
+export async function safeInvokeTauri<T>(
+  command: string,
+  args?: any,
+  timeoutMs?: number
+): Promise<T> {
   return tauriProtector.safeInvoke<T>(command, args, timeoutMs);
 }
 

@@ -5,7 +5,7 @@
 **Version**: 2.0.0  
 **Date**: 2024-06-15  
 **Super Prompt**: #18 — Temporal Intelligence Upgrade v2  
-**Extends**: Super Prompt #16 — Cycle & Continuity Engine v2  
+**Extends**: Super Prompt #16 — Cycle & Continuity Engine v2
 
 ---
 
@@ -406,15 +406,15 @@ let scheduler_adj = TemporalKernelBridge::get_scheduler_adjustments(&context);
 
 #### Patterns Temporels
 
-| Heure | Priority Mult. | Jobs | CPU% | Maintenance |
-|-------|----------------|------|------|-------------|
-| 02-04h | 0.7 | 3 | 30-40% | ✅ Critical |
-| 06-09h | 0.8-1.0 | 5-6 | 60-70% | ❌ |
-| 10-11h | 1.5 | 8 | 90-95% | ❌ |
-| 12-13h | 0.9 | 4 | 50-60% | ❌ |
-| 14-16h | 1.2 | 7 | 80-85% | ❌ |
-| 17-21h | 1.0 | 5 | 70-75% | ❌ |
-| 22-23h | 0.8 | 4 | 50-60% | ⚠️ Low |
+| Heure  | Priority Mult. | Jobs | CPU%   | Maintenance |
+| ------ | -------------- | ---- | ------ | ----------- |
+| 02-04h | 0.7            | 3    | 30-40% | ✅ Critical |
+| 06-09h | 0.8-1.0        | 5-6  | 60-70% | ❌          |
+| 10-11h | 1.5            | 8    | 90-95% | ❌          |
+| 12-13h | 0.9            | 4    | 50-60% | ❌          |
+| 14-16h | 1.2            | 7    | 80-85% | ❌          |
+| 17-21h | 1.0            | 5    | 70-75% | ❌          |
+| 22-23h | 0.8            | 4    | 50-60% | ⚠️ Low      |
 
 ---
 
@@ -509,12 +509,12 @@ pub enum ConsolidationOperation {
 
 #### Patterns de Consolidation
 
-| Heure | Consolidation | STM→LTM | GC Freq | Opérations |
-|-------|---------------|---------|---------|------------|
-| 02-04h | 1.0 (Critical) | 0.4 | 0.5h | Toutes (5) |
-| 09h | - | 0.6 | 2h | Précharge WorkdayMorning |
-| 12h | - | 0.8 | 4h | Précharge PostLunch |
-| 22h | 0.8 (High) | 0.6 | 1h | StmToLtm, SemanticIndexing |
+| Heure  | Consolidation  | STM→LTM | GC Freq | Opérations                 |
+| ------ | -------------- | ------- | ------- | -------------------------- |
+| 02-04h | 1.0 (Critical) | 0.4     | 0.5h    | Toutes (5)                 |
+| 09h    | -              | 0.6     | 2h      | Précharge WorkdayMorning   |
+| 12h    | -              | 0.8     | 4h      | Précharge PostLunch        |
+| 22h    | 0.8 (High)     | 0.6     | 1h      | StmToLtm, SemanticIndexing |
 
 ---
 
@@ -552,12 +552,12 @@ pub enum TuningFocus {
 
 #### Patterns Saisonniers
 
-| Saison | Adaptation Rate | Focus | Exploration |
-|--------|-----------------|-------|-------------|
-| Spring | 0.8 | Exploration | 0.5 |
-| Summer | 0.5 | Performance | 0.3 |
-| Autumn | 0.6 | Consolidation | 0.4 |
-| Winter | 0.3 | Stability | 0.5 |
+| Saison | Adaptation Rate | Focus         | Exploration |
+| ------ | --------------- | ------------- | ----------- |
+| Spring | 0.8             | Exploration   | 0.5         |
+| Summer | 0.5             | Performance   | 0.3         |
+| Autumn | 0.6             | Consolidation | 0.4         |
+| Winter | 0.3             | Stability     | 0.5         |
 
 #### Alignment Long-Terme
 
@@ -619,13 +619,13 @@ pub struct TemporalNarrative {
 
 #### Patterns Conversationnels
 
-| Heure | Tone | Verbosity | Formality | Strategies |
-|-------|------|-----------|-----------|------------|
-| 07-09h | Energizing | 0.6 | 0.5 | DailyPlanning, MotivationalTone |
-| 10-11h | Professional | 0.7 | 0.7 | ConciseResponses, ActionOriented |
-| 12-13h | Casual | 0.4 | 0.3 | LightInteractions |
-| 19-21h | Relaxed | 0.6 | 0.4 | ReflectiveMode |
-| 22-23h | Gentle | 0.5 | 0.3 | GentleGuidance, RestPrompts |
+| Heure  | Tone         | Verbosity | Formality | Strategies                       |
+| ------ | ------------ | --------- | --------- | -------------------------------- |
+| 07-09h | Energizing   | 0.6       | 0.5       | DailyPlanning, MotivationalTone  |
+| 10-11h | Professional | 0.7       | 0.7       | ConciseResponses, ActionOriented |
+| 12-13h | Casual       | 0.4       | 0.3       | LightInteractions                |
+| 19-21h | Relaxed      | 0.6       | 0.4       | ReflectiveMode                   |
+| 22-23h | Gentle       | 0.5       | 0.3       | GentleGuidance, RestPrompts      |
 
 ---
 
@@ -851,13 +851,13 @@ cargo test temporal_engine::integrations --lib
 
 ### Métriques de Performance
 
-| Opération | Temps (avg) | Mémoire | Notes |
-|-----------|-------------|---------|-------|
-| `tick()` | 5-10ms | 50KB | Update complet |
-| `get_context()` | <1ms | 10KB | Snapshot |
-| `check_routines()` | 2-5ms | 20KB | Par routine |
-| `generate_predictions()` | 10-20ms | 100KB | 5 prédictions |
-| Integration bridge call | <1ms | 5KB | Calculs légers |
+| Opération                | Temps (avg) | Mémoire | Notes          |
+| ------------------------ | ----------- | ------- | -------------- |
+| `tick()`                 | 5-10ms      | 50KB    | Update complet |
+| `get_context()`          | <1ms        | 10KB    | Snapshot       |
+| `check_routines()`       | 2-5ms       | 20KB    | Par routine    |
+| `generate_predictions()` | 10-20ms     | 100KB   | 5 prédictions  |
+| Integration bridge call  | <1ms        | 5KB     | Calculs légers |
 
 ### Optimisations
 
@@ -927,4 +927,4 @@ Le **Temporal Engine v2** apporte une intelligence temporelle complète à TITAN
 ---
 
 **TITANE∞ v20Ω — Intelligence Temporelle Complète**  
-*"Le temps est la toile sur laquelle nous tissons l'intelligence"*
+_"Le temps est la toile sur laquelle nous tissons l'intelligence"_

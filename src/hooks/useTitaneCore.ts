@@ -22,7 +22,7 @@ import type {
   SentinelAlerts,
   WatchdogData,
   SelfHealData,
-  AdaptiveData
+  AdaptiveData,
 } from '../types/system';
 
 export function useTitaneCore(autoRefresh: boolean = true) {
@@ -39,12 +39,13 @@ export function useTitaneCore(autoRefresh: boolean = true) {
         modules,
         uptime: 0,
         status: 'operational',
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
       setSystemStatus(status);
       return status;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to get system status';
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to get system status';
       setError(errorMessage);
       throw err;
     } finally {
@@ -72,14 +73,17 @@ export function useTitaneCore(autoRefresh: boolean = true) {
     return JSON.parse(statusJson) as SentinelAlerts;
   }, []);
 
-  const getWatchdogData = useCallback(async (): Promise<{ data: WatchdogData; logs: string[] }> => {
+  const getWatchdogData = useCallback(async (): Promise<{
+    data: WatchdogData;
+    logs: string[];
+  }> => {
     const [dataJson, logs] = await Promise.all([
       tauri<string>('watchdog_get_data'),
-      tauri<string[]>('watchdog_get_logs')
+      tauri<string[]>('watchdog_get_logs'),
     ]);
     return {
       data: JSON.parse(dataJson) as WatchdogData,
-      logs
+      logs,
     };
   }, []);
 
@@ -98,14 +102,14 @@ export function useTitaneCore(autoRefresh: boolean = true) {
 
     // ⚠️ FIX CRASH: Attendre que Tauri soit prêt avant d'appeler les commandes
     const initTimeout = setTimeout(() => {
-      getSystemStatus().catch((err) => {
+      getSystemStatus().catch(err => {
         console.warn('[TITANE] Failed to fetch initial system status:', err);
         setError('Connexion au backend en cours...');
       });
     }, 100); // Délai de 100ms pour laisser Tauri s'initialiser
 
     const interval = setInterval(() => {
-      getSystemStatus().catch((err) => {
+      getSystemStatus().catch(err => {
         console.warn('[TITANE] Failed to refresh system status:', err);
       });
     }, 5000);
@@ -127,6 +131,6 @@ export function useTitaneCore(autoRefresh: boolean = true) {
     getSentinelStatus,
     getWatchdogData,
     getSelfHealData,
-    getAdaptiveData
+    getAdaptiveData,
   };
 }

@@ -142,9 +142,12 @@ export class IAContextAPIService {
    */
   static async getEngineMetrics(engine: string): Promise<IAEngineMetrics> {
     try {
-      const result = await invoke<CommandResult<IAEngineMetrics>>('get_ia_engine_metrics', {
-        engine,
-      });
+      const result = await invoke<CommandResult<IAEngineMetrics>>(
+        'get_ia_engine_metrics',
+        {
+          engine,
+        }
+      );
 
       if (!result.success || !result.data) {
         throw new Error(result.error || 'Failed to get metrics');
@@ -162,9 +165,12 @@ export class IAContextAPIService {
    */
   static async getRequestHistory(limit?: number): Promise<IARequestRecord[]> {
     try {
-      const result = await invoke<CommandResult<IARequestRecord[]>>('get_ia_request_history', {
-        limit,
-      });
+      const result = await invoke<CommandResult<IARequestRecord[]>>(
+        'get_ia_request_history',
+        {
+          limit,
+        }
+      );
 
       if (!result.success || !result.data) {
         throw new Error(result.error || 'Failed to get history');
@@ -200,7 +206,10 @@ export class IAContextAPIService {
   /**
    * Met à jour la permission IA d'un agent
    */
-  static async updateAgentPermission(agentId: string, permission: string): Promise<string> {
+  static async updateAgentPermission(
+    agentId: string,
+    permission: string
+  ): Promise<string> {
     try {
       const result = await invoke<CommandResult<string>>('update_agent_ia_permission', {
         agentId,
@@ -221,12 +230,18 @@ export class IAContextAPIService {
   /**
    * Met à jour la recommandation de moteur pour un agent
    */
-  static async updateAgentRecommendation(agentId: string, engine: string): Promise<string> {
+  static async updateAgentRecommendation(
+    agentId: string,
+    engine: string
+  ): Promise<string> {
     try {
-      const result = await invoke<CommandResult<string>>('update_agent_ia_recommendation', {
-        agentId,
-        engine,
-      });
+      const result = await invoke<CommandResult<string>>(
+        'update_agent_ia_recommendation',
+        {
+          agentId,
+          engine,
+        }
+      );
 
       if (!result.success || !result.data) {
         throw new Error(result.error || 'Failed to update recommendation');
@@ -244,9 +259,12 @@ export class IAContextAPIService {
    */
   static async getNextFallbackEngine(currentEngine: string): Promise<string | null> {
     try {
-      const result = await invoke<CommandResult<string | null>>('get_next_fallback_ia_engine', {
-        currentEngine,
-      });
+      const result = await invoke<CommandResult<string | null>>(
+        'get_next_fallback_ia_engine',
+        {
+          currentEngine,
+        }
+      );
 
       if (!result.success) {
         throw new Error(result.error || 'Failed to get fallback engine');

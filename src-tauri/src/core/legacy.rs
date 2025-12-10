@@ -643,8 +643,10 @@ fn map_knowledge_entry(value: &Value, idx: usize) -> Option<KnowledgeEntry> {
         .filter(|s| !s.is_empty())
         .unwrap_or_else(|| format!("knowledge_{}", idx));
     let topic = read_string(value, &["topic", "title", "subject"]).unwrap_or_default();
-    let content = read_string(value, &["content", "summary", "details", "text"]).unwrap_or_default();
-    let source = read_string(value, &["source", "origin", "provider"]).unwrap_or_else(|| "memory".to_string());
+    let content =
+        read_string(value, &["content", "summary", "details", "text"]).unwrap_or_default();
+    let source = read_string(value, &["source", "origin", "provider"])
+        .unwrap_or_else(|| "memory".to_string());
     let relevance = read_f64(value, &["relevance", "score", "weight"]).unwrap_or(0.5) as f32;
     let timestamp = read_string(value, &["timestamp", "recorded_at", "updated_at"])
         .unwrap_or_else(|| Utc::now().to_rfc3339());
@@ -773,8 +775,7 @@ fn lookup_value<'a>(value: &'a Value, keys: &[&str]) -> Option<&'a Value> {
     None
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[derive(Default)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 struct MemoryDisk {
     snapshots: Vec<Snapshot>,
     logs: Vec<LogEntry>,

@@ -48,10 +48,7 @@ describe('DevOps Pipeline Integration', () => {
       `;
 
       // STEP 2: Analyze screen
-      const screenAnalysis = await VisualDevOps.analyzeScreen(
-        undefined,
-        errorContext
-      );
+      const screenAnalysis = await VisualDevOps.analyzeScreen(undefined, errorContext);
 
       expect(screenAnalysis.context_type).toBe('unknown'); // Or 'error_screen' if detected
       expect(screenAnalysis.technical_content.errors_detected.length).toBeGreaterThan(0);
@@ -72,10 +69,7 @@ describe('DevOps Pipeline Integration', () => {
         screenAnalysis.technical_content.errors_detected[0].file_path = 'src/main.rs';
       }
 
-      const fixAction = await VisualDevOps.proposeAction(
-        screenAnalysis,
-        'fix_error'
-      );
+      const fixAction = await VisualDevOps.proposeAction(screenAnalysis, 'fix_error');
 
       expect(fixAction.security_checks.length).toBeGreaterThan(0);
       if (fixAction.code_patch) {
@@ -101,7 +95,9 @@ describe('DevOps Pipeline Integration', () => {
       // STEP 7: Generate test action
       const testAction = await LocalAgent.generateTestAction();
 
-      expect(Array.isArray(testAction.commands) || testAction.script_generated).toBe(true);
+      expect(Array.isArray(testAction.commands) || testAction.script_generated).toBe(
+        true
+      );
 
       // STEP 8: Generate report
       const visualReport = VisualDevOps.generateReport('session');
@@ -122,10 +118,11 @@ describe('DevOps Pipeline Integration', () => {
   describe('CI/CD Pipeline', () => {
     it('should generate and validate full CI/CD pipeline', async () => {
       // Generate complete pipeline
-      const pipeline = await LocalAgent.generatePipeline(
-        'Production Pipeline',
-        ['build', 'test', 'deploy']
-      );
+      const pipeline = await LocalAgent.generatePipeline('Production Pipeline', [
+        'build',
+        'test',
+        'deploy',
+      ]);
 
       // Validate pipeline structure
       expect(pipeline.name).toBe('Production Pipeline');
@@ -197,10 +194,11 @@ describe('DevOps Pipeline Integration', () => {
     });
 
     it('should handle workflow with validation points', async () => {
-      const workflow = await LocalAgent.createWorkflow(
-        'Deployment Workflow',
-        ['build', 'test', 'deploy']
-      );
+      const workflow = await LocalAgent.createWorkflow('Deployment Workflow', [
+        'build',
+        'test',
+        'deploy',
+      ]);
 
       // Deploy requires validation
       expect(workflow.validation_points.length).toBeGreaterThan(0);
@@ -246,7 +244,11 @@ describe('DevOps Pipeline Integration', () => {
       };
 
       // Test multiple action types
-      const actionTypes: Array<'build' | 'test' | 'optimize'> = ['build', 'test', 'optimize'];
+      const actionTypes: Array<'build' | 'test' | 'optimize'> = [
+        'build',
+        'test',
+        'optimize',
+      ];
 
       for (const actionType of actionTypes) {
         const action = await VisualDevOps.proposeAction(mockAnalysis, actionType);
@@ -289,10 +291,7 @@ describe('DevOps Pipeline Integration', () => {
         confidence: 1,
       };
 
-      const action = await VisualDevOps.proposeAction(
-        mockAnalysis,
-        'generate_script'
-      );
+      const action = await VisualDevOps.proposeAction(mockAnalysis, 'generate_script');
 
       // Manually inject dangerous commands (simulating malicious attempt)
       if (action.script_generated) {
@@ -316,7 +315,10 @@ describe('DevOps Pipeline Integration', () => {
       tauriInvoke.mockRejectedValue(new Error('Backend unavailable'));
 
       // Visual DevOps should fallback
-      const analysis = await VisualDevOps.analyzeScreen(undefined, 'runtime error: backend down');
+      const analysis = await VisualDevOps.analyzeScreen(
+        undefined,
+        'runtime error: backend down'
+      );
       expect(analysis).toBeDefined();
       expect(analysis.diagnosis).toBeDefined();
 
@@ -327,13 +329,9 @@ describe('DevOps Pipeline Integration', () => {
     });
 
     it('should handle invalid action IDs', async () => {
-      await expect(
-        VisualDevOps.validateAction('invalid-id', true)
-      ).rejects.toThrow();
+      await expect(VisualDevOps.validateAction('invalid-id', true)).rejects.toThrow();
 
-      await expect(
-        VisualDevOps.markActionExecuted('invalid-id', true)
-      ).rejects.toThrow();
+      await expect(VisualDevOps.markActionExecuted('invalid-id', true)).rejects.toThrow();
     });
 
     it('should handle missing project', async () => {
@@ -421,10 +419,7 @@ describe('DevOps Pipeline Integration', () => {
         backup_recommended: false,
       });
 
-      const fixAction = await VisualDevOps.proposeAction(
-        errorAnalysis,
-        'fix_error'
-      );
+      const fixAction = await VisualDevOps.proposeAction(errorAnalysis, 'fix_error');
 
       // Validate fix
       await VisualDevOps.validateAction(fixAction.id, true);
@@ -478,8 +473,8 @@ describe('DevOps Pipeline Integration', () => {
       expect(agentStats.current_project).toBeDefined();
 
       // Combined metrics
-      const totalActions = visualReport.summary.total_actions +
-                          (agentStats.total_workflows || 0);
+      const totalActions =
+        visualReport.summary.total_actions + (agentStats.total_workflows || 0);
       expect(totalActions).toBeGreaterThan(0);
     });
   });
@@ -515,10 +510,11 @@ describe('DevOps Pipeline Integration', () => {
       await VisualDevOps.markActionExecuted(fixAction.id, true);
 
       // 3. Create automated pipeline
-      const pipeline = await LocalAgent.generatePipeline(
-        'Dev Pipeline',
-        ['build', 'test', 'deploy']
-      );
+      const pipeline = await LocalAgent.generatePipeline('Dev Pipeline', [
+        'build',
+        'test',
+        'deploy',
+      ]);
       expect(pipeline.stages).toHaveLength(3);
 
       // 4. Execute pipeline (simulated)

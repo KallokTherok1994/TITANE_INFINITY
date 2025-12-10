@@ -40,17 +40,13 @@ export const Button = ({
     loading && 'button--loading',
     disabled && 'button--disabled',
     className,
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
-    <button
-      className={classes}
-      disabled={disabled || loading}
-      {...props}
-    >
-      {loading && (
-        <span className="button__spinner" />
-      )}
+    <button className={classes} disabled={disabled || loading} {...props}>
+      {loading && <span className="button__spinner" />}
       {!loading && leftIcon && (
         <span className="button__icon button__icon--left">{leftIcon}</span>
       )}

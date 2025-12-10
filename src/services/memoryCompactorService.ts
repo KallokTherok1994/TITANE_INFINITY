@@ -35,7 +35,9 @@ export async function compactMemoryFile(path: string): Promise<string> {
  */
 export async function compactMemoryDirectory(dir: string): Promise<CompactionStats> {
   try {
-    const stats = await secureInvoke<CompactionStats>('compact_memory_directory', { dir });
+    const stats = await secureInvoke<CompactionStats>('compact_memory_directory', {
+      dir,
+    });
     return stats;
   } catch (error) {
     console.error('Failed to compact memory directory:', error);
@@ -76,7 +78,10 @@ export async function autoCompactMemory(): Promise<CompactionStats> {
 export function formatCompactionStats(stats: CompactionStats): string {
   const sizeBefore = (stats.total_size_before_bytes / 1024).toFixed(2);
   const sizeAfter = (stats.total_size_after_bytes / 1024).toFixed(2);
-  const saved = ((stats.total_size_before_bytes - stats.total_size_after_bytes) / 1024).toFixed(2);
+  const saved = (
+    (stats.total_size_before_bytes - stats.total_size_after_bytes) /
+    1024
+  ).toFixed(2);
 
   return `
 📊 Compaction Results:

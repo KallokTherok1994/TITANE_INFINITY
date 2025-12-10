@@ -66,11 +66,31 @@ interface MemoryCluster {
 // Composant Pyramide Mémoire
 const MemoryPyramid: React.FC<{ levels: Record<string, number> }> = ({ levels }) => {
   const pyramidLevels: MemoryLevel[] = [
-    { name: 'Core', description: 'Essence cognitive', color: '#10B981', count: levels['Core'] || 0 },
-    { name: 'ELT', description: 'Enhanced Long-Term', color: '#F59E0B', count: levels['ELT'] || 0 },
+    {
+      name: 'Core',
+      description: 'Essence cognitive',
+      color: '#10B981',
+      count: levels['Core'] || 0,
+    },
+    {
+      name: 'ELT',
+      description: 'Enhanced Long-Term',
+      color: '#F59E0B',
+      count: levels['ELT'] || 0,
+    },
     { name: 'LT', description: 'Long-Terme', color: '#EC4899', count: levels['LT'] || 0 },
-    { name: 'MT', description: 'Moyen-Terme', color: '#8B5CF6', count: levels['MT'] || 0 },
-    { name: 'CT', description: 'Court-Terme', color: '#3B82F6', count: levels['CT'] || 0 },
+    {
+      name: 'MT',
+      description: 'Moyen-Terme',
+      color: '#8B5CF6',
+      count: levels['MT'] || 0,
+    },
+    {
+      name: 'CT',
+      description: 'Court-Terme',
+      color: '#3B82F6',
+      count: levels['CT'] || 0,
+    },
   ];
 
   const maxCount = Math.max(...pyramidLevels.map(l => l.count), 1);
@@ -80,7 +100,7 @@ const MemoryPyramid: React.FC<{ levels: Record<string, number> }> = ({ levels })
       <h3 className="pyramid-title">Pyramide Mnésique</h3>
       <div className="pyramid-container">
         {pyramidLevels.map((level, index) => {
-          const width = 20 + ((4 - index) * 20); // Core = 20%, CT = 100%
+          const width = 20 + (4 - index) * 20; // Core = 20%, CT = 100%
           const fillWidth = Math.max(10, (level.count / maxCount) * 100);
 
           return (
@@ -93,16 +113,14 @@ const MemoryPyramid: React.FC<{ levels: Record<string, number> }> = ({ levels })
                 className="pyramid-level-fill"
                 style={{
                   width: `${fillWidth}%`,
-                  backgroundColor: level.color
+                  backgroundColor: level.color,
                 }}
               />
               <div className="pyramid-level-info">
                 <span className="level-name">{level.name}</span>
                 <span className="level-count">{level.count}</span>
               </div>
-              <div className="pyramid-level-tooltip">
-                {level.description}
-              </div>
+              <div className="pyramid-level-tooltip">{level.description}</div>
             </div>
           );
         })}
@@ -117,7 +135,9 @@ const MemoryPyramid: React.FC<{ levels: Record<string, number> }> = ({ levels })
 };
 
 // Composant Santé Hiérarchie
-const HierarchyHealthPanel: React.FC<{ health: HierarchyHealth | null }> = ({ health }) => {
+const HierarchyHealthPanel: React.FC<{ health: HierarchyHealth | null }> = ({
+  health,
+}) => {
   if (!health) return null;
 
   const getHealthColor = (value: number) => {
@@ -143,7 +163,7 @@ const HierarchyHealthPanel: React.FC<{ health: HierarchyHealth | null }> = ({ he
         <div
           className="health-ring"
           style={{
-            background: `conic-gradient(${getHealthColor(health.overall_health)} ${health.overall_health * 360}deg, #1e293b 0deg)`
+            background: `conic-gradient(${getHealthColor(health.overall_health)} ${health.overall_health * 360}deg, #1e293b 0deg)`,
           }}
         >
           <span>{Math.round(health.overall_health * 100)}%</span>
@@ -160,7 +180,7 @@ const HierarchyHealthPanel: React.FC<{ health: HierarchyHealth | null }> = ({ he
                 className="metric-fill"
                 style={{
                   width: `${metric.value * 100}%`,
-                  backgroundColor: getHealthColor(metric.value)
+                  backgroundColor: getHealthColor(metric.value),
                 }}
               />
             </div>
@@ -240,11 +260,19 @@ const EvolutionControls: React.FC<{
   onBackup: () => void;
   isLoading: boolean;
   kevinAuthorized: boolean;
-}> = (props) => {
+}> = props => {
   const {
-    onParse, onSynthesize, onCluster, onCompress,
-    onPatterns, onStability, onGrow, onFullEvolution,
-    onBackup, isLoading, kevinAuthorized
+    onParse,
+    onSynthesize,
+    onCluster,
+    onCompress,
+    onPatterns,
+    onStability,
+    onGrow,
+    onFullEvolution,
+    onBackup,
+    isLoading,
+    kevinAuthorized,
   } = props;
 
   return (
@@ -257,7 +285,11 @@ const EvolutionControls: React.FC<{
           <span>Analyser</span>
         </button>
 
-        <button onClick={onSynthesize} disabled={isLoading} className="control-btn synthesize">
+        <button
+          onClick={onSynthesize}
+          disabled={isLoading}
+          className="control-btn synthesize"
+        >
           <span className="btn-icon">🔮</span>
           <span>Synthétiser</span>
         </button>
@@ -267,17 +299,29 @@ const EvolutionControls: React.FC<{
           <span>Clusteriser</span>
         </button>
 
-        <button onClick={onCompress} disabled={isLoading} className="control-btn compress">
+        <button
+          onClick={onCompress}
+          disabled={isLoading}
+          className="control-btn compress"
+        >
           <span className="btn-icon">📦</span>
           <span>Compresser</span>
         </button>
 
-        <button onClick={onPatterns} disabled={isLoading} className="control-btn patterns">
+        <button
+          onClick={onPatterns}
+          disabled={isLoading}
+          className="control-btn patterns"
+        >
           <span className="btn-icon">🔄</span>
           <span>Patterns</span>
         </button>
 
-        <button onClick={onStability} disabled={isLoading} className="control-btn stability">
+        <button
+          onClick={onStability}
+          disabled={isLoading}
+          className="control-btn stability"
+        >
           <span className="btn-icon">🛡️</span>
           <span>Stabilité</span>
         </button>
@@ -309,19 +353,21 @@ const EvolutionControls: React.FC<{
 };
 
 // Composant Résultat Évolution
-const EvolutionResultPanel: React.FC<{ result: EvolutionResult | null }> = ({ result }) => {
+const EvolutionResultPanel: React.FC<{ result: EvolutionResult | null }> = ({
+  result,
+}) => {
   if (!result) return null;
 
   const statusColors: Record<string, string> = {
-    'Complete': '#10B981',
-    'Error': '#EF4444',
-    'Parsing': '#3B82F6',
-    'Synthesizing': '#8B5CF6',
-    'Clustering': '#EC4899',
-    'Compressing': '#F59E0B',
-    'Stabilizing': '#6366F1',
-    'Growing': '#14B8A6',
-    'Idle': '#6B7280',
+    Complete: '#10B981',
+    Error: '#EF4444',
+    Parsing: '#3B82F6',
+    Synthesizing: '#8B5CF6',
+    Clustering: '#EC4899',
+    Compressing: '#F59E0B',
+    Stabilizing: '#6366F1',
+    Growing: '#14B8A6',
+    Idle: '#6B7280',
   };
 
   return (
@@ -363,7 +409,9 @@ const EvolutionResultPanel: React.FC<{ result: EvolutionResult | null }> = ({ re
         </div>
         <div className="result-metric">
           <span className="metric-label">Stabilité</span>
-          <span className="metric-value">{Math.round(result.stability_score * 100)}%</span>
+          <span className="metric-value">
+            {Math.round(result.stability_score * 100)}%
+          </span>
         </div>
       </div>
 
@@ -476,7 +524,7 @@ export const MemoryEvolutionCenter: React.FC = () => {
           break;
         case 'full':
           result = await invoke<EvolutionResult>('memory_evolve_full', {
-            kevin_authorized: kevinAuthorized
+            kevin_authorized: kevinAuthorized,
           });
           if (result) setLastResult(result);
           break;
@@ -485,7 +533,6 @@ export const MemoryEvolutionCenter: React.FC = () => {
       // Refresh data after action
       await fetchStatus();
       await fetchHealth();
-
     } catch (err) {
       console.error(`Action ${action} failed:`, err);
       setError(String(err));
@@ -505,7 +552,7 @@ export const MemoryEvolutionCenter: React.FC = () => {
             <input
               type="checkbox"
               checked={kevinAuthorized}
-              onChange={(e) => setKevinAuthorized(e.target.checked)}
+              onChange={e => setKevinAuthorized(e.target.checked)}
             />
             <span>Kevin Authorization</span>
           </label>

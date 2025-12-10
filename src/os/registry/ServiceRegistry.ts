@@ -179,16 +179,16 @@ export class ServiceRegistry {
    * Retourne les services dégradés ou indisponibles
    */
   getUnhealthyServices(): Service[] {
-    return Array.from(this.services.values())
-      .filter(s => s.status !== 'available');
+    return Array.from(this.services.values()).filter(s => s.status !== 'available');
   }
 
   /**
    * Recherche des services par tag/endpoint
    */
   findByEndpoint(endpoint: string): Service[] {
-    return Array.from(this.services.values())
-      .filter(s => s.metadata.endpoints?.includes(endpoint));
+    return Array.from(this.services.values()).filter(s =>
+      s.metadata.endpoints?.includes(endpoint)
+    );
   }
 
   /**

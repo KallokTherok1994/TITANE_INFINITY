@@ -11,9 +11,9 @@ use super::task_queue::{TaskPriority, TaskType};
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 pub struct CognitivePriority {
     pub base_priority: TaskPriority,
-    pub urgency: f32,            // 0.0-1.0
-    pub cost: f32,               // 0.0-1.0 (énergétique #20)
-    pub criticality: f32,        // 0.0-1.0
+    pub urgency: f32,     // 0.0-1.0
+    pub cost: f32,        // 0.0-1.0 (énergétique #20)
+    pub criticality: f32, // 0.0-1.0
     pub task_type: TaskType,
 }
 
@@ -54,7 +54,8 @@ impl CognitivePriority {
             TaskType::Background => 0.5,
         };
 
-        let final_score = base_score * urgency_factor * criticality_factor * cost_penalty * type_factor;
+        let final_score =
+            base_score * urgency_factor * criticality_factor * cost_penalty * type_factor;
 
         PriorityScore(final_score)
     }

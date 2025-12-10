@@ -96,7 +96,9 @@ const MOCK_PREDICTION: AnomalyPrediction = {
 //   COMPONENTS
 // ═══════════════════════════════════════════════════════════════
 
-const StatusIndicator: React.FC<{ status: 'healthy' | 'warning' | 'critical' }> = ({ status }) => (
+const StatusIndicator: React.FC<{ status: 'healthy' | 'warning' | 'critical' }> = ({
+  status,
+}) => (
   <div className={`self-heal-status-indicator status-${status}`}>
     <div className="status-dot" />
     <span className="status-label">
@@ -113,7 +115,13 @@ const MetricBar: React.FC<{
   max?: number;
   unit?: string;
   thresholds?: { warning: number; critical: number };
-}> = ({ label, value, max = 1, unit = '%', thresholds = { warning: 0.7, critical: 0.9 } }) => {
+}> = ({
+  label,
+  value,
+  max = 1,
+  unit = '%',
+  thresholds = { warning: 0.7, critical: 0.9 },
+}) => {
   const percentage = (value / max) * 100;
   const displayValue = unit === '%' ? Math.round(value * 100) : value;
 
@@ -126,7 +134,8 @@ const MetricBar: React.FC<{
       <div className="metric-header">
         <span className="metric-label">{label}</span>
         <span className={`metric-value ${statusClass}`}>
-          {displayValue}{unit}
+          {displayValue}
+          {unit}
         </span>
       </div>
       <div className="metric-bar">
@@ -142,10 +151,14 @@ const MetricBar: React.FC<{
 const TrendIndicator: React.FC<{ trend: string }> = ({ trend }) => {
   const getIcon = () => {
     switch (trend) {
-      case 'Improving': return '↗';
-      case 'Degrading': return '↘';
-      case 'CriticalDegradation': return '⚠';
-      default: return '→';
+      case 'Improving':
+        return '↗';
+      case 'Degrading':
+        return '↘';
+      case 'CriticalDegradation':
+        return '⚠';
+      default:
+        return '→';
     }
   };
 
@@ -168,7 +181,9 @@ const ActionCard: React.FC<{
     <div className="action-info">
       <span className="action-name">{action}</span>
       <span className="action-description">{description}</span>
-      <span className={`action-risk risk-${riskLevel > 6 ? 'high' : riskLevel > 3 ? 'medium' : 'low'}`}>
+      <span
+        className={`action-risk risk-${riskLevel > 6 ? 'high' : riskLevel > 3 ? 'medium' : 'low'}`}
+      >
         Risque: {riskLevel}/10
       </span>
     </div>
@@ -202,7 +217,8 @@ export const SelfHealingDashboard: React.FC = () => {
   // Determine overall status
   const getOverallStatus = useCallback((): 'healthy' | 'warning' | 'critical' => {
     if (health.anomaly_score > 0.7 || healingState.safe_mode_active) return 'critical';
-    if (health.anomaly_score > 0.4 || healingState.circuit_breaker_active) return 'warning';
+    if (health.anomaly_score > 0.4 || healingState.circuit_breaker_active)
+      return 'warning';
     return 'healthy';
   }, [health, healingState]);
 
@@ -226,7 +242,10 @@ export const SelfHealingDashboard: React.FC = () => {
       // Simulate some variations in mock data
       setHealth(prev => ({
         ...prev,
-        anomaly_score: Math.max(0, Math.min(1, prev.anomaly_score + (Math.random() - 0.5) * 0.05)),
+        anomaly_score: Math.max(
+          0,
+          Math.min(1, prev.anomaly_score + (Math.random() - 0.5) * 0.05)
+        ),
         omega_latency: Math.round(50 + Math.random() * 100),
         last_update: Date.now(),
       }));
@@ -303,7 +322,9 @@ export const SelfHealingDashboard: React.FC = () => {
             />
             Auto-refresh
           </label>
-          <span className={`connection-status ${isConnected ? 'connected' : 'disconnected'}`}>
+          <span
+            className={`connection-status ${isConnected ? 'connected' : 'disconnected'}`}
+          >
             {isConnected ? 'Backend Connecté' : 'Mode Demo'}
           </span>
         </div>
@@ -317,13 +338,17 @@ export const SelfHealingDashboard: React.FC = () => {
               <svg viewBox="0 0 100 100">
                 <circle
                   className="score-bg"
-                  cx="50" cy="50" r="45"
+                  cx="50"
+                  cy="50"
+                  r="45"
                   fill="none"
                   strokeWidth="10"
                 />
                 <circle
                   className={`score-fill ${getOverallStatus()}`}
-                  cx="50" cy="50" r="45"
+                  cx="50"
+                  cy="50"
+                  r="45"
                   fill="none"
                   strokeWidth="10"
                   strokeDasharray={`${(1 - health.anomaly_score) * 283} 283`}
@@ -364,7 +389,9 @@ export const SelfHealingDashboard: React.FC = () => {
         <HUDFrame title="Prédiction" icon="🔮" className="prediction-panel">
           <div className="prediction-main">
             <div className="prediction-probability">
-              <span className="prob-value">{Math.round(prediction.probability * 100)}%</span>
+              <span className="prob-value">
+                {Math.round(prediction.probability * 100)}%
+              </span>
               <span className="prob-label">Probabilité d'anomalie</span>
             </div>
             <TrendIndicator trend={prediction.trend} />
@@ -373,7 +400,9 @@ export const SelfHealingDashboard: React.FC = () => {
           {prediction.time_to_critical_secs && (
             <div className="prediction-warning">
               <span className="warning-icon">⚠</span>
-              <span>Temps estimé avant critique: {prediction.time_to_critical_secs}s</span>
+              <span>
+                Temps estimé avant critique: {prediction.time_to_critical_secs}s
+              </span>
             </div>
           )}
 
@@ -385,28 +414,33 @@ export const SelfHealingDashboard: React.FC = () => {
         {/* Healing State Panel */}
         <HUDFrame title="État du Healing" icon="🛡" className="state-panel">
           <div className="state-toggles">
-            <div className={`state-item ${healingState.safe_mode_active ? 'active' : ''}`}>
+            <div
+              className={`state-item ${healingState.safe_mode_active ? 'active' : ''}`}
+            >
               <div className="state-indicator" />
               <span className="state-name">Safe Mode</span>
-              <button
-                className="state-toggle-btn"
-                onClick={handleToggleSafeMode}
-              >
+              <button className="state-toggle-btn" onClick={handleToggleSafeMode}>
                 {healingState.safe_mode_active ? 'Désactiver' : 'Activer'}
               </button>
             </div>
 
-            <div className={`state-item ${healingState.circuit_breaker_active ? 'active' : ''}`}>
+            <div
+              className={`state-item ${healingState.circuit_breaker_active ? 'active' : ''}`}
+            >
               <div className="state-indicator" />
               <span className="state-name">Circuit Breaker</span>
             </div>
 
-            <div className={`state-item ${healingState.degraded_mode_active ? 'active' : ''}`}>
+            <div
+              className={`state-item ${healingState.degraded_mode_active ? 'active' : ''}`}
+            >
               <div className="state-indicator" />
               <span className="state-name">Mode Dégradé</span>
             </div>
 
-            <div className={`state-item ${healingState.detailed_logging ? 'active' : ''}`}>
+            <div
+              className={`state-item ${healingState.detailed_logging ? 'active' : ''}`}
+            >
               <div className="state-indicator" />
               <span className="state-name">Logs Détaillés</span>
             </div>
@@ -449,7 +483,10 @@ export const SelfHealingDashboard: React.FC = () => {
           ) : (
             <div className="history-list">
               {history.map((report, idx) => (
-                <div key={idx} className={`history-item level-${report.level.toLowerCase()}`}>
+                <div
+                  key={idx}
+                  className={`history-item level-${report.level.toLowerCase()}`}
+                >
                   <div className="history-header">
                     <span className="history-time">
                       {new Date(report.timestamp).toLocaleTimeString()}
@@ -464,7 +501,10 @@ export const SelfHealingDashboard: React.FC = () => {
                   {report.actions_taken.length > 0 && (
                     <div className="history-actions">
                       {report.actions_taken.map((a, i) => (
-                        <span key={i} className={`action-tag ${a.success ? 'success' : 'failed'}`}>
+                        <span
+                          key={i}
+                          className={`action-tag ${a.success ? 'success' : 'failed'}`}
+                        >
                           {a.action}
                         </span>
                       ))}

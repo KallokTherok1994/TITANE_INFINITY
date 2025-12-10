@@ -53,9 +53,11 @@ export const WelcomeStep: React.FC = () => {
       >
         <h2>Bienvenue dans TITANE∞</h2>
         <p className="welcome-subtitle">
-          TITANE est votre assistant IA personnel qui fonctionne entièrement sur votre machine.
+          TITANE est votre assistant IA personnel qui fonctionne entièrement sur votre
+          machine.
           <br />
-          Vos conversations restent <strong>privées</strong> et <strong>sécurisées</strong>.
+          Vos conversations restent <strong>privées</strong> et{' '}
+          <strong>sécurisées</strong>.
         </p>
       </motion.div>
 

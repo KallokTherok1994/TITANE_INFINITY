@@ -35,9 +35,9 @@ export function useSelfHealing() {
     let unlisten: UnlistenFn | null = null;
 
     const setupListener = async () => {
-      unlisten = await listen<HealingEvent>('self_healing_event', (event) => {
+      unlisten = await listen<HealingEvent>('self_healing_event', event => {
         const healingEvent = event.payload;
-        setRecentEvents((prev) => [healingEvent, ...prev].slice(0, 50));
+        setRecentEvents(prev => [healingEvent, ...prev].slice(0, 50));
         // Refresh snapshot to get updated stats
         fetchSnapshot();
       });

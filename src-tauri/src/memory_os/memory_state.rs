@@ -329,8 +329,8 @@ impl Default for MemoryOSConfig {
         Self {
             stm_capacity: 20,
             mtm_capacity: 200,
-            stm_retention_ms: 3_600_000,       // 1 hour
-            mtm_retention_ms: 604_800_000,     // 7 days
+            stm_retention_ms: 3_600_000,   // 1 hour
+            mtm_retention_ms: 604_800_000, // 7 days
             embedding_dim: 384,
             enable_vectors: true,
             consolidation_interval_ms: 60_000, // 1 minute
@@ -351,11 +351,7 @@ mod tests {
 
     #[test]
     fn test_memory_entry_creation() {
-        let entry = MemoryEntry::new(
-            "Test content".to_string(),
-            0.8,
-            MemoryType::Conversation,
-        );
+        let entry = MemoryEntry::new("Test content".to_string(), 0.8, MemoryType::Conversation);
 
         assert!(!entry.id.is_nil());
         assert_eq!(entry.content, "Test content");
@@ -391,7 +387,10 @@ mod tests {
 
     #[test]
     fn test_memory_type_importance() {
-        assert!(MemoryType::Decision.default_importance() > MemoryType::Conversation.default_importance());
+        assert!(
+            MemoryType::Decision.default_importance()
+                > MemoryType::Conversation.default_importance()
+        );
     }
 
     #[test]

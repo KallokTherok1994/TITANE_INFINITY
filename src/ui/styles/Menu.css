@@ -38,7 +38,11 @@
 .menu-brand-text {
   font-size: 18px;
   font-weight: 700;
-  background: linear-gradient(135deg, var(--color-primary, #727b81) 0%, var(--color-primary-light, #8899aa) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary, #727b81) 0%,
+    var(--color-primary-light, #8899aa) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -213,7 +217,8 @@
  * ═══════════════════════════════════════════════════════ */
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {

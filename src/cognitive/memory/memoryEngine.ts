@@ -87,7 +87,11 @@ class MemoryEngineClass {
       }
 
       this.initialized = true;
-      console.log('[MemoryEngine] Initialized with', this.state.stats.totalMemories, 'memories');
+      console.log(
+        '[MemoryEngine] Initialized with',
+        this.state.stats.totalMemories,
+        'memories'
+      );
     } catch (error) {
       console.warn('[MemoryEngine] Init error, using defaults:', error);
       this.state = this.getDefaultState();
@@ -243,7 +247,11 @@ class MemoryEngineClass {
   /**
    * Créer une association entre deux souvenirs
    */
-  async associate(memoryId1: string, memoryId2: string, _strength: number = 0.5): Promise<boolean> {
+  async associate(
+    memoryId1: string,
+    memoryId2: string,
+    _strength: number = 0.5
+  ): Promise<boolean> {
     await this.ensureInitialized();
 
     const memory1 = this.state.memories.find(m => m.id === memoryId1);
@@ -317,7 +325,8 @@ class MemoryEngineClass {
     }
 
     this.state.lastConsolidation = Date.now();
-    this.state.stats.consolidationRate = consolidated / Math.max(this.state.memories.length, 1);
+    this.state.stats.consolidationRate =
+      consolidated / Math.max(this.state.memories.length, 1);
 
     this.updateStats();
     await this.persist();
@@ -331,7 +340,8 @@ class MemoryEngineClass {
    */
   private applyDecay(): void {
     const now = Date.now();
-    const daysSinceConsolidation = (now - this.state.lastConsolidation) / (1000 * 60 * 60 * 24);
+    const daysSinceConsolidation =
+      (now - this.state.lastConsolidation) / (1000 * 60 * 60 * 24);
 
     for (const memory of this.state.memories) {
       // Les souvenirs consolidés décroissent moins vite
@@ -343,7 +353,9 @@ class MemoryEngineClass {
       memory.strength = Math.max(0.01, memory.strength - decay);
     }
 
-    console.log(`[MemoryEngine] Applied decay over ${daysSinceConsolidation.toFixed(1)} days`);
+    console.log(
+      `[MemoryEngine] Applied decay over ${daysSinceConsolidation.toFixed(1)} days`
+    );
   }
 
   /**
@@ -378,15 +390,14 @@ class MemoryEngineClass {
       episodicCount: memories.filter(m => m.type === 'episodic').length,
       semanticCount: memories.filter(m => m.type === 'semantic').length,
       proceduralCount: memories.filter(m => m.type === 'procedural').length,
-      averageStrength: memories.length > 0
-        ? memories.reduce((sum, m) => sum + m.strength, 0) / memories.length
-        : 0,
-      oldestMemory: memories.length > 0
-        ? Math.min(...memories.map(m => m.createdAt))
-        : null,
-      newestMemory: memories.length > 0
-        ? Math.max(...memories.map(m => m.createdAt))
-        : null,
+      averageStrength:
+        memories.length > 0
+          ? memories.reduce((sum, m) => sum + m.strength, 0) / memories.length
+          : 0,
+      oldestMemory:
+        memories.length > 0 ? Math.min(...memories.map(m => m.createdAt)) : null,
+      newestMemory:
+        memories.length > 0 ? Math.max(...memories.map(m => m.createdAt)) : null,
       totalRecalls: this.state.stats.totalRecalls,
       consolidationRate: this.state.stats.consolidationRate,
     };

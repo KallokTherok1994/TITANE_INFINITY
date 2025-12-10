@@ -11,9 +11,8 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 // =============================================================================
 
 describe('IntentParser', () => {
-   
   let IntentParser: any;
-   
+
   let parser: any;
 
   beforeEach(async () => {
@@ -60,26 +59,34 @@ describe('IntentParser', () => {
     it('should detect entities', () => {
       const result = parser.parseIntent('Ouvre le fichier test.ts dans /src/components');
       expect(result.parsed.entities.length).toBeGreaterThan(0);
-      const fileEntity = result.parsed.entities.find((e: { type: string }) => e.type === 'file');
+      const fileEntity = result.parsed.entities.find(
+        (e: { type: string }) => e.type === 'file'
+      );
       expect(fileEntity).toBeDefined();
     });
 
     it('should calculate complexity', () => {
       const simpleResult = parser.parseIntent('Salut');
-      const complexResult = parser.parseIntent('Analyse le code backend et optimise les performances de la base de données en utilisant des algorithmes avancés pour l\'architecture système');
+      const complexResult = parser.parseIntent(
+        "Analyse le code backend et optimise les performances de la base de données en utilisant des algorithmes avancés pour l'architecture système"
+      );
 
-      expect(complexResult.parsed.complexity).toBeGreaterThan(simpleResult.parsed.complexity);
+      expect(complexResult.parsed.complexity).toBeGreaterThan(
+        simpleResult.parsed.complexity
+      );
     });
 
     it('should detect urgency', () => {
-      const normalResult = parser.parseIntent('Peux-tu m\'aider ?');
-      const urgentResult = parser.parseIntent('URGENT! J\'ai besoin d\'aide immédiatement!!!');
+      const normalResult = parser.parseIntent("Peux-tu m'aider ?");
+      const urgentResult = parser.parseIntent(
+        "URGENT! J'ai besoin d'aide immédiatement!!!"
+      );
 
       expect(urgentResult.parsed.urgency).toBeGreaterThan(normalResult.parsed.urgency);
     });
 
     it('should analyze sentiment', () => {
-      const positiveResult = parser.parseIntent('Merci beaucoup, c\'est excellent !');
+      const positiveResult = parser.parseIntent("Merci beaucoup, c'est excellent !");
       const negativeResult = parser.parseIntent('Il y a un problème, erreur critique');
 
       expect(positiveResult.parsed.sentiment).toBeGreaterThan(0);
@@ -87,7 +94,7 @@ describe('IntentParser', () => {
     });
 
     it('should suggest mode', () => {
-      const result = parser.parseIntent('Analyse l\'architecture système complète');
+      const result = parser.parseIntent("Analyse l'architecture système complète");
       expect(['dev', 'architect']).toContain(result.suggestedMode);
     });
 
@@ -99,7 +106,7 @@ describe('IntentParser', () => {
 
   describe('Quick Methods', () => {
     it('should quick categorize', () => {
-      const category = parser.quickCategorize('Qu\'est-ce que TypeScript ?');
+      const category = parser.quickCategorize("Qu'est-ce que TypeScript ?");
       expect(category).toBe('question');
     });
 
@@ -158,9 +165,8 @@ describe('IntentParser', () => {
 // =============================================================================
 
 describe('ContextCollector', () => {
-   
   let ContextCollector: any;
-   
+
   let collector: any;
 
   beforeEach(async () => {
@@ -269,9 +275,8 @@ describe('ContextCollector', () => {
 // =============================================================================
 
 describe('PromptAssembler', () => {
-   
   let PromptAssembler: any;
-   
+
   let assembler: any;
 
   beforeEach(async () => {
@@ -369,7 +374,7 @@ describe('PromptAssembler', () => {
 
   describe('Quick Parse', () => {
     it('should quick parse intent', () => {
-      const intent = assembler.quickParseIntent('Qu\'est-ce que c\'est ?');
+      const intent = assembler.quickParseIntent("Qu'est-ce que c'est ?");
       expect(intent.category).toBe('question');
     });
   });
@@ -419,9 +424,8 @@ describe('PromptAssembler', () => {
 // =============================================================================
 
 describe('PromptEngineOrchestrator', () => {
-   
   let PromptEngineOrchestrator: any;
-   
+
   let engine: any;
 
   beforeEach(async () => {

@@ -14,7 +14,11 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { PerformanceHeatmap, HeatmapData, TimePattern } from '../../lib/performanceHeatmap';
+import {
+  PerformanceHeatmap,
+  HeatmapData,
+  TimePattern,
+} from '../../lib/performanceHeatmap';
 import { Activity, TrendingUp, TrendingDown } from '../icons';
 
 interface PerformanceHeatmapProps {
@@ -71,7 +75,9 @@ export const PerformanceHeatmapViz: React.FC<PerformanceHeatmapProps> = ({
 
   const formatLatency = (latency: number): string => {
     if (latency === 0) return '-';
-    return latency >= 1000 ? `${(latency / 1000).toFixed(1)}s` : `${latency.toFixed(0)}ms`;
+    return latency >= 1000
+      ? `${(latency / 1000).toFixed(1)}s`
+      : `${latency.toFixed(0)}ms`;
   };
 
   const formatHour = (hour: number): string => {
@@ -104,7 +110,7 @@ export const PerformanceHeatmapViz: React.FC<PerformanceHeatmapProps> = ({
     }
   };
 
-  const selectedPattern = patterns.find((p) => p.service === selectedService);
+  const selectedPattern = patterns.find(p => p.service === selectedService);
 
   return (
     <div className="space-y-6">
@@ -117,10 +123,10 @@ export const PerformanceHeatmapViz: React.FC<PerformanceHeatmapProps> = ({
         {/* Service selector */}
         <select
           value={selectedService || ''}
-          onChange={(e) => setSelectedService(e.target.value)}
+          onChange={e => setSelectedService(e.target.value)}
           className="px-3 py-2 border-2 border-gray-300 rounded-lg text-sm font-medium"
         >
-          {heatmapData.services.map((service) => (
+          {heatmapData.services.map(service => (
             <option key={service} value={service}>
               {service.toUpperCase()}
             </option>
@@ -135,7 +141,7 @@ export const PerformanceHeatmapViz: React.FC<PerformanceHeatmapProps> = ({
           <div className="flex mb-2">
             <div className="w-24 shrink-0"></div>
             <div className="flex gap-1">
-              {heatmapData.hours.map((hour) => (
+              {heatmapData.hours.map(hour => (
                 <div
                   key={hour}
                   className="w-10 text-center text-xs font-medium text-gray-600"
@@ -147,15 +153,15 @@ export const PerformanceHeatmapViz: React.FC<PerformanceHeatmapProps> = ({
           </div>
 
           {/* Rows - Services */}
-          {heatmapData.services.map((service) => (
+          {heatmapData.services.map(service => (
             <div key={service} className="flex items-center mb-1">
               <div className="w-24 shrink-0 text-xs font-semibold text-gray-700">
                 {service.toUpperCase()}
               </div>
               <div className="flex gap-1">
-                {heatmapData.hours.map((hour) => {
+                {heatmapData.hours.map(hour => {
                   const cell = heatmapData.cells.find(
-                    (c) => c.service === service && c.hour === hour
+                    c => c.service === service && c.hour === hour
                   );
                   const latency = cell?.avgLatency || 0;
 
@@ -167,7 +173,9 @@ export const PerformanceHeatmapViz: React.FC<PerformanceHeatmapProps> = ({
                     >
                       {latency > 0 && (
                         <span className="text-gray-900">
-                          {latency >= 1000 ? Math.round(latency / 1000) : Math.round(latency)}
+                          {latency >= 1000
+                            ? Math.round(latency / 1000)
+                            : Math.round(latency)}
                         </span>
                       )}
                     </div>
@@ -227,11 +235,13 @@ export const PerformanceHeatmapViz: React.FC<PerformanceHeatmapProps> = ({
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <TrendingUp className="w-4 h-4 text-red-600" />
-                <span className="text-sm font-medium text-gray-700">Heures de Pointe</span>
+                <span className="text-sm font-medium text-gray-700">
+                  Heures de Pointe
+                </span>
               </div>
               <div className="flex flex-wrap gap-1">
                 {selectedPattern.peakHours.length > 0 ? (
-                  selectedPattern.peakHours.map((hour) => (
+                  selectedPattern.peakHours.map(hour => (
                     <span
                       key={hour}
                       className="px-2 py-1 bg-red-100 text-red-800 rounded text-xs font-semibold"
@@ -253,7 +263,7 @@ export const PerformanceHeatmapViz: React.FC<PerformanceHeatmapProps> = ({
               </div>
               <div className="flex flex-wrap gap-1">
                 {selectedPattern.lowHours.length > 0 ? (
-                  selectedPattern.lowHours.map((hour) => (
+                  selectedPattern.lowHours.map(hour => (
                     <span
                       key={hour}
                       className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-semibold"
@@ -274,12 +284,12 @@ export const PerformanceHeatmapViz: React.FC<PerformanceHeatmapProps> = ({
                 <span className="text-sm font-medium text-gray-700">Statistiques</span>
               </div>
               <div className="text-sm text-gray-600">
-                {Object.keys(selectedPattern.averageLatencyByHour).filter(
-                  (h) => {
+                {
+                  Object.keys(selectedPattern.averageLatencyByHour).filter(h => {
                     const latency = selectedPattern.averageLatencyByHour[parseInt(h)];
                     return latency !== undefined && latency > 0;
-                  }
-                ).length}{' '}
+                  }).length
+                }{' '}
                 heures avec données
               </div>
             </div>
@@ -291,7 +301,7 @@ export const PerformanceHeatmapViz: React.FC<PerformanceHeatmapProps> = ({
       <div className="bg-white rounded-lg border-2 border-gray-200 p-6">
         <h4 className="text-sm font-semibold text-gray-700 mb-4">Résumé des Patterns</h4>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {patterns.map((pattern) => (
+          {patterns.map(pattern => (
             <div
               key={pattern.service}
               className={`p-3 rounded-lg border-2 cursor-pointer transition-all ${
@@ -307,7 +317,9 @@ export const PerformanceHeatmapViz: React.FC<PerformanceHeatmapProps> = ({
                   {pattern.service.toUpperCase()}
                 </span>
               </div>
-              <div className="text-xs text-gray-600">{getPatternLabel(pattern.patternType)}</div>
+              <div className="text-xs text-gray-600">
+                {getPatternLabel(pattern.patternType)}
+              </div>
               <div className="text-xs text-gray-500 mt-1">
                 {pattern.peakHours.length} pointe / {pattern.lowHours.length} creuse
               </div>

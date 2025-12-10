@@ -38,7 +38,7 @@ const MOCK_PROJECTS: Project[] = [
     maxXp: 10000,
     level: 12,
     categories: ['Architecture', 'Backend', 'AI'],
-    lastUpdated: new Date()
+    lastUpdated: new Date(),
   },
   {
     id: '2',
@@ -48,7 +48,7 @@ const MOCK_PROJECTS: Project[] = [
     maxXp: 5000,
     level: 7,
     categories: ['Frontend', 'Design', 'React'],
-    lastUpdated: new Date()
+    lastUpdated: new Date(),
   },
   {
     id: '3',
@@ -58,8 +58,8 @@ const MOCK_PROJECTS: Project[] = [
     maxXp: 3000,
     level: 5,
     categories: ['Backend', 'Database', 'Analytics'],
-    lastUpdated: new Date()
-  }
+    lastUpdated: new Date(),
+  },
 ];
 
 export const ProjectsPage: React.FC = () => {
@@ -67,9 +67,10 @@ export const ProjectsPage: React.FC = () => {
   const [_selectedProject, setSelectedProject] = useState<string | null>(null); // TODO: Ajouter highlight projet
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredProjects = projects.filter(p =>
-    p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    p.description.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredProjects = projects.filter(
+    p =>
+      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleOpenChat = (_projectId: string) => {
@@ -95,7 +96,9 @@ export const ProjectsPage: React.FC = () => {
             </div>
             <div className="projects-stat">
               <span className="projects-stat-value">
-                {(projects.reduce((acc, p) => acc + p.level, 0) / projects.length).toFixed(1)}
+                {(
+                  projects.reduce((acc, p) => acc + p.level, 0) / projects.length
+                ).toFixed(1)}
               </span>
               <span className="projects-stat-label">Niveau Moyen</span>
             </div>
@@ -106,7 +109,7 @@ export const ProjectsPage: React.FC = () => {
             className="projects-search"
             placeholder="🔍 Rechercher un projet..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={e => setSearchQuery(e.target.value)}
           />
         </div>
 
@@ -114,13 +117,10 @@ export const ProjectsPage: React.FC = () => {
         <div className="projects-grid">
           {filteredProjects.map(project => (
             <div key={project.id} className="projects-item">
-              <ProjectCard
-                {...project}
-                onClick={() => setSelectedProject(project.id)}
-              />
+              <ProjectCard {...project} onClick={() => setSelectedProject(project.id)} />
               <button
                 className="projects-chat-btn"
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation();
                   handleOpenChat(project.id);
                 }}

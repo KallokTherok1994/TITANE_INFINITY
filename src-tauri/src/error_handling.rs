@@ -11,7 +11,7 @@ pub trait ResultExt<T, E> {
     fn unwrap_or_log(self, fallback: T, context: &str) -> T
     where
         E: std::fmt::Display;
-    
+
     /// Unwrap avec fallback et warning (non-critique)
     fn unwrap_or_warn(self, fallback: T, context: &str) -> T
     where
@@ -31,7 +31,7 @@ impl<T, E> ResultExt<T, E> for Result<T, E> {
             }
         }
     }
-    
+
     fn unwrap_or_warn(self, fallback: T, context: &str) -> T
     where
         E: std::fmt::Display,
@@ -50,7 +50,7 @@ impl<T, E> ResultExt<T, E> for Result<T, E> {
 pub trait OptionExt<T> {
     /// Unwrap Option avec fallback et logging
     fn unwrap_or_log(self, fallback: T, context: &str) -> T;
-    
+
     /// Unwrap Option avec warning
     fn unwrap_or_warn(self, fallback: T, context: &str) -> T;
 }
@@ -65,7 +65,7 @@ impl<T> OptionExt<T> for Option<T> {
             }
         }
     }
-    
+
     fn unwrap_or_warn(self, fallback: T, context: &str) -> T {
         match self {
             Some(val) => val,

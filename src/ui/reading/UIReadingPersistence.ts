@@ -38,7 +38,6 @@ export function loadSettings(): UIReadingSettings {
       ...DEFAULT_SETTINGS,
       ...sanitized,
     };
-
   } catch (error) {
     console.warn('[UIReading] Failed to load settings, using defaults:', error);
     // Self-healing: clear corrupted data

@@ -98,9 +98,9 @@ impl LongTermMemory {
     pub async fn init(&self) -> Result<(), LTMError> {
         // Create storage directories
         let data_path = self.storage_path.join(DATA_DIR);
-        tokio::fs::create_dir_all(&data_path).await.map_err(|e| {
-            LTMError::Storage(format!("Failed to create data directory: {}", e))
-        })?;
+        tokio::fs::create_dir_all(&data_path)
+            .await
+            .map_err(|e| LTMError::Storage(format!("Failed to create data directory: {}", e)))?;
 
         // Load existing index
         self.load_index().await?;
@@ -233,7 +233,9 @@ impl LongTermMemory {
             .values()
             .filter(|m| {
                 m.content_preview.to_lowercase().contains(&query_lower)
-                    || m.tags.iter().any(|t| t.to_lowercase().contains(&query_lower))
+                    || m.tags
+                        .iter()
+                        .any(|t| t.to_lowercase().contains(&query_lower))
             })
             .cloned()
             .collect();
@@ -336,17 +338,9 @@ impl LongTermMemory {
             0.0
         };
 
-        let oldest_age_ms = index
-            .values()
-            .map(|m| now - m.timestamp)
-            .max()
-            .unwrap_or(0);
+        let oldest_age_ms = index.values().map(|m| now - m.timestamp).max().unwrap_or(0);
 
-        let newest_age_ms = index
-            .values()
-            .map(|m| now - m.timestamp)
-            .min()
-            .unwrap_or(0);
+        let newest_age_ms = index.values().map(|m| now - m.timestamp).min().unwrap_or(0);
 
         // Count tags
         let mut tag_counts: HashMap<String, usize> = HashMap::new();

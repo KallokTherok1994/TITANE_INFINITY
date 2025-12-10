@@ -7,9 +7,9 @@
 
 .memory-evolution-center {
   --accent-ct: var(--info, #8899aa);
-  --accent-mt: #8B5CF6;
+  --accent-mt: #8b5cf6;
   --accent-lt: var(--primary, #727b81);
-  --accent-elt: #F59E0B;
+  --accent-elt: #f59e0b;
   --accent-core: var(--success, #93b399);
   --bg-primary: #0f172a;
   --bg-secondary: #1e293b;
@@ -22,7 +22,11 @@
   min-height: 100vh;
   background: var(--bg-primary);
   color: var(--text-primary);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
 }
 
 /* Header */
@@ -68,7 +72,7 @@
   border-color: var(--accent-core);
 }
 
-.kevin-auth input[type="checkbox"] {
+.kevin-auth input[type='checkbox'] {
   width: 16px;
   height: 16px;
   accent-color: var(--accent-core);
@@ -208,8 +212,13 @@
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 .total-items {
@@ -462,14 +471,30 @@
   font-size: 1.5rem;
 }
 
-.control-btn.parse:hover { border-color: var(--accent-ct); }
-.control-btn.synthesize:hover { border-color: var(--accent-mt); }
-.control-btn.cluster:hover { border-color: var(--accent-lt); }
-.control-btn.compress:hover { border-color: var(--accent-elt); }
-.control-btn.patterns:hover { border-color: var(--accent-core); }
-.control-btn.stability:hover { border-color: #6366F1; }
-.control-btn.grow:hover { border-color: #14B8A6; }
-.control-btn.backup:hover { border-color: var(--warning, #a89f91); }
+.control-btn.parse:hover {
+  border-color: var(--accent-ct);
+}
+.control-btn.synthesize:hover {
+  border-color: var(--accent-mt);
+}
+.control-btn.cluster:hover {
+  border-color: var(--accent-lt);
+}
+.control-btn.compress:hover {
+  border-color: var(--accent-elt);
+}
+.control-btn.patterns:hover {
+  border-color: var(--accent-core);
+}
+.control-btn.stability:hover {
+  border-color: #6366f1;
+}
+.control-btn.grow:hover {
+  border-color: #14b8a6;
+}
+.control-btn.backup:hover {
+  border-color: var(--warning, #a89f91);
+}
 
 .full-evolution {
   margin-top: 1rem;
@@ -635,7 +660,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Responsive */

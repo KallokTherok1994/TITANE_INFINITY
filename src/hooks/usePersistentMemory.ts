@@ -111,7 +111,9 @@ export interface UsePersistentMemoryReturn extends PersistentMemoryHookState {
   // Lecture
   refresh: () => Promise<void>;
   search: (options: PersistentMemorySearchOptions) => Promise<MemoryEntry[]>;
-  getContextForPrompt: (query: string) => Promise<{ context: string; usedEntries: string[] }>;
+  getContextForPrompt: (
+    query: string
+  ) => Promise<{ context: string; usedEntries: string[] }>;
   getEntryById: (id: string) => MemoryEntry | undefined;
   getEntriesByTopic: (topic: MemoryTopic) => MemoryEntry[];
   getEntriesByLevel: (level: MemoryLevel) => MemoryEntry[];
@@ -125,7 +127,11 @@ export interface UsePersistentMemoryReturn extends PersistentMemoryHookState {
   requestSummary: (entryIds: string[], title?: string) => Promise<string>;
 
   // Bundles
-  createBundle: (name: string, entryIds: string[], topic?: MemoryTopic) => Promise<string>;
+  createBundle: (
+    name: string,
+    entryIds: string[],
+    topic?: MemoryTopic
+  ) => Promise<string>;
   addToBundle: (bundleId: string, entryIds: string[]) => Promise<boolean>;
 
   // Utils
@@ -160,7 +166,9 @@ const CACHE_TTL = 30000; // 30 secondes
 // HOOK PRINCIPAL
 // ─────────────────────────────────────────────────────────────────────────────
 
-export function usePersistentMemory(options: UsePersistentMemoryOptions): UsePersistentMemoryReturn {
+export function usePersistentMemory(
+  options: UsePersistentMemoryOptions
+): UsePersistentMemoryReturn {
   const {
     modeId,
     refreshInterval = 0,
@@ -213,7 +221,9 @@ export function usePersistentMemory(options: UsePersistentMemoryOptions): UsePer
         limit: 500,
       };
 
-      const response = await secureInvoke<MemoryReadResponse>('persistent_memory_read', { request });
+      const response = await secureInvoke<MemoryReadResponse>('persistent_memory_read', {
+        request,
+      });
 
       // Filtrer selon les permissions du mode
       const filteredEntries = filterByPermissions(response.entries, modeId);
@@ -260,221 +270,262 @@ export function usePersistentMemory(options: UsePersistentMemoryOptions): UsePer
     }
   }, [modeId, levels, topics, projectId, enableCache]);
 
-  const search = useCallback(async (searchOptions: PersistentMemorySearchOptions): Promise<MemoryEntry[]> => {
-    const {
-      query,
-      minScore = 0.3,
-      limit = 20,
-      topics: searchTopics,
-      contentTypes,
-      minImportance,
-    } = searchOptions;
-
-    try {
-      // Recherche côté Rust si requête complexe
-      const request: MemoryReadRequest = {
-        levels,
+  const search = useCallback(
+    async (searchOptions: PersistentMemorySearchOptions): Promise<MemoryEntry[]> => {
+      const {
+        query,
+        minScore = 0.3,
+        limit = 20,
         topics: searchTopics,
         contentTypes,
         minImportance,
-        currentMode: modeId,
-        query,
-        limit: limit * 2, // Demander plus pour filtrer après scoring
-        minRelevanceScore: minScore,
-      };
+      } = searchOptions;
 
-      const response = await secureInvoke<MemoryReadResponse>('persistent_memory_read', { request });
+      try {
+        // Recherche côté Rust si requête complexe
+        const request: MemoryReadRequest = {
+          levels,
+          topics: searchTopics,
+          contentTypes,
+          minImportance,
+          currentMode: modeId,
+          query,
+          limit: limit * 2, // Demander plus pour filtrer après scoring
+          minRelevanceScore: minScore,
+        };
 
-      // Re-scorer et trier côté frontend pour plus de précision
-      const ranked = rankByRelevance(response.entries, query);
+        const response = await secureInvoke<MemoryReadResponse>(
+          'persistent_memory_read',
+          { request }
+        );
 
-      return ranked
-        .filter(r => r.score >= minScore)
-        .slice(0, limit)
-        .map(r => r.entry);
-    } catch (err) {
-      console.error('[usePersistentMemory] Erreur de recherche:', err);
+        // Re-scorer et trier côté frontend pour plus de précision
+        const ranked = rankByRelevance(response.entries, query);
 
-      // Fallback: recherche locale dans le cache
-      if (enableCache) {
-        const cached = Array.from(persistentMemoryCache.entries.values());
-        const ranked = rankByRelevance(cached, query);
         return ranked
           .filter(r => r.score >= minScore)
           .slice(0, limit)
           .map(r => r.entry);
+      } catch (err) {
+        console.error('[usePersistentMemory] Erreur de recherche:', err);
+
+        // Fallback: recherche locale dans le cache
+        if (enableCache) {
+          const cached = Array.from(persistentMemoryCache.entries.values());
+          const ranked = rankByRelevance(cached, query);
+          return ranked
+            .filter(r => r.score >= minScore)
+            .slice(0, limit)
+            .map(r => r.entry);
+        }
+
+        return [];
+      }
+    },
+    [modeId, levels, enableCache]
+  );
+
+  const getContextForPrompt = useCallback(
+    async (query: string): Promise<{ context: string; usedEntries: string[] }> => {
+      // Utiliser les entrées en cache ou charger
+      let entries = state.entries;
+
+      if (entries.length === 0 && enableCache) {
+        entries = Array.from(persistentMemoryCache.entries.values());
       }
 
-      return [];
-    }
-  }, [modeId, levels, enableCache]);
-
-  const getContextForPrompt = useCallback(async (query: string): Promise<{ context: string; usedEntries: string[] }> => {
-    // Utiliser les entrées en cache ou charger
-    let entries = state.entries;
-
-    if (entries.length === 0 && enableCache) {
-      entries = Array.from(persistentMemoryCache.entries.values());
-    }
-
-    if (entries.length === 0) {
-      // Charger depuis Rust
-      try {
-        const response = await secureInvoke<MemoryReadResponse>('persistent_memory_read', {
-          request: {
-            levels,
-            currentMode: modeId,
-            query,
-            limit: 100,
-          }
-        });
-        entries = response.entries;
-      } catch {
-        return { context: '', usedEntries: [] };
+      if (entries.length === 0) {
+        // Charger depuis Rust
+        try {
+          const response = await secureInvoke<MemoryReadResponse>(
+            'persistent_memory_read',
+            {
+              request: {
+                levels,
+                currentMode: modeId,
+                query,
+                limit: 100,
+              },
+            }
+          );
+          entries = response.entries;
+        } catch {
+          return { context: '', usedEntries: [] };
+        }
       }
-    }
 
-    return prepareContextInjection(entries, query, modeId);
-  }, [state.entries, modeId, levels, enableCache]);
+      return prepareContextInjection(entries, query, modeId);
+    },
+    [state.entries, modeId, levels, enableCache]
+  );
 
-  const getEntryById = useCallback((id: string): MemoryEntry | undefined => {
-    // D'abord chercher dans l'état
-    const found = state.entries.find(e => e.id === id);
-    if (found) return found;
+  const getEntryById = useCallback(
+    (id: string): MemoryEntry | undefined => {
+      // D'abord chercher dans l'état
+      const found = state.entries.find(e => e.id === id);
+      if (found) return found;
 
-    // Sinon dans le cache
-    return persistentMemoryCache.entries.get(id);
-  }, [state.entries]);
+      // Sinon dans le cache
+      return persistentMemoryCache.entries.get(id);
+    },
+    [state.entries]
+  );
 
-  const getEntriesByTopic = useCallback((topic: MemoryTopic): MemoryEntry[] => {
-    return state.entries.filter(e => e.topic === topic);
-  }, [state.entries]);
+  const getEntriesByTopic = useCallback(
+    (topic: MemoryTopic): MemoryEntry[] => {
+      return state.entries.filter(e => e.topic === topic);
+    },
+    [state.entries]
+  );
 
-  const getEntriesByLevel = useCallback((level: MemoryLevel): MemoryEntry[] => {
-    return state.entries.filter(e => e.level === level);
-  }, [state.entries]);
+  const getEntriesByLevel = useCallback(
+    (level: MemoryLevel): MemoryEntry[] => {
+      return state.entries.filter(e => e.level === level);
+    },
+    [state.entries]
+  );
 
-  const getRecentSummaries = useCallback((limit: number = 10): MemorySummary[] => {
-    return [...state.summaries]
-      .sort((a, b) => b.generatedAt - a.generatedAt)
-      .slice(0, limit);
-  }, [state.summaries]);
+  const getRecentSummaries = useCallback(
+    (limit: number = 10): MemorySummary[] => {
+      return [...state.summaries]
+        .sort((a, b) => b.generatedAt - a.generatedAt)
+        .slice(0, limit);
+    },
+    [state.summaries]
+  );
 
   // ─────────────────────────────────────────────────────────────────────────
   // FONCTIONS D'ÉCRITURE (via Tauri Commands)
   // ─────────────────────────────────────────────────────────────────────────
 
-  const saveEntry = useCallback(async (content: string, saveOptions?: SaveEntryOptions): Promise<string> => {
-    try {
-      const entryId = await secureInvoke<string>('persistent_memory_write_entry', {
-        content,
-        level: saveOptions?.level || 'session',
-        topic: saveOptions?.topic,
-        importance: saveOptions?.importance,
-        contentType: saveOptions?.contentType,
-        tags: saveOptions?.tags,
-        title: saveOptions?.title,
-        projectId: saveOptions?.projectId,
-        modeId,
-      });
+  const saveEntry = useCallback(
+    async (content: string, saveOptions?: SaveEntryOptions): Promise<string> => {
+      try {
+        const entryId = await secureInvoke<string>('persistent_memory_write_entry', {
+          content,
+          level: saveOptions?.level || 'session',
+          topic: saveOptions?.topic,
+          importance: saveOptions?.importance,
+          contentType: saveOptions?.contentType,
+          tags: saveOptions?.tags,
+          title: saveOptions?.title,
+          projectId: saveOptions?.projectId,
+          modeId,
+        });
 
-      // Rafraîchir après écriture
-      await refresh();
+        // Rafraîchir après écriture
+        await refresh();
 
-      return entryId;
-    } catch (err) {
-      console.error('[usePersistentMemory] Erreur de sauvegarde:', err);
-      throw err;
-    }
-  }, [modeId, refresh]);
+        return entryId;
+      } catch (err) {
+        console.error('[usePersistentMemory] Erreur de sauvegarde:', err);
+        throw err;
+      }
+    },
+    [modeId, refresh]
+  );
 
-  const promoteEntry = useCallback(async (entryId: string): Promise<boolean> => {
-    try {
-      await secureInvoke('persistent_memory_promote_entry', { entryId });
-      await refresh();
-      return true;
-    } catch (err) {
-      console.error('[usePersistentMemory] Erreur de promotion:', err);
-      return false;
-    }
-  }, [refresh]);
+  const promoteEntry = useCallback(
+    async (entryId: string): Promise<boolean> => {
+      try {
+        await secureInvoke('persistent_memory_promote_entry', { entryId });
+        await refresh();
+        return true;
+      } catch (err) {
+        console.error('[usePersistentMemory] Erreur de promotion:', err);
+        return false;
+      }
+    },
+    [refresh]
+  );
 
-  const archiveEntry = useCallback(async (entryId: string): Promise<boolean> => {
-    try {
-      await secureInvoke('persistent_memory_archive_entry', { entryId });
-      await refresh();
-      return true;
-    } catch (err) {
-      console.error('[usePersistentMemory] Erreur d\'archivage:', err);
-      return false;
-    }
-  }, [refresh]);
+  const archiveEntry = useCallback(
+    async (entryId: string): Promise<boolean> => {
+      try {
+        await secureInvoke('persistent_memory_archive_entry', { entryId });
+        await refresh();
+        return true;
+      } catch (err) {
+        console.error("[usePersistentMemory] Erreur d'archivage:", err);
+        return false;
+      }
+    },
+    [refresh]
+  );
 
-  const deleteEntry = useCallback(async (entryId: string): Promise<boolean> => {
-    try {
-      await secureInvoke('persistent_memory_delete_entry', { entryId });
+  const deleteEntry = useCallback(
+    async (entryId: string): Promise<boolean> => {
+      try {
+        await secureInvoke('persistent_memory_delete_entry', { entryId });
 
-      // Supprimer du cache immédiatement
-      persistentMemoryCache.entries.delete(entryId);
+        // Supprimer du cache immédiatement
+        persistentMemoryCache.entries.delete(entryId);
 
-      await refresh();
-      return true;
-    } catch (err) {
-      console.error('[usePersistentMemory] Erreur de suppression:', err);
-      return false;
-    }
-  }, [refresh]);
+        await refresh();
+        return true;
+      } catch (err) {
+        console.error('[usePersistentMemory] Erreur de suppression:', err);
+        return false;
+      }
+    },
+    [refresh]
+  );
 
-  const requestSummary = useCallback(async (entryIds: string[], title?: string): Promise<string> => {
-    try {
-      const summaryId = await secureInvoke<string>('persistent_memory_create_summary', {
-        entryIds,
-        title,
-        modeId,
-      });
+  const requestSummary = useCallback(
+    async (entryIds: string[], title?: string): Promise<string> => {
+      try {
+        const summaryId = await secureInvoke<string>('persistent_memory_create_summary', {
+          entryIds,
+          title,
+          modeId,
+        });
 
-      await refresh();
-      return summaryId;
-    } catch (err) {
-      console.error('[usePersistentMemory] Erreur de création résumé:', err);
-      throw err;
-    }
-  }, [modeId, refresh]);
+        await refresh();
+        return summaryId;
+      } catch (err) {
+        console.error('[usePersistentMemory] Erreur de création résumé:', err);
+        throw err;
+      }
+    },
+    [modeId, refresh]
+  );
 
   // ─────────────────────────────────────────────────────────────────────────
   // FONCTIONS BUNDLES
   // ─────────────────────────────────────────────────────────────────────────
 
-  const createBundle = useCallback(async (
-    name: string,
-    entryIds: string[],
-    topic?: MemoryTopic
-  ): Promise<string> => {
-    try {
-      const bundleId = await secureInvoke<string>('persistent_memory_create_bundle', {
-        name,
-        entryIds,
-        topic: topic || 'general',
-      });
+  const createBundle = useCallback(
+    async (name: string, entryIds: string[], topic?: MemoryTopic): Promise<string> => {
+      try {
+        const bundleId = await secureInvoke<string>('persistent_memory_create_bundle', {
+          name,
+          entryIds,
+          topic: topic || 'general',
+        });
 
-      await refresh();
-      return bundleId;
-    } catch (err) {
-      console.error('[usePersistentMemory] Erreur de création bundle:', err);
-      throw err;
-    }
-  }, [refresh]);
+        await refresh();
+        return bundleId;
+      } catch (err) {
+        console.error('[usePersistentMemory] Erreur de création bundle:', err);
+        throw err;
+      }
+    },
+    [refresh]
+  );
 
-  const addToBundle = useCallback(async (bundleId: string, entryIds: string[]): Promise<boolean> => {
-    try {
-      await secureInvoke('persistent_memory_add_to_bundle', { bundleId, entryIds });
-      await refresh();
-      return true;
-    } catch (err) {
-      console.error('[usePersistentMemory] Erreur d\'ajout au bundle:', err);
-      return false;
-    }
-  }, [refresh]);
+  const addToBundle = useCallback(
+    async (bundleId: string, entryIds: string[]): Promise<boolean> => {
+      try {
+        await secureInvoke('persistent_memory_add_to_bundle', { bundleId, entryIds });
+        await refresh();
+        return true;
+      } catch (err) {
+        console.error("[usePersistentMemory] Erreur d'ajout au bundle:", err);
+        return false;
+      }
+    },
+    [refresh]
+  );
 
   // ─────────────────────────────────────────────────────────────────────────
   // UTILS
@@ -499,7 +550,7 @@ export function usePersistentMemory(options: UsePersistentMemoryOptions): UsePer
     try {
       return await secureInvoke<string>('persistent_memory_export');
     } catch (err) {
-      console.error('[usePersistentMemory] Erreur d\'export:', err);
+      console.error("[usePersistentMemory] Erreur d'export:", err);
       throw err;
     }
   }, []);
@@ -586,7 +637,10 @@ export function usePersistentMemory(options: UsePersistentMemoryOptions): UsePer
 /**
  * Hook simplifié pour obtenir le contexte mémoire pour l'IA
  */
-export function usePersistentMemoryContext(modeId: ChatModeId, query: string): {
+export function usePersistentMemoryContext(
+  modeId: ChatModeId,
+  query: string
+): {
   context: string;
   usedEntries: string[];
   isLoading: boolean;

@@ -199,7 +199,11 @@
 }
 
 .modal-content {
-  background: linear-gradient(135deg, rgba(26, 28, 44, 0.95) 0%, rgba(18, 20, 32, 0.98) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(26, 28, 44, 0.95) 0%,
+    rgba(18, 20, 32, 0.98) 100%
+  );
   border: 1px solid rgba(102, 126, 234, 0.3);
   border-radius: 20px;
   width: 90%;

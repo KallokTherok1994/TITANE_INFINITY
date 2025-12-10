@@ -1,6 +1,7 @@
 # 🔥 GUIDE CORRECTION UNWRAP/EXPECT — Phase 1 Stabilisation v20.0
 
 ## 🎯 Objectif
+
 Remplacer **100+ occurrences** de `unwrap()` / `expect()` par gestion d'erreurs robuste avec `AppError`.
 
 ---
@@ -10,6 +11,7 @@ Remplacer **100+ occurrences** de `unwrap()` / `expect()` par gestion d'erreurs 
 ### 🚨 **P0 — CRITIQUE (Production, non-test)**
 
 #### 1. `commands/orchestration_center.rs` (ligne 144)
+
 ```rust
 // ❌ AVANT (DANGEREUX)
 let api_key = api_key.unwrap();
@@ -27,6 +29,7 @@ let api_key = api_key.ok_or_else(|| {
 ---
 
 #### 2. `commands/ai_chat.rs` (ligne 96)
+
 ```rust
 // ❌ AVANT (DANGEREUX)
 .expect("Failed to initialize memory storage")
@@ -42,6 +45,7 @@ let api_key = api_key.ok_or_else(|| {
 ---
 
 #### 3. `commands/persistent_memory.rs` (ligne 241)
+
 ```rust
 // ❌ AVANT (DANGEREUX)
 .expect("Failed to get app data dir")
@@ -57,6 +61,7 @@ let api_key = api_key.ok_or_else(|| {
 ---
 
 #### 4. `app/main.rs` (ligne 46)
+
 ```rust
 // ❌ AVANT (DANGEREUX)
 .expect("error while running tauri application")
@@ -75,6 +80,7 @@ let api_key = api_key.ok_or_else(|| {
 ---
 
 #### 5. `system_center/logs.rs` (lignes 153, 185, 205)
+
 ```rust
 // ❌ AVANT (DANGEREUX)
 let buffer = LOG_BUFFER.lock().unwrap();
@@ -91,6 +97,7 @@ let buffer = LOG_BUFFER.lock()
 ---
 
 #### 6. `commands/evolution_v14.rs` (lignes 99, 128)
+
 ```rust
 // ❌ AVANT (DANGEREUX)
 let mut evolution_state = state.state.lock().unwrap();
@@ -107,6 +114,7 @@ let mut evolution_state = state.state.lock()
 ---
 
 #### 7. `commands/automations.rs` (lignes 243, 843)
+
 ```rust
 // ❌ AVANT (DANGEREUX)
 let configs = state.configs.lock().unwrap();
@@ -125,6 +133,7 @@ let configs = state.configs.lock()
 ### ⚠️ **P1 — HAUTE PRIORITÉ (Tests, mais patterns dangereux)**
 
 #### 8. `security/validation.rs` (lignes 20-24)
+
 ```rust
 // ❌ AVANT (ACCEPTABLE en lazy_static, mais à documenter)
 Regex::new(r"<script[^>]*>.*?</script>").unwrap(),
@@ -138,6 +147,7 @@ Regex::new(r"javascript:").unwrap(),
 ---
 
 #### 9. `security/vault_engine.rs` (10+ dans tests)
+
 ```rust
 // Tests uniquement — Acceptable mais à améliorer
 let vault = VaultEngine::new(&master_key).await.unwrap();
@@ -150,6 +160,7 @@ let vault = VaultEngine::new(&master_key).await.unwrap();
 ---
 
 #### 10. `meta_energy/distributor.rs` (lignes 212, 373)
+
 ```rust
 // ❌ AVANT (DANGEREUX même en test)
 let (best_agent_id, _, _) = candidates.first().unwrap();
@@ -168,6 +179,7 @@ let (best_agent_id, _, _) = candidates.first()
 ### 🟡 **P2 — MOYENNE PRIORITÉ (Cycle, API Hub, AGI)**
 
 #### 11. `cycle_engine/engine.rs` (lignes 263, 268)
+
 ```rust
 // Tests uniquement
 engine.start().await.expect("Failed to start");
@@ -179,6 +191,7 @@ engine.start().await.expect("Failed to start");
 ---
 
 #### 12. `api_hub/temporal_rate_limiter.rs` (ligne 214)
+
 ```rust
 // ❌ AVANT (TEST)
 limiter.acquire_permit().await.unwrap();
@@ -193,6 +206,7 @@ limiter.acquire_permit().await?;
 ---
 
 #### 13. `agi_core/*` (15+ dans tests)
+
 Tous dans tests → **P2** — Corriger progressivement.
 
 ---
@@ -200,9 +214,11 @@ Tous dans tests → **P2** — Corriger progressivement.
 ### 🟢 **P3 — BASSE PRIORITÉ (Cloud, AI cache, config)**
 
 #### 14. `cloud/cloud_crypto.rs` (10+ dans tests)
+
 Tests uniquement → **P3**.
 
 #### 15. `ai/cache.rs`, `ai/config_multi.rs` (tests)
+
 Tests uniquement → **P3**.
 
 ---
@@ -210,6 +226,7 @@ Tests uniquement → **P3**.
 ## 🔧 Stratégie de Correction (Phase par Phase)
 
 ### **Phase 1.1: P0 Commands** ✅ (À FAIRE MAINTENANT)
+
 - [ ] `commands/orchestration_center.rs` (ligne 144)
 - [ ] `commands/ai_chat.rs` (ligne 96)
 - [ ] `commands/persistent_memory.rs` (ligne 241)
@@ -220,6 +237,7 @@ Tests uniquement → **P3**.
 ---
 
 ### **Phase 1.2: P0 System Center** (SUIVANT)
+
 - [ ] `system_center/logs.rs` (3 occurrences)
 - [ ] `commands/evolution_v14.rs` (2 occurrences)
 - [ ] `commands/automations.rs` (2 occurrences)
@@ -229,6 +247,7 @@ Tests uniquement → **P3**.
 ---
 
 ### **Phase 1.3: P1 Security** (APRÈS P0)
+
 - [ ] Documenter `security/validation.rs` (lazy_static OK)
 - [ ] Améliorer `security/vault_engine.rs` tests (optionnel)
 
@@ -237,6 +256,7 @@ Tests uniquement → **P3**.
 ---
 
 ### **Phase 1.4: P1 Meta-Energy** (IMPORTANT)
+
 - [ ] `meta_energy/distributor.rs` (2 occurrences critiques)
 
 **Estimation**: 15 min
@@ -244,6 +264,7 @@ Tests uniquement → **P3**.
 ---
 
 ### **Phase 1.5: P2/P3** (OPTIONNEL)
+
 - [ ] Améliorer tests progressivement
 
 ---
@@ -251,6 +272,7 @@ Tests uniquement → **P3**.
 ## 🧪 Tests Après Correction
 
 ### Commandes de validation
+
 ```bash
 # Scanner unwrap/expect restants
 rg 'unwrap\(\)|expect\(' src-tauri/src --type rust | grep -v "\.rs:#\[cfg(test)\]" | grep -v "// Safe:"
@@ -263,6 +285,7 @@ cargo test --lib
 ```
 
 ### Résultat attendu
+
 - **P0**: 0 unwrap/expect en code production
 - **P1**: Documentés ou corrigés
 - **P2/P3**: Améliorés progressivement
@@ -272,6 +295,7 @@ cargo test --lib
 ## 📚 Pattern de Correction Complet
 
 ### 1. Option<T> → Result<T, E>
+
 ```rust
 // AVANT
 let value = option.unwrap();
@@ -281,6 +305,7 @@ let value = option.ok_or_else(|| AppError::InvalidInput("Value is None".to_strin
 ```
 
 ### 2. Result<T, E> → Propagation
+
 ```rust
 // AVANT
 let content = fs::read_to_string(path).unwrap();
@@ -291,6 +316,7 @@ let content = fs::read_to_string(path)
 ```
 
 ### 3. Mutex/RwLock poison
+
 ```rust
 // AVANT
 let guard = mutex.lock().unwrap();
@@ -301,6 +327,7 @@ let guard = mutex.lock()
 ```
 
 ### 4. Tests unitaires (optionnel mais mieux)
+
 ```rust
 // AVANT
 #[tokio::test]

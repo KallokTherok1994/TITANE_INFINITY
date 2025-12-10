@@ -160,11 +160,11 @@ export const AppMinimal: React.FC = () => {
             cursor: 'pointer',
             transition: 'transform 0.2s, box-shadow 0.2s',
           }}
-          onMouseEnter={(e) => {
+          onMouseEnter={e => {
             e.currentTarget.style.transform = 'translateY(-2px)';
             e.currentTarget.style.boxShadow = '0 8px 16px rgba(99, 102, 241, 0.4)';
           }}
-          onMouseLeave={(e) => {
+          onMouseLeave={e => {
             e.currentTarget.style.transform = 'translateY(0)';
             e.currentTarget.style.boxShadow = 'none';
           }}
@@ -233,7 +233,8 @@ export const AppMinimal: React.FC = () => {
           Environment: {import.meta.env.DEV ? 'Development' : 'Production'}
         </p>
         <p style={{ marginTop: '0.5rem' }}>
-          Tauri: {typeof window.__TAURI__ !== 'undefined' ? '✅ Available' : '⚠️ Not detected'}
+          Tauri:{' '}
+          {typeof window.__TAURI__ !== 'undefined' ? '✅ Available' : '⚠️ Not detected'}
         </p>
       </div>
     </div>

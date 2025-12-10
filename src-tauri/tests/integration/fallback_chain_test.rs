@@ -3,10 +3,8 @@
 // Copyright (c) 2025 TITANE∞ Team
 
 use std::sync::Arc;
+use titane_infinity::singularity::ia_context::{IAContext, IARequestRecord, IAStatus};
 use tokio::sync::RwLock;
-use titane_infinity::singularity::ia_context::{
-    IAContext, IARequestRecord, IAStatus,
-};
 
 #[tokio::test]
 async fn test_full_fallback_chain() {
@@ -110,7 +108,8 @@ async fn test_full_fallback_chain() {
     {
         let ctx = ia_context.read().await;
         assert_eq!(
-            ctx.request_history.len(), 1,
+            ctx.request_history.len(),
+            1,
             "Should have 1 request in history"
         );
         assert_eq!(
@@ -131,7 +130,9 @@ async fn test_full_fallback_chain() {
     // Test 6: Verify local engine metrics
     {
         let ctx = ia_context.read().await;
-        let metrics = ctx.engine_metrics.get("local")
+        let metrics = ctx
+            .engine_metrics
+            .get("local")
             .expect("Local metrics should exist");
 
         assert_eq!(metrics.total_requests, 1);
@@ -144,11 +145,7 @@ async fn test_full_fallback_chain() {
     {
         let ctx = ia_context.read().await;
         let next = ctx.get_next_fallback_engine("local");
-        assert_eq!(
-            next,
-            None,
-            "Should have no fallback after local"
-        );
+        assert_eq!(next, None, "Should have no fallback after local");
         println!("✅ Test 7: No more fallback after local (end of chain)");
     }
 
@@ -208,11 +205,7 @@ async fn test_no_fallback_when_disabled() {
     {
         let ctx = ia_context.read().await;
         let next = ctx.get_next_fallback_engine("claude");
-        assert_eq!(
-            next,
-            None,
-            "Should return None when auto_fallback disabled"
-        );
+        assert_eq!(next, None, "Should return None when auto_fallback disabled");
         println!("✅ No fallback when auto_fallback_enabled = false");
     }
 }

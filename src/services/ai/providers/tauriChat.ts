@@ -78,7 +78,10 @@ class TauriChatProvider implements AIProvider {
     const now = Date.now();
 
     // Cache le résultat pendant 30s
-    if (this.backendAvailable !== null && now - this.lastCheckTime < this.CHECK_INTERVAL) {
+    if (
+      this.backendAvailable !== null &&
+      now - this.lastCheckTime < this.CHECK_INTERVAL
+    ) {
       return this.backendAvailable;
     }
 
@@ -91,15 +94,16 @@ class TauriChatProvider implements AIProvider {
     }
 
     try {
-      isDev && console.log('🔍 Tauri Chat Provider OMEGA: Checking backend availability...');
+      isDev &&
+        console.log('🔍 Tauri Chat Provider OMEGA: Checking backend availability...');
 
       // OMEGA: Protected invoke with timeout
       const status = await Promise.race([
         safeInvokeTauri<ProviderStatus[]>(TAURI_COMMANDS.CHAT_GET_PROVIDERS_STATUS),
         new Promise<null>((_, reject) =>
           setTimeout(() => reject(new Error('Backend check timeout')), 5000)
-        )
-      ]).catch((error) => {
+        ),
+      ]).catch(error => {
         this.handleInvokeError(error, 'isAvailable');
         return null;
       });
@@ -111,7 +115,10 @@ class TauriChatProvider implements AIProvider {
         this.errorCount = 0; // Reset error count on success
       }
 
-      isDev && console.log(`   ${this.backendAvailable ? '✅' : '❌'} Backend available: ${this.backendAvailable}`);
+      isDev &&
+        console.log(
+          `   ${this.backendAvailable ? '✅' : '❌'} Backend available: ${this.backendAvailable}`
+        );
 
       return this.backendAvailable;
     } catch (error) {
@@ -152,7 +159,10 @@ class TauriChatProvider implements AIProvider {
         system_prompt: this.buildSystemPrompt(history),
       };
 
-      isDev && console.log(`   📝 Message: "${message.substring(0, 50)}${message.length > 50 ? '...' : ''}"`);
+      isDev &&
+        console.log(
+          `   📝 Message: "${message.substring(0, 50)}${message.length > 50 ? '...' : ''}"`
+        );
       isDev && console.log(`   📚 History: ${history.length} messages`);
       isDev && console.log(`   🎯 Provider mode: auto (cascade)`);
 
@@ -161,7 +171,7 @@ class TauriChatProvider implements AIProvider {
         safeInvokeTauri<ChatResponse>(TAURI_COMMANDS.CHAT_SEND_MESSAGE, { request }),
         new Promise<never>((_, reject) =>
           setTimeout(() => reject(new Error('Backend invoke timeout')), this.TIMEOUT_MS)
-        )
+        ),
       ]);
 
       if (!response?.success) {
@@ -174,7 +184,10 @@ class TauriChatProvider implements AIProvider {
       }
 
       isDev && console.log(`   ✅ Response received in ${response.latency_ms}ms`);
-      isDev && console.log(`   🏷️  Provider: ${response.message.provider}, Model: ${response.message.model}`);
+      isDev &&
+        console.log(
+          `   🏷️  Provider: ${response.message.provider}, Model: ${response.message.model}`
+        );
       isDev && console.log(`   📦 Content: ${response.message.content.length} chars`);
 
       // Reset error count on success
@@ -214,16 +227,20 @@ class TauriChatProvider implements AIProvider {
       context,
       errorCount: this.errorCount,
       metadata,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
 
-    isDev && console.error(`   ❌ Tauri invoke error [${context}]: ${errorObj.message} (${this.errorCount}/${this.MAX_ERRORS})`);
+    isDev &&
+      console.error(
+        `   ❌ Tauri invoke error [${context}]: ${errorObj.message} (${this.errorCount}/${this.MAX_ERRORS})`
+      );
 
     // Si trop d'erreurs, marquer comme indisponible
     if (this.errorCount >= this.MAX_ERRORS) {
       this.backendAvailable = false;
       this.lastCheckTime = Date.now();
-      isDev && console.warn(`   🚫 Tauri backend disabled after ${this.errorCount} errors`);
+      isDev &&
+        console.warn(`   🚫 Tauri backend disabled after ${this.errorCount} errors`);
     }
   }
 
@@ -231,7 +248,10 @@ class TauriChatProvider implements AIProvider {
    * Stream pas encore implémenté côté Rust (OMEGA Protected)
    */
   async *stream(message: string, history: AIMessage[] = []): AsyncGenerator<string> {
-    isDev && console.warn('⚠️ Tauri Chat Provider OMEGA: Streaming not implemented, falling back to generate()');
+    isDev &&
+      console.warn(
+        '⚠️ Tauri Chat Provider OMEGA: Streaming not implemented, falling back to generate()'
+      );
 
     try {
       // Fallback: utilise generate() et simule le streaming
@@ -242,7 +262,7 @@ class TauriChatProvider implements AIProvider {
         if (char !== undefined) {
           yield char;
         }
-        await new Promise((resolve) => setTimeout(resolve, 10));
+        await new Promise(resolve => setTimeout(resolve, 10));
       }
     } catch (error) {
       this.handleInvokeError(error, 'stream');
@@ -254,14 +274,14 @@ class TauriChatProvider implements AIProvider {
    * Construit un prompt système depuis l'historique
    */
   private buildSystemPrompt(history: AIMessage[]): string | undefined {
-    const systemMessages = history.filter((m) => m.role === 'system');
+    const systemMessages = history.filter(m => m.role === 'system');
 
     if (systemMessages.length === 0) {
       return undefined;
     }
 
     // Combine tous les messages système
-    return systemMessages.map((m) => m.content).join('\n\n');
+    return systemMessages.map(m => m.content).join('\n\n');
   }
 
   /**
@@ -273,7 +293,7 @@ class TauriChatProvider implements AIProvider {
         safeInvokeTauri<ProviderStatus[]>(TAURI_COMMANDS.CHAT_GET_PROVIDERS_STATUS),
         new Promise<ProviderStatus[]>((_, reject) =>
           setTimeout(() => reject(new Error('Status check timeout')), 10000)
-        )
+        ),
       ]);
 
       return Array.isArray(status) ? status : [];
@@ -296,7 +316,7 @@ class TauriChatProvider implements AIProvider {
         safeInvokeTauri(TAURI_COMMANDS.CHAT_SET_GEMINI_KEY, { api_key: apiKey.trim() }),
         new Promise<never>((_, reject) =>
           setTimeout(() => reject(new Error('Set API key timeout')), 15000)
-        )
+        ),
       ]);
 
       isDev && console.log('✅ Gemini API key configured in backend');
@@ -320,11 +340,11 @@ class TauriChatProvider implements AIProvider {
   /**
    * OMEGA: Get provider stats
    */
-  getStats(): { errorCount: number, maxErrors: number, available: boolean | null } {
+  getStats(): { errorCount: number; maxErrors: number; available: boolean | null } {
     return {
       errorCount: this.errorCount,
       maxErrors: this.MAX_ERRORS,
-      available: this.backendAvailable
+      available: this.backendAvailable,
     };
   }
 }

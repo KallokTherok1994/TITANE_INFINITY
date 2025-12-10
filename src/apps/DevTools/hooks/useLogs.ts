@@ -24,7 +24,7 @@ export function useLogs(options: UseLogsOptions = {}) {
     let unlisten: UnlistenFn | null = null;
 
     const setupListener = async () => {
-      unlisten = await listen<LogEntry>('log_event', (event) => {
+      unlisten = await listen<LogEntry>('log_event', event => {
         const log = event.payload;
 
         // Apply filters
@@ -36,7 +36,7 @@ export function useLogs(options: UseLogsOptions = {}) {
           return;
         }
 
-        setLogs((prev) => {
+        setLogs(prev => {
           const updated = [log, ...prev];
           // Keep only maxEntries
           return updated.slice(0, maxEntries);

@@ -107,7 +107,10 @@ impl CloudSyncEngine {
             vec![]
         };
 
-        info!("[CloudSync] Engine initialized with {} known devices", known_devices.len());
+        info!(
+            "[CloudSync] Engine initialized with {} known devices",
+            known_devices.len()
+        );
 
         Ok(Self {
             vault_engine,
@@ -172,7 +175,10 @@ impl CloudSyncEngine {
                 };
 
                 self.record_sync(&sync_result)?;
-                info!("[CloudSync] Push completed in {}ms (revision {})", duration, local_revision);
+                info!(
+                    "[CloudSync] Push completed in {}ms (revision {})",
+                    duration, local_revision
+                );
 
                 Ok(sync_result)
             }
@@ -361,7 +367,10 @@ impl CloudSyncEngine {
         let local_vault = self.vault_engine.get_vault();
         if let Some(local) = local_vault {
             if local.revision >= remote_meta.revision {
-                info!("[CloudSync] Local vault is up to date (revision {})", local.revision);
+                info!(
+                    "[CloudSync] Local vault is up to date (revision {})",
+                    local.revision
+                );
                 return Ok((local.clone(), vec![]));
             }
         }
@@ -378,11 +387,9 @@ impl CloudSyncEngine {
         let encrypted: EncryptedData = serde_json::from_str(&encrypted_content)?;
 
         // Créer un crypto engine avec le même passphrase
-        let salt_bytes = base64::Engine::decode(
-            &base64::engine::general_purpose::STANDARD,
-            &encrypted.salt,
-        )
-        .map_err(|e| CloudSyncError::DecryptionFailed(e.to_string()))?;
+        let salt_bytes =
+            base64::Engine::decode(&base64::engine::general_purpose::STANDARD, &encrypted.salt)
+                .map_err(|e| CloudSyncError::DecryptionFailed(e.to_string()))?;
 
         let mut salt = [0u8; 16];
         salt.copy_from_slice(&salt_bytes[..16]);
@@ -392,8 +399,9 @@ impl CloudSyncEngine {
 
         // Déchiffrer
         let decrypted = fs::read(&vault_dst)?;
-        let remote_vault: CloudVault = serde_json::from_slice(&decrypted)
-            .map_err(|_| CloudSyncError::DecryptionFailed("Failed to parse remote vault".to_string()))?;
+        let remote_vault: CloudVault = serde_json::from_slice(&decrypted).map_err(|_| {
+            CloudSyncError::DecryptionFailed("Failed to parse remote vault".to_string())
+        })?;
 
         // Nettoyer les fichiers temporaires
         let _ = fs::remove_file(&vault_dst);
@@ -407,7 +415,10 @@ impl CloudSyncEngine {
             self.save_known_devices()?;
         }
 
-        info!("[CloudSync] Pulled from local folder (revision {})", remote_vault.revision);
+        info!(
+            "[CloudSync] Pulled from local folder (revision {})",
+            remote_vault.revision
+        );
 
         Ok((remote_vault, vec![]))
     }
@@ -490,7 +501,10 @@ impl CloudSyncEngine {
             device_id: self.vault_engine.get_device_identity().device_id.clone(),
             action: ChangeAction::ConflictResolved,
             affected_keys: vec!["*".to_string()],
-            description: Some(format!("Merged revisions {} and {}", local.revision, remote.revision)),
+            description: Some(format!(
+                "Merged revisions {} and {}",
+                local.revision, remote.revision
+            )),
         });
 
         Ok((merged, conflicts_count))
@@ -553,9 +567,10 @@ impl CloudSyncEngine {
         // Fusionner les changelogs
         let mut all_entries = local.changelog.clone();
         for entry in &remote.changelog {
-            if !all_entries.iter().any(|e|
-                e.timestamp == entry.timestamp && e.device_id == entry.device_id
-            ) {
+            if !all_entries
+                .iter()
+                .any(|e| e.timestamp == entry.timestamp && e.device_id == entry.device_id)
+            {
                 all_entries.push(entry.clone());
             }
         }
@@ -572,9 +587,7 @@ impl CloudSyncEngine {
 
     /// Retourne le statut actuel
     pub fn get_status(&self) -> SyncStatus {
-        self.status.read()
-            .map(|s| *s)
-            .unwrap_or(SyncStatus::Idle)
+        self.status.read().map(|s| *s).unwrap_or(SyncStatus::Idle)
     }
 
     /// Définit le statut
@@ -607,7 +620,10 @@ impl CloudSyncEngine {
 
         // Sauvegarder
         let history_path = self.data_path.join("sync_history.json");
-        fs::write(&history_path, serde_json::to_string_pretty(&self.sync_history)?)?;
+        fs::write(
+            &history_path,
+            serde_json::to_string_pretty(&self.sync_history)?,
+        )?;
 
         Ok(())
     }
@@ -615,7 +631,10 @@ impl CloudSyncEngine {
     /// Sauvegarde les appareils connus
     fn save_known_devices(&self) -> Result<(), CloudSyncError> {
         let devices_path = self.data_path.join("known_devices.json");
-        fs::write(&devices_path, serde_json::to_string_pretty(&self.known_devices)?)?;
+        fs::write(
+            &devices_path,
+            serde_json::to_string_pretty(&self.known_devices)?,
+        )?;
         Ok(())
     }
 

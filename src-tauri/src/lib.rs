@@ -31,6 +31,7 @@ pub mod core; // ✅ SingularityEngine v16 + modules
 pub mod engine; // ✅ Auto-Evolution & Engine Diagnostics v16 (existing)
 pub mod engine_trait; // ✅ v24 - Engine trait + OrchestratorEngine (TODO #13)
 pub mod error; // ✅ v24 - Unified TitaneError enum (TODO #12)
+pub mod errors;
 pub mod meta; // ✅ Meta-Cognition & Deep Sync v18 (NEW)
 pub mod narrative; // ✅ NarrativeEngine v22 (NEW)
 pub mod qa; // ✅ QA Engine v19.8 (NEW)
@@ -40,8 +41,7 @@ pub mod singularity_cortex; // ✅ Singularity Cortex OS v∞ — SUPER PROMPT #
 pub mod singularity_fusion;
 pub mod types; // ✅ Type definitions
 pub mod utils; // ✅ Utilities (AppResult, AppError)
-pub mod watchdog; // ✅ Watchdog Engine v17 (NEW)
-pub mod errors; // ✅ Phase 1 Stabilisation v20.0: Unified AppError (NEW) // ✅ SingularityFusion vΩ (NEW)
+pub mod watchdog; // ✅ Watchdog Engine v17 (NEW) // ✅ Phase 1 Stabilisation v20.0: Unified AppError (NEW) // ✅ SingularityFusion vΩ (NEW)
 
 // ═══════════════════════════════════════════════════════════════
 // KERNEL v20Ω.0 (Super Prompt #11)
@@ -63,11 +63,11 @@ pub mod profiling; // ✅ IPC Performance Profiler v19.5.0 (NEW)
 
 // ═══════════════════════════════════════════════════════════════
 pub mod ipc; // ✅ IPC Cache Layer v19.5.2 P2-1 Phase 4 (NEW)
-// CACHING SYSTEM v19.5.2 P2-2 (NEW)
-// ═══════════════════════════════════════════════════════════════
+             // CACHING SYSTEM v19.5.2 P2-2 (NEW)
+             // ═══════════════════════════════════════════════════════════════
 
-pub mod cache; // ✅ Intelligent Cache LRU + Persistent v19.5.2 P2-2 (NEW)
-pub mod batch; // ✅ Batch Request System v19.5.2 P2-3 (NEW)
+pub mod batch;
+pub mod cache; // ✅ Intelligent Cache LRU + Persistent v19.5.2 P2-2 (NEW) // ✅ Batch Request System v19.5.2 P2-3 (NEW)
 
 // ═══════════════════════════════════════════════════════════════
 // AI & MEMORY v15

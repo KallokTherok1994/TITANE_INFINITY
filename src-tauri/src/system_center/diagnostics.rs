@@ -123,8 +123,10 @@ async fn test_async_runtime() -> DiagnosticResult {
     // Test async capability with timeout
     match tokio::time::timeout(
         std::time::Duration::from_millis(100),
-        tokio::time::sleep(std::time::Duration::from_millis(10))
-    ).await {
+        tokio::time::sleep(std::time::Duration::from_millis(10)),
+    )
+    .await
+    {
         Ok(_) => DiagnosticResult {
             id: "async_runtime".to_string(),
             title: "Runtime Async".to_string(),
@@ -160,25 +162,23 @@ fn test_serialization() -> DiagnosticResult {
     };
 
     match serde_json::to_string(&test) {
-        Ok(json) => {
-            match serde_json::from_str::<TestStruct>(&json) {
-                Ok(_) => DiagnosticResult {
-                    id: "serialization".to_string(),
-                    title: "Sérialisation JSON".to_string(),
-                    status: DiagnosticStatus::Success,
-                    message: "Serde JSON fonctionnel".to_string(),
-                    duration_ms: Some(start.elapsed().as_millis() as u64),
-                    data: None,
-                },
-                Err(e) => DiagnosticResult {
-                    id: "serialization".to_string(),
-                    title: "Sérialisation JSON".to_string(),
-                    status: DiagnosticStatus::Error,
-                    message: format!("Erreur désérialisation: {}", e),
-                    duration_ms: Some(start.elapsed().as_millis() as u64),
-                    data: None,
-                },
-            }
+        Ok(json) => match serde_json::from_str::<TestStruct>(&json) {
+            Ok(_) => DiagnosticResult {
+                id: "serialization".to_string(),
+                title: "Sérialisation JSON".to_string(),
+                status: DiagnosticStatus::Success,
+                message: "Serde JSON fonctionnel".to_string(),
+                duration_ms: Some(start.elapsed().as_millis() as u64),
+                data: None,
+            },
+            Err(e) => DiagnosticResult {
+                id: "serialization".to_string(),
+                title: "Sérialisation JSON".to_string(),
+                status: DiagnosticStatus::Error,
+                message: format!("Erreur désérialisation: {}", e),
+                duration_ms: Some(start.elapsed().as_millis() as u64),
+                data: None,
+            },
         },
         Err(e) => DiagnosticResult {
             id: "serialization".to_string(),
@@ -193,8 +193,12 @@ fn test_serialization() -> DiagnosticResult {
 
 /// Calculate overall status from results
 fn calculate_overall_status(results: &[DiagnosticResult]) -> OverallStatus {
-    let has_errors = results.iter().any(|r| matches!(r.status, DiagnosticStatus::Error));
-    let has_warnings = results.iter().any(|r| matches!(r.status, DiagnosticStatus::Warning));
+    let has_errors = results
+        .iter()
+        .any(|r| matches!(r.status, DiagnosticStatus::Error));
+    let has_warnings = results
+        .iter()
+        .any(|r| matches!(r.status, DiagnosticStatus::Warning));
 
     if has_errors {
         OverallStatus::Critical
@@ -219,11 +223,7 @@ pub async fn sc_run_quick_diagnostics() -> Result<SystemDiagnostics, String> {
         .unwrap_or(0);
 
     // Tests rapides uniquement
-    let results = vec![
-        test_tauri_runtime(),
-        test_memory(),
-        test_serialization(),
-    ];
+    let results = vec![test_tauri_runtime(), test_memory(), test_serialization()];
 
     let overall_status = calculate_overall_status(&results);
 
@@ -255,7 +255,10 @@ pub async fn sc_run_full_diagnostics() -> Result<SystemDiagnostics, String> {
 
     let overall_status = calculate_overall_status(&results);
 
-    println!("[SystemCenter] Full diagnostics completed: {:?}", overall_status);
+    println!(
+        "[SystemCenter] Full diagnostics completed: {:?}",
+        overall_status
+    );
 
     Ok(SystemDiagnostics {
         timestamp,

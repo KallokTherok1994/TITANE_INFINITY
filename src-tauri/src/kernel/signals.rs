@@ -26,39 +26,25 @@ pub enum KernelSignal {
     },
 
     /// Memory system updated
-    MemoryUpdated {
-        layer: String,
-        operation: String,
-    },
+    MemoryUpdated { layer: String, operation: String },
 
     /// System overload detected
-    Overload {
-        level: u8,
-        cpu_usage: f32,
-    },
+    Overload { level: u8, cpu_usage: f32 },
 
     /// Watchdog heartbeat
-    Heartbeat {
-        timestamp: i64,
-    },
+    Heartbeat { timestamp: i64 },
 
     /// Request shutdown
-    Shutdown {
-        reason: String,
-    },
+    Shutdown { reason: String },
 
     /// Request state snapshot
     RequestSnapshot,
 
     /// Load shedding required
-    LoadShedding {
-        priority_threshold: u8,
-    },
+    LoadShedding { priority_threshold: u8 },
 
     /// Safe mode toggle
-    SafeMode {
-        enabled: bool,
-    },
+    SafeMode { enabled: bool },
 }
 
 /// Signal bus for kernel communication
@@ -130,10 +116,8 @@ mod tests {
         let mut rx1 = bus.subscribe();
         let mut rx2 = bus.subscribe();
 
-        bus.send(KernelSignal::Heartbeat {
-            timestamp: 123,
-        })
-        .unwrap();
+        bus.send(KernelSignal::Heartbeat { timestamp: 123 })
+            .unwrap();
 
         // Both should receive
         let signal1 = rx1.recv().await.unwrap();

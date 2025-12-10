@@ -17,14 +17,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import React, {
-  useRef,
-  useEffect,
-  useState,
-  useCallback,
-  useMemo,
-  memo
-} from 'react';
+import React, { useRef, useEffect, useState, useCallback, useMemo, memo } from 'react';
 import type { AIMessage } from '../../services/ai/types';
 
 // ═══════════════════════════════════════════════════════════════════
@@ -108,18 +101,22 @@ export const VirtualMessageList = memo(function VirtualMessageList({
   // SCROLL HANDLER
   // ═══════════════════════════════════════════════════════════════════
 
-  const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
-    const target = e.currentTarget;
-    setScrollTop(target.scrollTop);
+  const handleScroll = useCallback(
+    (e: React.UIEvent<HTMLDivElement>) => {
+      const target = e.currentTarget;
+      setScrollTop(target.scrollTop);
 
-    // Check if at bottom (with tolerance)
-    const isAtBottom = target.scrollHeight - target.scrollTop - target.clientHeight < 50;
-    isAtBottomRef.current = isAtBottom;
+      // Check if at bottom (with tolerance)
+      const isAtBottom =
+        target.scrollHeight - target.scrollTop - target.clientHeight < 50;
+      isAtBottomRef.current = isAtBottom;
 
-    if (isAtBottom && onScrollToBottom) {
-      onScrollToBottom();
-    }
-  }, [onScrollToBottom]);
+      if (isAtBottom && onScrollToBottom) {
+        onScrollToBottom();
+      }
+    },
+    [onScrollToBottom]
+  );
 
   // ═══════════════════════════════════════════════════════════════════
   // AUTO-SCROLL TO BOTTOM ON NEW MESSAGES
@@ -199,22 +196,25 @@ export const VirtualMessageList = memo(function VirtualMessageList({
   // ITEM MEASUREMENT CALLBACK
   // ═══════════════════════════════════════════════════════════════════
 
-  const measureItem = useCallback((index: number, element: HTMLElement | null) => {
-    if (!element || !shouldVirtualize) return;
+  const measureItem = useCallback(
+    (index: number, element: HTMLElement | null) => {
+      if (!element || !shouldVirtualize) return;
 
-    const height = Math.min(
-      Math.max(element.offsetHeight, CONFIG.MIN_ITEM_HEIGHT),
-      CONFIG.MAX_ITEM_HEIGHT
-    );
+      const height = Math.min(
+        Math.max(element.offsetHeight, CONFIG.MIN_ITEM_HEIGHT),
+        CONFIG.MAX_ITEM_HEIGHT
+      );
 
-    const current = measurementsRef.current.get(index);
-    if (!current || Math.abs(current.height - height) > 5) {
-      measurementsRef.current.set(index, {
-        offset: current?.offset ?? 0,
-        height,
-      });
-    }
-  }, [shouldVirtualize]);
+      const current = measurementsRef.current.get(index);
+      if (!current || Math.abs(current.height - height) > 5) {
+        measurementsRef.current.set(index, {
+          offset: current?.offset ?? 0,
+          height,
+        });
+      }
+    },
+    [shouldVirtualize]
+  );
 
   // ═══════════════════════════════════════════════════════════════════
   // RENDER
@@ -272,7 +272,7 @@ export const VirtualMessageList = memo(function VirtualMessageList({
             return (
               <div
                 key={message.metadata?.uiId ?? `msg-${absoluteIndex}`}
-                ref={(el) => measureItem(absoluteIndex, el)}
+                ref={el => measureItem(absoluteIndex, el)}
                 data-index={absoluteIndex}
               >
                 {renderMessage(message, absoluteIndex, isLast)}
@@ -298,23 +298,29 @@ export const VirtualMessageList = memo(function VirtualMessageList({
 // ═══════════════════════════════════════════════════════════════════
 
 export function useMessageListScroll(containerRef: React.RefObject<HTMLDivElement>) {
-  const scrollToBottom = useCallback((behavior: ScrollBehavior = 'smooth') => {
-    if (containerRef.current) {
-      containerRef.current.scrollTo({
-        top: containerRef.current.scrollHeight,
-        behavior,
-      });
-    }
-  }, [containerRef]);
-
-  const scrollToMessage = useCallback((index: number, behavior: ScrollBehavior = 'smooth') => {
-    if (containerRef.current) {
-      const item = containerRef.current.querySelector(`[data-index="${index}"]`);
-      if (item) {
-        item.scrollIntoView({ behavior, block: 'center' });
+  const scrollToBottom = useCallback(
+    (behavior: ScrollBehavior = 'smooth') => {
+      if (containerRef.current) {
+        containerRef.current.scrollTo({
+          top: containerRef.current.scrollHeight,
+          behavior,
+        });
       }
-    }
-  }, [containerRef]);
+    },
+    [containerRef]
+  );
+
+  const scrollToMessage = useCallback(
+    (index: number, behavior: ScrollBehavior = 'smooth') => {
+      if (containerRef.current) {
+        const item = containerRef.current.querySelector(`[data-index="${index}"]`);
+        if (item) {
+          item.scrollIntoView({ behavior, block: 'center' });
+        }
+      }
+    },
+    [containerRef]
+  );
 
   return { scrollToBottom, scrollToMessage };
 }

@@ -8,12 +8,12 @@
 // Recall: Semantic search across all tiers (indexed for O(1) lookup)
 // ═══════════════════════════════════════════════════════════════
 
-use crate::core::types::{EngineHealth, EngineResult, EngineError, ModuleInfo};
+use crate::core::types::{EngineError, EngineHealth, EngineResult, ModuleInfo};
+use chrono::Utc;
 use serde::{Deserialize, Serialize};
+use smallvec::SmallVec;
 use std::collections::{HashMap, VecDeque};
 use std::path::PathBuf;
-use chrono::Utc;
-use smallvec::SmallVec;
 
 pub type MemoryId = String;
 
@@ -39,15 +39,15 @@ pub struct UnifiedMemory {
     pub last_update_ms: u64,
 
     // Memory tiers (v20.1: VecDeque for efficient FIFO)
-    stm: ShortTermMemory,   // <1h, in-memory, VecDeque
-    mtm: MediumTermMemory,  // 1h-7d, hybrid, Vec (less frequent ops)
-    ltm: LongTermMemory,    // >7d, disk (AES-256-GCM)
+    stm: ShortTermMemory,  // <1h, in-memory, VecDeque
+    mtm: MediumTermMemory, // 1h-7d, hybrid, Vec (less frequent ops)
+    ltm: LongTermMemory,   // >7d, disk (AES-256-GCM)
 
     // v20.1: Fast lookup index (id → tier + position)
     #[serde(skip)]
-    stm_index: HashMap<MemoryId, usize>,  // id → VecDeque logical index
+    stm_index: HashMap<MemoryId, usize>, // id → VecDeque logical index
     #[serde(skip)]
-    mtm_index: HashMap<MemoryId, usize>,  // id → Vec index
+    mtm_index: HashMap<MemoryId, usize>, // id → Vec index
 
     // Metadata
     pub total_memories: u64,
@@ -64,7 +64,7 @@ pub struct UnifiedMemory {
 /// v20.1: ShortTermMemory with VecDeque for O(1) FIFO operations
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ShortTermMemory {
-    pub items: VecDeque<MemoryItem>,  // v20.1: VecDeque for efficient FIFO
+    pub items: VecDeque<MemoryItem>, // v20.1: VecDeque for efficient FIFO
     pub max_capacity: usize,
     pub retention_ms: u64, // 1 hour = 3_600_000ms
 }
@@ -89,7 +89,7 @@ pub struct MemoryItem {
     pub id: MemoryId,
     pub content: String,
     pub memory_type: MemoryType,
-    pub importance: f32, // 0.0 - 1.0
+    pub importance: f32,  // 0.0 - 1.0
     pub tags: MemoryTags, // v20.1: SmallVec<[String; 8]> - stack allocated for ≤8 tags
     pub created_at: u64,
     pub accessed_count: u32,
@@ -130,8 +130,8 @@ pub enum MemoryType {
 /// v20.1: Bounded timeline (max 1000 events) using VecDeque
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MemoryTimeline {
-    pub events: VecDeque<TimelineEvent>,  // v20.1: bounded FIFO
-    pub max_events: usize,                 // default: 1000
+    pub events: VecDeque<TimelineEvent>, // v20.1: bounded FIFO
+    pub max_events: usize,               // default: 1000
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -171,19 +171,19 @@ impl UnifiedMemory {
     const STM_CAPACITY: usize = 100;
     const MTM_CAPACITY: usize = 500;
     const TIMELINE_MAX_EVENTS: usize = 1000;
-    
+
     // === PUBLIC GETTERS (for Memory OS Bridge) ===
-    
+
     /// Get STM items (for Memory OS integration)
     pub fn get_stm_items(&self) -> &VecDeque<MemoryItem> {
         &self.stm.items
     }
-    
+
     /// Get MTM items (for Memory OS integration)
     pub fn get_mtm_items(&self) -> &Vec<MemoryItem> {
         &self.mtm.items
     }
-    
+
     /// Get LTM items (for Memory OS integration)
     /// Note: LTM is disk-based, returns empty Vec (use index for metadata)
     pub fn get_ltm_items(&self) -> Vec<MemoryItem> {
@@ -191,12 +191,12 @@ impl UnifiedMemory {
         // For now, return empty vec as items are not kept in memory
         Vec::new()
     }
-    
+
     /// Get LTM metadata index (for Memory OS integration)
     pub fn get_ltm_index(&self) -> &HashMap<MemoryId, MemoryMetadata> {
         &self.ltm.index
     }
-    
+
     // === CORE METHODS ===
 
     pub fn new() -> Self {
@@ -247,8 +247,9 @@ impl UnifiedMemory {
 
         // Create LTM storage directory
         if !self.ltm.storage_path.exists() {
-            std::fs::create_dir_all(&self.ltm.storage_path)
-                .map_err(|e| EngineError::Runtime(format!("Failed to create LTM storage: {}", e)))?;
+            std::fs::create_dir_all(&self.ltm.storage_path).map_err(|e| {
+                EngineError::Runtime(format!("Failed to create LTM storage: {}", e))
+            })?;
         }
 
         self.health = EngineHealth::Healthy;
@@ -261,18 +262,20 @@ impl UnifiedMemory {
     /// Main tick: promotion + cleanup
     pub async fn tick(&mut self) -> EngineResult<()> {
         if !self.initialized {
-            return Err(EngineError::Runtime("UnifiedMemory not initialized".to_string()));
+            return Err(EngineError::Runtime(
+                "UnifiedMemory not initialized".to_string(),
+            ));
         }
 
         let now = Self::current_timestamp();
-        
+
         // Auto-promote based on time + access patterns
         self.promote_stm_to_mtm()?;
         self.promote_mtm_to_ltm()?;
-        
+
         // Cleanup expired STM
         self.cleanup_stm()?;
-        
+
         // Compress LTM if needed
         if self.ltm.index.len() > 100 {
             self.compress_ltm()?;
@@ -294,7 +297,9 @@ impl UnifiedMemory {
         tags: Vec<String>,
     ) -> Result<MemoryId, EngineError> {
         if !self.initialized {
-            return Err(EngineError::Runtime("UnifiedMemory not initialized".to_string()));
+            return Err(EngineError::Runtime(
+                "UnifiedMemory not initialized".to_string(),
+            ));
         }
 
         let id = uuid::Uuid::new_v4().to_string();
@@ -392,7 +397,11 @@ impl UnifiedMemory {
         }
 
         // Sort by importance (descending)
-        results.sort_by(|a, b| b.importance.partial_cmp(&a.importance).unwrap_or(std::cmp::Ordering::Equal));
+        results.sort_by(|a, b| {
+            b.importance
+                .partial_cmp(&a.importance)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
         results.truncate(max_results);
 
         results
@@ -418,10 +427,9 @@ impl UnifiedMemory {
             // 1. Age > 30 minutes AND importance > 0.5
             // 2. OR accessed_count > 3
             // 3. OR STM is full and this is in first half (oldest)
-            let should_promote =
-                (age_ms > 1_800_000 && item.importance > 0.5) ||
-                (item.accessed_count > 3) ||
-                (stm_len >= self.stm.max_capacity && idx < stm_len / 2);
+            let should_promote = (age_ms > 1_800_000 && item.importance > 0.5)
+                || (item.accessed_count > 3)
+                || (stm_len >= self.stm.max_capacity && idx < stm_len / 2);
 
             if should_promote {
                 items_to_promote.push(idx);
@@ -482,8 +490,7 @@ impl UnifiedMemory {
             // 1. Age > 3 days AND importance > 0.6
             // 2. OR age > 7 days (retention time)
             let should_promote =
-                (age_ms > 259_200_000 && item.importance > 0.6) ||
-                (age_ms > self.mtm.retention_ms);
+                (age_ms > 259_200_000 && item.importance > 0.6) || (age_ms > self.mtm.retention_ms);
 
             if should_promote {
                 promoted.push(idx);
@@ -616,13 +623,16 @@ impl UnifiedMemory {
     /// v20.1: Works with SmallVec<[String; 8]> via AsRef<[String]>
     fn matches_query(content: &str, tags: &MemoryTags, query: &str) -> bool {
         let query_lower = query.to_lowercase();
-        content.to_lowercase().contains(&query_lower) ||
-        tags.iter().any(|t| t.to_lowercase().contains(&query_lower))
+        content.to_lowercase().contains(&query_lower)
+            || tags.iter().any(|t| t.to_lowercase().contains(&query_lower))
     }
 
     fn matches_query_metadata(metadata: &MemoryMetadata, query: &str) -> bool {
         let query_lower = query.to_lowercase();
-        metadata.tags.iter().any(|t| t.to_lowercase().contains(&query_lower))
+        metadata
+            .tags
+            .iter()
+            .any(|t| t.to_lowercase().contains(&query_lower))
     }
 
     fn generate_encryption_key() -> [u8; 32] {
@@ -657,7 +667,7 @@ mod tests {
     fn test_unified_memory_init() {
         let mut memory = UnifiedMemory::new();
         assert!(!memory.is_initialized());
-        
+
         memory.init().unwrap();
         assert!(memory.is_initialized());
         assert_eq!(memory.health(), EngineHealth::Healthy);
@@ -668,12 +678,14 @@ mod tests {
         let mut memory = UnifiedMemory::new();
         memory.init().unwrap();
 
-        let id = memory.store(
-            "Test memory content".to_string(),
-            MemoryType::Conversation,
-            0.8,
-            vec!["test".to_string()],
-        ).unwrap();
+        let id = memory
+            .store(
+                "Test memory content".to_string(),
+                MemoryType::Conversation,
+                0.8,
+                vec!["test".to_string()],
+            )
+            .unwrap();
 
         assert!(!id.is_empty());
         assert_eq!(memory.stm.items.len(), 1);
@@ -685,8 +697,22 @@ mod tests {
         let mut memory = UnifiedMemory::new();
         memory.init().unwrap();
 
-        memory.store("Chat about AI".to_string(), MemoryType::Conversation, 0.7, vec!["ai".to_string()]).unwrap();
-        memory.store("Project planning".to_string(), MemoryType::Project, 0.9, vec!["project".to_string()]).unwrap();
+        memory
+            .store(
+                "Chat about AI".to_string(),
+                MemoryType::Conversation,
+                0.7,
+                vec!["ai".to_string()],
+            )
+            .unwrap();
+        memory
+            .store(
+                "Project planning".to_string(),
+                MemoryType::Project,
+                0.9,
+                vec!["project".to_string()],
+            )
+            .unwrap();
 
         let results = memory.recall("ai", 10);
         assert_eq!(results.len(), 1);
@@ -699,12 +725,14 @@ mod tests {
         memory.init().unwrap();
 
         // Store high-importance memory
-        let id = memory.store(
-            "Important decision".to_string(),
-            MemoryType::Decision,
-            0.9,
-            vec!["decision".to_string()],
-        ).unwrap();
+        let id = memory
+            .store(
+                "Important decision".to_string(),
+                MemoryType::Decision,
+                0.9,
+                vec!["decision".to_string()],
+            )
+            .unwrap();
 
         // Simulate multiple accesses
         let _ = memory.recall("decision", 10);
@@ -725,8 +753,12 @@ mod tests {
         let mut memory = UnifiedMemory::new();
         memory.init().unwrap();
 
-        memory.store("Test 1".to_string(), MemoryType::System, 0.5, vec![]).unwrap();
-        memory.store("Test 2".to_string(), MemoryType::System, 0.7, vec![]).unwrap();
+        memory
+            .store("Test 1".to_string(), MemoryType::System, 0.5, vec![])
+            .unwrap();
+        memory
+            .store("Test 2".to_string(), MemoryType::System, 0.7, vec![])
+            .unwrap();
 
         let stats = memory.stats();
         assert_eq!(stats.stm_count, 2);
@@ -740,7 +772,9 @@ mod tests {
         let mut memory = UnifiedMemory::new();
         memory.init().unwrap();
 
-        memory.store("Old memory".to_string(), MemoryType::Event, 0.3, vec![]).unwrap();
+        memory
+            .store("Old memory".to_string(), MemoryType::Event, 0.3, vec![])
+            .unwrap();
 
         let result = memory.tick().await;
         assert!(result.is_ok());

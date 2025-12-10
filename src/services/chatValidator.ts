@@ -44,11 +44,7 @@ class ChatValidator {
   /**
    * Valide une réponse IA selon le mode actif
    */
-  validate(
-    response: string,
-    mode: ChatMode,
-    userMessage: string
-  ): ValidationResult {
+  validate(response: string, mode: ChatMode, userMessage: string): ValidationResult {
     const issues: ValidationIssue[] = [];
 
     // 1. Validations basiques
@@ -80,11 +76,8 @@ class ChatValidator {
     issues.push(...modeChecks);
 
     // Score global
-    const globalScore = (
-      basicChecks.score * 0.3 +
-      coherenceScore * 0.4 +
-      anomalyScore * 0.3
-    );
+    const globalScore =
+      basicChecks.score * 0.3 + coherenceScore * 0.4 + anomalyScore * 0.3;
 
     const isValid = globalScore >= this.MIN_VALID_SCORE;
 
@@ -158,11 +151,7 @@ class ChatValidator {
   // NEXUS - COHÉRENCE CONTEXTUELLE
   // ─────────────────────────────────────────────────────────────────
 
-  private checkCoherence(
-    response: string,
-    userMessage: string,
-    mode: ChatMode
-  ): number {
+  private checkCoherence(response: string, userMessage: string, mode: ChatMode): number {
     let coherence = 1.0;
 
     // Pertinence par rapport à la question
@@ -183,7 +172,10 @@ class ChatValidator {
 
   private calculateRelevance(response: string, userMessage: string): number {
     const userWords = new Set(
-      userMessage.toLowerCase().split(/\s+/).filter(w => w.length > 3)
+      userMessage
+        .toLowerCase()
+        .split(/\s+/)
+        .filter(w => w.length > 3)
     );
     const responseWords = response.toLowerCase().split(/\s+/);
 
@@ -395,13 +387,7 @@ class ChatValidator {
   // ─────────────────────────────────────────────────────────────────
 
   private isPlaceholder(response: string): boolean {
-    const placeholders = [
-      'lorem ipsum',
-      'test',
-      'placeholder',
-      'todo',
-      'coming soon',
-    ];
+    const placeholders = ['lorem ipsum', 'test', 'placeholder', 'todo', 'coming soon'];
 
     const lower = response.toLowerCase().trim();
     return placeholders.some(p => lower === p || lower.startsWith(p));

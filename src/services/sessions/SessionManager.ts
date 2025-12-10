@@ -196,7 +196,10 @@ export class SessionManager {
     session.updatedAt = now;
 
     // Mettre à jour le titre si c'est le premier message user
-    if (message.role === 'user' && session.messages.filter(m => m.role === 'user').length === 1) {
+    if (
+      message.role === 'user' &&
+      session.messages.filter(m => m.role === 'user').length === 1
+    ) {
       session.title = this.generateTitle(message.content);
     }
 
@@ -208,7 +211,8 @@ export class SessionManager {
     }
 
     if (message.metadata?.tokenCount && session.metadata) {
-      session.metadata.totalTokens = (session.metadata.totalTokens || 0) + message.metadata.tokenCount;
+      session.metadata.totalTokens =
+        (session.metadata.totalTokens || 0) + message.metadata.tokenCount;
     }
 
     this.saveToStorage();
@@ -218,7 +222,10 @@ export class SessionManager {
   /**
    * Met à jour une session
    */
-  updateSession(id: string, updates: Partial<Pick<Session, 'title' | 'mode' | 'metadata'>>): boolean {
+  updateSession(
+    id: string,
+    updates: Partial<Pick<Session, 'title' | 'mode' | 'metadata'>>
+  ): boolean {
     const session = this.sessions.get(id);
     if (!session) return false;
 
@@ -270,9 +277,7 @@ export class SessionManager {
    * Génère un aperçu de la session
    */
   private getPreview(session: Session): string {
-    const lastUserMessage = [...session.messages]
-      .reverse()
-      .find(m => m.role === 'user');
+    const lastUserMessage = [...session.messages].reverse().find(m => m.role === 'user');
 
     if (lastUserMessage) {
       return lastUserMessage.content.substring(0, 80);

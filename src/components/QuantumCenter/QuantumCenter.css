@@ -30,7 +30,11 @@
   height: 100%;
   background: var(--quantum-bg);
   color: var(--quantum-text);
-  font-family: 'Inter', 'SF Pro Display', -apple-system, sans-serif;
+  font-family:
+    'Inter',
+    'SF Pro Display',
+    -apple-system,
+    sans-serif;
   overflow: hidden;
 }
 
@@ -440,7 +444,8 @@
    GPU
    ═══════════════════════════════════════════════════════════════════════════ */
 
-.quantum-gpu h3, .quantum-gpu h4 {
+.quantum-gpu h3,
+.quantum-gpu h4 {
   margin: 0 0 1rem 0;
 }
 
@@ -535,7 +540,8 @@
    STABILITY
    ═══════════════════════════════════════════════════════════════════════════ */
 
-.quantum-stability h3, .quantum-stability h4 {
+.quantum-stability h3,
+.quantum-stability h4 {
   margin: 0 0 1rem 0;
 }
 
@@ -655,7 +661,8 @@
    MOTION
    ═══════════════════════════════════════════════════════════════════════════ */
 
-.quantum-motion h3, .quantum-motion h4 {
+.quantum-motion h3,
+.quantum-motion h4 {
   margin: 0 0 1rem 0;
 }
 
@@ -701,14 +708,29 @@
 }
 
 @keyframes curve-demo {
-  0%, 100% { transform: scaleX(0.2); transform-origin: left; }
-  50% { transform: scaleX(1); transform-origin: left; }
+  0%,
+  100% {
+    transform: scaleX(0.2);
+    transform-origin: left;
+  }
+  50% {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
 }
 
-.curve-preview.standard { animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1); }
-.curve-preview.decelerate { animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
-.curve-preview.accelerate { animation-timing-function: cubic-bezier(0.4, 0, 1, 1); }
-.curve-preview.bounce { animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+.curve-preview.standard {
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+.curve-preview.decelerate {
+  animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+.curve-preview.accelerate {
+  animation-timing-function: cubic-bezier(0.4, 0, 1, 1);
+}
+.curve-preview.bounce {
+  animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
 
 .motion-stats {
   display: flex;
@@ -770,8 +792,13 @@
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 .footer-version {
@@ -805,7 +832,9 @@
     flex-direction: column;
   }
 
-  .frame-stats, .motion-stats, .cache-stats-bar {
+  .frame-stats,
+  .motion-stats,
+  .cache-stats-bar {
     flex-wrap: wrap;
     gap: 1rem;
   }

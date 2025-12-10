@@ -18,7 +18,9 @@ interface MemoryState {
   encrypted_count: number;
 }
 
-const normalizeMemoryState = (state: Partial<MemoryState> | null | undefined): MemoryState => {
+const normalizeMemoryState = (
+  state: Partial<MemoryState> | null | undefined
+): MemoryState => {
   const rawEntries = Array.isArray(state?.entries) ? state.entries : [];
   const entries = rawEntries.filter((item): item is MemoryEntry => {
     if (!item || typeof item !== 'object') {
@@ -27,12 +29,13 @@ const normalizeMemoryState = (state: Partial<MemoryState> | null | undefined): M
     const candidate = item as Partial<MemoryEntry>;
     return typeof candidate.id === 'string' && typeof candidate.content === 'string';
   });
-  const encryptedCount = entries.filter((item) => Boolean(item?.encrypted)).length;
+  const encryptedCount = entries.filter(item => Boolean(item?.encrypted)).length;
 
   return {
     entries,
     total: typeof state?.total === 'number' ? state.total : entries.length,
-    encrypted_count: typeof state?.encrypted_count === 'number' ? state.encrypted_count : encryptedCount,
+    encrypted_count:
+      typeof state?.encrypted_count === 'number' ? state.encrypted_count : encryptedCount,
   };
 };
 
@@ -50,7 +53,8 @@ export const useMemoryCore = () => {
       setEntries(normalized.entries);
       return normalized;
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to load memory entries';
+      const message =
+        err instanceof Error ? err.message : 'Failed to load memory entries';
       setError(message);
       throw err;
     } finally {
@@ -58,26 +62,29 @@ export const useMemoryCore = () => {
     }
   }, []);
 
-  const saveEntry = useCallback(async (content: string) => {
-    try {
-      setLoading(true);
-      setError(null);
-      // Note: memory_save_entry est legacy, utiliser memoryService.saveChatInteraction pour nouvelles interactions
-      await memoryService.saveChatInteraction({
-        userMessage: content,
-        aiResponse: '',
-        mode: 'manual',
-        timestamp: new Date().toISOString(),
-      });
-      await loadEntries();
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to save entry';
-      setError(message);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, [loadEntries]);
+  const saveEntry = useCallback(
+    async (content: string) => {
+      try {
+        setLoading(true);
+        setError(null);
+        // Note: memory_save_entry est legacy, utiliser memoryService.saveChatInteraction pour nouvelles interactions
+        await memoryService.saveChatInteraction({
+          userMessage: content,
+          aiResponse: '',
+          mode: 'manual',
+          timestamp: new Date().toISOString(),
+        });
+        await loadEntries();
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Failed to save entry';
+        setError(message);
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [loadEntries]
+  );
 
   const clearMemory = useCallback(async () => {
     try {

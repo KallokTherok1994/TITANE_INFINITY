@@ -108,16 +108,16 @@ const DEFAULT_VITALS: VitalsSnapshot = {
 
 // XP nécessaire par niveau
 const XP_PER_LEVEL = [
-  0,      // Level 1
-  100,    // Level 2
-  300,    // Level 3
-  600,    // Level 4
-  1000,   // Level 5
-  1500,   // Level 6
-  2200,   // Level 7
-  3000,   // Level 8
-  4000,   // Level 9
-  5500,   // Level 10 (max)
+  0, // Level 1
+  100, // Level 2
+  300, // Level 3
+  600, // Level 4
+  1000, // Level 5
+  1500, // Level 6
+  2200, // Level 7
+  3000, // Level 8
+  4000, // Level 9
+  5500, // Level 10 (max)
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -289,9 +289,10 @@ export class SelfHealingSyncLayer {
     }
 
     // Calculer le taux de succès
-    this.profile.successRate = this.profile.totalRepairsAttempted > 0
-      ? this.profile.totalRepairsSuccessful / this.profile.totalRepairsAttempted
-      : 0;
+    this.profile.successRate =
+      this.profile.totalRepairsAttempted > 0
+        ? this.profile.totalRepairsSuccessful / this.profile.totalRepairsAttempted
+        : 0;
 
     // Mettre à jour le temps moyen de réparation
     const totalTime = this.executionHistory.reduce((sum, e) => sum + e.duration, 0);
@@ -405,7 +406,6 @@ export class SelfHealingSyncLayer {
    * Met à jour un vital spécifique
    */
   public updateVital(key: keyof VitalsSnapshot, value: number | boolean): void {
-     
     (this.vitals as any)[key] = value;
     this.vitals.timestamp = Date.now();
   }
@@ -451,7 +451,9 @@ export class SelfHealingSyncLayer {
       await this.performSync();
     }, this.config.syncIntervalMs);
 
-    console.log(`[SelfHealingSyncLayer] Auto-sync started (${this.config.syncIntervalMs}ms)`);
+    console.log(
+      `[SelfHealingSyncLayer] Auto-sync started (${this.config.syncIntervalMs}ms)`
+    );
   }
 
   private stopAutoSync(): void {
@@ -473,7 +475,6 @@ export class SelfHealingSyncLayer {
       }
 
       this.lastSyncTime = Date.now();
-
     } catch (error) {
       console.warn('[SelfHealingSyncLayer] Sync failed:', error);
     }
@@ -490,9 +491,12 @@ export class SelfHealingSyncLayer {
   private async setupListeners(): Promise<void> {
     try {
       // Écouter les mises à jour de vitaux du backend
-      const unlisten1 = await listen<VitalsSnapshot>('selfheal://vitals_update', (event) => {
-        this.vitals = { ...event.payload, timestamp: Date.now() };
-      });
+      const unlisten1 = await listen<VitalsSnapshot>(
+        'selfheal://vitals_update',
+        event => {
+          this.vitals = { ...event.payload, timestamp: Date.now() };
+        }
+      );
       this.unlisteners.push(unlisten1);
 
       // Écouter les demandes de sync
@@ -500,7 +504,6 @@ export class SelfHealingSyncLayer {
         await this.performSync();
       });
       this.unlisteners.push(unlisten2);
-
     } catch (error) {
       console.warn('[SelfHealingSyncLayer] Could not setup listeners:', error);
     }

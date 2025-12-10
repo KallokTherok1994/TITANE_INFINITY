@@ -948,8 +948,12 @@ pub async fn memory_ingest_file(
             "document".to_string()
         } else if path.ends_with(".json") || path.ends_with(".yaml") || path.ends_with(".yml") {
             "data".to_string()
-        } else if path.ends_with(".rs") || path.ends_with(".ts") || path.ends_with(".tsx") ||
-                  path.ends_with(".js") || path.ends_with(".py") {
+        } else if path.ends_with(".rs")
+            || path.ends_with(".ts")
+            || path.ends_with(".tsx")
+            || path.ends_with(".js")
+            || path.ends_with(".py")
+        {
             "code".to_string()
         } else if path.ends_with(".toml") || path.ends_with(".ini") || path.ends_with(".env") {
             "config".to_string()
@@ -961,14 +965,22 @@ pub async fn memory_ingest_file(
     // Get content size
     let content_size = content.as_ref().map(|c| c.len()).unwrap_or(0);
     let line_count = content.as_ref().map(|c| c.lines().count()).unwrap_or(0);
-    let word_count = content.as_ref().map(|c| c.split_whitespace().count()).unwrap_or(0);
+    let word_count = content
+        .as_ref()
+        .map(|c| c.split_whitespace().count())
+        .unwrap_or(0);
 
     // Store file in memory_persistence if content is provided
     if let Some(ref file_content) = content {
         if let Err(e) = crate::memory_persistence::store_file(&path, file_content, &file_category) {
             log::warn!("Failed to store file in memory: {}", e);
         } else {
-            log::info!("✅ File stored in memory: {} ({} bytes, {} lines)", filename, content_size, line_count);
+            log::info!(
+                "✅ File stored in memory: {} ({} bytes, {} lines)",
+                filename,
+                content_size,
+                line_count
+            );
         }
     }
 
@@ -1365,7 +1377,10 @@ pub async fn stop_recording() -> AppResult<serde_json::Value> {
 
 #[tauri::command]
 pub async fn transcribe_audio(_audio_data: Vec<u8>) -> AppResult<String> {
-    log::info!("[Voice Mock] Transcribing audio ({} bytes)", _audio_data.len());
+    log::info!(
+        "[Voice Mock] Transcribing audio ({} bytes)",
+        _audio_data.len()
+    );
     // En mode mock, retourner une transcription fictive
     // En production, ceci utilise Whisper/Vosk via asr.rs
     Ok("Bonjour, ceci est une transcription de test.".to_string())

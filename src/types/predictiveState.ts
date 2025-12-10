@@ -48,10 +48,10 @@ export interface HistoryDataPoint {
  */
 export interface TrendAnalysis {
   direction: TrendDirection;
-  slope: number;           // Pente de la régression linéaire
-  rSquared: number;        // Coefficient de détermination (qualité du fit)
-  sampleCount: number;     // Nombre de points analysés
-  windowMs: number;        // Fenêtre temporelle en ms
+  slope: number; // Pente de la régression linéaire
+  rSquared: number; // Coefficient de détermination (qualité du fit)
+  sampleCount: number; // Nombre de points analysés
+  windowMs: number; // Fenêtre temporelle en ms
 }
 
 /**
@@ -59,11 +59,11 @@ export interface TrendAnalysis {
  */
 export interface DimensionForecast {
   currentValue: number;
-  forecastValue: number;   // Valeur prédite
+  forecastValue: number; // Valeur prédite
   forecastHorizonMs: number; // Horizon de prédiction en ms
   trend: TrendAnalysis;
   confidence: number;
-  explanation: string;     // Explication humaine
+  explanation: string; // Explication humaine
 }
 
 // ============================================================================
@@ -76,8 +76,8 @@ export interface DimensionForecast {
 export interface PatternShiftDetection {
   detected: boolean;
   type: PatternShiftType;
-  severity: number;        // 0-1, importance du changement
-  zScore: number;          // Écart en nombre de déviations standard
+  severity: number; // 0-1, importance du changement
+  zScore: number; // Écart en nombre de déviations standard
   description: string;
   timestamp: number;
 }
@@ -86,10 +86,10 @@ export interface PatternShiftDetection {
  * Configuration de détection de patterns
  */
 export interface PatternDetectionConfig {
-  minZScoreForShift: number;        // Seuil Z-score pour détecter un shift (défaut: 2)
-  significantZScore: number;         // Seuil pour variation significative (défaut: 3)
-  windowSizeMs: number;              // Fenêtre d'analyse (défaut: 120000 = 2min)
-  minSamplesRequired: number;        // Nombre min de points (défaut: 10)
+  minZScoreForShift: number; // Seuil Z-score pour détecter un shift (défaut: 2)
+  significantZScore: number; // Seuil pour variation significative (défaut: 3)
+  windowSizeMs: number; // Fenêtre d'analyse (défaut: 120000 = 2min)
+  minSamplesRequired: number; // Nombre min de points (défaut: 10)
 }
 
 // ============================================================================
@@ -140,7 +140,12 @@ export interface PredictiveState {
  */
 export interface ProactiveTrigger {
   id: string;
-  type: 'energy_drop' | 'tension_rise' | 'engagement_drop' | 'pattern_shift' | 'forecast_warning';
+  type:
+    | 'energy_drop'
+    | 'tension_rise'
+    | 'engagement_drop'
+    | 'pattern_shift'
+    | 'forecast_warning';
   priority: 'low' | 'medium' | 'high';
   message: string;
   suggestedAction: string;
@@ -156,10 +161,10 @@ export interface ProactiveTriggerConfig {
   enableTensionRiseAlert: boolean;
   enableEngagementDropAlert: boolean;
   enablePatternShiftAlert: boolean;
-  energyDropThreshold: number;        // Défaut: 0.2 (20% drop)
-  tensionRiseThreshold: number;       // Défaut: 0.3 (30% rise)
-  engagementDropThreshold: number;    // Défaut: 0.25 (25% drop)
-  cooldownMs: number;                 // Temps entre alertes (défaut: 300000 = 5min)
+  energyDropThreshold: number; // Défaut: 0.2 (20% drop)
+  tensionRiseThreshold: number; // Défaut: 0.3 (30% rise)
+  engagementDropThreshold: number; // Défaut: 0.25 (25% drop)
+  cooldownMs: number; // Temps entre alertes (défaut: 300000 = 5min)
 }
 
 // ============================================================================
@@ -171,16 +176,16 @@ export interface ProactiveTriggerConfig {
  */
 export interface PredictiveEngineConfig {
   // Fenêtres temporelles
-  shortTermWindowMs: number;          // Court terme: 30-120s
-  mediumTermWindowMs: number;         // Moyen terme: 5-20min
-  longTermWindowMs: number;           // Long terme: 1-4h
+  shortTermWindowMs: number; // Court terme: 30-120s
+  mediumTermWindowMs: number; // Moyen terme: 5-20min
+  longTermWindowMs: number; // Long terme: 1-4h
 
   // Seuils de tendance
-  risingThreshold: number;            // Pente > X = rising (défaut: 0.02)
-  fallingThreshold: number;           // Pente < -X = falling (défaut: -0.02)
+  risingThreshold: number; // Pente > X = rising (défaut: 0.02)
+  fallingThreshold: number; // Pente < -X = falling (défaut: -0.02)
 
   // Lissage
-  emaAlpha: number;                   // Facteur EMA (défaut: 0.2)
+  emaAlpha: number; // Facteur EMA (défaut: 0.2)
 
   // Pattern detection
   patternDetection: PatternDetectionConfig;
@@ -189,10 +194,10 @@ export interface PredictiveEngineConfig {
   triggers: ProactiveTriggerConfig;
 
   // Horizons de prédiction par modalité
-  visionForecastHorizonMs: number;    // 2 minutes
-  voiceForecastHorizonMs: number;     // 20-60 secondes
-  textForecastHorizonMs: number;      // 10-30 secondes
-  globalForecastHorizonMs: number;    // 10-30 minutes
+  visionForecastHorizonMs: number; // 2 minutes
+  voiceForecastHorizonMs: number; // 20-60 secondes
+  textForecastHorizonMs: number; // 10-30 secondes
+  globalForecastHorizonMs: number; // 10-30 minutes
 }
 
 // ============================================================================
@@ -218,9 +223,9 @@ export const getDefaultProactiveTriggerConfig = (): ProactiveTriggerConfig => ({
 });
 
 export const getDefaultPredictiveEngineConfig = (): PredictiveEngineConfig => ({
-  shortTermWindowMs: 60000,           // 1 minute
-  mediumTermWindowMs: 600000,         // 10 minutes
-  longTermWindowMs: 3600000,          // 1 heure
+  shortTermWindowMs: 60000, // 1 minute
+  mediumTermWindowMs: 600000, // 10 minutes
+  longTermWindowMs: 3600000, // 1 heure
   risingThreshold: 0.02,
   fallingThreshold: -0.02,
   emaAlpha: 0.2,
@@ -229,7 +234,7 @@ export const getDefaultPredictiveEngineConfig = (): PredictiveEngineConfig => ({
   visionForecastHorizonMs: 120000,
   voiceForecastHorizonMs: 40000,
   textForecastHorizonMs: 20000,
-  globalForecastHorizonMs: 1200000,   // 20 minutes
+  globalForecastHorizonMs: 1200000, // 20 minutes
 });
 
 export const getDefaultTrendAnalysis = (): TrendAnalysis => ({

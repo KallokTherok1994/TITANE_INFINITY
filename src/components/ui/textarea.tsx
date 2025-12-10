@@ -16,7 +16,7 @@ export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextArea
 
 /**
  * Textarea - Multi-line text input avec auto-resize optionnel
- * 
+ *
  * @example
  * ```tsx
  * <Textarea
@@ -29,7 +29,19 @@ export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextArea
  * ```
  */
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ label, helper, error, autoResize = false, maxHeight, className = '', disabled, ...props }, ref) => {
+  (
+    {
+      label,
+      helper,
+      error,
+      autoResize = false,
+      maxHeight,
+      className = '',
+      disabled,
+      ...props
+    },
+    ref
+  ) => {
     const hasError = !!error;
     const internalRef = useRef<HTMLTextAreaElement>(null);
     const textareaRef = (ref as React.RefObject<HTMLTextAreaElement>) || internalRef;
@@ -75,7 +87,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           ref={textareaRef}
           disabled={disabled}
           aria-invalid={hasError}
-          aria-describedby={error ? `${props.id}-error` : helper ? `${props.id}-helper` : undefined}
+          aria-describedby={
+            error ? `${props.id}-error` : helper ? `${props.id}-helper` : undefined
+          }
           className={`
             w-full px-3 py-2.5 rounded-md
             text-sm font-normal leading-relaxed
@@ -98,7 +112,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
                   ? 'var(--border, rgba(196,196,196,0.12))'
                   : 'var(--border, rgba(196,196,196,0.12))'
             }`,
-            color: disabled ? 'var(--text-disabled, rgba(255,255,255,0.38))' : 'var(--text-primary, #e0e0e0)',
+            color: disabled
+              ? 'var(--text-disabled, rgba(255,255,255,0.38))'
+              : 'var(--text-primary, #e0e0e0)',
             minHeight: autoResize ? '60px' : undefined,
             maxHeight: maxHeight ? `${maxHeight}px` : undefined,
           }}

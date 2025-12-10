@@ -4,7 +4,13 @@
  * Rôle: Surveillance agents, sécurité, détection corruption
  */
 
-import type { Agent, AgentState, AgentEvent, AgentResponse, AgentRole } from '../multi_agent_engine';
+import type {
+  Agent,
+  AgentState,
+  AgentEvent,
+  AgentResponse,
+  AgentRole,
+} from '../multi_agent_engine';
 
 interface SecurityAlert {
   timestamp: number;
@@ -112,7 +118,7 @@ export class WatchdogAgent implements Agent {
     // For now, simulate auditing known agents
     const knownAgents = ['helios', 'harmonia', 'persona', 'memory-core'];
 
-    knownAgents.forEach((agentId) => {
+    knownAgents.forEach(agentId => {
       if (!this.audits.has(agentId)) {
         this.audits.set(agentId, {
           agentId,
@@ -131,8 +137,12 @@ export class WatchdogAgent implements Agent {
       if (recentErrors > this.MAX_ERRORS_PER_MINUTE) {
         audit.violations++;
         audit.suspicionScore = Math.min(100, audit.suspicionScore + 20);
-        this.createAlert('high', agentId, 'excessive_errors',
-          `${recentErrors} errors in 1 minute`);
+        this.createAlert(
+          'high',
+          agentId,
+          'excessive_errors',
+          `${recentErrors} errors in 1 minute`
+        );
       }
 
       // Update status based on suspicion score
@@ -160,28 +170,37 @@ export class WatchdogAgent implements Agent {
   // Detect system-wide anomalies
   private detectAnomalies(): void {
     // Check for unusual event patterns
-    const recentEvents = this.eventHistory.filter(
-      (e) => e.timestamp > Date.now() - 60000
-    );
+    const recentEvents = this.eventHistory.filter(e => e.timestamp > Date.now() - 60000);
 
     // Too many high-priority events
-    const criticalCount = recentEvents.filter((e) => e.priority === 'critical').length;
+    const criticalCount = recentEvents.filter(e => e.priority === 'critical').length;
     if (criticalCount > 5) {
-      this.createAlert('critical', 'system', 'event_storm',
-        `${criticalCount} critical events in 1 minute`);
+      this.createAlert(
+        'critical',
+        'system',
+        'event_storm',
+        `${criticalCount} critical events in 1 minute`
+      );
     }
 
     // Check for event loops (same event repeated)
-    const eventTypes = recentEvents.map((e) => e.type);
-    const typeCounts = eventTypes.reduce((acc, type) => {
-      acc[type] = (acc[type] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const eventTypes = recentEvents.map(e => e.type);
+    const typeCounts = eventTypes.reduce(
+      (acc, type) => {
+        acc[type] = (acc[type] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
     Object.entries(typeCounts).forEach(([type, count]) => {
       if (count > 20) {
-        this.createAlert('high', 'system', 'event_loop',
-          `Event type "${type}" repeated ${count} times`);
+        this.createAlert(
+          'high',
+          'system',
+          'event_loop',
+          `Event type "${type}" repeated ${count} times`
+        );
       }
     });
   }
@@ -189,14 +208,14 @@ export class WatchdogAgent implements Agent {
   // Enforce security policies
   private enforceSecurityPolicies(): void {
     // Block agents with high suspicion
-    this.blockedAgents.forEach((agentId) => {
+    this.blockedAgents.forEach(agentId => {
       console.warn(`[Watchdog] Agent ${agentId} is BLOCKED due to security concerns`);
       // In real implementation, would call engine.pauseAgent(agentId)
     });
 
     // Auto-resolve old alerts (cleanup)
     const oneHourAgo = Date.now() - 3600000;
-    this.alerts = this.alerts.filter((alert) => {
+    this.alerts = this.alerts.filter(alert => {
       if (alert.timestamp < oneHourAgo && alert.severity === 'low') {
         alert.autoResolved = true;
         return false;
@@ -209,16 +228,24 @@ export class WatchdogAgent implements Agent {
   private analyzeEvent(event: AgentEvent): void {
     // Check for unauthorized actions
     if (event.type.startsWith('admin:') && event.source !== 'system') {
-      this.createAlert('critical', event.source, 'unauthorized_action',
-        `Agent attempted admin action: ${event.type}`);
+      this.createAlert(
+        'critical',
+        event.source,
+        'unauthorized_action',
+        `Agent attempted admin action: ${event.type}`
+      );
     }
 
     // Check for suspicious data patterns
     if (event.data && typeof event.data === 'object') {
       const dataStr = JSON.stringify(event.data);
       if (dataStr.includes('<script>') || dataStr.includes('eval(')) {
-        this.createAlert('critical', event.source, 'code_injection',
-          'Potential code injection detected in event data');
+        this.createAlert(
+          'critical',
+          event.source,
+          'code_injection',
+          'Potential code injection detected in event data'
+        );
       }
     }
   }
@@ -235,9 +262,10 @@ export class WatchdogAgent implements Agent {
 
     // Create alert if error is severe
     if (event.priority === 'critical') {
-      const errorMsg = (event.data && typeof event.data === 'object' && 'message' in event.data)
-        ? String(event.data.message)
-        : 'Unknown error';
+      const errorMsg =
+        event.data && typeof event.data === 'object' && 'message' in event.data
+          ? String(event.data.message)
+          : 'Unknown error';
       this.createAlert('high', agentId, 'critical_error', errorMsg);
     }
 
@@ -267,7 +295,9 @@ export class WatchdogAgent implements Agent {
     this.alerts.push(alert);
     if (this.alerts.length > 200) this.alerts.shift(); // Keep last 200
 
-    console.warn(`[Watchdog] ${severity.toUpperCase()} ALERT: ${agentId} - ${type} - ${description}`);
+    console.warn(
+      `[Watchdog] ${severity.toUpperCase()} ALERT: ${agentId} - ${type} - ${description}`
+    );
   }
 
   // Escalate alert to system
@@ -285,10 +315,7 @@ export class WatchdogAgent implements Agent {
   private countRecentErrors(agentId: string, timeWindowMs: number): number {
     const cutoff = Date.now() - timeWindowMs;
     return this.eventHistory.filter(
-      (e) =>
-        e.source === agentId &&
-        e.type === 'agent:error' &&
-        e.timestamp > cutoff
+      e => e.source === agentId && e.type === 'agent:error' && e.timestamp > cutoff
     ).length;
   }
 
@@ -297,8 +324,8 @@ export class WatchdogAgent implements Agent {
     const report = {
       timestamp: Date.now(),
       totalAlerts: this.alerts.length,
-      criticalAlerts: this.alerts.filter((a) => a.severity === 'critical').length,
-      highAlerts: this.alerts.filter((a) => a.severity === 'high').length,
+      criticalAlerts: this.alerts.filter(a => a.severity === 'critical').length,
+      highAlerts: this.alerts.filter(a => a.severity === 'high').length,
       blockedAgents: Array.from(this.blockedAgents),
       agentAudits: Array.from(this.audits.values()),
       recentAlerts: this.alerts.slice(-20), // Last 20 alerts
@@ -314,9 +341,9 @@ export class WatchdogAgent implements Agent {
 
   // Update internal metrics
   private updateMetrics(): void {
-    const criticalAlerts = this.alerts.filter((a) => a.severity === 'critical').length;
+    const criticalAlerts = this.alerts.filter(a => a.severity === 'critical').length;
     const suspiciousAgents = Array.from(this.audits.values()).filter(
-      (a) => a.status === 'suspicious' || a.status === 'blocked'
+      a => a.status === 'suspicious' || a.status === 'blocked'
     ).length;
 
     this.state.data = {

@@ -3,8 +3,8 @@
 //! Super Prompt #9 — Routage du pipeline conversationnel
 //! ═══════════════════════════════════════════════════════════════════════════════
 
+use super::intent::{ComplexityLevel, IntentType, UserIntent};
 use serde::{Deserialize, Serialize};
-use super::intent::{UserIntent, IntentType, ComplexityLevel};
 
 /// Étape du pipeline conversationnel
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -131,8 +131,9 @@ impl ConversationRouter {
         }
 
         // Mise à jour narrative pour conversations complexes
-        if intent.complexity == ComplexityLevel::Complex ||
-           intent.complexity == ComplexityLevel::Expert {
+        if intent.complexity == ComplexityLevel::Complex
+            || intent.complexity == ComplexityLevel::Expert
+        {
             stages.push(ConversationStage::NarrativeUpdate);
             stages.push(ConversationStage::CoherenceCheck);
         }
@@ -256,13 +257,17 @@ impl ConversationRouter {
     pub fn estimate_time(&self, stages: &[ConversationStage]) -> u64 {
         let base_time = stages.len() as u64 * 50; // 50ms par étape de base
 
-        let complex_stages = stages.iter().filter(|s| {
-            matches!(s,
-                ConversationStage::MemoryExtraction |
-                ConversationStage::CoherenceCheck |
-                ConversationStage::EmotionAnalysis
-            )
-        }).count();
+        let complex_stages = stages
+            .iter()
+            .filter(|s| {
+                matches!(
+                    s,
+                    ConversationStage::MemoryExtraction
+                        | ConversationStage::CoherenceCheck
+                        | ConversationStage::EmotionAnalysis
+                )
+            })
+            .count();
 
         base_time + (complex_stages as u64 * 100) // +100ms pour étapes complexes
     }
@@ -298,7 +303,10 @@ mod tests {
     fn create_simple_intent() -> UserIntent {
         UserIntent {
             intent_type: IntentType::Question,
-            confidence: IntentConfidence { primary: 0.8, secondary: None },
+            confidence: IntentConfidence {
+                primary: 0.8,
+                secondary: None,
+            },
             keywords: vec![],
             urgency: UrgencyLevel::Normal,
             complexity: ComplexityLevel::Simple,
@@ -311,7 +319,10 @@ mod tests {
     fn create_complex_intent() -> UserIntent {
         UserIntent {
             intent_type: IntentType::Debugging,
-            confidence: IntentConfidence { primary: 0.9, secondary: None },
+            confidence: IntentConfidence {
+                primary: 0.9,
+                secondary: None,
+            },
             keywords: vec!["error".to_string()],
             urgency: UrgencyLevel::High,
             complexity: ComplexityLevel::Complex,

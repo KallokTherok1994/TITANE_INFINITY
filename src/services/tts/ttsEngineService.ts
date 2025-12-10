@@ -106,7 +106,8 @@ class TTSEngineService {
     }
 
     // Détection émotion si auto
-    const emotion = options.emotion ??
+    const emotion =
+      options.emotion ??
       (this.preferences.emotionalAdaptation ? detectEmotion(text) : 'neutral');
 
     console.log(`🎤 TTS: Queuing speech with emotion "${emotion}"`);
@@ -279,7 +280,9 @@ class TTSEngineService {
 
       try {
         // Check local TTS
-        const localStatus = await secureInvoke<{ piper: boolean; espeak: boolean }>('check_local_tts');
+        const localStatus = await secureInvoke<{ piper: boolean; espeak: boolean }>(
+          'check_local_tts'
+        );
         status.piper = localStatus.piper ? 'available' : 'unavailable';
         status.espeak = localStatus.espeak ? 'available' : 'unavailable';
       } catch {
@@ -324,7 +327,9 @@ class TTSEngineService {
     }
 
     // Insert by priority
-    const insertIndex = this.queue.findIndex(q => q.request.priority < item.request.priority);
+    const insertIndex = this.queue.findIndex(
+      q => q.request.priority < item.request.priority
+    );
     if (insertIndex === -1) {
       this.queue.push(item);
     } else {
@@ -462,7 +467,7 @@ class TTSEngineService {
     request: TTSRequest,
     provider: TTSProvider
   ): Promise<string> {
-    if (!await this.checkTauriAvailable()) {
+    if (!(await this.checkTauriAvailable())) {
       throw new Error('Tauri backend not available');
     }
 
@@ -501,7 +506,7 @@ class TTSEngineService {
         resolve();
       };
 
-      audio.onerror = (e) => {
+      audio.onerror = e => {
         this.currentAudio = null;
         reject(new Error(`Audio playback error: ${e}`));
       };
@@ -529,7 +534,7 @@ class TTSEngineService {
       utterance.pitch *= emotionModifier.pitchMultiplier;
 
       utterance.onend = () => resolve();
-      utterance.onerror = (e) => reject(new Error(`Web Speech error: ${e.error}`));
+      utterance.onerror = e => reject(new Error(`Web Speech error: ${e.error}`));
 
       window.speechSynthesis.speak(utterance);
     });
@@ -585,8 +590,14 @@ class TTSEngineService {
     };
   }
 
-  private getEmotionSpeechModifier(emotion: TTSEmotion): { rateMultiplier: number; pitchMultiplier: number } {
-    const modifiers: Record<TTSEmotion, { rateMultiplier: number; pitchMultiplier: number }> = {
+  private getEmotionSpeechModifier(emotion: TTSEmotion): {
+    rateMultiplier: number;
+    pitchMultiplier: number;
+  } {
+    const modifiers: Record<
+      TTSEmotion,
+      { rateMultiplier: number; pitchMultiplier: number }
+    > = {
       neutral: { rateMultiplier: 1.0, pitchMultiplier: 1.0 },
       calm: { rateMultiplier: 0.9, pitchMultiplier: 0.95 },
       focusing: { rateMultiplier: 1.05, pitchMultiplier: 1.0 },

@@ -104,29 +104,40 @@ export function GoogleCloudTester() {
       </div>
 
       {error && (
-        <div style={{
-          padding: '15px',
-          backgroundColor: '#fee',
-          border: '1px solid #fcc',
-          borderRadius: '5px',
-          marginBottom: '20px',
-          color: '#c33',
-        }}>
+        <div
+          style={{
+            padding: '15px',
+            backgroundColor: '#fee',
+            border: '1px solid #fcc',
+            borderRadius: '5px',
+            marginBottom: '20px',
+            color: '#c33',
+          }}
+        >
           <strong>❌ Erreur:</strong> {error}
         </div>
       )}
 
       {status && (
-        <div style={{
-          padding: '20px',
-          backgroundColor: '#f5f5f5',
-          borderRadius: '8px',
-          border: '1px solid #ddd',
-        }}>
+        <div
+          style={{
+            padding: '20px',
+            backgroundColor: '#f5f5f5',
+            borderRadius: '8px',
+            border: '1px solid #ddd',
+          }}
+        >
           <h3>📊 Résultats</h3>
 
           <div style={{ marginBottom: '15px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                marginBottom: '10px',
+              }}
+            >
               <span style={{ fontSize: '24px' }}>
                 {status.coreApiAvailable ? '✅' : '❌'}
               </span>
@@ -136,7 +147,14 @@ export function GoogleCloudTester() {
               </div>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                marginBottom: '10px',
+              }}
+            >
               <span style={{ fontSize: '24px' }}>
                 {status.apiKeyConfigured ? '🔑' : '⚠️'}
               </span>
@@ -146,7 +164,14 @@ export function GoogleCloudTester() {
               </div>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                marginBottom: '10px',
+              }}
+            >
               <span style={{ fontSize: '24px' }}>⚡</span>
               <div>
                 <strong>Latence:</strong> {status.globalLatencyMs}ms
@@ -184,7 +209,9 @@ export function GoogleCloudTester() {
                       {service.endpoint}
                     </div>
                     {service.error && (
-                      <div style={{ fontSize: '12px', color: '#f44336', marginTop: '5px' }}>
+                      <div
+                        style={{ fontSize: '12px', color: '#f44336', marginTop: '5px' }}
+                      >
                         {service.error}
                       </div>
                     )}
@@ -203,13 +230,15 @@ export function GoogleCloudTester() {
       )}
 
       {!status && !loading && !error && (
-        <div style={{
-          padding: '40px',
-          textAlign: 'center',
-          backgroundColor: '#f5f5f5',
-          borderRadius: '8px',
-          color: '#888',
-        }}>
+        <div
+          style={{
+            padding: '40px',
+            textAlign: 'center',
+            backgroundColor: '#f5f5f5',
+            borderRadius: '8px',
+            color: '#888',
+          }}
+        >
           Cliquez sur "Test All Services" pour commencer
         </div>
       )}

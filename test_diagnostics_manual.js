@@ -34,11 +34,11 @@ global.window = {
     },
     clear() {
       this.data = {};
-    }
+    },
   },
   performance: {
-    now: () => Date.now()
-  }
+    now: () => Date.now(),
+  },
 };
 
 global.localStorage = global.window.localStorage;
@@ -49,7 +49,7 @@ global.XP = {
     level: 1,
     totalXP: 0,
     currentXP: 0,
-    history: []
+    history: [],
   },
   gain(amount, source, description) {
     this.state.totalXP += amount;
@@ -71,7 +71,7 @@ global.XP = {
   },
   getXPToNextLevel() {
     return 500 - this.state.currentXP;
-  }
+  },
 };
 
 console.log('✓ Mock environment initialized\n');
@@ -86,8 +86,8 @@ const ttsResult = {
     tauriAvailable: false,
     webSpeechAvailable: true,
     voiceCount: 0,
-    testedPhrase: 'Test synthèse vocale TITANE'
-  }
+    testedPhrase: 'Test synthèse vocale TITANE',
+  },
 };
 console.log('  ✓ TTS: Available (Web Speech API fallback)');
 console.log(`  ⏱ Latency: ${ttsResult.latency_ms}ms\n`);
@@ -96,10 +96,21 @@ console.log(`  ⏱ Latency: ${ttsResult.latency_ms}ms\n`);
 console.log('[2/3] Testing File Import Module...');
 const fileImportResult = {
   available: true,
-  supportedExtensions: ['.txt', '.md', '.json', '.yaml', '.yml', '.js', '.ts', '.tsx', '.jsx', '.log'],
+  supportedExtensions: [
+    '.txt',
+    '.md',
+    '.json',
+    '.yaml',
+    '.yml',
+    '.js',
+    '.ts',
+    '.tsx',
+    '.jsx',
+    '.log',
+  ],
   maxSize: 5242880,
   tauriBackendAvailable: false,
-  latency_ms: 8
+  latency_ms: 8,
 };
 console.log('  ✓ File Import: Available (Frontend only)');
 console.log(`  📋 Extensions: ${fileImportResult.supportedExtensions.length}`);
@@ -115,14 +126,15 @@ const xpResult = {
   xpToNextLevel: 490,
   historyCount: 1,
   persistenceWorking: true,
-  latency_ms: 15
+  latency_ms: 15,
 };
 console.log('  ✓ XP System: Available');
 console.log(`  🎯 Level: ${xpResult.currentLevel}, XP: ${xpResult.totalXP}`);
 console.log(`  ⏱ Latency: ${xpResult.latency_ms}ms\n`);
 
 // Calculate summary
-const totalLatency = ttsResult.latency_ms + fileImportResult.latency_ms + xpResult.latency_ms;
+const totalLatency =
+  ttsResult.latency_ms + fileImportResult.latency_ms + xpResult.latency_ms;
 
 console.log('═══════════════════════════════════════');
 console.log('  RESULTS SUMMARY');

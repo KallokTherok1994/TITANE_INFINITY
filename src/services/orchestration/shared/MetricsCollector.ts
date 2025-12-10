@@ -1,7 +1,7 @@
 /**
  * TITANE∞ vΩ — Shared Metrics Collector
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
- * 
+ *
  * Unified metrics collection for all strategies
  */
 
@@ -45,7 +45,7 @@ export class MetricsCollector implements IMetricsProvider {
         successRate: 1.0,
         averageLatency: 0,
         errorCount: 0,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
     }
 
@@ -55,16 +55,18 @@ export class MetricsCollector implements IMetricsProvider {
 
     // Count errors (success=false tags)
     const errorCount = requests.filter(m => m.tags?.success === 'false').length;
-    const successRate = totalRequests > 0 ? (totalRequests - errorCount) / totalRequests : 1.0;
+    const successRate =
+      totalRequests > 0 ? (totalRequests - errorCount) / totalRequests : 1.0;
 
     // Calculate average latency from histogram metrics
     const latencies = this.metrics
       .filter(m => m.type === 'histogram' && m.name.includes('latency'))
       .map(m => m.value);
-    
-    const averageLatency = latencies.length > 0
-      ? latencies.reduce((sum, v) => sum + v, 0) / latencies.length
-      : 0;
+
+    const averageLatency =
+      latencies.length > 0
+        ? latencies.reduce((sum, v) => sum + v, 0) / latencies.length
+        : 0;
 
     return {
       totalRequests,
@@ -74,8 +76,8 @@ export class MetricsCollector implements IMetricsProvider {
       timestamp: Date.now(),
       details: {
         metricsCount: this.metrics.length,
-        strategiesReporting: this.strategySummaries.size
-      }
+        strategiesReporting: this.strategySummaries.size,
+      },
     };
   }
 

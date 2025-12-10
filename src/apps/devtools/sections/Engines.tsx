@@ -15,7 +15,7 @@ export function Engines() {
   const { engines, updateEngine, setSelectedEngine } = useDevToolsStore();
   const [filter, setFilter] = useState<'all' | 'running' | 'idle' | 'error'>('all');
 
-  const filteredEngines = engines.filter((e) => {
+  const filteredEngines = engines.filter(e => {
     if (filter === 'all') return true;
     return e.status === filter;
   });
@@ -23,7 +23,11 @@ export function Engines() {
   const handleRestart = (id: string) => {
     updateEngine(id, { status: 'starting' });
     setTimeout(() => {
-      updateEngine(id, { status: 'running', lastExecution: Date.now(), executionDuration: 0 });
+      updateEngine(id, {
+        status: 'running',
+        lastExecution: Date.now(),
+        executionDuration: 0,
+      });
     }, 1000);
   };
 
@@ -46,7 +50,7 @@ export function Engines() {
         description="Status et contrôle des moteurs TITANE∞"
         actions={
           <div className="flex gap-2">
-            {(['all', 'running', 'idle', 'error'] as const).map((status) => (
+            {(['all', 'running', 'idle', 'error'] as const).map(status => (
               <button
                 key={status}
                 onClick={() => setFilter(status)}
@@ -112,7 +116,7 @@ export function Engines() {
             className="text-2xl font-bold"
             style={{ color: 'var(--text-success, #93b399)' }}
           >
-            {engines.filter((e) => e.status === 'running').length}
+            {engines.filter(e => e.status === 'running').length}
           </div>
         </div>
 
@@ -133,7 +137,7 @@ export function Engines() {
             className="text-2xl font-bold"
             style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
           >
-            {engines.filter((e) => e.status === 'idle').length}
+            {engines.filter(e => e.status === 'idle').length}
           </div>
         </div>
 
@@ -154,14 +158,14 @@ export function Engines() {
             className="text-2xl font-bold"
             style={{ color: 'var(--text-danger, #8b5f5f)' }}
           >
-            {engines.filter((e) => e.errorCount > 0).length}
+            {engines.filter(e => e.errorCount > 0).length}
           </div>
         </div>
       </div>
 
       {/* Engines Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredEngines.map((engine) => (
+        {filteredEngines.map(engine => (
           <EngineCard
             key={engine.id}
             engine={engine}

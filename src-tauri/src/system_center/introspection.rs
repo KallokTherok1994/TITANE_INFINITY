@@ -94,7 +94,8 @@ async fn quick_scan(project_path: &str) -> Result<Vec<CodeIssue>, String> {
                     file_path: file_path.clone(),
                     line: None,
                     column: None,
-                    description: "console.log() found - should be removed in production".to_string(),
+                    description: "console.log() found - should be removed in production"
+                        .to_string(),
                     suggestion: Some("Use proper logging or remove".to_string()),
                     auto_fixable: true,
                 });
@@ -149,13 +150,19 @@ fn generate_report(
         .unwrap()
         .as_secs();
 
-    let mut by_severity: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
-    let mut by_category: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
+    let mut by_severity: std::collections::HashMap<String, usize> =
+        std::collections::HashMap::new();
+    let mut by_category: std::collections::HashMap<String, usize> =
+        std::collections::HashMap::new();
     let mut auto_fixes = 0;
 
     for issue in &issues {
-        *by_severity.entry(format!("{:?}", issue.severity)).or_insert(0) += 1;
-        *by_category.entry(format!("{:?}", issue.category)).or_insert(0) += 1;
+        *by_severity
+            .entry(format!("{:?}", issue.severity))
+            .or_insert(0) += 1;
+        *by_category
+            .entry(format!("{:?}", issue.category))
+            .or_insert(0) += 1;
         if issue.auto_fixable {
             auto_fixes += 1;
         }
@@ -180,7 +187,9 @@ fn generate_report(
 
 /// Quick introspection scan
 #[tauri::command]
-pub async fn sc_introspection_quick_scan(project_path: String) -> Result<IntrospectionReport, String> {
+pub async fn sc_introspection_quick_scan(
+    project_path: String,
+) -> Result<IntrospectionReport, String> {
     let start = std::time::Instant::now();
 
     let issues = quick_scan(&project_path).await?;
@@ -198,15 +207,19 @@ pub async fn sc_introspection_quick_scan(project_path: String) -> Result<Introsp
 
 /// Full introspection scan
 #[tauri::command]
-pub async fn sc_introspection_full_scan(project_path: String) -> Result<IntrospectionReport, String> {
+pub async fn sc_introspection_full_scan(
+    project_path: String,
+) -> Result<IntrospectionReport, String> {
     let start = std::time::Instant::now();
 
     // Delegate to existing scanner if available
     match crate::introspection::introspection_scan(project_path.clone()).await {
         Ok(scan_report) => {
             // Convert from existing format
-            let issues: Vec<CodeIssue> = scan_report.issues.into_iter().map(|i| {
-                CodeIssue {
+            let issues: Vec<CodeIssue> = scan_report
+                .issues
+                .into_iter()
+                .map(|i| CodeIssue {
                     id: i.id,
                     severity: match i.severity {
                         crate::introspection::IssueSeverity::Info => IssueSeverity::Info,
@@ -216,12 +229,20 @@ pub async fn sc_introspection_full_scan(project_path: String) -> Result<Introspe
                     },
                     category: match i.category {
                         crate::introspection::IssueCategory::DeadCode => IssueCategory::DeadCode,
-                        crate::introspection::IssueCategory::BrokenImport => IssueCategory::BrokenImport,
+                        crate::introspection::IssueCategory::BrokenImport => {
+                            IssueCategory::BrokenImport
+                        }
                         crate::introspection::IssueCategory::TypeError => IssueCategory::TypeError,
-                        crate::introspection::IssueCategory::PerformanceIssue => IssueCategory::PerformanceIssue,
-                        crate::introspection::IssueCategory::SecurityVulnerability => IssueCategory::SecurityVulnerability,
+                        crate::introspection::IssueCategory::PerformanceIssue => {
+                            IssueCategory::PerformanceIssue
+                        }
+                        crate::introspection::IssueCategory::SecurityVulnerability => {
+                            IssueCategory::SecurityVulnerability
+                        }
                         crate::introspection::IssueCategory::CodeSmell => IssueCategory::CodeSmell,
-                        crate::introspection::IssueCategory::MemoryLeak => IssueCategory::MemoryLeak,
+                        crate::introspection::IssueCategory::MemoryLeak => {
+                            IssueCategory::MemoryLeak
+                        }
                     },
                     file_path: i.file_path,
                     line: i.line,
@@ -229,8 +250,8 @@ pub async fn sc_introspection_full_scan(project_path: String) -> Result<Introspe
                     description: i.description,
                     suggestion: i.suggestion,
                     auto_fixable: i.auto_fixable,
-                }
-            }).collect();
+                })
+                .collect();
 
             let duration = start.elapsed().as_millis() as u64;
             let report = generate_report(
@@ -244,7 +265,10 @@ pub async fn sc_introspection_full_scan(project_path: String) -> Result<Introspe
         }
         Err(e) => {
             // Fallback to quick scan
-            println!("[SystemCenter::Introspection] Full scan failed, using quick scan: {}", e);
+            println!(
+                "[SystemCenter::Introspection] Full scan failed, using quick scan: {}",
+                e
+            );
             sc_introspection_quick_scan(project_path).await
         }
     }

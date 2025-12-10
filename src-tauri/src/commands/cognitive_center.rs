@@ -153,8 +153,8 @@ fn load_progression() -> ProgressionState {
 fn save_progression(state: &ProgressionState) -> CommandResult<()> {
     let dir = ensure_data_dir()?;
     let path = dir.join("progression_state.json");
-    let content = serde_json::to_string_pretty(state)
-        .map_err(|e| format!("Failed to serialize: {}", e))?;
+    let content =
+        serde_json::to_string_pretty(state).map_err(|e| format!("Failed to serialize: {}", e))?;
     fs::write(&path, content).map_err(|e| format!("Failed to write: {}", e))
 }
 
@@ -165,7 +165,11 @@ pub async fn cognitive_get_progression() -> CommandResult<ProgressionState> {
 }
 
 #[tauri::command]
-pub async fn cognitive_add_xp(amount: u64, source: String, description: String) -> CommandResult<ProgressionState> {
+pub async fn cognitive_add_xp(
+    amount: u64,
+    source: String,
+    description: String,
+) -> CommandResult<ProgressionState> {
     log::info!("[Cognitive] add_xp: {} from {}", amount, source);
 
     let mut state = load_progression();
@@ -246,8 +250,8 @@ fn load_knowledge_vault() -> KnowledgeVaultState {
 fn save_knowledge_vault(state: &KnowledgeVaultState) -> CommandResult<()> {
     let dir = ensure_data_dir()?;
     let path = dir.join("knowledge_vault.json");
-    let content = serde_json::to_string_pretty(state)
-        .map_err(|e| format!("Failed to serialize: {}", e))?;
+    let content =
+        serde_json::to_string_pretty(state).map_err(|e| format!("Failed to serialize: {}", e))?;
     fs::write(&path, content).map_err(|e| format!("Failed to write: {}", e))
 }
 
@@ -262,13 +266,16 @@ fn detect_category(path: &str) -> String {
         "json" | "yaml" | "toml" => "config",
         "txt" => "notes",
         _ => "unknown",
-    }.to_string()
+    }
+    .to_string()
 }
 
 fn generate_summary(content: &str, max_len: usize) -> String {
     let cleaned: String = content
         .lines()
-        .filter(|l| !l.trim().is_empty() && !l.trim().starts_with("//") && !l.trim().starts_with("#"))
+        .filter(|l| {
+            !l.trim().is_empty() && !l.trim().starts_with("//") && !l.trim().starts_with("#")
+        })
         .take(5)
         .collect::<Vec<_>>()
         .join(" ");
@@ -287,15 +294,16 @@ pub async fn cognitive_get_knowledge_vault() -> CommandResult<KnowledgeVaultStat
 }
 
 #[tauri::command]
-pub async fn cognitive_ingest_file(path: String, title: Option<String>) -> CommandResult<KnowledgeEntry> {
+pub async fn cognitive_ingest_file(
+    path: String,
+    title: Option<String>,
+) -> CommandResult<KnowledgeEntry> {
     log::info!("[Cognitive] ingest_file: {}", path);
 
     // Read file
-    let content = fs::read_to_string(&path)
-        .map_err(|e| format!("Failed to read file: {}", e))?;
+    let content = fs::read_to_string(&path).map_err(|e| format!("Failed to read file: {}", e))?;
 
-    let metadata = fs::metadata(&path)
-        .map_err(|e| format!("Failed to get metadata: {}", e))?;
+    let metadata = fs::metadata(&path).map_err(|e| format!("Failed to get metadata: {}", e))?;
 
     let now = chrono::Utc::now().timestamp_millis() as u64;
     let file_name = path.rsplit('/').next().unwrap_or(&path);
@@ -322,12 +330,20 @@ pub async fn cognitive_ingest_file(path: String, title: Option<String>) -> Comma
     vault.last_ingestion = Some(now);
 
     // Update category counts
-    *vault.category_counts.entry(entry.category.clone()).or_insert(0) += 1;
+    *vault
+        .category_counts
+        .entry(entry.category.clone())
+        .or_insert(0) += 1;
 
     save_knowledge_vault(&vault)?;
 
     // Add XP for ingestion
-    let _ = cognitive_add_xp(15, "knowledge_ingest".into(), format!("Imported: {}", entry.title)).await;
+    let _ = cognitive_add_xp(
+        15,
+        "knowledge_ingest".into(),
+        format!("Imported: {}", entry.title),
+    )
+    .await;
 
     Ok(entry)
 }
@@ -339,12 +355,15 @@ pub async fn cognitive_search_knowledge(query: String) -> CommandResult<Vec<Know
     let vault = load_knowledge_vault();
     let query_lower = query.to_lowercase();
 
-    let results: Vec<KnowledgeEntry> = vault.entries
+    let results: Vec<KnowledgeEntry> = vault
+        .entries
         .into_iter()
         .filter(|e| {
             e.title.to_lowercase().contains(&query_lower)
                 || e.summary.to_lowercase().contains(&query_lower)
-                || e.tags.iter().any(|t| t.to_lowercase().contains(&query_lower))
+                || e.tags
+                    .iter()
+                    .any(|t| t.to_lowercase().contains(&query_lower))
         })
         .collect();
 
@@ -428,21 +447,19 @@ impl Default for EvolutionState {
 }
 
 fn default_changelog() -> Vec<ChangelogEntry> {
-    vec![
-        ChangelogEntry {
-            version: "19.3.0".into(),
-            date: "2025-12-01".into(),
-            entry_type: "major".into(),
-            title: "Centre d'Évolution Cognitive".into(),
-            description: "Fusion Progression + Knowledge + Evolution + Memory".into(),
-            changes: vec![
-                "XP Engine unifié avec persistence".into(),
-                "Knowledge Vault avec ingestion".into(),
-                "Evolution Engine avec changelog".into(),
-                "Memory Engine CT/MT/LT".into(),
-            ],
-        },
-    ]
+    vec![ChangelogEntry {
+        version: "19.3.0".into(),
+        date: "2025-12-01".into(),
+        entry_type: "major".into(),
+        title: "Centre d'Évolution Cognitive".into(),
+        description: "Fusion Progression + Knowledge + Evolution + Memory".into(),
+        changes: vec![
+            "XP Engine unifié avec persistence".into(),
+            "Knowledge Vault avec ingestion".into(),
+            "Evolution Engine avec changelog".into(),
+            "Memory Engine CT/MT/LT".into(),
+        ],
+    }]
 }
 
 fn load_evolution() -> EvolutionState {
@@ -458,8 +475,8 @@ fn load_evolution() -> EvolutionState {
 fn save_evolution(state: &EvolutionState) -> CommandResult<()> {
     let dir = ensure_data_dir()?;
     let path = dir.join("evolution_state.json");
-    let content = serde_json::to_string_pretty(state)
-        .map_err(|e| format!("Failed to serialize: {}", e))?;
+    let content =
+        serde_json::to_string_pretty(state).map_err(|e| format!("Failed to serialize: {}", e))?;
     fs::write(&path, content).map_err(|e| format!("Failed to write: {}", e))
 }
 
@@ -491,12 +508,18 @@ pub async fn cognitive_run_evolution_cycle() -> CommandResult<EvolutionState> {
         51..=100 => "optimizing",
         101..=200 => "evolving",
         _ => "singularity",
-    }.into();
+    }
+    .into();
 
     save_evolution(&state)?;
 
     // Add XP for evolution cycle
-    let _ = cognitive_add_xp(30, "evolution_cycle".into(), "Cycle d'évolution complété".into()).await;
+    let _ = cognitive_add_xp(
+        30,
+        "evolution_cycle".into(),
+        "Cycle d'évolution complété".into(),
+    )
+    .await;
 
     Ok(state)
 }
@@ -595,8 +618,8 @@ fn load_memory() -> MemoryState {
 fn save_memory(state: &MemoryState) -> CommandResult<()> {
     let dir = ensure_data_dir()?;
     let path = dir.join("memory_state.json");
-    let content = serde_json::to_string_pretty(state)
-        .map_err(|e| format!("Failed to serialize: {}", e))?;
+    let content =
+        serde_json::to_string_pretty(state).map_err(|e| format!("Failed to serialize: {}", e))?;
     fs::write(&path, content).map_err(|e| format!("Failed to write: {}", e))
 }
 
@@ -604,13 +627,24 @@ fn update_memory_stats(state: &mut MemoryState) {
     state.stats.short_term_count = state.short_term.len() as u32;
     state.stats.medium_term_count = state.medium_term.len() as u32;
     state.stats.long_term_count = state.long_term.len() as u32;
-    state.stats.total_memories = state.stats.short_term_count
-        + state.stats.medium_term_count
-        + state.stats.long_term_count;
+    state.stats.total_memories =
+        state.stats.short_term_count + state.stats.medium_term_count + state.stats.long_term_count;
 
-    let total_size: usize = state.short_term.iter().map(|m| m.content.len()).sum::<usize>()
-        + state.medium_term.iter().map(|m| m.content.len()).sum::<usize>()
-        + state.long_term.iter().map(|m| m.content.len()).sum::<usize>();
+    let total_size: usize = state
+        .short_term
+        .iter()
+        .map(|m| m.content.len())
+        .sum::<usize>()
+        + state
+            .medium_term
+            .iter()
+            .map(|m| m.content.len())
+            .sum::<usize>()
+        + state
+            .long_term
+            .iter()
+            .map(|m| m.content.len())
+            .sum::<usize>();
 
     state.stats.total_size_bytes = total_size as u64;
     state.stats.compression_ratio = 0.9; // Placeholder
@@ -633,7 +667,11 @@ pub async fn cognitive_store_memory(
     importance: f32,
     tags: Vec<String>,
 ) -> CommandResult<MemoryItem> {
-    log::info!("[Cognitive] store_memory: type={}, importance={}", memory_type, importance);
+    log::info!(
+        "[Cognitive] store_memory: type={}, importance={}",
+        memory_type,
+        importance
+    );
 
     let now = chrono::Utc::now().timestamp_millis() as u64;
 
@@ -666,10 +704,14 @@ pub async fn cognitive_store_memory(
     const MAX_LONG: usize = 1000;
 
     if state.short_term.len() > MAX_SHORT {
-        state.short_term.drain(0..(state.short_term.len() - MAX_SHORT));
+        state
+            .short_term
+            .drain(0..(state.short_term.len() - MAX_SHORT));
     }
     if state.medium_term.len() > MAX_MEDIUM {
-        state.medium_term.drain(0..(state.medium_term.len() - MAX_MEDIUM));
+        state
+            .medium_term
+            .drain(0..(state.medium_term.len() - MAX_MEDIUM));
     }
     if state.long_term.len() > MAX_LONG {
         state.long_term.drain(0..(state.long_term.len() - MAX_LONG));
@@ -713,23 +755,29 @@ pub async fn cognitive_consolidate_memory() -> CommandResult<MemoryStats> {
     let now = chrono::Utc::now().timestamp_millis() as u64;
 
     // Move high-importance short-term to medium-term
-    let to_promote: Vec<MemoryItem> = state.short_term
+    let to_promote: Vec<MemoryItem> = state
+        .short_term
         .iter()
         .filter(|m| m.importance >= 0.6 || m.access_count >= 3)
         .cloned()
         .collect();
 
-    state.short_term.retain(|m| m.importance < 0.6 && m.access_count < 3);
+    state
+        .short_term
+        .retain(|m| m.importance < 0.6 && m.access_count < 3);
     state.medium_term.extend(to_promote);
 
     // Move high-importance medium-term to long-term
-    let to_promote: Vec<MemoryItem> = state.medium_term
+    let to_promote: Vec<MemoryItem> = state
+        .medium_term
         .iter()
         .filter(|m| m.importance >= 0.8 || m.access_count >= 5)
         .cloned()
         .collect();
 
-    state.medium_term.retain(|m| m.importance < 0.8 && m.access_count < 5);
+    state
+        .medium_term
+        .retain(|m| m.importance < 0.8 && m.access_count < 5);
     state.long_term.extend(to_promote);
 
     state.last_consolidation = now;
@@ -748,10 +796,9 @@ pub async fn cognitive_backup_memory() -> CommandResult<String> {
     let timestamp = chrono::Utc::now().format("%Y%m%d_%H%M%S");
     let backup_path = dir.join(format!("memory_backup_{}.json", timestamp));
 
-    let content = serde_json::to_string_pretty(&state)
-        .map_err(|e| format!("Failed to serialize: {}", e))?;
-    fs::write(&backup_path, content)
-        .map_err(|e| format!("Failed to write backup: {}", e))?;
+    let content =
+        serde_json::to_string_pretty(&state).map_err(|e| format!("Failed to serialize: {}", e))?;
+    fs::write(&backup_path, content).map_err(|e| format!("Failed to write backup: {}", e))?;
 
     Ok(backup_path.to_string_lossy().to_string())
 }

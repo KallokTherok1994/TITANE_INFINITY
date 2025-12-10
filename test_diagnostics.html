@@ -1,192 +1,208 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TITANE∞ v19.1.0 - Test Diagnostics</title>
-  <style>
-    body {
-      font-family: 'Courier New', monospace;
-      background: #001020;
-      color: #00ffff;
-      padding: 20px;
-      margin: 0;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TITANE∞ v19.1.0 - Test Diagnostics</title>
+    <style>
+      body {
+        font-family: 'Courier New', monospace;
+        background: #001020;
+        color: #00ffff;
+        padding: 20px;
+        margin: 0;
+      }
 
-    h1 {
-      text-align: center;
-      color: #00ffff;
-      text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-    }
+      h1 {
+        text-align: center;
+        color: #00ffff;
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+      }
 
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: rgba(0, 20, 40, 0.8);
-      border: 1px solid rgba(0, 255, 255, 0.3);
-      border-radius: 12px;
-      padding: 24px;
-    }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        background: rgba(0, 20, 40, 0.8);
+        border: 1px solid rgba(0, 255, 255, 0.3);
+        border-radius: 12px;
+        padding: 24px;
+      }
 
-    button {
-      background: rgba(0, 255, 255, 0.1);
-      border: 2px solid #00ffff;
-      color: #00ffff;
-      padding: 12px 24px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-family: 'Courier New', monospace;
-      font-size: 14px;
-      font-weight: bold;
-      margin: 10px;
-      transition: all 0.3s ease;
-    }
+      button {
+        background: rgba(0, 255, 255, 0.1);
+        border: 2px solid #00ffff;
+        color: #00ffff;
+        padding: 12px 24px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-family: 'Courier New', monospace;
+        font-size: 14px;
+        font-weight: bold;
+        margin: 10px;
+        transition: all 0.3s ease;
+      }
 
-    button:hover:not(:disabled) {
-      background: rgba(0, 255, 255, 0.2);
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
-      transform: translateY(-2px);
-    }
+      button:hover:not(:disabled) {
+        background: rgba(0, 255, 255, 0.2);
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+        transform: translateY(-2px);
+      }
 
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
 
-    #results {
-      margin-top: 20px;
-      padding: 16px;
-      background: rgba(0, 0, 0, 0.4);
-      border-radius: 8px;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-    }
+      #results {
+        margin-top: 20px;
+        padding: 16px;
+        background: rgba(0, 0, 0, 0.4);
+        border-radius: 8px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
 
-    .success { color: #00ff00; }
-    .warning { color: #ffa500; }
-    .error { color: #ff0000; }
+      .success {
+        color: #00ff00;
+      }
+      .warning {
+        color: #ffa500;
+      }
+      .error {
+        color: #ff0000;
+      }
 
-    .module {
-      margin: 12px 0;
-      padding: 12px;
-      background: rgba(0, 0, 0, 0.3);
-      border-left: 4px solid;
-      border-radius: 4px;
-    }
+      .module {
+        margin: 12px 0;
+        padding: 12px;
+        background: rgba(0, 0, 0, 0.3);
+        border-left: 4px solid;
+        border-radius: 4px;
+      }
 
-    .module.ok { border-left-color: #00ff00; }
-    .module.warn { border-left-color: #ffa500; }
-    .module.error { border-left-color: #ff0000; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>TITANE∞ v19.1.0 System Diagnostics Test</h1>
+      .module.ok {
+        border-left-color: #00ff00;
+      }
+      .module.warn {
+        border-left-color: #ffa500;
+      }
+      .module.error {
+        border-left-color: #ff0000;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>TITANE∞ v19.1.0 System Diagnostics Test</h1>
 
-    <div style="text-align: center;">
-      <button id="btnRunAll">Run All Tests</button>
-      <button id="btnQuickCheck">Quick Diagnostic</button>
-      <button id="btnExport" disabled>Export JSON</button>
+      <div style="text-align: center">
+        <button id="btnRunAll">Run All Tests</button>
+        <button id="btnQuickCheck">Quick Diagnostic</button>
+        <button id="btnExport" disabled>Export JSON</button>
+      </div>
+
+      <div id="results"></div>
     </div>
 
-    <div id="results"></div>
-  </div>
+    <script type="module">
+      // Import self-test functions
+      import {
+        runAllTests,
+        getSystemDiagnostic,
+        exportTestResults,
+      } from './src/services/selftest/systemSelfTest.ts';
 
-  <script type="module">
-    // Import self-test functions
-    import { runAllTests, getSystemDiagnostic, exportTestResults } from './src/services/selftest/systemSelfTest.ts';
+      let lastResults = null;
 
-    let lastResults = null;
+      const resultsDiv = document.getElementById('results');
+      const btnRunAll = document.getElementById('btnRunAll');
+      const btnQuickCheck = document.getElementById('btnQuickCheck');
+      const btnExport = document.getElementById('btnExport');
 
-    const resultsDiv = document.getElementById('results');
-    const btnRunAll = document.getElementById('btnRunAll');
-    const btnQuickCheck = document.getElementById('btnQuickCheck');
-    const btnExport = document.getElementById('btnExport');
+      function formatResults(results) {
+        const html = [];
+        html.push(`<div class="success">═════════════════════════════════════</div>`);
+        html.push(`<div class="success">  TITANE∞ SYSTEM DIAGNOSTICS</div>`);
+        html.push(`<div class="success">═════════════════════════════════════</div>\n`);
 
-    function formatResults(results) {
-      const html = [];
-      html.push(`<div class="success">═════════════════════════════════════</div>`);
-      html.push(`<div class="success">  TITANE∞ SYSTEM DIAGNOSTICS</div>`);
-      html.push(`<div class="success">═════════════════════════════════════</div>\n`);
+        html.push(`Timestamp: ${new Date(results.timestamp).toLocaleString('fr-FR')}\n`);
+        html.push(`Total Latency: ${results.totalLatency_ms}ms\n`);
+        html.push(`Modules Count: ${results.modulesCount}\n\n`);
 
-      html.push(`Timestamp: ${new Date(results.timestamp).toLocaleString('fr-FR')}\n`);
-      html.push(`Total Latency: ${results.totalLatency_ms}ms\n`);
-      html.push(`Modules Count: ${results.modulesCount}\n\n`);
+        html.push(`<div class="success">Summary:</div>`);
+        html.push(`  OK: ${results.summary.ok}`);
+        html.push(`  WARN: ${results.summary.warn}`);
+        html.push(`  ERROR: ${results.summary.error}`);
+        html.push(`  SKIP: ${results.summary.skip}\n\n`);
 
-      html.push(`<div class="success">Summary:</div>`);
-      html.push(`  OK: ${results.summary.ok}`);
-      html.push(`  WARN: ${results.summary.warn}`);
-      html.push(`  ERROR: ${results.summary.error}`);
-      html.push(`  SKIP: ${results.summary.skip}\n\n`);
+        html.push(`<div class="success">Modules:</div>\n`);
 
-      html.push(`<div class="success">Modules:</div>\n`);
-
-      for (const [key, module] of Object.entries(results.modules)) {
-        const statusClass = module.status;
-        html.push(`<div class="module ${statusClass}">`);
-        html.push(`  <strong>${module.name}</strong> [${module.status.toUpperCase()}]`);
-        html.push(`  Latency: ${module.latency_ms}ms`);
-        html.push(`  Available: ${module.available ? 'Yes' : 'No'}`);
-        html.push(`  Message: ${module.message}`);
-        if (module.error) {
-          html.push(`  <span class="error">Error: ${module.error}</span>`);
+        for (const [key, module] of Object.entries(results.modules)) {
+          const statusClass = module.status;
+          html.push(`<div class="module ${statusClass}">`);
+          html.push(`  <strong>${module.name}</strong> [${module.status.toUpperCase()}]`);
+          html.push(`  Latency: ${module.latency_ms}ms`);
+          html.push(`  Available: ${module.available ? 'Yes' : 'No'}`);
+          html.push(`  Message: ${module.message}`);
+          if (module.error) {
+            html.push(`  <span class="error">Error: ${module.error}</span>`);
+          }
+          if (module.details) {
+            html.push(`  Details: ${JSON.stringify(module.details, null, 2)}`);
+          }
+          html.push(`</div>`);
         }
-        if (module.details) {
-          html.push(`  Details: ${JSON.stringify(module.details, null, 2)}`);
-        }
-        html.push(`</div>`);
+
+        return html.join('\n');
       }
 
-      return html.join('\n');
-    }
+      btnRunAll.addEventListener('click', async () => {
+        btnRunAll.disabled = true;
+        resultsDiv.innerHTML = '<div class="warning">Running tests...</div>';
 
-    btnRunAll.addEventListener('click', async () => {
-      btnRunAll.disabled = true;
-      resultsDiv.innerHTML = '<div class="warning">Running tests...</div>';
+        try {
+          const results = await runAllTests();
+          lastResults = results;
+          resultsDiv.innerHTML = formatResults(results);
+          btnExport.disabled = false;
+        } catch (error) {
+          resultsDiv.innerHTML = `<div class="error">Error: ${error.message}\n${error.stack}</div>`;
+        } finally {
+          btnRunAll.disabled = false;
+        }
+      });
 
-      try {
-        const results = await runAllTests();
-        lastResults = results;
-        resultsDiv.innerHTML = formatResults(results);
-        btnExport.disabled = false;
-      } catch (error) {
-        resultsDiv.innerHTML = `<div class="error">Error: ${error.message}\n${error.stack}</div>`;
-      } finally {
-        btnRunAll.disabled = false;
-      }
-    });
+      btnQuickCheck.addEventListener('click', async () => {
+        btnQuickCheck.disabled = true;
+        resultsDiv.innerHTML = '<div class="warning">Running quick diagnostic...</div>';
 
-    btnQuickCheck.addEventListener('click', async () => {
-      btnQuickCheck.disabled = true;
-      resultsDiv.innerHTML = '<div class="warning">Running quick diagnostic...</div>';
-
-      try {
-        const diagnostic = await getSystemDiagnostic();
-        resultsDiv.innerHTML = `
+        try {
+          const diagnostic = await getSystemDiagnostic();
+          resultsDiv.innerHTML = `
           <div class="${diagnostic.status}">
             Status: ${diagnostic.status.toUpperCase()}
             Message: ${diagnostic.message}
           </div>
         `;
-      } catch (error) {
-        resultsDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
-      } finally {
-        btnQuickCheck.disabled = false;
-      }
-    });
+        } catch (error) {
+          resultsDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+        } finally {
+          btnQuickCheck.disabled = false;
+        }
+      });
 
-    btnExport.addEventListener('click', () => {
-      if (!lastResults) return;
+      btnExport.addEventListener('click', () => {
+        if (!lastResults) return;
 
-      const json = exportTestResults(lastResults);
-      const blob = new Blob([json], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `titane-diagnostic-${new Date().toISOString().split('T')[0]}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-    });
-  </script>
-</body>
+        const json = exportTestResults(lastResults);
+        const blob = new Blob([json], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `titane-diagnostic-${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+    </script>
+  </body>
 </html>

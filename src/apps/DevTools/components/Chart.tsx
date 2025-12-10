@@ -48,8 +48,12 @@ interface BarChartProps {
   color?: string;
 }
 
-export const BarChart: React.FC<BarChartProps> = ({ data, maxValue, color = '#0e639c' }) => {
-  const max = maxValue || Math.max(...data.map((d) => d.value));
+export const BarChart: React.FC<BarChartProps> = ({
+  data,
+  maxValue,
+  color = '#0e639c',
+}) => {
+  const max = maxValue || Math.max(...data.map(d => d.value));
 
   return (
     <div className="bar-chart">

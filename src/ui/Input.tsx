@@ -24,8 +24,7 @@ import { cn } from '@/utils/cn';
 export type InputSize = 'sm' | 'md' | 'lg';
 export type InputState = 'default' | 'error' | 'success' | 'warning';
 
-export interface InputProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
+export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   size?: InputSize;
   state?: InputState;
   label?: string;
@@ -46,10 +45,14 @@ const sizeClasses: Record<InputSize, string> = {
 };
 
 const stateClasses: Record<InputState, string> = {
-  default: 'border-border-default focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30',
-  error: 'border-error-500 ring-2 ring-error-500/20 focus:border-error-500 focus:ring-error-500/30',
-  success: 'border-success-500 ring-2 ring-success-500/20 focus:border-success-500 focus:ring-success-500/30',
-  warning: 'border-warning-500 ring-2 ring-warning-500/20 focus:border-warning-500 focus:ring-warning-500/30',
+  default:
+    'border-border-default focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30',
+  error:
+    'border-error-500 ring-2 ring-error-500/20 focus:border-error-500 focus:ring-error-500/30',
+  success:
+    'border-success-500 ring-2 ring-success-500/20 focus:border-success-500 focus:ring-success-500/30',
+  warning:
+    'border-warning-500 ring-2 ring-warning-500/20 focus:border-warning-500 focus:ring-warning-500/30',
 };
 
 const helperTextColors: Record<InputState, string> = {
@@ -130,9 +133,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
         {/* Helper Text */}
         {helperText && (
-          <div className={cn('mt-1 text-xs', helperTextColors[state])}>
-            {helperText}
-          </div>
+          <div className={cn('mt-1 text-xs', helperTextColors[state])}>{helperText}</div>
         )}
       </div>
     );

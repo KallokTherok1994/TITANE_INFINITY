@@ -36,8 +36,11 @@ const statusColors = {
   disabled: '#60676d',
 };
 
-export const DevToolsPanel: React.FC<DevToolsPanelProps> = ({ className = '', engines }) => {
-  const engine = useVisualStateStore((state) => state.engine);
+export const DevToolsPanel: React.FC<DevToolsPanelProps> = ({
+  className = '',
+  engines,
+}) => {
+  const engine = useVisualStateStore(state => state.engine);
   const { visuals, isTransitioning } = useVisualState(engine);
 
   return (
@@ -94,7 +97,7 @@ export const DevToolsPanel: React.FC<DevToolsPanelProps> = ({ className = '', en
             color: 'rgba(255, 255, 255, 0.6)',
           }}
         >
-          {engines.filter((e) => e.status === 'active').length} / {engines.length} Active
+          {engines.filter(e => e.status === 'active').length} / {engines.length} Active
         </span>
       </div>
 
@@ -122,11 +125,11 @@ export const DevToolsPanel: React.FC<DevToolsPanelProps> = ({ className = '', en
                 transition: 'all 500ms cubic-bezier(0.25, 0.1, 0.25, 1)',
                 cursor: 'pointer',
               }}
-              onMouseEnter={(e) => {
+              onMouseEnter={e => {
                 e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.06)';
                 e.currentTarget.style.borderColor = statusColor;
               }}
-              onMouseLeave={(e) => {
+              onMouseLeave={e => {
                 e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.03)';
                 e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
               }}

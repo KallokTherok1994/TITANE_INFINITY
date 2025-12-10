@@ -29,24 +29,25 @@ export function Logs() {
   // Detect manual scroll up
   const handleScroll = () => {
     if (!logsContainerRef.current) return;
-    
+
     const { scrollTop, scrollHeight, clientHeight } = logsContainerRef.current;
     const isAtBottom = scrollHeight - scrollTop - clientHeight < 50;
-    
+
     if (isAtBottom !== autoScrollLogs) {
       setAutoScrollLogs(isAtBottom);
     }
   };
 
   // Filter logs
-  const filteredLogs = logs.filter((log) => {
+  const filteredLogs = logs.filter(log => {
     if (selectedLevel !== 'all' && log.level !== selectedLevel) return false;
     if (selectedEngine !== 'all' && log.source !== selectedEngine) return false;
-    if (searchQuery && !log.message.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+    if (searchQuery && !log.message.toLowerCase().includes(searchQuery.toLowerCase()))
+      return false;
     return true;
   });
 
-  const engineList = Array.from(new Set(logs.map((l) => l.source)));
+  const engineList = Array.from(new Set(logs.map(l => l.source)));
 
   return (
     <div className="space-y-4 h-full flex flex-col">
@@ -71,7 +72,7 @@ export function Logs() {
                 type="checkbox"
                 id="auto-scroll"
                 checked={autoScrollLogs}
-                onChange={(e) => setAutoScrollLogs(e.target.checked)}
+                onChange={e => setAutoScrollLogs(e.target.checked)}
                 className="w-4 h-4 rounded"
               />
               <label
@@ -116,11 +117,11 @@ export function Logs() {
         >
           Filtered: <span className="font-medium">{filteredLogs.length}</span>
         </span>
-        <span
-          className="text-xs"
-          style={{ color: 'var(--text-danger, #8b5f5f)' }}
-        >
-          Errors: <span className="font-medium">{logs.filter((l) => l.level === 'error').length}</span>
+        <span className="text-xs" style={{ color: 'var(--text-danger, #8b5f5f)' }}>
+          Errors:{' '}
+          <span className="font-medium">
+            {logs.filter(l => l.level === 'error').length}
+          </span>
         </span>
       </div>
 
@@ -146,12 +147,12 @@ export function Logs() {
           </div>
         ) : (
           <div>
-            {filteredLogs.map((log) => (
+            {filteredLogs.map(log => (
               <LogLine
                 key={log.id}
                 log={log}
-                onFilter={(source) => setSelectedEngine(source)}
-                onCopy={(message) => navigator.clipboard.writeText(message)}
+                onFilter={source => setSelectedEngine(source)}
+                onCopy={message => navigator.clipboard.writeText(message)}
               />
             ))}
             <div ref={logsEndRef} />

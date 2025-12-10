@@ -311,7 +311,9 @@ describe('panelsStore', () => {
       result.current.bringToFront('test-panel');
     });
 
-    expect(result.current.panels.get('test-panel')?.zIndex).toBeGreaterThan(initialZIndex);
+    expect(result.current.panels.get('test-panel')?.zIndex).toBeGreaterThan(
+      initialZIndex
+    );
     expect(result.current.maxZIndex).toBeGreaterThan(initialMaxZ);
     expect(result.current.focusedPanelId).toBe('test-panel');
   });
@@ -363,7 +365,10 @@ describe('panelsStore', () => {
       result.current.updateSize('test-panel', { width: 400, height: 600 });
     });
 
-    expect(result.current.panels.get('test-panel')?.size).toEqual({ width: 400, height: 600 });
+    expect(result.current.panels.get('test-panel')?.size).toEqual({
+      width: 400,
+      height: 600,
+    });
   });
 
   it('should apply layout presets', () => {

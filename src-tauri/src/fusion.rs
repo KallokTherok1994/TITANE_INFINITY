@@ -132,9 +132,7 @@ impl Default for FusionEngineState {
 
 /// Collecte données depuis toutes les sources
 #[tauri::command]
-pub async fn fusion_collect(
-    state: State<'_, FusionEngineState>,
-) -> Result<FusionReport, String> {
+pub async fn fusion_collect(state: State<'_, FusionEngineState>) -> Result<FusionReport, String> {
     // Vérifier et définir le flag de fusion dans un scope isolé
     {
         let mut is_fusing = state.is_fusing.lock().map_err(|e| e.to_string())?;
@@ -178,9 +176,7 @@ pub async fn fusion_collect(
 
 /// Synchronise Memory + Logs + Dataset
 #[tauri::command]
-pub async fn fusion_sync(
-    state: State<'_, FusionEngineState>,
-) -> Result<String, String> {
+pub async fn fusion_sync(state: State<'_, FusionEngineState>) -> Result<String, String> {
     let config = state.config.lock().map_err(|e| e.to_string())?;
 
     let mut synced = Vec::new();
@@ -211,9 +207,7 @@ pub async fn fusion_build_dataset(
 
 /// Exporte dataset en JSONL
 #[tauri::command]
-pub async fn fusion_export(
-    output_path: Option<PathBuf>,
-) -> Result<String, String> {
+pub async fn fusion_export(output_path: Option<PathBuf>) -> Result<String, String> {
     let path = output_path.unwrap_or_else(|| {
         std::env::current_dir()
             .unwrap_or_default()
@@ -227,20 +221,22 @@ pub async fn fusion_export(
 
 /// Fusionne données externes
 #[tauri::command]
-pub async fn fusion_merge(
-    source_path: PathBuf,
-) -> Result<String, String> {
+pub async fn fusion_merge(source_path: PathBuf) -> Result<String, String> {
     if !source_path.exists() {
         return Err(format!("Source file not found: {:?}", source_path));
     }
 
     // Lecture fichier externe
-    let content = std::fs::read_to_string(&source_path)
-        .map_err(|e| format!("Failed to read file: {}", e))?;
+    let content =
+        std::fs::read_to_string(&source_path).map_err(|e| format!("Failed to read file: {}", e))?;
 
     let lines: Vec<&str> = content.lines().collect();
 
-    Ok(format!("Merged {} entries from {:?}", lines.len(), source_path))
+    Ok(format!(
+        "Merged {} entries from {:?}",
+        lines.len(),
+        source_path
+    ))
 }
 
 /// Obtient statistiques fusion
@@ -292,9 +288,8 @@ pub fn validate_jsonl(content: &str) -> Result<usize, String> {
             continue;
         }
 
-        serde_json::from_str::<serde_json::Value>(line).map_err(|e| {
-            format!("Invalid JSON at line {}: {}", i + 1, e)
-        })?;
+        serde_json::from_str::<serde_json::Value>(line)
+            .map_err(|e| format!("Invalid JSON at line {}: {}", i + 1, e))?;
 
         count += 1;
     }

@@ -114,10 +114,14 @@ export class GPUAccelerator {
   /**
    * Active un layer GPU sur un élément
    */
-  activateLayer(element: HTMLElement, type: 'transition' | 'animation' | 'persistent' = 'transition'): void {
+  activateLayer(
+    element: HTMLElement,
+    type: 'transition' | 'animation' | 'persistent' = 'transition'
+  ): void {
     if (!this.enabled) return;
 
-    const id = element.id || `gpu_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const id =
+      element.id || `gpu_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
     // Ajouter la classe GPU
     element.classList.add('titane-gpu-layer');

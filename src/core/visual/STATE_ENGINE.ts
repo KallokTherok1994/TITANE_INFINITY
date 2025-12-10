@@ -2,7 +2,17 @@
  * TITANE∞ PHASE 1 (OPTION B) - Stub pour STATE_ENGINE
  */
 
-export type SystemState = 'idle' | 'active' | 'focus' | 'flow' | 'processing' | 'error' | 'warning' | 'danger' | 'stable' | 'offline';
+export type SystemState =
+  | 'idle'
+  | 'active'
+  | 'focus'
+  | 'flow'
+  | 'processing'
+  | 'error'
+  | 'warning'
+  | 'danger'
+  | 'stable'
+  | 'offline';
 
 export interface StateConfig {
   colors: Record<SystemState, string>;
@@ -47,7 +57,7 @@ export const stateEngine = {
     subscribers.forEach(cb => cb(currentState, defaultConfig));
   },
   subscribe: (callback: (state: SystemState) => void) => {
-    subscribers.push((state) => callback(state));
+    subscribers.push(state => callback(state));
     return () => {
       const idx = subscribers.findIndex(cb => cb === callback);
       if (idx > -1) subscribers.splice(idx, 1);
@@ -60,7 +70,16 @@ export const stateEngine = {
       if (idx > -1) subscribers.splice(idx, 1);
     };
   },
-  getStateConfig: (state: SystemState): { color: string; transition: number; intensity: number; blur: number; opacity: number; colorRgb: string } => ({
+  getStateConfig: (
+    state: SystemState
+  ): {
+    color: string;
+    transition: number;
+    intensity: number;
+    blur: number;
+    opacity: number;
+    colorRgb: string;
+  } => ({
     color: defaultConfig.colors[state] || defaultConfig.colors.idle,
     transition: defaultConfig.transitions[state] || defaultConfig.transitions.idle,
     intensity: 1.0,

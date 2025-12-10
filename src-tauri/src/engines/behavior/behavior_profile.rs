@@ -133,7 +133,11 @@ impl BehaviorProfile {
         let inv = 1.0 - r;
 
         BehaviorProfile {
-            mode: if r > 0.5 { other.mode.clone() } else { self.mode.clone() },
+            mode: if r > 0.5 {
+                other.mode.clone()
+            } else {
+                self.mode.clone()
+            },
             assertiveness: self.assertiveness * inv + other.assertiveness * r,
             warmth: self.warmth * inv + other.warmth * r,
             directiveness: self.directiveness * inv + other.directiveness * r,

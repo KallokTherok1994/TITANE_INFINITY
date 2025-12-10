@@ -23,7 +23,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       fullWidth && 'input-wrapper--full-width',
       error && 'input-wrapper--error',
       className,
-    ].filter(Boolean).join(' ');
+    ]
+      .filter(Boolean)
+      .join(' ');
 
     return (
       <div className={classes}>

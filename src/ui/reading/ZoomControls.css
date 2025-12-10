@@ -29,7 +29,7 @@
   background: transparent;
   border: 1px solid transparent;
   border-radius: 4px;
-  color: #C4C4C4;
+  color: #c4c4c4;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -45,7 +45,7 @@
 .zoom-controls__btn:hover:not(:disabled) {
   background: rgba(196, 196, 196, 0.1);
   border-color: rgba(196, 196, 196, 0.2);
-  color: #F5F5F5;
+  color: #f5f5f5;
 }
 
 .zoom-controls__btn:active:not(:disabled) {
@@ -61,7 +61,7 @@
 .zoom-controls__btn--active {
   background: rgba(196, 196, 196, 0.15);
   border-color: rgba(196, 196, 196, 0.3);
-  color: #F5F5F5;
+  color: #f5f5f5;
 }
 
 .zoom-controls__btn--fullscreen {
@@ -85,7 +85,7 @@
   background: rgba(196, 196, 196, 0.05);
   border: 1px solid rgba(196, 196, 196, 0.1);
   border-radius: 4px;
-  color: #C4C4C4;
+  color: #c4c4c4;
   font-size: 11px;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
@@ -102,5 +102,5 @@
 .zoom-controls__level:hover {
   background: rgba(196, 196, 196, 0.1);
   border-color: rgba(196, 196, 196, 0.2);
-  color: #F5F5F5;
+  color: #f5f5f5;
 }

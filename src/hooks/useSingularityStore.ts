@@ -51,7 +51,8 @@ const DEFAULT_LEGACY_STATE: SingularityLegacyState = {
   enginesData: {},
 };
 
-const canUseStorage = (): boolean => typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
+const canUseStorage = (): boolean =>
+  typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
 
 let legacyState: SingularityLegacyState = readPersistedLegacyState();
 const legacyListeners = new Set<(state: SingularityLegacyState) => void>();
@@ -81,7 +82,10 @@ function readPersistedLegacyState(): SingularityLegacyState {
   }
 }
 
-const legacyStatesEqual = (a: SingularityLegacyState, b: SingularityLegacyState): boolean => {
+const legacyStatesEqual = (
+  a: SingularityLegacyState,
+  b: SingularityLegacyState
+): boolean => {
   if (a.metaMode !== b.metaMode || a.theme !== b.theme) {
     return false;
   }
@@ -145,7 +149,9 @@ const rehydrateLegacyStateFromStorage = (): void => {
   }
 };
 
-const subscribeToLegacyState = (listener: (state: SingularityLegacyState) => void): (() => void) => {
+const subscribeToLegacyState = (
+  listener: (state: SingularityLegacyState) => void
+): (() => void) => {
   legacyListeners.add(listener);
   return () => {
     legacyListeners.delete(listener);
@@ -246,12 +252,12 @@ export interface UseSingularityStoreOptions {
 /**
  * Comparaison stricte (défaut)
  */
-export const strictEqual = <T,>(a: T, b: T): boolean => a === b;
+export const strictEqual = <T>(a: T, b: T): boolean => a === b;
 
 /**
  * Comparaison shallow (objets premier niveau)
  */
-export const shallowEqual = <T,>(a: T, b: T): boolean => {
+export const shallowEqual = <T>(a: T, b: T): boolean => {
   if (a === b) return true;
   if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) {
     return false;
@@ -276,7 +282,7 @@ export const shallowEqual = <T,>(a: T, b: T): boolean => {
 /**
  * Comparaison deep (récursive, coûteuse)
  */
-export const deepEqual = <T,>(a: T, b: T): boolean => {
+export const deepEqual = <T>(a: T, b: T): boolean => {
   if (a === b) return true;
   if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) {
     return false;
@@ -346,19 +352,22 @@ function useSingularitySelector<T>(
   selectorRef.current = selector;
 
   // Fonction de callback appelée par SingularityBridge
-  const checkForUpdates = useCallback((state: SingularityState) => {
-    try {
-      const newSelected = selectorRef.current(state);
+  const checkForUpdates = useCallback(
+    (state: SingularityState) => {
+      try {
+        const newSelected = selectorRef.current(state);
 
-      // Comparer avec valeur précédente
-      if (!equalityFn(selectedRef.current as T, newSelected)) {
-        selectedRef.current = newSelected;
-        forceUpdate({}); // Trigger re-render
+        // Comparer avec valeur précédente
+        if (!equalityFn(selectedRef.current as T, newSelected)) {
+          selectedRef.current = newSelected;
+          forceUpdate({}); // Trigger re-render
+        }
+      } catch (error) {
+        console.error('[useSingularityStore] Selector error:', error);
       }
-    } catch (error) {
-      console.error('[useSingularityStore] Selector error:', error);
-    }
-  }, [equalityFn]);
+    },
+    [equalityFn]
+  );
 
   // Subscribe to SingularityBridge
   useEffect(() => {
@@ -371,7 +380,10 @@ function useSingularitySelector<T>(
 }
 
 export function useSingularityStore(): SingularityLegacyStore;
-export function useSingularityStore<T>(selector: Selector<T>, options?: UseSingularityStoreOptions): T;
+export function useSingularityStore<T>(
+  selector: Selector<T>,
+  options?: UseSingularityStoreOptions
+): T;
 export function useSingularityStore<T>(
   selector?: Selector<T>,
   options?: UseSingularityStoreOptions
@@ -390,7 +402,9 @@ export function useSingularityStore<T>(
     options
   );
 
-  return selectorToUse ? selected : (legacyStore as unknown as T | SingularityLegacyStore);
+  return selectorToUse
+    ? selected
+    : (legacyStore as unknown as T | SingularityLegacyStore);
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -446,7 +460,7 @@ export function useGlobalCoherence() {
   return useSingularityStore(s => {
     // Calculer santé système globale
     const physicalHealth = s.physical.system_health.global_health;
-    const cpuHealth = 1 - (s.physical.helios.cpu_usage / 100);
+    const cpuHealth = 1 - s.physical.helios.cpu_usage / 100;
 
     return (physicalHealth + cpuHealth) / 2;
   });

@@ -1,7 +1,7 @@
 /**
  * TITANE∞ vΩ — Unified Orchestration Types
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
- * 
+ *
  * Interface Segregation Pattern for UnifiedOrchestrator
  * Zero circular dependencies, maximum composability
  */
@@ -107,7 +107,12 @@ export interface IMetricsProvider {
 /**
  * Recovery action types
  */
-export type RecoveryAction = 'retry' | 'fallback' | 'circuit-break' | 'escalate' | 'abort';
+export type RecoveryAction =
+  | 'retry'
+  | 'fallback'
+  | 'circuit-break'
+  | 'escalate'
+  | 'abort';
 
 /**
  * Recovery policy
@@ -192,22 +197,25 @@ export interface IValidator<T = unknown> {
 export interface IOrchestrationStrategy extends IHealthMonitor, IMetricsProvider {
   readonly type: OrchestrationStrategyType;
   readonly name: string;
-  
+
   /**
    * Initialize strategy (lazy loading)
    */
   initialize(): Promise<void>;
-  
+
   /**
    * Check if strategy is initialized
    */
   isInitialized(): boolean;
-  
+
   /**
    * Execute strategy-specific operation
    */
-  execute<T = unknown>(operation: string, params?: unknown): Promise<OrchestrationResult<T>>;
-  
+  execute<T = unknown>(
+    operation: string,
+    params?: unknown
+  ): Promise<OrchestrationResult<T>>;
+
   /**
    * Shutdown strategy gracefully
    */
@@ -222,7 +230,10 @@ export interface IOrchestrationStrategy extends IHealthMonitor, IMetricsProvider
  * MCP Job operations
  */
 export interface MCPJobOperation {
-  createJob(type: string, priority: 'low' | 'medium' | 'high' | 'critical'): Promise<string>;
+  createJob(
+    type: string,
+    priority: 'low' | 'medium' | 'high' | 'critical'
+  ): Promise<string>;
   evaluateJob(jobId: string): Promise<{ status: string; result?: unknown }>;
   listJobs(filter?: { status?: string }): { id: string; type: string; status: string }[];
 }
@@ -247,7 +258,10 @@ export interface MCPHealthOperation {
  */
 export interface CognitiveMemoryOperation {
   storeMemory(content: string, importance?: number): Promise<string>;
-  retrieveMemories(query: string, limit?: number): Promise<Array<{ content: string; score: number }>>;
+  retrieveMemories(
+    query: string,
+    limit?: number
+  ): Promise<Array<{ content: string; score: number }>>;
   processConversation(messages: unknown[]): Promise<void>;
 }
 
@@ -279,7 +293,10 @@ export interface AIProviderInfo {
  * AI Provider operations
  */
 export interface AIProviderOperation {
-  selectProvider(criteria?: { preferLocal?: boolean; maxLatency?: number }): Promise<AIProviderInfo>;
+  selectProvider(criteria?: {
+    preferLocal?: boolean;
+    maxLatency?: number;
+  }): Promise<AIProviderInfo>;
   getAvailableProviders(): AIProviderInfo[];
   executeWithProvider(providerId: string, prompt: string): Promise<{ response: string }>;
 }

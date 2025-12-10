@@ -26,10 +26,10 @@ const config: Config = {
     /* BREAKPOINTS (mobile-first)                                       */
     /* ═══════════════════════════════════════════════════════════════ */
     screens: {
-      sm: '640px',   // Phones landscape
-      md: '768px',   // Tablets
-      lg: '1024px',  // Laptops
-      xl: '1280px',  // Desktops
+      sm: '640px', // Phones landscape
+      md: '768px', // Tablets
+      lg: '1024px', // Laptops
+      xl: '1280px', // Desktops
       '2xl': '1536px', // Large screens
     },
 
@@ -141,11 +141,11 @@ const config: Config = {
       /* SPACING (extend defaults with additional values)                 */
       /* ═══════════════════════════════════════════════════════════════ */
       spacing: {
-        '18': '4.5rem',  // 72px
-        '88': '22rem',   // 352px
-        '100': '25rem',  // 400px
-        '112': '28rem',  // 448px
-        '128': '32rem',  // 512px
+        '18': '4.5rem', // 72px
+        '88': '22rem', // 352px
+        '100': '25rem', // 400px
+        '112': '28rem', // 448px
+        '128': '32rem', // 512px
       },
 
       /* ═══════════════════════════════════════════════════════════════ */
@@ -160,25 +160,20 @@ const config: Config = {
           'Roboto',
           'sans-serif',
         ],
-        mono: [
-          'JetBrains Mono',
-          'Fira Code',
-          'Courier New',
-          'monospace',
-        ],
+        mono: ['JetBrains Mono', 'Fira Code', 'Courier New', 'monospace'],
       },
 
       fontSize: {
         // Add extra sizes beyond Tailwind defaults
-        '2xs': '0.625rem',  // 10px
-        '3xs': '0.5rem',    // 8px
+        '2xs': '0.625rem', // 10px
+        '3xs': '0.5rem', // 8px
       },
 
       /* ═══════════════════════════════════════════════════════════════ */
       /* BORDER RADIUS                                                     */
       /* ═══════════════════════════════════════════════════════════════ */
       borderRadius: {
-        '4xl': '2rem',      // 32px
+        '4xl': '2rem', // 32px
       },
 
       /* ═══════════════════════════════════════════════════════════════ */
@@ -247,7 +242,7 @@ const config: Config = {
           '50%': { transform: 'translateY(-8px)' },
         },
         // Shimmer (pour skeletons)
-        'shimmer': {
+        shimmer: {
           '0%': { backgroundPosition: '-1000px 0' },
           '100%': { backgroundPosition: '1000px 0' },
         },
@@ -263,7 +258,7 @@ const config: Config = {
         'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
         'spin-slow': 'spin-slow 3s linear infinite',
         'bounce-subtle': 'bounce-subtle 1s ease-in-out infinite',
-        'shimmer': 'shimmer 2s linear infinite',
+        shimmer: 'shimmer 2s linear infinite',
       },
 
       /* ═══════════════════════════════════════════════════════════════ */
@@ -288,26 +283,26 @@ const config: Config = {
         '3000': '3000ms',
       },
       transitionTimingFunction: {
-        'bounce': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+        bounce: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
       },
 
       /* ═══════════════════════════════════════════════════════════════ */
       /* LAYOUT-SPECIFIC DIMENSIONS                                        */
       /* ═══════════════════════════════════════════════════════════════ */
       width: {
-        'sidebar': '260px',
+        sidebar: '260px',
         'sidebar-collapsed': '64px',
       },
       minWidth: {
-        'sidebar': '260px',
+        sidebar: '260px',
         'sidebar-collapsed': '64px',
       },
       maxWidth: {
-        'content': '1280px',
+        content: '1280px',
       },
       height: {
-        'header': '64px',
-        'footer': '48px',
+        header: '64px',
+        footer: '48px',
       },
     },
   },

@@ -4,7 +4,7 @@
 //   Controls what the system should/shouldn't do in responses
 // ═══════════════════════════════════════════════════════════════
 
-use super::brain_state::{ConversationMode, ConstraintProfile, IntentClass};
+use super::brain_state::{ConstraintProfile, ConversationMode, IntentClass};
 
 /// Behavior Controller - Manages response behavior and constraints
 #[derive(Debug, Clone)]

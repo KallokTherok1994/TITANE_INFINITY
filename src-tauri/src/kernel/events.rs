@@ -11,16 +11,10 @@ use serde::{Deserialize, Serialize};
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum KernelEvent {
     /// Kernel started
-    KernelStarted {
-        version: String,
-        timestamp: i64,
-    },
+    KernelStarted { version: String, timestamp: i64 },
 
     /// Kernel stopped
-    KernelStopped {
-        reason: String,
-        timestamp: i64,
-    },
+    KernelStopped { reason: String, timestamp: i64 },
 
     /// Task submitted to scheduler
     TaskSubmitted {
@@ -30,28 +24,16 @@ pub enum KernelEvent {
     },
 
     /// Task started execution
-    TaskStarted {
-        task_id: String,
-        timestamp: i64,
-    },
+    TaskStarted { task_id: String, timestamp: i64 },
 
     /// Task completed successfully
-    TaskCompleted {
-        task_id: String,
-        duration_ms: u64,
-    },
+    TaskCompleted { task_id: String, duration_ms: u64 },
 
     /// Task failed with error
-    TaskFailed {
-        task_id: String,
-        error: String,
-    },
+    TaskFailed { task_id: String, error: String },
 
     /// Task timed out
-    TaskTimeout {
-        task_id: String,
-        timeout_ms: u64,
-    },
+    TaskTimeout { task_id: String, timeout_ms: u64 },
 
     /// Background task completed
     BackgroundTaskCompleted,
@@ -64,16 +46,10 @@ pub enum KernelEvent {
     },
 
     /// Memory updated
-    MemoryUpdated {
-        layer: String,
-        operation: String,
-    },
+    MemoryUpdated { layer: String, operation: String },
 
     /// Overload detected
-    OverloadDetected {
-        level: u8,
-        cpu_usage: f32,
-    },
+    OverloadDetected { level: u8, cpu_usage: f32 },
 
     /// Load shedding applied
     LoadShedding {
@@ -82,21 +58,13 @@ pub enum KernelEvent {
     },
 
     /// Watchdog heartbeat
-    WatchdogHeartbeat {
-        timestamp: i64,
-    },
+    WatchdogHeartbeat { timestamp: i64 },
 
     /// Watchdog alert
-    WatchdogAlert {
-        alert_type: String,
-        message: String,
-    },
+    WatchdogAlert { alert_type: String, message: String },
 
     /// Policy violation
-    PolicyViolation {
-        policy: String,
-        details: String,
-    },
+    PolicyViolation { policy: String, details: String },
 
     /// Resource limit hit
     ResourceLimitHit {
@@ -106,10 +74,7 @@ pub enum KernelEvent {
     },
 
     /// State snapshot taken
-    StateSnapshot {
-        snapshot_id: String,
-        timestamp: i64,
-    },
+    StateSnapshot { snapshot_id: String, timestamp: i64 },
 }
 
 /// Event priority for filtering

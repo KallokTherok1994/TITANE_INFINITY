@@ -448,7 +448,9 @@ describe('🧩 Base Extension Tests', () => {
       const ext = new MockContextSourceExtension();
       ext.state = 'error';
 
-      await expect(ext.activate()).rejects.toThrow('Cannot activate extension in error state');
+      await expect(ext.activate()).rejects.toThrow(
+        'Cannot activate extension in error state'
+      );
     });
   });
 

@@ -868,7 +868,9 @@ export async function handleCoherenceCheck(): Promise<DevSudoResult> {
 /**
  * REPAIR COMPONENT - Réparer un composant avec analyse Singularity complète
  */
-export async function handleRepairComponent(componentName: string): Promise<DevSudoResult> {
+export async function handleRepairComponent(
+  componentName: string
+): Promise<DevSudoResult> {
   return {
     handled: true,
     success: true,

@@ -21,7 +21,7 @@ const OMEGA_TEST_TIMEOUT = 30000;
 
 vi.setConfig({
   testTimeout: OMEGA_TEST_TIMEOUT,
-  hookTimeout: OMEGA_TEST_TIMEOUT
+  hookTimeout: OMEGA_TEST_TIMEOUT,
 });
 
 // Helper to keep these tests deterministic and fast without hitting real providers.
@@ -31,8 +31,8 @@ const createDeterministicResponse = (message: string, history: AIMessage[] = [])
   timestamp: Date.now(),
   metadata: {
     historyCount: history.length,
-    deterministic: true
-  }
+    deterministic: true,
+  },
 });
 
 const runWithDeterministicOrchestrator = async (callback: () => Promise<void>) => {
@@ -80,7 +80,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E Validation', () => {
       const messages = [
         'First message test',
         'Second message test',
-        'Third message test'
+        'Third message test',
       ];
 
       for (const message of messages) {
@@ -98,16 +98,19 @@ describe('🟣 OMEGA Phase 7Ω - E2E Validation', () => {
       {
         role: 'user',
         content: 'My favorite programming language is TypeScript',
-        timestamp: Date.now() - 5000
+        timestamp: Date.now() - 5000,
       },
       {
         role: 'assistant',
         content: 'TypeScript is excellent for type-safe development!',
-        timestamp: Date.now() - 4000
-      }
+        timestamp: Date.now() - 4000,
+      },
     ];
 
-    const result = await aiOrchestrator.generate('What did I tell you about programming?', context);
+    const result = await aiOrchestrator.generate(
+      'What did I tell you about programming?',
+      context
+    );
 
     expect(result).toBeDefined();
     expect(result.content.toLowerCase()).toMatch(/(typescript|programming|language)/);
@@ -132,7 +135,9 @@ describe('🟣 OMEGA Phase 7Ω - E2E Validation', () => {
 
     // Force error from Gemini
     const originalGenerate = geminiProvider.generate;
-    geminiProvider.generate = vi.fn().mockRejectedValue(new Error('Simulated Gemini error'));
+    geminiProvider.generate = vi
+      .fn()
+      .mockRejectedValue(new Error('Simulated Gemini error'));
 
     try {
       await aiOrchestrator.generate('Test auto-heal trigger', []);
@@ -155,12 +160,15 @@ describe('🟣 OMEGA Phase 7Ω - E2E Validation', () => {
         largeHistory.push({
           role: i % 2 === 0 ? 'user' : 'assistant',
           content: `Message ${i + 1}: This is a test message with sufficient length.`,
-          timestamp: Date.now() - (200 - i) * 1000
+          timestamp: Date.now() - (200 - i) * 1000,
         });
       }
 
       const startTime = Date.now();
-      const result = await aiOrchestrator.generate('Summarize our long conversation', largeHistory);
+      const result = await aiOrchestrator.generate(
+        'Summarize our long conversation',
+        largeHistory
+      );
       const endTime = Date.now();
 
       expect(result).toBeDefined();
@@ -182,7 +190,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E Validation', () => {
         'Test\n\nwith\nmultiple\n\nlines',
         'Ça marche avec des accents éèàù?',
         '<script>alert("test")</script>',
-        'Special chars: !@#$%^&*()[]{}|;:,.<>?'
+        'Special chars: !@#$%^&*()[]{}|;:,.<>?',
       ];
 
       for (const input of edgeCases) {
@@ -250,7 +258,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E Validation', () => {
     const longContext: AIMessage[] = Array.from({ length: 50 }, (_, i) => ({
       role: (i % 2 === 0 ? 'user' : 'assistant') as 'user' | 'assistant',
       content: `Context message ${i + 1}`,
-      timestamp: Date.now() - (50 - i) * 1000
+      timestamp: Date.now() - (50 - i) * 1000,
     }));
 
     const response5 = await aiOrchestrator.generate('Summarize context', longContext);
@@ -260,7 +268,9 @@ describe('🟣 OMEGA Phase 7Ω - E2E Validation', () => {
 
     // 6. Offrir cohérence TITANE∞ (TITANE consistency)
     const response6 = await aiOrchestrator.generate('OMEGA Test: Who are you?', []);
-    expect(response6.content.toLowerCase()).toMatch(/(titane|intelligence|cognitive|système)/);
+    expect(response6.content.toLowerCase()).toMatch(
+      /(titane|intelligence|cognitive|système)/
+    );
     console.log('✅ Criterion 6: TITANE consistency - PASSED');
 
     console.log('🟣 OMEGA Phase 7Ω - All criteria validated successfully');
@@ -281,15 +291,18 @@ describe('🟣 OMEGA Phase 7Ω - E2E Validation', () => {
           context: Array.from({ length: 20 }, (_, i) => ({
             role: (i % 2 === 0 ? 'user' : 'assistant') as 'user' | 'assistant',
             content: `Stress context ${i}`,
-            timestamp: Date.now() - i * 1000
-          }))
-        }
+            timestamp: Date.now() - i * 1000,
+          })),
+        },
       ];
 
       const startTime = Date.now();
 
       for (const condition of stressConditions) {
-        const result = await aiOrchestrator.generate(condition.message, condition.context);
+        const result = await aiOrchestrator.generate(
+          condition.message,
+          condition.context
+        );
 
         expect(result).toBeDefined();
         expect(result.content).toBeTruthy();

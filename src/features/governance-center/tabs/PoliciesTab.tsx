@@ -16,12 +16,17 @@ interface PoliciesTabProps {
   policies: IAPolicy[];
   loading: boolean;
   onTogglePolicy: (policyId: string, enabled: boolean) => Promise<unknown>;
-  onCreatePolicy: (policy: Omit<IAPolicy, 'id' | 'createdAt' | 'updatedAt'>) => Promise<unknown>;
+  onCreatePolicy: (
+    policy: Omit<IAPolicy, 'id' | 'createdAt' | 'updatedAt'>
+  ) => Promise<unknown>;
   onDeletePolicy: (policyId: string) => Promise<unknown>;
   onRefresh: () => void;
 }
 
-const policyTypeLabels: Record<PolicyType, { label: string; icon: string; color: string }> = {
+const policyTypeLabels: Record<
+  PolicyType,
+  { label: string; icon: string; color: string }
+> = {
   limit: { label: 'Limite', icon: '⚡', color: '#ff9800' },
   guardrail: { label: 'Garde-fou', icon: '🛡️', color: '#f44336' },
   restriction: { label: 'Restriction', icon: '🚫', color: '#e91e63' },
@@ -48,23 +53,34 @@ export const PoliciesTab: React.FC<PoliciesTabProps> = ({
     await onTogglePolicy(policy.id, !policy.enabled);
   };
 
-  const groupedPolicies = policies.reduce((acc, policy) => {
-    if (!acc[policy.type]) {
-      acc[policy.type] = [];
-    }
-    acc[policy.type].push(policy);
-    return acc;
-  }, {} as Record<PolicyType, IAPolicy[]>);
+  const groupedPolicies = policies.reduce(
+    (acc, policy) => {
+      if (!acc[policy.type]) {
+        acc[policy.type] = [];
+      }
+      acc[policy.type].push(policy);
+      return acc;
+    },
+    {} as Record<PolicyType, IAPolicy[]>
+  );
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div
+        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+      >
         <div>
           <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 600 }}>
             📋 Politiques IA TITANE∞
           </h3>
-          <p style={{ margin: '4px 0 0', color: 'var(--color-text-muted)', fontSize: '0.9rem' }}>
+          <p
+            style={{
+              margin: '4px 0 0',
+              color: 'var(--color-text-muted)',
+              fontSize: '0.9rem',
+            }}
+          >
             Règles et restrictions pour encadrer les comportements de l'IA
           </p>
         </div>
@@ -74,13 +90,23 @@ export const PoliciesTab: React.FC<PoliciesTabProps> = ({
       </div>
 
       {/* Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
+      <div
+        style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}
+      >
         {Object.entries(policyTypeLabels).map(([type, { label, icon, color }]) => {
           const count = groupedPolicies[type as PolicyType]?.length ?? 0;
-          const enabledCount = groupedPolicies[type as PolicyType]?.filter(p => p.enabled).length ?? 0;
+          const enabledCount =
+            groupedPolicies[type as PolicyType]?.filter(p => p.enabled).length ?? 0;
           return (
             <Card key={type} style={{ padding: '12px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  marginBottom: '4px',
+                }}
+              >
                 <span>{icon}</span>
                 <span style={{ fontWeight: 500, color }}>{label}</span>
               </div>
@@ -96,7 +122,14 @@ export const PoliciesTab: React.FC<PoliciesTabProps> = ({
       {/* Liste des politiques */}
       {Object.entries(groupedPolicies).map(([type, typePolicies]) => (
         <Card key={type}>
-          <header style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <header
+            style={{
+              marginBottom: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+            }}
+          >
             <span>{policyTypeLabels[type as PolicyType].icon}</span>
             <h4 style={{ margin: 0, color: policyTypeLabels[type as PolicyType].color }}>
               {policyTypeLabels[type as PolicyType].label}s
@@ -107,24 +140,35 @@ export const PoliciesTab: React.FC<PoliciesTabProps> = ({
           </header>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {typePolicies.map((policy) => (
+            {typePolicies.map(policy => (
               <div
                 key={policy.id}
                 style={{
                   padding: '12px 16px',
                   borderRadius: '8px',
                   background: 'var(--color-surface, #1a1a2e)',
-                  border: expandedPolicy === policy.id ? '1px solid var(--color-primary)' : '1px solid transparent',
+                  border:
+                    expandedPolicy === policy.id
+                      ? '1px solid var(--color-primary)'
+                      : '1px solid transparent',
                   cursor: 'pointer',
                   transition: 'all 0.2s',
                 }}
-                onClick={() => setExpandedPolicy(expandedPolicy === policy.id ? null : policy.id)}
+                onClick={() =>
+                  setExpandedPolicy(expandedPolicy === policy.id ? null : policy.id)
+                }
               >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     {/* Toggle */}
                     <button
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         handleToggle(policy);
                       }}
@@ -133,7 +177,9 @@ export const PoliciesTab: React.FC<PoliciesTabProps> = ({
                         height: '24px',
                         borderRadius: '12px',
                         border: 'none',
-                        background: policy.enabled ? 'var(--color-primary, #727b81)' : 'rgba(255,255,255,0.1)',
+                        background: policy.enabled
+                          ? 'var(--color-primary, #727b81)'
+                          : 'rgba(255,255,255,0.1)',
                         cursor: 'pointer',
                         position: 'relative',
                         transition: 'background 0.2s',
@@ -155,7 +201,9 @@ export const PoliciesTab: React.FC<PoliciesTabProps> = ({
 
                     <div>
                       <div style={{ fontWeight: 500 }}>{policy.name}</div>
-                      <div style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>
+                      <div
+                        style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }}
+                      >
                         {policy.description}
                       </div>
                     </div>
@@ -183,7 +231,13 @@ export const PoliciesTab: React.FC<PoliciesTabProps> = ({
                       borderTop: '1px solid rgba(255,255,255,0.1)',
                     }}
                   >
-                    <h5 style={{ margin: '0 0 8px', fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>
+                    <h5
+                      style={{
+                        margin: '0 0 8px',
+                        fontSize: '0.85rem',
+                        color: 'var(--color-text-muted)',
+                      }}
+                    >
                       Configuration
                     </h5>
                     <pre
@@ -198,7 +252,13 @@ export const PoliciesTab: React.FC<PoliciesTabProps> = ({
                     >
                       {JSON.stringify(policy.config, null, 2)}
                     </pre>
-                    <div style={{ marginTop: '8px', fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
+                    <div
+                      style={{
+                        marginTop: '8px',
+                        fontSize: '0.75rem',
+                        color: 'var(--color-text-muted)',
+                      }}
+                    >
                       Créé: {new Date(policy.createdAt).toLocaleString('fr-FR')}
                       {' • '}
                       Modifié: {new Date(policy.updatedAt).toLocaleString('fr-FR')}

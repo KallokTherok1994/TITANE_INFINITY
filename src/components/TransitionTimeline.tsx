@@ -51,13 +51,13 @@ export const TransitionTimeline: React.FC = () => {
       'Digital Twin (Kevin+)': '🧬',
       'Emotional Engine': '❤️',
       'Behavioral Engine': '🎭',
-      'LifeEngine': '⚡',
-      'Stratège': '🗺️',
+      LifeEngine: '⚡',
+      Stratège: '🗺️',
       'Architecte Systémique': '🏗️',
-      'Analyste': '🔍',
+      Analyste: '🔍',
       'Autopilot Proactif': '🚀',
       'Creator Engine': '✨',
-      'Optimizer': '⚙️',
+      Optimizer: '⚙️',
       'Risk Detector': '⚠️',
       'Forecast Engine': '🔮',
     };
@@ -92,7 +92,7 @@ export const TransitionTimeline: React.FC = () => {
     if (hours > 0) return `il y a ${hours}h`;
     if (minutes > 0) return `il y a ${minutes}min`;
     if (seconds > 10) return `il y a ${seconds}s`;
-    return 'à l\'instant';
+    return "à l'instant";
   };
 
   if (loading) {
@@ -123,8 +123,15 @@ export const TransitionTimeline: React.FC = () => {
       <div className="timeline-container">
         <div className="timeline-line" />
         {history.map((entry, idx) => (
-          <div key={idx} className="timeline-entry" style={{ '--delay': `${idx * 0.1}s` } as React.CSSProperties}>
-            <div className="timeline-dot" style={{ backgroundColor: getModeColor(entry.mode) }} />
+          <div
+            key={idx}
+            className="timeline-entry"
+            style={{ '--delay': `${idx * 0.1}s` } as React.CSSProperties}
+          >
+            <div
+              className="timeline-dot"
+              style={{ backgroundColor: getModeColor(entry.mode) }}
+            />
             <div className="timeline-card">
               <div className="card-header">
                 <span className="card-emoji">{getModeEmoji(entry.mode)}</span>
@@ -143,9 +150,7 @@ export const TransitionTimeline: React.FC = () => {
                 })}
               </div>
             </div>
-            {idx < history.length - 1 && (
-              <div className="timeline-arrow">→</div>
-            )}
+            {idx < history.length - 1 && <div className="timeline-arrow">→</div>}
           </div>
         ))}
       </div>

@@ -28,7 +28,7 @@ export {
   useZoom,
   useTypography,
   useFullscreen,
-  usePresets
+  usePresets,
 } from './useUIReading';
 
 // Components
@@ -36,7 +36,12 @@ export { ZoomControls } from './ZoomControls';
 export { UIReadingPanel } from './UIReadingPanel';
 
 // Presets
-export { ReadingPresets, PresetMetadata, getPresetSettings, isValidPreset } from './UIReadingPresets';
+export {
+  ReadingPresets,
+  PresetMetadata,
+  getPresetSettings,
+  isValidPreset,
+} from './UIReadingPresets';
 
 // Validator
 export {

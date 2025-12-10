@@ -49,10 +49,10 @@ export interface AutonomyState {
   last_test: number;
   last_shield: number;
   last_analyse: number;
-  health_score: number;           // 0-100, santé globale du système
-  stability_index: number;        // 0-100, stabilité structurelle
-  cognitive_load_score: number;   // 0-100, charge cognitive IA
-  pipeline_integrity: number;     // 0-100, intégrité pipeline IA→TTS→Avatar
+  health_score: number; // 0-100, santé globale du système
+  stability_index: number; // 0-100, stabilité structurelle
+  cognitive_load_score: number; // 0-100, charge cognitive IA
+  pipeline_integrity: number; // 0-100, intégrité pipeline IA→TTS→Avatar
 }
 
 export interface ScanResult {
@@ -200,7 +200,10 @@ export class SingularityAutonomyEngine {
   /**
    * Helper pour invoke sécurisé avec fallback pour non-Tauri
    */
-  private async safeInvoke<T>(cmd: string, args?: Record<string, unknown>): Promise<T | null> {
+  private async safeInvoke<T>(
+    cmd: string,
+    args?: Record<string, unknown>
+  ): Promise<T | null> {
     if (!this.isTauriEnv) {
       console.log(`[AutonomyEngine] Mock command: ${cmd}`);
       return null;
@@ -274,12 +277,18 @@ export class SingularityAutonomyEngine {
       await this.auto_shield();
 
       // 5. Fix immédiat si nécessaire
-      if (detectionResult.error_patterns.length > 0 || detectionResult.state_misalignments.length > 0) {
+      if (
+        detectionResult.error_patterns.length > 0 ||
+        detectionResult.state_misalignments.length > 0
+      ) {
         await this.auto_fix(detectionResult);
       }
 
       // 6. Heal profond si nécessaire
-      if (detectionResult.abnormal_behaviors.length > 0 || analyseResult.memory_inconsistencies_detected.length > 0) {
+      if (
+        detectionResult.abnormal_behaviors.length > 0 ||
+        analyseResult.memory_inconsistencies_detected.length > 0
+      ) {
         await this.auto_heal(detectionResult);
       }
 
@@ -299,7 +308,10 @@ export class SingularityAutonomyEngine {
       }
 
       // 10. Report (si activité significative)
-      if (scanResult.backend_errors.length > 0 || scanResult.frontend_warnings.length > 0) {
+      if (
+        scanResult.backend_errors.length > 0 ||
+        scanResult.frontend_warnings.length > 0
+      ) {
         await this.auto_report({
           diagnostics: [...scanResult.backend_errors, ...scanResult.frontend_warnings],
           improvements_applied: [],
@@ -337,7 +349,9 @@ export class SingularityAutonomyEngine {
 
       // Scanner backend Rust
       try {
-        const backendHealth = await this.safeInvoke<{ errors: string[] }>('autonomy_scan_backend');
+        const backendHealth = await this.safeInvoke<{ errors: string[] }>(
+          'autonomy_scan_backend'
+        );
         result.backend_errors = backendHealth?.errors || [];
       } catch (error) {
         result.backend_errors.push(`Backend scan failed: ${error}`);
@@ -398,7 +412,7 @@ export class SingularityAutonomyEngine {
       };
 
       // Détecter patterns d'erreurs connus
-      scanResult.backend_errors.forEach((error) => {
+      scanResult.backend_errors.forEach(error => {
         if (error.includes('mutex') || error.includes('lock')) {
           result.error_patterns.push(`Race condition detected: ${error}`);
         }
@@ -462,9 +476,12 @@ export class SingularityAutonomyEngine {
 
       // Corriger états invalides via backend
       try {
-        const fixResponse = await this.safeInvoke<{ fixed: string[] }>('autonomy_fix_states', {
-          issues: detectionResult.state_misalignments,
-        });
+        const fixResponse = await this.safeInvoke<{ fixed: string[] }>(
+          'autonomy_fix_states',
+          {
+            issues: detectionResult.state_misalignments,
+          }
+        );
         result.fixed_states = fixResponse?.fixed || [];
       } catch (error) {
         console.warn('[AutonomyEngine] Backend fix failed:', error);
@@ -520,9 +537,12 @@ export class SingularityAutonomyEngine {
 
       // Reconstruire modules endommagés via backend
       try {
-        const healResponse = await this.safeInvoke<{ repaired: string[] }>('autonomy_heal_modules', {
-          abnormal_behaviors: detectionResult.abnormal_behaviors,
-        });
+        const healResponse = await this.safeInvoke<{ repaired: string[] }>(
+          'autonomy_heal_modules',
+          {
+            abnormal_behaviors: detectionResult.abnormal_behaviors,
+          }
+        );
         result.rebuilt_modules = healResponse?.repaired || [];
       } catch (error) {
         console.warn('[AutonomyEngine] Backend heal failed:', error);
@@ -576,7 +596,9 @@ export class SingularityAutonomyEngine {
 
       // Optimiser backend Rust
       try {
-        const optimizeResponse = await this.safeInvoke<{ gains: number }>('autonomy_optimize_performance');
+        const optimizeResponse = await this.safeInvoke<{ gains: number }>(
+          'autonomy_optimize_performance'
+        );
         result.performance_gain_percentage = optimizeResponse?.gains || 0;
       } catch (error) {
         console.warn('[AutonomyEngine] Backend optimize failed:', error);
@@ -628,7 +650,9 @@ export class SingularityAutonomyEngine {
 
       // Évoluer paramètres IA via backend
       try {
-        const evolveResponse = await this.safeInvoke<{ improvements: string[] }>('autonomy_evolve_ia');
+        const evolveResponse = await this.safeInvoke<{ improvements: string[] }>(
+          'autonomy_evolve_ia'
+        );
         result.heuristics_updated = evolveResponse?.improvements || [];
         result.ia_coherence_improved = true;
       } catch (error) {
@@ -674,7 +698,9 @@ export class SingularityAutonomyEngine {
 
       // Tester cohérence IA
       try {
-        const iaTest = await this.safeInvoke<{ coherent: boolean }>('autonomy_test_ia_coherence');
+        const iaTest = await this.safeInvoke<{ coherent: boolean }>(
+          'autonomy_test_ia_coherence'
+        );
         result.ia_coherence = iaTest?.coherent || false;
       } catch (error) {
         console.warn('[AutonomyEngine] IA test failed:', error);
@@ -732,7 +758,9 @@ export class SingularityAutonomyEngine {
 
       // Protéger SingularityState via backend
       try {
-        const shieldResponse = await this.safeInvoke<{ protected: boolean }>('autonomy_shield_state');
+        const shieldResponse = await this.safeInvoke<{ protected: boolean }>(
+          'autonomy_shield_state'
+        );
         result.singularity_state_protected = shieldResponse?.protected || false;
       } catch (error) {
         console.warn('[AutonomyEngine] Backend shield failed:', error);
@@ -777,7 +805,9 @@ export class SingularityAutonomyEngine {
 
       // Analyser logs via backend
       try {
-        const analyseResponse = await this.safeInvoke<{ analyzed_count: number }>('autonomy_analyse_logs');
+        const analyseResponse = await this.safeInvoke<{ analyzed_count: number }>(
+          'autonomy_analyse_logs'
+        );
         result.logs_analyzed = analyseResponse?.analyzed_count || 0;
       } catch (error) {
         console.warn('[AutonomyEngine] Backend analyse failed:', error);
@@ -873,7 +903,9 @@ export class SingularityAutonomyEngine {
 
   private async scanAvatarIssues(): Promise<string[]> {
     try {
-      const response = await this.safeInvoke<{ issues: string[] }>('autonomy_scan_avatar');
+      const response = await this.safeInvoke<{ issues: string[] }>(
+        'autonomy_scan_avatar'
+      );
       return response?.issues || [];
     } catch {
       return [];
@@ -882,7 +914,9 @@ export class SingularityAutonomyEngine {
 
   private async scanMemoryIssues(): Promise<string[]> {
     try {
-      const response = await this.safeInvoke<{ issues: string[] }>('autonomy_scan_memory');
+      const response = await this.safeInvoke<{ issues: string[] }>(
+        'autonomy_scan_memory'
+      );
       return response?.issues || [];
     } catch {
       return [];
@@ -891,7 +925,9 @@ export class SingularityAutonomyEngine {
 
   private async scanSingularityState(): Promise<string[]> {
     try {
-      const response = await this.safeInvoke<{ inconsistencies: string[] }>('autonomy_scan_singularity_state');
+      const response = await this.safeInvoke<{ inconsistencies: string[] }>(
+        'autonomy_scan_singularity_state'
+      );
       return response?.inconsistencies || [];
     } catch {
       return [];
@@ -937,7 +973,7 @@ export class SingularityAutonomyEngine {
     // Compression caches (localStorage, etc.)
     try {
       const keys = Object.keys(localStorage);
-      keys.forEach((key) => {
+      keys.forEach(key => {
         if (key.startsWith('cache_')) {
           const value = localStorage.getItem(key);
           if (value && value.length > 10000) {
@@ -965,10 +1001,10 @@ export class SingularityAutonomyEngine {
   private preventMemoryDuplicates(): void {
     // Prévenir doublons mémoire (simplificado)
     try {
-      const memoryKeys = Object.keys(localStorage).filter((k) => k.startsWith('memory_'));
+      const memoryKeys = Object.keys(localStorage).filter(k => k.startsWith('memory_'));
       const seen = new Set<string>();
 
-      memoryKeys.forEach((key) => {
+      memoryKeys.forEach(key => {
         const value = localStorage.getItem(key);
         if (value) {
           if (seen.has(value)) {

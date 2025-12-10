@@ -47,7 +47,8 @@ export function useUIThemeCommands() {
             if (!command.key || !command.value) {
               return { success: false, message: 'Clé et valeur requises pour set_color' };
             }
-            const previousValue = tokens.colors[command.key as keyof typeof tokens.colors];
+            const previousValue =
+              tokens.colors[command.key as keyof typeof tokens.colors];
             await secureInvoke<UIThemeTokens>('update_ui_token', {
               category: 'colors',
               key: command.key,
@@ -64,9 +65,13 @@ export function useUIThemeCommands() {
 
           case 'set_typography': {
             if (!command.key || command.value === undefined) {
-              return { success: false, message: 'Clé et valeur requises pour set_typography' };
+              return {
+                success: false,
+                message: 'Clé et valeur requises pour set_typography',
+              };
             }
-            const previousValue = tokens.typography[command.key as keyof typeof tokens.typography];
+            const previousValue =
+              tokens.typography[command.key as keyof typeof tokens.typography];
             await secureInvoke<UIThemeTokens>('update_ui_token', {
               category: 'typography',
               key: command.key,
@@ -83,9 +88,13 @@ export function useUIThemeCommands() {
 
           case 'set_spacing': {
             if (!command.key || command.value === undefined) {
-              return { success: false, message: 'Clé et valeur requises pour set_spacing' };
+              return {
+                success: false,
+                message: 'Clé et valeur requises pour set_spacing',
+              };
             }
-            const previousValue = tokens.spacing[command.key as keyof typeof tokens.spacing];
+            const previousValue =
+              tokens.spacing[command.key as keyof typeof tokens.spacing];
             await secureInvoke<UIThemeTokens>('update_ui_token', {
               category: 'spacing',
               key: command.key,
@@ -102,9 +111,13 @@ export function useUIThemeCommands() {
 
           case 'set_borders': {
             if (!command.key || command.value === undefined) {
-              return { success: false, message: 'Clé et valeur requises pour set_borders' };
+              return {
+                success: false,
+                message: 'Clé et valeur requises pour set_borders',
+              };
             }
-            const previousValue = tokens.borders[command.key as keyof typeof tokens.borders];
+            const previousValue =
+              tokens.borders[command.key as keyof typeof tokens.borders];
             await secureInvoke<UIThemeTokens>('update_ui_token', {
               category: 'borders',
               key: command.key,
@@ -121,9 +134,13 @@ export function useUIThemeCommands() {
 
           case 'set_animations': {
             if (!command.key || command.value === undefined) {
-              return { success: false, message: 'Clé et valeur requises pour set_animations' };
+              return {
+                success: false,
+                message: 'Clé et valeur requises pour set_animations',
+              };
             }
-            const previousValue = tokens.animations[command.key as keyof typeof tokens.animations];
+            const previousValue =
+              tokens.animations[command.key as keyof typeof tokens.animations];
             await secureInvoke<UIThemeTokens>('update_ui_token', {
               category: 'animations',
               key: command.key,
@@ -140,9 +157,13 @@ export function useUIThemeCommands() {
 
           case 'set_contrast': {
             if (!command.key || command.value === undefined) {
-              return { success: false, message: 'Clé et valeur requises pour set_contrast' };
+              return {
+                success: false,
+                message: 'Clé et valeur requises pour set_contrast',
+              };
             }
-            const previousValue = tokens.contrast[command.key as keyof typeof tokens.contrast];
+            const previousValue =
+              tokens.contrast[command.key as keyof typeof tokens.contrast];
             await secureInvoke<UIThemeTokens>('update_ui_token', {
               category: 'contrast',
               key: command.key,
@@ -221,7 +242,9 @@ export function useUIThemeCommands() {
     }
 
     // Color change: "change color primary to #727b81"
-    const colorMatch = lowerText.match(/(?:change|set|modifier)\s+(?:color|couleur)\s+(\w+)\s+(?:to|à|vers)\s+(#[0-9a-f]{6})/i);
+    const colorMatch = lowerText.match(
+      /(?:change|set|modifier)\s+(?:color|couleur)\s+(\w+)\s+(?:to|à|vers)\s+(#[0-9a-f]{6})/i
+    );
     if (colorMatch) {
       return {
         type: 'set_color',
@@ -232,7 +255,9 @@ export function useUIThemeCommands() {
     }
 
     // Font size: "set font size to large"
-    const fontSizeMatch = lowerText.match(/(?:set|change|modifier)\s+(?:font\s*size|taille)\s+(?:to|à|vers)\s+(small|medium|large)/i);
+    const fontSizeMatch = lowerText.match(
+      /(?:set|change|modifier)\s+(?:font\s*size|taille)\s+(?:to|à|vers)\s+(small|medium|large)/i
+    );
     if (fontSizeMatch) {
       return {
         type: 'set_typography',
@@ -243,7 +268,9 @@ export function useUIThemeCommands() {
     }
 
     // Density: "set density to compact"
-    const densityMatch = lowerText.match(/(?:set|change|modifier)\s+(?:density|densité)\s+(?:to|à|vers)\s+(compact|standard|spacious)/i);
+    const densityMatch = lowerText.match(
+      /(?:set|change|modifier)\s+(?:density|densité)\s+(?:to|à|vers)\s+(compact|standard|spacious)/i
+    );
     if (densityMatch) {
       return {
         type: 'set_spacing',
@@ -254,19 +281,25 @@ export function useUIThemeCommands() {
     }
 
     // Animations: "disable animations" or "enable animations"
-    const animMatch = lowerText.match(/(enable|disable|activer|désactiver)\s+animations?/i);
+    const animMatch = lowerText.match(
+      /(enable|disable|activer|désactiver)\s+animations?/i
+    );
     if (animMatch) {
       const enabled = animMatch[1].match(/enable|activer/i) !== null;
       return {
         type: 'set_animations',
         key: 'enabled',
         value: enabled,
-        description: enabled ? 'Activation des animations' : 'Désactivation des animations',
+        description: enabled
+          ? 'Activation des animations'
+          : 'Désactivation des animations',
       };
     }
 
     // Contrast: "set high contrast" or "normal contrast"
-    const contrastMatch = lowerText.match(/(?:set|activer)\s+(high|normal|haut|élevé)\s+contrast/i);
+    const contrastMatch = lowerText.match(
+      /(?:set|activer)\s+(high|normal|haut|élevé)\s+contrast/i
+    );
     if (contrastMatch) {
       const level = contrastMatch[1].match(/high|haut|élevé/i) ? 'high' : 'normal';
       return {

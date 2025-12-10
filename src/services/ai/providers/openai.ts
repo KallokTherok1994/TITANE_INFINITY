@@ -25,7 +25,7 @@ export const OPENAI_MODELS = [
   'gpt-3.5-turbo',
 ] as const;
 
-export type OpenAIModel = typeof OPENAI_MODELS[number];
+export type OpenAIModel = (typeof OPENAI_MODELS)[number];
 
 /**
  * Configuration OpenAI
@@ -92,7 +92,7 @@ export const openaiProvider: AIProvider = {
       }
 
       // Conversion history vers format backend
-      const formattedHistory = history.map((msg) => ({
+      const formattedHistory = history.map(msg => ({
         role: msg.role,
         content: msg.content,
       }));
@@ -160,11 +160,16 @@ export const openaiProvider: AIProvider = {
       const latency = Date.now() - startTime;
 
       // 🔧 AUTOHEAL: Signaler l'erreur pour auto-réparation
-      autoHealEngine.detectError('openai-provider', error instanceof Error ? error : new Error(String(error)), 'provider', {
-        latency,
-        message: message.substring(0, 100), // Premier 100 chars seulement
-        historyLength: history.length,
-      });
+      autoHealEngine.detectError(
+        'openai-provider',
+        error instanceof Error ? error : new Error(String(error)),
+        'provider',
+        {
+          latency,
+          message: message.substring(0, 100), // Premier 100 chars seulement
+          historyLength: history.length,
+        }
+      );
 
       // Re-throw erreurs typées
       if (error instanceof Error) {

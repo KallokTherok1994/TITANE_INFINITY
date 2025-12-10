@@ -52,9 +52,9 @@ export const VisionToggleButton: React.FC<VisionToggleButtonProps> = ({
   // Store
   const isActive = useVisionStore(selectIsObservationActive);
   const hasPermission = useVisionStore(selectHasCameraPermission);
-  const enableVision = useVisionStore((s) => s.enableVision);
-  const disableVision = useVisionStore((s) => s.disableVision);
-  const requestPermission = useVisionStore((s) => s.requestCameraPermission);
+  const enableVision = useVisionStore(s => s.enableVision);
+  const disableVision = useVisionStore(s => s.disableVision);
+  const requestPermission = useVisionStore(s => s.requestCameraPermission);
 
   // Handle toggle
   const handleToggle = useCallback(async () => {
@@ -119,7 +119,9 @@ export const VisionToggleButton: React.FC<VisionToggleButtonProps> = ({
   // Confirmation mode
   if (isConfirming) {
     return (
-      <div className={`vision-toggle vision-toggle--confirmation ${variantClass} ${className}`}>
+      <div
+        className={`vision-toggle vision-toggle--confirmation ${variantClass} ${className}`}
+      >
         <div className="vision-toggle__confirmation-content">
           <span className="vision-toggle__confirmation-icon">👁️</span>
           <span className="vision-toggle__confirmation-text">
@@ -156,7 +158,9 @@ export const VisionToggleButton: React.FC<VisionToggleButtonProps> = ({
       onClick={handleToggle}
       disabled={isLoading}
       aria-pressed={isActive}
-      aria-label={isActive ? 'Désactiver le mode observation' : 'Activer le mode observation'}
+      aria-label={
+        isActive ? 'Désactiver le mode observation' : 'Activer le mode observation'
+      }
     >
       {/* Icon */}
       <span className="vision-toggle__icon">
@@ -166,16 +170,14 @@ export const VisionToggleButton: React.FC<VisionToggleButtonProps> = ({
       {/* Label */}
       {showLabel && (
         <span className="vision-toggle__label">
-          {isLoading
-            ? 'Chargement...'
-            : isActive
-              ? 'Vision Active'
-              : 'Activer Vision'}
+          {isLoading ? 'Chargement...' : isActive ? 'Vision Active' : 'Activer Vision'}
         </span>
       )}
 
       {/* Status dot */}
-      <span className={`vision-toggle__dot ${isActive ? 'vision-toggle__dot--active' : ''}`} />
+      <span
+        className={`vision-toggle__dot ${isActive ? 'vision-toggle__dot--active' : ''}`}
+      />
     </button>
   );
 };

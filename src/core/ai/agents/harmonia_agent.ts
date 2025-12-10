@@ -8,7 +8,13 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import type { Agent, AgentState, AgentEvent, AgentResponse, AgentRole } from '../multi_agent_engine';
+import type {
+  Agent,
+  AgentState,
+  AgentEvent,
+  AgentResponse,
+  AgentRole,
+} from '../multi_agent_engine';
 
 type ToneProfile = {
   warmth: number; // 0-100
@@ -42,7 +48,11 @@ export class HarmoniaAgent implements Agent {
     formality: 50,
   };
 
-  private conversationHistory: Array<{ role: string; tone: ToneProfile; timestamp: number }> = [];
+  private conversationHistory: Array<{
+    role: string;
+    tone: ToneProfile;
+    timestamp: number;
+  }> = [];
 
   async initialize(): Promise<void> {
     console.log('🎼 [HARMONIA] Initializing emotional calibration agent...');
@@ -97,7 +107,8 @@ export class HarmoniaAgent implements Agent {
   }
 
   private calculateToneVariations(history: typeof this.conversationHistory): ToneProfile {
-    if (history.length === 0) return { warmth: 0, precision: 0, intensity: 0, rhythm: 0, formality: 0 };
+    if (history.length === 0)
+      return { warmth: 0, precision: 0, intensity: 0, rhythm: 0, formality: 0 };
 
     const ranges: ToneProfile = {
       warmth: 0,
@@ -195,7 +206,8 @@ export class HarmoniaAgent implements Agent {
     const length = content.length;
     const exclamations = (content.match(/!/g) || []).length;
     const _questions = (content.match(/\?/g) || []).length;
-    const formalWords = (content.match(/\b(donc|ainsi|néanmoins|toutefois)\b/gi) || []).length;
+    const formalWords = (content.match(/\b(donc|ainsi|néanmoins|toutefois)\b/gi) || [])
+      .length;
 
     return {
       warmth: Math.min(100, 50 + exclamations * 10),
@@ -210,7 +222,7 @@ export class HarmoniaAgent implements Agent {
     const suggestions: string[] = [];
 
     if (tone.warmth < 40) {
-      suggestions.push('Augmenter la chaleur du ton (utiliser plus d\'empathie)');
+      suggestions.push("Augmenter la chaleur du ton (utiliser plus d'empathie)");
     }
 
     if (tone.precision < 60) {
@@ -218,7 +230,7 @@ export class HarmoniaAgent implements Agent {
     }
 
     if (tone.intensity > 80) {
-      suggestions.push('Réduire l\'intensité (adopter un ton plus mesuré)');
+      suggestions.push("Réduire l'intensité (adopter un ton plus mesuré)");
     }
 
     return suggestions;

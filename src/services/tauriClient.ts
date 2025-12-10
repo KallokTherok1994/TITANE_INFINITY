@@ -86,7 +86,13 @@ export interface ProviderStatus {
 
 export interface StreamCallbacks {
   onChunk?: (chunk: string) => void;
-  onComplete?: (data: { content: string; latency_ms: number; provider: string; model?: string; tokens?: number }) => void;
+  onComplete?: (data: {
+    content: string;
+    latency_ms: number;
+    provider: string;
+    model?: string;
+    tokens?: number;
+  }) => void;
   onError?: (error: TAPIError) => void;
 }
 
@@ -161,7 +167,10 @@ class TauriClient {
     if (breaker.state === 'open') {
       const elapsed = Date.now() - breaker.lastFailureTime;
       if (elapsed < this.CIRCUIT_BREAKER_TIMEOUT) {
-        throw this.createError('NetworkError', `Circuit breaker OPEN for ${command} (wait ${Math.ceil((this.CIRCUIT_BREAKER_TIMEOUT - elapsed) / 1000)}s)`);
+        throw this.createError(
+          'NetworkError',
+          `Circuit breaker OPEN for ${command} (wait ${Math.ceil((this.CIRCUIT_BREAKER_TIMEOUT - elapsed) / 1000)}s)`
+        );
       }
       // Passage en half-open après timeout
       breaker.state = 'half-open';
@@ -192,14 +201,16 @@ class TauriClient {
         // Succès → Reset circuit breaker
         this.resetCircuitBreaker(command);
         return result;
-
       } catch (error) {
         lastError = this.handleError(error);
 
         // Échec → Incrémenter circuit breaker
         this.recordFailure(command);
 
-        console.warn(`⚠️ Invoke ${command} failed (attempt ${attempt + 1}/${retries + 1}):`, lastError.message);
+        console.warn(
+          `⚠️ Invoke ${command} failed (attempt ${attempt + 1}/${retries + 1}):`,
+          lastError.message
+        );
 
         // Retry si pas dernière tentative
         if (attempt < retries) {
@@ -255,7 +266,9 @@ class TauriClient {
 
     if (breaker.failures >= this.CIRCUIT_BREAKER_THRESHOLD) {
       breaker.state = 'open';
-      console.error(`🚨 Circuit breaker OPEN for ${command} (${breaker.failures} failures)`);
+      console.error(
+        `🚨 Circuit breaker OPEN for ${command} (${breaker.failures} failures)`
+      );
     }
   }
 
@@ -278,12 +291,19 @@ class TauriClient {
   /**
    * Envoie un message chat (synchrone)
    */
-  async chatSendMessage(request: ChatRequest, options?: InvokeOptions): Promise<ChatResponse> {
+  async chatSendMessage(
+    request: ChatRequest,
+    options?: InvokeOptions
+  ): Promise<ChatResponse> {
     try {
-      return await this.safeInvoke<ChatResponse>('chat_send_message', { request }, {
-        timeout: 60000, // 60s pour génération IA
-        ...options,
-      });
+      return await this.safeInvoke<ChatResponse>(
+        'chat_send_message',
+        { request },
+        {
+          timeout: 60000, // 60s pour génération IA
+          ...options,
+        }
+      );
     } catch (error) {
       throw this.handleError(error);
     }
@@ -359,7 +379,10 @@ class TauriClient {
       if (pendingChunks.length > 0) {
         const remaining: BackendStreamChunk[] = [];
         for (const chunk of pendingChunks) {
-          if (chunk.conversation_id === targetConversationId && chunk.message_id === targetMessageId) {
+          if (
+            chunk.conversation_id === targetConversationId &&
+            chunk.message_id === targetMessageId
+          ) {
             processChunk(chunk);
           } else {
             remaining.push(chunk);
@@ -382,7 +405,7 @@ class TauriClient {
 
     try {
       // Écouter les chunks
-      unlistenChunk = await listen<BackendStreamChunk>('chat:stream:chunk', (event) => {
+      unlistenChunk = await listen<BackendStreamChunk>('chat:stream:chunk', event => {
         const payload = event.payload;
 
         if (!targetConversationId || !targetMessageId) {
@@ -390,7 +413,10 @@ class TauriClient {
           return;
         }
 
-        if (payload.conversation_id !== targetConversationId || payload.message_id !== targetMessageId) {
+        if (
+          payload.conversation_id !== targetConversationId ||
+          payload.message_id !== targetMessageId
+        ) {
           return;
         }
 
@@ -402,7 +428,7 @@ class TauriClient {
       });
 
       // Écouter la complétion
-      unlistenDone = await listen<BackendStreamChunk>('chat:stream:done', (event) => {
+      unlistenDone = await listen<BackendStreamChunk>('chat:stream:done', event => {
         const payload = event.payload;
 
         if (!targetConversationId || !targetMessageId) {
@@ -410,7 +436,10 @@ class TauriClient {
           return;
         }
 
-        if (payload.conversation_id !== targetConversationId || payload.message_id !== targetMessageId) {
+        if (
+          payload.conversation_id !== targetConversationId ||
+          payload.message_id !== targetMessageId
+        ) {
           return;
         }
 
@@ -423,10 +452,14 @@ class TauriClient {
       });
 
       // Démarrer le streaming
-      const result = await this.safeInvoke<{ conversationId: string; messageId: string }>('chat_stream_message', { request }, {
-        timeout: 90000, // 90s pour streaming IA
-        ...options,
-      });
+      const result = await this.safeInvoke<{ conversationId: string; messageId: string }>(
+        'chat_stream_message',
+        { request },
+        {
+          timeout: 90000, // 90s pour streaming IA
+          ...options,
+        }
+      );
       targetConversationId = result.conversationId ?? null;
       targetMessageId = result.messageId ?? null;
       flushPending();
@@ -455,10 +488,14 @@ class TauriClient {
    */
   async chatGetProvidersStatus(options?: InvokeOptions): Promise<ProviderStatus[]> {
     try {
-      return await this.safeInvoke<ProviderStatus[]>('chat_get_providers_status', {}, {
-        timeout: 10000, // 10s pour check rapide
-        ...options,
-      });
+      return await this.safeInvoke<ProviderStatus[]>(
+        'chat_get_providers_status',
+        {},
+        {
+          timeout: 10000, // 10s pour check rapide
+          ...options,
+        }
+      );
     } catch (error) {
       throw this.handleError(error);
     }
@@ -469,10 +506,14 @@ class TauriClient {
    */
   async chatCheckProviders(options?: InvokeOptions): Promise<ProviderStatus[]> {
     try {
-      return await this.safeInvoke<ProviderStatus[]>('chat_check_providers', {}, {
-        timeout: 15000, // 15s pour check réseau
-        ...options,
-      });
+      return await this.safeInvoke<ProviderStatus[]>(
+        'chat_check_providers',
+        {},
+        {
+          timeout: 15000, // 15s pour check réseau
+          ...options,
+        }
+      );
     } catch (error) {
       throw this.handleError(error);
     }
@@ -483,10 +524,14 @@ class TauriClient {
    */
   async chatSetGeminiKey(apiKey: string, options?: InvokeOptions): Promise<void> {
     try {
-      await this.safeInvoke('chat_set_gemini_key', { apiKey }, {
-        timeout: 5000, // 5s pour config
-        ...options,
-      });
+      await this.safeInvoke(
+        'chat_set_gemini_key',
+        { apiKey },
+        {
+          timeout: 5000, // 5s pour config
+          ...options,
+        }
+      );
     } catch (error) {
       throw this.handleError(error);
     }
@@ -497,10 +542,14 @@ class TauriClient {
    */
   async chatCreateConversation(options?: InvokeOptions): Promise<string> {
     try {
-      return await this.safeInvoke<string>('chat_create_conversation', {}, {
-        timeout: 5000,
-        ...options,
-      });
+      return await this.safeInvoke<string>(
+        'chat_create_conversation',
+        {},
+        {
+          timeout: 5000,
+          ...options,
+        }
+      );
     } catch (error) {
       throw this.handleError(error);
     }
@@ -509,12 +558,19 @@ class TauriClient {
   /**
    * Récupère une conversation
    */
-  async chatGetConversation(conversationId: string, options?: InvokeOptions): Promise<ConversationData> {
+  async chatGetConversation(
+    conversationId: string,
+    options?: InvokeOptions
+  ): Promise<ConversationData> {
     try {
-      return await this.safeInvoke<ConversationData>('chat_get_conversation', { conversationId }, {
-        timeout: 10000,
-        ...options,
-      });
+      return await this.safeInvoke<ConversationData>(
+        'chat_get_conversation',
+        { conversationId },
+        {
+          timeout: 10000,
+          ...options,
+        }
+      );
     } catch (error) {
       throw this.handleError(error);
     }
@@ -523,12 +579,19 @@ class TauriClient {
   /**
    * Supprime une conversation
    */
-  async chatDeleteConversation(conversationId: string, options?: InvokeOptions): Promise<void> {
+  async chatDeleteConversation(
+    conversationId: string,
+    options?: InvokeOptions
+  ): Promise<void> {
     try {
-      await this.safeInvoke('chat_delete_conversation', { conversationId }, {
-        timeout: 5000,
-        ...options,
-      });
+      await this.safeInvoke(
+        'chat_delete_conversation',
+        { conversationId },
+        {
+          timeout: 5000,
+          ...options,
+        }
+      );
     } catch (error) {
       throw this.handleError(error);
     }
@@ -543,11 +606,15 @@ class TauriClient {
    */
   async getSystemVitals(options?: InvokeOptions): Promise<SystemVitals> {
     try {
-      return await this.safeInvoke<SystemVitals>('get_system_vitals', {}, {
-        timeout: 5000,
-        retries: 0, // Pas de retry pour vitals (donnée temps réel)
-        ...options,
-      });
+      return await this.safeInvoke<SystemVitals>(
+        'get_system_vitals',
+        {},
+        {
+          timeout: 5000,
+          retries: 0, // Pas de retry pour vitals (donnée temps réel)
+          ...options,
+        }
+      );
     } catch (error) {
       throw this.handleError(error);
     }
@@ -558,10 +625,14 @@ class TauriClient {
    */
   async getSingularityState(options?: InvokeOptions): Promise<SingularityState> {
     try {
-      return await this.safeInvoke<SingularityState>('singularity_get_full_state', {}, {
-        timeout: 10000,
-        ...options,
-      });
+      return await this.safeInvoke<SingularityState>(
+        'singularity_get_full_state',
+        {},
+        {
+          timeout: 10000,
+          ...options,
+        }
+      );
     } catch (error) {
       throw this.handleError(error);
     }
@@ -595,7 +666,11 @@ class TauriClient {
   /**
    * Crée une TAPIError
    */
-  private createError(kind: TAPIError['kind'], message: string, context?: string): TAPIError {
+  private createError(
+    kind: TAPIError['kind'],
+    message: string,
+    context?: string
+  ): TAPIError {
     return {
       kind,
       message,

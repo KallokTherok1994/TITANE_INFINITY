@@ -28,7 +28,7 @@ export const geminiProvider: AIProvider = {
 
     try {
       const status = await tauriChatProvider.getProvidersStatus();
-      const geminiStatus = status.find((provider) => provider.provider === 'gemini');
+      const geminiStatus = status.find(provider => provider.provider === 'gemini');
       return Boolean(geminiStatus?.available);
     } catch (error) {
       if (process.env.NODE_ENV === 'development') {

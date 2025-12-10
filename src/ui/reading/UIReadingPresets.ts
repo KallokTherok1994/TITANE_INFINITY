@@ -16,7 +16,10 @@ import type { UIReadingSettings, PresetName } from './UIReadingContext';
 // READING PRESETS
 // ═══════════════════════════════════════════════════════════════════
 
-export const ReadingPresets: Record<Exclude<PresetName, null>, Partial<UIReadingSettings>> = {
+export const ReadingPresets: Record<
+  Exclude<PresetName, null>,
+  Partial<UIReadingSettings>
+> = {
   default: {
     zoomLevel: 1.0,
     fontSizeBase: 15,
@@ -67,7 +70,10 @@ export const ReadingPresets: Record<Exclude<PresetName, null>, Partial<UIReading
 // PRESET METADATA
 // ═══════════════════════════════════════════════════════════════════
 
-export const PresetMetadata: Record<Exclude<PresetName, null>, { label: string; icon: string; description: string }> = {
+export const PresetMetadata: Record<
+  Exclude<PresetName, null>,
+  { label: string; icon: string; description: string }
+> = {
   default: {
     label: 'Par défaut',
     icon: '⚪',
@@ -99,7 +105,9 @@ export const PresetMetadata: Record<Exclude<PresetName, null>, { label: string; 
 // HELPER FUNCTIONS
 // ═══════════════════════════════════════════════════════════════════
 
-export function getPresetSettings(preset: Exclude<PresetName, null>): Partial<UIReadingSettings> {
+export function getPresetSettings(
+  preset: Exclude<PresetName, null>
+): Partial<UIReadingSettings> {
   return ReadingPresets[preset] || ReadingPresets.default;
 }
 

@@ -34,11 +34,51 @@ export const CognitivePage = (): JSX.Element => {
   };
 
   const nexusNodes = [
-    { id: 'n1', label: 'React', type: 'skill' as const, x: 150, y: 100, connections: 5, importance: 0.9 },
-    { id: 'n2', label: 'TypeScript', type: 'skill' as const, x: 250, y: 150, connections: 8, importance: 0.95 },
-    { id: 'n3', label: 'Tauri', type: 'concept' as const, x: 350, y: 100, connections: 4, importance: 0.8 },
-    { id: 'n4', label: 'Design Patterns', type: 'concept' as const, x: 250, y: 50, connections: 6, importance: 0.85 },
-    { id: 'n5', label: 'Projet TITANE', type: 'memory' as const, x: 250, y: 200, connections: 3, importance: 0.92 },
+    {
+      id: 'n1',
+      label: 'React',
+      type: 'skill' as const,
+      x: 150,
+      y: 100,
+      connections: 5,
+      importance: 0.9,
+    },
+    {
+      id: 'n2',
+      label: 'TypeScript',
+      type: 'skill' as const,
+      x: 250,
+      y: 150,
+      connections: 8,
+      importance: 0.95,
+    },
+    {
+      id: 'n3',
+      label: 'Tauri',
+      type: 'concept' as const,
+      x: 350,
+      y: 100,
+      connections: 4,
+      importance: 0.8,
+    },
+    {
+      id: 'n4',
+      label: 'Design Patterns',
+      type: 'concept' as const,
+      x: 250,
+      y: 50,
+      connections: 6,
+      importance: 0.85,
+    },
+    {
+      id: 'n5',
+      label: 'Projet TITANE',
+      type: 'memory' as const,
+      x: 250,
+      y: 200,
+      connections: 3,
+      importance: 0.92,
+    },
   ];
 
   const nexusEdges = [
@@ -49,17 +89,49 @@ export const CognitivePage = (): JSX.Element => {
   ];
 
   const harmoniaPatterns = [
-    { id: 'p1', name: 'Deep Work', category: 'productivity' as const, frequency: 0.85, confidence: 0.92, hoursMean: 3.5, lastOccurrence: new Date(Date.now() - 3600000) },
-    { id: 'p2', name: 'Learning Sessions', category: 'learning' as const, frequency: 0.7, confidence: 0.88, hoursMean: 2.0, lastOccurrence: new Date(Date.now() - 7200000) },
-    { id: 'p3', name: 'Creative Flow', category: 'creative' as const, frequency: 0.6, confidence: 0.75, hoursMean: 1.5, lastOccurrence: new Date(Date.now() - 10800000) },
-    { id: 'p4', name: 'Rest Periods', category: 'rest' as const, frequency: 0.5, confidence: 0.95, hoursMean: 1.0, lastOccurrence: new Date(Date.now() - 14400000) },
+    {
+      id: 'p1',
+      name: 'Deep Work',
+      category: 'productivity' as const,
+      frequency: 0.85,
+      confidence: 0.92,
+      hoursMean: 3.5,
+      lastOccurrence: new Date(Date.now() - 3600000),
+    },
+    {
+      id: 'p2',
+      name: 'Learning Sessions',
+      category: 'learning' as const,
+      frequency: 0.7,
+      confidence: 0.88,
+      hoursMean: 2.0,
+      lastOccurrence: new Date(Date.now() - 7200000),
+    },
+    {
+      id: 'p3',
+      name: 'Creative Flow',
+      category: 'creative' as const,
+      frequency: 0.6,
+      confidence: 0.75,
+      hoursMean: 1.5,
+      lastOccurrence: new Date(Date.now() - 10800000),
+    },
+    {
+      id: 'p4',
+      name: 'Rest Periods',
+      category: 'rest' as const,
+      frequency: 0.5,
+      confidence: 0.95,
+      hoursMean: 1.0,
+      lastOccurrence: new Date(Date.now() - 14400000),
+    },
   ];
 
   const memoryEntries = [
     {
       id: 'mem1',
       type: 'conversation' as const,
-      content: 'Discussion sur l\'architecture de TITANE∞ v15',
+      content: "Discussion sur l'architecture de TITANE∞ v15",
       timestamp: new Date(Date.now() - 3600000),
       importance: 0.9,
       tags: ['architecture', 'typescript', 'design'],

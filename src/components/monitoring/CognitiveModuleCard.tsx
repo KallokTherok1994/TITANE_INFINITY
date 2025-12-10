@@ -31,7 +31,7 @@ const moduleConfig = {
     description: 'Énergie & Charge CPU',
     gradient: 'var(--helios-gradient)',
     glowColor: 'var(--helios-glow)',
-    animation: 'pulse-helios'
+    animation: 'pulse-helios',
   },
   nexus: {
     icon: '🔗',
@@ -39,7 +39,7 @@ const moduleConfig = {
     description: 'Connexions & Liens',
     gradient: 'var(--nexus-gradient)',
     glowColor: 'var(--nexus-glow)',
-    animation: 'flow-nexus'
+    animation: 'flow-nexus',
   },
   harmonia: {
     icon: '⚖️',
@@ -47,7 +47,7 @@ const moduleConfig = {
     description: 'Équilibre & Stabilité',
     gradient: 'var(--harmonia-gradient)',
     glowColor: 'var(--harmonia-glow)',
-    animation: 'sway-harmonia'
+    animation: 'sway-harmonia',
   },
   memory: {
     icon: '🧠',
@@ -55,8 +55,8 @@ const moduleConfig = {
     description: 'Profondeur & Couches',
     gradient: 'var(--memory-gradient)',
     glowColor: 'var(--memory-glow)',
-    animation: 'scan-memory'
-  }
+    animation: 'scan-memory',
+  },
 };
 
 export const CognitiveModuleCard: React.FC<CognitiveModuleCardProps> = ({
@@ -64,26 +64,26 @@ export const CognitiveModuleCard: React.FC<CognitiveModuleCardProps> = ({
   value,
   label,
   status = 'stable',
-  subtitle
+  subtitle,
 }) => {
   const config = moduleConfig[module];
   const intensity = value / 100;
 
   return (
-    <div 
+    <div
       className={`cognitive-module-card cognitive-module-card--${module} cognitive-module-card--${status}`}
-      style={{
-        '--module-intensity': intensity,
-        '--module-glow': config.glowColor
-      } as React.CSSProperties}
+      style={
+        {
+          '--module-intensity': intensity,
+          '--module-glow': config.glowColor,
+        } as React.CSSProperties
+      }
     >
       {/* Animated Glow Background */}
       <div className="cognitive-module-card__glow" />
 
       {/* Icon */}
-      <div className="cognitive-module-card__icon">
-        {config.icon}
-      </div>
+      <div className="cognitive-module-card__icon">{config.icon}</div>
 
       {/* Content */}
       <div className="cognitive-module-card__content">
@@ -101,20 +101,20 @@ export const CognitiveModuleCard: React.FC<CognitiveModuleCardProps> = ({
       <div className="cognitive-module-card__label">{label}</div>
 
       {/* Subtitle */}
-      {subtitle && (
-        <div className="cognitive-module-card__subtitle">{subtitle}</div>
-      )}
+      {subtitle && <div className="cognitive-module-card__subtitle">{subtitle}</div>}
 
       {/* Progress Bar */}
       <div className="cognitive-module-card__progress">
-        <div 
+        <div
           className="cognitive-module-card__progress-fill"
           style={{ width: `${value}%` }}
         />
       </div>
 
       {/* Animated Elements */}
-      <div className={`cognitive-module-card__animation cognitive-module-card__animation--${module}`} />
+      <div
+        className={`cognitive-module-card__animation cognitive-module-card__animation--${module}`}
+      />
     </div>
   );
 };

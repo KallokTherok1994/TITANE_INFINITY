@@ -104,7 +104,10 @@ class AIHealthMonitor {
       // Nettoyage vieilles alertes
       this.cleanupOldAlerts();
 
-      isDev && console.log(`[HEALTH MONITOR] Check complete: ${this.alerts.length} active alerts`);
+      isDev &&
+        console.log(
+          `[HEALTH MONITOR] Check complete: ${this.alerts.length} active alerts`
+        );
     } catch (error) {
       isDev && console.error('[HEALTH MONITOR] Check failed:', error);
     }
@@ -124,7 +127,7 @@ class AIHealthMonitor {
         recommendations: [
           'Vérifier la disponibilité des providers',
           'Examiner les clés API',
-          'Consulter les logs d\'erreurs',
+          "Consulter les logs d'erreurs",
         ],
         autoFixAvailable: false,
       });
@@ -134,7 +137,10 @@ class AIHealthMonitor {
         component: 'metrics',
         title: 'Taux de succès dégradé',
         description: `Le taux de succès global est de ${health.successRate.toFixed(1)}% (< 90%)`,
-        recommendations: ['Surveiller l\'évolution', 'Vérifier les providers les moins performants'],
+        recommendations: [
+          "Surveiller l'évolution",
+          'Vérifier les providers les moins performants',
+        ],
         autoFixAvailable: false,
       });
     }
@@ -165,9 +171,9 @@ class AIHealthMonitor {
       this.addAlert({
         severity: 'warning',
         component: 'autoheal',
-        title: 'Nombre d\'erreurs élevé',
+        title: "Nombre d'erreurs élevé",
         description: `${stats.totalErrors} erreurs détectées`,
-        recommendations: ['Auto-heal actif et fonctionnel', 'Surveiller l\'évolution'],
+        recommendations: ['Auto-heal actif et fonctionnel', "Surveiller l'évolution"],
         autoFixAvailable: true,
       });
     }
@@ -179,7 +185,10 @@ class AIHealthMonitor {
         component: 'autoheal',
         title: 'Efficacité auto-heal dégradée',
         description: `Taux de guérison: ${stats.successRate.toFixed(1)}% (< 70%)`,
-        recommendations: ['Examiner les erreurs persistantes', 'Envisager reset providers'],
+        recommendations: [
+          'Examiner les erreurs persistantes',
+          'Envisager reset providers',
+        ],
         autoFixAvailable: true,
       });
     }
@@ -188,7 +197,9 @@ class AIHealthMonitor {
   /**
    * Analyser orchestrator et générer alertes
    */
-  private analyzeOrchestrator(health: Awaited<ReturnType<typeof aiOrchestrator.healthCheck>>): void {
+  private analyzeOrchestrator(
+    health: Awaited<ReturnType<typeof aiOrchestrator.healthCheck>>
+  ): void {
     if (health.overall === 'critical') {
       this.addAlert({
         severity: 'critical',
@@ -210,7 +221,7 @@ class AIHealthMonitor {
     }
 
     // Providers individuels
-    health.providers.forEach((provider) => {
+    health.providers.forEach(provider => {
       if (!provider.available && provider.name !== 'ollama') {
         // ollama peut être offline (optionnel)
         this.addAlert({
@@ -237,7 +248,7 @@ class AIHealthMonitor {
     const now = Date.now();
     const oneHour = 60 * 60 * 1000;
     const existingSimilar = this.alerts.find(
-      (a) =>
+      a =>
         a.title === alertData.title &&
         a.component === alertData.component &&
         now - a.timestamp < oneHour
@@ -260,7 +271,8 @@ class AIHealthMonitor {
       this.alerts = this.alerts.slice(-this.MAX_ALERTS);
     }
 
-    isDev && console.log(`[HEALTH MONITOR] 🚨 ${alert.severity.toUpperCase()}: ${alert.title}`);
+    isDev &&
+      console.log(`[HEALTH MONITOR] 🚨 ${alert.severity.toUpperCase()}: ${alert.title}`);
   }
 
   /**
@@ -270,7 +282,7 @@ class AIHealthMonitor {
     const now = Date.now();
     const maxAge = 24 * 60 * 60 * 1000; // 24h
 
-    this.alerts = this.alerts.filter((a) => now - a.timestamp < maxAge);
+    this.alerts = this.alerts.filter(a => now - a.timestamp < maxAge);
   }
 
   /**
@@ -295,8 +307,8 @@ class AIHealthMonitor {
     }
 
     // Déduire selon alertes
-    const criticalAlerts = this.alerts.filter((a) => a.severity === 'critical').length;
-    const warningAlerts = this.alerts.filter((a) => a.severity === 'warning').length;
+    const criticalAlerts = this.alerts.filter(a => a.severity === 'critical').length;
+    const warningAlerts = this.alerts.filter(a => a.severity === 'warning').length;
     score -= criticalAlerts * 10 + warningAlerts * 3;
 
     score = Math.max(0, Math.min(100, score));
@@ -317,16 +329,16 @@ class AIHealthMonitor {
         const severityOrder = { critical: 0, warning: 1, info: 2 };
         return severityOrder[a.severity] - severityOrder[b.severity];
       }),
-      providers: metrics.providers.map((p) => ({
+      providers: metrics.providers.map(p => ({
         name: p.provider,
         status:
           p.successRate > 90 && p.avgLatency < 5000
             ? 'healthy'
             : p.successRate > 70 && p.avgLatency < 10000
-            ? 'degraded'
-            : p.successRate < 50
-            ? 'critical'
-            : 'offline',
+              ? 'degraded'
+              : p.successRate < 50
+                ? 'critical'
+                : 'offline',
         successRate: p.successRate,
         avgLatency: p.avgLatency,
       })),
@@ -349,7 +361,7 @@ class AIHealthMonitor {
    * Marquer alerte comme résolue
    */
   resolveAlert(alertId: string): void {
-    this.alerts = this.alerts.filter((a) => a.id !== alertId);
+    this.alerts = this.alerts.filter(a => a.id !== alertId);
     isDev && console.log(`[HEALTH MONITOR] Alert ${alertId} resolved`);
   }
 

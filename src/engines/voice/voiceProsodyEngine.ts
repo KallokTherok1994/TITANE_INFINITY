@@ -25,26 +25,26 @@ export interface VoiceProsodyState {
 
   // Paramètres prosodiques actuels
   prosody: {
-    rate: number;           // 0.5-2.0 - Speech rate multiplier
-    pitch: number;          // 0.5-2.0 - Pitch multiplier
-    volume: number;         // 0-1 - Volume level
-    emphasis: number;       // 0-1 - Emphasis strength
+    rate: number; // 0.5-2.0 - Speech rate multiplier
+    pitch: number; // 0.5-2.0 - Pitch multiplier
+    volume: number; // 0-1 - Volume level
+    emphasis: number; // 0-1 - Emphasis strength
   };
 
   // Timbre vocal
   timbre: {
-    warmth: number;         // 0-1 - Vocal warmth
-    breathiness: number;    // 0-1 - Breathiness
-    resonance: number;      // 0-1 - Resonance depth
-    clarity: number;        // 0-1 - Articulation clarity
+    warmth: number; // 0-1 - Vocal warmth
+    breathiness: number; // 0-1 - Breathiness
+    resonance: number; // 0-1 - Resonance depth
+    clarity: number; // 0-1 - Articulation clarity
   };
 
   // Micro-dynamiques
   microDynamics: {
-    intonationVariation: number;  // 0-1 - Pitch variation
-    rhythmicFlow: number;         // 0-1 - Rhythm naturalness
-    pausePlacement: number;       // 0-1 - Strategic pauses
-    emotionalColoring: number;    // 0-1 - Emotional expressiveness
+    intonationVariation: number; // 0-1 - Pitch variation
+    rhythmicFlow: number; // 0-1 - Rhythm naturalness
+    pausePlacement: number; // 0-1 - Strategic pauses
+    emotionalColoring: number; // 0-1 - Emotional expressiveness
   };
 
   // Métriques
@@ -176,7 +176,10 @@ class VoiceProsodyEngine {
   /**
    * Mettre à jour une micro-dynamique
    */
-  updateMicroDynamics(param: keyof VoiceProsodyState['microDynamics'], value: number): void {
+  updateMicroDynamics(
+    param: keyof VoiceProsodyState['microDynamics'],
+    value: number
+  ): void {
     if (!this.state.isActive) return;
 
     this.state.microDynamics[param] = value;

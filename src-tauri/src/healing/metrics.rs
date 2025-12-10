@@ -17,16 +17,16 @@ impl HealingMetrics {
             failures: AtomicU64::new(0),
         }
     }
-    
+
     pub fn record_recovery(&self) {
         self.recoveries.fetch_add(1, Ordering::Relaxed);
         info!("Recovery recorded");
     }
-    
+
     pub fn record_failure(&self) {
         self.failures.fetch_add(1, Ordering::Relaxed);
     }
-    
+
     pub fn get_stats(&self) -> (u64, u64) {
         (
             self.recoveries.load(Ordering::Relaxed),

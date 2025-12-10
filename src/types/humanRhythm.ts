@@ -25,12 +25,12 @@
  * Moments de la journée
  */
 export type DayMoment =
-  | 'earlyMorning'   // 05:00 - 08:00
-  | 'morning'        // 08:00 - 12:00
-  | 'midday'         // 12:00 - 14:00
-  | 'afternoon'      // 14:00 - 18:00
-  | 'evening'        // 18:00 - 22:00
-  | 'night';         // 22:00 - 05:00
+  | 'earlyMorning' // 05:00 - 08:00
+  | 'morning' // 08:00 - 12:00
+  | 'midday' // 12:00 - 14:00
+  | 'afternoon' // 14:00 - 18:00
+  | 'evening' // 18:00 - 22:00
+  | 'night'; // 22:00 - 05:00
 
 /**
  * Jours de la semaine
@@ -57,9 +57,9 @@ export type WeekPeriod = 'weekday' | 'weekend';
  * Chronotype détecté de l'utilisateur
  */
 export type Chronotype =
-  | 'earlyBird'      // Couche-tôt / lève-tôt
-  | 'neutral'        // Pas de préférence marquée
-  | 'nightOwl';      // Couche-tard / lève-tard
+  | 'earlyBird' // Couche-tôt / lève-tôt
+  | 'neutral' // Pas de préférence marquée
+  | 'nightOwl'; // Couche-tard / lève-tard
 
 /**
  * Confiance dans la détection du chronotype
@@ -89,11 +89,11 @@ export type EnergyTrend = 'rising' | 'falling' | 'stable' | 'peaking' | 'dipping
  */
 export interface MomentEnergyPattern {
   moment: DayMoment;
-  averageEnergy: number;          // 0-1
-  variability: number;            // Écart-type
-  sampleCount: number;            // Nombre d'observations
-  peakProbability: number;        // Probabilité d'être un pic
-  dipProbability: number;         // Probabilité d'être un creux
+  averageEnergy: number; // 0-1
+  variability: number; // Écart-type
+  sampleCount: number; // Nombre d'observations
+  peakProbability: number; // Probabilité d'être un pic
+  dipProbability: number; // Probabilité d'être un creux
 }
 
 /**
@@ -122,11 +122,11 @@ export interface WeekDayPattern {
  * Pattern hebdomadaire complet
  */
 export interface WeeklyPattern {
-  weekdayPattern: DailyPattern;      // Lundi-Vendredi agrégé
-  weekendPattern: DailyPattern;      // Samedi-Dimanche agrégé
-  dayPatterns: WeekDayPattern[];     // Détail par jour
-  weekdayPeakDay: WeekDay | null;    // Jour le plus productif en semaine
-  weekdayDipDay: WeekDay | null;     // Jour le plus fatigant en semaine
+  weekdayPattern: DailyPattern; // Lundi-Vendredi agrégé
+  weekendPattern: DailyPattern; // Samedi-Dimanche agrégé
+  dayPatterns: WeekDayPattern[]; // Détail par jour
+  weekdayPeakDay: WeekDay | null; // Jour le plus productif en semaine
+  weekdayDipDay: WeekDay | null; // Jour le plus fatigant en semaine
   lastUpdated: number;
 }
 
@@ -143,17 +143,17 @@ export interface CircadianState {
   energyTrend: EnergyTrend;
 
   // Prédictions
-  nextPeakEstimate: number | null;     // Timestamp du prochain pic estimé
-  nextDipEstimate: number | null;      // Timestamp du prochain creux estimé
+  nextPeakEstimate: number | null; // Timestamp du prochain pic estimé
+  nextDipEstimate: number | null; // Timestamp du prochain creux estimé
 
   // Phase du cycle
-  cyclePhase: number;                   // 0-1 position dans le cycle 24h
-  sleepPressure: number;                // 0-1 pression de sommeil estimée
+  cyclePhase: number; // 0-1 position dans le cycle 24h
+  sleepPressure: number; // 0-1 pression de sommeil estimée
 
   // Alertness
-  alertnessLevel: number;               // 0-1 niveau de vigilance
-  optimalForComplexTask: boolean;       // Bon moment pour tâches complexes ?
-  optimalForCreativeTask: boolean;      // Bon moment pour créativité ?
+  alertnessLevel: number; // 0-1 niveau de vigilance
+  optimalForComplexTask: boolean; // Bon moment pour tâches complexes ?
+  optimalForCreativeTask: boolean; // Bon moment pour créativité ?
 }
 
 // ============================================================================
@@ -165,21 +165,21 @@ export interface CircadianState {
  */
 export interface PacingRecommendation {
   suggestedIntensity: 'light' | 'moderate' | 'focused' | 'deep';
-  suggestedBreakInterval: number;       // Minutes recommandées entre pauses
-  suggestedSessionLength: number;       // Minutes de travail recommandées
+  suggestedBreakInterval: number; // Minutes recommandées entre pauses
+  suggestedSessionLength: number; // Minutes de travail recommandées
   reason: string;
-  confidence: number;                   // 0-1
+  confidence: number; // 0-1
 }
 
 /**
  * Type de tâche pour l'optimisation
  */
 export type TaskType =
-  | 'deepWork'       // Travail en profondeur, concentration intense
-  | 'creative'       // Tâches créatives, brainstorming
-  | 'routine'        // Tâches routinières, admin
-  | 'meetings'       // Réunions, collaboration
-  | 'learning';      // Apprentissage, lecture
+  | 'deepWork' // Travail en profondeur, concentration intense
+  | 'creative' // Tâches créatives, brainstorming
+  | 'routine' // Tâches routinières, admin
+  | 'meetings' // Réunions, collaboration
+  | 'learning'; // Apprentissage, lecture
 
 /**
  * Fenêtre optimale pour un type de tâche
@@ -188,8 +188,8 @@ export interface OptimalWindow {
   taskType: TaskType;
   startHour: number;
   endHour: number;
-  score: number;              // 0-1 pertinence de cette fenêtre
-  currentlyOptimal: boolean;  // Est-ce maintenant ?
+  score: number; // 0-1 pertinence de cette fenêtre
+  currentlyOptimal: boolean; // Est-ce maintenant ?
 }
 
 // ============================================================================
@@ -231,10 +231,10 @@ export interface EnergyHistoryEntry {
   timestamp: number;
   dayMoment: DayMoment;
   weekDay: WeekDay;
-  energyLevel: number;              // 0-1 valeur brute
-  perceivedEnergy: EnergyLevel;     // Niveau discret
+  energyLevel: number; // 0-1 valeur brute
+  perceivedEnergy: EnergyLevel; // Niveau discret
   context: {
-    sleepQuality?: number;          // 0-1 si connu
+    sleepQuality?: number; // 0-1 si connu
     caffeine?: boolean;
     exercise?: boolean;
     mealRecent?: boolean;
@@ -250,25 +250,25 @@ export interface EnergyHistoryEntry {
  */
 export interface HumanRhythmConfig {
   // Apprentissage
-  learningRate: number;                 // Vitesse d'adaptation
-  minDataPointsForPattern: number;      // Minimum de points pour un pattern
-  patternDecayDays: number;             // Jours avant décroissance des patterns
+  learningRate: number; // Vitesse d'adaptation
+  minDataPointsForPattern: number; // Minimum de points pour un pattern
+  patternDecayDays: number; // Jours avant décroissance des patterns
 
   // Chronotype
-  chronotypeMinDataPoints: number;      // Points minimum pour détecter chronotype
-  chronotypeAdaptationDays: number;     // Jours pour adapter le chronotype
+  chronotypeMinDataPoints: number; // Points minimum pour détecter chronotype
+  chronotypeAdaptationDays: number; // Jours pour adapter le chronotype
 
   // Pacing
-  defaultBreakInterval: number;         // Minutes par défaut entre pauses
-  defaultSessionLength: number;         // Minutes de session par défaut
+  defaultBreakInterval: number; // Minutes par défaut entre pauses
+  defaultSessionLength: number; // Minutes de session par défaut
 
   // Historique
-  maxHistoryEntries: number;            // Taille max de l'historique
-  historyRetentionDays: number;         // Jours de rétention
+  maxHistoryEntries: number; // Taille max de l'historique
+  historyRetentionDays: number; // Jours de rétention
 
   // Fenêtres optimales
   enableOptimalWindows: boolean;
-  windowSuggestionThreshold: number;    // Score min pour suggérer une fenêtre
+  windowSuggestionThreshold: number; // Score min pour suggérer une fenêtre
 }
 
 // ============================================================================
@@ -330,13 +330,48 @@ export const getDefaultWeeklyPattern = (): WeeklyPattern => ({
   weekdayPattern: getDefaultDailyPattern(),
   weekendPattern: getDefaultDailyPattern(),
   dayPatterns: [
-    { day: 'monday', dailyPattern: getDefaultDailyPattern(), isWeekend: false, specialCharacteristics: [] },
-    { day: 'tuesday', dailyPattern: getDefaultDailyPattern(), isWeekend: false, specialCharacteristics: [] },
-    { day: 'wednesday', dailyPattern: getDefaultDailyPattern(), isWeekend: false, specialCharacteristics: [] },
-    { day: 'thursday', dailyPattern: getDefaultDailyPattern(), isWeekend: false, specialCharacteristics: [] },
-    { day: 'friday', dailyPattern: getDefaultDailyPattern(), isWeekend: false, specialCharacteristics: [] },
-    { day: 'saturday', dailyPattern: getDefaultDailyPattern(), isWeekend: true, specialCharacteristics: [] },
-    { day: 'sunday', dailyPattern: getDefaultDailyPattern(), isWeekend: true, specialCharacteristics: [] },
+    {
+      day: 'monday',
+      dailyPattern: getDefaultDailyPattern(),
+      isWeekend: false,
+      specialCharacteristics: [],
+    },
+    {
+      day: 'tuesday',
+      dailyPattern: getDefaultDailyPattern(),
+      isWeekend: false,
+      specialCharacteristics: [],
+    },
+    {
+      day: 'wednesday',
+      dailyPattern: getDefaultDailyPattern(),
+      isWeekend: false,
+      specialCharacteristics: [],
+    },
+    {
+      day: 'thursday',
+      dailyPattern: getDefaultDailyPattern(),
+      isWeekend: false,
+      specialCharacteristics: [],
+    },
+    {
+      day: 'friday',
+      dailyPattern: getDefaultDailyPattern(),
+      isWeekend: false,
+      specialCharacteristics: [],
+    },
+    {
+      day: 'saturday',
+      dailyPattern: getDefaultDailyPattern(),
+      isWeekend: true,
+      specialCharacteristics: [],
+    },
+    {
+      day: 'sunday',
+      dailyPattern: getDefaultDailyPattern(),
+      isWeekend: true,
+      specialCharacteristics: [],
+    },
   ],
   weekdayPeakDay: null,
   weekdayDipDay: null,
@@ -407,7 +442,15 @@ export const getDayMomentFromHour = (hour: number): DayMoment => {
  * Détermine le jour de la semaine à partir d'un index (0 = dimanche)
  */
 export const getWeekDayFromIndex = (index: number): WeekDay => {
-  const days: WeekDay[] = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+  const days: WeekDay[] = [
+    'sunday',
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+    'saturday',
+  ];
   return days[index % 7];
 };
 

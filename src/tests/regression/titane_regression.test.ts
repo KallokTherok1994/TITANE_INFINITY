@@ -137,7 +137,7 @@ describe('Regression Test 3: Schema Changes', () => {
       if (typeof stats !== 'object' || stats === null) {
         alerts.push({
           module: 'memory',
-          cause: 'Schema Memory invalide - stats n\'est pas un objet',
+          cause: "Schema Memory invalide - stats n'est pas un objet",
           severity: 'HIGH',
           solution_suggeree: 'Vérifier structure MemoryStats dans backend',
           timestamp: new Date().toISOString(),
@@ -165,7 +165,7 @@ describe('Regression Test 3: Schema Changes', () => {
       if (!Array.isArray(timeline)) {
         alerts.push({
           module: 'timeline',
-          cause: 'Timeline n\'est plus un array',
+          cause: "Timeline n'est plus un array",
           severity: 'HIGH',
           solution_suggeree: 'Restaurer format Vec<TimelineEvent>',
           timestamp: new Date().toISOString(),
@@ -274,7 +274,7 @@ describe('Regression Test 6: Timeline Inconsistencies', () => {
         });
       } else {
         // Vérifier ordre chronologique
-        for (let i = 1; i < (timeline as Array<{timestamp?: string}>).length; i++) {
+        for (let i = 1; i < (timeline as Array<{ timestamp?: string }>).length; i++) {
           const prev = timeline[i - 1];
           const curr = timeline[i];
           if (prev.timestamp && curr.timestamp && prev.timestamp > curr.timestamp) {
@@ -432,7 +432,8 @@ describe('Regression Test 9: SingularityState Corruption', () => {
           module: 'singularity',
           cause: 'Structure SingularityState incomplète',
           severity: 'CRITICAL',
-          solution_suggeree: 'Restaurer structure complète (physical, cognitive, symbolic, adaptive, meta)',
+          solution_suggeree:
+            'Restaurer structure complète (physical, cognitive, symbolic, adaptive, meta)',
           timestamp: new Date().toISOString(),
         });
       }
@@ -486,7 +487,7 @@ describe('Regression Test 10: Deep Sync Failures', () => {
         });
       } else {
         const alignmentValues = Object.values(alignment as Record<string, unknown>);
-        if (!alignmentValues.every((value) => typeof value === 'boolean')) {
+        if (!alignmentValues.every(value => typeof value === 'boolean')) {
           alerts.push({
             module: 'meta',
             cause: 'Alignment meta contient des valeurs non booléennes',

@@ -1,16 +1,15 @@
+use std::sync::Arc;
 /**
  * ═══════════════════════════════════════════════════════════════════
  * TITANE∞ v∞ — CONVERSATION ENGINE COMMANDS
  * Commandes Tauri pour le Conversation Engine
  * ═══════════════════════════════════════════════════════════════════
  */
-
 use tauri::State;
-use std::sync::Arc;
 use uuid::Uuid;
 
-use super::ConversationEngineState;
 use super::types::*;
+use super::ConversationEngineState;
 
 type CommandResult<T> = Result<T, String>;
 
@@ -77,7 +76,8 @@ pub async fn conversation_generate(
 
     // Traiter via le pipeline OMEGA complet
     let start_time = std::time::Instant::now();
-    let response = engine.process_message(request)
+    let response = engine
+        .process_message(request)
         .await
         .map_err(|e| e.to_string())?;
     let latency_ms = start_time.elapsed().as_millis() as u64;
@@ -123,7 +123,8 @@ pub async fn conversation_process_message(
         emotion_context: None,
     };
 
-    engine.process_message(request)
+    engine
+        .process_message(request)
         .await
         .map_err(|e| e.to_string())
 }
@@ -133,9 +134,7 @@ pub async fn conversation_process_message(
 pub async fn conversation_health_check(
     engine: State<'_, Arc<ConversationEngineState>>,
 ) -> CommandResult<ConversationHealthReport> {
-    engine.health_check()
-        .await
-        .map_err(|e| e.to_string())
+    engine.health_check().await.map_err(|e| e.to_string())
 }
 
 /// Obtenir statistiques mémoire
@@ -206,7 +205,9 @@ pub async fn conversation_french_postprocess(
         },
     };
 
-    engine.french_mastery.process(request)
+    engine
+        .french_mastery
+        .process(request)
         .await
         .map_err(|e| e.to_string())
 }
@@ -290,7 +291,7 @@ pub async fn literary_engine_process(
     mode: String,
 ) -> CommandResult<serde_json::Value> {
     use crate::conversation_engine::literary_engine::{
-        LiteraryRequest, LiteraryContext, TextType, LiteraryIntensity, WritingMode
+        LiteraryContext, LiteraryIntensity, LiteraryRequest, TextType, WritingMode,
     };
 
     let text_type = match text_type.as_str() {
@@ -444,4 +445,3 @@ pub async fn anthology_get_statistics(
     let stats = anthology_engine.get_statistics();
     serde_json::to_value(&stats).map_err(|e| e.to_string())
 }
-

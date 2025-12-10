@@ -46,7 +46,7 @@ const variantStyles: Record<StatusVariant, { bg: string; text: string; dot: stri
 
 /**
  * StatusPill - Badge de status avec couleur sémantique
- * 
+ *
  * @example
  * ```tsx
  * <StatusPill status="success" label="Running" />

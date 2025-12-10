@@ -54,11 +54,7 @@ export const Header = ({
       transition={{ duration: animationConfig.duration }}
     >
       {/* Logo */}
-      {logo && (
-        <div className="flex items-center gap-3">
-          {logo}
-        </div>
-      )}
+      {logo && <div className="flex items-center gap-3">{logo}</div>}
 
       {/* Title & Subtitle */}
       {(title || subtitle) && (
@@ -68,33 +64,22 @@ export const Header = ({
               {title}
             </h1>
           )}
-          {subtitle && (
-            typeof subtitle === 'string' ? (
-              <p className="text-sm text-text-muted m-0">
-                {subtitle}
-              </p>
+          {subtitle &&
+            (typeof subtitle === 'string' ? (
+              <p className="text-sm text-text-muted m-0">{subtitle}</p>
             ) : (
-              <div className="text-sm text-text-muted">
-                {subtitle}
-              </div>
-            )
-          )}
+              <div className="text-sm text-text-muted">{subtitle}</div>
+            ))}
         </div>
       )}
 
       {/* Navigation */}
       {navigation && (
-        <nav className="flex-1 flex items-center gap-4 ml-8">
-          {navigation}
-        </nav>
+        <nav className="flex-1 flex items-center gap-4 ml-8">{navigation}</nav>
       )}
 
       {/* Actions */}
-      {actions && (
-        <div className="flex items-center gap-3 ml-auto">
-          {actions}
-        </div>
-      )}
+      {actions && <div className="flex items-center gap-3 ml-auto">{actions}</div>}
     </motion.div>
   );
 };

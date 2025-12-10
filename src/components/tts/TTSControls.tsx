@@ -43,7 +43,7 @@ export function TTSMiniControls({ text, className = '' }: TTSControlsProps): JSX
   return (
     <button
       className={`tts-mini-control ${className}`}
-      onClick={() => isSpeaking ? stop() : speak(text)}
+      onClick={() => (isSpeaking ? stop() : speak(text))}
       title={isSpeaking ? 'Arrêter' : 'Écouter'}
     >
       {isSpeaking ? '⏹️' : '🔊'}

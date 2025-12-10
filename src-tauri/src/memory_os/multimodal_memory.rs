@@ -116,9 +116,24 @@ impl MultimodalMemoryEntry {
     /// Get memory size including multimodal data
     pub fn total_size_bytes(&self) -> usize {
         let base_size = self.base.size_bytes();
-        let image_size = self.multimodal.image_data.as_ref().map(|d| d.len()).unwrap_or(0);
-        let audio_size = self.multimodal.audio_data.as_ref().map(|d| d.len() * 4).unwrap_or(0);
-        let joint_emb_size = self.multimodal.joint_embedding.as_ref().map(|e| e.len() * 4).unwrap_or(0);
+        let image_size = self
+            .multimodal
+            .image_data
+            .as_ref()
+            .map(|d| d.len())
+            .unwrap_or(0);
+        let audio_size = self
+            .multimodal
+            .audio_data
+            .as_ref()
+            .map(|d| d.len() * 4)
+            .unwrap_or(0);
+        let joint_emb_size = self
+            .multimodal
+            .joint_embedding
+            .as_ref()
+            .map(|e| e.len() * 4)
+            .unwrap_or(0);
         base_size + image_size + audio_size + joint_emb_size
     }
 }
@@ -180,7 +195,8 @@ impl MultimodalMemoryStore {
 
         // Sort by relevance score (ascending)
         tier_entries.sort_by(|a, b| {
-            a.1.base.relevance_score()
+            a.1.base
+                .relevance_score()
                 .partial_cmp(&b.1.base.relevance_score())
                 .unwrap_or(std::cmp::Ordering::Equal)
         });
@@ -254,7 +270,8 @@ impl MultimodalMemoryStore {
                     1.0
                 } else {
                     let query_words: Vec<_> = query_lower.split_whitespace().collect();
-                    let matches = query_words.iter()
+                    let matches = query_words
+                        .iter()
                         .filter(|w| content_lower.contains(*w))
                         .count();
                     matches as f32 / query_words.len().max(1) as f32
@@ -278,13 +295,21 @@ impl MultimodalMemoryStore {
     /// Get entries by tier
     pub async fn get_by_tier(&self, tier: MemoryTier) -> Vec<MultimodalMemoryEntry> {
         let entries = self.entries.read().await;
-        entries.iter().filter(|e| e.base.tier == tier).cloned().collect()
+        entries
+            .iter()
+            .filter(|e| e.base.tier == tier)
+            .cloned()
+            .collect()
     }
 
     /// Get multimodal entries only
     pub async fn get_multimodal_only(&self) -> Vec<MultimodalMemoryEntry> {
         let entries = self.entries.read().await;
-        entries.iter().filter(|e| e.has_multimodal()).cloned().collect()
+        entries
+            .iter()
+            .filter(|e| e.has_multimodal())
+            .cloned()
+            .collect()
     }
 
     /// Promote entry to next tier
@@ -334,14 +359,32 @@ impl MultimodalMemoryStore {
     pub async fn stats(&self) -> MultimodalMemoryStats {
         let entries = self.entries.read().await;
 
-        let stm_count = entries.iter().filter(|e| e.base.tier == MemoryTier::STM).count();
-        let mtm_count = entries.iter().filter(|e| e.base.tier == MemoryTier::MTM).count();
-        let ltm_count = entries.iter().filter(|e| e.base.tier == MemoryTier::LTM).count();
+        let stm_count = entries
+            .iter()
+            .filter(|e| e.base.tier == MemoryTier::STM)
+            .count();
+        let mtm_count = entries
+            .iter()
+            .filter(|e| e.base.tier == MemoryTier::MTM)
+            .count();
+        let ltm_count = entries
+            .iter()
+            .filter(|e| e.base.tier == MemoryTier::LTM)
+            .count();
 
         let multimodal_count = entries.iter().filter(|e| e.has_multimodal()).count();
-        let with_image = entries.iter().filter(|e| e.multimodal.image_data.is_some()).count();
-        let with_audio = entries.iter().filter(|e| e.multimodal.audio_data.is_some()).count();
-        let with_joint = entries.iter().filter(|e| e.multimodal.joint_embedding.is_some()).count();
+        let with_image = entries
+            .iter()
+            .filter(|e| e.multimodal.image_data.is_some())
+            .count();
+        let with_audio = entries
+            .iter()
+            .filter(|e| e.multimodal.audio_data.is_some())
+            .count();
+        let with_joint = entries
+            .iter()
+            .filter(|e| e.multimodal.joint_embedding.is_some())
+            .count();
 
         let total_size_bytes: usize = entries.iter().map(|e| e.total_size_bytes()).sum();
 
@@ -427,7 +470,10 @@ mod tests {
         let dynamic = image::DynamicImage::ImageRgb8(img);
         let mut bytes = Vec::new();
         dynamic
-            .write_to(&mut std::io::Cursor::new(&mut bytes), image::ImageFormat::Png)
+            .write_to(
+                &mut std::io::Cursor::new(&mut bytes),
+                image::ImageFormat::Png,
+            )
             .unwrap();
         bytes
     }
@@ -489,13 +535,21 @@ mod tests {
         let mut entry1 = create_test_entry("first memory", 0.9);
         entry1 = entry1.with_joint_embedding(
             vec![1.0, 0.0, 0.0],
-            ModalityWeights { text: 0.5, vision: 0.3, audio: 0.2 },
+            ModalityWeights {
+                text: 0.5,
+                vision: 0.3,
+                audio: 0.2,
+            },
         );
 
         let mut entry2 = create_test_entry("second memory", 0.8);
         entry2 = entry2.with_joint_embedding(
             vec![0.9, 0.1, 0.0],
-            ModalityWeights { text: 0.4, vision: 0.4, audio: 0.2 },
+            ModalityWeights {
+                text: 0.4,
+                vision: 0.4,
+                audio: 0.2,
+            },
         );
 
         store.store(entry1).await.unwrap();
@@ -565,7 +619,10 @@ mod tests {
         assert_eq!(stats.stm_count, 3); // Should evict lowest importance (memory 0)
 
         let stm_entries = store.get_by_tier(MemoryTier::STM).await;
-        let contents: Vec<_> = stm_entries.iter().map(|e| e.base.content.as_str()).collect();
+        let contents: Vec<_> = stm_entries
+            .iter()
+            .map(|e| e.base.content.as_str())
+            .collect();
         assert!(!contents.contains(&"memory 0")); // Lowest importance evicted
     }
 
@@ -581,7 +638,11 @@ mod tests {
         let mut entry3 = create_test_entry("with joint", 0.85);
         entry3 = entry3.with_joint_embedding(
             vec![0.0; 512],
-            ModalityWeights { text: 0.5, vision: 0.3, audio: 0.2 },
+            ModalityWeights {
+                text: 0.5,
+                vision: 0.3,
+                audio: 0.2,
+            },
         );
 
         store.store(entry1).await.unwrap();
@@ -599,9 +660,18 @@ mod tests {
     async fn test_text_search() {
         let store = MultimodalMemoryStore::new(10, 50, 1000);
 
-        store.store(create_test_entry("the quick brown fox", 0.9)).await.unwrap();
-        store.store(create_test_entry("lazy dog sleeping", 0.8)).await.unwrap();
-        store.store(create_test_entry("brown bear hunting", 0.85)).await.unwrap();
+        store
+            .store(create_test_entry("the quick brown fox", 0.9))
+            .await
+            .unwrap();
+        store
+            .store(create_test_entry("lazy dog sleeping", 0.8))
+            .await
+            .unwrap();
+        store
+            .store(create_test_entry("brown bear hunting", 0.85))
+            .await
+            .unwrap();
 
         let results = store.search_text("brown", 5).await;
         assert_eq!(results.len(), 2); // fox and bear entries

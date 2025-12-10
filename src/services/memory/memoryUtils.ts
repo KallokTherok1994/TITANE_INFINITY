@@ -112,7 +112,10 @@ export function calculateTFIDFScore(
   query: string,
   corpus: MemoryEntry[]
 ): number {
-  const queryTerms = query.toLowerCase().split(/\s+/).filter(t => t.length > 2);
+  const queryTerms = query
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(t => t.length > 2);
   if (queryTerms.length === 0) return 0;
 
   const contentTerms = entry.content.toLowerCase().split(/\s+/);
@@ -162,15 +165,95 @@ export function rankByRelevance(
 /** Keywords par sujet pour classification automatique */
 const TOPIC_KEYWORDS: Record<MemoryTopic, string[]> = {
   general: [],
-  coding: ['code', 'function', 'class', 'variable', 'bug', 'error', 'debug', 'typescript', 'javascript', 'rust', 'python', 'api', 'backend', 'frontend', 'database'],
-  project: ['projet', 'project', 'feature', 'milestone', 'deadline', 'sprint', 'task', 'todo', 'roadmap'],
-  personal: ['préférence', 'je préfère', 'j\'aime', 'mon', 'ma', 'mes', 'personnel', 'habitude'],
-  technical: ['architecture', 'système', 'performance', 'optimisation', 'configuration', 'infra', 'deployment', 'docker', 'server'],
-  creative: ['design', 'créatif', 'idée', 'concept', 'ui', 'ux', 'style', 'couleur', 'animation'],
-  learning: ['apprendre', 'comprendre', 'expliquer', 'tutoriel', 'cours', 'documentation', 'guide'],
-  decisions: ['décision', 'choix', 'option', 'avantage', 'inconvénient', 'conclusion', 'retenu'],
+  coding: [
+    'code',
+    'function',
+    'class',
+    'variable',
+    'bug',
+    'error',
+    'debug',
+    'typescript',
+    'javascript',
+    'rust',
+    'python',
+    'api',
+    'backend',
+    'frontend',
+    'database',
+  ],
+  project: [
+    'projet',
+    'project',
+    'feature',
+    'milestone',
+    'deadline',
+    'sprint',
+    'task',
+    'todo',
+    'roadmap',
+  ],
+  personal: [
+    'préférence',
+    'je préfère',
+    "j'aime",
+    'mon',
+    'ma',
+    'mes',
+    'personnel',
+    'habitude',
+  ],
+  technical: [
+    'architecture',
+    'système',
+    'performance',
+    'optimisation',
+    'configuration',
+    'infra',
+    'deployment',
+    'docker',
+    'server',
+  ],
+  creative: [
+    'design',
+    'créatif',
+    'idée',
+    'concept',
+    'ui',
+    'ux',
+    'style',
+    'couleur',
+    'animation',
+  ],
+  learning: [
+    'apprendre',
+    'comprendre',
+    'expliquer',
+    'tutoriel',
+    'cours',
+    'documentation',
+    'guide',
+  ],
+  decisions: [
+    'décision',
+    'choix',
+    'option',
+    'avantage',
+    'inconvénient',
+    'conclusion',
+    'retenu',
+  ],
   preferences: ['préférence', 'config', 'setting', 'paramètre', 'option', 'défaut'],
-  automation: ['automation', 'script', 'cron', 'workflow', 'ci', 'cd', 'pipeline', 'hook'],
+  automation: [
+    'automation',
+    'script',
+    'cron',
+    'workflow',
+    'ci',
+    'cd',
+    'pipeline',
+    'hook',
+  ],
   system: ['système', 'os', 'tauri', 'titane', 'engine', 'module', 'core'],
 };
 
@@ -179,7 +262,7 @@ const CONTENT_TYPE_KEYWORDS: Record<MemoryContentType, string[]> = {
   message: [],
   summary: ['résumé', 'en bref', 'récapitulatif', 'synthèse'],
   knowledge: ['savoir', 'connaissance', 'fait', 'information', 'définition'],
-  preference: ['préférer', 'j\'aime', 'je n\'aime pas', 'toujours', 'jamais'],
+  preference: ['préférer', "j'aime", "je n'aime pas", 'toujours', 'jamais'],
   project_context: ['projet', 'contexte', 'objectif', 'scope', 'périmètre'],
   code_snippet: ['```', 'function', 'const ', 'let ', 'class ', 'import ', 'export '],
   decision: ['décidé', 'choix final', 'conclusion', 'solution', 'retenu', 'validé'],
@@ -204,7 +287,8 @@ export function classifyTopic(content: string): MemoryTopic {
   }
 
   const bestTopic = Object.entries(scores).reduce(
-    (best, [topic, score]) => score > best.score ? { topic: topic as MemoryTopic, score } : best,
+    (best, [topic, score]) =>
+      score > best.score ? { topic: topic as MemoryTopic, score } : best,
     { topic: 'general' as MemoryTopic, score: 0 }
   );
 
@@ -218,11 +302,17 @@ export function classifyContentType(content: string): MemoryContentType {
   const contentLower = content.toLowerCase();
 
   // Détection code en priorité (pattern spécifique)
-  if (content.includes('```') || /^(const|let|var|function|class|import|export|def|pub|fn)\s/.test(content)) {
+  if (
+    content.includes('```') ||
+    /^(const|let|var|function|class|import|export|def|pub|fn)\s/.test(content)
+  ) {
     return 'code_snippet';
   }
 
-  const scores: Record<MemoryContentType, number> = {} as Record<MemoryContentType, number>;
+  const scores: Record<MemoryContentType, number> = {} as Record<
+    MemoryContentType,
+    number
+  >;
 
   for (const [type, keywords] of Object.entries(CONTENT_TYPE_KEYWORDS)) {
     if (keywords.length === 0) continue;
@@ -231,7 +321,8 @@ export function classifyContentType(content: string): MemoryContentType {
   }
 
   const bestType = Object.entries(scores).reduce(
-    (best, [type, score]) => score > best.score ? { type: type as MemoryContentType, score } : best,
+    (best, [type, score]) =>
+      score > best.score ? { type: type as MemoryContentType, score } : best,
     { type: 'message' as MemoryContentType, score: 0 }
   );
 
@@ -263,7 +354,14 @@ export function calculateAutoImportance(
   if (content.includes('\n-') || content.includes('\n1.')) importance += 0.5;
 
   // Keywords d'importance
-  const importantKeywords = ['important', 'critique', 'urgent', 'essentiel', 'ne pas oublier', 'rappel'];
+  const importantKeywords = [
+    'important',
+    'critique',
+    'urgent',
+    'essentiel',
+    'ne pas oublier',
+    'rappel',
+  ];
   if (importantKeywords.some(kw => content.toLowerCase().includes(kw))) {
     importance += 1;
   }
@@ -395,7 +493,8 @@ export function generateAutoTitle(entries: MemoryEntry[]): string {
   }
 
   const dominantTopic = Object.entries(topicCounts).reduce(
-    (best, [topic, count]) => count > best.count ? { topic: topic as MemoryTopic, count } : best,
+    (best, [topic, count]) =>
+      count > best.count ? { topic: topic as MemoryTopic, count } : best,
     { topic: 'general' as MemoryTopic, count: 0 }
   );
 
@@ -493,7 +592,7 @@ export function calculateContentHash(content: string): string {
 
   for (let i = 0; i < normalized.length; i++) {
     const char = normalized.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
+    hash = (hash << 5) - hash + char;
     hash = hash & hash; // Convert to 32bit integer
   }
 

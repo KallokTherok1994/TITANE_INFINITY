@@ -6,12 +6,8 @@
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-
 declare module '*.css' {
-
   const content: { [className: string]: string };
 
   export default content;
-
 }
-

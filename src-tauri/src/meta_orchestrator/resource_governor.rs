@@ -3,7 +3,7 @@
 //! Gestion et allocation des ressources système
 //! ═══════════════════════════════════════════════════════════════════════════
 
-use super::{MetaOrchestratorError, OrchestrationMode, ResourceAllocation, IoPriority};
+use super::{IoPriority, MetaOrchestratorError, OrchestrationMode, ResourceAllocation};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -178,8 +178,12 @@ impl ResourceGovernor {
             }
         }
 
-        log::info!("[ResourceGovernor] Applied mode {:?}: CPU={:.0}%, Memory={}MB",
-            mode, allocation.cpu_quota_percent, allocation.memory_limit_mb);
+        log::info!(
+            "[ResourceGovernor] Applied mode {:?}: CPU={:.0}%, Memory={}MB",
+            mode,
+            allocation.cpu_quota_percent,
+            allocation.memory_limit_mb
+        );
 
         Ok(())
     }
@@ -200,7 +204,13 @@ impl ResourceGovernor {
         allocation.cpu_quota_percent = (old + 10.0).min(self.policies.max_cpu_quota);
 
         if allocation.cpu_quota_percent != old {
-            self.record_change(ResourceType::CPU, old, allocation.cpu_quota_percent, "Auto scale up").await;
+            self.record_change(
+                ResourceType::CPU,
+                old,
+                allocation.cpu_quota_percent,
+                "Auto scale up",
+            )
+            .await;
         }
 
         Ok(())
@@ -212,7 +222,13 @@ impl ResourceGovernor {
         allocation.cpu_quota_percent = (old - 10.0).max(self.policies.min_cpu_quota);
 
         if allocation.cpu_quota_percent != old {
-            self.record_change(ResourceType::CPU, old, allocation.cpu_quota_percent, "Auto scale down").await;
+            self.record_change(
+                ResourceType::CPU,
+                old,
+                allocation.cpu_quota_percent,
+                "Auto scale down",
+            )
+            .await;
         }
 
         Ok(())
@@ -221,9 +237,16 @@ impl ResourceGovernor {
     async fn scale_up_memory(&self) -> Result<(), MetaOrchestratorError> {
         let mut allocation = self.allocation.write().await;
         let old = allocation.memory_limit_mb as f64;
-        allocation.memory_limit_mb = (allocation.memory_limit_mb + 512).min(self.policies.max_memory_mb);
+        allocation.memory_limit_mb =
+            (allocation.memory_limit_mb + 512).min(self.policies.max_memory_mb);
 
-        self.record_change(ResourceType::Memory, old, allocation.memory_limit_mb as f64, "Auto scale up").await;
+        self.record_change(
+            ResourceType::Memory,
+            old,
+            allocation.memory_limit_mb as f64,
+            "Auto scale up",
+        )
+        .await;
 
         Ok(())
     }
@@ -257,11 +280,13 @@ impl ResourceGovernor {
         }
 
         if utilization.memory_utilized > 85.0 {
-            recommendations.push("Memory pressure detected - increase limit or optimize".to_string());
+            recommendations
+                .push("Memory pressure detected - increase limit or optimize".to_string());
         }
 
         if utilization.gpu_utilized < 5.0 {
-            recommendations.push("GPU underutilized - consider disabling for power savings".to_string());
+            recommendations
+                .push("GPU underutilized - consider disabling for power savings".to_string());
         }
 
         recommendations

@@ -13,11 +13,16 @@
 }
 
 @keyframes living-glow {
-  0%, 100% {
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(100, 200, 255, 0.1);
+  0%,
+  100% {
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      0 0 20px rgba(100, 200, 255, 0.1);
   }
   50% {
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 40px rgba(100, 200, 255, 0.2);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      0 0 40px rgba(100, 200, 255, 0.2);
   }
 }
 
@@ -84,7 +89,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Sections */
@@ -163,8 +170,13 @@
 }
 
 @keyframes pulse-bar {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.8; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
 }
 
 .living-metric__bar-fill--glow {
@@ -196,7 +208,7 @@
   .living-engines-metrics {
     grid-template-columns: 1fr;
   }
-  
+
   .living-engines-card {
     padding: 1rem;
   }

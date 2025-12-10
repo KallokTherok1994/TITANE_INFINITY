@@ -35,8 +35,8 @@ impl LocalTTS {
         let piper_path = format!("{}/.local/bin/piper", home);
         let piper_model = format!("{}/.local/share/piper/voices/fr_FR-siwis-medium.onnx", home);
 
-        if std::path::Path::new(&piper_path).exists()
-           && std::path::Path::new(&piper_model).exists() {
+        if std::path::Path::new(&piper_path).exists() && std::path::Path::new(&piper_model).exists()
+        {
             TTSEngine::Piper
         } else if std::process::Command::new("which")
             .arg("espeak")
@@ -132,11 +132,13 @@ impl LocalTTS {
 
         // Write text to stdin (safe - no shell interpretation)
         if let Some(stdin) = child.stdin.as_mut() {
-            stdin.write_all(request.text.as_bytes())
+            stdin
+                .write_all(request.text.as_bytes())
                 .map_err(|e| TTSError::AudioError(format!("Piper stdin write failed: {}", e)))?;
         }
 
-        let output = child.wait_with_output()
+        let output = child
+            .wait_with_output()
             .map_err(|e| TTSError::AudioError(format!("Piper wait failed: {}", e)))?;
 
         if !output.status.success() {
@@ -150,11 +152,7 @@ impl LocalTTS {
             let play_result = std::process::Command::new("paplay")
                 .arg(output_str)
                 .output()
-                .or_else(|_| {
-                    std::process::Command::new("aplay")
-                        .arg(output_str)
-                        .output()
-                });
+                .or_else(|_| std::process::Command::new("aplay").arg(output_str).output());
 
             play_result
                 .map_err(|e| TTSError::AudioError(format!("Audio playback failed: {}", e)))?;

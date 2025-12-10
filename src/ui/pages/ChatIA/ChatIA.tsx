@@ -31,18 +31,24 @@ export const ChatIA: React.FC = () => {
         message: userMsg.content,
       });
 
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: response,
-        timestamp: Date.now(),
-      }]);
+      setMessages(prev => [
+        ...prev,
+        {
+          role: 'assistant',
+          content: response,
+          timestamp: Date.now(),
+        },
+      ]);
     } catch (err) {
       console.error('Erreur:', err);
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: '❌ Erreur: ' + err,
-        timestamp: Date.now(),
-      }]);
+      setMessages(prev => [
+        ...prev,
+        {
+          role: 'assistant',
+          content: '❌ Erreur: ' + err,
+          timestamp: Date.now(),
+        },
+      ]);
     } finally {
       setIsLoading(false);
     }

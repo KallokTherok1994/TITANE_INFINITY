@@ -4,16 +4,16 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
 
 use serde::{Deserialize, Serialize};
-use tokio::sync::RwLock;
 use std::collections::HashMap;
+use tokio::sync::RwLock;
 
 use super::{
-    principles::PrincipleSet,
-    values::ValueSystem,
-    limits::LimitSystem,
-    rights::RightsCharter,
     enforcement::{EnforcementEngine, EnforcementStats},
     evolution::{EvolutionEngine, EvolutionStats},
+    limits::LimitSystem,
+    principles::PrincipleSet,
+    rights::RightsCharter,
+    values::ValueSystem,
 };
 
 /// Niveau de santé constitutionnelle
@@ -167,14 +167,14 @@ impl ConstitutionalDiagnostics {
         diagnostics.push(self.diagnose_coherence(principles, values, limits));
 
         // Calculer le score global
-        let overall_score = diagnostics.iter()
-            .map(|d| d.score)
-            .sum::<f32>() / diagnostics.len() as f32;
+        let overall_score =
+            diagnostics.iter().map(|d| d.score).sum::<f32>() / diagnostics.len() as f32;
 
         let overall_health = Self::score_to_health(overall_score);
 
         // Collecter les problèmes critiques
-        let critical_issues: Vec<_> = diagnostics.iter()
+        let critical_issues: Vec<_> = diagnostics
+            .iter()
             .flat_map(|d| d.issues.iter())
             .filter(|i| i.severity >= IssueSeverity::High)
             .cloned()
@@ -208,7 +208,8 @@ impl ConstitutionalDiagnostics {
 
         // Mettre à jour les tendances
         for diag in &report.diagnostics {
-            state.trends
+            state
+                .trends
                 .entry(diag.category)
                 .or_default()
                 .push((now, diag.score));
@@ -412,12 +413,16 @@ impl ConstitutionalDiagnostics {
 
         // Vérifier le taux de violations non résolues
         if stats.unresolved_violations > 0 {
-            let unresolved_rate = stats.unresolved_violations as f32 / stats.total_violations.max(1) as f32;
+            let unresolved_rate =
+                stats.unresolved_violations as f32 / stats.total_violations.max(1) as f32;
             if unresolved_rate > 0.5 {
                 issues.push(DiagnosticIssue {
                     id: "high_unresolved_rate".to_string(),
                     severity: IssueSeverity::High,
-                    description: format!("{}% of violations are unresolved", (unresolved_rate * 100.0) as u32),
+                    description: format!(
+                        "{}% of violations are unresolved",
+                        (unresolved_rate * 100.0) as u32
+                    ),
                     affected_elements: vec!["enforcement".to_string()],
                     suggested_action: Some("Review and resolve pending violations".to_string()),
                 });
@@ -430,7 +435,10 @@ impl ConstitutionalDiagnostics {
             issues.push(DiagnosticIssue {
                 id: "many_restricted_actors".to_string(),
                 severity: IssueSeverity::Medium,
-                description: format!("{} actors are currently restricted", stats.restricted_actors),
+                description: format!(
+                    "{} actors are currently restricted",
+                    stats.restricted_actors
+                ),
                 affected_elements: vec!["enforcement".to_string()],
                 suggested_action: Some("Review restriction policies".to_string()),
             });
@@ -493,8 +501,12 @@ impl ConstitutionalDiagnostics {
         let value_names: Vec<_> = values.iter().map(|v| v.name.clone()).collect();
 
         // Vérifier que safety est dans les deux
-        if !principle_names.iter().any(|n| n.to_lowercase().contains("safety"))
-            && !value_names.iter().any(|n| n.to_lowercase().contains("safety"))
+        if !principle_names
+            .iter()
+            .any(|n| n.to_lowercase().contains("safety"))
+            && !value_names
+                .iter()
+                .any(|n| n.to_lowercase().contains("safety"))
         {
             issues.push(DiagnosticIssue {
                 id: "missing_safety_alignment".to_string(),
@@ -507,7 +519,8 @@ impl ConstitutionalDiagnostics {
         }
 
         // Vérifier que les limites couvrent les valeurs essentielles
-        let limit_ids: Vec<_> = limits.by_type(super::limits::LimitType::Absolute)
+        let limit_ids: Vec<_> = limits
+            .by_type(super::limits::LimitType::Absolute)
             .iter()
             .map(|l| l.id.clone())
             .collect();
@@ -558,28 +571,40 @@ impl ConstitutionalDiagnostics {
     pub async fn get_trends(&self) -> Vec<HealthTrend> {
         let state = self.state.read().await;
 
-        state.trends.iter().map(|(category, scores)| {
-            let trend_direction = if scores.len() < 2 {
-                TrendDirection::Stable
-            } else {
-                let recent: f32 = scores.iter().rev().take(5).map(|(_, s)| s).sum::<f32>() / 5.0;
-                let older: f32 = scores.iter().rev().skip(5).take(5).map(|(_, s)| s).sum::<f32>() / 5.0;
-
-                if recent > older + 0.05 {
-                    TrendDirection::Improving
-                } else if recent < older - 0.05 {
-                    TrendDirection::Declining
-                } else {
+        state
+            .trends
+            .iter()
+            .map(|(category, scores)| {
+                let trend_direction = if scores.len() < 2 {
                     TrendDirection::Stable
-                }
-            };
+                } else {
+                    let recent: f32 =
+                        scores.iter().rev().take(5).map(|(_, s)| s).sum::<f32>() / 5.0;
+                    let older: f32 = scores
+                        .iter()
+                        .rev()
+                        .skip(5)
+                        .take(5)
+                        .map(|(_, s)| s)
+                        .sum::<f32>()
+                        / 5.0;
 
-            HealthTrend {
-                category: *category,
-                scores: scores.clone(),
-                trend_direction,
-            }
-        }).collect()
+                    if recent > older + 0.05 {
+                        TrendDirection::Improving
+                    } else if recent < older - 0.05 {
+                        TrendDirection::Declining
+                    } else {
+                        TrendDirection::Stable
+                    }
+                };
+
+                HealthTrend {
+                    category: *category,
+                    scores: scores.clone(),
+                    trend_direction,
+                }
+            })
+            .collect()
     }
 
     /// Récupère le dernier rapport
@@ -629,14 +654,16 @@ mod tests {
         let enforcement = EnforcementEngine::new();
         let evolution = EvolutionEngine::new();
 
-        let report = diagnostics.run_full_diagnostic(
-            &principles,
-            &values,
-            &limits,
-            &rights,
-            &enforcement,
-            &evolution,
-        ).await;
+        let report = diagnostics
+            .run_full_diagnostic(
+                &principles,
+                &values,
+                &limits,
+                &rights,
+                &enforcement,
+                &evolution,
+            )
+            .await;
 
         assert!(report.overall_score > 0.0);
         assert!(!report.diagnostics.is_empty());
@@ -644,10 +671,25 @@ mod tests {
 
     #[test]
     fn test_score_to_health() {
-        assert_eq!(ConstitutionalDiagnostics::score_to_health(0.95), ConstitutionalHealth::Excellent);
-        assert_eq!(ConstitutionalDiagnostics::score_to_health(0.8), ConstitutionalHealth::Good);
-        assert_eq!(ConstitutionalDiagnostics::score_to_health(0.6), ConstitutionalHealth::Acceptable);
-        assert_eq!(ConstitutionalDiagnostics::score_to_health(0.3), ConstitutionalHealth::Degraded);
-        assert_eq!(ConstitutionalDiagnostics::score_to_health(0.1), ConstitutionalHealth::Critical);
+        assert_eq!(
+            ConstitutionalDiagnostics::score_to_health(0.95),
+            ConstitutionalHealth::Excellent
+        );
+        assert_eq!(
+            ConstitutionalDiagnostics::score_to_health(0.8),
+            ConstitutionalHealth::Good
+        );
+        assert_eq!(
+            ConstitutionalDiagnostics::score_to_health(0.6),
+            ConstitutionalHealth::Acceptable
+        );
+        assert_eq!(
+            ConstitutionalDiagnostics::score_to_health(0.3),
+            ConstitutionalHealth::Degraded
+        );
+        assert_eq!(
+            ConstitutionalDiagnostics::score_to_health(0.1),
+            ConstitutionalHealth::Critical
+        );
     }
 }

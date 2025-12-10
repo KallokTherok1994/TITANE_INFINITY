@@ -47,7 +47,9 @@ import {
  * Hook principal — Archetype Resonance Engine
  */
 export function useArchetypeResonance() {
-  const [state, setState] = useState<ArchetypeResonance>(archetypeResonanceEngine.getState());
+  const [state, setState] = useState<ArchetypeResonance>(
+    archetypeResonanceEngine.getState()
+  );
 
   useEffect(() => {
     const unsubscribe = archetypeResonanceEngine.subscribe(setState);
@@ -123,13 +125,16 @@ export function useMetaContinuum() {
     return metaContinuumEngine.synchronizeOutput();
   }, []);
 
-  const createAnchor = useCallback((params: {
-    type: TemporalAnchor['type'];
-    description: string;
-    identityImpact: number;
-  }) => {
-    metaContinuumEngine.createAnchor(params);
-  }, []);
+  const createAnchor = useCallback(
+    (params: {
+      type: TemporalAnchor['type'];
+      description: string;
+      identityImpact: number;
+    }) => {
+      metaContinuumEngine.createAnchor(params);
+    },
+    []
+  );
 
   const evolve = useCallback((impact: { direction: number[]; magnitude: number }) => {
     metaContinuumEngine.evolve(impact);
@@ -186,20 +191,28 @@ export function useTemporalAnchors(limit: number = 10): TemporalAnchor[] {
  * Hook principal — Embodied Presence Engine
  */
 export function useEmbodiedPresence() {
-  const [state, setState] = useState<EmbodiedPresenceState>(embodiedPresenceEngine.getState());
+  const [state, setState] = useState<EmbodiedPresenceState>(
+    embodiedPresenceEngine.getState()
+  );
 
   useEffect(() => {
     const unsubscribe = embodiedPresenceEngine.subscribe(setState);
     return unsubscribe;
   }, []);
 
-  const applyStrongEmotion = useCallback((emotion: string, intensity: number, duration?: number) => {
-    embodiedPresenceEngine.applyStrongEmotion(emotion, intensity, duration);
-  }, []);
+  const applyStrongEmotion = useCallback(
+    (emotion: string, intensity: number, duration?: number) => {
+      embodiedPresenceEngine.applyStrongEmotion(emotion, intensity, duration);
+    },
+    []
+  );
 
-  const activateUserSync = useCallback((userBreathingCycle?: number, userEnergy?: number) => {
-    embodiedPresenceEngine.activateUserSync(userBreathingCycle, userEnergy);
-  }, []);
+  const activateUserSync = useCallback(
+    (userBreathingCycle?: number, userEnergy?: number) => {
+      embodiedPresenceEngine.activateUserSync(userBreathingCycle, userEnergy);
+    },
+    []
+  );
 
   const deactivateUserSync = useCallback(() => {
     embodiedPresenceEngine.deactivateUserSync();
@@ -279,9 +292,13 @@ export function useEnergyField(): EnergyField & {
   const { energyField } = useEmbodiedPresence();
 
   const tempText =
-    energyField.temperature < -0.3 ? 'Froid' :
-    energyField.temperature < 0.3 ? 'Neutre' :
-    energyField.temperature < 0.7 ? 'Chaud' : 'Brûlant';
+    energyField.temperature < -0.3
+      ? 'Froid'
+      : energyField.temperature < 0.3
+        ? 'Neutre'
+        : energyField.temperature < 0.7
+          ? 'Chaud'
+          : 'Brûlant';
 
   return {
     ...energyField,
@@ -300,7 +317,9 @@ export function useEnergyField(): EnergyField & {
  * Hook principal — Neural Voice Blending Engine
  */
 export function useNeuralVoiceBlend() {
-  const [state, setState] = useState<NeuralVoiceBlendState>(neuralVoiceBlendingEngine.getState());
+  const [state, setState] = useState<NeuralVoiceBlendState>(
+    neuralVoiceBlendingEngine.getState()
+  );
 
   useEffect(() => {
     const unsubscribe = neuralVoiceBlendingEngine.subscribe(setState);
@@ -311,9 +330,12 @@ export function useNeuralVoiceBlend() {
     return neuralVoiceBlendingEngine.generateVoiceOutput(text, context);
   }, []);
 
-  const learnFromSession = useCallback((context: VoiceContext, feedback?: { satisfaction: number }) => {
-    neuralVoiceBlendingEngine.learnFromSession(context, feedback);
-  }, []);
+  const learnFromSession = useCallback(
+    (context: VoiceContext, feedback?: { satisfaction: number }) => {
+      neuralVoiceBlendingEngine.learnFromSession(context, feedback);
+    },
+    []
+  );
 
   const stabilizeSignature = useCallback(() => {
     neuralVoiceBlendingEngine.stabilizeSignature();
@@ -343,16 +365,21 @@ export function useVoiceIdentity(): VoiceIdentityProfile & {
   const { currentProfile } = useNeuralVoiceBlend();
 
   const brightnessText =
-    currentProfile.brightness < 0.4 ? 'Sombre' :
-    currentProfile.brightness < 0.7 ? 'Modéré' : 'Brillant';
+    currentProfile.brightness < 0.4
+      ? 'Sombre'
+      : currentProfile.brightness < 0.7
+        ? 'Modéré'
+        : 'Brillant';
 
   const warmthText =
-    currentProfile.warmth < 0.4 ? 'Froide' :
-    currentProfile.warmth < 0.7 ? 'Neutre' : 'Chaleureuse';
+    currentProfile.warmth < 0.4
+      ? 'Froide'
+      : currentProfile.warmth < 0.7
+        ? 'Neutre'
+        : 'Chaleureuse';
 
   const paceText =
-    currentProfile.pace < 0.8 ? 'Lent' :
-    currentProfile.pace < 1.1 ? 'Normal' : 'Rapide';
+    currentProfile.pace < 0.8 ? 'Lent' : currentProfile.pace < 1.1 ? 'Normal' : 'Rapide';
 
   return {
     ...currentProfile,

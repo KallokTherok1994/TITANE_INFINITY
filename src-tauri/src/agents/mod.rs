@@ -32,31 +32,31 @@
 //! - Temporal Engine: Modélisation temporelle
 
 pub mod agent;
-pub mod roles;
 pub mod capabilities;
-pub mod contract;
-pub mod registry;
-pub mod messaging;
-pub mod supervisor;
-pub mod sandbox;
 pub mod collaboration;
-pub mod diagnostics;
 pub mod config;
+pub mod contract;
+pub mod diagnostics;
+pub mod messaging;
+pub mod registry;
+pub mod roles;
+pub mod sandbox;
+pub mod supervisor;
 
 // Re-exports
-pub use agent::{Agent, AgentId, AgentState, AgentError};
-pub use roles::{AgentRole, RoleDescriptor};
+pub use agent::{Agent, AgentError, AgentId, AgentState};
 pub use capabilities::{Capability, CapabilitySet};
+pub use collaboration::{CollaborationPattern, CollaborationProtocol, CollaborationResult};
 pub use contract::{AgentContract, ContractViolation};
+pub use messaging::{AgentMessage, MessageBus, MessageChannel};
 pub use registry::{AgentRegistry, RegistryStats};
-pub use messaging::{AgentMessage, MessageChannel, MessageBus};
-pub use supervisor::{AgentSupervisor, SupervisorStats, AgentHealth};
+pub use roles::{AgentRole, RoleDescriptor};
 pub use sandbox::{AgentSandbox, SandboxConfig, SandboxViolation};
-pub use collaboration::{CollaborationProtocol, CollaborationPattern, CollaborationResult};
+pub use supervisor::{AgentHealth, AgentSupervisor, SupervisorStats};
 // Made public for Phase 1 compilation
-pub use diagnostics::{AgentDiagnostics, AgentEvent};
 pub use agent::AgentMetrics; // Export from agent.rs instead
 pub use config::AgentSystemConfig;
+pub use diagnostics::{AgentDiagnostics, AgentEvent};
 
 // Version info
 pub const AGENT_SYSTEM_VERSION: &str = "v20.6Ω";

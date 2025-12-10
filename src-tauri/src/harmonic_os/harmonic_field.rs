@@ -53,32 +53,34 @@ impl HarmonicField {
         weights.insert(SignalSource::Multimodal, 1.1);
         weights.insert(SignalSource::Temporal, 0.9);
         weights.insert(SignalSource::Energy, 1.0);
-        
+
         Self {
             signals: HashMap::new(),
             weights,
         }
     }
-    
+
     pub fn update_signal(&mut self, source: SignalSource, signal: HarmonicSignal) {
         self.signals.insert(source, signal);
     }
-    
+
     pub fn compute_unified_resonance(&self) -> f32 {
         if self.signals.is_empty() {
             return 0.5;
         }
-        
-        let total_weight: f32 = self.signals.keys()
+
+        let total_weight: f32 = self
+            .signals
+            .keys()
             .filter_map(|src| self.weights.get(src))
             .sum();
-        
-        let weighted_sum: f32 = self.signals.iter()
-            .filter_map(|(src, sig)| {
-                self.weights.get(src).map(|w| sig.resonance * w)
-            })
+
+        let weighted_sum: f32 = self
+            .signals
+            .iter()
+            .filter_map(|(src, sig)| self.weights.get(src).map(|w| sig.resonance * w))
             .sum();
-        
+
         if total_weight > 0.0 {
             (weighted_sum / total_weight).clamp(0.0, 1.0)
         } else {
@@ -96,7 +98,7 @@ impl Default for HarmonicField {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_harmonic_field() {
         let field = HarmonicField::new();

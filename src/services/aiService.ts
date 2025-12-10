@@ -27,14 +27,17 @@ export async function askTitan(
   message: string,
   _history: AIMessage[] = []
 ): Promise<AIResponse> {
-  console.warn('⚠️ DEPRECATED: aiService.askTitan() → Utilisez tauriClient.chatSendMessage()');
+  console.warn(
+    '⚠️ DEPRECATED: aiService.askTitan() → Utilisez tauriClient.chatSendMessage()'
+  );
 
   try {
     const request: ChatRequest = {
       message: message.trim(),
       provider: 'auto',
       streaming: false,
-      system_prompt: 'Tu es TITANE∞, une IA avancée intégrée dans un système d\'auto-évolution cognitive.',
+      system_prompt:
+        "Tu es TITANE∞, une IA avancée intégrée dans un système d'auto-évolution cognitive.",
     };
 
     const response = await tauriClient.chatSendMessage(request);
@@ -48,7 +51,7 @@ export async function askTitan(
     console.error('askTitan error:', error);
 
     return {
-      content: "Je suis TITANE∞, mais mes services IA sont temporairement indisponibles.",
+      content: 'Je suis TITANE∞, mais mes services IA sont temporairement indisponibles.',
       provider: 'fallback',
       timestamp: Date.now(),
     };
@@ -62,7 +65,9 @@ export async function* streamTitanResponse(
   message: string,
   history: AIMessage[] = []
 ): AsyncGenerator<string> {
-  console.warn('⚠️ DEPRECATED: aiService.streamTitanResponse() → Utilisez tauriClient.chatStreamMessage()');
+  console.warn(
+    '⚠️ DEPRECATED: aiService.streamTitanResponse() → Utilisez tauriClient.chatStreamMessage()'
+  );
 
   const response = await askTitan(message, history);
 

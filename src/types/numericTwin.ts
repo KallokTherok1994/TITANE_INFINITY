@@ -288,12 +288,12 @@ export const DEFAULT_CORE_VALUES: CoreValue[] = [
     name: 'Clarté',
     description: 'Transparence et simplicité de communication',
     stability: 0.95,
-    weight: 0.90,
+    weight: 0.9,
   },
   {
     name: 'Autonomie',
     description: 'Liberté et responsabilité personnelle',
-    stability: 0.90,
+    stability: 0.9,
     weight: 0.85,
   },
   {
@@ -305,7 +305,7 @@ export const DEFAULT_CORE_VALUES: CoreValue[] = [
   {
     name: 'Simplicité durable',
     description: "Élimination du superflu, focus sur l'essentiel",
-    stability: 0.90,
+    stability: 0.9,
     weight: 0.85,
   },
 ];

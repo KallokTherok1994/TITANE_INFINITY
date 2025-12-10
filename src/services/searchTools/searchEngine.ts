@@ -150,7 +150,9 @@ export class SearchEngine {
     const provider = this.config.providers.find(p => p.id === providerId);
     if (provider) {
       provider.enabled = enabled;
-      console.log(`[SearchEngine] Provider ${providerId}: ${enabled ? 'enabled' : 'disabled'}`);
+      console.log(
+        `[SearchEngine] Provider ${providerId}: ${enabled ? 'enabled' : 'disabled'}`
+      );
     }
   }
 
@@ -199,7 +201,9 @@ export class SearchEngine {
         const cached = this.getCachedResponse(query);
         if (cached) {
           this.stats.cacheHits++;
-          console.log(`[SearchEngine] 📦 Cache hit for: ${query.query.substring(0, 30)}...`);
+          console.log(
+            `[SearchEngine] 📦 Cache hit for: ${query.query.substring(0, 30)}...`
+          );
           return { ...cached, queryId: query.id, cached: true };
         }
         this.stats.cacheMisses++;
@@ -242,10 +246,11 @@ export class SearchEngine {
       this.notifyCallbacks(response);
 
       this.state.consecutiveErrors = 0;
-      console.log(`[SearchEngine] ✅ Search completed: ${response.results.length} results in ${executionTime}ms`);
+      console.log(
+        `[SearchEngine] ✅ Search completed: ${response.results.length} results in ${executionTime}ms`
+      );
 
       return response;
-
     } catch (error) {
       const executionTime = Date.now() - startTime;
       this.stats.failedSearches++;
@@ -273,7 +278,6 @@ export class SearchEngine {
       };
 
       return errorResponse;
-
     } finally {
       this.state.isSearching = false;
       this.state.currentQueryId = null;
@@ -346,11 +350,10 @@ export class SearchEngine {
         totalResults: results.length,
         page: query.options?.page ?? 1,
         hasMore: results.length >= (query.options?.maxResults ?? provider.maxResults),
-        executionTime: 0,  // Sera mis à jour par l'appelant
+        executionTime: 0, // Sera mis à jour par l'appelant
         cached: false,
         timestamp: Date.now(),
       };
-
     } catch (error) {
       clearTimeout(timeoutId);
 
@@ -440,7 +443,6 @@ export class SearchEngine {
         cached: false,
         timestamp: Date.now(),
       };
-
     } catch (error) {
       // Fallback pour le dev
       if (import.meta.env.DEV) {
@@ -708,15 +710,15 @@ export class SearchEngine {
 
     // Mettre à jour le temps de réponse moyen
     this.stats.totalResponseTime += executionTime;
-    this.stats.avgResponseTime = this.stats.totalResponseTime / this.stats.successfulSearches;
+    this.stats.avgResponseTime =
+      this.stats.totalResponseTime / this.stats.successfulSearches;
 
     // Par provider
     this.stats.searchesByProvider[provider] =
       (this.stats.searchesByProvider[provider] ?? 0) + 1;
 
     // Par type
-    this.stats.searchesByType[type] =
-      (this.stats.searchesByType[type] ?? 0) + 1;
+    this.stats.searchesByType[type] = (this.stats.searchesByType[type] ?? 0) + 1;
   }
 
   /**

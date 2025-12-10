@@ -17,7 +17,7 @@ import type {
   SearchType,
   Tool,
   ToolId,
-  ToolExecution
+  ToolExecution,
 } from '@/types/searchTools';
 
 // =============================================================================
@@ -129,16 +129,16 @@ const initialState: SearchToolsState = {
     selectedResultId: null,
     selectedToolId: null,
     view: 'search',
-    sidebarOpen: true
+    sidebarOpen: true,
   },
 
   loading: {
     search: false,
     tools: false,
-    execution: false
+    execution: false,
   },
 
-  error: null
+  error: null,
 };
 
 // =============================================================================
@@ -162,11 +162,11 @@ export const useSearchToolsStore = create<SearchToolsState & SearchToolsActions>
             try {
               await get().loadTools();
 
-              set((state) => {
+              set(state => {
                 state.isInitialized = true;
               });
             } catch (error) {
-              set((state) => {
+              set(state => {
                 state.error = error as Error;
               });
             }
@@ -184,10 +184,10 @@ export const useSearchToolsStore = create<SearchToolsState & SearchToolsActions>
               type: options.type || get().defaultType,
               filters: options.filters,
               limit: options.limit || get().maxResults,
-              offset: options.offset || 0
+              offset: options.offset || 0,
             };
 
-            set((state) => {
+            set(state => {
               state.currentQuery = query;
               state.isSearching = true;
               state.loading.search = true;
@@ -198,7 +198,7 @@ export const useSearchToolsStore = create<SearchToolsState & SearchToolsActions>
               // Perform search via Tauri
               const results: SearchResult[] = [];
 
-              set((state) => {
+              set(state => {
                 state.results = results;
                 state.isSearching = false;
                 state.loading.search = false;
@@ -208,7 +208,7 @@ export const useSearchToolsStore = create<SearchToolsState & SearchToolsActions>
 
               return results;
             } catch (error) {
-              set((state) => {
+              set(state => {
                 state.isSearching = false;
                 state.loading.search = false;
                 state.error = error as Error;
@@ -218,7 +218,7 @@ export const useSearchToolsStore = create<SearchToolsState & SearchToolsActions>
           },
 
           cancelSearch: () => {
-            set((state) => {
+            set(state => {
               state.isSearching = false;
               state.loading.search = false;
               state.currentQuery = null;
@@ -226,20 +226,20 @@ export const useSearchToolsStore = create<SearchToolsState & SearchToolsActions>
           },
 
           clearResults: () => {
-            set((state) => {
+            set(state => {
               state.results = [];
               state.ui.selectedResultId = null;
             });
           },
 
-          selectResult: (resultId) => {
-            set((state) => {
+          selectResult: resultId => {
+            set(state => {
               state.ui.selectedResultId = resultId;
             });
           },
 
-          addToHistory: (query) => {
-            set((state) => {
+          addToHistory: query => {
+            set(state => {
               state.searchHistory.unshift(query);
               if (state.searchHistory.length > 100) {
                 state.searchHistory = state.searchHistory.slice(0, 100);
@@ -248,7 +248,7 @@ export const useSearchToolsStore = create<SearchToolsState & SearchToolsActions>
           },
 
           clearHistory: () => {
-            set((state) => {
+            set(state => {
               state.searchHistory = [];
             });
           },
@@ -257,20 +257,20 @@ export const useSearchToolsStore = create<SearchToolsState & SearchToolsActions>
           // FILTER ACTIONS
           // ===========================================================
 
-          setDefaultScope: (scopes) => {
-            set((state) => {
+          setDefaultScope: scopes => {
+            set(state => {
               state.defaultScope = scopes;
             });
           },
 
-          setDefaultType: (type) => {
-            set((state) => {
+          setDefaultType: type => {
+            set(state => {
               state.defaultType = type;
             });
           },
 
-          setMaxResults: (max) => {
-            set((state) => {
+          setMaxResults: max => {
+            set(state => {
               state.maxResults = max;
             });
           },
@@ -280,7 +280,7 @@ export const useSearchToolsStore = create<SearchToolsState & SearchToolsActions>
           // ===========================================================
 
           loadTools: async () => {
-            set((state) => {
+            set(state => {
               state.loading.tools = true;
             });
 
@@ -288,11 +288,11 @@ export const useSearchToolsStore = create<SearchToolsState & SearchToolsActions>
               // Load tools from Tauri backend
               console.log('Loading tools...');
 
-              set((state) => {
+              set(state => {
                 state.loading.tools = false;
               });
             } catch (error) {
-              set((state) => {
+              set(state => {
                 state.loading.tools = false;
                 state.error = error as Error;
               });
@@ -305,10 +305,10 @@ export const useSearchToolsStore = create<SearchToolsState & SearchToolsActions>
               toolId,
               input,
               status: 'pending',
-              startedAt: Date.now()
+              startedAt: Date.now(),
             };
 
-            set((state) => {
+            set(state => {
               state.activeExecutions.push(execution);
               state.loading.execution = true;
               state.error = null;
@@ -322,11 +322,13 @@ export const useSearchToolsStore = create<SearchToolsState & SearchToolsActions>
                 ...execution,
                 status: 'success',
                 completedAt: Date.now(),
-                durationMs: Date.now() - execution.startedAt
+                durationMs: Date.now() - execution.startedAt,
               };
 
-              set((state) => {
-                state.activeExecutions = state.activeExecutions.filter(e => e.id !== execution.id);
+              set(state => {
+                state.activeExecutions = state.activeExecutions.filter(
+                  e => e.id !== execution.id
+                );
                 state.executionHistory.unshift(completedExecution);
                 state.loading.execution = false;
               });
@@ -338,11 +340,13 @@ export const useSearchToolsStore = create<SearchToolsState & SearchToolsActions>
                 status: 'failed',
                 error: (error as Error).message,
                 completedAt: Date.now(),
-                durationMs: Date.now() - execution.startedAt
+                durationMs: Date.now() - execution.startedAt,
               };
 
-              set((state) => {
-                state.activeExecutions = state.activeExecutions.filter(e => e.id !== execution.id);
+              set(state => {
+                state.activeExecutions = state.activeExecutions.filter(
+                  e => e.id !== execution.id
+                );
                 state.executionHistory.unshift(failedExecution);
                 state.loading.execution = false;
                 state.error = error as Error;
@@ -352,23 +356,25 @@ export const useSearchToolsStore = create<SearchToolsState & SearchToolsActions>
             }
           },
 
-          cancelExecution: (executionId) => {
-            set((state) => {
+          cancelExecution: executionId => {
+            set(state => {
               const execution = state.activeExecutions.find(e => e.id === executionId);
               if (execution) {
-                state.activeExecutions = state.activeExecutions.filter(e => e.id !== executionId);
+                state.activeExecutions = state.activeExecutions.filter(
+                  e => e.id !== executionId
+                );
                 state.executionHistory.unshift({
                   ...execution,
                   status: 'failed',
                   error: 'Cancelled',
-                  completedAt: Date.now()
+                  completedAt: Date.now(),
                 });
               }
             });
           },
 
-          selectTool: (toolId) => {
-            set((state) => {
+          selectTool: toolId => {
+            set(state => {
               state.ui.selectedToolId = toolId;
             });
           },
@@ -377,20 +383,20 @@ export const useSearchToolsStore = create<SearchToolsState & SearchToolsActions>
           // UI ACTIONS
           // ===========================================================
 
-          setView: (view) => {
-            set((state) => {
+          setView: view => {
+            set(state => {
               state.ui.view = view;
             });
           },
 
           toggleSidebar: () => {
-            set((state) => {
+            set(state => {
               state.ui.sidebarOpen = !state.ui.sidebarOpen;
             });
           },
 
           toggleAdvancedFilters: () => {
-            set((state) => {
+            set(state => {
               state.ui.showAdvancedFilters = !state.ui.showAdvancedFilters;
             });
           },
@@ -399,14 +405,14 @@ export const useSearchToolsStore = create<SearchToolsState & SearchToolsActions>
           // ERROR ACTIONS
           // ===========================================================
 
-          setError: (error) => {
-            set((state) => {
+          setError: error => {
+            set(state => {
               state.error = error;
             });
           },
 
           clearError: () => {
-            set((state) => {
+            set(state => {
               state.error = null;
             });
           },
@@ -417,17 +423,17 @@ export const useSearchToolsStore = create<SearchToolsState & SearchToolsActions>
 
           reset: () => {
             set(() => ({ ...initialState }));
-          }
+          },
         })),
         {
           name: 'titane-search-tools-store',
           version: 1,
-          partialize: (state) => ({
+          partialize: state => ({
             searchHistory: state.searchHistory.slice(0, 50),
             defaultScope: state.defaultScope,
             defaultType: state.defaultType,
-            maxResults: state.maxResults
-          })
+            maxResults: state.maxResults,
+          }),
         }
       )
     ),
@@ -449,7 +455,7 @@ export const searchToolsSelectors = {
   executionHistory: (state: SearchToolsState) => state.executionHistory,
   error: (state: SearchToolsState) => state.error,
   currentView: (state: SearchToolsState) => state.ui.view,
-  sidebarOpen: (state: SearchToolsState) => state.ui.sidebarOpen
+  sidebarOpen: (state: SearchToolsState) => state.ui.sidebarOpen,
 };
 
 export default useSearchToolsStore;

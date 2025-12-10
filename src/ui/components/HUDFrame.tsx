@@ -33,7 +33,7 @@ export const HUDFrame: React.FC<HUDFrameProps> = ({
   className = '',
   expandable = false,
   isExpanded = true,
-  onToggleExpand
+  onToggleExpand,
 }) => {
   return (
     <div className={`hud-frame ${className} ${!isExpanded ? 'collapsed' : ''}`}>
@@ -54,9 +54,7 @@ export const HUDFrame: React.FC<HUDFrameProps> = ({
           )}
         </div>
       )}
-      <div className="hud-frame-content">
-        {children}
-      </div>
+      <div className="hud-frame-content">{children}</div>
     </div>
   );
 };

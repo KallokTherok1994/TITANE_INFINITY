@@ -3,8 +3,8 @@
 // Copyright (c) 2025 TITANE∞ Team
 
 use titane_infinity::singularity::{
-    SingularityStateVInfinity,
     ia_context::{IAContext, IAStatus},
+    SingularityStateVInfinity,
 };
 
 #[test]
@@ -21,7 +21,8 @@ fn test_singularity_state_with_ia_context() {
         "IAContext should start with no active engine"
     );
     assert_eq!(
-        singularity.ia_context.available_engines.len(), 1,
+        singularity.ia_context.available_engines.len(),
+        1,
         "IAContext should start with 1 default engine (local)"
     );
     assert_eq!(
@@ -37,11 +38,12 @@ fn test_singularity_state_with_ia_context() {
         "claude".to_string(),
         "gemini".to_string(),
     ];
-    modified_singularity.ia_context.set_active_engine("openai".to_string());
-    modified_singularity.ia_context.update_engine_status(
-        "openai",
-        IAStatus::Available,
-    );
+    modified_singularity
+        .ia_context
+        .set_active_engine("openai".to_string());
+    modified_singularity
+        .ia_context
+        .update_engine_status("openai", IAStatus::Available);
     println!("✅ Test 3: IAContext modified (3 engines, openai active)");
 
     // Test 4: Verify modifications
@@ -51,35 +53,29 @@ fn test_singularity_state_with_ia_context() {
         "Active engine should be set to openai"
     );
     assert_eq!(
-        modified_singularity.ia_context.available_engines.len(), 3,
+        modified_singularity.ia_context.available_engines.len(),
+        3,
         "Should have 3 available engines"
     );
     println!("✅ Test 4: Modifications verified");
 
     // Test 5: Serialize to JSON
-    let json = serde_json::to_string_pretty(&modified_singularity)
-        .expect("Should serialize successfully");
+    let json =
+        serde_json::to_string_pretty(&modified_singularity).expect("Should serialize successfully");
 
     assert!(
         json.contains("ia_context"),
         "JSON should contain ia_context field"
     );
-    assert!(
-        json.contains("openai"),
-        "JSON should contain openai engine"
-    );
-    assert!(
-        json.contains("claude"),
-        "JSON should contain claude engine"
-    );
+    assert!(json.contains("openai"), "JSON should contain openai engine");
+    assert!(json.contains("claude"), "JSON should contain claude engine");
     println!("✅ Test 5: Serialization successful");
     println!("   - ia_context field present");
     println!("   - All engines serialized");
 
     // Test 6: Deserialize and verify integrity
     let deserialized: SingularityStateVInfinity =
-        serde_json::from_str(&json)
-        .expect("Should deserialize successfully");
+        serde_json::from_str(&json).expect("Should deserialize successfully");
 
     assert_eq!(
         deserialized.ia_context.active_engine,
@@ -87,19 +83,29 @@ fn test_singularity_state_with_ia_context() {
         "Deserialized active engine should match"
     );
     assert_eq!(
-        deserialized.ia_context.available_engines.len(), 3,
+        deserialized.ia_context.available_engines.len(),
+        3,
         "Deserialized available engines count should match"
     );
     assert!(
-        deserialized.ia_context.available_engines.contains(&"openai".to_string()),
+        deserialized
+            .ia_context
+            .available_engines
+            .contains(&"openai".to_string()),
         "Should contain openai"
     );
     assert!(
-        deserialized.ia_context.available_engines.contains(&"claude".to_string()),
+        deserialized
+            .ia_context
+            .available_engines
+            .contains(&"claude".to_string()),
         "Should contain claude"
     );
     assert!(
-        deserialized.ia_context.available_engines.contains(&"gemini".to_string()),
+        deserialized
+            .ia_context
+            .available_engines
+            .contains(&"gemini".to_string()),
         "Should contain gemini"
     );
     println!("✅ Test 6: Deserialization successful");
@@ -107,7 +113,9 @@ fn test_singularity_state_with_ia_context() {
     println!("   - Integrity maintained");
 
     // Test 7: Verify engine status preserved
-    let openai_status = deserialized.ia_context.engine_status
+    let openai_status = deserialized
+        .ia_context
+        .engine_status
         .get("openai")
         .expect("OpenAI status should exist");
     assert_eq!(
@@ -142,7 +150,8 @@ fn test_singularity_merge_with_ia_context() {
 
     // Verify clone worked
     assert_eq!(
-        state2.ia_context.available_engines.len(), 1,
+        state2.ia_context.available_engines.len(),
+        1,
         "State2 should have 1 available engine after clone"
     );
     assert_eq!(

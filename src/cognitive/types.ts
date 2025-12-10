@@ -147,11 +147,11 @@ export interface KnowledgeSearchResult {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type EvolutionPhase =
-  | 'nascent'      // Phase initiale
-  | 'learning'    // Apprentissage actif
-  | 'adapting'    // Adaptation
-  | 'optimizing'  // Optimisation
-  | 'evolving'    // Évolution autonome
+  | 'nascent' // Phase initiale
+  | 'learning' // Apprentissage actif
+  | 'adapting' // Adaptation
+  | 'optimizing' // Optimisation
+  | 'evolving' // Évolution autonome
   | 'singularity'; // Phase finale
 
 export type MutationType =

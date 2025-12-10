@@ -52,7 +52,7 @@ export function useSingularity(autoInit = true) {
 
   // S'abonner aux changements d'état
   useEffect(() => {
-    const unsubscribe = singularityEngine.subscribe((newState) => {
+    const unsubscribe = singularityEngine.subscribe(newState => {
       setState(newState);
     });
 
@@ -102,7 +102,14 @@ export function useSingularity(autoInit = true) {
  * Hook simplifié pour n'obtenir que les métriques principales
  */
 export function useSingularityMetrics() {
-  const { consciousness, autoCoherence, formStability, expressionQuality, globalHarmony, systemHealth } = useSingularity();
+  const {
+    consciousness,
+    autoCoherence,
+    formStability,
+    expressionQuality,
+    globalHarmony,
+    systemHealth,
+  } = useSingularity();
 
   return {
     consciousness,

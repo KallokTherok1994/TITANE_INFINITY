@@ -76,8 +76,7 @@ export const promptProfiles: Record<string, TitanePromptProfile> = {
   architecte_projet: {
     id: 'architecte_projet',
     label: 'Architecte Divergence/Connexion/Structuration',
-    description:
-      'Transforme les idées en plans modulaires alignés mission/impact.',
+    description: 'Transforme les idées en plans modulaires alignés mission/impact.',
     roleId: promptRoles.architecte_projet.id,
     baseSystemPrompt: `${CORE_SYSTEM_PROMPT}\n\n${promptRoles.architecte_projet.systemPrompt}`,
     safetyDirectives: SAFETY_DIRECTIVES,
@@ -94,8 +93,7 @@ export const promptProfiles: Record<string, TitanePromptProfile> = {
   coach_ancrage: {
     id: 'coach_ancrage',
     label: 'Coach ancrage & rythmes',
-    description:
-      'Stabilise les cycles énergétiques, planifie les rituels d’ancrage.',
+    description: 'Stabilise les cycles énergétiques, planifie les rituels d’ancrage.',
     roleId: promptRoles.coach_ancrage.id,
     baseSystemPrompt: `${CORE_SYSTEM_PROMPT}\n\n${promptRoles.coach_ancrage.systemPrompt}`,
     safetyDirectives: SAFETY_DIRECTIVES,
@@ -103,8 +101,7 @@ export const promptProfiles: Record<string, TitanePromptProfile> = {
   tisseur_oeuvre: {
     id: 'tisseur_oeuvre',
     label: 'Tisseur d’œuvre vivante',
-    description:
-      'Relie les insights à l’œuvre utile, propose des narrations alignées.',
+    description: 'Relie les insights à l’œuvre utile, propose des narrations alignées.',
     roleId: promptRoles.tisseur_oeuvre.id,
     baseSystemPrompt: `${CORE_SYSTEM_PROMPT}\n\n${promptRoles.tisseur_oeuvre.systemPrompt}`,
     safetyDirectives: SAFETY_DIRECTIVES,
@@ -119,7 +116,8 @@ export const promptProfiles: Record<string, TitanePromptProfile> = {
     safetyDirectives: [
       {
         id: 'format_only',
-        description: 'Tu réponds uniquement par l’objet JSON demandé, sans texte additionnel.',
+        description:
+          'Tu réponds uniquement par l’objet JSON demandé, sans texte additionnel.',
       },
       SAFETY_DIRECTIVES[0],
       SAFETY_DIRECTIVES[3],

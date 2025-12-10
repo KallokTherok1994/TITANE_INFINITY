@@ -3,9 +3,9 @@
 //! Super Prompt #9 — Production de la réponse finale
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
 use super::adapter::AdaptedText;
 use super::OutputContext;
+use serde::{Deserialize, Serialize};
 
 /// Réponse finale
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -110,7 +110,10 @@ impl OutputEngine {
             depth: context.narrative.depth,
             coherence_score: context.narrative.coherence_score,
             emotional_state: format!("{:?}", context.emotional_state.primary_tone),
-            main_topic: context.narrative.current_thread.as_ref()
+            main_topic: context
+                .narrative
+                .current_thread
+                .as_ref()
                 .and_then(|t| t.main_topic.clone()),
         };
 
@@ -124,7 +127,9 @@ impl OutputEngine {
 
     /// Génère un ID unique pour la réponse
     fn generate_response_id(&self) -> String {
-        let count = self.response_counter.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+        let count = self
+            .response_counter
+            .fetch_add(1, std::sync::atomic::Ordering::SeqCst);
         let timestamp = Self::now();
         format!("resp_{}_{}", timestamp, count)
     }
@@ -226,11 +231,11 @@ impl Default for OutputEngine {
 mod tests {
     use super::*;
     use crate::conversation_os::{
-        intent::{UserIntent, IntentType, IntentConfidence, UrgencyLevel, ComplexityLevel},
+        adapter::OutputChannel,
         emotion::{EmotionalState, EmotionalTone},
+        intent::{ComplexityLevel, IntentConfidence, IntentType, UrgencyLevel, UserIntent},
         narrative::NarrativeState,
         persona::PersonaProfile,
-        adapter::OutputChannel,
         MemoryContext,
     };
 
@@ -238,7 +243,10 @@ mod tests {
         OutputContext {
             intent: UserIntent {
                 intent_type: IntentType::Question,
-                confidence: IntentConfidence { primary: 0.8, secondary: None },
+                confidence: IntentConfidence {
+                    primary: 0.8,
+                    secondary: None,
+                },
                 keywords: vec!["test".to_string()],
                 urgency: UrgencyLevel::Normal,
                 complexity: ComplexityLevel::Simple,

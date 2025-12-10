@@ -38,7 +38,17 @@ function HealthBar({ value, label }: { value: number; label: string }): JSX.Elem
   );
 }
 
-function MetricCard({ icon, label, value, unit }: { icon: string; label: string; value: number | string; unit?: string }): JSX.Element {
+function MetricCard({
+  icon,
+  label,
+  value,
+  unit,
+}: {
+  icon: string;
+  label: string;
+  value: number | string;
+  unit?: string;
+}): JSX.Element {
   return (
     <div className="one-core-metric-card">
       <div className="one-core-metric-icon">{icon}</div>
@@ -53,8 +63,19 @@ function MetricCard({ icon, label, value, unit }: { icon: string; label: string;
   );
 }
 
-function CenterCard({ center, onClick }: { center: CenterStatus; onClick: () => void }): JSX.Element {
-  const healthColor = center.global_health >= 0.9 ? '#00ff88' : center.global_health >= 0.7 ? '#ffaa00' : '#ff4444';
+function CenterCard({
+  center,
+  onClick,
+}: {
+  center: CenterStatus;
+  onClick: () => void;
+}): JSX.Element {
+  const healthColor =
+    center.global_health >= 0.9
+      ? '#00ff88'
+      : center.global_health >= 0.7
+        ? '#ffaa00'
+        : '#ff4444';
 
   return (
     <div className="one-core-center-card" onClick={onClick}>
@@ -76,11 +97,22 @@ function CenterCard({ center, onClick }: { center: CenterStatus; onClick: () => 
   );
 }
 
-function CommandButton({ command, onExecute }: { command: OneCoreCommand; onExecute: (id: string) => void }): JSX.Element {
+function CommandButton({
+  command,
+  onExecute,
+}: {
+  command: OneCoreCommand;
+  onExecute: (id: string) => void;
+}): JSX.Element {
   const [executing, setExecuting] = useState(false);
 
   const handleClick = async () => {
-    if (command.dangerous && !confirm(`⚠️ ${command.name}\n\n${command.description}\n\nCette action est dangereuse. Continuer ?`)) {
+    if (
+      command.dangerous &&
+      !confirm(
+        `⚠️ ${command.name}\n\n${command.description}\n\nCette action est dangereuse. Continuer ?`
+      )
+    ) {
       return;
     }
     setExecuting(true);
@@ -105,10 +137,17 @@ function CommandButton({ command, onExecute }: { command: OneCoreCommand; onExec
 // Tabs Content
 // ═══════════════════════════════════════════════════════════════════
 
-function OverviewTab({ state, metrics }: { state: ReturnType<typeof useOneCore>['state']; metrics: ReturnType<typeof useOneCore>['metrics'] }): JSX.Element {
+function OverviewTab({
+  state,
+  metrics,
+}: {
+  state: ReturnType<typeof useOneCore>['state'];
+  metrics: ReturnType<typeof useOneCore>['metrics'];
+}): JSX.Element {
   if (!state) return <div className="one-core-loading">Chargement...</div>;
 
-  const consciousness = CONSCIOUSNESS_LEVELS[state.consciousness_level] || CONSCIOUSNESS_LEVELS[0];
+  const consciousness =
+    CONSCIOUSNESS_LEVELS[state.consciousness_level] || CONSCIOUSNESS_LEVELS[0];
   const systemMode = SYSTEM_MODES.find(m => m.id === state.mode) || SYSTEM_MODES[0];
 
   return (
@@ -119,13 +158,25 @@ function OverviewTab({ state, metrics }: { state: ReturnType<typeof useOneCore>[
           <h2>TITANE∞ {state.version}</h2>
           <span className="one-core-codename">{state.codename}</span>
         </div>
-        <div className="one-core-consciousness" style={{ borderColor: consciousness.color }}>
-          <span className="one-core-consciousness-level" style={{ color: consciousness.color }}>
+        <div
+          className="one-core-consciousness"
+          style={{ borderColor: consciousness.color }}
+        >
+          <span
+            className="one-core-consciousness-level"
+            style={{ color: consciousness.color }}
+          >
             Niveau {state.consciousness_level}
           </span>
           <span className="one-core-consciousness-name">{consciousness.name}</span>
         </div>
-        <div className="one-core-mode" style={{ backgroundColor: systemMode.color + '33', borderColor: systemMode.color }}>
+        <div
+          className="one-core-mode"
+          style={{
+            backgroundColor: systemMode.color + '33',
+            borderColor: systemMode.color,
+          }}
+        >
           {systemMode.name}
         </div>
       </div>
@@ -145,14 +196,32 @@ function OverviewTab({ state, metrics }: { state: ReturnType<typeof useOneCore>[
       <div className="one-core-metrics-section">
         <h3>📊 Métriques</h3>
         <div className="one-core-metrics-grid">
-          <MetricCard icon="🔧" label="Moteurs actifs" value={`${state.active_engines}/${state.total_engines}`} />
+          <MetricCard
+            icon="🔧"
+            label="Moteurs actifs"
+            value={`${state.active_engines}/${state.total_engines}`}
+          />
           <MetricCard icon="🏛️" label="Centres" value={state.total_centers} />
-          <MetricCard icon="⏱️" label="Uptime" value={Math.round(state.uptime_seconds / 60)} unit="min" />
+          <MetricCard
+            icon="⏱️"
+            label="Uptime"
+            value={Math.round(state.uptime_seconds / 60)}
+            unit="min"
+          />
           {metrics && (
             <>
               <MetricCard icon="⚡" label="Req/s" value={metrics.requests_per_second} />
-              <MetricCard icon="📶" label="Connexions" value={metrics.active_connections} />
-              <MetricCard icon="⏰" label="Latence" value={metrics.avg_response_time_ms} unit="ms" />
+              <MetricCard
+                icon="📶"
+                label="Connexions"
+                value={metrics.active_connections}
+              />
+              <MetricCard
+                icon="⏰"
+                label="Latence"
+                value={metrics.avg_response_time_ms}
+                unit="ms"
+              />
             </>
           )}
         </div>
@@ -172,12 +241,19 @@ function OverviewTab({ state, metrics }: { state: ReturnType<typeof useOneCore>[
   );
 }
 
-function CentersTab({ centers, navigate }: { centers: CenterStatus[]; navigate: (path: string) => void }): JSX.Element {
+function CentersTab({
+  centers,
+  navigate,
+}: {
+  centers: CenterStatus[];
+  navigate: (path: string) => void;
+}): JSX.Element {
   return (
     <div className="one-core-centers">
       <h3>🏛️ Centres TITANE∞</h3>
       <p className="one-core-centers-desc">
-        Accédez à tous les centres de contrôle du système. Chaque centre gère un aspect spécifique de TITANE∞.
+        Accédez à tous les centres de contrôle du système. Chaque centre gère un aspect
+        spécifique de TITANE∞.
       </p>
       <div className="one-core-centers-grid">
         {centers.map(center => (
@@ -192,7 +268,13 @@ function CentersTab({ centers, navigate }: { centers: CenterStatus[]; navigate: 
   );
 }
 
-function CommandsTab({ commands, onExecute }: { commands: OneCoreCommand[]; onExecute: (id: string) => void }): JSX.Element {
+function CommandsTab({
+  commands,
+  onExecute,
+}: {
+  commands: OneCoreCommand[];
+  onExecute: (id: string) => void;
+}): JSX.Element {
   const categories = [...new Set(commands.map(c => c.category))];
 
   return (
@@ -205,9 +287,11 @@ function CommandsTab({ commands, onExecute }: { commands: OneCoreCommand[]; onEx
         <div key={category} className="one-core-command-category">
           <h4>{category}</h4>
           <div className="one-core-command-list">
-            {commands.filter(c => c.category === category).map(cmd => (
-              <CommandButton key={cmd.id} command={cmd} onExecute={onExecute} />
-            ))}
+            {commands
+              .filter(c => c.category === category)
+              .map(cmd => (
+                <CommandButton key={cmd.id} command={cmd} onExecute={onExecute} />
+              ))}
           </div>
         </div>
       ))}
@@ -215,7 +299,13 @@ function CommandsTab({ commands, onExecute }: { commands: OneCoreCommand[]; onEx
   );
 }
 
-function DiagnosticTab({ diagnostic, onRun }: { diagnostic: ReturnType<typeof useOneCore>['diagnostic']; onRun: () => void }): JSX.Element {
+function DiagnosticTab({
+  diagnostic,
+  onRun,
+}: {
+  diagnostic: ReturnType<typeof useOneCore>['diagnostic'];
+  onRun: () => void;
+}): JSX.Element {
   const statusColors: Record<string, string> = {
     optimal: '#00ff88',
     good: '#88ff88',
@@ -240,22 +330,28 @@ function DiagnosticTab({ diagnostic, onRun }: { diagnostic: ReturnType<typeof us
             >
               {diagnostic.overall_status.toUpperCase()}
             </span>
-            <span className="one-core-diagnostic-time">
-              {diagnostic.duration_ms}ms
-            </span>
+            <span className="one-core-diagnostic-time">{diagnostic.duration_ms}ms</span>
           </div>
 
           <div className="one-core-diagnostic-tests">
-            <div className="one-core-test-passed">✅ {diagnostic.tests_passed} tests passés</div>
-            <div className="one-core-test-failed">❌ {diagnostic.tests_failed} tests échoués</div>
-            <div className="one-core-test-total">📝 {diagnostic.tests_total} tests total</div>
+            <div className="one-core-test-passed">
+              ✅ {diagnostic.tests_passed} tests passés
+            </div>
+            <div className="one-core-test-failed">
+              ❌ {diagnostic.tests_failed} tests échoués
+            </div>
+            <div className="one-core-test-total">
+              📝 {diagnostic.tests_total} tests total
+            </div>
           </div>
 
           {diagnostic.warnings.length > 0 && (
             <div className="one-core-diagnostic-warnings">
               <h4>⚠️ Avertissements</h4>
               <ul>
-                {diagnostic.warnings.map((w, i) => <li key={i}>{w}</li>)}
+                {diagnostic.warnings.map((w, i) => (
+                  <li key={i}>{w}</li>
+                ))}
               </ul>
             </div>
           )}
@@ -264,7 +360,9 @@ function DiagnosticTab({ diagnostic, onRun }: { diagnostic: ReturnType<typeof us
             <div className="one-core-diagnostic-errors">
               <h4>❌ Erreurs</h4>
               <ul>
-                {diagnostic.errors.map((e, i) => <li key={i}>{e}</li>)}
+                {diagnostic.errors.map((e, i) => (
+                  <li key={i}>{e}</li>
+                ))}
               </ul>
             </div>
           )}
@@ -273,7 +371,9 @@ function DiagnosticTab({ diagnostic, onRun }: { diagnostic: ReturnType<typeof us
             <div className="one-core-diagnostic-recommendations">
               <h4>💡 Recommandations</h4>
               <ul>
-                {diagnostic.recommendations.map((r, i) => <li key={i}>{r}</li>)}
+                {diagnostic.recommendations.map((r, i) => (
+                  <li key={i}>{r}</li>
+                ))}
               </ul>
             </div>
           )}
@@ -283,8 +383,13 @@ function DiagnosticTab({ diagnostic, onRun }: { diagnostic: ReturnType<typeof us
   );
 }
 
-function MetricsTab({ metrics }: { metrics: ReturnType<typeof useOneCore>['metrics'] }): JSX.Element {
-  if (!metrics) return <div className="one-core-loading">Chargement des métriques...</div>;
+function MetricsTab({
+  metrics,
+}: {
+  metrics: ReturnType<typeof useOneCore>['metrics'];
+}): JSX.Element {
+  if (!metrics)
+    return <div className="one-core-loading">Chargement des métriques...</div>;
 
   return (
     <div className="one-core-metrics-tab">
@@ -380,9 +485,15 @@ export function OneCorePage(): JSX.Element {
       {/* Tab Content */}
       <main className="one-core-content">
         {activeTab === 'overview' && <OverviewTab state={state} metrics={metrics} />}
-        {activeTab === 'centers' && <CentersTab centers={state?.centers || []} navigate={navigate} />}
-        {activeTab === 'commands' && <CommandsTab commands={commands} onExecute={executeCommand} />}
-        {activeTab === 'diagnostic' && <DiagnosticTab diagnostic={diagnostic} onRun={runDiagnostic} />}
+        {activeTab === 'centers' && (
+          <CentersTab centers={state?.centers || []} navigate={navigate} />
+        )}
+        {activeTab === 'commands' && (
+          <CommandsTab commands={commands} onExecute={executeCommand} />
+        )}
+        {activeTab === 'diagnostic' && (
+          <DiagnosticTab diagnostic={diagnostic} onRun={runDiagnostic} />
+        )}
         {activeTab === 'metrics' && <MetricsTab metrics={metrics} />}
       </main>
     </div>

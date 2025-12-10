@@ -6,10 +6,10 @@
 // Closed-loop: Monitor → Detect → Heal
 // ═══════════════════════════════════════════════════════════════
 
-use crate::core::types::{EngineHealth, EngineResult, EngineError, ModuleInfo};
 use crate::core::state::SingularityState;
-use serde::{Deserialize, Serialize};
+use crate::core::types::{EngineError, EngineHealth, EngineResult, ModuleInfo};
 use chrono::Utc;
+use serde::{Deserialize, Serialize};
 use sysinfo::System;
 
 // ═══════════════════════════════════════════════════════════════
@@ -24,26 +24,26 @@ pub struct SystemHealth {
     health: EngineHealth,
     initialized: bool,
     pub last_update_ms: u64,
-    
+
     // System metrics (ex-Helios)
     pub cpu_usage: f32,
     pub memory_usage: f32,
     pub disk_usage: f32,
     pub network_latency_ms: u32,
     pub uptime_ms: u64,
-    
+
     // Monitoring (ex-Sentinel)
     pub alert_count: u64,
     pub active_monitors: u32,
     pub protection_level: u8,
     error_log: Vec<ErrorRecord>,
-    
+
     // Auto-healing (ex-Self-Heal)
     pub repairs_performed: u64,
     pub last_repair_ms: u64,
     pub success_rate: f32,
     pub auto_heal_enabled: bool,
-    
+
     // Unified health score
     pub global_health: f32, // 0.0-1.0
 }
@@ -159,34 +159,36 @@ impl SystemHealth {
     /// Main tick: monitor + detect + heal
     pub async fn tick(&mut self, state: &mut SingularityState) -> EngineResult<()> {
         if !self.initialized {
-            return Err(EngineError::Runtime("SystemHealth not initialized".to_string()));
+            return Err(EngineError::Runtime(
+                "SystemHealth not initialized".to_string(),
+            ));
         }
 
         let now = Self::current_timestamp();
-        
+
         // 1. Collect system metrics (ex-Helios)
         self.collect_metrics()?;
-        
+
         // 2. Scan for anomalies (ex-Sentinel)
         let anomalies = self.scan_anomalies(state);
-        
+
         // 3. Auto-heal if enabled (ex-Self-Heal)
         if self.auto_heal_enabled && !anomalies.is_empty() {
             let report = self.auto_heal(anomalies).await;
             self.repairs_performed += report.repairs_successful as u64;
-            
+
             // Update success rate (exponential moving average)
             let new_rate = report.success_rate;
             self.success_rate = self.success_rate * 0.9 + new_rate * 0.1;
-            
+
             if report.repairs_successful > 0 {
                 self.last_repair_ms = now;
             }
         }
-        
+
         // 4. Compute global health score
         self.global_health = self.compute_health_score();
-        
+
         // 5. Update health status
         self.health = if self.global_health > 0.8 {
             EngineHealth::Healthy
@@ -293,9 +295,13 @@ impl SystemHealth {
         // Log anomalies
         for anomaly in &anomalies {
             self.log_error(
-                if anomaly.severity > 0.7 { ErrorSeverity::Critical }
-                else if anomaly.severity > 0.4 { ErrorSeverity::Error }
-                else { ErrorSeverity::Warning },
+                if anomaly.severity > 0.7 {
+                    ErrorSeverity::Critical
+                } else if anomaly.severity > 0.4 {
+                    ErrorSeverity::Error
+                } else {
+                    ErrorSeverity::Warning
+                },
                 "SystemHealth",
                 anomaly.description.clone(),
             );
@@ -356,19 +362,21 @@ impl SystemHealth {
         let cpu_health = (100.0 - self.cpu_usage.min(100.0)) / 100.0;
         let mem_health = (100.0 - self.memory_usage.min(100.0)) / 100.0;
         let disk_health = (100.0 - self.disk_usage.min(100.0)) / 100.0;
-        
+
         // Recent errors penalty
         let error_penalty = (self.error_log.len().min(10) as f32) * 0.05;
-        
-        let score = (cpu_health * 0.3 + mem_health * 0.3 + disk_health * 0.2 + self.success_rate * 0.2) 
-                    - error_penalty;
-        
+
+        let score =
+            (cpu_health * 0.3 + mem_health * 0.3 + disk_health * 0.2 + self.success_rate * 0.2)
+                - error_penalty;
+
         score.max(0.0).min(1.0)
     }
 
     /// Get health report
     pub fn get_report(&self) -> HealthReport {
-        let recent_errors: Vec<HealthIssue> = self.error_log
+        let recent_errors: Vec<HealthIssue> = self
+            .error_log
             .iter()
             .rev()
             .take(5)
@@ -432,7 +440,12 @@ impl SystemHealth {
     }
 
     fn mark_error_repaired(&mut self, description: &str) {
-        if let Some(err) = self.error_log.iter_mut().rev().find(|e| e.message.contains(description)) {
+        if let Some(err) = self
+            .error_log
+            .iter_mut()
+            .rev()
+            .find(|e| e.message.contains(description))
+        {
             err.auto_repaired = true;
         }
     }
@@ -478,7 +491,7 @@ mod tests {
     fn test_system_health_init() {
         let mut health = SystemHealth::new();
         assert!(!health.is_initialized());
-        
+
         health.init().unwrap();
         assert!(health.is_initialized());
         assert_eq!(health.health(), EngineHealth::Healthy);
@@ -490,7 +503,7 @@ mod tests {
         health.init().unwrap();
 
         health.collect_metrics().unwrap();
-        
+
         assert!(health.cpu_usage >= 0.0);
         assert!(health.memory_usage >= 0.0);
         assert!(health.disk_usage >= 0.0);
@@ -513,10 +526,10 @@ mod tests {
     fn test_anomaly_detection_high_cpu() {
         let mut health = SystemHealth::new();
         let state = SingularityState::default();
-        
+
         health.cpu_usage = 85.0;
         let anomalies = health.scan_anomalies(&state);
-        
+
         assert_eq!(anomalies.len(), 1);
         assert_eq!(anomalies[0].anomaly_type, AnomalyType::HighCPU);
     }
@@ -526,15 +539,13 @@ mod tests {
         let mut health = SystemHealth::new();
         health.init().unwrap();
 
-        let anomalies = vec![
-            Anomaly {
-                detected_at: 0,
-                anomaly_type: AnomalyType::HighCPU,
-                severity: 0.5,
-                description: "High CPU".to_string(),
-                auto_healable: true,
-            }
-        ];
+        let anomalies = vec![Anomaly {
+            detected_at: 0,
+            anomaly_type: AnomalyType::HighCPU,
+            severity: 0.5,
+            description: "High CPU".to_string(),
+            auto_healable: true,
+        }];
 
         let report = health.auto_heal(anomalies).await;
         assert_eq!(report.repairs_attempted, 1);

@@ -4,15 +4,12 @@
 //   Real-time monitoring, metrics collection, and health checks
 // ═══════════════════════════════════════════════════════════════
 
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
-use serde::{Deserialize, Serialize};
 
-use super::{
-    PipelineStage, PipelineStats, StageStats,
-    OmegaConfig,
-};
+use super::{OmegaConfig, PipelineStage, PipelineStats, StageStats};
 
 // ═══════════════════════════════════════════════════════════════
 //   DIAGNOSTICS TYPES
@@ -297,7 +294,11 @@ impl DiagnosticsEngine {
 
         let mut metrics = self.metrics.write().await;
         metrics.errors.total_errors += 1;
-        *metrics.errors.by_type.entry(error_type.to_string()).or_insert(0) += 1;
+        *metrics
+            .errors
+            .by_type
+            .entry(error_type.to_string())
+            .or_insert(0) += 1;
         metrics.errors.last_error = Some(message.to_string());
         metrics.errors.last_error_time = Some(chrono::Utc::now().timestamp_millis());
 
@@ -316,7 +317,10 @@ impl DiagnosticsEngine {
 
         let mut metrics = self.metrics.write().await;
         let stage_name = format!("{:?}", stage);
-        let stage_metrics = metrics.stages.entry(stage_name).or_insert_with(StageMetrics::default);
+        let stage_metrics = metrics
+            .stages
+            .entry(stage_name)
+            .or_insert_with(StageMetrics::default);
 
         stage_metrics.invocations += 1;
 
@@ -429,7 +433,11 @@ impl DiagnosticsEngine {
     }
 
     /// Check request health
-    fn check_request_health(&self, metrics: &MetricsCollector, issues: &mut Vec<HealthIssue>) -> ComponentHealth {
+    fn check_request_health(
+        &self,
+        metrics: &MetricsCollector,
+        issues: &mut Vec<HealthIssue>,
+    ) -> ComponentHealth {
         let total = metrics.requests.total;
         let failed = metrics.requests.failed;
 
@@ -441,7 +449,11 @@ impl DiagnosticsEngine {
 
         if score < 0.9 && total > 100 {
             issues.push(HealthIssue {
-                severity: if score < 0.7 { IssueSeverity::Error } else { IssueSeverity::Warning },
+                severity: if score < 0.7 {
+                    IssueSeverity::Error
+                } else {
+                    IssueSeverity::Warning
+                },
                 component: "requests".to_string(),
                 message: format!("Request success rate is {:.1}%", score * 100.0),
                 timestamp: chrono::Utc::now().timestamp_millis(),
@@ -458,14 +470,16 @@ impl DiagnosticsEngine {
     }
 
     /// Check latency health
-    fn check_latency_health(&self, metrics: &MetricsCollector, issues: &mut Vec<HealthIssue>) -> ComponentHealth {
+    fn check_latency_health(
+        &self,
+        metrics: &MetricsCollector,
+        issues: &mut Vec<HealthIssue>,
+    ) -> ComponentHealth {
         let target = self.config.target_latency_ms as f64;
         let avg = metrics.latency.avg_ms;
         let p95 = metrics.latency.p95_ms as f64;
 
-        let score = if avg == 0.0 {
-            1.0
-        } else if avg <= target {
+        let score = if avg == 0.0 || avg <= target {
             1.0
         } else if avg <= target * 1.5 {
             0.8
@@ -479,7 +493,10 @@ impl DiagnosticsEngine {
             issues.push(HealthIssue {
                 severity: IssueSeverity::Warning,
                 component: "latency".to_string(),
-                message: format!("P95 latency ({:.0}ms) exceeds target ({:.0}ms)", p95, target),
+                message: format!(
+                    "P95 latency ({:.0}ms) exceeds target ({:.0}ms)",
+                    p95, target
+                ),
                 timestamp: chrono::Utc::now().timestamp_millis(),
             });
         }
@@ -489,18 +506,29 @@ impl DiagnosticsEngine {
             status: HealthStatus::from_score(score),
             score,
             last_check: chrono::Utc::now().timestamp_millis(),
-            details: Some(format!("Avg: {:.1}ms, P95: {}ms, Target: {}ms", avg, p95, target)),
+            details: Some(format!(
+                "Avg: {:.1}ms, P95: {}ms, Target: {}ms",
+                avg, p95, target
+            )),
         }
     }
 
     /// Check error health
-    fn check_error_health(&self, metrics: &MetricsCollector, issues: &mut Vec<HealthIssue>) -> ComponentHealth {
+    fn check_error_health(
+        &self,
+        metrics: &MetricsCollector,
+        issues: &mut Vec<HealthIssue>,
+    ) -> ComponentHealth {
         let error_rate = metrics.errors.error_rate;
         let score = (1.0 - error_rate * 10.0).max(0.0) as f32;
 
         if error_rate > 0.05 {
             issues.push(HealthIssue {
-                severity: if error_rate > 0.1 { IssueSeverity::Error } else { IssueSeverity::Warning },
+                severity: if error_rate > 0.1 {
+                    IssueSeverity::Error
+                } else {
+                    IssueSeverity::Warning
+                },
                 component: "errors".to_string(),
                 message: format!("Error rate is {:.1}%", error_rate * 100.0),
                 timestamp: chrono::Utc::now().timestamp_millis(),
@@ -512,12 +540,21 @@ impl DiagnosticsEngine {
             status: HealthStatus::from_score(score),
             score,
             last_check: chrono::Utc::now().timestamp_millis(),
-            details: Some(format!("Error rate: {:.2}%, Total errors: {}", error_rate * 100.0, metrics.errors.total_errors)),
+            details: Some(format!(
+                "Error rate: {:.2}%, Total errors: {}",
+                error_rate * 100.0,
+                metrics.errors.total_errors
+            )),
         }
     }
 
     /// Check stage health
-    fn check_stage_health(&self, name: &str, metrics: &StageMetrics, issues: &mut Vec<HealthIssue>) -> ComponentHealth {
+    fn check_stage_health(
+        &self,
+        name: &str,
+        metrics: &StageMetrics,
+        issues: &mut Vec<HealthIssue>,
+    ) -> ComponentHealth {
         let score = metrics.success_rate as f32;
 
         if score < 0.95 && metrics.invocations > 100 {
@@ -534,7 +571,10 @@ impl DiagnosticsEngine {
             status: HealthStatus::from_score(score),
             score,
             last_check: chrono::Utc::now().timestamp_millis(),
-            details: Some(format!("Invocations: {}, Avg latency: {:.1}ms", metrics.invocations, metrics.avg_latency_ms)),
+            details: Some(format!(
+                "Invocations: {}, Avg latency: {:.1}ms",
+                metrics.invocations, metrics.avg_latency_ms
+            )),
         }
     }
 
@@ -544,11 +584,14 @@ impl DiagnosticsEngine {
 
         let mut stage_stats = HashMap::new();
         for (name, m) in &metrics.stages {
-            stage_stats.insert(name.clone(), StageStats {
-                invocations: m.invocations,
-                avg_latency_ms: m.avg_latency_ms,
-                error_count: m.errors,
-            });
+            stage_stats.insert(
+                name.clone(),
+                StageStats {
+                    invocations: m.invocations,
+                    avg_latency_ms: m.avg_latency_ms,
+                    error_count: m.errors,
+                },
+            );
         }
 
         PipelineStats {
@@ -622,7 +665,9 @@ mod tests {
         // Record some activity
         for i in 0..10 {
             engine.record_request_start(&format!("req-{}", i)).await;
-            engine.record_request_complete(&format!("req-{}", i), true, 50).await;
+            engine
+                .record_request_complete(&format!("req-{}", i), true, 50)
+                .await;
         }
 
         let health = engine.health_check().await;

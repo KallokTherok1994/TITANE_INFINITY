@@ -17,11 +17,16 @@ import type { NodeRole } from '../types/systemCenter.types';
 
 const getRoleIcon = (role: NodeRole): string => {
   switch (role) {
-    case 'Root': return '👑';
-    case 'Worker': return '⚙️';
-    case 'Storage': return '💾';
-    case 'Monitor': return '👁️';
-    default: return '🔵';
+    case 'Root':
+      return '👑';
+    case 'Worker':
+      return '⚙️';
+    case 'Storage':
+      return '💾';
+    case 'Monitor':
+      return '👁️';
+    default:
+      return '🔵';
   }
 };
 
@@ -38,15 +43,8 @@ const formatUptime = (seconds: number): string => {
 // ══════════════════════════════════════════════════════════════════
 
 export const NodeClusterTab: React.FC = () => {
-  const {
-    stats,
-    peers,
-    isInitialized,
-    isLoading,
-    error,
-    initialize,
-    shutdown,
-  } = useNodeCluster(true, 5000);
+  const { stats, peers, isInitialized, isLoading, error, initialize, shutdown } =
+    useNodeCluster(true, 5000);
 
   const [nodeId, setNodeId] = useState(`node-${Date.now()}`);
   const [port, setPort] = useState(9999);
@@ -75,7 +73,7 @@ export const NodeClusterTab: React.FC = () => {
               <input
                 type="text"
                 value={nodeId}
-                onChange={(e) => setNodeId(e.target.value)}
+                onChange={e => setNodeId(e.target.value)}
                 className="sc-input"
                 placeholder="node-12345"
               />
@@ -85,7 +83,7 @@ export const NodeClusterTab: React.FC = () => {
               <input
                 type="number"
                 value={port}
-                onChange={(e) => setPort(parseInt(e.target.value) || 9999)}
+                onChange={e => setPort(parseInt(e.target.value) || 9999)}
                 className="sc-input"
                 placeholder="9999"
               />
@@ -122,10 +120,7 @@ export const NodeClusterTab: React.FC = () => {
               <span className="sc-cluster-status-dot sc-cluster-status-dot--active" />
               <span>Réseau actif</span>
             </div>
-            <button
-              className="sc-btn sc-btn--danger sc-btn--small"
-              onClick={shutdown}
-            >
+            <button className="sc-btn sc-btn--danger sc-btn--small" onClick={shutdown}>
               ⏹️ Arrêter
             </button>
           </motion.div>
@@ -173,7 +168,9 @@ export const NodeClusterTab: React.FC = () => {
             >
               <span className="sc-stat-card-icon">⏱️</span>
               <span className="sc-stat-card-label">Uptime</span>
-              <span className="sc-stat-card-value">{formatUptime(stats.uptime_seconds)}</span>
+              <span className="sc-stat-card-value">
+                {formatUptime(stats.uptime_seconds)}
+              </span>
             </motion.div>
           </div>
 
@@ -185,7 +182,9 @@ export const NodeClusterTab: React.FC = () => {
               <div className="sc-empty-state">
                 <span className="sc-empty-icon">🔍</span>
                 <p>Aucun peer connecté</p>
-                <p className="sc-empty-hint">Les nœuds apparaîtront ici une fois découverts</p>
+                <p className="sc-empty-hint">
+                  Les nœuds apparaîtront ici une fois découverts
+                </p>
               </div>
             ) : (
               <div className="sc-peers-grid">

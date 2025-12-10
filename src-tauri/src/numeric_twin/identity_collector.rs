@@ -5,9 +5,9 @@
 
 #![allow(dead_code)]
 
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use chrono::{DateTime, Utc};
 
 /// Collecteur d'identité - assimile valeurs, vision, style humain
 pub struct IdentityCollector {
@@ -125,7 +125,8 @@ impl IdentityCollector {
             entry.1 += 1;
         }
 
-        aggregated.into_iter()
+        aggregated
+            .into_iter()
             .map(|(k, (sum, count))| (k, sum / count as f32))
             .collect()
     }
@@ -140,7 +141,8 @@ impl IdentityCollector {
             entry.1 += 1;
         }
 
-        profile.into_iter()
+        profile
+            .into_iter()
             .map(|(k, (sum, count))| (k, sum / count as f32))
             .collect()
     }

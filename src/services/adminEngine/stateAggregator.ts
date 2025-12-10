@@ -152,7 +152,11 @@ export class StateAggregator {
 
       // Construire le snapshot
       const healthLevel = determineHealthLevel(vitals, this.config.alertThresholds);
-      const healthScore = calculateHealthScore(vitals, moduleStatuses, this.config.alertThresholds);
+      const healthScore = calculateHealthScore(
+        vitals,
+        moduleStatuses,
+        this.config.alertThresholds
+      );
 
       const snapshot: AdminSnapshot = {
         id: generateAdminId('snap'),
@@ -290,11 +294,15 @@ export class StateAggregator {
    * Collecte le statut de tous les modules
    */
   private async collectModuleStatuses(): Promise<Record<TitaneModule, ModuleStatus>> {
-    const modules: Record<TitaneModule, ModuleStatus> = {} as Record<TitaneModule, ModuleStatus>;
+    const modules: Record<TitaneModule, ModuleStatus> = {} as Record<
+      TitaneModule,
+      ModuleStatus
+    >;
 
     // Essayer de récupérer depuis Rust
     try {
-      const rustStatuses = await secureInvoke<RustModuleStatusResponse[]>('get_module_statuses');
+      const rustStatuses =
+        await secureInvoke<RustModuleStatusResponse[]>('get_module_statuses');
 
       for (const rs of rustStatuses) {
         const moduleId = rs.module_id as TitaneModule;
@@ -371,7 +379,9 @@ export class StateAggregator {
 
     try {
       // Récupérer depuis Performance Engine
-      const perfAnomalies = await secureInvoke<AdminAnomaly[]>('get_performance_anomalies');
+      const perfAnomalies = await secureInvoke<AdminAnomaly[]>(
+        'get_performance_anomalies'
+      );
       anomalies.push(...perfAnomalies);
     } catch {
       // Performance Engine non disponible
@@ -379,7 +389,9 @@ export class StateAggregator {
 
     try {
       // Récupérer depuis Self-Healing Engine
-      const healingAnomalies = await secureInvoke<AdminAnomaly[]>('get_healing_anomalies');
+      const healingAnomalies = await secureInvoke<AdminAnomaly[]>(
+        'get_healing_anomalies'
+      );
       anomalies.push(...healingAnomalies);
     } catch {
       // Self-Healing Engine non disponible
@@ -528,9 +540,9 @@ export class StateAggregator {
     healthLevel: HealthLevel,
     modules: Record<TitaneModule, ModuleStatus>
   ): string {
-    const criticalModules = Object.values(modules).filter((m) => m.status === 'CRITICAL');
-    const degradedModules = Object.values(modules).filter((m) => m.status === 'DEGRADED');
-    const offlineModules = Object.values(modules).filter((m) => m.status === 'OFFLINE');
+    const criticalModules = Object.values(modules).filter(m => m.status === 'CRITICAL');
+    const degradedModules = Object.values(modules).filter(m => m.status === 'DEGRADED');
+    const offlineModules = Object.values(modules).filter(m => m.status === 'OFFLINE');
 
     switch (healthLevel) {
       case 'CRITICAL':

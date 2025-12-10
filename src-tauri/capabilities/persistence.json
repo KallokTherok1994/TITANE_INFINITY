@@ -3,9 +3,7 @@
   "identifier": "persistence",
   "description": "Capability pour le système de persistence TITANE∞ (Event Sourcing + Snapshots)",
   "windows": ["main"],
-  "permissions": [
-    "core:default"
-  ],
+  "permissions": ["core:default"],
   "commands": {
     "allow": [
       "titan_persistence_init",

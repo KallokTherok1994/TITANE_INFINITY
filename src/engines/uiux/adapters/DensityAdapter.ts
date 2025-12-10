@@ -81,7 +81,11 @@ export class DensityAdapter {
   /**
    * Adapte la densité au contexte
    */
-  adapt(context: UIContext, mode: UserMode, cognitiveLoad: CognitiveLoad): DensityAdaptation {
+  adapt(
+    context: UIContext,
+    mode: UserMode,
+    cognitiveLoad: CognitiveLoad
+  ): DensityAdaptation {
     const density = { ...DEFAULT_DENSITY };
 
     // Appliquer le préset du mode
@@ -200,9 +204,24 @@ export class DensityAdapter {
       '--density-line-height': String(density.lineHeight),
       '--density-padding': `${padding}px`,
       '--density-icon-size': `${density.iconSize}px`,
-      '--density-button-height': density.buttonSize === 'sm' ? '32px' : density.buttonSize === 'lg' ? '48px' : '40px',
-      '--density-card-padding': density.cardDensity === 'compact' ? '12px' : density.cardDensity === 'expanded' ? '24px' : '16px',
-      '--density-gap': density.cardDensity === 'compact' ? '8px' : density.cardDensity === 'expanded' ? '20px' : '14px',
+      '--density-button-height':
+        density.buttonSize === 'sm'
+          ? '32px'
+          : density.buttonSize === 'lg'
+            ? '48px'
+            : '40px',
+      '--density-card-padding':
+        density.cardDensity === 'compact'
+          ? '12px'
+          : density.cardDensity === 'expanded'
+            ? '24px'
+            : '16px',
+      '--density-gap':
+        density.cardDensity === 'compact'
+          ? '8px'
+          : density.cardDensity === 'expanded'
+            ? '20px'
+            : '14px',
     };
   }
 

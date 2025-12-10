@@ -78,10 +78,7 @@ pub struct OmegaStats {
 
 impl OmegaKernelBridge {
     /// Create new OMEGA-Kernel bridge
-    pub fn new(
-        signal_bus: Arc<SignalBus>,
-        event_tx: broadcast::Sender<KernelEvent>,
-    ) -> Self {
+    pub fn new(signal_bus: Arc<SignalBus>, event_tx: broadcast::Sender<KernelEvent>) -> Self {
         Self {
             signal_bus,
             event_tx,
@@ -126,7 +123,8 @@ impl OmegaKernelBridge {
                     stats_guard.successful_requests += 1;
                     stats_guard.total_duration_ms += duration_ms;
                     if stats_guard.successful_requests > 0 {
-                        stats_guard.avg_duration_ms = stats_guard.total_duration_ms / stats_guard.successful_requests;
+                        stats_guard.avg_duration_ms =
+                            stats_guard.total_duration_ms / stats_guard.successful_requests;
                     }
                 }
 
@@ -148,11 +146,13 @@ impl OmegaKernelBridge {
         let job_id = job.id;
 
         // Broadcast signal
-        self.signal_bus.send(KernelSignal::NewUserMessage {
-            user_id: request.user_id.clone(),
-            message: request.message.clone(),
-            timestamp: chrono::Utc::now().timestamp_millis(),
-        }).ok();
+        self.signal_bus
+            .send(KernelSignal::NewUserMessage {
+                user_id: request.user_id.clone(),
+                message: request.message.clone(),
+                timestamp: chrono::Utc::now().timestamp_millis(),
+            })
+            .ok();
 
         // Emit event (TaskSubmitted instead of EngineRegistered)
         let _ = self.event_tx.send(KernelEvent::TaskSubmitted {
@@ -176,10 +176,7 @@ impl OmegaKernelBridge {
     }
 
     /// Execute OMEGA request (async)
-    async fn execute_omega_request(
-        &self,
-        request: OmegaRequest,
-    ) -> TitaneResult<EngineOutput> {
+    async fn execute_omega_request(&self, request: OmegaRequest) -> TitaneResult<EngineOutput> {
         let start = std::time::Instant::now();
 
         // Update stats
@@ -219,11 +216,13 @@ impl OmegaKernelBridge {
         }
 
         // Broadcast result
-        self.signal_bus.send(KernelSignal::EngineOutput {
-            engine: "OMEGA".to_string(),
-            output: response.response.clone(),
-            duration_ms,
-        }).ok();
+        self.signal_bus
+            .send(KernelSignal::EngineOutput {
+                engine: "OMEGA".to_string(),
+                output: response.response.clone(),
+                duration_ms,
+            })
+            .ok();
 
         Ok(EngineOutput {
             engine: "OMEGA".to_string(),
@@ -241,9 +240,9 @@ impl OmegaKernelBridge {
         }
 
         // Broadcast error signal
-        self.signal_bus.send(KernelSignal::SafeMode {
-            enabled: true,
-        }).ok();
+        self.signal_bus
+            .send(KernelSignal::SafeMode { enabled: true })
+            .ok();
 
         // Emit error event (using TaskFailed)
         let _ = self.event_tx.send(KernelEvent::TaskFailed {
@@ -286,14 +285,8 @@ mod tests {
             bridge.determine_priority("emergency"),
             CognitivePriority::Critical
         );
-        assert_eq!(
-            bridge.determine_priority("code"),
-            CognitivePriority::High
-        );
-        assert_eq!(
-            bridge.determine_priority("chat"),
-            CognitivePriority::Normal
-        );
+        assert_eq!(bridge.determine_priority("code"), CognitivePriority::High);
+        assert_eq!(bridge.determine_priority("chat"), CognitivePriority::Normal);
         assert_eq!(
             bridge.determine_priority("indexing"),
             CognitivePriority::Background

@@ -36,7 +36,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   level,
   categories,
   lastUpdated,
-  onClick
+  onClick,
 }) => {
   const progress = Math.min((xp / maxXp) * 100, 100);
 
@@ -45,9 +45,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
       <div className="project-card-header">
         <div className="project-card-info">
           <h3 className="project-card-title">{name}</h3>
-          {description && (
-            <p className="project-card-description">{description}</p>
-          )}
+          {description && <p className="project-card-description">{description}</p>}
         </div>
         <div className="project-card-level">
           <span className="project-card-level-label">Niv.</span>
@@ -57,10 +55,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
 
       <div className="project-card-xp">
         <div className="project-card-xp-bar">
-          <div 
-            className="project-card-xp-fill"
-            style={{ width: `${progress}%` }}
-          />
+          <div className="project-card-xp-fill" style={{ width: `${progress}%` }} />
         </div>
         <div className="project-card-xp-info">
           <span className="project-card-xp-text">
@@ -78,9 +73,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
             </span>
           ))}
           {categories.length > 3 && (
-            <span className="project-card-category-more">
-              +{categories.length - 3}
-            </span>
+            <span className="project-card-category-more">+{categories.length - 3}</span>
           )}
         </div>
         {lastUpdated && (

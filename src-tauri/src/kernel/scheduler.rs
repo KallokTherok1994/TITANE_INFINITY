@@ -289,10 +289,7 @@ mod tests {
     async fn create_test_scheduler() -> CognitiveScheduler {
         let (event_tx, _) = broadcast::channel(100);
         let state = Arc::new(RwLock::new(KernelState::new()));
-        let runtime = Arc::new(KernelRuntime::new(
-            event_tx.clone(),
-            Arc::clone(&state),
-        ));
+        let runtime = Arc::new(KernelRuntime::new(event_tx.clone(), Arc::clone(&state)));
 
         CognitiveScheduler::new(runtime, state, event_tx, 4)
     }

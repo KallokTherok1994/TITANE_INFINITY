@@ -16,7 +16,7 @@ export interface SwitchProps {
 
 /**
  * Switch - Toggle on/off avec animation glissement
- * 
+ *
  * @example
  * ```tsx
  * <Switch
@@ -26,7 +26,13 @@ export interface SwitchProps {
  * />
  * ```
  */
-export function Switch({ checked, onCheckedChange, disabled = false, label, id }: SwitchProps) {
+export function Switch({
+  checked,
+  onCheckedChange,
+  disabled = false,
+  label,
+  id,
+}: SwitchProps) {
   const handleClick = () => {
     if (!disabled) {
       onCheckedChange(!checked);

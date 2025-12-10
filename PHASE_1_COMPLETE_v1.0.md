@@ -11,6 +11,7 @@
 ### ✅ SUPPRESSION CODE MORT
 
 #### Engines supprimés (10 dossiers)
+
 - ✅ `src/engines/vision/` — Vision AI (hors scope)
 - ✅ `src/engines/training/` — Training système (hors scope)
 - ✅ `src/engines/stress/` — Stress regulation (hors scope)
@@ -27,6 +28,7 @@
 ---
 
 #### Core supprimés (6 dossiers/fichiers)
+
 - ✅ `src/core/archetypes/` — ARCHETYPE_ENGINE, ICONOGRAPHY_ENGINE, IDENTITY_ENGINE
 - ✅ `src/core/sound/` — SOUND_ENGINE (hors scope)
 - ✅ `src/core/visual/` — STATE_ENGINE, MOTION_ENGINE (hors scope)
@@ -37,6 +39,7 @@
 ---
 
 #### Services supprimés (4 items)
+
 - ✅ `src/services/immersiveAvatarBridgeV23.ts` — Hors scope
 - ✅ `src/services/narrativeBridgeV22.ts` — Hors scope
 - ✅ `src/services/xp/` — XP system (hors scope)
@@ -72,26 +75,28 @@ src/core/
 **Fichier:** `src/core/services/unifiedMemory.ts` (400 lignes)
 
 **Architecture:**
+
 ```typescript
 class UnifiedMemorySystem {
   // STM: Short-Term Memory (20 max, expire 5min)
   private stm: MemoryEntry[] = [];
-  
+
   // MTM: Medium-Term Memory (100 max, expire 24h)
   private mtm: Map<string, MemoryEntry> = new Map();
-  
+
   // LTM: Long-Term Memory (illimité, permanent)
   private ltm: Map<string, MemoryEntry> = new Map();
-  
-  store()    // Stocker nouvelle entrée
-  recall()   // Rappeler selon requête
-  promote()  // MTM → LTM si accessCount > 10
-  cleanup()  // Nettoyage automatique (5min)
-  compress() // Compression LTM (placeholder v1.1)
+
+  store(); // Stocker nouvelle entrée
+  recall(); // Rappeler selon requête
+  promote(); // MTM → LTM si accessCount > 10
+  cleanup(); // Nettoyage automatique (5min)
+  compress(); // Compression LTM (placeholder v1.1)
 }
 ```
 
 **Features:**
+
 - ✅ Tri automatique par importance (0.0-1.0)
 - ✅ Promotion automatique MTM → LTM
 - ✅ Cleanup automatique toutes les 5min
@@ -103,6 +108,7 @@ class UnifiedMemorySystem {
 ### ✅ EXPORTS CENTRALISÉS
 
 **Créés:**
+
 - `src/core/kernels/index.ts` — Export 3 kernels + types
 - `src/core/services/index.ts` — Export 6 services + types
 
@@ -110,25 +116,27 @@ class UnifiedMemorySystem {
 
 ## 📊 GAINS MESURÉS
 
-| Métrique | Avant | Après | Gain |
-|----------|-------|-------|------|
-| **Engines** | 71 fichiers | 34 fichiers | **-52%** |
-| **Dossiers supprimés** | — | 20+ dossiers | **Simplification massive** |
-| **Architecture** | Chaos | 3 Kernels + 6 Services | **100% clarté** |
-| **Mémoire** | Non structurée | STM/MTM/LTM unifié | **✅ CRÉÉ** |
-| **Structure** | Dispersée | core/kernels + services | **100% cohérence** |
+| Métrique               | Avant          | Après                   | Gain                       |
+| ---------------------- | -------------- | ----------------------- | -------------------------- |
+| **Engines**            | 71 fichiers    | 34 fichiers             | **-52%**                   |
+| **Dossiers supprimés** | —              | 20+ dossiers            | **Simplification massive** |
+| **Architecture**       | Chaos          | 3 Kernels + 6 Services  | **100% clarté**            |
+| **Mémoire**            | Non structurée | STM/MTM/LTM unifié      | **✅ CRÉÉ**                |
+| **Structure**          | Dispersée      | core/kernels + services | **100% cohérence**         |
 
 ---
 
 ## 🎯 PROCHAINES ÉTAPES
 
 ### PHASE 2 — SEMAINE 1 (Suite)
+
 - [ ] Mettre à jour tous les imports (scripts automatiques)
 - [ ] Tester compilation `npm run build`
 - [ ] Corriger erreurs TypeScript
 - [ ] Valider 0 lint errors
 
 ### PHASE 3 — SEMAINE 2
+
 - [ ] Intégrer Unified Memory dans conversationOS
 - [ ] Aligner Pipeline OMEGA Backend ↔ Frontend
 - [ ] Créer tests unitaires Unified Memory

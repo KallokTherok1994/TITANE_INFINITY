@@ -125,18 +125,21 @@ export function useFusionEngine(): UseFusionEngineReturn {
   // DOWNLOAD
   // ─────────────────────────────────────────────────────────────────────────
 
-  const downloadDataset = useCallback((filename = 'titane-fusion-dataset.jsonl') => {
-    const jsonl = exportDataset();
-    const blob = new Blob([jsonl], { type: 'application/jsonl' });
-    const url = URL.createObjectURL(blob);
+  const downloadDataset = useCallback(
+    (filename = 'titane-fusion-dataset.jsonl') => {
+      const jsonl = exportDataset();
+      const blob = new Blob([jsonl], { type: 'application/jsonl' });
+      const url = URL.createObjectURL(blob);
 
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
 
-    URL.revokeObjectURL(url);
-  }, [exportDataset]);
+      URL.revokeObjectURL(url);
+    },
+    [exportDataset]
+  );
 
   const downloadTrainingPack = useCallback(() => {
     const pack = exportTrainingPackage();

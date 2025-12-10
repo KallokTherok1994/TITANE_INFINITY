@@ -6,11 +6,11 @@ use super::cache::{AIRouterCache, CachedAIResponse};
 use super::gemini::GeminiClient;
 use super::ollama::OllamaClient;
 use super::{AIError, AIProvider, AIRequest, AIResponse, AIResult};
+use crate::ia::{IAEngine, UnifiedIAEngine, UnifiedIARequest};
 use log::{info, warn};
 use std::sync::Arc;
 use std::time::Instant;
 use tokio::sync::RwLock;
-use crate::ia::{UnifiedIAEngine, UnifiedIARequest, IAEngine};
 
 #[derive(Debug, Clone)]
 pub enum AIRouterStatus {
@@ -32,9 +32,9 @@ pub enum AIRouterStatus {
 pub struct AIRouter {
     gemini_client: Option<Arc<GeminiClient>>,
     ollama_client: Arc<OllamaClient>,
-    unified_ia: Option<Arc<UnifiedIAEngine>>,  // 🟢🟣 Unified IA Engine (OpenAI + Claude)
+    unified_ia: Option<Arc<UnifiedIAEngine>>, // 🟢🟣 Unified IA Engine (OpenAI + Claude)
     status: Arc<RwLock<AIRouterStatus>>,
-    cache: Arc<AIRouterCache>,  // NEW v20.1: LRU cache
+    cache: Arc<AIRouterCache>, // NEW v20.1: LRU cache
 }
 
 impl AIRouter {
@@ -46,9 +46,9 @@ impl AIRouter {
         Self {
             gemini_client,
             ollama_client,
-            unified_ia: None,  // Set via set_unified_ia()
+            unified_ia: None, // Set via set_unified_ia()
             status: Arc::new(RwLock::new(AIRouterStatus::Online)),
-            cache: Arc::new(AIRouterCache::default_cache()),  // NEW v20.1
+            cache: Arc::new(AIRouterCache::default_cache()), // NEW v20.1
         }
     }
 
@@ -131,16 +131,18 @@ impl AIRouter {
 
     /// Cache une réponse AI pour réutilisation future
     async fn cache_response(&self, request: &AIRequest, response: &AIResponse) {
-        self.cache.set_response(
-            &request.prompt,
-            request.temperature,
-            request.max_tokens as u32,
-            CachedAIResponse {
-                content: response.content.clone(),
-                tokens: response.tokens as u32,
-                provider: format!("{:?}", response.provider),
-            },
-        ).await;
+        self.cache
+            .set_response(
+                &request.prompt,
+                request.temperature,
+                request.max_tokens as u32,
+                CachedAIResponse {
+                    content: response.content.clone(),
+                    tokens: response.tokens as u32,
+                    provider: format!("{:?}", response.provider),
+                },
+            )
+            .await;
     }
 
     /// Execute AI query with automatic cascade fallback v20.1
@@ -158,11 +160,15 @@ impl AIRouter {
         // ═══════════════════════════════════════════════════════════════
         // STEP 0: CHECK CACHE FIRST (instant response, ~0ms)
         // ═══════════════════════════════════════════════════════════════
-        if let Some(cached) = self.cache.get_response(
-            &request.prompt,
-            request.temperature,
-            request.max_tokens as u32,
-        ).await {
+        if let Some(cached) = self
+            .cache
+            .get_response(
+                &request.prompt,
+                request.temperature,
+                request.max_tokens as u32,
+            )
+            .await
+        {
             log::info!(
                 "[AI Router v20.1] ✓ CACHE HIT: {} tokens, {}ms",
                 cached.tokens,
@@ -171,7 +177,7 @@ impl AIRouter {
             return Ok(AIResponse {
                 content: cached.content,
                 tokens: cached.tokens as usize,
-                provider: AIProvider::Gemini,  // Cached provider
+                provider: AIProvider::Gemini, // Cached provider
                 timestamp: std::time::SystemTime::now()
                     .duration_since(std::time::UNIX_EPOCH)
                     .unwrap()
@@ -187,11 +193,11 @@ impl AIRouter {
             info!("[AI Router v15] Trying UnifiedIA (Claude→OpenAI) (primary)");
             let unified_request = UnifiedIARequest {
                 message: request.prompt.clone(),
-                history: vec![],  // Conversation history handled upstream
+                history: vec![], // Conversation history handled upstream
                 system_prompt: None,
                 temperature: request.temperature,
                 max_tokens: Some(request.max_tokens),
-                preferred_engine: None,  // Auto fallback: Claude → OpenAI → Gemini → Local
+                preferred_engine: None, // Auto fallback: Claude → OpenAI → Gemini → Local
             };
 
             match unified_ia.generate(unified_request).await {
@@ -205,7 +211,7 @@ impl AIRouter {
                     let response = AIResponse {
                         content: unified_response.content,
                         tokens: unified_response.tokens_used,
-                        provider: AIProvider::Gemini,  // TODO: Add OpenAI/Claude to AIProvider enum
+                        provider: AIProvider::Gemini, // TODO: Add OpenAI/Claude to AIProvider enum
                         timestamp: std::time::SystemTime::now()
                             .duration_since(std::time::UNIX_EPOCH)
                             .unwrap()
@@ -216,7 +222,10 @@ impl AIRouter {
                     return Ok(response);
                 }
                 Err(e) => {
-                    warn!("[AI Router v15] ✗ UnifiedIA failed: {}, fallback to Gemini", e);
+                    warn!(
+                        "[AI Router v15] ✗ UnifiedIA failed: {}, fallback to Gemini",
+                        e
+                    );
                 }
             }
         }
@@ -237,7 +246,10 @@ impl AIRouter {
                         return Ok(response);
                     }
                     Err(e) => {
-                        warn!("[AI Router v20.1] ✗ Gemini failed: {}, fallback to Ollama", e);
+                        warn!(
+                            "[AI Router v20.1] ✗ Gemini failed: {}, fallback to Ollama",
+                            e
+                        );
                     }
                 }
             }
@@ -263,7 +275,9 @@ impl AIRouter {
             }
         }
 
-        log::error!("[AI Router v15] ✗ No provider available (UnifiedIA + Gemini + Ollama all failed)");
+        log::error!(
+            "[AI Router v15] ✗ No provider available (UnifiedIA + Gemini + Ollama all failed)"
+        );
         // No provider available
         Err(AIError::NoProviderAvailable)
     }
@@ -307,7 +321,7 @@ impl AIRouter {
                     Ok(AIResponse {
                         content: unified_response.content,
                         tokens: unified_response.tokens_used,
-                        provider: AIProvider::Gemini,  // TODO: Extend AIProvider enum
+                        provider: AIProvider::Gemini, // TODO: Extend AIProvider enum
                         timestamp: std::time::SystemTime::now()
                             .duration_since(std::time::UNIX_EPOCH)
                             .unwrap()

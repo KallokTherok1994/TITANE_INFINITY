@@ -34,7 +34,7 @@ export const DictationButton: FC<DictationButtonProps> = ({
   title = 'Dictée vocale (micro → texte)',
 }) => {
   const { status, startDictation, stopDictation } = useVoiceEngine({
-    onTranscript: (text) => {
+    onTranscript: text => {
       if (text.trim()) {
         onDictationResult(text);
       }
@@ -84,12 +84,8 @@ export const DictationButton: FC<DictationButtonProps> = ({
       title={isDisabled ? 'Microphone non disponible' : title}
       aria-label={isRecording ? 'Arrêter la dictée' : 'Démarrer la dictée vocale'}
     >
-      <span className="dictation-icon">
-        {isRecording ? '⏹️' : '🎙️'}
-      </span>
-      {isRecording && (
-        <span className="dictation-pulse" />
-      )}
+      <span className="dictation-icon">{isRecording ? '⏹️' : '🎙️'}</span>
+      {isRecording && <span className="dictation-pulse" />}
     </button>
   );
 };

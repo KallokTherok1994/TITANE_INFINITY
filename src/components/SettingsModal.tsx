@@ -27,7 +27,7 @@ import {
   disableCloudMode,
   checkInternetConnection,
   isOnlineModeEnabled,
-  type AIConfig
+  type AIConfig,
 } from '../config/offline-first';
 import { getApprovalStatus, resetAllApprovals } from '../utils/cloudAPIConfirmation';
 
@@ -39,9 +39,9 @@ interface SettingsModalProps {
 export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [config, setConfig] = useState<AIConfig>(getAIConfig());
   const [isOnline, setIsOnline] = useState(false);
-  const [approvals, setApprovals] = useState<{session: string[], permanent: string[]}>({
+  const [approvals, setApprovals] = useState<{ session: string[]; permanent: string[] }>({
     session: [],
-    permanent: []
+    permanent: [],
   });
   const [checking, setChecking] = useState(false);
 
@@ -65,9 +65,10 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
       disableCloudMode();
     } else {
       // Par défaut gemini pour cloud/hybrid
-      const cloudProvider = config.provider === 'gemini' || config.provider === 'openai'
-        ? config.provider
-        : 'gemini';
+      const cloudProvider =
+        config.provider === 'gemini' || config.provider === 'openai'
+          ? config.provider
+          : 'gemini';
       enableCloudMode(cloudProvider);
     }
     setConfig(getAIConfig());
@@ -91,8 +92,8 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   if (!isOpen) return null;
 
   return (
-    <Modal 
-      isOpen={isOpen} 
+    <Modal
+      isOpen={isOpen}
       onClose={onClose}
       title="⚙️ Configuration AI"
       size="lg"
@@ -104,7 +105,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         <section className="settings-section" aria-labelledby="status-heading">
           <h3 id="status-heading">📡 Status Internet</h3>
           <div className="status-row">
-            <div 
+            <div
               className={`status-indicator ${isOnline ? 'online' : 'offline'}`}
               role="status"
               aria-live="polite"
@@ -116,7 +117,9 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               className="btn-secondary"
               onClick={handleCheckInternet}
               disabled={checking}
-              aria-label={checking ? 'Vérification en cours' : 'Vérifier la connexion internet'}
+              aria-label={
+                checking ? 'Vérification en cours' : 'Vérifier la connexion internet'
+              }
             >
               {checking ? '⏳ Vérification...' : '🔄 Vérifier'}
             </button>
@@ -128,50 +131,56 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           <h3 id="mode-heading">🤖 Mode AI</h3>
           <fieldset className="mode-selector">
             <legend className="sr-only">Choisir le mode AI</legend>
-            
+
             <label className="mode-btn">
-              <input 
-                type="radio" 
-                name="ai-mode" 
-                value="local" 
+              <input
+                type="radio"
+                name="ai-mode"
+                value="local"
                 checked={config.mode === 'local'}
                 onChange={() => handleModeChange('local')}
                 className="mode-radio sr-only"
               />
               <div className={`mode-visual ${config.mode === 'local' ? 'active' : ''}`}>
-                <div className="mode-icon" aria-hidden="true">🏠</div>
+                <div className="mode-icon" aria-hidden="true">
+                  🏠
+                </div>
                 <div className="mode-label">Local</div>
                 <div className="mode-desc">100% offline</div>
               </div>
             </label>
 
             <label className="mode-btn">
-              <input 
-                type="radio" 
-                name="ai-mode" 
-                value="cloud" 
+              <input
+                type="radio"
+                name="ai-mode"
+                value="cloud"
                 checked={config.mode === 'cloud'}
                 onChange={() => handleModeChange('cloud')}
                 className="mode-radio sr-only"
               />
               <div className={`mode-visual ${config.mode === 'cloud' ? 'active' : ''}`}>
-                <div className="mode-icon" aria-hidden="true">🌐</div>
+                <div className="mode-icon" aria-hidden="true">
+                  🌐
+                </div>
                 <div className="mode-label">Cloud</div>
                 <div className="mode-desc">APIs externes</div>
               </div>
             </label>
 
             <label className="mode-btn">
-              <input 
-                type="radio" 
-                name="ai-mode" 
-                value="hybrid" 
+              <input
+                type="radio"
+                name="ai-mode"
+                value="hybrid"
                 checked={config.mode === 'hybrid'}
                 onChange={() => handleModeChange('hybrid')}
                 className="mode-radio sr-only"
               />
               <div className={`mode-visual ${config.mode === 'hybrid' ? 'active' : ''}`}>
-                <div className="mode-icon" aria-hidden="true">⚡</div>
+                <div className="mode-icon" aria-hidden="true">
+                  ⚡
+                </div>
                 <div className="mode-label">Hybrid</div>
                 <div className="mode-desc">Local + Cloud</div>
               </div>
@@ -190,7 +199,9 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               id="provider-select"
               className="provider-select"
               value={config.provider}
-              onChange={(e) => handleProviderChange(e.target.value as 'gemini' | 'openai' | 'ollama')}
+              onChange={e =>
+                handleProviderChange(e.target.value as 'gemini' | 'openai' | 'ollama')
+              }
               aria-labelledby="provider-heading"
             >
               <option value="gemini">Google Gemini</option>
@@ -227,22 +238,34 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             <h3 id="approvals-heading">✅ Approbations Actives</h3>
 
             {approvals.permanent.length > 0 && (
-              <div className="approvals-list" role="region" aria-label="Approbations permanentes">
+              <div
+                className="approvals-list"
+                role="region"
+                aria-label="Approbations permanentes"
+              >
                 <div className="approvals-label">⭐ Permanentes:</div>
                 <div role="list">
                   {approvals.permanent.map(p => (
-                    <span key={p} role="listitem" className="approval-tag permanent">{p}</span>
+                    <span key={p} role="listitem" className="approval-tag permanent">
+                      {p}
+                    </span>
                   ))}
                 </div>
               </div>
             )}
 
             {approvals.session.length > 0 && (
-              <div className="approvals-list" role="region" aria-label="Approbations de session">
+              <div
+                className="approvals-list"
+                role="region"
+                aria-label="Approbations de session"
+              >
                 <div className="approvals-label">🔄 Session:</div>
                 <div role="list">
                   {approvals.session.map(p => (
-                    <span key={p} role="listitem" className="approval-tag session">{p}</span>
+                    <span key={p} role="listitem" className="approval-tag session">
+                      {p}
+                    </span>
                   ))}
                 </div>
               </div>

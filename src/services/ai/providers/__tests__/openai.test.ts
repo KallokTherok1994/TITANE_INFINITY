@@ -33,7 +33,7 @@ describe('OpenAI Provider', () => {
       expect(invoke).toHaveBeenCalledWith('get_openai_key_status');
     });
 
-    it('devrait retourner false si la clé n\'est pas configurée', async () => {
+    it("devrait retourner false si la clé n'est pas configurée", async () => {
       vi.mocked(invoke).mockResolvedValue({
         ok: true,
         data: { configured: false },
@@ -44,7 +44,7 @@ describe('OpenAI Provider', () => {
       expect(result).toBe(false);
     });
 
-    it('devrait retourner false en cas d\'erreur backend', async () => {
+    it("devrait retourner false en cas d'erreur backend", async () => {
       vi.mocked(invoke).mockRejectedValue(new Error('Backend error'));
 
       const result = await openaiProvider.isAvailable();
@@ -133,7 +133,7 @@ describe('OpenAI Provider', () => {
       });
 
       await expect(openaiProvider.generate('Test')).rejects.toThrow(
-        'Délai d\'attente OpenAI dépassé'
+        "Délai d'attente OpenAI dépassé"
       );
     });
 
@@ -149,7 +149,7 @@ describe('OpenAI Provider', () => {
       );
     });
 
-    it('devrait convertir l\'historique correctement', async () => {
+    it("devrait convertir l'historique correctement", async () => {
       vi.mocked(invoke).mockResolvedValue({
         ok: true,
         data: { content: 'Réponse', model: 'gpt-4o' },

@@ -104,22 +104,22 @@ export class AutoAuditEngine {
     console.log('🔍 [AUTO-AUDIT] Running scan...');
 
     // 1. Vérifier intégrité du système de fichiers
-    results.push(...await this.checkFileSystemIntegrity());
+    results.push(...(await this.checkFileSystemIntegrity()));
 
     // 2. Vérifier état des commandes Tauri
-    results.push(...await this.checkTauriCommands());
+    results.push(...(await this.checkTauriCommands()));
 
     // 3. Vérifier état de la mémoire
-    results.push(...await this.checkMemoryState());
+    results.push(...(await this.checkMemoryState()));
 
     // 4. Vérifier intégrité cryptographique
-    results.push(...await this.checkCryptoIntegrity());
+    results.push(...(await this.checkCryptoIntegrity()));
 
     // 5. Vérifier performance
-    results.push(...await this.checkPerformance());
+    results.push(...(await this.checkPerformance()));
 
     // 6. Vérifier structure XP
-    results.push(...await this.checkXpStructure());
+    results.push(...(await this.checkXpStructure()));
 
     const duration = performance.now() - startTime;
 
@@ -163,9 +163,11 @@ export class AutoAuditEngine {
     const results: AuditResult[] = [];
 
     try {
-      const response = await secureInvoke<{ ok: boolean; data?: unknown; error?: string }>(
-        'check_system_integrity'
-      );
+      const response = await secureInvoke<{
+        ok: boolean;
+        data?: unknown;
+        error?: string;
+      }>('check_system_integrity');
 
       if (response.ok) {
         const report = typeof response.data === 'string' ? response.data : undefined;
@@ -173,7 +175,9 @@ export class AutoAuditEngine {
           timestamp: Date.now(),
           category: 'filesystem',
           status: 'ok',
-          message: report ? `Vault integrity: OK (${report.split('\n')[3]?.trim() ?? 'validated'})` : 'Vault integrity: OK',
+          message: report
+            ? `Vault integrity: OK (${report.split('\n')[3]?.trim() ?? 'validated'})`
+            : 'Vault integrity: OK',
         });
       } else {
         const errorMsg = response.error ?? 'Integrity check failed';
@@ -383,7 +387,7 @@ export class AutoAuditEngine {
 
     console.log(
       `${statusIcon} [AUTO-AUDIT] Scan completed in ${report.duration.toFixed(0)}ms | ` +
-      `✅ ${report.passed} | ⚠️ ${report.warnings} | ❌ ${report.errors} | 🚨 ${report.critical}`
+        `✅ ${report.passed} | ⚠️ ${report.warnings} | ❌ ${report.errors} | 🚨 ${report.critical}`
     );
 
     // Logger uniquement les problèmes

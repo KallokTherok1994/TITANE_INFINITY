@@ -7,5 +7,5 @@ export type {
   AutoHealError,
   AutoHealAction,
   AutoHealStats,
-  AutoHealConfig
+  AutoHealConfig,
 } from '../../services/ai/autoHealEngine';

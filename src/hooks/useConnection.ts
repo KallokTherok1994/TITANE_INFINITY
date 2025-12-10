@@ -56,7 +56,9 @@ export function useConnection() {
         latency,
       });
 
-      console.log(`🔗 Connection check: ${providers.length} providers, best: ${availableProvider?.provider}`);
+      console.log(
+        `🔗 Connection check: ${providers.length} providers, best: ${availableProvider?.provider}`
+      );
 
       return online;
     } catch (err) {
@@ -67,13 +69,15 @@ export function useConnection() {
         online: false,
         lastCheck: Date.now(),
         provider: 'local',
-        availableProviders: [{
-          provider: 'local',
-          available: true,
-          latency_ms: 0,
-          models: ['echo'],
-          error: undefined,
-        }],
+        availableProviders: [
+          {
+            provider: 'local',
+            available: true,
+            latency_ms: 0,
+            models: ['echo'],
+            error: undefined,
+          },
+        ],
         latency: 0,
       });
 

@@ -10,11 +10,11 @@ use std::collections::HashMap;
 /// Type de raisonnement
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum ReasoningType {
-    Deductive,   // Déduction logique
-    Inductive,   // Généralisation
-    Abductive,   // Meilleure explication
-    Analogical,  // Par analogie
-    Causal,      // Cause et effet
+    Deductive,     // Déduction logique
+    Inductive,     // Généralisation
+    Abductive,     // Meilleure explication
+    Analogical,    // Par analogie
+    Causal,        // Cause et effet
     Probabilistic, // Probabiliste
 }
 

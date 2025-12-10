@@ -23,6 +23,7 @@ src/services/
 **Rôle**: Service centralisé pour toutes les commandes Tauri ↔ React
 
 **Features**:
+
 - ✅ Logging automatique (DEBUG_MODE)
 - ✅ Error handling unifié (CoreError)
 - ✅ Timeout configurable (défaut 30s)
@@ -30,6 +31,7 @@ src/services/
 - ✅ 30+ commandes typées
 
 **Usage**:
+
 ```typescript
 import { invokeTauriCommand, sendChatMessage } from '@services/tauriBridge';
 
@@ -47,13 +49,14 @@ const result = await invokeTauriCommand<any>(
 );
 
 // Typed helper
-const chatResult = await sendChatMessage(
-  [{ role: 'user', content: 'Hello!' }],
-  { model: 'gpt-4', temperature: 0.7 }
-);
+const chatResult = await sendChatMessage([{ role: 'user', content: 'Hello!' }], {
+  model: 'gpt-4',
+  temperature: 0.7,
+});
 ```
 
 **API disponibles**:
+
 - `getSingularityState()`, `syncSingularityState(state)`
 - `getHeliosModules()`, `getHeliosHealth()`
 - `getActiveProjects(limit)`, `getRecentMemories(limit)`
@@ -72,6 +75,7 @@ const chatResult = await sendChatMessage(
 **Rôle**: Client AI robuste avec circuit breaker, retry, fallback chain
 
 **Features**:
+
 - ✅ Circuit breaker (5 failures → open, 30s reset)
 - ✅ Retry avec exponential backoff (1s, 2s, 4s...)
 - ✅ Fallback chain configurable (gpt-4 → claude-3 → ollama)
@@ -79,14 +83,19 @@ const chatResult = await sendChatMessage(
 - ✅ Error handling robuste
 
 **Usage**:
+
 ```typescript
-import { sendMessage, sendSimpleMessage, getCircuitBreakerStatus } from '@services/ai/chatClient';
+import {
+  sendMessage,
+  sendSimpleMessage,
+  getCircuitBreakerStatus,
+} from '@services/ai/chatClient';
 
 // Full control
 const result = await sendMessage(
   [
     { role: 'system', content: 'Tu es un assistant IA.' },
-    { role: 'user', content: 'Explique-moi TypeScript.' }
+    { role: 'user', content: 'Explique-moi TypeScript.' },
   ],
   {
     model: 'gpt-4',
@@ -94,7 +103,7 @@ const result = await sendMessage(
     maxTokens: 2000,
     retries: 3,
     retryDelay: 1000,
-    fallbackModels: ['claude-3', 'ollama']
+    fallbackModels: ['claude-3', 'ollama'],
   }
 );
 
@@ -114,6 +123,7 @@ console.log('Circuit breaker:', cbState);
 ```
 
 **Types**:
+
 ```typescript
 interface ChatConfig {
   model?: string;
@@ -142,6 +152,7 @@ interface ChatResult {
 ### Migrer ChatWindow vers chatClient
 
 **AVANT** (retry local):
+
 ```typescript
 const handleSendWithRetry = async (prompt: string, retries = 3) => {
   for (let attempt = 0; attempt < retries; attempt++) {
@@ -163,18 +174,16 @@ const handleSendWithRetry = async (prompt: string, retries = 3) => {
 ```
 
 **APRÈS** (chatClient):
+
 ```typescript
 import { sendMessage } from '@services/ai/chatClient';
 
 const handleSend = async () => {
-  const result = await sendMessage(
-    [...messages, { role: 'user', content: input }],
-    {
-      model: 'gpt-4',
-      retries: 3,
-      fallbackModels: ['claude-3', 'ollama']
-    }
-  );
+  const result = await sendMessage([...messages, { role: 'user', content: input }], {
+    model: 'gpt-4',
+    retries: 3,
+    fallbackModels: ['claude-3', 'ollama'],
+  });
 
   if (result.success) {
     setMessages(prev => [...prev, { role: 'assistant', content: result.content }]);
@@ -185,6 +194,7 @@ const handleSend = async () => {
 ```
 
 **Avantages**:
+
 - ✅ Code 70% plus court
 - ✅ Circuit breaker automatique
 - ✅ Fallback chain configuré

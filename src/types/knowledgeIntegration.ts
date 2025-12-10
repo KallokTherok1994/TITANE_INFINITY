@@ -21,59 +21,59 @@
  * Source d'une connaissance
  */
 export type KnowledgeSource =
-  | 'multimodal'         // MultimodalFusionEngine
-  | 'predictive'         // PredictiveEngine
-  | 'rhythm'             // RhythmEngine
-  | 'presence'           // PresenceEngine
-  | 'resonance'          // ResonanceEngine
-  | 'flow'               // FlowEngine
-  | 'stress'             // StressRegulationEngine
-  | 'reflection'         // SelfReflectionEngine
-  | 'context'            // ChatContextEngine
-  | 'user_input'         // Input utilisateur direct
-  | 'inference';         // Inférence système
+  | 'multimodal' // MultimodalFusionEngine
+  | 'predictive' // PredictiveEngine
+  | 'rhythm' // RhythmEngine
+  | 'presence' // PresenceEngine
+  | 'resonance' // ResonanceEngine
+  | 'flow' // FlowEngine
+  | 'stress' // StressRegulationEngine
+  | 'reflection' // SelfReflectionEngine
+  | 'context' // ChatContextEngine
+  | 'user_input' // Input utilisateur direct
+  | 'inference'; // Inférence système
 
 /**
  * Type de connaissance
  */
 export type KnowledgeType =
-  | 'behavioral'         // Comportement utilisateur
-  | 'rhythmic'           // Patterns rythmiques
-  | 'emotional'          // États émotionnels (détectés, non imités)
-  | 'contextual'         // Contexte conversationnel
-  | 'preferential'       // Préférences
-  | 'systemic'           // État du système
-  | 'relational';        // Relations entre éléments
+  | 'behavioral' // Comportement utilisateur
+  | 'rhythmic' // Patterns rythmiques
+  | 'emotional' // États émotionnels (détectés, non imités)
+  | 'contextual' // Contexte conversationnel
+  | 'preferential' // Préférences
+  | 'systemic' // État du système
+  | 'relational'; // Relations entre éléments
 
 /**
  * Niveau de confiance
  */
 export type ConfidenceLevel =
-  | 'very_low'           // < 0.2
-  | 'low'                // 0.2 - 0.4
-  | 'medium'             // 0.4 - 0.6
-  | 'high'               // 0.6 - 0.8
-  | 'very_high';         // > 0.8
+  | 'very_low' // < 0.2
+  | 'low' // 0.2 - 0.4
+  | 'medium' // 0.4 - 0.6
+  | 'high' // 0.6 - 0.8
+  | 'very_high'; // > 0.8
 
 /**
  * Type de conflit
  */
 export type ConflictType =
-  | 'contradiction'      // Données contradictoires
-  | 'inconsistency'      // Incohérence logique
-  | 'redundancy'         // Données redondantes
-  | 'obsolescence'       // Données obsolètes
-  | 'priority_clash';    // Conflit de priorité
+  | 'contradiction' // Données contradictoires
+  | 'inconsistency' // Incohérence logique
+  | 'redundancy' // Données redondantes
+  | 'obsolescence' // Données obsolètes
+  | 'priority_clash'; // Conflit de priorité
 
 /**
  * Stratégie de résolution
  */
 export type ResolutionStrategy =
-  | 'newer_wins'         // La donnée la plus récente gagne
-  | 'higher_confidence'  // La confiance la plus élevée gagne
-  | 'weighted_merge'     // Fusion pondérée
-  | 'source_priority'    // Priorité par source
-  | 'manual_review';     // Révision manuelle requise
+  | 'newer_wins' // La donnée la plus récente gagne
+  | 'higher_confidence' // La confiance la plus élevée gagne
+  | 'weighted_merge' // Fusion pondérée
+  | 'source_priority' // Priorité par source
+  | 'manual_review'; // Révision manuelle requise
 
 // ============================================================================
 // INTERFACES - ÉLÉMENTS DE CONNAISSANCE
@@ -332,7 +332,12 @@ export interface IntegrationEvent {
   id: string;
 
   // Type d'événement
-  type: 'integration' | 'conflict_detected' | 'conflict_resolved' | 'pattern_learned' | 'update';
+  type:
+    | 'integration'
+    | 'conflict_detected'
+    | 'conflict_resolved'
+    | 'pattern_learned'
+    | 'update';
 
   // Source
   source: KnowledgeSource;
@@ -447,13 +452,13 @@ export interface KnowledgeIntegrationEngineConfig {
   // Seuils
   thresholds: {
     // Seuil de cohérence minimum
-    minCoherenceScore: number;        // default: 0.7
+    minCoherenceScore: number; // default: 0.7
 
     // Seuil de confiance pour intégration
-    minConfidenceForIntegration: number;  // default: 0.5
+    minConfidenceForIntegration: number; // default: 0.5
 
     // Seuil de sévérité pour conflit urgent
-    urgentConflictSeverity: number;   // default: 0.7
+    urgentConflictSeverity: number; // default: 0.7
   };
 
   // Résolution de conflits

@@ -12,11 +12,7 @@
  * - Tick interne pour mise à jour continue
  */
 
-import type {
-  TimeState,
-  DaySegment,
-  DayProfile,
-} from './types';
+import type { TimeState, DaySegment, DayProfile } from './types';
 
 // ═══════════════════════════════════════════════════════════════════
 // CONSTANTES — Segments par défaut (monochrome TITANE)
@@ -116,7 +112,11 @@ function getCurrentMinutes(date: Date): number {
 /**
  * Vérifie si une heure est dans un intervalle (gère le passage minuit)
  */
-function isTimeInRange(currentMinutes: number, startTime: string, endTime: string): boolean {
+function isTimeInRange(
+  currentMinutes: number,
+  startTime: string,
+  endTime: string
+): boolean {
   const start = timeToMinutes(startTime);
   const end = timeToMinutes(endTime);
 
@@ -137,20 +137,19 @@ function createInitialTimeState(): TimeState {
   const currentDayOfWeek = now.getDay();
 
   // Trouver le segment actuel
-  const currentSegment = DEFAULT_DAY_SEGMENTS.find(segment =>
-    isTimeInRange(currentMinutes, segment.startTime, segment.endTime)
-  ) || DEFAULT_DAY_SEGMENTS[0];
+  const currentSegment =
+    DEFAULT_DAY_SEGMENTS.find(segment =>
+      isTimeInRange(currentMinutes, segment.startTime, segment.endTime)
+    ) || DEFAULT_DAY_SEGMENTS[0];
 
   // Vérifier si jour travaillé
   const dayProfile = DEFAULT_WEEK_TEMPLATE.find(d => d.day === currentDayOfWeek);
   const isWorkDay = dayProfile?.active ?? false;
 
   // Vérifier si dans les heures de travail
-  const isWorkHours = isWorkDay && isTimeInRange(
-    currentMinutes,
-    DEFAULT_WORK_HOURS.start,
-    DEFAULT_WORK_HOURS.end
-  );
+  const isWorkHours =
+    isWorkDay &&
+    isTimeInRange(currentMinutes, DEFAULT_WORK_HOURS.start, DEFAULT_WORK_HOURS.end);
 
   return {
     currentDateTime: now.toISOString(),
@@ -258,14 +257,18 @@ export class TimeEngine {
 
     // Notifier si changement de segment
     if (previousSegment?.id !== this.state.currentSegment?.id) {
-      console.log('[TimeEngine] 🔄 Changement de segment:',
-        previousSegment?.label, '→', this.state.currentSegment?.label
+      console.log(
+        '[TimeEngine] 🔄 Changement de segment:',
+        previousSegment?.label,
+        '→',
+        this.state.currentSegment?.label
       );
     }
 
     // Notifier si changement heures de travail
     if (previousIsWorkHours !== this.state.isWorkHours) {
-      console.log('[TimeEngine] 💼 Heures de travail:',
+      console.log(
+        '[TimeEngine] 💼 Heures de travail:',
         this.state.isWorkHours ? 'DÉBUT' : 'FIN'
       );
     }
@@ -284,9 +287,10 @@ export class TimeEngine {
     const currentDayOfWeek = now.getDay();
 
     // Trouver le segment actuel
-    const currentSegment = this.state.daySegments.find(segment =>
-      isTimeInRange(currentMinutes, segment.startTime, segment.endTime)
-    ) || this.state.daySegments[0];
+    const currentSegment =
+      this.state.daySegments.find(segment =>
+        isTimeInRange(currentMinutes, segment.startTime, segment.endTime)
+      ) || this.state.daySegments[0];
 
     // Vérifier jour travaillé
     const dayProfile = this.state.weekTemplate.find(d => d.day === currentDayOfWeek);
@@ -294,11 +298,8 @@ export class TimeEngine {
 
     // Heures de travail personnalisées ou par défaut
     const workHours = dayProfile?.customWorkHours || this.state.workHours;
-    const isWorkHours = isWorkDay && isTimeInRange(
-      currentMinutes,
-      workHours.start,
-      workHours.end
-    );
+    const isWorkHours =
+      isWorkDay && isTimeInRange(currentMinutes, workHours.start, workHours.end);
 
     // Mettre à jour l'état
     this.state = {
@@ -419,7 +420,7 @@ export class TimeEngine {
 
     // Gestion passage minuit
     if (endMinutes < currentMinutes) {
-      return (24 * 60 - currentMinutes) + endMinutes;
+      return 24 * 60 - currentMinutes + endMinutes;
     }
 
     return endMinutes - currentMinutes;

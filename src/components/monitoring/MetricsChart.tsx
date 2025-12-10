@@ -51,7 +51,7 @@ export const MetricsChart: React.FC<MetricsChartProps> = ({
       if (service) {
         // Historique service
         const history = MetricsHistory.getServiceHistory(service);
-        const chartData = history.map((snapshot) => ({
+        const chartData = history.map(snapshot => ({
           time: new Date(snapshot.timestamp).toLocaleTimeString('fr-FR', {
             hour: '2-digit',
             minute: '2-digit',
@@ -63,13 +63,16 @@ export const MetricsChart: React.FC<MetricsChartProps> = ({
       } else {
         // Historique global
         const history = MetricsHistory.getGlobalHistory();
-        const chartData = history.map((snapshot) => ({
+        const chartData = history.map(snapshot => ({
           time: new Date(snapshot.timestamp).toLocaleTimeString('fr-FR', {
             hour: '2-digit',
             minute: '2-digit',
             second: '2-digit',
           }),
-          value: metric === 'latency' ? snapshot.globalAvgLatency : snapshot.globalErrorRate * 100,
+          value:
+            metric === 'latency'
+              ? snapshot.globalAvgLatency
+              : snapshot.globalErrorRate * 100,
         }));
         setData(chartData);
       }
@@ -141,7 +144,9 @@ export const MetricsChart: React.FC<MetricsChartProps> = ({
   };
 
   return (
-    <div className={`bg-gray-900 border border-gray-700 rounded-lg overflow-hidden ${className}`}>
+    <div
+      className={`bg-gray-900 border border-gray-700 rounded-lg overflow-hidden ${className}`}
+    >
       {/* Header */}
       <div className="px-6 py-4 border-b border-gray-700 flex items-center justify-between">
         <div className="flex items-center gap-3">

@@ -24,12 +24,12 @@ export type AgentRole =
   | 'healer'
   | 'memory'
   | 'persona'
-  | 'emotional'    // HarmoniaAgent
-  | 'cognitive'    // HeliosAgent
-  | 'watchdog'     // WatchdogAgent
-  | 'physical'     // HeliosAgent alternative
-  | 'expressive'   // PersonaAgent
-  | 'security';    // WatchdogAgent alternative
+  | 'emotional' // HarmoniaAgent
+  | 'cognitive' // HeliosAgent
+  | 'watchdog' // WatchdogAgent
+  | 'physical' // HeliosAgent alternative
+  | 'expressive' // PersonaAgent
+  | 'security'; // WatchdogAgent alternative
 
 export interface AgentState {
   id?: string;
@@ -86,7 +86,11 @@ export interface Agent {
   start?: () => Promise<void>;
   stop?: () => Promise<void>;
   processEvent?: (event: AgentEvent) => Promise<AgentResponse>;
-  getHealthStatus?: () => { health: number; load: number; metrics: Record<string, number> };
+  getHealthStatus?: () => {
+    health: number;
+    load: number;
+    metrics: Record<string, number>;
+  };
 }
 
 export interface MultiAgentEngine {

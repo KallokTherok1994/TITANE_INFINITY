@@ -5,9 +5,9 @@
 
 #![allow(dead_code)]
 
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use chrono::{DateTime, Utc};
 
 /// Synchroniseur d'évolution - croissance conjointe Kevin ↔ TITANE
 pub struct EvolutionSyncer {
@@ -216,35 +216,63 @@ impl EvolutionSyncer {
         // Kevin
         if trajectory.cognitive.current_level == self.kevin_trajectory.cognitive.current_level {
             self.kevin_trajectory.cognitive.current_level =
-                (self.kevin_trajectory.cognitive.current_level +
-                 self.kevin_trajectory.cognitive.recent_progress * 0.1).min(1.0);
+                (self.kevin_trajectory.cognitive.current_level
+                    + self.kevin_trajectory.cognitive.recent_progress * 0.1)
+                    .min(1.0);
             self.kevin_trajectory.emotional.current_level =
-                (self.kevin_trajectory.emotional.current_level +
-                 self.kevin_trajectory.emotional.recent_progress * 0.1).min(1.0);
+                (self.kevin_trajectory.emotional.current_level
+                    + self.kevin_trajectory.emotional.recent_progress * 0.1)
+                    .min(1.0);
         } else {
             // TITANE
             self.titane_trajectory.cognitive.current_level =
-                (self.titane_trajectory.cognitive.current_level +
-                 self.titane_trajectory.cognitive.recent_progress * 0.1).min(1.0);
+                (self.titane_trajectory.cognitive.current_level
+                    + self.titane_trajectory.cognitive.recent_progress * 0.1)
+                    .min(1.0);
             self.titane_trajectory.emotional.current_level =
-                (self.titane_trajectory.emotional.current_level +
-                 self.titane_trajectory.emotional.recent_progress * 0.1).min(1.0);
+                (self.titane_trajectory.emotional.current_level
+                    + self.titane_trajectory.emotional.recent_progress * 0.1)
+                    .min(1.0);
         }
     }
 
     /// Crée un point de synchronisation
     pub fn create_sync_point(&mut self) {
         let mut kevin_state = HashMap::new();
-        kevin_state.insert("cognitive".to_string(), self.kevin_trajectory.cognitive.current_level);
-        kevin_state.insert("emotional".to_string(), self.kevin_trajectory.emotional.current_level);
-        kevin_state.insert("spiritual".to_string(), self.kevin_trajectory.spiritual.current_level);
-        kevin_state.insert("entrepreneurial".to_string(), self.kevin_trajectory.entrepreneurial.current_level);
+        kevin_state.insert(
+            "cognitive".to_string(),
+            self.kevin_trajectory.cognitive.current_level,
+        );
+        kevin_state.insert(
+            "emotional".to_string(),
+            self.kevin_trajectory.emotional.current_level,
+        );
+        kevin_state.insert(
+            "spiritual".to_string(),
+            self.kevin_trajectory.spiritual.current_level,
+        );
+        kevin_state.insert(
+            "entrepreneurial".to_string(),
+            self.kevin_trajectory.entrepreneurial.current_level,
+        );
 
         let mut titane_state = HashMap::new();
-        titane_state.insert("cognitive".to_string(), self.titane_trajectory.cognitive.current_level);
-        titane_state.insert("emotional".to_string(), self.titane_trajectory.emotional.current_level);
-        titane_state.insert("spiritual".to_string(), self.titane_trajectory.spiritual.current_level);
-        titane_state.insert("entrepreneurial".to_string(), self.titane_trajectory.entrepreneurial.current_level);
+        titane_state.insert(
+            "cognitive".to_string(),
+            self.titane_trajectory.cognitive.current_level,
+        );
+        titane_state.insert(
+            "emotional".to_string(),
+            self.titane_trajectory.emotional.current_level,
+        );
+        titane_state.insert(
+            "spiritual".to_string(),
+            self.titane_trajectory.spiritual.current_level,
+        );
+        titane_state.insert(
+            "entrepreneurial".to_string(),
+            self.titane_trajectory.entrepreneurial.current_level,
+        );
 
         let alignment_score = self.calculate_alignment(&kevin_state, &titane_state);
 
@@ -260,7 +288,11 @@ impl EvolutionSyncer {
     }
 
     /// Calcule l'alignement entre deux états
-    fn calculate_alignment(&self, kevin: &HashMap<String, f32>, titane: &HashMap<String, f32>) -> f32 {
+    fn calculate_alignment(
+        &self,
+        kevin: &HashMap<String, f32>,
+        titane: &HashMap<String, f32>,
+    ) -> f32 {
         let mut total_diff = 0.0;
         let mut count = 0;
 
@@ -281,11 +313,8 @@ impl EvolutionSyncer {
     /// Met à jour l'état de symbiose
     fn update_symbiosis_state(&mut self) {
         // Calculer momentum
-        let recent_events: Vec<&EvolutionEvent> = self.evolution_events
-            .iter()
-            .rev()
-            .take(10)
-            .collect();
+        let recent_events: Vec<&EvolutionEvent> =
+            self.evolution_events.iter().rev().take(10).collect();
 
         let avg_impact: f32 = if recent_events.is_empty() {
             0.0

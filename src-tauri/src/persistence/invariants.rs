@@ -4,10 +4,10 @@
 //! © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
-use serde_json::Value;
 use super::migrations::CURRENT_SCHEMA_VERSION;
 use super::types::TitanEvent;
+use serde::{Deserialize, Serialize};
+use serde_json::Value;
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -124,7 +124,10 @@ pub fn assert_singularity_state_invariants(
                     if mode == ValidationMode::Strict {
                         errors.push(err);
                     } else {
-                        warnings.push(format!("schema_version {} > actuel {}", version, CURRENT_SCHEMA_VERSION));
+                        warnings.push(format!(
+                            "schema_version {} > actuel {}",
+                            version, CURRENT_SCHEMA_VERSION
+                        ));
                     }
                 }
             } else {
@@ -499,7 +502,10 @@ mod tests {
 
         let result = assert_singularity_state_invariants(&state, ValidationMode::Strict);
         assert!(!result.is_valid);
-        assert!(result.errors.iter().any(|e| matches!(e, InvariantError::InconsistentDate { .. })));
+        assert!(result
+            .errors
+            .iter()
+            .any(|e| matches!(e, InvariantError::InconsistentDate { .. })));
     }
 
     #[test]

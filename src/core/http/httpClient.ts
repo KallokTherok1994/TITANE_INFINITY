@@ -29,8 +29,15 @@ const isFetchMocked = (): boolean => {
     return false;
   }
 
-  const candidate = fetch as unknown as { mock?: unknown; getMockImplementation?: () => unknown };
-  return Boolean(candidate.mock || candidate.getMockImplementation || (candidate as any)._isMockFunction);
+  const candidate = fetch as unknown as {
+    mock?: unknown;
+    getMockImplementation?: () => unknown;
+  };
+  return Boolean(
+    candidate.mock ||
+    candidate.getMockImplementation ||
+    (candidate as any)._isMockFunction
+  );
 };
 
 const mockHttpResponse = async (url: string, _init?: RequestInit): Promise<Response> => {
@@ -41,18 +48,18 @@ const mockHttpResponse = async (url: string, _init?: RequestInit): Promise<Respo
             content: {
               parts: [
                 {
-                  text: `Gemini(mock) response for ${new URL(url).searchParams.get('key') ? 'secured request' : 'request'}`
-                }
-              ]
-            }
-          }
-        ]
+                  text: `Gemini(mock) response for ${new URL(url).searchParams.get('key') ? 'secured request' : 'request'}`,
+                },
+              ],
+            },
+          },
+        ],
       }
     : { ok: true };
 
   return new Response(JSON.stringify(body), {
     status: 200,
-    headers: { 'content-type': 'application/json' }
+    headers: { 'content-type': 'application/json' },
   });
 };
 
@@ -105,8 +112,8 @@ function isUrlAllowed(url: string): boolean {
     }
 
     // Vérifier domaines autorisés
-    return ALLOWED_DOMAINS.some(domain =>
-      hostname === domain || hostname.endsWith(`.${domain}`)
+    return ALLOWED_DOMAINS.some(
+      domain => hostname === domain || hostname.endsWith(`.${domain}`)
     );
   } catch (error) {
     console.error('[HTTP] Invalid URL:', url, error);
@@ -138,20 +145,17 @@ function isUrlAllowed(url: string): boolean {
 /**
  * Request générique (utilise Tauri fetch)
  */
-async function request<T = unknown>(url: string, config: HttpRequestConfig = {}): Promise<HttpResponse<T>> {
-  const {
-    method = 'GET',
-    headers = {},
-    body,
-    timeout = 30000,
-    signal,
-  } = config;
+async function request<T = unknown>(
+  url: string,
+  config: HttpRequestConfig = {}
+): Promise<HttpResponse<T>> {
+  const { method = 'GET', headers = {}, body, timeout = 30000, signal } = config;
 
   // Vérification liste blanche
   if (!isUrlAllowed(url)) {
     throw new Error(
       `[HTTP] Blocked request to unauthorized domain: ${url}\n` +
-      `Allowed domains: ${ALLOWED_DOMAINS.join(', ')}, localhost, 127.0.0.1`
+        `Allowed domains: ${ALLOWED_DOMAINS.join(', ')}, localhost, 127.0.0.1`
     );
   }
 
@@ -200,7 +204,8 @@ async function request<T = unknown>(url: string, config: HttpRequestConfig = {})
       throw new Error('[HTTP] No fetch implementation available in this environment');
     }
 
-    const shouldUseMockFetch = !useTauriFetch && isVitest && (!hasBrowserFetch || !isFetchMocked());
+    const shouldUseMockFetch =
+      !useTauriFetch && isVitest && (!hasBrowserFetch || !isFetchMocked());
     const fetchImpl = useTauriFetch
       ? tauriFetch
       : shouldUseMockFetch
@@ -254,35 +259,50 @@ export const httpClient = {
   /**
    * GET request
    */
-  get<T = unknown>(url: string, config: Omit<HttpRequestConfig, 'method' | 'body'> = {}): Promise<HttpResponse<T>> {
+  get<T = unknown>(
+    url: string,
+    config: Omit<HttpRequestConfig, 'method' | 'body'> = {}
+  ): Promise<HttpResponse<T>> {
     return request<T>(url, { ...config, method: 'GET' });
   },
 
   /**
    * POST request
    */
-  post<T = unknown>(url: string, config: Omit<HttpRequestConfig, 'method'> = {}): Promise<HttpResponse<T>> {
+  post<T = unknown>(
+    url: string,
+    config: Omit<HttpRequestConfig, 'method'> = {}
+  ): Promise<HttpResponse<T>> {
     return request<T>(url, { ...config, method: 'POST' });
   },
 
   /**
    * PUT request
    */
-  put<T = unknown>(url: string, config: Omit<HttpRequestConfig, 'method'> = {}): Promise<HttpResponse<T>> {
+  put<T = unknown>(
+    url: string,
+    config: Omit<HttpRequestConfig, 'method'> = {}
+  ): Promise<HttpResponse<T>> {
     return request<T>(url, { ...config, method: 'PUT' });
   },
 
   /**
    * DELETE request
    */
-  delete<T = unknown>(url: string, config: Omit<HttpRequestConfig, 'method' | 'body'> = {}): Promise<HttpResponse<T>> {
+  delete<T = unknown>(
+    url: string,
+    config: Omit<HttpRequestConfig, 'method' | 'body'> = {}
+  ): Promise<HttpResponse<T>> {
     return request<T>(url, { ...config, method: 'DELETE' });
   },
 
   /**
    * HEAD request
    */
-  head(url: string, config: Omit<HttpRequestConfig, 'method' | 'body'> = {}): Promise<HttpResponse<void>> {
+  head(
+    url: string,
+    config: Omit<HttpRequestConfig, 'method' | 'body'> = {}
+  ): Promise<HttpResponse<void>> {
     return request<void>(url, { ...config, method: 'HEAD' });
   },
 };
@@ -293,10 +313,7 @@ export const httpClient = {
  *
  * @deprecated Préférer httpClient.get/post/etc. pour clarté
  */
-export async function secureFetch(
-  url: string,
-  init?: RequestInit
-): Promise<Response> {
+export async function secureFetch(url: string, init?: RequestInit): Promise<Response> {
   const method = (init?.method || 'GET') as HttpRequestConfig['method'];
   const headers = init?.headers
     ? Object.fromEntries(new Headers(init.headers).entries())
@@ -310,7 +327,7 @@ export async function secureFetch(
       body = init.body;
     } else {
       // Body type complexe, conversion unknown→string safe
-      body = (init.body as unknown) as string;
+      body = init.body as unknown as string;
     }
   }
 

@@ -3,15 +3,17 @@
 //   Secure commands for AI key management and generation
 // ═══════════════════════════════════════════════════════════════
 
-#[allow(dead_code)]
-use titane_infinity::ia::{IAEngine, UnifiedIAEngine, UnifiedIARequest, UnifiedMessage};
-use titane_infinity::profiling::IPCProfiler;
-use titane_infinity::security::secrets_engine::{SecureSecretsEngine, KEY_CLAUDE, KEY_GEMINI, KEY_OPENAI};
 use log::{error, info};
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 use std::sync::Arc;
 use tauri::State;
+#[allow(dead_code)]
+use titane_infinity::ia::{IAEngine, UnifiedIAEngine, UnifiedIARequest, UnifiedMessage};
+use titane_infinity::profiling::IPCProfiler;
+use titane_infinity::security::secrets_engine::{
+    SecureSecretsEngine, KEY_CLAUDE, KEY_GEMINI, KEY_OPENAI,
+};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetAPIKeyRequest {
@@ -72,9 +74,12 @@ pub async fn set_api_key(
         "gemini" => secrets
             .set_secret(KEY_GEMINI, request.key)
             .map(|_| "Clé Gemini configurée avec succès".to_string()),
-        _ => Err(titane_infinity::security::secrets_engine::SecretsError::InvalidKey(
-            format!("Service inconnu: {}", request.service),
-        )),
+        _ => Err(
+            titane_infinity::security::secrets_engine::SecretsError::InvalidKey(format!(
+                "Service inconnu: {}",
+                request.service
+            )),
+        ),
     };
 
     match result {
@@ -101,12 +106,7 @@ pub async fn delete_api_key(
         "openai" | "gpt" => KEY_OPENAI,
         "claude" | "anthropic" => KEY_CLAUDE,
         "gemini" => KEY_GEMINI,
-        _ => {
-            return Ok(CommandResult::err(format!(
-                "Service inconnu: {}",
-                service
-            )))
-        }
+        _ => return Ok(CommandResult::err(format!("Service inconnu: {}", service))),
     };
 
     match secrets.clear_secret(key_name) {
@@ -152,12 +152,7 @@ pub async fn test_api_key(
 
     let engine = match IAEngine::from_str(&service) {
         Ok(e) => e,
-        Err(_) => {
-            return Ok(CommandResult::err(format!(
-                "Service inconnu: {}",
-                service
-            )))
-        }
+        Err(_) => return Ok(CommandResult::err(format!("Service inconnu: {}", service))),
     };
 
     // Try a simple request
@@ -190,7 +185,7 @@ pub async fn ia_generate(
     request: IAGenerateRequest,
 ) -> Result<CommandResult<serde_json::Value>, String> {
     let _guard = profiler.start("ia_generate");
-    
+
     info!("[IACommands] Génération IA...");
 
     let preferred = request

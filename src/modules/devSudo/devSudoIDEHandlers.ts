@@ -39,7 +39,10 @@ export async function handleViewFile(filePath: string): Promise<DevSudoResult> {
   return handleOpenFile(filePath);
 }
 
-export async function handleCreateFile(filePath: string, content?: string): Promise<DevSudoResult> {
+export async function handleCreateFile(
+  filePath: string,
+  content?: string
+): Promise<DevSudoResult> {
   return {
     handled: true,
     success: true,
@@ -264,7 +267,9 @@ ${partial}
 // REFACTORING OPERATIONS
 // ═══════════════════════════════════════════════════════════════════════════
 
-export async function handleRefactorComponent(componentName: string): Promise<DevSudoResult> {
+export async function handleRefactorComponent(
+  componentName: string
+): Promise<DevSudoResult> {
   return {
     handled: true,
     success: true,
@@ -356,7 +361,9 @@ export const ${hookName} = () => {
   };
 }
 
-export async function handleRefactorRustHandler(handlerName: string): Promise<DevSudoResult> {
+export async function handleRefactorRustHandler(
+  handlerName: string
+): Promise<DevSudoResult> {
   return {
     handled: true,
     success: true,

@@ -3,9 +3,7 @@
   "identifier": "audio-tts",
   "description": "Capability pour le système Audio/TTS/ASR TITANE∞ v19.3",
   "windows": ["main"],
-  "permissions": [
-    "core:default"
-  ],
+  "permissions": ["core:default"],
   "commands": {
     "allow": [
       "tts_speak",

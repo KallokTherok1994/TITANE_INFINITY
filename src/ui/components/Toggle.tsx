@@ -41,12 +41,14 @@ export const Toggle = ({
   className = '',
 }: ToggleProps) => {
   const [internalValue, setInternalValue] = useState(defaultValue);
-  
+
   const isControlled = controlledValue !== undefined;
   const value = isControlled ? controlledValue : internalValue;
 
   const handleSelect = (optionValue: string, optionDisabled?: boolean) => {
-    if (disabled || optionDisabled) {return;}
+    if (disabled || optionDisabled) {
+      return;
+    }
 
     if (!isControlled) {
       setInternalValue(optionValue);
@@ -62,11 +64,13 @@ export const Toggle = ({
     fullWidth && 'toggle--full-width',
     disabled && 'toggle--disabled',
     className,
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <div className={classes} role="tablist">
-      {options.map((option) => {
+      {options.map(option => {
         const isSelected = option.value === value;
         const isDisabled = disabled || option.disabled;
 
@@ -74,7 +78,9 @@ export const Toggle = ({
           'toggle__option',
           isSelected && 'toggle__option--selected',
           isDisabled && 'toggle__option--disabled',
-        ].filter(Boolean).join(' ');
+        ]
+          .filter(Boolean)
+          .join(' ');
 
         return (
           <button

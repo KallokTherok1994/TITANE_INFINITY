@@ -8,7 +8,7 @@ import type {
   EvolutionHistoryEntry,
   ActionResult,
   EvolutionPhase,
-  GovernanceRole
+  GovernanceRole,
 } from '../../services/evolutionEngine/evolutionEngine.config';
 import './EvolutionHistory.css';
 
@@ -36,7 +36,7 @@ const PHASE_ICONS: Record<EvolutionPhase, string> = {
   PLAN: '📋',
   VALIDATE: '✅',
   EXECUTE: '⚡',
-  LEARN: '🧠'
+  LEARN: '🧠',
 };
 
 const RESULT_COLORS: Record<ActionResult, string> = {
@@ -44,14 +44,14 @@ const RESULT_COLORS: Record<ActionResult, string> = {
   FAILED: '#ef4444',
   PARTIAL: '#f59e0b',
   DENIED: '#8b5cf6',
-  ROLLED_BACK: '#6b7280'
+  ROLLED_BACK: '#6b7280',
 };
 
 const ROLE_BADGES: Record<GovernanceRole, string> = {
   USER: '👤',
   DEV: '👨‍💻',
   ADMIN: '👑',
-  SYSTEM: '🤖'
+  SYSTEM: '🤖',
 };
 
 const formatDate = (timestamp: number): string => {
@@ -59,7 +59,7 @@ const formatDate = (timestamp: number): string => {
     day: '2-digit',
     month: '2-digit',
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
   });
 };
 
@@ -67,7 +67,7 @@ const formatRelativeTime = (timestamp: number): string => {
   const now = Date.now();
   const diff = now - timestamp;
 
-  if (diff < 60000) return 'À l\'instant';
+  if (diff < 60000) return "À l'instant";
   if (diff < 3600000) return `Il y a ${Math.floor(diff / 60000)} min`;
   if (diff < 86400000) return `Il y a ${Math.floor(diff / 3600000)}h`;
   return `Il y a ${Math.floor(diff / 86400000)}j`;
@@ -83,66 +83,66 @@ interface HistoryEntryCardProps {
   onRollback?: () => void;
 }
 
-const HistoryEntryCard: React.FC<HistoryEntryCardProps> = React.memo(({
-  entry,
-  onClick,
-  onRollback
-}) => {
-  const { timestamp, phase, actor, action, result, rollbackOf } = entry;
-  const phaseIcon = PHASE_ICONS[phase];
-  const roleIcon = ROLE_BADGES[actor];
-  const resultColor = RESULT_COLORS[result];
-  const canRollback = result === 'SUCCESS' && !rollbackOf;
+const HistoryEntryCard: React.FC<HistoryEntryCardProps> = React.memo(
+  ({ entry, onClick, onRollback }) => {
+    const { timestamp, phase, actor, action, result, rollbackOf } = entry;
+    const phaseIcon = PHASE_ICONS[phase];
+    const roleIcon = ROLE_BADGES[actor];
+    const resultColor = RESULT_COLORS[result];
+    const canRollback = result === 'SUCCESS' && !rollbackOf;
 
-  return (
-    <div
-      className={`history-entry result-${result.toLowerCase()}`}
-      onClick={onClick}
-      role="button"
-      tabIndex={0}
-    >
-      <div className="entry-timeline">
-        <span className="entry-phase-icon">{phaseIcon}</span>
-        <div className="timeline-line" />
-      </div>
-
-      <div className="entry-content">
-        <div className="entry-header">
-          <span className="entry-action">{action}</span>
-          <span className="entry-time" title={formatDate(timestamp)}>
-            {formatRelativeTime(timestamp)}
-          </span>
+    return (
+      <div
+        className={`history-entry result-${result.toLowerCase()}`}
+        onClick={onClick}
+        role="button"
+        tabIndex={0}
+      >
+        <div className="entry-timeline">
+          <span className="entry-phase-icon">{phaseIcon}</span>
+          <div className="timeline-line" />
         </div>
 
-        <div className="entry-meta">
-          <span className="entry-phase">{phase}</span>
-          <span className="entry-actor">{roleIcon} {actor}</span>
-          <span
-            className="entry-result"
-            style={{ color: resultColor }}
-          >
-            {result}
-          </span>
-        </div>
-
-        {rollbackOf && (
-          <div className="entry-rollback-info">
-            ↩️ Rollback de: {rollbackOf.slice(0, 8)}...
+        <div className="entry-content">
+          <div className="entry-header">
+            <span className="entry-action">{action}</span>
+            <span className="entry-time" title={formatDate(timestamp)}>
+              {formatRelativeTime(timestamp)}
+            </span>
           </div>
-        )}
 
-        {canRollback && onRollback && (
-          <button
-            className="btn-rollback"
-            onClick={(e) => { e.stopPropagation(); onRollback(); }}
-          >
-            ↩️ Annuler
-          </button>
-        )}
+          <div className="entry-meta">
+            <span className="entry-phase">{phase}</span>
+            <span className="entry-actor">
+              {roleIcon} {actor}
+            </span>
+            <span className="entry-result" style={{ color: resultColor }}>
+              {result}
+            </span>
+          </div>
+
+          {rollbackOf && (
+            <div className="entry-rollback-info">
+              ↩️ Rollback de: {rollbackOf.slice(0, 8)}...
+            </div>
+          )}
+
+          {canRollback && onRollback && (
+            <button
+              className="btn-rollback"
+              onClick={e => {
+                e.stopPropagation();
+                onRollback();
+              }}
+            >
+              ↩️ Annuler
+            </button>
+          )}
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  }
+);
 
 HistoryEntryCard.displayName = 'HistoryEntryCard';
 
@@ -155,7 +155,7 @@ export const EvolutionHistory: React.FC<EvolutionHistoryProps> = ({
   maxEntries = 50,
   onEntryClick,
   onRollback,
-  className = ''
+  className = '',
 }) => {
   const [filter, setFilter] = useState<FilterType>('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -175,25 +175,27 @@ export const EvolutionHistory: React.FC<EvolutionHistoryProps> = ({
     // Apply search filter
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
-      filtered = filtered.filter(e =>
-        e.action.toLowerCase().includes(term) ||
-        e.phase.toLowerCase().includes(term) ||
-        e.id.toLowerCase().includes(term)
+      filtered = filtered.filter(
+        e =>
+          e.action.toLowerCase().includes(term) ||
+          e.phase.toLowerCase().includes(term) ||
+          e.id.toLowerCase().includes(term)
       );
     }
 
     // Sort by timestamp (newest first) and limit
-    return filtered
-      .sort((a, b) => b.timestamp - a.timestamp)
-      .slice(0, maxEntries);
+    return filtered.sort((a, b) => b.timestamp - a.timestamp).slice(0, maxEntries);
   }, [entries, filter, searchTerm, maxEntries]);
 
-  const stats = useMemo(() => ({
-    total: entries.length,
-    success: entries.filter(e => e.result === 'SUCCESS').length,
-    failed: entries.filter(e => e.result === 'FAILED').length,
-    rollbacks: entries.filter(e => e.result === 'ROLLED_BACK').length
-  }), [entries]);
+  const stats = useMemo(
+    () => ({
+      total: entries.length,
+      success: entries.filter(e => e.result === 'SUCCESS').length,
+      failed: entries.filter(e => e.result === 'FAILED').length,
+      rollbacks: entries.filter(e => e.result === 'ROLLED_BACK').length,
+    }),
+    [entries]
+  );
 
   return (
     <div className={`evolution-history ${className}`}>
@@ -239,7 +241,7 @@ export const EvolutionHistory: React.FC<EvolutionHistoryProps> = ({
           className="search-input"
           placeholder="Rechercher..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={e => setSearchTerm(e.target.value)}
         />
       </div>
 

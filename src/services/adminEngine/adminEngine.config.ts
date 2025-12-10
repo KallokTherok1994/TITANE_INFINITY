@@ -34,12 +34,25 @@ export type LogSeverity = 'DEBUG' | 'INFO' | 'WARN' | 'ERROR' | 'CRITICAL';
 /**
  * Catégorie de log
  */
-export type LogCategory = 'INFO' | 'WARN' | 'ERROR' | 'ACTION' | 'SYSTEM' | 'SECURITY' | 'PERFORMANCE';
+export type LogCategory =
+  | 'INFO'
+  | 'WARN'
+  | 'ERROR'
+  | 'ACTION'
+  | 'SYSTEM'
+  | 'SECURITY'
+  | 'PERFORMANCE';
 
 /**
  * Statut d'un module TITANE∞
  */
-export type ModuleHealthStatus = 'HEALTHY' | 'DEGRADED' | 'CRITICAL' | 'OFFLINE' | 'RECOVERING' | 'UNKNOWN';
+export type ModuleHealthStatus =
+  | 'HEALTHY'
+  | 'DEGRADED'
+  | 'CRITICAL'
+  | 'OFFLINE'
+  | 'RECOVERING'
+  | 'UNKNOWN';
 
 /**
  * Identifiant des modules TITANE∞ surveillés
@@ -234,7 +247,12 @@ export interface AdminSnapshot {
 /**
  * Mode du système
  */
-export type SystemMode = 'NORMAL' | 'SAFE_MODE' | 'PROFILING' | 'MAINTENANCE' | 'RECOVERY';
+export type SystemMode =
+  | 'NORMAL'
+  | 'SAFE_MODE'
+  | 'PROFILING'
+  | 'MAINTENANCE'
+  | 'RECOVERY';
 
 /**
  * Anomalie détectée
@@ -606,7 +624,13 @@ export interface AdminDashboardState {
 /**
  * Vue active du dashboard
  */
-export type AdminView = 'OVERVIEW' | 'LOGS' | 'TIMELINE' | 'ACTIONS' | 'MODULES' | 'SETTINGS';
+export type AdminView =
+  | 'OVERVIEW'
+  | 'LOGS'
+  | 'TIMELINE'
+  | 'ACTIONS'
+  | 'MODULES'
+  | 'SETTINGS';
 
 /**
  * Configuration du dashboard
@@ -740,7 +764,7 @@ export const ADMIN_ACTIONS_CATALOG: AdminActionDefinition[] = [
   {
     id: 'purge_tts_cache',
     displayName: 'Purger Cache TTS',
-    description: 'Supprime les fichiers audio TTS en cache pour libérer de l\'espace',
+    description: "Supprime les fichiers audio TTS en cache pour libérer de l'espace",
     category: 'CACHE',
     targetModule: 'tts',
     permissionLevel: 'DEV_OR_ADMIN',
@@ -755,7 +779,8 @@ export const ADMIN_ACTIONS_CATALOG: AdminActionDefinition[] = [
   {
     id: 'purge_memory_cache',
     displayName: 'Purger Cache Mémoire Résumée',
-    description: 'Supprime les résumés de mémoire en cache (mémoire persistante préservée)',
+    description:
+      'Supprime les résumés de mémoire en cache (mémoire persistante préservée)',
     category: 'CACHE',
     targetModule: 'memory',
     permissionLevel: 'DEV_OR_ADMIN',
@@ -861,7 +886,8 @@ export const ADMIN_ACTIONS_CATALOG: AdminActionDefinition[] = [
       {
         type: 'SYSTEM_MODE',
         expectedValue: ['NORMAL', 'PROFILING'],
-        failureMessage: 'Vite watchers ne peuvent être relancés qu\'en mode normal ou profiling',
+        failureMessage:
+          "Vite watchers ne peuvent être relancés qu'en mode normal ou profiling",
       },
     ],
     estimatedDuration: 3000,
@@ -909,7 +935,7 @@ export const ADMIN_ACTIONS_CATALOG: AdminActionDefinition[] = [
   {
     id: 'run_mini_audit',
     displayName: 'Mini-Audit Système',
-    description: 'Exécute un audit rapide de l\'intégrité du système',
+    description: "Exécute un audit rapide de l'intégrité du système",
     category: 'HEALING',
     targetModule: null,
     permissionLevel: 'DEV_OR_ADMIN',
@@ -1021,7 +1047,7 @@ export const ADMIN_ACTIONS_CATALOG: AdminActionDefinition[] = [
   {
     id: 'sync_all_modules',
     displayName: 'Synchroniser Tous les Modules',
-    description: 'Force une synchronisation d\'état entre tous les modules TITANE∞',
+    description: "Force une synchronisation d'état entre tous les modules TITANE∞",
     category: 'SYSTEM',
     targetModule: null,
     permissionLevel: 'DEV_OR_ADMIN',
@@ -1098,8 +1124,10 @@ export const DEFAULT_DASHBOARD_CONFIG: AdminDashboardConfig = {
     'tauri',
   ],
   rolePermissions: {
-    ADMIN: ADMIN_ACTIONS_CATALOG.map((a) => a.id),
-    DEV: ADMIN_ACTIONS_CATALOG.filter((a) => a.permissionLevel !== 'ADMIN_ONLY').map((a) => a.id),
+    ADMIN: ADMIN_ACTIONS_CATALOG.map(a => a.id),
+    DEV: ADMIN_ACTIONS_CATALOG.filter(a => a.permissionLevel !== 'ADMIN_ONLY').map(
+      a => a.id
+    ),
     USER: [],
   },
 };
@@ -1154,9 +1182,9 @@ export const MODULE_ICONS: Record<TitaneModule, string> = {
  * Couleurs des niveaux de santé - TITANE Design System
  */
 export const HEALTH_LEVEL_COLORS: Record<HealthLevel, string> = {
-  OK: '#93b399',      // TITANE success
+  OK: '#93b399', // TITANE success
   WARNING: '#a89f91', // TITANE warning
-  ALERT: '#9a8a82',   // TITANE warning-dark
+  ALERT: '#9a8a82', // TITANE warning-dark
   CRITICAL: '#8f7a7a', // TITANE danger
 };
 
@@ -1164,10 +1192,10 @@ export const HEALTH_LEVEL_COLORS: Record<HealthLevel, string> = {
  * Couleurs des sévérités de log - TITANE Design System
  */
 export const LOG_SEVERITY_COLORS: Record<LogSeverity, string> = {
-  DEBUG: '#6b7280',   // gris
-  INFO: '#8899aa',    // TITANE info
-  WARN: '#a89f91',    // TITANE warning
-  ERROR: '#8f7a7a',   // TITANE danger
+  DEBUG: '#6b7280', // gris
+  INFO: '#8899aa', // TITANE info
+  WARN: '#a89f91', // TITANE warning
+  ERROR: '#8f7a7a', // TITANE danger
   CRITICAL: '#7a6868', // TITANE danger-dark
 };
 
@@ -1175,12 +1203,12 @@ export const LOG_SEVERITY_COLORS: Record<LogSeverity, string> = {
  * Couleurs des statuts de module - TITANE Design System
  */
 export const MODULE_STATUS_COLORS: Record<ModuleHealthStatus, string> = {
-  HEALTHY: '#93b399',   // TITANE success
-  DEGRADED: '#a89f91',  // TITANE warning
-  CRITICAL: '#8f7a7a',  // TITANE danger
-  OFFLINE: '#6b7280',   // gris
+  HEALTHY: '#93b399', // TITANE success
+  DEGRADED: '#a89f91', // TITANE warning
+  CRITICAL: '#8f7a7a', // TITANE danger
+  OFFLINE: '#6b7280', // gris
   RECOVERING: '#727b81', // TITANE primary
-  UNKNOWN: '#9ca3af',   // gris clair
+  UNKNOWN: '#9ca3af', // gris clair
 };
 
 // =============================================================================
@@ -1254,7 +1282,7 @@ export function hasPermission(role: AdminRole, action: AdminActionDefinition): b
  * Filtre les actions disponibles pour un rôle
  */
 export function getActionsForRole(role: AdminRole): AdminActionDefinition[] {
-  return ADMIN_ACTIONS_CATALOG.filter((action) => hasPermission(role, action));
+  return ADMIN_ACTIONS_CATALOG.filter(action => hasPermission(role, action));
 }
 
 /**
@@ -1350,9 +1378,9 @@ export function calculateHealthScore(
 
   // Module status penalties (max -25)
   const moduleValues = Object.values(modules);
-  const criticalModules = moduleValues.filter((m) => m.status === 'CRITICAL').length;
-  const degradedModules = moduleValues.filter((m) => m.status === 'DEGRADED').length;
-  const offlineModules = moduleValues.filter((m) => m.status === 'OFFLINE').length;
+  const criticalModules = moduleValues.filter(m => m.status === 'CRITICAL').length;
+  const degradedModules = moduleValues.filter(m => m.status === 'DEGRADED').length;
+  const offlineModules = moduleValues.filter(m => m.status === 'OFFLINE').length;
 
   score -= criticalModules * 10;
   score -= degradedModules * 3;

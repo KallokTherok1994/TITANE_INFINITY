@@ -22,11 +22,11 @@
  * - Utilisateur interne TITANE
  */
 export type CameraPermissionStatus =
-  | 'unknown'       // Pas encore demandé
-  | 'pending'       // Demande en cours
-  | 'granted'       // Accordé
-  | 'denied'        // Refusé
-  | 'unavailable';  // Pas de caméra
+  | 'unknown' // Pas encore demandé
+  | 'pending' // Demande en cours
+  | 'granted' // Accordé
+  | 'denied' // Refusé
+  | 'unavailable'; // Pas de caméra
 
 /**
  * Configuration globale du Vision Engine
@@ -42,29 +42,29 @@ export interface VisionConfig {
 
   // Processing
   processingEnabled: boolean;
-  landmarkSmoothing: number;      // 0-1, lissage temporel
-  confidenceThreshold: number;    // Seuil min pour considérer landmarks valides
+  landmarkSmoothing: number; // 0-1, lissage temporel
+  confidenceThreshold: number; // Seuil min pour considérer landmarks valides
 
   // Éthique & Privacy
   debugOverlayEnabled: boolean;
-  recordingEnabled: boolean;      // TOUJOURS false par défaut
-  historyMaxSize: number;         // Max entrées historique
+  recordingEnabled: boolean; // TOUJOURS false par défaut
+  historyMaxSize: number; // Max entrées historique
 
   // Auto-désactivation
-  autoDisableAfterMs?: number;    // Durée max mode observation
+  autoDisableAfterMs?: number; // Durée max mode observation
 }
 
 export type VisionResolution = '480p' | '720p' | '1080p';
 
 export const DEFAULT_VISION_CONFIG: VisionConfig = {
-  featureEnabled: false,          // Opt-in explicite
-  resolution: '480p',             // Basse résolution pour perf
-  targetFps: 15,                  // 15 FPS suffisant pour langage corporel
+  featureEnabled: false, // Opt-in explicite
+  resolution: '480p', // Basse résolution pour perf
+  targetFps: 15, // 15 FPS suffisant pour langage corporel
   processingEnabled: true,
   landmarkSmoothing: 0.5,
   confidenceThreshold: 0.5,
   debugOverlayEnabled: false,
-  recordingEnabled: false,        // JAMAIS par défaut
+  recordingEnabled: false, // JAMAIS par défaut
   historyMaxSize: 500,
   autoDisableAfterMs: 10 * 60 * 1000, // 10 minutes max
 };
@@ -139,17 +139,17 @@ export const getDefaultVisionInputState = (): VisionInputState => ({
  * 540+ points : corps (33), visage (468), mains (21×2)
  */
 export interface HolisticLandmarks {
-  pose?: NormalizedLandmark[];      // 33 landmarks corps
-  face?: NormalizedLandmark[];      // 468 landmarks visage
-  leftHand?: NormalizedLandmark[];  // 21 landmarks main gauche
+  pose?: NormalizedLandmark[]; // 33 landmarks corps
+  face?: NormalizedLandmark[]; // 468 landmarks visage
+  leftHand?: NormalizedLandmark[]; // 21 landmarks main gauche
   rightHand?: NormalizedLandmark[]; // 21 landmarks main droite
   timestamp: number;
 }
 
 export interface NormalizedLandmark {
-  x: number;  // 0-1 normalisé
-  y: number;  // 0-1 normalisé
-  z: number;  // Profondeur relative
+  x: number; // 0-1 normalisé
+  y: number; // 0-1 normalisé
+  z: number; // Profondeur relative
   visibility?: number; // 0-1 confiance visibilité
 }
 
@@ -161,17 +161,17 @@ export interface NormalizedLandmark {
  */
 export interface BodyLanguageState {
   // Scores principaux (0-1)
-  postureScore: number;         // Ouvert/droit vs affaissé/fermé
-  movementScore: number;        // Calme/statique vs agité/mouvement
-  gazeStabilityScore: number;   // Regard stable vs errant
+  postureScore: number; // Ouvert/droit vs affaissé/fermé
+  movementScore: number; // Calme/statique vs agité/mouvement
+  gazeStabilityScore: number; // Regard stable vs errant
 
   // Scores secondaires
-  shoulderSymmetry: number;     // Symétrie des épaules
-  headTilt: number;             // Inclinaison tête (-1 à 1)
-  facialActivity: number;       // Activité faciale détectée
+  shoulderSymmetry: number; // Symétrie des épaules
+  headTilt: number; // Inclinaison tête (-1 à 1)
+  facialActivity: number; // Activité faciale détectée
 
   // Confiance globale
-  confidence: number;           // 0-1, qualité des landmarks
+  confidence: number; // 0-1, qualité des landmarks
   landmarksDetected: boolean;
 
   // Debug (optionnel)
@@ -213,12 +213,12 @@ export type VisualLevel = 'low' | 'medium' | 'high';
  */
 export interface AffectEstimationState {
   // Indices principaux
-  visualEnergyLevel: VisualLevel;       // Énergie perçue
-  visualTensionLevel: VisualLevel;      // Tension corporelle apparente
-  visualEngagementLevel: VisualLevel;   // Engagement physique
+  visualEnergyLevel: VisualLevel; // Énergie perçue
+  visualTensionLevel: VisualLevel; // Tension corporelle apparente
+  visualEngagementLevel: VisualLevel; // Engagement physique
 
   // Confiance
-  confidence: number;                   // 0-1
+  confidence: number; // 0-1
   confidenceFactors: ConfidenceFactors;
 
   // Historique (pour tendances)
@@ -233,10 +233,10 @@ export interface AffectEstimationState {
 }
 
 export interface ConfidenceFactors {
-  landmarkQuality: number;      // Qualité des landmarks détectés
-  temporalStability: number;    // Stabilité dans le temps
-  lightingConditions: number;   // Qualité de l'éclairage estimée
-  faceVisibility: number;       // Visage bien visible
+  landmarkQuality: number; // Qualité des landmarks détectés
+  temporalStability: number; // Stabilité dans le temps
+  lightingConditions: number; // Qualité de l'éclairage estimée
+  faceVisibility: number; // Visage bien visible
 }
 
 export interface AffectHistoryEntry {
@@ -434,9 +434,9 @@ export const getDefaultVisionAffectGlobalState = (): VisionAffectGlobalState => 
  * Disclaimer obligatoire pour tout feedback visuel
  */
 export const VISION_ETHICAL_DISCLAIMER =
-  "Ces indices sont des approximations basées sur des signaux visuels. " +
-  "Ils ne représentent pas une vérité sur ton état interne. " +
-  "Seul toi sais vraiment comment tu te sens.";
+  'Ces indices sont des approximations basées sur des signaux visuels. ' +
+  'Ils ne représentent pas une vérité sur ton état interne. ' +
+  'Seul toi sais vraiment comment tu te sens.';
 
 /**
  * Templates de formulations prudentes
@@ -449,12 +449,12 @@ export const PRUDENT_FORMULATIONS = {
   },
   tension: {
     low: "Ta posture semble plutôt détendue d'après les indices visuels.",
-    medium: "Les signaux de tension corporelle semblent dans la moyenne.",
+    medium: 'Les signaux de tension corporelle semblent dans la moyenne.',
     high: "Je perçois peut-être des signes de tension corporelle. Qu'en penses-tu ?",
   },
   engagement: {
-    low: "Les indices suggèrent peut-être une attention dispersée, mais je peux me tromper.",
-    medium: "Ton engagement visible semble normal.",
-    high: "Tu sembles visuellement concentré et engagé.",
+    low: 'Les indices suggèrent peut-être une attention dispersée, mais je peux me tromper.',
+    medium: 'Ton engagement visible semble normal.',
+    high: 'Tu sembles visuellement concentré et engagé.',
   },
 } as const;

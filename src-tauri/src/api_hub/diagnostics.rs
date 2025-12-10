@@ -3,10 +3,10 @@
 //! Super Prompt #17 — Diagnostics et événements du Hub API
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
-use tokio::sync::RwLock;
-use std::collections::HashMap;
 use super::Provider;
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
+use tokio::sync::RwLock;
 
 /// Événement du Hub API
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -52,25 +52,16 @@ pub enum APIHubEvent {
         issues_count: usize,
     },
     /// Accès vault
-    VaultAccess {
-        provider: Provider,
-        action: String,
-    },
+    VaultAccess { provider: Provider, action: String },
     /// Erreur
-    Error {
-        context: String,
-        message: String,
-    },
+    Error { context: String, message: String },
     /// Rate limit atteint
     RateLimitHit {
         provider: Provider,
         retry_after_ms: Option<u64>,
     },
     /// Provider indisponible
-    ProviderUnavailable {
-        provider: Provider,
-        reason: String,
-    },
+    ProviderUnavailable { provider: Provider, reason: String },
 }
 
 /// Entrée d'événement avec timestamp
@@ -147,23 +138,41 @@ impl APIHubDiagnostics {
     /// Met à jour les métriques
     fn update_metrics(&self, metrics: &mut APIHubMetrics, event: &APIHubEvent) {
         match event {
-            APIHubEvent::RequestCompleted { provider, latency_ms, tokens, .. } => {
+            APIHubEvent::RequestCompleted {
+                provider,
+                latency_ms,
+                tokens,
+                ..
+            } => {
                 metrics.total_requests += 1;
                 metrics.successful_requests += 1;
                 metrics.total_tokens += *tokens as u64;
 
                 let provider_key = format!("{:?}", provider);
 
-                *metrics.requests_by_provider.entry(provider_key.clone()).or_insert(0) += 1;
-                *metrics.tokens_by_provider.entry(provider_key.clone()).or_insert(0) += *tokens as u64;
+                *metrics
+                    .requests_by_provider
+                    .entry(provider_key.clone())
+                    .or_insert(0) += 1;
+                *metrics
+                    .tokens_by_provider
+                    .entry(provider_key.clone())
+                    .or_insert(0) += *tokens as u64;
 
                 // Update average latency
                 let n = metrics.successful_requests as f64;
-                metrics.average_latency_ms = ((n - 1.0) * metrics.average_latency_ms + *latency_ms as f64) / n;
+                metrics.average_latency_ms =
+                    ((n - 1.0) * metrics.average_latency_ms + *latency_ms as f64) / n;
 
                 // Update provider latency
-                let entry = metrics.latency_by_provider.entry(provider_key).or_insert(0.0);
-                let count = *metrics.requests_by_provider.get(&format!("{:?}", provider)).unwrap_or(&1) as f64;
+                let entry = metrics
+                    .latency_by_provider
+                    .entry(provider_key)
+                    .or_insert(0.0);
+                let count = *metrics
+                    .requests_by_provider
+                    .get(&format!("{:?}", provider))
+                    .unwrap_or(&1) as f64;
                 *entry = ((*entry * (count - 1.0)) + *latency_ms as f64) / count;
             }
             APIHubEvent::RequestFailed { provider, .. } => {
@@ -186,7 +195,9 @@ impl APIHubDiagnostics {
     /// Récupère les événements par type
     pub async fn get_events_by_type(&self, event_type: &str, limit: usize) -> Vec<EventEntry> {
         let state = self.state.read().await;
-        state.events.iter()
+        state
+            .events
+            .iter()
             .rev()
             .filter(|e| self.matches_type(&e.event, event_type))
             .take(limit)
@@ -225,10 +236,26 @@ impl APIHubDiagnostics {
 
         ProviderMetrics {
             provider,
-            total_requests: *state.metrics.requests_by_provider.get(&provider_key).unwrap_or(&0),
-            total_tokens: *state.metrics.tokens_by_provider.get(&provider_key).unwrap_or(&0),
-            total_errors: *state.metrics.errors_by_provider.get(&provider_key).unwrap_or(&0),
-            average_latency_ms: *state.metrics.latency_by_provider.get(&provider_key).unwrap_or(&0.0),
+            total_requests: *state
+                .metrics
+                .requests_by_provider
+                .get(&provider_key)
+                .unwrap_or(&0),
+            total_tokens: *state
+                .metrics
+                .tokens_by_provider
+                .get(&provider_key)
+                .unwrap_or(&0),
+            total_errors: *state
+                .metrics
+                .errors_by_provider
+                .get(&provider_key)
+                .unwrap_or(&0),
+            average_latency_ms: *state
+                .metrics
+                .latency_by_provider
+                .get(&provider_key)
+                .unwrap_or(&0.0),
             error_rate: self.calculate_error_rate(&state.metrics, &provider_key),
         }
     }
@@ -268,8 +295,14 @@ impl APIHubDiagnostics {
             0.0
         };
 
-        let recent_errors = events.iter()
-            .filter(|e| matches!(e.event, APIHubEvent::RequestFailed { .. } | APIHubEvent::Error { .. }))
+        let recent_errors = events
+            .iter()
+            .filter(|e| {
+                matches!(
+                    e.event,
+                    APIHubEvent::RequestFailed { .. } | APIHubEvent::Error { .. }
+                )
+            })
             .count();
 
         let health_status = if error_rate < 0.01 && recent_errors < 5 {
@@ -382,7 +415,8 @@ mod tests {
             provider: Provider::OpenAI,
             latency_ms: 100,
             tokens: 50,
-        }).await;
+        })
+        .await;
 
         let events = diag.get_recent_events(10).await;
         assert_eq!(events.len(), 1);
@@ -400,7 +434,8 @@ mod tests {
             request_id: "test".to_string(),
             provider: Provider::Gemini,
             error: "Timeout".to_string(),
-        }).await;
+        })
+        .await;
 
         let metrics = diag.get_metrics().await;
         assert_eq!(metrics.failed_requests, 1);
@@ -418,7 +453,8 @@ mod tests {
                 provider: Provider::OpenAI,
                 latency_ms: 100,
                 tokens: 50,
-            }).await;
+            })
+            .await;
         }
 
         let report = diag.health_report().await;
@@ -434,7 +470,8 @@ mod tests {
             provider: Provider::Anthropic,
             latency_ms: 200,
             tokens: 100,
-        }).await;
+        })
+        .await;
 
         let provider_metrics = diag.get_provider_metrics(Provider::Anthropic).await;
         assert_eq!(provider_metrics.total_requests, 1);

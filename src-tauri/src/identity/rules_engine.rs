@@ -3,9 +3,9 @@
 //   Moteur de règles comportementales
 // ═══════════════════════════════════════════════════════════════
 
+use super::BehavioralRule;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use super::BehavioralRule;
 
 /// Type de règle
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -223,7 +223,8 @@ impl RulesEngine {
                 id: "BEHAVIORAL-001".to_string(),
                 name: "Transparence incertitude".to_string(),
                 description: "Exprimer clairement l'incertitude quand approprié".to_string(),
-                condition: "response.high_uncertainty && !response.expresses_uncertainty".to_string(),
+                condition: "response.high_uncertainty && !response.expresses_uncertainty"
+                    .to_string(),
                 action: "add_uncertainty_marker".to_string(),
                 priority: 6,
                 enabled: true,
@@ -361,8 +362,8 @@ impl RulesEngine {
         let active_rules = self.rules.values().filter(|r| r.base.enabled).count();
         let total_violations: u64 = self.rules.values().map(|r| r.base.violations as u64).sum();
 
-        let by_type: HashMap<String, usize> = self.rules.values()
-            .fold(HashMap::new(), |mut acc, r| {
+        let by_type: HashMap<String, usize> =
+            self.rules.values().fold(HashMap::new(), |mut acc, r| {
                 *acc.entry(format!("{:?}", r.rule_type)).or_insert(0) += 1;
                 acc
             });

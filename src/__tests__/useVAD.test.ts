@@ -83,13 +83,13 @@ Object.defineProperty(global.navigator, 'mediaDevices', {
 class MockAudioContext {
   sampleRate = 16000;
   state = 'running';
-  
+
   createMediaStreamSource() {
     return {
       connect: vi.fn(),
     };
   }
-  
+
   createAnalyser() {
     return {
       fftSize: 512,
@@ -97,7 +97,7 @@ class MockAudioContext {
       getFloatTimeDomainData: vi.fn(),
     };
   }
-  
+
   close() {
     this.state = 'closed';
     return Promise.resolve();
@@ -108,7 +108,7 @@ global.AudioContext = MockAudioContext as any;
 
 // Mock requestAnimationFrame
 let animationFrameId = 0;
-global.requestAnimationFrame = vi.fn((callback) => {
+global.requestAnimationFrame = vi.fn(callback => {
   animationFrameId++;
   setTimeout(callback, 16);
   return animationFrameId;
@@ -121,19 +121,19 @@ describe('useVAD', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    
+
     // Mock MediaStream
     const mockTrack = {
       stop: vi.fn(),
       kind: 'audio',
       enabled: true,
     } as any;
-    
+
     mockStream = {
       getTracks: vi.fn().mockReturnValue([mockTrack]),
       getAudioTracks: vi.fn().mockReturnValue([mockTrack]),
     } as any;
-    
+
     mockGetUserMedia.mockResolvedValue(mockStream);
   });
 
@@ -442,9 +442,7 @@ describe('useVAD', () => {
       const { result } = renderHook(() => useVAD());
 
       // Set error first
-      vi.mocked(audioService.configureVAD).mockRejectedValueOnce(
-        new Error('Test error')
-      );
+      vi.mocked(audioService.configureVAD).mockRejectedValueOnce(new Error('Test error'));
       await act(async () => {
         await result.current.configure({});
       });
@@ -459,9 +457,7 @@ describe('useVAD', () => {
     });
 
     it('should handle reset errors', async () => {
-      vi.mocked(audioService.resetVAD).mockRejectedValueOnce(
-        new Error('Reset failed')
-      );
+      vi.mocked(audioService.resetVAD).mockRejectedValueOnce(new Error('Reset failed'));
 
       const { result } = renderHook(() => useVAD());
 
@@ -505,9 +501,7 @@ describe('useVAD', () => {
     });
 
     it('should handle test errors', async () => {
-      vi.mocked(audioService.testVAD).mockRejectedValueOnce(
-        new Error('Test failed')
-      );
+      vi.mocked(audioService.testVAD).mockRejectedValueOnce(new Error('Test failed'));
 
       const { result } = renderHook(() => useVAD());
 

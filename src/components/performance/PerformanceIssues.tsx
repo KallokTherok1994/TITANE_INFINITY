@@ -20,13 +20,13 @@ import {
   SortDesc,
   Eye,
   EyeOff,
-  AlertCircle
+  AlertCircle,
 } from 'lucide-react';
 import type {
   PerformanceIssue,
   SeverityLevel,
   IssueType,
-  TitaneModule
+  TitaneModule,
 } from '../../services/performanceEngine/performanceEngine.config';
 
 // ============================================================================
@@ -61,41 +61,44 @@ export interface PerformanceIssuesProps {
 // CONFIGURATION
 // ============================================================================
 
-const SEVERITY_CONFIG: Record<SeverityLevel, {
-  label: string;
-  color: string;
-  bgColor: string;
-  icon: typeof AlertTriangle;
-  order: number;
-}> = {
+const SEVERITY_CONFIG: Record<
+  SeverityLevel,
+  {
+    label: string;
+    color: string;
+    bgColor: string;
+    icon: typeof AlertTriangle;
+    order: number;
+  }
+> = {
   critical: {
     label: 'Critique',
     color: 'text-red-400',
     bgColor: 'bg-red-500/20',
     icon: AlertOctagon,
-    order: 0
+    order: 0,
   },
   major: {
     label: 'Majeur',
     color: 'text-orange-400',
     bgColor: 'bg-orange-500/20',
     icon: AlertCircle,
-    order: 1
+    order: 1,
   },
   warning: {
     label: 'Avertissement',
     color: 'text-amber-400',
     bgColor: 'bg-amber-500/20',
     icon: AlertTriangle,
-    order: 2
+    order: 2,
   },
   info: {
     label: 'Information',
     color: 'text-blue-400',
     bgColor: 'bg-blue-500/20',
     icon: Info,
-    order: 3
-  }
+    order: 3,
+  },
 };
 
 const MODULE_LABELS: Record<TitaneModule | 'system' | 'frontend' | 'ia', string> = {
@@ -113,7 +116,7 @@ const MODULE_LABELS: Record<TitaneModule | 'system' | 'frontend' | 'ia', string>
   performance: 'Performance',
   system: 'Système',
   frontend: 'Frontend',
-  ia: 'IA'
+  ia: 'IA',
 };
 
 // ============================================================================
@@ -133,7 +136,7 @@ const IssueCard: React.FC<IssueCardProps> = ({
   expanded,
   onToggle,
   onResolve,
-  onIgnore
+  onIgnore,
 }) => {
   const config = SEVERITY_CONFIG[issue.severity];
   const SeverityIcon = config.icon;
@@ -144,7 +147,7 @@ const IssueCard: React.FC<IssueCardProps> = ({
     return date.toLocaleString('fr-FR', {
       hour: '2-digit',
       minute: '2-digit',
-      second: '2-digit'
+      second: '2-digit',
     });
   };
 
@@ -163,9 +166,10 @@ const IssueCard: React.FC<IssueCardProps> = ({
       layout
       className={`
         rounded-lg border overflow-hidden
-        ${isResolved
-          ? 'bg-slate-800/30 border-slate-700/30'
-          : `${config.bgColor} border-slate-700/50`
+        ${
+          isResolved
+            ? 'bg-slate-800/30 border-slate-700/30'
+            : `${config.bgColor} border-slate-700/50`
         }
       `}
     >
@@ -188,7 +192,9 @@ const IssueCard: React.FC<IssueCardProps> = ({
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className={`font-medium ${isResolved ? 'text-slate-400 line-through' : 'text-white'}`}>
+            <span
+              className={`font-medium ${isResolved ? 'text-slate-400 line-through' : 'text-white'}`}
+            >
               {issue.title}
             </span>
             {isResolved && (
@@ -207,10 +213,12 @@ const IssueCard: React.FC<IssueCardProps> = ({
           </div>
         </div>
 
-        <div className={`
+        <div
+          className={`
           px-2 py-1 rounded text-xs font-medium
           ${config.bgColor} ${config.color}
-        `}>
+        `}
+        >
           {config.label}
         </div>
       </button>
@@ -259,10 +267,15 @@ const IssueCard: React.FC<IssueCardProps> = ({
               {/* Recommandations */}
               {issue.recommendations && issue.recommendations.length > 0 && (
                 <div className="mb-4">
-                  <span className="text-xs text-slate-500 block mb-2">Recommandations</span>
+                  <span className="text-xs text-slate-500 block mb-2">
+                    Recommandations
+                  </span>
                   <ul className="space-y-1">
                     {issue.recommendations.map((recommendation, idx) => (
-                      <li key={idx} className="flex items-start gap-2 text-sm text-slate-300">
+                      <li
+                        key={idx}
+                        className="flex items-start gap-2 text-sm text-slate-300"
+                      >
                         <span className="text-blue-400">→</span>
                         {recommendation}
                       </li>
@@ -284,7 +297,10 @@ const IssueCard: React.FC<IssueCardProps> = ({
                 <div className="flex items-center gap-2 pt-2 border-t border-slate-700/30">
                   {onResolve && (
                     <button
-                      onClick={(e) => { e.stopPropagation(); onResolve(); }}
+                      onClick={e => {
+                        e.stopPropagation();
+                        onResolve();
+                      }}
                       className="flex items-center gap-2 px-3 py-1.5 rounded-lg
                         bg-green-500/20 text-green-400 hover:bg-green-500/30 transition-colors"
                     >
@@ -294,7 +310,10 @@ const IssueCard: React.FC<IssueCardProps> = ({
                   )}
                   {onIgnore && (
                     <button
-                      onClick={(e) => { e.stopPropagation(); onIgnore(); }}
+                      onClick={e => {
+                        e.stopPropagation();
+                        onIgnore();
+                      }}
                       className="flex items-center gap-2 px-3 py-1.5 rounded-lg
                         bg-slate-700/50 text-slate-400 hover:bg-slate-700 transition-colors"
                     >
@@ -326,7 +345,7 @@ export const PerformanceIssues: React.FC<PerformanceIssuesProps> = ({
   onIssueClick,
   onIssueResolve,
   onIssueIgnore,
-  className = ''
+  className = '',
 }) => {
   // États
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
@@ -367,11 +386,12 @@ export const PerformanceIssues: React.FC<PerformanceIssuesProps> = ({
     // Recherche
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      result = result.filter(issue =>
-        issue.title.toLowerCase().includes(query) ||
-        issue.description.toLowerCase().includes(query) ||
-        issue.type.toLowerCase().includes(query) ||
-        issue.module.toLowerCase().includes(query)
+      result = result.filter(
+        issue =>
+          issue.title.toLowerCase().includes(query) ||
+          issue.description.toLowerCase().includes(query) ||
+          issue.type.toLowerCase().includes(query) ||
+          issue.module.toLowerCase().includes(query)
       );
     }
 
@@ -409,7 +429,9 @@ export const PerformanceIssues: React.FC<PerformanceIssuesProps> = ({
 
   // Statistiques
   const stats = useMemo(() => {
-    const critical = issues.filter(i => i.severity === 'critical' && !i.resolvedAt).length;
+    const critical = issues.filter(
+      i => i.severity === 'critical' && !i.resolvedAt
+    ).length;
     const major = issues.filter(i => i.severity === 'major' && !i.resolvedAt).length;
     const warning = issues.filter(i => i.severity === 'warning' && !i.resolvedAt).length;
     const info = issues.filter(i => i.severity === 'info' && !i.resolvedAt).length;
@@ -431,14 +453,17 @@ export const PerformanceIssues: React.FC<PerformanceIssuesProps> = ({
     });
   }, []);
 
-  const toggleSort = useCallback((field: SortField) => {
-    if (sortField === field) {
-      setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortField(field);
-      setSortDirection('desc');
-    }
-  }, [sortField]);
+  const toggleSort = useCallback(
+    (field: SortField) => {
+      if (sortField === field) {
+        setSortDirection(prev => (prev === 'asc' ? 'desc' : 'asc'));
+      } else {
+        setSortField(field);
+        setSortDirection('desc');
+      }
+    },
+    [sortField]
+  );
 
   const toggleSeverityFilter = useCallback((severity: SeverityLevel) => {
     setFilters(prev => {
@@ -544,12 +569,15 @@ export const PerformanceIssues: React.FC<PerformanceIssuesProps> = ({
                   {/* Recherche */}
                   {showSearch && (
                     <div className="relative flex-1 min-w-[200px]">
-                      <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                      <Search
+                        size={16}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                      />
                       <input
                         type="text"
                         placeholder="Rechercher..."
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={e => setSearchQuery(e.target.value)}
                         className="w-full pl-10 pr-4 py-2 bg-slate-700/50 rounded-lg
                           text-sm text-white placeholder-slate-400
                           border border-slate-600 focus:border-blue-500 outline-none"
@@ -561,25 +589,28 @@ export const PerformanceIssues: React.FC<PerformanceIssuesProps> = ({
                   {showFilters && (
                     <div className="flex items-center gap-2">
                       <Filter size={16} className="text-slate-400" />
-                      {(['critical', 'major', 'warning', 'info'] as SeverityLevel[]).map(severity => {
-                        const config = SEVERITY_CONFIG[severity];
-                        const isActive = filters.severity?.includes(severity);
-                        return (
-                          <button
-                            key={severity}
-                            onClick={() => toggleSeverityFilter(severity)}
-                            className={`
+                      {(['critical', 'major', 'warning', 'info'] as SeverityLevel[]).map(
+                        severity => {
+                          const config = SEVERITY_CONFIG[severity];
+                          const isActive = filters.severity?.includes(severity);
+                          return (
+                            <button
+                              key={severity}
+                              onClick={() => toggleSeverityFilter(severity)}
+                              className={`
                               px-2 py-1 rounded text-xs transition-colors
-                              ${isActive
-                                ? `${config.bgColor} ${config.color}`
-                                : 'bg-slate-700/50 text-slate-400 hover:text-white'
+                              ${
+                                isActive
+                                  ? `${config.bgColor} ${config.color}`
+                                  : 'bg-slate-700/50 text-slate-400 hover:text-white'
                               }
                             `}
-                          >
-                            {config.label}
-                          </button>
-                        );
-                      })}
+                            >
+                              {config.label}
+                            </button>
+                          );
+                        }
+                      )}
                     </div>
                   )}
 
@@ -589,9 +620,10 @@ export const PerformanceIssues: React.FC<PerformanceIssuesProps> = ({
                       onClick={() => toggleSort('detectedAt')}
                       className={`
                         flex items-center gap-1 px-2 py-1 rounded text-xs
-                        ${sortField === 'detectedAt'
-                          ? 'bg-blue-500/20 text-blue-400'
-                          : 'bg-slate-700/50 text-slate-400 hover:text-white'
+                        ${
+                          sortField === 'detectedAt'
+                            ? 'bg-blue-500/20 text-blue-400'
+                            : 'bg-slate-700/50 text-slate-400 hover:text-white'
                         }
                       `}
                     >
@@ -603,9 +635,10 @@ export const PerformanceIssues: React.FC<PerformanceIssuesProps> = ({
                       onClick={() => toggleSort('severity')}
                       className={`
                         flex items-center gap-1 px-2 py-1 rounded text-xs
-                        ${sortField === 'severity'
-                          ? 'bg-blue-500/20 text-blue-400'
-                          : 'bg-slate-700/50 text-slate-400 hover:text-white'
+                        ${
+                          sortField === 'severity'
+                            ? 'bg-blue-500/20 text-blue-400'
+                            : 'bg-slate-700/50 text-slate-400 hover:text-white'
                         }
                       `}
                     >
@@ -631,7 +664,9 @@ export const PerformanceIssues: React.FC<PerformanceIssuesProps> = ({
                         toggleIssue(issue.id);
                         onIssueClick?.(issue);
                       }}
-                      onResolve={onIssueResolve ? () => onIssueResolve(issue.id) : undefined}
+                      onResolve={
+                        onIssueResolve ? () => onIssueResolve(issue.id) : undefined
+                      }
                       onIgnore={onIssueIgnore ? () => onIssueIgnore(issue.id) : undefined}
                     />
                   ))}
@@ -640,7 +675,9 @@ export const PerformanceIssues: React.FC<PerformanceIssuesProps> = ({
                 <div className="flex flex-col items-center justify-center py-12 text-slate-400">
                   <CheckCircle size={48} className="mb-3 text-green-400 opacity-50" />
                   <p className="text-lg">Aucun problème détecté</p>
-                  <p className="text-sm text-slate-500">Le système fonctionne normalement</p>
+                  <p className="text-sm text-slate-500">
+                    Le système fonctionne normalement
+                  </p>
                 </div>
               )}
 

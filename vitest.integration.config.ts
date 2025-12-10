@@ -17,13 +17,10 @@ export default mergeConfig(sharedTestConfig, {
       'tests/chat/**/*.{test,spec}.{ts,tsx}',
     ],
     // Exclure explicitement src/ pour éviter double exécution
-    exclude: [
-      'src/**/*',
-      'node_modules'
-    ],
+    exclude: ['src/**/*', 'node_modules'],
     environment: 'happy-dom',
     reporters: ['default'],
     dir: '.',
     testTimeout: 60000,
-  }
+  },
 });

@@ -75,7 +75,10 @@ interface ErrorMetrics {
 // OMNIS ERROR BOUNDARY CLASS
 // ─────────────────────────────────────────────────────────────────
 
-export class OmnisErrorBoundary extends Component<OmnisErrorBoundaryProps, OmnisErrorState> {
+export class OmnisErrorBoundary extends Component<
+  OmnisErrorBoundaryProps,
+  OmnisErrorState
+> {
   private recoveryTimer?: NodeJS.Timeout;
   private stateBackupKey: string;
   private errorMetrics: ErrorMetrics[] = [];
@@ -94,7 +97,7 @@ export class OmnisErrorBoundary extends Component<OmnisErrorBoundaryProps, Omnis
       lastErrorTimestamp: 0,
       backupState: this.loadBackupState(),
       degradedMode: false,
-      recoveryAttempts: []
+      recoveryAttempts: [],
     };
   }
 
@@ -109,7 +112,7 @@ export class OmnisErrorBoundary extends Component<OmnisErrorBoundaryProps, Omnis
       hasError: true,
       error,
       lastErrorTimestamp: Date.now(),
-      degradedMode: true // Immediate degraded mode activation
+      degradedMode: true, // Immediate degraded mode activation
     };
   }
 
@@ -121,7 +124,7 @@ export class OmnisErrorBoundary extends Component<OmnisErrorBoundaryProps, Omnis
     this.setState(prevState => ({
       errorInfo,
       retryCount: newRetryCount,
-      recoveryAttempts: [...prevState.recoveryAttempts, now]
+      recoveryAttempts: [...prevState.recoveryAttempts, now],
     }));
 
     // Immediate state backup before processing error
@@ -131,7 +134,10 @@ export class OmnisErrorBoundary extends Component<OmnisErrorBoundaryProps, Omnis
     this.logOmnisError(error, errorInfo, newRetryCount);
 
     // Trigger recovery sequence if enabled
-    if (this.props.autoRecovery !== false && newRetryCount <= (this.props.maxRetries || 3)) {
+    if (
+      this.props.autoRecovery !== false &&
+      newRetryCount <= (this.props.maxRetries || 3)
+    ) {
       this.initiateRecoverySequence();
     }
 
@@ -178,16 +184,18 @@ export class OmnisErrorBoundary extends Component<OmnisErrorBoundaryProps, Omnis
           url: window.location.href,
           viewport: {
             width: window.innerWidth,
-            height: window.innerHeight
-          }
-        }
+            height: window.innerHeight,
+          },
+        },
       };
 
       localStorage.setItem(this.stateBackupKey, JSON.stringify(stateSnapshot));
 
       // Also backup to sessionStorage as secondary
-      sessionStorage.setItem(`${this.stateBackupKey}-session`, JSON.stringify(stateSnapshot));
-
+      sessionStorage.setItem(
+        `${this.stateBackupKey}-session`,
+        JSON.stringify(stateSnapshot)
+      );
     } catch (error) {
       console.warn('[OMNIS] State backup failed:', error);
     }
@@ -239,7 +247,7 @@ export class OmnisErrorBoundary extends Component<OmnisErrorBoundaryProps, Omnis
       error: null,
       errorInfo: null,
       isRecovering: false,
-      degradedMode: false // Exit degraded mode on recovery
+      degradedMode: false, // Exit degraded mode on recovery
     });
 
     // Clear recovery timer
@@ -277,7 +285,7 @@ export class OmnisErrorBoundary extends Component<OmnisErrorBoundaryProps, Omnis
       url: window.location.href,
       retryCount,
       recoverySuccess: false,
-      degradedMode: this.state.degradedMode
+      degradedMode: this.state.degradedMode,
     };
 
     this.errorMetrics.push(metrics);
@@ -350,17 +358,15 @@ export class OmnisErrorBoundary extends Component<OmnisErrorBoundaryProps, Omnis
               {this.props.level === 'critical'
                 ? 'Erreur Système Critique'
                 : this.props.level === 'important'
-                ? 'Composant Temporairement Indisponible'
-                : 'Erreur Mineure'
-              }
+                  ? 'Composant Temporairement Indisponible'
+                  : 'Erreur Mineure'}
             </h3>
 
             {!isMinor && (
               <p>
                 {this.props.componentName
                   ? `Le composant "${this.props.componentName}" a rencontré une erreur.`
-                  : 'Une erreur inattendue s\'est produite.'
-                }
+                  : "Une erreur inattendue s'est produite."}
               </p>
             )}
 
@@ -440,7 +446,7 @@ export class OmnisErrorBoundary extends Component<OmnisErrorBoundaryProps, Omnis
       degradedMode: this.state.degradedMode,
       hasBackup: !!this.state.backupState,
       componentName: this.props.componentName,
-      level: this.props.level
+      level: this.props.level,
     };
   }
 
@@ -452,7 +458,7 @@ export class OmnisErrorBoundary extends Component<OmnisErrorBoundaryProps, Omnis
       retryCount: 0,
       isRecovering: false,
       degradedMode: false,
-      recoveryAttempts: []
+      recoveryAttempts: [],
     });
   };
 }

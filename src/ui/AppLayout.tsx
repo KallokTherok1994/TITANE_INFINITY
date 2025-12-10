@@ -25,7 +25,12 @@ interface AppLayoutProps {
   onOpenExpPanel: () => void;
 }
 
-export const AppLayout: React.FC<AppLayoutProps> = ({ children, currentRoute, onNavigate, onOpenExpPanel }) => {
+export const AppLayout: React.FC<AppLayoutProps> = ({
+  children,
+  currentRoute,
+  onNavigate,
+  onOpenExpPanel,
+}) => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -35,10 +40,10 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, currentRoute, on
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    
+
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
@@ -64,7 +69,11 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, currentRoute, on
   return (
     <div className="app-layout">
       {/* Skip to main content - Accessibilité */}
-      <a href="#main-content" className="skip-to-main" aria-label="Aller au contenu principal">
+      <a
+        href="#main-content"
+        className="skip-to-main"
+        aria-label="Aller au contenu principal"
+      >
         Aller au contenu principal
       </a>
 
@@ -75,27 +84,31 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, currentRoute, on
       <div className="app-container">
         {/* Mobile backdrop overlay */}
         {isMobile && isMobileMenuOpen && (
-          <div 
+          <div
             className="app-sidebar-backdrop"
             onClick={closeMobileMenu}
             role="button"
             tabIndex={0}
-            onKeyDown={(e) => e.key === 'Enter' && closeMobileMenu()}
+            onKeyDown={e => e.key === 'Enter' && closeMobileMenu()}
             aria-label="Fermer le menu"
           />
         )}
 
         {/* Sidebar Navigation */}
-        <aside 
+        <aside
           className={`app-sidebar ${
-            isMobile 
-              ? (isMobileMenuOpen ? 'mobile-open' : 'mobile-closed')
-              : (isSidebarCollapsed ? 'collapsed' : '')
+            isMobile
+              ? isMobileMenuOpen
+                ? 'mobile-open'
+                : 'mobile-closed'
+              : isSidebarCollapsed
+                ? 'collapsed'
+                : ''
           }`}
           aria-label="Navigation principale"
         >
-          <Menu 
-            isCollapsed={isSidebarCollapsed} 
+          <Menu
+            isCollapsed={isSidebarCollapsed}
             onToggle={toggleSidebar}
             currentRoute={currentRoute}
             onNavigate={onNavigate}
@@ -103,7 +116,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, currentRoute, on
         </aside>
 
         {/* Zone de contenu principale */}
-        <main 
+        <main
           id="main-content"
           className="app-main"
           role="main"

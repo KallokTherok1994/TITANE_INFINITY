@@ -3,7 +3,11 @@
 //   Stress testing, edge cases, recovery scenarios
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { AvatarDisplayMode, AnchorPosition, DEFAULT_DISPLAY_STATE } from './AvatarDisplayState';
+import {
+  AvatarDisplayMode,
+  AnchorPosition,
+  DEFAULT_DISPLAY_STATE,
+} from './AvatarDisplayState';
 import type { AvatarDisplayState } from './AvatarDisplayState';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -44,7 +48,10 @@ function simulateOpacityCycles(count: number): number[] {
 /**
  * Validate display state constraints
  */
-function validateDisplayState(state: AvatarDisplayState): { valid: boolean; errors: string[] } {
+function validateDisplayState(state: AvatarDisplayState): {
+  valid: boolean;
+  errors: string[];
+} {
   const errors: string[] = [];
 
   // Position
@@ -124,7 +131,7 @@ describe('Floating Window Robustness Tests', () => {
       console.log('[Robustness] 100 Movements:', {
         total: movements.length,
         failed: failedMoves,
-        successRate: `${((100 - failedMoves) / 100 * 100).toFixed(1)}%`,
+        successRate: `${(((100 - failedMoves) / 100) * 100).toFixed(1)}%`,
       });
     });
 
@@ -162,7 +169,7 @@ describe('Floating Window Robustness Tests', () => {
       console.log('[Robustness] Anchor Changes:', {
         total: 50,
         success: successCount,
-        successRate: `${(successCount / 50 * 100).toFixed(1)}%`,
+        successRate: `${((successCount / 50) * 100).toFixed(1)}%`,
       });
     });
 
@@ -406,7 +413,13 @@ describe('Floating Window Robustness Tests', () => {
 
   describe('Toggle Stress Tests', () => {
     it('should handle 100 rapid toggle changes', () => {
-      const toggles = ['locked', 'visible', 'always_on_top', 'click_through', 'mirror_mode'];
+      const toggles = [
+        'locked',
+        'visible',
+        'always_on_top',
+        'click_through',
+        'mirror_mode',
+      ];
       let validCount = 0;
 
       for (let i = 0; i < 100; i++) {

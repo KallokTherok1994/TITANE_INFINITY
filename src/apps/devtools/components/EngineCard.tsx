@@ -27,7 +27,7 @@ const statusToVariant: Record<EngineStatus, StatusVariant> = {
 
 /**
  * EngineCard - Carte d'état d'un moteur cognitif
- * 
+ *
  * @example
  * ```tsx
  * <EngineCard
@@ -165,7 +165,10 @@ export function EngineCard({
             style={{ color: 'var(--text-primary, #e0e0e0)' }}
           >
             {engine.executionDuration ? `${engine.executionDuration}ms` : 'N/A'}
-            <span className="text-xs ml-2" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>
+            <span
+              className="text-xs ml-2"
+              style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+            >
               ({new Date(engine.lastExecution).toLocaleTimeString()})
             </span>
           </div>

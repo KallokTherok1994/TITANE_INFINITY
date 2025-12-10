@@ -19,9 +19,9 @@ import { wakeWordEngine } from './wakeWordEngine';
  * Métriques d'environnement audio
  */
 export interface AudioMetrics {
-  noiseLevel: number;        // 0-1 (volume ambiant moyen)
-  peakVolume: number;        // 0-1 (pic volume)
-  isClean: boolean;          // Environnement calme
+  noiseLevel: number; // 0-1 (volume ambiant moyen)
+  peakVolume: number; // 0-1 (pic volume)
+  isClean: boolean; // Environnement calme
   timestamp: number;
 }
 
@@ -30,7 +30,7 @@ export interface AudioMetrics {
  */
 export interface DetectionHistory {
   timestamp: number;
-  wasCorrect: boolean;       // true si confirmé par utilisateur
+  wasCorrect: boolean; // true si confirmé par utilisateur
   confidence: number;
   variant: string;
 }
@@ -118,7 +118,9 @@ export class AdaptiveThresholdEngine {
       this.detectionHistory.shift();
     }
 
-    console.log(`[AdaptiveThresholdEngine] 📊 Detection recorded: ${wasCorrect ? '✅' : '❌'} (confidence: ${confidence.toFixed(2)})`);
+    console.log(
+      `[AdaptiveThresholdEngine] 📊 Detection recorded: ${wasCorrect ? '✅' : '❌'} (confidence: ${confidence.toFixed(2)})`
+    );
   }
 
   /**
@@ -191,7 +193,9 @@ export class AdaptiveThresholdEngine {
     console.log('[AdaptiveThresholdEngine] 🔧 Adjusting thresholds...');
     console.log(`  False Positive Rate: ${(fpRate * 100).toFixed(1)}%`);
     console.log(`  True Positive Rate: ${(tpRate * 100).toFixed(1)}%`);
-    console.log(`  Avg Noise Level: ${avgMetrics ? (avgMetrics.noiseLevel * 100).toFixed(1) : 'N/A'}%`);
+    console.log(
+      `  Avg Noise Level: ${avgMetrics ? (avgMetrics.noiseLevel * 100).toFixed(1) : 'N/A'}%`
+    );
 
     let newConfidence = this.baseConfidenceThreshold;
     let newLevenshtein = this.baseLevenshteinThreshold;
@@ -306,7 +310,9 @@ export class AdaptiveThresholdEngine {
    */
   setSensitivity(sensitivity: number): void {
     this.config.sensitivity = Math.max(0, Math.min(1, sensitivity));
-    console.log(`[AdaptiveThresholdEngine] 🎚️ Sensitivity set to ${this.config.sensitivity.toFixed(2)}`);
+    console.log(
+      `[AdaptiveThresholdEngine] 🎚️ Sensitivity set to ${this.config.sensitivity.toFixed(2)}`
+    );
 
     // Ajuster immédiatement
     this.adjustThresholds();

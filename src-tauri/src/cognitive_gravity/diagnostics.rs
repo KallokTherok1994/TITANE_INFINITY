@@ -6,10 +6,10 @@
 #![allow(unused_imports)]
 #![allow(dead_code)]
 
-use super::gravity_field::GravityField;
-use super::attractors::AttractorState;
 use super::anti_attractors::AntiAttractorState;
+use super::attractors::AttractorState;
 use super::density_model::CognitiveDensity;
+use super::gravity_field::GravityField;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -28,7 +28,7 @@ impl GravityMonitor {
     pub fn new() -> Self {
         Self
     }
-    
+
     pub fn analyze(
         &self,
         field: &GravityField,
@@ -38,33 +38,33 @@ impl GravityMonitor {
     ) -> GravityDiagnostics {
         let mut suggestions = Vec::new();
         let mut warnings = Vec::new();
-        
+
         // Warnings
         if field.is_critical() {
             warnings.push("⚠️ Champ gravitationnel CRITIQUE".to_string());
         }
-        
+
         if density.is_overloaded(0.7) {
             warnings.push("🔥 Surcharge cognitive détectée".to_string());
         }
-        
+
         if field.entropy > 0.6 {
             warnings.push("📊 Entropie élevée".to_string());
         }
-        
+
         // Suggestions
         if field.cognitive_mass < 0.4 {
             suggestions.push("💡 Augmenter attracteurs (Clarity, Truth)".to_string());
         }
-        
+
         if anti_attractors.dissonance > 0.5 {
             suggestions.push("🔧 Activer Harmonic OS régulation".to_string());
         }
-        
+
         if density.overload_risk > 0.6 {
             suggestions.push("⚡ Réduire processus parallèles".to_string());
         }
-        
+
         GravityDiagnostics {
             field: field.clone(),
             attractors: attractors.clone(),

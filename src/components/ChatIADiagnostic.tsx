@@ -19,13 +19,11 @@ export const ChatIADiagnostic: React.FC = () => {
   const [running, setRunning] = useState(false);
 
   const addResult = (result: DiagnosticResult) => {
-    setResults((prev) => [...prev, result]);
+    setResults(prev => [...prev, result]);
   };
 
   const updateResult = (index: number, updates: Partial<DiagnosticResult>) => {
-    setResults((prev) =>
-      prev.map((r, i) => (i === index ? { ...r, ...updates } : r))
-    );
+    setResults(prev => prev.map((r, i) => (i === index ? { ...r, ...updates } : r)));
   };
 
   const runAllTests = async () => {
@@ -164,9 +162,7 @@ export const ChatIADiagnostic: React.FC = () => {
             </div>
 
             {result.status === 'success' && typeof result.data !== 'undefined' && (
-              <pre style={styles.resultData}>
-                {JSON.stringify(result.data, null, 2)}
-              </pre>
+              <pre style={styles.resultData}>{JSON.stringify(result.data, null, 2)}</pre>
             )}
 
             {result.status === 'error' && result.error && (
@@ -180,30 +176,24 @@ export const ChatIADiagnostic: React.FC = () => {
         <div style={styles.summary}>
           <h3 style={styles.summaryTitle}>📊 Résumé</h3>
           <div style={styles.summaryStats}>
+            <div>✅ Réussis: {results.filter(r => r.status === 'success').length}</div>
+            <div>❌ Échoués: {results.filter(r => r.status === 'error').length}</div>
             <div>
-              ✅ Réussis:{' '}
-              {results.filter((r) => r.status === 'success').length}
-            </div>
-            <div>
-              ❌ Échoués: {results.filter((r) => r.status === 'error').length}
-            </div>
-            <div>
-              ⏱️ Durée totale:{' '}
-              {results.reduce((sum, r) => sum + (r.duration || 0), 0)}ms
+              ⏱️ Durée totale: {results.reduce((sum, r) => sum + (r.duration || 0), 0)}ms
             </div>
           </div>
 
-          {results.every((r) => r.status === 'success') && (
+          {results.every(r => r.status === 'success') && (
             <div style={styles.successMessage}>
-              🎉 Backend Chat IA fonctionne parfaitement ! Si l'UI ne répond
-              pas, le problème est dans le frontend React (useChat → MessageList).
+              🎉 Backend Chat IA fonctionne parfaitement ! Si l'UI ne répond pas, le
+              problème est dans le frontend React (useChat → MessageList).
             </div>
           )}
 
-          {results.some((r) => r.status === 'error') && (
+          {results.some(r => r.status === 'error') && (
             <div style={styles.errorMessage}>
-              ⚠️ Erreurs détectées. Consulter DIAGNOSTIC_CHAT_IA_v16.2.2.md
-              pour troubleshooting.
+              ⚠️ Erreurs détectées. Consulter DIAGNOSTIC_CHAT_IA_v16.2.2.md pour
+              troubleshooting.
             </div>
           )}
         </div>

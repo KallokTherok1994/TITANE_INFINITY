@@ -228,13 +228,7 @@ describe('SINGULARITY-FUSION vΩ - Mocked Integration Tests', () => {
     });
 
     it('should validate UnifiedPipeline stages', () => {
-      const stages = [
-        'intention',
-        'cognitive',
-        'tts',
-        'avatar',
-        'state',
-      ];
+      const stages = ['intention', 'cognitive', 'tts', 'avatar', 'state'];
 
       expect(stages).toHaveLength(5);
       expect(stages).toContain('intention');
@@ -242,12 +236,7 @@ describe('SINGULARITY-FUSION vΩ - Mocked Integration Tests', () => {
     });
 
     it('should validate Auto-Repair layers', () => {
-      const layers = [
-        'AutoFix',
-        'AutoHeal',
-        'StateIntegrity',
-        'CrashGuard',
-      ];
+      const layers = ['AutoFix', 'AutoHeal', 'StateIntegrity', 'CrashGuard'];
 
       expect(layers).toHaveLength(4);
       expect(layers).toContain('AutoFix');

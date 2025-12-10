@@ -13,12 +13,12 @@ import { secureInvoke } from '@/lib/security';
 import {
   formatUserError,
   sanitizeErrorForUser,
-  generateErrorId
+  generateErrorId,
 } from '../utils/errorMessages';
 import type {
   SystemDiagnostics,
   OverallStatus,
-  DiagnosticResult
+  DiagnosticResult,
 } from '../types/systemCenter.types';
 
 export interface UseSystemDiagnosticsReturn {
@@ -53,11 +53,9 @@ function createDiagnosticResult(
     id,
     title,
     status: isHealthy ? 'Success' : 'Warning',
-    message: isHealthy
-      ? `${title} : Fonctionnel`
-      : `${title} : Dégradé`,
+    message: isHealthy ? `${title} : Fonctionnel` : `${title} : Dégradé`,
     data,
-    duration_ms: 0
+    duration_ms: 0,
   };
 }
 
@@ -98,12 +96,14 @@ export function useSystemDiagnostics(): UseSystemDiagnosticsReturn {
           issues?: string[];
         }>('get_system_health');
 
-        results.push(createDiagnosticResult(
-          'system-health',
-          'Santé Système',
-          healthResult,
-          healthResult.healthy
-        ));
+        results.push(
+          createDiagnosticResult(
+            'system-health',
+            'Santé Système',
+            healthResult,
+            healthResult.healthy
+          )
+        );
       } catch (err) {
         results.push({
           id: 'system-health',
@@ -111,7 +111,7 @@ export function useSystemDiagnostics(): UseSystemDiagnosticsReturn {
           status: 'Error',
           message: 'Impossible de vérifier la santé système',
           data: null,
-          duration_ms: 0
+          duration_ms: 0,
         });
       }
 
@@ -126,12 +126,14 @@ export function useSystemDiagnostics(): UseSystemDiagnosticsReturn {
           unhealthy_modules?: string[];
         }>('get_module_health');
 
-        results.push(createDiagnosticResult(
-          'modules-health',
-          'Santé Modules',
-          moduleResult,
-          moduleResult.all_healthy
-        ));
+        results.push(
+          createDiagnosticResult(
+            'modules-health',
+            'Santé Modules',
+            moduleResult,
+            moduleResult.all_healthy
+          )
+        );
       } catch (err) {
         results.push({
           id: 'modules-health',
@@ -139,7 +141,7 @@ export function useSystemDiagnostics(): UseSystemDiagnosticsReturn {
           status: 'Skipped',
           message: 'Diagnostic des modules non disponible',
           data: null,
-          duration_ms: 0
+          duration_ms: 0,
         });
       }
 
@@ -147,14 +149,17 @@ export function useSystemDiagnostics(): UseSystemDiagnosticsReturn {
       // 3. Métriques système (get_helios_metrics - WHITELIST ✅)
       // ═══════════════════════════════════════════════════════════════
       try {
-        const metricsResult = await secureInvoke<Record<string, unknown>>('get_helios_metrics');
+        const metricsResult =
+          await secureInvoke<Record<string, unknown>>('get_helios_metrics');
 
-        results.push(createDiagnosticResult(
-          'system-metrics',
-          'Métriques Système',
-          metricsResult,
-          true
-        ));
+        results.push(
+          createDiagnosticResult(
+            'system-metrics',
+            'Métriques Système',
+            metricsResult,
+            true
+          )
+        );
       } catch (err) {
         results.push({
           id: 'system-metrics',
@@ -162,7 +167,7 @@ export function useSystemDiagnostics(): UseSystemDiagnosticsReturn {
           status: 'Skipped',
           message: 'Métriques non disponibles',
           data: null,
-          duration_ms: 0
+          duration_ms: 0,
         });
       }
 
@@ -178,18 +183,17 @@ export function useSystemDiagnostics(): UseSystemDiagnosticsReturn {
       const overallStatus: OverallStatus = hasErrors
         ? 'Critical'
         : hasWarnings
-        ? 'Degraded'
-        : 'Healthy';
+          ? 'Degraded'
+          : 'Healthy';
 
       const diagnosticsResult: SystemDiagnostics = {
         overall_status: overallStatus,
         results,
-        total_duration_ms: totalDuration
+        total_duration_ms: totalDuration,
       };
 
       setDiagnostics(diagnosticsResult);
       setStatus(overallStatus);
-
     } catch (err) {
       // Formater l'erreur pour l'utilisateur
       const formatted = formatUserError(err);
@@ -199,7 +203,7 @@ export function useSystemDiagnostics(): UseSystemDiagnosticsReturn {
       setErrorDetails({
         userMessage: formatted.userMessage,
         technicalDetails: formatted.technicalDetails,
-        suggestions: formatted.suggestions
+        suggestions: formatted.suggestions,
       });
 
       console.error('[useSystemDiagnostics] Quick diagnostics failed:', err);
@@ -228,7 +232,7 @@ export function useSystemDiagnostics(): UseSystemDiagnosticsReturn {
       const quickChecks = [
         { cmd: 'get_system_health', id: 'system-health', title: 'Santé Système' },
         { cmd: 'get_module_health', id: 'modules-health', title: 'Santé Modules' },
-        { cmd: 'get_helios_metrics', id: 'system-metrics', title: 'Métriques Système' }
+        { cmd: 'get_helios_metrics', id: 'system-metrics', title: 'Métriques Système' },
       ];
 
       for (const check of quickChecks) {
@@ -242,7 +246,7 @@ export function useSystemDiagnostics(): UseSystemDiagnosticsReturn {
             status: 'Error',
             message: `Impossible de vérifier ${check.title.toLowerCase()}`,
             data: null,
-            duration_ms: 0
+            duration_ms: 0,
           });
         }
       }
@@ -252,9 +256,17 @@ export function useSystemDiagnostics(): UseSystemDiagnosticsReturn {
       // ═══════════════════════════════════════════════════════════════
       const fullChecks = [
         { cmd: 'get_singularity_state', id: 'singularity', title: 'État Singularité' },
-        { cmd: 'engines_monitoring_get_health', id: 'monitoring', title: 'Monitoring Engines' },
-        { cmd: 'engines_monitoring_get_metrics', id: 'engine-metrics', title: 'Métriques Engines' },
-        { cmd: 'get_system_state', id: 'system-state', title: 'État Système' }
+        {
+          cmd: 'engines_monitoring_get_health',
+          id: 'monitoring',
+          title: 'Monitoring Engines',
+        },
+        {
+          cmd: 'engines_monitoring_get_metrics',
+          id: 'engine-metrics',
+          title: 'Métriques Engines',
+        },
+        { cmd: 'get_system_state', id: 'system-state', title: 'État Système' },
       ];
 
       for (const check of fullChecks) {
@@ -268,7 +280,7 @@ export function useSystemDiagnostics(): UseSystemDiagnosticsReturn {
             status: 'Skipped',
             message: `${check.title} non disponible`,
             data: null,
-            duration_ms: 0
+            duration_ms: 0,
           });
         }
       }
@@ -286,7 +298,7 @@ export function useSystemDiagnostics(): UseSystemDiagnosticsReturn {
           status: 'Skipped',
           message: 'Tests QA non disponibles',
           data: null,
-          duration_ms: 0
+          duration_ms: 0,
         });
       }
 
@@ -301,18 +313,17 @@ export function useSystemDiagnostics(): UseSystemDiagnosticsReturn {
       const overallStatus: OverallStatus = hasErrors
         ? 'Critical'
         : hasWarnings
-        ? 'Degraded'
-        : 'Healthy';
+          ? 'Degraded'
+          : 'Healthy';
 
       const diagnosticsResult: SystemDiagnostics = {
         overall_status: overallStatus,
         results,
-        total_duration_ms: totalDuration
+        total_duration_ms: totalDuration,
       };
 
       setDiagnostics(diagnosticsResult);
       setStatus(overallStatus);
-
     } catch (err) {
       const formatted = formatUserError(err);
       const userMessage = sanitizeErrorForUser(formatted.userMessage);
@@ -321,7 +332,7 @@ export function useSystemDiagnostics(): UseSystemDiagnosticsReturn {
       setErrorDetails({
         userMessage: formatted.userMessage,
         technicalDetails: formatted.technicalDetails,
-        suggestions: formatted.suggestions
+        suggestions: formatted.suggestions,
       });
 
       console.error('[useSystemDiagnostics] Full diagnostics failed:', err);
@@ -337,7 +348,9 @@ export function useSystemDiagnostics(): UseSystemDiagnosticsReturn {
    */
   const refreshStatus = useCallback(async () => {
     try {
-      const result = await secureInvoke<{ healthy: boolean; status: string }>('get_system_health');
+      const result = await secureInvoke<{ healthy: boolean; status: string }>(
+        'get_system_health'
+      );
       const newStatus: OverallStatus = result.healthy ? 'Healthy' : 'Degraded';
       setStatus(newStatus);
     } catch (err) {

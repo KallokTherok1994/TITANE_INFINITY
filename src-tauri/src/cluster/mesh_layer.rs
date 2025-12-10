@@ -88,7 +88,9 @@ impl MeshLayer {
     pub fn new(node_id: String, role: NodeRole, port: u16) -> Self {
         let listen_addr = format!("0.0.0.0:{}", port).parse().unwrap_or_else(|e| {
             log::error!("[MeshLayer] Parse error: {}, using default 0.0.0.0:9999", e);
-            "0.0.0.0:9999".parse().expect("Hardcoded address should always parse")
+            "0.0.0.0:9999"
+                .parse()
+                .expect("Hardcoded address should always parse")
         });
 
         Self {

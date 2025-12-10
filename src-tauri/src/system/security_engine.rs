@@ -78,7 +78,10 @@ impl SecurityEngine {
         }
 
         // Vérifier les caractères de contrôle
-        if text.chars().any(|c| c.is_control() && c != '\n' && c != '\r' && c != '\t') {
+        if text
+            .chars()
+            .any(|c| c.is_control() && c != '\n' && c != '\r' && c != '\t')
+        {
             return Err("Caractères de contrôle non autorisés".to_string());
         }
 

@@ -54,10 +54,7 @@
     "governance_validation": {
       "enabled": true,
       "description": "Validation par GovernanceEngine avant chaque sync",
-      "required_permissions": [
-        "cloud_sync_read",
-        "cloud_sync_write"
-      ],
+      "required_permissions": ["cloud_sync_read", "cloud_sync_write"],
       "audit_logging": true
     }
   },

@@ -101,7 +101,9 @@ export function useChatStreaming(
             setStreamedContent(fullContent);
 
             options.onChunk?.(value);
-            console.log(`📦 Chunk ${chunkCount}: +${value.length} chars (total: ${fullContent.length})`);
+            console.log(
+              `📦 Chunk ${chunkCount}: +${value.length} chars (total: ${fullContent.length})`
+            );
           }
 
           nextResult = await stream.next();
@@ -113,11 +115,14 @@ export function useChatStreaming(
           setStreamProgress(100);
           setCurrentProvider(finalResponse.provider || null);
 
-          const latencyMs = typeof finalResponse.metadata?.latencyMs === 'number'
-            ? finalResponse.metadata.latencyMs
-            : finalResponse.omegaMetadata?.processingTime ?? 0;
+          const latencyMs =
+            typeof finalResponse.metadata?.latencyMs === 'number'
+              ? finalResponse.metadata.latencyMs
+              : (finalResponse.omegaMetadata?.processingTime ?? 0);
 
-          console.log(`✅ Stream complete: ${chunkCount} chunks, ${fullContent.length} chars`);
+          console.log(
+            `✅ Stream complete: ${chunkCount} chunks, ${fullContent.length} chars`
+          );
           console.log(`   Provider: ${finalResponse.provider}, Latency: ${latencyMs}ms`);
 
           options.onComplete?.({
@@ -126,7 +131,6 @@ export function useChatStreaming(
             latency_ms: latencyMs,
           });
         }
-
       } catch (error) {
         if (stopRequestedRef.current) {
           console.log('🔕 Stream cancelled by user');

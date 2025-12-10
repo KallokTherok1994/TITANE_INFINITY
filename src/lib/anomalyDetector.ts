@@ -44,10 +44,10 @@ export class AnomalyDetector {
 
   // Seuils Z-score
   private static readonly THRESHOLDS = {
-    low: 2.0,       // 95.4% données normales
-    medium: 2.5,    // 98.8% données normales
-    high: 3.0,      // 99.7% données normales
-    critical: 3.5,  // 99.95% données normales
+    low: 2.0, // 95.4% données normales
+    medium: 2.5, // 98.8% données normales
+    high: 3.0, // 99.7% données normales
+    critical: 3.5, // 99.95% données normales
   };
 
   /**
@@ -96,14 +96,16 @@ export class AnomalyDetector {
         timestamp: Date.now(),
         service,
         totalCalls: currentStats.totalCalls,
-        successRate: currentStats.totalCalls > 0
-          ? currentStats.successfulCalls / currentStats.totalCalls
-          : 0,
+        successRate:
+          currentStats.totalCalls > 0
+            ? currentStats.successfulCalls / currentStats.totalCalls
+            : 0,
         avgLatency: currentStats.averageLatency,
         errorRate: currentStats.errorRate,
-        retryRate: currentStats.totalCalls > 0
-          ? currentStats.totalRetries / currentStats.totalCalls
-          : 0,
+        retryRate:
+          currentStats.totalCalls > 0
+            ? currentStats.totalRetries / currentStats.totalCalls
+            : 0,
       };
 
       // Vérifier chaque métrique
@@ -139,9 +141,8 @@ export class AnomalyDetector {
     const currentValue = this.getMetricValue(current, metric);
 
     // Z-score : (value - mean) / stdDev
-    const zScore = baseline.stdDev > 0
-      ? Math.abs(currentValue - baseline.mean) / baseline.stdDev
-      : 0;
+    const zScore =
+      baseline.stdDev > 0 ? Math.abs(currentValue - baseline.mean) / baseline.stdDev : 0;
 
     // Seuil dépassé ?
     if (zScore < this.THRESHOLDS.low) return null;
@@ -180,7 +181,7 @@ export class AnomalyDetector {
     }
 
     // Extraire valeurs métrique
-    const values = history.map((snapshot) => this.getMetricValue(snapshot, metric));
+    const values = history.map(snapshot => this.getMetricValue(snapshot, metric));
 
     // Moyenne
     const mean = values.reduce((sum, v) => sum + v, 0) / values.length;
@@ -233,9 +234,7 @@ export class AnomalyDetector {
     if (minSeverity) {
       const severityOrder = { low: 0, medium: 1, high: 2, critical: 3 };
       const minLevel = severityOrder[minSeverity];
-      filtered = filtered.filter(
-        (a) => severityOrder[a.severity] >= minLevel
-      );
+      filtered = filtered.filter(a => severityOrder[a.severity] >= minLevel);
     }
 
     // Trier par timestamp desc
@@ -247,7 +246,7 @@ export class AnomalyDetector {
    */
   static getServiceAnomalies(service: string, limit = 20): AnomalyDetection[] {
     return this.anomalies
-      .filter((a) => a.service === service)
+      .filter(a => a.service === service)
       .sort((a, b) => b.timestamp - a.timestamp)
       .slice(0, limit);
   }
@@ -278,7 +277,12 @@ export class AnomalyDetector {
     const now = Date.now();
     const last24h = now - 24 * 60 * 60 * 1000;
 
-    const bySeverity: Record<string, number> = { low: 0, medium: 0, high: 0, critical: 0 };
+    const bySeverity: Record<string, number> = {
+      low: 0,
+      medium: 0,
+      high: 0,
+      critical: 0,
+    };
     const byService: Record<string, number> = {};
     const byMetric: Record<string, number> = {};
     let last24hCount = 0;

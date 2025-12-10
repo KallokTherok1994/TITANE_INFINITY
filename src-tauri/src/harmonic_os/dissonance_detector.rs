@@ -24,10 +24,10 @@ impl DissonanceDetector {
     pub fn new(threshold: f32) -> Self {
         Self { threshold }
     }
-    
+
     pub async fn detect(&self, state: &HarmonicState) -> Vec<Dissonance> {
         let mut dissonances = Vec::new();
-        
+
         if state.cognitive_resonance < self.threshold {
             dissonances.push(Dissonance {
                 source: "cognitive".to_string(),
@@ -35,7 +35,7 @@ impl DissonanceDetector {
                 description: "Low cognitive resonance".to_string(),
             });
         }
-        
+
         if state.logical_alignment < self.threshold {
             dissonances.push(Dissonance {
                 source: "logical".to_string(),
@@ -43,7 +43,7 @@ impl DissonanceDetector {
                 description: "Logical inconsistency detected".to_string(),
             });
         }
-        
+
         dissonances
     }
 }

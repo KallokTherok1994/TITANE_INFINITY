@@ -35,7 +35,7 @@ impl ClockEngine {
             current_time: Arc::new(RwLock::new(Local::now())),
         }
     }
-    
+
     /// Start clock engine
     pub async fn start(&self) -> CycleResult<()> {
         let mut running = self.running.write().await;
@@ -43,54 +43,54 @@ impl ClockEngine {
             return Err(CycleError("Clock already running".to_string()));
         }
         *running = true;
-        
+
         // Spawn background task
         let tick_interval = self.tick_interval;
         let current_time = Arc::clone(&self.current_time);
         let running_clone = Arc::clone(&self.running);
-        
+
         tokio::spawn(async move {
             let mut interval_timer = interval(tick_interval);
             loop {
                 interval_timer.tick().await;
-                
+
                 let running = running_clone.read().await;
                 if !*running {
                     break;
                 }
                 drop(running);
-                
+
                 // Update current time
                 let mut time = current_time.write().await;
                 *time = Local::now();
-                
+
                 // Emit tick event
                 // TODO: Integrate with event system
             }
         });
-        
+
         Ok(())
     }
-    
+
     /// Stop clock engine
     pub async fn stop(&self) -> CycleResult<()> {
         let mut running = self.running.write().await;
         *running = false;
         Ok(())
     }
-    
+
     /// Get current time
     pub async fn current_time(&self) -> DateTime<Local> {
         let time = self.current_time.read().await;
         *time
     }
-    
+
     /// Get current hour
     pub async fn current_hour(&self) -> u32 {
         let time = self.current_time().await;
         time.hour()
     }
-    
+
     /// Check if running
     pub async fn is_running(&self) -> bool {
         let running = self.running.read().await;
@@ -101,15 +101,15 @@ impl ClockEngine {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[tokio::test]
     async fn test_clock_engine_start_stop() {
         let clock = ClockEngine::new(1);
         assert!(!clock.is_running().await);
-        
+
         let _ = clock.start().await;
         assert!(clock.is_running().await);
-        
+
         let _ = clock.stop().await;
         assert!(!clock.is_running().await);
     }

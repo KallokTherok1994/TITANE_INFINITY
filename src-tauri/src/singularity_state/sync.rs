@@ -4,10 +4,10 @@
  * Synchronisation Rust → Frontend via événements Tauri
  * ═══════════════════════════════════════════════════════════════════
  */
-use crate::singularity_state::layers::*;
-use crate::singularity_state::SingularityState;
+use super::layers::*; // FIX v21: use super instead of crate when included from main.rs
+use super::SingularityState;
 use serde::Serialize;
-use tauri::{AppHandle, Manager};
+use tauri::{AppHandle, Emitter}; // FIX v21: Emitter trait for emit() method
 
 pub struct EventSyncLayer {
     app_handle: AppHandle,
@@ -51,7 +51,7 @@ impl EventSyncLayer {
 
     /// Émettre événement générique
     async fn emit<T: Serialize + Clone>(&self, event_name: &str, payload: &T) {
-        if let Err(e) = self.app_handle.emit_all(event_name, payload.clone()) {
+        if let Err(e) = self.app_handle.emit(event_name, payload.clone()) {
             eprintln!("[EventSyncLayer] Failed to emit {}: {}", event_name, e);
         }
     }

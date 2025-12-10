@@ -155,8 +155,9 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
         // [P0-2] Layer 3 anti-feedback: Check if audio is TITANE voice
         // If TITANE detected → skip VAD processing (prevent feedback loop)
         if (voiceFingerprintTauri.isTitaneCalibrated()) {
-          const fingerprintResult = await voiceFingerprintTauri.checkIsTitaneSpeaking(audioData);
-          
+          const fingerprintResult =
+            await voiceFingerprintTauri.checkIsTitaneSpeaking(audioData);
+
           if (fingerprintResult.isTitane) {
             console.log(
               `[useVAD] 🎯 TITANE voice detected (Layer 3 anti-feedback), skipping VAD (similarity: ${fingerprintResult.similarity.toFixed(2)})`

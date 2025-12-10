@@ -89,7 +89,7 @@ const ToggleSwitch: React.FC<{
       <input
         type="checkbox"
         checked={checked}
-        onChange={(e) => onChange(e.target.checked)}
+        onChange={e => onChange(e.target.checked)}
       />
       <span className="toggle-slider" />
     </div>
@@ -113,7 +113,7 @@ const RenderModeSelector: React.FC<{
     <div className="render-mode-selector">
       <h4>Mode de Rendu</h4>
       <div className="mode-grid">
-        {modes.map((m) => (
+        {modes.map(m => (
           <button
             key={m.id}
             className={`mode-button ${mode === m.id ? 'active' : ''}`}
@@ -155,10 +155,10 @@ const EntityCreator: React.FC<{
         <input
           type="text"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={e => setName(e.target.value)}
           placeholder="Nom de l'entité"
         />
-        <select value={entityType} onChange={(e) => setEntityType(e.target.value)}>
+        <select value={entityType} onChange={e => setEntityType(e.target.value)}>
           <option value="object">🔷 Object</option>
           <option value="light">💡 Light</option>
           <option value="camera">📷 Camera</option>
@@ -189,9 +189,7 @@ const SceneView: React.FC<{
           </span>
         </div>
         <div className="viewport-overlay">
-          <div className="overlay-corner top-left">
-            Mode: {state.render_config.mode}
-          </div>
+          <div className="overlay-corner top-left">Mode: {state.render_config.mode}</div>
           <div className="overlay-corner top-right">
             {state.render_config.resolution_x}x{state.render_config.resolution_y}
           </div>
@@ -397,14 +395,16 @@ export const RealityCenter: React.FC = () => {
                 <ToggleSwitch
                   label="Antialiasing"
                   checked={state.render_config.antialiasing}
-                  onChange={(v) =>
-                    invoke('reality_set_render_config', { antialiasing: v }).then(loadState)
+                  onChange={v =>
+                    invoke('reality_set_render_config', { antialiasing: v }).then(
+                      loadState
+                    )
                   }
                 />
                 <ToggleSwitch
                   label="Shadows"
                   checked={state.render_config.shadows}
-                  onChange={(v) =>
+                  onChange={v =>
                     invoke('reality_set_render_config', { shadows: v }).then(loadState)
                   }
                 />
@@ -433,7 +433,11 @@ export const RealityCenter: React.FC = () => {
                   {state.render_config.resolution_x} × {state.render_config.resolution_y}
                 </span>
                 <span className="aspect-ratio">
-                  ({(state.render_config.resolution_x / state.render_config.resolution_y).toFixed(2)}:1)
+                  (
+                  {(
+                    state.render_config.resolution_x / state.render_config.resolution_y
+                  ).toFixed(2)}
+                  :1)
                 </span>
               </div>
             </div>
@@ -443,7 +447,8 @@ export const RealityCenter: React.FC = () => {
               <div className="camera-info">
                 <p>FOV: {state.render_config.fov}°</p>
                 <p>
-                  Clipping: {state.render_config.near_clip} - {state.render_config.far_clip}
+                  Clipping: {state.render_config.near_clip} -{' '}
+                  {state.render_config.far_clip}
                 </p>
               </div>
             </div>
@@ -464,7 +469,9 @@ export const RealityCenter: React.FC = () => {
             <div className="physics-status">
               <div className="status-item">
                 <span className="status-label">Spatial System:</span>
-                <span className={`status-value ${state.spatial_enabled ? 'enabled' : 'disabled'}`}>
+                <span
+                  className={`status-value ${state.spatial_enabled ? 'enabled' : 'disabled'}`}
+                >
                   {state.spatial_enabled ? '✅ Active' : '❌ Disabled'}
                 </span>
               </div>

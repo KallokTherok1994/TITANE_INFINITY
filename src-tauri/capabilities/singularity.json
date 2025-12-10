@@ -3,9 +3,7 @@
   "identifier": "singularity",
   "description": "Capability pour le Singularity Engine TITANE∞ (état global unifié)",
   "windows": ["main"],
-  "permissions": [
-    "core:default"
-  ],
+  "permissions": ["core:default"],
   "commands": {
     "allow": [
       "singularity_get_full_state",

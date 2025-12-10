@@ -89,9 +89,9 @@ const ERROR_METADATA: Record<AudioErrorType, ErrorMetadata> = {
     description:
       "L'accès au microphone a été refusé. TITANE∞ a besoin de votre permission pour utiliser le microphone.",
     troubleshooting: [
-      'Cliquez sur l\'icône de cadenas dans la barre d\'adresse',
-      'Autorisez l\'accès au microphone pour ce site',
-      'Si vous avez bloqué l\'accès, supprimez le site de la liste noire',
+      "Cliquez sur l'icône de cadenas dans la barre d'adresse",
+      "Autorisez l'accès au microphone pour ce site",
+      "Si vous avez bloqué l'accès, supprimez le site de la liste noire",
       'Rechargez la page après avoir accordé la permission',
     ],
     actions: [
@@ -106,7 +106,7 @@ const ERROR_METADATA: Record<AudioErrorType, ErrorMetadata> = {
     iconColor: 'text-yellow-500',
     title: 'Microphone occupé',
     description:
-      "Le microphone est actuellement utilisé par une autre application. Veuillez fermer les autres applications qui utilisent le microphone.",
+      'Le microphone est actuellement utilisé par une autre application. Veuillez fermer les autres applications qui utilisent le microphone.',
     troubleshooting: [
       'Fermez les autres onglets ou applications qui utilisent le microphone',
       'Vérifiez si une visioconférence est en cours (Zoom, Teams, etc.)',
@@ -124,7 +124,7 @@ const ERROR_METADATA: Record<AudioErrorType, ErrorMetadata> = {
     iconColor: 'text-red-500',
     title: 'Erreur du contexte audio',
     description:
-      "Le moteur audio du navigateur a rencontré une erreur. Cela peut être dû à une limitation du navigateur ou à un problème système.",
+      'Le moteur audio du navigateur a rencontré une erreur. Cela peut être dû à une limitation du navigateur ou à un problème système.',
     troubleshooting: [
       'Redémarrez votre navigateur',
       'Vérifiez que votre système audio fonctionne correctement',
@@ -162,7 +162,7 @@ const ERROR_METADATA: Record<AudioErrorType, ErrorMetadata> = {
     description:
       "Une erreur audio inattendue s'est produite. Veuillez réessayer ou contacter le support si le problème persiste.",
     troubleshooting: [
-      'Réessayez l\'opération',
+      "Réessayez l'opération",
       'Redémarrez votre navigateur',
       'Vérifiez la console développeur (F12) pour plus de détails',
       'Contactez le support technique si le problème persiste',
@@ -214,7 +214,7 @@ export const AudioErrorModal: React.FC<AudioErrorModalProps> = ({
         } else {
           // Fallback: Open browser settings
           alert(
-            'Veuillez ouvrir les paramètres de votre navigateur et autoriser l\'accès au microphone.'
+            "Veuillez ouvrir les paramètres de votre navigateur et autoriser l'accès au microphone."
           );
         }
         break;
@@ -295,10 +295,7 @@ export const AudioErrorModal: React.FC<AudioErrorModalProps> = ({
             </h3>
             <ul className="space-y-1.5">
               {metadata.troubleshooting.map((step, index) => (
-                <li
-                  key={index}
-                  className="text-gray-400 text-xs flex items-start"
-                >
+                <li key={index} className="text-gray-400 text-xs flex items-start">
                   <span className="text-cyan-500 mr-2 mt-0.5">•</span>
                   <span>{step}</span>
                 </li>

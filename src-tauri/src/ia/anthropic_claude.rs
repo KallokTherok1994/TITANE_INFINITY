@@ -101,9 +101,7 @@ impl ClaudeClient {
         });
 
         let api_request = ClaudeAPIRequest {
-            model: request
-                .model
-                .unwrap_or_else(|| DEFAULT_MODEL.to_string()),
+            model: request.model.unwrap_or_else(|| DEFAULT_MODEL.to_string()),
             messages,
             system: request.system_prompt,
             temperature: request.temperature.clamp(0.0, 1.0),

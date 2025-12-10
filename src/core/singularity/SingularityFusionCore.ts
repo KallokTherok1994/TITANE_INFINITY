@@ -164,7 +164,9 @@ export class SingularityFusionCore extends EventEmitter {
       this.autoHeal().catch(console.error);
     }, 2000);
 
-    console.log('[SingularityFusion vΩ] ✨ Auto-systems initialized (adaptive sync + enhanced heal)');
+    console.log(
+      '[SingularityFusion vΩ] ✨ Auto-systems initialized (adaptive sync + enhanced heal)'
+    );
   }
 
   /**
@@ -195,7 +197,11 @@ export class SingularityFusionCore extends EventEmitter {
       this.syncFailCount++;
       if (this.syncFailCount > 3) {
         this.adaptiveSyncRate = Math.min(2000, this.adaptiveSyncRate + 100);
-        console.warn('[SingularityFusion vΩ] Sync rate reduced to', this.adaptiveSyncRate, 'ms');
+        console.warn(
+          '[SingularityFusion vΩ] Sync rate reduced to',
+          this.adaptiveSyncRate,
+          'ms'
+        );
       }
     }
   }
@@ -326,23 +332,36 @@ export class SingularityFusionCore extends EventEmitter {
         healActions.push('cognitive.load normalized');
       }
       if (this.state.cognitive.clarity < 0 || this.state.cognitive.clarity > 1) {
-        this.state.cognitive.clarity = Math.max(0.5, Math.min(1, this.state.cognitive.clarity));
+        this.state.cognitive.clarity = Math.max(
+          0.5,
+          Math.min(1, this.state.cognitive.clarity)
+        );
         healActions.push('cognitive.clarity normalized');
       }
 
       // Correction valence émotionnelle
       if (this.state.emotional.valence < -1 || this.state.emotional.valence > 1) {
-        this.state.emotional.valence = Math.max(-1, Math.min(1, this.state.emotional.valence));
+        this.state.emotional.valence = Math.max(
+          -1,
+          Math.min(1, this.state.emotional.valence)
+        );
         healActions.push('emotional.valence normalized');
       }
       if (this.state.emotional.intensity < 0 || this.state.emotional.intensity > 1) {
-        this.state.emotional.intensity = Math.max(0, Math.min(1, this.state.emotional.intensity));
+        this.state.emotional.intensity = Math.max(
+          0,
+          Math.min(1, this.state.emotional.intensity)
+        );
         healActions.push('emotional.intensity normalized');
       }
 
       // Niveau 2: Cohérence critique - réparation aggressive
       if (coherence < 0.5) {
-        console.warn('[SingularityFusion vΩ] ⚠️ Low coherence:', coherence.toFixed(3), '- Auto-healing...');
+        console.warn(
+          '[SingularityFusion vΩ] ⚠️ Low coherence:',
+          coherence.toFixed(3),
+          '- Auto-healing...'
+        );
 
         // Restaurer valeurs par défaut pour éléments dégradés
         if (this.state.narrative.coherence < 0.3) {
@@ -354,7 +373,10 @@ export class SingularityFusionCore extends EventEmitter {
           healActions.push('adaptive.resilience restored');
         }
         if (this.state.performance.fps < 15) {
-          this.state.performance.optimization_level = Math.min(3, this.state.performance.optimization_level + 1);
+          this.state.performance.optimization_level = Math.min(
+            3,
+            this.state.performance.optimization_level + 1
+          );
           healActions.push('performance.optimization increased');
         }
 
@@ -368,7 +390,11 @@ export class SingularityFusionCore extends EventEmitter {
 
       // Niveau 3: Cohérence très basse - réinitialisation partielle
       if (coherence < 0.3) {
-        console.error('[SingularityFusion vΩ] ❌ Critical coherence:', coherence.toFixed(3), '- Hard reset...');
+        console.error(
+          '[SingularityFusion vΩ] ❌ Critical coherence:',
+          coherence.toFixed(3),
+          '- Hard reset...'
+        );
 
         // Reset des sous-systèmes critiques
         this.state.cognitive = {
@@ -394,7 +420,12 @@ export class SingularityFusionCore extends EventEmitter {
 
       if (healActions.length > 0) {
         console.log('[SingularityFusion vΩ] ✅ Healed:', healActions.join(', '));
-        console.log('[SingularityFusion vΩ] Coherence:', coherence.toFixed(3), '→', newCoherence.toFixed(3));
+        console.log(
+          '[SingularityFusion vΩ] Coherence:',
+          coherence.toFixed(3),
+          '→',
+          newCoherence.toFixed(3)
+        );
         this.emit('state:healed', { state: this.state, actions: healActions });
       }
     } catch (error) {
@@ -425,63 +456,62 @@ export class SingularityFusionCore extends EventEmitter {
     let score = 0;
 
     // Cohérence cognitive (focus * clarity * depth)
-    const cognitiveScore = (
+    const cognitiveScore =
       this.state.cognitive.clarity * 0.4 +
       this.state.cognitive.focus * 0.3 +
       this.state.cognitive.depth * 0.2 +
-      (1 - this.state.cognitive.load) * 0.1
-    );
+      (1 - this.state.cognitive.load) * 0.1;
     score += baseWeights.cognitive * cognitiveScore * contextMultiplier;
 
     // Cohérence émotionnelle (stabilité + intensité contrôlée)
-    const emotionalScore = (
+    const emotionalScore =
       (1 - Math.abs(this.state.emotional.valence - 0.5) * 0.5) * 0.5 +
-      Math.min(0.8, this.state.emotional.intensity) / 0.8 * 0.3 +
-      this.state.emotional.energy * 0.2
-    );
+      (Math.min(0.8, this.state.emotional.intensity) / 0.8) * 0.3 +
+      this.state.emotional.energy * 0.2;
     score += baseWeights.emotional * emotionalScore;
 
     // Cohérence adaptative (résilience + flexibilité)
-    const adaptiveScore = (
+    const adaptiveScore =
       this.state.adaptive.resilience * 0.4 +
       this.state.adaptive.flexibility * 0.3 +
       this.state.adaptive.adaptation_speed * 0.2 +
-      this.state.adaptive.learning_rate * 0.1
-    );
+      this.state.adaptive.learning_rate * 0.1;
     score += baseWeights.adaptive * adaptiveScore;
 
     // Cohérence narrative (cohérence + identité + sens)
-    const narrativeScore = (
+    const narrativeScore =
       this.state.narrative.coherence * 0.4 +
       this.state.narrative.identity_strength * 0.3 +
       this.state.narrative.purpose_alignment * 0.2 +
-      this.state.narrative.meaning_depth * 0.1
-    );
+      this.state.narrative.meaning_depth * 0.1;
     score += baseWeights.narrative * narrativeScore;
 
     // Cohérence physique (santé système)
-    const physicalScore = Math.max(0, 1 - (
-      (this.state.physical.cpu / 100) * 0.4 +
-      (this.state.physical.ram / 100) * 0.3 +
-      (this.state.physical.temperature / 100) * 0.3
-    ));
+    const physicalScore = Math.max(
+      0,
+      1 -
+        ((this.state.physical.cpu / 100) * 0.4 +
+          (this.state.physical.ram / 100) * 0.3 +
+          (this.state.physical.temperature / 100) * 0.3)
+    );
     score += baseWeights.physical * physicalScore;
 
     // Cohérence performance (FPS + temps rendu)
-    const performanceScore = (
+    const performanceScore =
       Math.min(1, this.state.performance.fps / 60) * 0.5 +
       Math.max(0, 1 - this.state.performance.render_time / 16.67) * 0.3 +
-      (1 - Math.min(1, this.state.performance.memory_usage / 1024)) * 0.2
-    );
+      (1 - Math.min(1, this.state.performance.memory_usage / 1024)) * 0.2;
     score += baseWeights.performance * performanceScore;
 
     // Cohérence mémoire
-    const memoryScore = this.state.memory.compressed ? 0.9 :
-      Math.max(0, 1 - this.state.memory.size_mb / 100);
+    const memoryScore = this.state.memory.compressed
+      ? 0.9
+      : Math.max(0, 1 - this.state.memory.size_mb / 100);
     score += baseWeights.memory * memoryScore;
 
     // Cohérence avatar
-    const avatarScore = this.state.avatar.opacity * 0.5 +
+    const avatarScore =
+      this.state.avatar.opacity * 0.5 +
       (this.state.avatar.expression !== 'error' ? 0.5 : 0);
     score += baseWeights.avatar * avatarScore;
 

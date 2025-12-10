@@ -13,9 +13,7 @@
 import { useEffect, useState, useCallback } from 'react';
 
 // REMOVED: engines/presence supprimé en PHASE 1 (OPTION B) - utilise stub temporaire
-import {
-  unifiedPresenceEngine,
-} from '@/engines/presence/_stubs';
+import { unifiedPresenceEngine } from '@/engines/presence/_stubs';
 
 // Types importés depuis stubs
 import type {
@@ -35,15 +33,10 @@ import {
 } from '@/engines/presence/unifiedPresenceEngine';
 */
 
-import {
-  narrativeProtocol,
-} from '@/engines/presence/_stubs';
+import { narrativeProtocol } from '@/engines/presence/_stubs';
 
 // Types importés depuis stubs
-import type {
-  NarrativeArc,
-  SymbolicElement,
-} from '@/engines/presence/_stubs';
+import type { NarrativeArc, SymbolicElement } from '@/engines/presence/_stubs';
 
 /*
 import {

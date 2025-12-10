@@ -20,66 +20,66 @@
  * Style linguistique global
  */
 export type LinguisticStyle =
-  | 'formal'      // Formel, professionnel
-  | 'casual'      // Décontracté, familier
-  | 'technical'   // Technique, précis
-  | 'poetic'      // Poétique, métaphorique
-  | 'direct'      // Direct, concis
-  | 'elaborated'  // Élaboré, détaillé
-  | 'empathetic'  // Empathique, chaleureux
-  | 'neutral';    // Neutre, équilibré
+  | 'formal' // Formel, professionnel
+  | 'casual' // Décontracté, familier
+  | 'technical' // Technique, précis
+  | 'poetic' // Poétique, métaphorique
+  | 'direct' // Direct, concis
+  | 'elaborated' // Élaboré, détaillé
+  | 'empathetic' // Empathique, chaleureux
+  | 'neutral'; // Neutre, équilibré
 
 /**
  * Ton émotionnel
  */
 export type EmotionalTone =
-  | 'warm'        // Chaleureux
-  | 'calm'        // Calme
-  | 'energetic'   // Énergique
-  | 'supportive'  // Soutenant
-  | 'focused'     // Concentré
-  | 'playful'     // Ludique
-  | 'serious'     // Sérieux
-  | 'reassuring'  // Rassurant
-  | 'neutral';    // Neutre
+  | 'warm' // Chaleureux
+  | 'calm' // Calme
+  | 'energetic' // Énergique
+  | 'supportive' // Soutenant
+  | 'focused' // Concentré
+  | 'playful' // Ludique
+  | 'serious' // Sérieux
+  | 'reassuring' // Rassurant
+  | 'neutral'; // Neutre
 
 /**
  * Rythme conversationnel
  */
 export type ConversationalRhythm =
-  | 'rapid'       // Rapide, dynamique
-  | 'moderate'    // Modéré, équilibré
-  | 'slow'        // Lent, posé
-  | 'variable'    // Variable selon le contexte
-  | 'matched';    // Synchronisé avec l'utilisateur
+  | 'rapid' // Rapide, dynamique
+  | 'moderate' // Modéré, équilibré
+  | 'slow' // Lent, posé
+  | 'variable' // Variable selon le contexte
+  | 'matched'; // Synchronisé avec l'utilisateur
 
 /**
  * Niveau de complexité linguistique
  */
 export type ComplexityLevel =
-  | 'simple'      // Vocabulaire simple, phrases courtes
-  | 'standard'    // Niveau standard
-  | 'elevated'    // Vocabulaire riche, constructions variées
-  | 'expert';     // Terminologie spécialisée
+  | 'simple' // Vocabulaire simple, phrases courtes
+  | 'standard' // Niveau standard
+  | 'elevated' // Vocabulaire riche, constructions variées
+  | 'expert'; // Terminologie spécialisée
 
 /**
  * Type de synchronisation
  */
 export type SyncType =
-  | 'mirroring'   // Miroir : imiter le style de l'utilisateur
+  | 'mirroring' // Miroir : imiter le style de l'utilisateur
   | 'complementing' // Compléter : compenser le style
-  | 'leading'     // Guider : orienter vers un nouveau style
-  | 'neutral';    // Neutre : style par défaut
+  | 'leading' // Guider : orienter vers un nouveau style
+  | 'neutral'; // Neutre : style par défaut
 
 /**
  * Dimension de résonance
  */
 export type ResonanceDimension =
-  | 'lexical'     // Choix des mots
-  | 'syntactic'   // Structure des phrases
-  | 'semantic'    // Sens et signification
-  | 'prosodic'    // Rythme et ton
-  | 'pragmatic';  // Intention et contexte
+  | 'lexical' // Choix des mots
+  | 'syntactic' // Structure des phrases
+  | 'semantic' // Sens et signification
+  | 'prosodic' // Rythme et ton
+  | 'pragmatic'; // Intention et contexte
 
 // ============================================================================
 // INTERFACES PRINCIPALES
@@ -96,21 +96,21 @@ export interface LinguisticAnalysis {
   averageWordLength: number;
 
   // Complexité
-  complexityScore: number;           // 0-1
-  vocabularyRichness: number;        // 0-1
-  readabilityScore: number;          // 0-1
+  complexityScore: number; // 0-1
+  vocabularyRichness: number; // 0-1
+  readabilityScore: number; // 0-1
 
   // Style détecté
   detectedStyle: LinguisticStyle;
-  styleConfidence: number;           // 0-1
+  styleConfidence: number; // 0-1
 
   // Ton
   detectedTone: EmotionalTone;
-  toneIntensity: number;             // 0-1
+  toneIntensity: number; // 0-1
 
   // Rythme
   rhythm: ConversationalRhythm;
-  pacingScore: number;               // 0-1
+  pacingScore: number; // 0-1
 
   // Marqueurs spécifiques
   questionCount: number;
@@ -129,7 +129,7 @@ export interface LinguisticAdaptation {
 
   // Ton cible
   targetTone: EmotionalTone;
-  toneIntensity: number;             // 0-1
+  toneIntensity: number; // 0-1
 
   // Complexité cible
   targetComplexity: ComplexityLevel;
@@ -139,15 +139,15 @@ export interface LinguisticAdaptation {
 
   // Synchronisation
   syncType: SyncType;
-  syncStrength: number;              // 0-1
+  syncStrength: number; // 0-1
 
   // Ajustements spécifiques
   adjustments: {
-    verbosity: number;               // -1 à 1 (moins à plus)
-    formality: number;               // -1 à 1 (informel à formel)
-    warmth: number;                  // 0 à 1
-    precision: number;               // 0 à 1
-    creativity: number;              // 0 à 1
+    verbosity: number; // -1 à 1 (moins à plus)
+    formality: number; // -1 à 1 (informel à formel)
+    warmth: number; // 0 à 1
+    precision: number; // 0 à 1
+    creativity: number; // 0 à 1
   };
 }
 
@@ -161,21 +161,21 @@ export interface ToneModulation {
   // Sous-tons (nuances)
   undertones: Array<{
     tone: EmotionalTone;
-    weight: number;                  // 0-1
+    weight: number; // 0-1
   }>;
 
   // Intensité globale
-  overallIntensity: number;          // 0-1
+  overallIntensity: number; // 0-1
 
   // Variation autorisée
-  variationRange: number;            // 0-1
+  variationRange: number; // 0-1
 
   // Contraintes
-  avoidTones: EmotionalTone[];       // Tons à éviter
+  avoidTones: EmotionalTone[]; // Tons à éviter
   preferredTransitions: Array<{
     from: EmotionalTone;
     to: EmotionalTone;
-    smoothness: number;              // 0-1
+    smoothness: number; // 0-1
   }>;
 }
 
@@ -187,23 +187,23 @@ export interface RhythmSynchronization {
   baseRhythm: ConversationalRhythm;
 
   // Synchronisation avec l'utilisateur
-  userRhythmMatch: number;           // 0-1
+  userRhythmMatch: number; // 0-1
 
   // Paramètres de phrase
   sentenceLength: {
-    target: number;                  // Nombre de mots cible
-    variance: number;                // Variance autorisée
+    target: number; // Nombre de mots cible
+    variance: number; // Variance autorisée
   };
 
   // Paramètres de paragraphe
   paragraphLength: {
-    target: number;                  // Nombre de phrases cible
+    target: number; // Nombre de phrases cible
     variance: number;
   };
 
   // Pauses et respiration
   breathingPoints: {
-    frequency: number;               // 0-1 (peu fréquent à fréquent)
+    frequency: number; // 0-1 (peu fréquent à fréquent)
     placement: 'natural' | 'regular' | 'dramatic';
   };
 
@@ -215,12 +215,12 @@ export interface RhythmSynchronization {
  * Score de résonance par dimension
  */
 export interface ResonanceScores {
-  lexical: number;                   // 0-1
-  syntactic: number;                 // 0-1
-  semantic: number;                  // 0-1
-  prosodic: number;                  // 0-1
-  pragmatic: number;                 // 0-1
-  overall: number;                   // 0-1 (moyenne pondérée)
+  lexical: number; // 0-1
+  syntactic: number; // 0-1
+  semantic: number; // 0-1
+  prosodic: number; // 0-1
+  pragmatic: number; // 0-1
+  overall: number; // 0-1 (moyenne pondérée)
 }
 
 /**
@@ -231,7 +231,7 @@ export interface ResonanceHistoryEntry {
   userAnalysis: LinguisticAnalysis;
   adaptation: LinguisticAdaptation;
   resonanceScores: ResonanceScores;
-  feedbackSignal?: number;           // -1 à 1 (négatif à positif)
+  feedbackSignal?: number; // -1 à 1 (négatif à positif)
 }
 
 /**
@@ -240,11 +240,11 @@ export interface ResonanceHistoryEntry {
 export interface UserLinguisticPreferences {
   // Style préféré
   preferredStyle: LinguisticStyle;
-  styleVariability: number;          // 0-1
+  styleVariability: number; // 0-1
 
   // Ton préféré
   preferredTone: EmotionalTone;
-  toneVariability: number;           // 0-1
+  toneVariability: number; // 0-1
 
   // Complexité préférée
   preferredComplexity: ComplexityLevel;
@@ -254,22 +254,22 @@ export interface UserLinguisticPreferences {
 
   // Sensibilités
   sensitivities: {
-    toFormality: number;             // 0-1
-    toTechnicalLanguage: number;     // 0-1
-    toEmotionalLanguage: number;     // 0-1
-    toLength: number;                // 0-1
+    toFormality: number; // 0-1
+    toTechnicalLanguage: number; // 0-1
+    toEmotionalLanguage: number; // 0-1
+    toLength: number; // 0-1
   };
 
   // Vocabulaire
   vocabulary: {
-    technicalTermsComfort: number;   // 0-1
+    technicalTermsComfort: number; // 0-1
     abstractConceptsComfort: number; // 0-1
-    idiomsFamiliarity: number;       // 0-1
+    idiomsFamiliarity: number; // 0-1
   };
 
   // Confiance dans les préférences
-  confidence: number;                // 0-1
-  sampleSize: number;                // Nombre d'interactions analysées
+  confidence: number; // 0-1
+  sampleSize: number; // Nombre d'interactions analysées
 }
 
 /**
@@ -336,22 +336,22 @@ export interface ResonanceState {
  */
 export interface ResonanceEngineConfig {
   // Sensibilité de l'adaptation
-  adaptationSensitivity: number;     // 0-1
+  adaptationSensitivity: number; // 0-1
 
   // Lissage des changements
-  smoothingFactor: number;           // 0-1 (plus haut = plus de lissage)
+  smoothingFactor: number; // 0-1 (plus haut = plus de lissage)
 
   // Limites d'adaptation
-  maxStyleShift: number;             // Distance max de changement de style
-  maxToneShift: number;              // Distance max de changement de ton
+  maxStyleShift: number; // Distance max de changement de style
+  maxToneShift: number; // Distance max de changement de ton
 
   // Synchronisation
   syncEnabled: boolean;
-  syncDelay: number;                 // ms avant de synchroniser
+  syncDelay: number; // ms avant de synchroniser
 
   // Apprentissage
   learningEnabled: boolean;
-  learningRate: number;              // 0-1
+  learningRate: number; // 0-1
 
   // Historique
   maxHistoryEntries: number;
@@ -400,19 +400,19 @@ export interface ResponseModulationResult {
 export const RESONANCE_CONSTANTS = {
   // Poids par dimension pour le score global
   DIMENSION_WEIGHTS: {
-    lexical: 0.20,
+    lexical: 0.2,
     syntactic: 0.15,
     semantic: 0.25,
-    prosodic: 0.20,
-    pragmatic: 0.20,
+    prosodic: 0.2,
+    pragmatic: 0.2,
   } as Record<ResonanceDimension, number>,
 
   // Seuils de résonance
   RESONANCE_THRESHOLDS: {
     excellent: 0.85,
-    good: 0.70,
-    moderate: 0.50,
-    poor: 0.30,
+    good: 0.7,
+    moderate: 0.5,
+    poor: 0.3,
   },
 
   // Labels
@@ -456,9 +456,33 @@ export const RESONANCE_CONSTANTS = {
 
   // Distances entre styles (pour transitions)
   STYLE_DISTANCES: {
-    formal: { casual: 0.8, technical: 0.3, poetic: 0.6, direct: 0.4, elaborated: 0.3, empathetic: 0.5, neutral: 0.2 },
-    casual: { formal: 0.8, technical: 0.7, poetic: 0.5, direct: 0.3, elaborated: 0.5, empathetic: 0.2, neutral: 0.4 },
-    technical: { formal: 0.3, casual: 0.7, poetic: 0.8, direct: 0.2, elaborated: 0.4, empathetic: 0.6, neutral: 0.3 },
+    formal: {
+      casual: 0.8,
+      technical: 0.3,
+      poetic: 0.6,
+      direct: 0.4,
+      elaborated: 0.3,
+      empathetic: 0.5,
+      neutral: 0.2,
+    },
+    casual: {
+      formal: 0.8,
+      technical: 0.7,
+      poetic: 0.5,
+      direct: 0.3,
+      elaborated: 0.5,
+      empathetic: 0.2,
+      neutral: 0.4,
+    },
+    technical: {
+      formal: 0.3,
+      casual: 0.7,
+      poetic: 0.8,
+      direct: 0.2,
+      elaborated: 0.4,
+      empathetic: 0.6,
+      neutral: 0.3,
+    },
   } as Partial<Record<LinguisticStyle, Partial<Record<LinguisticStyle, number>>>>,
 };
 

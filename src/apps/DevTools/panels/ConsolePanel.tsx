@@ -55,7 +55,9 @@ export const ConsolePanel: React.FC = () => {
             <div className="console-command">
               <span className="console-prompt">&gt;</span>
               <span className="console-command-text">{result.command}</span>
-              <span className="console-timestamp">{new Date(result.timestamp).toLocaleTimeString()}</span>
+              <span className="console-timestamp">
+                {new Date(result.timestamp).toLocaleTimeString()}
+              </span>
             </div>
             <div className={`console-result ${result.success ? 'success' : 'error'}`}>
               {result.success ? (
@@ -75,7 +77,7 @@ export const ConsolePanel: React.FC = () => {
           type="text"
           className="console-input"
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={e => setInput(e.target.value)}
           placeholder="Enter command..."
           disabled={executing}
         />

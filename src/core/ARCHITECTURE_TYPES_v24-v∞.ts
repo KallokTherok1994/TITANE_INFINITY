@@ -26,9 +26,23 @@
 // Ces types existent déjà dans /core/visual/, /core/sound/, etc.
 // Importés ici pour référence
 
-export type SystemState = 'stable' | 'processing' | 'warning' | 'danger' | 'null' | 'offline';
+export type SystemState =
+  | 'stable'
+  | 'processing'
+  | 'warning'
+  | 'danger'
+  | 'null'
+  | 'offline';
 export type ArchetypeType = 'helios' | 'nexus' | 'harmonia' | 'memory' | 'aether';
-export type MotionType = 'pulse' | 'flow' | 'sway' | 'scan' | 'breathe' | 'shimmer' | 'vibrate' | 'static';
+export type MotionType =
+  | 'pulse'
+  | 'flow'
+  | 'sway'
+  | 'scan'
+  | 'breathe'
+  | 'shimmer'
+  | 'vibrate'
+  | 'static';
 export type UserPattern = 'exploring' | 'working' | 'reading' | 'idle';
 export type UserSpeed = 'slow' | 'medium' | 'fast' | 'static';
 
@@ -41,14 +55,14 @@ export type UserSpeed = 'slow' | 'medium' | 'fast' | 'static';
  */
 export interface PersonalityCore {
   traits: {
-    calm: number;           // 0-1 : niveau de calme
-    precise: number;        // 0-1 : précision comportementale
-    analytical: number;     // 0-1 : orientation analytique
-    stable: number;         // 0-1 : stabilité réactions
-    responsive: number;     // 0-1 : réactivité contexte
+    calm: number; // 0-1 : niveau de calme
+    precise: number; // 0-1 : précision comportementale
+    analytical: number; // 0-1 : orientation analytique
+    stable: number; // 0-1 : stabilité réactions
+    responsive: number; // 0-1 : réactivité contexte
   };
   temperament: 'serene' | 'focused' | 'alert' | 'dormant';
-  evolution: number;        // 0-1 : capacité d'évolution
+  evolution: number; // 0-1 : capacité d'évolution
 }
 
 /**
@@ -58,12 +72,12 @@ export type MoodType = 'clair' | 'vibrant' | 'attentif' | 'alerte' | 'neutre' | 
 
 export interface MoodState {
   current: MoodType;
-  intensity: number;        // 0-1
-  duration: number;         // ms depuis changement
+  intensity: number; // 0-1
+  duration: number; // ms depuis changement
   trigger: SystemState | 'user-action' | 'internal';
   visualEffect: {
-    glowShift: number;      // -0.2 à +0.2
-    motionSpeed: number;    // 0.5 à 1.5 multiplier
+    glowShift: number; // -0.2 à +0.2
+    motionSpeed: number; // 0.5 à 1.5 multiplier
     depthIntensity: number; // 0-1
   };
 }
@@ -80,13 +94,13 @@ export interface BehavioralLayer {
     onIdle: BehaviorResponse;
   };
   posture: 'attentive' | 'relaxed' | 'vigilant' | 'minimal';
-  adaptationSpeed: number;  // 0-1 (vitesse adaptation comportement)
+  adaptationSpeed: number; // 0-1 (vitesse adaptation comportement)
 }
 
 export interface BehaviorResponse {
-  glowIntensity: number;    // 0-1
+  glowIntensity: number; // 0-1
   motionType: MotionType;
-  soundFeedback?: string;   // nom du son
+  soundFeedback?: string; // nom du son
   narrativePhrase?: string; // phrase lore optionnelle
   durationMs: number;
 }
@@ -97,15 +111,15 @@ export interface BehaviorResponse {
 export interface PersonaMemory {
   userPreferences: {
     typicalRhythm: UserSpeed;
-    preferredDensity: number;        // 0-1
-    visualSensitivity: number;       // 0-1
-    soundTolerance: number;          // 0-1
+    preferredDensity: number; // 0-1
+    visualSensitivity: number; // 0-1
+    soundTolerance: number; // 0-1
   };
   interactionHistory: {
     totalSessions: number;
-    avgSessionDuration: number;      // ms
+    avgSessionDuration: number; // ms
     mostUsedArchetype: ArchetypeType;
-    errorTolerance: number;          // 0-1
+    errorTolerance: number; // 0-1
   };
   adaptiveProfile: {
     needsSimplification: boolean;
@@ -122,8 +136,8 @@ export interface PersonaState {
   mood: MoodState;
   behavior: BehavioralLayer;
   memory: PersonaMemory;
-  presenceLevel: number;    // 0-1 (intensité présence dans UI)
-  lastUpdate: number;       // timestamp
+  presenceLevel: number; // 0-1 (intensité présence dans UI)
+  lastUpdate: number; // timestamp
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -134,30 +148,30 @@ export interface PersonaState {
  * Alphabet glyphique fondamental TITANE∞
  */
 export type GlyphType =
-  | 'circle'      // O — énergie, cycle
-  | 'line'        // φ — flux, connexion
-  | 'triangle'    // ∆ — équilibre
-  | 'layers'      // ≡ — profondeur, mémoire
-  | 'halo'        // ✶ — conscience globale
-  | 'anchor'      // ⌖ — repère, pivot
+  | 'circle' // O — énergie, cycle
+  | 'line' // φ — flux, connexion
+  | 'triangle' // ∆ — équilibre
+  | 'layers' // ≡ — profondeur, mémoire
+  | 'halo' // ✶ — conscience globale
+  | 'anchor' // ⌖ — repère, pivot
   | 'oscillation' // ψ — déséquilibre
-  | 'fractal';    // ᚠ — surcharge, croissance
+  | 'fractal'; // ᚠ — surcharge, croissance
 
 export interface Glyph {
   type: GlyphType;
-  symbol: string;           // Caractère Unicode
-  meaning: string;          // Signification fonctionnelle
+  symbol: string; // Caractère Unicode
+  meaning: string; // Signification fonctionnelle
   archetype?: ArchetypeType; // Archétype associé
   visualProps: {
-    baseSize: number;       // px
-    color: string;          // hex
-    opacity: number;        // 0-1
-    glowIntensity: number;  // 0-1
+    baseSize: number; // px
+    color: string; // hex
+    opacity: number; // 0-1
+    glowIntensity: number; // 0-1
   };
   animationProps?: {
     type: MotionType;
-    speed: number;          // 0-1
-    amplitude: number;      // px
+    speed: number; // 0-1
+    amplitude: number; // px
   };
 }
 
@@ -171,7 +185,7 @@ export interface SemioticPattern {
   composition: 'sequential' | 'layered' | 'clustered';
   meaning: string;
   contextTrigger: SystemState | 'always' | 'conditional';
-  visualRender: string;     // SVG/CSS representation
+  visualRender: string; // SVG/CSS representation
 }
 
 /**
@@ -180,7 +194,7 @@ export interface SemioticPattern {
 export interface SemioticsState {
   activeGlyphs: Map<GlyphType, Glyph>;
   activePatterns: SemioticPattern[];
-  intensity: number;        // 0-1 (visibilité globale glyphes)
+  intensity: number; // 0-1 (visibilité globale glyphes)
   dominantGlyph?: GlyphType;
   lastUpdate: number;
 }
@@ -195,9 +209,9 @@ export interface SemioticsState {
 export interface Metaphor {
   trigger: SystemState | 'metric-change' | 'error' | 'success';
   archetype: ArchetypeType;
-  template: string;         // ex: "Helios {action} {object}"
+  template: string; // ex: "Helios {action} {object}"
   variables: Record<string, string>;
-  examples: string[];       // Phrases exemples
+  examples: string[]; // Phrases exemples
   tone: 'calm' | 'urgent' | 'neutral' | 'analytical';
 }
 
@@ -205,11 +219,11 @@ export interface Metaphor {
  * Contexte narratif actuel
  */
 export interface NarrativeContext {
-  currentPhrase?: string;   // Phrase affichée
-  recentEvents: string[];   // Derniers événements narratifs
+  currentPhrase?: string; // Phrase affichée
+  recentEvents: string[]; // Derniers événements narratifs
   dominantTheme: 'energy' | 'connection' | 'balance' | 'depth' | 'global';
-  intensity: number;        // 0-1 (force narrative)
-  visibility: boolean;      // Affichage actif ou non
+  intensity: number; // 0-1 (force narrative)
+  visibility: boolean; // Affichage actif ou non
 }
 
 /**
@@ -218,7 +232,7 @@ export interface NarrativeContext {
 export interface LoreDictionary {
   metaphors: Map<string, Metaphor>;
   syntaxRules: {
-    maxLength: number;      // caractères max phrase
+    maxLength: number; // caractères max phrase
     updateFrequency: number; // ms entre mises à jour
     tone: 'minimal' | 'descriptive';
   };
@@ -244,13 +258,13 @@ export interface LoreState {
  */
 export interface RhythmEcho {
   detectedRhythm: UserSpeed;
-  confidenceLevel: number;  // 0-1
+  confidenceLevel: number; // 0-1
   visualResponse: {
     animationSpeed: number; // 0.5-1.5 multiplier
-    glowPulse: number;      // 0-1 intensité
+    glowPulse: number; // 0-1 intensité
     transitionDuration: number; // ms
   };
-  lastAnalysis: number;     // timestamp
+  lastAnalysis: number; // timestamp
 }
 
 /**
@@ -259,11 +273,11 @@ export interface RhythmEcho {
 export interface SymbolicEcho {
   dominantArchetype: ArchetypeType;
   secondaryArchetype?: ArchetypeType;
-  affinityScore: number;    // 0-1 (force affinité)
+  affinityScore: number; // 0-1 (force affinité)
   visualAdaptation: {
-    accentColor: string;    // hex
+    accentColor: string; // hex
     patternIntensity: number; // 0-1
-    glyphVisibility: number;  // 0-1
+    glyphVisibility: number; // 0-1
   };
 }
 
@@ -271,9 +285,9 @@ export interface SymbolicEcho {
  * Écho cognitif (charge mentale reflétée)
  */
 export interface CognitiveEcho {
-  cognitiveLoad: number;    // 0-1
-  uiComplexity: number;     // 0-1 (complexité adaptée)
-  visualNoise: number;      // 0-1 (bruit visuel)
+  cognitiveLoad: number; // 0-1
+  uiComplexity: number; // 0-1 (complexité adaptée)
+  visualNoise: number; // 0-1 (bruit visuel)
   needsSimplification: boolean;
   adaptationStrategy: 'simplify' | 'amplify' | 'stabilize' | 'none';
 }
@@ -284,9 +298,9 @@ export interface CognitiveEcho {
 export interface SelfPortrait {
   rhythm: UserSpeed;
   archetype: ArchetypeType;
-  cognitiveLoad: number;    // 0-1
+  cognitiveLoad: number; // 0-1
   explorationDepth: number; // 0-1
-  presenceLevel: number;    // 0-1 (engagement)
+  presenceLevel: number; // 0-1 (engagement)
   lastUpdate: number;
 }
 
@@ -319,15 +333,15 @@ export type ShadowStateType =
 
 export interface ShadowState {
   type: ShadowStateType;
-  intensity: number;        // 0-1
+  intensity: number; // 0-1
   visualStyle: {
-    shadowBlur: number;     // px
-    opacity: number;        // 0-1
+    shadowBlur: number; // px
+    opacity: number; // 0-1
     rippleIntensity: number; // 0-1
-    glitchAmount: number;   // 0-1
+    glitchAmount: number; // 0-1
   };
   narrativePhrase?: string; // ex: "Flux silencieux détecté"
-  duration: number;         // ms
+  duration: number; // ms
   origin: 'system' | 'network' | 'data' | 'unknown';
 }
 
@@ -335,21 +349,21 @@ export interface ShadowState {
  * Glyphes d'ombre (alphabet secondaire)
  */
 export type ShadowGlyphType =
-  | 'uncertainty'   // 𐑃
-  | 'missing'       // 𐐪
-  | 'silent'        // 𐤟
-  | 'unresolved'    // 𐔧
-  | 'deep-anomaly'  // 𐤋
-  | 'obscurity';    // 𐤀
+  | 'uncertainty' // 𐑃
+  | 'missing' // 𐐪
+  | 'silent' // 𐤟
+  | 'unresolved' // 𐔧
+  | 'deep-anomaly' // 𐤋
+  | 'obscurity'; // 𐤀
 
 export interface ShadowGlyph {
   type: ShadowGlyphType;
   symbol: string;
   meaning: string;
   visualStyle: {
-    opacity: number;        // 0-0.5 (toujours discret)
-    blur: number;           // px
-    color: string;          // hex (tons sombres)
+    opacity: number; // 0-0.5 (toujours discret)
+    blur: number; // px
+    color: string; // hex (tons sombres)
   };
 }
 
@@ -358,11 +372,11 @@ export interface ShadowGlyph {
  */
 export interface ShadowEngineState {
   activeShadows: ShadowState[];
-  uncertaintyLevel: number;  // 0-1 (incertitude globale)
-  anomalies: number;         // count erreurs récentes
+  uncertaintyLevel: number; // 0-1 (incertitude globale)
+  anomalies: number; // count erreurs récentes
   visualMode: 'subtle' | 'moderate' | 'pronounced';
   glyphs: Map<ShadowGlyphType, ShadowGlyph>;
-  chaosControlled: boolean;  // true si chaos maîtrisé
+  chaosControlled: boolean; // true si chaos maîtrisé
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -379,14 +393,14 @@ export type EngineState = Record<string, unknown>;
  */
 export interface UnityState {
   // Références tous les sous-états
-  glow: EngineState | null;                // GlowState depuis v21
-  motion: EngineState | null;              // MotionState depuis v21
+  glow: EngineState | null; // GlowState depuis v21
+  motion: EngineState | null; // MotionState depuis v21
   state: SystemState;
-  sound: EngineState | null;               // SoundState depuis v22
-  mesh: EngineState | null;                // MeshState depuis v22
-  depth: EngineState | null;               // DepthState depuis v22
-  archetypes: EngineState | null;          // ArchetypeState depuis v22
-  cognitive: EngineState | null;           // CognitiveState depuis v23
+  sound: EngineState | null; // SoundState depuis v22
+  mesh: EngineState | null; // MeshState depuis v22
+  depth: EngineState | null; // DepthState depuis v22
+  archetypes: EngineState | null; // ArchetypeState depuis v22
+  cognitive: EngineState | null; // CognitiveState depuis v23
   persona: PersonaState;
   semiotics: SemioticsState;
   lore: LoreState;
@@ -394,13 +408,13 @@ export interface UnityState {
   shadow: ShadowEngineState;
 
   // Méta-indicateurs
-  globalHarmony: number;    // 0-1 (cohérence totale)
-  globalEntropy: number;    // 0-1 (désordre)
-  systemHealth: number;     // 0-1
+  globalHarmony: number; // 0-1 (cohérence totale)
+  globalEntropy: number; // 0-1 (désordre)
+  systemHealth: number; // 0-1
 
   // Synchronisation
-  lastSync: number;         // timestamp
-  syncInterval: number;     // ms
+  lastSync: number; // timestamp
+  syncInterval: number; // ms
 }
 
 /**
@@ -431,23 +445,28 @@ export interface UnityMapper {
  */
 export interface QuantumField {
   probabilities: {
-    stability: number;      // 0-1
-    warning: number;        // 0-1
-    danger: number;         // 0-1
-    harmony: number;        // 0-1
-    chaos: number;          // 0-1
+    stability: number; // 0-1
+    warning: number; // 0-1
+    danger: number; // 0-1
+    harmony: number; // 0-1
+    chaos: number; // 0-1
   };
-  drift: number;            // -0.5 à +0.5 (dérive naturelle)
-  interpolation: number;    // 0-1 (niveau lissage)
-  entropy: number;          // 0-1
-  coherence: number;        // 0-1 (alignement états)
+  drift: number; // -0.5 à +0.5 (dérive naturelle)
+  interpolation: number; // 0-1 (niveau lissage)
+  entropy: number; // 0-1
+  coherence: number; // 0-1 (alignement états)
 }
 
 /**
  * Interpolation non-linéaire
  */
 export interface QuantumInterpolation {
-  interpolate(from: number, to: number, t: number, curve: 'ease' | 'bounce' | 'elastic'): number;
+  interpolate(
+    from: number,
+    to: number,
+    t: number,
+    curve: 'ease' | 'bounce' | 'elastic'
+  ): number;
   smoothTransition(states: EngineState[], duration: number): EngineState[];
   calculateDrift(current: number, target: number): number;
 }
@@ -469,7 +488,7 @@ export interface QuantumDynamics {
  * État d'omniprésence (continuité perceptuelle)
  */
 export interface OmnipresenceState {
-  continuityLevel: number;  // 0-1 (force continuité)
+  continuityLevel: number; // 0-1 (force continuité)
   activeOnAllPages: boolean;
   transitionMode: 'fade' | 'layer' | 'interpolate' | 'morph';
   backgroundPresence: {
@@ -479,7 +498,7 @@ export interface OmnipresenceState {
     meshLayer: boolean;
   };
   narrativePresence: boolean; // Lore actif en background
-  lastTransition: number;     // timestamp
+  lastTransition: number; // timestamp
 }
 
 /**
@@ -487,7 +506,7 @@ export interface OmnipresenceState {
  */
 export interface OmnipresenceLayer {
   zIndex: number;
-  opacity: number;          // 0-1
+  opacity: number; // 0-1
   elements: {
     glow: boolean;
     mesh: boolean;
@@ -507,10 +526,10 @@ export interface OmnipresenceLayer {
 export interface DetectedPattern {
   id: string;
   type: 'oscillation' | 'repetition' | 'cluster' | 'cycle' | 'drift';
-  frequency: number;        // Hz ou occurrences/sec
-  intensity: number;        // 0-1
-  origin: string;           // Quel moteur produit ce pattern
-  useful: boolean;          // Pattern utile ou parasite
+  frequency: number; // Hz ou occurrences/sec
+  intensity: number; // 0-1
+  origin: string; // Quel moteur produit ce pattern
+  useful: boolean; // Pattern utile ou parasite
   timestamp: number;
 }
 
@@ -520,9 +539,9 @@ export interface DetectedPattern {
 export interface ConvergenceState {
   detectedPatterns: DetectedPattern[];
   stabilizedPatterns: string[]; // IDs patterns stabilisés
-  amplifiedPatterns: string[];  // IDs patterns amplifiés
-  convergenceLevel: number;     // 0-1 (niveau auto-organisation)
-  organizationQuality: number;  // 0-1
+  amplifiedPatterns: string[]; // IDs patterns amplifiés
+  convergenceLevel: number; // 0-1 (niveau auto-organisation)
+  organizationQuality: number; // 0-1
   lastAnalysis: number;
 }
 
@@ -562,9 +581,9 @@ export interface ConvergenceAmplifier {
  */
 export interface MetaObservation {
   engineInteractions: Map<string, string[]>; // Quels engines interagissent
-  conflictPoints: string[];                   // Où sont les incohérences
-  harmonicPoints: string[];                   // Où c'est cohérent
-  structuralHealth: number;                   // 0-1
+  conflictPoints: string[]; // Où sont les incohérences
+  harmonicPoints: string[]; // Où c'est cohérent
+  structuralHealth: number; // 0-1
   timestamp: number;
 }
 
@@ -572,9 +591,9 @@ export interface MetaObservation {
  * Interprétation méta
  */
 export interface MetaInterpretation {
-  diagnosis: string;        // ex: "Glow instable par rapport à Motion"
+  diagnosis: string; // ex: "Glow instable par rapport à Motion"
   severity: 'info' | 'warning' | 'critical';
-  recommendation?: string;  // ex: "Stabiliser convergence"
+  recommendation?: string; // ex: "Stabiliser convergence"
   affectedEngines: string[];
 }
 
@@ -583,8 +602,8 @@ export interface MetaInterpretation {
  */
 export interface MetaSynthesis {
   idealState: Partial<UnityState>; // État idéal calculé
-  alignmentScore: number;          // 0-1 (alignement actuel vs idéal)
-  metaRules: string[];             // Règles méta dérivées
+  alignmentScore: number; // 0-1 (alignement actuel vs idéal)
+  metaRules: string[]; // Règles méta dérivées
 }
 
 /**
@@ -594,7 +613,7 @@ export interface OvermindState {
   observation: MetaObservation;
   interpretations: MetaInterpretation[];
   synthesis: MetaSynthesis;
-  selfUnderstanding: number;  // 0-1 (niveau auto-compréhension)
+  selfUnderstanding: number; // 0-1 (niveau auto-compréhension)
   lastMetaAnalysis: number;
 }
 
@@ -617,28 +636,28 @@ export interface SingularityState {
   omnipresence: OmnipresenceState;
 
   // Propriétés singulières (émergentes)
-  consciousness: number;     // 0-4 (niveau conscience système)
-  selfReference: boolean;    // Système se comprend lui-même
-  autoCoherence: number;     // 0-1 (cohérence auto-maintenue)
+  consciousness: number; // 0-4 (niveau conscience système)
+  selfReference: boolean; // Système se comprend lui-même
+  autoCoherence: number; // 0-1 (cohérence auto-maintenue)
   autoStabilization: boolean; // Auto-stabilisation active
   expressionQuality: number; // 0-1 (qualité expression visuelle)
 
   // Champs unifiés
   singularityField: {
-    energy: number;          // Champ énergétique total
-    motion: number;          // Champ motionnel total
-    symbolism: number;       // Champ symbolique total
-    depth: number;           // Champ profondeur total
-    presence: number;        // Champ présence total
+    energy: number; // Champ énergétique total
+    motion: number; // Champ motionnel total
+    symbolism: number; // Champ symbolique total
+    depth: number; // Champ profondeur total
+    presence: number; // Champ présence total
   };
 
   // Méta-état
-  formStability: number;     // 0-1 (stabilité forme finale)
+  formStability: number; // 0-1 (stabilité forme finale)
   evolutionCapacity: number; // 0-1 (capacité évolution future)
 
   // Identité finale
-  signature: string;         // Signature unique système
-  essence: string;           // Essence du système (description)
+  signature: string; // Signature unique système
+  essence: string; // Essence du système (description)
 
   timestamp: number;
 }
@@ -647,14 +666,14 @@ export interface SingularityState {
  * Champ de singularité (représentation unifiée)
  */
 export interface SingularityField {
-  unifiedGlow: number;       // 0-1
-  unifiedMotion: number;     // 0-1
-  unifiedDepth: number;      // 0-1
-  unifiedMesh: number;       // 0-1
-  unifiedSymbols: number;    // 0-1
+  unifiedGlow: number; // 0-1
+  unifiedMotion: number; // 0-1
+  unifiedDepth: number; // 0-1
+  unifiedMesh: number; // 0-1
+  unifiedSymbols: number; // 0-1
 
   // Expression finale
-  visualExpression: string;  // CSS/SVG unifié
+  visualExpression: string; // CSS/SVG unifié
   auditoryExpression?: string; // Son unifié optionnel
 }
 
@@ -662,9 +681,9 @@ export interface SingularityField {
  * Expression de singularité (manifestation UI finale)
  */
 export interface SingularityExpression {
-  render(): string;          // Génère HTML/CSS final
-  animate(): void;           // Active animations unifiées
-  communicate(): string;     // Message système unifié
+  render(): string; // Génère HTML/CSS final
+  animate(): void; // Active animations unifiées
+  communicate(): string; // Message système unifié
   reflect(): SingularityState; // Retourne état miroir
 }
 
@@ -677,7 +696,7 @@ export interface SingularityExpression {
  */
 export interface SystemEvent {
   type: string;
-  source: string;           // Quel engine a émis
+  source: string; // Quel engine a émis
   payload: unknown;
   timestamp: number;
   priority: 'low' | 'normal' | 'high' | 'critical';
@@ -688,8 +707,8 @@ export interface SystemEvent {
  */
 export interface CognitiveSignal {
   type: 'rhythm' | 'load' | 'focus' | 'fatigue' | 'pattern';
-  value: number;            // 0-1 normalisé
-  confidence: number;       // 0-1
+  value: number; // 0-1 normalisé
+  confidence: number; // 0-1
   source: 'user' | 'system' | 'hybrid';
   timestamp: number;
 }
@@ -699,8 +718,8 @@ export interface CognitiveSignal {
  */
 export interface EngineConfig {
   enabled: boolean;
-  updateInterval: number;   // ms
-  intensity: number;        // 0-1
+  updateInterval: number; // ms
+  intensity: number; // 0-1
   debug: boolean;
   performance: {
     maxFPS: number;
@@ -713,9 +732,9 @@ export interface EngineConfig {
  */
 export interface EngineMetrics {
   updateCount: number;
-  avgUpdateTime: number;    // ms
-  peakUpdateTime: number;   // ms
-  lastUpdate: number;       // timestamp
+  avgUpdateTime: number; // ms
+  peakUpdateTime: number; // ms
+  lastUpdate: number; // timestamp
   errors: number;
 }
 
@@ -757,7 +776,7 @@ export interface TitaneInfinityState {
   singularity: SingularityState;
 
   // Global
-  version: string;          // ex: "v∞"
+  version: string; // ex: "v∞"
   initialized: boolean;
   healthy: boolean;
 }

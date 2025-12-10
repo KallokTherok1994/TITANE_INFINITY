@@ -26,7 +26,14 @@ export interface AppShellWithDevToolsProps extends AppShellProps {
   /**
    * Section DevTools par défaut
    */
-  devToolsDefaultSection?: 'dashboard' | 'metrics' | 'logs' | 'engines' | 'memory' | 'pipeline' | 'errors';
+  devToolsDefaultSection?:
+    | 'dashboard'
+    | 'metrics'
+    | 'logs'
+    | 'engines'
+    | 'memory'
+    | 'pipeline'
+    | 'errors';
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -42,11 +49,11 @@ const DEVTOOLS_WIDTH_TABLET = 400;
 
 /**
  * AppShellWithDevTools - Layout avec DevTools intégrés
- * 
+ *
  * Desktop: 3-panel layout (sidebar | content | devtools)
  * Tablet: Drawer coulissant depuis la droite
  * Mobile: Modal fullscreen
- * 
+ *
  * @example
  * ```tsx
  * <AppShellWithDevTools
@@ -70,7 +77,11 @@ export const AppShellWithDevTools = ({
 
   // Si DevTools désactivés, retourner AppShell standard
   if (!devToolsEnabled) {
-    return <AppShell {...appShellProps} className={className}>{children}</AppShell>;
+    return (
+      <AppShell {...appShellProps} className={className}>
+        {children}
+      </AppShell>
+    );
   }
 
   return (

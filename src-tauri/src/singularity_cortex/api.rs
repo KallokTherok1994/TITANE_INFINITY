@@ -3,9 +3,9 @@
 //   Commandes Tauri pour Singularity Cortex OS
 // ═══════════════════════════════════════════════════════════════
 
-use crate::singularity_cortex::{SingularityCortex, state::CognitiveMode};
-use tauri::State;
+use crate::singularity_cortex::{state::CognitiveMode, SingularityCortex};
 use std::sync::Arc;
+use tauri::State;
 use tokio::sync::RwLock;
 
 pub struct SingularityCortexState {
@@ -51,7 +51,7 @@ pub async fn singularity_cortex_set_mode(
     mode: String,
 ) -> Result<(), String> {
     let c = cortex.cortex.read().await;
-    
+
     let cognitive_mode = match mode.to_lowercase().as_str() {
         "coach" => CognitiveMode::Coach,
         "architect" => CognitiveMode::Architect,
@@ -61,7 +61,7 @@ pub async fn singularity_cortex_set_mode(
         "expert" => CognitiveMode::Expert,
         _ => return Err(format!("Mode invalide: {}", mode)),
     };
-    
+
     c.set_mode(cognitive_mode).await;
     Ok(())
 }

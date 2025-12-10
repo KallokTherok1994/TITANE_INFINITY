@@ -15,7 +15,9 @@ import type { ParlerHealthStatus } from '@/services/tts/parlerTTSBridge';
 import type { TTSStatus } from '@/services/tts/hybridTTS';
 
 export const ParlerTTSTestPanel: React.FC = () => {
-  const [text, setText] = useState('Bonjour, je suis TITANE, votre assistant cognitif permanent.');
+  const [text, setText] = useState(
+    'Bonjour, je suis TITANE, votre assistant cognitif permanent.'
+  );
   const [styleDescription, setStyleDescription] = useState('');
   const [health, setHealth] = useState<ParlerHealthStatus | null>(null);
   const [ttsStatus, setTTSStatus] = useState<TTSStatus | null>(null);
@@ -96,33 +98,46 @@ export const ParlerTTSTestPanel: React.FC = () => {
   };
 
   return (
-    <div style={{
-      padding: '20px',
-      backgroundColor: '#1a1a2e',
-      color: '#eee',
-      borderRadius: '8px',
-      fontFamily: 'monospace',
-      maxWidth: '800px',
-      margin: '20px auto'
-    }}>
+    <div
+      style={{
+        padding: '20px',
+        backgroundColor: '#1a1a2e',
+        color: '#eee',
+        borderRadius: '8px',
+        fontFamily: 'monospace',
+        maxWidth: '800px',
+        margin: '20px auto',
+      }}
+    >
       <h2 style={{ margin: '0 0 20px 0' }}>🎤 Parler-TTS Test Panel v24.1</h2>
 
       {/* Health Status */}
-      <div style={{
-        marginBottom: '20px',
-        padding: '15px',
-        backgroundColor: '#16213e',
-        borderRadius: '6px',
-        border: health?.status === 'healthy' ? '2px solid #2ecc71' : '2px solid #e74c3c'
-      }}>
+      <div
+        style={{
+          marginBottom: '20px',
+          padding: '15px',
+          backgroundColor: '#16213e',
+          borderRadius: '6px',
+          border:
+            health?.status === 'healthy' ? '2px solid #2ecc71' : '2px solid #e74c3c',
+        }}
+      >
         <h3 style={{ margin: '0 0 10px 0', fontSize: '16px' }}>Service Status</h3>
         {health ? (
           <>
-            <div>Status: <strong style={{ color: health.status === 'healthy' ? '#2ecc71' : '#e74c3c' }}>
-              {health.status.toUpperCase()}
-            </strong></div>
+            <div>
+              Status:{' '}
+              <strong
+                style={{ color: health.status === 'healthy' ? '#2ecc71' : '#e74c3c' }}
+              >
+                {health.status.toUpperCase()}
+              </strong>
+            </div>
             <div>Model Loaded: {health.modelLoaded ? '✅ Yes' : '❌ No'}</div>
-            <div>Device: <strong>{health.device}</strong> {health.gpuName && `(${health.gpuName})`}</div>
+            <div>
+              Device: <strong>{health.device}</strong>{' '}
+              {health.gpuName && `(${health.gpuName})`}
+            </div>
             {health.vramUsedGb && <div>VRAM Used: {health.vramUsedGb.toFixed(2)} GB</div>}
             <div>Cache Size: {health.cacheSizeMb.toFixed(1)} MB</div>
             <div>Uptime: {Math.floor(health.uptimeSeconds)}s</div>
@@ -139,7 +154,7 @@ export const ParlerTTSTestPanel: React.FC = () => {
             color: '#fff',
             border: 'none',
             borderRadius: '4px',
-            cursor: 'pointer'
+            cursor: 'pointer',
           }}
         >
           🔄 Refresh
@@ -148,14 +163,21 @@ export const ParlerTTSTestPanel: React.FC = () => {
 
       {/* TTS Status */}
       {ttsStatus && (
-        <div style={{
-          marginBottom: '20px',
-          padding: '15px',
-          backgroundColor: '#16213e',
-          borderRadius: '6px'
-        }}>
+        <div
+          style={{
+            marginBottom: '20px',
+            padding: '15px',
+            backgroundColor: '#16213e',
+            borderRadius: '6px',
+          }}
+        >
           <h3 style={{ margin: '0 0 10px 0', fontSize: '16px' }}>HybridTTS Status</h3>
-          <div>Active Provider: <strong style={{ color: '#f39c12' }}>{ttsStatus.provider.toUpperCase()}</strong></div>
+          <div>
+            Active Provider:{' '}
+            <strong style={{ color: '#f39c12' }}>
+              {ttsStatus.provider.toUpperCase()}
+            </strong>
+          </div>
           <div>Parler-TTS: {ttsStatus.parlerTTSAvailable ? '✅' : '❌'}</div>
           <div>Tauri Backend: {ttsStatus.tauriAvailable ? '✅' : '❌'}</div>
           <div>Web Speech API: {ttsStatus.webSpeechAvailable ? '✅' : '❌'}</div>
@@ -170,7 +192,7 @@ export const ParlerTTSTestPanel: React.FC = () => {
         </label>
         <textarea
           value={text}
-          onChange={(e) => setText(e.target.value)}
+          onChange={e => setText(e.target.value)}
           rows={3}
           style={{
             width: '100%',
@@ -181,7 +203,7 @@ export const ParlerTTSTestPanel: React.FC = () => {
             borderRadius: '4px',
             fontFamily: 'monospace',
             fontSize: '14px',
-            resize: 'vertical'
+            resize: 'vertical',
           }}
           placeholder="Entrez le texte à synthétiser..."
         />
@@ -201,7 +223,7 @@ export const ParlerTTSTestPanel: React.FC = () => {
             borderRadius: '4px',
             cursor: isSpeaking ? 'not-allowed' : 'pointer',
             fontSize: '16px',
-            fontWeight: 'bold'
+            fontWeight: 'bold',
           }}
         >
           {isSpeaking ? '🔊 Lecture en cours...' : '▶️ Parler'}
@@ -216,7 +238,7 @@ export const ParlerTTSTestPanel: React.FC = () => {
             border: 'none',
             borderRadius: '4px',
             cursor: isSpeaking ? 'pointer' : 'not-allowed',
-            fontSize: '16px'
+            fontSize: '16px',
           }}
         >
           ⏹️ Stop
@@ -225,13 +247,15 @@ export const ParlerTTSTestPanel: React.FC = () => {
 
       {/* Generation Time */}
       {generationTime && (
-        <div style={{
-          marginBottom: '20px',
-          padding: '10px',
-          backgroundColor: '#27ae60',
-          borderRadius: '4px',
-          textAlign: 'center'
-        }}>
+        <div
+          style={{
+            marginBottom: '20px',
+            padding: '10px',
+            backgroundColor: '#27ae60',
+            borderRadius: '4px',
+            textAlign: 'center',
+          }}
+        >
           ⚡ Génération: <strong>{generationTime}ms</strong>
         </div>
       )}
@@ -243,7 +267,7 @@ export const ParlerTTSTestPanel: React.FC = () => {
         </label>
         <textarea
           value={styleDescription}
-          onChange={(e) => setStyleDescription(e.target.value)}
+          onChange={e => setStyleDescription(e.target.value)}
           rows={3}
           style={{
             width: '100%',
@@ -254,7 +278,7 @@ export const ParlerTTSTestPanel: React.FC = () => {
             borderRadius: '4px',
             fontFamily: 'monospace',
             fontSize: '13px',
-            resize: 'vertical'
+            resize: 'vertical',
           }}
           placeholder="Ex: Une voix féminine française, chaleureuse..."
         />
@@ -270,7 +294,7 @@ export const ParlerTTSTestPanel: React.FC = () => {
               border: 'none',
               borderRadius: '4px',
               cursor: styleDescription.trim() ? 'pointer' : 'not-allowed',
-              fontWeight: 'bold'
+              fontWeight: 'bold',
             }}
           >
             💾 Sauvegarder Style
@@ -283,7 +307,7 @@ export const ParlerTTSTestPanel: React.FC = () => {
               color: '#fff',
               border: 'none',
               borderRadius: '4px',
-              cursor: 'pointer'
+              cursor: 'pointer',
             }}
           >
             🔄 Reset Défaut
@@ -293,13 +317,15 @@ export const ParlerTTSTestPanel: React.FC = () => {
 
       {/* Error Display */}
       {lastError && (
-        <div style={{
-          padding: '15px',
-          backgroundColor: '#e74c3c',
-          color: '#fff',
-          borderRadius: '4px',
-          marginTop: '20px'
-        }}>
+        <div
+          style={{
+            padding: '15px',
+            backgroundColor: '#e74c3c',
+            color: '#fff',
+            borderRadius: '4px',
+            marginTop: '20px',
+          }}
+        >
           <strong>❌ Erreur:</strong> {lastError}
         </div>
       )}

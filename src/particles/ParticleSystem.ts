@@ -225,7 +225,9 @@ export class ParticleSystem extends EventEmitter {
     }
 
     // v21: Update color cycling
-    this.colorIndex = (this.colorIndex + this.colorCycleSpeed * deltaTime * 0.001) % this.config.colors.length;
+    this.colorIndex =
+      (this.colorIndex + this.colorCycleSpeed * deltaTime * 0.001) %
+      this.config.colors.length;
 
     // v21: Update metrics
     this.updateMetrics();
@@ -392,9 +394,10 @@ export class ParticleSystem extends EventEmitter {
       const blend = this.colorIndex - currentIndex;
 
       // Randomly choose current or next for smooth color transitions
-      color = blend > Math.random()
-        ? this.config.colors[nextIndex]
-        : this.config.colors[currentIndex];
+      color =
+        blend > Math.random()
+          ? this.config.colors[nextIndex]
+          : this.config.colors[currentIndex];
     } else {
       color = this.config.colors[0];
     }
@@ -430,14 +433,19 @@ export class ParticleSystem extends EventEmitter {
   /**
    * Create spiral pattern particle
    */
-  private createSpiralParticle(color: string, size: number, lifespan: number): ParticleConfig {
+  private createSpiralParticle(
+    color: string,
+    size: number,
+    lifespan: number
+  ): ParticleConfig {
     const angle = this.angleOffset + Math.random() * Math.PI * 2;
     const radius = 50 + Math.random() * 30;
 
     const x = this.centerX + Math.cos(angle) * radius;
     const y = this.centerY + Math.sin(angle) * radius;
 
-    const speed = this.config.baseSpeed + (Math.random() - 0.5) * 2 * this.config.speedVariation;
+    const speed =
+      this.config.baseSpeed + (Math.random() - 0.5) * 2 * this.config.speedVariation;
     const outwardAngle = angle;
     const vx = Math.cos(outwardAngle) * speed;
     const vy = Math.sin(outwardAngle) * speed;
@@ -448,9 +456,14 @@ export class ParticleSystem extends EventEmitter {
   /**
    * Create focused pattern particle (emits from center)
    */
-  private createFocusedParticle(color: string, size: number, lifespan: number): ParticleConfig {
+  private createFocusedParticle(
+    color: string,
+    size: number,
+    lifespan: number
+  ): ParticleConfig {
     const angle = Math.random() * Math.PI * 2;
-    const speed = this.config.baseSpeed + (Math.random() - 0.5) * 2 * this.config.speedVariation;
+    const speed =
+      this.config.baseSpeed + (Math.random() - 0.5) * 2 * this.config.speedVariation;
 
     const x = this.centerX;
     const y = this.centerY;
@@ -463,14 +476,19 @@ export class ParticleSystem extends EventEmitter {
   /**
    * Create dispersed pattern particle (scattered emission)
    */
-  private createDispersedParticle(color: string, size: number, lifespan: number): ParticleConfig {
+  private createDispersedParticle(
+    color: string,
+    size: number,
+    lifespan: number
+  ): ParticleConfig {
     const angle = Math.random() * Math.PI * 2;
     const radius = Math.random() * 150;
 
     const x = this.centerX + Math.cos(angle) * radius;
     const y = this.centerY + Math.sin(angle) * radius;
 
-    const speed = this.config.baseSpeed + (Math.random() - 0.5) * 2 * this.config.speedVariation;
+    const speed =
+      this.config.baseSpeed + (Math.random() - 0.5) * 2 * this.config.speedVariation;
     const dirAngle = Math.random() * Math.PI * 2;
     const vx = Math.cos(dirAngle) * speed * 0.5;
     const vy = Math.sin(dirAngle) * speed * 0.5;
@@ -481,11 +499,16 @@ export class ParticleSystem extends EventEmitter {
   /**
    * Create chaotic pattern particle (random everything)
    */
-  private createChaoticParticle(color: string, size: number, lifespan: number): ParticleConfig {
+  private createChaoticParticle(
+    color: string,
+    size: number,
+    lifespan: number
+  ): ParticleConfig {
     const x = this.centerX + (Math.random() - 0.5) * 300;
     const y = this.centerY + (Math.random() - 0.5) * 300;
 
-    const speed = this.config.baseSpeed + (Math.random() - 0.5) * 2 * this.config.speedVariation * 2;
+    const speed =
+      this.config.baseSpeed + (Math.random() - 0.5) * 2 * this.config.speedVariation * 2;
     const angle = Math.random() * Math.PI * 2;
     const vx = Math.cos(angle) * speed;
     const vy = Math.sin(angle) * speed;

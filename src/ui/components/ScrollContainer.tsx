@@ -40,15 +40,13 @@ export const ScrollContainer = ({
     showTopShadow && 'scroll-container--shadow-top',
     showBottomShadow && 'scroll-container--shadow-bottom',
     className,
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <div className={classes} style={{ maxHeight }}>
-      <div
-        ref={scrollRef}
-        className="scroll-container__content"
-        onScroll={handleScroll}
-      >
+      <div ref={scrollRef} className="scroll-container__content" onScroll={handleScroll}>
         {children}
       </div>
     </div>

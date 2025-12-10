@@ -134,7 +134,7 @@ const DEFAULT_MILESTONES: ProgressionMilestone[] = [
   {
     id: 'streak_7',
     name: 'Persévérant',
-    description: '7 jours consécutifs d\'utilisation',
+    description: "7 jours consécutifs d'utilisation",
     requiredXP: 0,
     requiredLevel: 1,
     icon: '🔥',
@@ -152,7 +152,7 @@ const DEFAULT_MILESTONES: ProgressionMilestone[] = [
   {
     id: 'auto_repair',
     name: 'Auto-guérison',
-    description: 'TITANE s\'auto-répare avec succès',
+    description: "TITANE s'auto-répare avec succès",
     requiredXP: 0,
     requiredLevel: 1,
     icon: '🔧',
@@ -161,7 +161,7 @@ const DEFAULT_MILESTONES: ProgressionMilestone[] = [
   {
     id: 'evolution_cycle',
     name: 'Évolution',
-    description: 'Complétez un cycle d\'évolution',
+    description: "Complétez un cycle d'évolution",
     requiredXP: 0,
     requiredLevel: 1,
     icon: '🧬',
@@ -231,7 +231,12 @@ class XPEngine {
       const backendState = await secureInvoke<ProgressionState>('progression_get_state');
       if (backendState) {
         this.state = { ...createDefaultState(), ...backendState };
-        console.log('[XPEngine] État chargé depuis backend:', this.state.level, 'XP:', this.state.totalXP);
+        console.log(
+          '[XPEngine] État chargé depuis backend:',
+          this.state.level,
+          'XP:',
+          this.state.totalXP
+        );
       }
     } catch {
       // Fallback: charger depuis localStorage
@@ -305,7 +310,9 @@ class XPEngine {
     // Notifier les listeners
     this.notifyListeners();
 
-    console.log(`[XPEngine] +${actualAmount} XP (${source}) → Level ${this.state.level}, Total: ${this.state.totalXP}`);
+    console.log(
+      `[XPEngine] +${actualAmount} XP (${source}) → Level ${this.state.level}, Total: ${this.state.totalXP}`
+    );
 
     return event;
   }
@@ -472,9 +479,7 @@ class XPEngine {
   getMilestones(): ProgressionMilestone[] {
     return this.state.milestones.map(m => ({
       ...m,
-      unlockedAt: this.state.unlockedMilestones.includes(m.id)
-        ? m.unlockedAt
-        : undefined,
+      unlockedAt: this.state.unlockedMilestones.includes(m.id) ? m.unlockedAt : undefined,
     }));
   }
 

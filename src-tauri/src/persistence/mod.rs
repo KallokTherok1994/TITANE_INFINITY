@@ -17,45 +17,47 @@
 //! - Auto-Snapshot Scheduler v∞ (30min periodic snapshots)
 
 // Core modules
-pub mod event_log;
-pub mod snapshot;
-pub mod database;
-pub mod recovery;
-pub mod types;
 pub mod commands;
+pub mod database;
+pub mod event_log;
+pub mod recovery;
+pub mod snapshot;
+pub mod types;
 
 // v∞.MPE-2 modules
-pub mod migrations;
-pub mod compression;
 pub mod backup;
+pub mod compression;
 pub mod crypto_store;
+pub mod migrations;
 
 // v∞.MPE-3 modules
-pub mod memory_health;
 pub mod invariants;
+pub mod memory_health;
 
 // v∞.MPE-Ω modules
 pub mod memory_doctor;
 
 // Re-exports - Core
-pub use event_log::EventLog;
-pub use snapshot::SnapshotManager;
 pub use database::PersistenceDB;
+pub use event_log::EventLog;
 pub use recovery::RecoveryEngine;
+pub use snapshot::SnapshotManager;
 pub use types::*;
 
 // Re-exports - MPE-2
+pub use backup::{BackupEngine, ExportReport, ImportMode, ImportReport};
+pub use compression::{CognitiveCompressionEngine, CognitiveSummary, CompressionReport};
+pub use crypto_store::{CryptoConfig, CryptoStore, CRYPTO_STORE};
 pub use migrations::{MigrationEngine, MigrationError, MigrationReport, CURRENT_SCHEMA_VERSION};
-pub use compression::{CognitiveCompressionEngine, CompressionReport, CognitiveSummary};
-pub use backup::{BackupEngine, ExportReport, ImportReport, ImportMode};
-pub use crypto_store::{CryptoStore, CryptoConfig, CRYPTO_STORE};
 
 // Re-exports - MPE-3
-pub use memory_health::{MemoryHealth, MemoryHealthEngine, SelfHealingReport, MEMORY_HEALTH_ENGINE};
-pub use invariants::{InvariantsEngine, ValidationResult, ValidationMode, InvariantError};
+pub use invariants::{InvariantError, InvariantsEngine, ValidationMode, ValidationResult};
+pub use memory_health::{
+    MemoryHealth, MemoryHealthEngine, SelfHealingReport, MEMORY_HEALTH_ENGINE,
+};
 
 // Re-exports - MPE-Ω
-pub use memory_doctor::{MemoryDoctor, DoctorReport, DoctorStatus, DoctorAction, DoctorIssue};
+pub use memory_doctor::{DoctorAction, DoctorIssue, DoctorReport, DoctorStatus, MemoryDoctor};
 
 use once_cell::sync::Lazy;
 use std::sync::Arc;
@@ -65,9 +67,8 @@ use tokio::sync::RwLock;
 pub use crate::core::SingularityState;
 
 /// Instance globale du moteur de persistence
-pub static PERSISTENCE_ENGINE: Lazy<Arc<RwLock<PersistenceEngine>>> = Lazy::new(|| {
-    Arc::new(RwLock::new(PersistenceEngine::new()))
-});
+pub static PERSISTENCE_ENGINE: Lazy<Arc<RwLock<PersistenceEngine>>> =
+    Lazy::new(|| Arc::new(RwLock::new(PersistenceEngine::new())));
 
 /// Moteur de persistence principal
 pub struct PersistenceEngine {
@@ -107,7 +108,9 @@ impl PersistenceEngine {
         self.check_integrity().await?;
 
         // 3. Effectuer le recovery si nécessaire
-        self.recovery_engine.recover(&mut self.event_log, &mut self.snapshot_manager).await?;
+        self.recovery_engine
+            .recover(&mut self.event_log, &mut self.snapshot_manager)
+            .await?;
 
         self.initialized = true;
         self.status.last_boot = Some(chrono::Utc::now().timestamp_millis() as u64);
@@ -121,7 +124,10 @@ impl PersistenceEngine {
         if let Some(db) = &self.db {
             // Vérifier idempotence
             if self.event_log.has_event(&event.id) {
-                log::debug!("[PersistenceEngine] Event {} déjà persisté (idempotent)", event.id);
+                log::debug!(
+                    "[PersistenceEngine] Event {} déjà persisté (idempotent)",
+                    event.id
+                );
                 return Ok(());
             }
 
@@ -144,7 +150,10 @@ impl PersistenceEngine {
     }
 
     /// Forcer un snapshot complet
-    pub async fn force_snapshot(&mut self, state: &SingularityState) -> Result<(), PersistenceError> {
+    pub async fn force_snapshot(
+        &mut self,
+        state: &SingularityState,
+    ) -> Result<(), PersistenceError> {
         if let Some(db) = &self.db {
             let snapshot = Snapshot::from_state(state);
             db.save_snapshot(&snapshot).await?;
@@ -239,7 +248,10 @@ impl PersistenceEngine {
         if let Some(db) = &self.db {
             let report = db.compact_events().await?;
             self.status.last_compaction = Some(chrono::Utc::now().timestamp_millis() as u64);
-            log::info!("[PersistenceEngine] 🗜️ Compaction: {} events archivés", report.events_archived);
+            log::info!(
+                "[PersistenceEngine] 🗜️ Compaction: {} events archivés",
+                report.events_archived
+            );
             Ok(report)
         } else {
             Err(PersistenceError::NotInitialized)
@@ -253,7 +265,9 @@ impl PersistenceEngine {
         // Forcer un snapshot final si dirty
         if self.status.dirty {
             // Note: l'appelant doit fournir l'état
-            log::warn!("[PersistenceEngine] État dirty au shutdown - snapshot requis par l'appelant");
+            log::warn!(
+                "[PersistenceEngine] État dirty au shutdown - snapshot requis par l'appelant"
+            );
         }
 
         if let Some(db) = &self.db {
@@ -266,7 +280,10 @@ impl PersistenceEngine {
     }
 
     /// Récupérer les événements depuis un timestamp
-    pub async fn get_events_since(&self, timestamp: u64) -> Result<Vec<TitanEvent>, PersistenceError> {
+    pub async fn get_events_since(
+        &self,
+        timestamp: u64,
+    ) -> Result<Vec<TitanEvent>, PersistenceError> {
         if let Some(db) = &self.db {
             db.load_events_since(timestamp).await
         } else {
@@ -317,14 +334,17 @@ pub fn start_auto_snapshot_scheduler(
         return;
     }
 
-    log::info!("[AutoSnapshot] 🚀 Démarrage du scheduler (intervalle: {}ms)", snapshot::SNAPSHOT_INTERVAL_MS);
+    log::info!(
+        "[AutoSnapshot] 🚀 Démarrage du scheduler (intervalle: {}ms)",
+        snapshot::SNAPSHOT_INTERVAL_MS
+    );
 
     let state_ref = Arc::clone(&singularity_state);
 
     tokio::spawn(async move {
-        let mut interval = tokio::time::interval(
-            std::time::Duration::from_millis(snapshot::SNAPSHOT_INTERVAL_MS)
-        );
+        let mut interval = tokio::time::interval(std::time::Duration::from_millis(
+            snapshot::SNAPSHOT_INTERVAL_MS,
+        ));
 
         loop {
             interval.tick().await;

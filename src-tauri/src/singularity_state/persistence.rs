@@ -4,7 +4,7 @@
  * Sauvegarde et chargement de l'état SingularityState
  * ═══════════════════════════════════════════════════════════════════
  */
-use crate::singularity_state::SingularityState;
+use super::SingularityState;
 use serde_json;
 use std::fs;
 use std::path::PathBuf;

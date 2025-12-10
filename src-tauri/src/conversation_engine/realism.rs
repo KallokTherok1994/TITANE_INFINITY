@@ -12,10 +12,10 @@ use std::collections::HashMap;
 /// Niveau d'intention détecté dans le message
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum IntentionLevel {
-    Explicit,      // Question ou demande directe
-    Implicit,      // Besoin sous-jacent (clarté, soutien, structure)
-    Exploratory,   // Exploration d'idées
-    Confirmatory,  // Recherche de validation
+    Explicit,     // Question ou demande directe
+    Implicit,     // Besoin sous-jacent (clarté, soutien, structure)
+    Exploratory,  // Exploration d'idées
+    Confirmatory, // Recherche de validation
 }
 
 /// Rythme conversationnel détecté
@@ -30,43 +30,43 @@ pub enum ConversationalRhythm {
 /// Type de relance intelligente
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum MicroPrompt {
-    Deepen,        // "On approfondit ?"
-    Simplify,      // "Tu veux une version plus simple ?"
-    Clarify,       // "Je peux clarifier un angle précis."
-    Continue,      // "On continue dans ce sens ?"
-    Redirect,      // "On recentre sur [sujet] ?"
-    None,          // Pas de relance nécessaire
+    Deepen,   // "On approfondit ?"
+    Simplify, // "Tu veux une version plus simple ?"
+    Clarify,  // "Je peux clarifier un angle précis."
+    Continue, // "On continue dans ce sens ?"
+    Redirect, // "On recentre sur [sujet] ?"
+    None,     // Pas de relance nécessaire
 }
 
 /// Demande de traitement réaliste
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RealismRequest {
-    pub context: String,                // Contexte conversationnel récent
-    pub user_message: String,           // Message actuel de l'utilisateur
-    pub draft_response: String,         // Réponse brouillon à affiner
+    pub context: String,                   // Contexte conversationnel récent
+    pub user_message: String,              // Message actuel de l'utilisateur
+    pub draft_response: String,            // Réponse brouillon à affiner
     pub conversation_history: Vec<String>, // Historique pour détecter patterns
-    pub recent_topics: Vec<String>,     // Sujets récents pour liens intelligents
+    pub recent_topics: Vec<String>,        // Sujets récents pour liens intelligents
 }
 
 /// Réponse avec réalisme conversationnel
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RealismResponse {
-    pub finalized_response: String,      // Réponse finale naturelle et fluide
-    pub micro_prompt: Option<String>,    // Relance optionnelle
+    pub finalized_response: String,   // Réponse finale naturelle et fluide
+    pub micro_prompt: Option<String>, // Relance optionnelle
     pub detected_rhythm: ConversationalRhythm,
     pub detected_intention: IntentionLevel,
-    pub smart_links: Vec<String>,        // Liens intelligents détectés
+    pub smart_links: Vec<String>, // Liens intelligents détectés
     pub interaction_quality: InteractionQuality,
 }
 
 /// Qualité de l'interaction
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct InteractionQuality {
-    pub fluidity: f32,           // 0-1: fluidité de la transition
-    pub autonomy: f32,           // 0-1: initiative pertinente
-    pub coherence: f32,          // 0-1: cohérence avec conversation
-    pub natural_feel: f32,       // 0-1: ressenti naturel
-    pub cognitive_load: f32,     // 0-1: charge mentale (bas = mieux)
+    pub fluidity: f32,       // 0-1: fluidité de la transition
+    pub autonomy: f32,       // 0-1: initiative pertinente
+    pub coherence: f32,      // 0-1: cohérence avec conversation
+    pub natural_feel: f32,   // 0-1: ressenti naturel
+    pub cognitive_load: f32, // 0-1: charge mentale (bas = mieux)
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -119,28 +119,18 @@ impl ConversationalRealismProcessor {
         let intention = self.detect_intention(&request.user_message);
 
         // 2️⃣ Créer liens intelligents
-        let smart_links = self.create_smart_links(
-            &request.recent_topics,
-            &request.context,
-        );
+        let smart_links = self.create_smart_links(&request.recent_topics, &request.context);
 
         // 3️⃣ Appliquer transitions fluides
-        let finalized = self.apply_fluid_transition(
-            &request.draft_response,
-            &rhythm,
-            &intention,
-            &smart_links,
-        );
+        let finalized =
+            self.apply_fluid_transition(&request.draft_response, &rhythm, &intention, &smart_links);
 
         // 4️⃣ Générer micro-relance si pertinente
         let micro_prompt = self.generate_micro_prompt(&intention, &rhythm);
 
         // 5️⃣ Calculer qualité d'interaction
-        let interaction_quality = self.evaluate_interaction_quality(
-            &finalized,
-            &request.user_message,
-            &rhythm,
-        );
+        let interaction_quality =
+            self.evaluate_interaction_quality(&finalized, &request.user_message, &rhythm);
 
         RealismResponse {
             finalized_response: finalized,
@@ -158,7 +148,8 @@ impl ConversationalRealismProcessor {
 
     fn detect_rhythm(&self, message: &str) -> ConversationalRhythm {
         let word_count = message.split_whitespace().count();
-        let has_hesitation = message.contains("...") || message.contains("euh") || message.contains("hm");
+        let has_hesitation =
+            message.contains("...") || message.contains("euh") || message.contains("hm");
 
         if has_hesitation {
             ConversationalRhythm::Hesitant
@@ -193,17 +184,17 @@ impl ConversationalRealismProcessor {
     // LIENS INTELLIGENTS
     // ─────────────────────────────────────────────────────────
 
-    fn create_smart_links(
-        &self,
-        recent_topics: &[String],
-        context: &str,
-    ) -> Vec<String> {
+    fn create_smart_links(&self, recent_topics: &[String], context: &str) -> Vec<String> {
         let mut links = Vec::new();
 
         // Rechercher mentions de moteurs TITANE
         let engines = vec![
-            "MemoryEngine", "SingularityState", "IdentityEngine",
-            "Self-Healing", "API Neutralizer", "Conversation Engine",
+            "MemoryEngine",
+            "SingularityState",
+            "IdentityEngine",
+            "Self-Healing",
+            "API Neutralizer",
+            "Conversation Engine",
         ];
 
         for engine in engines {
@@ -283,7 +274,10 @@ impl ConversationalRealismProcessor {
     fn add_depth(&self, text: &str) -> String {
         // Ajouter nuances et développements
         if text.len() < 200 {
-            format!("{}\n\nCette approche présente plusieurs avantages stratégiques.", text)
+            format!(
+                "{}\n\nCette approche présente plusieurs avantages stratégiques.",
+                text
+            )
         } else {
             text.to_string()
         }
@@ -313,9 +307,7 @@ impl ConversationalRealismProcessor {
             (IntentionLevel::Exploratory, ConversationalRhythm::Hesitant) => {
                 Some("Je peux clarifier un angle précis.".to_string())
             }
-            (_, ConversationalRhythm::Deliberate) => {
-                Some("On continue dans ce sens ?".to_string())
-            }
+            (_, ConversationalRhythm::Deliberate) => Some("On continue dans ce sens ?".to_string()),
             _ => None,
         }
     }

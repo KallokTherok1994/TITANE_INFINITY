@@ -11,13 +11,13 @@
 
 /** Catégories de modes IA */
 export type ChatModeCategory =
-  | 'coach'      // Accompagnement, motivation, développement personnel
-  | 'dev'        // Développement, code, architecture
-  | 'admin'      // Administration système, configuration
-  | 'strategy'   // Stratégie, planification, analyse
-  | 'audit'      // Audit, validation, qualité
-  | 'creative'   // Création, écriture, design
-  | 'hybrid';    // Multi-compétences
+  | 'coach' // Accompagnement, motivation, développement personnel
+  | 'dev' // Développement, code, architecture
+  | 'admin' // Administration système, configuration
+  | 'strategy' // Stratégie, planification, analyse
+  | 'audit' // Audit, validation, qualité
+  | 'creative' // Création, écriture, design
+  | 'hybrid'; // Multi-compétences
 
 /** Niveaux de permission (0-5) */
 export type PermissionLevel = 0 | 1 | 2 | 3 | 4 | 5;

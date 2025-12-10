@@ -9,6 +9,7 @@
 ## 🎯 OBJECTIF
 
 Valider que le backend Python Parler-TTS est **production-ready** :
+
 1. ✅ Serveur démarre sans erreur
 2. ✅ Endpoint `/health` répond (200 OK)
 3. ✅ Synthèse TTS fonctionne
@@ -19,13 +20,13 @@ Valider que le backend Python Parler-TTS est **production-ready** :
 
 ## 📂 FICHIERS BACKEND
 
-| Fichier | Type | Lignes | Status | Description |
-|---------|------|--------|--------|-------------|
-| `tts-service/tts_api_server.py` | Python | 330 | ✅ EXISTS | Serveur FastAPI Parler-TTS |
-| `tts-service/requirements.txt` | Txt | 21 | ✅ CREATED | Dépendances Python |
-| `setup_parler_tts.sh` | Bash | 190 | ✅ CREATED | Installation automatisée |
-| `test_parler_tts_backend.sh` | Bash | 250 | ✅ CREATED | Script test P0-4 |
-| `tts-service/start_tts_service.sh` | Bash | 15 | ✅ AUTO | Lancement rapide serveur |
+| Fichier                            | Type   | Lignes | Status     | Description                |
+| ---------------------------------- | ------ | ------ | ---------- | -------------------------- |
+| `tts-service/tts_api_server.py`    | Python | 330    | ✅ EXISTS  | Serveur FastAPI Parler-TTS |
+| `tts-service/requirements.txt`     | Txt    | 21     | ✅ CREATED | Dépendances Python         |
+| `setup_parler_tts.sh`              | Bash   | 190    | ✅ CREATED | Installation automatisée   |
+| `test_parler_tts_backend.sh`       | Bash   | 250    | ✅ CREATED | Script test P0-4           |
+| `tts-service/start_tts_service.sh` | Bash   | 15     | ✅ AUTO    | Lancement rapide serveur   |
 
 ---
 
@@ -57,6 +58,7 @@ async def health_check():
 ```
 
 **Response model** :
+
 ```json
 {
   "status": "ok",
@@ -80,7 +82,7 @@ async def synthesize_speech(request: TTSRequest):
         style=request.style_description,
         use_cache=True
     )
-    
+
     # Retourne audio WAV binaire
     return Response(
         content=result['audio_bytes'],
@@ -95,6 +97,7 @@ async def synthesize_speech(request: TTSRequest):
 ```
 
 **Request body** :
+
 ```json
 {
   "text": "Bonjour, je suis TITANE",
@@ -120,6 +123,7 @@ cd /home/titane/Documents/TITANE_INFINITY
 **Durée estimée** : 10-15 minutes (download modèle + install packages)
 
 **Requirements** :
+
 - Python 3.10+
 - pip
 - 5 GB espace disque (modèle + dépendances)
@@ -135,6 +139,7 @@ cd tts-service
 ```
 
 **Attendu** :
+
 ```
 ╔══════════════════════════════════════════════════════════════╗
 ║              TITANE∞ TTS API SERVER v1.0                    ║
@@ -167,6 +172,7 @@ cd /home/titane/Documents/TITANE_INFINITY
 ```
 
 **Tests exécutés** :
+
 1. ✅ Vérification fichier serveur
 2. ✅ Vérification dépendances Python
 3. ✅ Démarrage serveur (si pas déjà lancé)
@@ -177,6 +183,7 @@ cd /home/titane/Documents/TITANE_INFINITY
 8. ✅ Nettoyage (arrêt serveur si lancé par script)
 
 **Output attendu** :
+
 ```
 ╔══════════════════════════════════════════════════════════════╗
 ║         P0-4: TEST BACKEND PARLER-TTS PYTHON               ║
@@ -246,11 +253,13 @@ Pour écouter audio test:
 ### **Étape 4 : Test manuel curl (optionnel)**
 
 #### **Test health** :
+
 ```bash
 curl http://localhost:8765/api/v1/tts/health | jq
 ```
 
 **Expected** :
+
 ```json
 {
   "status": "ok",
@@ -264,6 +273,7 @@ curl http://localhost:8765/api/v1/tts/health | jq
 ```
 
 #### **Test TTS** :
+
 ```bash
 curl -X POST http://localhost:8765/api/v1/tts/synthesize \
   -H "Content-Type: application/json" \
@@ -278,15 +288,15 @@ aplay /tmp/test_tts.wav
 
 ## 📊 MÉTRIQUES CIBLES P0-4
 
-| Métrique | Target | Mesure | Status |
-|----------|--------|--------|--------|
-| **Startup time** | < 60s | [X]s | ⏳ À TESTER |
-| **Health check latency** | < 100ms | [X]ms | ⏳ À TESTER |
-| **TTS latency (1st call)** | < 3s | [X]ms | ⏳ À TESTER |
-| **TTS latency (cached)** | < 500ms | [X]ms | ⏳ À TESTER |
-| **Audio file size** | > 0 bytes | [X] bytes | ⏳ À TESTER |
-| **Audio format** | WAV | [format] | ⏳ À TESTER |
-| **Device** | GPU preferred | [cpu/cuda] | ⏳ À TESTER |
+| Métrique                   | Target        | Mesure     | Status      |
+| -------------------------- | ------------- | ---------- | ----------- |
+| **Startup time**           | < 60s         | [X]s       | ⏳ À TESTER |
+| **Health check latency**   | < 100ms       | [X]ms      | ⏳ À TESTER |
+| **TTS latency (1st call)** | < 3s          | [X]ms      | ⏳ À TESTER |
+| **TTS latency (cached)**   | < 500ms       | [X]ms      | ⏳ À TESTER |
+| **Audio file size**        | > 0 bytes     | [X] bytes  | ⏳ À TESTER |
+| **Audio format**           | WAV           | [format]   | ⏳ À TESTER |
+| **Device**                 | GPU preferred | [cpu/cuda] | ⏳ À TESTER |
 
 ---
 
@@ -316,11 +326,13 @@ aplay /tmp/test_tts.wav
 ### **Cas 1 : Serveur crash au démarrage**
 
 **Symptômes** :
+
 ```
 ModuleNotFoundError: No module named 'parler_tts'
 ```
 
 **Solution** :
+
 ```bash
 # Réinstaller dépendances
 cd tts-service
@@ -333,6 +345,7 @@ pip install -r requirements.txt
 ### **Cas 2 : Model not loaded**
 
 **Symptômes** :
+
 ```json
 {
   "status": "ok",
@@ -342,6 +355,7 @@ pip install -r requirements.txt
 ```
 
 **Solution** :
+
 ```bash
 # Télécharger modèle manuellement
 python3 -c "
@@ -356,10 +370,12 @@ print('Model downloaded')
 ### **Cas 3 : Latency > 5s**
 
 **Symptômes** :
+
 - TTS génération très lente (> 10s)
 - CPU mode au lieu de GPU
 
 **Solution** :
+
 ```bash
 # Vérifier device GPU
 python3 -c "import torch; print(torch.cuda.is_available())"
@@ -385,14 +401,14 @@ pip install torch --index-url https://download.pytorch.org/whl/cu121
 
 ## Métriques
 
-| Métrique | Target | Mesure | Status |
-|----------|--------|--------|--------|
-| Startup time | < 60s | [X]s | ✅/❌ |
-| Health latency | < 100ms | [X]ms | ✅/❌ |
-| TTS latency (1st) | < 3s | [X]ms | ✅/❌ |
-| TTS latency (cached) | < 500ms | [X]ms | ✅/❌ |
-| Audio size | > 0 | [X] bytes | ✅/❌ |
-| Device | GPU | [cpu/cuda] | ✅/❌ |
+| Métrique             | Target  | Mesure     | Status |
+| -------------------- | ------- | ---------- | ------ |
+| Startup time         | < 60s   | [X]s       | ✅/❌  |
+| Health latency       | < 100ms | [X]ms      | ✅/❌  |
+| TTS latency (1st)    | < 3s    | [X]ms      | ✅/❌  |
+| TTS latency (cached) | < 500ms | [X]ms      | ✅/❌  |
+| Audio size           | > 0     | [X] bytes  | ✅/❌  |
+| Device               | GPU     | [cpu/cuda] | ✅/❌  |
 
 ## Conclusion
 

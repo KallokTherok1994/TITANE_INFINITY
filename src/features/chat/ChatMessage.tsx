@@ -8,7 +8,15 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Badge } from '../../ui';
-import { colors, spacing, radius, shadows, fontSizes, fontWeights, lineHeights } from '@themes/tokens';
+import {
+  colors,
+  spacing,
+  radius,
+  shadows,
+  fontSizes,
+  fontWeights,
+  lineHeights,
+} from '@themes/tokens';
 import { useAnimation } from '../../contexts/AnimationContext';
 import { useTTS } from '@/hooks/useTTS';
 
@@ -147,9 +155,7 @@ export const ChatMessage = ({
           color: colors.neutral[400],
         }}
       >
-        <span style={{ fontWeight: fontWeights.semibold }}>
-          {config.label}
-        </span>
+        <span style={{ fontWeight: fontWeights.semibold }}>{config.label}</span>
         <span>•</span>
         <span>{formatTime(timestamp)}</span>
         {streaming && (
@@ -167,7 +173,9 @@ export const ChatMessage = ({
             onClick={handleSpeak}
             title={isSpeaking ? 'Arrêter' : 'Écouter'}
             style={{
-              background: isSpeaking ? colors.rubis.primary[600] : colors.saphir.primary[800],
+              background: isSpeaking
+                ? colors.rubis.primary[600]
+                : colors.saphir.primary[800],
               border: 'none',
               borderRadius: radius.full,
               width: '24px',

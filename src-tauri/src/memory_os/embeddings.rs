@@ -12,10 +12,10 @@ use tokio::sync::RwLock;
 pub enum EmbeddingSource {
     /// OpenAI text-embedding-3-small (1536 dim)
     OpenAI,
-    
+
     /// Google Gemini embedding
     Gemini,
-    
+
     /// Local model (e.g., all-MiniLM-L6-v2, 384 dim)
     Local,
 }
@@ -57,7 +57,7 @@ impl EmbeddingEngine {
             cache: Arc::new(RwLock::new(EmbeddingCache::new(1000))),
         }
     }
-    
+
     /// Embed single text
     pub async fn embed(&self, text: &str) -> MemoryOSResult<Vec<f32>> {
         // Check cache
@@ -67,27 +67,27 @@ impl EmbeddingEngine {
                 return Ok(embedding);
             }
         }
-        
+
         // Generate embedding
         let embedding = match self.config.source {
             EmbeddingSource::OpenAI => self.embed_openai(text).await?,
             EmbeddingSource::Gemini => self.embed_gemini(text).await?,
             EmbeddingSource::Local => self.embed_local(text).await?,
         };
-        
+
         // Cache result
         if self.config.cache_enabled {
             let mut cache = self.cache.write().await;
             cache.insert(text.to_string(), embedding.clone());
         }
-        
+
         Ok(embedding)
     }
-    
+
     /// Embed batch of texts
     pub async fn embed_batch(&self, texts: &[String]) -> MemoryOSResult<Vec<Vec<f32>>> {
         let mut results = Vec::with_capacity(texts.len());
-        
+
         // Process in batches
         for chunk in texts.chunks(self.config.batch_size) {
             for text in chunk {
@@ -95,33 +95,34 @@ impl EmbeddingEngine {
                 results.push(embedding);
             }
         }
-        
+
         Ok(results)
     }
-    
+
     /// OpenAI embedding
     async fn embed_openai(&self, text: &str) -> MemoryOSResult<Vec<f32>> {
-        let api_key = self.config.api_key.as_ref()
-            .ok_or_else(|| MemoryOSError::EmbeddingError("OpenAI API key not configured".to_string()))?;
-        
+        let api_key = self.config.api_key.as_ref().ok_or_else(|| {
+            MemoryOSError::EmbeddingError("OpenAI API key not configured".to_string())
+        })?;
+
         let client = reqwest::Client::new();
-        
+
         #[derive(Serialize)]
         struct OpenAIRequest {
             input: String,
             model: String,
         }
-        
+
         #[derive(Deserialize)]
         struct OpenAIResponse {
             data: Vec<OpenAIEmbedding>,
         }
-        
+
         #[derive(Deserialize)]
         struct OpenAIEmbedding {
             embedding: Vec<f32>,
         }
-        
+
         let response = client
             .post("https://api.openai.com/v1/embeddings")
             .header("Authorization", format!("Bearer {}", api_key))
@@ -132,12 +133,11 @@ impl EmbeddingEngine {
             .send()
             .await
             .map_err(|e| MemoryOSError::EmbeddingError(format!("OpenAI API error: {}", e)))?;
-        
-        let result: OpenAIResponse = response
-            .json()
-            .await
-            .map_err(|e| MemoryOSError::EmbeddingError(format!("OpenAI response parse error: {}", e)))?;
-        
+
+        let result: OpenAIResponse = response.json().await.map_err(|e| {
+            MemoryOSError::EmbeddingError(format!("OpenAI response parse error: {}", e))
+        })?;
+
         result
             .data
             .into_iter()
@@ -145,44 +145,45 @@ impl EmbeddingEngine {
             .map(|e| e.embedding)
             .ok_or_else(|| MemoryOSError::EmbeddingError("No embedding returned".to_string()))
     }
-    
+
     /// Gemini embedding
     async fn embed_gemini(&self, text: &str) -> MemoryOSResult<Vec<f32>> {
-        let api_key = self.config.api_key.as_ref()
-            .ok_or_else(|| MemoryOSError::EmbeddingError("Gemini API key not configured".to_string()))?;
-        
+        let api_key = self.config.api_key.as_ref().ok_or_else(|| {
+            MemoryOSError::EmbeddingError("Gemini API key not configured".to_string())
+        })?;
+
         let client = reqwest::Client::new();
-        
+
         #[derive(Serialize)]
         struct GeminiRequest {
             content: GeminiContent,
         }
-        
+
         #[derive(Serialize)]
         struct GeminiContent {
             parts: Vec<GeminiPart>,
         }
-        
+
         #[derive(Serialize)]
         struct GeminiPart {
             text: String,
         }
-        
+
         #[derive(Deserialize)]
         struct GeminiResponse {
             embedding: GeminiEmbedding,
         }
-        
+
         #[derive(Deserialize)]
         struct GeminiEmbedding {
             values: Vec<f32>,
         }
-        
+
         let url = format!(
             "https://generativelanguage.googleapis.com/v1beta/models/{}:embedContent?key={}",
             self.config.model, api_key
         );
-        
+
         let response = client
             .post(&url)
             .json(&GeminiRequest {
@@ -195,38 +196,37 @@ impl EmbeddingEngine {
             .send()
             .await
             .map_err(|e| MemoryOSError::EmbeddingError(format!("Gemini API error: {}", e)))?;
-        
-        let result: GeminiResponse = response
-            .json()
-            .await
-            .map_err(|e| MemoryOSError::EmbeddingError(format!("Gemini response parse error: {}", e)))?;
-        
+
+        let result: GeminiResponse = response.json().await.map_err(|e| {
+            MemoryOSError::EmbeddingError(format!("Gemini response parse error: {}", e))
+        })?;
+
         Ok(result.embedding.values)
     }
-    
+
     /// Local embedding (stub - requires model integration)
     async fn embed_local(&self, text: &str) -> MemoryOSResult<Vec<f32>> {
         // TODO: Integrate local embedding model (e.g., ONNX Runtime)
         // For now, return deterministic hash-based embedding
-        
+
         use std::collections::hash_map::DefaultHasher;
         use std::hash::{Hash, Hasher};
-        
+
         let mut hasher = DefaultHasher::new();
         text.hash(&mut hasher);
         let hash = hasher.finish();
-        
+
         // Generate pseudo-random embedding from hash
         let mut embedding = Vec::with_capacity(self.config.dimension);
         let mut seed = hash;
-        
+
         for _ in 0..self.config.dimension {
             // Linear congruential generator
             seed = seed.wrapping_mul(1103515245).wrapping_add(12345);
             let val = (seed as f32 / u64::MAX as f32) * 2.0 - 1.0;
             embedding.push(val);
         }
-        
+
         // Normalize
         let norm: f32 = embedding.iter().map(|x| x * x).sum::<f32>().sqrt();
         if norm > 0.0 {
@@ -234,14 +234,14 @@ impl EmbeddingEngine {
                 *val /= norm;
             }
         }
-        
+
         Ok(embedding)
     }
-    
+
     pub fn dimension(&self) -> usize {
         self.config.dimension
     }
-    
+
     pub fn source(&self) -> EmbeddingSource {
         self.config.source
     }
@@ -260,11 +260,11 @@ impl EmbeddingCache {
             max_size,
         }
     }
-    
+
     fn get(&self, key: &str) -> Option<Vec<f32>> {
         self.cache.get(key).cloned()
     }
-    
+
     fn insert(&mut self, key: String, value: Vec<f32>) {
         if self.cache.len() >= self.max_size {
             // Simple eviction: remove first entry
@@ -279,39 +279,39 @@ impl EmbeddingCache {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[tokio::test]
     async fn test_local_embedding() {
         let config = EmbeddingConfig::default();
         let engine = EmbeddingEngine::new(config);
-        
+
         let text = "Hello world";
         let embedding = engine.embed(text).await.unwrap();
-        
+
         assert_eq!(embedding.len(), 384);
-        
+
         // Test determinism
         let embedding2 = engine.embed(text).await.unwrap();
         assert_eq!(embedding, embedding2);
     }
-    
+
     #[tokio::test]
     async fn test_embedding_cache() {
         let config = EmbeddingConfig::default();
         let engine = EmbeddingEngine::new(config);
-        
+
         let text = "Test text";
-        
+
         // First call
         let start = std::time::Instant::now();
         let _ = engine.embed(text).await.unwrap();
         let first_duration = start.elapsed();
-        
+
         // Second call (cached)
         let start = std::time::Instant::now();
         let _ = engine.embed(text).await.unwrap();
         let cached_duration = start.elapsed();
-        
+
         // Cached should be faster
         assert!(cached_duration < first_duration);
     }

@@ -39,7 +39,9 @@ export const TalkToTitanePanel: React.FC = () => {
     setMode(mode);
   };
 
-  const handleEmotionalChange = (tone: 'analytical' | 'calm' | 'energizing' | 'motivating' | 'neutral') => {
+  const handleEmotionalChange = (
+    tone: 'analytical' | 'calm' | 'energizing' | 'motivating' | 'neutral'
+  ) => {
     setEmotionalCalibration(tone);
   };
 
@@ -71,7 +73,9 @@ export const TalkToTitanePanel: React.FC = () => {
           <div className="section-label">Wake Phrases:</div>
           <div className="phrases-list">
             {config.wakePhrases.map((phrase, i) => (
-              <span key={i} className="phrase-badge">"{phrase}"</span>
+              <span key={i} className="phrase-badge">
+                "{phrase}"
+              </span>
             ))}
           </div>
         </div>
@@ -81,7 +85,15 @@ export const TalkToTitanePanel: React.FC = () => {
       <div className="mode-selector">
         <div className="section-label">Mode:</div>
         <div className="mode-buttons">
-          {(['continuous', 'whispered', 'direct', 'calibrated', 'focus'] as TalkToTitaneMode[]).map((mode) => (
+          {(
+            [
+              'continuous',
+              'whispered',
+              'direct',
+              'calibrated',
+              'focus',
+            ] as TalkToTitaneMode[]
+          ).map(mode => (
             <button
               key={mode}
               className={`mode-btn ${currentMode === mode ? 'active' : ''}`}
@@ -98,16 +110,18 @@ export const TalkToTitanePanel: React.FC = () => {
       <div className="emotional-selector">
         <div className="section-label">Emotional Tone:</div>
         <div className="emotional-buttons">
-          {(['analytical', 'calm', 'energizing', 'motivating', 'neutral'] as const).map((tone) => (
-            <button
-              key={tone}
-              className={`emotional-btn ${state.emotionalCalibration === tone ? 'active' : ''}`}
-              onClick={() => handleEmotionalChange(tone)}
-              disabled={!isActive}
-            >
-              {tone}
-            </button>
-          ))}
+          {(['analytical', 'calm', 'energizing', 'motivating', 'neutral'] as const).map(
+            tone => (
+              <button
+                key={tone}
+                className={`emotional-btn ${state.emotionalCalibration === tone ? 'active' : ''}`}
+                onClick={() => handleEmotionalChange(tone)}
+                disabled={!isActive}
+              >
+                {tone}
+              </button>
+            )
+          )}
         </div>
       </div>
 
@@ -118,7 +132,9 @@ export const TalkToTitanePanel: React.FC = () => {
           <div className="intent-card">
             <div className="intent-header">
               <span className="intent-type">{lastResponse.intent.type}</span>
-              <span className="intent-confidence">{(lastResponse.intent.confidence * 100).toFixed(0)}%</span>
+              <span className="intent-confidence">
+                {(lastResponse.intent.confidence * 100).toFixed(0)}%
+              </span>
               <span className="intent-tone">{lastResponse.intent.emotionalTone}</span>
               <span className="intent-priority">{lastResponse.intent.priority}</span>
             </div>
@@ -171,16 +187,23 @@ export const TalkToTitanePanel: React.FC = () => {
       <div className="conversation-history">
         <div className="section-label">History ({conversationHistory.length}):</div>
         <div className="history-list">
-          {conversationHistory.slice(-5).reverse().map((item, i) => (
-            <div key={i} className="history-item">
-              <div className="history-header">
-                <span className="history-type">{item.intent.type}</span>
-                <span className="history-confidence">{(item.intent.confidence * 100).toFixed(0)}%</span>
+          {conversationHistory
+            .slice(-5)
+            .reverse()
+            .map((item, i) => (
+              <div key={i} className="history-item">
+                <div className="history-header">
+                  <span className="history-type">{item.intent.type}</span>
+                  <span className="history-confidence">
+                    {(item.intent.confidence * 100).toFixed(0)}%
+                  </span>
+                </div>
+                <div className="history-text">"{item.intent.text}"</div>
+                <div className="history-response">
+                  {item.response.substring(0, 100)}...
+                </div>
               </div>
-              <div className="history-text">"{item.intent.text}"</div>
-              <div className="history-response">{item.response.substring(0, 100)}...</div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
 

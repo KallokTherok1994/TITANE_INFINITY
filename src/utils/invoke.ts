@@ -70,10 +70,7 @@ export async function safeInvokeWithRetry<T = unknown>(
     }
   }
 
-  console.error(
-    `❌ Commande ${cmd} échouée après ${maxRetries} tentatives:`,
-    lastError
-  );
+  console.error(`❌ Commande ${cmd} échouée après ${maxRetries} tentatives:`, lastError);
   return null;
 }
 

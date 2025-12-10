@@ -9,15 +9,15 @@
 //!
 //! © 2025 TITANE Team. All rights reserved.
 
-pub mod diagnostics;
-pub mod logs;
 pub mod cluster;
-pub mod introspection;
+pub mod diagnostics;
 pub mod hypervision;
+pub mod introspection;
+pub mod logs;
 
 // Re-exports pour faciliter l'importation
-pub use diagnostics::*;
-pub use logs::*;
 pub use cluster::*;
-pub use introspection::*;
+pub use diagnostics::*;
 pub use hypervision::*;
+pub use introspection::*;
+pub use logs::*;

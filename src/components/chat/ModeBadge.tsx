@@ -58,7 +58,9 @@ export const ModeBadge: React.FC<ModeBadgeProps> = ({
     `mode-badge--${size}`,
     onClick ? 'mode-badge--clickable' : '',
     className,
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <div
@@ -71,9 +73,7 @@ export const ModeBadge: React.FC<ModeBadgeProps> = ({
       tabIndex={onClick ? 0 : undefined}
     >
       <span className="mode-badge__icon">{modeConfig.icon}</span>
-      {showLabel && (
-        <span className="mode-badge__label">{modeConfig.label}</span>
-      )}
+      {showLabel && <span className="mode-badge__label">{modeConfig.label}</span>}
 
       {/* Tooltip */}
       {showTooltip && isHovered && (

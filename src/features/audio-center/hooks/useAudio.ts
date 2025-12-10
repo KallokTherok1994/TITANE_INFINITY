@@ -50,7 +50,9 @@ export function useAudio(): UseAudioReturn {
   const [availableVoices, setAvailableVoices] = useState<VoiceProfile[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isTesting, setIsTesting] = useState(false);
-  const [testResult, setTestResult] = useState<AudioTestResult | MicrophoneTestResult | null>(null);
+  const [testResult, setTestResult] = useState<
+    AudioTestResult | MicrophoneTestResult | null
+  >(null);
 
   // Load initial data
   useEffect(() => {

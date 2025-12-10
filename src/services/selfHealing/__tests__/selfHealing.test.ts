@@ -11,9 +11,8 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe('SelfHealingObserver', () => {
-   
   let SelfHealingObserver: any;
-   
+
   let observer: any;
 
   beforeEach(async () => {
@@ -122,9 +121,8 @@ describe('SelfHealingObserver', () => {
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe('SelfHealingAnalyzer', () => {
-   
   let SelfHealingAnalyzer: any;
-   
+
   let analyzer: any;
 
   beforeEach(async () => {
@@ -256,7 +254,7 @@ describe('SelfHealingAnalyzer', () => {
     });
 
     it('should get all module health', () => {
-      const events = ['module_a', 'module_b'].map((id) => ({
+      const events = ['module_a', 'module_b'].map(id => ({
         id: `test_${id}`,
         timestamp: Date.now(),
         category: 'react' as const,
@@ -269,7 +267,7 @@ describe('SelfHealingAnalyzer', () => {
         autoDetected: true,
       }));
 
-      events.forEach((e) => analyzer.analyze(e));
+      events.forEach(e => analyzer.analyze(e));
 
       const allHealth = analyzer.getAllModuleHealth();
       expect(allHealth.length).toBe(2);
@@ -291,7 +289,7 @@ describe('SelfHealingAnalyzer', () => {
         autoDetected: true,
       }));
 
-      events.forEach((e) => analyzer.analyze(e));
+      events.forEach(e => analyzer.analyze(e));
 
       const patterns = analyzer.getPatterns();
       expect(patterns.length).toBeGreaterThan(0);
@@ -370,9 +368,8 @@ describe('SelfHealingAnalyzer', () => {
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe('SelfHealingPlaybookEngine', () => {
-   
   let SelfHealingPlaybookEngine: any;
-   
+
   let engine: any;
 
   beforeEach(async () => {
@@ -604,9 +601,8 @@ describe('SelfHealingPlaybookEngine', () => {
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe('SelfHealingExecutor', () => {
-   
   let SelfHealingExecutor: any;
-   
+
   let executor: any;
 
   beforeEach(async () => {
@@ -756,9 +752,8 @@ describe('SelfHealingExecutor', () => {
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe('SelfHealingSyncLayer', () => {
-   
   let SelfHealingSyncLayer: any;
-   
+
   let syncLayer: any;
 
   beforeEach(async () => {
@@ -896,7 +891,8 @@ describe('SelfHealing Configuration', () => {
   });
 
   it('should have proper severity weights', async () => {
-    const { SEVERITY_WEIGHTS, CATEGORY_PRIORITIES } = await import('../selfHealing.config');
+    const { SEVERITY_WEIGHTS, CATEGORY_PRIORITIES } =
+      await import('../selfHealing.config');
 
     expect(SEVERITY_WEIGHTS.info).toBe(1);
     expect(SEVERITY_WEIGHTS.low).toBe(10);

@@ -7,12 +7,7 @@
 
 import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
-import type {
-  AIRequest,
-  AIResponse,
-  AIConfig,
-  AIModelConfig,
-} from '@/types/aiModel';
+import type { AIRequest, AIResponse, AIConfig, AIModelConfig } from '@/types/aiModel';
 import { AI_MODELS, isLocalModel } from '@/types/aiModel';
 
 /**
@@ -33,10 +28,10 @@ export class AIPipeline {
   private async initializeStreamListener() {
     await listen<{ content: string; done: boolean; model: string }>(
       'ai-stream-chunk',
-      (event) => {
+      event => {
         const { content } = event.payload;
         // Émettre vers tous les listeners actifs
-        this.streamListeners.forEach((callback) => callback(content));
+        this.streamListeners.forEach(callback => callback(content));
       }
     );
   }
@@ -223,7 +218,7 @@ export class AIPipeline {
     config: AIModelConfig
   ): Promise<{ content: string; tokensUsed: number }> {
     // TODO: Remplacer par vraies implémentations API
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
     return {
       content: `[MOCK RESPONSE from ${config.modelName}]\n\nPrompt reçu: "${request.prompt}"\n\nCeci est une réponse de test. Implémentation API à venir.`,

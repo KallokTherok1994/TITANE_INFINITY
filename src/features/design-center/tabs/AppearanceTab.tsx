@@ -60,9 +60,9 @@ function SelectField({ label, value, options, onChange, description }: SelectFie
       <select
         className="dc-select"
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={e => onChange(e.target.value)}
       >
-        {options.map((opt) => (
+        {options.map(opt => (
           <option key={opt.value} value={opt.value}>
             {opt.label}
           </option>
@@ -87,7 +87,16 @@ interface SliderFieldProps {
   description?: string;
 }
 
-function SliderField({ label, value, min, max, step, onChange, unit, description }: SliderFieldProps) {
+function SliderField({
+  label,
+  value,
+  min,
+  max,
+  step,
+  onChange,
+  unit,
+  description,
+}: SliderFieldProps) {
   return (
     <div className="dc-slider-field">
       <div className="dc-slider-header">
@@ -96,7 +105,8 @@ function SliderField({ label, value, min, max, step, onChange, unit, description
           {description && <span className="dc-slider-desc">{description}</span>}
         </div>
         <span className="dc-slider-value">
-          {value}{unit || ''}
+          {value}
+          {unit || ''}
         </span>
       </div>
       <input
@@ -106,7 +116,7 @@ function SliderField({ label, value, min, max, step, onChange, unit, description
         max={max}
         step={step}
         value={value}
-        onChange={(e) => onChange(parseFloat(e.target.value))}
+        onChange={e => onChange(parseFloat(e.target.value))}
       />
     </div>
   );
@@ -117,7 +127,8 @@ function SliderField({ label, value, min, max, step, onChange, unit, description
 // ============================================================================
 
 export function AppearanceTab() {
-  const { tokens, updateToken, isDirty, saveTokens, resetToDefaults, undoChanges } = useUITheme();
+  const { tokens, updateToken, isDirty, saveTokens, resetToDefaults, undoChanges } =
+    useUITheme();
 
   return (
     <div className="dc-tab dc-appearance-tab">
@@ -153,11 +164,11 @@ export function AppearanceTab() {
             label="Mode de Densité"
             value={tokens.spacing.density}
             options={[
-              { value: 'compact', label: 'Compact - Plus d\'éléments visibles' },
+              { value: 'compact', label: "Compact - Plus d'éléments visibles" },
               { value: 'standard', label: 'Standard - Équilibre optimal' },
-              { value: 'spacious', label: 'Spacieux - Plus d\'espace' },
+              { value: 'spacious', label: "Spacieux - Plus d'espace" },
             ]}
-            onChange={(v) => {
+            onChange={v => {
               const value = v as 'compact' | 'standard' | 'spacious';
               updateToken('spacing', 'density', value);
               // Ajuster automatiquement les espacements
@@ -179,7 +190,7 @@ export function AppearanceTab() {
             min={4}
             max={10}
             step={1}
-            onChange={(v) => updateToken('spacing', 'baseUnit', v)}
+            onChange={v => updateToken('spacing', 'baseUnit', v)}
             unit="px"
             description="Unité de base pour tous les espacements"
           />
@@ -197,7 +208,7 @@ export function AppearanceTab() {
               { value: 'medium', label: 'Medium - Arrondi subtil' },
               { value: 'rounded', label: 'Arrondi - Bords doux' },
             ]}
-            onChange={(v) => {
+            onChange={v => {
               const value = v as 'minimal' | 'medium' | 'rounded';
               updateToken('borders', 'radius', value);
               // Ajuster automatiquement les rayons
@@ -221,7 +232,7 @@ export function AppearanceTab() {
             min={1}
             max={3}
             step={1}
-            onChange={(v) => updateToken('borders', 'width', v)}
+            onChange={v => updateToken('borders', 'width', v)}
             unit="px"
             description="Épaisseur des bordures des éléments"
           />
@@ -234,7 +245,7 @@ export function AppearanceTab() {
           <ToggleSwitch
             label="Animations Activées"
             checked={tokens.animations.enabled}
-            onChange={(v) => updateToken('animations', 'enabled', v)}
+            onChange={v => updateToken('animations', 'enabled', v)}
             description="Activer/désactiver toutes les animations"
           />
 
@@ -248,7 +259,7 @@ export function AppearanceTab() {
                   { value: 'normal', label: 'Normal - Fluidité équilibrée' },
                   { value: 'slow', label: 'Lent - Transitions douces' },
                 ]}
-                onChange={(v) => {
+                onChange={v => {
                   const value = v as 'fast' | 'normal' | 'slow';
                   updateToken('animations', 'speed', value);
                   // Ajuster les durées
@@ -272,7 +283,7 @@ export function AppearanceTab() {
                 min={50}
                 max={500}
                 step={50}
-                onChange={(v) => {
+                onChange={v => {
                   updateToken('animations', 'durationMs', v);
                   updateToken('animations', 'durationNormal', v);
                 }}
@@ -290,7 +301,7 @@ export function AppearanceTab() {
           <ToggleSwitch
             label="Ombres Activées"
             checked={tokens.shadows.enabled}
-            onChange={(v) => updateToken('shadows', 'enabled', v)}
+            onChange={v => updateToken('shadows', 'enabled', v)}
             description="Ajoute de la profondeur à l'interface"
           />
         </section>
@@ -306,7 +317,7 @@ export function AppearanceTab() {
               { value: 'normal', label: 'Normal - Contraste standard' },
               { value: 'high', label: 'Élevé - Contraste renforcé' },
             ]}
-            onChange={(v) => {
+            onChange={v => {
               const value = v as 'normal' | 'high';
               updateToken('contrast', 'level', value);
               updateToken('contrast', 'multiplier', value === 'high' ? 1.25 : 1.0);
@@ -320,7 +331,7 @@ export function AppearanceTab() {
             min={1.0}
             max={1.5}
             step={0.05}
-            onChange={(v) => updateToken('contrast', 'multiplier', v)}
+            onChange={v => updateToken('contrast', 'multiplier', v)}
             unit="x"
             description="Ajustement fin du niveau de contraste"
           />

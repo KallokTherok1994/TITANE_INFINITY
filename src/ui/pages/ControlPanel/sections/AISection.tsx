@@ -19,7 +19,7 @@ const DEFAULT_CONFIG: AIConfig = {
   gemini_api_key: '',
   gemini_model: 'gemini-pro',
   temperature: 0.7,
-  max_tokens: 2048
+  max_tokens: 2048,
 };
 
 type RuntimeConfig = {
@@ -29,10 +29,12 @@ type RuntimeConfig = {
 
 export const AISection: React.FC = () => {
   const [config, setConfig] = useState<AIConfig>(() => ({ ...DEFAULT_CONFIG }));
-  const [persistedConfig, setPersistedConfig] = useState<Omit<AIConfig, 'gemini_api_key'>>({
+  const [persistedConfig, setPersistedConfig] = useState<
+    Omit<AIConfig, 'gemini_api_key'>
+  >({
     gemini_model: DEFAULT_CONFIG.gemini_model,
     temperature: DEFAULT_CONFIG.temperature,
-    max_tokens: DEFAULT_CONFIG.max_tokens
+    max_tokens: DEFAULT_CONFIG.max_tokens,
   });
   const [hasStoredKey, setHasStoredKey] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -43,7 +45,8 @@ export const AISection: React.FC = () => {
     if (typeof window === 'undefined') {
       return null;
     }
-    const global = (window as unknown as { __TITANE_RUNTIME_CONFIG__?: RuntimeConfig }).__TITANE_RUNTIME_CONFIG__;
+    const global = (window as unknown as { __TITANE_RUNTIME_CONFIG__?: RuntimeConfig })
+      .__TITANE_RUNTIME_CONFIG__;
     return global ?? null;
   }, []);
 
@@ -56,13 +59,13 @@ export const AISection: React.FC = () => {
       setPersistedConfig({
         gemini_model: aiConfig.gemini_model,
         temperature: aiConfig.temperature,
-        max_tokens: aiConfig.max_tokens
+        max_tokens: aiConfig.max_tokens,
       });
       setConfig({
         gemini_api_key: '',
         gemini_model: aiConfig.gemini_model,
         temperature: aiConfig.temperature,
-        max_tokens: aiConfig.max_tokens
+        max_tokens: aiConfig.max_tokens,
       });
       setError(null);
     } catch (err) {
@@ -86,14 +89,10 @@ export const AISection: React.FC = () => {
       const trimmedKey = config.gemini_api_key.trim();
       const payload: AIConfig = {
         gemini_api_key:
-          trimmedKey.length > 0
-            ? trimmedKey
-            : hasStoredKey
-            ? GEMINI_KEY_SENTINEL
-            : '',
+          trimmedKey.length > 0 ? trimmedKey : hasStoredKey ? GEMINI_KEY_SENTINEL : '',
         gemini_model: config.gemini_model,
         temperature: config.temperature,
-        max_tokens: config.max_tokens
+        max_tokens: config.max_tokens,
       };
 
       await secureInvoke('cp_set_ai_config', { config: payload });
@@ -102,9 +101,9 @@ export const AISection: React.FC = () => {
       setPersistedConfig({
         gemini_model: payload.gemini_model,
         temperature: payload.temperature,
-        max_tokens: payload.max_tokens
+        max_tokens: payload.max_tokens,
       });
-      setConfig((current) => ({ ...current, gemini_api_key: '' }));
+      setConfig(current => ({ ...current, gemini_api_key: '' }));
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     } catch (err) {
@@ -125,17 +124,17 @@ export const AISection: React.FC = () => {
           gemini_api_key: '',
           gemini_model: config.gemini_model,
           temperature: config.temperature,
-          max_tokens: config.max_tokens
-        }
+          max_tokens: config.max_tokens,
+        },
       });
 
       setHasStoredKey(false);
       setPersistedConfig({
         gemini_model: config.gemini_model,
         temperature: config.temperature,
-        max_tokens: config.max_tokens
+        max_tokens: config.max_tokens,
       });
-      setConfig((current) => ({ ...current, gemini_api_key: '' }));
+      setConfig(current => ({ ...current, gemini_api_key: '' }));
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     } catch (err) {
@@ -147,10 +146,18 @@ export const AISection: React.FC = () => {
   }, [config]);
 
   const validationError = useMemo(() => {
-    if (!Number.isFinite(config.temperature) || config.temperature < 0 || config.temperature > 1) {
+    if (
+      !Number.isFinite(config.temperature) ||
+      config.temperature < 0 ||
+      config.temperature > 1
+    ) {
       return 'La température doit être comprise entre 0 et 1.';
     }
-    if (!Number.isFinite(config.max_tokens) || config.max_tokens < 64 || config.max_tokens > 8192) {
+    if (
+      !Number.isFinite(config.max_tokens) ||
+      config.max_tokens < 64 ||
+      config.max_tokens > 8192
+    ) {
       return 'Les tokens doivent être compris entre 64 et 8192.';
     }
     return null;
@@ -177,7 +184,7 @@ export const AISection: React.FC = () => {
     config.max_tokens,
     persistedConfig.gemini_model,
     persistedConfig.temperature,
-    persistedConfig.max_tokens
+    persistedConfig.max_tokens,
   ]);
 
   const saveDisabled = saving || Boolean(validationError) || !hasChanges;
@@ -189,7 +196,11 @@ export const AISection: React.FC = () => {
         <h2 className="cp-section-title">IA & APIs</h2>
         <div className="cp-section-actions">
           {hasStoredKey && (
-            <button className="cp-button secondary" onClick={clearGeminiKey} disabled={saving}>
+            <button
+              className="cp-button secondary"
+              onClick={clearGeminiKey}
+              disabled={saving}
+            >
               🔐 Supprimer la clé
             </button>
           )}
@@ -208,7 +219,7 @@ export const AISection: React.FC = () => {
               type="password"
               className="cp-input"
               value={config.gemini_api_key}
-              onChange={(e) => setConfig({ ...config, gemini_api_key: e.target.value })}
+              onChange={e => setConfig({ ...config, gemini_api_key: e.target.value })}
               placeholder={
                 hasStoredKey
                   ? 'Clé stockée dans le coffre — saisir une nouvelle clé pour la remplacer'
@@ -216,7 +227,9 @@ export const AISection: React.FC = () => {
               }
             />
             {hasStoredKey && (
-              <p className="cp-helper-text">Une clé chiffrée est déjà présente dans le coffre.</p>
+              <p className="cp-helper-text">
+                Une clé chiffrée est déjà présente dans le coffre.
+              </p>
             )}
           </div>
 
@@ -225,7 +238,7 @@ export const AISection: React.FC = () => {
             <select
               className="cp-input"
               value={config.gemini_model}
-              onChange={(e) => setConfig({ ...config, gemini_model: e.target.value })}
+              onChange={e => setConfig({ ...config, gemini_model: e.target.value })}
             >
               <option value="gemini-pro">Gemini Pro</option>
               <option value="gemini-pro-vision">Gemini Pro Vision</option>
@@ -233,14 +246,18 @@ export const AISection: React.FC = () => {
           </div>
 
           <div className="cp-input-group">
-            <label className="cp-input-label">Température: {config.temperature.toFixed(1)}</label>
+            <label className="cp-input-label">
+              Température: {config.temperature.toFixed(1)}
+            </label>
             <input
               type="range"
               min={0}
               max={1}
               step={0.1}
               value={config.temperature}
-              onChange={(e) => setConfig({ ...config, temperature: parseFloat(e.target.value) })}
+              onChange={e =>
+                setConfig({ ...config, temperature: parseFloat(e.target.value) })
+              }
             />
           </div>
 
@@ -252,11 +269,11 @@ export const AISection: React.FC = () => {
               min={64}
               max={8192}
               value={config.max_tokens}
-              onChange={(e) => {
+              onChange={e => {
                 const next = parseInt(e.target.value, 10);
                 setConfig({
                   ...config,
-                  max_tokens: Number.isFinite(next) ? next : 0
+                  max_tokens: Number.isFinite(next) ? next : 0,
                 });
               }}
             />
@@ -268,12 +285,14 @@ export const AISection: React.FC = () => {
                 🛡️
               </span>{' '}
               Secrets engine&nbsp;
-              <strong>{String(runtimeConfig.secretsMode ?? 'unknown')}</strong> · Gemini configuré:{' '}
-              <strong>{hasStoredKey ? 'oui' : 'non'}</strong>
+              <strong>{String(runtimeConfig.secretsMode ?? 'unknown')}</strong> · Gemini
+              configuré: <strong>{hasStoredKey ? 'oui' : 'non'}</strong>
             </div>
           )}
 
-          {(validationError || error) && <p className="cp-error">{validationError ?? error}</p>}
+          {(validationError || error) && (
+            <p className="cp-error">{validationError ?? error}</p>
+          )}
           {showUnsavedChanges && !validationError && !error && (
             <p className="cp-helper-text">Modifications en attente de sauvegarde.</p>
           )}
@@ -282,4 +301,3 @@ export const AISection: React.FC = () => {
     </div>
   );
 };
-

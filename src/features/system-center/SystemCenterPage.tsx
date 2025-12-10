@@ -13,10 +13,7 @@
 
 import React, { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  type SystemCenterTab,
-  SYSTEM_CENTER_TABS
-} from './types/systemCenter.types';
+import { type SystemCenterTab, SYSTEM_CENTER_TABS } from './types/systemCenter.types';
 import { DiagnosticsTab } from './tabs/DiagnosticsTab';
 import { DevToolsTab } from './tabs/DevToolsTab';
 import { NodeClusterTab } from './tabs/NodeClusterTab';
@@ -80,7 +77,7 @@ export const SystemCenterPage: React.FC = () => {
 
       {/* Tab Navigation */}
       <nav className="sc-tabs">
-        {SYSTEM_CENTER_TABS.map((tab) => (
+        {SYSTEM_CENTER_TABS.map(tab => (
           <button
             key={tab.id}
             className={`sc-tab ${activeTab === tab.id ? 'sc-tab--active' : ''}`}

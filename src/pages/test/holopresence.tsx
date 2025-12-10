@@ -30,9 +30,12 @@ export default function HoloPresenceTestPage() {
     const startEngines = async () => {
       try {
         // Import dynamique pour éviter erreurs SSR
-        const { unifiedIdentityKernel } = await import('@/engines/identity/unifiedIdentityKernel');
-        const { expressionEngine } = await import('@/engines/expression/expressionEngine');
-        const { holoPresenceEngine } = await import('@/engines/holopresence/holoPresenceEngine');
+        const { unifiedIdentityKernel } =
+          await import('@/engines/identity/unifiedIdentityKernel');
+        const { expressionEngine } =
+          await import('@/engines/expression/expressionEngine');
+        const { holoPresenceEngine } =
+          await import('@/engines/holopresence/holoPresenceEngine');
 
         unifiedIdentityKernel.start();
         expressionEngine.start();
@@ -49,15 +52,19 @@ export default function HoloPresenceTestPage() {
 
     // Cleanup
     return () => {
-      import('@/engines/identity/unifiedIdentityKernel').then(({ unifiedIdentityKernel }) => {
-        unifiedIdentityKernel.stop();
-      });
+      import('@/engines/identity/unifiedIdentityKernel').then(
+        ({ unifiedIdentityKernel }) => {
+          unifiedIdentityKernel.stop();
+        }
+      );
       import('@/engines/expression/expressionEngine').then(({ expressionEngine }) => {
         expressionEngine.stop();
       });
-      import('@/engines/holopresence/holoPresenceEngine').then(({ holoPresenceEngine }) => {
-        holoPresenceEngine.stop();
-      });
+      import('@/engines/holopresence/holoPresenceEngine').then(
+        ({ holoPresenceEngine }) => {
+          holoPresenceEngine.stop();
+        }
+      );
     };
   }, []);
 
@@ -67,7 +74,10 @@ export default function HoloPresenceTestPage() {
     });
   };
 
-  const handleColorChange = (colorType: 'primary' | 'secondary' | 'accent', color: string) => {
+  const handleColorChange = (
+    colorType: 'primary' | 'secondary' | 'accent',
+    color: string
+  ) => {
     import('@/engines/holopresence/holoPresenceEngine').then(({ holoPresenceEngine }) => {
       const currentColors = holoPresenceEngine.getState().visuals.colors;
       holoPresenceEngine.setColors({
@@ -91,7 +101,9 @@ export default function HoloPresenceTestPage() {
             Test et debug du système de visualisation holographique
           </p>
           <div className="mt-2">
-            <span className={`px-3 py-1 rounded-full text-sm ${isEngineRunning ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+            <span
+              className={`px-3 py-1 rounded-full text-sm ${isEngineRunning ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}
+            >
               {isEngineRunning ? '● Engines Running' : '○ Engines Stopped'}
             </span>
           </div>
@@ -116,7 +128,7 @@ export default function HoloPresenceTestPage() {
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">Shape</label>
                 <div className="grid grid-cols-4 gap-2">
-                  {shapes.map((s) => (
+                  {shapes.map(s => (
                     <button
                       key={s}
                       onClick={() => handleShapeChange(s)}
@@ -141,7 +153,7 @@ export default function HoloPresenceTestPage() {
                     <input
                       type="color"
                       value={colors.primary}
-                      onChange={(e) => handleColorChange('primary', e.target.value)}
+                      onChange={e => handleColorChange('primary', e.target.value)}
                       className="w-full h-10 rounded cursor-pointer"
                     />
                   </div>
@@ -150,7 +162,7 @@ export default function HoloPresenceTestPage() {
                     <input
                       type="color"
                       value={colors.secondary}
-                      onChange={(e) => handleColorChange('secondary', e.target.value)}
+                      onChange={e => handleColorChange('secondary', e.target.value)}
                       className="w-full h-10 rounded cursor-pointer"
                     />
                   </div>
@@ -159,7 +171,7 @@ export default function HoloPresenceTestPage() {
                     <input
                       type="color"
                       value={colors.accent}
-                      onChange={(e) => handleColorChange('accent', e.target.value)}
+                      onChange={e => handleColorChange('accent', e.target.value)}
                       className="w-full h-10 rounded cursor-pointer"
                     />
                   </div>
@@ -240,7 +252,10 @@ export default function HoloPresenceTestPage() {
                 <li>• Changez les couleurs pour personnaliser l'apparence</li>
                 <li>• Cliquez sur Flash/Pulse/Burst pour tester les événements</li>
                 <li>• Le Expression Monitor montre la synchronisation en temps réel</li>
-                <li>• Les moteurs Identity + Expression + HoloPresence tournent en arrière-plan</li>
+                <li>
+                  • Les moteurs Identity + Expression + HoloPresence tournent en
+                  arrière-plan
+                </li>
               </ul>
             </div>
           </div>

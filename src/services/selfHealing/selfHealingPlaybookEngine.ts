@@ -139,9 +139,7 @@ const PLAYBOOK_REGISTRY: HealingPlaybook[] = [
     description: 'Restaure un composant React après une erreur',
     targetCategory: ['react'],
     targetSeverity: ['medium', 'high'],
-    conditions: [
-      { field: 'nature', operator: 'contains', value: 'react' },
-    ],
+    conditions: [{ field: 'nature', operator: 'contains', value: 'react' }],
     actions: [
       {
         id: 'reset-component-state',
@@ -150,7 +148,7 @@ const PLAYBOOK_REGISTRY: HealingPlaybook[] = [
         parameters: { scope: 'component' },
         timeout: 5000,
         onFailure: 'continue',
-        description: 'Réinitialiser l\'état du composant',
+        description: "Réinitialiser l'état du composant",
       },
       {
         id: 'clear-react-cache',
@@ -179,9 +177,7 @@ const PLAYBOOK_REGISTRY: HealingPlaybook[] = [
     description: 'Restaure la communication avec le backend Tauri',
     targetCategory: ['tauri'],
     targetSeverity: ['medium', 'high', 'critical'],
-    conditions: [
-      { field: 'nature', operator: 'contains', value: 'tauri' },
-    ],
+    conditions: [{ field: 'nature', operator: 'contains', value: 'tauri' }],
     actions: [
       {
         id: 'sync-state-tauri',
@@ -190,7 +186,7 @@ const PLAYBOOK_REGISTRY: HealingPlaybook[] = [
         parameters: { force: true },
         timeout: 5000,
         onFailure: 'continue',
-        description: 'Synchroniser l\'état Singularity',
+        description: "Synchroniser l'état Singularity",
       },
       {
         id: 'restart-tauri-module',
@@ -219,9 +215,7 @@ const PLAYBOOK_REGISTRY: HealingPlaybook[] = [
     description: 'Restaure un pipeline IA bloqué',
     targetCategory: ['ia'],
     targetSeverity: ['medium', 'high', 'critical'],
-    conditions: [
-      { field: 'category', operator: 'eq', value: 'ia' },
-    ],
+    conditions: [{ field: 'category', operator: 'eq', value: 'ia' }],
     actions: [
       {
         id: 'clear-ia-queue',
@@ -268,9 +262,7 @@ const PLAYBOOK_REGISTRY: HealingPlaybook[] = [
     description: 'Restaure le moteur de synthèse vocale',
     targetCategory: ['tts'],
     targetSeverity: ['low', 'medium', 'high'],
-    conditions: [
-      { field: 'category', operator: 'eq', value: 'tts' },
-    ],
+    conditions: [{ field: 'category', operator: 'eq', value: 'tts' }],
     actions: [
       {
         id: 'clear-tts-cache',
@@ -317,9 +309,7 @@ const PLAYBOOK_REGISTRY: HealingPlaybook[] = [
     description: 'Répare la mémoire persistante corrompue',
     targetCategory: ['memory'],
     targetSeverity: ['high', 'critical'],
-    conditions: [
-      { field: 'category', operator: 'eq', value: 'memory' },
-    ],
+    conditions: [{ field: 'category', operator: 'eq', value: 'memory' }],
     actions: [
       {
         id: 'repair-memory-json',
@@ -337,7 +327,7 @@ const PLAYBOOK_REGISTRY: HealingPlaybook[] = [
         parameters: { type: 'index' },
         timeout: 15000,
         onFailure: 'abort',
-        description: 'Reconstruire l\'index mémoire',
+        description: "Reconstruire l'index mémoire",
       },
     ],
     maxRetries: 1,
@@ -368,9 +358,7 @@ const PLAYBOOK_REGISTRY: HealingPlaybook[] = [
     description: 'Améliore les performances système',
     targetCategory: ['performance'],
     targetSeverity: ['low', 'medium', 'high'],
-    conditions: [
-      { field: 'category', operator: 'eq', value: 'performance' },
-    ],
+    conditions: [{ field: 'category', operator: 'eq', value: 'performance' }],
     actions: [
       {
         id: 'clear-all-caches',
@@ -408,9 +396,7 @@ const PLAYBOOK_REGISTRY: HealingPlaybook[] = [
     description: 'Restaure la connectivité réseau',
     targetCategory: ['network'],
     targetSeverity: ['medium', 'high'],
-    conditions: [
-      { field: 'category', operator: 'eq', value: 'network' },
-    ],
+    conditions: [{ field: 'category', operator: 'eq', value: 'network' }],
     actions: [
       {
         id: 'clear-network-cache',
@@ -445,12 +431,10 @@ const PLAYBOOK_REGISTRY: HealingPlaybook[] = [
   {
     id: 'critical-recovery',
     name: 'Récupération Critique',
-    description: 'Récupération d\'urgence pour situations critiques',
+    description: "Récupération d'urgence pour situations critiques",
     targetCategory: ['react', 'tauri', 'ia', 'tts', 'memory'],
     targetSeverity: ['critical'],
-    conditions: [
-      { field: 'severity', operator: 'eq', value: 'critical' },
-    ],
+    conditions: [{ field: 'severity', operator: 'eq', value: 'critical' }],
     actions: [
       {
         id: 'emergency-state-sync',
@@ -459,7 +443,7 @@ const PLAYBOOK_REGISTRY: HealingPlaybook[] = [
         parameters: { force: true, emergency: true },
         timeout: 10000,
         onFailure: 'continue',
-        description: 'Synchronisation d\'urgence de l\'état',
+        description: "Synchronisation d'urgence de l'état",
       },
       {
         id: 'mini-audit',
@@ -714,7 +698,9 @@ export class SelfHealingPlaybookEngine {
       case 'contains':
         return typeof value === 'string' && value.includes(String(condition.value));
       case 'matches':
-        return typeof value === 'string' && new RegExp(String(condition.value)).test(value);
+        return (
+          typeof value === 'string' && new RegExp(String(condition.value)).test(value)
+        );
       default:
         return false;
     }
@@ -741,7 +727,11 @@ export class SelfHealingPlaybookEngine {
   ): PlannedAction[] {
     const planned: PlannedAction[] = [];
 
-    for (let i = 0; i < playbook.actions.length && i < this.config.maxActionsPerPlaybook; i++) {
+    for (
+      let i = 0;
+      i < playbook.actions.length && i < this.config.maxActionsPerPlaybook;
+      i++
+    ) {
       const action = playbook.actions[i];
 
       // Résoudre le module cible si dynamique
@@ -752,7 +742,8 @@ export class SelfHealingPlaybookEngine {
         sequence: i,
         action: resolvedAction,
         dependencies: i > 0 ? [`${playbook.id}_action_${i - 1}`] : [],
-        estimatedDuration: ACTION_DURATION_ESTIMATES[action.type] || this.config.defaultTimeout,
+        estimatedDuration:
+          ACTION_DURATION_ESTIMATES[action.type] || this.config.defaultTimeout,
         canParallelize: i === 0 || action.onFailure === 'continue',
         status: i === 0 ? 'ready' : 'pending',
       });
@@ -779,7 +770,7 @@ export class SelfHealingPlaybookEngine {
   }
 
   private calculateOverallRisk(actions: PlannedAction[]): 'safe' | 'moderate' | 'risky' {
-    const risks = actions.map((a) => ACTION_RISK[a.action.type] || 'safe');
+    const risks = actions.map(a => ACTION_RISK[a.action.type] || 'safe');
 
     if (risks.includes('risky')) return 'risky';
     if (risks.includes('moderate')) return 'moderate';
@@ -833,7 +824,7 @@ export class SelfHealingPlaybookEngine {
    * Vérifie si des actions risquées sont dans un plan
    */
   public hasRiskyActions(plan: ExecutionPlan): boolean {
-    return plan.actions.some((a) => ACTION_RISK[a.action.type] === 'risky');
+    return plan.actions.some(a => ACTION_RISK[a.action.type] === 'risky');
   }
 
   /**
@@ -848,7 +839,7 @@ export class SelfHealingPlaybookEngine {
     enabled: boolean;
     onCooldown: boolean;
   }> {
-    return [...this.playbooks.values()].map((p) => ({
+    return [...this.playbooks.values()].map(p => ({
       id: p.id,
       name: p.name,
       categories: p.targetCategory,

@@ -46,7 +46,7 @@ impl Default for ForgettingConfig {
     fn default() -> Self {
         Self {
             enable_decay: true,
-            daily_decay_rate: 0.05,      // 5% per day
+            daily_decay_rate: 0.05, // 5% per day
             deletion_threshold: 0.1,
             access_boost: 0.1,
             recency_weight: 0.3,
@@ -221,7 +221,9 @@ impl ForgettingEngine {
 
         // Similarity pruning (remove redundant low-importance entries)
         if config.enable_similarity_pruning {
-            let pruned = self.similarity_prune(&to_update, vector_store, &config).await;
+            let pruned = self
+                .similarity_prune(&to_update, vector_store, &config)
+                .await;
             result.pruned_count = pruned.len();
             for id in pruned {
                 to_delete.push(id);
@@ -391,7 +393,8 @@ mod tests {
         let score1 = ForgettingEngine::forgetting_score(&new_important, &config);
 
         // Old, unimportant entry = high forgetting score
-        let mut old_unimportant = MemoryEntry::new("Test".to_string(), 0.2, MemoryType::Conversation);
+        let mut old_unimportant =
+            MemoryEntry::new("Test".to_string(), 0.2, MemoryType::Conversation);
         old_unimportant.timestamp = chrono::Utc::now().timestamp_millis() - 30 * 86_400_000;
         let score2 = ForgettingEngine::forgetting_score(&old_unimportant, &config);
 

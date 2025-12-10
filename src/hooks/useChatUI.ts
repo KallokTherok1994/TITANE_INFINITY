@@ -54,10 +54,10 @@ export function useChatUI(options: UseChatUIOptions = {}): UseChatUIReturn {
    * FIX v15.1: Vérification de duplication (évite les doublons)
    */
   const addMessage = useCallback((message: AIMessage) => {
-    setMessages((prev) => {
+    setMessages(prev => {
       // Éviter les doublons basés sur timestamp + content
       const isDuplicate = prev.some(
-        (m) => m.timestamp === message.timestamp && m.content === message.content
+        m => m.timestamp === message.timestamp && m.content === message.content
       );
 
       if (isDuplicate) {

@@ -58,9 +58,12 @@ export type TrainingAction =
 const PRUDENT_MESSAGES = {
   sessionStart: "Reste naturel(le), je t'observe pendant quelques secondes...",
   captureSuccess: "J'ai bien enregistré cet état. Merci !",
-  privacyReminder: '🔒 Rappel : aucune image n\'est stockée, seulement des valeurs numériques abstraites.',
-  confidenceDisclaimer: '⚠️ Ces estimations sont approximatives et servent uniquement d\'indicateurs.',
-  explanation: 'L\'entraînement me permet d\'apprendre *tes* patterns uniques pour mieux te comprendre.',
+  privacyReminder:
+    "🔒 Rappel : aucune image n'est stockée, seulement des valeurs numériques abstraites.",
+  confidenceDisclaimer:
+    "⚠️ Ces estimations sont approximatives et servent uniquement d'indicateurs.",
+  explanation:
+    "L'entraînement me permet d'apprendre *tes* patterns uniques pour mieux te comprendre.",
 };
 
 // ============================================================================
@@ -77,13 +80,7 @@ interface IntentPattern {
  * Patterns pour détecter l'état émotionnel dans les phrases
  */
 const LABEL_PATTERNS: Record<UserStateLabel, RegExp[]> = {
-  calm: [
-    /calme/i,
-    /serein[e]?/i,
-    /apaisé[e]?/i,
-    /zen/i,
-    /paisible/i,
-  ],
+  calm: [/calme/i, /serein[e]?/i, /apaisé[e]?/i, /zen/i, /paisible/i],
   stressed: [
     /stress[eé][e]?/i,
     /anxieu[xs]?[e]?/i,
@@ -131,20 +128,8 @@ const LABEL_PATTERNS: Record<UserStateLabel, RegExp[]> = {
     /moyen[ne]?/i,
     /comme d'hab/i,
   ],
-  energized: [
-    /énergique/i,
-    /en forme/i,
-    /pleine forme/i,
-    /énergie/i,
-    /énergisé/i,
-  ],
-  relaxed: [
-    /détendu[e]?/i,
-    /relaxé[e]?/i,
-    /tranquille/i,
-    /détente/i,
-    /relax/i,
-  ],
+  energized: [/énergique/i, /en forme/i, /pleine forme/i, /énergie/i, /énergisé/i],
+  relaxed: [/détendu[e]?/i, /relaxé[e]?/i, /tranquille/i, /détente/i, /relax/i],
 };
 
 /**
@@ -415,7 +400,10 @@ export class TrainingIntentHandler {
 
   private handleStartTraining(label: UserStateLabel): TrainingIntentResult {
     try {
-      const session = this.engine.startTrainingCapture(label, TRAINING_CONFIG.defaultCaptureDuration);
+      const session = this.engine.startTrainingCapture(
+        label,
+        TRAINING_CONFIG.defaultCaptureDuration
+      );
 
       return {
         recognized: true,
@@ -471,7 +459,10 @@ export class TrainingIntentHandler {
   private handleRecordState(label: UserStateLabel): TrainingIntentResult {
     try {
       // Démarre une capture courte (5 secondes)
-      const session = this.engine.startTrainingCapture(label, TRAINING_CONFIG.defaultCaptureDuration);
+      const session = this.engine.startTrainingCapture(
+        label,
+        TRAINING_CONFIG.defaultCaptureDuration
+      );
 
       return {
         recognized: true,
@@ -543,7 +534,8 @@ export class TrainingIntentHandler {
             recognized: true,
             intent: 'confirm_reset',
             label: null,
-            response: "✅ Vos données d'entraînement ont été réinitialisées. Vous pouvez recommencer à partir de zéro.",
+            response:
+              "✅ Vos données d'entraînement ont été réinitialisées. Vous pouvez recommencer à partir de zéro.",
             action: { type: 'CONFIRM_RESET' },
           };
         }
@@ -572,7 +564,8 @@ export class TrainingIntentHandler {
       recognized: true,
       intent: 'reset_baseline',
       label: null,
-      response: "Je n'ai pas compris. Voulez-vous vraiment réinitialiser vos données ? Répondez 'oui, confirme' ou 'non, annule'.",
+      response:
+        "Je n'ai pas compris. Voulez-vous vraiment réinitialiser vos données ? Répondez 'oui, confirme' ou 'non, annule'.",
       action: null,
     };
   }
@@ -591,7 +584,10 @@ export class TrainingIntentHandler {
   // GÉNÉRATEURS DE RÉPONSES
   // ============================================================================
 
-  private getStartTrainingResponse(label: UserStateLabel, session: TrainingSession): string {
+  private getStartTrainingResponse(
+    label: UserStateLabel,
+    session: TrainingSession
+  ): string {
     const labelFr = this.getLabelFrench(label);
     const durationSec = Math.round(session.targetDurationMs / 1000);
 
@@ -642,11 +638,13 @@ Pour commencer, dites par exemple :
 ${PRUDENT_MESSAGES.explanation}`;
     }
 
-    const signatureList = signatures.map(label => {
-      const sig = profile.stateSignatures[label as UserStateLabel];
-      const samples = sig?.samplesCount ?? 0;
-      return `- **${this.getLabelFrench(label as UserStateLabel)}** : ${samples} échantillons`;
-    }).join('\n');
+    const signatureList = signatures
+      .map(label => {
+        const sig = profile.stateSignatures[label as UserStateLabel];
+        const samples = sig?.samplesCount ?? 0;
+        return `- **${this.getLabelFrench(label as UserStateLabel)}** : ${samples} échantillons`;
+      })
+      .join('\n');
 
     const calibrationStatus = profile.isCalibrated
       ? '✅ Calibré'
@@ -808,6 +806,8 @@ export const trainingIntentHandler = TrainingIntentHandler.getInstance();
 /**
  * Fonction utilitaire pour traiter un message
  */
-export async function processTrainingIntent(message: string): Promise<TrainingIntentResult> {
+export async function processTrainingIntent(
+  message: string
+): Promise<TrainingIntentResult> {
   return trainingIntentHandler.processMessage(message);
 }

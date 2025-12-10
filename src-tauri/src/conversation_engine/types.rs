@@ -4,7 +4,6 @@
  * Types fondamentaux pour le système conversationnel unifié
  * ═══════════════════════════════════════════════════════════════════
  */
-
 use serde::{Deserialize, Serialize};
 
 // ═══════════════════════════════════════════════════════════════════
@@ -120,7 +119,8 @@ impl Intention {
             || lower.starts_with("pourquoi ")
             || lower.starts_with("qu'est-ce ")
             || lower.starts_with("quel ")
-            || lower.starts_with("où ") {
+            || lower.starts_with("où ")
+        {
             return Self::Question;
         }
 
@@ -129,7 +129,8 @@ impl Intention {
             || lower.contains("pourrais-tu ")
             || lower.starts_with("créer ")
             || lower.starts_with("faire ")
-            || lower.starts_with("analyser ") {
+            || lower.starts_with("analyser ")
+        {
             return Self::Action;
         }
 
@@ -139,14 +140,16 @@ impl Intention {
             || lower.contains("sentiment")
             || lower.contains("inquiet")
             || lower.contains("heureux")
-            || lower.contains("triste") {
+            || lower.contains("triste")
+        {
             return Self::Emotion;
         }
 
         // Détection meta
         if lower.contains("conversation")
             || lower.contains("discuter de")
-            || lower.contains("parlons de") {
+            || lower.contains("parlons de")
+        {
             return Self::Meta;
         }
 
@@ -252,11 +255,11 @@ pub enum MemoryEffect {
 /// Couches de mémoire multi-niveaux
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MemoryLayers {
-    pub immediate: bool,        // Mémoire session courante
-    pub episodic: bool,         // Événement significatif
-    pub semantic: Vec<String>,  // Concepts extraits
-    pub procedural: Vec<String>,// Patterns/préférences détectés
-    pub reflective: bool,       // Nécessite réflexion
+    pub immediate: bool,         // Mémoire session courante
+    pub episodic: bool,          // Événement significatif
+    pub semantic: Vec<String>,   // Concepts extraits
+    pub procedural: Vec<String>, // Patterns/préférences détectés
+    pub reflective: bool,        // Nécessite réflexion
 }
 
 impl Default for MemoryLayers {
@@ -361,8 +364,8 @@ pub enum ProviderPreference {
     Auto,
     Gemini,
     Ollama,
-    OpenAI,  // 🟢 OpenAI GPT-4
-    Claude,  // 🟣 Anthropic Claude
+    OpenAI, // 🟢 OpenAI GPT-4
+    Claude, // 🟣 Anthropic Claude
     Local,
 }
 

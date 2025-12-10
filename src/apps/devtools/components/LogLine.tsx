@@ -15,10 +15,26 @@ export interface LogLineProps {
 }
 
 const levelStyles: Record<LogLevel, { bg: string; text: string; label: string }> = {
-  info: { bg: 'rgba(114, 123, 129, 0.10)', text: 'var(--text-info, #727b81)', label: 'INFO' },
-  warn: { bg: 'rgba(227, 213, 213, 0.10)', text: 'var(--text-warning, #e3d5d5)', label: 'WARN' },
-  error: { bg: 'rgba(139, 95, 95, 0.10)', text: 'var(--text-danger, #8b5f5f)', label: 'ERROR' },
-  debug: { bg: 'rgba(255, 255, 255, 0.05)', text: 'var(--text-muted, rgba(255,255,255,0.60))', label: 'DEBUG' },
+  info: {
+    bg: 'rgba(114, 123, 129, 0.10)',
+    text: 'var(--text-info, #727b81)',
+    label: 'INFO',
+  },
+  warn: {
+    bg: 'rgba(227, 213, 213, 0.10)',
+    text: 'var(--text-warning, #e3d5d5)',
+    label: 'WARN',
+  },
+  error: {
+    bg: 'rgba(139, 95, 95, 0.10)',
+    text: 'var(--text-danger, #8b5f5f)',
+    label: 'ERROR',
+  },
+  debug: {
+    bg: 'rgba(255, 255, 255, 0.05)',
+    text: 'var(--text-muted, rgba(255,255,255,0.60))',
+    label: 'DEBUG',
+  },
 };
 
 function formatRelativeTime(timestamp: number): string {
@@ -33,7 +49,7 @@ function formatRelativeTime(timestamp: number): string {
 
 /**
  * LogLine - Ligne de log avec couleur sémantique
- * 
+ *
  * @example
  * ```tsx
  * <LogLine

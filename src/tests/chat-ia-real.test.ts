@@ -15,7 +15,9 @@ vi.mock('../hooks/useChatMemory');
 const mockedUseChatCore = vi.mocked(useChatCore);
 const mockedUseChatMemory = vi.mocked(useChatMemory);
 
-const createMockResponse = (content = 'Réponse TITANE∞'): UseChatCoreReturn['generate'] => {
+const createMockResponse = (
+  content = 'Réponse TITANE∞'
+): UseChatCoreReturn['generate'] => {
   return async (message, history) => ({
     content: content || `Réponse: ${message}`,
     provider: 'titane-local',
@@ -49,15 +51,16 @@ const createCoreMock = () => {
   } satisfies UseChatCoreReturn;
 };
 
-const createMemoryMock = () => ({
-  messagesForMode: [],
-  memoryStats: { count: 0, sizeMB: 0, compressed: false },
-  loadHistory: vi.fn(() => []),
-  saveMessage: vi.fn(),
-  clearMode: vi.fn(),
-  compactIfNeeded: vi.fn(() => ({ cleaned: false, sizeMB: 0 })),
-  awardXP: vi.fn(),
-} satisfies UseChatMemoryReturn);
+const createMemoryMock = () =>
+  ({
+    messagesForMode: [],
+    memoryStats: { count: 0, sizeMB: 0, compressed: false },
+    loadHistory: vi.fn(() => []),
+    saveMessage: vi.fn(),
+    clearMode: vi.fn(),
+    compactIfNeeded: vi.fn(() => ({ cleaned: false, sizeMB: 0 })),
+    awardXP: vi.fn(),
+  }) satisfies UseChatMemoryReturn;
 
 let coreMock: UseChatCoreReturn;
 let memoryMock: UseChatMemoryReturn;

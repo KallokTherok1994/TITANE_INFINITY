@@ -4,13 +4,13 @@
 //   Final safety check before output with identity integration
 // ═══════════════════════════════════════════════════════════════
 
-use std::collections::HashSet;
+use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
+use std::collections::HashSet;
 
 use super::{
-    OmegaError, OmegaResult, PipelineStage,
-    StageInput, StageOutput, StageProcessor,
-    merger::MergeResult,
+    merger::MergeResult, OmegaError, OmegaResult, PipelineStage, StageInput, StageOutput,
+    StageProcessor,
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -150,10 +150,7 @@ impl Default for SafetyChecker {
                 "credit card number".to_string(),
                 "bank account".to_string(),
             ],
-            bias_indicators: vec![
-                "all people of".to_string(),
-                "those people".to_string(),
-            ],
+            bias_indicators: vec!["all people of".to_string(), "those people".to_string()],
         }
     }
 }
@@ -183,7 +180,11 @@ impl SafetyChecker {
             check_type: GuardrailType::ContentSafety,
             passed: !found_harmful,
             score,
-            details: if details.is_empty() { None } else { Some(details.join("; ")) },
+            details: if details.is_empty() {
+                None
+            } else {
+                Some(details.join("; "))
+            },
         }
     }
 
@@ -216,7 +217,11 @@ impl SafetyChecker {
             check_type: GuardrailType::PrivacyProtection,
             passed: !found_pii,
             score,
-            details: if details.is_empty() { None } else { Some(details.join("; ")) },
+            details: if details.is_empty() {
+                None
+            } else {
+                Some(details.join("; "))
+            },
         }
     }
 
@@ -240,7 +245,11 @@ impl SafetyChecker {
             check_type: GuardrailType::BiasDetection,
             passed: !found_bias,
             score,
-            details: if details.is_empty() { None } else { Some(details.join("; ")) },
+            details: if details.is_empty() {
+                None
+            } else {
+                Some(details.join("; "))
+            },
         }
     }
 
@@ -249,14 +258,21 @@ impl SafetyChecker {
         // Estimate tokens (rough: ~4 chars per token)
         let estimated_tokens = text.len() / 4;
         let passed = estimated_tokens <= max_length;
-        let score = if passed { 1.0 } else { (max_length as f32 / estimated_tokens as f32).min(0.9) };
+        let score = if passed {
+            1.0
+        } else {
+            (max_length as f32 / estimated_tokens as f32).min(0.9)
+        };
 
         GuardrailCheck {
             name: "Length Limits".to_string(),
             check_type: GuardrailType::LengthLimits,
             passed,
             score,
-            details: Some(format!("Estimated tokens: {}, max: {}", estimated_tokens, max_length)),
+            details: Some(format!(
+                "Estimated tokens: {}, max: {}",
+                estimated_tokens, max_length
+            )),
         }
     }
 
@@ -284,7 +300,11 @@ impl SafetyChecker {
     }
 
     /// Check identity consistency
-    pub fn check_identity_consistency(&self, text: &str, identity_data: Option<&serde_json::Value>) -> GuardrailCheck {
+    pub fn check_identity_consistency(
+        &self,
+        text: &str,
+        identity_data: Option<&serde_json::Value>,
+    ) -> GuardrailCheck {
         // Check if response aligns with identity profile
         let mut score = 0.9;
         let mut details = Vec::new();
@@ -304,7 +324,9 @@ impl SafetyChecker {
                     "professional" => {
                         if text_lower.contains("lol") || text_lower.contains("haha") {
                             score -= 0.2;
-                            details.push("Informal language doesn't match professional tone".to_string());
+                            details.push(
+                                "Informal language doesn't match professional tone".to_string(),
+                            );
                         }
                     }
                     _ => {}
@@ -317,7 +339,11 @@ impl SafetyChecker {
             check_type: GuardrailType::IdentityConsistency,
             passed: score >= 0.7,
             score,
-            details: if details.is_empty() { None } else { Some(details.join("; ")) },
+            details: if details.is_empty() {
+                None
+            } else {
+                Some(details.join("; "))
+            },
         }
     }
 
@@ -337,7 +363,14 @@ impl SafetyChecker {
         }
 
         // Check for uncertainty acknowledgment (positive)
-        let uncertainty_markers = ["might", "could", "possibly", "likely", "peut-être", "probablement"];
+        let uncertainty_markers = [
+            "might",
+            "could",
+            "possibly",
+            "likely",
+            "peut-être",
+            "probablement",
+        ];
         let has_uncertainty = uncertainty_markers.iter().any(|m| text_lower.contains(m));
         if has_uncertainty {
             score = (score + 0.05).min(1.0);
@@ -348,7 +381,11 @@ impl SafetyChecker {
             check_type: GuardrailType::EthicalCompliance,
             passed: score >= 0.7,
             score,
-            details: if details.is_empty() { None } else { Some(details.join("; ")) },
+            details: if details.is_empty() {
+                None
+            } else {
+                Some(details.join("; "))
+            },
         }
     }
 }
@@ -405,13 +442,16 @@ impl GuardrailsEngine {
             checks.push(self.checker.check_bias(response));
         }
 
-        checks.push(self.checker.check_length(response, self.config.max_response_length));
+        checks.push(
+            self.checker
+                .check_length(response, self.config.max_response_length),
+        );
         checks.push(self.checker.check_language(response));
         checks.push(self.checker.check_ethics(response));
-        checks.push(self.checker.check_identity_consistency(
-            response,
-            merge_result.metadata.identity.as_ref(),
-        ));
+        checks.push(
+            self.checker
+                .check_identity_consistency(response, merge_result.metadata.identity.as_ref()),
+        );
 
         // Check forbidden patterns from config
         for pattern in &self.config.forbidden_patterns {
@@ -434,13 +474,14 @@ impl GuardrailsEngine {
         };
 
         // Determine if blocked
-        let has_critical_failure = checks.iter()
+        let has_critical_failure = checks
+            .iter()
             .any(|c| !c.passed && c.check_type == GuardrailType::ContentSafety);
 
         let has_any_failure = checks.iter().any(|c| !c.passed);
-        let was_blocked = has_critical_failure ||
-            (self.config.strict_mode && has_any_failure) ||
-            safety_score < self.config.min_safety_score;
+        let was_blocked = has_critical_failure
+            || (self.config.strict_mode && has_any_failure)
+            || safety_score < self.config.min_safety_score;
 
         // Determine final response
         let (final_response, was_modified, block_reason) = if was_blocked {
@@ -470,7 +511,8 @@ impl GuardrailsEngine {
 
     /// Get block reason from failed checks
     fn get_block_reason(&self, checks: &[GuardrailCheck]) -> String {
-        let failed: Vec<_> = checks.iter()
+        let failed: Vec<_> = checks
+            .iter()
             .filter(|c| !c.passed)
             .map(|c| c.name.as_str())
             .collect();
@@ -499,10 +541,13 @@ impl GuardrailsEngine {
                     }
                     GuardrailType::PrivacyProtection => {
                         // Redact potential PII
-                        let email_re = regex::Regex::new(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}");
-                        if let Ok(re) = email_re {
-                            modified = re.replace_all(&modified, "[EMAIL REDACTED]").to_string();
-                        }
+                        static EMAIL_RE: Lazy<regex::Regex> = Lazy::new(|| {
+                            regex::Regex::new(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}")
+                                .unwrap()
+                        });
+                        modified = EMAIL_RE
+                            .replace_all(&modified, "[EMAIL REDACTED]")
+                            .to_string();
                     }
                     _ => {}
                 }
@@ -559,17 +604,22 @@ impl StageProcessor for Guardrails {
 
         // Get merge result from previous stage
         let merge_result: MergeResult = serde_json::from_value(
-            input.context.previous_outputs
+            input
+                .context
+                .previous_outputs
                 .get(&PipelineStage::Merger)
                 .cloned()
-                .unwrap_or_default()
-        ).map_err(|e| OmegaError::GuardrailsBlocked(e.to_string()))?;
+                .unwrap_or_default(),
+        )
+        .map_err(|e| OmegaError::GuardrailsBlocked(e.to_string()))?;
 
         let result = self.engine.check(&merge_result)?;
 
         if result.was_blocked {
             return Err(OmegaError::GuardrailsBlocked(
-                result.block_reason.unwrap_or_else(|| "Safety check failed".to_string())
+                result
+                    .block_reason
+                    .unwrap_or_else(|| "Safety check failed".to_string()),
             ));
         }
 
@@ -662,7 +712,9 @@ mod tests {
     #[test]
     fn test_guardrails_with_forbidden_pattern() {
         let mut config = GuardrailConfig::default();
-        config.forbidden_patterns.insert("forbidden_word".to_string());
+        config
+            .forbidden_patterns
+            .insert("forbidden_word".to_string());
 
         let engine = GuardrailsEngine::with_config(config);
         let mut merge_result = mock_merge_result();
@@ -671,7 +723,10 @@ mod tests {
         let result = engine.check(&merge_result).unwrap();
 
         // Should have a failing check for the forbidden pattern
-        assert!(result.checks.iter().any(|c| !c.passed && c.name.contains("Forbidden")));
+        assert!(result
+            .checks
+            .iter()
+            .any(|c| !c.passed && c.name.contains("Forbidden")));
     }
 
     #[test]

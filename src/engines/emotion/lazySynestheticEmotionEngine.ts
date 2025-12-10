@@ -18,14 +18,14 @@ let enginePromise: Promise<EngineInstance> | null = null;
  */
 export async function getSynestheticEmotionEngine() {
   if (engineInstance) return engineInstance;
-  
+
   if (!enginePromise) {
     enginePromise = import('./synestheticEmotionEngine').then(m => {
       engineInstance = m.synestheticEmotionEngine;
       return engineInstance;
     });
   }
-  
+
   return enginePromise;
 }
 

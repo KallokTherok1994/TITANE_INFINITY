@@ -4,7 +4,6 @@
  * Post-traitement linguistique avancé pour réponses en français
  * ═══════════════════════════════════════════════════════════════════
  */
-
 use serde::{Deserialize, Serialize};
 
 // ═══════════════════════════════════════════════════════════════════
@@ -135,7 +134,7 @@ pub struct FrenchMasteryResponse {
 /// Scores de qualité linguistique
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct QualityScores {
-    pub linguistic_correctness: f32,  // 0.0 → 1.0
+    pub linguistic_correctness: f32, // 0.0 → 1.0
     pub clarity: f32,
     pub titane_style_match: f32,
     pub context_adaptation: f32,
@@ -337,7 +336,8 @@ impl FrenchMasteryProcessor {
     /// Segmenter phrase longue
     fn segment_long_sentence(&self, sentence: &str) -> String {
         // Simplification : découper sur "et", "donc", "mais"
-        sentence.replace(" et ", ".\n")
+        sentence
+            .replace(" et ", ".\n")
             .replace(" donc ", ".\nDonc, ")
             .replace(" mais ", ".\nMais ")
     }
@@ -349,7 +349,10 @@ impl FrenchMasteryProcessor {
         // Remplacements style
         styled = styled.replace("Je pense que", "Je suggère");
         styled = styled.replace("Il y a genre", "Voici");
-        styled = styled.replace("C'est cool parce que", "Cette approche présente l'avantage de");
+        styled = styled.replace(
+            "C'est cool parce que",
+            "Cette approche présente l'avantage de",
+        );
         styled = styled.replace("trop stylé", "efficace");
         styled = styled.replace("ça déchire", "remarquable");
 
@@ -373,7 +376,8 @@ impl FrenchMasteryProcessor {
             if line.trim().starts_with('-')
                 || line.trim().starts_with('1')
                 || line.trim().starts_with('2')
-                || line.trim().starts_with('3') {
+                || line.trim().starts_with('3')
+            {
                 simplified.push_str(line);
                 simplified.push('\n');
             }
@@ -391,7 +395,7 @@ impl FrenchMasteryProcessor {
         if enriched.contains("mémoire épisodique") && !enriched.contains("comme un journal") {
             enriched = enriched.replace(
                 "mémoire épisodique",
-                "mémoire épisodique (comme un journal de bord qui garde les étapes clés)"
+                "mémoire épisodique (comme un journal de bord qui garde les étapes clés)",
             );
         }
 
@@ -443,9 +447,11 @@ impl FrenchMasteryProcessor {
     fn check_clarity(&self, text: &str) -> f32 {
         // Phrases courtes = clarté élevée
         let sentences: Vec<&str> = text.split('.').collect();
-        let avg_sentence_length: f32 = sentences.iter()
+        let avg_sentence_length: f32 = sentences
+            .iter()
             .map(|s| s.split_whitespace().count() as f32)
-            .sum::<f32>() / sentences.len() as f32;
+            .sum::<f32>()
+            / sentences.len() as f32;
 
         if avg_sentence_length < 20.0 {
             0.95

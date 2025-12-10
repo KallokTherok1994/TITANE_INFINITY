@@ -138,7 +138,6 @@ export async function testVoicePipeline(
     );
 
     return result;
-
   } catch (error) {
     // ═══ FAILURE ═══
     result.success = false;
@@ -147,8 +146,10 @@ export async function testVoicePipeline(
 
     console.error(
       `[VoicePipelineTest] ❌ Test failed at stage: ${result.stage}`,
-      '\nError:', result.error,
-      '\nDetails:', result.details
+      '\nError:',
+      result.error,
+      '\nDetails:',
+      result.details
     );
 
     // Try to cleanup
@@ -199,7 +200,10 @@ export function printTestResult(result: VoicePipelineTestResult): void {
   console.log('\nDetails:');
   console.log('  - Recording Started:', result.details.recordingStarted ? '✅' : '❌');
   console.log('  - Recording Stopped:', result.details.recordingStopped ? '✅' : '❌');
-  console.log('  - Transcript Received:', result.details.transcriptReceived ? '✅' : '❌');
+  console.log(
+    '  - Transcript Received:',
+    result.details.transcriptReceived ? '✅' : '❌'
+  );
   if (result.details.transcriptText) {
     console.log('  - Transcript:', `"${result.details.transcriptText}"`);
   }

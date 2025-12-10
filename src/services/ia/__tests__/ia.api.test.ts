@@ -109,7 +109,10 @@ describe('IAService', () => {
 
     describe('Unknown provider handling', () => {
       it('should reject unknown provider', () => {
-        const result = IAService.validateKeyFormat('unknown-provider' as IAProvider, 'sk-1234567890123456');
+        const result = IAService.validateKeyFormat(
+          'unknown-provider' as IAProvider,
+          'sk-1234567890123456'
+        );
         expect(result.valid).toBe(false);
         expect(result.error).toContain('Provider inconnu');
       });

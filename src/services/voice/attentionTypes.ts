@@ -14,21 +14,21 @@
  * États d'attention de TITANE∞
  */
 export type AttentionState =
-  | 'inactive'          // Écoute désactivée
-  | 'armed'             // En écoute passive (attend wake word)
-  | 'wake_detected'     // Wake word détecté, transition en cours
-  | 'awaiting_command'  // Réveillé, attend la commande utilisateur
-  | 'processing'        // Traitement IA en cours
-  | 'responding'        // TTS en cours
-  | 'cooldown';         // Période de refroidissement après réponse
+  | 'inactive' // Écoute désactivée
+  | 'armed' // En écoute passive (attend wake word)
+  | 'wake_detected' // Wake word détecté, transition en cours
+  | 'awaiting_command' // Réveillé, attend la commande utilisateur
+  | 'processing' // Traitement IA en cours
+  | 'responding' // TTS en cours
+  | 'cooldown'; // Période de refroidissement après réponse
 
 /**
  * Mode d'écoute
  */
 export type ListeningMode =
-  | 'off'           // Désactivé
-  | 'push_to_talk'  // Manuel (bouton)
-  | 'wake_word';    // Activation vocale
+  | 'off' // Désactivé
+  | 'push_to_talk' // Manuel (bouton)
+  | 'wake_word'; // Activation vocale
 
 /**
  * Événement d'attention

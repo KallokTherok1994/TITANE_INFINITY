@@ -3,8 +3,8 @@
 //! Commandes Tauri pour la persistence 100% SAVE
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use crate::persistence::{PERSISTENCE_ENGINE, TitanEvent, PersistenceStatus, IntegrityReport};
 use crate::core::SingularityState;
+use crate::persistence::{IntegrityReport, PersistenceStatus, TitanEvent, PERSISTENCE_ENGINE};
 use serde::{Deserialize, Serialize};
 
 /// DTO pour événement frontend
@@ -73,15 +73,22 @@ pub async fn titan_persist_event(event: TitanEventDto) -> Result<(), String> {
         Some("system") => EventOrigin::System,
         Some("migration") => EventOrigin::Migration,
         Some(other) => {
-            log::warn!("[titan_persist_event] Origine inconnue '{}', utilisation de 'user'", other);
+            log::warn!(
+                "[titan_persist_event] Origine inconnue '{}', utilisation de 'user'",
+                other
+            );
             EventOrigin::User
         }
     };
 
-    let titan_event = TitanEvent::with_origin(&event.module, &event.event_type, event.payload, origin);
+    let titan_event =
+        TitanEvent::with_origin(&event.module, &event.event_type, event.payload, origin);
 
     let mut engine = PERSISTENCE_ENGINE.write().await;
-    engine.persist_event(titan_event).await.map_err(|e| e.to_string())
+    engine
+        .persist_event(titan_event)
+        .await
+        .map_err(|e| e.to_string())
 }
 
 /// Forcer un snapshot avec état fourni
@@ -92,7 +99,10 @@ pub async fn titan_force_snapshot(state_json: String) -> Result<(), String> {
         serde_json::from_str(&state_json).map_err(|e| format!("JSON parse error: {}", e))?;
 
     let mut engine = PERSISTENCE_ENGINE.write().await;
-    engine.force_snapshot(&state).await.map_err(|e| e.to_string())
+    engine
+        .force_snapshot(&state)
+        .await
+        .map_err(|e| e.to_string())
 }
 
 /// Obtenir le status de persistence
@@ -127,7 +137,10 @@ pub async fn titan_load_state() -> Result<Option<SingularityState>, String> {
 #[tauri::command]
 pub async fn titan_get_events_since(timestamp: u64) -> Result<Vec<TitanEvent>, String> {
     let engine = PERSISTENCE_ENGINE.read().await;
-    engine.get_events_since(timestamp).await.map_err(|e| e.to_string())
+    engine
+        .get_events_since(timestamp)
+        .await
+        .map_err(|e| e.to_string())
 }
 
 /// Lister les snapshots disponibles
@@ -167,11 +180,12 @@ pub async fn titan_persistence_shutdown() -> Result<(), String> {
 pub async fn titan_migrate_state(state_json: String) -> Result<MigrationReportDto, String> {
     use super::migrations::MigrationEngine;
 
-    let mut state: serde_json::Value = serde_json::from_str(&state_json)
-        .map_err(|e| format!("JSON parse error: {}", e))?;
+    let mut state: serde_json::Value =
+        serde_json::from_str(&state_json).map_err(|e| format!("JSON parse error: {}", e))?;
 
     let mut engine = MigrationEngine::new();
-    let report = engine.migrate_to_current(&mut state)
+    let report = engine
+        .migrate_to_current(&mut state)
         .map_err(|e| e.to_string())?;
 
     Ok(MigrationReportDto {
@@ -203,11 +217,15 @@ pub fn titan_get_schema_version() -> u32 {
 
 /// Exporter les données vers une archive
 #[tauri::command]
-pub async fn titan_export_data(path: String, description: Option<String>) -> Result<ExportReportDto, String> {
+pub async fn titan_export_data(
+    path: String,
+    description: Option<String>,
+) -> Result<ExportReportDto, String> {
     use super::backup::BackupEngine;
 
     let mut engine = BackupEngine::new();
-    let report = engine.export(std::path::Path::new(&path), description)
+    let report = engine
+        .export(std::path::Path::new(&path), description)
         .await
         .map_err(|e| e.to_string())?;
 
@@ -238,7 +256,8 @@ pub async fn titan_validate_archive(path: String) -> Result<ArchiveValidationDto
     use super::backup::BackupEngine;
 
     let engine = BackupEngine::new();
-    let validation = engine.validate_archive(std::path::Path::new(&path))
+    let validation = engine
+        .validate_archive(std::path::Path::new(&path))
         .await
         .map_err(|e| e.to_string())?;
 
@@ -279,7 +298,8 @@ pub async fn titan_import_data(path: String, mode: String) -> Result<ImportRepor
     };
 
     let mut engine = BackupEngine::new();
-    let report = engine.import(std::path::Path::new(&path), import_mode)
+    let report = engine
+        .import(std::path::Path::new(&path), import_mode)
         .await
         .map_err(|e| e.to_string())?;
 
@@ -334,21 +354,29 @@ pub async fn titan_get_memory_health() -> Result<MemoryHealthDto, String> {
         snapshot_count: health.snapshot_count,
         estimated_recovery_time_ms: health.estimated_recovery_time_ms,
         last_backup_at: health.last_backup_at,
-        issues: health.issues.iter().map(|i| HealthIssueDto {
-            id: i.id.clone(),
-            severity: format!("{:?}", i.severity),
-            category: format!("{:?}", i.category),
-            message: i.message.clone(),
-            auto_fixable: i.auto_fixable,
-        }).collect(),
+        issues: health
+            .issues
+            .iter()
+            .map(|i| HealthIssueDto {
+                id: i.id.clone(),
+                severity: format!("{:?}", i.severity),
+                category: format!("{:?}", i.category),
+                message: i.message.clone(),
+                auto_fixable: i.auto_fixable,
+            })
+            .collect(),
         health_score: health.health_score,
-        recommendations: health.recommendations.iter().map(|r| RecommendationDto {
-            id: r.id.clone(),
-            priority: r.priority,
-            message: r.message.clone(),
-            action: r.action.clone(),
-            command: r.command.clone(),
-        }).collect(),
+        recommendations: health
+            .recommendations
+            .iter()
+            .map(|r| RecommendationDto {
+                id: r.id.clone(),
+                priority: r.priority,
+                message: r.message.clone(),
+                action: r.action.clone(),
+                command: r.command.clone(),
+            })
+            .collect(),
     })
 }
 
@@ -403,12 +431,16 @@ pub async fn titan_run_self_healing() -> Result<SelfHealingReportDto, String> {
         issues_remaining: report.issues_remaining,
         duration_ms: report.duration_ms,
         success: report.success,
-        actions: report.actions.iter().map(|a| HealingActionDto {
-            action_type: a.action_type.clone(),
-            description: a.description.clone(),
-            success: a.success,
-            details: a.details.clone(),
-        }).collect(),
+        actions: report
+            .actions
+            .iter()
+            .map(|a| HealingActionDto {
+                action_type: a.action_type.clone(),
+                description: a.description.clone(),
+                success: a.success,
+                details: a.details.clone(),
+            })
+            .collect(),
     })
 }
 
@@ -433,13 +465,20 @@ pub struct HealingActionDto {
 
 /// Valider les invariants d'un état
 #[tauri::command]
-pub fn titan_validate_invariants(state_json: String, strict: bool) -> Result<ValidationResultDto, String> {
+pub fn titan_validate_invariants(
+    state_json: String,
+    strict: bool,
+) -> Result<ValidationResultDto, String> {
     use super::invariants::{assert_singularity_state_invariants, ValidationMode};
 
-    let state: serde_json::Value = serde_json::from_str(&state_json)
-        .map_err(|e| format!("JSON parse error: {}", e))?;
+    let state: serde_json::Value =
+        serde_json::from_str(&state_json).map_err(|e| format!("JSON parse error: {}", e))?;
 
-    let mode = if strict { ValidationMode::Strict } else { ValidationMode::Lenient };
+    let mode = if strict {
+        ValidationMode::Strict
+    } else {
+        ValidationMode::Lenient
+    };
     let result = assert_singularity_state_invariants(&state, mode);
 
     Ok(ValidationResultDto {
@@ -474,8 +513,7 @@ pub async fn titan_reset_module(module: String) -> Result<String, String> {
 pub async fn titan_dump_raw_state() -> Result<String, String> {
     let engine = PERSISTENCE_ENGINE.read().await;
     match engine.load_latest_state().await {
-        Ok(Some(state)) => serde_json::to_string_pretty(&state)
-            .map_err(|e| e.to_string()),
+        Ok(Some(state)) => serde_json::to_string_pretty(&state).map_err(|e| e.to_string()),
         Ok(None) => Ok("{}".to_string()),
         Err(e) => Err(e.to_string()),
     }
@@ -488,7 +526,10 @@ pub async fn titan_run_full_integrity_check() -> Result<FullIntegrityReportDto, 
 
     // 1. Check DB integrity
     let mut persistence = PERSISTENCE_ENGINE.write().await;
-    let db_report = persistence.check_integrity().await.map_err(|e| e.to_string())?;
+    let db_report = persistence
+        .check_integrity()
+        .await
+        .map_err(|e| e.to_string())?;
 
     // 2. Check memory health
     let mut health_engine = MEMORY_HEALTH_ENGINE.write().await;
@@ -532,7 +573,9 @@ pub async fn titan_memory_doctor_diagnose() -> Result<super::memory_doctor::Doct
 pub async fn titan_memory_doctor_summary() -> Result<String, String> {
     let mut doctor = super::memory_doctor::MemoryDoctor::new();
     let report = doctor.diagnose().await;
-    Ok(super::memory_doctor::MemoryDoctor::generate_summary(&report))
+    Ok(super::memory_doctor::MemoryDoctor::generate_summary(
+        &report,
+    ))
 }
 
 /// Lancer le Self-Healing via Memory Doctor

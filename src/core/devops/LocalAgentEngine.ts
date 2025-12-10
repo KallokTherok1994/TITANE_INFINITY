@@ -89,7 +89,10 @@ class LocalAgentEngine {
     try {
       const projectRoot = process.cwd();
       this.currentProject = await this.analyzeProject(projectRoot);
-      console.log('[LocalAgentEngine] Current project analyzed:', this.currentProject.project_type);
+      console.log(
+        '[LocalAgentEngine] Current project analyzed:',
+        this.currentProject.project_type
+      );
     } catch (error) {
       console.warn('[LocalAgentEngine] Could not analyze current project:', error);
     }
@@ -162,13 +165,19 @@ class LocalAgentEngine {
 
     // Détecter technologies
     analysis.detected_technologies = await this.detectTechnologies(projectRoot);
-    console.log('[LocalAgentEngine] Technologies:', analysis.detected_technologies.map(t => t.name));
+    console.log(
+      '[LocalAgentEngine] Technologies:',
+      analysis.detected_technologies.map(t => t.name)
+    );
 
     // Analyser dépendances
     analysis.dependencies = await this.analyzeDependencies(projectRoot);
 
     // Détecter configuration build
-    analysis.build_config = await this.detectBuildConfig(projectRoot, analysis.project_type);
+    analysis.build_config = await this.detectBuildConfig(
+      projectRoot,
+      analysis.project_type
+    );
 
     // Détecter configuration test
     analysis.test_config = await this.detectTestConfig(projectRoot);
@@ -304,7 +313,10 @@ class LocalAgentEngine {
     return info;
   }
 
-  private async detectBuildConfig(projectRoot: string, projectType: ProjectType): Promise<BuildConfig> {
+  private async detectBuildConfig(
+    projectRoot: string,
+    projectType: ProjectType
+  ): Promise<BuildConfig> {
     const config: BuildConfig = {
       build_tool: 'npm',
       build_command: 'npm run build',
@@ -379,7 +391,9 @@ class LocalAgentEngine {
     return undefined;
   }
 
-  private async detectDeploymentConfig(projectRoot: string): Promise<DeploymentConfig | undefined> {
+  private async detectDeploymentConfig(
+    projectRoot: string
+  ): Promise<DeploymentConfig | undefined> {
     try {
       const tauriConfigPath = `${projectRoot}/src-tauri/tauri.conf.json`;
       if (await this.fileExists(tauriConfigPath)) {
@@ -414,7 +428,9 @@ class LocalAgentEngine {
 
     // Issue: Security vulnerabilities
     if (analysis.dependencies.security_vulnerabilities.length > 0) {
-      const critical = analysis.dependencies.security_vulnerabilities.filter(v => v.severity === 'critical');
+      const critical = analysis.dependencies.security_vulnerabilities.filter(
+        v => v.severity === 'critical'
+      );
       issues.push({
         id: this.generateId(),
         type: 'security',
@@ -442,7 +458,9 @@ class LocalAgentEngine {
     return issues;
   }
 
-  private async generateRecommendations(analysis: ProjectAnalysis): Promise<Recommendation[]> {
+  private async generateRecommendations(
+    analysis: ProjectAnalysis
+  ): Promise<Recommendation[]> {
     const recommendations: Recommendation[] = [];
 
     // Recommandation: Performance
@@ -757,7 +775,10 @@ class LocalAgentEngine {
       pipelineStages.push({
         name: stageName,
         commands: action.commands || [],
-        dependencies: pipelineStages.length > 0 ? [pipelineStages[pipelineStages.length - 1].name] : [],
+        dependencies:
+          pipelineStages.length > 0
+            ? [pipelineStages[pipelineStages.length - 1].name]
+            : [],
         allow_failure: stageName === 'deploy',
         timeout: '10 minutes',
       });
@@ -997,7 +1018,9 @@ class LocalAgentEngine {
       enabled: this.enabled,
       current_project: this.currentProject?.project_type || 'none',
       health_score: this.currentProject?.health_score || 0,
-      active_workflows: Array.from(this.workflows.values()).filter(w => w.status === 'active').length,
+      active_workflows: Array.from(this.workflows.values()).filter(
+        w => w.status === 'active'
+      ).length,
       total_workflows: this.workflows.size,
       cached_projects: this.projectCache.size,
     };

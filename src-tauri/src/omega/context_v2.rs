@@ -21,31 +21,31 @@ pub struct SystemHealthSnapshot {
 pub struct OmegaContextV2 {
     /// Input (multimodal)
     pub input: OmegaInput,
-    
+
     /// STM context (exact matches)
     pub memory_stm: Vec<MemoryItem>,
-    
+
     /// MTM context (exact matches)
     pub memory_mtm: Vec<MemoryItem>,
-    
+
     /// LTM context (exact matches)
     pub memory_ltm: Vec<MemoryItem>,
-    
+
     /// Vector search results (semantic matches)
     pub memory_vector: Vec<VectorSearchResult>,
-    
+
     /// System health snapshot
     pub system_state: Option<SystemHealthSnapshot>,
-    
+
     /// Engine states
     pub engine_states: HashMap<String, EngineState>,
-    
+
     /// Metadata
     pub metadata: OmegaMetadata,
-    
+
     /// Pipeline stage
     pub current_stage: String,
-    
+
     /// Accumulated results
     pub accumulated_results: Vec<StageResult>,
 }
@@ -55,7 +55,7 @@ pub struct OmegaContextV2 {
 pub enum OmegaInput {
     /// Text input
     Text(String),
-    
+
     /// Voice input (transcribed + audio metadata)
     Voice {
         transcript: String,
@@ -63,13 +63,13 @@ pub enum OmegaInput {
         duration_ms: u64,
         language: String,
     },
-    
+
     /// System command
     Command(OmegaCommand),
-    
+
     /// System event (internal signal)
     SystemEvent(SystemSignal),
-    
+
     /// Hybrid (multiple inputs)
     Hybrid {
         text: Option<String>,
@@ -86,17 +86,15 @@ impl OmegaInput {
             OmegaInput::Command(cmd) => format!("Command: {:?}", cmd),
             OmegaInput::SystemEvent(event) => format!("Event: {:?}", event),
             OmegaInput::Hybrid { text, voice, .. } => {
-                text.clone()
-                    .or_else(|| voice.clone())
-                    .unwrap_or_default()
+                text.clone().or_else(|| voice.clone()).unwrap_or_default()
             }
         }
     }
-    
+
     pub fn is_voice(&self) -> bool {
         matches!(self, OmegaInput::Voice { .. })
     }
-    
+
     pub fn is_command(&self) -> bool {
         matches!(self, OmegaInput::Command(_))
     }
@@ -106,19 +104,30 @@ impl OmegaInput {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OmegaCommand {
     /// Memory operations
-    MemoryRecall { query: String, limit: usize },
-    MemoryStore { content: String },
+    MemoryRecall {
+        query: String,
+        limit: usize,
+    },
+    MemoryStore {
+        content: String,
+    },
     MemoryCluster,
-    MemoryCompress { threshold: f32 },
-    
+    MemoryCompress {
+        threshold: f32,
+    },
+
     /// Engine operations
-    EngineReset { engine_id: String },
-    EngineStatus { engine_id: String },
-    
+    EngineReset {
+        engine_id: String,
+    },
+    EngineStatus {
+        engine_id: String,
+    },
+
     /// System operations
     SystemDiagnostics,
     SystemHealthCheck,
-    
+
     /// Pipeline operations
     PipelineDebug,
     PipelineProfile,
@@ -205,9 +214,15 @@ impl OmegaContextV2 {
             accumulated_results: Vec::new(),
         }
     }
-    
+
     /// Add stage result
-    pub fn add_result(&mut self, stage: String, success: bool, duration_ms: u64, data: serde_json::Value) {
+    pub fn add_result(
+        &mut self,
+        stage: String,
+        success: bool,
+        duration_ms: u64,
+        data: serde_json::Value,
+    ) {
         self.accumulated_results.push(StageResult {
             stage,
             success,
@@ -215,22 +230,25 @@ impl OmegaContextV2 {
             data,
         });
     }
-    
+
     /// Get total memory context size
     pub fn total_memory_entries(&self) -> usize {
-        self.memory_stm.len() + self.memory_mtm.len() + self.memory_ltm.len() + self.memory_vector.len()
+        self.memory_stm.len()
+            + self.memory_mtm.len()
+            + self.memory_ltm.len()
+            + self.memory_vector.len()
     }
-    
+
     /// Get input as text
     pub fn input_text(&self) -> String {
         self.input.as_text()
     }
-    
+
     /// Check if high priority
     pub fn is_high_priority(&self) -> bool {
         self.metadata.priority >= 8
     }
-    
+
     /// Check if system is under pressure
     pub fn is_system_under_pressure(&self) -> bool {
         if let Some(state) = &self.system_state {
@@ -245,16 +263,16 @@ impl OmegaContextV2 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_context_creation() {
         let input = OmegaInput::Text("Hello world".to_string());
         let ctx = OmegaContextV2::new(input);
-        
+
         assert_eq!(ctx.input_text(), "Hello world");
         assert_eq!(ctx.total_memory_entries(), 0);
     }
-    
+
     #[test]
     fn test_multimodal_input() {
         let voice_input = OmegaInput::Voice {
@@ -263,7 +281,7 @@ mod tests {
             duration_ms: 1500,
             language: "en".to_string(),
         };
-        
+
         let ctx = OmegaContextV2::new(voice_input);
         assert_eq!(ctx.input_text(), "Test voice");
         assert!(ctx.input.is_voice());

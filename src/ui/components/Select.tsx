@@ -51,18 +51,21 @@ export const Select = ({
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const selectRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
-  
+
   const isControlled = controlledValue !== undefined;
   const value = isControlled ? controlledValue : internalValue;
 
   const selectedOption = options.find(opt => opt.value === value);
 
-  const filteredOptions = searchable && searchQuery
-    ? options.filter(opt => opt.label.toLowerCase().includes(searchQuery.toLowerCase()))
-    : options;
+  const filteredOptions =
+    searchable && searchQuery
+      ? options.filter(opt => opt.label.toLowerCase().includes(searchQuery.toLowerCase()))
+      : options;
 
   const handleSelect = (optionValue: string) => {
-    if (disabled) {return;}
+    if (disabled) {
+      return;
+    }
 
     if (!isControlled) {
       setInternalValue(optionValue);
@@ -75,7 +78,9 @@ export const Select = ({
   };
 
   const handleToggle = () => {
-    if (disabled) {return;}
+    if (disabled) {
+      return;
+    }
     setIsOpen(!isOpen);
     if (!isOpen && searchable) {
       setTimeout(() => searchInputRef.current?.focus(), 0);
@@ -83,7 +88,9 @@ export const Select = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (disabled) {return;}
+    if (disabled) {
+      return;
+    }
 
     switch (e.key) {
       case 'ArrowDown':
@@ -145,7 +152,9 @@ export const Select = ({
     error && 'select--error',
     isOpen && 'select--open',
     className,
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <div className={classes} ref={selectRef}>
@@ -161,11 +170,25 @@ export const Select = ({
         aria-expanded={isOpen}
         aria-disabled={disabled}
       >
-        <span className={`select__value ${!selectedOption ? 'select__value--placeholder' : ''}`}>
+        <span
+          className={`select__value ${!selectedOption ? 'select__value--placeholder' : ''}`}
+        >
           {selectedOption?.label || placeholder}
         </span>
-        <svg className="select__arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
-          <path d="M1 1L6 6L11 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <svg
+          className="select__arrow"
+          width="12"
+          height="8"
+          viewBox="0 0 12 8"
+          fill="none"
+        >
+          <path
+            d="M1 1L6 6L11 1"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
       </div>
 
@@ -179,8 +202,8 @@ export const Select = ({
                 className="select__search-input"
                 placeholder="Rechercher..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onClick={(e) => e.stopPropagation()}
+                onChange={e => setSearchQuery(e.target.value)}
+                onClick={e => e.stopPropagation()}
               />
             </div>
           )}
@@ -201,8 +224,20 @@ export const Select = ({
                 >
                   {option.label}
                   {option.value === value && (
-                    <svg className="select__check" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <path d="M13 4L6 11L3 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <svg
+                      className="select__check"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                    >
+                      <path
+                        d="M13 4L6 11L3 8"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                   )}
                 </div>

@@ -141,7 +141,10 @@ impl CognitiveCompressionEngine {
     }
 
     /// Compresser des messages/conversations anciennes
-    pub fn compress_messages(&mut self, messages: &[Message]) -> Result<CompressionReport, CompressionError> {
+    pub fn compress_messages(
+        &mut self,
+        messages: &[Message],
+    ) -> Result<CompressionReport, CompressionError> {
         let start = std::time::Instant::now();
         let now = chrono::Utc::now().timestamp_millis() as u64;
         let threshold_ms = now - (self.config.age_threshold_days * 24 * 60 * 60 * 1000);
@@ -197,14 +200,17 @@ impl CognitiveCompressionEngine {
                     self.summaries.push(summary);
                 }
                 Err(e) => {
-                    report.errors.push(format!("Groupe {}: {}", period_key_clone, e));
+                    report
+                        .errors
+                        .push(format!("Groupe {}: {}", period_key_clone, e));
                 }
             }
         }
 
         // Calculer le ratio
         if report.bytes_before > 0 {
-            report.compression_ratio = 1.0 - (report.bytes_after as f32 / report.bytes_before as f32);
+            report.compression_ratio =
+                1.0 - (report.bytes_after as f32 / report.bytes_before as f32);
         }
 
         report.duration_ms = start.elapsed().as_millis() as u64;
@@ -223,7 +229,10 @@ impl CognitiveCompressionEngine {
     }
 
     /// Compresser des événements du journal
-    pub fn compress_events(&mut self, events: &[super::types::TitanEvent]) -> Result<CompressionReport, CompressionError> {
+    pub fn compress_events(
+        &mut self,
+        events: &[super::types::TitanEvent],
+    ) -> Result<CompressionReport, CompressionError> {
         let start = std::time::Instant::now();
         let now = chrono::Utc::now().timestamp_millis() as u64;
         let threshold_ms = now - (self.config.age_threshold_days * 24 * 60 * 60 * 1000);
@@ -304,7 +313,8 @@ impl CognitiveCompressionEngine {
         }
 
         if report.bytes_before > 0 {
-            report.compression_ratio = 1.0 - (report.bytes_after as f32 / report.bytes_before as f32);
+            report.compression_ratio =
+                1.0 - (report.bytes_after as f32 / report.bytes_before as f32);
         }
 
         report.duration_ms = start.elapsed().as_millis() as u64;
@@ -334,7 +344,8 @@ impl CognitiveCompressionEngine {
         &self,
         events: &[&'a super::types::TitanEvent],
     ) -> HashMap<(String, String), Vec<&'a super::types::TitanEvent>> {
-        let mut groups: HashMap<(String, String), Vec<&'a super::types::TitanEvent>> = HashMap::new();
+        let mut groups: HashMap<(String, String), Vec<&'a super::types::TitanEvent>> =
+            HashMap::new();
 
         for event in events {
             let date = chrono::DateTime::from_timestamp_millis(event.timestamp as i64)
@@ -349,7 +360,11 @@ impl CognitiveCompressionEngine {
     }
 
     /// Créer un résumé depuis un groupe de messages
-    fn create_summary(&self, period: String, messages: &[&Message]) -> Result<CognitiveSummary, CompressionError> {
+    fn create_summary(
+        &self,
+        period: String,
+        messages: &[&Message],
+    ) -> Result<CognitiveSummary, CompressionError> {
         let now = chrono::Utc::now().timestamp_millis() as u64;
 
         // Extraire les thèmes (mots les plus fréquents)
@@ -413,7 +428,7 @@ impl CognitiveCompressionEngine {
 
     /// Calculer un hash SHA256 (premiers 16 caractères hex)
     fn compute_hash(data: &str) -> String {
-        use sha2::{Sha256, Digest};
+        use sha2::{Digest, Sha256};
         let mut hasher = Sha256::new();
         hasher.update(data.as_bytes());
         format!("{:x}", hasher.finalize())[..16].to_string()
@@ -431,8 +446,8 @@ impl CognitiveCompressionEngine {
 
     /// Nettoyer les anciens résumés (plus vieux que X jours)
     pub fn cleanup_old_summaries(&mut self, max_age_days: u64) {
-        let threshold = chrono::Utc::now().timestamp_millis() as u64
-            - (max_age_days * 24 * 60 * 60 * 1000);
+        let threshold =
+            chrono::Utc::now().timestamp_millis() as u64 - (max_age_days * 24 * 60 * 60 * 1000);
 
         let before = self.summaries.len();
         self.summaries.retain(|s| s.created_at > threshold);
@@ -491,8 +506,8 @@ mod tests {
     use super::*;
 
     fn create_test_messages(count: usize, age_days: u64) -> Vec<Message> {
-        let base_timestamp = chrono::Utc::now().timestamp_millis() as u64
-            - (age_days * 24 * 60 * 60 * 1000);
+        let base_timestamp =
+            chrono::Utc::now().timestamp_millis() as u64 - (age_days * 24 * 60 * 60 * 1000);
 
         (0..count)
             .map(|i| Message {

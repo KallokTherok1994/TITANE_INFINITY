@@ -1,7 +1,7 @@
 /**
  * TITANE∞ vΩ — Shared Health Monitor
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
- * 
+ *
  * Unified health monitoring for all strategies
  */
 
@@ -20,7 +20,7 @@ export class HealthMonitor implements IHealthMonitor {
    */
   async checkHealth(): Promise<HealthCheckResult> {
     const cached = this.healthCache.get('global');
-    
+
     if (cached && Date.now() - cached.timestamp < this.cacheTimeout) {
       return cached;
     }
@@ -30,7 +30,7 @@ export class HealthMonitor implements IHealthMonitor {
       status: 'healthy',
       score: 95,
       message: 'System healthy',
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     this.healthCache.set('global', result);
@@ -65,13 +65,13 @@ export class HealthMonitor implements IHealthMonitor {
    */
   getAggregatedHealth(): HealthCheckResult {
     const allHealth = Array.from(this.healthCache.values());
-    
+
     if (allHealth.length === 0) {
       return {
         status: 'unknown',
         score: 0,
         message: 'No health data',
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
     }
 
@@ -86,9 +86,9 @@ export class HealthMonitor implements IHealthMonitor {
         strategiesCount: allHealth.length,
         healthyCount: allHealth.filter(h => h.status === 'healthy').length,
         degradedCount: allHealth.filter(h => h.status === 'degraded').length,
-        criticalCount: allHealth.filter(h => h.status === 'critical').length
+        criticalCount: allHealth.filter(h => h.status === 'critical').length,
       },
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
   }
 

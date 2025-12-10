@@ -4,7 +4,6 @@
  * Neutralisation et reconstruction des réponses API externes
  * ═══════════════════════════════════════════════════════════════════
  */
-
 use crate::ai::AIResponse;
 
 /// Neutraliseur d'API

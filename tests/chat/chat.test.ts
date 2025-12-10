@@ -162,9 +162,15 @@ describe('Chat IA v18 — Architecture Hybride', () => {
         vi.spyOn(geminiProvider, 'isAvailable').mockResolvedValue(true);
         vi.spyOn(ollamaProvider, 'isAvailable').mockResolvedValue(true);
 
-        vi.spyOn(tauriChatProvider, 'generate').mockRejectedValue(new Error('tauri offline'));
-        vi.spyOn(geminiProvider, 'generate').mockRejectedValue(new Error('gemini offline'));
-        vi.spyOn(ollamaProvider, 'generate').mockRejectedValue(new Error('ollama offline'));
+        vi.spyOn(tauriChatProvider, 'generate').mockRejectedValue(
+          new Error('tauri offline')
+        );
+        vi.spyOn(geminiProvider, 'generate').mockRejectedValue(
+          new Error('gemini offline')
+        );
+        vi.spyOn(ollamaProvider, 'generate').mockRejectedValue(
+          new Error('ollama offline')
+        );
         vi.spyOn(titaneLocalProvider, 'generate').mockResolvedValue({
           content: 'Response from TITANE Local',
           provider: 'titane-local',
@@ -203,7 +209,11 @@ describe('Chat IA v18 — Architecture Hybride', () => {
 
     it('should return provider status with local available', async () => {
       const mockStatus = [
-        { provider: 'gemini', available: false, error: 'API key not configured (mock mode)' },
+        {
+          provider: 'gemini',
+          available: false,
+          error: 'API key not configured (mock mode)',
+        },
         { provider: 'ollama', available: false, error: 'Ollama not running (mock mode)' },
         { provider: 'local', available: true, latency_ms: 50 },
       ];
@@ -226,7 +236,7 @@ describe('Chat IA v18 — Architecture Hybride', () => {
       const maliciousMessage = '<script>alert("xss")</script>Hello';
 
       vi.spyOn(titaneLocalProvider, 'isAvailable').mockResolvedValue(true);
-      vi.spyOn(titaneLocalProvider, 'generate').mockImplementation(async (msg) => ({
+      vi.spyOn(titaneLocalProvider, 'generate').mockImplementation(async msg => ({
         content: `Echo: ${msg}`,
         provider: 'titane-local',
         timestamp: Date.now(),
@@ -243,7 +253,7 @@ describe('Chat IA v18 — Architecture Hybride', () => {
       const longMessage = 'A'.repeat(20000);
 
       vi.spyOn(titaneLocalProvider, 'isAvailable').mockResolvedValue(true);
-      vi.spyOn(titaneLocalProvider, 'generate').mockImplementation(async (msg) => {
+      vi.spyOn(titaneLocalProvider, 'generate').mockImplementation(async msg => {
         // Verify message was truncated to 10k chars
         expect(msg.length).toBeLessThanOrEqual(10000);
         return {
@@ -260,9 +270,13 @@ describe('Chat IA v18 — Architecture Hybride', () => {
 
   describe('Error Handling', () => {
     it('should handle provider errors gracefully', async () => {
-      vi.spyOn(tauriChatProvider, 'isAvailable').mockRejectedValue(new Error('Backend error'));
+      vi.spyOn(tauriChatProvider, 'isAvailable').mockRejectedValue(
+        new Error('Backend error')
+      );
       vi.spyOn(geminiProvider, 'isAvailable').mockRejectedValue(new Error('API error'));
-      vi.spyOn(ollamaProvider, 'isAvailable').mockRejectedValue(new Error('Connection error'));
+      vi.spyOn(ollamaProvider, 'isAvailable').mockRejectedValue(
+        new Error('Connection error')
+      );
       vi.spyOn(titaneLocalProvider, 'isAvailable').mockResolvedValue(true);
       vi.spyOn(titaneLocalProvider, 'generate').mockResolvedValue({
         content: 'Fallback response',
@@ -279,10 +293,16 @@ describe('Chat IA v18 — Architecture Hybride', () => {
 
     it('should return emergency fallback if all providers fail', async () => {
       // All providers fail completely
-      vi.spyOn(tauriChatProvider, 'isAvailable').mockRejectedValue(new Error('Backend error'));
+      vi.spyOn(tauriChatProvider, 'isAvailable').mockRejectedValue(
+        new Error('Backend error')
+      );
       vi.spyOn(geminiProvider, 'isAvailable').mockRejectedValue(new Error('API error'));
-      vi.spyOn(ollamaProvider, 'isAvailable').mockRejectedValue(new Error('Connection error'));
-      vi.spyOn(titaneLocalProvider, 'isAvailable').mockRejectedValue(new Error('Local error'));
+      vi.spyOn(ollamaProvider, 'isAvailable').mockRejectedValue(
+        new Error('Connection error')
+      );
+      vi.spyOn(titaneLocalProvider, 'isAvailable').mockRejectedValue(
+        new Error('Local error')
+      );
 
       const response = await aiOrchestrator.generate('test');
 

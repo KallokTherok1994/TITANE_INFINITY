@@ -214,7 +214,9 @@ export async function handleFixHandler(handlerName: string): Promise<DevSudoResu
 
 2) 🔍 DIAGNOSTIC
 
-   ${['auto_heal_scan', 'hyper_think'].includes(handlerName) ? `
+   ${
+     ['auto_heal_scan', 'hyper_think'].includes(handlerName)
+       ? `
    Handler existant détecté:
 
    Signature actuelle:
@@ -226,7 +228,8 @@ export async function handleFixHandler(handlerName: string): Promise<DevSudoResu
    - ✅ Result type correct
    - ⚠️ Vérifier error propagation
    - ⚠️ Vérifier State management
-   ` : `
+   `
+       : `
    Handler non trouvé — Création nécessaire
 
    Template recommandé:
@@ -234,7 +237,8 @@ export async function handleFixHandler(handlerName: string): Promise<DevSudoResu
    pub async fn ${handlerName}() -> Result<String, String> {
        Ok("Handler created".to_string())
    }
-   `}
+   `
+   }
 
 3) 🛠️ PATCH MINIMAL
 
@@ -556,7 +560,9 @@ Handlers: ${apiName.toLowerCase()}_init, ${apiName.toLowerCase()}_execute, ${api
 /**
  * 📋 WHITELIST COMMAND — Ajouter une commande à la whitelist Tauri
  */
-export async function handleWhitelistCommand(commandName: string): Promise<DevSudoResult> {
+export async function handleWhitelistCommand(
+  commandName: string
+): Promise<DevSudoResult> {
   return {
     handled: true,
     success: true,

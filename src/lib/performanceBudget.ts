@@ -103,7 +103,7 @@ export class PerformanceMonitor {
     if (!('PerformanceObserver' in window)) return;
 
     try {
-      const observer = new PerformanceObserver((entryList) => {
+      const observer = new PerformanceObserver(entryList => {
         const entries = entryList.getEntries();
         const lastEntry = entries[entries.length - 1] as PerformanceEntry & {
           renderTime: number;
@@ -126,7 +126,7 @@ export class PerformanceMonitor {
     if (!('PerformanceObserver' in window)) return;
 
     try {
-      const observer = new PerformanceObserver((entryList) => {
+      const observer = new PerformanceObserver(entryList => {
         const entries = entryList.getEntries();
         const firstEntry = entries[0] as PerformanceEventTiming;
 
@@ -148,7 +148,7 @@ export class PerformanceMonitor {
     try {
       let clsScore = 0;
 
-      const observer = new PerformanceObserver((entryList) => {
+      const observer = new PerformanceObserver(entryList => {
         for (const entry of entryList.getEntries()) {
           const layoutShift = entry as LayoutShiftEntry;
           if (!layoutShift.hadRecentInput) {
@@ -172,9 +172,9 @@ export class PerformanceMonitor {
     if (!('PerformanceObserver' in window)) return;
 
     try {
-      const observer = new PerformanceObserver((entryList) => {
+      const observer = new PerformanceObserver(entryList => {
         const entries = entryList.getEntries();
-        const fcpEntry = entries.find((entry) => entry.name === 'first-contentful-paint');
+        const fcpEntry = entries.find(entry => entry.name === 'first-contentful-paint');
 
         if (fcpEntry) {
           this.vitals.FCP = fcpEntry.startTime;
@@ -210,13 +210,14 @@ export class PerformanceMonitor {
     const violations: PerformanceBudgetViolation[] = [];
 
     // Check each vital
-    const vitalChecks: Array<{ metric: keyof PerformanceBudget; value: number | null }> = [
-      { metric: 'LCP', value: this.vitals.LCP },
-      { metric: 'FID', value: this.vitals.FID },
-      { metric: 'CLS', value: this.vitals.CLS },
-      { metric: 'FCP', value: this.vitals.FCP },
-      { metric: 'TTFB', value: this.vitals.TTFB },
-    ];
+    const vitalChecks: Array<{ metric: keyof PerformanceBudget; value: number | null }> =
+      [
+        { metric: 'LCP', value: this.vitals.LCP },
+        { metric: 'FID', value: this.vitals.FID },
+        { metric: 'CLS', value: this.vitals.CLS },
+        { metric: 'FCP', value: this.vitals.FCP },
+        { metric: 'TTFB', value: this.vitals.TTFB },
+      ];
 
     for (const check of vitalChecks) {
       if (check.value === null) continue;
@@ -416,7 +417,7 @@ export class PerformanceMonitor {
   static subscribe(listener: (report: PerformanceReport) => void): () => void {
     this.listeners.push(listener);
     return () => {
-      this.listeners = this.listeners.filter((l) => l !== listener);
+      this.listeners = this.listeners.filter(l => l !== listener);
     };
   }
 
@@ -424,7 +425,7 @@ export class PerformanceMonitor {
    * Notifier listeners
    */
   private static notifyListeners(report: PerformanceReport): void {
-    this.listeners.forEach((listener) => listener(report));
+    this.listeners.forEach(listener => listener(report));
   }
 }
 
@@ -448,7 +449,9 @@ export class BundleSizeMonitor {
       return { total: 0, js: 0, css: 0, images: 0, fonts: 0, other: 0 };
     }
 
-    const resources = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
+    const resources = performance.getEntriesByType(
+      'resource'
+    ) as PerformanceResourceTiming[];
 
     const sizes = {
       total: 0,
@@ -493,7 +496,9 @@ export class BundleSizeMonitor {
       return [];
     }
 
-    const resources = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
+    const resources = performance.getEntriesByType(
+      'resource'
+    ) as PerformanceResourceTiming[];
     const threshold = thresholdKB * 1024;
     const large: Array<{ url: string; size: number; type: string }> = [];
 

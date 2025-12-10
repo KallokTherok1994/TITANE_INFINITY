@@ -32,13 +32,20 @@ type UIThemeAction =
   | { type: 'SET_DIRTY'; isDirty: boolean }
   | { type: 'SET_PREVIOUS'; previousTokens: UIThemeTokens | null }
   | { type: 'UPDATE_TOKEN'; category: keyof UIThemeTokens; key: string; value: unknown }
-  | { type: 'UPDATE_CATEGORY'; category: keyof UIThemeTokens; values: Partial<UIThemeTokens[keyof UIThemeTokens]> };
+  | {
+      type: 'UPDATE_CATEGORY';
+      category: keyof UIThemeTokens;
+      values: Partial<UIThemeTokens[keyof UIThemeTokens]>;
+    };
 
 // ============================================================================
 // REDUCER
 // ============================================================================
 
-function uiThemeReducer(state: UIThemeContextState, action: UIThemeAction): UIThemeContextState {
+function uiThemeReducer(
+  state: UIThemeContextState,
+  action: UIThemeAction
+): UIThemeContextState {
   switch (action.type) {
     case 'SET_TOKENS':
       return { ...state, tokens: action.tokens, isLoading: false, error: null };
@@ -52,7 +59,12 @@ function uiThemeReducer(state: UIThemeContextState, action: UIThemeAction): UITh
       return { ...state, previousTokens: action.previousTokens };
     case 'UPDATE_TOKEN': {
       const { category, key, value } = action;
-      if (category === 'version' || category === 'name' || category === 'description' || category === 'lastModified') {
+      if (
+        category === 'version' ||
+        category === 'name' ||
+        category === 'description' ||
+        category === 'lastModified'
+      ) {
         return {
           ...state,
           tokens: { ...state.tokens, [category]: value as string },
@@ -307,7 +319,16 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
       undoChanges,
       applyTokensToDOM,
     }),
-    [state, updateToken, updateCategory, saveTokens, reloadTokens, resetToDefaults, undoChanges, applyTokensToDOM]
+    [
+      state,
+      updateToken,
+      updateCategory,
+      saveTokens,
+      reloadTokens,
+      resetToDefaults,
+      undoChanges,
+      applyTokensToDOM,
+    ]
   );
 
   return (

@@ -25,11 +25,11 @@ import { invoke } from '@tauri-apps/api/core';
 export type HybridMode = 'bubble' | 'console' | 'chat' | 'dev';
 
 export type IntentType =
-  | 'chat'           // Question/conversation
-  | 'dev'            // Commande développement
-  | 'heal'           // Correction/patch
-  | 'introspection'  // Analyse système
-  | 'diagnostic';    // Diagnostic technique
+  | 'chat' // Question/conversation
+  | 'dev' // Commande développement
+  | 'heal' // Correction/patch
+  | 'introspection' // Analyse système
+  | 'diagnostic'; // Diagnostic technique
 
 export interface HybridIntent {
   type: IntentType;
@@ -112,9 +112,29 @@ export class HybridEngine {
     const lower = message.toLowerCase();
 
     // Keywords patterns
-    const devKeywords = ['fix', 'patch', 'compile', 'build', 'rust', 'cargo', 'npm', 'install', 'run', 'test', 'debug'];
+    const devKeywords = [
+      'fix',
+      'patch',
+      'compile',
+      'build',
+      'rust',
+      'cargo',
+      'npm',
+      'install',
+      'run',
+      'test',
+      'debug',
+    ];
     const healKeywords = ['repair', 'heal', 'correct', 'bug', 'error', 'crash', 'broken'];
-    const introspectionKeywords = ['analyze', 'inspect', 'diagnostic', 'status', 'health', 'check', 'scan'];
+    const introspectionKeywords = [
+      'analyze',
+      'inspect',
+      'diagnostic',
+      'status',
+      'health',
+      'check',
+      'scan',
+    ];
     const diagnosticKeywords = ['logs', 'errors', 'warnings', 'issues', 'problems'];
 
     let intent: IntentType = 'chat';
@@ -284,7 +304,6 @@ export class HybridEngine {
       this.notifySubscribers();
 
       return execution;
-
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
 
@@ -416,7 +435,6 @@ export class HybridEngine {
       // Parse result (format: JSON array of diagnostics)
       const parsed = JSON.parse(result) as DevDiagnostic[];
       diagnostics.push(...parsed);
-
     } catch (error) {
       console.error('[HybridEngine] Diagnostic failed:', error);
     }

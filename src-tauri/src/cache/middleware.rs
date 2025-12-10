@@ -3,12 +3,12 @@
 //   P2-2: Intelligent caching integration with IPC
 // ═══════════════════════════════════════════════════════════════
 
-use super::{IntelligentCache, CacheKey, CacheConfig};
+use super::{CacheConfig, CacheKey, IntelligentCache};
+use once_cell::sync::Lazy;
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 use std::sync::Arc;
 use std::time::Duration;
-use once_cell::sync::Lazy;
 
 // ────────────────────────────────────────────────────────────────
 // Global Cache Instance
@@ -102,8 +102,8 @@ where
     let result = executor().await?;
 
     // Store in cache (serialize as JSON)
-    let json_value = serde_json::to_value(&result)
-        .map_err(|e| format!("Cache serialization failed: {}", e))?;
+    let json_value =
+        serde_json::to_value(&result).map_err(|e| format!("Cache serialization failed: {}", e))?;
 
     GLOBAL_CACHE.set(cache_key, json_value, ttl);
 
@@ -139,8 +139,8 @@ where
     let result = executor()?;
 
     // Store in cache
-    let json_value = serde_json::to_value(&result)
-        .map_err(|e| format!("Cache serialization failed: {}", e))?;
+    let json_value =
+        serde_json::to_value(&result).map_err(|e| format!("Cache serialization failed: {}", e))?;
 
     GLOBAL_CACHE.set(cache_key, json_value, ttl);
 

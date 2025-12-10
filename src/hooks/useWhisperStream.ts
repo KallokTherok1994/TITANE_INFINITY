@@ -122,13 +122,13 @@ export function useWhisperStream(config: WhisperStreamConfig = {}) {
       // Listen to partial events
       const unlistenPartial = await listen<TranscriptionEvent>(
         'whisper:partial',
-        (event) => {
+        event => {
           const { text, confidence } = event.payload;
 
           console.log('[useWhisperStream] 📝 Partial:', text);
 
           if (mountedRef.current) {
-            setState((prev) => ({
+            setState(prev => ({
               ...prev,
               partial: text,
               confidence,
@@ -142,36 +142,33 @@ export function useWhisperStream(config: WhisperStreamConfig = {}) {
       unlistenPartialRef.current = unlistenPartial;
 
       // Listen to final events
-      const unlistenFinal = await listen<TranscriptionEvent>(
-        'whisper:final',
-        (event) => {
-          const { text, confidence } = event.payload;
+      const unlistenFinal = await listen<TranscriptionEvent>('whisper:final', event => {
+        const { text, confidence } = event.payload;
 
-          console.log('[useWhisperStream] ✅ Final:', text);
+        console.log('[useWhisperStream] ✅ Final:', text);
 
-          if (mountedRef.current) {
-            setState((prev) => {
-              const newSegments = [...prev.segments, text];
-              return {
-                ...prev,
-                final: text,
-                segments: newSegments,
-                fullTranscript: newSegments.join(' '),
-                partial: '', // Clear partial
-                confidence,
-                error: null,
-              };
-            });
+        if (mountedRef.current) {
+          setState(prev => {
+            const newSegments = [...prev.segments, text];
+            return {
+              ...prev,
+              final: text,
+              segments: newSegments,
+              fullTranscript: newSegments.join(' '),
+              partial: '', // Clear partial
+              confidence,
+              error: null,
+            };
+          });
 
-            config.onFinal?.(text, confidence);
-          }
+          config.onFinal?.(text, confidence);
         }
-      );
+      });
       unlistenFinalRef.current = unlistenFinal;
 
       // Update streaming state
       if (mountedRef.current) {
-        setState((prev) => ({
+        setState(prev => ({
           ...prev,
           isStreaming: true,
           error: null,
@@ -185,7 +182,7 @@ export function useWhisperStream(config: WhisperStreamConfig = {}) {
       const errorMsg = error instanceof Error ? error.message : String(error);
 
       if (mountedRef.current) {
-        setState((prev) => ({
+        setState(prev => ({
           ...prev,
           isStreaming: false,
           error: errorMsg,
@@ -218,7 +215,7 @@ export function useWhisperStream(config: WhisperStreamConfig = {}) {
 
       // Update state
       if (mountedRef.current) {
-        setState((prev) => ({
+        setState(prev => ({
           ...prev,
           isStreaming: false,
           partial: '',
@@ -233,7 +230,7 @@ export function useWhisperStream(config: WhisperStreamConfig = {}) {
       const errorMsg = error instanceof Error ? error.message : String(error);
 
       if (mountedRef.current) {
-        setState((prev) => ({
+        setState(prev => ({
           ...prev,
           error: errorMsg,
         }));
@@ -245,7 +242,7 @@ export function useWhisperStream(config: WhisperStreamConfig = {}) {
    * Reset transcript
    */
   const reset = useCallback(() => {
-    setState((prev) => ({
+    setState(prev => ({
       ...prev,
       partial: '',
       final: '',
@@ -259,23 +256,26 @@ export function useWhisperStream(config: WhisperStreamConfig = {}) {
   /**
    * Send audio chunk to backend (for manual streaming)
    */
-  const sendChunk = useCallback(async (
-    data: Float32Array,
-    sampleRate: number,
-    hasSpeech: boolean,
-    vadConfidence: number
-  ) => {
-    try {
-      await invoke('send_audio_chunk', {
-        data: Array.from(data),
-        sampleRate,
-        hasSpeech,
-        vadConfidence,
-      });
-    } catch (error) {
-      console.error('[useWhisperStream] ❌ Send chunk error:', error);
-    }
-  }, []);
+  const sendChunk = useCallback(
+    async (
+      data: Float32Array,
+      sampleRate: number,
+      hasSpeech: boolean,
+      vadConfidence: number
+    ) => {
+      try {
+        await invoke('send_audio_chunk', {
+          data: Array.from(data),
+          sampleRate,
+          hasSpeech,
+          vadConfidence,
+        });
+      } catch (error) {
+        console.error('[useWhisperStream] ❌ Send chunk error:', error);
+      }
+    },
+    []
+  );
 
   /**
    * Cleanup on unmount

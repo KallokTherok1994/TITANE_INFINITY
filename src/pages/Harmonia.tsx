@@ -21,7 +21,11 @@ import './ModulePages.css';
 
 export const Harmonia = () => {
   const harmoniaData = useEngineSubscription('harmonia');
-  const { data: flows, loading } = harmoniaData as { data: HarmoniaFlows | null; loading: boolean };  if (loading) {
+  const { data: flows, loading } = harmoniaData as {
+    data: HarmoniaFlows | null;
+    loading: boolean;
+  };
+  if (loading) {
     return (
       <div className="module-page">
         <div className="module-page__loading">
@@ -43,7 +47,9 @@ export const Harmonia = () => {
           <span className="module-page__icon">⚖️</span>
           Harmonia — Équilibre des Flux
         </h1>
-        <p className="module-page__subtitle">Harmonisation et équilibre des processus système</p>
+        <p className="module-page__subtitle">
+          Harmonisation et équilibre des processus système
+        </p>
       </div>
 
       <div className="module-page__grid">
@@ -61,7 +67,9 @@ export const Harmonia = () => {
           value={balanceScore}
           unit="%"
           subtitle="Niveau d'harmonisation"
-          variant={balanceScore > 75 ? 'success' : balanceScore > 50 ? 'warning' : 'error'}
+          variant={
+            balanceScore > 75 ? 'success' : balanceScore > 50 ? 'warning' : 'error'
+          }
         />
 
         <ModuleCard

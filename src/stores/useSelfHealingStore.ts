@@ -184,22 +184,23 @@ export const useSelfHealingStore = create<SelfHealingStore>()(
 
         // ========== Initialization ==========
         initialize: async () => {
-          set((state) => {
+          set(state => {
             state.isLoading = true;
             state.error = null;
           });
 
           try {
-            set((state) => {
+            set(state => {
               state.isInitialized = true;
               state.isLoading = false;
             });
 
             await get().checkHealth();
           } catch (error) {
-            set((state) => {
+            set(state => {
               state.isLoading = false;
-              state.error = error instanceof Error ? error.message : 'Erreur d\'initialisation';
+              state.error =
+                error instanceof Error ? error.message : "Erreur d'initialisation";
             });
           }
         },
@@ -209,7 +210,7 @@ export const useSelfHealingStore = create<SelfHealingStore>()(
         },
 
         // ========== Issues ==========
-        addIssue: (issueData) => {
+        addIssue: issueData => {
           const id = `issue_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
 
           const newIssue: DetectedIssue = {
@@ -218,7 +219,7 @@ export const useSelfHealingStore = create<SelfHealingStore>()(
             detectedAt: Date.now(),
           };
 
-          set((state) => {
+          set(state => {
             state.issues.push(newIssue);
             state.stats.issuesDetected += 1;
           });
@@ -227,9 +228,9 @@ export const useSelfHealingStore = create<SelfHealingStore>()(
           return id;
         },
 
-        resolveIssue: (issueId) => {
-          set((state) => {
-            const issue = state.issues.find((i) => i.id === issueId);
+        resolveIssue: issueId => {
+          set(state => {
+            const issue = state.issues.find(i => i.id === issueId);
             if (issue) {
               issue.resolved = true;
               issue.resolvedAt = Date.now();
@@ -239,23 +240,23 @@ export const useSelfHealingStore = create<SelfHealingStore>()(
           get().updateStats();
         },
 
-        getIssuesByCategory: (category) => {
-          return get().issues.filter((i) => i.category === category && !i.resolved);
+        getIssuesByCategory: category => {
+          return get().issues.filter(i => i.category === category && !i.resolved);
         },
 
-        getIssuesBySeverity: (severity) => {
-          return get().issues.filter((i) => i.severity === severity && !i.resolved);
+        getIssuesBySeverity: severity => {
+          return get().issues.filter(i => i.severity === severity && !i.resolved);
         },
 
         clearResolvedIssues: () => {
-          set((state) => {
-            state.issues = state.issues.filter((i) => !i.resolved);
+          set(state => {
+            state.issues = state.issues.filter(i => !i.resolved);
           });
         },
 
         // ========== Diagnostics ==========
         runDiagnostics: async () => {
-          set((state) => {
+          set(state => {
             state.isScanning = true;
           });
 
@@ -269,16 +270,17 @@ export const useSelfHealingStore = create<SelfHealingStore>()(
               lastCheck: Date.now(),
             };
 
-            set((state) => {
+            set(state => {
               state.isScanning = false;
               state.stats.lastHealthCheck = Date.now();
             });
 
             return metrics;
           } catch (error) {
-            set((state) => {
+            set(state => {
               state.isScanning = false;
-              state.error = error instanceof Error ? error.message : 'Erreur de diagnostic';
+              state.error =
+                error instanceof Error ? error.message : 'Erreur de diagnostic';
             });
             throw error;
           }
@@ -287,18 +289,18 @@ export const useSelfHealingStore = create<SelfHealingStore>()(
         checkHealth: async () => {
           await get().runDiagnostics();
 
-          const activeIssues = get().issues.filter((i) => !i.resolved);
+          const activeIssues = get().issues.filter(i => !i.resolved);
           let status: HealthStatus = 'healthy';
 
-          if (activeIssues.some((i) => i.severity === 'critical')) {
+          if (activeIssues.some(i => i.severity === 'critical')) {
             status = 'critical';
-          } else if (activeIssues.some((i) => i.severity === 'error')) {
+          } else if (activeIssues.some(i => i.severity === 'error')) {
             status = 'unhealthy';
-          } else if (activeIssues.some((i) => i.severity === 'warning')) {
+          } else if (activeIssues.some(i => i.severity === 'warning')) {
             status = 'degraded';
           }
 
-          set((state) => {
+          set(state => {
             state.healthStatus = status;
           });
 
@@ -306,36 +308,37 @@ export const useSelfHealingStore = create<SelfHealingStore>()(
         },
 
         // ========== Repairs ==========
-        attemptRepair: async (issueId) => {
-          const issue = get().issues.find((i) => i.id === issueId);
+        attemptRepair: async issueId => {
+          const issue = get().issues.find(i => i.id === issueId);
           if (!issue) return false;
 
-          set((state) => {
+          set(state => {
             state.isRepairing = true;
             state.stats.repairsAttempted += 1;
           });
 
           try {
-            await new Promise((resolve) => setTimeout(resolve, 500));
+            await new Promise(resolve => setTimeout(resolve, 500));
 
             get().resolveIssue(issueId);
 
-            set((state) => {
+            set(state => {
               state.isRepairing = false;
               state.stats.repairsSuccessful += 1;
             });
 
             return true;
           } catch (error) {
-            set((state) => {
+            set(state => {
               state.isRepairing = false;
-              state.error = error instanceof Error ? error.message : 'Erreur de réparation';
+              state.error =
+                error instanceof Error ? error.message : 'Erreur de réparation';
             });
             return false;
           }
         },
 
-        queueRepair: (repairData) => {
+        queueRepair: repairData => {
           const id = `repair_${Date.now()}`;
 
           const repair: InternalRepairAction = {
@@ -343,16 +346,16 @@ export const useSelfHealingStore = create<SelfHealingStore>()(
             id,
           };
 
-          set((state) => {
+          set(state => {
             state.repairs.push(repair);
           });
 
           return id;
         },
 
-        cancelRepair: (repairId) => {
-          set((state) => {
-            const repair = state.repairs.find((r) => r.id === repairId);
+        cancelRepair: repairId => {
+          set(state => {
+            const repair = state.repairs.find(r => r.id === repairId);
             if (repair && repair.status === 'pending') {
               repair.status = 'skipped';
             }
@@ -360,19 +363,19 @@ export const useSelfHealingStore = create<SelfHealingStore>()(
         },
 
         executeRepairs: async () => {
-          const pendingRepairs = get().repairs.filter((r) => r.status === 'pending');
+          const pendingRepairs = get().repairs.filter(r => r.status === 'pending');
 
           for (const repair of pendingRepairs) {
-            set((state) => {
-              const r = state.repairs.find((rep) => rep.id === repair.id);
+            set(state => {
+              const r = state.repairs.find(rep => rep.id === repair.id);
               if (r) r.status = 'in_progress';
             });
 
             try {
-              await new Promise((resolve) => setTimeout(resolve, 300));
+              await new Promise(resolve => setTimeout(resolve, 300));
 
-              set((state) => {
-                const r = state.repairs.find((rep) => rep.id === repair.id);
+              set(state => {
+                const r = state.repairs.find(rep => rep.id === repair.id);
                 if (r) {
                   r.status = 'success';
                   r.completedAt = Date.now();
@@ -381,8 +384,8 @@ export const useSelfHealingStore = create<SelfHealingStore>()(
                 state.stats.repairsSuccessful += 1;
               });
             } catch {
-              set((state) => {
-                const r = state.repairs.find((rep) => rep.id === repair.id);
+              set(state => {
+                const r = state.repairs.find(rep => rep.id === repair.id);
                 if (r) {
                   r.status = 'failed';
                   r.completedAt = Date.now();
@@ -394,7 +397,7 @@ export const useSelfHealingStore = create<SelfHealingStore>()(
         },
 
         // ========== Watchdogs ==========
-        addWatchdog: (config) => {
+        addWatchdog: config => {
           const id = `watchdog_${Date.now()}`;
 
           const watchdog: WatchdogConfig = {
@@ -402,7 +405,7 @@ export const useSelfHealingStore = create<SelfHealingStore>()(
             id,
           };
 
-          set((state) => {
+          set(state => {
             state.watchdogs.push(watchdog);
             if (config.enabled) {
               state.stats.watchdogsActive += 1;
@@ -412,19 +415,19 @@ export const useSelfHealingStore = create<SelfHealingStore>()(
           return id;
         },
 
-        removeWatchdog: (watchdogId) => {
-          set((state) => {
-            const watchdog = state.watchdogs.find((w) => w.id === watchdogId);
+        removeWatchdog: watchdogId => {
+          set(state => {
+            const watchdog = state.watchdogs.find(w => w.id === watchdogId);
             if (watchdog?.enabled) {
               state.stats.watchdogsActive -= 1;
             }
-            state.watchdogs = state.watchdogs.filter((w) => w.id !== watchdogId);
+            state.watchdogs = state.watchdogs.filter(w => w.id !== watchdogId);
           });
         },
 
-        enableWatchdog: (watchdogId) => {
-          set((state) => {
-            const watchdog = state.watchdogs.find((w) => w.id === watchdogId);
+        enableWatchdog: watchdogId => {
+          set(state => {
+            const watchdog = state.watchdogs.find(w => w.id === watchdogId);
             if (watchdog && !watchdog.enabled) {
               watchdog.enabled = true;
               state.stats.watchdogsActive += 1;
@@ -432,9 +435,9 @@ export const useSelfHealingStore = create<SelfHealingStore>()(
           });
         },
 
-        disableWatchdog: (watchdogId) => {
-          set((state) => {
-            const watchdog = state.watchdogs.find((w) => w.id === watchdogId);
+        disableWatchdog: watchdogId => {
+          set(state => {
+            const watchdog = state.watchdogs.find(w => w.id === watchdogId);
             if (watchdog && watchdog.enabled) {
               watchdog.enabled = false;
               state.stats.watchdogsActive -= 1;
@@ -443,7 +446,7 @@ export const useSelfHealingStore = create<SelfHealingStore>()(
         },
 
         // ========== Recovery ==========
-        createRecoveryPoint: async (name) => {
+        createRecoveryPoint: async name => {
           const id = `recovery_${Date.now()}`;
 
           const point: InternalRecoveryPoint = {
@@ -459,16 +462,16 @@ export const useSelfHealingStore = create<SelfHealingStore>()(
             metadata: {},
           };
 
-          set((state) => {
+          set(state => {
             state.recoveryPoints.push(point);
           });
 
           return id;
         },
 
-        deleteRecoveryPoint: (pointId) => {
-          set((state) => {
-            state.recoveryPoints = state.recoveryPoints.filter((p) => p.id !== pointId);
+        deleteRecoveryPoint: pointId => {
+          set(state => {
+            state.recoveryPoints = state.recoveryPoints.filter(p => p.id !== pointId);
           });
         },
 
@@ -479,8 +482,8 @@ export const useSelfHealingStore = create<SelfHealingStore>()(
           const healthByCategory = { ...initialHealthByCategory };
 
           issues
-            .filter((i) => !i.resolved)
-            .forEach((issue) => {
+            .filter(i => !i.resolved)
+            .forEach(issue => {
               const currentHealth = healthByCategory[issue.category];
               if (issue.severity === 'critical') {
                 healthByCategory[issue.category] = 'critical';
@@ -501,16 +504,16 @@ export const useSelfHealingStore = create<SelfHealingStore>()(
             overallHealth = 'degraded';
           }
 
-          set((state) => {
+          set(state => {
             state.healthByCategory = healthByCategory;
             state.healthStatus = overallHealth;
-            state.stats.watchdogsActive = watchdogs.filter((w) => w.enabled).length;
+            state.stats.watchdogsActive = watchdogs.filter(w => w.enabled).length;
           });
         },
 
         // ========== Error Handling ==========
-        setError: (error) => {
-          set((state) => {
+        setError: error => {
+          set(state => {
             state.error = error;
           });
         },
@@ -533,9 +536,9 @@ export const selectIsScanning = (state: SelfHealingStore) => state.isScanning;
 export const selectIsRepairing = (state: SelfHealingStore) => state.isRepairing;
 
 export const selectActiveIssues = (state: SelfHealingStore) =>
-  state.issues.filter((i) => !i.resolved);
+  state.issues.filter(i => !i.resolved);
 
 export const selectCriticalIssues = (state: SelfHealingStore) =>
-  state.issues.filter((i) => i.severity === 'critical' && !i.resolved);
+  state.issues.filter(i => i.severity === 'critical' && !i.resolved);
 
 export default useSelfHealingStore;

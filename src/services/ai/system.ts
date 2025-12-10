@@ -50,16 +50,9 @@ export type {
   AutoHealConfig,
 } from './autoHealEngine';
 
-export type {
-  MetricEvent,
-  ProviderMetrics,
-  AggregatedMetrics,
-} from './metricsEngine';
+export type { MetricEvent, ProviderMetrics, AggregatedMetrics } from './metricsEngine';
 
-export type {
-  HealthAlert,
-  HealthReport,
-} from './healthMonitor';
+export type { HealthAlert, HealthReport } from './healthMonitor';
 
 // ─────────────────────────────────────────────────────────────────
 // UTILITIES

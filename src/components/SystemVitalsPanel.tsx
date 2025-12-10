@@ -70,7 +70,9 @@ export const SystemVitalsPanel: React.FC = () => {
     try {
       const stats = await secureInvoke<CompactionStats>('auto_compact_memory');
       setCompactionStats(stats);
-      alert(`Mémoire compactée !\nFichiers : ${stats.files_processed}\nDoublons supprimés : ${stats.duplicates_removed}`);
+      alert(
+        `Mémoire compactée !\nFichiers : ${stats.files_processed}\nDoublons supprimés : ${stats.duplicates_removed}`
+      );
     } catch (error) {
       console.error('Échec compaction mémoire:', error);
       alert('Échec de la compaction mémoire. Voir la console pour les détails.');
@@ -89,7 +91,11 @@ export const SystemVitalsPanel: React.FC = () => {
   }
 
   const { cpu, throttling } = harmoniaMetrics;
-  const cpuColor = cpu.is_throttling ? 'text-red-400' : cpu.global_usage > 60 ? 'text-yellow-400' : 'text-green-400';
+  const cpuColor = cpu.is_throttling
+    ? 'text-red-400'
+    : cpu.global_usage > 60
+      ? 'text-yellow-400'
+      : 'text-green-400';
 
   return (
     <div className="space-y-4">
@@ -161,7 +167,9 @@ export const SystemVitalsPanel: React.FC = () => {
             {cpu.per_core_usage.map((usage, index) => (
               <div key={index} className="bg-slate-800 rounded p-2">
                 <div className="text-xs text-slate-400">Core {index}</div>
-                <div className={`text-sm font-semibold ${usage > 80 ? 'text-red-400' : usage > 60 ? 'text-yellow-400' : 'text-green-400'}`}>
+                <div
+                  className={`text-sm font-semibold ${usage > 80 ? 'text-red-400' : usage > 60 ? 'text-yellow-400' : 'text-green-400'}`}
+                >
                   {usage.toFixed(1)}%
                 </div>
               </div>
@@ -193,23 +201,34 @@ export const SystemVitalsPanel: React.FC = () => {
             <div className="grid grid-cols-3 gap-4 text-sm">
               <div>
                 <p className="text-slate-400">Fichiers traités</p>
-                <p className="text-white font-semibold">{compactionStats.files_processed}</p>
+                <p className="text-white font-semibold">
+                  {compactionStats.files_processed}
+                </p>
               </div>
               <div>
                 <p className="text-slate-400">Doublons supprimés</p>
-                <p className="text-white font-semibold">{compactionStats.duplicates_removed}</p>
+                <p className="text-white font-semibold">
+                  {compactionStats.duplicates_removed}
+                </p>
               </div>
               <div>
                 <p className="text-slate-400">Compression</p>
-                <p className="text-white font-semibold">{compactionStats.average_compression_ratio.toFixed(2)}%</p>
+                <p className="text-white font-semibold">
+                  {compactionStats.average_compression_ratio.toFixed(2)}%
+                </p>
               </div>
             </div>
             <div className="mt-3 flex items-center gap-2">
               <HardDrive className="w-4 h-4 text-slate-400" />
               <p className="text-xs text-slate-400">
                 {(compactionStats.total_size_before_bytes / 1024).toFixed(2)} KB →{' '}
-                {(compactionStats.total_size_after_bytes / 1024).toFixed(2)} KB
-                (saved {((compactionStats.total_size_before_bytes - compactionStats.total_size_after_bytes) / 1024).toFixed(2)} KB)
+                {(compactionStats.total_size_after_bytes / 1024).toFixed(2)} KB (saved{' '}
+                {(
+                  (compactionStats.total_size_before_bytes -
+                    compactionStats.total_size_after_bytes) /
+                  1024
+                ).toFixed(2)}{' '}
+                KB)
               </p>
             </div>
           </div>
@@ -222,7 +241,11 @@ export const SystemVitalsPanel: React.FC = () => {
         <div className="flex flex-wrap gap-2">
           <EngineBadge name="Helios" status="active" color="yellow" />
           <EngineBadge name="Nexus" status="active" color="blue" />
-          <EngineBadge name="Harmonia" status={cpu.is_throttling ? 'throttling' : 'active'} color="purple" />
+          <EngineBadge
+            name="Harmonia"
+            status={cpu.is_throttling ? 'throttling' : 'active'}
+            color="purple"
+          />
           <EngineBadge name="Sentinel" status="active" color="red" />
           <EngineBadge name="Memory" status="active" color="green" />
           <EngineBadge name="SelfHeal++" status="standby" color="cyan" />
@@ -255,7 +278,9 @@ const EngineBadge: React.FC<EngineBadgeProps> = ({ name, status, color }) => {
   };
 
   return (
-    <div className={`px-3 py-1 rounded border ${colorClasses[color]} text-sm font-medium`}>
+    <div
+      className={`px-3 py-1 rounded border ${colorClasses[color]} text-sm font-medium`}
+    >
       {statusIcon[status]} {name}
     </div>
   );

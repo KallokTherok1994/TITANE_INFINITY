@@ -150,7 +150,11 @@ export class MetricsHub {
    */
   private estimateMemoryUsage(): number {
     if (typeof performance !== 'undefined' && 'memory' in performance) {
-      const memory = (performance as unknown as { memory?: { usedJSHeapSize?: number; jsHeapSizeLimit?: number } }).memory;
+      const memory = (
+        performance as unknown as {
+          memory?: { usedJSHeapSize?: number; jsHeapSizeLimit?: number };
+        }
+      ).memory;
       if (memory?.usedJSHeapSize && memory.jsHeapSizeLimit) {
         return memory.usedJSHeapSize / memory.jsHeapSizeLimit;
       }

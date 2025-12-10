@@ -3,7 +3,13 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
-export type Provider = 'openai' | 'claude' | 'gemini' | 'ollama' | 'tauri' | 'titane-local';
+export type Provider =
+  | 'openai'
+  | 'claude'
+  | 'gemini'
+  | 'ollama'
+  | 'tauri'
+  | 'titane-local';
 
 export interface PromptSafetyDirective {
   id: string;

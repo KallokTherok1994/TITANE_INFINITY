@@ -6,11 +6,7 @@
  * Migrated from Harmonia equilibrium logic
  */
 
-import type {
-  LoadBalanceState,
-  ProviderLoad,
-  LoadRecommendation,
-} from '../types';
+import type { LoadBalanceState, ProviderLoad, LoadRecommendation } from '../types';
 
 /**
  * LoadBalancer - Balances load across providers
@@ -175,7 +171,10 @@ export class LoadBalancer {
           targetLoad: avgLoad,
           reason: `Utilization ${(provider.utilization * 100).toFixed(0)}% above target`,
         });
-      } else if (diff < -threshold && provider.utilization < this.targetUtilization - 0.2) {
+      } else if (
+        diff < -threshold &&
+        provider.utilization < this.targetUtilization - 0.2
+      ) {
         recommendations.push({
           providerId: id,
           action: 'increase',

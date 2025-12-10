@@ -13,25 +13,25 @@ export const FEATURE_FLAGS = {
    * Enable external network calls (AI APIs, etc.)
    * WARNING: Requires internet connection
    */
-  ENABLE_EXTERNAL_AI: false,  // Gemini, OpenAI APIs
-  ENABLE_LOCAL_LLM: true,     // Ollama localhost (optional)
+  ENABLE_EXTERNAL_AI: false, // Gemini, OpenAI APIs
+  ENABLE_LOCAL_LLM: true, // Ollama localhost (optional)
 
   /**
    * 🎯 AI PROVIDERS (DEFAULT: LOCAL ONLY)
    * ═══════════════════════════════════════
    */
   AI_PROVIDERS: {
-    gemini: false,      // Google Gemini API (requires API key)
-    openai: false,      // OpenAI API (requires API key)
-    ollama: true,       // Local Ollama (optional, localhost:11434)
-    builtin: true,      // Built-in mock responses (always available)
+    gemini: false, // Google Gemini API (requires API key)
+    openai: false, // OpenAI API (requires API key)
+    ollama: true, // Local Ollama (optional, localhost:11434)
+    builtin: true, // Built-in mock responses (always available)
   },
 
   /**
    * 🌐 NETWORK CHECKS (DEFAULT: DISABLED)
    * ═══════════════════════════════════════
    */
-  ENABLE_NETWORK_CHECK: false,  // Ping external services
+  ENABLE_NETWORK_CHECK: false, // Ping external services
 
   /**
    * 📊 TELEMETRY (DEFAULT: DISABLED)
@@ -59,7 +59,9 @@ export function isNetworkAllowed(): boolean {
 /**
  * Runtime check: Is AI provider available?
  */
-export function isAIProviderEnabled(provider: 'gemini' | 'openai' | 'ollama' | 'builtin'): boolean {
+export function isAIProviderEnabled(
+  provider: 'gemini' | 'openai' | 'ollama' | 'builtin'
+): boolean {
   return FEATURE_FLAGS.AI_PROVIDERS[provider];
 }
 

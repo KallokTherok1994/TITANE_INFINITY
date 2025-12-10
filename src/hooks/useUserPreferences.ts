@@ -27,7 +27,9 @@ export interface UseUserPreferencesReturn {
 
   // Actions
   setName: (name: string) => void;
-  updateCommunicationStyle: (style: Partial<UserPreferences['communicationStyle']>) => void;
+  updateCommunicationStyle: (
+    style: Partial<UserPreferences['communicationStyle']>
+  ) => void;
   addInterest: (interest: string) => void;
   removeInterest: (interest: string) => void;
   updateTechnicalPreferences: (prefs: Partial<UserPreferences['technical']>) => void;
@@ -55,45 +57,66 @@ export function useUserPreferences(): UseUserPreferencesReturn {
   }, []);
 
   // Wrappers pour les actions qui doivent refresher l'UI
-  const setName = useCallback((name: string) => {
-    userPreferencesEngine.setName(name);
-    refreshPreferences();
-  }, [refreshPreferences]);
+  const setName = useCallback(
+    (name: string) => {
+      userPreferencesEngine.setName(name);
+      refreshPreferences();
+    },
+    [refreshPreferences]
+  );
 
-  const updateCommunicationStyle = useCallback((style: Partial<UserPreferences['communicationStyle']>) => {
-    userPreferencesEngine.updateCommunicationStyle(style);
-    refreshPreferences();
-  }, [refreshPreferences]);
+  const updateCommunicationStyle = useCallback(
+    (style: Partial<UserPreferences['communicationStyle']>) => {
+      userPreferencesEngine.updateCommunicationStyle(style);
+      refreshPreferences();
+    },
+    [refreshPreferences]
+  );
 
-  const addInterest = useCallback((interest: string) => {
-    userPreferencesEngine.addInterest(interest);
-    refreshPreferences();
-  }, [refreshPreferences]);
+  const addInterest = useCallback(
+    (interest: string) => {
+      userPreferencesEngine.addInterest(interest);
+      refreshPreferences();
+    },
+    [refreshPreferences]
+  );
 
-  const removeInterest = useCallback((interest: string) => {
-    userPreferencesEngine.removeInterest(interest);
-    refreshPreferences();
-  }, [refreshPreferences]);
+  const removeInterest = useCallback(
+    (interest: string) => {
+      userPreferencesEngine.removeInterest(interest);
+      refreshPreferences();
+    },
+    [refreshPreferences]
+  );
 
-  const updateTechnicalPreferences = useCallback((prefs: Partial<UserPreferences['technical']>) => {
-    userPreferencesEngine.updateTechnicalPreferences(prefs);
-    refreshPreferences();
-  }, [refreshPreferences]);
+  const updateTechnicalPreferences = useCallback(
+    (prefs: Partial<UserPreferences['technical']>) => {
+      userPreferencesEngine.updateTechnicalPreferences(prefs);
+      refreshPreferences();
+    },
+    [refreshPreferences]
+  );
 
-  const setCustomPreference = useCallback((key: string, value: string | number | boolean) => {
-    userPreferencesEngine.setCustomPreference(key, value);
-    refreshPreferences();
-  }, [refreshPreferences]);
+  const setCustomPreference = useCallback(
+    (key: string, value: string | number | boolean) => {
+      userPreferencesEngine.setCustomPreference(key, value);
+      refreshPreferences();
+    },
+    [refreshPreferences]
+  );
 
   const recordInteraction = useCallback((userMessage: string, aiResponse: string) => {
     userPreferencesEngine.recordInteraction(userMessage, aiResponse);
     // Pas de refresh ici pour éviter les re-renders excessifs
   }, []);
 
-  const recordFeedback = useCallback((type: InteractionFeedback['type'], context?: string) => {
-    userPreferencesEngine.recordFeedback(type, context);
-    refreshPreferences();
-  }, [refreshPreferences]);
+  const recordFeedback = useCallback(
+    (type: InteractionFeedback['type'], context?: string) => {
+      userPreferencesEngine.recordFeedback(type, context);
+      refreshPreferences();
+    },
+    [refreshPreferences]
+  );
 
   const getContextForAI = useCallback(() => {
     return userPreferencesEngine.generateContextForAI();

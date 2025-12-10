@@ -45,7 +45,7 @@ export function useBatchCommands() {
       try {
         const results = await batchInvoke(commands, {
           ...options,
-          onProgress: (progress) => {
+          onProgress: progress => {
             setState(prev => ({ ...prev, progress }));
             if (options?.onProgress) {
               options.onProgress(progress);
@@ -55,7 +55,11 @@ export function useBatchCommands() {
 
         setState({
           isExecuting: false,
-          progress: { completed: commands.length, total: commands.length, percentage: 100 },
+          progress: {
+            completed: commands.length,
+            total: commands.length,
+            percentage: 100,
+          },
           results,
           error: null,
         });
@@ -88,7 +92,7 @@ export function useBatchCommands() {
       try {
         const results = await parallelInvoke(commands, {
           ...options,
-          onProgress: (progress) => {
+          onProgress: progress => {
             setState(prev => ({ ...prev, progress }));
             if (options?.onProgress) {
               options.onProgress(progress);
@@ -98,7 +102,11 @@ export function useBatchCommands() {
 
         setState({
           isExecuting: false,
-          progress: { completed: commands.length, total: commands.length, percentage: 100 },
+          progress: {
+            completed: commands.length,
+            total: commands.length,
+            percentage: 100,
+          },
           results,
           error: null,
         });
@@ -131,7 +139,7 @@ export function useBatchCommands() {
       try {
         const results = await sequentialInvoke(commands, {
           ...options,
-          onProgress: (progress) => {
+          onProgress: progress => {
             setState(prev => ({ ...prev, progress }));
             if (options?.onProgress) {
               options.onProgress(progress);
@@ -141,7 +149,11 @@ export function useBatchCommands() {
 
         setState({
           isExecuting: false,
-          progress: { completed: commands.length, total: commands.length, percentage: 100 },
+          progress: {
+            completed: commands.length,
+            total: commands.length,
+            percentage: 100,
+          },
           results,
           error: null,
         });

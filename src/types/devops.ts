@@ -23,16 +23,16 @@ export interface ScreenAnalysis {
 }
 
 export type ContextType =
-  | 'code_editor'      // VSCode, IDE
-  | 'terminal'         // Terminal bash/zsh
-  | 'browser'          // UI web
-  | 'logs'             // Logs applicatifs
-  | 'error_screen'     // Erreur compilation/runtime
-  | 'ui_designer'      // Figma, interface design
-  | 'documentation'    // Docs technique
-  | 'git_interface'    // Git, GitHub, GitLab
-  | 'tauri_devtools'   // Tauri DevTools
-  | 'performance'      // Profiling, metrics
+  | 'code_editor' // VSCode, IDE
+  | 'terminal' // Terminal bash/zsh
+  | 'browser' // UI web
+  | 'logs' // Logs applicatifs
+  | 'error_screen' // Erreur compilation/runtime
+  | 'ui_designer' // Figma, interface design
+  | 'documentation' // Docs technique
+  | 'git_interface' // Git, GitHub, GitLab
+  | 'tauri_devtools' // Tauri DevTools
+  | 'performance' // Profiling, metrics
   | 'unknown';
 
 export interface DetectedElement {
@@ -114,7 +114,13 @@ export interface Diagnosis {
 
 export interface Issue {
   id: string;
-  type: 'bug' | 'performance' | 'security' | 'architecture' | 'configuration' | 'dependency';
+  type:
+    | 'bug'
+    | 'performance'
+    | 'security'
+    | 'architecture'
+    | 'configuration'
+    | 'dependency';
   severity: 'critical' | 'high' | 'medium' | 'low';
   title: string;
   description: string;
@@ -405,7 +411,12 @@ export interface SessionContext {
 
 export interface Interaction {
   timestamp: number;
-  type: 'user_request' | 'screen_analysis' | 'agent_proposal' | 'validation' | 'execution_result';
+  type:
+    | 'user_request'
+    | 'screen_analysis'
+    | 'agent_proposal'
+    | 'validation'
+    | 'execution_result';
   content: string;
   data?: unknown;
 }

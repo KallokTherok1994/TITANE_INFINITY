@@ -120,7 +120,8 @@ export function useDeepSync() {
    */
   const getDeepSyncState = useCallback(async () => {
     try {
-      const [_metaState, deepState] = await secureInvoke<[Record<string, unknown>, DeepSyncState]>('meta_get_state');
+      const [_metaState, deepState] =
+        await secureInvoke<[Record<string, unknown>, DeepSyncState]>('meta_get_state');
       setDeepSyncState(deepState);
       return deepState;
     } catch (err) {
@@ -132,20 +133,20 @@ export function useDeepSync() {
   /**
    * Compare previous and next states
    */
-  const compareStates = useCallback((
-    prev: Record<string, number>,
-    next: Record<string, number>
-  ) => {
-    const deltas: Record<string, number> = {};
+  const compareStates = useCallback(
+    (prev: Record<string, number>, next: Record<string, number>) => {
+      const deltas: Record<string, number> = {};
 
-    for (const key in next) {
-      if (key in prev) {
-        deltas[key] = Math.abs(next[key] - prev[key]);
+      for (const key in next) {
+        if (key in prev) {
+          deltas[key] = Math.abs(next[key] - prev[key]);
+        }
       }
-    }
 
-    return deltas;
-  }, []);
+      return deltas;
+    },
+    []
+  );
 
   /**
    * Get sync quality score

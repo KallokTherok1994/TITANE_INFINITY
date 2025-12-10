@@ -248,11 +248,15 @@ pub struct PersonaEngine {
 impl PersonaEngine {
     pub fn new(default_persona: &str) -> Self {
         let mut personas = HashMap::new();
-        personas.insert("titane_default".to_string(), PersonaConfig::default_titane());
+        personas.insert(
+            "titane_default".to_string(),
+            PersonaConfig::default_titane(),
+        );
         personas.insert("titane_technical".to_string(), PersonaConfig::technical());
         personas.insert("titane_creative".to_string(), PersonaConfig::creative());
 
-        let active_config = personas.get(default_persona)
+        let active_config = personas
+            .get(default_persona)
             .cloned()
             .unwrap_or_else(PersonaConfig::default_titane);
 
@@ -268,7 +272,9 @@ impl PersonaEngine {
 
     /// Active un persona par son ID
     pub async fn activate(&self, persona_id: &str) -> Result<(), String> {
-        let config = self.available_personas.get(persona_id)
+        let config = self
+            .available_personas
+            .get(persona_id)
             .ok_or_else(|| format!("Persona '{}' not found", persona_id))?;
 
         let mut profile = self.active_profile.write().await;
@@ -288,7 +294,9 @@ impl PersonaEngine {
     /// Adapte temporairement un trait
     pub async fn adapt_trait(&self, trait_name: &str, adjustment: f32) {
         let mut profile = self.active_profile.write().await;
-        profile.adaptations.insert(trait_name.to_string(), adjustment);
+        profile
+            .adaptations
+            .insert(trait_name.to_string(), adjustment);
     }
 
     /// Réinitialise les adaptations

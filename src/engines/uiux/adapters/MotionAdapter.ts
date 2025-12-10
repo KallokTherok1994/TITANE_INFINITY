@@ -73,7 +73,11 @@ export class MotionAdapter {
   /**
    * Adapte le motion au contexte
    */
-  adapt(context: UIContext, mode: UserMode, performanceSignal?: PerformanceSignal): MotionAdaptation {
+  adapt(
+    context: UIContext,
+    mode: UserMode,
+    performanceSignal?: PerformanceSignal
+  ): MotionAdaptation {
     // Commencer avec le préset du mode
     const motion = { ...MOTION_PRESETS[mode] };
 

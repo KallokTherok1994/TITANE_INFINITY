@@ -11,7 +11,7 @@ use crate::cycle_engine::{
     continuity::ContinuityEngine,
     cycles::CycleState,
     diagnostics::CycleEngineDiagnostics,
-    load_regulator::{LoadRegulator, LoadRegulationParams},
+    load_regulator::{LoadRegulationParams, LoadRegulator},
     predictive::{PredictiveEvent, PredictiveTemporalModel},
     seasons::SeasonalParameters,
 };
@@ -77,7 +77,7 @@ impl CycleEngine {
 
         tokio::spawn(async move {
             let mut interval_timer = interval(Duration::from_secs(60)); // Update every minute
-            
+
             loop {
                 interval_timer.tick().await;
 
@@ -90,7 +90,7 @@ impl CycleEngine {
                 // Update cycle state
                 let new_state = CycleState::current();
                 let mut state = current_state.write().await;
-                
+
                 let previous_phase = state.daily_phase;
                 *state = new_state.clone();
                 drop(state);
@@ -114,11 +114,8 @@ impl CycleEngine {
 
                 // Update alignment
                 let mut alignment_engine = alignment.write().await;
-                let system_alignment = alignment_engine.align_system(
-                    &new_state,
-                    &cognitive_rhythm,
-                    &load_params,
-                );
+                let system_alignment =
+                    alignment_engine.align_system(&new_state, &cognitive_rhythm, &load_params);
                 drop(alignment_engine);
 
                 // Record continuity event

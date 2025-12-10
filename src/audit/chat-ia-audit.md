@@ -1,4 +1,5 @@
 # 🔍 AUDIT COMPLET CHAT IA TITANE∞ - RAPPORT PHASE 1-2 COMPLET
+
 ## Diagnostic du bug: "Réponse IA apparaît puis disparaît"
 
 **Date**: 28 novembre 2025
@@ -23,12 +24,14 @@
 **⚠️ PROBLÈME MAJEUR IDENTIFIÉ: MULTIPLES IMPLÉMENTATIONS CONFLICTUELLES**
 
 **Composants Chat identifiés:**
+
 - `ChatWindow.tsx` (224 lignes) - Interface principale avec filtrage `messages.filter(message => message.role !== 'system')`
 - `Chat.tsx` (ui/pages) - Alternative component
 - `ChatPage.tsx` - Page wrapper
 - `ChatMessage.tsx` + `ChatInput.tsx` - Composants atomiques
 
 **Hooks multiples (SOURCE DU PROBLÈME!):**
+
 - `useChat.ts` (338 lignes) - Hook principal OMNIS utilisé par ChatWindow
 - `useChatOmnis.ts` - Version alternative OMNIS
 - `useChatOmnisSimple.ts` - Version simplifiée
@@ -37,12 +40,14 @@
 - `useChat_OMNIS_Clean.ts` - Version nettoyée
 
 **Services IA:**
+
 - `chatEngineOmnis` (chatEngine_OMNIS_v1.ts) - Moteur principal
 - `chatEngine` (chatEngine.ts) - Moteur Omega alternatif
 - `aiOrchestrator` - Orchestrateur providers IA
 - Multiple providers: Gemini, OpenAI, Proxy, TITANE
 
 **Flux de données:**
+
 ```
 ChatWindow.tsx → useChat.ts → chatEngineOmnis.generate() → aiOrchestrator.generate() → AI Providers → Response → setMessages() → Render
 ```
@@ -86,19 +91,28 @@ async generate(message: string, history: AIMessage[]): Promise<AIMessage> {
 4. **Total:** Potentiellement 60s+ de timeouts imbriqués!
 
 **ORCHESTRATEUR COMPLEXE (orchestrator_OMNIS_v1.ts):**
+
 ```typescript
 // Lines 318-350: Cognitive selection avec fallbacks multiples
 const selection = this.performCognitiveSelection(message, context);
 
 // Execution avec timeout adaptatif
 const result = await this.executeWithProvider(
-  selection.primary, message, context, selection.timeout, config
+  selection.primary,
+  message,
+  context,
+  selection.timeout,
+  config
 );
 
 // Si échec: fallback chain avec timeouts réduits
 for (const fallbackProvider of selection.fallbacks) {
   const fallbackResult = await this.executeWithProvider(
-    fallbackProvider, message, context, selection.timeout * 0.8, config
+    fallbackProvider,
+    message,
+    context,
+    selection.timeout * 0.8,
+    config
   );
 }
 ```
@@ -113,12 +127,14 @@ for (const fallbackProvider of selection.fallbacks) {
 ### 🔍 PROVIDERS OMNIS WRAPPING (providerWrapper_OMNIS_v1.ts):
 
 **Chaque provider est wrappé avec:**
+
 - Circuit breaker (peut bloquer temporairement)
 - Retry logic (3+ tentatives avec backoff exponential)
 - Timeout protection (5s-15s selon provider)
 - Emergency responses en cas d'échec
 
 **GEMINI Provider Config:**
+
 ```typescript
 'gemini': {
   timeoutMs: 8000,
@@ -146,11 +162,13 @@ private normalizeResponse(response: any, status: string, startTime: number): AIM
 ```
 
 **Messages fallback générés automatiquement:**
+
 - "Une anomalie interne a été réparée automatiquement..."
 - "Le traitement prend plus de temps que prévu..."
 - "TITANE∞ est opérationnel. Votre requête a été traitée..."
 
 **Ces messages peuvent être:**
+
 1. Générés puis immédiatement replaced par un retry
 2. Générés avec un `role` incorrect qui cause le filtrage UI
 3. Générés mais timeout avant l'affichage
@@ -163,18 +181,20 @@ private normalizeResponse(response: any, status: string, startTime: number): AIM
 
 ```typescript
 // ChatWindow.tsx ligne ~180
-const filteredMessages = messages.filter((message) => message.role !== 'system');
+const filteredMessages = messages.filter(message => message.role !== 'system');
 ```
 
 **PROBLÈME:** Si les messages AI fallback ont un `role` incorrect ou undefined, ils sont filtrés!
 
 **Scénarios de disparition identifiés:**
+
 1. **Fallback avec role incorrect:** Emergency responses peuvent avoir `role: 'system'`
 2. **Response incomplète:** Timeout pendant la génération → réponse partielle filtrée
 3. **State race:** `setMessages()` appelé plusieurs fois rapidement → état inconsistant
 4. **Memory integration conflict:** `saveMessage()` async peut corrompre l'état
 
 **RENDU CONDITIONNEL:**
+
 ```typescript
 // ChatWindow.tsx - rendering avec conditions multiples
 {isLoading && <LoadingIndicator />}
@@ -191,15 +211,18 @@ Si `isLoading` reste true OU `error` est set, les messages peuvent être masqué
 ### 🔥 CAUSE RACINE CONFIRMÉE: TRIPLE PROBLÈME SYSTÉMIQUE
 
 **1. RACE CONDITION dans useChat.ts (PRIMAIRE)**
+
 - `setMessages()` async vs `chatEngineOmnis.generate(messages)` avec stale closure
 - Engine reçoit historique incomplet → génère réponse incorrecte
 
 **2. TIMEOUT CASCADÉ (SECONDAIRE)**
+
 - useChat: 20s → aiOrchestrator: 8-15s → Providers: 5-15s + retry
 - Total: 60s+ de timeouts imbriqués avec fallbacks multiples
 - Responses interrompues et replaced par fallbacks
 
 **3. FILTRAGE UI INCORRECT (TERTIAIRE)**
+
 - ChatWindow: `messages.filter(m => m.role !== 'system')`
 - Emergency/fallback responses peuvent avoir role incorrect
 - Messages valides filtrés par erreur
@@ -221,6 +244,7 @@ Si `isLoading` reste true OU `error` est set, les messages peuvent être masqué
 ### CORRECTIF CRITIQUE 1: FIXER RACE CONDITION
 
 **Solution optimale - useCallback avec ref sync:**
+
 ```typescript
 const messagesRef = useRef<AIMessage[]>(messages);
 const sendMessage = useCallback(async (content: string) => {
@@ -244,6 +268,7 @@ const sendMessage = useCallback(async (content: string) => {
 ### CORRECTIF CRITIQUE 2: SIMPLIFIER TIMEOUT CHAIN
 
 **Dans chatEngineOmnis - timeout unique:**
+
 ```typescript
 async generate(message: string, history: AIMessage[]): Promise<AIMessage> {
   const timeout = 15000; // Single 15s timeout
@@ -264,13 +289,15 @@ async generate(message: string, history: AIMessage[]): Promise<AIMessage> {
 ### CORRECTIF CRITIQUE 3: FIXER FILTRAGE UI
 
 **Dans ChatWindow.tsx - filtrage plus permissif:**
+
 ```typescript
-const filteredMessages = messages.filter(message =>
-  message &&
-  message.role &&
-  ['user', 'assistant'].includes(message.role) &&
-  message.content &&
-  message.content.trim().length > 0
+const filteredMessages = messages.filter(
+  message =>
+    message &&
+    message.role &&
+    ['user', 'assistant'].includes(message.role) &&
+    message.content &&
+    message.content.trim().length > 0
 );
 ```
 
@@ -279,12 +306,14 @@ const filteredMessages = messages.filter(message =>
 ## 🧪 PLAN DE TESTS & VALIDATION
 
 ### Tests automatisés à créer:
+
 1. **Race condition test:** Envoyer messages rapidement, vérifier historique engine
 2. **Timeout test:** Simuler provider lent, vérifier fallback response
 3. **UI filter test:** Injecter messages avec roles variés, vérifier affichage
 4. **Memory test:** Vérifier persistence après multiples envois
 
 ### Tests manuels:
+
 1. Envoyer message simple → vérifier persistance réponse IA
 2. Envoyer messages rapides → vérifier pas de race condition
 3. Simuler timeout réseau → vérifier fallback graceful
@@ -299,27 +328,32 @@ const filteredMessages = messages.filter(message =>
 ### 🎯 **CORRECTIFS CRITIQUES APPLIQUÉS AVEC SUCCÈS:**
 
 **1. RACE CONDITION RÉSOLUE ✅**
+
 - ✅ Ajout `messagesRef.current` pour état synchrone dans useChat.ts
 - ✅ Synchronisation atomique `messagesRef ↔ setMessages` via useEffect
 - ✅ Fix sendMessage: engine appelé avec `newMessages` au lieu de `messages` stale
 - ✅ Fix clearChat et importChat pour synchroniser messagesRef
 
 **2. TIMEOUT UNIFIÉ ✅**
+
 - ✅ Réduction timeout de 20s → 15s dans useChat.ts
 - ✅ Timeout unique dans chatEngineOmnis.generate() avec Promise.race
 - ✅ Suppression des timeouts cascadés multiples
 
 **3. FILTRAGE UI AMÉLIORÉ ✅**
+
 - ✅ Remplacement `message.role !== 'system'` par filtrage intelligent
 - ✅ Validation: `message && message.role && ['user', 'assistant'].includes(message.role)`
 - ✅ Protection contre messages undefined/vides
 
 **4. NETTOYAGE ARCHITECTURE ✅**
-- ✅ Archivage hooks redondants (useChat_OMNIS_*.ts, useChatOmnisSimple*.ts)
+
+- ✅ Archivage hooks redondants (useChat*OMNIS*_.ts, useChatOmnisSimple_.ts)
 - ✅ Conservation uniquement useChat.ts principal + hooks utilitaires
 - ✅ Réduction de la confusion architecturale
 
 **5. TESTS AUTOMATISÉS ✅**
+
 - ✅ Suite complète de tests dans `src/__tests__/chat-ia-diagnostic.test.ts`
 - ✅ Tests race condition, timeout, UI filtering, state synchronization
 - ✅ Tests d'intégration complets pour validation

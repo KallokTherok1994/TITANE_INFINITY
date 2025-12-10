@@ -68,7 +68,9 @@ impl CognitivePriority {
             "reflection" | "memory" | "coherence" | "singularity" => CognitivePriority::High,
 
             // Normal (default for most engines)
-            "style" | "behavior" | "emotion" | "adaptation" | "literary" => CognitivePriority::Normal,
+            "style" | "behavior" | "emotion" | "adaptation" | "literary" => {
+                CognitivePriority::Normal
+            }
 
             // Background
             "indexer" | "compactor" | "analytics" | "telemetry" => CognitivePriority::Background,
@@ -136,10 +138,22 @@ mod tests {
 
     #[test]
     fn test_from_engine_name() {
-        assert_eq!(CognitivePriority::from_engine_name("Security"), CognitivePriority::Critical);
-        assert_eq!(CognitivePriority::from_engine_name("reflection"), CognitivePriority::High);
-        assert_eq!(CognitivePriority::from_engine_name("Style"), CognitivePriority::Normal);
-        assert_eq!(CognitivePriority::from_engine_name("indexer"), CognitivePriority::Background);
+        assert_eq!(
+            CognitivePriority::from_engine_name("Security"),
+            CognitivePriority::Critical
+        );
+        assert_eq!(
+            CognitivePriority::from_engine_name("reflection"),
+            CognitivePriority::High
+        );
+        assert_eq!(
+            CognitivePriority::from_engine_name("Style"),
+            CognitivePriority::Normal
+        );
+        assert_eq!(
+            CognitivePriority::from_engine_name("indexer"),
+            CognitivePriority::Background
+        );
     }
 
     #[test]

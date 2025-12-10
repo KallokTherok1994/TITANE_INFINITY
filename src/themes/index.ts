@@ -9,7 +9,15 @@
 
 import type { ReactNode } from 'react';
 
-export { colors, spacing, radius, shadows, fontSizes, fontWeights, metalPalette } from './tokens';
+export {
+  colors,
+  spacing,
+  radius,
+  shadows,
+  fontSizes,
+  fontWeights,
+  metalPalette,
+} from './tokens';
 // Remove empty export type to fix syntax error
 // export type { } from './tokens';
 

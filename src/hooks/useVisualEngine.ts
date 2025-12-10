@@ -22,7 +22,10 @@
 
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { TitaneVisualEngine } from '@/visual-engine/TitaneVisualEngine';
-import type { VisualEngineConfig, PerformanceMetrics } from '@/visual-engine/TitaneVisualEngine';
+import type {
+  VisualEngineConfig,
+  PerformanceMetrics,
+} from '@/visual-engine/TitaneVisualEngine';
 import type { VisualState } from '@/design-system/visual-states';
 
 export interface UseVisualEngineOptions extends Partial<VisualEngineConfig> {

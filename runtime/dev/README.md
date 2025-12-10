@@ -1,5 +1,7 @@
 # ═══════════════════════════════════════════════════════════════════════════
+
 # TITANE∞ — DEV RUNTIME README
+
 # ═══════════════════════════════════════════════════════════════════════════
 
 ## 🟢 TITAN-DEV: Development Environment
@@ -11,6 +13,7 @@
 ## 🎯 PURPOSE
 
 **Titan-Dev** is the **DEVELOPMENT RUNTIME** of TITANE∞:
+
 - **Safe to experiment** - isolated from user experience
 - **Full debugging tools** - DevTools, profiler, monitoring
 - **Verbose logging** - see everything that happens
@@ -30,12 +33,12 @@ cd /path/to/TITANE_INFINITY
 
 ### Controls During Development
 
-| Key | Action |
-|-----|--------|
+| Key        | Action                     |
+| ---------- | -------------------------- |
 | **Ctrl+R** | Reload React (soft reload) |
-| **F5** | Full window reload |
-| **F12** | Toggle DevTools |
-| **Ctrl+C** | Stop dev server |
+| **F5**     | Full window reload         |
+| **F12**    | Toggle DevTools            |
+| **Ctrl+C** | Stop dev server            |
 
 ---
 
@@ -43,23 +46,24 @@ cd /path/to/TITANE_INFINITY
 
 ### Development Features
 
-| Feature | Status | Notes |
-|---------|--------|-------|
-| **Hot Reload** | ⚠️ Manual | Ctrl+R to reload React |
-| **Tauri Watch** | ❌ Disabled | Prevents crashes, use manual reload |
-| **DevTools** | ✅ Enabled | F12 to open |
-| **Source Maps** | ✅ Enabled | Full debugging support |
-| **Logging** | ✅ Verbose | Debug level, console + file |
-| **OMEGA Pipeline** | ✅ Dev Mode | Verbose logging, telemetry |
-| **MemoryOS** | ✅ Dev Mode | Volatile cache, debug enabled |
-| **Visual Engine v21** | ✅ Dev Mode | Debug overlay, performance metrics |
-| **Monitoring** | ✅ Full | Error tracking, performance, network |
+| Feature               | Status      | Notes                                |
+| --------------------- | ----------- | ------------------------------------ |
+| **Hot Reload**        | ⚠️ Manual   | Ctrl+R to reload React               |
+| **Tauri Watch**       | ❌ Disabled | Prevents crashes, use manual reload  |
+| **DevTools**          | ✅ Enabled  | F12 to open                          |
+| **Source Maps**       | ✅ Enabled  | Full debugging support               |
+| **Logging**           | ✅ Verbose  | Debug level, console + file          |
+| **OMEGA Pipeline**    | ✅ Dev Mode | Verbose logging, telemetry           |
+| **MemoryOS**          | ✅ Dev Mode | Volatile cache, debug enabled        |
+| **Visual Engine v21** | ✅ Dev Mode | Debug overlay, performance metrics   |
+| **Monitoring**        | ✅ Full     | Error tracking, performance, network |
 
 ### Environment Variables
 
 See `.env.development` for complete configuration.
 
 Key variables:
+
 - `NODE_ENV=development` - Development mode
 - `VITE_TITANE_RUNTIME=dev` - Identifies dev runtime
 - `VITE_ENABLE_DEVTOOLS=true` - Full debug tools
@@ -103,6 +107,7 @@ git commit -m "feat: implement new feature"
 ### DevTools
 
 Press **F12** to open Chrome DevTools:
+
 - **Console**: See logs, errors, warnings
 - **Elements**: Inspect DOM, CSS
 - **Network**: Monitor API calls
@@ -131,6 +136,7 @@ grep "VisualEngine" runtime/dev/logs/*.log
 ### Monitoring Dashboard
 
 **Coming Soon**: `http://localhost:3001/monitor`
+
 - Real-time performance metrics
 - Memory usage tracking
 - API call monitoring
@@ -143,11 +149,13 @@ grep "VisualEngine" runtime/dev/logs/*.log
 ### Hot Module Replacement (HMR)
 
 **React HMR** (Manual):
+
 - Press **Ctrl+R** to reload React
 - Preserves most component state
 - Fast feedback loop
 
 **Tauri Watch** (Disabled):
+
 - Auto-reload disabled to prevent crashes
 - Manual restart required for Rust changes:
   ```bash
@@ -159,6 +167,7 @@ grep "VisualEngine" runtime/dev/logs/*.log
 ### Visual Engine Debug Overlay
 
 When `VITE_VISUAL_ENGINE_DEBUG=true`:
+
 - Performance metrics (FPS, frame time)
 - Active state display
 - Transition tracking
@@ -167,6 +176,7 @@ When `VITE_VISUAL_ENGINE_DEBUG=true`:
 ### MemoryOS Debug Mode
 
 When `VITE_MEMORYOS_DEBUG=true`:
+
 - Memory operations logged
 - Cache miss/hit tracking
 - Storage size monitoring
@@ -185,6 +195,7 @@ VITE_FEATURE_FLAG_MEMORY_V2=true
 ```
 
 Feature flags:
+
 - `VISUAL_V22`: Next-gen visual engine
 - `MEMORY_V2`: New memory architecture
 - More flags added as features develop
@@ -241,6 +252,7 @@ npm run test:perf
 ### Claude Code Integration
 
 When `VITE_CLAUDE_CODE_INTEGRATION=true`:
+
 - Telemetry sent to `localhost:3001/telemetry`
 - Branch-aware context
 - Performance metrics shared
@@ -290,6 +302,7 @@ npm run test:e2e
 Before `merge-dev-to-stable.sh`:
 
 1. **Test thoroughly in Dev**
+
    ```bash
    npm test
    npm run test:e2e
@@ -302,6 +315,7 @@ Before `merge-dev-to-stable.sh`:
    - Check performance metrics
 
 3. **Review changes**
+
    ```bash
    git log stable-runtime..dev --oneline
    git diff stable-runtime..dev
@@ -390,6 +404,7 @@ rm -rf target/debug/
 > **"Development needs freedom to break, test, and iterate. Stability comes after validation."**
 
 **Key Principles**:
+
 - 🟢 **Freedom**: Break things without consequences
 - 🔧 **Tools**: Full debugging arsenal
 - 🧪 **Testing**: Validate before merging
@@ -401,7 +416,7 @@ rm -rf target/debug/
 
 Version: 24.2.0-dev  
 Runtime: Dev (Development)  
-Branch: dev or feature/*
+Branch: dev or feature/\*
 
 ---
 

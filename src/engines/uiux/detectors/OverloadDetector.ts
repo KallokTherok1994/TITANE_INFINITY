@@ -44,7 +44,7 @@ export class OverloadDetector {
   private lastActivityTime = Date.now();
   private navigationHistory: string[] = [];
   private inputHistory: Array<{ correct: boolean; timestamp: number }> = [];
-  
+
   // ✨ PHASE 4.4 - Store handlers and interval for cleanup
   private clickHandler = this.handleClick.bind(this);
   private scrollHandler = this.handleScroll.bind(this);
@@ -81,7 +81,7 @@ export class OverloadDetector {
     // Remove event listeners
     window.removeEventListener('click', this.clickHandler);
     window.removeEventListener('scroll', this.scrollHandler);
-    
+
     ['mousemove', 'keydown', 'scroll', 'click'].forEach(event => {
       window.removeEventListener(event, this.activityHandler);
     });
@@ -217,19 +217,19 @@ export class OverloadDetector {
 
     // Calculer le taux d'erreur
     const recentInputs = this.inputHistory.filter(i => Date.now() - i.timestamp < 60000);
-    const errorRate = recentInputs.length > 0
-      ? recentInputs.filter(i => !i.correct).length / recentInputs.length
-      : 0;
+    const errorRate =
+      recentInputs.length > 0
+        ? recentInputs.filter(i => !i.correct).length / recentInputs.length
+        : 0;
     const errorScore = Math.min(errorRate / THRESHOLDS.inputErrorRate, 1);
 
     // Score pondéré
-    const score = (
+    const score =
       clickScore * 0.25 +
       scrollScore * 0.2 +
       idleScore * 0.15 +
       backtrackScore * 0.25 +
-      errorScore * 0.15
-    );
+      errorScore * 0.15;
 
     return Math.min(Math.max(score, 0), 1);
   }

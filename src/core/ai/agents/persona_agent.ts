@@ -8,9 +8,20 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import type { Agent, AgentState, AgentEvent, AgentResponse, AgentRole } from '../multi_agent_engine';
+import type {
+  Agent,
+  AgentState,
+  AgentEvent,
+  AgentResponse,
+  AgentRole,
+} from '../multi_agent_engine';
 
-type BehaviorMode = 'professional' | 'creative' | 'analytical' | 'empathetic' | 'technical';
+type BehaviorMode =
+  | 'professional'
+  | 'creative'
+  | 'analytical'
+  | 'empathetic'
+  | 'technical';
 
 interface BehaviorProfile {
   mode: BehaviorMode;

@@ -11,34 +11,34 @@ import { useChat } from '../hooks/useChat';
 
 // Mock du hook useChat pour isoler les tests interface
 vi.mock('../hooks/useChat', () => ({
-  useChat: vi.fn()
+  useChat: vi.fn(),
 }));
 
 // Mock du panneau de vitals (évite les hooks système/Tauri)
 vi.mock('../components/VitalsPanel', () => ({
   VitalsPanel: ({ currentMode }: { currentMode?: string }) => (
     <div data-testid="mock-vitals-panel">Mock VitalsPanel - mode {currentMode}</div>
-  )
+  ),
 }));
 
 // Mock des composants enfants
 vi.mock('../hooks/useConnection', () => ({
-  useConnection: () => ({ status: { online: true, provider: 'Gemini' } })
+  useConnection: () => ({ status: { online: true, provider: 'Gemini' } }),
 }));
 
 const mockSingularityStore = {
   setAIStatus: vi.fn(),
-  setAIError: vi.fn()
+  setAIError: vi.fn(),
 };
 
 vi.mock('../core/state/SingularityState', () => ({
   useSingularityState: (selector?: (state: typeof mockSingularityStore) => unknown) => {
     const state = mockSingularityStore;
     return selector ? selector(state) : state;
-  }
+  },
 }));
 
-let ChatWindow: typeof import('../components/ChatWindow')['ChatWindow'];
+let ChatWindow: (typeof import('../components/ChatWindow'))['ChatWindow'];
 
 beforeAll(async () => {
   ({ ChatWindow } = await import('../components/ChatWindow'));
@@ -48,7 +48,7 @@ describe('🧪 CHAT IA INTERFACE - VERIFICATION COMPLÈTE', () => {
   const mockSendMessage = vi.fn().mockResolvedValue({
     role: 'assistant',
     content: 'ok',
-    timestamp: Date.now()
+    timestamp: Date.now(),
   });
 
   const buildChatState = (overrides: Record<string, unknown> = {}) => ({
@@ -66,9 +66,9 @@ describe('🧪 CHAT IA INTERFACE - VERIFICATION COMPLÈTE', () => {
       recoveries: 0,
       lastRecoveryAt: null,
       lastContext: 'test',
-      hasSnapshot: false
+      hasSnapshot: false,
     },
-    ...overrides
+    ...overrides,
   });
 
   beforeEach(() => {
@@ -113,9 +113,11 @@ describe('🧪 CHAT IA INTERFACE - VERIFICATION COMPLÈTE', () => {
   });
 
   test('4️⃣ État de loading affiché correctement', async () => {
-    vi.mocked(useChat).mockReturnValue(buildChatState({
-      isLoading: true
-    }));
+    vi.mocked(useChat).mockReturnValue(
+      buildChatState({
+        isLoading: true,
+      })
+    );
 
     render(<ChatWindow />);
 
@@ -128,18 +130,20 @@ describe('🧪 CHAT IA INTERFACE - VERIFICATION COMPLÈTE', () => {
       {
         role: 'user',
         content: 'Question test',
-        timestamp: Date.now()
+        timestamp: Date.now(),
       },
       {
         role: 'assistant',
         content: 'Réponse de TITANE∞',
-        timestamp: Date.now() + 1000
-      }
+        timestamp: Date.now() + 1000,
+      },
     ];
 
-    vi.mocked(useChat).mockReturnValue(buildChatState({
-      messages: mockMessages
-    }));
+    vi.mocked(useChat).mockReturnValue(
+      buildChatState({
+        messages: mockMessages,
+      })
+    );
 
     render(<ChatWindow />);
 
@@ -148,9 +152,11 @@ describe('🧪 CHAT IA INTERFACE - VERIFICATION COMPLÈTE', () => {
   });
 
   test('6️⃣ Gestion des erreurs Chat IA', async () => {
-    vi.mocked(useChat).mockReturnValue(buildChatState({
-      error: 'Erreur de connexion Chat IA'
-    }));
+    vi.mocked(useChat).mockReturnValue(
+      buildChatState({
+        error: 'Erreur de connexion Chat IA',
+      })
+    );
 
     render(<ChatWindow />);
 
@@ -230,10 +236,7 @@ describe('🚀 INTEGRATION CHAT IA HOOK', () => {
     );
 
     try {
-      await Promise.race([
-        sendMessage('Test timeout protection'),
-        timeoutPromise
-      ]);
+      await Promise.race([sendMessage('Test timeout protection'), timeoutPromise]);
     } catch (error) {
       if (error.message === 'TIMEOUT') {
         console.warn('⚠️ SendMessage a pris plus de 5s - possible blocage détecté');

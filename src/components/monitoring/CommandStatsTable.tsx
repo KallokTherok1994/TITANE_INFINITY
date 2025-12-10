@@ -35,7 +35,9 @@ export const CommandStatsTable: React.FC<CommandStatsTableProps> = ({
   refreshInterval = 5000,
   className = '',
 }) => {
-  const [stats, setStats] = useState<ReturnType<typeof ServiceMetrics.getTopCommands>>([]);
+  const [stats, setStats] = useState<ReturnType<typeof ServiceMetrics.getTopCommands>>(
+    []
+  );
   const [sortColumn, setSortColumn] = useState<SortColumn>('calls');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
 
@@ -110,7 +112,9 @@ export const CommandStatsTable: React.FC<CommandStatsTableProps> = ({
           : bVal.localeCompare(aVal);
       }
 
-      return sortDirection === 'asc' ? (aVal as number) - (bVal as number) : (bVal as number) - (aVal as number);
+      return sortDirection === 'asc'
+        ? (aVal as number) - (bVal as number)
+        : (bVal as number) - (aVal as number);
     });
   }, [stats, sortColumn, sortDirection]);
 
@@ -120,7 +124,7 @@ export const CommandStatsTable: React.FC<CommandStatsTableProps> = ({
     const now = Date.now();
     const diff = now - timestamp;
 
-    if (diff < 60000) return 'À l\'instant';
+    if (diff < 60000) return "À l'instant";
     if (diff < 3600000) return `${Math.floor(diff / 60000)}min`;
     if (diff < 86400000) return `${Math.floor(diff / 3600000)}h`;
     return date.toLocaleDateString('fr-FR');
@@ -137,17 +141,14 @@ export const CommandStatsTable: React.FC<CommandStatsTableProps> = ({
   };
 
   // Titre selon mode
-  const title = mode === 'volume'
-    ? 'Top Commandes par Volume'
-    : mode === 'latency'
-    ? 'Commandes les Plus Lentes'
-    : 'Commandes Error-Prone';
+  const title =
+    mode === 'volume'
+      ? 'Top Commandes par Volume'
+      : mode === 'latency'
+        ? 'Commandes les Plus Lentes'
+        : 'Commandes Error-Prone';
 
-  const Icon = mode === 'volume'
-    ? Activity
-    : mode === 'latency'
-    ? Clock
-    : AlertCircle;
+  const Icon = mode === 'volume' ? Activity : mode === 'latency' ? Clock : AlertCircle;
 
   return (
     <div className={`rounded-lg border border-gray-700 bg-gray-800/50 p-6 ${className}`}>
@@ -243,8 +244,8 @@ export const CommandStatsTable: React.FC<CommandStatsTableProps> = ({
                         stat.avgLatency > 5000
                           ? 'text-red-400'
                           : stat.avgLatency > 1000
-                          ? 'text-yellow-400'
-                          : 'text-green-400'
+                            ? 'text-yellow-400'
+                            : 'text-green-400'
                       }`}
                     >
                       {stat.avgLatency < 1000
@@ -260,8 +261,8 @@ export const CommandStatsTable: React.FC<CommandStatsTableProps> = ({
                         stat.errorRate > 0.3
                           ? 'text-red-400'
                           : stat.errorRate > 0.1
-                          ? 'text-yellow-400'
-                          : 'text-green-400'
+                            ? 'text-yellow-400'
+                            : 'text-green-400'
                       }`}
                     >
                       {(stat.errorRate * 100).toFixed(1)}%

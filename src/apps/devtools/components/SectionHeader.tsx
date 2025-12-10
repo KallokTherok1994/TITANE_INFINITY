@@ -15,7 +15,7 @@ export interface SectionHeaderProps {
 
 /**
  * SectionHeader - En-tête de section DevTools
- * 
+ *
  * @example
  * ```tsx
  * <SectionHeader
@@ -25,7 +25,12 @@ export interface SectionHeaderProps {
  * />
  * ```
  */
-export function SectionHeader({ title, description, actions, className = '' }: SectionHeaderProps) {
+export function SectionHeader({
+  title,
+  description,
+  actions,
+  className = '',
+}: SectionHeaderProps) {
   return (
     <div className={`flex items-start justify-between mb-6 ${className}`}>
       <div>

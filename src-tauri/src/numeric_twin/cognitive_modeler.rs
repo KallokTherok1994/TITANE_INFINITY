@@ -5,9 +5,9 @@
 
 #![allow(dead_code)]
 
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use chrono::{DateTime, Utc};
 
 /// Modélisateur cognitif - patterns de pensée Kevin
 pub struct CognitiveModeler {
@@ -122,7 +122,12 @@ impl CognitiveModeler {
     }
 
     /// Observe un pattern de raisonnement
-    pub fn observe_reasoning(&mut self, pattern_type: ReasoningType, context: &str, effectiveness: f32) {
+    pub fn observe_reasoning(
+        &mut self,
+        pattern_type: ReasoningType,
+        context: &str,
+        effectiveness: f32,
+    ) {
         self.reasoning_patterns.push(ObservedReasoning {
             pattern_type,
             context: context.to_string(),
@@ -160,12 +165,14 @@ impl CognitiveModeler {
         }
 
         for (key, (sum, count)) in counts {
-            self.current_model.reasoning_distribution
+            self.current_model
+                .reasoning_distribution
                 .insert(key, sum / count as f32);
         }
 
         // Calculer cohérence
-        let total_effectiveness: f32 = self.reasoning_patterns
+        let total_effectiveness: f32 = self
+            .reasoning_patterns
             .iter()
             .map(|p| p.effectiveness)
             .sum();

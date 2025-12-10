@@ -180,7 +180,10 @@ impl MemoryOS {
         let start = std::time::Instant::now();
 
         // Initialize LTM (load index)
-        self.ltm.init().await.map_err(|e| MemoryOSError::InitError(e.to_string()))?;
+        self.ltm
+            .init()
+            .await
+            .map_err(|e| MemoryOSError::InitError(e.to_string()))?;
 
         // Emit system event
         self.signal_bus
@@ -189,10 +192,7 @@ impl MemoryOS {
 
         *self.running.write().await = true;
 
-        log_info!(
-            "Memory OS initialized in {}ms",
-            start.elapsed().as_millis()
-        );
+        log_info!("Memory OS initialized in {}ms", start.elapsed().as_millis());
 
         Ok(())
     }
@@ -202,7 +202,10 @@ impl MemoryOS {
         *self.running.write().await = false;
 
         // Sync LTM to disk
-        self.ltm.sync().await.map_err(|e| MemoryOSError::StorageError(e.to_string()))?;
+        self.ltm
+            .sync()
+            .await
+            .map_err(|e| MemoryOSError::StorageError(e.to_string()))?;
 
         // Emit shutdown signal
         self.signal_bus
@@ -264,8 +267,7 @@ impl MemoryOS {
         memory_type: MemoryType,
         embedding: Vec<f32>,
     ) -> Result<Uuid, MemoryOSError> {
-        let entry = MemoryEntry::new(content, importance, memory_type)
-            .with_embedding(embedding);
+        let entry = MemoryEntry::new(content, importance, memory_type).with_embedding(embedding);
         self.store(entry).await
     }
 
@@ -350,11 +352,7 @@ impl MemoryOS {
     }
 
     /// Recall by semantic search (KNN)
-    pub async fn recall_semantic(
-        &self,
-        query_embedding: &[f32],
-        k: usize,
-    ) -> RecallResult {
+    pub async fn recall_semantic(&self, query_embedding: &[f32], k: usize) -> RecallResult {
         let start = std::time::Instant::now();
 
         let search_results = self.vector_store.search(query_embedding, k).await;
@@ -717,7 +715,11 @@ mod tests {
     async fn test_keyword_search() {
         let memory_os = MemoryOS::new();
 
-        let entry1 = MemoryEntry::new("Hello world test".to_string(), 0.5, MemoryType::Conversation);
+        let entry1 = MemoryEntry::new(
+            "Hello world test".to_string(),
+            0.5,
+            MemoryType::Conversation,
+        );
         let entry2 = MemoryEntry::new("Goodbye world".to_string(), 0.5, MemoryType::Conversation);
 
         memory_os.store(entry1).await.ok();
@@ -756,11 +758,7 @@ mod tests {
         let memory_os = MemoryOS::new();
 
         for i in 0..5 {
-            let entry = MemoryEntry::new(
-                format!("Entry {}", i),
-                0.5,
-                MemoryType::Conversation,
-            );
+            let entry = MemoryEntry::new(format!("Entry {}", i), 0.5, MemoryType::Conversation);
             memory_os.store(entry).await.ok();
         }
 
@@ -789,11 +787,7 @@ mod tests {
         let memory_os = MemoryOS::new();
 
         for i in 0..10 {
-            let entry = MemoryEntry::new(
-                format!("Entry {}", i),
-                0.5,
-                MemoryType::Conversation,
-            );
+            let entry = MemoryEntry::new(format!("Entry {}", i), 0.5, MemoryType::Conversation);
             memory_os.store(entry).await.ok();
         }
 

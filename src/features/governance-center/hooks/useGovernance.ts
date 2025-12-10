@@ -86,81 +86,96 @@ export function useGovernance() {
     return response;
   }, []);
 
-  const setGeminiKey = useCallback(async (apiKey: string) => {
-    setLoading(true);
-    setError(null);
+  const setGeminiKey = useCallback(
+    async (apiKey: string) => {
+      setLoading(true);
+      setError(null);
 
-    const response = await governanceService.setGeminiKey(apiKey);
+      const response = await governanceService.setGeminiKey(apiKey);
 
-    if (response.ok && response.data) {
-      setState(prev => ({ ...prev, geminiStatus: response.data }));
-    } else {
-      setError(response.error || 'Erreur lors de la configuration de la clé Gemini');
-    }
+      if (response.ok && response.data) {
+        setState(prev => ({ ...prev, geminiStatus: response.data }));
+      } else {
+        setError(response.error || 'Erreur lors de la configuration de la clé Gemini');
+      }
 
-    setLoading(false);
-    return response;
-  }, [setLoading, setError]);
+      setLoading(false);
+      return response;
+    },
+    [setLoading, setError]
+  );
 
-  const setOpenAIKey = useCallback(async (apiKey: string) => {
-    setLoading(true);
-    setError(null);
+  const setOpenAIKey = useCallback(
+    async (apiKey: string) => {
+      setLoading(true);
+      setError(null);
 
-    const response = await governanceService.setOpenAIKey(apiKey);
+      const response = await governanceService.setOpenAIKey(apiKey);
 
-    if (response.ok && response.data) {
-      setState(prev => ({ ...prev, openaiStatus: response.data }));
-    } else {
-      setError(response.error || 'Erreur lors de la configuration de la clé OpenAI');
-    }
+      if (response.ok && response.data) {
+        setState(prev => ({ ...prev, openaiStatus: response.data }));
+      } else {
+        setError(response.error || 'Erreur lors de la configuration de la clé OpenAI');
+      }
 
-    setLoading(false);
-    return response;
-  }, [setLoading, setError]);
+      setLoading(false);
+      return response;
+    },
+    [setLoading, setError]
+  );
 
-  const setAnthropicKey = useCallback(async (apiKey: string) => {
-    setLoading(true);
-    setError(null);
+  const setAnthropicKey = useCallback(
+    async (apiKey: string) => {
+      setLoading(true);
+      setError(null);
 
-    const response = await governanceService.setAnthropicKey(apiKey);
+      const response = await governanceService.setAnthropicKey(apiKey);
 
-    if (response.ok && response.data) {
-      setState(prev => ({ ...prev, anthropicStatus: response.data }));
-    } else {
-      setError(response.error || 'Erreur lors de la configuration de la clé Anthropic');
-    }
+      if (response.ok && response.data) {
+        setState(prev => ({ ...prev, anthropicStatus: response.data }));
+      } else {
+        setError(response.error || 'Erreur lors de la configuration de la clé Anthropic');
+      }
 
-    setLoading(false);
-    return response;
-  }, [setLoading, setError]);
+      setLoading(false);
+      return response;
+    },
+    [setLoading, setError]
+  );
 
-  const storeSecret = useCallback(async (key: string, value: string, purgeEnv = false) => {
-    setLoading(true);
-    setError(null);
+  const storeSecret = useCallback(
+    async (key: string, value: string, purgeEnv = false) => {
+      setLoading(true);
+      setError(null);
 
-    const response = await governanceService.storeSecret(key, value, purgeEnv);
+      const response = await governanceService.storeSecret(key, value, purgeEnv);
 
-    if (!response.ok) {
-      setError(response.error || 'Erreur lors du stockage du secret');
-    }
+      if (!response.ok) {
+        setError(response.error || 'Erreur lors du stockage du secret');
+      }
 
-    setLoading(false);
-    return response;
-  }, [setLoading, setError]);
+      setLoading(false);
+      return response;
+    },
+    [setLoading, setError]
+  );
 
-  const deleteSecret = useCallback(async (key: string) => {
-    setLoading(true);
-    setError(null);
+  const deleteSecret = useCallback(
+    async (key: string) => {
+      setLoading(true);
+      setError(null);
 
-    const response = await governanceService.deleteSecret(key);
+      const response = await governanceService.deleteSecret(key);
 
-    if (!response.ok) {
-      setError(response.error || 'Erreur lors de la suppression du secret');
-    }
+      if (!response.ok) {
+        setError(response.error || 'Erreur lors de la suppression du secret');
+      }
 
-    setLoading(false);
-    return response;
-  }, [setLoading, setError]);
+      setLoading(false);
+      return response;
+    },
+    [setLoading, setError]
+  );
 
   // ═══════════════════════════════════════════════════════════════
   // POLITIQUES IA
@@ -174,64 +189,71 @@ export function useGovernance() {
     return response;
   }, []);
 
-  const togglePolicy = useCallback(async (policyId: string, enabled: boolean) => {
-    setLoading(true);
-    setError(null);
+  const togglePolicy = useCallback(
+    async (policyId: string, enabled: boolean) => {
+      setLoading(true);
+      setError(null);
 
-    const response = await governanceService.togglePolicy(policyId, enabled);
+      const response = await governanceService.togglePolicy(policyId, enabled);
 
-    if (response.ok && response.data) {
-      setState(prev => ({
-        ...prev,
-        policies: prev.policies.map(p =>
-          p.id === policyId ? { ...p, enabled } : p
-        ),
-      }));
-    } else {
-      setError(response.error || 'Erreur lors de la modification de la politique');
-    }
+      if (response.ok && response.data) {
+        setState(prev => ({
+          ...prev,
+          policies: prev.policies.map(p => (p.id === policyId ? { ...p, enabled } : p)),
+        }));
+      } else {
+        setError(response.error || 'Erreur lors de la modification de la politique');
+      }
 
-    setLoading(false);
-    return response;
-  }, [setLoading, setError]);
+      setLoading(false);
+      return response;
+    },
+    [setLoading, setError]
+  );
 
-  const createPolicy = useCallback(async (policy: Omit<IAPolicy, 'id' | 'createdAt' | 'updatedAt'>) => {
-    setLoading(true);
-    setError(null);
+  const createPolicy = useCallback(
+    async (policy: Omit<IAPolicy, 'id' | 'createdAt' | 'updatedAt'>) => {
+      setLoading(true);
+      setError(null);
 
-    const response = await governanceService.createPolicy(policy);
+      const response = await governanceService.createPolicy(policy);
 
-    if (response.ok && response.data) {
-      setState(prev => ({
-        ...prev,
-        policies: [...prev.policies, response.data ?? ({} as IAPolicy)],
-      }));
-    } else {
-      setError(response.error || 'Erreur lors de la création de la politique');
-    }
+      if (response.ok && response.data) {
+        setState(prev => ({
+          ...prev,
+          policies: [...prev.policies, response.data ?? ({} as IAPolicy)],
+        }));
+      } else {
+        setError(response.error || 'Erreur lors de la création de la politique');
+      }
 
-    setLoading(false);
-    return response;
-  }, [setLoading, setError]);
+      setLoading(false);
+      return response;
+    },
+    [setLoading, setError]
+  );
 
-  const deletePolicy = useCallback(async (policyId: string) => {
-    setLoading(true);
-    setError(null);
+  const deletePolicy = useCallback(
+    async (policyId: string) => {
+      setLoading(true);
+      setError(null);
 
-    const response = await governanceService.deletePolicy(policyId);
+      const response = await governanceService.deletePolicy(policyId);
 
-    if (response.ok) {
-      setState(prev => ({
-        ...prev,
-        policies: prev.policies.filter(p => p.id !== policyId),
-      }));
-    } else {
-      setError(response.error || 'Erreur lors de la suppression de la politique');
-    }
+      if (response.ok) {
+        setState(prev => ({
+          ...prev,
+          policies: prev.policies.filter(p => p.id !== policyId),
+        }));
+      } else {
+        setError(response.error || 'Erreur lors de la suppression de la politique');
+      }
 
-    setLoading(false);
-    return response;
-  }, [setLoading, setError]);
+      setLoading(false);
+      return response;
+    },
+    [setLoading, setError]
+  );
 
   // ═══════════════════════════════════════════════════════════════
   // PERMISSIONS
@@ -262,7 +284,7 @@ export function useGovernance() {
     if (response.ok) {
       setState(prev => ({ ...prev, permissionAudit: [] }));
     } else {
-      setError(response.error || 'Erreur lors de l\'effacement de l\'audit');
+      setError(response.error || "Erreur lors de l'effacement de l'audit");
     }
 
     setLoading(false);
@@ -285,23 +307,31 @@ export function useGovernance() {
     return response;
   }, []);
 
-  const appendSecurityLog = useCallback(async (entry: Omit<SecurityLogEntry, 'id' | 'timestamp'>) => {
-    const response = await governanceService.appendSecurityLog(entry);
-    if (response.ok && response.data) {
-      setState(prev => ({
-        ...prev,
-        securityLog: response.data ? [response.data, ...prev.securityLog] : prev.securityLog,
-      }));
-    }
-    return response;
-  }, []);
+  const appendSecurityLog = useCallback(
+    async (entry: Omit<SecurityLogEntry, 'id' | 'timestamp'>) => {
+      const response = await governanceService.appendSecurityLog(entry);
+      if (response.ok && response.data) {
+        setState(prev => ({
+          ...prev,
+          securityLog: response.data
+            ? [response.data, ...prev.securityLog]
+            : prev.securityLog,
+        }));
+      }
+      return response;
+    },
+    []
+  );
 
-  const exportSecurityLog = useCallback(async (format: 'json' | 'csv') => {
-    setLoading(true);
-    const response = await governanceService.exportSecurityLog(format);
-    setLoading(false);
-    return response;
-  }, [setLoading]);
+  const exportSecurityLog = useCallback(
+    async (format: 'json' | 'csv') => {
+      setLoading(true);
+      const response = await governanceService.exportSecurityLog(format);
+      setLoading(false);
+      return response;
+    },
+    [setLoading]
+  );
 
   const clearSecurityLog = useCallback(async () => {
     setLoading(true);
@@ -312,7 +342,7 @@ export function useGovernance() {
     if (response.ok) {
       setState(prev => ({ ...prev, securityLog: [] }));
     } else {
-      setError(response.error || 'Erreur lors de l\'effacement du journal');
+      setError(response.error || "Erreur lors de l'effacement du journal");
     }
 
     setLoading(false);
@@ -349,7 +379,17 @@ export function useGovernance() {
     ]);
 
     setLoading(false);
-  }, [loadGeminiStatus, loadOpenAIStatus, loadAnthropicStatus, loadPolicies, loadPermissionMatrix, loadPermissionAudit, loadSecurityLog, setLoading, setError]);
+  }, [
+    loadGeminiStatus,
+    loadOpenAIStatus,
+    loadAnthropicStatus,
+    loadPolicies,
+    loadPermissionMatrix,
+    loadPermissionAudit,
+    loadSecurityLog,
+    setLoading,
+    setError,
+  ]);
 
   // Charger les données au montage
   useEffect(() => {

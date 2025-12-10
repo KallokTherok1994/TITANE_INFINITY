@@ -69,7 +69,12 @@ export const XPProgressBar = ({
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
-          transition={{ duration: animationConfig.skipAnimation ? 0 : Math.max(animationConfig.duration * 5, 1), ease: 'easeOut' }}
+          transition={{
+            duration: animationConfig.skipAnimation
+              ? 0
+              : Math.max(animationConfig.duration * 5, 1),
+            ease: 'easeOut',
+          }}
           style={{
             height: '100%',
             background: `linear-gradient(90deg, ${colors.rubis.primary[600]}, ${colors.rubis.primary[500]})`,

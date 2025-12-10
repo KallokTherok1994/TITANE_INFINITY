@@ -10,12 +10,12 @@
 //!   - Thread-safe operations
 //! ═══════════════════════════════════════════════════════════════════════════
 
+use ndarray::Array1;
+use parking_lot::RwLock;
 use rusqlite::{params, Connection, Result as SqlResult};
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::sync::Arc;
-use parking_lot::RwLock;
-use ndarray::Array1;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & STRUCTURES
@@ -119,7 +119,7 @@ impl VectorStore {
     /// Create database tables
     fn create_tables(&self) -> Result<(), String> {
         let conn = self.conn.write();
-        
+
         let sql = format!(
             r#"
             CREATE TABLE IF NOT EXISTS {} (
@@ -156,11 +156,26 @@ impl VectorStore {
         let table = &self.config.table_name;
 
         let indexes = vec![
-            format!("CREATE INDEX IF NOT EXISTS idx_{}_tier ON {} (tier)", table, table),
-            format!("CREATE INDEX IF NOT EXISTS idx_{}_type ON {} (type)", table, table),
-            format!("CREATE INDEX IF NOT EXISTS idx_{}_owner ON {} (owner)", table, table),
-            format!("CREATE INDEX IF NOT EXISTS idx_{}_importance ON {} (importance DESC)", table, table),
-            format!("CREATE INDEX IF NOT EXISTS idx_{}_created ON {} (created_at DESC)", table, table),
+            format!(
+                "CREATE INDEX IF NOT EXISTS idx_{}_tier ON {} (tier)",
+                table, table
+            ),
+            format!(
+                "CREATE INDEX IF NOT EXISTS idx_{}_type ON {} (type)",
+                table, table
+            ),
+            format!(
+                "CREATE INDEX IF NOT EXISTS idx_{}_owner ON {} (owner)",
+                table, table
+            ),
+            format!(
+                "CREATE INDEX IF NOT EXISTS idx_{}_importance ON {} (importance DESC)",
+                table, table
+            ),
+            format!(
+                "CREATE INDEX IF NOT EXISTS idx_{}_created ON {} (created_at DESC)",
+                table, table
+            ),
         ];
 
         for index_sql in indexes {
@@ -218,7 +233,11 @@ impl VectorStore {
     }
 
     /// Search vectors by similarity
-    pub fn search(&self, query_embedding: &[f32], options: SearchOptions) -> Result<Vec<SearchResult>, String> {
+    pub fn search(
+        &self,
+        query_embedding: &[f32],
+        options: SearchOptions,
+    ) -> Result<Vec<SearchResult>, String> {
         let conn = self.conn.write();
         let top_k = options.top_k.unwrap_or(10);
         let min_score = options.min_score.unwrap_or(0.0);
@@ -254,30 +273,29 @@ impl VectorStore {
             format!("WHERE {}", where_clauses.join(" AND "))
         };
 
-        let sql = format!(
-            "SELECT * FROM {} {}",
-            self.config.table_name, where_sql
-        );
+        let sql = format!("SELECT * FROM {} {}", self.config.table_name, where_sql);
 
-        let mut stmt = conn.prepare(&sql)
+        let mut stmt = conn
+            .prepare(&sql)
             .map_err(|e| format!("Failed to prepare statement: {}", e))?;
 
         let param_refs: Vec<&dyn rusqlite::ToSql> = params.iter().map(|p| p.as_ref()).collect();
-        
-        let rows = stmt.query_map(param_refs.as_slice(), |row| {
-            Ok((
-                self.row_to_entry(row)?,
-                row.get::<_, Vec<u8>>(5)?, // embedding bytes
-            ))
-        })
-        .map_err(|e| format!("Failed to query: {}", e))?;
+
+        let rows = stmt
+            .query_map(param_refs.as_slice(), |row| {
+                Ok((
+                    self.row_to_entry(row)?,
+                    row.get::<_, Vec<u8>>(5)?, // embedding bytes
+                ))
+            })
+            .map_err(|e| format!("Failed to query: {}", e))?;
 
         // Calculate similarities
         let mut results = Vec::new();
         for row_result in rows {
-            let (entry, embedding_bytes) = row_result
-                .map_err(|e| format!("Failed to read row: {}", e))?;
-            
+            let (entry, embedding_bytes) =
+                row_result.map_err(|e| format!("Failed to read row: {}", e))?;
+
             let embedding = Self::deserialize_embedding(&embedding_bytes)?;
             let score = Self::cosine_similarity(query_embedding, &embedding);
 
@@ -291,7 +309,11 @@ impl VectorStore {
         }
 
         // Sort by score descending
-        results.sort_by(|a, b| b.score.partial_cmp(&a.score).unwrap_or(std::cmp::Ordering::Equal));
+        results.sort_by(|a, b| {
+            b.score
+                .partial_cmp(&a.score)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
         results.truncate(top_k);
 
         Ok(results)
@@ -300,10 +322,11 @@ impl VectorStore {
     /// Get entry by ID
     pub fn get(&self, id: &str) -> Result<Option<VectorEntry>, String> {
         let conn = self.conn.read();
-        
+
         let sql = format!("SELECT * FROM {} WHERE id = ?1", self.config.table_name);
-        
-        let mut stmt = conn.prepare(&sql)
+
+        let mut stmt = conn
+            .prepare(&sql)
             .map_err(|e| format!("Failed to prepare statement: {}", e))?;
 
         let result = stmt.query_row([id], |row| self.row_to_entry(row));
@@ -363,7 +386,7 @@ impl VectorStore {
         params.push(Box::new(id.to_string()));
 
         let param_refs: Vec<&dyn rusqlite::ToSql> = params.iter().map(|p| p.as_ref()).collect();
-        
+
         conn.execute(&sql, param_refs.as_slice())
             .map_err(|e| format!("Failed to update entry: {}", e))?;
 
@@ -373,9 +396,9 @@ impl VectorStore {
     /// Delete entry
     pub fn delete(&self, id: &str) -> Result<(), String> {
         let conn = self.conn.write();
-        
+
         let sql = format!("DELETE FROM {} WHERE id = ?1", self.config.table_name);
-        
+
         conn.execute(&sql, [id])
             .map_err(|e| format!("Failed to delete entry: {}", e))?;
 
@@ -387,25 +410,28 @@ impl VectorStore {
         let conn = self.conn.read();
 
         // Total entries
-        let total: u32 = conn.query_row(
-            &format!("SELECT COUNT(*) FROM {}", self.config.table_name),
-            [],
-            |row| row.get(0),
-        )
-        .map_err(|e| format!("Failed to get count: {}", e))?;
+        let total: u32 = conn
+            .query_row(
+                &format!("SELECT COUNT(*) FROM {}", self.config.table_name),
+                [],
+                |row| row.get(0),
+            )
+            .map_err(|e| format!("Failed to get count: {}", e))?;
 
         // By tier
         let mut by_tier = std::collections::HashMap::new();
-        let mut stmt = conn.prepare(&format!(
-            "SELECT tier, COUNT(*) FROM {} GROUP BY tier",
-            self.config.table_name
-        ))
-        .map_err(|e| format!("Failed to prepare tier query: {}", e))?;
+        let mut stmt = conn
+            .prepare(&format!(
+                "SELECT tier, COUNT(*) FROM {} GROUP BY tier",
+                self.config.table_name
+            ))
+            .map_err(|e| format!("Failed to prepare tier query: {}", e))?;
 
-        let tier_rows = stmt.query_map([], |row| {
-            Ok((row.get::<_, String>(0)?, row.get::<_, u32>(1)?))
-        })
-        .map_err(|e| format!("Failed to query tiers: {}", e))?;
+        let tier_rows = stmt
+            .query_map([], |row| {
+                Ok((row.get::<_, String>(0)?, row.get::<_, u32>(1)?))
+            })
+            .map_err(|e| format!("Failed to query tiers: {}", e))?;
 
         for row in tier_rows {
             let (tier, count) = row.map_err(|e| format!("Failed to read tier: {}", e))?;
@@ -414,16 +440,18 @@ impl VectorStore {
 
         // By type
         let mut by_type = std::collections::HashMap::new();
-        let mut stmt = conn.prepare(&format!(
-            "SELECT type, COUNT(*) FROM {} GROUP BY type",
-            self.config.table_name
-        ))
-        .map_err(|e| format!("Failed to prepare type query: {}", e))?;
+        let mut stmt = conn
+            .prepare(&format!(
+                "SELECT type, COUNT(*) FROM {} GROUP BY type",
+                self.config.table_name
+            ))
+            .map_err(|e| format!("Failed to prepare type query: {}", e))?;
 
-        let type_rows = stmt.query_map([], |row| {
-            Ok((row.get::<_, String>(0)?, row.get::<_, u32>(1)?))
-        })
-        .map_err(|e| format!("Failed to query types: {}", e))?;
+        let type_rows = stmt
+            .query_map([], |row| {
+                Ok((row.get::<_, String>(0)?, row.get::<_, u32>(1)?))
+            })
+            .map_err(|e| format!("Failed to query types: {}", e))?;
 
         for row in type_rows {
             let (t, count) = row.map_err(|e| format!("Failed to read type: {}", e))?;
@@ -431,12 +459,13 @@ impl VectorStore {
         }
 
         // Average importance
-        let avg_importance: f32 = conn.query_row(
-            &format!("SELECT AVG(importance) FROM {}", self.config.table_name),
-            [],
-            |row| row.get(0),
-        )
-        .unwrap_or(0.0);
+        let avg_importance: f32 = conn
+            .query_row(
+                &format!("SELECT AVG(importance) FROM {}", self.config.table_name),
+                [],
+                |row| row.get(0),
+            )
+            .unwrap_or(0.0);
 
         // DB size
         let db_size_bytes = std::fs::metadata(&self.config.db_path)
@@ -485,10 +514,7 @@ impl VectorStore {
     }
 
     fn serialize_embedding(embedding: &[f32]) -> Result<Vec<u8>, String> {
-        let bytes: Vec<u8> = embedding
-            .iter()
-            .flat_map(|&f| f.to_le_bytes())
-            .collect();
+        let bytes: Vec<u8> = embedding.iter().flat_map(|&f| f.to_le_bytes()).collect();
         Ok(bytes)
     }
 
@@ -529,8 +555,8 @@ impl VectorStore {
 // TAURI COMMANDS
 // ═══════════════════════════════════════════════════════════════════════════
 
-use tauri::State;
 use std::collections::HashMap;
+use tauri::State;
 
 type VectorStoreRegistry = Arc<RwLock<HashMap<String, Arc<VectorStore>>>>;
 
@@ -541,10 +567,10 @@ pub async fn vector_store_init(
 ) -> Result<String, String> {
     let store_id = config.db_path.clone();
     let store = VectorStore::new(config)?;
-    
+
     let mut reg = registry.write();
     reg.insert(store_id.clone(), Arc::new(store));
-    
+
     Ok(store_id)
 }
 

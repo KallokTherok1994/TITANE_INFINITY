@@ -25,7 +25,7 @@ import {
   BENCHMARK_THRESHOLDS,
   LOWPOWER_THRESHOLDS,
   DEFAULT_PERFORMANCE_CONFIG,
-  METRIC_DEFINITIONS
+  METRIC_DEFINITIONS,
 } from '../../../services/performanceEngine/performanceEngine.config';
 
 import type {
@@ -38,14 +38,14 @@ import type {
   PerformanceIssue,
   ThresholdViolation,
   Recommendation,
-  MetricsSnapshot
+  MetricsSnapshot,
 } from '../../../services/performanceEngine/performanceEngine.config';
 
 // ============================================================================
 // TESTS - GÉNÉRATION D'IDS
 // ============================================================================
 
-describe('Performance Engine - Génération d\'IDs', () => {
+describe("Performance Engine - Génération d'IDs", () => {
   describe('generateSnapshotId', () => {
     it('devrait générer un ID unique', () => {
       const id1 = generateSnapshotId();
@@ -76,7 +76,7 @@ describe('Performance Engine - Génération d\'IDs', () => {
       expect(id).toMatch(/^issue_/);
     });
 
-    it('devrait inclure le type d\'issue', () => {
+    it("devrait inclure le type d'issue", () => {
       const id = generateIssueId('fps_drop');
       expect(id).toContain('fps_drop');
     });
@@ -303,32 +303,39 @@ describe('Performance Engine - Profils de configuration', () => {
 
   describe('Cohérence des seuils', () => {
     it('les seuils CPU warning doivent être inférieurs aux critical', () => {
-      expect(DEVELOPMENT_THRESHOLDS.system.cpuGlobalWarning)
-        .toBeLessThan(DEVELOPMENT_THRESHOLDS.system.cpuGlobalCritical);
-      expect(PRODUCTION_THRESHOLDS.system.cpuGlobalWarning)
-        .toBeLessThan(PRODUCTION_THRESHOLDS.system.cpuGlobalCritical);
+      expect(DEVELOPMENT_THRESHOLDS.system.cpuGlobalWarning).toBeLessThan(
+        DEVELOPMENT_THRESHOLDS.system.cpuGlobalCritical
+      );
+      expect(PRODUCTION_THRESHOLDS.system.cpuGlobalWarning).toBeLessThan(
+        PRODUCTION_THRESHOLDS.system.cpuGlobalCritical
+      );
     });
 
     it('les seuils RAM warning doivent être inférieurs aux critical', () => {
-      expect(DEVELOPMENT_THRESHOLDS.system.ramSystemWarning)
-        .toBeLessThan(DEVELOPMENT_THRESHOLDS.system.ramSystemCritical);
-      expect(PRODUCTION_THRESHOLDS.system.ramSystemWarning)
-        .toBeLessThan(PRODUCTION_THRESHOLDS.system.ramSystemCritical);
+      expect(DEVELOPMENT_THRESHOLDS.system.ramSystemWarning).toBeLessThan(
+        DEVELOPMENT_THRESHOLDS.system.ramSystemCritical
+      );
+      expect(PRODUCTION_THRESHOLDS.system.ramSystemWarning).toBeLessThan(
+        PRODUCTION_THRESHOLDS.system.ramSystemCritical
+      );
     });
 
     it('production devrait avoir des seuils CPU plus stricts que development', () => {
-      expect(PRODUCTION_THRESHOLDS.system.cpuGlobalWarning)
-        .toBeLessThanOrEqual(DEVELOPMENT_THRESHOLDS.system.cpuGlobalWarning);
+      expect(PRODUCTION_THRESHOLDS.system.cpuGlobalWarning).toBeLessThanOrEqual(
+        DEVELOPMENT_THRESHOLDS.system.cpuGlobalWarning
+      );
     });
 
     it('benchmark devrait avoir les seuils les plus stricts', () => {
-      expect(BENCHMARK_THRESHOLDS.system.cpuGlobalWarning)
-        .toBeLessThanOrEqual(PRODUCTION_THRESHOLDS.system.cpuGlobalWarning);
+      expect(BENCHMARK_THRESHOLDS.system.cpuGlobalWarning).toBeLessThanOrEqual(
+        PRODUCTION_THRESHOLDS.system.cpuGlobalWarning
+      );
     });
 
     it('lowpower devrait avoir les seuils les plus relaxés', () => {
-      expect(LOWPOWER_THRESHOLDS.system.cpuGlobalWarning)
-        .toBeGreaterThanOrEqual(DEVELOPMENT_THRESHOLDS.system.cpuGlobalWarning);
+      expect(LOWPOWER_THRESHOLDS.system.cpuGlobalWarning).toBeGreaterThanOrEqual(
+        DEVELOPMENT_THRESHOLDS.system.cpuGlobalWarning
+      );
     });
   });
 });
@@ -342,12 +349,17 @@ describe('Performance Engine - Configuration par défaut', () => {
     expect(DEFAULT_PERFORMANCE_CONFIG.collector.intervalMs).toBeGreaterThan(0);
   });
 
-  it('devrait avoir une taille d\'historique positive', () => {
+  it("devrait avoir une taille d'historique positive", () => {
     expect(DEFAULT_PERFORMANCE_CONFIG.collector.historySize).toBeGreaterThan(0);
   });
 
   it('devrait avoir un profil valide', () => {
-    const validProfiles: PerformanceProfile[] = ['development', 'production', 'benchmark', 'lowpower'];
+    const validProfiles: PerformanceProfile[] = [
+      'development',
+      'production',
+      'benchmark',
+      'lowpower',
+    ];
     expect(validProfiles).toContain(DEFAULT_PERFORMANCE_CONFIG.profile);
   });
 
@@ -412,7 +424,10 @@ describe('Performance Engine - Types de données', () => {
   describe('MetricType', () => {
     it('devrait accepter les métriques système', () => {
       const systemMetrics: MetricType[] = [
-        'cpu_global', 'cpu_process', 'ram_process', 'ram_system'
+        'cpu_global',
+        'cpu_process',
+        'ram_process',
+        'ram_system',
       ];
       systemMetrics.forEach(metric => {
         expect(METRIC_DEFINITIONS[metric]).toBeDefined();
@@ -421,7 +436,9 @@ describe('Performance Engine - Types de données', () => {
 
     it('devrait accepter les métriques frontend', () => {
       const frontendMetrics: MetricType[] = [
-        'fps_webview', 'render_time', 'invoke_latency'
+        'fps_webview',
+        'render_time',
+        'invoke_latency',
       ];
       frontendMetrics.forEach(metric => {
         expect(METRIC_DEFINITIONS[metric]).toBeDefined();
@@ -430,7 +447,9 @@ describe('Performance Engine - Types de données', () => {
 
     it('devrait accepter les métriques IA', () => {
       const iaMetrics: MetricType[] = [
-        'ia_latency_ollama', 'ia_latency_gemini', 'ia_tokens_per_sec'
+        'ia_latency_ollama',
+        'ia_latency_gemini',
+        'ia_tokens_per_sec',
       ];
       iaMetrics.forEach(metric => {
         expect(METRIC_DEFINITIONS[metric]).toBeDefined();
@@ -452,8 +471,18 @@ describe('Performance Engine - Types de données', () => {
   describe('TitaneModule', () => {
     it('devrait avoir 12 modules définis', () => {
       const modules: TitaneModule[] = [
-        'selfHealing', 'cognitive', 'memory', 'tools', 'search', 'xp',
-        'evolution', 'prompt', 'tts', 'avatar', 'chat', 'performance'
+        'selfHealing',
+        'cognitive',
+        'memory',
+        'tools',
+        'search',
+        'xp',
+        'evolution',
+        'prompt',
+        'tts',
+        'avatar',
+        'chat',
+        'performance',
       ];
       expect(modules).toHaveLength(12);
     });

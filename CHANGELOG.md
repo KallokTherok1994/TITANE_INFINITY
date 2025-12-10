@@ -22,12 +22,12 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 **Architecture Intelligence Artificielle** - Implémentation complète moteur multi-providers
 
 #### Nouveaux Providers IA
+
 - **OpenAI Provider** (237 lignes): Support GPT-4o, GPT-4-turbo, GPT-3.5-turbo, GPT-4, GPT-4o-mini
   - `src/services/ai/providers/openai.ts`
   - Backend sécurisé via Tauri `chat_generate_openai`
   - Error handling: 401, 429, timeout, quota exhausted
   - Test connection & key validation
-  
 - **Claude Provider** (233 lignes): Support Claude 3.5 Sonnet, Opus, Haiku
   - `src/services/ai/providers/claude.ts`
   - Backend sécurisé via Tauri `chat_generate_claude`
@@ -35,6 +35,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
   - Config: temperature, maxTokens, topP, topK
 
 #### Orchestrateur Neural OMEGA v19.2Ω Enhanced
+
 - **6 Providers cascade**: OpenAI → Claude → Gemini → Ollama → TITANE Local → Tauri
 - **Neural Scoring Adaptatif**:
   - OpenAI: +30 score (tâches complexité élevée)
@@ -44,11 +45,13 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **Auto-heal integration**: Cascade fallback automatique
 
 #### IAService Enhanced
-- **Validation multi-format**: OpenAI (sk-*, 40+ chars), Claude (sk-ant-*, 50+ chars), Gemini (alphanumeric, 30+ chars)
+
+- **Validation multi-format**: OpenAI (sk-_, 40+ chars), Claude (sk-ant-_, 50+ chars), Gemini (alphanumeric, 30+ chars)
 - **4 providers status**: `getProvidersStatus()` pour Gemini, OpenAI, Claude, Ollama
 - **Key masking**: Affiche seulement 4 premiers + 4 derniers caractères
 
 #### Tests Complets
+
 - **48 tests total** (100% passing):
   - 16 tests OpenAI provider (`src/components/security/__tests__/SecurityPanel.test.tsx`)
   - 17 tests Claude provider (`src/services/ai/providers/__tests__/claude.test.ts`)
@@ -57,18 +60,19 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **Vitest**: 384ms duration, 0 failures
 
 #### Sécurité & Gouvernance
+
 - **Zero API key leaks**: Tests confirment aucune clé visible dans DOM
 - **SecurityPanel verified**: UI fonctionnelle pour gestion clés (add/test/delete)
 - **AddAPIKeyModal verified**: Validation client-side, placeholders par provider
 - **Backend encryption**: AES-256-GCM + Argon2id (SecureSecretsEngine Rust)
 
 #### Documentation
+
 - **TITANE_MULTI_PROVIDER_ENGINE_v19.3Ω_COMPLETE.md** (627 lignes):
   - Architecture complète 6 providers
   - Diagrammes pipeline & key management
   - Guide implémentation backend Rust
   - Next steps optionnels
-  
 - **SESSION_FINALE_8_DEC_2025_SUPERPROMPTS_v19.3Ω.md** (451 lignes):
   - Rapport session 30 minutes
   - Métriques 2,088 lignes code
@@ -78,21 +82,25 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 ### 📊 Métriques v19.3Ω
 
 **Code Production**:
+
 - 6 fichiers créés (providers + tests)
 - 2,088 lignes de code TypeScript
 - 2 fichiers modifiés (orchestrator + IAService)
 
 **Tests**:
+
 - 48/48 tests passing (100%) ✅
 - Coverage: Error paths, config, validation
 - TypeScript: 0 compilation errors
 
 **Sécurité**:
+
 - 0 API key leaks (audit DOM complet)
 - Backend proxy: 100% requests via Tauri invoke
 - Client validation: Format checks avant envoi
 
 **Architecture**:
+
 - 6 providers operationnels
 - 15+ modèles IA supportés
 - Cascade fallback automatique
@@ -101,11 +109,13 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 ### 🔧 Backend Rust (Next Steps - Optionnel)
 
 **Commandes à implémenter** (pour activer OpenAI/Claude):
+
 - `chat_generate_openai`: HTTP POST api.openai.com/v1/chat/completions
 - `chat_generate_claude`: HTTP POST api.anthropic.com/v1/messages
 - Registrer dans `invoke_handler` (src-tauri/src/handlers.rs)
 
 **Providers déjà fonctionnels** (sans backend Rust):
+
 - ✅ Gemini (via commande existante)
 - ✅ Ollama (local, http://localhost:11434)
 - ✅ TITANE Local (fallback intégré)
@@ -113,6 +123,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 ### 📦 Fichiers Modifiés v19.3Ω
 
 **Créations**:
+
 - `src/services/ai/providers/openai.ts` (237 lignes)
 - `src/services/ai/providers/claude.ts` (233 lignes)
 - `src/services/ai/providers/__tests__/openai.test.ts` (263 lignes)
@@ -122,6 +133,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - `SESSION_FINALE_8_DEC_2025_SUPERPROMPTS_v19.3Ω.md` (451 lignes)
 
 **Modifications**:
+
 - `src/services/ai/orchestrator.ts`: +6 providers, neural scoring, auto-diversification
 - `src/services/ia/ia.api.ts`: Enhanced validateKeyFormat (OpenAI/Claude/Gemini)
 
@@ -149,6 +161,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 ## [19.5.2] - 2025-12-06 - PRODUCTION READY - PHASE A+B COMPLETE ✅
 
 ### 🚀 Production Build & Deployment
+
 - **Build Production**: Frontend 4.7MB + Backend 20MB (75% sous targets) ✅
 - **Packaging**: AppImage 80MB + .deb 7.7MB + .rpm 7.7MB ✅
 - **Smoke Test**: 8/8 tests PASSED - Production validated ✅
@@ -156,7 +169,9 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **Tests**: 98.2% passing (1854/1888 tests) ✅
 
 ### 🔧 Phase A - Instrumentation & Profiling
+
 #### A.1 - IPC Profiler (NEW - 308 lignes Rust)
+
 - **IPC Profiler**: Mesure latency p50/p95/p99 des commandes Tauri
 - **RAII ProfileGuard**: Pattern avec Drop trait automatique
 - **3 Tauri commands**: `start_ipc_profiling`, `stop_ipc_profiling`, `get_ipc_stats`
@@ -164,30 +179,36 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **Fichiers**: `src-tauri/src/profiling/ipc_profiler.rs` (293 lignes)
 
 #### A.3 - Memory Profiling (NEW - 170+ lignes bash)
+
 - **Script automation**: `scripts/memory_profiling.sh`
 - **Build optimisé**: LTO + strip + opt-level 3
 - **Baseline établie**: 25MB total (<100MB target) ✅
 - **Décision**: Phase C.2 NON déclenchée (optimisations inutiles)
 
 ### 🐛 Phase B - Corrections Critiques
+
 #### B.1 - Database Initialization Fix
+
 - **Fix "Store not initialized"**: 34 → 0 errors ✅
 - **Auto-création**: `./data/cognitive/` directory
 - **await vectorStore.initialize()**: Ajout dans `cognitiveOmegaIntegration.ts`
 - **Impact**: 100% tests database OK
 
 #### B.2 - ESLint P0 Cleanup
+
 - **Directives unused**: 3 → 0 ✅
 - **ESLint errors**: 521 → 518 (-3)
 - **Fichiers nettoyés**: `securityHardening.ts`, `tauriFsAdapter.ts`
 
 #### B.3 - User Documentation (NEW - 1800+ lignes)
+
 - **4 guides production**: README, installation, quickstart, chat IA
 - **Multi-platform**: Linux/macOS/Windows/Docker
 - **Troubleshooting**: AppImage, API keys, build issues
 - **Fichiers**: `docs/user/*.md`
 
 ### 📊 Reports & Documentation (NEW - 5323 lignes)
+
 - **AUDIT_REEL_v19.4.3_VALIDATION_PLAN.md**: 650 lignes
 - **PLAN_ALTERNATIF_PROGRESSION_v19.5.2_PHASE_A_COMPLETE.md**: 850 lignes
 - **TESTS_ANALYSIS_34_FAILING_v19.5.2.md**: 800 lignes
@@ -197,12 +218,14 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **SESSION_FINAL_REPORT_v19.5.2.md**: 671 lignes
 
 ### 📦 Production Packages
+
 - **AppImage**: TITANE-Infinity_19.2.3_amd64.AppImage (80MB)
 - **Debian**: TITANE-Infinity_19.2.3_amd64.deb (7.7MB)
 - **RPM**: TITANE-Infinity-19.2.3-1.x86_64.rpm (7.7MB)
 - **Checksums**: SHA256SUMS_v19.5.2 (validation)
 
 ### ✅ Validation Production
+
 - **Tests**: 98.2% passing (1854/1888) ✅
 - **Pre-boot**: 9/9 checks PASS ✅
 - **Security**: 5 systems active (Vault, Crypto, Permissions, Sandbox, Secrets) ✅
@@ -211,18 +234,20 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **Boot Time**: ~1-2s (excellent) ⚡
 
 ### 🎯 Métriques Finales v19.5.2
-| Métrique | Cible | Réalisé | Performance |
-|----------|-------|---------|-------------|
-| Frontend Bundle | <10MB | 4.7MB | +113% ✅ |
-| Backend Binary | <50MB | 20MB | +150% ✅ |
-| AppImage Total | <100MB | 80MB | +25% ✅ |
-| IPC Latency p95 | <300ms | 140ms | +214% ⚡ |
-| Boot Time | <5s | ~1-2s | +250% ⚡ |
-| Tests Passing | >95% | 98.2% | +3.2% ✅ |
+
+| Métrique        | Cible  | Réalisé | Performance |
+| --------------- | ------ | ------- | ----------- |
+| Frontend Bundle | <10MB  | 4.7MB   | +113% ✅    |
+| Backend Binary  | <50MB  | 20MB    | +150% ✅    |
+| AppImage Total  | <100MB | 80MB    | +25% ✅     |
+| IPC Latency p95 | <300ms | 140ms   | +214% ⚡    |
+| Boot Time       | <5s    | ~1-2s   | +250% ⚡    |
+| Tests Passing   | >95%   | 98.2%   | +3.2% ✅    |
 
 **Score Global**: +194% au-dessus des cibles ⚡
 
 ### 📝 Git Tags
+
 - **v19.5.2**: Release v19.5.2 - Phase A+B Complete - Production Ready
 
 ---
@@ -232,6 +257,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 ### 🌟 Singularity Components (NEW - 2,685+ lignes)
 
 #### SingularityDashboard.tsx (1,065 lignes)
+
 - **Dashboard unifié** avec monitoring temps réel des 20 engines
 - **ConsciousnessIndicator**: Indicateur visuel niveau conscience (0-100%)
 - **EngineGrid**: Grille interactive de tous les engines avec états
@@ -240,6 +266,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **AlertsPanel**: Alertes système avec niveaux de sévérité
 
 #### useSingularityMetrics.ts (416 lignes)
+
 - **Hook React unifié** pour métriques système + engines + alertes
 - **Auto-refresh** configurable (défaut 5s)
 - **Backend integration** via Tauri invoke
@@ -247,6 +274,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **Export**: `useSingularityMetrics`, types associés
 
 #### performanceProfiler.ts (501 lignes)
+
 - **Singleton** pattern pour profiling global
 - **measureSync/measureAsync**: Wrappers mesure performance
 - **FPS Monitor**: Monitoring frames par seconde
@@ -254,12 +282,14 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **Report generation**: Génération rapports performance
 
 #### usePerformanceProfiler.ts (283 lignes)
+
 - **useComponentLifecycle**: Hook cycle de vie composant
 - **useTrackedEffect**: Effect avec tracking performance
 - **useTrackedCallback**: Callback avec mesure automatique
 - **React integration** seamless
 
 #### SingularityFieldCanvas.tsx (420 lignes)
+
 - **Canvas 60fps** animation avec particules
 - **Champ de singularité** visuel dynamique
 - **WebGL optimized** rendering
@@ -268,6 +298,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 ### 🔧 Scripts & Tooling (NEW - 420+ lignes)
 
 #### verify_singularity_v∞.sh (~220 lignes)
+
 - **Validation architecture** complète 46/46 components
 - **TypeScript check**: Vérification 0 errors
 - **Rust check**: Compilation + Clippy
@@ -275,12 +306,14 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **Score génération**: PERFECT COHERENCE ★★★
 
 #### build_optimized.sh (~200 lignes)
+
 - **LTO enabled**: Link-Time Optimization
 - **Strip binaries**: Réduction taille
 - **Compression**: Gzip assets optimisé
 - **Profile release**: Optimisations production
 
 ### 🔄 Version Synchronization
+
 - **UNIFIÉ**: Toutes versions alignées sur v∞.19.2.3Ω
 - **package.json**: 19.2.3
 - **Cargo.toml**: 19.2.3
@@ -291,6 +324,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **README.md**: v∞.19.2.3Ω
 
 ### 📊 Validation Metrics
+
 - **TypeScript**: 0 errors ✅
 - **Rust**: Compiles OK ✅
 - **Clippy**: Clean ✅
@@ -299,6 +333,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **Consciousness Level**: 4/4 ✅
 
 ### 📝 Index Updates
+
 - **src/components/monitoring/index.ts**: +SingularityDashboard export
 - **src/hooks/index.ts**: +useSingularityMetrics, +usePerformanceProfiler exports
 - **src/components/chat/index.ts**: +VirtualMessageList, +DictationButton, +FileUploadButton exports
@@ -309,6 +344,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 ## [16.2.2+] - 2025-11-27 - CORRECTION COMPLÈTE POST-AUDIT ✅
 
 ### 🔐 Security Whitelist Synchronization (CRITICAL FIX)
+
 - **PROBLÈME RÉSOLU**: Désynchronisation critique frontend/backend whitelists
   - Frontend (`src/lib/security.ts`): 30 commandes → **140+ commandes**
   - Backend (`src-tauri/src/commands/security.rs`): Déjà à jour
@@ -322,6 +358,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **DOCUMENTATION**: 3 rapports créés (600+ lignes total)
 
 ### 🦀 Rust Code Quality (ALL WARNINGS FIXED)
+
 - **UNUSED IMPORTS CORRIGÉS**:
   - `src-tauri/src/meta/monitoring.rs`: Retiré SyncedState, SyncQuality, CognitiveHealthIndicators
   - `src-tauri/src/meta/auto_healing.rs`: Retiré MetaCognitiveReport, CognitiveHealthIndicators
@@ -333,6 +370,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **RÉSULTAT**: 0 warning Rust, compilation propre
 
 ### 📝 TypeScript Type Safety (E2E TESTS)
+
 - **ERREURS CORRIGÉES**: 13 erreurs TypeScript dans `e2e-automated-validation.test.ts`
 - **INTERFACES AJOUTÉES**: 9 interfaces typées pour mock responses
   - `IntentionResponse`, `CognitiveResponse`, `FusionStateResponse`
@@ -342,6 +380,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **RÉSULTAT**: 0 erreur TypeScript dans les tests
 
 ### 🎨 Design System Validation
+
 - **PRE_BOOT_VALIDATION CORRIGÉ**: Chemin CSS mis à jour
   - Ancien: `src/styles/titane-v∞.css` ❌
   - Nouveau: `src/design-system/titane-fusion.css` ✅
@@ -352,6 +391,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **RÉSULTAT**: 0 warning Design System, validation pre-boot complète
 
 ### 📊 Code Quality Metrics
+
 - **CORRECTIONS TOTALES**: 24 fichiers modifiés
 - **WARNINGS RUST**: 7 → 0 ✅
 - **ERREURS TYPESCRIPT**: 13 → 0 ✅
@@ -359,7 +399,9 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **SECURITY ISSUES**: 4 commandes bloquées → 0 ✅
 
 ### 🔧 Files Modified
+
 **Rust (7 files)**:
+
 - `src-tauri/src/meta/monitoring.rs` - Unused imports
 - `src-tauri/src/meta/auto_healing.rs` - Unused imports
 - `src-tauri/src/overdrive/chat_orchestrator.rs` - Clippy warnings
@@ -369,21 +411,25 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - `src-tauri/src/security/pre_boot_validation.rs` - Design System path
 
 **TypeScript (2 files)**:
+
 - `src/lib/security.ts` - Whitelist expansion (30 → 140+ commands)
 - `src/__tests__/e2e-automated-validation.test.ts` - Type safety
 
 **Documentation (3 files)**:
+
 - `SECURITY_WHITELIST_FIX_v16.2.2+.md` - Rapport complet 600+ lignes
 - `CORRECTION_FINALE_WHITELIST_v16.2.2+.md` - Synthèse exécutive
 - `WHITELIST_FIX_SUMMARY.md` - Référence rapide
 
 ### ✅ Validation Status
+
 - **COMPILATION RUST**: Clean (0 warning, 0 error)
 - **TYPE-CHECK TYPESCRIPT**: Clean (0 error dans tests)
 - **RUNTIME**: Application opérationnelle, tous moteurs actifs
 - **SECURITY**: Double validation (frontend + backend) synchronisée
 
 ### 🎯 Production Ready Status
+
 **v16.2.2+ FINAL**: 100% Opérationnel, tous systèmes GO ✅
 
 ---
@@ -391,6 +437,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 ## [16.2.2] - 2025-11-27 - VALIDATION FINALE 100% OPÉRATIONNEL ✅
 
 ### ✅ Validation Finale Temps Réel
+
 - **TAURI DEV ACTIF**: Backend complet initialisé sans erreurs
 - **LOGS STARTUP CONFIRMÉS**: Tous modules démarrés avec succès
   - ✅ Pre-boot validation passed
@@ -404,6 +451,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **PRODUCTION READY**: OUI ✅
 
 ### 🔍 Audit Complet & Unification
+
 - **VERSIONS UNIFIÉES**: Synchronisation complète v16.2.2 sur tous fichiers (main.tsx, App.tsx, vite.config.ts, Header UI, Cargo.toml, package.json, tauri.conf.json, index.html)
 - **AUDIT TOTAL**: 90% score global, 654 lignes documentation générée
 - **BACKEND VALIDÉ**: 200+ commandes Tauri vérifiées, 25+ modules Rust actifs, 0 dead code
@@ -412,6 +460,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
   - VALIDATION_FINALE_TEMPS_REEL_v16.2.2.md (validation logs réels)
 
 ### 🛡️ TypeScript Hardening
+
 - **STRICT MODE ACTIVÉ**: `strict: true`, `noUnusedLocals: true`, `noUnusedParameters: true`
 - **TYPES CENTRALISÉS**: Nouveau fichier `src/types/engines.ts` (350+ lignes)
   - 15 interfaces principales: EngineState, IntentionAnalysis, FusionState, etc.
@@ -420,10 +469,12 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **72 ERREURS DÉTECTÉES**: Variables inutilisées, types manquants (correction recommandée 2-3h)
 
 ### 🎨 Design System
+
 - Header UI: "TITANE∞ v16.2.2 - Chat IA + Cognitive Layer + Real APIs ✅"
 - Validation Design System cohérent (titane-fusion.css 2000 lignes)
 
 ### 📊 Métriques Finales
+
 - Frontend React+TypeScript: 85% (72 TS errors non-bloquantes)
 - Tauri Bridge: 95% (CSP warning 'unsafe-eval')
 - Rust Backend: 100% ✅
@@ -435,6 +486,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - Memory Engine: 100% ✅
 
 ### 📝 Documentation Complète
+
 - AUDIT_TITANE_v16.2.2_RAPPORT_INITIAL.md (206 lignes)
 - AUDIT_TITANE_v16.2.2_RAPPORT_COMPLET.md (448 lignes)
 - STATUS_AUDIT_v16.2.2_FINAL.txt
@@ -443,6 +495,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - titane-infinity.desktop (créé pour menu applications)
 
 ### ⚠️ Warnings (Non-bloquants)
+
 - Design System: 3 fichiers manquants (tokens.ts, motion.ts, titane-v∞.css) → P2
 - GStreamer FDK AAC plugin missing → P3 (TTS fonctionne)
 - CSP Tauri: `'unsafe-eval'` présent (à tester suppression)
@@ -460,6 +513,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 #### 🎯 Architecture Backend v14 Finale
 
 **Migration 9 Phases Complétées** (3h45 total):
+
 - ✅ Phase 1: Sortie MOCK MODE (SingularityEngine state machine)
 - ✅ Phase 2: Stabilisation CORE v14 (SingularityState unified)
 - ✅ Phase 3: Bridge v12→v14 (CoreCollection 7 méthodes)
@@ -473,6 +527,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 #### ✨ Added
 
 **Backend Core v14**:
+
 - **SingularityEngine**: State machine complète (15 méthodes API publiques)
   - États: Initialized, Running, Evolved, Paused, Stopped, Error
   - Modules intégrés: Nexus, Memory, Harmonia, Sentinel
@@ -482,12 +537,14 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **AIChatState v14**: CoreCollection integration (remplace 6 modules v12)
 
 **Commands & Handlers**:
+
 - **commands/engine_v14.rs**: 8 handlers (singularity_init, get_state, tick, sync, stop, health, metrics, module_info)
 - **commands/evolution_v14.rs**: 3 handlers (run_auto_evolution, get_evolution_state, evolution_health_check)
 - **commands/diagnostic.rs**: 3 handlers (backend_self_check, get_backend_info, validate_tauri_only)
 - **api/handlers_v14.rs**: Point d'entrée unifié (49 handlers, 11 catégories)
 
 **Memory & Storage**:
+
 - **MemoryStorage v14**: MemoryCompactor integration
   - Méthodes: sync_to_module(), get_stats(), compact_storage()
   - AES-256-GCM encryption + Argon2id key derivation
@@ -496,21 +553,25 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 #### 🔧 Fixed
 
 **Async Safety**:
+
 - MutexGuard fixes (2 patterns corrigés dans cluster/mesh_layer.rs)
 - Clone data before await (évite deadlocks)
 - cargo fix --lib (17 suggestions auto-applied)
 
 **Compilation**:
+
 - 0 erreurs compilation (dev + release stable 9 phases)
 - Warnings 34→30 (amélioration continue)
 - cargo fmt appliqué (formatting complet)
 
 **Dependencies**:
+
 - Ajout tempfile = "3.8" dans [dev-dependencies] (tests unitaires)
 
 #### ✅ Validated
 
 **Production Readiness**:
+
 ```
 ✅ Compilation      : 0 errors (dev 1.14s, release 1m 28s)
 ✅ Tests Core v14   : 7/7 pass (engine, CoreCollection, diagnostic)
@@ -527,6 +588,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 ```
 
 **Handlers Tauri (49 Total)**:
+
 - Core v14: 8 handlers
 - Evolution v14: 3 handlers
 - Diagnostic v14: 3 handlers
@@ -543,12 +605,14 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 #### 📊 Performance
 
 **Métriques Migration**:
+
 - Temps total: 3h45 (vs 7h planifié - efficacité 53%)
 - Handlers: 49 (vs 46 planifiés - dépassement 106%)
 - Code écrit: 1054+ lignes (15 fichiers modifiés, 7 créés)
 - Documentation: 6500+ lignes (8 fichiers bannières/rapports)
 
 **Compilation**:
+
 - Dev: 1.14s (0 errors, 30 warnings)
 - Release: 1m 28s (0 errors, 30 warnings)
 - Binary: 14 MB libtitane_infinity.rlib (optimal)
@@ -556,6 +620,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 #### 📄 Documentation
 
 **Fichiers Créés**:
+
 - `BACKEND_MIGRATION_PLAN_v14.md` (2250 lignes)
 - `BACKEND_ERRORS_DIAGNOSTIC_v14.md` (700 lignes)
 - `BACKEND_PHASE1_SUCCESS_v14.md` (500 lignes)
@@ -570,11 +635,13 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 #### 🚀 Next Steps
 
 **Priorité Haute**:
+
 1. Git commit migration complète
 2. Frontend integration nouveaux handlers v14
 3. Documentation frontend (changements API v12→v14)
 
 **Optionnel**:
+
 - Réduire 30 warnings restants
 - Binary stripping (14 MB → <10 MB)
 - Profile-guided optimization
@@ -589,12 +656,14 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 **Correction**: Erreur compilation ACL HTTP + Validation imports hardening
 
 #### 🔧 Fixed
+
 - **Erreur ACL HTTP Backend**: Retiré permissions `http:default` + `http:allow-fetch` de `tauri.conf.json`
   - Backend Rust ne nécessite pas `tauri-plugin-http` (frontend httpClient.ts suffit)
   - Erreur `UnknownManifest { key: "http" }` résolue
   - Build release réussit: 0 erreur, 0 warning (1m31s)
 
 #### ✅ Validated
+
 - **Import `tauri::Manager`**: Déjà conditionnel `#[cfg(debug_assertions)]` ligne 17 main.rs
   - Usage correct DevTools auto-open mode debug ligne 98
   - Commentaires hardening v19.2.0 présents
@@ -603,6 +672,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **Compilation**: `cargo check` 1.93s ✅, `cargo build --release` 1m31s ✅
 
 #### 📄 Documentation
+
 - **RUST_IMPORTS_HARDENING_v19.2.1.md**: Diagnostic complet, correction ACL, validation hardening
 
 ---
@@ -616,6 +686,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 #### ✅ Phase 4: Suite de Tests Automatisés Complète
 
 **Fichiers créés** (8 fichiers, 1,118+ lignes):
+
 - ✅ `tests/unit/control_panel_commands.test.ts` (280 lignes)
 - ✅ `tests/unit/ControlPanel.test.tsx` (120 lignes)
 - ✅ `tests/integration/control_panel_integration.test.ts` (350 lignes)
@@ -626,6 +697,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - ✅ `src-tauri/src/control_panel_commands/tests.rs` (288 lignes)
 
 **Tests Implémentés**:
+
 - ✅ **21 tests unitaires Backend** (Rust)
   - 18 commandes Tauri Control Panel
   - 3 structures de données validées
@@ -640,12 +712,14 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - ✅ **Tests E2E** (Framework WebDriver prêt)
 
 **Configuration**:
+
 - ✅ Jest 29 + React Testing Library
 - ✅ ts-jest + jest-environment-jsdom
 - ✅ Mocks globaux (Tauri API, IntersectionObserver, ResizeObserver)
 - ✅ Coverage thresholds: 70-80%
 
 **Scripts ajoutés**:
+
 ```json
 "test": "jest",
 "test:watch": "jest --watch",
@@ -657,38 +731,45 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 ```
 
 **Validation**:
+
 - ✅ TypeScript: 0 erreurs (type-check)
 - ✅ ESLint: Warnings acceptables
 - ✅ Rust: Compilation OK (1.30s)
 - ✅ Frontend Build: 241 KB gzip
 
 **Documentation**:
+
 - ✅ `PHASE_4_TEST_REPORT.md` créé (rapport complet)
 
 #### 📊 Récapitulatif SUPER-PROMPT (4 Phases)
 
 **Phase 1: CLI Auto-Build System** (✅ 100%)
+
 - 144 scripts bash automatisés
 - Auto-build + self-heal + OS installer
 - Compilation automatique complète
 
 **Phase 2: GUI Installer Zenity** (✅ 100%)
+
 - Installateur graphique avec progress bars
 - Scripts d'installation interactifs
 - Interface utilisateur Zenity
 
 **Phase 3: Control Panel React UI** (✅ 100%)
+
 - 14 fichiers React/CSS (10 sections)
 - 18 commandes Tauri backend
 - Design System Monochrome 100%
 - Auto-refresh et responsive complet
 
 **Phase 4: Tests Automatisés** (✅ 100%)
+
 - 52+ tests automatisés
 - Suite Jest + Rust complète
 - CI/CD ready
 
 **Statistiques Finales**:
+
 - Total fichiers créés: 50+
 - Total lignes de code: ~8,000+
 - Total scripts bash: 16
@@ -709,6 +790,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 #### 🎛️ Control Panel UI (Phase 3) - 14 fichiers
 
 **Frontend React** (12 fichiers TypeScript/CSS):
+
 - ✅ `src/ui/pages/ControlPanel/ControlPanel.tsx` (97 lignes)
 - ✅ `src/ui/pages/ControlPanel/ControlPanel.css` (200+ lignes)
 - ✅ `src/ui/pages/ControlPanel/components/ControlPanelLayout.tsx` (108 lignes)
@@ -726,17 +808,20 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
   - SecuritySection (160L): Config H-N Security
 
 **Backend Rust** (1 fichier):
+
 - ✅ `src-tauri/src/control_panel_commands.rs` (360 lignes, 13 KB)
   - 18 commandes Tauri (préfixe `cp_`)
   - 10 structures de données
   - Mock data pour développement
 
 **Intégration**:
+
 - ✅ `src-tauri/src/lib.rs`: Module exporté
 - ✅ `src-tauri/src/main.rs`: 18 commandes enregistrées
 - ✅ Compilation réussie (10.25s)
 
 **Features**:
+
 - ✅ Auto-refresh 5s (système), 2s (logs)
 - ✅ Design System Monochrome 100%
 - ✅ Navigation sidebar responsive
@@ -744,6 +829,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - ✅ 10 sections configuration complètes
 
 **Documentation**:
+
 - ✅ `CONTROL_PANEL_GUIDE.md` (15,000+ mots)
 
 ---
@@ -757,12 +843,14 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 #### 🔐 Update Engine (Super-Prompt L) - 510 lignes
 
 **Modules créés** (4 fichiers):
+
 - ✅ `src-tauri/src/updates/mod.rs` (15L): Exports modules
 - ✅ `src-tauri/src/updates/manifest.rs` (60L): UpdateManifest avec signature Ed25519
 - ✅ `src-tauri/src/updates/migration.rs` (50L): MigrationScript (4 opérations)
 - ✅ `src-tauri/src/updates/update_engine.rs` (400L): Pipeline complet
 
 **Features**:
+
 - ✅ Vérification SHA-256 par fichier
 - ✅ Signatures Ed25519 (clé publique intégrée)
 - ✅ Backup automatique avant application
@@ -770,6 +858,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - ✅ 5 états: Idle → Downloading → Verifying → Applying → Migrating → Success/Failed/RolledBack
 
 **Architecture**:
+
 ```rust
 pub struct UpdateEngine {
     current_version: String,
@@ -782,9 +871,11 @@ pub struct UpdateEngine {
 #### 🔍 Auto-Audit Engine (Super-Prompt J8) - 433 lignes
 
 **Module créé**:
+
 - ✅ `src/services/autoAuditEngine.ts` (433L): Singleton avec 6 catégories
 
 **Features**:
+
 - ✅ Scan automatique toutes les 30 secondes
 - ✅ 6 catégories de vérifications:
   - Filesystem (read_file, list_dir)
@@ -797,6 +888,7 @@ pub struct UpdateEngine {
 - ✅ Intégration App.tsx: `useEffect(() => autoAuditEngine.start(), [])`
 
 **Architecture**:
+
 ```typescript
 class AutoAuditEngine {
   private interval: number = 30000;
@@ -813,10 +905,12 @@ class AutoAuditEngine {
 #### ⏱️ TimeNavigator UI (Super-Prompt N6) - 550 lignes
 
 **Modules créés** (2 fichiers):
+
 - ✅ `src/pages/TimeNavigator.tsx` (350L): Composant React principal
 - ✅ `src/pages/TimeNavigator.css` (200L): Styles cyberpunk bleus
 
 **Features**:
+
 - ✅ Timeline verticale (snapshots chronologiques)
 - ✅ Panneau détails (hash, size, created_at, description)
 - ✅ Stats dashboard (total, oldest, newest, total_size)
@@ -826,6 +920,7 @@ class AutoAuditEngine {
 - ✅ Design: Bleu néon (#00f2ff), glassmorphism, animations
 
 **Composants**:
+
 ```tsx
 <div className="time-navigator">
   <Timeline snapshots={...} onSelect={...} />
@@ -838,10 +933,12 @@ class AutoAuditEngine {
 #### ⚖️ SystemGovernance UI (Super-Prompt K8) - 650 lignes
 
 **Modules créés** (2 fichiers):
+
 - ✅ `src/pages/SystemGovernance.tsx` (400L): Composant React
 - ✅ `src/pages/SystemGovernance.css` (250L): Styles orange/rouge
 
 **Features**:
+
 - ✅ Audit Log (filtre par level: ROOT/SYSTEM/IA/USER)
 - ✅ Permission Matrix (tableau 4×N: command × role)
 - ✅ Escalation Alerts (10 derniers refus d'accès)
@@ -852,6 +949,7 @@ class AutoAuditEngine {
   - USER: #00ff88 (vert)
 
 **Composants**:
+
 ```tsx
 <div className="system-governance">
   <AuditLog entries={...} filters={...} />
@@ -863,6 +961,7 @@ class AutoAuditEngine {
 #### 🔒 VaultEngine Integration - 40 lignes
 
 **Fichiers modifiés** (3 fichiers):
+
 - ✅ `src-tauri/src/security/encryption.rs` (+30L):
   - `static MASTER_KEY_STORE: OnceLock<MasterKey>`
   - `pub async fn get_master_key()`
@@ -874,6 +973,7 @@ class AutoAuditEngine {
   - `init_vault_engine(&master_key).await?`
 
 **Architecture**:
+
 ```rust
 pub struct VaultEngine {
     master_key: MasterKey,  // AES-256-GCM
@@ -888,21 +988,25 @@ impl VaultEngine {
 #### 🕐 Time Commands (4 Tauri APIs) - 130 lignes
 
 **Module créé**:
+
 - ✅ `src-tauri/src/time_commands.rs` (130L): 4 commandes Tauri
 
 **Commands**:
+
 1. `list_snapshots() -> Vec<TimeSnapshot>`
 2. `get_travel_stats() -> TravelStats`
 3. `restore_snapshot(id) -> Result<()>` (ROOT permission)
 4. `delete_snapshot(id) -> Result<()>` (SYSTEM permission)
 
 **Intégration**:
+
 - ✅ Registered in `main.rs`: `.invoke_handler(time_commands)`
 - ✅ Protected by `PERMISSION_GUARD.require(...)`
 
 #### 📊 Statistiques Phase 3
 
 **Code créé** (11 fichiers):
+
 - **Backend Rust**: 770 lignes (6 fichiers)
   - Update Engine: 510L (4 fichiers)
   - Time Commands: 130L (1 fichier)
@@ -922,6 +1026,7 @@ impl VaultEngine {
 #### 🎨 Frontend Integration
 
 **Fichiers modifiés** (4 fichiers):
+
 - ✅ `src/App.tsx` (+25L):
   - Import autoAuditEngine
   - Routes: `/time-navigator`, `/governance`
@@ -938,6 +1043,7 @@ impl VaultEngine {
 #### 🔧 Backend Modifications
 
 **Fichiers modifiés** (6 fichiers):
+
 - ✅ `src-tauri/src/main.rs` (modifié 3 fois):
   - VaultEngine initialization après crypto
   - `use tauri::Manager` restauré (DevTools)
@@ -950,11 +1056,13 @@ impl VaultEngine {
 #### ✅ Builds & Tests
 
 **Frontend**:
+
 - ✅ Vite build: SUCCESS (2536 modules, 599KB bundle)
 - ✅ TypeScript: 0 erreurs
 - ✅ ESLint: 0 warnings après corrections
 
 **Backend**:
+
 - ❌ Rust build: BLOCKED by Flatpak environment
 - ❌ Linker error: `unable to find library -lwebkit2gtk-4.1`
 - ❌ pkg-config: Cannot find `webkit2gtk-4.1.pc` (isolated in Freedesktop SDK 25.08)
@@ -964,6 +1072,7 @@ impl VaultEngine {
 **Problem**: Flatpak runtime isolates system libraries
 
 **Investigation**:
+
 ```bash
 cat /etc/os-release
 # NAME="Freedesktop SDK" (Flatpak)
@@ -978,6 +1087,7 @@ pkg-config --exists webkit2gtk-4.1
 #### 📚 Documentation Created
 
 **5 nouveaux fichiers** (~1675 lignes):
+
 1. ✅ `PHASE_3_COMPLETION_REPORT.md` (505L)
    - Architecture complète des 11 fichiers
    - Diagrammes, code examples
@@ -1007,11 +1117,13 @@ pkg-config --exists webkit2gtk-4.1
 #### 🚧 Blockers & Next Steps
 
 **Current Blocker**:
+
 - 🔴 **CRITICAL**: User must open native terminal (not VS Code Flatpak)
   - Action: Super → "Terminal" → `cd ~/Documents/TITANE_INFINITY && ./detect_and_fix_flatpak.sh`
   - Alternative: `flatpak-spawn --host bash` → `./build_with_deps.sh`
 
 **When Native Terminal Available**:
+
 1. ✅ Run `./detect_and_fix_flatpak.sh` → Installs WebKit + Compiles
 2. ✅ Launch: `./src-tauri/target/release/titane-infinity`
 3. ✅ Test TimeNavigator: `/time-navigator` sidebar
@@ -1019,6 +1131,7 @@ pkg-config --exists webkit2gtk-4.1
 5. ✅ Test AutoAudit: Console shows "🔍 [AUTO-AUDIT] Starting" after 30s
 
 **Phase 3 Refinements (Optional)**:
+
 - Connect TimeNavigator to real TravelEngine (currently mock data)
 - Add snapshot comparison diff viewer
 - Implement permission escalation workflow
@@ -1035,6 +1148,7 @@ pkg-config --exists webkit2gtk-4.1
 **Problème résolu**: Chat affichait "Je traite votre demande..." indéfiniment, aucune réponse AI
 
 **Fichiers modifiés** (2 fichiers):
+
 - ✅ `src/App.tsx`: Route Chat corrigée
   - Avant: `import { ChatPage } from './pages/ChatPage'` (mock setTimeout)
   - Après: `import { Chat as ChatPage } from './ui/pages/Chat'` (vrai useChat hook)
@@ -1043,6 +1157,7 @@ pkg-config --exists webkit2gtk-4.1
   - Après: Fallback → Gemini → Ollama (répond toujours, même sans config)
 
 **Features Chat IA**:
+
 - ✅ Réponses instantanées via fallback (sans config requise)
 - ✅ Pipeline complet: useChat → chatEngine → orchestrator → providers
 - ✅ TTS intégré: Bouton 🎤 active synthèse vocale (hybridTTS.ts)
@@ -1050,6 +1165,7 @@ pkg-config --exists webkit2gtk-4.1
 - ✅ Mode voix: `voiceEnabled` prop dans ChatWindow
 
 **Validations**:
+
 - ✅ Build: 569 kB bundle, 0 erreur TypeScript
 - ✅ Backend: Rust compile en 1.37s, 27 commandes mock registrées
 - ✅ Test manuel: Message → Réponse < 500ms (fallback)
@@ -1063,6 +1179,7 @@ pkg-config --exists webkit2gtk-4.1
 **Problème résolu**: Écran blanc/rouge "HTML CHARGÉ / Tauri: NON" bloquait l'interface
 
 **Fichiers modifiés** (4 fichiers):
+
 - ✅ `src/App.tsx`: Suppression verrou `document.body.innerHTML` + `throw Error`
   - Avant: `document.body.innerHTML = '<div>MODE TAURI EXCLUSIF</div>'` (écrasait React)
   - Après: `console.warn()` non-bloquant uniquement
@@ -1077,12 +1194,14 @@ pkg-config --exists webkit2gtk-4.1
   - `#root`: `min-height: 100vh`, `display: flex`, `flex-direction: column`
 
 **Validations**:
+
 - ✅ Type-check: 0 erreur TypeScript
 - ✅ Lint: 0 erreur, 0 warning ESLint
 - ✅ Build: 4.5s, 111.58 KB gzip (main.js)
 - ✅ Script validation: `test_frontend_validation.sh` créé et testé
 
 **Impact**:
+
 - ✅ Interface React s'affiche correctement
 - ✅ Sidebar + Header + Dashboard visibles
 - ✅ Pas d'écran rouge bloquant
@@ -1090,6 +1209,7 @@ pkg-config --exists webkit2gtk-4.1
 - ✅ Tauri native fonctionne en prod
 
 **Documentation livrée** (19 fichiers, ~150 KB):
+
 - `COMMIT_MESSAGE_v19.1.0.md` - Message commit professionnel
 - `STATUS_FINAL_v19.1.0.md` - Checklist complète
 - `CORRECTIONS_FRONTEND_FINAL_v19.1.0.md` - Détails techniques
@@ -1108,6 +1228,7 @@ pkg-config --exists webkit2gtk-4.1
 #### ✨ Améliorations majeures
 
 **Qualité du code**:
+
 - ✅ **0 erreur ESLint** (de 98 problèmes → 0)
 - ✅ **0 warning ESLint**
 - ✅ **~75 occurrences de `any` éliminées**
@@ -1115,6 +1236,7 @@ pkg-config --exists webkit2gtk-4.1
 - ✅ **React Hooks conformes** : Toutes dépendances correctes
 
 **Fichiers modifiés** (27 au total):
+
 - Core: `ARCHITECTURE_TYPES_v24-v∞.ts`, `ENGINE_BRIDGE.ts`
 - Utils: `dataMapper.ts`, `dataUtils.ts`
 - Services: `personaTauriBridge.ts`, `singularityConnections.ts`
@@ -1124,12 +1246,14 @@ pkg-config --exists webkit2gtk-4.1
 - Tests: `setup.ts`, `chatEngine.test.ts`
 
 **Types créés**:
+
 - ✅ `EngineState = Record<string, unknown>` pour uniformité
 - ✅ Type guards systématiques (`typeof raw !== 'object'`)
 - ✅ Unions strictes pour providers, modes, etc.
 - ✅ Optional chaining sécurisé partout
 
 **React Hooks**:
+
 - ✅ Mémorisation avec `useCallback` : 6 fonctions
 - ✅ Dépendances `useEffect` complètes : 4 composants corrigés
 - ✅ Variables inutilisées éliminées ou préfixées `_`
@@ -1137,6 +1261,7 @@ pkg-config --exists webkit2gtk-4.1
 #### 🔧 Corrections techniques
 
 **Suppression des `any`**:
+
 - ARCHITECTURE_TYPES : 38 → `EngineState`/`unknown`
 - dataMapper : 10 → `unknown` + type guards
 - dataUtils : 12 → `Record<string, unknown>`
@@ -1145,25 +1270,27 @@ pkg-config --exists webkit2gtk-4.1
 - Components : 7 fichiers → types appropriés
 
 **Hooks React corrigés**:
+
 - App.tsx : Ajout `cognitiveLoad` + `glow`
 - ModeIndicator.tsx : `useCallback` pour `fetchCurrentMode`/`fetchHistory`
 - WaveformVisualizer.tsx : `useCallback` pour `getFrequencyColor`
 - Slider.tsx : `useCallback` pour `updateValue`/`handleMouseMove`/`handleMouseUp`
 
 **Variables inutilisées**:
+
 - SingularityMonitor : Import `SingularityState` supprimé
 - Nexus : `graphData`/`setGraphData` → `_graphData`/`_setGraphData`
 - chatEngine.test : `ChatEngineConfig` non importé
 
 #### 📊 Métriques
 
-| Métrique | Avant | Après |
-|----------|-------|-------|
-| **Erreurs ESLint** | 1 | 0 |
-| **Warnings ESLint** | 97 | 0 |
-| **`any` dans le code** | ~75 | 0 |
-| **react-hooks warnings** | 4 | 0 |
-| **Variables inutilisées** | 5 | 0 |
+| Métrique                  | Avant | Après |
+| ------------------------- | ----- | ----- |
+| **Erreurs ESLint**        | 1     | 0     |
+| **Warnings ESLint**       | 97    | 0     |
+| **`any` dans le code**    | ~75   | 0     |
+| **react-hooks warnings**  | 4     | 0     |
+| **Variables inutilisées** | 5     | 0     |
 
 ---
 
@@ -1176,6 +1303,7 @@ pkg-config --exists webkit2gtk-4.1
 #### 📝 Changements
 
 **Licence**:
+
 - ❌ SUPPRIMÉ: LICENSE (MIT, 21 lignes)
 - ✅ CRÉÉ: LICENSE.md (Propriétaire FR/EN, 200+ lignes)
   - 🇫🇷 Section française (8 articles)
@@ -1183,6 +1311,7 @@ pkg-config --exists webkit2gtk-4.1
   - Propriétaire: © 2025 Humain Total / Kevin Thibault / TITANE Team
 
 **En-têtes**:
+
 - ✅ Ajouté en-tête propriétaire à 202+ fichiers source
   - TypeScript/JavaScript: `/** ... */` format
   - Rust: `//` format (chaque ligne)
@@ -1191,6 +1320,7 @@ pkg-config --exists webkit2gtk-4.1
   - TOML: `#` format
 
 **Éléments Protégés**:
+
 - Helios, Nexus, Harmonia, Sentinel engines
 - SingularityState architecture
 - TITANE Design System v∞
@@ -1198,6 +1328,7 @@ pkg-config --exists webkit2gtk-4.1
 - Systèmes cognitifs/adaptatifs
 
 **Restrictions**:
+
 - ❌ Aucune modification autorisée
 - ❌ Aucune distribution autorisée
 - ❌ Aucune rétro-ingénierie autorisée
@@ -1208,6 +1339,7 @@ pkg-config --exists webkit2gtk-4.1
 **Droit applicable**: Québec et Canada
 
 #### ✅ Validation
+
 - 202+ fichiers avec en-têtes propriétaires
 - 0 références MIT restantes
 - 0 erreurs de syntaxe introduites
@@ -1225,6 +1357,7 @@ pkg-config --exists webkit2gtk-4.1
 ### ✨ Ajouts
 
 #### Plugin System (5 fichiers, ~1500 lignes)
+
 - **`plugin_system/core_module.rs`**: Trait CoreModule avec lifecycle complet
   - Méthodes: `initialize()`, `start()`, `stop()`, `shutdown()`, `get_status()`, `health_check()`
   - Type `CoreStatus` avec états: Uninitialized, Ready, Running, Stopping, Stopped, Failed
@@ -1257,6 +1390,7 @@ pkg-config --exists webkit2gtk-4.1
   - 5+ tests unitaires
 
 #### DevTools - Observability Stack (3 fichiers, ~1000 lignes)
+
 - **`devtools/logging.rs`**: Système de logs structurés
   - `LogEntry` avec timestamp, level, target, message, metadata, correlation_id
   - `LogCollector` avec buffer circulaire (10,000 entrées max)
@@ -1278,6 +1412,7 @@ pkg-config --exists webkit2gtk-4.1
   - 5+ tests unitaires
 
 #### Cognitive Engine (5 fichiers, ~1250 lignes)
+
 - **`cognitive/mental.rs`**: Centre Mental (clarté cognitive)
   - `MentalCenter` avec cognitive_load (0.0-1.0), clarity_index, focus_level
   - Méthodes: `update_load()`, `get_recommendations()`, `is_overloaded()`
@@ -1309,6 +1444,7 @@ pkg-config --exists webkit2gtk-4.1
   - 10+ tests unitaires
 
 #### Tauri Commands API (2 fichiers, ~900 lignes, 23 commandes)
+
 - **`commands/devtools.rs`**: 18 commandes DevTools
   - **Logging API** (4 commandes):
     - `get_logs(level_filter, limit)` → Vec<LogEntry>
@@ -1344,6 +1480,7 @@ pkg-config --exists webkit2gtk-4.1
   - `check_core_health(core_id)` → HealthStatus
 
 #### Documentation (7 fichiers, ~7000 lignes)
+
 - **`docs/PLUGIN_DEVELOPMENT_GUIDE.md`** (3500 lignes): Guide développeur complet
 - **`docs/FINAL_ARCHITECTURE_v17.2.0.md`** (1200 lignes): Référence technique
 - **`docs/SESSION_IMPLEMENTATION_DEVTOOLS_v17.2.0.md`** (700 lignes): Rapport implémentation
@@ -1355,6 +1492,7 @@ pkg-config --exists webkit2gtk-4.1
 ### 🧪 Tests
 
 #### Couverture Tests (80+ tests)
+
 - Plugin System: 50+ tests (registry, orchestrator, profiles, event_bus)
 - DevTools: 30+ tests (logging, metrics, telemetry)
 - Cognitive Engine: 45+ tests (mental, heart, body, state, engine)
@@ -1390,6 +1528,7 @@ pkg-config --exists webkit2gtk-4.1
 ### 🔒 Sécurité
 
 #### Modules de Sécurité (3 nouveaux modules)
+
 - **`security/mod.rs`** (140 lignes): Types core sécurité
   - `SecurityDomain`: 6 domaines (CoreInternal, EngineSubsystem, IoServices, ExternalExecution, TauriApi, UserData)
   - `TrustLevel`: 4 niveaux (Trusted, Validated, Untrusted, Forbidden)
@@ -1414,6 +1553,7 @@ pkg-config --exists webkit2gtk-4.1
   - 5 tests unitaires
 
 #### Vulnérabilités Corrigées (10/10 ✅)
+
 - 🔴 **CRITICAL**: Shell injection TTS/ASR → **CORRIGÉ** (ShellGuard)
 - 🔴 **CRITICAL**: Path traversal storage → **CORRIGÉ** (StorageGuard)
 - 🟠 **MODERATE**: Temp file race conditions → **CORRIGÉ** (validation paths)
@@ -1421,6 +1561,7 @@ pkg-config --exists webkit2gtk-4.1
 - 🟠 **MODERATE**: No input validation → **PARTIELLEMENT** (frameworks en place)
 
 #### Fichiers Refactorisés (5 fichiers)
+
 - **`tts/local_tts.rs`**: ShellGuard pour espeak/festival/piper
   - Supprimé: `Command::new()` direct
   - Ajouté: Sanitization texte, validation args, clamping speed/pitch
@@ -1440,6 +1581,7 @@ pkg-config --exists webkit2gtk-4.1
 - **`overdrive/voice_engine.rs`**: ShellGuard pour pactl detection
 
 #### Tests de Sécurité (12 tests automatisés)
+
 - **Shell Injection**: Pipe, semicolon, command substitution bloqués
 - **Unauthorized Commands**: rm, curl, bash rejetés
 - **Path Traversal**: `../../etc/passwd` bloqué
@@ -1449,17 +1591,20 @@ pkg-config --exists webkit2gtk-4.1
 - **Workflow CRUD**: Safe operations end-to-end
 
 #### Métriques
+
 - Réduction surface d'attaque: **~80%**
 - Shell vulnerabilities: **5 → 0 fichiers** (100%)
 - FS vulnerabilities: **4 → 0 fichiers** (100%)
 - Security tests: **0 → 12** (+∞)
 
 ### 📚 Documentation
+
 - **`SECURITY_HARDENING_P0_COMPLETE.md`**: Rapport complet audit sécurité
   - Vulnérabilités, architecture, API, tests, roadmap P1/P2
   - Standards: OWASP Top 10, CWE-78, CWE-22, CWE-379
 
 ### 🚀 Impact
+
 - **Production-Ready**: 100% vulnérabilités critiques corrigées
 - **Compliance**: OWASP A03 (Injection), A05 (Security Misconfiguration)
 - **Local-First**: Sandbox maintient philosophie offline
@@ -1476,6 +1621,7 @@ pkg-config --exists webkit2gtk-4.1
 ### 🐛 Corrections
 
 #### Écran Noir / Black Screen (RÉSOLU)
+
 - **DevTools Auto-Open**: Ouverture automatique au démarrage (F12 + Ctrl+Shift+I)
 - **CSP Disabled**: Content Security Policy mis à `null` pour développement
 - **HMR Enabled**: Hot Module Replacement avec WebSocket configuré
@@ -1485,6 +1631,7 @@ pkg-config --exists webkit2gtk-4.1
 - **Files**: `main.rs`, `main.tsx`, `tauri.conf.json`, `vite.config.ts`
 
 #### Commandes Tauri "not found" (RÉSOLU)
+
 - **Problème**: Frontend appelle 14 commandes legacy non enregistrées dans v17.2.0
 - **Solution**: Création module `api/legacy_commands.rs` (140 lignes)
 - **Commandes Legacy Bridge** (14):
@@ -1496,6 +1643,7 @@ pkg-config --exists webkit2gtk-4.1
 - **Files**: `src-tauri/src/api/legacy_commands.rs`, `api/mod.rs`, `main.rs`
 
 #### Configuration Tauri
+
 - **beforeDevCommand**: Fix `../pnpm-host.sh` → `pnpm run dev`
 - **beforeBuildCommand**: Fix `../pnpm-host.sh` → `pnpm run build`
 - **File**: `tauri.conf.json`
@@ -1503,6 +1651,7 @@ pkg-config --exists webkit2gtk-4.1
 ### ✨ Ajouté
 
 #### Backend v17.2.0 Features
+
 - **29 Tauri Commands** enregistrées (15 core + 14 legacy)
 - **Core Commands** (15):
   - Helios: `get_helios_state`, `get_system_health`
@@ -1512,6 +1661,7 @@ pkg-config --exists webkit2gtk-4.1
 - **Legacy Commands** (14): Voir corrections ci-dessus
 
 #### Documentation
+
 - **Guide Écran Noir**: `GUIDE_FIX_ECRAN_NOIR_v17.2.1.md` (complet avec 5 sessions)
 - **Fix Tauri API Core**: `FIX_TAURI_API_CORE_ERROR.md` (module bundling)
 - **Fix Commandes**: `FIX_COMMANDES_TAURI_NOT_FOUND.md` (legacy bridge)
@@ -1519,12 +1669,14 @@ pkg-config --exists webkit2gtk-4.1
 ### 🔧 Modifié
 
 #### Versions
+
 - **package.json**: 17.1.1 → 17.2.1
 - **Cargo.toml**: 17.1.1 → 17.2.1
 - **tauri.conf.json**: 17.1.1 → 17.2.1
 - **Description**: Backend Architecture Refactor + Legacy Commands
 
 #### Frontend
+
 - **App.tsx**: Subtitle "v17.2.1 - Backend Refactor Complete"
 - **main.tsx**: Logs "40+ Rust modules | 29 Tauri Commands"
 - **vite.config.ts**: Commentaire v17.2.1 + bundling fix
@@ -1532,6 +1684,7 @@ pkg-config --exists webkit2gtk-4.1
 ### 🧪 Tests
 
 #### Compilation Backend
+
 ```bash
 cargo check
 ✅ 0 errors
@@ -1540,6 +1693,7 @@ cargo check
 ```
 
 #### Validation
+
 - **Toutes commandes enregistrées**: 29/29 ✅
 - **Aucune erreur "Command not found"**: ✅
 - **DevTools accessible**: ✅
@@ -1565,6 +1719,7 @@ cargo check
 ### ✨ Ajouté
 
 #### Design System Demo Page
+
 - **Page interactive** `/design-system` avec 9 sections de démonstration
 - **Tous les composants testables** en temps réel
 - **Comparison des sizes** (sm, md, lg) côte à côte
@@ -1574,6 +1729,7 @@ cargo check
 - **Files**: `src/pages/DesignSystemPage.tsx` (8.5KB), `DesignSystemPage.css` (1.7KB)
 
 #### Documentation Complète (10 fichiers, ~4,000 lignes)
+
 - **Component README** `src/ui/components/README.md` (11KB)
   - Guide d'utilisation avec exemples de code
   - Props détaillées pour chaque composant
@@ -1588,6 +1744,7 @@ cargo check
 - **Primitives Report** `PRIMITIVES_COMPLETION_REPORT_v17.1.md`
 
 #### Navigation Update
+
 - **Sidebar item** "Design System 🎨" avec badge v17.1
 - **Route** `/design-system` ajoutée dans App.tsx
 - **Position** entre Progression et Helios
@@ -1595,12 +1752,14 @@ cargo check
 ### 🔧 Modifié
 
 #### Files Principaux Mis à Jour
+
 - **package.json**: version 17.1.1, description Design System Complete
 - **index.html**: meta v17.1.1, keywords UI primitives + accessibility
 - **src/main.tsx**: logs v17.1.1 avec liste des 7 composants
 - **README.md**: section Design System v17.1 complète avec exemples
 
 #### Validation
+
 - **TypeScript**: 0 errors (strict mode) ✅
 - **ESLint**: 0 warnings ✅
 - **Design Tokens**: 100% cohérence
@@ -1667,12 +1826,14 @@ cargo check
 #### Design System Core
 
 **Design Tokens Optimisés:**
+
 - **colors.ts** (205 lignes): Palette neutre 12 niveaux + 9 aliases, 4 thèmes
 - **typography.ts**: H1-H5 + aliases (xs, sm, lg)
 - **spacing.ts**: space-1 (4px) → space-9 (72px)
 - **radius.ts**: sm (6px), md (10px), lg (16px), xl (22px), full
 
 **Motion System** (297 lignes):
+
 - 5 durées (instant 50ms → slower 400ms)
 - 7 easings (organic default, smooth, spring, etc.)
 - 10 animations standardisées
@@ -1680,22 +1841,26 @@ cargo check
 - Reduced motion support
 
 **Button Modernisé:**
+
 - 6 variants: primary, secondary, ghost, danger, **glass**, **subtle**
 - Props: leftIcon/rightIcon (remplace icon+iconPosition)
 - 243 lignes CSS optimisé
 
 #### TypeScript Types Exportés
+
 - `SliderMark` (value, label?)
 - `SelectOption` (value, label, disabled?)
 - `ToggleOption` (value, label, icon?, disabled?)
 
 #### Component Exports
+
 - Tous exports dans `src/ui/components/index.ts`
 - Types + composants exportés ensemble
 
 ### ♿ Accessibilité
 
 **Keyboard Navigation:**
+
 - Switch: Space, Enter
 - Checkbox: Space
 - Radio: Arrow keys (in RadioGroup)
@@ -1704,18 +1869,21 @@ cargo check
 - Toggle: Tab, Space, Enter
 
 **ARIA Attributes:**
+
 - role="switch", "checkbox", "radio", "radiogroup", "slider", "button", "tab"
 - aria-checked, aria-selected, aria-invalid, aria-describedby
 - aria-valuemin/max/now (Slider)
 - aria-haspopup="listbox" (Select)
 
 **Focus Management:**
+
 - 2px solid primary outline
 - 2px offset
 - :focus-visible pour keyboard-only
 - Visible sur tous éléments interactifs
 
 **WCAG AA Compliance:**
+
 - ✅ Color contrast ratios
 - ✅ Keyboard navigation
 - ✅ Screen reader support
@@ -1740,32 +1908,37 @@ cargo check
 ### ✨ Ajouté
 
 #### Clean-Up Engine v17
+
 - **1,6G d'espace libéré** (5,4G → 3,8G, -30% workspace)
 - **Suppression caches obsolètes** : core/backend/target (1,6G), node_modules/.vite, .cache
-- **Suppression archives v9** : titane_infinity_v9_*.tar.gz (177KB)
+- **Suppression archives v9** : titane*infinity_v9*\*.tar.gz (177KB)
 - **Consolidation logs** : 8M archivés dans archived_logs/ (3 dirs → 1)
 - **Nettoyage structure** : core/ obsolète supprimé (3,3M)
 - **Rapport complet** : RAPPORT_CLEAN-UP_v17.md (métriques, validations)
 
 #### WebKit Fix Total
+
 - **Script automatisé** : install-webkit-host-v17.sh (6,6KB, exécutable)
 - **Détection GLIBC** : 2.42 détecté (>= 2.37 requis) — Migration OS non requise
 - **Validation pkg-config** : Vérification javascriptcoregtk-4.1
 - **Instructions claires** : 5 étapes, 5-10 minutes d'installation
 
 #### Tauri-Only Enforcement 100%
+
 - **HTTP servers bloqués** : npm run preview → exit 1, vite:dev → exit 1
 - **Validation stricte** : enforce-tauri-only.sh (0 erreurs, 0 warnings)
 - **Configuration verrouillée** : tauri.conf.json sans devUrl HTTP
 - **package.json** : Scripts HTTP désactivés avec messages explicites
 
 #### Règles Permanentes Kevin Thibault
+
 - **.copilot-rules-permanent.md** : 300+ lignes règles AI-facing
 - **REGLES_PERMANENTES_KEVIN_THIBAULT.md** : 300+ lignes règles human-facing
 - **10 règles absolues** : Tauri-only, local-first, APIs on-demand, no HTTP ever
 - **Architecture complète** : Diagrammes, commandes, validations
 
 #### Version Harmonization v17.0.0
+
 - **package.json** : v17.0.0, description WebKit Fix Total
 - **Cargo.toml** : v17.0.0, author Kevin Thibault
 - **tauri.conf.json** : v17.0.0, productName "TITANE∞ v17.0"
@@ -1774,12 +1947,14 @@ cargo check
 ### 🔧 Modifié
 
 #### Frontend Optimization
+
 - **Build time** : 1,74s → 1,93s (stable, +0,19s)
 - **Bundle size** : 131KB gzipped (main.js: 73KB, vendor.js: 45KB, main.css: 12KB)
 - **TypeScript** : 0 erreurs (validation complète)
 - **Vite** : 360 modules transformés
 
 #### Workspace Structure
+
 - **Répertoires racine** : 22 → 19 (-14%)
 - **Logs consolidés** : correction_automatique_logs, deploy_logs, reconciliation_logs → archived_logs/
 - **Archives consolidées** : archived_builds/ créé (archives v9 supprimées)
@@ -1788,24 +1963,27 @@ cargo check
 ### 🗑️ Supprimé
 
 #### Obsolete Files (1,64G total)
+
 - **core/backend/target/** (1,6G) — Ancien cache Rust structure v9
 - **core/backend/** (3,0M) — Ancienne structure backend v9
 - **core/frontend/** (324KB) — Ancienne structure frontend v9
 - **core/v9_deployment.json** (8KB) — Configuration déploiement v9
-- **titane_infinity_v9_*.tar.gz** (177KB) — 3 archives obsolètes
-- **deploy_package_20251118_*** (660KB) — 3 packages déploiement obsolètes
+- **titane*infinity_v9*\*.tar.gz** (177KB) — 3 archives obsolètes
+- **deploy*package_20251118*\*** (660KB) — 3 packages déploiement obsolètes
 - **node_modules/.vite/** (~300KB) — Cache Vite obsolète
 - **node_modules/.cache/** (~200KB) — Cache Node obsolète
-- **backups/*.bak** (~4KB) — Fichiers backup temporaires
+- **backups/\*.bak** (~4KB) — Fichiers backup temporaires
 
 ### ✅ Validations
 
 #### Build & Type-Check
+
 - ✅ **npm run build** : 1,93s, 0 erreurs, 360 modules
 - ✅ **npm run type-check** : 0 erreurs TypeScript
 - ✅ **Assets** : main.css (64KB), vendor.js (139KB), main.js (253KB)
 
 #### Tauri-Only Mode
+
 - ✅ **enforce-tauri-only.sh** : 0 erreurs, 0 warnings
 - ✅ **npm run dev** → tauri dev (correct)
 - ✅ **npm run preview** → bloqué (correct)
@@ -1818,6 +1996,7 @@ cargo check
 - ✅ **dist/index.html présent**
 
 #### Security & Safety
+
 - ✅ **0 fichiers actifs supprimés**
 - ✅ **0 configurations perdues**
 - ✅ **0 code source modifié**
@@ -1825,15 +2004,15 @@ cargo check
 
 ### 📊 Métriques
 
-| Métrique | Avant | Après | Amélioration |
-|----------|-------|-------|---------------|
-| **Espace total** | 5,4G | 3,8G | **-30%** |
-| **Build frontend** | 1,74s | 1,93s | Stable |
-| **TypeScript** | 0 erreurs | 0 erreurs | ✅ |
-| **Tauri warnings** | 0 | 0 | ✅ |
-| **Fichiers obsolètes** | ~105 | 0 | **-100%** |
-| **Répertoires racine** | 22 | 19 | **-14%** |
-| **Logs dispersés** | 3 dirs | 1 dir | **-67%** |
+| Métrique               | Avant     | Après     | Amélioration |
+| ---------------------- | --------- | --------- | ------------ |
+| **Espace total**       | 5,4G      | 3,8G      | **-30%**     |
+| **Build frontend**     | 1,74s     | 1,93s     | Stable       |
+| **TypeScript**         | 0 erreurs | 0 erreurs | ✅           |
+| **Tauri warnings**     | 0         | 0         | ✅           |
+| **Fichiers obsolètes** | ~105      | 0         | **-100%**    |
+| **Répertoires racine** | 22        | 19        | **-14%**     |
+| **Logs dispersés**     | 3 dirs    | 1 dir     | **-67%**     |
 
 ### 🎖️ Badges Gagnés
 
@@ -1868,6 +2047,7 @@ cargo check
 ### ✨ Ajouté
 
 #### UI/UX Modernisation Complète
+
 - **15 CSS modernisés** avec glass morphism (backdrop-filter: blur(12px))
 - **12 animations keyframes** : slideInFromTop, fadeIn, slideInScale, pulse, etc.
 - **Design premium** : Gradients, ombres portées, effets de profondeur
@@ -1878,12 +2058,14 @@ cargo check
   - Badge.css, Layout.css, VoiceUI.css
 
 #### Configuration Système Optimisée
+
 - **Vite config** : strictPort: false (fallback automatique 5173 → 5174)
 - **File watchers** : Augmentation limite à 524288 (vs 8192 par défaut)
 - **Port management** : Scripts automatiques de nettoyage (kill-ports.sh)
 - **Tauri beforeDevCommand** : Script dev-server.sh non-bloquant
 
 #### Scripts Automatisation
+
 - **kill-ports.sh** : Nettoyage ports multi-méthodes (pkill, ps/grep, flatpak-spawn)
 - **dev-server.sh** : Démarrage Vite en arrière-plan pour Tauri
 - **tauri-start.sh** : Launcher intelligent avec vérifications WebKitGTK
@@ -1891,14 +2073,16 @@ cargo check
 - **START.sh** : Support arguments CLI (./START.sh 1-5)
 
 #### Migration & Build
+
 - **backup-pre-migration.sh** : Sauvegarde complète système (TITANE∞, SSH, Git, VSCode)
-- **install-popos-24.04.sh** : Configuration automatique Pop!_OS 24.04 pour Tauri v2
+- **install-popos-24.04.sh** : Configuration automatique Pop!\_OS 24.04 pour Tauri v2
 - **restore-after-migration.sh** : Restauration backup post-migration
 - **reinstall-titane.sh** : Installation propre (fresh install)
 - **build-docker.sh** : Build via container Ubuntu 24.04 (GLIBC 2.39)
 - **test-build-natif.sh** : Diagnostic et test build hors Flatpak
 
 #### Documentation Complète
+
 - **GUIDE_MIGRATION_POPOS_24.04.md** : Guide détaillé migration (procédure, dépannage, références)
 - **MIGRATION_QUICK_START.txt** : Guide rapide 3 étapes
 - **FIX_GLIBC_INCOMPATIBILITY.txt** : Analyse incompatibilité GLIBC + 4 solutions
@@ -1913,38 +2097,45 @@ cargo check
 ### 🔧 Modifié
 
 #### Package.json
+
 - **build script** : Changé de `"tsc && vite build"` → `"vite build"`
 - **prebuild** : Type-check séparé pour éviter double compilation
 - **Scripts optimisés** : 22 scripts npm opérationnels
 
 #### Tauri Configuration
+
 - **beforeDevCommand** : Changé de `"npm run dev"` → `"bash dev-server.sh"`
 - **beforeBuildCommand** : Changé de `"vite build"` → `"npm run build"`
 - **devUrl** : Maintenu `"http://localhost:5173"` avec fallback automatique
 
 #### Vite Configuration
+
 - **strictPort** : false (permet fallback automatique)
 - **fs.deny** : Exclusion dossiers problématiques (RECUP/, TITANE-DOC/OLD/)
 - **server.port** : 5173 (fallback 5174 si occupé)
 
 #### Scripts Shell
+
 - **Compatibilité Flatpak** : Changement lsof → fuser dans tous les scripts
 - **Nettoyage ports** : Méthodes multiples (pkill, flatpak-spawn --host)
 
 ### 🐛 Corrigé
 
 #### Erreurs TypeScript
+
 - **Projects.tsx** : TS6133 `_projectId` paramètre inutilisé
 - **AudioButton.tsx** : TS6133 `_text` paramètre inutilisé
 - **ProjectCard.css** : Propriété `line-clamp` invalide corrigée
 
 #### Erreurs Build
+
 - **beforeDevCommand terminated** : Script dev-server.sh non-bloquant implémenté
 - **Port 5173 already in use** : Configuration strictPort: false + cleanup automatique
 - **File watchers limit** : Augmentation fs.inotify.max_user_watches à 524288
-- **GLIBC incompatibility** : Solutions multiples (build natif, Docker, migration Pop!_OS 24.04)
+- **GLIBC incompatibility** : Solutions multiples (build natif, Docker, migration Pop!\_OS 24.04)
 
 #### Problèmes Système
+
 - **WebKitGTK 4.1 detection** : Scripts de vérification automatique
 - **JavaScriptCore missing** : Installation automatisée libjavascriptcoregtk-4.1-dev
 - **Flatpak isolation** : Workarounds pour accès système hôte (flatpak-spawn)
@@ -1966,13 +2157,15 @@ cargo check
 ### 🎯 Compatibilité
 
 #### Systèmes Testés
-- ✅ Pop!_OS 22.04 LTS (GLIBC 2.35) - Frontend uniquement
-- ✅ Pop!_OS 24.04 LTS (GLIBC 2.39) - Complet (recommandé)
+
+- ✅ Pop!\_OS 22.04 LTS (GLIBC 2.35) - Frontend uniquement
+- ✅ Pop!\_OS 24.04 LTS (GLIBC 2.39) - Complet (recommandé)
 - ✅ Ubuntu 22.04 LTS - Frontend uniquement
 - ✅ Ubuntu 24.04 LTS - Complet
 - ✅ VSCode Flatpak - Frontend dev
 
 #### Versions Requises
+
 - Node.js: >= 20.0.0 (recommandé 22.x LTS)
 - NPM: >= 10.0.0
 - Rust: >= 1.70 (stable)
@@ -1981,6 +2174,7 @@ cargo check
 - JavaScriptCore: 4.1 (Tauri v2)
 
 #### Technologies
+
 - React: 18.3.1
 - Vite: 6.4.1
 - TypeScript: 5.5.3
@@ -1991,6 +2185,7 @@ cargo check
 ### 📦 Dépendances
 
 #### Production
+
 ```json
 {
   "@tauri-apps/api": "^2.9.0",
@@ -2004,6 +2199,7 @@ cargo check
 ```
 
 #### Développement
+
 ```json
 {
   "@tauri-apps/cli": "^2.0.0",
@@ -2018,26 +2214,31 @@ cargo check
 ### 🚀 Déploiement
 
 #### Bundles Générés (Build Production)
+
 - **Binaire Linux** : `src-tauri/target/release/titane-infinity` (~50-80 MB)
 - **Package .deb** : `bundle/deb/titane-infinity_15.5.0_amd64.deb` (~50 MB)
 - **AppImage** : `bundle/appimage/titane-infinity_15.5.0_amd64.AppImage` (~80 MB)
 
 #### Distribution
+
 - **Ubuntu/Debian** : Installation via .deb package
 - **Universal Linux** : AppImage portable (run anywhere)
 - **Binaire direct** : Exécutable standalone
 
 ### 📝 Notes de Migration
 
-#### Pop!_OS 22.04 → 24.04
+#### Pop!\_OS 22.04 → 24.04
+
 **Raison** : Incompatibilité GLIBC 2.35 (22.04) avec Tauri v2 (nécessite GLIBC 2.39)
 
 **Solutions disponibles** :
+
 1. **Build natif** : Terminal système hors Flatpak (Ubuntu 22.04 uniquement)
 2. **Build Docker** : Container Ubuntu 24.04 (universel)
-3. **Migration système** : Pop!_OS 24.04 LTS (solution permanente)
+3. **Migration système** : Pop!\_OS 24.04 LTS (solution permanente)
 
 **Scripts automatisés** :
+
 - Backup complet : `./backup-pre-migration.sh`
 - Installation système : `./install-popos-24.04.sh`
 - Restauration : `./restore-after-migration.sh`
@@ -2049,6 +2250,7 @@ cargo check
 #### Aucun changement breaking pour utilisateurs finaux
 
 #### Pour développeurs
+
 - **beforeDevCommand** : Maintenant exécuté via script wrapper (dev-server.sh)
 - **Port configuration** : Fallback automatique activé (strictPort: false)
 - **Build script** : TypeScript compilation séparée du build Vite
@@ -2056,12 +2258,14 @@ cargo check
 ### 🎨 UI/UX Changes
 
 #### Thème Moderne
+
 - **Glass morphism** : Effets transparence + blur
 - **Animations fluides** : 12 animations CSS keyframes
 - **Couleurs premium** : Gradients, accents, ombres
 - **Responsive** : Adaptatif toutes tailles écran
 
 #### Composants
+
 - **Sidebar** : Navigation modernisée avec animations
 - **Cards** : Effets hover, transitions fluides
 - **Buttons** : États visuels clairs (hover, active, disabled)
@@ -2071,31 +2275,36 @@ cargo check
 ### 🧪 Tests
 
 #### Build Tests
+
 - ✅ Frontend build : 1.08s, 0 erreur
 - ✅ Type-check : 0 erreur TypeScript
 - ✅ ESLint : 0 warning
 - ✅ Vite dev : Startup 118ms
-- ✅ Tauri dev : Fenêtre s'ouvre (Pop!_OS 24.04)
-- ✅ Tauri build : Binaire 8.0MB généré (Pop!_OS 24.04)
+- ✅ Tauri dev : Fenêtre s'ouvre (Pop!\_OS 24.04)
+- ✅ Tauri build : Binaire 8.0MB généré (Pop!\_OS 24.04)
 
 #### Environnements Testés
-- ✅ Pop!_OS 22.04 + VSCode Flatpak : Frontend OK, Tauri bloqué (GLIBC)
-- ✅ Pop!_OS 24.04 natif : Frontend + Tauri complet OK
+
+- ✅ Pop!\_OS 22.04 + VSCode Flatpak : Frontend OK, Tauri bloqué (GLIBC)
+- ✅ Pop!\_OS 24.04 natif : Frontend + Tauri complet OK
 - ✅ Ubuntu 24.04 Docker : Build production OK
 
 ### 📚 Documentation
 
 #### Nouveaux Guides
+
 - **GUIDE_MIGRATION_POPOS_24.04.md** : 200+ lignes, procédure détaillée
 - **MIGRATION_QUICK_START.txt** : Guide rapide 3 étapes
 - **BUILD_PRODUCTION.txt** : Guide build complet
 
 #### Diagnostics
+
 - **FIX_GLIBC_INCOMPATIBILITY.txt** : Analyse + 4 solutions
 - **RAPPORT_FINAL_DIAGNOSTIC.txt** : État système complet
 - **STATUS_ACTUEL.txt** : Métriques en temps réel
 
 #### Troubleshooting
+
 - **PORT_CONFLICT_RESOLVED.txt** : Fix port 5173
 - **FIX_FILE_WATCHERS.txt** : Limite file watchers
 - **FIX_JAVASCRIPTCORE_MISSING.txt** : Dépendance manquante
@@ -2106,7 +2315,7 @@ cargo check
 - [x] TypeScript 0 erreur
 - [x] Configuration système optimisée
 - [x] Scripts automatisation complets
-- [x] Migration Pop!_OS 24.04 documentée
+- [x] Migration Pop!\_OS 24.04 documentée
 - [x] Build production fonctionnel
 - [x] Docker support
 - [x] Documentation exhaustive (10+ guides)
@@ -2116,12 +2325,14 @@ cargo check
 ## [15.0.0] - 2025-11-17
 
 ### ✨ Ajouté
+
 - **Evolution Supervisor** : Orchestration 12 modules d'auto-évolution
 - **EXP Fusion System** : Système d'expérience global
 - **Meta-Mode** : Mode développeur avancé
 - **Design System v12** : Composants uniformisés
 
 ### 🔧 Modifié
+
 - Architecture complète refactorée
 - Modules Core optimisés (8 modules)
 - API Tauri v2 intégrée
@@ -2131,11 +2342,13 @@ cargo check
 ## [14.1.0] - 2025-11-15
 
 ### ✨ Ajouté
+
 - **Meta-Mode** activation
 - **Interruptibility 2.0**
 - **Emotion Engine**
 
 ### 🐛 Corrigé
+
 - Gestion mémoire optimisée
 - Performance améliorée
 
@@ -2144,6 +2357,7 @@ cargo check
 ## [13.0.0] - 2025-11-10
 
 ### ✨ Ajouté
+
 - **Architecture v13/v14** complète
 - **Neural Mesh** intégration
 - **Cognitive Stack** complet
@@ -2153,6 +2367,7 @@ cargo check
 ## [12.0.0] - 2025-11-05
 
 ### ✨ Ajouté
+
 - **Design System v12** complet
 - **Voice Mode** avancé
 - **AI Chat** intégration

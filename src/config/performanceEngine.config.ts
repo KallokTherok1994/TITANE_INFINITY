@@ -11,13 +11,16 @@ import type { MetricType, OptimizationType } from '@/types/performanceEngine';
 // METRIC CONFIGURATION
 // ============================================================================
 
-export const METRIC_CONFIG: Record<MetricType, {
-  name: string;
-  description: string;
-  unit: string;
-  icon: string;
-  color: string;
-}> = {
+export const METRIC_CONFIG: Record<
+  MetricType,
+  {
+    name: string;
+    description: string;
+    unit: string;
+    icon: string;
+    color: string;
+  }
+> = {
   counter: {
     name: 'Compteur',
     description: 'Valeur incrémentale',
@@ -102,12 +105,15 @@ export const DEFAULT_THRESHOLDS: ThresholdConfig[] = [
 // OPTIMIZATION CONFIGURATION
 // ============================================================================
 
-export const OPTIMIZATION_CONFIG: Record<OptimizationType, {
-  name: string;
-  description: string;
-  priority: 'low' | 'medium' | 'high';
-  autoApplicable: boolean;
-}> = {
+export const OPTIMIZATION_CONFIG: Record<
+  OptimizationType,
+  {
+    name: string;
+    description: string;
+    priority: 'low' | 'medium' | 'high';
+    autoApplicable: boolean;
+  }
+> = {
   caching: {
     name: 'Cache',
     description: 'Activer ou optimiser le cache',

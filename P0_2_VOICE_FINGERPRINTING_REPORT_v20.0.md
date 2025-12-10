@@ -75,9 +75,9 @@
 ```typescript
 // 1. Calibration TITANE au démarrage (une seule fois)
 const samples = [
-  await generateTTSSample("Bonjour, je suis TITANE"),
-  await generateTTSSample("Comment puis-je vous aider ?"),
-  await generateTTSSample("Je suis là pour vous assister"),
+  await generateTTSSample('Bonjour, je suis TITANE'),
+  await generateTTSSample('Comment puis-je vous aider ?'),
+  await generateTTSSample('Je suis là pour vous assister'),
 ];
 await vad.calibrateTITANEVoice(samples);
 
@@ -89,9 +89,11 @@ const processAudioData = async (audioData: Float32Array) => {
   // Layer 3: Check voice fingerprinting (TITANE vs User)
   if (voiceFingerprintTauri.isTitaneCalibrated()) {
     const result = await voiceFingerprintTauri.checkIsTitaneSpeaking(audioData);
-    
+
     if (result.isTitane) {
-      console.log(`🎯 TITANE detected (Layer 3), skipping VAD (similarity: ${result.similarity})`);
+      console.log(
+        `🎯 TITANE detected (Layer 3), skipping VAD (similarity: ${result.similarity})`
+      );
       return; // Skip VAD processing - prevent feedback loop
     }
   }
@@ -108,18 +110,18 @@ const processAudioData = async (audioData: Float32Array) => {
 
 ### Backend Rust (3 fichiers)
 
-| Fichier | Lignes | Type | Description |
-|---------|--------|------|-------------|
-| `src-tauri/src/audio/voice_fingerprint.rs` | 338 | Modifié | Ajout `is_calibrated()`, `get_profile_info()` |
-| `src-tauri/src/audio/commands.rs` | +90 | Modifié | 3 commandes Tauri ajoutées |
-| `src-tauri/src/main.rs` | +6 | Modifié | Enregistrement commandes (mock + full mode) |
+| Fichier                                    | Lignes | Type    | Description                                   |
+| ------------------------------------------ | ------ | ------- | --------------------------------------------- |
+| `src-tauri/src/audio/voice_fingerprint.rs` | 338    | Modifié | Ajout `is_calibrated()`, `get_profile_info()` |
+| `src-tauri/src/audio/commands.rs`          | +90    | Modifié | 3 commandes Tauri ajoutées                    |
+| `src-tauri/src/main.rs`                    | +6     | Modifié | Enregistrement commandes (mock + full mode)   |
 
 ### Frontend TypeScript (2 fichiers)
 
-| Fichier | Lignes | Type | Description |
-|---------|--------|------|-------------|
-| `src/services/voice/voiceFingerprintTauri.ts` | 180 | Créé | Service wrapper Tauri |
-| `src/hooks/useVAD.ts` | +40 | Modifié | Integration Layer 3 dans processAudioData() |
+| Fichier                                       | Lignes | Type    | Description                                 |
+| --------------------------------------------- | ------ | ------- | ------------------------------------------- |
+| `src/services/voice/voiceFingerprintTauri.ts` | 180    | Créé    | Service wrapper Tauri                       |
+| `src/hooks/useVAD.ts`                         | +40    | Modifié | Integration Layer 3 dans processAudioData() |
 
 ---
 
@@ -128,6 +130,7 @@ const processAudioData = async (audioData: Float32Array) => {
 ### Backend voice_fingerprint.rs
 
 **Structures de données** :
+
 ```rust
 pub struct VoiceFeatures {
     pub pitch: f32,                   // Fundamental frequency (Hz)
@@ -149,6 +152,7 @@ pub struct VoiceFingerprint {
 ```
 
 **Méthodes** :
+
 - `extract_features(samples)` → Extract pitch, formants, spectral centroid, MFCC
 - `calibrate_titane(samples_list)` → Calculate average + std dev from multiple samples
 - `is_titane_speaking(samples)` → Calculate similarity score (0.0-1.0)
@@ -156,8 +160,9 @@ pub struct VoiceFingerprint {
 - `get_profile_info()` → Get sample count + threshold
 
 **Algorithme Similarity** :
+
 ```rust
-similarity = 
+similarity =
     0.25 * pitch_similarity       // Pitch matching
   + 0.25 * formant_similarity     // Formant matching (F1, F2, F3)
   + 0.20 * spectral_similarity    // Spectral centroid matching
@@ -167,28 +172,30 @@ similarity =
 ### Commandes Tauri
 
 **1. calibrate_titane_voice** :
+
 ```rust
 #[tauri::command]
 pub async fn calibrate_titane_voice(samples_list: Vec<Vec<f32>>) -> CommandResult<()> {
     let engine = VOICE_FINGERPRINT_ENGINE.lock()
         .map_err(|e| format!("Lock error: {}", e))?;
-    
+
     engine.calibrate_titane(samples_list)
         .map_err(|e| format!("Calibration failed: {}", e))?;
-    
+
     Ok(())
 }
 ```
 
 **2. check_is_titane_speaking** :
+
 ```rust
 #[tauri::command]
 pub async fn check_is_titane_speaking(samples: Vec<f32>) -> CommandResult<serde_json::Value> {
     let engine = VOICE_FINGERPRINT_ENGINE.lock()
         .map_err(|e| format!("Lock error: {}", e))?;
-    
+
     let (is_titane, similarity) = engine.is_titane_speaking(&samples);
-    
+
     Ok(serde_json::json!({
         "isTitane": is_titane,
         "similarity": similarity,
@@ -197,12 +204,13 @@ pub async fn check_is_titane_speaking(samples: Vec<f32>) -> CommandResult<serde_
 ```
 
 **3. get_titane_voice_status** :
+
 ```rust
 #[tauri::command]
 pub async fn get_titane_voice_status() -> CommandResult<serde_json::Value> {
     let engine = VOICE_FINGERPRINT_ENGINE.lock()
         .map_err(|e| format!("Lock error: {}", e))?;
-    
+
     Ok(serde_json::json!({
         "calibrated": engine.is_calibrated(),
         "sampleCount": engine.get_profile_info().map(|(count, _)| count).unwrap_or(0),
@@ -214,6 +222,7 @@ pub async fn get_titane_voice_status() -> CommandResult<serde_json::Value> {
 ### Frontend voiceFingerprintTauri.ts
 
 **Interface** :
+
 ```typescript
 export interface VoiceFingerprintResult {
   isTitane: boolean;
@@ -228,6 +237,7 @@ export interface TitaneVoiceStatus {
 ```
 
 **Méthodes** :
+
 - `calibrateTitaneVoice(samplesList: Float32Array[])` → Invoke Tauri command
 - `checkIsTitaneSpeaking(samples: Float32Array)` → Invoke Tauri command
 - `getTitaneVoiceStatus()` → Invoke Tauri command
@@ -235,6 +245,7 @@ export interface TitaneVoiceStatus {
 - `resetCalibration()` → Reset state (for testing)
 
 **Conversion Float32Array** :
+
 ```typescript
 // Convert Float32Array to array for JSON serialization
 const samplesArray = Array.from(samples);
@@ -244,6 +255,7 @@ await invoke('check_is_titane_speaking', { samples: samplesArray });
 ### Integration useVAD.ts
 
 **Modifications** :
+
 1. Import `voiceFingerprintTauri` service
 2. Ajout Layer 3 check dans `processAudioData()` (avant VAD processing)
 3. Méthodes exposées :
@@ -252,6 +264,7 @@ await invoke('check_is_titane_speaking', { samples: samplesArray });
 4. Interface `UseVADReturn` enrichie
 
 **Code** :
+
 ```typescript
 const processAudioData = useCallback(async (audioData: Float32Array) => {
   // Layer 2: Check suspension
@@ -259,8 +272,9 @@ const processAudioData = useCallback(async (audioData: Float32Array) => {
 
   // Layer 3: Check voice fingerprinting
   if (voiceFingerprintTauri.isTitaneCalibrated()) {
-    const fingerprintResult = await voiceFingerprintTauri.checkIsTitaneSpeaking(audioData);
-    
+    const fingerprintResult =
+      await voiceFingerprintTauri.checkIsTitaneSpeaking(audioData);
+
     if (fingerprintResult.isTitane) {
       console.log(`[useVAD] 🎯 TITANE voice detected (Layer 3), skipping VAD`);
       return; // Prevent feedback loop
@@ -280,12 +294,14 @@ const processAudioData = useCallback(async (audioData: Float32Array) => {
 ### 1. Placeholders Features Extraction
 
 **Actuel** :
+
 - Pitch: Placeholder 150.0 Hz (hardcoded)
 - Formants: Placeholder [700.0, 1220.0, 2600.0] Hz
 - Spectral centroid: Placeholder 1500.0 Hz
 - MFCC: Placeholder vec![0.0; 13]
 
 **Production** :
+
 - **Pitch**: Implement YIN algorithm ou aubio-rs
 - **Formants**: Implement LPC (Linear Predictive Coding)
 - **Spectral centroid**: Implement FFT with rustfft
@@ -294,10 +310,12 @@ const processAudioData = useCallback(async (audioData: Float32Array) => {
 ### 2. Real-Time Performance Non Optimisée
 
 **Actuel** :
+
 - Extraction features à chaque frame audio (16ms @ 16kHz)
 - No caching, no optimization
 
 **Production** :
+
 - Cache MFCC computation (only recompute every 100ms)
 - Use SIMD optimizations (rustfft supports SIMD)
 - Implement sliding window for formants
@@ -305,9 +323,11 @@ const processAudioData = useCallback(async (audioData: Float32Array) => {
 ### 3. Calibration Non Persistée
 
 **Actuel** :
+
 - Calibration perdue au redémarrage app
 
 **Production** :
+
 - Sauvegarder profile TITANE dans fichier JSON
 - Charger au démarrage si présent
 - Re-calibration automatique si TTS voice change
@@ -343,13 +363,13 @@ const processAudioData = useCallback(async (audioData: Float32Array) => {
 
 ## 📈 Métriques Performance (Estimées)
 
-| Métrique | Valeur Actuelle | Objectif Production | Status |
-|----------|-----------------|---------------------|--------|
+| Métrique                | Valeur Actuelle      | Objectif Production    | Status       |
+| ----------------------- | -------------------- | ---------------------- | ------------ |
 | **Calibration latence** | ~50ms (placeholders) | <200ms (real features) | ⚠️ À mesurer |
-| **Detection latence** | ~20ms (placeholders) | <50ms (real-time OK) | ⚠️ À mesurer |
-| **Accuracy** | ~60% (placeholders) | >90% (real features) | ⚠️ À mesurer |
-| **False positives** | Unknown | <5% | ⚠️ À mesurer |
-| **False negatives** | Unknown | <10% | ⚠️ À mesurer |
+| **Detection latence**   | ~20ms (placeholders) | <50ms (real-time OK)   | ⚠️ À mesurer |
+| **Accuracy**            | ~60% (placeholders)  | >90% (real features)   | ⚠️ À mesurer |
+| **False positives**     | Unknown              | <5%                    | ⚠️ À mesurer |
+| **False negatives**     | Unknown              | <10%                   | ⚠️ À mesurer |
 
 **Note** : Métriques actuelles basées sur placeholders, pas représentatives. Production nécessite real features extraction (YIN, LPC, FFT, MFCC) pour atteindre objectifs.
 
@@ -412,16 +432,16 @@ const processAudioData = useCallback(async (audioData: Float32Array) => {
 
 ## 📊 KPIs Finaux P0-2
 
-| KPI | Valeur | Objectif | Status |
-|-----|--------|----------|--------|
-| **Backend Rust** | ✅ Implémenté | ✅ | ✅ Complété |
-| **Commandes Tauri** | 3/3 | 3/3 | ✅ Complété |
-| **Frontend Service** | ✅ Créé | ✅ | ✅ Complété |
-| **Integration useVAD** | ✅ Ajoutée | ✅ | ✅ Complété |
-| **Build Rust** | ✅ OK | ✅ | ✅ Complété |
-| **TypeScript** | ⚠️ Erreurs pre-existantes | ✅ | ⚠️ Non bloquant |
-| **Tests** | 0/0 (P2) | >10 (P2) | ⏳ Phase 3 |
-| **Real Features** | ⏳ Placeholders | ✅ Production | ⏳ Phase 3 |
+| KPI                    | Valeur                    | Objectif      | Status          |
+| ---------------------- | ------------------------- | ------------- | --------------- |
+| **Backend Rust**       | ✅ Implémenté             | ✅            | ✅ Complété     |
+| **Commandes Tauri**    | 3/3                       | 3/3           | ✅ Complété     |
+| **Frontend Service**   | ✅ Créé                   | ✅            | ✅ Complété     |
+| **Integration useVAD** | ✅ Ajoutée                | ✅            | ✅ Complété     |
+| **Build Rust**         | ✅ OK                     | ✅            | ✅ Complété     |
+| **TypeScript**         | ⚠️ Erreurs pre-existantes | ✅            | ⚠️ Non bloquant |
+| **Tests**              | 0/0 (P2)                  | >10 (P2)      | ⏳ Phase 3      |
+| **Real Features**      | ⏳ Placeholders           | ✅ Production | ⏳ Phase 3      |
 
 ---
 
@@ -440,4 +460,4 @@ const processAudioData = useCallback(async (audioData: Float32Array) => {
 
 ---
 
-*Rapport généré le 8 décembre 2025 — TITANE_INFINITY v20.0*
+_Rapport généré le 8 décembre 2025 — TITANE_INFINITY v20.0_

@@ -11,9 +11,9 @@ use serde::{Deserialize, Serialize};
 /// Niveau d'énergie détecté
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum EnergyLevel {
-    High,    // Messages denses, enthousiastes → propositions audacieuses
-    Medium,  // Rythme normal → explications équilibrées
-    Low,     // Fatigue, flemme → simplification, respiration
+    High,   // Messages denses, enthousiastes → propositions audacieuses
+    Medium, // Rythme normal → explications équilibrées
+    Low,    // Fatigue, flemme → simplification, respiration
 }
 
 /// Niveau de clarté mentale détecté
@@ -54,17 +54,17 @@ pub enum ResponseTone {
 /// Demande de traitement émotionnel subtil
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct EmotionalRequest {
-    pub context: String,                 // Contexte conversationnel
-    pub user_message: String,            // Message actuel
-    pub draft_response: String,          // Réponse brouillon à affiner
-    pub conversation_velocity: usize,    // Vitesse (messages/minute)
-    pub message_history: Vec<String>,    // Historique pour détecter patterns
+    pub context: String,              // Contexte conversationnel
+    pub user_message: String,         // Message actuel
+    pub draft_response: String,       // Réponse brouillon à affiner
+    pub conversation_velocity: usize, // Vitesse (messages/minute)
+    pub message_history: Vec<String>, // Historique pour détecter patterns
 }
 
 /// Réponse avec subtilité émotionnelle
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct EmotionalResponse {
-    pub finalized_response: String,      // Réponse finale avec ton ajusté
+    pub finalized_response: String, // Réponse finale avec ton ajusté
     pub detected_energy: EnergyLevel,
     pub detected_clarity: ClarityLevel,
     pub detected_load: MentalLoad,
@@ -134,10 +134,7 @@ impl EmotionalSubtletyProcessor {
         let emotion = self.detect_emotional_state(&request.user_message);
 
         // 2️⃣ Détecter niveau d'énergie
-        let energy = self.detect_energy_level(
-            &request.user_message,
-            request.conversation_velocity,
-        );
+        let energy = self.detect_energy_level(&request.user_message, request.conversation_velocity);
 
         // 3️⃣ Détecter clarté mentale
         let clarity = self.detect_clarity_level(&request.user_message);
@@ -159,11 +156,7 @@ impl EmotionalSubtletyProcessor {
         );
 
         // 7️⃣ Évaluer qualité adaptation
-        let adaptation_quality = self.evaluate_adaptation_quality(
-            &finalized,
-            &emotion,
-            &tone,
-        );
+        let adaptation_quality = self.evaluate_adaptation_quality(&finalized, &emotion, &tone);
 
         EmotionalResponse {
             finalized_response: finalized,
@@ -415,7 +408,10 @@ impl EmotionalSubtletyProcessor {
 
     fn make_expansive(&self, text: &str) -> String {
         if text.len() < 100 {
-            format!("{}\n\nCette approche ouvre plusieurs perspectives intéressantes.", text)
+            format!(
+                "{}\n\nCette approche ouvre plusieurs perspectives intéressantes.",
+                text
+            )
         } else {
             text.to_string()
         }

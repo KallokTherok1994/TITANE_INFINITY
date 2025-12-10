@@ -102,9 +102,15 @@ async function initializeRuntimeConfig(): Promise<void> {
   }
 
   try {
-    const runtimeConfig = await safeInvokeTauri<Partial<RuntimeConfigPayload>>(TAURI_COMMANDS.RUNTIME_GET_CONFIG);
+    const runtimeConfig = await safeInvokeTauri<Partial<RuntimeConfigPayload>>(
+      TAURI_COMMANDS.RUNTIME_GET_CONFIG
+    );
 
-    if (runtimeConfig && typeof runtimeConfig === 'object' && 'ollamaUrl' in runtimeConfig) {
+    if (
+      runtimeConfig &&
+      typeof runtimeConfig === 'object' &&
+      'ollamaUrl' in runtimeConfig
+    ) {
       setRuntimeConfig(runtimeConfig as RuntimeConfigPayload);
       console.log('[RuntimeConfig] Loaded (sanitized)', {
         secretsMode: runtimeConfig.secretsMode,
@@ -112,7 +118,9 @@ async function initializeRuntimeConfig(): Promise<void> {
         ollamaEndpoint: runtimeConfig.ollamaUrl,
       });
     } else {
-      console.warn('[RuntimeConfig] Backend returned unexpected payload; keeping defaults');
+      console.warn(
+        '[RuntimeConfig] Backend returned unexpected payload; keeping defaults'
+      );
     }
   } catch (error) {
     console.warn('[RuntimeConfig] Failed to load from backend; using defaults', error);
@@ -126,15 +134,17 @@ const getTauriWindowAPI = () => {
     return undefined;
   }
 
-  return (window as typeof window & {
-    __TAURI__?: {
-      window?: {
-        getCurrent: () => {
-          openDevtools: () => Promise<void>;
+  return (
+    window as typeof window & {
+      __TAURI__?: {
+        window?: {
+          getCurrent: () => {
+            openDevtools: () => Promise<void>;
+          };
         };
       };
-    };
-  }).__TAURI__?.window;
+    }
+  ).__TAURI__?.window;
 };
 
 // 🔧 DevTools keyboard shortcuts (F12 + Ctrl+Shift+I)
@@ -198,37 +208,41 @@ singularityEngine.initialize().then(() => {
 */
 
 // 🌟 v15: Initialize SingularityBridge
-SingularityBridge.initialize().then(() => {
-  console.log('✅ SingularityBridge initialized (Rust ↔ React sync active)');
+SingularityBridge.initialize()
+  .then(() => {
+    console.log('✅ SingularityBridge initialized (Rust ↔ React sync active)');
 
-  // Log initial state
-  SingularityBridge.getGlobalCoherence().then((coherence) => {
-    console.log('🔗 Backend Coherence:', (coherence * 100).toFixed(1) + '%');
-  });
+    // Log initial state
+    SingularityBridge.getGlobalCoherence().then(coherence => {
+      console.log('🔗 Backend Coherence:', (coherence * 100).toFixed(1) + '%');
+    });
 
-  SingularityBridge.isCritical().then((critical) => {
-    if (critical) {
-      console.warn('⚠️  System in CRITICAL state!');
-    } else {
-      console.log('✅ System health: Normal');
-    }
-  });
+    SingularityBridge.isCritical().then(critical => {
+      if (critical) {
+        console.warn('⚠️  System in CRITICAL state!');
+      } else {
+        console.log('✅ System health: Normal');
+      }
+    });
 
-  // 🔗 v15: Start subsystem connections (Helios, Memory, Persona, AutoHeal, UI)
-  SingularityConnections.start(5000).then(() => {
-    console.log('🔗 SingularityConnections started (5s polling)');
-    console.log('   → Helios → PhysicalLayer');
-    console.log('   → Memory → CognitiveLayer');
-    console.log('   → Persona → SymbolicLayer');
-    console.log('   → AutoHeal → AdaptiveLayer');
-    console.log('   → UI Router → MetaLayer');
-  }).catch((err) => {
-    console.error('❌ SingularityConnections failed:', err);
+    // 🔗 v15: Start subsystem connections (Helios, Memory, Persona, AutoHeal, UI)
+    SingularityConnections.start(5000)
+      .then(() => {
+        console.log('🔗 SingularityConnections started (5s polling)');
+        console.log('   → Helios → PhysicalLayer');
+        console.log('   → Memory → CognitiveLayer');
+        console.log('   → Persona → SymbolicLayer');
+        console.log('   → AutoHeal → AdaptiveLayer');
+        console.log('   → UI Router → MetaLayer');
+      })
+      .catch(err => {
+        console.error('❌ SingularityConnections failed:', err);
+      });
+  })
+  .catch(err => {
+    console.error('❌ SingularityBridge initialization failed:', err);
+    console.error('   → Backend state sync disabled, frontend-only mode active');
   });
-}).catch((err) => {
-  console.error('❌ SingularityBridge initialization failed:', err);
-  console.error('   → Backend state sync disabled, frontend-only mode active');
-});
 
 // Phase 8: Initialize Performance Monitoring - DÉSACTIVÉ pour debug
 /*
@@ -255,11 +269,11 @@ injectSROnlyStyles();
 console.log('♿ Accessibility styles injected (WCAG 2.1 AA)');
 
 // 🔧 Global error handlers (catch unhandled errors)
-window.addEventListener('error', (event) => {
+window.addEventListener('error', event => {
   console.error('[TITANE] Global error caught:', event.error);
 });
 
-window.addEventListener('unhandledrejection', (event) => {
+window.addEventListener('unhandledrejection', event => {
   console.error('[TITANE] Unhandled promise rejection:', event.reason);
 });
 

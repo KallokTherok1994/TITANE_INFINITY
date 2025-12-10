@@ -140,22 +140,23 @@ export class ServiceMetrics {
   static getServiceStats(service: string, timeWindow?: number): ServiceStats {
     const cacheKey = `${service}_${timeWindow || 'all'}`;
 
-    return MetricsCache.getServiceStats(
-      cacheKey,
-      this.metrics.length,
-      () => this.calculateServiceStats(service, timeWindow)
+    return MetricsCache.getServiceStats(cacheKey, this.metrics.length, () =>
+      this.calculateServiceStats(service, timeWindow)
     );
   }
 
   /**
    * Calculer stats service (appelé si cache miss)
    */
-  private static calculateServiceStats(service: string, timeWindow?: number): ServiceStats {
+  private static calculateServiceStats(
+    service: string,
+    timeWindow?: number
+  ): ServiceStats {
     const now = Date.now();
     const windowStart = timeWindow ? now - timeWindow : 0;
 
     const serviceMetrics = this.metrics.filter(
-      (m) => m.service === service && m.startTime >= windowStart && m.duration !== undefined
+      m => m.service === service && m.startTime >= windowStart && m.duration !== undefined
     );
 
     if (serviceMetrics.length === 0) {
@@ -175,13 +176,13 @@ export class ServiceMetrics {
     }
 
     const totalCalls = serviceMetrics.length;
-    const successfulCalls = serviceMetrics.filter((m) => m.success).length;
+    const successfulCalls = serviceMetrics.filter(m => m.success).length;
     const failedCalls = totalCalls - successfulCalls;
     const totalRetries = serviceMetrics.reduce((sum, m) => sum + m.retries, 0);
 
     const durations = serviceMetrics
-      .map((m) => m.duration as number)
-      .filter((d) => d !== undefined)
+      .map(m => m.duration as number)
+      .filter(d => d !== undefined)
       .sort((a, b) => a - b);
 
     const averageLatency =
@@ -216,10 +217,8 @@ export class ServiceMetrics {
   static getTopCommands(limit = 10): CommandStats[] {
     const cacheKey = `top_${limit}`;
 
-    return MetricsCache.getCommandStats(
-      cacheKey,
-      this.metrics.length,
-      () => this.calculateTopCommands(limit)
+    return MetricsCache.getCommandStats(cacheKey, this.metrics.length, () =>
+      this.calculateTopCommands(limit)
     );
   }
 
@@ -234,20 +233,20 @@ export class ServiceMetrics {
       if (!commandMap.has(key)) {
         commandMap.set(key, []);
       }
-      const arr = commandMap.get(key); if (arr) arr.push(metric);
+      const arr = commandMap.get(key);
+      if (arr) arr.push(metric);
     }
 
     const commandStats: CommandStats[] = [];
 
     for (const [command, metrics] of Array.from(commandMap.entries())) {
       const durations = metrics
-        .filter((m) => m.duration !== undefined)
-        .map((m) => m.duration as number);
-      const avgLatency =
-        durations.reduce((sum, d) => sum + d, 0) / durations.length || 0;
-      const failed = metrics.filter((m) => !m.success).length;
+        .filter(m => m.duration !== undefined)
+        .map(m => m.duration as number);
+      const avgLatency = durations.reduce((sum, d) => sum + d, 0) / durations.length || 0;
+      const failed = metrics.filter(m => !m.success).length;
       const errorRate = failed / metrics.length || 0;
-      const lastCall = Math.max(...metrics.map((m) => m.startTime));
+      const lastCall = Math.max(...metrics.map(m => m.startTime));
 
       commandStats.push({
         command,
@@ -267,10 +266,8 @@ export class ServiceMetrics {
   static getSlowestCommands(limit = 10): CommandStats[] {
     const cacheKey = `slowest_${limit}`;
 
-    return MetricsCache.getCommandStats(
-      cacheKey,
-      this.metrics.length,
-      () => this.calculateSlowestCommands(limit)
+    return MetricsCache.getCommandStats(cacheKey, this.metrics.length, () =>
+      this.calculateSlowestCommands(limit)
     );
   }
 
@@ -285,22 +282,22 @@ export class ServiceMetrics {
       if (!commandMap.has(key)) {
         commandMap.set(key, []);
       }
-      const arr = commandMap.get(key); if (arr) arr.push(metric);
+      const arr = commandMap.get(key);
+      if (arr) arr.push(metric);
     }
 
     const commandStats: CommandStats[] = [];
 
     for (const [command, metrics] of Array.from(commandMap.entries())) {
       const durations = metrics
-        .filter((m) => m.duration !== undefined)
-        .map((m) => m.duration as number);
+        .filter(m => m.duration !== undefined)
+        .map(m => m.duration as number);
       if (durations.length === 0) continue;
 
-      const avgLatency =
-        durations.reduce((sum, d) => sum + d, 0) / durations.length || 0;
-      const failed = metrics.filter((m) => !m.success).length;
+      const avgLatency = durations.reduce((sum, d) => sum + d, 0) / durations.length || 0;
+      const failed = metrics.filter(m => !m.success).length;
       const errorRate = failed / metrics.length || 0;
-      const lastCall = Math.max(...metrics.map((m) => m.startTime));
+      const lastCall = Math.max(...metrics.map(m => m.startTime));
 
       commandStats.push({
         command,
@@ -320,10 +317,8 @@ export class ServiceMetrics {
   static getErrorProneCommands(limit = 10): CommandStats[] {
     const cacheKey = `errors_${limit}`;
 
-    return MetricsCache.getCommandStats(
-      cacheKey,
-      this.metrics.length,
-      () => this.calculateErrorProneCommands(limit)
+    return MetricsCache.getCommandStats(cacheKey, this.metrics.length, () =>
+      this.calculateErrorProneCommands(limit)
     );
   }
 
@@ -338,20 +333,20 @@ export class ServiceMetrics {
       if (!commandMap.has(key)) {
         commandMap.set(key, []);
       }
-      const arr = commandMap.get(key); if (arr) arr.push(metric);
+      const arr = commandMap.get(key);
+      if (arr) arr.push(metric);
     }
 
     const commandStats: CommandStats[] = [];
 
     for (const [command, metrics] of Array.from(commandMap.entries())) {
       const durations = metrics
-        .filter((m) => m.duration !== undefined)
-        .map((m) => m.duration as number);
-      const avgLatency =
-        durations.reduce((sum, d) => sum + d, 0) / durations.length || 0;
-      const failed = metrics.filter((m) => !m.success).length;
+        .filter(m => m.duration !== undefined)
+        .map(m => m.duration as number);
+      const avgLatency = durations.reduce((sum, d) => sum + d, 0) / durations.length || 0;
+      const failed = metrics.filter(m => !m.success).length;
       const errorRate = failed / metrics.length || 0;
-      const lastCall = Math.max(...metrics.map((m) => m.startTime));
+      const lastCall = Math.max(...metrics.map(m => m.startTime));
 
       if (failed > 0) {
         commandStats.push({
@@ -377,9 +372,8 @@ export class ServiceMetrics {
     globalErrorRate: number;
     globalAvgLatency: number;
   } {
-    return MetricsCache.getGlobalStats(
-      this.metrics.length,
-      () => this.calculateGlobalStats()
+    return MetricsCache.getGlobalStats(this.metrics.length, () =>
+      this.calculateGlobalStats()
     );
   }
 
@@ -393,13 +387,13 @@ export class ServiceMetrics {
     globalErrorRate: number;
     globalAvgLatency: number;
   } {
-    const services = [...new Set(this.metrics.map((m) => m.service))];
+    const services = [...new Set(this.metrics.map(m => m.service))];
     const totalRetries = this.metrics.reduce((sum, m) => sum + m.retries, 0);
-    const failed = this.metrics.filter((m) => !m.success).length;
+    const failed = this.metrics.filter(m => !m.success).length;
     const globalErrorRate = this.metrics.length > 0 ? failed / this.metrics.length : 0;
     const durations = this.metrics
-      .filter((m) => m.duration !== undefined)
-      .map((m) => m.duration as number);
+      .filter(m => m.duration !== undefined)
+      .map(m => m.duration as number);
     const globalAvgLatency =
       durations.length > 0
         ? durations.reduce((sum, d) => sum + d, 0) / durations.length

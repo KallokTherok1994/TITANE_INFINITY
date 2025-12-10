@@ -7,7 +7,13 @@
 // PATCH TYPES
 // ═══════════════════════════════════════════════════════════════════════════════
 
-export type PatchType = 'Replace' | 'Insert' | 'Delete' | 'Create' | 'Refactor' | 'Optimize';
+export type PatchType =
+  | 'Replace'
+  | 'Insert'
+  | 'Delete'
+  | 'Create'
+  | 'Refactor'
+  | 'Optimize';
 
 export type ChangeSeverity = 'Low' | 'Medium' | 'High' | 'Critical';
 

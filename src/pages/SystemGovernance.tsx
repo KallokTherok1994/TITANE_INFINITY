@@ -43,9 +43,11 @@ export const SystemGovernance: React.FC = () => {
   const loadAuditLog = async () => {
     try {
       setLoading(true);
-      const response = await secureInvoke<{ ok: boolean; data?: AuditEntry[]; error?: string }>(
-        'get_permission_audit'
-      );
+      const response = await secureInvoke<{
+        ok: boolean;
+        data?: AuditEntry[];
+        error?: string;
+      }>('get_permission_audit');
 
       if (response.ok && response.data) {
         setAuditLog(response.data.sort((a, b) => b.timestamp - a.timestamp));
@@ -62,14 +64,14 @@ export const SystemGovernance: React.FC = () => {
       // TODO: Implémenter commande Tauri get_permission_matrix
       // Pour l'instant, permissions hardcodées
       setPermissions({
-        'file_import': ['ROOT', 'SYSTEM', 'USER'],
-        'file_delete': ['ROOT', 'SYSTEM'],
-        'memory_write': ['ROOT', 'SYSTEM'],
-        'chat_generate': ['ROOT', 'SYSTEM', 'IA', 'USER'],
-        'snapshot_create': ['ROOT', 'SYSTEM'],
-        'snapshot_restore': ['ROOT'],
-        'permission_audit': ['ROOT'],
-        'system_integrity': ['ROOT', 'SYSTEM'],
+        file_import: ['ROOT', 'SYSTEM', 'USER'],
+        file_delete: ['ROOT', 'SYSTEM'],
+        memory_write: ['ROOT', 'SYSTEM'],
+        chat_generate: ['ROOT', 'SYSTEM', 'IA', 'USER'],
+        snapshot_create: ['ROOT', 'SYSTEM'],
+        snapshot_restore: ['ROOT'],
+        permission_audit: ['ROOT'],
+        system_integrity: ['ROOT', 'SYSTEM'],
       });
     } catch (error) {
       console.error('Failed to load permissions:', error);
@@ -82,11 +84,16 @@ export const SystemGovernance: React.FC = () => {
 
   const getRoleColor = (role: string): string => {
     switch (role) {
-      case 'ROOT': return '#ff0000';
-      case 'SYSTEM': return '#ff8800';
-      case 'IA': return '#00aaff';
-      case 'USER': return '#00ff88';
-      default: return '#888888';
+      case 'ROOT':
+        return '#ff0000';
+      case 'SYSTEM':
+        return '#ff8800';
+      case 'IA':
+        return '#00aaff';
+      case 'USER':
+        return '#00ff88';
+      default:
+        return '#888888';
     }
   };
 
@@ -106,14 +113,14 @@ export const SystemGovernance: React.FC = () => {
         <div className="audit-header">
           <h2>📋 Audit Log</h2>
           <div className="audit-filters">
-            <select value={filterRole} onChange={(e) => setFilterRole(e.target.value)}>
+            <select value={filterRole} onChange={e => setFilterRole(e.target.value)}>
               <option value="all">All Roles</option>
               <option value="ROOT">ROOT</option>
               <option value="SYSTEM">SYSTEM</option>
               <option value="IA">IA</option>
               <option value="USER">USER</option>
             </select>
-            <select value={filterResult} onChange={(e) => setFilterResult(e.target.value)}>
+            <select value={filterResult} onChange={e => setFilterResult(e.target.value)}>
               <option value="all">All Results</option>
               <option value="allowed">Allowed</option>
               <option value="denied">Denied</option>
@@ -141,7 +148,9 @@ export const SystemGovernance: React.FC = () => {
                 {filteredAuditLog.map((entry, index) => (
                   <tr key={index} className={entry.result === 'denied' ? 'denied' : ''}>
                     <td>{formatDate(entry.timestamp)}</td>
-                    <td><code>{entry.action}</code></td>
+                    <td>
+                      <code>{entry.action}</code>
+                    </td>
                     <td>
                       <span
                         className="role-badge"
@@ -166,7 +175,9 @@ export const SystemGovernance: React.FC = () => {
 
         <div className="audit-stats">
           <p>Total entrées : {filteredAuditLog.length}</p>
-          <p>Autorisées : {filteredAuditLog.filter(e => e.result === 'allowed').length}</p>
+          <p>
+            Autorisées : {filteredAuditLog.filter(e => e.result === 'allowed').length}
+          </p>
           <p>Refusées : {filteredAuditLog.filter(e => e.result === 'denied').length}</p>
         </div>
       </div>
@@ -192,7 +203,7 @@ export const SystemGovernance: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {actions.map((action) => {
+            {actions.map(action => {
               const roles = permissions[action];
               return (
                 <tr
@@ -200,34 +211,20 @@ export const SystemGovernance: React.FC = () => {
                   className={selectedAction === action ? 'selected' : ''}
                   onClick={() => setSelectedAction(action)}
                 >
-                  <td><code>{action}</code></td>
                   <td>
-                    <input
-                      type="checkbox"
-                      checked={roles.includes('ROOT')}
-                      disabled
-                    />
+                    <code>{action}</code>
                   </td>
                   <td>
-                    <input
-                      type="checkbox"
-                      checked={roles.includes('SYSTEM')}
-                      disabled
-                    />
+                    <input type="checkbox" checked={roles.includes('ROOT')} disabled />
                   </td>
                   <td>
-                    <input
-                      type="checkbox"
-                      checked={roles.includes('IA')}
-                      disabled
-                    />
+                    <input type="checkbox" checked={roles.includes('SYSTEM')} disabled />
                   </td>
                   <td>
-                    <input
-                      type="checkbox"
-                      checked={roles.includes('USER')}
-                      disabled
-                    />
+                    <input type="checkbox" checked={roles.includes('IA')} disabled />
+                  </td>
+                  <td>
+                    <input type="checkbox" checked={roles.includes('USER')} disabled />
                   </td>
                 </tr>
               );
@@ -273,7 +270,9 @@ export const SystemGovernance: React.FC = () => {
                 <div className="alert-content">
                   <strong>{entry.caller}</strong> attempted <code>{entry.action}</code>
                   <br />
-                  <small>{formatDate(entry.timestamp)} - Role: {entry.role}</small>
+                  <small>
+                    {formatDate(entry.timestamp)} - Role: {entry.role}
+                  </small>
                 </div>
               </div>
             ))}
@@ -291,17 +290,11 @@ export const SystemGovernance: React.FC = () => {
       </header>
 
       <div className="governance-grid">
-        <div className="governance-section">
-          {renderAuditLog()}
-        </div>
+        <div className="governance-section">{renderAuditLog()}</div>
 
-        <div className="governance-section">
-          {renderPermissionMatrix()}
-        </div>
+        <div className="governance-section">{renderPermissionMatrix()}</div>
 
-        <div className="governance-section">
-          {renderEscalationAlerts()}
-        </div>
+        <div className="governance-section">{renderEscalationAlerts()}</div>
       </div>
     </div>
   );

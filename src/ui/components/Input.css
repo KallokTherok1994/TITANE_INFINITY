@@ -39,8 +39,9 @@
   outline: none;
   border-color: var(--color-primary-500);
   background: rgba(20, 20, 25, 0.8);
-  box-shadow: 0 0 24px rgba(99, 102, 241, 0.3),
-              0 4px 16px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 0 24px rgba(99, 102, 241, 0.3),
+    0 4px 16px rgba(0, 0, 0, 0.3);
   transform: translateY(-2px);
 }
 

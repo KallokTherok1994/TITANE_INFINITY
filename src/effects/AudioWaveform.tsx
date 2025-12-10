@@ -43,9 +43,7 @@ export const AudioWaveform: React.FC<AudioWaveformProps> = ({
     >
       {Array.from({ length: barCount }).map((_, index) => {
         // Use audio data if provided, otherwise use animation
-        const barHeight = audioData
-          ? `${audioData[index] || 20}%`
-          : '20%';
+        const barHeight = audioData ? `${audioData[index] || 20}%` : '20%';
 
         return (
           <div

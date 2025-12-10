@@ -20,7 +20,11 @@
 
 import { detectEnvironment } from '@/core/tauri/environment';
 import { secureInvoke } from '@/lib/security';
-import { audioHealthService, type AudioHealthReport, type SelfHealResult as AudioSelfHealResult } from '@/services/audio/audioHealthCheck';
+import {
+  audioHealthService,
+  type AudioHealthReport,
+  type SelfHealResult as AudioSelfHealResult,
+} from '@/services/audio/audioHealthCheck';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Types
@@ -195,7 +199,9 @@ class DeviceHealthService {
     this.lastReport = report;
     this.notifyListeners(report);
 
-    console.log(`[DeviceHealth] 📊 Scan complete: ${overallStatus} (${devices.length} devices)`);
+    console.log(
+      `[DeviceHealth] 📊 Scan complete: ${overallStatus} (${devices.length} devices)`
+    );
     return report;
   }
 
@@ -217,11 +223,14 @@ class DeviceHealthService {
 
       if (env.isTauri) {
         // Tester le système de persistence
-        const result = await secureInvoke<{ success: boolean }>('titan_get_last_snapshot');
+        const result = await secureInvoke<{ success: boolean }>(
+          'titan_get_last_snapshot'
+        );
         device.status = result !== null ? 'ok' : 'warning';
-        device.message = result !== null
-          ? 'Storage backend opérationnel'
-          : 'Storage backend vide (premier lancement?)';
+        device.message =
+          result !== null
+            ? 'Storage backend opérationnel'
+            : 'Storage backend vide (premier lancement?)';
       } else {
         // En mode browser, vérifier localStorage
         try {
@@ -365,7 +374,9 @@ class DeviceHealthService {
     // Ajouter à l'historique
     this.repairHistory.push(...repairs);
 
-    console.log(`[DeviceHealth] 🩺 Self-healing complete: ${successCount}/${repairs.length} repairs succeeded`);
+    console.log(
+      `[DeviceHealth] 🩺 Self-healing complete: ${successCount}/${repairs.length} repairs succeeded`
+    );
     return report;
   }
 
@@ -404,7 +415,9 @@ class DeviceHealthService {
       result.message = `Repair error: ${err instanceof Error ? err.message : 'unknown'}`;
     }
 
-    console.log(`[DeviceHealth] ${result.success ? '✅' : '❌'} Storage repair: ${result.message}`);
+    console.log(
+      `[DeviceHealth] ${result.success ? '✅' : '❌'} Storage repair: ${result.message}`
+    );
     return result;
   }
 
@@ -429,7 +442,9 @@ class DeviceHealthService {
       case 'audioContext': {
         // Délègue à audioHealthService via selfHeal
         const audioResult = await audioHealthService.selfHeal();
-        const ctxAction = audioResult.actionsPerformed.find(a => a.target === 'audioContext');
+        const ctxAction = audioResult.actionsPerformed.find(
+          a => a.target === 'audioContext'
+        );
         return {
           deviceId: 'audioContext',
           category: 'audio',

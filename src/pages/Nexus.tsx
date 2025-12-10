@@ -21,7 +21,11 @@ import './ModulePages.css';
 
 export const Nexus = () => {
   const nexusData = useEngineSubscription('nexus');
-  const { data: graph, loading } = nexusData as { data: NexusGraph | null; loading: boolean };  if (loading) {
+  const { data: graph, loading } = nexusData as {
+    data: NexusGraph | null;
+    loading: boolean;
+  };
+  if (loading) {
     return (
       <div className="module-page">
         <div className="module-page__loading">
@@ -42,7 +46,9 @@ export const Nexus = () => {
           <span className="module-page__icon">🧠</span>
           Nexus — Réseau Cognitif
         </h1>
-        <p className="module-page__subtitle">Architecture neurale et connexions actives</p>
+        <p className="module-page__subtitle">
+          Architecture neurale et connexions actives
+        </p>
       </div>
 
       <div className="module-page__grid">

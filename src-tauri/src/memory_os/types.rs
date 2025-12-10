@@ -39,19 +39,19 @@ impl MemoryOSError {
     pub fn EmbeddingError(msg: String) -> Self {
         MemoryOSError(format!("EmbeddingError: {}", msg))
     }
-    
+
     pub fn ClusteringError(msg: String) -> Self {
         MemoryOSError(format!("ClusteringError: {}", msg))
     }
-    
+
     pub fn SearchError(msg: String) -> Self {
         MemoryOSError(format!("SearchError: {}", msg))
     }
-    
+
     pub fn VectorIndexError(msg: String) -> Self {
         MemoryOSError(format!("VectorIndexError: {}", msg))
     }
-    
+
     pub fn IoError(msg: String) -> Self {
         MemoryOSError(format!("IoError: {}", msg))
     }

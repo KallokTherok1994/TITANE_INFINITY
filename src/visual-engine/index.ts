@@ -9,7 +9,10 @@ export type { VisualEngineConfig, PerformanceMetrics } from './TitaneVisualEngin
 
 // Core Engine v21 (New Multi-dimensional)
 export { TitaneVisualEngineV21 } from './TitaneVisualEngineV21';
-export type { VisualEngineV21Config, PerformanceMetrics as PerformanceMetricsV21 } from './TitaneVisualEngineV21';
+export type {
+  VisualEngineV21Config,
+  PerformanceMetrics as PerformanceMetricsV21,
+} from './TitaneVisualEngineV21';
 
 // State Management
 export { StateManager } from './StateManager';

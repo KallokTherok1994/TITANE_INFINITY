@@ -39,12 +39,12 @@ pub type HyperResult<T> = Result<T, HyperIntelligenceError>;
 /// Mode d'intelligence
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum IntelligenceMode {
-    Analytical,    // Focus sur l'analyse logique
-    Creative,      // Focus sur la créativité
-    Intuitive,     // Mode intuitif
-    Strategic,     // Planification stratégique
-    Empathetic,    // Intelligence émotionnelle
-    Integrative,   // Intégration multi-domaine
+    Analytical,  // Focus sur l'analyse logique
+    Creative,    // Focus sur la créativité
+    Intuitive,   // Mode intuitif
+    Strategic,   // Planification stratégique
+    Empathetic,  // Intelligence émotionnelle
+    Integrative, // Intégration multi-domaine
 }
 
 impl Default for IntelligenceMode {

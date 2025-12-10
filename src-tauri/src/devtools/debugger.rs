@@ -321,9 +321,13 @@ impl LiveDebugger {
         let events = self.events.read().await;
 
         let total_events = events.len();
-        let error_count = events.iter().filter(|e| e.event_type == DebugEventType::Error).count();
+        let error_count = events
+            .iter()
+            .filter(|e| e.event_type == DebugEventType::Error)
+            .count();
 
-        let mut events_by_engine: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
+        let mut events_by_engine: std::collections::HashMap<String, usize> =
+            std::collections::HashMap::new();
         let mut total_duration_ms: u128 = 0;
         let mut max_duration_ms: u128 = 0;
         let mut slowest_engine = String::new();
@@ -407,7 +411,8 @@ mod tests {
 
         // Add more than MAX_EVENTS
         for i in 0..1100 {
-            dbg.record("TestEngine", i as u128, format!("Event {}", i)).await;
+            dbg.record("TestEngine", i as u128, format!("Event {}", i))
+                .await;
         }
 
         let events = dbg.all().await;
@@ -430,7 +435,8 @@ mod tests {
     async fn test_debugger_error_recording() {
         let dbg = LiveDebugger::new();
 
-        dbg.record_error("TestEngine", "Something went wrong", 50).await;
+        dbg.record_error("TestEngine", "Something went wrong", 50)
+            .await;
 
         let errors = dbg.errors().await;
         assert_eq!(errors.len(), 1);

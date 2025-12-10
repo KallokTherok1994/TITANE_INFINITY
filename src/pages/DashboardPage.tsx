@@ -61,12 +61,7 @@ export const DashboardPage = (): JSX.Element => {
         <PersonaMoodIndicator />
 
         {/* XP Progress - Stats Réelles Système v19.3 */}
-        <XPProgressBar
-          currentXP={193000}
-          requiredXP={250000}
-          level={19}
-          showDetails
-        />
+        <XPProgressBar currentXP={193000} requiredXP={250000} level={19} showDetails />
 
         {/* Stats Grid - TITANE∞ v19.3 Real Metrics */}
         <Grid columns={3} gap={4}>

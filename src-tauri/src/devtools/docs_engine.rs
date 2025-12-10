@@ -11,7 +11,6 @@
  * - API introspection pour le frontend
  * - Documentation contextuelle in-app
  */
-
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -326,18 +325,18 @@ if (report.score < 70) {
         self.register_command(CommandDoc {
             name: "titan_backup_create".to_string(),
             summary: "Crée un backup de l'état actuel".to_string(),
-            description: "Sauvegarde l'état complet avec métadonnées. Supporte le chiffrement optionnel.".to_string(),
+            description:
+                "Sauvegarde l'état complet avec métadonnées. Supporte le chiffrement optionnel."
+                    .to_string(),
             module: "persistence/backup".to_string(),
             category: CommandCategory::Memory,
-            params: vec![
-                ParamDoc {
-                    name: "description".to_string(),
-                    ts_type: "string".to_string(),
-                    description: "Description du backup".to_string(),
-                    required: false,
-                    default: Some("\"Manual backup\"".to_string()),
-                },
-            ],
+            params: vec![ParamDoc {
+                name: "description".to_string(),
+                ts_type: "string".to_string(),
+                description: "Description du backup".to_string(),
+                required: false,
+                default: Some("\"Manual backup\"".to_string()),
+            }],
             returns: ReturnDoc {
                 ts_type: "BackupReport".to_string(),
                 description: "Informations sur le backup créé".to_string(),
@@ -345,7 +344,11 @@ if (report.score < 70) {
                 error_types: vec!["BackupError".to_string(), "StorageError".to_string()],
             },
             examples: vec![],
-            tags: vec!["backup".to_string(), "save".to_string(), "persistence".to_string()],
+            tags: vec![
+                "backup".to_string(),
+                "save".to_string(),
+                "persistence".to_string(),
+            ],
             since: "v14.0.0".to_string(),
             deprecated: None,
         });
@@ -353,7 +356,9 @@ if (report.score < 70) {
         self.register_command(CommandDoc {
             name: "titan_backup_list".to_string(),
             summary: "Liste tous les backups disponibles".to_string(),
-            description: "Retourne la liste des backups avec leurs métadonnées (date, taille, description).".to_string(),
+            description:
+                "Retourne la liste des backups avec leurs métadonnées (date, taille, description)."
+                    .to_string(),
             module: "persistence/backup".to_string(),
             category: CommandCategory::Memory,
             params: vec![],
@@ -402,7 +407,9 @@ if (report.score < 70) {
         self.register_command(CommandDoc {
             name: "titan_ai_chat".to_string(),
             summary: "Envoie un message au chat IA".to_string(),
-            description: "Envoie un message et reçoit une réponse de l'IA configurée. Supporte le streaming.".to_string(),
+            description:
+                "Envoie un message et reçoit une réponse de l'IA configurée. Supporte le streaming."
+                    .to_string(),
             module: "ai_chat".to_string(),
             category: CommandCategory::AI,
             params: vec![
@@ -428,7 +435,11 @@ if (report.score < 70) {
                 error_types: vec!["APIError".to_string(), "RateLimitError".to_string()],
             },
             examples: vec![],
-            tags: vec!["ai".to_string(), "chat".to_string(), "conversation".to_string()],
+            tags: vec![
+                "ai".to_string(),
+                "chat".to_string(),
+                "conversation".to_string(),
+            ],
             since: "v14.0.0".to_string(),
             deprecated: None,
         });
@@ -439,18 +450,17 @@ if (report.score < 70) {
         self.register_command(CommandDoc {
             name: "titan_docs_search".to_string(),
             summary: "Recherche dans la documentation embarquée".to_string(),
-            description: "Recherche par mots-clés dans la documentation des commandes Tauri.".to_string(),
+            description: "Recherche par mots-clés dans la documentation des commandes Tauri."
+                .to_string(),
             module: "devtools/docs_engine".to_string(),
             category: CommandCategory::DevTools,
-            params: vec![
-                ParamDoc {
-                    name: "query".to_string(),
-                    ts_type: "string".to_string(),
-                    description: "Termes de recherche".to_string(),
-                    required: true,
-                    default: None,
-                },
-            ],
+            params: vec![ParamDoc {
+                name: "query".to_string(),
+                ts_type: "string".to_string(),
+                description: "Termes de recherche".to_string(),
+                required: true,
+                default: None,
+            }],
             returns: ReturnDoc {
                 ts_type: "CommandDoc[]".to_string(),
                 description: "Commandes correspondantes".to_string(),
@@ -466,18 +476,17 @@ if (report.score < 70) {
         self.register_command(CommandDoc {
             name: "titan_docs_get".to_string(),
             summary: "Récupère la documentation d'une commande".to_string(),
-            description: "Retourne la documentation complète d'une commande Tauri spécifique.".to_string(),
+            description: "Retourne la documentation complète d'une commande Tauri spécifique."
+                .to_string(),
             module: "devtools/docs_engine".to_string(),
             category: CommandCategory::DevTools,
-            params: vec![
-                ParamDoc {
-                    name: "command_name".to_string(),
-                    ts_type: "string".to_string(),
-                    description: "Nom de la commande".to_string(),
-                    required: true,
-                    default: None,
-                },
-            ],
+            params: vec![ParamDoc {
+                name: "command_name".to_string(),
+                ts_type: "string".to_string(),
+                description: "Nom de la commande".to_string(),
+                required: true,
+                default: None,
+            }],
             returns: ReturnDoc {
                 ts_type: "CommandDoc | null".to_string(),
                 description: "Documentation ou null si non trouvée".to_string(),
@@ -493,18 +502,17 @@ if (report.score < 70) {
         self.register_command(CommandDoc {
             name: "titan_docs_list".to_string(),
             summary: "Liste toutes les commandes documentées".to_string(),
-            description: "Retourne la liste de toutes les commandes Tauri avec leur documentation.".to_string(),
+            description: "Retourne la liste de toutes les commandes Tauri avec leur documentation."
+                .to_string(),
             module: "devtools/docs_engine".to_string(),
             category: CommandCategory::DevTools,
-            params: vec![
-                ParamDoc {
-                    name: "category".to_string(),
-                    ts_type: "CommandCategory".to_string(),
-                    description: "Filtrer par catégorie".to_string(),
-                    required: false,
-                    default: None,
-                },
-            ],
+            params: vec![ParamDoc {
+                name: "category".to_string(),
+                ts_type: "CommandCategory".to_string(),
+                description: "Filtrer par catégorie".to_string(),
+                required: false,
+                default: None,
+            }],
             returns: ReturnDoc {
                 ts_type: "CommandDoc[]".to_string(),
                 description: "Liste des commandes".to_string(),
@@ -536,7 +544,8 @@ if (report.score < 70) {
         for (name, doc) in &self.registry.commands {
             // Indexer par tags
             for tag in &doc.tags {
-                self.registry.search_index
+                self.registry
+                    .search_index
                     .entry(tag.clone())
                     .or_insert_with(Vec::new)
                     .push(name.clone());
@@ -544,13 +553,15 @@ if (report.score < 70) {
 
             // Indexer par catégorie
             let cat_str = format!("{:?}", doc.category).to_lowercase();
-            self.registry.search_index
+            self.registry
+                .search_index
                 .entry(cat_str)
                 .or_insert_with(Vec::new)
                 .push(name.clone());
 
             // Indexer par module
-            self.registry.search_index
+            self.registry
+                .search_index
                 .entry(doc.module.clone())
                 .or_insert_with(Vec::new)
                 .push(name.clone());
@@ -582,12 +593,15 @@ if (report.score < 70) {
                 _ => "Module TITANE",
             };
 
-            self.registry.modules.insert(module_name.clone(), ModuleDoc {
-                name: module_name,
-                description: description.to_string(),
-                commands,
-                submodules: vec![],
-            });
+            self.registry.modules.insert(
+                module_name.clone(),
+                ModuleDoc {
+                    name: module_name,
+                    description: description.to_string(),
+                    commands,
+                    submodules: vec![],
+                },
+            );
         }
     }
 
@@ -651,20 +665,20 @@ if (report.score < 70) {
 
     /// Lister toutes les commandes
     pub fn list(&self, category: Option<CommandCategory>) -> Vec<&CommandDoc> {
-        self.registry.commands
+        self.registry
+            .commands
             .values()
-            .filter(|doc| {
-                match &category {
-                    Some(cat) => &doc.category == cat,
-                    None => true,
-                }
+            .filter(|doc| match &category {
+                Some(cat) => &doc.category == cat,
+                None => true,
             })
             .collect()
     }
 
     /// Lister par module
     pub fn list_by_module(&self, module: &str) -> Vec<&CommandDoc> {
-        self.registry.commands
+        self.registry
+            .commands
             .values()
             .filter(|doc| doc.module == module || doc.module.starts_with(&format!("{}/", module)))
             .collect()
@@ -680,9 +694,9 @@ if (report.score < 70) {
         let mut md = String::new();
 
         md.push_str("# 📚 TITANE∞ API Documentation\n\n");
-        md.push_str(&format!("> Version: {} | API: {}\n\n",
-            self.registry.titane_version,
-            self.registry.api_version
+        md.push_str(&format!(
+            "> Version: {} | API: {}\n\n",
+            self.registry.titane_version, self.registry.api_version
         ));
         md.push_str("---\n\n");
 
@@ -703,7 +717,8 @@ if (report.score < 70) {
             if !cmds.is_empty() {
                 md.push_str(&format!("### {}\n\n", label));
                 for cmd in cmds {
-                    md.push_str(&format!("- [`{}`](#{}): {}\n",
+                    md.push_str(&format!(
+                        "- [`{}`](#{}): {}\n",
                         cmd.name,
                         cmd.name.replace('_', "-"),
                         cmd.summary
@@ -728,7 +743,8 @@ if (report.score < 70) {
                 md.push_str("|-----|------|--------|-------------|\n");
                 for param in &doc.params {
                     let req = if param.required { "✅" } else { "❌" };
-                    md.push_str(&format!("| `{}` | `{}` | {} | {} |\n",
+                    md.push_str(&format!(
+                        "| `{}` | `{}` | {} | {} |\n",
                         param.name, param.ts_type, req, param.description
                     ));
                 }
@@ -737,7 +753,10 @@ if (report.score < 70) {
 
             md.push_str("#### Retour\n\n");
             md.push_str(&format!("- **Type**: `{}`\n", doc.returns.ts_type));
-            md.push_str(&format!("- **Description**: {}\n\n", doc.returns.description));
+            md.push_str(&format!(
+                "- **Description**: {}\n\n",
+                doc.returns.description
+            ));
 
             if !doc.examples.is_empty() {
                 md.push_str("#### Exemples\n\n");
@@ -763,9 +782,7 @@ use once_cell::sync::Lazy;
 use std::sync::RwLock;
 
 /// Instance globale du DocsEngine
-pub static DOCS_ENGINE: Lazy<RwLock<DocsEngine>> = Lazy::new(|| {
-    RwLock::new(DocsEngine::new())
-});
+pub static DOCS_ENGINE: Lazy<RwLock<DocsEngine>> = Lazy::new(|| RwLock::new(DocsEngine::new()));
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TESTS

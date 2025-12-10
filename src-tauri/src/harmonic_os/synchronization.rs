@@ -15,7 +15,7 @@ impl SynchronizationEngine {
     pub fn new() -> Self {
         Self
     }
-    
+
     pub async fn synchronize(&self) -> TitaneResult<HarmonicCorrections> {
         Ok(HarmonicCorrections {
             recalibrate_memory: false,

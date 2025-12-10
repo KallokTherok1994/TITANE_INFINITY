@@ -30,12 +30,12 @@ export type ChatModeId =
 
 /** Catégories fonctionnelles pour regroupement UI */
 export type ChatModeCategory =
-  | 'general'     // Modes universels
-  | 'creative'    // Divergence, idéation
-  | 'productivity'// Structuration, action
-  | 'personal'    // Introspection, coaching
-  | 'technical'   // Dev, admin, audit
-  | 'strategic';  // Stratégie, décision
+  | 'general' // Modes universels
+  | 'creative' // Divergence, idéation
+  | 'productivity' // Structuration, action
+  | 'personal' // Introspection, coaching
+  | 'technical' // Dev, admin, audit
+  | 'strategic'; // Stratégie, décision
 
 /** Niveaux de permission (0 = lecture seule, 5 = admin complet) */
 export type PermissionLevel = 0 | 1 | 2 | 3 | 4 | 5;
@@ -61,31 +61,31 @@ export type PreferredProvider = 'auto' | 'gemini' | 'ollama' | 'local';
 /** Outils autorisés dans le système TITANE∞ */
 export interface ToolPermissions {
   // Outils cognitifs
-  memoryAccess: boolean;       // Accès mémoire contextuelle
-  contextAnalysis: boolean;    // Analyse de contexte
-  suggestionEngine: boolean;   // Suggestions automatiques
+  memoryAccess: boolean; // Accès mémoire contextuelle
+  contextAnalysis: boolean; // Analyse de contexte
+  suggestionEngine: boolean; // Suggestions automatiques
 
   // Outils créatifs
-  brainstormAssist: boolean;   // Aide brainstorming
-  synthesisTool: boolean;      // Outil de synthèse
-  mindMapping: boolean;        // Mind mapping
+  brainstormAssist: boolean; // Aide brainstorming
+  synthesisTool: boolean; // Outil de synthèse
+  mindMapping: boolean; // Mind mapping
 
   // Outils productivité
-  taskCreation: boolean;       // Création de tâches
-  planningAssist: boolean;     // Aide planification
-  reminderSet: boolean;        // Configuration rappels
+  taskCreation: boolean; // Création de tâches
+  planningAssist: boolean; // Aide planification
+  reminderSet: boolean; // Configuration rappels
 
   // Outils techniques
-  codeGeneration: boolean;     // Génération de code
-  codeReview: boolean;         // Revue de code
-  debugAssist: boolean;        // Aide debug
-  systemAnalysis: boolean;     // Analyse système
+  codeGeneration: boolean; // Génération de code
+  codeReview: boolean; // Revue de code
+  debugAssist: boolean; // Aide debug
+  systemAnalysis: boolean; // Analyse système
 
   // Outils admin (sensibles)
-  fileSystemAccess: boolean;   // Accès fichiers
-  shellExecution: boolean;     // Exécution shell
+  fileSystemAccess: boolean; // Accès fichiers
+  shellExecution: boolean; // Exécution shell
   configModification: boolean; // Modification config
-  auditLogs: boolean;          // Accès logs audit
+  auditLogs: boolean; // Accès logs audit
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -293,9 +293,9 @@ Kevin est en phase d'exploration. Aide-le à diverger, pas à converger.`,
     responseStyle: 'detailed',
     tone: 'motivational',
     suggestedActions: [
-      'Et si on changeait complètement d\'angle ?',
+      "Et si on changeait complètement d'angle ?",
       'Quelles sont 5 variations sur cette idée ?',
-      'À quoi cela te fait-il penser d\'autre ?',
+      "À quoi cela te fait-il penser d'autre ?",
     ],
 
     permissionLevel: 1,
@@ -370,7 +370,7 @@ Kevin a exploré. Maintenant aide-le à connecter les points.`,
   planning: {
     id: 'planning',
     label: 'Planification',
-    description: 'Mode structuration - plans d\'action concrets',
+    description: "Mode structuration - plans d'action concrets",
     category: 'productivity',
     icon: '📋',
     themeColor: '#8899aa', // TITANE info
@@ -450,7 +450,7 @@ Kevin se confie. Crée un espace sûr pour l'expression authentique.`,
     tone: 'empathetic',
     suggestedActions: [
       'Comment te sens-tu par rapport à ça ?',
-      'Qu\'est-ce que ça révèle sur toi ?',
+      "Qu'est-ce que ça révèle sur toi ?",
       'De quoi as-tu vraiment besoin ?',
     ],
 
@@ -502,7 +502,7 @@ Kevin sent une surcharge. Aide-le à diagnostiquer et réguler.`,
     tone: 'analytical',
     suggestedActions: [
       'Quelle est ta charge actuelle (0-10) ?',
-      'Quel projet/tâche draine le plus d\'énergie ?',
+      "Quel projet/tâche draine le plus d'énergie ?",
       'Que peux-tu simplifier ou déléguer ?',
     ],
 
@@ -555,7 +555,7 @@ Kevin cherche à progresser. Sois son partenaire de développement.`,
     tone: 'motivational',
     suggestedActions: [
       'Quel est ton objectif principal cette semaine ?',
-      'Qu\'est-ce qui te bloque actuellement ?',
+      "Qu'est-ce qui te bloque actuellement ?",
       'Quelle petite victoire peux-tu célébrer ?',
     ],
 
@@ -663,7 +663,7 @@ Kevin administre le système. Assiste-le avec prudence.`,
     responseStyle: 'detailed',
     tone: 'technical',
     suggestedActions: [
-      'Afficher l\'état du système',
+      "Afficher l'état du système",
       'Diagnostiquer les erreurs récentes',
       'Modifier la configuration de...',
     ],
@@ -816,20 +816,28 @@ export function getModeConfig(modeId: ChatModeId | string): ChatModeConfigExtend
 }
 
 /** Vérifie si un mode est autorisé pour un niveau de permission */
-export function isModeAllowed(modeId: ChatModeId, userPermissionLevel: PermissionLevel): boolean {
+export function isModeAllowed(
+  modeId: ChatModeId,
+  userPermissionLevel: PermissionLevel
+): boolean {
   const config = getModeConfig(modeId);
   return config.enabled && userPermissionLevel >= config.permissionLevel;
 }
 
 /** Filtre les modes accessibles selon permission */
-export function getAccessibleModes(userPermissionLevel: PermissionLevel): ChatModeConfigExtended[] {
+export function getAccessibleModes(
+  userPermissionLevel: PermissionLevel
+): ChatModeConfigExtended[] {
   return Object.values(CHAT_MODES_CONFIG)
     .filter(mode => mode.enabled && userPermissionLevel >= mode.permissionLevel)
     .sort((a, b) => a.sortOrder - b.sortOrder);
 }
 
 /** Vérifie si un outil est autorisé pour un mode */
-export function isToolAllowed(modeId: ChatModeId, toolName: keyof ToolPermissions): boolean {
+export function isToolAllowed(
+  modeId: ChatModeId,
+  toolName: keyof ToolPermissions
+): boolean {
   const config = getModeConfig(modeId);
   return config.toolsAllowed[toolName] ?? false;
 }
@@ -855,9 +863,11 @@ export function validateModeConfig(config: unknown): config is ChatModeConfigExt
     typeof c.description === 'string' &&
     typeof c.systemPrompt === 'string' &&
     typeof c.temperature === 'number' &&
-    c.temperature >= 0 && c.temperature <= 1 &&
+    c.temperature >= 0 &&
+    c.temperature <= 1 &&
     typeof c.permissionLevel === 'number' &&
-    c.permissionLevel >= 0 && c.permissionLevel <= 5
+    c.permissionLevel >= 0 &&
+    c.permissionLevel <= 5
   );
 }
 
@@ -887,9 +897,14 @@ export function toLegacyModeConfig(extended: ChatModeConfigExtended): {
 }
 
 /** Export des modes en format legacy pour compatibilité */
-export const chatModesLegacy: Record<string, ReturnType<typeof toLegacyModeConfig>> =
-  Object.fromEntries(
-    Object.entries(CHAT_MODES_CONFIG).map(([id, config]) => [id, toLegacyModeConfig(config)])
-  );
+export const chatModesLegacy: Record<
+  string,
+  ReturnType<typeof toLegacyModeConfig>
+> = Object.fromEntries(
+  Object.entries(CHAT_MODES_CONFIG).map(([id, config]) => [
+    id,
+    toLegacyModeConfig(config),
+  ])
+);
 
 export default CHAT_MODES_CONFIG;

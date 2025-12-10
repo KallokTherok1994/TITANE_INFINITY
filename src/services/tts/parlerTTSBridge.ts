@@ -146,9 +146,13 @@ class ParlerTTSBridge {
       const audioBlob = await response.blob();
 
       // Headers metadata
-      const generationTimeMs = parseInt(response.headers.get('X-Generation-Time-Ms') || '0');
+      const generationTimeMs = parseInt(
+        response.headers.get('X-Generation-Time-Ms') || '0'
+      );
       const cached = response.headers.get('X-Cached') === 'true';
-      const durationSeconds = parseFloat(response.headers.get('X-Duration-Seconds') || '0');
+      const durationSeconds = parseFloat(
+        response.headers.get('X-Duration-Seconds') || '0'
+      );
       const device = response.headers.get('X-Device') || 'unknown';
 
       const totalTime = Date.now() - startTime;
@@ -171,7 +175,9 @@ class ParlerTTSBridge {
       };
     } catch (error) {
       console.error('[ParlerTTS] ❌ Erreur synthèse:', error);
-      throw new Error(`Parler-TTS synthesis failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Parler-TTS synthesis failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
     }
   }
 
@@ -180,7 +186,10 @@ class ParlerTTSBridge {
    * @param newStyleDescription Nouvelle description style
    * @param saveAsDefault Sauvegarder comme défaut permanent ?
    */
-  async updateVoiceStyle(newStyleDescription: string, saveAsDefault: boolean = false): Promise<void> {
+  async updateVoiceStyle(
+    newStyleDescription: string,
+    saveAsDefault: boolean = false
+  ): Promise<void> {
     try {
       const response = await fetch(`${this.apiUrl}/api/v1/tts/update-style`, {
         method: 'POST',
@@ -247,7 +256,7 @@ export async function playAudioBlob(audioBlob: Blob, onEnd?: () => void): Promis
       onEnd?.();
     };
 
-    audio.onerror = (error) => {
+    audio.onerror = error => {
       console.error('[ParlerTTS] Audio playback error:', error);
       URL.revokeObjectURL(audioUrl);
     };
@@ -264,7 +273,10 @@ export async function playAudioBlob(audioBlob: Blob, onEnd?: () => void): Promis
  * @param audioBlob Blob audio
  * @param filename Nom fichier (défaut: titane_speech.wav)
  */
-export function downloadAudioBlob(audioBlob: Blob, filename: string = 'titane_speech.wav'): void {
+export function downloadAudioBlob(
+  audioBlob: Blob,
+  filename: string = 'titane_speech.wav'
+): void {
   const url = URL.createObjectURL(audioBlob);
   const a = document.createElement('a');
   a.href = url;

@@ -16,7 +16,13 @@
  * - Provides asset paths for 3D renderer
  */
 
-import type { AvatarAppearanceState, OutfitState, HairState, AccessoriesState, StyleState } from './appearanceState';
+import type {
+  AvatarAppearanceState,
+  OutfitState,
+  HairState,
+  AccessoriesState,
+  StyleState,
+} from './appearanceState';
 import outfitsData from './outfits.json';
 
 // ============================================================================
@@ -235,10 +241,18 @@ function mapHair(hair: HairState): AssetDefinition {
   // Special cases for common hair styles
   if (normalizedStyle.includes('queue_de_cheval')) {
     baseStyle = 'queue_de_cheval';
-    variant = normalizedStyle.includes('haute') ? 'haute' : normalizedStyle.includes('basse') ? 'basse' : 'haute';
+    variant = normalizedStyle.includes('haute')
+      ? 'haute'
+      : normalizedStyle.includes('basse')
+        ? 'basse'
+        : 'haute';
   } else if (normalizedStyle.includes('chignon')) {
     baseStyle = 'chignon';
-    variant = normalizedStyle.includes('haut') ? 'haut' : normalizedStyle.includes('bas') ? 'bas' : 'haut';
+    variant = normalizedStyle.includes('haut')
+      ? 'haut'
+      : normalizedStyle.includes('bas')
+        ? 'bas'
+        : 'haut';
   } else if (normalizedStyle.includes('detaches')) {
     baseStyle = 'detaches';
     if (normalizedStyle.includes('ondule')) variant = 'ondules';
@@ -365,7 +379,9 @@ function mapBag(accessories: AccessoriesState): AssetDefinition | undefined {
 /**
  * Map other accessories to 3D assets array
  */
-function mapOtherAccessories(accessories: AccessoriesState): AssetDefinition[] | undefined {
+function mapOtherAccessories(
+  accessories: AccessoriesState
+): AssetDefinition[] | undefined {
   if (!accessories.other || accessories.other.length === 0) return undefined;
 
   const otherAssets: AssetDefinition[] = [];
@@ -428,7 +444,9 @@ export function validateAsset(asset: AssetDefinition): boolean {
 /**
  * Get fallback asset for missing items
  */
-export function getFallbackAsset(category: 'top' | 'bottom' | 'shoes' | 'hair'): AssetDefinition {
+export function getFallbackAsset(
+  category: 'top' | 'bottom' | 'shoes' | 'hair'
+): AssetDefinition {
   return OUTFITS.fallback[category];
 }
 

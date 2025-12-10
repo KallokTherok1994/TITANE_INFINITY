@@ -13,31 +13,31 @@ pub type MemoryId = String;
 pub struct MemoryEntry {
     /// Unique identifier
     pub id: MemoryId,
-    
+
     /// Creation timestamp (Unix milliseconds)
     pub timestamp: i64,
-    
+
     /// Role: "user", "assistant", "system"
     pub role: String,
-    
+
     /// Content (conversation text, decision, knowledge)
     pub content: String,
-    
+
     /// Semantic embedding (384D vector from all-MiniLM-L6-v2)
     pub embedding: Option<Vec<f32>>,
-    
+
     /// Importance score (0.0-1.0)
     pub importance: f32,
-    
+
     /// Access count (for promotion logic)
     pub access_count: u32,
-    
+
     /// Last accessed timestamp
     pub last_accessed: i64,
-    
+
     /// Memory kind
     pub kind: MemoryKind,
-    
+
     /// Tags for semantic filtering
     pub tags: Vec<String>,
 }
@@ -47,13 +47,13 @@ pub struct MemoryEntry {
 pub struct MemoryBundle {
     /// Short-term memories (conversation context)
     pub stm: Vec<MemoryEntry>,
-    
+
     /// Mid-term memories (session context)
     pub mtm: Vec<MemoryEntry>,
-    
+
     /// Long-term memories (persistent knowledge)
     pub ltm: Vec<MemoryEntry>,
-    
+
     /// Total memories returned
     pub total: usize,
 }
@@ -63,13 +63,13 @@ pub struct MemoryBundle {
 pub enum MemoryImportance {
     /// Critical (0.9-1.0) — Always promote to LTM
     Critical,
-    
+
     /// High (0.7-0.89) — Promote to MTM quickly
     High,
-    
+
     /// Medium (0.4-0.69) — Standard promotion logic
     Medium,
-    
+
     /// Low (0.0-0.39) — May be evicted quickly
     Low,
 }
@@ -84,7 +84,7 @@ impl MemoryImportance {
             _ => Self::Low,
         }
     }
-    
+
     /// Convert enum to score
     pub fn to_score(&self) -> f32 {
         match self {
@@ -101,19 +101,19 @@ impl MemoryImportance {
 pub enum MemoryKind {
     /// Conversation message
     Conversation,
-    
+
     /// User decision or preference
     Decision,
-    
+
     /// Factual knowledge
     Knowledge,
-    
+
     /// System event or state change
     Event,
-    
+
     /// Emotional or affective state
     Emotion,
-    
+
     /// Cognitive insight
     Insight,
 }
@@ -123,13 +123,13 @@ pub enum MemoryKind {
 pub enum EmbeddingQuality {
     /// High quality (384D, normalized)
     High,
-    
+
     /// Medium quality (partial or compressed)
     Medium,
-    
+
     /// Low quality (fallback or missing)
     Low,
-    
+
     /// Not available
     None,
 }
@@ -187,7 +187,10 @@ mod tests {
 
     #[test]
     fn test_memory_importance_conversion() {
-        assert_eq!(MemoryImportance::from_score(0.95), MemoryImportance::Critical);
+        assert_eq!(
+            MemoryImportance::from_score(0.95),
+            MemoryImportance::Critical
+        );
         assert_eq!(MemoryImportance::from_score(0.75), MemoryImportance::High);
         assert_eq!(MemoryImportance::from_score(0.5), MemoryImportance::Medium);
         assert_eq!(MemoryImportance::from_score(0.2), MemoryImportance::Low);
@@ -196,8 +199,11 @@ mod tests {
     #[test]
     fn test_embedding_quality() {
         let high_quality = Some(vec![0.1; 384]);
-        assert_eq!(EmbeddingQuality::assess(&high_quality), EmbeddingQuality::Medium);
-        
+        assert_eq!(
+            EmbeddingQuality::assess(&high_quality),
+            EmbeddingQuality::Medium
+        );
+
         let none = None;
         assert_eq!(EmbeddingQuality::assess(&none), EmbeddingQuality::None);
     }

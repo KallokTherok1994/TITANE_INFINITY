@@ -81,7 +81,11 @@ impl MemoryClusterer {
 
     /// Effectue le clustering des items mémoire
     pub fn cluster(&self, items: &[MemoryItem]) -> Result<ClusteringResult, MemoryEvolutionError> {
-        info!("[MemoryClusterer] Clustering {} items with method {:?}", items.len(), self.config.method);
+        info!(
+            "[MemoryClusterer] Clustering {} items with method {:?}",
+            items.len(),
+            self.config.method
+        );
 
         let clusters = match self.config.method {
             ClusteringMethod::TopicBased => self.cluster_by_topic(items)?,
@@ -90,11 +94,13 @@ impl MemoryClusterer {
         };
 
         // Identifier les items non clusterisés
-        let clustered_ids: std::collections::HashSet<_> = clusters.iter()
+        let clustered_ids: std::collections::HashSet<_> = clusters
+            .iter()
             .flat_map(|c| c.members.iter().cloned())
             .collect();
 
-        let unclustered: Vec<_> = items.iter()
+        let unclustered: Vec<_> = items
+            .iter()
             .filter(|i| !clustered_ids.contains(&i.id))
             .map(|i| i.id.clone())
             .collect();
@@ -117,7 +123,9 @@ impl MemoryClusterer {
 
         info!(
             "[MemoryClusterer] Created {} clusters, {} items clustered, {} unclustered",
-            clusters.len(), clustered_count, unclustered.len()
+            clusters.len(),
+            clustered_count,
+            unclustered.len()
         );
 
         Ok(ClusteringResult {
@@ -128,7 +136,10 @@ impl MemoryClusterer {
     }
 
     /// Clustering basé sur les topics
-    fn cluster_by_topic(&self, items: &[MemoryItem]) -> Result<Vec<MemoryCluster>, MemoryEvolutionError> {
+    fn cluster_by_topic(
+        &self,
+        items: &[MemoryItem],
+    ) -> Result<Vec<MemoryCluster>, MemoryEvolutionError> {
         let mut groups: HashMap<String, Vec<&MemoryItem>> = HashMap::new();
 
         for item in items {
@@ -144,7 +155,10 @@ impl MemoryClusterer {
                 let coherence = self.calculate_coherence(&group);
 
                 clusters.push(MemoryCluster {
-                    id: format!("cluster-{}", uuid::Uuid::new_v4().to_string()[..8].to_string()),
+                    id: format!(
+                        "cluster-{}",
+                        uuid::Uuid::new_v4().to_string()[..8].to_string()
+                    ),
                     label: topic.clone(),
                     description: format!("Cluster thématique: {}", topic),
                     members: group.iter().map(|i| i.id.clone()).collect(),
@@ -164,7 +178,10 @@ impl MemoryClusterer {
     }
 
     /// Clustering basé sur les mots-clés
-    fn cluster_by_keywords(&self, items: &[MemoryItem]) -> Result<Vec<MemoryCluster>, MemoryEvolutionError> {
+    fn cluster_by_keywords(
+        &self,
+        items: &[MemoryItem],
+    ) -> Result<Vec<MemoryCluster>, MemoryEvolutionError> {
         // Extraire tous les mots-clés significatifs
         let mut keyword_to_items: HashMap<String, Vec<&MemoryItem>> = HashMap::new();
 
@@ -184,12 +201,15 @@ impl MemoryClusterer {
 
         for (keyword, group) in sorted {
             // Filtrer les items déjà assignés
-            let unassigned: Vec<_> = group.iter()
+            let unassigned: Vec<_> = group
+                .iter()
                 .filter(|i| !assigned.contains(&i.id))
                 .cloned()
                 .collect();
 
-            if unassigned.len() >= self.config.min_cluster_size && clusters.len() < self.config.max_clusters {
+            if unassigned.len() >= self.config.min_cluster_size
+                && clusters.len() < self.config.max_clusters
+            {
                 for item in &unassigned {
                     assigned.insert(item.id.clone());
                 }
@@ -197,7 +217,10 @@ impl MemoryClusterer {
                 let coherence = self.calculate_coherence(&unassigned);
 
                 clusters.push(MemoryCluster {
-                    id: format!("cluster-kw-{}", uuid::Uuid::new_v4().to_string()[..8].to_string()),
+                    id: format!(
+                        "cluster-kw-{}",
+                        uuid::Uuid::new_v4().to_string()[..8].to_string()
+                    ),
                     label: keyword.clone(),
                     description: format!("Cluster par mot-clé: {}", keyword),
                     members: unassigned.iter().map(|i| i.id.clone()).collect(),
@@ -213,7 +236,10 @@ impl MemoryClusterer {
     }
 
     /// Clustering hiérarchique simplifié
-    fn cluster_hierarchical(&self, items: &[MemoryItem]) -> Result<Vec<MemoryCluster>, MemoryEvolutionError> {
+    fn cluster_hierarchical(
+        &self,
+        items: &[MemoryItem],
+    ) -> Result<Vec<MemoryCluster>, MemoryEvolutionError> {
         // Pour l'instant, utiliser une approche topic + importance
         let mut high_importance: Vec<&MemoryItem> = Vec::new();
         let mut medium_importance: Vec<&MemoryItem> = Vec::new();
@@ -287,12 +313,18 @@ impl MemoryClusterer {
 
     /// Extrait les mots-clés d'un texte
     fn extract_keywords(&self, text: &str) -> Vec<String> {
-        let stop_words = ["le", "la", "les", "de", "du", "des", "un", "une", "et", "ou",
-                          "the", "a", "an", "is", "are", "was", "were", "be", "been",
-                          "to", "of", "in", "for", "on", "with", "at", "by", "from"];
+        let stop_words = [
+            "le", "la", "les", "de", "du", "des", "un", "une", "et", "ou", "the", "a", "an", "is",
+            "are", "was", "were", "be", "been", "to", "of", "in", "for", "on", "with", "at", "by",
+            "from",
+        ];
 
         text.split_whitespace()
-            .map(|w| w.to_lowercase().trim_matches(|c: char| !c.is_alphanumeric()).to_string())
+            .map(|w| {
+                w.to_lowercase()
+                    .trim_matches(|c: char| !c.is_alphanumeric())
+                    .to_string()
+            })
             .filter(|w| w.len() > 3 && !stop_words.contains(&w.as_str()))
             .collect()
     }
@@ -322,7 +354,8 @@ impl MemoryClusterer {
         // Cohérence basée sur la variance des confidences
         let confidences: Vec<f32> = items.iter().map(|i| i.confidence).collect();
         let mean = confidences.iter().sum::<f32>() / confidences.len() as f32;
-        let variance = confidences.iter().map(|c| (c - mean).powi(2)).sum::<f32>() / confidences.len() as f32;
+        let variance =
+            confidences.iter().map(|c| (c - mean).powi(2)).sum::<f32>() / confidences.len() as f32;
 
         // Plus la variance est basse, plus le cluster est cohérent
         1.0 - variance.sqrt().min(1.0)
@@ -335,15 +368,18 @@ impl MemoryClusterer {
         }
 
         // Approximation simple basée sur la cohérence moyenne
-        let avg_coherence = clusters.iter()
-            .map(|c| c.coherence_score)
-            .sum::<f32>() / clusters.len() as f32;
+        let avg_coherence =
+            clusters.iter().map(|c| c.coherence_score).sum::<f32>() / clusters.len() as f32;
 
         avg_coherence
     }
 
     /// Fusionne deux clusters
-    pub fn merge_clusters(&self, cluster_a: &MemoryCluster, cluster_b: &MemoryCluster) -> MemoryCluster {
+    pub fn merge_clusters(
+        &self,
+        cluster_a: &MemoryCluster,
+        cluster_b: &MemoryCluster,
+    ) -> MemoryCluster {
         let mut members = cluster_a.members.clone();
         members.extend(cluster_b.members.clone());
 
@@ -354,7 +390,10 @@ impl MemoryClusterer {
         keywords.truncate(5);
 
         MemoryCluster {
-            id: format!("cluster-merged-{}", uuid::Uuid::new_v4().to_string()[..8].to_string()),
+            id: format!(
+                "cluster-merged-{}",
+                uuid::Uuid::new_v4().to_string()[..8].to_string()
+            ),
             label: format!("{} + {}", cluster_a.label, cluster_b.label),
             description: format!("Fusion de {} et {}", cluster_a.label, cluster_b.label),
             members,
@@ -366,8 +405,13 @@ impl MemoryClusterer {
     }
 
     /// Divise un cluster trop grand
-    pub fn split_cluster(&self, cluster: &MemoryCluster, items: &[MemoryItem]) -> Vec<MemoryCluster> {
-        let cluster_items: Vec<_> = items.iter()
+    pub fn split_cluster(
+        &self,
+        cluster: &MemoryCluster,
+        items: &[MemoryItem],
+    ) -> Vec<MemoryCluster> {
+        let cluster_items: Vec<_> = items
+            .iter()
             .filter(|i| cluster.members.contains(&i.id))
             .collect();
 
@@ -376,8 +420,8 @@ impl MemoryClusterer {
         }
 
         // Diviser par importance
-        let (high, low): (Vec<_>, Vec<_>) = cluster_items.into_iter()
-            .partition(|i| i.importance > 0.5);
+        let (high, low): (Vec<_>, Vec<_>) =
+            cluster_items.into_iter().partition(|i| i.importance > 0.5);
 
         let mut result = Vec::new();
 

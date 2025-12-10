@@ -71,7 +71,15 @@ export class LogEngine {
     context: Record<string, unknown> = {},
     tags: string[] = []
   ): AdminLogRecord {
-    const record = createLogRecord(severity, category, moduleId, message, details, context, tags);
+    const record = createLogRecord(
+      severity,
+      category,
+      moduleId,
+      message,
+      details,
+      context,
+      tags
+    );
     this.addLog(record);
     return record;
   }
@@ -94,15 +102,27 @@ export class LogEngine {
   /**
    * Raccourcis pour les niveaux de log courants
    */
-  debug(moduleId: TitaneModule, message: string, context?: Record<string, unknown>): AdminLogRecord {
+  debug(
+    moduleId: TitaneModule,
+    message: string,
+    context?: Record<string, unknown>
+  ): AdminLogRecord {
     return this.log('DEBUG', 'INFO', moduleId, message, undefined, context);
   }
 
-  info(moduleId: TitaneModule, message: string, context?: Record<string, unknown>): AdminLogRecord {
+  info(
+    moduleId: TitaneModule,
+    message: string,
+    context?: Record<string, unknown>
+  ): AdminLogRecord {
     return this.log('INFO', 'INFO', moduleId, message, undefined, context);
   }
 
-  warn(moduleId: TitaneModule, message: string, context?: Record<string, unknown>): AdminLogRecord {
+  warn(
+    moduleId: TitaneModule,
+    message: string,
+    context?: Record<string, unknown>
+  ): AdminLogRecord {
     return this.log('WARN', 'WARN', moduleId, message, undefined, context);
   }
 
@@ -146,7 +166,9 @@ export class LogEngine {
     severity: LogSeverity = 'WARN',
     context?: Record<string, unknown>
   ): AdminLogRecord {
-    return this.log(severity, 'SECURITY', moduleId, message, undefined, context, ['security']);
+    return this.log(severity, 'SECURITY', moduleId, message, undefined, context, [
+      'security',
+    ]);
   }
 
   // ===========================================================================
@@ -166,7 +188,16 @@ export class LogEngine {
     impact: AdminEvent['impact'] = 'NONE',
     data: Record<string, unknown> = {}
   ): AdminEvent {
-    const event = createAdminEvent(source, type, moduleId, title, description, severity, impact, data);
+    const event = createAdminEvent(
+      source,
+      type,
+      moduleId,
+      title,
+      description,
+      severity,
+      impact,
+      data
+    );
     this.events.push(event);
 
     // Vérifier la taille du buffer
@@ -184,7 +215,7 @@ export class LogEngine {
    * Marque un événement comme résolu
    */
   resolveEvent(eventId: string): boolean {
-    const event = this.events.find((e) => e.id === eventId);
+    const event = this.events.find(e => e.id === eventId);
     if (event) {
       event.resolved = true;
       return true;
@@ -196,7 +227,7 @@ export class LogEngine {
    * Lie des événements entre eux
    */
   linkEvents(eventId: string, relatedIds: string[]): void {
-    const event = this.events.find((e) => e.id === eventId);
+    const event = this.events.find(e => e.id === eventId);
     if (event) {
       event.relatedEvents = [...new Set([...event.relatedEvents, ...relatedIds])];
     }
@@ -216,45 +247,45 @@ export class LogEngine {
     // Filtrer par période
     if (filters.startTime !== undefined) {
       const startTime = filters.startTime;
-      results = results.filter((log) => log.timestamp >= startTime);
+      results = results.filter(log => log.timestamp >= startTime);
     }
     if (filters.endTime !== undefined) {
       const endTime = filters.endTime;
-      results = results.filter((log) => log.timestamp <= endTime);
+      results = results.filter(log => log.timestamp <= endTime);
     }
 
     // Filtrer par modules
     if (filters.modules && filters.modules.length > 0) {
       const modules = filters.modules;
-      results = results.filter((log) => modules.includes(log.moduleId));
+      results = results.filter(log => modules.includes(log.moduleId));
     }
 
     // Filtrer par sévérités
     if (filters.severities && filters.severities.length > 0) {
       const severities = filters.severities;
-      results = results.filter((log) => severities.includes(log.severity));
+      results = results.filter(log => severities.includes(log.severity));
     }
 
     // Filtrer par catégories
     if (filters.categories && filters.categories.length > 0) {
       const categories = filters.categories;
-      results = results.filter((log) => categories.includes(log.category));
+      results = results.filter(log => categories.includes(log.category));
     }
 
     // Filtrer par tags
     if (filters.tags && filters.tags.length > 0) {
       const tags = filters.tags;
-      results = results.filter((log) => tags.some((tag) => log.tags.includes(tag)));
+      results = results.filter(log => tags.some(tag => log.tags.includes(tag)));
     }
 
     // Recherche textuelle
     if (filters.searchText && filters.searchText.trim()) {
       const searchLower = filters.searchText.toLowerCase();
       results = results.filter(
-        (log) =>
+        log =>
           log.message.toLowerCase().includes(searchLower) ||
           log.details?.toLowerCase().includes(searchLower) ||
-          log.tags.some((tag) => tag.toLowerCase().includes(searchLower))
+          log.tags.some(tag => tag.toLowerCase().includes(searchLower))
       );
     }
 
@@ -284,30 +315,32 @@ export class LogEngine {
   /**
    * Récupère les événements avec filtres basiques
    */
-  getEvents(options: {
-    limit?: number;
-    moduleId?: TitaneModule;
-    source?: EventSource;
-    resolved?: boolean;
-    since?: number;
-  } = {}): AdminEvent[] {
+  getEvents(
+    options: {
+      limit?: number;
+      moduleId?: TitaneModule;
+      source?: EventSource;
+      resolved?: boolean;
+      since?: number;
+    } = {}
+  ): AdminEvent[] {
     let results = [...this.events];
 
     if (options.moduleId) {
-      results = results.filter((e) => e.moduleId === options.moduleId);
+      results = results.filter(e => e.moduleId === options.moduleId);
     }
 
     if (options.source) {
-      results = results.filter((e) => e.source === options.source);
+      results = results.filter(e => e.source === options.source);
     }
 
     if (options.resolved !== undefined) {
-      results = results.filter((e) => e.resolved === options.resolved);
+      results = results.filter(e => e.resolved === options.resolved);
     }
 
     if (options.since !== undefined) {
       const since = options.since;
-      results = results.filter((e) => e.timestamp >= since);
+      results = results.filter(e => e.timestamp >= since);
     }
 
     // Trier par timestamp décroissant
@@ -339,7 +372,7 @@ export class LogEngine {
    * Récupère les logs par corrélation ID
    */
   getLogsByCorrelation(correlationId: string): AdminLogRecord[] {
-    return this.logs.filter((log) => log.correlationId === correlationId);
+    return this.logs.filter(log => log.correlationId === correlationId);
   }
 
   // ===========================================================================
@@ -414,7 +447,7 @@ export class LogEngine {
     const cutoffTime = Date.now() - days * 24 * 60 * 60 * 1000;
 
     const originalCount = this.logs.length;
-    const logsToKeep = this.logs.filter((log) => log.timestamp >= cutoffTime);
+    const logsToKeep = this.logs.filter(log => log.timestamp >= cutoffTime);
     const deletedCount = originalCount - logsToKeep.length;
 
     this.logs = logsToKeep;
@@ -448,7 +481,7 @@ export class LogEngine {
     const cutoffTime = Date.now() - days * 24 * 60 * 60 * 1000;
 
     const originalCount = this.events.length;
-    const eventsToKeep = this.events.filter((event) => event.timestamp >= cutoffTime);
+    const eventsToKeep = this.events.filter(event => event.timestamp >= cutoffTime);
     const deletedCount = originalCount - eventsToKeep.length;
 
     this.events = eventsToKeep;
@@ -574,7 +607,7 @@ export class LogEngine {
 
       for (const log of logs) {
         // Vérifier que le log a un ID unique
-        if (!this.logs.some((l) => l.id === log.id)) {
+        if (!this.logs.some(l => l.id === log.id)) {
           this.logs.push(log);
           imported++;
         }
@@ -608,7 +641,10 @@ export class LogEngine {
     this.config = { ...this.config, ...config };
 
     // Redémarrer l'auto-purge si nécessaire
-    if (config.autoPurgeEnabled !== undefined || config.autoPurgeIntervalHours !== undefined) {
+    if (
+      config.autoPurgeEnabled !== undefined ||
+      config.autoPurgeIntervalHours !== undefined
+    ) {
       this.stopAutoPurge();
       if (this.config.autoPurgeEnabled) {
         this.startAutoPurge();

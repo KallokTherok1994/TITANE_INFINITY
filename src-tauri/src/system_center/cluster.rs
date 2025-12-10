@@ -18,7 +18,6 @@ macro_rules! lock_or_recover {
     };
 }
 
-
 // ══════════════════════════════════════════════════════════════════
 // TYPES (re-export depuis cluster existant si possible)
 // ══════════════════════════════════════════════════════════════════
@@ -65,8 +64,8 @@ pub struct ClusterStatus {
 // INTERNAL STATE
 // ══════════════════════════════════════════════════════════════════
 
-use std::sync::{Arc, Mutex};
 use once_cell::sync::Lazy;
+use std::sync::{Arc, Mutex};
 
 #[derive(Default)]
 struct ClusterState {
@@ -76,9 +75,8 @@ struct ClusterState {
     start_time: Option<u64>,
 }
 
-static CLUSTER_STATE: Lazy<Arc<Mutex<ClusterState>>> = Lazy::new(|| {
-    Arc::new(Mutex::new(ClusterState::default()))
-});
+static CLUSTER_STATE: Lazy<Arc<Mutex<ClusterState>>> =
+    Lazy::new(|| Arc::new(Mutex::new(ClusterState::default())));
 
 // ══════════════════════════════════════════════════════════════════
 // TAURI COMMANDS
@@ -133,12 +131,18 @@ pub async fn sc_initialize_cluster(node_id: String, port: u16) -> Result<String,
     state.port = Some(port);
     state.start_time = Some(now);
 
-    println!("[SystemCenter::Cluster] Initialized node {} on port {}", node_id, port);
+    println!(
+        "[SystemCenter::Cluster] Initialized node {} on port {}",
+        node_id, port
+    );
 
     // TODO: Actually initialize mesh_layer
     // crate::cluster::mesh_initialize(node_id.clone(), port).await?;
 
-    Ok(format!("Cluster node {} initialized on port {}", node_id, port))
+    Ok(format!(
+        "Cluster node {} initialized on port {}",
+        node_id, port
+    ))
 }
 
 /// Get cluster statistics

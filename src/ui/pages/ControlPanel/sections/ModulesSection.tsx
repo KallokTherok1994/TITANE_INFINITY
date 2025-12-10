@@ -51,7 +51,7 @@ export const ModulesSection: React.FC = () => {
       <div className="cp-card">
         <h3 className="cp-card-title">Engines disponibles</h3>
         <div className="cp-card-content">
-          {modules.map((module) => (
+          {modules.map(module => (
             <div key={module.id} className="cp-switch-row">
               <div className="cp-switch-label">
                 <div className="cp-switch-title">

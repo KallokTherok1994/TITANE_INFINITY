@@ -4,13 +4,12 @@
  * Moteur de mémoire conversationnelle avec autosave et snapshots
  * ═══════════════════════════════════════════════════════════════════
  */
-
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use uuid::Uuid;
 
-use crate::memory::storage::MemoryStorage;
 use crate::memory::model::Conversation;
+use crate::memory::storage::MemoryStorage;
 
 use super::types::*;
 use super::ConversationEngineError;
@@ -59,7 +58,8 @@ impl ConversationMemoryEngine {
                 } else {
                     // Créer nouvelle conversation avec cet ID
                     let conversation = Conversation::new("Session".to_string());
-                    self.storage.save_conversation(&conversation)
+                    self.storage
+                        .save_conversation(&conversation)
                         .map_err(|e| ConversationEngineError::MemoryError(e.to_string()))?;
                     Ok(id)
                 }
@@ -68,7 +68,8 @@ impl ConversationMemoryEngine {
                 // Créer nouvelle conversation
                 let conversation = Conversation::new("Session".to_string());
                 let id = conversation.id.clone();
-                self.storage.save_conversation(&conversation)
+                self.storage
+                    .save_conversation(&conversation)
                     .map_err(|e| ConversationEngineError::MemoryError(e.to_string()))?;
                 Ok(id)
             }
@@ -136,18 +137,22 @@ impl ConversationMemoryEngine {
 
         // Ajouter au cache
         let mut cache = self.cache.write().await;
-        cache.entry(conversation_id.to_string())
+        cache
+            .entry(conversation_id.to_string())
             .or_insert_with(Vec::new)
             .push(entry.clone());
 
         // Sauvegarder dans storage
-        let conversation = self.storage.load_conversation(conversation_id)
+        let conversation = self
+            .storage
+            .load_conversation(conversation_id)
             .map_err(|e| ConversationEngineError::MemoryError(e.to_string()))?;
 
         // Note: add_entry n'est pas utilisé ici, on sauvegarde juste la conversation
         // La logique d'ajout d'entrées est gérée par le storage
 
-        self.storage.save_conversation(&conversation)
+        self.storage
+            .save_conversation(&conversation)
             .map_err(|e| ConversationEngineError::MemoryError(e.to_string()))?;
 
         // Auto-snapshot tous les 10 messages
@@ -159,20 +164,17 @@ impl ConversationMemoryEngine {
     }
 
     /// Créer un snapshot de la conversation
-    async fn create_snapshot(
-        &self,
-        conversation_id: &str,
-    ) -> Result<(), ConversationEngineError> {
+    async fn create_snapshot(&self, conversation_id: &str) -> Result<(), ConversationEngineError> {
         // TODO: Implémenter snapshot système
-        log::info!("[ConversationMemory] Snapshot créé pour {}", conversation_id);
+        log::info!(
+            "[ConversationMemory] Snapshot créé pour {}",
+            conversation_id
+        );
         Ok(())
     }
 
     /// Convertir Conversation en entries
-    fn conversation_to_entries(
-        &self,
-        conversation: &Conversation,
-    ) -> Vec<ConversationMemoryEntry> {
+    fn conversation_to_entries(&self, conversation: &Conversation) -> Vec<ConversationMemoryEntry> {
         // Simplification: créer des entries basiques
         // TODO: Enrichir avec métadonnées stockées
         Vec::new()
@@ -191,8 +193,7 @@ impl ConversationMemoryEngine {
         for entry in relevant {
             context.push_str(&format!(
                 "User: {}\nAssistant: {}\n\n",
-                entry.user_message,
-                entry.assistant_message
+                entry.user_message, entry.assistant_message
             ));
         }
 

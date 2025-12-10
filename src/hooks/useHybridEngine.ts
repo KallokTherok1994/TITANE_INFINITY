@@ -82,7 +82,7 @@ export function useHybridEngine(): UseHybridEngineReturn {
 
   // Subscribe to hybrid engine state changes
   useEffect(() => {
-    const unsubscribe = hybridEngine.subscribe((newState) => {
+    const unsubscribe = hybridEngine.subscribe(newState => {
       setState(newState);
     });
 
@@ -99,48 +99,68 @@ export function useHybridEngine(): UseHybridEngineReturn {
 
   // ═══ COMMAND EXECUTION ═══
 
-  const executeCommand = useCallback(async (command: HybridCommand): Promise<HybridExecution> => {
-    try {
-      const result = await hybridEngine.executeCommand(command);
-      return result;
-    } catch (error) {
-      console.error('[useHybridEngine] Execute failed:', error);
-      throw error;
-    }
-  }, []);
+  const executeCommand = useCallback(
+    async (command: HybridCommand): Promise<HybridExecution> => {
+      try {
+        const result = await hybridEngine.executeCommand(command);
+        return result;
+      } catch (error) {
+        console.error('[useHybridEngine] Execute failed:', error);
+        throw error;
+      }
+    },
+    []
+  );
 
-  const executeRawCommand = useCallback(async (input: string): Promise<HybridExecution> => {
-    const command = hybridEngine.parseCommand(input);
-    return executeCommand(command);
-  }, [executeCommand]);
+  const executeRawCommand = useCallback(
+    async (input: string): Promise<HybridExecution> => {
+      const command = hybridEngine.parseCommand(input);
+      return executeCommand(command);
+    },
+    [executeCommand]
+  );
 
   // ═══ DEV OPERATIONS ═══
 
-  const inspectModule = useCallback(async (target: string): Promise<HybridExecution> => {
-    const command = hybridEngine.parseCommand(`inspect ${target}`);
-    return executeCommand(command);
-  }, [executeCommand]);
+  const inspectModule = useCallback(
+    async (target: string): Promise<HybridExecution> => {
+      const command = hybridEngine.parseCommand(`inspect ${target}`);
+      return executeCommand(command);
+    },
+    [executeCommand]
+  );
 
-  const applyPatch = useCallback(async (target: string): Promise<HybridExecution> => {
-    const command = hybridEngine.parseCommand(`fix ${target}`);
-    return executeCommand(command);
-  }, [executeCommand]);
+  const applyPatch = useCallback(
+    async (target: string): Promise<HybridExecution> => {
+      const command = hybridEngine.parseCommand(`fix ${target}`);
+      return executeCommand(command);
+    },
+    [executeCommand]
+  );
 
-  const getLogs = useCallback(async (filter?: string): Promise<HybridExecution> => {
-    const command = hybridEngine.parseCommand(`logs ${filter || ''}`);
-    return executeCommand(command);
-  }, [executeCommand]);
+  const getLogs = useCallback(
+    async (filter?: string): Promise<HybridExecution> => {
+      const command = hybridEngine.parseCommand(`logs ${filter || ''}`);
+      return executeCommand(command);
+    },
+    [executeCommand]
+  );
 
-  const runDiagnostic = useCallback(async (target?: string): Promise<HybridExecution> => {
-    const command = hybridEngine.parseCommand(`diagnostic ${target || 'all'}`);
-    return executeCommand(command);
-  }, [executeCommand]);
+  const runDiagnostic = useCallback(
+    async (target?: string): Promise<HybridExecution> => {
+      const command = hybridEngine.parseCommand(`diagnostic ${target || 'all'}`);
+      return executeCommand(command);
+    },
+    [executeCommand]
+  );
 
   // ═══ AUTO-HEALING ═══
 
   const detectIssues = useCallback(async (context?: string): Promise<AutoPatch[]> => {
     try {
-      const patches = await hybridEngine.detectIssuesAndProposePatch(context || undefined);
+      const patches = await hybridEngine.detectIssuesAndProposePatch(
+        context || undefined
+      );
       return patches;
     } catch (error) {
       console.error('[useHybridEngine] Detect issues failed:', error);

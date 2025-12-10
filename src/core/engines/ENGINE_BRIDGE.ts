@@ -35,7 +35,8 @@ export interface EngineEventData {
 // 🧬 Engine Bridge principal
 export class EngineBridge {
   private eventQueue: EngineEventData[] = [];
-  private eventListeners: Map<EngineEvent, Array<(data: EngineEventData) => void>> = new Map();
+  private eventListeners: Map<EngineEvent, Array<(data: EngineEventData) => void>> =
+    new Map();
 
   constructor() {
     this.initializeSynchronization();
@@ -107,7 +108,12 @@ export class EngineBridge {
   /**
    * Gérer un changement de métrique système
    */
-  updateMetrics(metrics: { cpu?: number; memory?: number; errors?: number; connections?: number }): void {
+  updateMetrics(metrics: {
+    cpu?: number;
+    memory?: number;
+    errors?: number;
+    connections?: number;
+  }): void {
     // 1. Déterminer nouvel état
     const newState = stateEngine.determineStateFromMetrics(metrics);
     const currentState = stateEngine.getCurrentState();
@@ -128,7 +134,9 @@ export class EngineBridge {
   /**
    * Gérer une action utilisateur avec feedback multi-sensoriel
    */
-  handleUserAction(action: 'click' | 'hover' | 'open' | 'close' | 'success' | 'error'): void {
+  handleUserAction(
+    action: 'click' | 'hover' | 'open' | 'close' | 'success' | 'error'
+  ): void {
     // Mapping action → son
     const soundMap: Record<typeof action, SoundConfig> = {
       click: { type: 'click', volume: 0.3 },
@@ -208,7 +216,7 @@ export class EngineBridge {
       const currentListeners = this.eventListeners.get(event) || [];
       this.eventListeners.set(
         event,
-        currentListeners.filter((cb) => cb !== callback)
+        currentListeners.filter(cb => cb !== callback)
       );
     };
   }
@@ -227,7 +235,7 @@ export class EngineBridge {
 
     // Notifier les listeners
     const listeners = this.eventListeners.get(data.type) || [];
-    listeners.forEach((callback) => callback(data));
+    listeners.forEach(callback => callback(data));
   }
 
   /**
@@ -283,4 +291,11 @@ export class EngineBridge {
 export const engineBridge = new EngineBridge();
 
 // 🎨 Export des moteurs individuels pour accès direct
-export { glowEngine, motionEngine, stateEngine, soundEngine, holoMeshEngine, hyperDepthEngine };
+export {
+  glowEngine,
+  motionEngine,
+  stateEngine,
+  soundEngine,
+  holoMeshEngine,
+  hyperDepthEngine,
+};

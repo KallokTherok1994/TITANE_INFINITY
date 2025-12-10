@@ -53,7 +53,9 @@ const createScanResult = (overrides: Partial<ScanResult> = {}): ScanResult => ({
   ...overrides,
 });
 
-const createDetectionResult = (overrides: Partial<DetectionResult> = {}): DetectionResult => ({
+const createDetectionResult = (
+  overrides: Partial<DetectionResult> = {}
+): DetectionResult => ({
   error_patterns: [],
   abnormal_behaviors: [],
   latency_issues: [],
@@ -68,7 +70,7 @@ const createDetectionResult = (overrides: Partial<DetectionResult> = {}): Detect
 });
 
 const cleanupSpies = (...spies: Array<{ mockRestore: () => void }>) => {
-  spies.forEach((spy) => spy.mockRestore());
+  spies.forEach(spy => spy.mockRestore());
 };
 
 describe('SingularityAutonomyEngine', () => {
@@ -118,12 +120,22 @@ describe('SingularityAutonomyEngine', () => {
 
   describe('auto_scan', () => {
     it('aggregates diagnostics from every subsystem', async () => {
-      const frontendSpy = vi.spyOn(engine as any, 'scanFrontendWarnings').mockReturnValue(['React churn']);
-      const iaSpy = vi.spyOn(engine as any, 'scanIAAnomalies').mockResolvedValue(['Loop']);
+      const frontendSpy = vi
+        .spyOn(engine as any, 'scanFrontendWarnings')
+        .mockReturnValue(['React churn']);
+      const iaSpy = vi
+        .spyOn(engine as any, 'scanIAAnomalies')
+        .mockResolvedValue(['Loop']);
       const ttsSpy = vi.spyOn(engine as any, 'scanTTSIssues').mockResolvedValue(['Lag']);
-      const avatarSpy = vi.spyOn(engine as any, 'scanAvatarIssues').mockResolvedValue(['Artifact']);
-      const memorySpy = vi.spyOn(engine as any, 'scanMemoryIssues').mockResolvedValue(['Leak']);
-      const singularitySpy = vi.spyOn(engine as any, 'scanSingularityState').mockResolvedValue(['Drift']);
+      const avatarSpy = vi
+        .spyOn(engine as any, 'scanAvatarIssues')
+        .mockResolvedValue(['Artifact']);
+      const memorySpy = vi
+        .spyOn(engine as any, 'scanMemoryIssues')
+        .mockResolvedValue(['Leak']);
+      const singularitySpy = vi
+        .spyOn(engine as any, 'scanSingularityState')
+        .mockResolvedValue(['Drift']);
 
       mockInvoke.mockResolvedValueOnce({ errors: ['Backend deadlock'] });
 
@@ -143,12 +155,16 @@ describe('SingularityAutonomyEngine', () => {
     });
 
     it('logs backend failures without breaking the scan', async () => {
-      const frontendSpy = vi.spyOn(engine as any, 'scanFrontendWarnings').mockReturnValue([]);
+      const frontendSpy = vi
+        .spyOn(engine as any, 'scanFrontendWarnings')
+        .mockReturnValue([]);
       const iaSpy = vi.spyOn(engine as any, 'scanIAAnomalies').mockResolvedValue([]);
       const ttsSpy = vi.spyOn(engine as any, 'scanTTSIssues').mockResolvedValue([]);
       const avatarSpy = vi.spyOn(engine as any, 'scanAvatarIssues').mockResolvedValue([]);
       const memorySpy = vi.spyOn(engine as any, 'scanMemoryIssues').mockResolvedValue([]);
-      const singularitySpy = vi.spyOn(engine as any, 'scanSingularityState').mockResolvedValue([]);
+      const singularitySpy = vi
+        .spyOn(engine as any, 'scanSingularityState')
+        .mockResolvedValue([]);
 
       mockInvoke.mockRejectedValueOnce(new Error('Backend offline'));
 
@@ -172,7 +188,9 @@ describe('SingularityAutonomyEngine', () => {
 
       const result = await engine.auto_detect(scanResult);
 
-      expect(result.error_patterns).toContain('Race condition detected: mutex lock timeout');
+      expect(result.error_patterns).toContain(
+        'Race condition detected: mutex lock timeout'
+      );
       expect(result.latency_issues).toContain('Timeout detected: request timeout');
       expect(result.abnormal_behaviors).toContain('IA: Multiple anomalies detected');
       expect(result.tts_lip_sync_errors).toContain('TTS-Avatar synchronization lost');
@@ -224,7 +242,11 @@ describe('SingularityAutonomyEngine', () => {
         abnormal_behaviors: ['memory leak'],
       });
       // secureInvoke passe toujours {} comme payload par défaut
-      expect(mockInvoke).toHaveBeenNthCalledWith(2, 'autonomy_resync_singularity_state', {});
+      expect(mockInvoke).toHaveBeenNthCalledWith(
+        2,
+        'autonomy_resync_singularity_state',
+        {}
+      );
       expect(mockInvoke).toHaveBeenNthCalledWith(3, 'autonomy_clean_memory', {});
       expect(result.rebuilt_modules).toEqual(['Core']);
       expect(result.cleaned_memory).toContain('Memory inconsistencies cleaned');
@@ -234,8 +256,12 @@ describe('SingularityAutonomyEngine', () => {
 
   describe('auto_optimize', () => {
     it('compresses caches and cleans memory after backend optimizations', async () => {
-      const compressSpy = vi.spyOn(engine as any, 'compressCaches').mockImplementation(() => {});
-      const cleanMemorySpy = vi.spyOn(engine as any, 'cleanMemory').mockImplementation(() => {});
+      const compressSpy = vi
+        .spyOn(engine as any, 'compressCaches')
+        .mockImplementation(() => {});
+      const cleanMemorySpy = vi
+        .spyOn(engine as any, 'cleanMemory')
+        .mockImplementation(() => {});
       mockInvoke.mockResolvedValueOnce({ gains: 17 });
 
       const result = await engine.auto_optimize();
@@ -282,7 +308,9 @@ describe('SingularityAutonomyEngine', () => {
 
   describe('auto_shield', () => {
     it('protects singularity state and deduplicates memory keys', async () => {
-      const preventSpy = vi.spyOn(engine as any, 'preventMemoryDuplicates').mockImplementation(() => {});
+      const preventSpy = vi
+        .spyOn(engine as any, 'preventMemoryDuplicates')
+        .mockImplementation(() => {});
       mockInvoke.mockResolvedValueOnce({ protected: true });
 
       const result = await engine.auto_shield();
@@ -342,7 +370,10 @@ describe('SingularityAutonomyEngine', () => {
 
   describe('Autonomous cycle', () => {
     it('chains scan, detection, protections, and remediation steps', async () => {
-      const scanResult = createScanResult({ backend_errors: ['panic'], frontend_warnings: [] });
+      const scanResult = createScanResult({
+        backend_errors: ['panic'],
+        frontend_warnings: [],
+      });
       const detectionResult = createDetectionResult({
         error_patterns: ['panic'],
         abnormal_behaviors: ['glitch'],
@@ -359,8 +390,12 @@ describe('SingularityAutonomyEngine', () => {
       };
 
       const scanSpy = vi.spyOn(engine, 'auto_scan').mockResolvedValue(scanResult);
-      const detectSpy = vi.spyOn(engine, 'auto_detect').mockResolvedValue(detectionResult);
-      const analyseSpy = vi.spyOn(engine, 'auto_analyse').mockResolvedValue(analyseResult);
+      const detectSpy = vi
+        .spyOn(engine, 'auto_detect')
+        .mockResolvedValue(detectionResult);
+      const analyseSpy = vi
+        .spyOn(engine, 'auto_analyse')
+        .mockResolvedValue(analyseResult);
       const shieldSpy = vi.spyOn(engine, 'auto_shield').mockResolvedValue({
         singularity_state_protected: true,
         memory_duplicates_prevented: true,
@@ -454,7 +489,7 @@ describe('SingularityAutonomyEngine', () => {
         optimizeSpy,
         evolveSpy,
         testSpy,
-        reportSpy,
+        reportSpy
       );
     });
   });

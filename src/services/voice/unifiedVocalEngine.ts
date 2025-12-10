@@ -19,14 +19,21 @@
  * - Voice Memory & Style (XXVI)
  */
 
-import { audioStateMachine, type AudioConversationState } from '../audio/audioStateMachine';
+import {
+  audioStateMachine,
+  type AudioConversationState,
+} from '../audio/audioStateMachine';
 import { wakeWordEngine as _wakeWordEngine, type WakeWordEvent } from './wakeWordEngine';
 import { attentionEngine, type AttentionState } from './attentionEngine';
 import { fullDuplexOrchestrator as _fullDuplexOrchestrator } from './fullDuplexOrchestrator';
 import { haloEngine, type HaloState } from './haloEngine';
 import { voiceService } from '../api/voice';
 import { hybridTTS } from '../tts/hybridTTS';
-import { innerDialogueController as _innerDialogueController, type InnerDialogueState as _InnerDialogueState, type ThinkingState as _ThinkingState } from './innerDialogueController';
+import {
+  innerDialogueController as _innerDialogueController,
+  type InnerDialogueState as _InnerDialogueState,
+  type ThinkingState as _ThinkingState,
+} from './innerDialogueController';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES
@@ -201,10 +208,10 @@ class UnifiedVocalEngine {
       timbreBase: 'cristal-profond',
       warmth: 0.12,
       clarity: 0.15,
-      depth: 0.20,
+      depth: 0.2,
       calm: 0.25,
-      mystery: 0.10,
-      elegance: 0.10,
+      mystery: 0.1,
+      elegance: 0.1,
       presence: 0.08,
     };
   }
@@ -218,7 +225,9 @@ class UnifiedVocalEngine {
       return;
     }
 
-    console.log('[UnifiedVocalEngine] 🚀 Initializing Unified Vocal Intelligence Engine v∞...');
+    console.log(
+      '[UnifiedVocalEngine] 🚀 Initializing Unified Vocal Intelligence Engine v∞...'
+    );
 
     // Initialiser les sous-systèmes
     await this.initializeSubsystems();
@@ -245,13 +254,13 @@ class UnifiedVocalEngine {
     setInterval(checkAudioState, 200); // Check every 200ms
 
     // Sync avec attentionEngine
-    attentionEngine.onStateChange((attentionState) => {
+    attentionEngine.onStateChange(attentionState => {
       this.state.attentionState = attentionState.state;
       this.updateCognitiveState();
     });
 
     // Sync avec haloEngine
-    haloEngine.onStateChange((status) => {
+    haloEngine.onStateChange(status => {
       this.state.haloState = status.state;
     });
 
@@ -272,7 +281,9 @@ class UnifiedVocalEngine {
       this.cognitiveLoopTick();
     }, intervalMs);
 
-    console.log(`[UnifiedVocalEngine] 🔄 Cognitive loop started (${this.config.loopFrequency} Hz)`);
+    console.log(
+      `[UnifiedVocalEngine] 🔄 Cognitive loop started (${this.config.loopFrequency} Hz)`
+    );
   }
 
   /**
@@ -357,7 +368,15 @@ class UnifiedVocalEngine {
     // Mise à jour du UserVoiceProfile (Super Prompt XXVI)
 
     // Simulé pour l'instant - sera connecté à l'analyse audio réelle
-    const _emotions: EmotionalState[] = ['calm', 'joyful', 'stressed', 'tired', 'excited', 'focused', 'sad'];
+    const _emotions: EmotionalState[] = [
+      'calm',
+      'joyful',
+      'stressed',
+      'tired',
+      'excited',
+      'focused',
+      'sad',
+    ];
 
     // Détection basée sur intensité audio, rythme, pauses
     // À implémenter avec analyse spectrale réelle
@@ -539,7 +558,6 @@ class UnifiedVocalEngine {
   private updateCognitiveState(): void {
     // Logique de priorité (Super Prompt XXV)
     // HUMAIN PARLE > WAKEWORD > EMOTION > INTENT > IA > TTS > INTERNAL
-
     // À affiner avec tous les signaux disponibles
   }
 

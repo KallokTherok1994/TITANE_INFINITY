@@ -34,7 +34,7 @@ export const Memory = () => {
     }
   };
 
-  const encryptedCount = (entries as MemoryEntry[]).filter((e) => e.encrypted).length;
+  const encryptedCount = (entries as MemoryEntry[]).filter(e => e.encrypted).length;
   const totalEntries = entries.length;
 
   return (
@@ -67,32 +67,73 @@ export const Memory = () => {
         <ModuleCard
           title="Sécurité"
           icon="✅"
-          status={encryptedCount === totalEntries && totalEntries > 0 ? 'Tous chiffrés' : 'Partiel'}
+          status={
+            encryptedCount === totalEntries && totalEntries > 0
+              ? 'Tous chiffrés'
+              : 'Partiel'
+          }
           subtitle="Niveau de protection"
           variant={encryptedCount === totalEntries ? 'success' : 'warning'}
         />
       </div>
 
-      <div style={{ marginTop: '2rem', padding: '1.5rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.08)' }}>
+      <div
+        style={{
+          marginTop: '2rem',
+          padding: '1.5rem',
+          background: 'rgba(255,255,255,0.03)',
+          borderRadius: '12px',
+          backdropFilter: 'blur(12px)',
+          border: '1px solid rgba(255,255,255,0.08)',
+        }}
+      >
         <input
           type="text"
           placeholder="Nouvelle entrée mémoire..."
           value={newEntry}
-          onChange={(e) => setNewEntry(e.target.value)}
-          style={{ width: '100%', padding: '0.75rem', marginBottom: '1rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: 'white', fontSize: '0.95rem' }}
+          onChange={e => setNewEntry(e.target.value)}
+          style={{
+            width: '100%',
+            padding: '0.75rem',
+            marginBottom: '1rem',
+            background: 'rgba(255,255,255,0.05)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            borderRadius: '8px',
+            color: 'white',
+            fontSize: '0.95rem',
+          }}
         />
         <div style={{ display: 'flex', gap: '1rem' }}>
           <button
             onClick={handleSave}
             disabled={!newEntry.trim() || loading}
-            style={{ padding: '0.75rem 1.5rem', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', border: 'none', borderRadius: '8px', color: 'white', cursor: newEntry.trim() ? 'pointer' : 'not-allowed', opacity: newEntry.trim() ? 1 : 0.5, fontSize: '0.9rem', fontWeight: 600 }}
+            style={{
+              padding: '0.75rem 1.5rem',
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              border: 'none',
+              borderRadius: '8px',
+              color: 'white',
+              cursor: newEntry.trim() ? 'pointer' : 'not-allowed',
+              opacity: newEntry.trim() ? 1 : 0.5,
+              fontSize: '0.9rem',
+              fontWeight: 600,
+            }}
           >
             Sauvegarder
           </button>
           <button
             onClick={clearMemory}
             disabled={loading}
-            style={{ padding: '0.75rem 1.5rem', background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '8px', color: '#f87171', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 600 }}
+            style={{
+              padding: '0.75rem 1.5rem',
+              background: 'rgba(239,68,68,0.15)',
+              border: '1px solid rgba(239,68,68,0.3)',
+              borderRadius: '8px',
+              color: '#f87171',
+              cursor: 'pointer',
+              fontSize: '0.9rem',
+              fontWeight: 600,
+            }}
           >
             Effacer tout
           </button>
@@ -100,15 +141,55 @@ export const Memory = () => {
       </div>
 
       {entries.length === 0 ? (
-        <div style={{ marginTop: '2rem', textAlign: 'center', padding: '3rem', background: 'rgba(255,255,255,0.02)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
-          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.95rem' }}>Aucune entrée mémoire</p>
+        <div
+          style={{
+            marginTop: '2rem',
+            textAlign: 'center',
+            padding: '3rem',
+            background: 'rgba(255,255,255,0.02)',
+            borderRadius: '12px',
+            border: '1px solid rgba(255,255,255,0.05)',
+          }}
+        >
+          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.95rem' }}>
+            Aucune entrée mémoire
+          </p>
         </div>
       ) : (
-        <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem', maxHeight: '400px', overflowY: 'auto' }}>
-          {entries.map((entry) => (
-            <div key={entry.id} style={{ padding: '1rem', background: 'rgba(255,255,255,0.03)', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.08)' }}>
-              <div style={{ marginBottom: '0.5rem', color: 'white', fontSize: '0.95rem' }}>{entry.content}</div>
-              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)' }}>
+        <div
+          style={{
+            marginTop: '2rem',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            maxHeight: '400px',
+            overflowY: 'auto',
+          }}
+        >
+          {entries.map(entry => (
+            <div
+              key={entry.id}
+              style={{
+                padding: '1rem',
+                background: 'rgba(255,255,255,0.03)',
+                borderRadius: '10px',
+                border: '1px solid rgba(255,255,255,0.08)',
+              }}
+            >
+              <div
+                style={{ marginBottom: '0.5rem', color: 'white', fontSize: '0.95rem' }}
+              >
+                {entry.content}
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  gap: '1rem',
+                  alignItems: 'center',
+                  fontSize: '0.85rem',
+                  color: 'rgba(255,255,255,0.5)',
+                }}
+              >
                 <span>{entry.encrypted ? '🔒 Chiffré' : 'Non chiffré'}</span>
                 <span>{new Date(entry.timestamp * 1000).toLocaleString()}</span>
               </div>

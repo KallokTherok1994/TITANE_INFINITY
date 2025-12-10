@@ -3,9 +3,9 @@
 //! Super Prompt #9 — Vérification de cohérence narrative et logique
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
-use super::narrative::NarrativeState;
 use super::memory_context::ConversationContext;
+use super::narrative::NarrativeState;
+use serde::{Deserialize, Serialize};
 
 /// Type de problème de cohérence
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -118,8 +118,9 @@ impl CoherenceEngine {
         }
 
         for issue in &issues {
-            if issue.severity == CoherenceSeverity::Major ||
-               issue.severity == CoherenceSeverity::Critical {
+            if issue.severity == CoherenceSeverity::Major
+                || issue.severity == CoherenceSeverity::Critical
+            {
                 if let Some(ref suggestion) = issue.suggestion {
                     recommendations.push(suggestion.clone());
                 }
@@ -184,7 +185,9 @@ impl CoherenceEngine {
         if let Some(ref thread) = narrative.current_thread {
             // Vérifier la continuité des topics
             if thread.elements.len() > 3 {
-                let topics: Vec<_> = thread.elements.iter()
+                let topics: Vec<_> = thread
+                    .elements
+                    .iter()
                     .flat_map(|e| e.topics.clone())
                     .collect();
 
@@ -256,11 +259,7 @@ impl CoherenceEngine {
     }
 
     /// Vérifie les contradictions
-    fn check_contradictions(
-        &self,
-        narrative: &NarrativeState,
-        issues: &mut Vec<CoherenceIssue>,
-    ) {
+    fn check_contradictions(&self, narrative: &NarrativeState, issues: &mut Vec<CoherenceIssue>) {
         // Version simplifiée: recherche de patterns contradictoires dans les key_points
         let key_points = &narrative.key_points;
 
@@ -300,8 +299,9 @@ impl CoherenceEngine {
         let p2_lower = point2.to_lowercase();
 
         for (pos, neg) in negation_pairs {
-            if (p1_lower.contains(pos) && p2_lower.contains(neg)) ||
-               (p1_lower.contains(neg) && p2_lower.contains(pos)) {
+            if (p1_lower.contains(pos) && p2_lower.contains(neg))
+                || (p1_lower.contains(neg) && p2_lower.contains(pos))
+            {
                 return true;
             }
         }
@@ -310,11 +310,7 @@ impl CoherenceEngine {
     }
 
     /// Vérifie la redondance
-    fn check_redundancy(
-        &self,
-        narrative: &NarrativeState,
-        issues: &mut Vec<CoherenceIssue>,
-    ) {
+    fn check_redundancy(&self, narrative: &NarrativeState, issues: &mut Vec<CoherenceIssue>) {
         // Vérifier les répétitions dans les key_points
         let key_points = &narrative.key_points;
 

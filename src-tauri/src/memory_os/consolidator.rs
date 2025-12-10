@@ -46,9 +46,9 @@ pub struct ConsolidatorConfig {
 impl Default for ConsolidatorConfig {
     fn default() -> Self {
         Self {
-            stm_transfer_age_ms: 300_000,       // 5 minutes
+            stm_transfer_age_ms: 300_000, // 5 minutes
             ltm_importance_threshold: 0.7,
-            ltm_age_threshold_ms: 3_600_000,    // 1 hour
+            ltm_age_threshold_ms: 3_600_000, // 1 hour
             merge_duplicates: true,
             duplicate_similarity_threshold: 0.95,
             compress_ltm: true,
@@ -135,10 +135,9 @@ impl Consolidator {
         let mtm_overflow = mtm.consolidate().await;
 
         // Phase 3: MTM → LTM promotion
-        let ltm_candidates = mtm.get_ltm_candidates(
-            config.ltm_importance_threshold,
-            config.ltm_age_threshold_ms,
-        ).await;
+        let ltm_candidates = mtm
+            .get_ltm_candidates(config.ltm_importance_threshold, config.ltm_age_threshold_ms)
+            .await;
 
         for entry in ltm_candidates {
             if let Ok(()) = ltm.store(entry).await {
@@ -159,7 +158,9 @@ impl Consolidator {
 
         // Phase 5: Duplicate merging (if enabled)
         if config.merge_duplicates {
-            result.duplicates_merged = self.merge_duplicates_in_mtm(mtm, vector_store, &config).await;
+            result.duplicates_merged = self
+                .merge_duplicates_in_mtm(mtm, vector_store, &config)
+                .await;
         }
 
         result.duration_ms = start.elapsed().as_millis();
@@ -232,11 +233,7 @@ impl Consolidator {
             if let Some(ref embedding) = entry.embedding {
                 // Search for similar entries
                 let similar = vector_store
-                    .search_threshold(
-                        embedding,
-                        config.duplicate_similarity_threshold,
-                        10,
-                    )
+                    .search_threshold(embedding, config.duplicate_similarity_threshold, 10)
                     .await;
 
                 // Mark duplicates for removal (keep the first/oldest)

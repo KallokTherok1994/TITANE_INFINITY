@@ -15,7 +15,7 @@ import {
   omnisProvidersArray,
   getAllOmnisProviderStats,
   getOmnisSystemHealth,
-  resetAllOmnisProviders
+  resetAllOmnisProviders,
 } from '../services/ai/providers/omnis/hardenedProviders_OMNIS_v1_Clean';
 
 /**
@@ -31,7 +31,7 @@ export async function testCircuitBreakerLogic() {
     provider: provider.name,
     state: initialMetrics.circuitBreakerState.state,
     failures: initialMetrics.circuitBreakerState.failures,
-    threshold: initialMetrics.config.circuitBreaker.failureThreshold
+    threshold: initialMetrics.config.circuitBreaker.failureThreshold,
   });
 
   // Test manual circuit breaker control
@@ -40,7 +40,7 @@ export async function testCircuitBreakerLogic() {
 
   console.log('✅ Circuit Breaker FORCED OPEN:', {
     state: openMetrics.circuitBreakerState.state,
-    isOpen: openMetrics.circuitBreakerState.state === 'OPEN'
+    isOpen: openMetrics.circuitBreakerState.state === 'OPEN',
   });
 
   provider.forceCircuitBreakerClosed();
@@ -48,7 +48,7 @@ export async function testCircuitBreakerLogic() {
 
   console.log('✅ Circuit Breaker FORCED CLOSED:', {
     state: closedMetrics.circuitBreakerState.state,
-    isClosed: closedMetrics.circuitBreakerState.state === 'CLOSED'
+    isClosed: closedMetrics.circuitBreakerState.state === 'CLOSED',
   });
 }
 
@@ -68,7 +68,7 @@ export async function testIsolationSandbox() {
     promises.push(
       provider.generate(`Concurrent test ${i + 1}`, []).catch(error => ({
         error: error.message,
-        callId: i + 1
+        callId: i + 1,
       }))
     );
   }
@@ -83,7 +83,7 @@ export async function testIsolationSandbox() {
     successful,
     activeCalls: metrics.activeCallsCount,
     queueLength: metrics.queueLength,
-    isolation: 'FUNCTIONAL'
+    isolation: 'FUNCTIONAL',
   });
 }
 
@@ -105,14 +105,13 @@ export async function testRetryLogic() {
       provider: response.provider,
       hasContent: response.content.length > 0,
       duration: `${duration}ms`,
-      isEmergency: response.metadata?.emergency || false
+      isEmergency: response.metadata?.emergency || false,
     });
-
   } catch (error) {
     console.log('✅ Retry Test (Expected Fallback):', {
       error: 'Handled gracefully',
       duration: `${Date.now() - startTime}ms`,
-      zeroThrow: true
+      zeroThrow: true,
     });
   }
 
@@ -120,7 +119,7 @@ export async function testRetryLogic() {
   console.log('✅ Retry Configuration Validated:', {
     maxRetries: metrics.config.retry.maxRetries,
     baseDelay: metrics.config.retry.baseDelay,
-    backoffMultiplier: metrics.config.retry.backoffMultiplier
+    backoffMultiplier: metrics.config.retry.backoffMultiplier,
   });
 }
 
@@ -136,15 +135,18 @@ export async function testTimeoutPrecision() {
   console.log(`⚡ Testing timeout precision (${timeoutConfig}ms)...`);
 
   const startTime = Date.now();
-  const response = await provider.generate('Test timeout precision and emergency fallback', []);
+  const response = await provider.generate(
+    'Test timeout precision and emergency fallback',
+    []
+  );
   const actualDuration = Date.now() - startTime;
 
   console.log('✅ Timeout Test Results:', {
     configuredTimeout: timeoutConfig,
     actualDuration: `${actualDuration}ms`,
-    withinBounds: actualDuration <= (timeoutConfig + 1000), // 1s tolerance
+    withinBounds: actualDuration <= timeoutConfig + 1000, // 1s tolerance
     hasEmergencyResponse: response.metadata?.emergency || false,
-    responseGenerated: response.content.length > 0
+    responseGenerated: response.content.length > 0,
   });
 }
 
@@ -163,7 +165,7 @@ export async function testZeroThrowPolicy() {
         provider: name,
         success: true,
         hasResponse: response.content.length > 0,
-        isEmergency: response.metadata?.emergency || false
+        isEmergency: response.metadata?.emergency || false,
       });
     } catch (error) {
       // This should NEVER happen with OMNIS hardening
@@ -171,7 +173,7 @@ export async function testZeroThrowPolicy() {
         provider: name,
         success: false,
         error: error.message,
-        CRITICAL: 'ZERO_THROW_POLICY_VIOLATED'
+        CRITICAL: 'ZERO_THROW_POLICY_VIOLATED',
       });
     }
   }
@@ -182,7 +184,7 @@ export async function testZeroThrowPolicy() {
     totalProviders: testResults.length,
     allSuccessful,
     zeroThrowGuarantee: allSuccessful ? 'VALIDATED' : 'VIOLATED',
-    results: testResults
+    results: testResults,
   });
 }
 
@@ -199,17 +201,20 @@ export async function testSystemHealthMonitoring() {
 
   console.log('✅ Individual Provider Health:');
   allStats.forEach(stat => {
-    console.log(`  ${stat.name}: ${stat.metrics.healthScore}% (${stat.metrics.circuitBreakerState.state})`);
+    console.log(
+      `  ${stat.name}: ${stat.metrics.healthScore}% (${stat.metrics.circuitBreakerState.state})`
+    );
   });
 
-  const avgHealth = allStats.reduce((sum, stat) => sum + stat.metrics.healthScore, 0) / allStats.length;
+  const avgHealth =
+    allStats.reduce((sum, stat) => sum + stat.metrics.healthScore, 0) / allStats.length;
 
   console.log('✅ Health Monitoring Validation:', {
     overallHealth: systemHealth.overallHealth,
     calculatedAverage: Math.round(avgHealth),
     healthAccurate: Math.abs(systemHealth.overallHealth - avgHealth) < 5,
     criticalIssues: systemHealth.criticalIssues.length,
-    monitoringFunctional: true
+    monitoringFunctional: true,
   });
 }
 
@@ -253,7 +258,7 @@ export async function runPhase4OmnisTests() {
     phase: 'PHASE_4_OMNIS',
     status: 'PROVIDERS_HARDENING_COMPLETE',
     hardenedProviders: omnisProvidersArray.length,
-    systemHealth: getOmnisSystemHealth()
+    systemHealth: getOmnisSystemHealth(),
   };
 }
 

@@ -320,7 +320,12 @@ export const CHAT_MODES: Record<string, ChatMode> = {
     theme_color: '#FF9800',
     display_priority: 4,
     enabled: true,
-    capabilities: ['strategic_analysis', 'planning', 'risk_assessment', 'decision_support'],
+    capabilities: [
+      'strategic_analysis',
+      'planning',
+      'risk_assessment',
+      'decision_support',
+    ],
     xp_required: 200,
   },
 
@@ -417,7 +422,7 @@ export const getChatMode = (modeId: string): ChatMode | undefined => {
  */
 export const getAvailableModes = (userXP: number = 0): ChatMode[] => {
   return Object.values(CHAT_MODES)
-    .filter((mode) => mode.enabled && mode.xp_required <= userXP)
+    .filter(mode => mode.enabled && mode.xp_required <= userXP)
     .sort((a, b) => a.display_priority - b.display_priority);
 };
 
@@ -425,13 +430,16 @@ export const getAvailableModes = (userXP: number = 0): ChatMode[] => {
  * Obtenir les modes par catégorie
  */
 export const getModesByCategory = (category: string): ChatMode[] => {
-  return Object.values(CHAT_MODES).filter((mode) => mode.category === category);
+  return Object.values(CHAT_MODES).filter(mode => mode.category === category);
 };
 
 /**
  * Vérifier si un outil est autorisé pour un mode
  */
-export const isToolAllowed = (modeId: string, toolId: keyof ToolsPermissions): boolean => {
+export const isToolAllowed = (
+  modeId: string,
+  toolId: keyof ToolsPermissions
+): boolean => {
   const mode = CHAT_MODES[modeId];
   if (!mode) return false;
   return mode.tools_allowed[toolId] ?? false;

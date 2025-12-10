@@ -145,7 +145,11 @@ impl HealingExecutor {
             self.actions_succeeded.fetch_add(1, Ordering::Relaxed);
             RepairResult::success(action.clone(), duration_ms)
         } else {
-            RepairResult::failure(action.clone(), duration_ms, result.err().unwrap_or_default())
+            RepairResult::failure(
+                action.clone(),
+                duration_ms,
+                result.err().unwrap_or_default(),
+            )
         };
 
         self.actions_executed.fetch_add(1, Ordering::Relaxed);
@@ -170,7 +174,11 @@ impl HealingExecutor {
     }
 
     /// Exécute plusieurs actions en séquence
-    pub async fn execute_batch(&self, actions: Vec<RepairAction>, anomaly_score: f32) -> Vec<RepairResult> {
+    pub async fn execute_batch(
+        &self,
+        actions: Vec<RepairAction>,
+        anomaly_score: f32,
+    ) -> Vec<RepairResult> {
         let mut results = Vec::with_capacity(actions.len());
 
         for action in actions {
@@ -344,7 +352,10 @@ impl HealingExecutor {
             drop(history); // Libérer le lock
 
             let mut learning = self.learning.write().await;
-            let current = learning.action_effectiveness.entry(action_key).or_insert(0.0);
+            let current = learning
+                .action_effectiveness
+                .entry(action_key)
+                .or_insert(0.0);
             // Moyenne mobile
             *current = (*current * 0.8) + (effectiveness * 0.2);
         }
@@ -390,7 +401,11 @@ impl HealingExecutor {
 
     /// Vérifie si un moteur est isolé
     pub async fn is_engine_isolated(&self, engine_id: &str) -> bool {
-        self.state.read().await.isolated_engines.contains(&engine_id.to_string())
+        self.state
+            .read()
+            .await
+            .isolated_engines
+            .contains(&engine_id.to_string())
     }
 
     /// Timestamp actuel
@@ -482,7 +497,9 @@ mod tests {
         let executor = HealingExecutor::new();
 
         executor.execute(RepairAction::ForceGC, 0.4).await;
-        executor.execute(RepairAction::EnableDetailedLogging, 0.3).await;
+        executor
+            .execute(RepairAction::EnableDetailedLogging, 0.3)
+            .await;
 
         let stats = executor.stats();
         assert_eq!(stats.total_actions, 2);
@@ -509,11 +526,15 @@ mod tests {
     async fn test_circuit_breaker() {
         let executor = HealingExecutor::new();
 
-        executor.execute(RepairAction::EnableCircuitBreaker, 0.6).await;
+        executor
+            .execute(RepairAction::EnableCircuitBreaker, 0.6)
+            .await;
         let state = executor.get_state().await;
         assert!(state.circuit_breaker_active);
 
-        executor.execute(RepairAction::DisableCircuitBreaker, 0.3).await;
+        executor
+            .execute(RepairAction::DisableCircuitBreaker, 0.3)
+            .await;
         let state = executor.get_state().await;
         assert!(!state.circuit_breaker_active);
     }

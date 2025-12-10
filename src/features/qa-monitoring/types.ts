@@ -153,6 +153,15 @@ export interface HealthCheckResult {
   status: string;
   timestamp: string;
   version: string;
-  checks: Record<string, { status: string; latency_ms?: number; free_space_gb?: number; available_mb?: number; load_average?: number }>;
+  checks: Record<
+    string,
+    {
+      status: string;
+      latency_ms?: number;
+      free_space_gb?: number;
+      available_mb?: number;
+      load_average?: number;
+    }
+  >;
   uptime_seconds: number;
 }

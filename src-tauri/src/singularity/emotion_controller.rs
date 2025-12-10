@@ -54,7 +54,11 @@ impl EmotionController {
     }
 
     /// Adjust based on detected user emotion
-    pub fn respond_to_user_emotion(&mut self, user_valence: f32, user_arousal: f32) -> AffectiveState {
+    pub fn respond_to_user_emotion(
+        &mut self,
+        user_valence: f32,
+        user_arousal: f32,
+    ) -> AffectiveState {
         // Mirror with empathy but maintain stability
         let empathic_valence = user_valence * self.empathy_level;
         let empathic_arousal = user_arousal * self.empathy_level * 0.8; // Slightly damped arousal
@@ -68,10 +72,10 @@ impl EmotionController {
         let target = match intent {
             IntentClass::Emotional => AffectiveState::new(0.3, 0.3), // Warm, calm
             IntentClass::Help => AffectiveState::new(0.4, 0.4),      // Supportive, active
-            IntentClass::Creative => AffectiveState::new(0.5, 0.6), // Positive, energetic
-            IntentClass::Debug => AffectiveState::new(0.0, 0.5),    // Neutral, focused
-            IntentClass::Task => AffectiveState::new(0.1, 0.5),     // Slightly positive, active
-            IntentClass::Query => AffectiveState::new(0.1, 0.4),    // Helpful, moderate
+            IntentClass::Creative => AffectiveState::new(0.5, 0.6),  // Positive, energetic
+            IntentClass::Debug => AffectiveState::new(0.0, 0.5),     // Neutral, focused
+            IntentClass::Task => AffectiveState::new(0.1, 0.5),      // Slightly positive, active
+            IntentClass::Query => AffectiveState::new(0.1, 0.4),     // Helpful, moderate
             IntentClass::Conversation => AffectiveState::new(0.3, 0.5), // Engaged, friendly
             _ => AffectiveState::default(),
         };
@@ -105,17 +109,17 @@ impl EmotionController {
     /// Get intent-based adjustment values
     fn get_intent_adjustment(&self, intent: &IntentClass) -> (f32, f32) {
         match intent {
-            IntentClass::Emotional => (0.3, -0.1), // Warmer, calmer
-            IntentClass::Help => (0.2, 0.1),       // Supportive, slightly more active
-            IntentClass::Creative => (0.3, 0.2),   // More positive, more energetic
-            IntentClass::Debug => (0.0, 0.2),      // Neutral, focused
-            IntentClass::Task => (0.1, 0.1),       // Slightly positive, active
-            IntentClass::Query => (0.0, 0.0),      // Neutral
+            IntentClass::Emotional => (0.3, -0.1),   // Warmer, calmer
+            IntentClass::Help => (0.2, 0.1),         // Supportive, slightly more active
+            IntentClass::Creative => (0.3, 0.2),     // More positive, more energetic
+            IntentClass::Debug => (0.0, 0.2),        // Neutral, focused
+            IntentClass::Task => (0.1, 0.1),         // Slightly positive, active
+            IntentClass::Query => (0.0, 0.0),        // Neutral
             IntentClass::Conversation => (0.2, 0.1), // Friendly, engaged
-            IntentClass::Command => (0.0, 0.1),    // Neutral, ready
-            IntentClass::Explanation => (0.1, 0.0), // Helpful
-            IntentClass::MetaQuery => (0.0, 0.0),  // Neutral
-            IntentClass::Unknown => (0.0, 0.0),    // Default
+            IntentClass::Command => (0.0, 0.1),      // Neutral, ready
+            IntentClass::Explanation => (0.1, 0.0),  // Helpful
+            IntentClass::MetaQuery => (0.0, 0.0),    // Neutral
+            IntentClass::Unknown => (0.0, 0.0),      // Default
         }
     }
 

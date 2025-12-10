@@ -14,7 +14,6 @@ macro_rules! lock_or_recover {
     };
 }
 
-
 /// Type de métrique
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum MetricType {
@@ -232,7 +231,9 @@ mod systemtime_serde {
     where
         S: Serializer,
     {
-        let duration = time.duration_since(UNIX_EPOCH).unwrap_or(Duration::from_secs(0));
+        let duration = time
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or(Duration::from_secs(0));
         duration.as_secs().serialize(serializer)
     }
 

@@ -25,23 +25,23 @@ const isDev = process.env.NODE_ENV === 'development';
  * Principes cognitifs fondamentaux du système
  */
 export interface CognitivePrinciples {
-  clarity: number;       // 0-100: Simplicité à chaque niveau
-  robustness: number;    // 0-100: Minimisation instabilité
-  coherence: number;     // 0-100: Uniformité patterns/noms
-  parsimony: number;     // 0-100: Absence complexité superflue
-  adaptation: number;    // 0-100: Réactivité aux conditions
-  continuity: number;    // 0-100: Respect état actuel
+  clarity: number; // 0-100: Simplicité à chaque niveau
+  robustness: number; // 0-100: Minimisation instabilité
+  coherence: number; // 0-100: Uniformité patterns/noms
+  parsimony: number; // 0-100: Absence complexité superflue
+  adaptation: number; // 0-100: Réactivité aux conditions
+  continuity: number; // 0-100: Respect état actuel
 }
 
 /**
  * États d'environnement du système
  */
 export interface EnvironmentState {
-  providerHealth: Map<string, number>;  // Provider -> health score 0-100
-  averageLatency: number;                // Latence moyenne ms
-  responseQuality: number;               // Qualité perçue 0-100
-  errorFrequency: number;                // Fréquence erreurs (par heure)
-  chatStability: number;                 // Stabilité module chat 0-100
+  providerHealth: Map<string, number>; // Provider -> health score 0-100
+  averageLatency: number; // Latence moyenne ms
+  responseQuality: number; // Qualité perçue 0-100
+  errorFrequency: number; // Fréquence erreurs (par heure)
+  chatStability: number; // Stabilité module chat 0-100
   governanceStatus: 'configured' | 'partial' | 'unconfigured';
 }
 
@@ -60,9 +60,9 @@ export interface IntentionState {
  * Mémoire locale éphémère (non persistante)
  */
 export interface EphemeralMemory {
-  lastEffectiveProviders: string[];      // 5 derniers providers efficaces
-  recentErrorPatterns: Map<string, number>;  // Pattern -> occurrences
-  bestModelsByContext: Map<string, string>;  // Context -> model
+  lastEffectiveProviders: string[]; // 5 derniers providers efficaces
+  recentErrorPatterns: Map<string, number>; // Pattern -> occurrences
+  bestModelsByContext: Map<string, string>; // Context -> model
   recentAdaptations: Array<{
     timestamp: number;
     type: string;
@@ -184,16 +184,17 @@ class CognitiveKernel {
 
     // Principes fondamentaux (immuables)
     this.principles = {
-      clarity: 100,       // Toujours viser la simplicité
-      robustness: 100,    // Minimiser l'instabilité
-      coherence: 100,     // Uniformité patterns
-      parsimony: 100,     // Pas de code superflu
-      adaptation: 100,    // Réagir aux conditions réelles
-      continuity: 100,    // Respecter l'état actuel
+      clarity: 100, // Toujours viser la simplicité
+      robustness: 100, // Minimiser l'instabilité
+      coherence: 100, // Uniformité patterns
+      parsimony: 100, // Pas de code superflu
+      adaptation: 100, // Réagir aux conditions réelles
+      continuity: 100, // Respecter l'état actuel
     };
 
     // Cartographie cognitive (relations internes)
-    isDev && console.log('[COGNITIVE KERNEL] 📊 Cartographie cognitive:', this.cognitiveMap);
+    isDev &&
+      console.log('[COGNITIVE KERNEL] 📊 Cartographie cognitive:', this.cognitiveMap);
 
     this.initialized = true;
     isDev && console.log('[COGNITIVE KERNEL] ✅ Champ cognitif établi');
@@ -347,7 +348,8 @@ class CognitiveKernel {
     // Scorer chaque provider disponible
     const providerScores = context.providers.map((provider: string) => {
       const health = perception.systemState.providerHealth.get(provider) || 0;
-      const recentSuccess = perception.microHistory.lastEffectiveProviders.includes(provider);
+      const recentSuccess =
+        perception.microHistory.lastEffectiveProviders.includes(provider);
       const score = health * 0.7 + (recentSuccess ? 30 : 0);
       return { provider, score };
     });
@@ -387,7 +389,9 @@ class CognitiveKernel {
 
     const bestSequence = [
       evaluation.bestProvider,
-      ...context.providers.filter((p: string) => p !== evaluation.bestProvider).slice(0, 2),
+      ...context.providers
+        .filter((p: string) => p !== evaluation.bestProvider)
+        .slice(0, 2),
     ];
 
     return {
@@ -428,7 +432,10 @@ class CognitiveKernel {
   /**
    * Déterminer la raison du choix
    */
-  private determineReason(provider: string, projection: CognitiveProcess['projection']): string {
+  private determineReason(
+    provider: string,
+    projection: CognitiveProcess['projection']
+  ): string {
     if (projection.potentialRisks.length > 0) {
       return 'Sélection conservatrice (risques détectés)';
     }
@@ -441,7 +448,10 @@ class CognitiveKernel {
   /**
    * Calculer le niveau de confiance
    */
-  private calculateConfidence(provider: string, projection: CognitiveProcess['projection']): number {
+  private calculateConfidence(
+    provider: string,
+    projection: CognitiveProcess['projection']
+  ): number {
     const health = this.environmentState.providerHealth.get(provider) || 50;
     const riskPenalty = projection.potentialRisks.length * 10;
     return Math.max(0, Math.min(100, health - riskPenalty));
@@ -470,7 +480,8 @@ class CognitiveKernel {
    * Calculer le score de cohérence
    */
   private calculateCoherenceScore(): number {
-    const principleScore = Object.values(this.principles).reduce((sum, val) => sum + val, 0) / 6;
+    const principleScore =
+      Object.values(this.principles).reduce((sum, val) => sum + val, 0) / 6;
     const environmentScore = this.environmentState.chatStability;
     return (principleScore + environmentScore) / 2;
   }
@@ -485,7 +496,7 @@ class CognitiveKernel {
    * Harmoniser les messages du chat
    */
   harmonizeChatMessages(messages: any[]): any[] {
-    return messages.map((msg) => ({
+    return messages.map(msg => ({
       ...msg,
       // Structure uniforme
       role: msg.role || 'user',
@@ -560,7 +571,7 @@ class CognitiveKernel {
       return 'Impossible de se connecter au service';
     }
     if (message.includes('401') || message.includes('403')) {
-      return 'Erreur d\'authentification (vérifier clé API)';
+      return "Erreur d'authentification (vérifier clé API)";
     }
     if (message.includes('429')) {
       return 'Limite de taux atteinte (réessayer dans quelques instants)';
@@ -598,7 +609,10 @@ class CognitiveKernel {
     const currentHealth = this.environmentState.providerHealth.get(provider) || 50;
     const healthChange = success ? 5 : -10;
     const latencyPenalty = latency > 3000 ? -5 : 0;
-    const newHealth = Math.max(0, Math.min(100, currentHealth + healthChange + latencyPenalty));
+    const newHealth = Math.max(
+      0,
+      Math.min(100, currentHealth + healthChange + latencyPenalty)
+    );
 
     this.environmentState.providerHealth.set(provider, newHealth);
 
@@ -622,9 +636,8 @@ class CognitiveKernel {
 
     // Nettoyer patterns d'erreurs anciens (> 1h)
     const oneHourAgo = Date.now() - 60 * 60 * 1000;
-    this.ephemeralMemory.recentAdaptations = this.ephemeralMemory.recentAdaptations.filter(
-      (a) => a.timestamp > oneHourAgo
-    );
+    this.ephemeralMemory.recentAdaptations =
+      this.ephemeralMemory.recentAdaptations.filter(a => a.timestamp > oneHourAgo);
 
     if (this.ephemeralMemory.recentAdaptations.length < 5) {
       simplifications.push('Nettoyage mémoire adaptations anciennes');
@@ -666,9 +679,9 @@ class CognitiveKernel {
     }
 
     // Vérifier stratégie orchestration
-    const hasHealthyProvider = Array.from(this.environmentState.providerHealth.values()).some(
-      (h) => h > 50
-    );
+    const hasHealthyProvider = Array.from(
+      this.environmentState.providerHealth.values()
+    ).some(h => h > 50);
     if (!hasHealthyProvider) {
       issues.push('Aucun provider en bonne santé');
     }

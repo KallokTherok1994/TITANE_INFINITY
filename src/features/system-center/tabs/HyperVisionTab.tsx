@@ -17,21 +17,31 @@ import type { AnomalySeverity } from '../types/systemCenter.types';
 
 const getSeverityClass = (severity: AnomalySeverity): string => {
   switch (severity) {
-    case 'Critical': return 'sc-anomaly--critical';
-    case 'High': return 'sc-anomaly--high';
-    case 'Medium': return 'sc-anomaly--medium';
-    case 'Low': return 'sc-anomaly--low';
-    default: return '';
+    case 'Critical':
+      return 'sc-anomaly--critical';
+    case 'High':
+      return 'sc-anomaly--high';
+    case 'Medium':
+      return 'sc-anomaly--medium';
+    case 'Low':
+      return 'sc-anomaly--low';
+    default:
+      return '';
   }
 };
 
 const getSeverityIcon = (severity: AnomalySeverity): string => {
   switch (severity) {
-    case 'Critical': return '🔴';
-    case 'High': return '🟠';
-    case 'Medium': return '🟡';
-    case 'Low': return '🟢';
-    default: return '⚪';
+    case 'Critical':
+      return '🔴';
+    case 'High':
+      return '🟠';
+    case 'Medium':
+      return '🟡';
+    case 'Low':
+      return '🟢';
+    default:
+      return '⚪';
   }
 };
 
@@ -66,14 +76,14 @@ export const HyperVisionTab: React.FC = () => {
   } = hvData;
 
   // Active anomalies count
-  const activeAnomalies = useMemo(() =>
-    anomalies.filter(a => !a.auto_resolved).length,
+  const activeAnomalies = useMemo(
+    () => anomalies.filter(a => !a.auto_resolved).length,
     [anomalies]
   );
 
   // Critical anomalies
-  const criticalCount = useMemo(() =>
-    anomalies.filter(a => a.severity === 'Critical' && !a.auto_resolved).length,
+  const criticalCount = useMemo(
+    () => anomalies.filter(a => a.severity === 'Critical' && !a.auto_resolved).length,
     [anomalies]
   );
 
@@ -82,22 +92,18 @@ export const HyperVisionTab: React.FC = () => {
       {/* Control Header */}
       <div className="sc-hv-header">
         <div className="sc-hv-status">
-          <span className={`sc-status-dot ${isMonitoring ? 'sc-status-dot--active' : ''}`} />
+          <span
+            className={`sc-status-dot ${isMonitoring ? 'sc-status-dot--active' : ''}`}
+          />
           <span>{isMonitoring ? 'Monitoring actif' : 'Monitoring inactif'}</span>
         </div>
         <div className="sc-hv-actions">
           {!isMonitoring ? (
-            <button
-              className="sc-btn sc-btn--primary"
-              onClick={startMonitoring}
-            >
+            <button className="sc-btn sc-btn--primary" onClick={startMonitoring}>
               ▶️ Démarrer
             </button>
           ) : (
-            <button
-              className="sc-btn sc-btn--danger"
-              onClick={stopMonitoring}
-            >
+            <button className="sc-btn sc-btn--danger" onClick={stopMonitoring}>
               ⏹️ Arrêter
             </button>
           )}
@@ -178,7 +184,8 @@ export const HyperVisionTab: React.FC = () => {
                   style={{ width: `${metrics.disk_usage}%` }}
                 />
                 <span className="sc-metric-bar-text">
-                  {metrics.disk_used_gb.toFixed(1)} GB / {metrics.disk_total_gb.toFixed(1)} GB
+                  {metrics.disk_used_gb.toFixed(1)} GB /{' '}
+                  {metrics.disk_total_gb.toFixed(1)} GB
                 </span>
               </div>
               <span className="sc-metric-value">{metrics.disk_usage.toFixed(1)}%</span>
@@ -247,7 +254,9 @@ export const HyperVisionTab: React.FC = () => {
                 transition={{ delay: index * 0.05 }}
               >
                 <div className="sc-layer-header">
-                  <span className={`sc-layer-status ${layer.status === 'Healthy' ? 'sc-layer-status--on' : ''}`} />
+                  <span
+                    className={`sc-layer-status ${layer.status === 'Healthy' ? 'sc-layer-status--on' : ''}`}
+                  />
                   <span className="sc-layer-name">{layer.name}</span>
                 </div>
                 <div className="sc-layer-stats">
@@ -274,8 +283,12 @@ export const HyperVisionTab: React.FC = () => {
                 </div>
                 {(layer.errors > 0 || layer.warnings > 0) && (
                   <div className="sc-layer-alerts">
-                    {layer.errors > 0 && <span className="sc-alert sc-alert--error">🔴 {layer.errors}</span>}
-                    {layer.warnings > 0 && <span className="sc-alert sc-alert--warn">🟡 {layer.warnings}</span>}
+                    {layer.errors > 0 && (
+                      <span className="sc-alert sc-alert--error">🔴 {layer.errors}</span>
+                    )}
+                    {layer.warnings > 0 && (
+                      <span className="sc-alert sc-alert--warn">🟡 {layer.warnings}</span>
+                    )}
                   </div>
                 )}
               </motion.div>
@@ -298,7 +311,9 @@ export const HyperVisionTab: React.FC = () => {
               <span className="sc-anomaly-badge">{activeAnomalies}</span>
             )}
             {criticalCount > 0 && (
-              <span className="sc-anomaly-badge sc-anomaly-badge--critical">{criticalCount} critiques</span>
+              <span className="sc-anomaly-badge sc-anomaly-badge--critical">
+                {criticalCount} critiques
+              </span>
             )}
           </h3>
         </div>
@@ -335,7 +350,8 @@ export const HyperVisionTab: React.FC = () => {
                   </span>
                   {anomaly.metric && (
                     <span className="sc-anomaly-metric">
-                      📊 {anomaly.metric}: {anomaly.value?.toFixed(2)} (seuil: {anomaly.threshold})
+                      📊 {anomaly.metric}: {anomaly.value?.toFixed(2)} (seuil:{' '}
+                      {anomaly.threshold})
                     </span>
                   )}
                 </div>
@@ -350,7 +366,9 @@ export const HyperVisionTab: React.FC = () => {
         <div className="sc-empty-state sc-empty-state--large">
           <span className="sc-empty-icon">👁️</span>
           <p>HyperVision désactivé</p>
-          <p className="sc-empty-hint">Démarrez le monitoring pour surveiller le système en temps réel</p>
+          <p className="sc-empty-hint">
+            Démarrez le monitoring pour surveiller le système en temps réel
+          </p>
         </div>
       )}
     </div>

@@ -11,37 +11,37 @@
 //! - Anticipation et prédiction
 //! - Alignement long terme
 
-pub mod time_model;
-pub mod temporal_memory;
-pub mod routines;
-pub mod planner;
 pub mod anticipator;
-pub mod long_term_alignment;
-pub mod temporal_metrics;
-pub mod temporal_events;
-pub mod diagnostics;
 pub mod config;
+pub mod diagnostics;
 pub mod integrations;
+pub mod long_term_alignment;
+pub mod planner;
+pub mod routines;
+pub mod temporal_events;
+pub mod temporal_memory;
+pub mod temporal_metrics;
+pub mod time_model;
 
-pub use time_model::{TimeModel, TemporalContext, TimeScale, Moment};
-pub use temporal_memory::{TemporalMemory, TemporalTrace, MemoryDecay};
-pub use routines::{RoutineEngine, Routine, RoutinePattern, RoutineTrigger};
-pub use planner::{TemporalPlanner, Plan, Task, TaskPriority, PlanningHorizon};
 pub use anticipator::{Anticipator, Prediction, PredictionConfidence};
-pub use long_term_alignment::{LongTermAligner, Goal, Milestone, AlignmentScore};
-pub use temporal_metrics::{TemporalMetrics, TemporalHealth};
-pub use temporal_events::{TemporalEvent, TemporalEventType};
-pub use diagnostics::TemporalDiagnostics;
 pub use config::TemporalConfig;
+pub use diagnostics::TemporalDiagnostics;
+pub use long_term_alignment::{AlignmentScore, Goal, LongTermAligner, Milestone};
+pub use planner::{Plan, PlanningHorizon, Task, TaskPriority, TemporalPlanner};
+pub use routines::{Routine, RoutineEngine, RoutinePattern, RoutineTrigger};
+pub use temporal_events::{TemporalEvent, TemporalEventType};
+pub use temporal_memory::{MemoryDecay, TemporalMemory, TemporalTrace};
+pub use temporal_metrics::{TemporalHealth, TemporalMetrics};
+pub use time_model::{Moment, TemporalContext, TimeModel, TimeScale};
 
 // Exposer les intégrations système
 pub use integrations::{
-    IntegrationConfig,
-    TemporalKernelBridge, SchedulerAdjustments, ResourceLimits, MaintenanceAdvice,
-    TemporalOmegaBridge, OmegaTemporalAdjustments, RoutingStrategy,
-    TemporalMemoryBridge, MemoryTemporalAdjustments, PreloadingStrategy, ConsolidationRecommendation,
-    TemporalAgiBridge, AgiTemporalAdjustments, HeuristicTuningStrategy, AlignmentRecommendation,
-    TemporalConversationBridge, ConversationTemporalAdjustments, ConversationTone, TemporalNarrative,
+    AgiTemporalAdjustments, AlignmentRecommendation, ConsolidationRecommendation,
+    ConversationTemporalAdjustments, ConversationTone, HeuristicTuningStrategy, IntegrationConfig,
+    MaintenanceAdvice, MemoryTemporalAdjustments, OmegaTemporalAdjustments, PreloadingStrategy,
+    ResourceLimits, RoutingStrategy, SchedulerAdjustments, TemporalAgiBridge,
+    TemporalConversationBridge, TemporalKernelBridge, TemporalMemoryBridge, TemporalNarrative,
+    TemporalOmegaBridge,
 };
 
 use serde::{Deserialize, Serialize};
@@ -109,10 +109,12 @@ impl TemporalIntelligenceEngine {
         state.current_moment = context.now.clone();
         state.cognitive_rhythm_phase = self.detect_rhythm_phase(&context);
 
-        self.diagnostics.emit(TemporalEvent::new(
-            TemporalEventType::EngineInitialized,
-            "Temporal Intelligence Engine initialized".to_string(),
-        )).await;
+        self.diagnostics
+            .emit(TemporalEvent::new(
+                TemporalEventType::EngineInitialized,
+                "Temporal Intelligence Engine initialized".to_string(),
+            ))
+            .await;
 
         Ok(())
     }
@@ -132,7 +134,10 @@ impl TemporalIntelligenceEngine {
         let tasks_status = self.planner.update(&context).await;
 
         // 4. Générer des anticipations
-        let predictions = self.anticipator.predict(&context, &self.temporal_memory).await;
+        let predictions = self
+            .anticipator
+            .predict(&context, &self.temporal_memory)
+            .await;
 
         // 5. Vérifier l'alignement long terme
         let alignment = self.long_term_aligner.check_alignment(&context).await;
@@ -147,7 +152,9 @@ impl TemporalIntelligenceEngine {
         state.cognitive_rhythm_phase = self.detect_rhythm_phase(&context);
 
         // 7. Métriques
-        self.metrics.record_tick(start.elapsed().as_millis() as u64).await;
+        self.metrics
+            .record_tick(start.elapsed().as_millis() as u64)
+            .await;
 
         Ok(TickResult {
             triggered_routines,
@@ -162,10 +169,12 @@ impl TemporalIntelligenceEngine {
     pub async fn record_trace(&mut self, trace: TemporalTrace) -> Result<(), TemporalError> {
         self.temporal_memory.record(trace.clone()).await;
 
-        self.diagnostics.emit(TemporalEvent::new(
-            TemporalEventType::TraceRecorded,
-            format!("Recorded trace: {}", trace.event_type),
-        )).await;
+        self.diagnostics
+            .emit(TemporalEvent::new(
+                TemporalEventType::TraceRecorded,
+                format!("Recorded trace: {}", trace.event_type),
+            ))
+            .await;
 
         Ok(())
     }
@@ -194,7 +203,9 @@ impl TemporalIntelligenceEngine {
     /// Obtient des prédictions pour un horizon donné
     pub async fn predict(&self, horizon: PlanningHorizon) -> Vec<Prediction> {
         let context = self.time_model.current_context().await;
-        self.anticipator.predict_horizon(&context, &self.temporal_memory, horizon).await
+        self.anticipator
+            .predict_horizon(&context, &self.temporal_memory, horizon)
+            .await
     }
 
     /// Récupère le contexte temporel actuel

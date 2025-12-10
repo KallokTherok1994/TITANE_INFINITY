@@ -1,15 +1,18 @@
 # TITANE_INFINITY — Instructions Globales
 
 ## Vision
+
 Assistant IA local-first, privacy-first, cognitif.
 
 ## Stack
+
 - React 18 + Vite 6 + TypeScript
 - Tauri v2 + Rust async
 - Zustand state
 - Vitest + cargo test
 
 ## Architecture 9 Moteurs
+
 1. Orchestrator
 2. Style Engine
 3. CoherenceEngine
@@ -25,12 +28,14 @@ Assistant IA local-first, privacy-first, cognitif.
 ## Conventions
 
 ### Rust
+
 - async/await obligatoire
 - Result<T, E>
 - ZERO unwrap()
 - Tests unitaires
 
 ### TypeScript
+
 - Strict mode
 - Types explicites
 - ZERO any
@@ -38,9 +43,11 @@ Assistant IA local-first, privacy-first, cognitif.
 - Composants purs
 
 ## Communication
+
 IPC Tauri uniquement.
 
 ## Commits
+
 ```
 <type>(<scope>): <desc>
 

@@ -10,7 +10,9 @@ pub struct TemporalConversationBridge;
 
 impl TemporalConversationBridge {
     /// Obtient les ajustements conversationnels selon le contexte temporel
-    pub fn get_conversation_adjustments(context: &TemporalContext) -> ConversationTemporalAdjustments {
+    pub fn get_conversation_adjustments(
+        context: &TemporalContext,
+    ) -> ConversationTemporalAdjustments {
         let hour = context.now.hour;
         let is_weekend = context.now.is_weekend;
         let season = &context.now.season;
@@ -44,9 +46,9 @@ impl TemporalConversationBridge {
     /// Niveau de verbosité
     fn calculate_verbosity(hour: u8) -> f32 {
         match hour {
-            10..=11 => 0.7,   // Peak: moderate detail
-            12..=13 => 0.4,   // Midday: concise
-            22..=23 | 0..=5 => 0.5,    // Night: moderate
+            10..=11 => 0.7,         // Peak: moderate detail
+            12..=13 => 0.4,         // Midday: concise
+            22..=23 | 0..=5 => 0.5, // Night: moderate
             _ => 0.6,
         }
     }
@@ -54,9 +56,9 @@ impl TemporalConversationBridge {
     /// Niveau de formalité
     fn calculate_formality(hour: u8, is_weekend: bool) -> f32 {
         let base = match hour {
-            9..=17 => 0.7,    // Work hours: formal
-            18..=21 => 0.4,   // Evening: casual
-            22..=23 | 0..=5 => 0.3,    // Night: very casual
+            9..=17 => 0.7,          // Work hours: formal
+            18..=21 => 0.4,         // Evening: casual
+            22..=23 | 0..=5 => 0.3, // Night: very casual
             _ => 0.5,
         };
 
@@ -80,8 +82,8 @@ impl TemporalConversationBridge {
     /// Profondeur de rappel contextuel
     fn calculate_recall_depth(hour: u8) -> usize {
         match hour {
-            10..=11 => 10,    // Peak: deep context
-            22..=23 | 0..=5 => 3,      // Night: shallow
+            10..=11 => 10,        // Peak: deep context
+            22..=23 | 0..=5 => 3, // Night: shallow
             _ => 6,
         }
     }
@@ -105,11 +107,11 @@ impl TemporalConversationBridge {
     /// Conscience temporelle dans les réponses
     fn calculate_temporal_awareness(context: &TemporalContext) -> f32 {
         let hour = context.now.hour;
-        
+
         match hour {
-            6..=9 => 0.8,     // Morning: high awareness ("good morning", time-based suggestions)
-            22..=23 => 0.7,   // Night: moderate ("late evening", rest suggestions)
-            _ => 0.4,         // Default: subtle
+            6..=9 => 0.8,   // Morning: high awareness ("good morning", time-based suggestions)
+            22..=23 => 0.7, // Night: moderate ("late evening", rest suggestions)
+            _ => 0.4,       // Default: subtle
         }
     }
 

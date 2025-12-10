@@ -80,7 +80,10 @@ interface PromptEngineActions {
   deleteChain: (id: string) => void;
 
   // Compilation
-  compilePrompt: (promptId: string, context: PromptContext) => Promise<CompiledPrompt | null>;
+  compilePrompt: (
+    promptId: string,
+    context: PromptContext
+  ) => Promise<CompiledPrompt | null>;
   clearCompiled: () => void;
 
   // Context
@@ -138,21 +141,22 @@ export const usePromptEngineStore = create<PromptEngineStore>()(
 
         // ========== Initialization ==========
         initialize: async () => {
-          set((state) => {
+          set(state => {
             state.isLoading = true;
             state.error = null;
           });
 
           try {
-            set((state) => {
+            set(state => {
               state.isInitialized = true;
               state.isLoading = false;
             });
             get().updateStats();
           } catch (error) {
-            set((state) => {
+            set(state => {
               state.isLoading = false;
-              state.error = error instanceof Error ? error.message : 'Erreur d\'initialisation';
+              state.error =
+                error instanceof Error ? error.message : "Erreur d'initialisation";
             });
           }
         },
@@ -162,7 +166,7 @@ export const usePromptEngineStore = create<PromptEngineStore>()(
         },
 
         // ========== Prompts CRUD ==========
-        addPrompt: (promptData) => {
+        addPrompt: promptData => {
           const id = `prompt_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
           const now = Date.now();
 
@@ -173,7 +177,7 @@ export const usePromptEngineStore = create<PromptEngineStore>()(
             updatedAt: now,
           };
 
-          set((state) => {
+          set(state => {
             state.prompts.push(newPrompt);
           });
 
@@ -181,13 +185,13 @@ export const usePromptEngineStore = create<PromptEngineStore>()(
           return id;
         },
 
-        getPrompt: (id) => {
-          return get().prompts.find((p) => p.id === id);
+        getPrompt: id => {
+          return get().prompts.find(p => p.id === id);
         },
 
         updatePrompt: (id, updates) => {
-          set((state) => {
-            const index = state.prompts.findIndex((p) => p.id === id);
+          set(state => {
+            const index = state.prompts.findIndex(p => p.id === id);
             if (index !== -1) {
               state.prompts[index] = {
                 ...state.prompts[index],
@@ -199,15 +203,15 @@ export const usePromptEngineStore = create<PromptEngineStore>()(
           get().updateStats();
         },
 
-        deletePrompt: (id) => {
-          set((state) => {
-            state.prompts = state.prompts.filter((p) => p.id !== id);
+        deletePrompt: id => {
+          set(state => {
+            state.prompts = state.prompts.filter(p => p.id !== id);
           });
           get().updateStats();
         },
 
-        getPromptsByCategory: (category) => {
-          return get().prompts.filter((p) => p.category === category);
+        getPromptsByCategory: category => {
+          return get().prompts.filter(p => p.category === category);
         },
 
         // ========== Chains ==========
@@ -226,7 +230,7 @@ export const usePromptEngineStore = create<PromptEngineStore>()(
             updatedAt: now,
           };
 
-          set((state) => {
+          set(state => {
             state.chains.push(chain);
           });
 
@@ -234,13 +238,13 @@ export const usePromptEngineStore = create<PromptEngineStore>()(
           return id;
         },
 
-        getChain: (id) => {
-          return get().chains.find((c) => c.id === id);
+        getChain: id => {
+          return get().chains.find(c => c.id === id);
         },
 
-        deleteChain: (id) => {
-          set((state) => {
-            state.chains = state.chains.filter((c) => c.id !== id);
+        deleteChain: id => {
+          set(state => {
+            state.chains = state.chains.filter(c => c.id !== id);
           });
           get().updateStats();
         },
@@ -250,7 +254,7 @@ export const usePromptEngineStore = create<PromptEngineStore>()(
           const prompt = get().getPrompt(promptId);
           if (!prompt) return null;
 
-          set((state) => {
+          set(state => {
             state.isCompiling = true;
           });
 
@@ -277,7 +281,7 @@ export const usePromptEngineStore = create<PromptEngineStore>()(
               tokenCount: Math.ceil(compiled.length / 4),
             };
 
-            set((state) => {
+            set(state => {
               state.compiledPrompts.set(promptId, compiledPrompt);
               state.isCompiling = false;
               state.stats.compilationsCount += 1;
@@ -285,29 +289,30 @@ export const usePromptEngineStore = create<PromptEngineStore>()(
 
             return compiledPrompt;
           } catch (error) {
-            set((state) => {
+            set(state => {
               state.isCompiling = false;
-              state.error = error instanceof Error ? error.message : 'Erreur de compilation';
+              state.error =
+                error instanceof Error ? error.message : 'Erreur de compilation';
             });
             return null;
           }
         },
 
         clearCompiled: () => {
-          set((state) => {
+          set(state => {
             state.compiledPrompts.clear();
           });
         },
 
         // ========== Context ==========
-        setContext: (context) => {
-          set((state) => {
+        setContext: context => {
+          set(state => {
             state.activeContext = context;
           });
         },
 
         clearContext: () => {
-          set((state) => {
+          set(state => {
             state.activeContext = null;
           });
         },
@@ -325,11 +330,11 @@ export const usePromptEngineStore = create<PromptEngineStore>()(
             safety: 0,
           };
 
-          prompts.forEach((p) => {
+          prompts.forEach(p => {
             byCategory[p.category]++;
           });
 
-          set((state) => {
+          set(state => {
             state.stats = {
               ...state.stats,
               totalPrompts: prompts.length,
@@ -340,8 +345,8 @@ export const usePromptEngineStore = create<PromptEngineStore>()(
         },
 
         // ========== Error Handling ==========
-        setError: (error) => {
-          set((state) => {
+        setError: error => {
+          set(state => {
             state.error = error;
           });
         },

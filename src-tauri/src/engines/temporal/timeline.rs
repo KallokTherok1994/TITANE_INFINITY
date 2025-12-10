@@ -193,7 +193,10 @@ impl TimelinePosition {
 
     /// Position au début
     pub fn start() -> Self {
-        Self { index: 0, timestamp: 0 }
+        Self {
+            index: 0,
+            timestamp: 0,
+        }
     }
 }
 

@@ -1,3 +1,4 @@
+use chrono::Utc;
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
  * TITANE∞ v∞.MPE-Ω — TITAN MEMORY DOCTOR
@@ -5,18 +6,16 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * ═══════════════════════════════════════════════════════════════════════════════
  */
-
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
-use chrono::Utc;
 
 use super::{
-    PERSISTENCE_ENGINE,
-    memory_health::{MemoryHealthEngine, MemoryHealth, SelfHealingReport, IssueSeverity},
-    invariants::{InvariantsEngine, ValidationMode},
-    migrations::{MigrationEngine, CURRENT_SCHEMA_VERSION},
     backup::BackupEngine,
+    invariants::{InvariantsEngine, ValidationMode},
+    memory_health::{IssueSeverity, MemoryHealth, MemoryHealthEngine, SelfHealingReport},
+    migrations::{MigrationEngine, CURRENT_SCHEMA_VERSION},
     types::CompactionReport,
+    PERSISTENCE_ENGINE,
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -200,7 +199,9 @@ impl MemoryDoctor {
 
         log::info!(
             "[MemoryDoctor] ✅ Diagnostic terminé en {}ms - Score: {}/100 - Status: {:?}",
-            duration_ms, score, overall_status
+            duration_ms,
+            score,
+            overall_status
         );
 
         DoctorReport {
@@ -442,7 +443,10 @@ impl MemoryDoctor {
                 id: "storage_journal_huge".to_string(),
                 category: "storage".to_string(),
                 severity: "critical".to_string(),
-                message: format!("Journal trop volumineux: {}MB", storage.journal_size_bytes / 1024 / 1024),
+                message: format!(
+                    "Journal trop volumineux: {}MB",
+                    storage.journal_size_bytes / 1024 / 1024
+                ),
                 auto_fixable: true,
                 fix_action: Some("titan_compact_journal".to_string()),
             });
@@ -451,7 +455,10 @@ impl MemoryDoctor {
                 id: "storage_journal_large".to_string(),
                 category: "storage".to_string(),
                 severity: "warning".to_string(),
-                message: format!("Journal volumineux: {}MB", storage.journal_size_bytes / 1024 / 1024),
+                message: format!(
+                    "Journal volumineux: {}MB",
+                    storage.journal_size_bytes / 1024 / 1024
+                ),
                 auto_fixable: true,
                 fix_action: Some("titan_compact_journal".to_string()),
             });
@@ -626,7 +633,12 @@ impl MemoryDoctor {
                         name: format!("Fix: {}", issue.id),
                         description: issue.message.clone(),
                         command: fix_cmd.clone(),
-                        risk_level: if issue.severity == "critical" { "medium" } else { "low" }.to_string(),
+                        risk_level: if issue.severity == "critical" {
+                            "medium"
+                        } else {
+                            "low"
+                        }
+                        .to_string(),
                     });
                 }
             }
@@ -655,7 +667,11 @@ impl MemoryDoctor {
 
         use std::path::Path;
         let path_buf = Path::new(path);
-        let desc = if description.is_empty() { None } else { Some(description.to_string()) };
+        let desc = if description.is_empty() {
+            None
+        } else {
+            Some(description.to_string())
+        };
 
         self.backup_engine
             .export(path_buf, desc)
@@ -687,10 +703,14 @@ impl MemoryDoctor {
             "║  Durée: {}ms                                                     ║",
             report.duration_ms
         ));
-        lines.push("╠══════════════════════════════════════════════════════════════════════╣".to_string());
+        lines.push(
+            "╠══════════════════════════════════════════════════════════════════════╣".to_string(),
+        );
 
         // Storage
-        lines.push("║  📦 STOCKAGE                                                         ║".to_string());
+        lines.push(
+            "║  📦 STOCKAGE                                                         ║".to_string(),
+        );
         lines.push(format!(
             "║    Journal: {} événements ({} KB)                              ║",
             report.storage.events_count,
@@ -703,34 +723,58 @@ impl MemoryDoctor {
         ));
 
         // Schema
-        lines.push("║  📐 SCHÉMA                                                           ║".to_string());
+        lines.push(
+            "║  📐 SCHÉMA                                                           ║".to_string(),
+        );
         lines.push(format!(
             "║    Version: v{} → v{} {}                                    ║",
             report.schema.state_version,
             report.schema.current_version,
-            if report.schema.needs_migration { "(migration requise)" } else { "✓" }
+            if report.schema.needs_migration {
+                "(migration requise)"
+            } else {
+                "✓"
+            }
         ));
 
         // Issues
         if !report.critical_issues.is_empty() || !report.warnings.is_empty() {
-            lines.push("║  ⚠️  PROBLÈMES                                                       ║".to_string());
+            lines.push(
+                "║  ⚠️  PROBLÈMES                                                       ║"
+                    .to_string(),
+            );
             for issue in &report.critical_issues {
-                lines.push(format!("║    🔴 {}: {}                                ║", issue.category, issue.message));
+                lines.push(format!(
+                    "║    🔴 {}: {}                                ║",
+                    issue.category, issue.message
+                ));
             }
             for issue in &report.warnings {
-                lines.push(format!("║    ⚠️  {}: {}                                ║", issue.category, issue.message));
+                lines.push(format!(
+                    "║    ⚠️  {}: {}                                ║",
+                    issue.category, issue.message
+                ));
             }
         }
 
         // Suggestions
         if !report.suggestions.is_empty() {
-            lines.push("║  💡 SUGGESTIONS                                                      ║".to_string());
+            lines.push(
+                "║  💡 SUGGESTIONS                                                      ║"
+                    .to_string(),
+            );
             for (i, sug) in report.suggestions.iter().take(3).enumerate() {
-                lines.push(format!("║    {}. {}                                    ║", i + 1, sug));
+                lines.push(format!(
+                    "║    {}. {}                                    ║",
+                    i + 1,
+                    sug
+                ));
             }
         }
 
-        lines.push("╚══════════════════════════════════════════════════════════════════════╝".to_string());
+        lines.push(
+            "╚══════════════════════════════════════════════════════════════════════╝".to_string(),
+        );
 
         lines.join("\n")
     }

@@ -119,17 +119,16 @@ impl SelfHealEngine {
         actions.dedup();
 
         // Enregistrer le nombre d'actions
-        self.actions_count.fetch_add(
-            actions.len() as u32,
-            std::sync::atomic::Ordering::Relaxed,
-        );
+        self.actions_count
+            .fetch_add(actions.len() as u32, std::sync::atomic::Ordering::Relaxed);
 
         actions
     }
 
     /// Retourne le nombre total d'actions exécutées
     pub fn total_actions(&self) -> u32 {
-        self.actions_count.load(std::sync::atomic::Ordering::Relaxed)
+        self.actions_count
+            .load(std::sync::atomic::Ordering::Relaxed)
     }
 
     /// Active le mode agressif

@@ -22,6 +22,11 @@ import VisualSemanticGrammar, {
   PhenomenonType,
 } from './VisualSemanticGrammar';
 import type { TitaneVisualEngineV21 } from '../TitaneVisualEngineV21';
+import {
+  VISUAL_EVENTS,
+  getEvent,
+  type VisualEvent,
+} from '../orchestrators/VisualEventModel';
 
 // ═════════════════════════════════════════════════════════════════
 // TYPES — ÉVÉNEMENTS OS
@@ -307,51 +312,160 @@ export class VisualConductor extends EventEmitter {
   private async applyPhenomenonToEngine(phenomenon: VisualPhenomenon): Promise<void> {
     if (!this.visualEngine) return;
 
-    const { type, intensity, config } = phenomenon;
+    const { type } = phenomenon;
 
-    // Mapping phénomène → méthodes Visual Engine
-    // TODO: À implémenter selon l'API de TitaneVisualEngineV21
-
-    switch (type) {
-      case PhenomenonType.CORE_SIGNATURE:
-        // Signature permanente
-        // this.visualEngine.setCoreSignature(config);
-        break;
-
-      case PhenomenonType.CORE_PULSE:
-        // Pulsation du noyau
-        // this.visualEngine.triggerCorePulse(intensity, config);
-        break;
-
-      case PhenomenonType.ORBITAL_RING_ACTIVATION:
-        // Activation anneaux orbitaux
-        // this.visualEngine.setOrbitalRings(config);
-        break;
-
-      case PhenomenonType.PARTICLE_BURST:
-        // Burst de particules
-        // this.visualEngine.triggerParticleBurst(intensity, config);
-        break;
-
-      case PhenomenonType.ENERGY_ARCS:
-        // Arcs énergétiques
-        // this.visualEngine.activateEnergyArcs(config);
-        break;
-
-      case PhenomenonType.HEALING_WAVES:
-        // Vagues de guérison
-        // this.visualEngine.triggerHealingWaves(config);
-        break;
-
-      case PhenomenonType.GLITCH_EFFECT:
-        // Effet glitch
-        // this.visualEngine.triggerGlitch(intensity, config);
-        break;
-
-      // ... autres types
+    // ✨ v21 POLISH — Try to match with VisualEventModel first
+    const visualEvent = getEvent(type);
+    if (visualEvent) {
+      this.log(`Matched phenomenon to VisualEvent: ${visualEvent.name}`);
+      // Apply visual event effects
+      await this.applyVisualEvent(visualEvent);
+      return;
     }
 
-    this.log(`Applied phenomenon to engine: ${type}`);
+    // Fallback to legacy phenomenon handling
+    switch (type) {
+      case 'pulse':
+      case 'breathe':
+      case 'glow_pulse':
+        // Handled by Identity Pulse system
+        this.log('Pulse phenomenon delegated to Identity Pulse');
+        break;
+
+      case 'particle_burst':
+      case 'energy_arc':
+        // Handled by Particle Signature system
+        this.log('Particle phenomenon delegated to Particle Signature');
+        break;
+
+      case 'orbital_shift':
+      case 'vortex':
+        // Handled by Orbital Signature system
+        this.log('Orbital phenomenon delegated to Orbital Signature');
+        break;
+
+      case 'color_shift': {
+        // Apply color shift to visual engine
+        const colors = phenomenon.config?.colors;
+        if (colors && Array.isArray(colors)) {
+          this.visualEngine.emit('color_shift', { colors });
+        }
+        break;
+      }
+
+      case 'glitch':
+        // Trigger glitch effect
+        this.visualEngine.emit('glitch', phenomenon.config);
+        break;
+
+      case 'ripple':
+        // Trigger ripple effect
+        this.visualEngine.emit('ripple', phenomenon.config);
+        break;
+
+      case 'healing_wave':
+        // Trigger healing wave effect
+        this.visualEngine.emit('healing_wave', phenomenon.config);
+        break;
+
+      default:
+        this.log(`Unknown phenomenon type: ${type}`);
+    }
+  }
+
+  /**
+   * ✨ v21 POLISH — Apply VisualEvent from Event Model
+   */
+  private async applyVisualEvent(event: VisualEvent): Promise<void> {
+    if (!this.visualEngine) return;
+
+    // Check inhibitions (don't activate if inhibited by active phenomena)
+    const inhibited = Array.from(this.activePhenomena.values()).some(active =>
+      event.inhibits?.includes(active.type)
+    );
+
+    if (inhibited) {
+      this.log(`VisualEvent ${event.name} inhibited by active phenomena`);
+      return;
+    }
+
+    // Apply each effect in the event
+    for (const effect of event.effects) {
+      const duration = event.minDuration || 500;
+
+      // Map effect types to visual engine actions
+      switch (effect.type) {
+        case 'pulse':
+        case 'glow':
+          // Identity Pulse handles this
+          this.visualEngine.emit('pulse_intensity', {
+            intensity: effect.intensity || 1.0,
+            duration,
+          });
+          break;
+
+        case 'particle_burst':
+          this.visualEngine.emit('particle_burst', {
+            count: 20,
+            duration,
+          });
+          break;
+
+        case 'energy_arc':
+          this.visualEngine.emit('energy_arc', {
+            intensity: effect.intensity || 0.8,
+            duration,
+          });
+          break;
+
+        case 'orbital_shift':
+          this.visualEngine.emit('orbital_shift', {
+            phaseMode: effect.pattern || 'fibonacci',
+            duration,
+          });
+          break;
+
+        case 'color_shift':
+          if (effect.colors && effect.colors.length > 0) {
+            this.visualEngine.emit('color_shift', {
+              colors: effect.colors,
+              duration,
+            });
+          }
+          break;
+
+        case 'glitch':
+          this.visualEngine.emit('glitch', { duration });
+          break;
+
+        case 'healing_wave':
+          this.visualEngine.emit('healing_wave', {
+            intensity: effect.intensity || 0.7,
+            duration,
+          });
+          break;
+
+        case 'ripple':
+          this.visualEngine.emit('ripple', { duration });
+          break;
+
+        case 'trail':
+          this.visualEngine.emit('trail_enable', {
+            length: 8,
+            duration,
+          });
+          break;
+
+        case 'vortex':
+          this.visualEngine.emit('vortex', {
+            intensity: effect.intensity || 0.8,
+            duration,
+          });
+          break;
+      }
+    }
+
+    this.log(`Applied VisualEvent: ${event.name} (${event.effects.length} effects)`);
   }
 
   // ─────────────────────────────────────────────────────────────
@@ -387,10 +501,10 @@ export class VisualConductor extends EventEmitter {
     let lowestPriority = Infinity;
     let lowestId: string | null = null;
 
-    for (const [id, phenomenon] of this.activePhenomena) {
+    for (const [_id, phenomenon] of this.activePhenomena) {
       if (phenomenon.priority < lowestPriority) {
         lowestPriority = phenomenon.priority;
-        lowestId = id;
+        lowestId = _id;
       }
     }
 

@@ -37,29 +37,29 @@ const MENU_SECTIONS: MenuSection[] = [
     id: 'dashboard',
     icon: '📊',
     label: 'Tableau de bord',
-    description: 'Vue d\'ensemble du système',
-    route: '/'
+    description: "Vue d'ensemble du système",
+    route: '/',
   },
   {
     id: 'chat',
     icon: '💬',
     label: 'Chat IA',
     description: 'Module central - Intelligence conversationnelle',
-    route: '/chat'
+    route: '/chat',
   },
   {
     id: 'agenda',
     icon: '📅',
     label: 'Agenda',
     description: 'Temps, énergie, planning intelligent',
-    route: '/agenda'
+    route: '/agenda',
   },
   {
     id: 'camera',
     icon: '📷',
     label: 'Vision',
     description: 'Analyse visuelle et reconnaissance',
-    route: '/camera'
+    route: '/camera',
   },
   // ═══ CENTRES UNIFIÉS ═══
   {
@@ -67,49 +67,49 @@ const MENU_SECTIONS: MenuSection[] = [
     icon: '🎯',
     label: 'ONE CORE',
     description: 'Centre de commande unifié',
-    route: '/one-core'
+    route: '/one-core',
   },
   {
     id: 'system',
     icon: '⚙️',
     label: 'Centre Système',
     description: 'Performances, diagnostics, monitoring',
-    route: '/system-center'
+    route: '/system-center',
   },
   {
     id: 'audio',
     icon: '🔊',
     label: 'Audio & Voix',
     description: 'TTS, reconnaissance vocale, synthèse',
-    route: '/audio-center'
+    route: '/audio-center',
   },
   {
     id: 'design',
     icon: '🎨',
     label: 'Design & Apparence',
     description: 'Thèmes, tokens, personnalisation',
-    route: '/design-center'
+    route: '/design-center',
   },
   {
     id: 'governance',
     icon: '🛡️',
     label: 'Gouvernance',
     description: 'Sécurité, auto-heal, watchdog',
-    route: '/governance-center'
+    route: '/governance-center',
   },
   {
     id: 'qa',
     icon: '🧪',
     label: 'QA & Monitoring',
     description: 'Tests, qualité, métriques',
-    route: '/qa-monitoring'
+    route: '/qa-monitoring',
   },
   {
     id: 'developer',
     icon: '💻',
     label: 'Mode Développeur',
     description: 'Terminal, debug, commandes système',
-    route: '/developer-mode'
+    route: '/developer-mode',
   },
   // ═══ CENTRES COGNITIFS ═══
   {
@@ -117,32 +117,37 @@ const MENU_SECTIONS: MenuSection[] = [
     icon: '🧬',
     label: 'Évolution Cognitive',
     description: 'Apprentissage, adaptation, XP',
-    route: '/evolution-center'
+    route: '/evolution-center',
   },
   {
     id: 'orchestration',
     icon: '🎛️',
     label: 'Orchestration',
     description: 'Multi-IA, coordination agents',
-    route: '/orchestration-center'
+    route: '/orchestration-center',
   },
   {
     id: 'meta',
     icon: '🌐',
     label: 'Meta Orchestrator',
     description: 'Méta-cognition, supervision globale',
-    route: '/meta-center'
+    route: '/meta-center',
   },
   {
     id: 'memory',
     icon: '💾',
     label: 'Mémoire Évolutive',
     description: 'Historique, contexte, souvenirs',
-    route: '/memory-evolution'
-  }
+    route: '/memory-evolution',
+  },
 ];
 
-export const Menu: React.FC<MenuProps> = ({ isCollapsed, onToggle, currentRoute, onNavigate }) => {
+export const Menu: React.FC<MenuProps> = ({
+  isCollapsed,
+  onToggle,
+  currentRoute,
+  onNavigate,
+}) => {
   const handleSectionClick = (section: MenuSection) => {
     onNavigate(section.route);
   };
@@ -169,7 +174,7 @@ export const Menu: React.FC<MenuProps> = ({ isCollapsed, onToggle, currentRoute,
 
       {/* Sections de navigation */}
       <div className="menu-sections">
-        {MENU_SECTIONS.map((section) => (
+        {MENU_SECTIONS.map(section => (
           <button
             key={section.id}
             className={`menu-item ${currentRoute === section.route ? 'active' : ''}`}

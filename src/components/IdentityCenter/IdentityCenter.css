@@ -31,7 +31,11 @@
   height: 100%;
   background: var(--identity-bg);
   color: var(--identity-text);
-  font-family: 'Inter', 'SF Pro Display', -apple-system, sans-serif;
+  font-family:
+    'Inter',
+    'SF Pro Display',
+    -apple-system,
+    sans-serif;
   overflow: hidden;
 }
 
@@ -61,7 +65,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -108,8 +114,13 @@
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -754,7 +765,7 @@
   color: var(--identity-text-muted);
 }
 
-.dimension input[type="range"] {
+.dimension input[type='range'] {
   flex: 1;
   height: 6px;
   background: var(--identity-border);
@@ -762,7 +773,7 @@
   -webkit-appearance: none;
 }
 
-.dimension input[type="range"]::-webkit-slider-thumb {
+.dimension input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 14px;
   height: 14px;

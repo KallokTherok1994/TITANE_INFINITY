@@ -102,8 +102,16 @@ export const NarrativeBridgeV22 = {
   getArchetype: (): NarrativeArchetype => state.archetype || defaultArchetype,
   getAvailableArchetypes: (): NarrativeArchetype[] => [
     defaultArchetype,
-    { name: 'Creator', description: 'The innovative maker', traits: ['creativity', 'vision', 'passion'] },
-    { name: 'Caregiver', description: 'The nurturing helper', traits: ['empathy', 'compassion', 'support'] },
+    {
+      name: 'Creator',
+      description: 'The innovative maker',
+      traits: ['creativity', 'vision', 'passion'],
+    },
+    {
+      name: 'Caregiver',
+      description: 'The nurturing helper',
+      traits: ['empathy', 'compassion', 'support'],
+    },
   ],
   getAvailableStyles: (): StyleProfile[] => [
     { name: 'balanced', formality: 0.5, creativity: 0.5 },

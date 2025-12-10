@@ -37,5 +37,5 @@ export type {
   RiskLevel,
   SuggestionStatus,
   ActionResult,
-  GovernanceRole
+  GovernanceRole,
 } from '../../services/evolutionEngine/evolutionEngine.config';

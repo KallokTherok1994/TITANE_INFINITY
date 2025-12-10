@@ -30,19 +30,21 @@ export const Switch = ({
   className = '',
 }: SwitchProps) => {
   const [internalChecked, setInternalChecked] = useState(defaultChecked);
-  
+
   const isControlled = controlledChecked !== undefined;
   const checked = isControlled ? controlledChecked : internalChecked;
 
   const handleToggle = () => {
-    if (disabled) {return;}
-    
+    if (disabled) {
+      return;
+    }
+
     const newChecked = !checked;
-    
+
     if (!isControlled) {
       setInternalChecked(newChecked);
     }
-    
+
     onChange?.(newChecked);
   };
 
@@ -59,7 +61,9 @@ export const Switch = ({
     checked && 'switch--checked',
     disabled && 'switch--disabled',
     className,
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <label className={classes}>

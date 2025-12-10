@@ -178,7 +178,7 @@ describe('SingularityFusionEngine', () => {
     const input = createFusionInput({ current_state: baseState });
     const result = await engine.executeSingularityCycle(input);
 
-    const calledCommands = mockInvoke.mock.calls.map((call) => call[0]);
+    const calledCommands = mockInvoke.mock.calls.map(call => call[0]);
     expect(calledCommands).not.toContain('fusion_prepare_tts');
     expect(calledCommands).not.toContain('fusion_process_lipsync');
     expect(calledCommands).not.toContain('fusion_animate_avatar');
@@ -222,7 +222,10 @@ describe('SingularityFusionEngine', () => {
       emotion_modulation: 0.5,
     };
 
-    const styles = await (engine as any).step3_AdjustStyles(backendIntention, preferences);
+    const styles = await (engine as any).step3_AdjustStyles(
+      backendIntention,
+      preferences
+    );
 
     expect(styles.narrative_tone).toBe('technical');
     expect(styles.voice_parameters.pitch).toBeCloseTo(0.9);
@@ -244,7 +247,10 @@ describe('SingularityFusionEngine', () => {
   it('returns an empty buffer when TTS preparation fails', async () => {
     mockInvoke.mockRejectedValueOnce(new Error('tts down'));
 
-    const buffer = await (engine as any).step5_PrepareTTS('Voice me', fallbackVoiceParams);
+    const buffer = await (engine as any).step5_PrepareTTS(
+      'Voice me',
+      fallbackVoiceParams
+    );
 
     expect(buffer).toBeInstanceOf(ArrayBuffer);
     expect(buffer.byteLength).toBe(0);
@@ -262,7 +268,10 @@ describe('SingularityFusionEngine', () => {
   it('returns idle animation data when avatar backend fails', async () => {
     mockInvoke.mockRejectedValueOnce(new Error('avatar down'));
 
-    const animation = await (engine as any).step7_AnimateAvatar(backendLipSync, backendStyle);
+    const animation = await (engine as any).step7_AnimateAvatar(
+      backendLipSync,
+      backendStyle
+    );
 
     expect(animation.keyframes).toHaveLength(0);
     expect(animation.duration).toBe(0);
@@ -285,7 +294,7 @@ describe('SingularityFusionEngine', () => {
     const stats = createPipelineStats();
     await (engine as any).step9_AutoOptimize(stats);
 
-    const commands = mockInvoke.mock.calls.map((call) => call[0]);
+    const commands = mockInvoke.mock.calls.map(call => call[0]);
     expect(commands).not.toContain('fusion_auto_optimize');
   });
 
@@ -366,7 +375,9 @@ function applyInvokeResponses(map: InvokeResponseMap) {
   });
 }
 
-type FusionInputOverrides = Partial<Omit<FusionInput, 'preferences' | 'current_state'>> & {
+type FusionInputOverrides = Partial<
+  Omit<FusionInput, 'preferences' | 'current_state'>
+> & {
   preferences?: Partial<UserPreferences>;
   current_state?: SingularityState;
 };
@@ -382,9 +393,8 @@ function createFusionInput(overrides: FusionInputOverrides = {}): FusionInput {
   };
 
   const history: Message[] =
-    overrides.conversation_history ?? (
-      [{ role: 'user', content: 'Hello?', timestamp: Date.now() - 500 }] as Message[]
-    );
+    overrides.conversation_history ??
+    ([{ role: 'user', content: 'Hello?', timestamp: Date.now() - 500 }] as Message[]);
 
   return {
     user_message: overrides.user_message ?? 'Bonjour Fusion',
@@ -394,7 +404,9 @@ function createFusionInput(overrides: FusionInputOverrides = {}): FusionInput {
   };
 }
 
-function createSingularityState(overrides: Partial<SingularityState> = {}): SingularityState {
+function createSingularityState(
+  overrides: Partial<SingularityState> = {}
+): SingularityState {
   const timestamp = Date.now();
   const baseState: SingularityState = {
     physical: {

@@ -24,7 +24,10 @@
  * 8. VOICE SIGNATURE STABILIZATION — Cohérence identitaire
  */
 
-import { archetypeResonanceEngine, type ArchetypeType } from '../psyche/archetypeResonanceEngine';
+import {
+  archetypeResonanceEngine,
+  type ArchetypeType,
+} from '../psyche/archetypeResonanceEngine';
 import type { EmotionalState } from '@/services/voice/unifiedVocalEngine';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -87,14 +90,14 @@ export interface ProsodyProfile {
  * Tonalité cognitive
  */
 export type CognitiveTone =
-  | 'empathetic'      // Empathique
-  | 'soothing'        // Apaisante
-  | 'directive'       // Directive
-  | 'inspiring'       // Inspirante
-  | 'analytical'      // Analytique
-  | 'warm'            // Chaleureuse
-  | 'dynamic'         // Dynamique
-  | 'professional';   // Professionnelle/neutre
+  | 'empathetic' // Empathique
+  | 'soothing' // Apaisante
+  | 'directive' // Directive
+  | 'inspiring' // Inspirante
+  | 'analytical' // Analytique
+  | 'warm' // Chaleureuse
+  | 'dynamic' // Dynamique
+  | 'professional'; // Professionnelle/neutre
 
 /**
  * Micro-expression vocale
@@ -271,11 +274,23 @@ class NeuralVoiceBlendingEngine {
       timbreVector: baseProfile.timbreVector.map((v, i) =>
         this.lerp(v, learnedAdjustments.timbreVector?.[i] ?? v, this.config.learningRate)
       ),
-      brightness: this.lerp(baseProfile.brightness, learnedAdjustments.brightness || baseProfile.brightness, blendRatio.inspired * 0.3),
-      warmth: this.lerp(baseProfile.warmth, learnedAdjustments.warmth || baseProfile.warmth, blendRatio.inspired * 0.5),
+      brightness: this.lerp(
+        baseProfile.brightness,
+        learnedAdjustments.brightness || baseProfile.brightness,
+        blendRatio.inspired * 0.3
+      ),
+      warmth: this.lerp(
+        baseProfile.warmth,
+        learnedAdjustments.warmth || baseProfile.warmth,
+        blendRatio.inspired * 0.5
+      ),
       roughness: baseProfile.roughness,
       intonationShape: baseProfile.intonationShape,
-      pace: this.lerp(baseProfile.pace, learnedAdjustments.pace || baseProfile.pace, blendRatio.inspired * 0.2),
+      pace: this.lerp(
+        baseProfile.pace,
+        learnedAdjustments.pace || baseProfile.pace,
+        blendRatio.inspired * 0.2
+      ),
       articulation: baseProfile.articulation,
       breathingPattern: baseProfile.breathingPattern,
     };
@@ -456,7 +471,10 @@ class NeuralVoiceBlendingEngine {
     }
 
     // Intonation shift selon tonalité
-    if (this.state.cognitiveTone === 'empathetic' || this.state.cognitiveTone === 'warm') {
+    if (
+      this.state.cognitiveTone === 'empathetic' ||
+      this.state.cognitiveTone === 'warm'
+    ) {
       expressions.push({
         type: 'intonation_shift',
         position: 0.7,
@@ -490,7 +508,8 @@ class NeuralVoiceBlendingEngine {
 
     // Update preference
     const feedbackScore = userFeedback?.satisfaction || 0.7; // Default neutral
-    const newPref = currentPref + (feedbackScore - currentPref) * this.config.learningRate;
+    const newPref =
+      currentPref + (feedbackScore - currentPref) * this.config.learningRate;
 
     this.observedPreferences.set(key, newPref);
     this.state.learningSessionCount++;
@@ -498,7 +517,9 @@ class NeuralVoiceBlendingEngine {
     // Update identity coherence (slow increase)
     this.state.identityCoherence = Math.min(1, this.state.identityCoherence + 0.001);
 
-    console.log(`🎤 [VOICE-BLEND] Learning session ${this.state.learningSessionCount} — ${key} → ${Math.round(newPref * 100)}%`);
+    console.log(
+      `🎤 [VOICE-BLEND] Learning session ${this.state.learningSessionCount} — ${key} → ${Math.round(newPref * 100)}%`
+    );
   }
 
   /**
@@ -518,13 +539,18 @@ class NeuralVoiceBlendingEngine {
     const version = `v${Math.floor(this.state.learningSessionCount / 10)}.${this.state.learningSessionCount % 10}`;
     this.state.voiceSignature = `TITANE∞-Voice-${version}`;
 
-    console.log(`🎙️ [VOICE-BLEND] Voice signature stabilized: ${this.state.voiceSignature}`);
+    console.log(
+      `🎙️ [VOICE-BLEND] Voice signature stabilized: ${this.state.voiceSignature}`
+    );
   }
 
   /**
    * Générer voix complète pour un texte
    */
-  generateVoiceOutput(text: string, context: VoiceContext): {
+  generateVoiceOutput(
+    text: string,
+    context: VoiceContext
+  ): {
     profile: VoiceIdentityProfile;
     prosody: ProsodyProfile;
     tone: CognitiveTone;
@@ -535,7 +561,9 @@ class NeuralVoiceBlendingEngine {
     const tone = this.determineCognitiveTone(context);
     const microExpressions = this.injectMicroExpressions(text, context);
 
-    console.log(`🎤 [VOICE-BLEND] Voice generated: ${tone} ${context.archetype} (blend: ${Math.round(this.state.blendRatio.inspired * 100)}% inspired)`);
+    console.log(
+      `🎤 [VOICE-BLEND] Voice generated: ${tone} ${context.archetype} (blend: ${Math.round(this.state.blendRatio.inspired * 100)}% inspired)`
+    );
 
     this.notifyCallbacks();
 

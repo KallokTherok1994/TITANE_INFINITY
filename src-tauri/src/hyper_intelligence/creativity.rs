@@ -10,8 +10,8 @@ use std::collections::HashSet;
 /// Type de créativité
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum CreativityType {
-    Combinatorial,  // Combinaison d'idées existantes
-    Exploratory,    // Exploration de nouveaux espaces
+    Combinatorial,    // Combinaison d'idées existantes
+    Exploratory,      // Exploration de nouveaux espaces
     Transformational, // Transformation radicale
 }
 
@@ -123,9 +123,20 @@ impl CreativityEngine {
 
         // Seed with some base concepts
         let base_concepts = [
-            "light", "shadow", "time", "space", "energy", "matter",
-            "consciousness", "infinity", "harmony", "chaos",
-            "creation", "destruction", "transformation", "evolution",
+            "light",
+            "shadow",
+            "time",
+            "space",
+            "energy",
+            "matter",
+            "consciousness",
+            "infinity",
+            "harmony",
+            "chaos",
+            "creation",
+            "destruction",
+            "transformation",
+            "evolution",
         ];
 
         for concept in base_concepts {
@@ -211,7 +222,10 @@ impl CreativityEngine {
         );
 
         let possibilities = vec![
-            format!("What if {} could evolve?", elements.first().unwrap_or(&"this".to_string())),
+            format!(
+                "What if {} could evolve?",
+                elements.first().unwrap_or(&"this".to_string())
+            ),
             format!("Consider {} from a new perspective", seed),
             "Explore the boundaries of the conceivable".to_string(),
         ];

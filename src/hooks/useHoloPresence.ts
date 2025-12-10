@@ -28,12 +28,10 @@ import {
  * Hook principal: État complet du moteur holographique
  */
 export function useHoloPresence(): HoloPresenceState {
-  const [state, setState] = useState<HoloPresenceState>(
-    holoPresenceEngine.getState()
-  );
+  const [state, setState] = useState<HoloPresenceState>(holoPresenceEngine.getState());
 
   useEffect(() => {
-    const unsubscribe = holoPresenceEngine.subscribe((newState) => {
+    const unsubscribe = holoPresenceEngine.subscribe(newState => {
       setState(newState);
     });
     return unsubscribe;
@@ -50,12 +48,10 @@ export function useHoloPresence(): HoloPresenceState {
  * Hook: Visuels holographiques complets
  */
 export function useHoloVisuals(): HoloVisuals {
-  const [visuals, setVisuals] = useState<HoloVisuals>(
-    holoPresenceEngine.getVisuals()
-  );
+  const [visuals, setVisuals] = useState<HoloVisuals>(holoPresenceEngine.getVisuals());
 
   useEffect(() => {
-    const unsubscribe = holoPresenceEngine.subscribe((state) => {
+    const unsubscribe = holoPresenceEngine.subscribe(state => {
       setVisuals(state.visuals);
     });
     return unsubscribe;
@@ -68,12 +64,10 @@ export function useHoloVisuals(): HoloVisuals {
  * Hook: Forme holographique
  */
 export function useHoloShape(): HoloShape {
-  const [shape, setShape] = useState<HoloShape>(
-    holoPresenceEngine.getVisuals().shape
-  );
+  const [shape, setShape] = useState<HoloShape>(holoPresenceEngine.getVisuals().shape);
 
   useEffect(() => {
-    const unsubscribe = holoPresenceEngine.subscribe((state) => {
+    const unsubscribe = holoPresenceEngine.subscribe(state => {
       setShape(state.visuals.shape);
     });
     return unsubscribe;
@@ -89,7 +83,7 @@ export function useHoloColorsVisuals() {
   const [colors, setColors] = useState(holoPresenceEngine.getVisuals().colors);
 
   useEffect(() => {
-    const unsubscribe = holoPresenceEngine.subscribe((state) => {
+    const unsubscribe = holoPresenceEngine.subscribe(state => {
       setColors(state.visuals.colors);
     });
     return unsubscribe;
@@ -102,12 +96,10 @@ export function useHoloColorsVisuals() {
  * Hook: Rotation holographique
  */
 export function useHoloRotation() {
-  const [rotation, setRotation] = useState(
-    holoPresenceEngine.getVisuals().rotation
-  );
+  const [rotation, setRotation] = useState(holoPresenceEngine.getVisuals().rotation);
 
   useEffect(() => {
-    const unsubscribe = holoPresenceEngine.subscribe((state) => {
+    const unsubscribe = holoPresenceEngine.subscribe(state => {
       setRotation(state.visuals.rotation);
     });
     return unsubscribe;
@@ -123,7 +115,7 @@ export function useHoloSize(): number {
   const [size, setSize] = useState(holoPresenceEngine.getVisuals().size);
 
   useEffect(() => {
-    const unsubscribe = holoPresenceEngine.subscribe((state) => {
+    const unsubscribe = holoPresenceEngine.subscribe(state => {
       setSize(state.visuals.size);
     });
     return unsubscribe;
@@ -136,12 +128,10 @@ export function useHoloSize(): number {
  * Hook: Opacité holographique
  */
 export function useHoloOpacity(): number {
-  const [opacity, setOpacity] = useState(
-    holoPresenceEngine.getVisuals().opacity
-  );
+  const [opacity, setOpacity] = useState(holoPresenceEngine.getVisuals().opacity);
 
   useEffect(() => {
-    const unsubscribe = holoPresenceEngine.subscribe((state) => {
+    const unsubscribe = holoPresenceEngine.subscribe(state => {
       setOpacity(state.visuals.opacity);
     });
     return unsubscribe;
@@ -157,7 +147,7 @@ export function useHoloGlow(): number {
   const [glow, setGlow] = useState(holoPresenceEngine.getVisuals().glow);
 
   useEffect(() => {
-    const unsubscribe = holoPresenceEngine.subscribe((state) => {
+    const unsubscribe = holoPresenceEngine.subscribe(state => {
       setGlow(state.visuals.glow);
     });
     return unsubscribe;
@@ -179,7 +169,7 @@ export function useAuraParticles(): AuraParticles {
   );
 
   useEffect(() => {
-    const unsubscribe = holoPresenceEngine.subscribe((state) => {
+    const unsubscribe = holoPresenceEngine.subscribe(state => {
       setParticles(state.particles);
     });
     return unsubscribe;
@@ -195,7 +185,7 @@ export function useParticleCount(): number {
   const [count, setCount] = useState(holoPresenceEngine.getParticles().count);
 
   useEffect(() => {
-    const unsubscribe = holoPresenceEngine.subscribe((state) => {
+    const unsubscribe = holoPresenceEngine.subscribe(state => {
       setCount(state.particles.count);
     });
     return unsubscribe;
@@ -208,12 +198,10 @@ export function useParticleCount(): number {
  * Hook: Comportement des particules
  */
 export function useParticleBehavior(): string {
-  const [behavior, setBehavior] = useState(
-    holoPresenceEngine.getParticles().behavior
-  );
+  const [behavior, setBehavior] = useState(holoPresenceEngine.getParticles().behavior);
 
   useEffect(() => {
-    const unsubscribe = holoPresenceEngine.subscribe((state) => {
+    const unsubscribe = holoPresenceEngine.subscribe(state => {
       setBehavior(state.particles.behavior);
     });
     return unsubscribe;
@@ -235,7 +223,7 @@ export function useHoloAnimation(): HoloAnimation {
   );
 
   useEffect(() => {
-    const unsubscribe = holoPresenceEngine.subscribe((state) => {
+    const unsubscribe = holoPresenceEngine.subscribe(state => {
       setAnimation(state.animation);
     });
     return unsubscribe;
@@ -248,12 +236,10 @@ export function useHoloAnimation(): HoloAnimation {
  * Hook: Animation de respiration
  */
 export function useHoloBreathe() {
-  const [breathe, setBreathe] = useState(
-    holoPresenceEngine.getAnimation().breathe
-  );
+  const [breathe, setBreathe] = useState(holoPresenceEngine.getAnimation().breathe);
 
   useEffect(() => {
-    const unsubscribe = holoPresenceEngine.subscribe((state) => {
+    const unsubscribe = holoPresenceEngine.subscribe(state => {
       setBreathe(state.animation.breathe);
     });
     return unsubscribe;
@@ -269,7 +255,7 @@ export function useHoloPulse() {
   const [pulse, setPulse] = useState(holoPresenceEngine.getAnimation().pulse);
 
   useEffect(() => {
-    const unsubscribe = holoPresenceEngine.subscribe((state) => {
+    const unsubscribe = holoPresenceEngine.subscribe(state => {
       setPulse(state.animation.pulse);
     });
     return unsubscribe;
@@ -285,7 +271,7 @@ export function useHoloFlow() {
   const [flow, setFlow] = useState(holoPresenceEngine.getAnimation().flow);
 
   useEffect(() => {
-    const unsubscribe = holoPresenceEngine.subscribe((state) => {
+    const unsubscribe = holoPresenceEngine.subscribe(state => {
       setFlow(state.animation.flow);
     });
     return unsubscribe;
@@ -307,7 +293,7 @@ export function useHoloIntensity(): number {
   );
 
   useEffect(() => {
-    const unsubscribe = holoPresenceEngine.subscribe((state) => {
+    const unsubscribe = holoPresenceEngine.subscribe(state => {
       setIntensity(state.currentIntensity);
     });
     return unsubscribe;
@@ -320,12 +306,10 @@ export function useHoloIntensity(): number {
  * Hook: Niveau d'énergie
  */
 export function useHoloEnergyLevel(): number {
-  const [energy, setEnergy] = useState(
-    holoPresenceEngine.getState().energyLevel
-  );
+  const [energy, setEnergy] = useState(holoPresenceEngine.getState().energyLevel);
 
   useEffect(() => {
-    const unsubscribe = holoPresenceEngine.subscribe((state) => {
+    const unsubscribe = holoPresenceEngine.subscribe(state => {
       setEnergy(state.energyLevel);
     });
     return unsubscribe;
@@ -338,12 +322,10 @@ export function useHoloEnergyLevel(): number {
  * Hook: Point de focus
  */
 export function useHoloFocusPoint(): { x: number; y: number } {
-  const [focusPoint, setFocusPoint] = useState(
-    holoPresenceEngine.getState().focusPoint
-  );
+  const [focusPoint, setFocusPoint] = useState(holoPresenceEngine.getState().focusPoint);
 
   useEffect(() => {
-    const unsubscribe = holoPresenceEngine.subscribe((state) => {
+    const unsubscribe = holoPresenceEngine.subscribe(state => {
       setFocusPoint(state.focusPoint);
     });
     return unsubscribe;
@@ -356,12 +338,10 @@ export function useHoloFocusPoint(): { x: number; y: number } {
  * Hook: Visibilité
  */
 export function useHoloVisible(): boolean {
-  const [visible, setVisible] = useState(
-    holoPresenceEngine.getState().isVisible
-  );
+  const [visible, setVisible] = useState(holoPresenceEngine.getState().isVisible);
 
   useEffect(() => {
-    const unsubscribe = holoPresenceEngine.subscribe((state) => {
+    const unsubscribe = holoPresenceEngine.subscribe(state => {
       setVisible(state.isVisible);
     });
     return unsubscribe;

@@ -59,7 +59,7 @@ export function useVoiceMode() {
     try {
       await voiceService.startRecording();
 
-      setState((prev) => ({
+      setState(prev => ({
         ...prev,
         isRecording: true,
       }));
@@ -78,7 +78,7 @@ export function useVoiceMode() {
     try {
       await voiceService.stopRecording();
 
-      setState((prev) => ({
+      setState(prev => ({
         ...prev,
         isRecording: false,
       }));
@@ -90,7 +90,7 @@ export function useVoiceMode() {
   }, []);
 
   const transcribe = useCallback(async (audioData: Uint8Array) => {
-    setState((prev) => ({
+    setState(prev => ({
       ...prev,
       isTranscribing: true,
     }));
@@ -103,7 +103,7 @@ export function useVoiceMode() {
         audioData: Array.from(audioData),
       });
 
-      setState((prev) => ({
+      setState(prev => ({
         ...prev,
         isTranscribing: false,
         transcript,
@@ -115,7 +115,7 @@ export function useVoiceMode() {
       setError(errorMessage);
       console.error('Transcription error:', err);
 
-      setState((prev) => ({
+      setState(prev => ({
         ...prev,
         isTranscribing: false,
       }));
@@ -125,7 +125,7 @@ export function useVoiceMode() {
   }, []);
 
   const speak = useCallback(async (text: string, useOnline: boolean = false) => {
-    setState((prev) => ({
+    setState(prev => ({
       ...prev,
       isSpeaking: true,
     }));
@@ -155,7 +155,7 @@ export function useVoiceMode() {
         }
       }
 
-      setState((prev) => ({
+      setState(prev => ({
         ...prev,
         isSpeaking: false,
       }));
@@ -164,7 +164,7 @@ export function useVoiceMode() {
       setError(errorMessage);
       console.error('TTS error:', err);
 
-      setState((prev) => ({
+      setState(prev => ({
         ...prev,
         isSpeaking: false,
       }));
@@ -175,7 +175,7 @@ export function useVoiceMode() {
     try {
       const vadActive = await secureInvoke<boolean>('get_vad_state');
 
-      setState((prev) => ({
+      setState(prev => ({
         ...prev,
         vadActive,
       }));
@@ -188,7 +188,7 @@ export function useVoiceMode() {
   }, []);
 
   const clearTranscript = useCallback(() => {
-    setState((prev) => ({
+    setState(prev => ({
       ...prev,
       transcript: '',
     }));
