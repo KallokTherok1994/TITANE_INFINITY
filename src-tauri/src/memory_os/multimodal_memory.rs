@@ -182,7 +182,7 @@ impl MultimodalMemoryStore {
         tier_entries.sort_by(|a, b| {
             a.1.base.relevance_score()
                 .partial_cmp(&b.1.base.relevance_score())
-                .unwrap()
+                .unwrap_or(std::cmp::Ordering::Equal)
         });
 
         // Remove lowest
@@ -232,7 +232,7 @@ impl MultimodalMemoryStore {
             .collect();
 
         // Sort by similarity (descending)
-        scored.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
+        scored.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap_or(std::cmp::Ordering::Equal));
 
         // Take top k
         scored.into_iter().take(k).collect()
@@ -265,7 +265,7 @@ impl MultimodalMemoryStore {
             .filter(|(score, _)| *score > 0.0)
             .collect();
 
-        scored.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
+        scored.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap_or(std::cmp::Ordering::Equal));
         scored.into_iter().take(k).collect()
     }
 
