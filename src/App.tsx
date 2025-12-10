@@ -1027,22 +1027,22 @@ const AppRouter: React.FC = () => {
       </Suspense>
 
       {/* ✨ v∞.20.0 - Chat Bubble Global (Super Prompt #3) */}
-      {/* DÉSACTIVÉ v19.5.0 - Remplacé par HybridBubble v∞.26.0 */}
-      {/* <Suspense fallback={null}>
+      {/* ✅ ACTIF - Bulle Arc Reactor style Iron Man 🔵⚡ */}
+      <Suspense fallback={null}>
         <ChatBubble position="bottom-right" persistHistory />
-      </Suspense> */}
+      </Suspense>
 
       {/* ✨ v∞.25.0 - AI Bubble Engine (Super Prompt #14 - BUBBLE ENGINE v∞) */}
-      {/* DÉSACTIVÉ v19.5.0 - Remplacé par HybridBubble v∞.26.0 */}
+      {/* DÉSACTIVÉ v19.5.0 - Doublon avec ChatBubble Arc Reactor */}
       {/* <Suspense fallback={null}>
         <AIChatBubble />
       </Suspense> */}
 
       {/* ✨ v∞.26.0 - Hybrid Engine (Super Prompt #16 - AI + DEV CONSOLE FUSION ⚡🧠) */}
-      {/* ✅ ACTIF - Version la plus récente avec Chat IA intégré */}
-      <Suspense fallback={null}>
+      {/* DÉSACTIVÉ v19.5.0 - Doublon avec ChatBubble Arc Reactor */}
+      {/* <Suspense fallback={null}>
         <HybridBubble initialMode="bubble" />
-      </Suspense>
+      </Suspense> */}
 
       {/* ✨ v∞.27.0 - Cognitive Layout Control (Super Prompt #2 - ADAPTIVE UI 🧠) */}
       <Suspense fallback={null}>
