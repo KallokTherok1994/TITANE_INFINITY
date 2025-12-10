@@ -83,3 +83,135 @@ impl Default for AlignmentEngine {
         Self::new()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ─────────────────────────────────────────────────────────────
+    // SystemAlignment Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_system_alignment_default() {
+        let alignment = SystemAlignment::default();
+        assert!(!alignment.kernel_aligned);
+        assert!(!alignment.omega_aligned);
+        assert!(!alignment.memory_os_aligned);
+        assert!(!alignment.agi_core_aligned);
+        assert!(!alignment.self_healing_aligned);
+        assert_eq!(alignment.alignment_score, 0.0);
+    }
+
+    #[test]
+    fn test_system_alignment_clone() {
+        let alignment = SystemAlignment::default();
+        let cloned = alignment.clone();
+        assert_eq!(alignment.kernel_aligned, cloned.kernel_aligned);
+        assert_eq!(alignment.alignment_score, cloned.alignment_score);
+    }
+
+    #[test]
+    fn test_system_alignment_debug() {
+        let alignment = SystemAlignment::default();
+        let debug = format!("{:?}", alignment);
+        assert!(debug.contains("SystemAlignment"));
+    }
+
+    #[test]
+    fn test_system_alignment_serialization() {
+        let alignment = SystemAlignment::default();
+        let json = serde_json::to_string(&alignment).unwrap();
+        let restored: SystemAlignment = serde_json::from_str(&json).unwrap();
+        assert_eq!(alignment.alignment_score, restored.alignment_score);
+    }
+
+    #[test]
+    fn test_system_alignment_custom() {
+        let alignment = SystemAlignment {
+            kernel_aligned: true,
+            omega_aligned: true,
+            memory_os_aligned: true,
+            agi_core_aligned: false,
+            self_healing_aligned: true,
+            alignment_score: 0.85,
+        };
+        assert!(alignment.kernel_aligned);
+        assert!(alignment.omega_aligned);
+        assert!(!alignment.agi_core_aligned);
+        assert_eq!(alignment.alignment_score, 0.85);
+    }
+
+    #[test]
+    fn test_system_alignment_score_range() {
+        let alignment = SystemAlignment::default();
+        assert!(alignment.alignment_score >= 0.0 && alignment.alignment_score <= 1.0);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // AlignmentEngine Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_alignment_engine_new() {
+        let engine = AlignmentEngine::new();
+        let alignment = engine.current_alignment();
+        assert_eq!(alignment.alignment_score, 0.0);
+    }
+
+    #[test]
+    fn test_alignment_engine_default() {
+        let engine = AlignmentEngine::default();
+        assert_eq!(engine.current_alignment().alignment_score, 0.0);
+    }
+
+    #[test]
+    fn test_alignment_engine_is_well_aligned_false() {
+        let engine = AlignmentEngine::new();
+        assert!(!engine.is_well_aligned());
+    }
+
+    #[test]
+    fn test_alignment_engine_align_system() {
+        let mut engine = AlignmentEngine::new();
+        let cycle_state = CycleState::current();
+        let cognitive_rhythm = CognitiveRhythmParams::from_cycle_state(&cycle_state);
+        let load_params = LoadRegulationParams::default();
+
+        let alignment = engine.align_system(&cycle_state, &cognitive_rhythm, &load_params);
+        assert!(alignment.kernel_aligned);
+        assert!(alignment.omega_aligned);
+        assert_eq!(alignment.alignment_score, 0.95);
+    }
+
+    #[test]
+    fn test_alignment_engine_is_well_aligned_after_align() {
+        let mut engine = AlignmentEngine::new();
+        let cycle_state = CycleState::current();
+        let cognitive_rhythm = CognitiveRhythmParams::from_cycle_state(&cycle_state);
+        let load_params = LoadRegulationParams::default();
+
+        engine.align_system(&cycle_state, &cognitive_rhythm, &load_params);
+        assert!(engine.is_well_aligned());
+    }
+
+    #[test]
+    fn test_alignment_engine_current_alignment_updates() {
+        let mut engine = AlignmentEngine::new();
+        let initial_score = engine.current_alignment().alignment_score;
+
+        let cycle_state = CycleState::current();
+        let cognitive_rhythm = CognitiveRhythmParams::from_cycle_state(&cycle_state);
+        let load_params = LoadRegulationParams::default();
+        engine.align_system(&cycle_state, &cognitive_rhythm, &load_params);
+
+        assert_ne!(engine.current_alignment().alignment_score, initial_score);
+    }
+
+    #[test]
+    fn test_alignment_engine_threshold() {
+        let engine = AlignmentEngine::new();
+        // Threshold is 0.8, default score is 0.0, so not well aligned
+        assert!(!engine.is_well_aligned());
+    }
+}

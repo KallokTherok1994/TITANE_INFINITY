@@ -368,6 +368,264 @@ pub struct CalibratorStatsSnapshot {
 mod tests {
     use super::*;
 
+    // ─────────────────────────────────────────────────────────────
+    // CalibratorConfig Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_calibrator_config_default() {
+        let config = CalibratorConfig::default();
+        assert_eq!(config.sample_window_size, 100);
+        assert_eq!(config.drift_threshold_percent, 15.0);
+        assert!(config.auto_calibrate);
+        assert_eq!(config.calibration_cooldown_ms, 30000);
+        assert_eq!(config.baseline_samples, 20);
+    }
+
+    #[test]
+    fn test_calibrator_config_clone() {
+        let config = CalibratorConfig::default();
+        let cloned = config.clone();
+        assert_eq!(config.sample_window_size, cloned.sample_window_size);
+        assert_eq!(config.drift_threshold_percent, cloned.drift_threshold_percent);
+    }
+
+    #[test]
+    fn test_calibrator_config_debug() {
+        let config = CalibratorConfig::default();
+        let debug = format!("{:?}", config);
+        assert!(debug.contains("CalibratorConfig"));
+    }
+
+    #[test]
+    fn test_calibrator_config_serialization() {
+        let config = CalibratorConfig::default();
+        let json = serde_json::to_string(&config).unwrap();
+        let restored: CalibratorConfig = serde_json::from_str(&json).unwrap();
+        assert_eq!(config.sample_window_size, restored.sample_window_size);
+    }
+
+    #[test]
+    fn test_calibrator_config_custom() {
+        let config = CalibratorConfig {
+            sample_window_size: 50,
+            drift_threshold_percent: 10.0,
+            auto_calibrate: false,
+            calibration_cooldown_ms: 60000,
+            baseline_samples: 10,
+        };
+        assert_eq!(config.sample_window_size, 50);
+        assert!(!config.auto_calibrate);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // PerformanceSample Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_performance_sample_creation() {
+        let sample = PerformanceSample {
+            timestamp: 12345,
+            latency_ms: 10.5,
+            throughput: 100.0,
+            error_rate: 0.01,
+            memory_usage_mb: 256.0,
+        };
+        assert_eq!(sample.timestamp, 12345);
+        assert_eq!(sample.latency_ms, 10.5);
+    }
+
+    #[test]
+    fn test_performance_sample_clone() {
+        let sample = PerformanceSample {
+            timestamp: 1000,
+            latency_ms: 5.0,
+            throughput: 50.0,
+            error_rate: 0.0,
+            memory_usage_mb: 100.0,
+        };
+        let cloned = sample.clone();
+        assert_eq!(sample.timestamp, cloned.timestamp);
+        assert_eq!(sample.latency_ms, cloned.latency_ms);
+    }
+
+    #[test]
+    fn test_performance_sample_debug() {
+        let sample = PerformanceSample {
+            timestamp: 0,
+            latency_ms: 1.0,
+            throughput: 1.0,
+            error_rate: 0.0,
+            memory_usage_mb: 1.0,
+        };
+        let debug = format!("{:?}", sample);
+        assert!(debug.contains("PerformanceSample"));
+    }
+
+    #[test]
+    fn test_performance_sample_serialization() {
+        let sample = PerformanceSample {
+            timestamp: 9999,
+            latency_ms: 15.0,
+            throughput: 200.0,
+            error_rate: 0.05,
+            memory_usage_mb: 512.0,
+        };
+        let json = serde_json::to_string(&sample).unwrap();
+        let restored: PerformanceSample = serde_json::from_str(&json).unwrap();
+        assert_eq!(sample.timestamp, restored.timestamp);
+        assert_eq!(sample.latency_ms, restored.latency_ms);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // EngineBaseline Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_engine_baseline_creation() {
+        let baseline = EngineBaseline {
+            engine_id: "test_engine".to_string(),
+            avg_latency_ms: 10.0,
+            avg_throughput: 100.0,
+            avg_error_rate: 0.01,
+            avg_memory_mb: 256.0,
+            std_dev_latency: 2.0,
+            established_at: 12345,
+            sample_count: 20,
+        };
+        assert_eq!(baseline.engine_id, "test_engine");
+        assert_eq!(baseline.sample_count, 20);
+    }
+
+    #[test]
+    fn test_engine_baseline_clone() {
+        let baseline = EngineBaseline {
+            engine_id: "clone_test".to_string(),
+            avg_latency_ms: 5.0,
+            avg_throughput: 50.0,
+            avg_error_rate: 0.0,
+            avg_memory_mb: 128.0,
+            std_dev_latency: 1.0,
+            established_at: 1000,
+            sample_count: 10,
+        };
+        let cloned = baseline.clone();
+        assert_eq!(baseline.engine_id, cloned.engine_id);
+    }
+
+    #[test]
+    fn test_engine_baseline_serialization() {
+        let baseline = EngineBaseline {
+            engine_id: "serial_engine".to_string(),
+            avg_latency_ms: 8.0,
+            avg_throughput: 80.0,
+            avg_error_rate: 0.02,
+            avg_memory_mb: 200.0,
+            std_dev_latency: 1.5,
+            established_at: 5000,
+            sample_count: 15,
+        };
+        let json = serde_json::to_string(&baseline).unwrap();
+        let restored: EngineBaseline = serde_json::from_str(&json).unwrap();
+        assert_eq!(baseline.engine_id, restored.engine_id);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // DriftMetrics Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_drift_metrics_creation() {
+        let metrics = DriftMetrics {
+            latency_drift_percent: 5.0,
+            throughput_drift_percent: -3.0,
+            error_rate_drift: 0.01,
+            memory_drift_percent: 10.0,
+            overall_drift_score: 4.5,
+        };
+        assert_eq!(metrics.latency_drift_percent, 5.0);
+        assert_eq!(metrics.overall_drift_score, 4.5);
+    }
+
+    #[test]
+    fn test_drift_metrics_clone() {
+        let metrics = DriftMetrics {
+            latency_drift_percent: 1.0,
+            throughput_drift_percent: 2.0,
+            error_rate_drift: 0.0,
+            memory_drift_percent: 3.0,
+            overall_drift_score: 1.5,
+        };
+        let cloned = metrics.clone();
+        assert_eq!(metrics.overall_drift_score, cloned.overall_drift_score);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // DriftRecommendation Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_drift_recommendation_equality() {
+        assert_eq!(DriftRecommendation::NoAction, DriftRecommendation::NoAction);
+        assert_ne!(DriftRecommendation::NoAction, DriftRecommendation::MonitorClosely);
+    }
+
+    #[test]
+    fn test_drift_recommendation_all_variants() {
+        let variants = vec![
+            DriftRecommendation::NoAction,
+            DriftRecommendation::MonitorClosely,
+            DriftRecommendation::SoftRecalibrate,
+            DriftRecommendation::HardRecalibrate,
+            DriftRecommendation::RestartEngine,
+            DriftRecommendation::AlertOperator,
+        ];
+        assert_eq!(variants.len(), 6);
+    }
+
+    #[test]
+    fn test_drift_recommendation_serialization() {
+        let rec = DriftRecommendation::SoftRecalibrate;
+        let json = serde_json::to_string(&rec).unwrap();
+        let restored: DriftRecommendation = serde_json::from_str(&json).unwrap();
+        assert_eq!(rec, restored);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // CalibrationAction Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_calibration_action_equality() {
+        assert_eq!(CalibrationAction::None, CalibrationAction::None);
+        assert_ne!(CalibrationAction::None, CalibrationAction::ResetCaches);
+    }
+
+    #[test]
+    fn test_calibration_action_all_variants() {
+        let variants = vec![
+            CalibrationAction::None,
+            CalibrationAction::ResetCaches,
+            CalibrationAction::OptimizeBuffers,
+            CalibrationAction::RebalanceLoad,
+            CalibrationAction::RestartWorkers,
+            CalibrationAction::FullRecalibration,
+        ];
+        assert_eq!(variants.len(), 6);
+    }
+
+    #[test]
+    fn test_calibration_action_serialization() {
+        let action = CalibrationAction::FullRecalibration;
+        let json = serde_json::to_string(&action).unwrap();
+        let restored: CalibrationAction = serde_json::from_str(&json).unwrap();
+        assert_eq!(action, restored);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // EngineCalibrator Tests
+    // ─────────────────────────────────────────────────────────────
+
     #[test]
     fn test_record_samples() {
         let calibrator = EngineCalibrator::new(CalibratorConfig::default());
@@ -388,5 +646,238 @@ mod tests {
         let stats = calibrator.stats();
         assert_eq!(stats.samples_collected, 25);
         assert_eq!(stats.tracked_engines, 1);
+    }
+
+    #[test]
+    fn test_engine_calibrator_new() {
+        let calibrator = EngineCalibrator::new(CalibratorConfig::default());
+        let stats = calibrator.stats();
+        assert_eq!(stats.samples_collected, 0);
+        assert_eq!(stats.tracked_engines, 0);
+    }
+
+    #[test]
+    fn test_record_samples_window_size() {
+        let config = CalibratorConfig {
+            sample_window_size: 10,
+            ..CalibratorConfig::default()
+        };
+        let calibrator = EngineCalibrator::new(config);
+
+        for i in 0..20 {
+            calibrator.record_sample(
+                "test_engine",
+                PerformanceSample {
+                    timestamp: i,
+                    latency_ms: 10.0,
+                    throughput: 100.0,
+                    error_rate: 0.01,
+                    memory_usage_mb: 50.0,
+                },
+            );
+        }
+
+        let stats = calibrator.stats();
+        assert_eq!(stats.samples_collected, 20);
+    }
+
+    #[test]
+    fn test_multiple_engines() {
+        let calibrator = EngineCalibrator::new(CalibratorConfig::default());
+
+        for i in 0..25 {
+            calibrator.record_sample(
+                "engine1",
+                PerformanceSample {
+                    timestamp: i,
+                    latency_ms: 10.0,
+                    throughput: 100.0,
+                    error_rate: 0.01,
+                    memory_usage_mb: 50.0,
+                },
+            );
+            calibrator.record_sample(
+                "engine2",
+                PerformanceSample {
+                    timestamp: i,
+                    latency_ms: 15.0,
+                    throughput: 80.0,
+                    error_rate: 0.02,
+                    memory_usage_mb: 60.0,
+                },
+            );
+        }
+
+        let stats = calibrator.stats();
+        assert_eq!(stats.samples_collected, 50);
+        assert_eq!(stats.tracked_engines, 2);
+    }
+
+    #[test]
+    fn test_detect_drift_no_baseline() {
+        let calibrator = EngineCalibrator::new(CalibratorConfig::default());
+        let result = calibrator.detect_drift("nonexistent");
+        assert!(result.is_none());
+    }
+
+    #[test]
+    fn test_detect_drift_not_enough_samples() {
+        let calibrator = EngineCalibrator::new(CalibratorConfig::default());
+
+        for i in 0..3 {
+            calibrator.record_sample(
+                "test_engine",
+                PerformanceSample {
+                    timestamp: i,
+                    latency_ms: 10.0,
+                    throughput: 100.0,
+                    error_rate: 0.01,
+                    memory_usage_mb: 50.0,
+                },
+            );
+        }
+
+        let result = calibrator.detect_drift("test_engine");
+        assert!(result.is_none());
+    }
+
+    #[test]
+    fn test_detect_drift_stable() {
+        let calibrator = EngineCalibrator::new(CalibratorConfig::default());
+
+        // Create stable samples
+        for i in 0..30 {
+            calibrator.record_sample(
+                "stable_engine",
+                PerformanceSample {
+                    timestamp: i,
+                    latency_ms: 10.0,
+                    throughput: 100.0,
+                    error_rate: 0.01,
+                    memory_usage_mb: 50.0,
+                },
+            );
+        }
+
+        let result = calibrator.detect_drift("stable_engine");
+        assert!(result.is_some());
+        let report = result.unwrap();
+        assert!(!report.is_drifting);
+        assert_eq!(report.recommendation, DriftRecommendation::NoAction);
+    }
+
+    #[test]
+    fn test_calibrate_engine() {
+        let calibrator = EngineCalibrator::new(CalibratorConfig {
+            calibration_cooldown_ms: 0, // No cooldown for test
+            ..CalibratorConfig::default()
+        });
+
+        for i in 0..25 {
+            calibrator.record_sample(
+                "calibrate_engine",
+                PerformanceSample {
+                    timestamp: i,
+                    latency_ms: 10.0,
+                    throughput: 100.0,
+                    error_rate: 0.01,
+                    memory_usage_mb: 50.0,
+                },
+            );
+        }
+
+        let result = calibrator.calibrate("calibrate_engine");
+        assert!(result.success);
+        assert_eq!(result.action_taken, CalibrationAction::FullRecalibration);
+    }
+
+    #[test]
+    fn test_calibrate_cooldown() {
+        let calibrator = EngineCalibrator::new(CalibratorConfig::default());
+
+        for i in 0..25 {
+            calibrator.record_sample(
+                "cooldown_engine",
+                PerformanceSample {
+                    timestamp: i,
+                    latency_ms: 10.0,
+                    throughput: 100.0,
+                    error_rate: 0.01,
+                    memory_usage_mb: 50.0,
+                },
+            );
+        }
+
+        // First calibration
+        let result1 = calibrator.calibrate("cooldown_engine");
+        assert!(result1.success);
+
+        // Second calibration should be blocked by cooldown
+        let result2 = calibrator.calibrate("cooldown_engine");
+        assert!(!result2.success);
+        assert_eq!(result2.action_taken, CalibrationAction::None);
+    }
+
+    #[test]
+    fn test_stats_snapshot() {
+        let calibrator = EngineCalibrator::new(CalibratorConfig::default());
+        let stats = calibrator.stats();
+
+        assert_eq!(stats.samples_collected, 0);
+        assert_eq!(stats.drift_detections, 0);
+        assert_eq!(stats.calibrations_performed, 0);
+        assert_eq!(stats.calibrations_successful, 0);
+        assert_eq!(stats.tracked_engines, 0);
+    }
+
+    #[test]
+    fn test_stats_snapshot_serialization() {
+        let stats = CalibratorStatsSnapshot {
+            samples_collected: 100,
+            drift_detections: 5,
+            calibrations_performed: 2,
+            calibrations_successful: 2,
+            tracked_engines: 3,
+        };
+        let json = serde_json::to_string(&stats).unwrap();
+        let restored: CalibratorStatsSnapshot = serde_json::from_str(&json).unwrap();
+        assert_eq!(stats.samples_collected, restored.samples_collected);
+    }
+
+    #[test]
+    fn test_calibration_result_serialization() {
+        let result = CalibrationResult {
+            engine_id: "test".to_string(),
+            action_taken: CalibrationAction::ResetCaches,
+            success: true,
+            before_metrics: None,
+            after_metrics: None,
+            duration_ms: 50,
+            timestamp: 12345,
+        };
+        let json = serde_json::to_string(&result).unwrap();
+        let restored: CalibrationResult = serde_json::from_str(&json).unwrap();
+        assert_eq!(result.engine_id, restored.engine_id);
+    }
+
+    #[test]
+    fn test_drift_report_serialization() {
+        let report = DriftReport {
+            engine_id: "drift_engine".to_string(),
+            is_drifting: true,
+            drift_metrics: DriftMetrics {
+                latency_drift_percent: 20.0,
+                throughput_drift_percent: -15.0,
+                error_rate_drift: 0.05,
+                memory_drift_percent: 25.0,
+                overall_drift_score: 18.0,
+            },
+            recommendation: DriftRecommendation::SoftRecalibrate,
+            timestamp: 99999,
+        };
+        let json = serde_json::to_string(&report).unwrap();
+        let restored: DriftReport = serde_json::from_str(&json).unwrap();
+        assert_eq!(report.engine_id, restored.engine_id);
+        assert_eq!(report.is_drifting, restored.is_drifting);
     }
 }

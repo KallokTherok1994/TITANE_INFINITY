@@ -86,3 +86,215 @@ impl CognitiveRhythmParams {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ─────────────────────────────────────────────────────────────
+    // CognitiveRhythmParams Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_cognitive_rhythm_from_dawn() {
+        let state = CycleState::current();
+        let mut dawn_state = state.clone();
+        dawn_state.daily_phase = DailyPhase::Dawn;
+        let params = CognitiveRhythmParams::from_cycle_state(&dawn_state);
+        assert_eq!(params.mode, CognitiveMode::Creative);
+        assert_eq!(params.omega_depth, 0.6);
+        assert_eq!(params.creative_temperature, 0.8);
+    }
+
+    #[test]
+    fn test_cognitive_rhythm_from_morning() {
+        let state = CycleState::current();
+        let mut morning_state = state.clone();
+        morning_state.daily_phase = DailyPhase::Morning;
+        let params = CognitiveRhythmParams::from_cycle_state(&morning_state);
+        assert_eq!(params.mode, CognitiveMode::Analytical);
+        assert_eq!(params.omega_depth, 0.8);
+        assert_eq!(params.analysis_intensity, 0.9);
+    }
+
+    #[test]
+    fn test_cognitive_rhythm_from_noon() {
+        let state = CycleState::current();
+        let mut noon_state = state.clone();
+        noon_state.daily_phase = DailyPhase::Noon;
+        let params = CognitiveRhythmParams::from_cycle_state(&noon_state);
+        assert_eq!(params.mode, CognitiveMode::Peak);
+        assert_eq!(params.omega_depth, 1.0);
+        assert_eq!(params.analysis_intensity, 1.0);
+    }
+
+    #[test]
+    fn test_cognitive_rhythm_from_afternoon() {
+        let state = CycleState::current();
+        let mut afternoon_state = state.clone();
+        afternoon_state.daily_phase = DailyPhase::Afternoon;
+        let params = CognitiveRhythmParams::from_cycle_state(&afternoon_state);
+        assert_eq!(params.mode, CognitiveMode::Execution);
+        assert_eq!(params.speed_vs_quality, 0.4); // Favor speed
+    }
+
+    #[test]
+    fn test_cognitive_rhythm_from_dusk() {
+        let state = CycleState::current();
+        let mut dusk_state = state.clone();
+        dusk_state.daily_phase = DailyPhase::Dusk;
+        let params = CognitiveRhythmParams::from_cycle_state(&dusk_state);
+        assert_eq!(params.mode, CognitiveMode::Synthesis);
+        assert_eq!(params.memory_consolidation, 0.7);
+    }
+
+    #[test]
+    fn test_cognitive_rhythm_from_night() {
+        let state = CycleState::current();
+        let mut night_state = state.clone();
+        night_state.daily_phase = DailyPhase::Night;
+        let params = CognitiveRhythmParams::from_cycle_state(&night_state);
+        assert_eq!(params.mode, CognitiveMode::Consolidation);
+        assert_eq!(params.memory_consolidation, 1.0);
+        assert_eq!(params.speed_vs_quality, 1.0); // Favor quality
+    }
+
+    #[test]
+    fn test_cognitive_rhythm_clone() {
+        let state = CycleState::current();
+        let params = CognitiveRhythmParams::from_cycle_state(&state);
+        let cloned = params.clone();
+        assert_eq!(params.mode, cloned.mode);
+        assert_eq!(params.omega_depth, cloned.omega_depth);
+    }
+
+    #[test]
+    fn test_cognitive_rhythm_debug() {
+        let state = CycleState::current();
+        let params = CognitiveRhythmParams::from_cycle_state(&state);
+        let debug = format!("{:?}", params);
+        assert!(debug.contains("CognitiveRhythmParams"));
+    }
+
+    #[test]
+    fn test_cognitive_rhythm_serialization() {
+        let state = CycleState::current();
+        let params = CognitiveRhythmParams::from_cycle_state(&state);
+        let json = serde_json::to_string(&params).unwrap();
+        let restored: CognitiveRhythmParams = serde_json::from_str(&json).unwrap();
+        assert_eq!(params.mode, restored.mode);
+        assert_eq!(params.omega_depth, restored.omega_depth);
+    }
+
+    #[test]
+    fn test_omega_engine_weights_count() {
+        let state = CycleState::current();
+        let params = CognitiveRhythmParams::from_cycle_state(&state);
+        let weights = params.omega_engine_weights();
+        assert_eq!(weights.len(), 10);
+    }
+
+    #[test]
+    fn test_omega_engine_weights_creative() {
+        let state = CycleState::current();
+        let mut dawn_state = state.clone();
+        dawn_state.daily_phase = DailyPhase::Dawn;
+        let params = CognitiveRhythmParams::from_cycle_state(&dawn_state);
+        let weights = params.omega_engine_weights();
+        assert_eq!(weights[0], 1.0);
+    }
+
+    #[test]
+    fn test_omega_engine_weights_peak() {
+        let state = CycleState::current();
+        let mut noon_state = state.clone();
+        noon_state.daily_phase = DailyPhase::Noon;
+        let params = CognitiveRhythmParams::from_cycle_state(&noon_state);
+        let weights = params.omega_engine_weights();
+        // Peak has highest weights
+        assert!(weights.iter().sum::<f32>() > 9.0);
+    }
+
+    #[test]
+    fn test_omega_engine_weights_consolidation() {
+        let state = CycleState::current();
+        let mut night_state = state.clone();
+        night_state.daily_phase = DailyPhase::Night;
+        let params = CognitiveRhythmParams::from_cycle_state(&night_state);
+        let weights = params.omega_engine_weights();
+        // Consolidation has lower average weights
+        assert!(weights.iter().sum::<f32>() < 6.0);
+    }
+
+    #[test]
+    fn test_omega_depth_range() {
+        for phase in [
+            DailyPhase::Dawn,
+            DailyPhase::Morning,
+            DailyPhase::Noon,
+            DailyPhase::Afternoon,
+            DailyPhase::Dusk,
+            DailyPhase::Night,
+        ] {
+            let state = CycleState::current();
+            let mut test_state = state.clone();
+            test_state.daily_phase = phase;
+            let params = CognitiveRhythmParams::from_cycle_state(&test_state);
+            assert!(params.omega_depth >= 0.0 && params.omega_depth <= 1.0);
+        }
+    }
+
+    #[test]
+    fn test_analysis_intensity_range() {
+        for phase in [
+            DailyPhase::Dawn,
+            DailyPhase::Morning,
+            DailyPhase::Noon,
+            DailyPhase::Afternoon,
+            DailyPhase::Dusk,
+            DailyPhase::Night,
+        ] {
+            let state = CycleState::current();
+            let mut test_state = state.clone();
+            test_state.daily_phase = phase;
+            let params = CognitiveRhythmParams::from_cycle_state(&test_state);
+            assert!(params.analysis_intensity >= 0.0 && params.analysis_intensity <= 1.0);
+        }
+    }
+
+    #[test]
+    fn test_memory_consolidation_range() {
+        for phase in [
+            DailyPhase::Dawn,
+            DailyPhase::Morning,
+            DailyPhase::Noon,
+            DailyPhase::Afternoon,
+            DailyPhase::Dusk,
+            DailyPhase::Night,
+        ] {
+            let state = CycleState::current();
+            let mut test_state = state.clone();
+            test_state.daily_phase = phase;
+            let params = CognitiveRhythmParams::from_cycle_state(&test_state);
+            assert!(params.memory_consolidation >= 0.0 && params.memory_consolidation <= 1.0);
+        }
+    }
+
+    #[test]
+    fn test_creative_temperature_range() {
+        for phase in [
+            DailyPhase::Dawn,
+            DailyPhase::Morning,
+            DailyPhase::Noon,
+            DailyPhase::Afternoon,
+            DailyPhase::Dusk,
+            DailyPhase::Night,
+        ] {
+            let state = CycleState::current();
+            let mut test_state = state.clone();
+            test_state.daily_phase = phase;
+            let params = CognitiveRhythmParams::from_cycle_state(&test_state);
+            assert!(params.creative_temperature >= 0.0 && params.creative_temperature <= 1.0);
+        }
+    }
+}
