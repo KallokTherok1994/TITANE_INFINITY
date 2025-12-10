@@ -515,7 +515,7 @@ export class VisualSemanticGrammar {
    */
   static translateSystemEvent(
     event: string,
-    metadata?: Record<string, unknown>
+    _metadata?: Record<string, unknown>
   ): VisualPhenomenon[] {
     const phenomena: VisualPhenomenon[] = [];
 

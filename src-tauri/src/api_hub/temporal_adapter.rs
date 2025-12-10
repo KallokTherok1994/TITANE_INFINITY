@@ -54,9 +54,9 @@ impl TemporalApiAdapter {
     /// Multiplicateur rate limiting
     fn calculate_rate_limit_multiplier(hour: u8, is_weekend: bool) -> f32 {
         let base = match hour {
-            10..=11 => 1.5,         // Peak: allow more requests
-            12..=13 => 1.0,         // Midday: normal
-            22..=23 | 0..=5 => 0.5, // Night: conserve
+            10..=11 => 1.5,   // Peak: allow more requests
+            12..=13 => 1.0,   // Midday: normal
+            22..=23 | 0..=5 => 0.5,    // Night: conserve
             _ => 1.0,
         };
 
@@ -70,41 +70,41 @@ impl TemporalApiAdapter {
     /// TTL cache en secondes
     fn calculate_cache_ttl(hour: u8) -> u64 {
         match hour {
-            10..=11 => 300,          // Peak: 5min (fresh data)
-            22..=23 | 0..=5 => 1800, // Night: 30min (stable)
-            _ => 600,                // Default: 10min
+            10..=11 => 300,    // Peak: 5min (fresh data)
+            22..=23 | 0..=5 => 1800,    // Night: 30min (stable)
+            _ => 600,          // Default: 10min
         }
     }
 
     /// Multiplicateur timeout
     fn calculate_timeout_multiplier(hour: u8) -> f32 {
         match hour {
-            10..=11 => 1.0,         // Peak: normal timeout
-            22..=23 | 0..=5 => 2.0, // Night: longer timeout OK
+            10..=11 => 1.0,    // Peak: normal timeout
+            22..=23 | 0..=5 => 2.0,     // Night: longer timeout OK
             _ => 1.2,
         }
     }
 
     /// Devrait-on batcher les requêtes
     fn should_batch_requests(hour: u8) -> bool {
-        matches!(hour, 22..=23 | 0..=5) // Night: batch for efficiency
+        matches!(hour, 22..=23 | 0..=5)  // Night: batch for efficiency
     }
 
     /// Préférer qualité sur vitesse
     fn should_prefer_quality(hour: u8) -> bool {
-        matches!(hour, 10..=11 | 14..=16) // Peak working hours
+        matches!(hour, 10..=11 | 14..=16)  // Peak working hours
     }
 
     /// Sensibilité aux coûts (0.0-1.0)
     fn calculate_cost_sensitivity(hour: u8, is_weekend: bool) -> f32 {
         let base = match hour {
-            10..=11 => 0.3,         // Peak: less cost-sensitive
-            22..=23 | 0..=5 => 0.8, // Night: more cost-sensitive
+            10..=11 => 0.3,    // Peak: less cost-sensitive
+            22..=23 | 0..=5 => 0.8,     // Night: more cost-sensitive
             _ => 0.5,
         };
 
         if is_weekend {
-            base * 1.2 // Weekend: more cost-sensitive
+            base * 1.2  // Weekend: more cost-sensitive
         } else {
             base
         }
@@ -113,12 +113,12 @@ impl TemporalApiAdapter {
     /// TTL cache pour endpoint spécifique
     pub async fn get_cache_ttl(&self, endpoint: &str) -> u64 {
         let adjustments = self.get_api_adjustments().await;
-
+        
         // Ajuster selon type endpoint
         let base_ttl = if endpoint.contains("chat") || endpoint.contains("completion") {
-            adjustments.cache_ttl_seconds / 2 // Chat: shorter TTL
+            adjustments.cache_ttl_seconds / 2  // Chat: shorter TTL
         } else if endpoint.contains("embedding") {
-            adjustments.cache_ttl_seconds * 2 // Embeddings: longer TTL
+            adjustments.cache_ttl_seconds * 2  // Embeddings: longer TTL
         } else {
             adjustments.cache_ttl_seconds
         };
@@ -198,19 +198,31 @@ mod tests {
     fn create_test_context(hour: u8, is_weekend: bool) -> TemporalContext {
         TemporalContext {
             now: Moment {
+                timestamp_ms: std::time::SystemTime::now()
+                    .duration_since(std::time::UNIX_EPOCH)
+                    .unwrap()
+                    .as_millis() as u64,
                 hour,
+                minute: 0,
+                second: 0,
+                day: 15,
                 day_of_week: if is_weekend { 6 } else { 3 },
-                day_of_month: 15,
+                day_of_year: 349,
+                week_of_year: 50,
                 month: 12,
                 year: 2025,
                 is_weekend,
                 season: Season::Winter,
                 time_of_day: TimeOfDay::from_hour(hour),
             },
-            active_routines: vec![],
-            planned_tasks: vec![],
-            predictions: vec![],
-            alignment_status: Default::default(),
+            session_start: std::time::Instant::now(),
+            session_duration_ms: 0,
+            day_progress: 0.5,
+            week_progress: 0.5,
+            month_progress: 0.5,
+            year_progress: 0.5,
+            cognitive_energy_estimate: 0.8,
+            optimal_for: vec![],
         }
     }
 
@@ -218,7 +230,7 @@ mod tests {
     fn test_rate_limit_multiplier_peak() {
         let context = create_test_context(10, false);
         let adjustments = TemporalApiAdapter::calculate_adjustments(&context);
-
+        
         assert_eq!(adjustments.rate_limit_multiplier, 1.5);
     }
 
@@ -226,7 +238,7 @@ mod tests {
     fn test_rate_limit_multiplier_night() {
         let context = create_test_context(2, false);
         let adjustments = TemporalApiAdapter::calculate_adjustments(&context);
-
+        
         assert_eq!(adjustments.rate_limit_multiplier, 0.5);
     }
 
@@ -234,7 +246,7 @@ mod tests {
     fn test_cache_ttl_peak() {
         let context = create_test_context(10, false);
         let adjustments = TemporalApiAdapter::calculate_adjustments(&context);
-
+        
         assert_eq!(adjustments.cache_ttl_seconds, 300); // 5 min
     }
 
@@ -242,7 +254,7 @@ mod tests {
     fn test_cache_ttl_night() {
         let context = create_test_context(2, false);
         let adjustments = TemporalApiAdapter::calculate_adjustments(&context);
-
+        
         assert_eq!(adjustments.cache_ttl_seconds, 1800); // 30 min
     }
 

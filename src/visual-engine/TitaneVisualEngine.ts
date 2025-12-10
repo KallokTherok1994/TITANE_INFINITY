@@ -29,7 +29,7 @@ import { StateManager } from './StateManager';
 import type { VisualState, StateVisualConfig } from '@/design-system/visual-states';
 import { effectsOrchestrator } from './EffectsOrchestrator';
 import { osIntegrationBridge } from './OSIntegrationBridge';
-import type { EffectsMetrics } from './EffectsOrchestrator';
+import type { EffectsMetrics as _EffectsMetrics } from './EffectsOrchestrator';
 
 export interface VisualEngineConfig {
   enableParticles: boolean;

@@ -153,7 +153,10 @@ export class TauriAutoRepairEngine {
   async phase2_identifyCauses(): Promise<CauseAnalysis> {
     console.log('[AutoRepair] Phase 2: Identification des causes...');
 
-    const diagnostic = this.report.phase1_diagnostic!;
+    const diagnostic = this.report.phase1_diagnostic;
+    if (!diagnostic) {
+      throw new Error('Phase 1 diagnostic not completed');
+    }
     const available = diagnostic.available_commands;
 
     let root_cause: CauseAnalysis['root_cause'] = 'backend_missing';
@@ -224,7 +227,10 @@ export class TauriAutoRepairEngine {
     // Le mapping est déjà créé dans tauriCommandMapper.ts
     // On compte juste les mappings applicables
 
-    const diagnostic = this.report.phase1_diagnostic!;
+    const diagnostic = this.report.phase1_diagnostic;
+    if (!diagnostic) {
+      throw new Error('Phase 1 diagnostic not completed');
+    }
     const missing = diagnostic.missing_list;
 
     const mappings_created = missing.length;
@@ -428,14 +434,18 @@ export class TauriAutoRepairEngine {
   async phase6_validate(): Promise<ValidationResult> {
     console.log('[AutoRepair] Phase 6: Validation...');
 
-    const diagnostic = this.report.phase1_diagnostic!;
-    const singularity = this.report.phase4_singularity!;
-    const autoaudit = this.report.phase5_autoaudit!;
+    const diagnostic = this.report.phase1_diagnostic;
+    const singularity = this.report.phase4_singularity;
+    const autoaudit = this.report.phase5_autoaudit;
+    const mapping = this.report.phase3_mapping;
+
+    if (!diagnostic || !singularity || !autoaudit || !mapping) {
+      throw new Error('Previous phases not completed');
+    }
 
     // Toutes les commandes fonctionnent via mapping
     const all_commands_working =
-      diagnostic.commands_missing === 0 ||
-      this.report.phase3_mapping!.mappings_created > 0;
+      diagnostic.commands_missing === 0 || mapping.mappings_created > 0;
 
     // Singularity healthy
     const singularity_healthy = singularity.stability_after >= 0.7;
@@ -489,21 +499,26 @@ export class TauriAutoRepairEngine {
       this.generateRecommendations();
 
       // Marquer succès
-      this.report.success = this.report.phase6_validation!.overall_health >= 75;
+      const validation = this.report.phase6_validation;
+      if (validation) {
+        this.report.success = validation.overall_health >= 75;
+      }
 
       console.log('═══════════════════════════════════════════════════════════');
       console.log(`REPAIR ENGINE: ${this.report.success ? '✅ SUCCESS' : '⚠️ PARTIAL'}`);
-      console.log(`Overall Health: ${this.report.phase6_validation!.overall_health}%`);
+      if (validation) {
+        console.log(`Overall Health: ${validation.overall_health}%`);
+      }
       console.log('═══════════════════════════════════════════════════════════');
 
-      return this.report as RepairReport;
+      return this.report;
     } catch (err) {
       console.error('[AutoRepair] Fatal error:', err);
       this.report.success = false;
       this.report.recommendations = [
         'Erreur critique lors de la réparation. Vérifier les logs.',
       ];
-      return this.report as RepairReport;
+      return this.report;
     }
   }
 
@@ -513,7 +528,8 @@ export class TauriAutoRepairEngine {
   private generateRecommendations(): void {
     const recommendations: string[] = [];
 
-    const validation = this.report.phase6_validation!;
+    const validation = this.report.phase6_validation;
+    if (!validation) return;
 
     if (!validation.all_commands_working) {
       recommendations.push(

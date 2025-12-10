@@ -97,7 +97,7 @@ export function useSystemCenterAutoFix(): UseSystemCenterAutoFixReturn {
       // Mettre à jour les erreurs détectées
       setDetectedErrors(SystemAPI.getDetectedErrors());
     } catch (err) {
-      const detectedError = systemCenterAutoFix.analyzeError(
+      const _detectedError = systemCenterAutoFix.analyzeError(
         err as Error,
         'SystemCenter'
       );
@@ -124,7 +124,7 @@ export function useSystemCenterAutoFix(): UseSystemCenterAutoFixReturn {
 
       setDetectedErrors(SystemAPI.getDetectedErrors());
     } catch (err) {
-      const detectedError = systemCenterAutoFix.analyzeError(err as Error, 'Monitoring');
+      const _detectedError = systemCenterAutoFix.analyzeError(err as Error, 'Monitoring');
       setDetectedErrors([...systemCenterAutoFix.getDetectedErrors()]);
     } finally {
       setLoading(false);

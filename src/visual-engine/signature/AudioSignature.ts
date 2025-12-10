@@ -62,9 +62,12 @@ export class AudioSignature {
     }
 
     try {
-      this.audioContext = new (
-        window.AudioContext || (window as any).webkitAudioContext
-      )();
+      // Type assertion for webkit prefix
+      const AudioContextConstructor =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext })
+          .webkitAudioContext;
+      this.audioContext = new AudioContextConstructor();
       this.isInitialized = true;
       return true;
     } catch (error) {

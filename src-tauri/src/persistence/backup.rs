@@ -348,9 +348,15 @@ impl BackupEngine {
             return Ok(validation);
         }
 
-        let metadata_len =
-            u32::from_le_bytes(archive_data[header_len..header_len + 4].try_into().unwrap())
-                as usize;
+        let metadata_len = match archive_data[header_len..header_len + 4].try_into() {
+            Ok(bytes) => u32::from_le_bytes(bytes) as usize,
+            Err(_) => {
+                validation
+                    .errors
+                    .push("Impossible de lire la longueur des métadonnées".to_string());
+                return Ok(validation);
+            }
+        };
 
         if archive_data.len() < header_len + 4 + metadata_len {
             validation.errors.push("Métadonnées tronquées".to_string());
@@ -443,7 +449,15 @@ impl BackupEngine {
             return Ok(report);
         }
 
-        let metadata = validation.metadata.unwrap();
+        let metadata = match validation.metadata {
+            Some(m) => m,
+            None => {
+                report
+                    .errors
+                    .push("Métadonnées manquantes dans l'archive validée".to_string());
+                return Ok(report);
+            }
+        };
         report.schema_version = metadata.schema_version;
 
         // Lire et décompresser l'archive
@@ -452,9 +466,15 @@ impl BackupEngine {
             .map_err(|e| BackupError::IoError(e.to_string()))?;
 
         let header_len = 16;
-        let metadata_len =
-            u32::from_le_bytes(archive_data[header_len..header_len + 4].try_into().unwrap())
-                as usize;
+        let metadata_len = match archive_data[header_len..header_len + 4].try_into() {
+            Ok(bytes) => u32::from_le_bytes(bytes) as usize,
+            Err(_) => {
+                report
+                    .errors
+                    .push("Impossible de lire la longueur des métadonnées (restore)".to_string());
+                return Ok(report);
+            }
+        };
 
         let data_offset = header_len + 4 + metadata_len + 8;
         let compressed_data = &archive_data[data_offset..];
@@ -477,8 +497,16 @@ impl BackupEngine {
             if cursor + 8 > decompressed.len() {
                 break;
             }
-            let size =
-                u64::from_le_bytes(decompressed[cursor..cursor + 8].try_into().unwrap()) as usize;
+            let size = match decompressed[cursor..cursor + 8].try_into() {
+                Ok(bytes) => u64::from_le_bytes(bytes) as usize,
+                Err(_) => {
+                    report.errors.push(format!(
+                        "Impossible de lire la taille du fichier {}",
+                        file_name
+                    ));
+                    break;
+                }
+            };
             cursor += 8;
 
             // Lire le contenu

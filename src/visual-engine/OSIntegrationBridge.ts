@@ -331,7 +331,10 @@ export class OSIntegrationBridge {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, new Set());
     }
-    this.listeners.get(event)!.add(callback);
+    const listeners = this.listeners.get(event);
+    if (listeners) {
+      listeners.add(callback);
+    }
   }
 
   public off(event: string, callback: (data: unknown) => void): void {

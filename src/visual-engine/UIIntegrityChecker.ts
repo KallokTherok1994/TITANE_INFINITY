@@ -510,7 +510,7 @@ export class UIIntegrityChecker {
   private async autoFixAnomalies(): Promise<void> {
     let fixCount = 0;
 
-    for (const [id, anomaly] of this.anomalies.entries()) {
+    for (const [_id, anomaly] of this.anomalies.entries()) {
       if (anomaly.autoFixable && !anomaly.resolved && anomaly.fix) {
         try {
           const fixed = await anomaly.fix();

@@ -35,7 +35,7 @@ import {
   VisualConfig,
   CognitiveState,
   EmotionalTone,
-  SystemLoadLevel,
+  SystemLoadLevel as _SystemLoadLevel,
   ConversationContext,
 } from '@/design-system/visual-states';
 

@@ -367,7 +367,7 @@ export const useEffectsStore = create<EffectsStore>()(
         // ═══════════════════════════════════════════════════════════
 
         updateStats: () => {
-          const { history, metrics } = get();
+          const { history, metrics: _metrics } = get();
 
           if (history.length === 0) return;
 

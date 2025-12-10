@@ -349,10 +349,10 @@ impl MemoryDoctor {
                                 .unwrap_or_default()
                                 .as_millis() as u64;
 
-                            if last_backup_at.is_none() || ts > last_backup_at.unwrap() {
+                            if last_backup_at.map_or(true, |last| ts > last) {
                                 last_backup_at = Some(ts);
                             }
-                            if oldest_backup_at.is_none() || ts < oldest_backup_at.unwrap() {
+                            if oldest_backup_at.map_or(true, |oldest| ts < oldest) {
                                 oldest_backup_at = Some(ts);
                             }
                         }

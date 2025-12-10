@@ -357,7 +357,11 @@ export class ParticleSignature {
   }
 
   private calculatePosition(): { x: number; y: number } {
-    const { pattern, spiralTightness, goldenAngle } = this.config.distribution;
+    const {
+      pattern,
+      spiralTightness: _spiralTightness,
+      goldenAngle: _goldenAngle,
+    } = this.config.distribution;
 
     switch (pattern) {
       case 'fibonacci':
@@ -462,7 +466,11 @@ export class ParticleSignature {
   }
 
   private calculateColor(): string {
-    const { colors, colorCycleSpeed, colorVariation } = this.config.distribution;
+    const {
+      colors,
+      colorCycleSpeed,
+      colorVariation: _colorVariation,
+    } = this.config.distribution;
 
     if (colors.length === 0) return '#ffffff';
 

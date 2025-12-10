@@ -249,7 +249,8 @@ export class OrbitalSignature {
   // ═════════════════════════════════════════════════════════════════
 
   private updateRings(deltaSeconds: number): void {
-    const { resonanceStrength, resonanceFrequency } = this.parameters;
+    const { resonanceStrength, resonanceFrequency: _resonanceFrequency } =
+      this.parameters;
     const time = (this.lastUpdateTime - this.startTime) / 1000;
 
     for (let i = 0; i < this.rings.length; i++) {

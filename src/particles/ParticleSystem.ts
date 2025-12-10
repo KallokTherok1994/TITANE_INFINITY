@@ -625,8 +625,10 @@ export class ParticleSystem extends EventEmitter {
   clear(): void {
     // Return all particles to pool
     while (this.particles.length > 0) {
-      const particle = this.particles.pop()!;
-      this.particlePool.push(particle);
+      const particle = this.particles.pop();
+      if (particle) {
+        this.particlePool.push(particle);
+      }
     }
   }
 
