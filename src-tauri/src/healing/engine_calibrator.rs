@@ -137,9 +137,7 @@ impl EngineCalibrator {
     /// Record a performance sample for an engine
     pub fn record_sample(&self, engine_id: &str, sample: PerformanceSample) {
         let mut samples = self.samples.write();
-        let engine_samples = samples
-            .entry(engine_id.to_string())
-            .or_insert_with(VecDeque::new);
+        let engine_samples = samples.entry(engine_id.to_string()).or_default();
 
         engine_samples.push_back(sample);
 

@@ -194,12 +194,10 @@ pub async fn list_config_exports(app: AppHandle) -> Result<Vec<String>, String> 
         .map_err(|e| format!("Impossible de lire le dossier d'export: {}", e))?;
 
     let mut exports = Vec::new();
-    for entry in entries {
-        if let Ok(entry) = entry {
-            if let Some(filename) = entry.file_name().to_str() {
-                if filename.ends_with(".json") {
-                    exports.push(filename.to_string());
-                }
+    for entry in entries.flatten() {
+        if let Some(filename) = entry.file_name().to_str() {
+            if filename.ends_with(".json") {
+                exports.push(filename.to_string());
             }
         }
     }

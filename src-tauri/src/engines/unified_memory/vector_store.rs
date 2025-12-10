@@ -36,7 +36,7 @@ impl VectorStore {
     }
 
     /// Create default VectorStore (384D)
-    pub fn default() -> Self {
+    pub fn with_default_dimensions() -> Self {
         Self::new(384)
     }
 

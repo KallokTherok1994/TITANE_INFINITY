@@ -268,7 +268,7 @@ impl ResponseAdapter {
         result = result.replace(". ", ".\n");
 
         // Pauses après les virgules longues
-        result = result.replace(", ", ", ");
+        // Note: No transformation needed here (already correct)
 
         result
     }

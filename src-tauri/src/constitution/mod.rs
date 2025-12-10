@@ -200,7 +200,7 @@ impl Constitution {
         self.evolution
             .propose_amendment(amendment)
             .await
-            .map_err(|e| ConstitutionError::InvalidAmendment(e))
+            .map_err(ConstitutionError::InvalidAmendment)
     }
 
     /// Récupère les principes fondamentaux

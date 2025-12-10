@@ -30,19 +30,10 @@ pub struct OnboardingPreferences {
 /**
  * État de l'onboarding
  */
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct OnboardingState {
     pub completed: bool,
     pub preferences: Option<OnboardingPreferences>,
-}
-
-impl Default for OnboardingState {
-    fn default() -> Self {
-        Self {
-            completed: false,
-            preferences: None,
-        }
-    }
 }
 
 /**

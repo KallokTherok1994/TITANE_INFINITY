@@ -175,10 +175,7 @@ impl PatternAnalyzer {
 
         // Transitions
         if let Some(ref last) = self.last_action {
-            let transitions = self
-                .action_transitions
-                .entry(last.clone())
-                .or_insert_with(HashMap::new);
+            let transitions = self.action_transitions.entry(last.clone()).or_default();
             *transitions.entry(event_type.clone()).or_insert(0) += 1;
         }
 

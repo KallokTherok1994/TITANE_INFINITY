@@ -90,16 +90,13 @@ impl TemporalCircuitBreaker {
         state.success_count += 1;
         state.consecutive_successes += 1;
 
-        match state.current_state {
-            CircuitState::HalfOpen => {
-                // Fermer circuit après 3 succès consécutifs
-                if state.consecutive_successes >= 3 {
-                    state.current_state = CircuitState::Closed;
-                    state.failure_count = 0;
-                    state.last_state_change = Instant::now();
-                }
+        if state.current_state == CircuitState::HalfOpen {
+            // Fermer circuit après 3 succès consécutifs
+            if state.consecutive_successes >= 3 {
+                state.current_state = CircuitState::Closed;
+                state.failure_count = 0;
+                state.last_state_change = Instant::now();
             }
-            _ => {}
         }
     }
 

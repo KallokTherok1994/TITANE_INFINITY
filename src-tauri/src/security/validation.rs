@@ -294,14 +294,9 @@ macro_rules! validate {
     };
 }
 
+#[derive(Default)]
 pub struct InputValidator {
     max_length: usize,
-}
-
-impl Default for InputValidator {
-    fn default() -> Self {
-        Self { max_length: 0 }
-    }
 }
 
 impl InputValidator {

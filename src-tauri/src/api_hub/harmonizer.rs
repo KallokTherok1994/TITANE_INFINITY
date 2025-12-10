@@ -257,7 +257,7 @@ impl ResponseHarmonizer {
     fn make_concise(&self, text: &str) -> String {
         // Garder uniquement les phrases clés
         let sentences: Vec<&str> = text
-            .split(|c| c == '.' || c == '!' || c == '?')
+            .split(['.', '!', '?'])
             .filter(|s| !s.trim().is_empty())
             .collect();
 
@@ -305,7 +305,7 @@ impl ResponseHarmonizer {
         let search_start = max_len.saturating_sub(50);
         let slice = &text[search_start..max_len];
 
-        if let Some(pos) = slice.rfind(|c: char| c == '.' || c == '!' || c == '?' || c == '\n') {
+        if let Some(pos) = slice.rfind(['.', '!', '?', '\n']) {
             let end_pos = search_start + pos + 1;
             return text[..end_pos].to_string();
         }

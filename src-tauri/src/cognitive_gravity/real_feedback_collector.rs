@@ -21,7 +21,7 @@ use tokio::sync::RwLock;
 static SYSTEM: Lazy<Arc<RwLock<System>>> = Lazy::new(|| Arc::new(RwLock::new(System::new_all())));
 
 /// Timestamp de démarrage pour uptime tracking
-static START_TIME: Lazy<Instant> = Lazy::new(|| Instant::now());
+static START_TIME: Lazy<Instant> = Lazy::new(Instant::now);
 
 /// Collecteur de feedback réel
 pub struct RealFeedbackCollector;

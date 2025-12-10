@@ -283,7 +283,7 @@ impl IntentDetector {
         let keywords = self.extract_keywords(&input_lower);
 
         // Déterminer la complexité
-        let complexity = self.assess_complexity(&input_lower, &context);
+        let complexity = self.assess_complexity(&input_lower, context);
 
         // Déterminer l'urgence
         let urgency = self.assess_urgency(&input_lower);

@@ -70,9 +70,9 @@ impl CognitiveGravityEngine {
             density: Arc::new(RwLock::new(CognitiveDensity::default())),
             stability_engine: Arc::new(RwLock::new(StabilityEngine::default())),
             dissonance_absorber: Arc::new(RwLock::new(DissonanceAbsorber::default())),
-            propagation_engine: GravityPropagationEngine::default(),
+            propagation_engine: GravityPropagationEngine,
             feedback_loop: GravityFeedbackLoop::default(),
-            monitor: GravityMonitor::default(),
+            monitor: GravityMonitor,
             running: Arc::new(RwLock::new(false)),
         }
     }
@@ -178,7 +178,7 @@ impl CognitiveGravityEngine {
     /// Propage les forces gravitationnelles
     pub async fn propagate(&self) -> TitaneResult<GravityPropagation> {
         let field = self.field.read().await;
-        self.propagation_engine.propagate(&*field).await
+        self.propagation_engine.propagate(&field).await
     }
 
     /// Absorbe une dissonance
@@ -195,13 +195,13 @@ impl CognitiveGravityEngine {
         let density = self.density.read().await;
 
         self.monitor
-            .analyze(&*field, &*attractors, &*anti_attractors, &*density)
+            .analyze(&field, &attractors, &anti_attractors, &density)
     }
 }
 
 impl Default for CognitiveGravityEngine {
     fn default() -> Self {
-        Self::new(GravityConfig::default())
+        Self::new(GravityConfig::new_default())
     }
 }
 

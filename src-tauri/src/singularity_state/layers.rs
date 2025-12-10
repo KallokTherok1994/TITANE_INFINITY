@@ -11,6 +11,7 @@ use serde::{Deserialize, Serialize};
 // ═══════════════════════════════════════════════════════════════════
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Default)]
 pub struct PhysicalLayer {
     /// État Helios (monitoring hardware)
     pub helios: HeliosState,
@@ -22,15 +23,6 @@ pub struct PhysicalLayer {
     pub metrics: PerformanceMetrics,
 }
 
-impl Default for PhysicalLayer {
-    fn default() -> Self {
-        Self {
-            helios: HeliosState::default(),
-            system_health: SystemHealth::default(),
-            metrics: PerformanceMetrics::default(),
-        }
-    }
-}
 
 impl PhysicalLayer {
     pub fn health_score(&self) -> f32 {
@@ -167,6 +159,7 @@ impl Default for MemoryState {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Default)]
 pub struct ConversationState {
     pub active_session: bool,
     pub message_count: u32,
@@ -175,17 +168,6 @@ pub struct ConversationState {
     pub last_timestamp: Option<u64>,
 }
 
-impl Default for ConversationState {
-    fn default() -> Self {
-        Self {
-            active_session: false,
-            message_count: 0,
-            context_length: 0,
-            last_message: None,
-            last_timestamp: None,
-        }
-    }
-}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct KnowledgeState {

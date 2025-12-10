@@ -224,7 +224,7 @@ impl ConversationOS {
         self.persona_engine
             .activate(persona_id)
             .await
-            .map_err(|e| ConversationError::PersonaError(e))
+            .map_err(ConversationError::PersonaError)
     }
 
     /// Récupère l'état actuel

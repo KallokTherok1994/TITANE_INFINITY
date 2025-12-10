@@ -171,7 +171,7 @@ mod tests {
     async fn test_gravity_performance_integration() {
         use crate::performance::PerformanceConfig;
 
-        let gravity = Arc::new(CognitiveGravityEngine::new(GravityConfig::default()));
+        let gravity = Arc::new(CognitiveGravityEngine::new(GravityConfig::new_default()));
         let performance = Arc::new(PerformanceEngine::new(PerformanceConfig::default()).unwrap());
 
         let integration = GravityPerformanceIntegration::new(gravity.clone(), performance.clone());

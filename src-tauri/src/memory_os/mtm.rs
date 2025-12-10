@@ -217,11 +217,10 @@ impl MidTermMemory {
     /// Remove entry by ID
     pub async fn remove(&self, id: &uuid::Uuid) -> Option<MemoryEntry> {
         let mut entries = self.entries.write().await;
-        if let Some(pos) = entries.iter().position(|e| &e.id == id) {
-            Some(entries.remove(pos))
-        } else {
-            None
-        }
+        entries
+            .iter()
+            .position(|e| &e.id == id)
+            .map(|pos| entries.remove(pos))
     }
 
     /// Remove and return all entries

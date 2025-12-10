@@ -292,18 +292,18 @@ impl APIRouter {
         }
 
         // Bonus selon les capacités requises
-        if request.strategy == ModelChoiceStrategy::DeepReasoning {
-            if profile.has_capability(ProviderCapability::Reasoning) {
-                score += 1.5;
-            }
+        if request.strategy == ModelChoiceStrategy::DeepReasoning
+            && profile.has_capability(ProviderCapability::Reasoning)
+        {
+            score += 1.5;
         }
 
-        if request.strategy == ModelChoiceStrategy::LongContext {
-            if profile.has_capability(ProviderCapability::LongContext) {
-                score += 2.0;
-                if profile.provider == Provider::Gemini {
-                    score += 1.0; // 2M tokens!
-                }
+        if request.strategy == ModelChoiceStrategy::LongContext
+            && profile.has_capability(ProviderCapability::LongContext)
+        {
+            score += 2.0;
+            if profile.provider == Provider::Gemini {
+                score += 1.0; // 2M tokens!
             }
         }
 

@@ -56,7 +56,8 @@
       "Bash(sort:*)",
       "Bash(npm run format:*)",
       "Bash(cargo fmt:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(1)"
     ],
     "deny": [],
     "ask": []

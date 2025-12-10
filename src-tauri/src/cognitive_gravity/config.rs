@@ -43,7 +43,7 @@ pub struct GravityConfig {
 }
 
 impl GravityConfig {
-    pub fn default() -> Self {
+    pub fn new_default() -> Self {
         Self {
             min_cognitive_mass: 0.5,
             max_entropy: 0.4,
@@ -76,7 +76,7 @@ impl GravityConfig {
     }
 
     pub fn high_stability() -> Self {
-        let mut config = Self::default();
+        let mut config = Self::new_default();
         config.stability_threshold = 0.85;
         config.min_cognitive_mass = 0.7;
         config.max_entropy = 0.25;
@@ -92,7 +92,7 @@ impl GravityConfig {
     }
 
     pub fn low_power() -> Self {
-        let mut config = Self::default();
+        let mut config = Self::new_default();
         config.loop_interval_ms = 2000;
         config.enable_auto_stabilization = false;
 
@@ -132,7 +132,7 @@ mod tests {
 
     #[test]
     fn test_gravity_config() {
-        let config = GravityConfig::default();
+        let config = GravityConfig::new_default();
         assert_eq!(config.min_cognitive_mass, 0.5);
         assert_eq!(config.attractor_weights().len(), 6);
         assert_eq!(config.anti_attractor_weights().len(), 5);

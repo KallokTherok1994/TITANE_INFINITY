@@ -240,11 +240,7 @@ impl Anticipator {
                     description: format!("Energy dip expected in {} hours", hours),
                     confidence: PredictionConfidence::from_score(weight * 0.9),
                     confidence_score: weight * 0.9,
-                    horizon: if hours <= 2 {
-                        PlanningHorizon::Today
-                    } else {
-                        PlanningHorizon::Today
-                    },
+                    horizon: PlanningHorizon::Today,
                     predicted_at: now,
                     expected_at: Some(expected_at),
                     supporting_evidence: vec!["Circadian rhythm pattern".to_string()],

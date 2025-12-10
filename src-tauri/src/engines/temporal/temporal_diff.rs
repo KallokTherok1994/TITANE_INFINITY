@@ -266,20 +266,18 @@ fn set_value_at_path(root: &mut Value, path: &str, value: Value) -> Result<(), S
             } else {
                 current = &mut arr[idx];
             }
+        } else if is_last {
+            current
+                .as_object_mut()
+                .ok_or("Expected object")?
+                .insert(part.to_string(), value.clone());
+            return Ok(());
         } else {
-            if is_last {
-                current
-                    .as_object_mut()
-                    .ok_or("Expected object")?
-                    .insert(part.to_string(), value.clone());
-                return Ok(());
-            } else {
-                current = current
-                    .as_object_mut()
-                    .ok_or("Expected object")?
-                    .entry(part.to_string())
-                    .or_insert(Value::Object(serde_json::Map::new()));
-            }
+            current = current
+                .as_object_mut()
+                .ok_or("Expected object")?
+                .entry(part.to_string())
+                .or_insert(Value::Object(serde_json::Map::new()));
         }
     }
 

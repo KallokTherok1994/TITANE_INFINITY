@@ -102,10 +102,7 @@ impl ProbabilityEngine {
     fn update_likelihood(&mut self, event: &UserEvent, action: &str) {
         let condition = event.event_type.clone();
 
-        let likelihoods = self
-            .likelihoods
-            .entry(condition.clone())
-            .or_insert_with(Vec::new);
+        let likelihoods = self.likelihoods.entry(condition.clone()).or_default();
 
         // Chercher l'index de l'action existante
         let found_idx = likelihoods.iter().position(|l| l.action == action);

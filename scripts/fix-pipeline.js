@@ -8,8 +8,8 @@
  */
 
 import { execSync } from 'child_process';
-import { readFileSync, writeFileSync } from 'fs';
-import { join } from 'path';
+import { readFileSync as _readFileSync, writeFileSync as _writeFileSync } from 'fs';
+import { join as _join } from 'path';
 
 const ROOT = process.cwd();
 
