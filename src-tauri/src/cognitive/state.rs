@@ -323,4 +323,185 @@ mod tests {
 
         assert!(state.coherence.mental_heart < 0.5);
     }
+
+    #[test]
+    fn test_cognitive_state_default() {
+        let state = CognitiveState::default();
+        assert!(state.timestamp > 0);
+        assert_eq!(state.coherence.global, 0.5);
+    }
+
+    #[test]
+    fn test_cognitive_state_clone() {
+        let state = CognitiveState::new();
+        let cloned = state.clone();
+        assert_eq!(cloned.coherence.global, state.coherence.global);
+    }
+
+    #[test]
+    fn test_cognitive_state_debug() {
+        let state = CognitiveState::new();
+        let debug_str = format!("{:?}", state);
+        assert!(debug_str.contains("CognitiveState"));
+    }
+
+    #[test]
+    fn test_center_coherence_default() {
+        let coherence = CenterCoherence::default();
+        assert_eq!(coherence.mental_heart, 0.5);
+        assert_eq!(coherence.heart_body, 0.5);
+        assert_eq!(coherence.body_mental, 0.5);
+        assert_eq!(coherence.global, 0.5);
+    }
+
+    #[test]
+    fn test_center_coherence_clone() {
+        let coherence = CenterCoherence::default();
+        let cloned = coherence.clone();
+        assert_eq!(cloned.global, coherence.global);
+    }
+
+    #[test]
+    fn test_center_coherence_debug() {
+        let coherence = CenterCoherence::default();
+        let debug_str = format!("{:?}", coherence);
+        assert!(debug_str.contains("CenterCoherence"));
+    }
+
+    #[test]
+    fn test_system_recommendation_variants() {
+        let rec1 = SystemRecommendation::ReduceMentalLoad {
+            reason: "test".to_string(),
+        };
+        let rec2 = SystemRecommendation::CheckHeartAlignment {
+            reason: "test".to_string(),
+        };
+        let rec3 = SystemRecommendation::PhysicalBreak {
+            duration_secs: 300,
+            reason: "test".to_string(),
+        };
+        let rec4 = SystemRecommendation::CenteringExercise {
+            exercise: "test".to_string(),
+        };
+        let rec5 = SystemRecommendation::MaintainFlow {
+            message: "test".to_string(),
+        };
+        let rec6 = SystemRecommendation::SwitchMode {
+            from_mode: "A".to_string(),
+            to_mode: "B".to_string(),
+            reason: "test".to_string(),
+        };
+
+        // Just ensure they can be created
+        let _ = format!("{:?}", rec1);
+        let _ = format!("{:?}", rec2);
+        let _ = format!("{:?}", rec3);
+        let _ = format!("{:?}", rec4);
+        let _ = format!("{:?}", rec5);
+        let _ = format!("{:?}", rec6);
+    }
+
+    #[test]
+    fn test_system_recommendation_clone() {
+        let rec = SystemRecommendation::MaintainFlow {
+            message: "Excellent flow!".to_string(),
+        };
+        let cloned = rec.clone();
+        if let SystemRecommendation::MaintainFlow { message } = cloned {
+            assert_eq!(message, "Excellent flow!");
+        }
+    }
+
+    #[test]
+    fn test_cognitive_state_not_critical_when_normal() {
+        let state = CognitiveState::new();
+        // Default state should not be critical
+        assert!(!state.is_critical());
+    }
+
+    #[test]
+    fn test_cognitive_state_not_in_flow_by_default() {
+        let state = CognitiveState::new();
+        // Default state typically not in flow
+        assert!(!state.is_in_flow());
+    }
+
+    #[test]
+    fn test_coherence_clamping() {
+        let mut mental = MentalState::default();
+        let mut heart = HeartState::default();
+        let body = BodyState::default();
+
+        // Set extreme values
+        mental.charge.current = 10.0; // Way over
+        heart.alignment = -5.0; // Way under
+        heart.motivation = 2.0; // Over
+
+        let coherence = CenterCoherence::compute(&mental, &heart, &body);
+
+        // All values should be clamped to 0.0-1.0
+        assert!(coherence.mental_heart >= 0.0 && coherence.mental_heart <= 1.0);
+        assert!(coherence.heart_body >= 0.0 && coherence.heart_body <= 1.0);
+        assert!(coherence.body_mental >= 0.0 && coherence.body_mental <= 1.0);
+        assert!(coherence.global >= 0.0 && coherence.global <= 1.0);
+    }
+
+    #[test]
+    fn test_recommendations_heart_misaligned() {
+        let mut state = CognitiveState::new();
+        state.heart.alignment = 0.1;
+
+        let recs = state.generate_recommendations();
+        assert!(recs
+            .iter()
+            .any(|r| matches!(r, SystemRecommendation::CheckHeartAlignment { .. })));
+    }
+
+    #[test]
+    fn test_recommendations_low_coherence() {
+        let mut state = CognitiveState::new();
+        state.coherence.global = 0.2;
+
+        let recs = state.generate_recommendations();
+        assert!(recs
+            .iter()
+            .any(|r| matches!(r, SystemRecommendation::CenteringExercise { .. })));
+    }
+
+    #[test]
+    fn test_recommendations_empty_for_normal_state() {
+        let state = CognitiveState::new();
+        let recs = state.generate_recommendations();
+        // Normal state should have few or no recommendations
+        assert!(recs.len() <= 2);
+    }
+
+    #[test]
+    fn test_serialization_cognitive_state() {
+        let state = CognitiveState::new();
+        let json = serde_json::to_string(&state).unwrap();
+        let restored: CognitiveState = serde_json::from_str(&json).unwrap();
+        assert_eq!(restored.coherence.global, state.coherence.global);
+    }
+
+    #[test]
+    fn test_serialization_center_coherence() {
+        let coherence = CenterCoherence::default();
+        let json = serde_json::to_string(&coherence).unwrap();
+        let restored: CenterCoherence = serde_json::from_str(&json).unwrap();
+        assert_eq!(restored.global, coherence.global);
+    }
+
+    #[test]
+    fn test_serialization_system_recommendation() {
+        let rec = SystemRecommendation::PhysicalBreak {
+            duration_secs: 600,
+            reason: "Need rest".to_string(),
+        };
+        let json = serde_json::to_string(&rec).unwrap();
+        let restored: SystemRecommendation = serde_json::from_str(&json).unwrap();
+        if let SystemRecommendation::PhysicalBreak { duration_secs, .. } = restored {
+            assert_eq!(duration_secs, 600);
+        }
+    }
 }
