@@ -10,12 +10,11 @@
  *   First-run detection + sauvegarde préférences
  * ═══════════════════════════════════════════════════════════════
  */
-
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
-use tauri::State;
 use std::sync::Mutex;
+use tauri::State;
 
 /**
  * Préférences d'onboarding
@@ -31,27 +30,18 @@ pub struct OnboardingPreferences {
 /**
  * État de l'onboarding
  */
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct OnboardingState {
     pub completed: bool,
     pub preferences: Option<OnboardingPreferences>,
-}
-
-impl Default for OnboardingState {
-    fn default() -> Self {
-        Self {
-            completed: false,
-            preferences: None,
-        }
-    }
 }
 
 /**
  * Obtient le chemin du fichier de configuration onboarding
  */
 fn get_onboarding_config_path() -> Result<PathBuf, String> {
-    let config_dir = dirs::config_dir()
-        .ok_or_else(|| "Could not find config directory".to_string())?;
+    let config_dir =
+        dirs::config_dir().ok_or_else(|| "Could not find config directory".to_string())?;
 
     let titane_dir = config_dir.join("TITANE");
 
@@ -103,11 +93,12 @@ fn save_onboarding_preferences(preferences: &OnboardingPreferences) -> Result<()
  */
 #[tauri::command]
 pub async fn is_onboarding_complete(
-    state: State<'_, Mutex<OnboardingState>>
+    state: State<'_, Mutex<OnboardingState>>,
 ) -> Result<bool, String> {
     // Essayer de charger depuis l'état
     {
-        let onboarding_state = state.lock()
+        let onboarding_state = state
+            .lock()
             .map_err(|e| format!("Failed to lock onboarding state: {}", e))?;
 
         if onboarding_state.completed {
@@ -119,7 +110,8 @@ pub async fn is_onboarding_complete(
     match load_onboarding_preferences()? {
         Some(preferences) => {
             // Mettre à jour l'état
-            let mut onboarding_state = state.lock()
+            let mut onboarding_state = state
+                .lock()
                 .map_err(|e| format!("Failed to lock onboarding state: {}", e))?;
 
             onboarding_state.completed = true;
@@ -137,13 +129,14 @@ pub async fn is_onboarding_complete(
 #[tauri::command]
 pub async fn complete_onboarding(
     preferences: OnboardingPreferences,
-    state: State<'_, Mutex<OnboardingState>>
+    state: State<'_, Mutex<OnboardingState>>,
 ) -> Result<(), String> {
     // Sauvegarder sur le disque
     save_onboarding_preferences(&preferences)?;
 
     // Mettre à jour l'état
-    let mut onboarding_state = state.lock()
+    let mut onboarding_state = state
+        .lock()
         .map_err(|e| format!("Failed to lock onboarding state: {}", e))?;
 
     onboarding_state.completed = true;
@@ -165,11 +158,12 @@ pub async fn complete_onboarding(
  */
 #[tauri::command]
 pub async fn get_onboarding_preferences(
-    state: State<'_, Mutex<OnboardingState>>
+    state: State<'_, Mutex<OnboardingState>>,
 ) -> Result<Option<OnboardingPreferences>, String> {
     // Essayer depuis l'état
     {
-        let onboarding_state = state.lock()
+        let onboarding_state = state
+            .lock()
             .map_err(|e| format!("Failed to lock onboarding state: {}", e))?;
 
         if let Some(ref preferences) = onboarding_state.preferences {
@@ -185,9 +179,7 @@ pub async fn get_onboarding_preferences(
  * Tauri Command : Réinitialise l'onboarding (pour tests / debug)
  */
 #[tauri::command]
-pub async fn reset_onboarding(
-    state: State<'_, Mutex<OnboardingState>>
-) -> Result<(), String> {
+pub async fn reset_onboarding(state: State<'_, Mutex<OnboardingState>>) -> Result<(), String> {
     // Supprimer le fichier de config
     let config_path = get_onboarding_config_path()?;
 
@@ -197,7 +189,8 @@ pub async fn reset_onboarding(
     }
 
     // Réinitialiser l'état
-    let mut onboarding_state = state.lock()
+    let mut onboarding_state = state
+        .lock()
         .map_err(|e| format!("Failed to lock onboarding state: {}", e))?;
 
     onboarding_state.completed = false;

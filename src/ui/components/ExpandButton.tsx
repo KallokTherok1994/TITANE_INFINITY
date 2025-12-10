@@ -29,7 +29,7 @@ export const ExpandButton: React.FC<ExpandButtonProps> = ({
   onClick,
   direction = 'vertical',
   size = 'md',
-  label
+  label,
 }) => {
   const getIcon = () => {
     if (direction === 'vertical') {

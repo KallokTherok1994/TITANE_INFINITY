@@ -175,7 +175,10 @@ export const KevinStatePanel: React.FC = () => {
           {state.stress_level > 0.7 && (
             <div className="recommendation warning">
               <span>⚠️</span>
-              <p>Niveau de stress élevé → Mode Thérapeute ou Méditation TITANE ZÉRO recommandé</p>
+              <p>
+                Niveau de stress élevé → Mode Thérapeute ou Méditation TITANE ZÉRO
+                recommandé
+              </p>
             </div>
           )}
           {state.saturation_level > 0.8 && (

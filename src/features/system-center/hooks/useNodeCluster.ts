@@ -8,11 +8,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { secureInvoke } from '@/lib/security';
-import type {
-  ClusterStatus,
-  ClusterStats,
-  NodeInfo
-} from '../types/systemCenter.types';
+import type { ClusterStatus, ClusterStats, NodeInfo } from '../types/systemCenter.types';
 
 export interface UseNodeClusterReturn {
   // State
@@ -30,7 +26,10 @@ export interface UseNodeClusterReturn {
   refreshPeers: () => Promise<void>;
 }
 
-export function useNodeCluster(autoRefresh = false, refreshInterval = 5000): UseNodeClusterReturn {
+export function useNodeCluster(
+  autoRefresh = false,
+  refreshInterval = 5000
+): UseNodeClusterReturn {
   const [status, setStatus] = useState<ClusterStatus | null>(null);
   const [stats, setStats] = useState<ClusterStats | null>(null);
   const [peers, setPeers] = useState<NodeInfo[]>([]);
@@ -75,22 +74,25 @@ export function useNodeCluster(autoRefresh = false, refreshInterval = 5000): Use
     }
   }, []);
 
-  const initialize = useCallback(async (nodeId: string, port: number) => {
-    setIsLoading(true);
-    setError(null);
+  const initialize = useCallback(
+    async (nodeId: string, port: number) => {
+      setIsLoading(true);
+      setError(null);
 
-    try {
-      await secureInvoke('sc_initialize_cluster', { nodeId, port });
-      setIsInitialized(true);
-      await refreshStatus();
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      setError(`Erreur initialisation: ${message}`);
-      console.error('[useNodeCluster] Initialize failed:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [refreshStatus]);
+      try {
+        await secureInvoke('sc_initialize_cluster', { nodeId, port });
+        setIsInitialized(true);
+        await refreshStatus();
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        setError(`Erreur initialisation: ${message}`);
+        console.error('[useNodeCluster] Initialize failed:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [refreshStatus]
+  );
 
   const shutdown = useCallback(async () => {
     try {

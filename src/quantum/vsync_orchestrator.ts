@@ -33,7 +33,7 @@ export class VSyncOrchestrator {
    * Détecte le taux de rafraîchissement de l'écran
    */
   private async detectRefreshRate(): Promise<void> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       let frameCount = 0;
       const frames: number[] = [];
       let lastTime = performance.now();
@@ -64,7 +64,9 @@ export class VSyncOrchestrator {
             this.detectedRefreshRate = 144;
           }
 
-          console.log(`[VSyncOrchestrator] Detected refresh rate: ${this.detectedRefreshRate}Hz`);
+          console.log(
+            `[VSyncOrchestrator] Detected refresh rate: ${this.detectedRefreshRate}Hz`
+          );
           resolve();
         }
       };
@@ -176,9 +178,10 @@ export class VSyncOrchestrator {
    * Récupère l'état actuel
    */
   getState(): VSyncState {
-    const avgFrameTime = this.frameTimeHistory.length > 0
-      ? this.frameTimeHistory.reduce((a, b) => a + b, 0) / this.frameTimeHistory.length
-      : 1000 / this.detectedRefreshRate;
+    const avgFrameTime =
+      this.frameTimeHistory.length > 0
+        ? this.frameTimeHistory.reduce((a, b) => a + b, 0) / this.frameTimeHistory.length
+        : 1000 / this.detectedRefreshRate;
 
     return {
       isActive: this.isActive,

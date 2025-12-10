@@ -244,10 +244,7 @@ export class TitaneOS {
    * Enregistre un service
    */
   registerService<T>(id: string, name: string, instance: T): void {
-    this.services.register(
-      { id, name, version: this.config.version },
-      instance
-    );
+    this.services.register({ id, name, version: this.config.version }, instance);
     this.log('debug', `Registered service: ${id}`);
   }
 

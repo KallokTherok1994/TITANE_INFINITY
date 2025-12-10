@@ -102,7 +102,9 @@ export const ReadyStep: React.FC = () => {
         <div className="cta-icon">🚀</div>
         <div className="cta-text">
           <div className="cta-title">Prêt à explorer TITANE∞ ?</div>
-          <div className="cta-subtitle">Cliquez sur "Commencer" pour démarrer votre aventure</div>
+          <div className="cta-subtitle">
+            Cliquez sur "Commencer" pour démarrer votre aventure
+          </div>
         </div>
       </motion.div>
 

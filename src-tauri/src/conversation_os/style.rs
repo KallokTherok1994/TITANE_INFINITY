@@ -3,8 +3,8 @@
 //! Super Prompt #9 — Application du style, ton et formatting
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
 use super::persona::{PersonaProfile, ResponseLength, StructureLevel};
+use serde::{Deserialize, Serialize};
 
 /// Configuration de style
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -77,7 +77,10 @@ impl StyleEngine {
 
         // 2. Structurer selon préférences
         content = self.apply_structure(&content, &persona.config.style_preferences.structure_level);
-        transformations.push(format!("structure:{:?}", persona.config.style_preferences.structure_level));
+        transformations.push(format!(
+            "structure:{:?}",
+            persona.config.style_preferences.structure_level
+        ));
 
         // 3. Ajuster la longueur
         content = self.adjust_length(&content, &persona.config.style_preferences.response_length);
@@ -203,7 +206,8 @@ impl StyleEngine {
         // Ajouter des séparateurs et numérotation
         if structured.contains("\n\n") {
             let parts: Vec<&str> = structured.split("\n\n").collect();
-            parts.iter()
+            parts
+                .iter()
                 .enumerate()
                 .map(|(i, p)| format!("**{}.**\n{}", i + 1, p))
                 .collect::<Vec<_>>()
@@ -245,7 +249,8 @@ impl StyleEngine {
             for part in parts {
                 if part.matches(", ").count() >= 3 {
                     let items: Vec<&str> = part.split(", ").collect();
-                    let list = items.iter()
+                    let list = items
+                        .iter()
                         .map(|item| format!("- {}", item.trim()))
                         .collect::<Vec<_>>()
                         .join("\n");
@@ -264,7 +269,12 @@ impl StyleEngine {
     /// Retire les emojis du texte
     fn remove_emojis(&self, text: &str) -> String {
         text.chars()
-            .filter(|c| !c.is_ascii() || c.is_alphanumeric() || c.is_whitespace() || c.is_ascii_punctuation())
+            .filter(|c| {
+                !c.is_ascii()
+                    || c.is_alphanumeric()
+                    || c.is_whitespace()
+                    || c.is_ascii_punctuation()
+            })
             .filter(|c| {
                 let code = *c as u32;
                 // Filtrer les plages d'emoji Unicode
@@ -272,7 +282,7 @@ impl StyleEngine {
                 !(0x1F300..=0x1F5FF).contains(&code) && // Symboles
                 !(0x1F680..=0x1F6FF).contains(&code) && // Transport
                 !(0x2600..=0x26FF).contains(&code) &&   // Misc symboles
-                !(0x2700..=0x27BF).contains(&code)      // Dingbats
+                !(0x2700..=0x27BF).contains(&code) // Dingbats
             })
             .collect()
     }
@@ -283,12 +293,22 @@ impl StyleEngine {
         let mut result = text.to_string();
 
         // Ne pas modifier si déjà chaleureux
-        if !result.starts_with("Bien sûr") &&
-           !result.starts_with("Absolument") &&
-           !result.starts_with("Avec plaisir") {
+        if !result.starts_with("Bien sûr")
+            && !result.starts_with("Absolument")
+            && !result.starts_with("Avec plaisir")
+        {
             // Probabilité d'ajout (simple)
             if result.len() > 50 {
-                result = format!("Bien sûr, {}", result.chars().next().unwrap().to_lowercase().collect::<String>() + &result[1..]);
+                result = format!(
+                    "Bien sûr, {}",
+                    result
+                        .chars()
+                        .next()
+                        .unwrap()
+                        .to_lowercase()
+                        .collect::<String>()
+                        + &result[1..]
+                );
             }
         }
 

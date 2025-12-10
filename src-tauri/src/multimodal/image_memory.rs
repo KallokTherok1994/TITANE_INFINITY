@@ -54,7 +54,7 @@ impl ImageMemoryStore {
         
         // Evict oldest if at capacity
         if entries.len() >= self.max_entries {
-            entries.sort_by(|a, b| a.importance.partial_cmp(&b.importance).unwrap());
+            entries.sort_by(|a, b| a.importance.partial_cmp(&b.importance).unwrap_or(std::cmp::Ordering::Equal));
             entries.remove(0);
         }
         
@@ -77,7 +77,7 @@ impl ImageMemoryStore {
             .collect();
         
         // Sort by similarity (descending)
-        scored.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
+        scored.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap_or(std::cmp::Ordering::Equal));
         
         // Take top k
         Ok(scored.into_iter().take(k).map(|(_, entry)| entry).collect())

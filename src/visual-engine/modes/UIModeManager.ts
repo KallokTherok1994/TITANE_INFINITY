@@ -13,7 +13,7 @@
  * Mode → Configuration → Visual Engine → Render
  */
 
-import type { VisualConfig } from '@/design-system/visual-states';
+import type { VisualConfig as _VisualConfig } from '@/design-system/visual-states';
 
 // ═════════════════════════════════════════════════════════════════
 // TYPES — MODES

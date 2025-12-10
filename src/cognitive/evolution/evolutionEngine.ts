@@ -95,7 +95,10 @@ const CURRENT_VERSION = '19.3.0';
 // PHASE THRESHOLDS
 // ─────────────────────────────────────────────────────────────────────────────
 
-const PHASE_THRESHOLDS: Record<EvolutionPhase, { minCycles: number; minMetrics: number }> = {
+const PHASE_THRESHOLDS: Record<
+  EvolutionPhase,
+  { minCycles: number; minMetrics: number }
+> = {
   nascent: { minCycles: 0, minMetrics: 0 },
   learning: { minCycles: 5, minMetrics: 50 },
   adapting: { minCycles: 20, minMetrics: 65 },
@@ -113,14 +116,14 @@ const INITIAL_CHANGELOG: ChangelogEntry[] = [
     version: '19.3.0',
     date: '2025-11-30',
     type: 'major',
-    title: 'Centre d\'Évolution Cognitive',
+    title: "Centre d'Évolution Cognitive",
     description: 'Fusion Progression + Knowledge + Evolution + Memory',
     changes: [
       'XP Engine unifié avec persistence Tauri',
       'Knowledge Vault avec ingestion et indexation',
       'Evolution Engine avec changelog',
       'Memory Engine CT/MT/LT refactoré',
-      'UI Centre d\'Évolution Cognitive',
+      "UI Centre d'Évolution Cognitive",
     ],
     breaking: false,
   },
@@ -242,10 +245,22 @@ class EvolutionEngine {
 
     // Mettre à jour les métriques
     this.state.currentMetrics = {
-      stability: Math.min(100, this.state.currentMetrics.stability + (improvements.stability || 0)),
-      coherence: Math.min(100, this.state.currentMetrics.coherence + (improvements.coherence || 0)),
-      performance: Math.min(100, this.state.currentMetrics.performance + (improvements.performance || 0)),
-      cognitiveDepth: Math.min(100, this.state.currentMetrics.cognitiveDepth + (improvements.cognitiveDepth || 0)),
+      stability: Math.min(
+        100,
+        this.state.currentMetrics.stability + (improvements.stability || 0)
+      ),
+      coherence: Math.min(
+        100,
+        this.state.currentMetrics.coherence + (improvements.coherence || 0)
+      ),
+      performance: Math.min(
+        100,
+        this.state.currentMetrics.performance + (improvements.performance || 0)
+      ),
+      cognitiveDepth: Math.min(
+        100,
+        this.state.currentMetrics.cognitiveDepth + (improvements.cognitiveDepth || 0)
+      ),
     };
 
     // Créer le cycle
@@ -279,7 +294,9 @@ class EvolutionEngine {
     await this.persist();
     this.notifyListeners();
 
-    console.log(`[EvolutionEngine] Cycle ${cycleNumber} complété - Phase: ${this.state.phase}`);
+    console.log(
+      `[EvolutionEngine] Cycle ${cycleNumber} complété - Phase: ${this.state.phase}`
+    );
 
     // Envoyer au backend
     try {
@@ -297,15 +314,27 @@ class EvolutionEngine {
 
   private checkPhaseProgression(): void {
     const avgMetrics = this.getAverageMetrics();
-    const phases: EvolutionPhase[] = ['nascent', 'learning', 'adapting', 'optimizing', 'evolving', 'singularity'];
+    const phases: EvolutionPhase[] = [
+      'nascent',
+      'learning',
+      'adapting',
+      'optimizing',
+      'evolving',
+      'singularity',
+    ];
 
     for (let i = phases.length - 1; i >= 0; i--) {
       const phase = phases[i];
       const threshold = PHASE_THRESHOLDS[phase];
 
-      if (this.state.totalCycles >= threshold.minCycles && avgMetrics >= threshold.minMetrics) {
+      if (
+        this.state.totalCycles >= threshold.minCycles &&
+        avgMetrics >= threshold.minMetrics
+      ) {
         if (this.state.phase !== phase) {
-          console.log(`[EvolutionEngine] 🎉 Phase upgrade: ${this.state.phase} → ${phase}`);
+          console.log(
+            `[EvolutionEngine] 🎉 Phase upgrade: ${this.state.phase} → ${phase}`
+          );
           this.state.phase = phase;
         }
         break;
@@ -382,8 +411,19 @@ class EvolutionEngine {
     return limit ? this.state.cycleHistory.slice(0, limit) : [...this.state.cycleHistory];
   }
 
-  getPhaseProgress(): { current: EvolutionPhase; progress: number; nextPhase: EvolutionPhase | null } {
-    const phases: EvolutionPhase[] = ['nascent', 'learning', 'adapting', 'optimizing', 'evolving', 'singularity'];
+  getPhaseProgress(): {
+    current: EvolutionPhase;
+    progress: number;
+    nextPhase: EvolutionPhase | null;
+  } {
+    const phases: EvolutionPhase[] = [
+      'nascent',
+      'learning',
+      'adapting',
+      'optimizing',
+      'evolving',
+      'singularity',
+    ];
     const currentIdx = phases.indexOf(this.state.phase);
     const nextPhase = currentIdx < phases.length - 1 ? phases[currentIdx + 1] : null;
 
@@ -393,7 +433,10 @@ class EvolutionEngine {
 
     const nextThreshold = PHASE_THRESHOLDS[nextPhase];
     const cycleProgress = Math.min(this.state.totalCycles / nextThreshold.minCycles, 1);
-    const metricsProgress = Math.min(this.getAverageMetrics() / nextThreshold.minMetrics, 1);
+    const metricsProgress = Math.min(
+      this.getAverageMetrics() / nextThreshold.minMetrics,
+      1
+    );
     const progress = Math.floor((cycleProgress * 0.5 + metricsProgress * 0.5) * 100);
 
     return { current: this.state.phase, progress, nextPhase };

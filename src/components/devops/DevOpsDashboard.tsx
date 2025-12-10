@@ -87,7 +87,9 @@ export default function DevOpsDashboard() {
         <h1>TITANE DevOps Dashboard</h1>{' '}
         <div className="header-status">
           {' '}
-          {buildStatus.running && <span className="status-running">En cours...</span>}{' '}
+          {buildStatus.running && (
+            <span className="status-running">En cours...</span>
+          )}{' '}
           {!buildStatus.running && buildStatus.success && (
             <span className="status-success">Succès</span>
           )}{' '}

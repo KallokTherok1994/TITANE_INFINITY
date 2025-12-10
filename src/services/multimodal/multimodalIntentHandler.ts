@@ -22,7 +22,7 @@ import type {
   MultimodalState,
   ModalityWeights,
   BaselineFusionProfile,
-  CorrelationMatrix
+  CorrelationMatrix,
 } from '@/types/multimodalFusion';
 
 // ============================================================================
@@ -115,14 +115,16 @@ const INTENT_PATTERNS: Record<MultimodalIntentType, RegExp[]> = {
     /lien\s*entre\s*(vision|voix|texte)/i,
   ],
 
-  UNKNOWN: []
+  UNKNOWN: [],
 };
 
 // ============================================================================
 // HELPER FUNCTIONS
 // ============================================================================
 
-function extractWeightsFromMessage(message: string): Partial<ModalityWeights> | undefined {
+function extractWeightsFromMessage(
+  message: string
+): Partial<ModalityWeights> | undefined {
   const weights: Partial<ModalityWeights> = {};
 
   const visionMatch = message.match(/vision\s*[:\s=]?\s*(\d+(?:\.\d+)?)/i);
@@ -145,10 +147,18 @@ function extractWeightsFromMessage(message: string): Partial<ModalityWeights> | 
 }
 
 function formatMultimodalState(state: MultimodalState): string {
-  const energyDesc = state.globalEnergyLevel === 'high' ? 'haute' :
-                     state.globalEnergyLevel === 'low' ? 'basse' : 'moyenne';
-  const tensionDesc = state.globalTensionLevel === 'high' ? 'haute' :
-                      state.globalTensionLevel === 'low' ? 'basse' : 'moyenne';
+  const energyDesc =
+    state.globalEnergyLevel === 'high'
+      ? 'haute'
+      : state.globalEnergyLevel === 'low'
+        ? 'basse'
+        : 'moyenne';
+  const tensionDesc =
+    state.globalTensionLevel === 'high'
+      ? 'haute'
+      : state.globalTensionLevel === 'low'
+        ? 'basse'
+        : 'moyenne';
 
   return `État multimodal fusionné :
 • Énergie : ${(state.fusedScores.globalEnergy.value * 100).toFixed(0)}% (${energyDesc})
@@ -169,7 +179,7 @@ export function detectMultimodalIntent(message: string): MultimodalIntent {
 
   let bestMatch: { type: MultimodalIntentType; confidence: number } = {
     type: 'UNKNOWN',
-    confidence: 0
+    confidence: 0,
   };
 
   for (const [intentType, patterns] of Object.entries(INTENT_PATTERNS)) {
@@ -179,12 +189,15 @@ export function detectMultimodalIntent(message: string): MultimodalIntent {
       if (pattern.test(normalizedMessage)) {
         const match = normalizedMessage.match(pattern);
         const matchLength = match ? match[0].length : 0;
-        const confidence = Math.min(0.5 + (matchLength / normalizedMessage.length) * 0.5, 0.95);
+        const confidence = Math.min(
+          0.5 + (matchLength / normalizedMessage.length) * 0.5,
+          0.95
+        );
 
         if (confidence > bestMatch.confidence) {
           bestMatch = {
             type: intentType as MultimodalIntentType,
-            confidence
+            confidence,
           };
         }
       }
@@ -201,7 +214,7 @@ export function detectMultimodalIntent(message: string): MultimodalIntent {
     type: bestMatch.type,
     confidence: bestMatch.confidence,
     parameters: Object.keys(parameters).length > 0 ? parameters : undefined,
-    rawMessage: message
+    rawMessage: message,
   };
 }
 
@@ -230,8 +243,8 @@ export async function handleMultimodalIntent(
           intent: intent.type,
           message: engine.isActive()
             ? 'Analyse en cours, mais pas encore assez de données.'
-            : 'L\'analyse multimodale n\'est pas active. Demandez-moi de la démarrer.',
-          data: { isActive: engine.isActive() }
+            : "L'analyse multimodale n'est pas active. Demandez-moi de la démarrer.",
+          data: { isActive: engine.isActive() },
         };
       }
 
@@ -239,7 +252,7 @@ export async function handleMultimodalIntent(
         success: true,
         intent: intent.type,
         message: formatMultimodalState(state),
-        data: { state }
+        data: { state },
       };
     }
 
@@ -255,7 +268,7 @@ export async function handleMultimodalIntent(
 • Vision : ${(newWeights.vision * 100).toFixed(0)}%
 • Voix : ${(newWeights.voice * 100).toFixed(0)}%
 • Texte : ${(newWeights.text * 100).toFixed(0)}%`,
-          data: { weights: newWeights }
+          data: { weights: newWeights },
         };
       }
 
@@ -269,7 +282,7 @@ export async function handleMultimodalIntent(
 • Texte : ${(currentWeights.text * 100).toFixed(0)}%
 
 Pour modifier: "vision 50%, voix 30%, texte 20%"`,
-        data: { weights: currentWeights }
+        data: { weights: currentWeights },
       };
     }
 
@@ -282,7 +295,7 @@ Pour modifier: "vision 50%, voix 30%, texte 20%"`,
         message: `Baseline multimodal calibré !
 • Échantillons : ${baseline.totalSamplesCount}
 • Calibré : ${baseline.isCalibrated ? 'Oui' : 'Non (besoin de plus de données)'}`,
-        data: { baseline }
+        data: { baseline },
       };
     }
 
@@ -291,8 +304,8 @@ Pour modifier: "vision 50%, voix 30%, texte 20%"`,
         return {
           success: true,
           intent: intent.type,
-          message: 'L\'analyse multimodale est déjà active.',
-          data: { isActive: true }
+          message: "L'analyse multimodale est déjà active.",
+          data: { isActive: true },
         };
       }
 
@@ -302,7 +315,7 @@ Pour modifier: "vision 50%, voix 30%, texte 20%"`,
         success: true,
         intent: intent.type,
         message: 'Analyse multimodale démarrée ! Je combine vision, voix et texte.',
-        data: { isActive: true }
+        data: { isActive: true },
       };
     }
 
@@ -311,8 +324,8 @@ Pour modifier: "vision 50%, voix 30%, texte 20%"`,
         return {
           success: true,
           intent: intent.type,
-          message: 'L\'analyse multimodale n\'est pas active.',
-          data: { isActive: false }
+          message: "L'analyse multimodale n'est pas active.",
+          data: { isActive: false },
         };
       }
 
@@ -322,7 +335,7 @@ Pour modifier: "vision 50%, voix 30%, texte 20%"`,
         success: true,
         intent: intent.type,
         message: 'Analyse multimodale arrêtée.',
-        data: { isActive: false }
+        data: { isActive: false },
       };
     }
 
@@ -337,7 +350,7 @@ Pour modifier: "vision 50%, voix 30%, texte 20%"`,
 • Vision ↔ Texte : ${(correlations.visionText * 100).toFixed(0)}%
 • Voix ↔ Texte : ${(correlations.voiceText * 100).toFixed(0)}%
 • Triple : ${(correlations.allThree * 100).toFixed(0)}%`,
-        data: { correlations }
+        data: { correlations },
       };
     }
 
@@ -346,7 +359,7 @@ Pour modifier: "vision 50%, voix 30%, texte 20%"`,
       return {
         success: false,
         intent: 'UNKNOWN',
-        message: 'Je n\'ai pas compris cette demande concernant l\'analyse multimodale.'
+        message: "Je n'ai pas compris cette demande concernant l'analyse multimodale.",
       };
   }
 }
@@ -371,5 +384,5 @@ export default {
   detectMultimodalIntent,
   hasMultimodalIntent,
   handleMultimodalIntent,
-  processMultimodalMessage
+  processMultimodalMessage,
 };

@@ -39,7 +39,8 @@ export async function tts_selftest(): Promise<TtsSelfTestResult> {
 
   try {
     // 1. Vérifier disponibilité Web Speech API
-    const webSpeechAvailable = typeof window !== 'undefined' && 'speechSynthesis' in window;
+    const webSpeechAvailable =
+      typeof window !== 'undefined' && 'speechSynthesis' in window;
     console.log('Web Speech API:', webSpeechAvailable ? 'Disponible' : 'Indisponible');
 
     // 2. Obtenir statut hybride
@@ -60,7 +61,7 @@ export async function tts_selftest(): Promise<TtsSelfTestResult> {
       const speakPromise = hybridTTS.speak(testPhrase, { volume: 0.1 }, false);
       await Promise.race([
         speakPromise,
-        new Promise((resolve) => setTimeout(resolve, 5000)) // 5s max
+        new Promise(resolve => setTimeout(resolve, 5000)), // 5s max
       ]);
 
       console.log('Synthèse réussie');

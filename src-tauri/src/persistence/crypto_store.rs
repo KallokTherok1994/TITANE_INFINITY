@@ -19,7 +19,6 @@ macro_rules! lock_or_recover {
     };
 }
 
-
 // ═══════════════════════════════════════════════════════════════════════════════
 // CONSTANTS
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -192,7 +191,10 @@ impl CryptoStore {
     /// Déverrouiller avec le mot de passe
     pub fn unlock(&mut self, password: &str) -> Result<(), CryptoError> {
         let salt = self.salt.as_ref().ok_or(CryptoError::NotConfigured)?;
-        let stored_hash = self.password_hash.as_ref().ok_or(CryptoError::NotConfigured)?;
+        let stored_hash = self
+            .password_hash
+            .as_ref()
+            .ok_or(CryptoError::NotConfigured)?;
 
         // Vérifier le mot de passe
         let password_hash = Self::hash_password(password, salt);
@@ -330,7 +332,7 @@ impl CryptoStore {
 
     /// Dériver une clé depuis un mot de passe
     fn derive_key(&self, password: &str, salt: &[u8]) -> Result<Vec<u8>, CryptoError> {
-        use sha2::{Sha256, Digest};
+        use sha2::{Digest, Sha256};
 
         // Implémentation simplifiée de PBKDF2
         // TODO: Utiliser ring::pbkdf2 ou rust-crypto pour production
@@ -359,7 +361,7 @@ impl CryptoStore {
 
     /// Hash d'un mot de passe pour vérification
     fn hash_password(password: &str, salt: &[u8]) -> Vec<u8> {
-        use sha2::{Sha256, Digest};
+        use sha2::{Digest, Sha256};
 
         let mut hasher = Sha256::new();
         hasher.update(password.as_bytes());
@@ -375,14 +377,16 @@ impl CryptoStore {
         // Implémentation simplifiée - utiliser getrandom en production
         let seed = SystemTime::now()
             .duration_since(UNIX_EPOCH)
-            .unwrap()
+            .unwrap_or_else(|_| std::time::Duration::from_secs(0))
             .as_nanos();
 
         let mut bytes = Vec::with_capacity(len);
         let mut state = seed as u64;
 
         for _ in 0..len {
-            state = state.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+            state = state
+                .wrapping_mul(6364136223846793005)
+                .wrapping_add(1442695040888963407);
             bytes.push((state >> 33) as u8);
         }
 
@@ -392,7 +396,8 @@ impl CryptoStore {
     /// Chiffrement XOR simple (placeholder pour AES-GCM)
     fn xor_encrypt(data: &[u8], key: &[u8], nonce: &[u8]) -> Vec<u8> {
         let mut result = Vec::with_capacity(data.len());
-        let combined_key: Vec<u8> = key.iter()
+        let combined_key: Vec<u8> = key
+            .iter()
             .zip(nonce.iter().cycle())
             .map(|(k, n)| k ^ n)
             .collect();
@@ -406,7 +411,7 @@ impl CryptoStore {
 
     /// Calculer un tag d'authentification
     fn compute_auth_tag(key: &[u8], nonce: &[u8], ciphertext: &[u8]) -> Vec<u8> {
-        use sha2::{Sha256, Digest};
+        use sha2::{Digest, Sha256};
 
         let mut hasher = Sha256::new();
         hasher.update(key);
@@ -430,9 +435,8 @@ impl Default for CryptoStore {
 use once_cell::sync::Lazy;
 
 /// Instance globale du CryptoStore (thread-safe)
-pub static CRYPTO_STORE: Lazy<Arc<RwLock<CryptoStore>>> = Lazy::new(|| {
-    Arc::new(RwLock::new(CryptoStore::new()))
-});
+pub static CRYPTO_STORE: Lazy<Arc<RwLock<CryptoStore>>> =
+    Lazy::new(|| Arc::new(RwLock::new(CryptoStore::new())));
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TESTS

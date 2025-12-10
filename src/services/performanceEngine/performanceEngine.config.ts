@@ -77,7 +77,13 @@ export type MetricSource =
 /**
  * Catégorie de métrique
  */
-export type MetricCategory = 'system' | 'frontend' | 'ia' | 'network' | 'storage' | 'voice';
+export type MetricCategory =
+  | 'system'
+  | 'frontend'
+  | 'ia'
+  | 'network'
+  | 'storage'
+  | 'voice';
 
 /**
  * Unité de mesure
@@ -1072,7 +1078,7 @@ export const RECOMMENDATION_TEMPLATES: Record<
       'Vérifier les fuites mémoire avec valgrind',
       'Réduire la taille des caches',
       'Implémenter une stratégie de pagination',
-      "Libérer les ressources non utilisées",
+      'Libérer les ressources non utilisées',
     ],
   },
   io_saturation: {
@@ -1163,18 +1169,18 @@ export const RECOMMENDATION_TEMPLATES: Record<
   },
   ia_timeout: {
     title: 'Timeout IA',
-    description: "Temps de réponse IA trop long",
+    description: 'Temps de réponse IA trop long',
     category: 'ia_optimization',
     suggestions: [
       'Réduire la taille du prompt',
       'Utiliser un modèle plus rapide',
       'Implémenter le streaming',
-      "Augmenter le timeout ou optimiser la queue",
+      'Augmenter le timeout ou optimiser la queue',
     ],
   },
   ia_queue_overflow: {
     title: 'File IA saturée',
-    description: "Trop de requêtes IA en attente",
+    description: 'Trop de requêtes IA en attente',
     category: 'ia_optimization',
     suggestions: [
       'Implémenter le debouncing des requêtes',
@@ -1183,8 +1189,8 @@ export const RECOMMENDATION_TEMPLATES: Record<
     ],
   },
   ia_error_spike: {
-    title: 'Pic d\'erreurs IA',
-    description: 'Taux d\'erreur IA anormalement élevé',
+    title: "Pic d'erreurs IA",
+    description: "Taux d'erreur IA anormalement élevé",
     category: 'ia_optimization',
     suggestions: [
       'Vérifier la disponibilité du service IA',

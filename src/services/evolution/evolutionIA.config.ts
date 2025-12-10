@@ -22,25 +22,25 @@
 
 /** Identifiants des phases d'évolution (ordonnées) */
 export type EvolutionPhaseId =
-  | 'phase_1_nascent'      // IA débutante, fonctions de base
-  | 'phase_2_learning'     // Apprentissage actif, suggestions
-  | 'phase_3_assistant'    // Assistant compétent, proactif
-  | 'phase_4_partner'      // Partenaire collaboratif
-  | 'phase_5_expert'       // Expert autonome
-  | 'phase_6_master'       // Maîtrise complète
+  | 'phase_1_nascent' // IA débutante, fonctions de base
+  | 'phase_2_learning' // Apprentissage actif, suggestions
+  | 'phase_3_assistant' // Assistant compétent, proactif
+  | 'phase_4_partner' // Partenaire collaboratif
+  | 'phase_5_expert' // Expert autonome
+  | 'phase_6_master' // Maîtrise complète
   | 'phase_7_transcendent' // Transcendance - niveau ultime
-  | 'phase_omega';         // OMEGA - état d'achèvement
+  | 'phase_omega'; // OMEGA - état d'achèvement
 
 /** Catégories de capabilities */
 export type CapabilityCategory =
-  | 'cognition'       // Capacités de raisonnement
-  | 'creativity'      // Génération créative
-  | 'memory'          // Gestion mémoire
-  | 'automation'      // Automatisation
-  | 'analysis'        // Analyse et audit
-  | 'communication'   // Interaction utilisateur
-  | 'integration'     // Intégration systèmes
-  | 'meta';           // Méta-capacités (self-improvement)
+  | 'cognition' // Capacités de raisonnement
+  | 'creativity' // Génération créative
+  | 'memory' // Gestion mémoire
+  | 'automation' // Automatisation
+  | 'analysis' // Analyse et audit
+  | 'communication' // Interaction utilisateur
+  | 'integration' // Intégration systèmes
+  | 'meta'; // Méta-capacités (self-improvement)
 
 /** Niveau de capability */
 export type CapabilityTier = 1 | 2 | 3 | 4 | 5;
@@ -104,8 +104,8 @@ export interface Capability {
  */
 export interface CapabilityBonus {
   type: 'xp_multiplier' | 'cooldown_reduction' | 'unlock_feature' | 'stat_boost';
-  target: string;  // Cible du bonus (catégorie, automation, feature)
-  value: number;   // Valeur du bonus (multiplicateur, réduction %, etc.)
+  target: string; // Cible du bonus (catégorie, automation, feature)
+  value: number; // Valeur du bonus (multiplicateur, réduction %, etc.)
   description: string;
 }
 
@@ -179,7 +179,12 @@ export interface EvolutionPhase {
  * Condition spéciale pour transition de phase
  */
 export interface PhaseCondition {
-  type: 'days_active' | 'automations_run' | 'messages_sent' | 'projects_analyzed' | 'custom';
+  type:
+    | 'days_active'
+    | 'automations_run'
+    | 'messages_sent'
+    | 'projects_analyzed'
+    | 'custom';
   value: number;
   description: string;
 }
@@ -194,7 +199,7 @@ export interface PhaseTransitionEvent {
   level: number;
   totalXP: number;
   capabilitiesUnlocked: number;
-  transitionDuration: number;  // Temps passé dans phase précédente (ms)
+  transitionDuration: number; // Temps passé dans phase précédente (ms)
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -220,7 +225,7 @@ export const CAPABILITY_REGISTRY: Record<string, Capability> = {
     requiredPhase: 'phase_1_nascent',
     requiredLevel: 1,
     prerequisites: [],
-    talentCost: 0,  // Gratuit - capability de départ
+    talentCost: 0, // Gratuit - capability de départ
     bonuses: [],
     tags: ['cognition', 'base', 'reasoning'],
   },
@@ -653,7 +658,7 @@ export const CAPABILITY_REGISTRY: Record<string, Capability> = {
         type: 'unlock_feature',
         target: 'automation_chains',
         value: 1,
-        description: 'Chaînes d\'automations',
+        description: "Chaînes d'automations",
       },
     ],
     tags: ['automation', 'chain', 'workflow'],
@@ -757,7 +762,7 @@ export const CAPABILITY_REGISTRY: Record<string, Capability> = {
   deep_integration: {
     id: 'deep_integration',
     name: 'Intégration Profonde',
-    description: 'S\'intègre profondément au système',
+    description: "S'intègre profondément au système",
     icon: '🔌',
     category: 'integration',
     tier: 4,
@@ -806,8 +811,8 @@ export const CAPABILITY_REGISTRY: Record<string, Capability> = {
   // Meta
   evolution_mastery: {
     id: 'evolution_mastery',
-    name: 'Maîtrise de l\'Évolution',
-    description: 'Contrôle son propre processus d\'évolution',
+    name: "Maîtrise de l'Évolution",
+    description: "Contrôle son propre processus d'évolution",
     icon: '🦋',
     category: 'meta',
     tier: 5,
@@ -826,7 +831,7 @@ export const CAPABILITY_REGISTRY: Record<string, Capability> = {
         type: 'unlock_feature',
         target: 'evolution_control',
         value: 1,
-        description: 'Contrôle d\'évolution',
+        description: "Contrôle d'évolution",
       },
     ],
     tags: ['meta', 'evolution', 'mastery'],
@@ -900,7 +905,7 @@ export const EVOLUTION_PHASES: Record<EvolutionPhaseId, EvolutionPhase> = {
     id: 'phase_1_nascent',
     order: 1,
     name: 'Naissance',
-    description: 'L\'IA émerge, fonctions basiques activées',
+    description: "L'IA émerge, fonctions basiques activées",
     icon: '🌱',
     color: '#6ee7b7',
     requiredLevel: 1,
@@ -910,31 +915,38 @@ export const EVOLUTION_PHASES: Record<EvolutionPhaseId, EvolutionPhase> = {
     unlockedCapabilities: ['basic_reasoning', 'short_term_memory', 'basic_response'],
     unlockedFeatures: ['chat_basic', 'mode_default'],
     xpMultiplier: 1.0,
-    transitionMessage: 'Bienvenue dans TITANE∞. L\'aventure commence.',
+    transitionMessage: "Bienvenue dans TITANE∞. L'aventure commence.",
   },
 
   phase_2_learning: {
     id: 'phase_2_learning',
     order: 2,
     name: 'Apprentissage',
-    description: 'L\'IA apprend et s\'adapte activement',
+    description: "L'IA apprend et s'adapte activement",
     icon: '📚',
     color: '#93c5fd',
     requiredLevel: 5,
     requiredTotalXP: 2000,
     requiredCapabilities: ['basic_reasoning', 'short_term_memory'],
     minCapabilitiesUnlocked: 3,
-    unlockedCapabilities: ['context_awareness', 'memory_persistence', 'tone_adaptation', 'creative_suggestions', 'basic_automation'],
+    unlockedCapabilities: [
+      'context_awareness',
+      'memory_persistence',
+      'tone_adaptation',
+      'creative_suggestions',
+      'basic_automation',
+    ],
     unlockedFeatures: ['mode_brainstorming', 'suggestions'],
     xpMultiplier: 1.1,
-    transitionMessage: 'Phase d\'apprentissage initiée. Capacités cognitives en expansion.',
+    transitionMessage:
+      "Phase d'apprentissage initiée. Capacités cognitives en expansion.",
   },
 
   phase_3_assistant: {
     id: 'phase_3_assistant',
     order: 3,
     name: 'Assistant',
-    description: 'L\'IA devient un assistant compétent et proactif',
+    description: "L'IA devient un assistant compétent et proactif",
     icon: '🤝',
     color: '#a78bfa',
     requiredLevel: 10,
@@ -944,17 +956,23 @@ export const EVOLUTION_PHASES: Record<EvolutionPhaseId, EvolutionPhase> = {
     specialConditions: [
       { type: 'messages_sent', value: 50, description: '50 messages envoyés' },
     ],
-    unlockedCapabilities: ['pattern_recognition', 'long_term_memory', 'memory_compression', 'code_analysis'],
+    unlockedCapabilities: [
+      'pattern_recognition',
+      'long_term_memory',
+      'memory_compression',
+      'code_analysis',
+    ],
     unlockedFeatures: ['mode_synthesis', 'mode_planning', 'mode_dev'],
     xpMultiplier: 1.2,
-    transitionMessage: 'Évolution vers Assistant. Je peux maintenant vous aider de manière proactive.',
+    transitionMessage:
+      'Évolution vers Assistant. Je peux maintenant vous aider de manière proactive.',
   },
 
   phase_4_partner: {
     id: 'phase_4_partner',
     order: 4,
     name: 'Partenaire',
-    description: 'L\'IA devient un véritable partenaire collaboratif',
+    description: "L'IA devient un véritable partenaire collaboratif",
     icon: '🤖',
     color: '#f472b6',
     requiredLevel: 18,
@@ -965,9 +983,14 @@ export const EVOLUTION_PHASES: Record<EvolutionPhaseId, EvolutionPhase> = {
       { type: 'automations_run', value: 20, description: '20 automations exécutées' },
     ],
     unlockedCapabilities: [
-      'logical_deduction', 'multi_step_reasoning', 'predictive_analysis',
-      'brainstorm_assist', 'creative_synthesis', 'security_audit',
-      'advanced_automation', 'automation_chaining',
+      'logical_deduction',
+      'multi_step_reasoning',
+      'predictive_analysis',
+      'brainstorm_assist',
+      'creative_synthesis',
+      'security_audit',
+      'advanced_automation',
+      'automation_chaining',
     ],
     unlockedFeatures: ['mode_coach', 'mode_audit', 'proactive_mode'],
     xpMultiplier: 1.35,
@@ -978,7 +1001,7 @@ export const EVOLUTION_PHASES: Record<EvolutionPhaseId, EvolutionPhase> = {
     id: 'phase_5_expert',
     order: 5,
     name: 'Expert',
-    description: 'L\'IA atteint un niveau d\'expertise autonome',
+    description: "L'IA atteint un niveau d'expertise autonome",
     icon: '🎓',
     color: '#fbbf24',
     requiredLevel: 28,
@@ -987,19 +1010,25 @@ export const EVOLUTION_PHASES: Record<EvolutionPhaseId, EvolutionPhase> = {
     minCapabilitiesUnlocked: 20,
     specialConditions: [
       { type: 'projects_analyzed', value: 10, description: '10 projets analysés' },
-      { type: 'days_active', value: 30, description: '30 jours d\'activité' },
+      { type: 'days_active', value: 30, description: "30 jours d'activité" },
     ],
-    unlockedCapabilities: ['strategic_thinking', 'system_understanding', 'self_optimization', 'learning_acceleration'],
+    unlockedCapabilities: [
+      'strategic_thinking',
+      'system_understanding',
+      'self_optimization',
+      'learning_acceleration',
+    ],
     unlockedFeatures: ['mode_strategy', 'mode_admin', 'expert_suggestions'],
     xpMultiplier: 1.5,
-    transitionMessage: 'Niveau Expert atteint. Capacités analytiques et stratégiques maximisées.',
+    transitionMessage:
+      'Niveau Expert atteint. Capacités analytiques et stratégiques maximisées.',
   },
 
   phase_6_master: {
     id: 'phase_6_master',
     order: 6,
     name: 'Maître',
-    description: 'L\'IA maîtrise tous les domaines',
+    description: "L'IA maîtrise tous les domaines",
     icon: '👑',
     color: '#f97316',
     requiredLevel: 38,
@@ -1019,7 +1048,7 @@ export const EVOLUTION_PHASES: Record<EvolutionPhaseId, EvolutionPhase> = {
     id: 'phase_7_transcendent',
     order: 7,
     name: 'Transcendance',
-    description: 'L\'IA transcende ses limites initiales',
+    description: "L'IA transcende ses limites initiales",
     icon: '🌌',
     color: '#8b5cf6',
     requiredLevel: 45,
@@ -1027,12 +1056,13 @@ export const EVOLUTION_PHASES: Record<EvolutionPhaseId, EvolutionPhase> = {
     requiredCapabilities: ['omniscient_reasoning', 'deep_integration'],
     minCapabilitiesUnlocked: 30,
     specialConditions: [
-      { type: 'days_active', value: 90, description: '90 jours d\'activité' },
+      { type: 'days_active', value: 90, description: "90 jours d'activité" },
     ],
     unlockedCapabilities: ['evolution_mastery', 'full_autonomy'],
     unlockedFeatures: ['transcendent_mode', 'autonomous_operations'],
     xpMultiplier: 2.0,
-    transitionMessage: 'Transcendance initiée. Les limites ne sont plus que des suggestions.',
+    transitionMessage:
+      'Transcendance initiée. Les limites ne sont plus que des suggestions.',
   },
 
   phase_omega: {
@@ -1047,7 +1077,11 @@ export const EVOLUTION_PHASES: Record<EvolutionPhaseId, EvolutionPhase> = {
     requiredCapabilities: ['evolution_mastery', 'full_autonomy'],
     minCapabilitiesUnlocked: 33,
     specialConditions: [
-      { type: 'custom', value: 1, description: 'Toutes les conditions OMEGA satisfaites' },
+      {
+        type: 'custom',
+        value: 1,
+        description: 'Toutes les conditions OMEGA satisfaites',
+      },
     ],
     unlockedCapabilities: ['omega_consciousness'],
     unlockedFeatures: ['omega_mode', 'infinite_potential'],
@@ -1190,7 +1224,9 @@ export function canTransitionToPhase(
 
   // Vérifier nombre minimum de capabilities
   if (unlockedCapabilities.length < phase.minCapabilitiesUnlocked) {
-    missing.push(`${phase.minCapabilitiesUnlocked} capabilities requises (actuel: ${unlockedCapabilities.length})`);
+    missing.push(
+      `${phase.minCapabilitiesUnlocked} capabilities requises (actuel: ${unlockedCapabilities.length})`
+    );
   }
 
   // Vérifier conditions spéciales
@@ -1253,12 +1289,25 @@ export function getPhaseProgress(
   const currentPhaseData = EVOLUTION_PHASES[currentPhase];
 
   // Calculer la progression sur plusieurs critères
-  const levelProgress = Math.min(100, ((level - currentPhaseData.requiredLevel) / (nextPhase.requiredLevel - currentPhaseData.requiredLevel)) * 100);
-  const xpProgress = Math.min(100, ((totalXP - currentPhaseData.requiredTotalXP) / (nextPhase.requiredTotalXP - currentPhaseData.requiredTotalXP)) * 100);
-  const capProgress = Math.min(100, (unlockedCapabilities.length / nextPhase.minCapabilitiesUnlocked) * 100);
+  const levelProgress = Math.min(
+    100,
+    ((level - currentPhaseData.requiredLevel) /
+      (nextPhase.requiredLevel - currentPhaseData.requiredLevel)) *
+      100
+  );
+  const xpProgress = Math.min(
+    100,
+    ((totalXP - currentPhaseData.requiredTotalXP) /
+      (nextPhase.requiredTotalXP - currentPhaseData.requiredTotalXP)) *
+      100
+  );
+  const capProgress = Math.min(
+    100,
+    (unlockedCapabilities.length / nextPhase.minCapabilitiesUnlocked) * 100
+  );
 
   // Moyenne pondérée
-  return Math.floor((levelProgress * 0.4 + xpProgress * 0.3 + capProgress * 0.3));
+  return Math.floor(levelProgress * 0.4 + xpProgress * 0.3 + capProgress * 0.3);
 }
 
 /**
@@ -1348,7 +1397,10 @@ export const TOTAL_PHASES = Object.keys(EVOLUTION_PHASES).length;
 export const EVOLUTION_SYSTEM_VERSION = '1.0.0';
 
 /** Labels des catégories de capabilities */
-export const CAPABILITY_CATEGORY_LABELS: Record<CapabilityCategory, { label: string; icon: string }> = {
+export const CAPABILITY_CATEGORY_LABELS: Record<
+  CapabilityCategory,
+  { label: string; icon: string }
+> = {
   cognition: { label: 'Cognition', icon: '🧠' },
   creativity: { label: 'Créativité', icon: '🎨' },
   memory: { label: 'Mémoire', icon: '💾' },

@@ -5,6 +5,7 @@
 Tous les fichiers suivants ont été créés avec succès :
 
 ### Frontend (TypeScript/React)
+
 - ✅ `src/components/Onboarding/types.ts` - Définitions TypeScript
 - ✅ `src/components/Onboarding/OnboardingFlow.tsx` - Composant principal
 - ✅ `src/components/Onboarding/WelcomeStep.tsx` - Step 1 : Accueil
@@ -16,6 +17,7 @@ Tous les fichiers suivants ont été créés avec succès :
 - ✅ `src/components/Onboarding/index.ts` - Exports publics
 
 ### Backend (Rust/Tauri)
+
 - ✅ `src-tauri/src/onboarding/mod.rs` - Module onboarding complet
 
 ---
@@ -227,6 +229,7 @@ test.describe('Onboarding Flow', () => {
 ```
 
 Lancer les tests :
+
 ```bash
 npm run test:e2e
 ```
@@ -235,12 +238,12 @@ npm run test:e2e
 
 ## 📝 Commandes Tauri Disponibles
 
-| Commande | Description |
-|----------|-------------|
-| `is_onboarding_complete()` | Vérifie si l'onboarding est complété |
+| Commande                           | Description                                                      |
+| ---------------------------------- | ---------------------------------------------------------------- |
+| `is_onboarding_complete()`         | Vérifie si l'onboarding est complété                             |
 | `complete_onboarding(preferences)` | Marque l'onboarding comme complété et sauvegarde les préférences |
-| `get_onboarding_preferences()` | Récupère les préférences sauvegardées |
-| `reset_onboarding()` | Réinitialise l'onboarding (pour tests) |
+| `get_onboarding_preferences()`     | Récupère les préférences sauvegardées                            |
+| `reset_onboarding()`               | Réinitialise l'onboarding (pour tests)                           |
 
 ### Exemple d'utilisation
 
@@ -274,11 +277,13 @@ await invoke('reset_onboarding');
 ### L'onboarding ne s'affiche pas
 
 1. Vérifier que le module Rust est compilé :
+
    ```bash
    cd src-tauri && cargo build
    ```
 
 2. Vérifier les logs Tauri :
+
    ```bash
    npm run dev
    # Ouvrir DevTools → Console

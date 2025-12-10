@@ -22,12 +22,7 @@ export interface OnboardingStep {
 /**
  * IDs des steps d'onboarding
  */
-export type StepId =
-  | 'welcome'
-  | 'privacy'
-  | 'features'
-  | 'customization'
-  | 'ready';
+export type StepId = 'welcome' | 'privacy' | 'features' | 'customization' | 'ready';
 
 /**
  * Préférences utilisateur collectées durant l'onboarding

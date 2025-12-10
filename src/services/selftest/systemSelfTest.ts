@@ -133,7 +133,8 @@ export async function runAllTests(): Promise<SystemSelfTestResult> {
       available: xp.available,
       latency_ms: xp.latency_ms,
       message:
-        xp.error || `Level ${xp.currentLevel}, ${xp.totalXP} XP, ${xp.historyCount} events`,
+        xp.error ||
+        `Level ${xp.currentLevel}, ${xp.totalXP} XP, ${xp.historyCount} events`,
       error: xp.error,
       details: {
         currentLevel: xp.currentLevel,
@@ -160,16 +161,21 @@ export async function runAllTests(): Promise<SystemSelfTestResult> {
   // Calculer summary
   const allResults = [ttsResult, fileImportResult, xpResult];
   const summary = {
-    ok: allResults.filter((r) => r.status === 'ok').length,
-    warn: allResults.filter((r) => r.status === 'warn').length,
-    error: allResults.filter((r) => r.status === 'error').length,
-    skip: allResults.filter((r) => r.status === 'skip').length,
+    ok: allResults.filter(r => r.status === 'ok').length,
+    warn: allResults.filter(r => r.status === 'warn').length,
+    error: allResults.filter(r => r.status === 'error').length,
+    skip: allResults.filter(r => r.status === 'skip').length,
   };
 
   // Log résultats
   console.log('\n=== RESULTS ===');
   console.log('TTS:', ttsResult.status.toUpperCase(), '-', ttsResult.message);
-  console.log('FileImport:', fileImportResult.status.toUpperCase(), '-', fileImportResult.message);
+  console.log(
+    'FileImport:',
+    fileImportResult.status.toUpperCase(),
+    '-',
+    fileImportResult.message
+  );
   console.log('XP:', xpResult.status.toUpperCase(), '-', xpResult.message);
   console.log('\n=== SUMMARY ===');
   console.log(`OK: ${summary.ok}, WARN: ${summary.warn}, ERROR: ${summary.error}`);
@@ -217,8 +223,8 @@ export async function getSystemDiagnostic(): Promise<{
       globalStatus = 'warn';
     }
 
-    const errorCount = statuses.filter((s) => s === 'error').length;
-    const warnCount = statuses.filter((s) => s === 'warn').length;
+    const errorCount = statuses.filter(s => s === 'error').length;
+    const warnCount = statuses.filter(s => s === 'warn').length;
 
     let message = 'Tous les systemes operationnels';
     if (errorCount > 0) {

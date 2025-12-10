@@ -180,7 +180,8 @@ export class LongContextOptimizer {
         compressed_messages: recentMessages,
         original_tokens: messages.reduce((sum, msg) => sum + msg.tokens, 0),
         compressed_tokens: recentTokens,
-        compression_ratio: recentTokens / messages.reduce((sum, msg) => sum + msg.tokens, 0),
+        compression_ratio:
+          recentTokens / messages.reduce((sum, msg) => sum + msg.tokens, 0),
         semantic_preservation: 0.5,
         removed_noise: ['Fallback: kept only recent messages'],
         prioritized_segments: [],
@@ -231,7 +232,9 @@ export class LongContextOptimizer {
           messages: groupMessages,
           centroid: [],
           topic: `Group ${Math.floor(i / groupSize) + 1}`,
-          importance: groupMessages.reduce((sum, msg) => sum + msg.importance, 0) / groupMessages.length,
+          importance:
+            groupMessages.reduce((sum, msg) => sum + msg.importance, 0) /
+            groupMessages.length,
           coherence_score: 0.5,
         });
       }
@@ -256,7 +259,8 @@ export class LongContextOptimizer {
     } = {}
   ): Promise<InjectionResult> {
     try {
-      const relevanceThreshold = options.relevanceThreshold || this.DEFAULT_RELEVANCE_THRESHOLD;
+      const relevanceThreshold =
+        options.relevanceThreshold || this.DEFAULT_RELEVANCE_THRESHOLD;
       const maxInjected = options.maxInjected || 10;
 
       const result = await secureInvoke<InjectionResult>('context_selective_injection', {
@@ -302,7 +306,8 @@ export class LongContextOptimizer {
       const strategies: string[] = [];
       if (options.removeDuplicates !== false) strategies.push('remove_duplicates');
       if (options.removeLowRelevance !== false) strategies.push('remove_low_relevance');
-      if (options.removeContradictions !== false) strategies.push('remove_contradictions');
+      if (options.removeContradictions !== false)
+        strategies.push('remove_contradictions');
       if (options.removeCircular !== false) strategies.push('remove_circular_references');
 
       const minImportance = options.minImportance || 0.3;
@@ -319,7 +324,7 @@ export class LongContextOptimizer {
 
       // Fallback: supprimer duplicates basiques
       const seen = new Set<string>();
-      const cleaned = messages.filter((msg) => {
+      const cleaned = messages.filter(msg => {
         const key = `${msg.role}:${msg.content.slice(0, 100)}`;
         if (seen.has(key)) {
           return false;
@@ -373,7 +378,7 @@ export class LongContextOptimizer {
       // Fallback: filtrer par importance simple
       const recentMessages = messages.slice(-preserveRecent);
       const importantMessages = messages.filter(
-        (msg) =>
+        msg =>
           msg.importance >= threshold ||
           msg.role === 'system' ||
           recentMessages.includes(msg)
@@ -421,13 +426,13 @@ export class LongContextOptimizer {
       const allMessages: ContextMessage[] = [];
       const linkedMessages = new Map<string, ContextMessage[]>();
 
-      chats.forEach((chat) => {
+      chats.forEach(chat => {
         allMessages.push(...chat.messages);
         linkedMessages.set(chat.id, chat.messages);
       });
 
       return {
-        chat_ids: chats.map((c) => c.id),
+        chat_ids: chats.map(c => c.id),
         linked_messages: linkedMessages,
         semantic_links: [],
         merged_context: allMessages,
@@ -499,7 +504,7 @@ export class LongContextOptimizer {
         compression_ratio: optimizedTokens / originalTokens,
         semantic_preservation: 0.95, // Estimation (devrait être calculé par backend)
         removed_noise: [],
-        prioritized_segments: groups.map((g) => g.topic),
+        prioritized_segments: groups.map(g => g.topic),
         execution_time_ms: performance.now() - startTime,
       };
     } catch (error) {
@@ -527,7 +532,7 @@ export class LongContextOptimizer {
 
       // 2. Messages récents = importance plus haute
       const totalMessages = context.length;
-      const messageIndex = context.findIndex((m) => m.id === message.id);
+      const messageIndex = context.findIndex(m => m.id === message.id);
       const recencyFactor = messageIndex / totalMessages;
 
       // 3. Longueur du message (plus long = potentiellement plus important)

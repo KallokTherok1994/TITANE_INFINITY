@@ -18,7 +18,7 @@ export const NetworkSection: React.FC = () => {
     online_mode: true,
     proxy_enabled: false,
     proxy_url: '',
-    auto_sync: true
+    auto_sync: true,
   });
   const [saved, setSaved] = useState(false);
 
@@ -98,7 +98,9 @@ export const NetworkSection: React.FC = () => {
             </div>
             <div
               className={`cp-switch ${config.proxy_enabled ? 'active' : ''}`}
-              onClick={() => setConfig({ ...config, proxy_enabled: !config.proxy_enabled })}
+              onClick={() =>
+                setConfig({ ...config, proxy_enabled: !config.proxy_enabled })
+              }
             >
               <div className="cp-switch-thumb" />
             </div>
@@ -111,7 +113,7 @@ export const NetworkSection: React.FC = () => {
                 type="text"
                 className="cp-input"
                 value={config.proxy_url}
-                onChange={(e) => setConfig({ ...config, proxy_url: e.target.value })}
+                onChange={e => setConfig({ ...config, proxy_url: e.target.value })}
                 placeholder="http://proxy.example.com:8080"
               />
             </div>

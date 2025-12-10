@@ -56,8 +56,8 @@ const LEVEL_ORDER: Record<LogLevel, number> = {
 
 const LEVEL_COLORS: Record<LogLevel, string> = {
   debug: '\x1b[36m', // Cyan
-  info: '\x1b[32m',  // Green
-  warn: '\x1b[33m',  // Yellow
+  info: '\x1b[32m', // Green
+  warn: '\x1b[33m', // Yellow
   error: '\x1b[31m', // Red
   fatal: '\x1b[35m', // Magenta
 };
@@ -121,11 +121,21 @@ class StructuredLoggerImpl {
     this.log('warn', category, message, data);
   }
 
-  error(category: string, message: string, error?: Error | unknown, data?: Record<string, unknown>): void {
+  error(
+    category: string,
+    message: string,
+    error?: Error | unknown,
+    data?: Record<string, unknown>
+  ): void {
     this.log('error', category, message, data, error);
   }
 
-  fatal(category: string, message: string, error?: Error | unknown, data?: Record<string, unknown>): void {
+  fatal(
+    category: string,
+    message: string,
+    error?: Error | unknown,
+    data?: Record<string, unknown>
+  ): void {
     this.log('fatal', category, message, data, error);
   }
 
@@ -199,7 +209,10 @@ class StructuredLoggerImpl {
     }
   }
 
-  private prettyPrint(entry: LogEntry, consoleMethod: (...args: unknown[]) => void): void {
+  private prettyPrint(
+    entry: LogEntry,
+    consoleMethod: (...args: unknown[]) => void
+  ): void {
     const color = LEVEL_COLORS[entry.level];
     const levelStr = entry.level.toUpperCase().padEnd(5);
     const time = entry.timestamp.split('T')[1].split('.')[0];
@@ -223,11 +236,15 @@ class StructuredLoggerImpl {
 
   private getConsoleMethod(level: LogLevel): (...args: unknown[]) => void {
     switch (level) {
-      case 'debug': return console.debug;
-      case 'info': return console.info;
-      case 'warn': return console.warn;
+      case 'debug':
+        return console.debug;
+      case 'info':
+        return console.info;
+      case 'warn':
+        return console.warn;
       case 'error':
-      case 'fatal': return console.error;
+      case 'fatal':
+        return console.error;
     }
   }
 

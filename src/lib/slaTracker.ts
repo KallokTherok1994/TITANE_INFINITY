@@ -90,9 +90,7 @@ const DEFAULT_SLOS: Record<string, SLO> = {
 // ────────────────────────────────────────────────────────────────
 
 export class SLATracker {
-  private static slos: Map<string, SLO> = new Map(
-    Object.entries(DEFAULT_SLOS)
-  );
+  private static slos: Map<string, SLO> = new Map(Object.entries(DEFAULT_SLOS));
   private static violations: SLAViolation[] = [];
   private static maxViolations = 200;
   private static isTracking = false;
@@ -243,14 +241,12 @@ export class SLATracker {
 
     // Violations période
     const periodViolations = this.violations.filter(
-      (v) => v.service === service && v.timestamp >= startTime
+      v => v.service === service && v.timestamp >= startTime
     );
 
     // Metrics
     const uptime =
-      stats.totalCalls > 0
-        ? (stats.successfulCalls / stats.totalCalls) * 100
-        : 100;
+      stats.totalCalls > 0 ? (stats.successfulCalls / stats.totalCalls) * 100 : 100;
     const p95Latency = stats.p95Latency;
     const errorRate = stats.errorRate * 100;
 
@@ -284,13 +280,13 @@ export class SLATracker {
     let filtered = [...this.violations];
 
     if (service) {
-      filtered = filtered.filter((v) => v.service === service);
+      filtered = filtered.filter(v => v.service === service);
     }
 
     if (minSeverity) {
       const severityOrder = { low: 0, medium: 1, high: 2, critical: 3 };
       const minLevel = severityOrder[minSeverity];
-      filtered = filtered.filter((v) => severityOrder[v.severity] >= minLevel);
+      filtered = filtered.filter(v => severityOrder[v.severity] >= minLevel);
     }
 
     return filtered.sort((a, b) => b.timestamp - a.timestamp).slice(0, limit);
@@ -320,7 +316,10 @@ export class SLATracker {
   /**
    * Calculer budget erreur restant (error budget)
    */
-  static getErrorBudget(service: string, period: 'daily' | 'weekly' | 'monthly'): {
+  static getErrorBudget(
+    service: string,
+    period: 'daily' | 'weekly' | 'monthly'
+  ): {
     totalBudget: number; // nombre erreurs permises
     consumed: number; // nombre erreurs déjà faites
     remaining: number; // nombre erreurs restantes
@@ -373,7 +372,12 @@ export class SLATracker {
 
     const byService: Record<string, number> = {};
     const byType: Record<string, number> = {};
-    const bySeverity: Record<string, number> = { low: 0, medium: 0, high: 0, critical: 0 };
+    const bySeverity: Record<string, number> = {
+      low: 0,
+      medium: 0,
+      high: 0,
+      critical: 0,
+    };
     let last24hCount = 0;
 
     for (const violation of this.violations) {

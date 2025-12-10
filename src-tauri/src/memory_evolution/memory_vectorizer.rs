@@ -99,7 +99,10 @@ impl MemoryVectorizer {
     }
 
     /// Vectorise un item mémoire
-    pub async fn vectorize_item(&mut self, item: &MemoryItem) -> Result<MemoryVector, MemoryEvolutionError> {
+    pub async fn vectorize_item(
+        &mut self,
+        item: &MemoryItem,
+    ) -> Result<MemoryVector, MemoryEvolutionError> {
         info!("[MemoryVectorizer] Vectorizing item: {}", item.id);
 
         let vector = self.get_embedding(&item.content).await?;
@@ -114,7 +117,9 @@ impl MemoryVectorizer {
         };
 
         // Ajouter à l'index
-        self.index.vectors.insert(item.id.clone(), memory_vector.clone());
+        self.index
+            .vectors
+            .insert(item.id.clone(), memory_vector.clone());
         self.index.total_items = self.index.vectors.len();
         self.index.updated_at = chrono::Utc::now().to_rfc3339();
 
@@ -122,7 +127,10 @@ impl MemoryVectorizer {
     }
 
     /// Vectorise plusieurs items
-    pub async fn vectorize_batch(&mut self, items: &[MemoryItem]) -> Result<Vec<MemoryVector>, MemoryEvolutionError> {
+    pub async fn vectorize_batch(
+        &mut self,
+        items: &[MemoryItem],
+    ) -> Result<Vec<MemoryVector>, MemoryEvolutionError> {
         info!("[MemoryVectorizer] Batch vectorizing {} items", items.len());
 
         let mut vectors = Vec::new();
@@ -139,7 +147,10 @@ impl MemoryVectorizer {
 
     /// Recherche par similarité
     pub fn search(&self, query_vector: &[f32], items: &[MemoryItem]) -> Vec<VectorSearchResult> {
-        let mut results: Vec<_> = self.index.vectors.iter()
+        let mut results: Vec<_> = self
+            .index
+            .vectors
+            .iter()
             .filter_map(|(item_id, mv)| {
                 let similarity = self.cosine_similarity(query_vector, &mv.vector);
                 if similarity >= self.config.min_similarity {
@@ -155,14 +166,22 @@ impl MemoryVectorizer {
             })
             .collect();
 
-        results.sort_by(|a, b| b.similarity.partial_cmp(&a.similarity).unwrap_or(std::cmp::Ordering::Equal));
+        results.sort_by(|a, b| {
+            b.similarity
+                .partial_cmp(&a.similarity)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
         results.truncate(self.config.max_search_results);
 
         results
     }
 
     /// Recherche par texte (convertit d'abord en vecteur)
-    pub async fn search_by_text(&self, query: &str, items: &[MemoryItem]) -> Result<Vec<VectorSearchResult>, MemoryEvolutionError> {
+    pub async fn search_by_text(
+        &self,
+        query: &str,
+        items: &[MemoryItem],
+    ) -> Result<Vec<VectorSearchResult>, MemoryEvolutionError> {
         let query_vector = self.get_embedding(query).await?;
         Ok(self.search(&query_vector, items))
     }
@@ -170,7 +189,10 @@ impl MemoryVectorizer {
     /// Trouve les items les plus similaires à un item donné
     pub fn find_similar(&self, item_id: &str, items: &[MemoryItem]) -> Vec<VectorSearchResult> {
         if let Some(source_vector) = self.index.vectors.get(item_id) {
-            let mut results: Vec<_> = self.index.vectors.iter()
+            let mut results: Vec<_> = self
+                .index
+                .vectors
+                .iter()
                 .filter(|(id, _)| *id != item_id)
                 .filter_map(|(id, mv)| {
                     let similarity = self.cosine_similarity(&source_vector.vector, &mv.vector);
@@ -187,7 +209,11 @@ impl MemoryVectorizer {
                 })
                 .collect();
 
-            results.sort_by(|a, b| b.similarity.partial_cmp(&a.similarity).unwrap_or(std::cmp::Ordering::Equal));
+            results.sort_by(|a, b| {
+                b.similarity
+                    .partial_cmp(&a.similarity)
+                    .unwrap_or(std::cmp::Ordering::Equal)
+            });
             results.truncate(self.config.max_search_results);
 
             results
@@ -214,16 +240,21 @@ impl MemoryVectorizer {
                 .await
                 .map_err(|e| MemoryEvolutionError::VectorizationError(e.to_string()))?;
 
-            let data: serde_json::Value = response.json().await
+            let data: serde_json::Value = response
+                .json()
+                .await
                 .map_err(|e| MemoryEvolutionError::VectorizationError(e.to_string()))?;
 
             if let Some(embedding) = data.get("embedding").and_then(|e| e.as_array()) {
-                return Ok(embedding.iter()
+                return Ok(embedding
+                    .iter()
                     .filter_map(|v| v.as_f64().map(|f| f as f32))
                     .collect());
             }
 
-            Err(MemoryEvolutionError::VectorizationError("No embedding in response".to_string()))
+            Err(MemoryEvolutionError::VectorizationError(
+                "No embedding in response".to_string(),
+            ))
         }
 
         #[cfg(not(feature = "ollama"))]
@@ -286,7 +317,10 @@ impl MemoryVectorizer {
     pub fn load_index(&mut self, path: &std::path::Path) -> Result<(), MemoryEvolutionError> {
         let content = std::fs::read_to_string(path)?;
         self.index = serde_json::from_str(&content)?;
-        info!("[MemoryVectorizer] Loaded index with {} vectors", self.index.total_items);
+        info!(
+            "[MemoryVectorizer] Loaded index with {} vectors",
+            self.index.total_items
+        );
         Ok(())
     }
 
@@ -297,7 +331,10 @@ impl MemoryVectorizer {
             std::fs::create_dir_all(parent)?;
         }
         std::fs::write(path, content)?;
-        info!("[MemoryVectorizer] Saved index with {} vectors", self.index.total_items);
+        info!(
+            "[MemoryVectorizer] Saved index with {} vectors",
+            self.index.total_items
+        );
         Ok(())
     }
 
@@ -310,7 +347,8 @@ impl MemoryVectorizer {
             if let Some(a_vec) = self.index.vectors.get(a_id) {
                 for b_id in cluster_b_ids {
                     if let Some(b_vec) = self.index.vectors.get(b_id) {
-                        total_distance += 1.0 - self.cosine_similarity(&a_vec.vector, &b_vec.vector);
+                        total_distance +=
+                            1.0 - self.cosine_similarity(&a_vec.vector, &b_vec.vector);
                         count += 1;
                     }
                 }

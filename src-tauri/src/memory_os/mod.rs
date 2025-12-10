@@ -19,58 +19,60 @@
 //! - **Clustering**: K-means clustering for memory organization
 //! - **Memory OS Bridge**: Integration with UnifiedMemory
 
-pub mod memory_state;
-pub mod stm;
-pub mod mtm;
-pub mod ltm;
-pub mod vector_store;
-pub mod consolidator;
-pub mod indexer;
-pub mod forgetting;
-pub mod memory_signals;
-pub mod memory_os;
 pub mod api;
-pub mod multimodal_memory; // SUPER PROMPT #15 - Phase 6
+pub mod consolidator;
+pub mod forgetting;
+pub mod indexer;
+pub mod ltm;
+pub mod memory_os;
+pub mod memory_signals;
+pub mod memory_state;
+pub mod mtm;
+pub mod multimodal_memory;
+pub mod stm;
+pub mod vector_store; // SUPER PROMPT #15 - Phase 6
 
 // NEW: SUPER PROMPTS #6-7-8 modules
-pub mod types; // Shared types (must be first)
-pub mod vector_index;
-pub mod vector_hnsw;
-pub mod embeddings;
-pub mod similarity;
 pub mod clustering;
-pub mod semantic_search;
-pub mod memory_os_bridge;
+pub mod commands;
 pub mod config;
-pub mod commands; // Tauri commands
+pub mod embeddings;
+pub mod memory_os_bridge;
+pub mod semantic_search;
+pub mod similarity;
+pub mod types; // Shared types (must be first)
+pub mod vector_hnsw;
+pub mod vector_index; // Tauri commands
 
 // Re-export public types (selective)
+pub use clustering::{InitMethod, KMeansClustering, KMeansConfig};
+pub use config::MemoryOSConfigV2;
+pub use embeddings::{EmbeddingConfig, EmbeddingEngine, EmbeddingSource};
+pub use memory_os_bridge::{MemoryOSBridge, MemoryOSBridgeConfig, MemoryOSBridgeStats};
+pub use multimodal_memory::{
+    MultimodalContent, MultimodalMemoryEntry, MultimodalMemoryStats, MultimodalMemoryStore,
+};
+pub use semantic_search::SemanticSearchEngine;
 pub use types::*;
 pub use vector_index::{SearchResult, VectorIndex, VectorIndexConfig};
-pub use embeddings::{EmbeddingEngine, EmbeddingSource, EmbeddingConfig};
-pub use clustering::{KMeansClustering, KMeansConfig, InitMethod};
-pub use semantic_search::SemanticSearchEngine;
-pub use memory_os_bridge::{MemoryOSBridge, MemoryOSBridgeConfig, MemoryOSBridgeStats};
-pub use config::MemoryOSConfigV2;
-pub use multimodal_memory::{MultimodalMemoryEntry, MultimodalMemoryStore, MultimodalMemoryStats, MultimodalContent};
 
 // Re-exports for convenient access (original)
-pub use memory_state::{MemoryEntry, MemoryTier, MemoryType, MemorySnapshot};
-pub use stm::ShortTermMemory;
-pub use mtm::MidTermMemory;
-pub use ltm::LongTermMemory;
-pub use vector_store::VectorStore;
 pub use consolidator::Consolidator;
 pub use forgetting::ForgettingEngine;
-pub use memory_signals::MemorySignal;
+pub use ltm::LongTermMemory;
 pub use memory_os::MemoryOS;
+pub use memory_signals::MemorySignal;
+pub use memory_state::{MemoryEntry, MemorySnapshot, MemoryTier, MemoryType};
+pub use mtm::MidTermMemory;
+pub use stm::ShortTermMemory;
+pub use vector_store::VectorStore;
 
 // NEW: Re-exports for SUPER PROMPTs #6-7-8
-pub use vector_index::*;
-pub use vector_hnsw::*;
-pub use similarity::*;
-pub use semantic_search::*;
 pub use config::*;
+pub use semantic_search::*;
+pub use similarity::*;
+pub use vector_hnsw::*;
+pub use vector_index::*;
 
 // Version info
 pub const MEMORY_OS_VERSION: &str = "v20.1-Ω";

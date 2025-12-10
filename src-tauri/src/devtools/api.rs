@@ -200,7 +200,10 @@ pub async fn devtools_memory_search(
 
 /// KNN semantic search
 #[tauri::command]
-pub async fn devtools_knn(text: String, k: Option<usize>) -> DevToolsResponse<Vec<MemorySearchResult>> {
+pub async fn devtools_knn(
+    text: String,
+    k: Option<usize>,
+) -> DevToolsResponse<Vec<MemorySearchResult>> {
     if !*DEVTOOLS_ENABLED.read().await {
         return DevToolsResponse::err("DevTools is disabled");
     }

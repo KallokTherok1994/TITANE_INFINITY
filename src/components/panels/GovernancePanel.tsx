@@ -67,17 +67,11 @@ const getSeverityIcon = (severity: Anomaly['severity']) => {
 };
 
 export const GovernancePanel: React.FC<GovernancePanelProps> = ({ className = '' }) => {
-  const engine = useVisualStateStore((state) => state.engine);
-  const { visuals, isTransitioning } = useVisualState(engine);
+  const engine = useVisualStateStore(state => state.engine);
+  const { visuals, isTransitioning: _isTransitioning } = useVisualState(engine);
 
   // v21: Panel state management
-  const {
-    isCollapsed,
-    isVisible,
-    zIndex,
-    toggle,
-    bringToFront,
-  } = usePanelState({
+  const { isCollapsed, isVisible, zIndex, toggle, bringToFront } = usePanelState({
     panelId: 'governance',
     defaultCollapsed: false,
     defaultVisible: true,
@@ -86,7 +80,7 @@ export const GovernancePanel: React.FC<GovernancePanelProps> = ({ className = ''
   });
 
   // v21: Register panel in global store
-  const registerPanel = usePanelsStore((state) => state.registerPanel);
+  const registerPanel = usePanelsStore(state => state.registerPanel);
   useEffect(() => {
     registerPanel({
       id: 'governance',
@@ -203,7 +197,7 @@ export const GovernancePanel: React.FC<GovernancePanelProps> = ({ className = ''
 
         {/* Collapse/Expand button */}
         <button
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation();
             toggle();
           }}
@@ -304,13 +298,15 @@ export const GovernancePanel: React.FC<GovernancePanelProps> = ({ className = ''
                   Total Anomalies: <strong>{report.totalAnomalies}</strong>
                 </div>
                 <div>
-                  Critical: <strong style={{ color: '#ef4444' }}>{report.criticalCount}</strong>
+                  Critical:{' '}
+                  <strong style={{ color: '#ef4444' }}>{report.criticalCount}</strong>
                 </div>
                 <div>
                   High: <strong style={{ color: '#f97316' }}>{report.highCount}</strong>
                 </div>
                 <div>
-                  Medium: <strong style={{ color: '#eab308' }}>{report.mediumCount}</strong>
+                  Medium:{' '}
+                  <strong style={{ color: '#eab308' }}>{report.mediumCount}</strong>
                 </div>
               </div>
             )}
@@ -546,7 +542,9 @@ export const GovernancePanel: React.FC<GovernancePanelProps> = ({ className = ''
                         {anomaly.type}
                       </span>
                     </div>
-                    <div style={{ color: 'rgba(255, 255, 255, 0.8)', marginBottom: '4px' }}>
+                    <div
+                      style={{ color: 'rgba(255, 255, 255, 0.8)', marginBottom: '4px' }}
+                    >
                       {anomaly.message}
                     </div>
                     {anomaly.file && (
@@ -615,11 +613,10 @@ export const GovernancePanel: React.FC<GovernancePanelProps> = ({ className = ''
               transition: 'all 500ms cubic-bezier(0.25, 0.1, 0.25, 1)',
             }}
           >
+            <span>Monitoring: {isMonitoring ? '🟢 Active' : '🔴 Inactive'}</span>
             <span>
-              Monitoring: {isMonitoring ? '🟢 Active' : '🔴 Inactive'}
-            </span>
-            <span>
-              Last Check: {report ? new Date(report.timestamp).toLocaleTimeString() : 'N/A'}
+              Last Check:{' '}
+              {report ? new Date(report.timestamp).toLocaleTimeString() : 'N/A'}
             </span>
           </div>
         </>

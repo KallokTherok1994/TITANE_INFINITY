@@ -144,7 +144,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'get_ai_status',
   'test_gemini',
   'test_ollama',
-  'ollama_query',  // ✅ v∞ Direct Ollama query
+  'ollama_query', // ✅ v∞ Direct Ollama query
   'chat_generate',
   'upload_and_process_file',
 
@@ -157,7 +157,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'chat_delete_conversation',
   'chat_set_gemini_key',
   'chat_stream_message',
-  'chat_generate_suggestions',  // ✅ v∞ Suggestions IA
+  'chat_generate_suggestions', // ✅ v∞ Suggestions IA
   'generate_response',
   'stream_response',
   'speak_text',
@@ -699,7 +699,8 @@ const TRACKING_WINDOW_MS = 1000;
 const TEST_ONLY_COMMANDS = new Set<string>(['test_command', 'get_projects']);
 const isTestEnvironment =
   (typeof process !== 'undefined' && Boolean(process.env?.VITEST_WORKER_ID)) ||
-  (typeof globalThis !== 'undefined' && Boolean((globalThis as { __vitest_worker__?: unknown }).__vitest_worker__));
+  (typeof globalThis !== 'undefined' &&
+    Boolean((globalThis as { __vitest_worker__?: unknown }).__vitest_worker__));
 
 // ────────────────────────────────────────────────────────────────
 // Types & Interfaces
@@ -766,7 +767,9 @@ export function validateCommand(command: string): CommandValidationResult {
 /**
  * Détecter les tentatives d'injection dans le payload
  */
-export function detectInjection(payload: Record<string, unknown>): CommandValidationResult {
+export function detectInjection(
+  payload: Record<string, unknown>
+): CommandValidationResult {
   const errors: string[] = [];
 
   // Convertir payload en JSON pour analyse
@@ -786,15 +789,15 @@ export function detectInjection(payload: Record<string, unknown>): CommandValida
 /**
  * Valider la taille du payload
  */
-export function validatePayloadSize(payload: Record<string, unknown>): CommandValidationResult {
+export function validatePayloadSize(
+  payload: Record<string, unknown>
+): CommandValidationResult {
   const errors: string[] = [];
   const jsonString = JSON.stringify(payload);
   const sizeBytes = new Blob([jsonString]).size;
 
   if (sizeBytes > MAX_PAYLOAD_SIZE) {
-    errors.push(
-      `Payload too large: ${sizeBytes} bytes (max: ${MAX_PAYLOAD_SIZE} bytes)`
-    );
+    errors.push(`Payload too large: ${sizeBytes} bytes (max: ${MAX_PAYLOAD_SIZE} bytes)`);
     return { valid: false, errors };
   }
 
@@ -917,7 +920,7 @@ export function isHardeningReport(value: unknown): value is HardeningReport {
   const hasTests =
     Array.isArray(value.tests) &&
     value.tests.every(
-      (test) =>
+      test =>
         isRecord(test) &&
         typeof test.name === 'string' &&
         typeof test.passed === 'boolean' &&
@@ -934,7 +937,7 @@ export function isHardeningReport(value: unknown): value is HardeningReport {
  * Type guard pour tableau de strings
  */
 export function isStringArray(value: unknown): value is string[] {
-  return Array.isArray(value) && value.every((item) => typeof item === 'string');
+  return Array.isArray(value) && value.every(item => typeof item === 'string');
 }
 
 /**
@@ -1108,7 +1111,8 @@ export async function secureInvoke<T>(
   try {
     const isTestEnv =
       (typeof process !== 'undefined' && Boolean(process.env?.VITEST_WORKER_ID)) ||
-      (typeof globalThis !== 'undefined' && Boolean((globalThis as { __vitest_worker__?: unknown }).__vitest_worker__));
+      (typeof globalThis !== 'undefined' &&
+        Boolean((globalThis as { __vitest_worker__?: unknown }).__vitest_worker__));
 
     let response: unknown;
     if (isTestEnv) {
@@ -1116,7 +1120,9 @@ export async function secureInvoke<T>(
       const tauriCore = await import('@tauri-apps/api/core');
       response = await Promise.race([
         tauriCore.invoke<T>(command, payload),
-        new Promise((_, reject) => setTimeout(() => reject(new Error(`Timeout after ${timeout}ms`)), timeout)),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error(`Timeout after ${timeout}ms`)), timeout)
+        ),
       ]);
     } else {
       response = await safeInvokeTauri<T>(command, payload, timeout);
@@ -1180,11 +1186,9 @@ export async function runSecuritySelfTest(): Promise<HardeningReport> {
     isHardeningReport
   );
 
-  console.log(
-    `[Security Self-Test] Pass rate: ${(report.pass_rate * 100).toFixed(1)}%`
-  );
+  console.log(`[Security Self-Test] Pass rate: ${(report.pass_rate * 100).toFixed(1)}%`);
   console.table(
-    report.tests.map((t) => ({
+    report.tests.map(t => ({
       Test: t.name,
       Status: t.passed ? '✅ PASS' : '❌ FAIL',
       Details: t.details,

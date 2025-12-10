@@ -137,10 +137,7 @@ impl UnifiedIAEngine {
     }
 
     /// Generate response with automatic fallback
-    pub async fn generate(
-        &self,
-        request: UnifiedIARequest,
-    ) -> Result<UnifiedIAResponse, String> {
+    pub async fn generate(&self, request: UnifiedIARequest) -> Result<UnifiedIAResponse, String> {
         let engines = self.get_fallback_chain(request.preferred_engine.clone());
 
         debug!("[UnifiedIA] Chaîne de secours: {:?}", engines);
@@ -337,7 +334,13 @@ impl UnifiedIAEngine {
         if self.claude_client.read().await.is_some() {
             engines.push(IAEngine::Claude);
         }
-        if self.secrets.get_secret("gemini_api_key").ok().flatten().is_some() {
+        if self
+            .secrets
+            .get_secret("gemini_api_key")
+            .ok()
+            .flatten()
+            .is_some()
+        {
             engines.push(IAEngine::Gemini);
         }
 

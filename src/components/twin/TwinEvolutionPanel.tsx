@@ -7,7 +7,12 @@
 import React, { useState } from 'react';
 import { useTwinIdentity } from '../../hooks/useTwinIdentity';
 import { useTwinEvolution } from '../../hooks/useTwinEvolution';
-import { getScoreColor, getPhaseLabel, getTrendLabel, getTrendIcon } from '../../types/numericTwin';
+import {
+  getScoreColor,
+  getPhaseLabel,
+  getTrendLabel,
+  getTrendIcon,
+} from '../../types/numericTwin';
 import './TwinEvolutionPanel.css';
 
 interface TwinEvolutionPanelProps {
@@ -23,7 +28,12 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
   isAdmin = false,
   compact = false,
 }) => {
-  const { identity, isLoading: identityLoading, coreValues, humanStyle } = useTwinIdentity();
+  const {
+    identity,
+    isLoading: identityLoading,
+    coreValues,
+    humanStyle,
+  } = useTwinIdentity();
   const {
     fusionIndex,
     evolutionProfile,
@@ -36,7 +46,9 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
     reinforceValue,
   } = useTwinEvolution();
 
-  const [activeTab, setActiveTab] = useState<'fusion' | 'values' | 'evolution' | 'admin'>('fusion');
+  const [activeTab, setActiveTab] = useState<'fusion' | 'values' | 'evolution' | 'admin'>(
+    'fusion'
+  );
 
   const isLoading = identityLoading || evolutionLoading;
 
@@ -117,16 +129,10 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
       {/* Content */}
       <div className="twin-panel__content">
         {activeTab === 'fusion' && (
-          <FusionTab
-            fusionIndex={fusionIndex}
-            humanStyle={humanStyle}
-          />
+          <FusionTab fusionIndex={fusionIndex} humanStyle={humanStyle} />
         )}
         {activeTab === 'values' && (
-          <ValuesTab
-            coreValues={coreValues}
-            onReinforce={reinforceValue}
-          />
+          <ValuesTab coreValues={coreValues} onReinforce={reinforceValue} />
         )}
         {activeTab === 'evolution' && (
           <EvolutionTab
@@ -137,10 +143,7 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
           />
         )}
         {activeTab === 'admin' && isAdmin && (
-          <AdminTab
-            onRecalculate={recalculateFusion}
-            onTransition={transitionPhase}
-          />
+          <AdminTab onRecalculate={recalculateFusion} onTransition={transitionPhase} />
         )}
       </div>
     </div>
@@ -175,10 +178,12 @@ const FusionTab: React.FC<FusionTabProps> = ({ fusionIndex, humanStyle }) => {
         <div className="twin-fusion__score-container">
           <div
             className="twin-fusion__score"
-            style={{
-              '--score-color': getScoreColor(fusionIndex.globalScore),
-              '--score-percent': `${fusionIndex.globalScore * 100}%`
-            } as React.CSSProperties}
+            style={
+              {
+                '--score-color': getScoreColor(fusionIndex.globalScore),
+                '--score-percent': `${fusionIndex.globalScore * 100}%`,
+              } as React.CSSProperties
+            }
           >
             <span className="twin-fusion__score-value">
               {(fusionIndex.globalScore * 100).toFixed(0)}%
@@ -203,7 +208,9 @@ const FusionTab: React.FC<FusionTabProps> = ({ fusionIndex, humanStyle }) => {
           {alignments.map(({ label, value, icon }) => (
             <div key={label} className="twin-fusion__alignment">
               <div className="twin-fusion__alignment-header">
-                <span>{icon} {label}</span>
+                <span>
+                  {icon} {label}
+                </span>
                 <span style={{ color: getScoreColor(value) }}>
                   {(value * 100).toFixed(0)}%
                 </span>
@@ -213,7 +220,7 @@ const FusionTab: React.FC<FusionTabProps> = ({ fusionIndex, humanStyle }) => {
                   className="twin-fusion__alignment-fill"
                   style={{
                     width: `${value * 100}%`,
-                    backgroundColor: getScoreColor(value)
+                    backgroundColor: getScoreColor(value),
                   }}
                 />
               </div>
@@ -251,10 +258,7 @@ const StyleBar: React.FC<StyleBarProps> = ({ label, value }) => (
       <span>{(value * 100).toFixed(0)}%</span>
     </div>
     <div className="twin-style-bar__track">
-      <div
-        className="twin-style-bar__fill"
-        style={{ width: `${value * 100}%` }}
-      />
+      <div className="twin-style-bar__fill" style={{ width: `${value * 100}%` }} />
     </div>
   </div>
 );
@@ -280,21 +284,15 @@ const ValuesTab: React.FC<ValuesTabProps> = ({ coreValues, onReinforce }) => {
     <div className="twin-tab twin-tab--values">
       <h3>Valeurs Fondamentales (Inviolables)</h3>
       <div className="twin-values__list">
-        {coreValues.map((value) => (
+        {coreValues.map(value => (
           <div key={value.name} className="twin-value">
             <div className="twin-value__header">
               <span className="twin-value__name">💎 {value.name}</span>
               <div className="twin-value__badges">
-                <span
-                  className="twin-value__stability"
-                  title="Stabilité"
-                >
+                <span className="twin-value__stability" title="Stabilité">
                   🛡️ {(value.stability * 100).toFixed(0)}%
                 </span>
-                <span
-                  className="twin-value__weight"
-                  title="Poids décisionnel"
-                >
+                <span className="twin-value__weight" title="Poids décisionnel">
                   ⚖️ {(value.weight * 100).toFixed(0)}%
                 </span>
               </div>
@@ -327,7 +325,13 @@ const EvolutionTab: React.FC<EvolutionTabProps> = ({
   suggestions,
   milestonesCount,
 }) => {
-  const phases = ['Observation', 'Assimilation', 'Integration', 'CoEvolution', 'Symbiosis'];
+  const phases = [
+    'Observation',
+    'Assimilation',
+    'Integration',
+    'CoEvolution',
+    'Symbiosis',
+  ];
   const currentIndex = phases.indexOf(currentPhase ?? 'Observation');
 
   return (
@@ -364,9 +368,21 @@ const EvolutionTab: React.FC<EvolutionTabProps> = ({
           <h3>Tendances de Croissance</h3>
           <div className="twin-evolution__trends-grid">
             <TrendCard label="Cognitive" value={growthTrends.cognitiveGrowth} icon="🧠" />
-            <TrendCard label="Émotionnelle" value={growthTrends.emotionalGrowth} icon="💚" />
-            <TrendCard label="Spirituelle" value={growthTrends.spiritualGrowth} icon="✨" />
-            <TrendCard label="Entrepreneuriale" value={growthTrends.entrepreneurialGrowth} icon="🚀" />
+            <TrendCard
+              label="Émotionnelle"
+              value={growthTrends.emotionalGrowth}
+              icon="💚"
+            />
+            <TrendCard
+              label="Spirituelle"
+              value={growthTrends.spiritualGrowth}
+              icon="✨"
+            />
+            <TrendCard
+              label="Entrepreneuriale"
+              value={growthTrends.entrepreneurialGrowth}
+              icon="🚀"
+            />
           </div>
         </div>
       )}
@@ -384,9 +400,7 @@ const EvolutionTab: React.FC<EvolutionTabProps> = ({
                 }`}
               >
                 <div className="twin-evolution__suggestion-header">
-                  <span className="twin-evolution__suggestion-domain">
-                    📌 {s.domain}
-                  </span>
+                  <span className="twin-evolution__suggestion-domain">📌 {s.domain}</span>
                   <span className="twin-evolution__suggestion-priority">
                     Priorité: {(s.priority * 100).toFixed(0)}%
                   </span>
@@ -416,10 +430,7 @@ const TrendCard: React.FC<TrendCardProps> = ({ label, value, icon }) => (
   <div className="twin-trend-card">
     <span className="twin-trend-card__icon">{icon}</span>
     <span className="twin-trend-card__label">{label}</span>
-    <span
-      className="twin-trend-card__value"
-      style={{ color: getScoreColor(value) }}
-    >
+    <span className="twin-trend-card__value" style={{ color: getScoreColor(value) }}>
       {(value * 100).toFixed(0)}%
     </span>
   </div>
@@ -456,8 +467,8 @@ const AdminTab: React.FC<AdminTabProps> = ({ onRecalculate, onTransition }) => {
     <div className="twin-tab twin-tab--admin">
       <h3>⚙️ Administration Twin</h3>
       <p className="twin-admin__warning">
-        ⚠️ Ces actions sont réservées aux administrateurs et peuvent affecter
-        profondément l'état du Twin.
+        ⚠️ Ces actions sont réservées aux administrateurs et peuvent affecter profondément
+        l'état du Twin.
       </p>
 
       <div className="twin-admin__actions">

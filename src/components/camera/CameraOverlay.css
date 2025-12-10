@@ -8,10 +8,11 @@
 .camera-overlay {
   position: fixed;
   background: linear-gradient(135deg, #1a1f2e 0%, #0a0e1a 100%);
-  border: 2px solid #727B81;
+  border: 2px solid #727b81;
   border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5),
-              0 0 40px rgba(114, 123, 129, 0.2);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(114, 123, 129, 0.2);
   z-index: 9998;
   display: flex;
   flex-direction: column;
@@ -69,7 +70,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #C4C4C4;
+  color: #c4c4c4;
   font-size: 12px;
   font-weight: 600;
 }
@@ -83,7 +84,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     box-shadow: 0 0 8px rgba(147, 179, 153, 0.6);
   }
@@ -104,7 +106,7 @@
   border-radius: 6px;
   background: transparent;
   border: 1px solid rgba(196, 196, 196, 0.2);
-  color: #C4C4C4;
+  color: #c4c4c4;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -114,7 +116,7 @@
 
 .camera-overlay-btn:hover {
   background: rgba(196, 196, 196, 0.1);
-  border-color: #C4C4C4;
+  border-color: #c4c4c4;
 }
 
 /* ═══════════════════════════════════════════════════════════════

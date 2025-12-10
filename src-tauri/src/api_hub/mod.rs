@@ -12,40 +12,42 @@
 //! dynamiquement le meilleur modèle selon la tâche, le contexte, le coût,
 //! la vitesse et l'intention.
 
-pub mod provider_registry;
-pub mod openai;
-pub mod gemini;
 pub mod anthropic;
-pub mod router;
-pub mod multimodal_router;
-pub mod harmonizer;
-pub mod safety_bridge;
-pub mod vault_bridge;
-pub mod diagnostics;
 pub mod config;
+pub mod diagnostics;
+pub mod gemini;
+pub mod harmonizer;
+pub mod multimodal_router;
+pub mod openai;
+pub mod provider_registry;
+pub mod router;
+pub mod safety_bridge;
 pub mod temporal_adapter;
-pub mod temporal_rate_limiter;
 pub mod temporal_cache;
 pub mod temporal_circuit_breaker;
+pub mod temporal_rate_limiter;
+pub mod vault_bridge;
 
 #[cfg(test)]
 mod temporal_integration_tests;
 
-pub use provider_registry::{ProviderRegistry, ProviderProfile, ProviderCapability};
-pub use openai::OpenAIProvider;
-pub use gemini::GeminiProvider;
 pub use anthropic::AnthropicProvider;
-pub use router::{APIRouter, ModelChoiceStrategy, RouteDecision};
-pub use multimodal_router::{MultimodalRouter, MultimodalRequest, MultimodalResponse};
-pub use harmonizer::{ResponseHarmonizer, HarmonizedResponse};
-pub use safety_bridge::SafetyBridge;
-pub use vault_bridge::VaultBridge;
-pub use diagnostics::{APIHubDiagnostics, APIHubEvent};
 pub use config::APIHubConfig;
-pub use temporal_adapter::{TemporalApiAdapter, ApiTemporalAdjustments, ProviderSuggestion};
-pub use temporal_rate_limiter::{TemporalRateLimiter, RateLimitError};
-pub use temporal_cache::{TemporalCache, CacheStats};
-pub use temporal_circuit_breaker::{TemporalCircuitBreaker, CircuitState, CircuitBreakerError, BreakerStats};
+pub use diagnostics::{APIHubDiagnostics, APIHubEvent};
+pub use gemini::GeminiProvider;
+pub use harmonizer::{HarmonizedResponse, ResponseHarmonizer};
+pub use multimodal_router::{MultimodalRequest, MultimodalResponse, MultimodalRouter};
+pub use openai::OpenAIProvider;
+pub use provider_registry::{ProviderCapability, ProviderProfile, ProviderRegistry};
+pub use router::{APIRouter, ModelChoiceStrategy, RouteDecision};
+pub use safety_bridge::SafetyBridge;
+pub use temporal_adapter::{ApiTemporalAdjustments, ProviderSuggestion, TemporalApiAdapter};
+pub use temporal_cache::{CacheStats, TemporalCache};
+pub use temporal_circuit_breaker::{
+    BreakerStats, CircuitBreakerError, CircuitState, TemporalCircuitBreaker,
+};
+pub use temporal_rate_limiter::{RateLimitError, TemporalRateLimiter};
+pub use vault_bridge::VaultBridge;
 
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
@@ -103,11 +105,18 @@ pub struct APIRequest {
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub enum RequestContent {
     Text(String),
-    TextWithImages { text: String, images: Vec<Vec<u8>> },
+    TextWithImages {
+        text: String,
+        images: Vec<Vec<u8>>,
+    },
     Audio(Vec<u8>),
     EmbeddingRequest(Vec<String>),
     ImageGenerationPrompt(String),
-    MultiModal { text: Option<String>, images: Vec<Vec<u8>>, audio: Option<Vec<u8>> },
+    MultiModal {
+        text: Option<String>,
+        images: Vec<Vec<u8>>,
+        audio: Option<Vec<u8>>,
+    },
 }
 
 /// Réponse unifiée du Hub
@@ -129,7 +138,10 @@ pub enum ResponseContent {
     Embeddings(Vec<Vec<f32>>),
     ImageUrls(Vec<String>),
     AudioTranscription(String),
-    MultiModal { text: Option<String>, embeddings: Option<Vec<Vec<f32>>> },
+    MultiModal {
+        text: Option<String>,
+        embeddings: Option<Vec<Vec<f32>>>,
+    },
     Error(String),
 }
 
@@ -202,22 +214,27 @@ impl APIHub {
         // Récupérer les clés depuis le vault
         if let Some(key) = self.vault.get_api_key(Provider::OpenAI).await? {
             self.openai = Some(OpenAIProvider::new(key));
-            self.registry.register_provider(Provider::OpenAI, ProviderProfile::openai_default());
+            self.registry
+                .register_provider(Provider::OpenAI, ProviderProfile::openai_default());
         }
 
         if let Some(key) = self.vault.get_api_key(Provider::Gemini).await? {
             self.gemini = Some(GeminiProvider::new(key));
-            self.registry.register_provider(Provider::Gemini, ProviderProfile::gemini_default());
+            self.registry
+                .register_provider(Provider::Gemini, ProviderProfile::gemini_default());
         }
 
         if let Some(key) = self.vault.get_api_key(Provider::Anthropic).await? {
             self.anthropic = Some(AnthropicProvider::new(key));
-            self.registry.register_provider(Provider::Anthropic, ProviderProfile::anthropic_default());
+            self.registry
+                .register_provider(Provider::Anthropic, ProviderProfile::anthropic_default());
         }
 
-        self.diagnostics.emit(APIHubEvent::Initialized {
-            providers_count: self.registry.active_providers().len(),
-        }).await;
+        self.diagnostics
+            .emit(APIHubEvent::Initialized {
+                providers_count: self.registry.active_providers().len(),
+            })
+            .await;
 
         Ok(())
     }
@@ -232,26 +249,34 @@ impl APIHub {
         // 2. Router vers le meilleur provider
         let decision = self.router.route(&request, &self.registry).await;
 
-        self.diagnostics.emit(APIHubEvent::RouteDecision {
-            request_id: request.id.clone(),
-            provider: decision.provider,
-            reason: decision.reason.clone(),
-        }).await;
+        self.diagnostics
+            .emit(APIHubEvent::RouteDecision {
+                request_id: request.id.clone(),
+                provider: decision.provider,
+                reason: decision.reason.clone(),
+            })
+            .await;
 
         // 3. Exécuter la requête
         let raw_response = match decision.provider {
             Provider::OpenAI => {
-                let provider = self.openai.as_ref()
+                let provider = self
+                    .openai
+                    .as_ref()
                     .ok_or(APIHubError::ProviderNotAvailable(Provider::OpenAI))?;
                 provider.execute(&request).await?
             }
             Provider::Gemini => {
-                let provider = self.gemini.as_ref()
+                let provider = self
+                    .gemini
+                    .as_ref()
                     .ok_or(APIHubError::ProviderNotAvailable(Provider::Gemini))?;
                 provider.execute(&request).await?
             }
             Provider::Anthropic => {
-                let provider = self.anthropic.as_ref()
+                let provider = self
+                    .anthropic
+                    .as_ref()
                     .ok_or(APIHubError::ProviderNotAvailable(Provider::Anthropic))?;
                 provider.execute(&request).await?
             }
@@ -268,12 +293,14 @@ impl APIHub {
         self.update_stats(&harmonized, latency).await;
 
         // 6. Émettre diagnostic
-        self.diagnostics.emit(APIHubEvent::RequestCompleted {
-            request_id: request.id,
-            provider: decision.provider,
-            latency_ms: latency,
-            tokens: harmonized.usage.total_tokens,
-        }).await;
+        self.diagnostics
+            .emit(APIHubEvent::RequestCompleted {
+                request_id: request.id,
+                provider: decision.provider,
+                latency_ms: latency,
+                tokens: harmonized.usage.total_tokens,
+            })
+            .await;
 
         Ok(APIResponse {
             id: harmonized.id,
@@ -287,12 +314,20 @@ impl APIHub {
     }
 
     /// Exécute une requête multimodale complexe
-    pub async fn execute_multimodal(&self, request: MultimodalRequest) -> Result<MultimodalResponse, APIHubError> {
-        self.multimodal_router.route_and_execute(request, self).await
+    pub async fn execute_multimodal(
+        &self,
+        request: MultimodalRequest,
+    ) -> Result<MultimodalResponse, APIHubError> {
+        self.multimodal_router
+            .route_and_execute(request, self)
+            .await
     }
 
     /// Génère des embeddings
-    pub async fn generate_embeddings(&self, texts: Vec<String>) -> Result<Vec<Vec<f32>>, APIHubError> {
+    pub async fn generate_embeddings(
+        &self,
+        texts: Vec<String>,
+    ) -> Result<Vec<Vec<f32>>, APIHubError> {
         let request = APIRequest {
             id: uuid::Uuid::new_v4().to_string(),
             modality: Modality::Embeddings,
@@ -309,12 +344,18 @@ impl APIHub {
 
         match response.content {
             ResponseContent::Embeddings(emb) => Ok(emb),
-            _ => Err(APIHubError::UnexpectedResponse("Expected embeddings".to_string())),
+            _ => Err(APIHubError::UnexpectedResponse(
+                "Expected embeddings".to_string(),
+            )),
         }
     }
 
     /// Chat avec sélection automatique du provider
-    pub async fn chat(&self, message: &str, strategy: ModelChoiceStrategy) -> Result<String, APIHubError> {
+    pub async fn chat(
+        &self,
+        message: &str,
+        strategy: ModelChoiceStrategy,
+    ) -> Result<String, APIHubError> {
         let request = APIRequest {
             id: uuid::Uuid::new_v4().to_string(),
             modality: Modality::Text,
@@ -374,7 +415,10 @@ impl APIHub {
     async fn update_stats(&self, response: &HarmonizedResponse, latency: u64) {
         let mut state = self.state.write().await;
         state.total_requests += 1;
-        *state.requests_by_provider.entry(response.provider).or_insert(0) += 1;
+        *state
+            .requests_by_provider
+            .entry(response.provider)
+            .or_insert(0) += 1;
         state.total_tokens_used += response.usage.total_tokens as u64;
         state.total_cost_usd += response.usage.estimated_cost_usd;
 

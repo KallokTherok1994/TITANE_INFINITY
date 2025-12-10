@@ -198,7 +198,8 @@ export async function collectLogs(): Promise<SelfHealingLogEntry[]> {
       const item = entry as Record<string, unknown>;
       const timestamp = typeof item.timestamp === 'number' ? item.timestamp : Date.now();
       const level = typeof item.level === 'string' ? item.level : 'INFO';
-      const message = typeof item.message === 'string' ? item.message : JSON.stringify(item);
+      const message =
+        typeof item.message === 'string' ? item.message : JSON.stringify(item);
       const target = typeof item.target === 'string' ? item.target : undefined;
       const scope = typeof item.scope === 'string' ? item.scope : undefined;
 
@@ -260,15 +261,24 @@ export async function selectPlaybook(symptoms: string): Promise<PlaybookPlan> {
   const normalized = symptoms.toLowerCase();
 
   const match = PLAYBOOK_REGISTRY.find(playbook => {
-    if (playbook.id === 'runtime-errors' && /error|exception|panic|stack/i.test(normalized)) {
+    if (
+      playbook.id === 'runtime-errors' &&
+      /error|exception|panic|stack/i.test(normalized)
+    ) {
       return true;
     }
 
-    if (playbook.id === 'ui-desync' && /ui|ux|desync|state|store|render/i.test(normalized)) {
+    if (
+      playbook.id === 'ui-desync' &&
+      /ui|ux|desync|state|store|render/i.test(normalized)
+    ) {
       return true;
     }
 
-    if (playbook.id === 'performance-drift' && /slow|lag|performance|fps|drift/i.test(normalized)) {
+    if (
+      playbook.id === 'performance-drift' &&
+      /slow|lag|performance|fps|drift/i.test(normalized)
+    ) {
       return true;
     }
 
@@ -278,12 +288,20 @@ export async function selectPlaybook(symptoms: string): Promise<PlaybookPlan> {
   return match ?? PLAYBOOK_REGISTRY[0];
 }
 
-export async function buildPrompt(context: SelfHealingContext, playbook: string): Promise<string> {
+export async function buildPrompt(
+  context: SelfHealingContext,
+  playbook: string
+): Promise<string> {
   const formattedLogs = context.logs
-    .map(entry => `${new Date(entry.timestamp).toISOString()} [${entry.level}] ${entry.message}`)
+    .map(
+      entry =>
+        `${new Date(entry.timestamp).toISOString()} [${entry.level}] ${entry.message}`
+    )
     .join('\n');
 
-  const stateSnapshot = context.state ? JSON.stringify(context.state, null, 2) : 'Etat indisponible';
+  const stateSnapshot = context.state
+    ? JSON.stringify(context.state, null, 2)
+    : 'Etat indisponible';
 
   const prompt = `
 Tu es TITANE Local (modèle titane-local).
@@ -328,7 +346,9 @@ export async function callTitaneLocal(prompt: string): Promise<string> {
   }
 }
 
-export async function parseLocalResponse(raw: string): Promise<SelfHealingStructuredResult> {
+export async function parseLocalResponse(
+  raw: string
+): Promise<SelfHealingStructuredResult> {
   const sanitized = raw.trim();
 
   let parsed: unknown;
@@ -375,21 +395,21 @@ export async function parseLocalResponse(raw: string): Promise<SelfHealingStruct
 
   const response = parsed as Record<string, unknown>;
 
-  const diagnostic = typeof response.DIAGNOSTIC === 'string'
-    ? response.DIAGNOSTIC
-    : sanitized;
+  const diagnostic =
+    typeof response.DIAGNOSTIC === 'string' ? response.DIAGNOSTIC : sanitized;
 
-  const playbookAnalysis = typeof response.PLAYBOOK_ANALYSIS === 'string'
-    ? response.PLAYBOOK_ANALYSIS
-    : 'Analyse non fournie.';
+  const playbookAnalysis =
+    typeof response.PLAYBOOK_ANALYSIS === 'string'
+      ? response.PLAYBOOK_ANALYSIS
+      : 'Analyse non fournie.';
 
-  const patch = typeof response.PATCH === 'object' && response.PATCH !== null
-    ? (response.PATCH as Record<string, unknown>)
-    : null;
+  const patch =
+    typeof response.PATCH === 'object' && response.PATCH !== null
+      ? (response.PATCH as Record<string, unknown>)
+      : null;
 
-  const confidence = typeof response.CONFIDENCE === 'number'
-    ? clampConfidence(response.CONFIDENCE)
-    : 0;
+  const confidence =
+    typeof response.CONFIDENCE === 'number' ? clampConfidence(response.CONFIDENCE) : 0;
 
   const escalade = isEscalationChannel(response.ESCALADE)
     ? response.ESCALADE
@@ -436,7 +456,9 @@ export async function applyMinimalPatch(patch: unknown): Promise<ApplyPatchResul
           break;
         }
         default: {
-          errors.push(`Action inconnue: ${(instruction as MinimalPatchInstruction).action}`);
+          errors.push(
+            `Action inconnue: ${(instruction as MinimalPatchInstruction).action}`
+          );
         }
       }
     } catch (error) {
@@ -456,7 +478,9 @@ export async function applyMinimalPatch(patch: unknown): Promise<ApplyPatchResul
 // ESCALATION & LEARNING
 // ═══════════════════════════════════════════════════════════════════════════
 
-export async function escalateIfNeeded(result: SelfHealingStructuredResult): Promise<EscalationResult> {
+export async function escalateIfNeeded(
+  result: SelfHealingStructuredResult
+): Promise<EscalationResult> {
   const confidence = clampConfidence(result.confidence);
 
   if (confidence >= CONFIDENCE_THRESHOLD && result.escalade === 'aucune') {
@@ -467,9 +491,10 @@ export async function escalateIfNeeded(result: SelfHealingStructuredResult): Pro
     };
   }
 
-  const channel: EscalationChannel = result.escalade === 'aucune' && confidence < CONFIDENCE_THRESHOLD
-    ? 'codex'
-    : result.escalade;
+  const channel: EscalationChannel =
+    result.escalade === 'aucune' && confidence < CONFIDENCE_THRESHOLD
+      ? 'codex'
+      : result.escalade;
 
   console.warn('[SelfHealing] Escalation triggered:', {
     channel,
@@ -490,9 +515,10 @@ export async function escalateIfNeeded(result: SelfHealingStructuredResult): Pro
   return {
     triggered: true,
     channel,
-    reason: confidence < CONFIDENCE_THRESHOLD
-      ? 'Confiance insuffisante (< 0.65).'
-      : `Escalade demandée par TITANE Local (${channel}).`,
+    reason:
+      confidence < CONFIDENCE_THRESHOLD
+        ? 'Confiance insuffisante (< 0.65).'
+        : `Escalade demandée par TITANE Local (${channel}).`,
   };
 }
 
@@ -536,7 +562,9 @@ function clampConfidence(value: number): number {
 }
 
 function isEscalationChannel(value: unknown): value is EscalationChannel {
-  return value === 'aucune' || value === 'codex' || value === 'opus' || value === 'gemini';
+  return (
+    value === 'aucune' || value === 'codex' || value === 'opus' || value === 'gemini'
+  );
 }
 
 function normalizePatch(patch: unknown): MinimalPatchInstruction[] {
@@ -547,7 +575,9 @@ function normalizePatch(patch: unknown): MinimalPatchInstruction[] {
   if (Array.isArray(patch)) {
     return patch
       .map(instruction => normalizePatchInstruction(instruction))
-      .filter((instruction): instruction is MinimalPatchInstruction => Boolean(instruction));
+      .filter((instruction): instruction is MinimalPatchInstruction =>
+        Boolean(instruction)
+      );
   }
 
   const single = normalizePatchInstruction(patch);
@@ -566,7 +596,9 @@ function normalizePatchInstruction(value: unknown): MinimalPatchInstruction | nu
     return {
       action: 'invoke',
       command: instruction.command,
-      payload: isPlainObject(instruction.payload) ? (instruction.payload as Record<string, unknown>) : undefined,
+      payload: isPlainObject(instruction.payload)
+        ? (instruction.payload as Record<string, unknown>)
+        : undefined,
     };
   }
 
@@ -589,11 +621,18 @@ function normalizePatchInstruction(value: unknown): MinimalPatchInstruction | nu
 }
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && Object.getPrototypeOf(value) === Object.prototype;
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    Object.getPrototypeOf(value) === Object.prototype
+  );
 }
 
 function applyStateUpdate(path: string, value: unknown): void {
-  const segments = path.split('.').map(segment => segment.trim()).filter(Boolean);
+  const segments = path
+    .split('.')
+    .map(segment => segment.trim())
+    .filter(Boolean);
 
   if (segments.length === 0) {
     throw new Error('Chemin de mise à jour vide.');
@@ -708,7 +747,10 @@ async function syncSingularityLearning(result: SelfHealingRunResult): Promise<vo
   }
 }
 
-function buildPartialFromPath(segments: string[], value: unknown): EngineSingularityPartial {
+function buildPartialFromPath(
+  segments: string[],
+  value: unknown
+): EngineSingularityPartial {
   const root: Record<string, unknown> = {};
   let cursor = root;
 
@@ -730,4 +772,3 @@ function buildPartialFromPath(segments: string[], value: unknown): EngineSingula
 
   return root as EngineSingularityPartial;
 }
-

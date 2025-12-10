@@ -111,9 +111,15 @@ impl TemporalEvent {
     fn default_severity(event_type: &TemporalEventType) -> EventSeverity {
         match event_type {
             TemporalEventType::Error => EventSeverity::Error,
-            TemporalEventType::Warning | TemporalEventType::AlignmentWarning => EventSeverity::Warning,
-            TemporalEventType::RiskDetected | TemporalEventType::TaskOverdue => EventSeverity::Warning,
-            TemporalEventType::PeakEnergyPeriod | TemporalEventType::OpportunityDetected => EventSeverity::Info,
+            TemporalEventType::Warning | TemporalEventType::AlignmentWarning => {
+                EventSeverity::Warning
+            }
+            TemporalEventType::RiskDetected | TemporalEventType::TaskOverdue => {
+                EventSeverity::Warning
+            }
+            TemporalEventType::PeakEnergyPeriod | TemporalEventType::OpportunityDetected => {
+                EventSeverity::Info
+            }
             _ => EventSeverity::Debug,
         }
     }
@@ -191,7 +197,7 @@ impl TemporalEventBus {
     /// S'abonne aux événements
     pub async fn subscribe<F>(&self, id: &str, filter: Option<Vec<TemporalEventType>>, callback: F)
     where
-        F: Fn(&TemporalEvent) + Send + Sync + 'static
+        F: Fn(&TemporalEvent) + Send + Sync + 'static,
     {
         let mut subscribers = self.subscribers.write().await;
         subscribers.push(EventSubscriber {
@@ -221,8 +227,11 @@ impl TemporalEventBus {
     /// Filtre l'historique par type
     pub async fn by_type(&self, event_type: TemporalEventType) -> Vec<TemporalEvent> {
         let history = self.history.read().await;
-        history.iter()
-            .filter(|e| std::mem::discriminant(&e.event_type) == std::mem::discriminant(&event_type))
+        history
+            .iter()
+            .filter(|e| {
+                std::mem::discriminant(&e.event_type) == std::mem::discriminant(&event_type)
+            })
             .cloned()
             .collect()
     }
@@ -230,7 +239,8 @@ impl TemporalEventBus {
     /// Filtre par sévérité
     pub async fn by_severity(&self, min_severity: EventSeverity) -> Vec<TemporalEvent> {
         let history = self.history.read().await;
-        history.iter()
+        history
+            .iter()
             .filter(|e| Self::severity_value(&e.severity) >= Self::severity_value(&min_severity))
             .cloned()
             .collect()
@@ -270,10 +280,7 @@ mod tests {
     async fn test_event_bus() {
         let bus = TemporalEventBus::default();
 
-        let event = TemporalEvent::new(
-            TemporalEventType::TaskCreated,
-            "Task created".to_string(),
-        );
+        let event = TemporalEvent::new(TemporalEventType::TaskCreated, "Task created".to_string());
 
         bus.publish(event).await;
 

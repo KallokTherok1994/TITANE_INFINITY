@@ -10,11 +10,11 @@ import * as THREE from 'three';
 // ═══════════════════════════════════════════════════════════════════════════
 
 export interface LightingConfig {
-  keyIntensity: number;         // Key light intensity (2.0-4.0)
-  fillIntensity: number;        // Fill light intensity (1.0-2.0)
-  rimIntensity: number;         // Rim light intensity (1.5-3.0)
-  ambientIntensity: number;     // Ambient light intensity (0.2-0.5)
-  shadowMapSize: number;        // Shadow map resolution (1024, 2048, 4096)
+  keyIntensity: number; // Key light intensity (2.0-4.0)
+  fillIntensity: number; // Fill light intensity (1.0-2.0)
+  rimIntensity: number; // Rim light intensity (1.5-3.0)
+  ambientIntensity: number; // Ambient light intensity (0.2-0.5)
+  shadowMapSize: number; // Shadow map resolution (1024, 2048, 4096)
   keyColor: THREE.ColorRepresentation;
   fillColor: THREE.ColorRepresentation;
   rimColor: THREE.ColorRepresentation;
@@ -35,9 +35,9 @@ const STYLE_LIGHTING_PRESETS: Record<AppearanceStyle, Partial<LightingConfig>> =
     fillIntensity: 1.0,
     rimIntensity: 2.0,
     ambientIntensity: 0.25,
-    keyColor: 0xaac5dd,     // Blue tint
-    fillColor: 0x8899bb,    // Cool blue
-    rimColor: 0xccddff,     // Light blue
+    keyColor: 0xaac5dd, // Blue tint
+    fillColor: 0x8899bb, // Cool blue
+    rimColor: 0xccddff, // Light blue
   },
 
   // ─────────────────────────────────────────
@@ -48,9 +48,9 @@ const STYLE_LIGHTING_PRESETS: Record<AppearanceStyle, Partial<LightingConfig>> =
     fillIntensity: 1.2,
     rimIntensity: 2.5,
     ambientIntensity: 0.3,
-    keyColor: 0xe6f2ff,     // Cold white
-    fillColor: 0xcce5ff,    // Cool fill
-    rimColor: 0xffffff,     // Bright white
+    keyColor: 0xe6f2ff, // Cold white
+    fillColor: 0xcce5ff, // Cool fill
+    rimColor: 0xffffff, // Bright white
   },
 
   // ─────────────────────────────────────────
@@ -61,9 +61,9 @@ const STYLE_LIGHTING_PRESETS: Record<AppearanceStyle, Partial<LightingConfig>> =
     fillIntensity: 1.2,
     rimIntensity: 2.0,
     ambientIntensity: 0.3,
-    keyColor: 0xfff5e6,     // Warm white
-    fillColor: 0xe6f3ff,    // Cool fill (contrast)
-    rimColor: 0xffffff,     // Pure white
+    keyColor: 0xfff5e6, // Warm white
+    fillColor: 0xe6f3ff, // Cool fill (contrast)
+    rimColor: 0xffffff, // Pure white
   },
 
   // ─────────────────────────────────────────
@@ -74,9 +74,9 @@ const STYLE_LIGHTING_PRESETS: Record<AppearanceStyle, Partial<LightingConfig>> =
     fillIntensity: 1.5,
     rimIntensity: 2.8,
     ambientIntensity: 0.35,
-    keyColor: 0xddffff,     // Cyan tint
-    fillColor: 0xaae5ff,    // Cyan fill
-    rimColor: 0x00ffff,     // Bright cyan
+    keyColor: 0xddffff, // Cyan tint
+    fillColor: 0xaae5ff, // Cyan fill
+    rimColor: 0x00ffff, // Bright cyan
   },
 };
 
@@ -102,7 +102,7 @@ export class StudioLightingRig {
       fillIntensity: 1.2,
       rimIntensity: 2.0,
       ambientIntensity: 0.3,
-      shadowMapSize: 2048,      // Upgraded from 1024
+      shadowMapSize: 2048, // Upgraded from 1024
       keyColor: 0xfff5e6,
       fillColor: 0xe6f3ff,
       rimColor: 0xffffff,
@@ -177,10 +177,7 @@ export class StudioLightingRig {
   }
 
   private createAmbientLight(): THREE.AmbientLight {
-    return new THREE.AmbientLight(
-      0xffffff,
-      this.config.ambientIntensity
-    );
+    return new THREE.AmbientLight(0xffffff, this.config.ambientIntensity);
   }
 
   // ═════════════════════════════════════════════════════════════════════════

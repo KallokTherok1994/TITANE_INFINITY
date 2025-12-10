@@ -5,8 +5,8 @@
 
 #![allow(dead_code)]
 
-use serde::{Deserialize, Serialize};
 use chrono::{DateTime, Utc};
+use serde::{Deserialize, Serialize};
 
 /// Synthétiseur thérapeutique - posture coach/guide Kevin
 pub struct TherapeuticSynthesizer {
@@ -140,11 +140,8 @@ impl TherapeuticSynthesizer {
             return;
         }
 
-        let recent: Vec<&PostureObservation> = self.posture_observations
-            .iter()
-            .rev()
-            .take(50)
-            .collect();
+        let recent: Vec<&PostureObservation> =
+            self.posture_observations.iter().rev().take(50).collect();
 
         // Calculer scores par type de posture
         let mut listening_sum = 0.0;
@@ -174,13 +171,12 @@ impl TherapeuticSynthesizer {
         }
 
         // Calculer score global
-        self.current_profile.overall_score = (
-            self.current_profile.deep_listening_score +
-            self.current_profile.rhythm_respect_score +
-            self.current_profile.support_precision_score +
-            self.current_profile.grounded_verticality_score +
-            self.current_profile.non_directive_score
-        ) / 5.0;
+        self.current_profile.overall_score = (self.current_profile.deep_listening_score
+            + self.current_profile.rhythm_respect_score
+            + self.current_profile.support_precision_score
+            + self.current_profile.grounded_verticality_score
+            + self.current_profile.non_directive_score)
+            / 5.0;
     }
 
     /// Recommande une intervention

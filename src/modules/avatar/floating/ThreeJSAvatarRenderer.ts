@@ -22,7 +22,7 @@ export interface ThreeJSAvatarRendererOptions {
   antialias?: boolean;
   alpha?: boolean;
   pixelRatio?: number;
-  enablePostProcessing?: boolean;   // Enable TAA/Bloom/Vignette
+  enablePostProcessing?: boolean; // Enable TAA/Bloom/Vignette
   appearanceStyle?: AppearanceStyle; // Lighting style
 }
 
@@ -51,10 +51,7 @@ export class ThreeJSAvatarRenderer {
   private postProcessing: PostProcessingPipeline | null = null;
   private usePostProcessing: boolean = true;
 
-  constructor(
-    canvas: HTMLCanvasElement,
-    options: ThreeJSAvatarRendererOptions = {}
-  ) {
+  constructor(canvas: HTMLCanvasElement, options: ThreeJSAvatarRendererOptions = {}) {
     const {
       width = 400,
       height = 600,
@@ -343,11 +340,11 @@ export class ThreeJSAvatarRenderer {
 
     // Dispose avatar meshes
     if (this.avatarMeshes) {
-      this.avatarMeshes.root.traverse((object) => {
+      this.avatarMeshes.root.traverse(object => {
         if (object instanceof THREE.Mesh) {
           object.geometry?.dispose();
           if (Array.isArray(object.material)) {
-            object.material.forEach((mat) => mat.dispose());
+            object.material.forEach(mat => mat.dispose());
           } else {
             object.material?.dispose();
           }

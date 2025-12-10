@@ -27,7 +27,9 @@ export class ServiceRegistry {
    */
   register(service: Service): void {
     if (this.services.has(service.id)) {
-      console.warn(`[ServiceRegistry] Service ${service.id} already registered, replacing`);
+      console.warn(
+        `[ServiceRegistry] Service ${service.id} already registered, replacing`
+      );
     }
     this.services.set(service.id, service);
     this.initOrder.push(service.id);

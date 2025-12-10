@@ -3,9 +3,9 @@
 //   P2-1: Baseline + Optimization Benchmarks
 // ═══════════════════════════════════════════════════════════════
 
-use criterion::{black_box, criterion_group, criterion_main, Criterion, BenchmarkId};
-use std::sync::{Arc, RwLock};
+use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion};
 use std::collections::HashMap;
+use std::sync::{Arc, RwLock};
 use std::time::Duration;
 
 // ────────────────────────────────────────────────────────────────
@@ -203,9 +203,7 @@ fn benchmark_memory_load_batch(c: &mut Criterion) {
             |b, &size| {
                 b.iter(|| {
                     let results: Vec<_> = (0..size)
-                        .map(|i| {
-                            simulate_memory_load_sync(&format!("conv_{}", i))
-                        })
+                        .map(|i| simulate_memory_load_sync(&format!("conv_{}", i)))
                         .collect();
                     black_box(results);
                 });
@@ -220,7 +218,7 @@ fn benchmark_memory_load_batch(c: &mut Criterion) {
 // Benchmark: IPC Serialization
 // ────────────────────────────────────────────────────────────────
 
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
 struct LargeResponse {

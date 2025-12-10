@@ -1,17 +1,17 @@
 //! TITANE∞ v20Ω — Quantum Predictive Engine
 //! Moteur de prédiction et anticipation
 
-mod prediction_model;
+mod intention_detector;
 mod pattern_analyzer;
+mod prediction_model;
 mod probability_engine;
 mod quantum_state;
-mod intention_detector;
 
-pub use prediction_model::*;
+pub use intention_detector::*;
 pub use pattern_analyzer::*;
+pub use prediction_model::*;
 pub use probability_engine::*;
 pub use quantum_state::*;
-pub use intention_detector::*;
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -65,7 +65,10 @@ pub enum PredictedAction {
     /// Recherche
     Search { query_hint: String },
     /// Action sur un élément
-    Interact { element_type: String, action: String },
+    Interact {
+        element_type: String,
+        action: String,
+    },
     /// Demande d'aide
     RequestHelp { topic: String },
     /// Configuration
@@ -322,7 +325,11 @@ impl QuantumPredictiveEngine {
             accuracy,
             coherence: quantum.get_coherence(),
             entropy: quantum.get_entropy(),
-            learning_rate: if self.config.enable_learning { 0.01 } else { 0.0 },
+            learning_rate: if self.config.enable_learning {
+                0.01
+            } else {
+                0.0
+            },
         }
     }
 }

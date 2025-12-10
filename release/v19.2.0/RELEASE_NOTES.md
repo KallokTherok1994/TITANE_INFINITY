@@ -9,6 +9,7 @@
 ## 🎯 Nouveautés v19.2.0
 
 ### Architecture OMEGA
+
 - ✅ Cognitive Layer v16 (analyse, cohérence, évolution)
 - ✅ Singularity State v∞ (état global unifié)
 - ✅ Multi-providers IA : Gemini + Ollama + Local
@@ -16,18 +17,21 @@
 - ✅ Mémoire persistante chiffrée (AES-256-GCM)
 
 ### Sécurité
+
 - ✅ Passphrases 256-bit (auto-générées)
 - ✅ Pre-boot validation
 - ✅ Permissions Tauri minimales
 - ✅ VaultEngine chiffrement transparent
 
 ### Performance
+
 - ✅ 698/698 tests unitaires passés
 - ✅ RAM stable ~200-300 MB
 - ✅ CPU idle <2%
 - ✅ >30 FPS sous charge
 
 ### Fonctionnalités
+
 - ✅ Chat IA avec debug panel intégré
 - ✅ TTS (synthèse vocale) online + local
 - ✅ Avatar 3D avec lip-sync
@@ -56,12 +60,14 @@ LICENSE.md
 ## 🚀 Installation Rapide
 
 **AppImage (Portable) :**
+
 ```bash
 chmod +x "TITANE∞ v19.2Ω_19.2.0_amd64.AppImage"
 ./"TITANE∞ v19.2Ω_19.2.0_amd64.AppImage"
 ```
 
 **Debian Package :**
+
 ```bash
 sudo dpkg -i "TITANE∞ v19.2Ω_19.2.0_amd64.deb"
 titane-infinity
@@ -97,16 +103,19 @@ sha256sum -c SHA256SUMS
 ## 🔄 Changements Techniques
 
 ### Backend Rust
+
 - Optimisation SmallVec pour TTS chunking
 - Profile release : opt-level=z, lto=true
 - Build time : 3m31s
 
 ### Frontend React
+
 - 2669 modules transformés
 - Build time : 8.42s
 - Assets gzip : ~200 KB total
 
 ### Tests
+
 - 43 fichiers de tests
 - 698 tests unitaires + intégration + E2E
 - Duration : 59.30s

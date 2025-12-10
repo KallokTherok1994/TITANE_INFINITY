@@ -168,60 +168,64 @@ type ViewTab = 'overview' | 'meta' | 'engines' | 'cognitive' | 'resources';
 // HELPER COMPONENTS
 // ═══════════════════════════════════════════════════════════════════════════
 
-const HealthBar: React.FC<{ value: number; label: string; color?: string }> = memo(({
-  value,
-  label,
-  color = 'var(--accent-primary)',
-}) => (
-  <div className="omc-health-bar">
-    <div className="omc-health-bar-label">
-      <span>{label}</span>
-      <span>{value.toFixed(1)}%</span>
-    </div>
-    <div className="omc-health-bar-track">
-      <div
-        className="omc-health-bar-fill"
-        style={{
-          width: `${Math.min(value, 100)}%`,
-          backgroundColor: value > 80 ? 'var(--error)' : value > 60 ? 'var(--warning)' : color,
-        }}
-      />
-    </div>
-  </div>
-));
-
-const ScoreGauge: React.FC<{ value: number; label: string; size?: number }> = memo(({
-  value,
-  label,
-  size = 120,
-}) => {
-  const getColor = (): string => {
-    if (value >= 80) return 'var(--success)';
-    if (value >= 60) return 'var(--warning)';
-    return 'var(--error)';
-  };
-
-  return (
-    <div className="omc-score-gauge" style={{ width: size, height: size }}>
-      <svg viewBox="0 0 100 100" width={size} height={size}>
-        <circle cx="50" cy="50" r="40" fill="none" stroke="var(--border-subtle)" strokeWidth="8" />
-        <circle
-          cx="50"
-          cy="50"
-          r="40"
-          fill="none"
-          stroke={getColor()}
-          strokeWidth="8"
-          strokeLinecap="round"
-          strokeDasharray={`${value * 2.51} 251`}
-          transform="rotate(-90 50 50)"
+const HealthBar: React.FC<{ value: number; label: string; color?: string }> = memo(
+  ({ value, label, color = 'var(--accent-primary)' }) => (
+    <div className="omc-health-bar">
+      <div className="omc-health-bar-label">
+        <span>{label}</span>
+        <span>{value.toFixed(1)}%</span>
+      </div>
+      <div className="omc-health-bar-track">
+        <div
+          className="omc-health-bar-fill"
+          style={{
+            width: `${Math.min(value, 100)}%`,
+            backgroundColor:
+              value > 80 ? 'var(--error)' : value > 60 ? 'var(--warning)' : color,
+          }}
         />
-      </svg>
-      <div className="omc-score-gauge-value">{value}</div>
-      <div className="omc-score-gauge-label">{label}</div>
+      </div>
     </div>
-  );
-});
+  )
+);
+
+const ScoreGauge: React.FC<{ value: number; label: string; size?: number }> = memo(
+  ({ value, label, size = 120 }) => {
+    const getColor = (): string => {
+      if (value >= 80) return 'var(--success)';
+      if (value >= 60) return 'var(--warning)';
+      return 'var(--error)';
+    };
+
+    return (
+      <div className="omc-score-gauge" style={{ width: size, height: size }}>
+        <svg viewBox="0 0 100 100" width={size} height={size}>
+          <circle
+            cx="50"
+            cy="50"
+            r="40"
+            fill="none"
+            stroke="var(--border-subtle)"
+            strokeWidth="8"
+          />
+          <circle
+            cx="50"
+            cy="50"
+            r="40"
+            fill="none"
+            stroke={getColor()}
+            strokeWidth="8"
+            strokeLinecap="round"
+            strokeDasharray={`${value * 2.51} 251`}
+            transform="rotate(-90 50 50)"
+          />
+        </svg>
+        <div className="omc-score-gauge-value">{value}</div>
+        <div className="omc-score-gauge-label">{label}</div>
+      </div>
+    );
+  }
+);
 
 const StatusBadge: React.FC<{ status: string }> = memo(({ status }) => {
   const getClass = (): string => {
@@ -281,7 +285,9 @@ const EngineCard: React.FC<{ engine: EngineStatus }> = memo(({ engine }) => (
 // VIEW TABS
 // ═══════════════════════════════════════════════════════════════════════════
 
-const OverviewTab: React.FC<{ state: OrchestrationUnifiedState | null }> = ({ state }) => {
+const OverviewTab: React.FC<{ state: OrchestrationUnifiedState | null }> = ({
+  state,
+}) => {
   if (!state) {
     return <div className="omc-tab-loading">Chargement...</div>;
   }
@@ -307,8 +313,8 @@ const OverviewTab: React.FC<{ state: OrchestrationUnifiedState | null }> = ({ st
             {(state.meta.system_health.overall_score * 100).toFixed(0)}%
           </div>
           <p>
-            {state.meta.active_engines.length} engines actifs, {state.meta.priority_queue.length}{' '}
-            tâches
+            {state.meta.active_engines.length} engines actifs,{' '}
+            {state.meta.priority_queue.length} tâches
           </p>
         </div>
 
@@ -361,11 +367,11 @@ const OverviewTab: React.FC<{ state: OrchestrationUnifiedState | null }> = ({ st
   );
 };
 
-const MetaTab: React.FC<{ state: MetaOrchestratorState | null; onModeChange: (mode: string) => void; onRunCycle: () => void }> = ({
-  state,
-  onModeChange,
-  onRunCycle,
-}) => {
+const MetaTab: React.FC<{
+  state: MetaOrchestratorState | null;
+  onModeChange: (mode: string) => void;
+  onRunCycle: () => void;
+}> = ({ state, onModeChange, onRunCycle }) => {
   const [selectedMode, setSelectedMode] = useState<string>('balanced');
 
   const MODES = [
@@ -435,7 +441,7 @@ const MetaTab: React.FC<{ state: MetaOrchestratorState | null; onModeChange: (mo
       <div className="omc-section">
         <h2>Mode d'Orchestration</h2>
         <div className="omc-mode-selector">
-          {MODES.map((mode) => (
+          {MODES.map(mode => (
             <button
               key={mode.id}
               className={`omc-mode-btn ${selectedMode === mode.id ? 'active' : ''}`}
@@ -459,7 +465,9 @@ const MetaTab: React.FC<{ state: MetaOrchestratorState | null; onModeChange: (mo
           </div>
           <div className="omc-resource-item">
             <span className="omc-resource-label">Memory Limit</span>
-            <span className="omc-resource-value">{state.resource_allocation.memory_limit_mb} MB</span>
+            <span className="omc-resource-value">
+              {state.resource_allocation.memory_limit_mb} MB
+            </span>
           </div>
           <div className="omc-resource-item">
             <span className="omc-resource-label">GPU</span>
@@ -469,7 +477,9 @@ const MetaTab: React.FC<{ state: MetaOrchestratorState | null; onModeChange: (mo
           </div>
           <div className="omc-resource-item">
             <span className="omc-resource-label">Thread Pool</span>
-            <span className="omc-resource-value">{state.resource_allocation.thread_pool_size} threads</span>
+            <span className="omc-resource-value">
+              {state.resource_allocation.thread_pool_size} threads
+            </span>
           </div>
         </div>
       </div>
@@ -512,13 +522,15 @@ const EnginesTab: React.FC<{ engines: EngineStatus[]; tasks: PriorityTask[] }> =
               <span>Status</span>
               <span>Progress</span>
             </div>
-            {tasks.map((task) => (
+            {tasks.map(task => (
               <div key={task.id} className="omc-task-row">
                 <span className="omc-task-name">{task.name}</span>
                 <span className="omc-task-engine">{task.engine}</span>
                 <span
                   className="omc-task-priority"
-                  style={{ color: priorityColors[task.priority] || 'var(--text-primary)' }}
+                  style={{
+                    color: priorityColors[task.priority] || 'var(--text-primary)',
+                  }}
                 >
                   {task.priority}
                 </span>
@@ -615,7 +627,7 @@ const CognitiveTab: React.FC<{
         </div>
         <div className="omc-flows-list">
           <h3>Active Flows ({harmonia.activeFlows.length})</h3>
-          {harmonia.activeFlows.map((flow) => (
+          {harmonia.activeFlows.map(flow => (
             <div key={flow.id} className="omc-flow-item">
               <span>{flow.name}</span>
               <StatusBadge status={flow.status} />
@@ -628,7 +640,11 @@ const CognitiveTab: React.FC<{
       <div className="omc-section">
         <h2>État Cognitif</h2>
         <div className="omc-cognitive-stats">
-          <ScoreGauge value={cognitive.cognitiveScore} label="Score Cognitif" size={100} />
+          <ScoreGauge
+            value={cognitive.cognitiveScore}
+            label="Score Cognitif"
+            size={100}
+          />
           <div className="omc-cognitive-details">
             <div className="omc-cognitive-detail">
               <span>Mode</span>
@@ -659,19 +675,24 @@ const CognitiveTab: React.FC<{
 
 const OrchestrationMetaCenterContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<ViewTab>('overview');
-  const [unifiedState, setUnifiedState] = useState<OrchestrationUnifiedState | null>(null);
+  const [unifiedState, setUnifiedState] = useState<OrchestrationUnifiedState | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [autoRefresh, setAutoRefresh] = useState(true);
   const { loading: matrixLoading } = useIdentityMatrix();
   useSingularityStateSafe();
 
-  const TABS: { id: ViewTab; label: string; icon: string }[] = useMemo(() => [
-    { id: 'overview', label: 'Vue d\'ensemble', icon: '🎯' },
-    { id: 'meta', label: 'Meta Orchestrator', icon: '🎛️' },
-    { id: 'engines', label: 'Engines', icon: '⚙️' },
-    { id: 'cognitive', label: 'Orchestration Cognitive', icon: '🧠' },
-  ], []);
+  const TABS: { id: ViewTab; label: string; icon: string }[] = useMemo(
+    () => [
+      { id: 'overview', label: "Vue d'ensemble", icon: '🎯' },
+      { id: 'meta', label: 'Meta Orchestrator', icon: '🎛️' },
+      { id: 'engines', label: 'Engines', icon: '⚙️' },
+      { id: 'cognitive', label: 'Orchestration Cognitive', icon: '🧠' },
+    ],
+    []
+  );
 
   // Load initial state
   useEffect(() => {
@@ -690,11 +711,11 @@ const OrchestrationMetaCenterContent: React.FC = () => {
   const loadAllState = useCallback(async () => {
     try {
       // Load Meta Orchestrator state
-      const metaState = await invoke<MetaOrchestratorState>('orchestrator_get_state').catch(
-        async () => {
-          return invoke<MetaOrchestratorState>('orchestrator_init');
-        }
-      );
+      const metaState = await invoke<MetaOrchestratorState>(
+        'orchestrator_get_state'
+      ).catch(async () => {
+        return invoke<MetaOrchestratorState>('orchestrator_init');
+      });
 
       // Load Cognitive orchestration states (with fallbacks)
       const multiAiState = await invoke<MultiAIState>('multi_ai_get_state').catch(() => ({
@@ -715,27 +736,31 @@ const OrchestrationMetaCenterContent: React.FC = () => {
         lastUpdate: Date.now(),
       }));
 
-      const harmoniaState = await invoke<HarmoniaState>('harmonia_get_state').catch(() => ({
-        activeFlows: [],
-        cpuUsage: 35,
-        ramUsage: 45,
-        ioBalance: 78,
-        harmonyScore: 82,
-        mode: 'balanced',
-        lastUpdate: Date.now(),
-      }));
+      const harmoniaState = await invoke<HarmoniaState>('harmonia_get_state').catch(
+        () => ({
+          activeFlows: [],
+          cpuUsage: 35,
+          ramUsage: 45,
+          ioBalance: 78,
+          harmonyScore: 82,
+          mode: 'balanced',
+          lastUpdate: Date.now(),
+        })
+      );
 
-      const cognitiveState = await invoke<CognitiveState>('cognitive_get_state').catch(() => ({
-        provider: 'claude',
-        mode: 'deep',
-        depth: 7,
-        stability: 92,
-        cognitiveScore: 87,
-        mentalLoad: 42,
-        reasoningQuality: 91,
-        activeProcesses: [],
-        lastUpdate: Date.now(),
-      }));
+      const cognitiveState = await invoke<CognitiveState>('cognitive_get_state').catch(
+        () => ({
+          provider: 'claude',
+          mode: 'deep',
+          depth: 7,
+          stability: 92,
+          cognitiveScore: 87,
+          mentalLoad: 42,
+          reasoningQuality: 91,
+          activeProcesses: [],
+          lastUpdate: Date.now(),
+        })
+      );
 
       // Calculate global score
       const globalScore = Math.round(
@@ -769,14 +794,17 @@ const OrchestrationMetaCenterContent: React.FC = () => {
     }
   }, []);
 
-  const handleModeChange = useCallback(async (mode: string) => {
-    try {
-      await invoke('orchestrator_set_mode', { mode });
-      await loadAllState();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
-    }
-  }, [loadAllState]);
+  const handleModeChange = useCallback(
+    async (mode: string) => {
+      try {
+        await invoke('orchestrator_set_mode', { mode });
+        await loadAllState();
+      } catch (err) {
+        setError(err instanceof Error ? err.message : String(err));
+      }
+    },
+    [loadAllState]
+  );
 
   const handleRunCycle = useCallback(async () => {
     try {
@@ -826,7 +854,7 @@ const OrchestrationMetaCenterContent: React.FC = () => {
 
       {/* Tabs Navigation */}
       <div className="omc-tabs">
-        {TABS.map((tab) => (
+        {TABS.map(tab => (
           <button
             key={tab.id}
             className={`omc-tab ${activeTab === tab.id ? 'active' : ''}`}

@@ -37,7 +37,8 @@ export function useCognitiveLayout() {
     };
 
     window.addEventListener('cognitive-layout-suggestion', handleSuggestion);
-    return () => window.removeEventListener('cognitive-layout-suggestion', handleSuggestion);
+    return () =>
+      window.removeEventListener('cognitive-layout-suggestion', handleSuggestion);
   }, []);
 
   // Actions
@@ -53,9 +54,12 @@ export function useCognitiveLayout() {
     cognitiveLayoutEngine.updateTaskType(taskType);
   }, []);
 
-  const updateContext = useCallback((updates: { currentModule?: string; currentProject?: string }) => {
-    cognitiveLayoutEngine.updateContext(updates);
-  }, []);
+  const updateContext = useCallback(
+    (updates: { currentModule?: string; currentProject?: string }) => {
+      cognitiveLayoutEngine.updateContext(updates);
+    },
+    []
+  );
 
   const acceptSuggestion = useCallback(() => {
     if (suggestion) {
@@ -113,7 +117,7 @@ export function useLayoutConfig(): LayoutConfig | null {
   const [config, setConfig] = useState<LayoutConfig | null>(null);
 
   useEffect(() => {
-    const unsubscribe = cognitiveLayoutEngine.subscribe((state) => {
+    const unsubscribe = cognitiveLayoutEngine.subscribe(state => {
       setConfig(state.layoutConfig);
     });
     return unsubscribe;
@@ -129,7 +133,7 @@ export function useUIMode(): UIMode | null {
   const [mode, setMode] = useState<UIMode | null>(null);
 
   useEffect(() => {
-    const unsubscribe = cognitiveLayoutEngine.subscribe((state) => {
+    const unsubscribe = cognitiveLayoutEngine.subscribe(state => {
       setMode(state.currentMode);
     });
     return unsubscribe;
@@ -158,7 +162,7 @@ export function useConditionalVisibility(elementId: string): boolean {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = cognitiveLayoutEngine.subscribe((state) => {
+    const unsubscribe = cognitiveLayoutEngine.subscribe(state => {
       const isHidden = state.layoutConfig.hiddenElements?.includes(elementId);
       setVisible(!isHidden);
     });
@@ -172,10 +176,12 @@ export function useConditionalVisibility(elementId: string): boolean {
  * Hook pour adapter la densité d'un composant
  */
 export function useDensityLevel(): 'minimal' | 'low' | 'medium' | 'high' | 'maximal' {
-  const [level, setLevel] = useState<'minimal' | 'low' | 'medium' | 'high' | 'maximal'>('medium');
+  const [level, setLevel] = useState<'minimal' | 'low' | 'medium' | 'high' | 'maximal'>(
+    'medium'
+  );
 
   useEffect(() => {
-    const unsubscribe = cognitiveLayoutEngine.subscribe((state) => {
+    const unsubscribe = cognitiveLayoutEngine.subscribe(state => {
       setLevel(state.layoutConfig.density?.level ?? 'medium');
     });
     return unsubscribe;
@@ -184,4 +190,11 @@ export function useDensityLevel(): 'minimal' | 'low' | 'medium' | 'high' | 'maxi
   return level;
 }
 
-export type { UIMode, UserRole, TaskType, CognitiveLayoutState, LayoutConfig, AdaptationDecision };
+export type {
+  UIMode,
+  UserRole,
+  TaskType,
+  CognitiveLayoutState,
+  LayoutConfig,
+  AdaptationDecision,
+};

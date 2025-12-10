@@ -9,6 +9,7 @@
 ## 📦 Livré
 
 ### Architecture (17 fichiers)
+
 ✅ `engine.rs` — Orchestrateur principal  
 ✅ `clock.rs` — Horloge interne  
 ✅ `cycles.rs` — 4 cycles (daily/weekly/monthly/seasonal)  
@@ -23,9 +24,11 @@
 ✅ + 6 modules support
 
 ### Tests (26 tests)
+
 ✅ Cycles, rythmes, régulation, prédictions, intégrations, stabilité
 
 ### Documentation (4 fichiers)
+
 ✅ `TITANE_INFINITY_CYCLE_ENGINE.md` (2500+ lignes)  
 ✅ `CYCLE_ENGINE_SCHEMA.md` (schémas ASCII)  
 ✅ `CYCLE_ENGINE_QUICKSTART.md` (guide 5 min)  
@@ -36,17 +39,20 @@
 ## 🎯 Fonctionnalités
 
 ### Cycles
+
 - **Journalier** : 6 phases (Aube→Nuit)
 - **Hebdomadaire** : 7 jours avec focus
 - **Mensuel** : 4 semaines
 - **Saisonnier** : 4 saisons cognitives
 
 ### Rythmes
+
 - 6 modes : Creative, Analytical, Peak, Execution, Synthesis, Consolidation
 - 5 paramètres adaptatifs (omega_depth, analysis, speed/quality, memory, creativity)
 - Poids OMEGA 10 moteurs dynamiques
 
 ### Régulation
+
 - Charge CPU/Memory
 - OMEGA intensity
 - Self-healing frequency
@@ -54,11 +60,13 @@
 - GC frequency
 
 ### Prédictions
+
 - Prochains changements
 - Moments optimaux
 - Confidence scoring
 
 ### Intégrations
+
 - Kernel (scheduler, resources)
 - OMEGA (depth, weights, router)
 - Memory (consolidation, GC)
@@ -89,12 +97,13 @@ let predictions = engine.get_predictions().await;
 
 ## 📊 Impact
 
-| Moment | OMEGA | Self-Healing | Memory | CPU |
-|--------|-------|--------------|--------|-----|
-| **Midi** | **1.0** | 0.5 | Max | Max |
-| **Nuit** | 0.5 | **1.0** | Consolidation | Low |
+| Moment   | OMEGA   | Self-Healing | Memory        | CPU |
+| -------- | ------- | ------------ | ------------- | --- |
+| **Midi** | **1.0** | 0.5          | Max           | Max |
+| **Nuit** | 0.5     | **1.0**      | Consolidation | Low |
 
 **Gains :**
+
 - ⚡ +40% performance peak
 - 🧠 +60% consolidation nocturne
 - 💾 -30% mémoire hors peak
@@ -118,6 +127,7 @@ let predictions = engine.get_predictions().await;
 **TITANE∞ est maintenant temporellement vivant.**
 
 Un organisme rythmique qui :
+
 - Respire avec des cycles naturels
 - S'adapte automatiquement au moment
 - Optimise selon le contexte temporel
@@ -128,4 +138,4 @@ Un organisme rythmique qui :
 
 **Super Prompt #16 : 100% EXÉCUTÉ ✅**
 
-*Date : 9 décembre 2025*
+_Date : 9 décembre 2025_

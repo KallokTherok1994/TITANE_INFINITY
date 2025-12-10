@@ -58,9 +58,7 @@ async function invokeWithValidation<T>(
     const validated = schema.parse(result);
     return validated;
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error
-      ? error.message
-      : String(error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
 
     console.error(`[Tauri Command Error] ${cmd}:`, errorMessage);
     throw new Error(`Command "${cmd}" failed: ${errorMessage}`);
@@ -70,16 +68,11 @@ async function invokeWithValidation<T>(
 /**
  * Utilitaire pour commandes sans réponse (void)
  */
-async function invokeVoid(
-  cmd: string,
-  payload?: Record<string, unknown>
-): Promise<void> {
+async function invokeVoid(cmd: string, payload?: Record<string, unknown>): Promise<void> {
   try {
     await secureInvoke(cmd, payload ?? {});
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error
-      ? error.message
-      : String(error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
 
     console.error(`[Tauri Command Error] ${cmd}:`, errorMessage);
     throw new Error(`Command "${cmd}" failed: ${errorMessage}`);
@@ -98,21 +91,16 @@ export const metaMode = {
     // Valider l'entrée
     InteractionRequestSchema.parse(request);
 
-    return invokeWithValidation(
-      'meta_mode_process',
-      InteractionResponseSchema,
-      { request }
-    );
+    return invokeWithValidation('meta_mode_process', InteractionResponseSchema, {
+      request,
+    });
   },
 
   /**
    * Obtenir l'état actuel de Kevin
    */
   async getKevinState(): Promise<KevinStateResponse> {
-    return invokeWithValidation(
-      'meta_mode_get_kevin_state',
-      KevinStateResponseSchema
-    );
+    return invokeWithValidation('meta_mode_get_kevin_state', KevinStateResponseSchema);
   },
 
   /**
@@ -143,10 +131,7 @@ export const metaMode = {
    * Obtenir les statistiques du Meta-Mode
    */
   async getStats(): Promise<MetaModeStats> {
-    return invokeWithValidation(
-      'meta_mode_get_stats',
-      MetaModeStatsSchema
-    );
+    return invokeWithValidation('meta_mode_get_stats', MetaModeStatsSchema);
   },
 
   /**
@@ -172,11 +157,12 @@ export const exp = {
     source: string,
     description: string
   ): Promise<ExpProfile> {
-    return invokeWithValidation(
-      'exp_add',
-      ExpProfileSchema,
-      { amount, category, source, description }
-    );
+    return invokeWithValidation('exp_add', ExpProfileSchema, {
+      amount,
+      category,
+      source,
+      description,
+    });
   },
 
   /**
@@ -231,10 +217,7 @@ export const memory = {
   /**
    * Stocker une conversation complète
    */
-  async storeConversation(
-    conversationId: string,
-    messages: string[]
-  ): Promise<number> {
+  async storeConversation(conversationId: string, messages: string[]): Promise<number> {
     const result = await secureInvoke<number>('memory_store_conversation', {
       conversationId,
       messages,

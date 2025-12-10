@@ -11,11 +11,15 @@
  */
 
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
-import type { ChatModeId, ChatModeConfigExtended, ChatModeCategory } from '../../services/ai/chatModes.config';
+import type {
+  ChatModeId,
+  ChatModeConfigExtended,
+  ChatModeCategory,
+} from '../../services/ai/chatModes.config';
 import {
   CHAT_MODES_CONFIG,
   getAccessibleModes,
-  type PermissionLevel
+  type PermissionLevel,
 } from '../../services/ai/chatModes.config';
 import './ChatModeSelector.css';
 
@@ -74,10 +78,7 @@ export const ChatModeSelector: React.FC<ChatModeSelectorProps> = ({
   );
 
   // Mode courant config
-  const currentModeConfig = useMemo(
-    () => CHAT_MODES_CONFIG[currentMode],
-    [currentMode]
-  );
+  const currentModeConfig = useMemo(() => CHAT_MODES_CONFIG[currentMode], [currentMode]);
 
   // Groupement par catégorie
   const modesByCategory = useMemo(() => {
@@ -115,17 +116,23 @@ export const ChatModeSelector: React.FC<ChatModeSelectorProps> = ({
     }
   }, [disabled]);
 
-  const handleModeSelect = useCallback((mode: ChatModeId) => {
-    onModeChange(mode);
-    setIsOpen(false);
-  }, [onModeChange]);
+  const handleModeSelect = useCallback(
+    (mode: ChatModeId) => {
+      onModeChange(mode);
+      setIsOpen(false);
+    },
+    [onModeChange]
+  );
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent, mode: ChatModeId) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      handleModeSelect(mode);
-    }
-  }, [handleModeSelect]);
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent, mode: ChatModeId) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleModeSelect(mode);
+      }
+    },
+    [handleModeSelect]
+  );
 
   // ═══ RENDER DROPDOWN ═══
   if (variant === 'dropdown') {
@@ -146,7 +153,9 @@ export const ChatModeSelector: React.FC<ChatModeSelectorProps> = ({
         >
           <span className="chat-mode-selector__icon">{currentModeConfig.icon}</span>
           <span className="chat-mode-selector__label">{currentModeConfig.label}</span>
-          <span className={`chat-mode-selector__chevron ${isOpen ? 'chat-mode-selector__chevron--open' : ''}`}>
+          <span
+            className={`chat-mode-selector__chevron ${isOpen ? 'chat-mode-selector__chevron--open' : ''}`}
+          >
             ▾
           </span>
         </button>
@@ -164,7 +173,7 @@ export const ChatModeSelector: React.FC<ChatModeSelectorProps> = ({
                     key={mode.id}
                     className={`chat-mode-selector__option ${mode.id === currentMode ? 'chat-mode-selector__option--selected' : ''}`}
                     onClick={() => handleModeSelect(mode.id)}
-                    onKeyDown={(e) => handleKeyDown(e, mode.id)}
+                    onKeyDown={e => handleKeyDown(e, mode.id)}
                     onMouseEnter={() => setHoveredMode(mode.id)}
                     onMouseLeave={() => setHoveredMode(null)}
                     role="option"
@@ -174,9 +183,13 @@ export const ChatModeSelector: React.FC<ChatModeSelectorProps> = ({
                   >
                     <span className="chat-mode-selector__option-icon">{mode.icon}</span>
                     <div className="chat-mode-selector__option-content">
-                      <span className="chat-mode-selector__option-label">{mode.label}</span>
+                      <span className="chat-mode-selector__option-label">
+                        {mode.label}
+                      </span>
                       {hoveredMode === mode.id && (
-                        <span className="chat-mode-selector__option-desc">{mode.description}</span>
+                        <span className="chat-mode-selector__option-desc">
+                          {mode.description}
+                        </span>
                       )}
                     </div>
                     {mode.id === currentMode && (
@@ -219,7 +232,7 @@ export const ChatModeSelector: React.FC<ChatModeSelectorProps> = ({
     <div className={`chat-mode-selector chat-mode-selector--compact ${className}`}>
       <select
         value={currentMode}
-        onChange={(e) => handleModeSelect(e.target.value as ChatModeId)}
+        onChange={e => handleModeSelect(e.target.value as ChatModeId)}
         disabled={disabled}
         className="chat-mode-selector__select"
       >

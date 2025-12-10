@@ -4,7 +4,6 @@
  * Système d'auto-réparation conversationnelle
  * ═══════════════════════════════════════════════════════════════════
  */
-
 use std::collections::{HashMap, HashSet};
 use std::time::{SystemTime, UNIX_EPOCH};
 
@@ -39,9 +38,12 @@ impl SelfHealingConversation {
     ) -> Result<(), ConversationEngineError> {
         // Vérifier double-render
         if self.is_duplicate_conversation(conversation_id) {
-            log::warn!("[SelfHealing] Duplicate conversation detected: {}", conversation_id);
+            log::warn!(
+                "[SelfHealing] Duplicate conversation detected: {}",
+                conversation_id
+            );
             return Err(ConversationEngineError::ProcessingError(
-                "Duplicate conversation".to_string()
+                "Duplicate conversation".to_string(),
             ));
         }
 
@@ -50,7 +52,9 @@ impl SelfHealingConversation {
     }
 
     /// Scanner et réparer
-    pub async fn scan_and_repair(&mut self) -> Result<ConversationHealthReport, ConversationEngineError> {
+    pub async fn scan_and_repair(
+        &mut self,
+    ) -> Result<ConversationHealthReport, ConversationEngineError> {
         let mut anomalies = Vec::new();
         let mut repairs = Vec::new();
 

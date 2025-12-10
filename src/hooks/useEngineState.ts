@@ -22,7 +22,9 @@ export interface EngineStateHook {
   refresh: () => void;
 }
 
-export function useEngineState(options: { pollInterval?: number; enabled?: boolean } = {}): EngineStateHook {
+export function useEngineState(
+  options: { pollInterval?: number; enabled?: boolean } = {}
+): EngineStateHook {
   const { pollInterval = 10000, enabled = true } = options;
 
   const [state, setState] = useState<SingularityState | null>(null);
@@ -47,7 +49,8 @@ export function useEngineState(options: { pollInterval?: number; enabled?: boole
 
       return data as SingularityState;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch engine state';
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to fetch engine state';
       console.error('❌ [useEngineState] Fetch error:', err);
 
       setError(errorMessage);

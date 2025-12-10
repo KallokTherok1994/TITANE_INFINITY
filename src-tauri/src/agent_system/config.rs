@@ -3,9 +3,9 @@
 //! Super Prompt #19 — Configuration du système d'agents
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
-use super::supervisor::SupervisionConfig;
 use super::sandbox::SandboxConfig;
+use super::supervisor::SupervisionConfig;
+use serde::{Deserialize, Serialize};
 
 /// Configuration du système d'agents
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -157,18 +157,20 @@ impl AgentSystemConfig {
     /// Valide la configuration
     pub fn validate(&self) -> Result<(), ConfigError> {
         if self.max_agents == 0 {
-            return Err(ConfigError::InvalidValue("max_agents must be > 0".to_string()));
+            return Err(ConfigError::InvalidValue(
+                "max_agents must be > 0".to_string(),
+            ));
         }
 
         if self.max_concurrent_tasks > self.max_agents * 10 {
             return Err(ConfigError::InvalidValue(
-                "max_concurrent_tasks seems too high relative to max_agents".to_string()
+                "max_concurrent_tasks seems too high relative to max_agents".to_string(),
             ));
         }
 
         if self.default_task_timeout_ms < 1000 {
             return Err(ConfigError::InvalidValue(
-                "default_task_timeout_ms must be >= 1000".to_string()
+                "default_task_timeout_ms must be >= 1000".to_string(),
             ));
         }
 

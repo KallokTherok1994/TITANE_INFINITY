@@ -11,7 +11,7 @@
 
 import {
   useSingularityState as useZustandStore,
-  type SingularityFrontendState
+  type SingularityFrontendState,
 } from '@/core/state/SingularityState';
 
 /**
@@ -48,7 +48,7 @@ export function useSingularityStateSafe<T = SingularityFrontendState>(
   // Call hook unconditionally with proper types
   const result = useZustandStore(
     selector
-      ? ((state: SingularityFrontendState) => {
+      ? (((state: SingularityFrontendState) => {
           try {
             const selected = selector(state);
             return selected !== undefined && selected !== null ? selected : state;
@@ -56,7 +56,7 @@ export function useSingularityStateSafe<T = SingularityFrontendState>(
             console.error('[useSingularityStateSafe] Selector error:', err);
             return state;
           }
-        }) as (state: SingularityFrontendState) => unknown
+        }) as (state: SingularityFrontendState) => unknown)
       : (state: SingularityFrontendState) => state
   );
 

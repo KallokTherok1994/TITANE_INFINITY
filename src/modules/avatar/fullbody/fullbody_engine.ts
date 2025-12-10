@@ -186,7 +186,10 @@ export class FullBodyAvatarBridge {
   /**
    * Mettre à jour expression faciale
    */
-  async updateExpression(expression: ExpressionType, intensity: number = 0.7): Promise<void> {
+  async updateExpression(
+    expression: ExpressionType,
+    intensity: number = 0.7
+  ): Promise<void> {
     try {
       await secureInvoke<string>('fullbody_update_expression', {
         expression,

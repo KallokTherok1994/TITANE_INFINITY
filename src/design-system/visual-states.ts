@@ -54,11 +54,11 @@ export enum EmotionalTone {
  * Represents system resource usage
  */
 export enum SystemLoadLevel {
-  IDLE = 0,        // < 20%
-  LIGHT = 1,       // 20-40%
-  MODERATE = 2,    // 40-60%
-  HIGH = 3,        // 60-80%
-  CRITICAL = 4,    // > 80%
+  IDLE = 0, // < 20%
+  LIGHT = 1, // 20-40%
+  MODERATE = 2, // 40-60%
+  HIGH = 3, // 60-80%
+  CRITICAL = 4, // > 80%
 }
 
 /**
@@ -92,32 +92,32 @@ export interface TitaneState {
  */
 export interface VisualConfig {
   // Core colors
-  baseColor: string;           // Primary base color
-  accentColor: string;         // Accent highlights
-  glowColor: string;           // Glow effect color
-  
+  baseColor: string; // Primary base color
+  accentColor: string; // Accent highlights
+  glowColor: string; // Glow effect color
+
   // Intensity & effects
-  intensity: number;           // Overall intensity (0-1)
-  glowIntensity: number;       // Glow strength (0-1)
-  
+  intensity: number; // Overall intensity (0-1)
+  glowIntensity: number; // Glow strength (0-1)
+
   // Particle system
-  particleDensity: number;     // Number of particles (100-600)
-  particleSpeed: number;       // Movement speed (0.5-3.5)
-  particleOpacity: number;     // Opacity (0-1)
-  particleColor: string;       // Particle color
-  
+  particleDensity: number; // Number of particles (100-600)
+  particleSpeed: number; // Movement speed (0.5-3.5)
+  particleOpacity: number; // Opacity (0-1)
+  particleColor: string; // Particle color
+
   // Orbital & motion
-  glowRadius: number;          // Glow radius in pixels
-  orbitSpeed: number;          // Orbit rotation speed
-  waveAmplitude: number;       // Wave motion amplitude
-  waveFrequency: number;       // Wave motion frequency
-  pulseInterval: number;       // Pulse timing (ms)
-  
+  glowRadius: number; // Glow radius in pixels
+  orbitSpeed: number; // Orbit rotation speed
+  waveAmplitude: number; // Wave motion amplitude
+  waveFrequency: number; // Wave motion frequency
+  pulseInterval: number; // Pulse timing (ms)
+
   // Special effects
-  specialEffects: string[];    // Active effects: 'energyArcs', 'healingWaves', 'glitch', etc.
-  
+  specialEffects: string[]; // Active effects: 'energyArcs', 'healingWaves', 'glitch', etc.
+
   // Transition
-  transitionDuration: number;  // Transition time (ms)
+  transitionDuration: number; // Transition time (ms)
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -373,11 +373,15 @@ export function interpolateStates(
     glow: toConfig.glow,
     particleColor: toConfig.particleColor,
     particleOpacity: lerp(fromConfig.particleOpacity, toConfig.particleOpacity, progress),
-    particleDensity: Math.round(lerp(fromConfig.particleDensity, toConfig.particleDensity, progress)),
+    particleDensity: Math.round(
+      lerp(fromConfig.particleDensity, toConfig.particleDensity, progress)
+    ),
     particleSpeed: lerp(fromConfig.particleSpeed, toConfig.particleSpeed, progress),
     waveAmplitude: lerp(fromConfig.waveAmplitude, toConfig.waveAmplitude, progress),
     waveFrequency: lerp(fromConfig.waveFrequency, toConfig.waveFrequency, progress),
-    pulseInterval: Math.round(lerp(fromConfig.pulseInterval, toConfig.pulseInterval, progress)),
+    pulseInterval: Math.round(
+      lerp(fromConfig.pulseInterval, toConfig.pulseInterval, progress)
+    ),
     transitionDuration: 500,
   };
 }
@@ -536,27 +540,89 @@ export const COGNITIVE_VISUALS: Record<CognitiveState, Partial<VisualConfig>> = 
  * Emotional tone color modulations
  * Subtle color shifts based on emotional quality
  */
-export const EMOTIONAL_COLOR_SHIFTS: Record<EmotionalTone, { hueShift: number; saturationMultiplier: number; brightnessMultiplier: number }> = {
-  [EmotionalTone.CALM]: { hueShift: 0, saturationMultiplier: 0.8, brightnessMultiplier: 0.9 },
-  [EmotionalTone.CURIOUS]: { hueShift: 10, saturationMultiplier: 1.0, brightnessMultiplier: 1.05 },
-  [EmotionalTone.EXCITED]: { hueShift: 15, saturationMultiplier: 1.3, brightnessMultiplier: 1.15 },
-  [EmotionalTone.CONFIDENT]: { hueShift: -5, saturationMultiplier: 1.1, brightnessMultiplier: 1.1 },
-  [EmotionalTone.CAUTIOUS]: { hueShift: -10, saturationMultiplier: 0.7, brightnessMultiplier: 0.85 },
-  [EmotionalTone.CONCERNED]: { hueShift: -20, saturationMultiplier: 0.9, brightnessMultiplier: 0.8 },
-  [EmotionalTone.EMPATHETIC]: { hueShift: 5, saturationMultiplier: 1.0, brightnessMultiplier: 1.0 },
-  [EmotionalTone.PLAYFUL]: { hueShift: 20, saturationMultiplier: 1.4, brightnessMultiplier: 1.2 },
+export const EMOTIONAL_COLOR_SHIFTS: Record<
+  EmotionalTone,
+  { hueShift: number; saturationMultiplier: number; brightnessMultiplier: number }
+> = {
+  [EmotionalTone.CALM]: {
+    hueShift: 0,
+    saturationMultiplier: 0.8,
+    brightnessMultiplier: 0.9,
+  },
+  [EmotionalTone.CURIOUS]: {
+    hueShift: 10,
+    saturationMultiplier: 1.0,
+    brightnessMultiplier: 1.05,
+  },
+  [EmotionalTone.EXCITED]: {
+    hueShift: 15,
+    saturationMultiplier: 1.3,
+    brightnessMultiplier: 1.15,
+  },
+  [EmotionalTone.CONFIDENT]: {
+    hueShift: -5,
+    saturationMultiplier: 1.1,
+    brightnessMultiplier: 1.1,
+  },
+  [EmotionalTone.CAUTIOUS]: {
+    hueShift: -10,
+    saturationMultiplier: 0.7,
+    brightnessMultiplier: 0.85,
+  },
+  [EmotionalTone.CONCERNED]: {
+    hueShift: -20,
+    saturationMultiplier: 0.9,
+    brightnessMultiplier: 0.8,
+  },
+  [EmotionalTone.EMPATHETIC]: {
+    hueShift: 5,
+    saturationMultiplier: 1.0,
+    brightnessMultiplier: 1.0,
+  },
+  [EmotionalTone.PLAYFUL]: {
+    hueShift: 20,
+    saturationMultiplier: 1.4,
+    brightnessMultiplier: 1.2,
+  },
 };
 
 /**
  * System load visual intensity modifiers
  * Adjusts visual intensity based on system resource usage
  */
-export const SYSTEM_LOAD_MODIFIERS: Record<SystemLoadLevel, { intensityMultiplier: number; particleDensityMultiplier: number; speedMultiplier: number }> = {
-  [SystemLoadLevel.IDLE]: { intensityMultiplier: 0.8, particleDensityMultiplier: 0.7, speedMultiplier: 0.8 },
-  [SystemLoadLevel.LIGHT]: { intensityMultiplier: 1.0, particleDensityMultiplier: 1.0, speedMultiplier: 1.0 },
-  [SystemLoadLevel.MODERATE]: { intensityMultiplier: 1.15, particleDensityMultiplier: 1.2, speedMultiplier: 1.2 },
-  [SystemLoadLevel.HIGH]: { intensityMultiplier: 1.3, particleDensityMultiplier: 1.4, speedMultiplier: 1.4 },
-  [SystemLoadLevel.CRITICAL]: { intensityMultiplier: 1.5, particleDensityMultiplier: 1.5, speedMultiplier: 1.6 },
+export const SYSTEM_LOAD_MODIFIERS: Record<
+  SystemLoadLevel,
+  {
+    intensityMultiplier: number;
+    particleDensityMultiplier: number;
+    speedMultiplier: number;
+  }
+> = {
+  [SystemLoadLevel.IDLE]: {
+    intensityMultiplier: 0.8,
+    particleDensityMultiplier: 0.7,
+    speedMultiplier: 0.8,
+  },
+  [SystemLoadLevel.LIGHT]: {
+    intensityMultiplier: 1.0,
+    particleDensityMultiplier: 1.0,
+    speedMultiplier: 1.0,
+  },
+  [SystemLoadLevel.MODERATE]: {
+    intensityMultiplier: 1.15,
+    particleDensityMultiplier: 1.2,
+    speedMultiplier: 1.2,
+  },
+  [SystemLoadLevel.HIGH]: {
+    intensityMultiplier: 1.3,
+    particleDensityMultiplier: 1.4,
+    speedMultiplier: 1.4,
+  },
+  [SystemLoadLevel.CRITICAL]: {
+    intensityMultiplier: 1.5,
+    particleDensityMultiplier: 1.5,
+    speedMultiplier: 1.6,
+  },
 };
 
 /**
@@ -583,17 +649,17 @@ export const CONTEXT_EFFECTS: Record<ConversationContext, string[]> = {
 export function calculateVisualConfig(state: TitaneState): VisualConfig {
   // Base configuration from cognitive state
   const cognitiveBase = COGNITIVE_VISUALS[state.cognitive];
-  
+
   // Emotional modulation
   const emotionalShift = EMOTIONAL_COLOR_SHIFTS[state.emotional];
-  
+
   // System load intensity
   const systemLoadLevel = getSystemLoadLevel(state.systemLoad);
   const loadModifier = SYSTEM_LOAD_MODIFIERS[systemLoadLevel];
-  
+
   // Context effects
   const contextEffects = CONTEXT_EFFECTS[state.conversationContext];
-  
+
   // Combine all effects
   const config: VisualConfig = {
     // Colors (base from cognitive, modulated by emotion)
@@ -601,38 +667,41 @@ export function calculateVisualConfig(state: TitaneState): VisualConfig {
     accentColor: cognitiveBase.accentColor || colors.accent[500],
     glowColor: cognitiveBase.glowColor || 'rgba(114, 123, 129, 0.15)',
     particleColor: cognitiveBase.baseColor || colors.primary[400],
-    
+
     // Intensity (cognitive base * emotional * load)
-    intensity: (cognitiveBase.intensity || 0.5) * emotionalShift.brightnessMultiplier * loadModifier.intensityMultiplier,
-    glowIntensity: (cognitiveBase.glowIntensity || 0.3) * loadModifier.intensityMultiplier,
-    
+    intensity:
+      (cognitiveBase.intensity || 0.5) *
+      emotionalShift.brightnessMultiplier *
+      loadModifier.intensityMultiplier,
+    glowIntensity:
+      (cognitiveBase.glowIntensity || 0.3) * loadModifier.intensityMultiplier,
+
     // Particle system (cognitive base * load)
-    particleDensity: Math.round((cognitiveBase.particleDensity || 200) * loadModifier.particleDensityMultiplier),
+    particleDensity: Math.round(
+      (cognitiveBase.particleDensity || 200) * loadModifier.particleDensityMultiplier
+    ),
     particleSpeed: (cognitiveBase.particleSpeed || 1.0) * loadModifier.speedMultiplier,
     particleOpacity: cognitiveBase.particleOpacity || 0.6,
-    
+
     // Motion & orbital
     glowRadius: 150 * loadModifier.intensityMultiplier,
     orbitSpeed: 1.0 * loadModifier.speedMultiplier,
     waveAmplitude: cognitiveBase.waveAmplitude || 40,
     waveFrequency: cognitiveBase.waveFrequency || 1.5,
     pulseInterval: cognitiveBase.pulseInterval || 1500,
-    
+
     // Special effects (cognitive + context)
-    specialEffects: [
-      ...(cognitiveBase.specialEffects || []),
-      ...contextEffects,
-    ],
-    
+    specialEffects: [...(cognitiveBase.specialEffects || []), ...contextEffects],
+
     // Transition
     transitionDuration: 500,
   };
-  
+
   // Apply custom overrides if present
   if (state.customOverride) {
     return { ...config, ...state.customOverride };
   }
-  
+
   return config;
 }
 
@@ -669,19 +738,19 @@ export function lerpColor(color1: string, color2: string, t: number): string {
   // Extract RGB from hex
   const c1 = color1.replace('#', '');
   const c2 = color2.replace('#', '');
-  
+
   const r1 = parseInt(c1.substring(0, 2), 16);
   const g1 = parseInt(c1.substring(2, 4), 16);
   const b1 = parseInt(c1.substring(4, 6), 16);
-  
+
   const r2 = parseInt(c2.substring(0, 2), 16);
   const g2 = parseInt(c2.substring(2, 4), 16);
   const b2 = parseInt(c2.substring(4, 6), 16);
-  
+
   const r = Math.round(lerp(r1, r2, t));
   const g = Math.round(lerp(g1, g2, t));
   const b = Math.round(lerp(b1, b2, t));
-  
+
   return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
 }
 
@@ -696,26 +765,26 @@ export function interpolateVisualConfig(
   useEasing: boolean = true
 ): VisualConfig {
   const t = useEasing ? cubicEasing(progress) : progress;
-  
+
   return {
     baseColor: lerpColor(from.baseColor, to.baseColor, t),
     accentColor: lerpColor(from.accentColor, to.accentColor, t),
     glowColor: to.glowColor, // Glow color changes instantly (rgba interpolation complex)
     particleColor: lerpColor(from.particleColor, to.particleColor, t),
-    
+
     intensity: lerp(from.intensity, to.intensity, t),
     glowIntensity: lerp(from.glowIntensity, to.glowIntensity, t),
-    
+
     particleDensity: Math.round(lerp(from.particleDensity, to.particleDensity, t)),
     particleSpeed: lerp(from.particleSpeed, to.particleSpeed, t),
     particleOpacity: lerp(from.particleOpacity, to.particleOpacity, t),
-    
+
     glowRadius: lerp(from.glowRadius, to.glowRadius, t),
     orbitSpeed: lerp(from.orbitSpeed, to.orbitSpeed, t),
     waveAmplitude: lerp(from.waveAmplitude, to.waveAmplitude, t),
     waveFrequency: lerp(from.waveFrequency, to.waveFrequency, t),
     pulseInterval: Math.round(lerp(from.pulseInterval, to.pulseInterval, t)),
-    
+
     specialEffects: t > 0.5 ? to.specialEffects : from.specialEffects, // Switch at midpoint
     transitionDuration: from.transitionDuration,
   };

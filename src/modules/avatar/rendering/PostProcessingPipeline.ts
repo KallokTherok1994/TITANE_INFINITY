@@ -54,12 +54,12 @@ export interface PostProcessingConfig {
   enableTAA: boolean;
   enableBloom: boolean;
   enableVignette: boolean;
-  taaSampleLevel: number;       // TAA samples (3-5 optimal)
-  bloomStrength: number;         // Bloom intensity (0.1-0.5)
-  bloomRadius: number;           // Bloom radius (0.5-1.0)
-  bloomThreshold: number;        // Bloom threshold (0.8-1.0)
-  vignetteOffset: number;        // Vignette offset (0.8-1.2)
-  vignetteDarkness: number;      // Vignette darkness (1.0-2.0)
+  taaSampleLevel: number; // TAA samples (3-5 optimal)
+  bloomStrength: number; // Bloom intensity (0.1-0.5)
+  bloomRadius: number; // Bloom radius (0.5-1.0)
+  bloomThreshold: number; // Bloom threshold (0.8-1.0)
+  vignetteOffset: number; // Vignette offset (0.8-1.2)
+  vignetteDarkness: number; // Vignette darkness (1.0-2.0)
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

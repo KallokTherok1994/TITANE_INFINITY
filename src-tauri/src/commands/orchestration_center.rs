@@ -3,15 +3,15 @@
 // Fusion: Multi-AI + Nexus + Harmonia + Timeline + Cognitive State
 // ═══════════════════════════════════════════════════════════════════════════
 
+use crate::security::secrets_engine::SecureSecretsEngine;
+use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs;
 use std::path::PathBuf;
 use std::sync::Mutex;
 use std::time::{SystemTime, UNIX_EPOCH};
-use lazy_static::lazy_static;
 use tauri::State;
-use crate::security::secrets_engine::SecureSecretsEngine;
 
 type CommandResult<T> = Result<T, String>;
 
@@ -47,7 +47,7 @@ pub struct ProviderStatus {
     pub name: String,
     pub available: bool,
     pub latency_ms: u64,
-    pub score: u8,  // 0-100
+    pub score: u8, // 0-100
     pub last_checked: u64,
     pub error: Option<String>,
     pub model: Option<String>,
@@ -120,7 +120,7 @@ async fn ping_gemini_internal(secrets: Option<&SecureSecretsEngine>) -> Provider
     let api_key = if let Some(engine) = secrets {
         match engine.get_secret("gemini_api_key") {
             Ok(Some(key)) => Some(key),
-            _ => std::env::var("GEMINI_API_KEY").ok()
+            _ => std::env::var("GEMINI_API_KEY").ok(),
         }
     } else {
         std::env::var("GEMINI_API_KEY").ok()
@@ -172,7 +172,11 @@ async fn ping_gemini_internal(secrets: Option<&SecureSecretsEngine>) -> Provider
                         latency_ms: latency,
                         score,
                         last_checked: now,
-                        error: if available { None } else { Some(format!("HTTP {}", resp.status())) },
+                        error: if available {
+                            None
+                        } else {
+                            Some(format!("HTTP {}", resp.status()))
+                        },
                         model: Some("gemini-2.0-flash-exp".into()),
                         capabilities: vec!["text".into(), "multimodal".into(), "streaming".into()],
                     }
@@ -206,48 +210,50 @@ async fn ping_gemini_internal(secrets: Option<&SecureSecretsEngine>) -> Provider
 async fn ping_ollama_internal() -> ProviderStatus {
     let start = std::time::Instant::now();
     let now = now_ms();
-    let ollama_url = std::env::var("OLLAMA_BASE_URL")
-        .unwrap_or_else(|_| "http://localhost:11434".into());
+    let ollama_url =
+        std::env::var("OLLAMA_BASE_URL").unwrap_or_else(|_| "http://localhost:11434".into());
 
     let client = reqwest::Client::builder()
         .timeout(std::time::Duration::from_secs(3))
         .build();
 
     match client {
-        Ok(c) => {
-            match c.get(format!("{}/api/tags", ollama_url)).send().await {
-                Ok(resp) => {
-                    let latency = start.elapsed().as_millis() as u64;
-                    let available = resp.status().is_success();
-                    let score = if available {
-                        calculate_provider_score(latency, true, 85)
-                    } else {
-                        0
-                    };
+        Ok(c) => match c.get(format!("{}/api/tags", ollama_url)).send().await {
+            Ok(resp) => {
+                let latency = start.elapsed().as_millis() as u64;
+                let available = resp.status().is_success();
+                let score = if available {
+                    calculate_provider_score(latency, true, 85)
+                } else {
+                    0
+                };
 
-                    ProviderStatus {
-                        name: "ollama".into(),
-                        available,
-                        latency_ms: latency,
-                        score,
-                        last_checked: now,
-                        error: if available { None } else { Some(format!("HTTP {}", resp.status())) },
-                        model: Some("titane-local".into()),
-                        capabilities: vec!["text".into(), "local".into(), "offline".into()],
-                    }
-                }
-                Err(e) => ProviderStatus {
+                ProviderStatus {
                     name: "ollama".into(),
-                    available: false,
-                    latency_ms: start.elapsed().as_millis() as u64,
-                    score: 0,
+                    available,
+                    latency_ms: latency,
+                    score,
                     last_checked: now,
-                    error: Some(format!("Not running: {}", e)),
+                    error: if available {
+                        None
+                    } else {
+                        Some(format!("HTTP {}", resp.status()))
+                    },
                     model: Some("titane-local".into()),
                     capabilities: vec!["text".into(), "local".into(), "offline".into()],
-                },
+                }
             }
-        }
+            Err(e) => ProviderStatus {
+                name: "ollama".into(),
+                available: false,
+                latency_ms: start.elapsed().as_millis() as u64,
+                score: 0,
+                last_checked: now,
+                error: Some(format!("Not running: {}", e)),
+                model: Some("titane-local".into()),
+                capabilities: vec!["text".into(), "local".into(), "offline".into()],
+            },
+        },
         Err(e) => ProviderStatus {
             name: "ollama".into(),
             available: false,
@@ -319,7 +325,8 @@ pub async fn orchestration_ping_providers() -> CommandResult<MultiAIState> {
 
     let providers = vec![gemini, ollama, local];
     let best = select_best_provider(&providers);
-    let global_score = providers.iter()
+    let global_score = providers
+        .iter()
         .filter(|p| p.available)
         .map(|p| p.score as u32)
         .max()
@@ -381,7 +388,7 @@ pub struct NexusState {
     pub active_nodes: u32,
     pub total_nodes: u32,
     pub link_count: u32,
-    pub coherence_score: u8,  // 0-100
+    pub coherence_score: u8, // 0-100
     pub nodes: Vec<NexusNode>,
     pub anomalies: Vec<String>,
     pub last_update: u64,
@@ -394,14 +401,70 @@ lazy_static! {
 impl Default for NexusState {
     fn default() -> Self {
         let nodes = vec![
-            NexusNode { id: "helios".into(), name: "Helios".into(), node_type: "physical".into(), active: true, health: 100, connections: vec!["harmonia".into(), "watchdog".into()] },
-            NexusNode { id: "harmonia".into(), name: "Harmonia".into(), node_type: "flow".into(), active: true, health: 100, connections: vec!["helios".into(), "nexus".into()] },
-            NexusNode { id: "nexus".into(), name: "Nexus".into(), node_type: "cognitive".into(), active: true, health: 100, connections: vec!["harmonia".into(), "memory".into()] },
-            NexusNode { id: "memory".into(), name: "Memory".into(), node_type: "storage".into(), active: true, health: 100, connections: vec!["nexus".into(), "knowledge".into()] },
-            NexusNode { id: "knowledge".into(), name: "Knowledge".into(), node_type: "storage".into(), active: true, health: 95, connections: vec!["memory".into()] },
-            NexusNode { id: "watchdog".into(), name: "Watchdog".into(), node_type: "security".into(), active: true, health: 100, connections: vec!["helios".into(), "selfheal".into()] },
-            NexusNode { id: "selfheal".into(), name: "Self-Heal".into(), node_type: "repair".into(), active: true, health: 100, connections: vec!["watchdog".into()] },
-            NexusNode { id: "chat_ai".into(), name: "Chat IA".into(), node_type: "ai".into(), active: true, health: 100, connections: vec!["memory".into(), "harmonia".into()] },
+            NexusNode {
+                id: "helios".into(),
+                name: "Helios".into(),
+                node_type: "physical".into(),
+                active: true,
+                health: 100,
+                connections: vec!["harmonia".into(), "watchdog".into()],
+            },
+            NexusNode {
+                id: "harmonia".into(),
+                name: "Harmonia".into(),
+                node_type: "flow".into(),
+                active: true,
+                health: 100,
+                connections: vec!["helios".into(), "nexus".into()],
+            },
+            NexusNode {
+                id: "nexus".into(),
+                name: "Nexus".into(),
+                node_type: "cognitive".into(),
+                active: true,
+                health: 100,
+                connections: vec!["harmonia".into(), "memory".into()],
+            },
+            NexusNode {
+                id: "memory".into(),
+                name: "Memory".into(),
+                node_type: "storage".into(),
+                active: true,
+                health: 100,
+                connections: vec!["nexus".into(), "knowledge".into()],
+            },
+            NexusNode {
+                id: "knowledge".into(),
+                name: "Knowledge".into(),
+                node_type: "storage".into(),
+                active: true,
+                health: 95,
+                connections: vec!["memory".into()],
+            },
+            NexusNode {
+                id: "watchdog".into(),
+                name: "Watchdog".into(),
+                node_type: "security".into(),
+                active: true,
+                health: 100,
+                connections: vec!["helios".into(), "selfheal".into()],
+            },
+            NexusNode {
+                id: "selfheal".into(),
+                name: "Self-Heal".into(),
+                node_type: "repair".into(),
+                active: true,
+                health: 100,
+                connections: vec!["watchdog".into()],
+            },
+            NexusNode {
+                id: "chat_ai".into(),
+                name: "Chat IA".into(),
+                node_type: "ai".into(),
+                active: true,
+                health: 100,
+                connections: vec!["memory".into(), "harmonia".into()],
+            },
         ];
 
         let active = nodes.iter().filter(|n| n.active).count() as u32;
@@ -426,7 +489,8 @@ fn calculate_nexus_coherence(nodes: &[NexusNode]) -> u8 {
 
     let active_count = nodes.iter().filter(|n| n.active).count();
     let avg_health: u32 = nodes.iter().map(|n| n.health as u32).sum::<u32>() / nodes.len() as u32;
-    let connectivity = nodes.iter().map(|n| n.connections.len()).sum::<usize>() as f32 / nodes.len() as f32;
+    let connectivity =
+        nodes.iter().map(|n| n.connections.len()).sum::<usize>() as f32 / nodes.len() as f32;
 
     // Score = (active_ratio * 40) + (avg_health * 0.4) + (connectivity_bonus * 20)
     let active_ratio = (active_count as f32 / nodes.len() as f32) * 40.0;
@@ -445,7 +509,11 @@ pub async fn orchestration_get_nexus() -> CommandResult<NexusState> {
 }
 
 #[tauri::command]
-pub async fn orchestration_update_nexus_node(node_id: String, active: bool, health: u8) -> CommandResult<NexusState> {
+pub async fn orchestration_update_nexus_node(
+    node_id: String,
+    active: bool,
+    health: u8,
+) -> CommandResult<NexusState> {
     let mut state = NEXUS_STATE.lock().map_err(|e| e.to_string())?;
 
     if let Some(node) = state.nodes.iter_mut().find(|n| n.id == node_id) {
@@ -472,7 +540,7 @@ pub struct FlowMetrics {
     pub cpu_usage: f32,
     pub ram_usage: f32,
     pub io_rate: f32,
-    pub status: String,  // active, idle, throttled
+    pub status: String, // active, idle, throttled
     pub priority: u8,
 }
 
@@ -483,8 +551,8 @@ pub struct HarmoniaState {
     pub cpu_usage: f32,
     pub ram_usage: f32,
     pub io_balance: f32,
-    pub harmony_score: u8,  // 0-100
-    pub mode: String,  // normal, balanced, throttled
+    pub harmony_score: u8, // 0-100
+    pub mode: String,      // normal, balanced, throttled
     pub last_update: u64,
 }
 
@@ -496,11 +564,51 @@ impl Default for HarmoniaState {
     fn default() -> Self {
         Self {
             active_flows: vec![
-                FlowMetrics { id: "chat".into(), name: "Chat IA".into(), cpu_usage: 5.0, ram_usage: 8.0, io_rate: 2.0, status: "active".into(), priority: 1 },
-                FlowMetrics { id: "memory".into(), name: "Memory Engine".into(), cpu_usage: 3.0, ram_usage: 12.0, io_rate: 5.0, status: "active".into(), priority: 2 },
-                FlowMetrics { id: "knowledge".into(), name: "Knowledge Vault".into(), cpu_usage: 2.0, ram_usage: 6.0, io_rate: 3.0, status: "idle".into(), priority: 3 },
-                FlowMetrics { id: "selfheal".into(), name: "Self-Healing".into(), cpu_usage: 1.0, ram_usage: 2.0, io_rate: 1.0, status: "active".into(), priority: 2 },
-                FlowMetrics { id: "ui".into(), name: "Interface".into(), cpu_usage: 4.0, ram_usage: 15.0, io_rate: 1.0, status: "active".into(), priority: 1 },
+                FlowMetrics {
+                    id: "chat".into(),
+                    name: "Chat IA".into(),
+                    cpu_usage: 5.0,
+                    ram_usage: 8.0,
+                    io_rate: 2.0,
+                    status: "active".into(),
+                    priority: 1,
+                },
+                FlowMetrics {
+                    id: "memory".into(),
+                    name: "Memory Engine".into(),
+                    cpu_usage: 3.0,
+                    ram_usage: 12.0,
+                    io_rate: 5.0,
+                    status: "active".into(),
+                    priority: 2,
+                },
+                FlowMetrics {
+                    id: "knowledge".into(),
+                    name: "Knowledge Vault".into(),
+                    cpu_usage: 2.0,
+                    ram_usage: 6.0,
+                    io_rate: 3.0,
+                    status: "idle".into(),
+                    priority: 3,
+                },
+                FlowMetrics {
+                    id: "selfheal".into(),
+                    name: "Self-Healing".into(),
+                    cpu_usage: 1.0,
+                    ram_usage: 2.0,
+                    io_rate: 1.0,
+                    status: "active".into(),
+                    priority: 2,
+                },
+                FlowMetrics {
+                    id: "ui".into(),
+                    name: "Interface".into(),
+                    cpu_usage: 4.0,
+                    ram_usage: 15.0,
+                    io_rate: 1.0,
+                    status: "active".into(),
+                    priority: 1,
+                },
             ],
             cpu_usage: 15.0,
             ram_usage: 43.0,
@@ -516,8 +624,20 @@ fn calculate_harmony_score(flows: &[FlowMetrics], cpu: f32, ram: f32) -> (u8, St
     let active_count = flows.iter().filter(|f| f.status == "active").count();
     let throttled_count = flows.iter().filter(|f| f.status == "throttled").count();
 
-    let cpu_score = if cpu < 60.0 { 100.0 } else if cpu < 80.0 { 80.0 } else { 50.0 };
-    let ram_score = if ram < 70.0 { 100.0 } else if ram < 85.0 { 75.0 } else { 40.0 };
+    let cpu_score = if cpu < 60.0 {
+        100.0
+    } else if cpu < 80.0 {
+        80.0
+    } else {
+        50.0
+    };
+    let ram_score = if ram < 70.0 {
+        100.0
+    } else if ram < 85.0 {
+        75.0
+    } else {
+        40.0
+    };
     let balance_score = if throttled_count == 0 { 100.0 } else { 70.0 };
 
     let score = ((cpu_score + ram_score + balance_score) / 3.0) as u8;
@@ -543,7 +663,11 @@ pub async fn orchestration_get_harmonia() -> CommandResult<HarmoniaState> {
     let cpu_usage = sys.cpus().first().map(|c| c.cpu_usage()).unwrap_or(0.0);
     let total_mem = sys.total_memory() as f32;
     let used_mem = sys.used_memory() as f32;
-    let ram_usage = if total_mem > 0.0 { (used_mem / total_mem) * 100.0 } else { 0.0 };
+    let ram_usage = if total_mem > 0.0 {
+        (used_mem / total_mem) * 100.0
+    } else {
+        0.0
+    };
 
     let mut state = HARMONIA_STATE.lock().map_err(|e| e.to_string())?;
     state.cpu_usage = cpu_usage;
@@ -558,14 +682,22 @@ pub async fn orchestration_get_harmonia() -> CommandResult<HarmoniaState> {
 }
 
 #[tauri::command]
-pub async fn orchestration_throttle_flow(flow_id: String, throttle: bool) -> CommandResult<HarmoniaState> {
+pub async fn orchestration_throttle_flow(
+    flow_id: String,
+    throttle: bool,
+) -> CommandResult<HarmoniaState> {
     let mut state = HARMONIA_STATE.lock().map_err(|e| e.to_string())?;
 
     if let Some(flow) = state.active_flows.iter_mut().find(|f| f.id == flow_id) {
-        flow.status = if throttle { "throttled".into() } else { "active".into() };
+        flow.status = if throttle {
+            "throttled".into()
+        } else {
+            "active".into()
+        };
     }
 
-    let (score, mode) = calculate_harmony_score(&state.active_flows, state.cpu_usage, state.ram_usage);
+    let (score, mode) =
+        calculate_harmony_score(&state.active_flows, state.cpu_usage, state.ram_usage);
     state.harmony_score = score;
     state.mode = mode;
     state.last_update = now_ms();
@@ -582,9 +714,9 @@ pub async fn orchestration_throttle_flow(flow_id: String, throttle: bool) -> Com
 pub struct TimelineEvent {
     pub id: String,
     pub timestamp: u64,
-    pub category: String,  // chat, memory, system, healing, evolution, user
+    pub category: String, // chat, memory, system, healing, evolution, user
     pub message: String,
-    pub severity: String,  // info, warning, error, success
+    pub severity: String, // info, warning, error, success
     pub metadata: HashMap<String, serde_json::Value>,
 }
 
@@ -621,14 +753,17 @@ fn load_timeline() -> Vec<TimelineEvent> {
 fn save_timeline(events: &[TimelineEvent]) -> CommandResult<()> {
     let _ = ensure_data_dir()?;
     let path = get_timeline_path();
-    let json = serde_json::to_string_pretty(events)
-        .map_err(|e| format!("Serialization error: {}", e))?;
+    let json =
+        serde_json::to_string_pretty(events).map_err(|e| format!("Serialization error: {}", e))?;
     fs::write(&path, json).map_err(|e| format!("Write error: {}", e))?;
     Ok(())
 }
 
 #[tauri::command]
-pub async fn orchestration_get_timeline(limit: Option<u32>, category: Option<String>) -> CommandResult<TimelineState> {
+pub async fn orchestration_get_timeline(
+    limit: Option<u32>,
+    category: Option<String>,
+) -> CommandResult<TimelineState> {
     let mut events = TIMELINE_STATE.lock().map_err(|e| e.to_string())?;
 
     // Load from disk if empty
@@ -720,12 +855,12 @@ pub async fn orchestration_clear_timeline(older_than_days: Option<u32>) -> Comma
 #[serde(rename_all = "camelCase")]
 pub struct CognitiveState {
     pub provider: String,
-    pub mode: String,  // fast, balanced, deep
-    pub depth: u8,  // 0-10
-    pub stability: u8,  // 0-100
-    pub cognitive_score: u8,  // 0-100
-    pub mental_load: u8,  // 0-100
-    pub reasoning_quality: u8,  // 0-100
+    pub mode: String,          // fast, balanced, deep
+    pub depth: u8,             // 0-10
+    pub stability: u8,         // 0-100
+    pub cognitive_score: u8,   // 0-100
+    pub mental_load: u8,       // 0-100
+    pub reasoning_quality: u8, // 0-100
     pub active_processes: Vec<String>,
     pub last_update: u64,
 }
@@ -744,7 +879,11 @@ impl Default for CognitiveState {
             cognitive_score: 85,
             mental_load: 20,
             reasoning_quality: 90,
-            active_processes: vec!["reasoning".into(), "memory_recall".into(), "context_building".into()],
+            active_processes: vec![
+                "reasoning".into(),
+                "memory_recall".into(),
+                "context_building".into(),
+            ],
             last_update: now_ms(),
         }
     }
@@ -804,7 +943,8 @@ pub async fn orchestration_analyze_cognitive() -> CommandResult<CognitiveState> 
     state.mental_load = ((harmonia.cpu_usage + harmonia.ram_usage) / 2.0) as u8;
 
     // Calculate reasoning quality
-    state.reasoning_quality = ((multi_ai.global_score as u32 + nexus.coherence_score as u32) / 2) as u8;
+    state.reasoning_quality =
+        ((multi_ai.global_score as u32 + nexus.coherence_score as u32) / 2) as u8;
 
     state.cognitive_score = calculate_cognitive_score(&state);
     state.last_update = now_ms();
@@ -838,12 +978,11 @@ pub async fn orchestration_get_unified_state() -> CommandResult<OrchestrationUni
     let cognitive = orchestration_get_cognitive_state().await?;
 
     // Calculate global score
-    let global_score = (
-        (multi_ai.global_score as u32 +
-         nexus.coherence_score as u32 +
-         harmonia.harmony_score as u32 +
-         cognitive.cognitive_score as u32) / 4
-    ) as u8;
+    let global_score = ((multi_ai.global_score as u32
+        + nexus.coherence_score as u32
+        + harmonia.harmony_score as u32
+        + cognitive.cognitive_score as u32)
+        / 4) as u8;
 
     let system_status = if global_score >= 80 {
         "optimal"
@@ -909,7 +1048,9 @@ pub async fn ping_gemini(secrets: State<'_, SecureSecretsEngine>) -> CommandResu
     if status.available {
         Ok(status.latency_ms)
     } else {
-        Err(status.error.unwrap_or_else(|| "Gemini unavailable".to_string()))
+        Err(status
+            .error
+            .unwrap_or_else(|| "Gemini unavailable".to_string()))
     }
 }
 
@@ -920,7 +1061,9 @@ pub async fn ping_ollama() -> CommandResult<u64> {
     if status.available {
         Ok(status.latency_ms)
     } else {
-        Err(status.error.unwrap_or_else(|| "Ollama unavailable".to_string()))
+        Err(status
+            .error
+            .unwrap_or_else(|| "Ollama unavailable".to_string()))
     }
 }
 
@@ -949,7 +1092,9 @@ pub struct GeminiFullStatus {
 
 /// Test complet des 22 services Google Cloud Gemini activés
 #[tauri::command]
-pub async fn test_gemini_services(secrets: State<'_, SecureSecretsEngine>) -> CommandResult<GeminiFullStatus> {
+pub async fn test_gemini_services(
+    secrets: State<'_, SecureSecretsEngine>,
+) -> CommandResult<GeminiFullStatus> {
     let start = std::time::Instant::now();
 
     // Get API key from SecureSecretsEngine

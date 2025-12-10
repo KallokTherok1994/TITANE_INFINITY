@@ -176,7 +176,7 @@ describe('RealTimeExecutionEngine', () => {
   });
 
   it('enqueues audio, avatar and UI tasks when running the realtime pipeline', async () => {
-    mockInvoke.mockImplementation(async (command) => {
+    mockInvoke.mockImplementation(async command => {
       if (command === 'realtime_stream_tts') {
         return [new ArrayBuffer(8)];
       }
@@ -196,15 +196,19 @@ describe('RealTimeExecutionEngine', () => {
     });
 
     const tasks = drainQueue(queue);
-    const types = tasks.map((task) => task.type);
+    const types = tasks.map(task => task.type);
 
-    expect(types.filter((t) => t === 'audio')).toHaveLength(1);
-    expect(types.filter((t) => t === 'avatar')).toHaveLength(1);
-    expect(types.filter((t) => t === 'ui')).toHaveLength(1);
+    expect(types.filter(t => t === 'audio')).toHaveLength(1);
+    expect(types.filter(t => t === 'avatar')).toHaveLength(1);
+    expect(types.filter(t => t === 'ui')).toHaveLength(1);
   });
 });
 
-function createTask(type: RealtimeTask['type'], priority: Priority, payload: any = {}): RealtimeTask {
+function createTask(
+  type: RealtimeTask['type'],
+  priority: Priority,
+  payload: any = {}
+): RealtimeTask {
   return {
     id: `${type}_${Date.now()}`,
     type,
@@ -219,7 +223,10 @@ function createAudioBuffer(duration: number = 0.5): AudioBuffer {
   return { duration } as AudioBuffer;
 }
 
-function drainQueue(queue: { dequeue: () => RealtimeTask | undefined; size: () => number }): RealtimeTask[] {
+function drainQueue(queue: {
+  dequeue: () => RealtimeTask | undefined;
+  size: () => number;
+}): RealtimeTask[] {
   const tasks: RealtimeTask[] = [];
   while (queue.size() > 0) {
     const task = queue.dequeue();

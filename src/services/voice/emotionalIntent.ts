@@ -16,17 +16,17 @@
  * Émotions supportées par le moteur
  */
 export type EmotionType =
-  | 'calm'        // Calme, posé, zen
-  | 'gentle'      // Doux, tendre, chaleureux
-  | 'confident'   // Confiant, assuré, stable
-  | 'inspiring'   // Inspirant, motivant, énergisant
-  | 'playful'     // Joueur, léger, amusant
-  | 'empathetic'  // Empathique, compréhensif, soutenant
-  | 'serious'     // Sérieux, formel, sobre
-  | 'excited'     // Excité, enthousiaste, vibrant
-  | 'thoughtful'  // Pensif, réfléchi, profond
-  | 'warm'        // Chaleureux, accueillant, bienveillant
-  | 'neutral';    // Neutre, standard, sans modulation
+  | 'calm' // Calme, posé, zen
+  | 'gentle' // Doux, tendre, chaleureux
+  | 'confident' // Confiant, assuré, stable
+  | 'inspiring' // Inspirant, motivant, énergisant
+  | 'playful' // Joueur, léger, amusant
+  | 'empathetic' // Empathique, compréhensif, soutenant
+  | 'serious' // Sérieux, formel, sobre
+  | 'excited' // Excité, enthousiaste, vibrant
+  | 'thoughtful' // Pensif, réfléchi, profond
+  | 'warm' // Chaleureux, accueillant, bienveillant
+  | 'neutral'; // Neutre, standard, sans modulation
 
 /**
  * Intensité émotionnelle (0.0 - 1.0)
@@ -112,9 +112,9 @@ export interface EmotionalAnalysisResult {
 
   /** Indices utilisés pour l'analyse */
   indicators: {
-    lexical: number;    // Analyse lexicale (mots émotionnels)
-    syntactic: number;  // Analyse syntaxique (structure)
-    semantic: number;   // Analyse sémantique (sens)
+    lexical: number; // Analyse lexicale (mots émotionnels)
+    syntactic: number; // Analyse syntaxique (structure)
+    semantic: number; // Analyse sémantique (sens)
   };
 
   /** Suggestions alternatives */

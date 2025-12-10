@@ -78,7 +78,7 @@ export class AIRateLimiter {
     'claude-3-opus': 0.000015, // $0.015 / 1000 tokens
     'claude-3-sonnet': 0.000003, // $0.003 / 1000 tokens
     'gemini-pro': 0.0000005, // $0.0005 / 1000 tokens
-    'local': 0, // Gratuit
+    local: 0, // Gratuit
   };
 
   constructor(config: Partial<RateLimitConfig> = {}) {
@@ -147,7 +147,11 @@ export class AIRateLimiter {
    * @param provider - Provider
    * @param model - Model
    */
-  recordRequest(tokens: number, provider: string = 'local', model: string = 'local'): void {
+  recordRequest(
+    tokens: number,
+    provider: string = 'local',
+    model: string = 'local'
+  ): void {
     const cost = this.calculateCost(tokens, model);
 
     this.requests.push({
@@ -187,7 +191,7 @@ export class AIRateLimiter {
 
     // Garde seulement requests dans fenêtre
     const windowStart = now - this.config.windowMs;
-    this.requests = this.requests.filter((r) => r.timestamp >= windowStart);
+    this.requests = this.requests.filter(r => r.timestamp >= windowStart);
   }
 
   /**

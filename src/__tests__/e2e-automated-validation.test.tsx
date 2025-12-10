@@ -13,7 +13,14 @@
 
 import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, renderHook, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import {
+  render,
+  renderHook,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from '@testing-library/react';
 import { chatEngine } from '../services/ai/chatEngine';
 import { aiOrchestrator } from '../services/ai/orchestrator';
 import { autoHealEngine } from '../services/ai/autoHealEngine';
@@ -29,7 +36,7 @@ const createMockResponse = (content = 'Assistant response'): ChatEngineResponse 
   provider: 'titane-local',
   timestamp: Date.now(),
   mode: 'default',
-  contextUsed: []
+  contextUsed: [],
 });
 
 const summarizeMessages = (messages: AIMessage[]) =>
@@ -61,11 +68,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Complete Chat Flow', () => {
   });
 
   it('should maintain message validation throughout pipeline', async () => {
-    const messages = [
-      'First message test',
-      'Second message test',
-      'Third message test'
-    ];
+    const messages = ['First message test', 'Second message test', 'Third message test'];
 
     for (const message of messages) {
       const result = await aiOrchestrator.generate(message, []);
@@ -81,16 +84,19 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Complete Chat Flow', () => {
       {
         role: 'user',
         content: 'My favorite programming language is TypeScript',
-        timestamp: Date.now() - 5000
+        timestamp: Date.now() - 5000,
       },
       {
         role: 'assistant',
         content: 'TypeScript is excellent for type-safe development!',
-        timestamp: Date.now() - 4000
-      }
+        timestamp: Date.now() - 4000,
+      },
     ];
 
-    const result = await aiOrchestrator.generate('What did I tell you about programming?', context);
+    const result = await aiOrchestrator.generate(
+      'What did I tell you about programming?',
+      context
+    );
 
     expect(result).toBeDefined();
     expect(result.content.toLowerCase()).toMatch(/(typescript|programming|language)/);
@@ -121,7 +127,9 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Error Recovery', () => {
 
     // Force error from Gemini
     const originalGenerate = geminiProvider.generate;
-    geminiProvider.generate = vi.fn().mockRejectedValue(new Error('Simulated Gemini error'));
+    geminiProvider.generate = vi
+      .fn()
+      .mockRejectedValue(new Error('Simulated Gemini error'));
 
     try {
       await aiOrchestrator.generate('Test auto-heal trigger', []);
@@ -140,7 +148,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Error Recovery', () => {
     const testMessages = [
       'Message before error',
       '', // Empty message (potential error trigger)
-      'Message after error'
+      'Message after error',
     ];
 
     const results = [];
@@ -171,9 +179,10 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Error Recovery', () => {
       }
       return Promise.resolve({
         ok: true,
-        json: () => Promise.resolve({
-          candidates: [{ content: { parts: [{ text: 'Success after retry' }] } }]
-        })
+        json: () =>
+          Promise.resolve({
+            candidates: [{ content: { parts: [{ text: 'Success after retry' }] } }],
+          }),
       } as Response);
     });
 
@@ -220,12 +229,15 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Performance', () => {
       largeHistory.push({
         role: i % 2 === 0 ? 'user' : 'assistant',
         content: `Message ${i + 1}: This is a test message with sufficient length.`,
-        timestamp: Date.now() - (200 - i) * 1000
+        timestamp: Date.now() - (200 - i) * 1000,
       });
     }
 
     const startTime = Date.now();
-    const result = await aiOrchestrator.generate('Summarize our long conversation', largeHistory);
+    const result = await aiOrchestrator.generate(
+      'Summarize our long conversation',
+      largeHistory
+    );
     const endTime = Date.now();
 
     expect(result).toBeDefined();
@@ -240,7 +252,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Performance', () => {
       'Second rapid message',
       'Third rapid message',
       'Fourth rapid message',
-      'Fifth rapid message'
+      'Fifth rapid message',
     ];
 
     const startTime = Date.now();
@@ -299,7 +311,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Edge Cases', () => {
       'Test\n\nwith\nmultiple\n\nlines', // Multiline
       'Ça marche avec des accents éèàù?', // Accents
       '<script>alert("test")</script>', // Dangerous content
-      'Special chars: !@#$%^&*()[]{}|;:,.<>?'
+      'Special chars: !@#$%^&*()[]{}|;:,.<>?',
     ];
 
     for (const input of edgeCases) {
@@ -318,7 +330,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Edge Cases', () => {
       'javascript:void(0)',
       '<?php system("rm -rf /"); ?>',
       'data:text/html,<script>alert(1)</script>',
-      'vbscript:msgbox("test")'
+      'vbscript:msgbox("test")',
     ];
 
     for (const input of dangerousInputs) {
@@ -341,12 +353,15 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Edge Cases', () => {
       { role: 'user', content: null },
       { role: 'user', content: '', timestamp: 'invalid' },
       { role: 'invalid', content: 'Test', timestamp: Date.now() },
-      { role: 'user', content: 'Valid message', timestamp: Date.now() }
+      { role: 'user', content: 'Valid message', timestamp: Date.now() },
     ] as any;
 
     // Should not crash with malformed history
     expect(async () => {
-      const result = await aiOrchestrator.generate('Test with malformed history', malformedHistory);
+      const result = await aiOrchestrator.generate(
+        'Test with malformed history',
+        malformedHistory
+      );
       expect(result).toBeDefined();
       expect(result.content).toBeTruthy();
     }).not.toThrow();
@@ -374,7 +389,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Provider Isolation', () => {
     // Mock Tauri invoke to fail
     const mockInvoke = vi.fn().mockRejectedValue(new Error('Backend not available'));
     vi.mock('../../../core/commands/TAURI_COMMANDS', () => ({
-      invokeTauri: mockInvoke
+      invokeTauri: mockInvoke,
     }));
 
     const result = await aiOrchestrator.generate('Test when Tauri fails', []);
@@ -411,7 +426,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Provider Isolation', () => {
 
     const mockInvoke = vi.fn().mockRejectedValue(new Error('Backend down'));
     vi.mock('../../../core/commands/TAURI_COMMANDS', () => ({
-      invokeTauri: mockInvoke
+      invokeTauri: mockInvoke,
     }));
 
     const result = await aiOrchestrator.generate('Ultimate fallback test', []);
@@ -465,7 +480,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Full System Integration', () => {
     const errorResponses = await Promise.all([
       aiOrchestrator.generate('Test 1 during errors', []),
       aiOrchestrator.generate('Test 2 during errors', []),
-      aiOrchestrator.generate('Test 3 during errors', [])
+      aiOrchestrator.generate('Test 3 during errors', []),
     ]);
 
     errorResponses.forEach(response => {
@@ -477,7 +492,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Full System Integration', () => {
     const longContext: AIMessage[] = Array.from({ length: 100 }, (_, i) => ({
       role: (i % 2 === 0 ? 'user' : 'assistant') as 'user' | 'assistant',
       content: `Context message ${i + 1}`,
-      timestamp: Date.now() - (100 - i) * 1000
+      timestamp: Date.now() - (100 - i) * 1000,
     }));
 
     const response6 = await aiOrchestrator.generate('Summarize context', longContext);
@@ -486,7 +501,9 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Full System Integration', () => {
 
     // 7. Offrir cohérence TITANE∞ (TITANE consistency)
     const response7 = await aiOrchestrator.generate('OMEGA Test: Who are you?', []);
-    expect(response7.content.toLowerCase()).toMatch(/(titane|intelligence|cognitive|système)/);
+    expect(response7.content.toLowerCase()).toMatch(
+      /(titane|intelligence|cognitive|système)/
+    );
 
     console.log('🟣 OMEGA Phase 7Ω - All criteria validated successfully');
   });
@@ -504,9 +521,9 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Full System Integration', () => {
         context: Array.from({ length: 50 }, (_, i) => ({
           role: (i % 2 === 0 ? 'user' : 'assistant') as 'user' | 'assistant',
           content: `Stress context ${i}`,
-          timestamp: Date.now() - i * 1000
-        }))
-      }
+          timestamp: Date.now() - i * 1000,
+        })),
+      },
     ];
 
     // Mock intermittent failures
@@ -518,9 +535,10 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Full System Integration', () => {
       }
       return Promise.resolve({
         ok: true,
-        json: () => Promise.resolve({
-          candidates: [{ content: { parts: [{ text: 'Stress test response' }] } }]
-        })
+        json: () =>
+          Promise.resolve({
+            candidates: [{ content: { parts: [{ text: 'Stress test response' }] } }],
+          }),
       } as Response);
     });
 
@@ -588,11 +606,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Complete Chat Flow', () => {
   });
 
   it('should maintain message validation throughout pipeline', async () => {
-    const messages = [
-      'First message test',
-      'Second message test',
-      'Third message test'
-    ];
+    const messages = ['First message test', 'Second message test', 'Third message test'];
 
     for (const message of messages) {
       const result = await chatEngine.generate(message, []);
@@ -610,16 +624,19 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Complete Chat Flow', () => {
       {
         role: 'user',
         content: 'My favorite programming language is TypeScript',
-        timestamp: Date.now() - 5000
+        timestamp: Date.now() - 5000,
       },
       {
         role: 'assistant',
         content: 'TypeScript is excellent for type-safe development!',
-        timestamp: Date.now() - 4000
-      }
+        timestamp: Date.now() - 4000,
+      },
     ];
 
-    const result = await chatEngine.generate('What did I tell you about programming?', context);
+    const result = await chatEngine.generate(
+      'What did I tell you about programming?',
+      context
+    );
 
     expect(result).toBeDefined();
     expect(result.content.toLowerCase()).toMatch(/(typescript|programming|language)/);
@@ -650,7 +667,9 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Error Recovery', () => {
 
     // Force error from Gemini
     const originalGenerate = geminiProvider.generate;
-    geminiProvider.generate = vi.fn().mockRejectedValue(new Error('Simulated Gemini error'));
+    geminiProvider.generate = vi
+      .fn()
+      .mockRejectedValue(new Error('Simulated Gemini error'));
 
     try {
       await aiOrchestrator.generate('Test auto-heal trigger', []);
@@ -669,7 +688,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Error Recovery', () => {
     const testMessages = [
       'Message before error',
       '', // Empty message (potential error trigger)
-      'Message after error'
+      'Message after error',
     ];
 
     const results = [];
@@ -700,9 +719,10 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Error Recovery', () => {
       }
       return Promise.resolve({
         ok: true,
-        json: () => Promise.resolve({
-          candidates: [{ content: { parts: [{ text: 'Success after retry' }] } }]
-        })
+        json: () =>
+          Promise.resolve({
+            candidates: [{ content: { parts: [{ text: 'Success after retry' }] } }],
+          }),
       } as Response);
     });
 
@@ -749,12 +769,15 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Performance', () => {
       largeHistory.push({
         role: i % 2 === 0 ? 'user' : 'assistant',
         content: `Message ${i + 1}: This is a test message with sufficient length.`,
-        timestamp: Date.now() - (200 - i) * 1000
+        timestamp: Date.now() - (200 - i) * 1000,
       });
     }
 
     const startTime = Date.now();
-    const result = await aiOrchestrator.generate('Summarize our long conversation', largeHistory);
+    const result = await aiOrchestrator.generate(
+      'Summarize our long conversation',
+      largeHistory
+    );
     const endTime = Date.now();
 
     expect(result).toBeDefined();
@@ -769,7 +792,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Performance', () => {
       'Second rapid message',
       'Third rapid message',
       'Fourth rapid message',
-      'Fifth rapid message'
+      'Fifth rapid message',
     ];
 
     const startTime = Date.now();
@@ -828,7 +851,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Edge Cases', () => {
       'Test\n\nwith\nmultiple\n\nlines', // Multiline
       'Ça marche avec des accents éèàù?', // Accents
       '<script>alert("test")</script>', // Dangerous content
-      'Special chars: !@#$%^&*()[]{}|;:,.<>?'
+      'Special chars: !@#$%^&*()[]{}|;:,.<>?',
     ];
 
     for (const input of edgeCases) {
@@ -847,7 +870,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Edge Cases', () => {
       'javascript:void(0)',
       '<?php system("rm -rf /"); ?>',
       'data:text/html,<script>alert(1)</script>',
-      'vbscript:msgbox("test")'
+      'vbscript:msgbox("test")',
     ];
 
     for (const input of dangerousInputs) {
@@ -870,12 +893,15 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Edge Cases', () => {
       { role: 'user', content: null },
       { role: 'user', content: '', timestamp: 'invalid' },
       { role: 'invalid', content: 'Test', timestamp: Date.now() },
-      { role: 'user', content: 'Valid message', timestamp: Date.now() }
+      { role: 'user', content: 'Valid message', timestamp: Date.now() },
     ] as any;
 
     // Should not crash with malformed history
     expect(async () => {
-      const result = await aiOrchestrator.generate('Test with malformed history', malformedHistory);
+      const result = await aiOrchestrator.generate(
+        'Test with malformed history',
+        malformedHistory
+      );
       expect(result).toBeDefined();
       expect(result.content).toBeTruthy();
     }).not.toThrow();
@@ -902,7 +928,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Provider Isolation', () => {
   it('should isolate Tauri backend failures', async () => {
     // Mock Tauri invoke to fail
     vi.mock('../../../core/commands/TAURI_COMMANDS', () => ({
-      invokeTauri: vi.fn().mockRejectedValue(new Error('Backend not available'))
+      invokeTauri: vi.fn().mockRejectedValue(new Error('Backend not available')),
     }));
 
     const result = await aiOrchestrator.generate('Test when Tauri fails', []);
@@ -915,7 +941,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Provider Isolation', () => {
   it('should isolate Ollama endpoint failures', async () => {
     // Mock Ollama endpoint to be unreachable
     const originalFetch = global.fetch;
-    global.fetch = vi.fn().mockImplementation((url) => {
+    global.fetch = vi.fn().mockImplementation(url => {
       if (typeof url === 'string' && url.includes('ollama')) {
         return Promise.reject(new Error('Connection refused'));
       }
@@ -938,7 +964,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Provider Isolation', () => {
     vi.stubGlobal('fetch', mockFetch);
 
     vi.mock('../../../core/commands/TAURI_COMMANDS', () => ({
-      invokeTauri: vi.fn().mockRejectedValue(new Error('Backend down'))
+      invokeTauri: vi.fn().mockRejectedValue(new Error('Backend down')),
     }));
 
     const result = await aiOrchestrator.generate('Ultimate fallback test', []);
@@ -992,7 +1018,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Full System Integration', () => {
     const errorResponses = await Promise.all([
       aiOrchestrator.generate('Test 1 during errors', []),
       aiOrchestrator.generate('Test 2 during errors', []),
-      aiOrchestrator.generate('Test 3 during errors', [])
+      aiOrchestrator.generate('Test 3 during errors', []),
     ]);
 
     errorResponses.forEach(response => {
@@ -1004,7 +1030,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Full System Integration', () => {
     const longContext: AIMessage[] = Array.from({ length: 100 }, (_, i) => ({
       role: i % 2 === 0 ? 'user' : 'assistant',
       content: `Context message ${i + 1}`,
-      timestamp: Date.now() - (100 - i) * 1000
+      timestamp: Date.now() - (100 - i) * 1000,
     }));
 
     const response6 = await aiOrchestrator.generate('Summarize context', longContext);
@@ -1013,7 +1039,9 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Full System Integration', () => {
 
     // 7. Offrir cohérence TITANE∞ (TITANE consistency)
     const response7 = await aiOrchestrator.generate('OMEGA Test: Who are you?', []);
-    expect(response7.content.toLowerCase()).toMatch(/(titane|intelligence|cognitive|système)/);
+    expect(response7.content.toLowerCase()).toMatch(
+      /(titane|intelligence|cognitive|système)/
+    );
 
     console.log('🟣 OMEGA Phase 7Ω - All criteria validated successfully');
   });
@@ -1031,9 +1059,9 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Full System Integration', () => {
         context: Array.from({ length: 50 }, (_, i) => ({
           role: i % 2 === 0 ? 'user' : 'assistant',
           content: `Stress context ${i}`,
-          timestamp: Date.now() - i * 1000
-        }))
-      }
+          timestamp: Date.now() - i * 1000,
+        })),
+      },
     ];
 
     // Mock intermittent failures
@@ -1045,9 +1073,10 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Full System Integration', () => {
       }
       return Promise.resolve({
         ok: true,
-        json: () => Promise.resolve({
-          candidates: [{ content: { parts: [{ text: 'Stress test response' }] } }]
-        })
+        json: () =>
+          Promise.resolve({
+            candidates: [{ content: { parts: [{ text: 'Stress test response' }] } }],
+          }),
       } as Response);
     });
 
@@ -1167,10 +1196,13 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Complete Chat Flow', () => {
     fireEvent.click(sendButton);
 
     // Should eventually show the user message without crashing
-    await waitFor(() => {
-      const messages = screen.getAllByText(/ui integration test/i);
-      expect(messages.length).toBeGreaterThan(0);
-    }, { timeout: 10000 });
+    await waitFor(
+      () => {
+        const messages = screen.getAllByText(/ui integration test/i);
+        expect(messages.length).toBeGreaterThan(0);
+      },
+      { timeout: 10000 }
+    );
   });
 
   it('should preserve conversation context through multiple exchanges', async () => {
@@ -1205,7 +1237,9 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Error Recovery', () => {
         yield undefined as never;
       })();
     });
-    const generateSpy = vi.spyOn(chatEngine, 'generate').mockRejectedValue(new Error('All providers down'));
+    const generateSpy = vi
+      .spyOn(chatEngine, 'generate')
+      .mockRejectedValue(new Error('All providers down'));
 
     try {
       const { result } = renderHook(() => useChat());
@@ -1214,10 +1248,17 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Error Recovery', () => {
         await result.current.sendMessage('Test when everything fails');
       });
 
-      const assistantMessages = result.current.messages.filter(message => message.role === 'assistant');
-      console.log('Providers (all fail):', assistantMessages.map(msg => msg.provider));
+      const assistantMessages = result.current.messages.filter(
+        message => message.role === 'assistant'
+      );
+      console.log(
+        'Providers (all fail):',
+        assistantMessages.map(msg => msg.provider)
+      );
       expect(assistantMessages.length).toBeGreaterThan(0);
-      expect(assistantMessages[assistantMessages.length - 1]?.provider).toBe('omnis-fallback');
+      expect(assistantMessages[assistantMessages.length - 1]?.provider).toBe(
+        'omnis-fallback'
+      );
       expect(result.current.isLoading).toBe(false);
     } finally {
       streamSpy.mockRestore();
@@ -1232,7 +1273,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Error Recovery', () => {
         null, // Null message
         { role: 'user' }, // Missing content
         { content: 'Test' }, // Missing role
-        { role: 'user', content: 'Valid message', timestamp: Date.now() }
+        { role: 'user', content: 'Valid message', timestamp: Date.now() },
       ] as any);
 
       return <MessageList messages={messages} isLoading={false} />;
@@ -1249,7 +1290,8 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Error Recovery', () => {
         yield undefined as never;
       })();
     });
-    const generateSpy = vi.spyOn(chatEngine, 'generate')
+    const generateSpy = vi
+      .spyOn(chatEngine, 'generate')
       .mockRejectedValueOnce(new Error('Network error'))
       .mockResolvedValue(createMockResponse('Network recovered'));
 
@@ -1266,10 +1308,17 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Error Recovery', () => {
         await result.current.sendMessage('Test auto-healing again');
       });
 
-      const assistantMessages = result.current.messages.filter(message => message.role === 'assistant');
-      console.log('Messages after network auto-heal:', assistantMessages.map(msg => msg.content));
+      const assistantMessages = result.current.messages.filter(
+        message => message.role === 'assistant'
+      );
+      console.log(
+        'Messages after network auto-heal:',
+        assistantMessages.map(msg => msg.content)
+      );
       expect(assistantMessages.length).toBeGreaterThanOrEqual(2);
-      expect(assistantMessages[assistantMessages.length - 1]?.content).toBe('Network recovered');
+      expect(assistantMessages[assistantMessages.length - 1]?.content).toBe(
+        'Network recovered'
+      );
     } finally {
       streamSpy.mockRestore();
       generateSpy.mockRestore();
@@ -1277,14 +1326,16 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Error Recovery', () => {
   });
 
   it('should maintain state consistency during concurrent operations', async () => {
-    vi.spyOn(chatEngine, 'generate').mockResolvedValue(createMockResponse('Concurrent response'));
+    vi.spyOn(chatEngine, 'generate').mockResolvedValue(
+      createMockResponse('Concurrent response')
+    );
     const { result } = renderHook(() => useChat());
 
     // Send multiple messages concurrently
     const promises = [
       result.current.sendMessage('Concurrent message 1'),
       result.current.sendMessage('Concurrent message 2'),
-      result.current.sendMessage('Concurrent message 3')
+      result.current.sendMessage('Concurrent message 3'),
     ];
 
     await act(async () => {
@@ -1294,12 +1345,18 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Error Recovery', () => {
     expect(result.current.messages.length).toBeGreaterThanOrEqual(6);
     expect(result.current.isLoading).toBe(false);
 
-    const userMessages = result.current.messages.filter(message => message.role === 'user');
-    const assistantMessages = result.current.messages.filter(message => message.role === 'assistant');
+    const userMessages = result.current.messages.filter(
+      message => message.role === 'user'
+    );
+    const assistantMessages = result.current.messages.filter(
+      message => message.role === 'assistant'
+    );
 
     expect(userMessages.length).toBe(3);
     expect(assistantMessages.length).toBe(3);
-    expect(result.current.messages[result.current.messages.length - 1].role).toBe('assistant');
+    expect(result.current.messages[result.current.messages.length - 1].role).toBe(
+      'assistant'
+    );
   });
 });
 
@@ -1335,14 +1392,27 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Performance', () => {
     const largeHistory: AIMessage[] = [];
     for (let i = 0; i < 100; i++) {
       largeHistory.push(
-        { role: 'user', content: `User message ${i + 1}`, timestamp: Date.now() - (100 - i) * 1000 },
-        { role: 'assistant', content: `Assistant response ${i + 1}`, timestamp: Date.now() - (100 - i) * 1000 + 500 }
+        {
+          role: 'user',
+          content: `User message ${i + 1}`,
+          timestamp: Date.now() - (100 - i) * 1000,
+        },
+        {
+          role: 'assistant',
+          content: `Assistant response ${i + 1}`,
+          timestamp: Date.now() - (100 - i) * 1000 + 500,
+        }
       );
     }
 
     localStorage.setItem(
       'titane_chat_mode_default',
-      JSON.stringify({ mode: 'default', messages: largeHistory, compressed: [], lastCompacted: Date.now() })
+      JSON.stringify({
+        mode: 'default',
+        messages: largeHistory,
+        compressed: [],
+        lastCompacted: Date.now(),
+      })
     );
 
     const { result } = renderHook(() => useChat());
@@ -1385,7 +1455,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Performance', () => {
       'Second rapid message',
       'Third rapid message',
       'Fourth rapid message',
-      'Fifth rapid message'
+      'Fifth rapid message',
     ];
 
     const startTime = Date.now();
@@ -1419,7 +1489,9 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Full System Integration', () => {
     await act(async () => {
       await result.current.sendMessage('OMEGA Test: Always respond');
     });
-    expect(result.current.messages[result.current.messages.length - 1].content).toBeTruthy();
+    expect(
+      result.current.messages[result.current.messages.length - 1].content
+    ).toBeTruthy();
 
     // 2. Ne jamais geler (never freeze)
     const timeoutPromise = new Promise((_, reject) =>
@@ -1439,7 +1511,9 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Full System Integration', () => {
     await act(async () => {
       await result.current.sendMessage('OMEGA Test: Always fallback');
     });
-    expect(result.current.messages[result.current.messages.length - 1].content).toBeTruthy();
+    expect(
+      result.current.messages[result.current.messages.length - 1].content
+    ).toBeTruthy();
 
     // 4. S'auto-guérir (self-healing)
     // Already tested in provider tests
@@ -1449,7 +1523,9 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Full System Integration', () => {
     await act(async () => {
       await result.current.sendMessage('OMEGA Test: Error isolation works');
     });
-    expect(result.current.messages[result.current.messages.length - 1].content).toBeTruthy();
+    expect(
+      result.current.messages[result.current.messages.length - 1].content
+    ).toBeTruthy();
 
     // 6. Rester stable longtemps (long-term stability)
     // Tested with large history
@@ -1476,7 +1552,9 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Full System Integration', () => {
       await result.current.sendMessage('OMEGA Test: Who are you?');
     });
     const finalResponse = result.current.messages[result.current.messages.length - 1];
-    expect(finalResponse.content.toLowerCase()).toMatch(/(titane|intelligence|cognitive)/);
+    expect(finalResponse.content.toLowerCase()).toMatch(
+      /(titane|intelligence|cognitive)/
+    );
 
     // Final state validation
     expect(result.current.isLoading).toBe(false);
@@ -1497,7 +1575,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Full System Integration', () => {
       '🚀🤖💎✨🟣', // Emojis only
       'Stress test 4: After emojis',
       'Test with <script>alert("test")</script>', // Dangerous content
-      'Stress test 5: Final message'
+      'Stress test 5: Final message',
     ];
 
     const startTime = Date.now();
@@ -1515,7 +1593,8 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Full System Integration', () => {
     }
 
     const endTime = Date.now();
-    const expectedMinimumPairs = stressMessages.filter(message => message.trim().length > 0).length * 2;
+    const expectedMinimumPairs =
+      stressMessages.filter(message => message.trim().length > 0).length * 2;
 
     // Performance validation
     expect(endTime - startTime).toBeLessThan(120000); // Max 2 minutes
@@ -1682,25 +1761,31 @@ vi.mock('@tauri-apps/api/core', () => ({
       case 'autofix_detect_react_hook_violations':
       case 'autofix_detect_invalid_states':
         // Simuler détection aléatoire
-        return Math.random() > 0.7 ? [{
-          id: `issue_${Date.now()}`,
-          issue_type: 'warning',
-          severity: 'low',
-          description: 'Simulated issue',
-          source: 'test',
-          detected_at: Date.now(),
-          fixable: true,
-        }] : [];
+        return Math.random() > 0.7
+          ? [
+              {
+                id: `issue_${Date.now()}`,
+                issue_type: 'warning',
+                severity: 'low',
+                description: 'Simulated issue',
+                source: 'test',
+                detected_at: Date.now(),
+                fixable: true,
+              },
+            ]
+          : [];
 
       case 'autofix_fix_issue':
       case 'autofix_fix_all':
-        return [{
-          issue_id: args?.issue_id || 'test',
-          success: true,
-          actions_taken: ['Applied fix'],
-          duration: Math.random() * 100,
-          timestamp: Date.now(),
-        }];
+        return [
+          {
+            issue_id: args?.issue_id || 'test',
+            success: true,
+            actions_taken: ['Applied fix'],
+            duration: Math.random() * 100,
+            timestamp: Date.now(),
+          },
+        ];
 
       case 'autofix_get_stats':
         return {
@@ -1711,12 +1796,16 @@ vi.mock('@tauri-apps/api/core', () => ({
 
       // AutoHeal
       case 'autoheal_detect_broken_modules':
-        return Math.random() > 0.8 ? [{
-          module_type: 'cognitive',
-          severity: 'medium',
-          error: 'Simulated error',
-          detected_at: Date.now(),
-        }] : [];
+        return Math.random() > 0.8
+          ? [
+              {
+                module_type: 'cognitive',
+                severity: 'medium',
+                error: 'Simulated error',
+                detected_at: Date.now(),
+              },
+            ]
+          : [];
 
       case 'autoheal_heal_cognitive_module':
       case 'autoheal_heal_avatar_module':
@@ -1750,15 +1839,19 @@ vi.mock('@tauri-apps/api/core', () => ({
 
       // CrashGuard
       case 'crashguard_detect_threats':
-        return Math.random() > 0.95 ? [{
-          id: `threat_${Date.now()}`,
-          threat_type: 'memory_overflow',
-          severity: 'low',
-          description: 'Simulated threat',
-          source: 'test',
-          detected_at: Date.now(),
-          preventable: true,
-        }] : [];
+        return Math.random() > 0.95
+          ? [
+              {
+                id: `threat_${Date.now()}`,
+                threat_type: 'memory_overflow',
+                severity: 'low',
+                description: 'Simulated threat',
+                source: 'test',
+                detected_at: Date.now(),
+                preventable: true,
+              },
+            ]
+          : [];
 
       default:
         return { success: true };
@@ -1774,14 +1867,14 @@ describe('SINGULARITY-FUSION vΩ - E2E Automated Validation', async () => {
       const results = [];
 
       for (let i = 0; i < 100; i++) {
-        const intention = await invoke('pipeline_analyze_intention', {
+        const intention = (await invoke('pipeline_analyze_intention', {
           message: `Test message ${i}`,
-        }) as IntentionResponse;
+        })) as IntentionResponse;
 
-        const response = await invoke('pipeline_generate_cognitive_response', {
+        const response = (await invoke('pipeline_generate_cognitive_response', {
           message: `Test ${i}`,
           intention: intention.primary,
-        }) as CognitiveResponse;
+        })) as CognitiveResponse;
 
         expect(intention).toBeDefined();
         expect(response).toBeDefined();
@@ -1791,7 +1884,11 @@ describe('SINGULARITY-FUSION vΩ - E2E Automated Validation', async () => {
       }
 
       expect(results).toHaveLength(100);
-      const avgConfidence = results.reduce((sum, r) => sum + (r.response as CognitiveResponse).confidence, 0) / 100;
+      const avgConfidence =
+        results.reduce(
+          (sum, r) => sum + (r.response as CognitiveResponse).confidence,
+          0
+        ) / 100;
       expect(avgConfidence).toBeGreaterThan(0.7);
     }, 30000); // 30s timeout
   });
@@ -1807,13 +1904,18 @@ describe('SINGULARITY-FUSION vΩ - E2E Automated Validation', async () => {
         const brokenModules = await invoke('autoheal_detect_broken_modules');
 
         // Réparer si nécessaire
-        if ((rustWarnings as unknown[]).length > 0 || (tsErrors as unknown[]).length > 0) {
+        if (
+          (rustWarnings as unknown[]).length > 0 ||
+          (tsErrors as unknown[]).length > 0
+        ) {
           await invoke('autofix_fix_all');
         }
 
         if ((brokenModules as unknown[]).length > 0) {
           for (const module of brokenModules as Record<string, unknown>[]) {
-            await invoke('autoheal_heal_cognitive_module', { module_type: module.module_type });
+            await invoke('autoheal_heal_cognitive_module', {
+              module_type: module.module_type,
+            });
           }
         }
 
@@ -1825,7 +1927,8 @@ describe('SINGULARITY-FUSION vΩ - E2E Automated Validation', async () => {
       }
 
       expect(cycles).toHaveLength(50);
-      const avgIntegrity = cycles.reduce((sum, c) => sum + (c.integrity as number), 0) / 50;
+      const avgIntegrity =
+        cycles.reduce((sum, c) => sum + (c.integrity as number), 0) / 50;
       expect(avgIntegrity).toBeGreaterThan(0.9);
     }, 60000); // 60s timeout
   });
@@ -1876,14 +1979,14 @@ describe('SINGULARITY-FUSION vΩ - E2E Automated Validation', async () => {
     it('should handle long context without degradation', async () => {
       const longMessage = 'a'.repeat(20000); // Simuler 20k chars
 
-      const intention = await invoke('pipeline_analyze_intention', {
+      const intention = (await invoke('pipeline_analyze_intention', {
         message: longMessage,
-      }) as IntentionResponse;
+      })) as IntentionResponse;
 
-      const response = await invoke('pipeline_generate_cognitive_response', {
+      const response = (await invoke('pipeline_generate_cognitive_response', {
         message: longMessage,
         intention: intention.primary,
-      }) as CognitiveResponse;
+      })) as CognitiveResponse;
 
       expect(intention).toBeDefined();
       expect(response).toBeDefined();
@@ -1908,15 +2011,17 @@ describe('SINGULARITY-FUSION vΩ - E2E Automated Validation', async () => {
     }, 20000);
 
     it('should handle concurrent operations', async () => {
-      const operations = Array(50).fill(null).map(async () => {
-        const [state, metrics, stats] = await Promise.all([
-          invoke('singularity_get_fusion_state'),
-          invoke('performance_get_metrics'),
-          invoke('pipeline_get_stats'),
-        ]);
+      const operations = Array(50)
+        .fill(null)
+        .map(async () => {
+          const [state, metrics, stats] = await Promise.all([
+            invoke('singularity_get_fusion_state'),
+            invoke('performance_get_metrics'),
+            invoke('pipeline_get_stats'),
+          ]);
 
-        return { state, metrics, stats };
-      });
+          return { state, metrics, stats };
+        });
 
       const results = await Promise.all(operations);
       expect(results).toHaveLength(50);
@@ -1935,7 +2040,7 @@ describe('SINGULARITY-FUSION vΩ - E2E Automated Validation', async () => {
 
       for (let i = 0; i < 20; i++) {
         // Simuler détection de problèmes
-        void await invoke('crashguard_detect_threats');
+        void (await invoke('crashguard_detect_threats'));
         const broken = await invoke('autoheal_detect_broken_modules');
 
         // Auto-heal si nécessaire
@@ -1959,10 +2064,10 @@ describe('SINGULARITY-FUSION vΩ - E2E Automated Validation', async () => {
 
   describe('✅ Validation Omega Finale', () => {
     it('should have zero critical issues', async () => {
-      const state = await invoke('singularity_get_fusion_state') as FusionStateResponse;
-      const integrity = await invoke('singularity_check_integrity') as number;
-      const metrics = await invoke('performance_get_metrics') as PerformanceMetrics;
-      const stats = await invoke('autofix_get_stats') as AutoFixStats;
+      const state = (await invoke('singularity_get_fusion_state')) as FusionStateResponse;
+      const integrity = (await invoke('singularity_check_integrity')) as number;
+      const metrics = (await invoke('performance_get_metrics')) as PerformanceMetrics;
+      const stats = (await invoke('autofix_get_stats')) as AutoFixStats;
 
       // Zero critical issues
       expect(state.inconsistencies_detected).toBeLessThan(5);
@@ -1975,7 +2080,10 @@ describe('SINGULARITY-FUSION vΩ - E2E Automated Validation', async () => {
       const samples: Array<{ cpu_usage: number; memory_usage: number }> = [];
 
       for (let i = 0; i < 10; i++) {
-        const metrics = await invoke('performance_get_metrics') as { cpu_usage: number; memory_usage: number };
+        const metrics = (await invoke('performance_get_metrics')) as {
+          cpu_usage: number;
+          memory_usage: number;
+        };
         samples.push(metrics);
       }
 
@@ -1988,23 +2096,25 @@ describe('SINGULARITY-FUSION vΩ - E2E Automated Validation', async () => {
 
     it('should complete full system health check', async () => {
       // Fusion state
-      const fusionState = await invoke('singularity_get_fusion_state') as FusionStateResponse;
+      const fusionState = (await invoke(
+        'singularity_get_fusion_state'
+      )) as FusionStateResponse;
       expect(fusionState.fusion_integrity).toBeGreaterThan(0.85);
 
       // Pipeline health
-      const pipelineStats = await invoke('pipeline_get_stats') as PipelineStats;
+      const pipelineStats = (await invoke('pipeline_get_stats')) as PipelineStats;
       expect(pipelineStats.success_rate).toBeGreaterThan(0.9);
 
       // Performance health
-      const perfMetrics = await invoke('performance_get_metrics') as PerformanceMetrics;
+      const perfMetrics = (await invoke('performance_get_metrics')) as PerformanceMetrics;
       expect(perfMetrics.fps).toBeGreaterThan(30);
 
       // Security health
-      const threats = await invoke('crashguard_detect_threats') as unknown[];
+      const threats = (await invoke('crashguard_detect_threats')) as unknown[];
       expect(threats.length).toBeLessThan(3);
 
       // Auto-fix health
-      const autofixStats = await invoke('autofix_get_stats') as AutoFixStats;
+      const autofixStats = (await invoke('autofix_get_stats')) as AutoFixStats;
       expect(autofixStats.success_rate).toBeGreaterThan(0.8);
     });
   });

@@ -3,10 +3,10 @@
 //! Super Prompt #13 — Application des règles constitutionnelles et sanctions
 //! ═══════════════════════════════════════════════════════════════════════════════
 
+use super::{ComplianceResult, ComplianceStatus, ConstitutionalAction};
 use serde::{Deserialize, Serialize};
-use tokio::sync::RwLock;
 use std::collections::HashMap;
-use super::{ConstitutionalAction, ComplianceResult, ComplianceStatus};
+use tokio::sync::RwLock;
 
 /// Sévérité d'une violation
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
@@ -143,7 +143,11 @@ impl EnforcementEngine {
     }
 
     /// Applique les sanctions pour une non-conformité
-    pub async fn enforce(&self, action: &ConstitutionalAction, compliance: &ComplianceResult) -> Vec<SanctionType> {
+    pub async fn enforce(
+        &self,
+        action: &ConstitutionalAction,
+        compliance: &ComplianceResult,
+    ) -> Vec<SanctionType> {
         if compliance.status == ComplianceStatus::Compliant {
             return vec![];
         }
@@ -155,8 +159,16 @@ impl EnforcementEngine {
         let severity = self.determine_severity(compliance);
 
         // Trouver les règles applicables
-        let applicable_rules: Vec<_> = state.rules.iter()
-            .filter(|r| r.active && compliance.violations.iter().any(|v| v.contains(&r.trigger_pattern)))
+        let applicable_rules: Vec<_> = state
+            .rules
+            .iter()
+            .filter(|r| {
+                r.active
+                    && compliance
+                        .violations
+                        .iter()
+                        .any(|v| v.contains(&r.trigger_pattern))
+            })
             .cloned()
             .collect();
 
@@ -189,14 +201,16 @@ impl EnforcementEngine {
         state.violations.push(record);
 
         // Mettre à jour les violations par acteur
-        state.actor_violations
+        state
+            .actor_violations
             .entry(action.requester.clone())
             .or_default()
             .push(violation_id);
 
         // Appliquer les restrictions actives
         if !sanctions.is_empty() {
-            state.active_restrictions
+            state
+                .active_restrictions
                 .entry(action.requester.clone())
                 .or_default()
                 .extend(sanctions.clone());
@@ -227,7 +241,12 @@ impl EnforcementEngine {
     }
 
     /// Vérifie si une escalation est nécessaire
-    fn check_escalation(&self, state: &mut EnforcementState, actor: &str, sanctions: &mut Vec<SanctionType>) {
+    fn check_escalation(
+        &self,
+        state: &mut EnforcementState,
+        actor: &str,
+        sanctions: &mut Vec<SanctionType>,
+    ) {
         if let Some(actor_violations) = state.actor_violations.get(actor) {
             let violation_count = actor_violations.len();
 
@@ -239,7 +258,9 @@ impl EnforcementEngine {
                     privileges: vec!["advanced_operations".to_string()],
                 });
             } else if violation_count >= 3 {
-                sanctions.push(SanctionType::TemporaryRestriction { duration_ms: 300000 });
+                sanctions.push(SanctionType::TemporaryRestriction {
+                    duration_ms: 300000,
+                });
             }
         }
     }
@@ -253,7 +274,11 @@ impl EnforcementEngine {
     /// Récupère les restrictions actives
     pub async fn get_restrictions(&self, actor: &str) -> Vec<SanctionType> {
         let state = self.state.read().await;
-        state.active_restrictions.get(actor).cloned().unwrap_or_default()
+        state
+            .active_restrictions
+            .get(actor)
+            .cloned()
+            .unwrap_or_default()
     }
 
     /// Lève une restriction
@@ -282,7 +307,9 @@ impl EnforcementEngine {
     /// Récupère les violations non résolues
     pub async fn unresolved_violations(&self) -> Vec<ViolationRecord> {
         let state = self.state.read().await;
-        state.violations.iter()
+        state
+            .violations
+            .iter()
             .filter(|v| !v.resolved)
             .cloned()
             .collect()
@@ -291,16 +318,23 @@ impl EnforcementEngine {
     /// Récupère les violations par acteur
     pub async fn violations_by_actor(&self, actor: &str) -> Vec<ViolationRecord> {
         let state = self.state.read().await;
-        state.violations.iter()
+        state
+            .violations
+            .iter()
             .filter(|v| v.actor == actor)
             .cloned()
             .collect()
     }
 
     /// Récupère les violations par sévérité
-    pub async fn violations_by_severity(&self, severity: ViolationSeverity) -> Vec<ViolationRecord> {
+    pub async fn violations_by_severity(
+        &self,
+        severity: ViolationSeverity,
+    ) -> Vec<ViolationRecord> {
         let state = self.state.read().await;
-        state.violations.iter()
+        state
+            .violations
+            .iter()
             .filter(|v| v.severity == severity)
             .cloned()
             .collect()
@@ -314,8 +348,8 @@ impl EnforcementEngine {
         let unresolved = state.violations.iter().filter(|v| !v.resolved).count();
         let restricted_actors = state.active_restrictions.len();
 
-        let by_severity: HashMap<ViolationSeverity, usize> = state.violations.iter()
-            .fold(HashMap::new(), |mut acc, v| {
+        let by_severity: HashMap<ViolationSeverity, usize> =
+            state.violations.iter().fold(HashMap::new(), |mut acc, v| {
                 *acc.entry(v.severity).or_insert(0) += 1;
                 acc
             });

@@ -220,7 +220,10 @@ export class SingularityFusionEngine {
       // STEP 1: ANALYSE MESSAGE
       // ═══════════════════════════════════════════════════════════════
       const step1Start = performance.now();
-      const intention = await this.step1_Analyse(input.user_message, input.conversation_history);
+      const intention = await this.step1_Analyse(
+        input.user_message,
+        input.conversation_history
+      );
       stats.step1_analyse_ms = performance.now() - step1Start;
 
       // ═══════════════════════════════════════════════════════════════
@@ -327,7 +330,7 @@ export class SingularityFusionEngine {
   ): Promise<IntentionAnalysis> {
     try {
       // Utiliser CognitiveOptimizer pour analyse intention
-      const cognitiveMessages = history.map((msg) => ({
+      const cognitiveMessages = history.map(msg => ({
         role: msg.role,
         content: msg.content,
         tokens: Math.ceil(msg.content.length / 4),
@@ -338,11 +341,14 @@ export class SingularityFusionEngine {
       const basicIntention = await CognitiveOptimizer.analyzeIntention(message);
 
       // Enrichir avec analyse backend
-      const fullIntention = await secureInvoke<IntentionAnalysis>('fusion_analyze_intention', {
-        message,
-        history: cognitiveMessages,
-        basicAnalysis: basicIntention,
-      });
+      const fullIntention = await secureInvoke<IntentionAnalysis>(
+        'fusion_analyze_intention',
+        {
+          message,
+          history: cognitiveMessages,
+          basicAnalysis: basicIntention,
+        }
+      );
 
       return fullIntention;
     } catch (error) {
@@ -364,7 +370,9 @@ export class SingularityFusionEngine {
   // STEP 2: ACTIVATION MODULES
   // ═══════════════════════════════════════════════════════════════════
 
-  private async step2_ActivateModules(intention: IntentionAnalysis): Promise<ModuleActivation> {
+  private async step2_ActivateModules(
+    intention: IntentionAnalysis
+  ): Promise<ModuleActivation> {
     try {
       const activation = await secureInvoke<ModuleActivation>('fusion_activate_modules', {
         intention,
@@ -432,7 +440,7 @@ export class SingularityFusionEngine {
   ): Promise<string> {
     try {
       // Optimiser contexte avec CognitiveOptimizer
-      const cognitiveMessages = history.map((msg) => ({
+      const cognitiveMessages = history.map(msg => ({
         role: msg.role,
         content: msg.content,
         tokens: Math.ceil(msg.content.length / 4),
@@ -465,7 +473,7 @@ export class SingularityFusionEngine {
         : coherenceCheck.corrected_response || response;
     } catch (error) {
       console.error('[FusionEngine] Step 4 error:', error);
-      return "Je rencontre une difficulté technique. Pouvez-vous reformuler votre question ?";
+      return 'Je rencontre une difficulté technique. Pouvez-vous reformuler votre question ?';
     }
   }
 
@@ -495,7 +503,10 @@ export class SingularityFusionEngine {
   // STEP 6: LIP-SYNC PROCESSING
   // ═══════════════════════════════════════════════════════════════════
 
-  private async step6_LipSync(audioBuffer: ArrayBuffer, text: string): Promise<LipSyncData> {
+  private async step6_LipSync(
+    audioBuffer: ArrayBuffer,
+    text: string
+  ): Promise<LipSyncData> {
     try {
       const lipsyncData = await secureInvoke<LipSyncData>('fusion_process_lipsync', {
         audioBuffer,
@@ -578,7 +589,8 @@ export class SingularityFusionEngine {
 
       // Analyse des goulots d'étranglement avec seuils adaptatifs
       // Seuil plus permissif uniquement si cohérence très haute (système ultra-stable)
-      const iaThreshold = (this.currentState?.cognitive?.coherence ?? 0.5) > 0.98 ? 2600 : 2000;
+      const iaThreshold =
+        (this.currentState?.cognitive?.coherence ?? 0.5) > 0.98 ? 2600 : 2000;
       const ttsThreshold = 1000;
       const animThreshold = 500;
       const totalThreshold = 5000;
@@ -617,9 +629,10 @@ export class SingularityFusionEngine {
       }
 
       // Métriques détaillées
-      const efficiency = stats.total_ms > 0
-        ? ((stats.step4_generation_ms / stats.total_ms) * 100).toFixed(1)
-        : '0';
+      const efficiency =
+        stats.total_ms > 0
+          ? ((stats.step4_generation_ms / stats.total_ms) * 100).toFixed(1)
+          : '0';
 
       console.log('[FusionEngine v∞.Ω] Pipeline stats:', {
         total: `${stats.total_ms.toFixed(0)}ms`,
@@ -690,7 +703,9 @@ export async function executeAIResponse(
   // Récupérer état actuel
   const currentState = FusionEngine.getCurrentState();
   if (!currentState) {
-    throw new Error('FusionEngine not initialized. Call FusionEngine.initialize() first.');
+    throw new Error(
+      'FusionEngine not initialized. Call FusionEngine.initialize() first.'
+    );
   }
 
   return FusionEngine.executeSingularityCycle({

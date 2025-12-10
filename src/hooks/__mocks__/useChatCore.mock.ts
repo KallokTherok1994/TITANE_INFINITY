@@ -13,8 +13,8 @@ const mockResponse = (content: string): ChatEngineResponse => ({
     validationScore: 1,
     autoHealed: false,
     failureHandled: false,
-    processingTime: 1
-  }
+    processingTime: 1,
+  },
 });
 
 export function useChatCore(): UseChatCoreReturn {
@@ -34,7 +34,7 @@ export function useChatCore(): UseChatCoreReturn {
     validateResponse: () => ({
       isValid: true,
       score: 1,
-      issues: []
-    })
+      issues: [],
+    }),
   };
 }

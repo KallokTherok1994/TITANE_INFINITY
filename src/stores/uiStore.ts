@@ -51,58 +51,62 @@ const initialState = {
 export const useUIStore = create<UIStore>()(
   devtools(
     persist(
-      (set) => ({
+      set => ({
         ...initialState,
 
-        toggleSidebar: () => set((state) => ({ 
-          sidebarCollapsed: !state.sidebarCollapsed 
-        })),
+        toggleSidebar: () =>
+          set(state => ({
+            sidebarCollapsed: !state.sidebarCollapsed,
+          })),
 
-        setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
+        setSidebarCollapsed: collapsed => set({ sidebarCollapsed: collapsed }),
 
-        setSidebarWidth: (width) => set({ sidebarWidth: width }),
+        setSidebarWidth: width => set({ sidebarWidth: width }),
 
         openExpPanel: () => set({ expPanelOpen: true }),
 
         closeExpPanel: () => set({ expPanelOpen: false }),
 
-        openModal: (content) => set({ 
-          modalOpen: true, 
-          modalContent: content 
-        }),
+        openModal: content =>
+          set({
+            modalOpen: true,
+            modalContent: content,
+          }),
 
-        closeModal: () => set({ 
-          modalOpen: false, 
-          modalContent: null 
-        }),
+        closeModal: () =>
+          set({
+            modalOpen: false,
+            modalContent: null,
+          }),
 
-        addToast: (toast) => {
+        addToast: toast => {
           const id = crypto.randomUUID();
           const fullToast: Toast = { ...toast, id };
-          
-          set((state) => ({
+
+          set(state => ({
             toasts: [...state.toasts, fullToast],
           }));
 
           // Auto-remove after duration
           if (toast.duration !== undefined) {
             setTimeout(() => {
-              set((state) => ({
-                toasts: state.toasts.filter((t) => t.id !== id),
+              set(state => ({
+                toasts: state.toasts.filter(t => t.id !== id),
               }));
             }, toast.duration);
           }
         },
 
-        removeToast: (id) => set((state) => ({
-          toasts: state.toasts.filter((t) => t.id !== id),
-        })),
+        removeToast: id =>
+          set(state => ({
+            toasts: state.toasts.filter(t => t.id !== id),
+          })),
 
-        setLoading: (loading) => set({ loading }),
+        setLoading: loading => set({ loading }),
       }),
       {
         name: 'titane-ui-store',
-        partialize: (state) => ({
+        partialize: state => ({
           sidebarCollapsed: state.sidebarCollapsed,
           sidebarWidth: state.sidebarWidth,
         }),

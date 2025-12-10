@@ -142,11 +142,7 @@ impl BootOrchestrator {
                     if engine_info.priority == BootPriority::Critical {
                         // Engine critique échoué → abort complet
                         engine_info.state = EngineBootState::Failed(e.clone());
-                        log::error!(
-                            "❌ CRITICAL ENGINE FAILED: {} - {}",
-                            engine_info.name,
-                            e
-                        );
+                        log::error!("❌ CRITICAL ENGINE FAILED: {} - {}", engine_info.name, e);
                         return Err(format!(
                             "Critical engine '{}' failed to initialize: {}",
                             engine_info.name, e
@@ -169,7 +165,10 @@ impl BootOrchestrator {
 
         log::info!("╔══════════════════════════════════════════════════════════════╗");
         log::info!("║     TITANE∞ BOOT COMPLETE — SYSTEM READY                    ║");
-        log::info!("║     Total boot time: {}ms                                   ║", self.total_duration_ms);
+        log::info!(
+            "║     Total boot time: {}ms                                   ║",
+            self.total_duration_ms
+        );
         log::info!("╚══════════════════════════════════════════════════════════════╝");
 
         Ok(())
@@ -199,7 +198,11 @@ impl BootOrchestrator {
 
             // Timeout init engine
             // Timeout init engine
-            let result = timeout(timeout_duration, Self::init_engine_static(&engine_info.name)).await;
+            let result = timeout(
+                timeout_duration,
+                Self::init_engine_static(&engine_info.name),
+            )
+            .await;
             let duration_ms = start.elapsed().as_millis() as u64;
 
             match result {

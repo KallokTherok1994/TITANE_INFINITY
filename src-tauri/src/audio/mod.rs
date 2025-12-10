@@ -7,22 +7,28 @@
 pub mod asr;
 #[cfg(feature = "audio-capture")]
 pub mod capture;
+pub mod commands;
 pub mod recorder;
 pub mod recording_engine;
 pub mod streaming_engine; // NEW: Real-time streaming with CPAL
-pub mod whisper_streaming; // NEW v19.3.1: Real-time Whisper streaming
 pub mod vad;
 pub mod voice_fingerprint; // NEW v∞: Voice fingerprinting (SP-VOICE-001 Layer 3)
-pub mod commands;
+pub mod whisper_streaming; // NEW v19.3.1: Real-time Whisper streaming
 
 #[cfg(feature = "audio-capture")]
-pub use capture::{AudioCaptureState, list_input_devices, list_output_devices};
+pub use capture::{list_input_devices, list_output_devices, AudioCaptureState};
 pub use commands::*;
-pub use recording_engine::{RecordingConfig, RecordingEngine, RecordingResult, RecordingState, RECORDING_ENGINE};
-pub use streaming_engine::{StreamingAudioEngine, StreamingConfig, StreamingResult, StreamingState};
-pub use whisper_streaming::{WhisperStreamingEngine, WhisperStreamConfig, TranscriptionEvent, TranscriptionType, AudioChunk};
-pub use vad::{VoiceActivityDetector, VADState};
-pub use voice_fingerprint::{VoiceFingerprint, VoiceFeatures, VoiceProfile};
+pub use recording_engine::{
+    RecordingConfig, RecordingEngine, RecordingResult, RecordingState, RECORDING_ENGINE,
+};
+pub use streaming_engine::{
+    StreamingAudioEngine, StreamingConfig, StreamingResult, StreamingState,
+};
+pub use vad::{VADState, VoiceActivityDetector};
+pub use voice_fingerprint::{VoiceFeatures, VoiceFingerprint, VoiceProfile};
+pub use whisper_streaming::{
+    AudioChunk, TranscriptionEvent, TranscriptionType, WhisperStreamConfig, WhisperStreamingEngine,
+};
 
 use serde::{Deserialize, Serialize};
 

@@ -110,7 +110,9 @@ impl TemporalMetrics {
     /// Met à jour la santé d'un composant
     pub async fn update_component_health(&self, component: &str, health: f32) {
         let mut state = self.state.write().await;
-        state.component_health.insert(component.to_string(), health.clamp(0.0, 1.0));
+        state
+            .component_health
+            .insert(component.to_string(), health.clamp(0.0, 1.0));
     }
 
     /// Calcule la santé globale
@@ -141,14 +143,20 @@ impl TemporalMetrics {
         if tick_health < 0.5 {
             issues.push(HealthIssue {
                 component: "ticks".to_string(),
-                severity: if tick_health < 0.3 { IssueSeverity::Error } else { IssueSeverity::Warning },
+                severity: if tick_health < 0.3 {
+                    IssueSeverity::Error
+                } else {
+                    IssueSeverity::Warning
+                },
                 description: "Tick performance degraded".to_string(),
                 detected_at: Self::now(),
             });
         }
 
         // Ajouter les erreurs récentes comme issues
-        let recent_errors: Vec<_> = state.errors.iter()
+        let recent_errors: Vec<_> = state
+            .errors
+            .iter()
             .filter(|e| Self::now() - e.timestamp < 300000) // 5 minutes
             .collect();
 
@@ -188,7 +196,8 @@ impl TemporalMetrics {
             return 1.0;
         }
 
-        let average: f64 = state.tick_durations.iter().sum::<u64>() as f64 / state.tick_durations.len() as f64;
+        let average: f64 =
+            state.tick_durations.iter().sum::<u64>() as f64 / state.tick_durations.len() as f64;
 
         // Seuils de performance (en ms)
         let excellent = 10.0;

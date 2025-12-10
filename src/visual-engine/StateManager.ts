@@ -11,7 +11,11 @@
 
 import EventEmitter from 'eventemitter3';
 import type { VisualState, StateVisualConfig } from '@/design-system/visual-states';
-import { visualStates, interpolateStates, canTransition } from '@/design-system/visual-states';
+import {
+  visualStates,
+  interpolateStates,
+  canTransition,
+} from '@/design-system/visual-states';
 
 // Re-export VisualState for other modules
 export type { VisualState, StateVisualConfig };

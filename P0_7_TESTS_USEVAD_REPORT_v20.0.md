@@ -105,18 +105,18 @@
 
 ### 📋 Couverture Méthodes
 
-| Méthode | Testée | Coverage |
-|---------|--------|----------|
-| `startListening()` | ✅ | 100% |
-| `stopListening()` | ✅ | 100% |
-| `processAudioData()` | ✅ | 100% |
-| `configure()` | ✅ | 100% |
-| `reset()` | ✅ | 100% |
-| `runTest()` | ✅ | 100% |
-| `suspendForTTS()` | ✅ | 100% |
-| `resumeAfterTTS()` | ✅ | 100% |
-| `enableBargeIn()` | ✅ | 100% |
-| `disableBargeIn()` | ✅ | 100% |
+| Méthode              | Testée | Coverage |
+| -------------------- | ------ | -------- |
+| `startListening()`   | ✅     | 100%     |
+| `stopListening()`    | ✅     | 100%     |
+| `processAudioData()` | ✅     | 100%     |
+| `configure()`        | ✅     | 100%     |
+| `reset()`            | ✅     | 100%     |
+| `runTest()`          | ✅     | 100%     |
+| `suspendForTTS()`    | ✅     | 100%     |
+| `resumeAfterTTS()`   | ✅     | 100%     |
+| `enableBargeIn()`    | ✅     | 100%     |
+| `disableBargeIn()`   | ✅     | 100%     |
 
 ### 🔧 Mocks Implémentés
 
@@ -148,22 +148,22 @@
 
 ## 📈 Métriques Performance
 
-| Métrique | Valeur | Cible | Status |
-|----------|--------|-------|--------|
-| Tests passés | 51/51 | 51/51 | ✅ 100% |
-| Temps exécution | 69ms | <100ms | ✅ Excellent |
-| Coverage | >80% | >70% | ✅ Dépassé |
-| Assertions totales | 150+ | N/A | ✅ |
-| Mocks stables | 6 | 6 | ✅ |
+| Métrique           | Valeur | Cible  | Status       |
+| ------------------ | ------ | ------ | ------------ |
+| Tests passés       | 51/51  | 51/51  | ✅ 100%      |
+| Temps exécution    | 69ms   | <100ms | ✅ Excellent |
+| Coverage           | >80%   | >70%   | ✅ Dépassé   |
+| Assertions totales | 150+   | N/A    | ✅           |
+| Mocks stables      | 6      | 6      | ✅           |
 
 ### Comparaison P0-5, P0-6, P0-7
 
-| Correction | Tests | Passés | Durée | Coverage |
-|------------|-------|--------|-------|----------|
-| P0-5 (audioStateMachine) | 51 | 51 (100%) | 16ms | 100% |
-| P0-6 (useTTSWithMicControl) | 35 | 35 (100%) | 60ms | >80% |
-| P0-7 (useVAD) | 51 | 51 (100%) | 69ms | >80% |
-| **TOTAL** | **137** | **137 (100%)** | **145ms** | **>85%** |
+| Correction                  | Tests   | Passés         | Durée     | Coverage |
+| --------------------------- | ------- | -------------- | --------- | -------- |
+| P0-5 (audioStateMachine)    | 51      | 51 (100%)      | 16ms      | 100%     |
+| P0-6 (useTTSWithMicControl) | 35      | 35 (100%)      | 60ms      | >80%     |
+| P0-7 (useVAD)               | 51      | 51 (100%)      | 69ms      | >80%     |
+| **TOTAL**                   | **137** | **137 (100%)** | **145ms** | **>85%** |
 
 ---
 
@@ -291,10 +291,10 @@ it('should emit VAD_SPEECH_START on speech start', async () => {
 
 ## 📦 Fichiers Créés
 
-| Fichier | Lignes | Description |
-|---------|--------|-------------|
-| `src/__tests__/useVAD.test.ts` | 925 | 51 tests unitaires |
-| `P0_7_TESTS_USEVAD_REPORT_v20.0.md` | 300+ | Ce rapport |
+| Fichier                             | Lignes | Description        |
+| ----------------------------------- | ------ | ------------------ |
+| `src/__tests__/useVAD.test.ts`      | 925    | 51 tests unitaires |
+| `P0_7_TESTS_USEVAD_REPORT_v20.0.md` | 300+   | Ce rapport         |
 
 ---
 
@@ -310,12 +310,14 @@ it('should emit VAD_SPEECH_START on speech start', async () => {
 ### 📚 Best Practices
 
 1. **Web Audio API Mocking**:
+
    ```typescript
    global.AudioContext = MockAudioContext as any;
-   global.requestAnimationFrame = vi.fn((callback) => setTimeout(callback, 16));
+   global.requestAnimationFrame = vi.fn(callback => setTimeout(callback, 16));
    ```
 
 2. **Async Testing**:
+
    ```typescript
    await act(async () => {
      await result.current.startListening();
@@ -325,7 +327,9 @@ it('should emit VAD_SPEECH_START on speech start', async () => {
 3. **Timer Mocking**:
    ```typescript
    vi.useFakeTimers();
-   await act(async () => { vi.advanceTimersByTime(300); });
+   await act(async () => {
+     vi.advanceTimersByTime(300);
+   });
    vi.useRealTimers();
    ```
 
@@ -367,14 +371,14 @@ it('should emit VAD_SPEECH_START on speech start', async () => {
 
 ## 📊 KPIs Finaux
 
-| KPI | Valeur | Objectif | Status |
-|-----|--------|----------|--------|
-| Tests créés | 51 | >40 | ✅ Dépassé |
-| Success rate | 100% | 100% | ✅ Parfait |
-| Coverage | >80% | >70% | ✅ Dépassé |
-| Durée execution | 69ms | <100ms | ✅ Excellent |
-| Régressions | 0 | 0 | ✅ Aucune |
-| Documentation | ✅ | ✅ | ✅ Complète |
+| KPI             | Valeur | Objectif | Status       |
+| --------------- | ------ | -------- | ------------ |
+| Tests créés     | 51     | >40      | ✅ Dépassé   |
+| Success rate    | 100%   | 100%     | ✅ Parfait   |
+| Coverage        | >80%   | >70%     | ✅ Dépassé   |
+| Durée execution | 69ms   | <100ms   | ✅ Excellent |
+| Régressions     | 0      | 0        | ✅ Aucune    |
+| Documentation   | ✅     | ✅       | ✅ Complète  |
 
 ---
 
@@ -392,4 +396,4 @@ it('should emit VAD_SPEECH_START on speech start', async () => {
 
 ---
 
-*Rapport généré le 2025-06-XX — TITANE_INFINITY v20.0*
+_Rapport généré le 2025-06-XX — TITANE_INFINITY v20.0_

@@ -11,12 +11,15 @@ import type { PromptCategory } from '@/types/promptEngine';
 // CATEGORY CONFIGURATION
 // ============================================================================
 
-export const CATEGORY_CONFIG: Record<PromptCategory, {
-  name: string;
-  description: string;
-  icon: string;
-  color: string;
-}> = {
+export const CATEGORY_CONFIG: Record<
+  PromptCategory,
+  {
+    name: string;
+    description: string;
+    icon: string;
+    color: string;
+  }
+> = {
   system: {
     name: 'Système',
     description: 'Prompts système de base',
@@ -157,7 +160,12 @@ Consignes:
 - Utilise ta mémoire pour personnaliser les réponses`,
     description: 'Prompt système principal de TITANE∞',
     variables: [
-      { name: 'mode', description: 'Mode de chat actif', defaultValue: 'assistant', required: true },
+      {
+        name: 'mode',
+        description: 'Mode de chat actif',
+        defaultValue: 'assistant',
+        required: true,
+      },
       { name: 'date', description: 'Date actuelle', required: true },
     ],
   },
@@ -169,9 +177,7 @@ Consignes:
 
 Garde ce contexte en mémoire pour la conversation.`,
     description: 'Injection de contexte additionnel',
-    variables: [
-      { name: 'context', description: 'Contexte à injecter', required: true },
-    ],
+    variables: [{ name: 'context', description: 'Contexte à injecter', required: true }],
   },
   {
     name: 'Format Response',
@@ -181,8 +187,18 @@ Garde ce contexte en mémoire pour la conversation.`,
 {{instructions}}`,
     description: 'Consignes de formatage',
     variables: [
-      { name: 'format', description: 'Type de format (markdown, json, plain)', defaultValue: 'markdown', required: true },
-      { name: 'instructions', description: 'Instructions spécifiques', defaultValue: '', required: false },
+      {
+        name: 'format',
+        description: 'Type de format (markdown, json, plain)',
+        defaultValue: 'markdown',
+        required: true,
+      },
+      {
+        name: 'instructions',
+        description: 'Instructions spécifiques',
+        defaultValue: '',
+        required: false,
+      },
     ],
   },
   {

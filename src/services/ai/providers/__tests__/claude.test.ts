@@ -33,7 +33,7 @@ describe('Claude Provider', () => {
       expect(invoke).toHaveBeenCalledWith('get_anthropic_key_status');
     });
 
-    it('devrait retourner false si la clé n\'est pas configurée', async () => {
+    it("devrait retourner false si la clé n'est pas configurée", async () => {
       vi.mocked(invoke).mockResolvedValue({
         ok: true,
         data: { configured: false },
@@ -44,7 +44,7 @@ describe('Claude Provider', () => {
       expect(result).toBe(false);
     });
 
-    it('devrait retourner false en cas d\'erreur backend', async () => {
+    it("devrait retourner false en cas d'erreur backend", async () => {
       vi.mocked(invoke).mockRejectedValue(new Error('Backend error'));
 
       const result = await claudeProvider.isAvailable();
@@ -133,7 +133,7 @@ describe('Claude Provider', () => {
       });
 
       await expect(claudeProvider.generate('Test')).rejects.toThrow(
-        'Délai d\'attente Claude dépassé'
+        "Délai d'attente Claude dépassé"
       );
     });
 
@@ -161,7 +161,7 @@ describe('Claude Provider', () => {
       );
     });
 
-    it('devrait convertir l\'historique correctement', async () => {
+    it("devrait convertir l'historique correctement", async () => {
       vi.mocked(invoke).mockResolvedValue({
         ok: true,
         data: { content: 'Réponse', model: 'claude-3-sonnet' },

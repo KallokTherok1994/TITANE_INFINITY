@@ -90,7 +90,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     fallbackMode: true,
     debugMetrics: true,
     timeoutMs: 20000,
-    ...options.omnisConfig
+    ...options.omnisConfig,
   };
 
   // ═══ HOOKS INTEGRATION ═══
@@ -100,7 +100,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   }) || {
     currentMode: 'default' as ChatMode,
     anomalyCount: 0,
-    setMode: () => {}
+    setMode: () => {},
   };
 
   const memoryHookResult = useChatMemory({
@@ -111,7 +111,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     messagesForMode: [],
     memoryStats: { count: 0, sizeMB: 0, compressed: false },
     saveMessage: () => {},
-    clearMode: () => {}
+    clearMode: () => {},
   };
 
   const { currentMode, anomalyCount, setMode: setCoreMode } = coreHookResult;
@@ -125,123 +125,131 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   }, [messagesForMode]);
 
   // ═══ OMNIS SENDMESSAGE KERNEL ═══
-  const sendMessage = useCallback(async (content: string): Promise<AIMessage> => {
-    const startTime = Date.now();
+  const sendMessage = useCallback(
+    async (content: string): Promise<AIMessage> => {
+      const startTime = Date.now();
 
-    // Input validation
-    if (!content || typeof content !== 'string' || content.trim().length === 0) {
-      const errorResponse: AIMessage = {
-        role: 'assistant',
-        content: 'Veuillez entrer un message pour continuer la conversation.',
-        timestamp: Date.now(),
-        metadata: { status: 'input-error' }
-      };
-      return errorResponse;
-    }
-
-    const cleanMessage = content.trim();
-
-    // UI State update
-    setIsLoading(true);
-    setError(null);
-    processRef.current = { aborted: false };
-
-    // Add user message
-    const userMessage: AIMessage = {
-      role: 'user',
-      content: cleanMessage,
-      timestamp: Date.now(),
-      metadata: { inputLength: cleanMessage.length }
-    };
-
-    setMessages(prev => [...prev, userMessage]);
-    lastMessageRef.current = cleanMessage;
-
-    try {
-      // Engine call with timeout
-      const engineResponse = await Promise.race([
-        chatEngineOmnis.generate(cleanMessage, messages),
-        new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error('TIMEOUT')), omnisConfig.timeoutMs || 20000)
-        )
-      ]);
-
-      // Response validation
-      let validatedResponse: AIMessage;
-
-      if (engineResponse && engineResponse.content && typeof engineResponse.content === 'string') {
-        validatedResponse = {
+      // Input validation
+      if (!content || typeof content !== 'string' || content.trim().length === 0) {
+        const errorResponse: AIMessage = {
           role: 'assistant',
-          content: engineResponse.content,
+          content: 'Veuillez entrer un message pour continuer la conversation.',
           timestamp: Date.now(),
-          provider: engineResponse.provider || 'omnis',
-          metadata: {
-            status: 'success',
-            duration: Date.now() - startTime,
-            ...engineResponse.metadata
-          }
+          metadata: { status: 'input-error' },
         };
-      } else {
-        validatedResponse = {
-          role: 'assistant',
-          content: 'Le système TITANE∞ traite votre demande. Une réponse sera générée momentanément.',
-          timestamp: Date.now(),
-          provider: 'omnis-fallback',
-          metadata: {
-            status: 'fallback',
-            duration: Date.now() - startTime,
-            reason: 'invalid-engine-response'
-          }
-        };
+        return errorResponse;
       }
 
-      // Memory integration (non-critical)
+      const cleanMessage = content.trim();
+
+      // UI State update
+      setIsLoading(true);
+      setError(null);
+      processRef.current = { aborted: false };
+
+      // Add user message
+      const userMessage: AIMessage = {
+        role: 'user',
+        content: cleanMessage,
+        timestamp: Date.now(),
+        metadata: { inputLength: cleanMessage.length },
+      };
+
+      setMessages(prev => [...prev, userMessage]);
+      lastMessageRef.current = cleanMessage;
+
       try {
-        saveMessage(userMessage);
-        saveMessage(validatedResponse);
-      } catch (memoryError) {
-        console.warn('[OMNIS] Memory integration warning:', memoryError);
-      }
+        // Engine call with timeout
+        const engineResponse = await Promise.race([
+          chatEngineOmnis.generate(cleanMessage, messages),
+          new Promise<never>((_, reject) =>
+            setTimeout(() => reject(new Error('TIMEOUT')), omnisConfig.timeoutMs || 20000)
+          ),
+        ]);
 
-      // Add response to UI
-      setMessages(prev => [...prev, validatedResponse]);
+        // Response validation
+        let validatedResponse: AIMessage;
 
-      // Voice integration (if enabled)
-      if (options.voiceEnabled && validatedResponse.content) {
+        if (
+          engineResponse &&
+          engineResponse.content &&
+          typeof engineResponse.content === 'string'
+        ) {
+          validatedResponse = {
+            role: 'assistant',
+            content: engineResponse.content,
+            timestamp: Date.now(),
+            provider: engineResponse.provider || 'omnis',
+            metadata: {
+              status: 'success',
+              duration: Date.now() - startTime,
+              ...engineResponse.metadata,
+            },
+          };
+        } else {
+          validatedResponse = {
+            role: 'assistant',
+            content:
+              'Le système TITANE∞ traite votre demande. Une réponse sera générée momentanément.',
+            timestamp: Date.now(),
+            provider: 'omnis-fallback',
+            metadata: {
+              status: 'fallback',
+              duration: Date.now() - startTime,
+              reason: 'invalid-engine-response',
+            },
+          };
+        }
+
+        // Memory integration (non-critical)
         try {
-          hybridTTS.speak(validatedResponse.content);
-        } catch (voiceError) {
-          console.warn('[OMNIS] Voice warning:', voiceError);
+          saveMessage(userMessage);
+          saveMessage(validatedResponse);
+        } catch (memoryError) {
+          console.warn('[OMNIS] Memory integration warning:', memoryError);
         }
+
+        // Add response to UI
+        setMessages(prev => [...prev, validatedResponse]);
+
+        // Voice integration (if enabled)
+        if (options.voiceEnabled && validatedResponse.content) {
+          try {
+            hybridTTS.speak(validatedResponse.content);
+          } catch (voiceError) {
+            console.warn('[OMNIS] Voice warning:', voiceError);
+          }
+        }
+
+        setIsLoading(false);
+        return validatedResponse;
+      } catch (error) {
+        console.error('[OMNIS] Pipeline error:', error);
+
+        const fallbackResponse: AIMessage = {
+          role: 'assistant',
+          content:
+            "TITANE∞ est opérationnel. Le système s'auto-répare et reste disponible pour vos questions.",
+          timestamp: Date.now(),
+          provider: 'omnis-safety',
+          metadata: {
+            status: 'error',
+            duration: Date.now() - startTime,
+            error: String(error),
+            autoGenerated: true,
+          },
+        };
+
+        setMessages(prev => [...prev, fallbackResponse]);
+        setError('Une anomalie a été détectée et réparée automatiquement.');
+        setIsLoading(false);
+        setInternalAnomalyCount(prev => prev + 1);
+
+        return fallbackResponse;
       }
-
-      setIsLoading(false);
-      return validatedResponse;
-
-    } catch (error) {
-      console.error('[OMNIS] Pipeline error:', error);
-
-      const fallbackResponse: AIMessage = {
-        role: 'assistant',
-        content: 'TITANE∞ est opérationnel. Le système s\'auto-répare et reste disponible pour vos questions.',
-        timestamp: Date.now(),
-        provider: 'omnis-safety',
-        metadata: {
-          status: 'error',
-          duration: Date.now() - startTime,
-          error: String(error),
-          autoGenerated: true
-        }
-      };
-
-      setMessages(prev => [...prev, fallbackResponse]);
-      setError('Une anomalie a été détectée et réparée automatiquement.');
-      setIsLoading(false);
-      setInternalAnomalyCount(prev => prev + 1);
-
-      return fallbackResponse;
-    }
-  }, [messages, options.voiceEnabled, omnisConfig.timeoutMs, saveMessage]);
+    },
+    [messages, options.voiceEnabled, omnisConfig.timeoutMs, saveMessage]
+  );
 
   // ═══ OTHER ACTIONS ═══
   const clearChat = useCallback(() => {
@@ -256,13 +264,16 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     }
   }, [clearMode]);
 
-  const setMode = useCallback((mode: ChatMode) => {
-    try {
-      setCoreMode(mode);
-    } catch (error) {
-      console.warn('[OMNIS] Set mode warning:', error);
-    }
-  }, [setCoreMode]);
+  const setMode = useCallback(
+    (mode: ChatMode) => {
+      try {
+        setCoreMode(mode);
+      } catch (error) {
+        console.warn('[OMNIS] Set mode warning:', error);
+      }
+    },
+    [setCoreMode]
+  );
 
   const handleSend = useCallback(async () => {
     if (!input.trim() || isLoading) return;
@@ -275,7 +286,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     return JSON.stringify({
       messages,
       timestamp: Date.now(),
-      version: 'omnis-v1.0'
+      version: 'omnis-v1.0',
     });
   }, [messages]);
 
@@ -300,9 +311,17 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       currentMode,
       isLoading,
       messagesCount: messages.length,
-      omnisConfig
+      omnisConfig,
     };
-  }, [memoryStats, anomalyCount, internalAnomalyCount, currentMode, isLoading, messages.length, omnisConfig]);
+  }, [
+    memoryStats,
+    anomalyCount,
+    internalAnomalyCount,
+    currentMode,
+    isLoading,
+    messages.length,
+    omnisConfig,
+  ]);
 
   // ═══ COMPUTED VALUES ═══
   const omnisStats = useMemo(() => chatEngineOmnis.getStats(), []);
@@ -331,6 +350,6 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     // OMNIS Actions
     getDebugInfo,
     exportChat,
-    importChat
+    importChat,
   };
 }

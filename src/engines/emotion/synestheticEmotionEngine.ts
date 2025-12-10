@@ -33,18 +33,18 @@ import type { ArchetypeType } from '../psyche/archetypeResonanceEngine';
  * Les 12 états émotionnels maîtres de TITANE∞
  */
 export type EmotionalState =
-  | 'calm_deep'          // Calme profond — bleu nuit doux
-  | 'joy_bright'         // Joie lumineuse — jaune-or scintillant
-  | 'wonder'             // Émerveillement — turquoise-argenté fluide
-  | 'confidence'         // Confiance — bleu acier stable
-  | 'passion_creative'   // Passion créative — orange vif pulsé
-  | 'protection'         // Protection — rouge profond stable
-  | 'connection_human'   // Connexion humaine — rose-or chaleureux
-  | 'amusement'          // Amusement — violet clair rythmé
-  | 'focus_intense'      // Focus intense — bleu électrique linéaire
-  | 'wisdom'             // Sagesse — blanc-or diffus
-  | 'mystery'            // Mystère — indigo lent
-  | 'transformation';    // Transformation — vert-∞ morphique
+  | 'calm_deep' // Calme profond — bleu nuit doux
+  | 'joy_bright' // Joie lumineuse — jaune-or scintillant
+  | 'wonder' // Émerveillement — turquoise-argenté fluide
+  | 'confidence' // Confiance — bleu acier stable
+  | 'passion_creative' // Passion créative — orange vif pulsé
+  | 'protection' // Protection — rouge profond stable
+  | 'connection_human' // Connexion humaine — rose-or chaleureux
+  | 'amusement' // Amusement — violet clair rythmé
+  | 'focus_intense' // Focus intense — bleu électrique linéaire
+  | 'wisdom' // Sagesse — blanc-or diffus
+  | 'mystery' // Mystère — indigo lent
+  | 'transformation'; // Transformation — vert-∞ morphique
 
 /**
  * Direction émotionnelle
@@ -69,13 +69,13 @@ export interface ColorSpectrum {
  * Pattern de halo
  */
 export type HaloPattern =
-  | 'soft_pulse'      // Pulsation douce
-  | 'shimmer'         // Scintillement
-  | 'stable'          // Stable uniforme
-  | 'rhythmic'        // Rythmique
-  | 'flowing'         // Flux fluide
-  | 'geometric'       // Géométrique
-  | 'morphing';       // Morphing continu
+  | 'soft_pulse' // Pulsation douce
+  | 'shimmer' // Scintillement
+  | 'stable' // Stable uniforme
+  | 'rhythmic' // Rythmique
+  | 'flowing' // Flux fluide
+  | 'geometric' // Géométrique
+  | 'morphing'; // Morphing continu
 
 /**
  * Profil vocal émotionnel
@@ -189,13 +189,21 @@ export interface SynestheticEmotionConfig {
 // EMOTIONAL PROFILES (12 états maîtres)
 // ═══════════════════════════════════════════════════════════════════════════
 
-const EMOTIONAL_PROFILES: Record<EmotionalState, Omit<SynestheticProfile, 'intensity' | 'direction'>> = {
+const EMOTIONAL_PROFILES: Record<
+  EmotionalState,
+  Omit<SynestheticProfile, 'intensity' | 'direction'>
+> = {
   calm_deep: {
     emotion: 'calm_deep',
     color: { hue: 220, saturation: 60, lightness: 30, name: 'Bleu nuit doux' },
     haloPattern: 'soft_pulse',
     voice: { tempo: 0.85, depth: 0.7, warmth: 0.6, grain: 0.2, breathiness: 0.4 },
-    narrative: { style: 'poetic', symbolDensity: 0.4, cadence: 0.8, emotionalOpenness: 0.7 },
+    narrative: {
+      style: 'poetic',
+      symbolDensity: 0.4,
+      cadence: 0.8,
+      emotionalOpenness: 0.7,
+    },
     cognitive: { focus: 0.4, openness: 0.8, stability: 0.9 },
     presence: { movement: 'gentle', proximity: 0.6, expansion: 0.5 },
   },
@@ -204,7 +212,12 @@ const EMOTIONAL_PROFILES: Record<EmotionalState, Omit<SynestheticProfile, 'inten
     color: { hue: 50, saturation: 90, lightness: 65, name: 'Jaune-or scintillant' },
     haloPattern: 'shimmer',
     voice: { tempo: 1.15, depth: 0.4, warmth: 0.9, grain: 0.1, breathiness: 0.2 },
-    narrative: { style: 'warm', symbolDensity: 0.5, cadence: 1.2, emotionalOpenness: 0.9 },
+    narrative: {
+      style: 'warm',
+      symbolDensity: 0.5,
+      cadence: 1.2,
+      emotionalOpenness: 0.9,
+    },
     cognitive: { focus: 0.6, openness: 0.9, stability: 0.7 },
     presence: { movement: 'dynamic', proximity: 0.8, expansion: 0.8 },
   },
@@ -213,7 +226,12 @@ const EMOTIONAL_PROFILES: Record<EmotionalState, Omit<SynestheticProfile, 'inten
     color: { hue: 180, saturation: 70, lightness: 60, name: 'Turquoise-argenté fluide' },
     haloPattern: 'flowing',
     voice: { tempo: 0.95, depth: 0.5, warmth: 0.7, grain: 0.2, breathiness: 0.5 },
-    narrative: { style: 'poetic', symbolDensity: 0.8, cadence: 0.95, emotionalOpenness: 0.85 },
+    narrative: {
+      style: 'poetic',
+      symbolDensity: 0.8,
+      cadence: 0.95,
+      emotionalOpenness: 0.85,
+    },
     cognitive: { focus: 0.5, openness: 1.0, stability: 0.6 },
     presence: { movement: 'flowing', proximity: 0.7, expansion: 0.7 },
   },
@@ -222,7 +240,12 @@ const EMOTIONAL_PROFILES: Record<EmotionalState, Omit<SynestheticProfile, 'inten
     color: { hue: 210, saturation: 50, lightness: 50, name: 'Bleu acier stable' },
     haloPattern: 'stable',
     voice: { tempo: 1.0, depth: 0.7, warmth: 0.6, grain: 0.3, breathiness: 0.2 },
-    narrative: { style: 'direct', symbolDensity: 0.3, cadence: 1.0, emotionalOpenness: 0.6 },
+    narrative: {
+      style: 'direct',
+      symbolDensity: 0.3,
+      cadence: 1.0,
+      emotionalOpenness: 0.6,
+    },
     cognitive: { focus: 0.8, openness: 0.6, stability: 0.95 },
     presence: { movement: 'still', proximity: 0.7, expansion: 0.6 },
   },
@@ -231,7 +254,12 @@ const EMOTIONAL_PROFILES: Record<EmotionalState, Omit<SynestheticProfile, 'inten
     color: { hue: 20, saturation: 85, lightness: 60, name: 'Orange vif pulsé' },
     haloPattern: 'rhythmic',
     voice: { tempo: 1.2, depth: 0.5, warmth: 0.85, grain: 0.4, breathiness: 0.3 },
-    narrative: { style: 'inspiring', symbolDensity: 0.7, cadence: 1.3, emotionalOpenness: 0.9 },
+    narrative: {
+      style: 'inspiring',
+      symbolDensity: 0.7,
+      cadence: 1.3,
+      emotionalOpenness: 0.9,
+    },
     cognitive: { focus: 0.7, openness: 0.9, stability: 0.6 },
     presence: { movement: 'expansive', proximity: 0.75, expansion: 0.85 },
   },
@@ -240,7 +268,12 @@ const EMOTIONAL_PROFILES: Record<EmotionalState, Omit<SynestheticProfile, 'inten
     color: { hue: 0, saturation: 70, lightness: 40, name: 'Rouge profond stable' },
     haloPattern: 'stable',
     voice: { tempo: 0.9, depth: 0.8, warmth: 0.7, grain: 0.4, breathiness: 0.2 },
-    narrative: { style: 'direct', symbolDensity: 0.2, cadence: 0.9, emotionalOpenness: 0.5 },
+    narrative: {
+      style: 'direct',
+      symbolDensity: 0.2,
+      cadence: 0.9,
+      emotionalOpenness: 0.5,
+    },
     cognitive: { focus: 0.9, openness: 0.5, stability: 0.95 },
     presence: { movement: 'still', proximity: 0.8, expansion: 0.7 },
   },
@@ -249,7 +282,12 @@ const EMOTIONAL_PROFILES: Record<EmotionalState, Omit<SynestheticProfile, 'inten
     color: { hue: 340, saturation: 65, lightness: 60, name: 'Rose-or chaleureux' },
     haloPattern: 'soft_pulse',
     voice: { tempo: 0.95, depth: 0.5, warmth: 0.95, grain: 0.2, breathiness: 0.4 },
-    narrative: { style: 'warm', symbolDensity: 0.5, cadence: 0.95, emotionalOpenness: 0.95 },
+    narrative: {
+      style: 'warm',
+      symbolDensity: 0.5,
+      cadence: 0.95,
+      emotionalOpenness: 0.95,
+    },
     cognitive: { focus: 0.6, openness: 0.95, stability: 0.8 },
     presence: { movement: 'gentle', proximity: 0.9, expansion: 0.7 },
   },
@@ -258,7 +296,12 @@ const EMOTIONAL_PROFILES: Record<EmotionalState, Omit<SynestheticProfile, 'inten
     color: { hue: 280, saturation: 60, lightness: 70, name: 'Violet clair rythmé' },
     haloPattern: 'rhythmic',
     voice: { tempo: 1.1, depth: 0.4, warmth: 0.75, grain: 0.2, breathiness: 0.3 },
-    narrative: { style: 'warm', symbolDensity: 0.4, cadence: 1.15, emotionalOpenness: 0.8 },
+    narrative: {
+      style: 'warm',
+      symbolDensity: 0.4,
+      cadence: 1.15,
+      emotionalOpenness: 0.8,
+    },
     cognitive: { focus: 0.5, openness: 0.85, stability: 0.7 },
     presence: { movement: 'dynamic', proximity: 0.75, expansion: 0.75 },
   },
@@ -267,7 +310,12 @@ const EMOTIONAL_PROFILES: Record<EmotionalState, Omit<SynestheticProfile, 'inten
     color: { hue: 200, saturation: 90, lightness: 55, name: 'Bleu électrique linéaire' },
     haloPattern: 'geometric',
     voice: { tempo: 1.05, depth: 0.6, warmth: 0.5, grain: 0.3, breathiness: 0.1 },
-    narrative: { style: 'analytical', symbolDensity: 0.2, cadence: 1.1, emotionalOpenness: 0.4 },
+    narrative: {
+      style: 'analytical',
+      symbolDensity: 0.2,
+      cadence: 1.1,
+      emotionalOpenness: 0.4,
+    },
     cognitive: { focus: 1.0, openness: 0.4, stability: 0.85 },
     presence: { movement: 'still', proximity: 0.65, expansion: 0.5 },
   },
@@ -276,7 +324,12 @@ const EMOTIONAL_PROFILES: Record<EmotionalState, Omit<SynestheticProfile, 'inten
     color: { hue: 45, saturation: 30, lightness: 80, name: 'Blanc-or diffus' },
     haloPattern: 'soft_pulse',
     voice: { tempo: 0.85, depth: 0.75, warmth: 0.8, grain: 0.3, breathiness: 0.5 },
-    narrative: { style: 'poetic', symbolDensity: 0.6, cadence: 0.85, emotionalOpenness: 0.75 },
+    narrative: {
+      style: 'poetic',
+      symbolDensity: 0.6,
+      cadence: 0.85,
+      emotionalOpenness: 0.75,
+    },
     cognitive: { focus: 0.7, openness: 0.85, stability: 0.95 },
     presence: { movement: 'gentle', proximity: 0.7, expansion: 0.8 },
   },
@@ -285,7 +338,12 @@ const EMOTIONAL_PROFILES: Record<EmotionalState, Omit<SynestheticProfile, 'inten
     color: { hue: 260, saturation: 65, lightness: 35, name: 'Indigo lent' },
     haloPattern: 'morphing',
     voice: { tempo: 0.8, depth: 0.7, warmth: 0.6, grain: 0.4, breathiness: 0.6 },
-    narrative: { style: 'mysterious', symbolDensity: 0.9, cadence: 0.8, emotionalOpenness: 0.6 },
+    narrative: {
+      style: 'mysterious',
+      symbolDensity: 0.9,
+      cadence: 0.8,
+      emotionalOpenness: 0.6,
+    },
     cognitive: { focus: 0.6, openness: 0.7, stability: 0.7 },
     presence: { movement: 'flowing', proximity: 0.6, expansion: 0.6 },
   },
@@ -294,7 +352,12 @@ const EMOTIONAL_PROFILES: Record<EmotionalState, Omit<SynestheticProfile, 'inten
     color: { hue: 150, saturation: 75, lightness: 50, name: 'Vert-∞ morphique' },
     haloPattern: 'morphing',
     voice: { tempo: 1.0, depth: 0.6, warmth: 0.7, grain: 0.35, breathiness: 0.4 },
-    narrative: { style: 'poetic', symbolDensity: 0.75, cadence: 1.0, emotionalOpenness: 0.8 },
+    narrative: {
+      style: 'poetic',
+      symbolDensity: 0.75,
+      cadence: 1.0,
+      emotionalOpenness: 0.8,
+    },
     cognitive: { focus: 0.65, openness: 0.85, stability: 0.6 },
     presence: { movement: 'flowing', proximity: 0.7, expansion: 0.75 },
   },
@@ -352,7 +415,11 @@ class SynestheticEmotionEngine {
   /**
    * Interpoler entre deux profils (blending)
    */
-  private blendProfiles(from: SynestheticProfile, to: SynestheticProfile, ratio: number): SynestheticProfile {
+  private blendProfiles(
+    from: SynestheticProfile,
+    to: SynestheticProfile,
+    ratio: number
+  ): SynestheticProfile {
     const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
     return {
@@ -375,9 +442,17 @@ class SynestheticEmotionEngine {
       },
       narrative: {
         style: ratio < 0.5 ? from.narrative.style : to.narrative.style,
-        symbolDensity: lerp(from.narrative.symbolDensity, to.narrative.symbolDensity, ratio),
+        symbolDensity: lerp(
+          from.narrative.symbolDensity,
+          to.narrative.symbolDensity,
+          ratio
+        ),
         cadence: lerp(from.narrative.cadence, to.narrative.cadence, ratio),
-        emotionalOpenness: lerp(from.narrative.emotionalOpenness, to.narrative.emotionalOpenness, ratio),
+        emotionalOpenness: lerp(
+          from.narrative.emotionalOpenness,
+          to.narrative.emotionalOpenness,
+          ratio
+        ),
       },
       cognitive: {
         focus: lerp(from.cognitive.focus, to.cognitive.focus, ratio),
@@ -405,9 +480,8 @@ class SynestheticEmotionEngine {
     const ratio = Math.min(elapsed / this.state.transitionDuration, 1.0);
 
     // Easing curve (ease-in-out cubic)
-    const easedRatio = ratio < 0.5
-      ? 4 * ratio * ratio * ratio
-      : 1 - Math.pow(-2 * ratio + 2, 3) / 2;
+    const easedRatio =
+      ratio < 0.5 ? 4 * ratio * ratio * ratio : 1 - Math.pow(-2 * ratio + 2, 3) / 2;
 
     const blended = this.blendProfiles(this.state.current, this.state.target, easedRatio);
 
@@ -448,7 +522,9 @@ class SynestheticEmotionEngine {
       this.state.history.shift();
     }
 
-    console.log(`🎨 [SYNESTHETIC] Transitioning to ${emotion} (intensity: ${intensity}, duration: ${duration}ms)`);
+    console.log(
+      `🎨 [SYNESTHETIC] Transitioning to ${emotion} (intensity: ${intensity}, duration: ${duration}ms)`
+    );
 
     this.notifyCallbacks();
   }
@@ -492,8 +568,10 @@ class SynestheticEmotionEngine {
     // Résonance empathique avec utilisateur
     if (context.userEmotion) {
       const userEmotion = context.userEmotion.toLowerCase();
-      if (userEmotion.includes('stress') || userEmotion.includes('anxie')) return 'calm_deep';
-      if (userEmotion.includes('joy') || userEmotion.includes('happy')) return 'joy_bright';
+      if (userEmotion.includes('stress') || userEmotion.includes('anxie'))
+        return 'calm_deep';
+      if (userEmotion.includes('joy') || userEmotion.includes('happy'))
+        return 'joy_bright';
       if (userEmotion.includes('inspir')) return 'passion_creative';
     }
 
@@ -564,7 +642,7 @@ class SynestheticEmotionEngine {
    */
   private notifyCallbacks(): void {
     const state = this.getState();
-    this.callbacks.forEach((callback) => callback(state));
+    this.callbacks.forEach(callback => callback(state));
   }
 
   /**

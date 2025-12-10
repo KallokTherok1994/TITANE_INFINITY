@@ -82,7 +82,6 @@ class ChatMemoryCompactor {
       // Sauvegarder
       const key = `${STORAGE_KEY_PREFIX}${mode}`;
       localStorage.setItem(key, JSON.stringify(memory));
-
     } catch (error) {
       console.error(`[MemoryCompactor] Failed to save ${mode}:`, error);
     }
@@ -115,7 +114,14 @@ class ChatMemoryCompactor {
    * Efface tout (tous les modes)
    */
   clearAll(): void {
-    const modes: ChatMode[] = ['default', 'brainstorming', 'synthesis', 'planning', 'journal', 'debug_cognitive'];
+    const modes: ChatMode[] = [
+      'default',
+      'brainstorming',
+      'synthesis',
+      'planning',
+      'journal',
+      'debug_cognitive',
+    ];
 
     modes.forEach(mode => this.clearMode(mode));
 
@@ -130,9 +136,20 @@ class ChatMemoryCompactor {
   /**
    * Retourne les stats mémoire par mode
    */
-  getMemoryStats(): Record<ChatMode, { messages: number; compressed: number; size: string }> {
-    const modes: ChatMode[] = ['default', 'brainstorming', 'synthesis', 'planning', 'journal', 'debug_cognitive'];
-    const stats: Record<string, { messages: number; compressed: number; size: string }> = {};
+  getMemoryStats(): Record<
+    ChatMode,
+    { messages: number; compressed: number; size: string }
+  > {
+    const modes: ChatMode[] = [
+      'default',
+      'brainstorming',
+      'synthesis',
+      'planning',
+      'journal',
+      'debug_cognitive',
+    ];
+    const stats: Record<string, { messages: number; compressed: number; size: string }> =
+      {};
 
     modes.forEach(mode => {
       const memory = this.loadMemoryObject(mode);
@@ -220,7 +237,9 @@ class ChatMemoryCompactor {
     memory.messages = recent;
     memory.lastCompacted = Date.now();
 
-    console.log(`[MemoryCompactor] Compressed ${toCompress.length} → summary, kept ${recent.length} recent`);
+    console.log(
+      `[MemoryCompactor] Compressed ${toCompress.length} → summary, kept ${recent.length} recent`
+    );
 
     return memory;
   }
@@ -256,7 +275,8 @@ class ChatMemoryCompactor {
 
       // Mots-clés techniques
       if (content.includes('rust') || content.includes('tauri')) topics.add('Rust/Tauri');
-      if (content.includes('react') || content.includes('typescript')) topics.add('React/TS');
+      if (content.includes('react') || content.includes('typescript'))
+        topics.add('React/TS');
       if (content.includes('architecture')) topics.add('Architecture');
       if (content.includes('erreur') || content.includes('bug')) topics.add('Debug');
       if (content.includes('performance')) topics.add('Performance');
@@ -272,7 +292,14 @@ class ChatMemoryCompactor {
   autoCleanupIfNeeded(): { cleaned: boolean; sizeMB: number } {
     // Calculer taille totale localStorage
     let totalSize = 0;
-    const modes: ChatMode[] = ['default', 'brainstorming', 'synthesis', 'planning', 'journal', 'debug_cognitive'];
+    const modes: ChatMode[] = [
+      'default',
+      'brainstorming',
+      'synthesis',
+      'planning',
+      'journal',
+      'debug_cognitive',
+    ];
 
     modes.forEach(mode => {
       const key = `${STORAGE_KEY_PREFIX}${mode}`;

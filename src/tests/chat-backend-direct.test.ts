@@ -24,7 +24,7 @@ describe('🧠 BACKEND CHAT IA - VERIFICATION CORE', () => {
         chatEngineOmnis.generate(testMessage, []),
         new Promise((_, reject) =>
           setTimeout(() => reject(new Error('TIMEOUT_15S')), 15000)
-        )
+        ),
       ]);
 
       const duration = Date.now() - startTime;
@@ -39,8 +39,9 @@ describe('🧠 BACKEND CHAT IA - VERIFICATION CORE', () => {
       console.log(`✅ Provider: ${response.provider || 'unknown'}`);
 
       // Vérifier que c'est une vraie réponse IA
-      expect(response.content.toLowerCase()).toMatch(/(titane|bonjour|salut|hello|ai|ia|assistant)/);
-
+      expect(response.content.toLowerCase()).toMatch(
+        /(titane|bonjour|salut|hello|ai|ia|assistant)/
+      );
     } catch (error) {
       if (error.message === 'TIMEOUT_15S') {
         console.error('❌ BLOCAGE: Generate prend plus de 15s !');
@@ -55,7 +56,7 @@ describe('🧠 BACKEND CHAT IA - VERIFICATION CORE', () => {
     const messages = [
       'Test 1 - Comment allez-vous ?',
       'Test 2 - Quel est votre nom ?',
-      'Test 3 - Que pouvez-vous faire ?'
+      'Test 3 - Que pouvez-vous faire ?',
     ];
 
     const responses = [];
@@ -68,7 +69,7 @@ describe('🧠 BACKEND CHAT IA - VERIFICATION CORE', () => {
           chatEngineOmnis.generate(message, []),
           new Promise((_, reject) =>
             setTimeout(() => reject(new Error('TIMEOUT_10S')), 10000)
-          )
+          ),
         ]);
 
         const duration = Date.now() - startTime;
@@ -79,7 +80,6 @@ describe('🧠 BACKEND CHAT IA - VERIFICATION CORE', () => {
         responses.push({ message, response: response.content, duration });
 
         console.log(`✅ Message ${index + 1}/3 OK en ${duration}ms`);
-
       } catch (error) {
         if (error.message === 'TIMEOUT_10S') {
           console.error(`❌ Message ${index + 1} bloqué après 10s`);
@@ -102,7 +102,6 @@ describe('🧠 BACKEND CHAT IA - VERIFICATION CORE', () => {
       expect(typeof stats).toBe('object');
 
       console.log('✅ Engine stats récupérées:', stats);
-
     } catch (error) {
       console.warn('⚠️ Engine stats non disponibles:', error);
       // Non critique, continuer
@@ -113,14 +112,14 @@ describe('🧠 BACKEND CHAT IA - VERIFICATION CORE', () => {
     const history = [
       {
         role: 'user' as const,
-        content: 'Je m\'appelle Test User',
-        timestamp: Date.now() - 1000
+        content: "Je m'appelle Test User",
+        timestamp: Date.now() - 1000,
       },
       {
         role: 'assistant' as const,
         content: 'Bonjour Test User, ravi de vous rencontrer !',
-        timestamp: Date.now() - 500
-      }
+        timestamp: Date.now() - 500,
+      },
     ];
 
     const response = await chatEngineOmnis.generate('Quel est mon nom ?', history);
@@ -186,7 +185,6 @@ describe('🚀 PERFORMANCE ET ROBUSTESSE', () => {
         expect(typeof response.content).toBe('string');
 
         console.log(`✅ Input "${input}" géré gracieusement`);
-
       } catch (error) {
         console.warn(`⚠️ Input "${input}" a généré erreur:`, error.message);
         // Acceptable mais pas optimal

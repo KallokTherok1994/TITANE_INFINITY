@@ -24,7 +24,9 @@ const mockSecureInvoke = async (command, params = {}) => {
   if (command === 'speak') {
     // Simulate mutex check
     if (mockIsSpeaking) {
-      throw new Error('TTS busy: another synthesis is in progress. Please wait or call stop_speaking().');
+      throw new Error(
+        'TTS busy: another synthesis is in progress. Please wait or call stop_speaking().'
+      );
     }
 
     // Validation
@@ -40,7 +42,9 @@ const mockSecureInvoke = async (command, params = {}) => {
     const finalRate = rate ? Math.max(0.5, Math.min(2.0, rate)) : 1.0;
     const finalPitch = pitch ? Math.max(0.5, Math.min(2.0, pitch)) : 1.0;
 
-    console.log(`✅ TTS Start: mode=${use_online ? 'online' : 'local'}, rate=${finalRate.toFixed(2)}, pitch=${finalPitch.toFixed(2)}, voice=${voice || 'default'}`);
+    console.log(
+      `✅ TTS Start: mode=${use_online ? 'online' : 'local'}, rate=${finalRate.toFixed(2)}, pitch=${finalPitch.toFixed(2)}, voice=${voice || 'default'}`
+    );
 
     // Set mutex
     mockIsSpeaking = true;
@@ -149,7 +153,8 @@ async function testParametersTransmission() {
       testName: 'Transmission paramètres',
       status: 'ok',
       duration,
-      details: 'Parameters correctly transmitted (rate=1.5, pitch=1.2, voice=fr-FR-Wavenet-A)',
+      details:
+        'Parameters correctly transmitted (rate=1.5, pitch=1.2, voice=fr-FR-Wavenet-A)',
     };
   } catch (error) {
     const duration = performance.now() - start;

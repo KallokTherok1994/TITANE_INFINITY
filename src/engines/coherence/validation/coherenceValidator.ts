@@ -65,8 +65,9 @@ export class CoherenceValidator {
     coherenceScore = Math.max(0, Math.min(1, coherenceScore));
 
     return {
-      valid: coherenceScore >= this.MIN_COHERENCE_SCORE &&
-             issues.filter(i => i.severity === 'error').length === 0,
+      valid:
+        coherenceScore >= this.MIN_COHERENCE_SCORE &&
+        issues.filter(i => i.severity === 'error').length === 0,
       coherenceScore,
       issues,
       suggestions,
@@ -112,8 +113,10 @@ export class CoherenceValidator {
 
       // Check for stale engines (no activity in 5 minutes)
       const staleThreshold = 5 * 60 * 1000;
-      if (engine.status === 'active' &&
-          Date.now() - engine.lastActivity > staleThreshold) {
+      if (
+        engine.status === 'active' &&
+        Date.now() - engine.lastActivity > staleThreshold
+      ) {
         issues.push({
           severity: 'warning',
           code: 'ENGINE_STALE',

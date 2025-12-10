@@ -16,7 +16,10 @@ const LOG_LEVELS: LogLevel[] = ['DEBUG', 'INFO', 'WARN', 'ERROR', 'FATAL'];
 export const LogsPanel: React.FC = () => {
   const [filterLevel, setFilterLevel] = useState<LogLevel>('INFO');
   const [filterSource, setFilterSource] = useState<string>('');
-  const { logs, clearLogs } = useLogs({ filterLevel, filterSource: filterSource || undefined });
+  const { logs, clearLogs } = useLogs({
+    filterLevel,
+    filterSource: filterSource || undefined,
+  });
 
   return (
     <div className="logs-panel">
@@ -26,9 +29,9 @@ export const LogsPanel: React.FC = () => {
           <select
             className="filter-select"
             value={filterLevel}
-            onChange={(e) => setFilterLevel(e.target.value as LogLevel)}
+            onChange={e => setFilterLevel(e.target.value as LogLevel)}
           >
-            {LOG_LEVELS.map((level) => (
+            {LOG_LEVELS.map(level => (
               <option key={level} value={level}>
                 {level}
               </option>
@@ -39,7 +42,7 @@ export const LogsPanel: React.FC = () => {
             className="filter-input"
             placeholder="Filter by source..."
             value={filterSource}
-            onChange={(e) => setFilterSource(e.target.value)}
+            onChange={e => setFilterSource(e.target.value)}
           />
           <button className="btn btn-secondary" onClick={clearLogs}>
             Clear
@@ -59,14 +62,16 @@ export const LogsPanel: React.FC = () => {
                     log.level === 'ERROR' || log.level === 'FATAL'
                       ? 'error'
                       : log.level === 'WARN'
-                      ? 'warning'
-                      : 'info'
+                        ? 'warning'
+                        : 'info'
                   }
                 >
                   {log.level}
                 </Badge>
                 <span className="log-source">{log.source}</span>
-                <span className="log-timestamp">{new Date(log.timestamp).toLocaleTimeString()}</span>
+                <span className="log-timestamp">
+                  {new Date(log.timestamp).toLocaleTimeString()}
+                </span>
               </div>
               <div className="log-message">{log.message}</div>
               {log.metadata && (

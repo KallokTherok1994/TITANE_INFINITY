@@ -29,18 +29,18 @@ src/apps/DevTools/                  26 fichiers créés
 
 ### 2. Panels Implémentés (4/10)
 
-| Panel | Status | Fonctionnalités |
-|-------|--------|-----------------|
-| **🔀 PipelineDebugger** | ✅ Complet | Visualisation OMEGA temps réel, étapes, latence |
-| **📊 MetricsPanel** | ✅ Complet | CPU/RAM, latence engines (P50/P95/P99), graphiques |
-| **📝 LogsPanel** | ✅ Complet | Stream logs, filtres niveau/source, metadata |
-| **💻 ConsolePanel** | ✅ Complet | Commandes internes, history, JSON output |
-| 🧠 MemoryInspector | 🚧 Stub | STM/MTM/LTM à implémenter |
-| ⚙️ EngineInspector | 🚧 Stub | États engines à implémenter |
-| 🩹 SelfHealingPanel | 🚧 Stub | Incidents + actions à implémenter |
-| ⏱️ EventTimeline | 🚧 Stub | Timeline événements à implémenter |
-| 🎤 VoiceMonitor | 🚧 Stub | ASR/TTS monitoring à implémenter |
-| ❤️ SystemHealthPanel | 🚧 Stub | CPU/RAM graphs à implémenter |
+| Panel                   | Status     | Fonctionnalités                                    |
+| ----------------------- | ---------- | -------------------------------------------------- |
+| **🔀 PipelineDebugger** | ✅ Complet | Visualisation OMEGA temps réel, étapes, latence    |
+| **📊 MetricsPanel**     | ✅ Complet | CPU/RAM, latence engines (P50/P95/P99), graphiques |
+| **📝 LogsPanel**        | ✅ Complet | Stream logs, filtres niveau/source, metadata       |
+| **💻 ConsolePanel**     | ✅ Complet | Commandes internes, history, JSON output           |
+| 🧠 MemoryInspector      | 🚧 Stub    | STM/MTM/LTM à implémenter                          |
+| ⚙️ EngineInspector      | 🚧 Stub    | États engines à implémenter                        |
+| 🩹 SelfHealingPanel     | 🚧 Stub    | Incidents + actions à implémenter                  |
+| ⏱️ EventTimeline        | 🚧 Stub    | Timeline événements à implémenter                  |
+| 🎤 VoiceMonitor         | 🚧 Stub    | ASR/TTS monitoring à implémenter                   |
+| ❤️ SystemHealthPanel    | 🚧 Stub    | CPU/RAM graphs à implémenter                       |
 
 ### 3. Hooks React (7/7)
 
@@ -61,6 +61,7 @@ src/apps/DevTools/                  26 fichiers créés
 ### 5. Types TypeScript Complets
 
 `types.ts` (300+ lignes):
+
 - ✅ OMEGA events (`OmegaStepEvent`, `OmegaCompleteEvent`)
 - ✅ Metrics (`MetricsSnapshot`, `EngineMetrics`, `SystemMetrics`)
 - ✅ Logs (`LogEntry`, `LogLevel`)
@@ -84,14 +85,14 @@ src/apps/DevTools/                  26 fichiers créés
 
 ## 📊 Statistiques
 
-| Métrique | Valeur |
-|----------|--------|
-| **Fichiers créés** | 26 |
-| **Lignes de code** | ~3000+ |
-| **Panels complets** | 4/10 (40%) |
-| **Hooks** | 7/7 (100%) |
-| **Composants UI** | 3/3 (100%) |
-| **Tests** | 0 (Phase 2) |
+| Métrique             | Valeur       |
+| -------------------- | ------------ |
+| **Fichiers créés**   | 26           |
+| **Lignes de code**   | ~3000+       |
+| **Panels complets**  | 4/10 (40%)   |
+| **Hooks**            | 7/7 (100%)   |
+| **Composants UI**    | 3/3 (100%)   |
+| **Tests**            | 0 (Phase 2)  |
 | **Rust integration** | 0% (Phase 3) |
 
 ---
@@ -123,10 +124,10 @@ useEffect(() => {
 // Panel Pattern
 export const Panel: React.FC = () => {
   const { data, loading, error } = useHook();
-  
+
   if (loading) return <Loading />;
   if (error) return <Error />;
-  
+
   return <PanelContent data={data} />;
 };
 ```
@@ -159,9 +160,7 @@ self_healing.rs                   useSelfHealing
 ```tsx
 import DevToolsApp from '@/apps/DevTools';
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <DevToolsApp />
-);
+ReactDOM.createRoot(document.getElementById('root')!).render(<DevToolsApp />);
 ```
 
 ### 2. Toggle in Main App
@@ -452,12 +451,14 @@ test('renders pipeline debugger', () => {
 > **"Les DevTools sont les yeux et les oreilles de l'organisme cognitif."**
 
 TITANE∞ n'est pas un outil. C'est un **organisme** avec:
+
 - 🧠 Un cortex préfrontal (OMEGA Pipeline)
 - 💾 Une mémoire hiérarchique (STM/MTM/LTM)
 - 🩹 Un système immunitaire (Self-Healing)
 - ❤️ Une santé systémique (SystemHealth)
 
 Les DevTools = **interface de métacognition** permettant:
+
 - L'**introspection** (voir ses propres processus)
 - La **réflexion** (analyser ses décisions)
 - L'**adaptation** (corriger ses erreurs)
@@ -472,6 +473,7 @@ Les DevTools = **interface de métacognition** permettant:
 **Phase**: 1/4 COMPLETE
 
 **Métriques**:
+
 - ✅ 26 fichiers créés
 - ✅ ~3000 lignes de code
 - ✅ 4 panels complets

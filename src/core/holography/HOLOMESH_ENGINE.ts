@@ -117,7 +117,7 @@ export class HoloMeshEngine {
       },
     ];
 
-    defaultNodes.forEach((node) => this.nodes.set(node.id, node));
+    defaultNodes.forEach(node => this.nodes.set(node.id, node));
 
     // Créer les liens
     this.generateLinksFromNodes();
@@ -129,8 +129,8 @@ export class HoloMeshEngine {
   private generateLinksFromNodes(): void {
     this.links.clear();
 
-    this.nodes.forEach((node) => {
-      node.connections.forEach((targetId) => {
+    this.nodes.forEach(node => {
+      node.connections.forEach(targetId => {
         const linkId = `${node.id}-${targetId}`;
         const reverseLinkId = `${targetId}-${node.id}`;
 
@@ -168,7 +168,7 @@ export class HoloMeshEngine {
    * Mettre à jour les liens liés à un node
    */
   private updateRelatedLinks(nodeId: string): void {
-    this.links.forEach((link) => {
+    this.links.forEach(link => {
       if (link.source === nodeId || link.target === nodeId) {
         const sourceNode = this.nodes.get(link.source);
         const targetNode = this.nodes.get(link.target);
@@ -243,7 +243,7 @@ export class HoloMeshEngine {
     svg += `</defs>`;
 
     // Liens
-    links.forEach((link) => {
+    links.forEach(link => {
       const sourceNode = this.nodes.get(link.source);
       const targetNode = this.nodes.get(link.target);
 
@@ -279,7 +279,7 @@ export class HoloMeshEngine {
     });
 
     // Nodes
-    nodes.forEach((node) => {
+    nodes.forEach(node => {
       if (!node.active) return;
 
       const cx = (node.x / 100) * width;

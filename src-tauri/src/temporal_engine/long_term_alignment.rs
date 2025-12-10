@@ -3,10 +3,10 @@
 //! Super Prompt #18 — Alignement et objectifs long terme
 //! ═══════════════════════════════════════════════════════════════════════════════
 
+use super::planner::PlanningHorizon;
+use super::time_model::TemporalContext;
 use serde::{Deserialize, Serialize};
 use tokio::sync::RwLock;
-use super::time_model::TemporalContext;
-use super::planner::PlanningHorizon;
 
 /// Score d'alignement
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
@@ -83,9 +83,7 @@ impl Goal {
             return;
         }
 
-        let completed = self.milestones.iter()
-            .filter(|m| m.completed)
-            .count();
+        let completed = self.milestones.iter().filter(|m| m.completed).count();
 
         self.progress = completed as f32 / self.milestones.len() as f32;
     }
@@ -293,7 +291,8 @@ impl LongTermAligner {
     }
 
     fn calculate_goal_progress(&self, goals: &[Goal]) -> f32 {
-        let active_goals: Vec<_> = goals.iter()
+        let active_goals: Vec<_> = goals
+            .iter()
             .filter(|g| g.status == GoalStatus::Active)
             .collect();
 
@@ -301,19 +300,19 @@ impl LongTermAligner {
             return 0.5; // Neutral if no goals
         }
 
-        let total_progress: f32 = active_goals.iter()
+        let total_progress: f32 = active_goals
+            .iter()
             .map(|g| g.progress * (g.priority as f32 / 10.0))
             .sum();
 
-        let total_weight: f32 = active_goals.iter()
-            .map(|g| g.priority as f32 / 10.0)
-            .sum();
+        let total_weight: f32 = active_goals.iter().map(|g| g.priority as f32 / 10.0).sum();
 
         (total_progress / total_weight).clamp(0.0, 1.0)
     }
 
     fn calculate_milestone_completion(&self, goals: &[Goal]) -> f32 {
-        let all_milestones: Vec<_> = goals.iter()
+        let all_milestones: Vec<_> = goals
+            .iter()
             .filter(|g| g.status == GoalStatus::Active)
             .flat_map(|g| &g.milestones)
             .collect();
@@ -328,16 +327,18 @@ impl LongTermAligner {
 
     fn calculate_consistency(&self, goals: &[Goal], _context: &TemporalContext) -> f32 {
         // Vérifier la distribution des objectifs par catégorie
-        let categories: std::collections::HashSet<_> = goals.iter()
-            .map(|g| g.category)
-            .collect();
+        let categories: std::collections::HashSet<_> = goals.iter().map(|g| g.category).collect();
 
         // Plus de diversité = meilleure consistance
         let diversity = categories.len() as f32 / 8.0; // 8 catégories possibles
 
         // Vérifier l'équilibre des priorités
         let priority_sum: u32 = goals.iter().map(|g| g.priority as u32).sum();
-        let avg_priority = if goals.is_empty() { 5.0 } else { priority_sum as f32 / goals.len() as f32 };
+        let avg_priority = if goals.is_empty() {
+            5.0
+        } else {
+            priority_sum as f32 / goals.len() as f32
+        };
         let priority_balance = 1.0 - (avg_priority - 5.0).abs() / 5.0;
 
         (diversity * 0.5 + priority_balance * 0.5).clamp(0.0, 1.0)
@@ -345,7 +346,8 @@ impl LongTermAligner {
 
     fn calculate_direction_alignment(&self, goals: &[Goal]) -> f32 {
         // Vérifier que les objectifs ont une direction claire (target_date, milestones)
-        let goals_with_direction: Vec<_> = goals.iter()
+        let goals_with_direction: Vec<_> = goals
+            .iter()
             .filter(|g| g.status == GoalStatus::Active)
             .filter(|g| g.target_date.is_some() || !g.milestones.is_empty())
             .collect();
@@ -390,11 +392,7 @@ impl LongTermAligner {
         }
 
         // Calculer la moyenne des 5 derniers scores
-        let recent: Vec<f32> = history.iter()
-            .rev()
-            .take(5)
-            .map(|s| s.score)
-            .collect();
+        let recent: Vec<f32> = history.iter().rev().take(5).map(|s| s.score).collect();
 
         let avg_recent: f32 = recent.iter().sum::<f32>() / recent.len() as f32;
         let diff = current_score - avg_recent;
@@ -411,7 +409,8 @@ impl LongTermAligner {
     /// Récupère tous les objectifs actifs
     pub async fn active_goals(&self) -> Vec<Goal> {
         let goals = self.goals.read().await;
-        goals.iter()
+        goals
+            .iter()
             .filter(|g| g.status == GoalStatus::Active)
             .cloned()
             .collect()
@@ -420,7 +419,8 @@ impl LongTermAligner {
     /// Récupère les objectifs par horizon
     pub async fn goals_by_horizon(&self, horizon: PlanningHorizon) -> Vec<Goal> {
         let goals = self.goals.read().await;
-        goals.iter()
+        goals
+            .iter()
             .filter(|g| g.horizon == horizon && g.status == GoalStatus::Active)
             .cloned()
             .collect()

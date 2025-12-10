@@ -10,11 +10,11 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum AntiAttractor {
-    Noise,        // Bruit cognitif
-    Confusion,    // Confusion logique
-    Overload,     // Surcharge cognitive
-    Dissonance,   // Dissonance (contradictions)
-    Drift,        // Dérive temporelle
+    Noise,      // Bruit cognitif
+    Confusion,  // Confusion logique
+    Overload,   // Surcharge cognitive
+    Dissonance, // Dissonance (contradictions)
+    Drift,      // Dérive temporelle
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -36,14 +36,14 @@ impl AntiAttractorState {
             drift: 0.0,
         }
     }
-    
+
     pub fn compute_total_repulsion(&self, weights: &[f32; 5]) -> f32 {
         let sum = self.noise * weights[0]
             + self.confusion * weights[1]
             + self.overload * weights[2]
             + self.dissonance * weights[3]
             + self.drift * weights[4];
-        
+
         let total_weight: f32 = weights.iter().sum();
         if total_weight > 0.0 {
             (sum / total_weight).clamp(0.0, 1.0)
@@ -51,7 +51,7 @@ impl AntiAttractorState {
             0.0
         }
     }
-    
+
     pub fn get(&self, anti_attractor: AntiAttractor) -> f32 {
         match anti_attractor {
             AntiAttractor::Noise => self.noise,
@@ -61,7 +61,7 @@ impl AntiAttractorState {
             AntiAttractor::Drift => self.drift,
         }
     }
-    
+
     pub fn set(&mut self, anti_attractor: AntiAttractor, value: f32) {
         let clamped = value.clamp(0.0, 1.0);
         match anti_attractor {

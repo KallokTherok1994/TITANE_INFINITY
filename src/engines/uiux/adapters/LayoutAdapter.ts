@@ -68,7 +68,11 @@ export class LayoutAdapter {
   /**
    * Adapte le layout au contexte
    */
-  adapt(context: UIContext, mode: UserMode, cognitiveLoad: CognitiveLoad): LayoutAdaptation {
+  adapt(
+    context: UIContext,
+    mode: UserMode,
+    cognitiveLoad: CognitiveLoad
+  ): LayoutAdaptation {
     const layout = { ...DEFAULT_LAYOUT };
 
     // Appliquer le préset du mode
@@ -170,7 +174,12 @@ export class LayoutAdapter {
 
     return {
       '--layout-columns': String(layout.gridColumns),
-      '--layout-spacing': layout.spacing === 'compact' ? '8px' : layout.spacing === 'relaxed' ? '24px' : '16px',
+      '--layout-spacing':
+        layout.spacing === 'compact'
+          ? '8px'
+          : layout.spacing === 'relaxed'
+            ? '24px'
+            : '16px',
       '--sidebar-width': `${layout.sidebarWidth}px`,
       '--sidebar-visible': layout.sidebarVisible ? '1' : '0',
       '--header-height': `${layout.headerHeight}px`,

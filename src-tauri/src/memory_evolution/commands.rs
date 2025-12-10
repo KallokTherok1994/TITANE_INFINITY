@@ -5,20 +5,19 @@
 
 use log::info;
 use serde::{Deserialize, Serialize};
+use std::path::PathBuf;
 use std::sync::Mutex;
 use tauri::State;
-use std::path::PathBuf;
 
 use super::{
-    MemoryEvolutionConfig, MemoryItem, MemoryLevel, MemoryType,
-    EvolutionResult, EvolutionStatus,
-    memory_parser::{MemoryParser, MemoryParseResult, ParserConfig},
-    memory_synthesizer::{MemorySynthesizer, SynthesisResult, SynthesizerConfig},
-    memory_clusterer::{MemoryClusterer, ClusteringResult, ClustererConfig, MemoryCluster},
-    memory_compressor::{MemoryCompressor, CompressionResult, CompressorConfig},
-    memory_patterns::{MemoryPatternExtractor, PatternExtractionResult, PatternConfig},
+    memory_clusterer::{ClustererConfig, ClusteringResult, MemoryCluster, MemoryClusterer},
+    memory_compressor::{CompressionResult, CompressorConfig, MemoryCompressor},
+    memory_growth::{GrowthConfig, GrowthResult, HierarchyHealth, MemoryGrowthEngine},
+    memory_parser::{MemoryParseResult, MemoryParser, ParserConfig},
+    memory_patterns::{MemoryPatternExtractor, PatternConfig, PatternExtractionResult},
     memory_stability::{MemoryStabilityEngine, StabilityCheckResult, StabilityConfig},
-    memory_growth::{MemoryGrowthEngine, GrowthResult, GrowthConfig, HierarchyHealth},
+    memory_synthesizer::{MemorySynthesizer, SynthesisResult, SynthesizerConfig},
+    EvolutionResult, EvolutionStatus, MemoryEvolutionConfig, MemoryItem, MemoryLevel, MemoryType,
 };
 
 /// État global du Memory Evolution Engine
@@ -53,7 +52,10 @@ impl Default for MemoryEvolutionState {
             clusterer: MemoryClusterer::new(ClustererConfig::default()),
             compressor: MemoryCompressor::new(CompressorConfig::default()),
             pattern_extractor: MemoryPatternExtractor::new(PatternConfig::default()),
-            stability_engine: MemoryStabilityEngine::new(StabilityConfig::default(), data_path.join("backups")),
+            stability_engine: MemoryStabilityEngine::new(
+                StabilityConfig::default(),
+                data_path.join("backups"),
+            ),
             growth_engine: MemoryGrowthEngine::new(GrowthConfig::default()),
         }
     }
@@ -162,7 +164,10 @@ pub async fn memory_synthesize(
 ) -> Result<SynthesisResult, String> {
     let items = state.items.lock().map_err(|e| e.to_string())?;
 
-    state.synthesizer.synthesize(&items).map_err(|e| e.to_string())
+    state
+        .synthesizer
+        .synthesize(&items)
+        .map_err(|e| e.to_string())
 }
 
 /// Clusterise les mémoires
@@ -198,7 +203,10 @@ pub async fn memory_extract_patterns(
 ) -> Result<PatternExtractionResult, String> {
     let items = state.items.lock().map_err(|e| e.to_string())?;
 
-    state.pattern_extractor.extract_patterns(&items).map_err(|e| e.to_string())
+    state
+        .pattern_extractor
+        .extract_patterns(&items)
+        .map_err(|e| e.to_string())
 }
 
 /// Vérifie la stabilité
@@ -208,7 +216,10 @@ pub async fn memory_check_stability(
 ) -> Result<StabilityCheckResult, String> {
     let items = state.items.lock().map_err(|e| e.to_string())?;
 
-    state.stability_engine.check_stability(&items).map_err(|e| e.to_string())
+    state
+        .stability_engine
+        .check_stability(&items)
+        .map_err(|e| e.to_string())
 }
 
 /// Vérifie et répare la mémoire
@@ -218,17 +229,21 @@ pub async fn memory_check_and_repair(
 ) -> Result<StabilityCheckResult, String> {
     let mut items = state.items.lock().map_err(|e| e.to_string())?;
 
-    state.stability_engine.check_and_repair(&mut items).map_err(|e| e.to_string())
+    state
+        .stability_engine
+        .check_and_repair(&mut items)
+        .map_err(|e| e.to_string())
 }
 
 /// Déclenche la croissance mémoire
 #[tauri::command]
-pub async fn memory_grow(
-    state: State<'_, MemoryEvolutionState>,
-) -> Result<GrowthResult, String> {
+pub async fn memory_grow(state: State<'_, MemoryEvolutionState>) -> Result<GrowthResult, String> {
     let mut items = state.items.lock().map_err(|e| e.to_string())?;
 
-    state.growth_engine.grow(&mut items).map_err(|e| e.to_string())
+    state
+        .growth_engine
+        .grow(&mut items)
+        .map_err(|e| e.to_string())
 }
 
 /// Évalue la santé de la hiérarchie
@@ -264,7 +279,8 @@ pub async fn memory_evolve_full(
     {
         let items = state.items.lock().map_err(|e| e.to_string())?;
         let parse_result = state.parser.parse(&items).map_err(|e| e.to_string())?;
-        result.items_parsed = parse_result.ct_items.len() + parse_result.mt_items.len() + parse_result.lt_items.len();
+        result.items_parsed =
+            parse_result.ct_items.len() + parse_result.mt_items.len() + parse_result.lt_items.len();
     }
 
     result.status = EvolutionStatus::Synthesizing;
@@ -272,7 +288,10 @@ pub async fn memory_evolve_full(
     // 2. Synthesize
     {
         let items = state.items.lock().map_err(|e| e.to_string())?;
-        let synth_result = state.synthesizer.synthesize(&items).map_err(|e| e.to_string())?;
+        let synth_result = state
+            .synthesizer
+            .synthesize(&items)
+            .map_err(|e| e.to_string())?;
         result.items_synthesized = synth_result.summaries.len();
     }
 
@@ -293,14 +312,20 @@ pub async fn memory_evolve_full(
     // 4. Compress
     {
         let items = state.items.lock().map_err(|e| e.to_string())?;
-        let compress_result = state.compressor.compress(&items).map_err(|e| e.to_string())?;
+        let compress_result = state
+            .compressor
+            .compress(&items)
+            .map_err(|e| e.to_string())?;
         result.items_compressed = compress_result.blocks.len();
     }
 
     // 5. Extract Patterns
     {
         let items = state.items.lock().map_err(|e| e.to_string())?;
-        let pattern_result = state.pattern_extractor.extract_patterns(&items).map_err(|e| e.to_string())?;
+        let pattern_result = state
+            .pattern_extractor
+            .extract_patterns(&items)
+            .map_err(|e| e.to_string())?;
         result.patterns_extracted = pattern_result.patterns.len();
     }
 
@@ -309,7 +334,10 @@ pub async fn memory_evolve_full(
     // 6. Check & Repair Stability
     {
         let mut items = state.items.lock().map_err(|e| e.to_string())?;
-        let stability_result = state.stability_engine.check_and_repair(&mut items).map_err(|e| e.to_string())?;
+        let stability_result = state
+            .stability_engine
+            .check_and_repair(&mut items)
+            .map_err(|e| e.to_string())?;
         result.stability_score = stability_result.stability_score;
     }
 
@@ -318,7 +346,10 @@ pub async fn memory_evolve_full(
     // 7. Grow
     {
         let mut items = state.items.lock().map_err(|e| e.to_string())?;
-        let growth_result = state.growth_engine.grow(&mut items).map_err(|e| e.to_string())?;
+        let growth_result = state
+            .growth_engine
+            .grow(&mut items)
+            .map_err(|e| e.to_string())?;
         result.growth_achieved = growth_result.growth_achieved;
     }
 
@@ -379,7 +410,8 @@ pub async fn memory_get_items_by_level(
     };
 
     let items = state.items.lock().map_err(|e| e.to_string())?;
-    let filtered: Vec<_> = items.iter()
+    let filtered: Vec<_> = items
+        .iter()
         .filter(|i| i.level == target_level)
         .cloned()
         .collect();
@@ -394,7 +426,10 @@ pub async fn memory_create_backup(
 ) -> Result<String, String> {
     let items = state.items.lock().map_err(|e| e.to_string())?;
 
-    let path = state.stability_engine.create_backup(&items).map_err(|e| e.to_string())?;
+    let path = state
+        .stability_engine
+        .create_backup(&items)
+        .map_err(|e| e.to_string())?;
 
     Ok(path.to_string_lossy().to_string())
 }
@@ -404,7 +439,13 @@ pub async fn memory_create_backup(
 pub async fn memory_list_backups(
     state: State<'_, MemoryEvolutionState>,
 ) -> Result<Vec<String>, String> {
-    let backups = state.stability_engine.list_backups().map_err(|e| e.to_string())?;
+    let backups = state
+        .stability_engine
+        .list_backups()
+        .map_err(|e| e.to_string())?;
 
-    Ok(backups.iter().map(|p| p.to_string_lossy().to_string()).collect())
+    Ok(backups
+        .iter()
+        .map(|p| p.to_string_lossy().to_string())
+        .collect())
 }

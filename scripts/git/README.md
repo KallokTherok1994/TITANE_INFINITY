@@ -1,10 +1,13 @@
 # ═══════════════════════════════════════════════════════════════════════════
+
 # TITANE∞ — DUAL-RUNTIME GIT WORKFLOW
+
 # ═══════════════════════════════════════════════════════════════════════════
 
 ## 🌟 PHILOSOPHY
 
 **TITANE∞** uses a **dual-runtime architecture** for complete separation between:
+
 - **User Experience** (Titan-Stable) - Your daily cognitive OS
 - **Development** (Titan-Dev) - Safe experimentation environment
 
@@ -23,11 +26,11 @@ MAIN                    # Legacy/backup branch
 
 ### Branch Purposes
 
-| Branch | Purpose | Rules | When to Use |
-|--------|---------|-------|-------------|
-| **stable-runtime** | Production user runtime | ❌ No direct commits<br>✅ Only merges from `dev`<br>🔒 Protected | Daily Titan usage |
-| **dev** | Development environment | ✅ Active development<br>✅ Testing<br>✅ Refactoring | Building features |
-| **feature/\*** | Feature branches | ✅ Experiments<br>✅ Isolated work<br>✅ Merge to `dev` when ready | New features |
+| Branch             | Purpose                 | Rules                                                              | When to Use       |
+| ------------------ | ----------------------- | ------------------------------------------------------------------ | ----------------- |
+| **stable-runtime** | Production user runtime | ❌ No direct commits<br>✅ Only merges from `dev`<br>🔒 Protected  | Daily Titan usage |
+| **dev**            | Development environment | ✅ Active development<br>✅ Testing<br>✅ Refactoring              | Building features |
+| **feature/\***     | Feature branches        | ✅ Experiments<br>✅ Isolated work<br>✅ Merge to `dev` when ready | New features      |
 
 ---
 
@@ -75,13 +78,13 @@ git merge feature/visual-engine-v22
 
 All scripts are located in `scripts/git/`:
 
-| Script | Purpose | Usage |
-|--------|---------|-------|
-| **switch-stable.sh** | Switch to stable-runtime branch | `./scripts/git/switch-stable.sh` |
-| **switch-dev.sh** | Switch to dev branch | `./scripts/git/switch-dev.sh` |
-| **new-feature.sh** | Create feature branch from dev | `./scripts/git/new-feature.sh <name>` |
-| **merge-dev-to-stable.sh** | Deploy dev → stable-runtime | `./scripts/git/merge-dev-to-stable.sh` |
-| **clean-working-state.sh** | Stash or reset changes | `./scripts/git/clean-working-state.sh [--force]` |
+| Script                     | Purpose                         | Usage                                            |
+| -------------------------- | ------------------------------- | ------------------------------------------------ |
+| **switch-stable.sh**       | Switch to stable-runtime branch | `./scripts/git/switch-stable.sh`                 |
+| **switch-dev.sh**          | Switch to dev branch            | `./scripts/git/switch-dev.sh`                    |
+| **new-feature.sh**         | Create feature branch from dev  | `./scripts/git/new-feature.sh <name>`            |
+| **merge-dev-to-stable.sh** | Deploy dev → stable-runtime     | `./scripts/git/merge-dev-to-stable.sh`           |
+| **clean-working-state.sh** | Stash or reset changes          | `./scripts/git/clean-working-state.sh [--force]` |
 
 ---
 
@@ -161,31 +164,39 @@ git merge feature/mega-feature-v2
 ### 🔴 NEVER DO
 
 ❌ **Never develop directly in `stable-runtime`**
-   - `stable-runtime` is for USER RUNTIME only
-   - Only merge validated changes from `dev`
+
+- `stable-runtime` is for USER RUNTIME only
+- Only merge validated changes from `dev`
 
 ❌ **Never force push to `stable-runtime`**
-   - This breaks user experience continuity
+
+- This breaks user experience continuity
 
 ❌ **Never merge unvalidated code to `stable-runtime`**
-   - Always test thoroughly in `dev` first
+
+- Always test thoroughly in `dev` first
 
 ❌ **Never interrupt Titan-Stable process during development**
-   - Stable runtime must remain independent
+
+- Stable runtime must remain independent
 
 ### ✅ ALWAYS DO
 
 ✅ **Always develop in `dev` or `feature/*` branches**
-   - This protects user experience
+
+- This protects user experience
 
 ✅ **Always test in Titan-Dev before merging to stable**
-   - Validate features thoroughly
+
+- Validate features thoroughly
 
 ✅ **Always use merge (not rebase) for `dev` → `stable-runtime`**
-   - Preserves deployment history
+
+- Preserves deployment history
 
 ✅ **Always commit before switching branches**
-   - Or use `./scripts/git/clean-working-state.sh` to stash
+
+- Or use `./scripts/git/clean-working-state.sh` to stash
 
 ---
 
@@ -325,9 +336,9 @@ git reset --hard HEAD
 
 ## 📝 VERSION HISTORY
 
-| Version | Date | Changes |
-|---------|------|---------|
-| v1.0 | 2025-01-XX | Initial dual-runtime Git workflow setup |
+| Version | Date       | Changes                                 |
+| ------- | ---------- | --------------------------------------- |
+| v1.0    | 2025-01-XX | Initial dual-runtime Git workflow setup |
 
 ---
 

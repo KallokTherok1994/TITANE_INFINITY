@@ -4,7 +4,13 @@
 // ═══════════════════════════════════════════════════════════════
 
 // Re-export canonical types from services/ai/types.ts
-export type { AIMessage, AIResponse, AIConfig, AIProvider, AIProviderName } from '@/services/ai/types';
+export type {
+  AIMessage,
+  AIResponse,
+  AIConfig,
+  AIProvider,
+  AIProviderName,
+} from '@/services/ai/types';
 
 // Additional types specific to this module (not in canonical types)
 export type ModalityOrigin = 'voice' | 'text' | 'gesture' | 'visual' | 'multimodal';

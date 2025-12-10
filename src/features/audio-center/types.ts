@@ -30,10 +30,10 @@ export interface VoiceProfile {
 export interface TTSSettings {
   engine: TTSEngine;
   voiceId: string;
-  rate: number;      // 0.5 - 2.0
-  pitch: number;     // 0.5 - 2.0
-  volume: number;    // 0.0 - 1.0
-  language: string;  // 'fr-FR', 'en-US'
+  rate: number; // 0.5 - 2.0
+  pitch: number; // 0.5 - 2.0
+  volume: number; // 0.0 - 1.0
+  language: string; // 'fr-FR', 'en-US'
   emotionEnabled: boolean;
   autoFallback: boolean;
 }
@@ -59,19 +59,19 @@ export interface AudioDevice {
   type: 'input' | 'output';
   isDefault: boolean;
   isActive: boolean;
-  driver: string;  // 'pipewire', 'alsa', 'pulseaudio'
+  driver: string; // 'pipewire', 'alsa', 'pulseaudio'
 }
 
 export interface AudioOutputSettings {
   deviceId: string;
-  volume: number;       // 0.0 - 1.0
-  balance: number;      // -1.0 (left) to 1.0 (right)
+  volume: number; // 0.0 - 1.0
+  balance: number; // -1.0 (left) to 1.0 (right)
   enhancementsEnabled: boolean;
 }
 
 export interface AudioInputSettings {
   deviceId: string;
-  gain: number;         // 0.0 - 2.0
+  gain: number; // 0.0 - 2.0
   noiseSuppression: boolean;
   echoCancellation: boolean;
   autoGainControl: boolean;
@@ -156,19 +156,19 @@ export const AVAILABLE_VOICES: VoiceProfile[] = [
 export interface AudioTestResult {
   success: boolean;
   latencyMs: number;
-  qualityScore: number;  // 0-100
+  qualityScore: number; // 0-100
   errorMessage?: string;
-  provider?: string;     // Which TTS/audio provider was used
-  duration?: number;     // Test duration in ms
+  provider?: string; // Which TTS/audio provider was used
+  duration?: number; // Test duration in ms
   signalToNoise?: number; // For mic tests (dB)
-  peakLevel?: number;    // For mic tests (0.0 - 1.0)
-  noiseFloor?: number;   // For mic tests (0.0 - 1.0)
+  peakLevel?: number; // For mic tests (0.0 - 1.0)
+  noiseFloor?: number; // For mic tests (0.0 - 1.0)
 }
 
 export interface MicrophoneTestResult {
   success: boolean;
-  peakLevel: number;     // 0.0 - 1.0
-  noiseFloor: number;    // 0.0 - 1.0
+  peakLevel: number; // 0.0 - 1.0
+  noiseFloor: number; // 0.0 - 1.0
   signalToNoise: number; // dB
   errorMessage?: string;
 }

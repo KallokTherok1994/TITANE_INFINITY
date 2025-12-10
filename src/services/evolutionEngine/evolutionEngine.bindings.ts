@@ -21,7 +21,12 @@ export type EvolutionRiskLevel = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 export type GovernanceRole = 'USER' | 'DEV' | 'ADMIN' | 'SYSTEM';
 
 /** Statut d'une suggestion */
-export type SuggestionStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'APPLIED' | 'REVERTED';
+export type SuggestionStatus =
+  | 'PENDING'
+  | 'APPROVED'
+  | 'REJECTED'
+  | 'APPLIED'
+  | 'REVERTED';
 
 /** Catégories de données */
 export type DataCategory =
@@ -57,7 +62,13 @@ export type EvolutionActionType =
 export type ActionResult = 'SUCCESS' | 'FAILED' | 'PARTIAL' | 'REVERTED';
 
 /** Phases d'évolution */
-export type EvolutionPhase = 'COLLECTION' | 'ANALYSIS' | 'PLANNING' | 'EXECUTION' | 'VALIDATION' | 'IDLE';
+export type EvolutionPhase =
+  | 'COLLECTION'
+  | 'ANALYSIS'
+  | 'PLANNING'
+  | 'EXECUTION'
+  | 'VALIDATION'
+  | 'IDLE';
 
 /** Direction de tendance */
 export type TrendDirection = 'UP' | 'DOWN' | 'STABLE';
@@ -419,9 +430,7 @@ export async function getEvolutionHistory(options?: {
 /**
  * Effacer l'historique ancien
  */
-export async function clearOldEvolutionHistory(
-  beforeTimestamp: number
-): Promise<number> {
+export async function clearOldEvolutionHistory(beforeTimestamp: number): Promise<number> {
   return secureInvoke<number>('evolution_clear_old_history', {
     beforeTimestamp,
   });
@@ -536,7 +545,12 @@ export class EvolutionEngineClient {
     await this.approveSuggestion(suggestionId, role);
 
     // 2. Créer l'action
-    const action = await this.createAction(suggestionId, actionType, targetModule, parameters);
+    const action = await this.createAction(
+      suggestionId,
+      actionType,
+      targetModule,
+      parameters
+    );
 
     // 3. Exécuter l'action
     return this.executeAction(action.id, role);

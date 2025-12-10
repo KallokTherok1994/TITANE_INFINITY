@@ -3,11 +3,11 @@
 //! Super Prompt #9 — Gestion du fil narratif et continuité conversationnelle
 //! ═══════════════════════════════════════════════════════════════════════════════
 
+use super::intent::UserIntent;
+use super::MemoryContext;
 use serde::{Deserialize, Serialize};
 use std::collections::VecDeque;
 use tokio::sync::RwLock;
-use super::intent::UserIntent;
-use super::MemoryContext;
 
 /// Élément du fil narratif
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -222,7 +222,8 @@ impl NarrativeEngine {
     /// Extrait les entités nommées (simplifiée)
     fn extract_entities(&self, input: &str) -> Vec<String> {
         // Version simplifiée: extraire les mots capitalisés
-        input.split_whitespace()
+        input
+            .split_whitespace()
             .filter(|w| w.chars().next().map(|c| c.is_uppercase()).unwrap_or(false))
             .filter(|w| w.len() > 2)
             .take(5)
@@ -243,10 +244,7 @@ impl NarrativeEngine {
 
         // Ajouter les points clés récents
         if !state.key_points.is_empty() {
-            let recent_points: Vec<_> = state.key_points.iter()
-                .rev()
-                .take(3)
-                .collect();
+            let recent_points: Vec<_> = state.key_points.iter().rev().take(3).collect();
             summary_parts.push(format!("Points abordés: {}", recent_points.len()));
         }
 
@@ -319,11 +317,7 @@ impl NarrativeEngine {
 
         let should_reference_past = state.depth > 2 && !state.key_points.is_empty();
 
-        let key_elements = state.key_points.iter()
-            .rev()
-            .take(3)
-            .cloned()
-            .collect();
+        let key_elements = state.key_points.iter().rev().take(3).cloned().collect();
 
         ResponseStructure {
             position,
@@ -334,7 +328,11 @@ impl NarrativeEngine {
         }
     }
 
-    fn suggest_opening(&self, position: &DiscoursePosition, state: &NarrativeState) -> Option<String> {
+    fn suggest_opening(
+        &self,
+        position: &DiscoursePosition,
+        state: &NarrativeState,
+    ) -> Option<String> {
         match position {
             DiscoursePosition::Opening => Some("Introduction du sujet".to_string()),
             DiscoursePosition::Development => {
@@ -387,7 +385,9 @@ impl Default for NarrativeEngine {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::conversation_os::intent::{IntentType, IntentConfidence, UrgencyLevel, ComplexityLevel};
+    use crate::conversation_os::intent::{
+        ComplexityLevel, IntentConfidence, IntentType, UrgencyLevel,
+    };
 
     #[tokio::test]
     async fn test_narrative_engine_creation() {
@@ -401,7 +401,10 @@ mod tests {
         let engine = NarrativeEngine::new();
         let intent = UserIntent {
             intent_type: IntentType::Question,
-            confidence: IntentConfidence { primary: 0.8, secondary: None },
+            confidence: IntentConfidence {
+                primary: 0.8,
+                secondary: None,
+            },
             keywords: vec!["test".to_string()],
             urgency: UrgencyLevel::Normal,
             complexity: ComplexityLevel::Simple,

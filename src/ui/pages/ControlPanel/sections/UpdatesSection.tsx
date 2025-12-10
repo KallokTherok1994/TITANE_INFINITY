@@ -50,7 +50,11 @@ export const UpdatesSection: React.FC = () => {
     <div className="cp-section">
       <div className="cp-section-header">
         <h2 className="cp-section-title">Mises à jour</h2>
-        <button className="cp-button secondary" onClick={checkForUpdates} disabled={checking}>
+        <button
+          className="cp-button secondary"
+          onClick={checkForUpdates}
+          disabled={checking}
+        >
           {checking ? '⏳ Vérification...' : '🔍 Vérifier'}
         </button>
       </div>
@@ -94,8 +98,7 @@ export const UpdatesSection: React.FC = () => {
               </>
             ) : (
               <span className="cp-badge success">
-                <span className="cp-badge-dot" />
-                À jour
+                <span className="cp-badge-dot" />À jour
               </span>
             )}
           </div>

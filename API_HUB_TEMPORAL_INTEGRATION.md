@@ -61,6 +61,7 @@ L'**API Hub** de TITANE∞ a été enrichi avec l'**Intelligence Temporelle v2**
 **Rôle:** Adapter central qui calcule les ajustements temporels pour toute l'infrastructure API.
 
 **Méthodes:**
+
 ```rust
 pub async fn get_api_adjustments(&self) -> ApiTemporalAdjustments
 pub async fn get_cache_ttl(&self, endpoint: &str) -> u64
@@ -69,12 +70,12 @@ pub async fn suggest_provider(&self, modality: Modality) -> ProviderSuggestion
 
 **Ajustements selon l'heure:**
 
-| Temporalité | Rate Limit | Cache TTL | Qualité | Coût | Batching |
-|-------------|-----------|-----------|---------|------|----------|
-| **Peak (10-11h)** | ×1.5 | 300s | ✅ High | 0.3 | ❌ |
-| **Normal** | ×1.0 | 600s | ⚖️ Balanced | 0.5 | ❌ |
-| **Night (2-4h)** | ×0.5 | 1800s | ⬇️ Standard | 0.8 | ✅ |
-| **Weekend** | ×0.8 | 900s | ⚖️ Balanced | 0.6 | ⚡ Partial |
+| Temporalité       | Rate Limit | Cache TTL | Qualité     | Coût | Batching   |
+| ----------------- | ---------- | --------- | ----------- | ---- | ---------- |
+| **Peak (10-11h)** | ×1.5       | 300s      | ✅ High     | 0.3  | ❌         |
+| **Normal**        | ×1.0       | 600s      | ⚖️ Balanced | 0.5  | ❌         |
+| **Night (2-4h)**  | ×0.5       | 1800s     | ⬇️ Standard | 0.8  | ✅         |
+| **Weekend**       | ×0.8       | 900s      | ⚖️ Balanced | 0.6  | ⚡ Partial |
 
 **Tests:** 8 tests couvrant tous les scénarios temporels
 
@@ -85,11 +86,13 @@ pub async fn suggest_provider(&self, modality: Modality) -> ProviderSuggestion
 **Rôle:** Rate limiter adaptatif utilisant sliding windows avec limites temporelles.
 
 **Fonctionnalités:**
+
 - Fenêtres glissantes (60s minute, 3600s heure)
 - Limites ajustées par multiplicateur temporel
 - Auto-reset des compteurs
 
 **Exemple:**
+
 ```rust
 let rate_limiter = TemporalRateLimiter::new(100, 1000, temporal_adapter);
 
@@ -107,12 +110,14 @@ let permit = rate_limiter.acquire_permit().await?;
 **Rôle:** Cache adaptatif avec TTL variable selon temporalité et type d'endpoint.
 
 **Fonctionnalités:**
+
 - TTL adaptatif selon heure et endpoint
 - Éviction LRU automatique
 - Statistiques (hit rate, entries, expiration)
 - Cleanup périodique
 
 **TTL Adaptatif:**
+
 ```rust
 // Chat endpoint, peak hours: 300s / 2 = 150s (2.5min)
 // Chat endpoint, night: 1800s / 2 = 900s (15min)
@@ -129,6 +134,7 @@ let permit = rate_limiter.acquire_permit().await?;
 **Rôle:** Circuit breaker résilient avec seuils adaptatifs.
 
 **États:**
+
 - **Closed** — Fonctionnement normal
 - **Open** — Circuit ouvert (rejette requêtes)
 - **HalfOpen** — Test de récupération
@@ -136,10 +142,10 @@ let permit = rate_limiter.acquire_permit().await?;
 **Seuils Adaptatifs:**
 
 | Temporalité | Failures → Open | Recovery Timeout |
-|-------------|----------------|------------------|
-| **Peak** | 5 échecs | 30s |
-| **Normal** | 7 échecs | 60s |
-| **Night** | 10 échecs | 120s |
+| ----------- | --------------- | ---------------- |
+| **Peak**    | 5 échecs        | 30s              |
+| **Normal**  | 7 échecs        | 60s              |
+| **Night**   | 10 échecs       | 120s             |
 
 **Logique:** Plus tolérant la nuit (moins d'utilisateurs), plus strict en peak (expérience critique).
 
@@ -152,6 +158,7 @@ let permit = rate_limiter.acquire_permit().await?;
 **Ajout:** Intelligence temporelle pour sélection optimale de providers.
 
 **Modifications:**
+
 ```rust
 pub struct APIRouter {
     default_strategy: ModelChoiceStrategy,
@@ -167,6 +174,7 @@ fn adapt_strategy_to_temporal(
 ```
 
 **Adaptation Stratégie:**
+
 - **Peak hours** (prefer_quality):
   - `CostEfficient` → `Balanced`
   - `Speed` → `Quality`
@@ -175,6 +183,7 @@ fn adapt_strategy_to_temporal(
   - `Speed` → `CostEfficient`
 
 **Provider Bonus:**
+
 - **Peak + Quality:** Anthropic +1.0 (Claude excellence)
 - **Night + Cost:** Gemini +0.8 (meilleur rapport qualité/prix)
 
@@ -311,12 +320,13 @@ pub async fn get_api_adjustments(&self) -> ApiTemporalAdjustments {
 
     let hour = temporal_context.current_time.hour();
     let is_weekend = temporal_context.is_weekend;
-    
+
     // Calcul ajustements...
 }
 ```
 
 **Ponts actifs:**
+
 - `TemporalApiAdapter` ↔️ `TemporalEngine` (contexte temporel)
 - `APIRouter` ↔️ `TemporalAdapter` (suggestions providers)
 - Tous les composants temporels partagent la même source de vérité
@@ -328,6 +338,7 @@ pub async fn get_api_adjustments(&self) -> ApiTemporalAdjustments {
 ### Statistiques Disponibles
 
 **Rate Limiter:**
+
 ```rust
 pub struct RateLimitStats {
     pub current_rpm: u32,
@@ -339,6 +350,7 @@ pub struct RateLimitStats {
 ```
 
 **Cache:**
+
 ```rust
 pub struct CacheStats {
     pub total_entries: usize,
@@ -350,6 +362,7 @@ pub struct CacheStats {
 ```
 
 **Circuit Breaker:**
+
 ```rust
 pub struct BreakerStats {
     pub current_state: CircuitState,
@@ -410,14 +423,14 @@ cargo test --lib api_hub
 
 ### Couverture
 
-| Composant | Tests Unitaires | Tests Intégration | Total |
-|-----------|----------------|-------------------|-------|
-| TemporalAdapter | 8 | 2 | 10 |
-| RateLimiter | 3 | 2 | 5 |
-| Cache | 5 | 2 | 7 |
-| CircuitBreaker | 5 | 1 | 6 |
-| Router | - | 1 | 1 |
-| **TOTAL** | **21** | **8** | **29** |
+| Composant       | Tests Unitaires | Tests Intégration | Total  |
+| --------------- | --------------- | ----------------- | ------ |
+| TemporalAdapter | 8               | 2                 | 10     |
+| RateLimiter     | 3               | 2                 | 5      |
+| Cache           | 5               | 2                 | 7      |
+| CircuitBreaker  | 5               | 1                 | 6      |
+| Router          | -               | 1                 | 1      |
+| **TOTAL**       | **21**          | **8**             | **29** |
 
 ---
 
@@ -505,15 +518,15 @@ async fn main() {
 
 ## 📚 FICHIERS CRÉÉS
 
-| Fichier | Lignes | Description |
-|---------|--------|-------------|
-| `temporal_adapter.rs` | 294 | Adapter central ajustements temporels |
-| `temporal_rate_limiter.rs` | 200+ | Rate limiting adaptatif |
-| `temporal_cache.rs` | 200+ | Cache TTL dynamique |
-| `temporal_circuit_breaker.rs` | 250+ | Circuit breaker résilient |
-| `temporal_integration_tests.rs` | 200+ | Tests intégration E2E |
-| `router.rs` (modifié) | +60 | Adaptation temporelle routing |
-| `mod.rs` (modifié) | +10 | Exports temporels |
+| Fichier                         | Lignes | Description                           |
+| ------------------------------- | ------ | ------------------------------------- |
+| `temporal_adapter.rs`           | 294    | Adapter central ajustements temporels |
+| `temporal_rate_limiter.rs`      | 200+   | Rate limiting adaptatif               |
+| `temporal_cache.rs`             | 200+   | Cache TTL dynamique                   |
+| `temporal_circuit_breaker.rs`   | 250+   | Circuit breaker résilient             |
+| `temporal_integration_tests.rs` | 200+   | Tests intégration E2E                 |
+| `router.rs` (modifié)           | +60    | Adaptation temporelle routing         |
+| `mod.rs` (modifié)              | +10    | Exports temporels                     |
 
 **Total:** ~1400 lignes + 29 tests
 
@@ -581,6 +594,6 @@ async fn main() {
 
 **🌐 API Hub Temporal Integration — COMPLETE ✅**
 
-*"Intelligence temporelle pour orchestration API optimale"*
+_"Intelligence temporelle pour orchestration API optimale"_
 
 **TITANE∞ vΩ — L'avenir de l'orchestration adaptative**

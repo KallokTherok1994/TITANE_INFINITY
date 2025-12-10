@@ -20,7 +20,11 @@ import React, {
   type PointerEventHandler,
 } from 'react';
 import type { CSSProperties } from 'react';
-import { useChat, type ProviderPreference, type ChatDebugEntry } from '../../hooks/useChat';
+import {
+  useChat,
+  type ProviderPreference,
+  type ChatDebugEntry,
+} from '../../hooks/useChat';
 // OMEGA v19.2Ω: Utiliser MessageListOptimized pour production
 import { MessageListOptimized as MessageList } from '../../components/chat/MessageListOptimized';
 // import { MessageListSimple as MessageList } from '../../components/chat/MessageListSimple';
@@ -118,7 +122,7 @@ const ChatDebugPanel = ({
   );
 
   const handlePointerDown = useCallback<PointerEventHandler<HTMLDivElement>>(
-    (event) => {
+    event => {
       const header = event.currentTarget;
       dragRef.current = {
         pointerId: event.pointerId,
@@ -131,7 +135,7 @@ const ChatDebugPanel = ({
   );
 
   const handlePointerMove = useCallback<PointerEventHandler<HTMLDivElement>>(
-    (event) => {
+    event => {
       const dragState = dragRef.current;
       if (!dragState || dragState.pointerId !== event.pointerId) {
         return;
@@ -152,7 +156,7 @@ const ChatDebugPanel = ({
     [clampPosition, collapsed, onPositionChange]
   );
 
-  const handlePointerUp = useCallback<PointerEventHandler<HTMLDivElement>>((event) => {
+  const handlePointerUp = useCallback<PointerEventHandler<HTMLDivElement>>(event => {
     if (dragRef.current?.pointerId === event.pointerId) {
       event.currentTarget.releasePointerCapture(event.pointerId);
       dragRef.current = null;
@@ -226,7 +230,9 @@ const ChatDebugPanel = ({
           <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Debug Chat IA</span>
           {!collapsed && (
             <span style={{ fontSize: '0.7rem', opacity: 0.7 }}>
-              {lastEntry ? new Date(lastEntry.timestamp).toLocaleTimeString() : 'Aucun échange'}
+              {lastEntry
+                ? new Date(lastEntry.timestamp).toLocaleTimeString()
+                : 'Aucun échange'}
             </span>
           )}
         </div>
@@ -280,18 +286,21 @@ const ChatDebugPanel = ({
               <div style={{ fontSize: '0.8rem', lineHeight: 1.5 }}>
                 <strong>Provider demandé :</strong> {lastEntry.requestedProvider}
                 <br />
-                <strong>Statut :</strong> {lastEntry.status === 'success' ? '✅ Succès' : '⚠️ Échec'}
+                <strong>Statut :</strong>{' '}
+                {lastEntry.status === 'success' ? '✅ Succès' : '⚠️ Échec'}
               </div>
 
               {lastEntry.selectedProvider && (
                 <div style={{ fontSize: '0.8rem', lineHeight: 1.5 }}>
-                  <strong>Provider final :</strong> {resolveProviderDisplayName(lastEntry.selectedProvider)}
+                  <strong>Provider final :</strong>{' '}
+                  {resolveProviderDisplayName(lastEntry.selectedProvider)}
                 </div>
               )}
 
               {typeof lastEntry.latencyMs === 'number' && (
                 <div style={{ fontSize: '0.8rem', lineHeight: 1.5 }}>
-                  <strong>Latence :</strong> {Math.max(0, Math.round(lastEntry.latencyMs))} ms
+                  <strong>Latence :</strong>{' '}
+                  {Math.max(0, Math.round(lastEntry.latencyMs))} ms
                 </div>
               )}
 
@@ -299,13 +308,15 @@ const ChatDebugPanel = ({
                 <div style={{ fontSize: '0.75rem', opacity: 0.75 }}>
                   <strong>Ordre tentatives :</strong>{' '}
                   {lastEntry.request.attemptedProviders
-                    .map((provider) => resolveProviderDisplayName(provider))
+                    .map(provider => resolveProviderDisplayName(provider))
                     .join(' → ')}
                 </div>
               )}
 
               <div>
-                <div style={{ fontSize: '0.75rem', opacity: 0.7, marginBottom: 4 }}>Tentatives</div>
+                <div style={{ fontSize: '0.75rem', opacity: 0.7, marginBottom: 4 }}>
+                  Tentatives
+                </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                   {lastEntry.attempts.map((attempt, index) => (
                     <div
@@ -314,13 +325,19 @@ const ChatDebugPanel = ({
                         fontSize: '0.75rem',
                         padding: '6px 8px',
                         borderRadius: '8px',
-                        background: attempt.success ? 'rgba(34,197,94,0.12)' : 'rgba(248,113,113,0.12)',
+                        background: attempt.success
+                          ? 'rgba(34,197,94,0.12)'
+                          : 'rgba(248,113,113,0.12)',
                         border: `1px solid ${attempt.success ? 'rgba(34,197,94,0.35)' : 'rgba(248,113,113,0.35)'}`,
-                        boxShadow: attempt.success ? '0 0 0 1px rgba(56,189,248,0.4)' : 'none',
+                        boxShadow: attempt.success
+                          ? '0 0 0 1px rgba(56,189,248,0.4)'
+                          : 'none',
                       }}
                     >
                       <strong>{resolveProviderDisplayName(attempt.provider)}</strong>{' '}
-                      {attempt.success ? '— Succès' : `— Erreur : ${attempt.error ?? 'inconnue'}`}
+                      {attempt.success
+                        ? '— Succès'
+                        : `— Erreur : ${attempt.error ?? 'inconnue'}`}
                     </div>
                   ))}
                 </div>
@@ -351,11 +368,17 @@ const ChatDebugPanel = ({
                   fontSize: '0.7rem',
                 }}
               >
-                {JSON.stringify(lastEntry.response ?? { error: lastEntry.error ?? 'Aucune donnée' }, null, 2)}
+                {JSON.stringify(
+                  lastEntry.response ?? { error: lastEntry.error ?? 'Aucune donnée' },
+                  null,
+                  2
+                )}
               </pre>
             </>
           ) : (
-            <div style={{ fontSize: '0.8rem', opacity: 0.7 }}>Aucun échange enregistré pour le moment.</div>
+            <div style={{ fontSize: '0.8rem', opacity: 0.7 }}>
+              Aucun échange enregistré pour le moment.
+            </div>
           )}
         </div>
       )}
@@ -392,7 +415,7 @@ function useOmegaRenderProtection() {
     recoveryCount: 0,
     lastRecovery: 0,
     stateVersion: 1,
-    isCorrupted: false
+    isCorrupted: false,
   });
 
   const renderAttempts = useRef(0);
@@ -405,7 +428,7 @@ function useOmegaRenderProtection() {
     autoHealEngine.heal('chat-page', error, 'validation', {
       context,
       renderAttempts: renderAttempts.current,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
 
     setPageState(prev => ({
@@ -414,7 +437,7 @@ function useOmegaRenderProtection() {
       recoveryCount: prev.recoveryCount + 1,
       lastRecovery: Date.now(),
       stateVersion: prev.stateVersion + 1,
-      isCorrupted: renderAttempts.current >= maxRenderAttempts
+      isCorrupted: renderAttempts.current >= maxRenderAttempts,
     }));
 
     isDev && console.error('[OMEGA CHAT PAGE] Render error handled:', error, context);
@@ -426,7 +449,7 @@ function useOmegaRenderProtection() {
       ...prev,
       renderError: null,
       isCorrupted: false,
-      stateVersion: prev.stateVersion + 1
+      stateVersion: prev.stateVersion + 1,
     }));
     isDev && console.log('[OMEGA CHAT PAGE] State reset');
   }, []);
@@ -458,16 +481,34 @@ export const Chat: React.FC = () => {
   const [voiceModeActive, setVoiceModeActive] = useState(false);
   const [debugPanelVisible, setDebugPanelVisible] = useState(false);
   const [debugPanelCollapsed, setDebugPanelCollapsed] = useState(false);
-  const [debugPanelPosition, setDebugPanelPosition] = useState<PanelPosition>(DEFAULT_PANEL_POSITION);
+  const [debugPanelPosition, setDebugPanelPosition] =
+    useState<PanelPosition>(DEFAULT_PANEL_POSITION);
 
   // ═══ MODE CHAT STATE ═══
   const [currentChatMode, setCurrentChatMode] = useState<ChatModeId>(() => {
     try {
       const saved = localStorage.getItem(CHAT_MODE_STORAGE_KEY);
-      if (saved && ['default', 'brainstorming', 'synthesis', 'planning', 'journal', 'debug_cognitive', 'coach', 'dev', 'admin', 'strategy', 'audit'].includes(saved)) {
+      if (
+        saved &&
+        [
+          'default',
+          'brainstorming',
+          'synthesis',
+          'planning',
+          'journal',
+          'debug_cognitive',
+          'coach',
+          'dev',
+          'admin',
+          'strategy',
+          'audit',
+        ].includes(saved)
+      ) {
         return saved as ChatModeId;
       }
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
     return 'default';
   });
 
@@ -476,7 +517,9 @@ export const Chat: React.FC = () => {
     setCurrentChatMode(newMode);
     try {
       localStorage.setItem(CHAT_MODE_STORAGE_KEY, newMode);
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
     isDev && console.log(`[OMEGA CHAT] Mode changé: ${newMode}`);
   }, []);
 
@@ -510,7 +553,7 @@ export const Chat: React.FC = () => {
 
   // ═══ PHASE 5.1: PROTECTED HOOKS ═══
   const chatHookResult = useChat({
-    voiceEnabled: voiceModeActive
+    voiceEnabled: voiceModeActive,
   });
 
   const {
@@ -525,7 +568,7 @@ export const Chat: React.FC = () => {
     preferredProvider,
     setPreferredProvider,
     lastProvider,
-    debugEntries
+    debugEntries,
   } = chatHookResult;
 
   // Phase 1.9: Audio Feedback - VAD integration with anti-echo + barge-in
@@ -537,7 +580,7 @@ export const Chat: React.FC = () => {
   useEffect(() => {
     if (voiceModeActive) {
       vad.enableBargeIn(); // Allow user to interrupt AI
-      vad.startListening().catch((err) => {
+      vad.startListening().catch(err => {
         console.error('[Chat] Failed to start VAD:', err);
       });
       console.log('[Chat] 🎤 Voice mode enabled: VAD started, barge-in enabled');
@@ -550,13 +593,21 @@ export const Chat: React.FC = () => {
 
   // OMEGA DEBUG: Trace messages dans Chat.tsx
   useEffect(() => {
-    console.log('[OMEGA CHAT PAGE DEBUG] 📊 Messages state changed:', messages?.length, 'messages');
+    console.log(
+      '[OMEGA CHAT PAGE DEBUG] 📊 Messages state changed:',
+      messages?.length,
+      'messages'
+    );
   }, [messages]);
 
   const providerStatus = useMemo<ProviderStatus>(() => {
     const lastEntry = debugEntries[0];
     const attemptedProviders = lastEntry?.request?.attemptedProviders ?? [];
-    const resolvedProviderRaw = lastEntry?.selectedProvider ?? lastEntry?.response?.provider ?? lastProvider ?? null;
+    const resolvedProviderRaw =
+      lastEntry?.selectedProvider ??
+      lastEntry?.response?.provider ??
+      lastProvider ??
+      null;
     const displayName = resolveProviderDisplayName(resolvedProviderRaw);
     const status: ProviderStatus['status'] = (() => {
       if (error) {
@@ -571,11 +622,12 @@ export const Chat: React.FC = () => {
       return 'online';
     })();
 
-    const latency = typeof lastEntry?.latencyMs === 'number'
-      ? lastEntry.latencyMs
-      : typeof lastEntry?.response?.latencyMs === 'number'
-        ? lastEntry.response.latencyMs
-        : undefined;
+    const latency =
+      typeof lastEntry?.latencyMs === 'number'
+        ? lastEntry.latencyMs
+        : typeof lastEntry?.response?.latencyMs === 'number'
+          ? lastEntry.response.latencyMs
+          : undefined;
 
     return {
       name: displayName,
@@ -626,7 +678,7 @@ export const Chat: React.FC = () => {
     try {
       if (messages.length === 0) return;
 
-      if (window.confirm('Effacer tout l\'historique du chat ?')) {
+      if (window.confirm("Effacer tout l'historique du chat ?")) {
         clearChat();
       }
     } catch (clearError) {
@@ -673,16 +725,18 @@ export const Chat: React.FC = () => {
 
   const omnisStatsSafe = useMemo(() => {
     try {
-      return omnisStats || {
-        failureCount: 0,
-        autoHealCount: 0,
-        pipelineHealth: 'unknown',
-        totalRequests: 0,
-        successCount: 0,
-        errorCount: 0,
-        successRate: 0,
-        engineVersion: 'unknown'
-      };
+      return (
+        omnisStats || {
+          failureCount: 0,
+          autoHealCount: 0,
+          pipelineHealth: 'unknown',
+          totalRequests: 0,
+          successCount: 0,
+          errorCount: 0,
+          successRate: 0,
+          engineVersion: 'unknown',
+        }
+      );
     } catch (statsError) {
       return {
         failureCount: 0,
@@ -692,7 +746,7 @@ export const Chat: React.FC = () => {
         successCount: 0,
         errorCount: 0,
         successRate: 0,
-        engineVersion: 'unknown'
+        engineVersion: 'unknown',
       };
     }
   }, [omnisStats]);
@@ -715,9 +769,7 @@ export const Chat: React.FC = () => {
       <div className="chat-page chat-page-critical">
         <div className="chat-critical-recovery">
           <div className="chat-critical-icon">🆘</div>
-          <h2 className="chat-critical-title">
-            Récupération critique OMEGA
-          </h2>
+          <h2 className="chat-critical-title">Récupération critique OMEGA</h2>
           <p className="chat-critical-text">
             Erreur de rendu persistante détectée. Le système maintient la stabilité.
           </p>
@@ -730,7 +782,10 @@ export const Chat: React.FC = () => {
             <button onClick={resetError} className="chat-critical-reset">
               Réinitialiser l'interface
             </button>
-            <button onClick={() => window.location.reload()} className="chat-critical-reload">
+            <button
+              onClick={() => window.location.reload()}
+              className="chat-critical-reload"
+            >
               Recharger la page
             </button>
           </div>
@@ -742,7 +797,11 @@ export const Chat: React.FC = () => {
   // ═══ PHASE 5.7: MAIN RENDER WITH PROTECTION ═══
   try {
     return (
-      <div className="chat-page" data-omega-version="v19.2Ω" data-state-version={pageState.stateVersion}>
+      <div
+        className="chat-page"
+        data-omega-version="v19.2Ω"
+        data-state-version={pageState.stateVersion}
+      >
         {/* Enhanced Header with Status Bar + OMEGA Protection */}
         <div className="chat-header">
           <div className="chat-header-main">
@@ -789,8 +848,16 @@ export const Chat: React.FC = () => {
               <button
                 className="chat-action-btn"
                 onClick={toggleDebugPanelVisibility}
-                title={debugPanelVisible ? 'Masquer le panneau debug' : 'Afficher le panneau debug'}
-                aria-label={debugPanelVisible ? 'Masquer le panneau debug chat' : 'Afficher le panneau debug chat'}
+                title={
+                  debugPanelVisible
+                    ? 'Masquer le panneau debug'
+                    : 'Afficher le panneau debug'
+                }
+                aria-label={
+                  debugPanelVisible
+                    ? 'Masquer le panneau debug chat'
+                    : 'Afficher le panneau debug chat'
+                }
               >
                 🛠️
               </button>
@@ -808,24 +875,38 @@ export const Chat: React.FC = () => {
           {/* OMEGA Status Bar */}
           <div className="chat-status-bar chat-status-omega">
             <div className="chat-status-item chat-status-provider">
-              <span className={`status-indicator status-${providerStatus.status}`}
-                    aria-label={`Provider ${providerStatus.status}`} />
+              <span
+                className={`status-indicator status-${providerStatus.status}`}
+                aria-label={`Provider ${providerStatus.status}`}
+              />
               <span className="status-label">Actif:</span>
               <span
                 className="status-value"
-                title={providerStatus.attemptedProviders?.length
-                  ? `Tentatives: ${providerStatus.attemptedProviders
-                      .map(provider => resolveProviderDisplayName(provider))
-                      .join(' → ')}`
-                  : undefined}
+                title={
+                  providerStatus.attemptedProviders?.length
+                    ? `Tentatives: ${providerStatus.attemptedProviders
+                        .map(provider => resolveProviderDisplayName(provider))
+                        .join(' → ')}`
+                    : undefined
+                }
               >
                 {providerStatus.name}
               </span>
               {providerStatus.autoHealed && (
-                <span className="status-badge status-healed" title="Auto-guérison activée">🔄</span>
+                <span
+                  className="status-badge status-healed"
+                  title="Auto-guérison activée"
+                >
+                  🔄
+                </span>
               )}
               {providerStatus.lastError && (
-                <span className="status-badge status-error" title={providerStatus.lastError}>⚠️</span>
+                <span
+                  className="status-badge status-error"
+                  title={providerStatus.lastError}
+                >
+                  ⚠️
+                </span>
               )}
             </div>
 
@@ -906,7 +987,10 @@ export const Chat: React.FC = () => {
             )}
 
             {debugEntries.length > 0 && (
-              <div className="chat-status-item chat-status-debug" title="Entrées du panneau debug">
+              <div
+                className="chat-status-item chat-status-debug"
+                title="Entrées du panneau debug"
+              >
                 <span className="status-label">Debug:</span>
                 <span className="status-value">{debugEntries.length}</span>
               </div>
@@ -937,7 +1021,7 @@ export const Chat: React.FC = () => {
               error={error}
               enableTTS={true}
               autoScroll={true}
-              onCopyMessage={(content) => {
+              onCopyMessage={content => {
                 isDev && console.log('[OMEGA] Message copié:', content?.substring(0, 30));
               }}
             />
@@ -958,10 +1042,10 @@ export const Chat: React.FC = () => {
               }}
             >
               <VoiceConversation
-                onTranscript={(text) => {
+                onTranscript={text => {
                   isDev && console.log('[OMEGA] Voice transcript:', text);
                 }}
-                onResponse={(response) => {
+                onResponse={response => {
                   isDev && console.log('[OMEGA] Voice response:', response);
                 }}
               />
@@ -980,13 +1064,10 @@ export const Chat: React.FC = () => {
         {/* Settings Panel (Modal) with OMEGA Stats */}
         {showSettings && (
           <div className="chat-settings-overlay" onClick={toggleSettings}>
-            <div className="chat-settings-panel" onClick={(e) => e.stopPropagation()}>
+            <div className="chat-settings-panel" onClick={e => e.stopPropagation()}>
               <div className="chat-settings-header">
                 <h2 className="chat-settings-title">Paramètres OMEGA v19.2Ω</h2>
-                <button
-                  className="chat-settings-close"
-                  onClick={toggleSettings}
-                >
+                <button className="chat-settings-close" onClick={toggleSettings}>
                   ✕
                 </button>
               </div>
@@ -995,7 +1076,12 @@ export const Chat: React.FC = () => {
                 <div className="chat-setting-section">
                   <h3 className="chat-setting-section-title">🤖 Provider IA</h3>
                   <div className="chat-setting-item">
-                    <label className="chat-setting-label" htmlFor="omega-provider-preference">Préférence moteur</label>
+                    <label
+                      className="chat-setting-label"
+                      htmlFor="omega-provider-preference"
+                    >
+                      Préférence moteur
+                    </label>
                     <select
                       id="omega-provider-preference"
                       className="chat-provider-select"
@@ -1013,7 +1099,9 @@ export const Chat: React.FC = () => {
                     <label className="chat-setting-label">Dernier provider actif</label>
                     <div className="chat-setting-value">
                       {providerStatus.name}
-                      {typeof providerStatus.latency === 'number' ? ` • ${providerStatus.latency}ms` : ''}
+                      {typeof providerStatus.latency === 'number'
+                        ? ` • ${providerStatus.latency}ms`
+                        : ''}
                     </div>
                   </div>
                   <div className="chat-setting-item">
@@ -1024,9 +1112,7 @@ export const Chat: React.FC = () => {
                   </div>
                   <div className="chat-setting-item">
                     <label className="chat-setting-label">Entrées debug</label>
-                    <div className="chat-setting-value">
-                      {debugEntries.length}
-                    </div>
+                    <div className="chat-setting-value">{debugEntries.length}</div>
                   </div>
                   {providerStatus.attemptedProviders?.length ? (
                     <div className="chat-setting-item">
@@ -1069,7 +1155,8 @@ export const Chat: React.FC = () => {
                   <div className="chat-setting-item">
                     <label className="chat-setting-label">UI Shield</label>
                     <div className="chat-setting-value">
-                      {uiIntegrity?.preventedResets ?? 0} protections — version {uiIntegrity?.version ?? 1}
+                      {uiIntegrity?.preventedResets ?? 0} protections — version{' '}
+                      {uiIntegrity?.version ?? 1}
                     </div>
                   </div>
                 </div>
@@ -1105,7 +1192,6 @@ export const Chat: React.FC = () => {
         />
       </div>
     );
-
   } catch (renderError) {
     // ═══ ULTIMATE FALLBACK RENDER ═══
     handleRenderError(

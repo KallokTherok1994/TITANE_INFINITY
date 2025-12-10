@@ -5,11 +5,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import type {
-  ScreenAnalysis,
-  DevOpsAction,
-  ActionType,
-} from '../../../src/types/devops';
+import type { ScreenAnalysis, DevOpsAction, ActionType } from '../../../src/types/devops';
 
 // Mock Tauri invoke
 vi.mock('@tauri-apps/api/core', () => ({
@@ -61,10 +57,7 @@ describe('VisualDevOpsEngine', () => {
     });
 
     it('should analyze screen without image', async () => {
-      const analysis = await VisualDevOps.analyzeScreen(
-        undefined,
-        'Test context'
-      );
+      const analysis = await VisualDevOps.analyzeScreen(undefined, 'Test context');
 
       expect(analysis).toBeDefined();
       expect(analysis.id).toBeDefined();
@@ -111,7 +104,8 @@ describe('VisualDevOpsEngine', () => {
     });
 
     it('should detect errors in screen', async () => {
-      const errorContext = 'error[E0425]: cannot find value `foo` in this scope\n  --> src/main.rs:42:15';
+      const errorContext =
+        'error[E0425]: cannot find value `foo` in this scope\n  --> src/main.rs:42:15';
 
       const analysis = await VisualDevOps.analyzeScreen(undefined, errorContext);
 
@@ -300,9 +294,9 @@ describe('VisualDevOpsEngine', () => {
     });
 
     it('should throw error for unknown action', async () => {
-      await expect(
-        VisualDevOps.validateAction('unknown-id', true)
-      ).rejects.toThrow('Action unknown-id not found');
+      await expect(VisualDevOps.validateAction('unknown-id', true)).rejects.toThrow(
+        'Action unknown-id not found'
+      );
     });
   });
 
@@ -346,11 +340,7 @@ describe('VisualDevOpsEngine', () => {
     });
 
     it('should mark action as executed successfully', async () => {
-      await VisualDevOps.markActionExecuted(
-        action.id,
-        true,
-        'Build successful'
-      );
+      await VisualDevOps.markActionExecuted(action.id, true, 'Build successful');
 
       const history = VisualDevOps.getActionHistory();
       const executedAction = history.find(a => a.id === action.id);
@@ -385,7 +375,9 @@ describe('VisualDevOpsEngine', () => {
       const executedAction = history.find(a => a.id === action.id);
 
       expect(executedAction?.result?.duration_ms).toBeGreaterThan(0);
-      expect(executedAction?.result?.duration_ms).toBeLessThan(Date.now() - startTime + 1000);
+      expect(executedAction?.result?.duration_ms).toBeLessThan(
+        Date.now() - startTime + 1000
+      );
     });
   });
 
@@ -427,14 +419,16 @@ describe('VisualDevOpsEngine', () => {
       const action = await VisualDevOps.proposeAction(mockAnalysis, 'build');
 
       // Manually add a sudo command for testing
-      action.commands = [{
-        command: 'sudo',
-        args: ['apt', 'install', 'package'],
-        description: 'Install package',
-        estimated_duration: '1 minute',
-        requires_sudo: true,
-        safety_level: 'risky',
-      }];
+      action.commands = [
+        {
+          command: 'sudo',
+          args: ['apt', 'install', 'package'],
+          description: 'Install package',
+          estimated_duration: '1 minute',
+          requires_sudo: true,
+          safety_level: 'risky',
+        },
+      ];
 
       // Re-run security checks
       const checks = await (VisualDevOps as any).performSecurityChecks(action);
@@ -471,14 +465,16 @@ describe('VisualDevOpsEngine', () => {
 
       const action = await VisualDevOps.proposeAction(mockAnalysis, 'build');
 
-      action.commands = [{
-        command: 'rm',
-        args: ['-rf', 'dist/'],
-        description: 'Clean artifacts',
-        estimated_duration: '5 seconds',
-        requires_sudo: false,
-        safety_level: 'moderate',
-      }];
+      action.commands = [
+        {
+          command: 'rm',
+          args: ['-rf', 'dist/'],
+          description: 'Clean artifacts',
+          estimated_duration: '5 seconds',
+          requires_sudo: false,
+          safety_level: 'moderate',
+        },
+      ];
 
       const checks = await (VisualDevOps as any).performSecurityChecks(action);
 
@@ -559,12 +555,14 @@ describe('VisualDevOpsEngine', () => {
         technical_content: {
           languages_detected: [],
           frameworks_detected: [],
-          errors_detected: [{
-            error_type: 'compilation',
-            severity: 'high',
-            message: 'Error',
-            suggested_fixes: [],
-          }],
+          errors_detected: [
+            {
+              error_type: 'compilation',
+              severity: 'high',
+              message: 'Error',
+              suggested_fixes: [],
+            },
+          ],
         },
         diagnosis: {
           summary: '',

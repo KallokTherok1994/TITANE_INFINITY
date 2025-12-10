@@ -65,6 +65,7 @@ Avec Meta-Energy Engine → **stabilité, robustesse, fluidité, prédictibilit�
 Modèle énergétique multi-dimensionnel.
 
 **Dimensions:**
+
 - **Cognitive** — Raisonnement, analyse
 - **Creative** — Génération, innovation
 - **Social** — Communication, collaboration
@@ -74,6 +75,7 @@ Modèle énergétique multi-dimensionnel.
 - **Physical** — Calcul, I/O
 
 **Méthodes:**
+
 ```rust
 pub fn get_current_energy(&self) -> f32
 pub fn consume_energy(&mut self, amount: f32)
@@ -82,6 +84,7 @@ pub fn get_energy_by_dimension(&self, dim: EnergyDimension) -> f32
 ```
 
 **Niveaux:**
+
 - Optimal (> 0.9)
 - High (0.7-0.9)
 - Normal (0.5-0.7)
@@ -96,6 +99,7 @@ pub fn get_energy_by_dimension(&self, dim: EnergyDimension) -> f32
 Modèle de coûts cognitifs pour chaque opération.
 
 **Coûts:**
+
 ```rust
 TextProcessing:   0.05-0.15
 TextGeneration:   0.15-0.30
@@ -109,6 +113,7 @@ Creative:         0.30-0.60
 ```
 
 **Calcul:**
+
 - Coût de base
 - Facteur complexité
 - Impact fatigue
@@ -121,12 +126,14 @@ Creative:         0.30-0.60
 Régulation automatique du système.
 
 **Modes:**
+
 - **Normal** — Fonctionnement standard
 - **Conservative** — Réduction charge 30%
 - **Restricted** — Réduction charge 50%
 - **Emergency** — Réduction charge 70%
 
 **Actions:**
+
 - Réduction profondeur OMEGA
 - Désactivation agents non critiques
 - Simplification réponses
@@ -140,6 +147,7 @@ Régulation automatique du système.
 Suivi de la fatigue par moteur/agent.
 
 **Sources:**
+
 - OMEGA Pipeline
 - Memory OS
 - Multimodal OS
@@ -147,6 +155,7 @@ Suivi de la fatigue par moteur/agent.
 - Agents internes
 
 **Niveaux:**
+
 - Fresh (< 0.2)
 - Mild (0.2-0.4)
 - Moderate (0.4-0.6)
@@ -160,12 +169,14 @@ Suivi de la fatigue par moteur/agent.
 Gestion de la récupération énergétique.
 
 **Stratégies:**
+
 - **Passive** — Récupération continue lente
 - **Active** — Repos ciblé
 - **Accelerated** — Boost récupération (nuit)
 - **Differential** — Récupération par dimension
 
 **Taux:**
+
 - Base: 0.01/seconde
 - Nuit (2-6h): ×2.0
 - Weekend: ×1.2
@@ -178,6 +189,7 @@ Gestion de la récupération énergétique.
 Distribution intelligente de charge cognitive.
 
 **Priorités:**
+
 - Critical (4)
 - High (3)
 - Normal (2)
@@ -185,6 +197,7 @@ Distribution intelligente de charge cognitive.
 - Background (0)
 
 **Logique:**
+
 1. Filtrer agents capables
 2. Calculer affinité (spécialisation)
 3. Considérer fatigue agent
@@ -192,6 +205,7 @@ Distribution intelligente de charge cognitive.
 5. Assigner au meilleur
 
 **Actions:**
+
 - **Assign** — Tâche assignée
 - **Defer** — Différée
 - **Queue** — En attente
@@ -205,12 +219,14 @@ Distribution intelligente de charge cognitive.
 Couche de stabilisation long terme.
 
 **Modes:**
+
 - **Normal** — Stabilisation standard
 - **Conservative** — Priorité stabilité
 - **Aggressive** — Stabilisation forcée
 - **Adaptive** — Ajustement dynamique
 
 **Métriques:**
+
 ```rust
 pub struct StabilityMetrics {
     pub coherence_score: f32,       // 0.0-1.0
@@ -222,6 +238,7 @@ pub struct StabilityMetrics {
 ```
 
 **Actions:**
+
 - None — RAS
 - ReduceLoad — Réduction progressive
 - SimplifyResponses — Simplification
@@ -237,12 +254,14 @@ pub struct StabilityMetrics {
 Prédiction de surcharge.
 
 **Prévisions:**
+
 - Charge future
 - Risque surcharge
 - Moments critiques
 - Interventions recommandées
 
 **Alertes:**
+
 - Warning (charge > 70%)
 - Critical (charge > 85%)
 - Emergency (charge > 95%)
@@ -254,6 +273,7 @@ Prédiction de surcharge.
 Équilibrage de charge entre agents.
 
 **Métriques:**
+
 - Charge totale
 - Distribution agents
 - Bottlenecks
@@ -266,6 +286,7 @@ Prédiction de surcharge.
 Monitoring et diagnostics.
 
 **Événements:**
+
 - EnergyLow
 - EnergyCritical
 - FatigueHigh
@@ -274,6 +295,7 @@ Monitoring et diagnostics.
 - RecoveryCompleted
 
 **Métriques:**
+
 - Énergie actuelle
 - Fatigue par module
 - Charge agents
@@ -288,17 +310,18 @@ Monitoring et diagnostics.
 Pont vers Temporal Engine v2.
 
 **Fonctions:**
+
 - `adjust_recovery_for_time(hour, is_weekend)`
-  * Nuit (2-6h): récupération ×2.0
-  * Journée (9-18h): récupération ×1.0
-  * Soirée (18-23h): récupération ×1.3
-  * Weekend: +20% récupération
+  - Nuit (2-6h): récupération ×2.0
+  - Journée (9-18h): récupération ×1.0
+  - Soirée (18-23h): récupération ×1.3
+  - Weekend: +20% récupération
 
 - `predict_energy_availability(hour)`
-  * Peak (10-12h): énergie ×1.2
-  * Après-midi (14-16h): énergie ×1.1
-  * Fin journée (17-20h): énergie ×0.8
-  * Nuit (23-6h): énergie ×0.5
+  - Peak (10-12h): énergie ×1.2
+  - Après-midi (14-16h): énergie ×1.1
+  - Fin journée (17-20h): énergie ×0.8
+  - Nuit (23-6h): énergie ×0.5
 
 ---
 
@@ -307,12 +330,14 @@ Pont vers Temporal Engine v2.
 Pont vers Cycle Engine v2.
 
 **Synchronisation:**
+
 - **Morning** — Reset fatigue 30%
 - **Afternoon** — Stabilisation normale
 - **Evening** — Mode conservateur
 - **Night** — Récupération maximale
 
 **Cycles:**
+
 - Quotidien (24h)
 - Hebdomadaire (7 jours)
 - Mensuel (consolidation)
@@ -324,14 +349,15 @@ Pont vers Cycle Engine v2.
 Pont vers Kernel OS.
 
 **Fonctions:**
+
 - `get_scheduler_throttle()`
-  * Normal: 1.0 (pas de throttling)
-  * Conservative: 0.7
-  * Restricted: 0.5
-  * Emergency: 0.3
+  - Normal: 1.0 (pas de throttling)
+  - Conservative: 0.7
+  - Restricted: 0.5
+  - Emergency: 0.3
 
 - `should_kernel_reduce_load()`
-  * True si Restricted ou Emergency
+  - True si Restricted ou Emergency
 
 ---
 
@@ -340,15 +366,16 @@ Pont vers Kernel OS.
 Pont vers OMEGA Pipeline.
 
 **Fonctions:**
+
 - `recommend_depth(max_depth)`
-  * Énergie > 0.8: profondeur maximale
-  * Énergie > 0.6: 75% profondeur
-  * Énergie > 0.4: 50% profondeur
-  * Énergie > 0.2: 33% profondeur
-  * Énergie < 0.2: profondeur minimale
+  - Énergie > 0.8: profondeur maximale
+  - Énergie > 0.6: 75% profondeur
+  - Énergie > 0.4: 50% profondeur
+  - Énergie > 0.2: 33% profondeur
+  - Énergie < 0.2: profondeur minimale
 
 - `can_execute_omega(depth)`
-  * Vérifie si énergie suffisante
+  - Vérifie si énergie suffisante
 
 ---
 
@@ -417,7 +444,7 @@ let stability = stabilization.compute_stability().await;
 
 if !stability.is_stable() {
     let decision = stabilization.evaluate().await?;
-    
+
     match decision.action {
         StabilizationAction::ReduceLoad => {
             // Réduire charge progressive
@@ -455,6 +482,7 @@ let depth = omega_bridge.recommend_depth(10).await;
 ### Tests créés (40+ tests)
 
 **Unitaires (30+):**
+
 - EnergyModel (7 tests)
 - CostModel (6 tests)
 - Regulator (5 tests)
@@ -464,6 +492,7 @@ let depth = omega_bridge.recommend_depth(10).await;
 - StabilizationLayer (5 tests) ✨ NOUVEAU
 
 **Intégration (10 tests):** ✨ NOUVEAU
+
 1. `test_complete_energy_cycle` — Cycle complet
 2. `test_automatic_regulation` — Régulation auto
 3. `test_task_distribution` — Distribution tâches
@@ -497,21 +526,25 @@ pub struct MetaEnergyConfig {
 ## 📈 BÉNÉFICES
 
 ### Stabilité
+
 - Prévention surcharges
 - Régulation automatique
 - Stabilisation long terme
 
 ### Performance
+
 - Distribution optimale
 - Équilibrage charge
 - Priorisation intelligente
 
 ### Robustesse
+
 - Récupération cyclique
 - Prédiction problèmes
 - Mode dégradé gracieux
 
 ### Intelligence
+
 - Adaptation temporelle
 - Apprentissage patterns
 - Anticipation besoins
@@ -605,6 +638,7 @@ async fn main() {
 ## 📚 FICHIERS
 
 ### Existants (Base):
+
 - `energy_model.rs` (457 lignes)
 - `cost_model.rs` (348 lignes)
 - `regulator.rs`
@@ -617,6 +651,7 @@ async fn main() {
 - `mod.rs` (421 lignes)
 
 ### Nouveaux (Enhancement): ✨
+
 - `distributor.rs` (400+ lignes, 5 tests)
 - `stabilization.rs` (350+ lignes, 5 tests)
 - `integration_bridges.rs` (300+ lignes, 4 tests)
@@ -661,7 +696,7 @@ Le Meta-Energy Engine donne au TITANE∞ OS :
 
 **🌌⚡ META-ENERGY ENGINE vΩ — COMPLETE**
 
-*"L'homéostasie cognitive : le sang du système vivant"*
+_"L'homéostasie cognitive : le sang du système vivant"_
 
 **TITANE∞ vΩ — Un OS qui respire, se fatigue, et se régénère**
 

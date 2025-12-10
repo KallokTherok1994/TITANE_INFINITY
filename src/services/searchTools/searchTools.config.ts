@@ -55,16 +55,16 @@ export type PermissionLevel = 'none' | 'read' | 'write' | 'execute' | 'admin';
  * Catégorie d'outil
  */
 export type ToolCategory =
-  | 'search'        // Recherche web
-  | 'file'          // Opérations fichiers
-  | 'code'          // Analyse/génération de code
-  | 'system'        // Commandes système
-  | 'network'       // Requêtes réseau
-  | 'database'      // Accès base de données
-  | 'ai'            // Appels IA externes
-  | 'automation'    // Scripts d'automatisation
-  | 'security'      // Outils de sécurité
-  | 'utility';      // Utilitaires divers
+  | 'search' // Recherche web
+  | 'file' // Opérations fichiers
+  | 'code' // Analyse/génération de code
+  | 'system' // Commandes système
+  | 'network' // Requêtes réseau
+  | 'database' // Accès base de données
+  | 'ai' // Appels IA externes
+  | 'automation' // Scripts d'automatisation
+  | 'security' // Outils de sécurité
+  | 'utility'; // Utilitaires divers
 
 /**
  * Niveau de risque d'un outil
@@ -84,19 +84,19 @@ export type SearchProvider =
   | 'bing'
   | 'brave'
   | 'searxng'
-  | 'local';  // Recherche locale dans les fichiers
+  | 'local'; // Recherche locale dans les fichiers
 
 /**
  * Type de recherche
  */
 export type SearchType =
-  | 'web'           // Recherche web générale
-  | 'images'        // Recherche d'images
-  | 'news'          // Actualités
-  | 'code'          // Recherche de code (GitHub, etc.)
-  | 'docs'          // Documentation
-  | 'local'         // Fichiers locaux
-  | 'semantic';     // Recherche sémantique
+  | 'web' // Recherche web générale
+  | 'images' // Recherche d'images
+  | 'news' // Actualités
+  | 'code' // Recherche de code (GitHub, etc.)
+  | 'docs' // Documentation
+  | 'local' // Fichiers locaux
+  | 'semantic'; // Recherche sémantique
 
 /**
  * Configuration d'un provider de recherche
@@ -109,9 +109,9 @@ export interface SearchProviderConfig {
   baseUrl?: string;
   maxResults: number;
   timeout: number;
-  rateLimit: number;  // requêtes par minute
+  rateLimit: number; // requêtes par minute
   supportedTypes: SearchType[];
-  priority: number;   // 1 = plus haute priorité
+  priority: number; // 1 = plus haute priorité
 }
 
 /**
@@ -121,7 +121,7 @@ export interface SearchQuery {
   id: string;
   query: string;
   type: SearchType;
-  provider?: SearchProvider;  // Auto-sélection si non spécifié
+  provider?: SearchProvider; // Auto-sélection si non spécifié
   filters?: SearchFilters;
   options?: SearchOptions;
   metadata?: Record<string, unknown>;
@@ -135,12 +135,12 @@ export interface SearchFilters {
     start?: Date;
     end?: Date;
   };
-  domain?: string[];       // Domaines à inclure
+  domain?: string[]; // Domaines à inclure
   excludeDomains?: string[]; // Domaines à exclure
   language?: string;
   region?: string;
   safeSearch?: 'off' | 'moderate' | 'strict';
-  fileType?: string[];     // Pour recherche fichiers
+  fileType?: string[]; // Pour recherche fichiers
   codeLanguage?: string[]; // Pour recherche code
 }
 
@@ -152,7 +152,7 @@ export interface SearchOptions {
   page?: number;
   timeout?: number;
   cache?: boolean;
-  cacheTTL?: number;  // en secondes
+  cacheTTL?: number; // en secondes
   includeSnippets?: boolean;
   includeMetadata?: boolean;
 }
@@ -167,7 +167,7 @@ export interface SearchResult {
   snippet: string;
   source: SearchProvider;
   type: SearchType;
-  relevanceScore: number;  // 0-100
+  relevanceScore: number; // 0-100
   timestamp: number;
   metadata?: {
     favicon?: string;
@@ -226,7 +226,7 @@ export interface ToolDefinition {
 
   // Permissions requises
   requiredPermissions: PermissionLevel[];
-  minIAMode: IAMode;  // Mode minimum requis
+  minIAMode: IAMode; // Mode minimum requis
 
   // Risque et sécurité
   riskLevel: RiskLevel;
@@ -365,7 +365,7 @@ export interface PermissionRule {
   description: string;
   condition: PermissionCondition;
   effect: 'allow' | 'deny';
-  priority: number;  // Plus élevé = plus prioritaire
+  priority: number; // Plus élevé = plus prioritaire
   enabled: boolean;
 }
 
@@ -376,7 +376,7 @@ export interface PermissionCondition {
   type: 'mode' | 'category' | 'tool' | 'time' | 'context' | 'custom';
   operator: 'equals' | 'not_equals' | 'in' | 'not_in' | 'matches' | 'custom';
   value: unknown;
-  customEvaluator?: string;  // Nom de la fonction d'évaluation
+  customEvaluator?: string; // Nom de la fonction d'évaluation
 }
 
 /**
@@ -415,8 +415,8 @@ export interface PermissionDecision {
  */
 export interface SandboxConfig {
   enabled: boolean;
-  maxExecutionTime: number;  // ms
-  maxMemory: number;         // bytes
+  maxExecutionTime: number; // ms
+  maxMemory: number; // bytes
   allowedModules: string[];
   blockedModules: string[];
   networkAccess: boolean;
@@ -504,10 +504,10 @@ export interface SearchEngineConfig {
   defaultProvider: SearchProvider;
   providers: SearchProviderConfig[];
   cacheEnabled: boolean;
-  cacheTTL: number;  // secondes
-  maxCacheSize: number;  // nombre d'entrées
+  cacheTTL: number; // secondes
+  maxCacheSize: number; // nombre d'entrées
   retryAttempts: number;
-  retryDelay: number;  // ms
+  retryDelay: number; // ms
   userAgent: string;
   respectRobotsTxt: boolean;
 }
@@ -532,7 +532,7 @@ export interface ToolsEngineConfig {
 export interface PermissionManagerConfig {
   enabled: boolean;
   defaultLevel: PermissionLevel;
-  strictMode: boolean;  // Refuse tout ce qui n'est pas explicitement autorisé
+  strictMode: boolean; // Refuse tout ce qui n'est pas explicitement autorisé
   matrix: PermissionMatrix;
   customRules: PermissionRule[];
   cacheDecisions: boolean;
@@ -693,7 +693,7 @@ export const DEFAULT_SEARCH_PROVIDERS: SearchProviderConfig[] = [
     timeout: 5000,
     rateLimit: 100,
     supportedTypes: ['local', 'code', 'docs'],
-    priority: 0,  // Toujours disponible
+    priority: 0, // Toujours disponible
   },
 ];
 
@@ -702,8 +702,8 @@ export const DEFAULT_SEARCH_PROVIDERS: SearchProviderConfig[] = [
  */
 export const DEFAULT_SANDBOX_CONFIG: SandboxConfig = {
   enabled: true,
-  maxExecutionTime: 30000,  // 30 secondes
-  maxMemory: 256 * 1024 * 1024,  // 256 MB
+  maxExecutionTime: 30000, // 30 secondes
+  maxMemory: 256 * 1024 * 1024, // 256 MB
   allowedModules: ['path', 'url', 'querystring', 'crypto'],
   blockedModules: ['child_process', 'fs', 'net', 'http', 'https'],
   networkAccess: false,
@@ -733,7 +733,7 @@ export const DEFAULT_SEARCH_ENGINE_CONFIG: SearchEngineConfig = {
   defaultProvider: 'duckduckgo',
   providers: DEFAULT_SEARCH_PROVIDERS,
   cacheEnabled: true,
-  cacheTTL: 3600,  // 1 heure
+  cacheTTL: 3600, // 1 heure
   maxCacheSize: 1000,
   retryAttempts: 3,
   retryDelay: 1000,
@@ -766,7 +766,7 @@ export const DEFAULT_PERMISSION_MANAGER_CONFIG: PermissionManagerConfig = {
   matrix: JSON.parse(JSON.stringify(DEFAULT_PERMISSION_MATRIX)) as PermissionMatrix,
   customRules: [],
   cacheDecisions: true,
-  decisionCacheTTL: 300,  // 5 minutes
+  decisionCacheTTL: 300, // 5 minutes
 };
 
 /**
@@ -805,8 +805,18 @@ export const BUILTIN_TOOLS: ToolDefinition[] = [
       type: 'object',
       properties: {
         query: { type: 'string', description: 'Requête de recherche' },
-        provider: { type: 'string', description: 'Provider à utiliser', enum: ['duckduckgo', 'brave', 'searxng'] },
-        maxResults: { type: 'number', description: 'Nombre max de résultats', default: 10, minimum: 1, maximum: 50 },
+        provider: {
+          type: 'string',
+          description: 'Provider à utiliser',
+          enum: ['duckduckgo', 'brave', 'searxng'],
+        },
+        maxResults: {
+          type: 'number',
+          description: 'Nombre max de résultats',
+          default: 10,
+          minimum: 1,
+          maximum: 50,
+        },
       },
       required: ['query'],
     },
@@ -838,8 +848,16 @@ export const BUILTIN_TOOLS: ToolDefinition[] = [
       properties: {
         query: { type: 'string', description: 'Terme à rechercher' },
         path: { type: 'string', description: 'Chemin de recherche', default: '.' },
-        fileTypes: { type: 'array', description: 'Types de fichiers', items: { type: 'string', description: 'Extension de fichier' } },
-        caseSensitive: { type: 'boolean', description: 'Sensible à la casse', default: false },
+        fileTypes: {
+          type: 'array',
+          description: 'Types de fichiers',
+          items: { type: 'string', description: 'Extension de fichier' },
+        },
+        caseSensitive: {
+          type: 'boolean',
+          description: 'Sensible à la casse',
+          default: false,
+        },
       },
       required: ['query'],
     },
@@ -861,7 +879,7 @@ export const BUILTIN_TOOLS: ToolDefinition[] = [
   {
     id: 'file_read',
     name: 'Lire Fichier',
-    description: 'Lit le contenu d\'un fichier',
+    description: "Lit le contenu d'un fichier",
     category: 'file',
     version: '1.0.0',
     author: 'TITANE∞',
@@ -908,14 +926,23 @@ export const BUILTIN_TOOLS: ToolDefinition[] = [
       properties: {
         path: { type: 'string', description: 'Chemin du fichier' },
         content: { type: 'string', description: 'Contenu à écrire' },
-        mode: { type: 'string', description: 'Mode d\'écriture', enum: ['write', 'append', 'prepend'], default: 'write' },
-        createDirs: { type: 'boolean', description: 'Créer les répertoires parents', default: true },
+        mode: {
+          type: 'string',
+          description: "Mode d'écriture",
+          enum: ['write', 'append', 'prepend'],
+          default: 'write',
+        },
+        createDirs: {
+          type: 'boolean',
+          description: 'Créer les répertoires parents',
+          default: true,
+        },
       },
       required: ['path', 'content'],
     },
     outputSchema: {
       type: 'object',
-      description: 'Résultat de l\'écriture',
+      description: "Résultat de l'écriture",
     },
     tags: ['file', 'write', 'edit'],
     enabled: true,
@@ -927,7 +954,7 @@ export const BUILTIN_TOOLS: ToolDefinition[] = [
   {
     id: 'file_list',
     name: 'Lister Répertoire',
-    description: 'Liste le contenu d\'un répertoire',
+    description: "Liste le contenu d'un répertoire",
     category: 'file',
     version: '1.0.0',
     author: 'TITANE∞',
@@ -941,7 +968,11 @@ export const BUILTIN_TOOLS: ToolDefinition[] = [
       properties: {
         path: { type: 'string', description: 'Chemin du répertoire', default: '.' },
         recursive: { type: 'boolean', description: 'Récursif', default: false },
-        includeHidden: { type: 'boolean', description: 'Inclure fichiers cachés', default: false },
+        includeHidden: {
+          type: 'boolean',
+          description: 'Inclure fichiers cachés',
+          default: false,
+        },
         pattern: { type: 'string', description: 'Pattern glob (optionnel)' },
       },
       required: [],
@@ -964,7 +995,7 @@ export const BUILTIN_TOOLS: ToolDefinition[] = [
   {
     id: 'code_analyze',
     name: 'Analyser Code',
-    description: 'Analyse statique d\'un fichier de code',
+    description: "Analyse statique d'un fichier de code",
     category: 'code',
     version: '1.0.0',
     author: 'TITANE∞',
@@ -978,13 +1009,17 @@ export const BUILTIN_TOOLS: ToolDefinition[] = [
       properties: {
         path: { type: 'string', description: 'Chemin du fichier' },
         language: { type: 'string', description: 'Langage (auto-détecté si omis)' },
-        checks: { type: 'array', description: 'Types de vérifications', items: { type: 'string', description: 'Type de check' } },
+        checks: {
+          type: 'array',
+          description: 'Types de vérifications',
+          items: { type: 'string', description: 'Type de check' },
+        },
       },
       required: ['path'],
     },
     outputSchema: {
       type: 'object',
-      description: 'Rapport d\'analyse',
+      description: "Rapport d'analyse",
     },
     tags: ['code', 'analyze', 'lint'],
     enabled: true,
@@ -1009,15 +1044,23 @@ export const BUILTIN_TOOLS: ToolDefinition[] = [
       type: 'object',
       properties: {
         code: { type: 'string', description: 'Code à exécuter' },
-        language: { type: 'string', description: 'Langage', enum: ['javascript', 'typescript', 'python', 'rust'] },
+        language: {
+          type: 'string',
+          description: 'Langage',
+          enum: ['javascript', 'typescript', 'python', 'rust'],
+        },
         timeout: { type: 'number', description: 'Timeout en ms', default: 5000 },
-        args: { type: 'array', description: 'Arguments', items: { type: 'string', description: 'Argument' } },
+        args: {
+          type: 'array',
+          description: 'Arguments',
+          items: { type: 'string', description: 'Argument' },
+        },
       },
       required: ['code', 'language'],
     },
     outputSchema: {
       type: 'object',
-      description: 'Résultat d\'exécution',
+      description: "Résultat d'exécution",
     },
     tags: ['code', 'execute', 'run'],
     enabled: true,
@@ -1045,7 +1088,11 @@ export const BUILTIN_TOOLS: ToolDefinition[] = [
     inputSchema: {
       type: 'object',
       properties: {
-        include: { type: 'array', description: 'Sections à inclure', items: { type: 'string', description: 'Section' } },
+        include: {
+          type: 'array',
+          description: 'Sections à inclure',
+          items: { type: 'string', description: 'Section' },
+        },
       },
       required: [],
     },
@@ -1078,7 +1125,7 @@ export const BUILTIN_TOOLS: ToolDefinition[] = [
         command: { type: 'string', description: 'Commande à exécuter' },
         cwd: { type: 'string', description: 'Répertoire de travail' },
         timeout: { type: 'number', description: 'Timeout en ms', default: 30000 },
-        env: { type: 'object', description: 'Variables d\'environnement' },
+        env: { type: 'object', description: "Variables d'environnement" },
       },
       required: ['command'],
     },
@@ -1091,7 +1138,7 @@ export const BUILTIN_TOOLS: ToolDefinition[] = [
     deprecated: false,
     usageCount: 0,
     avgExecutionTime: 5000,
-    successRate: 0.90,
+    successRate: 0.9,
   },
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -1100,7 +1147,7 @@ export const BUILTIN_TOOLS: ToolDefinition[] = [
   {
     id: 'util_hash',
     name: 'Calculer Hash',
-    description: 'Calcule le hash d\'une chaîne ou fichier',
+    description: "Calcule le hash d'une chaîne ou fichier",
     category: 'utility',
     version: '1.0.0',
     author: 'TITANE∞',
@@ -1113,7 +1160,12 @@ export const BUILTIN_TOOLS: ToolDefinition[] = [
       type: 'object',
       properties: {
         input: { type: 'string', description: 'Chaîne ou chemin de fichier' },
-        algorithm: { type: 'string', description: 'Algorithme', enum: ['md5', 'sha1', 'sha256', 'sha512'], default: 'sha256' },
+        algorithm: {
+          type: 'string',
+          description: 'Algorithme',
+          enum: ['md5', 'sha1', 'sha256', 'sha512'],
+          default: 'sha256',
+        },
         isFile: { type: 'boolean', description: 'Input est un fichier', default: false },
       },
       required: ['input'],
@@ -1145,8 +1197,17 @@ export const BUILTIN_TOOLS: ToolDefinition[] = [
       type: 'object',
       properties: {
         input: { type: 'string', description: 'Chaîne à traiter' },
-        operation: { type: 'string', description: 'Opération', enum: ['encode', 'decode'] },
-        format: { type: 'string', description: 'Format', enum: ['base64', 'url', 'html', 'hex'], default: 'base64' },
+        operation: {
+          type: 'string',
+          description: 'Opération',
+          enum: ['encode', 'decode'],
+        },
+        format: {
+          type: 'string',
+          description: 'Format',
+          enum: ['base64', 'url', 'html', 'hex'],
+          default: 'base64',
+        },
       },
       required: ['input', 'operation'],
     },
@@ -1177,7 +1238,11 @@ export const BUILTIN_TOOLS: ToolDefinition[] = [
       type: 'object',
       properties: {
         input: { type: 'string', description: 'JSON en entrée' },
-        operation: { type: 'string', description: 'Opération', enum: ['parse', 'stringify', 'format', 'minify', 'query'] },
+        operation: {
+          type: 'string',
+          description: 'Opération',
+          enum: ['parse', 'stringify', 'format', 'minify', 'query'],
+        },
         query: { type: 'string', description: 'JSONPath query (si operation=query)' },
         indent: { type: 'number', description: 'Indentation', default: 2 },
       },
@@ -1358,7 +1423,9 @@ export function validateToolInput(
     // Vérification de type basique
     const actualType = Array.isArray(value) ? 'array' : typeof value;
     if (propSchema.type !== actualType && value !== undefined) {
-      errors.push(`Invalid type for ${key}: expected ${propSchema.type}, got ${actualType}`);
+      errors.push(
+        `Invalid type for ${key}: expected ${propSchema.type}, got ${actualType}`
+      );
     }
 
     // Contraintes numériques

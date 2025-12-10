@@ -118,12 +118,7 @@ export class Executor {
     const results: EvolutionActionResult[] = [];
 
     for (const action of suggestion.actions) {
-      const result = await this.executeAction(
-        suggestion,
-        action,
-        userRole,
-        reason
-      );
+      const result = await this.executeAction(suggestion, action, userRole, reason);
       results.push(result);
 
       // Arrêter si une action échoue et rollbackOnFailure est activé
@@ -133,7 +128,7 @@ export class Executor {
     }
 
     // Marquer la suggestion comme exécutée
-    const allSuccess = results.every((r) => r.result === 'SUCCESS');
+    const allSuccess = results.every(r => r.result === 'SUCCESS');
     if (allSuccess) {
       planner.markExecuted(suggestionId);
     }
@@ -164,14 +159,22 @@ export class Executor {
     // ==== COUCHE 1: VALIDATION DES PERMISSIONS ====
     const permissionCheck = this.checkPermissions(action, userRole);
     if (!permissionCheck.valid) {
-      return this.createDeniedResult(request, action, permissionCheck.reason || 'Permission refusée');
+      return this.createDeniedResult(
+        request,
+        action,
+        permissionCheck.reason || 'Permission refusée'
+      );
     }
 
     // ==== COUCHE 2: VALIDATION SELF-HEALING ====
     if (this.config.requiresSelfHealingCheck) {
       const healingCheck = await this.checkSelfHealing(action);
       if (!healingCheck.valid) {
-        return this.createDeniedResult(request, action, healingCheck.reason || 'Self-Healing refusé');
+        return this.createDeniedResult(
+          request,
+          action,
+          healingCheck.reason || 'Self-Healing refusé'
+        );
       }
     }
 
@@ -183,24 +186,36 @@ export class Executor {
       this.whitelist
     );
     if (!whitelistCheck.allowed) {
-      return this.createDeniedResult(request, action, whitelistCheck.reason || 'Non dans whitelist');
+      return this.createDeniedResult(
+        request,
+        action,
+        whitelistCheck.reason || 'Non dans whitelist'
+      );
     }
 
     // ==== VÉRIFICATION COOLDOWN ====
     const cooldownCheck = this.checkCooldown(action, whitelistCheck.entry);
     if (!cooldownCheck.valid) {
-      return this.createDeniedResult(request, action, cooldownCheck.reason || 'Cooldown actif');
+      return this.createDeniedResult(
+        request,
+        action,
+        cooldownCheck.reason || 'Cooldown actif'
+      );
     }
 
     // ==== VÉRIFICATION LIMITE QUOTIDIENNE ====
     const dailyLimitCheck = this.checkDailyLimit(action, whitelistCheck.entry);
     if (!dailyLimitCheck.valid) {
-      return this.createDeniedResult(request, action, dailyLimitCheck.reason || 'Limite quotidienne');
+      return this.createDeniedResult(
+        request,
+        action,
+        dailyLimitCheck.reason || 'Limite quotidienne'
+      );
     }
 
     // ==== VÉRIFICATION CONCURRENCE ====
     if (this.state.executingActions.size >= this.config.maxConcurrentActions) {
-      return this.createDeniedResult(request, action, 'Trop d\'actions en cours');
+      return this.createDeniedResult(request, action, "Trop d'actions en cours");
     }
 
     // ==== DRY RUN ====
@@ -233,9 +248,7 @@ export class Executor {
     userRole: GovernanceRole
   ): { valid: boolean; reason?: string } {
     // Trouver la politique applicable
-    const policy = this.policies.find((p) =>
-      p.appliesToRiskLevels.includes(action.risk)
-    );
+    const policy = this.policies.find(p => p.appliesToRiskLevels.includes(action.risk));
 
     if (policy) {
       if (!hasPermission(userRole, policy.requiredRole)) {
@@ -248,9 +261,7 @@ export class Executor {
 
     // Vérifier dans la whitelist
     const entry = this.whitelist.find(
-      (e) =>
-        e.actionType === action.type &&
-        e.allowedTargets.includes(action.targetModule)
+      e => e.actionType === action.type && e.allowedTargets.includes(action.targetModule)
     );
 
     if (entry && !hasPermission(userRole, entry.requiredRole)) {
@@ -410,7 +421,7 @@ export class Executor {
         requestId: request.correlationId,
         actionId: action.id,
         result: 'FAILED',
-        message: 'Erreur lors de l\'exécution',
+        message: "Erreur lors de l'exécution",
         startedAt: startTime,
         completedAt: Date.now(),
         duration: Date.now() - startTime,
@@ -446,7 +457,11 @@ export class Executor {
     success: boolean;
     message: string;
     changes?: Array<{ target: string; before: unknown; after: unknown }>;
-    metrics?: { before: Record<string, number>; after: Record<string, number>; improvement: number };
+    metrics?: {
+      before: Record<string, number>;
+      after: Record<string, number>;
+      improvement: number;
+    };
     error?: string;
   }> {
     const timeout = action.estimatedDuration * 2 || this.config.defaultTimeout;
@@ -460,7 +475,11 @@ export class Executor {
       success: boolean;
       message: string;
       changes?: Array<{ target: string; before: unknown; after: unknown }>;
-      metrics?: { before: Record<string, number>; after: Record<string, number>; improvement: number };
+      metrics?: {
+        before: Record<string, number>;
+        after: Record<string, number>;
+        improvement: number;
+      };
       error?: string;
     }>('run_evolution_action', {
       actionType: action.type,
@@ -615,7 +634,7 @@ export class Executor {
       this.state.history = this.state.history.slice(-1000);
     }
 
-    this.historyListeners.forEach((listener) => {
+    this.historyListeners.forEach(listener => {
       try {
         listener(entry);
       } catch (e) {
@@ -625,7 +644,7 @@ export class Executor {
   }
 
   private notifyResultListeners(result: EvolutionActionResult): void {
-    this.resultListeners.forEach((listener) => {
+    this.resultListeners.forEach(listener => {
       try {
         listener(result);
       } catch (e) {

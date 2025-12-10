@@ -16,31 +16,31 @@
  * État d'humeur de l'utilisateur
  */
 export type UserMood =
-  | 'calm'        // Calme, serein
-  | 'curious'     // Curieux, intéressé
-  | 'focused'     // Concentré, déterminé
-  | 'excited'     // Excité, enthousiaste
-  | 'tired'       // Fatigué, épuisé
-  | 'stressed'    // Stressé, anxieux
-  | 'frustrated'  // Frustré, irrité
-  | 'happy'       // Heureux, joyeux
-  | 'sad'         // Triste, mélancolique
-  | 'neutral';    // Neutre, baseline
+  | 'calm' // Calme, serein
+  | 'curious' // Curieux, intéressé
+  | 'focused' // Concentré, déterminé
+  | 'excited' // Excité, enthousiaste
+  | 'tired' // Fatigué, épuisé
+  | 'stressed' // Stressé, anxieux
+  | 'frustrated' // Frustré, irrité
+  | 'happy' // Heureux, joyeux
+  | 'sad' // Triste, mélancolique
+  | 'neutral'; // Neutre, baseline
 
 /**
  * Type d'intention détectée
  */
 export type UserIntention =
-  | 'question'       // Pose une question
-  | 'command'        // Donne une commande
-  | 'doubt'          // Exprime un doute
-  | 'affirmation'    // Affirme quelque chose
-  | 'urgency'        // Besoin urgent
-  | 'casual'         // Conversation décontractée
-  | 'reflection'     // Réflexion, pensée
-  | 'complaint'      // Se plaint
-  | 'thanks'         // Remercie
-  | 'unknown';       // Non déterminé
+  | 'question' // Pose une question
+  | 'command' // Donne une commande
+  | 'doubt' // Exprime un doute
+  | 'affirmation' // Affirme quelque chose
+  | 'urgency' // Besoin urgent
+  | 'casual' // Conversation décontractée
+  | 'reflection' // Réflexion, pensée
+  | 'complaint' // Se plaint
+  | 'thanks' // Remercie
+  | 'unknown'; // Non déterminé
 
 /**
  * État émotionnel complet de l'utilisateur
@@ -142,9 +142,26 @@ export interface ESEngineConfig {
  */
 const EMOTION_KEYWORDS: Record<UserMood, string[]> = {
   calm: ['calme', 'tranquille', 'paisible', 'serein', 'détendu', 'zen', 'ok', 'bien'],
-  curious: ['pourquoi', 'comment', 'intéressant', 'curieux', 'découvrir', 'savoir', 'comprendre'],
+  curious: [
+    'pourquoi',
+    'comment',
+    'intéressant',
+    'curieux',
+    'découvrir',
+    'savoir',
+    'comprendre',
+  ],
   focused: ['concentré', 'focus', 'important', 'priorité', 'urgent', 'faut que', 'dois'],
-  excited: ['génial', 'super', 'incroyable', 'wow', 'excellent', 'parfait', 'top', 'yeah'],
+  excited: [
+    'génial',
+    'super',
+    'incroyable',
+    'wow',
+    'excellent',
+    'parfait',
+    'top',
+    'yeah',
+  ],
   tired: ['fatigué', 'épuisé', 'crevé', 'las', 'sommeil', 'dormir', 'repos'],
   stressed: ['stressé', 'angoissé', 'anxieux', 'inquiet', 'peur', 'panique', 'tendu'],
   frustrated: ['frustré', 'énervé', 'irrité', 'agacé', 'marre', 'ras le bol', 'pfff'],
@@ -157,11 +174,47 @@ const EMOTION_KEYWORDS: Record<UserMood, string[]> = {
  * Mots-clés d'intention
  */
 const INTENTION_KEYWORDS: Record<UserIntention, string[]> = {
-  question: ['pourquoi', 'comment', 'quoi', 'qui', 'quand', 'où', 'quel', 'quelle', 'est-ce que'],
-  command: ['fais', 'fait', 'lance', 'ouvre', 'ferme', 'arrête', 'commence', 'démarre', 'stop'],
+  question: [
+    'pourquoi',
+    'comment',
+    'quoi',
+    'qui',
+    'quand',
+    'où',
+    'quel',
+    'quelle',
+    'est-ce que',
+  ],
+  command: [
+    'fais',
+    'fait',
+    'lance',
+    'ouvre',
+    'ferme',
+    'arrête',
+    'commence',
+    'démarre',
+    'stop',
+  ],
   doubt: ['peut-être', 'je sais pas', 'pas sûr', 'doute', 'hésit', 'vraiment', 'certain'],
-  affirmation: ['oui', 'exactement', 'voilà', 'tout à fait', 'absolument', 'c\'est ça', 'évidemment'],
-  urgency: ['urgent', 'vite', 'rapidement', 'maintenant', 'immédiatement', 'tout de suite', 'aide'],
+  affirmation: [
+    'oui',
+    'exactement',
+    'voilà',
+    'tout à fait',
+    'absolument',
+    "c'est ça",
+    'évidemment',
+  ],
+  urgency: [
+    'urgent',
+    'vite',
+    'rapidement',
+    'maintenant',
+    'immédiatement',
+    'tout de suite',
+    'aide',
+  ],
   casual: ['salut', 'coucou', 'hey', 'ça va', 'quoi de neuf', 'alors', 'bon'],
   reflection: ['je pense', 'je crois', 'il me semble', 'réfléchis', 'médite', 'imagine'],
   complaint: ['problème', 'bug', 'marche pas', 'fonctionne pas', 'erreur', 'nul', 'déçu'],
@@ -275,13 +328,15 @@ export class EmotionalStateEstimator {
     const questionCount = (text.match(/\?/g) || []).length;
     const ellipsisCount = (text.match(/\.{3}/g) || []).length;
     const capsWordsCount = (text.match(/\b[A-Z]{2,}\b/g) || []).length;
-    const negationCount = (text.match(/\b(ne|pas|non|rien|jamais|aucun)\b/gi) || []).length;
+    const negationCount = (text.match(/\b(ne|pas|non|rien|jamais|aucun)\b/gi) || [])
+      .length;
 
     // Phrases
     const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
-    const avgSentenceLength = sentences.length > 0
-      ? sentences.reduce((sum, s) => sum + s.trim().length, 0) / sentences.length
-      : 0;
+    const avgSentenceLength =
+      sentences.length > 0
+        ? sentences.reduce((sum, s) => sum + s.trim().length, 0) / sentences.length
+        : 0;
 
     // Sentiment
     const sentimentScore = this.calculateTextSentiment(text);
@@ -309,7 +364,15 @@ export class EmotionalStateEstimator {
     let score = 0;
 
     // Mots positifs
-    const positiveWords = ['bien', 'bon', 'génial', 'super', 'excellent', 'parfait', 'top'];
+    const positiveWords = [
+      'bien',
+      'bon',
+      'génial',
+      'super',
+      'excellent',
+      'parfait',
+      'top',
+    ];
     const negativeWords = ['mal', 'mauvais', 'nul', 'horrible', 'terrible', 'pire'];
 
     positiveWords.forEach(word => {
@@ -330,7 +393,14 @@ export class EmotionalStateEstimator {
     const lower = text.toLowerCase();
     const strong: string[] = [];
 
-    const strongWords = ['incroyable', 'génial', 'horrible', 'terrible', 'urgent', 'critique'];
+    const strongWords = [
+      'incroyable',
+      'génial',
+      'horrible',
+      'terrible',
+      'urgent',
+      'critique',
+    ];
     strongWords.forEach(word => {
       if (lower.includes(word)) strong.push(word);
     });
@@ -347,8 +417,16 @@ export class EmotionalStateEstimator {
     audioIndicators?: AudioIndicators
   ): Record<UserMood, number> {
     const scores: Record<UserMood, number> = {
-      calm: 0, curious: 0, focused: 0, excited: 0, tired: 0,
-      stressed: 0, frustrated: 0, happy: 0, sad: 0, neutral: 0.5,
+      calm: 0,
+      curious: 0,
+      focused: 0,
+      excited: 0,
+      tired: 0,
+      stressed: 0,
+      frustrated: 0,
+      happy: 0,
+      sad: 0,
+      neutral: 0.5,
     };
 
     const lower = text.toLowerCase();
@@ -446,8 +524,16 @@ export class EmotionalStateEstimator {
     textIndicators: TextIndicators
   ): Record<UserIntention, number> {
     const scores: Record<UserIntention, number> = {
-      question: 0, command: 0, doubt: 0, affirmation: 0, urgency: 0,
-      casual: 0, reflection: 0, complaint: 0, thanks: 0, unknown: 0.5,
+      question: 0,
+      command: 0,
+      doubt: 0,
+      affirmation: 0,
+      urgency: 0,
+      casual: 0,
+      reflection: 0,
+      complaint: 0,
+      thanks: 0,
+      unknown: 0.5,
     };
 
     const lower = text.toLowerCase();

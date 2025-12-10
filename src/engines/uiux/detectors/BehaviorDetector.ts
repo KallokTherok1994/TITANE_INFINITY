@@ -21,7 +21,7 @@ export class BehaviorDetector {
   private lastMouseMove = 0;
   private keypressTimestamps: number[] = [];
   private clickPositions: Array<{ x: number; y: number; t: number }> = [];
-  
+
   // ✨ PHASE 4.4 - Store handlers for cleanup
   private clickHandler = this.handleClick.bind(this);
   private scrollHandler = this.handleScroll.bind(this);
@@ -167,9 +167,7 @@ export class BehaviorDetector {
    * Calcule la vélocité de scroll
    */
   private calculateScrollVelocity(): number {
-    const scrollSamples = this.samples
-      .filter(s => s.type === 'scroll')
-      .slice(-10);
+    const scrollSamples = this.samples.filter(s => s.type === 'scroll').slice(-10);
 
     if (scrollSamples.length < 2) return 0;
 
@@ -180,7 +178,8 @@ export class BehaviorDetector {
       totalDistance += Math.abs(curr.y - prev.y);
     }
 
-    const timeSpan = scrollSamples[scrollSamples.length - 1].timestamp - scrollSamples[0].timestamp;
+    const timeSpan =
+      scrollSamples[scrollSamples.length - 1].timestamp - scrollSamples[0].timestamp;
     return timeSpan > 0 ? (totalDistance / timeSpan) * 1000 : 0;
   }
 
@@ -232,9 +231,10 @@ export class BehaviorDetector {
     const avgX = recentClicks.reduce((sum, c) => sum + c.x, 0) / recentClicks.length;
     const avgY = recentClicks.reduce((sum, c) => sum + c.y, 0) / recentClicks.length;
 
-    const variance = recentClicks.reduce((sum, c) => {
-      return sum + Math.pow(c.x - avgX, 2) + Math.pow(c.y - avgY, 2);
-    }, 0) / recentClicks.length;
+    const variance =
+      recentClicks.reduce((sum, c) => {
+        return sum + Math.pow(c.x - avgX, 2) + Math.pow(c.y - avgY, 2);
+      }, 0) / recentClicks.length;
 
     const stdDev = Math.sqrt(variance);
 
@@ -263,7 +263,9 @@ export class BehaviorDetector {
     const focusScore = Math.min(focusDuration / 60000, 1); // Max à 1 minute
 
     // Score pondéré
-    return (activityScore * 0.3 + typingScore * 0.25 + mouseScore * 0.2 + focusScore * 0.25);
+    return (
+      activityScore * 0.3 + typingScore * 0.25 + mouseScore * 0.2 + focusScore * 0.25
+    );
   }
 
   /**
@@ -277,8 +279,8 @@ export class BehaviorDetector {
     const recentClicks = this.clickPositions.filter(c => now - c.t < 3000);
     if (recentClicks.length >= 3) {
       const first = recentClicks[0];
-      const sameArea = recentClicks.filter(c =>
-        Math.abs(c.x - first.x) < 50 && Math.abs(c.y - first.y) < 50
+      const sameArea = recentClicks.filter(
+        c => Math.abs(c.x - first.x) < 50 && Math.abs(c.y - first.y) < 50
       );
       if (sameArea.length >= 3) signals++;
     }

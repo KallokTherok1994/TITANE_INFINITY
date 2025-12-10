@@ -57,7 +57,7 @@ export function useParticles(
       particleSystem.destroy();
       particleSystemRef.current = null;
     };
-  }, []); // Empty deps - only create once
+  }, [config]); // Re-create if config changes
 
   // Setup canvas
   useEffect(() => {
@@ -65,6 +65,11 @@ export function useParticles(
     const particleSystem = particleSystemRef.current;
 
     if (!canvas || !particleSystem) return;
+
+    const { particleCount, velocity, lifespan } = config;
+    particleSystem.setEmissionRate(particleCount / 2);
+    particleSystem.setVelocity(velocity);
+    particleSystem.setLifespan(lifespan);
 
     // Set canvas size
     const updateCanvasSize = () => {
@@ -92,7 +97,7 @@ export function useParticles(
     return () => {
       resizeObserver.disconnect();
     };
-  }, []);
+  }, [config]);
 
   // Render loop
   const renderLoop = useCallback((timestamp: number) => {

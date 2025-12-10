@@ -58,7 +58,8 @@ export interface UseFloatingWindowResult {
  * - Persistence: localStorage via SingularityState zustand
  */
 export function useFloatingWindow(): UseFloatingWindowResult {
-  const [displayState, setDisplayState] = useState<AvatarDisplayState>(DEFAULT_DISPLAY_STATE);
+  const [displayState, setDisplayState] =
+    useState<AvatarDisplayState>(DEFAULT_DISPLAY_STATE);
   const [screens, setScreens] = useState<ScreenInfo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -74,9 +75,12 @@ export function useFloatingWindow(): UseFloatingWindowResult {
   /**
    * Synchroniser l'état local avec SingularityState (Frontend → SingularityState)
    */
-  const syncToSingularity = useCallback((state: AvatarDisplayState) => {
-    updateAvatarDisplay(state);
-  }, [updateAvatarDisplay]);
+  const syncToSingularity = useCallback(
+    (state: AvatarDisplayState) => {
+      updateAvatarDisplay(state);
+    },
+    [updateAvatarDisplay]
+  );
 
   /**
    * Synchroniser l'état depuis SingularityState (SingularityState → Local)
@@ -191,53 +195,65 @@ export function useFloatingWindow(): UseFloatingWindowResult {
   // WINDOW PROPERTIES
   // ═══════════════════════════════════════════════════════════════
 
-  const setPosition = useCallback(async (x: number, y: number) => {
-    try {
-      const state = await FloatingEngine.setPosition(x, y);
-      setDisplayState(state);
-      syncToSingularity(state); // Sync vers SingularityState
-      setError(null);
-    } catch (err) {
-      setError(`Failed to set position: ${err}`);
-      console.error('Failed to set position:', err);
-    }
-  }, [syncToSingularity]);
+  const setPosition = useCallback(
+    async (x: number, y: number) => {
+      try {
+        const state = await FloatingEngine.setPosition(x, y);
+        setDisplayState(state);
+        syncToSingularity(state); // Sync vers SingularityState
+        setError(null);
+      } catch (err) {
+        setError(`Failed to set position: ${err}`);
+        console.error('Failed to set position:', err);
+      }
+    },
+    [syncToSingularity]
+  );
 
-  const setSize = useCallback(async (width: number, height: number) => {
-    try {
-      const state = await FloatingEngine.setSize(width, height);
-      setDisplayState(state);
-      syncToSingularity(state); // Sync vers SingularityState
-      setError(null);
-    } catch (err) {
-      setError(`Failed to set size: ${err}`);
-      console.error('Failed to set size:', err);
-    }
-  }, [syncToSingularity]);
+  const setSize = useCallback(
+    async (width: number, height: number) => {
+      try {
+        const state = await FloatingEngine.setSize(width, height);
+        setDisplayState(state);
+        syncToSingularity(state); // Sync vers SingularityState
+        setError(null);
+      } catch (err) {
+        setError(`Failed to set size: ${err}`);
+        console.error('Failed to set size:', err);
+      }
+    },
+    [syncToSingularity]
+  );
 
-  const setScale = useCallback(async (scale: number) => {
-    try {
-      const state = await FloatingEngine.setScale(scale);
-      setDisplayState(state);
-      syncToSingularity(state); // Sync vers SingularityState
-      setError(null);
-    } catch (err) {
-      setError(`Failed to set scale: ${err}`);
-      console.error('Failed to set scale:', err);
-    }
-  }, [syncToSingularity]);
+  const setScale = useCallback(
+    async (scale: number) => {
+      try {
+        const state = await FloatingEngine.setScale(scale);
+        setDisplayState(state);
+        syncToSingularity(state); // Sync vers SingularityState
+        setError(null);
+      } catch (err) {
+        setError(`Failed to set scale: ${err}`);
+        console.error('Failed to set scale:', err);
+      }
+    },
+    [syncToSingularity]
+  );
 
-  const setOpacity = useCallback(async (opacity: number) => {
-    try {
-      const state = await FloatingEngine.setOpacity(opacity);
-      setDisplayState(state);
-      syncToSingularity(state); // Sync vers SingularityState
-      setError(null);
-    } catch (err) {
-      setError(`Failed to set opacity: ${err}`);
-      console.error('Failed to set opacity:', err);
-    }
-  }, [syncToSingularity]);
+  const setOpacity = useCallback(
+    async (opacity: number) => {
+      try {
+        const state = await FloatingEngine.setOpacity(opacity);
+        setDisplayState(state);
+        syncToSingularity(state); // Sync vers SingularityState
+        setError(null);
+      } catch (err) {
+        setError(`Failed to set opacity: ${err}`);
+        console.error('Failed to set opacity:', err);
+      }
+    },
+    [syncToSingularity]
+  );
 
   // ═══════════════════════════════════════════════════════════════
   // BEHAVIOR TOGGLES
@@ -295,57 +311,69 @@ export function useFloatingWindow(): UseFloatingWindowResult {
   // ANCHORS & MULTI-SCREEN
   // ═══════════════════════════════════════════════════════════════
 
-  const setAnchor = useCallback(async (anchor: AnchorPosition) => {
-    try {
-      const state = await FloatingEngine.setAnchor(anchor);
-      setDisplayState(state);
-      syncToSingularity(state); // Sync vers SingularityState
-      setError(null);
-    } catch (err) {
-      setError(`Failed to set anchor: ${err}`);
-      console.error('Failed to set anchor:', err);
-    }
-  }, [syncToSingularity]);
+  const setAnchor = useCallback(
+    async (anchor: AnchorPosition) => {
+      try {
+        const state = await FloatingEngine.setAnchor(anchor);
+        setDisplayState(state);
+        syncToSingularity(state); // Sync vers SingularityState
+        setError(null);
+      } catch (err) {
+        setError(`Failed to set anchor: ${err}`);
+        console.error('Failed to set anchor:', err);
+      }
+    },
+    [syncToSingularity]
+  );
 
-  const setAnchorByName = useCallback(async (name: string) => {
-    try {
-      const state = await FloatingEngine.setAnchorByName(name);
-      setDisplayState(state);
-      syncToSingularity(state); // Sync vers SingularityState
-      setError(null);
-    } catch (err) {
-      setError(`Failed to set anchor by name: ${err}`);
-      console.error('Failed to set anchor by name:', err);
-    }
-  }, [syncToSingularity]);
+  const setAnchorByName = useCallback(
+    async (name: string) => {
+      try {
+        const state = await FloatingEngine.setAnchorByName(name);
+        setDisplayState(state);
+        syncToSingularity(state); // Sync vers SingularityState
+        setError(null);
+      } catch (err) {
+        setError(`Failed to set anchor by name: ${err}`);
+        console.error('Failed to set anchor by name:', err);
+      }
+    },
+    [syncToSingularity]
+  );
 
-  const moveToScreen = useCallback(async (screenIndex: number) => {
-    try {
-      const state = await FloatingEngine.moveToScreen(screenIndex);
-      setDisplayState(state);
-      syncToSingularity(state); // Sync vers SingularityState
-      setError(null);
-    } catch (err) {
-      setError(`Failed to move to screen: ${err}`);
-      console.error('Failed to move to screen:', err);
-    }
-  }, [syncToSingularity]);
+  const moveToScreen = useCallback(
+    async (screenIndex: number) => {
+      try {
+        const state = await FloatingEngine.moveToScreen(screenIndex);
+        setDisplayState(state);
+        syncToSingularity(state); // Sync vers SingularityState
+        setError(null);
+      } catch (err) {
+        setError(`Failed to move to screen: ${err}`);
+        console.error('Failed to move to screen:', err);
+      }
+    },
+    [syncToSingularity]
+  );
 
   // ═══════════════════════════════════════════════════════════════
   // STATE MANAGEMENT
   // ═══════════════════════════════════════════════════════════════
 
-  const updateState = useCallback(async (update: AvatarDisplayStateUpdate) => {
-    try {
-      const state = await FloatingEngine.updateDisplayState(update);
-      setDisplayState(state);
-      syncToSingularity(state); // Sync vers SingularityState
-      setError(null);
-    } catch (err) {
-      setError(`Failed to update display state: ${err}`);
-      console.error('Failed to update display state:', err);
-    }
-  }, [syncToSingularity]);
+  const updateState = useCallback(
+    async (update: AvatarDisplayStateUpdate) => {
+      try {
+        const state = await FloatingEngine.updateDisplayState(update);
+        setDisplayState(state);
+        syncToSingularity(state); // Sync vers SingularityState
+        setError(null);
+      } catch (err) {
+        setError(`Failed to update display state: ${err}`);
+        console.error('Failed to update display state:', err);
+      }
+    },
+    [syncToSingularity]
+  );
 
   const resetState = useCallback(async () => {
     try {

@@ -29,7 +29,7 @@ function ColorPicker({ label, colorKey, value, onChange }: ColorPickerProps) {
           <input
             type="color"
             value={value}
-            onChange={(e) => onChange(colorKey, e.target.value)}
+            onChange={e => onChange(colorKey, e.target.value)}
             className="dc-color-input"
           />
           <span className="dc-color-value">{value}</span>
@@ -103,7 +103,12 @@ function ComponentPreview() {
           }}
         >
           <h6 style={{ color: tokens.colors.text, margin: 0 }}>Titre de la Carte</h6>
-          <p style={{ color: tokens.colors.textMuted, margin: `${tokens.spacing.sm}px 0 0` }}>
+          <p
+            style={{
+              color: tokens.colors.textMuted,
+              margin: `${tokens.spacing.sm}px 0 0`,
+            }}
+          >
             Description avec texte secondaire
           </p>
         </div>
@@ -183,8 +188,11 @@ function ComponentPreview() {
 // ============================================================================
 
 export function DesignSystemTab() {
-  const { tokens, updateToken, isDirty, saveTokens, resetToDefaults, undoChanges } = useUITheme();
-  const [activeSection, setActiveSection] = useState<'colors' | 'typography' | 'preview'>('colors');
+  const { tokens, updateToken, isDirty, saveTokens, resetToDefaults, undoChanges } =
+    useUITheme();
+  const [activeSection, setActiveSection] = useState<'colors' | 'typography' | 'preview'>(
+    'colors'
+  );
 
   const handleColorChange = (key: keyof ColorTokens, value: string) => {
     updateToken('colors', key, value);
@@ -244,38 +252,108 @@ export function DesignSystemTab() {
             <div className="dc-colors-group">
               <h4>Couleurs Principales</h4>
               <div className="dc-colors-grid">
-                <ColorPicker label="Primary" colorKey="primary" value={tokens.colors.primary} onChange={handleColorChange} />
-                <ColorPicker label="Secondary" colorKey="secondary" value={tokens.colors.secondary} onChange={handleColorChange} />
-                <ColorPicker label="Accent" colorKey="accent" value={tokens.colors.accent} onChange={handleColorChange} />
+                <ColorPicker
+                  label="Primary"
+                  colorKey="primary"
+                  value={tokens.colors.primary}
+                  onChange={handleColorChange}
+                />
+                <ColorPicker
+                  label="Secondary"
+                  colorKey="secondary"
+                  value={tokens.colors.secondary}
+                  onChange={handleColorChange}
+                />
+                <ColorPicker
+                  label="Accent"
+                  colorKey="accent"
+                  value={tokens.colors.accent}
+                  onChange={handleColorChange}
+                />
               </div>
             </div>
 
             <div className="dc-colors-group">
               <h4>Surfaces</h4>
               <div className="dc-colors-grid">
-                <ColorPicker label="Background" colorKey="background" value={tokens.colors.background} onChange={handleColorChange} />
-                <ColorPicker label="Surface" colorKey="surface" value={tokens.colors.surface} onChange={handleColorChange} />
-                <ColorPicker label="Surface Elevated" colorKey="surfaceElevated" value={tokens.colors.surfaceElevated} onChange={handleColorChange} />
+                <ColorPicker
+                  label="Background"
+                  colorKey="background"
+                  value={tokens.colors.background}
+                  onChange={handleColorChange}
+                />
+                <ColorPicker
+                  label="Surface"
+                  colorKey="surface"
+                  value={tokens.colors.surface}
+                  onChange={handleColorChange}
+                />
+                <ColorPicker
+                  label="Surface Elevated"
+                  colorKey="surfaceElevated"
+                  value={tokens.colors.surfaceElevated}
+                  onChange={handleColorChange}
+                />
               </div>
             </div>
 
             <div className="dc-colors-group">
               <h4>Texte & Bordures</h4>
               <div className="dc-colors-grid">
-                <ColorPicker label="Text" colorKey="text" value={tokens.colors.text} onChange={handleColorChange} />
-                <ColorPicker label="Text Muted" colorKey="textMuted" value={tokens.colors.textMuted} onChange={handleColorChange} />
-                <ColorPicker label="Border" colorKey="border" value={tokens.colors.border} onChange={handleColorChange} />
-                <ColorPicker label="Border Focus" colorKey="borderFocus" value={tokens.colors.borderFocus} onChange={handleColorChange} />
+                <ColorPicker
+                  label="Text"
+                  colorKey="text"
+                  value={tokens.colors.text}
+                  onChange={handleColorChange}
+                />
+                <ColorPicker
+                  label="Text Muted"
+                  colorKey="textMuted"
+                  value={tokens.colors.textMuted}
+                  onChange={handleColorChange}
+                />
+                <ColorPicker
+                  label="Border"
+                  colorKey="border"
+                  value={tokens.colors.border}
+                  onChange={handleColorChange}
+                />
+                <ColorPicker
+                  label="Border Focus"
+                  colorKey="borderFocus"
+                  value={tokens.colors.borderFocus}
+                  onChange={handleColorChange}
+                />
               </div>
             </div>
 
             <div className="dc-colors-group">
               <h4>Sémantique</h4>
               <div className="dc-colors-grid">
-                <ColorPicker label="Success" colorKey="success" value={tokens.colors.success} onChange={handleColorChange} />
-                <ColorPicker label="Warning" colorKey="warning" value={tokens.colors.warning} onChange={handleColorChange} />
-                <ColorPicker label="Error" colorKey="error" value={tokens.colors.error} onChange={handleColorChange} />
-                <ColorPicker label="Info" colorKey="info" value={tokens.colors.info} onChange={handleColorChange} />
+                <ColorPicker
+                  label="Success"
+                  colorKey="success"
+                  value={tokens.colors.success}
+                  onChange={handleColorChange}
+                />
+                <ColorPicker
+                  label="Warning"
+                  colorKey="warning"
+                  value={tokens.colors.warning}
+                  onChange={handleColorChange}
+                />
+                <ColorPicker
+                  label="Error"
+                  colorKey="error"
+                  value={tokens.colors.error}
+                  onChange={handleColorChange}
+                />
+                <ColorPicker
+                  label="Info"
+                  colorKey="info"
+                  value={tokens.colors.info}
+                  onChange={handleColorChange}
+                />
               </div>
             </div>
           </div>
@@ -290,7 +368,7 @@ export function DesignSystemTab() {
                 <input
                   type="text"
                   value={tokens.typography.fontFamily}
-                  onChange={(e) => updateToken('typography', 'fontFamily', e.target.value)}
+                  onChange={e => updateToken('typography', 'fontFamily', e.target.value)}
                   className="dc-input"
                 />
               </div>
@@ -299,7 +377,9 @@ export function DesignSystemTab() {
                 <input
                   type="text"
                   value={tokens.typography.fontFamilyMono}
-                  onChange={(e) => updateToken('typography', 'fontFamilyMono', e.target.value)}
+                  onChange={e =>
+                    updateToken('typography', 'fontFamilyMono', e.target.value)
+                  }
                   className="dc-input"
                 />
               </div>
@@ -311,7 +391,13 @@ export function DesignSystemTab() {
                 <label>Taille de base</label>
                 <select
                   value={tokens.typography.fontSize}
-                  onChange={(e) => updateToken('typography', 'fontSize', e.target.value as 'small' | 'medium' | 'large')}
+                  onChange={e =>
+                    updateToken(
+                      'typography',
+                      'fontSize',
+                      e.target.value as 'small' | 'medium' | 'large'
+                    )
+                  }
                   className="dc-select"
                 >
                   <option value="small">Petit</option>
@@ -327,7 +413,9 @@ export function DesignSystemTab() {
                   max="1.4"
                   step="0.1"
                   value={tokens.typography.fontScale}
-                  onChange={(e) => updateToken('typography', 'fontScale', parseFloat(e.target.value))}
+                  onChange={e =>
+                    updateToken('typography', 'fontScale', parseFloat(e.target.value))
+                  }
                   className="dc-range"
                 />
               </div>
@@ -339,7 +427,9 @@ export function DesignSystemTab() {
                   max="2.0"
                   step="0.1"
                   value={tokens.typography.lineHeight}
-                  onChange={(e) => updateToken('typography', 'lineHeight', parseFloat(e.target.value))}
+                  onChange={e =>
+                    updateToken('typography', 'lineHeight', parseFloat(e.target.value))
+                  }
                   className="dc-range"
                 />
               </div>
@@ -356,7 +446,9 @@ export function DesignSystemTab() {
                 }}
               >
                 <p style={{ fontSize: '2em', marginBottom: '0.5em' }}>Titre Principal</p>
-                <p style={{ fontSize: '1.5em', marginBottom: '0.5em' }}>Titre Secondaire</p>
+                <p style={{ fontSize: '1.5em', marginBottom: '0.5em' }}>
+                  Titre Secondaire
+                </p>
                 <p>Texte de paragraphe avec la police sélectionnée.</p>
                 <p style={{ fontFamily: tokens.typography.fontFamilyMono }}>
                   <code>Code monospace: const x = 42;</code>

@@ -15,12 +15,12 @@ Implémentation des **fondations du Performance & Parallelism Engine vΩ** (SUPE
 
 - **12 fichiers Rust** (~1671 lignes)
 - **Performance Engine** complet avec:
-  * Scheduler multi-queues (4 niveaux priorité)
-  * Thread pools spécialisés (7 types)
-  * Executor non-bloquant
-  * Load balancer dynamique
-  * Diagnostics temps réel
-  * Modules parallèles (stubs OMEGA, Memory, Multimodal)
+  - Scheduler multi-queues (4 niveaux priorité)
+  - Thread pools spécialisés (7 types)
+  - Executor non-bloquant
+  - Load balancer dynamique
+  - Diagnostics temps réel
+  - Modules parallèles (stubs OMEGA, Memory, Multimodal)
 
 ### Résultats
 
@@ -132,14 +132,15 @@ PerformanceConfig::low_power()
 
 **4 niveaux de priorité**:
 
-| Priorité | Timeout | Usage |
-|----------|---------|-------|
-| `Realtime` | 100ms | Kernel, Security Layer |
-| `High` | 1s | OMEGA moteurs |
-| `Normal` | 5s | Memory search, Agents |
-| `Background` | 30s | Recovery, cleanup |
+| Priorité     | Timeout | Usage                  |
+| ------------ | ------- | ---------------------- |
+| `Realtime`   | 100ms   | Kernel, Security Layer |
+| `High`       | 1s      | OMEGA moteurs          |
+| `Normal`     | 5s      | Memory search, Agents  |
+| `Background` | 30s     | Recovery, cleanup      |
 
 **TaskType**:
+
 - `Engine` (OMEGA, Style, Coherence...)
 - `Agent` (Agent System)
 - `Memory` (vector search, clustering)
@@ -154,7 +155,7 @@ PerformanceConfig::low_power()
 **Scoring multi-dimensionnel**:
 
 ```rust
-final_score = base_score 
+final_score = base_score
   × urgency_factor      // 1.0 + urgency (0-1)
   × criticality_factor  // 1.0 + criticality * 0.5
   × cost_penalty        // 1.0 - cost * 0.3
@@ -166,12 +167,14 @@ final_score = base_score
 ### 4. Scheduler (scheduler.rs)
 
 **Fonctionnalités**:
+
 - Enqueue/dequeue avec priorités
 - Track state (active, pending, completed, failed)
 - Background scheduler loop (à implémenter)
 - Integration hooks pour Kernel OS
 
 **Tests**:
+
 - ✅ Creation
 - ✅ Enqueue/dequeue
 - ✅ Mark completed/failed
@@ -198,11 +201,13 @@ pub enum PoolType {
 ### 6. Executor (executor.rs)
 
 **Capacités**:
+
 - `execute()` - Future asynchrone standard
 - `execute_on_pool()` - Sur pool spécifique
 - `execute_with_timeout()` - Avec timeout configurable
 
 **Tests**:
+
 - ✅ Simple future execution
 - ✅ Timeout success
 - ✅ Timeout failure
@@ -210,6 +215,7 @@ pub enum PoolType {
 ### 7. Diagnostics (diagnostics.rs)
 
 **Métriques trackées**:
+
 - Tasks submitted/completed/failed
 - Latencies (avg, min, max)
 - Queue sizes (4 queues)
@@ -217,6 +223,7 @@ pub enum PoolType {
 - Active threads
 
 **Tests**:
+
 - ✅ Increment counters
 - ✅ Latency tracking (running average)
 - ✅ Queue size updates
@@ -224,31 +231,37 @@ pub enum PoolType {
 ### 8. Load Balancer (load_balancer.rs)
 
 **Monitoring**:
+
 - CPU usage threshold (default 80%)
 - Memory usage threshold (default 85%)
 - Overload detection
 - Throttling recommendations
 
 **Integration Meta-Energy #20**:
+
 - `energy_aware: true` (default)
 - `throttle_on_low_energy: true`
 
 **Tests**:
+
 - ✅ Overload detection
 - ✅ Throttling enable/disable
 
 ### 9. Modules Parallèles (stubs Phase 2)
 
 **parallel_omega.rs**:
+
 - `ParallelOmegaEngine` (désactivé par défaut)
 - `max_parallel_engines: 4`
 - TODO: Exécution parallèle OMEGA (Reflection + Memory concurrents)
 
 **parallel_memory.rs**:
+
 - `ParallelMemoryEngine` (activé par défaut)
 - TODO: Vector search async FAISS/HNSW
 
 **multimodal_parallel.rs**:
+
 - `MultimodalParallelEngine` (activé par défaut)
 - TODO: Vision ONNX + Audio FFT en threads dédiés
 
@@ -259,12 +272,14 @@ pub enum PoolType {
 ### Couverture totale: 13 tests
 
 **config.rs** (4 tests):
+
 - ✅ `test_default_config_valid`
 - ✅ `test_high_performance_config`
 - ✅ `test_low_power_config`
 - ✅ `test_invalid_config`
 
 **task_queue.rs** (4 tests):
+
 - ✅ `test_task_creation`
 - ✅ `test_engine_task`
 - ✅ `test_task_queues_enqueue_dequeue`
@@ -272,6 +287,7 @@ pub enum PoolType {
 - ✅ `test_task_timeout`
 
 **priorities.rs** (6 tests):
+
 - ✅ `test_priority_score_realtime`
 - ✅ `test_priority_score_background`
 - ✅ `test_urgency_boost`
@@ -280,33 +296,39 @@ pub enum PoolType {
 - ✅ `test_task_type_ordering`
 
 **scheduler.rs** (3 tests):
+
 - ✅ `test_scheduler_creation`
 - ✅ `test_enqueue_dequeue`
 - ✅ `test_mark_completed`
 
 **thread_pool.rs** (2 tests):
+
 - ✅ `test_thread_pools_creation`
 - ✅ `test_pool_sizes`
 - ✅ `test_high_performance_config`
 
 **executor.rs** (3 tests):
+
 - ✅ `test_executor_creation`
 - ✅ `test_execute_simple_future`
 - ✅ `test_execute_with_timeout_success`
 - ✅ `test_execute_with_timeout_failure`
 
 **diagnostics.rs** (3 tests):
+
 - ✅ `test_diagnostics_creation`
 - ✅ `test_increment_submitted`
 - ✅ `test_latency_tracking`
 - ✅ `test_update_queue_sizes`
 
 **load_balancer.rs** (3 tests):
+
 - ✅ `test_load_balancer_creation`
 - ✅ `test_overload_detection`
 - ✅ `test_throttling_disabled`
 
 **parallel modules** (3 tests):
+
 - ✅ `test_parallel_omega_creation`
 - ✅ `test_parallel_memory_creation`
 - ✅ `test_multimodal_parallel_creation`
@@ -346,6 +368,7 @@ sed -i 's/::InitializationError/::System/g' *.rs
 ### SUPER_PROMPTS_21_24_ARCHITECTURE.md
 
 **Contenu** (~400 lignes):
+
 - Vue d'ensemble 4 SUPER PROMPTs (#21-24)
 - Architecture globale (schémas)
 - Détails Performance Engine (#21)
@@ -495,20 +518,20 @@ Compilation status:  ✅ 0 errors, 0 warnings
 
 ### Module Breakdown
 
-| Module | Lines | Tests | Status |
-|--------|-------|-------|--------|
-| mod.rs | 136 | 3 | ✅ Complete |
-| config.rs | 164 | 4 | ✅ Complete |
-| task_queue.rs | 264 | 5 | ✅ Complete |
-| priorities.rs | 167 | 6 | ✅ Complete |
-| scheduler.rs | 170 | 3 | ✅ Complete |
-| thread_pool.rs | 102 | 3 | ✅ Complete |
-| executor.rs | 143 | 4 | ✅ Complete |
-| diagnostics.rs | 133 | 4 | ✅ Complete |
-| load_balancer.rs | 131 | 3 | ✅ Complete |
-| parallel_omega.rs | 64 | 1 | 🔄 Stub |
-| parallel_memory.rs | 55 | 1 | 🔄 Stub |
-| multimodal_parallel.rs | 57 | 1 | 🔄 Stub |
+| Module                 | Lines | Tests | Status      |
+| ---------------------- | ----- | ----- | ----------- |
+| mod.rs                 | 136   | 3     | ✅ Complete |
+| config.rs              | 164   | 4     | ✅ Complete |
+| task_queue.rs          | 264   | 5     | ✅ Complete |
+| priorities.rs          | 167   | 6     | ✅ Complete |
+| scheduler.rs           | 170   | 3     | ✅ Complete |
+| thread_pool.rs         | 102   | 3     | ✅ Complete |
+| executor.rs            | 143   | 4     | ✅ Complete |
+| diagnostics.rs         | 133   | 4     | ✅ Complete |
+| load_balancer.rs       | 131   | 3     | ✅ Complete |
+| parallel_omega.rs      | 64    | 1     | 🔄 Stub     |
+| parallel_memory.rs     | 55    | 1     | 🔄 Stub     |
+| multimodal_parallel.rs | 57    | 1     | 🔄 Stub     |
 
 ---
 
@@ -632,7 +655,7 @@ Compilation status:  ✅ 0 errors, 0 warnings
 
 ## ✨ Citation finale
 
-> *"Un OS cognitif n'est pas seulement intelligent — il doit être **rapide**, **stable**, et **harmonieux**. Le Performance Engine est le cœur battant qui permet au TITANE∞ de **penser à la vitesse de la cognition humaine**."*
+> _"Un OS cognitif n'est pas seulement intelligent — il doit être **rapide**, **stable**, et **harmonieux**. Le Performance Engine est le cœur battant qui permet au TITANE∞ de **penser à la vitesse de la cognition humaine**."_
 
 ---
 

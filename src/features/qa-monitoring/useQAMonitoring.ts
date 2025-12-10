@@ -127,7 +127,10 @@ export function useQAMonitoring() {
   /**
    * Résoudre une alerte
    */
-  const resolveAlert = async (alertId: string, resolutionNote: string): Promise<Alert> => {
+  const resolveAlert = async (
+    alertId: string,
+    resolutionNote: string
+  ): Promise<Alert> => {
     return await secureInvoke<Alert>('qa_resolve_alert', { alertId, resolutionNote });
   };
 
@@ -145,7 +148,9 @@ export function useQAMonitoring() {
   /**
    * Mettre à jour la configuration hardening
    */
-  const updateHardeningConfig = async (config: HardeningConfig): Promise<HardeningConfig> => {
+  const updateHardeningConfig = async (
+    config: HardeningConfig
+  ): Promise<HardeningConfig> => {
     return await secureInvoke<HardeningConfig>('qa_update_hardening_config', { config });
   };
 

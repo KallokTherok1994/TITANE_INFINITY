@@ -3,13 +3,11 @@
 // Copyright (c) 2025 TITANE∞ Team
 
 use std::sync::Arc;
-use tokio::sync::RwLock;
 use titane_infinity::multi_agents::permissions::{
-    AgentPermissionManager, AgentRole, AgentIAPermission, AgentConfig,
+    AgentConfig, AgentIAPermission, AgentPermissionManager, AgentRole,
 };
-use titane_infinity::singularity::ia_context::{
-    IAContext, IARequestRecord,
-};
+use titane_infinity::singularity::ia_context::{IAContext, IARequestRecord};
+use tokio::sync::RwLock;
 
 #[tokio::test]
 async fn test_complete_agent_ia_workflow() {
@@ -29,8 +27,7 @@ async fn test_complete_agent_ia_workflow() {
     println!("✅ Phase 1: Agent 'code_gen' created with OpenAIOnly permission");
 
     // Phase 2: Verify Claude access is DENIED
-    let can_use_claude = agent_manager
-        .can_agent_use_provider("code_gen", "claude");
+    let can_use_claude = agent_manager.can_agent_use_provider("code_gen", "claude");
     assert!(
         !can_use_claude,
         "Agent with OpenAIOnly should NOT access Claude"
@@ -38,12 +35,8 @@ async fn test_complete_agent_ia_workflow() {
     println!("✅ Phase 2: Claude access correctly denied");
 
     // Phase 3: Verify OpenAI access is ALLOWED
-    let can_use_openai = agent_manager
-        .can_agent_use_provider("code_gen", "openai");
-    assert!(
-        can_use_openai,
-        "Agent with OpenAIOnly should access OpenAI"
-    );
+    let can_use_openai = agent_manager.can_agent_use_provider("code_gen", "openai");
+    assert!(can_use_openai, "Agent with OpenAIOnly should access OpenAI");
     println!("✅ Phase 3: OpenAI access correctly allowed");
 
     // Phase 4: Setup IA context with OpenAI engine
@@ -78,7 +71,8 @@ async fn test_complete_agent_ia_workflow() {
     {
         let ctx = ia_context.read().await;
         assert_eq!(
-            ctx.request_history.len(), 1,
+            ctx.request_history.len(),
+            1,
             "Should have exactly 1 request in history"
         );
         assert_eq!(
@@ -100,35 +94,27 @@ async fn test_complete_agent_ia_workflow() {
     // Phase 7: Verify metrics updated correctly
     {
         let ctx = ia_context.read().await;
-        let metrics = ctx.engine_metrics.get("openai")
+        let metrics = ctx
+            .engine_metrics
+            .get("openai")
             .expect("OpenAI metrics should exist");
 
-        assert_eq!(
-            metrics.total_requests, 1,
-            "Should have 1 total request"
-        );
+        assert_eq!(metrics.total_requests, 1, "Should have 1 total request");
         assert_eq!(
             metrics.successful_requests, 1,
             "Should have 1 successful request"
         );
-        assert_eq!(
-            metrics.failed_requests, 0,
-            "Should have 0 failed requests"
-        );
+        assert_eq!(metrics.failed_requests, 0, "Should have 0 failed requests");
         assert_eq!(
             metrics.average_latency_ms, 250,
             "Average latency should be 250ms"
         );
-        assert_eq!(
-            metrics.total_tokens, 1000,
-            "Total tokens should be 1000"
-        );
+        assert_eq!(metrics.total_tokens, 1000, "Total tokens should be 1000");
         println!("✅ Phase 7: Metrics verified (1 req, 250ms latency, 1000 tokens)");
     }
 
     // Phase 8: Test permission enforcement on second request
-    let can_use_gemini = agent_manager
-        .can_agent_use_provider("code_gen", "gemini");
+    let can_use_gemini = agent_manager.can_agent_use_provider("code_gen", "gemini");
     assert!(
         !can_use_gemini,
         "Agent with OpenAIOnly should NOT access Gemini"
@@ -227,12 +213,14 @@ async fn test_multi_agent_concurrent_requests() {
     {
         let ctx = ia_context.read().await;
         assert_eq!(
-            ctx.request_history.len(), 3,
+            ctx.request_history.len(),
+            3,
             "Should have 3 requests in history"
         );
 
         // Verify different engines used
-        let engines: Vec<String> = ctx.request_history
+        let engines: Vec<String> = ctx
+            .request_history
             .iter()
             .map(|r| r.engine.clone())
             .collect();

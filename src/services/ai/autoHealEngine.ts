@@ -20,7 +20,14 @@ const isDev = process.env.NODE_ENV === 'development';
 export interface AutoHealError {
   id: string;
   timestamp: number;
-  type: 'provider' | 'network' | 'memory' | 'validation' | 'timeout' | 'critical' | 'unknown';
+  type:
+    | 'provider'
+    | 'network'
+    | 'memory'
+    | 'validation'
+    | 'timeout'
+    | 'critical'
+    | 'unknown';
   severity: 'low' | 'medium' | 'high' | 'critical';
   source: string;
   message: string;
@@ -32,7 +39,14 @@ export interface AutoHealAction {
   id: string;
   errorId: string;
   timestamp: number;
-  action: 'restart' | 'fallback' | 'purge' | 'reset' | 'isolate' | 'reconnect' | 'restore';
+  action:
+    | 'restart'
+    | 'fallback'
+    | 'purge'
+    | 'reset'
+    | 'isolate'
+    | 'reconnect'
+    | 'restore';
   target: string;
   success: boolean;
   duration: number;
@@ -72,7 +86,7 @@ class AutoHealEngine {
     enablePurge: true,
     enableRestart: true,
     enableFallback: true,
-    logLevel: isDev ? 'debug' : 'warn'
+    logLevel: isDev ? 'debug' : 'warn',
   };
 
   private errors: Map<string, AutoHealError> = new Map();
@@ -85,16 +99,19 @@ class AutoHealEngine {
     errorsByType: {},
     actionsByType: {},
     lastHeal: 0,
-    healthScore: 100
+    healthScore: 100,
   };
 
   private isHealing = false;
   private healingQueue: AutoHealError[] = [];
-  private providerHealthMap: Map<string, {
-    status: 'healthy' | 'degraded' | 'critical' | 'offline',
-    lastFailure: number,
-    failureCount: number
-  }> = new Map();
+  private providerHealthMap: Map<
+    string,
+    {
+      status: 'healthy' | 'degraded' | 'critical' | 'offline';
+      lastFailure: number;
+      failureCount: number;
+    }
+  > = new Map();
 
   /**
    * ═══════════════════════════════════════════════════════════════════
@@ -123,25 +140,27 @@ class AutoHealEngine {
       source,
       message: error instanceof Error ? error.message : String(error),
       metadata,
-      stackTrace: error instanceof Error ? error.stack : undefined
+      stackTrace: error instanceof Error ? error.stack : undefined,
     };
 
     // Enregistrer l'erreur
     this.errors.set(errorId, autoHealError);
     this.stats.totalErrors++;
-    this.stats.errorsByType[analyzedType] = (this.stats.errorsByType[analyzedType] || 0) + 1;
+    this.stats.errorsByType[analyzedType] =
+      (this.stats.errorsByType[analyzedType] || 0) + 1;
 
     // Mettre à jour health provider
     this.updateProviderHealth(source, 'failure');
 
     // Log selon niveau
     if (this.config.logLevel === 'debug' || severity === 'critical') {
-      isDev && console.error(`[AUTO-HEAL] Error detected [${errorId}]:`, {
-        type: analyzedType,
-        severity,
-        source,
-        message: autoHealError.message
-      });
+      isDev &&
+        console.error(`[AUTO-HEAL] Error detected [${errorId}]:`, {
+          type: analyzedType,
+          severity,
+          source,
+          message: autoHealError.message,
+        });
     }
 
     // Déclencher auto-heal si activé
@@ -224,7 +243,8 @@ class AutoHealEngine {
       // Enregistrer l'action
       this.actions.set(action.id, action);
       this.stats.totalHeals++;
-      this.stats.actionsByType[action.action] = (this.stats.actionsByType[action.action] || 0) + 1;
+      this.stats.actionsByType[action.action] =
+        (this.stats.actionsByType[action.action] || 0) + 1;
       this.stats.lastHeal = Date.now();
 
       // Mettre à jour statistiques
@@ -232,11 +252,16 @@ class AutoHealEngine {
 
       if (action.success) {
         this.updateProviderHealth(error.source, 'recovery');
-        isDev && console.log(`[AUTO-HEAL] ✅ Healing successful [${action.id}] (${healingDuration}ms)`);
+        isDev &&
+          console.log(
+            `[AUTO-HEAL] ✅ Healing successful [${action.id}] (${healingDuration}ms)`
+          );
       } else {
-        isDev && console.warn(`[AUTO-HEAL] ❌ Healing failed [${action.id}] (${healingDuration}ms)`);
+        isDev &&
+          console.warn(
+            `[AUTO-HEAL] ❌ Healing failed [${action.id}] (${healingDuration}ms)`
+          );
       }
-
     } catch (healingError) {
       isDev && console.error('[AUTO-HEAL] Healing process crashed:', healingError);
     } finally {
@@ -306,12 +331,11 @@ class AutoHealEngine {
           details = { restored: success, backupUsed: true };
           break;
       }
-
     } catch (actionError) {
       success = false;
       details = {
         error: actionError instanceof Error ? actionError.message : String(actionError),
-        failed: true
+        failed: true,
       };
     }
 
@@ -325,7 +349,7 @@ class AutoHealEngine {
       target: error.source,
       success,
       duration,
-      details
+      details,
     };
   }
 
@@ -479,11 +503,21 @@ class AutoHealEngine {
    * ═══════════════════════════════════════════════════════════════════
    */
 
-  private updateProviderHealth(source: string, event: 'failure' | 'recovery' | 'restart' | 'reset' | 'isolate' | 'reconnect' | 'restore'): void {
+  private updateProviderHealth(
+    source: string,
+    event:
+      | 'failure'
+      | 'recovery'
+      | 'restart'
+      | 'reset'
+      | 'isolate'
+      | 'reconnect'
+      | 'restore'
+  ): void {
     const current = this.providerHealthMap.get(source) || {
       status: 'healthy',
       lastFailure: 0,
-      failureCount: 0
+      failureCount: 0,
     };
 
     switch (event) {
@@ -521,19 +555,29 @@ class AutoHealEngine {
   private updateStats(): void {
     // Calcul success rate
     const totalActions = this.stats.totalHeals;
-    const successfulActions = Array.from(this.actions.values()).filter(a => a.success).length;
-    this.stats.successRate = totalActions > 0 ? (successfulActions / totalActions) * 100 : 100;
+    const successfulActions = Array.from(this.actions.values()).filter(
+      a => a.success
+    ).length;
+    this.stats.successRate =
+      totalActions > 0 ? (successfulActions / totalActions) * 100 : 100;
 
     // Calcul temps moyen de guérison
     const allDurations = Array.from(this.actions.values()).map(a => a.duration);
-    this.stats.avgHealTime = allDurations.length > 0
-      ? allDurations.reduce((sum, d) => sum + d, 0) / allDurations.length
-      : 0;
+    this.stats.avgHealTime =
+      allDurations.length > 0
+        ? allDurations.reduce((sum, d) => sum + d, 0) / allDurations.length
+        : 0;
 
     // Calcul health score global (0-100)
-    const errorRate = this.stats.totalErrors > 0 ? this.stats.totalHeals / this.stats.totalErrors : 1;
-    const timeScore = this.stats.avgHealTime < 1000 ? 100 : Math.max(0, 100 - (this.stats.avgHealTime / 100));
-    this.stats.healthScore = Math.round((this.stats.successRate * 0.6 + errorRate * 100 * 0.2 + timeScore * 0.2));
+    const errorRate =
+      this.stats.totalErrors > 0 ? this.stats.totalHeals / this.stats.totalErrors : 1;
+    const timeScore =
+      this.stats.avgHealTime < 1000
+        ? 100
+        : Math.max(0, 100 - this.stats.avgHealTime / 100);
+    this.stats.healthScore = Math.round(
+      this.stats.successRate * 0.6 + errorRate * 100 * 0.2 + timeScore * 0.2
+    );
   }
 
   /**
@@ -545,7 +589,12 @@ class AutoHealEngine {
   /**
    * API principale pour déclencher auto-heal depuis l'extérieur
    */
-  heal(source: string, error: Error | string, type?: AutoHealError['type'], metadata?: Record<string, unknown>): AutoHealError {
+  heal(
+    source: string,
+    error: Error | string,
+    type?: AutoHealError['type'],
+    metadata?: Record<string, unknown>
+  ): AutoHealError {
     return this.detectError(source, error, type, metadata);
   }
 
@@ -558,14 +607,14 @@ class AutoHealEngine {
         name,
         {
           ...health,
-          lastFailureAgo: health.lastFailure ? Date.now() - health.lastFailure : null
-        }
+          lastFailureAgo: health.lastFailure ? Date.now() - health.lastFailure : null,
+        },
       ])
     );
 
     return {
       ...this.stats,
-      providers: providersStatus
+      providers: providersStatus,
     };
   }
 
@@ -610,7 +659,7 @@ class AutoHealEngine {
       errorsByType: {},
       actionsByType: {},
       lastHeal: 0,
-      healthScore: 100
+      healthScore: 100,
     };
     isDev && console.log('[AUTO-HEAL] Stats reset complete');
   }
@@ -618,27 +667,39 @@ class AutoHealEngine {
   /**
    * Test de fonctionnement
    */
-  async selfTest(): Promise<{ success: boolean, results: any[] }> {
+  async selfTest(): Promise<{ success: boolean; results: any[] }> {
     const results = [];
     let allSuccess = true;
 
     try {
       // Test détection erreur
-      const testError = this.detectError('test-provider', 'Test error', 'validation', { test: true });
+      const testError = this.detectError('test-provider', 'Test error', 'validation', {
+        test: true,
+      });
       results.push({ test: 'error_detection', success: true, errorId: testError.id });
 
       // Test classification
       const networkError = this.analyzeErrorType(new Error('Network timeout'));
-      results.push({ test: 'error_classification', success: networkError === 'timeout', classified: networkError });
+      results.push({
+        test: 'error_classification',
+        success: networkError === 'timeout',
+        classified: networkError,
+      });
 
       // Test action selection
-      const action = this.selectHealingAction({ type: 'provider', severity: 'high' } as AutoHealError);
+      const action = this.selectHealingAction({
+        type: 'provider',
+        severity: 'high',
+      } as AutoHealError);
       results.push({ test: 'action_selection', success: true, action });
 
       // Test statistiques
       const stats = this.getStats();
-      results.push({ test: 'stats_generation', success: stats.healthScore >= 0, healthScore: stats.healthScore });
-
+      results.push({
+        test: 'stats_generation',
+        success: stats.healthScore >= 0,
+        healthScore: stats.healthScore,
+      });
     } catch (error) {
       allSuccess = false;
       results.push({ test: 'self_test', success: false, error: String(error) });

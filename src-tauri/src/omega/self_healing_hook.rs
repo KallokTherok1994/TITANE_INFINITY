@@ -4,12 +4,12 @@
 //   Detection → Diagnosis → Repair → Learn
 // ═══════════════════════════════════════════════════════════════
 
-use std::sync::Arc;
-use std::sync::atomic::{AtomicU64, AtomicU32, Ordering};
+use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, VecDeque};
+use std::sync::atomic::{AtomicU32, AtomicU64, Ordering};
+use std::sync::Arc;
 use std::time::Instant;
 use tokio::sync::RwLock;
-use serde::{Deserialize, Serialize};
 
 // ═══════════════════════════════════════════════════════════════
 //   TYPES DE BASE (Self-contained)
@@ -52,7 +52,10 @@ impl HookSystemHealth {
         };
         format!(
             "[{}] Score: {:.2}, Errors: {:.1}%, Latency: {}ms",
-            status, self.anomaly_score, self.error_rate * 100.0, self.omega_latency
+            status,
+            self.anomaly_score,
+            self.error_rate * 100.0,
+            self.omega_latency
         )
     }
 
@@ -370,7 +373,7 @@ impl Healer {
         }
 
         // Deduplicate and sort by priority
-        actions.sort_by(|a, b| b.priority().cmp(&a.priority()));
+        actions.sort_by_key(|a| std::cmp::Reverse(a.priority()));
         actions.dedup();
 
         actions
@@ -642,9 +645,9 @@ impl SelfHealingHook {
 
         // Filter actions by config
         let (auto_actions, pending_actions): (Vec<_>, Vec<_>) = if self.config.auto_execute {
-            actions.into_iter().partition(|a| {
-                !self.config.confirm_high_risk || a.risk_level() < 7
-            })
+            actions
+                .into_iter()
+                .partition(|a| !self.config.confirm_high_risk || a.risk_level() < 7)
         } else {
             (vec![], actions)
         };

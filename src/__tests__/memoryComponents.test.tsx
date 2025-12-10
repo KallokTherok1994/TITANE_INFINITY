@@ -131,7 +131,9 @@ describe('TITANE∞ Memory Components', () => {
   describe('MemoryViewer - Empty State', () => {
     it('should render empty state when no entry provided', () => {
       render(<MemoryViewer entry={null} onClose={mockOnClose} />);
-      expect(screen.getByText('Sélectionnez une entrée pour voir les détails')).toBeInTheDocument();
+      expect(
+        screen.getByText('Sélectionnez une entrée pour voir les détails')
+      ).toBeInTheDocument();
     });
 
     it('should display empty icon', () => {
@@ -143,7 +145,9 @@ describe('TITANE∞ Memory Components', () => {
   describe('MemoryViewer - Session Entry', () => {
     it('should render session entry content', () => {
       render(<MemoryViewer entry={mockSessionEntry} onClose={mockOnClose} />);
-      expect(screen.getByText('Test session content with some meaningful text')).toBeInTheDocument();
+      expect(
+        screen.getByText('Test session content with some meaningful text')
+      ).toBeInTheDocument();
     });
 
     it('should display session level badge', () => {
@@ -204,7 +208,13 @@ describe('TITANE∞ Memory Components', () => {
     });
 
     it('should not show promote button', () => {
-      render(<MemoryViewer entry={mockLongTermEntry} onClose={mockOnClose} onPromote={mockOnPromote} />);
+      render(
+        <MemoryViewer
+          entry={mockLongTermEntry}
+          onClose={mockOnClose}
+          onPromote={mockOnPromote}
+        />
+      );
       expect(screen.queryByText('⬆️ Promouvoir')).not.toBeInTheDocument();
     });
   });
@@ -316,11 +326,7 @@ describe('TITANE∞ Memory Components', () => {
 
     it('should disable importance stars in read only mode', () => {
       render(
-        <MemoryViewer
-          entry={mockSessionEntry}
-          onClose={mockOnClose}
-          readOnly={true}
-        />
+        <MemoryViewer entry={mockSessionEntry} onClose={mockOnClose} readOnly={true} />
       );
       const stars = screen.getAllByRole('button', { name: /Importance/i });
       stars.forEach(star => {
@@ -330,11 +336,7 @@ describe('TITANE∞ Memory Components', () => {
 
     it('should still show copy and export buttons', () => {
       render(
-        <MemoryViewer
-          entry={mockSessionEntry}
-          onClose={mockOnClose}
-          readOnly={true}
-        />
+        <MemoryViewer entry={mockSessionEntry} onClose={mockOnClose} readOnly={true} />
       );
       expect(screen.getByText('📋 Copier')).toBeInTheDocument();
       expect(screen.getByText('📤 Exporter')).toBeInTheDocument();

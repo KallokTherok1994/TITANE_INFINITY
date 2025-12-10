@@ -30,21 +30,9 @@
   },
   "categorizeByGroup": true,
   "defaultCategory": "Other",
-  "categoryOrder": [
-    "Services",
-    "Hooks",
-    "Store",
-    "Types",
-    "*"
-  ],
+  "categoryOrder": ["Services", "Hooks", "Store", "Types", "*"],
   "sort": ["source-order"],
-  "kindSortOrder": [
-    "Function",
-    "Class",
-    "Interface",
-    "TypeAlias",
-    "Variable"
-  ],
+  "kindSortOrder": ["Function", "Class", "Interface", "TypeAlias", "Variable"],
   "jsDocCompatibility": true,
   "excludeExternals": true
 }

@@ -309,15 +309,13 @@ export function validateData<T>(
 
   if (!result.success) {
     const errors = result.error.issues.map(
-      (err) => `${err.path.join('.')}: ${err.message}`
+      err => `${err.path.join('.')}: ${err.message}`
     );
 
     const contextMsg = context ? ` [${context}]` : '';
     console.error(`[Validation Error]${contextMsg}:`, errors);
 
-    throw new Error(
-      `Validation failed${contextMsg}: ${errors.join(', ')}`
-    );
+    throw new Error(`Validation failed${contextMsg}: ${errors.join(', ')}`);
   }
 
   return result.data;
@@ -326,10 +324,7 @@ export function validateData<T>(
 /**
  * Valider optionnellement (retourne null si invalid)
  */
-export function validateDataOptional<T>(
-  data: unknown,
-  schema: z.ZodSchema<T>
-): T | null {
+export function validateDataOptional<T>(data: unknown, schema: z.ZodSchema<T>): T | null {
   const result = schema.safeParse(data);
   return result.success ? result.data : null;
 }

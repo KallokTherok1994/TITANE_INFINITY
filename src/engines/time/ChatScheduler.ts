@@ -138,14 +138,16 @@ export class ChatScheduler {
         start: obj.start,
         end: obj.end,
         fromEventId: obj.fromEventId,
-        meta: obj.meta ? {
-          durationMinutes: obj.meta.durationMinutes,
-          category: obj.meta.category as EventCategory,
-          priority: obj.meta.priority as PriorityLevel,
-          description: obj.meta.description,
-          tags: obj.meta.tags,
-          recurrence: obj.meta.recurrence,
-        } : undefined,
+        meta: obj.meta
+          ? {
+              durationMinutes: obj.meta.durationMinutes,
+              category: obj.meta.category as EventCategory,
+              priority: obj.meta.priority as PriorityLevel,
+              description: obj.meta.description,
+              tags: obj.meta.tags,
+              recurrence: obj.meta.recurrence,
+            }
+          : undefined,
       };
 
       console.log('[ChatScheduler] ✅ Commande parsée:', command.type, command.title);
@@ -241,7 +243,9 @@ export class ChatScheduler {
     if (!endDateTime) {
       const durationMinutes = command.meta?.durationMinutes || 60;
       const startDate = new Date(command.start);
-      endDateTime = new Date(startDate.getTime() + durationMinutes * 60 * 1000).toISOString();
+      endDateTime = new Date(
+        startDate.getTime() + durationMinutes * 60 * 1000
+      ).toISOString();
     }
 
     try {
@@ -288,7 +292,7 @@ export class ChatScheduler {
       return {
         success: false,
         command,
-        error: 'ID d\'événement requis pour la mise à jour',
+        error: "ID d'événement requis pour la mise à jour",
         message: 'ID manquant',
       };
     }
@@ -335,7 +339,7 @@ export class ChatScheduler {
       return {
         success: false,
         command,
-        error: 'ID d\'événement et nouvelle date requis',
+        error: "ID d'événement et nouvelle date requis",
         message: 'Informations manquantes',
       };
     }
@@ -347,7 +351,11 @@ export class ChatScheduler {
         newEndDateTime: command.end,
       });
 
-      const event = await agendaEngine.moveEvent(command.fromEventId, command.start, command.end);
+      const event = await agendaEngine.moveEvent(
+        command.fromEventId,
+        command.start,
+        command.end
+      );
 
       return {
         success: true,
@@ -356,7 +364,11 @@ export class ChatScheduler {
         message: `✅ Événement déplacé`,
       };
     } catch (error) {
-      const event = await agendaEngine.moveEvent(command.fromEventId, command.start, command.end);
+      const event = await agendaEngine.moveEvent(
+        command.fromEventId,
+        command.start,
+        command.end
+      );
       return {
         success: !!event,
         command,
@@ -374,7 +386,7 @@ export class ChatScheduler {
       return {
         success: false,
         command,
-        error: 'ID d\'événement requis pour la suppression',
+        error: "ID d'événement requis pour la suppression",
         message: 'ID manquant',
       };
     }
@@ -504,7 +516,7 @@ export class ChatScheduler {
     const templates: Record<AgendaCommandType, object> = {
       create: {
         type: 'create',
-        title: 'Titre de l\'événement',
+        title: "Titre de l'événement",
         start: new Date().toISOString(),
         end: new Date(Date.now() + 3600000).toISOString(),
         meta: {

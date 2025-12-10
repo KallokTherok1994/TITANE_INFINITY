@@ -106,9 +106,7 @@ export function AIModelSelector({
     <div className={`flex flex-col gap-2 ${className}`}>
       {/* Label */}
       <div className="flex items-center justify-between">
-        <label className="text-sm font-medium text-white/80">
-          Modèle IA
-        </label>
+        <label className="text-sm font-medium text-white/80">Modèle IA</label>
         {devMode && (
           <span className="text-xs px-2 py-0.5 rounded bg-purple-500/20 text-purple-400">
             DEV MODE
@@ -119,17 +117,20 @@ export function AIModelSelector({
       {/* Dropdown */}
       <select
         value={currentProvider}
-        onChange={(e) => handleProviderChange(e.target.value as AIProvider)}
+        onChange={e => handleProviderChange(e.target.value as AIProvider)}
         className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
       >
-        {MODEL_OPTIONS.map((option) => (
+        {MODEL_OPTIONS.map(option => (
           <option
             key={option.value}
             value={option.value}
             disabled={option.value === 'titane-local' && !ollamaStatus.available}
             className="bg-gray-900 text-white"
           >
-            {option.icon} {option.label} {option.value === 'titane-local' && !ollamaStatus.available ? '(OFFLINE)' : ''}
+            {option.icon} {option.label}{' '}
+            {option.value === 'titane-local' && !ollamaStatus.available
+              ? '(OFFLINE)'
+              : ''}
           </option>
         ))}
       </select>
@@ -137,19 +138,19 @@ export function AIModelSelector({
       {/* Description + Status */}
       <div className="flex items-center justify-between">
         <p className="text-xs text-white/60">
-          {MODEL_OPTIONS.find((opt) => opt.value === currentProvider)?.description}
+          {MODEL_OPTIONS.find(opt => opt.value === currentProvider)?.description}
         </p>
-        {MODEL_OPTIONS.find((opt) => opt.value === currentProvider) &&
-          getStatusBadge(MODEL_OPTIONS.find((opt) => opt.value === currentProvider) as AIModelOption)}
+        {MODEL_OPTIONS.find(opt => opt.value === currentProvider) &&
+          getStatusBadge(
+            MODEL_OPTIONS.find(opt => opt.value === currentProvider) as AIModelOption
+          )}
       </div>
 
       {/* Ollama Details (si local sélectionné) */}
       {currentProvider === 'titane-local' && ollamaStatus.available && (
         <div className="mt-2 p-3 rounded-lg bg-white/5 border border-white/10">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-medium text-white/80">
-              Modèles installés
-            </span>
+            <span className="text-xs font-medium text-white/80">Modèles installés</span>
             <button
               onClick={checkOllamaStatus}
               disabled={isChecking}
@@ -160,7 +161,7 @@ export function AIModelSelector({
           </div>
           <div className="flex flex-wrap gap-1">
             {ollamaStatus.models.length > 0 ? (
-              ollamaStatus.models.map((model) => (
+              ollamaStatus.models.map(model => (
                 <span
                   key={model}
                   className="text-xs px-2 py-1 rounded bg-purple-500/20 text-purple-300"
@@ -178,9 +179,7 @@ export function AIModelSelector({
       {/* Installation Instructions (si local sélectionné mais offline) */}
       {currentProvider === 'titane-local' && !ollamaStatus.available && (
         <div className="mt-2 p-3 rounded-lg bg-red-500/10 border border-red-500/20">
-          <p className="text-xs text-red-300 mb-2">
-            ⚠️ Ollama n'est pas disponible
-          </p>
+          <p className="text-xs text-red-300 mb-2">⚠️ Ollama n'est pas disponible</p>
           <p className="text-xs text-red-200/60 mb-2">
             Pour utiliser TITANE∞ Local, installez Ollama:
           </p>

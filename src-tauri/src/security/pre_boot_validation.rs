@@ -177,7 +177,9 @@ async fn verify_design_system() -> Result<bool, String> {
     // Essayer plusieurs chemins possibles pour le workspace
     // Note: current_dir peut être src-tauri, donc on remonte d'un niveau si nécessaire
     let current = std::env::current_dir().ok();
-    let parent_of_current = current.as_ref().and_then(|p| p.parent().map(|pp| pp.to_path_buf()));
+    let parent_of_current = current
+        .as_ref()
+        .and_then(|p| p.parent().map(|pp| pp.to_path_buf()));
 
     let possible_bases = vec![
         // D'abord le parent (si on est dans src-tauri)
@@ -185,7 +187,10 @@ async fn verify_design_system() -> Result<bool, String> {
         // Puis le current_dir direct
         current,
         // CARGO_MANIFEST_DIR parent (workspace root)
-        std::env::var("CARGO_MANIFEST_DIR").ok().map(PathBuf::from).and_then(|p| p.parent().map(|pp| pp.to_path_buf())),
+        std::env::var("CARGO_MANIFEST_DIR")
+            .ok()
+            .map(PathBuf::from)
+            .and_then(|p| p.parent().map(|pp| pp.to_path_buf())),
         // Home dir fallback
         dirs::home_dir().map(|h| h.join("Documents/TITANE_INFINITY")),
     ];
@@ -212,7 +217,10 @@ async fn verify_design_system() -> Result<bool, String> {
                 }
             }
             if all_found {
-                log::debug!("✅ Design System: OK (source files verified in {:?})", maybe_base);
+                log::debug!(
+                    "✅ Design System: OK (source files verified in {:?})",
+                    maybe_base
+                );
             } else {
                 log::debug!("✅ Design System: OK (some files missing, may be in bundle)");
             }

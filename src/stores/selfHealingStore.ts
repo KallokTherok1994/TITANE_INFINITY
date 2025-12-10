@@ -52,7 +52,7 @@ export const useSelfHealingStore = create<SelfHealingStoreState>()(
           const result = await triggerSelfHealing(symptoms);
           const summary = summarizeSelfHealing(result);
 
-          set((state) => ({
+          set(state => ({
             lastResult: result,
             history: [summary, ...state.history].slice(0, MAX_HISTORY),
             isRunning: false,

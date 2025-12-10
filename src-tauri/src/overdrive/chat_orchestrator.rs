@@ -153,7 +153,11 @@ async fn initialize_providers(state: &ChatOrchestratorState) {
         provider: "openai".to_string(),
         available: false,
         latency_ms: 0,
-        models: vec!["gpt-4o".to_string(), "gpt-4-turbo".to_string(), "gpt-4".to_string()],
+        models: vec![
+            "gpt-4o".to_string(),
+            "gpt-4-turbo".to_string(),
+            "gpt-4".to_string(),
+        ],
         error: None,
     });
 
@@ -162,7 +166,10 @@ async fn initialize_providers(state: &ChatOrchestratorState) {
         provider: "anthropic".to_string(),
         available: false,
         latency_ms: 0,
-        models: vec!["claude-3-5-sonnet-20241022".to_string(), "claude-3-opus".to_string()],
+        models: vec![
+            "claude-3-5-sonnet-20241022".to_string(),
+            "claude-3-opus".to_string(),
+        ],
         error: None,
     });
 
@@ -289,18 +296,26 @@ pub async fn chat_send_message(
     mut request: ChatRequest,
     state: State<'_, ChatOrchestratorState>,
 ) -> Result<ChatResponse, String> {
-    println!("[CHAT] 📨 chat_send_message appelé - provider: {}, message: {}...",
-             request.provider,
-             request.message.chars().take(50).collect::<String>());
+    println!(
+        "[CHAT] 📨 chat_send_message appelé - provider: {}, message: {}...",
+        request.provider,
+        request.message.chars().take(50).collect::<String>()
+    );
 
     let start = crate::core::utils::now_ms();
 
     // 🔒 SECURITY v19.3: Rate Limiting Check
     // Utiliser user_id si fourni, sinon "anonymous"
-    let user_id = request.conversation_id.clone().unwrap_or_else(|| "anonymous".to_string());
-    if let Err(e) = crate::security::rate_limit::GLOBAL_RATE_LIMITER.check(&user_id).await {
+    let user_id = request
+        .conversation_id
+        .clone()
+        .unwrap_or_else(|| "anonymous".to_string());
+    if let Err(e) = crate::security::rate_limit::GLOBAL_RATE_LIMITER
+        .check(&user_id)
+        .await
+    {
         println!("[CHAT] ⛔ Rate limit exceeded for user {}: {}", user_id, e);
-        
+
         // Log security event
         let event = crate::security::AuditEvent::new(
             crate::security::AuditEventType::RateLimitExceeded,
@@ -308,9 +323,9 @@ pub async fn chat_send_message(
             serde_json::json!({ "provider": request.provider, "message_length": request.message.len() }),
             crate::security::AuditSeverity::Warning.into(),
         );
-        
+
         let _ = crate::security::audit::GLOBAL_AUDIT_LOGGER.log(event).await;
-        
+
         return Err(format!("Rate limit exceeded: {}", e));
     }
 
@@ -326,11 +341,11 @@ pub async fn chat_send_message(
     // Liste des providers à essayer (ordre de priorité)
     let providers_to_try: Vec<String> = if request.provider == "auto" {
         vec![
-            "openai".to_string(),      // 1️⃣ OpenAI GPT-4 (priorité haute)
-            "anthropic".to_string(),   // 2️⃣ Anthropic Claude (priorité haute)
-            "gemini".to_string(),      // 3️⃣ Google Gemini (backup cloud)
-            "ollama".to_string(),      // 4️⃣ Ollama local (backup)
-            "local".to_string(),       // 5️⃣ TITANE Local (fallback ultime)
+            "openai".to_string(),    // 1️⃣ OpenAI GPT-4 (priorité haute)
+            "anthropic".to_string(), // 2️⃣ Anthropic Claude (priorité haute)
+            "gemini".to_string(),    // 3️⃣ Google Gemini (backup cloud)
+            "ollama".to_string(),    // 4️⃣ Ollama local (backup)
+            "local".to_string(),     // 5️⃣ TITANE Local (fallback ultime)
         ]
     } else {
         let mut providers = vec![request.provider.clone()];
@@ -450,7 +465,10 @@ async fn send_to_gemini(
          Si on te demande du code, tu fournis des exemples bien commentés en français. \
          Tu ne réponds JAMAIS en anglais sauf si l'utilisateur le demande explicitement.";
 
-    let system_prompt = request.system_prompt.as_deref().unwrap_or(default_system_prompt);
+    let system_prompt = request
+        .system_prompt
+        .as_deref()
+        .unwrap_or(default_system_prompt);
 
     // Build request body avec system prompt intégré
     let body = serde_json::json!({
@@ -585,7 +603,7 @@ async fn send_to_ollama(
         "Tu es TITANE∞, un assistant IA avancé créé par l'équipe TITANE. \
          Tu réponds TOUJOURS en français, de manière claire, concise et utile. \
          Tu es amical, professionnel et tu aides l'utilisateur avec ses questions. \
-         Si on te demande du code, tu fournis des exemples bien commentés en français."
+         Si on te demande du code, tu fournis des exemples bien commentés en français.",
     );
 
     // Build request body avec system prompt
@@ -685,7 +703,10 @@ async fn send_to_openai(
          Si on te demande du code, tu fournis des exemples bien commentés en français. \
          Tu ne réponds JAMAIS en anglais sauf si l'utilisateur le demande explicitement.";
 
-    let system_prompt = request.system_prompt.as_deref().unwrap_or(default_system_prompt);
+    let system_prompt = request
+        .system_prompt
+        .as_deref()
+        .unwrap_or(default_system_prompt);
 
     // Build request body
     let body = serde_json::json!({
@@ -809,10 +830,16 @@ async fn send_to_anthropic(
         .as_ref()
         .ok_or_else(|| TAPIError::config("Anthropic API key not configured"))?;
 
-    let model = request.model.as_deref().unwrap_or("claude-3-5-sonnet-20241022");
+    let model = request
+        .model
+        .as_deref()
+        .unwrap_or("claude-3-5-sonnet-20241022");
     let url = "https://api.anthropic.com/v1/messages";
 
-    println!("[CHAT] 🧠 Anthropic Claude API call: {} (timeout 60s)", model);
+    println!(
+        "[CHAT] 🧠 Anthropic Claude API call: {} (timeout 60s)",
+        model
+    );
 
     // System prompt TITANE∞
     let default_system_prompt = "Tu es TITANE∞, un assistant IA avancé créé par l'équipe TITANE. \
@@ -821,7 +848,10 @@ async fn send_to_anthropic(
          Si on te demande du code, tu fournis des exemples bien commentés en français. \
          Tu ne réponds JAMAIS en anglais sauf si l'utilisateur le demande explicitement.";
 
-    let system_prompt = request.system_prompt.as_deref().unwrap_or(default_system_prompt);
+    let system_prompt = request
+        .system_prompt
+        .as_deref()
+        .unwrap_or(default_system_prompt);
 
     // Build request body
     let body = serde_json::json!({
@@ -946,10 +976,7 @@ async fn send_to_local(
     let user_message = request.message.to_lowercase();
     let response_content = generate_local_response(&user_message, &request.message);
 
-    println!(
-        "[CHAT] ✅ Local success: {} chars",
-        response_content.len()
-    );
+    println!("[CHAT] ✅ Local success: {} chars", response_content.len());
 
     Ok(ChatMessage {
         id: uuid::Uuid::new_v4().to_string(),
@@ -966,27 +993,42 @@ async fn send_to_local(
 /// Génère une réponse locale intelligente basée sur le contexte du message
 fn generate_local_response(message_lower: &str, original_message: &str) -> String {
     // Salutations
-    if message_lower.contains("bonjour") || message_lower.contains("salut") || message_lower.contains("hello") {
+    if message_lower.contains("bonjour")
+        || message_lower.contains("salut")
+        || message_lower.contains("hello")
+    {
         return "Bonjour ! Je suis TITANE∞, ton assistant cognitif. Je fonctionne actuellement en mode local (hors-ligne). Comment puis-je t'aider aujourd'hui ?".to_string();
     }
 
     // Questions sur l'identité
-    if message_lower.contains("qui es-tu") || message_lower.contains("qui êtes-vous") || message_lower.contains("c'est quoi titane") {
+    if message_lower.contains("qui es-tu")
+        || message_lower.contains("qui êtes-vous")
+        || message_lower.contains("c'est quoi titane")
+    {
         return "Je suis TITANE∞, un système d'intelligence artificielle cognitif avancé. En mode local, je dispose de capacités de réponse limitées mais je reste disponible pour t'assister. Pour des réponses plus complètes, configure Ollama ou une clé API Gemini.".to_string();
     }
 
     // Aide et capacités
-    if message_lower.contains("aide") || message_lower.contains("help") || message_lower.contains("que peux-tu faire") {
+    if message_lower.contains("aide")
+        || message_lower.contains("help")
+        || message_lower.contains("que peux-tu faire")
+    {
         return "En mode local, je peux :\n\n• Répondre à des questions simples\n• Fournir des informations de base\n• Maintenir une conversation\n\nPour des capacités avancées (génération de code, analyse complexe), connecte Ollama ou configure une clé API Gemini dans les paramètres.".to_string();
     }
 
     // Questions techniques
-    if message_lower.contains("code") || message_lower.contains("programmation") || message_lower.contains("développement") {
+    if message_lower.contains("code")
+        || message_lower.contains("programmation")
+        || message_lower.contains("développement")
+    {
         return "Pour la génération de code et l'assistance au développement, je recommande d'activer Ollama (local) ou Gemini (cloud). En mode local basique, mes capacités de codage sont limitées.\n\nPour démarrer Ollama : `ollama serve` puis `ollama pull llama3.1`".to_string();
     }
 
     // État du système
-    if message_lower.contains("status") || message_lower.contains("état") || message_lower.contains("diagnostic") {
+    if message_lower.contains("status")
+        || message_lower.contains("état")
+        || message_lower.contains("diagnostic")
+    {
         return "🔄 **État TITANE∞**\n\n• Mode: Local (hors-ligne)\n• Moteur: titane-local-v1\n• Statut: Opérationnel\n\nPour des diagnostics avancés, utilise la commande `/diagnostic` ou accède au panneau DevTools.".to_string();
     }
 
@@ -996,7 +1038,10 @@ fn generate_local_response(message_lower: &str, original_message: &str) -> Strin
     }
 
     // Au revoir
-    if message_lower.contains("au revoir") || message_lower.contains("bye") || message_lower.contains("à bientôt") {
+    if message_lower.contains("au revoir")
+        || message_lower.contains("bye")
+        || message_lower.contains("à bientôt")
+    {
         return "À bientôt ! TITANE∞ reste disponible quand tu en auras besoin. 🌟".to_string();
     }
 
@@ -1612,7 +1657,8 @@ fn handle_ollama_line(
     accumulated: &mut String,
     tokens: &mut Option<u32>,
     prompt_tokens: &mut Option<u32>,
-) -> Result<Option<OllamaStreamChunk>, String> { // clippy: keep signature (8 params) pending refactor
+) -> Result<Option<OllamaStreamChunk>, String> {
+    // clippy: keep signature (8 params) pending refactor
     use tauri::Emitter;
 
     if line.trim().is_empty() {

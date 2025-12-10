@@ -130,17 +130,21 @@ export const PerformanceTest = () => {
   return (
     <div className="devtools-page" style={{ background: '#0a0e1a' }}>
       {/* Header */}
-      <div style={{
-        padding: '2rem',
-        borderBottom: '1px solid rgba(255,255,255,0.1)',
-        background: 'linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%)'
-      }}>
-        <h1 style={{
-          fontSize: '2rem',
-          fontWeight: 700,
-          color: '#fff',
-          marginBottom: '0.5rem'
-        }}>
+      <div
+        style={{
+          padding: '2rem',
+          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          background: 'linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%)',
+        }}
+      >
+        <h1
+          style={{
+            fontSize: '2rem',
+            fontWeight: 700,
+            color: '#fff',
+            marginBottom: '0.5rem',
+          }}
+        >
           ⚡ Performance Test — TITANE∞ v24
         </h1>
         <p style={{ color: '#8892a6', fontSize: '0.95rem' }}>
@@ -149,40 +153,58 @@ export const PerformanceTest = () => {
       </div>
 
       {/* Metrics Grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-        gap: '1.5rem',
-        padding: '2rem'
-      }}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+          gap: '1.5rem',
+          padding: '2rem',
+        }}
+      >
         {/* FPS Card */}
         <div className="living-engines-card">
           <div className="living-engines-card__header">
             <h3 className="living-engines-card__title">🎯 FPS (Current)</h3>
-            <span className={`living-engines-card__badge living-engines-card__badge--${fpsStatus}`}>
+            <span
+              className={`living-engines-card__badge living-engines-card__badge--${fpsStatus}`}
+            >
               {metrics.fps}
             </span>
           </div>
           <div style={{ padding: '1rem' }}>
-            <div style={{ fontSize: '3rem', fontWeight: 700, color: '#fff', marginBottom: '0.5rem' }}>
+            <div
+              style={{
+                fontSize: '3rem',
+                fontWeight: 700,
+                color: '#fff',
+                marginBottom: '0.5rem',
+              }}
+            >
               {metrics.fps}
             </div>
-            <div style={{ fontSize: '0.85rem', color: '#8892a6' }}>
-              Target: ≥55 FPS
-            </div>
-            <div style={{
-              marginTop: '1rem',
-              height: '4px',
-              background: 'rgba(255,255,255,0.1)',
-              borderRadius: '2px',
-              overflow: 'hidden'
-            }}>
-              <div style={{
-                width: `${Math.min((metrics.fps / 60) * 100, 100)}%`,
-                height: '100%',
-                background: fpsStatus === 'good' ? '#10b981' : fpsStatus === 'warning' ? '#f59e0b' : '#ef4444',
-                transition: 'width 0.3s ease'
-              }} />
+            <div style={{ fontSize: '0.85rem', color: '#8892a6' }}>Target: ≥55 FPS</div>
+            <div
+              style={{
+                marginTop: '1rem',
+                height: '4px',
+                background: 'rgba(255,255,255,0.1)',
+                borderRadius: '2px',
+                overflow: 'hidden',
+              }}
+            >
+              <div
+                style={{
+                  width: `${Math.min((metrics.fps / 60) * 100, 100)}%`,
+                  height: '100%',
+                  background:
+                    fpsStatus === 'good'
+                      ? '#10b981'
+                      : fpsStatus === 'warning'
+                        ? '#f59e0b'
+                        : '#ef4444',
+                  transition: 'width 0.3s ease',
+                }}
+              />
             </div>
           </div>
         </div>
@@ -191,22 +213,35 @@ export const PerformanceTest = () => {
         <div className="living-engines-card">
           <div className="living-engines-card__header">
             <h3 className="living-engines-card__title">📊 Average FPS</h3>
-            <span className={`living-engines-card__badge living-engines-card__badge--${avgFpsStatus}`}>
+            <span
+              className={`living-engines-card__badge living-engines-card__badge--${avgFpsStatus}`}
+            >
               {metrics.avgFps}
             </span>
           </div>
           <div style={{ padding: '1rem' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 700, color: '#fff', marginBottom: '0.5rem' }}>
+            <div
+              style={{
+                fontSize: '2rem',
+                fontWeight: 700,
+                color: '#fff',
+                marginBottom: '0.5rem',
+              }}
+            >
               {metrics.avgFps}
             </div>
             <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
               <div>
                 <div style={{ fontSize: '0.75rem', color: '#8892a6' }}>Min</div>
-                <div style={{ fontSize: '1.25rem', color: '#10b981' }}>{metrics.minFps === Infinity ? '-' : metrics.minFps}</div>
+                <div style={{ fontSize: '1.25rem', color: '#10b981' }}>
+                  {metrics.minFps === Infinity ? '-' : metrics.minFps}
+                </div>
               </div>
               <div>
                 <div style={{ fontSize: '0.75rem', color: '#8892a6' }}>Max</div>
-                <div style={{ fontSize: '1.25rem', color: '#3b82f6' }}>{metrics.maxFps}</div>
+                <div style={{ fontSize: '1.25rem', color: '#3b82f6' }}>
+                  {metrics.maxFps}
+                </div>
               </div>
             </div>
           </div>
@@ -221,15 +256,29 @@ export const PerformanceTest = () => {
             </span>
           </div>
           <div style={{ padding: '1rem' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 700, color: '#fff', marginBottom: '0.5rem' }}>
+            <div
+              style={{
+                fontSize: '2rem',
+                fontWeight: 700,
+                color: '#fff',
+                marginBottom: '0.5rem',
+              }}
+            >
               {metrics.frameTime.toFixed(2)}ms
             </div>
             <div style={{ fontSize: '0.85rem', color: '#8892a6' }}>
               Target: &lt;16.67ms (60 FPS)
             </div>
             <div style={{ marginTop: '1rem' }}>
-              <div style={{ fontSize: '0.75rem', color: '#8892a6', marginBottom: '0.25rem' }}>
-                Status: {metrics.frameTime < 16.67 ? '✅ Good' : metrics.frameTime < 22 ? '⚠️ Warning' : '❌ Critical'}
+              <div
+                style={{ fontSize: '0.75rem', color: '#8892a6', marginBottom: '0.25rem' }}
+              >
+                Status:{' '}
+                {metrics.frameTime < 16.67
+                  ? '✅ Good'
+                  : metrics.frameTime < 22
+                    ? '⚠️ Warning'
+                    : '❌ Critical'}
               </div>
             </div>
           </div>
@@ -244,7 +293,14 @@ export const PerformanceTest = () => {
             </span>
           </div>
           <div style={{ padding: '1rem' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 700, color: '#fff', marginBottom: '0.5rem' }}>
+            <div
+              style={{
+                fontSize: '2rem',
+                fontWeight: 700,
+                color: '#fff',
+                marginBottom: '0.5rem',
+              }}
+            >
               {metrics.updateTime.toFixed(2)}ms
             </div>
             <div style={{ fontSize: '0.85rem', color: '#8892a6' }}>
@@ -267,15 +323,22 @@ export const PerformanceTest = () => {
             </span>
           </div>
           <div style={{ padding: '1rem' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 700, color: '#fff', marginBottom: '0.5rem' }}>
+            <div
+              style={{
+                fontSize: '2rem',
+                fontWeight: 700,
+                color: '#fff',
+                marginBottom: '0.5rem',
+              }}
+            >
               {metrics.memoryUsed.toFixed(1)}MB
             </div>
-            <div style={{ fontSize: '0.85rem', color: '#8892a6' }}>
-              JS Heap Size
-            </div>
+            <div style={{ fontSize: '0.85rem', color: '#8892a6' }}>JS Heap Size</div>
             <div style={{ marginTop: '1rem' }}>
               <div style={{ fontSize: '0.75rem', color: '#8892a6' }}>
-                {metrics.memoryUsed > 0 ? 'Monitoring active' : 'Not available in this browser'}
+                {metrics.memoryUsed > 0
+                  ? 'Monitoring active'
+                  : 'Not available in this browser'}
               </div>
             </div>
           </div>
@@ -285,21 +348,24 @@ export const PerformanceTest = () => {
         <div className="living-engines-card">
           <div className="living-engines-card__header">
             <h3 className="living-engines-card__title">🎨 Render Count</h3>
-            <span className="living-engines-card__badge">
-              {metrics.renderCount}
-            </span>
+            <span className="living-engines-card__badge">{metrics.renderCount}</span>
           </div>
           <div style={{ padding: '1rem' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 700, color: '#fff', marginBottom: '0.5rem' }}>
+            <div
+              style={{
+                fontSize: '2rem',
+                fontWeight: 700,
+                color: '#fff',
+                marginBottom: '0.5rem',
+              }}
+            >
               {metrics.renderCount.toLocaleString()}
             </div>
             <div style={{ fontSize: '0.85rem', color: '#8892a6' }}>
               Total frames rendered
             </div>
             <div style={{ marginTop: '1rem' }}>
-              <div style={{ fontSize: '0.75rem', color: '#8892a6' }}>
-                Since page load
-              </div>
+              <div style={{ fontSize: '0.75rem', color: '#8892a6' }}>Since page load</div>
             </div>
           </div>
         </div>
@@ -315,43 +381,93 @@ export const PerformanceTest = () => {
             </span>
           </div>
           <div style={{ padding: '1rem' }}>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-              gap: '1rem'
-            }}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                gap: '1rem',
+              }}
+            >
               <div>
-                <div style={{ fontSize: '0.75rem', color: '#8892a6', marginBottom: '0.25rem' }}>Glow</div>
+                <div
+                  style={{
+                    fontSize: '0.75rem',
+                    color: '#8892a6',
+                    marginBottom: '0.25rem',
+                  }}
+                >
+                  Glow
+                </div>
                 <div style={{ fontSize: '1.5rem', fontWeight: 600, color: '#10b981' }}>
                   {(livingEngines.state.glow * 100).toFixed(0)}%
                 </div>
               </div>
               <div>
-                <div style={{ fontSize: '0.75rem', color: '#8892a6', marginBottom: '0.25rem' }}>Motion</div>
+                <div
+                  style={{
+                    fontSize: '0.75rem',
+                    color: '#8892a6',
+                    marginBottom: '0.25rem',
+                  }}
+                >
+                  Motion
+                </div>
                 <div style={{ fontSize: '1.5rem', fontWeight: 600, color: '#3b82f6' }}>
                   {(livingEngines.state.motion * 100).toFixed(0)}%
                 </div>
               </div>
               <div>
-                <div style={{ fontSize: '0.75rem', color: '#8892a6', marginBottom: '0.25rem' }}>Depth</div>
+                <div
+                  style={{
+                    fontSize: '0.75rem',
+                    color: '#8892a6',
+                    marginBottom: '0.25rem',
+                  }}
+                >
+                  Depth
+                </div>
                 <div style={{ fontSize: '1.5rem', fontWeight: 600, color: '#8b5cf6' }}>
                   {(livingEngines.state.depth * 100).toFixed(0)}%
                 </div>
               </div>
               <div>
-                <div style={{ fontSize: '0.75rem', color: '#8892a6', marginBottom: '0.25rem' }}>Sound</div>
+                <div
+                  style={{
+                    fontSize: '0.75rem',
+                    color: '#8892a6',
+                    marginBottom: '0.25rem',
+                  }}
+                >
+                  Sound
+                </div>
                 <div style={{ fontSize: '1.5rem', fontWeight: 600, color: '#f59e0b' }}>
                   {(livingEngines.state.sound * 100).toFixed(0)}%
                 </div>
               </div>
               <div>
-                <div style={{ fontSize: '0.75rem', color: '#8892a6', marginBottom: '0.25rem' }}>Cognitive Load</div>
+                <div
+                  style={{
+                    fontSize: '0.75rem',
+                    color: '#8892a6',
+                    marginBottom: '0.25rem',
+                  }}
+                >
+                  Cognitive Load
+                </div>
                 <div style={{ fontSize: '1.5rem', fontWeight: 600, color: '#ef4444' }}>
                   {(livingEngines.state.cognitiveLoad * 100).toFixed(0)}%
                 </div>
               </div>
               <div>
-                <div style={{ fontSize: '0.75rem', color: '#8892a6', marginBottom: '0.25rem' }}>Rhythm Score</div>
+                <div
+                  style={{
+                    fontSize: '0.75rem',
+                    color: '#8892a6',
+                    marginBottom: '0.25rem',
+                  }}
+                >
+                  Rhythm Score
+                </div>
                 <div style={{ fontSize: '1.5rem', fontWeight: 600, color: '#14b8a6' }}>
                   {livingEngines.state.rhythmScore.toFixed(2)}
                 </div>
@@ -367,44 +483,93 @@ export const PerformanceTest = () => {
           <div className="living-engines-card__header">
             <h3 className="living-engines-card__title">📋 Performance Summary</h3>
             <span className="living-engines-card__badge living-engines-card__badge--good">
-              {metrics.avgFps >= 55 && metrics.frameTime < 16.67 ? 'EXCELLENT' :
-               metrics.avgFps >= 45 ? 'GOOD' : 'NEEDS OPTIMIZATION'}
+              {metrics.avgFps >= 55 && metrics.frameTime < 16.67
+                ? 'EXCELLENT'
+                : metrics.avgFps >= 45
+                  ? 'GOOD'
+                  : 'NEEDS OPTIMIZATION'}
             </span>
           </div>
           <div style={{ padding: '1rem' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
                 <span style={{ color: '#8892a6' }}>Target FPS (≥55)</span>
-                <span style={{
-                  color: metrics.avgFps >= 55 ? '#10b981' : metrics.avgFps >= 45 ? '#f59e0b' : '#ef4444',
-                  fontWeight: 600
-                }}>
-                  {metrics.avgFps >= 55 ? '✅ PASSED' : metrics.avgFps >= 45 ? '⚠️ WARNING' : '❌ FAILED'}
+                <span
+                  style={{
+                    color:
+                      metrics.avgFps >= 55
+                        ? '#10b981'
+                        : metrics.avgFps >= 45
+                          ? '#f59e0b'
+                          : '#ef4444',
+                    fontWeight: 600,
+                  }}
+                >
+                  {metrics.avgFps >= 55
+                    ? '✅ PASSED'
+                    : metrics.avgFps >= 45
+                      ? '⚠️ WARNING'
+                      : '❌ FAILED'}
                 </span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
                 <span style={{ color: '#8892a6' }}>Frame Time (&lt;16.67ms)</span>
-                <span style={{
-                  color: metrics.frameTime < 16.67 ? '#10b981' : metrics.frameTime < 22 ? '#f59e0b' : '#ef4444',
-                  fontWeight: 600
-                }}>
-                  {metrics.frameTime < 16.67 ? '✅ PASSED' : metrics.frameTime < 22 ? '⚠️ WARNING' : '❌ FAILED'}
+                <span
+                  style={{
+                    color:
+                      metrics.frameTime < 16.67
+                        ? '#10b981'
+                        : metrics.frameTime < 22
+                          ? '#f59e0b'
+                          : '#ef4444',
+                    fontWeight: 600,
+                  }}
+                >
+                  {metrics.frameTime < 16.67
+                    ? '✅ PASSED'
+                    : metrics.frameTime < 22
+                      ? '⚠️ WARNING'
+                      : '❌ FAILED'}
                 </span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
                 <span style={{ color: '#8892a6' }}>Update Time (&lt;50ms)</span>
-                <span style={{
-                  color: metrics.updateTime < 50 ? '#10b981' : '#f59e0b',
-                  fontWeight: 600
-                }}>
+                <span
+                  style={{
+                    color: metrics.updateTime < 50 ? '#10b981' : '#f59e0b',
+                    fontWeight: 600,
+                  }}
+                >
                   {metrics.updateTime < 50 ? '✅ PASSED' : '⚠️ WARNING'}
                 </span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
                 <span style={{ color: '#8892a6' }}>Memory Stable</span>
-                <span style={{ color: '#10b981', fontWeight: 600 }}>
-                  ✅ MONITORING
-                </span>
+                <span style={{ color: '#10b981', fontWeight: 600 }}>✅ MONITORING</span>
               </div>
             </div>
           </div>

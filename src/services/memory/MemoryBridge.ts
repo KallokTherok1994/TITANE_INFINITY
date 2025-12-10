@@ -94,7 +94,32 @@ export class MemoryBridge {
     const _lowerMessage = message.toLowerCase();
 
     // Extraire les mots-clés significatifs (> 3 caractères, pas stopwords)
-    const stopwords = new Set(['que', 'qui', 'quoi', 'est', 'sont', 'les', 'des', 'une', 'pour', 'dans', 'avec', 'sur', 'par', 'plus', 'mais', 'comme', 'tout', 'peut', 'cette', 'fait', 'être', 'avoir', 'faire', 'dire']);
+    const stopwords = new Set([
+      'que',
+      'qui',
+      'quoi',
+      'est',
+      'sont',
+      'les',
+      'des',
+      'une',
+      'pour',
+      'dans',
+      'avec',
+      'sur',
+      'par',
+      'plus',
+      'mais',
+      'comme',
+      'tout',
+      'peut',
+      'cette',
+      'fait',
+      'être',
+      'avoir',
+      'faire',
+      'dire',
+    ]);
     const words = message.match(/\b[a-zA-ZÀ-ÿ]{4,}\b/g) || [];
     const keywords = words
       .map(w => w.toLowerCase())
@@ -138,7 +163,9 @@ export class MemoryBridge {
     }
 
     // Détection heuristique basée sur les questions
-    const isQuestion = /\?$/.test(message.trim()) || /^(est-ce|y a-t-il|pourquoi|comment|quand|où)/i.test(message);
+    const isQuestion =
+      /\?$/.test(message.trim()) ||
+      /^(est-ce|y a-t-il|pourquoi|comment|quand|où)/i.test(message);
 
     if (isQuestion && keywords.length > 0) {
       return {
@@ -177,7 +204,10 @@ export class MemoryBridge {
       }
 
       const relevanceBoost = matchCount / keywords.length;
-      const recencyBoost = Math.max(0, 1 - (Date.now() - memory.timestamp) / (7 * 24 * 60 * 60 * 1000)); // 7 jours
+      const recencyBoost = Math.max(
+        0,
+        1 - (Date.now() - memory.timestamp) / (7 * 24 * 60 * 60 * 1000)
+      ); // 7 jours
 
       return {
         memory,
@@ -219,8 +249,9 @@ export class MemoryBridge {
     }
 
     // Construire le texte d'injection
-    const memoryLines = relevantMemories.map((m, i) =>
-      `[Mémoire ${i + 1}] (${m.type}, pertinence: ${Math.round(m.relevance * 100)}%): ${m.content}`
+    const memoryLines = relevantMemories.map(
+      (m, i) =>
+        `[Mémoire ${i + 1}] (${m.type}, pertinence: ${Math.round(m.relevance * 100)}%): ${m.content}`
     );
 
     const systemPromptAddition = `
@@ -241,7 +272,10 @@ Utilise ces informations si elles sont pertinentes pour répondre à l'utilisate
   /**
    * Stocke une nouvelle mémoire
    */
-  store(content: string, type: MemoryRetrievalResult['type'] = 'conversation'): MemoryRetrievalResult {
+  store(
+    content: string,
+    type: MemoryRetrievalResult['type'] = 'conversation'
+  ): MemoryRetrievalResult {
     const memory: MemoryRetrievalResult = {
       id: crypto.randomUUID(),
       content: content.substring(0, 500), // Limite de taille

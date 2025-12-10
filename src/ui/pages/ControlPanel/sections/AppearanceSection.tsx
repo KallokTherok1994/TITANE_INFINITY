@@ -18,7 +18,7 @@ export const AppearanceSection: React.FC = () => {
     mode: 'auto',
     density: 'normal',
     animations_enabled: true,
-    transparency_enabled: false
+    transparency_enabled: false,
   });
 
   useEffect(() => {
@@ -169,9 +169,18 @@ export const AppearanceSection: React.FC = () => {
             <div className="cp-preview-section">
               <span className="cp-preview-label">Couleurs primaires</span>
               <div className="cp-color-swatches">
-                <div className="cp-color-swatch" style={{ background: 'var(--color-primary)' }} />
-                <div className="cp-color-swatch" style={{ background: 'var(--color-surface)' }} />
-                <div className="cp-color-swatch" style={{ background: 'var(--color-border)' }} />
+                <div
+                  className="cp-color-swatch"
+                  style={{ background: 'var(--color-primary)' }}
+                />
+                <div
+                  className="cp-color-swatch"
+                  style={{ background: 'var(--color-surface)' }}
+                />
+                <div
+                  className="cp-color-swatch"
+                  style={{ background: 'var(--color-border)' }}
+                />
               </div>
             </div>
             <div className="cp-preview-section">

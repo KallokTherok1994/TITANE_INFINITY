@@ -28,7 +28,12 @@ interface E2ETrace {
 async function measureStep<T>(
   action: string,
   fn: () => Promise<T>
-): Promise<{ result: T | null; duration_ms: number; status: 'OK' | 'FAIL'; error?: string }> {
+): Promise<{
+  result: T | null;
+  duration_ms: number;
+  status: 'OK' | 'FAIL';
+  error?: string;
+}> {
   const start = performance.now();
   try {
     const result = await fn();
@@ -153,7 +158,7 @@ describe('E2E Scenario 1: New User Onboarding', () => {
     trace.steps.push({ step: 7, action: 'Check coherence', ...step7 });
     expect(step7.status).toBe('OK');
 
-    trace.success = trace.steps.every((s) => s.status === 'OK');
+    trace.success = trace.steps.every(s => s.status === 'OK');
     expect(trace.success).toBe(true);
   }, 30000); // Timeout 30s
 });
@@ -252,7 +257,7 @@ describe('E2E Scenario 2: Legal Designer Workflow', () => {
     trace.steps.push({ step: 6, action: 'Verify storage', ...step6 });
     expect(step6.status).toBe('OK');
 
-    trace.success = trace.steps.every((s) => s.status === 'OK');
+    trace.success = trace.steps.every(s => s.status === 'OK');
     expect(trace.success).toBe(true);
   }, 30000);
 });
@@ -337,7 +342,7 @@ describe('E2E Scenario 3: Advanced Web Search', () => {
     trace.steps.push({ step: 5, action: 'Timeline event', ...step5 });
     expect(step5.status).toBe('OK');
 
-    trace.success = trace.steps.every((s) => s.status === 'OK');
+    trace.success = trace.steps.every(s => s.status === 'OK');
     expect(trace.success).toBe(true);
   }, 30000);
 });
@@ -429,7 +434,7 @@ describe('E2E Scenario 4: Complete Cognitive Loop', () => {
     trace.steps.push({ step: 7, action: 'Validate metrics', ...step7 });
     expect(step7.status).toBe('OK');
 
-    trace.success = trace.steps.every((s) => s.status === 'OK');
+    trace.success = trace.steps.every(s => s.status === 'OK');
     expect(trace.success).toBe(true);
   }, 45000); // Timeout 45s (cognitive loop + long)
 });
@@ -531,7 +536,7 @@ describe('E2E Scenario 5: Complex Multi-Module Interaction', () => {
     trace.steps.push({ step: 7, action: 'Validate coherence', ...step7 });
     expect(step7.status).toBe('OK');
 
-    trace.success = trace.steps.every((s) => s.status === 'OK');
+    trace.success = trace.steps.every(s => s.status === 'OK');
     expect(trace.success).toBe(true);
   }, 45000);
 });

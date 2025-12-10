@@ -18,7 +18,7 @@
  */
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
-use tauri::{AppHandle, Manager};
+use tauri::AppHandle; // FIX v21: Removed Manager import (not used in mod.rs)
 use tokio::sync::RwLock;
 
 // Sub-modules
@@ -27,8 +27,8 @@ pub mod layers;
 pub mod persistence;
 pub mod sync;
 
-// META v18 imports
-use crate::meta::{MetaCognitiveReport, SyncedState};
+// META v18 imports (FIX v21: use titane_infinity:: when included from main.rs)
+use titane_infinity::meta::{MetaCognitiveReport, SyncedState};
 
 pub use layers::*;
 pub use persistence::PersistenceLayer;
@@ -123,8 +123,8 @@ impl SingularityState {
     /// 5. Met à jour meta_cognition_report + deep_sync_status
     ///
     /// Retourne: MetaCognitiveReport (avec anomalies détectées + actions recommandées)
-    pub async fn singularity_deep_sync(&mut self) -> Result<crate::meta::MetaCognitiveReport, String> {
-        use crate::meta::{
+    pub async fn singularity_deep_sync(&mut self) -> Result<titane_infinity::meta::MetaCognitiveReport, String> {
+        use titane_infinity::meta::{
             CognitiveSnapshot, EngineState, META_ENGINE, DEEP_SYNC_ENGINE
         };
         use std::collections::HashMap;
@@ -134,10 +134,10 @@ impl SingularityState {
             timestamp: self.timestamp,
             cognitive_integrity: Some(self.cognitive.coherence_score()),
             timeline_coherence: Some(0.9), // TODO: calculer depuis états historiques
-            memory_alignment: Some(self.cognitive.memory.coherence),
-            ai_stability: Some(self.cognitive.confidence),
+            memory_alignment: Some(self.cognitive.coherence), // FIX v21: use coherence instead of memory.coherence
+            ai_stability: Some(self.cognitive.coherence), // FIX v21: use coherence instead of confidence
             singularity_coherence: Some(self.global_coherence()),
-            emotion_state: Some(self.cognitive.emotional.stability),
+            emotion_state: Some(0.8), // FIX v21: cognitive doesn't have emotional, use default
         };
 
         // [2] Évaluer cohérence cognitive (META-COGNITION ENGINE)
@@ -163,12 +163,12 @@ impl SingularityState {
 
         engine_states.insert("emotional".to_string(), EngineState::new(
             "emotional".to_string(),
-            self.cognitive.emotional.stability
+            0.8 // FIX v21: cognitive doesn't have emotional, use default
         ));
 
         engine_states.insert("memory".to_string(), EngineState::new(
             "memory".to_string(),
-            self.cognitive.memory.coherence
+            self.cognitive.coherence // FIX v21: use coherence instead of memory.coherence
         ));
 
         // [4] Effectuer synchronisation profonde (DEEP SYNC ENGINE)
@@ -199,12 +199,12 @@ impl SingularityState {
     }
 
     /// META v18.1: Obtenir rapport META-COGNITION
-    pub fn get_meta_cognition_report(&self) -> Option<&crate::meta::MetaCognitiveReport> {
+    pub fn get_meta_cognition_report(&self) -> Option<&titane_infinity::meta::MetaCognitiveReport> {
         self.meta_cognition_report.as_ref()
     }
 
     /// META v18.1: Obtenir statut DEEP SYNC
-    pub fn get_deep_sync_status(&self) -> Option<&crate::meta::SyncedState> {
+    pub fn get_deep_sync_status(&self) -> Option<&titane_infinity::meta::SyncedState> {
         self.deep_sync_status.as_ref()
     }
 
@@ -213,9 +213,9 @@ impl SingularityState {
         if let Some(sync) = &self.deep_sync_status {
             sync.success && matches!(
                 sync.quality,
-                crate::meta::SyncQuality::Perfect
-                | crate::meta::SyncQuality::Excellent
-                | crate::meta::SyncQuality::Good
+                titane_infinity::meta::SyncQuality::Perfect
+                | titane_infinity::meta::SyncQuality::Excellent
+                | titane_infinity::meta::SyncQuality::Good
             )
         } else {
             false
@@ -239,13 +239,13 @@ impl SingularityState {
         let sync_quality = self.deep_sync_status
             .as_ref()
             .map(|s| match s.quality {
-                crate::meta::SyncQuality::Perfect => 1.0,
-                crate::meta::SyncQuality::Excellent => 0.95,
-                crate::meta::SyncQuality::Good => 0.85,
-                crate::meta::SyncQuality::Acceptable => 0.75,
-                crate::meta::SyncQuality::Degraded => 0.60,
-                crate::meta::SyncQuality::Poor => 0.40,
-                crate::meta::SyncQuality::Failed => 0.20,
+                titane_infinity::meta::SyncQuality::Perfect => 1.0,
+                titane_infinity::meta::SyncQuality::Excellent => 0.95,
+                titane_infinity::meta::SyncQuality::Good => 0.85,
+                titane_infinity::meta::SyncQuality::Acceptable => 0.75,
+                titane_infinity::meta::SyncQuality::Degraded => 0.60,
+                titane_infinity::meta::SyncQuality::Poor => 0.40,
+                titane_infinity::meta::SyncQuality::Failed => 0.20,
             })
             .unwrap_or(0.5);
 

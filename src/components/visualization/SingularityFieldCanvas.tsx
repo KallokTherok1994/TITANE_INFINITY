@@ -65,9 +65,9 @@ const LAYER_COLORS = [
   { h: 142, s: 70, l: 45 }, // Physical - Green
   { h: 217, s: 90, l: 60 }, // Cognitive - Blue
   { h: 271, s: 80, l: 65 }, // Symbolic - Purple
-  { h: 38, s: 90, l: 55 },  // Adaptive - Orange
+  { h: 38, s: 90, l: 55 }, // Adaptive - Orange
   { h: 330, s: 80, l: 60 }, // Meta - Pink
-  { h: 0, s: 0, l: 77 },    // Singularity - Silver
+  { h: 0, s: 0, l: 77 }, // Singularity - Silver
 ];
 
 const LAYER_NAMES = [
@@ -278,7 +278,7 @@ export const SingularityFieldCanvas = memo(function SingularityFieldCanvas({
 
     // Draw connections
     if (showConnections) {
-      connections.forEach((connection) => {
+      connections.forEach(connection => {
         const from = particles[connection.from];
         const to = particles[connection.to];
         const avgLayer = Math.floor((from.layer + to.layer) / 2);
@@ -294,7 +294,7 @@ export const SingularityFieldCanvas = memo(function SingularityFieldCanvas({
     }
 
     // Draw particles
-    particles.forEach((particle) => {
+    particles.forEach(particle => {
       const color = LAYER_COLORS[particle.layer];
       const glow = particle.energy * 10;
 
@@ -307,7 +307,10 @@ export const SingularityFieldCanvas = memo(function SingularityFieldCanvas({
         particle.y,
         particle.radius + glow
       );
-      gradient.addColorStop(0, `hsla(${color.h}, ${color.s}%, ${color.l}%, ${particle.energy})`);
+      gradient.addColorStop(
+        0,
+        `hsla(${color.h}, ${color.s}%, ${color.l}%, ${particle.energy})`
+      );
       gradient.addColorStop(1, `hsla(${color.h}, ${color.s}%, ${color.l}%, 0)`);
 
       ctx.beginPath();
@@ -340,7 +343,14 @@ export const SingularityFieldCanvas = memo(function SingularityFieldCanvas({
     const corePulse = 0.5 + Math.sin(Date.now() / 500) * 0.2;
     const coreSize = 8 + corePulse * 4;
 
-    const coreGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, coreSize + 10);
+    const coreGradient = ctx.createRadialGradient(
+      centerX,
+      centerY,
+      0,
+      centerX,
+      centerY,
+      coreSize + 10
+    );
     coreGradient.addColorStop(0, `rgba(196, 196, 196, ${corePulse})`);
     coreGradient.addColorStop(1, 'rgba(196, 196, 196, 0)');
 
@@ -363,7 +373,14 @@ export const SingularityFieldCanvas = memo(function SingularityFieldCanvas({
     ctx.fillStyle = COLORS.secondary;
     ctx.fillText(`Consciousness: ${consciousness.toFixed(2)}/4`, 10, 20);
     ctx.fillText(`Coherence: ${(coherence * 100).toFixed(0)}%`, 10, 35);
-  }, [width, height, showConnections, showLabels, singularity.consciousness, singularity.autoCoherence]);
+  }, [
+    width,
+    height,
+    showConnections,
+    showLabels,
+    singularity.consciousness,
+    singularity.autoCoherence,
+  ]);
 
   // Animation loop
   const animate = useCallback(() => {

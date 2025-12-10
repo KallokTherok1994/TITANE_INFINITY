@@ -157,20 +157,29 @@ const formatBytes = (bytes: number): string => {
 
 const formatTimestamp = (ts: number): string => {
   const date = new Date(ts);
-  return date.toLocaleTimeString('fr-FR', {
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-  }) + '.' + String(date.getMilliseconds()).padStart(3, '0');
+  return (
+    date.toLocaleTimeString('fr-FR', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    }) +
+    '.' +
+    String(date.getMilliseconds()).padStart(3, '0')
+  );
 };
 
 const getSeverityColor = (severity: string): string => {
   switch (severity) {
-    case 'Critical': return 'var(--color-error)';
-    case 'High': return 'var(--color-warning)';
-    case 'Medium': return 'var(--color-info)';
-    case 'Low': return 'var(--color-text-tertiary)';
-    default: return 'var(--color-text-secondary)';
+    case 'Critical':
+      return 'var(--color-error)';
+    case 'High':
+      return 'var(--color-warning)';
+    case 'Medium':
+      return 'var(--color-info)';
+    case 'Low':
+      return 'var(--color-text-tertiary)';
+    default:
+      return 'var(--color-text-secondary)';
   }
 };
 
@@ -251,7 +260,7 @@ const DebuggerPanel: React.FC = () => {
           <input
             type="checkbox"
             checked={autoRefresh}
-            onChange={(e) => setAutoRefresh(e.target.checked)}
+            onChange={e => setAutoRefresh(e.target.checked)}
           />
           <span>Auto-refresh</span>
         </label>
@@ -271,7 +280,7 @@ const DebuggerPanel: React.FC = () => {
             <p>No debug events recorded</p>
           </div>
         ) : (
-          events.map((event) => (
+          events.map(event => (
             <motion.div
               key={event.id}
               className={`dt-event ${event.event_type === 'Error' ? 'dt-event--error' : ''}`}
@@ -281,7 +290,9 @@ const DebuggerPanel: React.FC = () => {
               <span className="dt-event-time">{formatTimestamp(event.timestamp)}</span>
               <span className="dt-event-engine">{event.engine}</span>
               <span className="dt-event-type">{event.event_type}</span>
-              <span className="dt-event-duration">{formatDuration(event.duration_ms)}</span>
+              <span className="dt-event-duration">
+                {formatDuration(event.duration_ms)}
+              </span>
               <span className="dt-event-details">{event.details}</span>
             </motion.div>
           ))
@@ -373,7 +384,10 @@ const MemoryPanel: React.FC = () => {
               </div>
             </div>
             {health && (
-              <div className="dt-memory-health" style={{ color: getScoreColor(health.stm_health) }}>
+              <div
+                className="dt-memory-health"
+                style={{ color: getScoreColor(health.stm_health) }}
+              >
                 Health: {(health.stm_health * 100).toFixed(0)}%
               </div>
             )}
@@ -400,7 +414,10 @@ const MemoryPanel: React.FC = () => {
               </div>
             </div>
             {health && (
-              <div className="dt-memory-health" style={{ color: getScoreColor(health.mtm_health) }}>
+              <div
+                className="dt-memory-health"
+                style={{ color: getScoreColor(health.mtm_health) }}
+              >
                 Health: {(health.mtm_health * 100).toFixed(0)}%
               </div>
             )}
@@ -422,12 +439,17 @@ const MemoryPanel: React.FC = () => {
                 <label>Size</label>
               </div>
               <div className="dt-memory-stat">
-                <span>{stats.indexed_count}/{stats.ltm.total_entries}</span>
+                <span>
+                  {stats.indexed_count}/{stats.ltm.total_entries}
+                </span>
                 <label>Indexed</label>
               </div>
             </div>
             {health && (
-              <div className="dt-memory-health" style={{ color: getScoreColor(health.ltm_health) }}>
+              <div
+                className="dt-memory-health"
+                style={{ color: getScoreColor(health.ltm_health) }}
+              >
                 Health: {(health.ltm_health * 100).toFixed(0)}%
               </div>
             )}
@@ -465,10 +487,10 @@ const MemoryPanel: React.FC = () => {
           <input
             type="text"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={e => setSearchQuery(e.target.value)}
             placeholder="Search memories..."
             className="dt-input"
-            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+            onKeyDown={e => e.key === 'Enter' && handleSearch()}
           />
           <button className="dt-btn" onClick={handleSearch}>
             🔍 Search
@@ -532,7 +554,7 @@ const MetricsPanel: React.FC = () => {
           <input
             type="checkbox"
             checked={autoRefresh}
-            onChange={(e) => setAutoRefresh(e.target.checked)}
+            onChange={e => setAutoRefresh(e.target.checked)}
           />
           <span>Live refresh (1s)</span>
         </label>
@@ -572,7 +594,15 @@ const MetricsPanel: React.FC = () => {
 
           <div className="dt-metric-card">
             <div className="dt-metric-icon">❤️</div>
-            <div className="dt-metric-value" style={{ color: metrics.engine_health === 'Healthy' ? 'var(--color-success)' : 'var(--color-warning)' }}>
+            <div
+              className="dt-metric-value"
+              style={{
+                color:
+                  metrics.engine_health === 'Healthy'
+                    ? 'var(--color-success)'
+                    : 'var(--color-warning)',
+              }}
+            >
               {metrics.engine_health}
             </div>
             <div className="dt-metric-label">Engine Health</div>
@@ -611,7 +641,11 @@ const AnalyzerPanel: React.FC = () => {
   return (
     <div className="dt-panel dt-analyzer">
       <div className="dt-controls">
-        <button className="dt-btn dt-btn--primary" onClick={runAnalysis} disabled={loading}>
+        <button
+          className="dt-btn dt-btn--primary"
+          onClick={runAnalysis}
+          disabled={loading}
+        >
           {loading ? '⏳ Analyzing...' : '🔍 Run Analysis'}
         </button>
       </div>
@@ -709,7 +743,10 @@ const AnalyzerPanel: React.FC = () => {
                     style={{ borderLeftColor: getSeverityColor(warning.severity) }}
                   >
                     <div className="dt-warning-header">
-                      <span className="dt-warning-severity" style={{ color: getSeverityColor(warning.severity) }}>
+                      <span
+                        className="dt-warning-severity"
+                        style={{ color: getSeverityColor(warning.severity) }}
+                      >
                         {warning.severity}
                       </span>
                       <span className="dt-warning-category">{warning.category}</span>
@@ -734,8 +771,12 @@ const AnalyzerPanel: React.FC = () => {
                 {report.suggestions.map((suggestion, i) => (
                   <div key={i} className="dt-suggestion">
                     <div className="dt-suggestion-header">
-                      <span className="dt-suggestion-priority">P{suggestion.priority}</span>
-                      <span className="dt-suggestion-category">{suggestion.category}</span>
+                      <span className="dt-suggestion-priority">
+                        P{suggestion.priority}
+                      </span>
+                      <span className="dt-suggestion-category">
+                        {suggestion.category}
+                      </span>
                       <span className="dt-suggestion-effort">{suggestion.effort}</span>
                     </div>
                     <div className="dt-suggestion-message">{suggestion.message}</div>
@@ -831,9 +872,7 @@ export const DevToolsTab: React.FC = () => {
       <div className="dt-header">
         <div className="dt-header-info">
           <h3>🛠️ DevTools OS</h3>
-          {status && (
-            <span className="dt-version">{status.version}</span>
-          )}
+          {status && <span className="dt-version">{status.version}</span>}
         </div>
         <div className="dt-header-actions">
           {status && (
@@ -849,7 +888,7 @@ export const DevToolsTab: React.FC = () => {
 
       {/* Sub-Tab Navigation */}
       <nav className="dt-subtabs">
-        {DEVTOOLS_SUBTABS.map((tab) => (
+        {DEVTOOLS_SUBTABS.map(tab => (
           <button
             key={tab.id}
             className={`dt-subtab ${activeSubTab === tab.id ? 'dt-subtab--active' : ''}`}

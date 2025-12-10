@@ -83,38 +83,33 @@ pub async fn execute_batch_command(
                 "disk_usage": 0.60,
                 "initialized": true
             }))
-        },
+        }
 
         // Memory commands (cached, read-only)
-        "memory_get_state" => {
-            Ok(serde_json::json!({
-                "stm_count": 12,
-                "mtm_count": 45,
-                "ltm_count": 230,
-                "total_memories": 287,
-                "initialized": true
-            }))
-        },
+        "memory_get_state" => Ok(serde_json::json!({
+            "stm_count": 12,
+            "mtm_count": 45,
+            "ltm_count": 230,
+            "total_memories": 287,
+            "initialized": true
+        })),
 
         // Coherence commands (cached, read-only)
-        "coherence_get_state" => {
-            Ok(serde_json::json!({
-                "health": "Optimal",
-                "global_coherence": 0.92,
-                "active_connections": 9,
-                "initialized": true
-            }))
-        },
+        "coherence_get_state" => Ok(serde_json::json!({
+            "health": "Optimal",
+            "global_coherence": 0.92,
+            "active_connections": 9,
+            "initialized": true
+        })),
 
         // Cache metrics
         "cache_get_metrics" => {
             use crate::cache::middleware::get_cache_metrics;
             Ok(get_cache_metrics())
-        },
+        }
 
         // Add more batch-safe commands here
         // IMPORTANT: Only add read-only, stateless commands
-
         _ => Err(format!("Command '{}' is not batch-enabled", command)),
     }
 }
@@ -136,7 +131,8 @@ pub async fn execute_batch(requests: Vec<BatchRequest>) -> BatchResult {
         .map(|req| async move {
             let req_start = Instant::now();
 
-            let (success, data, error) = match execute_batch_command(&req.command, req.params).await {
+            let (success, data, error) = match execute_batch_command(&req.command, req.params).await
+            {
                 Ok(result) => (true, Some(result), None),
                 Err(err) => (false, None, Some(err)),
             };
@@ -194,7 +190,10 @@ pub async fn batch_execute(requests: Vec<BatchRequest>) -> Result<BatchResult, S
     }
 
     if requests.len() > 50 {
-        return Err(format!("Batch too large: {} requests (max 50)", requests.len()));
+        return Err(format!(
+            "Batch too large: {} requests (max 50)",
+            requests.len()
+        ));
     }
 
     // Validate unique IDs
@@ -288,13 +287,11 @@ mod tests {
 
     #[tokio::test]
     async fn test_batch_invalid_command() {
-        let requests = vec![
-            BatchRequest {
-                id: "1".to_string(),
-                command: "invalid_command".to_string(),
-                params: serde_json::json!({}),
-            },
-        ];
+        let requests = vec![BatchRequest {
+            id: "1".to_string(),
+            command: "invalid_command".to_string(),
+            params: serde_json::json!({}),
+        }];
 
         let result = execute_batch(requests).await;
 

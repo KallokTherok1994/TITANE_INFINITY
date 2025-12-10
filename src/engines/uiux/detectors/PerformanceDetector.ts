@@ -78,7 +78,7 @@ export class PerformanceDetector {
     // Observer les tâches longues (>50ms)
     if (typeof PerformanceObserver !== 'undefined') {
       try {
-        this.longTaskObserver = new PerformanceObserver((entryList) => {
+        this.longTaskObserver = new PerformanceObserver(entryList => {
           for (const entry of entryList.getEntries()) {
             if (entry.duration > 50) {
               this.metrics.longTasks++;
@@ -93,7 +93,7 @@ export class PerformanceDetector {
 
       // Observer les Layout Shifts (CLS)
       try {
-        this.layoutShiftObserver = new PerformanceObserver((entryList) => {
+        this.layoutShiftObserver = new PerformanceObserver(entryList => {
           for (const entry of entryList.getEntries()) {
             // @ts-expect-error LayoutShift entry type
             if (!entry.hadRecentInput) {
@@ -217,7 +217,11 @@ export class PerformanceDetector {
    */
   getSummary(): string {
     const metrics = this.collect();
-    const status = this.needsDegradation() ? '🔴' : this.needsOptimization() ? '🟡' : '🟢';
+    const status = this.needsDegradation()
+      ? '🔴'
+      : this.needsOptimization()
+        ? '🟡'
+        : '🟢';
 
     return `${status} FPS: ${metrics.fps} | Memory: ${(metrics.memoryUsage * 100).toFixed(1)}% | Long Tasks: ${metrics.longTasks}`;
   }

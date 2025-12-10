@@ -30,7 +30,7 @@ impl DailyPhase {
             _ => DailyPhase::Night,
         }
     }
-    
+
     pub fn cognitive_mode(&self) -> CognitiveMode {
         match self {
             DailyPhase::Dawn => CognitiveMode::Creative,
@@ -65,7 +65,7 @@ impl WeeklyPhase {
             _ => WeeklyPhase::Weekend,
         }
     }
-    
+
     pub fn cognitive_focus(&self) -> &'static str {
         match self {
             WeeklyPhase::Monday => "Structuration",
@@ -118,7 +118,7 @@ impl SeasonalPhase {
             _ => SeasonalPhase::Winter,
         }
     }
-    
+
     pub fn cognitive_tendency(&self) -> &'static str {
         match self {
             SeasonalPhase::Spring => "Expansion",
@@ -155,7 +155,7 @@ impl CycleState {
     pub fn current() -> Self {
         let now = Local::now();
         let daily = DailyPhase::from_hour(now.hour());
-        
+
         Self {
             daily_phase: daily,
             weekly_phase: WeeklyPhase::from_date(&now),
@@ -170,14 +170,14 @@ impl CycleState {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_daily_phase() {
         assert_eq!(DailyPhase::from_hour(8), DailyPhase::Morning);
         assert_eq!(DailyPhase::from_hour(13), DailyPhase::Noon);
         assert_eq!(DailyPhase::from_hour(22), DailyPhase::Night);
     }
-    
+
     #[test]
     fn test_cognitive_mode() {
         assert_eq!(DailyPhase::Dawn.cognitive_mode(), CognitiveMode::Creative);

@@ -22,7 +22,7 @@ export interface TabsProps {
 
 /**
  * Tabs - Système d'onglets avec support clavier
- * 
+ *
  * @example
  * ```tsx
  * const tabs = [
@@ -30,7 +30,7 @@ export interface TabsProps {
  *   { id: 'metrics', label: 'Métriques', icon: <BarChart /> },
  *   { id: 'memory', label: 'Mémoire', icon: <Database /> },
  * ];
- * 
+ *
  * <Tabs tabs={tabs} defaultTab="logs">
  *   {(activeTab) => (
  *     <>
@@ -98,7 +98,7 @@ export function Tabs({ tabs, defaultTab, onTabChange, children }: TabsProps) {
               tabIndex={isActive ? 0 : -1}
               disabled={tab.disabled}
               onClick={() => handleTabClick(tab.id, tab.disabled)}
-              onKeyDown={(e) => handleKeyDown(e, index)}
+              onKeyDown={e => handleKeyDown(e, index)}
               className={`
                 relative px-4 py-2.5 text-sm font-medium
                 transition-all duration-150
@@ -114,7 +114,9 @@ export function Tabs({ tabs, defaultTab, onTabChange, children }: TabsProps) {
                     ? 'var(--text-disabled, rgba(255,255,255,0.38))'
                     : 'var(--text-muted, rgba(255,255,255,0.60))',
                 borderColor: isActive ? 'var(--border-active, #727b81)' : 'transparent',
-                background: isActive ? 'var(--bg-hover, rgba(255,255,255,0.04))' : 'transparent',
+                background: isActive
+                  ? 'var(--bg-hover, rgba(255,255,255,0.04))'
+                  : 'transparent',
               }}
             >
               <div className="flex items-center gap-2">

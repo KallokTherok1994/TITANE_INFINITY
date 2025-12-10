@@ -67,7 +67,7 @@ export function useStreamingChat(): UseStreamingChatReturn {
     setState(prev => ({
       ...prev,
       isStreaming: false,
-      error: 'Streaming annulé par l\'utilisateur',
+      error: "Streaming annulé par l'utilisateur",
     }));
 
     // Cleanup listeners
@@ -81,124 +81,126 @@ export function useStreamingChat(): UseStreamingChatReturn {
     }
   }, []);
 
-  const sendMessage = useCallback(async (args: OmegaGenerateArgs): Promise<OmegaResponse | null> => {
-    // Reset state
-    abortRef.current = false;
-    setState({
-      isStreaming: true,
-      content: '',
-      error: null,
-      messageId: null,
-      latencyMs: null,
-      metadata: null,
-    });
-
-    const startTime = performance.now();
-
-    try {
-      // Tentative d'utiliser le vrai streaming si disponible
-      const useRealStreaming = false; // TODO: Activer quand backend prêt
-
-      if (useRealStreaming) {
-        // Setup streaming listeners
-        unlistenChunkRef.current = await chatEngineCommands.onStreamChunk(
-          (chunk: StreamChunkPayload) => {
-            if (abortRef.current) return;
-
-            setState(prev => ({
-              ...prev,
-              content: prev.content + chunk.content,
-              messageId: chunk.messageId,
-            }));
-          }
-        );
-
-        unlistenDoneRef.current = await chatEngineCommands.onStreamDone(
-          (_chunk: StreamChunkPayload) => {
-            const latency = Math.round(performance.now() - startTime);
-            setState(prev => ({
-              ...prev,
-              isStreaming: false,
-              latencyMs: latency,
-            }));
-
-            // Cleanup
-            if (unlistenChunkRef.current) {
-              unlistenChunkRef.current();
-              unlistenChunkRef.current = null;
-            }
-            if (unlistenDoneRef.current) {
-              unlistenDoneRef.current();
-              unlistenDoneRef.current = null;
-            }
-          }
-        );
-
-        // Start streaming
-        await chatEngineCommands.streamResponse({
-          userMessage: args.message,
-          conversationId: args.conversationId,
-          enableStreaming: true,
-        });
-
-        // Le state sera mis à jour via les listeners
-        return null;
-      }
-
-      // Fallback: Non-streaming avec affichage progressif simulé
-      const response = await chatEngineCommands.generate(args);
-
-      if (abortRef.current) {
-        return null;
-      }
-
-      // Affichage progressif simulé (typewriter effect)
-      const fullContent = response.content;
-      const chunkSize = 3; // Caractères par chunk
-      const delayMs = 10; // Délai entre chunks
-
-      let displayedContent = '';
-
-      for (let i = 0; i < fullContent.length && !abortRef.current; i += chunkSize) {
-        displayedContent = fullContent.slice(0, i + chunkSize);
-        setState(prev => ({
-          ...prev,
-          content: displayedContent,
-          messageId: response.messageId,
-        }));
-
-        // Petit délai pour l'effet de streaming
-        if (i + chunkSize < fullContent.length) {
-          await new Promise(resolve => setTimeout(resolve, delayMs));
-        }
-      }
-
-      // Finaliser
-      const latency = response.latencyMs ?? Math.round(performance.now() - startTime);
+  const sendMessage = useCallback(
+    async (args: OmegaGenerateArgs): Promise<OmegaResponse | null> => {
+      // Reset state
+      abortRef.current = false;
       setState({
-        isStreaming: false,
-        content: fullContent,
+        isStreaming: true,
+        content: '',
         error: null,
-        messageId: response.messageId,
-        latencyMs: latency,
-        metadata: response.metadata ?? null,
+        messageId: null,
+        latencyMs: null,
+        metadata: null,
       });
 
-      return response;
+      const startTime = performance.now();
 
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      console.error('[useStreamingChat] Erreur:', errorMessage);
+      try {
+        // Tentative d'utiliser le vrai streaming si disponible
+        const useRealStreaming = false; // TODO: Activer quand backend prêt
 
-      setState(prev => ({
-        ...prev,
-        isStreaming: false,
-        error: errorMessage,
-      }));
+        if (useRealStreaming) {
+          // Setup streaming listeners
+          unlistenChunkRef.current = await chatEngineCommands.onStreamChunk(
+            (chunk: StreamChunkPayload) => {
+              if (abortRef.current) return;
 
-      return null;
-    }
-  }, []);
+              setState(prev => ({
+                ...prev,
+                content: prev.content + chunk.content,
+                messageId: chunk.messageId,
+              }));
+            }
+          );
+
+          unlistenDoneRef.current = await chatEngineCommands.onStreamDone(
+            (_chunk: StreamChunkPayload) => {
+              const latency = Math.round(performance.now() - startTime);
+              setState(prev => ({
+                ...prev,
+                isStreaming: false,
+                latencyMs: latency,
+              }));
+
+              // Cleanup
+              if (unlistenChunkRef.current) {
+                unlistenChunkRef.current();
+                unlistenChunkRef.current = null;
+              }
+              if (unlistenDoneRef.current) {
+                unlistenDoneRef.current();
+                unlistenDoneRef.current = null;
+              }
+            }
+          );
+
+          // Start streaming
+          await chatEngineCommands.streamResponse({
+            userMessage: args.message,
+            conversationId: args.conversationId,
+            enableStreaming: true,
+          });
+
+          // Le state sera mis à jour via les listeners
+          return null;
+        }
+
+        // Fallback: Non-streaming avec affichage progressif simulé
+        const response = await chatEngineCommands.generate(args);
+
+        if (abortRef.current) {
+          return null;
+        }
+
+        // Affichage progressif simulé (typewriter effect)
+        const fullContent = response.content;
+        const chunkSize = 3; // Caractères par chunk
+        const delayMs = 10; // Délai entre chunks
+
+        let displayedContent = '';
+
+        for (let i = 0; i < fullContent.length && !abortRef.current; i += chunkSize) {
+          displayedContent = fullContent.slice(0, i + chunkSize);
+          setState(prev => ({
+            ...prev,
+            content: displayedContent,
+            messageId: response.messageId,
+          }));
+
+          // Petit délai pour l'effet de streaming
+          if (i + chunkSize < fullContent.length) {
+            await new Promise(resolve => setTimeout(resolve, delayMs));
+          }
+        }
+
+        // Finaliser
+        const latency = response.latencyMs ?? Math.round(performance.now() - startTime);
+        setState({
+          isStreaming: false,
+          content: fullContent,
+          error: null,
+          messageId: response.messageId,
+          latencyMs: latency,
+          metadata: response.metadata ?? null,
+        });
+
+        return response;
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.error('[useStreamingChat] Erreur:', errorMessage);
+
+        setState(prev => ({
+          ...prev,
+          isStreaming: false,
+          error: errorMessage,
+        }));
+
+        return null;
+      }
+    },
+    []
+  );
 
   return {
     state,

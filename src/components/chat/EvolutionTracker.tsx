@@ -76,9 +76,7 @@ const PhaseIndicator: React.FC<PhaseIndicatorProps> = ({
       style={{ '--phase-color': phaseData.color } as React.CSSProperties}
       title={`${phaseData.name}: ${phaseData.description}`}
     >
-      <div className="phase-indicator__icon">
-        {isCompleted ? '✓' : phaseData.icon}
-      </div>
+      <div className="phase-indicator__icon">{isCompleted ? '✓' : phaseData.icon}</div>
       <div className="phase-indicator__name">{phaseData.name}</div>
       {isActive && (
         <div className="phase-indicator__progress">
@@ -123,30 +121,21 @@ const CapabilityCard: React.FC<CapabilityCardProps> = ({
       </div>
 
       {status === 'unlockable' && canUnlock && (
-        <button
-          className="capability-card__unlock-btn"
-          onClick={onUnlock}
-        >
+        <button className="capability-card__unlock-btn" onClick={onUnlock}>
           Débloquer ({capability.talentCost} pt)
         </button>
       )}
 
       {status === 'unlocked' && (
-        <div className="capability-card__status-badge unlocked">
-          ✓ Débloqué
-        </div>
+        <div className="capability-card__status-badge unlocked">✓ Débloqué</div>
       )}
 
       {status === 'mastered' && (
-        <div className="capability-card__status-badge mastered">
-          ⭐ Maîtrisé
-        </div>
+        <div className="capability-card__status-badge mastered">⭐ Maîtrisé</div>
       )}
 
       {status === 'locked' && (
-        <div className="capability-card__status-badge locked">
-          🔒 Verrouillé
-        </div>
+        <div className="capability-card__status-badge locked">🔒 Verrouillé</div>
       )}
     </div>
   );
@@ -156,7 +145,10 @@ const CapabilityCard: React.FC<CapabilityCardProps> = ({
 // COMPOSANT: XPBar
 // ─────────────────────────────────────────────────────────────────────────────
 
-const XPBar: React.FC<{ totalXP: number; compact?: boolean }> = ({ totalXP, compact }) => {
+const XPBar: React.FC<{ totalXP: number; compact?: boolean }> = ({
+  totalXP,
+  compact,
+}) => {
   const level = calculateLevel(totalXP);
   const progress = levelProgress(totalXP);
   const remaining = xpToNextLevel(totalXP);
@@ -168,14 +160,13 @@ const XPBar: React.FC<{ totalXP: number; compact?: boolean }> = ({ totalXP, comp
         <span className="xp-bar__xp">{totalXP.toLocaleString()} XP</span>
       </div>
       <div className="xp-bar__track">
-        <div
-          className="xp-bar__fill"
-          style={{ width: `${progress}%` }}
-        />
+        <div className="xp-bar__fill" style={{ width: `${progress}%` }} />
       </div>
       {!compact && (
         <div className="xp-bar__footer">
-          <span>{remaining} XP pour niveau {level + 1}</span>
+          <span>
+            {remaining} XP pour niveau {level + 1}
+          </span>
         </div>
       )}
     </div>
@@ -203,8 +194,9 @@ export const EvolutionTracker: React.FC<EvolutionTrackerProps> = ({
   const unlockedCapabilities = useMemo(() => {
     if (evolutionState?.capabilities) {
       return Object.keys(evolutionState.capabilities).filter(
-        id => evolutionState.capabilities[id].status === 'unlocked' ||
-              evolutionState.capabilities[id].status === 'mastered'
+        id =>
+          evolutionState.capabilities[id].status === 'unlocked' ||
+          evolutionState.capabilities[id].status === 'mastered'
       );
     }
     // Par défaut: capabilities initiales de la phase 1
@@ -263,8 +255,12 @@ export const EvolutionTracker: React.FC<EvolutionTrackerProps> = ({
           <XPBar totalXP={totalXP} compact />
         </div>
         <div className="evolution-tracker__compact-stats">
-          <span>🌟 {unlockedCapabilities.length}/{TOTAL_CAPABILITIES} capabilities</span>
-          <span>📈 {phaseProgress}% vers {nextPhaseData?.name || 'OMEGA'}</span>
+          <span>
+            🌟 {unlockedCapabilities.length}/{TOTAL_CAPABILITIES} capabilities
+          </span>
+          <span>
+            📈 {phaseProgress}% vers {nextPhaseData?.name || 'OMEGA'}
+          </span>
         </div>
       </div>
     );
@@ -281,7 +277,9 @@ export const EvolutionTracker: React.FC<EvolutionTrackerProps> = ({
           <span className="evolution-tracker__phase-icon">{currentPhaseData.icon}</span>
           <div className="evolution-tracker__phase-info">
             <span className="evolution-tracker__phase-name">{currentPhaseData.name}</span>
-            <span className="evolution-tracker__phase-desc">{currentPhaseData.description}</span>
+            <span className="evolution-tracker__phase-desc">
+              {currentPhaseData.description}
+            </span>
           </div>
           <span className="evolution-tracker__multiplier">
             x{currentPhaseData.xpMultiplier} XP
@@ -295,7 +293,7 @@ export const EvolutionTracker: React.FC<EvolutionTrackerProps> = ({
       {/* Timeline des phases */}
       <div className="evolution-tracker__timeline">
         <div className="evolution-tracker__timeline-track" />
-        {allPhases.map((phase) => {
+        {allPhases.map(phase => {
           const isActive = phase.id === currentPhase;
           const isCompleted = phase.order < currentPhaseData.order;
           return (
@@ -314,7 +312,9 @@ export const EvolutionTracker: React.FC<EvolutionTrackerProps> = ({
       {nextPhaseData && (
         <div className="evolution-tracker__next-phase">
           <div className="evolution-tracker__next-header">
-            <span>Prochaine: {nextPhaseData.icon} {nextPhaseData.name}</span>
+            <span>
+              Prochaine: {nextPhaseData.icon} {nextPhaseData.name}
+            </span>
             <span className="evolution-tracker__progress-pct">{phaseProgress}%</span>
           </div>
 
@@ -341,7 +341,7 @@ export const EvolutionTracker: React.FC<EvolutionTrackerProps> = ({
             Capabilities disponibles ({unlockableCapabilities.length})
           </div>
           <div className="evolution-tracker__capabilities-grid">
-            {unlockableCapabilities.slice(0, 4).map((cap) => (
+            {unlockableCapabilities.slice(0, 4).map(cap => (
               <CapabilityCard
                 key={cap.id}
                 capability={cap}
@@ -357,7 +357,9 @@ export const EvolutionTracker: React.FC<EvolutionTrackerProps> = ({
       {/* Stats */}
       <div className="evolution-tracker__stats">
         <div className="evolution-tracker__stat">
-          <span className="evolution-tracker__stat-value">{unlockedCapabilities.length}</span>
+          <span className="evolution-tracker__stat-value">
+            {unlockedCapabilities.length}
+          </span>
           <span className="evolution-tracker__stat-label">Capabilities</span>
         </div>
         <div className="evolution-tracker__stat">

@@ -2,9 +2,9 @@
 // Hybrid online/offline speech synthesis + streaming support
 // Phase 8: SmallVec optimization + ElevenLabs Premium Integration
 
+pub mod elevenlabs_tts;
 pub mod local_tts;
 pub mod online_tts;
-pub mod elevenlabs_tts;
 
 pub use elevenlabs_tts::{ElevenLabsTTS, TTSEmotion, TITANE_VOICE_ID};
 

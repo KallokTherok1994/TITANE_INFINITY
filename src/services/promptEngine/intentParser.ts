@@ -54,55 +54,57 @@ const ENTITY_PATTERNS: EntityPattern[] = [
   {
     type: 'file',
     pattern: /[\w-]+\.(ts|tsx|js|jsx|json|md|css|scss|html|py|rs|toml|yaml|yml)/gi,
-    extract: (m) => m[0],
+    extract: m => m[0],
   },
   // Chemins
   {
     type: 'path',
     pattern: /(\/[\w.-]+)+\/?/g,
-    extract: (m) => m[0],
+    extract: m => m[0],
   },
   // URLs
   {
     type: 'url',
     pattern: /https?:\/\/[^\s]+/gi,
-    extract: (m) => m[0],
+    extract: m => m[0],
   },
   // Nombres
   {
     type: 'number',
     pattern: /\b\d+(?:\.\d+)?\b/g,
-    extract: (m) => m[0],
+    extract: m => m[0],
   },
   // Dates (format ISO ou FR)
   {
     type: 'date',
     pattern: /\b\d{4}-\d{2}-\d{2}\b|\b\d{2}\/\d{2}\/\d{4}\b/g,
-    extract: (m) => m[0],
+    extract: m => m[0],
   },
   // Noms de fonctions/méthodes
   {
     type: 'function',
-    pattern: /\b[a-z][a-zA-Z0-9]*(?:Function|Method|Handler|Callback)\b|\b[a-z][a-zA-Z0-9]*\(\)/g,
-    extract: (m) => m[0].replace('()', ''),
+    pattern:
+      /\b[a-z][a-zA-Z0-9]*(?:Function|Method|Handler|Callback)\b|\b[a-z][a-zA-Z0-9]*\(\)/g,
+    extract: m => m[0].replace('()', ''),
   },
   // Noms de classes
   {
     type: 'class',
-    pattern: /\b[A-Z][a-zA-Z0-9]+(?:Manager|Service|Engine|Controller|Component|Provider)\b/g,
-    extract: (m) => m[0],
+    pattern:
+      /\b[A-Z][a-zA-Z0-9]+(?:Manager|Service|Engine|Controller|Component|Provider)\b/g,
+    extract: m => m[0],
   },
   // Variables d'environnement
   {
     type: 'env_var',
     pattern: /\b[A-Z][A-Z0-9_]+\b/g,
-    extract: (m) => m[0],
+    extract: m => m[0],
   },
   // Commandes
   {
     type: 'command',
     pattern: /`[^`]+`|npm\s+\w+|cargo\s+\w+|git\s+\w+/g,
-    extract: (m) => m[0].replace(/`/g, ''),
+    extract: m => m[0].replace(/`/g, ''),
   },
 ];
 
@@ -110,24 +112,60 @@ const ENTITY_PATTERNS: EntityPattern[] = [
  * Mots indicateurs de sentiment positif
  */
 const POSITIVE_WORDS = [
-  'bien', 'super', 'excellent', 'parfait', 'merci', 'génial', 'bravo',
-  'good', 'great', 'excellent', 'perfect', 'thanks', 'awesome', 'amazing',
+  'bien',
+  'super',
+  'excellent',
+  'parfait',
+  'merci',
+  'génial',
+  'bravo',
+  'good',
+  'great',
+  'excellent',
+  'perfect',
+  'thanks',
+  'awesome',
+  'amazing',
 ];
 
 /**
  * Mots indicateurs de sentiment négatif
  */
 const NEGATIVE_WORDS = [
-  'problème', 'erreur', 'bug', 'crash', 'mal', 'impossible', 'échec',
-  'problem', 'error', 'bug', 'crash', 'bad', 'impossible', 'fail', 'broken',
+  'problème',
+  'erreur',
+  'bug',
+  'crash',
+  'mal',
+  'impossible',
+  'échec',
+  'problem',
+  'error',
+  'bug',
+  'crash',
+  'bad',
+  'impossible',
+  'fail',
+  'broken',
 ];
 
 /**
  * Mots indicateurs d'urgence
  */
 const URGENCY_WORDS = [
-  'urgent', 'vite', 'rapidement', 'maintenant', 'immédiatement', 'asap',
-  'urgent', 'quick', 'fast', 'now', 'immediately', 'asap', 'critical',
+  'urgent',
+  'vite',
+  'rapidement',
+  'maintenant',
+  'immédiatement',
+  'asap',
+  'urgent',
+  'quick',
+  'fast',
+  'now',
+  'immediately',
+  'asap',
+  'critical',
 ];
 
 /**
@@ -273,7 +311,9 @@ export class IntentParser {
       (this.stats.averageProcessingTime * (this.stats.totalParsed - 1) + processingTime) /
       this.stats.totalParsed;
 
-    console.log(`[IntentParser] 📝 Parsed: "${userInput.substring(0, 50)}..." → ${topCategory.category} (${(topCategory.score * 100).toFixed(1)}%)`);
+    console.log(
+      `[IntentParser] 📝 Parsed: "${userInput.substring(0, 50)}..." → ${topCategory.category} (${(topCategory.score * 100).toFixed(1)}%)`
+    );
 
     return profile;
   }
@@ -303,9 +343,10 @@ export class IntentParser {
       }
 
       // Score basé sur le ratio de matches
-      const score = keywords.length > 0
-        ? Math.min(matchCount / Math.max(keywords.length * 0.3, 1), 1)
-        : 0;
+      const score =
+        keywords.length > 0
+          ? Math.min(matchCount / Math.max(keywords.length * 0.3, 1), 1)
+          : 0;
 
       scores.push({
         category: category as IntentCategory,
@@ -409,7 +450,7 @@ export class IntentParser {
     // Points d'exclamation = plus intense
     const exclamations = (input.match(/!/g) || []).length;
     if (exclamations > 0) {
-      score *= 1 + (exclamations * 0.1);
+      score *= 1 + exclamations * 0.1;
     }
 
     // Clamper entre -1 et 1
@@ -475,7 +516,15 @@ export class IntentParser {
     }
 
     // Mots techniques
-    const technicalWords = ['api', 'database', 'algorithm', 'architecture', 'backend', 'frontend', 'deploy'];
+    const technicalWords = [
+      'api',
+      'database',
+      'algorithm',
+      'architecture',
+      'backend',
+      'frontend',
+      'deploy',
+    ];
     for (const word of technicalWords) {
       if (input.toLowerCase().includes(word)) {
         complexity += 0.05;
@@ -508,7 +557,9 @@ export class IntentParser {
 
     // Si beaucoup d'entités techniques, upgrade
     const technicalEntities = ['file', 'path', 'function', 'class', 'command'];
-    const techCount = parsed.entities.filter(e => technicalEntities.includes(e.type)).length;
+    const techCount = parsed.entities.filter(e =>
+      technicalEntities.includes(e.type)
+    ).length;
     if (techCount > 3 && mode === 'standard') {
       mode = 'dev';
     }
@@ -524,10 +575,7 @@ export class IntentParser {
    * Normalise l'entrée utilisateur
    */
   private normalizeInput(input: string): string {
-    return input
-      .trim()
-      .replace(/\s+/g, ' ')
-      .toLowerCase();
+    return input.trim().replace(/\s+/g, ' ').toLowerCase();
   }
 
   /**
@@ -535,20 +583,81 @@ export class IntentParser {
    */
   private extractKeywords(input: string): string[] {
     const stopWords = new Set([
-      'le', 'la', 'les', 'un', 'une', 'des', 'de', 'du', 'à', 'au', 'aux',
-      'et', 'ou', 'mais', 'donc', 'car', 'ni', 'que', 'qui', 'quoi',
-      'the', 'a', 'an', 'and', 'or', 'but', 'so', 'for', 'of', 'to', 'in',
-      'is', 'are', 'was', 'were', 'be', 'been', 'being',
-      'je', 'tu', 'il', 'elle', 'nous', 'vous', 'ils', 'elles',
-      'i', 'you', 'he', 'she', 'it', 'we', 'they',
-      'ce', 'cette', 'ces', 'mon', 'ma', 'mes', 'ton', 'ta', 'tes',
-      'this', 'that', 'these', 'those', 'my', 'your', 'his', 'her', 'its',
+      'le',
+      'la',
+      'les',
+      'un',
+      'une',
+      'des',
+      'de',
+      'du',
+      'à',
+      'au',
+      'aux',
+      'et',
+      'ou',
+      'mais',
+      'donc',
+      'car',
+      'ni',
+      'que',
+      'qui',
+      'quoi',
+      'the',
+      'a',
+      'an',
+      'and',
+      'or',
+      'but',
+      'so',
+      'for',
+      'of',
+      'to',
+      'in',
+      'is',
+      'are',
+      'was',
+      'were',
+      'be',
+      'been',
+      'being',
+      'je',
+      'tu',
+      'il',
+      'elle',
+      'nous',
+      'vous',
+      'ils',
+      'elles',
+      'i',
+      'you',
+      'he',
+      'she',
+      'it',
+      'we',
+      'they',
+      'ce',
+      'cette',
+      'ces',
+      'mon',
+      'ma',
+      'mes',
+      'ton',
+      'ta',
+      'tes',
+      'this',
+      'that',
+      'these',
+      'those',
+      'my',
+      'your',
+      'his',
+      'her',
+      'its',
     ]);
 
     const words = input.split(/\s+/);
-    return words
-      .filter(w => w.length > 2 && !stopWords.has(w))
-      .slice(0, 10);
+    return words.filter(w => w.length > 2 && !stopWords.has(w)).slice(0, 10);
   }
 
   /**
@@ -559,7 +668,7 @@ export class IntentParser {
     let hash = 0;
     const normalized = input.toLowerCase().trim();
     for (let i = 0; i < normalized.length; i++) {
-      hash = ((hash << 5) - hash) + normalized.charCodeAt(i);
+      hash = (hash << 5) - hash + normalized.charCodeAt(i);
       hash = hash & hash;
     }
     return `intent_${Math.abs(hash).toString(36)}`;

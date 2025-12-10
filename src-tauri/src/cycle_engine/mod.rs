@@ -3,7 +3,7 @@
 // ═══════════════════════════════════════════════════════════════
 //   TITANE∞ CYCLE & CONTINUITY ENGINE v2 — SUPER PROMPT #16
 //   Rythmes, Saisons, Temporalité, Évolution Cognitive
-//   
+//
 //   Donne à TITANE∞ une dimension temporelle vivante :
 //   - Cycles cognitifs (journalier, hebdo, mensuel, saisonnier)
 //   - Rythmes adaptatifs
@@ -13,35 +13,35 @@
 // ═══════════════════════════════════════════════════════════════
 
 // Core modules
-pub mod clock;
-pub mod cycles;
-pub mod seasons;
-pub mod cognitive_rhythm;
-pub mod load_regulator;
-pub mod continuity;
-pub mod predictive;
 pub mod alignment;
-pub mod diagnostics;
+pub mod clock;
+pub mod cognitive_rhythm;
 pub mod config;
+pub mod continuity;
+pub mod cycles;
+pub mod diagnostics;
 pub mod engine;
+pub mod load_regulator;
+pub mod predictive;
+pub mod seasons;
 
 // Integrations
 pub mod kernel_integration;
-pub mod omega_integration;
 pub mod memory_integration;
+pub mod omega_integration;
 
 // pub mod commands; // TODO: Fix type issues
 
 // Re-exports — Components
-pub use clock::*;
-pub use cycles::*;
-pub use seasons::*;
-pub use cognitive_rhythm::*;
-pub use load_regulator::*;
-pub use continuity::*;
-pub use predictive::*;
 pub use alignment::*;
+pub use clock::*;
+pub use cognitive_rhythm::*;
 pub use config::*;
+pub use continuity::*;
+pub use cycles::*;
+pub use load_regulator::*;
+pub use predictive::*;
+pub use seasons::*;
 
 // Re-exports — Main Engine
 pub use engine::CycleEngine;

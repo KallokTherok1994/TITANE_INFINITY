@@ -23,14 +23,14 @@ export interface VoiceFingerprint {
   userId: string;
 
   // Features spectrales moyennes
-  mfccMean: Float32Array;       // 13 coefficients MFCC moyens
-  mfccStd: Float32Array;        // Écart-type des MFCC
+  mfccMean: Float32Array; // 13 coefficients MFCC moyens
+  mfccStd: Float32Array; // Écart-type des MFCC
 
   // Features prosodiques
-  pitchMean: number;            // Hauteur tonale moyenne (Hz)
-  pitchStd: number;             // Variation hauteur
-  tempoMean: number;            // Vitesse de parole (syllabes/sec)
-  energyMean: number;           // Énergie vocale moyenne
+  pitchMean: number; // Hauteur tonale moyenne (Hz)
+  pitchStd: number; // Variation hauteur
+  tempoMean: number; // Vitesse de parole (syllabes/sec)
+  energyMean: number; // Énergie vocale moyenne
 
   // Prononciation wake word
   wakeWordSamples: {
@@ -40,9 +40,9 @@ export interface VoiceFingerprint {
   }[];
 
   // Métadonnées
-  sampleCount: number;          // Nombre d'échantillons collectés
-  lastUpdated: number;          // Timestamp dernière mise à jour
-  accuracy: number;             // Précision actuelle (0-1)
+  sampleCount: number; // Nombre d'échantillons collectés
+  lastUpdated: number; // Timestamp dernière mise à jour
+  accuracy: number; // Précision actuelle (0-1)
 }
 
 /**
@@ -70,7 +70,7 @@ export interface VoiceAnalysis {
   pitch: number;
   energy: number;
   tempo: number;
-  features: Float32Array;       // Combined feature vector
+  features: Float32Array; // Combined feature vector
 }
 
 /**
@@ -79,7 +79,6 @@ export interface VoiceAnalysis {
  * ═══════════════════════════════════════════════════════════════════
  */
 class VoiceFingerprintEngine {
-
   private config: Required<VoiceFingerprintConfig>;
   private fingerprints: Map<string, VoiceFingerprint>;
   private currentUserId: string = 'default';
@@ -166,7 +165,7 @@ class VoiceFingerprintEngine {
    */
   private estimatePitch(audio: Float32Array, sampleRate: number): number {
     const minPeriod = Math.floor(sampleRate / 500); // 500 Hz max
-    const maxPeriod = Math.floor(sampleRate / 80);  // 80 Hz min
+    const maxPeriod = Math.floor(sampleRate / 80); // 80 Hz min
 
     let maxCorr = 0;
     let bestPeriod = 0;
@@ -213,22 +212,27 @@ class VoiceFingerprintEngine {
 
     // Convert to approximate syllables/sec
     const duration = audio.length / sampleRate;
-    return (crossings / duration) / 10; // Rough approximation
+    return crossings / duration / 10; // Rough approximation
   }
 
   /**
    * Combine features into single vector
    */
-  private combineFeatures(mfcc: Float32Array, pitch: number, energy: number, tempo: number): Float32Array {
+  private combineFeatures(
+    mfcc: Float32Array,
+    pitch: number,
+    energy: number,
+    tempo: number
+  ): Float32Array {
     const features = new Float32Array(mfcc.length + 3);
 
     // Copy MFCC
     features.set(mfcc, 0);
 
     // Normalize and add prosodic features
-    features[mfcc.length] = pitch / 300;      // Normalize pitch (0-300 Hz → 0-1)
+    features[mfcc.length] = pitch / 300; // Normalize pitch (0-300 Hz → 0-1)
     features[mfcc.length + 1] = energy;
-    features[mfcc.length + 2] = tempo / 5;    // Normalize tempo
+    features[mfcc.length + 2] = tempo / 5; // Normalize tempo
 
     return features;
   }
@@ -344,7 +348,8 @@ class VoiceFingerprintEngine {
     const alpha = 0.1; // Learning rate
     fingerprint.pitchMean = fingerprint.pitchMean * (1 - alpha) + analysis.pitch * alpha;
     fingerprint.tempoMean = fingerprint.tempoMean * (1 - alpha) + analysis.tempo * alpha;
-    fingerprint.energyMean = fingerprint.energyMean * (1 - alpha) + analysis.energy * alpha;
+    fingerprint.energyMean =
+      fingerprint.energyMean * (1 - alpha) + analysis.energy * alpha;
 
     fingerprint.lastUpdated = Date.now();
 

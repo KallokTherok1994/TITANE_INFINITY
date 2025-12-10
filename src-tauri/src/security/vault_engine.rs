@@ -27,7 +27,6 @@ macro_rules! lock_or_recover {
     };
 }
 
-
 const VAULT_DIR: &str = "vault/encrypted";
 const CHECKSUM_SUFFIX: &str = ".sha256";
 
@@ -390,7 +389,7 @@ mod tests {
         // Load
         let loaded: TestData = vault.load("test_data").await?;
         assert_eq!(loaded, data);
-        
+
         Ok(())
     }
 
@@ -416,7 +415,7 @@ mod tests {
             result.unwrap_err(),
             VaultError::CorruptionDetected(_)
         ));
-        
+
         Ok(())
     }
 
@@ -431,7 +430,7 @@ mod tests {
 
         let corrupted = vault.verify_integrity().await?;
         assert_eq!(corrupted.len(), 0);
-        
+
         Ok(())
     }
 }

@@ -175,8 +175,7 @@ export class PipelineInspector {
 
     const durations = this.traces.map(t => t.totalDuration);
     const avgDuration = durations.reduce((a, b) => a + b, 0) / durations.length;
-    const successRate =
-      this.traces.filter(t => t.success).length / this.traces.length;
+    const successRate = this.traces.filter(t => t.success).length / this.traces.length;
 
     // Trouver le stage le plus lent
     const stageDurations: Record<string, number[]> = {};

@@ -308,7 +308,9 @@ mod systemtime_serde {
     where
         S: Serializer,
     {
-        let duration = time.duration_since(std::time::UNIX_EPOCH).unwrap_or(std::time::Duration::from_secs(0));
+        let duration = time
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap_or(std::time::Duration::from_secs(0));
         duration.as_secs().serialize(serializer)
     }
 

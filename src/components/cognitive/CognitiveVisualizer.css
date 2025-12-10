@@ -44,7 +44,8 @@
 }
 
 @keyframes pulse-border {
-  0%, 100% {
+  0%,
+  100% {
     border-color: rgba(14, 165, 233, 0.4);
   }
   50% {
@@ -52,12 +53,12 @@
   }
 }
 
-.cv-mode-indicator[data-mode="focus_deep"] {
+.cv-mode-indicator[data-mode='focus_deep'] {
   background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(139, 92, 246, 0.2));
   border-color: rgba(168, 85, 247, 0.4);
 }
 
-.cv-mode-indicator[data-mode="monitoring"] {
+.cv-mode-indicator[data-mode='monitoring'] {
   background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(249, 115, 22, 0.2));
   border-color: rgba(239, 68, 68, 0.4);
 }
@@ -109,7 +110,9 @@
 
 .gauge-fill {
   height: 100%;
-  transition: width 0.3s ease, background-color 0.3s ease;
+  transition:
+    width 0.3s ease,
+    background-color 0.3s ease;
   border-radius: 4px;
 }
 
@@ -261,16 +264,16 @@
 }
 
 /* Animations adaptatives selon mode */
-body[data-ui-mode="focus_deep"] .cognitive-visualizer {
+body[data-ui-mode='focus_deep'] .cognitive-visualizer {
   /* Plus compact en mode focus */
   padding: 16px;
 }
 
-body[data-ui-mode="focus_deep"] .cv-signals-grid {
+body[data-ui-mode='focus_deep'] .cv-signals-grid {
   gap: 12px;
 }
 
-body[data-ui-mode="monitoring"] .cognitive-visualizer {
+body[data-ui-mode='monitoring'] .cognitive-visualizer {
   /* Plus dense en mode monitoring */
   padding: 16px;
   font-size: 0.95em;
@@ -297,6 +300,10 @@ body[data-ui-mode="monitoring"] .cognitive-visualizer {
   }
 
   .cv-stat {
-    background: linear-gradient(135deg, rgba(14, 165, 233, 0.08), rgba(168, 85, 247, 0.08));
+    background: linear-gradient(
+      135deg,
+      rgba(14, 165, 233, 0.08),
+      rgba(168, 85, 247, 0.08)
+    );
   }
 }

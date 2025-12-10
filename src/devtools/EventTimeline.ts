@@ -114,9 +114,8 @@ export class EventTimeline {
     }
 
     const timestamps = this.events.map(e => e.timestamp);
-    const timespan = timestamps.length > 0
-      ? Math.max(...timestamps) - Math.min(...timestamps)
-      : 0;
+    const timespan =
+      timestamps.length > 0 ? Math.max(...timestamps) - Math.min(...timestamps) : 0;
 
     return {
       total: this.events.length,

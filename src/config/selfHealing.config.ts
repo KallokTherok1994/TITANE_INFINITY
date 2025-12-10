@@ -28,7 +28,7 @@ export const SELF_HEALING_CONFIG: SelfHealingConfig = {
   autoRepairEnabled: true,
 
   // Diagnostics
-  diagnosticIntervalMs: 30 * 1000,      // 30 secondes
+  diagnosticIntervalMs: 30 * 1000, // 30 secondes
   diagnosticCategories: [
     'memory',
     'performance',
@@ -45,7 +45,7 @@ export const SELF_HEALING_CONFIG: SelfHealingConfig = {
 
   // Réparations
   maxAutoRepairAttempts: 3,
-  repairCooldownMs: 60 * 1000,          // 1 minute
+  repairCooldownMs: 60 * 1000, // 1 minute
 
   // Récupération
   recoveryPointsEnabled: true,
@@ -76,9 +76,9 @@ export const WATCHDOG_CONFIGS: WatchdogConfig[] = [
     checkIntervalMs: 10 * 1000,
     timeoutMs: 5000,
     thresholds: {
-      warning: 70,    // 70%
-      error: 85,      // 85%
-      critical: 95,   // 95%
+      warning: 70, // 70%
+      error: 85, // 85%
+      critical: 95, // 95%
     },
     onWarning: { type: 'log' },
     onError: { type: 'repair', strategyId: 'garbage_collect' },
@@ -93,9 +93,9 @@ export const WATCHDOG_CONFIGS: WatchdogConfig[] = [
     checkIntervalMs: 30 * 1000,
     timeoutMs: 10000,
     thresholds: {
-      warning: 1,     // 1 échec
-      error: 3,       // 3 échecs
-      critical: 5,    // 5 échecs
+      warning: 1, // 1 échec
+      error: 3, // 3 échecs
+      critical: 5, // 5 échecs
     },
     onWarning: { type: 'log' },
     onError: { type: 'repair', strategyId: 'reconnect_api' },
@@ -110,8 +110,8 @@ export const WATCHDOG_CONFIGS: WatchdogConfig[] = [
     checkIntervalMs: 15 * 1000,
     timeoutMs: 5000,
     thresholds: {
-      warning: 500,   // 500ms
-      error: 2000,    // 2s
+      warning: 500, // 500ms
+      error: 2000, // 2s
       critical: 5000, // 5s
     },
     onWarning: { type: 'log' },
@@ -120,16 +120,16 @@ export const WATCHDOG_CONFIGS: WatchdogConfig[] = [
   },
   {
     id: 'error_rate',
-    name: 'Taux d\'Erreurs',
+    name: "Taux d'Erreurs",
     enabled: true,
     target: 'error_rate',
     category: 'state',
     checkIntervalMs: 60 * 1000,
     timeoutMs: 5000,
     thresholds: {
-      warning: 5,     // 5%
-      error: 15,      // 15%
-      critical: 30,   // 30%
+      warning: 5, // 5%
+      error: 15, // 15%
+      critical: 30, // 30%
     },
     onWarning: { type: 'log' },
     onError: { type: 'repair', strategyId: 'clear_error_state' },
@@ -161,8 +161,8 @@ export const WATCHDOG_CONFIGS: WatchdogConfig[] = [
     checkIntervalMs: 20 * 1000,
     timeoutMs: 10000,
     thresholds: {
-      warning: 300,   // 300ms
-      error: 1000,    // 1s
+      warning: 300, // 300ms
+      error: 1000, // 1s
       critical: 3000, // 3s
     },
     onWarning: { type: 'log' },
@@ -325,7 +325,7 @@ export const REPAIR_STRATEGIES: RepairStrategy[] = [
   {
     id: 'clear_error_state',
     name: 'Effacer État Erreur',
-    description: 'Réinitialise les compteurs d\'erreurs',
+    description: "Réinitialise les compteurs d'erreurs",
     type: 'reset_state',
     category: 'state',
     applicableIssueCodes: ['ERROR_RATE_HIGH', 'STATE_CORRUPTED'],
@@ -393,10 +393,16 @@ export const REPAIR_STRATEGIES: RepairStrategy[] = [
 // CODES D'ISSUES
 // ============================================================================
 
-export const ISSUE_CODES: Record<string, { category: IssueCategory; description: string }> = {
+export const ISSUE_CODES: Record<
+  string,
+  { category: IssueCategory; description: string }
+> = {
   // Mémoire
   HIGH_MEMORY_USAGE: { category: 'memory', description: 'Utilisation mémoire élevée' },
-  CRITICAL_MEMORY_USAGE: { category: 'memory', description: 'Utilisation mémoire critique' },
+  CRITICAL_MEMORY_USAGE: {
+    category: 'memory',
+    description: 'Utilisation mémoire critique',
+  },
   MEMORY_LEAK: { category: 'memory', description: 'Fuite mémoire détectée' },
   OUT_OF_MEMORY: { category: 'memory', description: 'Mémoire insuffisante' },
 
@@ -430,7 +436,7 @@ export const ISSUE_CODES: Record<string, { category: IssueCategory; description:
 
   // État
   STATE_CORRUPTED: { category: 'state', description: 'État corrompu' },
-  ERROR_RATE_HIGH: { category: 'state', description: 'Taux d\'erreurs élevé' },
+  ERROR_RATE_HIGH: { category: 'state', description: "Taux d'erreurs élevé" },
   DATA_LOSS: { category: 'state', description: 'Perte de données' },
 
   // Sync
@@ -446,9 +452,9 @@ export const ISSUE_CODES: Record<string, { category: IssueCategory; description:
  * Obtient la stratégie de réparation pour un code d'issue
  */
 export function getRepairStrategiesForIssue(issueCode: string): RepairStrategy[] {
-  return REPAIR_STRATEGIES.filter(s =>
-    s.applicableIssueCodes.includes(issueCode)
-  ).sort((a, b) => b.priority - a.priority);
+  return REPAIR_STRATEGIES.filter(s => s.applicableIssueCodes.includes(issueCode)).sort(
+    (a, b) => b.priority - a.priority
+  );
 }
 
 /**

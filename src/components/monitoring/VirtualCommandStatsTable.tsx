@@ -38,7 +38,9 @@ export const VirtualCommandStatsTable: React.FC<VirtualCommandStatsTableProps> =
   className = '',
   height = 600,
 }) => {
-  const [stats, setStats] = useState<ReturnType<typeof ServiceMetrics.getTopCommands>>([]);
+  const [stats, setStats] = useState<ReturnType<typeof ServiceMetrics.getTopCommands>>(
+    []
+  );
   const [sortColumn, setSortColumn] = useState<SortColumn>('calls');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
 
@@ -113,7 +115,9 @@ export const VirtualCommandStatsTable: React.FC<VirtualCommandStatsTableProps> =
           : bVal.localeCompare(aVal);
       }
 
-      return sortDirection === 'asc' ? (aVal as number) - (bVal as number) : (bVal as number) - (aVal as number);
+      return sortDirection === 'asc'
+        ? (aVal as number) - (bVal as number)
+        : (bVal as number) - (aVal as number);
     });
   }, [stats, sortColumn, sortDirection]);
 
@@ -183,9 +187,7 @@ export const VirtualCommandStatsTable: React.FC<VirtualCommandStatsTableProps> =
         className="flex items-center border-b border-gray-700 hover:bg-gray-800/50 transition-colors"
       >
         {/* Rank */}
-        <div className="w-12 px-2 text-sm text-gray-500 font-mono">
-          #{index + 1}
-        </div>
+        <div className="w-12 px-2 text-sm text-gray-500 font-mono">#{index + 1}</div>
 
         {/* Command */}
         <div className="flex-1 px-4 text-sm font-mono truncate" title={stat.command}>
@@ -198,14 +200,18 @@ export const VirtualCommandStatsTable: React.FC<VirtualCommandStatsTableProps> =
         </div>
 
         {/* Avg Latency */}
-        <div className={`w-28 px-4 text-sm text-right font-semibold ${getLatencyColor(stat.avgLatency)}`}>
+        <div
+          className={`w-28 px-4 text-sm text-right font-semibold ${getLatencyColor(stat.avgLatency)}`}
+        >
           {stat.avgLatency < 1000
             ? `${stat.avgLatency}ms`
             : `${(stat.avgLatency / 1000).toFixed(2)}s`}
         </div>
 
         {/* Error Rate */}
-        <div className={`w-24 px-4 text-sm text-right font-semibold ${getErrorRateColor(stat.errorRate)}`}>
+        <div
+          className={`w-24 px-4 text-sm text-right font-semibold ${getErrorRateColor(stat.errorRate)}`}
+        >
           {(stat.errorRate * 100).toFixed(1)}%
         </div>
 
@@ -218,15 +224,15 @@ export const VirtualCommandStatsTable: React.FC<VirtualCommandStatsTableProps> =
   };
 
   return (
-    <div className={`bg-gray-900 border border-gray-700 rounded-lg overflow-hidden ${className}`}>
+    <div
+      className={`bg-gray-900 border border-gray-700 rounded-lg overflow-hidden ${className}`}
+    >
       {/* Header */}
       <div className="px-6 py-4 border-b border-gray-700 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Icon className={`w-5 h-5 text-${config.color}-500`} />
           <h3 className="text-lg font-semibold text-white">{config.title}</h3>
-          <span className="text-sm text-gray-400">
-            ({sortedStats.length} commandes)
-          </span>
+          <span className="text-sm text-gray-400">({sortedStats.length} commandes)</span>
         </div>
       </div>
 
@@ -265,7 +271,10 @@ export const VirtualCommandStatsTable: React.FC<VirtualCommandStatsTableProps> =
       </div>
 
       {/* Standard List (Virtual scrolling removed due to react-window compatibility) */}
-      <div style={{ maxHeight: height, overflowY: 'auto' }} className="scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900">
+      <div
+        style={{ maxHeight: height, overflowY: 'auto' }}
+        className="scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900"
+      >
         {sortedStats.length > 0 ? (
           sortedStats.map((_, index) => (
             <div key={index}>{Row({ index, style: {} })}</div>

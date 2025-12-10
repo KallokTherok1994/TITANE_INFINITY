@@ -27,7 +27,10 @@ import type {
 
 const FALLBACK_ERROR = 'Tauri backend indisponible';
 
-function normalizeResponse<T>(raw: unknown, defaultError = FALLBACK_ERROR): SecureResponse<T> {
+function normalizeResponse<T>(
+  raw: unknown,
+  defaultError = FALLBACK_ERROR
+): SecureResponse<T> {
   if (!raw || typeof raw !== 'object') {
     return { ok: false, data: null, error: defaultError };
   }
@@ -35,7 +38,11 @@ function normalizeResponse<T>(raw: unknown, defaultError = FALLBACK_ERROR): Secu
   const payload = raw as SecureResponse<T> & { fallback?: boolean; message?: string };
 
   if (payload.fallback) {
-    return { ok: false, data: null, error: payload.error ?? payload.message ?? defaultError };
+    return {
+      ok: false,
+      data: null,
+      error: payload.error ?? payload.message ?? defaultError,
+    };
   }
 
   if (typeof payload.ok === 'boolean') {
@@ -54,7 +61,10 @@ function normalizeResponse<T>(raw: unknown, defaultError = FALLBACK_ERROR): Secu
  */
 async function getGeminiStatus(): Promise<SecureResponse<GeminiKeyStatus>> {
   const raw = await safeInvoke<unknown>('get_gemini_key_status');
-  return normalizeResponse<GeminiKeyStatus>(raw, 'Impossible de récupérer le statut Gemini');
+  return normalizeResponse<GeminiKeyStatus>(
+    raw,
+    'Impossible de récupérer le statut Gemini'
+  );
 }
 
 /**
@@ -70,7 +80,10 @@ async function setGeminiKey(apiKey: string): Promise<SecureResponse<GeminiKeySta
  */
 async function getOpenAIStatus(): Promise<SecureResponse<GeminiKeyStatus>> {
   const raw = await safeInvoke<unknown>('get_openai_key_status');
-  return normalizeResponse<GeminiKeyStatus>(raw, 'Impossible de récupérer le statut OpenAI');
+  return normalizeResponse<GeminiKeyStatus>(
+    raw,
+    'Impossible de récupérer le statut OpenAI'
+  );
 }
 
 /**
@@ -86,7 +99,10 @@ async function setOpenAIKey(apiKey: string): Promise<SecureResponse<GeminiKeySta
  */
 async function getAnthropicStatus(): Promise<SecureResponse<GeminiKeyStatus>> {
   const raw = await safeInvoke<unknown>('get_anthropic_key_status');
-  return normalizeResponse<GeminiKeyStatus>(raw, 'Impossible de récupérer le statut Anthropic');
+  return normalizeResponse<GeminiKeyStatus>(
+    raw,
+    'Impossible de récupérer le statut Anthropic'
+  );
 }
 
 /**
@@ -94,7 +110,10 @@ async function getAnthropicStatus(): Promise<SecureResponse<GeminiKeyStatus>> {
  */
 async function setAnthropicKey(apiKey: string): Promise<SecureResponse<GeminiKeyStatus>> {
   const raw = await safeInvoke<unknown>('chat_set_anthropic_key', { apiKey });
-  return normalizeResponse<GeminiKeyStatus>(raw, 'Impossible de définir la clé Anthropic');
+  return normalizeResponse<GeminiKeyStatus>(
+    raw,
+    'Impossible de définir la clé Anthropic'
+  );
 }
 
 /**
@@ -120,7 +139,10 @@ async function storeSecret(
  */
 async function getSecretsStatus(): Promise<SecureResponse<SecretStatus[]>> {
   const raw = await safeInvoke<unknown>('get_secrets_status');
-  return normalizeResponse<SecretStatus[]>(raw, 'Impossible de récupérer les statuts des secrets');
+  return normalizeResponse<SecretStatus[]>(
+    raw,
+    'Impossible de récupérer les statuts des secrets'
+  );
 }
 
 /**
@@ -162,7 +184,10 @@ async function savePolicies(policies: IAPolicy[]): Promise<SecureResponse<void>>
 /**
  * Activer/désactiver une politique
  */
-async function togglePolicy(policyId: string, enabled: boolean): Promise<SecureResponse<IAPolicy>> {
+async function togglePolicy(
+  policyId: string,
+  enabled: boolean
+): Promise<SecureResponse<IAPolicy>> {
   const raw = await safeInvoke<unknown>('toggle_ia_policy', { policyId, enabled });
   return normalizeResponse<IAPolicy>(raw, 'Impossible de modifier la politique');
 }
@@ -170,7 +195,9 @@ async function togglePolicy(policyId: string, enabled: boolean): Promise<SecureR
 /**
  * Créer une nouvelle politique
  */
-async function createPolicy(policy: Omit<IAPolicy, 'id' | 'createdAt' | 'updatedAt'>): Promise<SecureResponse<IAPolicy>> {
+async function createPolicy(
+  policy: Omit<IAPolicy, 'id' | 'createdAt' | 'updatedAt'>
+): Promise<SecureResponse<IAPolicy>> {
   const raw = await safeInvoke<unknown>('create_ia_policy', { policy });
   return normalizeResponse<IAPolicy>(raw, 'Impossible de créer la politique');
 }
@@ -192,7 +219,10 @@ async function deletePolicy(policyId: string): Promise<SecureResponse<void>> {
  */
 async function getPermissionMatrix(): Promise<SecureResponse<PermissionMatrix>> {
   const raw = await safeInvoke<unknown>('get_permission_matrix');
-  return normalizeResponse<PermissionMatrix>(raw, 'Impossible de récupérer la matrice de permissions');
+  return normalizeResponse<PermissionMatrix>(
+    raw,
+    'Impossible de récupérer la matrice de permissions'
+  );
 }
 
 /**
@@ -202,14 +232,14 @@ async function getPermissionAudit(): Promise<SecureResponse<PermissionAudit[]>> 
   const raw = await safeInvoke<unknown>('get_permission_audit');
 
   // Le backend retourne le JSON sous forme de string, on le parse
-  const response = normalizeResponse<string>(raw, 'Impossible de récupérer l\'audit');
+  const response = normalizeResponse<string>(raw, "Impossible de récupérer l'audit");
 
   if (response.ok && response.data) {
     try {
       const parsed = JSON.parse(response.data) as PermissionAudit[];
       return { ok: true, data: parsed, error: null };
     } catch {
-      return { ok: false, data: null, error: 'Format d\'audit invalide' };
+      return { ok: false, data: null, error: "Format d'audit invalide" };
     }
   }
 
@@ -221,7 +251,7 @@ async function getPermissionAudit(): Promise<SecureResponse<PermissionAudit[]>> 
  */
 async function clearPermissionAudit(): Promise<SecureResponse<void>> {
   const raw = await safeInvoke<unknown>('clear_permission_audit');
-  return normalizeResponse<void>(raw, 'Impossible d\'effacer l\'audit');
+  return normalizeResponse<void>(raw, "Impossible d'effacer l'audit");
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -231,25 +261,34 @@ async function clearPermissionAudit(): Promise<SecureResponse<void>> {
 /**
  * Obtenir les entrées du journal de sécurité
  */
-async function getSecurityLog(filters?: SecurityLogFilters): Promise<SecureResponse<SecurityLogEntry[]>> {
+async function getSecurityLog(
+  filters?: SecurityLogFilters
+): Promise<SecureResponse<SecurityLogEntry[]>> {
   const raw = await safeInvoke<unknown>('get_security_log', { filters });
-  return normalizeResponse<SecurityLogEntry[]>(raw, 'Impossible de récupérer le journal de sécurité');
+  return normalizeResponse<SecurityLogEntry[]>(
+    raw,
+    'Impossible de récupérer le journal de sécurité'
+  );
 }
 
 /**
  * Ajouter une entrée au journal de sécurité
  */
-async function appendSecurityLog(entry: Omit<SecurityLogEntry, 'id' | 'timestamp'>): Promise<SecureResponse<SecurityLogEntry>> {
+async function appendSecurityLog(
+  entry: Omit<SecurityLogEntry, 'id' | 'timestamp'>
+): Promise<SecureResponse<SecurityLogEntry>> {
   const raw = await safeInvoke<unknown>('append_security_log', { entry });
-  return normalizeResponse<SecurityLogEntry>(raw, 'Impossible d\'ajouter au journal');
+  return normalizeResponse<SecurityLogEntry>(raw, "Impossible d'ajouter au journal");
 }
 
 /**
  * Exporter le journal de sécurité
  */
-async function exportSecurityLog(format: 'json' | 'csv'): Promise<SecureResponse<string>> {
+async function exportSecurityLog(
+  format: 'json' | 'csv'
+): Promise<SecureResponse<string>> {
   const raw = await safeInvoke<unknown>('export_security_log', { format });
-  return normalizeResponse<string>(raw, 'Impossible d\'exporter le journal');
+  return normalizeResponse<string>(raw, "Impossible d'exporter le journal");
 }
 
 /**
@@ -257,7 +296,7 @@ async function exportSecurityLog(format: 'json' | 'csv'): Promise<SecureResponse
  */
 async function clearSecurityLog(): Promise<SecureResponse<void>> {
   const raw = await safeInvoke<unknown>('clear_security_log');
-  return normalizeResponse<void>(raw, 'Impossible d\'effacer le journal');
+  return normalizeResponse<void>(raw, "Impossible d'effacer le journal");
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -269,7 +308,7 @@ async function clearSecurityLog(): Promise<SecureResponse<void>> {
  */
 async function checkSystemIntegrity(): Promise<SecureResponse<string>> {
   const raw = await safeInvoke<unknown>('check_system_integrity');
-  return normalizeResponse<string>(raw, 'Vérification d\'intégrité impossible');
+  return normalizeResponse<string>(raw, "Vérification d'intégrité impossible");
 }
 
 // ═══════════════════════════════════════════════════════════════

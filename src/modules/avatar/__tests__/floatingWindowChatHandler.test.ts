@@ -202,7 +202,7 @@ describe('FloatingWindowChatHandler', () => {
     });
 
     it('should parse "passe sur l\'écran numéro 3"', () => {
-      const result = parseFloatingWindowCommand('passe sur l\'écran numéro 3');
+      const result = parseFloatingWindowCommand("passe sur l'écran numéro 3");
       expect(result.handled).toBe(true);
       expect(result.type).toBe('screen');
       expect(result.value).toBe(2);
@@ -371,7 +371,7 @@ describe('FloatingWindowChatHandler', () => {
     });
 
     it('should detect "écran"', () => {
-      expect(containsFloatingWindowKeyword('change d\'écran')).toBe(true);
+      expect(containsFloatingWindowKeyword("change d'écran")).toBe(true);
     });
 
     it('should detect "floating"', () => {

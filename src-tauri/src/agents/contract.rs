@@ -17,10 +17,7 @@ pub enum ContractViolation {
         actual_seconds: u64,
     },
     /// Dépassement de l'utilisation mémoire
-    MemoryExceeded {
-        allowed_mb: usize,
-        actual_mb: usize,
-    },
+    MemoryExceeded { allowed_mb: usize, actual_mb: usize },
     /// Trop d'échecs consécutifs
     TooManyFailures {
         max_failures: u32,
@@ -45,28 +42,40 @@ pub enum ContractViolation {
 impl std::fmt::Display for ContractViolation {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::TimeoutExceeded { allowed_seconds, actual_seconds } => {
+            Self::TimeoutExceeded {
+                allowed_seconds,
+                actual_seconds,
+            } => {
                 write!(
                     f,
                     "Timeout exceeded: allowed {}s, actual {}s",
                     allowed_seconds, actual_seconds
                 )
             }
-            Self::MemoryExceeded { allowed_mb, actual_mb } => {
+            Self::MemoryExceeded {
+                allowed_mb,
+                actual_mb,
+            } => {
                 write!(
                     f,
                     "Memory exceeded: allowed {}MB, actual {}MB",
                     allowed_mb, actual_mb
                 )
             }
-            Self::TooManyFailures { max_failures, actual_failures } => {
+            Self::TooManyFailures {
+                max_failures,
+                actual_failures,
+            } => {
                 write!(
                     f,
                     "Too many failures: max {}, actual {}",
                     max_failures, actual_failures
                 )
             }
-            Self::InsufficientSuccessRate { required_rate, actual_rate } => {
+            Self::InsufficientSuccessRate {
+                required_rate,
+                actual_rate,
+            } => {
                 write!(
                     f,
                     "Insufficient success rate: required {:.2}, actual {:.2}",
@@ -74,7 +83,10 @@ impl std::fmt::Display for ContractViolation {
                 )
             }
             Self::InvariantViolation(msg) => write!(f, "Invariant violation: {}", msg),
-            Self::MessageQuotaExceeded { max_messages, actual_messages } => {
+            Self::MessageQuotaExceeded {
+                max_messages,
+                actual_messages,
+            } => {
                 write!(
                     f,
                     "Message quota exceeded: max {}, actual {}",
@@ -230,7 +242,9 @@ impl AgentContract {
                 message_quota_per_minute: 50,
                 required_success_rate: 0.80,
                 max_consecutive_failures: 5,
-                invariants: vec!["Les prédictions doivent inclure un niveau de confiance".to_string()],
+                invariants: vec![
+                    "Les prédictions doivent inclure un niveau de confiance".to_string()
+                ],
                 forbidden_actions: vec![],
                 auto_restart_on_error: true,
                 sandboxed: true,

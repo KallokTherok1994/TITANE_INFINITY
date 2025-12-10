@@ -62,9 +62,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
           <span className="message-bubble-author">
             {role === 'user' ? 'Vous' : role === 'system' ? 'Système' : 'TITANE∞'}
           </span>
-          <span className="message-bubble-time">
-            {formatTime(timestamp)}
-          </span>
+          <span className="message-bubble-time">{formatTime(timestamp)}</span>
         </div>
 
         <div className="message-bubble-text">
@@ -85,11 +83,14 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
                       </code>
                     );
                   },
-                  pre: ({ children }) => (
-                    <pre className="code-block">{children}</pre>
-                  ),
+                  pre: ({ children }) => <pre className="code-block">{children}</pre>,
                   a: ({ href, children }) => (
-                    <a href={href} target="_blank" rel="noopener noreferrer" className="markdown-link">
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="markdown-link"
+                    >
                       {children}
                     </a>
                   ),
@@ -98,7 +99,10 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
                 {content}
               </ReactMarkdown>
             ) : (
-              <span className="typing-indicator" aria-label="TITANE∞ génère une réponse...">
+              <span
+                className="typing-indicator"
+                aria-label="TITANE∞ génère une réponse..."
+              >
                 <span className="typing-dot">●</span>
                 <span className="typing-dot">●</span>
                 <span className="typing-dot">●</span>

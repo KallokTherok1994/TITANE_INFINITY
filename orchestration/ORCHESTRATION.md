@@ -16,6 +16,7 @@ npm install
 ```
 
 This installs:
+
 - `yaml` : Parse roadmap files
 - `chalk` : Colored terminal output
 - `clipboardy` : Copy prompts to clipboard
@@ -75,9 +76,11 @@ TITANE_INFINITY/
 ## 🎯 Agents Overview
 
 ### 🧠 Titane Conductor
+
 **Role** : Master orchestrator for entire TITANE workflow
 
 **Responsibility** :
+
 - Plan phases (PLANNING → IMPLEMENTATION → REVIEW → COMMIT)
 - Delegate to subagents
 - Manage workflow transitions
@@ -86,6 +89,7 @@ TITANE_INFINITY/
 
 **Tools** : edit_file, run_in_terminal, search, usages
 **Handoffs** :
+
 - 🔍 `audit-subagent` : For code analysis & audits
 - ⚙️ `implement-subagent` : For TDD-strict implementation
 - ✅ `review-subagent` : For quality review & validation
@@ -95,9 +99,11 @@ TITANE_INFINITY/
 ---
 
 ### 🔍 Audit Subagent
+
 **Role** : Code analysis and quality auditing
 
 **Responsibility** :
+
 - Scan codebase structure
 - Check TypeScript/Rust compilation
 - Run linters (clippy, eslint)
@@ -112,9 +118,11 @@ TITANE_INFINITY/
 ---
 
 ### ⚙️ Implement Subagent
+
 **Role** : TDD-strict development
 
 **Responsibility** :
+
 - Write tests first (RED)
 - Implement minimal code (GREEN)
 - Refactor for quality (REFACTOR)
@@ -129,9 +137,11 @@ TITANE_INFINITY/
 ---
 
 ### ✅ Review Subagent
+
 **Role** : Quality validation and approval
 
 **Responsibility** :
+
 - Check compilation (cargo check, tsc)
 - Validate tests pass
 - Run linters with zero tolerance
@@ -146,6 +156,7 @@ TITANE_INFINITY/
 ## 📋 Typical Workflow
 
 ### Phase 1 : PLANNING
+
 ```
 1. Conductor reads task from roadmap.yaml
 2. Conductor creates plan in plans/<task-id>-plan.md
@@ -154,6 +165,7 @@ TITANE_INFINITY/
 ```
 
 ### Phase 2 : IMPLEMENTATION
+
 ```
 1. Conductor delegates to implement-subagent
 2. Subagent implements using TDD
@@ -166,6 +178,7 @@ TITANE_INFINITY/
 ```
 
 ### Phase 3 : REVIEW
+
 ```
 1. Conductor delegates to review-subagent
 2. Subagent checks:
@@ -178,6 +191,7 @@ TITANE_INFINITY/
 ```
 
 ### Phase 4 : COMMIT
+
 ```
 1. Conductor generates commit message
 2. User runs: git add . && git commit -m "..."
@@ -186,6 +200,7 @@ TITANE_INFINITY/
 ```
 
 ### Phase 5 : ITERATION
+
 ```
 1. Loop to Phase 2 for next micro-phase
 2. Or loop to next task if complete
@@ -199,12 +214,12 @@ Edit `orchestration/roadmap.yaml`:
 
 ```yaml
 - id: P3-X-Y
-  title: "Feature Name"
-  description: "Detailed description of what to implement"
-  priority: "P0" # P0=critical, P1=high, P2=normal
-  status: "todo"
-  dependencies: ["P3-X-Z"] # tasks that must complete first
-  estimatedTime: "3h"
+  title: 'Feature Name'
+  description: 'Detailed description of what to implement'
+  priority: 'P0' # P0=critical, P1=high, P2=normal
+  status: 'todo'
+  dependencies: ['P3-X-Z'] # tasks that must complete first
+  estimatedTime: '3h'
   files: 2
   tests: 4
 ```
@@ -217,32 +232,39 @@ In `plans/` directory, create `<task-id>-plan.md`:
 # Task Plan — <task-id>
 
 ## Objective
+
 <2-3 sentence summary>
 
 ## Requirements
+
 - Requirement 1
 - Requirement 2
 
 ## Files to Create/Modify
+
 - `src-tauri/src/...rs` : <description>
 - `src/.../...ts` : <description>
 
 ## Tests Required
+
 - test_1 : <description>
 - test_2 : <description>
 
 ## Architecture Considerations
+
 - How it integrates with 9 motors
 - State management approach
 - Error handling strategy
 
 ## Implementation Steps
+
 1. Write failing tests
 2. Implement minimal code
 3. Refactor for quality
 4. Run full test suite
 
 ## Success Criteria
+
 - [ ] All tests pass
 - [ ] Zero compiler warnings
 - [ ] Code documented
@@ -252,36 +274,43 @@ In `plans/` directory, create `<task-id>-plan.md`:
 ## 🔄 Workflow Commands
 
 ### Check Status
+
 ```bash
 npm run status
 # Shows progress across all phases and tasks
 ```
 
 ### Get Next Task
+
 ```bash
 npm run next
 # Generates prompt for next task, copies to clipboard
 ```
 
 ### Start Task
+
 In Copilot Chat:
+
 ```
 You are titane-conductor. Task P3-1-1: Implement Orchestrator motor.
 Use the prompt from `npm run next` output.
 ```
 
 ### Update After Implementation
+
 ```bash
 npm run update -- P3-1-1
 # Marks P3-1-1 as done, shows next task
 ```
 
 ### Mark as In-Progress
+
 ```bash
 npm run update -- P3-1-1 in-progress
 ```
 
 ### Mark as Needs Review
+
 ```bash
 npm run update -- P3-1-1 review
 ```
@@ -289,17 +318,20 @@ npm run update -- P3-1-1 review
 ## 🧠 Using Agents in VS Code
 
 ### Option 1: Chat with Conductor
+
 1. Open Copilot Chat (Cmd/Ctrl + I)
 2. Start with: `@titane-conductor <your task or question>`
 3. Follow instructions in agent definition
 4. Use handoffs to delegate (`/delegate audit-subagent`)
 
 ### Option 2: Direct Agent Chat
+
 1. Open Copilot Chat
 2. Use `@audit-subagent`, `@implement-subagent`, or `@review-subagent`
 3. Ask specific questions (e.g., "Audit current code for quality issues")
 
 ### Option 3: Automated via CLI
+
 ```bash
 # Get next task (which agent to use is indicated)
 npm run next
@@ -311,6 +343,7 @@ npm run next
 ### Command Output Examples
 
 **Status View**:
+
 ```
 📊 TITANE_INFINITY Orchestration Progress
 
@@ -347,6 +380,7 @@ Status: 🔄 in-progress
 ## 🚫 Important Rules
 
 ### For Copilot Agents
+
 1. **NEVER modify** old 14 components
 2. **ALWAYS respect** 9-motor architecture
 3. **MANDATORY** TDD workflow for implementation
@@ -354,6 +388,7 @@ Status: 🔄 in-progress
 5. **MANDATORY** Tests first, code second
 
 ### For Using This System
+
 1. Run `npm run status` before starting work
 2. Always use `npm run next` to get next task
 3. Update status with `npm run update` after each task
@@ -370,6 +405,7 @@ Status: 🔄 in-progress
 ## 🆘 Troubleshooting
 
 ### Scripts Won't Run
+
 ```bash
 # Make sure Node.js and npm are installed
 node --version  # Should be >=16
@@ -383,6 +419,7 @@ npx ts-node scripts/batch-progress.ts
 ```
 
 ### Roadmap YAML Errors
+
 ```bash
 # Validate YAML syntax
 npm run status  # Will show parsing errors if any
@@ -392,6 +429,7 @@ cat orchestration/roadmap.yaml
 ```
 
 ### Agents Not Available
+
 - Ensure `.github/agents/*.agent.md` files exist
 - Agents must be named exactly as in agent files
 - Copilot Chat must have access to workspace
@@ -399,6 +437,7 @@ cat orchestration/roadmap.yaml
 ## 📞 Support
 
 For issues or questions:
+
 1. Check this configuration file
 2. Read agent definition files
 3. Review global instructions

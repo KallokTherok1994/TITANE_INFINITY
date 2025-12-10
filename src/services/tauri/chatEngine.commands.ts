@@ -125,7 +125,9 @@ export interface StreamHandle {
   messageId: string;
 }
 
-function normalizeCompletion(payload: BackendChatCompletionPayload): ChatCompletionPayload {
+function normalizeCompletion(
+  payload: BackendChatCompletionPayload
+): ChatCompletionPayload {
   return {
     conversationId: payload.conversation_id,
     messageId: payload.message_id,
@@ -171,7 +173,10 @@ function toBackendPayload(args: ChatRequestArgs): Record<string, unknown> {
   };
 }
 
-async function invokeCommand<T>(command: string, args?: Record<string, unknown>): Promise<T> {
+async function invokeCommand<T>(
+  command: string,
+  args?: Record<string, unknown>
+): Promise<T> {
   try {
     return await secureInvoke<T>(command, args ?? {});
   } catch (error) {
@@ -181,9 +186,13 @@ async function invokeCommand<T>(command: string, args?: Record<string, unknown>)
   }
 }
 
-export async function generateResponse(args: ChatRequestArgs): Promise<ChatCompletionPayload> {
+export async function generateResponse(
+  args: ChatRequestArgs
+): Promise<ChatCompletionPayload> {
   const payload = toBackendPayload({ ...args, enableStreaming: false });
-  const result = await invokeCommand<BackendChatCompletionPayload>(COMMANDS.generate, { payload });
+  const result = await invokeCommand<BackendChatCompletionPayload>(COMMANDS.generate, {
+    payload,
+  });
   return normalizeCompletion(result);
 }
 
@@ -226,14 +235,18 @@ export async function healthCheck(): Promise<EngineHealthReport> {
   return normalizeHealthReport(report);
 }
 
-export async function onStreamChunk(handler: (chunk: StreamChunkPayload) => void): Promise<UnlistenFn> {
-  return listen<BackendStreamChunkPayload>('chat:stream:chunk', (event) => {
+export async function onStreamChunk(
+  handler: (chunk: StreamChunkPayload) => void
+): Promise<UnlistenFn> {
+  return listen<BackendStreamChunkPayload>('chat:stream:chunk', event => {
     handler(normalizeStreamChunk(event.payload));
   });
 }
 
-export async function onStreamDone(handler: (chunk: StreamChunkPayload) => void): Promise<UnlistenFn> {
-  return listen<BackendStreamChunkPayload>('chat:stream:done', (event) => {
+export async function onStreamDone(
+  handler: (chunk: StreamChunkPayload) => void
+): Promise<UnlistenFn> {
+  return listen<BackendStreamChunkPayload>('chat:stream:done', event => {
     handler(normalizeStreamChunk(event.payload));
   });
 }

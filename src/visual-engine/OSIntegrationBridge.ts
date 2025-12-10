@@ -58,11 +58,14 @@ export interface MemoryMetrics {
 
 export interface PipelineStatus {
   stage: string; // 'input' | 'processing' | 'output' | 'idle'
-  kernels: Record<string, {
-    active: boolean;
-    load: number; // 0-1
-    latency: number; // ms
-  }>;
+  kernels: Record<
+    string,
+    {
+      active: boolean;
+      load: number; // 0-1
+      latency: number; // ms
+    }
+  >;
   throughput: number; // ops/sec
   errorRate: number; // 0-1
   timestamp: number;
@@ -328,7 +331,10 @@ export class OSIntegrationBridge {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, new Set());
     }
-    this.listeners.get(event)!.add(callback);
+    const listeners = this.listeners.get(event);
+    if (listeners) {
+      listeners.add(callback);
+    }
   }
 
   public off(event: string, callback: (data: unknown) => void): void {
@@ -357,7 +363,7 @@ export class OSIntegrationBridge {
         this.emit('connected', null);
       };
 
-      this.ws.onmessage = (event) => {
+      this.ws.onmessage = event => {
         try {
           const message = JSON.parse(event.data);
           this.handleMessage(message);
@@ -366,7 +372,7 @@ export class OSIntegrationBridge {
         }
       };
 
-      this.ws.onerror = (error) => {
+      this.ws.onerror = error => {
         console.error('[OSIntegrationBridge] WebSocket error:', error);
         this.emit('error', error);
       };
@@ -384,7 +390,10 @@ export class OSIntegrationBridge {
         this.reconnectTimer = setTimeout(() => {
           this.metrics.reconnectAttempts++;
           if (this.config.debug) {
-            console.log('[OSIntegrationBridge] Reconnect attempt', this.metrics.reconnectAttempts);
+            console.log(
+              '[OSIntegrationBridge] Reconnect attempt',
+              this.metrics.reconnectAttempts
+            );
           }
           this.connectWebSocket();
         }, 5000);
@@ -404,10 +413,7 @@ export class OSIntegrationBridge {
     }, this.config.pollInterval);
   }
 
-  private handleMessage(message: {
-    type: string;
-    data: unknown;
-  }): void {
+  private handleMessage(message: { type: string; data: unknown }): void {
     switch (message.type) {
       case 'cognitive':
         this.updateCognitiveState(message.data as CognitiveState);

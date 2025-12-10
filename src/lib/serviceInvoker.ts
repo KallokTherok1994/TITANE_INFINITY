@@ -45,9 +45,7 @@ export class RetryError extends Error {
     public readonly attempts: number,
     lastError: Error
   ) {
-    super(
-      `Command "${command}" failed after ${attempts} attempts: ${lastError.message}`
-    );
+    super(`Command "${command}" failed after ${attempts} attempts: ${lastError.message}`);
     this.name = 'RetryError';
     this.originalError = lastError;
   }
@@ -58,9 +56,7 @@ export class ValidationError extends Error {
     public readonly command: string,
     public readonly validationErrors: string[]
   ) {
-    super(
-      `Command "${command}" validation failed: ${validationErrors.join(', ')}`
-    );
+    super(`Command "${command}" validation failed: ${validationErrors.join(', ')}`);
     this.name = 'ValidationError';
   }
 }
@@ -81,11 +77,7 @@ function timeoutPromise<T>(ms: number, command: string): Promise<T> {
 /**
  * Backoff exponentiel avec jitter
  */
-function calculateBackoff(
-  attempt: number,
-  baseDelay: number,
-  factor: number
-): number {
+function calculateBackoff(attempt: number, baseDelay: number, factor: number): number {
   const exponentialDelay = baseDelay * Math.pow(factor, attempt);
   // Ajouter jitter (±25%)
   const jitter = exponentialDelay * (0.75 + Math.random() * 0.5);
@@ -101,7 +93,7 @@ async function waitWithBackoff(
   factor: number
 ): Promise<void> {
   const delay = calculateBackoff(attempt, baseDelay, factor);
-  await new Promise((resolve) => setTimeout(resolve, delay));
+  await new Promise(resolve => setTimeout(resolve, delay));
 }
 
 /**
@@ -127,7 +119,7 @@ function isRetriableError(error: unknown): boolean {
     '401',
   ];
 
-  const isNonRetriable = nonRetriablePatterns.some((p) =>
+  const isNonRetriable = nonRetriablePatterns.some(p =>
     errorMsg.toLowerCase().includes(p)
   );
 
@@ -175,13 +167,18 @@ export async function invokeWithRetry<T>(
     try {
       // Race entre secureInvoke et timeout
       const result = await Promise.race<T>([
-        secureInvoke<T>(command, payload ?? {}, {
-          timeout,
-          skipWhitelistCheck: options.skipWhitelistCheck,
-          skipInjectionCheck: options.skipInjectionCheck,
-          skipLoopCheck: options.skipLoopCheck,
-          treatFallbackAsError: true,
-        }, options.validator),
+        secureInvoke<T>(
+          command,
+          payload ?? {},
+          {
+            timeout,
+            skipWhitelistCheck: options.skipWhitelistCheck,
+            skipInjectionCheck: options.skipInjectionCheck,
+            skipLoopCheck: options.skipLoopCheck,
+            treatFallbackAsError: true,
+          },
+          options.validator
+        ),
         timeoutPromise<T>(timeout, command),
       ]);
 
@@ -260,7 +257,12 @@ export async function invokeSimple<T>(
   validator?: <U>(val: unknown) => val is U
 ): Promise<T> {
   try {
-    return await secureInvoke<T>(command, payload ?? {}, {}, validator as unknown as (val: unknown) => val is T);
+    return await secureInvoke<T>(
+      command,
+      payload ?? {},
+      {},
+      validator as unknown as (val: unknown) => val is T
+    );
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : String(error);
     console.error(`[Service] Command "${command}" failed:`, errorMsg);
@@ -290,16 +292,13 @@ export interface BatchCommand {
  * ]);
  * ```
  */
-export async function invokeBatch<T = unknown>(
-  commands: BatchCommand[]
-): Promise<T[]> {
+export async function invokeBatch<T = unknown>(commands: BatchCommand[]): Promise<T[]> {
   return Promise.all(
-    commands.map((cmd) =>
-      invokeWithRetry<T>(
-        cmd.command,
-        cmd.payload,
-        { ...cmd.options, noRetry: cmd.options?.noRetry ?? true }
-      )
+    commands.map(cmd =>
+      invokeWithRetry<T>(cmd.command, cmd.payload, {
+        ...cmd.options,
+        noRetry: cmd.options?.noRetry ?? true,
+      })
     )
   );
 }
@@ -323,16 +322,13 @@ export async function invokeSequence<T = unknown>(
 
   for (const cmd of commands) {
     try {
-      const result = await invokeWithRetry<T>(
-        cmd.command,
-        cmd.payload,
-        { ...cmd.options, noRetry: cmd.options?.noRetry ?? true }
-      );
+      const result = await invokeWithRetry<T>(cmd.command, cmd.payload, {
+        ...cmd.options,
+        noRetry: cmd.options?.noRetry ?? true,
+      });
       results.push(result);
     } catch (error) {
-      console.error(
-        `[Sequence] Failed at command "${cmd.command}". Stopping sequence.`
-      );
+      console.error(`[Sequence] Failed at command "${cmd.command}". Stopping sequence.`);
       throw error;
     }
   }

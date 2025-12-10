@@ -22,7 +22,10 @@ export interface VoiceControlPanelProps {
   onToggle: () => void;
 }
 
-export const VoiceControlPanel: React.FC<VoiceControlPanelProps> = ({ enabled, onToggle }) => {
+export const VoiceControlPanel: React.FC<VoiceControlPanelProps> = ({
+  enabled,
+  onToggle,
+}) => {
   const [status, setStatus] = useState<TTSStatus>({
     provider: 'none',
     available: false,
@@ -50,11 +53,14 @@ export const VoiceControlPanel: React.FC<VoiceControlPanelProps> = ({ enabled, o
     setTestInProgress(true);
 
     try {
-      await hybridTTS.speak('Test de synthèse vocale TITANE Infinity. Système opérationnel.', {
-        lang: 'fr-FR',
-        rate: 1.0,
-        pitch: 1.0,
-      });
+      await hybridTTS.speak(
+        'Test de synthèse vocale TITANE Infinity. Système opérationnel.',
+        {
+          lang: 'fr-FR',
+          rate: 1.0,
+          pitch: 1.0,
+        }
+      );
     } catch (error) {
       console.error('Test TTS failed:', error);
     } finally {
@@ -105,7 +111,9 @@ export const VoiceControlPanel: React.FC<VoiceControlPanelProps> = ({ enabled, o
             <span className="voice-provider">
               {getProviderIcon()} {getProviderLabel()}
             </span>
-            <span className={`voice-indicator ${status.available ? 'available' : 'unavailable'}`}>
+            <span
+              className={`voice-indicator ${status.available ? 'available' : 'unavailable'}`}
+            >
               {status.available ? '✅ Disponible' : '❌ Indisponible'}
             </span>
           </div>
@@ -129,8 +137,12 @@ export const VoiceControlPanel: React.FC<VoiceControlPanelProps> = ({ enabled, o
           <div className="voice-help">
             <small>
               {status.tauriAvailable && '💡 Backend Tauri optimal activé'}
-              {!status.tauriAvailable && status.webSpeechAvailable && '🌐 Web Speech actif (fallback)'}
-              {!status.tauriAvailable && !status.webSpeechAvailable && '⚠️ Aucun moteur TTS disponible'}
+              {!status.tauriAvailable &&
+                status.webSpeechAvailable &&
+                '🌐 Web Speech actif (fallback)'}
+              {!status.tauriAvailable &&
+                !status.webSpeechAvailable &&
+                '⚠️ Aucun moteur TTS disponible'}
             </small>
           </div>
         </div>

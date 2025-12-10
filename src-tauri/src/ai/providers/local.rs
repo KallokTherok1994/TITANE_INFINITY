@@ -3,8 +3,8 @@
 //   SUPER PROMPT #8 — Ollama/GGUF/ONNX Integration
 // ═══════════════════════════════════════════════════════════════
 
-use crate::ai::{AiRequest, AiResponse, AiMetadata, AiMode, AIError};
 use crate::ai::providers::{AiProvider, ProviderResult};
+use crate::ai::{AIError, AiMetadata, AiMode, AiRequest, AiResponse};
 use async_trait::async_trait;
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
@@ -165,7 +165,7 @@ mod tests {
     #[test]
     fn test_model_selection() {
         let provider = LocalProvider::new(None);
-        
+
         assert_eq!(provider.select_model(AiMode::Fast), "llama3");
         assert_eq!(provider.select_model(AiMode::Quality), "mistral");
     }

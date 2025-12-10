@@ -72,7 +72,6 @@ export function useProviderStatus(
       }
 
       console.log(`✅ Provider status refreshed (${statuses.length} providers)`);
-
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Provider status error';
       setError(errorMsg);
@@ -107,8 +106,9 @@ export function useProviderStatus(
         setActiveProvider(null);
       }
 
-      console.log(`✅ Provider check complete (${available.length}/${statuses.length} available)`);
-
+      console.log(
+        `✅ Provider check complete (${available.length}/${statuses.length} available)`
+      );
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Provider check error';
       setError(errorMsg);

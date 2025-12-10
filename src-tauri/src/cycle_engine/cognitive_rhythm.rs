@@ -12,9 +12,9 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CognitiveRhythmParams {
     pub mode: CognitiveMode,
-    pub omega_depth: f32,         // 0.0 - 1.0 (reflection depth)
-    pub analysis_intensity: f32,  // 0.0 - 1.0 (coherence strength)
-    pub speed_vs_quality: f32,    // 0.0 (speed) - 1.0 (quality)
+    pub omega_depth: f32,          // 0.0 - 1.0 (reflection depth)
+    pub analysis_intensity: f32,   // 0.0 - 1.0 (coherence strength)
+    pub speed_vs_quality: f32,     // 0.0 (speed) - 1.0 (quality)
     pub memory_consolidation: f32, // 0.0 - 1.0
     pub creative_temperature: f32, // 0.0 - 1.0 (randomness)
 }
@@ -72,7 +72,7 @@ impl CognitiveRhythmParams {
             },
         }
     }
-    
+
     /// Get OMEGA engine weights based on rhythm
     pub fn omega_engine_weights(&self) -> Vec<f32> {
         // Adjust weights for 10 OMEGA engines based on cognitive mode

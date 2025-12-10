@@ -63,7 +63,8 @@ const styles = {
   },
   statCard: {
     padding: '20px',
-    background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
+    background:
+      'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
     borderRadius: '12px',
     border: '1px solid rgba(102, 126, 234, 0.2)',
   },
@@ -249,8 +250,8 @@ export const SecurityDashboard: React.FC = () => {
             {(report.pass_rate * 100).toFixed(1)}%
           </div>
           <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-            <strong>Taux de Réussite</strong> ({report.tests.filter((t) => t.passed).length}/
-            {report.tests.length} tests réussis)
+            <strong>Taux de Réussite</strong> ({report.tests.filter(t => t.passed).length}
+            /{report.tests.length} tests réussis)
           </div>
 
           {/* Tests Table */}
@@ -266,9 +267,7 @@ export const SecurityDashboard: React.FC = () => {
               {report.tests.map((test, idx) => (
                 <tr key={idx} style={styles.tableRow}>
                   <td style={styles.tableCell}>
-                    <span style={styles.statusIcon}>
-                      {test.passed ? '✅' : '❌'}
-                    </span>
+                    <span style={styles.statusIcon}>{test.passed ? '✅' : '❌'}</span>
                   </td>
                   <td style={styles.tableCell}>
                     <strong>{test.name}</strong>
@@ -291,7 +290,8 @@ export const SecurityDashboard: React.FC = () => {
         <div style={styles.loading}>
           <div>🛡️ Aucun rapport de sécurité</div>
           <div style={{ fontSize: '14px', marginTop: '8px' }}>
-            Cliquez sur « Lancer l'Auto-Test Sécurité » pour valider le durcissement du système
+            Cliquez sur « Lancer l'Auto-Test Sécurité » pour valider le durcissement du
+            système
           </div>
         </div>
       )}

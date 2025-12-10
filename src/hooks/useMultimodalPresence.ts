@@ -46,7 +46,7 @@ export function useMultimodalPresence() {
   );
 
   useEffect(() => {
-    const unsubscribe = multimodalPresenceEngine.subscribe((newState) => {
+    const unsubscribe = multimodalPresenceEngine.subscribe(newState => {
       setState(newState);
     });
 
@@ -108,14 +108,17 @@ export function useBreathingCycle(): {
   const [breathingValue, setBreathingValue] = useState(0);
 
   useEffect(() => {
-    const unsubscribe = multimodalPresenceEngine.subscribe((state) => {
+    const unsubscribe = multimodalPresenceEngine.subscribe(state => {
       setBreathing(state.breathing);
       // Calculer la valeur respiratoire actuelle (0-1)
       const elapsed = Date.now();
       // Type guard pour BreathingState
       if (typeof state.breathing === 'object' && 'cycleDuration' in state.breathing) {
-        const cycleProgress = (elapsed % state.breathing.cycleDuration) / state.breathing.cycleDuration;
-        setBreathingValue(Math.sin(cycleProgress * Math.PI * 2) * state.breathing.amplitude);
+        const cycleProgress =
+          (elapsed % state.breathing.cycleDuration) / state.breathing.cycleDuration;
+        setBreathingValue(
+          Math.sin(cycleProgress * Math.PI * 2) * state.breathing.amplitude
+        );
       } else {
         setBreathingValue(typeof state.breathing === 'number' ? state.breathing : 0);
       }
@@ -140,7 +143,7 @@ export function useHaloExpression(): {
   const [halo, setHalo] = useState(multimodalPresenceEngine.getState().halo);
 
   useEffect(() => {
-    const unsubscribe = multimodalPresenceEngine.subscribe((state) => {
+    const unsubscribe = multimodalPresenceEngine.subscribe(state => {
       setHalo(state.halo);
     });
 
@@ -174,7 +177,7 @@ export function useAvatarMimics(): {
   const [shouldBlink, setShouldBlink] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = multimodalPresenceEngine.subscribe((state) => {
+    const unsubscribe = multimodalPresenceEngine.subscribe(state => {
       setAvatar(state.avatar);
 
       // Détection blink
@@ -205,10 +208,12 @@ export function useInnerState(): {
   coherence: number;
   isThinking: boolean;
 } {
-  const [innerState, setInnerState] = useState(multimodalPresenceEngine.getState().innerState);
+  const [innerState, setInnerState] = useState(
+    multimodalPresenceEngine.getState().innerState
+  );
 
   useEffect(() => {
-    const unsubscribe = multimodalPresenceEngine.subscribe((state) => {
+    const unsubscribe = multimodalPresenceEngine.subscribe(state => {
       setInnerState(state.innerState);
     });
 
@@ -219,7 +224,8 @@ export function useInnerState(): {
     thinkingState: innerState.thinkingState,
     mentalColor: innerState.mentalColor,
     coherence: innerState.coherence,
-    isThinking: innerState.thinkingState !== null && innerState.thinkingState !== 'silent',
+    isThinking:
+      innerState.thinkingState !== null && innerState.thinkingState !== 'silent',
   };
 }
 
@@ -232,10 +238,12 @@ export function usePresenceEnergy(): {
   isHigh: boolean;
   isNeutral: boolean;
 } {
-  const [energy, setEnergy] = useState(multimodalPresenceEngine.getState().presenceEnergy);
+  const [energy, setEnergy] = useState(
+    multimodalPresenceEngine.getState().presenceEnergy
+  );
 
   useEffect(() => {
-    const unsubscribe = multimodalPresenceEngine.subscribe((state) => {
+    const unsubscribe = multimodalPresenceEngine.subscribe(state => {
       setEnergy(state.presenceEnergy);
     });
 
@@ -260,10 +268,12 @@ export function useUserMirroring(): {
   activate: () => void;
   deactivate: () => void;
 } {
-  const [mirroring, setMirroring] = useState(multimodalPresenceEngine.getState().userMirroring);
+  const [mirroring, setMirroring] = useState(
+    multimodalPresenceEngine.getState().userMirroring
+  );
 
   useEffect(() => {
-    const unsubscribe = multimodalPresenceEngine.subscribe((state) => {
+    const unsubscribe = multimodalPresenceEngine.subscribe(state => {
       setMirroring(state.userMirroring);
     });
 

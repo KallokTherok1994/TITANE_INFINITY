@@ -7,25 +7,31 @@
 import { useEffect } from 'react';
 import { listen, UnlistenFn } from '@tauri-apps/api/event';
 import { useDevToolsStore } from '../store/devtools.store';
-import type { Engine, LogEntry, ErrorEntry, MemoryNode, OmegaStep } from '../store/devtools.store';
+import type {
+  Engine,
+  LogEntry,
+  ErrorEntry,
+  MemoryNode,
+  OmegaStep,
+} from '../store/devtools.store';
 
 /**
  * useEngineStatusUpdates - Écoute les mises à jour de statut des moteurs
- * 
+ *
  * @example
  * ```tsx
  * useEngineStatusUpdates();
  * ```
  */
 export function useEngineStatusUpdates() {
-  const updateEngine = useDevToolsStore((state) => state.updateEngine);
+  const updateEngine = useDevToolsStore(state => state.updateEngine);
 
   useEffect(() => {
     let unlisten: UnlistenFn | undefined;
 
     const setupListener = async () => {
       try {
-        unlisten = await listen<Partial<Engine>>('engine-status-update', (event) => {
+        unlisten = await listen<Partial<Engine>>('engine-status-update', event => {
           if (event.payload && event.payload.id) {
             updateEngine(event.payload.id, event.payload);
           }
@@ -47,25 +53,32 @@ export function useEngineStatusUpdates() {
 
 /**
  * useMetricsUpdates - Écoute les mises à jour de métriques
- * 
+ *
  * @example
  * ```tsx
  * useMetricsUpdates();
  * ```
  */
 export function useMetricsUpdates() {
-  const updateMetric = useDevToolsStore((state) => state.updateMetric);
+  const updateMetric = useDevToolsStore(state => state.updateMetric);
 
   useEffect(() => {
     let unlisten: UnlistenFn | undefined;
 
     const setupListener = async () => {
       try {
-        unlisten = await listen<{ id: string; value: number }>('metrics-update', (event) => {
-          if (event.payload && event.payload.id && typeof event.payload.value === 'number') {
-            updateMetric(event.payload.id, event.payload.value);
+        unlisten = await listen<{ id: string; value: number }>(
+          'metrics-update',
+          event => {
+            if (
+              event.payload &&
+              event.payload.id &&
+              typeof event.payload.value === 'number'
+            ) {
+              updateMetric(event.payload.id, event.payload.value);
+            }
           }
-        });
+        );
       } catch (error) {
         console.error('[DevTools] Failed to setup metrics listener:', error);
       }
@@ -83,21 +96,21 @@ export function useMetricsUpdates() {
 
 /**
  * useLogStream - Écoute le flux de logs en temps réel
- * 
+ *
  * @example
  * ```tsx
  * useLogStream();
  * ```
  */
 export function useLogStream() {
-  const addLog = useDevToolsStore((state) => state.addLog);
+  const addLog = useDevToolsStore(state => state.addLog);
 
   useEffect(() => {
     let unlisten: UnlistenFn | undefined;
 
     const setupListener = async () => {
       try {
-        unlisten = await listen<LogEntry>('log-line', (event) => {
+        unlisten = await listen<LogEntry>('log-line', event => {
           if (event.payload) {
             addLog(event.payload);
           }
@@ -119,21 +132,21 @@ export function useLogStream() {
 
 /**
  * useErrorTracking - Écoute les erreurs système
- * 
+ *
  * @example
  * ```tsx
  * useErrorTracking();
  * ```
  */
 export function useErrorTracking() {
-  const addError = useDevToolsStore((state) => state.addError);
+  const addError = useDevToolsStore(state => state.addError);
 
   useEffect(() => {
     let unlisten: UnlistenFn | undefined;
 
     const setupListener = async () => {
       try {
-        unlisten = await listen<ErrorEntry>('error-raised', (event) => {
+        unlisten = await listen<ErrorEntry>('error-raised', event => {
           if (event.payload) {
             addError(event.payload);
           }
@@ -155,21 +168,21 @@ export function useErrorTracking() {
 
 /**
  * useMemoryUpdates - Écoute les mises à jour de la mémoire
- * 
+ *
  * @example
  * ```tsx
  * useMemoryUpdates();
  * ```
  */
 export function useMemoryUpdates() {
-  const updateMemory = useDevToolsStore((state) => state.updateMemory);
+  const updateMemory = useDevToolsStore(state => state.updateMemory);
 
   useEffect(() => {
     let unlisten: UnlistenFn | undefined;
 
     const setupListener = async () => {
       try {
-        unlisten = await listen<MemoryNode[]>('memory-update', (event) => {
+        unlisten = await listen<MemoryNode[]>('memory-update', event => {
           if (event.payload) {
             updateMemory(event.payload);
           }
@@ -191,21 +204,21 @@ export function useMemoryUpdates() {
 
 /**
  * usePipelineUpdates - Écoute les étapes du pipeline Omega
- * 
+ *
  * @example
  * ```tsx
  * usePipelineUpdates();
  * ```
  */
 export function usePipelineUpdates() {
-  const updatePipeline = useDevToolsStore((state) => state.updatePipeline);
+  const updatePipeline = useDevToolsStore(state => state.updatePipeline);
 
   useEffect(() => {
     let unlisten: UnlistenFn | undefined;
 
     const setupListener = async () => {
       try {
-        unlisten = await listen<OmegaStep[]>('omega-pipeline-update', (event) => {
+        unlisten = await listen<OmegaStep[]>('omega-pipeline-update', event => {
           if (event.payload) {
             updatePipeline(event.payload);
           }
@@ -227,9 +240,9 @@ export function usePipelineUpdates() {
 
 /**
  * useAllDevToolsEvents - Hook principal activant tous les listeners
- * 
+ *
  * Utiliser dans DevToolsApp pour activer tous les events en une fois
- * 
+ *
  * @example
  * ```tsx
  * function DevToolsApp() {

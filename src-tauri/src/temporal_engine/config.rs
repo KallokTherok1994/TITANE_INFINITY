@@ -3,9 +3,9 @@
 //! Super Prompt #18 — Configuration du système temporel
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
-use super::temporal_memory::TemporalMemoryConfig;
 use super::planner::PlannerConfig;
+use super::temporal_memory::TemporalMemoryConfig;
+use serde::{Deserialize, Serialize};
 
 /// Configuration du moteur temporel
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -44,7 +44,7 @@ impl Default for TemporalConfig {
         Self {
             name: "default".to_string(),
             enabled: true,
-            tick_interval_ms: 60000, // 1 minute
+            tick_interval_ms: 60000,    // 1 minute
             max_tick_duration_ms: 5000, // 5 seconds max per tick
             memory_config: TemporalMemoryConfig::default(),
             planner_config: PlannerConfig::default(),
@@ -94,7 +94,7 @@ impl TemporalConfig {
         Self {
             name: "high_performance".to_string(),
             enabled: true,
-            tick_interval_ms: 30000, // 30 seconds
+            tick_interval_ms: 30000,     // 30 seconds
             max_tick_duration_ms: 10000, // 10 seconds max
             memory_config: TemporalMemoryConfig {
                 max_traces: 50000,
@@ -147,24 +147,27 @@ impl TemporalConfig {
     /// Valide la configuration
     pub fn validate(&self) -> Result<(), ConfigError> {
         if self.tick_interval_ms < 1000 {
-            return Err(ConfigError::InvalidValue("tick_interval_ms must be >= 1000".to_string()));
+            return Err(ConfigError::InvalidValue(
+                "tick_interval_ms must be >= 1000".to_string(),
+            ));
         }
 
         if self.max_tick_duration_ms >= self.tick_interval_ms {
             return Err(ConfigError::InvalidValue(
-                "max_tick_duration_ms must be < tick_interval_ms".to_string()
+                "max_tick_duration_ms must be < tick_interval_ms".to_string(),
             ));
         }
 
-        if self.prediction_confidence_threshold < 0.0 || self.prediction_confidence_threshold > 1.0 {
+        if self.prediction_confidence_threshold < 0.0 || self.prediction_confidence_threshold > 1.0
+        {
             return Err(ConfigError::InvalidValue(
-                "prediction_confidence_threshold must be between 0 and 1".to_string()
+                "prediction_confidence_threshold must be between 0 and 1".to_string(),
             ));
         }
 
         if self.alignment_warning_threshold < 0.0 || self.alignment_warning_threshold > 1.0 {
             return Err(ConfigError::InvalidValue(
-                "alignment_warning_threshold must be between 0 and 1".to_string()
+                "alignment_warning_threshold must be between 0 and 1".to_string(),
             ));
         }
 
@@ -173,11 +176,11 @@ impl TemporalConfig {
 
     /// Charge depuis un fichier JSON
     pub fn load_from_file(path: &str) -> Result<Self, ConfigError> {
-        let content = std::fs::read_to_string(path)
-            .map_err(|e| ConfigError::IoError(e.to_string()))?;
+        let content =
+            std::fs::read_to_string(path).map_err(|e| ConfigError::IoError(e.to_string()))?;
 
-        let config: Self = serde_json::from_str(&content)
-            .map_err(|e| ConfigError::ParseError(e.to_string()))?;
+        let config: Self =
+            serde_json::from_str(&content).map_err(|e| ConfigError::ParseError(e.to_string()))?;
 
         config.validate()?;
         Ok(config)
@@ -188,8 +191,7 @@ impl TemporalConfig {
         let content = serde_json::to_string_pretty(self)
             .map_err(|e| ConfigError::ParseError(e.to_string()))?;
 
-        std::fs::write(path, content)
-            .map_err(|e| ConfigError::IoError(e.to_string()))?;
+        std::fs::write(path, content).map_err(|e| ConfigError::IoError(e.to_string()))?;
 
         Ok(())
     }

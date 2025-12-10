@@ -52,8 +52,15 @@ export const MonitoringDashboard: React.FC = () => {
       const metrics = ServiceMetrics.export();
 
       // Construire CSV
-      const headers = ['Command', 'Service', 'Success', 'Duration', 'Retries', 'Timestamp'];
-      const rows = metrics.map((m) => [
+      const headers = [
+        'Command',
+        'Service',
+        'Success',
+        'Duration',
+        'Retries',
+        'Timestamp',
+      ];
+      const rows = metrics.map(m => [
         m.command,
         m.service,
         m.success ? 'true' : 'false',
@@ -64,7 +71,7 @@ export const MonitoringDashboard: React.FC = () => {
 
       const csv = [
         headers.join(','),
-        ...rows.map((row) => row.map((cell) => `"${cell}"`).join(',')),
+        ...rows.map(row => row.map(cell => `"${cell}"`).join(',')),
       ].join('\n');
 
       const blob = new Blob([csv], { type: 'text/csv' });

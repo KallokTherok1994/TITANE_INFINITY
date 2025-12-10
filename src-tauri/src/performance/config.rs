@@ -56,17 +56,17 @@ impl Default for PerformanceConfig {
             background_queue_max: 1000,
 
             // Thread Pools (valeurs conservatrices)
-            pool_engines_size: 8,      // OMEGA moteurs
-            pool_agents_size: 4,        // Agent System
-            pool_memory_size: 4,        // Vector search, clustering
-            pool_multimodal_size: 4,    // Vision, Audio3D
-            pool_api_size: 4,           // External API calls
-            pool_agi_core_size: 2,      // Meta-learning
-            pool_background_size: 2,    // Recovery, cleanup
+            pool_engines_size: 8,    // OMEGA moteurs
+            pool_agents_size: 4,     // Agent System
+            pool_memory_size: 4,     // Vector search, clustering
+            pool_multimodal_size: 4, // Vision, Audio3D
+            pool_api_size: 4,        // External API calls
+            pool_agi_core_size: 2,   // Meta-learning
+            pool_background_size: 2, // Recovery, cleanup
 
             // Parallelism (désactivé par défaut, activation progressive)
             enable_parallel_omega: false,
-            enable_parallel_memory: true,  // Async vector search activé
+            enable_parallel_memory: true, // Async vector search activé
             enable_multimodal_parallel: true,
 
             // Load Balancing
@@ -76,8 +76,8 @@ impl Default for PerformanceConfig {
             memory_threshold_percent: 85.0,
 
             // Timeouts
-            task_timeout_ms: 30_000,      // 30s
-            engine_timeout_ms: 10_000,    // 10s
+            task_timeout_ms: 30_000,         // 30s
+            engine_timeout_ms: 10_000,       // 10s
             vector_search_timeout_ms: 5_000, // 5s
 
             // Energy Integration

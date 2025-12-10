@@ -254,9 +254,7 @@ impl AnalyzerEngine {
         // Calculate scores
         let risk_score = self.calculate_risk_score(&warnings);
         let stability_score = self.calculate_stability_score(debugger_stats, &warnings);
-        let coherence_score = system_metrics
-            .map(|m| m.coherence_score)
-            .unwrap_or(0.8);
+        let coherence_score = system_metrics.map(|m| m.coherence_score).unwrap_or(0.8);
         let performance_score = self.calculate_performance_score(debugger_stats, system_metrics);
 
         // Generate metrics
@@ -296,10 +294,7 @@ impl AnalyzerEngine {
                 warnings.push(AnalyzerWarning {
                     category: WarningCategory::ErrorRate,
                     severity: Severity::High,
-                    message: format!(
-                        "High error rate detected: {:.1}%",
-                        error_rate * 100.0
-                    ),
+                    message: format!("High error rate detected: {:.1}%", error_rate * 100.0),
                     component: "Pipeline".to_string(),
                     impact: "User experience degradation, potential data loss".to_string(),
                     action: Some("Review error logs and fix root causes".to_string()),
@@ -382,8 +377,9 @@ impl AnalyzerEngine {
 
         // Check for unindexed LTM
         if stats.indexed_count < stats.ltm.total_entries && stats.ltm.total_entries > 0 {
-            let unindexed_pct =
-                ((stats.ltm.total_entries - stats.indexed_count) as f32 / stats.ltm.total_entries as f32) * 100.0;
+            let unindexed_pct = ((stats.ltm.total_entries - stats.indexed_count) as f32
+                / stats.ltm.total_entries as f32)
+                * 100.0;
 
             if unindexed_pct > 20.0 {
                 warnings.push(AnalyzerWarning {
@@ -422,10 +418,7 @@ impl AnalyzerEngine {
             warnings.push(AnalyzerWarning {
                 category: WarningCategory::Coherence,
                 severity: Severity::Medium,
-                message: format!(
-                    "Low coherence score: {:.2}",
-                    metrics.coherence_score
-                ),
+                message: format!("Low coherence score: {:.2}", metrics.coherence_score),
                 component: "SingularityState".to_string(),
                 impact: "Response quality may be inconsistent".to_string(),
                 action: Some("Review conversation context and state synchronization".to_string()),
@@ -437,7 +430,10 @@ impl AnalyzerEngine {
             suggestions.push(AnalyzerSuggestion {
                 category: SuggestionCategory::Performance,
                 priority: 8,
-                message: format!("Time to first token is {}ms (target: <200ms)", metrics.ttft_ms),
+                message: format!(
+                    "Time to first token is {}ms (target: <200ms)",
+                    metrics.ttft_ms
+                ),
                 expected_improvement: "Faster perceived response time".to_string(),
                 effort: Effort::Medium,
             });
@@ -553,9 +549,7 @@ impl AnalyzerEngine {
             memory_utilization,
             cognitive_density: 0.0, // Would need conversation history
             repetition_score: 0.0,  // Would need conversation analysis
-            tonal_consistency: system_metrics
-                .map(|m| m.coherence_score)
-                .unwrap_or(1.0),
+            tonal_consistency: system_metrics.map(|m| m.coherence_score).unwrap_or(1.0),
             chronological_consistency: 1.0, // Would need timeline analysis
             engine_metrics,
         }
@@ -653,7 +647,10 @@ mod tests {
         let report = analyzer.analyze(&debugger_stats, &memory_stats, None).await;
 
         // Should have error rate warning
-        assert!(report.warnings.iter().any(|w| w.category == WarningCategory::ErrorRate));
+        assert!(report
+            .warnings
+            .iter()
+            .any(|w| w.category == WarningCategory::ErrorRate));
         assert!(report.risk_score > 0.0);
     }
 
@@ -667,8 +664,8 @@ mod tests {
         let report = analyzer.analyze(&debugger_stats, &memory_stats, None).await;
 
         // Should have critical latency warning
-        assert!(report.warnings.iter().any(|w|
-            w.category == WarningCategory::Performance && w.severity == Severity::Critical
+        assert!(report.warnings.iter().any(
+            |w| w.category == WarningCategory::Performance && w.severity == Severity::Critical
         ));
     }
 

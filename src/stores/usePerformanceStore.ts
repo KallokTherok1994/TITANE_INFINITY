@@ -113,20 +113,21 @@ export const usePerformanceStore = create<PerformanceEngineStore>()(
 
         // ========== Initialization ==========
         initialize: async () => {
-          set((state) => {
+          set(state => {
             state.isLoading = true;
             state.error = null;
           });
 
           try {
-            set((state) => {
+            set(state => {
               state.isInitialized = true;
               state.isLoading = false;
             });
           } catch (error) {
-            set((state) => {
+            set(state => {
               state.isLoading = false;
-              state.error = error instanceof Error ? error.message : 'Erreur d\'initialisation';
+              state.error =
+                error instanceof Error ? error.message : "Erreur d'initialisation";
             });
           }
         },
@@ -147,7 +148,7 @@ export const usePerformanceStore = create<PerformanceEngineStore>()(
             tags: {},
           };
 
-          set((state) => {
+          set(state => {
             state.metrics.push(metric);
             state.stats.totalMetrics = state.metrics.length;
             // Garder uniquement les 1000 dernières métriques
@@ -158,15 +159,15 @@ export const usePerformanceStore = create<PerformanceEngineStore>()(
         },
 
         getMetrics: (type, since) => {
-          const metrics = get().metrics.filter((m) => m.type === type);
+          const metrics = get().metrics.filter(m => m.type === type);
           if (since) {
-            return metrics.filter((m) => m.timestamp >= since);
+            return metrics.filter(m => m.timestamp >= since);
           }
           return metrics;
         },
 
         clearMetrics: () => {
-          set((state) => {
+          set(state => {
             state.metrics = [];
             state.stats.totalMetrics = 0;
           });
@@ -174,19 +175,19 @@ export const usePerformanceStore = create<PerformanceEngineStore>()(
 
         // ========== Monitoring ==========
         startMonitoring: () => {
-          set((state) => {
+          set(state => {
             state.isMonitoring = true;
           });
         },
 
         stopMonitoring: () => {
-          set((state) => {
+          set(state => {
             state.isMonitoring = false;
           });
         },
 
         // ========== Profiling ==========
-        startProfiling: (name) => {
+        startProfiling: name => {
           const sessionId = `profile_${Date.now()}`;
 
           const session: ProfileSession = {
@@ -196,7 +197,7 @@ export const usePerformanceStore = create<PerformanceEngineStore>()(
             spans: [],
           };
 
-          set((state) => {
+          set(state => {
             state.profileSessions.push(session);
             state.isProfiling = true;
           });
@@ -204,24 +205,24 @@ export const usePerformanceStore = create<PerformanceEngineStore>()(
           return sessionId;
         },
 
-        stopProfiling: (sessionId) => {
-          const session = get().profileSessions.find((s) => s.id === sessionId);
+        stopProfiling: sessionId => {
+          const session = get().profileSessions.find(s => s.id === sessionId);
           if (!session) return null;
 
-          set((state) => {
-            const idx = state.profileSessions.findIndex((s) => s.id === sessionId);
+          set(state => {
+            const idx = state.profileSessions.findIndex(s => s.id === sessionId);
             if (idx !== -1) {
               state.profileSessions[idx].endedAt = Date.now();
             }
-            state.isProfiling = state.profileSessions.some((s) => !s.endedAt);
+            state.isProfiling = state.profileSessions.some(s => !s.endedAt);
           });
 
-          return get().profileSessions.find((s) => s.id === sessionId) || null;
+          return get().profileSessions.find(s => s.id === sessionId) || null;
         },
 
         // ========== Suggestions ==========
         generateSuggestions: async () => {
-          set((state) => {
+          set(state => {
             state.isLoading = true;
           });
 
@@ -230,9 +231,10 @@ export const usePerformanceStore = create<PerformanceEngineStore>()(
             const metrics = get().metrics;
 
             // Analyse simple des métriques pour suggestions
-            const timerMetrics = metrics.filter((m) => m.type === 'timer');
+            const timerMetrics = metrics.filter(m => m.type === 'timer');
             if (timerMetrics.length > 0) {
-              const avgTimer = timerMetrics.reduce((sum, m) => sum + m.value, 0) / timerMetrics.length;
+              const avgTimer =
+                timerMetrics.reduce((sum, m) => sum + m.value, 0) / timerMetrics.length;
               if (avgTimer > 100) {
                 suggestions.push({
                   id: `suggestion_${Date.now()}`,
@@ -248,25 +250,26 @@ export const usePerformanceStore = create<PerformanceEngineStore>()(
               }
             }
 
-            set((state) => {
+            set(state => {
               state.suggestions = suggestions;
               state.isLoading = false;
             });
           } catch (error) {
-            set((state) => {
+            set(state => {
               state.isLoading = false;
-              state.error = error instanceof Error ? error.message : 'Erreur de génération';
+              state.error =
+                error instanceof Error ? error.message : 'Erreur de génération';
             });
           }
         },
 
-        applySuggestion: async (suggestionId) => {
-          const suggestion = get().suggestions.find((s) => s.id === suggestionId);
+        applySuggestion: async suggestionId => {
+          const suggestion = get().suggestions.find(s => s.id === suggestionId);
           if (!suggestion || !suggestion.actionable) return false;
 
           try {
-            set((state) => {
-              state.suggestions = state.suggestions.filter((s) => s.id !== suggestionId);
+            set(state => {
+              state.suggestions = state.suggestions.filter(s => s.id !== suggestionId);
               state.stats.optimizationsApplied += 1;
             });
             return true;
@@ -276,21 +279,21 @@ export const usePerformanceStore = create<PerformanceEngineStore>()(
         },
 
         // ========== Budgets ==========
-        addBudget: (budget) => {
-          set((state) => {
+        addBudget: budget => {
+          set(state => {
             state.budgets.push(budget);
           });
         },
 
-        removeBudget: (budgetId) => {
-          set((state) => {
-            state.budgets = state.budgets.filter((b) => b.id !== budgetId);
+        removeBudget: budgetId => {
+          set(state => {
+            state.budgets = state.budgets.filter(b => b.id !== budgetId);
           });
         },
 
         // ========== Error Handling ==========
-        setError: (error) => {
-          set((state) => {
+        setError: error => {
+          set(state => {
             state.error = error;
           });
         },

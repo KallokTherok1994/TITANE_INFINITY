@@ -10,12 +10,12 @@
 
 Ces 4 SUPER PROMPTs représentent la **couche supérieure d'optimisation** du TITANE∞ OS:
 
-| SUPER PROMPT | Objectif | Priorité | Dépendances |
-|--------------|----------|----------|-------------|
-| **#21 Performance & Parallelism** | Multi-threading, scheduler avancé, pools spécialisés | **P0** | Kernel, OMEGA, Memory |
-| **#22 Harmonic Cognitive OS** | Synchronisation globale, cohérence suprême | **P0** | #21, Tous moteurs |
-| **#23 Distributed OS** | Cluster multi-machines, RPC cognitif | **P1** | #21, #22 |
-| **#24 Cognitive Gravity** | Champ gravitationnel, attracteurs, stabilité | **P0** | #22 |
+| SUPER PROMPT                      | Objectif                                             | Priorité | Dépendances           |
+| --------------------------------- | ---------------------------------------------------- | -------- | --------------------- |
+| **#21 Performance & Parallelism** | Multi-threading, scheduler avancé, pools spécialisés | **P0**   | Kernel, OMEGA, Memory |
+| **#22 Harmonic Cognitive OS**     | Synchronisation globale, cohérence suprême           | **P0**   | #21, Tous moteurs     |
+| **#23 Distributed OS**            | Cluster multi-machines, RPC cognitif                 | **P1**   | #21, #22              |
+| **#24 Cognitive Gravity**         | Champ gravitationnel, attracteurs, stabilité         | **P0**   | #22                   |
 
 ---
 
@@ -132,7 +132,7 @@ impl ParallelOmegaEngine {
             self.run_reflection(request),
             self.run_memory_search(request)
         );
-        
+
         // Fusion résultats
         self.fusion.merge(reflection?, memory?)
     }
@@ -301,16 +301,16 @@ impl HarmonicLoop {
     pub async fn cycle(&self) -> TitaneResult<HarmonicUpdate> {
         // 1. Collecte signaux
         let signals = self.collect_signals().await?;
-        
+
         // 2. Fusion
         let unified = self.field.write().await.unify(signals)?;
-        
+
         // 3. Détection dissonance
         let dissonances = self.detector.detect(&unified).await?;
-        
+
         // 4. Régulation
         let corrections = self.regulator.regulate(dissonances).await?;
-        
+
         // 5. Propagation
         self.propagate_corrections(corrections).await
     }
@@ -330,10 +330,10 @@ impl KernelRuntime {
     ) -> TitaneResult<()> {
         // Tick Kernel normal
         self.tick().await?;
-        
+
         // Cycle harmonique
         let update = harmonic_os.cycle().await?;
-        
+
         // Applique corrections
         if update.recalibrate_memory {
             self.memory_os.recalibrate().await?;
@@ -341,7 +341,7 @@ impl KernelRuntime {
         if update.adjust_omega_depth {
             self.omega.set_depth(update.new_depth).await?;
         }
-        
+
         Ok(())
     }
 }
@@ -506,12 +506,12 @@ impl GravityPropagation {
         let field = self.field.read().await;
         kernel.adjust_scheduling_weight(field.coherence_force).await;
     }
-    
+
     pub async fn propagate_to_omega(&self, omega: &OmegaPipeline) {
         let field = self.field.read().await;
         omega.set_gravity_influence(field.alignment_force).await;
     }
-    
+
     pub async fn propagate_to_memory(&self, memory: &UnifiedMemory) {
         let field = self.field.read().await;
         memory.adjust_retrieval_weights(field.cognitive_mass).await;
@@ -532,10 +532,10 @@ impl HarmonicLoop {
     ) -> TitaneResult<HarmonicUpdate> {
         // Cycle harmonique normal
         let mut update = self.cycle().await?;
-        
+
         // Influence gravitationnelle
         let gravity = gravity_engine.field().read().await;
-        
+
         // Ajuste selon attracteurs
         if gravity.stability < 0.7 {
             update.increase_coherence_force = true;
@@ -543,7 +543,7 @@ impl HarmonicLoop {
         if gravity.entropy > 0.6 {
             update.activate_simplicity_attractor = true;
         }
-        
+
         Ok(update)
     }
 }
@@ -559,7 +559,7 @@ impl OmegaPipeline {
         if gravity.cognitive_mass > 0.8 {
             self.config.max_depth = 5;
         }
-        
+
         // Attracteur Simplicity = favoriser Style Engine
         if gravity.active_attractors.contains(&Attractor::Simplicity) {
             self.boost_engine("style_engine", 1.3);
@@ -771,6 +771,7 @@ src/apps/DevTools/
 ## 🚀 Prochain pas immédiat
 
 1. **Créer structure Performance Engine** (30 min)
+
    ```bash
    mkdir -p src-tauri/src/performance
    touch src-tauri/src/performance/{mod,scheduler,executor,thread_pool,task_queue,priorities,config,diagnostics}.rs

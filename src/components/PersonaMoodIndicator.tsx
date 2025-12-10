@@ -82,7 +82,7 @@ export const PersonaMoodIndicator: React.FC = () => {
         border: `1px solid ${config.color}40`,
         boxShadow: config.glow,
         transition: 'all 0.3s ease',
-        opacity: 0.7 + (intensity * 0.3),
+        opacity: 0.7 + intensity * 0.3,
       }}
       title={`Mood: ${config.label} (${Math.round(intensity * 100)}%)`}
     >

@@ -139,10 +139,13 @@ export class CognitiveOptimizationEngine {
       }
 
       // Analyser via backend IA
-      const result = await secureInvoke<IntentionAnalysis>('cognitive_analyze_intention', {
-        message,
-        context: this.context,
-      });
+      const result = await secureInvoke<IntentionAnalysis>(
+        'cognitive_analyze_intention',
+        {
+          message,
+          context: this.context,
+        }
+      );
 
       // Mettre en cache
       this.updateCache(cacheKey, result);
@@ -165,7 +168,10 @@ export class CognitiveOptimizationEngine {
   // 2. VÉRIFICATION DE COHÉRENCE
   // ═══════════════════════════════════════════════════════════════════
 
-  async checkCoherence(response: string, context: CognitiveMessage[]): Promise<CoherenceCheck> {
+  async checkCoherence(
+    response: string,
+    context: CognitiveMessage[]
+  ): Promise<CoherenceCheck> {
     try {
       const result = await secureInvoke<CoherenceCheck>('cognitive_check_coherence', {
         response,
@@ -175,7 +181,11 @@ export class CognitiveOptimizationEngine {
 
       // Si incohérent, tenter correction automatique
       if (!result.is_coherent && result.coherence_score < this.COHERENCE_THRESHOLD) {
-        const corrected = await this.autoCorrectResponse(response, context, result.issues);
+        const corrected = await this.autoCorrectResponse(
+          response,
+          context,
+          result.issues
+        );
         result.corrected_response = corrected;
       }
 
@@ -201,11 +211,14 @@ export class CognitiveOptimizationEngine {
       const _originalTokens = messages.reduce((sum, msg) => sum + msg.tokens, 0);
 
       // Appliquer compression contextuelle
-      const result = await secureInvoke<ContextOptimization>('cognitive_optimize_context', {
-        messages,
-        maxTokens: 8000, // Limite pour IA (GPT-4 Turbo = 128k, on garde marge)
-        compressionStrategy: 'semantic_grouping',
-      });
+      const result = await secureInvoke<ContextOptimization>(
+        'cognitive_optimize_context',
+        {
+          messages,
+          maxTokens: 8000, // Limite pour IA (GPT-4 Turbo = 128k, on garde marge)
+          compressionStrategy: 'semantic_grouping',
+        }
+      );
 
       // Mettre à jour contexte interne
       this.context.compression_ratio = result.compression_ratio;
@@ -229,7 +242,10 @@ export class CognitiveOptimizationEngine {
   // 4. MEMORY GATING (rappel intelligent)
   // ═══════════════════════════════════════════════════════════════════
 
-  async memoryGating(query: string, threshold: number = 0.7): Promise<MemoryGatingResult> {
+  async memoryGating(
+    query: string,
+    threshold: number = 0.7
+  ): Promise<MemoryGatingResult> {
     try {
       // Récupérer mémoires pertinentes via vectorisation
       const result = await secureInvoke<MemoryGatingResult>('cognitive_memory_gating', {
@@ -257,13 +273,18 @@ export class CognitiveOptimizationEngine {
   // 5. CLUSTERING SÉMANTIQUE
   // ═══════════════════════════════════════════════════════════════════
 
-  async clusterSemanticMessages(messages: CognitiveMessage[]): Promise<SemanticCluster[]> {
+  async clusterSemanticMessages(
+    messages: CognitiveMessage[]
+  ): Promise<SemanticCluster[]> {
     try {
-      const clusters = await secureInvoke<SemanticCluster[]>('cognitive_cluster_messages', {
-        messages,
-        algorithm: 'kmeans',
-        numClusters: Math.min(5, Math.ceil(messages.length / 10)),
-      });
+      const clusters = await secureInvoke<SemanticCluster[]>(
+        'cognitive_cluster_messages',
+        {
+          messages,
+          algorithm: 'kmeans',
+          numClusters: Math.min(5, Math.ceil(messages.length / 10)),
+        }
+      );
 
       // Mettre à jour contexte
       this.context.semantic_clusters = clusters;
@@ -331,11 +352,14 @@ export class CognitiveOptimizationEngine {
   ): Promise<CognitiveMessage[]> {
     try {
       // Injecter uniquement messages pertinents via scoring
-      const injected = await secureInvoke<CognitiveMessage[]>('cognitive_inject_selective', {
-        baseContext,
-        additionalContext,
-        relevanceThreshold: 0.6,
-      });
+      const injected = await secureInvoke<CognitiveMessage[]>(
+        'cognitive_inject_selective',
+        {
+          baseContext,
+          additionalContext,
+          relevanceThreshold: 0.6,
+        }
+      );
 
       return injected;
     } catch (error) {
@@ -366,12 +390,18 @@ export class CognitiveOptimizationEngine {
   // 10. MINI REASONING (auto-vérification)
   // ═══════════════════════════════════════════════════════════════════
 
-  async miniReasoning(query: string, response: string): Promise<{ valid: boolean; reasoning: string }> {
+  async miniReasoning(
+    query: string,
+    response: string
+  ): Promise<{ valid: boolean; reasoning: string }> {
     try {
-      const result = await secureInvoke<{ valid: boolean; reasoning: string }>('cognitive_mini_reasoning', {
-        query,
-        response,
-      });
+      const result = await secureInvoke<{ valid: boolean; reasoning: string }>(
+        'cognitive_mini_reasoning',
+        {
+          query,
+          response,
+        }
+      );
 
       return result;
     } catch (error) {
@@ -386,9 +416,12 @@ export class CognitiveOptimizationEngine {
 
   async maintainNarrativeContinuity(messages: CognitiveMessage[]): Promise<number> {
     try {
-      const continuityScore = await secureInvoke<number>('cognitive_narrative_continuity', {
-        messages,
-      });
+      const continuityScore = await secureInvoke<number>(
+        'cognitive_narrative_continuity',
+        {
+          messages,
+        }
+      );
 
       this.context.narrative_continuity = continuityScore;
       return continuityScore;

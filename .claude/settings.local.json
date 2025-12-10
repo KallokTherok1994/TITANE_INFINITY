@@ -49,7 +49,15 @@
       "Bash(mkdir:*)",
       "Bash(tree:*)",
       "Bash(while read file)",
-      "Bash(wait)"
+      "Bash(wait)",
+      "Bash(npm exec:*)",
+      "Bash(npm run fix-pipeline:*)",
+      "Bash(git push:*)",
+      "Bash(sort:*)",
+      "Bash(npm run format:*)",
+      "Bash(cargo fmt:*)",
+      "Bash(git checkout:*)",
+      "Bash(1)"
     ],
     "deny": [],
     "ask": []

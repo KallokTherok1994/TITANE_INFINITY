@@ -59,14 +59,16 @@ const HyperVisionDashboard: React.FC = () => {
       setHistory(prev => [...prev.slice(-29), data]);
 
       // Mock layer data
-      setLayers(LAYER_NAMES.map((name, idx) => ({
-        layer_id: idx,
-        name,
-        health: 85 + Math.random() * 15,
-        load: 30 + Math.random() * 40,
-        errors: Math.floor(Math.random() * 3),
-        warnings: Math.floor(Math.random() * 8)
-      })));
+      setLayers(
+        LAYER_NAMES.map((name, idx) => ({
+          layer_id: idx,
+          name,
+          health: 85 + Math.random() * 15,
+          load: 30 + Math.random() * 40,
+          errors: Math.floor(Math.random() * 3),
+          warnings: Math.floor(Math.random() * 8),
+        }))
+      );
     } catch (err) {
       console.error('Failed to fetch metrics:', err);
     }
@@ -95,7 +97,9 @@ const HyperVisionDashboard: React.FC = () => {
           <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#c4c4c4] to-[#93b399]">
             HyperVision
           </h1>
-          <p className="text-[#9ca3af] mt-2">Phase 7 : Surveillance système en temps réel</p>
+          <p className="text-[#9ca3af] mt-2">
+            Phase 7 : Surveillance système en temps réel
+          </p>
         </div>
 
         {!isMonitoring && (
@@ -118,8 +122,12 @@ const HyperVisionDashboard: React.FC = () => {
       {!isMonitoring ? (
         <div className="bg-[rgba(255,255,255,0.03)] backdrop-blur-xl rounded-2xl p-12 border border-[rgba(147,179,153,0.2)] text-center">
           <div className="text-6xl mb-4">📊</div>
-          <h2 className="text-2xl font-semibold text-[#e8e8e8] mb-2">Démarrer la surveillance système</h2>
-          <p className="text-[#9ca3af]">Cliquez sur le bouton ci-dessus pour commencer l'observation en temps réel</p>
+          <h2 className="text-2xl font-semibold text-[#e8e8e8] mb-2">
+            Démarrer la surveillance système
+          </h2>
+          <p className="text-[#9ca3af]">
+            Cliquez sur le bouton ci-dessus pour commencer l'observation en temps réel
+          </p>
         </div>
       ) : (
         <>
@@ -128,28 +136,36 @@ const HyperVisionDashboard: React.FC = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
               <div className="bg-gradient-to-br from-[rgba(114,123,129,0.1)] to-[rgba(147,179,153,0.1)] backdrop-blur-xl rounded-2xl p-6 border border-[rgba(114,123,129,0.2)]">
                 <div className="text-[#9ca3af] text-sm mb-2">Utilisation CPU</div>
-                <div className={`text-3xl font-bold ${getHealthColor(100 - metrics.cpu_usage)}`}>
+                <div
+                  className={`text-3xl font-bold ${getHealthColor(100 - metrics.cpu_usage)}`}
+                >
                   {metrics.cpu_usage.toFixed(1)}%
                 </div>
               </div>
 
               <div className="bg-gradient-to-br from-[rgba(147,179,153,0.1)] to-[rgba(114,123,129,0.1)] backdrop-blur-xl rounded-2xl p-6 border border-[rgba(147,179,153,0.2)]">
                 <div className="text-[#9ca3af] text-sm mb-2">Utilisation mémoire</div>
-                <div className={`text-3xl font-bold ${getHealthColor(100 - metrics.memory_usage)}`}>
+                <div
+                  className={`text-3xl font-bold ${getHealthColor(100 - metrics.memory_usage)}`}
+                >
                   {metrics.memory_usage.toFixed(1)}%
                 </div>
               </div>
 
               <div className="bg-gradient-to-br from-[rgba(147,179,153,0.15)] to-[rgba(147,179,153,0.05)] backdrop-blur-xl rounded-2xl p-6 border border-[rgba(147,179,153,0.25)]">
                 <div className="text-[#9ca3af] text-sm mb-2">Cohérence</div>
-                <div className={`text-3xl font-bold ${getHealthColor(metrics.coherence)}`}>
+                <div
+                  className={`text-3xl font-bold ${getHealthColor(metrics.coherence)}`}
+                >
                   {metrics.coherence.toFixed(1)}%
                 </div>
               </div>
 
               <div className="bg-gradient-to-br from-[rgba(168,159,145,0.1)] to-[rgba(143,122,122,0.1)] backdrop-blur-xl rounded-2xl p-6 border border-[rgba(168,159,145,0.2)]">
                 <div className="text-[#9ca3af] text-sm mb-2">Stabilité</div>
-                <div className={`text-3xl font-bold ${getHealthColor(metrics.stability)}`}>
+                <div
+                  className={`text-3xl font-bold ${getHealthColor(metrics.stability)}`}
+                >
                   {metrics.stability.toFixed(1)}%
                 </div>
               </div>
@@ -158,10 +174,12 @@ const HyperVisionDashboard: React.FC = () => {
 
           {/* 5-Layer Scanner */}
           <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30 mb-6">
-            <h2 className="text-xl font-semibold text-white mb-4">Scanner système 5 couches</h2>
+            <h2 className="text-xl font-semibold text-white mb-4">
+              Scanner système 5 couches
+            </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-              {layers.map((layer) => (
+              {layers.map(layer => (
                 <div
                   key={layer.layer_id}
                   className="bg-gray-700/30 rounded-xl p-4 border border-gray-600/50 hover:border-blue-500/50 transition-all"
@@ -196,18 +214,22 @@ const HyperVisionDashboard: React.FC = () => {
 
           {/* Metrics History Graph */}
           <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
-            <h2 className="text-xl font-semibold text-white mb-4">Historique des métriques</h2>
+            <h2 className="text-xl font-semibold text-white mb-4">
+              Historique des métriques
+            </h2>
 
             <div className="relative h-64 bg-gray-900/50 rounded-xl p-4">
               {history.length > 1 ? (
                 <svg className="w-full h-full">
                   {/* CPU Line */}
                   <polyline
-                    points={history.map((m, i) => {
-                      const x = (i / (history.length - 1)) * 100;
-                      const y = 100 - m.cpu_usage;
-                      return `${x}%,${y}%`;
-                    }).join(' ')}
+                    points={history
+                      .map((m, i) => {
+                        const x = (i / (history.length - 1)) * 100;
+                        const y = 100 - m.cpu_usage;
+                        return `${x}%,${y}%`;
+                      })
+                      .join(' ')}
                     fill="none"
                     stroke="var(--info, #8899aa)"
                     strokeWidth="2"
@@ -215,11 +237,13 @@ const HyperVisionDashboard: React.FC = () => {
 
                   {/* Memory Line */}
                   <polyline
-                    points={history.map((m, i) => {
-                      const x = (i / (history.length - 1)) * 100;
-                      const y = 100 - m.memory_usage;
-                      return `${x}%,${y}%`;
-                    }).join(' ')}
+                    points={history
+                      .map((m, i) => {
+                        const x = (i / (history.length - 1)) * 100;
+                        const y = 100 - m.memory_usage;
+                        return `${x}%,${y}%`;
+                      })
+                      .join(' ')}
                     fill="none"
                     stroke="var(--accent, #93b399)"
                     strokeWidth="2"
@@ -249,19 +273,24 @@ const HyperVisionDashboard: React.FC = () => {
             <div className="grid grid-cols-3 gap-4 mt-6">
               <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
                 <div className="text-gray-400 text-sm mb-2">Utilisation disque</div>
-                <div className="text-2xl font-bold text-white">{metrics.disk_usage.toFixed(1)}%</div>
+                <div className="text-2xl font-bold text-white">
+                  {metrics.disk_usage.toFixed(1)}%
+                </div>
               </div>
 
               <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
                 <div className="text-gray-400 text-sm mb-2">Réseau RX/TX</div>
                 <div className="text-lg font-bold text-white">
-                  ↓{(metrics.network_rx / 1024).toFixed(1)} / ↑{(metrics.network_tx / 1024).toFixed(1)} KB/s
+                  ↓{(metrics.network_rx / 1024).toFixed(1)} / ↑
+                  {(metrics.network_tx / 1024).toFixed(1)} KB/s
                 </div>
               </div>
 
               <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
                 <div className="text-gray-400 text-sm mb-2">Processus actifs</div>
-                <div className="text-2xl font-bold text-white">{metrics.active_processes}</div>
+                <div className="text-2xl font-bold text-white">
+                  {metrics.active_processes}
+                </div>
               </div>
             </div>
           )}

@@ -58,10 +58,7 @@ export const WakewordIndicator: React.FC<WakewordIndicatorProps> = ({
   const colors = getColors();
 
   return (
-    <div 
-      className="wakeword-indicator"
-      style={{ width: size, height: size }}
-    >
+    <div className="wakeword-indicator" style={{ width: size, height: size }}>
       {/* Cercle principal */}
       <motion.div
         className="wakeword-circle"
@@ -84,7 +81,7 @@ export const WakewordIndicator: React.FC<WakewordIndicatorProps> = ({
       {/* Ondes de détection */}
       {state === 'detecting' && (
         <>
-          {[0, 1, 2].map((i) => (
+          {[0, 1, 2].map(i => (
             <motion.div
               key={`wave-${i}`}
               className="wakeword-wave"
@@ -128,10 +125,7 @@ export const WakewordIndicator: React.FC<WakewordIndicatorProps> = ({
       )}
 
       {/* Icône micro */}
-      <div 
-        className="wakeword-icon"
-        style={{ color: colors.primary }}
-      >
+      <div className="wakeword-icon" style={{ color: colors.primary }}>
         <svg
           viewBox="0 0 24 24"
           fill="none"
@@ -144,7 +138,7 @@ export const WakewordIndicator: React.FC<WakewordIndicatorProps> = ({
           <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
           <line x1="12" y1="19" x2="12" y2="23" />
           <line x1="8" y1="23" x2="16" y2="23" />
-          
+
           {/* Ondes sonores */}
           {state !== 'waiting' && (
             <>
@@ -193,10 +187,7 @@ export const WakewordIndicator: React.FC<WakewordIndicatorProps> = ({
       </div>
 
       {/* Instructions */}
-      <div 
-        className="wakeword-instructions"
-        style={{ color: colors.text }}
-      >
+      <div className="wakeword-instructions" style={{ color: colors.text }}>
         {state === 'waiting' && '💬 Dites "TITANE" pour activer'}
         {state === 'detecting' && '🎤 Détection en cours...'}
         {state === 'activated' && '✅ Activé ! Parlez maintenant'}

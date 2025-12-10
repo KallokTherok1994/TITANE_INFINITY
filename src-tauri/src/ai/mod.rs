@@ -12,13 +12,13 @@ pub mod router; // Legacy AIRouter (Gemini/Ollama)
 pub mod security;
 
 // NEW: Multi-IA Orchestrator modules (SUPER PROMPT #8)
-pub mod providers;
-pub mod orchestrator_multi;
-pub mod router_intelligent; // NEW: Intelligent AI Router (Multi-provider)
-pub mod fusion;
-pub mod evaluator;
-pub mod config_multi;
 pub mod api;
+pub mod config_multi;
+pub mod evaluator;
+pub mod fusion;
+pub mod orchestrator_multi;
+pub mod providers;
+pub mod router_intelligent; // NEW: Intelligent AI Router (Multi-provider)
 
 use serde::{Deserialize, Serialize};
 
@@ -42,11 +42,11 @@ pub struct AiRequest {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum AiMode {
-    Fast,      // Vitesse maximale (Haiku, GPT-3.5, Local rapide)
-    Quality,   // Qualité optimale (Sonnet, GPT-4.1)
-    Deep,      // Réflexion profonde (Opus, GPT-4.1)
-    Creative,  // Créativité (température élevée)
-    Analysis,  // Analyse technique (température basse)
+    Fast,     // Vitesse maximale (Haiku, GPT-3.5, Local rapide)
+    Quality,  // Qualité optimale (Sonnet, GPT-4.1)
+    Deep,     // Réflexion profonde (Opus, GPT-4.1)
+    Creative, // Créativité (température élevée)
+    Analysis, // Analyse technique (température basse)
 }
 
 impl std::fmt::Display for AiMode {
@@ -124,12 +124,26 @@ pub enum AIError {
     InvalidResponse(String),
     NoProviderAvailable,
     // NEW: Multi-IA errors
-    ProviderUnavailable { provider: String, reason: String },
-    RateLimitExceeded { provider: String, retry_after: Option<u64> },
-    AuthenticationFailed { provider: String },
-    ConfigurationError { message: String },
-    AllProvidersFailed { attempts: Vec<String> },
-    InvalidRequest { message: String },
+    ProviderUnavailable {
+        provider: String,
+        reason: String,
+    },
+    RateLimitExceeded {
+        provider: String,
+        retry_after: Option<u64>,
+    },
+    AuthenticationFailed {
+        provider: String,
+    },
+    ConfigurationError {
+        message: String,
+    },
+    AllProvidersFailed {
+        attempts: Vec<String>,
+    },
+    InvalidRequest {
+        message: String,
+    },
 }
 
 impl std::fmt::Display for AIError {
@@ -143,8 +157,15 @@ impl std::fmt::Display for AIError {
             AIError::ProviderUnavailable { provider, reason } => {
                 write!(f, "Provider {} unavailable: {}", provider, reason)
             }
-            AIError::RateLimitExceeded { provider, retry_after } => {
-                write!(f, "Rate limit exceeded for {}: retry after {:?}s", provider, retry_after)
+            AIError::RateLimitExceeded {
+                provider,
+                retry_after,
+            } => {
+                write!(
+                    f,
+                    "Rate limit exceeded for {}: retry after {:?}s",
+                    provider, retry_after
+                )
             }
             AIError::AuthenticationFailed { provider } => {
                 write!(f, "Authentication failed for {}", provider)

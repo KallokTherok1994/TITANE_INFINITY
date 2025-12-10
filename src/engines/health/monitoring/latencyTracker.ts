@@ -29,7 +29,9 @@ export class LatencyTracker {
       this.samples.set(operation, []);
     }
 
-    const samples = this.samples.get(operation)!;
+    const samples = this.samples.get(operation);
+    if (!samples) return;
+
     samples.push(latencyMs);
 
     // Trim old samples

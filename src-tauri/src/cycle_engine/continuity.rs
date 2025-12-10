@@ -10,9 +10,9 @@ use std::collections::HashMap;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UsagePattern {
-    pub hour_of_day: HashMap<u8, u32>,    // Usage count by hour
-    pub day_of_week: HashMap<u8, u32>,    // Usage count by weekday
-    pub preferred_tasks: Vec<String>,     // Most common tasks
+    pub hour_of_day: HashMap<u8, u32>, // Usage count by hour
+    pub day_of_week: HashMap<u8, u32>, // Usage count by weekday
+    pub preferred_tasks: Vec<String>,  // Most common tasks
     pub user_preferences: HashMap<String, String>,
 }
 
@@ -31,17 +31,17 @@ impl ContinuityEngine {
             },
         }
     }
-    
+
     /// Record usage event
     pub fn record_event(&mut self, hour: u8, weekday: u8, task: String) {
         *self.patterns.hour_of_day.entry(hour).or_insert(0) += 1;
         *self.patterns.day_of_week.entry(weekday).or_insert(0) += 1;
-        
+
         if !self.patterns.preferred_tasks.contains(&task) {
             self.patterns.preferred_tasks.push(task);
         }
     }
-    
+
     /// Get most active hour
     pub fn most_active_hour(&self) -> Option<u8> {
         self.patterns
@@ -50,7 +50,7 @@ impl ContinuityEngine {
             .max_by_key(|(_, count)| *count)
             .map(|(hour, _)| *hour)
     }
-    
+
     /// Get most active day
     pub fn most_active_day(&self) -> Option<u8> {
         self.patterns
@@ -59,17 +59,17 @@ impl ContinuityEngine {
             .max_by_key(|(_, count)| *count)
             .map(|(day, _)| *day)
     }
-    
+
     /// Set user preference
     pub fn set_preference(&mut self, key: String, value: String) {
         self.patterns.user_preferences.insert(key, value);
     }
-    
+
     /// Get user preference
     pub fn get_preference(&self, key: &str) -> Option<&String> {
         self.patterns.user_preferences.get(key)
     }
-    
+
     /// Get patterns
     pub fn patterns(&self) -> &UsagePattern {
         &self.patterns

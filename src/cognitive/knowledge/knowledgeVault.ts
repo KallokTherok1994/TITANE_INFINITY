@@ -153,12 +153,12 @@ const createDefaultState = (): KnowledgeVaultState => ({
     'code-tauri': 0,
     'code-python': 0,
     'code-other': 0,
-    'document': 0,
-    'config': 0,
-    'data': 0,
-    'notes': 0,
-    'snippet': 0,
-    'unknown': 0,
+    document: 0,
+    config: 0,
+    data: 0,
+    notes: 0,
+    snippet: 0,
+    unknown: 0,
   },
   lastIngestion: null,
   indexVersion: '1.0.0',
@@ -190,7 +190,11 @@ class KnowledgeVaultEngine {
       const backendState = await secureInvoke<KnowledgeVaultState>('knowledge_get_state');
       if (backendState) {
         this.state = { ...createDefaultState(), ...backendState };
-        console.log('[KnowledgeVault] État chargé depuis backend:', this.state.totalDocuments, 'documents');
+        console.log(
+          '[KnowledgeVault] État chargé depuis backend:',
+          this.state.totalDocuments,
+          'documents'
+        );
       }
     } catch {
       // Fallback: charger depuis localStorage
@@ -223,7 +227,9 @@ class KnowledgeVaultEngine {
     metadata?: Partial<KnowledgeMetadata>
   ): Promise<KnowledgeEntry> {
     if (content.length > MAX_CONTENT_LENGTH) {
-      throw new Error(`Content too large: ${content.length} bytes (max: ${MAX_CONTENT_LENGTH})`);
+      throw new Error(
+        `Content too large: ${content.length} bytes (max: ${MAX_CONTENT_LENGTH})`
+      );
     }
 
     const _ext = this.getExtension(path);
@@ -395,7 +401,10 @@ class KnowledgeVaultEngine {
     if (idx !== -1) {
       const start = Math.max(0, idx - 50);
       const end = Math.min(entry.content.length, idx + 150);
-      snippet = (start > 0 ? '...' : '') + entry.content.slice(start, end) + (end < entry.content.length ? '...' : '');
+      snippet =
+        (start > 0 ? '...' : '') +
+        entry.content.slice(start, end) +
+        (end < entry.content.length ? '...' : '');
     } else {
       snippet = entry.summary || entry.content.slice(0, 150) + '...';
     }
@@ -418,7 +427,10 @@ class KnowledgeVaultEngine {
     // Par extension
     if (EXTENSION_CATEGORIES[ext]) {
       // Vérifier si c'est du code Tauri
-      if (ext === '.rs' && (content.includes('#[tauri::command]') || content.includes('tauri::'))) {
+      if (
+        ext === '.rs' &&
+        (content.includes('#[tauri::command]') || content.includes('tauri::'))
+      ) {
         return 'code-tauri';
       }
       return EXTENSION_CATEGORIES[ext];
@@ -426,8 +438,10 @@ class KnowledgeVaultEngine {
 
     // Par contenu
     if (content.includes('fn ') && content.includes('->')) return 'code-rust';
-    if (content.includes('interface ') || content.includes('type ')) return 'code-typescript';
-    if (content.includes('import React') || content.includes('useState')) return 'code-react';
+    if (content.includes('interface ') || content.includes('type '))
+      return 'code-typescript';
+    if (content.includes('import React') || content.includes('useState'))
+      return 'code-react';
 
     return 'unknown';
   }

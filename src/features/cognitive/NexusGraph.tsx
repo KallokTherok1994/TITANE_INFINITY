@@ -50,8 +50,13 @@ const nodeColors: Record<NexusNode['type'], string> = {
 // COMPONENT
 // ─────────────────────────────────────────────────────────────────
 
-export const NexusGraph = ({ nodes, edges, onNodeClick }: NexusGraphProps): JSX.Element => {
-  const { shouldReduceMotion: _shouldReduceMotion, shouldThrottle: _shouldThrottle } = useAnimation();
+export const NexusGraph = ({
+  nodes,
+  edges,
+  onNodeClick,
+}: NexusGraphProps): JSX.Element => {
+  const { shouldReduceMotion: _shouldReduceMotion, shouldThrottle: _shouldThrottle } =
+    useAnimation();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {

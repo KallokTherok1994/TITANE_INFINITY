@@ -5,7 +5,12 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { tauriClient, type ChatRequest, type StreamCallbacks, type TAPIError } from './tauriClient';
+import {
+  tauriClient,
+  type ChatRequest,
+  type StreamCallbacks,
+  type TAPIError,
+} from './tauriClient';
 
 export type ChatMessage = {
   role: 'user' | 'assistant' | 'system';
@@ -110,7 +115,7 @@ class AIChatClient {
         // Convertir callbacks legacy vers nouveau format
         const tauriCallbacks: StreamCallbacks = {
           onChunk: callbacks.onChunk,
-          onComplete: (data) => {
+          onComplete: data => {
             if (callbacks.onComplete) {
               callbacks.onComplete(data.content);
             }

@@ -17,12 +17,7 @@ import { VADIndicator } from './VADIndicator';
 // import './VoiceUI.css';
 
 export const VoiceUI: React.FC = () => {
-  const {
-    status,
-    startDictation,
-    stopDictation,
-    clearTranscript
-  } = useVoiceEngine();
+  const { status, startDictation, stopDictation, clearTranscript } = useVoiceEngine();
   const { sendMessage } = useChat({ voiceEnabled: true });
 
   const toggleVoiceMode = async () => {
@@ -58,11 +53,15 @@ export const VoiceUI: React.FC = () => {
       <VADIndicator active={isVadActive} />
 
       <div className="voice-status">
-        {status.isRecording && <span className="status-badge recording">🔴 Recording</span>}
+        {status.isRecording && (
+          <span className="status-badge recording">🔴 Recording</span>
+        )}
         {status.state === 'processing' && (
           <span className="status-badge transcribing">⏳ Transcribing...</span>
         )}
-        {status.state === 'speaking' && <span className="status-badge speaking">🔊 Speaking</span>}
+        {status.state === 'speaking' && (
+          <span className="status-badge speaking">🔊 Speaking</span>
+        )}
       </div>
 
       {status.transcript && (

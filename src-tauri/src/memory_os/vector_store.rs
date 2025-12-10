@@ -77,9 +77,10 @@ impl VectorStore {
 
     /// Insert vector for entry
     pub async fn insert(&self, entry: &MemoryEntry) -> Result<(), VectorStoreError> {
-        let embedding = entry.embedding.as_ref().ok_or_else(|| {
-            VectorStoreError::MissingEmbedding(entry.id.to_string())
-        })?;
+        let embedding = entry
+            .embedding
+            .as_ref()
+            .ok_or_else(|| VectorStoreError::MissingEmbedding(entry.id.to_string()))?;
 
         if embedding.len() != self.dim {
             return Err(VectorStoreError::DimensionMismatch {
@@ -317,7 +318,9 @@ mod tests {
     use crate::memory_os::memory_state::MemoryType;
 
     fn create_test_embedding(seed: f32) -> Vec<f32> {
-        (0..EMBEDDING_DIM).map(|i| (i as f32 + seed) / EMBEDDING_DIM as f32).collect()
+        (0..EMBEDDING_DIM)
+            .map(|i| (i as f32 + seed) / EMBEDDING_DIM as f32)
+            .collect()
     }
 
     #[tokio::test]
@@ -373,7 +376,9 @@ mod tests {
     async fn test_cosine_similarity() {
         let a = vec![1.0, 0.0, 0.0];
         let b = vec![1.0, 0.0, 0.0];
-        assert!((cosine_similarity(&normalize_vector(&a), &normalize_vector(&b)) - 1.0).abs() < 0.001);
+        assert!(
+            (cosine_similarity(&normalize_vector(&a), &normalize_vector(&b)) - 1.0).abs() < 0.001
+        );
 
         let c = vec![0.0, 1.0, 0.0];
         assert!((cosine_similarity(&normalize_vector(&a), &normalize_vector(&c))).abs() < 0.001);

@@ -35,9 +35,9 @@ export type ModalityOrigin = 'vision' | 'voice' | 'text' | 'fusion';
  * Score normalisé avec métadonnées
  */
 export interface NormalizedScore {
-  value: number;           // 0-1
-  confidence: number;      // 0-1
-  variance: number;        // Variabilité
+  value: number; // 0-1
+  confidence: number; // 0-1
+  variance: number; // Variabilité
   origin: ModalityOrigin;
   timestamp: number;
 }
@@ -61,22 +61,22 @@ export interface ModalityWeights {
  */
 export interface VoiceFeatures {
   // Intensité et énergie
-  intensity: number;           // 0-1 : volume/amplitude
-  energy: number;              // 0-1 : énergie globale
+  intensity: number; // 0-1 : volume/amplitude
+  energy: number; // 0-1 : énergie globale
 
   // Stabilité et variation
-  toneStability: number;       // 0-1 : stabilité du ton fondamental
-  pitchVariation: number;      // 0-1 : variation d'intonation
-  tremor: number;              // 0-1 : tremblements vocaux
+  toneStability: number; // 0-1 : stabilité du ton fondamental
+  pitchVariation: number; // 0-1 : variation d'intonation
+  tremor: number; // 0-1 : tremblements vocaux
 
   // Rythme et tempo
-  speechRate: number;          // 0-1 : vitesse d'élocution (normalisée)
-  rhythm: number;              // 0-1 : régularité du rythme
-  pauseFrequency: number;      // 0-1 : fréquence des pauses
+  speechRate: number; // 0-1 : vitesse d'élocution (normalisée)
+  rhythm: number; // 0-1 : régularité du rythme
+  pauseFrequency: number; // 0-1 : fréquence des pauses
 
   // Respiration
-  breathingLoad: number;       // 0-1 : respiration audible
-  breathPauses: number;        // 0-1 : pauses respiratoires
+  breathingLoad: number; // 0-1 : respiration audible
+  breathPauses: number; // 0-1 : pauses respiratoires
 
   // Métadonnées
   confidence: number;
@@ -120,28 +120,28 @@ export interface VoiceState {
  */
 export interface TextFeatures {
   // Structure et longueur
-  messageLength: number;       // Nombre de caractères
-  wordCount: number;           // Nombre de mots
-  sentenceCount: number;       // Nombre de phrases
-  avgWordLength: number;       // Longueur moyenne des mots
+  messageLength: number; // Nombre de caractères
+  wordCount: number; // Nombre de mots
+  sentenceCount: number; // Nombre de phrases
+  avgWordLength: number; // Longueur moyenne des mots
 
   // Cadence et timing
-  responseDelay: number;       // Délai de réponse (ms)
-  typingSpeed: number;         // Vitesse de frappe estimée
+  responseDelay: number; // Délai de réponse (ms)
+  typingSpeed: number; // Vitesse de frappe estimée
 
   // Syntaxe et style
-  punctuationDensity: number;  // Densité de ponctuation
-  exclamationCount: number;    // Points d'exclamation
-  questionCount: number;       // Points d'interrogation
-  ellipsisCount: number;       // Ellipses (...)
-  capsRatio: number;           // Ratio majuscules
+  punctuationDensity: number; // Densité de ponctuation
+  exclamationCount: number; // Points d'exclamation
+  questionCount: number; // Points d'interrogation
+  ellipsisCount: number; // Ellipses (...)
+  capsRatio: number; // Ratio majuscules
 
   // Marqueurs d'énergie
-  intensityMarkers: number;    // Mots d'intensité ("très", "super", etc.)
-  fatigueMarkers: number;      // Marqueurs de fatigue ("fatigué", "épuisé")
-  stressMarkers: number;       // Marqueurs de stress ("stressé", "débordé")
-  positiveMarkers: number;     // Marqueurs positifs
-  negativeMarkers: number;     // Marqueurs négatifs
+  intensityMarkers: number; // Mots d'intensité ("très", "super", etc.)
+  fatigueMarkers: number; // Marqueurs de fatigue ("fatigué", "épuisé")
+  stressMarkers: number; // Marqueurs de stress ("stressé", "débordé")
+  positiveMarkers: number; // Marqueurs positifs
+  negativeMarkers: number; // Marqueurs négatifs
 
   // Auto-déclarations détectées
   selfDeclarations: SelfDeclaration[];
@@ -165,7 +165,7 @@ export interface SelfDeclaration {
  */
 export interface TextScores {
   t_energy: NormalizedScore;
-  t_charge: NormalizedScore;          // Charge mentale perçue
+  t_charge: NormalizedScore; // Charge mentale perçue
   t_engagement_verbal: NormalizedScore;
   t_ambiguity: NormalizedScore;
   t_clarity: NormalizedScore;
@@ -262,7 +262,7 @@ export interface BaselineFusionProfile {
  * Courbe horaire (24 valeurs)
  */
 export interface HourlyCurve {
-  hourlyMeans: number[];      // Index 0-23
+  hourlyMeans: number[]; // Index 0-23
   hourlyVariances: number[];
   samplesPerHour: number[];
   peakHour: number;
@@ -283,10 +283,10 @@ export interface StabilityMap {
  * Matrice de corrélation entre modalités
  */
 export interface CorrelationMatrix {
-  visionVoice: number;        // Corrélation vision-voix
-  visionText: number;         // Corrélation vision-texte
-  voiceText: number;          // Corrélation voix-texte
-  allThree: number;           // Corrélation triple
+  visionVoice: number; // Corrélation vision-voix
+  visionText: number; // Corrélation vision-texte
+  voiceText: number; // Corrélation voix-texte
+  allThree: number; // Corrélation triple
 }
 
 /**
@@ -366,11 +366,11 @@ export interface FusedScores {
  * Déviation par rapport au baseline
  */
 export interface BaselineDeviation {
-  energyDeviation: number;    // Positif = au-dessus du baseline
+  energyDeviation: number; // Positif = au-dessus du baseline
   tensionDeviation: number;
   engagementDeviation: number;
-  isSignificant: boolean;     // Déviation notable ?
-  description: string;        // Description textuelle
+  isSignificant: boolean; // Déviation notable ?
+  description: string; // Description textuelle
 }
 
 // ============================================================================
@@ -645,12 +645,14 @@ export const MULTIMODAL_FUSION_CONFIG: MultimodalFusionConfig = {
 // ============================================================================
 
 export const PRUDENT_MULTIMODAL_MESSAGES = {
-  disclaimer: "Ce n'est qu'une estimation basée sur des indices observables. Je peux me tromper.",
-  askConfirmation: "Est-ce que ça te paraît juste ?",
+  disclaimer:
+    "Ce n'est qu'une estimation basée sur des indices observables. Je peux me tromper.",
+  askConfirmation: 'Est-ce que ça te paraît juste ?',
   noData: "Je n'ai pas assez de données pour faire une estimation fiable.",
-  lowConfidence: "Ma confiance est faible sur cette estimation.",
+  lowConfidence: 'Ma confiance est faible sur cette estimation.',
   baselineNeeded: "Je n'ai pas encore assez appris de ton baseline pour comparer.",
-  privacyReminder: "Rappel : aucun audio ni vidéo brut n'est stocké, seulement des valeurs numériques abstraites.",
+  privacyReminder:
+    "Rappel : aucun audio ni vidéo brut n'est stocké, seulement des valeurs numériques abstraites.",
 };
 
 export const LEVEL_DESCRIPTIONS_FR: Record<ModalityLevel, Record<string, string>> = {

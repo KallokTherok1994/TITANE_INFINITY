@@ -21,7 +21,7 @@ pub fn similarity(a: &[f32], b: &[f32], metric: SimilarityMetric) -> MemoryOSRes
             b.len()
         )));
     }
-    
+
     match metric {
         SimilarityMetric::Cosine => Ok(cosine_similarity(a, b)),
         SimilarityMetric::Euclidean => Ok(euclidean_distance(a, b)),
@@ -34,11 +34,11 @@ pub fn cosine_similarity(a: &[f32], b: &[f32]) -> f32 {
     let dot = dot_product(a, b);
     let norm_a = vector_norm(a);
     let norm_b = vector_norm(b);
-    
+
     if norm_a == 0.0 || norm_b == 0.0 {
         return 0.0;
     }
-    
+
     dot / (norm_a * norm_b)
 }
 
@@ -95,31 +95,31 @@ pub fn distance_to_similarity(distance: f32, metric: SimilarityMetric) -> f32 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_cosine_similarity() {
         let a = vec![1.0, 0.0, 0.0];
         let b = vec![1.0, 0.0, 0.0];
         let c = vec![0.0, 1.0, 0.0];
-        
+
         assert!((cosine_similarity(&a, &b) - 1.0).abs() < 1e-6);
         assert!((cosine_similarity(&a, &c) - 0.0).abs() < 1e-6);
     }
-    
+
     #[test]
     fn test_euclidean_distance() {
         let a = vec![0.0, 0.0];
         let b = vec![3.0, 4.0];
-        
+
         let dist = euclidean_distance(&a, &b);
         assert!((dist - 5.0).abs() < 1e-6);
     }
-    
+
     #[test]
     fn test_normalize() {
         let mut v = vec![3.0, 4.0];
         normalize(&mut v);
-        
+
         let norm = vector_norm(&v);
         assert!((norm - 1.0).abs() < 1e-6);
     }

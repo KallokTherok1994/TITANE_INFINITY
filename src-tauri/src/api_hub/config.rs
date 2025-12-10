@@ -3,8 +3,8 @@
 //! Super Prompt #17 — Configuration du Hub API
 //! ═══════════════════════════════════════════════════════════════════════════════
 
+use super::{router::ModelChoiceStrategy, Provider};
 use serde::{Deserialize, Serialize};
-use super::{Provider, router::ModelChoiceStrategy};
 
 /// Configuration du Hub API
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -97,7 +97,7 @@ impl APIHubConfig {
     pub fn development() -> Self {
         Self {
             default_timeout_ms: 120000, // Plus long pour debug
-            cache_enabled: false, // Pas de cache en dev
+            cache_enabled: false,       // Pas de cache en dev
             daily_budget_usd: Some(5.0),
             ..Default::default()
         }

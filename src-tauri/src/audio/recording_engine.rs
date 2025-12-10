@@ -38,10 +38,18 @@ pub struct RecordingConfig {
     pub language: Option<String>,
 }
 
-fn default_sample_rate() -> u32 { 16000 }
-fn default_channels() -> u16 { 1 }
-fn default_format() -> String { "wav".to_string() }
-fn default_max_duration() -> u32 { 30 }
+fn default_sample_rate() -> u32 {
+    16000
+}
+fn default_channels() -> u16 {
+    1
+}
+fn default_format() -> String {
+    "wav".to_string()
+}
+fn default_max_duration() -> u32 {
+    30
+}
 
 impl Default for RecordingConfig {
     fn default() -> Self {
@@ -108,9 +116,7 @@ impl RecordingEngine {
         }
 
         // ✅ SAFETY: Kill any orphaned arecord processes
-        let _ = Command::new("pkill")
-            .args(["-9", "-f", "arecord"])
-            .output();
+        let _ = Command::new("pkill").args(["-9", "-f", "arecord"]).output();
 
         // ✅ SAFETY: Force reset internal state before starting
         self.is_recording.store(false, Ordering::Release);
@@ -122,17 +128,29 @@ impl RecordingEngine {
         let recording_id = format!("rec_{}", chrono::Utc::now().timestamp_millis());
         let output_path = std::env::temp_dir().join(format!("{}.wav", recording_id));
 
-        log::info!("[RecordingEngine] Starting recording: {} → {:?}", recording_id, output_path);
-        log::info!("[RecordingEngine] Config: sample_rate={}, channels={}, max_duration={}s",
-            config.sample_rate, config.channels, config.max_duration);
+        log::info!(
+            "[RecordingEngine] Starting recording: {} → {:?}",
+            recording_id,
+            output_path
+        );
+        log::info!(
+            "[RecordingEngine] Config: sample_rate={}, channels={}, max_duration={}s",
+            config.sample_rate,
+            config.channels,
+            config.max_duration
+        );
 
         // Start arecord process
         let child = Command::new("arecord")
             .args([
-                "-f", "S16_LE",      // 16-bit signed little-endian
-                "-r", &config.sample_rate.to_string(),
-                "-c", &config.channels.to_string(),
-                "-d", &config.max_duration.to_string(),
+                "-f",
+                "S16_LE", // 16-bit signed little-endian
+                "-r",
+                &config.sample_rate.to_string(),
+                "-c",
+                &config.channels.to_string(),
+                "-d",
+                &config.max_duration.to_string(),
                 output_path.to_str().ok_or("Invalid UTF-8 in output path")?,
             ])
             .stdin(std::process::Stdio::null())
@@ -202,7 +220,9 @@ impl RecordingEngine {
 
         // Get output file
         let output_path = lock_or_recover!(self.output_path).clone();
-        let file_path_str = output_path.as_ref().and_then(|p| p.to_str().map(String::from));
+        let file_path_str = output_path
+            .as_ref()
+            .and_then(|p| p.to_str().map(String::from));
 
         // Verify file exists and has content
         if let Some(ref path) = output_path {
@@ -249,9 +269,7 @@ impl RecordingEngine {
         *process_guard = None;
 
         // Kill any orphaned processes
-        let _ = Command::new("pkill")
-            .args(["-9", "-f", "arecord"])
-            .output();
+        let _ = Command::new("pkill").args(["-9", "-f", "arecord"]).output();
 
         // Delete temp file
         if let Some(ref path) = *lock_or_recover!(self.output_path) {
@@ -301,9 +319,7 @@ impl RecordingEngine {
         let _ = self.cancel();
 
         // Extra safety: kill ALL arecord processes
-        let _ = Command::new("pkill")
-            .args(["-9", "arecord"])
-            .output();
+        let _ = Command::new("pkill").args(["-9", "arecord"]).output();
 
         // Hard reset all state
         self.is_recording.store(false, Ordering::Release);

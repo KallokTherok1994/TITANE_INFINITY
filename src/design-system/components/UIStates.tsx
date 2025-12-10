@@ -13,7 +13,15 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { colors, spacing, typography, borders, text, backgrounds, radius } from '../tokens';
+import {
+  colors,
+  spacing,
+  typography,
+  borders,
+  text,
+  backgrounds,
+  radius,
+} from '../tokens';
 
 // ═══════════════════════════════════════════════════════════════
 // LOADING STATE

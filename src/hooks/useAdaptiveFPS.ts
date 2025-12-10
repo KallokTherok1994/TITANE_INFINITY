@@ -95,7 +95,7 @@ export function useAdaptiveFPS(): UseAdaptiveFPSReturn {
   useEffect(() => {
     let frameCount = 0;
     let lastTime = performance.now();
-    let fpsHistory: number[] = [];
+    const fpsHistory: number[] = [];
     const maxHistory = 60; // Track last 60 frames
 
     const measureFPS = () => {

@@ -28,9 +28,7 @@
 // ============================================================================
 // MEMORY CORE
 // ============================================================================
-export {
-  memoryService,
-} from './memory';
+export { memoryService } from './memory';
 export type {
   ChatInteraction,
   MemoryContext,

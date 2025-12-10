@@ -7,7 +7,7 @@
  * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ v1.0 — UNIFIED MEMORY SYSTEM
  *   Architecture STM / MTM / LTM minimale et stable
- *   
+ *
  *   STM (Short-Term Memory)  : 20 derniers messages, expire 5min
  *   MTM (Medium-Term Memory) : Contexte session, expire 24h
  *   LTM (Long-Term Memory)   : Connaissances durables, permanent
@@ -87,12 +87,24 @@ class UnifiedMemorySystem {
 
   // Stats
   private stats: MemoryStats = {
-    stm: { totalEntries: 0, maxEntries: 20, ttl: '5min', oldestTimestamp: 0, newestTimestamp: 0 },
-    mtm: { totalEntries: 0, maxEntries: 100, ttl: '24h', oldestTimestamp: 0, newestTimestamp: 0 },
+    stm: {
+      totalEntries: 0,
+      maxEntries: 20,
+      ttl: '5min',
+      oldestTimestamp: 0,
+      newestTimestamp: 0,
+    },
+    mtm: {
+      totalEntries: 0,
+      maxEntries: 100,
+      ttl: '24h',
+      oldestTimestamp: 0,
+      newestTimestamp: 0,
+    },
     ltm: { totalEntries: 0, maxEntries: 'unlimited', ttl: 'permanent', totalAccesses: 0 },
     total: 0,
     lastCleanup: Date.now(),
-    promotions: 0
+    promotions: 0,
   };
 
   // Cleanup timer
@@ -107,20 +119,20 @@ class UnifiedMemorySystem {
    * ═══════════════════════════════════════════════════════════════════
    * STORE: Stocker nouvelle entrée mémoire
    * ═══════════════════════════════════════════════════════════════════
-   * 
+   *
    * Stocke un message dans le système de mémoire unifiée.
    * Le tier (STM/MTM/LTM) est automatiquement déterminé selon l'importance:
    * - importance < 0.5  → STM (Short-Term Memory, 5 min TTL)
    * - importance 0.5-0.7 → MTM (Medium-Term Memory, 24h TTL)
    * - importance > 0.7  → LTM (Long-Term Memory, permanent)
-   * 
+   *
    * @param content - Contenu du message à stocker
    * @param role - Rôle de l'émetteur ('user' | 'assistant' | 'system')
    * @param importance - Score d'importance (0.0 → 1.0), défaut: 0.5
    * @param conversationId - ID optionnel de la conversation
    * @param tags - Tags optionnels pour filtrage ultérieur
    * @returns L'entrée mémoire créée avec ID unique
-   * 
+   *
    * @example
    * ```typescript
    * const entry = unifiedMemory.store(
@@ -150,7 +162,7 @@ class UnifiedMemorySystem {
       tier: this.determineTier(importance),
       conversationId,
       tags,
-      metadata: {}
+      metadata: {},
     };
 
     // Router vers bon tier
@@ -168,7 +180,7 @@ class UnifiedMemorySystem {
 
     this.updateStats();
     isDev && console.log(`[UnifiedMemory] Stored in ${entry.tier}:`, entry.id);
-    
+
     return entry;
   }
 
@@ -176,11 +188,11 @@ class UnifiedMemorySystem {
    * ═══════════════════════════════════════════════════════════════════
    * RECALL: Rappeler mémoire selon requête
    * ═══════════════════════════════════════════════════════════════════
-   * 
+   *
    * Recherche et rappelle des entrées mémoire selon une requête textuelle.
    * Incrémente automatiquement accessCount et peut déclencher promotion MTM → LTM.
    * Les résultats sont triés par pertinence (importance 70% + recency 30%).
-   * 
+   *
    * @param query - Requête de recherche textuelle
    * @param options - Options de filtrage:
    *   - tier: Limiter recherche à un tier ('STM' | 'MTM' | 'LTM')
@@ -189,7 +201,7 @@ class UnifiedMemorySystem {
    *   - conversationId: Filtrer par conversation
    *   - tags: Filtrer par tags
    * @returns Liste d'entrées triées par pertinence
-   * 
+   *
    * @example
    * ```typescript
    * // Rechercher messages importants récents
@@ -198,19 +210,13 @@ class UnifiedMemorySystem {
    *   limit: 5,
    *   tier: 'MTM'
    * });
-   * 
+   *
    * // Rechercher dans toute la mémoire
    * const allResults = unifiedMemory.recall('decision', { limit: 20 });
    * ```
    */
   recall(query: string, options: RecallOptions = {}): MemoryEntry[] {
-    const {
-      tier,
-      limit = 10,
-      minImportance = 0.3,
-      conversationId,
-      tags
-    } = options;
+    const { tier, limit = 10, minImportance = 0.3, conversationId, tags } = options;
 
     const results: MemoryEntry[] = [];
 
@@ -239,8 +245,8 @@ class UnifiedMemorySystem {
 
     // Trier par pertinence (importance + recency)
     const sorted = filtered.sort((a, b) => {
-      const scoreA = a.importance * 0.7 + (Date.now() - a.timestamp) / 1000000 * 0.3;
-      const scoreB = b.importance * 0.7 + (Date.now() - b.timestamp) / 1000000 * 0.3;
+      const scoreA = a.importance * 0.7 + ((Date.now() - a.timestamp) / 1000000) * 0.3;
+      const scoreB = b.importance * 0.7 + ((Date.now() - b.timestamp) / 1000000) * 0.3;
       return scoreB - scoreA;
     });
 
@@ -251,20 +257,20 @@ class UnifiedMemorySystem {
    * ═══════════════════════════════════════════════════════════════════
    * PROMOTE: Promouvoir MTM → LTM si important
    * ═══════════════════════════════════════════════════════════════════
-   * 
+   *
    * Promeut manuellement une entrée MTM vers LTM si elle satisfait les critères:
    * - accessCount >= 10 (seuil de promotion)
    * - OU importance > 0.7
-   * 
+   *
    * Note: La promotion automatique est aussi déclenchée lors de recall().
-   * 
+   *
    * @param id - ID de l'entrée à promouvoir
    * @returns true si promotion réussie, false si entrée non trouvée ou critères non remplis
-   * 
+   *
    * @example
    * ```typescript
    * const entry = unifiedMemory.store('Knowledge important', 'system', 0.6);
-   * 
+   *
    * // Forcer promotion vers LTM
    * const promoted = unifiedMemory.promote(entry.id);
    * if (promoted) {
@@ -292,20 +298,20 @@ class UnifiedMemorySystem {
    * ═══════════════════════════════════════════════════════════════════
    * CLEANUP: Nettoyage automatique
    * ═══════════════════════════════════════════════════════════════════
-   * 
+   *
    * Nettoie les entrées expirées selon les TTL de chaque tier:
    * - STM: Supprime entrées > 5 min OU garde seulement 20 plus récentes
    * - MTM: Supprime entrées > 24h OU garde seulement 100 plus importantes
    * - LTM: Aucune expiration (permanent)
-   * 
+   *
    * Appelé automatiquement toutes les 5 minutes.
    * Peut aussi être appelé manuellement si besoin.
-   * 
+   *
    * @example
    * ```typescript
    * // Forcer nettoyage immédiat
    * unifiedMemory.cleanup();
-   * 
+   *
    * // Vérifier effet
    * const stats = unifiedMemory.getStats();
    * console.log('Entries after cleanup:', stats.total);
@@ -359,16 +365,16 @@ class UnifiedMemorySystem {
    * ═══════════════════════════════════════════════════════════════════
    * GET STATS: Récupérer statistiques
    * ═══════════════════════════════════════════════════════════════════
-   * 
+   *
    * Retourne statistiques détaillées sur chaque tier mémoire:
    * - Compteurs par tier (STM/MTM/LTM)
    * - Timestamps min/max
    * - Total accès LTM
    * - Nombre de promotions
    * - Timestamp du dernier cleanup
-   * 
+   *
    * @returns Objet MemoryStats avec statistiques complètes
-   * 
+   *
    * @example
    * ```typescript
    * const stats = unifiedMemory.getStats();
@@ -386,17 +392,17 @@ class UnifiedMemorySystem {
    * ═══════════════════════════════════════════════════════════════════
    * CLEAR: Effacer tier spécifique ou tout
    * ═══════════════════════════════════════════════════════════════════
-   * 
+   *
    * Efface complètement un tier spécifique ou toute la mémoire.
    * ⚠️ Attention: Opération irréversible!
-   * 
+   *
    * @param tier - Tier à effacer ('STM' | 'MTM' | 'LTM'), ou undefined pour tout effacer
-   * 
+   *
    * @example
    * ```typescript
    * // Effacer seulement STM (short-term)
    * unifiedMemory.clear('STM');
-   * 
+   *
    * // Effacer toute la mémoire (reset complet)
    * unifiedMemory.clear();
    * ```
@@ -458,8 +464,9 @@ class UnifiedMemorySystem {
     this.mtm.set(entry.id, entry);
     if (this.mtm.size > this.MTM_MAX) {
       // Supprimer le plus ancien
-      const oldest = Array.from(this.mtm.values())
-        .sort((a, b) => a.timestamp - b.timestamp)[0];
+      const oldest = Array.from(this.mtm.values()).sort(
+        (a, b) => a.timestamp - b.timestamp
+      )[0];
       if (oldest) this.mtm.delete(oldest.id);
     }
   }
@@ -468,20 +475,30 @@ class UnifiedMemorySystem {
     this.ltm.set(entry.id, entry);
   }
 
-  private searchSTM(query: string, conversationId?: string, tags?: string[]): MemoryEntry[] {
-    return this.stm.filter(e => 
+  private searchSTM(
+    query: string,
+    conversationId?: string,
+    tags?: string[]
+  ): MemoryEntry[] {
+    return this.stm.filter(e => this.matchesQuery(e, query, conversationId, tags));
+  }
+
+  private searchMTM(
+    query: string,
+    conversationId?: string,
+    tags?: string[]
+  ): MemoryEntry[] {
+    return Array.from(this.mtm.values()).filter(e =>
       this.matchesQuery(e, query, conversationId, tags)
     );
   }
 
-  private searchMTM(query: string, conversationId?: string, tags?: string[]): MemoryEntry[] {
-    return Array.from(this.mtm.values()).filter(e => 
-      this.matchesQuery(e, query, conversationId, tags)
-    );
-  }
-
-  private searchLTM(query: string, conversationId?: string, tags?: string[]): MemoryEntry[] {
-    return Array.from(this.ltm.values()).filter(e => 
+  private searchLTM(
+    query: string,
+    conversationId?: string,
+    tags?: string[]
+  ): MemoryEntry[] {
+    return Array.from(this.ltm.values()).filter(e =>
       this.matchesQuery(e, query, conversationId, tags)
     );
   }
@@ -494,13 +511,13 @@ class UnifiedMemorySystem {
   ): boolean {
     // Match content
     const contentMatch = entry.content.toLowerCase().includes(query.toLowerCase());
-    
+
     // Match conversationId
     const conversationMatch = !conversationId || entry.conversationId === conversationId;
-    
+
     // Match tags
     const tagsMatch = !tags || tags.some(tag => entry.tags?.includes(tag));
-    
+
     return contentMatch && conversationMatch && tagsMatch;
   }
 
@@ -524,7 +541,10 @@ class UnifiedMemorySystem {
     this.stats.ltm.ttl = 'permanent';
     this.stats.ltm.totalAccesses = ltmEntries.reduce((sum, e) => sum + e.accessCount, 0);
 
-    this.stats.total = this.stats.stm.totalEntries + this.stats.mtm.totalEntries + this.stats.ltm.totalEntries;
+    this.stats.total =
+      this.stats.stm.totalEntries +
+      this.stats.mtm.totalEntries +
+      this.stats.ltm.totalEntries;
   }
 
   private startAutoCleanup(): void {

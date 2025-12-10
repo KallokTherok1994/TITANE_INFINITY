@@ -26,11 +26,9 @@ export const Collapse = ({
 }: CollapseProps) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
-  const classes = [
-    'collapse',
-    isOpen && 'collapse--open',
-    className,
-  ].filter(Boolean).join(' ');
+  const classes = ['collapse', isOpen && 'collapse--open', className]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <div className={classes}>

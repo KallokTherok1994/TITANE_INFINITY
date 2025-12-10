@@ -171,7 +171,7 @@ export class AdaptiveUI {
   onChange(callback: (config: AdaptiveUIConfig) => void): () => void {
     this.listeners.push(callback);
     return () => {
-      this.listeners = this.listeners.filter((cb) => cb !== callback);
+      this.listeners = this.listeners.filter(cb => cb !== callback);
     };
   }
 
@@ -179,7 +179,7 @@ export class AdaptiveUI {
    * Notifier les listeners
    */
   private notifyListeners(): void {
-    this.listeners.forEach((callback) => callback(this.config));
+    this.listeners.forEach(callback => callback(this.config));
   }
 
   /**

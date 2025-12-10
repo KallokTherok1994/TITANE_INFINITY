@@ -36,11 +36,11 @@ export type StressTrend = 'rising' | 'falling' | 'stable';
  * Types d'interventions possibles
  */
 export type InterventionType =
-  | 'breath'      // Respiration guidée
-  | 'pause'       // Micro-pause consciente
-  | 'body'        // Scan corporel rapide
-  | 'focus'       // Réduction charge cognitive
-  | 'agenda'      // Ajustement d'agenda
+  | 'breath' // Respiration guidée
+  | 'pause' // Micro-pause consciente
+  | 'body' // Scan corporel rapide
+  | 'focus' // Réduction charge cognitive
+  | 'agenda' // Ajustement d'agenda
   | 'reassurance'; // Rappel bienveillant
 
 /**
@@ -132,8 +132,8 @@ export interface StressRegulationState {
 
   // Configuration utilisateur
   autoRegulationEnabled: boolean;
-  maxInterventionFrequency: number;  // Interventions max par heure
-  cooldownMs: number;                // Temps minimum entre interventions
+  maxInterventionFrequency: number; // Interventions max par heure
+  cooldownMs: number; // Temps minimum entre interventions
 
   // État cooldown
   cooldownActive: boolean;
@@ -189,7 +189,7 @@ export interface InterventionSelectionContext {
   stressLevel: StressLevel;
   stressTrend: StressTrend;
   hourOfDay: number;
-  agendaLoad: number;        // 0-1
+  agendaLoad: number; // 0-1
   recentRejections: InterventionType[];
   weights: InterventionWeights;
 }
@@ -214,20 +214,20 @@ export interface InterventionRecommendation {
  */
 export interface StressRegulationConfig {
   // Seuils de déclenchement
-  tensionThresholdMultiplier: number;  // Déclenchement si tension > baseline * multiplier
-  changeProbabilityThreshold: number;  // Seuil de probabilité de changement
+  tensionThresholdMultiplier: number; // Déclenchement si tension > baseline * multiplier
+  changeProbabilityThreshold: number; // Seuil de probabilité de changement
 
   // Timing
-  defaultCooldownMs: number;           // 900000 = 15 minutes
-  maxInterventionsPerHour: number;     // Maximum 4 par heure
+  defaultCooldownMs: number; // 900000 = 15 minutes
+  maxInterventionsPerHour: number; // Maximum 4 par heure
 
   // Apprentissage
-  learningRate: number;                // Vitesse d'apprentissage des poids
-  minWeightValue: number;              // Poids minimum (éviter abandon total)
-  maxWeightValue: number;              // Poids maximum
+  learningRate: number; // Vitesse d'apprentissage des poids
+  minWeightValue: number; // Poids minimum (éviter abandon total)
+  maxWeightValue: number; // Poids maximum
 
   // Feedback
-  feedbackTimeoutMs: number;           // Temps pour donner un feedback
+  feedbackTimeoutMs: number; // Temps pour donner un feedback
 
   // Protocoles activés
   enabledInterventions: InterventionType[];
@@ -287,15 +287,33 @@ export const BREATH_PROTOCOL: InterventionProtocol = {
   description: '4-6 respirations profondes pour se recentrer',
   durationSeconds: 45,
   steps: [
-    { instruction: 'Inspire doucement par le nez pendant 4 secondes...', durationSeconds: 4 },
-    { instruction: 'Garde l\'air 2 secondes...', durationSeconds: 2 },
-    { instruction: 'Expire lentement par la bouche pendant 6 secondes...', durationSeconds: 6 },
-    { instruction: 'Inspire doucement par le nez pendant 4 secondes...', durationSeconds: 4 },
-    { instruction: 'Garde l\'air 2 secondes...', durationSeconds: 2 },
-    { instruction: 'Expire lentement par la bouche pendant 6 secondes...', durationSeconds: 6 },
-    { instruction: 'Inspire doucement par le nez pendant 4 secondes...', durationSeconds: 4 },
-    { instruction: 'Garde l\'air 2 secondes...', durationSeconds: 2 },
-    { instruction: 'Expire lentement par la bouche pendant 6 secondes...', durationSeconds: 6 },
+    {
+      instruction: 'Inspire doucement par le nez pendant 4 secondes...',
+      durationSeconds: 4,
+    },
+    { instruction: "Garde l'air 2 secondes...", durationSeconds: 2 },
+    {
+      instruction: 'Expire lentement par la bouche pendant 6 secondes...',
+      durationSeconds: 6,
+    },
+    {
+      instruction: 'Inspire doucement par le nez pendant 4 secondes...',
+      durationSeconds: 4,
+    },
+    { instruction: "Garde l'air 2 secondes...", durationSeconds: 2 },
+    {
+      instruction: 'Expire lentement par la bouche pendant 6 secondes...',
+      durationSeconds: 6,
+    },
+    {
+      instruction: 'Inspire doucement par le nez pendant 4 secondes...',
+      durationSeconds: 4,
+    },
+    { instruction: "Garde l'air 2 secondes...", durationSeconds: 2 },
+    {
+      instruction: 'Expire lentement par la bouche pendant 6 secondes...',
+      durationSeconds: 6,
+    },
     { instruction: 'Reprends ton rythme naturel.', durationSeconds: 3 },
   ],
   suitableFor: ['medium', 'high'],
@@ -311,7 +329,7 @@ export const PAUSE_PROTOCOL: InterventionProtocol = {
     { instruction: 'Étire tes bras vers le haut, relâche.', durationSeconds: 15 },
     { instruction: 'Roule doucement les épaules.', durationSeconds: 15 },
     { instruction: 'Regarde au loin, détends tes yeux.', durationSeconds: 20 },
-    { instruction: 'Prends une gorgée d\'eau si tu en as.', durationSeconds: 15 },
+    { instruction: "Prends une gorgée d'eau si tu en as.", durationSeconds: 15 },
     { instruction: 'Reviens quand tu es prêt.', durationSeconds: 15 },
   ],
   suitableFor: ['low', 'medium'],
@@ -324,7 +342,10 @@ export const BODY_SCAN_PROTOCOL: InterventionProtocol = {
   durationSeconds: 30,
   steps: [
     { instruction: 'Porte attention à tes épaules. Relâche-les.', durationSeconds: 8 },
-    { instruction: 'Détends ta mâchoire, laisse-la s\'ouvrir légèrement.', durationSeconds: 8 },
+    {
+      instruction: "Détends ta mâchoire, laisse-la s'ouvrir légèrement.",
+      durationSeconds: 8,
+    },
     { instruction: 'Relâche tes mains, desserre les doigts.', durationSeconds: 8 },
     { instruction: 'Prends une respiration profonde.', durationSeconds: 6 },
   ],
@@ -346,13 +367,16 @@ export const FOCUS_PROTOCOL: InterventionProtocol = {
 
 export const AGENDA_PROTOCOL: InterventionProtocol = {
   type: 'agenda',
-  name: 'Ajustement d\'agenda',
+  name: "Ajustement d'agenda",
   description: 'Alléger la charge prévue',
   durationSeconds: 30,
   steps: [
     { instruction: 'Regarde ta liste de tâches à venir.', durationSeconds: 10 },
-    { instruction: 'Y a-t-il quelque chose de non-urgent qu\'on peut décaler ?', durationSeconds: 10 },
-    { instruction: 'Je peux t\'aider à réorganiser si tu veux.', durationSeconds: 10 },
+    {
+      instruction: "Y a-t-il quelque chose de non-urgent qu'on peut décaler ?",
+      durationSeconds: 10,
+    },
+    { instruction: "Je peux t'aider à réorganiser si tu veux.", durationSeconds: 10 },
   ],
   suitableFor: ['medium', 'high'],
 };
@@ -364,8 +388,11 @@ export const REASSURANCE_PROTOCOL: InterventionProtocol = {
   durationSeconds: 15,
   steps: [
     { instruction: 'Tu fais de ton mieux avec ce que tu as.', durationSeconds: 5 },
-    { instruction: 'C\'est normal de ressentir de la tension parfois.', durationSeconds: 5 },
-    { instruction: 'Prends le temps qu\'il te faut.', durationSeconds: 5 },
+    {
+      instruction: "C'est normal de ressentir de la tension parfois.",
+      durationSeconds: 5,
+    },
+    { instruction: "Prends le temps qu'il te faut.", durationSeconds: 5 },
   ],
   suitableFor: ['low', 'medium'],
 };
@@ -385,13 +412,13 @@ export const ALL_PROTOCOLS: Record<InterventionType, InterventionProtocol> = {
 
 export const STRESS_REGULATION_CONSTANTS = {
   // Timing
-  MIN_COOLDOWN_MS: 300000,           // 5 minutes minimum
-  MAX_COOLDOWN_MS: 3600000,          // 1 heure maximum
-  DEFAULT_COOLDOWN_MS: 900000,       // 15 minutes par défaut
+  MIN_COOLDOWN_MS: 300000, // 5 minutes minimum
+  MAX_COOLDOWN_MS: 3600000, // 1 heure maximum
+  DEFAULT_COOLDOWN_MS: 900000, // 15 minutes par défaut
 
   // Limites
   MAX_HISTORY_SIZE: 100,
-  MAX_REJECTIONS_BEFORE_DISABLE: 5,  // Désactiver après 5 refus consécutifs
+  MAX_REJECTIONS_BEFORE_DISABLE: 5, // Désactiver après 5 refus consécutifs
 
   // Labels
   LEVEL_LABELS: {

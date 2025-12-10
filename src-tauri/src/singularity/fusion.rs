@@ -6,7 +6,6 @@ use serde::{Deserialize, Serialize};
 
 // Structures et fonctions réservées pour évolutions futures
 #[allow(dead_code)]
-
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FusionState {
     pub layers_fused: Vec<String>,

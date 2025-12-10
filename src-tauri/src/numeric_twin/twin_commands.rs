@@ -3,14 +3,14 @@
 //   Commandes Tauri pour le Numeric Twin Engine
 // ═══════════════════════════════════════════════════════════════════════════
 
+use log::{info, warn};
+use serde::{Deserialize, Serialize};
 use tauri::State;
 use tokio::sync::Mutex;
-use serde::{Deserialize, Serialize};
-use log::{info, warn};
 
 use super::{
-    NumericTwinEngine, TwinConfig, TwinState, TwinObservation, ObservationType,
-    TwinEvolutionRequest, EvolutionType, TwinEvolutionResult,
+    EvolutionType, NumericTwinEngine, ObservationType, TwinConfig, TwinEvolutionRequest,
+    TwinEvolutionResult, TwinObservation, TwinState,
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -254,7 +254,10 @@ pub async fn twin_submit_observation(
     state: State<'_, NumericTwinState>,
     observation: TwinObservationRequest,
 ) -> Result<String, String> {
-    info!("[NumericTwin] twin_submit_observation called: {:?}", observation.observation_type);
+    info!(
+        "[NumericTwin] twin_submit_observation called: {:?}",
+        observation.observation_type
+    );
 
     let mut engine = state.0.lock().await;
 
@@ -263,7 +266,12 @@ pub async fn twin_submit_observation(
         "cognitive" => ObservationType::Cognitive,
         "style" => ObservationType::Style,
         "emotional" => ObservationType::Emotional,
-        _ => return Err(format!("Unknown observation type: {}", observation.observation_type)),
+        _ => {
+            return Err(format!(
+                "Unknown observation type: {}",
+                observation.observation_type
+            ))
+        }
     };
 
     let twin_observation = TwinObservation {
@@ -291,7 +299,10 @@ pub async fn twin_apply_evolution(
     state: State<'_, NumericTwinState>,
     evolution: TwinEvolutionRequestPayload,
 ) -> Result<TwinEvolutionResult, String> {
-    info!("[NumericTwin] twin_apply_evolution called: {:?}", evolution.evolution_type);
+    info!(
+        "[NumericTwin] twin_apply_evolution called: {:?}",
+        evolution.evolution_type
+    );
 
     let mut engine = state.0.lock().await;
 
@@ -300,7 +311,12 @@ pub async fn twin_apply_evolution(
         "value_reinforcement" => EvolutionType::ValueReinforcement,
         "pattern_integration" => EvolutionType::PatternIntegration,
         "phase_transition" => EvolutionType::PhaseTransition,
-        _ => return Err(format!("Unknown evolution type: {}", evolution.evolution_type)),
+        _ => {
+            return Err(format!(
+                "Unknown evolution type: {}",
+                evolution.evolution_type
+            ))
+        }
     };
 
     let request = TwinEvolutionRequest {
@@ -329,7 +345,10 @@ pub async fn twin_validate_sync(
     state: State<'_, NumericTwinState>,
     validation: TwinSyncValidationRequest,
 ) -> Result<bool, String> {
-    info!("[NumericTwin] twin_validate_sync called: {}", validation.sync_id);
+    info!(
+        "[NumericTwin] twin_validate_sync called: {}",
+        validation.sync_id
+    );
 
     let mut engine = state.0.lock().await;
 
@@ -364,14 +383,16 @@ pub async fn twin_get_evolution_profile(
             spiritual_growth: profile.growth_trends.spiritual_growth,
             entrepreneurial_growth: profile.growth_trends.entrepreneurial_growth,
         },
-        adjustment_suggestions: profile.adjustment_suggestions.iter().map(|s| {
-            AdjustmentSuggestionResponse {
+        adjustment_suggestions: profile
+            .adjustment_suggestions
+            .iter()
+            .map(|s| AdjustmentSuggestionResponse {
                 domain: s.domain.clone(),
                 suggestion: s.suggestion.clone(),
                 priority: s.priority,
                 validated_by_kevin: s.validated_by_kevin,
-            }
-        }).collect(),
+            })
+            .collect(),
         sync_score: profile.sync_score,
     })
 }
@@ -390,14 +411,16 @@ pub async fn twin_get_identity(
         version: identity.version.clone(),
         name: identity.name.clone(),
         signature: identity.signature.clone(),
-        core_values: identity.core_values.iter().map(|v| {
-            CoreValueResponse {
+        core_values: identity
+            .core_values
+            .iter()
+            .map(|v| CoreValueResponse {
                 name: v.name.clone(),
                 description: v.description.clone(),
                 stability: v.stability,
                 weight: v.weight,
-            }
-        }).collect(),
+            })
+            .collect(),
         human_style: HumanStyleResponse {
             sincerity: identity.human_style.sincerity,
             gentle_intensity: identity.human_style.gentle_intensity,
@@ -411,9 +434,7 @@ pub async fn twin_get_identity(
 
 /// Force le recalcul du FusionIndex
 #[tauri::command]
-pub async fn twin_recalculate_fusion(
-    state: State<'_, NumericTwinState>,
-) -> Result<f32, String> {
+pub async fn twin_recalculate_fusion(state: State<'_, NumericTwinState>) -> Result<f32, String> {
     info!("[NumericTwin] twin_recalculate_fusion called");
 
     let mut engine = state.0.lock().await;
@@ -432,14 +453,17 @@ fn convert_to_response(state: &TwinState) -> TwinStateResponse {
             version: state.identity_core.version.clone(),
             name: state.identity_core.name.clone(),
             signature: state.identity_core.signature.clone(),
-            core_values: state.identity_core.core_values.iter().map(|v| {
-                CoreValueResponse {
+            core_values: state
+                .identity_core
+                .core_values
+                .iter()
+                .map(|v| CoreValueResponse {
                     name: v.name.clone(),
                     description: v.description.clone(),
                     stability: v.stability,
                     weight: v.weight,
-                }
-            }).collect(),
+                })
+                .collect(),
             human_style: HumanStyleResponse {
                 sincerity: state.identity_core.human_style.sincerity,
                 gentle_intensity: state.identity_core.human_style.gentle_intensity,
@@ -450,40 +474,61 @@ fn convert_to_response(state: &TwinState) -> TwinStateResponse {
             fusion_index: state.identity_core.fusion_index,
         },
         value_map: TwinValueMapResponse {
-            observed_values: state.value_map.observed_values.values().map(|v| {
-                ObservedValueResponse {
+            observed_values: state
+                .value_map
+                .observed_values
+                .values()
+                .map(|v| ObservedValueResponse {
                     name: v.name.clone(),
                     frequency: v.frequency,
                     confidence: v.confidence,
                     observations_count: v.observations_count,
-                }
-            }).collect(),
+                })
+                .collect(),
             confirmed_values: state.value_map.confirmed_values.clone(),
             alignment_score: state.value_map.alignment_score,
         },
         cognitive_patterns: TwinCognitivePatternsResponse {
-            reasoning_patterns: state.cognitive_patterns.reasoning_patterns.iter().map(|p| {
-                ReasoningPatternResponse {
+            reasoning_patterns: state
+                .cognitive_patterns
+                .reasoning_patterns
+                .iter()
+                .map(|p| ReasoningPatternResponse {
                     name: p.name.clone(),
                     description: p.description.clone(),
                     frequency: p.frequency,
                     effectiveness: p.effectiveness,
-                }
-            }).collect(),
+                })
+                .collect(),
             structuring_style: StructuringStyleResponse {
                 simple_to_complex: state.cognitive_patterns.structuring_style.simple_to_complex,
                 structure_level: state.cognitive_patterns.structuring_style.structure_level,
-                hierarchy_preference: state.cognitive_patterns.structuring_style.hierarchy_preference,
+                hierarchy_preference: state
+                    .cognitive_patterns
+                    .structuring_style
+                    .hierarchy_preference,
                 visual_preference: state.cognitive_patterns.structuring_style.visual_preference,
             },
         },
         therapeutic_model: TwinTherapeuticModelResponse {
             deep_listening: state.therapeutic_model.accompaniment_posture.deep_listening,
             rhythm_respect: state.therapeutic_model.accompaniment_posture.rhythm_respect,
-            relational_clarity: state.therapeutic_model.accompaniment_posture.relational_clarity,
-            support_precision: state.therapeutic_model.accompaniment_posture.support_precision,
-            non_directive_guidance: state.therapeutic_model.guide_qualities.non_directive_guidance,
-            holistic_integration: state.therapeutic_model.transformational_approach.holistic_integration,
+            relational_clarity: state
+                .therapeutic_model
+                .accompaniment_posture
+                .relational_clarity,
+            support_precision: state
+                .therapeutic_model
+                .accompaniment_posture
+                .support_precision,
+            non_directive_guidance: state
+                .therapeutic_model
+                .guide_qualities
+                .non_directive_guidance,
+            holistic_integration: state
+                .therapeutic_model
+                .transformational_approach
+                .holistic_integration,
         },
         creative_signature: TwinCreativeSignatureResponse {
             operational_intuition: state.creative_signature.operational_intuition,
@@ -501,16 +546,22 @@ fn convert_to_response(state: &TwinState) -> TwinStateResponse {
                 cognitive_growth: state.evolution_profile.growth_trends.cognitive_growth,
                 emotional_growth: state.evolution_profile.growth_trends.emotional_growth,
                 spiritual_growth: state.evolution_profile.growth_trends.spiritual_growth,
-                entrepreneurial_growth: state.evolution_profile.growth_trends.entrepreneurial_growth,
+                entrepreneurial_growth: state
+                    .evolution_profile
+                    .growth_trends
+                    .entrepreneurial_growth,
             },
-            adjustment_suggestions: state.evolution_profile.adjustment_suggestions.iter().map(|s| {
-                AdjustmentSuggestionResponse {
+            adjustment_suggestions: state
+                .evolution_profile
+                .adjustment_suggestions
+                .iter()
+                .map(|s| AdjustmentSuggestionResponse {
                     domain: s.domain.clone(),
                     suggestion: s.suggestion.clone(),
                     priority: s.priority,
                     validated_by_kevin: s.validated_by_kevin,
-                }
-            }).collect(),
+                })
+                .collect(),
             sync_score: state.evolution_profile.sync_score,
         },
         fusion_index: FusionIndexResponse {

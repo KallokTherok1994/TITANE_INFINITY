@@ -134,14 +134,17 @@ describe('SingularityState Store', () => {
 
     it('should restore state from localStorage', () => {
       // Set initial state
-      localStorage.setItem('singularity-storage', JSON.stringify({
-        state: {
-          metaMode: 'meta',
-          theme: 'light',
-          enginesData: { nexus: { status: 'active' } },
-        },
-        version: 0,
-      }));
+      localStorage.setItem(
+        'singularity-storage',
+        JSON.stringify({
+          state: {
+            metaMode: 'meta',
+            theme: 'light',
+            enginesData: { nexus: { status: 'active' } },
+          },
+          version: 0,
+        })
+      );
 
       const { result } = renderHook(() => useSingularityStore());
 

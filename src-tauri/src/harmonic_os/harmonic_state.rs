@@ -50,31 +50,35 @@ impl HarmonicState {
             cycle_count: 0,
         }
     }
-    
+
     pub fn calculate_global_score(&mut self, weights: &[f32; 7]) {
-        self.global_score = (
-            self.cognitive_resonance * weights[0] +
-            self.emotional_coherence * weights[1] +
-            self.logical_alignment * weights[2] +
-            self.memory_alignment * weights[3] +
-            self.energy_alignment * weights[4] +
-            self.temporal_alignment * weights[5] +
-            self.agent_sync * weights[6]
-        ).clamp(0.0, 1.0);
-        
+        self.global_score = (self.cognitive_resonance * weights[0]
+            + self.emotional_coherence * weights[1]
+            + self.logical_alignment * weights[2]
+            + self.memory_alignment * weights[3]
+            + self.energy_alignment * weights[4]
+            + self.temporal_alignment * weights[5]
+            + self.agent_sync * weights[6])
+            .clamp(0.0, 1.0);
+
         self.harmony_level = Self::compute_harmony_level(self.global_score);
     }
-    
+
     pub fn calculate_stability(&mut self) {
         let values = [
-            self.cognitive_resonance, self.emotional_coherence, self.logical_alignment,
-            self.memory_alignment, self.energy_alignment, self.temporal_alignment, self.agent_sync,
+            self.cognitive_resonance,
+            self.emotional_coherence,
+            self.logical_alignment,
+            self.memory_alignment,
+            self.energy_alignment,
+            self.temporal_alignment,
+            self.agent_sync,
         ];
         let mean = values.iter().sum::<f32>() / values.len() as f32;
         let variance = values.iter().map(|v| (v - mean).powi(2)).sum::<f32>() / values.len() as f32;
         self.stability = (1.0 - variance).clamp(0.0, 1.0);
     }
-    
+
     fn compute_harmony_level(score: f32) -> HarmonyLevel {
         match score {
             s if s < 0.3 => HarmonyLevel::Critical,
@@ -84,15 +88,15 @@ impl HarmonicState {
             _ => HarmonyLevel::Excellent,
         }
     }
-    
+
     pub fn is_critical(&self) -> bool {
         self.harmony_level == HarmonyLevel::Critical
     }
-    
+
     pub fn is_stable(&self, threshold: f32) -> bool {
         self.stability >= threshold
     }
-    
+
     pub fn increment_cycle(&mut self) {
         self.cycle_count += 1;
         self.last_update = chrono::Utc::now().timestamp_millis();
@@ -108,7 +112,7 @@ impl Default for HarmonicState {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_harmonic_state() {
         let state = HarmonicState::new();

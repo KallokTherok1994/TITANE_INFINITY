@@ -34,19 +34,21 @@ export const Checkbox = ({
   className = '',
 }: CheckboxProps) => {
   const [internalChecked, setInternalChecked] = useState(defaultChecked);
-  
+
   const isControlled = controlledChecked !== undefined;
   const checked = isControlled ? controlledChecked : internalChecked;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (disabled) {return;}
-    
+    if (disabled) {
+      return;
+    }
+
     const newChecked = e.target.checked;
-    
+
     if (!isControlled) {
       setInternalChecked(newChecked);
     }
-    
+
     onChange?.(newChecked);
   };
 
@@ -58,7 +60,9 @@ export const Checkbox = ({
     disabled && 'checkbox--disabled',
     error && 'checkbox--error',
     className,
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <div className={classes}>
@@ -75,17 +79,35 @@ export const Checkbox = ({
         <span className="checkbox__box">
           {indeterminate ? (
             <svg className="checkbox__icon" viewBox="0 0 16 16" fill="none">
-              <line x1="4" y1="8" x2="12" y2="8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <line
+                x1="4"
+                y1="8"
+                x2="12"
+                y2="8"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
             </svg>
           ) : checked ? (
             <svg className="checkbox__icon" viewBox="0 0 16 16" fill="none">
-              <path d="M13 4L6 11L3 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <path
+                d="M13 4L6 11L3 8"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           ) : null}
         </span>
         {label && <span className="checkbox__label">{label}</span>}
       </label>
-      {error && <span className="checkbox__error" id="checkbox-error">{error}</span>}
+      {error && (
+        <span className="checkbox__error" id="checkbox-error">
+          {error}
+        </span>
+      )}
     </div>
   );
 };

@@ -17,7 +17,6 @@ macro_rules! lock_or_recover {
     };
 }
 
-
 // ══════════════════════════════════════════════════════════════════
 // TYPES
 // ══════════════════════════════════════════════════════════════════
@@ -117,7 +116,8 @@ impl IntrospectionScanner {
 
         for entry in WalkDir::new(&src_path).into_iter().filter_map(|e| e.ok()) {
             if entry.path().extension().and_then(|s| s.to_str()) == Some("rs") {
-                self.scan_rust_file(entry.path().to_str().unwrap_or("")).await?;
+                self.scan_rust_file(entry.path().to_str().unwrap_or(""))
+                    .await?;
                 count += 1;
             }
         }

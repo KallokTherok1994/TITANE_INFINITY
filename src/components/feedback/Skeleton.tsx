@@ -15,7 +15,7 @@ export interface SkeletonProps {
 
 /**
  * Skeleton - Skeleton loading avec shimmer
- * 
+ *
  * @example
  * ```tsx
  * <Skeleton variant="text" width="80%" height={20} />
@@ -23,9 +23,15 @@ export interface SkeletonProps {
  * <Skeleton variant="rect" width="100%" height={120} />
  * ```
  */
-export function Skeleton({ variant = 'text', width, height, className = '' }: SkeletonProps) {
+export function Skeleton({
+  variant = 'text',
+  width,
+  height,
+  className = '',
+}: SkeletonProps) {
   const baseStyle: React.CSSProperties = {
-    background: 'linear-gradient(90deg, var(--bg-surface, #181c21) 0%, var(--bg-panel, #101216) 50%, var(--bg-surface, #181c21) 100%)',
+    background:
+      'linear-gradient(90deg, var(--bg-surface, #181c21) 0%, var(--bg-panel, #101216) 50%, var(--bg-surface, #181c21) 100%)',
     backgroundSize: '200% 100%',
     animation: 'skeleton-shimmer 1.5s ease-in-out infinite',
     width: width || (variant === 'text' ? '100%' : variant === 'circle' ? 40 : '100%'),
@@ -59,7 +65,13 @@ export function Skeleton({ variant = 'text', width, height, className = '' }: Sk
 /**
  * SkeletonGroup - Groupe de skeletons pour une liste
  */
-export function SkeletonGroup({ count = 3, children }: { count?: number; children: React.ReactNode }) {
+export function SkeletonGroup({
+  count = 3,
+  children,
+}: {
+  count?: number;
+  children: React.ReactNode;
+}) {
   return (
     <div className="space-y-4">
       {Array.from({ length: count }).map((_, i) => (

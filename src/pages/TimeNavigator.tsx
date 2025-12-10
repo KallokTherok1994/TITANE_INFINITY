@@ -76,7 +76,11 @@ export const TimeNavigator: React.FC = () => {
   };
 
   const handleRestore = async (snapshot: Snapshot) => {
-    if (!window.confirm(`Restaurer l'état du ${formatDate(snapshot.timestamp)} ?\n\nCette action nécessite les permissions ROOT.`)) {
+    if (
+      !window.confirm(
+        `Restaurer l'état du ${formatDate(snapshot.timestamp)} ?\n\nCette action nécessite les permissions ROOT.`
+      )
+    ) {
       return;
     }
 
@@ -118,7 +122,7 @@ export const TimeNavigator: React.FC = () => {
   const renderTimeline = () => {
     return (
       <div className="timeline">
-        {snapshots.map((snapshot) => (
+        {snapshots.map(snapshot => (
           <div
             key={snapshot.id}
             className={`timeline-item ${selectedSnapshot?.id === snapshot.id ? 'selected' : ''}`}
@@ -129,7 +133,8 @@ export const TimeNavigator: React.FC = () => {
               <div className="timeline-time">{formatDate(snapshot.timestamp)}</div>
               <div className="timeline-version">Version {snapshot.version}</div>
               <div className="timeline-context">
-                Level {snapshot.context.level} | XP {snapshot.context.xp} | {snapshot.context.personaMood}
+                Level {snapshot.context.level} | XP {snapshot.context.xp} |{' '}
+                {snapshot.context.personaMood}
               </div>
               <div className="timeline-size">{formatSize(snapshot.size)}</div>
             </div>
@@ -154,7 +159,9 @@ export const TimeNavigator: React.FC = () => {
             <tbody>
               <tr>
                 <td>ID:</td>
-                <td><code>{selectedSnapshot.id}</code></td>
+                <td>
+                  <code>{selectedSnapshot.id}</code>
+                </td>
               </tr>
               <tr>
                 <td>Timestamp:</td>
@@ -170,7 +177,9 @@ export const TimeNavigator: React.FC = () => {
               </tr>
               <tr>
                 <td>Checksum:</td>
-                <td><code>{selectedSnapshot.checksum.substring(0, 16)}...</code></td>
+                <td>
+                  <code>{selectedSnapshot.checksum.substring(0, 16)}...</code>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -269,7 +278,10 @@ export const TimeNavigator: React.FC = () => {
     <div className="time-navigator">
       <header className="navigator-header">
         <h1>⏱️ Navigateur Temporel</h1>
-        <p>Naviguez dans l'historique d'état de TITANE∞ et restaurez les versions précédentes</p>
+        <p>
+          Naviguez dans l'historique d'état de TITANE∞ et restaurez les versions
+          précédentes
+        </p>
       </header>
 
       {renderStats()}
@@ -280,9 +292,7 @@ export const TimeNavigator: React.FC = () => {
           {loading ? <div className="loading">Chargement...</div> : renderTimeline()}
         </div>
 
-        <div className="details-container">
-          {renderSnapshotDetails()}
-        </div>
+        <div className="details-container">{renderSnapshotDetails()}</div>
       </div>
 
       {compareMode && compareSnapshot && (

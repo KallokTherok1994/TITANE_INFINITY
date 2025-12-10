@@ -97,9 +97,7 @@ export const AppShell = ({
 
         {/* Main Content */}
         <main className="flex-1 overflow-hidden relative flex flex-col">
-          <div className="p-6 flex-1 overflow-auto scrollbar-custom">
-            {children}
-          </div>
+          <div className="p-6 flex-1 overflow-auto scrollbar-custom">{children}</div>
         </main>
       </div>
 

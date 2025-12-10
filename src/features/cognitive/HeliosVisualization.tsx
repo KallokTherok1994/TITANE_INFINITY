@@ -36,7 +36,8 @@ export interface HeliosVisualizationProps {
 export const HeliosVisualization = ({
   metrics,
 }: HeliosVisualizationProps): JSX.Element => {
-  const { shouldReduceMotion: _shouldReduceMotion, shouldThrottle: _shouldThrottle } = useAnimation();
+  const { shouldReduceMotion: _shouldReduceMotion, shouldThrottle: _shouldThrottle } =
+    useAnimation();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [dimensions] = useState({ width: 400, height: 400 });
 

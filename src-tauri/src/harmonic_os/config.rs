@@ -57,7 +57,7 @@ impl HarmonicConfig {
             ..Default::default()
         }
     }
-    
+
     pub fn low_power() -> Self {
         Self {
             min_resonance: 0.5,
@@ -68,10 +68,15 @@ impl HarmonicConfig {
             ..Default::default()
         }
     }
-    
+
     pub fn normalized_weights(&self) -> [f32; 7] {
-        let total = self.weight_cognitive + self.weight_emotional + self.weight_logical
-            + self.weight_memory + self.weight_energy + self.weight_temporal + self.weight_agent;
+        let total = self.weight_cognitive
+            + self.weight_emotional
+            + self.weight_logical
+            + self.weight_memory
+            + self.weight_energy
+            + self.weight_temporal
+            + self.weight_agent;
         [
             self.weight_cognitive / total,
             self.weight_emotional / total,
@@ -82,7 +87,7 @@ impl HarmonicConfig {
             self.weight_agent / total,
         ]
     }
-    
+
     pub fn validate(&self) -> Result<(), String> {
         if self.min_resonance < 0.0 || self.min_resonance > 1.0 {
             return Err("min_resonance must be 0.0-1.0".to_string());
@@ -97,11 +102,10 @@ impl HarmonicConfig {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_default_config() {
         let config = HarmonicConfig::default();
         assert!(config.validate().is_ok());
     }
 }
-

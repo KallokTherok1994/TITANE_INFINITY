@@ -5,8 +5,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * ═══════════════════════════════════════════════════════════════════════════════
  */
-
-use super::docs_engine::{CommandDoc, CommandCategory, DocsRegistry, DOCS_ENGINE};
+use super::docs_engine::{CommandCategory, CommandDoc, DocsRegistry, DOCS_ENGINE};
 
 /// Macro for safe RwLock read access with auto-recovery
 macro_rules! read_or_recover {
@@ -17,7 +16,6 @@ macro_rules! read_or_recover {
         })
     };
 }
-
 
 /// Rechercher dans la documentation
 #[tauri::command]
@@ -38,20 +36,18 @@ pub fn titan_docs_get(command_name: String) -> Option<CommandDoc> {
 pub fn titan_docs_list(category: Option<String>) -> Vec<CommandDoc> {
     let engine = read_or_recover!(DOCS_ENGINE);
 
-    let cat = category.and_then(|c| {
-        match c.to_lowercase().as_str() {
-            "state" => Some(CommandCategory::State),
-            "memory" => Some(CommandCategory::Memory),
-            "ai" => Some(CommandCategory::AI),
-            "audio" => Some(CommandCategory::Audio),
-            "filesystem" | "fs" => Some(CommandCategory::FileSystem),
-            "security" => Some(CommandCategory::Security),
-            "devtools" | "dev" => Some(CommandCategory::DevTools),
-            "settings" => Some(CommandCategory::Settings),
-            "metrics" => Some(CommandCategory::Metrics),
-            "network" => Some(CommandCategory::Network),
-            _ => None,
-        }
+    let cat = category.and_then(|c| match c.to_lowercase().as_str() {
+        "state" => Some(CommandCategory::State),
+        "memory" => Some(CommandCategory::Memory),
+        "ai" => Some(CommandCategory::AI),
+        "audio" => Some(CommandCategory::Audio),
+        "filesystem" | "fs" => Some(CommandCategory::FileSystem),
+        "security" => Some(CommandCategory::Security),
+        "devtools" | "dev" => Some(CommandCategory::DevTools),
+        "settings" => Some(CommandCategory::Settings),
+        "metrics" => Some(CommandCategory::Metrics),
+        "network" => Some(CommandCategory::Network),
+        _ => None,
     });
 
     engine.list(cat).into_iter().cloned().collect()
@@ -61,7 +57,11 @@ pub fn titan_docs_list(category: Option<String>) -> Vec<CommandDoc> {
 #[tauri::command]
 pub fn titan_docs_list_by_module(module: String) -> Vec<CommandDoc> {
     let engine = read_or_recover!(DOCS_ENGINE);
-    engine.list_by_module(&module).into_iter().cloned().collect()
+    engine
+        .list_by_module(&module)
+        .into_iter()
+        .cloned()
+        .collect()
 }
 
 /// Obtenir le registre complet

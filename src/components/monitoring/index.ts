@@ -30,7 +30,10 @@ export { CognitiveModuleCard } from './CognitiveModuleCard';
 export type { CognitiveModuleCardProps } from './CognitiveModuleCard';
 
 // v∞ — Singularity Dashboard
-export { SingularityDashboard, default as SingularityDashboardDefault } from './SingularityDashboard';
+export {
+  SingularityDashboard,
+  default as SingularityDashboardDefault,
+} from './SingularityDashboard';
 
 // Anomaly & Predictive Dashboards
 export { AnomalyDashboard } from './AnomalyDashboard';

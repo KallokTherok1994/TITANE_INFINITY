@@ -21,7 +21,11 @@ import './ModulePages.css';
 
 export const SelfHeal = () => {
   const selfhealData = useEngineSubscription('selfheal');
-  const { data, loading } = selfhealData as { data: SelfHealData | null; loading: boolean };  if (loading) {
+  const { data, loading } = selfhealData as {
+    data: SelfHealData | null;
+    loading: boolean;
+  };
+  if (loading) {
     return (
       <div className="module-page">
         <div className="module-page__loading">

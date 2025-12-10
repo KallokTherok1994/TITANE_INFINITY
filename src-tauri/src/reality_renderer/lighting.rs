@@ -210,7 +210,10 @@ impl LightingSystem {
         self.lights.insert(ambient.id.clone(), ambient);
 
         self.active = true;
-        log::info!("[LightingSystem] ✅ Initialized with {} lights", self.lights.len());
+        log::info!(
+            "[LightingSystem] ✅ Initialized with {} lights",
+            self.lights.len()
+        );
         Ok(())
     }
 
@@ -249,25 +252,28 @@ impl LightingSystem {
     }
 
     pub fn set_light_intensity(&mut self, light_id: &str, intensity: f32) -> RealityResult<()> {
-        let light = self.lights.get_mut(light_id).ok_or_else(|| {
-            RealityError::Lighting(format!("Light not found: {}", light_id))
-        })?;
+        let light = self
+            .lights
+            .get_mut(light_id)
+            .ok_or_else(|| RealityError::Lighting(format!("Light not found: {}", light_id)))?;
         light.intensity = intensity;
         Ok(())
     }
 
     pub fn set_light_color(&mut self, light_id: &str, color: Color) -> RealityResult<()> {
-        let light = self.lights.get_mut(light_id).ok_or_else(|| {
-            RealityError::Lighting(format!("Light not found: {}", light_id))
-        })?;
+        let light = self
+            .lights
+            .get_mut(light_id)
+            .ok_or_else(|| RealityError::Lighting(format!("Light not found: {}", light_id)))?;
         light.color = color;
         Ok(())
     }
 
     pub fn toggle_light(&mut self, light_id: &str, enabled: bool) -> RealityResult<()> {
-        let light = self.lights.get_mut(light_id).ok_or_else(|| {
-            RealityError::Lighting(format!("Light not found: {}", light_id))
-        })?;
+        let light = self
+            .lights
+            .get_mut(light_id)
+            .ok_or_else(|| RealityError::Lighting(format!("Light not found: {}", light_id)))?;
         light.enabled = enabled;
         Ok(())
     }

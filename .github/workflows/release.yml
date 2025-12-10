@@ -188,8 +188,8 @@ jobs:
     strategy:
       matrix:
         target:
-          - x86_64-apple-darwin  # Intel
-          - aarch64-apple-darwin  # Apple Silicon M1/M2
+          - x86_64-apple-darwin # Intel
+          - aarch64-apple-darwin # Apple Silicon M1/M2
 
     steps:
       - name: 📥 Checkout repository

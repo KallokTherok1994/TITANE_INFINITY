@@ -16,8 +16,11 @@ impl SignalUnifier {
     pub fn new() -> Self {
         Self
     }
-    
-    pub async fn unify(&self, signals: HashMap<SignalSource, HarmonicSignal>) -> TitaneResult<HarmonicSignal> {
+
+    pub async fn unify(
+        &self,
+        signals: HashMap<SignalSource, HarmonicSignal>,
+    ) -> TitaneResult<HarmonicSignal> {
         if signals.is_empty() {
             return Ok(HarmonicSignal {
                 resonance: 0.5,
@@ -25,11 +28,10 @@ impl SignalUnifier {
                 timestamp: chrono::Utc::now().timestamp_millis(),
             });
         }
-        
-        let avg_resonance = signals.values()
-            .map(|s| s.resonance)
-            .sum::<f32>() / signals.len() as f32;
-        
+
+        let avg_resonance =
+            signals.values().map(|s| s.resonance).sum::<f32>() / signals.len() as f32;
+
         Ok(HarmonicSignal {
             resonance: avg_resonance.clamp(0.0, 1.0),
             corrections: Default::default(),

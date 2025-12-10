@@ -74,7 +74,9 @@ export class AgentsAPIService {
         throw new Error(result.error || 'Failed to create agent');
       }
 
-      console.log(`✅ [AgentsAPI] Agent created: ${result.data?.name} (${result.data?.id})`);
+      console.log(
+        `✅ [AgentsAPI] Agent created: ${result.data?.name} (${result.data?.id})`
+      );
       return result.data;
     } catch (error) {
       console.error('❌ [AgentsAPI] Error creating agent:', error);
@@ -87,9 +89,7 @@ export class AgentsAPIService {
    * @param request - ID de l'agent et nouvelle permission
    * @returns Message de confirmation
    */
-  static async updateAgentPermission(
-    request: UpdatePermissionRequest
-  ): Promise<string> {
+  static async updateAgentPermission(request: UpdatePermissionRequest): Promise<string> {
     try {
       const result = await invoke<CommandResult<string>>('update_agent_permission', {
         request,
@@ -113,10 +113,7 @@ export class AgentsAPIService {
    * @param provider - Nom du fournisseur (openai, claude, gemini, local)
    * @returns true si autorisé, false sinon
    */
-  static async canAgentUseProvider(
-    agentId: string,
-    provider: string
-  ): Promise<boolean> {
+  static async canAgentUseProvider(agentId: string, provider: string): Promise<boolean> {
     try {
       const result = await invoke<CommandResult<boolean>>('can_agent_use_provider', {
         agentId,
@@ -139,9 +136,7 @@ export class AgentsAPIService {
    * @param agentId - ID de l'agent
    * @returns Nom du fournisseur recommandé (ou null si aucun)
    */
-  static async getAgentRecommendedProvider(
-    agentId: string
-  ): Promise<string | null> {
+  static async getAgentRecommendedProvider(agentId: string): Promise<string | null> {
     try {
       const result = await invoke<CommandResult<string | null>>(
         'get_agent_recommended_provider',
@@ -193,7 +188,7 @@ export class AgentsAPIService {
     const results = new Map<string, boolean>();
 
     await Promise.all(
-      providers.map(async (provider) => {
+      providers.map(async provider => {
         try {
           const canUse = await this.canAgentUseProvider(agentId, provider);
           results.set(provider, canUse);

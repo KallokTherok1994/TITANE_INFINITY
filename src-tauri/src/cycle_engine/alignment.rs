@@ -30,7 +30,7 @@ impl AlignmentEngine {
             current_alignment: SystemAlignment::default(),
         }
     }
-    
+
     /// Align all subsystems with current cycle
     pub fn align_system(
         &mut self,
@@ -40,7 +40,7 @@ impl AlignmentEngine {
     ) -> SystemAlignment {
         // TODO: Implement actual alignment logic with each subsystem
         // For now, return placeholder
-        
+
         let alignment = SystemAlignment {
             kernel_aligned: true,
             omega_aligned: true,
@@ -49,16 +49,16 @@ impl AlignmentEngine {
             self_healing_aligned: true,
             alignment_score: 0.95,
         };
-        
+
         self.current_alignment = alignment.clone();
         alignment
     }
-    
+
     /// Check if system is well-aligned
     pub fn is_well_aligned(&self) -> bool {
         self.current_alignment.alignment_score > 0.8
     }
-    
+
     /// Get current alignment
     pub fn current_alignment(&self) -> &SystemAlignment {
         &self.current_alignment

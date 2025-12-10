@@ -3,11 +3,11 @@
 //! Super Prompt #19 — Collaboration inter-agents
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
 use super::agent::AgentId;
-use super::registry::AgentRegistry;
 use super::communication::MessageBus;
+use super::registry::AgentRegistry;
 use super::AgentSystemError;
+use serde::{Deserialize, Serialize};
 
 /// Mode de collaboration
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -60,24 +60,14 @@ impl Collaboration {
         self.status = CollaborationStatus::Active;
 
         let result = match self.mode {
-            CollaborationMode::Sequential => {
-                self.execute_sequential(registry, message_bus).await
-            }
-            CollaborationMode::Parallel => {
-                self.execute_parallel(registry, message_bus).await
-            }
-            CollaborationMode::Pipeline => {
-                self.execute_pipeline(registry, message_bus).await
-            }
-            CollaborationMode::Voting => {
-                self.execute_voting(registry, message_bus).await
-            }
+            CollaborationMode::Sequential => self.execute_sequential(registry, message_bus).await,
+            CollaborationMode::Parallel => self.execute_parallel(registry, message_bus).await,
+            CollaborationMode::Pipeline => self.execute_pipeline(registry, message_bus).await,
+            CollaborationMode::Voting => self.execute_voting(registry, message_bus).await,
             CollaborationMode::Hierarchical => {
                 self.execute_hierarchical(registry, message_bus).await
             }
-            CollaborationMode::PeerToPeer => {
-                self.execute_p2p(registry, message_bus).await
-            }
+            CollaborationMode::PeerToPeer => self.execute_p2p(registry, message_bus).await,
         };
 
         self.status = if result.is_ok() {
@@ -97,7 +87,9 @@ impl Collaboration {
         let mut outputs = Vec::new();
 
         for agent_id in &self.participants {
-            let agent = registry.get(agent_id).await
+            let agent = registry
+                .get(agent_id)
+                .await
                 .ok_or(AgentSystemError::AgentNotFound(agent_id.clone()))?;
 
             // Simulation d'exécution
@@ -181,7 +173,9 @@ impl Collaboration {
         let mut current_output = serde_json::json!({ "initial": self.objective });
 
         for agent_id in &self.participants {
-            let agent = registry.get(agent_id).await
+            let agent = registry
+                .get(agent_id)
+                .await
                 .ok_or(AgentSystemError::AgentNotFound(agent_id.clone()))?;
 
             // Transformer la sortie
@@ -216,7 +210,9 @@ impl Collaboration {
         let mut votes: std::collections::HashMap<String, u32> = std::collections::HashMap::new();
 
         for agent_id in &self.participants {
-            let agent = registry.get(agent_id).await
+            let agent = registry
+                .get(agent_id)
+                .await
                 .ok_or(AgentSystemError::AgentNotFound(agent_id.clone()))?;
 
             // Simulation de vote
@@ -231,7 +227,8 @@ impl Collaboration {
         }
 
         // Trouver le gagnant
-        let winner = votes.iter()
+        let winner = votes
+            .iter()
             .max_by_key(|(_, count)| *count)
             .map(|(option, _)| option.clone())
             .unwrap_or_default();
@@ -255,18 +252,24 @@ impl Collaboration {
         _message_bus: &MessageBus,
     ) -> Result<CollaborationResult, AgentSystemError> {
         if self.participants.is_empty() {
-            return Err(AgentSystemError::CollaborationFailed("No participants".to_string()));
+            return Err(AgentSystemError::CollaborationFailed(
+                "No participants".to_string(),
+            ));
         }
 
         let coordinator_id = &self.participants[0];
-        let coordinator = registry.get(coordinator_id).await
+        let coordinator = registry
+            .get(coordinator_id)
+            .await
             .ok_or(AgentSystemError::AgentNotFound(coordinator_id.clone()))?;
 
         // Coordinateur distribue le travail
         let mut subordinate_results = Vec::new();
 
         for worker_id in self.participants.iter().skip(1) {
-            let worker = registry.get(worker_id).await
+            let worker = registry
+                .get(worker_id)
+                .await
                 .ok_or(AgentSystemError::AgentNotFound(worker_id.clone()))?;
 
             let contribution = CollaborationContribution {

@@ -19,28 +19,35 @@ export * from './types';
 export * from './validation';
 
 // New Backend API (v15.2)
-export { backendV17, helios, memory as memoryV17, engine, system as systemV17, composite } from './backend-v17.2.commands';
+export {
+  backendV17,
+  helios,
+  memory as memoryV17,
+  engine,
+  system as systemV17,
+  composite,
+} from './backend-v17.2.commands';
 export * from './backend-v17.2.types';
 
 // Chat Engine Backend (v19.2Ω)
 export {
-	chatEngineCommands,
-	generateResponse as chatEngineGenerateResponse,
-	streamResponse as chatEngineStreamResponse,
-	speakText as chatEngineSpeakText,
-	saveMemory as chatEngineSaveMemory,
-	loadMemory as chatEngineLoadMemory,
-	resetMemory as chatEngineResetMemory,
-	healthCheck as chatEngineHealthCheck,
-	onStreamChunk as chatEngineOnStreamChunk,
-	onStreamDone as chatEngineOnStreamDone,
+  chatEngineCommands,
+  generateResponse as chatEngineGenerateResponse,
+  streamResponse as chatEngineStreamResponse,
+  speakText as chatEngineSpeakText,
+  saveMemory as chatEngineSaveMemory,
+  loadMemory as chatEngineLoadMemory,
+  resetMemory as chatEngineResetMemory,
+  healthCheck as chatEngineHealthCheck,
+  onStreamChunk as chatEngineOnStreamChunk,
+  onStreamDone as chatEngineOnStreamDone,
 } from './chatEngine.commands';
 export type {
-	ProviderPreference as ChatEngineProviderPreference,
-	SpeechMode as ChatEngineSpeechMode,
-	ChatRequestArgs as ChatEngineRequestArgs,
-	ChatCompletionPayload as ChatEngineCompletion,
-	StreamChunkPayload as ChatEngineStreamChunk,
-	StreamHandle as ChatEngineStreamHandle,
-	EngineHealthReport as ChatEngineHealthReport,
+  ProviderPreference as ChatEngineProviderPreference,
+  SpeechMode as ChatEngineSpeechMode,
+  ChatRequestArgs as ChatEngineRequestArgs,
+  ChatCompletionPayload as ChatEngineCompletion,
+  StreamChunkPayload as ChatEngineStreamChunk,
+  StreamHandle as ChatEngineStreamHandle,
+  EngineHealthReport as ChatEngineHealthReport,
 } from './chatEngine.commands';

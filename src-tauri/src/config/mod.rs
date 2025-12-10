@@ -2,16 +2,15 @@
 // © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
 
 #![allow(dead_code)]
+pub mod io;
+pub mod presets;
 /**
  * ═══════════════════════════════════════════════════════════════
  *   CONFIG MODULE - Unified Configuration Management
  *   Phase 2: Configuration Management UI
  * ═══════════════════════════════════════════════════════════════
  */
-
 pub mod update;
-pub mod io;
-pub mod presets;
 
 use serde::{Deserialize, Serialize};
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -105,7 +104,7 @@ pub async fn get_all_configs() -> Result<ConfigSnapshot, String> {
         ollama_model: std::env::var("OLLAMA_DEFAULT_MODEL")
             .unwrap_or_else(|_| "qwen2.5:latest".to_string()),
         secrets_mode: "encrypted".to_string(), // TODO: Get from SecureSecretsEngine
-        gemini_configured: false, // TODO: Check SecureSecretsEngine
+        gemini_configured: false,              // TODO: Check SecureSecretsEngine
         timestamp: SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .unwrap()
@@ -117,7 +116,10 @@ pub async fn get_all_configs() -> Result<ConfigSnapshot, String> {
 
     let snapshot = ConfigSnapshot::new(runtime, chat_engine);
 
-    log::info!("✅ [CONFIG] Configuration snapshot created (version: {})", snapshot.version);
+    log::info!(
+        "✅ [CONFIG] Configuration snapshot created (version: {})",
+        snapshot.version
+    );
 
     Ok(snapshot)
 }

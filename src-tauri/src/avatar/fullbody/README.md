@@ -84,12 +84,14 @@ function AvatarComponent() {
 ### Backend (Rust)
 
 **Fichiers**:
+
 - `fullbody_engine.rs` (698 lignes) — Moteur principal, skeleton, gestures
 - `posture_ai.rs` (380 lignes) — AI-driven posture selection
 - `fullbody_commands.rs` (180 lignes) — 11 commandes Tauri
 - `mod.rs` (15 lignes) — Exports
 
 **Structures Clés**:
+
 1. **`FullBodyAvatarEngine`** — Moteur principal
 2. **`SkeletonModel`** — 18 bones + IK chains
 3. **`MotionLayer`** — Gestuelle + animations
@@ -101,11 +103,13 @@ function AvatarComponent() {
 ### Frontend (TypeScript + React)
 
 **Fichiers**:
+
 - `fullbody_engine.ts` (320 lignes) — Bridge Tauri
 - `useFullBodyAvatar.ts` (240 lignes) — Hook React
 - `TAURI_COMMANDS.ts` — 11 constantes ajoutées
 
 **API Bridge**:
+
 - `initialize()` — Setup moteur
 - `startAnimationLoop()` — Lancer 60 FPS
 - `activateGesture()` — Déclencher geste
@@ -121,14 +125,14 @@ function AvatarComponent() {
 
 ## 🎭 Gestures (6 disponibles)
 
-| Gesture | Durée | Loop | Déclencheur | Description |
-|---------|-------|------|-------------|-------------|
-| `listening` | 800ms | ✅ | Auto lors pause utilisateur | Tête tilt, lean forward subtil |
-| `explaining` | 600ms | ❌ | TTS start, meta_intention="explain" | Main droite ouverte, bras gauche support |
-| `thinking` | 900ms | ❌ | Expression "Thinking", pause longue | Look-away, sourcil contracté, inhale-pause |
-| `smiling_warm` | 500ms | ❌ | Expression "SoftSmile", XP gain | Micro-smile, tête tilt léger |
-| `attention_shift` | 200ms | ❌ | Wake-word "TITANE" | Saccade oculaire rapide, alignement tête |
-| `idle_cycle` | 6000ms | ✅ | Default (si aucun autre geste) | Respiration thorax ±2mm, micro-spine motion |
+| Gesture           | Durée  | Loop | Déclencheur                         | Description                                 |
+| ----------------- | ------ | ---- | ----------------------------------- | ------------------------------------------- |
+| `listening`       | 800ms  | ✅   | Auto lors pause utilisateur         | Tête tilt, lean forward subtil              |
+| `explaining`      | 600ms  | ❌   | TTS start, meta_intention="explain" | Main droite ouverte, bras gauche support    |
+| `thinking`        | 900ms  | ❌   | Expression "Thinking", pause longue | Look-away, sourcil contracté, inhale-pause  |
+| `smiling_warm`    | 500ms  | ❌   | Expression "SoftSmile", XP gain     | Micro-smile, tête tilt léger                |
+| `attention_shift` | 200ms  | ❌   | Wake-word "TITANE"                  | Saccade oculaire rapide, alignement tête    |
+| `idle_cycle`      | 6000ms | ✅   | Default (si aucun autre geste)      | Respiration thorax ±2mm, micro-spine motion |
 
 **Transitions**: 150–350ms (fluides, interpolées)
 
@@ -136,13 +140,13 @@ function AvatarComponent() {
 
 ## 🧘 Postures (5 dynamiques)
 
-| Posture | Spine | Épaules | Bras | Énergie | Usage |
-|---------|-------|---------|------|---------|-------|
-| `Professional` | 0.0 (neutre) | 0.8 (ouvert) | 0.3 (contrôlé) | 0.6 | Default, topic complexe |
-| `Engaged` | +0.2 (lean-in) | 0.9 (très ouvert) | 0.7 (actif) | 0.85 | Haut engagement utilisateur |
-| `Calm` | -0.05 (retrait) | 0.6 (relâché) | 0.2 (minimal) | 0.4 | Faible engagement, relaxation |
-| `Creative` | +0.1 (incliné) | 0.85 (ouvert) | 0.9 (expressif) | 0.75 | Phase brainstorm, idéation |
-| `Welcoming` | +0.05 (avant) | 1.0 (complet) | 0.5 (accueillant) | 0.7 | Ouverture conversation |
+| Posture        | Spine           | Épaules           | Bras              | Énergie | Usage                         |
+| -------------- | --------------- | ----------------- | ----------------- | ------- | ----------------------------- |
+| `Professional` | 0.0 (neutre)    | 0.8 (ouvert)      | 0.3 (contrôlé)    | 0.6     | Default, topic complexe       |
+| `Engaged`      | +0.2 (lean-in)  | 0.9 (très ouvert) | 0.7 (actif)       | 0.85    | Haut engagement utilisateur   |
+| `Calm`         | -0.05 (retrait) | 0.6 (relâché)     | 0.2 (minimal)     | 0.4     | Faible engagement, relaxation |
+| `Creative`     | +0.1 (incliné)  | 0.85 (ouvert)     | 0.9 (expressif)   | 0.75    | Phase brainstorm, idéation    |
+| `Welcoming`    | +0.05 (avant)   | 1.0 (complet)     | 0.5 (accueillant) | 0.7     | Ouverture conversation        |
 
 **Sélection AI**: Basée sur `ConversationalContext` (engagement, complexité, phase)
 
@@ -151,11 +155,13 @@ function AvatarComponent() {
 ## 🔗 Intégrations
 
 ### Avec v23 ImmersiveAvatarEngine
+
 - **LipSyncFeed**: Récupère morphs depuis `LipSyncModel`
 - **ExpressionBridge**: Synchronise `FacialExpression` → geste corporel
 - **ProsodyControl**: Timing SSML influence respiration
 
 ### Avec SingularityState v∞
+
 - **cognitive_load** → Réduction mouvements si >0.7
 - **emotional_tone** → Sélection posture (warm → Engaged)
 - **meta_intention** → Geste adapté (explain → Explaining)
@@ -163,6 +169,7 @@ function AvatarComponent() {
 - **xp_progression** → Micro-ouverture torse lors gain
 
 ### Avec Wake-Word Detection
+
 - **on_wake_word()** → Geste `attention_shift` + halo expression
 
 ---
@@ -170,6 +177,7 @@ function AvatarComponent() {
 ## 📊 Performance
 
 ### Cibles v24
+
 - **FPS**: 60 constant (16.67ms par frame)
 - **CPU Idle**: <3% (skeleton + idle_cycle)
 - **CPU Speaking**: <12% (skeleton + gesture + lip-sync)
@@ -177,6 +185,7 @@ function AvatarComponent() {
 - **Latency**: <5ms (advance_frame + apply_to_skeleton)
 
 ### Optimisations
+
 - Thread-safe global instance (`Arc<Mutex<>>`)
 - Interpolation linéaire simplifiée (améliorer avec easing curves)
 - Borrow checker optimisé (éviter double mutable borrow)
@@ -187,6 +196,7 @@ function AvatarComponent() {
 ## 🧪 Tests (à venir v24.1)
 
 **avatar_fullbody_selftest()**:
+
 1. ✅ Posture transitions (5 postures × 3 secondes)
 2. ✅ Gesture blending (6 gestures × overlaps)
 3. ✅ TTS synchronization (lip-sync feed active)
@@ -203,6 +213,7 @@ function AvatarComponent() {
 Voir **`AVATAR_STYLE_V24.md`** pour détails complets.
 
 **Résumé**:
+
 - Femme adulte athlétique (1.68m, athletic-toned)
 - Élégante, professionnelle, inspirante
 - Tenue moderne neutre + touches chaudes
@@ -214,6 +225,7 @@ Voir **`AVATAR_STYLE_V24.md`** pour détails complets.
 ## 📝 TODO v24.1+
 
 ### Phase 1: Rendu 3D (WebGL/Three.js)
+
 - [ ] Modèle 3D complet (18 bones riggés)
 - [ ] Textures PBR (skin, hair, outfit)
 - [ ] Three.js scene setup
@@ -221,12 +233,14 @@ Voir **`AVATAR_STYLE_V24.md`** pour détails complets.
 - [ ] Lighting (three-point studio)
 
 ### Phase 2: Animations Avancées
+
 - [ ] Easing curves (ease-in-out, cubic-bezier)
 - [ ] IK résolution complète (pieds + contraintes)
 - [ ] Hair physics (simulation cheveux)
 - [ ] Cloth simulation (tenue vestimentaire)
 
 ### Phase 3: Optimisation GPU
+
 - [ ] PBR shader optimisé
 - [ ] LOD système (niveaux de détail)
 - [ ] Frustum culling
@@ -277,6 +291,7 @@ FULLBODY_GET_STATS() → JSON { frame_count, current_gesture, speech_active, ...
 ## ✨ Cohérence TITANE∞
 
 **v24 FullBodyAvatarEngine** s'intègre parfaitement dans l'écosystème TITANE∞:
+
 - ✅ **v23 ImmersiveAvatarEngine** — Lip-sync + expressions faciales
 - ✅ **v22 NarrativeEngine** — Archétypes narratifs → postures
 - ✅ **v21 AdaptiveEngine** — Apprentissage patterns gestuels

@@ -54,9 +54,11 @@ export type ChatResponse = z.infer<typeof ChatResponseSchema>;
 export const StreamingChunkSchema = z.object({
   delta: z.string(),
   done: z.boolean(),
-  metadata: z.object({
-    tokens_used: z.number().optional(),
-  }).optional(),
+  metadata: z
+    .object({
+      tokens_used: z.number().optional(),
+    })
+    .optional(),
 });
 
 export type StreamingChunk = z.infer<typeof StreamingChunkSchema>;
@@ -187,7 +189,9 @@ export class AIResponseValidator {
    * @param response - Réponse brute Meta-Mode
    * @returns Résultat validation
    */
-  static validateMetaModeResponse(response: unknown): AIValidationResult<MetaModeResponse> {
+  static validateMetaModeResponse(
+    response: unknown
+  ): AIValidationResult<MetaModeResponse> {
     const result: AIValidationResult<MetaModeResponse> = {
       isValid: false,
       errors: [],

@@ -45,11 +45,12 @@ const EthicalDisclaimer: React.FC = () => (
   <div className="camera-ethical-disclaimer">
     <h4>⚠️ Information Importante</h4>
     <p>
-      Le module Vision est <strong>100% local</strong> — aucune donnée n'est envoyée vers le cloud.
+      Le module Vision est <strong>100% local</strong> — aucune donnée n'est envoyée vers
+      le cloud.
     </p>
     <p>
-      Les analyses émotionnelles sont des <strong>indices approximatifs</strong>,
-      pas des diagnostics cliniques.
+      Les analyses émotionnelles sont des <strong>indices approximatifs</strong>, pas des
+      diagnostics cliniques.
     </p>
     <p>
       L'activation nécessite votre <strong>consentement explicite</strong> (opt-in).
@@ -63,19 +64,27 @@ const EthicalDisclaimer: React.FC = () => (
 
 const levelToPercent = (level: VisualLevel): number => {
   switch (level) {
-    case 'low': return 25;
-    case 'medium': return 50;
-    case 'high': return 75;
-    default: return 50;
+    case 'low':
+      return 25;
+    case 'medium':
+      return 50;
+    case 'high':
+      return 75;
+    default:
+      return 50;
   }
 };
 
 const levelToColor = (level: VisualLevel): string => {
   switch (level) {
-    case 'high': return 'var(--titane-accent)';
-    case 'medium': return 'var(--titane-primary)';
-    case 'low': return 'var(--titane-secondary)';
-    default: return 'var(--titane-secondary)';
+    case 'high':
+      return 'var(--titane-accent)';
+    case 'medium':
+      return 'var(--titane-primary)';
+    case 'low':
+      return 'var(--titane-secondary)';
+    default:
+      return 'var(--titane-secondary)';
   }
 };
 
@@ -89,21 +98,21 @@ export const CameraPage: React.FC = () => {
 
   // Vision Store
   const isCameraActive = useVisionStore(selectIsCameraActive);
-  const visionInput = useVisionStore((s) => s.visionInput);
-  const bodyLanguage = useVisionStore((s) => s.bodyLanguage);
-  const affectEstimation = useVisionStore((s) => s.affectEstimation);
-  const config = useVisionStore((s) => s.config);
-  const isProcessing = useVisionStore((s) => s.isProcessing);
-  const lastError = useVisionStore((s) => s.lastError);
-  const isObservationActive = useVisionStore((s) => s.isObservationActive);
+  const visionInput = useVisionStore(s => s.visionInput);
+  const bodyLanguage = useVisionStore(s => s.bodyLanguage);
+  const affectEstimation = useVisionStore(s => s.affectEstimation);
+  const config = useVisionStore(s => s.config);
+  const isProcessing = useVisionStore(s => s.isProcessing);
+  const lastError = useVisionStore(s => s.lastError);
+  const isObservationActive = useVisionStore(s => s.isObservationActive);
 
   // Actions
-  const enableVision = useVisionStore((s) => s.enableVision);
-  const disableVision = useVisionStore((s) => s.disableVision);
-  const updateConfig = useVisionStore((s) => s.updateConfig);
-  const requestCameraPermission = useVisionStore((s) => s.requestCameraPermission);
-  const startCamera = useVisionStore((s) => s.startCamera);
-  const stopCamera = useVisionStore((s) => s.stopCamera);
+  const enableVision = useVisionStore(s => s.enableVision);
+  const disableVision = useVisionStore(s => s.disableVision);
+  const updateConfig = useVisionStore(s => s.updateConfig);
+  const requestCameraPermission = useVisionStore(s => s.requestCameraPermission);
+  const startCamera = useVisionStore(s => s.startCamera);
+  const stopCamera = useVisionStore(s => s.stopCamera);
 
   // Handle camera toggle
   const handleToggleCamera = async () => {
@@ -117,7 +126,9 @@ export const CameraPage: React.FC = () => {
         if (permStatus === 'granted') {
           await startCamera();
         } else if (permStatus === 'denied') {
-          setError('Permission caméra refusée. Veuillez l\'autoriser dans les paramètres système.');
+          setError(
+            "Permission caméra refusée. Veuillez l'autoriser dans les paramètres système."
+          );
         }
       }
     } catch (err) {
@@ -134,7 +145,7 @@ export const CameraPage: React.FC = () => {
       } else {
         const success = await enableVision(30 * 60 * 1000); // 30 minutes max
         if (!success) {
-          setError('Impossible d\'activer le Vision Engine');
+          setError("Impossible d'activer le Vision Engine");
         }
       }
     } catch (err) {
@@ -169,8 +180,9 @@ export const CameraPage: React.FC = () => {
       {/* Environment Warning */}
       {!env.isTauri && (
         <div className="camera-warning">
-          <strong>Note:</strong> En mode navigateur, certaines fonctionnalités peuvent être limitées.
-          Pour une expérience complète, utilisez l'application Tauri native.
+          <strong>Note:</strong> En mode navigateur, certaines fonctionnalités peuvent
+          être limitées. Pour une expérience complète, utilisez l'application Tauri
+          native.
         </div>
       )}
 
@@ -204,7 +216,7 @@ export const CameraPage: React.FC = () => {
               <input
                 type="checkbox"
                 checked={config.processingEnabled}
-                onChange={(e) => updateConfig({ processingEnabled: e.target.checked })}
+                onChange={e => updateConfig({ processingEnabled: e.target.checked })}
               />
               <span>Traitement actif</span>
             </label>
@@ -212,7 +224,7 @@ export const CameraPage: React.FC = () => {
               <input
                 type="checkbox"
                 checked={config.debugOverlayEnabled}
-                onChange={(e) => updateConfig({ debugOverlayEnabled: e.target.checked })}
+                onChange={e => updateConfig({ debugOverlayEnabled: e.target.checked })}
               />
               <span>Overlay Debug</span>
             </label>
@@ -259,7 +271,9 @@ export const CameraPage: React.FC = () => {
                         className="meter-fill"
                         style={{
                           width: `${levelToPercent(affectEstimation.visualEnergyLevel)}%`,
-                          backgroundColor: levelToColor(affectEstimation.visualEnergyLevel)
+                          backgroundColor: levelToColor(
+                            affectEstimation.visualEnergyLevel
+                          ),
                         }}
                       />
                     </div>
@@ -272,7 +286,9 @@ export const CameraPage: React.FC = () => {
                         className="meter-fill"
                         style={{
                           width: `${levelToPercent(affectEstimation.visualTensionLevel)}%`,
-                          backgroundColor: levelToColor(affectEstimation.visualTensionLevel)
+                          backgroundColor: levelToColor(
+                            affectEstimation.visualTensionLevel
+                          ),
                         }}
                       />
                     </div>
@@ -285,7 +301,9 @@ export const CameraPage: React.FC = () => {
                         className="meter-fill"
                         style={{
                           width: `${levelToPercent(affectEstimation.visualEngagementLevel)}%`,
-                          backgroundColor: levelToColor(affectEstimation.visualEngagementLevel)
+                          backgroundColor: levelToColor(
+                            affectEstimation.visualEngagementLevel
+                          ),
                         }}
                       />
                     </div>

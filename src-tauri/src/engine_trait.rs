@@ -1,3 +1,4 @@
+use crate::error::TitaneError;
 /**
  * ═══════════════════════════════════════════════════════════════════════════
  * TITANE∞ v24 — ENGINE TRAIT & ORCHESTRATOR
@@ -5,11 +6,9 @@
  * TODO #13
  * ═══════════════════════════════════════════════════════════════════════════
  */
-
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::{Arc, RwLock};
-use crate::error::TitaneError;
 
 /// Macro for safe mutex locking with auto-recovery
 #[allow(unused_macros)]
@@ -21,7 +20,6 @@ macro_rules! lock_or_recover {
         })
     };
 }
-
 
 // ═══════════════════════════════════════════════════════════════════════════
 // ENGINE TRAIT
@@ -134,7 +132,9 @@ impl OrchestratorEngine {
 
     /// Register an engine
     pub fn register_engine(&mut self, engine: Box<dyn Engine>) -> Result<(), TitaneError> {
-        let mut registry = self.registry.write()
+        let mut registry = self
+            .registry
+            .write()
             .map_err(|e| TitaneError::InternalError(format!("Registry lock failed: {}", e)))?;
 
         registry.register(engine);
@@ -145,7 +145,9 @@ impl OrchestratorEngine {
     pub fn init_all(&mut self) -> Result<(), TitaneError> {
         self.state = EngineState::Initializing;
 
-        let mut registry = self.registry.write()
+        let mut registry = self
+            .registry
+            .write()
             .map_err(|e| TitaneError::InternalError(format!("Registry lock failed: {}", e)))?;
 
         // Get engines sorted by priority
@@ -156,7 +158,10 @@ impl OrchestratorEngine {
             log::info!("🔧 Initializing engine: {}", name);
             if let Err(e) = engine.init() {
                 log::error!("❌ Engine {} init failed: {}", name, e);
-                return Err(TitaneError::EngineOperationFailed(format!("Init {} failed", name)));
+                return Err(TitaneError::EngineOperationFailed(format!(
+                    "Init {} failed",
+                    name
+                )));
             }
         }
 
@@ -170,7 +175,9 @@ impl OrchestratorEngine {
             return Err(TitaneError::OrchestratorNotInitialized);
         }
 
-        let mut registry = self.registry.write()
+        let mut registry = self
+            .registry
+            .write()
             .map_err(|e| TitaneError::InternalError(format!("Registry lock failed: {}", e)))?;
 
         // Update all engines by priority
@@ -189,10 +196,14 @@ impl OrchestratorEngine {
 
     /// Get all engine statuses
     pub fn get_statuses(&self) -> Result<Vec<EngineStatus>, TitaneError> {
-        let registry = self.registry.read()
+        let registry = self
+            .registry
+            .read()
             .map_err(|e| TitaneError::InternalError(format!("Registry lock failed: {}", e)))?;
 
-        let statuses: Vec<EngineStatus> = registry.engines.values()
+        let statuses: Vec<EngineStatus> = registry
+            .engines
+            .values()
             .map(|engine| engine.status())
             .collect();
 
@@ -203,7 +214,9 @@ impl OrchestratorEngine {
     pub fn shutdown_all(&mut self) -> Result<(), TitaneError> {
         self.state = EngineState::Shutdown;
 
-        let mut registry = self.registry.write()
+        let mut registry = self
+            .registry
+            .write()
             .map_err(|e| TitaneError::InternalError(format!("Registry lock failed: {}", e)))?;
 
         for (name, engine) in registry.engines.iter_mut() {
@@ -271,7 +284,11 @@ mod tests {
         fn status(&self) -> EngineStatus {
             EngineStatus {
                 name: self.name.clone(),
-                state: if self.initialized { EngineState::Running } else { EngineState::Uninitialized },
+                state: if self.initialized {
+                    EngineState::Running
+                } else {
+                    EngineState::Uninitialized
+                },
                 priority: self.priority,
                 last_update_ms: 0,
                 error_count: 0,
@@ -295,8 +312,12 @@ mod tests {
     fn test_orchestrator_init() {
         let mut orchestrator = OrchestratorEngine::new();
 
-        orchestrator.register_engine(Box::new(MockEngine::new("Engine1", 80))).unwrap();
-        orchestrator.register_engine(Box::new(MockEngine::new("Engine2", 60))).unwrap();
+        orchestrator
+            .register_engine(Box::new(MockEngine::new("Engine1", 80)))
+            .unwrap();
+        orchestrator
+            .register_engine(Box::new(MockEngine::new("Engine2", 60)))
+            .unwrap();
 
         assert!(orchestrator.init_all().is_ok());
         assert_eq!(orchestrator.state, EngineState::Running);
@@ -306,7 +327,9 @@ mod tests {
     fn test_orchestrator_cycle() {
         let mut orchestrator = OrchestratorEngine::new();
 
-        orchestrator.register_engine(Box::new(MockEngine::new("Engine1", 50))).unwrap();
+        orchestrator
+            .register_engine(Box::new(MockEngine::new("Engine1", 50)))
+            .unwrap();
         orchestrator.init_all().unwrap();
 
         assert!(orchestrator.run_cycle().is_ok());
@@ -317,9 +340,15 @@ mod tests {
     fn test_orchestrator_priority_order() {
         let mut orchestrator = OrchestratorEngine::new();
 
-        orchestrator.register_engine(Box::new(MockEngine::new("LowPriority", 10))).unwrap();
-        orchestrator.register_engine(Box::new(MockEngine::new("HighPriority", 90))).unwrap();
-        orchestrator.register_engine(Box::new(MockEngine::new("MediumPriority", 50))).unwrap();
+        orchestrator
+            .register_engine(Box::new(MockEngine::new("LowPriority", 10)))
+            .unwrap();
+        orchestrator
+            .register_engine(Box::new(MockEngine::new("HighPriority", 90)))
+            .unwrap();
+        orchestrator
+            .register_engine(Box::new(MockEngine::new("MediumPriority", 50)))
+            .unwrap();
 
         orchestrator.init_all().unwrap();
 

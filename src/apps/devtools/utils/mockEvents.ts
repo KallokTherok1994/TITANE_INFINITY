@@ -95,10 +95,10 @@ export async function sendError(
 
 /**
  * Démarre une simulation d'activité système
- * 
+ *
  * @param intervalMs - Intervalle entre chaque événement (défaut: 2000ms)
  * @returns Fonction pour arrêter la simulation
- * 
+ *
  * @example
  * ```tsx
  * const stopSimulation = startMockActivity(2000);

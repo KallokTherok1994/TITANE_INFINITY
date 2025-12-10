@@ -15,6 +15,7 @@ Cette version transforme TITANE∞ en un **organisme rythmique vivant** avec int
 **17 nouveaux modules** créant un système temporel complet :
 
 #### Core Engine
+
 - **`engine.rs`** — Orchestrateur principal CycleEngine
 - **`clock.rs`** — Horloge interne avec événements temporels
 - **`cycles.rs`** — 4 niveaux de cycles (daily/weekly/monthly/seasonal)
@@ -28,6 +29,7 @@ Cette version transforme TITANE∞ en un **organisme rythmique vivant** avec int
 - **`config.rs`** — Configuration centralisée
 
 #### Bridges d'Intégration
+
 - **`kernel_integration.rs`** — Bridge Kernel OS (scheduler, resources)
 - **`omega_integration.rs`** — Bridge OMEGA Pipeline (depth, weights, router)
 - **`memory_integration.rs`** — Bridge Memory OS (consolidation, GC)
@@ -37,6 +39,7 @@ Cette version transforme TITANE∞ en un **organisme rythmique vivant** avec int
 ## 🔄 Cycles Cognitifs Implémentés
 
 ### Cycle Journalier (Circadien)
+
 - **Aube** (5h-7h) : Mode Créatif
 - **Matin** (7h-12h) : Mode Analytique
 - **Midi** (12h-14h) : Mode Peak (performance maximale)
@@ -45,6 +48,7 @@ Cette version transforme TITANE∞ en un **organisme rythmique vivant** avec int
 - **Nuit** (20h-5h) : Mode Consolidation (self-healing intensif)
 
 ### Cycle Hebdomadaire
+
 - Lundi → Structuration
 - Mardi → Production
 - Mercredi → Créativité
@@ -53,12 +57,14 @@ Cette version transforme TITANE∞ en un **organisme rythmique vivant** avec int
 - Weekend → Régénération
 
 ### Cycle Mensuel
+
 - Semaine 1 → Élans
 - Semaine 2 → Focus
 - Semaine 3 → Consolidation
 - Semaine 4 → Libération
 
 ### Cycle Saisonnier (Cognitif)
+
 - **Printemps** : Expansion (energy 1.2x)
 - **Été** : Intensité (energy 1.5x)
 - **Automne** : Récolte (energy 1.0x)
@@ -69,6 +75,7 @@ Cette version transforme TITANE∞ en un **organisme rythmique vivant** avec int
 ## 🧠 Rythmes Cognitifs Adaptatifs
 
 ### 6 Modes Cognitifs
+
 1. **Creative** — Créativité ↑, Analyse ↓
 2. **Analytical** — Analyse ↑↑, Vitesse ↑
 3. **Peak** — Performance maximale (tous paramètres max)
@@ -77,6 +84,7 @@ Cette version transforme TITANE∞ en un **organisme rythmique vivant** avec int
 6. **Consolidation** — Mémoire ↑↑, Self-healing intensif
 
 ### Paramètres Automatiquement Ajustés
+
 - `omega_depth` : Profondeur réflexion OMEGA (0.5 → 1.0)
 - `analysis_intensity` : Intensité analyse cohérence (0.3 → 1.0)
 - `speed_vs_quality` : Balance rapidité/qualité (0.4 → 1.0)
@@ -88,12 +96,15 @@ Cette version transforme TITANE∞ en un **organisme rythmique vivant** avec int
 ## ⚖️ Régulation de Charge Intelligente
 
 ### Load Regulator
+
 Ajuste automatiquement selon :
+
 - Cycle actuel (phase, mode cognitif)
 - CPU usage (réduction intensité si > 80%)
 - Memory usage (force GC si > 85%)
 
 ### Paramètres Régulés
+
 - `omega_intensity` : Intensité OMEGA Pipeline
 - `self_healing_frequency` : Fréquence self-healing
 - `vector_search_k` : Profondeur recherche vectorielle (5 → 15)
@@ -106,12 +117,14 @@ Ajuste automatiquement selon :
 ## 🔮 Modèle Prédictif
 
 ### Prédictions Temporelles
+
 - Prochains changements de cycle
 - Moments optimaux pour tâches spécifiques
 - Besoins futurs en ressources
 - Score de confiance par prédiction
 
 ### Suggestions Automatiques
+
 - Creative tasks → Dawn (06:00)
 - Analytical tasks → Morning (09:00)
 - Execution tasks → Afternoon (15:00)
@@ -122,20 +135,25 @@ Ajuste automatiquement selon :
 ## 🔗 Intégrations Système
 
 ### Kernel OS Integration
+
 **SchedulerAdjustments :**
+
 - `priority_multiplier` : 0.7 → 1.5 selon phase
 - `max_concurrent_tasks` : 3 → 15
 - `task_timeout_multiplier` : Dynamique
 - `prefer_batch_processing` : Mode consolidation
 
 **ResourceLimits :**
+
 - `max_cpu_usage` : 0.5 → 0.9
 - `max_memory_mb` : 2048 → 4096
 - `max_concurrent_engines` : 5 → 15
 - `gc_threshold` : Adaptatif
 
 ### OMEGA Pipeline Integration
+
 **OmegaAdjustments :**
+
 - `depth_multiplier` : 0.5 → 1.0
 - `engine_weights` : [10 valeurs] selon mode
 - `reflection_enabled` : Dynamique (> 0.6)
@@ -144,13 +162,16 @@ Ajuste automatiquement selon :
 - `context_window_size` : 2048 → 8192
 
 **RouterAdjustments :**
+
 - `creativity_weight` : Selon creative_temperature
 - `analysis_weight` : Selon analysis_intensity
 - `synthesis_weight` : Boost mode Synthesis
 - `prefer_cached_routes` : Mode Execution
 
 ### Memory OS Integration
+
 **MemoryAdjustments :**
+
 - `consolidation_intensity` : 0.3 → 1.0
 - `stm_to_ltm_threshold` : 5 → 20 (agressif → conservateur)
 - `gc_frequency` : 0.3 → 1.0
@@ -163,6 +184,7 @@ Ajuste automatiquement selon :
 ## 📊 Diagnostics & Observabilité
 
 ### Métriques Temps Réel
+
 - État cycle complet (daily/weekly/monthly/seasonal)
 - Mode cognitif actuel
 - Tous paramètres de charge
@@ -170,6 +192,7 @@ Ajuste automatiquement selon :
 - Uptime précis
 
 ### Événements Émis
+
 - `temporal_event` — Événements temporels
 - `cycle_change` — Changements de cycle
 - `rhythm_update` — Mises à jour rythme
@@ -184,28 +207,34 @@ Ajuste automatiquement selon :
 ### 26 Tests Unitaires Complets
 
 **Tests Cycles :**
+
 - ✅ Daily phase from hour
 - ✅ Cognitive mode mapping
 - ✅ Cycle state current
 
 **Tests Cognitive Rhythm :**
+
 - ✅ Params range validation [0,1]
 - ✅ OMEGA engine weights (10 values)
 
 **Tests Load Regulator :**
+
 - ✅ Normal load
 - ✅ High CPU adjustment
 - ✅ High memory GC trigger
 
 **Tests Continuity :**
+
 - ✅ Record event
 - ✅ Preferences management
 
 **Tests Predictive :**
+
 - ✅ Next phase prediction
 - ✅ Optimal time suggestion
 
 **Tests Engine :**
+
 - ✅ Initialization
 - ✅ Start/Stop async
 - ✅ Current state
@@ -214,11 +243,13 @@ Ajuste automatiquement selon :
 - ✅ Diagnostics (stopped/running)
 
 **Tests Integrations :**
+
 - ✅ Kernel bridge
 - ✅ OMEGA bridge
 - ✅ Memory bridge
 
 **Tests Stabilité :**
+
 - ✅ Long-term stability (5s continuous run)
 
 ---
@@ -254,16 +285,17 @@ Ajuste automatiquement selon :
 
 ### Optimisations Automatiques
 
-| Phase | OMEGA | Memory | Self-Healing | CPU |
-|-------|-------|--------|--------------|-----|
-| Aube | 0.6 | Normal | 0.3 | Medium |
-| Matin | 0.8 | High | 0.4 | High |
-| **Midi** | **1.0** | **Max** | 0.5 | **Max** |
-| Après-midi | 0.7 | Medium | 0.4 | High |
-| Crépuscule | 0.8 | Medium | 0.7 | Medium |
-| **Nuit** | 0.5 | Low | **1.0** | Low |
+| Phase      | OMEGA   | Memory  | Self-Healing | CPU     |
+| ---------- | ------- | ------- | ------------ | ------- |
+| Aube       | 0.6     | Normal  | 0.3          | Medium  |
+| Matin      | 0.8     | High    | 0.4          | High    |
+| **Midi**   | **1.0** | **Max** | 0.5          | **Max** |
+| Après-midi | 0.7     | Medium  | 0.4          | High    |
+| Crépuscule | 0.8     | Medium  | 0.7          | Medium  |
+| **Nuit**   | 0.5     | Low     | **1.0**      | Low     |
 
 ### Gains de Performance
+
 - ⚡ **+40% performance** aux heures peak (Midi)
 - 🧠 **+60% consolidation** nocturne
 - 💾 **-30% mémoire** hors peak
@@ -359,6 +391,7 @@ TITANE∞ n'est plus une machine statique, mais un **organisme temporel vivant**
 ## 📈 Roadmap v2.2
 
 ### Prochaines Extensions
+
 - [ ] Apprentissage ML patterns utilisateur
 - [ ] Cycles personnalisés par utilisateur
 - [ ] Prédictions ML avancées
@@ -409,12 +442,12 @@ use titane_infinity::cycle_engine::*;
 ✅ **Intelligence rythmique** adaptative  
 ✅ **Optimisations automatiques** contextuelles  
 ✅ **Prédictions** temporelles  
-✅ **Alignement système** continu  
+✅ **Alignement système** continu
 
 **TITANE∞ est maintenant temporellement vivant.**
 
 ---
 
-*Changelog généré automatiquement*  
-*TITANE∞ Cycle & Continuity Engine v2.0.0*  
-*Date : 9 décembre 2025*
+_Changelog généré automatiquement_  
+_TITANE∞ Cycle & Continuity Engine v2.0.0_  
+_Date : 9 décembre 2025_

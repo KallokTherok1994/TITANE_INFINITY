@@ -1,12 +1,14 @@
 // TITANE_INFINITY v∞ — Proprietary License
 // © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
 
+use crate::error::{TitaneError, TitaneResult};
+use once_cell::sync::Lazy;
 /**
  * TITANE∞ v19.5 — Rate Limiting Backend (REPAIRED vΩ)
- * 
+ *
  * Production-grade rate limiting pour toutes les commandes Tauri
  * Protection contre spam, brute-force, et abus
- * 
+ *
  * Features:
  * - Per-user rate limiting
  * - Configurable time windows
@@ -14,12 +16,9 @@
  * - Thread-safe avec RwLock
  * - get_stats() and cleanup() API
  */
-
 use std::collections::HashMap;
 use std::time::{Duration, Instant};
 use tokio::sync::RwLock;
-use crate::error::{TitaneResult, TitaneError};
-use once_cell::sync::Lazy;
 
 // ═══════════════════════════════════════════════════════════════
 // RATE LIMITER CORE
@@ -39,18 +38,15 @@ impl RateLimiter {
             window: Duration::from_secs(window_seconds),
         }
     }
-    
+
     pub async fn check(&self, user_id: &str) -> TitaneResult<()> {
         let mut requests = self.requests.write().await;
         let now = Instant::now();
-        
-        let user_requests = requests.entry(user_id.to_string())
-            .or_insert_with(Vec::new);
-        
-        user_requests.retain(|&timestamp| {
-            now.duration_since(timestamp) < self.window
-        });
-        
+
+        let user_requests = requests.entry(user_id.to_string()).or_insert_with(Vec::new);
+
+        user_requests.retain(|&timestamp| now.duration_since(timestamp) < self.window);
+
         if user_requests.len() >= self.max_requests {
             return Err(TitaneError::RateLimitExceeded {
                 message: format!(
@@ -60,27 +56,30 @@ impl RateLimiter {
                 ),
             });
         }
-        
+
         user_requests.push(now);
         Ok(())
     }
-    
+
     pub async fn reset(&self, user_id: &str) {
         let mut requests = self.requests.write().await;
         requests.remove(user_id);
     }
-    
+
     /// Get statistics for a specific user
     pub async fn get_stats(&self, user_id: &str) -> RateLimitStats {
         let requests = self.requests.read().await;
         let now = Instant::now();
-        
-        let current = requests.get(user_id)
-            .map(|reqs| reqs.iter()
-                .filter(|&&timestamp| now.duration_since(timestamp) < self.window)
-                .count())
+
+        let current = requests
+            .get(user_id)
+            .map(|reqs| {
+                reqs.iter()
+                    .filter(|&&timestamp| now.duration_since(timestamp) < self.window)
+                    .count()
+            })
             .unwrap_or(0);
-        
+
         RateLimitStats {
             user_id: user_id.to_string(),
             current: current as u64,
@@ -88,16 +87,14 @@ impl RateLimiter {
             window_seconds: self.window.as_secs(),
         }
     }
-    
+
     /// Clean up expired entries
     pub async fn cleanup(&self) {
         let mut requests = self.requests.write().await;
         let now = Instant::now();
-        
+
         requests.retain(|_, timestamps| {
-            timestamps.retain(|&timestamp| {
-                now.duration_since(timestamp) < self.window
-            });
+            timestamps.retain(|&timestamp| now.duration_since(timestamp) < self.window);
             !timestamps.is_empty()
         });
     }
@@ -108,9 +105,7 @@ impl RateLimiter {
 // ═══════════════════════════════════════════════════════════════
 
 /// Global rate limiter instance (100 req/min)
-pub static GLOBAL_RATE_LIMITER: Lazy<RateLimiter> = Lazy::new(|| {
-    RateLimiter::new(100, 60)
-});
+pub static GLOBAL_RATE_LIMITER: Lazy<RateLimiter> = Lazy::new(|| RateLimiter::new(100, 60));
 
 // ═══════════════════════════════════════════════════════════════
 // TYPES & CONFIG
@@ -177,10 +172,10 @@ mod tests {
     #[tokio::test]
     async fn test_get_stats() {
         let limiter = RateLimiter::new(10, 60);
-        
+
         limiter.check("user1").await.ok();
         limiter.check("user1").await.ok();
-        
+
         let stats = limiter.get_stats("user1").await;
         assert_eq!(stats.current, 2);
         assert_eq!(stats.limit, 10);

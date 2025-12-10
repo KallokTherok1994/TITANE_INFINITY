@@ -10,17 +10,14 @@ import sharedTestConfig from './vitest.config';
 export default mergeConfig(sharedTestConfig, {
   test: {
     name: 'unit-core',
-    include: [
-      'src/**/*.{test,spec}.{ts,tsx}',
-      'tests/unit/**/*.{test,spec}.{ts,tsx}'
-    ],
+    include: ['src/**/*.{test,spec}.{ts,tsx}', 'tests/unit/**/*.{test,spec}.{ts,tsx}'],
     exclude: [
       // tests/integration et tests/chat sont traités par integration config
       'tests/integration/**/*',
       'tests/chat/**/*',
       'tests/e2e/**/*',
-      'node_modules'
+      'node_modules',
     ],
-    environment: 'happy-dom'
-  }
+    environment: 'happy-dom',
+  },
 });

@@ -36,7 +36,11 @@ describe('DiagnosticPanel Integration', () => {
     expect(results.modules.xp).toBeDefined();
 
     // Verify summary counts
-    const totalModules = results.summary.ok + results.summary.warn + results.summary.error + results.summary.skip;
+    const totalModules =
+      results.summary.ok +
+      results.summary.warn +
+      results.summary.error +
+      results.summary.skip;
     expect(totalModules).toBe(3);
 
     console.log('Test Results:', JSON.stringify(results, null, 2));

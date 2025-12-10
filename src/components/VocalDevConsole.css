@@ -63,11 +63,26 @@
   text-transform: uppercase;
 }
 
-.vocal-dev-console__status--dev { background: #4caf50; color: #fff; }
-.vocal-dev-console__status--chat { background: #2196f3; color: #fff; }
-.vocal-dev-console__status--heal { background: #ff9800; color: #fff; }
-.vocal-dev-console__status--system { background: #9c27b0; color: #fff; }
-.vocal-dev-console__status--idle { background: #757575; color: #fff; }
+.vocal-dev-console__status--dev {
+  background: #4caf50;
+  color: #fff;
+}
+.vocal-dev-console__status--chat {
+  background: #2196f3;
+  color: #fff;
+}
+.vocal-dev-console__status--heal {
+  background: #ff9800;
+  color: #fff;
+}
+.vocal-dev-console__status--system {
+  background: #9c27b0;
+  color: #fff;
+}
+.vocal-dev-console__status--idle {
+  background: #757575;
+  color: #fff;
+}
 
 .vocal-dev-console__actions {
   display: flex;
@@ -122,7 +137,9 @@
 
 .vocal-dev-console__health-fill {
   height: 100%;
-  transition: width 0.3s, background-color 0.3s;
+  transition:
+    width 0.3s,
+    background-color 0.3s;
   border-radius: 4px;
 }
 
@@ -172,11 +189,21 @@
   word-break: break-word;
 }
 
-.vocal-dev-console__log--info .vocal-dev-console__log-message { color: #64b5f6; }
-.vocal-dev-console__log--success .vocal-dev-console__log-message { color: #81c784; }
-.vocal-dev-console__log--warning .vocal-dev-console__log-message { color: #ffb74d; }
-.vocal-dev-console__log--error .vocal-dev-console__log-message { color: #e57373; }
-.vocal-dev-console__log--debug .vocal-dev-console__log-message { color: #ba68c8; }
+.vocal-dev-console__log--info .vocal-dev-console__log-message {
+  color: #64b5f6;
+}
+.vocal-dev-console__log--success .vocal-dev-console__log-message {
+  color: #81c784;
+}
+.vocal-dev-console__log--warning .vocal-dev-console__log-message {
+  color: #ffb74d;
+}
+.vocal-dev-console__log--error .vocal-dev-console__log-message {
+  color: #e57373;
+}
+.vocal-dev-console__log--debug .vocal-dev-console__log-message {
+  color: #ba68c8;
+}
 
 .vocal-dev-console__log-metadata {
   margin: 4px 0 0 0;
@@ -291,8 +318,13 @@
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
 .vocal-dev-console__mic--speaking {

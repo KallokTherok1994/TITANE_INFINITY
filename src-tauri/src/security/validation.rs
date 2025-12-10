@@ -7,9 +7,9 @@
 // ═══════════════════════════════════════════════════════════════
 
 use crate::error::{TitaneError, TitaneResult};
+use once_cell::sync::Lazy;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
-use once_cell::sync::Lazy;
 
 const MAX_STRING_LENGTH: usize = 1_000_000; // 1 MB
 const MAX_ARRAY_LENGTH: usize = 10_000;
@@ -21,9 +21,9 @@ const MAX_OBJECT_DEPTH: usize = 32;
 static DANGEROUS_PATTERNS: Lazy<Vec<Regex>> = Lazy::new(|| {
     vec![
         Regex::new(r"<script[^>]*>.*?</script>").unwrap(), // Safe: static regex
-        Regex::new(r"javascript:").unwrap(),                // Safe: static regex
-        Regex::new(r"on\w+\s*=").unwrap(),                  // Safe: static regex
-        Regex::new(r"eval\s*\(").unwrap(),                  // Safe: static regex
+        Regex::new(r"javascript:").unwrap(),               // Safe: static regex
+        Regex::new(r"on\w+\s*=").unwrap(),                 // Safe: static regex
+        Regex::new(r"eval\s*\(").unwrap(),                 // Safe: static regex
         Regex::new(r"(?i)(UNION|SELECT|INSERT|UPDATE|DELETE|DROP)\s+").unwrap(), // Safe: static regex
     ]
 });
@@ -294,14 +294,9 @@ macro_rules! validate {
     };
 }
 
+#[derive(Default)]
 pub struct InputValidator {
     max_length: usize,
-}
-
-impl Default for InputValidator {
-    fn default() -> Self {
-        Self { max_length: 0 }
-    }
 }
 
 impl InputValidator {
@@ -316,7 +311,11 @@ impl InputValidator {
             });
         }
 
-        let max = if self.max_length == 0 { 100_000 } else { self.max_length };
+        let max = if self.max_length == 0 {
+            100_000
+        } else {
+            self.max_length
+        };
         if message.len() > max {
             return Err(TitaneError::ValidationError {
                 message: format!("Message too long (max {} chars)", max),
@@ -394,7 +393,9 @@ mod tests {
         assert!(validator.validate_message("Hello, world!").is_ok());
         assert!(validator.validate_message("").is_err());
         assert!(validator.validate_message(&"a".repeat(100_001)).is_err());
-        assert!(validator.validate_message("<script>alert('XSS')</script>").is_err());
+        assert!(validator
+            .validate_message("<script>alert('XSS')</script>")
+            .is_err());
     }
 
     #[test]
@@ -415,12 +416,17 @@ mod tests {
     #[test]
     fn test_validate_xss_attack() {
         let validator = InputValidator::default();
-        assert!(validator.validate_message("<script>alert('xss')</script>").is_err());
+        assert!(validator
+            .validate_message("<script>alert('xss')</script>")
+            .is_err());
     }
 
     #[test]
     fn test_sanitize_filename_advanced() {
-        assert_eq!(InputValidator::sanitize_filename("../../etc/passwd"), "etcpasswd");
+        assert_eq!(
+            InputValidator::sanitize_filename("../../etc/passwd"),
+            "etcpasswd"
+        );
         assert_eq!(InputValidator::sanitize_filename("file<>.txt"), "file.txt");
     }
 }

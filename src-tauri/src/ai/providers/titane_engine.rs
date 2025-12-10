@@ -3,13 +3,13 @@
 //   SUPER PROMPT #8 — Cognitive Fallback Engine
 // ═══════════════════════════════════════════════════════════════
 
-use crate::ai::{AiRequest, AiResponse, AiMetadata};
 use crate::ai::providers::{AiProvider, ProviderResult};
+use crate::ai::{AiMetadata, AiRequest, AiResponse};
 use async_trait::async_trait;
 use std::time::Instant;
 
 /// TITANE Engine - Fallback intelligent interne
-/// 
+///
 /// Ce provider garantit une réponse même si tous les autres échouent.
 /// Basé sur des règles cognitives, templates et génération contrôlée.
 pub struct TitaneEngineProvider {
@@ -36,7 +36,10 @@ impl TitaneEngineProvider {
             self.generate_why_response(prompt)
         } else if prompt_lower.contains("qu'est-ce") || prompt_lower.contains("what is") {
             self.generate_definition_response(prompt)
-        } else if prompt_lower.contains("code") || prompt_lower.contains("rust") || prompt_lower.contains("typescript") {
+        } else if prompt_lower.contains("code")
+            || prompt_lower.contains("rust")
+            || prompt_lower.contains("typescript")
+        {
             self.generate_code_response(prompt)
         } else if prompt_lower.contains("aide") || prompt_lower.contains("help") {
             self.generate_help_response()
@@ -101,7 +104,8 @@ impl TitaneEngineProvider {
         }\n\
         ```\n\n\
         *Note: Code généré en mode fallback. Pour du code spécifique à votre cas d'usage, \
-        veuillez utiliser les providers IA principaux (Claude, GPT, Local).*".to_string()
+        veuillez utiliser les providers IA principaux (Claude, GPT, Local).*"
+            .to_string()
     }
 
     fn generate_help_response(&self) -> String {

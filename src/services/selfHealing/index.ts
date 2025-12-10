@@ -76,7 +76,10 @@ export {
 
 import { selfHealingObserver, type ObservedError } from './selfHealingObserver';
 import { selfHealingAnalyzer } from './selfHealingAnalyzer';
-import { selfHealingPlaybookEngine, type ExecutionPlan } from './selfHealingPlaybookEngine';
+import {
+  selfHealingPlaybookEngine,
+  type ExecutionPlan,
+} from './selfHealingPlaybookEngine';
 import { selfHealingExecutor, type PlanExecutionResult } from './selfHealingExecutor';
 import { selfHealingSyncLayer } from './selfHealingSyncLayer';
 import type { HealingEvent, HealingDiagnosis } from './selfHealing.config';
@@ -335,7 +338,10 @@ class SelfHealingEngineOrchestrator {
     // Enregistrer le diagnostic
     selfHealingSyncLayer.recordDiagnosis(diagnosis);
 
-    this.log('info', `Diagnosis: [${diagnosis.severity}] ${diagnosis.nature} (confidence: ${(diagnosis.confidence * 100).toFixed(0)}%)`);
+    this.log(
+      'info',
+      `Diagnosis: [${diagnosis.severity}] ${diagnosis.nature} (confidence: ${(diagnosis.confidence * 100).toFixed(0)}%)`
+    );
 
     // 2. Sélectionner un playbook
     const match = selfHealingPlaybookEngine.selectPlaybook(diagnosis);
@@ -353,7 +359,10 @@ class SelfHealingEngineOrchestrator {
     }
 
     // 3. Générer le plan d'exécution
-    const plan = selfHealingPlaybookEngine.generateExecutionPlan(match.playbook, diagnosis);
+    const plan = selfHealingPlaybookEngine.generateExecutionPlan(
+      match.playbook,
+      diagnosis
+    );
 
     // 4. Vérifier si confirmation requise
     if (
@@ -414,7 +423,6 @@ class SelfHealingEngineOrchestrator {
       this.pendingPlans.delete(plan.id);
 
       return result;
-
     } catch (error) {
       this.log('error', `Plan execution failed: ${error}`);
       throw error;

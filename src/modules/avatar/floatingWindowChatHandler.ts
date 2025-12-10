@@ -37,12 +37,18 @@ export type FloatingWindowCommandType =
 
 const SCALE_PATTERNS_FR = [
   // Diminution
-  { pattern: /(?:devient?|fais-toi|deviens?)\s+(?:plus\s+)?(?:petit|petite|miniature)/i, value: 0.5 },
+  {
+    pattern: /(?:devient?|fais-toi|deviens?)\s+(?:plus\s+)?(?:petit|petite|miniature)/i,
+    value: 0.5,
+  },
   { pattern: /(?:réduis?|diminue?)\s+(?:ta\s+)?taille/i, value: 0.7 },
   { pattern: /(?:rétrécis?|rapetisse?)/i, value: 0.6 },
 
   // Augmentation
-  { pattern: /(?:devient?|fais-toi|deviens?)\s+(?:plus\s+)?(?:grand|grande|gros|grosse)/i, value: 1.5 },
+  {
+    pattern: /(?:devient?|fais-toi|deviens?)\s+(?:plus\s+)?(?:grand|grande|gros|grosse)/i,
+    value: 1.5,
+  },
   { pattern: /(?:augmente?|agrandis?)\s+(?:ta\s+)?taille/i, value: 1.3 },
   { pattern: /(?:grossis?|élargis?)/i, value: 1.4 },
 
@@ -51,13 +57,22 @@ const SCALE_PATTERNS_FR = [
   { pattern: /remets?\s+taille\s+(?:normale|d'origine)/i, value: 1.0 },
 
   // Valeurs spécifiques
-  { pattern: /taille\s+(?:à\s+)?(\d+(?:\.\d+)?)\s*%/i, extract: (match: RegExpMatchArray) => parseFloat(match[1]) / 100 },
-  { pattern: /échelle\s+(?:de\s+)?(\d+(?:\.\d+)?)/i, extract: (match: RegExpMatchArray) => parseFloat(match[1]) },
+  {
+    pattern: /taille\s+(?:à\s+)?(\d+(?:\.\d+)?)\s*%/i,
+    extract: (match: RegExpMatchArray) => parseFloat(match[1]) / 100,
+  },
+  {
+    pattern: /échelle\s+(?:de\s+)?(\d+(?:\.\d+)?)/i,
+    extract: (match: RegExpMatchArray) => parseFloat(match[1]),
+  },
 ];
 
 const OPACITY_PATTERNS_FR = [
   // Diminution
-  { pattern: /(?:devient?|deviens?|fais-toi)\s+(?:plus\s+)?transparent(?:e)?/i, value: 0.5 },
+  {
+    pattern: /(?:devient?|deviens?|fais-toi)\s+(?:plus\s+)?transparent(?:e)?/i,
+    value: 0.5,
+  },
   { pattern: /(?:réduis?|diminue?)\s+(?:ton\s+)?opacité/i, value: 0.6 },
   { pattern: /(?:disparais?|efface-toi)\s+(?:un\s+peu)?/i, value: 0.3 },
 
@@ -67,23 +82,56 @@ const OPACITY_PATTERNS_FR = [
   { pattern: /(?:augmente?|remonte?)\s+(?:ton\s+)?opacité/i, value: 0.9 },
 
   // Valeurs spécifiques
-  { pattern: /opacité\s+(?:à\s+)?(\d+)\s*%/i, extract: (match: RegExpMatchArray) => parseFloat(match[1]) / 100 },
-  { pattern: /transparence\s+(?:de\s+)?(\d+)\s*%/i, extract: (match: RegExpMatchArray) => 1 - (parseFloat(match[1]) / 100) },
+  {
+    pattern: /opacité\s+(?:à\s+)?(\d+)\s*%/i,
+    extract: (match: RegExpMatchArray) => parseFloat(match[1]) / 100,
+  },
+  {
+    pattern: /transparence\s+(?:de\s+)?(\d+)\s*%/i,
+    extract: (match: RegExpMatchArray) => 1 - parseFloat(match[1]) / 100,
+  },
 ];
 
 const ANCHOR_PATTERNS_FR = [
   // Coins
-  { pattern: /(?:va|mets?-toi|place-toi)\s+(?:au\s+|dans\s+le\s+)?coin\s+haut\s+gauche/i, value: AnchorEnum.TopLeft },
-  { pattern: /(?:va|mets?-toi|place-toi)\s+(?:au\s+|dans\s+le\s+)?coin\s+haut\s+droite?/i, value: AnchorEnum.TopRight },
-  { pattern: /(?:va|mets?-toi|place-toi)\s+(?:au\s+|dans\s+le\s+)?coin\s+bas\s+gauche/i, value: AnchorEnum.BottomLeft },
-  { pattern: /(?:va|mets?-toi|place-toi)\s+(?:au\s+|dans\s+le\s+)?coin\s+bas\s+droite?/i, value: AnchorEnum.BottomRight },
+  {
+    pattern: /(?:va|mets?-toi|place-toi)\s+(?:au\s+|dans\s+le\s+)?coin\s+haut\s+gauche/i,
+    value: AnchorEnum.TopLeft,
+  },
+  {
+    pattern: /(?:va|mets?-toi|place-toi)\s+(?:au\s+|dans\s+le\s+)?coin\s+haut\s+droite?/i,
+    value: AnchorEnum.TopRight,
+  },
+  {
+    pattern: /(?:va|mets?-toi|place-toi)\s+(?:au\s+|dans\s+le\s+)?coin\s+bas\s+gauche/i,
+    value: AnchorEnum.BottomLeft,
+  },
+  {
+    pattern: /(?:va|mets?-toi|place-toi)\s+(?:au\s+|dans\s+le\s+)?coin\s+bas\s+droite?/i,
+    value: AnchorEnum.BottomRight,
+  },
 
   // Centres
-  { pattern: /(?:va|mets?-toi|place-toi)\s+(?:au\s+|en\s+)?centre\s+haut/i, value: AnchorEnum.TopCenter },
-  { pattern: /(?:va|mets?-toi|place-toi)\s+(?:au\s+|en\s+)?centre\s+bas/i, value: AnchorEnum.BottomCenter },
-  { pattern: /(?:va|mets?-toi|place-toi)\s+(?:au\s+|en\s+|à\s+)?centre\s+gauche/i, value: AnchorEnum.CenterLeft },
-  { pattern: /(?:va|mets?-toi|place-toi)\s+(?:au\s+|en\s+|à\s+)?centre\s+droite?/i, value: AnchorEnum.CenterRight },
-  { pattern: /(?:va|mets?-toi|place-toi)\s+(?:au\s+|en\s+|bien\s+)?centre/i, value: AnchorEnum.Center },
+  {
+    pattern: /(?:va|mets?-toi|place-toi)\s+(?:au\s+|en\s+)?centre\s+haut/i,
+    value: AnchorEnum.TopCenter,
+  },
+  {
+    pattern: /(?:va|mets?-toi|place-toi)\s+(?:au\s+|en\s+)?centre\s+bas/i,
+    value: AnchorEnum.BottomCenter,
+  },
+  {
+    pattern: /(?:va|mets?-toi|place-toi)\s+(?:au\s+|en\s+|à\s+)?centre\s+gauche/i,
+    value: AnchorEnum.CenterLeft,
+  },
+  {
+    pattern: /(?:va|mets?-toi|place-toi)\s+(?:au\s+|en\s+|à\s+)?centre\s+droite?/i,
+    value: AnchorEnum.CenterRight,
+  },
+  {
+    pattern: /(?:va|mets?-toi|place-toi)\s+(?:au\s+|en\s+|bien\s+)?centre/i,
+    value: AnchorEnum.Center,
+  },
 
   // Raccourcis
   { pattern: /(?:en\s+)?haut\s+à\s+gauche/i, value: AnchorEnum.TopLeft },
@@ -93,40 +141,101 @@ const ANCHOR_PATTERNS_FR = [
 ];
 
 const SCREEN_PATTERNS_FR = [
-  { pattern: /(?:va|passe)\s+(?:sur\s+(?:l')?)?écran\s+(?:numéro\s+)?(\d+)/i, extract: (match: RegExpMatchArray) => parseInt(match[1]) - 1 },
-  { pattern: /(?:déplace-toi|va)\s+(?:vers|sur)\s+(?:le\s+)?(?:deuxième|2e|second)\s+écran/i, value: 1 },
-  { pattern: /(?:déplace-toi|va)\s+(?:vers|sur)\s+(?:le\s+)?(?:troisième|3e)\s+écran/i, value: 2 },
+  {
+    pattern: /(?:va|passe)\s+(?:sur\s+(?:l')?)?écran\s+(?:numéro\s+)?(\d+)/i,
+    extract: (match: RegExpMatchArray) => parseInt(match[1]) - 1,
+  },
+  {
+    pattern:
+      /(?:déplace-toi|va)\s+(?:vers|sur)\s+(?:le\s+)?(?:deuxième|2e|second)\s+écran/i,
+    value: 1,
+  },
+  {
+    pattern: /(?:déplace-toi|va)\s+(?:vers|sur)\s+(?:le\s+)?(?:troisième|3e)\s+écran/i,
+    value: 2,
+  },
   { pattern: /(?:reviens?|retourne)\s+(?:sur\s+)?(?:l')?écran\s+principal/i, value: 0 },
 ];
 
 const MODE_PATTERNS_FR = [
-  { pattern: /(?:devient?|deviens?|mets?-toi|passe)\s+(?:en\s+)?(?:mode\s+)?(?:fen(?:ê|e)tre\s+)?flottante?/i, value: 'floating' },
+  {
+    pattern:
+      /(?:devient?|deviens?|mets?-toi|passe)\s+(?:en\s+)?(?:mode\s+)?(?:fen(?:ê|e)tre\s+)?flottante?/i,
+    value: 'floating',
+  },
   { pattern: /(?:détache-toi|sort|libère-toi)/i, value: 'floating' },
-  { pattern: /(?:devient?|mets?-toi|passe)\s+en\s+(?:mode\s+)?(?:intégré|embed|incorporé)/i, value: 'embed' },
-  { pattern: /(?:rentre|reviens?|intègre-toi)\s+dans\s+(?:la\s+)?fenêtre\s+principale/i, value: 'embed' },
+  {
+    pattern:
+      /(?:devient?|mets?-toi|passe)\s+en\s+(?:mode\s+)?(?:intégré|embed|incorporé)/i,
+    value: 'embed',
+  },
+  {
+    pattern: /(?:rentre|reviens?|intègre-toi)\s+dans\s+(?:la\s+)?fenêtre\s+principale/i,
+    value: 'embed',
+  },
   { pattern: /(?:cache-toi|disparais|masque-toi)/i, value: 'hidden' },
   { pattern: /(?:montre-toi|apparais|affiche-toi)/i, value: 'floating' },
 ];
 
 const TOGGLE_PATTERNS_FR = [
   // Locked
-  { pattern: /(?:^|\b)(?:déverrouille-toi|débloque-toi|bouge\s+librement)(?:\b|$)/i, type: 'toggle_locked', value: false },
-  { pattern: /(?:^|\b)(?:verrouille-toi|bloque-toi|reste\s+en\s+place)(?:\b|$)/i, type: 'toggle_locked', value: true },
-  { pattern: /(?:^|\b)(?<!dé)(?:verrouillage|lock|verrouille)(?:\b|$)/i, type: 'toggle_locked', value: true },
+  {
+    pattern: /(?:^|\b)(?:déverrouille-toi|débloque-toi|bouge\s+librement)(?:\b|$)/i,
+    type: 'toggle_locked',
+    value: false,
+  },
+  {
+    pattern: /(?:^|\b)(?:verrouille-toi|bloque-toi|reste\s+en\s+place)(?:\b|$)/i,
+    type: 'toggle_locked',
+    value: true,
+  },
+  {
+    pattern: /(?:^|\b)(?<!dé)(?:verrouillage|lock|verrouille)(?:\b|$)/i,
+    type: 'toggle_locked',
+    value: true,
+  },
 
   // Always on top
-  { pattern: /(?:reste|mets?-toi)\s+(?:toujours\s+)?(?:au-dessus|par-dessus|devant)/i, type: 'toggle_always_on_top', value: true },
-  { pattern: /(?:ne\s+reste\s+plus|arrête\s+de\s+rester)\s+au-dessus/i, type: 'toggle_always_on_top', value: false },
+  {
+    pattern: /(?:reste|mets?-toi)\s+(?:toujours\s+)?(?:au-dessus|par-dessus|devant)/i,
+    type: 'toggle_always_on_top',
+    value: true,
+  },
+  {
+    pattern: /(?:ne\s+reste\s+plus|arrête\s+de\s+rester)\s+au-dessus/i,
+    type: 'toggle_always_on_top',
+    value: false,
+  },
   { pattern: /always\s+on\s+top/i, type: 'toggle_always_on_top', value: true },
 
   // Mirror mode
-  { pattern: /(?:active|met)\s+(?:le\s+)?mode\s+miroir/i, type: 'toggle_mirror', value: true },
-  { pattern: /(?:désactive|enlève|coupe)\s+(?:le\s+)?mode\s+miroir/i, type: 'toggle_mirror', value: false },
-  { pattern: /(?:inverse|retourne)-toi\s+horizontalement/i, type: 'toggle_mirror', value: true },
+  {
+    pattern: /(?:active|met)\s+(?:le\s+)?mode\s+miroir/i,
+    type: 'toggle_mirror',
+    value: true,
+  },
+  {
+    pattern: /(?:désactive|enlève|coupe)\s+(?:le\s+)?mode\s+miroir/i,
+    type: 'toggle_mirror',
+    value: false,
+  },
+  {
+    pattern: /(?:inverse|retourne)-toi\s+horizontalement/i,
+    type: 'toggle_mirror',
+    value: true,
+  },
 
   // Click through
-  { pattern: /(?:laisse|autorise)\s+(?:les\s+)?clics?\s+passer/i, type: 'toggle_click_through', value: true },
-  { pattern: /(?:bloque|empêche)\s+(?:les\s+)?clics?\s+(?:de\s+)?passer/i, type: 'toggle_click_through', value: false },
+  {
+    pattern: /(?:laisse|autorise)\s+(?:les\s+)?clics?\s+passer/i,
+    type: 'toggle_click_through',
+    value: true,
+  },
+  {
+    pattern: /(?:bloque|empêche)\s+(?:les\s+)?clics?\s+(?:de\s+)?passer/i,
+    type: 'toggle_click_through',
+    value: false,
+  },
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -139,26 +248,44 @@ const SCALE_PATTERNS_EN = [
   { pattern: /(?:make\s+yourself|become|get)\s+(?:bigger|larger|huge)/i, value: 1.5 },
   { pattern: /(?:increase|grow)\s+(?:your\s+)?size/i, value: 1.3 },
   { pattern: /normal\s+size/i, value: 1.0 },
-  { pattern: /size\s+(?:to\s+)?(\d+(?:\.\d+)?)\s*%/i, extract: (match: RegExpMatchArray) => parseFloat(match[1]) / 100 },
+  {
+    pattern: /size\s+(?:to\s+)?(\d+(?:\.\d+)?)\s*%/i,
+    extract: (match: RegExpMatchArray) => parseFloat(match[1]) / 100,
+  },
 ];
 
 const OPACITY_PATTERNS_EN = [
   { pattern: /(?:become|get|make\s+yourself)\s+(?:more\s+)?transparent/i, value: 0.5 },
   { pattern: /(?:fade\s+out|disappear\s+a\s+bit)/i, value: 0.3 },
   { pattern: /(?:become|get|be)\s+(?:fully\s+)?opaque/i, value: 1.0 },
-  { pattern: /opacity\s+(?:to\s+)?(\d+)\s*%/i, extract: (match: RegExpMatchArray) => parseFloat(match[1]) / 100 },
+  {
+    pattern: /opacity\s+(?:to\s+)?(\d+)\s*%/i,
+    extract: (match: RegExpMatchArray) => parseFloat(match[1]) / 100,
+  },
 ];
 
 const ANCHOR_PATTERNS_EN = [
   { pattern: /(?:go|move)\s+to\s+top\s+left(?:\s+corner)?/i, value: AnchorEnum.TopLeft },
-  { pattern: /(?:go|move)\s+to\s+top\s+right(?:\s+corner)?/i, value: AnchorEnum.TopRight },
-  { pattern: /(?:go|move)\s+to\s+bottom\s+left(?:\s+corner)?/i, value: AnchorEnum.BottomLeft },
-  { pattern: /(?:go|move)\s+to\s+bottom\s+right(?:\s+corner)?/i, value: AnchorEnum.BottomRight },
+  {
+    pattern: /(?:go|move)\s+to\s+top\s+right(?:\s+corner)?/i,
+    value: AnchorEnum.TopRight,
+  },
+  {
+    pattern: /(?:go|move)\s+to\s+bottom\s+left(?:\s+corner)?/i,
+    value: AnchorEnum.BottomLeft,
+  },
+  {
+    pattern: /(?:go|move)\s+to\s+bottom\s+right(?:\s+corner)?/i,
+    value: AnchorEnum.BottomRight,
+  },
   { pattern: /(?:go|move)\s+to\s+(?:the\s+)?center/i, value: AnchorEnum.Center },
 ];
 
 const SCREEN_PATTERNS_EN = [
-  { pattern: /(?:go|move)\s+to\s+screen\s+(?:#)?(\d+)/i, extract: (match: RegExpMatchArray) => parseInt(match[1]) - 1 },
+  {
+    pattern: /(?:go|move)\s+to\s+screen\s+(?:#)?(\d+)/i,
+    extract: (match: RegExpMatchArray) => parseInt(match[1]) - 1,
+  },
   { pattern: /(?:go|move)\s+to\s+(?:the\s+)?(?:second|2nd)\s+screen/i, value: 1 },
   { pattern: /(?:go|move)\s+back\s+to\s+(?:the\s+)?main\s+screen/i, value: 0 },
 ];
@@ -167,17 +294,36 @@ const MODE_PATTERNS_EN = [
   { pattern: /(?:become|go|switch\s+to)\s+floating(?:\s+mode)?/i, value: 'floating' },
   { pattern: /(?:detach|separate|float\s+free)/i, value: 'floating' },
   { pattern: /(?:become|go|switch\s+to)\s+embedded?(?:\s+mode)?/i, value: 'embed' },
-  { pattern: /(?:dock|attach|integrate)\s+(?:back\s+)?(?:to|with)\s+main\s+window/i, value: 'embed' },
+  {
+    pattern: /(?:dock|attach|integrate)\s+(?:back\s+)?(?:to|with)\s+main\s+window/i,
+    value: 'embed',
+  },
   { pattern: /(?:hide|disappear|hide\s+yourself)/i, value: 'hidden' },
 ];
 
 const TOGGLE_PATTERNS_EN = [
-  { pattern: /(?:lock|freeze)\s+(?:yourself|position)/i, type: 'toggle_locked', value: true },
+  {
+    pattern: /(?:lock|freeze)\s+(?:yourself|position)/i,
+    type: 'toggle_locked',
+    value: true,
+  },
   { pattern: /(?:unlock|unfreeze)/i, type: 'toggle_locked', value: false },
   { pattern: /(?:stay|remain)\s+on\s+top/i, type: 'toggle_always_on_top', value: true },
-  { pattern: /(?:stop\s+staying|don't\s+stay)\s+on\s+top/i, type: 'toggle_always_on_top', value: false },
-  { pattern: /(?:enable|activate)\s+mirror(?:\s+mode)?/i, type: 'toggle_mirror', value: true },
-  { pattern: /(?:disable|deactivate)\s+mirror(?:\s+mode)?/i, type: 'toggle_mirror', value: false },
+  {
+    pattern: /(?:stop\s+staying|don't\s+stay)\s+on\s+top/i,
+    type: 'toggle_always_on_top',
+    value: false,
+  },
+  {
+    pattern: /(?:enable|activate)\s+mirror(?:\s+mode)?/i,
+    type: 'toggle_mirror',
+    value: true,
+  },
+  {
+    pattern: /(?:disable|deactivate)\s+mirror(?:\s+mode)?/i,
+    type: 'toggle_mirror',
+    value: false,
+  },
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -191,7 +337,10 @@ export function parseFloatingWindowCommand(message: string): FloatingWindowComma
   const msgTrimmed = message.trim();
 
   // Try Scale commands
-  const scaleResult = matchPatterns(msgTrimmed, [...SCALE_PATTERNS_FR, ...SCALE_PATTERNS_EN]);
+  const scaleResult = matchPatterns(msgTrimmed, [
+    ...SCALE_PATTERNS_FR,
+    ...SCALE_PATTERNS_EN,
+  ]);
   if (scaleResult) {
     return {
       handled: true,
@@ -202,7 +351,10 @@ export function parseFloatingWindowCommand(message: string): FloatingWindowComma
   }
 
   // Try Opacity commands
-  const opacityResult = matchPatterns(msgTrimmed, [...OPACITY_PATTERNS_FR, ...OPACITY_PATTERNS_EN]);
+  const opacityResult = matchPatterns(msgTrimmed, [
+    ...OPACITY_PATTERNS_FR,
+    ...OPACITY_PATTERNS_EN,
+  ]);
   if (opacityResult) {
     return {
       handled: true,
@@ -213,7 +365,10 @@ export function parseFloatingWindowCommand(message: string): FloatingWindowComma
   }
 
   // Try Anchor commands
-  const anchorResult = matchPatterns(msgTrimmed, [...ANCHOR_PATTERNS_FR, ...ANCHOR_PATTERNS_EN]);
+  const anchorResult = matchPatterns(msgTrimmed, [
+    ...ANCHOR_PATTERNS_FR,
+    ...ANCHOR_PATTERNS_EN,
+  ]);
   if (anchorResult) {
     return {
       handled: true,
@@ -224,7 +379,10 @@ export function parseFloatingWindowCommand(message: string): FloatingWindowComma
   }
 
   // Try Screen commands
-  const screenResult = matchPatterns(msgTrimmed, [...SCREEN_PATTERNS_FR, ...SCREEN_PATTERNS_EN]);
+  const screenResult = matchPatterns(msgTrimmed, [
+    ...SCREEN_PATTERNS_FR,
+    ...SCREEN_PATTERNS_EN,
+  ]);
   if (screenResult !== null && screenResult !== undefined) {
     return {
       handled: true,
@@ -235,7 +393,10 @@ export function parseFloatingWindowCommand(message: string): FloatingWindowComma
   }
 
   // Try Mode commands
-  const modeResult = matchPatterns(msgTrimmed, [...MODE_PATTERNS_FR, ...MODE_PATTERNS_EN]);
+  const modeResult = matchPatterns(msgTrimmed, [
+    ...MODE_PATTERNS_FR,
+    ...MODE_PATTERNS_EN,
+  ]);
   if (modeResult) {
     return {
       handled: true,
@@ -246,7 +407,10 @@ export function parseFloatingWindowCommand(message: string): FloatingWindowComma
   }
 
   // Try Toggle commands
-  const toggleResult = matchTogglePatterns(msgTrimmed, [...TOGGLE_PATTERNS_FR, ...TOGGLE_PATTERNS_EN]);
+  const toggleResult = matchTogglePatterns(msgTrimmed, [
+    ...TOGGLE_PATTERNS_FR,
+    ...TOGGLE_PATTERNS_EN,
+  ]);
   if (toggleResult) {
     return toggleResult;
   }
@@ -269,7 +433,10 @@ interface Pattern {
   extract?: (match: RegExpMatchArray) => number | string | AnchorPosition;
 }
 
-function matchPatterns(message: string, patterns: Pattern[]): number | string | AnchorPosition | null {
+function matchPatterns(
+  message: string,
+  patterns: Pattern[]
+): number | string | AnchorPosition | null {
   for (const { pattern, value, extract } of patterns) {
     const match = message.match(pattern);
     if (match) {
@@ -288,7 +455,10 @@ interface TogglePattern {
   value: boolean;
 }
 
-function matchTogglePatterns(message: string, patterns: TogglePattern[]): FloatingWindowCommand | null {
+function matchTogglePatterns(
+  message: string,
+  patterns: TogglePattern[]
+): FloatingWindowCommand | null {
   for (const { pattern, type, value } of patterns) {
     const match = message.match(pattern);
     if (match) {
@@ -342,7 +512,7 @@ function generateAnchorResponse(anchor: AnchorPosition): string {
 }
 
 function generateScreenResponse(screenIndex: number): string {
-  if (screenIndex === 0) return '✅ Je reviens sur l\'écran principal.';
+  if (screenIndex === 0) return "✅ Je reviens sur l'écran principal.";
   return `✅ Je passe sur l'écran ${screenIndex + 1}.`;
 }
 
@@ -403,5 +573,5 @@ const FLOATING_WINDOW_KEYWORDS = [
  */
 export function containsFloatingWindowKeyword(message: string): boolean {
   const msgLower = message.toLowerCase();
-  return FLOATING_WINDOW_KEYWORDS.some((keyword) => msgLower.includes(keyword));
+  return FLOATING_WINDOW_KEYWORDS.some(keyword => msgLower.includes(keyword));
 }

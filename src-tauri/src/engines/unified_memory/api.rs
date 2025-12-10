@@ -3,8 +3,8 @@
 //   SUPER PROMPT #6 vΩ.8 — Tauri Commands
 // ═══════════════════════════════════════════════════════════════
 
-use super::{UnifiedMemoryEngine, MemoryStats};
 use super::models::{MemoryBundle, MemoryEntry};
+use super::{MemoryStats, UnifiedMemoryEngine};
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
@@ -154,9 +154,9 @@ pub fn create_shared_engine_with_capacities(
     mtm_size: usize,
     ltm_size: usize,
 ) -> SharedMemoryEngine {
-    Arc::new(RwLock::new(
-        UnifiedMemoryEngine::with_capacities(stm_size, mtm_size, ltm_size)
-    ))
+    Arc::new(RwLock::new(UnifiedMemoryEngine::with_capacities(
+        stm_size, mtm_size, ltm_size,
+    )))
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -164,7 +164,7 @@ pub fn create_shared_engine_with_capacities(
 // ═══════════════════════════════════════════════════════════════
 
 /// Register all memory v2 commands with Tauri
-/// 
+///
 /// Usage in main.rs:
 /// ```rust
 /// tauri::Builder::default()
@@ -204,7 +204,7 @@ mod tests {
             let eng = engine.read().await;
             eng.stats()
         };
-        
+
         assert_eq!(stats.stm_count, 0);
         assert_eq!(stats.total_memories, 0);
     }
@@ -212,23 +212,20 @@ mod tests {
     #[tokio::test]
     async fn test_shared_engine_store() {
         let engine = create_shared_engine();
-        
+
         let result = {
             let mut eng = engine.write().await;
-            eng.store(
-                "Test message".to_string(),
-                "user".to_string(),
-                0.5,
-            ).await
+            eng.store("Test message".to_string(), "user".to_string(), 0.5)
+                .await
         };
-        
+
         assert!(result.is_ok());
-        
+
         let stats = {
             let eng = engine.read().await;
             eng.stats()
         };
-        
+
         assert_eq!(stats.stm_count, 1);
     }
 
@@ -236,18 +233,20 @@ mod tests {
     async fn test_concurrent_access() {
         let engine = create_shared_engine();
         let engine_clone = engine.clone();
-        
+
         // Concurrent writes
         let handle1 = tokio::spawn(async move {
             let mut eng = engine.write().await;
-            eng.store("Message 1".to_string(), "user".to_string(), 0.5).await
+            eng.store("Message 1".to_string(), "user".to_string(), 0.5)
+                .await
         });
-        
+
         let handle2 = tokio::spawn(async move {
             let mut eng = engine_clone.write().await;
-            eng.store("Message 2".to_string(), "user".to_string(), 0.6).await
+            eng.store("Message 2".to_string(), "user".to_string(), 0.6)
+                .await
         });
-        
+
         let results = tokio::join!(handle1, handle2);
         assert!(results.0.is_ok());
         assert!(results.1.is_ok());

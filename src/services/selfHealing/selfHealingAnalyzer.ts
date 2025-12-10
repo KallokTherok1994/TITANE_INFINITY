@@ -195,7 +195,7 @@ const ANOMALY_CAUSES: Record<AnomalyType, string[]> = {
     'Race condition',
     'Événement manqué',
     'Store mal initialisé',
-    'Mutation directe d\'état',
+    "Mutation directe d'état",
   ],
   config_invalid: [
     'Fichier config corrompu',
@@ -203,11 +203,7 @@ const ANOMALY_CAUSES: Record<AnomalyType, string[]> = {
     'Valeur hors limites',
     'Format incompatible',
   ],
-  unknown_anomaly: [
-    'Cause indéterminée',
-    'Erreur silencieuse',
-    'État inattendu',
-  ],
+  unknown_anomaly: ['Cause indéterminée', 'Erreur silencieuse', 'État inattendu'],
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -218,10 +214,10 @@ const DIAGNOSTIC_RULES: DiagnosticRule[] = [
   {
     id: 'critical_cascade',
     name: 'Cascade Critique',
-    description: 'Détecte une cascade d\'erreurs critiques',
+    description: "Détecte une cascade d'erreurs critiques",
     matchCondition: (event, context) => {
       const recentCritical = context.recentEvents.filter(
-        (e) => e.severity === 'critical' && Date.now() - e.timestamp < 60000
+        e => e.severity === 'critical' && Date.now() - e.timestamp < 60000
       );
       return event.severity === 'critical' && recentCritical.length >= 2;
     },
@@ -241,16 +237,16 @@ const DIAGNOSTIC_RULES: DiagnosticRule[] = [
   {
     id: 'recurring_pattern',
     name: 'Pattern Récurrent',
-    description: 'Détecte un pattern d\'erreur récurrent',
+    description: "Détecte un pattern d'erreur récurrent",
     matchCondition: (event, context) => {
       const similar = context.recentEvents.filter(
-        (e) => e.eventType === event.eventType && e.moduleId === event.moduleId
+        e => e.eventType === event.eventType && e.moduleId === event.moduleId
       );
       return similar.length >= 3;
     },
     diagnose: (event, context) => {
       const similar = context.recentEvents.filter(
-        (e) => e.eventType === event.eventType && e.moduleId === event.moduleId
+        e => e.eventType === event.eventType && e.moduleId === event.moduleId
       );
       return {
         nature: 'recurring_error',
@@ -264,7 +260,7 @@ const DIAGNOSTIC_RULES: DiagnosticRule[] = [
   {
     id: 'module_degradation',
     name: 'Dégradation Module',
-    description: 'Détecte la dégradation progressive d\'un module',
+    description: "Détecte la dégradation progressive d'un module",
     matchCondition: (event, context) => {
       const health = context.moduleHealth.get(event.moduleId);
       return health !== undefined && health.trend === 'degrading' && health.score < 50;
@@ -290,7 +286,8 @@ const DIAGNOSTIC_RULES: DiagnosticRule[] = [
     matchCondition: (event, context) => {
       return (
         event.eventType === 'memory_corruption' ||
-        (context.systemState.memoryUsage !== undefined && context.systemState.memoryUsage > 85)
+        (context.systemState.memoryUsage !== undefined &&
+          context.systemState.memoryUsage > 85)
       );
     },
     diagnose: (_, context) => ({
@@ -310,10 +307,10 @@ const DIAGNOSTIC_RULES: DiagnosticRule[] = [
     id: 'ia_pipeline_issue',
     name: 'Problème Pipeline IA',
     description: 'Détecte les problèmes de pipeline IA',
-    matchCondition: (event) => {
+    matchCondition: event => {
       return event.category === 'ia' || event.eventType === 'pipeline_stuck';
     },
-    diagnose: (event) => ({
+    diagnose: event => ({
       nature: 'ia_pipeline_failure',
       affectedModule: event.moduleName,
       probableCause: 'Pipeline IA bloqué ou timeout',
@@ -411,7 +408,7 @@ export class SelfHealingAnalyzer {
    * Analyse multiple événements en batch
    */
   public analyzeBatch(events: HealingEvent[]): HealingDiagnosis[] {
-    return events.map((event) => this.analyze(event));
+    return events.map(event => this.analyze(event));
   }
 
   /**
@@ -458,9 +455,10 @@ export class SelfHealingAnalyzer {
       const decayFactor = Math.min(1, timeSinceLastError / 60000); // Récupération sur 1 minute
       const severityPenalty = SEVERITY_TO_URGENCY[event.severity] * 5;
 
-      const newScore = Math.max(0, Math.min(100,
-        existing.score * (0.9 + 0.1 * decayFactor) - severityPenalty
-      ));
+      const newScore = Math.max(
+        0,
+        Math.min(100, existing.score * (0.9 + 0.1 * decayFactor) - severityPenalty)
+      );
 
       // Déterminer la tendance
       let trend: 'improving' | 'stable' | 'degrading' = 'stable';
@@ -527,7 +525,7 @@ export class SelfHealingAnalyzer {
     const windowStart = now - this.config.patternDetectionWindow;
 
     return {
-      recentEvents: this.eventHistory.filter((e) => e.timestamp >= windowStart),
+      recentEvents: this.eventHistory.filter(e => e.timestamp >= windowStart),
       systemState: {
         timestamp: now,
         activeModules: [...this.moduleHealth.keys()],
@@ -548,7 +546,7 @@ export class SelfHealingAnalyzer {
       try {
         if (rule.matchCondition(event, context)) {
           const ruleDiagnosis = rule.diagnose(event, context);
-          const ruleConfidence = 0.6 + (rule.priority / 200);
+          const ruleConfidence = 0.6 + rule.priority / 200;
 
           if (ruleConfidence > maxConfidence) {
             diagnosis = {
@@ -571,10 +569,7 @@ export class SelfHealingAnalyzer {
     }
 
     // Vérifier si escalation requise
-    if (
-      this.config.autoEscalate &&
-      this.shouldEscalate(diagnosis.severity, context)
-    ) {
+    if (this.config.autoEscalate && this.shouldEscalate(diagnosis.severity, context)) {
       diagnosis.escalationRequired = true;
     }
 
@@ -625,12 +620,12 @@ export class SelfHealingAnalyzer {
         impacts.push('Fonctionnalités réseau dégradées');
         break;
       case 'performance':
-        impacts.push('Ralentissement général de l\'application');
+        impacts.push("Ralentissement général de l'application");
         break;
     }
 
     if (event.severity === 'critical') {
-      impacts.push('Risque d\'instabilité système majeure');
+      impacts.push("Risque d'instabilité système majeure");
     }
 
     return impacts;
@@ -640,10 +635,7 @@ export class SelfHealingAnalyzer {
     const related: string[] = [];
 
     for (const [key, pattern] of this.patterns) {
-      if (
-        key.includes(event.category) ||
-        key.includes(event.eventType)
-      ) {
+      if (key.includes(event.category) || key.includes(event.eventType)) {
         related.push(`${pattern.description} (${pattern.occurrences}x)`);
       }
     }
@@ -653,7 +645,13 @@ export class SelfHealingAnalyzer {
 
   private shouldEscalate(severity: HealingSeverity, context: AnalysisContext): boolean {
     // Escalade si sévérité >= seuil
-    const severityOrder: HealingSeverity[] = ['info', 'low', 'medium', 'high', 'critical'];
+    const severityOrder: HealingSeverity[] = [
+      'info',
+      'low',
+      'medium',
+      'high',
+      'critical',
+    ];
     const currentIndex = severityOrder.indexOf(severity);
     const thresholdIndex = severityOrder.indexOf(this.config.escalationThreshold);
 
@@ -661,7 +659,7 @@ export class SelfHealingAnalyzer {
 
     // Escalade si trop d'erreurs récentes
     const recentCriticalCount = context.recentEvents.filter(
-      (e) => e.severity === 'critical' || e.severity === 'high'
+      e => e.severity === 'critical' || e.severity === 'high'
     ).length;
 
     return recentCriticalCount >= 5;
@@ -697,7 +695,7 @@ export class SelfHealingAnalyzer {
 
   public getRecurringPatterns(): PatternRecord[] {
     return [...this.patterns.values()].filter(
-      (p) => p.occurrences >= this.config.patternMinOccurrences
+      p => p.occurrences >= this.config.patternMinOccurrences
     );
   }
 
@@ -707,7 +705,7 @@ export class SelfHealingAnalyzer {
     }
 
     const now = Date.now();
-    return this.eventHistory.filter((e) => now - e.timestamp <= maxAge);
+    return this.eventHistory.filter(e => now - e.timestamp <= maxAge);
   }
 
   public clearHistory(): void {

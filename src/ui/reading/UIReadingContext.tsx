@@ -17,7 +17,7 @@ import { createContext, useContext } from 'react';
 // TYPES
 // ═══════════════════════════════════════════════════════════════════
 
-export type UIScale = 0.85 | 0.90 | 0.95 | 1.0 | 1.05 | 1.10 | 1.15 | 1.2 | 1.3 | 1.4;
+export type UIScale = 0.85 | 0.9 | 0.95 | 1.0 | 1.05 | 1.1 | 1.15 | 1.2 | 1.3 | 1.4;
 export type FontFamilyOption = 'system' | 'serif' | 'mono';
 export type PresetName = 'default' | 'focus' | 'reading' | 'immersion' | 'dev' | null;
 

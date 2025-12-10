@@ -30,7 +30,7 @@ export const ToastContainer: React.FC = () => {
       const notification = customEvent.detail;
 
       const toast: Toast = { ...notification };
-      setToasts((prev) => [...prev, toast]);
+      setToasts(prev => [...prev, toast]);
 
       // Auto-dismiss après 5s (8s si critique)
       const duration = notification.priority === 'critical' ? 8000 : 5000;
@@ -44,13 +44,11 @@ export const ToastContainer: React.FC = () => {
   }, []);
 
   const dismissToast = (id: string) => {
-    setToasts((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, exiting: true } : t))
-    );
+    setToasts(prev => prev.map(t => (t.id === id ? { ...t, exiting: true } : t)));
 
     // Supprimer après animation
     setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id));
+      setToasts(prev => prev.filter(t => t.id !== id));
     }, 300);
   };
 
@@ -67,7 +65,10 @@ export const ToastContainer: React.FC = () => {
     }
   };
 
-  const getTypeColor = (type: Notification['type'], priority: Notification['priority']): string => {
+  const getTypeColor = (
+    type: Notification['type'],
+    priority: Notification['priority']
+  ): string => {
     if (priority === 'critical') {
       return 'bg-red-600 text-white border-red-700';
     }
@@ -86,7 +87,7 @@ export const ToastContainer: React.FC = () => {
 
   return (
     <div className="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm">
-      {toasts.map((toast) => (
+      {toasts.map(toast => (
         <div
           key={toast.id}
           className={`

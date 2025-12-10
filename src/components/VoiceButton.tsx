@@ -43,11 +43,12 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
 }) => {
   const [isPressed, setIsPressed] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  
+
   // P2: Respect prefers-reduced-motion (WCAG 2.3.3 AAA)
-  const prefersReducedMotion = typeof window !== 'undefined' 
-    ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    : false;
+  const prefersReducedMotion =
+    typeof window !== 'undefined'
+      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      : false;
 
   const handlePress = () => {
     if (disabled) return;
@@ -81,7 +82,7 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
       {/* Anneaux concentriques animés (skip if prefers-reduced-motion) */}
       {isActive && !prefersReducedMotion && (
         <>
-          {[0, 1, 2].map((i) => (
+          {[0, 1, 2].map(i => (
             <motion.div
               key={`ring-${i}`}
               className="voice-button-ring"
@@ -122,14 +123,14 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
         }}
         onTouchStart={handlePress}
         onTouchEnd={handleRelease}
-        onKeyDown={(e) => {
+        onKeyDown={e => {
           if (disabled) return;
           if (e.key === ' ' || e.key === 'Enter') {
             e.preventDefault();
             handlePress();
           }
         }}
-        onKeyUp={(e) => {
+        onKeyUp={e => {
           if (disabled) return;
           if (e.key === ' ' || e.key === 'Enter') {
             e.preventDefault();
@@ -142,7 +143,9 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
           boxShadow: isActive
             ? [
                 '0 0 20px rgba(59, 130, 246, 0.4)',
-                prefersReducedMotion ? '0 0 20px rgba(59, 130, 246, 0.4)' : '0 0 40px rgba(59, 130, 246, 0.6)',
+                prefersReducedMotion
+                  ? '0 0 20px rgba(59, 130, 246, 0.4)'
+                  : '0 0 40px rgba(59, 130, 246, 0.6)',
                 '0 0 20px rgba(59, 130, 246, 0.4)',
               ]
             : '0 4px 24px rgba(0, 0, 0, 0.12)',
@@ -158,11 +161,17 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
           },
         }}
         disabled={disabled}
-        aria-label={isActive ? 'Arrêter l\'enregistrement vocal' : 'Démarrer l\'enregistrement vocal'}
+        aria-label={
+          isActive ? "Arrêter l'enregistrement vocal" : "Démarrer l'enregistrement vocal"
+        }
         aria-pressed={isActive}
         aria-disabled={disabled}
         tabIndex={disabled ? -1 : 0}
-        title={mode === 'push-to-talk' ? 'Maintenir pour parler (Espace)' : 'Cliquer pour activer/désactiver (Entrée)'}
+        title={
+          mode === 'push-to-talk'
+            ? 'Maintenir pour parler (Espace)'
+            : 'Cliquer pour activer/désactiver (Entrée)'
+        }
       >
         {/* Gradient background */}
         <div className="voice-button-gradient" />
@@ -203,7 +212,10 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
           ) : (
             // Micro inactif
             <>
-              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" opacity="0.5" />
+              <path
+                d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"
+                opacity="0.5"
+              />
               <path d="M19 10v2a7 7 0 0 1-14 0v-2" opacity="0.5" />
               <line x1="12" y1="19" x2="12" y2="23" opacity="0.5" />
               <line x1="8" y1="23" x2="16" y2="23" opacity="0.5" />
@@ -242,7 +254,7 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
       )}
 
       {/* Mode indicator with live region */}
-      <div 
+      <div
         className="voice-button-mode"
         role="status"
         aria-live="polite"

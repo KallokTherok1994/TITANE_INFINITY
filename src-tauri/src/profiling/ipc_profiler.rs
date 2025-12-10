@@ -4,9 +4,12 @@
 // ═══════════════════════════════════════════════════════════════
 
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use std::time::Instant;
-use std::collections::HashMap;
+
+// Type alias for complex profiler storage type
+type ProfilerStorage = Arc<Mutex<HashMap<String, Vec<ExecutionRecord>>>>;
 
 /// IPC Command performance metrics
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -84,9 +87,18 @@ impl IPCProfiler {
         let p95_idx = (count as f64 * 0.95) as usize;
         let p99_idx = (count as f64 * 0.99) as usize;
 
-        let p50 = durations.get(p50_idx.saturating_sub(1)).copied().unwrap_or(0);
-        let p95 = durations.get(p95_idx.saturating_sub(1)).copied().unwrap_or(max);
-        let p99 = durations.get(p99_idx.saturating_sub(1)).copied().unwrap_or(max);
+        let p50 = durations
+            .get(p50_idx.saturating_sub(1))
+            .copied()
+            .unwrap_or(0);
+        let p95 = durations
+            .get(p95_idx.saturating_sub(1))
+            .copied()
+            .unwrap_or(max);
+        let p99 = durations
+            .get(p99_idx.saturating_sub(1))
+            .copied()
+            .unwrap_or(max);
 
         let last = executions.last().map(|r| r.duration_ms).unwrap_or(0);
 
@@ -181,7 +193,7 @@ impl Default for IPCProfiler {
 pub struct ProfileGuard {
     command_name: String,
     start_time: Instant,
-    profiler: Option<Arc<Mutex<HashMap<String, Vec<ExecutionRecord>>>>>,
+    profiler: Option<ProfilerStorage>,
 }
 
 impl Drop for ProfileGuard {

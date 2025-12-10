@@ -37,10 +37,14 @@ export function NexusMesh() {
 
   const getHealthColor = (health: string): string => {
     switch (health) {
-      case 'Healthy': return 'green';
-      case 'Degraded': return 'yellow';
-      case 'Failed': return 'red';
-      default: return 'gray';
+      case 'Healthy':
+        return 'green';
+      case 'Degraded':
+        return 'yellow';
+      case 'Failed':
+        return 'red';
+      default:
+        return 'gray';
     }
   };
 
@@ -66,7 +70,9 @@ export function NexusMesh() {
       <Card className="p-6">
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm text-gray-400">Score Global</span>
-          <span className="text-lg font-semibold">{nexus.coherence_score.toFixed(1)}%</span>
+          <span className="text-lg font-semibold">
+            {nexus.coherence_score.toFixed(1)}%
+          </span>
         </div>
         <div className="w-full bg-gray-700 rounded-full h-3">
           <div
@@ -74,8 +80,8 @@ export function NexusMesh() {
               nexus.coherence_score >= 90
                 ? 'bg-green-500'
                 : nexus.coherence_score >= 70
-                ? 'bg-yellow-500'
-                : 'bg-red-500'
+                  ? 'bg-yellow-500'
+                  : 'bg-red-500'
             }`}
             style={{ width: `${nexus.coherence_score}%` }}
           />

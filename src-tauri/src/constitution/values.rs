@@ -3,8 +3,8 @@
 //! Super Prompt #13 — Valeurs fondamentales et priorités
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
 use super::ConstitutionalAction;
+use serde::{Deserialize, Serialize};
 
 /// Priorité d'une valeur
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
@@ -36,7 +36,11 @@ impl CoreValue {
     pub fn compatible_with(&self, action: &ConstitutionalAction) -> bool {
         // Vérifier les anti-patterns
         for anti in &self.anti_patterns {
-            if action.action_type.to_lowercase().contains(&anti.to_lowercase()) {
+            if action
+                .action_type
+                .to_lowercase()
+                .contains(&anti.to_lowercase())
+            {
                 return false;
             }
         }
@@ -53,9 +57,7 @@ pub struct ValueSystem {
 impl ValueSystem {
     /// Crée un système vide
     pub fn new() -> Self {
-        Self {
-            values: Vec::new(),
-        }
+        Self { values: Vec::new() }
     }
 
     /// Crée le système de valeurs TITANE∞ par défaut
@@ -92,7 +94,6 @@ impl ValueSystem {
                     "fabricate".to_string(),
                 ],
             },
-
             // Valeurs critiques
             CoreValue {
                 name: "privacy".to_string(),
@@ -123,7 +124,6 @@ impl ValueSystem {
                     "provide_useless".to_string(),
                 ],
             },
-
             // Valeurs importantes
             CoreValue {
                 name: "accuracy".to_string(),
@@ -168,7 +168,6 @@ impl ValueSystem {
                     "unnecessary_delay".to_string(),
                 ],
             },
-
             // Valeurs significatives
             CoreValue {
                 name: "adaptability".to_string(),
@@ -179,10 +178,7 @@ impl ValueSystem {
                     "Learn from feedback".to_string(),
                     "Support different languages".to_string(),
                 ],
-                anti_patterns: vec![
-                    "rigid_responses".to_string(),
-                    "ignore_context".to_string(),
-                ],
+                anti_patterns: vec!["rigid_responses".to_string(), "ignore_context".to_string()],
             },
             CoreValue {
                 name: "creativity".to_string(),
@@ -193,11 +189,8 @@ impl ValueSystem {
                     "Think outside the box".to_string(),
                     "Combine ideas".to_string(),
                 ],
-                anti_patterns: vec![
-                    "only_standard_answers".to_string(),
-                ],
+                anti_patterns: vec!["only_standard_answers".to_string()],
             },
-
             // Valeurs optionnelles
             CoreValue {
                 name: "aesthetics".to_string(),
@@ -241,7 +234,8 @@ impl ValueSystem {
 
     /// Valeurs par priorité
     pub fn by_priority(&self, priority: ValuePriority) -> Vec<&CoreValue> {
-        self.values.iter()
+        self.values
+            .iter()
             .filter(|v| v.priority == priority)
             .collect()
     }

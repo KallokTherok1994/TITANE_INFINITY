@@ -3,10 +3,7 @@
 // Module: Tauri Bridge for Appearance Engine
 
 import { secureInvoke } from '@/lib/security';
-import type {
-  AvatarAppearanceState,
-  AppearanceUpdateRequest,
-} from "./appearanceState";
+import type { AvatarAppearanceState, AppearanceUpdateRequest } from './appearanceState';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TAURI COMMANDS — Bridge Functions
@@ -16,35 +13,31 @@ import type {
  * Get current avatar appearance state
  */
 export async function getAppearance(): Promise<AvatarAppearanceState> {
-  const json = await secureInvoke<string>("avatar_get_appearance");
+  const json = await secureInvoke<string>('avatar_get_appearance');
   return JSON.parse(json);
 }
 
 /**
  * Set complete appearance state (override)
  */
-export async function setAppearance(
-  state: AvatarAppearanceState,
-): Promise<string> {
+export async function setAppearance(state: AvatarAppearanceState): Promise<string> {
   const json = JSON.stringify(state);
-  return secureInvoke<string>("avatar_set_appearance", { stateJson: json });
+  return secureInvoke<string>('avatar_set_appearance', { stateJson: json });
 }
 
 /**
  * Update appearance (partial)
  */
-export async function updateAppearance(
-  update: AppearanceUpdateRequest,
-): Promise<string> {
+export async function updateAppearance(update: AppearanceUpdateRequest): Promise<string> {
   const json = JSON.stringify(update);
-  return secureInvoke<string>("avatar_update_appearance", { updateJson: json });
+  return secureInvoke<string>('avatar_update_appearance', { updateJson: json });
 }
 
 /**
  * Apply style preset (e.g., "Bureau_Pro", "Casual_Light")
  */
 export async function applyStylePreset(styleName: string): Promise<string> {
-  return secureInvoke<string>("avatar_apply_style_preset", { styleName });
+  return secureInvoke<string>('avatar_apply_style_preset', { styleName });
 }
 
 /**
@@ -53,9 +46,9 @@ export async function applyStylePreset(styleName: string): Promise<string> {
  * @returns AppearanceUpdateRequest JSON string
  */
 export async function parseStyleCommand(
-  command: string,
+  command: string
 ): Promise<AppearanceUpdateRequest> {
-  const json = await secureInvoke<string>("avatar_parse_style_command", { command });
+  const json = await secureInvoke<string>('avatar_parse_style_command', { command });
   return JSON.parse(json);
 }
 
@@ -65,10 +58,10 @@ export async function parseStyleCommand(
 export async function saveCustomStyle(
   name: string,
   archetype: string,
-  keywords: string[],
+  keywords: string[]
 ): Promise<string> {
   const keywordsJson = JSON.stringify(keywords);
-  return secureInvoke<string>("avatar_save_custom_style", {
+  return secureInvoke<string>('avatar_save_custom_style', {
     name,
     archetype,
     keywordsJson,
@@ -79,7 +72,7 @@ export async function saveCustomStyle(
  * Load saved custom style
  */
 export async function loadCustomStyle(name: string): Promise<string> {
-  return secureInvoke<string>("avatar_load_custom_style", { name });
+  return secureInvoke<string>('avatar_load_custom_style', { name });
 }
 
 /**
@@ -88,26 +81,23 @@ export async function loadCustomStyle(name: string): Promise<string> {
  */
 export async function mergeStyles(styleNames: string[]): Promise<string> {
   const json = JSON.stringify(styleNames);
-  return secureInvoke<string>("avatar_merge_styles", { styleNamesJson: json });
+  return secureInvoke<string>('avatar_merge_styles', { styleNamesJson: json });
 }
 
 /**
  * List all available style names
  */
 export async function listStyles(): Promise<string[]> {
-  const json = await secureInvoke<string>("avatar_list_styles");
+  const json = await secureInvoke<string>('avatar_list_styles');
   return JSON.parse(json);
 }
 
 /**
  * Add custom archetype to taxonomy
  */
-export async function addArchetype(
-  name: string,
-  keywords: string[],
-): Promise<string> {
+export async function addArchetype(name: string, keywords: string[]): Promise<string> {
   const keywordsJson = JSON.stringify(keywords);
-  return secureInvoke<string>("avatar_add_archetype", { name, keywordsJson });
+  return secureInvoke<string>('avatar_add_archetype', { name, keywordsJson });
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -130,7 +120,7 @@ export async function applyStyleFromCommand(command: string): Promise<string> {
 export async function changeOutfit(
   top?: string,
   bottom?: string,
-  shoes?: string,
+  shoes?: string
 ): Promise<string> {
   const update: AppearanceUpdateRequest = {
     outfit: { top, bottom, shoes },

@@ -27,7 +27,11 @@ import type {
   AutomationCategory,
   SecurityLevel,
 } from '../services/automation/automations.config';
-import type { ChatModeId, PermissionLevel, ToolPermissions } from '../services/ai/chatModes.config';
+import type {
+  ChatModeId,
+  PermissionLevel,
+  ToolPermissions,
+} from '../services/ai/chatModes.config';
 
 describe('automations.config.ts', () => {
   // ═══════════════════════════════════════════════════════════════════════════
@@ -87,7 +91,7 @@ describe('automations.config.ts', () => {
   // ═══════════════════════════════════════════════════════════════════════════
 
   describe('getAutomation', () => {
-    it('retourne l\'automation correcte par ID', () => {
+    it("retourne l'automation correcte par ID", () => {
       const automation = getAutomation('auto_backup');
       expect(automation).toBeDefined();
       expect(automation.id).toBe('auto_backup');
@@ -150,7 +154,7 @@ describe('automations.config.ts', () => {
       expect(hasHealthCheck).toBe(true);
     });
 
-    it('mode admin a accès à plus d\'automations que default', () => {
+    it("mode admin a accès à plus d'automations que default", () => {
       const adminAutomations = getAutomationsForMode('admin');
       const defaultAutomations = getAutomationsForMode('default');
       expect(adminAutomations.length).toBeGreaterThanOrEqual(defaultAutomations.length);
@@ -202,7 +206,7 @@ describe('automations.config.ts', () => {
       auditLogs: true,
     };
 
-    it('autorise auto_git_status pour n\'importe quel mode avec permission 0', () => {
+    it("autorise auto_git_status pour n'importe quel mode avec permission 0", () => {
       const result = canExecuteAutomation('auto_git_status', 'default', 0, fullTools);
       expect(result.allowed).toBe(true);
       expect(result.reason).toBeUndefined();
@@ -233,19 +237,24 @@ describe('automations.config.ts', () => {
     });
 
     it('retourne erreur pour automation inconnue', () => {
-      const result = canExecuteAutomation('unknown_automation' as AutomationId, 'dev', 5, fullTools);
+      const result = canExecuteAutomation(
+        'unknown_automation' as AutomationId,
+        'dev',
+        5,
+        fullTools
+      );
       expect(result.allowed).toBe(false);
       expect(result.reason).toContain('inconnue');
     });
   });
 
   describe('calculateAutomationXP', () => {
-    it('calcule l\'XP de base correctement', () => {
+    it("calcule l'XP de base correctement", () => {
       const xp = calculateAutomationXP('auto_git_status', 'default', true);
       expect(xp).toBe(5); // baseXpReward de auto_git_status
     });
 
-    it('retourne 0 si l\'exécution a échoué', () => {
+    it("retourne 0 si l'exécution a échoué", () => {
       const xp = calculateAutomationXP('auto_backup', 'dev', false);
       expect(xp).toBe(0);
     });
@@ -259,7 +268,7 @@ describe('automations.config.ts', () => {
       expect(xpDefault).toBe(50); // Pas de multiplicateur
     });
 
-    it('le multiplicateur dev augmente l\'XP pour auto_type_check', () => {
+    it("le multiplicateur dev augmente l'XP pour auto_type_check", () => {
       const xpDev = calculateAutomationXP('auto_type_check', 'dev', true);
       const xpDefault = calculateAutomationXP('auto_type_check', 'default', true);
 
@@ -368,8 +377,17 @@ describe('automations.config.ts', () => {
   describe('Integration', () => {
     it('toutes les automations sont accessibles par au moins un mode', () => {
       const allModes: ChatModeId[] = [
-        'default', 'brainstorming', 'synthesis', 'planning',
-        'journal', 'debug_cognitive', 'coach', 'dev', 'admin', 'strategy', 'audit'
+        'default',
+        'brainstorming',
+        'synthesis',
+        'planning',
+        'journal',
+        'debug_cognitive',
+        'coach',
+        'dev',
+        'admin',
+        'strategy',
+        'audit',
       ];
 
       for (const automation of Object.values(AUTOMATION_REGISTRY)) {
@@ -390,7 +408,9 @@ describe('automations.config.ts', () => {
     it('les automations avec confirmation ne sont pas de niveau safe', () => {
       for (const automation of Object.values(AUTOMATION_REGISTRY)) {
         if (automation.requiresConfirmation) {
-          expect(['moderate', 'elevated', 'critical']).toContain(automation.securityLevel);
+          expect(['moderate', 'elevated', 'critical']).toContain(
+            automation.securityLevel
+          );
         }
       }
     });

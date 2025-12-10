@@ -39,7 +39,7 @@
 
 - ✅ **Zero API key leaks**: Validation complète DOM + 48 tests
 - ✅ **Backend encryption**: AES-256-GCM + Argon2id (Rust)
-- ✅ **Client validation**: Format par provider (OpenAI sk-*, Claude sk-ant-*)
+- ✅ **Client validation**: Format par provider (OpenAI sk-_, Claude sk-ant-_)
 - ✅ **SecurityPanel UI**: Gestion clés sécurisée (add/test/delete)
 - ✅ **Tauri proxy**: 100% requests via backend sécurisé
 
@@ -47,7 +47,7 @@
 
 - **48/48 tests** passing (100%) ✅
   - 16 tests OpenAI provider
-  - 17 tests Claude provider  
+  - 17 tests Claude provider
   - 15 tests SecurityPanel UI
 - **2,088 lignes** de code TypeScript production
 - **0 erreurs** compilation TypeScript
@@ -59,13 +59,13 @@ Le système choisit automatiquement le meilleur provider selon la tâche:
 
 ```typescript
 // Tâche complexe → OpenAI GPT-4o (+30 score)
-"Écris un algorithme de machine learning..."
+'Écris un algorithme de machine learning...';
 
 // Analyse profonde → Claude 3.5 Sonnet (+28 score)
-"Analyse cette architecture et identifie les failles..."
+'Analyse cette architecture et identifie les failles...';
 
 // Équilibré → Gemini 2.0 (+25 score)
-"Résume ce document en 3 paragraphes..."
+'Résume ce document en 3 paragraphes...';
 ```
 
 **Fallback cascade**: Si un provider échoue, le suivant prend le relais automatiquement.

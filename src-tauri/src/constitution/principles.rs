@@ -3,8 +3,8 @@
 //! Super Prompt #13 — Principes fondamentaux du système
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
 use super::ConstitutionalAction;
+use serde::{Deserialize, Serialize};
 
 /// Type de principe
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -66,17 +66,27 @@ impl Principle {
 
     fn check_ethical(&self, action: &ConstitutionalAction) -> bool {
         match self.id.as_str() {
-            "no_harm" => !action.action_type.contains("harm") && !action.action_type.contains("damage"),
-            "honesty" => !action.action_type.contains("deceive") && !action.action_type.contains("lie"),
-            "respect" => !action.action_type.contains("insult") && !action.action_type.contains("demean"),
+            "no_harm" => {
+                !action.action_type.contains("harm") && !action.action_type.contains("damage")
+            }
+            "honesty" => {
+                !action.action_type.contains("deceive") && !action.action_type.contains("lie")
+            }
+            "respect" => {
+                !action.action_type.contains("insult") && !action.action_type.contains("demean")
+            }
             _ => true,
         }
     }
 
     fn check_security(&self, action: &ConstitutionalAction) -> bool {
         match self.id.as_str() {
-            "data_protection" => !action.target.contains("external") || action.parameters.contains_key("encrypted"),
-            "access_control" => action.parameters.contains_key("authorized") || action.requester == "system",
+            "data_protection" => {
+                !action.target.contains("external") || action.parameters.contains_key("encrypted")
+            }
+            "access_control" => {
+                action.parameters.contains_key("authorized") || action.requester == "system"
+            }
             _ => true,
         }
     }
@@ -126,7 +136,6 @@ impl PrincipleSet {
                 enforceable: true,
                 active: true,
             },
-
             // Principes éthiques
             Principle {
                 id: "no_harm".to_string(),
@@ -155,7 +164,6 @@ impl PrincipleSet {
                 enforceable: true,
                 active: true,
             },
-
             // Principes de sécurité
             Principle {
                 id: "data_protection".to_string(),
@@ -175,7 +183,6 @@ impl PrincipleSet {
                 enforceable: true,
                 active: true,
             },
-
             // Principes opérationnels
             Principle {
                 id: "efficiency".to_string(),
@@ -195,7 +202,6 @@ impl PrincipleSet {
                 enforceable: true,
                 active: true,
             },
-
             // Principes de performance
             Principle {
                 id: "continuous_improvement".to_string(),
@@ -238,16 +244,15 @@ impl PrincipleSet {
 
     /// Principes par type
     pub fn by_type(&self, principle_type: PrincipleType) -> Vec<&Principle> {
-        self.principles.iter()
+        self.principles
+            .iter()
             .filter(|p| p.principle_type == principle_type)
             .collect()
     }
 
     /// Principes actifs
     pub fn active(&self) -> Vec<&Principle> {
-        self.principles.iter()
-            .filter(|p| p.active)
-            .collect()
+        self.principles.iter().filter(|p| p.active).collect()
     }
 
     /// Principes fondamentaux

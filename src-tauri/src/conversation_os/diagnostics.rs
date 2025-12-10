@@ -3,11 +3,11 @@
 //! Super Prompt #9 — Diagnostics et événements du Conversation OS
 //! ═══════════════════════════════════════════════════════════════════════════════
 
+use super::intent::{IntentType, UserIntent};
+use super::safety::SafetyCheck;
 use serde::{Deserialize, Serialize};
 use std::collections::VecDeque;
 use tokio::sync::RwLock;
-use super::intent::{UserIntent, IntentType};
-use super::safety::SafetyCheck;
 
 /// Événement conversationnel
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -17,40 +17,24 @@ pub enum ConversationEvent {
     /// Pipeline routé
     PipelineRouted(usize),
     /// Émotion analysée
-    EmotionAnalyzed {
-        tone: String,
-        intensity: f32,
-    },
+    EmotionAnalyzed { tone: String, intensity: f32 },
     /// Narrative mis à jour
-    NarrativeUpdated {
-        depth: u32,
-        coherence: f32,
-    },
+    NarrativeUpdated { depth: u32, coherence: f32 },
     /// Sécurité déclenchée
     SafetyTriggered(SafetyCheck),
     /// Style appliqué
-    StyleApplied {
-        transformations: Vec<String>,
-    },
+    StyleApplied { transformations: Vec<String> },
     /// Traitement terminé
     ProcessingComplete {
         duration_ms: u64,
         intent: IntentType,
     },
     /// Erreur
-    Error {
-        stage: String,
-        message: String,
-    },
+    Error { stage: String, message: String },
     /// Avertissement
-    Warning {
-        message: String,
-    },
+    Warning { message: String },
     /// Persona changé
-    PersonaChanged {
-        from: String,
-        to: String,
-    },
+    PersonaChanged { from: String, to: String },
     /// Conversation réinitialisée
     ConversationReset,
 }
@@ -169,7 +153,8 @@ impl ConversationDiagnostics {
     /// Récupère les événements récents
     pub async fn get_recent(&self, limit: usize) -> Vec<ConversationEvent> {
         let history = self.history.read().await;
-        history.iter()
+        history
+            .iter()
             .rev()
             .take(limit)
             .map(|e| e.event.clone())
@@ -189,7 +174,8 @@ impl ConversationDiagnostics {
     /// Filtre les événements par type
     pub async fn filter_by_type(&self, event_type: &str) -> Vec<DiagnosticEntry> {
         let history = self.history.read().await;
-        history.iter()
+        history
+            .iter()
             .filter(|e| self.matches_type(&e.event, event_type))
             .cloned()
             .collect()
@@ -197,20 +183,21 @@ impl ConversationDiagnostics {
 
     /// Vérifie si un événement correspond au type recherché
     fn matches_type(&self, event: &ConversationEvent, event_type: &str) -> bool {
-        match (event, event_type) {
-            (ConversationEvent::IntentDetected(_), "intent") => true,
-            (ConversationEvent::Error { .. }, "error") => true,
-            (ConversationEvent::Warning { .. }, "warning") => true,
-            (ConversationEvent::SafetyTriggered(_), "safety") => true,
-            (ConversationEvent::ProcessingComplete { .. }, "complete") => true,
-            _ => false,
-        }
+        matches!(
+            (event, event_type),
+            (ConversationEvent::IntentDetected(_), "intent")
+                | (ConversationEvent::Error { .. }, "error")
+                | (ConversationEvent::Warning { .. }, "warning")
+                | (ConversationEvent::SafetyTriggered(_), "safety")
+                | (ConversationEvent::ProcessingComplete { .. }, "complete")
+        )
     }
 
     /// Récupère les erreurs récentes
     pub async fn get_errors(&self, limit: usize) -> Vec<DiagnosticEntry> {
         let history = self.history.read().await;
-        history.iter()
+        history
+            .iter()
             .filter(|e| matches!(e.event, ConversationEvent::Error { .. }))
             .rev()
             .take(limit)
@@ -270,7 +257,9 @@ impl ConversationDiagnostics {
 
     /// Récupère les intentions les plus fréquentes
     fn get_top_intents(&self, stats: &DiagnosticStats, limit: usize) -> Vec<(String, u64)> {
-        let mut intents: Vec<_> = stats.intents_distribution.iter()
+        let mut intents: Vec<_> = stats
+            .intents_distribution
+            .iter()
             .map(|(k, v)| (k.clone(), *v))
             .collect();
         intents.sort_by(|a, b| b.1.cmp(&a.1));
@@ -321,7 +310,8 @@ mod tests {
 
         diag.emit(ConversationEvent::Warning {
             message: "Test warning".to_string(),
-        }).await;
+        })
+        .await;
 
         let recent = diag.get_recent(10).await;
         assert_eq!(recent.len(), 1);
@@ -334,7 +324,8 @@ mod tests {
         diag.emit(ConversationEvent::Error {
             stage: "test".to_string(),
             message: "error".to_string(),
-        }).await;
+        })
+        .await;
 
         let stats = diag.get_stats().await;
         assert_eq!(stats.errors_count, 1);
@@ -349,7 +340,8 @@ mod tests {
             diag.emit(ConversationEvent::ProcessingComplete {
                 duration_ms: 100,
                 intent: IntentType::Question,
-            }).await;
+            })
+            .await;
         }
 
         let report = diag.health_report().await;
@@ -363,11 +355,13 @@ mod tests {
         diag.emit(ConversationEvent::Error {
             stage: "test".to_string(),
             message: "error".to_string(),
-        }).await;
+        })
+        .await;
 
         diag.emit(ConversationEvent::Warning {
             message: "warning".to_string(),
-        }).await;
+        })
+        .await;
 
         let errors = diag.filter_by_type("error").await;
         assert_eq!(errors.len(), 1);

@@ -18,7 +18,7 @@ describe('Control Panel E2E', () => {
   });
 
   describe('Navigation complète', () => {
-    test('Ouvre l\'application et navigue dans toutes les sections', async () => {
+    test("Ouvre l'application et navigue dans toutes les sections", async () => {
       // TODO: Implémenter avec WebDriver
       // await driver.get('http://localhost:1420');
 
@@ -44,7 +44,7 @@ describe('Control Panel E2E', () => {
   });
 
   describe('Interactions utilisateur', () => {
-    test('Modifie le mode d\'apparence', async () => {
+    test("Modifie le mode d'apparence", async () => {
       // TODO: Implémenter
       // 1. Naviguer vers Apparence
       // 2. Cliquer sur le bouton "Sombre"

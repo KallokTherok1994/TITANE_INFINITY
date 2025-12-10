@@ -15,16 +15,16 @@ export type HealingSeverity = 'info' | 'low' | 'medium' | 'high' | 'critical';
 
 /** Catégorie de module surveillé */
 export type ModuleCategory =
-  | 'react'      // Composants UI
-  | 'tauri'      // Backend Rust
-  | 'ia'         // Pipelines IA (Ollama, Gemini)
-  | 'tts'        // Synthèse vocale
-  | 'memory'     // Mémoire persistante
+  | 'react' // Composants UI
+  | 'tauri' // Backend Rust
+  | 'ia' // Pipelines IA (Ollama, Gemini)
+  | 'tts' // Synthèse vocale
+  | 'memory' // Mémoire persistante
   | 'automation' // Playbooks automation
-  | 'performance'// CPU, RAM, FPS
-  | 'io'         // Système de fichiers
-  | 'network'    // Connexions réseau
-  | 'security';  // Intégrité & sécurité
+  | 'performance' // CPU, RAM, FPS
+  | 'io' // Système de fichiers
+  | 'network' // Connexions réseau
+  | 'security'; // Intégrité & sécurité
 
 /** Statut d'un module */
 export type ModuleStatus = 'healthy' | 'degraded' | 'critical' | 'offline' | 'recovering';
@@ -56,15 +56,15 @@ export type HealingResult = 'success' | 'partial' | 'failed' | 'skipped' | 'esca
 /** Snapshot de l'état vital du système */
 export interface VitalsSnapshot {
   timestamp: number;
-  cpu_usage: number;         // 0-100%
-  memory_usage: number;      // 0-100%
-  fps: number;               // Frames par seconde
+  cpu_usage: number; // 0-100%
+  memory_usage: number; // 0-100%
+  fps: number; // Frames par seconde
   webview_responsive: boolean;
   tauri_backend_alive: boolean;
   ollama_available: boolean;
   gemini_available: boolean;
   tts_available: boolean;
-  memory_integrity: number;  // 0-100%
+  memory_integrity: number; // 0-100%
   active_errors: number;
   queue_size: number;
 }
@@ -107,12 +107,12 @@ export interface HealingDiagnosis {
   category: ModuleCategory;
   probableCause: string;
   severity: HealingSeverity;
-  urgency: number;           // 1-10
+  urgency: number; // 1-10
   potentialImpact: string[];
   suggestedActions: HealingActionType[];
   historicalPatterns: string[];
   escalationRequired: boolean;
-  confidence: number;        // 0-1
+  confidence: number; // 0-1
 }
 
 /** Playbook de réparation */
@@ -364,7 +364,7 @@ export const ANOMALY_CATALOG: AnomalyDefinition[] = [
     id: 'react-render-error',
     name: 'React Render Error',
     category: 'react',
-    description: 'Erreur lors du rendu d\'un composant React',
+    description: "Erreur lors du rendu d'un composant React",
     detectionPattern: /Error: (Minified React error|Cannot read|undefined is not)/,
     defaultSeverity: 'high',
     suggestedPlaybooks: ['restart-component', 'clear-react-cache'],
@@ -408,7 +408,7 @@ export const ANOMALY_CATALOG: AnomalyDefinition[] = [
     id: 'tauri-command-timeout',
     name: 'Tauri Command Timeout',
     category: 'tauri',
-    description: 'Commande Tauri n\'a pas répondu dans le délai',
+    description: "Commande Tauri n'a pas répondu dans le délai",
     detectionPattern: /Command .* timed out|invoke.*timeout/i,
     defaultSeverity: 'high',
     suggestedPlaybooks: ['restart-tauri-module', 'increase-timeout'],
@@ -418,7 +418,7 @@ export const ANOMALY_CATALOG: AnomalyDefinition[] = [
     id: 'tauri-command-error',
     name: 'Tauri Command Error',
     category: 'tauri',
-    description: 'Erreur lors de l\'exécution d\'une commande Tauri',
+    description: "Erreur lors de l'exécution d'une commande Tauri",
     detectionPattern: /Tauri (command|invoke) (failed|error)/i,
     defaultSeverity: 'medium',
     suggestedPlaybooks: ['retry-command', 'fallback-frontend'],
@@ -442,7 +442,7 @@ export const ANOMALY_CATALOG: AnomalyDefinition[] = [
     id: 'ollama-offline',
     name: 'Ollama Offline',
     category: 'ia',
-    description: 'Le serveur Ollama n\'est pas accessible',
+    description: "Le serveur Ollama n'est pas accessible",
     detectionPattern: /Ollama (offline|unavailable|connection refused)/i,
     defaultSeverity: 'high',
     suggestedPlaybooks: ['restart-ollama', 'fallback-gemini'],
@@ -452,7 +452,7 @@ export const ANOMALY_CATALOG: AnomalyDefinition[] = [
     id: 'gemini-api-error',
     name: 'Gemini API Error',
     category: 'ia',
-    description: 'Erreur de l\'API Gemini',
+    description: "Erreur de l'API Gemini",
     detectionPattern: /Gemini (error|failed|rate limit|quota)/i,
     defaultSeverity: 'medium',
     suggestedPlaybooks: ['fallback-ollama', 'retry-with-backoff'],
@@ -462,7 +462,7 @@ export const ANOMALY_CATALOG: AnomalyDefinition[] = [
     id: 'ia-empty-response',
     name: 'IA Empty Response',
     category: 'ia',
-    description: 'L\'IA a retourné une réponse vide',
+    description: "L'IA a retourné une réponse vide",
     detectionPattern: /empty response|0 tokens|no content/i,
     defaultSeverity: 'medium',
     suggestedPlaybooks: ['retry-prompt', 'fallback-provider'],
@@ -622,7 +622,7 @@ export const ANOMALY_CATALOG: AnomalyDefinition[] = [
     id: 'playbook-crash',
     name: 'Automation Playbook Crash',
     category: 'automation',
-    description: 'Un playbook d\'automatisation a crashé',
+    description: "Un playbook d'automatisation a crashé",
     detectionPattern: /playbook (crash|failed|error)/i,
     defaultSeverity: 'medium',
     suggestedPlaybooks: ['abort-playbook', 'rollback-playbook'],
@@ -632,7 +632,7 @@ export const ANOMALY_CATALOG: AnomalyDefinition[] = [
     id: 'automation-invalid-return',
     name: 'Automation Invalid Return',
     category: 'automation',
-    description: 'Retour invalide d\'une automatisation',
+    description: "Retour invalide d'une automatisation",
     detectionPattern: /automation.*(invalid|unexpected) return/i,
     defaultSeverity: 'low',
     suggestedPlaybooks: ['retry-automation'],
@@ -651,7 +651,7 @@ export const STANDARD_PLAYBOOKS: HealingPlaybook[] = [
   {
     id: 'restart-component',
     name: 'Restart Component',
-    description: 'Force le re-render d\'un composant React',
+    description: "Force le re-render d'un composant React",
     targetCategory: ['react'],
     targetSeverity: ['medium', 'high'],
     conditions: [{ field: 'category', operator: 'eq', value: 'react' }],
@@ -849,7 +849,7 @@ export const STANDARD_PLAYBOOKS: HealingPlaybook[] = [
   {
     id: 'rebuild-memory-index',
     name: 'Rebuild Memory Index',
-    description: 'Reconstruit l\'index mémoire',
+    description: "Reconstruit l'index mémoire",
     targetCategory: ['memory'],
     targetSeverity: ['medium', 'high'],
     conditions: [],
@@ -861,7 +861,7 @@ export const STANDARD_PLAYBOOKS: HealingPlaybook[] = [
         parameters: { fullRebuild: false },
         timeout: 60000,
         onFailure: 'abort',
-        description: 'Reconstruit l\'index de recherche mémoire',
+        description: "Reconstruit l'index de recherche mémoire",
       },
     ],
     maxRetries: 1,
@@ -915,7 +915,7 @@ export const STANDARD_PLAYBOOKS: HealingPlaybook[] = [
         parameters: { force: true },
         timeout: 5000,
         onFailure: 'continue',
-        description: 'Force l\'exécution du GC',
+        description: "Force l'exécution du GC",
       },
     ],
     maxRetries: 2,
@@ -957,7 +957,7 @@ export const STANDARD_PLAYBOOKS: HealingPlaybook[] = [
   {
     id: 'sync-state',
     name: 'Sync Singularity State',
-    description: 'Synchronise l\'état avec SingularityEngine',
+    description: "Synchronise l'état avec SingularityEngine",
     targetCategory: ['react', 'tauri', 'ia', 'tts', 'memory'],
     targetSeverity: ['low', 'medium', 'high'],
     conditions: [],
@@ -1045,9 +1045,10 @@ export function filterPlaybooks(
   severity: HealingSeverity
 ): HealingPlaybook[] {
   return STANDARD_PLAYBOOKS.filter(
-    p => p.enabled &&
-         p.targetCategory.includes(category) &&
-         p.targetSeverity.includes(severity)
+    p =>
+      p.enabled &&
+      p.targetCategory.includes(category) &&
+      p.targetSeverity.includes(severity)
   );
 }
 

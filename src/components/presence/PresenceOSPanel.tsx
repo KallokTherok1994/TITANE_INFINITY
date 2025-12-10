@@ -216,7 +216,10 @@ function OverviewTab({ state, coherence }: { state: PresenceState; coherence: nu
           <LayerIndicator
             label="Expressive"
             value={
-              (Object.values(state.expressive.timbreBlend) as number[]).reduce((a, b) => a + b, 0) / 4
+              (Object.values(state.expressive.timbreBlend) as number[]).reduce(
+                (a, b) => a + b,
+                0
+              ) / 4
             }
           />
           <LayerIndicator label="Aura" value={coherence} />

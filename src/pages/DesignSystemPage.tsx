@@ -61,17 +61,35 @@ export function DesignSystemPage() {
         {/* Button Variants */}
         <Panel title="Variantes de boutons" className="demo-section">
           <div className="button-grid">
-            <Button variant="primary" size="sm">Primaire Petit</Button>
-            <Button variant="primary" size="md">Primaire Moyen</Button>
-            <Button variant="primary" size="lg">Primaire Grand</Button>
+            <Button variant="primary" size="sm">
+              Primaire Petit
+            </Button>
+            <Button variant="primary" size="md">
+              Primaire Moyen
+            </Button>
+            <Button variant="primary" size="lg">
+              Primaire Grand
+            </Button>
 
-            <Button variant="secondary" size="md">Secondaire</Button>
-            <Button variant="ghost" size="md">Fantôme</Button>
-            <Button variant="danger" size="md">Danger</Button>
+            <Button variant="secondary" size="md">
+              Secondaire
+            </Button>
+            <Button variant="ghost" size="md">
+              Fantôme
+            </Button>
+            <Button variant="danger" size="md">
+              Danger
+            </Button>
 
-            <Button variant="glass" size="md">Verre</Button>
-            <Button variant="subtle" size="md">Subtil</Button>
-            <Button variant="primary" size="md" disabled>Désactivé</Button>
+            <Button variant="glass" size="md">
+              Verre
+            </Button>
+            <Button variant="subtle" size="md">
+              Subtil
+            </Button>
+            <Button variant="primary" size="md" disabled>
+              Désactivé
+            </Button>
           </div>
         </Panel>
 
@@ -134,12 +152,7 @@ export function DesignSystemPage() {
 
         {/* Radio */}
         <Panel title="Radio Group" className="demo-section">
-          <RadioGroup
-            value={theme}
-            onChange={setTheme}
-            name="theme"
-            size="md"
-          >
+          <RadioGroup value={theme} onChange={setTheme} name="theme" size="md">
             <Radio value="rubis" label="🔴 Rubis" />
             <Radio value="saphir" label="🔵 Saphir" />
             <Radio value="emeraude" label="🟢 Émeraude" />
@@ -240,19 +253,25 @@ export function DesignSystemPage() {
               <label className="demo-label">Small</label>
               <Switch checked={true} onChange={() => {}} size="sm" label="Switch" />
               <Checkbox checked={true} onChange={() => {}} size="sm" label="Checkbox" />
-              <Button variant="primary" size="sm">Button</Button>
+              <Button variant="primary" size="sm">
+                Button
+              </Button>
             </div>
             <div>
               <label className="demo-label">Medium</label>
               <Switch checked={true} onChange={() => {}} size="md" label="Switch" />
               <Checkbox checked={true} onChange={() => {}} size="md" label="Checkbox" />
-              <Button variant="primary" size="md">Button</Button>
+              <Button variant="primary" size="md">
+                Button
+              </Button>
             </div>
             <div>
               <label className="demo-label">Large</label>
               <Switch checked={true} onChange={() => {}} size="lg" label="Switch" />
               <Checkbox checked={true} onChange={() => {}} size="lg" label="Checkbox" />
-              <Button variant="primary" size="lg">Button</Button>
+              <Button variant="primary" size="lg">
+                Button
+              </Button>
             </div>
           </div>
         </Panel>

@@ -122,8 +122,13 @@ impl IntentionDetector {
     /// Détecte l'intention basée sur les indicateurs
     fn detect_intention(&mut self) {
         let ind = &self.indicators;
-        let total = ind.navigation_count + ind.search_count + ind.interaction_count
-            + ind.help_count + ind.config_count + ind.create_count + ind.export_count;
+        let total = ind.navigation_count
+            + ind.search_count
+            + ind.interaction_count
+            + ind.help_count
+            + ind.config_count
+            + ind.create_count
+            + ind.export_count;
 
         if total < 3 {
             self.current_intention = Some(UserIntention::Uncertain);
@@ -135,7 +140,8 @@ impl IntentionDetector {
         let mut scores: Vec<(UserIntention, f64)> = Vec::new();
 
         // Information Seeking: beaucoup de recherches et navigation
-        let info_score = (ind.search_count as f64 * 2.0 + ind.navigation_count as f64) / total as f64;
+        let info_score =
+            (ind.search_count as f64 * 2.0 + ind.navigation_count as f64) / total as f64;
         scores.push((UserIntention::InformationSeeking, info_score));
 
         // Task Completion: interactions ciblées
@@ -169,7 +175,8 @@ impl IntentionDetector {
         // Frustration: erreurs, backtracking, actions rapides
         let frustration_score = (ind.error_count as f64 * 2.0
             + ind.backtrack_count as f64 * 1.5
-            + ind.rapid_actions as f64 * 0.5) / total as f64;
+            + ind.rapid_actions as f64 * 0.5)
+            / total as f64;
         scores.push((UserIntention::Frustration, frustration_score.min(1.0)));
 
         // Trouver l'intention avec le score le plus élevé
@@ -190,43 +197,147 @@ impl IntentionDetector {
     pub fn predict_from_intent(&self, intent: &UserIntention) -> Vec<(PredictedAction, f64)> {
         match intent {
             UserIntention::InformationSeeking => vec![
-                (PredictedAction::Search { query_hint: String::new() }, 0.4),
-                (PredictedAction::Navigate { path: String::new() }, 0.3),
-                (PredictedAction::Interact { element_type: "link".to_string(), action: "click".to_string() }, 0.2),
+                (
+                    PredictedAction::Search {
+                        query_hint: String::new(),
+                    },
+                    0.4,
+                ),
+                (
+                    PredictedAction::Navigate {
+                        path: String::new(),
+                    },
+                    0.3,
+                ),
+                (
+                    PredictedAction::Interact {
+                        element_type: "link".to_string(),
+                        action: "click".to_string(),
+                    },
+                    0.2,
+                ),
             ],
             UserIntention::TaskCompletion => vec![
-                (PredictedAction::Interact { element_type: "button".to_string(), action: "click".to_string() }, 0.5),
-                (PredictedAction::Create { content_type: String::new() }, 0.3),
+                (
+                    PredictedAction::Interact {
+                        element_type: "button".to_string(),
+                        action: "click".to_string(),
+                    },
+                    0.5,
+                ),
+                (
+                    PredictedAction::Create {
+                        content_type: String::new(),
+                    },
+                    0.3,
+                ),
             ],
             UserIntention::Exploration => vec![
-                (PredictedAction::Navigate { path: String::new() }, 0.6),
-                (PredictedAction::Interact { element_type: "menu".to_string(), action: "expand".to_string() }, 0.3),
+                (
+                    PredictedAction::Navigate {
+                        path: String::new(),
+                    },
+                    0.6,
+                ),
+                (
+                    PredictedAction::Interact {
+                        element_type: "menu".to_string(),
+                        action: "expand".to_string(),
+                    },
+                    0.3,
+                ),
             ],
             UserIntention::Configuration => vec![
-                (PredictedAction::Configure { setting: String::new() }, 0.6),
-                (PredictedAction::Navigate { path: "/settings".to_string() }, 0.3),
+                (
+                    PredictedAction::Configure {
+                        setting: String::new(),
+                    },
+                    0.6,
+                ),
+                (
+                    PredictedAction::Navigate {
+                        path: "/settings".to_string(),
+                    },
+                    0.3,
+                ),
             ],
             UserIntention::HelpSeeking => vec![
-                (PredictedAction::RequestHelp { topic: String::new() }, 0.5),
-                (PredictedAction::Search { query_hint: "help".to_string() }, 0.3),
-                (PredictedAction::Navigate { path: "/help".to_string() }, 0.2),
+                (
+                    PredictedAction::RequestHelp {
+                        topic: String::new(),
+                    },
+                    0.5,
+                ),
+                (
+                    PredictedAction::Search {
+                        query_hint: "help".to_string(),
+                    },
+                    0.3,
+                ),
+                (
+                    PredictedAction::Navigate {
+                        path: "/help".to_string(),
+                    },
+                    0.2,
+                ),
             ],
             UserIntention::ContentCreation => vec![
-                (PredictedAction::Create { content_type: String::new() }, 0.5),
-                (PredictedAction::Interact { element_type: "editor".to_string(), action: "type".to_string() }, 0.3),
+                (
+                    PredictedAction::Create {
+                        content_type: String::new(),
+                    },
+                    0.5,
+                ),
+                (
+                    PredictedAction::Interact {
+                        element_type: "editor".to_string(),
+                        action: "type".to_string(),
+                    },
+                    0.3,
+                ),
             ],
             UserIntention::DataExport => vec![
-                (PredictedAction::Export { format: String::new() }, 0.6),
-                (PredictedAction::Configure { setting: "export".to_string() }, 0.2),
+                (
+                    PredictedAction::Export {
+                        format: String::new(),
+                    },
+                    0.6,
+                ),
+                (
+                    PredictedAction::Configure {
+                        setting: "export".to_string(),
+                    },
+                    0.2,
+                ),
             ],
             UserIntention::Frustration => vec![
-                (PredictedAction::RequestHelp { topic: String::new() }, 0.3),
+                (
+                    PredictedAction::RequestHelp {
+                        topic: String::new(),
+                    },
+                    0.3,
+                ),
                 (PredictedAction::Abandon, 0.4),
-                (PredictedAction::Navigate { path: "/".to_string() }, 0.2),
+                (
+                    PredictedAction::Navigate {
+                        path: "/".to_string(),
+                    },
+                    0.2,
+                ),
             ],
             UserIntention::Uncertain => vec![
-                (PredictedAction::Navigate { path: String::new() }, 0.3),
-                (PredictedAction::Search { query_hint: String::new() }, 0.2),
+                (
+                    PredictedAction::Navigate {
+                        path: String::new(),
+                    },
+                    0.3,
+                ),
+                (
+                    PredictedAction::Search {
+                        query_hint: String::new(),
+                    },
+                    0.2,
+                ),
             ],
         }
     }
@@ -251,7 +362,8 @@ impl IntentionDetector {
     /// Retourne les indicateurs
     pub fn get_indicators(&self) -> IntentionIndicatorsSummary {
         IntentionIndicatorsSummary {
-            total_actions: self.indicators.navigation_count + self.indicators.search_count
+            total_actions: self.indicators.navigation_count
+                + self.indicators.search_count
                 + self.indicators.interaction_count,
             help_requests: self.indicators.help_count,
             errors: self.indicators.error_count,

@@ -143,7 +143,10 @@ export const useTrainingStore = create<TrainingStore>()(
             set({ isProcessing: true, lastError: null });
 
             try {
-              const session = getEngine().startTrainingCapture(label, TRAINING_CONFIG.defaultCaptureDuration);
+              const session = getEngine().startTrainingCapture(
+                label,
+                TRAINING_CONFIG.defaultCaptureDuration
+              );
 
               set({
                 isSessionActive: true,
@@ -224,7 +227,10 @@ export const useTrainingStore = create<TrainingStore>()(
           importProfile: (profile: TrainingBaselineProfile): boolean => {
             try {
               // Validation basique
-              if (!profile.stateSignatures || typeof profile.profileConfidence !== 'number') {
+              if (
+                !profile.stateSignatures ||
+                typeof profile.profileConfidence !== 'number'
+              ) {
                 set({ lastError: 'Format de profil invalide' });
                 return false;
               }
@@ -266,11 +272,13 @@ export const useTrainingStore = create<TrainingStore>()(
               isSessionActive: session !== null,
               currentSessionLabel: session?.targetLabel ?? null,
               sessionStartTime: session?.startedAt ?? null,
-              sessionProgress: session ? {
-                currentFrames: session.framesCollected,
-                targetDurationMs: session.targetDurationMs,
-                percentage: session.progress,
-              } : null,
+              sessionProgress: session
+                ? {
+                    currentFrames: session.framesCollected,
+                    targetDurationMs: session.targetDurationMs,
+                    percentage: session.progress,
+                  }
+                : null,
               baselineProfile: profile,
             });
           },
@@ -298,7 +306,7 @@ export const useTrainingStore = create<TrainingStore>()(
       },
       {
         name: 'titane-training-store',
-        partialize: (state) => ({
+        partialize: state => ({
           // Persister uniquement le profil et les préférences
           baselineProfile: state.baselineProfile,
           autoSaveEnabled: state.autoSaveEnabled,
@@ -354,9 +362,11 @@ export const selectTrainedLabels = (state: TrainingStore): UserStateLabel[] => {
 /**
  * Sélecteur pour la signature d'un état
  */
-export const selectSignature = (label: UserStateLabel) => (state: TrainingStore): StateSignature | null => {
-  return state.baselineProfile.stateSignatures[label] ?? null;
-};
+export const selectSignature =
+  (label: UserStateLabel) =>
+  (state: TrainingStore): StateSignature | null => {
+    return state.baselineProfile.stateSignatures[label] ?? null;
+  };
 
 /**
  * Sélecteur pour la confiance globale
@@ -375,9 +385,11 @@ export const selectTotalSamples = (state: TrainingStore): number => {
 /**
  * Sélecteur pour vérifier si un état est entraîné
  */
-export const selectIsLabelTrained = (label: UserStateLabel) => (state: TrainingStore): boolean => {
-  return label in state.baselineProfile.stateSignatures;
-};
+export const selectIsLabelTrained =
+  (label: UserStateLabel) =>
+  (state: TrainingStore): boolean => {
+    return label in state.baselineProfile.stateSignatures;
+  };
 
 /**
  * Sélecteur pour le statut système

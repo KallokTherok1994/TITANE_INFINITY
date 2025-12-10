@@ -6,8 +6,8 @@
  */
 
 .xp-progress-bar {
-  --titane-gray: #C4C4C4;
-  --titane-dark: #727B81;
+  --titane-gray: #c4c4c4;
+  --titane-dark: #727b81;
   --titane-bg: #1a1a1a;
 
   display: flex;
@@ -39,7 +39,8 @@
   align-items: center;
   gap: 6px;
   padding: 4px 10px;
-  background: linear-gradient(135deg,
+  background: linear-gradient(
+    135deg,
     color-mix(in srgb, var(--level-color, var(--titane-gray)) 20%, transparent),
     color-mix(in srgb, var(--level-color, var(--titane-gray)) 10%, transparent)
   );
@@ -76,8 +77,13 @@
 }
 
 @keyframes streak-pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.2); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
 }
 
 .xp-streak-count {
@@ -118,7 +124,8 @@
 /* Fill animé */
 .xp-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg,
+  background: linear-gradient(
+    90deg,
     var(--fill-color, var(--titane-gray)),
     color-mix(in srgb, var(--fill-color, var(--titane-gray)) 70%, white)
   );
@@ -132,7 +139,8 @@
   top: 0;
   left: 0;
   height: 100%;
-  background: linear-gradient(90deg,
+  background: linear-gradient(
+    90deg,
     transparent 50%,
     color-mix(in srgb, var(--glow-color, var(--titane-gray)) 50%, white) 75%,
     transparent 100%
@@ -143,8 +151,12 @@
 }
 
 @keyframes glow-sweep {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 /* Texte XP */

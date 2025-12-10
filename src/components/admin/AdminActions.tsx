@@ -123,10 +123,10 @@ const ActionCard: React.FC<{
     action.color === 'danger'
       ? 'border-red-500/50 hover:border-red-500'
       : action.color === 'warning'
-      ? 'border-amber-500/50 hover:border-amber-500'
-      : action.color === 'success'
-      ? 'border-green-500/50 hover:border-green-500'
-      : 'border-[#333] hover:border-[#555]';
+        ? 'border-amber-500/50 hover:border-amber-500'
+        : action.color === 'success'
+          ? 'border-green-500/50 hover:border-green-500'
+          : 'border-[#333] hover:border-[#555]';
 
   return (
     <motion.div
@@ -168,8 +168,11 @@ const ActionCard: React.FC<{
 
       {/* Tags */}
       <div className="flex flex-wrap gap-1 mb-4">
-        {action.tags.slice(0, 4).map((tag) => (
-          <span key={tag} className="text-xs text-[#727B81] bg-[#333] px-2 py-0.5 rounded">
+        {action.tags.slice(0, 4).map(tag => (
+          <span
+            key={tag}
+            className="text-xs text-[#727B81] bg-[#333] px-2 py-0.5 rounded"
+          >
             {tag}
           </span>
         ))}
@@ -241,9 +244,7 @@ const ActionCard: React.FC<{
             {state.result.details && (
               <p className="text-xs mt-1 opacity-80">{state.result.details}</p>
             )}
-            <p className="text-xs mt-2 opacity-60">
-              Durée: {state.result.duration}ms
-            </p>
+            <p className="text-xs mt-2 opacity-60">Durée: {state.result.duration}ms</p>
           </motion.div>
         ) : (
           <motion.button
@@ -289,17 +290,17 @@ export const AdminActions: React.FC<AdminActionsProps> = ({
 
     // Filtrer par catégorie
     if (selectedCategory !== 'ALL') {
-      actions = actions.filter((a) => a.category === selectedCategory);
+      actions = actions.filter(a => a.category === selectedCategory);
     }
 
     // Filtrer par recherche
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       actions = actions.filter(
-        (a) =>
+        a =>
           a.displayName.toLowerCase().includes(query) ||
           a.description.toLowerCase().includes(query) ||
-          a.tags.some((t) => t.toLowerCase().includes(query))
+          a.tags.some(t => t.toLowerCase().includes(query))
       );
     }
 
@@ -314,67 +315,91 @@ export const AdminActions: React.FC<AdminActionsProps> = ({
   }, [selectedCategory, searchQuery, userRole]);
 
   // Récupérer l'état d'une action
-  const getActionState = useCallback((actionId: string): ActionState => {
-    return actionStates[actionId] || { isExecuting: false, showConfirm: false, result: null };
-  }, [actionStates]);
+  const getActionState = useCallback(
+    (actionId: string): ActionState => {
+      return (
+        actionStates[actionId] || { isExecuting: false, showConfirm: false, result: null }
+      );
+    },
+    [actionStates]
+  );
 
   // Mettre à jour l'état d'une action
-  const updateActionState = useCallback((actionId: string, update: Partial<ActionState>) => {
-    setActionStates((prev) => {
-      const current = prev[actionId] || { isExecuting: false, showConfirm: false, result: null };
-      return {
-        ...prev,
-        [actionId]: { ...current, ...update },
-      };
-    });
-  }, []);
+  const updateActionState = useCallback(
+    (actionId: string, update: Partial<ActionState>) => {
+      setActionStates(prev => {
+        const current = prev[actionId] || {
+          isExecuting: false,
+          showConfirm: false,
+          result: null,
+        };
+        return {
+          ...prev,
+          [actionId]: { ...current, ...update },
+        };
+      });
+    },
+    []
+  );
 
   // Exécuter une action
-  const executeAction = useCallback(async (action: AdminActionDefinition) => {
-    updateActionState(action.id, { isExecuting: true, result: null });
+  const executeAction = useCallback(
+    async (action: AdminActionDefinition) => {
+      updateActionState(action.id, { isExecuting: true, result: null });
 
-    try {
-      const result = await adminEngine.executeAction(action.id, userRole);
-      updateActionState(action.id, { isExecuting: false, result });
-      onActionExecuted?.(action.id, result);
+      try {
+        const result = await adminEngine.executeAction(action.id, userRole);
+        updateActionState(action.id, { isExecuting: false, result });
+        onActionExecuted?.(action.id, result);
 
-      // Effacer le résultat après 5 secondes
-      setTimeout(() => {
-        updateActionState(action.id, { result: null });
-      }, 5000);
-    } catch (error) {
-      const errorResult: AdminActionResult = {
-        requestId: '',
-        actionId: action.id,
-        result: 'FAILED',
-        message: 'Erreur inattendue',
-        error: error instanceof Error ? error.message : String(error),
-        startedAt: Date.now(),
-        completedAt: Date.now(),
-        duration: 0,
-        rollbackAvailable: false,
-      };
-      updateActionState(action.id, { isExecuting: false, result: errorResult });
-    }
-  }, [adminEngine, userRole, updateActionState, onActionExecuted]);
+        // Effacer le résultat après 5 secondes
+        setTimeout(() => {
+          updateActionState(action.id, { result: null });
+        }, 5000);
+      } catch (error) {
+        const errorResult: AdminActionResult = {
+          requestId: '',
+          actionId: action.id,
+          result: 'FAILED',
+          message: 'Erreur inattendue',
+          error: error instanceof Error ? error.message : String(error),
+          startedAt: Date.now(),
+          completedAt: Date.now(),
+          duration: 0,
+          rollbackAvailable: false,
+        };
+        updateActionState(action.id, { isExecuting: false, result: errorResult });
+      }
+    },
+    [adminEngine, userRole, updateActionState, onActionExecuted]
+  );
 
   // Handlers
-  const handleExecute = useCallback((action: AdminActionDefinition) => {
-    if (action.requiresConfirmation) {
-      updateActionState(action.id, { showConfirm: true, result: null });
-    } else {
+  const handleExecute = useCallback(
+    (action: AdminActionDefinition) => {
+      if (action.requiresConfirmation) {
+        updateActionState(action.id, { showConfirm: true, result: null });
+      } else {
+        executeAction(action);
+      }
+    },
+    [executeAction, updateActionState]
+  );
+
+  const handleCancel = useCallback(
+    (actionId: string) => {
+      updateActionState(actionId, { showConfirm: false });
+    },
+    [updateActionState]
+  );
+
+  const handleConfirm = useCallback(
+    (action: AdminActionDefinition) => {
+      updateActionState(action.id, { showConfirm: false });
       executeAction(action);
-    }
-  }, [executeAction, updateActionState]);
-
-  const handleCancel = useCallback((actionId: string) => {
-    updateActionState(actionId, { showConfirm: false });
-  }, [updateActionState]);
-
-  const handleConfirm = useCallback((action: AdminActionDefinition) => {
-    updateActionState(action.id, { showConfirm: false });
-    executeAction(action);
-  }, [executeAction, updateActionState]);
+    },
+    [executeAction, updateActionState]
+  );
 
   // Catégories disponibles
   const categories: (ActionCategory | 'ALL')[] = [
@@ -402,19 +427,22 @@ export const AdminActions: React.FC<AdminActionsProps> = ({
       <div className="flex flex-col md:flex-row gap-4 mb-6">
         {/* Recherche */}
         <div className="relative flex-1">
-          <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#727B81]" />
+          <Search
+            size={18}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-[#727B81]"
+          />
           <input
             type="text"
             placeholder="Rechercher une action..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={e => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 bg-[#1a1a1a] border border-[#333] rounded-lg text-[#C4C4C4] placeholder-[#727B81] focus:outline-none focus:border-[#555]"
           />
         </div>
 
         {/* Catégories */}
         <div className="flex flex-wrap gap-2">
-          {categories.map((cat) => (
+          {categories.map(cat => (
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
@@ -447,7 +475,7 @@ export const AdminActions: React.FC<AdminActionsProps> = ({
 
       {/* Grille d'actions */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredActions.map((action) => (
+        {filteredActions.map(action => (
           <ActionCard
             key={action.id}
             action={action}

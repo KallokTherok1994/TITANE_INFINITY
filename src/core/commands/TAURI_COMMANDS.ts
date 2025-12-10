@@ -65,16 +65,16 @@ export const TAURI_COMMANDS = {
   // ═══════════════════════════════════════════════════════════════
   // SINGULARITY v∞ (v20) - Global Unified State (NEW)
   // ═══════════════════════════════════════════════════════════════
-  SINGULARITY_V_GET: 'singularity_get',              // Récupère état complet v∞
-  SINGULARITY_V_SET: 'singularity_set',              // Définit nouvel état v∞
-  SINGULARITY_V_DIFF: 'singularity_diff',            // Calcule diff entre états
-  SINGULARITY_V_HASH: 'singularity_hash',            // Récupère hash SHA-256
-  SINGULARITY_V_SYNC: 'singularity_sync',            // Deep Sync des 20 moteurs
-  SINGULARITY_V_META: 'singularity_meta',            // Méta-évaluation cognitive
-  SINGULARITY_V_INTEGRITY: 'singularity_integrity',  // Vérification intégrité
-  SINGULARITY_V_REPAIR: 'singularity_repair',        // Auto-réparation
-  SINGULARITY_V_EXPORT: 'singularity_export_json',   // Export JSON complet
-  SINGULARITY_V_SNAPSHOT: 'singularity_snapshot',    // Snapshot résumé
+  SINGULARITY_V_GET: 'singularity_get', // Récupère état complet v∞
+  SINGULARITY_V_SET: 'singularity_set', // Définit nouvel état v∞
+  SINGULARITY_V_DIFF: 'singularity_diff', // Calcule diff entre états
+  SINGULARITY_V_HASH: 'singularity_hash', // Récupère hash SHA-256
+  SINGULARITY_V_SYNC: 'singularity_sync', // Deep Sync des 20 moteurs
+  SINGULARITY_V_META: 'singularity_meta', // Méta-évaluation cognitive
+  SINGULARITY_V_INTEGRITY: 'singularity_integrity', // Vérification intégrité
+  SINGULARITY_V_REPAIR: 'singularity_repair', // Auto-réparation
+  SINGULARITY_V_EXPORT: 'singularity_export_json', // Export JSON complet
+  SINGULARITY_V_SNAPSHOT: 'singularity_snapshot', // Snapshot résumé
   SINGULARITY_V_SELFTEST: 'singularity_selftest_full', // Self-test complet 10 tests
 
   // ═══════════════════════════════════════════════════════════════
@@ -200,7 +200,7 @@ export const TAURI_COMMANDS = {
 // TYPE HELPER
 // ═══════════════════════════════════════════════════════════════
 
-export type TauriCommand = typeof TAURI_COMMANDS[keyof typeof TAURI_COMMANDS];
+export type TauriCommand = (typeof TAURI_COMMANDS)[keyof typeof TAURI_COMMANDS];
 
 /**
  * Type guard pour vérifier si une string est une commande valide
@@ -252,7 +252,7 @@ function createFallbackResponse<T>(command: string, error: unknown): T {
       success: false,
       error: 'Backend not available - using local fallback',
       fallback: true,
-      provider: 'titane-local'
+      provider: 'titane-local',
     } as T;
   }
 
@@ -260,7 +260,7 @@ function createFallbackResponse<T>(command: string, error: unknown): T {
     return {
       status: 'offline',
       available: false,
-      fallback: true
+      fallback: true,
     } as T;
   }
 
@@ -268,7 +268,7 @@ function createFallbackResponse<T>(command: string, error: unknown): T {
   return {
     success: false,
     error: String(error),
-    fallback: true
+    fallback: true,
   } as T;
 }
 

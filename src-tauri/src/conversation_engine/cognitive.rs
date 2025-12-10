@@ -1,12 +1,11 @@
+use super::pipeline::CognitiveSummary;
 /**
  * ═══════════════════════════════════════════════════════════════════
  * TITANE∞ v∞ — COGNITIVE COMPRESSOR
  * Compression cognitive des échanges conversationnels
  * ═══════════════════════════════════════════════════════════════════
  */
-
-use super::types::{Intention, EmotionState, MemoryEffect, MemoryLayers};
-use super::pipeline::CognitiveSummary;
+use super::types::{EmotionState, Intention, MemoryEffect, MemoryLayers};
 
 /// Compresseur cognitif
 pub struct CognitiveCompressor {
@@ -52,21 +51,24 @@ impl CognitiveCompressor {
     }
 
     /// Extraire des tags cognitifs
-    fn extract_tags(
-        &self,
-        user: &str,
-        assistant: &str,
-        intention: &Intention,
-    ) -> Vec<String> {
+    fn extract_tags(&self, user: &str, assistant: &str, intention: &Intention) -> Vec<String> {
         let mut tags = vec![format!("{:?}", intention)];
 
         let combined = format!("{} {}", user, assistant).to_lowercase();
 
         // Tags thématiques
-        if combined.contains("projet") { tags.push("projet".to_string()); }
-        if combined.contains("décision") { tags.push("décision".to_string()); }
-        if combined.contains("problème") { tags.push("problème".to_string()); }
-        if combined.contains("idée") { tags.push("idée".to_string()); }
+        if combined.contains("projet") {
+            tags.push("projet".to_string());
+        }
+        if combined.contains("décision") {
+            tags.push("décision".to_string());
+        }
+        if combined.contains("problème") {
+            tags.push("problème".to_string());
+        }
+        if combined.contains("idée") {
+            tags.push("idée".to_string());
+        }
 
         tags
     }

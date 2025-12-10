@@ -85,7 +85,8 @@ impl DiagnosticsEngine {
             .filter(|m| {
                 matches!(
                     m.health,
-                    crate::types::nexus::ModuleHealth::Failing | crate::types::nexus::ModuleHealth::Offline
+                    crate::types::nexus::ModuleHealth::Failing
+                        | crate::types::nexus::ModuleHealth::Offline
                 )
             })
             .collect();

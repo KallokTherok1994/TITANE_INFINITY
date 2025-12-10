@@ -54,11 +54,13 @@ export const NativeVoiceRecorder: React.FC<NativeVoiceRecorderProps> = ({
     try {
       setStatus('🎤 Test microphone...');
       // Tauri 2.0: camelCase params (durationMs, not duration_ms)
-      const result = await secureInvoke<MicrophoneTestResult>('test_microphone', { durationMs: 2000 });
+      const result = await secureInvoke<MicrophoneTestResult>('test_microphone', {
+        durationMs: 2000,
+      });
 
       if (result.success) {
         setStatus(`✓ Micro OK (SNR: ${result.signalToNoise.toFixed(1)}dB)`);
-        await audioService.speak("Microphone fonctionnel.");
+        await audioService.speak('Microphone fonctionnel.');
       } else {
         setStatus(`✗ ${result.errorMessage || 'Échec test micro'}`);
       }
@@ -74,7 +76,7 @@ export const NativeVoiceRecorder: React.FC<NativeVoiceRecorderProps> = ({
     const lower = input.toLowerCase();
 
     if (lower.includes('bonjour') || lower.includes('salut')) {
-      return "Bonjour ! Je suis TITANE, votre assistant intelligent.";
+      return 'Bonjour ! Je suis TITANE, votre assistant intelligent.';
     }
     if (lower.includes('heure')) {
       return `Il est ${new Date().toLocaleTimeString('fr-FR')}.`;
@@ -83,10 +85,10 @@ export const NativeVoiceRecorder: React.FC<NativeVoiceRecorderProps> = ({
       return `Nous sommes le ${new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}.`;
     }
     if (lower.includes('merci')) {
-      return "Je vous en prie !";
+      return 'Je vous en prie !';
     }
     if (lower.includes('test') || lower.includes('écoute')) {
-      return "Je vous entends parfaitement. Le système fonctionne.";
+      return 'Je vous entends parfaitement. Le système fonctionne.';
     }
 
     return `J'ai compris : "${input}". Comment puis-je vous aider ?`;
@@ -104,7 +106,9 @@ export const NativeVoiceRecorder: React.FC<NativeVoiceRecorderProps> = ({
       setStatus('🎤 Parlez maintenant (4 sec)...');
 
       // Enregistrement via backend natif - Tauri 2.0: camelCase
-      const micResult = await secureInvoke<MicrophoneTestResult>('test_microphone', { durationMs: 4000 });
+      const micResult = await secureInvoke<MicrophoneTestResult>('test_microphone', {
+        durationMs: 4000,
+      });
 
       if (!micResult.success) {
         throw new Error(micResult.errorMessage || 'Échec enregistrement');
@@ -117,10 +121,14 @@ export const NativeVoiceRecorder: React.FC<NativeVoiceRecorderProps> = ({
       // v19.3.0: Envoyer un tableau vide - le backend utilisera
       // automatiquement le fichier titane_mic_test.wav créé par test_microphone
       const transcription = await secureInvoke<string>('transcribe_audio', {
-        audioData: []
+        audioData: [],
       });
 
-      if (transcription && transcription.trim() && !transcription.includes('Aucune parole')) {
+      if (
+        transcription &&
+        transcription.trim() &&
+        !transcription.includes('Aucune parole')
+      ) {
         const text = transcription.trim();
         setTranscript(text);
         onTranscript?.(text);
@@ -167,13 +175,30 @@ export const NativeVoiceRecorder: React.FC<NativeVoiceRecorderProps> = ({
 
     switch (state) {
       case 'idle':
-        return { ...base, background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)' };
+        return {
+          ...base,
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
+        };
       case 'recording':
-        return { ...base, background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)', boxShadow: '0 0 25px rgba(239, 68, 68, 0.6)', animation: 'pulse 1s infinite' };
+        return {
+          ...base,
+          background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+          boxShadow: '0 0 25px rgba(239, 68, 68, 0.6)',
+          animation: 'pulse 1s infinite',
+        };
       case 'processing':
-        return { ...base, background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)', boxShadow: '0 4px 15px rgba(245, 158, 11, 0.4)' };
+        return {
+          ...base,
+          background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+          boxShadow: '0 4px 15px rgba(245, 158, 11, 0.4)',
+        };
       case 'speaking':
-        return { ...base, background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)', boxShadow: '0 4px 20px rgba(139, 92, 246, 0.5)' };
+        return {
+          ...base,
+          background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+          boxShadow: '0 4px 20px rgba(139, 92, 246, 0.5)',
+        };
       default:
         return base;
     }
@@ -181,11 +206,16 @@ export const NativeVoiceRecorder: React.FC<NativeVoiceRecorderProps> = ({
 
   const getIcon = () => {
     switch (state) {
-      case 'idle': return '🎤';
-      case 'recording': return '⏺️';
-      case 'processing': return '🧠';
-      case 'speaking': return '🔊';
-      default: return '🎤';
+      case 'idle':
+        return '🎤';
+      case 'recording':
+        return '⏺️';
+      case 'processing':
+        return '🧠';
+      case 'speaking':
+        return '🔊';
+      default:
+        return '🎤';
     }
   };
 
@@ -194,24 +224,30 @@ export const NativeVoiceRecorder: React.FC<NativeVoiceRecorderProps> = ({
   // ─────────────────────────────────────────────────────────────────
 
   return (
-    <div className={className} style={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      gap: '0.75rem',
-      padding: '1rem',
-      background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
-      borderRadius: '16px',
-      border: '1px solid rgba(102, 126, 234, 0.2)'
-    }}>
-      {/* Mode indicator */}
-      <div style={{
-        fontSize: '0.65rem',
-        color: 'rgba(16, 185, 129, 0.8)',
+    <div
+      className={className}
+      style={{
         display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
-        gap: '0.25rem'
-      }}>
+        gap: '0.75rem',
+        padding: '1rem',
+        background:
+          'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
+        borderRadius: '16px',
+        border: '1px solid rgba(102, 126, 234, 0.2)',
+      }}
+    >
+      {/* Mode indicator */}
+      <div
+        style={{
+          fontSize: '0.65rem',
+          color: 'rgba(16, 185, 129, 0.8)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.25rem',
+        }}
+      >
         🦀 Mode Natif Tauri
       </div>
 
@@ -226,26 +262,30 @@ export const NativeVoiceRecorder: React.FC<NativeVoiceRecorderProps> = ({
       </button>
 
       {/* Status text */}
-      <span style={{
-        fontSize: '0.75rem',
-        color: 'rgba(255,255,255,0.7)',
-        textAlign: 'center',
-        minHeight: '1.2em'
-      }}>
+      <span
+        style={{
+          fontSize: '0.75rem',
+          color: 'rgba(255,255,255,0.7)',
+          textAlign: 'center',
+          minHeight: '1.2em',
+        }}
+      >
         {status || (state === 'idle' ? 'Cliquez pour parler' : '')}
       </span>
 
       {/* Transcript display */}
       {transcript && (
-        <div style={{
-          padding: '0.5rem 0.75rem',
-          background: 'rgba(0,0,0,0.2)',
-          borderRadius: '8px',
-          fontSize: '0.8rem',
-          color: 'rgba(255,255,255,0.85)',
-          maxWidth: '200px',
-          textAlign: 'center'
-        }}>
+        <div
+          style={{
+            padding: '0.5rem 0.75rem',
+            background: 'rgba(0,0,0,0.2)',
+            borderRadius: '8px',
+            fontSize: '0.8rem',
+            color: 'rgba(255,255,255,0.85)',
+            maxWidth: '200px',
+            textAlign: 'center',
+          }}
+        >
           "{transcript}"
         </div>
       )}
@@ -269,7 +309,9 @@ export const NativeVoiceRecorder: React.FC<NativeVoiceRecorderProps> = ({
             🎙️ Test Micro
           </button>
           <button
-            onClick={() => audioService.speak("Test de synthèse vocale. TITANE est opérationnel.")}
+            onClick={() =>
+              audioService.speak('Test de synthèse vocale. TITANE est opérationnel.')
+            }
             style={{
               padding: '0.4rem 0.8rem',
               background: 'rgba(16, 185, 129, 0.2)',
@@ -287,14 +329,16 @@ export const NativeVoiceRecorder: React.FC<NativeVoiceRecorderProps> = ({
       )}
 
       {/* Info */}
-      <p style={{
-        fontSize: '0.6rem',
-        color: 'rgba(255,255,255,0.35)',
-        margin: '0.5rem 0 0',
-        textAlign: 'center',
-        maxWidth: '180px',
-        lineHeight: 1.3
-      }}>
+      <p
+        style={{
+          fontSize: '0.6rem',
+          color: 'rgba(255,255,255,0.35)',
+          margin: '0.5rem 0 0',
+          textAlign: 'center',
+          maxWidth: '180px',
+          lineHeight: 1.3,
+        }}
+      >
         💡 Utilise arecord + Whisper pour la reconnaissance vocale native.
       </p>
 

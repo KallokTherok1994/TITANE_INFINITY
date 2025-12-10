@@ -1,5 +1,7 @@
 # ═══════════════════════════════════════════════════════════════════════════
+
 # TITANE∞ — STABLE RUNTIME README
+
 # ═══════════════════════════════════════════════════════════════════════════
 
 ## 🔵 TITAN-STABLE: Production User Runtime
@@ -11,6 +13,7 @@
 ## 🎯 PURPOSE
 
 **Titan-Stable** is the **USER RUNTIME** of TITANE∞:
+
 - **Used daily** for conversations, memory, thinking, workflows
 - **Never interrupted** by development activities
 - **Fully optimized** for performance and stability
@@ -47,22 +50,23 @@ runtime/stable/*.msi  # Install first, then launch
 
 ### Production Settings
 
-| Feature | Status | Notes |
-|---------|--------|-------|
-| **Hot Reload** | ❌ Disabled | Stable experience, no interruptions |
-| **DevTools** | ❌ Disabled | Clean production interface |
-| **Source Maps** | ❌ Disabled | Smaller bundle size |
-| **Logging** | ⚠️ Minimal | Errors only (warn level) |
-| **OMEGA Pipeline** | ✅ FULL | All cognitive engines active |
-| **MemoryOS** | ✅ Enabled | Persistent local storage |
-| **Visual Engine v21** | ✅ Enabled | 60fps, high quality |
-| **Optimizations** | ✅ MAX | Minify, treeshake, compress |
+| Feature               | Status      | Notes                               |
+| --------------------- | ----------- | ----------------------------------- |
+| **Hot Reload**        | ❌ Disabled | Stable experience, no interruptions |
+| **DevTools**          | ❌ Disabled | Clean production interface          |
+| **Source Maps**       | ❌ Disabled | Smaller bundle size                 |
+| **Logging**           | ⚠️ Minimal  | Errors only (warn level)            |
+| **OMEGA Pipeline**    | ✅ FULL     | All cognitive engines active        |
+| **MemoryOS**          | ✅ Enabled  | Persistent local storage            |
+| **Visual Engine v21** | ✅ Enabled  | 60fps, high quality                 |
+| **Optimizations**     | ✅ MAX      | Minify, treeshake, compress         |
 
 ### Environment Variables
 
 See `.env.production` for complete configuration.
 
 Key variables:
+
 - `NODE_ENV=production` - Production build mode
 - `VITE_TITANE_RUNTIME=stable` - Identifies stable runtime
 - `VITE_OMEGA_ENABLED=true` - Full OMEGA activation
@@ -81,6 +85,7 @@ The build script (`build.sh`) performs:
 5. **Copy** executable to `runtime/stable/`
 
 Build artifacts:
+
 - Linux: `*.AppImage` (portable executable)
 - macOS: `*.app` (application bundle)
 - Windows: `*.msi` (installer)
@@ -112,6 +117,7 @@ Build artifacts:
 ### When to Rebuild Titan-Stable
 
 Rebuild when:
+
 - New features validated in `dev` branch
 - After merging `dev` → `stable-runtime`
 - Performance improvements deployed
@@ -139,6 +145,7 @@ Rebuild when:
 ### Branch Protection
 
 **stable-runtime** branch rules:
+
 - ❌ No direct commits allowed
 - ✅ Only merges from `dev`
 - ✅ Requires validation before merge
@@ -147,6 +154,7 @@ Rebuild when:
 ### Process Isolation
 
 **Titan-Stable** runs completely independently:
+
 - Separate process from Titan-Dev
 - Different executable
 - Different configuration
@@ -155,6 +163,7 @@ Rebuild when:
 ### Zero Interruptions
 
 **Development never affects Titan-Stable**:
+
 - Code changes don't trigger reloads
 - Dev crashes don't affect stable
 - Experiments stay in dev environment
@@ -166,13 +175,13 @@ Rebuild when:
 
 Expected performance (optimized build):
 
-| Metric | Target | Notes |
-|--------|--------|-------|
-| **Startup Time** | < 2s | First launch |
-| **Memory Usage** | < 300MB | Idle state |
-| **CPU Usage** | < 5% | Background |
-| **FPS (Visual Engine)** | 60fps | Smooth animations |
-| **Bundle Size** | < 30MB | Compressed |
+| Metric                  | Target  | Notes             |
+| ----------------------- | ------- | ----------------- |
+| **Startup Time**        | < 2s    | First launch      |
+| **Memory Usage**        | < 300MB | Idle state        |
+| **CPU Usage**           | < 5%    | Background        |
+| **FPS (Visual Engine)** | 60fps   | Smooth animations |
+| **Bundle Size**         | < 30MB  | Compressed        |
 
 ---
 
@@ -242,6 +251,7 @@ runtime/stable/
 > **"Your cognitive OS should be as stable and reliable as your operating system. Development happens elsewhere."**
 
 **Key Principles**:
+
 - 🔵 **Stability First**: User experience never compromised
 - ⚡ **Performance**: Optimized for daily use
 - 🔒 **Isolation**: Dev work can't break stable

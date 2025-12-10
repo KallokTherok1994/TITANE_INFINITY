@@ -12,7 +12,13 @@
  * ══════════════════════════════════════════════════════════════════════════════════
  */
 
-import type { AIMessage, AIResponse, AIProvider, AIConfig, AIProviderName } from '../../types';
+import type {
+  AIMessage,
+  AIResponse,
+  AIProvider,
+  AIConfig,
+  AIProviderName,
+} from '../../types';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES OMNIS HARDENING
@@ -50,7 +56,7 @@ interface OmnisWrapperConfig {
     enableMetrics: boolean;
     logErrors: boolean;
   };
-};
+}
 
 interface ProviderMetrics {
   totalCalls: number;
@@ -72,23 +78,23 @@ const DEFAULT_OMNIS_CONFIG: OmnisWrapperConfig = {
   circuitBreaker: {
     failureThreshold: 5,
     recoveryTimeoutMs: 30000,
-    halfOpenMaxCalls: 3
+    halfOpenMaxCalls: 3,
   },
   retry: {
     maxRetries: 3,
     baseDelay: 1000,
     maxDelay: 8000,
     backoffMultiplier: 2,
-    retryableErrors: ['TIMEOUT', 'NETWORK_ERROR', 'RATE_LIMIT', 'SERVER_ERROR']
+    retryableErrors: ['TIMEOUT', 'NETWORK_ERROR', 'RATE_LIMIT', 'SERVER_ERROR'],
   },
   isolation: {
     maxConcurrentCalls: 10,
-    queueTimeout: 5000
+    queueTimeout: 5000,
   },
   monitoring: {
     enableMetrics: true,
-    logErrors: true
-  }
+    logErrors: true,
+  },
 };
 
 // Provider-specific optimized configs
@@ -98,91 +104,91 @@ const PROVIDER_CONFIGS: Record<string, Partial<OmnisWrapperConfig>> = {
     circuitBreaker: {
       failureThreshold: 10,
       recoveryTimeoutMs: 10000,
-      halfOpenMaxCalls: 3
+      halfOpenMaxCalls: 3,
     },
     retry: {
       maxRetries: 1,
       baseDelay: 500,
       maxDelay: 2000,
       backoffMultiplier: 1.5,
-      retryableErrors: ['TIMEOUT', 'NETWORK_ERROR']
-    }
+      retryableErrors: ['TIMEOUT', 'NETWORK_ERROR'],
+    },
   },
-  'gemini': {
+  gemini: {
     timeoutMs: 8000,
     circuitBreaker: {
       failureThreshold: 3,
       recoveryTimeoutMs: 20000,
-      halfOpenMaxCalls: 2
+      halfOpenMaxCalls: 2,
     },
     retry: {
       maxRetries: 2,
       baseDelay: 1500,
       maxDelay: 6000,
       backoffMultiplier: 2,
-      retryableErrors: ['RATE_LIMIT', 'SERVER_ERROR', 'TIMEOUT']
-    }
+      retryableErrors: ['RATE_LIMIT', 'SERVER_ERROR', 'TIMEOUT'],
+    },
   },
-  'openai': {
+  openai: {
     timeoutMs: 12000,
     circuitBreaker: {
       failureThreshold: 4,
       recoveryTimeoutMs: 30000,
-      halfOpenMaxCalls: 3
+      halfOpenMaxCalls: 3,
     },
     retry: {
       maxRetries: 3,
       baseDelay: 2000,
       maxDelay: 8000,
       backoffMultiplier: 2,
-      retryableErrors: ['RATE_LIMIT', 'SERVER_ERROR', 'TIMEOUT']
-    }
+      retryableErrors: ['RATE_LIMIT', 'SERVER_ERROR', 'TIMEOUT'],
+    },
   },
-  'claude': {
+  claude: {
     timeoutMs: 10000,
     circuitBreaker: {
       failureThreshold: 4,
       recoveryTimeoutMs: 25000,
-      halfOpenMaxCalls: 2
+      halfOpenMaxCalls: 2,
     },
     retry: {
       maxRetries: 2,
       baseDelay: 1800,
       maxDelay: 7000,
       backoffMultiplier: 2,
-      retryableErrors: ['RATE_LIMIT', 'SERVER_ERROR', 'TIMEOUT']
-    }
+      retryableErrors: ['RATE_LIMIT', 'SERVER_ERROR', 'TIMEOUT'],
+    },
   },
-  'ollama': {
+  ollama: {
     timeoutMs: 15000,
     circuitBreaker: {
       failureThreshold: 7,
       recoveryTimeoutMs: 15000,
-      halfOpenMaxCalls: 5
+      halfOpenMaxCalls: 5,
     },
     retry: {
       maxRetries: 2,
       baseDelay: 3000,
       maxDelay: 10000,
       backoffMultiplier: 1.8,
-      retryableErrors: ['TIMEOUT', 'NETWORK_ERROR', 'SERVER_ERROR']
-    }
+      retryableErrors: ['TIMEOUT', 'NETWORK_ERROR', 'SERVER_ERROR'],
+    },
   },
   'tauri-chat': {
     timeoutMs: 5000,
     circuitBreaker: {
       failureThreshold: 6,
       recoveryTimeoutMs: 12000,
-      halfOpenMaxCalls: 4
+      halfOpenMaxCalls: 4,
     },
     retry: {
       maxRetries: 2,
       baseDelay: 1000,
       maxDelay: 4000,
       backoffMultiplier: 2,
-      retryableErrors: ['TIMEOUT', 'NETWORK_ERROR']
-    }
-  }
+      retryableErrors: ['TIMEOUT', 'NETWORK_ERROR'],
+    },
+  },
 };
 
 // ─────────────────────────────────────────────────────────────────
@@ -195,7 +201,11 @@ export class OmnisProviderWrapper implements AIProvider {
   private readonly circuitBreaker: CircuitBreakerState;
   private readonly metrics: ProviderMetrics;
   private readonly activeCalls = new Set<string>();
-  private readonly callQueue: Array<{ resolve: () => void; reject: (error: Error) => void; timestamp: number }> = [];
+  private readonly callQueue: Array<{
+    resolve: () => void;
+    reject: (error: Error) => void;
+    timestamp: number;
+  }> = [];
 
   public readonly name: AIProviderName;
 
@@ -212,23 +222,23 @@ export class OmnisProviderWrapper implements AIProvider {
       circuitBreaker: {
         ...DEFAULT_OMNIS_CONFIG.circuitBreaker,
         ...providerConfig.circuitBreaker,
-        ...customConfig?.circuitBreaker
+        ...customConfig?.circuitBreaker,
       },
       retry: {
         ...DEFAULT_OMNIS_CONFIG.retry,
         ...providerConfig.retry,
-        ...customConfig?.retry
+        ...customConfig?.retry,
       },
       isolation: {
         ...DEFAULT_OMNIS_CONFIG.isolation,
         ...providerConfig.isolation,
-        ...customConfig?.isolation
+        ...customConfig?.isolation,
       },
       monitoring: {
         ...DEFAULT_OMNIS_CONFIG.monitoring,
         ...providerConfig.monitoring,
-        ...customConfig?.monitoring
-      }
+        ...customConfig?.monitoring,
+      },
     };
 
     // Initialize circuit breaker
@@ -237,7 +247,7 @@ export class OmnisProviderWrapper implements AIProvider {
       lastFailure: 0,
       state: 'CLOSED',
       recoveryTimeout: this.config.circuitBreaker.recoveryTimeoutMs,
-      successCount: 0
+      successCount: 0,
     };
 
     // Initialize metrics
@@ -249,7 +259,7 @@ export class OmnisProviderWrapper implements AIProvider {
       circuitBreakerTrips: 0,
       averageResponseTime: 0,
       lastCallTimestamp: 0,
-      healthScore: 100
+      healthScore: 100,
     };
   }
 
@@ -264,7 +274,10 @@ export class OmnisProviderWrapper implements AIProvider {
 
     switch (this.circuitBreaker.state) {
       case 'OPEN':
-        if (now - this.circuitBreaker.lastFailure >= this.circuitBreaker.recoveryTimeout) {
+        if (
+          now - this.circuitBreaker.lastFailure >=
+          this.circuitBreaker.recoveryTimeout
+        ) {
           this.circuitBreaker.state = 'HALF_OPEN';
           this.circuitBreaker.successCount = 0;
           return true; // Allow call
@@ -272,7 +285,9 @@ export class OmnisProviderWrapper implements AIProvider {
         return false; // Circuit is open, reject call
 
       case 'HALF_OPEN':
-        return this.circuitBreaker.successCount < this.config.circuitBreaker.halfOpenMaxCalls;
+        return (
+          this.circuitBreaker.successCount < this.config.circuitBreaker.halfOpenMaxCalls
+        );
 
       case 'CLOSED':
       default:
@@ -284,7 +299,9 @@ export class OmnisProviderWrapper implements AIProvider {
     switch (this.circuitBreaker.state) {
       case 'HALF_OPEN':
         this.circuitBreaker.successCount++;
-        if (this.circuitBreaker.successCount >= this.config.circuitBreaker.halfOpenMaxCalls) {
+        if (
+          this.circuitBreaker.successCount >= this.config.circuitBreaker.halfOpenMaxCalls
+        ) {
           this.circuitBreaker.state = 'CLOSED';
           this.circuitBreaker.failures = 0;
         }
@@ -321,7 +338,7 @@ export class OmnisProviderWrapper implements AIProvider {
       const queueEntry = {
         resolve,
         reject,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
 
       this.callQueue.push(queueEntry);
@@ -340,7 +357,10 @@ export class OmnisProviderWrapper implements AIProvider {
   private releaseCallSlot(): void {
     if (this.callQueue.length > 0) {
       const nextCall = this.callQueue.shift();
-      if (nextCall && Date.now() - nextCall.timestamp < this.config.isolation.queueTimeout) {
+      if (
+        nextCall &&
+        Date.now() - nextCall.timestamp < this.config.isolation.queueTimeout
+      ) {
         nextCall.resolve();
       }
     }
@@ -360,8 +380,8 @@ export class OmnisProviderWrapper implements AIProvider {
       return await operation();
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      const isRetryable = this.config.retry.retryableErrors.some(
-        retryableError => errorMessage.includes(retryableError)
+      const isRetryable = this.config.retry.retryableErrors.some(retryableError =>
+        errorMessage.includes(retryableError)
       );
 
       if (attempt >= this.config.retry.maxRetries || !isRetryable) {
@@ -370,7 +390,8 @@ export class OmnisProviderWrapper implements AIProvider {
 
       // Calculate exponential backoff delay
       const delay = Math.min(
-        this.config.retry.baseDelay * Math.pow(this.config.retry.backoffMultiplier, attempt - 1),
+        this.config.retry.baseDelay *
+          Math.pow(this.config.retry.backoffMultiplier, attempt - 1),
         this.config.retry.maxDelay
       );
 
@@ -398,7 +419,11 @@ export class OmnisProviderWrapper implements AIProvider {
     });
   }
 
-  private updateMetrics(success: boolean, responseTime: number, wasTimeout: boolean = false): void {
+  private updateMetrics(
+    success: boolean,
+    responseTime: number,
+    wasTimeout: boolean = false
+  ): void {
     this.metrics.totalCalls++;
     this.metrics.lastCallTimestamp = Date.now();
 
@@ -406,8 +431,9 @@ export class OmnisProviderWrapper implements AIProvider {
       this.metrics.successfulCalls++;
       // Update rolling average response time
       this.metrics.averageResponseTime = Math.round(
-        (this.metrics.averageResponseTime * (this.metrics.successfulCalls - 1) + responseTime) /
-        this.metrics.successfulCalls
+        (this.metrics.averageResponseTime * (this.metrics.successfulCalls - 1) +
+          responseTime) /
+          this.metrics.successfulCalls
       );
     } else {
       this.metrics.failedCalls++;
@@ -421,11 +447,15 @@ export class OmnisProviderWrapper implements AIProvider {
     const timeoutRate = this.metrics.timeoutCalls / this.metrics.totalCalls;
     const circuitBreakerPenalty = this.circuitBreaker.state === 'OPEN' ? 0.3 : 0;
 
-    this.metrics.healthScore = Math.max(0, Math.min(100, Math.round(
-      (successRate * 70) +
-      ((1 - timeoutRate) * 20) +
-      ((1 - circuitBreakerPenalty) * 10)
-    )));
+    this.metrics.healthScore = Math.max(
+      0,
+      Math.min(
+        100,
+        Math.round(
+          successRate * 70 + (1 - timeoutRate) * 20 + (1 - circuitBreakerPenalty) * 10
+        )
+      )
+    );
   }
 
   /**
@@ -434,7 +464,11 @@ export class OmnisProviderWrapper implements AIProvider {
    * ═══════════════════════════════════════════════════════════════════
    */
 
-  async generate(message: string, history: AIMessage[] = [], config?: AIConfig): Promise<AIResponse> {
+  async generate(
+    message: string,
+    history: AIMessage[] = [],
+    config?: AIConfig
+  ): Promise<AIResponse> {
     const callId = `${Date.now()}-${Math.random()}`;
     const startTime = Date.now();
 
@@ -453,7 +487,7 @@ export class OmnisProviderWrapper implements AIProvider {
         const result = await this.executeWithRetry(async () => {
           return Promise.race([
             this.originalProvider.generate(message, history),
-            this.createTimeoutPromise<AIResponse>(this.config.timeoutMs)
+            this.createTimeoutPromise<AIResponse>(this.config.timeoutMs),
           ]);
         });
 
@@ -470,20 +504,19 @@ export class OmnisProviderWrapper implements AIProvider {
               responseTime,
               retries: 0, // Could be enhanced to track actual retries
               circuitBreakerState: this.circuitBreaker.state,
-              healthScore: this.metrics.healthScore
-            }
-          }
+              healthScore: this.metrics.healthScore,
+            },
+          },
         };
-
       } finally {
         this.activeCalls.delete(callId);
         this.releaseCallSlot();
       }
-
     } catch (error) {
       // 5. Error handling with OMNIS fallback
       const responseTime = Date.now() - startTime;
-      const isTimeout = error instanceof Error && error.message === 'OMNIS_PROVIDER_TIMEOUT';
+      const isTimeout =
+        error instanceof Error && error.message === 'OMNIS_PROVIDER_TIMEOUT';
 
       this.recordFailure();
       this.updateMetrics(false, responseTime, isTimeout);
@@ -493,7 +526,7 @@ export class OmnisProviderWrapper implements AIProvider {
           error: error instanceof Error ? error.message : String(error),
           circuitState: this.circuitBreaker.state,
           healthScore: this.metrics.healthScore,
-          responseTime
+          responseTime,
         });
       }
 
@@ -519,7 +552,7 @@ export class OmnisProviderWrapper implements AIProvider {
         this.originalProvider.isAvailable(),
         new Promise<boolean>((_, reject) =>
           setTimeout(() => reject(new Error('AVAILABILITY_TIMEOUT')), 2000)
-        )
+        ),
       ]);
 
       return quickCheck;
@@ -538,10 +571,11 @@ export class OmnisProviderWrapper implements AIProvider {
     const emergencyMessages = [
       `Le provider ${this.name} traite votre demande en mode sécurisé. Réponse OMNIS en cours.`,
       `Système ${this.name} temporairement indisponible. TITANE∞ continue le traitement via protocole de sécurité.`,
-      `Mode OMNIS activé pour "${message.substring(0, 30)}...". Le système garantit une réponse alternative.`
+      `Mode OMNIS activé pour "${message.substring(0, 30)}...". Le système garantit une réponse alternative.`,
     ];
 
-    const selectedMessage = emergencyMessages[Math.floor(Math.random() * emergencyMessages.length)];
+    const selectedMessage =
+      emergencyMessages[Math.floor(Math.random() * emergencyMessages.length)];
 
     return {
       content: selectedMessage,
@@ -554,9 +588,9 @@ export class OmnisProviderWrapper implements AIProvider {
         omnisWrapper: {
           circuitBreakerState: this.circuitBreaker.state,
           healthScore: this.metrics.healthScore,
-          fallbackMode: true
-        }
-      }
+          fallbackMode: true,
+        },
+      },
     };
   }
 
@@ -577,7 +611,7 @@ export class OmnisProviderWrapper implements AIProvider {
       circuitBreakerState: { ...this.circuitBreaker },
       config: this.config,
       activeCallsCount: this.activeCalls.size,
-      queueLength: this.callQueue.length
+      queueLength: this.callQueue.length,
     };
   }
 
@@ -620,9 +654,4 @@ export function wrapProviderWithOmnis(
   return new OmnisProviderWrapper(provider, customConfig);
 }
 
-export type {
-  OmnisWrapperConfig,
-  ProviderMetrics,
-  CircuitBreakerState,
-  RetryConfig
-};
+export type { OmnisWrapperConfig, ProviderMetrics, CircuitBreakerState, RetryConfig };

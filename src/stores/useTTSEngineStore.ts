@@ -161,7 +161,7 @@ export const useTTSEngineStore = create<TTSEngineStore>()(
 
         // ========== Initialization ==========
         initialize: async () => {
-          set((state) => {
+          set(state => {
             state.isLoading = true;
             state.error = null;
           });
@@ -169,14 +169,15 @@ export const useTTSEngineStore = create<TTSEngineStore>()(
           try {
             await get().loadVoices();
 
-            set((state) => {
+            set(state => {
               state.isInitialized = true;
               state.isLoading = false;
             });
           } catch (error) {
-            set((state) => {
+            set(state => {
               state.isLoading = false;
-              state.error = error instanceof Error ? error.message : 'Erreur d\'initialisation TTS';
+              state.error =
+                error instanceof Error ? error.message : "Erreur d'initialisation TTS";
             });
           }
         },
@@ -200,8 +201,8 @@ export const useTTSEngineStore = create<TTSEngineStore>()(
             retryCount: 0,
           };
 
-          set((state) => {
-            const insertIndex = state.queue.findIndex((q) => q.priority < priority);
+          set(state => {
+            const insertIndex = state.queue.findIndex(q => q.priority < priority);
             if (insertIndex === -1) {
               state.queue.push(item);
             } else {
@@ -217,14 +218,14 @@ export const useTTSEngineStore = create<TTSEngineStore>()(
           return id;
         },
 
-        removeFromQueue: (itemId) => {
-          set((state) => {
-            state.queue = state.queue.filter((q) => q.id !== itemId);
+        removeFromQueue: itemId => {
+          set(state => {
+            state.queue = state.queue.filter(q => q.id !== itemId);
           });
         },
 
         clearQueue: () => {
-          set((state) => {
+          set(state => {
             state.queue = [];
           });
         },
@@ -243,7 +244,7 @@ export const useTTSEngineStore = create<TTSEngineStore>()(
           const nextItem = currentItem || queue[0];
           if (!nextItem) return;
 
-          set((state) => {
+          set(state => {
             state.isPlaying = true;
             state.isPaused = false;
             state.currentItem = nextItem;
@@ -255,7 +256,7 @@ export const useTTSEngineStore = create<TTSEngineStore>()(
           try {
             await get().speak(nextItem.text, nextItem.emotion);
           } catch (error) {
-            set((state) => {
+            set(state => {
               state.error = error instanceof Error ? error.message : 'Erreur de lecture';
               state.metrics.failedRequests += 1;
             });
@@ -263,21 +264,21 @@ export const useTTSEngineStore = create<TTSEngineStore>()(
         },
 
         pause: () => {
-          set((state) => {
+          set(state => {
             state.isPaused = true;
             state.isPlaying = false;
           });
         },
 
         resume: () => {
-          set((state) => {
+          set(state => {
             state.isPaused = false;
             state.isPlaying = true;
           });
         },
 
         stop: () => {
-          set((state) => {
+          set(state => {
             state.isPlaying = false;
             state.isPaused = false;
             state.isSpeaking = false;
@@ -289,7 +290,7 @@ export const useTTSEngineStore = create<TTSEngineStore>()(
         skip: () => {
           const { queue } = get();
 
-          set((state) => {
+          set(state => {
             state.currentItem = null;
             state.progress = 0;
           });
@@ -303,7 +304,7 @@ export const useTTSEngineStore = create<TTSEngineStore>()(
 
         // ========== Speak ==========
         speak: async (text, _emotion) => {
-          set((state) => {
+          set(state => {
             state.isSpeaking = true;
           });
 
@@ -311,27 +312,31 @@ export const useTTSEngineStore = create<TTSEngineStore>()(
             const startTime = Date.now();
 
             // Simuler la synthèse vocale
-            await new Promise((resolve) => setTimeout(resolve, Math.min(text.length * 10, 2000)));
+            await new Promise(resolve =>
+              setTimeout(resolve, Math.min(text.length * 10, 2000))
+            );
 
             const generationTime = Date.now() - startTime;
 
-            set((state) => {
+            set(state => {
               state.isSpeaking = false;
               state.metrics.successfulRequests += 1;
               state.metrics.totalCharacters += text.length;
 
               const totalRequests = state.metrics.successfulRequests;
               state.metrics.averageLatencyMs =
-                (state.metrics.averageLatencyMs * (totalRequests - 1) + generationTime) / totalRequests;
+                (state.metrics.averageLatencyMs * (totalRequests - 1) + generationTime) /
+                totalRequests;
             });
 
             if (get().settings.autoPlay && get().queue.length > 0) {
               get().play();
             }
           } catch (error) {
-            set((state) => {
+            set(state => {
               state.isSpeaking = false;
-              state.error = error instanceof Error ? error.message : 'Erreur de synthèse vocale';
+              state.error =
+                error instanceof Error ? error.message : 'Erreur de synthèse vocale';
               state.metrics.failedRequests += 1;
             });
             throw error;
@@ -339,16 +344,16 @@ export const useTTSEngineStore = create<TTSEngineStore>()(
         },
 
         stopSpeaking: () => {
-          set((state) => {
+          set(state => {
             state.isSpeaking = false;
           });
         },
 
         // ========== Voice ==========
-        setActiveVoice: (voiceId) => {
-          const voice = get().voices.find((v) => v.id === voiceId);
+        setActiveVoice: voiceId => {
+          const voice = get().voices.find(v => v.id === voiceId);
           if (voice) {
-            set((state) => {
+            set(state => {
               state.activeVoice = voice;
               state.settings.preferredVoiceId = voiceId;
             });
@@ -367,7 +372,7 @@ export const useTTSEngineStore = create<TTSEngineStore>()(
             languageCode: 'fr-FR',
           };
 
-          set((state) => {
+          set(state => {
             state.voices = [defaultVoice];
             if (!state.activeVoice) {
               state.activeVoice = defaultVoice;
@@ -376,39 +381,39 @@ export const useTTSEngineStore = create<TTSEngineStore>()(
         },
 
         // ========== Settings ==========
-        updateSettings: (newSettings) => {
-          set((state) => {
+        updateSettings: newSettings => {
+          set(state => {
             state.settings = { ...state.settings, ...newSettings };
           });
         },
 
-        setVolume: (volume) => {
-          set((state) => {
+        setVolume: volume => {
+          set(state => {
             state.settings.volume = Math.max(0, Math.min(1, volume));
           });
         },
 
-        setPlaybackRate: (rate) => {
-          set((state) => {
+        setPlaybackRate: rate => {
+          set(state => {
             state.settings.playbackRate = Math.max(0.5, Math.min(2, rate));
           });
         },
 
         toggleMute: () => {
-          set((state) => {
+          set(state => {
             state.isMuted = !state.isMuted;
           });
         },
 
         // ========== Error Handling ==========
-        setError: (error) => {
-          set((state) => {
+        setError: error => {
+          set(state => {
             state.error = error;
           });
         },
 
         clearError: () => {
-          set((state) => {
+          set(state => {
             state.error = null;
           });
         },

@@ -1,7 +1,7 @@
 /**
  * TITANE∞ v∞ Phase 4 - Multi-Agent System
  * Multi-AI Dashboard - Visualisation temps réel des 5 agents
- * 
+ *
  * ⚠️ DEPRECATED: multi_agent_engine supprimé en PHASE 1 (OPTION B)
  * Ce fichier est conservé pour référence mais n'est plus utilisé
  */

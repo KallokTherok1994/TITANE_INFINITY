@@ -6,10 +6,10 @@
 
 #![allow(unused_imports)]
 
+use titane_infinity::agi_core::*;
+use titane_infinity::memory_os::*;
 use titane_infinity::multimodal::*;
 use titane_infinity::omega::*;
-use titane_infinity::memory_os::*;
-use titane_infinity::agi_core::*;
 
 // ═══════════════════════════════════════════════════════════════
 //   TEST 1: Full Vision Pipeline
@@ -19,16 +19,15 @@ use titane_infinity::agi_core::*;
 async fn test_vision_pipeline_e2e() {
     // Create test image
     let img = image::ImageBuffer::from_fn(100, 100, |x, y| {
-        image::Rgb([
-            (x * 2) as u8,
-            (y * 2) as u8,
-            128,
-        ])
+        image::Rgb([(x * 2) as u8, (y * 2) as u8, 128])
     });
     let dynamic_img = image::DynamicImage::ImageRgb8(img);
     let mut bytes = Vec::new();
     dynamic_img
-        .write_to(&mut std::io::Cursor::new(&mut bytes), image::ImageFormat::Png)
+        .write_to(
+            &mut std::io::Cursor::new(&mut bytes),
+            image::ImageFormat::Png,
+        )
         .unwrap();
 
     // Initialize vision engine
@@ -66,7 +65,10 @@ async fn test_image_embeddings_and_search() {
         let dynamic = image::DynamicImage::ImageRgb8(img);
         let mut bytes = Vec::new();
         dynamic
-            .write_to(&mut std::io::Cursor::new(&mut bytes), image::ImageFormat::Png)
+            .write_to(
+                &mut std::io::Cursor::new(&mut bytes),
+                image::ImageFormat::Png,
+            )
             .unwrap();
         bytes
     };
@@ -84,47 +86,56 @@ async fn test_image_embeddings_and_search() {
     let vision_engine = VisionEngine::new(config);
 
     let red_analysis = vision_engine.analyze_image_bytes(&red_img).await.unwrap();
-    image_memory.store_image(ImageMemoryEntry {
-        id: red_analysis.image_id.clone(),
-        image_path: None,
-        image_data: Some(red_img.clone()),
-        embedding: red_emb.clone(),
-        metadata: ImageMetadata {
-            title: Some("Red Image".to_string()),
-            description: None,
-            tags: vec!["red".to_string()],
-            width: 50,
-            height: 50,
-            format: "PNG".to_string(),
-            source: "test".to_string(),
-        },
-        linked_text: vec![],
-        timestamp: chrono::Utc::now().timestamp(),
-        importance: 0.8,
-    }).await.unwrap();
+    image_memory
+        .store_image(ImageMemoryEntry {
+            id: red_analysis.image_id.clone(),
+            image_path: None,
+            image_data: Some(red_img.clone()),
+            embedding: red_emb.clone(),
+            metadata: ImageMetadata {
+                title: Some("Red Image".to_string()),
+                description: None,
+                tags: vec!["red".to_string()],
+                width: 50,
+                height: 50,
+                format: "PNG".to_string(),
+                source: "test".to_string(),
+            },
+            linked_text: vec![],
+            timestamp: chrono::Utc::now().timestamp(),
+            importance: 0.8,
+        })
+        .await
+        .unwrap();
 
     let blue_analysis = vision_engine.analyze_image_bytes(&blue_img).await.unwrap();
-    image_memory.store_image(ImageMemoryEntry {
-        id: blue_analysis.image_id.clone(),
-        image_path: None,
-        image_data: Some(blue_img.clone()),
-        embedding: blue_emb.clone(),
-        metadata: ImageMetadata {
-            title: Some("Blue Image".to_string()),
-            description: None,
-            tags: vec!["blue".to_string()],
-            width: 50,
-            height: 50,
-            format: "PNG".to_string(),
-            source: "test".to_string(),
-        },
-        linked_text: vec![],
-        timestamp: chrono::Utc::now().timestamp(),
-        importance: 0.7,
-    }).await.unwrap();
+    image_memory
+        .store_image(ImageMemoryEntry {
+            id: blue_analysis.image_id.clone(),
+            image_path: None,
+            image_data: Some(blue_img.clone()),
+            embedding: blue_emb.clone(),
+            metadata: ImageMetadata {
+                title: Some("Blue Image".to_string()),
+                description: None,
+                tags: vec!["blue".to_string()],
+                width: 50,
+                height: 50,
+                format: "PNG".to_string(),
+                source: "test".to_string(),
+            },
+            linked_text: vec![],
+            timestamp: chrono::Utc::now().timestamp(),
+            importance: 0.7,
+        })
+        .await
+        .unwrap();
 
     // Search with similar red image
-    let results = image_memory.search_by_image_embedding(&red_emb2, 2).await.unwrap();
+    let results = image_memory
+        .search_by_image_embedding(&red_emb2, 2)
+        .await
+        .unwrap();
     assert_eq!(results.len(), 2);
 
     // First result should be red (most similar)
@@ -149,35 +160,44 @@ async fn test_cross_modal_search() {
     let dynamic = image::DynamicImage::ImageRgb8(img);
     let mut bytes = Vec::new();
     dynamic
-        .write_to(&mut std::io::Cursor::new(&mut bytes), image::ImageFormat::Png)
+        .write_to(
+            &mut std::io::Cursor::new(&mut bytes),
+            image::ImageFormat::Png,
+        )
         .unwrap();
 
     let img_emb = vision_models.embed_image(&bytes).await.unwrap();
     let analysis = vision_engine.analyze_image_bytes(&bytes).await.unwrap();
 
-    image_memory.store_image(ImageMemoryEntry {
-        id: analysis.image_id.clone(),
-        image_path: None,
-        image_data: Some(bytes),
-        embedding: img_emb,
-        metadata: ImageMetadata {
-            title: Some("Gray Test Image".to_string()),
-            description: Some("A test image for cross-modal search".to_string()),
-            tags: vec!["gray".to_string(), "test".to_string()],
-            width: 50,
-            height: 50,
-            format: "PNG".to_string(),
-            source: "test".to_string(),
-        },
-        linked_text: vec!["This is a gray image".to_string()],
-        timestamp: chrono::Utc::now().timestamp(),
-        importance: 0.9,
-    }).await.unwrap();
+    image_memory
+        .store_image(ImageMemoryEntry {
+            id: analysis.image_id.clone(),
+            image_path: None,
+            image_data: Some(bytes),
+            embedding: img_emb,
+            metadata: ImageMetadata {
+                title: Some("Gray Test Image".to_string()),
+                description: Some("A test image for cross-modal search".to_string()),
+                tags: vec!["gray".to_string(), "test".to_string()],
+                width: 50,
+                height: 50,
+                format: "PNG".to_string(),
+                source: "test".to_string(),
+            },
+            linked_text: vec!["This is a gray image".to_string()],
+            timestamp: chrono::Utc::now().timestamp(),
+            importance: 0.9,
+        })
+        .await
+        .unwrap();
 
     // Perform cross-modal search
     let query = "gray image";
     let text_emb = vision_models.embed_text(query).await.unwrap();
-    let results = image_memory.search_cross_modal(query, &text_emb, 5).await.unwrap();
+    let results = image_memory
+        .search_cross_modal(query, &text_emb, 5)
+        .await
+        .unwrap();
 
     assert!(!results.is_empty());
     assert!(results[0].metadata.tags.contains(&"gray".to_string()));
@@ -224,18 +244,18 @@ async fn test_multimodal_fusion() {
     let audio_engine = std::sync::Arc::new(Audio3DEngine::new(44100, 1024));
     let image_memory = std::sync::Arc::new(ImageMemoryStore::new(100));
 
-    let fusion_engine = MultimodalFusionEngine::new(
-        vision_engine.clone(),
-        audio_engine.clone(),
-        image_memory,
-    );
+    let fusion_engine =
+        MultimodalFusionEngine::new(vision_engine.clone(), audio_engine.clone(), image_memory);
 
     // Create test data
     let img = image::ImageBuffer::from_fn(50, 50, |_, _| image::Rgb([150, 150, 150]));
     let dynamic = image::DynamicImage::ImageRgb8(img);
     let mut img_bytes = Vec::new();
     dynamic
-        .write_to(&mut std::io::Cursor::new(&mut img_bytes), image::ImageFormat::Png)
+        .write_to(
+            &mut std::io::Cursor::new(&mut img_bytes),
+            image::ImageFormat::Png,
+        )
         .unwrap();
 
     let audio_samples: Vec<f32> = (0..1024).map(|i| (i as f32 / 1024.0).sin()).collect();
@@ -280,7 +300,10 @@ async fn test_omega_multimodal_integration() {
     let dynamic = image::DynamicImage::ImageRgb8(img);
     let mut img_bytes = Vec::new();
     dynamic
-        .write_to(&mut std::io::Cursor::new(&mut img_bytes), image::ImageFormat::Png)
+        .write_to(
+            &mut std::io::Cursor::new(&mut img_bytes),
+            image::ImageFormat::Png,
+        )
         .unwrap();
 
     // Create OMEGA input
@@ -319,14 +342,21 @@ async fn test_memory_os_multimodal() {
     let dynamic = image::DynamicImage::ImageRgb8(img);
     let mut img_bytes = Vec::new();
     dynamic
-        .write_to(&mut std::io::Cursor::new(&mut img_bytes), image::ImageFormat::Png)
+        .write_to(
+            &mut std::io::Cursor::new(&mut img_bytes),
+            image::ImageFormat::Png,
+        )
         .unwrap();
 
     let multimodal_entry = MultimodalMemoryEntry::from_base(base)
         .with_image(img_bytes, "test_img_001".to_string())
         .with_joint_embedding(
             vec![0.1; 512],
-            ModalityWeights { text: 0.5, vision: 0.3, audio: 0.2 },
+            ModalityWeights {
+                text: 0.5,
+                vision: 0.3,
+                audio: 0.2,
+            },
         );
 
     assert!(multimodal_entry.has_multimodal());
@@ -417,9 +447,10 @@ async fn test_full_e2e_workflow() {
     // 1. Initialize all systems
     let config = MultimodalConfig::default();
     let vision_engine = std::sync::Arc::new(VisionEngine::new(config.clone()));
-    let vision_models = std::sync::Arc::new(tokio::sync::RwLock::new(
-        VisionModelManager::new(VisionModel::CLIP, true)
-    ));
+    let vision_models = std::sync::Arc::new(tokio::sync::RwLock::new(VisionModelManager::new(
+        VisionModel::CLIP,
+        true,
+    )));
     let audio_engine = std::sync::Arc::new(Audio3DEngine::new(44100, 1024));
     let image_memory = std::sync::Arc::new(ImageMemoryStore::new(1000));
     let fusion_engine = std::sync::Arc::new(MultimodalFusionEngine::new(
@@ -435,38 +466,50 @@ async fn test_full_e2e_workflow() {
     let dynamic = image::DynamicImage::ImageRgb8(img);
     let mut img_bytes = Vec::new();
     dynamic
-        .write_to(&mut std::io::Cursor::new(&mut img_bytes), image::ImageFormat::Png)
+        .write_to(
+            &mut std::io::Cursor::new(&mut img_bytes),
+            image::ImageFormat::Png,
+        )
         .unwrap();
 
     // 3. Analyze image
     let vision_analysis = vision_engine.analyze_image_bytes(&img_bytes).await.unwrap();
-    println!("   ✓ Image analyzed: {}x{}", vision_analysis.width, vision_analysis.height);
+    println!(
+        "   ✓ Image analyzed: {}x{}",
+        vision_analysis.width, vision_analysis.height
+    );
 
     // 4. Generate embedding
     let models = vision_models.read().await;
     let img_embedding = models.embed_image(&img_bytes).await.unwrap();
-    println!("   ✓ Embedding generated: {} dimensions", img_embedding.len());
+    println!(
+        "   ✓ Embedding generated: {} dimensions",
+        img_embedding.len()
+    );
     drop(models);
 
     // 5. Store in memory
-    image_memory.store_image(ImageMemoryEntry {
-        id: vision_analysis.image_id.clone(),
-        image_path: None,
-        image_data: Some(img_bytes.clone()),
-        embedding: img_embedding,
-        metadata: ImageMetadata {
-            title: Some("E2E Test Image".to_string()),
-            description: Some("Full workflow test".to_string()),
-            tags: vec!["test".to_string(), "e2e".to_string()],
-            width: vision_analysis.width,
-            height: vision_analysis.height,
-            format: vision_analysis.format.clone(),
-            source: "integration_test".to_string(),
-        },
-        linked_text: vec!["Full end-to-end workflow test".to_string()],
-        timestamp: chrono::Utc::now().timestamp(),
-        importance: 0.95,
-    }).await.unwrap();
+    image_memory
+        .store_image(ImageMemoryEntry {
+            id: vision_analysis.image_id.clone(),
+            image_path: None,
+            image_data: Some(img_bytes.clone()),
+            embedding: img_embedding,
+            metadata: ImageMetadata {
+                title: Some("E2E Test Image".to_string()),
+                description: Some("Full workflow test".to_string()),
+                tags: vec!["test".to_string(), "e2e".to_string()],
+                width: vision_analysis.width,
+                height: vision_analysis.height,
+                format: vision_analysis.format.clone(),
+                source: "integration_test".to_string(),
+            },
+            linked_text: vec!["Full end-to-end workflow test".to_string()],
+            timestamp: chrono::Utc::now().timestamp(),
+            importance: 0.95,
+        })
+        .await
+        .unwrap();
     println!("   ✓ Image stored in memory");
 
     // 6. Perform cross-modal search
@@ -478,14 +521,23 @@ async fn test_full_e2e_workflow() {
         .search_cross_modal("test image", &text_emb, 5)
         .await
         .unwrap();
-    println!("   ✓ Cross-modal search found {} results", search_results.len());
+    println!(
+        "   ✓ Cross-modal search found {} results",
+        search_results.len()
+    );
 
     // 7. Audio analysis
     let audio_samples: Vec<f32> = (0..1024)
         .map(|i| (2.0 * std::f32::consts::PI * 440.0 * (i as f32 / 44100.0)).sin() * 0.5)
         .collect();
-    let audio_analysis = audio_engine.analyze_audio_frame(&audio_samples).await.unwrap();
-    println!("   ✓ Audio analyzed: intensity={:.2}", audio_analysis.intensity);
+    let audio_analysis = audio_engine
+        .analyze_audio_frame(&audio_samples)
+        .await
+        .unwrap();
+    println!(
+        "   ✓ Audio analyzed: intensity={:.2}",
+        audio_analysis.intensity
+    );
 
     // 8. Multimodal fusion
     let context = fusion_engine
@@ -496,9 +548,14 @@ async fn test_full_e2e_workflow() {
         )
         .await
         .unwrap();
-    let fusion = fusion_engine.fuse_signals(&context, 0.4, 0.4, 0.2).await.unwrap();
-    println!("   ✓ Fusion complete: confidence={:.2}, dominant={:?}",
-        fusion.confidence, fusion.dominant_modality);
+    let fusion = fusion_engine
+        .fuse_signals(&context, 0.4, 0.4, 0.2)
+        .await
+        .unwrap();
+    println!(
+        "   ✓ Fusion complete: confidence={:.2}, dominant={:?}",
+        fusion.confidence, fusion.dominant_modality
+    );
 
     // 9. Memory OS integration
     let multimodal_store = MultimodalMemoryStore::new(20, 200, 5000);
@@ -506,25 +563,35 @@ async fn test_full_e2e_workflow() {
         "Full workflow test memory".to_string(),
         0.9,
         MemoryType::Episodic,
-    ).with_embedding(vec![0.5; 384]);
+    )
+    .with_embedding(vec![0.5; 384]);
 
     let multimodal_memory = MultimodalMemoryEntry::from_base(base_memory)
         .with_image(img_bytes, vision_analysis.image_id.clone())
-        .with_audio(vec![0.5; 1024], AudioMetadata {
-            sample_rate: 44100,
-            duration_ms: 1000,
-            intensity: audio_analysis.intensity,
-            frequency_bands: audio_analysis.frequency_bands.clone(),
-        })
-        .with_joint_embedding(vec![0.7; 512], ModalityWeights {
-            text: 0.4,
-            vision: 0.4,
-            audio: 0.2,
-        });
+        .with_audio(
+            vec![0.5; 1024],
+            AudioMetadata {
+                sample_rate: 44100,
+                duration_ms: 1000,
+                intensity: audio_analysis.intensity,
+                frequency_bands: audio_analysis.frequency_bands.clone(),
+            },
+        )
+        .with_joint_embedding(
+            vec![0.7; 512],
+            ModalityWeights {
+                text: 0.4,
+                vision: 0.4,
+                audio: 0.2,
+            },
+        );
 
     multimodal_store.store(multimodal_memory).await.unwrap();
     let mm_stats = multimodal_store.stats().await;
-    println!("   ✓ Multimodal memory stored: {} entries", mm_stats.total_entries);
+    println!(
+        "   ✓ Multimodal memory stored: {} entries",
+        mm_stats.total_entries
+    );
 
     // 10. AGI Core perception
     let perception_engine = MultimodalPerceptionEngine::new(true, true, 0.7);
@@ -534,8 +601,11 @@ async fn test_full_e2e_workflow() {
         .with_fusion(fusion);
 
     let introspection = perception_engine.introspect(&agi_context).await;
-    println!("   ✓ AGI perception: quality={:.2}, {} insights",
-        introspection.perceptual_quality, introspection.insights.len());
+    println!(
+        "   ✓ AGI perception: quality={:.2}, {} insights",
+        introspection.perceptual_quality,
+        introspection.insights.len()
+    );
 
     // Final verification
     assert!(mm_stats.total_entries > 0);
@@ -565,7 +635,10 @@ async fn test_performance_benchmarks() {
     let dynamic = image::DynamicImage::ImageRgb8(img);
     let mut bytes = Vec::new();
     dynamic
-        .write_to(&mut std::io::Cursor::new(&mut bytes), image::ImageFormat::Png)
+        .write_to(
+            &mut std::io::Cursor::new(&mut bytes),
+            image::ImageFormat::Png,
+        )
         .unwrap();
 
     // Benchmark vision analysis

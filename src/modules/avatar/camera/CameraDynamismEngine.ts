@@ -12,19 +12,19 @@ import * as THREE from 'three';
 export type CameraMode = 'portrait' | 'torso' | 'fullbody';
 
 export interface CameraModeConfig {
-  distance: number;   // Distance from avatar (meters)
-  fov: number;        // Field of view (degrees)
-  height: number;     // Camera Y position (meters)
-  lookAtY: number;    // Look-at target Y (meters)
+  distance: number; // Distance from avatar (meters)
+  fov: number; // Field of view (degrees)
+  height: number; // Camera Y position (meters)
+  lookAtY: number; // Look-at target Y (meters)
 }
 
 export interface CameraConfig {
   initialMode: CameraMode;
-  transitionDuration: number;          // Mode transition duration (ms)
-  breathingAmplitude: number;          // Breathing parallax amplitude (meters)
-  breathingFrequency: number;          // Breathing cycles per minute
-  vocalZoomSensitivity: number;        // Zoom sensitivity to vocal intensity
-  vocalZoomMax: number;                // Max FOV change (degrees)
+  transitionDuration: number; // Mode transition duration (ms)
+  breathingAmplitude: number; // Breathing parallax amplitude (meters)
+  breathingFrequency: number; // Breathing cycles per minute
+  vocalZoomSensitivity: number; // Zoom sensitivity to vocal intensity
+  vocalZoomMax: number; // Max FOV change (degrees)
   enableBreathingParallax: boolean;
   enableVocalZoom: boolean;
 }
@@ -38,30 +38,30 @@ const CAMERA_MODE_PRESETS: Record<CameraMode, CameraModeConfig> = {
   // PORTRAIT (close-up visage)
   // ─────────────────────────────────────────
   portrait: {
-    distance: 0.8,      // 80cm (très proche)
-    fov: 50,            // FOV resserré
-    height: 1.6,        // Hauteur yeux
-    lookAtY: 1.6,       // Regarde visage
+    distance: 0.8, // 80cm (très proche)
+    fov: 50, // FOV resserré
+    height: 1.6, // Hauteur yeux
+    lookAtY: 1.6, // Regarde visage
   },
 
   // ─────────────────────────────────────────
   // TORSO (torse + tête)
   // ─────────────────────────────────────────
   torso: {
-    distance: 1.5,      // 1.5m (moyen)
-    fov: 45,            // FOV normal
-    height: 1.5,        // Hauteur milieu torse
-    lookAtY: 1.4,       // Regarde haut torse
+    distance: 1.5, // 1.5m (moyen)
+    fov: 45, // FOV normal
+    height: 1.5, // Hauteur milieu torse
+    lookAtY: 1.4, // Regarde haut torse
   },
 
   // ─────────────────────────────────────────
   // FULLBODY (corps entier)
   // ─────────────────────────────────────────
   fullbody: {
-    distance: 3.0,      // 3m (large)
-    fov: 40,            // FOV plus large
-    height: 1.2,        // Hauteur milieu corps
-    lookAtY: 1.0,       // Regarde centre corps
+    distance: 3.0, // 3m (large)
+    fov: 40, // FOV plus large
+    height: 1.2, // Hauteur milieu corps
+    lookAtY: 1.0, // Regarde centre corps
   },
 };
 
@@ -83,25 +83,25 @@ export class CameraDynamismEngine {
   private targetFOV: number;
 
   // Transition state
-  private transitionProgress: number = 1.0;  // 0.0-1.0 (1.0 = complete)
+  private transitionProgress: number = 1.0; // 0.0-1.0 (1.0 = complete)
   private transitionStartTime: number = 0;
 
   // Breathing state
-  private breathingPhase: number = 0;        // 0-2π
+  private breathingPhase: number = 0; // 0-2π
 
   // Vocal zoom state
-  private vocalIntensity: number = 0;        // 0.0-1.0
+  private vocalIntensity: number = 0; // 0.0-1.0
 
   constructor(camera: THREE.PerspectiveCamera, config: Partial<CameraConfig> = {}) {
     this.camera = camera;
 
     this.config = {
       initialMode: 'torso',
-      transitionDuration: 1000,         // 1s transitions
-      breathingAmplitude: 0.02,         // ±2cm Y
-      breathingFrequency: 10,           // 10 cycles/min (realistic)
-      vocalZoomSensitivity: 0.5,        // Moderate sensitivity
-      vocalZoomMax: 5.0,                // Max -5° FOV
+      transitionDuration: 1000, // 1s transitions
+      breathingAmplitude: 0.02, // ±2cm Y
+      breathingFrequency: 10, // 10 cycles/min (realistic)
+      vocalZoomSensitivity: 0.5, // Moderate sensitivity
+      vocalZoomMax: 5.0, // Max -5° FOV
       enableBreathingParallax: true,
       enableVocalZoom: true,
       ...config,
@@ -182,11 +182,7 @@ export class CameraDynamismEngine {
       );
 
       // Interpolate look-at
-      this.currentLookAt.lerpVectors(
-        this.currentLookAt,
-        this.targetLookAt,
-        eased * 0.1
-      );
+      this.currentLookAt.lerpVectors(this.currentLookAt, this.targetLookAt, eased * 0.1);
 
       // Interpolate FOV
       this.currentFOV = THREE.MathUtils.lerp(
@@ -216,9 +212,10 @@ export class CameraDynamismEngine {
     let vocalZoomOffset = 0;
     if (this.config.enableVocalZoom) {
       // Vocal intensity → FOV reduction (zoom in)
-      vocalZoomOffset = -this.vocalIntensity *
-                        this.config.vocalZoomSensitivity *
-                        this.config.vocalZoomMax;
+      vocalZoomOffset =
+        -this.vocalIntensity *
+        this.config.vocalZoomSensitivity *
+        this.config.vocalZoomMax;
     }
 
     // ─────────────────────────────────────────
@@ -312,9 +309,7 @@ export class CameraDynamismEngine {
    * Ease-in-out cubic
    */
   private easeInOutCubic(t: number): number {
-    return t < 0.5
-      ? 4 * t * t * t
-      : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   }
 }
 

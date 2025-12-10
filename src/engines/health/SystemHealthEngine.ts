@@ -133,7 +133,14 @@ class SystemHealthImpl {
         status: 'offline',
         health: 0,
         metrics: this.createEmptyProviderMetrics(id),
-        issues: [{ severity: 'critical', code: 'NOT_FOUND', message: 'Provider not registered', timestamp: Date.now() }],
+        issues: [
+          {
+            severity: 'critical',
+            code: 'NOT_FOUND',
+            message: 'Provider not registered',
+            timestamp: Date.now(),
+          },
+        ],
       };
     }
 
@@ -168,9 +175,11 @@ class SystemHealthImpl {
 
     // Update provider latency if operation is a provider ID
     if (this.providers.has(operation)) {
-      const provider = this.providers.get(operation)!;
-      // Running average
-      provider.latency = (provider.latency * 0.9) + (ms * 0.1);
+      const provider = this.providers.get(operation);
+      if (provider) {
+        // Running average
+        provider.latency = provider.latency * 0.9 + ms * 0.1;
+      }
     }
   }
 
@@ -200,7 +209,7 @@ class SystemHealthImpl {
     if (provider) {
       provider.requestCount++;
       provider.lastSuccess = Date.now();
-      provider.latency = (provider.latency * 0.9) + (latencyMs * 0.1);
+      provider.latency = provider.latency * 0.9 + latencyMs * 0.1;
       // Boost health on success
       provider.health = Math.min(1, provider.health + 0.01);
       provider.available = true;
@@ -367,12 +376,7 @@ class SystemHealthImpl {
       // Create alerts for critical issues
       for (const issue of issues) {
         if (issue.severity === 'critical') {
-          this.metrics.createAlert(
-            'provider_unhealthy',
-            id,
-            issue.message,
-            'critical'
-          );
+          this.metrics.createAlert('provider_unhealthy', id, issue.message, 'critical');
         }
       }
 

@@ -67,14 +67,7 @@ const dotSizes: Record<BadgeSize, string> = {
 
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
   (
-    {
-      variant = 'primary',
-      size = 'md',
-      dot = false,
-      className,
-      children,
-      ...props
-    },
+    { variant = 'primary', size = 'md', dot = false, className, children, ...props },
     ref
   ) => {
     return (
@@ -93,14 +86,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
         {...props}
       >
         {/* Dot Indicator */}
-        {dot && (
-          <span
-            className={cn(
-              'rounded-full bg-current',
-              dotSizes[size]
-            )}
-          />
-        )}
+        {dot && <span className={cn('rounded-full bg-current', dotSizes[size])} />}
 
         {children}
       </span>

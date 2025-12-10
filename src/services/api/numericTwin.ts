@@ -71,7 +71,9 @@ class NumericTwinService {
   async applyEvolution(evolution: TwinEvolutionRequest): Promise<TwinEvolutionResult> {
     console.log(`${this.LOG_PREFIX} applyEvolution:`, evolution.evolutionType);
     try {
-      const result = await invoke<TwinEvolutionResult>('twin_apply_evolution', { evolution });
+      const result = await invoke<TwinEvolutionResult>('twin_apply_evolution', {
+        evolution,
+      });
       return result;
     } catch (error) {
       console.error(`${this.LOG_PREFIX} applyEvolution error:`, error);
@@ -142,7 +144,11 @@ class NumericTwinService {
   /**
    * Observe une valeur dans une interaction
    */
-  async observeValue(valueName: string, context?: string, confidence = 0.7): Promise<string> {
+  async observeValue(
+    valueName: string,
+    context?: string,
+    confidence = 0.7
+  ): Promise<string> {
     return this.submitObservation({
       observationType: 'value',
       content: valueName,
@@ -154,7 +160,11 @@ class NumericTwinService {
   /**
    * Observe un pattern cognitif
    */
-  async observeCognitivePattern(patternName: string, context?: string, confidence = 0.7): Promise<string> {
+  async observeCognitivePattern(
+    patternName: string,
+    context?: string,
+    confidence = 0.7
+  ): Promise<string> {
     return this.submitObservation({
       observationType: 'cognitive',
       content: patternName,
@@ -166,7 +176,11 @@ class NumericTwinService {
   /**
    * Observe un élément de style
    */
-  async observeStyle(styleElement: string, context?: string, confidence = 0.7): Promise<string> {
+  async observeStyle(
+    styleElement: string,
+    context?: string,
+    confidence = 0.7
+  ): Promise<string> {
     return this.submitObservation({
       observationType: 'style',
       content: styleElement,
@@ -178,7 +192,11 @@ class NumericTwinService {
   /**
    * Observe un état émotionnel
    */
-  async observeEmotional(emotionalState: string, context?: string, confidence = 0.7): Promise<string> {
+  async observeEmotional(
+    emotionalState: string,
+    context?: string,
+    confidence = 0.7
+  ): Promise<string> {
     return this.submitObservation({
       observationType: 'emotional',
       content: emotionalState,
@@ -190,7 +208,10 @@ class NumericTwinService {
   /**
    * Renforce une valeur (avec validation Kevin)
    */
-  async reinforceValue(valueName: string, validatedByKevin = true): Promise<TwinEvolutionResult> {
+  async reinforceValue(
+    valueName: string,
+    validatedByKevin = true
+  ): Promise<TwinEvolutionResult> {
     return this.applyEvolution({
       evolutionType: 'value_reinforcement',
       target: valueName,
@@ -202,7 +223,12 @@ class NumericTwinService {
   /**
    * Ajuste un trait (avec validation si profond)
    */
-  async adjustTrait(traitName: string, delta: number, isDeep = false, validatedByKevin = true): Promise<TwinEvolutionResult> {
+  async adjustTrait(
+    traitName: string,
+    delta: number,
+    isDeep = false,
+    validatedByKevin = true
+  ): Promise<TwinEvolutionResult> {
     return this.applyEvolution({
       evolutionType: 'trait_adjustment',
       target: traitName,
@@ -215,7 +241,10 @@ class NumericTwinService {
   /**
    * Intègre un nouveau pattern
    */
-  async integratePattern(patternName: string, validatedByKevin = true): Promise<TwinEvolutionResult> {
+  async integratePattern(
+    patternName: string,
+    validatedByKevin = true
+  ): Promise<TwinEvolutionResult> {
     return this.applyEvolution({
       evolutionType: 'pattern_integration',
       target: patternName,

@@ -4,8 +4,8 @@
 //! © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
 use super::migrations::CURRENT_SCHEMA_VERSION;
+use serde::{Deserialize, Serialize};
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -174,12 +174,12 @@ pub struct HealthThresholds {
 impl Default for HealthThresholds {
     fn default() -> Self {
         Self {
-            max_journal_size_warning: 10 * 1024 * 1024,     // 10 MB
-            max_journal_size_critical: 50 * 1024 * 1024,    // 50 MB
+            max_journal_size_warning: 10 * 1024 * 1024,  // 10 MB
+            max_journal_size_critical: 50 * 1024 * 1024, // 50 MB
             max_events_before_compaction: 5000,
-            max_snapshot_age_ms: 30 * 60 * 1000,            // 30 minutes
-            max_backup_age_ms: 7 * 24 * 60 * 60 * 1000,     // 7 jours
-            max_recovery_time_ms: 5000,                      // 5 secondes
+            max_snapshot_age_ms: 30 * 60 * 1000, // 30 minutes
+            max_backup_age_ms: 7 * 24 * 60 * 60 * 1000, // 7 jours
+            max_recovery_time_ms: 5000,          // 5 secondes
         }
     }
 }
@@ -220,7 +220,10 @@ impl MemoryHealthEngine {
                 id: uuid::Uuid::new_v4().to_string(),
                 severity: IssueSeverity::Warning,
                 category: IssueCategory::Schema,
-                message: format!("Migration requise: v{} → v{}", schema_version, CURRENT_SCHEMA_VERSION),
+                message: format!(
+                    "Migration requise: v{} → v{}",
+                    schema_version, CURRENT_SCHEMA_VERSION
+                ),
                 details: Some("L'état utilise un schéma ancien".to_string()),
                 detected_at: now,
                 auto_fixable: true,
@@ -294,10 +297,7 @@ impl MemoryHealthEngine {
                 recommendations.push(Recommendation {
                     id: uuid::Uuid::new_v4().to_string(),
                     priority: 3,
-                    message: format!(
-                        "Dernier snapshot il y a {} minutes",
-                        age / 60000
-                    ),
+                    message: format!("Dernier snapshot il y a {} minutes", age / 60000),
                     action: "Créer un nouveau snapshot".to_string(),
                     command: Some("titan_force_snapshot".to_string()),
                 });
@@ -317,7 +317,7 @@ impl MemoryHealthEngine {
 
         // Estimer le temps de recovery
         let estimated_recovery_time_ms = Some(
-            (status.events_persisted as u64).saturating_mul(10) // ~10ms par event
+            (status.events_persisted as u64).saturating_mul(10), // ~10ms par event
         );
 
         let health = MemoryHealth {
@@ -414,7 +414,7 @@ impl MemoryHealthEngine {
 
     /// Exécuter une commande de correction et tracer via TitanEvent
     async fn execute_fix(&self, command: &str) -> Result<(), String> {
-        use super::types::{TitanEvent, EventOrigin};
+        use super::types::{EventOrigin, TitanEvent};
 
         let start = std::time::Instant::now();
         let result = self.execute_fix_internal(command).await;
@@ -423,7 +423,11 @@ impl MemoryHealthEngine {
         // Tracer l'action de self-heal via un TitanEvent
         let event = TitanEvent::with_origin(
             "self_heal",
-            if result.is_ok() { "fix_success" } else { "fix_failed" },
+            if result.is_ok() {
+                "fix_success"
+            } else {
+                "fix_failed"
+            },
             serde_json::json!({
                 "command": command,
                 "success": result.is_ok(),
@@ -437,7 +441,10 @@ impl MemoryHealthEngine {
         // Persister l'événement (ne pas bloquer en cas d'erreur)
         let mut engine = super::PERSISTENCE_ENGINE.write().await;
         if let Err(e) = engine.persist_event(event).await {
-            log::warn!("[MemoryHealth] Impossible de tracer l'action self_heal: {}", e);
+            log::warn!(
+                "[MemoryHealth] Impossible de tracer l'action self_heal: {}",
+                e
+            );
         }
 
         result
@@ -448,7 +455,11 @@ impl MemoryHealthEngine {
         match command {
             "titan_compact_journal" => {
                 let mut engine = super::PERSISTENCE_ENGINE.write().await;
-                engine.compact_journal().await.map(|_| ()).map_err(|e| e.to_string())
+                engine
+                    .compact_journal()
+                    .await
+                    .map(|_| ())
+                    .map_err(|e| e.to_string())
             }
             "titan_force_snapshot" => {
                 // Note: nécessite l'état actuel du frontend
@@ -457,7 +468,11 @@ impl MemoryHealthEngine {
             }
             "titan_repair_integrity" => {
                 let mut engine = super::PERSISTENCE_ENGINE.write().await;
-                engine.check_integrity().await.map(|_| ()).map_err(|e| e.to_string())
+                engine
+                    .check_integrity()
+                    .await
+                    .map(|_| ())
+                    .map_err(|e| e.to_string())
             }
             "titan_migrate_state" => {
                 // TODO: implémenter via MigrationEngine
@@ -517,9 +532,8 @@ use std::sync::Arc;
 use tokio::sync::RwLock;
 
 /// Instance globale du MemoryHealthEngine
-pub static MEMORY_HEALTH_ENGINE: Lazy<Arc<RwLock<MemoryHealthEngine>>> = Lazy::new(|| {
-    Arc::new(RwLock::new(MemoryHealthEngine::new()))
-});
+pub static MEMORY_HEALTH_ENGINE: Lazy<Arc<RwLock<MemoryHealthEngine>>> =
+    Lazy::new(|| Arc::new(RwLock::new(MemoryHealthEngine::new())));
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TESTS

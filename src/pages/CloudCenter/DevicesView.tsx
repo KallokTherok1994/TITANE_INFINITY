@@ -99,9 +99,7 @@ const DevicesView: React.FC = () => {
         <section className="devices-section">
           <h3>🏠 Cet Appareil</h3>
           <div className="device-card local">
-            <div className="device-icon">
-              {getOsIcon(localDevice.os)}
-            </div>
+            <div className="device-icon">{getOsIcon(localDevice.os)}</div>
             <div className="device-info">
               <div className="device-name">{localDevice.device_name}</div>
               <div className="device-id">{localDevice.device_id}</div>
@@ -160,21 +158,23 @@ const DevicesView: React.FC = () => {
         ) : (
           <div className="devices-grid">
             {knownDevices
-              .filter((d) => d.device_id !== localDevice?.device_id)
-              .map((device) => (
+              .filter(d => d.device_id !== localDevice?.device_id)
+              .map(device => (
                 <div
                   key={device.device_id}
                   className={`device-card ${device.trusted ? 'trusted' : 'untrusted'}`}
                 >
                   <div className="device-header">
-                    <div className="device-icon">
-                      {getOsIcon(device.os)}
-                    </div>
+                    <div className="device-icon">{getOsIcon(device.os)}</div>
                     <div className="device-status">
                       {device.trusted ? (
-                        <span className="status-trusted" title="Appareil de confiance">✓</span>
+                        <span className="status-trusted" title="Appareil de confiance">
+                          ✓
+                        </span>
                       ) : (
-                        <span className="status-untrusted" title="Non vérifié">?</span>
+                        <span className="status-untrusted" title="Non vérifié">
+                          ?
+                        </span>
                       )}
                     </div>
                   </div>

@@ -19,11 +19,30 @@ const stepIcons: Record<string, string> = {
   enrichment: '✨',
 };
 
-const statusColors: Record<OmegaStep['status'], { bg: string; text: string; border: string }> = {
-  pending: { bg: 'var(--bg-surface, #181c21)', text: 'var(--text-muted, rgba(255,255,255,0.60))', border: 'var(--border, rgba(196,196,196,0.12))' },
-  running: { bg: 'rgba(114, 123, 129, 0.15)', text: 'var(--text-info, #727b81)', border: 'var(--border-info, #727b81)' },
-  complete: { bg: 'rgba(147, 179, 153, 0.15)', text: 'var(--text-success, #93b399)', border: 'var(--border-success, #93b399)' },
-  error: { bg: 'rgba(139, 95, 95, 0.15)', text: 'var(--text-danger, #8b5f5f)', border: 'var(--border-danger, #8b5f5f)' },
+const statusColors: Record<
+  OmegaStep['status'],
+  { bg: string; text: string; border: string }
+> = {
+  pending: {
+    bg: 'var(--bg-surface, #181c21)',
+    text: 'var(--text-muted, rgba(255,255,255,0.60))',
+    border: 'var(--border, rgba(196,196,196,0.12))',
+  },
+  running: {
+    bg: 'rgba(114, 123, 129, 0.15)',
+    text: 'var(--text-info, #727b81)',
+    border: 'var(--border-info, #727b81)',
+  },
+  complete: {
+    bg: 'rgba(147, 179, 153, 0.15)',
+    text: 'var(--text-success, #93b399)',
+    border: 'var(--border-success, #93b399)',
+  },
+  error: {
+    bg: 'rgba(139, 95, 95, 0.15)',
+    text: 'var(--text-danger, #8b5f5f)',
+    border: 'var(--border-danger, #8b5f5f)',
+  },
 };
 
 /**
@@ -33,7 +52,7 @@ export function OmegaPipeline() {
   const { currentPipeline, pipelineHistory } = useDevToolsStore();
 
   const totalDuration = currentPipeline
-    .filter((s) => s.duration)
+    .filter(s => s.duration)
     .reduce((sum, s) => sum + (s.duration || 0), 0);
 
   return (
@@ -97,9 +116,10 @@ export function OmegaPipeline() {
                     <div
                       className="absolute left-6 top-12 w-0.5 h-8 -mt-2"
                       style={{
-                        background: step.status === 'complete'
-                          ? 'var(--bg-success, #93b399)'
-                          : 'var(--border, rgba(196,196,196,0.12))',
+                        background:
+                          step.status === 'complete'
+                            ? 'var(--bg-success, #93b399)'
+                            : 'var(--border, rgba(196,196,196,0.12))',
                       }}
                     />
                   )}
@@ -107,11 +127,13 @@ export function OmegaPipeline() {
                   {/* Step Card */}
                   <div
                     className={`p-4 rounded-lg border transition-all duration-300 ${isActive ? 'ring-2' : ''}`}
-                    style={{
-                      background: colors.bg,
-                      borderColor: colors.border,
-                      '--tw-ring-color': isActive ? colors.border : undefined,
-                    } as React.CSSProperties}
+                    style={
+                      {
+                        background: colors.bg,
+                        borderColor: colors.border,
+                        '--tw-ring-color': isActive ? colors.border : undefined,
+                      } as React.CSSProperties
+                    }
                   >
                     <div className="flex items-start gap-4">
                       {/* Icon */}
@@ -151,7 +173,9 @@ export function OmegaPipeline() {
                           <div className="flex items-center gap-2 mb-2">
                             <span
                               className="text-xs"
-                              style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+                              style={{
+                                color: 'var(--text-muted, rgba(255,255,255,0.60))',
+                              }}
                             >
                               Duration:
                             </span>
@@ -162,7 +186,8 @@ export function OmegaPipeline() {
                               {step.duration}ms
                             </span>
                             {step.duration > 0 && (
-                              <div className="flex-1 h-1.5 rounded-full overflow-hidden"
+                              <div
+                                className="flex-1 h-1.5 rounded-full overflow-hidden"
                                 style={{ background: 'var(--bg-surface, #181c21)' }}
                               >
                                 <div
@@ -182,12 +207,14 @@ export function OmegaPipeline() {
                           <div className="flex items-center gap-2 mb-2">
                             <span
                               className="text-xs"
-                              style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+                              style={{
+                                color: 'var(--text-muted, rgba(255,255,255,0.60))',
+                              }}
                             >
                               Engines:
                             </span>
                             <div className="flex flex-wrap gap-1">
-                              {step.engines.map((engine) => (
+                              {step.engines.map(engine => (
                                 <span
                                   key={engine}
                                   className="text-xs px-2 py-0.5 rounded-full"
@@ -243,9 +270,9 @@ export function OmegaPipeline() {
           >
             {pipelineHistory.slice(0, 5).map((pipeline, historyIndex) => {
               const duration = pipeline
-                .filter((s) => s.duration)
+                .filter(s => s.duration)
                 .reduce((sum, s) => sum + (s.duration || 0), 0);
-              const hasErrors = pipeline.some((s) => s.status === 'error');
+              const hasErrors = pipeline.some(s => s.status === 'error');
 
               return (
                 <div
@@ -262,7 +289,7 @@ export function OmegaPipeline() {
                     #{pipelineHistory.length - historyIndex}
                   </span>
                   <div className="flex-1 flex items-center gap-2">
-                    {pipeline.map((step) => (
+                    {pipeline.map(step => (
                       <div
                         key={step.id}
                         className="w-8 h-2 rounded-full"

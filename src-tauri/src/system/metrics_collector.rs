@@ -55,7 +55,8 @@ impl MetricsCollector {
 
     /// Ajoute une latence au cumul
     pub fn add_latency(&self, latency_ms: u64) {
-        self.cumulative_latency.fetch_add(latency_ms, Ordering::Relaxed);
+        self.cumulative_latency
+            .fetch_add(latency_ms, Ordering::Relaxed);
     }
 
     /// Retourne la latence moyenne

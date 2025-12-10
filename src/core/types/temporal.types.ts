@@ -133,7 +133,12 @@ export interface AgendaEvent {
  */
 export interface TemporalPattern {
   id: string;
-  type: 'productivity_peak' | 'energy_dip' | 'overload' | 'underutilization' | 'optimal_rhythm';
+  type:
+    | 'productivity_peak'
+    | 'energy_dip'
+    | 'overload'
+    | 'underutilization'
+    | 'optimal_rhythm';
   timeRange: {
     start: string; // "HH:mm"
     end: string; // "HH:mm"

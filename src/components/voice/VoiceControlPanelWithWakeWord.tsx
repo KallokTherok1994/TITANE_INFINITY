@@ -31,10 +31,9 @@ interface VoiceControlPanelWithWakeWordProps {
  *   COMPOSANT PRINCIPAL
  * ═══════════════════════════════════════════════════════════════════
  */
-export const VoiceControlPanelWithWakeWord: React.FC<VoiceControlPanelWithWakeWordProps> = ({
-  className,
-}) => {
-
+export const VoiceControlPanelWithWakeWord: React.FC<
+  VoiceControlPanelWithWakeWordProps
+> = ({ className }) => {
   // ═══ STATE ═══
 
   const [mode, setMode] = useState<'push_to_talk' | 'wake_word'>('push_to_talk');
@@ -50,7 +49,7 @@ export const VoiceControlPanelWithWakeWord: React.FC<VoiceControlPanelWithWakeWo
       sensitivity: 0.5,
     },
     {
-      onWakeDetected: (event) => {
+      onWakeDetected: event => {
         console.log('[VoiceControlPanel] 🎯 Wake detected:', event.mode);
       },
 
@@ -61,7 +60,7 @@ export const VoiceControlPanelWithWakeWord: React.FC<VoiceControlPanelWithWakeWo
         voiceEngine.completeTurnWithText(text);
       },
 
-      onAttentionChange: (state) => {
+      onAttentionChange: state => {
         console.log('[VoiceControlPanel] 🧠 Attention:', state);
       },
     }
@@ -121,12 +120,17 @@ export const VoiceControlPanelWithWakeWord: React.FC<VoiceControlPanelWithWakeWo
 
   // ═══ RENDER ═══
 
-  const isProcessing = voiceEngine.status.state === 'processing' || voiceEngine.status.state === 'speaking';
+  const isProcessing =
+    voiceEngine.status.state === 'processing' || voiceEngine.status.state === 'speaking';
   const canRecord = voiceEngine.status.isMicAvailable && !isProcessing;
 
   return (
-    <div className={cn('flex flex-col items-center gap-4 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg', className)}>
-
+    <div
+      className={cn(
+        'flex flex-col items-center gap-4 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg',
+        className
+      )}
+    >
       {/* Mode Toggle */}
       <div className="flex items-center gap-2">
         <button
@@ -179,8 +183,8 @@ export const VoiceControlPanelWithWakeWord: React.FC<VoiceControlPanelWithWakeWo
               voiceEngine.status.isRecording
                 ? 'bg-red-500 shadow-[0_0_30px_rgba(239,68,68,0.8)] animate-pulse'
                 : canRecord
-                ? 'bg-blue-500 hover:bg-blue-600 shadow-lg'
-                : 'bg-gray-400 cursor-not-allowed'
+                  ? 'bg-blue-500 hover:bg-blue-600 shadow-lg'
+                  : 'bg-gray-400 cursor-not-allowed'
             )}
           >
             {voiceEngine.status.isRecording ? '⏸️' : '🎤'}
@@ -195,9 +199,8 @@ export const VoiceControlPanelWithWakeWord: React.FC<VoiceControlPanelWithWakeWo
       {/* Status Text */}
       <div className="text-center space-y-1">
         <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
-          {voiceEngine.status.state === 'idle' && (
-            mode === 'wake_word' ? 'Dites "Titane" pour m\'activer' : 'Prêt à écouter'
-          )}
+          {voiceEngine.status.state === 'idle' &&
+            (mode === 'wake_word' ? 'Dites "Titane" pour m\'activer' : 'Prêt à écouter')}
           {voiceEngine.status.state === 'listening' && 'Écoute en cours...'}
           {voiceEngine.status.state === 'processing' && 'Traitement...'}
           {voiceEngine.status.state === 'speaking' && 'Je réponds...'}

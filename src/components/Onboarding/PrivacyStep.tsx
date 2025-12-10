@@ -57,8 +57,8 @@ export const PrivacyStep: React.FC = () => {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
       >
-        TITANE∞ a été conçu avec la confidentialité comme priorité absolue.
-        Voici nos garanties :
+        TITANE∞ a été conçu avec la confidentialité comme priorité absolue. Voici nos
+        garanties :
       </motion.p>
 
       <div className="privacy-guarantees">
@@ -66,10 +66,7 @@ export const PrivacyStep: React.FC = () => {
           icon="✅"
           text="Toutes vos conversations sont stockées localement sur votre machine"
         />
-        <Guarantee
-          icon="✅"
-          text="Aucune donnée n'est envoyée à des serveurs externes"
-        />
+        <Guarantee icon="✅" text="Aucune donnée n'est envoyée à des serveurs externes" />
         <Guarantee
           icon="✅"
           text="Vous gardez le contrôle total de vos données et pouvez les exporter"
@@ -97,7 +94,9 @@ export const PrivacyStep: React.FC = () => {
         <div className="badge-icon">🛡️</div>
         <div className="badge-text">
           <div className="badge-title">100% Privé</div>
-          <div className="badge-subtitle">Zero tracking · Zero cloud · Zero compromis</div>
+          <div className="badge-subtitle">
+            Zero tracking · Zero cloud · Zero compromis
+          </div>
         </div>
       </motion.div>
 
@@ -108,8 +107,8 @@ export const PrivacyStep: React.FC = () => {
         transition={{ delay: 0.6 }}
       >
         <p>
-          💡 <strong>Note :</strong> Les modèles IA tournent directement sur votre machine.
-          Aucune connexion Internet n'est requise pour utiliser TITANE∞.
+          💡 <strong>Note :</strong> Les modèles IA tournent directement sur votre
+          machine. Aucune connexion Internet n'est requise pour utiliser TITANE∞.
         </p>
       </motion.div>
     </div>

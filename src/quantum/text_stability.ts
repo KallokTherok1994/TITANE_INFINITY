@@ -199,9 +199,11 @@ export class TextStabilityEngine {
    */
   private isMonospace(element: HTMLElement): boolean {
     const computed = getComputedStyle(element);
-    return computed.fontFamily.toLowerCase().includes('mono') ||
-           element.tagName === 'CODE' ||
-           element.tagName === 'PRE';
+    return (
+      computed.fontFamily.toLowerCase().includes('mono') ||
+      element.tagName === 'CODE' ||
+      element.tagName === 'PRE'
+    );
   }
 
   /**
@@ -250,8 +252,12 @@ export class TextStabilityEngine {
     let score = 0;
 
     // Fonts
-    score += this.fontLoadStatus === 'loaded' ? 0.4 :
-             this.fontLoadStatus === 'loading' ? 0.2 : 0.1;
+    score +=
+      this.fontLoadStatus === 'loaded'
+        ? 0.4
+        : this.fontLoadStatus === 'loading'
+          ? 0.2
+          : 0.1;
 
     // Stabilisation
     const stabilizationRatio = Math.min(1, this.stabilizedElements.size / 20);

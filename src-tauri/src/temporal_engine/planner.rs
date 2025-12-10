@@ -3,9 +3,9 @@
 //! Super Prompt #18 — Planification intelligente et gestion des tâches
 //! ═══════════════════════════════════════════════════════════════════════════════
 
+use super::time_model::TemporalContext;
 use serde::{Deserialize, Serialize};
 use tokio::sync::RwLock;
-use super::time_model::TemporalContext;
 
 /// Horizon de planification
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -144,10 +144,21 @@ impl Task {
             let remaining = due.saturating_sub(context.now.timestamp_ms) as f32;
             let horizon_ms = self.horizon.duration_ms() as f32;
             let ratio = remaining / horizon_ms;
-            if ratio < 0.1 { 30.0 }      // Très urgent
-            else if ratio < 0.25 { 20.0 } // Urgent
-            else if ratio < 0.5 { 10.0 }  // Modéré
-            else { 0.0 }
+            if ratio < 0.1 {
+                30.0
+            }
+            // Très urgent
+            else if ratio < 0.25 {
+                20.0
+            }
+            // Urgent
+            else if ratio < 0.5 {
+                10.0
+            }
+            // Modéré
+            else {
+                0.0
+            }
         } else {
             0.0
         };
@@ -265,27 +276,31 @@ impl TemporalPlanner {
     pub async fn update(&self, context: &TemporalContext) -> UpdateResult {
         let tasks = self.tasks.read().await;
 
-        let pending: Vec<_> = tasks.iter()
+        let pending: Vec<_> = tasks
+            .iter()
             .filter(|t| t.status == TaskStatus::Pending)
             .collect();
 
-        let due: Vec<_> = pending.iter()
+        let due: Vec<_> = pending
+            .iter()
             .filter(|t| t.is_due(context))
             .cloned()
             .cloned()
             .collect();
 
-        let overdue: Vec<_> = tasks.iter()
+        let overdue: Vec<_> = tasks
+            .iter()
             .filter(|t| t.is_overdue(context))
             .cloned()
             .collect();
 
         // Compter les tâches complétées aujourd'hui
         let day_start = context.now.timestamp_ms - (context.now.timestamp_ms % 86400000);
-        let completed_today = tasks.iter()
+        let completed_today = tasks
+            .iter()
             .filter(|t| {
-                t.status == TaskStatus::Completed &&
-                t.completed_at.map_or(false, |c| c >= day_start)
+                t.status == TaskStatus::Completed
+                    && t.completed_at.map_or(false, |c| c >= day_start)
             })
             .count();
 
@@ -344,7 +359,10 @@ impl TemporalPlanner {
             // Gérer la récurrence
             if status == TaskStatus::Completed && old_status != TaskStatus::Completed {
                 if let Some(recurrence) = &task.recurrence {
-                    if recurrence.end_after.map_or(true, |max| recurrence.occurrences < max) {
+                    if recurrence
+                        .end_after
+                        .map_or(true, |max| recurrence.occurrences < max)
+                    {
                         // Créer la prochaine occurrence
                         let next_task = self.create_recurring_task(task, recurrence);
                         drop(tasks);
@@ -370,7 +388,9 @@ impl TemporalPlanner {
             RecurrencePattern::Custom(ms) => ms,
         };
 
-        let new_due = original.due_at.map(|d| d + interval_ms * recurrence.interval as u64);
+        let new_due = original
+            .due_at
+            .map(|d| d + interval_ms * recurrence.interval as u64);
 
         Task {
             id: format!("{}_r{}", original.id, recurrence.occurrences + 1),
@@ -404,11 +424,9 @@ impl TemporalPlanner {
         let tasks = self.tasks.read().await;
         let now = Self::now();
 
-        tasks.iter()
-            .filter(|t| {
-                t.status == TaskStatus::Pending &&
-                t.due_at.map_or(false, |d| now >= d)
-            })
+        tasks
+            .iter()
+            .filter(|t| t.status == TaskStatus::Pending && t.due_at.map_or(false, |d| now >= d))
             .cloned()
             .collect()
     }
@@ -416,7 +434,8 @@ impl TemporalPlanner {
     /// Récupère les tâches par horizon
     pub async fn tasks_by_horizon(&self, horizon: PlanningHorizon) -> Vec<Task> {
         let tasks = self.tasks.read().await;
-        tasks.iter()
+        tasks
+            .iter()
             .filter(|t| t.horizon == horizon && t.status != TaskStatus::Completed)
             .cloned()
             .collect()
@@ -425,7 +444,8 @@ impl TemporalPlanner {
     /// Récupère les tâches triées par priorité
     pub async fn prioritized_tasks(&self, context: &TemporalContext) -> Vec<Task> {
         let tasks = self.tasks.read().await;
-        let mut pending: Vec<_> = tasks.iter()
+        let mut pending: Vec<_> = tasks
+            .iter()
             .filter(|t| t.status == TaskStatus::Pending)
             .cloned()
             .collect();
@@ -433,7 +453,9 @@ impl TemporalPlanner {
         pending.sort_by(|a, b| {
             let score_a = a.priority_score(context);
             let score_b = b.priority_score(context);
-            score_b.partial_cmp(&score_a).unwrap_or(std::cmp::Ordering::Equal)
+            score_b
+                .partial_cmp(&score_a)
+                .unwrap_or(std::cmp::Ordering::Equal)
         });
 
         pending
@@ -461,11 +483,23 @@ impl TemporalPlanner {
 
         PlannerStats {
             total_tasks: tasks.len(),
-            pending_tasks: tasks.iter().filter(|t| t.status == TaskStatus::Pending).count(),
-            in_progress_tasks: tasks.iter().filter(|t| t.status == TaskStatus::InProgress).count(),
-            completed_tasks: tasks.iter().filter(|t| t.status == TaskStatus::Completed).count(),
+            pending_tasks: tasks
+                .iter()
+                .filter(|t| t.status == TaskStatus::Pending)
+                .count(),
+            in_progress_tasks: tasks
+                .iter()
+                .filter(|t| t.status == TaskStatus::InProgress)
+                .count(),
+            completed_tasks: tasks
+                .iter()
+                .filter(|t| t.status == TaskStatus::Completed)
+                .count(),
             total_plans: plans.len(),
-            active_plans: plans.iter().filter(|p| p.status == PlanStatus::Active).count(),
+            active_plans: plans
+                .iter()
+                .filter(|p| p.status == PlanStatus::Active)
+                .count(),
             tasks_created: stats.tasks_created,
             tasks_completed: stats.tasks_completed,
         }

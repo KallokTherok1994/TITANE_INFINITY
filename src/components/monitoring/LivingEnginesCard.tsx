@@ -36,26 +36,35 @@ export const LivingEnginesCard: React.FC<LivingEnginesCardProps> = ({ state }) =
     );
   }
 
-  const { persona, glow, motion, depth, sound, presenceLevel, cognitiveLoad, rhythmScore, holoActive, particleCount } = state;
+  const {
+    persona,
+    glow,
+    motion,
+    depth,
+    sound,
+    presenceLevel,
+    cognitiveLoad,
+    rhythmScore,
+    holoActive,
+    particleCount,
+  } = state;
 
   return (
     <div
       className="living-engines-card"
-      style={{
-        '--glow-mult': glow,
-        '--motion-mult': motion,
-        '--depth-mult': depth,
-        opacity: presenceLevel > 0 ? 0.9 + presenceLevel * 0.1 : 0.9,
-      } as React.CSSProperties}
+      style={
+        {
+          '--glow-mult': glow,
+          '--motion-mult': motion,
+          '--depth-mult': depth,
+          opacity: presenceLevel > 0 ? 0.9 + presenceLevel * 0.1 : 0.9,
+        } as React.CSSProperties
+      }
     >
       {/* Header */}
       <div className="living-engines-card__header">
-        <h3 className="living-engines-card__title">
-          🌟 Living Engines v21-v24
-        </h3>
-        <span className="living-engines-card__badge">
-          {state.systemState}
-        </span>
+        <h3 className="living-engines-card__title">🌟 Living Engines v21-v24</h3>
+        <span className="living-engines-card__badge">{state.systemState}</span>
       </div>
 
       {/* Persona Section */}
@@ -83,9 +92,7 @@ export const LivingEnginesCard: React.FC<LivingEnginesCardProps> = ({ state }) =
             </div>
             <div className="living-metric">
               <span className="living-metric__label">Posture</span>
-              <span className="living-metric__value">
-                {persona.behavior.posture}
-              </span>
+              <span className="living-metric__value">{persona.behavior.posture}</span>
             </div>
           </div>
         </div>
@@ -175,7 +182,9 @@ export const LivingEnginesCard: React.FC<LivingEnginesCardProps> = ({ state }) =
         <div className="living-engines-metrics">
           <div className="living-metric">
             <span className="living-metric__label">Statut</span>
-            <span className={`living-metric__value ${holoActive ? 'living-metric__value--active' : ''}`}>
+            <span
+              className={`living-metric__value ${holoActive ? 'living-metric__value--active' : ''}`}
+            >
               {holoActive ? 'Actif' : 'Inactif'}
             </span>
           </div>

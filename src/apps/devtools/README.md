@@ -19,6 +19,7 @@ function App() {
 ### Navigation entre Sections
 
 7 sections disponibles:
+
 - **Dashboard**: Vue d'ensemble système (health, metrics, engines, logs)
 - **Metrics**: Monitoring performance avec time ranges (30s→1h)
 - **Logs**: Streaming temps réel avec filtres (level/engine/search)
@@ -71,14 +72,14 @@ app.emit_all("error-raised", json!({
 
 ### Events Supportés
 
-| Event                    | Payload Type              | Description                  |
-|--------------------------|---------------------------|------------------------------|
-| `engine-status-update`   | `Partial<Engine>`         | Mise à jour statut engine    |
-| `metrics-update`         | `{ id: string, value: number }` | Nouvelle valeur métrique |
-| `log-line`               | `LogEntry`                | Nouvelle ligne log           |
-| `error-raised`           | `ErrorEntry`              | Nouvelle erreur système      |
-| `memory-update`          | `MemoryNode[]`            | Arbre mémoire mis à jour     |
-| `omega-pipeline-update`  | `OmegaStep[]`             | Étapes pipeline Omega        |
+| Event                   | Payload Type                    | Description               |
+| ----------------------- | ------------------------------- | ------------------------- |
+| `engine-status-update`  | `Partial<Engine>`               | Mise à jour statut engine |
+| `metrics-update`        | `{ id: string, value: number }` | Nouvelle valeur métrique  |
+| `log-line`              | `LogEntry`                      | Nouvelle ligne log        |
+| `error-raised`          | `ErrorEntry`                    | Nouvelle erreur système   |
+| `memory-update`         | `MemoryNode[]`                  | Arbre mémoire mis à jour  |
+| `omega-pipeline-update` | `OmegaStep[]`                   | Étapes pipeline Omega     |
 
 ## 🎪 Mode Démo (sans Backend)
 
@@ -89,8 +90,8 @@ import { DevToolsApp, useMockActivity } from '@/apps/devtools';
 
 function App() {
   // Activer simulation en dev uniquement
-  useMockActivity(import.meta.env.DEV, 2000);  // Événement toutes les 2s
-  
+  useMockActivity(import.meta.env.DEV, 2000); // Événement toutes les 2s
+
   return <DevToolsApp />;
 }
 ```
@@ -101,7 +102,7 @@ function App() {
 import { startMockActivity, sendLogLine } from '@/apps/devtools';
 
 // Démarrer simulation
-const stopSimulation = startMockActivity(1000);  // 1s interval
+const stopSimulation = startMockActivity(1000); // 1s interval
 
 // Envoyer event manuel
 await sendLogLine('info', 'Custom log message', 'test-engine');
@@ -118,20 +119,24 @@ stopSimulation();
 import { useDevToolsStore } from '@/apps/devtools';
 
 function CustomComponent() {
-  const engines = useDevToolsStore((state) => state.engines);
-  const logs = useDevToolsStore((state) => state.logs);
-  const addLog = useDevToolsStore((state) => state.addLog);
-  
+  const engines = useDevToolsStore(state => state.engines);
+  const logs = useDevToolsStore(state => state.logs);
+  const addLog = useDevToolsStore(state => state.addLog);
+
   return (
     <div>
       <p>Active Engines: {engines.filter(e => e.status === 'running').length}</p>
-      <button onClick={() => addLog({
-        id: 'custom-log',
-        level: 'info',
-        message: 'Custom log',
-        source: 'ui',
-        timestamp: new Date().toISOString()
-      })}>
+      <button
+        onClick={() =>
+          addLog({
+            id: 'custom-log',
+            level: 'info',
+            message: 'Custom log',
+            source: 'ui',
+            timestamp: new Date().toISOString(),
+          })
+        }
+      >
         Add Log
       </button>
     </div>
@@ -154,14 +159,14 @@ function CustomDashboard() {
         trend="up"
         history={[30, 35, 40, 42.5]}
       />
-      
+
       <EngineCard
         engine={{
           id: 'helios',
           name: 'Helios',
           status: 'running',
           cpuUsage: 45,
-          memoryUsage: 128
+          memoryUsage: 128,
         }}
       />
     </div>
@@ -177,9 +182,9 @@ import { useLogStream, useErrorTracking } from '@/apps/devtools';
 function LogMonitor() {
   // Écouter uniquement les logs
   useLogStream();
-  
-  const logs = useDevToolsStore((state) => state.logs);
-  
+
+  const logs = useDevToolsStore(state => state.logs);
+
   return (
     <div>
       {logs.map(log => (
@@ -192,9 +197,9 @@ function LogMonitor() {
 function ErrorMonitor() {
   // Écouter uniquement les erreurs
   useErrorTracking();
-  
-  const errors = useDevToolsStore((state) => state.errors);
-  
+
+  const errors = useDevToolsStore(state => state.errors);
+
   return (
     <div>
       <h2>Errors: {errors.filter(e => !e.resolved).length}</h2>
@@ -274,6 +279,7 @@ import type {
 ## 🎯 Exemples Complets
 
 Voir:
+
 - `src/apps/devtools/DevToolsApp.tsx` → Shell complet
 - `src/apps/devtools/sections/` → 7 sections implémentées
 - `src/apps/devtools/utils/mockEvents.ts` → Simulation complète

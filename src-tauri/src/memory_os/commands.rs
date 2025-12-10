@@ -56,7 +56,7 @@ pub async fn memory_get_by_tier(
     state: State<'_, Arc<RwLock<MemoryOSState>>>,
 ) -> Result<Vec<crate::core::modules::unified_memory::MemoryItem>, String> {
     let state = state.read().await;
-    
+
     // For now, use recall with tier-specific query
     let query = format!("tier:{}", tier);
     let all_memories = state
@@ -64,22 +64,28 @@ pub async fn memory_get_by_tier(
         .recall(&query, limit)
         .await
         .map_err(|e| e.to_string())?;
-    
+
     // Filter by tier
     let filtered: Vec<_> = all_memories
         .into_iter()
         .filter(|m| match tier.as_str() {
-            "STM" => matches!(m.tier, crate::core::modules::unified_memory::MemoryTier::ShortTerm),
+            "STM" => matches!(
+                m.tier,
+                crate::core::modules::unified_memory::MemoryTier::ShortTerm
+            ),
             "MTM" => matches!(
                 m.tier,
                 crate::core::modules::unified_memory::MemoryTier::MediumTerm
             ),
-            "LTM" => matches!(m.tier, crate::core::modules::unified_memory::MemoryTier::LongTerm),
+            "LTM" => matches!(
+                m.tier,
+                crate::core::modules::unified_memory::MemoryTier::LongTerm
+            ),
             _ => false,
         })
         .take(limit)
         .collect();
-    
+
     Ok(filtered)
 }
 
@@ -127,7 +133,7 @@ pub async fn memory_os_store_simple(
     state: State<'_, Arc<RwLock<MemoryOSState>>>,
 ) -> Result<String, String> {
     let state = state.read().await;
-    
+
     let mem_type = match memory_type.as_str() {
         "Conversation" => crate::core::modules::unified_memory::MemoryType::Conversation,
         "Decision" => crate::core::modules::unified_memory::MemoryType::Decision,
@@ -135,7 +141,7 @@ pub async fn memory_os_store_simple(
         "Project" => crate::core::modules::unified_memory::MemoryType::Project,
         _ => crate::core::modules::unified_memory::MemoryType::Conversation,
     };
-    
+
     state
         .bridge
         .store(content, mem_type, importance, tags)

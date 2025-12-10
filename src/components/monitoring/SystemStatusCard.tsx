@@ -35,47 +35,47 @@ const statusConfig = {
     label: 'Stable',
     color: 'emeraude',
     icon: '✓',
-    glow: 'var(--titane-emeraude-glow)'
+    glow: 'var(--titane-emeraude-glow)',
   },
   attention: {
     label: 'Attention',
     color: 'saphir',
     icon: '◉',
-    glow: 'var(--titane-saphir-glow)'
+    glow: 'var(--titane-saphir-glow)',
   },
   warning: {
     label: 'Surcharge',
     color: 'helios',
     icon: '⚠',
-    glow: 'var(--helios-glow)'
+    glow: 'var(--helios-glow)',
   },
   critical: {
     label: 'Critique',
     color: 'rubis',
     icon: '✕',
-    glow: 'var(--titane-rubis-glow)'
+    glow: 'var(--titane-rubis-glow)',
   },
   unknown: {
     label: 'Inconnu',
     color: 'diamant',
     icon: '?',
-    glow: 'rgba(255, 255, 255, 0.1)'
-  }
+    glow: 'rgba(255, 255, 255, 0.1)',
+  },
 };
 
 export const SystemStatusCard: React.FC<SystemStatusCardProps> = ({
   status,
   value,
-  subtitle = "État du système",
+  subtitle = 'État du système',
   lastUpdate,
-  metrics
+  metrics,
 }) => {
   const config = statusConfig[status];
 
   return (
     <div className={`system-status-card system-status-card--${config.color}`}>
       {/* Glow Background */}
-      <div 
+      <div
         className="system-status-card__glow"
         style={{ '--glow-color': config.glow } as React.CSSProperties}
       />
@@ -90,17 +90,15 @@ export const SystemStatusCard: React.FC<SystemStatusCardProps> = ({
       </div>
 
       {/* Status Badge */}
-      <div className={`system-status-card__badge system-status-card__badge--${config.color}`}>
+      <div
+        className={`system-status-card__badge system-status-card__badge--${config.color}`}
+      >
         <span className="system-status-card__badge-pulse" />
         <span className="system-status-card__badge-label">{config.label}</span>
       </div>
 
       {/* Value Display */}
-      {value !== undefined && (
-        <div className="system-status-card__value">
-          {value}
-        </div>
-      )}
+      {value !== undefined && <div className="system-status-card__value">{value}</div>}
 
       {/* Metrics */}
       {metrics && (

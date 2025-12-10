@@ -8,13 +8,13 @@ use std::collections::{HashMap, HashSet};
 /// Les 7 couches de l'Anthologie
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, Hash)]
 pub enum AnthologyLayer {
-    LiteraryFragments,      // Couche 1: Fragments littéraires
-    LexicalFields,          // Couche 2: Champs lexicaux dominants
-    StylisticSignatures,    // Couche 3: Signatures stylistiques
-    MetaphorsImages,        // Couche 4: Métaphores & images
-    FoundingThemes,         // Couche 5: Thèmes fondateurs
-    ModelsMethodologies,    // Couche 6: Modèles & méthodologies
-    LiteraryDNA,            // Couche 7: ADN littéraire synthétique
+    LiteraryFragments,   // Couche 1: Fragments littéraires
+    LexicalFields,       // Couche 2: Champs lexicaux dominants
+    StylisticSignatures, // Couche 3: Signatures stylistiques
+    MetaphorsImages,     // Couche 4: Métaphores & images
+    FoundingThemes,      // Couche 5: Thèmes fondateurs
+    ModelsMethodologies, // Couche 6: Modèles & méthodologies
+    LiteraryDNA,         // Couche 7: ADN littéraire synthétique
 }
 
 /// Tag thématique/émotionnel/structurel
@@ -27,9 +27,9 @@ pub struct AnthologyTag {
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq)]
 pub enum TagCategory {
-    Thematic,     // thématique
-    Emotional,    // émotionnel
-    Structural,   // structurel
+    Thematic,   // thématique
+    Emotional,  // émotionnel
+    Structural, // structurel
 }
 
 /// Extrait littéraire dans l'anthologie
@@ -37,21 +37,21 @@ pub enum TagCategory {
 pub struct LiteraryExcerpt {
     pub id: String,
     pub text: String,
-    pub source: String,          // livre, post, etc.
+    pub source: String, // livre, post, etc.
     pub layers: Vec<AnthologyLayer>,
     pub tags: Vec<String>,
-    pub stylistic_score: f32,    // 0-1: pertinence stylistique
+    pub stylistic_score: f32, // 0-1: pertinence stylistique
     pub added_date: String,
 }
 
 /// Analyse stylistique d'un texte
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct StylisticAnalysis {
-    pub vocabulary: Vec<String>,       // mots clés
+    pub vocabulary: Vec<String>, // mots clés
     pub rhythm: RhythmProfile,
-    pub construction: Vec<String>,     // types de constructions
-    pub images: Vec<String>,           // images/métaphores détectées
-    pub tone: Vec<String>,             // tons détectés
+    pub construction: Vec<String>, // types de constructions
+    pub images: Vec<String>,       // images/métaphores détectées
+    pub tone: Vec<String>,         // tons détectés
 }
 
 /// Profil de rythme
@@ -59,8 +59,8 @@ pub struct StylisticAnalysis {
 pub struct RhythmProfile {
     pub avg_sentence_length: f32,
     pub sentence_length_variance: f32,
-    pub has_visual_breaks: bool,      // présence de respirations visuelles
-    pub parallelism_detected: bool,   // structures parallèles
+    pub has_visual_breaks: bool,    // présence de respirations visuelles
+    pub parallelism_detected: bool, // structures parallèles
 }
 
 /// ADN littéraire Kevin Thibault (évolutif)
@@ -132,18 +132,18 @@ pub struct AnthologyIntegrationRequest {
 /// Réponse d'intégration
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AnthologyIntegrationResponse {
-    pub stylistic_summary: String,           // 3-6 lignes
-    pub selected_excerpts: Vec<String>,      // 2-5 extraits
-    pub tags: Vec<String>,                   // 5-10 tags
+    pub stylistic_summary: String,      // 3-6 lignes
+    pub selected_excerpts: Vec<String>, // 2-5 extraits
+    pub tags: Vec<String>,              // 5-10 tags
     pub layer_assignments: Vec<AnthologyLayer>,
-    pub dna_evolution_summary: String,       // synthèse évolution
+    pub dna_evolution_summary: String, // synthèse évolution
 }
 
 /// Moteur d'Anthologie Interne
 pub struct AnthologyEngine {
     // Collections par couche
     literary_fragments: Vec<LiteraryExcerpt>,
-    lexical_fields: HashMap<String, usize>,      // mot → fréquence
+    lexical_fields: HashMap<String, usize>, // mot → fréquence
     stylistic_signatures: Vec<String>,
     metaphors_images: Vec<String>,
     founding_themes: HashSet<String>,
@@ -193,7 +193,10 @@ impl AnthologyEngine {
     }
 
     /// Intégrer un nouveau texte dans l'anthologie
-    pub fn integrate_text(&mut self, request: AnthologyIntegrationRequest) -> AnthologyIntegrationResponse {
+    pub fn integrate_text(
+        &mut self,
+        request: AnthologyIntegrationRequest,
+    ) -> AnthologyIntegrationResponse {
         // 1. Extraction brute
         let excerpts = self.extract_remarkable_excerpts(&request.text);
 
@@ -228,7 +231,8 @@ impl AnthologyEngine {
 
         // Mettre à jour tags globaux
         for tag in &tags {
-            self.all_tags.entry(tag.clone())
+            self.all_tags
+                .entry(tag.clone())
                 .and_modify(|t| t.frequency += 1)
                 .or_insert(AnthologyTag {
                     name: tag.clone(),
@@ -248,7 +252,8 @@ impl AnthologyEngine {
 
     /// Extraire les passages remarquables
     fn extract_remarkable_excerpts(&self, text: &str) -> Vec<String> {
-        let sentences: Vec<&str> = text.split('.')
+        let sentences: Vec<&str> = text
+            .split('.')
             .map(|s| s.trim())
             .filter(|s| !s.is_empty())
             .collect();
@@ -273,24 +278,37 @@ impl AnthologyEngine {
     /// Vérifier valeur littéraire d'une phrase
     fn has_literary_value(&self, sentence: &str) -> bool {
         let literary_markers = [
-            "comme", "tel", "semblable",
-            "respire", "rythme", "espace", "vivant",
-            "clarté", "cohérence", "structure",
-            "où", "là où", "ce qui"
+            "comme",
+            "tel",
+            "semblable",
+            "respire",
+            "rythme",
+            "espace",
+            "vivant",
+            "clarté",
+            "cohérence",
+            "structure",
+            "où",
+            "là où",
+            "ce qui",
         ];
 
-        literary_markers.iter().any(|marker| sentence.contains(marker))
+        literary_markers
+            .iter()
+            .any(|marker| sentence.contains(marker))
     }
 
     /// Analyser le style d'un texte
     fn analyze_style(&self, text: &str) -> StylisticAnalysis {
-        let sentences: Vec<&str> = text.split('.')
+        let sentences: Vec<&str> = text
+            .split('.')
             .map(|s| s.trim())
             .filter(|s| !s.is_empty())
             .collect();
 
         // Calcul rythme
-        let sentence_lengths: Vec<usize> = sentences.iter()
+        let sentence_lengths: Vec<usize> = sentences
+            .iter()
             .map(|s| s.split_whitespace().count())
             .collect();
 
@@ -302,7 +320,8 @@ impl AnthologyEngine {
 
         let variance = if sentence_lengths.len() > 1 {
             let mean = avg_length;
-            let sum_sq_diff: f32 = sentence_lengths.iter()
+            let sum_sq_diff: f32 = sentence_lengths
+                .iter()
                 .map(|&len| (len as f32 - mean).powi(2))
                 .sum();
             (sum_sq_diff / sentence_lengths.len() as f32).sqrt()
@@ -340,13 +359,17 @@ impl AnthologyEngine {
 
     fn detect_parallelism(&self, text: &str) -> bool {
         // Détecter structures parallèles (heuristique simple)
-        text.matches("où").count() >= 2 ||
-        text.matches(". ").count() >= 3 && text.len() < 200
+        text.matches("où").count() >= 2 || text.matches(". ").count() >= 3 && text.len() < 200
     }
 
     fn extract_key_vocabulary(&self, text: &str) -> Vec<String> {
-        let words: Vec<String> = text.split_whitespace()
-            .map(|w| w.to_lowercase().trim_matches(|c: char| !c.is_alphabetic()).to_string())
+        let words: Vec<String> = text
+            .split_whitespace()
+            .map(|w| {
+                w.to_lowercase()
+                    .trim_matches(|c: char| !c.is_alphabetic())
+                    .to_string()
+            })
             .filter(|w| w.len() > 4) // mots significatifs
             .collect();
 
@@ -414,7 +437,12 @@ impl AnthologyEngine {
     }
 
     /// Générer tags pour un texte
-    fn generate_tags(&self, text: &str, analysis: &StylisticAnalysis, provided: Option<Vec<String>>) -> Vec<String> {
+    fn generate_tags(
+        &self,
+        text: &str,
+        analysis: &StylisticAnalysis,
+        provided: Option<Vec<String>>,
+    ) -> Vec<String> {
         let mut tags = HashSet::new();
 
         // Tags fournis
@@ -506,7 +534,10 @@ impl AnthologyEngine {
         );
 
         if !analysis.construction.is_empty() {
-            summary.push_str(&format!("Constructions: {}. ", analysis.construction.join(", ")));
+            summary.push_str(&format!(
+                "Constructions: {}. ",
+                analysis.construction.join(", ")
+            ));
         }
 
         if !analysis.images.is_empty() {
@@ -543,8 +574,7 @@ impl AnthologyEngine {
 
         format!(
             "ADN mis à jour vers {}. {} textes analysés. Nouveaux patterns intégrés.",
-            self.literary_dna.version,
-            self.literary_dna.total_texts_analyzed
+            self.literary_dna.version, self.literary_dna.total_texts_analyzed
         )
     }
 
@@ -560,8 +590,13 @@ impl AnthologyEngine {
 
     /// Mettre à jour champs lexicaux
     fn update_lexical_fields(&mut self, text: &str) {
-        let words: Vec<String> = text.split_whitespace()
-            .map(|w| w.to_lowercase().trim_matches(|c: char| !c.is_alphabetic()).to_string())
+        let words: Vec<String> = text
+            .split_whitespace()
+            .map(|w| {
+                w.to_lowercase()
+                    .trim_matches(|c: char| !c.is_alphabetic())
+                    .to_string()
+            })
             .filter(|w| w.len() > 4)
             .collect();
 
@@ -595,21 +630,25 @@ impl AnthologyEngine {
 
     /// Rechercher des extraits par tag
     pub fn search_by_tag(&self, tag: &str) -> Vec<&LiteraryExcerpt> {
-        self.literary_fragments.iter()
+        self.literary_fragments
+            .iter()
             .filter(|excerpt| excerpt.tags.contains(&tag.to_string()))
             .collect()
     }
 
     /// Rechercher des extraits par couche
     pub fn search_by_layer(&self, layer: AnthologyLayer) -> Vec<&LiteraryExcerpt> {
-        self.literary_fragments.iter()
+        self.literary_fragments
+            .iter()
             .filter(|excerpt| excerpt.layers.contains(&layer))
             .collect()
     }
 
     /// Obtenir le top N des champs lexicaux
     pub fn get_top_lexical_fields(&self, n: usize) -> Vec<(String, usize)> {
-        let mut fields: Vec<_> = self.lexical_fields.iter()
+        let mut fields: Vec<_> = self
+            .lexical_fields
+            .iter()
             .map(|(k, v)| (k.clone(), *v))
             .collect();
         fields.sort_by(|a, b| b.1.cmp(&a.1));
@@ -651,7 +690,8 @@ mod tests {
     fn test_text_integration() {
         let mut engine = AnthologyEngine::new();
         let request = AnthologyIntegrationRequest {
-            text: "TITANE n'est pas un outil. C'est un espace où la pensée peut respirer.".to_string(),
+            text: "TITANE n'est pas un outil. C'est un espace où la pensée peut respirer."
+                .to_string(),
             source: "Test".to_string(),
             author_provided_tags: None,
         };
@@ -676,7 +716,8 @@ mod tests {
     #[test]
     fn test_excerpt_extraction() {
         let engine = AnthologyEngine::new();
-        let text = "TITANE devient le lieu où les idées trouvent leur structure. Simple dans sa forme.";
+        let text =
+            "TITANE devient le lieu où les idées trouvent leur structure. Simple dans sa forme.";
         let excerpts = engine.extract_remarkable_excerpts(text);
 
         assert!(!excerpts.is_empty());

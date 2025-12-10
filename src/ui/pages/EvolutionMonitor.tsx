@@ -81,22 +81,33 @@ const EvolutionMonitor: React.FC = () => {
 
   const getRiskColor = (risk: string) => {
     switch (risk) {
-      case 'P0': return 'bg-green-500/20 text-green-300 border-green-500/50';
-      case 'P1': return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/50';
-      case 'P2': return 'bg-orange-500/20 text-orange-300 border-orange-500/50';
-      case 'P3': return 'bg-red-500/20 text-red-300 border-red-500/50';
-      default: return 'bg-gray-500/20 text-gray-300 border-gray-500/50';
+      case 'P0':
+        return 'bg-green-500/20 text-green-300 border-green-500/50';
+      case 'P1':
+        return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/50';
+      case 'P2':
+        return 'bg-orange-500/20 text-orange-300 border-orange-500/50';
+      case 'P3':
+        return 'bg-red-500/20 text-red-300 border-red-500/50';
+      default:
+        return 'bg-gray-500/20 text-gray-300 border-gray-500/50';
     }
   };
 
   const _getMutationIcon = (type: string) => {
     switch (type) {
-      case 'Optimize': return '⚡';
-      case 'Refactor': return '🔄';
-      case 'Simplify': return '✂️';
-      case 'Enhance': return '✨';
-      case 'Fix': return '🔧';
-      default: return '🔀';
+      case 'Optimize':
+        return '⚡';
+      case 'Refactor':
+        return '🔄';
+      case 'Simplify':
+        return '✂️';
+      case 'Enhance':
+        return '✨';
+      case 'Fix':
+        return '🔧';
+      default:
+        return '🔀';
     }
   };
 
@@ -112,7 +123,9 @@ const EvolutionMonitor: React.FC = () => {
           <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600">
             Moniteur d'Évolution
           </h1>
-          <p className="text-gray-400 mt-2">Phase 10 : Suivi & Contrôle de l'Auto-Évolution</p>
+          <p className="text-gray-400 mt-2">
+            Phase 10 : Suivi & Contrôle de l'Auto-Évolution
+          </p>
         </div>
 
         <button
@@ -130,7 +143,9 @@ const EvolutionMonitor: React.FC = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
               <div className="text-gray-400 text-sm mb-2">Stabilité</div>
-              <div className={`text-3xl font-bold ${getMetricColor(stats.current_metrics.stability, 90)}`}>
+              <div
+                className={`text-3xl font-bold ${getMetricColor(stats.current_metrics.stability, 90)}`}
+              >
                 {stats.current_metrics.stability.toFixed(1)}%
               </div>
               <div className="mt-3 bg-gray-600 rounded-full h-2">
@@ -143,7 +158,9 @@ const EvolutionMonitor: React.FC = () => {
 
             <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
               <div className="text-gray-400 text-sm mb-2">Cohérence</div>
-              <div className={`text-3xl font-bold ${getMetricColor(stats.current_metrics.coherence, 95)}`}>
+              <div
+                className={`text-3xl font-bold ${getMetricColor(stats.current_metrics.coherence, 95)}`}
+              >
                 {stats.current_metrics.coherence.toFixed(1)}%
               </div>
               <div className="mt-3 bg-gray-600 rounded-full h-2">
@@ -156,7 +173,9 @@ const EvolutionMonitor: React.FC = () => {
 
             <div className="bg-gradient-to-br from-yellow-500/20 to-orange-500/20 backdrop-blur-xl rounded-2xl p-6 border border-yellow-500/30">
               <div className="text-gray-400 text-sm mb-2">Performance</div>
-              <div className={`text-3xl font-bold ${getMetricColor(stats.current_metrics.performance, 85)}`}>
+              <div
+                className={`text-3xl font-bold ${getMetricColor(stats.current_metrics.performance, 85)}`}
+              >
                 {stats.current_metrics.performance.toFixed(1)}%
               </div>
               <div className="mt-3 bg-gray-600 rounded-full h-2">
@@ -169,7 +188,9 @@ const EvolutionMonitor: React.FC = () => {
 
             <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
               <div className="text-gray-400 text-sm mb-2">Profondeur Cognitive</div>
-              <div className={`text-3xl font-bold ${getMetricColor(stats.current_metrics.cognitive_depth, 80)}`}>
+              <div
+                className={`text-3xl font-bold ${getMetricColor(stats.current_metrics.cognitive_depth, 80)}`}
+              >
                 {stats.current_metrics.cognitive_depth.toFixed(1)}%
               </div>
               <div className="mt-3 bg-gray-600 rounded-full h-2">
@@ -184,17 +205,23 @@ const EvolutionMonitor: React.FC = () => {
           {/* Evolution Statistics */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
-              <h2 className="text-xl font-semibold text-white mb-4">Statistiques d'Évolution</h2>
+              <h2 className="text-xl font-semibold text-white mb-4">
+                Statistiques d'Évolution
+              </h2>
 
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-400">Cycles Totaux</span>
-                  <span className="text-white text-xl font-bold">{stats.total_cycles}</span>
+                  <span className="text-white text-xl font-bold">
+                    {stats.total_cycles}
+                  </span>
                 </div>
 
                 <div className="flex justify-between items-center">
                   <span className="text-gray-400">Mutations Totales</span>
-                  <span className="text-white text-xl font-bold">{stats.total_mutations}</span>
+                  <span className="text-white text-xl font-bold">
+                    {stats.total_mutations}
+                  </span>
                 </div>
 
                 {lastReport && (
@@ -203,11 +230,15 @@ const EvolutionMonitor: React.FC = () => {
                       <div className="text-gray-400 text-sm mb-2">Dernier Cycle</div>
                       <div className="flex justify-between items-center">
                         <span className="text-gray-400">Proposées</span>
-                        <span className="text-yellow-400 font-bold">{lastReport.mutations_proposed}</span>
+                        <span className="text-yellow-400 font-bold">
+                          {lastReport.mutations_proposed}
+                        </span>
                       </div>
                       <div className="flex justify-between items-center mt-2">
                         <span className="text-gray-400">Appliquées</span>
-                        <span className="text-green-400 font-bold">{lastReport.mutations_applied}</span>
+                        <span className="text-green-400 font-bold">
+                          {lastReport.mutations_applied}
+                        </span>
                       </div>
                     </div>
                   </>
@@ -250,25 +281,33 @@ const EvolutionMonitor: React.FC = () => {
               <div className="grid grid-cols-4 gap-4 mb-6">
                 <div className="bg-gray-700/30 rounded-lg p-4">
                   <div className="text-gray-400 text-sm mb-1">Stabilité</div>
-                  <div className={`text-xl font-bold ${getMetricColor(lastReport.metrics.stability, 90)}`}>
+                  <div
+                    className={`text-xl font-bold ${getMetricColor(lastReport.metrics.stability, 90)}`}
+                  >
                     {lastReport.metrics.stability.toFixed(1)}%
                   </div>
                 </div>
                 <div className="bg-gray-700/30 rounded-lg p-4">
                   <div className="text-gray-400 text-sm mb-1">Cohérence</div>
-                  <div className={`text-xl font-bold ${getMetricColor(lastReport.metrics.coherence, 95)}`}>
+                  <div
+                    className={`text-xl font-bold ${getMetricColor(lastReport.metrics.coherence, 95)}`}
+                  >
                     {lastReport.metrics.coherence.toFixed(1)}%
                   </div>
                 </div>
                 <div className="bg-gray-700/30 rounded-lg p-4">
                   <div className="text-gray-400 text-sm mb-1">Performance</div>
-                  <div className={`text-xl font-bold ${getMetricColor(lastReport.metrics.performance, 85)}`}>
+                  <div
+                    className={`text-xl font-bold ${getMetricColor(lastReport.metrics.performance, 85)}`}
+                  >
                     {lastReport.metrics.performance.toFixed(1)}%
                   </div>
                 </div>
                 <div className="bg-gray-700/30 rounded-lg p-4">
                   <div className="text-gray-400 text-sm mb-1">Profondeur Cognitive</div>
-                  <div className={`text-xl font-bold ${getMetricColor(lastReport.metrics.cognitive_depth, 80)}`}>
+                  <div
+                    className={`text-xl font-bold ${getMetricColor(lastReport.metrics.cognitive_depth, 80)}`}
+                  >
                     {lastReport.metrics.cognitive_depth.toFixed(1)}%
                   </div>
                 </div>
@@ -283,14 +322,20 @@ const EvolutionMonitor: React.FC = () => {
       ) : (
         <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-12 border border-green-500/30 text-center">
           <div className="text-6xl mb-4">🧬</div>
-          <h2 className="text-2xl font-semibold text-white mb-2">Moteur d'Évolution Prêt</h2>
-          <p className="text-gray-400">Lancez un cycle d'évolution pour démarrer le suivi des améliorations</p>
+          <h2 className="text-2xl font-semibold text-white mb-2">
+            Moteur d'Évolution Prêt
+          </h2>
+          <p className="text-gray-400">
+            Lancez un cycle d'évolution pour démarrer le suivi des améliorations
+          </p>
         </div>
       )}
 
       {/* Risk Level Legend */}
       <div className="mt-6 bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
-        <h3 className="text-lg font-semibold text-white mb-3">Guide des Niveaux de Risque</h3>
+        <h3 className="text-lg font-semibold text-white mb-3">
+          Guide des Niveaux de Risque
+        </h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <div className={`rounded-lg p-3 border ${getRiskColor('P0')}`}>
             <div className="font-semibold mb-1">P0 - Sûr</div>
@@ -306,7 +351,9 @@ const EvolutionMonitor: React.FC = () => {
           </div>
           <div className={`rounded-lg p-3 border ${getRiskColor('P3')}`}>
             <div className="font-semibold mb-1">P3 - Risque Élevé</div>
-            <div className="text-xs">Changements majeurs, approbation manuelle requise</div>
+            <div className="text-xs">
+              Changements majeurs, approbation manuelle requise
+            </div>
           </div>
         </div>
       </div>

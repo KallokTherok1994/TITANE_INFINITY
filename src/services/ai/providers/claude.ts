@@ -24,7 +24,7 @@ export const CLAUDE_MODELS = [
   'claude-3-haiku-20240307',
 ] as const;
 
-export type ClaudeModel = typeof CLAUDE_MODELS[number];
+export type ClaudeModel = (typeof CLAUDE_MODELS)[number];
 
 /**
  * Configuration Claude
@@ -89,7 +89,7 @@ export const claudeProvider: AIProvider = {
       }
 
       // Conversion history vers format backend
-      const formattedHistory = history.map((msg) => ({
+      const formattedHistory = history.map(msg => ({
         role: msg.role,
         content: msg.content,
       }));
@@ -161,11 +161,16 @@ export const claudeProvider: AIProvider = {
       const latency = Date.now() - startTime;
 
       // 🔧 AUTOHEAL: Signaler l'erreur pour auto-réparation
-      autoHealEngine.detectError('claude-provider', error instanceof Error ? error : new Error(String(error)), 'provider', {
-        latency,
-        message: message.substring(0, 100),
-        historyLength: history.length,
-      });
+      autoHealEngine.detectError(
+        'claude-provider',
+        error instanceof Error ? error : new Error(String(error)),
+        'provider',
+        {
+          latency,
+          message: message.substring(0, 100),
+          historyLength: history.length,
+        }
+      );
 
       // Re-throw erreurs typées
       if (error instanceof Error) {

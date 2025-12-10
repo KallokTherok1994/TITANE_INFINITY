@@ -10,12 +10,12 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum Attractor {
-    Clarity,      // Clarté cognitive
-    Coherence,    // Cohérence logique
-    Alignment,    // Alignement multi-moteurs
-    Simplicity,   // Simplicité (rasoir d'Occam)
-    Focus,        // Focus attentionnel
-    Truth,        // Vérité factuelle
+    Clarity,    // Clarté cognitive
+    Coherence,  // Cohérence logique
+    Alignment,  // Alignement multi-moteurs
+    Simplicity, // Simplicité (rasoir d'Occam)
+    Focus,      // Focus attentionnel
+    Truth,      // Vérité factuelle
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -39,7 +39,7 @@ impl AttractorState {
             truth: 0.5,
         }
     }
-    
+
     pub fn compute_total_influence(&self, weights: &[f32; 6]) -> f32 {
         let sum = self.clarity * weights[0]
             + self.coherence * weights[1]
@@ -47,7 +47,7 @@ impl AttractorState {
             + self.simplicity * weights[3]
             + self.focus * weights[4]
             + self.truth * weights[5];
-        
+
         let total_weight: f32 = weights.iter().sum();
         if total_weight > 0.0 {
             (sum / total_weight).clamp(0.0, 1.0)
@@ -55,7 +55,7 @@ impl AttractorState {
             0.5
         }
     }
-    
+
     pub fn get(&self, attractor: Attractor) -> f32 {
         match attractor {
             Attractor::Clarity => self.clarity,
@@ -66,7 +66,7 @@ impl AttractorState {
             Attractor::Truth => self.truth,
         }
     }
-    
+
     pub fn set(&mut self, attractor: Attractor, value: f32) {
         let clamped = value.clamp(0.0, 1.0);
         match attractor {
@@ -89,7 +89,7 @@ impl Default for AttractorState {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_attractor_state() {
         let state = AttractorState::new();

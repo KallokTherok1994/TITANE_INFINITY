@@ -72,53 +72,71 @@ impl Default for VoiceProfile {
     fn default() -> Self {
         let mut emotion_mappings = HashMap::new();
 
-        emotion_mappings.insert("neutral".to_string(), VoiceAdjustment {
-            pitch_delta: 0.0,
-            rate_delta: 0.0,
-            volume_delta: 0.0,
-            emphasis_delta: 0.0,
-            warmth_delta: 0.0,
-        });
+        emotion_mappings.insert(
+            "neutral".to_string(),
+            VoiceAdjustment {
+                pitch_delta: 0.0,
+                rate_delta: 0.0,
+                volume_delta: 0.0,
+                emphasis_delta: 0.0,
+                warmth_delta: 0.0,
+            },
+        );
 
-        emotion_mappings.insert("happy".to_string(), VoiceAdjustment {
-            pitch_delta: 20.0,
-            rate_delta: 15.0,
-            volume_delta: 0.1,
-            emphasis_delta: 0.2,
-            warmth_delta: 0.2,
-        });
+        emotion_mappings.insert(
+            "happy".to_string(),
+            VoiceAdjustment {
+                pitch_delta: 20.0,
+                rate_delta: 15.0,
+                volume_delta: 0.1,
+                emphasis_delta: 0.2,
+                warmth_delta: 0.2,
+            },
+        );
 
-        emotion_mappings.insert("sad".to_string(), VoiceAdjustment {
-            pitch_delta: -15.0,
-            rate_delta: -20.0,
-            volume_delta: -0.15,
-            emphasis_delta: -0.1,
-            warmth_delta: 0.1,
-        });
+        emotion_mappings.insert(
+            "sad".to_string(),
+            VoiceAdjustment {
+                pitch_delta: -15.0,
+                rate_delta: -20.0,
+                volume_delta: -0.15,
+                emphasis_delta: -0.1,
+                warmth_delta: 0.1,
+            },
+        );
 
-        emotion_mappings.insert("excited".to_string(), VoiceAdjustment {
-            pitch_delta: 30.0,
-            rate_delta: 25.0,
-            volume_delta: 0.15,
-            emphasis_delta: 0.3,
-            warmth_delta: 0.15,
-        });
+        emotion_mappings.insert(
+            "excited".to_string(),
+            VoiceAdjustment {
+                pitch_delta: 30.0,
+                rate_delta: 25.0,
+                volume_delta: 0.15,
+                emphasis_delta: 0.3,
+                warmth_delta: 0.15,
+            },
+        );
 
-        emotion_mappings.insert("calm".to_string(), VoiceAdjustment {
-            pitch_delta: -10.0,
-            rate_delta: -15.0,
-            volume_delta: -0.1,
-            emphasis_delta: -0.2,
-            warmth_delta: 0.25,
-        });
+        emotion_mappings.insert(
+            "calm".to_string(),
+            VoiceAdjustment {
+                pitch_delta: -10.0,
+                rate_delta: -15.0,
+                volume_delta: -0.1,
+                emphasis_delta: -0.2,
+                warmth_delta: 0.25,
+            },
+        );
 
-        emotion_mappings.insert("serious".to_string(), VoiceAdjustment {
-            pitch_delta: -5.0,
-            rate_delta: -5.0,
-            volume_delta: 0.0,
-            emphasis_delta: 0.15,
-            warmth_delta: -0.1,
-        });
+        emotion_mappings.insert(
+            "serious".to_string(),
+            VoiceAdjustment {
+                pitch_delta: -5.0,
+                rate_delta: -5.0,
+                volume_delta: 0.0,
+                emphasis_delta: 0.15,
+                warmth_delta: -0.1,
+            },
+        );
 
         Self {
             id: uuid::Uuid::new_v4().to_string(),
@@ -209,7 +227,8 @@ impl VoiceProfileManager {
 
     /// Obtient le profil actif
     pub fn get_active(&self) -> Option<&VoiceProfile> {
-        self.active_profile_id.as_ref()
+        self.active_profile_id
+            .as_ref()
             .and_then(|id| self.profiles.get(id))
     }
 

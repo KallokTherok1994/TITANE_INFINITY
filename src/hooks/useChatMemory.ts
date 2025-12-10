@@ -72,7 +72,9 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
       compressed: stats.compressed,
     });
 
-    console.log(`🧠 USE CHAT MEMORY: Loaded ${history.length} messages for mode ${options.mode}`);
+    console.log(
+      `🧠 USE CHAT MEMORY: Loaded ${history.length} messages for mode ${options.mode}`
+    );
 
     // Auto-cleanup si enabled
     if (options.autoCleanup) {
@@ -113,7 +115,9 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
         compressed: stats.compressed,
       });
 
-      console.log(`💾 USE CHAT MEMORY: Message saved (mode: ${options.mode}, total: ${updatedMessages.length})`);
+      console.log(
+        `💾 USE CHAT MEMORY: Message saved (mode: ${options.mode}, total: ${updatedMessages.length})`
+      );
     },
     [options.mode]
   );

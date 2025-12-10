@@ -34,6 +34,9 @@ pub use monitoring::{
     SyncHistoryEntry,
 };
 
+// Export global engines (v21 FIX: needed by singularity_state)
+pub use commands::{DEEP_SYNC_ENGINE, META_ENGINE};
+
 // Re-export commands with __cmd__ prefix for Tauri
 pub use commands::{
     __cmd__meta_acknowledge_alert,

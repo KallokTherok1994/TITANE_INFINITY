@@ -90,10 +90,7 @@ export const Experience = (): JSX.Element => {
         transition={{ delay: 0.2 }}
       >
         <div className="exp-progress-bar-large">
-          <div
-            className="exp-progress-fill"
-            style={{ width: `${progress}%` }}
-          />
+          <div className="exp-progress-fill" style={{ width: `${progress}%` }} />
         </div>
         <div className="exp-progress-text">{progress.toFixed(1)}%</div>
       </motion.div>
@@ -125,7 +122,9 @@ export const Experience = (): JSX.Element => {
                 <div className="exp-domain-progress">
                   <div
                     className="exp-domain-progress-fill"
-                    style={{ width: `${Math.min((domain.xp % 100) / 100 * 100, 100)}%` }}
+                    style={{
+                      width: `${Math.min(((domain.xp % 100) / 100) * 100, 100)}%`,
+                    }}
                   />
                 </div>
                 <div className="exp-domain-stats">
@@ -192,24 +191,27 @@ export const Experience = (): JSX.Element => {
       >
         <h2>📜 Historique ({filteredHistory.length})</h2>
         <div className="exp-history-list">
-          {filteredHistory.slice().reverse().map((event, i) => (
-            <motion.div
-              key={`${event.timestamp}-${i}`}
-              className="exp-event"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: Math.min(i * 0.02, 0.5) }}
-            >
-              <span className="exp-event-time">
-                {new Date(event.timestamp).toLocaleString('fr-FR')}
-              </span>
-              <span className="exp-event-amount">+{event.amount} XP</span>
-              <span className="exp-event-source">{formatSource(event.source)}</span>
-              {event.description && (
-                <span className="exp-event-desc">{event.description}</span>
-              )}
-            </motion.div>
-          ))}
+          {filteredHistory
+            .slice()
+            .reverse()
+            .map((event, i) => (
+              <motion.div
+                key={`${event.timestamp}-${i}`}
+                className="exp-event"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: Math.min(i * 0.02, 0.5) }}
+              >
+                <span className="exp-event-time">
+                  {new Date(event.timestamp).toLocaleString('fr-FR')}
+                </span>
+                <span className="exp-event-amount">+{event.amount} XP</span>
+                <span className="exp-event-source">{formatSource(event.source)}</span>
+                {event.description && (
+                  <span className="exp-event-desc">{event.description}</span>
+                )}
+              </motion.div>
+            ))}
         </div>
       </motion.div>
     </div>
@@ -219,16 +221,16 @@ export const Experience = (): JSX.Element => {
 // Helper pour formater les noms de sources
 function formatSource(source: string): string {
   const map: Record<string, string> = {
-    'message_user': '💬 Message utilisateur',
-    'chat_message': '💬 Message chat',
-    'response_ai': '🤖 Réponse IA',
-    'file_import': '📁 Import fichier',
-    'file_analysis': '🔍 Analyse fichier',
-    'memory_promote': '⬆️ Promotion mémoire',
-    'memory_archive': '📦 Archivage mémoire',
-    'system_update': '⚙️ Mise à jour système',
-    'engine_load': '🚀 Chargement moteur',
-    'system': '⚙️ Système',
+    message_user: '💬 Message utilisateur',
+    chat_message: '💬 Message chat',
+    response_ai: '🤖 Réponse IA',
+    file_import: '📁 Import fichier',
+    file_analysis: '🔍 Analyse fichier',
+    memory_promote: '⬆️ Promotion mémoire',
+    memory_archive: '📦 Archivage mémoire',
+    system_update: '⚙️ Mise à jour système',
+    engine_load: '🚀 Chargement moteur',
+    system: '⚙️ Système',
   };
   return map[source] || source;
 }

@@ -15,14 +15,14 @@ Valider que l'architecture anti-feedback à 3 couches empêche la boucle TTS →
 
 ## 📊 RÉSULTATS GLOBAUX
 
-| Critère | Target | Mesure | Status |
-|---------|--------|--------|--------|
-| **Feedback loops détectés** | 0 sur 10 cycles | [X] / 10 | ⏳ À TESTER |
-| **Layer 2 (VAD suspension)** | 100% efficace | [X]% | ⏳ À TESTER |
-| **Layer 3 (Voice fingerprinting)** | > 80% accuracy | [X]% | ⏳ À TESTER |
-| **Suspend latency** | < 50ms | [X] ms | ⏳ À TESTER |
-| **Resume delay** | 500ms ± 50ms | [X] ms | ⏳ À TESTER |
-| **Audio quality** | Pas d'écho | [OK / KO] | ⏳ À TESTER |
+| Critère                            | Target          | Mesure    | Status      |
+| ---------------------------------- | --------------- | --------- | ----------- |
+| **Feedback loops détectés**        | 0 sur 10 cycles | [X] / 10  | ⏳ À TESTER |
+| **Layer 2 (VAD suspension)**       | 100% efficace   | [X]%      | ⏳ À TESTER |
+| **Layer 3 (Voice fingerprinting)** | > 80% accuracy  | [X]%      | ⏳ À TESTER |
+| **Suspend latency**                | < 50ms          | [X] ms    | ⏳ À TESTER |
+| **Resume delay**                   | 500ms ± 50ms    | [X] ms    | ⏳ À TESTER |
+| **Audio quality**                  | Pas d'écho      | [OK / KO] | ⏳ À TESTER |
 
 ---
 
@@ -30,20 +30,21 @@ Valider que l'architecture anti-feedback à 3 couches empêche la boucle TTS →
 
 ### **Test 1 : Cycle vocal simple (x10)**
 
-| Cycle | Phrase user | Feedback ? | Layer 2 OK ? | Layer 3 OK ? | Notes |
-|-------|-------------|-----------|--------------|--------------|-------|
-| 1 | "Bonjour TITANE" | ❌ / ✅ | ❌ / ✅ | ❌ / ✅ | [Notes] |
-| 2 | "Comment vas-tu ?" | ❌ / ✅ | ❌ / ✅ | ❌ / ✅ | [Notes] |
-| 3 | "Quelle heure est-il ?" | ❌ / ✅ | ❌ / ✅ | ❌ / ✅ | [Notes] |
-| 4 | "Raconte-moi une blague" | ❌ / ✅ | ❌ / ✅ | ❌ / ✅ | [Notes] |
-| 5 | "Donne-moi un conseil" | ❌ / ✅ | ❌ / ✅ | ❌ / ✅ | [Notes] |
-| 6 | "Parle-moi du soleil" | ❌ / ✅ | ❌ / ✅ | ❌ / ✅ | [Notes] |
-| 7 | "Qu'est-ce que tu aimes ?" | ❌ / ✅ | ❌ / ✅ | ❌ / ✅ | [Notes] |
-| 8 | "Explique la photosynthèse" | ❌ / ✅ | ❌ / ✅ | ❌ / ✅ | [Notes] |
-| 9 | "Résume en 3 mots ton rôle" | ❌ / ✅ | ❌ / ✅ | ❌ / ✅ | [Notes] |
-| 10 | "Merci, au revoir" | ❌ / ✅ | ❌ / ✅ | ❌ / ✅ | [Notes] |
+| Cycle | Phrase user                 | Feedback ? | Layer 2 OK ? | Layer 3 OK ? | Notes   |
+| ----- | --------------------------- | ---------- | ------------ | ------------ | ------- |
+| 1     | "Bonjour TITANE"            | ❌ / ✅    | ❌ / ✅      | ❌ / ✅      | [Notes] |
+| 2     | "Comment vas-tu ?"          | ❌ / ✅    | ❌ / ✅      | ❌ / ✅      | [Notes] |
+| 3     | "Quelle heure est-il ?"     | ❌ / ✅    | ❌ / ✅      | ❌ / ✅      | [Notes] |
+| 4     | "Raconte-moi une blague"    | ❌ / ✅    | ❌ / ✅      | ❌ / ✅      | [Notes] |
+| 5     | "Donne-moi un conseil"      | ❌ / ✅    | ❌ / ✅      | ❌ / ✅      | [Notes] |
+| 6     | "Parle-moi du soleil"       | ❌ / ✅    | ❌ / ✅      | ❌ / ✅      | [Notes] |
+| 7     | "Qu'est-ce que tu aimes ?"  | ❌ / ✅    | ❌ / ✅      | ❌ / ✅      | [Notes] |
+| 8     | "Explique la photosynthèse" | ❌ / ✅    | ❌ / ✅      | ❌ / ✅      | [Notes] |
+| 9     | "Résume en 3 mots ton rôle" | ❌ / ✅    | ❌ / ✅      | ❌ / ✅      | [Notes] |
+| 10    | "Merci, au revoir"          | ❌ / ✅    | ❌ / ✅      | ❌ / ✅      | [Notes] |
 
 **Légende** :
+
 - ❌ = Feedback détecté (échec)
 - ✅ = Pas de feedback (succès)
 
@@ -51,14 +52,15 @@ Valider que l'architecture anti-feedback à 3 couches empêche la boucle TTS →
 
 ### **Test 2 : Timing VAD Suspension**
 
-| Événement | Timestamp | Delta | Target | Status |
-|-----------|-----------|-------|--------|--------|
-| TTS start | [HH:MM:SS.mmm] | 0 ms | - | - |
-| VAD suspend | [HH:MM:SS.mmm] | [X] ms | < 50ms | ⏳ |
-| TTS end | [HH:MM:SS.mmm] | [X] ms | - | - |
-| VAD resume | [HH:MM:SS.mmm] | [X] ms | ~500ms | ⏳ |
+| Événement   | Timestamp      | Delta  | Target | Status |
+| ----------- | -------------- | ------ | ------ | ------ |
+| TTS start   | [HH:MM:SS.mmm] | 0 ms   | -      | -      |
+| VAD suspend | [HH:MM:SS.mmm] | [X] ms | < 50ms | ⏳     |
+| TTS end     | [HH:MM:SS.mmm] | [X] ms | -      | -      |
+| VAD resume  | [HH:MM:SS.mmm] | [X] ms | ~500ms | ⏳     |
 
 **Méthode mesure** :
+
 ```typescript
 // Dans console DevTools (F12)
 performance.mark('tts-start');
@@ -74,19 +76,20 @@ performance.measure('suspend-latency', 'tts-start', 'vad-suspend');
 ⚠️ **Prérequis** : Layer 3 calibrée (voir section Calibration)
 
 | Détection | Audio source | Similarity | Détecté TITANE ? | Attendu | Status |
-|-----------|--------------|------------|------------------|---------|--------|
-| 1 | TTS TITANE | [0.XX] | ✅ / ❌ | ✅ | ⏳ |
-| 2 | TTS TITANE | [0.XX] | ✅ / ❌ | ✅ | ⏳ |
-| 3 | User voice | [0.XX] | ✅ / ❌ | ❌ | ⏳ |
-| 4 | User voice | [0.XX] | ✅ / ❌ | ❌ | ⏳ |
-| 5 | TTS TITANE | [0.XX] | ✅ / ❌ | ✅ | ⏳ |
-| 6 | User voice | [0.XX] | ✅ / ❌ | ❌ | ⏳ |
-| 7 | TTS TITANE | [0.XX] | ✅ / ❌ | ✅ | ⏳ |
-| 8 | User voice | [0.XX] | ✅ / ❌ | ❌ | ⏳ |
-| 9 | TTS TITANE | [0.XX] | ✅ / ❌ | ✅ | ⏳ |
-| 10 | User voice | [0.XX] | ✅ / ❌ | ❌ | ⏳ |
+| --------- | ------------ | ---------- | ---------------- | ------- | ------ |
+| 1         | TTS TITANE   | [0.XX]     | ✅ / ❌          | ✅      | ⏳     |
+| 2         | TTS TITANE   | [0.XX]     | ✅ / ❌          | ✅      | ⏳     |
+| 3         | User voice   | [0.XX]     | ✅ / ❌          | ❌      | ⏳     |
+| 4         | User voice   | [0.XX]     | ✅ / ❌          | ❌      | ⏳     |
+| 5         | TTS TITANE   | [0.XX]     | ✅ / ❌          | ✅      | ⏳     |
+| 6         | User voice   | [0.XX]     | ✅ / ❌          | ❌      | ⏳     |
+| 7         | TTS TITANE   | [0.XX]     | ✅ / ❌          | ✅      | ⏳     |
+| 8         | User voice   | [0.XX]     | ✅ / ❌          | ❌      | ⏳     |
+| 9         | TTS TITANE   | [0.XX]     | ✅ / ❌          | ✅      | ⏳     |
+| 10        | User voice   | [0.XX]     | ✅ / ❌          | ❌      | ⏳     |
 
 **Calcul accuracy** :
+
 - True Positive (TP) : TTS détecté TITANE
 - True Negative (TN) : User détecté User
 - False Positive (FP) : User détecté TITANE (erreur)
@@ -161,21 +164,22 @@ Exemple attendu :
 [Texte libre 2-5 phrases expliquant le verdict final]
 
 Exemple :
+
 ```
-✅ VALIDÉ : 0 feedback loop détecté sur 10 cycles. Layer 2 (VAD suspension) 
-fonctionne à 100% (VAD suspendue pendant 100% du TTS playback). 
-Layer 3 (voice fingerprinting) atteint 85% accuracy (TP=4/5, TN=4/5, FP=1, FN=1). 
-Timing optimal : suspend latency 35ms, resume delay 510ms. 
+✅ VALIDÉ : 0 feedback loop détecté sur 10 cycles. Layer 2 (VAD suspension)
+fonctionne à 100% (VAD suspendue pendant 100% du TTS playback).
+Layer 3 (voice fingerprinting) atteint 85% accuracy (TP=4/5, TN=4/5, FP=1, FN=1).
+Timing optimal : suspend latency 35ms, resume delay 510ms.
 Aucun écho audible, qualité audio excellente.
 ```
 
 ou
 
 ```
-❌ ÉCHEC : 2 feedback loops détectés sur 10 cycles (cycles 4 et 7). 
-Layer 2 non activée correctement (suspendedRef.current toujours false). 
-Layer 3 non testée (calibration échouée). 
-Suspend latency >150ms (trop élevée). 
+❌ ÉCHEC : 2 feedback loops détectés sur 10 cycles (cycles 4 et 7).
+Layer 2 non activée correctement (suspendedRef.current toujours false).
+Layer 3 non testée (calibration échouée).
+Suspend latency >150ms (trop élevée).
 Recommandation : Fix urgence Layer 2, debug suspendForTTS() dans useTTSWithMicControl.
 ```
 
@@ -183,15 +187,15 @@ Recommandation : Fix urgence Layer 2, debug suspendForTTS() dans useTTSWithMicCo
 
 ## 🎯 MÉTRIQUES FINALES
 
-| Métrique | Target | Mesure réelle | Delta | Status |
-|----------|--------|---------------|-------|--------|
-| **Feedback loops** | 0 | [X] | [±X] | ✅/❌ |
-| **Layer 2 efficacy** | 100% | [X]% | [±X]% | ✅/❌ |
-| **Layer 3 accuracy** | > 80% | [X]% | [±X]% | ✅/❌ |
-| **Suspend latency** | < 50ms | [X]ms | [±X]ms | ✅/❌ |
-| **Resume delay** | 500ms | [X]ms | [±X]ms | ✅/❌ |
-| **False positive rate** | < 5% | [X]% | [±X]% | ✅/❌ |
-| **False negative rate** | < 10% | [X]% | [±X]% | ✅/❌ |
+| Métrique                | Target | Mesure réelle | Delta  | Status |
+| ----------------------- | ------ | ------------- | ------ | ------ |
+| **Feedback loops**      | 0      | [X]           | [±X]   | ✅/❌  |
+| **Layer 2 efficacy**    | 100%   | [X]%          | [±X]%  | ✅/❌  |
+| **Layer 3 accuracy**    | > 80%  | [X]%          | [±X]%  | ✅/❌  |
+| **Suspend latency**     | < 50ms | [X]ms         | [±X]ms | ✅/❌  |
+| **Resume delay**        | 500ms  | [X]ms         | [±X]ms | ✅/❌  |
+| **False positive rate** | < 5%   | [X]%          | [±X]%  | ✅/❌  |
+| **False negative rate** | < 10%  | [X]%          | [±X]%  | ✅/❌  |
 
 ---
 
@@ -210,6 +214,7 @@ Recommandation : Fix urgence Layer 2, debug suspendForTTS() dans useTTSWithMicCo
 3. ❌ [Recommandation 3 spécifique au problème]
 
 Exemples :
+
 - Fix Layer 2 : Corriger `suspendForTTS()` dans `useTTSWithMicControl.ts`
 - Fix Layer 3 : Re-calibrer avec 10+ échantillons diversifiés
 - Fix Timing : Optimiser audio context latency (`latencyHint: 'interactive'`)

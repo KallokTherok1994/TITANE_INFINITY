@@ -25,10 +25,7 @@ export class EventBus {
   /**
    * S'abonne à un type d'événement
    */
-  subscribe<T = unknown>(
-    type: EventType,
-    handler: EventHandler<T>
-  ): EventSubscription {
+  subscribe<T = unknown>(type: EventType, handler: EventHandler<T>): EventSubscription {
     const subscriptionId = `sub-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
     if (!this.subscribers.has(type)) {
@@ -141,14 +138,11 @@ export class EventBus {
   /**
    * Attend un événement spécifique
    */
-  once<T = unknown>(
-    type: EventType,
-    timeout?: number
-  ): Promise<OSEvent<T>> {
+  once<T = unknown>(type: EventType, timeout?: number): Promise<OSEvent<T>> {
     return new Promise((resolve, reject) => {
       let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
-      const subscription = this.subscribe<T>(type, (event) => {
+      const subscription = this.subscribe<T>(type, event => {
         if (timeoutId) {
           clearTimeout(timeoutId);
         }

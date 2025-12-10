@@ -5,7 +5,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { secureInvoke } from '@/lib/security';
-import { Activity, Zap, RefreshCw, AlertTriangle, TrendingUp, Settings } from 'lucide-react';
+import {
+  Activity,
+  Zap,
+  RefreshCw,
+  AlertTriangle,
+  TrendingUp,
+  Settings,
+} from 'lucide-react';
 
 interface PredictiveIssue {
   id: string;
@@ -46,7 +53,9 @@ interface AccelerationReport {
 
 export const HyperEvolutionDashboard: React.FC = () => {
   const [predictionReport, setPredictionReport] = useState<PredictionReport | null>(null);
-  const [accelerationReport, setAccelerationReport] = useState<AccelerationReport | null>(null);
+  const [accelerationReport, setAccelerationReport] = useState<AccelerationReport | null>(
+    null
+  );
   const [loading, setLoading] = useState(false);
 
   const loadPredictions = async () => {
@@ -81,10 +90,14 @@ export const HyperEvolutionDashboard: React.FC = () => {
   // Design System TITANE — Couleurs monochromes pour sévérité
   const getSeverityColor = (severity: string) => {
     switch (severity.toLowerCase()) {
-      case 'critical': return 'text-[#8f7a7a]'; // danger (rouge-gris désaturé)
-      case 'high': return 'text-[#a89f91]'; // warning (beige métal)
-      case 'medium': return 'text-[#c4c4c4]'; // secondary (argent)
-      default: return 'text-[#8899aa]'; // info (bleu-gris)
+      case 'critical':
+        return 'text-[#8f7a7a]'; // danger (rouge-gris désaturé)
+      case 'high':
+        return 'text-[#a89f91]'; // warning (beige métal)
+      case 'medium':
+        return 'text-[#c4c4c4]'; // secondary (argent)
+      default:
+        return 'text-[#8899aa]'; // info (bleu-gris)
     }
   };
 
@@ -127,10 +140,13 @@ export const HyperEvolutionDashboard: React.FC = () => {
             <Zap className="w-5 h-5 text-[#93b399]" />
           </div>
           <div className="text-2xl font-bold text-[#c4c4c4]">
-            {accelerationReport ? `${(accelerationReport.execution_speed * 100).toFixed(0)}%` : '0%'}
+            {accelerationReport
+              ? `${(accelerationReport.execution_speed * 100).toFixed(0)}%`
+              : '0%'}
           </div>
           <div className="text-xs text-[#93b399] mt-1">
-            +{accelerationReport ? (accelerationReport.total_gain * 100).toFixed(0) : 0}% gain
+            +{accelerationReport ? (accelerationReport.total_gain * 100).toFixed(0) : 0}%
+            gain
           </div>
         </div>
 
@@ -139,12 +155,8 @@ export const HyperEvolutionDashboard: React.FC = () => {
             <span className="text-[#b5b5b5] text-sm">Évolution</span>
             <TrendingUp className="w-5 h-5 text-[#93b399]" />
           </div>
-          <div className="text-2xl font-bold text-[#c4c4c4]">
-            Active
-          </div>
-          <div className="text-xs text-[#93b399] mt-1">
-            Cycle continu
-          </div>
+          <div className="text-2xl font-bold text-[#c4c4c4]">Active</div>
+          <div className="text-xs text-[#93b399] mt-1">Cycle continu</div>
         </div>
       </div>
 
@@ -168,14 +180,20 @@ export const HyperEvolutionDashboard: React.FC = () => {
           >
             <div className="flex items-start justify-between mb-2">
               <div>
-                <span className={`text-sm font-semibold ${getSeverityColor(issue.severity)}`}>
+                <span
+                  className={`text-sm font-semibold ${getSeverityColor(issue.severity)}`}
+                >
                   {issue.severity.toUpperCase()}
                 </span>
                 <span className="ml-2 text-[#b5b5b5] text-sm">• {issue.category}</span>
               </div>
               <div className="text-right text-xs">
-                <div className="text-[#93b399]">Impact: {(issue.impact * 100).toFixed(0)}%</div>
-                <div className="text-[#b5b5b5]">Prob: {(issue.probability * 100).toFixed(0)}%</div>
+                <div className="text-[#93b399]">
+                  Impact: {(issue.impact * 100).toFixed(0)}%
+                </div>
+                <div className="text-[#b5b5b5]">
+                  Prob: {(issue.probability * 100).toFixed(0)}%
+                </div>
               </div>
             </div>
             <p className="text-[#e5e5e5] mb-2">{issue.description}</p>
@@ -220,7 +238,8 @@ export const HyperEvolutionDashboard: React.FC = () => {
               <h3 className="text-[#c4c4c4] font-semibold">{target.module}</h3>
               <div className="text-right text-sm">
                 <div className="text-[#b5b5b5]">
-                  {target.current_efficiency.toFixed(0)}% → {target.target_efficiency.toFixed(0)}%
+                  {target.current_efficiency.toFixed(0)}% →{' '}
+                  {target.target_efficiency.toFixed(0)}%
                 </div>
               </div>
             </div>

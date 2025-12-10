@@ -121,7 +121,15 @@ function drawSplitMode(
   drawWaveform(ctx, inputData, 64, width, quarterHeight, centerY / 2, '#8899aa');
 
   // Sortie (bas)
-  drawWaveform(ctx, outputData, 64, width, quarterHeight, centerY + centerY / 2, '#727b81');
+  drawWaveform(
+    ctx,
+    outputData,
+    64,
+    width,
+    quarterHeight,
+    centerY + centerY / 2,
+    '#727b81'
+  );
 }
 
 function drawOverlayMode(

@@ -4,7 +4,6 @@
  * Analyse émotionnelle conversationnelle
  * ═══════════════════════════════════════════════════════════════════
  */
-
 use super::types::EmotionState;
 
 /// Analyseur d'émotions
@@ -18,11 +17,7 @@ impl EmotionAnalyzer {
     }
 
     /// Analyser l'émotion d'un message
-    pub fn analyze(
-        &self,
-        message: &str,
-        context: Option<EmotionState>,
-    ) -> EmotionState {
+    pub fn analyze(&self, message: &str, context: Option<EmotionState>) -> EmotionState {
         let mut detected = EmotionState::analyze(message);
 
         // Fusionner avec contexte si fourni

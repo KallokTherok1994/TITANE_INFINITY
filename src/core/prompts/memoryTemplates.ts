@@ -35,8 +35,17 @@ const memoryTemplates: Record<MemoryTemplateId, MemoryTemplate> = {
   decision: {
     id: 'decision',
     label: 'Décision (D.I.S.C.E.R.N.E.R.)',
-    description: 'Capture les décisions structurées avec critères Impact/Alignement/Innovation et vote mental/cœur/corps.',
-    expectedFields: ['title', 'context', 'criteria', 'choice', 'body_vote', 'next_step', 'tags'],
+    description:
+      'Capture les décisions structurées avec critères Impact/Alignement/Innovation et vote mental/cœur/corps.',
+    expectedFields: [
+      'title',
+      'context',
+      'criteria',
+      'choice',
+      'body_vote',
+      'next_step',
+      'tags',
+    ],
     prompt: `Tu es le SYNTHÉTISEUR COGNITIF TITANE∞.
 Analyse l'échange fourni et produis UNIQUEMENT un JSON respectant exactement le schéma suivant :
 {
@@ -113,7 +122,14 @@ Pas d'introduction, pas de conseils additionnels.`,
     id: 'project_snapshot',
     label: 'Snapshot projet D/C/S',
     description: 'Capture Divergence/Connexion/Structuration d’un sprint.',
-    expectedFields: ['project', 'phase', 'divergence', 'connexion', 'structuration', 'next_milestone'],
+    expectedFields: [
+      'project',
+      'phase',
+      'divergence',
+      'connexion',
+      'structuration',
+      'next_milestone',
+    ],
     prompt: `Retourne uniquement un JSON:
 {
   "type": "project_snapshot",
@@ -139,7 +155,7 @@ Si certaines sections ne sont pas mentionnées, déduis-les honnêtement sans in
       connexion: ['Besoin de repos avant relance', 'Alignement mission : régulation'],
       structuration: [
         { step: 'Valider rituel d’ouverture', owner: 'Kevin', eta: '2025-12-02' },
-        { step: 'Former cercle pilote', owner: 'Équipe Rituels', eta: '2025-12-05' }
+        { step: 'Former cercle pilote', owner: 'Équipe Rituels', eta: '2025-12-05' },
       ],
       next_milestone: 'Sprint pilote 12 décembre',
     },
@@ -180,7 +196,14 @@ Score 0-10. Liste maximum 5 éléments par tableau. Aucun texte externe.`,
     id: 'season_summary',
     label: 'Synthèse saison / long terme',
     description: 'Résumé longue portée : saisons de vie, leçons, lignes rouges.',
-    expectedFields: ['season', 'period', 'themes', 'lessons', 'guardrails', 'next_season_intent'],
+    expectedFields: [
+      'season',
+      'period',
+      'themes',
+      'lessons',
+      'guardrails',
+      'next_season_intent',
+    ],
     prompt: `Produit un JSON longue portée :
 {
   "type": "season_summary",
@@ -198,7 +221,10 @@ Pas de commentaire en dehors du JSON.`,
       period: 'Sept-Nov 2025',
       themes: ['Ancrage corporel', 'Transmission méthodo', 'Protection du temps sacré'],
       lessons: ['Saturation = alarme à écouter', 'Le corps donne la cadence réelle'],
-      guardrails: ['Pas plus de 2 grands projets simultanés', 'Rituels matin/soir non négociables'],
+      guardrails: [
+        'Pas plus de 2 grands projets simultanés',
+        'Rituels matin/soir non négociables',
+      ],
       next_season_intent: 'Décembre-janvier = ralentir + écrire le blueprint v14',
     },
   },
@@ -213,5 +239,8 @@ export function listMemoryTemplates(): MemoryTemplate[] {
 }
 
 export function buildMemoryPrompt(templateId: MemoryTemplateId): string {
-  return memoryTemplates[templateId]?.prompt || 'Tu es le Synthétiseur Cognitif TITANE∞. Retourne uniquement un JSON valide.';
+  return (
+    memoryTemplates[templateId]?.prompt ||
+    'Tu es le Synthétiseur Cognitif TITANE∞. Retourne uniquement un JSON valide.'
+  );
 }

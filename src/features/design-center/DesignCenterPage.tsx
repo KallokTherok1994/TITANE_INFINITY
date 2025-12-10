@@ -71,7 +71,7 @@ interface TabNavigationProps {
 function TabNavigation({ tabs, activeTab, onTabChange }: TabNavigationProps) {
   return (
     <nav className="dc-tabs-nav">
-      {tabs.map((tab) => (
+      {tabs.map(tab => (
         <button
           key={tab.id}
           className={`dc-tab-btn ${activeTab === tab.id ? 'active' : ''}`}

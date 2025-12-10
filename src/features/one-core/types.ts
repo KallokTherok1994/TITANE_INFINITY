@@ -101,7 +101,7 @@ export interface OneCoreMetrics {
 export type OneCoreTabs = 'overview' | 'centers' | 'commands' | 'diagnostic' | 'metrics';
 
 export const ONE_CORE_TABS: Array<{ id: OneCoreTabs; label: string; icon: string }> = [
-  { id: 'overview', label: 'Vue d\'ensemble', icon: '🌌' },
+  { id: 'overview', label: "Vue d'ensemble", icon: '🌌' },
   { id: 'centers', label: 'Centres', icon: '🏛️' },
   { id: 'commands', label: 'Commandes', icon: '⚡' },
   { id: 'diagnostic', label: 'Diagnostic', icon: '🔍' },

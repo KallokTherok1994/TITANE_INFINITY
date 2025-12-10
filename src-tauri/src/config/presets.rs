@@ -8,7 +8,6 @@
  *   Phase 2: Configuration Management UI (Day 7-8)
  * ═══════════════════════════════════════════════════════════════
  */
-
 use serde::{Deserialize, Serialize};
 use std::fs;
 use tauri::{AppHandle, Manager};
@@ -46,7 +45,8 @@ pub async fn save_config_preset(
     }
 
     // Get presets directory
-    let data_dir = app.path()
+    let data_dir = app
+        .path()
         .app_data_dir()
         .map_err(|e| format!("Impossible d'obtenir le dossier de données: {}", e))?;
 
@@ -85,8 +85,7 @@ pub async fn save_config_preset(
     let json = serde_json::to_string_pretty(&preset)
         .map_err(|e| format!("Échec de sérialisation: {}", e))?;
 
-    fs::write(&file_path, json)
-        .map_err(|e| format!("Échec d'écriture: {}", e))?;
+    fs::write(&file_path, json).map_err(|e| format!("Échec d'écriture: {}", e))?;
 
     log::info!("✅ [PRESETS] Preset saved: {}", name);
     Ok(name)
@@ -98,26 +97,25 @@ pub async fn save_config_preset(
  * Commande Tauri: load_config_preset
  */
 #[tauri::command]
-pub async fn load_config_preset(
-    app: AppHandle,
-    name: String,
-) -> Result<ConfigSnapshot, String> {
+pub async fn load_config_preset(app: AppHandle, name: String) -> Result<ConfigSnapshot, String> {
     log::info!("📥 [PRESETS] Loading preset: {}", name);
 
     // Get presets directory
-    let data_dir = app.path()
+    let data_dir = app
+        .path()
         .app_data_dir()
         .map_err(|e| format!("Impossible d'obtenir le dossier de données: {}", e))?;
 
-    let file_path = data_dir.join("config_presets").join(format!("{}.json", name));
+    let file_path = data_dir
+        .join("config_presets")
+        .join(format!("{}.json", name));
 
     // Read file
-    let json = fs::read_to_string(&file_path)
-        .map_err(|e| format!("Preset introuvable: {}", e))?;
+    let json = fs::read_to_string(&file_path).map_err(|e| format!("Preset introuvable: {}", e))?;
 
     // Parse
-    let mut preset: ConfigPreset = serde_json::from_str(&json)
-        .map_err(|e| format!("JSON invalide: {}", e))?;
+    let mut preset: ConfigPreset =
+        serde_json::from_str(&json).map_err(|e| format!("JSON invalide: {}", e))?;
 
     // Update last_used
     preset.last_used = Some(chrono::Utc::now().to_rfc3339());
@@ -139,13 +137,12 @@ pub async fn load_config_preset(
  * Commande Tauri: list_config_presets
  */
 #[tauri::command]
-pub async fn list_config_presets(
-    app: AppHandle,
-) -> Result<Vec<ConfigPreset>, String> {
+pub async fn list_config_presets(app: AppHandle) -> Result<Vec<ConfigPreset>, String> {
     log::info!("📋 [PRESETS] Listing presets...");
 
     // Get presets directory
-    let data_dir = app.path()
+    let data_dir = app
+        .path()
         .app_data_dir()
         .map_err(|e| format!("Impossible d'obtenir le dossier de données: {}", e))?;
 
@@ -157,18 +154,16 @@ pub async fn list_config_presets(
     }
 
     // Read directory
-    let entries = fs::read_dir(&presets_dir)
-        .map_err(|e| format!("Impossible de lire le dossier: {}", e))?;
+    let entries =
+        fs::read_dir(&presets_dir).map_err(|e| format!("Impossible de lire le dossier: {}", e))?;
 
     let mut presets = Vec::new();
-    for entry in entries {
-        if let Ok(entry) = entry {
-            if let Some(filename) = entry.file_name().to_str() {
-                if filename.ends_with(".json") {
-                    if let Ok(json) = fs::read_to_string(entry.path()) {
-                        if let Ok(preset) = serde_json::from_str::<ConfigPreset>(&json) {
-                            presets.push(preset);
-                        }
+    for entry in entries.flatten() {
+        if let Some(filename) = entry.file_name().to_str() {
+            if filename.ends_with(".json") {
+                if let Ok(json) = fs::read_to_string(entry.path()) {
+                    if let Ok(preset) = serde_json::from_str::<ConfigPreset>(&json) {
+                        presets.push(preset);
                     }
                 }
             }
@@ -188,22 +183,21 @@ pub async fn list_config_presets(
  * Commande Tauri: delete_config_preset
  */
 #[tauri::command]
-pub async fn delete_config_preset(
-    app: AppHandle,
-    name: String,
-) -> Result<(), String> {
+pub async fn delete_config_preset(app: AppHandle, name: String) -> Result<(), String> {
     log::info!("🗑️  [PRESETS] Deleting preset: {}", name);
 
     // Get presets directory
-    let data_dir = app.path()
+    let data_dir = app
+        .path()
         .app_data_dir()
         .map_err(|e| format!("Impossible d'obtenir le dossier de données: {}", e))?;
 
-    let file_path = data_dir.join("config_presets").join(format!("{}.json", name));
+    let file_path = data_dir
+        .join("config_presets")
+        .join(format!("{}.json", name));
 
     // Delete file
-    fs::remove_file(&file_path)
-        .map_err(|e| format!("Impossible de supprimer le preset: {}", e))?;
+    fs::remove_file(&file_path).map_err(|e| format!("Impossible de supprimer le preset: {}", e))?;
 
     log::info!("✅ [PRESETS] Preset deleted: {}", name);
     Ok(())

@@ -3,10 +3,10 @@
 //! Super Prompt #19 — Communication inter-agents
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
-use tokio::sync::RwLock;
-use std::collections::VecDeque;
 use super::agent::AgentId;
+use serde::{Deserialize, Serialize};
+use std::collections::VecDeque;
+use tokio::sync::RwLock;
 
 /// Priorité de message
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Ord, PartialOrd, Serialize, Deserialize)]
@@ -90,7 +90,12 @@ impl Message {
     }
 
     pub fn broadcast(from: AgentId, content: &str) -> Self {
-        let mut msg = Self::new(from, "broadcast".to_string(), content, MessagePriority::Normal);
+        let mut msg = Self::new(
+            from,
+            "broadcast".to_string(),
+            content,
+            MessagePriority::Normal,
+        );
         msg.message_type = MessageType::Broadcast;
         msg
     }
@@ -180,7 +185,9 @@ impl MessageBus {
             }
         } else {
             // Message direct
-            let queue = queues.entry(message.to.clone()).or_insert_with(VecDeque::new);
+            let queue = queues
+                .entry(message.to.clone())
+                .or_insert_with(VecDeque::new);
 
             if queue.len() < self.max_queue_size {
                 message.delivered = true;
@@ -219,7 +226,8 @@ impl MessageBus {
 
         if let Some(queue) = queues.get_mut(agent_id) {
             // Trouver le message de plus haute priorité
-            let highest_idx = queue.iter()
+            let highest_idx = queue
+                .iter()
                 .enumerate()
                 .max_by_key(|(_, m)| m.priority)
                 .map(|(i, _)| i);
@@ -264,10 +272,10 @@ impl MessageBus {
     /// Récupère les messages entre deux agents
     pub async fn conversation(&self, agent_a: &AgentId, agent_b: &AgentId) -> Vec<Message> {
         let history = self.history.read().await;
-        history.iter()
+        history
+            .iter()
             .filter(|m| {
-                (&m.from == agent_a && &m.to == agent_b) ||
-                (&m.from == agent_b && &m.to == agent_a)
+                (&m.from == agent_a && &m.to == agent_b) || (&m.from == agent_b && &m.to == agent_a)
             })
             .cloned()
             .collect()

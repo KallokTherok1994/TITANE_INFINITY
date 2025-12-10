@@ -3,9 +3,9 @@
 //! Super Prompt #17 — Harmonisation des réponses multi-providers
 //! ═══════════════════════════════════════════════════════════════════════════════
 
+use super::{APIRequest, Provider, ResponseContent, UsageStats};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use super::{Provider, APIRequest, ResponseContent, UsageStats};
 
 /// Réponse harmonisée
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -71,7 +71,11 @@ impl ResponseHarmonizer {
     }
 
     /// Harmonise une réponse brute
-    pub async fn harmonize(&self, response: HarmonizedResponse, _request: &APIRequest) -> HarmonizedResponse {
+    pub async fn harmonize(
+        &self,
+        response: HarmonizedResponse,
+        _request: &APIRequest,
+    ) -> HarmonizedResponse {
         let mut harmonized = response;
 
         // Harmoniser le contenu textuel
@@ -133,11 +137,7 @@ impl ResponseHarmonizer {
             }
             Provider::Anthropic => {
                 // Claude peut commencer par des réflexions internes
-                let prefixes = [
-                    "I'd be happy to ",
-                    "I'll ",
-                    "Let me ",
-                ];
+                let prefixes = ["I'd be happy to ", "I'll ", "Let me "];
                 // On ne les enlève pas car ils font partie du style naturel
             }
             Provider::Gemini => {
@@ -233,7 +233,8 @@ impl ResponseHarmonizer {
         if text.len() > 500 {
             let paragraphs: Vec<&str> = text.split("\n\n").collect();
             if paragraphs.len() > 2 {
-                return paragraphs.iter()
+                return paragraphs
+                    .iter()
                     .enumerate()
                     .map(|(i, p)| {
                         if i == 0 {
@@ -255,7 +256,8 @@ impl ResponseHarmonizer {
     /// Rend le texte plus concis
     fn make_concise(&self, text: &str) -> String {
         // Garder uniquement les phrases clés
-        let sentences: Vec<&str> = text.split(|c| c == '.' || c == '!' || c == '?')
+        let sentences: Vec<&str> = text
+            .split(['.', '!', '?'])
             .filter(|s| !s.trim().is_empty())
             .collect();
 
@@ -268,17 +270,26 @@ impl ResponseHarmonizer {
         result.push(sentences[0]);
 
         // Garder les phrases importantes (avec des mots-clés)
-        let keywords = ["important", "key", "main", "essential", "must", "should", "critical"];
-        for sentence in &sentences[1..sentences.len()-1] {
+        let keywords = [
+            "important",
+            "key",
+            "main",
+            "essential",
+            "must",
+            "should",
+            "critical",
+        ];
+        for sentence in &sentences[1..sentences.len() - 1] {
             let lower = sentence.to_lowercase();
             if keywords.iter().any(|k| lower.contains(k)) {
                 result.push(sentence);
             }
         }
 
-        result.push(sentences[sentences.len()-1]);
+        result.push(sentences[sentences.len() - 1]);
 
-        result.iter()
+        result
+            .iter()
             .map(|s| format!("{}.", s.trim()))
             .collect::<Vec<_>>()
             .join(" ")
@@ -294,7 +305,7 @@ impl ResponseHarmonizer {
         let search_start = max_len.saturating_sub(50);
         let slice = &text[search_start..max_len];
 
-        if let Some(pos) = slice.rfind(|c: char| c == '.' || c == '!' || c == '?' || c == '\n') {
+        if let Some(pos) = slice.rfind(['.', '!', '?', '\n']) {
             let end_pos = search_start + pos + 1;
             return text[..end_pos].to_string();
         }
@@ -304,7 +315,7 @@ impl ResponseHarmonizer {
             return format!("{}...", &text[..end_pos]);
         }
 
-        format!("{}...", &text[..max_len-3])
+        format!("{}...", &text[..max_len - 3])
     }
 
     /// Fusionne plusieurs réponses en une seule
@@ -324,7 +335,8 @@ impl ResponseHarmonizer {
         }
 
         // Fusionner les contenus textuels
-        let texts: Vec<String> = responses.iter()
+        let texts: Vec<String> = responses
+            .iter()
             .filter_map(|r| {
                 if let ResponseContent::Text(t) = &r.content {
                     Some(t.clone())
@@ -341,14 +353,13 @@ impl ResponseHarmonizer {
         };
 
         // Agréger l'usage
-        let total_usage = responses.iter()
-            .fold(UsageStats::default(), |mut acc, r| {
-                acc.prompt_tokens += r.usage.prompt_tokens;
-                acc.completion_tokens += r.usage.completion_tokens;
-                acc.total_tokens += r.usage.total_tokens;
-                acc.estimated_cost_usd += r.usage.estimated_cost_usd;
-                acc
-            });
+        let total_usage = responses.iter().fold(UsageStats::default(), |mut acc, r| {
+            acc.prompt_tokens += r.usage.prompt_tokens;
+            acc.completion_tokens += r.usage.completion_tokens;
+            acc.total_tokens += r.usage.total_tokens;
+            acc.estimated_cost_usd += r.usage.estimated_cost_usd;
+            acc
+        });
 
         HarmonizedResponse {
             id: responses.first().map(|r| r.id.clone()).unwrap_or_default(),
@@ -363,7 +374,8 @@ impl ResponseHarmonizer {
     fn synthesize_texts(&self, texts: &[String]) -> String {
         // Simple: concaténer avec séparateurs
         // En production, on utiliserait Claude pour synthétiser
-        texts.iter()
+        texts
+            .iter()
             .enumerate()
             .map(|(i, t)| format!("**Perspective {}:**\n{}", i + 1, t))
             .collect::<Vec<_>>()

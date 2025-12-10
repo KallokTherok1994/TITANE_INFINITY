@@ -10,10 +10,10 @@
 // ============================================================================
 
 export type MetricType =
-  | 'counter'     // Compteur incrémental
-  | 'gauge'       // Valeur instantanée
-  | 'histogram'   // Distribution
-  | 'timer';      // Durées
+  | 'counter' // Compteur incrémental
+  | 'gauge' // Valeur instantanée
+  | 'histogram' // Distribution
+  | 'timer'; // Durées
 
 export interface Metric {
   id: string;
@@ -81,11 +81,14 @@ export interface ProfileSummary {
   spanCount: number;
 
   // Par catégorie
-  byCategory: Record<string, {
-    count: number;
-    totalDuration: number;
-    avgDuration: number;
-  }>;
+  byCategory: Record<
+    string,
+    {
+      count: number;
+      totalDuration: number;
+      avgDuration: number;
+    }
+  >;
 
   // Hotspots
   hotspots: { name: string; duration: number; percentage: number }[];

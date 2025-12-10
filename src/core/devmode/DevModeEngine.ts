@@ -111,7 +111,9 @@ export interface AuditResult {
 
 export interface OptimizeRequest {
   location: CodeLocation;
-  optimization_targets: Array<'speed' | 'memory' | 'network' | 'bundle_size' | 'rendering'>;
+  optimization_targets: Array<
+    'speed' | 'memory' | 'network' | 'bundle_size' | 'rendering'
+  >;
   constraints?: {
     max_complexity?: number;
     preserve_api?: boolean;
@@ -155,7 +157,9 @@ export interface FusionResult {
 
 export interface HardeningRequest {
   location: CodeLocation;
-  hardening_levels: Array<'error_handling' | 'input_validation' | 'state_rollback' | 'logging' | 'monitoring'>;
+  hardening_levels: Array<
+    'error_handling' | 'input_validation' | 'state_rollback' | 'logging' | 'monitoring'
+  >;
 }
 
 export interface HardeningResult {
@@ -506,9 +510,10 @@ export class DevModeEngine {
   } {
     const totalOps = this.operationHistory.length;
     const successOps = this.operationHistory.filter(op => op.success).length;
-    const avgDuration = totalOps > 0
-      ? this.operationHistory.reduce((sum, op) => sum + op.duration_ms, 0) / totalOps
-      : 0;
+    const avgDuration =
+      totalOps > 0
+        ? this.operationHistory.reduce((sum, op) => sum + op.duration_ms, 0) / totalOps
+        : 0;
 
     const opsByCommand: Record<string, number> = {};
     this.operationHistory.forEach(op => {

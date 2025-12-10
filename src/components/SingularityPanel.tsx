@@ -60,10 +60,7 @@ export const SingularityPanel: React.FC<SingularityPanelProps> = ({
         <h3>{title}</h3>
         <div className="module-status">
           <span className="health-emoji">{getHealthEmoji(health)}</span>
-          <span
-            className="health-text"
-            style={{ color: getHealthColor(health) }}
-          >
+          <span className="health-text" style={{ color: getHealthColor(health) }}>
             {health}
           </span>
         </div>
@@ -87,7 +84,12 @@ export const SingularityPanel: React.FC<SingularityPanelProps> = ({
     if (!cognitionState) return null;
 
     const loadPercent = (cognitionState.load * 100).toFixed(1);
-    const loadColor = cognitionState.load < 0.5 ? '#00ff88' : cognitionState.load < 0.8 ? '#ffaa00' : '#ff3344';
+    const loadColor =
+      cognitionState.load < 0.5
+        ? '#00ff88'
+        : cognitionState.load < 0.8
+          ? '#ffaa00'
+          : '#ff3344';
 
     return (
       <div className="singularity-module-card cognition-card">
@@ -105,7 +107,7 @@ export const SingularityPanel: React.FC<SingularityPanelProps> = ({
                 className="load-bar"
                 style={{
                   width: `${loadPercent}%`,
-                  backgroundColor: loadColor
+                  backgroundColor: loadColor,
                 }}
               />
               <span className="load-text">{loadPercent}%</span>
@@ -168,22 +170,16 @@ export const SingularityPanel: React.FC<SingularityPanelProps> = ({
           <h1>🔮 Singularity Engine</h1>
           <div className="header-meta">
             <span className="uptime">Disponibilité : {uptime}</span>
-            <span className="events">Événements : {singularityState.timeline_events}</span>
+            <span className="events">
+              Événements : {singularityState.timeline_events}
+            </span>
           </div>
         </div>
         <div className="header-right">
-          <button
-            onClick={refreshState}
-            disabled={loading}
-            className="btn-refresh"
-          >
+          <button onClick={refreshState} disabled={loading} className="btn-refresh">
             🔄 Actualiser
           </button>
-          <button
-            onClick={tickEngine}
-            disabled={loading}
-            className="btn-tick"
-          >
+          <button onClick={tickEngine} disabled={loading} className="btn-tick">
             ⚡ Tick
           </button>
           <button
@@ -198,41 +194,62 @@ export const SingularityPanel: React.FC<SingularityPanelProps> = ({
       {/* Main Grid */}
       <div className="singularity-grid">
         {/* Nexus Module */}
-        {nexusState && renderModuleCard(
-          '🔗 Nexus',
-          nexusState.health,
-          [
-            { label: 'Coordinations', value: nexusState.coordination_count },
-            { label: 'Connections', value: nexusState.active_connections },
-            { label: 'Last Coord', value: formatTimestamp(nexusState.last_coordination_ms) },
-          ],
-          nexusState.initialized
-        )}
+        {nexusState &&
+          renderModuleCard(
+            '🔗 Nexus',
+            nexusState.health,
+            [
+              { label: 'Coordinations', value: nexusState.coordination_count },
+              { label: 'Connections', value: nexusState.active_connections },
+              {
+                label: 'Last Coord',
+                value: formatTimestamp(nexusState.last_coordination_ms),
+              },
+            ],
+            nexusState.initialized
+          )}
 
         {/* Harmonia Module */}
-        {harmoniaState && renderModuleCard(
-          '⚖️ Harmonia',
-          harmoniaState.health,
-          [
-            { label: 'Harmony Index', value: `${(harmoniaState.harmony_index * 100).toFixed(1)}%` },
-            { label: 'Balance Score', value: `${(harmoniaState.balance_score * 100).toFixed(1)}%` },
-            { label: 'Last Check', value: formatTimestamp(harmoniaState.last_check_ms) },
-          ],
-          harmoniaState.initialized
-        )}
+        {harmoniaState &&
+          renderModuleCard(
+            '⚖️ Harmonia',
+            harmoniaState.health,
+            [
+              {
+                label: 'Harmony Index',
+                value: `${(harmoniaState.harmony_index * 100).toFixed(1)}%`,
+              },
+              {
+                label: 'Balance Score',
+                value: `${(harmoniaState.balance_score * 100).toFixed(1)}%`,
+              },
+              {
+                label: 'Last Check',
+                value: formatTimestamp(harmoniaState.last_check_ms),
+              },
+            ],
+            harmoniaState.initialized
+          )}
 
         {/* Sentinel Module */}
-        {sentinelState && renderModuleCard(
-          '🛡️ Sentinel',
-          sentinelState.health,
-          [
-            { label: 'Alert Count', value: sentinelState.alert_count },
-            { label: 'Active Monitors', value: sentinelState.active_monitors },
-            { label: 'Protection Level', value: `${sentinelState.protection_level}/10` },
-            { label: 'Last Check', value: formatTimestamp(sentinelState.last_check_ms) },
-          ],
-          sentinelState.initialized
-        )}
+        {sentinelState &&
+          renderModuleCard(
+            '🛡️ Sentinel',
+            sentinelState.health,
+            [
+              { label: 'Alert Count', value: sentinelState.alert_count },
+              { label: 'Active Monitors', value: sentinelState.active_monitors },
+              {
+                label: 'Protection Level',
+                value: `${sentinelState.protection_level}/10`,
+              },
+              {
+                label: 'Last Check',
+                value: formatTimestamp(sentinelState.last_check_ms),
+              },
+            ],
+            sentinelState.initialized
+          )}
 
         {/* Cognition */}
         {renderCognitionCard()}

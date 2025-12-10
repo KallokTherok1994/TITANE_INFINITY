@@ -68,7 +68,7 @@ export const TTS_ENGINE_CONFIG: TTSEngineConfig = {
   cacheEnabled: true,
   maxCacheEntries: 200,
   maxCacheSizeBytes: 100 * 1024 * 1024, // 100 MB
-  cacheTTLMs: 24 * 60 * 60 * 1000,      // 24h
+  cacheTTLMs: 24 * 60 * 60 * 1000, // 24h
 
   // Limites
   maxTextLength: 5000,
@@ -133,7 +133,10 @@ export const ALTERNATIVE_VOICES: Record<string, VoiceConfig> = {
  * Configuration complète des 10 émotions TTS
  * Chaque émotion modifie les paramètres vocaux pour un rendu naturel
  */
-export const EMOTION_CONFIGS: Record<TTSEmotion, Record<EmotionIntensity, EmotionConfig>> = {
+export const EMOTION_CONFIGS: Record<
+  TTSEmotion,
+  Record<EmotionIntensity, EmotionConfig>
+> = {
   neutral: {
     subtle: {
       emotion: 'neutral',
@@ -378,7 +381,10 @@ export const EMOTION_CONFIGS: Record<TTSEmotion, Record<EmotionIntensity, Emotio
 /**
  * Labels et icônes des émotions pour l'UI
  */
-export const EMOTION_UI: Record<TTSEmotion, { label: string; icon: string; color: string }> = {
+export const EMOTION_UI: Record<
+  TTSEmotion,
+  { label: string; icon: string; color: string }
+> = {
   neutral: { label: 'Neutre', icon: '😐', color: '#808080' },
   joyful: { label: 'Joyeux', icon: '😊', color: '#FFD700' },
   empathetic: { label: 'Empathique', icon: '🤗', color: '#FF69B4' },
@@ -398,11 +404,14 @@ export const EMOTION_UI: Record<TTSEmotion, { label: string; icon: string; color
 /**
  * Configuration des priorités de queue
  */
-export const PRIORITY_CONFIG: Record<TTSPriority, {
-  weight: number;
-  timeout: number;
-  skipable: boolean;
-}> = {
+export const PRIORITY_CONFIG: Record<
+  TTSPriority,
+  {
+    weight: number;
+    timeout: number;
+    skipable: boolean;
+  }
+> = {
   low: {
     weight: 1,
     timeout: 30000,
@@ -449,13 +458,13 @@ export const TTS_COMMANDS = {
 // ============================================================================
 
 export const TEST_PHRASES: Record<TTSEmotion, string> = {
-  neutral: "Bonjour, je suis Rachel, votre assistante vocale TITANE.",
+  neutral: 'Bonjour, je suis Rachel, votre assistante vocale TITANE.',
   joyful: "Quelle excellente nouvelle ! Je suis ravie de vous aider aujourd'hui !",
-  empathetic: "Je comprends parfaitement ce que vous ressentez. Je suis là pour vous.",
+  empathetic: 'Je comprends parfaitement ce que vous ressentez. Je suis là pour vous.',
   serious: "C'est une situation importante qui nécessite toute notre attention.",
   curious: "Hmm, c'est vraiment intéressant... Pouvez-vous m'en dire plus ?",
-  confident: "Absolument, je connais parfaitement la réponse à votre question.",
-  calm: "Prenez votre temps, respirez profondément. Tout va bien se passer.",
+  confident: 'Absolument, je connais parfaitement la réponse à votre question.',
+  calm: 'Prenez votre temps, respirez profondément. Tout va bien se passer.',
   urgent: "Attention ! C'est urgent et requiert une action immédiate !",
   playful: "Ha ha ! Vous avez le sens de l'humour, j'adore ça !",
   thoughtful: "Laissez-moi réfléchir un instant... C'est une question profonde.",
@@ -530,7 +539,7 @@ export function validateText(text: string): { valid: boolean; error?: string } {
   if (text.length > TTS_ENGINE_CONFIG.maxTextLength) {
     return {
       valid: false,
-      error: `Texte trop long (max ${TTS_ENGINE_CONFIG.maxTextLength} caractères)`
+      error: `Texte trop long (max ${TTS_ENGINE_CONFIG.maxTextLength} caractères)`,
     };
   }
 
@@ -549,7 +558,7 @@ function simpleHash(str: string): string {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
+    hash = (hash << 5) - hash + char;
     hash = hash & hash;
   }
   return Math.abs(hash).toString(36);

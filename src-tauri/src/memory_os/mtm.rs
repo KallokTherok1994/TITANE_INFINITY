@@ -103,7 +103,9 @@ impl MidTermMemory {
         entries.sort_by(|a, b| {
             let score_a = self.consolidation_score(a, now);
             let score_b = self.consolidation_score(b, now);
-            score_b.partial_cmp(&score_a).unwrap_or(std::cmp::Ordering::Equal)
+            score_b
+                .partial_cmp(&score_a)
+                .unwrap_or(std::cmp::Ordering::Equal)
         });
 
         // Truncate to max size, returning removed entries
@@ -115,7 +117,10 @@ impl MidTermMemory {
 
         let duration = start.elapsed();
         if duration.as_millis() > super::targets::MTM_CONSOLIDATION_MS {
-            log_warn!("MTM consolidation exceeded target: {}ms", duration.as_millis());
+            log_warn!(
+                "MTM consolidation exceeded target: {}ms",
+                duration.as_millis()
+            );
         }
 
         overflow
@@ -167,7 +172,9 @@ impl MidTermMemory {
             .iter()
             .filter(|e| {
                 e.content.to_lowercase().contains(&query_lower)
-                    || e.tags.iter().any(|t| t.to_lowercase().contains(&query_lower))
+                    || e.tags
+                        .iter()
+                        .any(|t| t.to_lowercase().contains(&query_lower))
             })
             .cloned()
             .collect();
@@ -210,11 +217,10 @@ impl MidTermMemory {
     /// Remove entry by ID
     pub async fn remove(&self, id: &uuid::Uuid) -> Option<MemoryEntry> {
         let mut entries = self.entries.write().await;
-        if let Some(pos) = entries.iter().position(|e| &e.id == id) {
-            Some(entries.remove(pos))
-        } else {
-            None
-        }
+        entries
+            .iter()
+            .position(|e| &e.id == id)
+            .map(|pos| entries.remove(pos))
     }
 
     /// Remove and return all entries
@@ -229,24 +235,26 @@ impl MidTermMemory {
         let threshold = now - self.retention_ms as i64;
 
         let mut entries = self.entries.write().await;
-        let (keep, expired): (Vec<_>, Vec<_>) = entries
-            .drain(..)
-            .partition(|e| e.timestamp >= threshold);
+        let (keep, expired): (Vec<_>, Vec<_>) =
+            entries.drain(..).partition(|e| e.timestamp >= threshold);
 
         *entries = keep;
         expired
     }
 
     /// Get entries ready for LTM promotion (high importance + old enough)
-    pub async fn get_ltm_candidates(&self, importance_threshold: f32, age_threshold_ms: i64) -> Vec<MemoryEntry> {
+    pub async fn get_ltm_candidates(
+        &self,
+        importance_threshold: f32,
+        age_threshold_ms: i64,
+    ) -> Vec<MemoryEntry> {
         let now = chrono::Utc::now().timestamp_millis();
         let entries = self.entries.read().await;
 
         entries
             .iter()
             .filter(|e| {
-                e.importance >= importance_threshold
-                    && (now - e.timestamp) >= age_threshold_ms
+                e.importance >= importance_threshold && (now - e.timestamp) >= age_threshold_ms
             })
             .cloned()
             .collect()
@@ -265,9 +273,8 @@ impl MidTermMemory {
     /// Remove entries marked for LTM
     pub async fn extract_ltm_marked(&self) -> Vec<MemoryEntry> {
         let mut entries = self.entries.write().await;
-        let (keep, ltm): (Vec<_>, Vec<_>) = entries
-            .drain(..)
-            .partition(|e| e.tier != MemoryTier::LTM);
+        let (keep, ltm): (Vec<_>, Vec<_>) =
+            entries.drain(..).partition(|e| e.tier != MemoryTier::LTM);
 
         *entries = keep;
         ltm
@@ -302,20 +309,13 @@ impl MidTermMemory {
             0.0
         };
 
-        let oldest_age_ms = entries
-            .iter()
-            .map(|e| now - e.timestamp)
-            .max()
-            .unwrap_or(0);
+        let oldest_age_ms = entries.iter().map(|e| now - e.timestamp).max().unwrap_or(0);
 
-        let newest_age_ms = entries
-            .iter()
-            .map(|e| now - e.timestamp)
-            .min()
-            .unwrap_or(0);
+        let newest_age_ms = entries.iter().map(|e| now - e.timestamp).min().unwrap_or(0);
 
         // Count tags
-        let mut tag_counts: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
+        let mut tag_counts: std::collections::HashMap<String, usize> =
+            std::collections::HashMap::new();
         for entry in entries.iter() {
             for tag in &entry.tags {
                 *tag_counts.entry(tag.clone()).or_insert(0) += 1;
@@ -403,7 +403,8 @@ mod tests {
         // Add more than capacity
         for i in 0..10 {
             let importance = (10 - i) as f32 / 10.0;
-            let entry = MemoryEntry::new(format!("Entry {}", i), importance, MemoryType::Conversation);
+            let entry =
+                MemoryEntry::new(format!("Entry {}", i), importance, MemoryType::Conversation);
             mtm.add(entry).await;
         }
 
@@ -435,7 +436,8 @@ mod tests {
 
         for i in 0..5 {
             let importance = i as f32 / 5.0;
-            let entry = MemoryEntry::new(format!("Entry {}", i), importance, MemoryType::Conversation);
+            let entry =
+                MemoryEntry::new(format!("Entry {}", i), importance, MemoryType::Conversation);
             mtm.add(entry).await;
         }
 

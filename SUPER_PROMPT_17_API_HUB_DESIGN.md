@@ -107,24 +107,28 @@ src-tauri/src/api_hub/
 ### Phase 1: LLM Providers (Essentiel)
 
 #### OpenAI
+
 - **Models**: GPT-4, GPT-4-turbo, o1-preview, o1-mini
 - **Endpoints**: Chat completions, embeddings, moderations
 - **Features**: Streaming, function calling, vision
 - **Rate Limits**: 10K RPM (tier 1), 500K TPM
 
 #### Anthropic
+
 - **Models**: Claude 3.5 Sonnet, Claude 3 Opus, Claude 3 Haiku
 - **Endpoints**: Messages, completions
 - **Features**: 200K context, tool use, vision
 - **Rate Limits**: Varies by tier
 
 #### Mistral AI
+
 - **Models**: Mistral Large, Mistral Medium, Mistral Small
 - **Endpoints**: Chat completions, embeddings
 - **Features**: JSON mode, function calling
 - **Rate Limits**: Provider-specific
 
 #### Local (Ollama)
+
 - **Models**: llama2, mistral, codellama, phi
 - **Endpoints**: Local HTTP API
 - **Features**: No rate limits, offline
@@ -133,16 +137,19 @@ src-tauri/src/api_hub/
 ### Phase 2: Web APIs (Important)
 
 #### GitHub
+
 - **Endpoints**: Repos, issues, PRs, actions, search
 - **Auth**: OAuth2, Personal Access Token
 - **Rate Limits**: 5000 req/hour (authenticated)
 
 #### GitLab
+
 - **Endpoints**: Projects, issues, MRs, pipelines
 - **Auth**: OAuth2, Personal Access Token
 - **Rate Limits**: 300 req/minute
 
 #### Jira
+
 - **Endpoints**: Issues, projects, workflows
 - **Auth**: OAuth2, API token
 - **Rate Limits**: Varies by plan
@@ -150,6 +157,7 @@ src-tauri/src/api_hub/
 ### Phase 3: Cloud & Messaging (Optionnel)
 
 #### Discord, Slack, AWS, GCP, Azure
+
 - À implémenter selon besoins
 
 ---
@@ -163,10 +171,10 @@ src-tauri/src/api_hub/
 pub trait Provider: Send + Sync {
     fn name(&self) -> &str;
     fn provider_type(&self) -> ProviderType;
-    
+
     async fn health_check(&self) -> Result<HealthStatus, ApiError>;
     async fn send_request(&self, request: ApiRequest) -> Result<ApiResponse, ApiError>;
-    
+
     fn rate_limit(&self) -> RateLimit;
     fn supports_streaming(&self) -> bool;
     fn supports_caching(&self) -> bool;
@@ -220,7 +228,7 @@ impl RateLimiter {
     pub async fn acquire_permit(&self) -> Result<Permit, RateLimitError> {
         // Token bucket algorithm
     }
-    
+
     pub async fn wait_for_permit(&self) -> Permit {
         // Avec backoff intelligent
     }
@@ -272,7 +280,7 @@ impl ApiCache {
     pub async fn get(&self, key: &str) -> Option<ApiResponse> {
         // Avec considération contexte temporel
     }
-    
+
     pub async fn set(&self, key: String, response: ApiResponse, ttl: u64) {
         // TTL adaptatif selon heure
     }
@@ -291,12 +299,12 @@ impl TemporalApiAdapter {
         // Peak hours: 1.5x rate limits
         // Night: 0.5x rate limits
     }
-    
+
     pub fn get_cache_ttl(&self, endpoint: &str) -> u64 {
         // Peak: shorter TTL (fresh data)
         // Night: longer TTL (less changes)
     }
-    
+
     pub fn should_batch_requests(&self) -> bool {
         // Night: batch for efficiency
         // Peak: real-time
@@ -477,14 +485,14 @@ let multiplier = adapter.get_rate_limit_multiplier();
 #[tokio::test]
 async fn test_openai_with_retry() {
     let provider = OpenAiProvider::new(config);
-    
+
     // Simuler échec temporaire
     mock_server.respond_with_error(500).times(2);
     mock_server.respond_with_success().once();
-    
+
     let request = create_test_request();
     let response = provider.send_request(request).await;
-    
+
     assert!(response.is_ok());
     assert_eq!(mock_server.call_count(), 3); // 2 retries + success
 }
@@ -496,14 +504,14 @@ async fn test_openai_with_retry() {
 
 ### Objectifs
 
-| Métrique | Objectif |
-|----------|----------|
-| Latence P95 | <500ms |
-| Latence P99 | <1000ms |
-| Cache Hit Rate | >60% |
-| Rate Limit Compliance | 100% |
-| Circuit Breaker Accuracy | >95% |
-| Overhead Hub | <10ms |
+| Métrique                 | Objectif |
+| ------------------------ | -------- |
+| Latence P95              | <500ms   |
+| Latence P99              | <1000ms  |
+| Cache Hit Rate           | >60%     |
+| Rate Limit Compliance    | 100%     |
+| Circuit Breaker Accuracy | >95%     |
+| Overhead Hub             | <10ms    |
 
 ### Optimisations
 

@@ -58,8 +58,8 @@ export const ExpressionMonitor: React.FC<ExpressionMonitorProps> = ({
               globalSync >= 0.85
                 ? 'bg-green-500'
                 : globalSync >= 0.7
-                ? 'bg-yellow-500'
-                : 'bg-red-500'
+                  ? 'bg-yellow-500'
+                  : 'bg-red-500'
             }`}
             style={{ width: `${globalSync * 100}%` }}
           />
@@ -68,18 +68,9 @@ export const ExpressionMonitor: React.FC<ExpressionMonitorProps> = ({
 
       {/* Detailed Sync */}
       <div className="space-y-3 mb-6">
-        <SyncMeter
-          label="Voix ↔ Halo"
-          score={syncDetails.voiceHaloSync}
-        />
-        <SyncMeter
-          label="Voix ↔ Narratif"
-          score={syncDetails.voiceNarrativeSync}
-        />
-        <SyncMeter
-          label="Halo ↔ Narratif"
-          score={syncDetails.haloNarrativeSync}
-        />
+        <SyncMeter label="Voix ↔ Halo" score={syncDetails.voiceHaloSync} />
+        <SyncMeter label="Voix ↔ Narratif" score={syncDetails.voiceNarrativeSync} />
+        <SyncMeter label="Halo ↔ Narratif" score={syncDetails.haloNarrativeSync} />
       </div>
 
       {/* Voice Stats */}
@@ -92,7 +83,9 @@ export const ExpressionMonitor: React.FC<ExpressionMonitorProps> = ({
           </div>
           <div>
             <span className="text-gray-500">Pitch:</span>{' '}
-            <span className="text-white">{expression.voice.prosody.pitch.toFixed(2)}</span>
+            <span className="text-white">
+              {expression.voice.prosody.pitch.toFixed(2)}
+            </span>
           </div>
           <div>
             <span className="text-gray-500">Warmth:</span>{' '}
@@ -180,11 +173,7 @@ const SyncMeter: React.FC<{ label: string; score: number }> = ({ label, score })
       <div className="w-full bg-gray-700 rounded-full h-1.5">
         <div
           className={`h-1.5 rounded-full transition-all ${
-            score >= 0.85
-              ? 'bg-green-500'
-              : score >= 0.7
-              ? 'bg-yellow-500'
-              : 'bg-red-500'
+            score >= 0.85 ? 'bg-green-500' : score >= 0.7 ? 'bg-yellow-500' : 'bg-red-500'
           }`}
           style={{ width: `${score * 100}%` }}
         />

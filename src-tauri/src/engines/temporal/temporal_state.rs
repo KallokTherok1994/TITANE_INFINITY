@@ -25,12 +25,7 @@ pub struct StateSnapshot {
 
 impl StateSnapshot {
     /// Crée un nouveau snapshot
-    pub fn new(
-        id: String,
-        data: String,
-        branch: String,
-        parent_id: Option<String>,
-    ) -> Self {
+    pub fn new(id: String, data: String, branch: String, parent_id: Option<String>) -> Self {
         Self {
             id,
             timestamp: current_timestamp(),
@@ -117,7 +112,9 @@ impl TemporalState {
 
     /// Récupère le snapshot actuel
     pub fn current_snapshot(&self) -> Option<&StateSnapshot> {
-        self.timeline.get(self.position).and_then(|id| self.snapshots.get(id))
+        self.timeline
+            .get(self.position)
+            .and_then(|id| self.snapshots.get(id))
     }
 
     /// Vérifie si undo est possible

@@ -224,7 +224,11 @@
 }
 
 .chat-mode-pill--active {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(168, 85, 247, 0.3) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.3) 0%,
+    rgba(168, 85, 247, 0.3) 100%
+  );
   border-color: var(--mode-color);
   box-shadow: 0 0 16px rgba(99, 102, 241, 0.3);
 }
@@ -324,6 +328,10 @@
 }
 
 .chat-mode-selector__menu::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--primary, #727b81) 0%, var(--primary, #727b81) 100%);
+  background: linear-gradient(
+    180deg,
+    var(--primary, #727b81) 0%,
+    var(--primary, #727b81) 100%
+  );
   border-radius: 3px;
 }

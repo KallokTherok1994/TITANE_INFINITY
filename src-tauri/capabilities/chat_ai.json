@@ -3,9 +3,7 @@
   "identifier": "chat-ai",
   "description": "Capability pour le Chat IA TITANE∞ (Gemini, Ollama, Local)",
   "windows": ["main"],
-  "permissions": [
-    "core:default"
-  ],
+  "permissions": ["core:default"],
   "commands": {
     "allow": [
       "chat_generate",
@@ -25,9 +23,6 @@
     "deny": []
   },
   "remote": {
-    "urls": [
-      "https://generativelanguage.googleapis.com/**",
-      "http://localhost:11434/**"
-    ]
+    "urls": ["https://generativelanguage.googleapis.com/**", "http://localhost:11434/**"]
   }
 }

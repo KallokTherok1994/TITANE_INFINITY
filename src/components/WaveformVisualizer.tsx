@@ -66,23 +66,26 @@ export const WaveformVisualizer: React.FC<WaveformVisualizerProps> = ({
   const frameDuration = React.useMemo(() => 1000 / targetFPS, [targetFPS]);
 
   // Obtenir couleur selon fréquence (mémoïsé)
-  const getFrequencyColor = React.useCallback((index: number, value: number): string => {
-    if (!dynamicColors) return '#8899aa'; // TITANE info
+  const getFrequencyColor = React.useCallback(
+    (index: number, value: number): string => {
+      if (!dynamicColors) return '#8899aa'; // TITANE info
 
-    const ratio = index / barCount;
-    const intensity = value / 255;
+      const ratio = index / barCount;
+      const intensity = value / 255;
 
-    if (ratio < 0.3) {
-      // Graves - Cyan vers Bleu
-      return `hsl(${ 190 + ratio * 30}, 100%, ${50 + intensity * 20}%)`;
-    } else if (ratio < 0.7) {
-      // Médiums - Bleu vers Violet
-      return `hsl(${220 + (ratio - 0.3) * 100}, 100%, ${50 + intensity * 20}%)`;
-    } else {
-      // Aigus - Violet vers Rose
-      return `hsl(${280 + (ratio - 0.7) * 60}, 100%, ${50 + intensity * 20}%)`;
-    }
-  }, [dynamicColors, barCount]);
+      if (ratio < 0.3) {
+        // Graves - Cyan vers Bleu
+        return `hsl(${190 + ratio * 30}, 100%, ${50 + intensity * 20}%)`;
+      } else if (ratio < 0.7) {
+        // Médiums - Bleu vers Violet
+        return `hsl(${220 + (ratio - 0.3) * 100}, 100%, ${50 + intensity * 20}%)`;
+      } else {
+        // Aigus - Violet vers Rose
+        return `hsl(${280 + (ratio - 0.7) * 60}, 100%, ${50 + intensity * 20}%)`;
+      }
+    },
+    [dynamicColors, barCount]
+  );
 
   // Animation canvas
   useEffect(() => {
@@ -188,7 +191,18 @@ export const WaveformVisualizer: React.FC<WaveformVisualizerProps> = ({
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [audioData, barCount, maxHeight, mode, dynamicColors, mirror, smoothing, smoothedData, getFrequencyColor, frameDuration]);
+  }, [
+    audioData,
+    barCount,
+    maxHeight,
+    mode,
+    dynamicColors,
+    mirror,
+    smoothing,
+    smoothedData,
+    getFrequencyColor,
+    frameDuration,
+  ]);
 
   return (
     <div className="waveform-visualizer">

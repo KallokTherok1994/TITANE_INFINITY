@@ -18,8 +18,8 @@ use crate::tts::TTSRequest;
 use dashmap::DashMap;
 use std::path::PathBuf;
 use std::sync::Arc;
-use tokio::sync::RwLock;
 use tauri::State;
+use tokio::sync::RwLock;
 
 /// Macro for safe mutex locking with auto-recovery
 macro_rules! lock_or_recover {
@@ -30,7 +30,6 @@ macro_rules! lock_or_recover {
         })
     };
 }
-
 
 // Global state for AI Chat system (v15)
 // v19.5.2 P2-1: Optimized with DashMap for concurrent access (Phase 2)
@@ -71,8 +70,9 @@ pub enum AudioDevice {
 
 impl AIChatState {
     pub fn new() -> Self {
-        let secrets_engine = SecureSecretsEngine::new(std::env::var("TITANE_SECRETS_PASSPHRASE").ok())
-            .unwrap_or_default();
+        let secrets_engine =
+            SecureSecretsEngine::new(std::env::var("TITANE_SECRETS_PASSPHRASE").ok())
+                .unwrap_or_default();
 
         let gemini_key = secrets_engine
             .get_secret("gemini_api_key")
@@ -83,7 +83,10 @@ impl AIChatState {
 
         // v19.5.2 P2-1: DashMap for lock-free concurrent access
         let ai_router = Arc::new(DashMap::new());
-        ai_router.insert("default".to_string(), AIRouter::new(gemini_key.clone(), ollama_model));
+        ai_router.insert(
+            "default".to_string(),
+            AIRouter::new(gemini_key.clone(), ollama_model),
+        );
 
         // Memory storage location
         let storage_dir = dirs::data_local_dir()
@@ -102,14 +105,23 @@ impl AIChatState {
 
         // v19.5.2: TTS engines in DashMap
         let tts_engines = Arc::new(DashMap::new());
-        tts_engines.insert("online".to_string(), TTSEngine::Online(OnlineTTS::new(gemini_key)));
+        tts_engines.insert(
+            "online".to_string(),
+            TTSEngine::Online(OnlineTTS::new(gemini_key)),
+        );
         tts_engines.insert("local".to_string(), TTSEngine::Local(LocalTTS::new()));
 
         // v19.5.2: Audio devices in DashMap
         let audio_devices = Arc::new(DashMap::new());
-        audio_devices.insert("recorder".to_string(), AudioDevice::Recorder(AudioRecorder::new(AudioConfig::default())));
+        audio_devices.insert(
+            "recorder".to_string(),
+            AudioDevice::Recorder(AudioRecorder::new(AudioConfig::default())),
+        );
         audio_devices.insert("asr".to_string(), AudioDevice::ASR(ASREngine::auto()));
-        audio_devices.insert("vad".to_string(), AudioDevice::VAD(VoiceActivityDetector::new()));
+        audio_devices.insert(
+            "vad".to_string(),
+            AudioDevice::VAD(VoiceActivityDetector::new()),
+        );
 
         // v19.5.2: Conversations in DashMap (empty initially)
         let conversations = Arc::new(DashMap::new());
@@ -150,7 +162,10 @@ pub async fn ai_query(
     };
 
     if !scan_result.safe {
-        log::warn!("[Sentinel v15] Security scan failed: {:?}", scan_result.threats);
+        log::warn!(
+            "[Sentinel v15] Security scan failed: {:?}",
+            scan_result.threats
+        );
         // Log to SingularityEngine Sentinel module
         if let Ok(engine) = state.core_collection.engine().lock() {
             let sentinel_mod = engine.sentinel();
@@ -177,12 +192,18 @@ pub async fn ai_query(
     // Query AI through router (cascade Gemini → Ollama → Local)
     // v19.5.2 P2-1: DashMap lock-free access (no .read().await needed!)
     let response = {
-        let router_ref = state.ai_router.get("default")
+        let router_ref = state
+            .ai_router
+            .get("default")
             .ok_or_else(|| "AI Router not initialized".to_string())?;
         router_ref.query(request).await.map_err(|e| e.to_string())?
     };
 
-    log::info!("[AI Router v15] Response from {:?} ({} tokens)", response.provider, response.tokens);
+    log::info!(
+        "[AI Router v15] Response from {:?} ({} tokens)",
+        response.provider,
+        response.tokens
+    );
 
     // Balance response with Harmonia (v15 - via CoreCollection)
     let balanced_response = {
@@ -195,7 +216,11 @@ pub async fn ai_query(
     if let Ok(mut conv_opt) = state.current_conversation.try_write() {
         if let Some(conv) = conv_opt.as_mut() {
             conv.add_entry(MessageRole::User, prompt, 0);
-            conv.add_entry(MessageRole::Assistant, balanced_response.clone(), response.tokens);
+            conv.add_entry(
+                MessageRole::Assistant,
+                balanced_response.clone(),
+                response.tokens,
+            );
 
             // Save to persistent storage
             let storage = state.memory_storage.read().await;
@@ -207,8 +232,11 @@ pub async fn ai_query(
                 // Sync to MemoryModule in SingularityEngine v15
                 if let Ok(engine) = state.core_collection.engine().lock() {
                     let memory_mod = engine.memory();
-                    log::info!("[Memory v15] Memory count: {}, capacity: {:.2}%",
-                        memory_mod.memory_count, memory_mod.capacity_usage * 100.0);
+                    log::info!(
+                        "[Memory v15] Memory count: {}, capacity: {:.2}%",
+                        memory_mod.memory_count,
+                        memory_mod.capacity_usage * 100.0
+                    );
                 }
             }
         }
@@ -245,7 +273,10 @@ pub async fn speak(
     {
         let is_speaking = state.is_speaking.read().await;
         if *is_speaking {
-            return Err("TTS busy: another synthesis is in progress. Please wait or call stop_speaking().".to_string());
+            return Err(
+                "TTS busy: another synthesis is in progress. Please wait or call stop_speaking()."
+                    .to_string(),
+            );
         }
     }
 
@@ -345,9 +376,7 @@ pub async fn transcribe_audio(
     audio_data: Vec<u8>,
 ) -> Result<String, String> {
     let asr = state.asr_engine.read().await;
-    asr.transcribe(&audio_data)
-        .await
-        .map_err(|e| e.to_string())
+    asr.transcribe(&audio_data).await.map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -390,9 +419,7 @@ pub async fn load_conversation(
 #[tauri::command]
 pub async fn list_conversations(state: State<'_, AIChatState>) -> Result<String, String> {
     let storage = state.memory_storage.read().await;
-    let conversations = storage
-        .list_conversations()
-        .map_err(|e| e.to_string())?;
+    let conversations = storage.list_conversations().map_err(|e| e.to_string())?;
 
     serde_json::to_string(&conversations).map_err(|e| e.to_string())
 }
@@ -434,7 +461,7 @@ pub async fn health_check(state: State<'_, AIChatState>) -> Result<String, Strin
 
     // Run SelfHeal diagnostic
     let diagnostic = {
-        let mut selfheal = state.lock_or_recover!(selfheal);
+        let mut selfheal = lock_or_recover!(state.selfheal);
         selfheal.run_diagnostic()
     };
 
@@ -459,12 +486,12 @@ pub async fn get_vad_state(state: State<'_, AIChatState>) -> Result<bool, String
 
 #[tauri::command]
 pub fn get_module_status(state: State<'_, AIChatState>) -> Result<String, String> {
-    let helios = state.lock_or_recover!(helios);
-    let nexus = state.lock_or_recover!(nexus);
-    let harmonia = state.lock_or_recover!(harmonia);
-    let sentinel = state.lock_or_recover!(sentinel);
-    let adaptive = state.lock_or_recover!(adaptive);
-    let selfheal = state.lock_or_recover!(selfheal);
+    let helios = lock_or_recover!(state.helios);
+    let nexus = lock_or_recover!(state.nexus);
+    let harmonia = lock_or_recover!(state.harmonia);
+    let sentinel = lock_or_recover!(state.sentinel);
+    let adaptive = lock_or_recover!(state.adaptive);
+    let selfheal = lock_or_recover!(state.selfheal);
 
     let status = serde_json::json!({
         "modules": [

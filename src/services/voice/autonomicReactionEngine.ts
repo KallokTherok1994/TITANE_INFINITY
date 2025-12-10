@@ -19,14 +19,14 @@ import { vocalMicroFXEngine } from './vocalMicroFXEngine';
  * Type de réaction autonome
  */
 export type AutonomicReactionType =
-  | 'acknowledgment'   // Accusé de réception simple
-  | 'empathy'          // Réaction empathique
-  | 'excitement'       // Réaction excitée/joyeuse
-  | 'concern'          // Réaction inquiète/attentive
-  | 'curiosity'        // Réaction curieuse
-  | 'thinking'         // Signal de réflexion
-  | 'surprise'         // Réaction surprise
-  | 'none';            // Pas de réaction autonome
+  | 'acknowledgment' // Accusé de réception simple
+  | 'empathy' // Réaction empathique
+  | 'excitement' // Réaction excitée/joyeuse
+  | 'concern' // Réaction inquiète/attentive
+  | 'curiosity' // Réaction curieuse
+  | 'thinking' // Signal de réflexion
+  | 'surprise' // Réaction surprise
+  | 'none'; // Pas de réaction autonome
 
 /**
  * Réaction autonome générée
@@ -65,37 +65,24 @@ export interface ReactionEngineConfig {
  * Bibliothèque de réactions par type
  */
 const REACTION_LIBRARY: Record<AutonomicReactionType, string[]> = {
-  acknowledgment: [
-    'D\'accord',
-    'Je vois',
-    'Compris',
-    'Noté',
-    'Ok',
-    'Mhm',
-  ],
+  acknowledgment: ["D'accord", 'Je vois', 'Compris', 'Noté', 'Ok', 'Mhm'],
   empathy: [
     'Je comprends...',
     'Je vois ce que tu veux dire',
-    'Oui, je t\'entends',
+    "Oui, je t'entends",
     'Hmm, je comprends',
     'Je ressens ça aussi',
-    'C\'est pas facile...',
+    "C'est pas facile...",
   ],
   excitement: [
     'Oh ! Excellent !',
     'Génial !',
     'Super !',
-    'Wow, c\'est top !',
+    "Wow, c'est top !",
     'Ah oui ! Parfait !',
-    'Oh là là, c\'est super !',
+    "Oh là là, c'est super !",
   ],
-  concern: [
-    'Oh...',
-    'Je vois...',
-    'Hmm, d\'accord...',
-    'Ok, je comprends',
-    'Ah oui...',
-  ],
+  concern: ['Oh...', 'Je vois...', "Hmm, d'accord...", 'Ok, je comprends', 'Ah oui...'],
   curiosity: [
     'Oh ? Vraiment ?',
     'Ah oui ?',
@@ -103,13 +90,7 @@ const REACTION_LIBRARY: Record<AutonomicReactionType, string[]> = {
     'Hmm, dis-moi...',
     'Oh, raconte',
   ],
-  thinking: [
-    'Hmm...',
-    'Voyons...',
-    'Laisse-moi réfléchir...',
-    'Alors...',
-    'Euh...',
-  ],
+  thinking: ['Hmm...', 'Voyons...', 'Laisse-moi réfléchir...', 'Alors...', 'Euh...'],
   surprise: [
     'Oh !',
     'Ah !',
@@ -124,7 +105,9 @@ const REACTION_LIBRARY: Record<AutonomicReactionType, string[]> = {
 /**
  * Mapping Mood + Intention → Reaction Type
  */
-const MOOD_INTENTION_REACTION_MAP: Partial<Record<UserMood, Partial<Record<UserIntention, AutonomicReactionType>>>> = {
+const MOOD_INTENTION_REACTION_MAP: Partial<
+  Record<UserMood, Partial<Record<UserIntention, AutonomicReactionType>>>
+> = {
   excited: {
     question: 'curiosity',
     affirmation: 'excitement',
@@ -216,7 +199,11 @@ export class AutonomicReactionEngine {
     }
 
     // Déterminer si une réaction est nécessaire
-    const shouldReact = this.determineIfShouldReact(emotionState, lastUserMessage, context);
+    const shouldReact = this.determineIfShouldReact(
+      emotionState,
+      lastUserMessage,
+      context
+    );
 
     if (!shouldReact) return null;
 
@@ -229,7 +216,8 @@ export class AutonomicReactionEngine {
     const reactionText = this.generateReactionText(reactionType, emotionState);
 
     // Générer micro-expression associée
-    const microExpression = vocalMicroFXEngine.generateAutonomicMicroExpression(emotionState);
+    const microExpression =
+      vocalMicroFXEngine.generateAutonomicMicroExpression(emotionState);
 
     // Priority basée sur type + émotion
     const priority = this.determinePriority(reactionType, emotionState);
@@ -454,6 +442,8 @@ export function generateAutonomicReaction(
 /**
  * Helper: Generate quick reaction
  */
-export function generateQuickReaction(emotionState: EmotionalState): AutonomicReaction | null {
+export function generateQuickReaction(
+  emotionState: EmotionalState
+): AutonomicReaction | null {
   return autonomicReactionEngine.generateQuickReaction(emotionState);
 }

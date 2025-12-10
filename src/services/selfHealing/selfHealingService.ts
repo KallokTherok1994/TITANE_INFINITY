@@ -20,7 +20,9 @@ export type {
  * Déclenche un cycle complet d'auto-guérison.
  * @param symptoms Description synthétique des symptômes détectés.
  */
-export async function triggerSelfHealing(symptoms: string): Promise<SelfHealingRunResult> {
+export async function triggerSelfHealing(
+  symptoms: string
+): Promise<SelfHealingRunResult> {
   if (!symptoms || symptoms.trim().length === 0) {
     throw new Error('Symptômes requis pour lancer le self-healing.');
   }

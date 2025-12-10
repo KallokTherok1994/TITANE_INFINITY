@@ -23,8 +23,16 @@ export const UIReadingPanel = memo(function UIReadingPanel() {
   const { isPanelOpen, togglePanel } = useUIReadingContext();
   const { zoomLevel, zoomOut, zoomPercent, setZoom } = useZoom();
   const {
-    fontSizeBase, fontFamily, lineHeight, letterSpacing, maxContentWidth,
-    setFontSize, setFontFamily, setLineHeight, setLetterSpacing, setMaxContentWidth
+    fontSizeBase,
+    fontFamily,
+    lineHeight,
+    letterSpacing,
+    maxContentWidth,
+    setFontSize,
+    setFontFamily,
+    setLineHeight,
+    setLetterSpacing,
+    setMaxContentWidth,
   } = useTypography();
   const { currentPreset, applyPreset, resetAll } = usePresets();
 
@@ -58,8 +66,12 @@ export const UIReadingPanel = memo(function UIReadingPanel() {
                 onClick={() => applyPreset(preset)}
                 title={PresetMetadata[preset].description}
               >
-                <span className="ui-reading-panel__preset-icon">{PresetMetadata[preset].icon}</span>
-                <span className="ui-reading-panel__preset-label">{PresetMetadata[preset].label}</span>
+                <span className="ui-reading-panel__preset-icon">
+                  {PresetMetadata[preset].icon}
+                </span>
+                <span className="ui-reading-panel__preset-label">
+                  {PresetMetadata[preset].label}
+                </span>
               </button>
             ))}
           </div>
@@ -69,7 +81,9 @@ export const UIReadingPanel = memo(function UIReadingPanel() {
         <section className="ui-reading-panel__section">
           <h4 className="ui-reading-panel__section-title">Zoom</h4>
           <div className="ui-reading-panel__row">
-            <button className="ui-reading-panel__btn" onClick={zoomOut}>−</button>
+            <button className="ui-reading-panel__btn" onClick={zoomOut}>
+              −
+            </button>
             <input
               type="range"
               className="ui-reading-panel__slider"
@@ -80,9 +94,11 @@ export const UIReadingPanel = memo(function UIReadingPanel() {
               onChange={e => {
                 const val = parseInt(e.target.value) / 100;
                 // Round to nearest valid zoom level
-                const validZoomLevels = [0.85, 0.90, 0.95, 1.0, 1.05, 1.10, 1.15, 1.2, 1.3, 1.4] as const;
-                const closestZoom = validZoomLevels.reduce(
-                  (prev, curr) => Math.abs(curr - val) < Math.abs(prev - val) ? curr : prev
+                const validZoomLevels = [
+                  0.85, 0.9, 0.95, 1.0, 1.05, 1.1, 1.15, 1.2, 1.3, 1.4,
+                ] as const;
+                const closestZoom = validZoomLevels.reduce((prev, curr) =>
+                  Math.abs(curr - val) < Math.abs(prev - val) ? curr : prev
                 );
                 setZoom(closestZoom);
                 applyPreset(null); // Clear preset when manually adjusting
@@ -143,7 +159,9 @@ export const UIReadingPanel = memo(function UIReadingPanel() {
                 value={letterSpacing * 100}
                 onChange={e => setLetterSpacing(parseInt(e.target.value) / 100)}
               />
-              <span className="ui-reading-panel__value">{letterSpacing.toFixed(2)}em</span>
+              <span className="ui-reading-panel__value">
+                {letterSpacing.toFixed(2)}em
+              </span>
             </div>
           </div>
 
@@ -156,7 +174,14 @@ export const UIReadingPanel = memo(function UIReadingPanel() {
                   key={font}
                   className={`ui-reading-panel__font-btn ${fontFamily === font ? 'ui-reading-panel__font-btn--active' : ''}`}
                   onClick={() => setFontFamily(font)}
-                  style={{ fontFamily: font === 'system' ? 'inherit' : font === 'serif' ? 'Georgia, serif' : 'monospace' }}
+                  style={{
+                    fontFamily:
+                      font === 'system'
+                        ? 'inherit'
+                        : font === 'serif'
+                          ? 'Georgia, serif'
+                          : 'monospace',
+                  }}
                 >
                   {font === 'system' ? 'Système' : font === 'serif' ? 'Serif' : 'Mono'}
                 </button>
@@ -187,10 +212,7 @@ export const UIReadingPanel = memo(function UIReadingPanel() {
 
         {/* Footer: Reset */}
         <div className="ui-reading-panel__footer">
-          <button
-            className="ui-reading-panel__reset"
-            onClick={resetAll}
-          >
+          <button className="ui-reading-panel__reset" onClick={resetAll}>
             Réinitialiser par défaut
           </button>
         </div>

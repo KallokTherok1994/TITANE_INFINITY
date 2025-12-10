@@ -3,9 +3,9 @@
 //! Super Prompt #17 — Registre des providers et leurs capacités
 //! ═══════════════════════════════════════════════════════════════════════════════
 
+use super::{Modality, Provider};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use super::{Provider, Modality};
 
 /// Capacité d'un provider
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -35,10 +35,10 @@ pub struct ProviderProfile {
     pub supports_audio: bool,
     pub supports_embeddings: bool,
     pub max_context_tokens: u32,
-    pub cost_rating: u8,      // 1-10, 10 = most expensive
-    pub speed_rating: u8,     // 1-10, 10 = fastest
-    pub quality_rating: u8,   // 1-10, 10 = highest quality
-    pub safety_rating: u8,    // 1-10, 10 = safest
+    pub cost_rating: u8,    // 1-10, 10 = most expensive
+    pub speed_rating: u8,   // 1-10, 10 = fastest
+    pub quality_rating: u8, // 1-10, 10 = highest quality
+    pub safety_rating: u8,  // 1-10, 10 = safest
     pub models: Vec<ModelInfo>,
     pub rate_limits: RateLimits,
     pub available: bool,
@@ -279,7 +279,9 @@ impl ProviderProfile {
             Modality::Vision => self.supports_vision,
             Modality::Audio => self.supports_audio,
             Modality::Embeddings => self.supports_embeddings,
-            Modality::ImageGeneration => self.capabilities.contains(&ProviderCapability::ImageGeneration),
+            Modality::ImageGeneration => self
+                .capabilities
+                .contains(&ProviderCapability::ImageGeneration),
             Modality::MultiModal => self.capabilities.contains(&ProviderCapability::MultiModal),
         }
     }
@@ -359,7 +361,8 @@ impl ProviderRegistry {
 
     /// Liste les providers actifs
     pub fn active_providers(&self) -> Vec<Provider> {
-        self.providers.iter()
+        self.providers
+            .iter()
             .filter(|(_, p)| p.available)
             .map(|(k, _)| *k)
             .collect()
@@ -367,20 +370,29 @@ impl ProviderRegistry {
 
     /// Providers supportant une modalité
     pub fn providers_for_modality(&self, modality: Modality) -> Vec<&ProviderProfile> {
-        self.providers.values()
+        self.providers
+            .values()
             .filter(|p| p.available && p.supports_modality(modality))
             .collect()
     }
 
     /// Providers ayant une capacité
-    pub fn providers_with_capability(&self, capability: ProviderCapability) -> Vec<&ProviderProfile> {
-        self.providers.values()
+    pub fn providers_with_capability(
+        &self,
+        capability: ProviderCapability,
+    ) -> Vec<&ProviderProfile> {
+        self.providers
+            .values()
             .filter(|p| p.available && p.has_capability(capability))
             .collect()
     }
 
     /// Meilleur provider pour une modalité selon les poids
-    pub fn best_provider_for(&self, modality: Modality, weights: &ScoreWeights) -> Option<Provider> {
+    pub fn best_provider_for(
+        &self,
+        modality: Modality,
+        weights: &ScoreWeights,
+    ) -> Option<Provider> {
         self.providers_for_modality(modality)
             .into_iter()
             .max_by(|a, b| {

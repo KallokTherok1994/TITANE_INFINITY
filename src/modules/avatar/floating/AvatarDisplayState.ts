@@ -7,9 +7,9 @@
  * Mode d'affichage avatar
  */
 export enum AvatarDisplayMode {
-  Floating = 'floating',  // Fenêtre flottante indépendante
-  Embed = 'embed',        // Intégré dans fenêtre principale
-  Hidden = 'hidden',      // Caché
+  Floating = 'floating', // Fenêtre flottante indépendante
+  Embed = 'embed', // Intégré dans fenêtre principale
+  Hidden = 'hidden', // Caché
 }
 
 /**
@@ -25,7 +25,7 @@ export enum AnchorPosition {
   BottomLeft = 'bottom_left',
   BottomCenter = 'bottom_center',
   BottomRight = 'bottom_right',
-  Free = 'free',  // Position libre (drag)
+  Free = 'free', // Position libre (drag)
 }
 
 /**
@@ -34,28 +34,28 @@ export enum AnchorPosition {
 export interface AvatarDisplayState {
   // Mode & Position
   mode: AvatarDisplayMode;
-  position: [number, number];  // [x, y] en pixels
+  position: [number, number]; // [x, y] en pixels
   anchor: AnchorPosition;
-  screen_index: number;   // Index de l'écran (0 = principal)
+  screen_index: number; // Index de l'écran (0 = principal)
 
   // Dimensions
   width: number;
   height: number;
-  scale: number;            // 0.1 à 2.0
+  scale: number; // 0.1 à 2.0
 
   // Apparence
-  opacity: number;          // 0.0 à 1.0
-  brightness: number;       // 0.0 à 2.0
+  opacity: number; // 0.0 à 1.0
+  brightness: number; // 0.0 à 2.0
 
   // Comportement
   always_on_top: boolean;
-  mirror_mode: boolean;     // Effet miroir horizontal
-  locked: boolean;          // Verrouillage drag & resize
-  click_through: boolean;   // Passthrough des clics
+  mirror_mode: boolean; // Effet miroir horizontal
+  locked: boolean; // Verrouillage drag & resize
+  click_through: boolean; // Passthrough des clics
 
   // État
   visible: boolean;
-  last_updated: number;     // Timestamp
+  last_updated: number; // Timestamp
 }
 
 /**
@@ -120,50 +120,50 @@ export function parseAnchorPosition(anchorStr: string): AnchorPosition | null {
 
   const mapping: Record<string, AnchorPosition> = {
     'top-left': AnchorPosition.TopLeft,
-    'topleft': AnchorPosition.TopLeft,
+    topleft: AnchorPosition.TopLeft,
     'haut-gauche': AnchorPosition.TopLeft,
     'coin haut gauche': AnchorPosition.TopLeft,
 
     'top-center': AnchorPosition.TopCenter,
-    'topcenter': AnchorPosition.TopCenter,
+    topcenter: AnchorPosition.TopCenter,
     'haut-centre': AnchorPosition.TopCenter,
     'haut centre': AnchorPosition.TopCenter,
 
     'top-right': AnchorPosition.TopRight,
-    'topright': AnchorPosition.TopRight,
+    topright: AnchorPosition.TopRight,
     'haut-droite': AnchorPosition.TopRight,
     'coin haut droite': AnchorPosition.TopRight,
 
     'center-left': AnchorPosition.CenterLeft,
-    'centerleft': AnchorPosition.CenterLeft,
+    centerleft: AnchorPosition.CenterLeft,
     'centre-gauche': AnchorPosition.CenterLeft,
 
-    'center': AnchorPosition.Center,
-    'centre': AnchorPosition.Center,
-    'milieu': AnchorPosition.Center,
+    center: AnchorPosition.Center,
+    centre: AnchorPosition.Center,
+    milieu: AnchorPosition.Center,
 
     'center-right': AnchorPosition.CenterRight,
-    'centerright': AnchorPosition.CenterRight,
+    centerright: AnchorPosition.CenterRight,
     'centre-droite': AnchorPosition.CenterRight,
 
     'bottom-left': AnchorPosition.BottomLeft,
-    'bottomleft': AnchorPosition.BottomLeft,
+    bottomleft: AnchorPosition.BottomLeft,
     'bas-gauche': AnchorPosition.BottomLeft,
     'coin bas gauche': AnchorPosition.BottomLeft,
 
     'bottom-center': AnchorPosition.BottomCenter,
-    'bottomcenter': AnchorPosition.BottomCenter,
+    bottomcenter: AnchorPosition.BottomCenter,
     'bas-centre': AnchorPosition.BottomCenter,
     'bas centre': AnchorPosition.BottomCenter,
 
     'bottom-right': AnchorPosition.BottomRight,
-    'bottomright': AnchorPosition.BottomRight,
+    bottomright: AnchorPosition.BottomRight,
     'bas-droite': AnchorPosition.BottomRight,
     'coin bas droite': AnchorPosition.BottomRight,
 
-    'free': AnchorPosition.Free,
-    'libre': AnchorPosition.Free,
-    'custom': AnchorPosition.Free,
+    free: AnchorPosition.Free,
+    libre: AnchorPosition.Free,
+    custom: AnchorPosition.Free,
   };
 
   return mapping[normalized] || null;
@@ -184,45 +184,30 @@ export function calculateAnchoredPosition(
     case AnchorPosition.TopLeft:
       return [margin, margin];
     case AnchorPosition.TopCenter:
-      return [
-        Math.floor((screenWidth / 2) - (windowWidth / 2)),
-        margin,
-      ];
+      return [Math.floor(screenWidth / 2 - windowWidth / 2), margin];
     case AnchorPosition.TopRight:
-      return [
-        screenWidth - windowWidth - margin,
-        margin,
-      ];
+      return [screenWidth - windowWidth - margin, margin];
     case AnchorPosition.CenterLeft:
-      return [
-        margin,
-        Math.floor((screenHeight / 2) - (windowHeight / 2)),
-      ];
+      return [margin, Math.floor(screenHeight / 2 - windowHeight / 2)];
     case AnchorPosition.Center:
       return [
-        Math.floor((screenWidth / 2) - (windowWidth / 2)),
-        Math.floor((screenHeight / 2) - (windowHeight / 2)),
+        Math.floor(screenWidth / 2 - windowWidth / 2),
+        Math.floor(screenHeight / 2 - windowHeight / 2),
       ];
     case AnchorPosition.CenterRight:
       return [
         screenWidth - windowWidth - margin,
-        Math.floor((screenHeight / 2) - (windowHeight / 2)),
+        Math.floor(screenHeight / 2 - windowHeight / 2),
       ];
     case AnchorPosition.BottomLeft:
-      return [
-        margin,
-        screenHeight - windowHeight - margin,
-      ];
+      return [margin, screenHeight - windowHeight - margin];
     case AnchorPosition.BottomCenter:
       return [
-        Math.floor((screenWidth / 2) - (windowWidth / 2)),
+        Math.floor(screenWidth / 2 - windowWidth / 2),
         screenHeight - windowHeight - margin,
       ];
     case AnchorPosition.BottomRight:
-      return [
-        screenWidth - windowWidth - margin,
-        screenHeight - windowHeight - margin,
-      ];
+      return [screenWidth - windowWidth - margin, screenHeight - windowHeight - margin];
     case AnchorPosition.Free:
     default:
       return [0, 0]; // Position libre

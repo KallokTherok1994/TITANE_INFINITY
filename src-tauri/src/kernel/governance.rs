@@ -50,26 +50,17 @@ impl GovernanceEngine {
             "max_parallel_engines".to_string(),
             KernelPolicy::MaxParallelEngines(16),
         );
-        policies.insert(
-            "memory_cap_mb".to_string(),
-            KernelPolicy::MemoryCapMb(2048),
-        );
+        policies.insert("memory_cap_mb".to_string(), KernelPolicy::MemoryCapMb(2048));
         policies.insert(
             "ltm_index_refresh".to_string(),
             KernelPolicy::LtmIndexRefresh(300),
         );
-        policies.insert(
-            "rate_limit".to_string(),
-            KernelPolicy::RateLimit(60),
-        );
+        policies.insert("rate_limit".to_string(), KernelPolicy::RateLimit(60));
         policies.insert(
             "safe_mode_on_overload".to_string(),
             KernelPolicy::SafeModeOnOverload(true),
         );
-        policies.insert(
-            "require_auth".to_string(),
-            KernelPolicy::RequireAuth(false),
-        );
+        policies.insert("require_auth".to_string(), KernelPolicy::RequireAuth(false));
         policies.insert(
             "max_queue_depth".to_string(),
             KernelPolicy::MaxQueueDepth(100),
@@ -107,9 +98,7 @@ impl GovernanceEngine {
                     }
                 }
 
-                if let Some(KernelPolicy::MaxQueueDepth(max)) =
-                    self.get_policy("max_queue_depth")
-                {
+                if let Some(KernelPolicy::MaxQueueDepth(max)) = self.get_policy("max_queue_depth") {
                     if context.queue_depth >= *max {
                         return Some(format!(
                             "Max queue depth exceeded: {} >= {}",
@@ -243,8 +232,7 @@ mod tests {
             KernelPolicy::MaxParallelEngines(32),
         );
 
-        if let Some(KernelPolicy::MaxParallelEngines(max)) =
-            gov.get_policy("max_parallel_engines")
+        if let Some(KernelPolicy::MaxParallelEngines(max)) = gov.get_policy("max_parallel_engines")
         {
             assert_eq!(*max, 32);
         } else {

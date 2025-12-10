@@ -81,7 +81,6 @@ vi.mock('../hooks/useChat', () => ({
  */
 
 describe('useActiveListening', () => {
-
   beforeEach(() => {
     vi.clearAllMocks();
     attentionEngine.reset();
@@ -92,7 +91,6 @@ describe('useActiveListening', () => {
   });
 
   describe('Initialization', () => {
-
     it('should initialize in inactive state', () => {
       const { result } = renderHook(() => useActiveListening());
 
@@ -102,18 +100,14 @@ describe('useActiveListening', () => {
     });
 
     it('should auto-arm when autoArm=true', () => {
-      const { result } = renderHook(() =>
-        useActiveListening({ autoArm: true })
-      );
+      const { result } = renderHook(() => useActiveListening({ autoArm: true }));
 
       expect(result.current.state.attentionState).toBe('armed');
       expect(result.current.isArmed).toBe(true);
     });
-
   });
 
   describe('Arm/Disarm', () => {
-
     it('should arm wake word detection', async () => {
       const { result } = renderHook(() => useActiveListening());
 
@@ -139,19 +133,14 @@ describe('useActiveListening', () => {
         expect(result.current.isArmed).toBe(false);
       });
     });
-
   });
 
   describe('Wake Word Detection', () => {
-
     it('should detect wake word in wake_only mode', async () => {
       const onWakeDetected = vi.fn();
 
       const { result } = renderHook(() =>
-        useActiveListening(
-          { autoArm: true },
-          { onWakeDetected }
-        )
+        useActiveListening({ autoArm: true }, { onWakeDetected })
       );
 
       // Simuler détection "Titane ?"
@@ -171,10 +160,7 @@ describe('useActiveListening', () => {
       const onCommand = vi.fn();
 
       const { result } = renderHook(() =>
-        useActiveListening(
-          { autoArm: true },
-          { onCommand }
-        )
+        useActiveListening({ autoArm: true }, { onCommand })
       );
 
       // Simuler one-shot "Titane, ouvre le terminal"
@@ -192,19 +178,14 @@ describe('useActiveListening', () => {
         );
       });
     });
-
   });
 
   describe('Attention State Changes', () => {
-
     it.skip('should transition through attention states', async () => {
       const onAttentionChange = vi.fn();
 
       const { result } = renderHook(() =>
-        useActiveListening(
-          { autoArm: false },
-          { onAttentionChange }
-        )
+        useActiveListening({ autoArm: false }, { onAttentionChange })
       );
 
       // inactive → armed
@@ -229,9 +210,7 @@ describe('useActiveListening', () => {
         expect(result.current.state.attentionState).toBe('awaiting_command');
       });
     });
-
   });
-
 });
 
 /**
@@ -241,7 +220,6 @@ describe('useActiveListening', () => {
  */
 
 describe('useVoiceEngine - completeTurnWithText', () => {
-
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -268,7 +246,6 @@ describe('useVoiceEngine - completeTurnWithText', () => {
 
     expect(result.current.status.state).toBe('idle');
   });
-
 });
 
 /**
@@ -278,14 +255,15 @@ describe('useVoiceEngine - completeTurnWithText', () => {
  */
 
 describe('E2E: Wake Word → VoiceEngine', () => {
-
   beforeEach(() => {
     vi.clearAllMocks();
     attentionEngine.reset();
   });
 
   it('should handle complete wake_only flow', async () => {
-    const { result: listeningResult } = renderHook(() => useActiveListening({ autoArm: true }));
+    const { result: listeningResult } = renderHook(() =>
+      useActiveListening({ autoArm: true })
+    );
     const { result: voiceResult } = renderHook(() => useVoiceEngine());
 
     // 1. Detect wake word
@@ -330,7 +308,6 @@ describe('E2E: Wake Word → VoiceEngine', () => {
       expect(voiceResult.current.status.transcript).toContain('ouvre');
     });
   });
-
 });
 
 /**
@@ -340,7 +317,6 @@ describe('E2E: Wake Word → VoiceEngine', () => {
  */
 
 describe('WakeWordIndicator', () => {
-
   it('should render correct state for armed', () => {
     // Test rendu visuel
     const state = 'armed';
@@ -350,13 +326,20 @@ describe('WakeWordIndicator', () => {
   });
 
   it('should show different glows for different states', () => {
-    const states = ['inactive', 'armed', 'wake_detected', 'awaiting_command', 'processing', 'responding', 'cooldown'];
+    const states = [
+      'inactive',
+      'armed',
+      'wake_detected',
+      'awaiting_command',
+      'processing',
+      'responding',
+      'cooldown',
+    ];
 
     states.forEach(state => {
       expect(state).toBeTruthy();
     });
   });
-
 });
 
 /**
@@ -368,8 +351,8 @@ describe('WakeWordIndicator', () => {
 export const testSummary = {
   totalTests: 15,
   categories: {
-    'useActiveListening': 6,
-    'useVoiceEngine': 2,
+    useActiveListening: 6,
+    useVoiceEngine: 2,
     'E2E Scenarios': 2,
     'UI Components': 2,
   },

@@ -237,15 +237,17 @@ export const composite = {
   /**
    * Logger une erreur avec contexte complet
    */
-  async logError(module: string, message: string, context?: Record<string, unknown>): Promise<void> {
+  async logError(
+    module: string,
+    message: string,
+    context?: Record<string, unknown>
+  ): Promise<void> {
     const entry: LogEntry = {
       id: crypto.randomUUID(),
       timestamp: Date.now(),
       level: 'Error',
       module,
-      message: context
-        ? `${message} | Context: ${JSON.stringify(context)}`
-        : message,
+      message: context ? `${message} | Context: ${JSON.stringify(context)}` : message,
     };
 
     await safeInvoke<void>('write_log', { entry });

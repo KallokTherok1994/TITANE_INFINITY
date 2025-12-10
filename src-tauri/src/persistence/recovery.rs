@@ -50,7 +50,10 @@ impl RecoveryEngine {
                         Ok(events) => {
                             report.events_recovered = events.len() as u64;
                             event_log.load_events(events);
-                            log::info!("[RecoveryEngine] ✅ {} événements récupérés", report.events_recovered);
+                            log::info!(
+                                "[RecoveryEngine] ✅ {} événements récupérés",
+                                report.events_recovered
+                            );
                         }
                         Err(e) => {
                             log::warn!("[RecoveryEngine] ⚠️ Erreur parsing events: {}", e);
@@ -73,19 +76,20 @@ impl RecoveryEngine {
         // 3. Récupérer les snapshots
         if snapshots_path.exists() {
             match tokio::fs::read_to_string(&snapshots_path).await {
-                Ok(content) => {
-                    match serde_json::from_str::<Vec<SnapshotMeta>>(&content) {
-                        Ok(snapshots) => {
-                            report.snapshots_found = snapshots.len() as u64;
-                            log::info!("[RecoveryEngine] ✅ {} snapshots trouvés", report.snapshots_found);
-                        }
-                        Err(e) => {
-                            log::warn!("[RecoveryEngine] ⚠️ Erreur parsing snapshots: {}", e);
-                            report.errors.push(format!("Parsing snapshots: {}", e));
-                            Self::backup_corrupted_file(&snapshots_path).await;
-                        }
+                Ok(content) => match serde_json::from_str::<Vec<SnapshotMeta>>(&content) {
+                    Ok(snapshots) => {
+                        report.snapshots_found = snapshots.len() as u64;
+                        log::info!(
+                            "[RecoveryEngine] ✅ {} snapshots trouvés",
+                            report.snapshots_found
+                        );
                     }
-                }
+                    Err(e) => {
+                        log::warn!("[RecoveryEngine] ⚠️ Erreur parsing snapshots: {}", e);
+                        report.errors.push(format!("Parsing snapshots: {}", e));
+                        Self::backup_corrupted_file(&snapshots_path).await;
+                    }
+                },
                 Err(e) => {
                     log::warn!("[RecoveryEngine] ⚠️ Erreur lecture snapshots: {}", e);
                     report.errors.push(format!("Lecture snapshots: {}", e));
@@ -102,9 +106,15 @@ impl RecoveryEngine {
         self.recovery_errors = report.errors.clone();
 
         if report.success {
-            log::info!("[RecoveryEngine] ✅ Récupération terminée en {}ms", report.duration_ms);
+            log::info!(
+                "[RecoveryEngine] ✅ Récupération terminée en {}ms",
+                report.duration_ms
+            );
         } else {
-            log::warn!("[RecoveryEngine] ⚠️ Récupération avec erreurs: {:?}", report.errors);
+            log::warn!(
+                "[RecoveryEngine] ⚠️ Récupération avec erreurs: {:?}",
+                report.errors
+            );
         }
 
         Ok(report)
@@ -130,7 +140,10 @@ impl RecoveryEngine {
         if let Err(e) = tokio::fs::copy(path, &backup_path).await {
             log::error!("[RecoveryEngine] ❌ Échec backup fichier corrompu: {}", e);
         } else {
-            log::info!("[RecoveryEngine] 📦 Fichier corrompu sauvegardé: {:?}", backup_path);
+            log::info!(
+                "[RecoveryEngine] 📦 Fichier corrompu sauvegardé: {:?}",
+                backup_path
+            );
         }
     }
 

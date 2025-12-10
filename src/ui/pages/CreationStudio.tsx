@@ -22,7 +22,7 @@ const TARGET_TYPES = [
   { value: 'ReactPage', label: '⚛️ React Page', color: 'cyan' },
   { value: 'TauriCommand', label: '🔧 Tauri Command', color: 'purple' },
   { value: 'UIWidget', label: '🎨 UI Widget', color: 'pink' },
-  { value: 'DataModel', label: '📊 Data Model', color: 'green' }
+  { value: 'DataModel', label: '📊 Data Model', color: 'green' },
 ];
 
 const CreationStudio: React.FC = () => {
@@ -44,7 +44,7 @@ const CreationStudio: React.FC = () => {
     try {
       const result = await secureInvoke<GeneratedArtifact>('create_module', {
         intent: intent.trim(),
-        targetType
+        targetType,
       });
       setArtifact(result);
     } catch (err) {
@@ -72,14 +72,18 @@ const CreationStudio: React.FC = () => {
         {/* Left Panel - Configuration */}
         <div className="space-y-6">
           <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
-            <h2 className="text-xl font-semibold text-white mb-4">Que souhaitez-vous créer ?</h2>
+            <h2 className="text-xl font-semibold text-white mb-4">
+              Que souhaitez-vous créer ?
+            </h2>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Description de l'intention</label>
+                <label className="block text-sm text-gray-400 mb-2">
+                  Description de l'intention
+                </label>
                 <textarea
                   value={intent}
-                  onChange={(e) => setIntent(e.target.value)}
+                  onChange={e => setIntent(e.target.value)}
                   placeholder="Décrivez ce que vous voulez créer... Exemple : 'Créer un module d'authentification utilisateur avec tokens JWT'"
                   className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white h-32 resize-none focus:border-purple-500 focus:outline-none"
                 />
@@ -88,7 +92,7 @@ const CreationStudio: React.FC = () => {
               <div>
                 <label className="block text-sm text-gray-400 mb-2">Type de cible</label>
                 <div className="grid grid-cols-2 gap-2">
-                  {TARGET_TYPES.map((type) => (
+                  {TARGET_TYPES.map(type => (
                     <button
                       key={type.value}
                       onClick={() => setTargetType(type.value)}
@@ -124,12 +128,30 @@ const CreationStudio: React.FC = () => {
           <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
             <h3 className="text-lg font-semibold text-white mb-3">Modèles disponibles</h3>
             <div className="space-y-2 text-sm text-gray-400">
-              <div>• <span className="text-orange-400">Rust Modules</span> - Structs, traits, implementations</div>
-              <div>• <span className="text-blue-400">TypeScript</span> - Classes, interfaces, functions</div>
-              <div>• <span className="text-cyan-400">React Components</span> - Functional components with hooks</div>
-              <div>• <span className="text-purple-400">Tauri Commands</span> - Backend API endpoints</div>
-              <div>• <span className="text-pink-400">UI Widgets</span> - Reusable UI components</div>
-              <div>• <span className="text-green-400">Data Models</span> - Serializable data structures</div>
+              <div>
+                • <span className="text-orange-400">Rust Modules</span> - Structs, traits,
+                implementations
+              </div>
+              <div>
+                • <span className="text-blue-400">TypeScript</span> - Classes, interfaces,
+                functions
+              </div>
+              <div>
+                • <span className="text-cyan-400">React Components</span> - Functional
+                components with hooks
+              </div>
+              <div>
+                • <span className="text-purple-400">Tauri Commands</span> - Backend API
+                endpoints
+              </div>
+              <div>
+                • <span className="text-pink-400">UI Widgets</span> - Reusable UI
+                components
+              </div>
+              <div>
+                • <span className="text-green-400">Data Models</span> - Serializable data
+                structures
+              </div>
             </div>
           </div>
         </div>
@@ -141,7 +163,9 @@ const CreationStudio: React.FC = () => {
               {/* Code Preview */}
               <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-semibold text-white">Généré : {artifact.name}</h2>
+                  <h2 className="text-xl font-semibold text-white">
+                    Généré : {artifact.name}
+                  </h2>
                   <button
                     onClick={() => copyToClipboard(artifact.code)}
                     className="bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 px-4 py-2 rounded-lg text-sm transition-all"
@@ -163,7 +187,10 @@ const CreationStudio: React.FC = () => {
                   <h3 className="text-lg font-semibold text-white mb-3">Dépendances</h3>
                   <div className="space-y-2">
                     {artifact.dependencies.map((dep, idx) => (
-                      <div key={idx} className="bg-gray-700/30 rounded-lg p-3 font-mono text-sm text-green-400">
+                      <div
+                        key={idx}
+                        className="bg-gray-700/30 rounded-lg p-3 font-mono text-sm text-green-400"
+                      >
                         {dep}
                       </div>
                     ))}
@@ -175,7 +202,9 @@ const CreationStudio: React.FC = () => {
               {artifact.tests && (
                 <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-white">Tests auto-générés</h3>
+                    <h3 className="text-lg font-semibold text-white">
+                      Tests auto-générés
+                    </h3>
                     <button
                       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                       onClick={() => copyToClipboard(artifact.tests!)} // Safe: checked by parent condition
@@ -196,7 +225,9 @@ const CreationStudio: React.FC = () => {
               <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
                 <h3 className="text-lg font-semibold text-white mb-3">Documentation</h3>
                 <div className="prose prose-invert prose-sm max-w-none">
-                  <p className="text-gray-300 whitespace-pre-wrap">{artifact.documentation}</p>
+                  <p className="text-gray-300 whitespace-pre-wrap">
+                    {artifact.documentation}
+                  </p>
                 </div>
               </div>
             </>
@@ -204,7 +235,10 @@ const CreationStudio: React.FC = () => {
             <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-12 border border-purple-500/30 text-center">
               <div className="text-6xl mb-4">✨</div>
               <h2 className="text-2xl font-semibold text-white mb-2">Prêt à créer</h2>
-              <p className="text-gray-400">Décrivez votre intention et sélectionnez un type de cible pour générer le code</p>
+              <p className="text-gray-400">
+                Décrivez votre intention et sélectionnez un type de cible pour générer le
+                code
+              </p>
             </div>
           )}
         </div>

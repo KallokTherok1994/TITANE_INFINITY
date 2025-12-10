@@ -32,10 +32,7 @@ pub struct CognitiveThreadPools {
 impl CognitiveThreadPools {
     pub fn new(config: &PerformanceConfig) -> TitaneResult<Self> {
         config.validate().map_err(|e| {
-            crate::utils::AppError::System(format!(
-                "Invalid PerformanceConfig: {}",
-                e
-            ))
+            crate::utils::AppError::System(format!("Invalid PerformanceConfig: {}", e))
         })?;
 
         // TODO: Créer thread pools réels selon config
@@ -84,8 +81,14 @@ mod tests {
         let config = PerformanceConfig::default();
         let pools = CognitiveThreadPools::new(&config).unwrap();
 
-        assert_eq!(pools.get_pool_size(PoolType::Engines), config.pool_engines_size);
-        assert_eq!(pools.get_pool_size(PoolType::Memory), config.pool_memory_size);
+        assert_eq!(
+            pools.get_pool_size(PoolType::Engines),
+            config.pool_engines_size
+        );
+        assert_eq!(
+            pools.get_pool_size(PoolType::Memory),
+            config.pool_memory_size
+        );
     }
 
     #[test]
@@ -97,4 +100,3 @@ mod tests {
         assert_eq!(pools.get_pool_size(PoolType::Agents), 8);
     }
 }
-

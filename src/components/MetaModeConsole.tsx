@@ -36,7 +36,9 @@ export const MetaModeConsole: React.FC = () => {
   const [response, setResponse] = useState<InteractionResponse | null>(null);
   const [kevinState, setKevinState] = useState<KevinState | null>(null);
   const [currentMode, setCurrentMode] = useState<string>('Digital Twin');
-  const [history, setHistory] = useState<Array<{ input: string; response: InteractionResponse }>>([]);
+  const [history, setHistory] = useState<
+    Array<{ input: string; response: InteractionResponse }>
+  >([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll vers le bas
@@ -80,7 +82,9 @@ export const MetaModeConsole: React.FC = () => {
         context: context.trim() || 'general',
       };
 
-      const result = await secureInvoke<InteractionResponse>('meta_mode_process', { request });
+      const result = await secureInvoke<InteractionResponse>('meta_mode_process', {
+        request,
+      });
 
       setResponse(result);
       setCurrentMode(result.active_mode);
@@ -163,7 +167,9 @@ export const MetaModeConsole: React.FC = () => {
                 }}
               />
             </div>
-            <span className="state-value">{(kevinState.stress_level * 100).toFixed(0)}%</span>
+            <span className="state-value">
+              {(kevinState.stress_level * 100).toFixed(0)}%
+            </span>
           </div>
           <div className="state-row">
             <span className="state-label">🧠 Charge cognitive:</span>
@@ -173,7 +179,9 @@ export const MetaModeConsole: React.FC = () => {
                 style={{ width: `${kevinState.cognitive_load * 100}%` }}
               />
             </div>
-            <span className="state-value">{(kevinState.cognitive_load * 100).toFixed(0)}%</span>
+            <span className="state-value">
+              {(kevinState.cognitive_load * 100).toFixed(0)}%
+            </span>
           </div>
           <div className="state-row">
             <span className="state-label">💡 Clarté:</span>
@@ -183,7 +191,9 @@ export const MetaModeConsole: React.FC = () => {
                 style={{ width: `${kevinState.clarity_level * 100}%` }}
               />
             </div>
-            <span className="state-value">{(kevinState.clarity_level * 100).toFixed(0)}%</span>
+            <span className="state-value">
+              {(kevinState.clarity_level * 100).toFixed(0)}%
+            </span>
           </div>
           <div className="state-row">
             <span className="state-label">⚡ Énergie:</span>
@@ -193,7 +203,9 @@ export const MetaModeConsole: React.FC = () => {
                 style={{ width: `${kevinState.energy_level * 100}%` }}
               />
             </div>
-            <span className="state-value">{(kevinState.energy_level * 100).toFixed(0)}%</span>
+            <span className="state-value">
+              {(kevinState.energy_level * 100).toFixed(0)}%
+            </span>
           </div>
         </div>
       )}
@@ -229,7 +241,9 @@ export const MetaModeConsole: React.FC = () => {
         <div className="current-response">
           <div className="response-header">
             <span className="mode-active">Mode actif: {response.active_mode}</span>
-            <span className="timestamp">{new Date(response.timestamp).toLocaleTimeString()}</span>
+            <span className="timestamp">
+              {new Date(response.timestamp).toLocaleTimeString()}
+            </span>
           </div>
           <p className="justification">{response.mode_justification}</p>
         </div>
@@ -243,7 +257,7 @@ export const MetaModeConsole: React.FC = () => {
             id="context"
             type="text"
             value={context}
-            onChange={(e) => setContext(e.target.value)}
+            onChange={e => setContext(e.target.value)}
             placeholder="ex: projet, décision, création..."
             className="context-input"
           />
@@ -253,7 +267,7 @@ export const MetaModeConsole: React.FC = () => {
           <textarea
             id="input"
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={e => setInput(e.target.value)}
             placeholder="Exprimez-vous librement... Le Meta-Mode Engine détectera automatiquement le mode optimal."
             className="message-input"
             rows={4}

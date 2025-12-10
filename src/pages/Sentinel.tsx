@@ -21,7 +21,11 @@ import './ModulePages.css';
 
 export const Sentinel = () => {
   const sentinelData = useEngineSubscription('sentinel');
-  const { data: status, loading } = sentinelData as { data: SentinelAlerts | null; loading: boolean };  if (loading) {
+  const { data: status, loading } = sentinelData as {
+    data: SentinelAlerts | null;
+    loading: boolean;
+  };
+  if (loading) {
     return (
       <div className="module-page">
         <div className="module-page__loading">
@@ -43,7 +47,9 @@ export const Sentinel = () => {
           <span className="module-page__icon">🛡️</span>
           Sentinel — Gardien de l'Intégrité
         </h1>
-        <p className="module-page__subtitle">Protection et surveillance de l'intégrité système</p>
+        <p className="module-page__subtitle">
+          Protection et surveillance de l'intégrité système
+        </p>
       </div>
 
       <div className="module-page__grid">

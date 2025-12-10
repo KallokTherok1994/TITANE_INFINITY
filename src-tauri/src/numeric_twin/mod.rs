@@ -8,17 +8,17 @@
 
 #![allow(dead_code)]
 
-pub mod identity_collector;
 pub mod cognitive_modeler;
-pub mod therapeutic_synthesizer;
-pub mod operational_twin;
 pub mod creative_mirror;
 pub mod evolution_syncer;
+pub mod identity_collector;
+pub mod operational_twin;
+pub mod therapeutic_synthesizer;
 pub mod twin_commands;
 
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use chrono::{DateTime, Utc};
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TWIN IDENTITY CORE — Noyau d'identité fusionnelle
@@ -266,7 +266,8 @@ impl Default for TwinCognitivePatterns {
             decision_patterns: vec![
                 DecisionPattern {
                     context_type: "architecture".to_string(),
-                    typical_approach: "Analyse structurée puis implémentation progressive".to_string(),
+                    typical_approach: "Analyse structurée puis implémentation progressive"
+                        .to_string(),
                     speed: 0.4,
                     confidence_threshold: 0.8,
                 },
@@ -679,12 +680,12 @@ impl NumericTwinEngine {
     pub fn calculate_fusion_index(&mut self) {
         let components = &self.fusion_index.components;
 
-        let global = components.value_alignment * 0.25 +
-            components.cognitive_alignment * 0.20 +
-            components.style_alignment * 0.15 +
-            components.therapeutic_alignment * 0.15 +
-            components.creative_alignment * 0.10 +
-            components.evolution_alignment * 0.15;
+        let global = components.value_alignment * 0.25
+            + components.cognitive_alignment * 0.20
+            + components.style_alignment * 0.15
+            + components.therapeutic_alignment * 0.15
+            + components.creative_alignment * 0.10
+            + components.evolution_alignment * 0.15;
 
         let old_score = self.fusion_index.global_score;
         self.fusion_index.global_score = global;
@@ -705,10 +706,15 @@ impl NumericTwinEngine {
     }
 
     /// Soumet des données d'observation
-    pub fn submit_observation(&mut self, observation: TwinObservation) -> Result<TwinSyncPacket, TwinError> {
+    pub fn submit_observation(
+        &mut self,
+        observation: TwinObservation,
+    ) -> Result<TwinSyncPacket, TwinError> {
         // Valider l'observation
         if observation.content.is_empty() {
-            return Err(TwinError::InvalidInput("Empty observation content".to_string()));
+            return Err(TwinError::InvalidInput(
+                "Empty observation content".to_string(),
+            ));
         }
 
         // Créer paquet de sync
@@ -746,14 +752,17 @@ impl NumericTwinEngine {
             existing.last_observed = Utc::now();
             existing.confidence = (existing.confidence + 0.05).min(1.0);
         } else {
-            self.value_map.observed_values.insert(name.clone(), ObservedValue {
-                name,
-                frequency: 1.0,
-                confidence: 0.3,
-                first_observed: Utc::now(),
-                last_observed: Utc::now(),
-                observations_count: 1,
-            });
+            self.value_map.observed_values.insert(
+                name.clone(),
+                ObservedValue {
+                    name,
+                    frequency: 1.0,
+                    confidence: 0.3,
+                    first_observed: Utc::now(),
+                    last_observed: Utc::now(),
+                    observations_count: 1,
+                },
+            );
         }
 
         // Améliorer alignement valeurs
@@ -763,17 +772,21 @@ impl NumericTwinEngine {
 
     fn process_cognitive_observation(&mut self, obs: &TwinObservation) {
         // Ajouter pattern si nouveau
-        let pattern_exists = self.cognitive_patterns.reasoning_patterns
+        let pattern_exists = self
+            .cognitive_patterns
+            .reasoning_patterns
             .iter()
             .any(|p| p.name == obs.content);
 
         if !pattern_exists && obs.confidence > 0.5 {
-            self.cognitive_patterns.reasoning_patterns.push(ReasoningPattern {
-                name: obs.content.clone(),
-                description: obs.context.clone().unwrap_or_default(),
-                frequency: obs.confidence,
-                effectiveness: 0.5,
-            });
+            self.cognitive_patterns
+                .reasoning_patterns
+                .push(ReasoningPattern {
+                    name: obs.content.clone(),
+                    description: obs.context.clone().unwrap_or_default(),
+                    frequency: obs.confidence,
+                    effectiveness: 0.5,
+                });
         }
 
         self.fusion_index.components.cognitive_alignment =
@@ -791,11 +804,17 @@ impl NumericTwinEngine {
     }
 
     /// Applique une évolution (avec validation si nécessaire)
-    pub fn apply_evolution(&mut self, evolution: TwinEvolutionRequest) -> Result<TwinEvolutionResult, TwinError> {
+    pub fn apply_evolution(
+        &mut self,
+        evolution: TwinEvolutionRequest,
+    ) -> Result<TwinEvolutionResult, TwinError> {
         // Vérifier si validation requise
-        if self.config.require_validation_for_deep_changes && evolution.is_deep_change && !evolution.validated_by_kevin {
+        if self.config.require_validation_for_deep_changes
+            && evolution.is_deep_change
+            && !evolution.validated_by_kevin
+        {
             return Err(TwinError::ValidationRequired(
-                "Deep changes require Kevin's validation".to_string()
+                "Deep changes require Kevin's validation".to_string(),
             ));
         }
 
@@ -827,7 +846,10 @@ impl NumericTwinEngine {
         Ok(result)
     }
 
-    fn apply_trait_adjustment(&mut self, evolution: &TwinEvolutionRequest) -> Result<(), TwinError> {
+    fn apply_trait_adjustment(
+        &mut self,
+        evolution: &TwinEvolutionRequest,
+    ) -> Result<(), TwinError> {
         if let Some(delta) = evolution.delta {
             match evolution.target.as_str() {
                 "sincerity" => {
@@ -844,20 +866,31 @@ impl NumericTwinEngine {
         Ok(())
     }
 
-    fn apply_value_reinforcement(&mut self, evolution: &TwinEvolutionRequest) -> Result<(), TwinError> {
+    fn apply_value_reinforcement(
+        &mut self,
+        evolution: &TwinEvolutionRequest,
+    ) -> Result<(), TwinError> {
         if !self.value_map.confirmed_values.contains(&evolution.target) {
-            self.value_map.confirmed_values.push(evolution.target.clone());
+            self.value_map
+                .confirmed_values
+                .push(evolution.target.clone());
         }
         Ok(())
     }
 
-    fn apply_pattern_integration(&mut self, _evolution: &TwinEvolutionRequest) -> Result<(), TwinError> {
+    fn apply_pattern_integration(
+        &mut self,
+        _evolution: &TwinEvolutionRequest,
+    ) -> Result<(), TwinError> {
         self.fusion_index.components.cognitive_alignment =
             (self.fusion_index.components.cognitive_alignment + 0.05).min(1.0);
         Ok(())
     }
 
-    fn apply_phase_transition(&mut self, _evolution: &TwinEvolutionRequest) -> Result<(), TwinError> {
+    fn apply_phase_transition(
+        &mut self,
+        _evolution: &TwinEvolutionRequest,
+    ) -> Result<(), TwinError> {
         let next_phase = match self.evolution_profile.current_phase {
             EvolutionPhase::Observation => EvolutionPhase::Assimilation,
             EvolutionPhase::Assimilation => EvolutionPhase::Integration,
@@ -867,12 +900,14 @@ impl NumericTwinEngine {
         };
 
         // Ajouter milestone
-        self.evolution_profile.evolution_history.push(EvolutionMilestone {
-            phase: next_phase.clone(),
-            description: format!("Transition to {:?} phase", next_phase),
-            achieved_at: Utc::now(),
-            fusion_index_at_achievement: self.fusion_index.global_score,
-        });
+        self.evolution_profile
+            .evolution_history
+            .push(EvolutionMilestone {
+                phase: next_phase.clone(),
+                description: format!("Transition to {:?} phase", next_phase),
+                achieved_at: Utc::now(),
+                fusion_index_at_achievement: self.fusion_index.global_score,
+            });
 
         self.evolution_profile.current_phase = next_phase;
         Ok(())

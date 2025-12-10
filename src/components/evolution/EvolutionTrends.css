@@ -56,14 +56,31 @@
   border-radius: 8px;
 }
 
-.summary-item.improving { border-bottom: 2px solid var(--success, #93b399); }
-.summary-item.stable { border-bottom: 2px solid var(--info, #8899aa); }
-.summary-item.degrading { border-bottom: 2px solid var(--danger, #8f7a7a); }
-.summary-item.volatile { border-bottom: 2px solid #f59e0b; }
+.summary-item.improving {
+  border-bottom: 2px solid var(--success, #93b399);
+}
+.summary-item.stable {
+  border-bottom: 2px solid var(--info, #8899aa);
+}
+.summary-item.degrading {
+  border-bottom: 2px solid var(--danger, #8f7a7a);
+}
+.summary-item.volatile {
+  border-bottom: 2px solid #f59e0b;
+}
 
-.summary-icon { font-size: 20px; }
-.summary-count { font-size: 24px; font-weight: 700; }
-.summary-label { font-size: 10px; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; }
+.summary-icon {
+  font-size: 20px;
+}
+.summary-count {
+  font-size: 24px;
+  font-weight: 700;
+}
+.summary-label {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+}
 
 .anomaly-alert {
   padding: 10px 16px;
@@ -104,9 +121,19 @@
   margin-bottom: 12px;
 }
 
-.trend-icon { font-size: 16px; }
-.trend-metric { flex: 1; font-size: 13px; font-weight: 500; }
-.trend-direction { font-size: 10px; font-weight: 600; text-transform: uppercase; }
+.trend-icon {
+  font-size: 16px;
+}
+.trend-metric {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+}
+.trend-direction {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
 
 .trend-chart {
   height: 40px;
@@ -132,8 +159,15 @@
   gap: 2px;
 }
 
-.trend-stats .stat-label { font-size: 9px; color: rgba(255, 255, 255, 0.4); text-transform: uppercase; }
-.trend-stats .stat-value { font-size: 12px; font-weight: 500; }
+.trend-stats .stat-label {
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+}
+.trend-stats .stat-value {
+  font-size: 12px;
+  font-weight: 500;
+}
 
 .trend-footer {
   display: flex;
@@ -163,11 +197,26 @@
   text-align: center;
 }
 
-.empty-trends .empty-icon { font-size: 32px; margin-bottom: 8px; opacity: 0.5; }
-.empty-trends p { margin: 0 0 4px 0; font-size: 13px; color: rgba(255, 255, 255, 0.7); }
-.empty-trends small { font-size: 11px; color: rgba(255, 255, 255, 0.4); }
+.empty-trends .empty-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+  opacity: 0.5;
+}
+.empty-trends p {
+  margin: 0 0 4px 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+}
+.empty-trends small {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+}
 
 @media (max-width: 768px) {
-  .trends-summary { grid-template-columns: repeat(2, 1fr); }
-  .trends-grid { grid-template-columns: 1fr; }
+  .trends-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .trends-grid {
+    grid-template-columns: 1fr;
+  }
 }

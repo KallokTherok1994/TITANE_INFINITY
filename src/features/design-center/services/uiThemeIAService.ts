@@ -6,7 +6,11 @@
  */
 
 import { secureInvoke } from '@/lib/security';
-import type { UICommand, UICommandResult, UIThemeTokens } from '../types/designCenter.types';
+import type {
+  UICommand,
+  UICommandResult,
+  UIThemeTokens,
+} from '../types/designCenter.types';
 
 // ============================================================================
 // CONSTANTES
@@ -17,13 +21,16 @@ const AUTHORIZED_USER = 'kevin';
 // Patterns de commandes reconnus
 const COMMAND_PATTERNS = {
   // Couleurs: "change color primary to #727b81"
-  color: /(?:change|set|modifier)\s+(?:color|couleur)\s+(\w+)\s+(?:to|à|vers)\s+(#[0-9a-f]{6})/i,
+  color:
+    /(?:change|set|modifier)\s+(?:color|couleur)\s+(\w+)\s+(?:to|à|vers)\s+(#[0-9a-f]{6})/i,
 
   // Font size: "set font size to large"
-  fontSize: /(?:set|change|modifier)\s+(?:font\s*size|taille)\s+(?:to|à|vers)\s+(small|medium|large)/i,
+  fontSize:
+    /(?:set|change|modifier)\s+(?:font\s*size|taille)\s+(?:to|à|vers)\s+(small|medium|large)/i,
 
   // Density: "set density to compact"
-  density: /(?:set|change|modifier)\s+(?:density|densité)\s+(?:to|à|vers)\s+(compact|standard|spacious)/i,
+  density:
+    /(?:set|change|modifier)\s+(?:density|densité)\s+(?:to|à|vers)\s+(compact|standard|spacious)/i,
 
   // Animations: "disable animations"
   animations: /(enable|disable|activer|désactiver)\s+animations?/i,
@@ -65,16 +72,42 @@ export const uiThemeIAService = {
 
     // Keywords qui indiquent une commande UI
     const uiKeywords = [
-      'color', 'couleur', 'theme', 'thème',
-      'font', 'police', 'typography', 'typographie',
-      'spacing', 'espacement', 'density', 'densité',
-      'animation', 'border', 'bordure', 'radius',
-      'contrast', 'contraste', 'shadow', 'ombre',
-      'design', 'ui', 'interface', 'apparence',
+      'color',
+      'couleur',
+      'theme',
+      'thème',
+      'font',
+      'police',
+      'typography',
+      'typographie',
+      'spacing',
+      'espacement',
+      'density',
+      'densité',
+      'animation',
+      'border',
+      'bordure',
+      'radius',
+      'contrast',
+      'contraste',
+      'shadow',
+      'ombre',
+      'design',
+      'ui',
+      'interface',
+      'apparence',
     ];
 
     // Verbes d'action
-    const actionVerbs = ['change', 'set', 'modifier', 'activer', 'désactiver', 'reset', 'réinitialiser'];
+    const actionVerbs = [
+      'change',
+      'set',
+      'modifier',
+      'activer',
+      'désactiver',
+      'reset',
+      'réinitialiser',
+    ];
 
     const hasUIKeyword = uiKeywords.some(kw => lowerMessage.includes(kw));
     const hasActionVerb = actionVerbs.some(v => lowerMessage.includes(v));
@@ -144,7 +177,9 @@ export const uiThemeIAService = {
         type: 'set_animations',
         key: 'enabled',
         value: enabled,
-        description: enabled ? 'Activation des animations' : 'Désactivation des animations',
+        description: enabled
+          ? 'Activation des animations'
+          : 'Désactivation des animations',
       };
     }
 

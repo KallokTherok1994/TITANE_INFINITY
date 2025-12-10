@@ -2,12 +2,19 @@
  * TITANE∞ v8.0 — MAIN STYLESHEET
  *
  * Import order:
- * 1. Tailwind base layer
- * 2. CSS Custom Properties (design tokens)
+ * 1. CSS imports (must be first)
+ * 2. Tailwind base layer
  * 3. Tailwind components
  * 4. Tailwind utilities
- * 5. Existing custom styles (compatibility)
+ * 5. Custom component classes
  */
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* CSS IMPORTS (must precede all other statements)                  */
+/* ═══════════════════════════════════════════════════════════════ */
+@import './styles/css-vars.css';
+@import './styles/animations.css';
+@import './styles/a11y.css';
 
 /* ═══════════════════════════════════════════════════════════════ */
 /* TAILWIND BASE LAYER                                              */
@@ -15,31 +22,10 @@
 @tailwind base;
 
 /* ═══════════════════════════════════════════════════════════════ */
-/* CSS CUSTOM PROPERTIES (Design Tokens)                            */
-/* ═══════════════════════════════════════════════════════════════ */
-@import './styles/css-vars.css';
-
-/* ═══════════════════════════════════════════════════════════════ */
 /* TAILWIND COMPONENTS & UTILITIES                                   */
 /* ═══════════════════════════════════════════════════════════════ */
 @tailwind components;
 @tailwind utilities;
-
-/* ═══════════════════════════════════════════════════════════════ */
-/* EXISTING CUSTOM STYLES (Compatibility Layer)                     */
-/* ═══════════════════════════════════════════════════════════════ */
-
-/* Animations (conserve pour compatibilité) */
-@import './styles/animations.css';
-
-/* Experience UI (conserve temporairement) */
-/* @import './styles/experience.css'; */
-
-/* Chat messages (conserve temporairement) */
-/* @import './styles/chat-messages.css'; */
-
-/* A11y (conserve) */
-@import './styles/a11y.css';
 
 /* ═══════════════════════════════════════════════════════════════ */
 /* CUSTOM COMPONENT CLASSES (Tailwind @layer components)            */

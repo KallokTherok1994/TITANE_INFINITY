@@ -69,7 +69,9 @@ import {
 // HELPERS DE TEST
 // ─────────────────────────────────────────────────────────────────────────────
 
-const createMockSessionEntry = (overrides?: Partial<SessionMemoryEntry>): SessionMemoryEntry => ({
+const createMockSessionEntry = (
+  overrides?: Partial<SessionMemoryEntry>
+): SessionMemoryEntry => ({
   id: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
   level: 'session',
   contentType: 'message',
@@ -89,7 +91,9 @@ const createMockSessionEntry = (overrides?: Partial<SessionMemoryEntry>): Sessio
   ...overrides,
 });
 
-const createMockIntermediateEntry = (overrides?: Partial<IntermediateMemoryEntry>): IntermediateMemoryEntry => ({
+const createMockIntermediateEntry = (
+  overrides?: Partial<IntermediateMemoryEntry>
+): IntermediateMemoryEntry => ({
   id: `intermediate_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
   level: 'intermediate',
   contentType: 'summary',
@@ -113,7 +117,9 @@ const createMockIntermediateEntry = (overrides?: Partial<IntermediateMemoryEntry
   ...overrides,
 });
 
-const createMockLongTermEntry = (overrides?: Partial<LongTermMemoryEntry>): LongTermMemoryEntry => ({
+const createMockLongTermEntry = (
+  overrides?: Partial<LongTermMemoryEntry>
+): LongTermMemoryEntry => ({
   id: `long_term_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
   level: 'long_term',
   contentType: 'knowledge',
@@ -174,8 +180,17 @@ describe('TITANE∞ Persistent Memory - Configuration', () => {
   describe('Memory Topics', () => {
     it('should define all 11 memory topics', () => {
       const expectedTopics = [
-        'general', 'coding', 'project', 'personal', 'technical',
-        'creative', 'learning', 'decisions', 'preferences', 'automation', 'system'
+        'general',
+        'coding',
+        'project',
+        'personal',
+        'technical',
+        'creative',
+        'learning',
+        'decisions',
+        'preferences',
+        'automation',
+        'system',
       ];
       expectedTopics.forEach(topic => {
         expect(MEMORY_TOPIC_LABELS).toHaveProperty(topic);
@@ -195,8 +210,17 @@ describe('TITANE∞ Persistent Memory - Configuration', () => {
   describe('Memory Content Types', () => {
     it('should define all 11 content types', () => {
       const expectedTypes = [
-        'message', 'summary', 'knowledge', 'preference', 'project_context',
-        'code_snippet', 'decision', 'reference', 'identity', 'automation_result', 'milestone'
+        'message',
+        'summary',
+        'knowledge',
+        'preference',
+        'project_context',
+        'code_snippet',
+        'decision',
+        'reference',
+        'identity',
+        'automation_result',
+        'milestone',
       ];
       expectedTypes.forEach(type => {
         expect(MEMORY_CONTENT_TYPE_LABELS).toHaveProperty(type);
@@ -248,7 +272,7 @@ describe('TITANE∞ Persistent Memory - Relevance Scoring', () => {
 
     it('should return higher score for matching content', () => {
       const entry = createMockSessionEntry({
-        content: 'TypeScript is great for building applications'
+        content: 'TypeScript is great for building applications',
       });
       const matchingScore = calculateRelevanceScore(entry, 'TypeScript applications');
       const nonMatchingScore = calculateRelevanceScore(entry, 'Python Django');
@@ -258,7 +282,7 @@ describe('TITANE∞ Persistent Memory - Relevance Scoring', () => {
     it('should boost score for matching tags', () => {
       const entryWithTags = createMockSessionEntry({
         content: 'Some content',
-        tags: ['typescript', 'react', 'frontend']
+        tags: ['typescript', 'react', 'frontend'],
       });
       const scoreWithTagMatch = calculateRelevanceScore(entryWithTags, 'typescript');
       const scoreWithoutTagMatch = calculateRelevanceScore(entryWithTags, 'python');
@@ -268,13 +292,13 @@ describe('TITANE∞ Persistent Memory - Relevance Scoring', () => {
     it('should boost score for matching topic context', () => {
       const entry = createMockSessionEntry({
         content: 'Code review best practices',
-        topic: 'coding'
+        topic: 'coding',
       });
       const scoreWithTopicMatch = calculateRelevanceScore(entry, 'code review', {
-        currentTopic: 'coding'
+        currentTopic: 'coding',
       });
       const scoreWithoutTopicMatch = calculateRelevanceScore(entry, 'code review', {
-        currentTopic: 'personal'
+        currentTopic: 'personal',
       });
       expect(scoreWithTopicMatch).toBeGreaterThan(scoreWithoutTopicMatch);
     });
@@ -282,11 +306,11 @@ describe('TITANE∞ Persistent Memory - Relevance Scoring', () => {
     it('should consider importance in scoring', () => {
       const highImportance = createMockSessionEntry({
         content: 'Important content',
-        importance: 5
+        importance: 5,
       });
       const lowImportance = createMockSessionEntry({
         content: 'Important content',
-        importance: 1
+        importance: 1,
       });
       const highScore = calculateRelevanceScore(highImportance, 'Important');
       const lowScore = calculateRelevanceScore(lowImportance, 'Important');
@@ -308,7 +332,11 @@ describe('TITANE∞ Persistent Memory - Relevance Scoring', () => {
         createMockSessionEntry({ content: 'Python is popular' }),
       ];
       // 'TypeScript' est unique, devrait avoir un score plus élevé
-      const typeScriptScore = calculateTFIDFScore(entries[0], 'TypeScript amazing', entries);
+      const typeScriptScore = calculateTFIDFScore(
+        entries[0],
+        'TypeScript amazing',
+        entries
+      );
       expect(typeScriptScore).toBeGreaterThan(0);
     });
   });
@@ -353,7 +381,9 @@ describe('TITANE∞ Persistent Memory - Classification', () => {
   describe('classifyTopic', () => {
     it('should classify coding content', () => {
       expect(classifyTopic('Fixed the bug in the API endpoint code')).toBe('coding');
-      expect(classifyTopic('TypeScript class implementation with function')).toBe('coding');
+      expect(classifyTopic('TypeScript class implementation with function')).toBe(
+        'coding'
+      );
       expect(classifyTopic('debug error in backend code')).toBe('coding');
     });
 
@@ -363,8 +393,12 @@ describe('TITANE∞ Persistent Memory - Classification', () => {
     });
 
     it('should classify technical content', () => {
-      expect(classifyTopic('System architecture optimization performance')).toBe('technical');
-      expect(classifyTopic('Performance monitoring configuration infra')).toBe('technical');
+      expect(classifyTopic('System architecture optimization performance')).toBe(
+        'technical'
+      );
+      expect(classifyTopic('Performance monitoring configuration infra')).toBe(
+        'technical'
+      );
     });
 
     it('should classify creative content', () => {
@@ -385,8 +419,12 @@ describe('TITANE∞ Persistent Memory - Classification', () => {
 
   describe('classifyContentType', () => {
     it('should detect code snippets', () => {
-      expect(classifyContentType('```typescript\nconst x = 1;\n```')).toBe('code_snippet');
-      expect(classifyContentType('function test() { return true; }')).toBe('code_snippet');
+      expect(classifyContentType('```typescript\nconst x = 1;\n```')).toBe(
+        'code_snippet'
+      );
+      expect(classifyContentType('function test() { return true; }')).toBe(
+        'code_snippet'
+      );
       expect(classifyContentType('const myVar = "value";')).toBe('code_snippet');
     });
 
@@ -401,8 +439,10 @@ describe('TITANE∞ Persistent Memory - Classification', () => {
     });
 
     it('should detect preferences', () => {
-      expect(classifyContentType('je préfère toujours utiliser VS Code')).toBe('preference');
-      expect(classifyContentType('J\'aime le dark mode jamais light')).toBe('preference');
+      expect(classifyContentType('je préfère toujours utiliser VS Code')).toBe(
+        'preference'
+      );
+      expect(classifyContentType("J'aime le dark mode jamais light")).toBe('preference');
     });
 
     it('should default to message', () => {
@@ -441,11 +481,7 @@ describe('TITANE∞ Persistent Memory - Classification', () => {
         'message',
         'user'
       );
-      const normalContent = calculateAutoImportance(
-        'Ceci est normal',
-        'message',
-        'user'
-      );
+      const normalContent = calculateAutoImportance('Ceci est normal', 'message', 'user');
       expect(importantContent).toBeGreaterThan(normalContent);
     });
 
@@ -520,7 +556,7 @@ describe('TITANE∞ Persistent Memory - Validation', () => {
     it('should detect acknowledgments', () => {
       expect(isTrivialMessage('OK')).toBe(true);
       expect(isTrivialMessage('Merci!')).toBe(true);
-      expect(isTrivialMessage('D\'accord')).toBe(true);
+      expect(isTrivialMessage("D'accord")).toBe(true);
     });
 
     it('should detect short messages', () => {
@@ -529,8 +565,10 @@ describe('TITANE∞ Persistent Memory - Validation', () => {
     });
 
     it('should allow substantial messages', () => {
-      expect(isTrivialMessage('Peux-tu m\'expliquer comment fonctionne React?')).toBe(false);
-      expect(isTrivialMessage('J\'ai besoin d\'aide avec TypeScript')).toBe(false);
+      expect(isTrivialMessage("Peux-tu m'expliquer comment fonctionne React?")).toBe(
+        false
+      );
+      expect(isTrivialMessage("J'ai besoin d'aide avec TypeScript")).toBe(false);
     });
   });
 
@@ -554,7 +592,9 @@ describe('TITANE∞ Persistent Memory - Validation', () => {
     });
 
     it('should accept valid content', () => {
-      const result = shouldSaveContent('This is a valid message with enough content to be saved.');
+      const result = shouldSaveContent(
+        'This is a valid message with enough content to be saved.'
+      );
       expect(result.save).toBe(true);
       expect(result.reason).toBeUndefined();
     });
@@ -604,7 +644,9 @@ describe('TITANE∞ Persistent Memory - Validation', () => {
       const filtered = filterByPermissions(entries, 'default');
 
       // default ne peut pas accéder à coding ou automation
-      expect(filtered.every(e => ['general', 'personal', 'creative'].includes(e.topic))).toBe(true);
+      expect(
+        filtered.every(e => ['general', 'personal', 'creative'].includes(e.topic))
+      ).toBe(true);
     });
   });
 });
@@ -711,18 +753,19 @@ describe('TITANE∞ Persistent Memory - Duplicate Detection', () => {
       // "TypeScript is a great programming language" (7 mots)
       // "TypeScript is a great programming language for web" (9 mots)
       // Similarité Jaccard = 7/9 = 0.778 > 0.75
-      expect(areSimilarContents(
-        'TypeScript is a great programming language',
-        'TypeScript is a great programming language for web',
-        0.75
-      )).toBe(true);
+      expect(
+        areSimilarContents(
+          'TypeScript is a great programming language',
+          'TypeScript is a great programming language for web',
+          0.75
+        )
+      ).toBe(true);
     });
 
     it('should reject dissimilar content', () => {
-      expect(areSimilarContents(
-        'TypeScript is great',
-        'Python is amazing for data science'
-      )).toBe(false);
+      expect(
+        areSimilarContents('TypeScript is great', 'Python is amazing for data science')
+      ).toBe(false);
     });
 
     it('should respect custom threshold', () => {
@@ -737,8 +780,12 @@ describe('TITANE∞ Persistent Memory - Duplicate Detection', () => {
   describe('findDuplicates', () => {
     it('should find duplicate entries', () => {
       const existingEntries: MemoryEntry[] = [
-        createMockSessionEntry({ content: 'TypeScript is great for web development' }) as MemoryEntry,
-        createMockSessionEntry({ content: 'Python is good for data science' }) as MemoryEntry,
+        createMockSessionEntry({
+          content: 'TypeScript is great for web development',
+        }) as MemoryEntry,
+        createMockSessionEntry({
+          content: 'Python is good for data science',
+        }) as MemoryEntry,
       ];
 
       const duplicates = findDuplicates(
@@ -775,7 +822,9 @@ describe('TITANE∞ Persistent Memory - Auto-Save Rules', () => {
   });
 
   it('should have session messages rule', () => {
-    const sessionRule = DEFAULT_AUTO_SAVE_RULES.find(r => r.id === 'auto_session_messages');
+    const sessionRule = DEFAULT_AUTO_SAVE_RULES.find(
+      r => r.id === 'auto_session_messages'
+    );
     expect(sessionRule).toBeDefined();
     expect(sessionRule?.targetLevel).toBe('session');
     expect(sessionRule?.enabled).toBe(true);
@@ -887,9 +936,7 @@ describe('TITANE∞ Persistent Memory - Blacklist Patterns', () => {
   });
 
   it('should match simple greetings', () => {
-    const matchesGreeting = EXCLUDED_MESSAGE_PATTERNS.some(p =>
-      p.test('Bonjour!')
-    );
+    const matchesGreeting = EXCLUDED_MESSAGE_PATTERNS.some(p => p.test('Bonjour!'));
     expect(matchesGreeting).toBe(true);
   });
 });

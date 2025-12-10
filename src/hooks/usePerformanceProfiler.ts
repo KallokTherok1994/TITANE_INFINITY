@@ -98,10 +98,19 @@ export function usePerformanceProfiler(
   const lastRenderTimeRef = useRef(performance.now());
 
   // State for reactive updates
-  const [fps, setFPS] = useState<FPSData>({ current: 0, avg: 0, min: 0, max: 0, samples: [] });
+  const [fps, setFPS] = useState<FPSData>({
+    current: 0,
+    avg: 0,
+    min: 0,
+    max: 0,
+    samples: [],
+  });
   const [memory, setMemory] = useState<MemorySnapshot | null>(null);
   const [stats, setStats] = useState<PerformanceStats | null>(null);
-  const [summary, setSummary] = useState<{ measurements: number; topSlow: PerformanceStats[] }>({
+  const [summary, setSummary] = useState<{
+    measurements: number;
+    topSlow: PerformanceStats[];
+  }>({
     measurements: 0,
     topSlow: [],
   });
@@ -183,7 +192,7 @@ export function usePerformanceProfiler(
 
   // Measure async function
   const measureAsync = useCallback(
-    async <T,>(name: string, fn: () => Promise<T>): Promise<T> => {
+    async <T>(name: string, fn: () => Promise<T>): Promise<T> => {
       if (!enabled) return fn();
       return profiler.measureAsync(`${componentName}:${name}`, fn, componentCategory);
     },
@@ -227,10 +236,7 @@ export function usePerformanceProfiler(
  */
 export function useComponentLifecycle(componentName: string): void {
   useEffect(() => {
-    const mountStop = profiler.startMeasure(
-      `${componentName}:mount`,
-      'lifecycle'
-    );
+    const mountStop = profiler.startMeasure(`${componentName}:mount`, 'lifecycle');
     mountStop();
 
     return () => {
@@ -265,7 +271,6 @@ export function useTrackedCallback<T extends (...args: unknown[]) => unknown>(
   callback: T,
   deps: React.DependencyList
 ): T {
-   
   return useCallback(
     (...args: Parameters<T>) => {
       const stop = profiler.startMeasure(callbackName, 'callback');

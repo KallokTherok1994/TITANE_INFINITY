@@ -26,7 +26,7 @@ export interface CameraChatIntegrationResult {
  */
 export async function handleCameraInChat(
   message: string,
-  visionStore: ReturnType<typeof useVisionStore.getState>,
+  visionStore: ReturnType<typeof useVisionStore.getState>
 ): Promise<CameraChatIntegrationResult> {
   // Quick check pour performance
   if (!containsCameraKeyword(message)) {
@@ -59,7 +59,8 @@ export async function handleCameraInChat(
           if (status !== 'granted') {
             return {
               handled: true,
-              response: '❌ Permission caméra refusée. Veuillez l\'autoriser dans les paramètres système.',
+              response:
+                "❌ Permission caméra refusée. Veuillez l'autoriser dans les paramètres système.",
               error: 'Permission denied',
             };
           }
@@ -70,18 +71,19 @@ export async function handleCameraInChat(
         if (!success) {
           return {
             handled: true,
-            response: '❌ Impossible d\'activer la caméra. Vérifiez les permissions.',
+            response: "❌ Impossible d'activer la caméra. Vérifiez les permissions.",
             error: 'Activation failed',
           };
         }
 
-        finalResponse = '✅ Caméra activée avec succès. Observation visuelle en cours (30 min max). Flux 100% local.';
+        finalResponse =
+          '✅ Caméra activée avec succès. Observation visuelle en cours (30 min max). Flux 100% local.';
         break;
       }
 
       case 'deactivate': {
         if (!visionStore.isObservationActive) {
-          finalResponse = 'ℹ️ La caméra n\'est pas active.';
+          finalResponse = "ℹ️ La caméra n'est pas active.";
           break;
         }
 

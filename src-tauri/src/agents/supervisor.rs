@@ -1,7 +1,7 @@
 #![allow(unused_imports)]
 #![allow(dead_code)]
 // Agent Supervisor - Health Monitoring
-use crate::agents::{Agent, AgentId, AgentState, AgentError, AgentRegistry};
+use crate::agents::{Agent, AgentError, AgentId, AgentRegistry, AgentState};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 
@@ -41,7 +41,8 @@ impl AgentSupervisor {
     pub async fn check_health(&self, agent: &Agent) -> AgentHealth {
         let state = agent.get_state().await;
         let success_rate = agent.success_rate().await;
-        let is_healthy = matches!(state, AgentState::Running | AgentState::Initialized) && success_rate > 0.5;
+        let is_healthy =
+            matches!(state, AgentState::Running | AgentState::Initialized) && success_rate > 0.5;
 
         AgentHealth {
             agent_id: agent.id.clone(),

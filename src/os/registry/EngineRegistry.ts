@@ -3,7 +3,14 @@
  * Registre des moteurs cognitifs
  */
 
-import type { EngineId, Engine, EngineMetadata as _EngineMetadata, EngineState as _EngineState, EngineStatus, EngineMetrics } from '../types';
+import type {
+  EngineId,
+  Engine,
+  EngineMetadata as _EngineMetadata,
+  EngineState as _EngineState,
+  EngineStatus,
+  EngineMetrics,
+} from '../types';
 
 /**
  * Registre des moteurs
@@ -40,7 +47,9 @@ export class EngineRegistry {
     // Vérifier si d'autres moteurs dépendent de celui-ci
     for (const engine of this.engines.values()) {
       if (engine.metadata.dependencies?.includes(id)) {
-        throw new Error(`Cannot unregister ${id}: engine ${engine.metadata.id} depends on it`);
+        throw new Error(
+          `Cannot unregister ${id}: engine ${engine.metadata.id} depends on it`
+        );
       }
     }
 
@@ -101,8 +110,9 @@ export class EngineRegistry {
     };
 
     // Trier par priorité décroissante, puis visiter
-    const sorted = Array.from(this.engines.values())
-      .sort((a, b) => b.metadata.priority - a.metadata.priority);
+    const sorted = Array.from(this.engines.values()).sort(
+      (a, b) => b.metadata.priority - a.metadata.priority
+    );
 
     for (const engine of sorted) {
       visit(engine.metadata.id);
@@ -238,9 +248,12 @@ export class EngineRegistry {
       metrics.averageLatency = metrics.totalLatency / metrics.activationCount;
 
       if (isError) {
-        metrics.errorRate = (metrics.errorRate * (metrics.activationCount - 1) + 1) / metrics.activationCount;
+        metrics.errorRate =
+          (metrics.errorRate * (metrics.activationCount - 1) + 1) /
+          metrics.activationCount;
       } else {
-        metrics.errorRate = (metrics.errorRate * (metrics.activationCount - 1)) / metrics.activationCount;
+        metrics.errorRate =
+          (metrics.errorRate * (metrics.activationCount - 1)) / metrics.activationCount;
       }
 
       engine.state.lastActivity = Date.now();

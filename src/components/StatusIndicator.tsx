@@ -10,10 +10,7 @@ export interface StatusIndicatorProps {
   health: number;
 }
 
-export const StatusIndicator: React.FC<StatusIndicatorProps> = ({
-  provider,
-  health,
-}) => {
+export const StatusIndicator: React.FC<StatusIndicatorProps> = ({ provider, health }) => {
   const getStatusColor = () => {
     if (health > 0.7) return 'green';
     if (health > 0.4) return 'yellow';
@@ -38,10 +35,7 @@ export const StatusIndicator: React.FC<StatusIndicatorProps> = ({
         {getProviderIcon()} {provider}
       </span>
       <div className="status-health-bar">
-        <div
-          className="status-health-fill"
-          style={{ width: `${health * 100}%` }}
-        />
+        <div className="status-health-fill" style={{ width: `${health * 100}%` }} />
       </div>
     </div>
   );

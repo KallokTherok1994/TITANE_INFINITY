@@ -100,72 +100,35 @@ pub mod developer_mode;
 // ═══════════════════════════════════════════════════════════════════════════════
 
 // QA Engine exports
-pub use qa_engine::{
-    QAEngineState,
-    QATestResult,
-    QASeverity,
-    QATestSuite,
-    QAReport,
-    SystemInfo,
-};
+pub use qa_engine::{QAEngineState, QAReport, QASeverity, QATestResult, QATestSuite, SystemInfo};
 
 // Monitoring Engine exports
 pub use monitoring_engine::{
-    MonitoringState,
-    SystemMetricsRealtime,
-    EngineHeartbeat,
-    DetectedAnomaly,
-    HealthStatus,
-    MonitoringConfig,
-    MetricsHistory,
-    MetricsDataPoint,
+    DetectedAnomaly, EngineHeartbeat, HealthStatus, MetricsDataPoint, MetricsHistory,
+    MonitoringConfig, MonitoringState, SystemMetricsRealtime,
 };
 
 // Developer Mode exports
 pub use developer_mode::{
-    DeveloperModeState,
-    PatchAction,
-    PatchResult,
-    PatchType,
-    ChangeSeverity,
-    PatchChange,
-    PatchMetadata,
-    PatchHistory,
-    SecurityValidation,
-    DiffPreview,
+    ChangeSeverity, DeveloperModeState, DiffPreview, PatchAction, PatchChange, PatchHistory,
+    PatchMetadata, PatchResult, PatchType, SecurityValidation,
 };
 
 // Behavior Engine exports (Super Prompt #16)
 pub use behavior::{
-    BehaviorEngine,
-    BehaviorProfile,
-    BehaviorMode,
-    BehaviorRules,
-    BehaviorState,
+    BehaviorEngine, BehaviorMode, BehaviorProfile, BehaviorRules, BehaviorState, EmotionSignal,
     Intent,
-    EmotionSignal,
 };
 
 // Quantum Predictive Engine exports (Super Prompt #20)
 pub use quantum::{
-    QuantumPredictiveEngine,
-    QuantumConfig,
-    Prediction,
-    PredictedAction,
-    UserEvent,
-    QuantumStats,
+    PredictedAction, Prediction, QuantumConfig, QuantumPredictiveEngine, QuantumStats, UserEvent,
 };
 
 // Temporal Engine exports (Super Prompt #22)
 pub use temporal::{
-    TemporalEngine,
-    TemporalConfig,
-    TemporalResult,
-    StateSnapshot,
-    SnapshotInfo,
-    TemporalStats,
-    Timeline,
-    TemporalDiff,
+    SnapshotInfo, StateSnapshot, TemporalConfig, TemporalDiff, TemporalEngine, TemporalResult,
+    TemporalStats, Timeline,
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════

@@ -65,11 +65,14 @@ impl ProbabilityEngine {
         ];
 
         for (action, prior) in default_actions {
-            self.priors.insert(action.to_string(), ActionPrior {
-                action: action.to_string(),
-                prior,
-                observations: 0,
-            });
+            self.priors.insert(
+                action.to_string(),
+                ActionPrior {
+                    action: action.to_string(),
+                    prior,
+                    observations: 0,
+                },
+            );
         }
     }
 
@@ -99,9 +102,7 @@ impl ProbabilityEngine {
     fn update_likelihood(&mut self, event: &UserEvent, action: &str) {
         let condition = event.event_type.clone();
 
-        let likelihoods = self.likelihoods
-            .entry(condition.clone())
-            .or_insert_with(Vec::new);
+        let likelihoods = self.likelihoods.entry(condition.clone()).or_default();
 
         // Chercher l'index de l'action existante
         let found_idx = likelihoods.iter().position(|l| l.action == action);
@@ -123,8 +124,7 @@ impl ProbabilityEngine {
         let smoothing = self.smoothing_factor;
         let len = likelihoods.len();
         for l in likelihoods.iter_mut() {
-            l.likelihood = (l.count as f64 + smoothing)
-                / (total as f64 + smoothing * len as f64);
+            l.likelihood = (l.count as f64 + smoothing) / (total as f64 + smoothing * len as f64);
         }
     }
 
@@ -163,7 +163,8 @@ impl ProbabilityEngine {
 
     /// Calcule les probabilités pour toutes les actions
     pub fn compute_all_posteriors(&self, evidence: &[(&str, &str)]) -> Vec<(String, f64)> {
-        let mut posteriors: Vec<(String, f64)> = self.priors
+        let mut posteriors: Vec<(String, f64)> = self
+            .priors
             .keys()
             .map(|action| {
                 let post = self.posterior(action, evidence);

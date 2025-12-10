@@ -3,9 +3,9 @@
 //   Gestion des modes opérationnels
 // ═══════════════════════════════════════════════════════════════
 
+use super::{CommunicationStyle, EmotionalLevel, OperationalMode, Tone};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use super::{OperationalMode, CommunicationStyle, EmotionalLevel, Tone};
 
 /// Configuration d'un mode opérationnel
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -119,171 +119,195 @@ impl ModeSystemEngine {
     /// Initialise tous les modes
     fn initialize_modes(&mut self) {
         // Standard
-        self.mode_configs.insert(OperationalMode::Standard, ModeConfig {
-            mode: OperationalMode::Standard,
-            name: "Standard".to_string(),
-            description: "Mode équilibré pour usage général".to_string(),
-            icon: "⚖️".to_string(),
-            communication_style: CommunicationStyle::Casual,
-            emotional_level: EmotionalLevel::Warm,
-            default_tone: Tone::Friendly,
-            verbosity: 0.5,
-            proactivity: 0.5,
-            creativity: 0.5,
-            rigor: 0.5,
-            features: ModeFeatures::default(),
-            constraints: ModeConstraints::default(),
-        });
+        self.mode_configs.insert(
+            OperationalMode::Standard,
+            ModeConfig {
+                mode: OperationalMode::Standard,
+                name: "Standard".to_string(),
+                description: "Mode équilibré pour usage général".to_string(),
+                icon: "⚖️".to_string(),
+                communication_style: CommunicationStyle::Casual,
+                emotional_level: EmotionalLevel::Warm,
+                default_tone: Tone::Friendly,
+                verbosity: 0.5,
+                proactivity: 0.5,
+                creativity: 0.5,
+                rigor: 0.5,
+                features: ModeFeatures::default(),
+                constraints: ModeConstraints::default(),
+            },
+        );
 
         // Focus
-        self.mode_configs.insert(OperationalMode::Focus, ModeConfig {
-            mode: OperationalMode::Focus,
-            name: "Focus".to_string(),
-            description: "Mode productivité maximale".to_string(),
-            icon: "🎯".to_string(),
-            communication_style: CommunicationStyle::Concise,
-            emotional_level: EmotionalLevel::Neutral,
-            default_tone: Tone::Professional,
-            verbosity: 0.3,
-            proactivity: 0.7,
-            creativity: 0.3,
-            rigor: 0.8,
-            features: ModeFeatures {
-                emojis_enabled: false,
-                ..Default::default()
+        self.mode_configs.insert(
+            OperationalMode::Focus,
+            ModeConfig {
+                mode: OperationalMode::Focus,
+                name: "Focus".to_string(),
+                description: "Mode productivité maximale".to_string(),
+                icon: "🎯".to_string(),
+                communication_style: CommunicationStyle::Concise,
+                emotional_level: EmotionalLevel::Neutral,
+                default_tone: Tone::Professional,
+                verbosity: 0.3,
+                proactivity: 0.7,
+                creativity: 0.3,
+                rigor: 0.8,
+                features: ModeFeatures {
+                    emojis_enabled: false,
+                    ..Default::default()
+                },
+                constraints: ModeConstraints {
+                    max_response_length: Some(500),
+                    ..Default::default()
+                },
             },
-            constraints: ModeConstraints {
-                max_response_length: Some(500),
-                ..Default::default()
-            },
-        });
+        );
 
         // Creative
-        self.mode_configs.insert(OperationalMode::Creative, ModeConfig {
-            mode: OperationalMode::Creative,
-            name: "Créatif".to_string(),
-            description: "Mode exploration et idéation".to_string(),
-            icon: "🎨".to_string(),
-            communication_style: CommunicationStyle::Elaborate,
-            emotional_level: EmotionalLevel::Enthusiastic,
-            default_tone: Tone::Playful,
-            verbosity: 0.8,
-            proactivity: 0.9,
-            creativity: 1.0,
-            rigor: 0.2,
-            features: ModeFeatures::default(),
-            constraints: ModeConstraints::default(),
-        });
+        self.mode_configs.insert(
+            OperationalMode::Creative,
+            ModeConfig {
+                mode: OperationalMode::Creative,
+                name: "Créatif".to_string(),
+                description: "Mode exploration et idéation".to_string(),
+                icon: "🎨".to_string(),
+                communication_style: CommunicationStyle::Elaborate,
+                emotional_level: EmotionalLevel::Enthusiastic,
+                default_tone: Tone::Playful,
+                verbosity: 0.8,
+                proactivity: 0.9,
+                creativity: 1.0,
+                rigor: 0.2,
+                features: ModeFeatures::default(),
+                constraints: ModeConstraints::default(),
+            },
+        );
 
         // Learning
-        self.mode_configs.insert(OperationalMode::Learning, ModeConfig {
-            mode: OperationalMode::Learning,
-            name: "Apprentissage".to_string(),
-            description: "Mode pédagogique et explicatif".to_string(),
-            icon: "📚".to_string(),
-            communication_style: CommunicationStyle::Elaborate,
-            emotional_level: EmotionalLevel::Encouraging,
-            default_tone: Tone::Instructive,
-            verbosity: 0.9,
-            proactivity: 0.8,
-            creativity: 0.5,
-            rigor: 0.6,
-            features: ModeFeatures::default(),
-            constraints: ModeConstraints {
-                require_step_by_step: true,
-                ..Default::default()
+        self.mode_configs.insert(
+            OperationalMode::Learning,
+            ModeConfig {
+                mode: OperationalMode::Learning,
+                name: "Apprentissage".to_string(),
+                description: "Mode pédagogique et explicatif".to_string(),
+                icon: "📚".to_string(),
+                communication_style: CommunicationStyle::Elaborate,
+                emotional_level: EmotionalLevel::Encouraging,
+                default_tone: Tone::Instructive,
+                verbosity: 0.9,
+                proactivity: 0.8,
+                creativity: 0.5,
+                rigor: 0.6,
+                features: ModeFeatures::default(),
+                constraints: ModeConstraints {
+                    require_step_by_step: true,
+                    ..Default::default()
+                },
             },
-        });
+        );
 
         // Debug
-        self.mode_configs.insert(OperationalMode::Debug, ModeConfig {
-            mode: OperationalMode::Debug,
-            name: "Debug".to_string(),
-            description: "Mode technique et diagnostic".to_string(),
-            icon: "🔧".to_string(),
-            communication_style: CommunicationStyle::Technical,
-            emotional_level: EmotionalLevel::Serious,
-            default_tone: Tone::Serious,
-            verbosity: 1.0,
-            proactivity: 0.6,
-            creativity: 0.2,
-            rigor: 0.95,
-            features: ModeFeatures {
-                emojis_enabled: false,
-                ..Default::default()
+        self.mode_configs.insert(
+            OperationalMode::Debug,
+            ModeConfig {
+                mode: OperationalMode::Debug,
+                name: "Debug".to_string(),
+                description: "Mode technique et diagnostic".to_string(),
+                icon: "🔧".to_string(),
+                communication_style: CommunicationStyle::Technical,
+                emotional_level: EmotionalLevel::Serious,
+                default_tone: Tone::Serious,
+                verbosity: 1.0,
+                proactivity: 0.6,
+                creativity: 0.2,
+                rigor: 0.95,
+                features: ModeFeatures {
+                    emojis_enabled: false,
+                    ..Default::default()
+                },
+                constraints: ModeConstraints {
+                    require_citations: true,
+                    ..Default::default()
+                },
             },
-            constraints: ModeConstraints {
-                require_citations: true,
-                ..Default::default()
-            },
-        });
+        );
 
         // Casual
-        self.mode_configs.insert(OperationalMode::Casual, ModeConfig {
-            mode: OperationalMode::Casual,
-            name: "Détendu".to_string(),
-            description: "Mode conversation libre".to_string(),
-            icon: "☕".to_string(),
-            communication_style: CommunicationStyle::Casual,
-            emotional_level: EmotionalLevel::Playful,
-            default_tone: Tone::Playful,
-            verbosity: 0.6,
-            proactivity: 0.4,
-            creativity: 0.7,
-            rigor: 0.2,
-            features: ModeFeatures::default(),
-            constraints: ModeConstraints::default(),
-        });
+        self.mode_configs.insert(
+            OperationalMode::Casual,
+            ModeConfig {
+                mode: OperationalMode::Casual,
+                name: "Détendu".to_string(),
+                description: "Mode conversation libre".to_string(),
+                icon: "☕".to_string(),
+                communication_style: CommunicationStyle::Casual,
+                emotional_level: EmotionalLevel::Playful,
+                default_tone: Tone::Playful,
+                verbosity: 0.6,
+                proactivity: 0.4,
+                creativity: 0.7,
+                rigor: 0.2,
+                features: ModeFeatures::default(),
+                constraints: ModeConstraints::default(),
+            },
+        );
 
         // Emergency
-        self.mode_configs.insert(OperationalMode::Emergency, ModeConfig {
-            mode: OperationalMode::Emergency,
-            name: "Urgence".to_string(),
-            description: "Mode critique et prioritaire".to_string(),
-            icon: "🚨".to_string(),
-            communication_style: CommunicationStyle::Concise,
-            emotional_level: EmotionalLevel::Serious,
-            default_tone: Tone::Urgent,
-            verbosity: 0.2,
-            proactivity: 1.0,
-            creativity: 0.1,
-            rigor: 1.0,
-            features: ModeFeatures {
-                emojis_enabled: false,
-                diagrams_enabled: false,
-                ..Default::default()
+        self.mode_configs.insert(
+            OperationalMode::Emergency,
+            ModeConfig {
+                mode: OperationalMode::Emergency,
+                name: "Urgence".to_string(),
+                description: "Mode critique et prioritaire".to_string(),
+                icon: "🚨".to_string(),
+                communication_style: CommunicationStyle::Concise,
+                emotional_level: EmotionalLevel::Serious,
+                default_tone: Tone::Urgent,
+                verbosity: 0.2,
+                proactivity: 1.0,
+                creativity: 0.1,
+                rigor: 1.0,
+                features: ModeFeatures {
+                    emojis_enabled: false,
+                    diagrams_enabled: false,
+                    ..Default::default()
+                },
+                constraints: ModeConstraints {
+                    max_response_length: Some(200),
+                    max_thinking_time_ms: Some(1000),
+                    ..Default::default()
+                },
             },
-            constraints: ModeConstraints {
-                max_response_length: Some(200),
-                max_thinking_time_ms: Some(1000),
-                ..Default::default()
-            },
-        });
+        );
 
         // Silent
-        self.mode_configs.insert(OperationalMode::Silent, ModeConfig {
-            mode: OperationalMode::Silent,
-            name: "Silencieux".to_string(),
-            description: "Mode minimal, réponses courtes".to_string(),
-            icon: "🤫".to_string(),
-            communication_style: CommunicationStyle::Concise,
-            emotional_level: EmotionalLevel::Calm,
-            default_tone: Tone::Neutral,
-            verbosity: 0.1,
-            proactivity: 0.1,
-            creativity: 0.1,
-            rigor: 0.5,
-            features: ModeFeatures {
-                suggestions_enabled: false,
-                emojis_enabled: false,
-                voice_enabled: false,
-                ..Default::default()
+        self.mode_configs.insert(
+            OperationalMode::Silent,
+            ModeConfig {
+                mode: OperationalMode::Silent,
+                name: "Silencieux".to_string(),
+                description: "Mode minimal, réponses courtes".to_string(),
+                icon: "🤫".to_string(),
+                communication_style: CommunicationStyle::Concise,
+                emotional_level: EmotionalLevel::Calm,
+                default_tone: Tone::Neutral,
+                verbosity: 0.1,
+                proactivity: 0.1,
+                creativity: 0.1,
+                rigor: 0.5,
+                features: ModeFeatures {
+                    suggestions_enabled: false,
+                    emojis_enabled: false,
+                    voice_enabled: false,
+                    ..Default::default()
+                },
+                constraints: ModeConstraints {
+                    max_response_length: Some(100),
+                    ..Default::default()
+                },
             },
-            constraints: ModeConstraints {
-                max_response_length: Some(100),
-                ..Default::default()
-            },
-        });
+        );
     }
 
     /// Change le mode actuel
@@ -321,17 +345,35 @@ impl ModeSystemEngine {
     pub fn detect_mode(&self, context: &str) -> OperationalMode {
         let context_lower = context.to_lowercase();
 
-        if context_lower.contains("urgent") || context_lower.contains("critique") || context_lower.contains("erreur grave") {
+        if context_lower.contains("urgent")
+            || context_lower.contains("critique")
+            || context_lower.contains("erreur grave")
+        {
             OperationalMode::Emergency
-        } else if context_lower.contains("debug") || context_lower.contains("bug") || context_lower.contains("trace") {
+        } else if context_lower.contains("debug")
+            || context_lower.contains("bug")
+            || context_lower.contains("trace")
+        {
             OperationalMode::Debug
-        } else if context_lower.contains("apprend") || context_lower.contains("expliqu") || context_lower.contains("comment") {
+        } else if context_lower.contains("apprend")
+            || context_lower.contains("expliqu")
+            || context_lower.contains("comment")
+        {
             OperationalMode::Learning
-        } else if context_lower.contains("créatif") || context_lower.contains("idée") || context_lower.contains("brainstorm") {
+        } else if context_lower.contains("créatif")
+            || context_lower.contains("idée")
+            || context_lower.contains("brainstorm")
+        {
             OperationalMode::Creative
-        } else if context_lower.contains("focus") || context_lower.contains("productif") || context_lower.contains("rapide") {
+        } else if context_lower.contains("focus")
+            || context_lower.contains("productif")
+            || context_lower.contains("rapide")
+        {
             OperationalMode::Focus
-        } else if context_lower.contains("bavard") || context_lower.contains("détend") || context_lower.contains("chat") {
+        } else if context_lower.contains("bavard")
+            || context_lower.contains("détend")
+            || context_lower.contains("chat")
+        {
             OperationalMode::Casual
         } else {
             OperationalMode::Standard

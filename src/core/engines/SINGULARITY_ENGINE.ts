@@ -348,9 +348,7 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
 
     try {
       // Mise à jour consciousness basée sur la cohérence globale
-      this.state.consciousness = Math.min(4,
-        this.state.unity.globalHarmony * 4
-      );
+      this.state.consciousness = Math.min(4, this.state.unity.globalHarmony * 4);
 
       // Mise à jour auto-cohérence
       this.state.autoCoherence = this.calculateAutoCoherence();
@@ -379,7 +377,6 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
         this.metrics.updateCount;
       this.metrics.peakUpdateTime = Math.max(this.metrics.peakUpdateTime, updateTime);
       this.metrics.lastUpdate = Date.now();
-
     } catch (error) {
       this.metrics.errors++;
       console.error('[SingularityEngine] Update error:', error);
@@ -424,7 +421,8 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
     this.state.quantum.coherence = Math.min(1, this.state.quantum.coherence + 0.1);
 
     // Augmenter la convergence
-    this.state.convergence.convergenceLevel = Math.min(1,
+    this.state.convergence.convergenceLevel = Math.min(
+      1,
       this.state.convergence.convergenceLevel + 0.05
     );
 
@@ -447,13 +445,13 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
    */
   private calculateExpressionQuality(): number {
     const { singularityField } = this.state;
-    const avg = (
-      singularityField.energy +
-      singularityField.motion +
-      singularityField.symbolism +
-      singularityField.depth +
-      singularityField.presence
-    ) / 5;
+    const avg =
+      (singularityField.energy +
+        singularityField.motion +
+        singularityField.symbolism +
+        singularityField.depth +
+        singularityField.presence) /
+      5;
     return avg;
   }
 

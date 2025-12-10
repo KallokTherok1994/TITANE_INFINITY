@@ -29,45 +29,45 @@ const MATERIAL_PRESETS: Record<string, Partial<PBRMaterialConfig>> = {
   // SKIN (SSS approximation)
   // ─────────────────────────────────────────
   skin: {
-    roughness: 0.6,         // Légèrement mat
-    metalness: 0.0,         // Non-métal
-    normalScale: 0.3,       // Micro-détails légers
+    roughness: 0.6, // Légèrement mat
+    metalness: 0.0, // Non-métal
+    normalScale: 0.3, // Micro-détails légers
   },
 
   // ─────────────────────────────────────────
   // CLOTH (textile)
   // ─────────────────────────────────────────
   cloth: {
-    roughness: 0.8,         // Très mat
-    metalness: 0.1,         // Légèrement réfléchissant
-    normalScale: 0.5,       // Texture tissu
+    roughness: 0.8, // Très mat
+    metalness: 0.1, // Légèrement réfléchissant
+    normalScale: 0.5, // Texture tissu
   },
 
   // ─────────────────────────────────────────
   // HAIR (cheveux/poils)
   // ─────────────────────────────────────────
   hair: {
-    roughness: 0.4,         // Semi-brillant
-    metalness: 0.0,         // Non-métal
-    normalScale: 0.8,       // Texture forte
+    roughness: 0.4, // Semi-brillant
+    metalness: 0.0, // Non-métal
+    normalScale: 0.8, // Texture forte
   },
 
   // ─────────────────────────────────────────
   // METAL (accessoires métalliques)
   // ─────────────────────────────────────────
   metal: {
-    roughness: 0.2,         // Très brillant
-    metalness: 1.0,         // Full métal
-    normalScale: 0.2,       // Surface lisse
+    roughness: 0.2, // Très brillant
+    metalness: 1.0, // Full métal
+    normalScale: 0.2, // Surface lisse
   },
 
   // ─────────────────────────────────────────
   // PLASTIC (plastique dur)
   // ─────────────────────────────────────────
   plastic: {
-    roughness: 0.3,         // Brillant
-    metalness: 0.0,         // Non-métal
-    normalScale: 0.1,       // Surface très lisse
+    roughness: 0.3, // Brillant
+    metalness: 0.0, // Non-métal
+    normalScale: 0.1, // Surface très lisse
   },
 };
 
@@ -200,10 +200,7 @@ export class PBRMaterialSystem {
   /**
    * Update material properties
    */
-  public updateMaterial(
-    name: string,
-    updates: Partial<PBRMaterialConfig>
-  ): void {
+  public updateMaterial(name: string, updates: Partial<PBRMaterialConfig>): void {
     const material = this.materials.get(name);
     if (!material) return;
 

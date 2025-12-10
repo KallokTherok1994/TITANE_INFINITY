@@ -108,6 +108,7 @@ src-tauri/src/temporal_engine/integrations/
 ### Objectif
 
 Hub centralisé pour gérer toutes les intégrations API externes de TITANE∞:
+
 - Providers LLM (OpenAI, Anthropic, Mistral, Local)
 - APIs Web (GitHub, GitLab, Jira, Discord, Slack)
 - Services Cloud (AWS, GCP, Azure)
@@ -156,6 +157,7 @@ src-tauri/src/api_hub/
 ### Raison Report
 
 Implémenté **#18 avant #17** car:
+
 1. **Continuité logique**: #18 étend #16 (Cycle Engine)
 2. **Pas de dépendances externes**: #18 est autonome
 3. **Fondation**: Intelligence temporelle utile pour orchestrer APIs
@@ -176,11 +178,11 @@ Implémenté **#18 avant #17** car:
 
 ### Code Créé
 
-| Super Prompt | Modules | Lignes Code | Tests | Doc (lignes) |
-|--------------|---------|-------------|-------|--------------|
-| #16 Cycle Engine | 17 | 2500+ | 26 | 2500+ |
-| #18 Temporal Engine | 5 bridges | 1800+ | 45 | 1250+ |
-| **TOTAL** | **22** | **4300+** | **71** | **3750+** |
+| Super Prompt        | Modules   | Lignes Code | Tests  | Doc (lignes) |
+| ------------------- | --------- | ----------- | ------ | ------------ |
+| #16 Cycle Engine    | 17        | 2500+       | 26     | 2500+        |
+| #18 Temporal Engine | 5 bridges | 1800+       | 45     | 1250+        |
+| **TOTAL**           | **22**    | **4300+**   | **71** | **3750+**    |
 
 ### Tests
 

@@ -33,7 +33,9 @@ export interface UseTalkToTitaneReturn {
 
   // Configuration
   setMode: (mode: TalkToTitaneMode) => void;
-  setEmotionalCalibration: (tone: 'analytical' | 'calm' | 'energizing' | 'motivating' | 'neutral') => void;
+  setEmotionalCalibration: (
+    tone: 'analytical' | 'calm' | 'energizing' | 'motivating' | 'neutral'
+  ) => void;
   configure: (config: Partial<TalkToTitaneConfig>) => void;
 
   // Stats
@@ -46,11 +48,13 @@ export interface UseTalkToTitaneReturn {
 
 export function useTalkToTitane(): UseTalkToTitaneReturn {
   const [state, setState] = useState<TalkToTitaneState>(talkToTitaneEngine.getState());
-  const [config, setConfig] = useState<TalkToTitaneConfig>(talkToTitaneEngine.getConfig());
+  const [config, setConfig] = useState<TalkToTitaneConfig>(
+    talkToTitaneEngine.getConfig()
+  );
 
   // Subscribe to engine updates
   useEffect(() => {
-    const unsubscribe = talkToTitaneEngine.subscribe((newState) => {
+    const unsubscribe = talkToTitaneEngine.subscribe(newState => {
       setState(newState);
     });
 
@@ -60,9 +64,12 @@ export function useTalkToTitane(): UseTalkToTitaneReturn {
   }, []);
 
   // Actions
-  const activate = useCallback(async (mode?: TalkToTitaneMode) => {
-    await talkToTitaneEngine.activate(mode || config.defaultMode);
-  }, [config.defaultMode]);
+  const activate = useCallback(
+    async (mode?: TalkToTitaneMode) => {
+      await talkToTitaneEngine.activate(mode || config.defaultMode);
+    },
+    [config.defaultMode]
+  );
 
   const deactivate = useCallback(async () => {
     await talkToTitaneEngine.deactivate();
@@ -70,7 +77,9 @@ export function useTalkToTitane(): UseTalkToTitaneReturn {
 
   const startListening = useCallback(() => {
     // Engine starts listening automatically on wake phrase detection
-    console.log('[useTalkToTitane] Manual start listening (not implemented - use wake phrases)');
+    console.log(
+      '[useTalkToTitane] Manual start listening (not implemented - use wake phrases)'
+    );
   }, []);
 
   const stopListening = useCallback(() => {
@@ -86,9 +95,12 @@ export function useTalkToTitane(): UseTalkToTitaneReturn {
     talkToTitaneEngine.setMode(mode);
   }, []);
 
-  const setEmotionalCalibration = useCallback((tone: 'analytical' | 'calm' | 'energizing' | 'motivating' | 'neutral') => {
-    talkToTitaneEngine.setEmotionalCalibration(tone);
-  }, []);
+  const setEmotionalCalibration = useCallback(
+    (tone: 'analytical' | 'calm' | 'energizing' | 'motivating' | 'neutral') => {
+      talkToTitaneEngine.setEmotionalCalibration(tone);
+    },
+    []
+  );
 
   const configure = useCallback((newConfig: Partial<TalkToTitaneConfig>) => {
     talkToTitaneEngine.configure(newConfig);

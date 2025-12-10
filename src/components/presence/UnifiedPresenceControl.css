@@ -23,7 +23,8 @@
   gap: 8px;
 
   padding: 10px 16px;
-  background: linear-gradient(135deg,
+  background: linear-gradient(
+    135deg,
     hsl(var(--presence-ambient-hue, 250), 70%, 50%) 0%,
     hsl(var(--presence-ambient-hue, 250), 70%, 40%) 100%
   );
@@ -45,7 +46,8 @@
 }
 
 .unified-presence-badge.open {
-  background: linear-gradient(135deg,
+  background: linear-gradient(
+    135deg,
     hsl(var(--presence-ambient-hue, 250), 70%, 60%) 0%,
     hsl(var(--presence-ambient-hue, 250), 70%, 50%) 100%
   );
@@ -57,8 +59,15 @@
 }
 
 @keyframes presence-pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(0.95); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(0.95);
+  }
 }
 
 .presence-badge-label {
@@ -116,7 +125,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px;
-  background: linear-gradient(135deg,
+  background: linear-gradient(
+    135deg,
     rgba(139, 92, 246, 0.2) 0%,
     rgba(99, 102, 241, 0.2) 100%
   );

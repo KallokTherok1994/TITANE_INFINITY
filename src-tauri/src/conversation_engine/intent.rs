@@ -4,7 +4,6 @@
  * Analyse d'intention conversationnelle
  * ═══════════════════════════════════════════════════════════════════
  */
-
 use super::types::Intention;
 
 /// Analyseur d'intentions
@@ -29,14 +28,16 @@ impl IntentAnalyzer {
         match intention {
             Intention::Question => {
                 let question_markers = ["?", "comment", "pourquoi", "quel", "où"];
-                let count = question_markers.iter()
+                let count = question_markers
+                    .iter()
                     .filter(|marker| lower.contains(*marker))
                     .count();
                 (count as f32 * 0.25).min(1.0)
             }
             Intention::Action => {
                 let action_markers = ["peux-tu", "pourrais-tu", "créer", "faire"];
-                let count = action_markers.iter()
+                let count = action_markers
+                    .iter()
                     .filter(|marker| lower.contains(*marker))
                     .count();
                 (count as f32 * 0.25).min(1.0)

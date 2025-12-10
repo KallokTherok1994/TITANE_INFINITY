@@ -16,20 +16,20 @@ export interface BoneTransform {
 }
 
 export interface PostureDynamicsConfig {
-  vocalToneInfluence: number;           // How much vocal tone affects posture (0-1)
-  gestureAmplitudeMultiplier: number;   // Global gesture amplitude scale
-  smoothingFactor: number;              // IK interpolation smoothness
-  maxArmRotation: number;               // Max arm rotation per frame (degrees)
-  maxHandSpeed: number;                 // Max hand movement speed (m/s)
+  vocalToneInfluence: number; // How much vocal tone affects posture (0-1)
+  gestureAmplitudeMultiplier: number; // Global gesture amplitude scale
+  smoothingFactor: number; // IK interpolation smoothness
+  maxArmRotation: number; // Max arm rotation per frame (degrees)
+  maxHandSpeed: number; // Max hand movement speed (m/s)
 }
 
 export type VocalTone = 'soft' | 'assertive' | 'rapid' | 'calm';
 
 export interface PosturePreset {
-  spineRotation: number;      // Spine forward/back lean (degrees)
-  shoulderHeight: number;     // Shoulder Y offset (meters)
-  armRelaxation: number;      // Arm tension 0-1 (0=tense, 1=relaxed)
-  gestureScale: number;       // Gesture amplitude multiplier
+  spineRotation: number; // Spine forward/back lean (degrees)
+  shoulderHeight: number; // Shoulder Y offset (meters)
+  armRelaxation: number; // Arm tension 0-1 (0=tense, 1=relaxed)
+  gestureScale: number; // Gesture amplitude multiplier
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -41,40 +41,40 @@ const POSTURE_PRESETS: Record<VocalTone, PosturePreset> = {
   // SOFT (gentle, relaxed)
   // ─────────────────────────────────────────
   soft: {
-    spineRotation: 2,           // Slight forward lean
-    shoulderHeight: -0.01,      // Shoulders slightly down
-    armRelaxation: 0.8,         // Very relaxed
-    gestureScale: 0.7,          // Gentle gestures
+    spineRotation: 2, // Slight forward lean
+    shoulderHeight: -0.01, // Shoulders slightly down
+    armRelaxation: 0.8, // Very relaxed
+    gestureScale: 0.7, // Gentle gestures
   },
 
   // ─────────────────────────────────────────
   // ASSERTIVE (confident, upright)
   // ─────────────────────────────────────────
   assertive: {
-    spineRotation: -1,          // Slight back lean (confident)
-    shoulderHeight: 0.02,       // Shoulders up
-    armRelaxation: 0.4,         // Tense
-    gestureScale: 1.2,          // Pronounced gestures
+    spineRotation: -1, // Slight back lean (confident)
+    shoulderHeight: 0.02, // Shoulders up
+    armRelaxation: 0.4, // Tense
+    gestureScale: 1.2, // Pronounced gestures
   },
 
   // ─────────────────────────────────────────
   // RAPID (energetic, animated)
   // ─────────────────────────────────────────
   rapid: {
-    spineRotation: 0,           // Neutral
-    shoulderHeight: 0.01,       // Slightly elevated
-    armRelaxation: 0.3,         // Very tense (ready to move)
-    gestureScale: 1.5,          // Large gestures
+    spineRotation: 0, // Neutral
+    shoulderHeight: 0.01, // Slightly elevated
+    armRelaxation: 0.3, // Very tense (ready to move)
+    gestureScale: 1.5, // Large gestures
   },
 
   // ─────────────────────────────────────────
   // CALM (peaceful, centered)
   // ─────────────────────────────────────────
   calm: {
-    spineRotation: 1,           // Very slight forward
-    shoulderHeight: 0,          // Neutral
-    armRelaxation: 1.0,         // Fully relaxed
-    gestureScale: 0.6,          // Minimal gestures
+    spineRotation: 1, // Very slight forward
+    shoulderHeight: 0, // Neutral
+    armRelaxation: 1.0, // Fully relaxed
+    gestureScale: 0.6, // Minimal gestures
   },
 };
 
@@ -100,9 +100,9 @@ export class BodyGestureFluidityEngine {
     this.config = {
       vocalToneInfluence: 0.7,
       gestureAmplitudeMultiplier: 1.0,
-      smoothingFactor: 0.15,            // Smooth IK interpolation
-      maxArmRotation: 30,               // 30° max per frame
-      maxHandSpeed: 0.5,                // 0.5 m/s max
+      smoothingFactor: 0.15, // Smooth IK interpolation
+      maxArmRotation: 30, // 30° max per frame
+      maxHandSpeed: 0.5, // 0.5 m/s max
       ...config,
     };
 
@@ -199,7 +199,10 @@ export class BodyGestureFluidityEngine {
       const velocity = this.boneVelocities.get(boneName) || new THREE.Vector3();
 
       // Position interpolation with velocity limit
-      const positionDelta = new THREE.Vector3().subVectors(target.position, current.position);
+      const positionDelta = new THREE.Vector3().subVectors(
+        target.position,
+        current.position
+      );
       const distance = positionDelta.length();
 
       if (distance > 0.001) {

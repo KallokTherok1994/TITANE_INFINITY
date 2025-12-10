@@ -19,7 +19,14 @@ interface TalentTreeProps {
 export const TalentTree: React.FC<TalentTreeProps> = () => {
   return (
     <div style={{ gridColumn: '1 / -1', padding: '2rem', textAlign: 'center' }}>
-      <h2 style={{ fontSize: '1.5rem', fontWeight: 600, color: 'var(--text)', marginBottom: '1rem' }}>
+      <h2
+        style={{
+          fontSize: '1.5rem',
+          fontWeight: 600,
+          color: 'var(--text)',
+          marginBottom: '1rem',
+        }}
+      >
         🌳 Arbre de Talents
       </h2>
       <div style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
@@ -31,5 +38,3 @@ export const TalentTree: React.FC<TalentTreeProps> = () => {
     </div>
   );
 };
-
-

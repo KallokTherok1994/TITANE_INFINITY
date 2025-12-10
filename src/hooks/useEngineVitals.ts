@@ -146,7 +146,6 @@ export function useEngineVitals(
         nexus: `${engineVitals.nexus.coherence}%`,
         sentinel: `${engineVitals.sentinel.errors} errors`,
       });
-
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Engine vitals error';
       setError(errorMsg);
@@ -154,7 +153,6 @@ export function useEngineVitals(
 
       // Fallback: vitals par défaut
       setVitals(DEFAULT_VITALS);
-
     } finally {
       setIsLoading(false);
     }

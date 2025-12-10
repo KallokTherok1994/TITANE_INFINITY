@@ -19,17 +19,24 @@ export { useRAG } from './useRAG';
 export type { LivingEnginesState } from './useLivingEngines';
 
 // Singularity hooks
-export { useSingularity, useSingularityMetrics as useSingularityMetricsLegacy, useSingularityField } from './useSingularity';
+export {
+  useSingularity,
+  useSingularityMetrics as useSingularityMetricsLegacy,
+  useSingularityField,
+} from './useSingularity';
 
 // v∞ - Enhanced Singularity Metrics
-export { useSingularityMetrics, default as useSingularityMetricsDefault } from './useSingularityMetrics';
+export {
+  useSingularityMetrics,
+  default as useSingularityMetricsDefault,
+} from './useSingularityMetrics';
 export type {
   SystemMetrics,
   EngineMetrics,
   HealthScore,
   Alert as MetricsAlert,
   SingularityMetricsState,
-  UseSingularityMetricsOptions
+  UseSingularityMetricsOptions,
 } from './useSingularityMetrics';
 
 // ═══════════════════════════════════════════════════════════════
@@ -51,7 +58,10 @@ export type { UseChatCoreOptions, UseChatCoreReturn } from './useChatCore';
 export type { UseChatUIOptions, UseChatUIReturn } from './useChatUI';
 export type { UseChatStreamingOptions, UseChatStreamingReturn } from './useChatStreaming';
 export type { UseChatMemoryOptions, UseChatMemoryReturn } from './useChatMemory';
-export type { UseProviderStatusOptions, UseProviderStatusReturn } from './useProviderStatus';
+export type {
+  UseProviderStatusOptions,
+  UseProviderStatusReturn,
+} from './useProviderStatus';
 
 // ═══════════════════════════════════════════════════════════════
 // v15 - Refactored Hooks (TauriClient integration)
@@ -67,7 +77,11 @@ export type { SystemVitals, VitalsState } from './useVitals';
 
 // Engine Vitals (NOUVEAU v15)
 export { useEngineVitals } from './useEngineVitals';
-export type { EngineVitals, UseEngineVitalsOptions, UseEngineVitalsReturn } from './useEngineVitals';
+export type {
+  EngineVitals,
+  UseEngineVitalsOptions,
+  UseEngineVitalsReturn,
+} from './useEngineVitals';
 
 // System Monitor (NOUVEAU v15 - Combine vitals + engines)
 export { useSystemMonitor } from './useSystemMonitor';
@@ -75,7 +89,10 @@ export type { UseSystemMonitorOptions, UseSystemMonitorReturn } from './useSyste
 
 // Performance Monitor (NOUVEAU v15 - FPS tracking)
 export { usePerformanceMonitor } from './usePerformanceMonitor';
-export type { PerformanceMetrics, UsePerformanceMonitorReturn } from './usePerformanceMonitor';
+export type {
+  PerformanceMetrics,
+  UsePerformanceMonitorReturn,
+} from './usePerformanceMonitor';
 
 // Performance Profiler (v∞ - Advanced profiling)
 export {
@@ -83,9 +100,12 @@ export {
   useComponentLifecycle,
   useTrackedEffect,
   useTrackedCallback,
-  default as usePerformanceProfilerDefault
+  default as usePerformanceProfilerDefault,
 } from './usePerformanceProfiler';
-export type { UsePerformanceProfilerOptions, UsePerformanceProfilerReturn } from './usePerformanceProfiler';
+export type {
+  UsePerformanceProfilerOptions,
+  UsePerformanceProfilerReturn,
+} from './usePerformanceProfiler';
 
 // Animation Context hook (re-export from contexts)
 export { useAnimation } from '../contexts/AnimationContext';
@@ -116,7 +136,7 @@ export type {
   VoiceEngineState,
   VoiceEngineStatus,
   UseVoiceEngineOptions,
-  UseVoiceEngineReturn
+  UseVoiceEngineReturn,
 } from './useVoiceEngine';
 
 // Audio Settings & Diagnostics
@@ -124,7 +144,7 @@ export { useAudioSettings, default as useAudioSettingsDefault } from './useAudio
 export type {
   AudioDiagnosticStep,
   AudioHealthSummary,
-  UseAudioSettingsReturn
+  UseAudioSettingsReturn,
 } from './useAudioSettings';
 
 // ═══════════════════════════════════════════════════════════════
@@ -132,21 +152,21 @@ export type {
 // ═══════════════════════════════════════════════════════════════
 
 // Device Permissions Engine
-export { useDevicePermissions, default as useDevicePermissionsDefault } from './useDevicePermissions';
+export {
+  useDevicePermissions,
+  default as useDevicePermissionsDefault,
+} from './useDevicePermissions';
 export type {
   PermissionStatus,
   DeviceType,
   DevicePermission,
   DevicePermissionsState,
-  DevicePermissionsResult
+  DevicePermissionsResult,
 } from './useDevicePermissions';
 
 // Device Health & Self-Healing
 export { useDeviceHealth, default as useDeviceHealthDefault } from './useDeviceHealth';
-export type {
-  UseDeviceHealthReturn,
-  UseDeviceHealthOptions
-} from './useDeviceHealth';
+export type { UseDeviceHealthReturn, UseDeviceHealthOptions } from './useDeviceHealth';
 
 // Legacy voice hooks (DEPRECATED - use useVoiceEngine instead)
 // export { useVoice } from './useVoice';
@@ -163,7 +183,7 @@ export {
   useUIMode,
   useModuleContext,
   useConditionalVisibility,
-  useDensityLevel
+  useDensityLevel,
 } from './useCognitiveLayout';
 
 export type {
@@ -172,7 +192,7 @@ export type {
   TaskType,
   CognitiveLayoutState,
   LayoutConfig,
-  AdaptationDecision
+  AdaptationDecision,
 } from './useCognitiveLayout';
 
 // ═══════════════════════════════════════════════════════════════
@@ -189,7 +209,7 @@ export {
   useSymbolicPresence,
   useUserContextPresence,
   useTonicProfile,
-  useTitaneIdentity
+  useTitaneIdentity,
 } from './useUnifiedPresence';
 
 // REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
@@ -221,7 +241,7 @@ export {
   useInnerState,
   usePresenceEnergy,
   useUserMirroring,
-  useExpressiveActions
+  useExpressiveActions,
 } from './useMultimodalPresence';
 
 // REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
@@ -267,31 +287,31 @@ export {
   useVoiceBlendRatio,
 
   // Unified Hook
-  useDeepPsyche
+  useDeepPsyche,
 } from './useDeepPsyche';
 
 export type {
   ArchetypeType,
   ArchetypeResonance,
-  ArchetypeProfile
+  ArchetypeProfile,
 } from '../engines/psyche/archetypeResonanceEngine';
 
 export type {
   MetaContinuumState,
-  TemporalAnchor
+  TemporalAnchor,
 } from '../engines/continuum/metaContinuumEngine';
 
 export type {
   EmbodiedPresenceState,
   BreathCycle,
   PostureType,
-  EnergyField
+  EnergyField,
 } from '../engines/embodiment/embodiedPresenceEngine';
 
 export type {
   VoiceIdentityProfile,
   CognitiveTone,
-  VoiceBlendRatio
+  VoiceBlendRatio,
 } from '../engines/voice/neuralVoiceBlendingEngine';
 
 // ═══════════════════════════════════════════════════════════════
@@ -319,7 +339,7 @@ export {
   useAuraColor,
 
   // Unified Expression
-  useExpression
+  useExpression,
 } from './useExpression';
 
 // ✨ PHASE 4.2 - Temporairement commenté pour lazy loading (réduire bundle)
@@ -359,7 +379,7 @@ export {
   useExpressiveState,
   useSpatialPosition,
   usePresenceCoherence,
-  usePresenceModeControl
+  usePresenceModeControl,
 } from './usePresenceOS';
 
 // REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
@@ -390,20 +410,20 @@ export {
   useHolophonic,
   useSpatialPosition as useHolophonicPosition,
   useCognitiveSounds,
-  usePhysiologicalState
+  usePhysiologicalState,
 } from './usePhysiological';
 
 export type {
   InteroceptionState,
   InteroceptionContext,
-  InteroceptionExport
+  InteroceptionExport,
 } from '../engines/interoception/interoceptionEngine';
 
 export type {
   TitanSpatialState,
   SpatialPreset,
   CognitiveSound,
-  SpatialOptions
+  SpatialOptions,
 } from '../engines/spatial/holophonicEngine';
 
 // ═══════════════════════════════════════════════════════════════
@@ -431,7 +451,7 @@ export {
   useNarrativeCoherence,
   useNarrativeCuriosity,
   useActiveThought,
-  useCognitiveDynamicsState
+  useCognitiveDynamicsState,
 } from './useCognitive';
 
 // REMOVED: engines/predictive supprimé en PHASE 1 (OPTION B)
@@ -453,7 +473,7 @@ export type {
   ConsciousMode,
   TransitionState,
   ModeConfig,
-  RepairState
+  RepairState,
 } from '../engines/conscious/consciousDynamicsModel';
 
 export type {
@@ -462,9 +482,8 @@ export type {
   ThoughtType,
   InnerThought,
   NarrativeContext,
-  NarrativeExport
+  NarrativeExport,
 } from '../engines/narrative/internalNarrativeEngine';
-
 
 // ═══════════════════════════════════════════════════════════════
 // v∞.36 - Unified Identity Kernel (Phase 1)
@@ -498,7 +517,7 @@ export {
   useGlobalCoherence,
   useIdentityStability,
   useIdentityExpression,
-  useIdentityActions
+  useIdentityActions,
 } from './useIdentity';
 
 // Types
@@ -517,9 +536,8 @@ export type {
   IdentityMemoryRoot,
   EvolutionSnapshot,
   StylePattern,
-  IdentityTrajectory
+  IdentityTrajectory,
 } from '../engines/identity/unifiedIdentityKernel';
-
 
 // ═══════════════════════════════════════════════════════════════
 // v∞.37 - Expression Engine + HoloPresence Engine (Phase 2)
@@ -571,7 +589,7 @@ export {
   useHoloEnergyLevel,
   useHoloFocusPoint,
   useHoloVisible,
-  useHoloPresenceActions
+  useHoloPresenceActions,
 } from './useHoloPresence';
 
 // Types
@@ -592,7 +610,7 @@ export type {
   AuraParticles,
   HoloAnimation,
   HoloEvent,
-  HoloShape
+  HoloShape,
 } from '../engines/holopresence/holoPresenceEngine';
 
 // ═══════════════════════════════════════════════════════════════
@@ -640,7 +658,7 @@ export {
   usePatternsLearned,
   useAverageEffectiveness,
   useTrendDirection,
-  useAutopoiesisActions
+  useAutopoiesisActions,
 } from './useAutopoiesis';
 
 // Meta-Singularity Hooks
@@ -660,7 +678,7 @@ export {
   useTotalEmergences,
   useTotalInsights,
   useAverageCoherence,
-  useMetaSingularityActions
+  useMetaSingularityActions,
 } from './useMetaSingularity';
 
 // Phase-Space Hooks
@@ -682,7 +700,7 @@ export {
   useLyapunovExponent,
   useTotalPoints,
   usePhaseHistory,
-  usePhaseSpaceActions
+  usePhaseSpaceActions,
 } from './usePhaseSpace';
 
 // Types
@@ -690,7 +708,7 @@ export type {
   AutopoiesisState,
   EffectivePattern,
   EvolutionRule,
-  OptimizationStrategy
+  OptimizationStrategy,
 } from '../engines/autopoiesis/autopoiesisEngine';
 
 export type {
@@ -698,7 +716,7 @@ export type {
   MetaCoherence,
   EmergentPhenomenon,
   EngineConflict,
-  MetaInsight
+  MetaInsight,
 } from '../engines/metasingularity/metaSingularityKernel';
 
 export type {
@@ -707,7 +725,5 @@ export type {
   PhaseTrajectory,
   Attractor,
   Bifurcation,
-  StatePrediction
+  StatePrediction,
 } from '../engines/phasespace/phaseSpaceEngine';
-
-

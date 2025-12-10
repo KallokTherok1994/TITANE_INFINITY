@@ -1,9 +1,9 @@
 /**
  * TITANE∞ PHASE 1 (OPTION B) - Stubs pour engines/presence supprimés
- * 
+ *
  * Ce fichier fournit des stubs pour maintenir la compatibilité
  * temporaire avec les modules qui référencent encore engines/presence.
- * 
+ *
  * ⚠️ engines/presence a été supprimé lors de la restructuration.
  * Ces stubs retournent des valeurs par défaut pour éviter les erreurs
  * de compilation. Les modules dépendants devront être refactorisés.
@@ -13,7 +13,23 @@
 // STUBS - multimodalPresenceEngine
 // ═══════════════════════════════════════════════════════════════════════════
 
-export type PresenceMode = 'default' | 'idle' | 'healing' | 'storytelling' | 'listening' | 'learning' | 'creating' | 'insight' | 'empathy' | 'architect' | 'deep-work' | 'singularity' | 'thinking' | 'speaking' | 'deep_reflection' | 'empathic_sync';
+export type PresenceMode =
+  | 'default'
+  | 'idle'
+  | 'healing'
+  | 'storytelling'
+  | 'listening'
+  | 'learning'
+  | 'creating'
+  | 'insight'
+  | 'empathy'
+  | 'architect'
+  | 'deep-work'
+  | 'singularity'
+  | 'thinking'
+  | 'speaking'
+  | 'deep_reflection'
+  | 'empathic_sync';
 
 export interface ExpressiveIntention {
   type: string;
@@ -160,7 +176,15 @@ export const multimodalPresenceEngine = {
 // STUBS - presenceOS
 // ═══════════════════════════════════════════════════════════════════════════
 
-export type PresenceOSMode = 'neutral' | 'insight' | 'empathy' | 'architect' | 'deep-work' | 'singularity' | 'listening' | 'processing';
+export type PresenceOSMode =
+  | 'neutral'
+  | 'insight'
+  | 'empathy'
+  | 'architect'
+  | 'deep-work'
+  | 'singularity'
+  | 'listening'
+  | 'processing';
 
 export interface CognitiveState {
   reasoningStyle: string;
@@ -336,7 +360,7 @@ const defaultUserContext: UserContext = {
 
 const defaultIdentityMatrix: IdentityMatrix = {
   coreValues: ['excellence', 'empathy', 'innovation', 'integrity'],
-  missionStatement: 'Accompagner l\'humain vers son plein potentiel',
+  missionStatement: "Accompagner l'humain vers son plein potentiel",
   traits: { wisdom: 0.8, creativity: 0.9, empathy: 0.85, precision: 0.9 },
 };
 
@@ -411,7 +435,13 @@ const defaultArc: NarrativeArc = {
 };
 
 const defaultSymbols: SymbolicElement[] = [
-  { key: 'infinity', symbol: '∞', meaning: 'infinite potential', active: true, intensity: 0.8 },
+  {
+    key: 'infinity',
+    symbol: '∞',
+    meaning: 'infinite potential',
+    active: true,
+    intensity: 0.8,
+  },
   { key: 'diamond', symbol: '◇', meaning: 'clarity', active: false, intensity: 0.5 },
 ];
 

@@ -35,9 +35,9 @@ pub struct MemoryEntry {
 /// Memory layer identifier
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
 pub enum MemoryLayer {
-    STM,  // Short-Term Memory
-    MTM,  // Medium-Term Memory
-    LTM,  // Long-Term Memory
+    STM, // Short-Term Memory
+    MTM, // Medium-Term Memory
+    LTM, // Long-Term Memory
 }
 
 impl std::fmt::Display for MemoryLayer {

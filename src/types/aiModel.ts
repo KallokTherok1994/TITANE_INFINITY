@@ -61,7 +61,7 @@ export interface AIModelOption {
  * Configuration de tous les modèles disponibles
  */
 export const AI_MODELS: Record<AIProvider, AIModelConfig> = {
-  'gemini': {
+  gemini: {
     provider: 'gemini',
     modelName: 'gemini-2.0-flash-exp',
     endpoint: 'https://generativelanguage.googleapis.com/v1beta/models',
@@ -75,7 +75,7 @@ export const AI_MODELS: Record<AIProvider, AIModelConfig> = {
     },
   },
 
-  'gpt': {
+  gpt: {
     provider: 'gpt',
     modelName: 'gpt-4-turbo',
     endpoint: 'https://api.openai.com/v1/chat/completions',
@@ -104,7 +104,7 @@ export const AI_MODELS: Record<AIProvider, AIModelConfig> = {
     },
   },
 
-  'anthropic': {
+  anthropic: {
     provider: 'anthropic',
     modelName: 'claude-3-5-sonnet-20241022',
     endpoint: 'https://api.anthropic.com/v1/messages',

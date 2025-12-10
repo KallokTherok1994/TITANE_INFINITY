@@ -86,10 +86,10 @@ export const VisionDebugOverlay: React.FC<VisionDebugOverlayProps> = ({
   const tensionLevel = useVisionStore(selectTensionLevel);
   const engagementLevel = useVisionStore(selectEngagementLevel);
   const confidence = useVisionStore(selectConfidence);
-  const bodyLanguage = useVisionStore((s) => s.bodyLanguage);
-  const visionInput = useVisionStore((s) => s.visionInput);
-  const affectEstimation = useVisionStore((s) => s.affectEstimation);
-  const toggleDebugOverlay = useVisionStore((s) => s.toggleDebugOverlay);
+  const bodyLanguage = useVisionStore(s => s.bodyLanguage);
+  const visionInput = useVisionStore(s => s.visionInput);
+  const affectEstimation = useVisionStore(s => s.affectEstimation);
+  const toggleDebugOverlay = useVisionStore(s => s.toggleDebugOverlay);
 
   // Ne pas afficher si pas actif ou pas en mode debug
   if (!forceShow && !isDebugVisible) {
@@ -183,11 +183,17 @@ export const VisionDebugOverlay: React.FC<VisionDebugOverlayProps> = ({
           </div>
           <div
             className="vision-debug__bar"
-            style={{
-              '--fill-color': levelToColor(energyLevel),
-              '--fill-width':
-                energyLevel === 'low' ? '33%' : energyLevel === 'medium' ? '66%' : '100%',
-            } as React.CSSProperties}
+            style={
+              {
+                '--fill-color': levelToColor(energyLevel),
+                '--fill-width':
+                  energyLevel === 'low'
+                    ? '33%'
+                    : energyLevel === 'medium'
+                      ? '66%'
+                      : '100%',
+              } as React.CSSProperties
+            }
           />
         </div>
 
@@ -201,11 +207,17 @@ export const VisionDebugOverlay: React.FC<VisionDebugOverlayProps> = ({
           </div>
           <div
             className="vision-debug__bar"
-            style={{
-              '--fill-color': levelToColor(tensionLevel),
-              '--fill-width':
-                tensionLevel === 'low' ? '33%' : tensionLevel === 'medium' ? '66%' : '100%',
-            } as React.CSSProperties}
+            style={
+              {
+                '--fill-color': levelToColor(tensionLevel),
+                '--fill-width':
+                  tensionLevel === 'low'
+                    ? '33%'
+                    : tensionLevel === 'medium'
+                      ? '66%'
+                      : '100%',
+              } as React.CSSProperties
+            }
           />
         </div>
 
@@ -219,11 +231,17 @@ export const VisionDebugOverlay: React.FC<VisionDebugOverlayProps> = ({
           </div>
           <div
             className="vision-debug__bar"
-            style={{
-              '--fill-color': levelToColor(engagementLevel),
-              '--fill-width':
-                engagementLevel === 'low' ? '33%' : engagementLevel === 'medium' ? '66%' : '100%',
-            } as React.CSSProperties}
+            style={
+              {
+                '--fill-color': levelToColor(engagementLevel),
+                '--fill-width':
+                  engagementLevel === 'low'
+                    ? '33%'
+                    : engagementLevel === 'medium'
+                      ? '66%'
+                      : '100%',
+              } as React.CSSProperties
+            }
           />
         </div>
 
@@ -244,19 +262,27 @@ export const VisionDebugOverlay: React.FC<VisionDebugOverlayProps> = ({
         <h4 className="vision-debug__section-title">Confiance Factors</h4>
         <div className="vision-debug__row">
           <span>Landmarks:</span>
-          <span>{(affectEstimation.confidenceFactors.landmarkQuality * 100).toFixed(0)}%</span>
+          <span>
+            {(affectEstimation.confidenceFactors.landmarkQuality * 100).toFixed(0)}%
+          </span>
         </div>
         <div className="vision-debug__row">
           <span>Stabilité:</span>
-          <span>{(affectEstimation.confidenceFactors.temporalStability * 100).toFixed(0)}%</span>
+          <span>
+            {(affectEstimation.confidenceFactors.temporalStability * 100).toFixed(0)}%
+          </span>
         </div>
         <div className="vision-debug__row">
           <span>Éclairage:</span>
-          <span>{(affectEstimation.confidenceFactors.lightingConditions * 100).toFixed(0)}%</span>
+          <span>
+            {(affectEstimation.confidenceFactors.lightingConditions * 100).toFixed(0)}%
+          </span>
         </div>
         <div className="vision-debug__row">
           <span>Visage:</span>
-          <span>{(affectEstimation.confidenceFactors.faceVisibility * 100).toFixed(0)}%</span>
+          <span>
+            {(affectEstimation.confidenceFactors.faceVisibility * 100).toFixed(0)}%
+          </span>
         </div>
       </div>
 
@@ -273,8 +299,12 @@ export const VisionDebugOverlay: React.FC<VisionDebugOverlayProps> = ({
         </div>
         <div className="vision-debug__row">
           <span>Baseline:</span>
-          <span className={affectEstimation.baselineProfile ? 'text-green' : 'text-yellow'}>
-            {affectEstimation.baselineProfile?.isCalibrated ? '✓ Calibré' : '✗ Non calibré'}
+          <span
+            className={affectEstimation.baselineProfile ? 'text-green' : 'text-yellow'}
+          >
+            {affectEstimation.baselineProfile?.isCalibrated
+              ? '✓ Calibré'
+              : '✗ Non calibré'}
           </span>
         </div>
       </div>
