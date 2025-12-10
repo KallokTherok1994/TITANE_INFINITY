@@ -461,7 +461,7 @@ mod tests {
     use super::*;
 
     fn create_test_entry(content: &str, importance: f32) -> MultimodalMemoryEntry {
-        let base = MemoryEntry::new(content.to_string(), importance, MemoryType::Factual);
+        let base = MemoryEntry::new(content.to_string(), importance, MemoryType::Knowledge);
         MultimodalMemoryEntry::from_base(base)
     }
 

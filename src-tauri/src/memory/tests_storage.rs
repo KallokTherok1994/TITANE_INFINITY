@@ -41,7 +41,7 @@ mod tests {
         // Phase 1 Stabilisation: Test création basique
         let (storage, _temp_dir) = create_test_storage()?;
 
-        assert!(storage.storage_dir.exists());
+        assert!(storage.storage_dir().exists());
 
         Ok(())
     }
@@ -315,7 +315,7 @@ mod tests {
 
         storage.clear_all()?;
 
-        assert!(storage.storage_dir.exists());
+        assert!(storage.storage_dir().exists());
 
         Ok(())
     }
