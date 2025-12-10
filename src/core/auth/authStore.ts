@@ -1,0 +1,138 @@
+// TITANE_INFINITY v∞ — Proprietary License
+// © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+
+// ═══════════════════════════════════════════════════════════════
+//   AUTH OS — ZUSTAND STORE (Unified Auth State)
+// ═══════════════════════════════════════════════════════════════
+
+import { create } from 'zustand';
+import { authClient } from './authClient';
+import type { ApiKeysInput, AuthState } from './types';
+
+interface AuthStore extends AuthState {
+  // Actions
+  refresh: () => Promise<void>;
+  generateDevToken: () => Promise<string>;
+  validateDevToken: (token: string) => Promise<boolean>;
+  revokeDevToken: () => Promise<void>;
+  saveApiKeys: (keys: ApiKeysInput) => Promise<void>;
+  deleteApiKey: (provider: 'openai' | 'anthropic' | 'gemini') => Promise<void>;
+  reset: () => void;
+}
+
+/**
+ * Auth Store (Zustand)
+ * Unified state for dev token + API keys + roles
+ */
+export const useAuth = create<AuthStore>((set, get) => ({
+  // Initial state
+  status: null,
+  loading: false,
+  error: null,
+  devToken: null,
+
+  /**
+   * Rafraîchir statut global
+   */
+  refresh: async () => {
+    set({ loading: true, error: null });
+    try {
+      const status = await authClient.getStatus();
+      set({ status, loading: false });
+    } catch (error) {
+      set({ error: String(error), loading: false });
+      throw error;
+    }
+  },
+
+  /**
+   * Générer dev token
+   */
+  generateDevToken: async () => {
+    set({ loading: true, error: null });
+    try {
+      const token = await authClient.generateDevToken();
+      set({ devToken: token, loading: false });
+      await get().refresh(); // Refresh status après génération
+      return token;
+    } catch (error) {
+      set({ error: String(error), loading: false });
+      throw error;
+    }
+  },
+
+  /**
+   * Valider dev token
+   */
+  validateDevToken: async (token: string) => {
+    set({ loading: true, error: null });
+    try {
+      const isValid = await authClient.validateDevToken(token);
+      set({ loading: false });
+      if (isValid) {
+        await get().refresh(); // Refresh status après validation
+      }
+      return isValid;
+    } catch (error) {
+      set({ error: String(error), loading: false });
+      throw error;
+    }
+  },
+
+  /**
+   * Révoquer dev token
+   */
+  revokeDevToken: async () => {
+    set({ loading: true, error: null });
+    try {
+      await authClient.revokeDevToken();
+      set({ devToken: null, loading: false });
+      await get().refresh(); // Refresh status après révocation
+    } catch (error) {
+      set({ error: String(error), loading: false });
+      throw error;
+    }
+  },
+
+  /**
+   * Sauvegarder API keys
+   */
+  saveApiKeys: async (keys: ApiKeysInput) => {
+    set({ loading: true, error: null });
+    try {
+      await authClient.saveApiKeys(keys);
+      set({ loading: false });
+      await get().refresh(); // Refresh status après sauvegarde
+    } catch (error) {
+      set({ error: String(error), loading: false });
+      throw error;
+    }
+  },
+
+  /**
+   * Supprimer API key
+   */
+  deleteApiKey: async (provider: 'openai' | 'anthropic' | 'gemini') => {
+    set({ loading: true, error: null });
+    try {
+      await authClient.deleteApiKey(provider);
+      set({ loading: false });
+      await get().refresh(); // Refresh status après suppression
+    } catch (error) {
+      set({ error: String(error), loading: false });
+      throw error;
+    }
+  },
+
+  /**
+   * Reset state (logout équivalent)
+   */
+  reset: () => {
+    set({
+      status: null,
+      loading: false,
+      error: null,
+      devToken: null,
+    });
+  },
+}));
