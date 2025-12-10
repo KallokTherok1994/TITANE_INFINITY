@@ -235,4 +235,77 @@ mod tests {
         let stats = cache.get_stats().await;
         assert_eq!(stats.total_entries, 0);
     }
+
+    #[tokio::test]
+    async fn test_cache_multiple_entries() {
+        let adapter = Arc::new(TemporalApiAdapter::new());
+        let cache: TemporalCache<String> = TemporalCache::new(100, adapter);
+
+        // Ajouter plusieurs entrées
+        for i in 0..5 {
+            cache
+                .set(
+                    format!("key_{}", i),
+                    format!("value_{}", i),
+                    "/api/test".to_string(),
+                )
+                .await;
+        }
+
+        let stats = cache.get_stats().await;
+        assert_eq!(stats.total_entries, 5);
+
+        // Vérifier que toutes les valeurs sont accessibles
+        for i in 0..5 {
+            let value = cache.get(&format!("key_{}", i)).await;
+            assert_eq!(value, Some(format!("value_{}", i)));
+        }
+    }
+
+    #[tokio::test]
+    async fn test_cache_overwrite() {
+        let adapter = Arc::new(TemporalApiAdapter::new());
+        let cache: TemporalCache<String> = TemporalCache::new(100, adapter);
+
+        cache
+            .set(
+                "same_key".to_string(),
+                "original_value".to_string(),
+                "/test".to_string(),
+            )
+            .await;
+
+        cache
+            .set(
+                "same_key".to_string(),
+                "updated_value".to_string(),
+                "/test".to_string(),
+            )
+            .await;
+
+        let value = cache.get("same_key").await;
+        assert_eq!(value, Some("updated_value".to_string()));
+
+        // Devrait toujours être 1 entrée (pas 2)
+        let stats = cache.get_stats().await;
+        assert_eq!(stats.total_entries, 1);
+    }
+
+    #[tokio::test]
+    async fn test_cache_hit_tracking() {
+        let adapter = Arc::new(TemporalApiAdapter::new());
+        let cache: TemporalCache<String> = TemporalCache::new(100, adapter);
+
+        cache
+            .set("hit_test".to_string(), "value".to_string(), "/test".to_string())
+            .await;
+
+        // Plusieurs accès au même key
+        for _ in 0..3 {
+            cache.get("hit_test").await;
+        }
+
+        let stats = cache.get_stats().await;
+        assert_eq!(stats.total_hits, 3);
+    }
 }
