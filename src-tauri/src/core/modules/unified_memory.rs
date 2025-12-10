@@ -392,7 +392,7 @@ impl UnifiedMemory {
         }
 
         // Sort by importance (descending)
-        results.sort_by(|a, b| b.importance.partial_cmp(&a.importance).unwrap());
+        results.sort_by(|a, b| b.importance.partial_cmp(&a.importance).unwrap_or(std::cmp::Ordering::Equal));
         results.truncate(max_results);
 
         results

@@ -6,8 +6,9 @@
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::memory::model::{Conversation, MessageRole};
+    use crate::memory::storage::MemoryStorage;
+    use crate::memory::model::Conversation;
+    use crate::memory::MessageRole;
     use std::error::Error;
     use tempfile::TempDir;
 

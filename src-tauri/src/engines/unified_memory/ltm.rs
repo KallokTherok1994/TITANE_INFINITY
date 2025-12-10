@@ -101,7 +101,7 @@ impl LongTermMemory {
             .collect();
         
         // Sort by importance (descending)
-        results.sort_by(|a, b| b.importance.partial_cmp(&a.importance).unwrap());
+        results.sort_by(|a, b| b.importance.partial_cmp(&a.importance).unwrap_or(std::cmp::Ordering::Equal));
         
         // Take top K
         results.truncate(top_k);
@@ -125,7 +125,7 @@ impl LongTermMemory {
             .collect();
         
         // Sort by similarity (descending)
-        scored.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
+        scored.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap_or(std::cmp::Ordering::Equal));
         
         // Take top K
         scored.truncate(top_k);
@@ -172,7 +172,7 @@ impl LongTermMemory {
         
         // Sort by combined score
         let mut results: Vec<(MemoryEntry, f32)> = combined.into_values().collect();
-        results.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
+        results.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
         
         // Take top K
         results.truncate(top_k);

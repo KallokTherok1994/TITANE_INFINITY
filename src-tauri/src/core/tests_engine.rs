@@ -152,7 +152,6 @@ mod tests {
 
 #[cfg(test)]
 mod integration_tests {
-    use super::*;
     use crate::core::engine::SingularityEngine;
 
     /// Test I1: Cycle complet init → tick × N → résultats
