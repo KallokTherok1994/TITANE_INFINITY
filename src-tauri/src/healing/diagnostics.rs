@@ -464,4 +464,439 @@ mod tests {
         assert!(report.duration_ms < 10000); // Shouldn't take more than 10 seconds
         assert!(report.timestamp > 0);
     }
+
+    #[test]
+    fn test_diagnostic_severity_equality() {
+        assert_eq!(DiagnosticSeverity::Info, DiagnosticSeverity::Info);
+        assert_eq!(DiagnosticSeverity::Warning, DiagnosticSeverity::Warning);
+        assert_eq!(DiagnosticSeverity::Error, DiagnosticSeverity::Error);
+        assert_eq!(DiagnosticSeverity::Critical, DiagnosticSeverity::Critical);
+    }
+
+    #[test]
+    fn test_diagnostic_severity_hash() {
+        use std::collections::HashSet;
+        let mut set = HashSet::new();
+        set.insert(DiagnosticSeverity::Info);
+        set.insert(DiagnosticSeverity::Warning);
+        set.insert(DiagnosticSeverity::Error);
+        set.insert(DiagnosticSeverity::Critical);
+        assert_eq!(set.len(), 4);
+    }
+
+    #[test]
+    fn test_diagnostic_severity_clone() {
+        let severity = DiagnosticSeverity::Critical;
+        let cloned = severity.clone();
+        assert_eq!(severity, cloned);
+    }
+
+    #[test]
+    fn test_diagnostic_severity_copy() {
+        let severity = DiagnosticSeverity::Error;
+        let copied: DiagnosticSeverity = severity;
+        assert_eq!(severity, copied);
+    }
+
+    #[test]
+    fn test_diagnostic_finding_clone() {
+        let finding = DiagnosticFinding {
+            code: "CLONE001".to_string(),
+            severity: DiagnosticSeverity::Info,
+            component: "test".to_string(),
+            message: "Clone test".to_string(),
+            details: Some("Details".to_string()),
+            suggestion: None,
+            timestamp: 1000,
+        };
+
+        let cloned = finding.clone();
+        assert_eq!(cloned.code, "CLONE001");
+        assert_eq!(cloned.severity, DiagnosticSeverity::Info);
+    }
+
+    #[test]
+    fn test_diagnostic_finding_no_details() {
+        let finding = DiagnosticFinding {
+            code: "NO001".to_string(),
+            severity: DiagnosticSeverity::Warning,
+            component: "test".to_string(),
+            message: "No details".to_string(),
+            details: None,
+            suggestion: None,
+            timestamp: 0,
+        };
+
+        assert!(finding.details.is_none());
+        assert!(finding.suggestion.is_none());
+    }
+
+    #[test]
+    fn test_component_diagnostic_clone() {
+        let diagnostic = ComponentDiagnostic {
+            component_name: "test".to_string(),
+            status: ComponentStatus::Operational,
+            findings: vec![],
+            metrics: HashMap::new(),
+            timestamp: 12345,
+        };
+
+        let cloned = diagnostic.clone();
+        assert_eq!(cloned.component_name, "test");
+        assert_eq!(cloned.timestamp, 12345);
+    }
+
+    #[test]
+    fn test_component_diagnostic_with_metrics() {
+        let mut metrics = HashMap::new();
+        metrics.insert("cpu".to_string(), 45.0);
+        metrics.insert("memory".to_string(), 60.0);
+
+        let diagnostic = ComponentDiagnostic {
+            component_name: "system".to_string(),
+            status: ComponentStatus::Operational,
+            findings: vec![],
+            metrics,
+            timestamp: 0,
+        };
+
+        assert_eq!(diagnostic.metrics.len(), 2);
+        assert_eq!(*diagnostic.metrics.get("cpu").unwrap(), 45.0);
+    }
+
+    #[test]
+    fn test_component_status_clone() {
+        let status = ComponentStatus::Degraded;
+        let cloned = status.clone();
+        assert_eq!(status, cloned);
+    }
+
+    #[test]
+    fn test_system_diagnostic_report_clone() {
+        let report = SystemDiagnosticReport {
+            overall_status: ComponentStatus::Operational,
+            components: vec![],
+            critical_findings: vec![],
+            summary: DiagnosticSummary {
+                total_components: 0,
+                operational_count: 0,
+                degraded_count: 0,
+                failed_count: 0,
+                total_findings: 0,
+                critical_count: 0,
+                error_count: 0,
+                warning_count: 0,
+            },
+            timestamp: 1000,
+            duration_ms: 50,
+        };
+
+        let cloned = report.clone();
+        assert_eq!(cloned.timestamp, 1000);
+        assert_eq!(cloned.duration_ms, 50);
+    }
+
+    #[test]
+    fn test_diagnostic_summary_clone() {
+        let summary = DiagnosticSummary {
+            total_components: 3,
+            operational_count: 2,
+            degraded_count: 1,
+            failed_count: 0,
+            total_findings: 5,
+            critical_count: 0,
+            error_count: 1,
+            warning_count: 4,
+        };
+
+        let cloned = summary.clone();
+        assert_eq!(cloned.total_components, 3);
+        assert_eq!(cloned.warning_count, 4);
+    }
+
+    #[test]
+    fn test_engine_empty_component_diagnostics() {
+        let engine = DiagnosticsEngine::new();
+        let result = engine.run_component_diagnostics("nonexistent");
+        assert!(result.is_none());
+    }
+
+    #[test]
+    fn test_engine_multiple_checkers() {
+        let mut engine = DiagnosticsEngine::new();
+        engine.register_checker(Box::new(MemoryDiagnosticChecker));
+        engine.register_checker(Box::new(CpuDiagnosticChecker));
+
+        let report = engine.run_full_diagnostics();
+        assert_eq!(report.summary.total_components, 2);
+        assert_eq!(report.components.len(), 2);
+    }
+
+    #[test]
+    fn test_diagnostic_finding_all_severities() {
+        let severities = vec![
+            DiagnosticSeverity::Info,
+            DiagnosticSeverity::Warning,
+            DiagnosticSeverity::Error,
+            DiagnosticSeverity::Critical,
+        ];
+
+        for (i, severity) in severities.iter().enumerate() {
+            let finding = DiagnosticFinding {
+                code: format!("SEV{:03}", i),
+                severity: *severity,
+                component: "test".to_string(),
+                message: format!("Severity {:?}", severity),
+                details: None,
+                suggestion: None,
+                timestamp: i as u64,
+            };
+            assert_eq!(finding.severity, *severity);
+        }
+    }
+
+    #[test]
+    fn test_component_status_all_variants() {
+        let statuses = vec![
+            ComponentStatus::Operational,
+            ComponentStatus::Degraded,
+            ComponentStatus::Failed,
+            ComponentStatus::Unknown,
+        ];
+
+        for status in statuses {
+            let diagnostic = ComponentDiagnostic {
+                component_name: format!("{:?}", status),
+                status: status.clone(),
+                findings: vec![],
+                metrics: HashMap::new(),
+                timestamp: 0,
+            };
+            assert_eq!(diagnostic.status, status);
+        }
+    }
+
+    #[test]
+    fn test_memory_checker_metrics_values() {
+        let checker = MemoryDiagnosticChecker;
+        let diagnostic = checker.run_diagnostics();
+
+        let heap = diagnostic.metrics.get("heap_usage_percent").unwrap();
+        let gc = diagnostic.metrics.get("gc_pressure").unwrap();
+
+        assert!(*heap >= 0.0 && *heap <= 100.0);
+        assert!(*gc >= 0.0 && *gc <= 1.0);
+    }
+
+    #[test]
+    fn test_cpu_checker_metrics_values() {
+        let checker = CpuDiagnosticChecker;
+        let diagnostic = checker.run_diagnostics();
+
+        let cpu = diagnostic.metrics.get("cpu_usage_percent").unwrap();
+        let threads = diagnostic.metrics.get("thread_count").unwrap();
+
+        assert!(*cpu >= 0.0 && *cpu <= 100.0);
+        assert!(*threads >= 1.0);
+    }
+
+    #[test]
+    fn test_diagnostic_report_with_all_status_types() {
+        struct UnknownChecker;
+        impl ComponentChecker for UnknownChecker {
+            fn component_name(&self) -> &str { "unknown" }
+            fn run_diagnostics(&self) -> ComponentDiagnostic {
+                ComponentDiagnostic {
+                    component_name: "unknown".to_string(),
+                    status: ComponentStatus::Unknown,
+                    findings: vec![],
+                    metrics: HashMap::new(),
+                    timestamp: 0,
+                }
+            }
+        }
+
+        let mut engine = DiagnosticsEngine::new();
+        engine.register_checker(Box::new(MemoryDiagnosticChecker));
+        engine.register_checker(Box::new(DegradedChecker));
+        engine.register_checker(Box::new(FailingChecker));
+        engine.register_checker(Box::new(UnknownChecker));
+
+        let report = engine.run_full_diagnostics();
+        assert_eq!(report.summary.total_components, 4);
+        // Failed takes priority
+        assert_eq!(report.overall_status, ComponentStatus::Failed);
+    }
+
+    #[test]
+    fn test_critical_findings_collection() {
+        struct MultiCriticalChecker;
+        impl ComponentChecker for MultiCriticalChecker {
+            fn component_name(&self) -> &str { "multi" }
+            fn run_diagnostics(&self) -> ComponentDiagnostic {
+                ComponentDiagnostic {
+                    component_name: "multi".to_string(),
+                    status: ComponentStatus::Failed,
+                    findings: vec![
+                        DiagnosticFinding {
+                            code: "CRIT001".to_string(),
+                            severity: DiagnosticSeverity::Critical,
+                            component: "multi".to_string(),
+                            message: "First critical".to_string(),
+                            details: None,
+                            suggestion: None,
+                            timestamp: 0,
+                        },
+                        DiagnosticFinding {
+                            code: "CRIT002".to_string(),
+                            severity: DiagnosticSeverity::Critical,
+                            component: "multi".to_string(),
+                            message: "Second critical".to_string(),
+                            details: None,
+                            suggestion: None,
+                            timestamp: 0,
+                        },
+                    ],
+                    metrics: HashMap::new(),
+                    timestamp: 0,
+                }
+            }
+        }
+
+        let mut engine = DiagnosticsEngine::new();
+        engine.register_checker(Box::new(MultiCriticalChecker));
+
+        let report = engine.run_full_diagnostics();
+        assert_eq!(report.critical_findings.len(), 2);
+        assert_eq!(report.summary.critical_count, 2);
+    }
+
+    #[test]
+    fn test_diagnostic_summary_all_zero() {
+        let summary = DiagnosticSummary {
+            total_components: 0,
+            operational_count: 0,
+            degraded_count: 0,
+            failed_count: 0,
+            total_findings: 0,
+            critical_count: 0,
+            error_count: 0,
+            warning_count: 0,
+        };
+
+        assert_eq!(summary.total_components, 0);
+        assert_eq!(summary.total_findings, 0);
+    }
+
+    #[test]
+    fn test_finding_with_all_optional_fields() {
+        let finding = DiagnosticFinding {
+            code: "FULL001".to_string(),
+            severity: DiagnosticSeverity::Error,
+            component: "test".to_string(),
+            message: "Full finding".to_string(),
+            details: Some("Detailed information".to_string()),
+            suggestion: Some("Try restarting".to_string()),
+            timestamp: 99999,
+        };
+
+        assert!(finding.details.is_some());
+        assert!(finding.suggestion.is_some());
+        assert!(finding.details.as_ref().unwrap().contains("Detailed"));
+        assert!(finding.suggestion.as_ref().unwrap().contains("restarting"));
+    }
+
+    #[test]
+    fn test_mixed_findings_count() {
+        struct MixedFindingsChecker;
+        impl ComponentChecker for MixedFindingsChecker {
+            fn component_name(&self) -> &str { "mixed" }
+            fn run_diagnostics(&self) -> ComponentDiagnostic {
+                ComponentDiagnostic {
+                    component_name: "mixed".to_string(),
+                    status: ComponentStatus::Degraded,
+                    findings: vec![
+                        DiagnosticFinding {
+                            code: "INFO".to_string(),
+                            severity: DiagnosticSeverity::Info,
+                            component: "mixed".to_string(),
+                            message: "Info".to_string(),
+                            details: None,
+                            suggestion: None,
+                            timestamp: 0,
+                        },
+                        DiagnosticFinding {
+                            code: "WARN".to_string(),
+                            severity: DiagnosticSeverity::Warning,
+                            component: "mixed".to_string(),
+                            message: "Warning".to_string(),
+                            details: None,
+                            suggestion: None,
+                            timestamp: 0,
+                        },
+                        DiagnosticFinding {
+                            code: "ERR".to_string(),
+                            severity: DiagnosticSeverity::Error,
+                            component: "mixed".to_string(),
+                            message: "Error".to_string(),
+                            details: None,
+                            suggestion: None,
+                            timestamp: 0,
+                        },
+                    ],
+                    metrics: HashMap::new(),
+                    timestamp: 0,
+                }
+            }
+        }
+
+        let mut engine = DiagnosticsEngine::new();
+        engine.register_checker(Box::new(MixedFindingsChecker));
+
+        let report = engine.run_full_diagnostics();
+        assert_eq!(report.summary.total_findings, 3);
+        assert_eq!(report.summary.warning_count, 1);
+        assert_eq!(report.summary.error_count, 1);
+        assert_eq!(report.summary.critical_count, 0);
+    }
+
+    #[test]
+    fn test_component_diagnostic_debug() {
+        let diagnostic = ComponentDiagnostic {
+            component_name: "debug_test".to_string(),
+            status: ComponentStatus::Operational,
+            findings: vec![],
+            metrics: HashMap::new(),
+            timestamp: 12345,
+        };
+
+        let debug_str = format!("{:?}", diagnostic);
+        assert!(debug_str.contains("debug_test"));
+        assert!(debug_str.contains("12345"));
+    }
+
+    #[test]
+    fn test_system_report_debug() {
+        let report = SystemDiagnosticReport {
+            overall_status: ComponentStatus::Operational,
+            components: vec![],
+            critical_findings: vec![],
+            summary: DiagnosticSummary {
+                total_components: 1,
+                operational_count: 1,
+                degraded_count: 0,
+                failed_count: 0,
+                total_findings: 0,
+                critical_count: 0,
+                error_count: 0,
+                warning_count: 0,
+            },
+            timestamp: 5000,
+            duration_ms: 10,
+        };
+
+        let debug_str = format!("{:?}", report);
+        assert!(debug_str.contains("5000"));
+        assert!(debug_str.contains("Operational"));
+    }
 }
