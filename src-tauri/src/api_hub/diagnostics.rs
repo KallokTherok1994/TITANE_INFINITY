@@ -477,4 +477,359 @@ mod tests {
         assert_eq!(provider_metrics.total_requests, 1);
         assert_eq!(provider_metrics.total_tokens, 100);
     }
+
+    #[test]
+    fn test_api_hub_event_variants() {
+        let events = vec![
+            APIHubEvent::Initialized { providers_count: 3 },
+            APIHubEvent::RouteDecision {
+                request_id: "r1".to_string(),
+                provider: Provider::OpenAI,
+                reason: "Best match".to_string(),
+            },
+            APIHubEvent::RequestCompleted {
+                request_id: "r2".to_string(),
+                provider: Provider::Gemini,
+                latency_ms: 100,
+                tokens: 50,
+            },
+            APIHubEvent::RequestFailed {
+                request_id: "r3".to_string(),
+                provider: Provider::Anthropic,
+                error: "Timeout".to_string(),
+            },
+            APIHubEvent::MultimodalProcessed {
+                request_id: "r4".to_string(),
+                stages: 3,
+                providers: vec![Provider::OpenAI, Provider::Gemini],
+                total_latency_ms: 500,
+            },
+            APIHubEvent::ResponseHarmonized {
+                request_id: "r5".to_string(),
+                original_length: 1000,
+                harmonized_length: 800,
+            },
+            APIHubEvent::SafetyValidation {
+                request_id: "r6".to_string(),
+                approved: true,
+                issues_count: 0,
+            },
+            APIHubEvent::VaultAccess {
+                provider: Provider::OpenAI,
+                action: "read".to_string(),
+            },
+            APIHubEvent::Error {
+                context: "test".to_string(),
+                message: "error msg".to_string(),
+            },
+            APIHubEvent::RateLimitHit {
+                provider: Provider::Gemini,
+                retry_after_ms: Some(5000),
+            },
+            APIHubEvent::ProviderUnavailable {
+                provider: Provider::Anthropic,
+                reason: "Maintenance".to_string(),
+            },
+        ];
+
+        assert_eq!(events.len(), 11);
+    }
+
+    #[test]
+    fn test_api_hub_metrics_default() {
+        let metrics = APIHubMetrics::default();
+
+        assert_eq!(metrics.total_requests, 0);
+        assert_eq!(metrics.successful_requests, 0);
+        assert_eq!(metrics.failed_requests, 0);
+        assert_eq!(metrics.total_tokens, 0);
+        assert_eq!(metrics.total_cost_usd, 0.0);
+        assert_eq!(metrics.average_latency_ms, 0.0);
+    }
+
+    #[test]
+    fn test_api_hub_metrics_clone() {
+        let mut metrics = APIHubMetrics::default();
+        metrics.total_requests = 100;
+        metrics.successful_requests = 95;
+
+        let cloned = metrics.clone();
+        assert_eq!(cloned.total_requests, 100);
+        assert_eq!(cloned.successful_requests, 95);
+    }
+
+    #[test]
+    fn test_health_status_variants() {
+        let statuses = vec![
+            HealthStatus::Healthy,
+            HealthStatus::Degraded,
+            HealthStatus::Unhealthy,
+            HealthStatus::Unknown,
+        ];
+
+        assert_eq!(statuses.len(), 4);
+        assert_ne!(HealthStatus::Healthy, HealthStatus::Degraded);
+    }
+
+    #[test]
+    fn test_provider_metrics_structure() {
+        let metrics = ProviderMetrics {
+            provider: Provider::OpenAI,
+            total_requests: 100,
+            total_tokens: 5000,
+            total_errors: 2,
+            average_latency_ms: 150.0,
+            error_rate: 0.02,
+        };
+
+        assert_eq!(metrics.total_requests, 100);
+        assert_eq!(metrics.total_tokens, 5000);
+        assert_eq!(metrics.total_errors, 2);
+    }
+
+    #[test]
+    fn test_provider_metrics_clone() {
+        let metrics = ProviderMetrics {
+            provider: Provider::Gemini,
+            total_requests: 50,
+            total_tokens: 2500,
+            total_errors: 1,
+            average_latency_ms: 120.0,
+            error_rate: 0.02,
+        };
+
+        let cloned = metrics.clone();
+        assert_eq!(cloned.total_requests, 50);
+        assert_eq!(cloned.provider, Provider::Gemini);
+    }
+
+    #[test]
+    fn test_health_report_structure() {
+        let report = HealthReport {
+            status: HealthStatus::Healthy,
+            error_rate: 0.01,
+            recent_errors: 2,
+            average_latency_ms: 100.0,
+            total_requests: 1000,
+            providers_status: HashMap::new(),
+        };
+
+        assert_eq!(report.status, HealthStatus::Healthy);
+        assert_eq!(report.total_requests, 1000);
+    }
+
+    #[test]
+    fn test_event_entry_structure() {
+        let entry = EventEntry {
+            timestamp: 1234567890,
+            event: APIHubEvent::Initialized { providers_count: 3 },
+        };
+
+        assert_eq!(entry.timestamp, 1234567890);
+    }
+
+    #[tokio::test]
+    async fn test_diagnostics_default() {
+        let diag = APIHubDiagnostics::default();
+        let metrics = diag.get_metrics().await;
+        assert_eq!(metrics.total_requests, 0);
+    }
+
+    #[tokio::test]
+    async fn test_reset_metrics() {
+        let diag = APIHubDiagnostics::new();
+
+        diag.emit(APIHubEvent::RequestCompleted {
+            request_id: "test".to_string(),
+            provider: Provider::OpenAI,
+            latency_ms: 100,
+            tokens: 50,
+        })
+        .await;
+
+        let metrics = diag.get_metrics().await;
+        assert_eq!(metrics.total_requests, 1);
+
+        diag.reset_metrics().await;
+        let metrics = diag.get_metrics().await;
+        assert_eq!(metrics.total_requests, 0);
+    }
+
+    #[tokio::test]
+    async fn test_clear_events() {
+        let diag = APIHubDiagnostics::new();
+
+        diag.emit(APIHubEvent::Initialized { providers_count: 3 })
+            .await;
+
+        let events = diag.get_recent_events(10).await;
+        assert_eq!(events.len(), 1);
+
+        diag.clear_events().await;
+        let events = diag.get_recent_events(10).await;
+        assert_eq!(events.len(), 0);
+    }
+
+    #[tokio::test]
+    async fn test_get_events_by_type() {
+        let diag = APIHubDiagnostics::new();
+
+        diag.emit(APIHubEvent::Initialized { providers_count: 3 })
+            .await;
+        diag.emit(APIHubEvent::RequestCompleted {
+            request_id: "test".to_string(),
+            provider: Provider::OpenAI,
+            latency_ms: 100,
+            tokens: 50,
+        })
+        .await;
+        diag.emit(APIHubEvent::RequestCompleted {
+            request_id: "test2".to_string(),
+            provider: Provider::Gemini,
+            latency_ms: 150,
+            tokens: 60,
+        })
+        .await;
+
+        let completed_events = diag.get_events_by_type("request_completed", 10).await;
+        assert_eq!(completed_events.len(), 2);
+
+        let init_events = diag.get_events_by_type("initialized", 10).await;
+        assert_eq!(init_events.len(), 1);
+    }
+
+    #[tokio::test]
+    async fn test_health_report_degraded() {
+        let diag = APIHubDiagnostics::new();
+
+        // Add successful requests
+        for _ in 0..80 {
+            diag.emit(APIHubEvent::RequestCompleted {
+                request_id: "test".to_string(),
+                provider: Provider::OpenAI,
+                latency_ms: 100,
+                tokens: 50,
+            })
+            .await;
+        }
+
+        // Add some failures (around 3% error rate)
+        for _ in 0..3 {
+            diag.emit(APIHubEvent::RequestFailed {
+                request_id: "fail".to_string(),
+                provider: Provider::OpenAI,
+                error: "Error".to_string(),
+            })
+            .await;
+        }
+
+        let report = diag.health_report().await;
+        assert_eq!(report.status, HealthStatus::Degraded);
+    }
+
+    #[tokio::test]
+    async fn test_health_report_unhealthy() {
+        let diag = APIHubDiagnostics::new();
+
+        // Add many failures (>5% error rate)
+        for _ in 0..50 {
+            diag.emit(APIHubEvent::RequestFailed {
+                request_id: "fail".to_string(),
+                provider: Provider::OpenAI,
+                error: "Error".to_string(),
+            })
+            .await;
+        }
+
+        let report = diag.health_report().await;
+        assert_eq!(report.status, HealthStatus::Unhealthy);
+    }
+
+    #[tokio::test]
+    async fn test_average_latency_calculation() {
+        let diag = APIHubDiagnostics::new();
+
+        diag.emit(APIHubEvent::RequestCompleted {
+            request_id: "1".to_string(),
+            provider: Provider::OpenAI,
+            latency_ms: 100,
+            tokens: 50,
+        })
+        .await;
+
+        diag.emit(APIHubEvent::RequestCompleted {
+            request_id: "2".to_string(),
+            provider: Provider::OpenAI,
+            latency_ms: 200,
+            tokens: 50,
+        })
+        .await;
+
+        let metrics = diag.get_metrics().await;
+        // Average should be 150
+        assert!((metrics.average_latency_ms - 150.0).abs() < 1.0);
+    }
+
+    #[tokio::test]
+    async fn test_provider_metrics_no_requests() {
+        let diag = APIHubDiagnostics::new();
+        let provider_metrics = diag.get_provider_metrics(Provider::OpenAI).await;
+
+        assert_eq!(provider_metrics.total_requests, 0);
+        assert_eq!(provider_metrics.error_rate, 0.0);
+    }
+
+    #[tokio::test]
+    async fn test_multiple_providers_metrics() {
+        let diag = APIHubDiagnostics::new();
+
+        diag.emit(APIHubEvent::RequestCompleted {
+            request_id: "1".to_string(),
+            provider: Provider::OpenAI,
+            latency_ms: 100,
+            tokens: 50,
+        })
+        .await;
+
+        diag.emit(APIHubEvent::RequestCompleted {
+            request_id: "2".to_string(),
+            provider: Provider::Gemini,
+            latency_ms: 150,
+            tokens: 60,
+        })
+        .await;
+
+        diag.emit(APIHubEvent::RequestCompleted {
+            request_id: "3".to_string(),
+            provider: Provider::Anthropic,
+            latency_ms: 200,
+            tokens: 70,
+        })
+        .await;
+
+        let metrics = diag.get_metrics().await;
+        assert_eq!(metrics.total_requests, 3);
+        assert_eq!(metrics.requests_by_provider.len(), 3);
+    }
+
+    #[test]
+    fn test_event_clone() {
+        let event = APIHubEvent::RequestCompleted {
+            request_id: "clone-test".to_string(),
+            provider: Provider::OpenAI,
+            latency_ms: 100,
+            tokens: 50,
+        };
+
+        let cloned = event.clone();
+        if let APIHubEvent::RequestCompleted { request_id, .. } = cloned {
+            assert_eq!(request_id, "clone-test");
+        }
+    }
+
+    #[test]
+    fn test_health_status_equality() {
+        assert_eq!(HealthStatus::Healthy, HealthStatus::Healthy);
+        assert_ne!(HealthStatus::Healthy, HealthStatus::Unknown);
+    }
 }

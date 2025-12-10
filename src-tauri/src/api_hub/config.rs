@@ -236,4 +236,159 @@ mod tests {
         assert_eq!(configs.gemini.default_model, "gemini-2.0-flash");
         assert_eq!(configs.anthropic.default_model, "claude-sonnet-4-20250514");
     }
+
+    #[test]
+    fn test_api_hub_config_all_defaults() {
+        let config = APIHubConfig::default();
+
+        assert_eq!(config.default_timeout_ms, 60000);
+        assert_eq!(config.default_max_tokens, 4096);
+        assert!((config.default_temperature - 0.7).abs() < 0.01);
+        assert!(config.cache_enabled);
+        assert_eq!(config.cache_ttl_seconds, 3600);
+        assert!(config.retry_enabled);
+        assert_eq!(config.max_retries, 3);
+        assert_eq!(config.retry_delay_ms, 1000);
+        assert!(config.rate_limiting_enabled);
+        assert!(config.harmonization_enabled);
+        assert!(config.diagnostics_enabled);
+        assert_eq!(config.daily_budget_usd, Some(10.0));
+    }
+
+    #[test]
+    fn test_development_config() {
+        let config = APIHubConfig::development();
+
+        assert_eq!(config.default_timeout_ms, 120000);
+        assert!(!config.cache_enabled);
+        assert_eq!(config.daily_budget_usd, Some(5.0));
+    }
+
+    #[test]
+    fn test_production_config_budget() {
+        let config = APIHubConfig::production();
+        assert_eq!(config.daily_budget_usd, Some(100.0));
+    }
+
+    #[test]
+    fn test_enable_already_enabled_provider() {
+        let mut config = APIHubConfig::default();
+        let initial_count = config.enabled_providers.len();
+
+        config.enable_provider(Provider::OpenAI);
+
+        // Should not add duplicate
+        assert_eq!(config.enabled_providers.len(), initial_count);
+    }
+
+    #[test]
+    fn test_disable_all_providers() {
+        let mut config = APIHubConfig::default();
+
+        config.disable_provider(Provider::OpenAI);
+        config.disable_provider(Provider::Gemini);
+        config.disable_provider(Provider::Anthropic);
+
+        assert!(config.enabled_providers.is_empty());
+    }
+
+    #[test]
+    fn test_config_clone() {
+        let config = APIHubConfig::default();
+        let cloned = config.clone();
+
+        assert_eq!(cloned.default_timeout_ms, config.default_timeout_ms);
+        assert_eq!(
+            cloned.enabled_providers.len(),
+            config.enabled_providers.len()
+        );
+    }
+
+    #[test]
+    fn test_openai_config_default() {
+        let config = OpenAIConfig::default();
+
+        assert_eq!(config.default_model, "gpt-4o");
+        assert_eq!(config.embedding_model, "text-embedding-3-large");
+        assert_eq!(config.vision_model, "gpt-4o");
+        assert!(config.base_url.is_none());
+        assert!(config.organization_id.is_none());
+        assert_eq!(config.max_requests_per_minute, 500);
+    }
+
+    #[test]
+    fn test_gemini_config_default() {
+        let config = GeminiConfig::default();
+
+        assert_eq!(config.default_model, "gemini-2.0-flash");
+        assert_eq!(config.vision_model, "gemini-2.0-flash");
+        assert_eq!(config.long_context_model, "gemini-1.5-pro");
+        assert_eq!(config.max_requests_per_minute, 1000);
+    }
+
+    #[test]
+    fn test_anthropic_config_default() {
+        let config = AnthropicConfig::default();
+
+        assert_eq!(config.default_model, "claude-sonnet-4-20250514");
+        assert_eq!(config.reasoning_model, "claude-opus-4-20250514");
+        assert_eq!(config.fast_model, "claude-3-5-haiku-20241022");
+        assert_eq!(config.max_requests_per_minute, 1000);
+    }
+
+    #[test]
+    fn test_openai_config_clone() {
+        let config = OpenAIConfig::default();
+        let cloned = config.clone();
+
+        assert_eq!(cloned.default_model, config.default_model);
+        assert_eq!(
+            cloned.max_requests_per_minute,
+            config.max_requests_per_minute
+        );
+    }
+
+    #[test]
+    fn test_gemini_config_clone() {
+        let config = GeminiConfig::default();
+        let cloned = config.clone();
+
+        assert_eq!(cloned.default_model, config.default_model);
+        assert_eq!(cloned.vision_model, config.vision_model);
+    }
+
+    #[test]
+    fn test_anthropic_config_clone() {
+        let config = AnthropicConfig::default();
+        let cloned = config.clone();
+
+        assert_eq!(cloned.default_model, config.default_model);
+        assert_eq!(cloned.fast_model, config.fast_model);
+    }
+
+    #[test]
+    fn test_provider_configs_clone() {
+        let configs = ProviderConfigs::default();
+        let cloned = configs.clone();
+
+        assert_eq!(cloned.openai.default_model, configs.openai.default_model);
+        assert_eq!(cloned.gemini.default_model, configs.gemini.default_model);
+    }
+
+    #[test]
+    fn test_default_strategy() {
+        let config = APIHubConfig::default();
+        assert_eq!(config.default_strategy, ModelChoiceStrategy::Balanced);
+    }
+
+    #[test]
+    fn test_minimal_config_features() {
+        let config = APIHubConfig::minimal();
+
+        assert!(!config.safety_validation_enabled);
+        assert!(!config.harmonization_enabled);
+        assert!(!config.cache_enabled);
+        assert!(!config.retry_enabled);
+        assert!(!config.diagnostics_enabled);
+    }
 }

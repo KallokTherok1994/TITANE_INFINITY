@@ -441,4 +441,271 @@ mod tests {
         assert_eq!(capitalize_first("hello"), "Hello");
         assert_eq!(capitalize_first(""), "");
     }
+
+    #[test]
+    fn test_harmonization_config_default() {
+        let config = HarmonizationConfig::default();
+
+        assert!(config.normalize_style);
+        assert!(!config.strip_pleasantries);
+        assert_eq!(config.preferred_format, OutputFormat::Natural);
+        assert!(config.max_length.is_none());
+    }
+
+    #[test]
+    fn test_output_format_variants() {
+        let formats = vec![
+            OutputFormat::Natural,
+            OutputFormat::Structured,
+            OutputFormat::Concise,
+            OutputFormat::Technical,
+        ];
+
+        assert_eq!(formats.len(), 4);
+        assert_ne!(OutputFormat::Natural, OutputFormat::Structured);
+    }
+
+    #[test]
+    fn test_harmonizer_default() {
+        let harmonizer = ResponseHarmonizer::default();
+        assert!(harmonizer.config.normalize_style);
+    }
+
+    #[test]
+    fn test_harmonizer_with_config() {
+        let config = HarmonizationConfig {
+            normalize_style: false,
+            strip_pleasantries: true,
+            preferred_format: OutputFormat::Concise,
+            max_length: Some(100),
+        };
+
+        let harmonizer = ResponseHarmonizer::with_config(config);
+        assert!(!harmonizer.config.normalize_style);
+        assert!(harmonizer.config.strip_pleasantries);
+    }
+
+    #[test]
+    fn test_strip_provider_prefixes_openai() {
+        let harmonizer = ResponseHarmonizer::new();
+        let text = "As an AI language model, I can help you.";
+        let result = harmonizer.strip_provider_prefixes(text, Provider::OpenAI);
+
+        assert!(!result.starts_with("As an AI"));
+        assert!(result.starts_with("I")); // Capitalized
+    }
+
+    #[test]
+    fn test_strip_provider_prefixes_anthropic() {
+        let harmonizer = ResponseHarmonizer::new();
+        let text = "I'd be happy to help with that.";
+        let result = harmonizer.strip_provider_prefixes(text, Provider::Anthropic);
+
+        // Anthropic prefixes are kept
+        assert_eq!(result, text);
+    }
+
+    #[test]
+    fn test_strip_provider_prefixes_gemini() {
+        let harmonizer = ResponseHarmonizer::new();
+        let text = "Here is the answer.";
+        let result = harmonizer.strip_provider_prefixes(text, Provider::Gemini);
+
+        assert_eq!(result, text);
+    }
+
+    #[test]
+    fn test_strip_pleasantries_multiple() {
+        let harmonizer = ResponseHarmonizer::new();
+
+        let tests = vec![
+            ("Of course! Here is the answer.", "Here is the answer."),
+            ("Certainly! The answer is 42.", "The answer is 42."),
+            ("Absolutely! I can help.", "I can help."),
+        ];
+
+        for (input, expected) in tests {
+            let result = harmonizer.strip_pleasantries(input);
+            assert_eq!(result, expected);
+        }
+    }
+
+    #[test]
+    fn test_strip_pleasantries_endings() {
+        let harmonizer = ResponseHarmonizer::new();
+        let text = "Here is the answer.\n\nI hope this helps!";
+        let result = harmonizer.strip_pleasantries(text);
+
+        assert_eq!(result, "Here is the answer.");
+    }
+
+    #[test]
+    fn test_apply_format_natural() {
+        let harmonizer = ResponseHarmonizer::new();
+        let text = "This is natural text.";
+        let result = harmonizer.apply_format(text);
+
+        assert_eq!(result, text);
+    }
+
+    #[test]
+    fn test_make_concise_short_text() {
+        let harmonizer = ResponseHarmonizer::new();
+        let text = "Short text. Only two sentences.";
+        let result = harmonizer.make_concise(text);
+
+        assert_eq!(result, text);
+    }
+
+    #[test]
+    fn test_truncate_gracefully_short_text() {
+        let harmonizer = ResponseHarmonizer::new();
+        let text = "Short";
+        let result = harmonizer.truncate_gracefully(text, 100);
+
+        assert_eq!(result, text);
+    }
+
+    #[test]
+    fn test_merge_responses_empty() {
+        let harmonizer = ResponseHarmonizer::new();
+        let responses: Vec<HarmonizedResponse> = vec![];
+        let merged = harmonizer.merge_responses(responses);
+
+        assert_eq!(merged.id, "merged");
+        assert_eq!(merged.provider, Provider::Local);
+    }
+
+    #[test]
+    fn test_merge_responses_single() {
+        let harmonizer = ResponseHarmonizer::new();
+        let response = HarmonizedResponse {
+            id: "single".to_string(),
+            provider: Provider::OpenAI,
+            content: ResponseContent::Text("Hello".to_string()),
+            usage: UsageStats::default(),
+            metadata: HashMap::new(),
+        };
+
+        let merged = harmonizer.merge_responses(vec![response]);
+        assert_eq!(merged.id, "single");
+        assert_eq!(merged.provider, Provider::OpenAI);
+    }
+
+    #[test]
+    fn test_merge_responses_multiple() {
+        let harmonizer = ResponseHarmonizer::new();
+
+        let r1 = HarmonizedResponse {
+            id: "r1".to_string(),
+            provider: Provider::OpenAI,
+            content: ResponseContent::Text("First response".to_string()),
+            usage: UsageStats {
+                prompt_tokens: 10,
+                completion_tokens: 20,
+                total_tokens: 30,
+                estimated_cost_usd: 0.01,
+            },
+            metadata: HashMap::new(),
+        };
+
+        let r2 = HarmonizedResponse {
+            id: "r2".to_string(),
+            provider: Provider::Gemini,
+            content: ResponseContent::Text("Second response".to_string()),
+            usage: UsageStats {
+                prompt_tokens: 15,
+                completion_tokens: 25,
+                total_tokens: 40,
+                estimated_cost_usd: 0.02,
+            },
+            metadata: HashMap::new(),
+        };
+
+        let merged = harmonizer.merge_responses(vec![r1, r2]);
+        assert_eq!(merged.provider, Provider::Local);
+        assert_eq!(merged.usage.total_tokens, 70);
+    }
+
+    #[test]
+    fn test_synthesize_texts() {
+        let harmonizer = ResponseHarmonizer::new();
+        let texts = vec!["First".to_string(), "Second".to_string()];
+        let result = harmonizer.synthesize_texts(&texts);
+
+        assert!(result.contains("Perspective 1"));
+        assert!(result.contains("Perspective 2"));
+    }
+
+    #[test]
+    fn test_structure_text_already_structured() {
+        let harmonizer = ResponseHarmonizer::new();
+        let text = "## Header\n**Bold text**";
+        let result = harmonizer.structure_text(text);
+
+        assert_eq!(result, text);
+    }
+
+    #[test]
+    fn test_harmonized_response_structure() {
+        let response = HarmonizedResponse {
+            id: "test-id".to_string(),
+            provider: Provider::Anthropic,
+            content: ResponseContent::Text("Test content".to_string()),
+            usage: UsageStats::default(),
+            metadata: HashMap::new(),
+        };
+
+        assert_eq!(response.id, "test-id");
+        assert_eq!(response.provider, Provider::Anthropic);
+    }
+
+    #[test]
+    fn test_harmonized_response_clone() {
+        let response = HarmonizedResponse {
+            id: "clone-test".to_string(),
+            provider: Provider::Gemini,
+            content: ResponseContent::Text("Clone content".to_string()),
+            usage: UsageStats::default(),
+            metadata: HashMap::new(),
+        };
+
+        let cloned = response.clone();
+        assert_eq!(cloned.id, "clone-test");
+        assert_eq!(cloned.provider, Provider::Gemini);
+    }
+
+    #[test]
+    fn test_capitalize_first_unicode() {
+        assert_eq!(capitalize_first("éléphant"), "Éléphant");
+        assert_eq!(capitalize_first("über"), "Über");
+    }
+
+    #[test]
+    fn test_normalize_style_only_whitespace() {
+        let harmonizer = ResponseHarmonizer::new();
+        let text = "    \n\n    ";
+        let result = harmonizer.normalize_style(text);
+
+        assert!(result.is_empty());
+    }
+
+    #[test]
+    fn test_harmonize_text_with_max_length() {
+        let harmonizer = ResponseHarmonizer::with_config(HarmonizationConfig {
+            max_length: Some(20),
+            ..Default::default()
+        });
+
+        let text = "This is a very long text that should be truncated.";
+        let result = harmonizer.harmonize_text(text, Provider::OpenAI);
+
+        assert!(result.len() <= 25); // Allow for "..." suffix
+    }
+
+    #[test]
+    fn test_output_format_equality() {
+        assert_eq!(OutputFormat::Natural, OutputFormat::Natural);
+        assert_ne!(OutputFormat::Natural, OutputFormat::Concise);
+    }
 }
