@@ -114,12 +114,12 @@ const ChatBubble = lazy(() =>
 );
 
 // ✨ v∞.25.0 - AI Bubble Engine (Super Prompt #14 - BUBBLE ENGINE)
-const AIChatBubble = lazy(() =>
+const _AIChatBubble = lazy(() =>
   import('./components/AIChatBubble').then(m => ({ default: m.AIChatBubble }))
 );
 
 // ✨ v∞.26.0 - Hybrid Engine (Super Prompt #16 - AI + DEV CONSOLE FUSION)
-const HybridBubble = lazy(() =>
+const _HybridBubble = lazy(() =>
   import('./components/HybridBubble').then(m => ({ default: m.HybridBubble }))
 );
 

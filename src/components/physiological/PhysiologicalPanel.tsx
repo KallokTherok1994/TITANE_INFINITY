@@ -72,8 +72,8 @@ interface HolophonicHookReturn {
   setSoundIntensity?: (intensity: 'off' | 'minimal' | 'normal' | 'rich') => void;
 }
 
-// Alias for compatibility
-type SpatialAudioState = SpatialState;
+// Alias for compatibility (reserved for future spatial audio feature)
+type _SpatialAudioState = SpatialState;
 
 interface CognitiveSoundsReturn {
   playThinking: () => void;

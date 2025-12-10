@@ -110,7 +110,7 @@ const ChatDebugPanel = ({
         y: Math.max(16, Math.min(next.y, maxY)),
       };
     },
-    []
+    [] // No dependencies needed - pure calculation
   );
 
   const handlePointerDown = useCallback<PointerEventHandler<HTMLDivElement>>(
@@ -636,7 +636,7 @@ export const ChatPage = (): JSX.Element => {
 
       setIsSending(false);
     },
-    [provider, conversationId, currentModeId] // Ajout de currentModeId aux dépendances
+    [provider, conversationId, currentModeId] // currentModeId added to dependencies
   );
 
   return (

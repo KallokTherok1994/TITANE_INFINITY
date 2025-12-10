@@ -39,7 +39,6 @@ pub struct ChatEngineConfigUpdate {
 /**
  * Validation functions
  */
-
 /// Valide une URL Ollama
 pub fn validate_ollama_url(url: &str) -> Result<(), String> {
     let url = url.trim();

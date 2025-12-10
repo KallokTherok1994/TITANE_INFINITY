@@ -17,8 +17,6 @@
 // © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.
 
 #![allow(dead_code)]
-#![allow(dead_code)]
-#![allow(dead_code)]
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::path::PathBuf;
