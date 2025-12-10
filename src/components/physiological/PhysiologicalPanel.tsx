@@ -19,6 +19,17 @@ import {
 } from '@/hooks';
 import './PhysiologicalPanel.css';
 
+interface SpatialState {
+  spatialState: {
+    x: number;
+    y: number;
+    z: number;
+    width: number;
+    focus: number;
+    distance: number;
+  };
+}
+
 interface PhysiologicalState {
   energy: number;
   cognitiveLoad: number;
@@ -56,11 +67,14 @@ interface HolophonicHookReturn {
     focus: number;
     distance: number;
   };
-  setSpatialState: (state: SpatialAudioState['spatialState']) => void;
+  setSpatialState: (state: SpatialState['spatialState']) => void;
   setPreset: (preset: string) => void;
   playCue?: (cue: string, options?: Record<string, unknown>) => void;
   setSoundIntensity?: (intensity: number) => void;
 }
+
+// Alias for compatibility
+type SpatialAudioState = SpatialState;
 
 interface CognitiveSoundsReturn {
   playThinking: () => void;

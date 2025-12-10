@@ -64,7 +64,7 @@ export const LivingEnginesCard: React.FC<LivingEnginesCardProps> = ({ state }) =
       {/* Header */}
       <div className="living-engines-card__header">
         <h3 className="living-engines-card__title">🌟 Living Engines v21-v24</h3>
-        <span className="living-engines-card__badge">{state.systemState}</span>
+        <span className="living-engines-card__badge">{String(state.systemState)}</span>
       </div>
 
       {/* Persona Section */}
@@ -81,7 +81,7 @@ export const LivingEnginesCard: React.FC<LivingEnginesCardProps> = ({ state }) =
             <div className="living-metric">
               <span className="living-metric__label">Temperament</span>
               <span className="living-metric__value">
-                {persona.personality.temperament}
+                {persona.personality?.temperament ?? 'Unknown'}
               </span>
             </div>
             <div className="living-metric">
@@ -92,7 +92,9 @@ export const LivingEnginesCard: React.FC<LivingEnginesCardProps> = ({ state }) =
             </div>
             <div className="living-metric">
               <span className="living-metric__label">Posture</span>
-              <span className="living-metric__value">{persona.behavior.posture}</span>
+              <span className="living-metric__value">
+                {persona.behavior?.posture ?? 'Neutral'}
+              </span>
             </div>
           </div>
         </div>

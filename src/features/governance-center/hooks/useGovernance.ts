@@ -16,6 +16,7 @@ import type {
   IAPolicy,
   SecurityLogEntry,
   SecurityLogFilters,
+  OllamaStatus,
 } from '../types';
 
 /**
@@ -26,6 +27,7 @@ const initialState: GovernanceState = {
   geminiStatus: null,
   openaiStatus: null,
   anthropicStatus: null,
+  ollamaStatus: null,
   policies: [],
   permissionMatrix: {},
   permissionAudit: [],
@@ -84,6 +86,31 @@ export function useGovernance() {
       setState(prev => ({ ...prev, anthropicStatus: response.data }));
     }
     return response;
+  }, []);
+
+  const loadOllamaStatus = useCallback(async () => {
+    // Ollama status is checked via health check (no API key)
+    const status: OllamaStatus = {
+      provider_enabled: false,
+      available: false,
+      url: 'http://localhost:11434',
+      models: [],
+    };
+
+    try {
+      const response = await fetch('http://localhost:11434/api/tags');
+      if (response.ok) {
+        const data = await response.json();
+        status.provider_enabled = true;
+        status.available = true;
+        status.models = data.models?.map((m: any) => m.name) || [];
+      }
+    } catch {
+      // Ollama not running
+    }
+
+    setState(prev => ({ ...prev, ollamaStatus: status }));
+    return { ok: true, data: status, error: null };
   }, []);
 
   const setGeminiKey = useCallback(
@@ -372,6 +399,7 @@ export function useGovernance() {
       loadGeminiStatus(),
       loadOpenAIStatus(),
       loadAnthropicStatus(),
+      loadOllamaStatus(),
       loadPolicies(),
       loadPermissionMatrix(),
       loadPermissionAudit(),
@@ -383,6 +411,7 @@ export function useGovernance() {
     loadGeminiStatus,
     loadOpenAIStatus,
     loadAnthropicStatus,
+    loadOllamaStatus,
     loadPolicies,
     loadPermissionMatrix,
     loadPermissionAudit,
@@ -411,6 +440,7 @@ export function useGovernance() {
     setOpenAIKey,
     loadAnthropicStatus,
     setAnthropicKey,
+    loadOllamaStatus,
     storeSecret,
     deleteSecret,
 

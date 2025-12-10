@@ -13,7 +13,9 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import React from 'react';
+import React, { useState } from 'react';
+import { Edit3 } from 'lucide-react';
+import { MenuEditor } from '../features/menu-editor/MenuEditor';
 import './styles/Menu.css';
 
 interface MenuProps {
@@ -29,6 +31,7 @@ interface MenuSection {
   label: string;
   description: string;
   route: string;
+  visible?: boolean;
 }
 
 const MENU_SECTIONS: MenuSection[] = [
@@ -148,59 +151,95 @@ export const Menu: React.FC<MenuProps> = ({
   currentRoute,
   onNavigate,
 }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [menuSections, setMenuSections] = useState(MENU_SECTIONS);
+
   const handleSectionClick = (section: MenuSection) => {
     onNavigate(section.route);
   };
 
+  const handleSaveMenu = (newSections: MenuSection[]) => {
+    setMenuSections(newSections);
+    // Optionally save to localStorage or backend
+    localStorage.setItem('titane_menu_config', JSON.stringify(newSections));
+    console.log('✅ Menu sauvegardé:', newSections.length, 'sections');
+  };
+
   return (
-    <nav className="menu-container">
-      {/* Header avec toggle */}
-      <div className="menu-header">
-        {!isCollapsed && (
-          <div className="menu-brand">
-            <span className="menu-brand-icon">⚡</span>
-            <span className="menu-brand-text">TITANE∞</span>
-            <span className="menu-brand-version">v∞.19.3Ω</span>
-          </div>
-        )}
-        <button
-          className="menu-toggle"
-          onClick={onToggle}
-          aria-label={isCollapsed ? 'Étendre le menu' : 'Réduire le menu'}
-        >
-          {isCollapsed ? '→' : '←'}
-        </button>
-      </div>
-
-      {/* Sections de navigation */}
-      <div className="menu-sections">
-        {MENU_SECTIONS.map(section => (
-          <button
-            key={section.id}
-            className={`menu-item ${currentRoute === section.route ? 'active' : ''}`}
-            onClick={() => handleSectionClick(section)}
-            title={isCollapsed ? section.label : undefined}
-          >
-            <span className="menu-item-icon">{section.icon}</span>
+    <>
+      <nav className="menu-container">
+        {/* Header avec toggle */}
+        <div className="menu-header">
+          {!isCollapsed && (
+            <div className="menu-brand">
+              <span className="menu-brand-icon">⚡</span>
+              <span className="menu-brand-text">TITANE∞</span>
+              <span className="menu-brand-version">v∞.19.3Ω</span>
+            </div>
+          )}
+          <div style={{ display: 'flex', gap: '8px' }}>
             {!isCollapsed && (
-              <div className="menu-item-content">
-                <span className="menu-item-label">{section.label}</span>
-                <span className="menu-item-desc">{section.description}</span>
-              </div>
+              <button
+                className="menu-toggle"
+                onClick={() => setIsEditing(true)}
+                aria-label="Éditer le menu"
+                title="Éditer le menu"
+                style={{ background: '#3b82f6' }}
+              >
+                <Edit3 size={16} />
+              </button>
             )}
-          </button>
-        ))}
-      </div>
-
-      {/* Footer status */}
-      {!isCollapsed && (
-        <div className="menu-footer">
-          <div className="menu-status">
-            <div className="menu-status-indicator online" />
-            <span className="menu-status-text">Système opérationnel</span>
+            <button
+              className="menu-toggle"
+              onClick={onToggle}
+              aria-label={isCollapsed ? 'Étendre le menu' : 'Réduire le menu'}
+            >
+              {isCollapsed ? '→' : '←'}
+            </button>
           </div>
         </div>
+
+        {/* Sections de navigation */}
+        <div className="menu-sections">
+          {menuSections
+            .filter(s => ('visible' in s ? s.visible !== false : true))
+            .map(section => (
+              <button
+                key={section.id}
+                className={`menu-item ${currentRoute === section.route ? 'active' : ''}`}
+                onClick={() => handleSectionClick(section)}
+                title={isCollapsed ? section.label : undefined}
+              >
+                <span className="menu-item-icon">{section.icon}</span>
+                {!isCollapsed && (
+                  <div className="menu-item-content">
+                    <span className="menu-item-label">{section.label}</span>
+                    <span className="menu-item-desc">{section.description}</span>
+                  </div>
+                )}
+              </button>
+            ))}
+        </div>
+
+        {/* Footer status */}
+        {!isCollapsed && (
+          <div className="menu-footer">
+            <div className="menu-status">
+              <div className="menu-status-indicator online" />
+              <span className="menu-status-text">Système opérationnel</span>
+            </div>
+          </div>
+        )}
+      </nav>
+
+      {/* Menu Editor Modal */}
+      {isEditing && (
+        <MenuEditor
+          sections={menuSections}
+          onSave={handleSaveMenu}
+          onClose={() => setIsEditing(false)}
+        />
       )}
-    </nav>
+    </>
   );
 };

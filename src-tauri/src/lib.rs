@@ -26,6 +26,8 @@
 pub mod adaptive; // ✅ AdaptiveEngine v21 (NEW)
 pub mod avatar; // ✅ ImmersiveAvatarEngine v23 (NEW)
 pub mod backend_selftest; // ✅ Backend Global Self-Test v17.7 (NEW)
+pub mod bounded; // ✅ v21.1Ω - Bounded collections for memory safety (NEW)
+pub mod cache_multilevel; // ✅ v21.1Ω - Multi-level caching system (NEW)
 pub mod cognitive; // ✅ Cognitive Layer v16 (NEW)
 pub mod core; // ✅ SingularityEngine v16 + modules
 pub mod engine; // ✅ Auto-Evolution & Engine Diagnostics v16 (existing)
@@ -39,6 +41,7 @@ pub mod shared; // ✅ Shared types and utilities
 pub mod singularity; // ✅ SingularityState v∞ v20 (NEW)
 pub mod singularity_cortex; // ✅ Singularity Cortex OS v∞ — SUPER PROMPT #7 (NEW)
 pub mod singularity_fusion;
+pub mod streaming; // ✅ v21.1Ω - Streaming IPC for real-time responses (NEW)
 pub mod types; // ✅ Type definitions
 pub mod utils; // ✅ Utilities (AppResult, AppError)
 pub mod watchdog; // ✅ Watchdog Engine v17 (NEW) // ✅ Phase 1 Stabilisation v20.0: Unified AppError (NEW) // ✅ SingularityFusion vΩ (NEW)

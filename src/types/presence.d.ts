@@ -24,6 +24,7 @@ export interface AffectiveState {
   arousal: number;
   dominance: number;
   emotionalState?: string;
+  warmth?: number;
   [key: string]: unknown;
 }
 

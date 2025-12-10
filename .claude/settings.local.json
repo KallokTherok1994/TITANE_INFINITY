@@ -57,7 +57,21 @@
       "Bash(npm run format:*)",
       "Bash(cargo fmt:*)",
       "Bash(git checkout:*)",
-      "Bash(1)"
+      "Bash(1)",
+      "Bash(git reset:*)",
+      "Bash(timeout 120 cargo test:*)",
+      "Bash(src-tauri/src/api_hub/provider_registry.rs )",
+      "Bash(src-tauri/src/api_hub/router.rs )",
+      "Bash(src-tauri/src/conversation_engine/cognitive.rs )",
+      "Bash(src-tauri/src/engines/unified_memory/ltm.rs )",
+      "Bash(src-tauri/src/memory_os/ltm.rs )",
+      "Bash(src-tauri/src/neuro_symbolic/cognitive_adapter.rs)",
+      "Bash(src-tauri/src/healing/health_scheduler.rs )",
+      "Bash(src-tauri/src/healing/diagnostics.rs )",
+      "Bash(src-tauri/src/healing/memory_validator.rs )",
+      "Bash(src-tauri/src/wakeword/engine.rs )",
+      "Bash(src-tauri/src/wakeword/listener.rs )",
+      "Bash(src-tauri/src/creation/generator.rs)"
     ],
     "deny": [],
     "ask": []

@@ -3,7 +3,7 @@
  */
 
 import React, { useState } from 'react';
-import { useMemoryOS } from '../hooks/useMemoryOS';
+import { useMemoryOS, VectorSearchResult, MemoryEntry } from '../hooks/useMemoryOS';
 
 export const MemoryInspector: React.FC = () => {
   const {
@@ -18,8 +18,8 @@ export const MemoryInspector: React.FC = () => {
     'STM' | 'MTM' | 'LTM' | 'Vector' | 'Clusters'
   >('STM');
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<Record<string, unknown>[]>([]);
-  const [tierMemories, setTierMemories] = useState<Record<string, unknown>[]>([]);
+  const [searchResults, setSearchResults] = useState<VectorSearchResult[]>([]);
+  const [tierMemories, setTierMemories] = useState<MemoryEntry[]>([]);
 
   const handleSemanticSearch = async () => {
     if (!searchQuery.trim()) return;
@@ -148,13 +148,14 @@ export const MemoryInspector: React.FC = () => {
                     }}
                   >
                     <div>
-                      <strong>ID:</strong> {result.id}
+                      <strong>ID:</strong> {String(result.id)}
                     </div>
                     <div>
-                      <strong>Score:</strong> {result.score.toFixed(3)}
+                      <strong>Score:</strong> {Number(result.score).toFixed(3)}
                     </div>
                     <div>
-                      <strong>Content:</strong> {result.content.substring(0, 200)}...
+                      <strong>Content:</strong> {String(result.content).substring(0, 200)}
+                      ...
                     </div>
                   </li>
                 ))}
@@ -215,16 +216,16 @@ export const MemoryInspector: React.FC = () => {
                   }}
                 >
                   <div>
-                    <strong>ID:</strong> {mem.id}
+                    <strong>ID:</strong> {String(mem.id)}
                   </div>
                   <div>
-                    <strong>Importance:</strong> {mem.importance.toFixed(2)}
+                    <strong>Importance:</strong> {Number(mem.importance).toFixed(2)}
                   </div>
                   <div>
-                    <strong>Accessed:</strong> {mem.accessed_count} times
+                    <strong>Accessed:</strong> {String(mem.accessed_count)} times
                   </div>
                   <div>
-                    <strong>Content:</strong> {mem.content.substring(0, 150)}...
+                    <strong>Content:</strong> {String(mem.content).substring(0, 150)}...
                   </div>
                 </li>
               ))}

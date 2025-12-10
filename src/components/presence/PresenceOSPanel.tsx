@@ -277,15 +277,31 @@ function ExpressiveTab({ expressive }: { expressive: ExpressiveState }) {
     <div className="presence-os-expressive">
       <div className="presence-os-card">
         <h4>🎵 Expression Vocale</h4>
-        <MetricCard label="Speech Rate" value={expressive.speechRate} type="progress" />
-        <MetricCard label="Softness" value={expressive.softness} type="progress" />
-        <MetricCard label="Vocal Warmth" value={expressive.vocalWarmth} type="progress" />
+        <MetricCard
+          label="Speech Rate"
+          value={expressive.speechRate ?? 1.0}
+          type="progress"
+        />
+        <MetricCard label="Softness" value={expressive.softness ?? 0.5} type="progress" />
+        <MetricCard
+          label="Vocal Warmth"
+          value={expressive.vocalWarmth ?? 0.5}
+          type="progress"
+        />
       </div>
 
       <div className="presence-os-card">
         <h4>🎤 Timbre & Breathing</h4>
-        <MetricCard label="Breathiness" value={expressive.breathiness} type="progress" />
-        <MetricCard label="Micro Pauses" value={expressive.microPauses} type="progress" />
+        <MetricCard
+          label="Breathiness"
+          value={expressive.breathiness ?? 0.3}
+          type="progress"
+        />
+        <MetricCard
+          label="Micro Pauses"
+          value={expressive.microPauses ?? 0.2}
+          type="progress"
+        />
       </div>
 
       <div className="presence-os-card">

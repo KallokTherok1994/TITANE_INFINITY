@@ -10,11 +10,11 @@
 
 import React, { useState } from 'react';
 import { Eye, EyeOff, Key, CheckCircle, XCircle, Loader2 } from 'lucide-react';
-import type { GeminiKeyStatus } from '../types';
+import type { GeminiKeyStatus, OllamaStatus } from '../types';
 
 interface APIProviderCardProps {
   provider: 'gemini' | 'openai' | 'anthropic' | 'ollama';
-  status: GeminiKeyStatus | null;
+  status: GeminiKeyStatus | OllamaStatus | null;
   onSetKey: (key: string) => Promise<void>;
   loading?: boolean;
   error?: string | null;
@@ -81,7 +81,12 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
     }
   };
 
-  const isConfigured = status?.configured || false;
+  // Type guard
+  const isGeminiStatus = (s: typeof status): s is GeminiKeyStatus => {
+    return s !== null && 'configured' in s;
+  };
+
+  const isConfigured = isGeminiStatus(status) ? status.configured : false;
   const isEnabled = status?.provider_enabled || false;
 
   return (
@@ -181,7 +186,7 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
           /* API Key Input */
           <form onSubmit={handleSubmit} className="space-y-3">
             {/* Current Status */}
-            {isConfigured && status?.masked_key && (
+            {isConfigured && isGeminiStatus(status) && status.masked_key && (
               <div className="rounded-lg border border-gray-700/50 bg-gray-800/30 p-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -262,7 +267,7 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
         )}
 
         {/* Additional Info */}
-        {status?.env_present && !status?.env_purged && (
+        {isGeminiStatus(status) && status.env_present && !status.env_purged && (
           <div className="mt-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-2 text-xs text-yellow-400">
             ⚠️ Clé détectée dans .env - sera supprimée lors de la prochaine configuration
           </div>

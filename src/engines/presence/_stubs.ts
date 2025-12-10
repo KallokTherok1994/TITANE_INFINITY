@@ -203,10 +203,17 @@ export interface AffectiveState {
 
 export interface ExpressiveOSState {
   timbreBlend: { warm: number; neutral: number; analytical: number; empathic: number };
+  speechRate?: number;
+  softness?: number;
+  vocalWarmth?: number;
+  breathiness?: number;
+  microPauses?: number;
 }
 
 export interface SpatialState {
   proximity: number;
+  elevation?: number;
+  width?: number;
 }
 
 export interface PresenceState {
