@@ -51,3 +51,219 @@ pub enum ActionType {
     Redistribute,
     Pause,
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ─────────────────────────────────────────────────────────────
+    // StabilizationLevel Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_stabilization_level_variants() {
+        let levels = vec![
+            StabilizationLevel::Stable,
+            StabilizationLevel::Adjusting,
+            StabilizationLevel::Rebalancing,
+        ];
+        assert_eq!(levels.len(), 3);
+    }
+
+    #[test]
+    fn test_stabilization_level_equality() {
+        assert_eq!(StabilizationLevel::Stable, StabilizationLevel::Stable);
+        assert_ne!(StabilizationLevel::Stable, StabilizationLevel::Adjusting);
+    }
+
+    #[test]
+    fn test_stabilization_level_clone() {
+        let level = StabilizationLevel::Rebalancing;
+        let cloned = level;
+        assert_eq!(level, cloned);
+    }
+
+    #[test]
+    fn test_stabilization_level_copy() {
+        let level = StabilizationLevel::Adjusting;
+        let copied: StabilizationLevel = level;
+        assert_eq!(level, copied);
+    }
+
+    #[test]
+    fn test_stabilization_level_debug() {
+        let level = StabilizationLevel::Stable;
+        let debug_str = format!("{:?}", level);
+        assert!(debug_str.contains("Stable"));
+    }
+
+    #[test]
+    fn test_stabilization_level_serialization() {
+        let level = StabilizationLevel::Rebalancing;
+        let json = serde_json::to_string(&level).unwrap();
+        let restored: StabilizationLevel = serde_json::from_str(&json).unwrap();
+        assert_eq!(restored, StabilizationLevel::Rebalancing);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // ActionType Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_action_type_variants() {
+        let types = vec![
+            ActionType::ReduceLoad,
+            ActionType::IncreaseCapacity,
+            ActionType::Redistribute,
+            ActionType::Pause,
+        ];
+        assert_eq!(types.len(), 4);
+    }
+
+    #[test]
+    fn test_action_type_clone() {
+        let action = ActionType::ReduceLoad;
+        let cloned = action.clone();
+        assert!(matches!(cloned, ActionType::ReduceLoad));
+    }
+
+    #[test]
+    fn test_action_type_debug() {
+        let action = ActionType::IncreaseCapacity;
+        let debug_str = format!("{:?}", action);
+        assert!(debug_str.contains("IncreaseCapacity"));
+    }
+
+    #[test]
+    fn test_action_type_serialization() {
+        let action = ActionType::Redistribute;
+        let json = serde_json::to_string(&action).unwrap();
+        let restored: ActionType = serde_json::from_str(&json).unwrap();
+        assert!(matches!(restored, ActionType::Redistribute));
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // BalanceAction Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_balance_action_creation() {
+        let action = BalanceAction {
+            target: "cpu".to_string(),
+            action_type: ActionType::ReduceLoad,
+            priority: 5,
+        };
+        assert_eq!(action.target, "cpu");
+        assert_eq!(action.priority, 5);
+    }
+
+    #[test]
+    fn test_balance_action_clone() {
+        let action = BalanceAction {
+            target: "memory".to_string(),
+            action_type: ActionType::Pause,
+            priority: 10,
+        };
+        let cloned = action.clone();
+        assert_eq!(cloned.target, "memory");
+        assert_eq!(cloned.priority, 10);
+    }
+
+    #[test]
+    fn test_balance_action_debug() {
+        let action = BalanceAction {
+            target: "x".to_string(),
+            action_type: ActionType::IncreaseCapacity,
+            priority: 1,
+        };
+        let debug_str = format!("{:?}", action);
+        assert!(debug_str.contains("BalanceAction"));
+    }
+
+    #[test]
+    fn test_balance_action_serialization() {
+        let action = BalanceAction {
+            target: "disk".to_string(),
+            action_type: ActionType::Redistribute,
+            priority: 7,
+        };
+        let json = serde_json::to_string(&action).unwrap();
+        let restored: BalanceAction = serde_json::from_str(&json).unwrap();
+        assert_eq!(restored.target, "disk");
+        assert_eq!(restored.priority, 7);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // HarmoniaState Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_harmonia_state_default() {
+        let state = HarmoniaState::default();
+
+        assert_eq!(state.balance_score, 100.0);
+        assert_eq!(state.active_flows, 0);
+        assert_eq!(state.stabilization_level, StabilizationLevel::Stable);
+        assert_eq!(state.adjustments_applied, 0);
+        assert_eq!(state.timestamp, 0);
+    }
+
+    #[test]
+    fn test_harmonia_state_with_data() {
+        let state = HarmoniaState {
+            balance_score: 85.5,
+            active_flows: 3,
+            stabilization_level: StabilizationLevel::Adjusting,
+            adjustments_applied: 15,
+            timestamp: 1234567890,
+        };
+
+        assert_eq!(state.balance_score, 85.5);
+        assert_eq!(state.active_flows, 3);
+        assert_eq!(state.adjustments_applied, 15);
+    }
+
+    #[test]
+    fn test_harmonia_state_clone() {
+        let state = HarmoniaState::default();
+        let cloned = state.clone();
+        assert_eq!(cloned.balance_score, state.balance_score);
+    }
+
+    #[test]
+    fn test_harmonia_state_debug() {
+        let state = HarmoniaState::default();
+        let debug_str = format!("{:?}", state);
+        assert!(debug_str.contains("HarmoniaState"));
+    }
+
+    #[test]
+    fn test_harmonia_state_serialization() {
+        let state = HarmoniaState {
+            balance_score: 90.0,
+            active_flows: 5,
+            ..Default::default()
+        };
+        let json = serde_json::to_string(&state).unwrap();
+        let restored: HarmoniaState = serde_json::from_str(&json).unwrap();
+        assert_eq!(restored.balance_score, 90.0);
+        assert_eq!(restored.active_flows, 5);
+    }
+
+    #[test]
+    fn test_harmonia_state_all_stabilization_levels() {
+        for level in &[
+            StabilizationLevel::Stable,
+            StabilizationLevel::Adjusting,
+            StabilizationLevel::Rebalancing,
+        ] {
+            let state = HarmoniaState {
+                stabilization_level: *level,
+                ..Default::default()
+            };
+            let json = serde_json::to_string(&state).unwrap();
+            let restored: HarmoniaState = serde_json::from_str(&json).unwrap();
+            assert_eq!(restored.stabilization_level, *level);
+        }
+    }
+}
