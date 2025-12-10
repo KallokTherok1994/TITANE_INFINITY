@@ -100,7 +100,7 @@ interface AnalyzerReport {
   analysis_duration_ms: number;
 }
 
-interface SystemMetrics {
+interface _SystemMetrics {
   cpu_pct: number;
   ram_mb: number;
   latency_ms: number;

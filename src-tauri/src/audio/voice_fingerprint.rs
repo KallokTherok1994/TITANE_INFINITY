@@ -329,19 +329,19 @@ impl VoiceFingerprint {
         let nfft = 512;
         let mut spectrum = vec![0.0; nfft / 2];
 
-        for k in 0..(nfft / 2) {
+        for (k, spectrum_value) in spectrum.iter_mut().enumerate() {
             let freq = k as f32 * sample_rate / nfft as f32;
             let omega = 2.0 * PI * freq / sample_rate;
 
             let mut real = 1.0;
             let mut imag = 0.0;
 
-            for n in 1..=order {
-                real -= lpc[n] * (n as f32 * omega).cos();
-                imag += lpc[n] * (n as f32 * omega).sin();
+            for (n, &lpc_coef) in lpc.iter().enumerate().take(order + 1).skip(1) {
+                real -= lpc_coef * (n as f32 * omega).cos();
+                imag += lpc_coef * (n as f32 * omega).sin();
             }
 
-            spectrum[k] = 1.0 / (real * real + imag * imag).sqrt();
+            *spectrum_value = 1.0 / (real * real + imag * imag).sqrt();
         }
 
         // Find local maxima (formants)
@@ -482,12 +482,12 @@ impl VoiceFingerprint {
 
         // Step 4: DCT-II
         let mut mfcc = vec![0.0; num_cepstral];
-        for i in 0..num_cepstral {
+        for (i, mfcc_coef) in mfcc.iter_mut().enumerate() {
             let mut sum = 0.0;
             for (j, &energy) in mel_energies.iter().enumerate() {
                 sum += energy * ((PI * i as f32 * (j as f32 + 0.5)) / num_filters as f32).cos();
             }
-            mfcc[i] = sum;
+            *mfcc_coef = sum;
         }
 
         mfcc
@@ -519,8 +519,8 @@ impl VoiceFingerprint {
 
         // Create mel points (linearly spaced in mel scale)
         let mut mel_points = vec![0.0; num_filters + 2];
-        for i in 0..(num_filters + 2) {
-            mel_points[i] = low_mel + (high_mel - low_mel) * i as f32 / (num_filters + 1) as f32;
+        for (i, mel_point) in mel_points.iter_mut().enumerate() {
+            *mel_point = low_mel + (high_mel - low_mel) * i as f32 / (num_filters + 1) as f32;
         }
 
         // Convert mel points to Hz
@@ -543,16 +543,18 @@ impl VoiceFingerprint {
             let right = bin_points[i + 2];
 
             // Rising slope
-            for j in left..center {
+            for (idx, filter_value) in filters[i][left..center].iter_mut().enumerate() {
+                let j = left + idx;
                 if center > left {
-                    filters[i][j] = (j - left) as f32 / (center - left) as f32;
+                    *filter_value = (j - left) as f32 / (center - left) as f32;
                 }
             }
 
             // Falling slope
-            for j in center..right {
+            for (idx, filter_value) in filters[i][center..right].iter_mut().enumerate() {
+                let j = center + idx;
                 if right > center {
-                    filters[i][j] = (right - j) as f32 / (right - center) as f32;
+                    *filter_value = (right - j) as f32 / (right - center) as f32;
                 }
             }
         }
