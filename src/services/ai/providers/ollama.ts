@@ -128,7 +128,7 @@ async function buildPromptWithMemory(
       timeWindow: '7d',
     });
   } catch (error) {
-    isDev && console.warn('[OLLAMA] Failed to load memory context:', error);
+    logger.warn('Failed to load memory context', error);
   }
 
   // Construire sections du prompt

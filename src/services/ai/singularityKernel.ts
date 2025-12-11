@@ -28,7 +28,9 @@ import type {
   FragilityZone as _FragilityZone,
 } from './metaKernel';
 import type { CognitiveProcess as _CognitiveProcess } from './cognitiveKernel';
+import { createLogger } from '@/utils/logger';
 
+const logger = createLogger('SingularityKernel');
 const isDev = process.env.NODE_ENV === 'development';
 
 // ─────────────────────────────────────────────────────────────────
@@ -749,7 +751,7 @@ class SingularityKernel {
   initialize(): void {
     if (this.initialized) return;
 
-    isDev && console.log('[SINGULARITY-KERNEL] 🌌 Initialisation OS Cognitif Total...');
+    logger.debug('Initializing Total Cognitive OS...');
 
     // 1. Unifier champs cognitifs
     this.unifyAllCognitiveFields();
@@ -758,7 +760,7 @@ class SingularityKernel {
     this.startCognitiveCycle();
 
     this.initialized = true;
-    isDev && console.log('[SINGULARITY-KERNEL] ✅ OS Cognitif Total établi');
+    logger.info('Total Cognitive OS initialized');
   }
 
   private unifyAllCognitiveFields(): void {
@@ -773,11 +775,10 @@ class SingularityKernel {
     this.integrationField.globalContext.harmonyLevel = this.harmonyMatrix.globalHarmony;
     this.integrationField.globalContext.coherenceLevel = cognitiveReport.coherenceScore;
 
-    isDev &&
-      console.log('[SINGULARITY-KERNEL] 🔗 Champs cognitifs unifiés:', {
-        harmony: this.harmonyMatrix.globalHarmony.toFixed(1),
-        coherence: cognitiveReport.coherenceScore.toFixed(1),
-      });
+    logger.debug('Cognitive fields unified', {
+      harmony: this.harmonyMatrix.globalHarmony.toFixed(1),
+      coherence: cognitiveReport.coherenceScore.toFixed(1),
+    });
   }
 
   /**
@@ -797,7 +798,7 @@ class SingularityKernel {
   }
 
   private executeCognitiveCycle(): void {
-    isDev && console.log('[SINGULARITY-KERNEL] 🧠 Cycle cognitif...');
+    logger.debug('Cognitive cycle...');
 
     // 1. PERCEVOIR
     this.systemPerception = this.perceiveSystem();
@@ -823,7 +824,7 @@ class SingularityKernel {
     // 8. OPÉRER (Phase F)
     this.operateSingularity();
 
-    isDev && console.log('[SINGULARITY-KERNEL] ✅ Cycle cognitif terminé');
+    logger.debug('Cognitive cycle complete');
   }
 
   /**
@@ -1244,7 +1245,7 @@ class SingularityKernel {
   }
 
   private autoOrganize(): void {
-    isDev && console.log('[SINGULARITY-KERNEL] 🔄 Auto-organisation...');
+    logger.debug('Auto-organization...');
 
     // Réorganiser kernels selon besoin
     metaKernel.executeSuperCycle();
@@ -1254,7 +1255,7 @@ class SingularityKernel {
   }
 
   private autoCohere(): void {
-    isDev && console.log('[SINGULARITY-KERNEL] 🔗 Auto-cohérence...');
+    logger.debug('Auto-coherence...');
 
     // Harmoniser via cognitive kernel
     cognitiveKernel.harmonizeChatMessages([]);
@@ -1268,7 +1269,7 @@ class SingularityKernel {
     const complexity = this.calculateSystemComplexity();
 
     if (complexity > 70) {
-      isDev && console.log('[SINGULARITY-KERNEL] 🛡️ Prévention dérive complexité...');
+      logger.warn('Preventing complexity drift', { complexity });
 
       this.operationalSingularity.antiDrift.driftsDetected++;
       this.operationalSingularity.antiDrift.driftsPrevented++;
@@ -1293,7 +1294,7 @@ class SingularityKernel {
   }
 
   private autoStabilize(): void {
-    isDev && console.log('[SINGULARITY-KERNEL] ⚖️ Auto-stabilisation...');
+    logger.debug('Auto-stabilization...');
 
     // Activer stability kernel
     metaKernel.activateKernel('stability', 'auto-stabilization', 95);
@@ -1308,7 +1309,7 @@ class SingularityKernel {
       this.harmonyMatrix.states.coherence <
       this.operationalSingularity.coherenceLaw.coherenceThreshold
     ) {
-      isDev && console.log('[SINGULARITY-KERNEL] ⚖️ Application loi cohérence...');
+      logger.info('Enforcing coherence law');
 
       // Forcer harmonisation
       this.autoCohere();
@@ -1436,7 +1437,7 @@ class SingularityKernel {
     }
 
     this.initialized = false;
-    isDev && console.log('[SINGULARITY-KERNEL] 🌑 OS Cognitif Total désactivé');
+    logger.info('Total Cognitive OS deactivated');
   }
 }
 
