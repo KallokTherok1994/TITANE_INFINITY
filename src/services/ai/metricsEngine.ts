@@ -11,6 +11,9 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('Metrics');
 const isDev = process.env.NODE_ENV === 'development';
 
 // ─────────────────────────────────────────────────────────────────
@@ -85,10 +88,9 @@ class MetricsEngine {
       this.cleanup();
     }
 
-    isDev &&
-      console.log(
-        `[METRICS] ${metricEvent.type} | ${metricEvent.provider} | ${metricEvent.success ? '✅' : '❌'} | ${metricEvent.latencyMs || 0}ms`
-      );
+    logger.debug(
+      `${metricEvent.type} | ${metricEvent.provider} | ${metricEvent.success ? '✅' : '❌'} | ${metricEvent.latencyMs || 0}ms`
+    );
   }
 
   /**
@@ -106,7 +108,7 @@ class MetricsEngine {
       this.events = this.events.slice(-this.MAX_EVENTS);
     }
 
-    isDev && console.log(`[METRICS] Cleanup: ${this.events.length} events retained`);
+    logger.debug(`Cleanup: ${this.events.length} events retained`);
   }
 
   /**
@@ -201,7 +203,7 @@ class MetricsEngine {
   reset(): void {
     this.events = [];
     this.startTime = Date.now();
-    isDev && console.log('[METRICS] Reset complete');
+    logger.debug('Reset complete');
   }
 
   /**

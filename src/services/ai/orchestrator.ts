@@ -23,6 +23,10 @@ import { claudeProvider } from './providers/claude'; // ← NOUVEAU: Anthropic C
 import { ollamaProvider } from './providers/ollama';
 import { getAutoHealEngine, getMetricsEngine } from './system'; // ← LAZY: Auto-heal & Metrics
 import { cognitiveKernel } from './cognitiveKernel'; // ← NOUVEAU v22Ω: Cognitive Kernel
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('Orchestrator');
+const isDev = process.env.NODE_ENV === 'development';
 
 // Lazy-loaded engine instances (cached singletons)
 let _autoHeal: Awaited<ReturnType<typeof getAutoHealEngine>> | null = null;
@@ -35,7 +39,6 @@ const ensureEngines = async () => {
   return { autoHeal: _autoHeal, metrics: _metrics };
 };
 
-const isDev = process.env.NODE_ENV === 'development';
 const NULL_BYTE = String.fromCharCode(0);
 const CONTROL_CHAR_DETECTOR = /\p{Cc}/u;
 const CONTROL_CHAR_REMOVER = /\p{Cc}+/gu;
@@ -172,8 +175,7 @@ class AIOrchestrator {
     this.isWarmup = true;
 
     try {
-      isDev &&
-        console.log('[OMEGA ORCHESTRATOR] Starting provider warmup (optimized)...');
+      logger.info('Starting provider warmup (optimized)...');
 
       // Warmup en parallèle avec timeout court pour performance
       const warmupPromises = this.providers.map(async provider => {
@@ -201,11 +203,10 @@ class AIOrchestrator {
       });
 
       const warmupResults = await Promise.allSettled(warmupPromises);
-      isDev &&
-        console.log(
-          '[OMEGA ORCHESTRATOR] Warmup complete:',
-          warmupResults.map(r => (r.status === 'fulfilled' ? r.value : { error: true }))
-        );
+      logger.info(
+        'Warmup complete:',
+        warmupResults.map(r => (r.status === 'fulfilled' ? r.value : { error: true }))
+      );
     } catch (error) {
       isDev && console.error('[OMEGA ORCHESTRATOR] Warmup failed:', error);
     } finally {
@@ -347,10 +348,9 @@ class AIOrchestrator {
       ) {
         const recoveryBoost = Math.min(15, (timeSinceLastUsed - 60000) / 10000); // +1 per 10s idle, max +15
         score += recoveryBoost;
-        isDev &&
-          console.log(
-            `   🔄 Recovery boost for ${provider.name}: +${recoveryBoost.toFixed(1)}`
-          );
+        logger.debug(
+          `   🔄 Recovery boost for ${provider.name}: +${recoveryBoost.toFixed(1)}`
+        );
       }
 
       // Bonus selon le type de provider
@@ -386,7 +386,7 @@ class AIOrchestrator {
           // ✨ v21 - BOOST MASSIF en mode local forcé
           if (preferredProvider === 'local') {
             score += 200; // Priorité absolue au local
-            isDev && console.log('   🏠 LOCAL MODE: Ollama boosted to top priority');
+            logger.debug('   🏠 LOCAL MODE: Ollama boosted to top priority');
           }
           score += messageLength < 500 ? 15 : 5; // Bon sur court
           score += stats.avgResponseTime < 3000 ? 10 : -10; // Bonus vitesse
@@ -549,20 +549,20 @@ class AIOrchestrator {
           ? cognitiveDecision.provider
           : selection.selectedProvider;
 
-      if (isDev) {
-        console.log(
-          `🧠 Cognitive Decision: ${cognitiveDecision.provider} (confidence: ${cognitiveDecision.confidence}%, coherence: ${cognitiveDecision.coherenceScore}%)`
-        );
-        console.log(`   Reason: ${cognitiveDecision.reason}`);
-        console.log(
-          `   Adaptations: ${cognitiveDecision.adaptations.join(', ') || 'None'}`
-        );
-        console.log(
-          `🧠 Neural Selection: ${selection.selectedProvider} (${selection.reason}, ${selection.confidence}% confidence)`
-        );
-        console.log(`🎯 Final Provider: ${finalProvider}`);
-        console.log(`🔄 Alternates: ${selection.alternates.join(', ')}`);
-      }
+      logger.group('Provider Selection');
+      logger.info(
+        `🧠 Cognitive Decision: ${cognitiveDecision.provider} (confidence: ${cognitiveDecision.confidence}%, coherence: ${cognitiveDecision.coherenceScore}%)`
+      );
+      logger.info(`   Reason: ${cognitiveDecision.reason}`);
+      logger.info(
+        `   Adaptations: ${cognitiveDecision.adaptations.join(', ') || 'None'}`
+      );
+      logger.info(
+        `🧠 Neural Selection: ${selection.selectedProvider} (${selection.reason}, ${selection.confidence}% confidence)`
+      );
+      logger.info(`🎯 Final Provider: ${finalProvider}`);
+      logger.info(`🔄 Alternates: ${selection.alternates.join(', ')}`);
+      logger.groupEnd();
 
       // ═══ PHASE 3.4.3: ISOLATED PROVIDER EXECUTION ═══
       const providersToTry = [
