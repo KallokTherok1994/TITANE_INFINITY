@@ -14,9 +14,10 @@
 import type { AIMessage, AIProvider, AIResponse } from '../types';
 import { TAURI_COMMANDS } from '../../../core/commands/TAURI_COMMANDS';
 import { safeInvokeTauri } from '../../../utils/tauriProtector';
-import { autoHealEngine } from '../autoHealEngine';
+import { getAutoHealEngine } from '../system';
+import { createLogger } from '@/utils/logger';
 
-const isDev = process.env.NODE_ENV === 'development';
+const logger = createLogger('TauriChat');
 
 // ═══════════════════════════════════════════════════════════════
 // TYPES (matching Rust structs)
@@ -87,15 +88,14 @@ class TauriChatProvider implements AIProvider {
 
     // Si trop d'erreurs, considérer comme indisponible
     if (this.errorCount >= this.MAX_ERRORS) {
-      isDev && console.warn(`⚠️ Tauri Backend: Disabled after ${this.errorCount} errors`);
+      logger.warn(`Backend disabled after ${this.errorCount} errors`);
       this.backendAvailable = false;
       this.lastCheckTime = now;
       return false;
     }
 
     try {
-      isDev &&
-        console.log('🔍 Tauri Chat Provider OMEGA: Checking backend availability...');
+      logger.debug('Checking backend availability...');
 
       // OMEGA: Protected invoke with timeout
       const status = await Promise.race([
@@ -115,10 +115,9 @@ class TauriChatProvider implements AIProvider {
         this.errorCount = 0; // Reset error count on success
       }
 
-      isDev &&
-        console.log(
-          `   ${this.backendAvailable ? '✅' : '❌'} Backend available: ${this.backendAvailable}`
-        );
+      logger.debug(`Backend available: ${this.backendAvailable}`, {
+        available: this.backendAvailable,
+      });
 
       return this.backendAvailable;
     } catch (error) {
@@ -133,7 +132,7 @@ class TauriChatProvider implements AIProvider {
    * Génère une réponse via backend Rust (OMEGA Protected)
    */
   async generate(message: string, history: AIMessage[] = []): Promise<AIResponse> {
-    isDev && console.log('🦀 Tauri Chat Provider OMEGA: Sending to Rust backend...');
+    logger.debug('Sending to Rust backend...');
 
     try {
       // OMEGA: Input validation
@@ -159,12 +158,11 @@ class TauriChatProvider implements AIProvider {
         system_prompt: this.buildSystemPrompt(history),
       };
 
-      isDev &&
-        console.log(
-          `   📝 Message: "${message.substring(0, 50)}${message.length > 50 ? '...' : ''}"`
-        );
-      isDev && console.log(`   📚 History: ${history.length} messages`);
-      isDev && console.log(`   🎯 Provider mode: auto (cascade)`);
+      logger.debug('Request details', {
+        message: message.substring(0, 50) + (message.length > 50 ? '...' : ''),
+        historyLength: history.length,
+        provider: 'auto (cascade)',
+      });
 
       // OMEGA: Protected invoke with timeout and retry
       const response = await Promise.race([
@@ -183,12 +181,12 @@ class TauriChatProvider implements AIProvider {
         throw new Error('Empty response from backend');
       }
 
-      isDev && console.log(`   ✅ Response received in ${response.latency_ms}ms`);
-      isDev &&
-        console.log(
-          `   🏷️  Provider: ${response.message.provider}, Model: ${response.message.model}`
-        );
-      isDev && console.log(`   📦 Content: ${response.message.content.length} chars`);
+      logger.debug('Response received', {
+        latency: response.latency_ms,
+        provider: response.message.provider,
+        model: response.message.model,
+        contentLength: response.message.content.length,
+      });
 
       // Reset error count on success
       this.errorCount = 0;
@@ -222,25 +220,29 @@ class TauriChatProvider implements AIProvider {
 
     const errorObj = error instanceof Error ? error : new Error(String(error));
 
-    // Auto-heal trigger
-    autoHealEngine.heal('tauri-chat', errorObj, 'provider', {
-      context,
-      errorCount: this.errorCount,
-      metadata,
-      timestamp: Date.now(),
-    });
+    // Auto-heal trigger (lazy loaded)
+    getAutoHealEngine()
+      .then(autoHeal => {
+        autoHeal.heal('tauri-chat', errorObj, 'provider', {
+          context,
+          errorCount: this.errorCount,
+          metadata,
+          timestamp: Date.now(),
+        });
+      })
+      .catch(err => logger.error('Failed to record healing error', err));
 
-    isDev &&
-      console.error(
-        `   ❌ Tauri invoke error [${context}]: ${errorObj.message} (${this.errorCount}/${this.MAX_ERRORS})`
-      );
+    logger.error(`Tauri invoke error [${context}]`, {
+      message: errorObj.message,
+      errorCount: this.errorCount,
+      maxErrors: this.MAX_ERRORS,
+    });
 
     // Si trop d'erreurs, marquer comme indisponible
     if (this.errorCount >= this.MAX_ERRORS) {
       this.backendAvailable = false;
       this.lastCheckTime = Date.now();
-      isDev &&
-        console.warn(`   🚫 Tauri backend disabled after ${this.errorCount} errors`);
+      logger.warn(`Backend disabled after ${this.errorCount} errors`);
     }
   }
 
@@ -248,10 +250,7 @@ class TauriChatProvider implements AIProvider {
    * Stream pas encore implémenté côté Rust (OMEGA Protected)
    */
   async *stream(message: string, history: AIMessage[] = []): AsyncGenerator<string> {
-    isDev &&
-      console.warn(
-        '⚠️ Tauri Chat Provider OMEGA: Streaming not implemented, falling back to generate()'
-      );
+    logger.warn('Streaming not implemented, falling back to generate()');
 
     try {
       // Fallback: utilise generate() et simule le streaming
@@ -319,7 +318,7 @@ class TauriChatProvider implements AIProvider {
         ),
       ]);
 
-      isDev && console.log('✅ Gemini API key configured in backend');
+      logger.info('Gemini API key configured in backend');
     } catch (error) {
       this.handleInvokeError(error, 'setGeminiKey');
       const errorMsg = error instanceof Error ? error.message : 'Unknown error';
@@ -334,7 +333,7 @@ class TauriChatProvider implements AIProvider {
     this.errorCount = 0;
     this.backendAvailable = null;
     this.lastCheckTime = 0;
-    isDev && console.log('🔄 Tauri Chat Provider: Errors reset');
+    logger.debug('Errors reset');
   }
 
   /**

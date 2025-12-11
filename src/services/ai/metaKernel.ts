@@ -17,11 +17,12 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { autoHealEngine } from './autoHealEngine';
-import { metricsEngine } from './metricsEngine';
+import { createLogger } from '@/utils/logger';
+import metricsEngine from './metricsEngine';
+import autoHealEngine from './autoHealEngine';
 import { cognitiveKernel } from './cognitiveKernel';
 
-const isDev = process.env.NODE_ENV === 'development';
+const logger = createLogger('[META-KERNEL]');
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES META-KERNEL
@@ -331,8 +332,7 @@ class MetaKernel {
   initialize(): void {
     if (this.initialized) return;
 
-    isDev &&
-      console.log('[META-KERNEL] 🌌 Initialisation de la super-conscience système...');
+    logger.info('Initializing super-consciousness system');
 
     // 1.1 Construire cartographie globale
     this.buildSystemMap();
@@ -344,7 +344,7 @@ class MetaKernel {
     this.startContinuousObservation();
 
     this.initialized = true;
-    isDev && console.log('[META-KERNEL] ✅ Super-conscience système établie');
+    logger.info('Super-consciousness system established');
   }
 
   /**
@@ -678,13 +678,12 @@ class MetaKernel {
       },
     ];
 
-    isDev &&
-      console.log('[META-KERNEL] 📊 Cartographie système construite:', {
-        nodes: this.systemMap.nodes.length,
-        edges: this.systemMap.edges.length,
-        flows: this.systemMap.flows.length,
-        layers: this.systemMap.layers.length,
-      });
+    logger.debug('System map constructed', {
+      nodes: this.systemMap.nodes.length,
+      edges: this.systemMap.edges.length,
+      flows: this.systemMap.flows.length,
+      layers: this.systemMap.layers.length,
+    });
   }
 
   /**
@@ -704,11 +703,10 @@ class MetaKernel {
       quality: metricsEngine.getAggregatedMetrics().successRate,
     };
 
-    isDev &&
-      console.log('[META-KERNEL] 🔄 Flux cognitifs analysés:', {
-        horizontal: horizontalFlow,
-        vertical: verticalFlow,
-      });
+    logger.debug('Global cognitive flows analyzed', {
+      horizontal: horizontalFlow,
+      vertical: verticalFlow,
+    });
   }
 
   /**
@@ -762,13 +760,12 @@ class MetaKernel {
     // Détecter zones de fragilité
     this.detectFragilityZones(observation);
 
-    isDev &&
-      console.log('[META-KERNEL] 👁️ Observation système:', {
-        stability: observation.stability.toFixed(1),
-        coherence: observation.coherence.toFixed(1),
-        cognitiveLoad: observation.cognitiveLoad.toFixed(1),
-        titaneAlignment: observation.titaneAlignment.toFixed(1),
-      });
+    logger.debug('System observation complete', {
+      stability: observation.stability.toFixed(1),
+      coherence: observation.coherence.toFixed(1),
+      cognitiveLoad: observation.cognitiveLoad.toFixed(1),
+      titaneAlignment: observation.titaneAlignment.toFixed(1),
+    });
   }
 
   private calculateCognitiveLoad(): number {
@@ -833,8 +830,12 @@ class MetaKernel {
     // Mettre à jour l'état du kernel
     this.subKernels[kernel].active = true;
 
-    isDev &&
-      console.log(`[META-KERNEL] 🎯 Activation ${kernel} kernel (${location}):`, action);
+    logger.debug('Kernel activation', {
+      kernel,
+      location,
+      purpose,
+      priority: action.priority,
+    });
 
     return action;
   }
@@ -856,14 +857,13 @@ class MetaKernel {
     const conflicts = this.detectKernelConflicts(actions);
 
     if (conflicts.length > 0) {
-      isDev &&
-        console.warn('[META-KERNEL] ⚠️ Conflits détectés entre kernels:', conflicts);
+      logger.warn('Kernel conflicts detected', { conflicts });
       // Résoudre conflits en gardant action prioritaire
       actions = this.resolveConflicts(actions, conflicts);
     }
 
     // Exécuter actions sans conflit
-    isDev && console.log(`[META-KERNEL] 🎼 Coordination ${actions.length} kernels`);
+    logger.debug('Coordinating kernels', { count: actions.length });
   }
 
   private getKernelConstraints(kernel: string): string[] {
@@ -975,24 +975,23 @@ class MetaKernel {
 
     // Appliquer corrections si nécessaire
     if (this.titanePrinciples.simplicityStructural < 80) {
-      isDev &&
-        console.warn(
-          '[META-KERNEL] ⚠️ Simplicité structurelle faible, activation simplification'
-        );
+      logger.warn('Low structural simplicity, activating simplification', {
+        score: this.titanePrinciples.simplicityStructural,
+      });
       this.activateKernel('autofix', 'structural-simplification', 90);
     }
 
     if (this.titanePrinciples.clarityFlows < 80) {
-      isDev &&
-        console.warn('[META-KERNEL] ⚠️ Clarté des flux faible, activation harmonisation');
+      logger.warn('Low flow clarity, activating harmonization', {
+        score: this.titanePrinciples.clarityFlows,
+      });
       this.activateKernel('cognitive', 'flow-clarification', 85);
     }
 
     if (this.titanePrinciples.robustnessNatural < 80) {
-      isDev &&
-        console.warn(
-          '[META-KERNEL] ⚠️ Robustesse naturelle faible, activation stabilité'
-        );
+      logger.warn('Low natural robustness, activating stability', {
+        score: this.titanePrinciples.robustnessNatural,
+      });
       this.activateKernel('stability', 'robustness-reinforcement', 95);
     }
   }
@@ -1113,10 +1112,7 @@ class MetaKernel {
     }
 
     if (this.fragilityZones.length > 0) {
-      isDev &&
-        console.warn(
-          `[META-KERNEL] 🚨 ${this.fragilityZones.length} zones de fragilité détectées`
-        );
+      logger.warn('Fragility zones detected', { count: this.fragilityZones.length });
     }
   }
 
@@ -1126,10 +1122,10 @@ class MetaKernel {
   prevent(): void {
     this.fragilityZones.forEach(zone => {
       if (zone.severity === 'critical' || zone.severity === 'high') {
-        isDev &&
-          console.log(
-            `[META-KERNEL] 🛡️ Prévention ${zone.severity} sur ${zone.location}`
-          );
+        logger.debug('Applying prevention strategy', {
+          severity: zone.severity,
+          location: zone.location,
+        });
 
         // Appliquer stratégies de prévention
         zone.preventionStrategies.forEach(strategy => {
@@ -1189,10 +1185,9 @@ class MetaKernel {
     const syncStatus = this.synchronizeFrontendBackendKernels();
     optimizations.push(`Kernels synchronisés: ${syncStatus}`);
 
-    isDev &&
-      console.log(
-        `[META-KERNEL] ⚡ ${optimizations.length} optimisations transversales appliquées`
-      );
+    logger.debug('Cross-kernel optimizations applied', {
+      count: optimizations.length,
+    });
 
     return optimizations;
   }
@@ -1395,7 +1390,7 @@ class MetaKernel {
     }
 
     this.initialized = false;
-    isDev && console.log('[META-KERNEL] 🌑 Super-conscience système désactivée');
+    logger.info('Super-consciousness system deactivated');
   }
 
   /**
@@ -1457,7 +1452,7 @@ class MetaKernel {
    * Exécuter un cycle complet de meta-orchestration
    */
   executeSuperCycle(): SuperConsciousnessReport {
-    isDev && console.log('[META-KERNEL] 🌌 Exécution cycle super-conscience...');
+    logger.debug('Executing super-consciousness cycle');
 
     // 1. Observer
     this.observe();
@@ -1477,7 +1472,7 @@ class MetaKernel {
     // 6. Générer rapport
     const report = this.getSuperConsciousnessReport();
 
-    isDev && console.log('[META-KERNEL] ✅ Cycle super-conscience terminé');
+    logger.debug('Super-consciousness cycle complete');
 
     return report;
   }

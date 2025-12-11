@@ -114,7 +114,10 @@ impl ConversationEngineState {
         let self_healing = Arc::new(RwLock::new(SelfHealingConversation::new()));
 
         // R05 P1: Initialize OMEGA Pipeline Bridge
-        let omega_bridge = Arc::new(OmegaConversationBridge::new(OmegaBridgeConfig::default()));
+        let omega_bridge = Arc::new(OmegaConversationBridge::new(
+            OmegaBridgeConfig::default(),
+            Arc::clone(&singularity),
+        ));
 
         let pipeline = Arc::new(ConversationPipeline::new(
             memory.clone(),

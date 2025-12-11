@@ -48,6 +48,7 @@ import { PageLoadingFallback } from './ui/components/PageLoadingFallback'; // �
 import { initializeMicroInteractions } from './ui/motion'; // ✨ v21 - TITANE∞ Polish Phase
 import { ToastContainer } from './ui/components/Toast'; // ✨ v19.5.2 - Toast notifications
 import { useUIStore } from './stores/uiStore'; // ✨ v19.5.2 - UI state management
+import { initializeOllama } from './services/ai/providers/ollama'; // ✨ v21 - Local AI initialization
 import './i18n';
 
 /**
@@ -354,6 +355,14 @@ const AppRouter: React.FC = () => {
     };
 
     checkOnboarding();
+  }, []);
+
+  // ✨ v21 - Initialiser Ollama Provider au démarrage
+  useEffect(() => {
+    console.log('🤖 [OLLAMA] Initializing local AI provider...');
+    initializeOllama().catch(error => {
+      console.error('❌ [OLLAMA] Failed to initialize:', error);
+    });
   }, []);
 
   // ✨ v∞ - Démarrer Auto-Audit Engine au chargement

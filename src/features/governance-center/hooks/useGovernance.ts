@@ -103,7 +103,7 @@ export function useGovernance() {
         const data = await response.json();
         status.provider_enabled = true;
         status.available = true;
-        status.models = data.models?.map((m: any) => m.name) || [];
+        status.models = data.models?.map((m: { name: string }) => m.name) || [];
       }
     } catch {
       // Ollama not running

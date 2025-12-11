@@ -12,7 +12,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import type { AIMessage, AIResponse, AIConfig } from './types';
+import type { AIMessage, AIResponse, AIConfig, ProviderChoice } from './types';
 import { buildSystemPrompt as buildTitanePrompt } from '@/core/prompts';
 import type { Provider as PromptProvider, PromptContext } from '@/core/prompts';
 import { titaneLocalProvider } from './providers/titaneLocal'; // ← PREMIER (noyau infaillible)
@@ -21,11 +21,23 @@ import { geminiProvider } from './providers/gemini';
 import { openaiProvider } from './providers/openai'; // ← NOUVEAU: OpenAI GPT
 import { claudeProvider } from './providers/claude'; // ← NOUVEAU: Anthropic Claude
 import { ollamaProvider } from './providers/ollama';
-import { autoHealEngine } from './autoHealEngine'; // ← NOUVEAU: Auto-heal intégré
-import { metricsEngine } from './metricsEngine'; // ← NOUVEAU: Metrics Engine v20Ω
+import { getAutoHealEngine, getMetricsEngine } from './system'; // ← LAZY: Auto-heal & Metrics
 import { cognitiveKernel } from './cognitiveKernel'; // ← NOUVEAU v22Ω: Cognitive Kernel
+import { createLogger } from '@/utils/logger';
 
-const isDev = process.env.NODE_ENV === 'development';
+const logger = createLogger('Orchestrator');
+
+// Lazy-loaded engine instances (cached singletons)
+let _autoHeal: Awaited<ReturnType<typeof getAutoHealEngine>> | null = null;
+let _metrics: Awaited<ReturnType<typeof getMetricsEngine>> | null = null;
+
+// Initialize engines on first use
+const ensureEngines = async () => {
+  if (!_autoHeal) _autoHeal = await getAutoHealEngine();
+  if (!_metrics) _metrics = await getMetricsEngine();
+  return { autoHeal: _autoHeal, metrics: _metrics };
+};
+
 const NULL_BYTE = String.fromCharCode(0);
 const CONTROL_CHAR_DETECTOR = /\p{Cc}/u;
 const CONTROL_CHAR_REMOVER = /\p{Cc}+/gu;
@@ -162,8 +174,7 @@ class AIOrchestrator {
     this.isWarmup = true;
 
     try {
-      isDev &&
-        console.log('[OMEGA ORCHESTRATOR] Starting provider warmup (optimized)...');
+      logger.info('Starting provider warmup (optimized)...');
 
       // Warmup en parallèle avec timeout court pour performance
       const warmupPromises = this.providers.map(async provider => {
@@ -191,13 +202,12 @@ class AIOrchestrator {
       });
 
       const warmupResults = await Promise.allSettled(warmupPromises);
-      isDev &&
-        console.log(
-          '[OMEGA ORCHESTRATOR] Warmup complete:',
-          warmupResults.map(r => (r.status === 'fulfilled' ? r.value : { error: true }))
-        );
+      logger.info(
+        'Warmup complete:',
+        warmupResults.map(r => (r.status === 'fulfilled' ? r.value : { error: true }))
+      );
     } catch (error) {
-      isDev && console.error('[OMEGA ORCHESTRATOR] Warmup failed:', error);
+      logger.error('Warmup failed', error);
     } finally {
       this.isWarmup = false;
     }
@@ -280,7 +290,11 @@ class AIOrchestrator {
    * ═══════════════════════════════════════════════════════════════════
    */
 
-  private selectOptimalProvider(message: string, history: AIMessage[]): NeuralSelection {
+  private selectOptimalProvider(
+    message: string,
+    history: AIMessage[],
+    preferredProvider?: ProviderChoice
+  ): NeuralSelection {
     // Analyse contextuelle du message
     const messageLength = message.length;
     const contextLength = history.reduce((sum, msg) => sum + msg.content.length, 0);
@@ -333,10 +347,9 @@ class AIOrchestrator {
       ) {
         const recoveryBoost = Math.min(15, (timeSinceLastUsed - 60000) / 10000); // +1 per 10s idle, max +15
         score += recoveryBoost;
-        isDev &&
-          console.log(
-            `   🔄 Recovery boost for ${provider.name}: +${recoveryBoost.toFixed(1)}`
-          );
+        logger.debug(
+          `   🔄 Recovery boost for ${provider.name}: +${recoveryBoost.toFixed(1)}`
+        );
       }
 
       // Bonus selon le type de provider
@@ -369,6 +382,11 @@ class AIOrchestrator {
           break;
 
         case 'ollama':
+          // ✨ v21 - BOOST MASSIF en mode local forcé
+          if (preferredProvider === 'local') {
+            score += 200; // Priorité absolue au local
+            logger.debug('   🏠 LOCAL MODE: Ollama boosted to top priority');
+          }
           score += messageLength < 500 ? 15 : 5; // Bon sur court
           score += stats.avgResponseTime < 3000 ? 10 : -10; // Bonus vitesse
           break;
@@ -460,29 +478,30 @@ class AIOrchestrator {
     const requestId = `req_${Date.now()}_${Math.random().toString(36).substring(7)}`;
     const requestStartTime = Date.now();
 
+    // Ensure engines are loaded
+    const { autoHeal, metrics: _metrics } = await ensureEngines();
+
     // Increment metrics
     this.orchestratorMetrics.totalRequests++;
     this.orchestratorMetrics.lastActivity = Date.now();
 
     try {
-      // ═══ PHASE 3.4.1: VALIDATION MESSAGE ═══
+      // ═══ PHASE 3.4.1: VALIDATION MESSAGE ===
       const { sanitized, valid, issues } = this.sanitizeMessage(message);
 
       if (!valid) {
         const error = `Invalid message: ${issues.join(', ')}`;
-        autoHealEngine.heal('orchestrator', error, 'validation', { issues, requestId });
+        autoHeal.heal('orchestrator', error, 'validation', { issues, requestId });
         throw new Error(error);
       }
 
-      if (isDev) {
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        console.log(`🟣 OMEGA ORCHESTRATOR: Neural Generation [${requestId}]`);
-        console.log(
-          `📝 Message: "${sanitized.substring(0, 60)}${sanitized.length > 60 ? '...' : ''}"`
-        );
-        console.log(`📚 History: ${history.length} messages`);
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-      }
+      logger.group('Neural Generation');
+      logger.info(`Request ID: ${requestId}`);
+      logger.info(
+        `Message: "${sanitized.substring(0, 60)}${sanitized.length > 60 ? '...' : ''}"`,
+        { historyLength: history.length }
+      );
+      logger.groupEnd();
 
       // ═══ PHASE 3.4.2: NEURAL PROVIDER SELECTION + COGNITIVE KERNEL v22Ω ═══
 
@@ -514,8 +533,12 @@ class AIOrchestrator {
         metrics: realtimeMetrics,
       });
 
-      // Sélection neurale standard
-      const selection = this.selectOptimalProvider(sanitized, history);
+      // Sélection neurale standard (avec préférence optionnelle)
+      const selection = this.selectOptimalProvider(
+        sanitized,
+        history,
+        config?.preferredProvider
+      );
 
       // 🧠 Fusionner décision cognitive et sélection neurale
       const finalProvider =
@@ -523,20 +546,20 @@ class AIOrchestrator {
           ? cognitiveDecision.provider
           : selection.selectedProvider;
 
-      if (isDev) {
-        console.log(
-          `🧠 Cognitive Decision: ${cognitiveDecision.provider} (confidence: ${cognitiveDecision.confidence}%, coherence: ${cognitiveDecision.coherenceScore}%)`
-        );
-        console.log(`   Reason: ${cognitiveDecision.reason}`);
-        console.log(
-          `   Adaptations: ${cognitiveDecision.adaptations.join(', ') || 'None'}`
-        );
-        console.log(
-          `🧠 Neural Selection: ${selection.selectedProvider} (${selection.reason}, ${selection.confidence}% confidence)`
-        );
-        console.log(`🎯 Final Provider: ${finalProvider}`);
-        console.log(`🔄 Alternates: ${selection.alternates.join(', ')}`);
-      }
+      logger.group('Provider Selection');
+      logger.info(
+        `🧠 Cognitive Decision: ${cognitiveDecision.provider} (confidence: ${cognitiveDecision.confidence}%, coherence: ${cognitiveDecision.coherenceScore}%)`
+      );
+      logger.info(`   Reason: ${cognitiveDecision.reason}`);
+      logger.info(
+        `   Adaptations: ${cognitiveDecision.adaptations.join(', ') || 'None'}`
+      );
+      logger.info(
+        `🧠 Neural Selection: ${selection.selectedProvider} (${selection.reason}, ${selection.confidence}% confidence)`
+      );
+      logger.info(`🎯 Final Provider: ${finalProvider}`);
+      logger.info(`🔄 Alternates: ${selection.alternates.join(', ')}`);
+      logger.groupEnd();
 
       // ═══ PHASE 3.4.3: ISOLATED PROVIDER EXECUTION ═══
       const providersToTry = [
@@ -561,10 +584,9 @@ class AIOrchestrator {
         if (quickFailTime && providerName !== 'titane-local') {
           const timeSinceFailure = Date.now() - quickFailTime;
           if (timeSinceFailure < this.QUICK_FAIL_COOLDOWN_MS) {
-            isDev &&
-              console.log(
-                `⏭️ Skipping ${providerName} (failed ${timeSinceFailure}ms ago, cooldown: ${this.QUICK_FAIL_COOLDOWN_MS}ms)`
-              );
+            logger.debug(
+              `⏭️ Skipping ${providerName} (failed ${timeSinceFailure}ms ago, cooldown: ${this.QUICK_FAIL_COOLDOWN_MS}ms)`
+            );
             continue;
           } else {
             // Clear stale cache entry
@@ -576,11 +598,9 @@ class AIOrchestrator {
         const providerStartTime = Date.now();
 
         try {
-          if (isDev) {
-            console.log(
-              `\n🔍 [${attempts}/${providersToTry.length}] Trying ${providerName}...`
-            );
-          }
+          logger.debug(
+            `\n🔍 [${attempts}/${providersToTry.length}] Trying ${providerName}...`
+          );
 
           // ═══ ISOLATED EXECUTION WITH ADAPTIVE TIMEOUT ═══
           const executionTimeout =
@@ -641,16 +661,14 @@ class AIOrchestrator {
           this.orchestratorMetrics.avgResponseTime =
             totalTime / this.orchestratorMetrics.totalSuccesses;
 
-          if (isDev) {
-            console.log(
-              `   ✅ SUCCESS in ${providerLatency}ms (total: ${totalResponseTime}ms)`
-            );
-            console.log(`   📦 Response: ${response.content.length} chars`);
-            console.log(`   🏷️ Provider: ${response.provider || providerName}`);
-            console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-            console.log(`🟣 OMEGA ORCHESTRATOR: Generation complete! [${requestId}]`);
-            console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-          }
+          logger.group('Generation Complete');
+          logger.info(`Request ID: ${requestId}`);
+          logger.info(`Provider: ${response.provider || providerName}`);
+          logger.info(
+            `Timing: ${providerLatency}ms (provider) / ${totalResponseTime}ms (total)`,
+            { contentLength: response.content.length }
+          );
+          logger.groupEnd();
 
           return {
             ...response,
@@ -708,15 +726,14 @@ class AIOrchestrator {
             this.orchestratorMetrics.autoHealTriggers++;
           }
 
-          if (isDev) {
-            console.error(
-              `   ❌ FAILED: ${lastError.message} (${providerFailureLatency}ms)`
-            );
-          }
+          logger.error(`Provider ${providerName} failed`, {
+            error: lastError.message,
+            latency: providerFailureLatency,
+          });
 
           // Si c'est titane-local qui échoue, c'est critique
           if (providerName === 'titane-local') {
-            isDev && console.error('🚨 CRITICAL: titane-local provider failed!');
+            logger.error('CRITICAL: titane-local provider failed');
             break;
           }
 
@@ -732,11 +749,10 @@ class AIOrchestrator {
 
       const responseTime = Date.now() - requestStartTime;
 
-      if (isDev) {
-        console.error('\n🚨 OMEGA ORCHESTRATOR: All providers exhausted!');
-        console.error(`Last error: ${lastError?.message || 'Unknown'}`);
-        console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-      }
+      logger.error('All providers exhausted', {
+        lastError: lastError?.message || 'Unknown',
+        responseTime,
+      });
 
       // Ultimate emergency response
       return {
@@ -783,12 +799,7 @@ Le système s'auto-répare en continu. Que puis-je t'aider à explorer ?`,
         }
       );
 
-      if (isDev) {
-        console.error(
-          `🆘 OMEGA ORCHESTRATOR: Critical error [${requestId}]:`,
-          criticalError
-        );
-      }
+      logger.error(`Critical error [${requestId}]`, criticalError);
 
       return {
         content: `🔴 **Récupération Critique OMEGA** [${requestId.substring(0, 8)}]
@@ -880,8 +891,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
 
       return cloned;
     } catch (error) {
-      isDev &&
-        console.warn('[OMEGA] Prompt rebuild skipped for provider', providerName, error);
+      logger.warn(`Prompt rebuild skipped for ${providerName}`, error);
       return history;
     }
   }
@@ -896,8 +906,10 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
     this.currentRequests++;
 
     try {
-      isDev &&
-        console.debug('[OMEGA] Provider execution start', requestId, provider.name);
+      logger.debug('Provider execution start', {
+        requestId,
+        provider: provider.name,
+      });
       // Availability check with short timeout
       const availabilityPromise = provider.isAvailable();
       const availabilityTimeout = new Promise<boolean>((_, reject) =>
@@ -1107,7 +1119,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
           return; // Simulation successful
         }
       } catch (error) {
-        isDev && console.warn(`[OMEGA STREAM] ${providerName} failed:`, error);
+        logger.warn('Stream provider failed', { provider: providerName, error });
 
         // Auto-heal pour streaming failures
         autoHealEngine.heal(
@@ -1208,7 +1220,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
    * EVOLUTION v21Ω: Now clears ALL state including quick-fail cache
    */
   async resetAllProviders(): Promise<void> {
-    isDev && console.log('[OMEGA ORCHESTRATOR] Force reset all providers...');
+    logger.info('Force reset all providers...');
 
     this.initializeProviderStats();
     this.orchestratorMetrics = {
