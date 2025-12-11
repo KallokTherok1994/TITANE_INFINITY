@@ -23,6 +23,9 @@ import type {
   RitualInfo,
   TimelineEntry,
 } from '../memory/types';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('Memory');
 
 // Re-export for compatibility
 export type { MemoryContext } from '../memory/types';
@@ -98,7 +101,7 @@ export class MemoryIntegration {
         timeline,
       };
     } catch (error) {
-      console.error('[MemoryIntegration] Erreur chargement contexte:', error);
+      logger.error('Failed to load memory context', error);
       return this.getEmptyContext();
     }
   }
@@ -122,7 +125,7 @@ export class MemoryIntegration {
         timestamp: new Date().toISOString(),
       });
     } catch (error) {
-      console.error('[MemoryIntegration] Erreur sauvegarde interaction:', error);
+      logger.error('Failed to save interaction', error);
     }
   }
 
@@ -137,7 +140,7 @@ export class MemoryIntegration {
     try {
       await memoryService.saveStructuredEntry(normalized);
     } catch (error) {
-      console.error('[MemoryIntegration] Erreur sauvegarde structured entry:', error);
+      logger.error('Failed to save structured entry', error);
     }
   }
 
@@ -153,7 +156,7 @@ export class MemoryIntegration {
       this.setCache('active_projects', projects);
       return projects;
     } catch (error) {
-      console.warn('[MemoryIntegration] Projets non disponibles:', error);
+      logger.warn('Active projects unavailable', error);
       return [];
     }
   }
@@ -173,7 +176,7 @@ export class MemoryIntegration {
       this.setCache('recent_decisions', decisions);
       return decisions;
     } catch (error) {
-      console.warn('[MemoryIntegration] Décisions non disponibles:', error);
+      logger.warn('Recent decisions unavailable', error);
       return [];
     }
   }
@@ -190,7 +193,7 @@ export class MemoryIntegration {
       this.setCache('relevant_knowledge', knowledge);
       return knowledge;
     } catch (error) {
-      console.warn('[MemoryIntegration] Connaissances non disponibles:', error);
+      logger.warn('Relevant knowledge unavailable', error);
       return [];
     }
   }
@@ -207,7 +210,7 @@ export class MemoryIntegration {
       this.setCache('active_rituals', rituals);
       return rituals;
     } catch (error) {
-      console.warn('[MemoryIntegration] Rituels non disponibles:', error);
+      logger.warn('Active rituals unavailable', error);
       return [];
     }
   }
@@ -219,7 +222,7 @@ export class MemoryIntegration {
     try {
       return await memoryService.getTimeline(timeWindow);
     } catch (error) {
-      console.warn('[MemoryIntegration] Timeline non disponible:', error);
+      logger.warn('Timeline unavailable', error);
       return [];
     }
   }

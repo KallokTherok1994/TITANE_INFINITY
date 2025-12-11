@@ -219,16 +219,17 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_event_serialization() {
+    fn test_event_serialization() -> Result<(), serde_json::Error> {
         let event = OmegaEvent::Started {
             request_id: "test-123".to_string(),
             timestamp: 1234567890,
             input_type: "text".to_string(),
         };
 
-        let json = serde_json::to_string(&event).unwrap();
+        let json = serde_json::to_string(&event)?;
         assert!(json.contains("Started"));
         assert!(json.contains("test-123"));
+        Ok(())
     }
 
     #[test]
@@ -254,7 +255,7 @@ mod tests {
     }
 
     #[test]
-    fn test_step_event() {
+    fn test_step_event() -> Result<(), serde_json::Error> {
         let event = OmegaEvent::Step {
             request_id: "req-002".to_string(),
             stage: "Router".to_string(),
@@ -263,10 +264,11 @@ mod tests {
             success: true,
         };
 
-        let json = serde_json::to_string(&event).unwrap();
+        let json = serde_json::to_string(&event)?;
         assert!(json.contains("Step"));
         assert!(json.contains("Router"));
         assert!(json.contains("IntentClassifier"));
+        Ok(())
     }
 
     #[test]
@@ -311,16 +313,17 @@ mod tests {
     }
 
     #[test]
-    fn test_warning_event() {
+    fn test_warning_event() -> Result<(), serde_json::Error> {
         let event = OmegaEvent::Warning {
             request_id: "req-005".to_string(),
             engine: "MemoryEngine".to_string(),
             message: "High memory usage detected".to_string(),
         };
 
-        let json = serde_json::to_string(&event).unwrap();
+        let json = serde_json::to_string(&event)?;
         assert!(json.contains("Warning"));
         assert!(json.contains("High memory usage"));
+        Ok(())
     }
 
     #[test]
@@ -356,7 +359,7 @@ mod tests {
     }
 
     #[test]
-    fn test_self_healing_event_success() {
+    fn test_self_healing_event_success() -> Result<(), serde_json::Error> {
         let event = OmegaEvent::SelfHealing {
             request_id: "req-008".to_string(),
             incident_id: "incident-001".to_string(),
@@ -364,10 +367,11 @@ mod tests {
             success: true,
         };
 
-        let json = serde_json::to_string(&event).unwrap();
+        let json = serde_json::to_string(&event)?;
         assert!(json.contains("SelfHealing"));
         assert!(json.contains("incident-001"));
         assert!(json.contains("restart_service"));
+        Ok(())
     }
 
     #[test]
@@ -408,7 +412,7 @@ mod tests {
     }
 
     #[test]
-    fn test_complete_event_failure() {
+    fn test_complete_event_failure() -> Result<(), serde_json::Error> {
         let event = OmegaEvent::Complete {
             request_id: "req-011".to_string(),
             total_duration_ms: 800,
@@ -416,9 +420,10 @@ mod tests {
             success: false,
         };
 
-        let json = serde_json::to_string(&event).unwrap();
+        let json = serde_json::to_string(&event)?;
         assert!(json.contains("Complete"));
         assert!(json.contains("false"));
+        Ok(())
     }
 
     #[test]
@@ -440,7 +445,7 @@ mod tests {
     }
 
     #[test]
-    fn test_memory_promotion_ltm() {
+    fn test_memory_promotion_ltm() -> Result<(), serde_json::Error> {
         let event = OmegaEvent::MemoryPromotion {
             memory_id: "mem-002".to_string(),
             from_tier: "MTM".to_string(),
@@ -448,10 +453,11 @@ mod tests {
             reason: "Repeated access pattern".to_string(),
         };
 
-        let json = serde_json::to_string(&event).unwrap();
+        let json = serde_json::to_string(&event)?;
         assert!(json.contains("MemoryPromotion"));
         assert!(json.contains("MTM"));
         assert!(json.contains("LTM"));
+        Ok(())
     }
 
     #[test]
@@ -542,21 +548,22 @@ mod tests {
     }
 
     #[test]
-    fn test_event_deserialization() {
+    fn test_event_deserialization() -> Result<(), serde_json::Error> {
         let json = r#"{"type":"Started","request_id":"test","timestamp":123,"input_type":"text"}"#;
-        let event: OmegaEvent = serde_json::from_str(json).unwrap();
+        let event: OmegaEvent = serde_json::from_str(json)?;
 
         if let OmegaEvent::Started { request_id, .. } = event {
             assert_eq!(request_id, "test");
         } else {
             panic!("Wrong event type after deserialization");
         }
+        Ok(())
     }
 
     #[test]
-    fn test_step_event_deserialization() {
+    fn test_step_event_deserialization() -> Result<(), serde_json::Error> {
         let json = r#"{"type":"Step","request_id":"r","stage":"s","engine":"e","duration_ms":100,"success":false}"#;
-        let event: OmegaEvent = serde_json::from_str(json).unwrap();
+        let event: OmegaEvent = serde_json::from_str(json)?;
 
         if let OmegaEvent::Step {
             duration_ms,
@@ -567,10 +574,11 @@ mod tests {
             assert_eq!(duration_ms, 100);
             assert!(!success);
         }
+        Ok(())
     }
 
     #[test]
-    fn test_memory_loaded_zero_counts() {
+    fn test_memory_loaded_zero_counts() -> Result<(), serde_json::Error> {
         let event = OmegaEvent::MemoryLoaded {
             request_id: "empty".to_string(),
             stm_count: 0,
@@ -580,8 +588,9 @@ mod tests {
             duration_ms: 1,
         };
 
-        let json = serde_json::to_string(&event).unwrap();
+        let json = serde_json::to_string(&event)?;
         assert!(json.contains("\"stm_count\":0"));
+        Ok(())
     }
 
     #[test]

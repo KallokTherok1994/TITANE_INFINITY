@@ -3,6 +3,8 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
+import { createLogger } from '@/utils/logger';
+
 /**
  * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ v19.2Ω — AUTO-HEAL ENGINE (NOUVEAU MODULE)
@@ -11,7 +13,9 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-const isDev = process.env.NODE_ENV === 'development';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('[AUTO-HEAL]');
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES AUTO-HEAL
@@ -86,7 +90,7 @@ class AutoHealEngine {
     enablePurge: true,
     enableRestart: true,
     enableFallback: true,
-    logLevel: isDev ? 'debug' : 'warn',
+    logLevel: process.env.NODE_ENV === 'development' ? 'debug' : 'warn',
   };
 
   private errors: Map<string, AutoHealError> = new Map();
@@ -154,13 +158,13 @@ class AutoHealEngine {
 
     // Log selon niveau
     if (this.config.logLevel === 'debug' || severity === 'critical') {
-      isDev &&
-        console.error(`[AUTO-HEAL] Error detected [${errorId}]:`, {
-          type: analyzedType,
-          severity,
-          source,
-          message: autoHealError.message,
-        });
+      logger.error('Error detected', {
+        errorId,
+        type: analyzedType,
+        severity,
+        source,
+        message: autoHealError.message,
+      });
     }
 
     // Déclencher auto-heal si activé
@@ -252,18 +256,12 @@ class AutoHealEngine {
 
       if (action.success) {
         this.updateProviderHealth(error.source, 'recovery');
-        isDev &&
-          console.log(
-            `[AUTO-HEAL] ✅ Healing successful [${action.id}] (${healingDuration}ms)`
-          );
+        logger.info(`✅ Healing successful [${action.id}] (${healingDuration}ms)`);
       } else {
-        isDev &&
-          console.warn(
-            `[AUTO-HEAL] ❌ Healing failed [${action.id}] (${healingDuration}ms)`
-          );
+        logger.warn(`❌ Healing failed [${action.id}] (${healingDuration}ms)`);
       }
     } catch (healingError) {
-      isDev && console.error('[AUTO-HEAL] Healing process crashed:', healingError);
+      logger.error('Healing process crashed:', healingError);
     } finally {
       this.isHealing = false;
 
@@ -394,7 +392,7 @@ class AutoHealEngine {
 
   private async restartProvider(source: string): Promise<boolean> {
     try {
-      isDev && console.log(`[AUTO-HEAL] Restarting provider: ${source}`);
+      logger.debug(`Restarting provider: ${source}`);
 
       // Simulation restart (implémentation dépend du provider)
       await new Promise(resolve => setTimeout(resolve, 500));
@@ -404,40 +402,40 @@ class AutoHealEngine {
 
       return true;
     } catch (error) {
-      isDev && console.error(`[AUTO-HEAL] Restart failed for ${source}:`, error);
+      logger.error('Restart failed', { source, error });
       return false;
     }
   }
 
   private async activateFallback(source: string): Promise<boolean> {
     try {
-      isDev && console.log(`[AUTO-HEAL] Activating fallback for: ${source}`);
+      logger.debug(`Activating fallback for: ${source}`);
 
       // Toujours réussir car titane-local est toujours disponible
       return true;
     } catch (error) {
-      isDev && console.error(`[AUTO-HEAL] Fallback activation failed:`, error);
+      logger.error('Fallback activation failed', { error });
       return false;
     }
   }
 
   private async purgeCache(source: string): Promise<boolean> {
     try {
-      isDev && console.log(`[AUTO-HEAL] Purging cache for: ${source}`);
+      logger.debug(`Purging cache for: ${source}`);
 
       // Simulation purge cache
       await new Promise(resolve => setTimeout(resolve, 200));
 
       return true;
     } catch (error) {
-      isDev && console.error(`[AUTO-HEAL] Cache purge failed:`, error);
+      logger.error('Cache purge failed', { source, error });
       return false;
     }
   }
 
   private async resetConnection(source: string): Promise<boolean> {
     try {
-      isDev && console.log(`[AUTO-HEAL] Resetting connection: ${source}`);
+      logger.debug(`Resetting connection: ${source}`);
 
       // Simulation reset connection
       await new Promise(resolve => setTimeout(resolve, 300));
@@ -446,28 +444,28 @@ class AutoHealEngine {
 
       return true;
     } catch (error) {
-      isDev && console.error(`[AUTO-HEAL] Connection reset failed:`, error);
+      logger.error('Connection reset failed', { source, error });
       return false;
     }
   }
 
   private async isolateProvider(source: string): Promise<boolean> {
     try {
-      isDev && console.log(`[AUTO-HEAL] Isolating provider: ${source}`);
+      logger.debug(`Isolating provider: ${source}`);
 
       // Marquer comme isolé
       this.updateProviderHealth(source, 'isolate');
 
       return true;
     } catch (error) {
-      isDev && console.error(`[AUTO-HEAL] Provider isolation failed:`, error);
+      logger.error('Provider isolation failed', { source, error });
       return false;
     }
   }
 
   private async reconnectProvider(source: string): Promise<boolean> {
     try {
-      isDev && console.log(`[AUTO-HEAL] Reconnecting provider: ${source}`);
+      logger.debug(`Reconnecting provider: ${source}`);
 
       // Simulation reconnection
       await new Promise(resolve => setTimeout(resolve, 800));
@@ -476,14 +474,14 @@ class AutoHealEngine {
 
       return true;
     } catch (error) {
-      isDev && console.error(`[AUTO-HEAL] Reconnection failed:`, error);
+      logger.error('Reconnection failed', { source, error });
       return false;
     }
   }
 
   private async restoreFromBackup(source: string): Promise<boolean> {
     try {
-      isDev && console.log(`[AUTO-HEAL] Restoring from backup: ${source}`);
+      logger.debug(`Restoring from backup: ${source}`);
 
       // Simulation restoration
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -492,7 +490,7 @@ class AutoHealEngine {
 
       return true;
     } catch (error) {
-      isDev && console.error(`[AUTO-HEAL] Backup restoration failed:`, error);
+      logger.error('Backup restoration failed', { source, error });
       return false;
     }
   }
@@ -641,7 +639,7 @@ class AutoHealEngine {
    */
   configure(config: Partial<AutoHealConfig>): void {
     this.config = { ...this.config, ...config };
-    isDev && console.log('[AUTO-HEAL] Configuration updated:', this.config);
+    logger.debug('Configuration updated:', this.config);
   }
 
   /**
@@ -661,7 +659,7 @@ class AutoHealEngine {
       lastHeal: 0,
       healthScore: 100,
     };
-    isDev && console.log('[AUTO-HEAL] Stats reset complete');
+    logger.debug('Stats reset complete');
   }
 
   /**

@@ -13,6 +13,10 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('InputValidator');
+
 export class InputValidator {
   private readonly MAX_LENGTH = 10000;
   private readonly MIN_LENGTH = 1;
@@ -35,7 +39,7 @@ export class InputValidator {
 
     if (sanitized.length > this.MAX_LENGTH) {
       sanitized = sanitized.substring(0, this.MAX_LENGTH);
-      console.warn(`Message tronqué à ${this.MAX_LENGTH} caractères`);
+      logger.warn(`Message truncated to ${this.MAX_LENGTH} characters`);
     }
 
     // Sanitize HTML/Scripts

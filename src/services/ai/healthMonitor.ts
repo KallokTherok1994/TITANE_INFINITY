@@ -11,11 +11,11 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { metricsEngine } from './metricsEngine';
-import { autoHealEngine } from './autoHealEngine';
+import { getMetricsEngine, getAutoHealEngine } from './system';
 import { aiOrchestrator } from './orchestrator';
+import { createLogger } from '@/utils/logger';
 
-const isDev = process.env.NODE_ENV === 'development';
+const logger = createLogger('HealthMonitor');
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -62,11 +62,11 @@ class AIHealthMonitor {
    */
   startMonitoring(): void {
     if (this.monitoringInterval) {
-      isDev && console.log('[HEALTH MONITOR] Already running');
+      logger.debug('Already running');
       return;
     }
 
-    isDev && console.log('[HEALTH MONITOR] Starting continuous monitoring...');
+    logger.info('Starting continuous monitoring...');
 
     this.monitoringInterval = window.setInterval(() => {
       this.performHealthCheck();
@@ -83,7 +83,7 @@ class AIHealthMonitor {
     if (this.monitoringInterval) {
       clearInterval(this.monitoringInterval);
       this.monitoringInterval = null;
-      isDev && console.log('[HEALTH MONITOR] Stopped');
+      logger.debug('Stopped');
     }
   }
 
@@ -92,8 +92,13 @@ class AIHealthMonitor {
    */
   private async performHealthCheck(): Promise<void> {
     try {
-      const metricsHealth = metricsEngine.getHealthStats();
-      const autoHealStats = autoHealEngine.getStats();
+      const [metrics, autoHeal] = await Promise.all([
+        getMetricsEngine(),
+        getAutoHealEngine(),
+      ]);
+
+      const metricsHealth = metrics.getHealthStats();
+      const autoHealStats = autoHeal.getStats();
       const orchestratorHealth = await aiOrchestrator.healthCheck();
 
       // Analyser et générer alertes si nécessaire
@@ -104,12 +109,9 @@ class AIHealthMonitor {
       // Nettoyage vieilles alertes
       this.cleanupOldAlerts();
 
-      isDev &&
-        console.log(
-          `[HEALTH MONITOR] Check complete: ${this.alerts.length} active alerts`
-        );
+      logger.debug(`Check complete: ${this.alerts.length} active alerts`);
     } catch (error) {
-      isDev && console.error('[HEALTH MONITOR] Check failed:', error);
+      logger.error('Check failed:', error);
     }
   }
 
@@ -271,8 +273,7 @@ class AIHealthMonitor {
       this.alerts = this.alerts.slice(-this.MAX_ALERTS);
     }
 
-    isDev &&
-      console.log(`[HEALTH MONITOR] 🚨 ${alert.severity.toUpperCase()}: ${alert.title}`);
+    logger.warn(`🚨 ${alert.severity.toUpperCase()}: ${alert.title}`);
   }
 
   /**
@@ -289,8 +290,9 @@ class AIHealthMonitor {
    * Obtenir rapport de santé complet
    */
   async getHealthReport(): Promise<HealthReport> {
-    const metricsHealth = metricsEngine.getHealthStats();
-    const metrics = metricsEngine.getAggregatedMetrics();
+    const metrics = await getMetricsEngine();
+    const metricsHealth = metrics.getHealthStats();
+    const metricsData = metrics.getAggregatedMetrics();
     const orchestratorHealth = await aiOrchestrator.healthCheck();
 
     // Calculer score global
@@ -329,7 +331,7 @@ class AIHealthMonitor {
         const severityOrder = { critical: 0, warning: 1, info: 2 };
         return severityOrder[a.severity] - severityOrder[b.severity];
       }),
-      providers: metrics.providers.map(p => ({
+      providers: metricsData.providers.map(p => ({
         name: p.provider,
         status:
           p.successRate > 90 && p.avgLatency < 5000
@@ -362,15 +364,15 @@ class AIHealthMonitor {
    */
   resolveAlert(alertId: string): void {
     this.alerts = this.alerts.filter(a => a.id !== alertId);
-    isDev && console.log(`[HEALTH MONITOR] Alert ${alertId} resolved`);
+    logger.debug(`Alert ${alertId} resolved`);
   }
 
   /**
    * Nettoyer toutes les alertes
    */
-  clearAlerts(): void {
+  clearAllAlerts(): void {
     this.alerts = [];
-    isDev && console.log('[HEALTH MONITOR] All alerts cleared');
+    logger.debug('All alerts cleared');
   }
 }
 

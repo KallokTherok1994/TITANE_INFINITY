@@ -16,6 +16,9 @@ import {
   type SecureAIResponse,
   type ChatResponse,
 } from '@/lib/security';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('ChatClient');
 
 // ═══════════════════════════════════════════════════════════════
 // TYPES
@@ -170,7 +173,9 @@ export async function sendMessage(
           ? 'google'
           : 'ollama',
     model,
-    userId: 'system', // TODO: Get from auth context
+    userId:
+      (typeof window !== 'undefined' && (window as any).__TITANE_USER_ID__) ||
+      'anonymous',
     metadata: {
       temperature,
       maxTokens,
@@ -258,7 +263,7 @@ export async function sendMessage(
         duration: Date.now() - startTime,
       };
     } catch (error) {
-      console.warn(`[ChatClient] Attempt ${attempt}/${retries} failed:`, error);
+      logger.warn(`Attempt ${attempt}/${retries} failed`, error);
 
       if (attempt < retries) {
         await new Promise(resolve => setTimeout(resolve, retryDelay * attempt));
@@ -271,7 +276,7 @@ export async function sendMessage(
   // ============================================================
   for (const fallbackModel of fallbackModels) {
     try {
-      console.log(`[ChatClient] Trying fallback model: ${fallbackModel}`);
+      logger.debug(`Trying fallback model: ${fallbackModel}`);
 
       const fallbackRequest = { ...secureRequest, model: fallbackModel };
       const fallbackResult = await SecureAIService.executeSecureChat(
@@ -310,7 +315,7 @@ export async function sendMessage(
         };
       }
     } catch (error) {
-      console.warn(`[ChatClient] Fallback ${fallbackModel} failed:`, error);
+      logger.warn(`Fallback ${fallbackModel} failed`, error);
     }
   }
 

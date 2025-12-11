@@ -34,7 +34,7 @@ import { ChatModeSelector } from '../../components/chat/ChatModeSelector';
 import { ModeBadge } from '../../components/chat/ModeBadge';
 import { VoiceConversation } from '../../components/VoiceConversation';
 import type { ChatModeId } from '../../services/ai/chatModes.config';
-import { autoHealEngine } from '../../services/ai/autoHealEngine';
+import { getAutoHealEngine } from '../../services/ai/system';
 // Phase 1.9: Audio Feedback - VAD + TTS integration
 import useVAD, { useVADWithTTS, useBargeInHandler } from '../../hooks/useVAD';
 import './styles/Chat.css';
@@ -424,12 +424,16 @@ function useOmegaRenderProtection() {
   const handleRenderError = useCallback((error: Error, context: string) => {
     renderAttempts.current++;
 
-    // Auto-heal trigger
-    autoHealEngine.heal('chat-page', error, 'validation', {
-      context,
-      renderAttempts: renderAttempts.current,
-      timestamp: Date.now(),
-    });
+    // Auto-heal trigger (lazy loaded)
+    getAutoHealEngine()
+      .then(autoHeal => {
+        autoHeal.heal('chat-page', error, 'validation', {
+          context,
+          renderAttempts: renderAttempts.current,
+          timestamp: Date.now(),
+        });
+      })
+      .catch(console.error);
 
     setPageState(prev => ({
       ...prev,

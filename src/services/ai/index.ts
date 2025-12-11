@@ -39,8 +39,9 @@ export {
   type ChatEngineConfig,
   type ChatEngineResponse,
 } from './chatEngine';
-export { autoHealEngine } from './autoHealEngine';
-export { metricsEngine } from './metricsEngine';
+// ⚠️ Engines now lazy-loaded via system.ts helpers:
+// Use getAutoHealEngine(), getMetricsEngine(), getHealthMonitor()
+export { getAutoHealEngine, getMetricsEngine, getHealthMonitor } from './system';
 
 // Providers
 export { geminiProvider } from './providers/gemini';

@@ -33,7 +33,7 @@ import { invoke as _invoke } from '@tauri-apps/api/core';
 import { secureInvoke } from '@/lib/security';
 import { voiceService as _voiceService } from '@/services/api';
 import { hybridTTS } from '@/services/tts/hybridTTS';
-import { autoHealEngine } from '@/services/ai/autoHealEngine';
+import { getAutoHealEngine } from '@/services/ai/system';
 import type { AutoHealError as _AutoHealError } from '@/services/ai/autoHealEngine';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -697,8 +697,9 @@ export class VocalDevConsoleEngine {
         return { output: '✅ No issues detected. System healthy.' };
       }
 
-      // Trigger self-healing
-      const healResult = await autoHealEngine.heal(
+      // Trigger self-healing (lazy loaded)
+      const autoHeal = await getAutoHealEngine();
+      const healResult = await autoHeal.heal(
         'vocal-dev',
         new Error(`Issues: ${diagnostics.issues.join(', ')}`)
       );

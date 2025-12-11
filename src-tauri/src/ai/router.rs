@@ -147,7 +147,15 @@ impl AIRouter {
 
     /// Execute AI query with automatic cascade fallback v20.1
     /// Fallback chain: Cache → UnifiedIA (Claude→OpenAI) → Gemini → Ollama
+    /// v21: Force Ollama if provider_preference = "local" or "ollama"
     pub async fn query(&self, request: AIRequest) -> AIResult<AIResponse> {
+        // v21 FIX: Force Ollama en mode local (provider_preference = "local" | "ollama")
+        if let Some(ref pref) = request.provider_preference {
+            if pref == "local" || pref == "ollama" {
+                info!("[AI Router v21] 🏠 LOCAL MODE FORCED - Direct Ollama (provider_preference={})", pref);
+                return self.query_ollama_direct(&request).await;
+            }
+        }
         let query_start = Instant::now();
 
         log::info!(
@@ -344,6 +352,34 @@ impl AIRouter {
 
         providers.push(AIProvider::Ollama);
         providers
+    }
+
+    /// v21: Direct Ollama query (used for local mode force)
+    async fn query_ollama_direct(&self, request: &AIRequest) -> AIResult<AIResponse> {
+        let query_start = Instant::now();
+
+        if !self.ollama_client.is_available().await {
+            log::error!("[AI Router v21] 🏠 LOCAL MODE: Ollama NOT available");
+            return Err(AIError::NoProviderAvailable);
+        }
+
+        info!("[AI Router v21] 🏠 LOCAL MODE: Routing to Ollama");
+        match self.ollama_client.query(request).await {
+            Ok(response) => {
+                log::info!(
+                    "[AI Router v21] ✅ LOCAL MODE: Ollama success: {} tokens, {}ms",
+                    response.tokens,
+                    query_start.elapsed().as_millis()
+                );
+                // Cache the response
+                self.cache_response(request, &response).await;
+                Ok(response)
+            }
+            Err(e) => {
+                log::error!("[AI Router v21] ❌ LOCAL MODE: Ollama failed: {}", e);
+                Err(e)
+            }
+        }
     }
 
     pub async fn health_check(&self) -> serde_json::Value {
