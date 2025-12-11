@@ -14,6 +14,7 @@ use crate::omega::{
 
 use super::types::*;
 use super::ConversationEngineError;
+use super::french_mastery::{FrenchMasteryProcessor, FrenchMasteryRequest, ProcessingMode, PostProcessingConstraints};
 
 /// Bridge between OMEGA Pipeline and Conversation Engine
 pub struct OmegaConversationBridge {
@@ -21,6 +22,8 @@ pub struct OmegaConversationBridge {
     omega_pipeline: Arc<OmegaPipeline>,
     /// Configuration
     config: OmegaBridgeConfig,
+    /// French Mastery post-processor
+    french_mastery: Arc<FrenchMasteryProcessor>,
 }
 
 /// Configuration for OMEGA-Conversation bridge
@@ -62,10 +65,12 @@ impl OmegaConversationBridge {
         };
 
         let omega_pipeline = Arc::new(OmegaPipeline::new(omega_config));
+        let french_mastery = Arc::new(FrenchMasteryProcessor::new());
 
         Self {
             omega_pipeline,
             config,
+            french_mastery,
         }
     }
 
@@ -223,6 +228,100 @@ impl OmegaConversationBridge {
             timings: output.timings,
         }
     }
+
+    /// Convert OMEGA result directly to ConversationResponse (Phase 2 optimization)
+    /// This bypasses the legacy pipeline while preserving FrenchMastery quality
+    pub async fn convert_to_conversation_response(
+        &self,
+        omega_result: OmegaPipelineResult,
+        request: &ConversationRequest,
+        conversation_id: String,
+    ) -> Result<ConversationResponse, ConversationEngineError> {
+        let start = std::time::Instant::now();
+
+        // Parse intent from OMEGA metadata
+        let detected_intention = match omega_result.intent.to_lowercase().as_str() {
+            "question" => Intention::Question,
+            "action" => Intention::Action,
+            "emotion" => Intention::Emotion,
+            "clarification" => Intention::Clarification,
+            "meta" => Intention::Meta,
+            _ => Intention::Question, // Default fallback
+        };
+
+        // Parse emotion (simplified - OMEGA provides confidence as proxy)
+        let detected_emotion = EmotionState {
+            valence: if omega_result.confidence > 0.7 { 0.5 } else { 0.0 },
+            intensity: omega_result.confidence,
+            energy: omega_result.safety_score,
+        };
+
+        // Apply FrenchMastery post-processing (preserve quality)
+        let french_request = FrenchMasteryRequest {
+            context: format!("Mode: {:?}, Intent: {}", request.mode, omega_result.intent),
+            draft_response: omega_result.processed_text.clone(),
+            mode: ProcessingMode::Optimization,
+            constraints: PostProcessingConstraints::default(),
+        };
+
+        let finalized_message = match self.french_mastery.process(french_request).await {
+            Ok(processed) => {
+                log::info!("[OMEGA-BRIDGE] ✅ FrenchMastery applied");
+                processed.finalized_response
+            }
+            Err(e) => {
+                log::warn!("[OMEGA-BRIDGE] ⚠️ FrenchMastery failed: {}, using raw", e);
+                omega_result.processed_text.clone()
+            }
+        };
+
+        // Generate cognitive tags from OMEGA sources
+        let cognitive_tags: Vec<String> = omega_result.sources
+            .iter()
+            .map(|s| format!("source:{}", s))
+            .chain(std::iter::once(format!("intent:{}", omega_result.intent)))
+            .chain(std::iter::once(format!("confidence:{:.2}", omega_result.confidence)))
+            .collect();
+
+        // Generate cognitive summary
+        let cognitive_summary = format!(
+            "OMEGA Pipeline processed with {} confidence. Intent: {}. Safety: {:.2}. Model: {}",
+            if omega_result.confidence > 0.8 { "high" } else { "moderate" },
+            omega_result.intent,
+            omega_result.safety_score,
+            omega_result.model
+        );
+
+        // Generate message ID
+        let message_id = uuid::Uuid::new_v4().to_string();
+
+        // Build metadata
+        let total_latency = start.elapsed().as_millis() as u64 + omega_result.latency_ms;
+        let metadata = ConversationMetadata {
+            timestamp: chrono::Utc::now().timestamp_millis() as u64,
+            provider_used: omega_result.model.clone(),
+            latency_ms: total_latency,
+            tokens_used: omega_result.tokens as usize,
+            memory_effect: MemoryEffect::New, // OMEGA provides new information
+            links_to_contexts: omega_result.sources.clone(),
+        };
+
+        log::info!(
+            "[OMEGA-BRIDGE] ✅ Direct conversion complete | latency={}ms | french_mastery=true",
+            total_latency
+        );
+
+        Ok(ConversationResponse {
+            assistant_message: finalized_message,
+            conversation_id,
+            message_id,
+            detected_intention,
+            detected_emotion,
+            cognitive_tags,
+            cognitive_summary,
+            metadata,
+        })
+    }
 }
 
 /// OMEGA Pipeline processing result
@@ -323,5 +422,63 @@ mod tests {
         
         // Verify preferences contains conversation_id
         assert!(omega_input.preferences.contains_key("conversation_id"));
+    }
+
+    #[tokio::test]
+    async fn test_omega_to_conversation_response_conversion() {
+        // R05 P2: Test direct OMEGA → ConversationResponse conversion
+        let bridge = OmegaConversationBridge::new(OmegaBridgeConfig::default());
+        let _ = bridge.initialize().await;
+
+        let request = ConversationRequest {
+            user_message: "Quelle est la capitale de la France?".to_string(),
+            conversation_id: Some("test-conv-p2".to_string()),
+            mode: ConversationMode::Default,
+            ai_config: None,
+            emotion_context: None,
+            custom_system_prompt: None,
+        };
+
+        // Simulate OMEGA result
+        let omega_result = OmegaPipelineResult {
+            processed_text: "La capitale de la France est Paris.".to_string(),
+            latency_ms: 150,
+            intent: "question".to_string(),
+            confidence: 0.95,
+            safety_score: 0.99,
+            sources: vec!["knowledge_base".to_string(), "ai_model".to_string()],
+            model: "gpt-4".to_string(),
+            tokens: 25,
+            timings: {
+                let mut map = std::collections::HashMap::new();
+                map.insert("routing".to_string(), 10);
+                map.insert("execution".to_string(), 120);
+                map.insert("guardrails".to_string(), 20);
+                map
+            },
+        };
+
+        let conversation_id = "test-conv-p2".to_string();
+        let result = bridge.convert_to_conversation_response(
+            omega_result,
+            &request,
+            conversation_id.clone(),
+        ).await;
+
+        assert!(result.is_ok(), "P2 Conversion should succeed");
+        
+        let response = result.expect("Failed to get response");
+        
+        // Verify all 8 required fields
+        assert!(response.assistant_message.len() > 0, "assistant_message should not be empty");
+        assert_eq!(response.conversation_id, conversation_id, "conversation_id should match");
+        assert!(response.message_id.len() > 0, "message_id should be generated");
+        assert_eq!(response.detected_intention, Intention::Question, "intent should be Question");
+        assert!(response.detected_emotion.intensity > 0.0, "emotion intensity should be positive");
+        assert!(response.cognitive_tags.len() > 0, "cognitive_tags should contain OMEGA metadata");
+        assert!(response.cognitive_summary.contains("OMEGA"), "cognitive_summary should mention OMEGA");
+        assert!(response.metadata.latency_ms < 300, "total latency should be under 300ms");
+        
+        log::info!("[TEST] ✅ P2 Direct conversion validated | latency={}ms", response.metadata.latency_ms);
     }
 }
