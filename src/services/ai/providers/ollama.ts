@@ -250,18 +250,19 @@ function handleOllamaError(error: unknown, context: string, metadata?: any): voi
         timestamp: Date.now(),
       });
     })
-    .catch(console.error);
+    .catch(error => logger.error('Failed to record error', { error }));
 
-  isDev &&
-    console.error(
-      `[OLLAMA OMEGA] Error [${context}]: ${errorObj.message} (${errorCount}/${MAX_ENDPOINT_ERRORS})`
-    );
+  logger.error('Error in Ollama provider', {
+    context,
+    message: errorObj.message,
+    errorCount,
+    maxErrors: MAX_ENDPOINT_ERRORS,
+  });
 
   // Mark as unhealthy if too many errors
   if (errorCount >= MAX_ENDPOINT_ERRORS) {
     endpointHealthy = false;
-    isDev &&
-      console.warn(`[OLLAMA OMEGA] Endpoint marked unhealthy after ${errorCount} errors`);
+    logger.warn('Endpoint marked unhealthy', { errorCount });
   }
 }
 
@@ -455,7 +456,7 @@ export const ollamaProvider: AIProvider = {
           mode: 'chat',
         })
         .catch(err => {
-          isDev && console.warn('[OLLAMA] Failed to save interaction to memory:', err);
+          logger.warn('Failed to save interaction to memory', { error: err });
         });
 
       return aiResponse;
@@ -572,12 +573,12 @@ export const ollamaProvider: AIProvider = {
             mode: 'chat',
           })
           .catch(err => {
-            isDev && console.warn('[OLLAMA] Failed to save streaming interaction:', err);
+            logger.warn('Failed to save streaming interaction', { error: err });
           });
       }
     } catch (error) {
       handleOllamaError(error, 'stream_error');
-      console.error('Ollama streaming error:', error);
+      logger.error('Streaming error', { error });
       throw error;
     }
   },

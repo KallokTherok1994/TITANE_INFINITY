@@ -421,7 +421,7 @@ export const titaneLocalProvider: AIProvider = {
       };
     } catch (error) {
       // ═══ FALLBACK ULTIME OMEGA - JAMAIS D'ÉCHEC ═══
-      console.error('[TITANE OMEGA] Erreur noyau autonome (récupérable):', error);
+      logger.error('Autonomous kernel error (recoverable)', { error });
 
       const emergencyTime = Date.now() - generateStartTime;
 

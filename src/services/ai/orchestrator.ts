@@ -907,8 +907,10 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
     this.currentRequests++;
 
     try {
-      isDev &&
-        console.debug('[OMEGA] Provider execution start', requestId, provider.name);
+      logger.debug('Provider execution start', {
+        requestId,
+        provider: provider.name,
+      });
       // Availability check with short timeout
       const availabilityPromise = provider.isAvailable();
       const availabilityTimeout = new Promise<boolean>((_, reject) =>
@@ -1118,7 +1120,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
           return; // Simulation successful
         }
       } catch (error) {
-        isDev && console.warn(`[OMEGA STREAM] ${providerName} failed:`, error);
+        logger.warn('Stream provider failed', { provider: providerName, error });
 
         // Auto-heal pour streaming failures
         autoHealEngine.heal(

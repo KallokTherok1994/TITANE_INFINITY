@@ -65,7 +65,7 @@ export const claudeProvider: AIProvider = {
       return response.ok && response.data?.configured === true;
     } catch (error) {
       if (process.env.NODE_ENV === 'development') {
-        console.warn('[ClaudeProvider] Status check failed:', error);
+        logger.warn('Status check failed', { error });
       }
       return false;
     }
@@ -174,7 +174,7 @@ export const claudeProvider: AIProvider = {
             }
           );
         })
-        .catch(console.error);
+        .catch(error => logger.error('Failed to save interaction', { error }));
 
       // Re-throw erreurs typées
       if (error instanceof Error) {
