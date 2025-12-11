@@ -11,7 +11,7 @@ pub mod unified_memory; // v20.0 - Fusion #2: Memory #5 + MemoryModule + Singula
 pub use coherence::CoherenceEngine;
 pub use harmonia::HarmoniaModule;
 pub use system_health::SystemHealth;
-pub use unified_memory::UnifiedMemory;
+pub use unified_memory::{UnifiedMemory, MemoryType};
 
 // Deprecated modules (v19.5.2) - Migrated to new fusions
 // pub mod nexus;      → CoherenceEngine

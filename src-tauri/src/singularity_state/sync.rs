@@ -59,6 +59,7 @@ impl EventSyncLayer {
 
 #[cfg(test)]
 mod tests {
+    #[allow(unused_imports)]
     use super::*;
 
     // Note: Tests nécessitent un AppHandle Tauri réel

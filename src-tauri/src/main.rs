@@ -118,6 +118,8 @@ mod core {
     pub mod utils {
         include!("core/utils.rs");
     }
+    // Re-export from library for overdrive modules compatibility
+    pub use titane_infinity::core::{UnifiedMemory, MemoryType};
 }
 
 mod error {
