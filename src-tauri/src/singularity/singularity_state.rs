@@ -1,6 +1,27 @@
 /**
- * TITANE∞ v∞ - Singularity State (Phase Ω)
- * État global ultime
+ * ═══════════════════════════════════════════════════════════════════
+ * TITANE∞ v∞ — SINGULARITY META-PROCESSING (Chat IA Specific)
+ * ═══════════════════════════════════════════════════════════════════
+ * 
+ * Rôle: Meta-cognitive validation des conversations Chat IA
+ * Scope: Conversation-specific (ConversationPipeline Step 12 uniquement)
+ * Usage: process_message() → ConversationPipeline → Singularity
+ * 
+ * Fonctionnalités:
+ * - Validation cohérence (réponse ↔ intention détectée)
+ * - Analyse style (French-only, détection fuites anglais)
+ * - Critères LTM (suggestions consolidation mémoire)
+ * - Détection ambiguïtés (marqueurs incertitude)
+ * - Enrichissement metadata (meta-tags, coherence scores)
+ * 
+ * IMPORTANT: Ce module est DISTINCT de `singularity_state/mod.rs`
+ * (System-wide monitoring 5 layers). Voir ARCHITECTURE_DUAL_STATE.md
+ * pour clarification rôles.
+ * 
+ * Documentation: SINGULARITY_INTEGRATION_COMPLETE.md
+ * Tests: omega_p2_performance_test.rs (3/3 passing)
+ * Status: ✅ Production-ready (commit 47d8e3a, 10 déc 2025)
+ * ═══════════════════════════════════════════════════════════════════
  */
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;

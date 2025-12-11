@@ -99,3 +99,5 @@ add_license_headers*.sh
 
 *storybook.log
 storybook-static
+src-tauri/data/
+src-tauri/vault/encrypted/
