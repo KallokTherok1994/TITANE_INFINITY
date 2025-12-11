@@ -25,7 +25,7 @@ export const geminiProvider: AIProvider = {
     return false;
   },
 
-  async generate(message: string, history: AIMessage[] = []): Promise<AIResponse> {
+  async generate(message: string, _history: AIMessage[] = []): Promise<AIResponse> {
     // GEMINI DÉSACTIVÉ
     throw new Error(
       'Gemini provider is disabled. Please use OpenAI, Claude, Ollama, or Local providers.'

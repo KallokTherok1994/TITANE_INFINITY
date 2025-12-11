@@ -636,7 +636,7 @@ export const ChatPage = (): JSX.Element => {
 
       setIsSending(false);
     },
-    [provider, conversationId, currentModeId] // currentModeId added to dependencies
+    [provider, conversationId, currentModeId, currentInstructionMode.systemPrompt]
   );
 
   return (
