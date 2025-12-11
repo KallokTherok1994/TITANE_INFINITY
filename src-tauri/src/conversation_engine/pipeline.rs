@@ -10,7 +10,9 @@ use tokio::sync::RwLock;
 
 use crate::ai::router::AIRouter;
 use crate::ai::{AIRequest, AIResponse};
-use crate::singularity::singularity_state::SingularityState;
+use crate::singularity::singularity_state::{
+    SingularityState, ChatContext,
+};
 
 use super::api_neutralizer::ApiNeutralizer;
 use super::cognitive::CognitiveCompressor;
@@ -183,7 +185,7 @@ impl ConversationPipeline {
             )
             .await?;
 
-        // ÉTAPE 10: Synchronisation SingularityState
+        // ÉTAPE 10: Synchronisation SingularityState (legacy)
         self.sync_singularity(&emotion, &cognitive_summary).await?;
 
         // ÉTAPE 11: Self-Healing check
@@ -193,24 +195,75 @@ impl ConversationPipeline {
             .verify_state(&conversation_id)
             .await?;
 
+        // ═══════════════════════════════════════════════════════════════
+        // ÉTAPE 12: 🌌 SINGULARITY META-PROCESSING (NOUVEAU)
+        // Meta-analyse conversationnelle finale avec Singularity Engine
+        // - Validation cohérence globale
+        // - Enrichissement meta-tags
+        // - Suggestions LTM
+        // - Corrections style/identité si nécessaire
+        // ═══════════════════════════════════════════════════════════════
+        let singularity_result = {
+            let context = ChatContext {
+                user_message: validated_message.clone(),
+                ai_response: neutralized_response.content.clone(),
+                conversation_id: conversation_id.clone(),
+                intention: format!("{:?}", intention),
+                emotion_state: (emotion.valence, emotion.intensity, emotion.energy),
+                cognitive_summary: cognitive_summary.summary.clone(),
+                cognitive_tags: cognitive_summary.tags.clone(),
+                memory_context: memory_context.clone(),
+            };
+
+            let mut singularity = self.singularity.write().await;
+            singularity.singularity_meta_process_conversation(context).await
+        };
+
+        // Appliquer résultat Singularity ou fallback sur réponse originale
+        let (final_message, final_tags, singularity_latency) = match singularity_result {
+            Ok(meta_output) => {
+                log::info!(
+                    "[Ω:SINGULARITY] ✅ Meta-processing success | coherence={:.2} | corrections={}",
+                    meta_output.meta_coherence,
+                    meta_output.corrections_applied.len()
+                );
+                (
+                    meta_output.final_message,
+                    meta_output.meta_tags,
+                    0, // Latency déjà loggée dans singularity_meta_process_conversation
+                )
+            }
+            Err(e) => {
+                log::warn!(
+                    "[Ω:SINGULARITY] ⚠️ Meta-processing failed: {} | using original response",
+                    e
+                );
+                (
+                    neutralized_response.content.clone(),
+                    cognitive_summary.tags.clone(),
+                    0,
+                )
+            }
+        };
+
         let final_latency = start.elapsed().as_millis() as u64;
 
         // 🔍 LOG SORTIE PIPELINE OMEGA
         log::info!(
-            "[Ω:OUT] latency={}ms | tokens={} | french_mastery=true | provider={}",
+            "[Ω:OUT] latency={}ms | tokens={} | french_mastery=true | singularity=true | provider={}",
             final_latency,
             neutralized_response.tokens_used,
             neutralized_response.provider
         );
 
-        // Construction réponse
+        // Construction réponse ENRICHIE par Singularity
         Ok(ConversationResponse {
-            assistant_message: neutralized_response.content,
+            assistant_message: final_message,
             conversation_id,
             message_id,
             detected_intention: intention,
             detected_emotion: emotion,
-            cognitive_tags: cognitive_summary.tags,
+            cognitive_tags: final_tags, // ← Enrichis par Singularity
             cognitive_summary: cognitive_summary.summary,
             metadata: ConversationMetadata {
                 timestamp: chrono::Utc::now().timestamp_millis() as u64,
