@@ -17,13 +17,13 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import {
-  getAutoHealEngine as _getAutoHealEngine,
-  getMetricsEngine as _getMetricsEngine,
-} from './system';
+import { createLogger } from '@/utils/logger';
+import type { EmotionState } from '@/types';
+import metricsEngine from './metricsEngine';
+import autoHealEngine from './autoHealEngine';
 import { cognitiveKernel } from './cognitiveKernel';
 
-const isDev = process.env.NODE_ENV === 'development';
+const logger = createLogger('[META-KERNEL]');
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES META-KERNEL

@@ -15,8 +15,7 @@ import { createLogger } from '@/utils/logger';
 
 import { createLogger } from '@/utils/logger';
 
-const logger = createLogger('AutoHeal');
-const isDev = process.env.NODE_ENV === 'development';
+const logger = createLogger('[AUTO-HEAL]');
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES AUTO-HEAL
@@ -91,7 +90,7 @@ class AutoHealEngine {
     enablePurge: true,
     enableRestart: true,
     enableFallback: true,
-    logLevel: isDev ? 'debug' : 'warn',
+    logLevel: process.env.NODE_ENV === 'development' ? 'debug' : 'warn',
   };
 
   private errors: Map<string, AutoHealError> = new Map();
