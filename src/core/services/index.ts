@@ -33,8 +33,8 @@ export type {
 export { unifiedMemory } from './unifiedMemory';
 export type { MemoryEntry, MemoryStats, RecallOptions } from './unifiedMemory';
 
-// 4. SYSTEM HEALTH CORE (Self-Healing) (depuis services/ai/autoHealEngine)
-export { autoHealEngine } from '../../services/ai/autoHealEngine';
+// 4. SYSTEM HEALTH CORE (Self-Healing) - LAZY LOADED
+// ⚠️ Use getAutoHealEngine() from '../../services/ai/system' for lazy loading
 export type {
   AutoHealError,
   AutoHealAction,
@@ -42,8 +42,8 @@ export type {
   AutoHealConfig,
 } from '../../services/ai/autoHealEngine';
 
-// 5. METRICS ENGINE (depuis services/ai)
-export { metricsEngine } from '../../services/ai/metricsEngine';
+// 5. METRICS ENGINE - LAZY LOADED
+// ⚠️ Use getMetricsEngine() from '../../services/ai/system' for lazy loading
 export type { ProviderMetrics } from '../../services/ai/metricsEngine';
 
 // 6. PROVIDER LAYER (Re-export from services/ai/providers)

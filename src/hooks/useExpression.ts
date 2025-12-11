@@ -21,7 +21,8 @@ import {
   type UnifiedMultimodalOutput,
   type UnifiedOutputState,
 } from '@/engines/output/unifiedMultimodalOutputEngine';
-import { auraEngine, type AuraState } from '@/engines/aura/auraEngine';
+import { getAuraEngine } from '@/engines/aura/lazyAuraEngine';
+import type { AuraState } from '@/engines/aura/auraEngine';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // SYNESTHETIC EMOTION HOOKS
@@ -161,22 +162,52 @@ export function useLastOutput(): UnifiedMultimodalOutput | null {
  * Hook principal pour Aura Engine
  */
 export function useAura() {
-  const [state, setState] = useState<AuraState>(auraEngine.getState());
+  const [state, setState] = useState<AuraState | null>(null);
+  const [engine, setEngine] = useState<Awaited<ReturnType<typeof getAuraEngine>> | null>(
+    null
+  );
 
   useEffect(() => {
-    const unsubscribe = auraEngine.subscribe(setState);
-    return unsubscribe;
+    let unsubscribe: (() => void) | undefined;
+
+    getAuraEngine().then(auraEngine => {
+      setEngine(auraEngine);
+      setState(auraEngine.getState());
+      unsubscribe = auraEngine.subscribe(setState);
+    });
+
+    return () => unsubscribe?.();
   }, []);
 
+  const defaultState: AuraState = {
+    affective: {
+      color: { hue: 200, saturation: 60, lightness: 50 },
+      energy: 0.5,
+      intensity: 0.5,
+    },
+    pattern: 'idle' as const,
+    layers: [],
+    particles: [],
+  };
+
   return {
-    state,
-    affective: state.affective,
-    pattern: state.pattern,
-    layers: state.layers,
-    particles: state.particles,
-    updateAudioLevel: (level: number) => auraEngine.updateAudioLevel(level),
-    triggerInsight: () => auraEngine.triggerInsightFlash(),
-    onWakeWord: () => auraEngine.onWakeWord(),
+    state: state ?? defaultState,
+    affective: state?.affective ?? defaultState.affective,
+    pattern: state?.pattern ?? defaultState.pattern,
+    layers: state?.layers ?? defaultState.layers,
+    particles: state?.particles ?? defaultState.particles,
+    updateAudioLevel: async (level: number) => {
+      const e = engine ?? (await getAuraEngine());
+      e.updateAudioLevel(level);
+    },
+    triggerInsight: async () => {
+      const e = engine ?? (await getAuraEngine());
+      e.triggerInsightFlash();
+    },
+    onWakeWord: async () => {
+      const e = engine ?? (await getAuraEngine());
+      e.onWakeWord();
+    },
   };
 }
 

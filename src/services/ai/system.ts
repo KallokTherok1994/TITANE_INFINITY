@@ -26,11 +26,10 @@ export { claudeProvider } from './providers/claude';
 export { ollamaProvider } from './providers/ollama';
 
 // ─────────────────────────────────────────────────────────────────
-// ENGINES v20Ω+
+// ENGINES v20Ω+ — LAZY LOADED (use utility functions below)
 // ─────────────────────────────────────────────────────────────────
-export { autoHealEngine } from './autoHealEngine';
-export { metricsEngine } from './metricsEngine';
-export { aiHealthMonitor } from './healthMonitor';
+// ⚠️ Engines are dynamically imported to enable code-splitting
+// Use getAutoHealEngine(), getMetricsEngine(), getHealthMonitor() instead
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -53,6 +52,34 @@ export type {
 export type { MetricEvent, ProviderMetrics, AggregatedMetrics } from './metricsEngine';
 
 export type { HealthAlert, HealthReport } from './healthMonitor';
+
+// ─────────────────────────────────────────────────────────────────
+// LAZY ENGINE ACCESSORS
+// ─────────────────────────────────────────────────────────────────
+
+/**
+ * 🔄 Lazy load Auto Heal Engine
+ */
+export async function getAutoHealEngine() {
+  const { autoHealEngine } = await import('./autoHealEngine');
+  return autoHealEngine;
+}
+
+/**
+ * 📊 Lazy load Metrics Engine
+ */
+export async function getMetricsEngine() {
+  const { metricsEngine } = await import('./metricsEngine');
+  return metricsEngine;
+}
+
+/**
+ * 🏥 Lazy load Health Monitor
+ */
+export async function getHealthMonitor() {
+  const { aiHealthMonitor } = await import('./healthMonitor');
+  return aiHealthMonitor;
+}
 
 // ─────────────────────────────────────────────────────────────────
 // UTILITIES

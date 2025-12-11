@@ -55,7 +55,7 @@ function DeveloperModePageContent(): JSX.Element {
 
   // 🔐 AUTH OS Integration
   const {
-    status: authStatus,
+    status: _authStatus,
     loading: authLoading,
     error: authError,
     devToken,

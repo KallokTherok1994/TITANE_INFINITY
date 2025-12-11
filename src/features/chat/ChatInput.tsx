@@ -203,7 +203,7 @@ export const ChatInput = ({
         isLoading,
       });
     }
-  }, [value, disabled, isLoading, onSubmit, onChange, isProcessing]);
+  }, [value, disabled, isLoading, onSubmit, onChange, isProcessing, selectedProvider]);
 
   const applySuggestion = useCallback(
     (suggestion: ChatSuggestion): void => {
