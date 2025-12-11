@@ -26,7 +26,6 @@ import { cognitiveKernel } from './cognitiveKernel'; // ← NOUVEAU v22Ω: Cogni
 import { createLogger } from '@/utils/logger';
 
 const logger = createLogger('Orchestrator');
-const isDev = process.env.NODE_ENV === 'development';
 
 // Lazy-loaded engine instances (cached singletons)
 let _autoHeal: Awaited<ReturnType<typeof getAutoHealEngine>> | null = null;

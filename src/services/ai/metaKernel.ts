@@ -18,7 +18,6 @@
  */
 
 import { createLogger } from '@/utils/logger';
-import type { EmotionState } from '@/types';
 import metricsEngine from './metricsEngine';
 import autoHealEngine from './autoHealEngine';
 import { cognitiveKernel } from './cognitiveKernel';
