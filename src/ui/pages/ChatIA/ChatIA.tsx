@@ -297,28 +297,54 @@ export const ChatIA: React.FC = () => {
           )} */}
           {provider === 'openai' && (
             <div className="model-selector">
-              <label>Modèle:</label>
+              <label>Modèle OpenAI:</label>
               <select
-                value={selectedModel || 'gpt-4o'}
+                value={selectedModel || 'gpt-4o-mini'}
                 onChange={e => setSelectedModel(e.target.value)}
               >
-                <option value="gpt-4o">GPT-4o (Latest)</option>
-                <option value="gpt-4-turbo">GPT-4 Turbo</option>
-                <option value="gpt-4">GPT-4</option>
-                <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                <optgroup label="GPT-4o (Recommandé)">
+                  <option value="gpt-4o">GPT-4o (128k context)</option>
+                  <option value="gpt-4o-mini">GPT-4o Mini (Rapide + Économique)</option>
+                </optgroup>
+                <optgroup label="GPT-4 Série">
+                  <option value="gpt-4-turbo">GPT-4 Turbo (128k context)</option>
+                  <option value="gpt-4">GPT-4 (8k context)</option>
+                  <option value="gpt-4-32k">GPT-4 32k</option>
+                </optgroup>
+                <optgroup label="o1 Série (Raisonnement Avancé)">
+                  <option value="o1">o1 (Reasoning)</option>
+                  <option value="o1-mini">o1 Mini</option>
+                  <option value="o1-preview">o1 Preview</option>
+                </optgroup>
+                <optgroup label="GPT-3.5">
+                  <option value="gpt-3.5-turbo">GPT-3.5 Turbo (16k context)</option>
+                  <option value="gpt-3.5-turbo-16k">GPT-3.5 Turbo 16k</option>
+                </optgroup>
               </select>
             </div>
           )}
           {provider === 'anthropic' && (
             <div className="model-selector">
-              <label>Modèle:</label>
+              <label>Modèle Claude:</label>
               <select
                 value={selectedModel || 'claude-3-5-sonnet-20241022'}
                 onChange={e => setSelectedModel(e.target.value)}
               >
-                <option value="claude-3-5-sonnet-20241022">Claude 3.5 Sonnet</option>
-                <option value="claude-3-opus-20240229">Claude 3 Opus</option>
-                <option value="claude-3-sonnet-20240229">Claude 3 Sonnet</option>
+                <optgroup label="Claude 3.5 (Recommandé)">
+                  <option value="claude-3-5-sonnet-20241022">
+                    Claude 3.5 Sonnet (Latest)
+                  </option>
+                  <option value="claude-3-5-haiku-20241022">
+                    Claude 3.5 Haiku (Rapide)
+                  </option>
+                </optgroup>
+                <optgroup label="Claude 3">
+                  <option value="claude-3-opus-20240229">
+                    Claude 3 Opus (Plus Puissant)
+                  </option>
+                  <option value="claude-3-sonnet-20240229">Claude 3 Sonnet</option>
+                  <option value="claude-3-haiku-20240307">Claude 3 Haiku</option>
+                </optgroup>
               </select>
             </div>
           )}

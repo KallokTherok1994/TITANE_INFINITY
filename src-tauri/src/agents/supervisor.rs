@@ -181,7 +181,7 @@ mod tests {
     #[test]
     fn test_agent_health_healthy() {
         let health = AgentHealth {
-            agent_id: AgentId::new("agent1"),
+            agent_id: AgentId::from_string("agent1".to_string()),
             is_healthy: true,
             last_check: 1234567890,
             success_rate: 0.95,
@@ -193,7 +193,7 @@ mod tests {
     #[test]
     fn test_agent_health_unhealthy() {
         let health = AgentHealth {
-            agent_id: AgentId::new("agent1"),
+            agent_id: AgentId::from_string("agent1".to_string()),
             is_healthy: false,
             last_check: 1234567890,
             success_rate: 0.3,
@@ -205,7 +205,7 @@ mod tests {
     #[test]
     fn test_agent_health_debug() {
         let health = AgentHealth {
-            agent_id: AgentId::new("agent1"),
+            agent_id: AgentId::from_string("agent1".to_string()),
             is_healthy: true,
             last_check: 1234567890,
             success_rate: 0.8,
@@ -218,7 +218,7 @@ mod tests {
     #[test]
     fn test_agent_health_clone() {
         let health = AgentHealth {
-            agent_id: AgentId::new("agent1"),
+            agent_id: AgentId::from_string("agent1".to_string()),
             is_healthy: true,
             last_check: 1234567890,
             success_rate: 0.9,
@@ -231,7 +231,7 @@ mod tests {
     #[test]
     fn test_agent_health_serialize() {
         let health = AgentHealth {
-            agent_id: AgentId::new("agent1"),
+            agent_id: AgentId::from_string("agent1".to_string()),
             is_healthy: true,
             last_check: 1234567890,
             success_rate: 0.85,
@@ -253,7 +253,7 @@ mod tests {
     #[test]
     fn test_agent_health_zero_success_rate() {
         let health = AgentHealth {
-            agent_id: AgentId::new("failing_agent"),
+            agent_id: AgentId::from_string("failing_agent".to_string()),
             is_healthy: false,
             last_check: 0,
             success_rate: 0.0,
@@ -264,7 +264,7 @@ mod tests {
     #[test]
     fn test_agent_health_perfect_success_rate() {
         let health = AgentHealth {
-            agent_id: AgentId::new("perfect_agent"),
+            agent_id: AgentId::from_string("perfect_agent".to_string()),
             is_healthy: true,
             last_check: 1000,
             success_rate: 1.0,
@@ -313,8 +313,13 @@ mod tests {
     async fn test_monitor_all_with_agents() {
         let registry = Arc::new(AgentRegistry::new(100));
 
-        use crate::agents::{Agent, AgentRole};
-        let agent = Agent::new(AgentId::new("agent1"), AgentRole::Executor);
+        use crate::agents::{Agent, AgentRole, CapabilitySet, AgentContract};
+        let agent = Agent::with_id(
+            AgentId::from_string("agent1".to_string()),
+            AgentRole::Observer,
+            CapabilitySet::new(),
+            AgentContract::default_for_role(&AgentRole::Observer),
+        );
         registry.register(agent).await.unwrap();
 
         let supervisor = AgentSupervisor::new(registry, 1000, true);
@@ -326,8 +331,13 @@ mod tests {
     async fn test_check_health() {
         let registry = Arc::new(AgentRegistry::new(100));
 
-        use crate::agents::{Agent, AgentRole};
-        let agent = Agent::new(AgentId::new("agent1"), AgentRole::Executor);
+        use crate::agents::{Agent, AgentRole, CapabilitySet, AgentContract};
+        let agent = Agent::with_id(
+            AgentId::from_string("agent1".to_string()),
+            AgentRole::Observer,
+            CapabilitySet::new(),
+            AgentContract::default_for_role(&AgentRole::Observer),
+        );
 
         let supervisor = AgentSupervisor::new(registry, 1000, true);
         let health = supervisor.check_health(&agent).await;
@@ -355,9 +365,14 @@ mod tests {
     async fn test_stats_with_agents() {
         let registry = Arc::new(AgentRegistry::new(100));
 
-        use crate::agents::{Agent, AgentRole};
+        use crate::agents::{Agent, AgentRole, CapabilitySet, AgentContract};
         for i in 0..3 {
-            let agent = Agent::new(AgentId::new(&format!("agent{}", i)), AgentRole::Executor);
+            let agent = Agent::with_id(
+                AgentId::from_string(format!("agent{}", i)),
+                AgentRole::Observer,
+                CapabilitySet::new(),
+                AgentContract::default_for_role(&AgentRole::Observer),
+            );
             registry.register(agent).await.unwrap();
         }
 

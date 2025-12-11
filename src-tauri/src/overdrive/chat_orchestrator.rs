@@ -5,11 +5,38 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 use crate::core::tapi_error::TAPIError;
+use crate::core::modules::unified_memory::{UnifiedMemory, MemoryType};
 use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tauri::State;
 use tokio::sync::RwLock;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ADAPTIVE TIMEOUT CONFIGURATION (R02 - P1 FIX)
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// Timeout adaptatif selon la longueur du message et le provider
+/// Résout R02: "Timeout 50s trop élevé" (Audit v21)
+const TIMEOUT_QUICK_SECS: u64 = 10;      // Messages courts (<500 chars)
+const TIMEOUT_STANDARD_SECS: u64 = 30;   // Messages standards (500-2000 chars)
+const TIMEOUT_EXTENDED_SECS: u64 = 60;   // Messages longs ou streaming (>2000 chars)
+const TIMEOUT_LOCAL_SECS: u64 = 45;      // Ollama/Local (généralement plus rapides)
+
+/// Calcule le timeout adaptatif basé sur la longueur du message
+fn calculate_adaptive_timeout(message_length: usize, is_local: bool) -> u64 {
+    if is_local {
+        return TIMEOUT_LOCAL_SECS;
+    }
+    
+    if message_length < 500 {
+        TIMEOUT_QUICK_SECS
+    } else if message_length < 2000 {
+        TIMEOUT_STANDARD_SECS
+    } else {
+        TIMEOUT_EXTENDED_SECS
+    }
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STRUCTURES
@@ -110,6 +137,8 @@ pub struct ChatOrchestratorState {
     pub anthropic_api_key: Arc<RwLock<Option<String>>>,
     #[allow(dead_code)]
     default_provider: Arc<RwLock<String>>,
+    // R04 FIX: UnifiedMemory integration for STM/MTM/LTM
+    pub unified_memory: Arc<RwLock<UnifiedMemory>>,
 }
 
 impl ChatOrchestratorState {
@@ -129,6 +158,14 @@ impl ChatOrchestratorState {
 // ─────────────────────────────────────────────────────────────────────────────
 
 pub fn init() -> ChatOrchestratorState {
+    // R04 FIX: Initialize UnifiedMemory
+    let mut unified_memory = UnifiedMemory::new();
+    if let Err(e) = unified_memory.init() {
+        eprintln!("[CHAT] ⚠️ UnifiedMemory init failed: {:?}", e);
+    } else {
+        println!("[CHAT] ✅ UnifiedMemory initialized (STM/MTM/LTM ready)");
+    }
+    
     ChatOrchestratorState {
         conversations: Arc::new(RwLock::new(Vec::new())),
         provider_status: Arc::new(RwLock::new(Vec::new())),
@@ -138,6 +175,7 @@ pub fn init() -> ChatOrchestratorState {
         openai_api_key: Arc::new(RwLock::new(None)),
         anthropic_api_key: Arc::new(RwLock::new(None)),
         default_provider: Arc::new(RwLock::new("auto".to_string())),
+        unified_memory: Arc::new(RwLock::new(unified_memory)),
     }
 }
 
@@ -287,6 +325,80 @@ async fn reset_provider_failures(provider: &str, state: &ChatOrchestratorState) 
     failures.insert(provider.to_string(), 0);
 }
 
+/// R04 FIX: Store conversation in UnifiedMemory (STM/MTM/LTM pipeline)
+/// Automatically consolidates: STM (session) → MTM (7 days) → LTM (permanent)
+async fn store_in_unified_memory(
+    state: &ChatOrchestratorState,
+    request: &ChatRequest,
+    response: &ChatMessage,
+) {
+    let mut memory = state.unified_memory.write().await;
+    
+    // Combine user message + AI response for context
+    let combined_content = format!(
+        "User: {}\nAssistant ({}): {}",
+        request.message,
+        response.provider,
+        response.content
+    );
+    
+    // Calculate importance based on message length and provider
+    let importance = calculate_message_importance(request, response);
+    
+    // Build tags for semantic search
+    let tags = vec![
+        response.provider.clone(),
+        response.model.clone(),
+        format!("tokens:{}", response.tokens.unwrap_or(0)),
+        if request.system_prompt.is_some() { "custom_prompt".to_string() } else { "default_prompt".to_string() },
+    ];
+    
+    // Store in UnifiedMemory (will go to STM first, then auto-consolidate to MTM/LTM)
+    match memory.store(
+        combined_content,
+        MemoryType::Conversation,
+        importance,
+        tags,
+    ) {
+        Ok(memory_id) => {
+            println!(
+                "[CHAT] 💾 Stored in UnifiedMemory: {} (importance: {:.2}, STM → MTM → LTM pipeline active)",
+                memory_id, importance
+            );
+        }
+        Err(e) => {
+            eprintln!("[CHAT] ⚠️ Failed to store in UnifiedMemory: {:?}", e);
+        }
+    }
+}
+
+/// Calculate message importance for memory consolidation
+fn calculate_message_importance(request: &ChatRequest, response: &ChatMessage) -> f32 {
+    let mut importance = 0.5; // Base importance
+    
+    // Longer responses = more important
+    if response.content.len() > 1000 {
+        importance += 0.2;
+    }
+    
+    // Custom prompts = more important
+    if request.system_prompt.is_some() {
+        importance += 0.1;
+    }
+    
+    // Cloud providers (higher quality) = more important
+    if matches!(response.provider.as_str(), "openai" | "anthropic" | "gemini") {
+        importance += 0.1;
+    }
+    
+    // Code-related = more important
+    if response.content.contains("```") || response.content.contains("function") {
+        importance += 0.1;
+    }
+    
+    importance.min(1.0) // Cap at 1.0
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // ORCHESTRATION PRINCIPALE
 // ─────────────────────────────────────────────────────────────────────────────
@@ -395,6 +507,9 @@ pub async fn chat_send_message(
                 if let Some(conv_id) = &request.conversation_id {
                     store_message(&state, conv_id, &message).await;
                 }
+                
+                // R04 FIX: Store in UnifiedMemory (STM → MTM → LTM pipeline)
+                store_in_unified_memory(&state, &request, &message).await;
 
                 return Ok(ChatResponse {
                     message,
@@ -456,7 +571,9 @@ async fn send_to_gemini(
         model
     );
 
-    println!("[CHAT] 🌐 Gemini API call: {} (timeout 60s)", model);
+    // Adaptive timeout based on message length (R02 fix)
+    let timeout_secs = calculate_adaptive_timeout(request.message.len(), false);
+    println!("[CHAT] 🌐 Gemini API call: {} (adaptive timeout {}s)", model, timeout_secs);
 
     // System prompt TITANE∞ en français (toujours actif)
     let default_system_prompt = "Tu es TITANE∞, un assistant IA avancé créé par l'équipe TITANE. \
@@ -484,9 +601,9 @@ async fn send_to_gemini(
         }
     });
 
-    // HTTP client with timeout
+    // HTTP client with adaptive timeout
     let client = reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(60))
+        .timeout(std::time::Duration::from_secs(timeout_secs))
         .build()
         .map_err(|e| TAPIError::network(format!("HTTP client error: {}", e)))?;
 
@@ -596,7 +713,9 @@ async fn send_to_ollama(
     let model = request.model.as_deref().unwrap_or("llama2:latest");
     let url = "http://localhost:11434/api/generate";
 
-    println!("[CHAT] 🦙 Ollama API call: {} (timeout 45s)", model);
+    // Adaptive timeout for Ollama (local, typically faster)
+    let timeout_secs = calculate_adaptive_timeout(request.message.len(), true);
+    println!("[CHAT] 🦙 Ollama API call: {} (adaptive timeout {}s)", model, timeout_secs);
 
     // System prompt TITANE∞ en français
     let system_prompt = request.system_prompt.as_deref().unwrap_or(
@@ -618,9 +737,9 @@ async fn send_to_ollama(
         }
     });
 
-    // HTTP client with timeout
+    // HTTP client with adaptive timeout
     let client = reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(45))
+        .timeout(std::time::Duration::from_secs(timeout_secs))
         .build()
         .map_err(|e| TAPIError::network(format!("HTTP client error: {}", e)))?;
 
@@ -694,7 +813,9 @@ async fn send_to_openai(
     let model = request.model.as_deref().unwrap_or("gpt-4o");
     let url = "https://api.openai.com/v1/chat/completions";
 
-    println!("[CHAT] 🤖 OpenAI API call: {} (timeout 60s)", model);
+    // Adaptive timeout based on message length (R02 fix)
+    let timeout_secs = calculate_adaptive_timeout(request.message.len(), false);
+    println!("[CHAT] 🤖 OpenAI API call: {} (adaptive timeout {}s)", model, timeout_secs);
 
     // System prompt TITANE∞
     let default_system_prompt = "Tu es TITANE∞, un assistant IA avancé créé par l'équipe TITANE. \
@@ -719,9 +840,9 @@ async fn send_to_openai(
         "max_tokens": 2048,
     });
 
-    // HTTP client with timeout
+    // HTTP client with adaptive timeout (R02 fix)
     let client = reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(60))
+        .timeout(std::time::Duration::from_secs(timeout_secs))
         .build()
         .map_err(|e| TAPIError::network(format!("HTTP client error: {}", e)))?;
 
@@ -836,9 +957,11 @@ async fn send_to_anthropic(
         .unwrap_or("claude-3-5-sonnet-20241022");
     let url = "https://api.anthropic.com/v1/messages";
 
+    // Adaptive timeout based on message length (R02 fix)
+    let timeout_secs = calculate_adaptive_timeout(request.message.len(), false);
     println!(
-        "[CHAT] 🧠 Anthropic Claude API call: {} (timeout 60s)",
-        model
+        "[CHAT] 🧠 Anthropic Claude API call: {} (adaptive timeout {}s)",
+        model, timeout_secs
     );
 
     // System prompt TITANE∞
@@ -864,9 +987,9 @@ async fn send_to_anthropic(
         "max_tokens": 4096,
     });
 
-    // HTTP client with timeout
+    // HTTP client with adaptive timeout (R02 fix)
     let client = reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(60))
+        .timeout(std::time::Duration::from_secs(timeout_secs))
         .build()
         .map_err(|e| TAPIError::network(format!("HTTP client error: {}", e)))?;
 
@@ -1055,6 +1178,26 @@ fn generate_local_response(message_lower: &str, original_message: &str) -> Strin
 // ─────────────────────────────────────────────────────────────────────────────
 // GESTION CONVERSATIONS
 // ─────────────────────────────────────────────────────────────────────────────
+
+/// R04 FIX: Get UnifiedMemory stats (STM/MTM/LTM counts)
+#[tauri::command]
+pub async fn chat_get_memory_stats(
+    state: State<'_, ChatOrchestratorState>,
+) -> Result<serde_json::Value, String> {
+    let memory = state.unified_memory.read().await;
+    let stats = memory.stats();
+    
+    Ok(serde_json::json!({
+        "stm_count": stats.stm_count,
+        "mtm_count": stats.mtm_count,
+        "ltm_count": stats.ltm_count,
+        "total_memories": stats.total_memories,
+        "capacity_usage": stats.capacity_usage,
+        "compression_ratio": stats.compression_ratio,
+        "avg_importance": stats.avg_importance,
+        "initialized": memory.is_initialized(),
+    }))
+}
 
 #[tauri::command]
 pub async fn chat_create_conversation(

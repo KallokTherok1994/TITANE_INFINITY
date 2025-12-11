@@ -6,7 +6,7 @@
 #[cfg(test)]
 mod stm_tests {
     use super::super::stm::ShortTermMemory;
-    use crate::unified_memory_v2::types::{MemoryEntry, MemoryTier, MemoryType};
+    use crate::unified_memory_v2::types::{MemoryEntry, MemoryType};
 
     #[test]
     fn test_stm_fifo_behavior() {
@@ -21,15 +21,15 @@ mod stm_tests {
             );
             entry.id = format!("id_{}", i);
             entry.created_at = i as i64;
-            stm.add(entry);
+            stm.push(entry).unwrap();
         }
 
         // Should only have 5 most recent entries
         let all = stm.get_all();
         assert_eq!(all.len(), 5, "STM should maintain FIFO with capacity limit");
 
-        // First entry should be id_2 (oldest 2 were evicted)
-        assert_eq!(all[0].id, "id_2", "FIFO: oldest entries evicted first");
+        // Newest entries first (reversed order), id_6 should be first
+        assert_eq!(all[0].id, "id_6", "FIFO: newest entry should be first in get_all");
     }
 
     #[test]
@@ -43,7 +43,7 @@ mod stm_tests {
                 0.5,
                 MemoryType::Factual,
             );
-            stm.add(entry);
+            stm.push(entry).unwrap();
         }
 
         // Search for "rust"
@@ -55,7 +55,7 @@ mod stm_tests {
 #[cfg(test)]
 mod mtm_tests {
     use super::super::mtm::MidTermMemory;
-    use crate::unified_memory_v2::types::{MemoryEntry, MemoryTier, MemoryType};
+    use crate::unified_memory_v2::types::{MemoryEntry, MemoryType};
 
     #[test]
     fn test_mtm_capacity_limit() {
@@ -69,8 +69,7 @@ mod mtm_tests {
                 MemoryType::Conversation,
             );
             entry.id = format!("id_{}", i);
-            entry.tier = MemoryTier::MTM;
-            mtm.add(entry);
+            mtm.push(entry).unwrap();
         }
 
         // Should maintain capacity and keep most important
@@ -91,8 +90,7 @@ mod mtm_tests {
                 MemoryType::Factual,
             );
             entry.id = format!("id_{}", i);
-            entry.tier = MemoryTier::MTM;
-            mtm.add(entry);
+            mtm.push(entry).unwrap();
         }
 
         // Get all should be sorted by importance (descending)
@@ -160,8 +158,8 @@ mod vector_tests {
         store.insert(&entry1, vec![1.0, 0.0]).unwrap();
         store.insert(&entry2, vec![0.0, 1.0]).unwrap();
 
-        let removed = store.remove("doc1");
-        assert!(removed, "Should successfully remove doc1");
+        store.remove("doc1");
+        // Removal is void - just verify it's gone below
 
         // Verify it's gone
         let query = vec![1.0, 0.0];
@@ -189,9 +187,9 @@ mod vector_tests {
 
 #[cfg(test)]
 mod consolidation_tests {
-    use super::super::consolidation::{Consolidator, ConsolidatorConfig};
+    use super::super::consolidation::Consolidator;
     use super::super::{LongTermMemory, MidTermMemory, ShortTermMemory};
-    use crate::unified_memory_v2::types::{MemoryEntry, MemoryTier, MemoryType};
+    use crate::unified_memory_v2::types::{MemoryEntry, MemoryType};
     use std::time::{SystemTime, UNIX_EPOCH};
 
     fn create_test_entry(id: &str, importance: f32, age_secs: i64) -> MemoryEntry {
@@ -220,11 +218,11 @@ mod consolidation_tests {
         let mut ltm = LongTermMemory::default();
 
         // Add old entries to STM (should be transferred)
-        stm.add(create_test_entry("old1", 0.6, 1)); // 1 second old
-        stm.add(create_test_entry("old2", 0.7, 1));
+        stm.push(create_test_entry("old1", 0.6, 1)).unwrap(); // 1 second old
+        stm.push(create_test_entry("old2", 0.7, 1)).unwrap();
 
         // Add new entry to STM (should stay)
-        stm.add(create_test_entry("new1", 0.5, 0));
+        stm.push(create_test_entry("new1", 0.5, 0)).unwrap();
 
         // Wait for entries to age
         tokio::time::sleep(tokio::time::Duration::from_millis(150)).await;
