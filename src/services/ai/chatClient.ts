@@ -263,7 +263,7 @@ export async function sendMessage(
         duration: Date.now() - startTime,
       };
     } catch (error) {
-      console.warn(`[ChatClient] Attempt ${attempt}/${retries} failed:`, error);
+      logger.warn(`Attempt ${attempt}/${retries} failed`, error);
 
       if (attempt < retries) {
         await new Promise(resolve => setTimeout(resolve, retryDelay * attempt));
@@ -315,7 +315,7 @@ export async function sendMessage(
         };
       }
     } catch (error) {
-      console.warn(`[ChatClient] Fallback ${fallbackModel} failed:`, error);
+      logger.warn(`Fallback ${fallbackModel} failed`, error);
     }
   }
 

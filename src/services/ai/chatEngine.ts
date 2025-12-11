@@ -43,6 +43,9 @@ import type {
 import { semanticMemoryEngine as _semanticMemoryEngine } from '@/services/memory/semanticMemoryEngine';
 import { consistencyEngine as _consistencyEngine } from '@/services/consistency/consistencyEngine';
 import { cognitiveOmega } from '@/services/cognitive/cognitiveOmegaIntegration';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('ChatEngine');
 
 type BackendStreamMetadata = {
   provider?: string;
@@ -123,7 +126,7 @@ class ChatEngineOmega {
     try {
       // Reset cognitif si changement de mode
       if (this.lastMode !== mode) {
-        isDev && console.log(`🔄 OMEGA RESET COGNITIF: ${this.lastMode} → ${mode}`);
+        logger.info(`Cognitive reset: ${this.lastMode} → ${mode}`);
         this.conversationContext.clear();
         this.lastMode = mode;
 
@@ -143,11 +146,10 @@ class ChatEngineOmega {
         ...config,
       };
 
-      isDev &&
-        console.log(`⚙️ OMEGA Mode configuré: ${mode} (${Date.now() - startTime}ms)`);
+      logger.debug(`Mode configured: ${mode}`, { elapsed: Date.now() - startTime });
     } catch (error) {
       // Fallback configuration sécurisée
-      isDev && console.error('[OMEGA ENGINE] Erreur setMode (récupérée):', error);
+      logger.error('setMode error (recovered)', error);
       this.config = { mode: 'default' };
     }
   }
@@ -199,22 +201,17 @@ class ChatEngineOmega {
     const failureHandled = false;
 
     try {
-      isDev &&
-        console.log('\n╔══════════════════════════════════════════════════════════════╗');
-      isDev &&
-        console.log('║  🟣 CHAT ENGINE OMEGA v19.2Ω: Pipeline Starting            ║');
-      isDev &&
-        console.log('╚══════════════════════════════════════════════════════════════╝');
+      logger.group('OMEGA Pipeline Starting');
+      logger.info(`Mode: ${finalConfig.mode}`, {
+        autoHeal: finalConfig.omegaConfig?.enableAutoHeal,
+      });
+      logger.groupEnd();
 
       const finalConfig = { ...this.config, ...config };
-      isDev &&
-        console.log(
-          `🎯 Mode: ${finalConfig.mode} | AutoHeal: ${finalConfig.omegaConfig?.enableAutoHeal}`
-        );
 
       // ═══ PHASE 1.1: VALIDATION ENTRÉE SÉCURISÉE ═══
       pipelineSteps.push('input-validation');
-      isDev && console.log('🔒 Step 1.1: OMEGA Input Validation...');
+      logger.debug('Step 1.1: Input validation...');
 
       if (!message || typeof message !== 'string') {
         throw new Error('Invalid message input');
@@ -225,7 +222,7 @@ class ChatEngineOmega {
         throw new Error('Message validation failed');
       }
 
-      isDev && console.log(`   ✅ Validated (${validatedMessage.length} chars)`);
+      logger.debug('Validated', { length: validatedMessage.length });
 
       // Generate or retrieve conversation ID
       const conversation_id =
@@ -242,14 +239,14 @@ class ChatEngineOmega {
           turnNumber,
           validatedMessage
         );
-        isDev && console.log(`   🔍 Trace started: ${traceId}`);
+        logger.debug('Trace started', { traceId });
       } catch (error) {
-        isDev && console.warn('   ⚠️ Failed to start trace (non-blocking)');
+        logger.warn('Failed to start trace (non-blocking)');
       }
 
       // ═══ PHASE 1.2: CONTEXTE MEMORY CORE SÉCURISÉ ═══
       pipelineSteps.push('context-loading');
-      isDev && console.log('🧠 Step 1.2: Loading Memory Core context...');
+      logger.debug('Step 1.2: Loading memory context...');
 
       let memoryContext: MemoryContext;
       let context: { sources: string[]; data: Record<string, unknown> };
@@ -261,10 +258,10 @@ class ChatEngineOmega {
           'Memory context timeout'
         );
         context = this.formatMemoryContext(memoryContext);
-        isDev && console.log(`   ✅ Context loaded (${context.sources.length} sources)`);
+        logger.debug('Context loaded', { sources: context.sources.length });
       } catch (error) {
         // Fallback contexte vide
-        isDev && console.warn('   ⚠️ Memory context failed, using empty context');
+        logger.warn('Memory context failed, using empty context');
         memoryContext = {
           activeProjects: [],
           recentDecisions: [],
@@ -278,15 +275,11 @@ class ChatEngineOmega {
 
       // ═══ PHASE 1.3: CONSTRUCTION PROMPT SELON MODE ═══
       pipelineSteps.push('prompt-building');
-      isDev &&
-        console.log(
-          `🎨 Step 1.3: Building OMEGA prompt for mode "${finalConfig.mode}"...`
-        );
+      logger.debug(`Step 1.3: Building prompt for mode "${finalConfig.mode}"...`);
 
       // ═══ PHASE 1.3.2: COGNITIVE CONTEXT ENRICHMENT (v∞.42) ═══
       pipelineSteps.push('cognitive-context-enrichment');
-      isDev &&
-        console.log('🧠 Step 1.3.2: Enriching context with cognitive engines v∞.42...');
+      logger.debug('Step 1.3.2: Enriching context with cognitive engines...');
 
       let cognitiveContext = '';
       try {
@@ -311,13 +304,13 @@ class ChatEngineOmega {
           });
         }
 
-        isDev &&
-          console.log(
-            `   ✅ Cognitive context enriched (${enrichment.metadata?.memoryCount} memories, ${enrichment.metadata?.goalCount} goals, ${enrichment.metadata?.factCount} facts)`
-          );
+        logger.debug('Cognitive context enriched', {
+          memories: enrichment.metadata?.memoryCount,
+          goals: enrichment.metadata?.goalCount,
+          facts: enrichment.metadata?.factCount,
+        });
       } catch (error) {
-        isDev &&
-          console.warn('   ⚠️ Cognitive context enrichment failed, continuing without');
+        logger.warn('Cognitive context enrichment failed, continuing without');
         autoHealed = true;
       }
 
@@ -360,12 +353,11 @@ class ChatEngineOmega {
         promptContext,
         systemPrompt
       );
-      isDev &&
-        console.log(`   ✅ Enriched history built (${enrichedHistory.length} messages)`);
+      logger.debug('Enriched history built', { messages: enrichedHistory.length });
 
       // ═══ PHASE 1.4: APPEL ORCHESTRATOR OMEGA ═══
       pipelineSteps.push('orchestrator-call');
-      isDev && console.log('🚀 Step 1.4: Calling OMEGA orchestrator...');
+      logger.debug('Step 1.4: Calling orchestrator...');
 
       // Timeout adaptatif selon le mode (plus long pour modes complexes)
       const baseTimeout = finalConfig.omegaConfig?.timeoutMs || 30000;
@@ -389,11 +381,11 @@ class ChatEngineOmega {
         throw new Error('Orchestrator returned empty response');
       }
 
-      isDev && console.log('   ✅ Orchestrator response received');
+      logger.debug('Orchestrator response received');
 
       // ═══ PHASE 1.5: VALIDATION NEXUS & SENTINEL ═══
       pipelineSteps.push('nexus-sentinel-validation');
-      isDev && console.log('🛡️  Step 1.5: Validating response with Nexus/Sentinel...');
+      logger.debug('Step 1.5: Validating response with Nexus/Sentinel...');
 
       const validation = chatValidator.validate(
         response.content,

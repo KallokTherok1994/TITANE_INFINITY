@@ -15,9 +15,11 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-const isDev = process.env.NODE_ENV === 'development';
+import { createLogger } from '@/utils/logger';
 
-// ─────────────────────────────────────────────────────────────────
+const logger = createLogger('CognitiveKernel');
+
+// ───────────────────────────────────────────────────────────────────
 // TYPES COGNITIVE KERNEL
 // ─────────────────────────────────────────────────────────────────
 
@@ -180,7 +182,7 @@ class CognitiveKernel {
   initialize(): void {
     if (this.initialized) return;
 
-    isDev && console.log('[COGNITIVE KERNEL] 🧠 Initialisation du champ cognitif...');
+    logger.debug('Initializing cognitive field...');
 
     // Principes fondamentaux (immuables)
     this.principles = {
@@ -193,11 +195,10 @@ class CognitiveKernel {
     };
 
     // Cartographie cognitive (relations internes)
-    isDev &&
-      console.log('[COGNITIVE KERNEL] 📊 Cartographie cognitive:', this.cognitiveMap);
+    logger.debug('Cognitive map established', this.cognitiveMap);
 
     this.initialized = true;
-    isDev && console.log('[COGNITIVE KERNEL] ✅ Champ cognitif établi');
+    logger.info('Cognitive field initialized');
   }
 
   /**
