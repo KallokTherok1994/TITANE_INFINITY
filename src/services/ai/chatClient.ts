@@ -170,7 +170,9 @@ export async function sendMessage(
           ? 'google'
           : 'ollama',
     model,
-    userId: 'system', // TODO: Get from auth context
+    userId:
+      (typeof window !== 'undefined' && (window as any).__TITANE_USER_ID__) ||
+      'anonymous',
     metadata: {
       temperature,
       maxTokens,

@@ -331,7 +331,9 @@ export const ollamaProvider: AIProvider = {
       input: message,
       provider: 'ollama',
       model: OLLAMA_MODEL,
-      userId: 'system', // TODO: Get from auth context
+      userId:
+        (typeof window !== 'undefined' && (window as any).__TITANE_USER_ID__) ||
+        'anonymous',
       metadata: {
         temperature: finalConfig.temperature,
         maxTokens: finalConfig.maxTokens,
