@@ -31,7 +31,6 @@ import type { CognitiveProcess as _CognitiveProcess } from './cognitiveKernel';
 import { createLogger } from '@/utils/logger';
 
 const logger = createLogger('SingularityKernel');
-const isDev = process.env.NODE_ENV === 'development';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES SINGULARITY KERNEL

@@ -63,8 +63,6 @@ type BackendStreamMetadata = {
   parseError?: string;
 };
 
-const isDev = import.meta.env.DEV;
-
 // ─────────────────────────────────────────────────────────────────
 // TYPES OMEGA ÉTENDUS + SURVEILLANCE
 // ─────────────────────────────────────────────────────────────────
