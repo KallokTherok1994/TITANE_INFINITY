@@ -392,27 +392,27 @@ class ChatEngineOmega {
         finalConfig.mode,
         validatedMessage
       );
-      isDev &&
-        console.log(
-          `   ✅ Validation score: ${(validation.score * 100).toFixed(0)}% (coherence: ${(validation.coherenceScore * 100).toFixed(0)}%, anomaly: ${(validation.anomalyScore * 100).toFixed(0)}%)`
-        );
+      logger.debug('Validation score', {
+        score: (validation.score * 100).toFixed(0) + '%',
+        coherence: (validation.coherenceScore * 100).toFixed(0) + '%',
+        anomaly: (validation.anomalyScore * 100).toFixed(0) + '%',
+      });
 
       if (validation.issues.length > 0) {
-        isDev && console.log(`   ⚠️ Issues detected: ${validation.issues.length}`);
+        logger.warn(`Issues detected: ${validation.issues.length}`);
         validation.issues.forEach(issue => {
-          isDev &&
-            console.log(`      - [${issue.severity}] ${issue.type}: ${issue.message}`);
+          logger.debug(`Issue: [${issue.severity}] ${issue.type} - ${issue.message}`);
         });
       }
 
       // Si validation échoue, utiliser réponse nettoyée ou auto-heal
       if (!validation.isValid) {
         if (validation.cleaned && finalConfig.omegaConfig?.enableSanitizer) {
-          isDev && console.log('   🧹 Using sanitized response');
+          logger.info('Using sanitized response');
           response.content = validation.cleaned;
           autoHealed = true;
         } else if (finalConfig.omegaConfig?.enableAutoHeal) {
-          isDev && console.log('   🔄 Auto-healing invalid response');
+          logger.info('Auto-healing invalid response');
           response.content = this.generateEmergencyResponse(
             validatedMessage,
             finalConfig.mode
@@ -423,8 +423,7 @@ class ChatEngineOmega {
 
       // ═══ PHASE 1.5.1: CONSISTENCY CHECK (v∞.42) ═══
       pipelineSteps.push('consistency-check');
-      isDev &&
-        console.log('🔍 Step 1.5.1: Checking consistency with cognitive engine v∞.42...');
+      logger.debug('Step 1.5.1: Checking consistency with cognitive engine...');
 
       try {
         const consistencyResult = await this.withTimeout(
@@ -499,13 +498,13 @@ class ChatEngineOmega {
 
       // ═══ PHASE 1.6: POST-TRAITEMENT SELON MODE ═══
       pipelineSteps.push('post-processing');
-      isDev && console.log('⚙️ Step 1.6: Post-processing...');
+      logger.debug('Step 1.6: Post-processing...');
       const processedResponse = this.postProcess(response, finalConfig);
-      isDev && console.log('   ✅ Response processed');
+      logger.debug('Response processed');
 
       // ═══ PHASE 1.7: SAUVEGARDE UNIFIED MEMORY (Single Source of Truth) ═══
       pipelineSteps.push('memory-saving');
-      isDev && console.log('💾 Step 1.7: Saving to Unified Memory...');
+      logger.debug('Step 1.7: Saving to unified memory...');
 
       try {
         // Importance calculée selon le mode
@@ -518,15 +517,15 @@ class ChatEngineOmega {
           [finalConfig.mode, 'conversation']
         );
 
-        isDev && console.log('   ✅ Interaction saved to unified memory');
+        logger.debug('Interaction saved to unified memory');
       } catch (error) {
-        isDev && console.warn('   ⚠️ Memory save failed (non-blocking):', error);
+        logger.warn('Memory save failed (non-blocking)', error);
         autoHealed = true;
       }
 
       // ═══ PHASE 1.7: COGNITIVE MEMORY SAVING (v∞.42) ═══
       pipelineSteps.push('cognitive-memory-saving');
-      isDev && console.log('💾 Step 1.7: Saving to cognitive engines v∞.42...');
+      logger.debug('Step 1.7: Saving to cognitive engines...');
 
       try {
         await this.withTimeout(

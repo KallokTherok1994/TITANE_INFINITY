@@ -208,7 +208,7 @@ class AIOrchestrator {
         warmupResults.map(r => (r.status === 'fulfilled' ? r.value : { error: true }))
       );
     } catch (error) {
-      isDev && console.error('[OMEGA ORCHESTRATOR] Warmup failed:', error);
+      logger.error('Warmup failed', error);
     } finally {
       this.isWarmup = false;
     }
@@ -727,15 +727,14 @@ class AIOrchestrator {
             this.orchestratorMetrics.autoHealTriggers++;
           }
 
-          if (isDev) {
-            console.error(
-              `   ❌ FAILED: ${lastError.message} (${providerFailureLatency}ms)`
-            );
-          }
+          logger.error(`Provider ${providerName} failed`, {
+            error: lastError.message,
+            latency: providerFailureLatency,
+          });
 
           // Si c'est titane-local qui échoue, c'est critique
           if (providerName === 'titane-local') {
-            isDev && console.error('🚨 CRITICAL: titane-local provider failed!');
+            logger.error('CRITICAL: titane-local provider failed');
             break;
           }
 
@@ -751,11 +750,10 @@ class AIOrchestrator {
 
       const responseTime = Date.now() - requestStartTime;
 
-      if (isDev) {
-        console.error('\n🚨 OMEGA ORCHESTRATOR: All providers exhausted!');
-        console.error(`Last error: ${lastError?.message || 'Unknown'}`);
-        console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-      }
+      logger.error('All providers exhausted', {
+        lastError: lastError?.message || 'Unknown',
+        responseTime,
+      });
 
       // Ultimate emergency response
       return {
@@ -802,12 +800,7 @@ Le système s'auto-répare en continu. Que puis-je t'aider à explorer ?`,
         }
       );
 
-      if (isDev) {
-        console.error(
-          `🆘 OMEGA ORCHESTRATOR: Critical error [${requestId}]:`,
-          criticalError
-        );
-      }
+      logger.error(`Critical error [${requestId}]`, criticalError);
 
       return {
         content: `🔴 **Récupération Critique OMEGA** [${requestId.substring(0, 8)}]
@@ -899,8 +892,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
 
       return cloned;
     } catch (error) {
-      isDev &&
-        console.warn('[OMEGA] Prompt rebuild skipped for provider', providerName, error);
+      logger.warn(`Prompt rebuild skipped for ${providerName}`, error);
       return history;
     }
   }
