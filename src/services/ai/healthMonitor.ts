@@ -13,8 +13,9 @@
 
 import { getMetricsEngine, getAutoHealEngine } from './system';
 import { aiOrchestrator } from './orchestrator';
+import { createLogger } from '@/utils/logger';
 
-const isDev = process.env.NODE_ENV === 'development';
+const logger = createLogger('HealthMonitor');
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -61,11 +62,11 @@ class AIHealthMonitor {
    */
   startMonitoring(): void {
     if (this.monitoringInterval) {
-      isDev && console.log('[HEALTH MONITOR] Already running');
+      logger.debug('Already running');
       return;
     }
 
-    isDev && console.log('[HEALTH MONITOR] Starting continuous monitoring...');
+    logger.info('Starting continuous monitoring...');
 
     this.monitoringInterval = window.setInterval(() => {
       this.performHealthCheck();
@@ -82,7 +83,7 @@ class AIHealthMonitor {
     if (this.monitoringInterval) {
       clearInterval(this.monitoringInterval);
       this.monitoringInterval = null;
-      isDev && console.log('[HEALTH MONITOR] Stopped');
+      logger.debug('Stopped');
     }
   }
 
@@ -108,12 +109,9 @@ class AIHealthMonitor {
       // Nettoyage vieilles alertes
       this.cleanupOldAlerts();
 
-      isDev &&
-        console.log(
-          `[HEALTH MONITOR] Check complete: ${this.alerts.length} active alerts`
-        );
+      logger.debug(`Check complete: ${this.alerts.length} active alerts`);
     } catch (error) {
-      isDev && console.error('[HEALTH MONITOR] Check failed:', error);
+      logger.error('Check failed:', error);
     }
   }
 
@@ -275,8 +273,7 @@ class AIHealthMonitor {
       this.alerts = this.alerts.slice(-this.MAX_ALERTS);
     }
 
-    isDev &&
-      console.log(`[HEALTH MONITOR] 🚨 ${alert.severity.toUpperCase()}: ${alert.title}`);
+    logger.warn(`🚨 ${alert.severity.toUpperCase()}: ${alert.title}`);
   }
 
   /**
@@ -367,15 +364,15 @@ class AIHealthMonitor {
    */
   resolveAlert(alertId: string): void {
     this.alerts = this.alerts.filter(a => a.id !== alertId);
-    isDev && console.log(`[HEALTH MONITOR] Alert ${alertId} resolved`);
+    logger.debug(`Alert ${alertId} resolved`);
   }
 
   /**
    * Nettoyer toutes les alertes
    */
-  clearAlerts(): void {
+  clearAllAlerts(): void {
     this.alerts = [];
-    isDev && console.log('[HEALTH MONITOR] All alerts cleared');
+    logger.debug('All alerts cleared');
   }
 }
 
