@@ -5,7 +5,14 @@ use titane_infinity::conversation_engine::{
     ConversationRequest, ConversationMode,
     omega_integration::{OmegaConversationBridge, OmegaBridgeConfig},
 };
+use titane_infinity::singularity::singularity_state::SingularityState;
+use std::sync::Arc;
 use std::time::Instant;
+use tokio::sync::RwLock;
+
+fn create_test_singularity() -> Arc<RwLock<SingularityState>> {
+    Arc::new(RwLock::new(SingularityState::default()))
+}
 
 #[tokio::test]
 async fn test_omega_p2_latency_improvement() {
@@ -17,7 +24,7 @@ async fn test_omega_p2_latency_improvement() {
         enable_guardrails: true,
     };
 
-    let bridge = OmegaConversationBridge::new(config);
+    let bridge = OmegaConversationBridge::new(config, create_test_singularity());
     bridge.initialize().await.expect("Bridge init failed");
 
     // Test request (French question - typical use case)
@@ -72,7 +79,7 @@ async fn test_omega_p2_latency_improvement() {
 async fn test_omega_p2_french_mastery_integration() {
     // Test that FrenchMastery post-processing is applied in P2 path
     let config = OmegaBridgeConfig::default();
-    let bridge = OmegaConversationBridge::new(config);
+    let bridge = OmegaConversationBridge::new(config, create_test_singularity());
     bridge.initialize().await.expect("Bridge init failed");
 
     let request = ConversationRequest {
@@ -112,7 +119,7 @@ async fn test_omega_p2_french_mastery_integration() {
 async fn test_omega_p2_vs_legacy_comparison() {
     // Comparative test: P2 should be faster than legacy for OMEGA success
     let config = OmegaBridgeConfig::default();
-    let bridge = OmegaConversationBridge::new(config);
+    let bridge = OmegaConversationBridge::new(config, create_test_singularity());
     bridge.initialize().await.expect("Bridge init failed");
 
     let test_messages = vec![
