@@ -12,7 +12,9 @@
  */
 
 import type { AIProvider, AIMessage, AIResponse } from '../types';
+import { createLogger } from '@/utils/logger';
 
+const logger = createLogger('TitaneLocal');
 const isDev = import.meta.env.DEV;
 const isTestEnv = typeof process !== 'undefined' && Boolean(process.env?.VITEST);
 
@@ -389,7 +391,7 @@ export const titaneLocalProvider: AIProvider = {
 
       // ═══ SIMULATION DÉLAI COGNITIF RÉALISTE ═══
       if (isDev && !isTestEnv) {
-        console.log('[TITANE OMEGA] Generating autonomous response...');
+        logger.debug('Generating autonomous response...');
       }
       const cognitiveDelayBase = isTestEnv ? 5 : 400;
       const cognitiveDelayJitter = isTestEnv ? Math.random() * 10 : Math.random() * 800;
