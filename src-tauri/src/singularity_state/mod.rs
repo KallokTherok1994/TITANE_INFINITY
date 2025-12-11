@@ -1,8 +1,12 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
- * TITANE∞ v14 — SINGULARITY STATE BACKEND
+ * TITANE∞ v14 — SYSTEM STATE MONITOR (Global Singularity State)
  * État unifié backend Rust avec synchronisation Tauri
  * ═══════════════════════════════════════════════════════════════════
+ *
+ * Rôle: Monitoring état système global via architecture 5 layers
+ * Scope: System-wide (monitoring, introspection, santé globale)
+ * Usage: SingularityEngine (main.rs), Tauri commands frontend
  *
  * Architecture 5 Layers:
  * - PhysicalLayer : Helios, health, metrics système
@@ -12,9 +16,18 @@
  * - MetaLayer     : UI, runtime, introspection
  *
  * Synchronisation:
- * - Backend Rust → Frontend React (Tauri events)
- * - Frontend React → Backend Rust (invoke commands)
+ * - Backend Rust → Frontend React (Tauri events EventSyncLayer)
+ * - Frontend React → Backend Rust (invoke commands singularity_*)
  * - Persistence SQLite (état sauvegardé)
+ *
+ * IMPORTANT: Ce module est DISTINCT de `singularity/singularity_state.rs`
+ * (Chat IA meta-processing conversationnel). Voir ARCHITECTURE_DUAL_STATE.md
+ * pour clarification rôles.
+ *
+ * Documentation: CHANGELOG.md v14.7, EXECUTIVE_SUMMARY_v14_INTEGRATION.txt
+ * Tauri Commands: 12+ commands exposés (singularity_get_*, singularity_update_*)
+ * Status: ✅ Production-stable (v14+ legacy, opérationnel depuis nov 2025)
+ * ═══════════════════════════════════════════════════════════════════
  */
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
