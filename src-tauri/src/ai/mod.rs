@@ -89,13 +89,15 @@ pub struct AiMetadata {
 // LEGACY TYPES (v20.1) - Rétro-compatibilité
 // ═══════════════════════════════════════════════════════════════
 
-/// AI Request structure v15 (legacy)
+/// AI Request structure v15 (legacy) - Extended v21 with provider_preference
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AIRequest {
     pub prompt: String,
     pub temperature: f32,
     pub max_tokens: usize,
     pub stream: bool,
+    /// v21: Provider preference for direct routing (Local → Ollama)
+    pub provider_preference: Option<String>,
 }
 
 /// AI Response structure v15 (legacy)

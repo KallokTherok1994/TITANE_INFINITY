@@ -400,11 +400,21 @@ impl ConversationPipeline {
         prompt: String,
         config: AIConfig,
     ) -> Result<AIResponse, ConversationEngineError> {
+        let provider_pref = match config.provider_preference {
+            super::types::ProviderPreference::Local => Some("local".to_string()),
+            super::types::ProviderPreference::Ollama => Some("ollama".to_string()),
+            super::types::ProviderPreference::Gemini => Some("gemini".to_string()),
+            super::types::ProviderPreference::OpenAI => Some("openai".to_string()),
+            super::types::ProviderPreference::Claude => Some("claude".to_string()),
+            super::types::ProviderPreference::Auto => None,
+        };
+
         let ai_request = AIRequest {
             prompt,
             temperature: config.temperature,
             max_tokens: config.max_tokens.unwrap_or(2000),
             stream: false,
+            provider_preference: provider_pref,
         };
 
         let router = self.ai_router.read().await;
