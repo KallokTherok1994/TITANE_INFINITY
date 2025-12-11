@@ -496,15 +496,13 @@ class AIOrchestrator {
         throw new Error(error);
       }
 
-      if (isDev) {
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        console.log(`🟣 OMEGA ORCHESTRATOR: Neural Generation [${requestId}]`);
-        console.log(
-          `📝 Message: "${sanitized.substring(0, 60)}${sanitized.length > 60 ? '...' : ''}"`
-        );
-        console.log(`📚 History: ${history.length} messages`);
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-      }
+      logger.group('Neural Generation');
+      logger.info(`Request ID: ${requestId}`);
+      logger.info(
+        `Message: "${sanitized.substring(0, 60)}${sanitized.length > 60 ? '...' : ''}"`,
+        { historyLength: history.length }
+      );
+      logger.groupEnd();
 
       // ═══ PHASE 3.4.2: NEURAL PROVIDER SELECTION + COGNITIVE KERNEL v22Ω ═══
 
@@ -587,10 +585,9 @@ class AIOrchestrator {
         if (quickFailTime && providerName !== 'titane-local') {
           const timeSinceFailure = Date.now() - quickFailTime;
           if (timeSinceFailure < this.QUICK_FAIL_COOLDOWN_MS) {
-            isDev &&
-              console.log(
-                `⏭️ Skipping ${providerName} (failed ${timeSinceFailure}ms ago, cooldown: ${this.QUICK_FAIL_COOLDOWN_MS}ms)`
-              );
+            logger.debug(
+              `⏭️ Skipping ${providerName} (failed ${timeSinceFailure}ms ago, cooldown: ${this.QUICK_FAIL_COOLDOWN_MS}ms)`
+            );
             continue;
           } else {
             // Clear stale cache entry
@@ -602,11 +599,9 @@ class AIOrchestrator {
         const providerStartTime = Date.now();
 
         try {
-          if (isDev) {
-            console.log(
-              `\n🔍 [${attempts}/${providersToTry.length}] Trying ${providerName}...`
-            );
-          }
+          logger.debug(
+            `\n🔍 [${attempts}/${providersToTry.length}] Trying ${providerName}...`
+          );
 
           // ═══ ISOLATED EXECUTION WITH ADAPTIVE TIMEOUT ═══
           const executionTimeout =
@@ -667,16 +662,14 @@ class AIOrchestrator {
           this.orchestratorMetrics.avgResponseTime =
             totalTime / this.orchestratorMetrics.totalSuccesses;
 
-          if (isDev) {
-            console.log(
-              `   ✅ SUCCESS in ${providerLatency}ms (total: ${totalResponseTime}ms)`
-            );
-            console.log(`   📦 Response: ${response.content.length} chars`);
-            console.log(`   🏷️ Provider: ${response.provider || providerName}`);
-            console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-            console.log(`🟣 OMEGA ORCHESTRATOR: Generation complete! [${requestId}]`);
-            console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-          }
+          logger.group('Generation Complete');
+          logger.info(`Request ID: ${requestId}`);
+          logger.info(`Provider: ${response.provider || providerName}`);
+          logger.info(
+            `Timing: ${providerLatency}ms (provider) / ${totalResponseTime}ms (total)`,
+            { contentLength: response.content.length }
+          );
+          logger.groupEnd();
 
           return {
             ...response,
@@ -1234,7 +1227,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
    * EVOLUTION v21Ω: Now clears ALL state including quick-fail cache
    */
   async resetAllProviders(): Promise<void> {
-    isDev && console.log('[OMEGA ORCHESTRATOR] Force reset all providers...');
+    logger.info('Force reset all providers...');
 
     this.initializeProviderStats();
     this.orchestratorMetrics = {

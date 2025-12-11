@@ -16,6 +16,9 @@
 
 import type { AIProvider, AIMessage, AIResponse } from '../types';
 import { titaneLocalProvider } from './titaneLocal';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('Fallback');
 
 // OBSOLETE : Ces messages ne sont plus utilisés
 const __FALLBACK_RESPONSES: readonly string[] = [
@@ -34,7 +37,7 @@ export const fallbackProvider: AIProvider = {
   },
 
   async generate(message: string, history: AIMessage[] = []): Promise<AIResponse> {
-    console.log('[Fallback → TITANE Local] Redirecting to autonomous AI...');
+    logger.info('Redirecting to autonomous AI...');
     return titaneLocalProvider.generate(message, history);
   },
 
