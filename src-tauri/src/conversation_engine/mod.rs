@@ -147,7 +147,7 @@ impl ConversationEngineState {
         &self,
         request: ConversationRequest,
     ) -> Result<ConversationResponse, ConversationEngineError> {
-        // R05 P1: Try OMEGA pipeline first
+        // R05 P2: OMEGA → Direct conversion (bypasses legacy pipeline duplication)
         match self.omega_bridge.process_through_omega(&request).await {
             Ok(omega_result) => {
                 log::info!(
@@ -157,10 +157,32 @@ impl ConversationEngineState {
                     omega_result.safety_score
                 );
 
-                // Convert OMEGA result to ConversationResponse
-                // For now, we pass through to legacy pipeline with OMEGA enrichment
-                // TODO: Direct OMEGA → Response conversion in future phase
-                self.pipeline.process(request).await
+                // P2 OPTIMIZATION: Convert OMEGA → ConversationResponse directly
+                // This bypasses legacy pipeline while preserving FrenchMastery quality
+                let conversation_id = request.conversation_id.clone()
+                    .unwrap_or_else(|| uuid::Uuid::new_v4().to_string());
+
+                match self.omega_bridge.convert_to_conversation_response(
+                    omega_result,
+                    &request,
+                    conversation_id,
+                ).await {
+                    Ok(response) => {
+                        log::info!(
+                            "[CONV-ENGINE] 🚀 P2 Direct conversion | bypass_legacy=true | total_latency={}ms",
+                            response.metadata.latency_ms
+                        );
+                        Ok(response)
+                    }
+                    Err(e) => {
+                        log::warn!(
+                            "[CONV-ENGINE] ⚠️ P2 Conversion failed, falling back to legacy: {}",
+                            e
+                        );
+                        // Fallback to legacy pipeline
+                        self.pipeline.process(request).await
+                    }
+                }
             }
             Err(e) => {
                 log::warn!(
