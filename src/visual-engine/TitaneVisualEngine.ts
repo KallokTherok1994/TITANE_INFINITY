@@ -107,11 +107,7 @@ export class TitaneVisualEngine extends EventEmitter {
 
       // v21: Update effects orchestrator with new state
       if (this.config.enableOrchestration) {
-        effectsOrchestrator.updateVisualState({
-          current: state,
-          intensity: 0.8,
-          transition: 0.3,
-        });
+        effectsOrchestrator.updateVisualState(state);
       }
     });
 
