@@ -26,6 +26,21 @@ export const authClient = {
   /**
    * Générer ou récupérer dev token
    */
+  /**
+   * Generates a development token for authentication purposes.
+   *
+   * This method invokes the backend 'auth_generate_dev_token' command to create
+   * a temporary authentication token intended for development use only.
+   *
+   * @returns A promise that resolves to the generated development token string.
+   * @throws {Error} Throws an error if the token generation fails or returns no response.
+   *
+   * @example
+   * ```typescript
+   * const token = await authClient.generateDevToken();
+   * console.log('Dev token:', token);
+   * ```
+   */
   async generateDevToken(): Promise<string> {
     const response = await safeInvoke<string>('auth_generate_dev_token');
     if (!response) {
