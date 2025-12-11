@@ -54,30 +54,41 @@ export type { MetricEvent, ProviderMetrics, AggregatedMetrics } from './metricsE
 export type { HealthAlert, HealthReport } from './healthMonitor';
 
 // ─────────────────────────────────────────────────────────────────
-// LAZY ENGINE ACCESSORS
+// LAZY ENGINE ACCESSORS WITH SINGLETON CACHE
 // ─────────────────────────────────────────────────────────────────
 
+// Singleton caches
+let _autoHealCache: typeof import('./autoHealEngine').autoHealEngine | null = null;
+let _metricsCache: typeof import('./metricsEngine').metricsEngine | null = null;
+let _healthMonitorCache: typeof import('./healthMonitor').aiHealthMonitor | null = null;
+
 /**
- * 🔄 Lazy load Auto Heal Engine
+ * 🔄 Lazy load Auto Heal Engine (singleton cached)
  */
 export async function getAutoHealEngine() {
+  if (_autoHealCache) return _autoHealCache;
   const { autoHealEngine } = await import('./autoHealEngine');
+  _autoHealCache = autoHealEngine;
   return autoHealEngine;
 }
 
 /**
- * 📊 Lazy load Metrics Engine
+ * 📊 Lazy load Metrics Engine (singleton cached)
  */
 export async function getMetricsEngine() {
+  if (_metricsCache) return _metricsCache;
   const { metricsEngine } = await import('./metricsEngine');
+  _metricsCache = metricsEngine;
   return metricsEngine;
 }
 
 /**
- * 🏥 Lazy load Health Monitor
+ * 🏥 Lazy load Health Monitor (singleton cached)
  */
 export async function getHealthMonitor() {
+  if (_healthMonitorCache) return _healthMonitorCache;
   const { aiHealthMonitor } = await import('./healthMonitor');
+  _healthMonitorCache = aiHealthMonitor;
   return aiHealthMonitor;
 }
 

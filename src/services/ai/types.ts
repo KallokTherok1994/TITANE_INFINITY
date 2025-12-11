@@ -42,6 +42,9 @@ export type AIProviderName =
   | 'omnis-emergency'
   | 'omnis-fallback';
 
+// ✨ v21 - Provider choice for UI selection
+export type ProviderChoice = 'auto' | 'openai' | 'claude' | 'gemini' | 'ollama' | 'local';
+
 export interface AIResponse {
   content: string;
   provider: AIProviderName;
@@ -77,6 +80,7 @@ export interface AIConfig {
   timeout?: number;
   promptProfileId?: string;
   promptContext?: PromptContext;
+  preferredProvider?: ProviderChoice; // ✨ v21 - Force specific provider
 }
 
 export const DEFAULT_AI_CONFIG: AIConfig = {

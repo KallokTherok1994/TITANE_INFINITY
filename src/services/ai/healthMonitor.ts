@@ -11,8 +11,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { metricsEngine } from './metricsEngine';
-import { autoHealEngine } from './autoHealEngine';
+import { getMetricsEngine, getAutoHealEngine } from './system';
 import { aiOrchestrator } from './orchestrator';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -92,8 +91,13 @@ class AIHealthMonitor {
    */
   private async performHealthCheck(): Promise<void> {
     try {
-      const metricsHealth = metricsEngine.getHealthStats();
-      const autoHealStats = autoHealEngine.getStats();
+      const [metrics, autoHeal] = await Promise.all([
+        getMetricsEngine(),
+        getAutoHealEngine(),
+      ]);
+
+      const metricsHealth = metrics.getHealthStats();
+      const autoHealStats = autoHeal.getStats();
       const orchestratorHealth = await aiOrchestrator.healthCheck();
 
       // Analyser et générer alertes si nécessaire
@@ -289,8 +293,9 @@ class AIHealthMonitor {
    * Obtenir rapport de santé complet
    */
   async getHealthReport(): Promise<HealthReport> {
-    const metricsHealth = metricsEngine.getHealthStats();
-    const metrics = metricsEngine.getAggregatedMetrics();
+    const metrics = await getMetricsEngine();
+    const metricsHealth = metrics.getHealthStats();
+    const metricsData = metrics.getAggregatedMetrics();
     const orchestratorHealth = await aiOrchestrator.healthCheck();
 
     // Calculer score global
@@ -329,7 +334,7 @@ class AIHealthMonitor {
         const severityOrder = { critical: 0, warning: 1, info: 2 };
         return severityOrder[a.severity] - severityOrder[b.severity];
       }),
-      providers: metrics.providers.map(p => ({
+      providers: metricsData.providers.map(p => ({
         name: p.provider,
         status:
           p.successRate > 90 && p.avgLatency < 5000

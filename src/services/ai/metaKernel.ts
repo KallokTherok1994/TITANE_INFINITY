@@ -17,8 +17,10 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { autoHealEngine } from './autoHealEngine';
-import { metricsEngine } from './metricsEngine';
+import {
+  getAutoHealEngine as _getAutoHealEngine,
+  getMetricsEngine as _getMetricsEngine,
+} from './system';
 import { cognitiveKernel } from './cognitiveKernel';
 
 const isDev = process.env.NODE_ENV === 'development';
