@@ -12,7 +12,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import type { AIMessage, AIResponse, AIConfig } from './types';
+import type { AIMessage, AIResponse, AIConfig, ProviderChoice } from './types';
 import { buildSystemPrompt as buildTitanePrompt } from '@/core/prompts';
 import type { Provider as PromptProvider, PromptContext } from '@/core/prompts';
 import { titaneLocalProvider } from './providers/titaneLocal'; // ← PREMIER (noyau infaillible)
@@ -21,9 +21,19 @@ import { geminiProvider } from './providers/gemini';
 import { openaiProvider } from './providers/openai'; // ← NOUVEAU: OpenAI GPT
 import { claudeProvider } from './providers/claude'; // ← NOUVEAU: Anthropic Claude
 import { ollamaProvider } from './providers/ollama';
-import { autoHealEngine } from './autoHealEngine'; // ← NOUVEAU: Auto-heal intégré
-import { metricsEngine } from './metricsEngine'; // ← NOUVEAU: Metrics Engine v20Ω
+import { getAutoHealEngine, getMetricsEngine } from './system'; // ← LAZY: Auto-heal & Metrics
 import { cognitiveKernel } from './cognitiveKernel'; // ← NOUVEAU v22Ω: Cognitive Kernel
+
+// Lazy-loaded engine instances (cached singletons)
+let _autoHeal: Awaited<ReturnType<typeof getAutoHealEngine>> | null = null;
+let _metrics: Awaited<ReturnType<typeof getMetricsEngine>> | null = null;
+
+// Initialize engines on first use
+const ensureEngines = async () => {
+  if (!_autoHeal) _autoHeal = await getAutoHealEngine();
+  if (!_metrics) _metrics = await getMetricsEngine();
+  return { autoHeal: _autoHeal, metrics: _metrics };
+};
 
 const isDev = process.env.NODE_ENV === 'development';
 const NULL_BYTE = String.fromCharCode(0);
@@ -280,7 +290,11 @@ class AIOrchestrator {
    * ═══════════════════════════════════════════════════════════════════
    */
 
-  private selectOptimalProvider(message: string, history: AIMessage[]): NeuralSelection {
+  private selectOptimalProvider(
+    message: string,
+    history: AIMessage[],
+    preferredProvider?: ProviderChoice
+  ): NeuralSelection {
     // Analyse contextuelle du message
     const messageLength = message.length;
     const contextLength = history.reduce((sum, msg) => sum + msg.content.length, 0);
@@ -369,6 +383,11 @@ class AIOrchestrator {
           break;
 
         case 'ollama':
+          // ✨ v21 - BOOST MASSIF en mode local forcé
+          if (preferredProvider === 'local') {
+            score += 200; // Priorité absolue au local
+            isDev && console.log('   🏠 LOCAL MODE: Ollama boosted to top priority');
+          }
           score += messageLength < 500 ? 15 : 5; // Bon sur court
           score += stats.avgResponseTime < 3000 ? 10 : -10; // Bonus vitesse
           break;
@@ -460,17 +479,20 @@ class AIOrchestrator {
     const requestId = `req_${Date.now()}_${Math.random().toString(36).substring(7)}`;
     const requestStartTime = Date.now();
 
+    // Ensure engines are loaded
+    const { autoHeal, metrics: _metrics } = await ensureEngines();
+
     // Increment metrics
     this.orchestratorMetrics.totalRequests++;
     this.orchestratorMetrics.lastActivity = Date.now();
 
     try {
-      // ═══ PHASE 3.4.1: VALIDATION MESSAGE ═══
+      // ═══ PHASE 3.4.1: VALIDATION MESSAGE ===
       const { sanitized, valid, issues } = this.sanitizeMessage(message);
 
       if (!valid) {
         const error = `Invalid message: ${issues.join(', ')}`;
-        autoHealEngine.heal('orchestrator', error, 'validation', { issues, requestId });
+        autoHeal.heal('orchestrator', error, 'validation', { issues, requestId });
         throw new Error(error);
       }
 
@@ -514,8 +536,12 @@ class AIOrchestrator {
         metrics: realtimeMetrics,
       });
 
-      // Sélection neurale standard
-      const selection = this.selectOptimalProvider(sanitized, history);
+      // Sélection neurale standard (avec préférence optionnelle)
+      const selection = this.selectOptimalProvider(
+        sanitized,
+        history,
+        config?.preferredProvider
+      );
 
       // 🧠 Fusionner décision cognitive et sélection neurale
       const finalProvider =

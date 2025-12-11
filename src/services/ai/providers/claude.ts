@@ -11,7 +11,7 @@
 
 import { invoke } from '@tauri-apps/api/core';
 import type { AIProvider, AIMessage, AIResponse } from '../types';
-import { autoHealEngine } from '../autoHealEngine';
+import { getAutoHealEngine } from '../system';
 
 /**
  * Modèles Claude supportés par TITANE∞
@@ -160,17 +160,21 @@ export const claudeProvider: AIProvider = {
     } catch (error) {
       const latency = Date.now() - startTime;
 
-      // 🔧 AUTOHEAL: Signaler l'erreur pour auto-réparation
-      autoHealEngine.detectError(
-        'claude-provider',
-        error instanceof Error ? error : new Error(String(error)),
-        'provider',
-        {
-          latency,
-          message: message.substring(0, 100),
-          historyLength: history.length,
-        }
-      );
+      // 🔧 AUTOHEAL: Signaler l'erreur pour auto-réparation (lazy loaded)
+      getAutoHealEngine()
+        .then(autoHeal => {
+          autoHeal.detectError(
+            'claude-provider',
+            error instanceof Error ? error : new Error(String(error)),
+            'provider',
+            {
+              latency,
+              message: message.substring(0, 100),
+              historyLength: history.length,
+            }
+          );
+        })
+        .catch(console.error);
 
       // Re-throw erreurs typées
       if (error instanceof Error) {

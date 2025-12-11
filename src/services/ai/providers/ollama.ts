@@ -19,7 +19,9 @@ import {
   type SecureAIResponse,
   type ChatResponse,
 } from '@/lib/security';
-import { autoHealEngine } from '../autoHealEngine';
+import { getAutoHealEngine } from '../system';
+import { memoryIntegration } from '../memoryIntegration'; // ✨ v21 - Memory integration
+import type { MemoryContext } from '../memoryIntegration'; // ✨ v21
 
 const isDev = process.env.NODE_ENV === 'development';
 const runtimeConfig = (globalThis as any)?.__TITANE_RUNTIME_CONFIG__ || {};
@@ -43,9 +45,40 @@ const MAX_ENDPOINT_ERRORS = 5;
 const ENDPOINT_TIMEOUT = 8000; // 8s for health checks (optimisé)
 
 /**
- * Construit le prompt pour Ollama
+ * OMEGA: Initialize Ollama provider at startup
+ * Tests endpoint health and prepares the provider
  */
-function buildPrompt(message: string, history: AIMessage[]): string {
+export async function initializeOllama(): Promise<boolean> {
+  isDev && console.log('[OLLAMA] 🚀 Initializing Ollama provider...');
+
+  try {
+    const healthy = await checkEndpointHealth();
+    endpointHealthy = healthy;
+    lastHealthCheck = Date.now();
+
+    if (healthy) {
+      errorCount = 0;
+      isDev &&
+        console.log(`[OLLAMA] ✅ Health check passed - Ready at ${OLLAMA_API_URL}`);
+      isDev && console.log(`[OLLAMA] 📦 Model: ${OLLAMA_MODEL}`);
+    } else {
+      isDev && console.warn(`[OLLAMA] ⚠️ Endpoint offline at ${OLLAMA_API_URL}`);
+      isDev && console.warn(`[OLLAMA] 🔄 Falling back to titaneLocal provider`);
+    }
+
+    return healthy;
+  } catch (error) {
+    handleOllamaError(error, 'initialization', { url: OLLAMA_API_URL });
+    isDev && console.error('[OLLAMA] ❌ Initialization failed:', error);
+    return false;
+  }
+}
+
+/**
+ * Construit le prompt pour Ollama (legacy - sans mémoire)
+ * @deprecated Use buildPromptWithMemory() instead
+ */
+function _buildPrompt(message: string, history: AIMessage[]): string {
   const recentHistory = history.slice(-5);
 
   if (recentHistory.length === 0) {
@@ -68,6 +101,105 @@ ${contextLines.join('\n')}
 Utilisateur: ${message}
 
 TITANE∞:`;
+}
+
+/**
+ * ✨ v21 - Construit le prompt enrichi avec mémoire STM/MTM/LTM
+ */
+async function buildPromptWithMemory(
+  message: string,
+  history: AIMessage[]
+): Promise<string> {
+  const recentHistory = history.slice(-5);
+
+  // Charger contexte mémoire
+  let memoryContext: MemoryContext | null = null;
+  try {
+    memoryContext = await memoryIntegration.loadContext({
+      includeProjects: true,
+      includeDecisions: true,
+      includeKnowledge: true,
+      includeRituals: false,
+      includeTimeline: false,
+      maxProjects: 3,
+      maxDecisions: 5,
+      maxKnowledge: 10,
+      timeWindow: '7d',
+    });
+  } catch (error) {
+    isDev && console.warn('[OLLAMA] Failed to load memory context:', error);
+  }
+
+  // Construire sections du prompt
+  const sections: string[] = [];
+
+  // System prompt
+  sections.push(
+    `Tu es TITANE∞ v21, un OS cognitif personnel développé pour Kevin Thibault.`,
+    ``,
+    `IDENTITÉ:`,
+    `- Système local-first (priorité absolue à la vie privée)`,
+    `- Multi-IA orchestré (Ollama local, Claude, OpenAI en backup)`,
+    `- Mémoire persistante (STM/MTM/LTM)`,
+    `- Auto-évolution cognitive`,
+    ``,
+    `PRINCIPES:`,
+    `- Local-first: toujours privilégier Ollama quand possible`,
+    `- Mémoire vivante: utiliser le contexte passé pour répondre`,
+    `- Précision technique: réponses structurées, claires, sourcées`,
+    `- Français: langue par défaut`,
+    ``,
+    `STYLE:`,
+    `- Réponses structurées (titres, listes, sections)`,
+    `- Ton professionnel mais accessible`,
+    `- Citer la mémoire quand pertinent`,
+    `- Admettre quand tu ne sais pas`
+  );
+
+  // Contexte mémoire
+  if (memoryContext) {
+    sections.push(``, `📋 CONTEXTE MÉMOIRE:`);
+
+    if (memoryContext.activeProjects?.length > 0) {
+      const projectNames = memoryContext.activeProjects
+        .map(p => p.name || p.title)
+        .filter(Boolean)
+        .join(', ');
+      if (projectNames) {
+        sections.push(`Projets actifs: ${projectNames}`);
+      }
+    }
+
+    if (memoryContext.recentDecisions?.length > 0) {
+      const decisions = memoryContext.recentDecisions
+        .slice(0, 3)
+        .map(d => d.summary || d.title)
+        .filter(Boolean)
+        .join('; ');
+      if (decisions) {
+        sections.push(`Décisions récentes: ${decisions}`);
+      }
+    }
+
+    if (memoryContext.relevantKnowledge?.length > 0) {
+      const knowledgeCount = memoryContext.relevantKnowledge.length;
+      sections.push(`Base de connaissances: ${knowledgeCount} entrées disponibles`);
+    }
+  }
+
+  // Conversation récente
+  if (recentHistory.length > 0) {
+    sections.push(``, `💬 CONVERSATION RÉCENTE:`);
+    const contextLines = recentHistory.map(
+      msg => `${msg.role === 'user' ? 'Utilisateur' : 'TITANE∞'}: ${msg.content}`
+    );
+    sections.push(...contextLines);
+  }
+
+  // Message utilisateur
+  sections.push(``, `Utilisateur: ${message}`, ``, `TITANE∞:`);
+
+  return sections.join('\n');
 }
 
 /**
@@ -107,13 +239,17 @@ function handleOllamaError(error: unknown, context: string, metadata?: any): voi
 
   const errorObj = error instanceof Error ? error : new Error(String(error));
 
-  // Auto-heal trigger
-  autoHealEngine.heal('ollama', errorObj, 'provider', {
-    context,
-    errorCount,
-    metadata,
-    timestamp: Date.now(),
-  });
+  // Auto-heal trigger (lazy loaded)
+  getAutoHealEngine()
+    .then(autoHeal => {
+      autoHeal.heal('ollama', errorObj, 'provider', {
+        context,
+        errorCount,
+        metadata,
+        timestamp: Date.now(),
+      });
+    })
+    .catch(console.error);
 
   isDev &&
     console.error(
@@ -211,7 +347,8 @@ export const ollamaProvider: AIProvider = {
           const timeout = setTimeout(() => controller.abort(), finalConfig.timeout);
 
           try {
-            const prompt = buildPrompt(sanitizedMessage, history);
+            // ✨ v21 - Use memory-enriched prompt
+            const prompt = await buildPromptWithMemory(sanitizedMessage, history);
 
             const response = await fetch(`${OLLAMA_API_URL}/api/generate`, {
               method: 'POST',
@@ -301,12 +438,25 @@ export const ollamaProvider: AIProvider = {
       // ============================================================
       // SUCCESS (OMEGA)
       // ============================================================
-      return {
+      const aiResponse: AIResponse = {
         content: secureResult.response.content,
         provider: 'ollama',
         timestamp: Date.now(),
         model: OLLAMA_MODEL,
       };
+
+      // ✨ v21 - Save interaction to memory (async, non-blocking)
+      memoryIntegration
+        .saveInteraction({
+          userMessage: message,
+          aiResponse: aiResponse.content,
+          mode: 'chat',
+        })
+        .catch(err => {
+          isDev && console.warn('[OLLAMA] Failed to save interaction to memory:', err);
+        });
+
+      return aiResponse;
     } catch (error) {
       // OMEGA: Final error handler
       if (error instanceof Error) {
@@ -357,7 +507,10 @@ export const ollamaProvider: AIProvider = {
 
   // Streaming pour Ollama
   async *stream(message: string, history: AIMessage[] = []): AsyncGenerator<string> {
-    const prompt = buildPrompt(message, history);
+    // ✨ v21 - Use memory-enriched prompt
+    const prompt = await buildPromptWithMemory(message, history);
+
+    let fullResponse = ''; // Track complete response for memory save
 
     try {
       const response = await fetch(`${OLLAMA_API_URL}/api/generate`, {
@@ -399,12 +552,26 @@ export const ollamaProvider: AIProvider = {
           try {
             const data = JSON.parse(line);
             if (data.response) {
+              fullResponse += data.response;
               yield data.response;
             }
           } catch {
             // Ignore invalid JSON
           }
         }
+      }
+
+      // ✨ v21 - Save streaming interaction to memory after completion
+      if (fullResponse) {
+        memoryIntegration
+          .saveInteraction({
+            userMessage: message,
+            aiResponse: fullResponse,
+            mode: 'chat',
+          })
+          .catch(err => {
+            isDev && console.warn('[OLLAMA] Failed to save streaming interaction:', err);
+          });
       }
     } catch (error) {
       handleOllamaError(error, 'stream_error');

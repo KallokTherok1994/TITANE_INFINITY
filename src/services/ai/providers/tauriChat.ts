@@ -14,7 +14,7 @@
 import type { AIMessage, AIProvider, AIResponse } from '../types';
 import { TAURI_COMMANDS } from '../../../core/commands/TAURI_COMMANDS';
 import { safeInvokeTauri } from '../../../utils/tauriProtector';
-import { autoHealEngine } from '../autoHealEngine';
+import { getAutoHealEngine } from '../system';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -222,13 +222,17 @@ class TauriChatProvider implements AIProvider {
 
     const errorObj = error instanceof Error ? error : new Error(String(error));
 
-    // Auto-heal trigger
-    autoHealEngine.heal('tauri-chat', errorObj, 'provider', {
-      context,
-      errorCount: this.errorCount,
-      metadata,
-      timestamp: Date.now(),
-    });
+    // Auto-heal trigger (lazy loaded)
+    getAutoHealEngine()
+      .then(autoHeal => {
+        autoHeal.heal('tauri-chat', errorObj, 'provider', {
+          context,
+          errorCount: this.errorCount,
+          metadata,
+          timestamp: Date.now(),
+        });
+      })
+      .catch(console.error);
 
     isDev &&
       console.error(
