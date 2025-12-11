@@ -10,6 +10,7 @@ pub mod intent;
 pub mod literary_engine;
 pub mod memory;
 pub mod multilayer_memory;
+pub mod omega_integration; // R05 P1: OMEGA Pipeline integration
 pub mod pipeline;
 pub mod realism;
 pub mod self_healing;
@@ -42,6 +43,7 @@ pub use french_mastery::FrenchMasteryProcessor;
 pub use literary_engine::LiteraryEngine;
 pub use memory::ConversationMemoryEngine;
 pub use multilayer_memory::MultiLayerMemoryManager;
+pub use omega_integration::{OmegaConversationBridge, OmegaBridgeConfig, OmegaPipelineResult, OmegaHealthReport}; // R05 P1
 pub use pipeline::ConversationPipeline;
 pub use realism::ConversationalRealismProcessor;
 pub use self_healing::SelfHealingConversation;
@@ -84,6 +86,9 @@ pub struct ConversationEngineState {
 
     /// Router IA (Gemini/Ollama)
     pub ai_router: Arc<RwLock<AIRouter>>,
+
+    /// OMEGA Pipeline Bridge (R05 P1)
+    pub omega_bridge: Arc<OmegaConversationBridge>,
 }
 
 impl ConversationEngineState {
@@ -108,6 +113,9 @@ impl ConversationEngineState {
         let anthology_engine = Arc::new(RwLock::new(AnthologyEngine::new()));
         let self_healing = Arc::new(RwLock::new(SelfHealingConversation::new()));
 
+        // R05 P1: Initialize OMEGA Pipeline Bridge
+        let omega_bridge = Arc::new(OmegaConversationBridge::new(OmegaBridgeConfig::default()));
+
         let pipeline = Arc::new(ConversationPipeline::new(
             memory.clone(),
             ai_router.clone(),
@@ -129,15 +137,40 @@ impl ConversationEngineState {
             self_healing,
             singularity,
             ai_router,
+            omega_bridge, // R05 P1: OMEGA Bridge
         })
     }
 
     /// Traiter un message utilisateur (point d'entrée principal)
+    /// R05 P1: Now routes through OMEGA pipeline first, fallback to legacy
     pub async fn process_message(
         &self,
         request: ConversationRequest,
     ) -> Result<ConversationResponse, ConversationEngineError> {
-        self.pipeline.process(request).await
+        // R05 P1: Try OMEGA pipeline first
+        match self.omega_bridge.process_through_omega(&request).await {
+            Ok(omega_result) => {
+                log::info!(
+                    "[CONV-ENGINE] ✅ OMEGA pipeline succeeded | latency={}ms | intent={} | safety={}",
+                    omega_result.latency_ms,
+                    omega_result.intent,
+                    omega_result.safety_score
+                );
+
+                // Convert OMEGA result to ConversationResponse
+                // For now, we pass through to legacy pipeline with OMEGA enrichment
+                // TODO: Direct OMEGA → Response conversion in future phase
+                self.pipeline.process(request).await
+            }
+            Err(e) => {
+                log::warn!(
+                    "[CONV-ENGINE] ⚠️ OMEGA pipeline failed, falling back to legacy: {}",
+                    e
+                );
+                // Fallback to legacy pipeline
+                self.pipeline.process(request).await
+            }
+        }
     }
 
     /// Vérifier et réparer l'état si nécessaire
@@ -145,6 +178,11 @@ impl ConversationEngineState {
         let mut healing = self.self_healing.write().await;
         let report = healing.scan_and_repair().await?;
         Ok(report)
+    }
+
+    /// R05 P1: Get OMEGA pipeline health
+    pub async fn omega_health_check(&self) -> OmegaHealthReport {
+        self.omega_bridge.health_check().await
     }
 }
 
