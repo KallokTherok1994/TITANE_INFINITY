@@ -302,10 +302,9 @@ export const ollamaProvider: AIProvider = {
       errorCount = 0; // Reset on success
     }
 
-    isDev &&
-      console.log(
-        `   ${endpointHealthy ? '✅' : '❌'} Ollama endpoint: ${endpointHealthy ? 'healthy' : 'unavailable'}`
-      );
+    logger.debug(
+      `   ${endpointHealthy ? '✅' : '❌'} Ollama endpoint: ${endpointHealthy ? 'healthy' : 'unavailable'}`
+    );
 
     return endpointHealthy;
   },
