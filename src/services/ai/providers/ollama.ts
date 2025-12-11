@@ -25,7 +25,6 @@ import type { MemoryContext } from '../memoryIntegration'; // ✨ v21
 import { createLogger } from '@/utils/logger'; // ✨ v21.1 - Conditional logging
 
 const logger = createLogger('Ollama'); // ✨ v21.1
-const isDev = process.env.NODE_ENV === 'development';
 const runtimeConfig = (globalThis as any)?.__TITANE_RUNTIME_CONFIG__ || {};
 const OLLAMA_API_URL =
   typeof runtimeConfig.ollamaUrl === 'string' && runtimeConfig.ollamaUrl.trim().length > 0

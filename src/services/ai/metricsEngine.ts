@@ -14,7 +14,6 @@
 import { createLogger } from '@/utils/logger';
 
 const logger = createLogger('Metrics');
-const isDev = process.env.NODE_ENV === 'development';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES METRICS

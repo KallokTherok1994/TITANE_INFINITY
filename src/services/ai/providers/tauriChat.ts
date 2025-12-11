@@ -18,7 +18,6 @@ import { getAutoHealEngine } from '../system';
 import { createLogger } from '@/utils/logger';
 
 const logger = createLogger('TauriChat');
-const isDev = process.env.NODE_ENV === 'development';
 
 // ═══════════════════════════════════════════════════════════════
 // TYPES (matching Rust structs)
