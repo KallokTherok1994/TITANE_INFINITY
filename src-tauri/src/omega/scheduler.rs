@@ -823,7 +823,7 @@ mod tests {
     }
 
     #[test]
-    fn test_priority_ordering() {
+    fn test_priority_comparison() {
         assert!(Priority::CRITICAL > Priority::HIGH);
         assert!(Priority::HIGH > Priority::NORMAL);
         assert!(Priority::NORMAL > Priority::LOW);

@@ -999,7 +999,7 @@ mod tests {
     }
 
     #[test]
-    fn test_mental_load_high() {
+    fn test_detect_mental_load_high() {
         let processor = EmotionalSubtletyProcessor::new();
         let history: Vec<String> = (0..25).map(|i| format!("Message {}", i)).collect();
         let load = processor.detect_mental_load(&history, &EnergyLevel::Low);
@@ -1007,7 +1007,7 @@ mod tests {
     }
 
     #[test]
-    fn test_mental_load_low() {
+    fn test_detect_mental_load_low() {
         let processor = EmotionalSubtletyProcessor::new();
         let history = vec!["Msg1".to_string(), "Msg2".to_string()];
         let load = processor.detect_mental_load(&history, &EnergyLevel::High);
@@ -1015,7 +1015,7 @@ mod tests {
     }
 
     #[test]
-    fn test_mental_load_normal() {
+    fn test_detect_mental_load_normal() {
         let processor = EmotionalSubtletyProcessor::new();
         let history: Vec<String> = (0..10).map(|i| format!("Message {}", i)).collect();
         let load = processor.detect_mental_load(&history, &EnergyLevel::Medium);

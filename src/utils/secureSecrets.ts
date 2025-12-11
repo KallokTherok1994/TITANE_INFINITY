@@ -102,6 +102,54 @@ export async function getGeminiKeyStatus(): Promise<SecureResponse<GeminiKeyStat
 }
 
 /**
+ * Request secure backend to persist the OpenAI API key via SecureSecretsEngine.
+ */
+export async function setOpenAIApiKey(
+  apiKey: string
+): Promise<SecureResponse<GeminiKeyStatus>> {
+  const raw = await safeInvoke<unknown>('chat_set_openai_key', { api_key: apiKey });
+  return normalizeSecureResponse<GeminiKeyStatus>(
+    raw,
+    'Impossible de sécuriser la clé OpenAI (runtime indisponible).'
+  );
+}
+
+/**
+ * Fetch the current OpenAI API key status (masked response).
+ */
+export async function getOpenAIKeyStatus(): Promise<SecureResponse<GeminiKeyStatus>> {
+  const raw = await safeInvoke<unknown>('get_openai_key_status');
+  return normalizeSecureResponse<GeminiKeyStatus>(
+    raw,
+    'Statut OpenAI indisponible (runtime requis).'
+  );
+}
+
+/**
+ * Request secure backend to persist the Anthropic API key via SecureSecretsEngine.
+ */
+export async function setAnthropicApiKey(
+  apiKey: string
+): Promise<SecureResponse<GeminiKeyStatus>> {
+  const raw = await safeInvoke<unknown>('chat_set_anthropic_key', { api_key: apiKey });
+  return normalizeSecureResponse<GeminiKeyStatus>(
+    raw,
+    'Impossible de sécuriser la clé Anthropic (runtime indisponible).'
+  );
+}
+
+/**
+ * Fetch the current Anthropic API key status (masked response).
+ */
+export async function getAnthropicKeyStatus(): Promise<SecureResponse<GeminiKeyStatus>> {
+  const raw = await safeInvoke<unknown>('get_anthropic_key_status');
+  return normalizeSecureResponse<GeminiKeyStatus>(
+    raw,
+    'Statut Anthropic indisponible (runtime requis).'
+  );
+}
+
+/**
  * Persist an arbitrary secret using the SecureSecretsEngine backend.
  */
 export async function secureStoreSecret(

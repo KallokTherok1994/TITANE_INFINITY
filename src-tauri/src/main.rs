@@ -370,7 +370,7 @@ fn main() {
             conversation_engine::commands::conversation_process_message,
             conversation_engine::commands::conversation_health_check,
             conversation_engine::commands::conversation_memory_stats,
-            // Chat Orchestrator Commands (CHAT PIPELINE v21)
+            // Chat Orchestrator Commands (CHAT PIPELINE v21 + R04 Memory Integration)
             overdrive::chat_orchestrator::chat_send_message,
             overdrive::chat_orchestrator::chat_stream_message,
             overdrive::chat_orchestrator::chat_get_providers_status,
@@ -379,6 +379,7 @@ fn main() {
             overdrive::chat_orchestrator::chat_create_conversation,
             overdrive::chat_orchestrator::chat_delete_conversation,
             overdrive::chat_orchestrator::chat_generate_suggestions,
+            overdrive::chat_orchestrator::chat_get_memory_stats, // R04 FIX
             // Voice Engine Commands (VOICE PIPELINE v21 REPAIR - 17 commands)
             overdrive::voice_engine::voice_start_listening,
             overdrive::voice_engine::voice_stop_listening,

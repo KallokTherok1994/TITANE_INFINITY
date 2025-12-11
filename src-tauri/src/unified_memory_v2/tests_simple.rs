@@ -91,6 +91,6 @@ mod integration_tests {
 
         // Verify empty
         let stats = memory.stats().await.unwrap();
-        assert_eq!(stats.total_entries, 0, "Should be empty after clear");
+        assert_eq!(stats.snapshot.total_count, 0, "Should be empty after clear");
     }
 }

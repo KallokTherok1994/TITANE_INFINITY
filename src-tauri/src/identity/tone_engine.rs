@@ -650,7 +650,7 @@ mod tests {
     fn test_tone_config_creation() {
         let config = ToneConfig {
             primary_tone: Tone::Friendly,
-            secondary_tone: Some(Tone::Warm),
+            secondary_tone: Some(Tone::Friendly),
             parameters: ToneParameters::default(),
             text_markers: ToneTextMarkers::default(),
         };

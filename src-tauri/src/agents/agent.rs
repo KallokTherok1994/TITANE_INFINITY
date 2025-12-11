@@ -23,6 +23,10 @@ impl AgentId {
     pub fn from_string(s: String) -> Self {
         Self(s)
     }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
 }
 
 impl Default for AgentId {
@@ -726,7 +730,7 @@ mod tests {
     #[tokio::test]
     async fn test_agent_with_id() {
         let custom_id = AgentId::from_string("custom-agent".to_string());
-        let role = AgentRole::Executor;
+        let role = AgentRole::Observer;
         let capabilities = CapabilitySet::new();
         let contract = AgentContract::default_for_role(&role);
         let agent = Agent::with_id(custom_id.clone(), role, capabilities, contract);
@@ -788,7 +792,7 @@ mod tests {
     #[tokio::test]
     async fn test_agent_can_execute_missing_capability() {
         let agent = create_test_agent();
-        let result = agent.can_execute(&[Capability::NetworkAccess]).await;
+        let result = agent.can_execute(&[Capability::MemoryWrite]).await;
         assert!(result.is_err());
     }
 
