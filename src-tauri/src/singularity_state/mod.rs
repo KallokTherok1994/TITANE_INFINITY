@@ -453,23 +453,23 @@ mod tests {
 
         {
             let mut s = state.write().await;
-            s.physical.cpu_usage = 0.5;
+            s.physical.metrics.cpu_usage = 0.5;
             s.update_timestamp();
         }
 
         let s = state.read().await;
-        assert_eq!(s.physical.cpu_usage, 0.5);
+        assert_eq!(s.physical.metrics.cpu_usage, 0.5);
     }
 
     #[tokio::test]
     async fn test_singularity_deep_sync() {
         let mut state = SingularityState::new();
 
-        // Remplir avec données valides
-        state.cognitive.confidence = 0.9;
-        state.cognitive.energy = 0.85;
-        state.cognitive.emotional.stability = 0.88;
-        state.cognitive.memory.coherence = 0.92;
+        // Remplir avec données valides (using actual CognitiveLayer fields)
+        state.cognitive.coherence = 0.9;
+        state.cognitive.memory.memory_usage = 0.5;
+        state.cognitive.memory.total_memories = 100;
+        state.cognitive.knowledge.knowledge_score = 0.88;
 
         let result = state.singularity_deep_sync().await;
 
@@ -485,7 +485,7 @@ mod tests {
 
     #[test]
     fn test_meta_augmented_coherence() {
-        let mut state = SingularityState::new();
+        let state = SingularityState::new();
 
         // Sans META reports
         let base_coherence = state.meta_augmented_coherence();

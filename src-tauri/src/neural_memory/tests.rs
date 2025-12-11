@@ -109,7 +109,7 @@ mod mtm_tests {
 #[cfg(test)]
 mod vector_tests {
     use super::super::vector::VectorStore;
-    use crate::unified_memory_v2::types::{MemoryEntry, MemoryTier, MemoryType};
+    use crate::unified_memory_v2::types::{MemoryEntry, MemoryType};
 
     fn create_test_entry(id: &str, content: &str) -> MemoryEntry {
         let mut entry = MemoryEntry::new(content.to_string(), 0.5, MemoryType::Factual);

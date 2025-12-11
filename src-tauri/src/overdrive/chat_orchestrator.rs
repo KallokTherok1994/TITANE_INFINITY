@@ -5,7 +5,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 use crate::core::tapi_error::TAPIError;
-use crate::core::modules::unified_memory::{UnifiedMemory, MemoryType};
+use crate::core::{UnifiedMemory, MemoryType};
 use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
@@ -374,28 +374,28 @@ async fn store_in_unified_memory(
 
 /// Calculate message importance for memory consolidation
 fn calculate_message_importance(request: &ChatRequest, response: &ChatMessage) -> f32 {
-    let mut importance = 0.5; // Base importance
-    
+    let mut importance: f32 = 0.5; // Base importance
+
     // Longer responses = more important
     if response.content.len() > 1000 {
         importance += 0.2;
     }
-    
+
     // Custom prompts = more important
     if request.system_prompt.is_some() {
         importance += 0.1;
     }
-    
+
     // Cloud providers (higher quality) = more important
     if matches!(response.provider.as_str(), "openai" | "anthropic" | "gemini") {
         importance += 0.1;
     }
-    
+
     // Code-related = more important
     if response.content.contains("```") || response.content.contains("function") {
         importance += 0.1;
     }
-    
+
     importance.min(1.0) // Cap at 1.0
 }
 
