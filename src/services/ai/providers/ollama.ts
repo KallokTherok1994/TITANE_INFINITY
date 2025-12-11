@@ -22,7 +22,9 @@ import {
 import { getAutoHealEngine } from '../system';
 import { memoryIntegration } from '../memoryIntegration'; // ✨ v21 - Memory integration
 import type { MemoryContext } from '../memoryIntegration'; // ✨ v21
+import { createLogger } from '@/utils/logger'; // ✨ v21.1 - Conditional logging
 
+const logger = createLogger('Ollama'); // ✨ v21.1
 const isDev = process.env.NODE_ENV === 'development';
 const runtimeConfig = (globalThis as any)?.__TITANE_RUNTIME_CONFIG__ || {};
 const OLLAMA_API_URL =
@@ -49,7 +51,7 @@ const ENDPOINT_TIMEOUT = 8000; // 8s for health checks (optimisé)
  * Tests endpoint health and prepares the provider
  */
 export async function initializeOllama(): Promise<boolean> {
-  isDev && console.log('[OLLAMA] 🚀 Initializing Ollama provider...');
+  logger.debug('🚀 Initializing Ollama provider...');
 
   try {
     const healthy = await checkEndpointHealth();
@@ -58,18 +60,17 @@ export async function initializeOllama(): Promise<boolean> {
 
     if (healthy) {
       errorCount = 0;
-      isDev &&
-        console.log(`[OLLAMA] ✅ Health check passed - Ready at ${OLLAMA_API_URL}`);
-      isDev && console.log(`[OLLAMA] 📦 Model: ${OLLAMA_MODEL}`);
+      logger.info(`✅ Health check passed - Ready at ${OLLAMA_API_URL}`);
+      logger.debug(`📦 Model: ${OLLAMA_MODEL}`);
     } else {
-      isDev && console.warn(`[OLLAMA] ⚠️ Endpoint offline at ${OLLAMA_API_URL}`);
-      isDev && console.warn(`[OLLAMA] 🔄 Falling back to titaneLocal provider`);
+      logger.warn(`⚠️ Endpoint offline at ${OLLAMA_API_URL}`);
+      logger.warn(`🔄 Falling back to titaneLocal provider`);
     }
 
     return healthy;
   } catch (error) {
     handleOllamaError(error, 'initialization', { url: OLLAMA_API_URL });
-    isDev && console.error('[OLLAMA] ❌ Initialization failed:', error);
+    logger.error('❌ Initialization failed:', error);
     return false;
   }
 }
@@ -292,7 +293,7 @@ export const ollamaProvider: AIProvider = {
       }
     }
 
-    isDev && console.log('🔍 Ollama OMEGA: Checking endpoint health...');
+    logger.debug('🔍 OMEGA: Checking endpoint health...');
 
     endpointHealthy = await checkEndpointHealth();
     lastHealthCheck = now;
@@ -487,7 +488,7 @@ export const ollamaProvider: AIProvider = {
     errorCount = 0;
     endpointHealthy = null;
     lastHealthCheck = 0;
-    isDev && console.log('🔄 Ollama Provider: Errors and health state reset');
+    logger.debug('🔄 Errors and health state reset');
   },
 
   /**
