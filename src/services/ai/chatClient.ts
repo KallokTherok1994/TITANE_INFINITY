@@ -16,6 +16,9 @@ import {
   type SecureAIResponse,
   type ChatResponse,
 } from '@/lib/security';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('ChatClient');
 
 // ═══════════════════════════════════════════════════════════════
 // TYPES
@@ -273,7 +276,7 @@ export async function sendMessage(
   // ============================================================
   for (const fallbackModel of fallbackModels) {
     try {
-      console.log(`[ChatClient] Trying fallback model: ${fallbackModel}`);
+      logger.debug(`Trying fallback model: ${fallbackModel}`);
 
       const fallbackRequest = { ...secureRequest, model: fallbackModel };
       const fallbackResult = await SecureAIService.executeSecureChat(
