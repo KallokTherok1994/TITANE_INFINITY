@@ -185,6 +185,7 @@ Patterns trouvés:
    - **Ne peut pas envoyer messages Chat IA** ❌ (pas d'IPC direct)
 
 3. **Test Unitaires Rust** ✅ Possible mais hors scope
+
    ```rust
    #[tokio::test]
    async fn test_singularity_meta_process() {
