@@ -445,16 +445,17 @@ class ChatEngineOmega {
         }
 
         if (!consistencyResult.isConsistent) {
-          isDev &&
-            console.log(
-              `   ⚠️ ${consistencyResult.violations.length} consistency violations detected`
-            );
+          logger.debug('Consistency violations detected', {
+            count: consistencyResult.violations.length,
+          });
 
           consistencyResult.violations.forEach((v, idx) => {
-            isDev &&
-              console.log(
-                `      ${idx + 1}. [${v.severity}] ${v.type}: ${v.description}`
-              );
+            logger.debug('Violation detail', {
+              index: idx + 1,
+              severity: v.severity,
+              type: v.type,
+              description: v.description,
+            });
           });
 
           // Auto-correct if high/critical violations
@@ -462,7 +463,7 @@ class ChatEngineOmega {
             consistencyResult.shouldCorrect &&
             finalConfig.omegaConfig?.enableAutoHeal
           ) {
-            isDev && console.log('   🔄 Applying auto-correction...');
+            logger.debug('Applying auto-correction');
 
             const correctionResult = await cognitiveOmega.autoCorrect(
               conversation_id,
@@ -482,17 +483,19 @@ class ChatEngineOmega {
                 });
               }
 
-              isDev && console.log('   ✅ Response auto-corrected for consistency');
+              logger.info('Response auto-corrected for consistency', {
+                correctionType: (correctionResult.correction as any)?.correction_type,
+                confidence: (correctionResult.correction as any)?.confidence,
+              });
             }
           }
         } else {
-          isDev &&
-            console.log(
-              `   ✅ Response consistent (score: ${(consistencyResult.consistencyScore * 100).toFixed(0)}%)`
-            );
+          logger.debug('Response consistency validated', {
+            score: (consistencyResult.consistencyScore * 100).toFixed(0) + '%',
+          });
         }
       } catch (error) {
-        isDev && console.warn('   ⚠️ Consistency check failed (non-blocking):', error);
+        logger.warn('Consistency check failed (non-blocking)', { error });
         autoHealed = true;
       }
 
@@ -551,12 +554,11 @@ class ChatEngineOmega {
           });
         }
 
-        isDev &&
-          console.log(
-            '   ✅ Interaction saved to cognitive engines (memory + goals + facts + evaluation)'
-          );
+        logger.debug('Interaction saved to cognitive engines', {
+          engines: ['memory', 'goals', 'facts', 'evaluation'],
+        });
       } catch (error) {
-        isDev && console.warn('   ⚠️ Cognitive memory save failed (continuing):', error);
+        logger.warn('Cognitive memory save failed (continuing)', { error });
         autoHealed = true;
       }
 
@@ -564,9 +566,9 @@ class ChatEngineOmega {
       if (traceId) {
         try {
           await cognitiveOmega.endTrace(traceId, processedResponse.content, 'success');
-          isDev && console.log('   🔍 Trace ended successfully');
+          logger.debug('Observability trace ended', { status: 'success' });
         } catch (error) {
-          isDev && console.warn('   ⚠️ Failed to end trace:', error);
+          logger.warn('Failed to end observability trace', { error });
         }
       }
 
@@ -591,14 +593,10 @@ class ChatEngineOmega {
       // Reset compteur failures si succès
       this.pipelineFailures = 0;
 
-      isDev &&
-        console.log('\n╔══════════════════════════════════════════════════════════════╗');
-      isDev &&
-        console.log(
-          `║  🟣 CHAT ENGINE OMEGA: Pipeline complete! (${processingTime}ms)     ║`
-        );
-      isDev &&
-        console.log('╚══════════════════════════════════════════════════════════════╝\n');
+      logger.info('OMEGA Pipeline complete', {
+        processingTime: `${processingTime}ms`,
+        steps: pipelineSteps,
+      });
 
       return finalResponse;
     } catch (error) {
@@ -630,8 +628,11 @@ class ChatEngineOmega {
     this.pipelineFailures++;
     this.lastHealing = Date.now();
 
-    isDev && console.error(`🆘 OMEGA PIPELINE FAILURE #${this.pipelineFailures}:`, error);
-    isDev && console.log(`   Steps completed: ${pipelineSteps.join(' → ')}`);
+    logger.error('OMEGA pipeline failure', {
+      failureCount: this.pipelineFailures,
+      stepsCompleted: pipelineSteps.join(' → '),
+      error,
+    });
 
     // Emergency response selon niveau de failure
     let emergencyContent: string;
@@ -760,15 +761,17 @@ Que souhaites-tu explorer ?`;
         finalConfig.mode,
         validatedMessage
       );
-      isDev &&
-        console.log(
-          `   ✅ Backend validation score: ${(validation.score * 100).toFixed(0)}%`
-        );
+      logger.debug('Backend validation complete', {
+        score: `${(validation.score * 100).toFixed(0)}%`,
+      });
 
       if (validation.issues.length > 0) {
         validation.issues.forEach(issue => {
-          isDev &&
-            console.log(`      - [${issue.severity}] ${issue.type}: ${issue.message}`);
+          logger.debug('Backend validation issue', {
+            severity: issue.severity,
+            type: issue.type,
+            message: issue.message,
+          });
         });
       }
 
@@ -811,7 +814,7 @@ Que souhaites-tu explorer ?`;
           'Memory save timeout'
         );
       } catch (error) {
-        isDev && console.warn('   ⚠️ Memory save failed (continuing)');
+        logger.warn('Backend memory save failed (continuing)', { error });
         autoHealed = true;
       }
 
@@ -832,23 +835,17 @@ Que souhaites-tu explorer ?`;
         },
       };
 
-      if (isDev) {
-        console.log('\n╔══════════════════════════════════════════════════════════════╗');
-        console.log(
-          `║  🟣 CHAT ENGINE OMEGA: Backend pipeline complete! (${processingTime}ms) ║`
-        );
-        console.log('╚══════════════════════════════════════════════════════════════╝\n');
-      }
+      logger.info('OMEGA Backend pipeline complete', {
+        processingTime: `${processingTime}ms`,
+        validationScore: validation.score,
+        autoHealed,
+      });
 
       this.pipelineFailures = 0;
       return finalResponse;
     } catch (error) {
       pipelineSteps.push('backend-error');
-      isDev &&
-        console.warn(
-          '[OMEGA ENGINE] Backend pipeline failed, falling back to orchestrator:',
-          error
-        );
+      logger.warn('Backend pipeline failed, falling back to orchestrator', { error });
       return null;
     }
   }
@@ -1050,15 +1047,17 @@ Que souhaites-tu explorer ?`;
         finalConfig.mode,
         validatedMessage
       );
-      isDev &&
-        console.log(
-          `   ✅ Backend stream validation score: ${(validation.score * 100).toFixed(0)}%`
-        );
+      logger.debug('Backend stream validation complete', {
+        score: `${(validation.score * 100).toFixed(0)}%`,
+      });
 
       if (validation.issues.length > 0) {
         validation.issues.forEach(issue => {
-          isDev &&
-            console.log(`      - [${issue.severity}] ${issue.type}: ${issue.message}`);
+          logger.debug('Backend stream validation issue', {
+            severity: issue.severity,
+            type: issue.type,
+            message: issue.message,
+          });
         });
       }
 
@@ -1101,7 +1100,7 @@ Que souhaites-tu explorer ?`;
           'Memory save timeout'
         );
       } catch (_memoryError) {
-        isDev && console.warn('   ⚠️ Memory save failed (streaming)');
+        logger.warn('Memory save failed (streaming)', { error: _memoryError });
         autoHealed = true;
       }
 
@@ -1122,13 +1121,11 @@ Que souhaites-tu explorer ?`;
         },
       };
 
-      if (isDev) {
-        console.log('\n╔══════════════════════════════════════════════════════════════╗');
-        console.log(
-          `║  🟣 CHAT ENGINE OMEGA: Backend stream complete! (${processingTime}ms) ║`
-        );
-        console.log('╚══════════════════════════════════════════════════════════════╝\n');
-      }
+      logger.info('OMEGA Backend stream complete', {
+        processingTime: `${processingTime}ms`,
+        validationScore: validation.score,
+        autoHealed,
+      });
 
       this.pipelineFailures = 0;
       return finalResponse;
@@ -1267,11 +1264,9 @@ Que souhaites-tu explorer ?`;
           return yield* backendStream;
         } catch (error) {
           pipelineSteps.push('backend-error');
-          isDev &&
-            console.warn(
-              '[OMEGA STREAM] Backend pipeline failed, falling back to orchestrator:',
-              error
-            );
+          logger.warn('Backend stream pipeline failed, falling back to orchestrator', {
+            error,
+          });
         }
       }
 
@@ -1322,7 +1317,7 @@ Que souhaites-tu explorer ?`;
           context: memoryContext,
         })
         .catch(error => {
-          isDev && console.warn('[OMEGA STREAM] Memory save failed:', error);
+          logger.warn('Stream memory save failed', { error });
         });
 
       // Retour final
@@ -1344,7 +1339,7 @@ Que souhaites-tu explorer ?`;
       };
     } catch (error) {
       // Fallback streaming
-      isDev && console.error('[OMEGA STREAM] Error:', error);
+      logger.error('OMEGA stream error, triggering auto-heal', { error });
       yield '\n\n🔄 *Auto-réparation OMEGA en cours...*';
 
       return {
@@ -1404,7 +1399,7 @@ Que souhaites-tu explorer ?`;
       return enrichedHistory;
     } catch (error) {
       // Fallback history sécurisé
-      isDev && console.warn('[OMEGA] buildEnrichedHistory failed, using minimal history');
+      logger.warn('buildEnrichedHistory failed, using minimal history', { error });
       return [
         {
           role: 'system',
@@ -1460,7 +1455,7 @@ Que souhaites-tu explorer ?`;
       return { sources, data };
     } catch (error) {
       // Fallback formatage sécurisé
-      isDev && console.warn('[OMEGA] formatMemoryContext failed:', error);
+      logger.warn('formatMemoryContext failed', { error });
       return { sources: [], data: {} };
     }
   }
@@ -1526,7 +1521,7 @@ Que souhaites-tu explorer ?`;
 
       return basePrompt;
     } catch (error) {
-      isDev && console.warn('[OMEGA] buildSystemPrompt failed:', error);
+      logger.warn('buildSystemPrompt failed', { error });
       return `TITANE∞ v19.2Ω - Mode ${modeConfig.name} (Emergency Mode)`;
     }
   }
@@ -1571,7 +1566,7 @@ Que souhaites-tu explorer ?`;
       };
     } catch (error) {
       // Fallback post-process sécurisé
-      isDev && console.warn('[OMEGA] postProcess failed:', error);
+      logger.warn('postProcess failed', { error });
       return response;
     }
   }

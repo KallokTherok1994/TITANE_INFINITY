@@ -3,6 +3,8 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
+import { createLogger } from '@/utils/logger';
+
 /**
  * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ v19.2Ω — AUTO-HEAL ENGINE (NOUVEAU MODULE)
@@ -157,13 +159,13 @@ class AutoHealEngine {
 
     // Log selon niveau
     if (this.config.logLevel === 'debug' || severity === 'critical') {
-      isDev &&
-        console.error(`[AUTO-HEAL] Error detected [${errorId}]:`, {
-          type: analyzedType,
-          severity,
-          source,
-          message: autoHealError.message,
-        });
+      logger.error('Error detected', {
+        errorId,
+        type: analyzedType,
+        severity,
+        source,
+        message: autoHealError.message,
+      });
     }
 
     // Déclencher auto-heal si activé
@@ -401,7 +403,7 @@ class AutoHealEngine {
 
       return true;
     } catch (error) {
-      isDev && console.error(`[AUTO-HEAL] Restart failed for ${source}:`, error);
+      logger.error('Restart failed', { source, error });
       return false;
     }
   }
@@ -413,7 +415,7 @@ class AutoHealEngine {
       // Toujours réussir car titane-local est toujours disponible
       return true;
     } catch (error) {
-      isDev && console.error(`[AUTO-HEAL] Fallback activation failed:`, error);
+      logger.error('Fallback activation failed', { error });
       return false;
     }
   }
@@ -427,7 +429,7 @@ class AutoHealEngine {
 
       return true;
     } catch (error) {
-      isDev && console.error(`[AUTO-HEAL] Cache purge failed:`, error);
+      logger.error('Cache purge failed', { source, error });
       return false;
     }
   }
@@ -443,7 +445,7 @@ class AutoHealEngine {
 
       return true;
     } catch (error) {
-      isDev && console.error(`[AUTO-HEAL] Connection reset failed:`, error);
+      logger.error('Connection reset failed', { source, error });
       return false;
     }
   }
@@ -457,7 +459,7 @@ class AutoHealEngine {
 
       return true;
     } catch (error) {
-      isDev && console.error(`[AUTO-HEAL] Provider isolation failed:`, error);
+      logger.error('Provider isolation failed', { source, error });
       return false;
     }
   }
@@ -473,7 +475,7 @@ class AutoHealEngine {
 
       return true;
     } catch (error) {
-      isDev && console.error(`[AUTO-HEAL] Reconnection failed:`, error);
+      logger.error('Reconnection failed', { source, error });
       return false;
     }
   }
@@ -489,7 +491,7 @@ class AutoHealEngine {
 
       return true;
     } catch (error) {
-      isDev && console.error(`[AUTO-HEAL] Backup restoration failed:`, error);
+      logger.error('Backup restoration failed', { source, error });
       return false;
     }
   }

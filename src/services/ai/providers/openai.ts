@@ -12,7 +12,10 @@
 import { invoke } from '@tauri-apps/api/core';
 import type { AIProvider, AIMessage, AIResponse } from '../types';
 import { getAutoHealEngine } from '../system';
+import { createLogger } from '@/utils/logger';
 // AUTOFIX v19.3Ω: Removed duplicate import
+
+const logger = createLogger('[OpenAIProvider]');
 
 /**
  * Modèles OpenAI supportés par TITANE∞
@@ -68,7 +71,7 @@ export const openaiProvider: AIProvider = {
       return response.ok && response.data?.configured === true;
     } catch (error) {
       if (process.env.NODE_ENV === 'development') {
-        console.warn('[OpenAIProvider] Status check failed:', error);
+        logger.warn('Status check failed', { error });
       }
       return false;
     }
@@ -173,7 +176,7 @@ export const openaiProvider: AIProvider = {
             }
           );
         })
-        .catch(console.error);
+        .catch(error => logger.error('Failed to save interaction', { error }));
 
       // Re-throw erreurs typées
       if (error instanceof Error) {

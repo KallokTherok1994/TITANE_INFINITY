@@ -1105,10 +1105,11 @@ class SingularityKernel {
   }
 
   private executeKernelDirective(directive: KernelDirective): void {
-    isDev &&
-      console.log(
-        `[SINGULARITY-KERNEL] 🎯 Directive: ${directive.action} ${directive.targetKernel} (priority ${directive.priority})`
-      );
+    logger.debug('Executing kernel directive', {
+      action: directive.action,
+      targetKernel: directive.targetKernel,
+      priority: directive.priority,
+    });
 
     // Mettre à jour état kernel dans matrice
     const kernel =

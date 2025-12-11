@@ -12,6 +12,10 @@
  * ══════════════════════════════════════════════════════════════════════════════════
  */
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('[OMNIS]');
+
 import type {
   AIMessage,
   AIResponse,
@@ -522,7 +526,7 @@ export class OmnisProviderWrapper implements AIProvider {
       this.updateMetrics(false, responseTime, isTimeout);
 
       if (this.config.monitoring.logErrors) {
-        console.warn(`[OMNIS ${this.name}] Error:`, {
+        logger.warn(`Provider error (${this.name})`, {
           error: error instanceof Error ? error.message : String(error),
           circuitState: this.circuitBreaker.state,
           healthScore: this.metrics.healthScore,
