@@ -450,15 +450,18 @@ pub async fn chat_send_message(
         return Err(TAPIError::validation("Message too long (max 10000 chars)").into());
     }
 
-    // 🚨 TEMP CLEANUP MODE — FORCE OLLAMA UNIQUE (test noyau minimal)
-    // Objectif: Vérifier que Ollama répond vraiment, pas de fallback silencieux
+    // ═══ PHASE 4 ÉTAPE 4: Cascade complète réactivée ═══
+    // Cascade multi-providers avec fallback intelligent
     let providers_to_try: Vec<String> = if request.provider == "auto" {
         vec![
-            "ollama".to_string(),    // 🧪 CLEANUP: Ollama SEUL (pas de fallback)
-            // TEMP DISABLED: "openai", "anthropic", "gemini", "local"
+            "ollama".to_string(),      // Premier choix: Ollama local rapide
+            "openai".to_string(),      // Fallback 1: OpenAI GPT
+            "anthropic".to_string(),   // Fallback 2: Claude
+            "gemini".to_string(),      // Fallback 3: Google Gemini
+            "local".to_string(),       // Fallback final: Noyau local infaillible
         ]
     } else {
-        vec![request.provider.clone()] // Provider spécifique SANS fallback
+        vec![request.provider.clone()] // Provider spécifique direct
     };
 
     let mut last_error: Option<TAPIError> = None;
