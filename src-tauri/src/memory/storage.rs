@@ -185,25 +185,27 @@ impl MemoryStorage {
         Ok(())
     }
 
-    /// Sync storage stats to MemoryModule v14
-    ///
-    /// Updates the MemoryModule with current storage statistics.
-    /// This is called after save operations to keep the unified
-    /// SingularityEngine state in sync with persistent storage.
+    // ═══════════════════════════════════════════════════════════════
+    // DEPRECATED v20.0: sync_module_state() - Removed with MemoryModule
+    // ═══════════════════════════════════════════════════════════════
+    // This function synced stats to MemoryModule (v14-v19.5.2).
+    // MemoryModule was replaced by UnifiedMemory in v20.0 (Phase 2 Fusion #2).
+    // UnifiedMemory manages its own stats internally.
+    // Legacy code preserved in git history.
+    // ═══════════════════════════════════════════════════════════════
+    /*
     #[cfg(feature = "full")]
     pub fn sync_module_state(
         &self,
         memory_module: &mut crate::core::modules::MemoryModule,
     ) -> MemoryResult<()> {
         let index = self.load_index()?;
-
-        // Update module stats
         memory_module.memory_count = index.total_conversations as u64;
         memory_module.capacity_usage = (index.total_messages as f32) / 10000.0;
         memory_module.last_operation_ms = chrono::Utc::now().timestamp_millis() as u64;
-
         Ok(())
     }
+    */
 
     /// Get storage statistics
     pub fn get_stats(&self) -> MemoryResult<(u64, u64)> {

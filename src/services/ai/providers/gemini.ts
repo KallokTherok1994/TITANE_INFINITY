@@ -13,7 +13,7 @@
 
 import { invoke } from '@tauri-apps/api/core';
 import type { AIProvider, AIMessage, AIResponse } from '../types';
-import { getAutoHealEngine } from '../system';
+import { autoHealEngine } from '../system';
 import { logger } from '../../../utils/logger';
 import { withRetry, getRetryConfig } from '../retryStrategy';
 import { withCache, CACHE_TTL } from '../apiCache';
@@ -176,21 +176,17 @@ export const geminiProvider: AIProvider = {
         } catch (error) {
           const latency = Date.now() - startTime;
 
-          // 🔧 AUTOHEAL: Signaler l'erreur pour auto-réparation (lazy loaded)
-          getAutoHealEngine()
-            .then(autoHeal => {
-              autoHeal.detectError(
-                'gemini-provider',
-                error instanceof Error ? error : new Error(String(error)),
-                'provider',
-                {
-                  latency,
-                  message: message.substring(0, 100), // Premier 100 chars seulement
-                  historyLength: history.length,
-                }
-              );
-            })
-            .catch(error => logger.error('Failed to save interaction', { error }));
+          // 🔧 AUTOHEAL: Signaler l'erreur pour auto-réparation (direct instance)
+          autoHealEngine.detectError(
+            'gemini-provider',
+            error instanceof Error ? error : new Error(String(error)),
+            'provider',
+            {
+              latency,
+              message: message.substring(0, 100), // Premier 100 chars seulement
+              historyLength: history.length,
+            }
+          );
 
           // Re-throw erreurs typées
           if (error instanceof Error) {

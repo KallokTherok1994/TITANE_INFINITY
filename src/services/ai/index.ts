@@ -39,9 +39,8 @@ export {
   type ChatEngineConfig,
   type ChatEngineResponse,
 } from './chatEngine';
-// ⚠️ Engines now lazy-loaded via system.ts helpers:
-// Use getAutoHealEngine(), getMetricsEngine(), getHealthMonitor()
-export { getAutoHealEngine, getMetricsEngine, getHealthMonitor } from './system';
+// ✨ Direct exports of AI engines (no lazy loading)
+export { autoHealEngine, metricsEngine, aiHealthMonitor } from './system';
 
 // ✨ v21 Phase 2: Retry Strategy unifiée
 export {

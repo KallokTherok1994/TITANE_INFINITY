@@ -479,7 +479,7 @@ fn main() {
             overdrive::voice_engine::voice_enable_duplex,
             overdrive::voice_engine::voice_disable_duplex,
             overdrive::voice_engine::voice_check_interruption,
-            // Singularity State Commands (SINGULARITY API v21 REPAIR - 17 commands)
+            // Singularity State Commands (SINGULARITY API v21 REPAIR - 18 commands)
             singularity_state::commands::singularity_get_full_state,
             singularity_state::commands::singularity_get_physical,
             singularity_state::commands::singularity_get_cognitive,
@@ -494,6 +494,7 @@ fn main() {
             singularity_state::commands::singularity_update_adaptive,
             singularity_state::commands::singularity_update_meta,
             singularity_state::commands::singularity_update_full_state,
+            singularity_state::commands::sync_singularity, // ✅ v∞.FIX - Auto-sync command
             singularity_state::commands::singularity_save_state,
             singularity_state::commands::singularity_load_state,
             // System Center Diagnostics (v∞)

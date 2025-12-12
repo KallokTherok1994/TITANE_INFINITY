@@ -450,13 +450,14 @@ pub async fn chat_send_message(
         return Err(TAPIError::validation("Message too long (max 10000 chars)").into());
     }
 
-    // Liste des providers à essayer (ordre de priorité)
+    // 🚨 DEBUG MODE — FORCE OLLAMA PRIORITAIRE (test LLM local)
+    // TODO: Restaurer cascade cloud après validation
     let providers_to_try: Vec<String> = if request.provider == "auto" {
         vec![
+            "ollama".to_string(),    // 🧪 TEST: Ollama en premier (LLM local)
             "openai".to_string(),    // 1️⃣ OpenAI GPT-4 (priorité haute)
             "anthropic".to_string(), // 2️⃣ Anthropic Claude (priorité haute)
             "gemini".to_string(),    // 3️⃣ Google Gemini (backup cloud)
-            "ollama".to_string(),    // 4️⃣ Ollama local (backup)
             "local".to_string(),     // 5️⃣ TITANE Local (fallback ultime)
         ]
     } else {
@@ -469,15 +470,26 @@ pub async fn chat_send_message(
 
     let mut last_error: Option<TAPIError> = None;
 
+    // 🔍 DEBUG ROUTING — Log la cascade complète
+    println!("[CHAT ROUTER] 📋 Provider cascade = {:?}", providers_to_try);
+    println!("[CHAT ROUTER] 📨 Sending prompt length = {}", request.message.len());
+
     // Boucle de fallback (au lieu de récursion)
     for provider in providers_to_try {
+        // 🔍 DEBUG — Log AVANT le check de disponibilité
+        println!("[CHAT ROUTER] 🧪 Testing provider = {}", provider);
+        
         // Vérifier disponibilité via heartbeat (avec cache)
-        if !is_provider_available(&provider, &state).await {
+        let is_available = is_provider_available(&provider, &state).await;
+        println!("[CHAT ROUTER] ⚡ Provider {} availability = {}", provider, is_available);
+        
+        if !is_available {
             println!("[CHAT] ⏭️ Provider {} non disponible (skip)", provider);
             last_error = Some(TAPIError::provider_unavailable(&provider));
             continue;
         }
 
+        println!("[CHAT ROUTER] ✅ Provider selected = {}", provider);
         println!("[CHAT] 🔄 Tentative avec provider: {}", provider);
 
         // Cloner request pour chaque tentative
@@ -718,7 +730,8 @@ async fn send_to_ollama(
     request: &ChatRequest,
     _state: &ChatOrchestratorState,
 ) -> Result<ChatMessage, TAPIError> {
-    let model = request.model.as_deref().unwrap_or("llama2:latest");
+    // 🚨 FIX: llama2:latest n'existe pas → utiliser llama3.1:latest (vérifié disponible)
+    let model = request.model.as_deref().unwrap_or("llama3.1:latest");
     let url = "http://localhost:11434/api/generate";
 
     // Adaptive timeout for Ollama (local, typically faster)
@@ -1114,12 +1127,19 @@ pub async fn send_to_anthropic_internal(
 }
 
 async fn send_to_local(
-    request: &ChatRequest,
+    _request: &ChatRequest,
     _state: &ChatOrchestratorState,
 ) -> Result<ChatMessage, TAPIError> {
-    println!("[CHAT] 🔄 Local fallback (offline mode intelligent)");
-
-    // Génération de réponse locale intelligente basée sur le contexte
+    // 🚨 DEBUG MODE — Fallback local DÉSACTIVÉ pour forcer diagnostic
+    // TODO: Restaurer après validation routing
+    println!("[CHAT] ❌ Local fallback BLOCKED (debug mode)");
+    println!("[CHAT] ⚠️ Aucun provider LLM n'a répondu — c'est le vrai problème!");
+    
+    return Err(TAPIError::internal(
+        "DEBUG MODE: Local fallback désactivé. Si tu vois ce message, aucun LLM réel n'a été appelé. Vérifie les logs [CHAT ROUTER] ci-dessus."
+    ));
+    
+    /* CODE ORIGINAL (désactivé temporairement)
     let user_message = request.message.to_lowercase();
     let response_content = generate_local_response(&user_message, &request.message);
 
@@ -1135,6 +1155,7 @@ async fn send_to_local(
         tokens: None,
         multimodal: false,
     })
+    */
 }
 
 /// Génère une réponse locale intelligente basée sur le contexte du message
