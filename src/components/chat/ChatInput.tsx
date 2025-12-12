@@ -297,7 +297,7 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
     }, [inputState.inputError, resetError]);
 
     // ═══ PHASE 5.4: PROTECTED SEND HANDLER ═══
-    const handleSend = useCallback(() => {
+    const handleSend = useCallback(async () => {
       console.log('[ChatInput OMEGA] 🔘 handleSend appelé', {
         value: value.substring(0, 30),
         disabled,
@@ -334,19 +334,38 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
         messageSent.current = true;
         lastMessageTime.current = Date.now();
 
-        // Envoyer le message
-        onSend(sanitized);
-        setValue('');
-
-        // Reset height et état + restore focus
-        setTimeout(() => {
-          if (textareaRef.current && mountedRef.current) {
-            textareaRef.current.style.height = 'auto';
-            // P2: Restore focus to textarea after send (accessibility)
-            textareaRef.current.focus();
+        // ⭐ OMEGA FIX: Timeout de sécurité 10s pour forcer reset si onSend() bloque
+        const resetTimeout = setTimeout(() => {
+          if (messageSent.current && mountedRef.current) {
+            console.warn(
+              '[OMEGA ChatInput] ⚠️ messageSent.current reset forcé après timeout 10s'
+            );
+            messageSent.current = false;
           }
+        }, 10000); // 10s max
+
+        try {
+          // Envoyer le message (async safe)
+          await onSend(sanitized);
+          setValue('');
+
+          // ✅ Reset immédiat après succès
+          clearTimeout(resetTimeout);
           messageSent.current = false;
-        }, 100);
+
+          // Reset height et restore focus
+          setTimeout(() => {
+            if (textareaRef.current && mountedRef.current) {
+              textareaRef.current.style.height = 'auto';
+              textareaRef.current.focus();
+            }
+          }, 100);
+        } catch (sendError) {
+          // ✅ Reset même en erreur
+          clearTimeout(resetTimeout);
+          messageSent.current = false;
+          throw sendError; // Re-throw pour catch externe
+        }
       } catch (sendError) {
         messageSent.current = false;
         handleInputError(
