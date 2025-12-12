@@ -318,6 +318,12 @@ console.log('🎨 Starting React 18 render...');
 try {
   console.log('🚀 [v16.2.3] Rendering App complet (après validation AppMinimal)');
 
+  // 🔬 DIAGNOSTIC: Test minimal pour isoler problème écran noir
+  // Décommenter la ligne ci-dessous pour tester React minimal
+  // import('./AppMinimalTest').then(({ default: AppMinimal }) => {
+  //   ReactDOM.createRoot(rootElement).render(<AppMinimal />);
+  // });
+
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
       <ProductionErrorBoundary

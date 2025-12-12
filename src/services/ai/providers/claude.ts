@@ -12,6 +12,11 @@
 import { invoke } from '@tauri-apps/api/core';
 import type { AIProvider, AIMessage, AIResponse } from '../types';
 import { getAutoHealEngine } from '../system';
+import { withRetry, getRetryConfig } from '../retryStrategy';
+import { createLogger } from '@/utils/logger';
+import { withCache, CACHE_TTL } from '../apiCache';
+
+const logger = createLogger('[ClaudeProvider]');
 
 /**
  * Modèles Claude supportés par TITANE∞
@@ -82,110 +87,129 @@ export const claudeProvider: AIProvider = {
     const startTime = Date.now();
     const finalConfig = { ...DEFAULT_CONFIG, ...config };
 
-    try {
-      // Validation input
-      if (!message?.trim()) {
-        throw new Error('Message vide');
-      }
+    // ✨ v21 Phase 3: Cache intelligent pour réduire coûts API
+    return withCache(
+      'claude',
+      message,
+      history,
+      async () => {
+        try {
+          // Validation input
+          if (!message?.trim()) {
+            throw new Error('Message vide');
+          }
 
-      // Conversion history vers format backend
-      const formattedHistory = history.map(msg => ({
-        role: msg.role,
-        content: msg.content,
-      }));
+          // Conversion history vers format backend
+          const formattedHistory = history.map(msg => ({
+            role: msg.role,
+            content: msg.content,
+          }));
 
-      // Appel backend sécurisé
-      const response = await invoke<{
-        ok: boolean;
-        data: {
-          content: string;
-          model?: string;
-          tokens?: number;
-          stopReason?: string;
-        } | null;
-        error: string | null;
-      }>('chat_generate_claude', {
-        message: message.trim(),
-        history: formattedHistory,
-        config: finalConfig,
-      });
+          // ✨ v21 Phase 2: Retry unifié avec backoff exponentiel
+          const retryConfig = getRetryConfig('claude');
 
-      const latency = Date.now() - startTime;
-
-      // Gestion erreurs backend
-      if (!response.ok || !response.data) {
-        const errorMsg = response.error || 'Erreur inconnue';
-
-        // Erreurs typées Claude
-        if (errorMsg.includes('invalid_api_key') || errorMsg.includes('401')) {
-          throw new Error(
-            'Clé API Anthropic invalide. Vérifiez votre configuration dans Gouvernance.'
+          const response = await withRetry(
+            async () => {
+              return await invoke<{
+                ok: boolean;
+                data: {
+                  content: string;
+                  model?: string;
+                  tokens?: number;
+                  stopReason?: string;
+                } | null;
+                error: string | null;
+              }>('chat_generate_claude', {
+                message: message.trim(),
+                history: formattedHistory,
+                config: finalConfig,
+              });
+            },
+            retryConfig,
+            { provider: 'claude', message: message.substring(0, 50) }
           );
-        }
 
-        if (errorMsg.includes('rate_limit') || errorMsg.includes('429')) {
-          throw new Error(
-            'Limite de taux Anthropic atteinte. Réessayez dans quelques secondes.'
-          );
-        }
+          const latency = Date.now() - startTime;
 
-        if (errorMsg.includes('timeout') || errorMsg.includes('timed out')) {
-          throw new Error(`Délai d'attente Claude dépassé (${latency}ms). Réessayez.`);
-        }
+          // Gestion erreurs backend
+          if (!response.ok || !response.data) {
+            const errorMsg = response.error || 'Erreur inconnue';
 
-        if (errorMsg.includes('overloaded') || errorMsg.includes('529')) {
-          throw new Error('Serveurs Claude surchargés. Réessayez dans un instant.');
-        }
-
-        if (errorMsg.includes('insufficient_quota')) {
-          throw new Error('Quota Anthropic épuisé. Vérifiez votre compte Anthropic.');
-        }
-
-        throw new Error(`Erreur Claude (${latency}ms): ${errorMsg}`);
-      }
-
-      // Succès: retourner réponse normalisée
-      return {
-        content: response.data.content,
-        provider: 'claude',
-        timestamp: Date.now(),
-        model: response.data.model || finalConfig.model,
-        tokens: response.data.tokens,
-        metadata: {
-          latencyMs: latency,
-          stopReason: response.data.stopReason,
-          config: finalConfig,
-        },
-      };
-    } catch (error) {
-      const latency = Date.now() - startTime;
-
-      // 🔧 AUTOHEAL: Signaler l'erreur pour auto-réparation (lazy loaded)
-      getAutoHealEngine()
-        .then(autoHeal => {
-          autoHeal.detectError(
-            'claude-provider',
-            error instanceof Error ? error : new Error(String(error)),
-            'provider',
-            {
-              latency,
-              message: message.substring(0, 100),
-              historyLength: history.length,
+            // Erreurs typées Claude
+            if (errorMsg.includes('invalid_api_key') || errorMsg.includes('401')) {
+              throw new Error(
+                'Clé API Anthropic invalide. Vérifiez votre configuration dans Gouvernance.'
+              );
             }
+
+            if (errorMsg.includes('rate_limit') || errorMsg.includes('429')) {
+              throw new Error(
+                'Limite de taux Anthropic atteinte. Réessayez dans quelques secondes.'
+              );
+            }
+
+            if (errorMsg.includes('timeout') || errorMsg.includes('timed out')) {
+              throw new Error(
+                `Délai d'attente Claude dépassé (${latency}ms). Réessayez.`
+              );
+            }
+
+            if (errorMsg.includes('overloaded') || errorMsg.includes('529')) {
+              throw new Error('Serveurs Claude surchargés. Réessayez dans un instant.');
+            }
+
+            if (errorMsg.includes('insufficient_quota')) {
+              throw new Error('Quota Anthropic épuisé. Vérifiez votre compte Anthropic.');
+            }
+
+            throw new Error(`Erreur Claude (${latency}ms): ${errorMsg}`);
+          }
+
+          // Succès: retourner réponse normalisée
+          return {
+            content: response.data.content,
+            provider: 'claude',
+            timestamp: Date.now(),
+            model: response.data.model || finalConfig.model,
+            tokens: response.data.tokens,
+            metadata: {
+              latencyMs: latency,
+              stopReason: response.data.stopReason,
+              config: finalConfig,
+            },
+          };
+        } catch (error) {
+          const latency = Date.now() - startTime;
+
+          // 🔧 AUTOHEAL: Signaler l'erreur pour auto-réparation (lazy loaded)
+          getAutoHealEngine()
+            .then(autoHeal => {
+              autoHeal.detectError(
+                'claude-provider',
+                error instanceof Error ? error : new Error(String(error)),
+                'provider',
+                {
+                  latency,
+                  message: message.substring(0, 100),
+                  historyLength: history.length,
+                }
+              );
+            })
+            .catch(error => logger.error('Failed to save interaction', { error }));
+
+          // Re-throw erreurs typées
+          if (error instanceof Error) {
+            throw error;
+          }
+
+          // Erreur générique
+          throw new Error(
+            `Erreur Claude (${latency}ms): ${error instanceof Error ? error.message : String(error)}`
           );
-        })
-        .catch(error => logger.error('Failed to save interaction', { error }));
-
-      // Re-throw erreurs typées
-      if (error instanceof Error) {
-        throw error;
-      }
-
-      // Erreur générique
-      throw new Error(
-        `Erreur Claude (${latency}ms): ${error instanceof Error ? error.message : String(error)}`
-      );
-    }
+        }
+      },
+      CACHE_TTL.GENERAL
+    );
   },
 
   /**

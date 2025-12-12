@@ -90,6 +90,17 @@ export class WakeWordEngineV2 {
     console.log('[WakeWordV2] 🧠 Initialized (Cognitive Mode)');
   }
 
+  /**
+   * Update engine configuration
+   */
+  setConfig(config: Partial<WakeWordConfig>): void {
+    this.config = {
+      ...this.config,
+      ...config,
+    };
+    console.log('[WakeWordV2] ⚙️ Config updated');
+  }
+
   // ═══ DETECTION WITH AUDIO ═══
 
   /**

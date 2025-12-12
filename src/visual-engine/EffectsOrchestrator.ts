@@ -507,18 +507,18 @@ export class EffectsOrchestrator {
   }
 
   private triggerAdaptiveEffects(state: VisualState): void {
-    // Example: trigger healing waves when transitioning to calm
-    if (state.current === 'calm' && this.visualState?.current !== 'calm') {
+    // Example: trigger healing waves when transitioning to idle/calm
+    if (state === 'idle' && this.visualState !== 'idle') {
       this.requestEffect({ type: 'healingWaves', priority: 'medium' });
     }
 
     // Example: trigger glitch on error state
-    if (state.current === 'error') {
+    if (state === 'error') {
       this.requestEffect({ type: 'glitchEffect', priority: 'critical' });
     }
 
-    // Example: trigger energy arcs on intense cognitive load
-    if (state.current === 'intense') {
+    // Example: trigger healing visual on healing state
+    if (state === 'healing') {
       this.requestEffect({ type: 'energyArcs', priority: 'high' });
     }
   }

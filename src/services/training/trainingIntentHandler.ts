@@ -310,7 +310,7 @@ export class TrainingIntentHandler {
     for (const intentPattern of INTENT_PATTERNS) {
       for (const pattern of intentPattern.patterns) {
         if (pattern.test(trimmedMessage)) {
-          return this.processIntent(
+          return await this.processIntent(
             intentPattern.intent,
             trimmedMessage,
             intentPattern.requiresLabel ?? false
@@ -325,11 +325,11 @@ export class TrainingIntentHandler {
   /**
    * Traite un intent reconnu
    */
-  private processIntent(
+  private async processIntent(
     intent: TrainingIntentType,
     message: string,
     requiresLabel: boolean
-  ): TrainingIntentResult {
+  ): Promise<TrainingIntentResult> {
     this._lastIntentTime = Date.now();
 
     // Extraire le label si nécessaire
@@ -350,7 +350,7 @@ export class TrainingIntentHandler {
     switch (intent) {
       case 'start_training':
         if (label) {
-          return this.handleStartTraining(label);
+          return await this.handleStartTraining(label);
         }
         return this.noMatch();
 
@@ -359,7 +359,7 @@ export class TrainingIntentHandler {
 
       case 'record_state':
         if (label) {
-          return this.handleRecordState(label);
+          return await this.handleRecordState(label);
         }
         return this.noMatch();
 
@@ -398,10 +398,11 @@ export class TrainingIntentHandler {
   // HANDLERS D'INTENTS
   // ============================================================================
 
-  private handleStartTraining(label: UserStateLabel): TrainingIntentResult {
+  private async handleStartTraining(
+    label: UserStateLabel
+  ): Promise<TrainingIntentResult> {
     try {
-      const session = this.engine.startTrainingCapture(
-        label,
+      const session = await this.engine.startTrainingCapture(
         TRAINING_CONFIG.defaultCaptureDuration
       );
 
@@ -456,11 +457,10 @@ export class TrainingIntentHandler {
     };
   }
 
-  private handleRecordState(label: UserStateLabel): TrainingIntentResult {
+  private async handleRecordState(label: UserStateLabel): Promise<TrainingIntentResult> {
     try {
       // Démarre une capture courte (5 secondes)
-      const session = this.engine.startTrainingCapture(
-        label,
+      const session = await this.engine.startTrainingCapture(
         TRAINING_CONFIG.defaultCaptureDuration
       );
 

@@ -290,11 +290,11 @@ class AIOrchestrator {
    * ═══════════════════════════════════════════════════════════════════
    */
 
-  private selectOptimalProvider(
+  private async selectOptimalProvider(
     message: string,
     history: AIMessage[],
     preferredProvider?: ProviderChoice
-  ): NeuralSelection {
+  ): Promise<NeuralSelection> {
     // Analyse contextuelle du message
     const messageLength = message.length;
     const contextLength = history.reduce((sum, msg) => sum + msg.content.length, 0);
@@ -304,7 +304,8 @@ class AIOrchestrator {
       message.toLowerCase().includes('maintenant');
 
     // 📊 NOUVEAU v20Ω: Obtenir métriques en temps réel pour ajuster le scoring
-    const realtimeMetrics = metricsEngine.getAggregatedMetrics();
+    const { metrics: _metricsLoaded } = await ensureEngines();
+    const realtimeMetrics = _metricsLoaded.getAggregatedMetrics();
 
     // Scoring neuronal des providers
     const providerScores = new Map<string, number>();
@@ -317,7 +318,7 @@ class AIOrchestrator {
 
       // 📊 NOUVEAU: Ajustement basé sur métriques réelles
       const providerMetrics = realtimeMetrics.providers.find(
-        p => p.provider === provider.name
+        (p: { provider: string }) => p.provider === provider.name
       );
       if (providerMetrics) {
         // Bonus si provider très performant récemment
@@ -506,7 +507,8 @@ class AIOrchestrator {
       // ═══ PHASE 3.4.2: NEURAL PROVIDER SELECTION + COGNITIVE KERNEL v22Ω ═══
 
       // 🧠 NOUVEAU v22Ω: Mise à jour état environnement du Cognitive Kernel
-      const realtimeMetrics = metricsEngine.getAggregatedMetrics();
+      const { metrics: _metricsLoaded } = await ensureEngines();
+      const realtimeMetrics = _metricsLoaded.getAggregatedMetrics();
       cognitiveKernel.updateEnvironmentState({
         providerHealth: new Map(
           this.providers.map(p => {
@@ -534,7 +536,7 @@ class AIOrchestrator {
       });
 
       // Sélection neurale standard (avec préférence optionnelle)
-      const selection = this.selectOptimalProvider(
+      const selection = await this.selectOptimalProvider(
         sanitized,
         history,
         config?.preferredProvider
@@ -643,7 +645,8 @@ class AIOrchestrator {
           this.quickFailCache.delete(providerName);
 
           // 📊 METRICS: Enregistrer succès
-          metricsEngine.recordEvent({
+          const { metrics: _metricsLoaded } = await ensureEngines();
+          _metricsLoaded.recordEvent({
             type: 'response',
             provider: providerName,
             latencyMs: providerLatency, // Use provider-specific latency
@@ -707,7 +710,8 @@ class AIOrchestrator {
           }
 
           // 📊 METRICS: Enregistrer erreur with provider-specific latency
-          metricsEngine.recordEvent({
+          const { metrics: _metricsLoaded } = await ensureEngines();
+          _metricsLoaded.recordEvent({
             type: 'error',
             provider: providerName,
             latencyMs: providerFailureLatency, // EVOLUTION v21Ω: Use provider-specific latency
@@ -718,7 +722,8 @@ class AIOrchestrator {
 
           // Trigger auto-heal sauf pour titane-local (déjà auto-réparé)
           if (providerName !== 'titane-local') {
-            autoHealEngine.heal(providerName, lastError, 'provider', {
+            const { autoHeal: _autoHealLoaded } = await ensureEngines();
+            _autoHealLoaded.heal(providerName, lastError, 'provider', {
               requestId,
               attempt: attempts,
               providerLatency: providerFailureLatency, // EVOLUTION v21Ω: Accurate latency
@@ -789,7 +794,8 @@ Le système s'auto-répare en continu. Que puis-je t'aider à explorer ?`,
       const responseTime = Date.now() - requestStartTime;
       this.orchestratorMetrics.totalFailures++;
 
-      autoHealEngine.heal(
+      const { autoHeal: _autoHealLoaded } = await ensureEngines();
+      _autoHealLoaded.heal(
         'orchestrator',
         criticalError instanceof Error ? criticalError : new Error(String(criticalError)),
         'critical',
@@ -1039,7 +1045,8 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
     const { sanitized, valid, issues } = this.sanitizeMessage(message);
 
     if (!valid) {
-      autoHealEngine.heal(
+      const { autoHeal: _autoHealLoaded } = await ensureEngines();
+      _autoHealLoaded.heal(
         'orchestrator',
         `Stream validation failed: ${issues.join(', ')}`,
         'validation'
@@ -1048,7 +1055,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
       return;
     }
 
-    const selection = this.selectOptimalProvider(sanitized, history);
+    const selection = await this.selectOptimalProvider(sanitized, history);
     const providersToTry = [selection.selectedProvider, 'titane-local']; // Minimal pour streaming
 
     let hasStreamed = false;
@@ -1122,7 +1129,8 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
         logger.warn('Stream provider failed', { provider: providerName, error });
 
         // Auto-heal pour streaming failures
-        autoHealEngine.heal(
+        const { autoHeal: _autoHealLoaded } = await ensureEngines();
+        _autoHealLoaded.heal(
           providerName,
           error instanceof Error ? error : new Error(String(error)),
           'network'
@@ -1154,7 +1162,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
     providers: ProviderStats[];
     orchestrator: OrchestratorMetrics;
     autoHeal: any;
-    metrics?: ReturnType<typeof metricsEngine.getAggregatedMetrics>;
+    metrics?: any;
     timestamp: number;
   }> {
     try {
@@ -1185,19 +1193,22 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
 
       await Promise.allSettled(availabilityChecks);
 
+      const { autoHeal: _autoHealLoaded, metrics: _metricsLoaded } =
+        await ensureEngines();
       return {
         providers: Array.from(this.providerStats.values()),
         orchestrator: { ...this.orchestratorMetrics },
-        autoHeal: autoHealEngine.getStats(),
-        metrics: metricsEngine.getAggregatedMetrics(), // 📊 NOUVEAU: Métriques détaillées
+        autoHeal: _autoHealLoaded.getStats(),
+        metrics: _metricsLoaded.getAggregatedMetrics(), // 📊 NOUVEAU: Métriques détaillées
         timestamp: Date.now(),
       };
     } catch (error) {
+      const { metrics: _metricsLoaded } = await ensureEngines();
       return {
         providers: Array.from(this.providerStats.values()),
         orchestrator: { ...this.orchestratorMetrics },
         autoHeal: { error: 'Auto-heal stats unavailable' },
-        metrics: metricsEngine.getAggregatedMetrics(), // 📊 NOUVEAU
+        metrics: _metricsLoaded.getAggregatedMetrics(), // 📊 NOUVEAU
         timestamp: Date.now(),
       };
     }
@@ -1206,11 +1217,12 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
   /**
    * 📊 NOUVEAU v20Ω: Obtenir métriques détaillées
    */
-  getDetailedMetrics() {
+  async getDetailedMetrics() {
+    const { autoHeal: _autoHealLoaded, metrics: _metricsLoaded } = await ensureEngines();
     return {
-      aggregated: metricsEngine.getAggregatedMetrics(),
-      health: metricsEngine.getHealthStats(),
-      autoHeal: autoHealEngine.getStats(),
+      aggregated: _metricsLoaded.getAggregatedMetrics(),
+      health: _metricsLoaded.getHealthStats(),
+      autoHeal: _autoHealLoaded.getStats(),
       orchestrator: { ...this.orchestratorMetrics },
     };
   }
@@ -1239,7 +1251,8 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
     this.consecutiveLocalResponses = 0;
     this.currentRequests = 0;
 
-    autoHealEngine.resetStats();
+    const { autoHeal: _autoHealLoaded } = await ensureEngines();
+    _autoHealLoaded.resetStats();
     await this.startWarmup();
   }
 

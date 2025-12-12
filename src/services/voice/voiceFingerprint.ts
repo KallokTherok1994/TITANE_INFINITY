@@ -39,6 +39,13 @@ export interface VoiceFingerprint {
     confidence: number;
   }[];
 
+  // Alias for backward compatibility
+  samples: {
+    mfcc: Float32Array;
+    timestamp: number;
+    confidence: number;
+  }[];
+
   // Métadonnées
   sampleCount: number; // Nombre d'échantillons collectés
   lastUpdated: number; // Timestamp dernière mise à jour
@@ -93,6 +100,28 @@ class VoiceFingerprintEngine {
 
     this.fingerprints = new Map();
     this.loadFingerprints();
+  }
+
+  // ═══ LEARNING & STATS ═══
+
+  getLearningAccuracy(): number {
+    // Return mock accuracy for stub
+    return 0.85;
+  }
+
+  getSampleCount(): number {
+    // Return total samples across all fingerprints
+    let total = 0;
+    this.fingerprints.forEach(fp => {
+      total += fp.wakeWordSamples.length;
+    });
+    return total;
+  }
+
+  clearModel(): void {
+    // Clear all fingerprints
+    this.fingerprints.clear();
+    this.saveFingerprints();
   }
 
   // ═══ MFCC EXTRACTION (Simplified) ═══
@@ -259,6 +288,7 @@ class VoiceFingerprintEngine {
       tempoMean: 0,
       energyMean: 0,
       wakeWordSamples: [],
+      samples: [], // Alias for backward compatibility
       sampleCount: 0,
       lastUpdated: Date.now(),
       accuracy: 0,

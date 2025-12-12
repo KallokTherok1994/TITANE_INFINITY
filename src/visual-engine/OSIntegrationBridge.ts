@@ -442,20 +442,16 @@ export class OSIntegrationBridge {
   // ─────────────────────────────────────────────────────────────────
 
   private mapCognitiveToVisualState(cognitive: CognitiveState): VisualState {
-    // Map cognitive mode to visual state
-    const stateMap: Record<CognitiveState['mode'], VisualState['current']> = {
-      focus: 'focus',
-      creative: 'creative',
-      analytical: 'analytical',
-      rest: 'calm',
-      learning: 'learning',
+    // Map cognitive mode to visual state (return string directly)
+    const stateMap: Record<CognitiveState['mode'], VisualState> = {
+      focus: 'thinking', // Map to available VisualState values
+      creative: 'quantum',
+      analytical: 'processing',
+      rest: 'idle',
+      learning: 'thinking', // learning mode → thinking visual state
     };
 
-    return {
-      current: stateMap[cognitive.mode] || 'calm',
-      intensity: cognitive.intensity,
-      transition: 0.3,
-    };
+    return stateMap[cognitive.mode] || 'idle';
   }
 
   private triggerCognitiveEffects(state: CognitiveState): void {

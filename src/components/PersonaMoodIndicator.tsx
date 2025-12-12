@@ -65,9 +65,9 @@ const MOOD_CONFIGS: Record<MoodType, MoodConfig> = {
 
 export const PersonaMoodIndicator: React.FC = () => {
   const { state } = useLivingEngines(100);
-  const mood = (state.persona?.mood.current || 'neutre') as MoodType;
+  const mood = (state.persona?.mood || 'neutre') as MoodType; // mood is MoodType directly, not object
   const config = MOOD_CONFIGS[mood];
-  const intensity = state.persona?.mood.intensity || 0;
+  const intensity = state.persona?.intensity || 0; // intensity from PersonaState root
 
   return (
     <div

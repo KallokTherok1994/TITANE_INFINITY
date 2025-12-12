@@ -12,6 +12,13 @@
 
 export type ChatMode =
   | 'default'
+  | 'reflection'
+  | 'creation'
+  | 'strategy'
+  | 'emergency'
+  | 'standard'
+  | 'quick'
+  | 'omega'
   | 'dev-senior'
   | 'nexus-guide'
   | 'sentinel-guardian'

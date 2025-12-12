@@ -381,6 +381,9 @@ export interface SingularityMemory {
     stability: number;
     identity: string;
   };
+
+  // Index signature pour compatibilité Record<string, unknown>
+  [key: string]: unknown;
 }
 
 /**
