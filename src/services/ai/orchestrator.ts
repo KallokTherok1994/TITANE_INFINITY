@@ -78,12 +78,15 @@ interface NeuralSelection {
 // ─────────────────────────────────────────────────────────────────
 
 class AIOrchestrator {
-  // ═══ TEMP CLEANUP MODE: Simplified provider order ═══
-  // Objectif: Tester noyau minimal - backend direct puis fallback local
+  // ═══ PHASE 4 ÉTAPE 3: Providers complets réactivés ═══
+  // Cascade multi-providers avec fallback
   private providers = [
-    tauriChatProvider, // 🧪 CLEANUP: Backend Rust (Ollama forcé)
-    titaneLocalProvider, // Fallback simple si backend échoue
-    // TEMP DISABLED pour cleanup: openai, claude, gemini, ollama frontend
+    tauriChatProvider, // Backend Rust (cascade Ollama→OpenAI→etc.)
+    geminiProvider, // Google Gemini
+    ollamaProvider, // Ollama frontend direct
+    openaiProvider, // OpenAI GPT
+    claudeProvider, // Anthropic Claude
+    titaneLocalProvider, // Fallback local (noyau infaillible)
   ];
 
   private providerStats: Map<string, ProviderStats> = new Map();
@@ -559,11 +562,12 @@ class AIOrchestrator {
       logger.info(`🔄 Alternates: ${selection.alternates.join(', ')}`);
       logger.groupEnd();
 
-      // ═══ TEMP CLEANUP: Simplified provider execution ═══
-      // Test direct: tauri-backend puis titane-local (pas de cognitive complexity)
+      // ═══ PHASE 4 ÉTAPE 3: Cascade providers complète réactivée ═══
+      // Ordre: Selection → Alternates → titane-local (fallback garanti)
       const providersToTry = [
-        'tauri-backend', // 🧪 Backend Rust (Ollama)
-        'titane-local', // Fallback simple
+        finalProvider,
+        ...selection.alternates.filter(p => p !== finalProvider),
+        'titane-local', // Fallback infaillible
       ];
 
       let lastError: Error | null = null;
