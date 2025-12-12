@@ -28,7 +28,7 @@ class MultimodalFusionEngine {
   getWeights() {
     return { vision: 0.33, voice: 0.34, text: 0.33 };
   }
-  setWeights(_weights: any) {}
+  setWeights(_weights: { vision?: number; voice?: number; text?: number }) {}
   calibrateBaseline() {
     return Promise.resolve({
       totalSamplesCount: 0,

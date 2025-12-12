@@ -172,7 +172,7 @@ export const ChatMessage = ({
         {/* ✨ v21 Phase 4: Provider badge */}
         {provider && role === 'assistant' && (
           <Badge
-            variant="subtle"
+            variant="info"
             style={{
               backgroundColor: `${providerConfig[provider].color}20`,
               color: providerConfig[provider].color,

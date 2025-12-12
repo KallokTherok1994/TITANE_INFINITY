@@ -660,7 +660,7 @@ export class GoalConsistencyEngine extends EventEmitter {
     const topViolation = sortedViolations[0];
     let correctedResponse = response;
     let correctionType: string;
-    let reasoning: string;
+    let reasoning: string = 'Correction automatique appliquée';
 
     // Determine correction strategy
     switch (topViolation.type) {
@@ -722,7 +722,7 @@ export class GoalConsistencyEngine extends EventEmitter {
       corrected_response: correctedResponse,
       correction_type: correctionType,
       violations_addressed: violations.map(v => v.type),
-      reasoning,
+      reasoning: reasoning || 'Correction automatique appliquée',
       confidence: this.calculateCorrectionConfidence(violations),
       applied_at: new Date().toISOString(),
     };

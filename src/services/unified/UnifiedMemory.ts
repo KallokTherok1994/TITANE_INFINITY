@@ -853,11 +853,10 @@ export class UnifiedMemory {
           if (!memories[j].embedding) continue;
 
           // Calculate similarity
-          if (memories[i].embedding && memories[j].embedding) {
-            const similarity = this.cosineSimilarity(
-              memories[i].embedding,
-              memories[j].embedding
-            );
+          const mem1Embedding = memories[i].embedding;
+          const mem2Embedding = memories[j].embedding;
+          if (mem1Embedding && mem2Embedding) {
+            const similarity = this.cosineSimilarity(mem1Embedding, mem2Embedding);
 
             // If highly similar, merge
             if (similarity >= threshold) {

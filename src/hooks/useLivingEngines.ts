@@ -19,16 +19,7 @@ import type { MoodType } from '../core/ARCHITECTURE_TYPES_v24-v∞';
 
 // REMOVED: core/persona supprimé en PHASE 1 (OPTION B)
 // Stubs temporaires pour compatibilité
-interface SystemState {
-  engines: Record<string, boolean>;
-  health: number;
-}
-
-interface LocalPersonaState {
-  mood: { current: MoodType; intensity: number };
-  energy: number;
-  coherence: number;
-}
+type SystemState = 'stable' | 'warning' | 'danger' | 'critical';
 
 interface VisualMultipliers {
   glow: number;
@@ -38,10 +29,14 @@ interface VisualMultipliers {
 }
 
 const personaEngine = {
-  getState: (): LocalPersonaState => ({
-    mood: { current: 'neutre' as MoodType, intensity: 0.5 },
-    energy: 100,
-    coherence: 100,
+  getState: (): PersonaState => ({
+    name: 'TITANE',
+    mood: 'neutre' as MoodType,
+    intensity: 0.5,
+    evolution_level: 1,
+    last_interaction: Date.now(),
+    personality: {},
+    behavior: {},
   }),
   start: () => {},
   stop: () => {},
@@ -168,10 +163,14 @@ export const useLivingEngines = (updateInterval = 100) => {
         if (!personaState) return;
 
         // Simulate cognitive load from mood intensity
-        const cogLoad = personaState.mood.intensity || 0.5;
+        const cogLoad = personaState.intensity || 0.5;
 
-        // Simulate rhythm from presence
-        const rhythm = personaState.presenceLevel * 0.8 + 0.2;
+        // Simulate rhythm from presence (fallback to intensity)
+        const presenceLevel =
+          (personaState as unknown as { presenceLevel?: number }).presenceLevel ??
+          personaState.intensity ??
+          0.5;
+        const rhythm = presenceLevel * 0.8 + 0.2;
 
         setEnginesState({
           systemState: 'stable',
@@ -180,7 +179,7 @@ export const useLivingEngines = (updateInterval = 100) => {
           depth: visualMults.depth,
           sound: visualMults.sound,
           persona: personaState,
-          presenceLevel: personaState.presenceLevel,
+          presenceLevel: presenceLevel,
           cognitiveLoad: cogLoad,
           rhythmScore: rhythm,
           holoActive: true,
@@ -197,19 +196,21 @@ export const useLivingEngines = (updateInterval = 100) => {
 
   // Actions
   const updateSystemState = useCallback(async (newState: SystemState) => {
+    const partialUpdate: Partial<PersonaState> = { last_interaction: Date.now() };
     if (personaTauriBridge.isTauriEnvironment()) {
-      await personaTauriBridge.update(newState, {
+      await personaTauriBridge.update(partialUpdate, {
         cpu: Math.random() * 100,
         memory: Math.random() * 100,
         errors: 0,
       });
     } else {
-      personaEngine.update(newState, {
+      personaEngine.update(partialUpdate, {
         cpu: Math.random() * 100,
         memory: Math.random() * 100,
         errors: 0,
       });
     }
+    setEnginesState(prev => ({ ...prev, systemState: newState }));
   }, []);
 
   const triggerPersonaReaction = useCallback(
@@ -224,22 +225,26 @@ export const useLivingEngines = (updateInterval = 100) => {
   );
 
   const updateCognitiveLoad = useCallback(async (load: number) => {
-    // Update persona based on cognitive load
     const state: SystemState = load > 0.8 ? 'danger' : load > 0.6 ? 'warning' : 'stable';
+    const partialUpdate: Partial<PersonaState> = {
+      intensity: load,
+      last_interaction: Date.now(),
+    };
 
     if (personaTauriBridge.isTauriEnvironment()) {
-      await personaTauriBridge.update(state, {
+      await personaTauriBridge.update(partialUpdate, {
         cpu: load * 100,
         memory: 60,
         errors: 0,
       });
     } else {
-      personaEngine.update(state, {
+      personaEngine.update(partialUpdate, {
         cpu: load * 100,
         memory: 60,
         errors: 0,
       });
     }
+    setEnginesState(prev => ({ ...prev, systemState: state, cognitiveLoad: load }));
   }, []);
 
   return {

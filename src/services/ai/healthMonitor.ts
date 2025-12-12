@@ -103,7 +103,14 @@ class AIHealthMonitor {
 
       // Analyser et générer alertes si nécessaire
       this.analyzeMetrics(metricsHealth);
-      this.analyzeAutoHeal(autoHealStats);
+      this.analyzeAutoHeal(
+        autoHealStats as unknown as {
+          totalErrors: number;
+          totalFixes: number;
+          successRate: number;
+          [key: string]: any;
+        }
+      );
       this.analyzeOrchestrator(orchestratorHealth);
 
       // Nettoyage vieilles alertes
@@ -118,7 +125,12 @@ class AIHealthMonitor {
   /**
    * Analyser métriques et générer alertes
    */
-  private analyzeMetrics(health: ReturnType<typeof metricsEngine.getHealthStats>): void {
+  private analyzeMetrics(health: {
+    overall: 'healthy' | 'degraded' | 'critical';
+    successRate: number;
+    avgLatency: number;
+    recommendations: string[];
+  }): void {
     // Taux de succès critique
     if (health.successRate < 80) {
       this.addAlert({
@@ -167,7 +179,12 @@ class AIHealthMonitor {
   /**
    * Analyser auto-heal et générer alertes
    */
-  private analyzeAutoHeal(stats: ReturnType<typeof autoHealEngine.getStats>): void {
+  private analyzeAutoHeal(stats: {
+    totalErrors: number;
+    totalFixes: number;
+    successRate: number;
+    [key: string]: any;
+  }): void {
     // Trop d'erreurs
     if (stats.totalErrors > 50) {
       this.addAlert({
@@ -348,7 +365,7 @@ class AIHealthMonitor {
         ...metricsHealth.recommendations,
         ...orchestratorHealth.recommendations,
       ],
-      uptime: metrics.uptime,
+      uptime: (metrics as { uptime?: number }).uptime ?? Date.now(),
     };
   }
 

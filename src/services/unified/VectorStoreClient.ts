@@ -113,7 +113,16 @@ export class VectorStoreClient implements IVectorStore {
   }
 
   /**
-   * Search vectors by similarity
+   * Search vectors by similarity (IVectorStore interface implementation)
+   * Converts positional params to options object
+   */
+  async search(
+    embedding: number[],
+    limit: number,
+    filters?: Record<string, any>
+  ): Promise<UnifiedMemoryResult[]>;
+  /**
+   * Search vectors by similarity (preferred signature)
    */
   async search(
     queryEmbedding: number[],
@@ -123,9 +132,47 @@ export class VectorStoreClient implements IVectorStore {
       tierFilter?: MemoryTier[];
       typeFilter?: UnifiedMemoryType[];
       ownerFilter?: string;
-    } = {}
+    }
+  ): Promise<UnifiedMemoryResult[]>;
+  /**
+   * Implementation (handles both signatures)
+   */
+  async search(
+    queryEmbedding: number[],
+    optionsOrLimit?:
+      | number
+      | {
+          topK?: number;
+          minScore?: number;
+          tierFilter?: MemoryTier[];
+          typeFilter?: UnifiedMemoryType[];
+          ownerFilter?: string;
+        },
+    filters?: Record<string, any>
   ): Promise<UnifiedMemoryResult[]> {
     this.ensureInitialized();
+
+    // Convert IVectorStore signature to options object
+    let options: {
+      topK?: number;
+      minScore?: number;
+      tierFilter?: MemoryTier[];
+      typeFilter?: UnifiedMemoryType[];
+      ownerFilter?: string;
+    } = {};
+
+    if (typeof optionsOrLimit === 'number') {
+      options.topK = optionsOrLimit;
+      if (filters) {
+        // Map generic filters to specific options
+        if (filters.tierFilter) options.tierFilter = filters.tierFilter;
+        if (filters.typeFilter) options.typeFilter = filters.typeFilter;
+        if (filters.ownerFilter) options.ownerFilter = filters.ownerFilter;
+        if (filters.minScore) options.minScore = filters.minScore;
+      }
+    } else if (optionsOrLimit) {
+      options = optionsOrLimit;
+    }
 
     try {
       const searchOptions: VectorSearchOptions = {
@@ -331,6 +378,41 @@ export class VectorStoreClient implements IVectorStore {
       relatedTo: entry.related_to ?? undefined,
       supersedes: entry.supersedes ?? undefined,
     };
+  }
+
+  /**
+   * Add single entry (IVectorStore interface stub)
+   * Delegates to insert()
+   */
+  async add(entry: UnifiedMemoryEntry): Promise<void> {
+    await this.insert(entry);
+  }
+
+  /**
+   * Add multiple entries (IVectorStore interface stub)
+   * Delegates to insertBatch()
+   */
+  async addBatch(entries: UnifiedMemoryEntry[]): Promise<void> {
+    return this.insertBatch(entries);
+  }
+
+  /**
+   * Delete entries matching filters (IVectorStore interface stub)
+   */
+  async deleteWhere(_filters: Record<string, unknown>): Promise<number> {
+    this.ensureInitialized();
+    // TODO: Implement backend command for filtered deletion
+    console.warn('VectorStoreClient.deleteWhere not yet implemented');
+    return 0;
+  }
+
+  /**
+   * Cleanup old entries (IVectorStore interface stub)
+   */
+  async cleanup(): Promise<void> {
+    this.ensureInitialized();
+    // TODO: Implement backend cleanup command
+    console.warn('VectorStoreClient.cleanup not yet implemented');
   }
 }
 

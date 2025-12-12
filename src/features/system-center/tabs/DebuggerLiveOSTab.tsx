@@ -8,16 +8,11 @@
 
 import React, { useState } from 'react';
 import { useDebuggerLiveOS } from '../hooks/useDebuggerLiveOS';
-import type { DebuggerMode, RiskLevel } from '../types/debuggerLiveOS.types';
-
-interface SnapshotDiff {
-  changes: Array<{
-    type: 'added' | 'modified' | 'removed';
-    path: string;
-    oldValue?: unknown;
-    newValue?: unknown;
-  }>;
-}
+import type {
+  DebuggerMode,
+  RiskLevel,
+  SnapshotDiff,
+} from '../types/debuggerLiveOS.types';
 
 export function DebuggerLiveOSTab() {
   const debugPanel = useDebuggerLiveOS();
@@ -489,17 +484,17 @@ export function DebuggerLiveOSTab() {
                     </span>
                     <span className="dbg-diff-change-path">{change.path}</span>
                     <span className="dbg-diff-change-impact">
-                      {(change as any).impact || 'medium'}
+                      {(change as { impact?: string }).impact || 'medium'}
                     </span>
                   </div>
-                  {change.oldValue !== undefined && (
-                    <div className="dbg-diff-old-value">
-                      <strong>Ancien:</strong> {JSON.stringify(change.oldValue)}
+                  {change.old_value !== undefined && (
+                    <div className="dbg-diff-change-value">
+                      <strong>Ancien:</strong> {JSON.stringify(change.old_value)}
                     </div>
                   )}
-                  {change.newValue !== undefined && (
-                    <div className="dbg-diff-new-value">
-                      <strong>Nouveau:</strong> {JSON.stringify(change.newValue)}
+                  {change.new_value !== undefined && (
+                    <div className="dbg-diff-change-value">
+                      <strong>Nouveau:</strong> {JSON.stringify(change.new_value)}
                     </div>
                   )}
                 </div>

@@ -100,7 +100,7 @@ export class ConfigManager {
         const configKey = key as ConfigKey;
         const oldValue = this.config[configKey];
 
-        (this.config as Record<string, unknown>)[key] = value;
+        (this.config as unknown as Record<string, unknown>)[key] = value;
 
         if (oldValue !== value) {
           this.notifyWatchers(configKey, value);
@@ -131,7 +131,7 @@ export class ConfigManager {
   private applyOverrides(): void {
     for (const [key, value] of Object.entries(this.overrides)) {
       if (value !== undefined) {
-        (this.config as Record<string, unknown>)[key] = value;
+        (this.config as unknown as Record<string, unknown>)[key] = value;
       }
     }
   }
