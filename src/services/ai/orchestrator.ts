@@ -21,20 +21,18 @@ import { geminiProvider } from './providers/gemini';
 import { openaiProvider } from './providers/openai'; // ← NOUVEAU: OpenAI GPT
 import { claudeProvider } from './providers/claude'; // ← NOUVEAU: Anthropic Claude
 import { ollamaProvider } from './providers/ollama';
-import { getAutoHealEngine, getMetricsEngine } from './system'; // ← LAZY: Auto-heal & Metrics
+import { autoHealEngine, metricsEngine } from './system'; // ← Direct imports (no lazy load)
 import { cognitiveKernel } from './cognitiveKernel'; // ← NOUVEAU v22Ω: Cognitive Kernel
 import { createLogger } from '@/utils/logger';
 
 const logger = createLogger('Orchestrator');
 
-// Lazy-loaded engine instances (cached singletons)
-let _autoHeal: Awaited<ReturnType<typeof getAutoHealEngine>> | null = null;
-let _metrics: Awaited<ReturnType<typeof getMetricsEngine>> | null = null;
+// Direct engine instances (no lazy loading needed)
+const _autoHeal = autoHealEngine;
+const _metrics = metricsEngine;
 
-// Initialize engines on first use
-const ensureEngines = async () => {
-  if (!_autoHeal) _autoHeal = await getAutoHealEngine();
-  if (!_metrics) _metrics = await getMetricsEngine();
+// Initialize engines on first use (now sync)
+const ensureEngines = () => {
   return { autoHeal: _autoHeal, metrics: _metrics };
 };
 

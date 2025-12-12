@@ -322,7 +322,7 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
     setVadState('unknown');
     setIsSpeaking(false);
 
-    console.log('[useVAD] Stopped listening');
+    // ✅ v∞.FIX - Removed repetitive log (was spamming console 100+ times)
   }, []);
 
   /**
@@ -413,7 +413,10 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
    * If speech detected → BARGE_IN event stops TTS
    */
   const enableBargeIn = useCallback(() => {
-    console.log('[useVAD] ⚡ Barge-in mode ENABLED');
+    // ✅ v∞.FIX - Debug log only (was spamming console)
+    if (import.meta.env.DEV) {
+      console.log('[useVAD] ⚡ Barge-in mode ENABLED');
+    }
     bargeInEnabledRef.current = true;
     setIsBargeInEnabled(true);
   }, []);
@@ -423,7 +426,10 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
    * VAD will be fully suspended during TTS playback (anti-echo only)
    */
   const disableBargeIn = useCallback(() => {
-    console.log('[useVAD] 🔇 Barge-in mode DISABLED');
+    // ✅ v∞.FIX - Debug log only (was spamming console)
+    if (import.meta.env.DEV) {
+      console.log('[useVAD] 🔇 Barge-in mode DISABLED');
+    }
     bargeInEnabledRef.current = false;
     setIsBargeInEnabled(false);
   }, []);

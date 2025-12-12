@@ -11,7 +11,7 @@
 
 import { invoke } from '@tauri-apps/api/core';
 import type { AIProvider, AIMessage, AIResponse } from '../types';
-import { getAutoHealEngine } from '../system';
+import { autoHealEngine } from '../system';
 import { withRetry, getRetryConfig } from '../retryStrategy';
 import { createLogger } from '@/utils/logger';
 import { withCache, CACHE_TTL } from '../apiCache';
@@ -181,21 +181,17 @@ export const claudeProvider: AIProvider = {
         } catch (error) {
           const latency = Date.now() - startTime;
 
-          // 🔧 AUTOHEAL: Signaler l'erreur pour auto-réparation (lazy loaded)
-          getAutoHealEngine()
-            .then(autoHeal => {
-              autoHeal.detectError(
-                'claude-provider',
-                error instanceof Error ? error : new Error(String(error)),
-                'provider',
-                {
-                  latency,
-                  message: message.substring(0, 100),
-                  historyLength: history.length,
-                }
-              );
-            })
-            .catch(error => logger.error('Failed to save interaction', { error }));
+          // 🔧 AUTOHEAL: Signaler l'erreur pour auto-réparation (direct instance)
+          autoHealEngine.detectError(
+            'claude-provider',
+            error instanceof Error ? error : new Error(String(error)),
+            'provider',
+            {
+              latency,
+              message: message.substring(0, 100),
+              historyLength: history.length,
+            }
+          );
 
           // Re-throw erreurs typées
           if (error instanceof Error) {

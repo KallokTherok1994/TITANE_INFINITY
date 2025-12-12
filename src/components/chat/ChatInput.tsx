@@ -13,7 +13,7 @@
  */
 
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import { getAutoHealEngine } from '../../services/ai/system';
+import { autoHealEngine } from '../../services/ai/system';
 import { FileUploadButton, type AnalyzedFile } from './FileUploadButton';
 import { DictationButton } from './DictationButton';
 import './ChatInput.css';
@@ -76,16 +76,12 @@ function useOmegaInputProtection() {
 
   const handleInputError = useCallback(
     (error: Error, context: string, inputValue?: string) => {
-      // Auto-heal trigger (lazy loaded)
-      getAutoHealEngine()
-        .then(engine => {
-          engine.heal('chat-input', error, 'validation', {
-            context,
-            inputLength: inputValue?.length || 0,
-            timestamp: Date.now(),
-          });
-        })
-        .catch(console.error);
+      // Auto-heal trigger (direct instance)
+      autoHealEngine.heal('chat-input', error, 'validation', {
+        context,
+        inputLength: inputValue?.length || 0,
+        timestamp: Date.now(),
+      });
 
       setInputState(prev => ({
         ...prev,

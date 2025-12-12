@@ -11,7 +11,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { getMetricsEngine, getAutoHealEngine } from './system';
+import { metricsEngine, autoHealEngine } from './system';
 import { aiOrchestrator } from './orchestrator';
 import { createLogger } from '@/utils/logger';
 
@@ -93,8 +93,8 @@ class AIHealthMonitor {
   private async performHealthCheck(): Promise<void> {
     try {
       const [metrics, autoHeal] = await Promise.all([
-        getMetricsEngine(),
-        getAutoHealEngine(),
+        Promise.resolve(metricsEngine),
+        Promise.resolve(autoHealEngine),
       ]);
 
       const metricsHealth = metrics.getHealthStats();
@@ -307,7 +307,7 @@ class AIHealthMonitor {
    * Obtenir rapport de santé complet
    */
   async getHealthReport(): Promise<HealthReport> {
-    const metrics = await getMetricsEngine();
+    const metrics = metricsEngine;
     const metricsHealth = metrics.getHealthStats();
     const metricsData = metrics.getAggregatedMetrics();
     const orchestratorHealth = await aiOrchestrator.healthCheck();

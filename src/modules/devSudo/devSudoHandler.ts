@@ -12,7 +12,7 @@
  */
 
 import { invoke } from '@tauri-apps/api/core';
-import { getAutoHealEngine } from '@/services/ai/system';
+import { autoHealEngine } from '@/services/ai/system';
 import { autoSaveConversationEngine } from '@/modules/talkToTitane/AutoSaveConversationEngine';
 import { talkToTitaneEngine } from '@/modules/talkToTitane/TalkToTitaneEngine';
 import type { LiveDebuggerMode } from '@/modules/liveDebugger/LiveDebuggerEngine';
@@ -5856,9 +5856,8 @@ Le patch généré nécessite review manuelle.
       };
     }
 
-    // Appliquer le patch via AutoHealEngine (lazy loaded)
-    const autoHeal = await getAutoHealEngine();
-    await autoHeal.heal(
+    // Appliquer le patch via AutoHealEngine (direct instance)
+    await autoHealEngine.heal(
       'live-debugger',
       new Error(`Applying patch for ${patch.module}: ${patch.reason}`),
       'critical',

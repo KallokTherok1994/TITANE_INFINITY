@@ -34,7 +34,7 @@ import { ChatModeSelector } from '../../components/chat/ChatModeSelector';
 import { ModeBadge } from '../../components/chat/ModeBadge';
 import { VoiceConversation } from '../../components/VoiceConversation';
 import type { ChatModeId } from '../../services/ai/chatModes.config';
-import { getAutoHealEngine } from '../../services/ai/system';
+import { autoHealEngine } from '../../services/ai/system';
 // Phase 1.9: Audio Feedback - VAD + TTS integration
 import useVAD, { useVADWithTTS, useBargeInHandler } from '../../hooks/useVAD';
 import './styles/Chat.css';
@@ -45,6 +45,9 @@ const PROVIDER_PREFERENCE_LABELS: Record<ProviderPreference, string> = {
   auto: 'Auto (sélection intelligente)',
   local: 'Local prioritaire',
   ollama: 'Ollama prioritaire',
+  openai: 'OpenAI GPT-4o',
+  gemini: 'Google Gemini 2.0',
+  anthropic: 'Anthropic Claude',
 };
 
 const PROVIDER_DISPLAY_NAMES: Record<string, string> = {
@@ -66,7 +69,14 @@ const PROVIDER_DISPLAY_NAMES: Record<string, string> = {
 };
 
 const DEFAULT_PROVIDER_NAME = 'OMEGA Neural';
-const PROVIDER_PREFERENCE_OPTIONS: ProviderPreference[] = ['auto', 'local', 'ollama'];
+const PROVIDER_PREFERENCE_OPTIONS: ProviderPreference[] = [
+  'auto',
+  'local',
+  'ollama',
+  'openai',
+  'gemini',
+  'anthropic',
+];
 
 const resolveProviderDisplayName = (provider: string | null | undefined): string => {
   if (!provider) {
@@ -163,48 +173,80 @@ const ChatDebugPanel = ({
     }
   }, []);
 
+  // Memoize styles pour éviter re-création à chaque render (performance optimization)
+  const toggleButtonStyle = useMemo<CSSProperties>(
+    () => ({
+      position: 'fixed',
+      bottom: 24,
+      right: 24,
+      padding: '10px 16px',
+      borderRadius: '12px',
+      border: '1px solid rgba(148,163,184,0.3)',
+      background: 'rgba(15,23,42,0.9)',
+      color: '#e2e8f0',
+      cursor: 'pointer',
+      zIndex: 9100,
+      fontSize: '0.85rem',
+    }),
+    []
+  );
+
+  const panelWidth = collapsed ? 260 : 360;
+  const panelHeight = collapsed ? 60 : 360;
+
+  const containerStyle = useMemo<CSSProperties>(
+    () => ({
+      position: 'fixed',
+      top: position.y,
+      left: position.x,
+      width: panelWidth,
+      maxHeight: panelHeight,
+      background: 'rgba(15,23,42,0.94)',
+      borderRadius: '14px',
+      border: '1px solid rgba(148,163,184,0.25)',
+      boxShadow: '0 20px 45px rgba(2,6,23,0.45)',
+      color: '#e2e8f0',
+      overflow: 'hidden',
+      zIndex: 9200,
+      display: 'flex',
+      flexDirection: 'column',
+    }),
+    [position.y, position.x, panelWidth, panelHeight]
+  );
+
+  const headerStyle = useMemo<CSSProperties>(
+    () => ({
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '10px 14px',
+      cursor: 'grab',
+      background: 'rgba(30,41,59,0.95)',
+      borderBottom: collapsed ? 'none' : '1px solid rgba(148,163,184,0.15)',
+      gap: 12,
+    }),
+    [collapsed]
+  );
+
+  const contentStyle = useMemo<CSSProperties>(
+    () => ({
+      flex: 1,
+      overflowY: 'auto',
+      padding: '12px 14px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 12,
+    }),
+    []
+  );
+
   if (!visible) {
     return (
-      <button
-        type="button"
-        onClick={onToggleVisible}
-        style={{
-          position: 'fixed',
-          bottom: 24,
-          right: 24,
-          padding: '10px 16px',
-          borderRadius: '12px',
-          border: '1px solid rgba(148,163,184,0.3)',
-          background: 'rgba(15,23,42,0.9)',
-          color: '#e2e8f0',
-          cursor: 'pointer',
-          zIndex: 9100,
-          fontSize: '0.85rem',
-        }}
-      >
+      <button type="button" onClick={onToggleVisible} style={toggleButtonStyle}>
         🛠️ Ouvrir Debug Chat
       </button>
     );
   }
-
-  const panelWidth = collapsed ? 260 : 360;
-  const panelHeight = collapsed ? 60 : 360;
-  const containerStyle: CSSProperties = {
-    position: 'fixed',
-    top: position.y,
-    left: position.x,
-    width: panelWidth,
-    maxHeight: panelHeight,
-    background: 'rgba(15,23,42,0.94)',
-    borderRadius: '14px',
-    border: '1px solid rgba(148,163,184,0.25)',
-    boxShadow: '0 20px 45px rgba(2,6,23,0.45)',
-    color: '#e2e8f0',
-    overflow: 'hidden',
-    zIndex: 9200,
-    display: 'flex',
-    flexDirection: 'column',
-  };
 
   const lastEntry = entries[0];
 
@@ -215,16 +257,7 @@ const ChatDebugPanel = ({
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerUp}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '10px 14px',
-          cursor: 'grab',
-          background: 'rgba(30,41,59,0.95)',
-          borderBottom: collapsed ? 'none' : '1px solid rgba(148,163,184,0.15)',
-          gap: 12,
-        }}
+        style={headerStyle}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Debug Chat IA</span>
@@ -271,16 +304,7 @@ const ChatDebugPanel = ({
       </div>
 
       {!collapsed && (
-        <div
-          style={{
-            flex: 1,
-            overflowY: 'auto',
-            padding: '12px 14px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 12,
-          }}
-        >
+        <div style={contentStyle}>
           {lastEntry ? (
             <>
               <div style={{ fontSize: '0.8rem', lineHeight: 1.5 }}>
@@ -424,16 +448,12 @@ function useOmegaRenderProtection() {
   const handleRenderError = useCallback((error: Error, context: string) => {
     renderAttempts.current++;
 
-    // Auto-heal trigger (lazy loaded)
-    getAutoHealEngine()
-      .then(autoHeal => {
-        autoHeal.heal('chat-page', error, 'validation', {
-          context,
-          renderAttempts: renderAttempts.current,
-          timestamp: Date.now(),
-        });
-      })
-      .catch(console.error);
+    // Auto-heal trigger (direct instance)
+    autoHealEngine.heal('chat-page', error, 'validation', {
+      context,
+      renderAttempts: renderAttempts.current,
+      timestamp: Date.now(),
+    });
 
     setPageState(prev => ({
       ...prev,
@@ -573,6 +593,7 @@ export const Chat: React.FC = () => {
     setPreferredProvider,
     lastProvider,
     debugEntries,
+    providerReadiness, // v24.3.0: Cloud providers availability
   } = chatHookResult;
 
   // Phase 1.9: Audio Feedback - VAD integration with anti-echo + barge-in
@@ -585,23 +606,27 @@ export const Chat: React.FC = () => {
     if (voiceModeActive) {
       vad.enableBargeIn(); // Allow user to interrupt AI
       vad.startListening().catch(err => {
-        console.error('[Chat] Failed to start VAD:', err);
+        isDev && console.error('[Chat] Failed to start VAD:', err);
       });
-      console.log('[Chat] 🎤 Voice mode enabled: VAD started, barge-in enabled');
+      isDev && console.log('[Chat] 🎤 Voice mode enabled: VAD started, barge-in enabled');
     } else {
       vad.stopListening();
       vad.disableBargeIn();
-      console.log('[Chat] 🔇 Voice mode disabled: VAD stopped');
+      // ✅ v∞.FIX - Debug log only (was spamming console every render)
+      if (import.meta.env.DEV) {
+        console.log('[Chat] 🔇 Voice mode disabled: VAD stopped');
+      }
     }
   }, [voiceModeActive, vad]);
 
   // OMEGA DEBUG: Trace messages dans Chat.tsx
   useEffect(() => {
-    console.log(
-      '[OMEGA CHAT PAGE DEBUG] 📊 Messages state changed:',
-      messages?.length,
-      'messages'
-    );
+    isDev &&
+      console.log(
+        '[OMEGA CHAT PAGE DEBUG] 📊 Messages state changed:',
+        messages?.length,
+        'messages'
+      );
   }, [messages]);
 
   const providerStatus = useMemo<ProviderStatus>(() => {
@@ -1055,6 +1080,36 @@ export const Chat: React.FC = () => {
               />
             </div>
           )}
+
+          {/* ✨ v24.3.0 - Provider Readiness Warning */}
+          {preferredProvider !== 'auto' &&
+            preferredProvider !== 'local' &&
+            preferredProvider !== 'ollama' &&
+            !providerReadiness[preferredProvider] && (
+              <div
+                className="chat-provider-warning"
+                style={{
+                  padding: '12px 16px',
+                  marginBottom: '8px',
+                  backgroundColor: 'rgba(255, 193, 7, 0.1)',
+                  border: '1px solid rgba(255, 193, 7, 0.3)',
+                  borderRadius: '8px',
+                  color: '#ffc107',
+                  fontSize: '14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                }}
+              >
+                <span style={{ fontSize: '18px' }}>⚠️</span>
+                <span>
+                  <strong>{preferredProvider.toUpperCase()}</strong> n'est pas configuré.
+                  Le système basculera automatiquement vers un provider disponible. Pour
+                  utiliser {preferredProvider}, ajoutez votre clé API dans{' '}
+                  <strong>Gouvernance → Secrets</strong>.
+                </span>
+              </div>
+            )}
 
           <ChatInput
             onSend={sendMessage}
