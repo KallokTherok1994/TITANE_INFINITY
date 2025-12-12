@@ -1,0 +1,15 @@
+{
+  "snapshots": [],
+  "logs": [],
+  "events": [],
+  "timeline_entries": [],
+  "chat_history": [],
+  "projects": [],
+  "decisions": [],
+  "knowledge": [],
+  "rituals": [],
+  "metadata": {
+    "last_validation_ts": 1765487598159,
+    "last_compaction_ts": null
+  }
+}

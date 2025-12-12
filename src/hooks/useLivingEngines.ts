@@ -15,6 +15,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import type { PersonaState } from '@/types/singularityState';
+import type { MoodType } from '../core/ARCHITECTURE_TYPES_v24-v∞';
 
 // REMOVED: core/persona supprimé en PHASE 1 (OPTION B)
 // Stubs temporaires pour compatibilité
@@ -24,7 +25,7 @@ interface SystemState {
 }
 
 interface LocalPersonaState {
-  mood: { current: string; intensity: number };
+  mood: { current: MoodType; intensity: number };
   energy: number;
   coherence: number;
 }
@@ -38,7 +39,7 @@ interface VisualMultipliers {
 
 const personaEngine = {
   getState: (): LocalPersonaState => ({
-    mood: { current: 'neutre', intensity: 0.5 },
+    mood: { current: 'neutre' as MoodType, intensity: 0.5 },
     energy: 100,
     coherence: 100,
   }),

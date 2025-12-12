@@ -699,7 +699,7 @@ class MetaKernel {
 
     // Analyser flux vertical: stabilité → qualité
     const verticalFlow = {
-      stability: metricsEngine.getHealthStats().systemHealth,
+      stability: metricsEngine.getHealthStats().overall,
       quality: metricsEngine.getAggregatedMetrics().successRate,
     };
 
@@ -816,6 +816,7 @@ class MetaKernel {
     priority: number = 50
   ): OrchestrationAction {
     const location = this.getKernelLocation(kernel);
+    const purpose = context; // ✅ FIX: Define purpose from context
 
     const action: OrchestrationAction = {
       kernel,
@@ -1006,8 +1007,14 @@ class MetaKernel {
     // Clarté des flux basée sur taux de succès
     this.titanePrinciples.clarityFlows = metrics.successRate;
 
-    // Robustesse naturelle basée sur stabilité
-    this.titanePrinciples.robustnessNatural = metricsEngine.getHealthStats().systemHealth;
+    // Robustesse naturelle basée sur stabilité (convert status to number)
+    const healthStats = metricsEngine.getHealthStats();
+    this.titanePrinciples.robustnessNatural =
+      healthStats.overall === 'healthy'
+        ? 100
+        : healthStats.overall === 'degraded'
+          ? 70
+          : 40;
 
     // Types unicité (toujours 100 si TypeScript strict)
     this.titanePrinciples.typesUnicity = 100;

@@ -123,6 +123,9 @@ export interface PhenomenonConfig {
   auraColor?: string;
   auraOpacity?: number;
 
+  // Colors
+  colors?: string[];
+
   // Effects
   arcCount?: number;
   arcIntensity?: number;

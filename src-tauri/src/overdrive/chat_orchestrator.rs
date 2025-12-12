@@ -706,6 +706,14 @@ async fn send_to_gemini(
     })))
 }
 
+/// Public wrapper pour appel depuis chat_generate_commands
+pub async fn send_to_gemini_internal(
+    request: &ChatRequest,
+    state: &ChatOrchestratorState,
+) -> Result<ChatMessage, TAPIError> {
+    send_to_gemini(request, state).await
+}
+
 async fn send_to_ollama(
     request: &ChatRequest,
     _state: &ChatOrchestratorState,
@@ -942,6 +950,14 @@ async fn send_to_openai(
     })))
 }
 
+/// Public wrapper pour appel depuis chat_generate_commands
+pub async fn send_to_openai_internal(
+    request: &ChatRequest,
+    state: &ChatOrchestratorState,
+) -> Result<ChatMessage, TAPIError> {
+    send_to_openai(request, state).await
+}
+
 async fn send_to_anthropic(
     request: &ChatRequest,
     state: &ChatOrchestratorState,
@@ -1087,6 +1103,14 @@ async fn send_to_anthropic(
     Err(TAPIError::network(last_error.unwrap_or_else(|| {
         "Anthropic failed after 3 attempts".to_string()
     })))
+}
+
+/// Public wrapper pour appel depuis chat_generate_commands
+pub async fn send_to_anthropic_internal(
+    request: &ChatRequest,
+    state: &ChatOrchestratorState,
+) -> Result<ChatMessage, TAPIError> {
+    send_to_anthropic(request, state).await
 }
 
 async fn send_to_local(

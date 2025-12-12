@@ -195,10 +195,12 @@ export interface CognitiveState {
 }
 
 export interface AffectiveState {
-  emotion: string;
-  intensity: number;
   valence: number;
-  stability: number;
+  arousal: number;
+  dominance: number;
+  warmth: number;
+  emotionalState?: string;
+  [key: string]: unknown;
 }
 
 export interface ExpressiveOSState {

@@ -15,6 +15,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, lazy, Suspense } from 'react';
 import type { CSSProperties, PointerEventHandler } from 'react';
+import { invoke } from '@tauri-apps/api/core';
 import {
   ChatMessage,
   ChatInput,

@@ -49,6 +49,7 @@ import { initializeMicroInteractions } from './ui/motion'; // ✨ v21 - TITANE�
 import { ToastContainer } from './ui/components/Toast'; // ✨ v19.5.2 - Toast notifications
 import { useUIStore } from './stores/uiStore'; // ✨ v19.5.2 - UI state management
 import { initializeOllama } from './services/ai/providers/ollama'; // ✨ v21 - Local AI initialization
+import { connectCacheToSingularity } from './services/ai'; // ✨ v21.5 Sprint 1 - Cognitive Cache
 import './i18n';
 
 /**
@@ -365,6 +366,25 @@ const AppRouter: React.FC = () => {
     });
   }, []);
 
+  // ✨ v21.5 Sprint 1 - Connecter Cognitive Cache au SingularityKernel
+  useEffect(() => {
+    console.log('🧠 [COGNITIVE-CACHE] Connecting to SingularityKernel...');
+
+    // Import dynamique pour éviter circular dependency
+    import('./services/ai/singularityKernel')
+      .then(({ singularityKernel }) => {
+        try {
+          connectCacheToSingularity(singularityKernel);
+          console.log('✅ [COGNITIVE-CACHE] Connected successfully');
+        } catch (error) {
+          console.error('❌ [COGNITIVE-CACHE] Connection failed:', error);
+        }
+      })
+      .catch(error => {
+        console.warn('⚠️ [COGNITIVE-CACHE] SingularityKernel not available:', error);
+      });
+  }, []);
+
   // ✨ v∞ - Démarrer Auto-Audit Engine au chargement
   useEffect(() => {
     console.log('🔍 [AUTO-AUDIT] Starting automatic audits...');
@@ -559,7 +579,7 @@ const AppRouter: React.FC = () => {
   useEffect(() => {
     if (!livingEngines.state.initialized) return;
 
-    console.log('🎭 Persona:', livingEngines.state.persona?.mood.current);
+    console.log('🎭 Persona:', livingEngines.state.persona?.mood); // mood is MoodType string
     console.log('⚡ Glow:', livingEngines.state.glow.toFixed(2));
     console.log('🧠 Cognitive Load:', livingEngines.state.cognitiveLoad.toFixed(2));
     // Note: Cet effet log uniquement à l'initialisation, pas à chaque update

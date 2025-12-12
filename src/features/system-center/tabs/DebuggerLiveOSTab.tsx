@@ -488,16 +488,18 @@ export function DebuggerLiveOSTab() {
                       {change.type.toUpperCase()}
                     </span>
                     <span className="dbg-diff-change-path">{change.path}</span>
-                    <span className="dbg-diff-change-impact">{change.impact}</span>
+                    <span className="dbg-diff-change-impact">
+                      {(change as any).impact || 'medium'}
+                    </span>
                   </div>
-                  {change.old_value !== undefined && (
+                  {change.oldValue !== undefined && (
                     <div className="dbg-diff-old-value">
-                      <strong>Ancien:</strong> {JSON.stringify(change.old_value)}
+                      <strong>Ancien:</strong> {JSON.stringify(change.oldValue)}
                     </div>
                   )}
-                  {change.new_value !== undefined && (
+                  {change.newValue !== undefined && (
                     <div className="dbg-diff-new-value">
-                      <strong>Nouveau:</strong> {JSON.stringify(change.new_value)}
+                      <strong>Nouveau:</strong> {JSON.stringify(change.newValue)}
                     </div>
                   )}
                 </div>

@@ -18,7 +18,7 @@ pub use evolution::{
     Recommendation, RepairAction, RepairResult,
 };
 pub use harmonia::{HarmoniaState, StabilizationLevel};
-pub use helios::{HeliosState, LoadAverage};
+pub use helios::HeliosState;
 pub use memory::{
     DiskMode, LogEntry, MemoryDirectoryReport, MemoryFileReport, MemoryState, Snapshot,
     TimelineEvent,
@@ -35,6 +35,9 @@ pub use shared::{CognitiveNode, HealthStatus, LogLevel, ModuleHealthInfo, System
 
 // Re-export AppError for backward compatibility
 pub use crate::utils::AppError;
+
+// Re-export AppError for backward compatibility
+// pub use crate::utils::AppError;
 
 // Type alias for ModuleHealth (deprecated, use ModuleHealthInfo)
 pub type ModuleHealth = ModuleHealthInfo;

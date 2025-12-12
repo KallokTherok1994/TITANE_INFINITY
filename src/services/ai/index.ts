@@ -43,6 +43,34 @@ export {
 // Use getAutoHealEngine(), getMetricsEngine(), getHealthMonitor()
 export { getAutoHealEngine, getMetricsEngine, getHealthMonitor } from './system';
 
+// ✨ v21 Phase 2: Retry Strategy unifiée
+export {
+  withRetry,
+  withRetryAndTimeout,
+  getRetryConfig,
+  isRetriableError,
+  type RetryConfig,
+  DEFAULT_RETRY_CONFIG,
+  PROVIDER_RETRY_CONFIGS,
+} from './retryStrategy';
+
+// ✨ v21 Phase 3: API Response Cache (LRU)
+export {
+  apiResponseCache,
+  withCache,
+  LRUCache,
+  CACHE_TTL,
+  type CacheStats,
+} from './apiCache';
+
+// ✨ v21.5 Sprint 1: Cognitive Cache Connector
+export {
+  connectCacheToSingularity,
+  disconnectCacheFromSingularity,
+  isCacheConnected,
+  detectPattern,
+} from './cognitiveCacheConnector';
+
 // Providers
 export { geminiProvider } from './providers/gemini';
 export { ollamaProvider } from './providers/ollama';

@@ -41,26 +41,46 @@ interface TestScenario {
   name: string;
   description: string;
   inputs: Array<{ role: 'user' | 'assistant'; content: string }>;
+  conversation_turns: Array<{ role: 'user' | 'assistant'; content: string }>;
+  context?: Record<string, unknown>;
   expectedMetrics: Partial<ConversationMetrics>;
+  success_criteria?: {
+    minQuality?: number;
+    minRelevance?: number;
+    minCoherence?: number;
+    minEngagement?: number;
+    min_metrics?: Record<string, number>;
+    required_keywords?: string[];
+    prohibited_keywords?: string[];
+  };
+  expected_outcomes?: string[];
   tags?: string[];
 }
 
 interface TestResult {
   scenarioId: string;
+  scenario_id?: string;
+  scenario_name?: string;
   passed: boolean;
   metrics: ConversationMetrics;
+  execution_time_ms?: number;
+  actual_responses?: string[];
+  failure_reason?: string;
+  executed_at?: string;
   errors?: string[];
   timestamp: number;
 }
 
 interface LiveEvaluation {
   messageId: string;
+  turn_number?: number;
   metrics: ConversationMetrics;
   timestamp: number;
   context?: Record<string, unknown>;
 }
 
 interface EvaluationReport {
+  conversation_id?: string;
   period: { start: number; end: number };
   totalEvaluations: number;
   averageMetrics: ConversationMetrics;
@@ -69,6 +89,16 @@ interface EvaluationReport {
 }
 
 interface RegressionTest {
+  test_id?: string;
+  test_name?: string;
+  baseline_metrics?: ConversationMetrics;
+  current_metrics?: ConversationMetrics;
+  regression_detected?: boolean;
+  degraded_metrics?: MetricDegradation[];
+  tested_at?: string;
+}
+
+interface MetricDegradation {
   metricName: string;
   baseline: number;
   current: number;
@@ -818,6 +848,8 @@ export class ConversationEvaluationEngine extends EventEmitter {
     responses: string[],
     criteria: TestScenario['success_criteria']
   ): boolean {
+    if (!criteria) return true;
+
     // Check minimum metric thresholds
     if (criteria.min_metrics) {
       for (const [metric, threshold] of Object.entries(criteria.min_metrics)) {

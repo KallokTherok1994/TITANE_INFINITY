@@ -17,6 +17,13 @@
 /** Identifiants uniques des modes (clés stables, ne jamais renommer) */
 export type ChatModeId =
   | 'default'
+  | 'reflection'
+  | 'creation'
+  | 'strategy'
+  | 'emergency'
+  | 'standard'
+  | 'quick'
+  | 'omega'
   | 'brainstorming'
   | 'synthesis'
   | 'planning'
@@ -25,7 +32,6 @@ export type ChatModeId =
   | 'coach'
   | 'dev'
   | 'admin'
-  | 'strategy'
   | 'audit';
 
 /** Catégories fonctionnelles pour regroupement UI */
@@ -258,6 +264,58 @@ export const CHAT_MODES_CONFIG: Record<ChatModeId, ChatModeConfigExtended> = {
     enabled: true,
     sortOrder: 0,
     tags: ['general', 'default', 'conversation'],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // MODE: REFLECTION (Réflexion Profonde)
+  // ═══════════════════════════════════════════════════════════════════════════
+  reflection: {
+    id: 'reflection',
+    label: 'Réflexion Profonde',
+    description: 'Mode introspection - analyse profonde et questionnement',
+    category: 'personal',
+    icon: '🤔',
+    themeColor: '#8b7aa8',
+
+    defaultProvider: 'auto',
+    systemPrompt: `Tu es TITANE∞ en mode RÉFLEXION PROFONDE.
+
+Ton rôle:
+• Faciliter la pensée profonde et l'analyse réflexive
+• Poser des questions qui challengent les présupposés
+• Aider à explorer les différentes facettes d'une question
+• Encourager la métacognition (penser sur sa propre pensée)
+• Identifier les angles morts et les biais potentiels
+
+Ton style:
+• Philosophique, nuancé, exploratoire
+• Questions socratiques, hypothèses alternatives
+• Questions du type "Pourquoi est-ce important ?", "Quelles sont tes croyances sous-jacentes ?", "Et si c'était faux ?"
+
+Kevin cherche à approfondir sa compréhension. Aide-le à voir au-delà de l'évidence.`,
+    temperature: 0.8,
+    maxTokens: 2500,
+
+    responseStyle: 'detailed',
+    tone: 'analytical',
+    suggestedActions: [
+      'Quelles sont tes hypothèses implicites ?',
+      'Comment vérifier cette croyance ?',
+      'Quel serait le contre-argument le plus fort ?',
+    ],
+
+    permissionLevel: 1,
+    toolsAllowed: { ...TOOLS_MINIMAL, contextAnalysis: true },
+    memoryScope: 'session',
+
+    profileId: 'philosophe_sage',
+    enginesEnabled: ['cognitive', 'memory', 'reflection'],
+    capabilities: ['deep-analysis', 'metacognition', 'critical-thinking'],
+
+    version: '1.0.0',
+    enabled: true,
+    sortOrder: 0.5,
+    tags: ['personal', 'reflection', 'philosophy', 'deep-thinking'],
   },
 
   // ═══════════════════════════════════════════════════════════════════════════

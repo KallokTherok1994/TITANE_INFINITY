@@ -231,13 +231,20 @@ export class VectorStoreClient implements IVectorStore {
       });
 
       return {
-        totalEntries: stats.totalEntries,
+        total: stats.totalEntries || 0,
         byTier: stats.byTier as Record<MemoryTier, number>,
         byType: stats.byType as Record<UnifiedMemoryType, number>,
-        avgImportance: stats.avgImportance,
-        dbSizeBytes: stats.dbSizeBytes,
-        oldestEntry: 0, // Not implemented in backend yet
-        newestEntry: Date.now(),
+        byImportance: {
+          low: 0,
+          medium: 0,
+          high: 0,
+          critical: 0,
+        },
+        avgEmbeddingTimeMs: 0,
+        avgRetrievalTimeMs: 0,
+        storageSizeMB: (stats.dbSizeBytes || 0) / (1024 * 1024),
+        oldestMemory: 0,
+        newestMemory: Date.now(),
       };
     } catch (error) {
       console.error('[VectorStoreClient] GetStats failed:', error);
@@ -283,14 +290,11 @@ export class VectorStoreClient implements IVectorStore {
       embedding: entry.embedding,
       owner: entry.owner,
       tags: entry.tags,
-      sourceType: entry.sourceType,
-      sourceId: entry.sourceId,
-      sourceTimestamp: entry.sourceTimestamp,
+      source: entry.source, // MemorySource object
       importance: entry.importance,
       accessCount: entry.accessCount,
-      createdAt: entry.createdAt,
-      updatedAt: entry.updatedAt,
-      lastAccessed: entry.lastAccessed,
+      created: entry.created,
+      accessed: entry.accessed,
     };
   }
 
@@ -307,14 +311,25 @@ export class VectorStoreClient implements IVectorStore {
       embedding: entry.embedding,
       owner: entry.owner,
       tags: entry.tags,
-      sourceType: entry.source_type || entry.sourceType,
-      sourceId: entry.source_id ?? entry.sourceId ?? undefined,
-      sourceTimestamp: entry.source_timestamp || entry.sourceTimestamp,
+      source: entry.source || {
+        type: entry.source_type || 'system',
+        id: entry.source_id,
+        timestamp: entry.source_timestamp || Date.now(),
+      },
       importance: entry.importance,
+      confidence: entry.confidence ?? 0.5,
+      strength: entry.strength ?? 0.5,
+      isUseful: entry.is_useful ?? true,
+      isTrue: entry.is_true ?? true,
+      isStructuring: entry.is_structuring ?? false,
+      isStable: entry.is_stable ?? true,
+      isReusable: entry.is_reusable ?? true,
       accessCount: entry.access_count || entry.accessCount,
-      createdAt: entry.created_at || entry.createdAt,
-      updatedAt: entry.updated_at || entry.updatedAt,
-      lastAccessed: entry.last_accessed || entry.lastAccessed,
+      created: entry.created_at || entry.created || Date.now(),
+      accessed: entry.last_accessed || entry.accessed || Date.now(),
+      compressionLevel: entry.compression_level ?? 0,
+      relatedTo: entry.related_to ?? undefined,
+      supersedes: entry.supersedes ?? undefined,
     };
   }
 }

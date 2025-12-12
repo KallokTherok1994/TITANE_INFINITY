@@ -169,7 +169,7 @@ export const DevTools = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const personaMood = livingEngines.state.persona?.mood.current || 'neutre';
+      const personaMood = livingEngines.state.persona?.mood || 'neutre'; // mood is MoodType string
       setLogs(prev => [
         ...prev,
         `[DEBUG] System tick at ${new Date().toLocaleTimeString()} | Mood: ${personaMood}`,

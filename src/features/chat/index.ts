@@ -16,3 +16,9 @@ export type {
   CognitiveContext,
   ActiveMemory,
 } from './ChatContextPanel';
+
+// ✨ v21 Phase 4: UX Components
+export { TypingIndicator } from './TypingIndicator';
+export type { TypingIndicatorProps } from './TypingIndicator';
+
+export { ProviderStatusPanel } from './ProviderStatusPanel';
