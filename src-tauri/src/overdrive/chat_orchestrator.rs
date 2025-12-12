@@ -279,8 +279,9 @@ async fn is_provider_available(provider: &str, state: &ChatOrchestratorState) ->
         }
         "ollama" => {
             // Ping rapide http://localhost:11434/api/tags
+            // ✅ FIX: Timeout augmenté 500ms → 3000ms (Ollama peut être lent au premier appel)
             match reqwest::Client::builder()
-                .timeout(std::time::Duration::from_millis(500))
+                .timeout(std::time::Duration::from_millis(3000))
                 .build()
             {
                 Ok(client) => {
@@ -1123,19 +1124,12 @@ pub async fn send_to_anthropic_internal(
 }
 
 async fn send_to_local(
-    _request: &ChatRequest,
+    request: &ChatRequest,
     _state: &ChatOrchestratorState,
 ) -> Result<ChatMessage, TAPIError> {
-    // 🚨 DEBUG MODE — Fallback local DÉSACTIVÉ pour forcer diagnostic
-    // TODO: Restaurer après validation routing
-    println!("[CHAT] ❌ Local fallback BLOCKED (debug mode)");
-    println!("[CHAT] ⚠️ Aucun provider LLM n'a répondu — c'est le vrai problème!");
+    // ✅ Fallback local RÉACTIVÉ — Réponse garantie même si tous les LLM échouent
+    println!("[CHAT] 🔧 Local fallback activated (all LLM providers failed)");
     
-    return Err(TAPIError::internal(
-        "DEBUG MODE: Local fallback désactivé. Si tu vois ce message, aucun LLM réel n'a été appelé. Vérifie les logs [CHAT ROUTER] ci-dessus."
-    ));
-    
-    /* CODE ORIGINAL (désactivé temporairement)
     let user_message = request.message.to_lowercase();
     let response_content = generate_local_response(&user_message, &request.message);
 
@@ -1151,7 +1145,6 @@ async fn send_to_local(
         tokens: None,
         multimodal: false,
     })
-    */
 }
 
 /// Génère une réponse locale intelligente basée sur le contexte du message
