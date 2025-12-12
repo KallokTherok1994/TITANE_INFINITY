@@ -330,15 +330,15 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
         messageSent.current = true;
         lastMessageTime.current = Date.now();
 
-        // ⭐ OMEGA FIX: Timeout de sécurité 10s pour forcer reset si onSend() bloque
+        // ⭐ OMEGA FIX: Timeout de sécurité 3s (TEMP CLEANUP: réduit pour debug)
         const resetTimeout = setTimeout(() => {
           if (messageSent.current && mountedRef.current) {
             console.warn(
-              '[OMEGA ChatInput] ⚠️ messageSent.current reset forcé après timeout 10s'
+              '[OMEGA ChatInput] ⚠️ messageSent.current reset forcé après timeout 3s (TEMP CLEANUP)'
             );
             messageSent.current = false;
           }
-        }, 10000); // 10s max
+        }, 3000); // TEMP CLEANUP: 3s au lieu de 10s
 
         try {
           // Envoyer le message (async safe)
@@ -722,11 +722,17 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
               type="submit"
               className="chat-send-btn chat-send-omega"
               onClick={handleSend}
-              disabled={!trimmedValue || isInputDisabled || messageSent.current}
+              disabled={
+                !trimmedValue ||
+                isInputDisabled /* TEMP CLEANUP: messageSent.current removed */
+              }
               aria-label={
                 voiceModeActive ? 'Envoyer message vocal' : 'Envoyer message texte'
               }
-              aria-disabled={!trimmedValue || isInputDisabled || messageSent.current}
+              aria-disabled={
+                !trimmedValue ||
+                isInputDisabled /* TEMP CLEANUP: messageSent.current removed */
+              }
               aria-busy={messageSent.current}
               title="Envoyer le message (Enter ou Ctrl+Enter)"
             >
