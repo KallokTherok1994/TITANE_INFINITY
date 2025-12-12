@@ -330,15 +330,15 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
         messageSent.current = true;
         lastMessageTime.current = Date.now();
 
-        // ⭐ OMEGA FIX: Timeout de sécurité 3s (TEMP CLEANUP: réduit pour debug)
+        // ⭐ PHASE 4 ÉTAPE 1: Timeout restauré 10s (testing si cause blocage)
         const resetTimeout = setTimeout(() => {
           if (messageSent.current && mountedRef.current) {
             console.warn(
-              '[OMEGA ChatInput] ⚠️ messageSent.current reset forcé après timeout 3s (TEMP CLEANUP)'
+              '[OMEGA ChatInput] ⚠️ messageSent.current reset forcé après timeout 10s'
             );
             messageSent.current = false;
           }
-        }, 3000); // TEMP CLEANUP: 3s au lieu de 10s
+        }, 10000); // PHASE 4: Timeout restauré à 10s
 
         try {
           // Envoyer le message (async safe)
