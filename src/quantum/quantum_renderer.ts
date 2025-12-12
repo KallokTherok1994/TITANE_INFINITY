@@ -200,7 +200,7 @@ export class QuantumRenderer {
 
   private startQuantumLoop(): void {
     let lastTime = performance.now();
-    const _frameCount = 0;
+    let _frameCount = 0;
     let reRenderCounter = 0;
     const reRenderWindow = 1000; // 1 seconde
     let reRenderWindowStart = performance.now();
@@ -235,7 +235,7 @@ export class QuantumRenderer {
 
       // Increment cycle
       this.state.renderCycle++;
-      frameCount++;
+      _frameCount++;
 
       // Schedule next frame
       this.rafId = requestAnimationFrame(quantumFrame);

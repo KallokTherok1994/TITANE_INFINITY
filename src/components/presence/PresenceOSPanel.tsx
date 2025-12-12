@@ -212,14 +212,16 @@ function OverviewTab({ state, coherence }: { state: PresenceState; coherence: nu
         <h4>📈 7 Couches</h4>
         <div className="presence-os-layers">
           <LayerIndicator label="Cognitive" value={state.cognitive.coherence} />
-          <LayerIndicator label="Affective" value={state.affective.stability} />
+          <LayerIndicator
+            label="Affective"
+            value={state.affective.stability as unknown as number}
+          />
           <LayerIndicator
             label="Expressive"
             value={
-              (Object.values(state.expressive.timbreBlend) as number[]).reduce(
-                (a, b) => a + b,
-                0
-              ) / 4
+              (Object.values(state.expressive.timbreBlend)
+                .filter((v): v is number => typeof v === 'number')
+                .reduce((a, b) => a + b, 0) / 4 || 0) as unknown as number
             }
           />
           <LayerIndicator label="Aura" value={coherence} />
@@ -259,11 +261,27 @@ function CognitiveTab({ cognitive }: { cognitive: CognitiveState }) {
 function AffectiveTab({ affective }: { affective: AffectiveState }) {
   return (
     <div className="presence-os-affective">
-      <MetricCard label="Emotion" value={affective.emotion} />
-      <MetricCard label="Intensity" value={affective.intensity} type="progress" />
-      <MetricCard label="Valence" value={affective.valence} type="progress" />
-      <MetricCard label="Warmth" value={affective.warmth ?? 0.5} type="progress" />
-      <MetricCard label="Stability" value={affective.stability} type="progress" />
+      <MetricCard label="Emotion" value={(affective.emotion as string) ?? 'neutre'} />
+      <MetricCard
+        label="Intensity"
+        value={(affective.intensity as number) ?? 0.5}
+        type="progress"
+      />
+      <MetricCard
+        label="Valence"
+        value={(affective.valence as number) ?? 0.5}
+        type="progress"
+      />
+      <MetricCard
+        label="Warmth"
+        value={((affective.warmth as unknown) || 0.5) as unknown as number}
+        type="progress"
+      />
+      <MetricCard
+        label="Stability"
+        value={affective.stability as unknown as number}
+        type="progress"
+      />
     </div>
   );
 }
@@ -333,7 +351,7 @@ function SpatialTab({ spatial }: { spatial: SpatialPosition }) {
               left: `${(spatial.proximity + 1) * 50}%`,
               top: `${(1 - (spatial.elevation ?? 0.5)) * 50}%`,
               width: `${(spatial.width ?? 0.5) * 50}px`,
-              height: `${spatial.width * 50}px`,
+              height: `${(spatial.width ?? 0.5) * 50}px`,
             }}
           />
         </div>

@@ -192,7 +192,7 @@ export async function quickFix(): Promise<{
     actions.push('✅ Providers réinitialisés');
 
     // Clear old alerts
-    aiHealthMonitor.clearAlerts();
+    aiHealthMonitor.clearAllAlerts();
     actions.push('✅ Alertes nettoyées');
 
     return {

@@ -66,10 +66,22 @@ export function useParticles(
 
     if (!canvas || !particleSystem) return;
 
-    const { particleCount, velocity, lifespan } = config;
+    const particleConfig = config as Record<string, unknown>;
+    const particleCount = (particleConfig.particleCount as number | undefined) ?? 100;
+    const velocity = (particleConfig.velocity as number | undefined) ?? 1;
+    const lifespan = (particleConfig.lifespan as number | undefined) ?? 5000;
+
     particleSystem.setEmissionRate(particleCount / 2);
-    particleSystem.setVelocity(velocity);
-    particleSystem.setLifespan(lifespan);
+    if ('setVelocity' in particleSystem) {
+      (particleSystem as unknown as { setVelocity: (v: number) => void }).setVelocity(
+        velocity
+      );
+    }
+    if ('setLifespan' in particleSystem) {
+      (particleSystem as unknown as { setLifespan: (l: number) => void }).setLifespan(
+        lifespan
+      );
+    }
 
     // Set canvas size
     const updateCanvasSize = () => {

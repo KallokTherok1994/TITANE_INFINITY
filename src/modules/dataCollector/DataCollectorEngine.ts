@@ -324,7 +324,9 @@ export class DataCollectorEngine {
 
       // Convertir en entrée dataset
       const prompt = 'Effectue une introspection complète du système TITANE∞';
-      const response = this.formatIntrospectionResponse(introspection);
+      const response = this.formatIntrospectionResponse(
+        introspection as unknown as Record<string, unknown>
+      );
 
       entries.push({
         prompt,

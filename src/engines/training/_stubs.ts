@@ -3,7 +3,10 @@
  */
 
 // Import types for proper typing
-import type { TrainingSession, TrainingBaselineProfile } from '../types/trainingBaseline';
+import type {
+  TrainingSession,
+  TrainingBaselineProfile,
+} from '../../types/trainingBaseline';
 
 export class TrainingBaselineEngine {
   private static instance: TrainingBaselineEngine | null = null;
@@ -38,7 +41,10 @@ export class TrainingBaselineEngine {
         gaze: [],
         energy: [],
         tension: [],
+        engagement: [],
+        confidence: [],
       },
+      userMessage: 'Collecte en cours...',
     });
   }
 

@@ -490,9 +490,9 @@ export class TrainingIntentHandler {
       recognized: true,
       intent: 'query_baseline',
       label: null,
-      response: this.getBaselineProfileResponse(profile),
+      response: this.getBaselineProfileResponse(profile ?? undefined),
       action: { type: 'QUERY_BASELINE' },
-      metadata: { profile },
+      metadata: { profile: profile ?? undefined },
     };
   }
 
@@ -504,9 +504,9 @@ export class TrainingIntentHandler {
       recognized: true,
       intent: 'query_progress',
       label: null,
-      response: this.getProgressResponse(session, profile),
+      response: this.getProgressResponse(session, profile ?? undefined),
       action: { type: 'QUERY_PROGRESS' },
-      metadata: { session, totalSamples: profile.totalSamplesCount },
+      metadata: { session, totalSamples: profile?.totalSamplesCount ?? 0 },
     };
   }
 
@@ -623,7 +623,19 @@ Je capture ton état **${labelFr}** pendant quelques secondes.
 ${PRUDENT_MESSAGES.sessionStart}`;
   }
 
-  private getBaselineProfileResponse(profile: TrainingBaselineProfile): string {
+  private getBaselineProfileResponse(
+    profile: TrainingBaselineProfile | undefined
+  ): string {
+    if (!profile) {
+      return `📋 **Votre profil**
+
+Aucun profil de baseline disponible.
+
+Pour commencer, dites par exemple :
+- "Je suis calme" (je capture cet état)
+- "Je suis concentré" (autre état)`;
+    }
+
     const signatures = Object.keys(profile.stateSignatures);
 
     if (signatures.length === 0 && profile.totalSamplesCount === 0) {
@@ -663,9 +675,18 @@ ${PRUDENT_MESSAGES.confidenceDisclaimer}`;
 
   private getProgressResponse(
     session: TrainingSession | null,
-    profile: TrainingBaselineProfile
+    profile: TrainingBaselineProfile | undefined
   ): string {
     if (!session) {
+      if (!profile) {
+        return `📊 **Progression**
+
+Aucune session d’entraînement en cours.
+Aucun profil de baseline disponible.
+
+Pour démarrer une session, dites "je suis calme" (ou un autre état).`;
+      }
+
       const statesCount = Object.keys(profile.stateSignatures).length;
 
       return `📊 **Progression**

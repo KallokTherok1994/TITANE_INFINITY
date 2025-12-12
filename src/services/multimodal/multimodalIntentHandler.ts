@@ -286,19 +286,6 @@ Pour modifier: "vision 50%, voix 30%, texte 20%"`,
       };
     }
 
-    case 'CALIBRATE_MULTIMODAL': {
-      const baseline = engine.calibrateBaseline();
-
-      return {
-        success: true,
-        intent: intent.type,
-        message: `Baseline multimodal calibré !
-• Échantillons : ${baseline.totalSamplesCount}
-• Calibré : ${baseline.isCalibrated ? 'Oui' : 'Non (besoin de plus de données)'}`,
-        data: { baseline },
-      };
-    }
-
     case 'START_MULTIMODAL': {
       if (engine.isActive()) {
         return {

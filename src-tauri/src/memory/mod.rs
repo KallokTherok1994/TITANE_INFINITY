@@ -14,7 +14,8 @@ pub mod telemetry;
 #[cfg(test)]
 mod tests_storage;
 
-// Re-export pool types
+// Re-export pool types (allow dead_code for future use)
+#[allow(dead_code)]
 pub use pool::{
     BufferPool, EmbeddingPool, MemoryPoolManager, MemoryPoolMetrics, PoolConfig, PoolMetrics,
     PoolMetricsSnapshot, PooledBuffer, PooledEmbedding, PooledString, StringPool,

@@ -140,7 +140,11 @@ export function useAutopoiesisActions() {
     resetLearning: () => {
       autopoiesisEngine.resetLearning();
     },
-    suggestOptimalConfig: (context: Record<string, unknown>) => {
+    suggestOptimalConfig: (context: {
+      taskType: string;
+      userMood: string;
+      timeOfDay: 'morning' | 'afternoon' | 'evening' | 'night';
+    }) => {
       return autopoiesisEngine.suggestOptimalConfig(context);
     },
   };

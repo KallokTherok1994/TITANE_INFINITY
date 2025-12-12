@@ -22,7 +22,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import type { MetaSingularityState } from '../metasingularity/metaSingularityKernel';
+import type { MetaSingularityState as _MetaSingularityState } from '../metasingularity/metaSingularityKernel';
 
 // ═══════════════════════════════════════════════════════════════════════════
 //   TYPES
@@ -325,12 +325,25 @@ class PhaseSpaceEngine {
   // ─────────────────────────────────────────────────────────────────────────
 
   private captureCurrentPoint(): void {
-    const metaState = this.metaKernel.getState() as MetaSingularityState;
+    let rawState: unknown;
+    try {
+      // @ts-expect-error - metaKernel.getState() returns unknown type
+      rawState = this.metaKernel.getState();
+    } catch {
+      return;
+    }
+    if (!rawState) return;
+    const metaState: Record<string, unknown> = rawState as Record<string, unknown>;
 
-    if (!metaState.unifiedState) return;
+    if (!metaState || !metaState.unifiedState) return;
 
-    const { identity, expression, holoPresence } = metaState.unifiedState;
-    const { coherence } = metaState;
+    const unifiedState = metaState.unifiedState as Record<string, unknown>;
+    const { identity, expression, holoPresence } = unifiedState as {
+      identity?: Record<string, unknown>;
+      expression?: Record<string, unknown>;
+      holoPresence?: Record<string, unknown>;
+    };
+    const coherence = metaState.coherence as { global?: number } | undefined;
 
     // Cast pour accès aux propriétés imbriquées
     const identitySignature = (identity as Record<string, unknown> | undefined)
@@ -378,8 +391,8 @@ class PhaseSpaceEngine {
 
         // Méta
         coherence: coherence?.global ?? 0,
-        complexity: metaState.emergentComplexity ?? 0,
-        stability: metaState.systemStability ?? 1,
+        complexity: (metaState.emergentComplexity as number | undefined) ?? 0,
+        stability: (metaState.systemStability as number | undefined) ?? 1,
       },
       velocity: {},
     };

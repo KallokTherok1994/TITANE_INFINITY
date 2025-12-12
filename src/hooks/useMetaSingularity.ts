@@ -175,7 +175,15 @@ export function useAverageCoherence() {
  */
 export function useMetaSingularityActions() {
   return {
-    initiateTransition: (toState: unknown, duration: number, strategy: unknown) => {
+    initiateTransition: (
+      toState: Partial<{
+        identity: Record<string, unknown>;
+        expression: Record<string, unknown>;
+        holoPresence: Record<string, unknown>;
+      }>,
+      duration: number,
+      strategy: 'smooth' | 'abrupt' | 'staged' | 'adaptive' = 'smooth'
+    ) => {
       metaSingularityKernel.initiateTransition(toState, duration, strategy);
     },
   };

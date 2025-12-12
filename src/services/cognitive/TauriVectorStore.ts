@@ -104,7 +104,7 @@ export class TauriVectorStore implements VectorStore {
       summary: entry.summary as string,
       details: entry.details as string | undefined,
       source: {
-        type: entry.source_type as string,
+        type: entry.source_type as 'system' | 'manual' | 'conversation',
         id: entry.source_id as string | undefined,
         timestamp: new Date(entry.source_timestamp as number).toISOString(),
         context: undefined,

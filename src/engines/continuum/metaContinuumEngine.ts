@@ -322,7 +322,9 @@ class MetaContinuumEngine {
     const stateVector = [
       archetypeState.intensity,
       presenceState.presenceEnergy,
-      presenceState.breathing.amplitude,
+      typeof presenceState.breathing === 'number'
+        ? presenceState.breathing
+        : (presenceState.breathing?.amplitude ?? 0.5),
       presenceState.halo.intensity,
     ];
 

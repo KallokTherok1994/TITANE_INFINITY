@@ -246,6 +246,9 @@ const defaultPresenceOSState: PresenceState = {
     intensity: 0.5,
     valence: 0.5,
     stability: 0.8,
+    arousal: 0.5,
+    dominance: 0.5,
+    warmth: 0.5,
   },
   expressive: {
     timbreBlend: { warm: 0.3, neutral: 0.4, analytical: 0.2, empathic: 0.1 },

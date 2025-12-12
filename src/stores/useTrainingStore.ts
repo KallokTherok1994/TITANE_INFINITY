@@ -189,7 +189,7 @@ export const useTrainingStore = create<TrainingStore>()(
               currentSessionLabel: null,
               sessionStartTime: null,
               sessionProgress: null,
-              baselineProfile: profile,
+              baselineProfile: profile ?? undefined,
               isProcessing: false,
             });
 
@@ -203,7 +203,7 @@ export const useTrainingStore = create<TrainingStore>()(
           loadProfile: (): void => {
             try {
               const profile = getEngine().getProfile();
-              set({ baselineProfile: profile, lastError: null });
+              set({ baselineProfile: profile ?? undefined, lastError: null });
             } catch (error) {
               set({ lastError: (error as Error).message });
             }
@@ -235,7 +235,7 @@ export const useTrainingStore = create<TrainingStore>()(
               }
 
               set({
-                baselineProfile: profile,
+                baselineProfile: profile ?? undefined,
                 lastError: null,
               });
 
@@ -278,7 +278,7 @@ export const useTrainingStore = create<TrainingStore>()(
                     percentage: session.progress,
                   }
                 : null,
-              baselineProfile: profile,
+              baselineProfile: profile ?? undefined,
             });
           },
 
