@@ -724,14 +724,16 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
               onClick={handleSend}
               disabled={
                 !trimmedValue ||
-                isInputDisabled /* TEMP CLEANUP: messageSent.current removed */
+                isInputDisabled ||
+                messageSent.current /* PHASE 4 ÉTAPE 2: Anti-spam réactivé */
               }
               aria-label={
                 voiceModeActive ? 'Envoyer message vocal' : 'Envoyer message texte'
               }
               aria-disabled={
                 !trimmedValue ||
-                isInputDisabled /* TEMP CLEANUP: messageSent.current removed */
+                isInputDisabled ||
+                messageSent.current /* PHASE 4 ÉTAPE 2: Anti-spam réactivé */
               }
               aria-busy={messageSent.current}
               title="Envoyer le message (Enter ou Ctrl+Enter)"
