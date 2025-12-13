@@ -172,6 +172,26 @@ impl UnifiedMemory {
     const MTM_CAPACITY: usize = 500;
     const TIMELINE_MAX_EVENTS: usize = 1000;
 
+    fn default_ltm_storage_path() -> PathBuf {
+        if let Ok(p) = std::env::var("TITANE_UNIFIED_MEMORY_LTM_DIR") {
+            let trimmed = p.trim();
+            if !trimmed.is_empty() {
+                return PathBuf::from(trimmed);
+            }
+        }
+
+        if let Some(base) = dirs::data_local_dir() {
+            return base
+                .join("titane-infinity")
+                .join("unified_memory")
+                .join("ltm");
+        }
+
+        PathBuf::from("/tmp/titane")
+            .join("unified_memory")
+            .join("ltm")
+    }
+
     // === PUBLIC GETTERS (for Memory OS Bridge) ===
 
     /// Get STM items (for Memory OS integration)
@@ -217,7 +237,7 @@ impl UnifiedMemory {
                 retention_ms: 604_800_000, // 7 days
             },
             ltm: LongTermMemory {
-                storage_path: PathBuf::from("./data/memory/ltm"),
+                storage_path: Self::default_ltm_storage_path(),
                 index: HashMap::with_capacity(1000), // v20.1: pre-allocate
                 compressed: true,
             },

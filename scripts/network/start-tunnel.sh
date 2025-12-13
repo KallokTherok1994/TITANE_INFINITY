@@ -4,6 +4,9 @@
 
 set -e
 
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$ROOT_DIR"
+
 echo "🌐 TITANE∞ NETWORK DEV TUNNEL - START"
 echo "======================================"
 echo ""
@@ -73,17 +76,17 @@ echo "   Starting cloudflared tunnel..."
 echo ""
 
 # Create logs directory
-mkdir -p logs/network
+mkdir -p "$ROOT_DIR/logs/network"
 
 # Start tunnel in background and capture URL
-cloudflared tunnel --url http://localhost:$DEV_PORT > logs/network/tunnel.log 2>&1 &
+cloudflared tunnel --url http://localhost:$DEV_PORT > "$ROOT_DIR/logs/network/tunnel.log" 2>&1 &
 TUNNEL_PID=$!
 
 echo "⏳ Waiting for tunnel URL..."
 sleep 5
 
 # Extract tunnel URL from logs
-TUNNEL_URL=$(grep -oP 'https://[a-z0-9-]+\.trycloudflare\.com' logs/network/tunnel.log | head -1)
+TUNNEL_URL=$(grep -oP 'https://[a-z0-9-]+\.trycloudflare\.com' "$ROOT_DIR/logs/network/tunnel.log" | head -1)
 
 if [ -n "$TUNNEL_URL" ]; then
     echo "✅ Tunnel active"
@@ -103,9 +106,9 @@ if [ -n "$TUNNEL_URL" ]; then
     echo ""
     
     # Save tunnel info
-    echo "$TUNNEL_PID" > logs/network/tunnel.pid
-    echo "$TUNNEL_URL" > logs/network/tunnel.url
-    echo "$(date '+%Y-%m-%d %H:%M:%S')" > logs/network/tunnel.start
+    echo "$TUNNEL_PID" > "$ROOT_DIR/logs/network/tunnel.pid"
+    echo "$TUNNEL_URL" > "$ROOT_DIR/logs/network/tunnel.url"
+    echo "$(date '+%Y-%m-%d %H:%M:%S')" > "$ROOT_DIR/logs/network/tunnel.start"
     
     echo "✅ Tunnel started successfully"
 else

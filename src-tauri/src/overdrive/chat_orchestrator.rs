@@ -1888,3 +1888,35 @@ fn get_timestamp() -> u64 {
         .unwrap_or_else(|_| std::time::Duration::from_secs(0))
         .as_secs()
 }
+
+#[cfg(test)]
+mod smoke_tests {
+    use super::*;
+
+    #[tokio::test]
+    #[ignore]
+    async fn ollama_smoke_generate_ok() {
+        let state = init();
+
+        let request = ChatRequest {
+            message: "Réponds uniquement: OK".to_string(),
+            conversation_id: Some("smoke-test-ollama".to_string()),
+            provider: "ollama".to_string(),
+            model: Some("llama3.1:latest".to_string()),
+            streaming: false,
+            images: None,
+            system_prompt: Some("Réponds uniquement: OK".to_string()),
+        };
+
+        let msg = match send_to_ollama(&request, &state).await {
+            Ok(message) => message,
+            Err(err) => panic!(
+                "Ollama smoke test failed (ollama sur :11434 ? modèle llama3.1:latest présent ?): {err}"
+            ),
+        };
+
+        assert!(!msg.content.trim().is_empty());
+        assert!(msg.content.to_uppercase().contains("OK"));
+        assert_eq!(msg.provider, "ollama");
+    }
+}

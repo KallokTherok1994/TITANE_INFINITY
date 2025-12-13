@@ -438,6 +438,72 @@ fn main() {
             tauri::async_runtime::spawn(async move {
                 overdrive::chat_orchestrator::initialize_providers_async(&chat_orch_clone).await;
             });
+
+            // ─────────────────────────────────────────────────────────────
+            // SMOKE TEST RUNTIME (opt-in)
+            // Active uniquement si TITANE_SMOKE_RUNTIME_CHAT=1
+            // ─────────────────────────────────────────────────────────────
+            if std::env::var("TITANE_SMOKE_RUNTIME_CHAT")
+                .ok()
+                .is_some_and(|v| v == "1")
+            {
+                let app_handle = app.handle().clone();
+                tauri::async_runtime::spawn(async move {
+                    println!("[SMOKE-RUNTIME-CHAT] enabled (TITANE_SMOKE_RUNTIME_CHAT=1)");
+
+                    match overdrive::chat_orchestrator::chat_get_providers_status(
+                        app_handle.state::<overdrive::chat_orchestrator::ChatOrchestratorState>(),
+                    )
+                    .await
+                    {
+                        Ok(status) => {
+                            println!(
+                                "[SMOKE-RUNTIME-CHAT] providers_status ok (count={})",
+                                status.len()
+                            );
+                        }
+                        Err(err) => {
+                            eprintln!("[SMOKE-RUNTIME-CHAT] providers_status error: {err}");
+                        }
+                    }
+
+                    let request = overdrive::chat_orchestrator::ChatRequest {
+                        message: "Réponds uniquement: OK".to_string(),
+                        conversation_id: Some("smoke-runtime-chat".to_string()),
+                        provider: "ollama".to_string(),
+                        model: Some("llama3.1:latest".to_string()),
+                        streaming: false,
+                        images: None,
+                        system_prompt: Some("Réponds uniquement: OK".to_string()),
+                    };
+
+                    match overdrive::chat_orchestrator::chat_send_message(
+                        request,
+                        app_handle.state::<overdrive::chat_orchestrator::ChatOrchestratorState>(),
+                    )
+                    .await
+                    {
+                        Ok(response) => {
+                            let content_preview = response
+                                .message
+                                .content
+                                .chars()
+                                .take(120)
+                                .collect::<String>();
+
+                            println!(
+                                "[SMOKE-RUNTIME-CHAT] chat_send_message ok provider={} latency_ms={} preview={}",
+                                response.message.provider,
+                                response.latency_ms,
+                                content_preview
+                            );
+                        }
+                        Err(err) => {
+                            eprintln!("[SMOKE-RUNTIME-CHAT] chat_send_message error: {err}");
+                        }
+                    }
+                });
+            }
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![

@@ -1,3 +1,5 @@
+#![cfg(all(test, not(feature = "mock"), feature = "full"))]
+
 // ═══════════════════════════════════════════════════════════════════
 // SMOKE TESTS - Nouveaux Modules v21.5.3
 // Tests basiques validation compilation + error handling
