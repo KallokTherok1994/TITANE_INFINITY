@@ -58,6 +58,22 @@ function saveTrace(trace: E2ETrace): void {
   console.log(JSON.stringify(trace, null, 2));
 }
 
+function extractChatContent(response: unknown): string {
+  if (typeof response === 'string') return response;
+  if (response && typeof response === 'object') {
+    const r = response as any;
+    if (typeof r.content === 'string') return r.content;
+    if (
+      r.message &&
+      typeof r.message === 'object' &&
+      typeof r.message.content === 'string'
+    ) {
+      return r.message.content;
+    }
+  }
+  return '';
+}
+
 // ═══════════════════════════════════════════════════════════════
 //   SCÉNARIO 1: NOUVEL UTILISATEUR
 //   First launch → IA welcome → Memory save
@@ -103,11 +119,13 @@ describe('E2E Scenario 1: New User Onboarding', () => {
     // Step 3: Générer message de bienvenue IA
     const step3 = await measureStep('Generate AI welcome message', async () => {
       const response = await invoke('chat_send_message', {
-        message: 'Bonjour, je suis un nouvel utilisateur',
-        conversationId: 'onboarding-001',
+        request: {
+          message: 'Bonjour, je suis un nouvel utilisateur',
+          conversation_id: 'onboarding-001',
+        },
       });
       expect(response).toBeDefined();
-      return response;
+      return extractChatContent(response);
     });
     trace.steps.push({ step: 3, action: 'Generate AI welcome', ...step3 });
     expect(step3.status).toBe('OK');
@@ -211,11 +229,13 @@ describe('E2E Scenario 2: Legal Designer Workflow', () => {
     // Step 3: Générer analyse IA du document
     const step3 = await measureStep('AI document analysis', async () => {
       const analysis = await invoke('chat_send_message', {
-        message: 'Analyse ce contrat: CONTRAT DE PRESTATION - Article 1: Objet',
-        conversationId: 'legal-001',
+        request: {
+          message: 'Analyse ce contrat: CONTRAT DE PRESTATION - Article 1: Objet',
+          conversation_id: 'legal-001',
+        },
       });
       expect(analysis).toBeDefined();
-      return analysis;
+      return extractChatContent(analysis);
     });
     trace.steps.push({ step: 3, action: 'AI analysis', ...step3 });
     expect(step3.status).toBe('OK');
@@ -309,11 +329,13 @@ describe('E2E Scenario 3: Advanced Web Search', () => {
     // Step 3: Générer synthèse IA des résultats
     const step3 = await measureStep('AI synthesis', async () => {
       const synthesis = await invoke('chat_send_message', {
-        message: 'Synthétise ces résultats web: Cognitive Architecture, TITANE Design',
-        conversationId: 'websearch-001',
+        request: {
+          message: 'Synthétise ces résultats web: Cognitive Architecture, TITANE Design',
+          conversation_id: 'websearch-001',
+        },
       });
       expect(synthesis).toBeDefined();
-      return synthesis;
+      return extractChatContent(synthesis);
     });
     trace.steps.push({ step: 3, action: 'AI synthesis', ...step3 });
     expect(step3.status).toBe('OK');
@@ -466,13 +488,18 @@ describe('E2E Scenario 5: Complex Multi-Module Interaction', () => {
     // Step 1: Chat IA → Memory → Timeline
     const step1 = await measureStep('AI chat + memory save', async () => {
       const message = await invoke('chat_send_message', {
-        message: 'Analyse mes projets actifs',
-        conversationId: 'complex-001',
+        request: {
+          message: 'Analyse mes projets actifs',
+          conversation_id: 'complex-001',
+        },
       });
       await invoke('memory_save_chat_interaction', {
-        interaction: { user: 'Analyse mes projets', assistant: message },
+        interaction: {
+          user: 'Analyse mes projets',
+          assistant: extractChatContent(message),
+        },
       });
-      return message;
+      return extractChatContent(message);
     });
     trace.steps.push({ step: 1, action: 'AI + Memory', ...step1 });
     expect(step1.status).toBe('OK');

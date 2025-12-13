@@ -40,11 +40,13 @@ export const AIProvidersTester: React.FC = () => {
 
     try {
       const result = await safeInvoke('chat_send_message', {
-        message: TEST_PROMPT,
-        conversation_id: 'test-' + Date.now(),
-        provider: provider === 'ollama' ? 'ollama' : undefined,
-        model: undefined,
-        streaming: false,
+        request: {
+          message: TEST_PROMPT,
+          conversation_id: 'test-' + Date.now(),
+          provider,
+          model: undefined,
+          streaming: false,
+        },
       });
 
       const latency = Math.round(performance.now() - startTime);

@@ -4,19 +4,22 @@
 
 set -e
 
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$ROOT_DIR"
+
 echo "🛑 TITANE∞ NETWORK DEV TUNNEL - STOP"
 echo "====================================="
 echo ""
 
 # Check if tunnel is running
-if [ ! -f logs/network/tunnel.pid ]; then
+if [ ! -f "$ROOT_DIR/logs/network/tunnel.pid" ]; then
     echo "⚠️  No active tunnel found"
     exit 0
 fi
 
-TUNNEL_PID=$(cat logs/network/tunnel.pid)
-TUNNEL_URL=$(cat logs/network/tunnel.url 2>/dev/null || echo "unknown")
-TUNNEL_START=$(cat logs/network/tunnel.start 2>/dev/null || echo "unknown")
+TUNNEL_PID=$(cat "$ROOT_DIR/logs/network/tunnel.pid")
+TUNNEL_URL=$(cat "$ROOT_DIR/logs/network/tunnel.url" 2>/dev/null || echo "unknown")
+TUNNEL_START=$(cat "$ROOT_DIR/logs/network/tunnel.start" 2>/dev/null || echo "unknown")
 
 echo "📝 Tunnel Info:"
 echo "   PID: $TUNNEL_PID"
@@ -42,9 +45,9 @@ else
 fi
 
 # Cleanup
-rm -f logs/network/tunnel.pid
-rm -f logs/network/tunnel.url
-rm -f logs/network/tunnel.start
+rm -f "$ROOT_DIR/logs/network/tunnel.pid"
+rm -f "$ROOT_DIR/logs/network/tunnel.url"
+rm -f "$ROOT_DIR/logs/network/tunnel.start"
 
 echo ""
 echo "📊 Logs preserved: logs/network/tunnel.log"

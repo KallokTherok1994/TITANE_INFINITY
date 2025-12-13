@@ -48,6 +48,10 @@ export interface ParlerHealthStatus {
   uptimeSeconds: number;
 }
 
+function isVitestEnv(): boolean {
+  return typeof process !== 'undefined' && Boolean((process as any)?.env?.VITEST);
+}
+
 /**
  * Style vocal par défaut "Adina-like"
  * Modifiable dynamiquement via TITANE IA Chat
@@ -72,6 +76,16 @@ class ParlerTTSBridge {
    * Vérifier santé du service TTS
    */
   async healthCheck(): Promise<ParlerHealthStatus> {
+    if (isVitestEnv()) {
+      return {
+        status: 'error',
+        modelLoaded: false,
+        device: 'unknown',
+        cacheSizeMb: 0,
+        uptimeSeconds: 0,
+      };
+    }
+
     try {
       const response = await fetch(`${this.apiUrl}/api/v1/tts/health`, {
         method: 'GET',
@@ -113,6 +127,10 @@ class ParlerTTSBridge {
     const startTime = Date.now();
 
     try {
+      if (isVitestEnv()) {
+        throw new Error('Parler-TTS disabled in Vitest environment');
+      }
+
       // Payload API
       const payload = {
         text: text.trim(),
@@ -191,6 +209,10 @@ class ParlerTTSBridge {
     saveAsDefault: boolean = false
   ): Promise<void> {
     try {
+      if (isVitestEnv()) {
+        throw new Error('Parler-TTS disabled in Vitest environment');
+      }
+
       const response = await fetch(`${this.apiUrl}/api/v1/tts/update-style`, {
         method: 'POST',
         headers: {

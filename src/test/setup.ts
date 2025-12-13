@@ -18,6 +18,92 @@ import '@testing-library/jest-dom';
 import { cleanup } from '@testing-library/react';
 import { afterEach, vi } from 'vitest';
 
+type MockResponseInit = {
+  status?: number;
+  headers?: Record<string, string>;
+};
+
+const createMockResponse = (body: string, init: MockResponseInit = {}) => {
+  const status = init.status ?? 200;
+  const headers = init.headers ?? { 'Content-Type': 'application/json' };
+
+  if (typeof Response !== 'undefined') {
+    return new Response(body, { status, headers });
+  }
+
+  return {
+    ok: status >= 200 && status < 300,
+    status,
+    headers: {
+      get: (key: string) => headers[key] ?? null,
+    },
+    json: async () => JSON.parse(body),
+    text: async () => body,
+    blob: async () => new Blob([body], { type: headers['Content-Type'] ?? 'text/plain' }),
+  };
+};
+
+const getFetchUrl = (input: any): string => {
+  if (typeof input === 'string') return input;
+  if (typeof URL !== 'undefined' && input instanceof URL) return input.toString();
+  if (input?.url) return String(input.url);
+  return String(input);
+};
+
+// Bloque par défaut le réseau dans les tests unitaires.
+// Les tests peuvent override ce mock si nécessaire.
+const fetchMock = vi.fn(async (input: any) => {
+  const url = getFetchUrl(input);
+
+  if (url.includes('localhost:11434') && url.endsWith('/api/tags')) {
+    return createMockResponse(JSON.stringify({ models: [] }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  return createMockResponse(
+    JSON.stringify({ error: 'network disabled in unit tests', url }),
+    { status: 503, headers: { 'Content-Type': 'application/json' } }
+  );
+});
+
+vi.stubGlobal('fetch', fetchMock);
+
+class MockWebSocket {
+  static CONNECTING = 0;
+  static OPEN = 1;
+  static CLOSING = 2;
+  static CLOSED = 3;
+
+  readonly url: string;
+  readyState = MockWebSocket.CONNECTING;
+
+  onopen: ((ev: any) => void) | null = null;
+  onmessage: ((ev: any) => void) | null = null;
+  onerror: ((ev: any) => void) | null = null;
+  onclose: ((ev: any) => void) | null = null;
+
+  constructor(url: string) {
+    this.url = url;
+    queueMicrotask(() => {
+      this.readyState = MockWebSocket.OPEN;
+      this.onopen?.({ type: 'open' });
+    });
+  }
+
+  send(_data: any) {
+    // no-op
+  }
+
+  close(code?: number, reason?: string) {
+    this.readyState = MockWebSocket.CLOSED;
+    this.onclose?.({ type: 'close', code, reason });
+  }
+}
+
+vi.stubGlobal('WebSocket', MockWebSocket as any);
+
 type FusionState = {
   fusion_integrity: number;
   sync_score: number;

@@ -17,11 +17,15 @@ if [[ $CURRENT_BRANCH != "stable-runtime" ]]; then
     echo "⚠️  WARNING: Not on stable-runtime branch"
     echo "Current: $CURRENT_BRANCH"
     echo ""
-    read -p "❓ Continue anyway? (y/n): " -n 1 -r
-    echo ""
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        echo "❌ Build cancelled"
-        exit 1
+    if [[ "${TITANE_BUILD_ASSUME_YES:-0}" == "1" ]]; then
+        echo "✅ TITANE_BUILD_ASSUME_YES=1 → continue non-interactif"
+    else
+        read -p "❓ Continue anyway? (y/n): " -n 1 -r
+        echo ""
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            echo "❌ Build cancelled"
+            exit 1
+        fi
     fi
 fi
 
@@ -63,7 +67,30 @@ mkdir -p runtime/stable/build/
 
 # Detect platform and copy appropriate executable
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    cp src-tauri/target/release/bundle/appimage/*.AppImage runtime/stable/
+    shopt -s nullglob
+    APPIMAGES=(src-tauri/target/release/bundle/appimage/*.AppImage)
+    if [[ ${#APPIMAGES[@]} -eq 0 ]]; then
+        echo "❌ No AppImage produced in src-tauri/target/release/bundle/appimage/"
+        exit 1
+    fi
+
+    for src in "${APPIMAGES[@]}"; do
+        base="$(basename "$src")"
+        tmp="runtime/stable/${base}.new"
+        dest="runtime/stable/${base}"
+
+        cp "$src" "$tmp"
+
+        if mv -f "$tmp" "$dest" 2>/dev/null; then
+            :
+        else
+            ts="$(date +%Y%m%d-%H%M%S)"
+            alt="runtime/stable/${base%.AppImage}-${ts}.AppImage"
+            mv -f "$tmp" "$alt"
+            echo "⚠️  Destination busy, wrote: $alt"
+        fi
+    done
+
     echo "✅ Linux AppImage ready: runtime/stable/*.AppImage"
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     cp src-tauri/target/release/bundle/macos/*.app runtime/stable/

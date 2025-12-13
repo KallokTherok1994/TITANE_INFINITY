@@ -28,6 +28,22 @@ interface RegressionReport {
   success: boolean;
 }
 
+function extractChatContent(response: unknown): string {
+  if (typeof response === 'string') return response;
+  if (response && typeof response === 'object') {
+    const r = response as any;
+    if (typeof r.content === 'string') return r.content;
+    if (
+      r.message &&
+      typeof r.message === 'object' &&
+      typeof r.message.content === 'string'
+    ) {
+      return r.message.content;
+    }
+  }
+  return '';
+}
+
 // ═══════════════════════════════════════════════════════════════
 //   SCÉNARIO 1: MODULES SUPPRIMÉS
 // ═══════════════════════════════════════════════════════════════
@@ -313,8 +329,10 @@ describe('Regression Test 7: Invalid IA Responses', () => {
 
     try {
       const response = await invoke('chat_send_message', {
-        message: 'Test régression',
-        conversationId: 'regression-test',
+        request: {
+          message: 'Test régression',
+          conversation_id: 'regression-test',
+        },
       });
 
       if (typeof response !== 'string' && typeof response !== 'object') {
@@ -327,7 +345,8 @@ describe('Regression Test 7: Invalid IA Responses', () => {
         });
       }
 
-      if (typeof response === 'string' && response.length === 0) {
+      const content = extractChatContent(response);
+      if (content.length === 0) {
         alerts.push({
           module: 'chat',
           cause: 'Réponse IA vide',
