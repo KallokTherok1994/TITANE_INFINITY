@@ -10,12 +10,13 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { UnifiedMemory, SQLiteVectorStore, LocalEmbeddingGenerator } from '../index';
+import { UnifiedMemory, LocalEmbeddingGenerator } from '../index';
+import { SQLiteVectorStore } from '../SQLiteVectorStore';
 import path from 'path';
 import fs from 'fs';
 
 describe('UnifiedMemory Benchmarks', () => {
-  let memory: UnifiedMemory;
+  let memory: UnifiedMemory | null = null;
   let vectorStore: SQLiteVectorStore;
   let embeddingGenerator: LocalEmbeddingGenerator;
   const dbPath = path.join(__dirname, 'benchmark-test.db');
@@ -30,9 +31,9 @@ describe('UnifiedMemory Benchmarks', () => {
 
     vectorStore = new SQLiteVectorStore({ dbPath });
     embeddingGenerator = new LocalEmbeddingGenerator({
-      model: 'Xenova/all-MiniLM-L6-v2',
+      modelName: 'all-MiniLM-L6-v2',
       dimensions: 384,
-      useFallback: true,
+      enableCache: false,
     });
 
     memory = new UnifiedMemory(vectorStore, embeddingGenerator, {
@@ -46,7 +47,9 @@ describe('UnifiedMemory Benchmarks', () => {
   });
 
   afterAll(async () => {
-    await memory.shutdown();
+    if (memory) {
+      await memory.shutdown();
+    }
     if (fs.existsSync(dbPath)) fs.unlinkSync(dbPath);
   });
 

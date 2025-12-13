@@ -91,6 +91,15 @@ export interface CheckerMetrics {
 // ─────────────────────────────────────────────────────────────────
 
 export class UIIntegrityChecker {
+  private static instance: UIIntegrityChecker | null = null;
+
+  public static getInstance(config?: CheckerConfig): UIIntegrityChecker {
+    if (!UIIntegrityChecker.instance) {
+      UIIntegrityChecker.instance = new UIIntegrityChecker(config);
+    }
+    return UIIntegrityChecker.instance;
+  }
+
   private anomalies: Map<string, Anomaly> = new Map();
   private checkHistory: IntegrityReport[] = [];
   public isMonitoring = false;
@@ -577,14 +586,17 @@ export class UIIntegrityChecker {
 // SINGLETON INSTANCE
 // ─────────────────────────────────────────────────────────────────
 
-export const uiIntegrityChecker = new UIIntegrityChecker({
+export const uiIntegrityChecker = UIIntegrityChecker.getInstance({
   debug: import.meta.env.DEV,
   autoFix: true,
   logAnomalies: true,
   checkInterval: 60000, // 1 minute
 });
 
-// Auto-start in development
-if (import.meta.env.DEV) {
+const isVitest = typeof (globalThis as unknown as { vi?: unknown }).vi !== 'undefined';
+const isTestMode = import.meta.env.MODE === 'test' || isVitest;
+
+// Auto-start in development (mais jamais pendant les tests)
+if (import.meta.env.DEV && !isTestMode) {
   uiIntegrityChecker.start();
 }

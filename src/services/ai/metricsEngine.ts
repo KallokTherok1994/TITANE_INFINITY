@@ -120,7 +120,7 @@ class MetricsEngine {
       .map(e => e.latencyMs as number); // ✅ Type assertion sûre
 
     const totalRequests = providerEvents.filter(
-      e => e.type === 'request' || e.type === 'response'
+      e => e.type === 'request' || e.type === 'response' || e.type === 'error'
     ).length;
     const successCount = providerEvents.filter(e => e.success).length;
     const errorCount = providerEvents.filter(e => !e.success).length;
@@ -155,7 +155,7 @@ class MetricsEngine {
     const recentEvents = this.events.filter(e => e.timestamp > last24h);
 
     const totalRequests = this.events.filter(
-      e => e.type === 'request' || e.type === 'response'
+      e => e.type === 'request' || e.type === 'response' || e.type === 'error'
     ).length;
     const totalSuccesses = this.events.filter(
       e => e.success && e.type === 'response'
@@ -179,8 +179,9 @@ class MetricsEngine {
       successRate: totalRequests > 0 ? (totalSuccesses / totalRequests) * 100 : 0,
       providers,
       last24h: {
-        requests: recentEvents.filter(e => e.type === 'request' || e.type === 'response')
-          .length,
+        requests: recentEvents.filter(
+          e => e.type === 'request' || e.type === 'response' || e.type === 'error'
+        ).length,
         successes: recentEvents.filter(e => e.success && e.type === 'response').length,
         errors: recentEvents.filter(e => !e.success).length,
       },

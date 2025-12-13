@@ -74,6 +74,8 @@ export interface VisualStoreActions {
   stop: () => void;
   pause: () => void;
   resume: () => void;
+  setRunning: (running: boolean) => void;
+  setInitialized: (initialized: boolean) => void;
   reset: () => void;
 
   // Metrics Update
@@ -81,9 +83,13 @@ export interface VisualStoreActions {
 
   // Configuration
   setOrchestration: (enabled: boolean) => void;
+  toggleOrchestration: () => void;
   setOSIntegration: (enabled: boolean) => void;
+  toggleOSIntegration: () => void;
   setAdaptiveFPS: (enabled: boolean) => void;
+  toggleAdaptiveFPS: () => void;
   setDebug: (enabled: boolean) => void;
+  toggleDebug: () => void;
 
   // History
   clearHistory: () => void;
@@ -125,7 +131,7 @@ const initialState: VisualEngineState = {
   enableOrchestration: true,
   enableOSIntegration: true,
   adaptiveFPS: true,
-  debug: import.meta.env.DEV,
+  debug: import.meta.env.DEV && !process.env.VITEST,
 
   // History
   stateHistory: [],
@@ -181,7 +187,7 @@ export const useVisualStore = create<VisualStore>()(
           set(prev => {
             // Ajouter à l'historique
             const historyEntry = {
-              state: currentState,
+              state,
               timestamp: Date.now(),
               duration,
             };
@@ -239,6 +245,14 @@ export const useVisualStore = create<VisualStore>()(
           }
         },
 
+        setRunning: (running: boolean) => {
+          set({ isRunning: running });
+        },
+
+        setInitialized: (initialized: boolean) => {
+          set({ isInitialized: initialized });
+        },
+
         stop: () => {
           set({
             isRunning: false,
@@ -273,11 +287,6 @@ export const useVisualStore = create<VisualStore>()(
         reset: () => {
           set({
             ...initialState,
-            // Conserver config
-            enableOrchestration: get().enableOrchestration,
-            enableOSIntegration: get().enableOSIntegration,
-            adaptiveFPS: get().adaptiveFPS,
-            debug: get().debug,
           });
 
           if (get().debug) {
@@ -312,6 +321,11 @@ export const useVisualStore = create<VisualStore>()(
           }
         },
 
+        toggleOrchestration: () => {
+          const current = get().enableOrchestration;
+          get().setOrchestration(!current);
+        },
+
         setOSIntegration: (enabled: boolean) => {
           set({ enableOSIntegration: enabled });
 
@@ -322,6 +336,11 @@ export const useVisualStore = create<VisualStore>()(
           }
         },
 
+        toggleOSIntegration: () => {
+          const current = get().enableOSIntegration;
+          get().setOSIntegration(!current);
+        },
+
         setAdaptiveFPS: (enabled: boolean) => {
           set({ adaptiveFPS: enabled });
 
@@ -330,9 +349,19 @@ export const useVisualStore = create<VisualStore>()(
           }
         },
 
+        toggleAdaptiveFPS: () => {
+          const current = get().adaptiveFPS;
+          get().setAdaptiveFPS(!current);
+        },
+
         setDebug: (enabled: boolean) => {
           set({ debug: enabled });
           console.log(`[visualStore] Debug mode ${enabled ? 'activé' : 'désactivé'}`);
+        },
+
+        toggleDebug: () => {
+          const current = get().debug;
+          get().setDebug(!current);
         },
 
         // ═══════════════════════════════════════════════════════════
@@ -442,9 +471,13 @@ export const useVisualActions = () =>
     reset: state.reset,
     updateMetrics: state.updateMetrics,
     setOrchestration: state.setOrchestration,
+    toggleOrchestration: state.toggleOrchestration,
     setOSIntegration: state.setOSIntegration,
+    toggleOSIntegration: state.toggleOSIntegration,
     setAdaptiveFPS: state.setAdaptiveFPS,
+    toggleAdaptiveFPS: state.toggleAdaptiveFPS,
     setDebug: state.setDebug,
+    toggleDebug: state.toggleDebug,
     clearHistory: state.clearHistory,
     getRecentStates: state.getRecentStates,
   }));

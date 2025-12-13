@@ -254,12 +254,12 @@ export interface IVectorStore {
   search(
     embedding: number[],
     limit: number,
-    filters?: Record<string, any>
+    filters?: Record<string, unknown>
   ): Promise<UnifiedMemoryResult[]>;
   get(id: string): Promise<UnifiedMemoryEntry | null>;
   update(id: string, updates: Partial<UnifiedMemoryEntry>): Promise<void>;
   delete(id: string): Promise<void>;
-  deleteWhere(filters: Record<string, any>): Promise<number>;
+  deleteWhere(filters: Record<string, unknown>): Promise<number>;
   getStats(): Promise<UnifiedMemoryStats>;
   cleanup(): Promise<void>;
   close(): Promise<void>;
@@ -556,7 +556,7 @@ export class UnifiedMemory {
       if (query.text) {
         const embedding = await this.embeddingGenerator.generate(query.text);
 
-        const filters: Record<string, any> = {};
+        const filters: Record<string, unknown> = {};
         if (query.tiers) filters.tiers = query.tiers;
         if (query.types) filters.types = query.types;
         if (query.tags) filters.tags = query.tags;

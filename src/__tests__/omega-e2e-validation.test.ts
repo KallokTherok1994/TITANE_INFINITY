@@ -140,7 +140,9 @@ describe('🟣 OMEGA Phase 7Ω - E2E Validation', () => {
       .mockRejectedValue(new Error('Simulated Gemini error'));
 
     try {
-      await aiOrchestrator.generate('Test auto-heal trigger', []);
+      await aiOrchestrator.generate('Test auto-heal trigger', [], {
+        preferredProvider: 'gemini',
+      });
     } catch (error) {
       // Expected to handle error internally
     }

@@ -99,6 +99,11 @@ export interface EffectsStoreActions {
   syncActiveEffects: (effects: ActiveEffect[]) => void;
   syncMetrics: (metrics: EffectsMetrics) => void;
 
+  // Legacy/Test aliases
+  addEffect: (effect: ActiveEffect) => void;
+  removeEffect: (id: string) => void;
+  updateMetrics: (metrics: EffectsMetrics) => void;
+
   // History Management
   addToHistory: (entry: EffectHistoryEntry) => void;
   clearHistory: () => void;
@@ -112,9 +117,12 @@ export interface EffectsStoreActions {
   setMaxActiveOverride: (max: number | null) => void;
   setCooldownMultiplier: (multiplier: number) => void;
   toggleEffectType: (type: EffectType) => void;
+  toggleEffect: (type: EffectType) => void;
   enableEffectType: (type: EffectType) => void;
   disableEffectType: (type: EffectType) => void;
   resetPreferences: () => void;
+
+  toggleEffectsEnabled: () => void;
 
   // Stats
   updateStats: () => void;
@@ -124,6 +132,9 @@ export interface EffectsStoreActions {
   isEffectActive: (type: EffectType) => boolean;
   getActiveEffectsByType: (type: EffectType) => ActiveEffect[];
   getTotalActiveCount: () => number;
+
+  // Test/Dev helper: reset store to initial state
+  reset: () => void;
 }
 
 /**
@@ -224,6 +235,24 @@ export const useEffectsStore = create<EffectsStore>()(
         },
 
         // ═══════════════════════════════════════════════════════════
+        // LEGACY/TEST ALIASES
+        // ═══════════════════════════════════════════════════════════
+
+        addEffect: effect => {
+          set(state => ({ activeEffects: [...state.activeEffects, effect] }));
+        },
+
+        removeEffect: id => {
+          set(state => ({
+            activeEffects: state.activeEffects.filter(effect => effect.id !== id),
+          }));
+        },
+
+        updateMetrics: metrics => {
+          get().syncMetrics(metrics);
+        },
+
+        // ═══════════════════════════════════════════════════════════
         // HISTORY MANAGEMENT
         // ═══════════════════════════════════════════════════════════
 
@@ -267,6 +296,11 @@ export const useEffectsStore = create<EffectsStore>()(
               effectsEnabled: enabled,
             },
           }));
+        },
+
+        toggleEffectsEnabled: () => {
+          const current = get().preferences.effectsEnabled;
+          get().setEffectsEnabled(!current);
         },
 
         setIntensity: intensity => {
@@ -323,6 +357,10 @@ export const useEffectsStore = create<EffectsStore>()(
               },
             };
           });
+        },
+
+        toggleEffect: type => {
+          get().toggleEffectType(type);
         },
 
         enableEffectType: type => {
@@ -437,6 +475,38 @@ export const useEffectsStore = create<EffectsStore>()(
 
         getTotalActiveCount: () => {
           return get().activeEffects.length;
+        },
+
+        reset: () => {
+          try {
+            sessionStorage.removeItem('titane-effects-store');
+          } catch {
+            // ignore
+          }
+
+          set({
+            activeEffects: [],
+            metrics: {
+              activeCount: 0,
+              queuedCount: 0,
+              totalTriggered: 0,
+              totalBlocked: 0,
+              gpuLoad: 0,
+              averageFrameTime: 0,
+            },
+            history: [],
+            preferences: {
+              ...defaultPreferences,
+              enabledEffects: new Set(defaultPreferences.enabledEffects),
+            },
+            stats: {
+              totalTriggered: 0,
+              totalBlocked: 0,
+              averageDuration: 0,
+              mostUsedEffect: null,
+              sessionStartTime: Date.now(),
+            },
+          });
         },
       }),
       {

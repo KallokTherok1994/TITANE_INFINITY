@@ -53,29 +53,43 @@ vi.mock('@/hooks/useEffects', () => ({
   }),
 }));
 
-vi.mock('@/visual-engine/UIIntegrityChecker', () => ({
-  UIIntegrityChecker: {
-    getInstance: () => ({
-      runCheck: vi.fn().mockResolvedValue({
-        timestamp: Date.now(),
-        overallHealth: 0.95,
-        anomalies: [
-          {
-            id: 'test-anomaly-1',
-            type: 'PERFORMANCE',
-            severity: 'low',
-            message: 'Minor FPS drop detected',
-            timestamp: Date.now(),
-            autoFixed: true,
-            context: {},
-          },
-        ],
-        autoFixed: 1,
-        recommendations: [],
-      }),
-    }),
-  },
-}));
+vi.mock('@/visual-engine/UIIntegrityChecker', () => {
+  // Singleton mock instance so spies and call counts are stable across tests.
+  const runCheck = vi.fn().mockResolvedValue({
+    timestamp: Date.now(),
+    totalChecks: 1,
+    anomaliesFound: 1,
+    criticalCount: 0,
+    highCount: 0,
+    mediumCount: 0,
+    lowCount: 1,
+    autoFixedCount: 1,
+    manualFixRequired: 0,
+    overallHealth: 0.95,
+    anomalies: [
+      {
+        id: 'test-anomaly-1',
+        type: 'runtime_error',
+        severity: 'low',
+        message: 'Minor FPS drop detected',
+        autoFixed: true,
+        detected: Date.now(),
+        autoFixable: true,
+      },
+    ],
+  });
+
+  const instance = {
+    runCheck,
+    isMonitoring: false,
+  };
+
+  return {
+    UIIntegrityChecker: {
+      getInstance: () => instance,
+    },
+  };
+});
 
 describe('ChatPanel', () => {
   beforeEach(() => {
@@ -390,24 +404,36 @@ describe('GovernancePanel', () => {
     const instance = UIIntegrityChecker.getInstance();
     const runCheckSpy = vi.spyOn(instance, 'runCheck');
 
-    render(<GovernancePanel />);
-
-    await waitFor(() => {
-      expect(runCheckSpy).toHaveBeenCalled();
+    // With fake timers enabled, `waitFor` polling won't progress unless timers advance.
+    // Wrap initial render + effect flush in `act` to avoid React warnings.
+    let unmount: (() => void) | null = null;
+    await act(async () => {
+      const rendered = render(<GovernancePanel />);
+      unmount = rendered.unmount;
+      await Promise.resolve();
+      await Promise.resolve();
     });
+
+    expect(runCheckSpy).toHaveBeenCalled();
 
     const initialCallCount = runCheckSpy.mock.calls.length;
 
     // Advance by 60 seconds to trigger interval
-    act(() => {
+    await act(async () => {
       vi.advanceTimersByTime(60000);
+      await Promise.resolve();
+      await Promise.resolve();
     });
 
-    await waitFor(() => {
-      expect(runCheckSpy.mock.calls.length).toBeGreaterThan(initialCallCount);
+    expect(runCheckSpy.mock.calls.length).toBeGreaterThan(initialCallCount);
+
+    await act(async () => {
+      unmount?.();
     });
 
     vi.restoreAllMocks();
+    vi.clearAllTimers();
+    vi.useRealTimers();
   });
 
   it('should display correct severity icons', async () => {

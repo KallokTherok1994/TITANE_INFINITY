@@ -102,6 +102,8 @@ export interface PanelsStoreActions {
   showPanel: (id: string) => void;
   hidePanel: (id: string) => void;
   togglePanel: (id: string) => void;
+  // Alias attendu par certains tests/consommateurs
+  toggleVisibility: (id: string) => void;
 
   // Collapse
   collapsePanel: (id: string) => void;
@@ -113,8 +115,10 @@ export interface PanelsStoreActions {
   sendToBack: (id: string) => void;
 
   // Position & Size
-  updatePosition: (id: string, x: number, y: number) => void;
-  updateSize: (id: string, width: number, height: number) => void;
+  updatePosition(id: string, position: { x: number; y: number }): void;
+  updatePosition(id: string, x: number, y: number): void;
+  updateSize(id: string, size: { width: number; height: number }): void;
+  updateSize(id: string, width: number, height: number): void;
   resetPosition: (id: string) => void;
   resetSize: (id: string) => void;
 
@@ -134,6 +138,9 @@ export interface PanelsStoreActions {
   // Layouts
   applyLayout: (layout: 'default' | 'minimal' | 'dev' | 'focus') => void;
   resetAllPanels: () => void;
+
+  // Test/Dev helper: reset store to initial state
+  reset: () => void;
 
   // Bulk Operations
   showAll: () => void;
@@ -306,6 +313,10 @@ export const usePanelsStore = create<PanelsStore>()(
           }
         },
 
+        toggleVisibility: id => {
+          get().togglePanel(id);
+        },
+
         // ═══════════════════════════════════════════════════════════
         // COLLAPSE
         // ═══════════════════════════════════════════════════════════
@@ -398,15 +409,24 @@ export const usePanelsStore = create<PanelsStore>()(
         // POSITION & SIZE
         // ═══════════════════════════════════════════════════════════
 
-        updatePosition: (id, x, y) => {
+        updatePosition: (
+          id: string,
+          positionOrX: { x: number; y: number } | number,
+          y?: number
+        ) => {
           set(state => {
             const panel = state.panels.get(id);
             if (!panel) return state;
 
+            const position =
+              typeof positionOrX === 'number'
+                ? { x: positionOrX, y: y ?? 0 }
+                : positionOrX;
+
             const newPanels = new Map(state.panels);
             newPanels.set(id, {
               ...panel,
-              position: { x, y },
+              position,
               lastInteraction: Date.now(),
             });
 
@@ -414,15 +434,24 @@ export const usePanelsStore = create<PanelsStore>()(
           });
         },
 
-        updateSize: (id, width, height) => {
+        updateSize: (
+          id: string,
+          sizeOrWidth: { width: number; height: number } | number,
+          height?: number
+        ) => {
           set(state => {
             const panel = state.panels.get(id);
             if (!panel) return state;
 
+            const size =
+              typeof sizeOrWidth === 'number'
+                ? { width: sizeOrWidth, height: height ?? 0 }
+                : sizeOrWidth;
+
             const newPanels = new Map(state.panels);
             newPanels.set(id, {
               ...panel,
-              size: { width, height },
+              size,
               lastInteraction: Date.now(),
             });
 
@@ -553,12 +582,18 @@ export const usePanelsStore = create<PanelsStore>()(
 
           switch (layout) {
             case 'minimal':
-              // Tout collapser sauf pinned
+              // Mode minimal: ne garder visible que le chat (et les panels épinglés)
               get().panels.forEach((panel, id) => {
-                if (!panel.isPinned) {
-                  get().collapsePanel(id);
+                if (panel.isPinned) {
+                  get().showPanel(id);
+                  return;
                 }
+
+                get().hidePanel(id);
               });
+
+              // Le chat est l'ancre du layout minimal
+              get().showPanel('chat');
               break;
 
             case 'dev':
@@ -602,6 +637,22 @@ export const usePanelsStore = create<PanelsStore>()(
               focusedPanelId: null,
               currentLayout: 'default',
             };
+          });
+        },
+
+        reset: () => {
+          try {
+            localStorage.removeItem('titane-panels-store');
+          } catch {
+            // ignore (non-browser / restricted storage)
+          }
+
+          set({
+            panels: new Map(),
+            maxZIndex: 100,
+            focusedPanelId: null,
+            isMobileView: false,
+            currentLayout: 'default',
           });
         },
 

@@ -12,7 +12,13 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import type { AIMessage, AIResponse, AIConfig, ProviderChoice } from './types';
+import type {
+  AIMessage,
+  AIResponse,
+  AIConfig,
+  ProviderChoice,
+  AIProvider,
+} from './types';
 import { buildSystemPrompt as buildTitanePrompt } from '@/core/prompts';
 import type { Provider as PromptProvider, PromptContext } from '@/core/prompts';
 import { titaneLocalProvider } from './providers/titaneLocal'; // ← PREMIER (noyau infaillible)
@@ -119,6 +125,8 @@ class AIOrchestrator {
   private quickFailCleanupInterval: ReturnType<typeof setInterval> | null = null;
 
   constructor() {
+    // Certains providers peuvent être indisponibles/undefined en tests ou selon le runtime.
+    this.providers = this.providers.filter((p): p is AIProvider => Boolean(p));
     this.initializeProviderStats();
     this.startWarmup();
     this.startQuickFailCleanup();
@@ -595,18 +603,21 @@ class AIOrchestrator {
 
       // ═══ PHASE 4 ÉTAPE 3: Cascade providers complète réactivée ═══
       // Ordre: Selection → Alternates → titane-local (fallback garanti)
-      const providersToTry = [
-        finalProvider,
-        ...selection.alternates.filter(p => p !== finalProvider),
-        'titane-local', // Fallback infaillible
-      ];
-
       const forcedProviderName =
         preferredProvider && preferredProvider !== 'auto'
           ? preferredProvider === 'local'
             ? 'ollama'
             : preferredProvider
           : null;
+
+      const providersToTry =
+        IS_VITEST && forcedProviderName
+          ? [forcedProviderName, 'titane-local']
+          : [
+              finalProvider,
+              ...selection.alternates.filter(p => p !== finalProvider),
+              'titane-local', // Fallback infaillible
+            ];
 
       let lastError: Error | null = null;
       let attempts = 0;

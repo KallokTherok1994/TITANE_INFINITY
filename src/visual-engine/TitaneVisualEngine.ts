@@ -55,6 +55,43 @@ export interface PerformanceMetrics {
 }
 
 export class TitaneVisualEngine extends EventEmitter {
+  private static instance: TitaneVisualEngine | null = null;
+
+  public static getInstance(
+    config: Partial<VisualEngineConfig> = {}
+  ): TitaneVisualEngine {
+    const viteEnv = (import.meta as unknown as { env?: Record<string, unknown> }).env;
+    const viteMode = typeof viteEnv?.MODE === 'string' ? viteEnv.MODE : undefined;
+
+    const isVitest =
+      typeof process !== 'undefined' && typeof process.env?.VITEST === 'string';
+    const isNodeTest = typeof process !== 'undefined' && process.env?.NODE_ENV === 'test';
+    const isTestEnv = viteMode === 'test' || isVitest || isNodeTest;
+
+    // En tests, on évite les fuites d'état d'un singleton entre suites.
+    // On désactive aussi les intégrations OS/orchestration pour réduire les effets de bord.
+    if (isTestEnv) {
+      TitaneVisualEngine.instance = new TitaneVisualEngine({
+        enableParticles: false,
+        enableEffects: false,
+        enableOrchestration: false,
+        enableOSIntegration: false,
+        adaptiveFPS: false,
+        ...config,
+      });
+      return TitaneVisualEngine.instance;
+    }
+
+    if (!TitaneVisualEngine.instance) {
+      TitaneVisualEngine.instance = new TitaneVisualEngine(config);
+    }
+    return TitaneVisualEngine.instance;
+  }
+
+  public static resetInstance(): void {
+    TitaneVisualEngine.instance = null;
+  }
+
   private stateManager: StateManager;
   private config: VisualEngineConfig;
   private isRunning = false;
