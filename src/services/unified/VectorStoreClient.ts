@@ -119,7 +119,7 @@ export class VectorStoreClient implements IVectorStore {
   async search(
     embedding: number[],
     limit: number,
-    filters?: Record<string, any>
+    filters?: Record<string, unknown>
   ): Promise<UnifiedMemoryResult[]>;
   /**
    * Search vectors by similarity (preferred signature)
@@ -148,7 +148,7 @@ export class VectorStoreClient implements IVectorStore {
           typeFilter?: UnifiedMemoryType[];
           ownerFilter?: string;
         },
-    filters?: Record<string, any>
+    filters?: Record<string, unknown>
   ): Promise<UnifiedMemoryResult[]> {
     this.ensureInitialized();
 
@@ -164,11 +164,18 @@ export class VectorStoreClient implements IVectorStore {
     if (typeof optionsOrLimit === 'number') {
       options.topK = optionsOrLimit;
       if (filters) {
+        const f = filters as Record<string, unknown>;
         // Map generic filters to specific options
-        if (filters.tierFilter) options.tierFilter = filters.tierFilter;
-        if (filters.typeFilter) options.typeFilter = filters.typeFilter;
-        if (filters.ownerFilter) options.ownerFilter = filters.ownerFilter;
-        if (filters.minScore) options.minScore = filters.minScore;
+        const tierFilter = f.tierFilter;
+        const typeFilter = f.typeFilter;
+        const ownerFilter = f.ownerFilter;
+        const minScore = f.minScore;
+
+        if (Array.isArray(tierFilter)) options.tierFilter = tierFilter as MemoryTier[];
+        if (Array.isArray(typeFilter))
+          options.typeFilter = typeFilter as UnifiedMemoryType[];
+        if (typeof ownerFilter === 'string') options.ownerFilter = ownerFilter;
+        if (typeof minScore === 'number') options.minScore = minScore;
       }
     } else if (optionsOrLimit) {
       options = optionsOrLimit;
@@ -185,7 +192,7 @@ export class VectorStoreClient implements IVectorStore {
 
       const results = await invoke<
         Array<{
-          entry: any;
+          entry: unknown;
           score: number;
           distance: number;
         }>
@@ -213,7 +220,7 @@ export class VectorStoreClient implements IVectorStore {
     this.ensureInitialized();
 
     try {
-      const entry = await invoke<any | null>('vector_store_get', {
+      const entry = await invoke<unknown | null>('vector_store_get', {
         storeId: this.storeId,
         id,
       });
@@ -327,7 +334,7 @@ export class VectorStoreClient implements IVectorStore {
   /**
    * Convert frontend entry to backend format
    */
-  private toBackendEntry(entry: UnifiedMemoryEntry): any {
+  private toBackendEntry(entry: UnifiedMemoryEntry): Record<string, unknown> {
     return {
       id: entry.id,
       tier: entry.tier,
@@ -348,35 +355,82 @@ export class VectorStoreClient implements IVectorStore {
   /**
    * Convert backend entry to frontend format
    */
-  private fromBackendEntry(entry: any): UnifiedMemoryEntry {
+  private fromBackendEntry(entry: unknown): UnifiedMemoryEntry {
+    const e = entry as Record<string, unknown>;
+    const now = Date.now();
+
+    const id = typeof e.id === 'string' ? e.id : `unknown-${now}`;
+    const tier = (e.tier as MemoryTier) ?? 'SHORT_TERM';
+    const type =
+      (typeof e.entry_type === 'string'
+        ? (e.entry_type as UnifiedMemoryType)
+        : (e.type as UnifiedMemoryType)) ?? 'fact';
+    const summary = typeof e.summary === 'string' ? e.summary : '';
+    const details = typeof e.details === 'string' ? e.details : undefined;
+    const embedding = Array.isArray(e.embedding) ? (e.embedding as number[]) : undefined;
+    const owner = typeof e.owner === 'string' ? e.owner : 'system';
+    const tags = Array.isArray(e.tags) ? (e.tags as string[]) : [];
+
+    const source = ((): UnifiedMemoryEntry['source'] => {
+      if (typeof e.source === 'object' && e.source !== null) {
+        return e.source as UnifiedMemoryEntry['source'];
+      }
+
+      const rawType = typeof e.source_type === 'string' ? e.source_type : 'system';
+      const normalizedType: UnifiedMemoryEntry['source']['type'] =
+        rawType === 'conversation' ||
+        rawType === 'manual' ||
+        rawType === 'system' ||
+        rawType === 'cognitive'
+          ? rawType
+          : 'system';
+
+      return {
+        type: normalizedType,
+        id: typeof e.source_id === 'string' ? e.source_id : undefined,
+        timestamp: typeof e.source_timestamp === 'number' ? e.source_timestamp : now,
+      };
+    })();
+
     return {
-      id: entry.id,
-      tier: entry.tier,
-      type: entry.entry_type || entry.type,
-      summary: entry.summary,
-      details: entry.details ?? undefined,
-      embedding: entry.embedding,
-      owner: entry.owner,
-      tags: entry.tags,
-      source: entry.source || {
-        type: entry.source_type || 'system',
-        id: entry.source_id,
-        timestamp: entry.source_timestamp || Date.now(),
-      },
-      importance: entry.importance,
-      confidence: entry.confidence ?? 0.5,
-      strength: entry.strength ?? 0.5,
-      isUseful: entry.is_useful ?? true,
-      isTrue: entry.is_true ?? true,
-      isStructuring: entry.is_structuring ?? false,
-      isStable: entry.is_stable ?? true,
-      isReusable: entry.is_reusable ?? true,
-      accessCount: entry.access_count || entry.accessCount,
-      created: entry.created_at || entry.created || Date.now(),
-      accessed: entry.last_accessed || entry.accessed || Date.now(),
-      compressionLevel: entry.compression_level ?? 0,
-      relatedTo: entry.related_to ?? undefined,
-      supersedes: entry.supersedes ?? undefined,
+      id,
+      tier,
+      type,
+      summary,
+      details,
+      embedding,
+      owner,
+      tags,
+      source,
+      importance: typeof e.importance === 'number' ? e.importance : 0.5,
+      confidence: typeof e.confidence === 'number' ? e.confidence : 0.5,
+      strength: typeof e.strength === 'number' ? e.strength : 0.5,
+      isUseful: typeof e.is_useful === 'boolean' ? e.is_useful : true,
+      isTrue: typeof e.is_true === 'boolean' ? e.is_true : true,
+      isStructuring: typeof e.is_structuring === 'boolean' ? e.is_structuring : false,
+      isStable: typeof e.is_stable === 'boolean' ? e.is_stable : true,
+      isReusable: typeof e.is_reusable === 'boolean' ? e.is_reusable : true,
+      accessCount:
+        typeof e.access_count === 'number'
+          ? e.access_count
+          : typeof e.accessCount === 'number'
+            ? e.accessCount
+            : 0,
+      created:
+        typeof e.created_at === 'number'
+          ? e.created_at
+          : typeof e.created === 'number'
+            ? e.created
+            : now,
+      accessed:
+        typeof e.last_accessed === 'number'
+          ? e.last_accessed
+          : typeof e.accessed === 'number'
+            ? e.accessed
+            : now,
+      compressionLevel: typeof e.compression_level === 'number' ? e.compression_level : 0,
+      relatedTo: Array.isArray(e.related_to) ? (e.related_to as string[]) : undefined,
+      supersedes: typeof e.supersedes === 'string' ? e.supersedes : undefined,
     };
   }
 

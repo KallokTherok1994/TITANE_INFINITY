@@ -168,19 +168,34 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ className = '', children }
               }}
             />
 
-            {/* State label */}
+            {/* Panel title (stable) */}
             <span
               className="smooth-colors"
               style={{
                 color: visuals.primary,
                 fontSize: '14px',
                 fontWeight: 600,
-                textTransform: 'capitalize',
                 transition: 'color 500ms cubic-bezier(0.25, 0.1, 0.25, 1)',
               }}
             >
-              {state}
+              Chat
             </span>
+
+            {/* Visual state label (optional, for debugging) */}
+            {state ? (
+              <span
+                className="smooth-colors"
+                style={{
+                  color: visuals.secondary,
+                  fontSize: '12px',
+                  fontWeight: 500,
+                  textTransform: 'capitalize',
+                  transition: 'color 500ms cubic-bezier(0.25, 0.1, 0.25, 1)',
+                }}
+              >
+                {state}
+              </span>
+            ) : null}
           </div>
 
           {/* v21: Collapse/Expand button */}
@@ -206,47 +221,53 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ className = '', children }
           </button>
         </div>
 
-        {/* Main content area - v21: Hide when collapsed */}
-        {!isCollapsed && (
-          <>
-            <div
-              style={{
-                flex: 1,
-                padding: '16px',
-                overflowY: 'auto',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '12px',
-              }}
-            >
-              {children}
-            </div>
+        {/* Main content area - keep in DOM for tests; hide visually when collapsed */}
+        <div
+          style={{
+            display: isCollapsed ? 'none' : 'flex',
+            flex: 1,
+            flexDirection: 'column',
+            minHeight: 0,
+          }}
+        >
+          <div
+            style={{
+              flex: 1,
+              padding: '16px',
+              overflowY: 'auto',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px',
+              minHeight: 0,
+            }}
+          >
+            {children}
+          </div>
 
-            {/* Footer with visual accent */}
+          {/* Footer with visual accent */}
+          <div
+            className="smooth-colors"
+            style={{
+              padding: '12px 16px',
+              borderTop: `1px solid rgba(255, 255, 255, 0.1)`,
+              background: `linear-gradient(to top, ${visuals.background}, transparent)`,
+              transition: 'all 500ms cubic-bezier(0.25, 0.1, 0.25, 1)',
+            }}
+          >
             <div
-              className="smooth-colors"
+              className="smooth-transform"
               style={{
-                padding: '12px 16px',
-                borderTop: `1px solid rgba(255, 255, 255, 0.1)`,
-                background: `linear-gradient(to top, ${visuals.background}, transparent)`,
+                height: '4px',
+                borderRadius: '2px',
+                backgroundColor: visuals.accent,
+                opacity: 0.5,
+                transform: isTransitioning ? 'scaleX(1)' : 'scaleX(0.3)',
+                transformOrigin: 'left',
                 transition: 'all 500ms cubic-bezier(0.25, 0.1, 0.25, 1)',
               }}
-            >
-              <div
-                className="smooth-transform"
-                style={{
-                  height: '4px',
-                  borderRadius: '2px',
-                  backgroundColor: visuals.accent,
-                  opacity: 0.5,
-                  transform: isTransitioning ? 'scaleX(1)' : 'scaleX(0.3)',
-                  transformOrigin: 'left',
-                  transition: 'all 500ms cubic-bezier(0.25, 0.1, 0.25, 1)',
-                }}
-              />
-            </div>
-          </>
-        )}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

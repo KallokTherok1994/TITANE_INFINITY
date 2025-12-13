@@ -514,6 +514,13 @@ const handleTauriInvoke = async (
         provider: 'mock',
         suggestions: ['Continuer'],
       };
+    case 'get_gemini_key_status':
+    case 'get_openai_key_status':
+    case 'get_anthropic_key_status':
+      return {
+        ok: true,
+        data: { configured: false },
+      };
     case 'chat_get_providers_status':
       return {
         gemini: { healthy: true, latency_ms: 320 },
