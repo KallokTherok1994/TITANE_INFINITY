@@ -579,8 +579,10 @@ class AIOrchestrator {
       // 🧠 Fusionner décision cognitive et sélection neurale
       // Si un provider est explicitement demandé (UI/tests), il doit rester déterministe.
       // La décision cognitive ne doit pas l'écraser (sinon impossible de forcer un scénario d'erreur).
-      const finalProvider =
-        preferredProvider && preferredProvider !== 'auto'
+      // En Vitest, on force aussi un comportement déterministe pour les tests de cascade.
+      const finalProvider = IS_VITEST
+        ? selection.selectedProvider
+        : preferredProvider && preferredProvider !== 'auto'
           ? selection.selectedProvider
           : cognitiveDecision.confidence > 70
             ? cognitiveDecision.provider

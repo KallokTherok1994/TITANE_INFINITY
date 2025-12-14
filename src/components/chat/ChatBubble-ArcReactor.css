@@ -585,3 +585,43 @@
     height: 28px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   DRAG & DROP STYLES
+   ═══════════════════════════════════════════════════════════════ */
+
+.chat-bubble-trigger.dragging,
+.chat-bubble-panel.dragging {
+  cursor: grabbing !important;
+  box-shadow:
+    0 0 40px rgba(59, 130, 246, 0.8),
+    0 0 80px rgba(59, 130, 246, 0.6),
+    0 30px 80px rgba(0, 0, 0, 0.6),
+    inset 0 0 30px rgba(59, 130, 246, 0.5);
+  z-index: 10000 !important;
+}
+
+.chat-bubble-trigger.dragging {
+  animation: none;
+  transform: scale(1.15) !important;
+}
+
+.chat-bubble-panel.dragging {
+  backdrop-filter: blur(30px) saturate(200%);
+}
+
+.chat-bubble-trigger:not(.dragging) {
+  cursor: grab;
+}
+
+.chat-bubble-panel:not(.dragging) {
+  cursor: grab;
+}
+
+.chat-bubble-header {
+  cursor: grab;
+}
+
+.chat-bubble-header:active {
+  cursor: grabbing;
+}

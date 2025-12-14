@@ -31,7 +31,9 @@ impl HarmonicRegulator {
     ) -> TitaneResult<HarmonicCorrections> {
         let mut corrections = HarmonicCorrections::default();
 
-        if state.cognitive_resonance < self.min_resonance {
+        // Omega depth is a strong intervention: trigger only on *significantly* low resonance.
+        let omega_depth_threshold = (self.min_resonance * 0.75).clamp(0.0, 1.0);
+        if state.cognitive_resonance < omega_depth_threshold {
             corrections.adjust_omega_depth = true;
             corrections.new_omega_depth = Some(3);
         }

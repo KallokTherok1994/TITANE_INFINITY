@@ -595,11 +595,13 @@ fn main() {
             // ═══════════════════════════════════════════════════════════════
             // CRITICAL COMMANDS (v21.5 AUTO-FIX) - Audio + Helios + Memory
             // ═══════════════════════════════════════════════════════════════
-            // Audio System Commands (TTS + Microphone Testing)
+            // Audio System Commands (TTS + Microphone Testing + Device Detection)
             audio::commands::tts_speak,
             audio::commands::tts_stop,
             audio::commands::test_tts,
             audio::commands::test_microphone,
+            audio::commands::get_audio_output_devices,
+            audio::commands::get_audio_input_devices,
             // Helios API Commands (System Monitoring) - ONLY get_helios_state
             api::helios_api::get_helios_state,
             // Memory API Commands (Storage + Timeline)

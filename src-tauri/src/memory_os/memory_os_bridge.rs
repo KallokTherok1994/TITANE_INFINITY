@@ -90,6 +90,9 @@ impl MemoryOSBridge {
         let memory_id = {
             let mut memory = self.unified_memory.write().await;
             memory
+                .init()
+                .map_err(|e| MemoryOSError::SearchError(e.to_string()))?;
+            memory
                 .store(content.clone(), memory_type, importance, tags.clone())
                 .map_err(|e| MemoryOSError::SearchError(e.to_string()))?
         };
@@ -141,7 +144,11 @@ impl MemoryOSBridge {
         }
 
         // Sort by importance
-        results.sort_by(|a, b| b.importance.partial_cmp(&a.importance).unwrap());
+        results.sort_by(|a, b| {
+            b.importance
+                .partial_cmp(&a.importance)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
 
         // Limit results
         results.truncate(max_results);
@@ -320,9 +327,38 @@ pub struct MemoryOSBridgeStats {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use tempfile::TempDir;
+
+    struct EnvVarGuard {
+        key: &'static str,
+        old_value: Option<String>,
+    }
+
+    impl EnvVarGuard {
+        fn set(key: &'static str, value: String) -> Self {
+            let old_value = std::env::var(key).ok();
+            std::env::set_var(key, value);
+            Self { key, old_value }
+        }
+    }
+
+    impl Drop for EnvVarGuard {
+        fn drop(&mut self) {
+            match self.old_value.as_ref() {
+                Some(v) => std::env::set_var(self.key, v),
+                None => std::env::remove_var(self.key),
+            }
+        }
+    }
 
     #[tokio::test]
     async fn test_bridge_basic() {
+        let temp_dir = TempDir::new().expect("temp dir");
+        let _env_guard = EnvVarGuard::set(
+            "TITANE_UNIFIED_MEMORY_LTM_DIR",
+            temp_dir.path().to_string_lossy().to_string(),
+        );
+
         let unified_memory = Arc::new(RwLock::new(UnifiedMemory::new()));
         let config = MemoryOSBridgeConfig::default();
         let bridge = MemoryOSBridge::new(unified_memory, config);
@@ -336,7 +372,12 @@ mod tests {
                 vec!["test".to_string()],
             )
             .await
-            .unwrap();
+            ;
+
+        let id = match id {
+            Ok(v) => v,
+            Err(e) => panic!("store failed: {e}"),
+        };
 
         assert!(!id.is_empty());
 

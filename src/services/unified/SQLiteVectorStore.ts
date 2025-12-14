@@ -226,11 +226,14 @@ export class SQLiteVectorStore implements IVectorStore {
   async addBatch(entries: UnifiedMemoryEntry[]): Promise<void> {
     if (!this.db) throw new Error('Store not initialized');
 
-    const insertMany = this.db.transaction((batch: UnifiedMemoryEntry[]) => {
+    // Capture db reference for transaction closure
+    const db = this.db;
+
+    const insertMany = db.transaction((batch: UnifiedMemoryEntry[]) => {
       for (const entry of batch) {
         // NOTE: add() is effectively synchronous (better-sqlite3), but returns a Promise.
         // Use the same insertion logic inline for transaction safety.
-        const stmt = this.db!.prepare(`
+        const stmt = db.prepare(`
           INSERT INTO ${this.config.tableName} (
             id, tier, type, summary, details, embedding, owner, tags,
             source_type, source_id, source_timestamp, source_context,

@@ -36,7 +36,7 @@ pub struct SummaryResult {
     /// Processing time in milliseconds
     pub latency_ms: u64,
 
-    /// Compression ratio (summary_len / original_len)
+    /// Compression ratio (approx): included_content_len / original_content_len
     pub compression_ratio: f32,
 }
 
@@ -63,7 +63,7 @@ pub async fn summarize(
         });
     }
 
-    let summary = match strategy {
+    let (summary, included_content_len) = match strategy {
         SummaryStrategy::KeyMessages => summarize_key_messages(entries),
         SummaryStrategy::Clustering => summarize_clustering(entries),
         SummaryStrategy::Simple => summarize_simple(entries),
@@ -78,7 +78,7 @@ pub async fn summarize(
     // Calculate compression ratio
     let original_len: usize = entries.iter().map(|e| e.content.len()).sum();
     let compression_ratio = if original_len > 0 {
-        summary.len() as f32 / original_len as f32
+        (included_content_len as f32 / original_len as f32).min(1.0)
     } else {
         0.0
     };
@@ -98,7 +98,7 @@ pub async fn summarize(
 /// 1. Take first 3 messages (conversation start)
 /// 2. Take last 3 messages (recent context)
 /// 3. Take top 5 high-importance messages (importance > 0.7)
-fn summarize_key_messages(entries: &[MemoryEntry]) -> String {
+fn summarize_key_messages(entries: &[MemoryEntry]) -> (String, usize) {
     let mut key_entries = Vec::new();
 
     // First 3 messages
@@ -113,7 +113,11 @@ fn summarize_key_messages(entries: &[MemoryEntry]) -> String {
 
     // High importance messages
     let mut important: Vec<&MemoryEntry> = entries.iter().filter(|e| e.importance > 0.7).collect();
-    important.sort_by(|a, b| b.importance.partial_cmp(&a.importance).unwrap());
+    important.sort_by(|a, b| {
+        b.importance
+            .partial_cmp(&a.importance)
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
 
     for entry in important.iter().take(5) {
         key_entries.push((*entry).clone());
@@ -124,7 +128,7 @@ fn summarize_key_messages(entries: &[MemoryEntry]) -> String {
     key_entries.dedup_by(|a, b| a.id == b.id);
 
     // Format summary
-    format_summary(&key_entries)
+    format_summary_with_len(&key_entries)
 }
 
 /// Clustering strategy (simplified)
@@ -133,7 +137,7 @@ fn summarize_key_messages(entries: &[MemoryEntry]) -> String {
 /// - User vs assistant
 /// - Time windows (every 10 messages)
 /// - Importance levels
-fn summarize_clustering(entries: &[MemoryEntry]) -> String {
+fn summarize_clustering(entries: &[MemoryEntry]) -> (String, usize) {
     let mut clusters: Vec<Vec<&MemoryEntry>> = Vec::new();
 
     // Group by role
@@ -161,12 +165,20 @@ fn summarize_clustering(entries: &[MemoryEntry]) -> String {
         }
     }
 
-    format_summary(&representatives)
+    format_summary_with_len(&representatives)
 }
 
 /// Simple strategy (concatenate + truncate)
-fn summarize_simple(entries: &[MemoryEntry]) -> String {
+fn summarize_simple(entries: &[MemoryEntry]) -> (String, usize) {
     let max_messages = 50.min(entries.len());
+
+    let included_content_len: usize = entries
+        .iter()
+        .rev()
+        .take(max_messages)
+        .map(|e| e.content.len())
+        .sum();
+
     let recent: Vec<String> = entries
         .iter()
         .rev()
@@ -182,28 +194,35 @@ fn summarize_simple(entries: &[MemoryEntry]) -> String {
         summary.push_str("\n...[truncated]");
     }
 
-    summary
+    (summary, included_content_len)
 }
 
 /// Format entries into readable summary
 fn format_summary(entries: &[MemoryEntry]) -> String {
-    entries
+    format_summary_with_len(entries).0
+}
+
+fn format_summary_with_len(entries: &[MemoryEntry]) -> (String, usize) {
+    let mut included_content_len: usize = 0;
+
+    let lines = entries
         .iter()
         .map(|e| {
             let timestamp = chrono::DateTime::from_timestamp_millis(e.timestamp)
                 .map(|dt| dt.format("%H:%M:%S").to_string())
                 .unwrap_or_else(|| "??:??:??".to_string());
 
+            let truncated = truncate_text(&e.content, 100);
+            included_content_len = included_content_len.saturating_add(truncated.len());
+
             format!(
                 "[{}] {} (importance: {:.2}): {}",
-                timestamp,
-                e.role,
-                e.importance,
-                truncate_text(&e.content, 100)
+                timestamp, e.role, e.importance, truncated
             )
         })
-        .collect::<Vec<_>>()
-        .join("\n")
+        .collect::<Vec<_>>();
+
+    (lines.join("\n"), included_content_len)
 }
 
 /// Truncate text to max length

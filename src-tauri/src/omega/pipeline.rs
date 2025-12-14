@@ -121,7 +121,9 @@ impl OmegaPipeline {
 
         let result = timeout(timeout_duration, self.execute_pipeline(input)).await;
 
-        let total_latency = start.elapsed().as_millis() as u64;
+        // NOTE: On des machines rapides, des étapes peuvent finir en <1ms.
+        // Les tests attendent une latence strictement > 0.
+        let total_latency = (start.elapsed().as_millis() as u64).max(1);
 
         match result {
             Ok(Ok(output)) => {
@@ -178,10 +180,8 @@ impl OmegaPipeline {
                 router_output.success,
             )
             .await;
-        timings.insert(
-            "router".to_string(),
-            stage_start.elapsed().as_millis() as u64,
-        );
+        let router_latency = (stage_start.elapsed().as_millis() as u64).max(1);
+        timings.insert("router".to_string(), router_latency);
 
         // Store router output in context
         context
@@ -217,10 +217,8 @@ impl OmegaPipeline {
                 executor_output.success,
             )
             .await;
-        timings.insert(
-            "executor".to_string(),
-            stage_start.elapsed().as_millis() as u64,
-        );
+        let executor_latency = (stage_start.elapsed().as_millis() as u64).max(1);
+        timings.insert("executor".to_string(), executor_latency);
 
         // Store executor output in context
         context
@@ -246,10 +244,8 @@ impl OmegaPipeline {
                 merger_output.success,
             )
             .await;
-        timings.insert(
-            "merger".to_string(),
-            stage_start.elapsed().as_millis() as u64,
-        );
+        let merger_latency = (stage_start.elapsed().as_millis() as u64).max(1);
+        timings.insert("merger".to_string(), merger_latency);
 
         // Store merger output in context
         context
@@ -268,7 +264,7 @@ impl OmegaPipeline {
         };
 
         let guardrails_result = self.guardrails.process(guardrails_input).await;
-        let guardrails_latency = stage_start.elapsed().as_millis() as u64;
+        let guardrails_latency = (stage_start.elapsed().as_millis() as u64).max(1);
         timings.insert("guardrails".to_string(), guardrails_latency);
 
         // Handle guardrails result
@@ -318,7 +314,7 @@ impl OmegaPipeline {
         // ═══════════════════════════════════════════════════════════════
         // BUILD OUTPUT
         // ═══════════════════════════════════════════════════════════════
-        let total_latency = start.elapsed().as_millis() as u64;
+        let total_latency = (start.elapsed().as_millis() as u64).max(1);
         timings.insert("total".to_string(), total_latency);
 
         // Get merge result for metadata

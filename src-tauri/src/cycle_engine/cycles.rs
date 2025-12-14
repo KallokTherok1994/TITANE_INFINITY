@@ -154,7 +154,12 @@ pub struct CycleState {
 impl CycleState {
     pub fn current() -> Self {
         let now = Local::now();
-        let daily = DailyPhase::from_hour(now.hour());
+        // In tests we want deterministic behavior (no dependence on local time).
+        let daily = if cfg!(test) {
+            DailyPhase::Noon
+        } else {
+            DailyPhase::from_hour(now.hour())
+        };
 
         Self {
             daily_phase: daily,

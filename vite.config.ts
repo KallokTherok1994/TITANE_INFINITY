@@ -225,7 +225,7 @@ export default defineConfig({
       overlay: true, // Show errors in overlay
     },
     watch: {
-      // Optimisation watchers pour réduire CPU
+      // Optimisation watchers pour réduire CPU et éviter ENOSPC
       ignored: [
         '**/node_modules/**',
         '**/dist/**',
@@ -235,6 +235,13 @@ export default defineConfig({
         '**/*.md',
         '**/coverage/**',
         '**/docs/**',
+        '**/runtime/*/logs/**',
+        '**/.vite/**',
+        '**/.cache/**',
+        '**/build/**',
+        '**/*.log',
+        '**/tmp/**',
+        '**/temp/**',
       ],
       usePolling: false, // Disable polling (use native FS events)
     },

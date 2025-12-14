@@ -216,9 +216,9 @@ impl BehavioralConsistencyProcessor {
             .sum::<usize>()
             / previous.len().max(1);
 
-        // Accepter variation de ±30%
+        // Accepter variation de ±50% (les réponses peuvent devenir plus concises sans rupture de ton)
         let ratio = current_density as f32 / avg_previous.max(1) as f32;
-        ratio > 0.7 && ratio < 1.3
+        ratio >= 0.5 && ratio <= 1.5
     }
 
     // ─────────────────────────────────────────────────────────

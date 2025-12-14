@@ -247,12 +247,31 @@ impl IntentClassifier {
                     "besoin".into(),
                     "comment faire".into(),
                     "peux-tu m'aider".into(),
-                    "explique".into(),
                     "guide".into(),
                 ],
                 negative_keywords: vec![],
                 base_confidence: 0.55,
                 keyword_boost: 0.15,
+            }],
+        );
+
+        // Explanation patterns (distinct from Help)
+        self.patterns.insert(
+            Intent::Explanation,
+            vec![PatternRule {
+                keywords: vec![
+                    "explique".into(),
+                    "explique-moi".into(),
+                    "expliquer".into(),
+                    "explication".into(),
+                    "explain".into(),
+                    "explain to me".into(),
+                    "how it works".into(),
+                    "comment ça marche".into(),
+                ],
+                negative_keywords: vec![],
+                base_confidence: 0.65,
+                keyword_boost: 0.18,
             }],
         );
 
