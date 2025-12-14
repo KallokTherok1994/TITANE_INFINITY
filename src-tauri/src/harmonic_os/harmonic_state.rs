@@ -52,14 +52,20 @@ impl HarmonicState {
     }
 
     pub fn calculate_global_score(&mut self, weights: &[f32; 7]) {
-        self.global_score = (self.cognitive_resonance * weights[0]
+        let weighted_sum = self.cognitive_resonance * weights[0]
             + self.emotional_coherence * weights[1]
             + self.logical_alignment * weights[2]
             + self.memory_alignment * weights[3]
             + self.energy_alignment * weights[4]
             + self.temporal_alignment * weights[5]
-            + self.agent_sync * weights[6])
-            .clamp(0.0, 1.0);
+            + self.agent_sync * weights[6];
+
+        let weight_sum: f32 = weights.iter().copied().sum();
+        self.global_score = if weight_sum.abs() > f32::EPSILON {
+            (weighted_sum / weight_sum).clamp(0.0, 1.0)
+        } else {
+            0.0
+        };
 
         self.harmony_level = Self::compute_harmony_level(self.global_score);
     }
@@ -75,8 +81,10 @@ impl HarmonicState {
             self.agent_sync,
         ];
         let mean = values.iter().sum::<f32>() / values.len() as f32;
-        let variance = values.iter().map(|v| (v - mean).powi(2)).sum::<f32>() / values.len() as f32;
-        self.stability = (1.0 - variance).clamp(0.0, 1.0);
+        let variance =
+            values.iter().map(|v| (v - mean).powi(2)).sum::<f32>() / values.len() as f32;
+        let std_dev = variance.sqrt();
+        self.stability = (1.0 - std_dev).clamp(0.0, 1.0);
     }
 
     fn compute_harmony_level(score: f32) -> HarmonyLevel {

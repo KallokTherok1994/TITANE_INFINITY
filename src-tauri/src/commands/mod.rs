@@ -5,6 +5,7 @@
 
 pub mod ai_chat; // ✅ v∞: AI Chat commands (NOT re-exported - uses State<AIChatState>)
 pub mod automations; // ✅ v19.2Ω: Automation System
+pub mod chat_generate_commands; // ✅ v21 Phase 1: Provider-specific AI generation (Gemini/OpenAI/Claude)
 
 // Tests — Phase 1 Stabilisation v20.0
 pub mod chat_modes; // ✅ v19.2Ω: Chat Modes System
@@ -47,6 +48,31 @@ pub use harmonia_commands::*;
 pub use ia_commands::*; // ✅ v∞.19.3Ω: Export IA commands
 pub use memory_compactor_commands::*;
 pub use memory_os::*; // ✅ v∞: Export Memory OS commands (SUPER PROMPTs #6-7-8)
+
+// ═══════════════════════════════════════════════════════════════
+// NEW COMMANDS v21.5.3 - BACKEND REBUILD (SUPER PROMPT #2)
+// ═══════════════════════════════════════════════════════════════
+pub mod governance_commands;
+pub mod system_center_commands;
+pub mod memory_os_commands;
+pub mod devtools_commands;
+pub mod whisper_commands;
+// audio_config_commands removed - duplicates audio::commands
+pub mod persistent_memory_commands;
+pub mod ui_theme_commands;
+pub mod self_healing_commands;
+pub mod singularity_commands;
+
+pub use governance_commands::*;
+pub use system_center_commands::*;
+pub use memory_os_commands::*;
+pub use devtools_commands::*;
+pub use whisper_commands::*;
+// audio_config_commands removed - duplicates audio::commands
+pub use persistent_memory_commands::*;
+pub use ui_theme_commands::*;
+pub use self_healing_commands::*;
+pub use singularity_commands::*;
 pub use multi_ai::*; // ✅ v∞: Export Multi-IA Orchestrator commands
 pub use one_core::*; // ✅ v19.6: Export ONE CORE commands
 pub use orchestration_center::*; // ✅ v19.5: Export orchestration center commands

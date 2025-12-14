@@ -75,7 +75,7 @@ export const LivingEnginesCard: React.FC<LivingEnginesCardProps> = ({ state }) =
             <div className="living-metric">
               <span className="living-metric__label">Mood</span>
               <span className="living-metric__value living-metric__value--highlight">
-                {persona.mood.current}
+                {persona.mood}
               </span>
             </div>
             <div className="living-metric">

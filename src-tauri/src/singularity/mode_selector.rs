@@ -353,12 +353,23 @@ impl ModeSelector {
 
         // If current mode is working well, resist change
         if new_mode != self.current_mode {
+            // With too little history, any ratio-based stability is misleading.
+            // Allow changes early so the selector can actually adapt.
+            if self.mode_history.len() < 2 {
+                return new_mode;
+            }
+
             // Check how often current mode appears in history
             let current_count = self
                 .mode_history
                 .iter()
                 .filter(|&&m| m == self.current_mode)
                 .count();
+
+            // Require at least two occurrences before we start resisting change.
+            if current_count < 2 {
+                return new_mode;
+            }
 
             let stability_ratio = current_count as f32 / self.mode_history.len() as f32;
 

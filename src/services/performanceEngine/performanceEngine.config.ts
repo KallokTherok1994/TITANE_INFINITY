@@ -765,6 +765,18 @@ export const LOWPOWER_THRESHOLDS: ThresholdConfig = {
     queueSizeWarning: 10,
     queueSizeCritical: 50,
   },
+  voice: {
+    asrLatencyWarning: 5000,
+    asrLatencyCritical: 10000,
+    ttsLatencyWarning: 5000,
+    ttsLatencyCritical: 10000,
+    omegaLatencyWarning: 10000,
+    omegaLatencyCritical: 20000,
+    successRateWarning: 0.8,
+    successRateCritical: 0.6,
+    feedbackRateWarning: 0.15,
+    feedbackRateCritical: 0.3,
+  },
 };
 
 /**

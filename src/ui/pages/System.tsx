@@ -13,7 +13,7 @@
  * ═══════════════════════════════════════════════════════════
  */
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { HUDFrame } from '../components/HUDFrame';
 import './styles/System.css';
 
@@ -63,7 +63,7 @@ const SYSTEM_MODULES: SystemModule[] = [
   },
 ];
 
-export const SystemPage: React.FC = () => {
+export const SystemPage: React.FC = React.memo(() => {
   const [cpuUsage] = useState(42); // Mock data
   const [memoryUsage] = useState(65); // Mock data
   const [logs, setLogs] = useState<string[]>([
@@ -72,9 +72,9 @@ export const SystemPage: React.FC = () => {
     '[INFO] Auto-Évolution: cycle de veille actif',
   ]);
 
-  const handleRestartModule = (moduleId: string) => {
+  const handleRestartModule = useCallback((moduleId: string) => {
     setLogs(prev => [...prev, `[INFO] Redémarrage du module ${moduleId}...`]);
-  };
+  }, []);
 
   return (
     <div className="system-page">
@@ -88,10 +88,7 @@ export const SystemPage: React.FC = () => {
                 <span className="system-metric-value">{cpuUsage}%</span>
               </div>
               <div className="system-metric-bar">
-                <div
-                  className="system-metric-fill cpu"
-                  style={{ width: `${cpuUsage}%` }}
-                />
+                <CpuBar percentage={cpuUsage} />
               </div>
             </div>
 
@@ -101,10 +98,7 @@ export const SystemPage: React.FC = () => {
                 <span className="system-metric-value">{memoryUsage}%</span>
               </div>
               <div className="system-metric-bar">
-                <div
-                  className="system-metric-fill memory"
-                  style={{ width: `${memoryUsage}%` }}
-                />
+                <MemoryBar percentage={memoryUsage} />
               </div>
             </div>
           </div>
@@ -151,4 +145,17 @@ export const SystemPage: React.FC = () => {
       </div>
     </div>
   );
-};
+});
+
+SystemPage.displayName = 'SystemPage';
+
+// Composants memoized pour éviter re-renders inutiles
+const CpuBar: React.FC<{ percentage: number }> = React.memo(({ percentage }) => (
+  <div className="system-metric-fill cpu" style={{ width: `${percentage}%` }} />
+));
+CpuBar.displayName = 'CpuBar';
+
+const MemoryBar: React.FC<{ percentage: number }> = React.memo(({ percentage }) => (
+  <div className="system-metric-fill memory" style={{ width: `${percentage}%` }} />
+));
+MemoryBar.displayName = 'MemoryBar';

@@ -307,7 +307,7 @@ class UnifiedMemoryImpl {
    * Get memory statistics
    */
   async getStats(): Promise<MemoryStats> {
-    const backendStats = await this.bridge.getStats();
+    const backendStats = (await this.bridge.getStats()) ?? {};
     const cacheStats = this.cache.getStats();
 
     return {

@@ -29,6 +29,7 @@ export interface ChatMessageProps {
   content: string;
   timestamp: Date;
   streaming?: boolean;
+  provider?: 'gemini' | 'openai' | 'claude' | 'ollama' | 'local'; // ✨ v21 Phase 4: Provider badge
   metadata?: {
     cognitiveState?: {
       stress: number;
@@ -79,6 +80,15 @@ const formatTime = (date: Date): string => {
   });
 };
 
+// ✨ v21 Phase 4: Provider badge config
+const providerConfig = {
+  gemini: { emoji: '🤖', label: 'Gemini', color: colors.saphir.primary[500] },
+  openai: { emoji: '✨', label: 'GPT-4o', color: colors.rubis.primary[500] },
+  claude: { emoji: '🧠', label: 'Claude', color: colors.emeraude.primary[600] },
+  ollama: { emoji: '🦉', label: 'Ollama', color: colors.emeraude.primary[500] },
+  local: { emoji: '🏠', label: 'Local', color: colors.neutral[500] },
+};
+
 // ─────────────────────────────────────────────────────────────────
 // COMPONENT
 // ─────────────────────────────────────────────────────────────────
@@ -88,6 +98,7 @@ export const ChatMessage = ({
   content,
   timestamp,
   streaming = false,
+  provider, // ✨ v21 Phase 4
   metadata,
 }: ChatMessageProps): JSX.Element => {
   const { animationConfig } = useAnimation();
@@ -158,6 +169,21 @@ export const ChatMessage = ({
         <span style={{ fontWeight: fontWeights.semibold }}>{config.label}</span>
         <span>•</span>
         <span>{formatTime(timestamp)}</span>
+        {/* ✨ v21 Phase 4: Provider badge */}
+        {provider && role === 'assistant' && (
+          <Badge
+            variant="info"
+            style={{
+              backgroundColor: `${providerConfig[provider].color}20`,
+              color: providerConfig[provider].color,
+              borderColor: providerConfig[provider].color,
+              fontSize: fontSizes.xs,
+              padding: `${spacing[1]} ${spacing[2]}`,
+            }}
+          >
+            {providerConfig[provider].emoji} {providerConfig[provider].label}
+          </Badge>
+        )}
         {streaming && (
           <motion.span
             animate={{ opacity: [1, 0.3, 1] }}

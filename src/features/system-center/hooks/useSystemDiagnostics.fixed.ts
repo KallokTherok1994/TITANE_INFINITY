@@ -187,6 +187,7 @@ export function useSystemDiagnostics(): UseSystemDiagnosticsReturn {
           : 'Healthy';
 
       const diagnosticsResult: SystemDiagnostics = {
+        timestamp: Date.now(),
         overall_status: overallStatus,
         results,
         total_duration_ms: totalDuration,
@@ -317,6 +318,7 @@ export function useSystemDiagnostics(): UseSystemDiagnosticsReturn {
           : 'Healthy';
 
       const diagnosticsResult: SystemDiagnostics = {
+        timestamp: Date.now(),
         overall_status: overallStatus,
         results,
         total_duration_ms: totalDuration,

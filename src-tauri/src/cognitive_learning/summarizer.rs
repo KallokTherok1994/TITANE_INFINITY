@@ -31,31 +31,43 @@ impl Summarizer {
         let id = format!("summary_{}", uuid::Uuid::new_v4());
         let original_length = content.len();
 
-        // Extraction de points clés (premiers mots de chaque phrase)
-        let key_points: Vec<String> = content
-            .split('.')
-            .filter(|s| !s.trim().is_empty())
-            .take(5)
-            .map(|s| {
-                let words: Vec<&str> = s.split_whitespace().collect();
-                words.into_iter().take(10).collect::<Vec<_>>().join(" ")
-            })
-            .collect();
+        // Extraction de points clés (premiers mots de chaque phrase).
+        // Si le contenu ne contient pas de '.', on considère qu’il n’y a pas de phrases.
+        let key_points: Vec<String> = if content.contains('.') {
+            content
+                .split('.')
+                .filter(|s| !s.trim().is_empty())
+                .take(5)
+                .map(|s| {
+                    let words: Vec<&str> = s.split_whitespace().collect();
+                    words.into_iter().take(10).collect::<Vec<_>>().join(" ")
+                })
+                .collect()
+        } else {
+            Vec::new()
+        };
 
-        // Création du résumé (premiers 300 caractères + points clés)
+        // Création du résumé (premiers 300 caractères + points clés si disponibles)
         let summary_text = if content.len() > 300 {
-            format!(
-                "{}...\n\nPoints clés:\n- {}",
-                &content[..300],
-                key_points.join("\n- ")
-            )
+            if key_points.is_empty() {
+                format!("{}...", &content[..300])
+            } else {
+                format!(
+                    "{}...\n\nPoints clés:\n- {}",
+                    &content[..300],
+                    key_points.join("\n- ")
+                )
+            }
         } else {
             content.clone()
         };
 
         let summary_length = summary_text.len();
-        let compression_ratio =
-            (original_length as f32 - summary_length as f32) / original_length as f32;
+        let compression_ratio = if original_length == 0 {
+            0.0
+        } else {
+            (original_length as f32 - summary_length as f32) / original_length as f32
+        };
 
         Summary {
             id,

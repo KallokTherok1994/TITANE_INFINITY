@@ -50,6 +50,8 @@ export const useVisualStateStore = create<VisualStateStore>((set, get) => ({
     particleCount: 0,
     effectsActive: 0,
     memoryUsage: 0,
+    gpuLoad: 0,
+    throttleActive: false,
   },
 
   // Initialize engine

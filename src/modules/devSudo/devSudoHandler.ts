@@ -12,9 +12,10 @@
  */
 
 import { invoke } from '@tauri-apps/api/core';
-import { getAutoHealEngine } from '@/services/ai/system';
+import { autoHealEngine } from '@/services/ai/system';
 import { autoSaveConversationEngine } from '@/modules/talkToTitane/AutoSaveConversationEngine';
 import { talkToTitaneEngine } from '@/modules/talkToTitane/TalkToTitaneEngine';
+import type { LiveDebuggerMode } from '@/modules/liveDebugger/LiveDebuggerEngine';
 import * as ExtendedHandlers from './devSudoExtendedHandlers';
 import * as IDEHandlers from './devSudoIDEHandlers';
 import * as SingularityHandlers from './devSudoSingularityHandlers';
@@ -43,7 +44,13 @@ const dataCollector = {
       analysis: 0,
       memory: 0,
       error: 0,
-    },
+      'super-prompt': 0,
+      interaction: 0,
+      'auto-heal': 0,
+      introspection: 0,
+      patch: 0,
+      style: 0,
+    } as Record<string, number>,
   }),
   exportToFile: async () => {},
   clear: () => {},
@@ -60,29 +67,51 @@ const vocalDevConsole = {
   listen: () => Promise.resolve(''),
   getMode: () => 'default' as const,
   setMode: (_mode: string) => {},
-  getState: () => ({ isActive: false, isListening: false, lastCommand: '' }),
+  getState: () => ({
+    isActive: false,
+    isListening: false,
+    lastCommand: '',
+    consoleVisible: false,
+    consoleLogs: [] as Array<{ timestamp: number; message: string; level: string }>,
+    config: { mode: 'default' as const, verbose: false },
+  }),
   toggleVisibility: () => {},
   getHealthScore: () => 100,
   configure: (_config: Record<string, unknown>) => {},
+  getConfig: () => ({ mode: 'default' as const, verbose: false, ttsEnabled: false }),
 };
 
 // Stub pour liveDebugger
-export type LiveDebuggerMode = 'off' | 'minimal' | 'verbose' | 'full';
+// Note: Real LiveDebuggerMode is imported from LiveDebuggerEngine when needed
+type LiveDebuggerModeStub = 'off' | 'minimal' | 'verbose' | 'full';
 const liveDebugger = {
   isActive: () => false,
   start: () => {},
   stop: () => {},
-  setMode: (_mode: LiveDebuggerMode) => {},
-  getMode: (): LiveDebuggerMode => 'off',
+  setMode: (_mode: LiveDebuggerModeStub) => {},
+  getMode: (): LiveDebuggerModeStub => 'off',
   log: (_message: string, _level?: string) => {},
   getMetrics: () => ({ logs: 0, errors: 0, warnings: 0 }),
-  getRecentDiagnostics: () =>
+  getRecentDiagnostics: (_count?: number) =>
     [] as Array<{ timestamp: number; message: string; level: string }>,
-  getStats: () => ({ totalLogs: 0, errorsCount: 0, warningsCount: 0 }),
+  getStats: () => ({
+    totalLogs: 0,
+    errorsCount: 0,
+    warningsCount: 0,
+    sessionDuration: 0,
+    totalSegments: 0,
+    totalDiagnostics: 0,
+    totalPatches: 0,
+    averageConfidence: 0,
+  }),
   getHealthScore: () => 100,
   reset: () => {},
   configure: (_config: Record<string, unknown>) => {},
-  getConfig: () => ({ mode: 'off' as LiveDebuggerMode, verbose: false }),
+  getConfig: () => ({
+    mode: 'off' as LiveDebuggerModeStub,
+    verbose: false,
+    shadowModeThreshold: 0.8,
+  }),
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -5485,8 +5514,8 @@ function handleVocalFullscreen(): DevSudoResult {
  */
 function handleVocalSilence(): DevSudoResult {
   try {
-    const currentState = vocalDevConsole.getState();
-    const newTTSState = !currentState.config.ttsEnabled;
+    const currentConfig = vocalDevConsole.getConfig();
+    const newTTSState = !currentConfig.ttsEnabled;
 
     vocalDevConsole.configure({ ttsEnabled: newTTSState });
 
@@ -5827,9 +5856,8 @@ Le patch généré nécessite review manuelle.
       };
     }
 
-    // Appliquer le patch via AutoHealEngine (lazy loaded)
-    const autoHeal = await getAutoHealEngine();
-    await autoHeal.heal(
+    // Appliquer le patch via AutoHealEngine (direct instance)
+    await autoHealEngine.heal(
       'live-debugger',
       new Error(`Applying patch for ${patch.module}: ${patch.reason}`),
       'critical',
@@ -6148,7 +6176,7 @@ function handleLiveSetMode(modeName: string): DevSudoResult {
   }
 
   try {
-    liveDebugger.setMode(normalizedMode as LiveDebuggerMode);
+    liveDebugger.setMode(normalizedMode as unknown as LiveDebuggerModeStub);
 
     // Auto-config selon mode
     if (normalizedMode === 'auto-heal') {

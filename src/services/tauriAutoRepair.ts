@@ -511,14 +511,14 @@ export class TauriAutoRepairEngine {
       }
       console.log('═══════════════════════════════════════════════════════════');
 
-      return this.report;
+      return this.report as RepairReport;
     } catch (err) {
       console.error('[AutoRepair] Fatal error:', err);
       this.report.success = false;
       this.report.recommendations = [
         'Erreur critique lors de la réparation. Vérifier les logs.',
       ];
-      return this.report;
+      return this.report as RepairReport;
     }
   }
 

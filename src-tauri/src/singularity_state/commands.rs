@@ -164,6 +164,17 @@ pub async fn singularity_update_full_state(
     Ok(SingularityUpdateAck::new("singularity_update_full_state"))
 }
 
+/// Synchroniser la singularité (auto-sync depuis frontend)
+/// ✅ v∞.FIX - Nouvelle commande pour auto-audit engine
+#[tauri::command]
+pub async fn sync_singularity(
+    engine: State<'_, Arc<SingularityEngine>>,
+) -> Result<SingularityUpdateAck, String> {
+    // Récupérer l'état actuel et le renvoyer (pas de modification)
+    let _state = engine.get_full_state().await;
+    Ok(SingularityUpdateAck::new("sync_singularity"))
+}
+
 // ═══════════════════════════════════════════════════════════════════
 // PERSISTENCE COMMANDS
 // ═══════════════════════════════════════════════════════════════════

@@ -38,6 +38,13 @@ import { narrativeProtocol } from '@/engines/presence/_stubs';
 // Types importés depuis stubs
 import type { NarrativeArc, SymbolicElement } from '@/engines/presence/_stubs';
 
+// Local SymbolInfo type (used by hooks)
+export interface SymbolInfo {
+  name: string;
+  strength: number;
+  lastActivated: number;
+}
+
 /*
 import {
   narrativeProtocol,
@@ -317,7 +324,16 @@ export function useEmotionalPresence() {
  * );
  * ```
  */
-export function useSymbolicPresence() {
+export function useSymbolicPresence(): {
+  symbols: SymbolicElement[];
+  continuity: number;
+  stability: number;
+  mythDepth: number;
+  continuityScore: number;
+  isStable: boolean;
+  hasContinuity: boolean;
+  isDeep: boolean;
+} {
   const { state } = useUnifiedPresence();
   const { symbols, continuityScore } = useNarrativeArc();
 

@@ -263,11 +263,12 @@ export const AudioDiagnosticsPanel = ({
                 onChange={e => selectInputDevice(e.target.value)}
                 disabled={isLoading}
               >
-                {inputDevices.map(device => (
-                  <option key={device.id} value={device.id}>
-                    {device.name} {device.isDefault ? '(Par défaut)' : ''}
-                  </option>
-                ))}
+                {Array.isArray(inputDevices) &&
+                  inputDevices.map(device => (
+                    <option key={device.id} value={device.id}>
+                      {device.name} {device.isDefault ? '(Par défaut)' : ''}
+                    </option>
+                  ))}
               </select>
               <div className="adp-device-actions">
                 <button
@@ -301,11 +302,12 @@ export const AudioDiagnosticsPanel = ({
                 onChange={e => selectOutputDevice(e.target.value)}
                 disabled={isLoading}
               >
-                {outputDevices.map(device => (
-                  <option key={device.id} value={device.id}>
-                    {device.name} {device.isDefault ? '(Par défaut)' : ''}
-                  </option>
-                ))}
+                {Array.isArray(outputDevices) &&
+                  outputDevices.map(device => (
+                    <option key={device.id} value={device.id}>
+                      {device.name} {device.isDefault ? '(Par défaut)' : ''}
+                    </option>
+                  ))}
               </select>
               <div className="adp-device-actions">
                 <button

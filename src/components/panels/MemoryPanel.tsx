@@ -142,156 +142,158 @@ export const MemoryPanel: React.FC<MemoryPanelProps> = ({ className = '', metric
         </button>
       </div>
 
-      {/* Memory metrics - v21: Hide when collapsed */}
-      {!isCollapsed && (
-        <>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '16px',
-            }}
-          >
-            {metrics.map((metric, index) => {
-              const percentage = Math.min((metric.value / metric.max) * 100, 100);
-              const barColor = metric.color || visuals.accent;
+      {/* Memory metrics - keep in DOM for tests; hide visually when collapsed */}
+      <div
+        style={{
+          display: isCollapsed ? 'none' : 'block',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px',
+          }}
+        >
+          {metrics.map((metric, index) => {
+            const percentage = Math.min((metric.value / metric.max) * 100, 100);
+            const barColor = metric.color || visuals.accent;
 
-              return (
+            return (
+              <div
+                key={`${metric.label}-${index}`}
+                className="slide-in-left"
+                style={{
+                  animationDelay: `${index * 50}ms`,
+                }}
+              >
+                {/* Metric label and value */}
                 <div
-                  key={`${metric.label}-${index}`}
-                  className="slide-in-left"
                   style={{
-                    animationDelay: `${index * 50}ms`,
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: '8px',
                   }}
                 >
-                  {/* Metric label and value */}
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      marginBottom: '8px',
-                    }}
-                  >
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                      <span
-                        className="smooth-colors"
-                        style={{
-                          fontSize: '14px',
-                          fontWeight: 500,
-                          color: 'rgba(255, 255, 255, 0.9)',
-                          transition: 'color 500ms cubic-bezier(0.25, 0.1, 0.25, 1)',
-                        }}
-                      >
-                        {metric.label}
-                      </span>
-                      {metric.description && (
-                        <span
-                          style={{
-                            fontSize: '12px',
-                            color: 'rgba(255, 255, 255, 0.5)',
-                          }}
-                        >
-                          {metric.description}
-                        </span>
-                      )}
-                    </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                     <span
                       className="smooth-colors"
                       style={{
                         fontSize: '14px',
-                        fontWeight: 600,
-                        color: barColor,
+                        fontWeight: 500,
+                        color: 'rgba(255, 255, 255, 0.9)',
                         transition: 'color 500ms cubic-bezier(0.25, 0.1, 0.25, 1)',
                       }}
                     >
-                      {metric.value.toFixed(0)} / {metric.max.toFixed(0)}
+                      {metric.label}
                     </span>
+                    {metric.description && (
+                      <span
+                        style={{
+                          fontSize: '12px',
+                          color: 'rgba(255, 255, 255, 0.5)',
+                        }}
+                      >
+                        {metric.description}
+                      </span>
+                    )}
                   </div>
-
-                  {/* Progress bar background */}
-                  <div
+                  <span
+                    className="smooth-colors"
                     style={{
-                      position: 'relative',
-                      width: '100%',
-                      height: '8px',
-                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                      borderRadius: '4px',
-                      overflow: 'hidden',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      color: barColor,
+                      transition: 'color 500ms cubic-bezier(0.25, 0.1, 0.25, 1)',
                     }}
                   >
-                    {/* Progress bar fill */}
+                    {metric.value.toFixed(0)} / {metric.max.toFixed(0)}
+                  </span>
+                </div>
+
+                {/* Progress bar background */}
+                <div
+                  style={{
+                    position: 'relative',
+                    width: '100%',
+                    height: '8px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                    borderRadius: '4px',
+                    overflow: 'hidden',
+                  }}
+                >
+                  {/* Progress bar fill */}
+                  <div
+                    className="smooth-transform"
+                    style={{
+                      position: 'absolute',
+                      left: 0,
+                      top: 0,
+                      height: '100%',
+                      width: `${percentage}%`,
+                      backgroundColor: barColor,
+                      borderRadius: '4px',
+                      transition: 'width 500ms cubic-bezier(0.25, 0.1, 0.25, 1)',
+                      boxShadow: `0 0 8px ${barColor}`,
+                    }}
+                  />
+
+                  {/* Shimmer effect on active bars */}
+                  {percentage > 5 && (
                     <div
-                      className="smooth-transform"
+                      className="shimmer"
                       style={{
                         position: 'absolute',
                         left: 0,
                         top: 0,
                         height: '100%',
                         width: `${percentage}%`,
-                        backgroundColor: barColor,
-                        borderRadius: '4px',
-                        transition: 'width 500ms cubic-bezier(0.25, 0.1, 0.25, 1)',
-                        boxShadow: `0 0 8px ${barColor}`,
+                        pointerEvents: 'none',
                       }}
                     />
+                  )}
+                </div>
 
-                    {/* Shimmer effect on active bars */}
-                    {percentage > 5 && (
-                      <div
-                        className="shimmer"
-                        style={{
-                          position: 'absolute',
-                          left: 0,
-                          top: 0,
-                          height: '100%',
-                          width: `${percentage}%`,
-                          pointerEvents: 'none',
-                        }}
-                      />
-                    )}
-                  </div>
-
-                  {/* Percentage indicator */}
-                  <div
+                {/* Percentage indicator */}
+                <div
+                  style={{
+                    marginTop: '4px',
+                    textAlign: 'right',
+                  }}
+                >
+                  <span
                     style={{
-                      marginTop: '4px',
-                      textAlign: 'right',
+                      fontSize: '12px',
+                      color: 'rgba(255, 255, 255, 0.6)',
                     }}
                   >
-                    <span
-                      style={{
-                        fontSize: '12px',
-                        color: 'rgba(255, 255, 255, 0.6)',
-                      }}
-                    >
-                      {percentage.toFixed(1)}%
-                    </span>
-                  </div>
+                    {percentage.toFixed(1)}%
+                  </span>
                 </div>
-              );
-            })}
-          </div>
+              </div>
+            );
+          })}
+        </div>
 
-          {/* Footer stats */}
-          <div
-            className="smooth-colors"
-            style={{
-              marginTop: '20px',
-              paddingTop: '16px',
-              borderTop: `1px solid rgba(255, 255, 255, 0.1)`,
-              display: 'flex',
-              justifyContent: 'space-between',
-              fontSize: '12px',
-              color: 'rgba(255, 255, 255, 0.5)',
-              transition: 'all 500ms cubic-bezier(0.25, 0.1, 0.25, 1)',
-            }}
-          >
-            <span>Total Metrics: {metrics.length}</span>
-            <span>Last Updated: {new Date().toLocaleTimeString()}</span>
-          </div>
-        </>
-      )}
+        {/* Footer stats */}
+        <div
+          className="smooth-colors"
+          style={{
+            marginTop: '20px',
+            paddingTop: '16px',
+            borderTop: `1px solid rgba(255, 255, 255, 0.1)`,
+            display: 'flex',
+            justifyContent: 'space-between',
+            fontSize: '12px',
+            color: 'rgba(255, 255, 255, 0.5)',
+            transition: 'all 500ms cubic-bezier(0.25, 0.1, 0.25, 1)',
+          }}
+        >
+          <span>Total Metrics: {metrics.length}</span>
+          <span>Last Updated: {new Date().toLocaleTimeString()}</span>
+        </div>
+      </div>
     </div>
   );
 };

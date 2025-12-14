@@ -769,6 +769,7 @@ function OrchestrationCenterPageContent(): JSX.Element {
     { id: 'cognitive', label: 'État Cognitif', icon: '💭' },
   ];
 
+  const matrixLoading = false; // TODO: Add actual matrix loading state
   if ((loading && !unifiedState) || matrixLoading) {
     return (
       <div className="orchestration-center loading">

@@ -56,7 +56,7 @@ export interface TrainingStoreState {
 
 export interface TrainingStoreActions {
   // === Actions de session ===
-  startSession: (label: UserStateLabel) => boolean;
+  startSession: (label: UserStateLabel) => Promise<boolean>;
   stopSession: () => TrainingSession | null;
 
   // === Actions de profil ===
@@ -132,7 +132,7 @@ export const useTrainingStore = create<TrainingStore>()(
           // ACTIONS DE SESSION
           // ================================================================
 
-          startSession: (label: UserStateLabel): boolean => {
+          startSession: async (label: UserStateLabel): Promise<boolean> => {
             const currentState = get();
 
             if (currentState.isSessionActive) {
@@ -143,8 +143,7 @@ export const useTrainingStore = create<TrainingStore>()(
             set({ isProcessing: true, lastError: null });
 
             try {
-              const session = getEngine().startTrainingCapture(
-                label,
+              const session = await getEngine().startTrainingCapture(
                 TRAINING_CONFIG.defaultCaptureDuration
               );
 
@@ -190,7 +189,7 @@ export const useTrainingStore = create<TrainingStore>()(
               currentSessionLabel: null,
               sessionStartTime: null,
               sessionProgress: null,
-              baselineProfile: profile,
+              baselineProfile: profile ?? undefined,
               isProcessing: false,
             });
 
@@ -204,7 +203,7 @@ export const useTrainingStore = create<TrainingStore>()(
           loadProfile: (): void => {
             try {
               const profile = getEngine().getProfile();
-              set({ baselineProfile: profile, lastError: null });
+              set({ baselineProfile: profile ?? undefined, lastError: null });
             } catch (error) {
               set({ lastError: (error as Error).message });
             }
@@ -236,7 +235,7 @@ export const useTrainingStore = create<TrainingStore>()(
               }
 
               set({
-                baselineProfile: profile,
+                baselineProfile: profile ?? undefined,
                 lastError: null,
               });
 
@@ -279,7 +278,7 @@ export const useTrainingStore = create<TrainingStore>()(
                     percentage: session.progress,
                   }
                 : null,
-              baselineProfile: profile,
+              baselineProfile: profile ?? undefined,
             });
           },
 

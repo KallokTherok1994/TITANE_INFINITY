@@ -8,16 +8,11 @@
 
 import React, { useState } from 'react';
 import { useDebuggerLiveOS } from '../hooks/useDebuggerLiveOS';
-import type { DebuggerMode, RiskLevel } from '../types/debuggerLiveOS.types';
-
-interface SnapshotDiff {
-  changes: Array<{
-    type: 'added' | 'modified' | 'removed';
-    path: string;
-    oldValue?: unknown;
-    newValue?: unknown;
-  }>;
-}
+import type {
+  DebuggerMode,
+  RiskLevel,
+  SnapshotDiff,
+} from '../types/debuggerLiveOS.types';
 
 export function DebuggerLiveOSTab() {
   const debugPanel = useDebuggerLiveOS();
@@ -488,15 +483,17 @@ export function DebuggerLiveOSTab() {
                       {change.type.toUpperCase()}
                     </span>
                     <span className="dbg-diff-change-path">{change.path}</span>
-                    <span className="dbg-diff-change-impact">{change.impact}</span>
+                    <span className="dbg-diff-change-impact">
+                      {(change as { impact?: string }).impact || 'medium'}
+                    </span>
                   </div>
                   {change.old_value !== undefined && (
-                    <div className="dbg-diff-old-value">
+                    <div className="dbg-diff-change-value">
                       <strong>Ancien:</strong> {JSON.stringify(change.old_value)}
                     </div>
                   )}
                   {change.new_value !== undefined && (
-                    <div className="dbg-diff-new-value">
+                    <div className="dbg-diff-change-value">
                       <strong>Nouveau:</strong> {JSON.stringify(change.new_value)}
                     </div>
                   )}

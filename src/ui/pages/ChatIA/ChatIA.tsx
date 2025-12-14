@@ -163,7 +163,7 @@ export const ChatIA: React.FC = () => {
       console.log(`[ChatIA] Envoi message avec provider: ${provider}`);
 
       const response = await invoke<ChatResponse>('chat_send_message', {
-        ...request,
+        request,
       });
 
       if (response.success) {

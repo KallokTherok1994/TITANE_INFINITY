@@ -17,6 +17,13 @@
 /** Identifiants uniques des modes (clés stables, ne jamais renommer) */
 export type ChatModeId =
   | 'default'
+  | 'reflection'
+  | 'creation'
+  | 'strategy'
+  | 'emergency'
+  | 'standard'
+  | 'quick'
+  | 'omega'
   | 'brainstorming'
   | 'synthesis'
   | 'planning'
@@ -25,7 +32,6 @@ export type ChatModeId =
   | 'coach'
   | 'dev'
   | 'admin'
-  | 'strategy'
   | 'audit';
 
 /** Catégories fonctionnelles pour regroupement UI */
@@ -258,6 +264,58 @@ export const CHAT_MODES_CONFIG: Record<ChatModeId, ChatModeConfigExtended> = {
     enabled: true,
     sortOrder: 0,
     tags: ['general', 'default', 'conversation'],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // MODE: REFLECTION (Réflexion Profonde)
+  // ═══════════════════════════════════════════════════════════════════════════
+  reflection: {
+    id: 'reflection',
+    label: 'Réflexion Profonde',
+    description: 'Mode introspection - analyse profonde et questionnement',
+    category: 'personal',
+    icon: '🤔',
+    themeColor: '#8b7aa8',
+
+    defaultProvider: 'auto',
+    systemPrompt: `Tu es TITANE∞ en mode RÉFLEXION PROFONDE.
+
+Ton rôle:
+• Faciliter la pensée profonde et l'analyse réflexive
+• Poser des questions qui challengent les présupposés
+• Aider à explorer les différentes facettes d'une question
+• Encourager la métacognition (penser sur sa propre pensée)
+• Identifier les angles morts et les biais potentiels
+
+Ton style:
+• Philosophique, nuancé, exploratoire
+• Questions socratiques, hypothèses alternatives
+• Questions du type "Pourquoi est-ce important ?", "Quelles sont tes croyances sous-jacentes ?", "Et si c'était faux ?"
+
+Kevin cherche à approfondir sa compréhension. Aide-le à voir au-delà de l'évidence.`,
+    temperature: 0.8,
+    maxTokens: 2500,
+
+    responseStyle: 'detailed',
+    tone: 'analytical',
+    suggestedActions: [
+      'Quelles sont tes hypothèses implicites ?',
+      'Comment vérifier cette croyance ?',
+      'Quel serait le contre-argument le plus fort ?',
+    ],
+
+    permissionLevel: 1,
+    toolsAllowed: { ...TOOLS_MINIMAL, contextAnalysis: true },
+    memoryScope: 'session',
+
+    profileId: 'philosophe_sage',
+    enginesEnabled: ['cognitive', 'memory', 'reflection'],
+    capabilities: ['deep-analysis', 'metacognition', 'critical-thinking'],
+
+    version: '1.0.0',
+    enabled: true,
+    sortOrder: 0.5,
+    tags: ['personal', 'reflection', 'philosophy', 'deep-thinking'],
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -787,6 +845,158 @@ Kevin veut auditer. Sois son œil critique bienveillant.`,
     enabled: true,
     sortOrder: 10,
     tags: ['technical', 'audit', 'quality', 'security'],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // MODE: CREATION (Alias for brainstorming)
+  // ═══════════════════════════════════════════════════════════════════════════
+  creation: {
+    id: 'creation',
+    label: 'Création',
+    description: 'Mode création - idéation et innovation',
+    category: 'creative',
+    icon: '✨',
+    themeColor: '#a78bfa',
+    defaultProvider: 'auto',
+    systemPrompt: 'Tu es TITANE∞ en mode CRÉATION. Aide Kevin à innover et créer.',
+    temperature: 0.9,
+    maxTokens: 3000,
+    responseStyle: 'detailed',
+    tone: 'motivational',
+    suggestedActions: ['Génère des idées', 'Explore des concepts'],
+    permissionLevel: 2,
+    toolsAllowed: TOOLS_STANDARD,
+    memoryScope: 'session',
+    profileId: 'createur',
+    enginesEnabled: ['cognitive', 'creative'],
+    capabilities: ['ideation', 'innovation'],
+    version: '1.0.0',
+    enabled: true,
+    sortOrder: 3.5,
+    tags: ['creative', 'innovation'],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // MODE: EMERGENCY (Urgences)
+  // ═══════════════════════════════════════════════════════════════════════════
+  emergency: {
+    id: 'emergency',
+    label: 'Urgence',
+    description: 'Mode urgence - réponses rapides et directes',
+    category: 'general',
+    icon: '🚨',
+    themeColor: '#ef4444',
+    defaultProvider: 'auto',
+    systemPrompt: 'Tu es TITANE∞ en mode URGENCE. Réponds rapidement et efficacement.',
+    temperature: 0.4,
+    maxTokens: 1500,
+    responseStyle: 'concise',
+    tone: 'professional',
+    suggestedActions: ['Résous ce problème urgent', 'Diagnostic rapide'],
+    permissionLevel: 2,
+    toolsAllowed: TOOLS_STANDARD,
+    memoryScope: 'session',
+    profileId: 'urgence',
+    enginesEnabled: ['cognitive', 'analysis'],
+    capabilities: ['quick-response', 'problem-solving'],
+    version: '1.0.0',
+    enabled: true,
+    sortOrder: 12,
+    tags: ['urgent', 'fast'],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // MODE: STANDARD (Alias for default)
+  // ═══════════════════════════════════════════════════════════════════════════
+  standard: {
+    id: 'standard',
+    label: 'Standard',
+    description: 'Mode standard - conversation équilibrée',
+    category: 'general',
+    icon: '💬',
+    themeColor: '#3b82f6',
+    defaultProvider: 'auto',
+    systemPrompt: 'Tu es TITANE∞ en mode STANDARD. Conversation équilibrée et naturelle.',
+    temperature: 0.7,
+    maxTokens: 3000,
+    responseStyle: 'moderate',
+    tone: 'neutral',
+    suggestedActions: ['Discutons', 'Explique-moi'],
+    permissionLevel: 1,
+    toolsAllowed: TOOLS_STANDARD,
+    memoryScope: 'session',
+    profileId: 'assistant',
+    enginesEnabled: ['cognitive', 'memory'],
+    capabilities: ['conversation', 'assistance'],
+    version: '1.0.0',
+    enabled: true,
+    sortOrder: 0.75,
+    tags: ['general', 'conversation'],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // MODE: QUICK (Réponses rapides)
+  // ═══════════════════════════════════════════════════════════════════════════
+  quick: {
+    id: 'quick',
+    label: 'Rapide',
+    description: 'Mode rapide - réponses courtes et concises',
+    category: 'general',
+    icon: '⚡',
+    themeColor: '#f59e0b',
+    defaultProvider: 'auto',
+    systemPrompt: 'Tu es TITANE∞ en mode RAPIDE. Sois concis et précis.',
+    temperature: 0.5,
+    maxTokens: 1000,
+    responseStyle: 'concise',
+    tone: 'professional',
+    suggestedActions: ['Réponds brièvement', 'Résumé rapide'],
+    permissionLevel: 1,
+    toolsAllowed: TOOLS_MINIMAL,
+    memoryScope: 'session',
+    profileId: 'assistant',
+    enginesEnabled: ['cognitive'],
+    capabilities: ['quick-response'],
+    version: '1.0.0',
+    enabled: true,
+    sortOrder: 2.5,
+    tags: ['fast', 'concise'],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // MODE: OMEGA (Mode ultime)
+  // ═══════════════════════════════════════════════════════════════════════════
+  omega: {
+    id: 'omega',
+    label: 'Oméga',
+    description: 'Mode Oméga - capacités maximales TITANE∞',
+    category: 'technical',
+    icon: 'Ω',
+    themeColor: '#8b5cf6',
+    defaultProvider: 'auto',
+    systemPrompt: 'Tu es TITANE∞ en mode OMÉGA. Utilise toutes tes capacités avancées.',
+    temperature: 0.8,
+    maxTokens: 8000,
+    responseStyle: 'exhaustive',
+    tone: 'professional',
+    suggestedActions: ['Analyse complète', 'Traitement avancé'],
+    permissionLevel: 5,
+    toolsAllowed: TOOLS_ADMIN,
+    memoryScope: 'session',
+    profileId: 'omega',
+    enginesEnabled: [
+      'cognitive',
+      'memory',
+      'analysis',
+      'creative',
+      'security',
+      'quantum',
+    ],
+    capabilities: ['full-analysis', 'advanced-processing', 'multi-modal'],
+    version: '1.0.0',
+    enabled: true,
+    sortOrder: 15,
+    tags: ['advanced', 'premium', 'full-power'],
   },
 };
 

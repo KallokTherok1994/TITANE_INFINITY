@@ -19,7 +19,7 @@ import {
   type SecureAIResponse,
   type ChatResponse,
 } from '@/lib/security';
-import { getAutoHealEngine } from '../system';
+import { autoHealEngine } from '../system';
 import { memoryIntegration } from '../memoryIntegration'; // ✨ v21 - Memory integration
 import type { MemoryContext } from '../memoryIntegration'; // ✨ v21
 import { createLogger } from '@/utils/logger'; // ✨ v21.1 - Conditional logging
@@ -162,7 +162,7 @@ async function buildPromptWithMemory(
 
     if (memoryContext.activeProjects?.length > 0) {
       const projectNames = memoryContext.activeProjects
-        .map(p => p.name || p.title)
+        .map(p => (p as any).name || (p as any).title)
         .filter(Boolean)
         .join(', ');
       if (projectNames) {
@@ -173,7 +173,7 @@ async function buildPromptWithMemory(
     if (memoryContext.recentDecisions?.length > 0) {
       const decisions = memoryContext.recentDecisions
         .slice(0, 3)
-        .map(d => d.summary || d.title)
+        .map(d => (d as any).summary || (d as any).title)
         .filter(Boolean)
         .join('; ');
       if (decisions) {
@@ -239,17 +239,13 @@ function handleOllamaError(error: unknown, context: string, metadata?: any): voi
 
   const errorObj = error instanceof Error ? error : new Error(String(error));
 
-  // Auto-heal trigger (lazy loaded)
-  getAutoHealEngine()
-    .then(autoHeal => {
-      autoHeal.heal('ollama', errorObj, 'provider', {
-        context,
-        errorCount,
-        metadata,
-        timestamp: Date.now(),
-      });
-    })
-    .catch(error => logger.error('Failed to record error', { error }));
+  // Auto-heal trigger (direct instance)
+  autoHealEngine.heal('ollama', errorObj, 'provider', {
+    context,
+    errorCount,
+    metadata,
+    timestamp: Date.now(),
+  });
 
   logger.error('Error in Ollama provider', {
     context,

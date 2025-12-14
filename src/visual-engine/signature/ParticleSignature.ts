@@ -223,7 +223,7 @@ export class ParticleSignature {
         config.maxParticles = 800;
         break;
 
-      case 'responding':
+      case CognitiveState.SPEAKING:
         dist.pattern = 'radial';
         dist.emissionRate = 12;
         dist.burstMode = true;

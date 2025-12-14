@@ -198,11 +198,61 @@ export async function getPersonaMultipliers() {
 
 // --- CHAT ---
 export async function sendChatMessage(messages: ChatMessage[], config: ChatConfig) {
-  return invokeTauriCommand<string>(
+  const extractChatContent = (response: unknown): string => {
+    if (typeof response === 'string') return response;
+    if (response && typeof response === 'object') {
+      const r = response as any;
+      if (typeof r.content === 'string') return r.content;
+      if (
+        r.message &&
+        typeof r.message === 'object' &&
+        typeof r.message.content === 'string'
+      ) {
+        return r.message.content;
+      }
+    }
+    return '';
+  };
+
+  const lastUserMessage = [...messages]
+    .reverse()
+    .find(m => (m as any)?.role === 'user')?.content;
+
+  const userMessage = (
+    lastUserMessage ??
+    messages[messages.length - 1]?.content ??
+    ''
+  ).trim();
+
+  const history = messages
+    .slice(-20)
+    .map(m => `${(m as any)?.role ?? 'unknown'}: ${m.content}`)
+    .join('\n');
+
+  const request = {
+    message: userMessage,
+    conversation_id: `chat-${Date.now()}`,
+    provider: 'auto',
+    model: (config as any)?.model,
+    streaming: false,
+    system_prompt: history ? `Contexte conversation (résumé):\n${history}` : undefined,
+  };
+
+  const raw = await invokeTauriCommand<unknown>(
     'chat_send_message',
-    { messages, config },
+    { request },
     { timeout: 30000, retries: 2, retryDelay: 1000 }
   );
+
+  if (!raw.success) {
+    return raw as CoreResponse<string>;
+  }
+
+  return {
+    success: true,
+    data: extractChatContent(raw.data),
+    timestamp: Date.now(),
+  };
 }
 
 // --- VOICE ---

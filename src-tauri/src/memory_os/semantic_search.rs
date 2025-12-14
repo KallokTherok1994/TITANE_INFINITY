@@ -6,6 +6,7 @@ use crate::memory_os::{
     ClusterResult, EmbeddingEngine, HnswVectorIndex, KMeansClustering, KMeansConfig, MemoryOSError,
     MemoryOSResult, VectorIndex, VectorIndexConfig, VectorSearchResult,
 };
+use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -106,20 +107,39 @@ impl SemanticSearchEngine {
         let metadata_map = self.metadata_map.read().await;
 
         let mut results = Vec::new();
+        let mut candidates = Vec::new();
 
         for result in search_results {
-            if result.score >= self.config.similarity_threshold {
-                if let (Some(content), Some(metadata)) =
-                    (content_map.get(&result.id), metadata_map.get(&result.id))
-                {
-                    results.push(VectorSearchResult {
-                        id: result.id,
-                        score: result.score,
-                        content: content.clone(),
-                        metadata: metadata.clone(),
-                    });
-                }
+            let (Some(content), Some(metadata)) =
+                (content_map.get(&result.id), metadata_map.get(&result.id))
+            else {
+                continue;
+            };
+
+            let item = VectorSearchResult {
+                id: result.id,
+                score: result.score,
+                content: content.clone(),
+                metadata: metadata.clone(),
+            };
+
+            if item.score >= self.config.similarity_threshold {
+                results.push(item.clone());
             }
+
+            candidates.push(item);
+        }
+
+        if results.is_empty() && !candidates.is_empty() {
+            candidates.sort_by(|a, b| {
+                b.score
+                    .partial_cmp(&a.score)
+                    .unwrap_or(Ordering::Equal)
+                    .then_with(|| a.id.cmp(&b.id))
+            });
+
+            candidates.truncate(k.min(candidates.len()));
+            return Ok(candidates);
         }
 
         Ok(results)

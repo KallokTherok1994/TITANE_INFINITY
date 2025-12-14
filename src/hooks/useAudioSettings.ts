@@ -363,20 +363,24 @@ export function useAudioSettings(): UseAudioSettingsReturn {
       ]);
 
       if (mountedRef.current) {
-        setInputDevices(inputs);
-        setOutputDevices(outputs);
+        // Garantir que ce sont des tableaux avant de set
+        setInputDevices(Array.isArray(inputs) ? inputs : []);
+        setOutputDevices(Array.isArray(outputs) ? outputs : []);
 
         // Validate selected devices still exist
+        const validInputs = Array.isArray(inputs) ? inputs : [];
+        const validOutputs = Array.isArray(outputs) ? outputs : [];
+
         if (
           selectedInputDevice !== 'default' &&
-          !inputs.find(d => d.id === selectedInputDevice)
+          !validInputs.find(d => d.id === selectedInputDevice)
         ) {
           setSelectedInputDevice('default');
           localStorage.removeItem(STORAGE_KEYS.selectedInput);
         }
         if (
           selectedOutputDevice !== 'default' &&
-          !outputs.find(d => d.id === selectedOutputDevice)
+          !validOutputs.find(d => d.id === selectedOutputDevice)
         ) {
           setSelectedOutputDevice('default');
           localStorage.removeItem(STORAGE_KEYS.selectedOutput);
@@ -385,6 +389,11 @@ export function useAudioSettings(): UseAudioSettingsReturn {
     } catch (error) {
       console.error('[useAudioSettings] Failed to refresh devices:', error);
       setLastError('Échec de la détection des périphériques audio');
+      // En cas d'erreur, garantir qu'on a au moins des tableaux vides
+      if (mountedRef.current) {
+        setInputDevices([]);
+        setOutputDevices([]);
+      }
     }
   }, [selectedInputDevice, selectedOutputDevice]);
 

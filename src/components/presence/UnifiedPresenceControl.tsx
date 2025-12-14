@@ -23,11 +23,11 @@ import {
 } from '@/hooks/useUnifiedPresence';
 
 // REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
-import type { TonicProfile, NarrativeArc } from '@/engines/presence/_stubs';
-interface SymbolInfo {
-  symbol: string;
-  meaning: string;
-}
+import type {
+  TonicProfile,
+  NarrativeArc,
+  SymbolicElement as _SymbolicElement,
+} from '@/engines/presence/_stubs';
 
 import './UnifiedPresenceControl.css';
 
@@ -48,7 +48,8 @@ export function UnifiedPresenceControl() {
   const symbolic = useSymbolicPresence();
   const userContext = useUserContextPresence();
   const { profile, changeProfile } = useTonicProfile();
-  const { arc, symbols } = useNarrativeArc() as { arc: unknown; symbols: SymbolInfo[] };
+  const narrativeData = useNarrativeArc();
+  const arc: unknown = narrativeData.arc;
 
   return (
     <>
@@ -111,7 +112,7 @@ export function UnifiedPresenceControl() {
               />
             )}
             {activeTab === 'symbolic' && (
-              <SymbolicLayerPanel symbolic={symbolic} symbols={symbols} arc={arc} />
+              <SymbolicLayerPanel symbolic={symbolic} arc={arc} />
             )}
           </div>
 
@@ -474,13 +475,11 @@ function EmotionalLayerPanel({
 
 function SymbolicLayerPanel({
   symbolic,
-  symbols,
   arc,
 }: {
   symbolic: ReturnType<typeof useSymbolicPresence>;
-  symbols: SymbolInfo[];
   arc: unknown;
-}) {
+}): JSX.Element {
   return (
     <div className="presence-layer-panel">
       <h4>Couche Symbolique</h4>
@@ -515,32 +514,13 @@ function SymbolicLayerPanel({
             style={{ width: `${symbolic.mythDepth}%` }}
           />
         </div>
-        <span className="presence-metric-value">{symbolic.mythDepth}%</span>
-      </div>
-
-      {/* Symboles actifs */}
-      <div className="presence-symbols">
-        <h5>Symboles Actifs</h5>
-        <div className="presence-symbols-grid">
-          {symbols.length === 0 ? (
-            <p className="presence-empty">Aucun symbole actif</p>
-          ) : (
-            symbols.map((symbol: SymbolInfo) => (
-              <div
-                key={String(symbol.symbol)}
-                className="presence-symbol-card"
-                title={String(symbol.meaning || '')}
-              >
-                <span className="presence-symbol-icon">{String(symbol.symbol)}</span>
-                <span className="presence-symbol-meaning">{String(symbol.meaning)}</span>
-              </div>
-            ))
-          )}
-        </div>
+        <span className="presence-metric-value">
+          {(Number(symbolic.mythDepth) || 0) + '%'}
+        </span>
       </div>
 
       {/* Arc narratif */}
-      {arc && typeof arc === 'object' && (
+      {arc && typeof arc === 'object' ? (
         <div className="presence-narrative-arc">
           <h5>Arc Narratif</h5>
           <div className="presence-arc-info">
@@ -555,7 +535,7 @@ function SymbolicLayerPanel({
             </span>
           </div>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

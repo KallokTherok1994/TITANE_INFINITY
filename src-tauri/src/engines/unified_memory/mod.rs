@@ -23,7 +23,7 @@ use vector_store::VectorStore;
 /// Unified Memory Engine v2 — Central memory orchestrator
 ///
 /// Architecture:
-/// ```
+/// ```text
 /// ┌─────────────────────────────────────────────┐
 /// │  STM (Short-Term)                          │
 /// │  • FIFO buffer (100 messages)              │
@@ -201,7 +201,13 @@ impl UnifiedMemoryEngine {
 
     /// Summarize current MTM state
     pub async fn summarize(&mut self) -> Result<String, String> {
-        let entries = self.mtm.list();
+        let mut entries = self.mtm.list();
+
+        // Fallback: if MTM is still empty (e.g. early session), summarize STM instead.
+        if entries.is_empty() {
+            entries = self.stm.recent(50);
+        }
+
         let result = summarize(&entries, SummaryStrategy::KeyMessages).await?;
 
         self.mtm.update_summary(&entries);

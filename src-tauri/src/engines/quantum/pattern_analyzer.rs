@@ -246,14 +246,41 @@ impl PatternAnalyzer {
         let mut predictions: Vec<(PredictedAction, f64)> = Vec::new();
 
         // Prédictions basées sur les transitions
-        if let Some(ref last) = self.last_action {
-            if let Some(transitions) = self.action_transitions.get(last) {
-                let total: usize = transitions.values().sum();
+        // Si la dernière action n'a pas (encore) de transitions sortantes, utiliser
+        // la dernière action antérieure qui en a pour éviter de retourner un vecteur vide.
+        let transition_source: Option<&str> = self.last_action.as_deref().or_else(|| {
+            self.current_session.events.last().map(|s| s.as_str())
+        }).and_then(|last| {
+            if self.action_transitions.contains_key(last) {
+                Some(last)
+            } else {
+                None
+            }
+        }).or_else(|| {
+            // Fallback: remonter l'historique (en ignorant la dernière action)
+            self.current_session
+                .events
+                .iter()
+                .rev()
+                .skip(1)
+                .find_map(|event_type| {
+                    if self.action_transitions.contains_key(event_type) {
+                        Some(event_type.as_str())
+                    } else {
+                        None
+                    }
+                })
+        });
 
-                for (next_action, &freq) in transitions {
-                    let prob = freq as f64 / total as f64;
-                    let action = self.event_type_to_action(next_action);
-                    predictions.push((action, prob * self.confidence));
+        if let Some(source) = transition_source {
+            if let Some(transitions) = self.action_transitions.get(source) {
+                let total: usize = transitions.values().sum();
+                if total > 0 {
+                    for (next_action, &freq) in transitions {
+                        let prob = freq as f64 / total as f64;
+                        let action = self.event_type_to_action(next_action);
+                        predictions.push((action, prob * self.confidence));
+                    }
                 }
             }
         }
@@ -266,6 +293,19 @@ impl PatternAnalyzer {
                     let prob = (pattern.frequency as f64 / 10.0).min(1.0) * pattern.confidence;
                     predictions.push((action, prob));
                 }
+            }
+        }
+
+        // Fallback final: si aucune transition/pattern n'est disponible, proposer
+        // les actions les plus fréquentes observées.
+        if predictions.is_empty() {
+            let mut freqs: Vec<(&String, &usize)> = self.action_frequency.iter().collect();
+            freqs.sort_by(|a, b| b.1.cmp(a.1));
+            for (event_type, freq) in freqs.into_iter().take(count) {
+                if *freq == 0 {
+                    continue;
+                }
+                predictions.push((self.event_type_to_action(event_type), 0.1 * self.confidence));
             }
         }
 

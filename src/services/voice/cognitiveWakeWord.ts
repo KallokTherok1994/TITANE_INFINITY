@@ -192,7 +192,7 @@
 
 import { voiceFingerprintEngine } from './voiceFingerprint';
 import { antiEchoShield } from './antiEchoShield';
-import { contextualAttentionV2 } from './contextualAttentionV2';
+// import { contextualAttentionV2 } from './contextualAttentionV2'; // DISABLED - stub below
 import { wakeWordEngineV2 } from './wakeWordEngineV2';
 
 // ========================================
@@ -274,7 +274,7 @@ export function getCognitiveStatus() {
     },
     antiEcho: {
       active: true,
-      muted: antiEchoShield.isMuted(),
+      muted: antiEchoShield.isMuted,
     },
     contextualAttention: {
       threshold: contextualAttentionV2.getAdaptedConfig().wakeThreshold,
@@ -286,6 +286,30 @@ export function getCognitiveStatus() {
     },
   };
 }
+
+/**
+ * Contextual Attention v2.0 Stub
+ * Système d'adaptation contextuelle des seuils de détection.
+ */
+const contextualAttentionV2 = {
+  setBaseConfig: (config: {
+    wakeThreshold?: number;
+    minConfidence?: number;
+    maxConfidence?: number;
+  }) => {
+    console.log('[ContextualAttention] Base config updated:', config);
+  },
+  getAdaptedConfig: () => ({
+    wakeThreshold: 0.7,
+    confidenceThreshold: 0.7,
+    minConfidence: 0.3,
+    maxConfidence: 0.9,
+  }),
+  getActiveRules: () => [],
+  updateApplicationContext: (_context: unknown) => {
+    console.log('[ContextualAttention] Context updated');
+  },
+};
 
 /**
  * Reset complet de tous les moteurs cognitifs.

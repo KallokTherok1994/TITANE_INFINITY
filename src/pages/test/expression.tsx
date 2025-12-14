@@ -5,7 +5,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ExpressionMonitor } from '@/components/visualization/ExpressionMonitor';
 import {
   useUnifiedExpression,

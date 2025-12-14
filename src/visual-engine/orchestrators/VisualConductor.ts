@@ -20,7 +20,7 @@ import VisualSemanticGrammar, {
   MemoryState,
   VisualPhenomenon,
   PhenomenonType as _PhenomenonType,
-} from './VisualSemanticGrammar';
+} from '../semantic/VisualSemanticGrammar';
 import type { TitaneVisualEngineV21 } from '../TitaneVisualEngineV21';
 import {
   VISUAL_EVENTS as _VISUAL_EVENTS,
@@ -323,8 +323,9 @@ export class VisualConductor extends EventEmitter {
       return;
     }
 
-    // Fallback to legacy phenomenon handling
-    switch (type) {
+    // Fallback to legacy phenomenon handling (using string literals for backward compatibility)
+    const typeStr = type as string;
+    switch (typeStr) {
       case 'pulse':
       case 'breathe':
       case 'glow_pulse':
@@ -420,15 +421,19 @@ export class VisualConductor extends EventEmitter {
 
         case 'orbital_shift':
           this.visualEngine.emit('orbital_shift', {
-            phaseMode: effect.pattern || 'fibonacci',
+            phaseMode: (effect.parameters?.pattern as string) || 'fibonacci',
             duration,
           });
           break;
 
         case 'color_shift':
-          if (effect.colors && effect.colors.length > 0) {
+          if (
+            effect.parameters?.colors &&
+            Array.isArray(effect.parameters.colors) &&
+            effect.parameters.colors.length > 0
+          ) {
             this.visualEngine.emit('color_shift', {
-              colors: effect.colors,
+              colors: effect.parameters.colors as string[],
               duration,
             });
           }

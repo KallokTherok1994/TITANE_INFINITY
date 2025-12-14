@@ -45,16 +45,6 @@ echo "🧹 Cleaning dev cache..."
 rm -rf runtime/dev/logs/
 mkdir -p runtime/dev/logs/
 
-# Start Vite dev server in background
-echo ""
-echo "⚛️  Starting Vite dev server..."
-npm run vite:dev > runtime/dev/logs/vite.log 2>&1 &
-VITE_PID=$!
-echo "Vite PID: $VITE_PID"
-
-# Wait for Vite to be ready
-sleep 3
-
 # Start Tauri dev (without watch to prevent crashes)
 echo ""
 echo "🦀 Starting Tauri dev (watch disabled)..."
@@ -71,7 +61,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo ""
 
 # Run Tauri dev without auto-reload
-npm run tauri dev -- --no-watch 2>&1 | tee runtime/dev/logs/tauri.log
-
-# Cleanup on exit
-trap "kill $VITE_PID 2>/dev/null" EXIT
+# Note: Tauri will run build.beforeDevCommand (starts Vite) from src-tauri/tauri.conf.json.
+# You can pass extra flags to tauri dev via this script, e.g.:
+#   ./runtime/dev/run-dev.sh --features full ollama
+npm run tauri -- dev --no-watch "$@" 2>&1 | tee runtime/dev/logs/tauri.log

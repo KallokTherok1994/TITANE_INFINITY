@@ -43,8 +43,8 @@ function DesignCenterHeader() {
         <div className="dc-header-title">
           <h1>🎨 Centre Design & Apparence</h1>
           <div className="dc-header-meta">
-            <span className="dc-version">v{tokens.version}</span>
-            <span className="dc-name">{tokens.name}</span>
+            <span className="dc-version">v{tokens?.version || '...'}</span>
+            <span className="dc-name">{tokens?.name || 'Chargement...'}</span>
             {isDirty && <span className="dc-dirty-badge">• Non sauvegardé</span>}
           </div>
         </div>

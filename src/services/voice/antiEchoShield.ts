@@ -64,7 +64,7 @@ class AntiEchoShieldEngine {
   private config: Required<AntiEchoConfig>;
   private activeTTS: TTSFingerprint | null = null;
   private recentTTS: TTSFingerprint[] = [];
-  private isMuted: boolean = false;
+  public isMuted: boolean = false; // ✨ v21.5.7 - Made public for external access
   private maxRecentTTS = 5;
 
   constructor(config: AntiEchoConfig = {}) {
@@ -104,6 +104,14 @@ class AntiEchoShieldEngine {
     );
 
     return id;
+  }
+
+  /**
+   * Force unmute microphone (emergency override)
+   */
+  forceUnmute(): void {
+    this.isMuted = false;
+    console.log('[AntiEchoShield] 🔊 Force unmute activated');
   }
 
   /**

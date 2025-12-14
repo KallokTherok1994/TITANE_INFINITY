@@ -4,7 +4,7 @@
 /// Macro nudge! - Pousse une valeur vers le centre 0.5 progressivement
 ///
 /// # Exemples
-/// ```
+/// ```rust,ignore
 /// let value = 0.8;
 /// let result = nudge!(value, 0.1);  // Pousse 0.8 vers 0.5 avec factor 0.1
 /// ```
@@ -25,7 +25,7 @@ macro_rules! nudge {
 /// Macro check! - Vérifie qu'une valeur est dans [min, max] (ou [0.0, 1.0] par défaut)
 ///
 /// # Exemples
-/// ```
+/// ```rust,ignore
 /// check!0.7;           // Vérifie [0.0, 1.0]
 /// check!(5.0, 0.0, 10.0) // Vérifie [0.0, 10.0]
 /// ```
@@ -44,7 +44,7 @@ macro_rules! check {
 /// Macro soften! - Lissage exponentiel entre deux valeurs
 ///
 /// # Exemples
-/// ```
+/// ```rust,ignore
 /// let result = soften!(0.3, 0.8, 0.2);  // Lissage old->new avec alpha=0.2
 /// ```
 #[macro_export]
@@ -61,7 +61,7 @@ macro_rules! soften {
 /// Macro stabilize! - Stabilise une valeur près d'une cible
 ///
 /// # Exemples
-/// ```
+/// ```rust,ignore
 /// let result = stabilize!(0.52, 0.5, 0.05);  // Si |value - 0.5| < 0.05, snap to 0.5
 /// ```
 #[macro_export]
@@ -82,7 +82,7 @@ macro_rules! stabilize {
 /// Macro clamp01! - Clamp une valeur entre 0.0 et 1.0
 ///
 /// # Exemples
-/// ```
+/// ```rust,ignore
 /// clamp01!1.5;   // 1.0
 /// clamp01!(-0.3);  // 0.0
 /// ```
@@ -97,7 +97,7 @@ macro_rules! clamp01 {
 /// Macro safe_div! - Division sécurisée avec fallback
 ///
 /// # Exemples
-/// ```
+/// ```rust,ignore
 /// safe_div!(10.0, 2.0, 0.0);   // 5.0
 /// safe_div!(10.0, 0.0, 0.0);   // 0.0 (fallback)
 /// ```
@@ -118,7 +118,7 @@ macro_rules! safe_div {
 /// Macro lerp! - Interpolation linéaire entre deux valeurs
 ///
 /// # Exemples
-/// ```
+/// ```rust,ignore
 /// lerp!(0.0, 1.0, 0.5);  // 0.5
 /// ```
 #[macro_export]

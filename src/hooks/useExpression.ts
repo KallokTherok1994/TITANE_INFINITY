@@ -182,12 +182,33 @@ export function useAura() {
   const defaultState: AuraState = {
     affective: {
       color: { hue: 200, saturation: 60, lightness: 50 },
-      energy: 0.5,
+      energy: 'medium' as const,
       intensity: 0.5,
+      valence: 0.5,
+      turbulence: 0.2,
+      visualTemp: 0.5,
     },
-    pattern: 'idle' as const,
-    layers: [],
-    particles: [],
+    pattern: 'idle_breathe' as const,
+    layers: {
+      core: {
+        radius: 80,
+        opacity: 1,
+        color: { hue: 200, saturation: 60, lightness: 50 },
+        glow: 20,
+      },
+      halo: {
+        radius: 150,
+        opacity: 0.7,
+        color: { hue: 200, saturation: 60, lightness: 50 },
+        blur: 30,
+        pulsation: 0.3,
+      },
+      corona: { radius: 200, opacity: 0.3, rotation: 0, segments: 6, arcLength: 30 },
+    },
+    particles: { count: 50, velocity: 1, size: 2, opacity: 0.5, lifetime: 1000 },
+    audioLevel: 0,
+    presenceMode: 'idle' as const,
+    lastUpdate: Date.now(),
   };
 
   return {

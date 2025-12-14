@@ -446,7 +446,15 @@ impl FrenchMasteryProcessor {
 
     fn check_clarity(&self, text: &str) -> f32 {
         // Phrases courtes = clarté élevée
-        let sentences: Vec<&str> = text.split('.').collect();
+        let sentences: Vec<&str> = text
+            .split('.')
+            .map(|s| s.trim())
+            .filter(|s| !s.is_empty())
+            .collect();
+
+        if sentences.is_empty() {
+            return 0.95;
+        }
         let avg_sentence_length: f32 = sentences
             .iter()
             .map(|s| s.split_whitespace().count() as f32)
@@ -1115,7 +1123,7 @@ mod tests {
     fn test_check_clarity_medium_sentences() {
         let processor = FrenchMasteryProcessor::new();
         // Create a text with ~25 words per sentence
-        let text = "Cette phrase contient environ vingt-cinq mots ce qui est une longueur moyenne acceptable pour la clarté.";
+        let text = "Cette phrase contient environ vingt-cinq mots, ce qui correspond à une longueur moyenne acceptable et lisible pour évaluer correctement la clarté du texte.";
         let score = processor.check_clarity(text);
         assert_eq!(score, 0.85);
     }

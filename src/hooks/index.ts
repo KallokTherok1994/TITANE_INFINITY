@@ -544,8 +544,7 @@ export type {
 // ═══════════════════════════════════════════════════════════════
 
 // Expression Orchestration Hooks
-// ✨ PHASE 4.2 - Temporairement commenté pour lazy loading (réduire bundle)
-/*
+// ✨ PHASE 4.2 - Réactivé pour test/expression.tsx
 export {
   useExpressionEngineOrchestration,
   useUnifiedExpression,
@@ -564,9 +563,8 @@ export {
   useNarrativeEmphasis,
   useExpressionSync,
   useExpressionSyncDetails,
-  useExpressionActions
+  useExpressionActions,
 } from './useExpressionOrchestration';
-*/
 
 // HoloPresence Hooks
 export {

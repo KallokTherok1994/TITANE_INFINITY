@@ -257,8 +257,11 @@ mod tests {
 
         // Modèle avec transitions uniformes = entropie élevée
         for _ in 0..10 {
+            // Construire une distribution non-déterministe pour l'état "a":
+            // a -> b et a -> c, avec fréquences similaires.
             model.record(make_event("a"));
             model.record(make_event("b"));
+            model.record(make_event("a"));
             model.record(make_event("c"));
         }
 

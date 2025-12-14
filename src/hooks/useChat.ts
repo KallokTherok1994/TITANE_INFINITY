@@ -39,9 +39,24 @@ import { useVisionStore } from '@/stores/useVisionStore';
 // ✨ v∞.21.0 - DEV-SUDO Mode Integration (Super Prompt FULL UNLOCK)
 import { handleDevSudoInChat } from '@/modules/devSudo/devSudoIntegration';
 
+// ✨ v∞.24.2 - Production-Safe Logging
+import { chatLogger } from '@/utils/chatLogger';
+
+// ✨ v24.3.0 - Cloud Providers Availability Check
+import { openaiProvider } from '@/services/ai/providers/openai';
+import { geminiProvider } from '@/services/ai/providers/gemini';
+import { claudeProvider } from '@/services/ai/providers/claude';
+
 type MaybeAIMessage = Partial<AIMessage> | null | undefined;
 
-export type ProviderPreference = 'auto' | 'local' | 'ollama';
+// ✨ v24.3.0 - Cloud Providers Integration (OpenAI/Gemini/Anthropic)
+export type ProviderPreference =
+  | 'auto'
+  | 'local'
+  | 'ollama'
+  | 'openai'
+  | 'gemini'
+  | 'anthropic';
 
 export interface ChatDebugAttempt {
   provider: string;
@@ -72,7 +87,12 @@ const DEBUG_MAX_ENTRIES = 20;
 const PREFERRED_PROVIDER_STORAGE_KEY = 'omega-chat-preferred-provider';
 
 const isProviderPreference = (value: unknown): value is ProviderPreference =>
-  value === 'auto' || value === 'local' || value === 'ollama';
+  value === 'auto' ||
+  value === 'local' ||
+  value === 'ollama' ||
+  value === 'openai' ||
+  value === 'gemini' ||
+  value === 'anthropic';
 
 const readStoredPreferredProvider = (): ProviderPreference => {
   if (typeof window === 'undefined') {
@@ -195,6 +215,7 @@ interface UseChatReturn {
   setPreferredProvider: (provider: ProviderPreference) => void;
   lastProvider: AIProviderName | null;
   debugEntries: ChatDebugEntry[];
+  providerReadiness: Record<string, boolean>; // v24.3.0: Cloud providers availability
 
   // Actions
   sendMessage: (content: string) => Promise<AIMessage>;
@@ -231,8 +252,8 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       if (stored) {
         const memory = JSON.parse(stored);
         if (memory && Array.isArray(memory.messages)) {
-          console.log(
-            '[useChat OMNIS] 📂 Initial load from localStorage:',
+          chatLogger.info(
+            '📂 Initial load from localStorage:',
             memory.messages.length,
             'messages'
           );
@@ -243,7 +264,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         }
       }
     } catch (e) {
-      console.warn('[useChat OMNIS] ⚠️ Failed to load initial messages:', e);
+      chatLogger.warn('⚠️ Failed to load initial messages', { error: e });
     }
     return [];
   });
@@ -270,6 +291,16 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   const [lastProviderUsed, setLastProviderUsed] = useState<AIProviderName | null>(null);
   const debugEntriesRef = useRef<ChatDebugEntry[]>([]);
   const [debugEntries, setDebugEntries] = useState<ChatDebugEntry[]>([]);
+
+  // ✨ v24.3.0 - Provider Readiness Check (P1 fix)
+  const [providerReadiness, setProviderReadiness] = useState<Record<string, boolean>>({
+    auto: true,
+    local: true,
+    ollama: true,
+    openai: false,
+    gemini: false,
+    anthropic: false,
+  });
 
   const updatePreferredProvider = useCallback((provider: ProviderPreference) => {
     setPreferredProviderState(provider);
@@ -302,6 +333,36 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       window.removeEventListener('storage', handleStorage);
     };
   }, []);
+
+  // ✨ v24.3.0 - Check cloud providers availability on mount and preference change
+  useEffect(() => {
+    const checkProvidersAvailability = async () => {
+      const [openaiAvailable, geminiAvailable, claudeAvailable] = await Promise.all([
+        openaiProvider.isAvailable().catch(() => false),
+        geminiProvider.isAvailable().catch(() => false),
+        claudeProvider.isAvailable().catch(() => false),
+      ]);
+
+      setProviderReadiness(prev => ({
+        ...prev,
+        openai: openaiAvailable,
+        gemini: geminiAvailable,
+        anthropic: claudeAvailable,
+      }));
+
+      chatLogger.debug('Provider readiness check', {
+        openai: openaiAvailable,
+        gemini: geminiAvailable,
+        anthropic: claudeAvailable,
+      });
+    };
+
+    checkProvidersAvailability();
+
+    // Re-check every 30s (in case API keys are added dynamically)
+    const interval = setInterval(checkProvidersAvailability, 30000);
+    return () => clearInterval(interval);
+  }, [preferredProviderState]);
   const [uiIntegrity, setUiIntegrity] = useState({
     version: 1,
     preventedResets: 0,
@@ -489,13 +550,10 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
     // 🛡️ PROTECTION CRITIQUE: JAMAIS sync pendant une opération en cours ou lock
     if (isLoadingRef.current || operationLockRef.current) {
-      console.log(
-        '[useChat OMNIS] 🛡️ CRITICAL PROTECTED: Skipping sync during operation (loading:',
-        isLoadingRef.current,
-        'lock:',
-        operationLockRef.current,
-        ')'
-      );
+      chatLogger.debug('🛡️ CRITICAL PROTECTED: Skipping sync during operation', {
+        loading: isLoadingRef.current,
+        lock: operationLockRef.current,
+      });
       return;
     }
 
@@ -506,11 +564,9 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
     // 🛡️ Triple protection: ref, vault, et memory doivent tous être cohérents
     if (currentCount > 0 && memoryCount === 0) {
-      console.log(
-        '[useChat OMNIS] 🛡️ PROTECTED: Skipping empty memory sync - preserving',
-        currentCount,
-        'messages'
-      );
+      chatLogger.debug('🛡️ PROTECTED: Skipping empty memory sync', {
+        preservingMessages: currentCount,
+      });
       return;
     }
 
@@ -518,9 +574,10 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     // FIX v19.3Ω: Utiliser aussi le vault pour la comparaison
     const maxExisting = Math.max(currentCount, vaultCount);
     if (maxExisting > 0 && memoryCount > 0 && maxExisting >= memoryCount) {
-      console.log(
-        '[useChat OMNIS] 🛡️ PROTECTED: Current/vault has more messages, skipping sync'
-      );
+      chatLogger.debug('🛡️ PROTECTED: Current/vault has more messages, skipping sync', {
+        maxExisting,
+        memoryCount,
+      });
       return;
     }
 
@@ -533,7 +590,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     }
 
     // Sync uniquement si mémoire a plus de contenu ET pas en loading
-    console.log('[useChat OMNIS] 📥 Syncing from memory:', memoryCount, 'messages');
+    chatLogger.info('📥 Syncing from memory:', memoryCount, 'messages');
     applyMessagesSafely(messagesForMode, 'memory-sync');
   }, [messagesForMode, applyMessagesSafely]);
 
@@ -551,14 +608,13 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   // ═══ OMNIS SENDMESSAGE KERNEL ═══
   const sendMessage = useCallback(
     async (content: string): Promise<AIMessage> => {
-      console.log(
-        '[useChat OMNIS] 🚀 sendMessage appelé avec:',
-        content?.substring(0, 50)
-      );
+      chatLogger.info('🚀 sendMessage called', {
+        contentPreview: content?.substring(0, 50),
+      });
       const startTime = Date.now();
 
       if (!content || typeof content !== 'string' || content.trim().length === 0) {
-        console.log('[useChat OMNIS] ❌ Message invalide ou vide');
+        chatLogger.debug('❌ Message invalide ou vide');
         return {
           role: 'assistant',
           content: 'Veuillez entrer un message pour continuer la conversation.',
@@ -567,16 +623,18 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         };
       }
 
+      // ⭐ OMEGA FIX: Failsafe timeout 30s pour forcer unlock UI si backend freeze
+      let failsafeTimeout: ReturnType<typeof setTimeout> | null = null;
+
       // ✨ v∞.21.0 - DEV-SUDO Mode Integration (Super Prompt FULL UNLOCK)
       // Vérifier commandes développeur en PRIORITÉ ABSOLUE
       try {
         const devSudoResult = await handleDevSudoInChat(content.trim());
 
         if (devSudoResult.handled) {
-          console.log(
-            '[useChat OMNIS] ⚡ DEV-SUDO command handled:',
-            devSudoResult.success ? 'success' : 'failed'
-          );
+          chatLogger.debug('⚡ DEV-SUDO command handled', {
+            success: devSudoResult.success,
+          });
 
           // Ajouter le message utilisateur
           const userMessage: AIMessage = {
@@ -609,7 +667,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           return devSudoResponse;
         }
       } catch (devSudoError) {
-        console.warn('[useChat OMNIS] DEV-SUDO command check failed:', devSudoError);
+        chatLogger.warn('DEV-SUDO command check failed', { error: devSudoError });
         // Continuer normalement si erreur
       }
 
@@ -620,10 +678,9 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         const cameraResult = await handleCameraInChat(content.trim(), visionStore);
 
         if (cameraResult.handled) {
-          console.log(
-            '[useChat OMNIS] 📷 Camera command handled:',
-            cameraResult.response
-          );
+          chatLogger.debug('📷 Camera command handled', {
+            response: cameraResult.response?.substring(0, 100),
+          });
 
           // Ajouter le message utilisateur
           const userMessage: AIMessage = {
@@ -651,17 +708,28 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           return cameraResponse;
         }
       } catch (cameraError) {
-        console.warn('[useChat OMNIS] Camera command check failed:', cameraError);
+        chatLogger.warn('Camera command check failed', { error: cameraError });
         // Continuer normalement si erreur
       }
 
       // FIX v19.3Ω: Activer le verrou d'opération AVANT tout changement d'état
       operationLockRef.current = true;
-      console.log('[useChat OMNIS] 🔒 Operation lock ACTIVATED');
-
-      console.log('[useChat OMNIS] ✅ Message valide, traitement...');
+      chatLogger.debug('🔒 Operation lock ACTIVATED');
+      chatLogger.info('✅ Message valide, traitement...');
       const cleanMessage = content.trim();
       setIsLoading(true);
+
+      // ⭐ OMEGA FIX: Activer failsafe timeout APRÈS setIsLoading(true)
+      failsafeTimeout = setTimeout(() => {
+        if (isLoadingRef.current) {
+          chatLogger.warn(
+            '⚠️ OMEGA FAILSAFE: isLoading reset forcé après 30s timeout backend'
+          );
+          setIsLoading(false);
+          operationLockRef.current = false;
+        }
+      }, 30000); // 30s max
+
       setError(null);
 
       const userMessage: AIMessage = {
@@ -674,7 +742,32 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       const bufferedMessages = [...messagesRef.current, userMessage];
       const historyBuffer = applyMessagesSafely(bufferedMessages, 'user-message');
 
-      const timeoutMs = Math.max(1000, omnisConfig.timeoutMs || 15000);
+      // ✅ v∞.FIX P0-3: Timeout adaptatif selon provider et longueur message
+      const getAdaptiveTimeout = (): number => {
+        const messageLength = cleanMessage.length;
+        const configTimeout = omnisConfig.timeoutMs;
+
+        // Si timeout manuel configuré, l'utiliser comme minimum
+        const minTimeout = configTimeout || 0;
+
+        // Ajuster selon le provider sélectionné
+        if (preferredProviderState === 'local') {
+          return Math.max(minTimeout, messageLength > 1000 ? 20000 : 10000); // Local: 10-20s
+        } else if (preferredProviderState === 'ollama') {
+          return Math.max(minTimeout, messageLength > 1000 ? 30000 : 15000); // Ollama: 15-30s
+        } else {
+          // Auto (cloud providers OpenAI/Anthropic/Gemini): 30-90s
+          const cloudTimeout =
+            messageLength > 2000 ? 90000 : messageLength > 500 ? 60000 : 30000;
+          return Math.max(minTimeout, cloudTimeout);
+        }
+      };
+      const timeoutMs = getAdaptiveTimeout();
+      chatLogger.debug('⏱️ Adaptive timeout configured', {
+        timeoutMs,
+        provider: preferredProviderState,
+        messageLength: cleanMessage.length,
+      });
       let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
       const assistantMetadata = withUiId({
@@ -695,8 +788,8 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         [...messagesRef.current, assistantPlaceholder],
         'assistant-stream-start'
       );
-      console.log(
-        '[useChat OMNIS DEBUG] ✅ Placeholder ajouté, targetUiId:',
+      chatLogger.debug(
+        '✅ Placeholder ajouté, targetUiId:',
         assistantMetadata.uiId,
         'messagesCount:',
         messagesRef.current.length
@@ -720,16 +813,14 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         metadataPatch?: Record<string, unknown>
       ) => {
         if (!targetUiId) {
-          console.error('[useChat OMNIS DEBUG] ❌ updateAssistant: targetUiId manquant!');
+          chatLogger.error('❌ updateAssistant: targetUiId missing');
           return;
         }
 
-        console.log(
-          '[useChat OMNIS DEBUG] 🔄 updateAssistant appelé, context:',
+        chatLogger.debug('🔄 updateAssistant called', {
           context,
-          'targetUiId:',
-          targetUiId
-        );
+          targetUiId,
+        });
 
         const nextMessages = messagesRef.current.map(msg => {
           if (!msg?.metadata || msg.metadata.uiId !== targetUiId) {
@@ -757,15 +848,8 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           };
         });
 
-        console.log(
-          '[useChat OMNIS DEBUG] 📤 updateAssistant: Mise à jour des messages, count:',
-          nextMessages.length
-        );
-        nextMessages.forEach((msg, idx) => {
-          console.log(`[useChat OMNIS DEBUG] Message ${idx}:`, {
-            role: msg.role,
-            contentLen: msg.content?.length,
-          });
+        chatLogger.debug('📤 updateAssistant: Messages updated', {
+          count: nextMessages.length,
         });
 
         applyMessagesSafely(nextMessages, context);
@@ -1063,8 +1147,8 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         };
 
         const finalContent = finalResponse.content ?? aggregatedContent;
-        console.log(
-          '[useChat OMNIS DEBUG] 🎯 finalContent:',
+        chatLogger.debug(
+          '🎯 finalContent:',
           finalContent?.substring(0, 100),
           'length:',
           finalContent?.length
@@ -1095,14 +1179,15 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         };
 
         try {
-          saveMessage(userMessage);
-          saveMessage(assistantMessage);
+          // ✅ v∞.FIX P1-6: Await saveMessage pour garantir persistence
+          await saveMessage(userMessage);
+          await saveMessage(assistantMessage);
 
           // ═══ RECORD INTERACTION FOR PREFERENCES LEARNING ═══
           try {
             userPreferencesEngine.recordInteraction(cleanMessage, finalContent);
           } catch (prefError) {
-            console.warn('[useChat OMNIS] ⚠️ Preferences recording failed:', prefError);
+            chatLogger.warn('⚠️ Preferences recording failed', { error: prefError });
           }
 
           // ═══ AWARD XP FOR SUCCESSFUL MESSAGE ═══
@@ -1130,11 +1215,9 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
               });
             }
 
-            console.log(
-              '[useChat OMNIS] ✨ XP awarded: +5 chat, +2 cognitive (si applicable)'
-            );
+            chatLogger.success('✨ XP awarded: +5 chat, +2 cognitive (si applicable)');
           } catch (xpError) {
-            console.warn('[useChat OMNIS] XP award warning:', xpError);
+            chatLogger.warn('XP award warning', { error: xpError });
           }
         } catch (memoryError) {
           console.warn('[Chat] Memory integration warning:', memoryError);
@@ -1149,15 +1232,10 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         }
 
         setSuggestions(finalResponse.suggestions ?? []);
-        setIsLoading(false);
-        // FIX v19.3Ω: Désactiver le verrou après un délai pour permettre la stabilisation
-        setTimeout(() => {
-          operationLockRef.current = false;
-          console.log('[useChat OMNIS] 🔓 Operation lock RELEASED (success)');
-        }, 100);
         setLastProviderUsed(
           chatServiceResponse ? normalizeProvider(chatServiceResponse.provider) : provider
         );
+
         return assistantMessage;
       } catch (error) {
         console.error('[Chat] Engine pipeline error:', error);
@@ -1200,16 +1278,21 @@ Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation 
         setError(
           "TITANE∞ a rencontré une anomalie et s'est réparé. Tu peux réessayer immédiatement."
         );
-        setIsLoading(false);
-        // FIX v19.3Ω: Désactiver le verrou même en cas d'erreur
-        setTimeout(() => {
-          operationLockRef.current = false;
-          console.log('[useChat OMNIS] 🔓 Operation lock RELEASED (error)');
-        }, 100);
         setInternalAnomalyCount(prev => prev + 1);
-
         setLastProviderUsed('omnis-fallback');
+
         return fallbackResponse;
+      } finally {
+        // ✅ OMEGA FIX: Clear failsafe timeout
+        if (failsafeTimeout !== null) {
+          clearTimeout(failsafeTimeout);
+          failsafeTimeout = null;
+        }
+
+        // ✅ v∞.FIX P0-1: Garantie absolue de désactivation du lock (synchrone)
+        setIsLoading(false);
+        operationLockRef.current = false;
+        chatLogger.debug('🔓 Operation lock RELEASED (finally)');
       }
     },
     [
@@ -1357,6 +1440,7 @@ Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation 
     setPreferredProvider: updatePreferredProvider,
     lastProvider: lastProviderUsed,
     debugEntries,
+    providerReadiness, // v24.3.0: Cloud providers availability
 
     // Actions
     sendMessage,

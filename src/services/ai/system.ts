@@ -11,6 +11,14 @@
  */
 
 // ─────────────────────────────────────────────────────────────────
+// INTERNAL IMPORTS (needed for utility functions)
+// ─────────────────────────────────────────────────────────────────
+import { aiOrchestrator } from './orchestrator';
+import { metricsEngine } from './metricsEngine';
+import { autoHealEngine } from './autoHealEngine';
+import { aiHealthMonitor } from './healthMonitor';
+
+// ─────────────────────────────────────────────────────────────────
 // CORE ORCHESTRATOR
 // ─────────────────────────────────────────────────────────────────
 export { aiOrchestrator, askTitan, streamTitan, getAIStatus } from './orchestrator';
@@ -26,10 +34,13 @@ export { claudeProvider } from './providers/claude';
 export { ollamaProvider } from './providers/ollama';
 
 // ─────────────────────────────────────────────────────────────────
-// ENGINES v20Ω+ — LAZY LOADED (use utility functions below)
+// ENGINES (Static imports - already bundled due to metaKernel usage)
 // ─────────────────────────────────────────────────────────────────
-// ⚠️ Engines are dynamically imported to enable code-splitting
-// Use getAutoHealEngine(), getMetricsEngine(), getHealthMonitor() instead
+// ℹ️ Previously lazy-loaded, but metaKernel.ts uses static imports
+// Converting to static to avoid Vite chunk splitting warnings
+export { autoHealEngine } from './autoHealEngine';
+export { metricsEngine } from './metricsEngine';
+export { aiHealthMonitor } from './healthMonitor';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -54,45 +65,6 @@ export type { MetricEvent, ProviderMetrics, AggregatedMetrics } from './metricsE
 export type { HealthAlert, HealthReport } from './healthMonitor';
 
 // ─────────────────────────────────────────────────────────────────
-// LAZY ENGINE ACCESSORS WITH SINGLETON CACHE
-// ─────────────────────────────────────────────────────────────────
-
-// Singleton caches
-let _autoHealCache: typeof import('./autoHealEngine').autoHealEngine | null = null;
-let _metricsCache: typeof import('./metricsEngine').metricsEngine | null = null;
-let _healthMonitorCache: typeof import('./healthMonitor').aiHealthMonitor | null = null;
-
-/**
- * 🔄 Lazy load Auto Heal Engine (singleton cached)
- */
-export async function getAutoHealEngine() {
-  if (_autoHealCache) return _autoHealCache;
-  const { autoHealEngine } = await import('./autoHealEngine');
-  _autoHealCache = autoHealEngine;
-  return autoHealEngine;
-}
-
-/**
- * 📊 Lazy load Metrics Engine (singleton cached)
- */
-export async function getMetricsEngine() {
-  if (_metricsCache) return _metricsCache;
-  const { metricsEngine } = await import('./metricsEngine');
-  _metricsCache = metricsEngine;
-  return metricsEngine;
-}
-
-/**
- * 🏥 Lazy load Health Monitor (singleton cached)
- */
-export async function getHealthMonitor() {
-  if (_healthMonitorCache) return _healthMonitorCache;
-  const { aiHealthMonitor } = await import('./healthMonitor');
-  _healthMonitorCache = aiHealthMonitor;
-  return aiHealthMonitor;
-}
-
-// ─────────────────────────────────────────────────────────────────
 // UTILITIES
 // ─────────────────────────────────────────────────────────────────
 
@@ -103,16 +75,11 @@ export async function initializeAISystem(options?: {
   enableHealthMonitoring?: boolean;
   monitoringIntervalMs?: number;
 }): Promise<{
-  orchestrator: typeof import('./orchestrator').aiOrchestrator;
-  metrics: typeof import('./metricsEngine').metricsEngine;
-  autoHeal: typeof import('./autoHealEngine').autoHealEngine;
-  healthMonitor: typeof import('./healthMonitor').aiHealthMonitor;
+  orchestrator: typeof aiOrchestrator;
+  metrics: typeof metricsEngine;
+  autoHeal: typeof autoHealEngine;
+  healthMonitor: typeof aiHealthMonitor;
 }> {
-  const { aiOrchestrator } = await import('./orchestrator');
-  const { metricsEngine } = await import('./metricsEngine');
-  const { autoHealEngine } = await import('./autoHealEngine');
-  const { aiHealthMonitor } = await import('./healthMonitor');
-
   // Démarrer health monitoring si demandé
   if (options?.enableHealthMonitoring !== false) {
     aiHealthMonitor.startMonitoring();
@@ -134,7 +101,6 @@ export async function quickHealthCheck(): Promise<{
   score: number;
   message: string;
 }> {
-  const { aiHealthMonitor } = await import('./healthMonitor');
   const report = await aiHealthMonitor.getHealthReport();
 
   let message = '';
@@ -162,7 +128,6 @@ export async function quickStats(): Promise<{
   avgLatency: number;
   providersCount: number;
 }> {
-  const { metricsEngine } = await import('./metricsEngine');
   const metrics = metricsEngine.getAggregatedMetrics();
 
   return {
@@ -181,9 +146,6 @@ export async function quickFix(): Promise<{
   message: string;
   actions: string[];
 }> {
-  const { aiOrchestrator } = await import('./orchestrator');
-  const { aiHealthMonitor } = await import('./healthMonitor');
-
   const actions: string[] = [];
 
   try {
@@ -192,7 +154,7 @@ export async function quickFix(): Promise<{
     actions.push('✅ Providers réinitialisés');
 
     // Clear old alerts
-    aiHealthMonitor.clearAlerts();
+    aiHealthMonitor.clearAllAlerts();
     actions.push('✅ Alertes nettoyées');
 
     return {

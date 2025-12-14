@@ -198,7 +198,13 @@ impl AnthologyEngine {
         request: AnthologyIntegrationRequest,
     ) -> AnthologyIntegrationResponse {
         // 1. Extraction brute
-        let excerpts = self.extract_remarkable_excerpts(&request.text);
+        let mut excerpts = self.extract_remarkable_excerpts(&request.text);
+        if excerpts.is_empty() {
+            let trimmed = request.text.trim();
+            if !trimmed.is_empty() {
+                excerpts.push(trimmed.to_string());
+            }
+        }
 
         // 2. Analyse stylistique
         let analysis = self.analyze_style(&request.text);

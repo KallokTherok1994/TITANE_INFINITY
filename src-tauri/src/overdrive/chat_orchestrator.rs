@@ -279,8 +279,9 @@ async fn is_provider_available(provider: &str, state: &ChatOrchestratorState) ->
         }
         "ollama" => {
             // Ping rapide http://localhost:11434/api/tags
+            // ✅ FIX: Timeout augmenté 500ms → 3000ms (Ollama peut être lent au premier appel)
             match reqwest::Client::builder()
-                .timeout(std::time::Duration::from_millis(500))
+                .timeout(std::time::Duration::from_millis(3000))
                 .build()
             {
                 Ok(client) => {
@@ -450,34 +451,42 @@ pub async fn chat_send_message(
         return Err(TAPIError::validation("Message too long (max 10000 chars)").into());
     }
 
-    // Liste des providers à essayer (ordre de priorité)
+    // ═══ PHASE 4 ÉTAPE 4: Cascade complète réactivée ═══
+    // Cascade multi-providers avec fallback intelligent
     let providers_to_try: Vec<String> = if request.provider == "auto" {
         vec![
-            "openai".to_string(),    // 1️⃣ OpenAI GPT-4 (priorité haute)
-            "anthropic".to_string(), // 2️⃣ Anthropic Claude (priorité haute)
-            "gemini".to_string(),    // 3️⃣ Google Gemini (backup cloud)
-            "ollama".to_string(),    // 4️⃣ Ollama local (backup)
-            "local".to_string(),     // 5️⃣ TITANE Local (fallback ultime)
+            "ollama".to_string(),      // Premier choix: Ollama local rapide
+            "openai".to_string(),      // Fallback 1: OpenAI GPT
+            "anthropic".to_string(),   // Fallback 2: Claude
+            "gemini".to_string(),      // Fallback 3: Google Gemini
+            "local".to_string(),       // Fallback final: Noyau local infaillible
         ]
     } else {
-        let mut providers = vec![request.provider.clone()];
-        if request.provider != "local" {
-            providers.push("local".to_string()); // Toujours fallback sur local
-        }
-        providers
+        vec![request.provider.clone()] // Provider spécifique direct
     };
 
     let mut last_error: Option<TAPIError> = None;
 
+    // 🔍 DEBUG ROUTING — Log la cascade complète
+    println!("[CHAT ROUTER] 📋 Provider cascade = {:?}", providers_to_try);
+    println!("[CHAT ROUTER] 📨 Sending prompt length = {}", request.message.len());
+
     // Boucle de fallback (au lieu de récursion)
     for provider in providers_to_try {
+        // 🔍 DEBUG — Log AVANT le check de disponibilité
+        println!("[CHAT ROUTER] 🧪 Testing provider = {}", provider);
+        
         // Vérifier disponibilité via heartbeat (avec cache)
-        if !is_provider_available(&provider, &state).await {
+        let is_available = is_provider_available(&provider, &state).await;
+        println!("[CHAT ROUTER] ⚡ Provider {} availability = {}", provider, is_available);
+        
+        if !is_available {
             println!("[CHAT] ⏭️ Provider {} non disponible (skip)", provider);
             last_error = Some(TAPIError::provider_unavailable(&provider));
             continue;
         }
 
+        println!("[CHAT ROUTER] ✅ Provider selected = {}", provider);
         println!("[CHAT] 🔄 Tentative avec provider: {}", provider);
 
         // Cloner request pour chaque tentative
@@ -706,11 +715,20 @@ async fn send_to_gemini(
     })))
 }
 
+/// Public wrapper pour appel depuis chat_generate_commands
+pub async fn send_to_gemini_internal(
+    request: &ChatRequest,
+    state: &ChatOrchestratorState,
+) -> Result<ChatMessage, TAPIError> {
+    send_to_gemini(request, state).await
+}
+
 async fn send_to_ollama(
     request: &ChatRequest,
     _state: &ChatOrchestratorState,
 ) -> Result<ChatMessage, TAPIError> {
-    let model = request.model.as_deref().unwrap_or("llama2:latest");
+    // 🚨 FIX: llama2:latest n'existe pas → utiliser llama3.1:latest (vérifié disponible)
+    let model = request.model.as_deref().unwrap_or("llama3.1:latest");
     let url = "http://localhost:11434/api/generate";
 
     // Adaptive timeout for Ollama (local, typically faster)
@@ -942,6 +960,14 @@ async fn send_to_openai(
     })))
 }
 
+/// Public wrapper pour appel depuis chat_generate_commands
+pub async fn send_to_openai_internal(
+    request: &ChatRequest,
+    state: &ChatOrchestratorState,
+) -> Result<ChatMessage, TAPIError> {
+    send_to_openai(request, state).await
+}
+
 async fn send_to_anthropic(
     request: &ChatRequest,
     state: &ChatOrchestratorState,
@@ -1089,13 +1115,21 @@ async fn send_to_anthropic(
     })))
 }
 
+/// Public wrapper pour appel depuis chat_generate_commands
+pub async fn send_to_anthropic_internal(
+    request: &ChatRequest,
+    state: &ChatOrchestratorState,
+) -> Result<ChatMessage, TAPIError> {
+    send_to_anthropic(request, state).await
+}
+
 async fn send_to_local(
     request: &ChatRequest,
     _state: &ChatOrchestratorState,
 ) -> Result<ChatMessage, TAPIError> {
-    println!("[CHAT] 🔄 Local fallback (offline mode intelligent)");
-
-    // Génération de réponse locale intelligente basée sur le contexte
+    // ✅ Fallback local RÉACTIVÉ — Réponse garantie même si tous les LLM échouent
+    println!("[CHAT] 🔧 Local fallback activated (all LLM providers failed)");
+    
     let user_message = request.message.to_lowercase();
     let response_content = generate_local_response(&user_message, &request.message);
 
@@ -1853,4 +1887,36 @@ fn get_timestamp() -> u64 {
         .duration_since(std::time::UNIX_EPOCH)
         .unwrap_or_else(|_| std::time::Duration::from_secs(0))
         .as_secs()
+}
+
+#[cfg(test)]
+mod smoke_tests {
+    use super::*;
+
+    #[tokio::test]
+    #[ignore]
+    async fn ollama_smoke_generate_ok() {
+        let state = init();
+
+        let request = ChatRequest {
+            message: "Réponds uniquement: OK".to_string(),
+            conversation_id: Some("smoke-test-ollama".to_string()),
+            provider: "ollama".to_string(),
+            model: Some("llama3.1:latest".to_string()),
+            streaming: false,
+            images: None,
+            system_prompt: Some("Réponds uniquement: OK".to_string()),
+        };
+
+        let msg = match send_to_ollama(&request, &state).await {
+            Ok(message) => message,
+            Err(err) => panic!(
+                "Ollama smoke test failed (ollama sur :11434 ? modèle llama3.1:latest présent ?): {err}"
+            ),
+        };
+
+        assert!(!msg.content.trim().is_empty());
+        assert!(msg.content.to_uppercase().contains("OK"));
+        assert_eq!(msg.provider, "ollama");
+    }
 }
