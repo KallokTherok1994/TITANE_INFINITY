@@ -130,6 +130,17 @@ export function AppearanceTab() {
   const { tokens, updateToken, isDirty, saveTokens, resetToDefaults, undoChanges } =
     useUITheme();
 
+  // Protection: Attendre que tokens soit chargé
+  if (!tokens || !tokens.spacing || !tokens.borders || !tokens.animations) {
+    return (
+      <div className="dc-tab dc-appearance-tab">
+        <div style={{ padding: '2rem', textAlign: 'center' }}>
+          <p>Chargement des paramètres...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="dc-tab dc-appearance-tab">
       {/* Header avec actions */}

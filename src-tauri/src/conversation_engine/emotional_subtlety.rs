@@ -216,9 +216,9 @@ impl EmotionalSubtletyProcessor {
         let exclamations = message.matches('!').count();
 
         // Messages rapides + courts = haute énergie OU basse énergie selon mots
-        if velocity > 3 && word_count > 20 {
+        if velocity >= 5 && word_count >= 17 {
             EnergyLevel::High
-        } else if word_count < 5 && exclamations == 0 {
+        } else if velocity <= 1 && word_count < 5 && exclamations == 0 {
             EnergyLevel::Low
         } else {
             EnergyLevel::Medium

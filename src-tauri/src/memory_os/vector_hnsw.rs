@@ -6,6 +6,7 @@ use crate::memory_os::{
     MemoryOSError, MemoryOSResult, SearchResult, VectorIndex, VectorIndexConfig,
 };
 use hnsw_rs::prelude::*;
+use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::path::Path;
 
@@ -99,10 +100,23 @@ impl VectorIndex for HnswVectorIndex {
         }
 
         // Search HNSW
-        let neighbors = self.hnsw.search(query, k, self.config.ef_construction);
+        // We intentionally over-sample (when possible) so we can apply a deterministic
+        // tie-breaker in case multiple vectors have equal distance.
+        let available = self.id_map.len();
+        let oversample_k = if available == 0 {
+            k
+        } else {
+            let requested = k.max(1);
+            // Over-sample by a small factor, bounded by available elements.
+            (requested.saturating_mul(8)).max(requested).min(available)
+        };
+
+        let neighbors = self
+            .hnsw
+            .search(query, oversample_k, self.config.ef_construction);
 
         // Convert to SearchResult
-        let results: Vec<SearchResult> = neighbors
+        let mut results: Vec<SearchResult> = neighbors
             .iter()
             .filter_map(|neighbor| {
                 let internal_idx = neighbor.d_id;
@@ -111,6 +125,23 @@ impl VectorIndex for HnswVectorIndex {
                     .map(|id| SearchResult::from_distance(id.clone(), neighbor.distance))
             })
             .collect();
+
+        // Deterministic ordering: distance ASC, then id ASC.
+        // This avoids flaky expectations when multiple vectors have equal cosine distance.
+        results.sort_by(|a, b| {
+            let dist_ord = a
+                .distance
+                .partial_cmp(&b.distance)
+                .unwrap_or(Ordering::Greater);
+            if dist_ord != Ordering::Equal {
+                return dist_ord;
+            }
+            a.id.cmp(&b.id)
+        });
+
+        if results.len() > k {
+            results.truncate(k);
+        }
 
         Ok(results)
     }

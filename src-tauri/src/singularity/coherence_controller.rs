@@ -131,7 +131,9 @@ impl CoherenceController {
     /// Evaluate context coherence
     fn evaluate_context_coherence(&self, context: &MemoryContext) -> f32 {
         if context.items.is_empty() {
-            return 0.7; // No context is okay, not great
+            // No context items is acceptable, but we still reward higher relevance signals.
+            let relevance = context.relevance_score.clamp(0.0, 1.0);
+            return (0.6 + relevance * 0.3).clamp(0.0, 1.0);
         }
 
         // Based on relevance score and item count

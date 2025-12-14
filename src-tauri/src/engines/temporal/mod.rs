@@ -120,8 +120,10 @@ impl TemporalEngine {
         timeline.push(snapshot_id.clone());
         *position = timeline.len() - 1;
 
-        // Nettoyer les anciens snapshots si nécessaire
-        self.cleanup_old_snapshots().await;
+        // Nettoyer les anciens snapshots si nécessaire.
+        // IMPORTANT: ne pas await en tenant des verrous, sinon deadlock.
+        let cutoff = current_timestamp().saturating_sub(self.config.retention_duration);
+        manager.remove_older_than(cutoff);
 
         TemporalResult::Success { snapshot_id }
     }
@@ -271,13 +273,6 @@ impl TemporalEngine {
     /// Retourne toutes les branches
     pub async fn get_branches(&self) -> Vec<String> {
         self.branches.read().await.clone()
-    }
-
-    /// Nettoie les anciens snapshots
-    async fn cleanup_old_snapshots(&self) {
-        let mut manager = self.snapshot_manager.write().await;
-        let cutoff = current_timestamp() - self.config.retention_duration;
-        manager.remove_older_than(cutoff);
     }
 
     /// Retourne les statistiques

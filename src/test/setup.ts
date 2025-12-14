@@ -277,7 +277,7 @@ const handleTauriInvoke = async (
       };
     case 'memory_store':
       memoryStatsState.totalEntries += 1;
-      return { stored: true };
+      return `mock_${Date.now()}`;
     case 'add_timeline_event': {
       const eventId = `timeline-${timelineEvents.length}`;
       const event = {

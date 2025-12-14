@@ -363,9 +363,10 @@ mod tests {
     #[tokio::test]
     async fn test_emoji_removal() {
         let engine = StyleEngine::new(3);
-        let result = engine.remove_emojis("Hello World");
+        let result = engine.remove_emojis("Hello 😀 World");
 
-        assert!(!result.contains(""));
+        assert!(!result.contains('😀'));
         assert!(result.contains("Hello"));
+        assert!(result.contains("World"));
     }
 }

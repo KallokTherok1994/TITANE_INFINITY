@@ -154,7 +154,10 @@ impl ProsodyControl {
         // Adoucir phonèmes FR difficiles
         if self.soft_r_phonemes {
             // Simuler adoucissement (préprocessing simple)
-            output = output.replace("rr", "r"); // éviter double roulement
+            // Réduit aussi les cas "rrr" → "r" (un simple replace laisserait "rr").
+            while output.contains("rr") {
+                output = output.replace("rr", "r");
+            }
         }
 
         output

@@ -205,8 +205,24 @@ impl EmotionState {
         let mut intensity = 0.5;
         let mut energy = 0.5;
 
-        // Mots positifs
-        if lower.contains("super") || lower.contains("génial") || lower.contains("excellent") {
+        // Mots positifs (cumulatifs)
+        // Note: garder des incréments modestes et laisser `Self::new` faire le clamp.
+        if lower.contains("super") {
+            valence += 0.3;
+            intensity += 0.2;
+            energy += 0.2;
+        }
+        if lower.contains("génial") {
+            valence += 0.3;
+            intensity += 0.2;
+            energy += 0.2;
+        }
+        if lower.contains("excellent") {
+            valence += 0.3;
+            intensity += 0.2;
+            energy += 0.2;
+        }
+        if lower.contains("fantastique") {
             valence += 0.3;
             intensity += 0.2;
             energy += 0.2;
