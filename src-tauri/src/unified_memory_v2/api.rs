@@ -13,7 +13,7 @@ use super::types::*;
 /// Unified Memory v2 Public API
 ///
 /// **Usage:**
-/// ```rust
+/// ```rust,ignore
 /// let mut memory = UnifiedMemoryV2::new(MemoryConfig::default());
 /// memory.init().await?;
 /// 

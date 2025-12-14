@@ -188,6 +188,7 @@ async fn test_cache_cleanup_expired() {
 
 #[tokio::test]
 async fn test_cache_concurrent_access() {
+    use std::sync::atomic::{AtomicU32, Ordering};
     use std::sync::Arc;
 
     let cache = Arc::new(IPCCache::<i32>::new(10));
@@ -215,7 +216,21 @@ async fn test_cache_concurrent_access() {
 
     let stats = cache.get_stats();
     assert_eq!(stats.total_entries, 3); // Should have 3 unique keys (0, 1, 2)
-    assert!(stats.total_hits > 0); // Should have some cache hits
+
+    // Le scheduling async peut faire que toutes les requêtes initiales soient des misses
+    // (compute concurrent), donc on force ici des hits déterministes sur les clés déjà remplies.
+    let compute_count = Arc::new(AtomicU32::new(0));
+    for key in ["key0", "key1", "key2"] {
+        let counter = Arc::clone(&compute_count);
+        cache.get_or_compute(key, || {
+            counter.fetch_add(1, Ordering::SeqCst);
+            123
+        });
+    }
+    assert_eq!(compute_count.load(Ordering::SeqCst), 0);
+
+    let stats = cache.get_stats();
+    assert!(stats.total_hits > 0); // Doit désormais avoir des hits
 }
 
 #[tokio::test]
