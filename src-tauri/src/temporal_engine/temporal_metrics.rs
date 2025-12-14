@@ -207,7 +207,7 @@ impl TemporalMetrics {
         if average <= excellent {
             1.0
         } else if average <= good {
-            0.9 - ((average - excellent) / (good - excellent) * 0.1) as f32
+            1.0 - ((average - excellent) / (good - excellent) * 0.1) as f32
         } else if average <= acceptable {
             0.7 - ((average - good) / (acceptable - good) * 0.3) as f32
         } else {

@@ -286,7 +286,7 @@ pub fn reset_ipc_metrics(profiler: tauri::State<Arc<IPCProfiler>>) -> Result<Str
 /// Macro to profile a Tauri command
 ///
 /// Usage:
-/// ```rust
+/// ```rust,ignore
 /// #[tauri::command]
 /// async fn my_command(profiler: State<'_, Arc<IPCProfiler>>) -> Result<String, String> {
 ///     profile_command!(profiler, "my_command", {

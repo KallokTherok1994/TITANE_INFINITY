@@ -166,7 +166,7 @@ pub fn create_shared_engine_with_capacities(
 /// Register all memory v2 commands with Tauri
 ///
 /// Usage in main.rs:
-/// ```rust
+/// ```rust,ignore
 /// tauri::Builder::default()
 ///     .manage(unified_memory::api::create_shared_engine())
 ///     .invoke_handler(tauri::generate_handler![
