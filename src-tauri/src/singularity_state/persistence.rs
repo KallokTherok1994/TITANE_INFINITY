@@ -16,8 +16,12 @@ pub struct PersistenceLayer {
 impl PersistenceLayer {
     /// Créer un nouveau layer de persistence
     pub fn new() -> Self {
-        let db_path = Self::get_db_path();
+        Self::with_db_path(Self::get_db_path())
+    }
 
+    /// Créer un layer de persistence avec un chemin explicite.
+    /// Utile pour les tests afin d'éviter les collisions/races entre fichiers.
+    pub fn with_db_path(db_path: PathBuf) -> Self {
         // Créer répertoire si inexistant
         if let Some(parent) = db_path.parent() {
             fs::create_dir_all(parent).ok();
@@ -97,9 +101,27 @@ impl Default for PersistenceLayer {
 mod tests {
     use super::*;
 
+    fn unique_test_state_path() -> PathBuf {
+        use std::time::{SystemTime, UNIX_EPOCH};
+
+        let nanos = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_nanos();
+
+        let mut path = std::env::temp_dir();
+        path.push("TITANE_INFINITY_tests");
+        path.push(format!(
+            "singularity_state_{}_{}.json",
+            std::process::id(),
+            nanos
+        ));
+        path
+    }
+
     #[tokio::test]
     async fn test_persistence_save_load() {
-        let persistence = PersistenceLayer::new();
+        let persistence = PersistenceLayer::with_db_path(unique_test_state_path());
         let state = SingularityState::new();
 
         // Test save
@@ -116,7 +138,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_persistence_clear() {
-        let persistence = PersistenceLayer::new();
+        let persistence = PersistenceLayer::with_db_path(unique_test_state_path());
         let state = SingularityState::new();
 
         persistence.save_state(&state).await.ok();
