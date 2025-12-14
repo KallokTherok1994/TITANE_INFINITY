@@ -287,7 +287,7 @@ impl PersonalityEngine {
             CommunicationStyle::Formal
         } else if self.profile.openness > 0.8 && self.profile.extraversion > 0.7 {
             CommunicationStyle::Elaborate
-        } else if self.profile.conscientiousness < 0.5 {
+        } else if self.profile.conscientiousness <= 0.5 {
             CommunicationStyle::Casual
         } else if self.state.current_mood == Mood::Playful {
             CommunicationStyle::Humorous
