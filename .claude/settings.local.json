@@ -74,7 +74,12 @@
       "Bash(src-tauri/src/creation/generator.rs)",
       "Bash(src-tauri/src/singularity/evolution_engine.rs )",
       "Bash(src-tauri/src/singularity/emotion_controller.rs )",
-      "Bash(src-tauri/src/identity/identity_matrix.rs)"
+      "Bash(src-tauri/src/identity/identity_matrix.rs)",
+      "Bash(CARGO_BUILD_JOBS=1 cargo test:*)",
+      "Bash(RUST_BACKTRACE=1 cargo test:*)",
+      "Bash(for:*)",
+      "Bash(do cargo test -j 1 --lib resilience::retry::tests::test_delay_calculation -- --test-threads=1)",
+      "Bash(do echo \"=== RUN $run ===\" CARGO_BUILD_JOBS=1 cargo test -j 1 --lib -- --test-threads=1)"
     ],
     "deny": [],
     "ask": []

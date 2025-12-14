@@ -187,7 +187,7 @@ mod vector_tests {
 
 #[cfg(test)]
 mod consolidation_tests {
-    use super::super::consolidation::Consolidator;
+    use super::super::consolidation::{Consolidator, ConsolidatorConfig};
     use super::super::{LongTermMemory, MidTermMemory, ShortTermMemory};
     use crate::unified_memory_v2::types::{MemoryEntry, MemoryType};
     use std::time::{SystemTime, UNIX_EPOCH};
@@ -211,21 +211,21 @@ mod consolidation_tests {
 
     #[tokio::test]
     async fn test_consolidation_stm_to_mtm() {
-        let consolidator = Consolidator::default();
-        // Override config via consolidator internals if needed
+        let consolidator = Consolidator::with_config(ConsolidatorConfig {
+            // Seuil réduit pour test (1s)
+            stm_transfer_age_ms: 1_000,
+            ..ConsolidatorConfig::default()
+        });
         let mut stm = ShortTermMemory::default();
         let mut mtm = MidTermMemory::default();
         let mut ltm = LongTermMemory::default();
 
         // Add old entries to STM (should be transferred)
-        stm.push(create_test_entry("old1", 0.6, 1)).unwrap(); // 1 second old
-        stm.push(create_test_entry("old2", 0.7, 1)).unwrap();
+        stm.push(create_test_entry("old1", 0.6, 5)).unwrap(); // 5 seconds old
+        stm.push(create_test_entry("old2", 0.7, 5)).unwrap();
 
         // Add new entry to STM (should stay)
         stm.push(create_test_entry("new1", 0.5, 0)).unwrap();
-
-        // Wait for entries to age
-        tokio::time::sleep(tokio::time::Duration::from_millis(150)).await;
 
         // Run consolidation
         let result = consolidator.consolidate(&mut stm, &mut mtm, &mut ltm).await;
