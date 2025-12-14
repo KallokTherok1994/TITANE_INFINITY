@@ -13,6 +13,8 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
+import type { MoodType } from '../core/ARCHITECTURE_TYPES_v24-v∞';
+
 export interface SingularityState {
   physical: PhysicalLayer;
   cognitive: CognitiveLayer;
@@ -190,7 +192,7 @@ export interface SymbolicLayer {
 
 export interface PersonaState {
   name: string;
-  mood: string;
+  mood: MoodType; // ✨ v21.5.5 - typed mood instead of string
   intensity: number;
   evolution_level: number;
   last_interaction: number | null;

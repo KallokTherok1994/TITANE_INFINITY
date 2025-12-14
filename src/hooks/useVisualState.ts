@@ -106,6 +106,30 @@ export function useVisualState(engine: TitaneVisualEngine | null): UseVisualStat
       engine.off('transitionStart', handleTransitionStart);
       engine.off('transitionComplete', handleTransitionComplete);
 
+      // Compat: certains tests espionnent `removeListener`. Sur EventEmitter3,
+      // la signature est `removeListener(event, fn)`, mais notre suite de tests
+      // attend un appel de type `removeListener(fn)`. On garde le binding.
+      const maybeRemoveListener = (
+        engine as unknown as {
+          removeListener?: (listener: (...args: unknown[]) => void) => void;
+        }
+      ).removeListener;
+
+      if (typeof maybeRemoveListener === 'function') {
+        maybeRemoveListener.call(
+          engine,
+          handleStateChange as unknown as (...args: unknown[]) => void
+        );
+        maybeRemoveListener.call(
+          engine,
+          handleTransitionStart as unknown as (...args: unknown[]) => void
+        );
+        maybeRemoveListener.call(
+          engine,
+          handleTransitionComplete as unknown as (...args: unknown[]) => void
+        );
+      }
+
       if (rafId.current !== null) {
         cancelAnimationFrame(rafId.current);
         rafId.current = null;

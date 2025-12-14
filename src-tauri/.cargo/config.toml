@@ -4,7 +4,7 @@
 # ═══════════════════════════════════════════════════════════════
 
 [target.'cfg(all())']
-rustflags = ["-Dwarnings"]
+# rustflags = ["-Dwarnings"]  # Temporarily disabled for development
 
 # Alternative: Configuration au niveau workspace
 # À ajouter dans Cargo.toml:

@@ -262,82 +262,311 @@ pub async fn test_tts(text: String, settings: TTSSettings) -> CommandResult<Audi
 
 #[tauri::command]
 pub async fn get_audio_output_devices() -> CommandResult<Vec<AudioDevice>> {
-    let output = Command::new("pactl")
-        .args(["list", "short", "sinks"])
-        .output()
-        .map_err(|e| format!("Erreur pactl: {}", e))?;
-
-    let stdout = String::from_utf8_lossy(&output.stdout);
-    let mut devices = Vec::new();
-
-    for line in stdout.lines() {
-        let parts: Vec<&str> = line.split('\t').collect();
-        if parts.len() >= 5 {
-            let is_running = parts.get(4).map(|s| *s == "RUNNING").unwrap_or(false);
-            devices.push(AudioDevice {
-                id: parts[0].to_string(),
-                name: parts[1].to_string(),
-                device_type: "output".to_string(),
-                is_default: devices.is_empty(), // First is usually default
-                is_active: is_running,
-                driver: parts[2].to_string(),
-            });
+    // Try PipeWire first (modern Linux audio)
+    if let Ok(devices) = get_pipewire_output_devices().await {
+        if !devices.is_empty() {
+            return Ok(devices);
         }
     }
 
-    if devices.is_empty() {
-        devices.push(AudioDevice {
-            id: "default".to_string(),
-            name: "Default Speaker".to_string(),
-            device_type: "output".to_string(),
-            is_default: true,
-            is_active: true,
-            driver: "unknown".to_string(),
-        });
+    // Fallback to PulseAudio
+    if let Ok(output) = Command::new("pactl")
+        .args(["list", "short", "sinks"])
+        .output()
+    {
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        let mut devices = Vec::new();
+
+        for line in stdout.lines() {
+            let parts: Vec<&str> = line.split('\t').collect();
+            if parts.len() >= 5 {
+                let is_running = parts.get(4).map(|s| *s == "RUNNING").unwrap_or(false);
+                devices.push(AudioDevice {
+                    id: parts[0].to_string(),
+                    name: parts[1].to_string(),
+                    device_type: "output".to_string(),
+                    is_default: devices.is_empty(),
+                    is_active: is_running,
+                    driver: parts[2].to_string(),
+                });
+            }
+        }
+
+        if !devices.is_empty() {
+            return Ok(devices);
+        }
+    }
+
+    // Fallback to ALSA
+    if let Ok(devices) = get_alsa_output_devices().await {
+        if !devices.is_empty() {
+            return Ok(devices);
+        }
+    }
+
+    // Last resort: return default device
+    Ok(vec![AudioDevice {
+        id: "default".to_string(),
+        name: "Default Speaker".to_string(),
+        device_type: "output".to_string(),
+        is_default: true,
+        is_active: true,
+        driver: "system".to_string(),
+    }])
+}
+
+#[tauri::command]
+pub async fn get_audio_input_devices() -> CommandResult<Vec<AudioDevice>> {
+    // Try PipeWire first (modern Linux audio)
+    if let Ok(devices) = get_pipewire_input_devices().await {
+        if !devices.is_empty() {
+            return Ok(devices);
+        }
+    }
+
+    // Fallback to PulseAudio
+    if let Ok(output) = Command::new("pactl")
+        .args(["list", "short", "sources"])
+        .output()
+    {
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        let mut devices = Vec::new();
+
+        for line in stdout.lines() {
+            if line.contains(".monitor") {
+                continue;
+            }
+
+            let parts: Vec<&str> = line.split('\t').collect();
+            if parts.len() >= 5 {
+                let is_running = parts.get(4).map(|s| *s == "RUNNING").unwrap_or(false);
+                devices.push(AudioDevice {
+                    id: parts[0].to_string(),
+                    name: parts[1].to_string(),
+                    device_type: "input".to_string(),
+                    is_default: devices.is_empty(),
+                    is_active: is_running,
+                    driver: parts[2].to_string(),
+                });
+            }
+        }
+
+        if !devices.is_empty() {
+            return Ok(devices);
+        }
+    }
+
+    // Fallback to ALSA
+    if let Ok(devices) = get_alsa_input_devices().await {
+        if !devices.is_empty() {
+            return Ok(devices);
+        }
+    }
+
+    // Last resort: return default device
+    Ok(vec![AudioDevice {
+        id: "default".to_string(),
+        name: "Default Microphone".to_string(),
+        device_type: "input".to_string(),
+        is_default: true,
+        is_active: false,
+        driver: "system".to_string(),
+    }])
+}
+
+// ─────────────────────────────────────────────────────────────────
+//  PipeWire Helper Functions
+// ─────────────────────────────────────────────────────────────────
+
+async fn get_pipewire_output_devices() -> Result<Vec<AudioDevice>, String> {
+    let output = Command::new("pw-cli")
+        .args(["list-objects"])
+        .output()
+        .map_err(|e| format!("Erreur pw-cli: {}", e))?;
+
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let mut devices = Vec::new();
+    let mut current_device: Option<AudioDevice> = None;
+    let mut is_sink = false;
+    let mut id_counter = 0;
+
+    for line in stdout.lines() {
+        let line = line.trim();
+        
+        if line.contains("type = \"PipeWire:Interface:Node\"") {
+            if let Some(device) = current_device.take() {
+                if is_sink {
+                    devices.push(device);
+                }
+            }
+            current_device = Some(AudioDevice {
+                id: format!("{}", id_counter),
+                name: String::new(),
+                device_type: "output".to_string(),
+                is_default: devices.is_empty(),
+                is_active: false,
+                driver: "pipewire".to_string(),
+            });
+            is_sink = false;
+            id_counter += 1;
+        }
+        
+        if line.contains("media.class = \"Audio/Sink\"") {
+            is_sink = true;
+        }
+        
+        if let Some(ref mut device) = current_device {
+            if line.contains("node.description =") || line.contains("node.name =") {
+                if let Some(name_start) = line.find('\"') {
+                    if let Some(name_end) = line[name_start + 1..].find('\"') {
+                        let name = &line[name_start + 1..name_start + 1 + name_end];
+                        if device.name.is_empty() || line.contains("node.description") {
+                            device.name = name.to_string();
+                        }
+                    }
+                }
+            }
+            
+            if line.contains("\"running\"") || line.contains("state = \"running\"") {
+                device.is_active = true;
+            }
+        }
+    }
+    
+    if let Some(device) = current_device {
+        if is_sink {
+            devices.push(device);
+        }
     }
 
     Ok(devices)
 }
 
-#[tauri::command]
-pub async fn get_audio_input_devices() -> CommandResult<Vec<AudioDevice>> {
-    let output = Command::new("pactl")
-        .args(["list", "short", "sources"])
+async fn get_pipewire_input_devices() -> Result<Vec<AudioDevice>, String> {
+    let output = Command::new("pw-cli")
+        .args(["list-objects"])
         .output()
-        .map_err(|e| format!("Erreur pactl: {}", e))?;
+        .map_err(|e| format!("Erreur pw-cli: {}", e))?;
+
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let mut devices = Vec::new();
+    let mut current_device: Option<AudioDevice> = None;
+    let mut is_source = false;
+    let mut id_counter = 0;
+
+    for line in stdout.lines() {
+        let line = line.trim();
+        
+        if line.contains("type = \"PipeWire:Interface:Node\"") {
+            if let Some(device) = current_device.take() {
+                if is_source {
+                    devices.push(device);
+                }
+            }
+            current_device = Some(AudioDevice {
+                id: format!("{}", id_counter),
+                name: String::new(),
+                device_type: "input".to_string(),
+                is_default: devices.is_empty(),
+                is_active: false,
+                driver: "pipewire".to_string(),
+            });
+            is_source = false;
+            id_counter += 1;
+        }
+        
+        if line.contains("media.class = \"Audio/Source\"") && !line.contains("monitor") {
+            is_source = true;
+        }
+        
+        if let Some(ref mut device) = current_device {
+            if line.contains("node.description =") || line.contains("node.name =") {
+                if let Some(name_start) = line.find('\"') {
+                    if let Some(name_end) = line[name_start + 1..].find('\"') {
+                        let name = &line[name_start + 1..name_start + 1 + name_end];
+                        if device.name.is_empty() || line.contains("node.description") {
+                            device.name = name.to_string();
+                        }
+                    }
+                }
+            }
+            
+            if line.contains("\"running\"") || line.contains("state = \"running\"") {
+                device.is_active = true;
+            }
+        }
+    }
+    
+    if let Some(device) = current_device {
+        if is_source {
+            devices.push(device);
+        }
+    }
+
+    Ok(devices)
+}
+
+// ─────────────────────────────────────────────────────────────────
+//  ALSA Helper Functions
+// ─────────────────────────────────────────────────────────────────
+
+async fn get_alsa_output_devices() -> Result<Vec<AudioDevice>, String> {
+    let output = Command::new("aplay")
+        .args(["-l"])
+        .output()
+        .map_err(|e| format!("Erreur aplay: {}", e))?;
 
     let stdout = String::from_utf8_lossy(&output.stdout);
     let mut devices = Vec::new();
 
     for line in stdout.lines() {
-        // Skip monitor sources (speakers loopback)
-        if line.contains(".monitor") {
-            continue;
-        }
-
-        let parts: Vec<&str> = line.split('\t').collect();
-        if parts.len() >= 5 {
-            let is_running = parts.get(4).map(|s| *s == "RUNNING").unwrap_or(false);
-            devices.push(AudioDevice {
-                id: parts[0].to_string(),
-                name: parts[1].to_string(),
-                device_type: "input".to_string(),
-                is_default: devices.is_empty(),
-                is_active: is_running,
-                driver: parts[2].to_string(),
-            });
+        if line.starts_with("carte ") || line.starts_with("card ") {
+            if let Some(_card_start) = line.find("carte ").or_else(|| line.find("card ")) {
+                if let Some(colon_pos) = line.find(':') {
+                    let card_name = line[colon_pos + 1..].trim();
+                    
+                    devices.push(AudioDevice {
+                        id: format!("alsa_{}", devices.len()),
+                        name: card_name.to_string(),
+                        device_type: "output".to_string(),
+                        is_default: devices.is_empty(),
+                        is_active: true,
+                        driver: "alsa".to_string(),
+                    });
+                }
+            }
         }
     }
 
-    if devices.is_empty() {
-        devices.push(AudioDevice {
-            id: "default".to_string(),
-            name: "Default Microphone".to_string(),
-            device_type: "input".to_string(),
-            is_default: true,
-            is_active: false,
-            driver: "unknown".to_string(),
-        });
+    Ok(devices)
+}
+
+async fn get_alsa_input_devices() -> Result<Vec<AudioDevice>, String> {
+    let output = Command::new("arecord")
+        .args(["-l"])
+        .output()
+        .map_err(|e| format!("Erreur arecord: {}", e))?;
+
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let mut devices = Vec::new();
+
+    for line in stdout.lines() {
+        if line.starts_with("carte ") || line.starts_with("card ") {
+            if let Some(_card_start) = line.find("carte ").or_else(|| line.find("card ")) {
+                if let Some(colon_pos) = line.find(':') {
+                    let card_name = line[colon_pos + 1..].trim();
+                    
+                    devices.push(AudioDevice {
+                        id: format!("alsa_{}", devices.len()),
+                        name: card_name.to_string(),
+                        device_type: "input".to_string(),
+                        is_default: devices.is_empty(),
+                        is_active: false,
+                        driver: "alsa".to_string(),
+                    });
+                }
+            }
+        }
     }
 
     Ok(devices)
@@ -345,20 +574,42 @@ pub async fn get_audio_input_devices() -> CommandResult<Vec<AudioDevice>> {
 
 #[tauri::command]
 pub async fn set_audio_output_device(device_id: String) -> CommandResult<()> {
-    Command::new("pactl")
+    // Try PipeWire first
+    if Command::new("pw-cli").arg("--version").output().is_ok() {
+        // PipeWire device switching would require more complex logic
+        // For now, fall through to pactl
+    }
+    
+    // Try PulseAudio
+    if let Ok(_) = Command::new("pactl")
         .args(["set-default-sink", &device_id])
         .output()
-        .map_err(|e| format!("Erreur changement sortie: {}", e))?;
-    Ok(())
+    {
+        return Ok(());
+    }
+    
+    // ALSA doesn't have a simple command-line way to switch devices
+    Err("Device switching not supported on this system".to_string())
 }
 
 #[tauri::command]
 pub async fn set_audio_input_device(device_id: String) -> CommandResult<()> {
-    Command::new("pactl")
+    // Try PipeWire first
+    if Command::new("pw-cli").arg("--version").output().is_ok() {
+        // PipeWire device switching would require more complex logic
+        // For now, fall through to pactl
+    }
+    
+    // Try PulseAudio
+    if let Ok(_) = Command::new("pactl")
         .args(["set-default-source", &device_id])
         .output()
-        .map_err(|e| format!("Erreur changement entrée: {}", e))?;
-    Ok(())
+    {
+        return Ok(());
+    }
+    
+    // ALSA doesn't have a simple command-line way to switch devices
+    Err("Device switching not supported on this system".to_string())
 }
 
 // ─────────────────────────────────────────────────────────────────

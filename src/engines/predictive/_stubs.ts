@@ -9,6 +9,14 @@
  * de compilation. Les modules dépendants devront être refactorisés.
  */
 
+import type { MultimodalState } from '../../types/multimodalFusion';
+import {
+  getDefaultPredictiveEngineConfig,
+  getDefaultPredictiveState,
+  type PredictiveEngineConfig,
+  type PredictiveState,
+} from '../../types/predictiveState';
+
 export interface Prediction {
   type: string;
   confidence: number;
@@ -65,10 +73,101 @@ export interface RecommendedAdjustments {
 }
 
 export class PredictiveStateEngine {
+  private static instance: PredictiveStateEngine | null = null;
+
+  private running = false;
+  private config: PredictiveEngineConfig = getDefaultPredictiveEngineConfig();
+  private state: PredictiveState = getDefaultPredictiveState();
+  private observationsCount = 0;
+  private onStateUpdate: ((state: PredictiveState) => void) | null = null;
+
+  static getInstance(): PredictiveStateEngine {
+    if (!PredictiveStateEngine.instance) {
+      PredictiveStateEngine.instance = new PredictiveStateEngine();
+    }
+    return PredictiveStateEngine.instance;
+  }
+
+  static resetInstance(): void {
+    // Stub: pas de ressources réelles, mais on garde une API sûre.
+    PredictiveStateEngine.instance?.stop();
+    PredictiveStateEngine.instance = null;
+  }
+
   constructor() {}
-  start() {}
-  stop() {}
-  getState() {
-    return {};
+
+  start(): void {
+    this.running = true;
+  }
+
+  stop(): void {
+    this.running = false;
+  }
+
+  reset(): void {
+    this.observationsCount = 0;
+    this.state = getDefaultPredictiveState();
+  }
+
+  processMultimodalState(_multimodalState: MultimodalState): void {
+    if (!this.running) {
+      // API tolérante: les tests démarrent le moteur, mais on évite de throw.
+      this.running = true;
+    }
+
+    this.observationsCount += 1;
+    const now = Date.now();
+
+    // Stub minimal: on “met à jour” l’état sans prétendre faire de prédiction.
+    this.state = {
+      ...this.state,
+      lastUpdate: now,
+      energyTrend: this.state.energyTrend,
+      tensionTrend: this.state.tensionTrend,
+      engagementTrend: this.state.engagementTrend,
+      explanations:
+        this.observationsCount <= 1
+          ? ['Observation multimodale reçue']
+          : this.state.explanations,
+    };
+
+    this.onStateUpdate?.(this.state);
+  }
+
+  setConfig(partial: Partial<PredictiveEngineConfig>): void {
+    this.config = {
+      ...this.config,
+      ...partial,
+      patternDetection: {
+        ...this.config.patternDetection,
+        ...(partial.patternDetection ?? {}),
+      },
+      triggers: {
+        ...this.config.triggers,
+        ...(partial.triggers ?? {}),
+      },
+    };
+  }
+
+  getConfig(): PredictiveEngineConfig {
+    return this.config;
+  }
+
+  getState(): PredictiveState {
+    return this.state;
+  }
+
+  generatePredictiveSummary(): string {
+    const state = this.state;
+    return [
+      'Résumé prédictif',
+      `Énergie: ${state.energyTrend}`,
+      `Tension: ${state.tensionTrend}`,
+      `Engagement: ${state.engagementTrend}`,
+    ].join(' | ');
+  }
+
+  setStateUpdateCallback(callback: (state: PredictiveState) => void): void {
+    this.onStateUpdate = callback;
   }
 }

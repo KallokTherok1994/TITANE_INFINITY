@@ -419,7 +419,18 @@ mod tests {
 
     #[tokio::test]
     async fn test_multi_level_cache() {
-        let cache_dir = PathBuf::from("/tmp/titane_cache_test");
+        let now_nanos = match std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH) {
+            Ok(d) => d.as_nanos(),
+            Err(_) => 0,
+        };
+        let cache_dir = std::env::temp_dir().join(format!(
+            "titane_cache_test_{}_{}",
+            std::process::id(),
+            now_nanos
+        ));
+
+        // Ensure isolation even if a previous run left artifacts.
+        let _ = tokio::fs::remove_dir_all(&cache_dir).await;
         let cache = MultiLevelCache::<String>::new(
             100,  // L1 capacity
             60,   // L1 TTL

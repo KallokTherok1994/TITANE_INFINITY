@@ -32,6 +32,11 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
   const [unreadCount, setUnreadCount] = useState(0);
   const [selectedProvider, setSelectedProvider] = useState<string>('auto');
 
+  // ✨ Drag & Drop state
+  const [isDragging, setIsDragging] = useState(false);
+  const [bubblePosition, setBubblePosition] = useState({ x: 0, y: 0 });
+  const [justDragged, setJustDragged] = useState(false);
+
   const { messages, isLoading, sendMessage } = useChat({});
 
   const {
@@ -105,9 +110,12 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
 
   // Réinitialiser le compteur à l'ouverture
   const handleOpen = useCallback(() => {
-    setIsOpen(true);
-    setUnreadCount(0);
-  }, []);
+    // Empêcher l'ouverture si on vient de finir un drag
+    if (!isDragging && !justDragged) {
+      setIsOpen(true);
+      setUnreadCount(0);
+    }
+  }, [isDragging, justDragged]);
 
   const handleClose = useCallback(() => {
     setIsOpen(false);
@@ -145,13 +153,36 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
       <AnimatePresence>
         {!isOpen && (
           <motion.button
-            className={`chat-bubble-trigger ${position}`}
+            className={`chat-bubble-trigger ${position} ${isDragging ? 'dragging' : ''}`}
             onClick={handleOpen}
+            drag
+            dragMomentum={false}
+            dragElastic={0.1}
+            dragConstraints={{
+              top: -window.innerHeight + 100,
+              left: -window.innerWidth + 100,
+              right: window.innerWidth - 100,
+              bottom: window.innerHeight - 100,
+            }}
+            onDragStart={() => setIsDragging(true)}
+            onDragEnd={(_, info) => {
+              setIsDragging(false);
+              // Marquer qu'on vient de drag pour éviter le clic
+              if (Math.abs(info.offset.x) > 5 || Math.abs(info.offset.y) > 5) {
+                setJustDragged(true);
+                setTimeout(() => setJustDragged(false), 300);
+              }
+              setBubblePosition({
+                x: bubblePosition.x + info.offset.x,
+                y: bubblePosition.y + info.offset.y,
+              });
+            }}
+            style={{ x: bubblePosition.x, y: bubblePosition.y }}
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={!isDragging ? { scale: 1.1 } : {}}
+            whileTap={!isDragging ? { scale: 0.95 } : {}}
           >
             <MessageSquare size={24} />
             {unreadCount > 0 && (
@@ -186,7 +217,30 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className={`chat-bubble-panel ${position}`}
+            className={`chat-bubble-panel ${position} ${isDragging ? 'dragging' : ''}`}
+            drag
+            dragMomentum={false}
+            dragElastic={0.1}
+            dragConstraints={{
+              top: -window.innerHeight + 200,
+              left: -window.innerWidth + 200,
+              right: window.innerWidth - 200,
+              bottom: window.innerHeight - 200,
+            }}
+            onDragStart={() => setIsDragging(true)}
+            onDragEnd={(_, info) => {
+              setIsDragging(false);
+              // Sauvegarder la position finale
+              if (Math.abs(info.offset.x) > 5 || Math.abs(info.offset.y) > 5) {
+                setJustDragged(true);
+                setTimeout(() => setJustDragged(false), 300);
+              }
+              setBubblePosition({
+                x: bubblePosition.x + info.offset.x,
+                y: bubblePosition.y + info.offset.y,
+              });
+            }}
+            style={{ x: bubblePosition.x, y: bubblePosition.y }}
             initial={{ opacity: 0, y: 20, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}

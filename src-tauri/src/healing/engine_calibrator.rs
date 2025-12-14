@@ -136,20 +136,26 @@ impl EngineCalibrator {
 
     /// Record a performance sample for an engine
     pub fn record_sample(&self, engine_id: &str, sample: PerformanceSample) {
-        let mut samples = self.samples.write();
-        let engine_samples = samples.entry(engine_id.to_string()).or_default();
+        let should_establish_baseline = {
+            let mut samples = self.samples.write();
+            let engine_samples = samples.entry(engine_id.to_string()).or_default();
 
-        engine_samples.push_back(sample);
+            engine_samples.push_back(sample);
 
-        // Maintain window size
-        while engine_samples.len() > self.config.sample_window_size {
-            engine_samples.pop_front();
-        }
+            // Maintain window size
+            while engine_samples.len() > self.config.sample_window_size {
+                engine_samples.pop_front();
+            }
 
-        self.stats.samples_collected.fetch_add(1, Ordering::Relaxed);
+            self.stats.samples_collected.fetch_add(1, Ordering::Relaxed);
 
-        // Establish baseline if we have enough samples
-        if engine_samples.len() >= self.config.baseline_samples {
+            engine_samples.len() >= self.config.baseline_samples
+        };
+
+        // Establish baseline if we have enough samples.
+        // IMPORTANT: we must not hold the samples write-lock when calling establish_baseline,
+        // because establish_baseline reads samples and would deadlock.
+        if should_establish_baseline {
             let baselines = self.baselines.read();
             if !baselines.contains_key(engine_id) {
                 drop(baselines);

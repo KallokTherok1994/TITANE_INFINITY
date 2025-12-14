@@ -239,6 +239,7 @@ describe('useAdaptiveFPS Hook', () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.useRealTimers();
   });
 
   it('should initialize with default metrics', () => {
@@ -259,9 +260,8 @@ describe('useAdaptiveFPS Hook', () => {
       vi.advanceTimersByTime(1000);
     });
 
-    await waitFor(() => {
-      expect(result.current.metrics.average).toBeDefined();
-    });
+    expect(result.current.metrics.average).toBeGreaterThanOrEqual(0);
+    expect(result.current.metrics.average).toBeGreaterThanOrEqual(initialAverage);
   });
 
   it('should detect performance degradation', async () => {
@@ -274,9 +274,7 @@ describe('useAdaptiveFPS Hook', () => {
       vi.advanceTimersByTime(5000);
     });
 
-    await waitFor(() => {
-      expect(result.current.isPerformanceDegraded).toBeDefined();
-    });
+    expect(typeof result.current.isPerformanceDegraded).toBe('boolean');
   });
 
   it('should generate warnings when FPS drops', async () => {
@@ -286,19 +284,17 @@ describe('useAdaptiveFPS Hook', () => {
       vi.advanceTimersByTime(10000);
     });
 
-    await waitFor(() => {
-      expect(result.current.warnings).toBeDefined();
-      expect(Array.isArray(result.current.warnings)).toBe(true);
-    });
+    expect(result.current.warnings).toBeDefined();
+    expect(Array.isArray(result.current.warnings)).toBe(true);
   });
 
-  it('should cleanup interval on unmount', () => {
+  it('should cleanup animation frame on unmount', () => {
     const { unmount } = renderHook(() => useAdaptiveFPS());
-    const clearIntervalSpy = vi.spyOn(global, 'clearInterval');
+    const cancelAnimationFrameSpy = vi.spyOn(global, 'cancelAnimationFrame');
 
     unmount();
 
-    expect(clearIntervalSpy).toHaveBeenCalled();
+    expect(cancelAnimationFrameSpy).toHaveBeenCalled();
   });
 });
 
@@ -309,6 +305,7 @@ describe('useEffects Hook', () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.useRealTimers();
   });
 
   it('should initialize with default metrics', () => {
@@ -335,9 +332,7 @@ describe('useEffects Hook', () => {
       vi.advanceTimersByTime(1000);
     });
 
-    await waitFor(() => {
-      expect(result.current.metrics.totalTriggered).toBeGreaterThanOrEqual(initialTotal);
-    });
+    expect(result.current.metrics.totalTriggered).toBeGreaterThanOrEqual(initialTotal);
   });
 
   it('should track GPU load', () => {
@@ -402,11 +397,10 @@ describe('Hooks Integration Tests', () => {
       vi.advanceTimersByTime(2000);
     });
 
-    await waitFor(() => {
-      expect(fpsResult.current.metrics.average).toBeGreaterThanOrEqual(0);
-      expect(effectsResult.current.metrics.totalTriggered).toBeGreaterThanOrEqual(0);
-    });
+    expect(fpsResult.current.metrics.average).toBeGreaterThanOrEqual(0);
+    expect(effectsResult.current.metrics.totalTriggered).toBeGreaterThanOrEqual(0);
 
     vi.restoreAllMocks();
+    vi.useRealTimers();
   });
 });

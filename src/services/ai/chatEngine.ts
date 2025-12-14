@@ -69,6 +69,7 @@ type BackendStreamMetadata = {
 
 export interface ChatEngineConfig {
   mode: ChatMode;
+  conversationId?: string;
   emotionState?: {
     valence: number; // -1.0 (négatif) → 1.0 (positif)
     intensity: number; // 0.0 (calme) → 1.0 (intense)
@@ -199,13 +200,13 @@ class ChatEngineOmega {
     const failureHandled = false;
 
     try {
+      const finalConfig = { ...this.config, ...config };
+
       logger.group('OMEGA Pipeline Starting');
       logger.info(`Mode: ${finalConfig.mode}`, {
         autoHeal: finalConfig.omegaConfig?.enableAutoHeal,
       });
       logger.groupEnd();
-
-      const finalConfig = { ...this.config, ...config };
 
       // ═══ PHASE 1.1: VALIDATION ENTRÉE SÉCURISÉE ═══
       pipelineSteps.push('input-validation');
@@ -1675,6 +1676,7 @@ Que souhaites-tu explorer ?`;
    */
   private calculateImportance(mode: ChatMode, message: string): number {
     const modeImportance: Record<ChatMode, number> = {
+      // Modes TITANE∞ v21
       reflection: 0.8,
       creation: 0.7,
       strategy: 0.7,
@@ -1683,7 +1685,18 @@ Que souhaites-tu explorer ?`;
       standard: 0.4,
       quick: 0.2,
       omega: 0.5,
+      'omega-meta': 0.5,
       default: 0.3,
+      // Modes legacy
+      'dev-senior': 0.6,
+      'nexus-guide': 0.5,
+      'sentinel-guardian': 0.7,
+      'artisan-creator': 0.7,
+      'visionary-philosopher': 0.8,
+      brainstorming: 0.7,
+      synthesis: 0.6,
+      planning: 0.7,
+      journal: 0.5,
     };
     let importance = modeImportance[mode] || 0.3;
     const lowerMessage = message.toLowerCase();

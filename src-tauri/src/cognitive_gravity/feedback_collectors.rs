@@ -305,7 +305,7 @@ mod tests {
         let mut anti_attractors = AntiAttractorState::new();
 
         feedback.apply_to_anti_attractors(&mut anti_attractors);
-        assert_eq!(anti_attractors.overload, 0.7); // (0.8 + 0.6) / 2
+        assert!((anti_attractors.overload - 0.7).abs() < 1e-6); // (0.8 + 0.6) / 2
     }
 
     #[test]

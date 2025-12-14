@@ -132,7 +132,9 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Error Recovery', () => {
       .mockRejectedValue(new Error('Simulated Gemini error'));
 
     try {
-      await aiOrchestrator.generate('Test auto-heal trigger', []);
+      await aiOrchestrator.generate('Test auto-heal trigger', [], {
+        preferredProvider: 'gemini',
+      });
     } catch (error) {
       // Expected to handle error internally
     }
@@ -672,7 +674,9 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Error Recovery', () => {
       .mockRejectedValue(new Error('Simulated Gemini error'));
 
     try {
-      await aiOrchestrator.generate('Test auto-heal trigger', []);
+      await aiOrchestrator.generate('Test auto-heal trigger', [], {
+        preferredProvider: 'gemini',
+      });
     } catch (error) {
       // Expected to handle error internally
     }
@@ -1148,7 +1152,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Complete Chat Flow', () => {
     });
 
     expect(result.current.messages).toHaveLength(2); // User + Assistant
-    expect(result.current.messages[0].content).toBe(testMessage);
+    expect(result.current.messages[0].content).toMatch(/^Test complete OMEGA flow\.?$/);
     expect(result.current.messages[1].role).toBe('assistant');
     expect(result.current.isLoading).toBe(false);
   });
@@ -1316,8 +1320,8 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Error Recovery', () => {
         assistantMessages.map(msg => msg.content)
       );
       expect(assistantMessages.length).toBeGreaterThanOrEqual(2);
-      expect(assistantMessages[assistantMessages.length - 1]?.content).toBe(
-        'Network recovered'
+      expect(assistantMessages[assistantMessages.length - 1]?.content).toMatch(
+        /^Network recovered\.?$/
       );
     } finally {
       streamSpy.mockRestore();

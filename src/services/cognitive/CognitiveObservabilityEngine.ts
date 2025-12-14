@@ -502,7 +502,7 @@ export class CognitiveObservabilityEngine extends EventEmitter {
         md += `### ${decision.decision_point}\n`;
         md += `- **Chosen:** ${decision.chosen_option}\n`;
         md += `- **Why:** ${decision.why}\n`;
-        md += `- **Confidence:** ${((decision.confidence ?? 0 ?? 0) * 100).toFixed(0)}%\n`;
+        md += `- **Confidence:** ${((decision.confidence ?? 0) * 100).toFixed(0)}%\n`;
         if (decision.alternatives && decision.alternatives.length > 0) {
           md += `- **Alternatives:** ${decision.alternatives.join(', ')}\n`;
         }
@@ -549,7 +549,7 @@ export class CognitiveObservabilityEngine extends EventEmitter {
       if (trace.decisions.length > 0) {
         md += `**Decisions:**\n`;
         for (const decision of trace.decisions) {
-          md += `- ${decision.decision_point}: ${decision.chosen_option} (${((decision.confidence ?? 0 ?? 0) * 100).toFixed(0)}%)\n`;
+          md += `- ${decision.decision_point}: ${decision.chosen_option} (${((decision.confidence ?? 0) * 100).toFixed(0)}%)\n`;
         }
         md += `\n`;
       }

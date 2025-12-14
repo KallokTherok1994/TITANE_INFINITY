@@ -88,9 +88,9 @@ impl TemporalKernelBridge {
 
     fn calculate_max_cpu(hour: u8) -> f32 {
         match hour {
-            10..=11 => 0.95,        // Peak: max CPU
-            22..=23 | 0..=5 => 0.3, // Night: reduced
-            _ => 0.7,
+            10..=11 => 95.0,        // Peak: max CPU
+            22..=23 | 0..=5 => 30.0, // Night: reduced
+            _ => 70.0,
         }
     }
 
@@ -124,10 +124,12 @@ impl TemporalKernelBridge {
         let is_weekend = context.now.is_weekend;
 
         let is_maintenance_window = matches!(hour, 2..=4);
-        let urgency = if is_maintenance_window && is_weekend {
-            MaintenanceUrgency::High
-        } else if is_maintenance_window {
-            MaintenanceUrgency::Medium
+        let urgency = if is_maintenance_window {
+            if is_weekend {
+                MaintenanceUrgency::Critical
+            } else {
+                MaintenanceUrgency::High
+            }
         } else {
             MaintenanceUrgency::Low
         };

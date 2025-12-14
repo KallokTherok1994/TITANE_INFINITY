@@ -159,7 +159,9 @@ export class TauriBridge {
    * Batch multiple commandes
    */
   async batch<R = unknown>(commands: Array<TauriCommand>): Promise<R[]> {
-    return Promise.all(commands.map(cmd => this.invoke(cmd.name, cmd.args)));
+    return Promise.all(commands.map(cmd => this.invoke(cmd.name, cmd.args))) as Promise<
+      R[]
+    >;
   }
 
   /**

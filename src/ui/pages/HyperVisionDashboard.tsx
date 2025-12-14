@@ -3,7 +3,7 @@
  * Super-Prompt R: Real-time system monitoring & anomaly detection
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { secureInvoke } from '@/lib/security';
 
 interface SystemMetrics {
@@ -29,30 +29,13 @@ interface LayerMetrics {
 
 const LAYER_NAMES = ['Physique', 'Réseau', 'Logique', 'Mémoire', 'Sécurité'];
 
-const HyperVisionDashboard: React.FC = () => {
+const HyperVisionDashboard: React.FC = React.memo(() => {
   const [metrics, setMetrics] = useState<SystemMetrics | null>(null);
   const [layers, setLayers] = useState<LayerMetrics[]>([]);
   const [isMonitoring, setIsMonitoring] = useState(false);
   const [history, setHistory] = useState<SystemMetrics[]>([]);
 
-  useEffect(() => {
-    if (isMonitoring) {
-      fetchMetrics();
-      const interval = setInterval(fetchMetrics, 2000);
-      return () => clearInterval(interval);
-    }
-  }, [isMonitoring]);
-
-  const startMonitoring = async () => {
-    try {
-      await secureInvoke('hypervision_start');
-      setIsMonitoring(true);
-    } catch (err) {
-      console.error('Failed to start monitoring:', err);
-    }
-  };
-
-  const fetchMetrics = async () => {
+  const fetchMetrics = useCallback(async () => {
     try {
       const data = await secureInvoke<SystemMetrics>('get_system_metrics');
       setMetrics(data);
@@ -72,22 +55,32 @@ const HyperVisionDashboard: React.FC = () => {
     } catch (err) {
       console.error('Failed to fetch metrics:', err);
     }
-  };
+  }, []);
+
+  const startMonitoring = useCallback(async () => {
+    try {
+      await secureInvoke('hypervision_start');
+      setIsMonitoring(true);
+    } catch (err) {
+      console.error('Failed to start monitoring:', err);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isMonitoring) {
+      fetchMetrics();
+      const interval = setInterval(fetchMetrics, 2000);
+      return () => clearInterval(interval);
+    }
+  }, [isMonitoring, fetchMetrics]);
 
   // Design System TITANE — Couleurs monochromes pour santé
-  const getHealthColor = (value: number) => {
+  const getHealthColor = useCallback((value: number) => {
     if (value >= 90) return 'text-[#93b399]'; // success (vert métal)
     if (value >= 70) return 'text-[#c4c4c4]'; // secondary (argent)
     if (value >= 50) return 'text-[#a89f91]'; // warning (beige métal)
     return 'text-[#8f7a7a]'; // danger (rouge-gris)
-  };
-
-  const _getHealthBg = (value: number) => {
-    if (value >= 90) return 'bg-[#93b399]'; // success
-    if (value >= 70) return 'bg-[#c4c4c4]'; // secondary
-    if (value >= 50) return 'bg-[#a89f91]'; // warning
-    return 'bg-[#8f7a7a]'; // danger
-  };
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] via-[#111416] to-[#0f0f0f] p-6">
@@ -298,6 +291,8 @@ const HyperVisionDashboard: React.FC = () => {
       )}
     </div>
   );
-};
+});
+
+HyperVisionDashboard.displayName = 'HyperVisionDashboard';
 
 export default HyperVisionDashboard;

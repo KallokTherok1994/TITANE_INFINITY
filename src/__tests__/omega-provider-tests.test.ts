@@ -19,6 +19,7 @@ import { titaneLocalProvider } from '../services/ai/providers/titaneLocal';
 import { aiOrchestrator } from '../services/ai/orchestrator';
 import { autoHealEngine } from '../services/ai/autoHealEngine';
 import type { AIMessage } from '../services/ai/types';
+import * as tauriCore from '@tauri-apps/api/core';
 
 // ═══════════════════════════════════════════════════════════════════
 // OMEGA TEST SUITE 1: GEMINI PROVIDER DOWN
@@ -80,7 +81,9 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 1: Gemini Provider Down', () => {
   });
 
   it('should trigger auto-heal on repeated Gemini failures', async () => {
-    const healSpy = vi.spyOn(autoHealEngine, 'heal');
+    const detectSpy = vi.spyOn(autoHealEngine, 'detectError');
+
+    vi.spyOn(tauriCore, 'invoke').mockRejectedValue(new Error('Gemini provider down'));
 
     // Multiple failures
     for (let i = 0; i < 3; i++) {
@@ -91,13 +94,14 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 1: Gemini Provider Down', () => {
       }
     }
 
-    expect(healSpy).toHaveBeenCalledWith(
-      'tauri-chat',
+    expect(detectSpy).toHaveBeenCalledWith(
+      'gemini-provider',
       expect.any(Error),
       'provider',
       expect.objectContaining({
-        context: expect.any(String),
-        errorCount: expect.any(Number),
+        latency: expect.any(Number),
+        message: expect.any(String),
+        historyLength: expect.any(Number),
       })
     );
   });

@@ -37,6 +37,7 @@
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:debug": "playwright test --debug",
     "test:rust": "cd src-tauri && cargo test",
+    "test:tauri": "npm run test:rust",
     "test:all": "npm run test && npm run test:e2e && cargo test",
     "test:ci": "npm run lint && npm run type-check && npm run test && npm run test:e2e && npm run test:rust",
     "storybook": "storybook dev -p 6006",

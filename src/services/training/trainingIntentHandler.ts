@@ -310,7 +310,7 @@ export class TrainingIntentHandler {
     for (const intentPattern of INTENT_PATTERNS) {
       for (const pattern of intentPattern.patterns) {
         if (pattern.test(trimmedMessage)) {
-          return this.processIntent(
+          return await this.processIntent(
             intentPattern.intent,
             trimmedMessage,
             intentPattern.requiresLabel ?? false
@@ -325,11 +325,11 @@ export class TrainingIntentHandler {
   /**
    * Traite un intent reconnu
    */
-  private processIntent(
+  private async processIntent(
     intent: TrainingIntentType,
     message: string,
     requiresLabel: boolean
-  ): TrainingIntentResult {
+  ): Promise<TrainingIntentResult> {
     this._lastIntentTime = Date.now();
 
     // Extraire le label si nécessaire
@@ -350,7 +350,7 @@ export class TrainingIntentHandler {
     switch (intent) {
       case 'start_training':
         if (label) {
-          return this.handleStartTraining(label);
+          return await this.handleStartTraining(label);
         }
         return this.noMatch();
 
@@ -359,7 +359,7 @@ export class TrainingIntentHandler {
 
       case 'record_state':
         if (label) {
-          return this.handleRecordState(label);
+          return await this.handleRecordState(label);
         }
         return this.noMatch();
 
@@ -398,10 +398,11 @@ export class TrainingIntentHandler {
   // HANDLERS D'INTENTS
   // ============================================================================
 
-  private handleStartTraining(label: UserStateLabel): TrainingIntentResult {
+  private async handleStartTraining(
+    label: UserStateLabel
+  ): Promise<TrainingIntentResult> {
     try {
-      const session = this.engine.startTrainingCapture(
-        label,
+      const session = await this.engine.startTrainingCapture(
         TRAINING_CONFIG.defaultCaptureDuration
       );
 
@@ -456,11 +457,10 @@ export class TrainingIntentHandler {
     };
   }
 
-  private handleRecordState(label: UserStateLabel): TrainingIntentResult {
+  private async handleRecordState(label: UserStateLabel): Promise<TrainingIntentResult> {
     try {
       // Démarre une capture courte (5 secondes)
-      const session = this.engine.startTrainingCapture(
-        label,
+      const session = await this.engine.startTrainingCapture(
         TRAINING_CONFIG.defaultCaptureDuration
       );
 
@@ -490,9 +490,9 @@ export class TrainingIntentHandler {
       recognized: true,
       intent: 'query_baseline',
       label: null,
-      response: this.getBaselineProfileResponse(profile),
+      response: this.getBaselineProfileResponse(profile ?? undefined),
       action: { type: 'QUERY_BASELINE' },
-      metadata: { profile },
+      metadata: { profile: profile ?? undefined },
     };
   }
 
@@ -504,9 +504,9 @@ export class TrainingIntentHandler {
       recognized: true,
       intent: 'query_progress',
       label: null,
-      response: this.getProgressResponse(session, profile),
+      response: this.getProgressResponse(session, profile ?? undefined),
       action: { type: 'QUERY_PROGRESS' },
-      metadata: { session, totalSamples: profile.totalSamplesCount },
+      metadata: { session, totalSamples: profile?.totalSamplesCount ?? 0 },
     };
   }
 
@@ -623,7 +623,19 @@ Je capture ton état **${labelFr}** pendant quelques secondes.
 ${PRUDENT_MESSAGES.sessionStart}`;
   }
 
-  private getBaselineProfileResponse(profile: TrainingBaselineProfile): string {
+  private getBaselineProfileResponse(
+    profile: TrainingBaselineProfile | undefined
+  ): string {
+    if (!profile) {
+      return `📋 **Votre profil**
+
+Aucun profil de baseline disponible.
+
+Pour commencer, dites par exemple :
+- "Je suis calme" (je capture cet état)
+- "Je suis concentré" (autre état)`;
+    }
+
     const signatures = Object.keys(profile.stateSignatures);
 
     if (signatures.length === 0 && profile.totalSamplesCount === 0) {
@@ -663,9 +675,18 @@ ${PRUDENT_MESSAGES.confidenceDisclaimer}`;
 
   private getProgressResponse(
     session: TrainingSession | null,
-    profile: TrainingBaselineProfile
+    profile: TrainingBaselineProfile | undefined
   ): string {
     if (!session) {
+      if (!profile) {
+        return `📊 **Progression**
+
+Aucune session d’entraînement en cours.
+Aucun profil de baseline disponible.
+
+Pour démarrer une session, dites "je suis calme" (ou un autre état).`;
+      }
+
       const statesCount = Object.keys(profile.stateSignatures).length;
 
       return `📊 **Progression**

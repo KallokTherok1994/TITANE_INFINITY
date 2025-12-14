@@ -110,7 +110,7 @@ impl Ord for ScheduledJob {
                 // Older jobs first (FIFO within same priority)
                 other.created_at.cmp(&self.created_at)
             }
-            ord => ord.reverse(), // BinaryHeap is max-heap, we want higher priority first
+            ord => ord, // BinaryHeap est un max-heap: priorité élevée doit être "plus grande"
         }
     }
 }

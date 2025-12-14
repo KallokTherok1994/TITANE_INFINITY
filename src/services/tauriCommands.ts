@@ -93,8 +93,8 @@ export const TAURI_COMMANDS: Record<string, TauriCommand> = {
   chat_send_message: {
     name: 'chat_send_message',
     description: 'Send message to AI chat',
-    params: { messages: 'Vec<Message>', config: 'ChatConfig' },
-    returnType: 'string',
+    params: { request: 'ChatRequest' },
+    returnType: 'ChatResponse',
     active: true,
   },
   start_recording: {

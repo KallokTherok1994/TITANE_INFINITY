@@ -363,6 +363,23 @@ impl InvariantsEngine {
 
     /// Valider et réparer si possible
     pub fn validate_and_repair(&mut self, state_json: &mut Value) -> ValidationResult {
+        if self.mode == ValidationMode::Recovery {
+            if let Some(obj) = state_json.as_object_mut() {
+                obj.entry("schema_version".to_string())
+                    .or_insert_with(|| Value::Number(1.into()));
+
+                obj.entry("timestamp".to_string()).or_insert_with(|| {
+                    let now = chrono::Utc::now().timestamp_millis() as u64;
+                    Value::Number(now.into())
+                });
+
+                obj.entry("signature".to_string()).or_insert_with(|| {
+                    let sig = format!("TITANE-{}", uuid::Uuid::new_v4());
+                    Value::String(sig)
+                });
+            }
+        }
+
         let mut result = self.validate_state(state_json);
 
         if !result.is_valid && self.mode == ValidationMode::Recovery {

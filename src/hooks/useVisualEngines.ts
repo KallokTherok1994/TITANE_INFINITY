@@ -34,7 +34,7 @@ interface SystemState {
 export const useVisualEngines = (systemState: SystemState, moduleId?: string) => {
   useEffect(() => {
     // Mapping SystemState → intensité visuelle
-    const stateIntensityMap: Record<SystemState, number> = {
+    const stateIntensityMap: Record<string, number> = {
       stable: 50,
       processing: 75,
       warning: 85,
@@ -43,14 +43,14 @@ export const useVisualEngines = (systemState: SystemState, moduleId?: string) =>
       offline: 5,
     };
 
-    const intensity = stateIntensityMap[systemState] || 50;
+    const intensity = stateIntensityMap[systemState as unknown as string] || 50;
 
     // Application CSS Variables globales
     document.documentElement.style.setProperty(
       '--system-state-intensity',
-      `${intensity}`
+      String(intensity)
     );
-    document.documentElement.style.setProperty('--system-state', systemState);
+    document.documentElement.style.setProperty('--system-state', String(systemState));
 
     if (moduleId) {
       document.documentElement.style.setProperty('--active-module-id', moduleId);

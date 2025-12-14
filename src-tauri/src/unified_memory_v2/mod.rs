@@ -16,7 +16,7 @@
 //! - `memory_compactor.rs` → Compaction
 //!
 //! **Nouvelle architecture:**
-//! ```
+//! ```text
 //! unified_memory_v2/       ← API publique unifiée
 //! │  ├── api.rs            ← Interface publique simple
 //! │  ├── types.rs          ← Types communs (MemoryEntry, MemoryTier, etc.)

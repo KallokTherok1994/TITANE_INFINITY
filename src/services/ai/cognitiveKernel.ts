@@ -356,7 +356,10 @@ class CognitiveKernel {
     });
 
     // Trier par score
-    providerScores.sort((a, b) => b.score - a.score);
+    providerScores.sort(
+      (a: { provider: string; score: number }, b: { provider: string; score: number }) =>
+        b.score - a.score
+    );
 
     const bestProvider = providerScores[0]?.provider || 'titane-local';
     const stabilityScore = perception.systemState.chatStability;
@@ -712,7 +715,7 @@ class CognitiveKernel {
       errorPatterns: number;
       adaptations: number;
     };
-    health: ReturnType<typeof this.validateCognitiveHealth>;
+    health: ReturnType<typeof CognitiveKernel.prototype.validateCognitiveHealth>;
     coherenceScore: number;
   } {
     return {

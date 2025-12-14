@@ -191,19 +191,19 @@ export class SingularityConnections {
 
       const updated: PhysicalLayer = {
         ...current,
-        helios: {
+        hardware: {
           active: true,
           cpu_usage: helios.cpu_usage / 100, // 0-100 → 0-1
           memory_usage: helios.ram_usage / 100,
           disk_usage: helios.disk_usage / 100,
           temperature: 0.0, // TODO: Add temperature sensor if available
           battery_level: 1.0, // TODO: Add battery API if available
-          last_update: Date.now(),
+          last_update: Math.floor(Date.now() / 1000), // ✅ v∞.FIX: Convert ms → seconds (u64)
         },
         system_health: {
           ...current.system_health,
           global_health: this.calculateHealthScore(helios),
-          last_check: Date.now(),
+          // ✅ v∞.FIX: Removed last_check (not in Rust SystemHealth struct)
         },
         metrics: {
           ...current.metrics,
@@ -258,22 +258,23 @@ export class SingularityConnections {
           total_memories: totalEntries,
           active_memories: memory.snapshots_count, // Snapshots = active context
           memory_usage: memory.storage_size_mb / 1024, // MB → GB
-          last_retrieval: Date.now(),
+          last_retrieval: null, // ✅ v∞.FIX - Backend will populate timestamp
           compression_ratio: 0.9, // TODO: Calculate from actual data
         },
         conversation: {
           ...current.conversation,
-          active_threads: 1, // TODO: Get from conversation state
           message_count: memory.log_entries_count,
-          context_depth: Math.min(10, memory.snapshots_count),
-          last_message: Date.now(),
+          context_length: Math.min(10, memory.snapshots_count),
+          active_session: true,
+          last_message: null,
+          last_timestamp: null, // ✅ v∞.FIX - Backend will populate timestamp
         },
         knowledge: {
           ...current.knowledge,
-          graph_size: totalEntries,
-          connections: memory.timeline_events,
-          depth: Math.floor(Math.log2(totalEntries + 1)),
-          last_update: Date.now(),
+          total_entries: totalEntries,
+          indexed_entries: memory.timeline_events,
+          knowledge_score: Math.min(1.0, totalEntries / 1000),
+          last_update: null, // ✅ v∞.FIX - Backend will populate timestamp
         },
       };
 
@@ -301,20 +302,22 @@ export class SingularityConnections {
           mood: 'focused',
           intensity: 0.8,
           evolution_level: 5,
-          last_interaction: Date.now(),
+          last_interaction: null, // ✅ v∞.FIX - Backend will populate timestamp
         },
         archetype: {
-          primary: 'sentinel',
-          secondary: 'sage',
-          traits: ['vigilant', 'analytical', 'adaptive'],
-          stability: 0.95,
+          active_archetype: 'helios', // ✅ v∞.FIX - Required field for backend
+          strength: 0.95,
+          transition: null,
         },
         visual: {
           ...current.visual,
-          active_theme: 'dark',
-          animation_state: 'idle',
-          last_transition: Date.now(),
+          theme: 'dark',
+          accent_color: '#6366f1',
+          glow_intensity: 0.7,
+          motion_enabled: true,
+          depth_enabled: true,
         },
+        stability: 0.9,
       };
 
       await SingularityBridge.updateSymbolic(updated);
@@ -337,11 +340,10 @@ export class SingularityConnections {
       const updated: AdaptiveLayer = {
         ...current,
         evolution: {
-          ...current.evolution,
-          generation: current.evolution?.generation ?? 0, // ✅ Guard against undefined
-          fitness: 0.85, // TODO: Calculate from system health
+          generation: current.evolution?.generation ?? 0,
           mutation_rate: 0.1,
-          last_evolution: Date.now(),
+          fitness_score: 0.85, // TODO: Calculate from system health
+          last_evolution: null, // ✅ v∞.FIX - Backend will populate timestamp
         },
         auto_heal: {
           active: true,
@@ -349,6 +351,7 @@ export class SingularityConnections {
           errors_healed: 0, // TODO: Track from ErrorBoundary
           last_heal: null,
         },
+        evolution_capacity: 0.85,
       };
 
       await SingularityBridge.updateAdaptive(updated);
@@ -377,15 +380,17 @@ export class SingularityConnections {
           sidebar_open: true, // TODO: Track from sidebar state
           modal_open: false, // TODO: Track from modal state
           theme: 'dark',
-          last_interaction: Date.now(),
+          last_interaction: null, // ✅ v∞.FIX - Backend will populate timestamp
         },
         runtime: {
           ...current.runtime,
           version: '17.3.0',
+          build: 'dev',
           environment: import.meta.env.MODE,
-          uptime: performance.now(),
-          health: this.calculateRuntimeHealth(),
+          uptime: Math.floor(performance.now() / 1000), // ✅ v∞.FIX - Convert ms to seconds (u64)
+          restart_count: 0,
         },
+        runtime_health: this.calculateRuntimeHealth(),
       };
 
       await SingularityBridge.updateMeta(updated);

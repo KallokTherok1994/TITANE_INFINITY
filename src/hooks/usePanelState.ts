@@ -22,6 +22,8 @@
 
 import { useState, useCallback, useEffect } from 'react';
 
+const storageKeyForPanel = (panelId: string) => `titane-panel-${panelId}`;
+
 export interface PanelState {
   isCollapsed: boolean;
   isVisible: boolean;
@@ -101,9 +103,17 @@ export function usePanelState(options: UsePanelStateOptions): UsePanelStateRetur
   const getInitialState = useCallback((): PanelState => {
     if (persistState && typeof window !== 'undefined') {
       try {
-        const saved = localStorage.getItem(`panel-state-${panelId}`);
+        const saved = localStorage.getItem(storageKeyForPanel(panelId));
         if (saved) {
-          return JSON.parse(saved);
+          const parsed: unknown = JSON.parse(saved);
+          if (typeof parsed === 'object' && parsed !== null) {
+            const maybeState = parsed as Partial<PanelState>;
+            return {
+              isCollapsed: maybeState.isCollapsed ?? defaultCollapsed,
+              isVisible: maybeState.isVisible ?? defaultVisible,
+              zIndex: maybeState.zIndex ?? defaultZIndex,
+            };
+          }
         }
       } catch (error) {
         console.warn(`[usePanelState] Failed to load state for ${panelId}:`, error);
@@ -124,7 +134,7 @@ export function usePanelState(options: UsePanelStateOptions): UsePanelStateRetur
   useEffect(() => {
     if (persistState && typeof window !== 'undefined') {
       try {
-        localStorage.setItem(`panel-state-${panelId}`, JSON.stringify(state));
+        localStorage.setItem(storageKeyForPanel(panelId), JSON.stringify(state));
       } catch (error) {
         console.warn(`[usePanelState] Failed to save state for ${panelId}:`, error);
       }

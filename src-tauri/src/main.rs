@@ -28,6 +28,40 @@ use titane_infinity::chat_engine;
 // OMEGA Conversation Engine v19.5.2
 use titane_infinity::conversation_engine;
 
+// ═══════════════════════════════════════════════════════════════
+// TITANE∞ NEW COMMANDS v21.5.3 - BACKEND REBUILD
+// ═══════════════════════════════════════════════════════════════
+mod commands_v21 {
+    pub mod governance_commands {
+        include!("commands/governance_commands.rs");
+    }
+    pub mod system_center_commands {
+        include!("commands/system_center_commands.rs");
+    }
+    pub mod memory_os_commands {
+        include!("commands/memory_os_commands.rs");
+    }
+    pub mod devtools_commands {
+        include!("commands/devtools_commands.rs");
+    }
+    pub mod whisper_commands {
+        include!("commands/whisper_commands.rs");
+    }
+    // audio_config_commands removed - duplicates audio::commands
+    pub mod persistent_memory_commands {
+        include!("commands/persistent_memory_commands.rs");
+    }
+    pub mod ui_theme_commands {
+        include!("commands/ui_theme_commands.rs");
+    }
+    pub mod self_healing_commands {
+        include!("commands/self_healing_commands.rs");
+    }
+    pub mod singularity_commands {
+        include!("commands/singularity_commands.rs");
+    }
+}
+
 // Coherence Engine commands v20.0 (Phase 2 Fusion #1)
 mod coherence_commands {
     include!("commands/coherence_commands.rs");
@@ -61,6 +95,13 @@ mod audio {
 // Secure Commands v∞ (Super-Prompts H, I, J, K) - API Key Management
 mod secure_commands {
     include!("secure_commands.rs");
+}
+
+// Chat Generate Commands v21 Phase 1 - Provider-specific AI generation
+mod commands {
+    pub mod chat_generate_commands {
+        include!("commands/chat_generate_commands.rs");
+    }
 }
 
 // Auth OS v∞ - Unified Authentication System
@@ -111,6 +152,18 @@ mod security {
     };
 }
 
+// ═══════════════════════════════════════════════════════════════
+// API MODULES (v21.5 AUTO-FIX) - Helios & Memory
+// ═══════════════════════════════════════════════════════════════
+mod api {
+    pub mod helios_api {
+        include!("api/helios_api.rs");
+    }
+    pub mod memory_api {
+        include!("api/memory_api.rs");
+    }
+}
+
 mod core {
     pub mod tapi_error {
         include!("core/tapi_error.rs");
@@ -118,8 +171,13 @@ mod core {
     pub mod utils {
         include!("core/utils.rs");
     }
+    pub mod legacy {
+        include!("core/legacy.rs");
+    }
     // Re-export from library for overdrive modules compatibility
     pub use titane_infinity::core::{UnifiedMemory, MemoryType};
+    // Re-export legacy for API modules
+    pub use legacy::{HeliosCore, MemoryCore};
 }
 
 mod error {
@@ -160,6 +218,14 @@ mod onboarding;
 
 // Configuration Management System v19.5.2 (Phase 2 - Configuration Hub)
 mod config;
+
+// ═══════════════════════════════════════════════════════════════
+// SUPPORT MODULES (v21.5 AUTO-FIX) - Types, Memory, Utils
+// ═══════════════════════════════════════════════════════════════
+mod types;
+mod memory;
+mod memory_compactor;
+mod utils;
 
 // System Center v∞ (Diagnostics, DevTools, Cluster)
 use titane_infinity::system_center;
@@ -293,6 +359,16 @@ fn main() {
     // Initialize Chat Orchestrator with provider management
     let chat_orchestrator = overdrive::chat_orchestrator::init();
 
+    // ═══════════════════════════════════════════════════════════════
+    // HELIOS & MEMORY CORES (v21.5 AUTO-FIX) - System Monitoring & Storage
+    // ═══════════════════════════════════════════════════════════════
+    use crate::core::{HeliosCore, MemoryCore};
+
+    let helios_core = HeliosCore::new();
+    let memory_core = MemoryCore::new();
+
+    log::info!("✅ HeliosCore and MemoryCore initialized successfully");
+
     let app_state = AppState {
         // ...existing code...
         security_manager,
@@ -310,6 +386,8 @@ fn main() {
         .manage(multi_ai_orchestrator)
         .manage(secrets_engine)
         .manage(chat_orchestrator.clone())
+        .manage(helios_core)
+        .manage(memory_core)
         .setup(move |app| {
             // 🔐 Initialize Auth OS v∞ (Unified Authentication System)
             if let Err(e) = auth::init_auth() {
@@ -360,6 +438,72 @@ fn main() {
             tauri::async_runtime::spawn(async move {
                 overdrive::chat_orchestrator::initialize_providers_async(&chat_orch_clone).await;
             });
+
+            // ─────────────────────────────────────────────────────────────
+            // SMOKE TEST RUNTIME (opt-in)
+            // Active uniquement si TITANE_SMOKE_RUNTIME_CHAT=1
+            // ─────────────────────────────────────────────────────────────
+            if std::env::var("TITANE_SMOKE_RUNTIME_CHAT")
+                .ok()
+                .is_some_and(|v| v == "1")
+            {
+                let app_handle = app.handle().clone();
+                tauri::async_runtime::spawn(async move {
+                    println!("[SMOKE-RUNTIME-CHAT] enabled (TITANE_SMOKE_RUNTIME_CHAT=1)");
+
+                    match overdrive::chat_orchestrator::chat_get_providers_status(
+                        app_handle.state::<overdrive::chat_orchestrator::ChatOrchestratorState>(),
+                    )
+                    .await
+                    {
+                        Ok(status) => {
+                            println!(
+                                "[SMOKE-RUNTIME-CHAT] providers_status ok (count={})",
+                                status.len()
+                            );
+                        }
+                        Err(err) => {
+                            eprintln!("[SMOKE-RUNTIME-CHAT] providers_status error: {err}");
+                        }
+                    }
+
+                    let request = overdrive::chat_orchestrator::ChatRequest {
+                        message: "Réponds uniquement: OK".to_string(),
+                        conversation_id: Some("smoke-runtime-chat".to_string()),
+                        provider: "ollama".to_string(),
+                        model: Some("llama3.1:latest".to_string()),
+                        streaming: false,
+                        images: None,
+                        system_prompt: Some("Réponds uniquement: OK".to_string()),
+                    };
+
+                    match overdrive::chat_orchestrator::chat_send_message(
+                        request,
+                        app_handle.state::<overdrive::chat_orchestrator::ChatOrchestratorState>(),
+                    )
+                    .await
+                    {
+                        Ok(response) => {
+                            let content_preview = response
+                                .message
+                                .content
+                                .chars()
+                                .take(120)
+                                .collect::<String>();
+
+                            println!(
+                                "[SMOKE-RUNTIME-CHAT] chat_send_message ok provider={} latency_ms={} preview={}",
+                                response.message.provider,
+                                response.latency_ms,
+                                content_preview
+                            );
+                        }
+                        Err(err) => {
+                            eprintln!("[SMOKE-RUNTIME-CHAT] chat_send_message error: {err}");
+                        }
+                    }
+                });
+            }
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -401,7 +545,7 @@ fn main() {
             overdrive::voice_engine::voice_enable_duplex,
             overdrive::voice_engine::voice_disable_duplex,
             overdrive::voice_engine::voice_check_interruption,
-            // Singularity State Commands (SINGULARITY API v21 REPAIR - 17 commands)
+            // Singularity State Commands (SINGULARITY API v21 REPAIR - 18 commands)
             singularity_state::commands::singularity_get_full_state,
             singularity_state::commands::singularity_get_physical,
             singularity_state::commands::singularity_get_cognitive,
@@ -416,6 +560,7 @@ fn main() {
             singularity_state::commands::singularity_update_adaptive,
             singularity_state::commands::singularity_update_meta,
             singularity_state::commands::singularity_update_full_state,
+            singularity_state::commands::sync_singularity, // ✅ v∞.FIX - Auto-sync command
             singularity_state::commands::singularity_save_state,
             singularity_state::commands::singularity_load_state,
             // System Center Diagnostics (v∞)
@@ -423,13 +568,18 @@ fn main() {
             system_center::diagnostics::sc_run_full_diagnostics,
             system_center::diagnostics::sc_get_diagnostic_status,
             // Secure API Key Management (v∞ - Super-Prompts H, I, J, K)
-            // GEMINI DÉSACTIVÉ - Ne pas utiliser
-            // secure_commands::chat_set_gemini_key,
-            // secure_commands::get_gemini_key_status,
+            // ✅ v21 Phase 1: Réactivation Gemini
+            secure_commands::chat_set_gemini_key,
+            secure_commands::get_gemini_key_status,
             secure_commands::chat_set_openai_key,
             secure_commands::get_openai_key_status,
             secure_commands::chat_set_anthropic_key,
             secure_commands::get_anthropic_key_status,
+            secure_commands::check_system_integrity, // ✅ v21.5: System integrity check
+            // ✅ v21 Phase 1: Provider-specific AI generation
+            commands::chat_generate_commands::chat_generate_gemini,
+            commands::chat_generate_commands::chat_generate_openai,
+            commands::chat_generate_commands::chat_generate_claude,
             // Ollama AI Provider Status Check
             titane_infinity::ai::ollama::ai_check_ollama_status,
             // Auth OS Commands v∞ (Unified Authentication System)
@@ -442,6 +592,81 @@ fn main() {
             auth::commands::auth_delete_api_key,
             auth::commands::auth_grant_role,
             auth::commands::auth_revoke_role,
+            // ═══════════════════════════════════════════════════════════════
+            // CRITICAL COMMANDS (v21.5 AUTO-FIX) - Audio + Helios + Memory
+            // ═══════════════════════════════════════════════════════════════
+            // Audio System Commands (TTS + Microphone Testing + Device Detection)
+            audio::commands::tts_speak,
+            audio::commands::tts_stop,
+            audio::commands::test_tts,
+            audio::commands::test_microphone,
+            audio::commands::get_audio_output_devices,
+            audio::commands::get_audio_input_devices,
+            // Helios API Commands (System Monitoring) - ONLY get_helios_state
+            api::helios_api::get_helios_state,
+            // Memory API Commands (Storage + Timeline)
+            api::memory_api::get_memory_state,
+            api::memory_api::write_snapshot,
+            api::memory_api::read_snapshot,
+            api::memory_api::write_log,
+            api::memory_api::read_logs,
+            api::memory_api::add_timeline_event,
+            api::memory_api::memory_get_active_projects,
+            api::memory_api::memory_get_recent_decisions,
+            // ═══════════════════════════════════════════════════════════════
+            // NEW COMMANDS v21.5.3 - BACKEND REBUILD (SUPER PROMPT #2)
+            // ═══════════════════════════════════════════════════════════════
+            // Governance Commands (11 commands)
+            commands_v21::governance_commands::get_ia_policies,
+            commands_v21::governance_commands::save_ia_policies,
+            commands_v21::governance_commands::toggle_ia_policy,
+            commands_v21::governance_commands::create_ia_policy,
+            commands_v21::governance_commands::delete_ia_policy,
+            commands_v21::governance_commands::get_permission_matrix,
+            // get_permission_audit already exists in secure_commands
+            commands_v21::governance_commands::clear_permission_audit,
+            commands_v21::governance_commands::get_security_log,
+            commands_v21::governance_commands::append_security_log,
+            commands_v21::governance_commands::export_security_log,
+            commands_v21::governance_commands::clear_security_log,
+            // System Center Commands (6 commands)
+            commands_v21::system_center_commands::sc_clear_logs,
+            commands_v21::system_center_commands::sc_add_log,
+            commands_v21::system_center_commands::sc_initialize_cluster,
+            commands_v21::system_center_commands::sc_shutdown_cluster,
+            commands_v21::system_center_commands::sc_hypervision_stop,
+            commands_v21::system_center_commands::sc_hypervision_clear_anomalies,
+            commands_v21::system_center_commands::sc_hypervision_resolve_anomaly,
+            // Memory OS Commands (5 commands)
+            commands_v21::memory_os_commands::memory_clear,
+            commands_v21::memory_os_commands::memory_promote,
+            commands_v21::memory_os_commands::memory_demote,
+            commands_v21::memory_os_commands::memory_delete,
+            commands_v21::memory_os_commands::memory_prune,
+            // DevTools Commands (3 commands)
+            commands_v21::devtools_commands::devtools_enable,
+            commands_v21::devtools_commands::devtools_disable,
+            commands_v21::devtools_commands::devtools_debug_clear,
+            // Whisper Streaming Commands (3 commands)
+            commands_v21::whisper_commands::start_whisper_streaming,
+            commands_v21::whisper_commands::stop_whisper_streaming,
+            commands_v21::whisper_commands::send_audio_chunk,
+            // Audio Config Commands - NOTE: Already exist in audio::commands (set/get_audio_*_device)
+            // Persistent Memory Commands (4 commands)
+            commands_v21::persistent_memory_commands::persistent_memory_promote_entry,
+            commands_v21::persistent_memory_commands::persistent_memory_archive_entry,
+            commands_v21::persistent_memory_commands::persistent_memory_delete_entry,
+            commands_v21::persistent_memory_commands::persistent_memory_add_to_bundle,
+            // UI Theme Commands (2 commands)
+            commands_v21::ui_theme_commands::save_ui_theme,
+            commands_v21::ui_theme_commands::load_ui_theme,
+            // Self-Healing Commands (4 commands)
+            commands_v21::self_healing_commands::self_healing_trigger,
+            commands_v21::self_healing_commands::self_healing_get_status,
+            commands_v21::self_healing_commands::self_healing_enable,
+            commands_v21::self_healing_commands::self_healing_disable,
+            // Singularity Extra Commands (1 command)
+            commands_v21::singularity_commands::singularity_self_check,
         ])
         .run(tauri::generate_context!())
         .map_err(|e| {

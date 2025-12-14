@@ -24,7 +24,7 @@ pub struct EmotionController {
 impl Default for EmotionController {
     fn default() -> Self {
         Self {
-            current_state: AffectiveState::default(),
+            current_state: EmotionController::neutral_state(),
             history: Vec::new(),
             max_history: 20,
             inertia: 0.6,
@@ -34,6 +34,11 @@ impl Default for EmotionController {
 }
 
 impl EmotionController {
+    fn neutral_state() -> AffectiveState {
+        // Neutral valence, but balanced arousal to avoid overly “flat” responses.
+        AffectiveState::new(0.0, 0.5)
+    }
+
     /// Create new emotion controller
     pub fn new() -> Self {
         Self::default()
@@ -176,7 +181,11 @@ impl EmotionController {
     /// Get average emotional state
     pub fn average_state(&self) -> AffectiveState {
         if self.history.is_empty() {
-            return AffectiveState::default();
+            return AffectiveState {
+                valence: 0.0,
+                arousal: 0.0,
+                confidence: 0.0,
+            };
         }
 
         let count = self.history.len() as f32;
@@ -193,7 +202,7 @@ impl EmotionController {
 
     /// Reset to neutral state
     pub fn reset(&mut self) {
-        self.current_state = AffectiveState::default();
+        self.current_state = Self::neutral_state();
         self.history.clear();
     }
 

@@ -193,24 +193,23 @@ export const PerformanceProfiler: React.FC<PerformanceProfilerProps> = ({
   }, [id, logRenders]);
 
   const onRender: ProfilerOnRenderCallback = (
-    profilerId,
-    phase,
-    actualDuration,
-    baseDuration,
-    startTime,
-    commitTime,
-    interactions
+    profilerId: string,
+    phase: 'mount' | 'update' | 'nested-update',
+    actualDuration: number,
+    baseDuration: number,
+    startTime: number,
+    commitTime: number
   ) => {
     if (!enabled) return;
 
     const metric: PerformanceMetrics = {
       id: profilerId,
-      phase,
+      phase: phase === 'nested-update' ? 'update' : phase, // normalize nested-update to update
       actualDuration,
       baseDuration,
       startTime,
       commitTime,
-      interactions,
+      interactions: new Set(), // React 18 doesn't provide interactions anymore
     };
 
     recordMetric(metric);

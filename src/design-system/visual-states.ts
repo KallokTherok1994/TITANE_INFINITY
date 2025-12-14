@@ -134,6 +134,7 @@ export interface VisualConfig {
  */
 export type VisualState =
   | 'idle'
+  | 'focus'
   | 'listening'
   | 'thinking'
   | 'speaking'
@@ -186,6 +187,22 @@ export const visualStates: Record<VisualState, StateVisualConfig> = {
     waveAmplitude: 20,
     waveFrequency: 0.8,
     pulseInterval: 3000,
+    transitionDuration: 500,
+  },
+  focus: {
+    // Alias “concentration” : on réutilise la palette/rythme de 'thinking'
+    primary: '#a78bfa',
+    secondary: '#8b5cf6',
+    accent: '#c4b5fd',
+    background: backgrounds.panel,
+    glow: 'rgba(167, 139, 250, 0.3)',
+    particleColor: '#a78bfa',
+    particleOpacity: 0.7,
+    particleDensity: 300,
+    particleSpeed: 1.8,
+    waveAmplitude: 60,
+    waveFrequency: 2.0,
+    pulseInterval: 1000,
     transitionDuration: 500,
   },
   listening: {
@@ -360,8 +377,9 @@ export function interpolateStates(
   to: VisualState,
   progress: number
 ): StateVisualConfig {
-  const fromConfig = visualStates[from];
-  const toConfig = visualStates[to];
+  // Hardening: évite un crash runtime si une clé est absente (ou castée)
+  const fromConfig = visualStates[from] ?? visualStates.idle;
+  const toConfig = visualStates[to] ?? visualStates.idle;
 
   const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 

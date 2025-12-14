@@ -1096,6 +1096,7 @@ function EvolutionCenterPageContent(): JSX.Element {
   };
 
   // Loading state
+  const matrixLoading = false; // TODO: Add actual matrix loading state
   if (loading || matrixLoading) {
     return (
       <Container

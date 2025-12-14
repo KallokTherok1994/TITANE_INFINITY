@@ -14,7 +14,7 @@
 import type { AIMessage, AIProvider, AIResponse } from '../types';
 import { TAURI_COMMANDS } from '../../../core/commands/TAURI_COMMANDS';
 import { safeInvokeTauri } from '../../../utils/tauriProtector';
-import { getAutoHealEngine } from '../system';
+import { autoHealEngine } from '../system';
 import { createLogger } from '@/utils/logger';
 
 const logger = createLogger('TauriChat');
@@ -220,17 +220,13 @@ class TauriChatProvider implements AIProvider {
 
     const errorObj = error instanceof Error ? error : new Error(String(error));
 
-    // Auto-heal trigger (lazy loaded)
-    getAutoHealEngine()
-      .then(autoHeal => {
-        autoHeal.heal('tauri-chat', errorObj, 'provider', {
-          context,
-          errorCount: this.errorCount,
-          metadata,
-          timestamp: Date.now(),
-        });
-      })
-      .catch(err => logger.error('Failed to record healing error', err));
+    // Auto-heal trigger (direct instance)
+    autoHealEngine.heal('tauri-chat', errorObj, 'provider', {
+      context,
+      errorCount: this.errorCount,
+      metadata,
+      timestamp: Date.now(),
+    });
 
     logger.error(`Tauri invoke error [${context}]`, {
       message: errorObj.message,

@@ -83,7 +83,7 @@ describe('Chat IA Diagnostic Tests - Bug Resolution Validation', () => {
         expect.arrayContaining([
           expect.objectContaining({
             role: 'user',
-            content: 'Test message utilisateur',
+            content: expect.stringMatching(/^Test message utilisateur\.?$/),
           }),
         ])
       );
@@ -92,11 +92,11 @@ describe('Chat IA Diagnostic Tests - Bug Resolution Validation', () => {
       expect(result.current.messages).toHaveLength(2);
       expect(result.current.messages[0]).toMatchObject({
         role: 'user',
-        content: 'Test message utilisateur',
+        content: expect.stringMatching(/^Test message utilisateur\.?$/),
       });
       expect(result.current.messages[1]).toMatchObject({
         role: 'assistant',
-        content: 'Réponse test',
+        content: expect.stringMatching(/^Réponse test\.?$/),
       });
     });
 
@@ -137,8 +137,14 @@ describe('Chat IA Diagnostic Tests - Bug Resolution Validation', () => {
         m => m.role === 'assistant'
       );
 
-      expect(userMessages.map(m => m.content)).toEqual(['Message 1', 'Message 2']);
-      expect(assistantMessages.map(m => m.content)).toEqual(['Réponse 1', 'Réponse 2']);
+      expect(userMessages.map(m => m.content.replace(/\.$/, ''))).toEqual([
+        'Message 1',
+        'Message 2',
+      ]);
+      expect(assistantMessages.map(m => m.content.replace(/\.$/, ''))).toEqual([
+        'Réponse 1',
+        'Réponse 2',
+      ]);
     });
   });
 
@@ -279,7 +285,9 @@ describe('Chat IA Diagnostic Tests - Bug Resolution Validation', () => {
       });
 
       expect(result.current.messages).toHaveLength(1);
-      expect(result.current.messages[0].content).toBe('Imported message');
+      expect(result.current.messages[0].content.replace(/\.$/, '')).toBe(
+        'Imported message'
+      );
     });
   });
 
@@ -306,12 +314,16 @@ describe('Chat IA Diagnostic Tests - Bug Resolution Validation', () => {
       expect(result.current.messages).toHaveLength(2);
       expect(result.current.messages[0]).toMatchObject({
         role: 'user',
-        content: 'Message test complet',
       });
+      expect(result.current.messages[0].content.replace(/\.$/, '')).toBe(
+        'Message test complet'
+      );
       expect(result.current.messages[1]).toMatchObject({
         role: 'assistant',
-        content: 'Réponse complète test',
       });
+      expect(result.current.messages[1].content.replace(/\.$/, '')).toBe(
+        'Réponse complète test'
+      );
 
       // Phase 3: Vérification que les messages ne disparaissent pas
       await waitFor(

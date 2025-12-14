@@ -47,6 +47,8 @@ export default defineConfig({
     exclude: ['better-sqlite3', 'sqlite3', 'bindings'],
     esbuildOptions: {
       target: 'esnext',
+      // ✨ v21.5 Sprint 1: Drop logs/debugger in production optimized deps
+      drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
     },
   },
 
@@ -191,8 +193,9 @@ export default defineConfig({
     minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: true,
-        drop_debugger: true,
+        drop_console: true, // ✨ v21.5: Strip console.* in production
+        drop_debugger: true, // ✨ v21.5: Strip debugger statements
+        pure_funcs: ['console.log', 'console.debug', 'console.info'], // Extra safety
       },
     },
     // Réduit à 800KB pour forcer plus de découpage
@@ -201,6 +204,12 @@ export default defineConfig({
     target: 'esnext',
     cssCodeSplit: true,
     sourcemap: false,
+  },
+
+  // ✨ v21.5 Sprint 1: Global esbuild transform (source code)
+  esbuild: {
+    drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
+    legalComments: 'none', // Remove comments in production
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -216,7 +225,7 @@ export default defineConfig({
       overlay: true, // Show errors in overlay
     },
     watch: {
-      // Optimisation watchers pour réduire CPU
+      // Optimisation watchers pour réduire CPU et éviter ENOSPC
       ignored: [
         '**/node_modules/**',
         '**/dist/**',
@@ -226,6 +235,13 @@ export default defineConfig({
         '**/*.md',
         '**/coverage/**',
         '**/docs/**',
+        '**/runtime/*/logs/**',
+        '**/.vite/**',
+        '**/.cache/**',
+        '**/build/**',
+        '**/*.log',
+        '**/tmp/**',
+        '**/temp/**',
       ],
       usePolling: false, // Disable polling (use native FS events)
     },

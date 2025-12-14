@@ -13,7 +13,7 @@
  */
 
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import { getAutoHealEngine } from '../../services/ai/system';
+import { autoHealEngine } from '../../services/ai/system';
 import { FileUploadButton, type AnalyzedFile } from './FileUploadButton';
 import { DictationButton } from './DictationButton';
 import './ChatInput.css';
@@ -76,16 +76,12 @@ function useOmegaInputProtection() {
 
   const handleInputError = useCallback(
     (error: Error, context: string, inputValue?: string) => {
-      // Auto-heal trigger (lazy loaded)
-      getAutoHealEngine()
-        .then(engine => {
-          engine.heal('chat-input', error, 'validation', {
-            context,
-            inputLength: inputValue?.length || 0,
-            timestamp: Date.now(),
-          });
-        })
-        .catch(console.error);
+      // Auto-heal trigger (direct instance)
+      autoHealEngine.heal('chat-input', error, 'validation', {
+        context,
+        inputLength: inputValue?.length || 0,
+        timestamp: Date.now(),
+      });
 
       setInputState(prev => ({
         ...prev,
@@ -297,7 +293,7 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
     }, [inputState.inputError, resetError]);
 
     // ═══ PHASE 5.4: PROTECTED SEND HANDLER ═══
-    const handleSend = useCallback(() => {
+    const handleSend = useCallback(async () => {
       console.log('[ChatInput OMEGA] 🔘 handleSend appelé', {
         value: value.substring(0, 30),
         disabled,
@@ -334,19 +330,38 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
         messageSent.current = true;
         lastMessageTime.current = Date.now();
 
-        // Envoyer le message
-        onSend(sanitized);
-        setValue('');
-
-        // Reset height et état + restore focus
-        setTimeout(() => {
-          if (textareaRef.current && mountedRef.current) {
-            textareaRef.current.style.height = 'auto';
-            // P2: Restore focus to textarea after send (accessibility)
-            textareaRef.current.focus();
+        // ⭐ PHASE 4 ÉTAPE 1: Timeout restauré 10s (testing si cause blocage)
+        const resetTimeout = setTimeout(() => {
+          if (messageSent.current && mountedRef.current) {
+            console.warn(
+              '[OMEGA ChatInput] ⚠️ messageSent.current reset forcé après timeout 10s'
+            );
+            messageSent.current = false;
           }
+        }, 10000); // PHASE 4: Timeout restauré à 10s
+
+        try {
+          // Envoyer le message (async safe)
+          await onSend(sanitized);
+          setValue('');
+
+          // ✅ Reset immédiat après succès
+          clearTimeout(resetTimeout);
           messageSent.current = false;
-        }, 100);
+
+          // Reset height et restore focus
+          setTimeout(() => {
+            if (textareaRef.current && mountedRef.current) {
+              textareaRef.current.style.height = 'auto';
+              textareaRef.current.focus();
+            }
+          }, 100);
+        } catch (sendError) {
+          // ✅ Reset même en erreur
+          clearTimeout(resetTimeout);
+          messageSent.current = false;
+          throw sendError; // Re-throw pour catch externe
+        }
       } catch (sendError) {
         messageSent.current = false;
         handleInputError(
@@ -707,11 +722,19 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
               type="submit"
               className="chat-send-btn chat-send-omega"
               onClick={handleSend}
-              disabled={!trimmedValue || isInputDisabled || messageSent.current}
+              disabled={
+                !trimmedValue ||
+                isInputDisabled ||
+                messageSent.current /* PHASE 4 ÉTAPE 2: Anti-spam réactivé */
+              }
               aria-label={
                 voiceModeActive ? 'Envoyer message vocal' : 'Envoyer message texte'
               }
-              aria-disabled={!trimmedValue || isInputDisabled || messageSent.current}
+              aria-disabled={
+                !trimmedValue ||
+                isInputDisabled ||
+                messageSent.current /* PHASE 4 ÉTAPE 2: Anti-spam réactivé */
+              }
               aria-busy={messageSent.current}
               title="Envoyer le message (Enter ou Ctrl+Enter)"
             >

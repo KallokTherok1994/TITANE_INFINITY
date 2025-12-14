@@ -46,6 +46,15 @@ function ColorPicker({ label, colorKey, value, onChange }: ColorPickerProps) {
 function ComponentPreview() {
   const { tokens } = useUITheme();
 
+  // Protection: Vérifier que tokens est bien défini
+  if (!tokens || !tokens.colors) {
+    return (
+      <div className="dc-component-preview">
+        <p style={{ padding: '1rem', textAlign: 'center' }}>Chargement de l'aperçu...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="dc-component-preview">
       <h4 className="dc-preview-title">Aperçu des Composants</h4>
@@ -197,6 +206,17 @@ export function DesignSystemTab() {
   const handleColorChange = (key: keyof ColorTokens, value: string) => {
     updateToken('colors', key, value);
   };
+
+  // Protection: Attendre que tokens soit chargé
+  if (!tokens || !tokens.colors) {
+    return (
+      <div className="dc-tab dc-design-system-tab">
+        <div style={{ padding: '2rem', textAlign: 'center' }}>
+          <p>Chargement des tokens...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="dc-tab dc-design-system-tab">

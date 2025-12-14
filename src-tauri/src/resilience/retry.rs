@@ -287,7 +287,11 @@ impl RetryExecutor {
 
         // Ajouter le jitter (±jitter_factor * delay)
         let jitter_range = capped_delay * self.config.jitter_factor;
-        let jitter = rand::thread_rng().gen_range(-jitter_range..jitter_range);
+        let jitter = if jitter_range <= 0.0 {
+            0.0
+        } else {
+            rand::thread_rng().gen_range(-jitter_range..jitter_range)
+        };
 
         let final_delay = (capped_delay + jitter).max(0.0) as u64;
 

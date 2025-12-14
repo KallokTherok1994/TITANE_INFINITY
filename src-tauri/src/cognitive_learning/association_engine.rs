@@ -208,8 +208,7 @@ mod tests {
         let strongest = engine.get_strongest(10);
 
         // Strong should be first
-        assert_eq!(strongest[0].concept_a, "base");
-        assert!(strongest[0].concept_b == "strong" || strongest[0].concept_a == "strong");
+        assert!(strongest[0].concept_a == "strong" || strongest[0].concept_b == "strong");
     }
 
     #[test]

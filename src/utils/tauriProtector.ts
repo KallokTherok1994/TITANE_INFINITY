@@ -82,7 +82,7 @@ export const createFallbackSymbolic = (): SymbolicLayer => {
   return {
     persona: {
       name: 'TITANE∞ (offline)',
-      mood: 'neutral',
+      mood: 'neutre', // ✨ v21.5.5 - MoodType French values
       intensity: 0.25,
       evolution_level: 1,
       last_interaction: now,
