@@ -19,6 +19,8 @@ import type {
   ProviderChoice,
   AIProvider,
 } from './types';
+import type { AutoHealStats } from './autoHealEngine';
+import type { AggregatedMetrics } from './metricsEngine';
 import { buildSystemPrompt as buildTitanePrompt } from '@/core/prompts';
 import type { Provider as PromptProvider, PromptContext } from '@/core/prompts';
 import { titaneLocalProvider } from './providers/titaneLocal'; // ← PREMIER (noyau infaillible)
@@ -959,7 +961,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
   }
 
   private async executeProviderIsolated(
-    provider: any,
+    provider: AIProvider,
     message: string,
     history: AIMessage[],
     timeout: number,
@@ -1217,8 +1219,8 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
   async getProvidersStatus(): Promise<{
     providers: ProviderStats[];
     orchestrator: OrchestratorMetrics;
-    autoHeal: any;
-    metrics?: any;
+    autoHeal: AutoHealStats & { providers: Record<string, unknown> };
+    metrics?: AggregatedMetrics;
     timestamp: number;
   }> {
     try {
@@ -1260,10 +1262,22 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
       };
     } catch (error) {
       const { metrics: _metricsLoaded } = await ensureEngines();
+      // Return fallback stats with placeholder autoHeal
+      const fallbackAutoHeal: AutoHealStats & { providers: Record<string, unknown> } = {
+        totalErrors: 0,
+        totalHeals: 0,
+        successRate: 0,
+        avgHealTime: 0,
+        errorsByType: {},
+        actionsByType: {},
+        lastHeal: 0,
+        healthScore: 0,
+        providers: {},
+      };
       return {
         providers: Array.from(this.providerStats.values()),
         orchestrator: { ...this.orchestratorMetrics },
-        autoHeal: { error: 'Auto-heal stats unavailable' },
+        autoHeal: fallbackAutoHeal,
         metrics: _metricsLoaded.getAggregatedMetrics(), // 📊 NOUVEAU
         timestamp: Date.now(),
       };
@@ -1318,7 +1332,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
   async healthCheck(): Promise<{
     overall: 'healthy' | 'degraded' | 'critical';
     providers: { name: string; status: string; available: boolean }[];
-    autoHeal: any;
+    autoHeal: AutoHealStats;
     recommendations: string[];
   }> {
     const status = await this.getProvidersStatus();

@@ -30,7 +30,7 @@ pub enum HealthStatus {
 
 impl HealthStatus {
     /// Convertit vers score numérique (0-100)
-    pub fn to_score(&self) -> u8 {
+    pub fn to_score(self) -> u8 {
         match self {
             HealthStatus::Healthy => 100,
             HealthStatus::Degraded => 60,

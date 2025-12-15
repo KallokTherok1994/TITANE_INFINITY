@@ -597,7 +597,7 @@ class AutoHealEngine {
   /**
    * Obtenir statistiques complètes
    */
-  getStats(): AutoHealStats & { providers: Record<string, any> } {
+  getStats(): AutoHealStats & { providers: Record<string, unknown> } {
     const providersStatus = Object.fromEntries(
       Array.from(this.providerHealthMap.entries()).map(([name, health]) => [
         name,

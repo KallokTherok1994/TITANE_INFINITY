@@ -581,9 +581,10 @@ pub async fn set_audio_output_device(device_id: String) -> CommandResult<()> {
     }
 
     // Try PulseAudio
-    if let Ok(_) = Command::new("pactl")
+    if Command::new("pactl")
         .args(["set-default-sink", &device_id])
         .output()
+        .is_ok()
     {
         return Ok(());
     }
@@ -601,9 +602,10 @@ pub async fn set_audio_input_device(device_id: String) -> CommandResult<()> {
     }
 
     // Try PulseAudio
-    if let Ok(_) = Command::new("pactl")
+    if Command::new("pactl")
         .args(["set-default-source", &device_id])
         .output()
+        .is_ok()
     {
         return Ok(());
     }
