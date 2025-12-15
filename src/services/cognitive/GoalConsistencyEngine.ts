@@ -36,6 +36,19 @@ import {
 } from './goalConsistency.types';
 
 /**
+ * Auto-correction result
+ */
+interface AutoCorrection {
+  original_response: string;
+  corrected_response: string;
+  correction_type: string;
+  violations_addressed: ConsistencyViolationType[];
+  reasoning: string;
+  confidence: number;
+  applied_at: string;
+}
+
+/**
  * Goal & Consistency Engine
  *
  * Manages conversation goals, facts database, and consistency checking
@@ -591,7 +604,7 @@ export class GoalConsistencyEngine extends EventEmitter {
   private checkTemporalConsistency(
     response: string,
     facts: ConversationFact[],
-    _context: any
+    _context: Record<string, unknown>
   ): ConsistencyViolation[] {
     const violations: ConsistencyViolation[] = [];
 
@@ -717,7 +730,7 @@ export class GoalConsistencyEngine extends EventEmitter {
         reasoning = 'Generic reformulation applied';
     }
 
-    const correction: any = {
+    const correction: AutoCorrection = {
       original_response: response,
       corrected_response: correctedResponse,
       correction_type: correctionType,
@@ -875,8 +888,11 @@ export class GoalConsistencyEngine extends EventEmitter {
    * Calculate overall consistency score
    */
   async calculateConsistencyScore(conversation_id: string): Promise<number> {
-    const allViolations: any[] = Array.from(this.violations.get(conversation_id) || []);
+    const allViolations: ConsistencyViolation[] = Array.from(
+      this.violations.get(conversation_id) || []
+    );
     const recentViolations = allViolations.filter(v => {
+      if (!v.detected_at) return false;
       const age = Date.now() - new Date(v.detected_at).getTime();
       return age < 24 * 60 * 60 * 1000; // Last 24 hours
     });
@@ -972,8 +988,11 @@ export class GoalConsistencyEngine extends EventEmitter {
     context += `[COHÉRENCE]\n`;
     context += `Score: ${(consistencyScore * 100).toFixed(0)}%\n`;
 
-    const allViolations: any[] = Array.from(this.violations.get(conversation_id) || []);
-    const recentViolations = allViolations.filter((v: any) => {
+    const allViolations: ConsistencyViolation[] = Array.from(
+      this.violations.get(conversation_id) || []
+    );
+    const recentViolations = allViolations.filter((v: ConsistencyViolation) => {
+      if (!v.detected_at) return false;
       const age = Date.now() - new Date(v.detected_at).getTime();
       return age < 60 * 60 * 1000; // Last hour
     });
@@ -991,7 +1010,7 @@ export class GoalConsistencyEngine extends EventEmitter {
    */
   private log(
     message: string,
-    data?: any,
+    data?: unknown,
     level: 'info' | 'warn' | 'error' = 'info'
   ): void {
     const timestamp = new Date().toISOString();
