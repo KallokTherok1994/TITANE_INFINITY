@@ -12,6 +12,7 @@
  */
 
 import { logger } from '../../utils/logger';
+import { REFRESH_INTERVALS } from '@/constants/timeouts';
 
 /**
  * Configuration du cache
@@ -101,7 +102,7 @@ export class LRUCache<T = unknown> {
 
     // Cleanup timer toutes les 30s
     if (this.config.enabled) {
-      setInterval(() => this.cleanup(), 30000);
+      setInterval(() => this.cleanup(), REFRESH_INTERVALS.SLOW);
     }
   }
 

@@ -8,6 +8,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { secureInvoke } from '@/lib/security';
+import { REFRESH_INTERVALS } from '@/constants/timeouts';
 import { SystemInfo } from '../../../types/tauri';
 import { ControlPanelLayout } from './components/ControlPanelLayout';
 import { SystemSection } from './sections/SystemSection';
@@ -32,7 +33,7 @@ export const ControlPanel: React.FC = () => {
 
   useEffect(() => {
     loadSystemInfo();
-    const interval = setInterval(loadSystemInfo, 5000); // Refresh toutes les 5s
+    const interval = setInterval(loadSystemInfo, REFRESH_INTERVALS.NORMAL); // Refresh toutes les 5s
     return () => clearInterval(interval);
   }, []);
 

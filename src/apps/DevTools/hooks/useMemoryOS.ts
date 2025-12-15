@@ -4,6 +4,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
+import { REFRESH_INTERVALS } from '@/constants/timeouts';
 
 export interface MemoryEntry {
   id: string;
@@ -156,7 +157,7 @@ export function useMemoryOS() {
   // Auto-refresh stats
   useEffect(() => {
     fetchStats();
-    const interval = setInterval(fetchStats, 5000); // Every 5s
+    const interval = setInterval(fetchStats, REFRESH_INTERVALS.NORMAL); // Every 5s
 
     return () => clearInterval(interval);
   }, [fetchStats]);

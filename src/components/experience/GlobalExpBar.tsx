@@ -11,6 +11,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { secureInvoke } from '@/lib/security';
+import { REFRESH_INTERVALS } from '@/constants/timeouts';
 import '../../styles/exp-fusion.css';
 
 interface GlobalExpState {
@@ -32,7 +33,7 @@ export const GlobalExpBar: React.FC<{ onOpenPanel: () => void }> = ({ onOpenPane
 
   useEffect(() => {
     fetchExpState();
-    const interval = setInterval(fetchExpState, 5000); // Refresh toutes les 5s
+    const interval = setInterval(fetchExpState, REFRESH_INTERVALS.NORMAL); // Refresh toutes les 5s
     return () => clearInterval(interval);
   }, []);
 
