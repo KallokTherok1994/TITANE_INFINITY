@@ -36,10 +36,33 @@ import {
   type ConsistencyViolation,
   type CognitiveTrace as _CognitiveTrace,
   type DecisionLog as _DecisionLog,
+  type SubGoal,
 } from '@/services/cognitive';
 
 import type { AIMessage as _AIMessage } from '@/services/ai/types';
 import type { ChatMode } from '@/services/ai/chatEngine';
+
+/**
+ * Memory search result from vector search
+ */
+interface MemorySearchResult {
+  entry: {
+    summary: string;
+    content?: string;
+    timestamp?: number;
+  };
+  score: number;
+}
+
+/**
+ * Subgoal update structure
+ */
+interface SubGoalUpdate {
+  id: string;
+  status?: 'pending' | 'in_progress' | 'completed' | 'failed';
+  label?: string;
+  description?: string;
+}
 
 // Stub types for missing interfaces
 interface AutoCorrection {
@@ -247,10 +270,12 @@ class CognitiveOmegaOrchestrator {
       let memoriesContext = '';
       if (Array.isArray(relevantMemories) && relevantMemories.length > 0) {
         memoriesContext = '\n[MÉMOIRES PERTINENTES]\n';
-        relevantMemories.slice(0, 3).forEach((result: any, idx: number) => {
-          const memory = result.entry;
-          memoriesContext += `${idx + 1}. ${memory.summary} (pertinence: ${(result.score * 100).toFixed(0)}%)\n`;
-        });
+        relevantMemories
+          .slice(0, 3)
+          .forEach((result: MemorySearchResult, idx: number) => {
+            const memory = result.entry;
+            memoriesContext += `${idx + 1}. ${memory.summary} (pertinence: ${(result.score * 100).toFixed(0)}%)\n`;
+          });
       }
 
       // 3. Combine contexts
@@ -324,7 +349,7 @@ class CognitiveOmegaOrchestrator {
 
       // Should correct if high/critical violations
       const shouldCorrect = violations.some(
-        (v: any) => v.severity === 'high' || v.severity === 'critical'
+        (v: ConsistencyViolation) => v.severity === 'high' || v.severity === 'critical'
       );
 
       this.stats.totalViolationsDetected += violations.length;
@@ -610,8 +635,8 @@ class CognitiveOmegaOrchestrator {
     conversationId: string,
     updates: {
       main_goal?: string;
-      add_subgoals?: any[];
-      update_subgoals?: any[];
+      add_subgoals?: Partial<SubGoal>[];
+      update_subgoals?: SubGoalUpdate[];
     }
   ): Promise<ConversationGoal | null> {
     await this.ensureInitialized();
@@ -749,7 +774,7 @@ class CognitiveOmegaOrchestrator {
    */
   private log(
     message: string,
-    data?: any,
+    data?: unknown,
     level: 'info' | 'warn' | 'error' = 'info'
   ): void {
     const timestamp = new Date().toISOString();

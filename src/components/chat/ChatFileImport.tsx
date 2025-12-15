@@ -89,10 +89,10 @@ export const ChatFileImport: React.FC<ChatFileImportProps> = ({
   };
 
   /**
-   * Valide la taille du fichier (max 5MB)
+   * Valide la taille du fichier (max 10MB - unifié avec backend v24.6)
    */
   const validateFileSize = (file: File): boolean => {
-    const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
+    const MAX_SIZE = 10 * 1024 * 1024; // 10 MB (unifié frontend/backend)
     return file.size > 0 && file.size <= MAX_SIZE;
   };
 
@@ -144,7 +144,7 @@ export const ChatFileImport: React.FC<ChatFileImportProps> = ({
       // Validation taille
       if (!validateFileSize(file)) {
         const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
-        alert(`Fichier trop volumineux: ${sizeMB} MB\nTaille maximale autorisée: 5 MB`);
+        alert(`Fichier trop volumineux: ${sizeMB} MB\nTaille maximale autorisée: 10 MB`);
         return;
       }
 
