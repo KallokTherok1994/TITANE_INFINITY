@@ -24,7 +24,7 @@ mod integration_tests {
     async fn test_memory_initialization() {
         let config = create_test_config();
         let mut memory = UnifiedMemoryV2::new(config);
-        
+
         let result = memory.init().await;
         assert!(result.is_ok(), "Memory initialization should succeed");
     }

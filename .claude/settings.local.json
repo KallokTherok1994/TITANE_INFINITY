@@ -74,7 +74,9 @@
       "Bash(src-tauri/src/creation/generator.rs)",
       "Bash(src-tauri/src/singularity/evolution_engine.rs )",
       "Bash(src-tauri/src/singularity/emotion_controller.rs )",
-      "Bash(src-tauri/src/identity/identity_matrix.rs)"
+      "Bash(src-tauri/src/identity/identity_matrix.rs)",
+      "Bash(git pull:*)",
+      "Bash(git stash:*)"
     ],
     "deny": [],
     "ask": []

@@ -258,7 +258,8 @@ mod tests {
     #[test]
     fn test_confidence_score_action_max_1() {
         let analyzer = IntentAnalyzer::new();
-        let score = analyzer.confidence_score("peux-tu pourrais-tu créer faire", &Intention::Action);
+        let score =
+            analyzer.confidence_score("peux-tu pourrais-tu créer faire", &Intention::Action);
         assert_eq!(score, 1.0);
     }
 

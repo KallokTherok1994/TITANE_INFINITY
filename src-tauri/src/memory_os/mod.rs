@@ -25,7 +25,7 @@ pub mod forgetting;
 pub mod indexer;
 pub mod ltm;
 #[allow(clippy::module_inception)]
-pub mod memory_os;  // Same name as parent module but needed for exports
+pub mod memory_os; // Same name as parent module but needed for exports
 pub mod memory_signals;
 pub mod memory_state;
 pub mod mtm;

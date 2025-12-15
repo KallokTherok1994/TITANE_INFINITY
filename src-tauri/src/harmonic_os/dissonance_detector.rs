@@ -122,7 +122,10 @@ mod tests {
 
         let dissonances = detector.detect(&state).await;
         assert!(!dissonances.is_empty());
-        let cog_diss = dissonances.iter().find(|d| d.source == "cognitive").unwrap();
+        let cog_diss = dissonances
+            .iter()
+            .find(|d| d.source == "cognitive")
+            .unwrap();
         assert!((cog_diss.severity - 0.2).abs() < 0.01);
     }
 

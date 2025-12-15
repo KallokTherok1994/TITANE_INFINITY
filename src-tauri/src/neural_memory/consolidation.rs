@@ -4,7 +4,7 @@
 //   Migré et simplifié depuis memory_os/consolidator.rs
 // ═══════════════════════════════════════════════════════════════
 
-use super::{ShortTermMemory, MidTermMemory, LongTermMemory};
+use super::{LongTermMemory, MidTermMemory, ShortTermMemory};
 
 /// Consolidation configuration
 #[derive(Debug, Clone)]
@@ -22,9 +22,9 @@ pub struct ConsolidatorConfig {
 impl Default for ConsolidatorConfig {
     fn default() -> Self {
         Self {
-            stm_transfer_age_ms: 300_000,      // 5 minutes
+            stm_transfer_age_ms: 300_000, // 5 minutes
             ltm_importance_threshold: 0.7,
-            ltm_age_threshold_ms: 3_600_000,   // 1 hour
+            ltm_age_threshold_ms: 3_600_000, // 1 hour
             mtm_min_importance: 0.3,
         }
     }

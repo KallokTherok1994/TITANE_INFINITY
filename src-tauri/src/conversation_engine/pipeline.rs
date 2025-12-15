@@ -10,9 +10,7 @@ use tokio::sync::RwLock;
 
 use crate::ai::router::AIRouter;
 use crate::ai::{AIRequest, AIResponse};
-use crate::singularity::singularity_state::{
-    SingularityState, ChatContext,
-};
+use crate::singularity::singularity_state::{ChatContext, SingularityState};
 
 use super::api_neutralizer::ApiNeutralizer;
 use super::cognitive::CognitiveCompressor;
@@ -216,7 +214,9 @@ impl ConversationPipeline {
             };
 
             let mut singularity = self.singularity.write().await;
-            singularity.singularity_meta_process_conversation(context).await
+            singularity
+                .singularity_meta_process_conversation(context)
+                .await
         };
 
         // Appliquer résultat Singularity ou fallback sur réponse originale
@@ -305,11 +305,13 @@ impl ConversationPipeline {
         memory_context: &str,
     ) -> String {
         // 🎯 PRIORITÉ: Custom System Prompt depuis InstructionMode frontend
-        let (system_identity, mode_instruction) = if let Some(custom_prompt) = &request.custom_system_prompt {
+        let (system_identity, mode_instruction) = if let Some(custom_prompt) =
+            &request.custom_system_prompt
+        {
             // ✨ Si custom_system_prompt fourni, on l'utilise en priorité
             (
                 custom_prompt.as_str(),
-                "Suis les instructions fournies dans le prompt système personnalisé."
+                "Suis les instructions fournies dans le prompt système personnalisé.",
             )
         } else {
             // 🎭 Sinon, fallback sur SYSTEM PROMPT ADAPTATIF PAR MODE (CRITIQUE POUR MODES RÉELS)

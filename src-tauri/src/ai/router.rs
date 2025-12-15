@@ -152,7 +152,10 @@ impl AIRouter {
         // v21 FIX: Force Ollama en mode local (provider_preference = "local" | "ollama")
         if let Some(ref pref) = request.provider_preference {
             if pref == "local" || pref == "ollama" {
-                info!("[AI Router v21] 🏠 LOCAL MODE FORCED - Direct Ollama (provider_preference={})", pref);
+                info!(
+                    "[AI Router v21] 🏠 LOCAL MODE FORCED - Direct Ollama (provider_preference={})",
+                    pref
+                );
                 return self.query_ollama_direct(&request).await;
             }
         }

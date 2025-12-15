@@ -13,7 +13,7 @@ export const FEATURE_FLAGS = {
    * Enable external network calls (AI APIs, etc.)
    * WARNING: Requires internet connection
    */
-  ENABLE_EXTERNAL_AI: false, // Gemini, OpenAI APIs
+  ENABLE_EXTERNAL_AI: true, // Gemini, OpenAI APIs ✅ ENABLED
   ENABLE_LOCAL_LLM: true, // Ollama localhost (optional)
 
   /**
@@ -21,8 +21,8 @@ export const FEATURE_FLAGS = {
    * ═══════════════════════════════════════
    */
   AI_PROVIDERS: {
-    gemini: false, // Google Gemini API (requires API key)
-    openai: false, // OpenAI API (requires API key)
+    gemini: true, // Google Gemini API (requires API key) ✅ ENABLED
+    openai: true, // OpenAI API (requires API key) ✅ ENABLED
     ollama: true, // Local Ollama (optional, localhost:11434)
     builtin: true, // Built-in mock responses (always available)
   },

@@ -20,7 +20,12 @@ mod integration_tests {
     async fn test_complete_temporal_flow() {
         // Setup
         let temporal_adapter = Arc::new(TemporalApiAdapter::new());
-        let rate_limiter = TemporalRateLimiter::new("flow_provider".to_string(), 1000, 60, temporal_adapter.clone());
+        let rate_limiter = TemporalRateLimiter::new(
+            "flow_provider".to_string(),
+            1000,
+            60,
+            temporal_adapter.clone(),
+        );
         let cache: TemporalCache<String> = TemporalCache::new(100, temporal_adapter.clone());
 
         // 1. Vérifier rate limit
@@ -121,7 +126,12 @@ mod integration_tests {
     #[tokio::test]
     async fn test_adaptive_rate_limiting() {
         let temporal_adapter = Arc::new(TemporalApiAdapter::new());
-        let rate_limiter = TemporalRateLimiter::new("test_provider".to_string(), 100, 60, temporal_adapter.clone());
+        let rate_limiter = TemporalRateLimiter::new(
+            "test_provider".to_string(),
+            100,
+            60,
+            temporal_adapter.clone(),
+        );
 
         // Acquérir plusieurs permits
         for i in 0..5 {
@@ -191,7 +201,12 @@ mod integration_tests {
     async fn test_full_api_request_pipeline() {
         // Setup infrastructure temporelle
         let temporal_adapter = Arc::new(TemporalApiAdapter::new());
-        let rate_limiter = TemporalRateLimiter::new("api_provider".to_string(), 1000, 60, temporal_adapter.clone());
+        let rate_limiter = TemporalRateLimiter::new(
+            "api_provider".to_string(),
+            1000,
+            60,
+            temporal_adapter.clone(),
+        );
         let cache: TemporalCache<String> = TemporalCache::new(100, temporal_adapter.clone());
         let breaker =
             TemporalCircuitBreaker::new("/api/chat".to_string(), temporal_adapter.clone());

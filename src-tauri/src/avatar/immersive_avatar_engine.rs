@@ -797,12 +797,33 @@ mod tests {
     #[test]
     fn test_french_phoneme_all_variants() {
         let phonemes = vec![
-            FrenchPhoneme::A, FrenchPhoneme::E, FrenchPhoneme::I, FrenchPhoneme::O, FrenchPhoneme::U,
-            FrenchPhoneme::EU, FrenchPhoneme::OU, FrenchPhoneme::AN, FrenchPhoneme::ON, FrenchPhoneme::IN,
-            FrenchPhoneme::P, FrenchPhoneme::B, FrenchPhoneme::T, FrenchPhoneme::D, FrenchPhoneme::K,
-            FrenchPhoneme::G, FrenchPhoneme::F, FrenchPhoneme::V, FrenchPhoneme::S, FrenchPhoneme::Z,
-            FrenchPhoneme::CH, FrenchPhoneme::J, FrenchPhoneme::L, FrenchPhoneme::R, FrenchPhoneme::M,
-            FrenchPhoneme::N, FrenchPhoneme::Silence,
+            FrenchPhoneme::A,
+            FrenchPhoneme::E,
+            FrenchPhoneme::I,
+            FrenchPhoneme::O,
+            FrenchPhoneme::U,
+            FrenchPhoneme::EU,
+            FrenchPhoneme::OU,
+            FrenchPhoneme::AN,
+            FrenchPhoneme::ON,
+            FrenchPhoneme::IN,
+            FrenchPhoneme::P,
+            FrenchPhoneme::B,
+            FrenchPhoneme::T,
+            FrenchPhoneme::D,
+            FrenchPhoneme::K,
+            FrenchPhoneme::G,
+            FrenchPhoneme::F,
+            FrenchPhoneme::V,
+            FrenchPhoneme::S,
+            FrenchPhoneme::Z,
+            FrenchPhoneme::CH,
+            FrenchPhoneme::J,
+            FrenchPhoneme::L,
+            FrenchPhoneme::R,
+            FrenchPhoneme::M,
+            FrenchPhoneme::N,
+            FrenchPhoneme::Silence,
         ];
         assert_eq!(phonemes.len(), 27);
     }
@@ -1050,7 +1071,10 @@ mod tests {
         engine.is_speaking = true;
         engine.finish_speech();
         assert!(!engine.is_speaking);
-        assert_eq!(engine.expression.current_expression, FacialExpression::Neutral);
+        assert_eq!(
+            engine.expression.current_expression,
+            FacialExpression::Neutral
+        );
     }
 
     #[test]
@@ -1067,7 +1091,10 @@ mod tests {
         let mut engine = ImmersiveAvatarEngine::new();
         engine.on_wake_word_detected();
         assert!(engine.wake_word_active);
-        assert_eq!(engine.expression.current_expression, FacialExpression::LiftedBrows);
+        assert_eq!(
+            engine.expression.current_expression,
+            FacialExpression::LiftedBrows
+        );
     }
 
     #[test]

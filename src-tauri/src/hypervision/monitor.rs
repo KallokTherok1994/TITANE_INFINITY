@@ -471,7 +471,8 @@ mod tests {
 
     #[test]
     fn test_layer_metrics_deserialize() {
-        let json = r#"{"layer_id":1,"name":"Network","health":92.5,"load":35.0,"errors":2,"warnings":4}"#;
+        let json =
+            r#"{"layer_id":1,"name":"Network","health":92.5,"load":35.0,"errors":2,"warnings":4}"#;
         let layer: LayerMetrics = serde_json::from_str(json).unwrap();
         assert_eq!(layer.layer_id, 1);
         assert_eq!(layer.name, "Network");

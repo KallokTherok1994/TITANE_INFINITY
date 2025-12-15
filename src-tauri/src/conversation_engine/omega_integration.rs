@@ -1,24 +1,21 @@
+use std::collections::HashMap;
 /**
  * ═══════════════════════════════════════════════════════════════════
  * TITANE∞ R05 P1/P2 + SINGULARITY — OMEGA PIPELINE INTEGRATION
  * Bridge: Connect OMEGA Pipeline + Singularity to Chat IA
  * ═══════════════════════════════════════════════════════════════════
  */
-
 use std::sync::Arc;
-use std::collections::HashMap;
 use tokio::sync::RwLock;
 
-use crate::omega::{
-    OmegaConfig, OmegaPipeline, PipelineInput, PipelineOutput,
-};
-use crate::singularity::singularity_state::{
-    SingularityState, ChatContext,
-};
+use crate::omega::{OmegaConfig, OmegaPipeline, PipelineInput, PipelineOutput};
+use crate::singularity::singularity_state::{ChatContext, SingularityState};
 
+use super::french_mastery::{
+    FrenchMasteryProcessor, FrenchMasteryRequest, PostProcessingConstraints, ProcessingMode,
+};
 use super::types::*;
 use super::ConversationEngineError;
-use super::french_mastery::{FrenchMasteryProcessor, FrenchMasteryRequest, ProcessingMode, PostProcessingConstraints};
 
 /// Bridge between OMEGA Pipeline and Conversation Engine
 pub struct OmegaConversationBridge {
@@ -88,17 +85,16 @@ impl OmegaConversationBridge {
             return Ok(());
         }
 
-        self.omega_pipeline
-            .initialize()
-            .await
-            .map_err(|e| ConversationEngineError::ProcessingError(format!("OMEGA init failed: {}", e)))?;
+        self.omega_pipeline.initialize().await.map_err(|e| {
+            ConversationEngineError::ProcessingError(format!("OMEGA init failed: {}", e))
+        })?;
 
         log::info!("[OMEGA-BRIDGE] ✅ OMEGA pipeline initialized");
         Ok(())
     }
 
     /// Process message through OMEGA pipeline
-    /// 
+    ///
     /// This method wraps the conversation request into OMEGA pipeline format,
     /// executes the OMEGA stages (Router → Executor → Merger → Guardrails),
     /// and converts the output back to conversation format.
@@ -174,12 +170,9 @@ impl OmegaConversationBridge {
             ));
         }
 
-        self.omega_pipeline
-            .quick_process(text)
-            .await
-            .map_err(|e| {
-                ConversationEngineError::ProcessingError(format!("OMEGA quick process failed: {}", e))
-            })
+        self.omega_pipeline.quick_process(text).await.map_err(|e| {
+            ConversationEngineError::ProcessingError(format!("OMEGA quick process failed: {}", e))
+        })
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -205,7 +198,10 @@ impl OmegaConversationBridge {
             preferences.insert("ai_config".to_string(), serde_json::json!(ai_config));
         }
         if let Some(ref prompt) = request.custom_system_prompt {
-            preferences.insert("custom_system_prompt".to_string(), serde_json::json!(prompt));
+            preferences.insert(
+                "custom_system_prompt".to_string(),
+                serde_json::json!(prompt),
+            );
         }
 
         PipelineInput {
@@ -258,7 +254,11 @@ impl OmegaConversationBridge {
 
         // Parse emotion (simplified - OMEGA provides confidence as proxy)
         let detected_emotion = EmotionState {
-            valence: if omega_result.confidence > 0.7 { 0.5 } else { 0.0 },
+            valence: if omega_result.confidence > 0.7 {
+                0.5
+            } else {
+                0.0
+            },
             intensity: omega_result.confidence,
             energy: omega_result.safety_score,
         };
@@ -292,8 +292,12 @@ impl OmegaConversationBridge {
             conversation_id: conversation_id.clone(),
             intention: omega_result.intent.clone(),
             emotion_state: (
-                if omega_result.confidence > 0.7 { 0.5 } else { 0.0 }, // valence
-                omega_result.confidence, // intensity
+                if omega_result.confidence > 0.7 {
+                    0.5
+                } else {
+                    0.0
+                }, // valence
+                omega_result.confidence,   // intensity
                 omega_result.safety_score, // energy
             ),
             cognitive_summary: format!(
@@ -308,27 +312,34 @@ impl OmegaConversationBridge {
 
         let (finalized_message, enriched_tags) = {
             let mut singularity = self.singularity.write().await;
-            match singularity.singularity_meta_process_conversation(singularity_context).await {
+            match singularity
+                .singularity_meta_process_conversation(singularity_context)
+                .await
+            {
                 Ok(meta_output) => {
                     log::info!(
                         "[Ω:SINGULARITY] ✅ Meta-processing success | coherence={:.2} | corrections={}",
                         meta_output.meta_coherence,
                         meta_output.corrections_applied.len()
                     );
-                    
+
                     // Merge OMEGA sources + Singularity meta-tags
-                    let mut merged_tags: Vec<String> = omega_result.sources
+                    let mut merged_tags: Vec<String> = omega_result
+                        .sources
                         .iter()
                         .map(|s| format!("omega:{}", s))
                         .chain(meta_output.meta_tags.iter().cloned())
-                        .chain(std::iter::once(format!("coherence:{:.2}", meta_output.meta_coherence)))
+                        .chain(std::iter::once(format!(
+                            "coherence:{:.2}",
+                            meta_output.meta_coherence
+                        )))
                         .collect();
-                    
+
                     // Add LTM suggestions as tags
                     for ltm_suggestion in &meta_output.ltm_suggestions {
                         merged_tags.push(format!("ltm:{}", ltm_suggestion));
                     }
-                    
+
                     (meta_output.final_message, merged_tags)
                 }
                 Err(e) => {
@@ -337,11 +348,15 @@ impl OmegaConversationBridge {
                         e
                     );
                     // Fallback to OMEGA tags only
-                    let basic_tags: Vec<String> = omega_result.sources
+                    let basic_tags: Vec<String> = omega_result
+                        .sources
                         .iter()
                         .map(|s| format!("omega:{}", s))
                         .chain(std::iter::once(format!("intent:{}", omega_result.intent)))
-                        .chain(std::iter::once(format!("confidence:{:.2}", omega_result.confidence)))
+                        .chain(std::iter::once(format!(
+                            "confidence:{:.2}",
+                            omega_result.confidence
+                        )))
                         .collect();
                     (french_processed.clone(), basic_tags)
                 }
@@ -436,34 +451,31 @@ mod tests {
 
     #[tokio::test]
     async fn test_omega_bridge_initialization() {
-        let bridge = OmegaConversationBridge::new(
-            OmegaBridgeConfig::default(),
-            create_test_singularity(),
-        );
+        let bridge =
+            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity());
         let result = bridge.initialize().await;
-        assert!(result.is_ok(), "OMEGA bridge should initialize successfully");
+        assert!(
+            result.is_ok(),
+            "OMEGA bridge should initialize successfully"
+        );
     }
 
     #[tokio::test]
     async fn test_omega_bridge_health_check() {
-        let bridge = OmegaConversationBridge::new(
-            OmegaBridgeConfig::default(),
-            create_test_singularity(),
-        );
+        let bridge =
+            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity());
         let _ = bridge.initialize().await;
-        
+
         let health = bridge.health_check().await;
         assert!(health.enabled, "OMEGA should be enabled");
     }
 
     #[tokio::test]
     async fn test_omega_bridge_quick_process() {
-        let bridge = OmegaConversationBridge::new(
-            OmegaBridgeConfig::default(),
-            create_test_singularity(),
-        );
+        let bridge =
+            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity());
         let _ = bridge.initialize().await;
-        
+
         let result = bridge.quick_process("Hello OMEGA").await;
         assert!(result.is_ok(), "Quick process should succeed");
     }
@@ -475,7 +487,7 @@ mod tests {
             ..Default::default()
         };
         let bridge = OmegaConversationBridge::new(config, create_test_singularity());
-        
+
         let health = bridge.health_check().await;
         assert!(!health.enabled, "OMEGA should be disabled");
         assert!(!health.healthy, "OMEGA should not be healthy when disabled");
@@ -483,11 +495,9 @@ mod tests {
 
     #[tokio::test]
     async fn test_omega_bridge_conversion() {
-        let bridge = OmegaConversationBridge::new(
-            OmegaBridgeConfig::default(),
-            create_test_singularity(),
-        );
-        
+        let bridge =
+            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity());
+
         let request = ConversationRequest {
             user_message: "Test message".to_string(),
             conversation_id: Some("test-conv-123".to_string()),
@@ -498,10 +508,10 @@ mod tests {
         };
 
         let omega_input = bridge.convert_to_omega_input(&request);
-        
+
         assert_eq!(omega_input.text, "Test message");
         assert!(omega_input.request_id.len() > 0);
-        
+
         // Verify preferences contains conversation_id
         assert!(omega_input.preferences.contains_key("conversation_id"));
     }
@@ -509,10 +519,8 @@ mod tests {
     #[tokio::test]
     async fn test_omega_to_conversation_response_conversion() {
         // R05 P2: Test direct OMEGA → ConversationResponse conversion
-        let bridge = OmegaConversationBridge::new(
-            OmegaBridgeConfig::default(),
-            create_test_singularity(),
-        );
+        let bridge =
+            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity());
         let _ = bridge.initialize().await;
 
         let request = ConversationRequest {
@@ -544,26 +552,52 @@ mod tests {
         };
 
         let conversation_id = "test-conv-p2".to_string();
-        let result = bridge.convert_to_conversation_response(
-            omega_result,
-            &request,
-            conversation_id.clone(),
-        ).await;
+        let result = bridge
+            .convert_to_conversation_response(omega_result, &request, conversation_id.clone())
+            .await;
 
         assert!(result.is_ok(), "P2 Conversion should succeed");
-        
+
         let response = result.expect("Failed to get response");
-        
+
         // Verify all 8 required fields
-        assert!(response.assistant_message.len() > 0, "assistant_message should not be empty");
-        assert_eq!(response.conversation_id, conversation_id, "conversation_id should match");
-        assert!(response.message_id.len() > 0, "message_id should be generated");
-        assert_eq!(response.detected_intention, Intention::Question, "intent should be Question");
-        assert!(response.detected_emotion.intensity > 0.0, "emotion intensity should be positive");
-        assert!(response.cognitive_tags.len() > 0, "cognitive_tags should contain OMEGA metadata");
-        assert!(response.cognitive_summary.contains("OMEGA"), "cognitive_summary should mention OMEGA");
-        assert!(response.metadata.latency_ms < 300, "total latency should be under 300ms");
-        
-        log::info!("[TEST] ✅ P2 Direct conversion validated | latency={}ms", response.metadata.latency_ms);
+        assert!(
+            response.assistant_message.len() > 0,
+            "assistant_message should not be empty"
+        );
+        assert_eq!(
+            response.conversation_id, conversation_id,
+            "conversation_id should match"
+        );
+        assert!(
+            response.message_id.len() > 0,
+            "message_id should be generated"
+        );
+        assert_eq!(
+            response.detected_intention,
+            Intention::Question,
+            "intent should be Question"
+        );
+        assert!(
+            response.detected_emotion.intensity > 0.0,
+            "emotion intensity should be positive"
+        );
+        assert!(
+            response.cognitive_tags.len() > 0,
+            "cognitive_tags should contain OMEGA metadata"
+        );
+        assert!(
+            response.cognitive_summary.contains("OMEGA"),
+            "cognitive_summary should mention OMEGA"
+        );
+        assert!(
+            response.metadata.latency_ms < 300,
+            "total latency should be under 300ms"
+        );
+
+        log::info!(
+            "[TEST] ✅ P2 Direct conversion validated | latency={}ms",
+            response.metadata.latency_ms
+        );
     }
 }

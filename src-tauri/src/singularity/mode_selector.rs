@@ -595,13 +595,8 @@ mod tests {
         let mut selector = ModeSelector::new();
         selector.lock_mode(ConversationMode::Logic);
 
-        let mode = selector.select_with_context(
-            &IntentClass::Creative,
-            100,
-            false,
-            false,
-            Some(0.8),
-        );
+        let mode =
+            selector.select_with_context(&IntentClass::Creative, 100, false, false, Some(0.8));
 
         assert_eq!(mode, ConversationMode::Logic);
     }
@@ -630,13 +625,7 @@ mod tests {
     #[test]
     fn test_context_short_message() {
         let mut selector = ModeSelector::new();
-        let mode = selector.select_with_context(
-            &IntentClass::Command,
-            15,
-            false,
-            false,
-            None,
-        );
+        let mode = selector.select_with_context(&IntentClass::Command, 15, false, false, None);
         assert_eq!(mode, ConversationMode::Logic);
     }
 
@@ -656,13 +645,8 @@ mod tests {
     #[test]
     fn test_context_negative_sentiment() {
         let mut selector = ModeSelector::new();
-        let mode = selector.select_with_context(
-            &IntentClass::Emotional,
-            50,
-            false,
-            false,
-            Some(-0.5),
-        );
+        let mode =
+            selector.select_with_context(&IntentClass::Emotional, 50, false, false, Some(-0.5));
         assert_eq!(mode, ConversationMode::Harmonic);
     }
 

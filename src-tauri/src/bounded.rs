@@ -391,8 +391,7 @@ impl MemorySize for String {
 
 impl<T: MemorySize> MemorySize for Vec<T> {
     fn estimated_size(&self) -> usize {
-        std::mem::size_of::<Vec<T>>()
-            + self.iter().map(|item| item.estimated_size()).sum::<usize>()
+        std::mem::size_of::<Vec<T>>() + self.iter().map(|item| item.estimated_size()).sum::<usize>()
     }
 }
 
@@ -400,7 +399,11 @@ impl<T: MemorySize> BoundedVecDeque<T> {
     /// Estimate current memory usage
     pub fn estimated_memory(&self) -> usize {
         std::mem::size_of::<Self>()
-            + self.inner.iter().map(|item| item.estimated_size()).sum::<usize>()
+            + self
+                .inner
+                .iter()
+                .map(|item| item.estimated_size())
+                .sum::<usize>()
     }
 }
 

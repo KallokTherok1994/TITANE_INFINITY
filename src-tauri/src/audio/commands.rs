@@ -392,7 +392,7 @@ async fn get_pipewire_output_devices() -> Result<Vec<AudioDevice>, String> {
 
     for line in stdout.lines() {
         let line = line.trim();
-        
+
         if line.contains("type = \"PipeWire:Interface:Node\"") {
             if let Some(device) = current_device.take() {
                 if is_sink {
@@ -410,11 +410,11 @@ async fn get_pipewire_output_devices() -> Result<Vec<AudioDevice>, String> {
             is_sink = false;
             id_counter += 1;
         }
-        
+
         if line.contains("media.class = \"Audio/Sink\"") {
             is_sink = true;
         }
-        
+
         if let Some(ref mut device) = current_device {
             if line.contains("node.description =") || line.contains("node.name =") {
                 if let Some(name_start) = line.find('\"') {
@@ -426,13 +426,13 @@ async fn get_pipewire_output_devices() -> Result<Vec<AudioDevice>, String> {
                     }
                 }
             }
-            
+
             if line.contains("\"running\"") || line.contains("state = \"running\"") {
                 device.is_active = true;
             }
         }
     }
-    
+
     if let Some(device) = current_device {
         if is_sink {
             devices.push(device);
@@ -456,7 +456,7 @@ async fn get_pipewire_input_devices() -> Result<Vec<AudioDevice>, String> {
 
     for line in stdout.lines() {
         let line = line.trim();
-        
+
         if line.contains("type = \"PipeWire:Interface:Node\"") {
             if let Some(device) = current_device.take() {
                 if is_source {
@@ -474,11 +474,11 @@ async fn get_pipewire_input_devices() -> Result<Vec<AudioDevice>, String> {
             is_source = false;
             id_counter += 1;
         }
-        
+
         if line.contains("media.class = \"Audio/Source\"") && !line.contains("monitor") {
             is_source = true;
         }
-        
+
         if let Some(ref mut device) = current_device {
             if line.contains("node.description =") || line.contains("node.name =") {
                 if let Some(name_start) = line.find('\"') {
@@ -490,13 +490,13 @@ async fn get_pipewire_input_devices() -> Result<Vec<AudioDevice>, String> {
                     }
                 }
             }
-            
+
             if line.contains("\"running\"") || line.contains("state = \"running\"") {
                 device.is_active = true;
             }
         }
     }
-    
+
     if let Some(device) = current_device {
         if is_source {
             devices.push(device);
@@ -524,7 +524,7 @@ async fn get_alsa_output_devices() -> Result<Vec<AudioDevice>, String> {
             if let Some(_card_start) = line.find("carte ").or_else(|| line.find("card ")) {
                 if let Some(colon_pos) = line.find(':') {
                     let card_name = line[colon_pos + 1..].trim();
-                    
+
                     devices.push(AudioDevice {
                         id: format!("alsa_{}", devices.len()),
                         name: card_name.to_string(),
@@ -555,7 +555,7 @@ async fn get_alsa_input_devices() -> Result<Vec<AudioDevice>, String> {
             if let Some(_card_start) = line.find("carte ").or_else(|| line.find("card ")) {
                 if let Some(colon_pos) = line.find(':') {
                     let card_name = line[colon_pos + 1..].trim();
-                    
+
                     devices.push(AudioDevice {
                         id: format!("alsa_{}", devices.len()),
                         name: card_name.to_string(),
@@ -579,7 +579,7 @@ pub async fn set_audio_output_device(device_id: String) -> CommandResult<()> {
         // PipeWire device switching would require more complex logic
         // For now, fall through to pactl
     }
-    
+
     // Try PulseAudio
     if let Ok(_) = Command::new("pactl")
         .args(["set-default-sink", &device_id])
@@ -587,7 +587,7 @@ pub async fn set_audio_output_device(device_id: String) -> CommandResult<()> {
     {
         return Ok(());
     }
-    
+
     // ALSA doesn't have a simple command-line way to switch devices
     Err("Device switching not supported on this system".to_string())
 }
@@ -599,7 +599,7 @@ pub async fn set_audio_input_device(device_id: String) -> CommandResult<()> {
         // PipeWire device switching would require more complex logic
         // For now, fall through to pactl
     }
-    
+
     // Try PulseAudio
     if let Ok(_) = Command::new("pactl")
         .args(["set-default-source", &device_id])
@@ -607,7 +607,7 @@ pub async fn set_audio_input_device(device_id: String) -> CommandResult<()> {
     {
         return Ok(());
     }
-    
+
     // ALSA doesn't have a simple command-line way to switch devices
     Err("Device switching not supported on this system".to_string())
 }

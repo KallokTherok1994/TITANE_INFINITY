@@ -36,21 +36,13 @@ impl ApiKeyManager {
         let keystore = Keystore::load()?;
 
         Ok(ApiKeysOutput {
-            openai: keystore
-                .api_keys
-                .openai
-                .as_ref()
-                .map(|k| Self::mask_key(k)),
+            openai: keystore.api_keys.openai.as_ref().map(|k| Self::mask_key(k)),
             anthropic: keystore
                 .api_keys
                 .anthropic
                 .as_ref()
                 .map(|k| Self::mask_key(k)),
-            gemini: keystore
-                .api_keys
-                .gemini
-                .as_ref()
-                .map(|k| Self::mask_key(k)),
+            gemini: keystore.api_keys.gemini.as_ref().map(|k| Self::mask_key(k)),
         })
     }
 

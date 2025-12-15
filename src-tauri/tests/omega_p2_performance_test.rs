@@ -1,13 +1,13 @@
 // R05 P2: Performance validation test for OMEGA → ConversationResponse direct conversion
 // This test validates that P2 optimization achieves <200ms latency with OMEGA success
 
-use titane_infinity::conversation_engine::{
-    ConversationRequest, ConversationMode,
-    omega_integration::{OmegaConversationBridge, OmegaBridgeConfig},
-};
-use titane_infinity::singularity::singularity_state::SingularityState;
 use std::sync::Arc;
 use std::time::Instant;
+use titane_infinity::conversation_engine::{
+    omega_integration::{OmegaBridgeConfig, OmegaConversationBridge},
+    ConversationMode, ConversationRequest,
+};
+use titane_infinity::singularity::singularity_state::SingularityState;
 use tokio::sync::RwLock;
 
 fn create_test_singularity() -> Arc<RwLock<SingularityState>> {
@@ -39,23 +39,27 @@ async fn test_omega_p2_latency_improvement() {
 
     // Measure P2 pipeline latency
     let start = Instant::now();
-    
-    let omega_result = bridge.process_through_omega(&request).await
+
+    let omega_result = bridge
+        .process_through_omega(&request)
+        .await
         .expect("OMEGA processing failed");
-    
+
     let conversation_id = "perf-test-001".to_string();
-    let response = bridge.convert_to_conversation_response(
-        omega_result,
-        &request,
-        conversation_id,
-    ).await.expect("P2 conversion failed");
+    let response = bridge
+        .convert_to_conversation_response(omega_result, &request, conversation_id)
+        .await
+        .expect("P2 conversion failed");
 
     let total_latency = start.elapsed().as_millis() as u64;
 
     // Assertions (adapted for mock environment)
     println!("\n[P2 PERFORMANCE TEST]");
     println!("Total latency: {}ms", total_latency);
-    println!("Response latency (metadata): {}ms", response.metadata.latency_ms);
+    println!(
+        "Response latency (metadata): {}ms",
+        response.metadata.latency_ms
+    );
     println!("Message length: {} chars", response.assistant_message.len());
     println!("Intent: {:?}", response.detected_intention);
     println!("Cognitive tags: {}", response.cognitive_tags.len());
@@ -68,9 +72,18 @@ async fn test_omega_p2_latency_improvement() {
     );
 
     // Verify structure is correct (content may be empty in mock)
-    assert!(!response.message_id.is_empty(), "Message ID should be generated");
-    assert!(response.cognitive_tags.len() > 0, "Cognitive tags should be populated from OMEGA");
-    assert_eq!(response.conversation_id, "perf-test-001", "Conversation ID should match");
+    assert!(
+        !response.message_id.is_empty(),
+        "Message ID should be generated"
+    );
+    assert!(
+        response.cognitive_tags.len() > 0,
+        "Cognitive tags should be populated from OMEGA"
+    );
+    assert_eq!(
+        response.conversation_id, "perf-test-001",
+        "Conversation ID should match"
+    );
 
     println!("✅ P2 Performance test passed (mock env)");
 }
@@ -91,14 +104,15 @@ async fn test_omega_p2_french_mastery_integration() {
         custom_system_prompt: None,
     };
 
-    let omega_result = bridge.process_through_omega(&request).await
+    let omega_result = bridge
+        .process_through_omega(&request)
+        .await
         .expect("OMEGA failed");
 
-    let response = bridge.convert_to_conversation_response(
-        omega_result,
-        &request,
-        "french-test-001".to_string(),
-    ).await.expect("Conversion failed");
+    let response = bridge
+        .convert_to_conversation_response(omega_result, &request, "french-test-001".to_string())
+        .await
+        .expect("Conversion failed");
 
     // In mock environment, verify P2 conversion structure is correct
     // FrenchMastery may not produce content without real AI model
@@ -106,11 +120,20 @@ async fn test_omega_p2_french_mastery_integration() {
     println!("Response length: {}", response.assistant_message.len());
     println!("Conversation ID: {}", response.conversation_id);
     println!("Intent: {:?}", response.detected_intention);
-    
+
     // Verify P2 conversion created valid response structure
-    assert_eq!(response.conversation_id, "french-test-001", "Conversation ID should match");
-    assert!(!response.message_id.is_empty(), "Message ID should be generated");
-    assert!(response.cognitive_tags.len() > 0, "Cognitive tags should exist");
+    assert_eq!(
+        response.conversation_id, "french-test-001",
+        "Conversation ID should match"
+    );
+    assert!(
+        !response.message_id.is_empty(),
+        "Message ID should be generated"
+    );
+    assert!(
+        response.cognitive_tags.len() > 0,
+        "Cognitive tags should exist"
+    );
 
     println!("✅ P2 FrenchMastery integration validated (structure)");
 }
@@ -141,14 +164,15 @@ async fn test_omega_p2_vs_legacy_comparison() {
         };
 
         let start = Instant::now();
-        let omega_result = bridge.process_through_omega(&request).await
+        let omega_result = bridge
+            .process_through_omega(&request)
+            .await
             .expect("OMEGA failed");
-        let _response = bridge.convert_to_conversation_response(
-            omega_result,
-            &request,
-            "benchmark-001".to_string(),
-        ).await.expect("Conversion failed");
-        
+        let _response = bridge
+            .convert_to_conversation_response(omega_result, &request, "benchmark-001".to_string())
+            .await
+            .expect("Conversion failed");
+
         let latency = start.elapsed().as_millis() as u64;
         p2_latencies.push(latency);
     }

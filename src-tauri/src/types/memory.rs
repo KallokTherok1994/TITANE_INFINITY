@@ -174,10 +174,22 @@ mod tests {
     #[test]
     fn test_disk_mode_rename_all() {
         // Test snake_case serialization for all variants
-        assert_eq!(serde_json::to_string(&DiskMode::Disabled).unwrap(), "\"disabled\"");
-        assert_eq!(serde_json::to_string(&DiskMode::ReadOnly).unwrap(), "\"read_only\"");
-        assert_eq!(serde_json::to_string(&DiskMode::WriteOnly).unwrap(), "\"write_only\"");
-        assert_eq!(serde_json::to_string(&DiskMode::ReadWrite).unwrap(), "\"read_write\"");
+        assert_eq!(
+            serde_json::to_string(&DiskMode::Disabled).unwrap(),
+            "\"disabled\""
+        );
+        assert_eq!(
+            serde_json::to_string(&DiskMode::ReadOnly).unwrap(),
+            "\"read_only\""
+        );
+        assert_eq!(
+            serde_json::to_string(&DiskMode::WriteOnly).unwrap(),
+            "\"write_only\""
+        );
+        assert_eq!(
+            serde_json::to_string(&DiskMode::ReadWrite).unwrap(),
+            "\"read_write\""
+        );
     }
 
     // ─────────────────────────────────────────────────────────────

@@ -24,7 +24,7 @@
 //! │  ├── encryption.rs     ← AES-256-GCM encryption (from memory/)
 //! │  ├── persistence.rs    ← Disk I/O (from memory_persistence.rs)
 //! │  └── bridge.rs         ← Bridge vers neural_memory/
-//! 
+//!
 //! neural_memory/           ← Implémentation neuronale (privée)
 //! │  ├── stm.rs            ← Short-Term Memory (20 items)
 //! │  ├── mtm.rs            ← Mid-Term Memory (200 items)
@@ -48,12 +48,12 @@ pub mod types;
 mod tests_simple; // Phase 2.4: Integration tests (simplified)
 
 // Re-exports pour interface publique
-pub use api::{UnifiedMemoryV2, MemoryAPI};
+pub use api::{MemoryAPI, UnifiedMemoryV2};
 pub use compat::{MemoryBridge, MemoryVectorSearchResult}; // Compatibility exports
-pub use config::{MemoryConfig, PerformanceTargets, CapacityLimits};
+pub use config::{CapacityLimits, MemoryConfig, PerformanceTargets};
 pub use types::{
-    MemoryEntry, MemoryTier, MemoryType, MemoryId,
-    MemorySnapshot, MemoryStats, MemoryError, MemoryResult
+    MemoryEntry, MemoryError, MemoryId, MemoryResult, MemorySnapshot, MemoryStats, MemoryTier,
+    MemoryType,
 };
 
 // Version info

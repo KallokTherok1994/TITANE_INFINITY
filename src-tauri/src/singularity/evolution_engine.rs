@@ -709,7 +709,9 @@ mod tests {
     #[test]
     fn test_learning_insights_clone() {
         let mut insights = LearningInsights::default();
-        insights.recommendations.push("Test recommendation".to_string());
+        insights
+            .recommendations
+            .push("Test recommendation".to_string());
         let cloned = insights.clone();
         assert_eq!(cloned.recommendations.len(), 1);
     }
@@ -793,7 +795,10 @@ mod tests {
         engine.metrics.cognitive_drift = 0.3;
 
         let insights = engine.apply_learnings();
-        assert!(insights.recommendations.iter().any(|r| r.contains("dérive")));
+        assert!(insights
+            .recommendations
+            .iter()
+            .any(|r| r.contains("dérive")));
     }
 
     #[test]

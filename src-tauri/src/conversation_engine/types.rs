@@ -914,7 +914,10 @@ mod tests {
         let config = AIConfig::default();
         assert_eq!(config.temperature, 0.7);
         assert!(config.max_tokens.is_none());
-        assert!(matches!(config.provider_preference, ProviderPreference::Auto));
+        assert!(matches!(
+            config.provider_preference,
+            ProviderPreference::Auto
+        ));
     }
 
     #[test]

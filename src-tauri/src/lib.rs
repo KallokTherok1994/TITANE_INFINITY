@@ -101,7 +101,7 @@ pub mod memory; // ⚠️ Phase 2.4: Partial deprecation (system memory → unif
 
 pub mod control_panel_commands; // ✅ Control Panel
 pub mod harmonia_engine; // ✅ Harmonia CPU monitoring
-// TODO Phase 2.4: Add #[deprecated] after migration complete
+                         // TODO Phase 2.4: Add #[deprecated] after migration complete
 pub mod memory_compactor; // ⚠️ Phase 2.4: → unified_memory_v2::consolidate()
 pub mod memory_persistence; // ⚠️ Phase 2.4: → unified_memory_v2::persistence
 pub mod overdrive; // ✅ Chat orchestrator (always active)

@@ -2,10 +2,10 @@
 // UI THEME COMMANDS - TITANE∞ v21.5.3
 // ═══════════════════════════════════════════════════════════════════
 
+use crate::error::TitaneError;
+use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
 use std::sync::Mutex;
-use lazy_static::lazy_static;
-use crate::error::TitaneError;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UITheme {
@@ -21,10 +21,11 @@ lazy_static! {
 #[tauri::command]
 pub async fn save_ui_theme(tokens: serde_json::Value) -> Result<(), TitaneError> {
     log::info!("[UI_THEME] save_ui_theme called");
-    
-    let mut theme = CURRENT_THEME.lock()
+
+    let mut theme = CURRENT_THEME
+        .lock()
         .map_err(|e| TitaneError::InternalError(format!("Failed to lock CURRENT_THEME: {}", e)))?;
-    
+
     *theme = Some(UITheme {
         name: "custom".to_string(),
         tokens,
@@ -33,7 +34,7 @@ pub async fn save_ui_theme(tokens: serde_json::Value) -> Result<(), TitaneError>
             .unwrap()
             .as_secs(),
     });
-    
+
     log::info!("[UI_THEME] ✅ Theme saved");
     Ok(())
 }
@@ -41,10 +42,11 @@ pub async fn save_ui_theme(tokens: serde_json::Value) -> Result<(), TitaneError>
 #[tauri::command]
 pub async fn load_ui_theme() -> Result<Option<UITheme>, TitaneError> {
     log::debug!("[UI_THEME] load_ui_theme called");
-    
-    let theme = CURRENT_THEME.lock()
+
+    let theme = CURRENT_THEME
+        .lock()
         .map_err(|e| TitaneError::InternalError(format!("Failed to lock CURRENT_THEME: {}", e)))?
         .clone();
-    
+
     Ok(theme)
 }

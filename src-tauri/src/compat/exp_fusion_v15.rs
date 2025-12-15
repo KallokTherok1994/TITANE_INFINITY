@@ -77,11 +77,11 @@ pub mod talents {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use super::timeline::{TimelineEntry, TimelineStats};
     use super::categories::CategoryState;
     use super::projects::{ProjectState, ProjectStats};
     use super::talents::TalentTreeState;
+    use super::timeline::{TimelineEntry, TimelineStats};
+    use super::*;
 
     // ─────────────────────────────────────────────────────────────
     // ExpSource Tests
@@ -359,7 +359,11 @@ mod tests {
     #[test]
     fn test_talent_tree_state_creation() {
         let state = TalentTreeState {
-            talents: vec!["Rust".to_string(), "TypeScript".to_string(), "AI".to_string()],
+            talents: vec![
+                "Rust".to_string(),
+                "TypeScript".to_string(),
+                "AI".to_string(),
+            ],
         };
         assert_eq!(state.talents.len(), 3);
         assert!(state.talents.contains(&"Rust".to_string()));

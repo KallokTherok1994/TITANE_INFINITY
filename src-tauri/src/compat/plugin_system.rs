@@ -110,10 +110,10 @@ pub struct CoreInfo {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use super::core_module::CoreHealth;
     use super::core_system::CoreCollection;
     use super::registry::CoreRegistry as RegistryModule;
-    use super::core_module::CoreHealth;
+    use super::*;
 
     // ─────────────────────────────────────────────────────────────
     // CoreHealth Tests

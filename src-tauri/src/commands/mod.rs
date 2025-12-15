@@ -52,32 +52,32 @@ pub use memory_os::*; // ✅ v∞: Export Memory OS commands (SUPER PROMPTs #6-7
 // ═══════════════════════════════════════════════════════════════
 // NEW COMMANDS v21.5.3 - BACKEND REBUILD (SUPER PROMPT #2)
 // ═══════════════════════════════════════════════════════════════
-pub mod governance_commands;
-pub mod system_center_commands;
-pub mod memory_os_commands;
 pub mod devtools_commands;
+pub mod governance_commands;
+pub mod memory_os_commands;
+pub mod system_center_commands;
 pub mod whisper_commands;
 // audio_config_commands removed - duplicates audio::commands
 pub mod persistent_memory_commands;
-pub mod ui_theme_commands;
 pub mod self_healing_commands;
 pub mod singularity_commands;
+pub mod ui_theme_commands;
 
-pub use governance_commands::*;
-pub use system_center_commands::*;
-pub use memory_os_commands::*;
 pub use devtools_commands::*;
+pub use governance_commands::*;
+pub use memory_os_commands::*;
+pub use system_center_commands::*;
 pub use whisper_commands::*;
 // audio_config_commands removed - duplicates audio::commands
-pub use persistent_memory_commands::*;
-pub use ui_theme_commands::*;
-pub use self_healing_commands::*;
-pub use singularity_commands::*;
 pub use multi_ai::*; // ✅ v∞: Export Multi-IA Orchestrator commands
 pub use one_core::*; // ✅ v19.6: Export ONE CORE commands
 pub use orchestration_center::*; // ✅ v19.5: Export orchestration center commands
 pub use persistent_memory::*; // ✅ v19.2Ω: Export persistent memory commands
-pub use qa_monitoring::*; // ✅ v19.7: Export QA monitoring commands
+pub use persistent_memory_commands::*;
+pub use qa_monitoring::*;
+pub use self_healing_commands::*;
+pub use singularity_commands::*;
+pub use ui_theme_commands::*; // ✅ v19.7: Export QA monitoring commands
 
 use crate::shared::types::ModuleHealth;
 use crate::TitaneCore;

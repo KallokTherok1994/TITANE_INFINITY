@@ -24,7 +24,7 @@
 //! - Search: <15ms
 //! - RAM: <300MB
 //!
-//! **Privacy:** 
+//! **Privacy:**
 //! Ce module est PRIVÉ et n'est pas exporté publiquement.
 //! L'accès se fait uniquement via `unified_memory_v2::api`.
 
@@ -44,4 +44,4 @@ pub use consolidation::Consolidator;
 pub use ltm::LongTermMemory;
 pub use mtm::MidTermMemory;
 pub use stm::ShortTermMemory;
-pub use vector::{VectorStore, VectorSearchResult}; // Export VectorSearchResult for compat layer
+pub use vector::{VectorSearchResult, VectorStore}; // Export VectorSearchResult for compat layer

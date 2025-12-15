@@ -987,7 +987,9 @@ mod tests {
     #[test]
     fn test_clarity_clear() {
         let processor = EmotionalSubtletyProcessor::new();
-        let clarity = processor.detect_clarity_level("Je veux implémenter une fonction de tri rapide pour les tableaux");
+        let clarity = processor.detect_clarity_level(
+            "Je veux implémenter une fonction de tri rapide pour les tableaux",
+        );
         assert_eq!(clarity, ClarityLevel::Clear);
     }
 

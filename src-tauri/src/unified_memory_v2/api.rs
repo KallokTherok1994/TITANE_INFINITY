@@ -16,13 +16,13 @@ use super::types::*;
 /// ```rust
 /// let mut memory = UnifiedMemoryV2::new(MemoryConfig::default());
 /// memory.init().await?;
-/// 
+///
 /// // Store
 /// let id = memory.store("Hello world", 0.8, MemoryType::Conversation).await?;
-/// 
+///
 /// // Recall
 /// let results = memory.recall("world", 10).await?;
-/// 
+///
 /// // Stats
 /// let stats = memory.stats().await?;
 /// ```
@@ -53,7 +53,7 @@ impl UnifiedMemoryV2 {
     /// Initialize memory system
     pub async fn init(&mut self) -> MemoryResult<()> {
         let mut inner = self.inner.write().await;
-        
+
         if inner.initialized {
             return Ok(());
         }
@@ -71,16 +71,12 @@ impl UnifiedMemoryV2 {
         memory_type: MemoryType,
     ) -> MemoryResult<MemoryId> {
         let mut inner = self.inner.write().await;
-        
+
         if !inner.initialized {
             return Err(MemoryError::StorageError("Not initialized".to_string()));
         }
 
-        let entry = MemoryEntry::new(
-            content.into(),
-            importance,
-            memory_type,
-        );
+        let entry = MemoryEntry::new(content.into(), importance, memory_type);
 
         let id = entry.id.clone();
         inner.bridge.store_stm(entry).await?;
@@ -95,7 +91,7 @@ impl UnifiedMemoryV2 {
         limit: usize,
     ) -> MemoryResult<Vec<MemoryEntry>> {
         let inner = self.inner.read().await;
-        
+
         if !inner.initialized {
             return Err(MemoryError::StorageError("Not initialized".to_string()));
         }
@@ -106,7 +102,7 @@ impl UnifiedMemoryV2 {
     /// Get memory by ID
     pub async fn get(&self, id: &str) -> MemoryResult<MemoryEntry> {
         let inner = self.inner.read().await;
-        
+
         if !inner.initialized {
             return Err(MemoryError::StorageError("Not initialized".to_string()));
         }
@@ -117,7 +113,7 @@ impl UnifiedMemoryV2 {
     /// Remove memory by ID
     pub async fn remove(&self, id: &str) -> MemoryResult<()> {
         let mut inner = self.inner.write().await;
-        
+
         if !inner.initialized {
             return Err(MemoryError::StorageError("Not initialized".to_string()));
         }
@@ -126,9 +122,13 @@ impl UnifiedMemoryV2 {
     }
 
     /// Get memories by tier
-    pub async fn get_by_tier(&self, tier: MemoryTier, limit: usize) -> MemoryResult<Vec<MemoryEntry>> {
+    pub async fn get_by_tier(
+        &self,
+        tier: MemoryTier,
+        limit: usize,
+    ) -> MemoryResult<Vec<MemoryEntry>> {
         let inner = self.inner.read().await;
-        
+
         if !inner.initialized {
             return Err(MemoryError::StorageError("Not initialized".to_string()));
         }
@@ -139,7 +139,7 @@ impl UnifiedMemoryV2 {
     /// Get system statistics
     pub async fn stats(&self) -> MemoryResult<MemoryStats> {
         let inner = self.inner.read().await;
-        
+
         if !inner.initialized {
             return Err(MemoryError::StorageError("Not initialized".to_string()));
         }
@@ -170,14 +170,14 @@ impl UnifiedMemoryV2 {
     /// Run consolidation cycle (STM→MTM→LTM)
     pub async fn consolidate(&self) -> MemoryResult<ConsolidationResult> {
         let mut inner = self.inner.write().await;
-        
+
         if !inner.initialized {
             return Err(MemoryError::StorageError("Not initialized".to_string()));
         }
 
         let start = std::time::Instant::now();
         inner.bridge.consolidate().await?;
-        
+
         Ok(ConsolidationResult {
             stm_promoted: 0,
             mtm_promoted: 0,
@@ -189,13 +189,13 @@ impl UnifiedMemoryV2 {
     /// Run forgetting cycle (decay + cleanup)
     pub async fn forget(&self) -> MemoryResult<ForgettingResult> {
         let inner = self.inner.read().await;
-        
+
         if !inner.initialized {
             return Err(MemoryError::StorageError("Not initialized".to_string()));
         }
 
         // TODO: Implement forgetting
-        
+
         Ok(ForgettingResult {
             decayed_count: 0,
             deleted_count: 0,
@@ -206,13 +206,13 @@ impl UnifiedMemoryV2 {
     /// Run evolution cycle (clustering, compression, patterns)
     pub async fn evolve(&self) -> MemoryResult<EvolutionResult> {
         let inner = self.inner.read().await;
-        
+
         if !inner.initialized {
             return Err(MemoryError::StorageError("Not initialized".to_string()));
         }
 
         // TODO: Implement evolution
-        
+
         Ok(EvolutionResult {
             clusters_created: 0,
             compressed_count: 0,
@@ -224,7 +224,7 @@ impl UnifiedMemoryV2 {
     /// Clear all memories
     pub async fn clear(&self) -> MemoryResult<()> {
         let mut inner = self.inner.write().await;
-        
+
         if !inner.initialized {
             return Err(MemoryError::StorageError("Not initialized".to_string()));
         }
@@ -262,7 +262,12 @@ pub struct EvolutionResult {
 /// Public trait for memory operations
 #[async_trait::async_trait]
 pub trait MemoryAPI {
-    async fn store(&self, content: String, importance: f32, memory_type: MemoryType) -> MemoryResult<MemoryId>;
+    async fn store(
+        &self,
+        content: String,
+        importance: f32,
+        memory_type: MemoryType,
+    ) -> MemoryResult<MemoryId>;
     async fn recall(&self, query: String, limit: usize) -> MemoryResult<Vec<MemoryEntry>>;
     async fn get(&self, id: &str) -> MemoryResult<MemoryEntry>;
     async fn remove(&self, id: &str) -> MemoryResult<()>;
@@ -271,7 +276,12 @@ pub trait MemoryAPI {
 
 #[async_trait::async_trait]
 impl MemoryAPI for UnifiedMemoryV2 {
-    async fn store(&self, content: String, importance: f32, memory_type: MemoryType) -> MemoryResult<MemoryId> {
+    async fn store(
+        &self,
+        content: String,
+        importance: f32,
+        memory_type: MemoryType,
+    ) -> MemoryResult<MemoryId> {
         self.store(content, importance, memory_type).await
     }
 

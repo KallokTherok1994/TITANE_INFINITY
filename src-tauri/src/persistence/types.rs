@@ -433,8 +433,8 @@ mod tests {
         let mut metadata = HashMap::new();
         metadata.insert("key".to_string(), serde_json::json!("value"));
 
-        let event = TitanEvent::new("test", "action", serde_json::json!({}))
-            .with_metadata(metadata);
+        let event =
+            TitanEvent::new("test", "action", serde_json::json!({})).with_metadata(metadata);
 
         assert!(event.metadata.is_some());
         let meta = event.metadata.unwrap();
@@ -809,7 +809,10 @@ mod tests {
 
     #[test]
     fn test_persistence_error_schema_mismatch() {
-        let error = PersistenceError::SchemaVersionMismatch { expected: 2, found: 1 };
+        let error = PersistenceError::SchemaVersionMismatch {
+            expected: 2,
+            found: 1,
+        };
         let display = format!("{}", error);
         assert!(display.contains("schéma"));
         assert!(display.contains("2"));

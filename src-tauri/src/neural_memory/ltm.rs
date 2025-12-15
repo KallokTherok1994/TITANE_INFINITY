@@ -4,9 +4,11 @@
 //   Migré et simplifié depuis memory_os/ltm.rs
 // ═══════════════════════════════════════════════════════════════
 
+use crate::unified_memory_v2::types::{
+    MemoryEntry, MemoryError, MemoryResult, MemoryTier, MemoryType,
+};
 use std::collections::HashMap;
 use std::path::PathBuf;
-use crate::unified_memory_v2::types::{MemoryEntry, MemoryResult, MemoryError, MemoryTier, MemoryType};
 
 /// LTM metadata for fast index lookup
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
@@ -143,7 +145,9 @@ impl LongTermMemory {
 
     /// Load full entry from disk
     pub async fn load(&self, id: &str) -> MemoryResult<MemoryEntry> {
-        let metadata = self.index.get(id)
+        let metadata = self
+            .index
+            .get(id)
             .ok_or_else(|| MemoryError::NotFound(format!("Entry not found: {}", id)))?;
 
         let file_path = self.storage_path.join("entries").join(&metadata.file_path);
@@ -195,12 +199,13 @@ impl LongTermMemory {
         self.index.clear();
         self.index_dirty = true;
         self.save_index().await?;
-        
+
         let entries_dir = self.storage_path.join("entries");
         let _ = tokio::fs::remove_dir_all(&entries_dir).await;
-        tokio::fs::create_dir_all(&entries_dir).await
-            .map_err(|e| MemoryError::StorageError(format!("Failed to recreate directory: {}", e)))?;
-        
+        tokio::fs::create_dir_all(&entries_dir).await.map_err(|e| {
+            MemoryError::StorageError(format!("Failed to recreate directory: {}", e))
+        })?;
+
         Ok(())
     }
 }

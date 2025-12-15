@@ -109,7 +109,9 @@ mod tests {
         let result = engine.scan("This has a warning");
 
         assert_eq!(result.anomalies_detected, 1);
-        assert!(result.patterns_found.contains(&"warning_pattern".to_string()));
+        assert!(result
+            .patterns_found
+            .contains(&"warning_pattern".to_string()));
     }
 
     #[test]
@@ -119,7 +121,9 @@ mod tests {
 
         assert_eq!(result.anomalies_detected, 2);
         assert!(result.patterns_found.contains(&"error_pattern".to_string()));
-        assert!(result.patterns_found.contains(&"warning_pattern".to_string()));
+        assert!(result
+            .patterns_found
+            .contains(&"warning_pattern".to_string()));
     }
 
     #[test]
@@ -153,7 +157,9 @@ mod tests {
         let mut engine = AnalysisEngine::new();
         let result = engine.scan("WARNING: something");
 
-        assert!(result.patterns_found.contains(&"warning_pattern".to_string()));
+        assert!(result
+            .patterns_found
+            .contains(&"warning_pattern".to_string()));
     }
 
     #[test]

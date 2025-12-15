@@ -33,9 +33,9 @@ impl MemoryPersistence {
         // Create tier-specific directories
         for tier in &["stm", "mtm", "ltm"] {
             let tier_dir = self.data_dir.join(tier);
-            fs::create_dir_all(&tier_dir)
-                .await
-                .map_err(|e| MemoryError::StorageError(format!("Failed to create {} dir: {}", tier, e)))?;
+            fs::create_dir_all(&tier_dir).await.map_err(|e| {
+                MemoryError::StorageError(format!("Failed to create {} dir: {}", tier, e))
+            })?;
         }
 
         Ok(())

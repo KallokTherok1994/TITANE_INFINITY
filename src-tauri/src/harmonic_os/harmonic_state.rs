@@ -81,8 +81,7 @@ impl HarmonicState {
             self.agent_sync,
         ];
         let mean = values.iter().sum::<f32>() / values.len() as f32;
-        let variance =
-            values.iter().map(|v| (v - mean).powi(2)).sum::<f32>() / values.len() as f32;
+        let variance = values.iter().map(|v| (v - mean).powi(2)).sum::<f32>() / values.len() as f32;
         let std_dev = variance.sqrt();
         self.stability = (1.0 - std_dev).clamp(0.0, 1.0);
     }

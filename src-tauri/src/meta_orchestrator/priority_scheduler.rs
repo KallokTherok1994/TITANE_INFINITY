@@ -353,9 +353,18 @@ mod tests {
         let scheduler = PriorityScheduler::new();
 
         // Ajouter des tâches dans l'ordre inverse de priorité
-        scheduler.enqueue(create_test_task("low", TaskPriority::Low)).await.unwrap();
-        scheduler.enqueue(create_test_task("critical", TaskPriority::Critical)).await.unwrap();
-        scheduler.enqueue(create_test_task("normal", TaskPriority::Normal)).await.unwrap();
+        scheduler
+            .enqueue(create_test_task("low", TaskPriority::Low))
+            .await
+            .unwrap();
+        scheduler
+            .enqueue(create_test_task("critical", TaskPriority::Critical))
+            .await
+            .unwrap();
+        scheduler
+            .enqueue(create_test_task("normal", TaskPriority::Normal))
+            .await
+            .unwrap();
 
         // Vérifier que la queue est triée par priorité
         let queue = scheduler.get_queue().await;
@@ -370,8 +379,14 @@ mod tests {
     async fn test_scheduler_get_queue() {
         let scheduler = PriorityScheduler::new();
 
-        scheduler.enqueue(create_test_task("task_1", TaskPriority::Normal)).await.unwrap();
-        scheduler.enqueue(create_test_task("task_2", TaskPriority::High)).await.unwrap();
+        scheduler
+            .enqueue(create_test_task("task_1", TaskPriority::Normal))
+            .await
+            .unwrap();
+        scheduler
+            .enqueue(create_test_task("task_2", TaskPriority::High))
+            .await
+            .unwrap();
 
         let queue = scheduler.get_queue().await;
         assert_eq!(queue.len(), 2);
@@ -398,7 +413,10 @@ mod tests {
     #[tokio::test]
     async fn test_scheduler_cancel_task() {
         let scheduler = PriorityScheduler::new();
-        scheduler.enqueue(create_test_task("to_cancel", TaskPriority::Normal)).await.unwrap();
+        scheduler
+            .enqueue(create_test_task("to_cancel", TaskPriority::Normal))
+            .await
+            .unwrap();
 
         let result = scheduler.cancel_task("to_cancel").await;
         assert!(result.is_ok());

@@ -49,7 +49,10 @@ impl RecoveryManager {
             return Err("Recovery disabled".to_string());
         }
         self.recovery_count += 1;
-        info!("Recovery operation executed (count: {})", self.recovery_count);
+        info!(
+            "Recovery operation executed (count: {})",
+            self.recovery_count
+        );
         Ok(())
     }
 

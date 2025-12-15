@@ -760,10 +760,7 @@ mod tests {
             model: Some("gpt-4".to_string()),
             reason: "Primary choice".to_string(),
             confidence: 0.9,
-            alternatives: vec![
-                (Provider::Anthropic, 0.85),
-                (Provider::Gemini, 0.80),
-            ],
+            alternatives: vec![(Provider::Anthropic, 0.85), (Provider::Gemini, 0.80)],
         };
 
         assert_eq!(decision.alternatives.len(), 2);

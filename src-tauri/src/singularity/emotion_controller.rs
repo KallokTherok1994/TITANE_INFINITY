@@ -575,11 +575,8 @@ mod tests {
     #[test]
     fn test_full_adjust_with_negative_sentiment() {
         let mut controller = EmotionController::new();
-        let state = controller.full_adjust(
-            ConversationMode::Coach,
-            &IntentClass::Emotional,
-            Some(-0.8),
-        );
+        let state =
+            controller.full_adjust(ConversationMode::Coach, &IntentClass::Emotional, Some(-0.8));
         assert!(state.valence >= -1.0);
     }
 

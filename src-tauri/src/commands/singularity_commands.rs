@@ -2,8 +2,8 @@
 // SINGULARITY EXTRA COMMANDS - TITANE∞ v21.5.3
 // ═══════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
 use crate::error::TitaneError;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SingularitySelfCheckResult {
@@ -17,7 +17,7 @@ pub struct SingularitySelfCheckResult {
 #[tauri::command]
 pub async fn singularity_self_check() -> Result<SingularitySelfCheckResult, TitaneError> {
     log::info!("[SINGULARITY] self_check called");
-    
+
     let result = SingularitySelfCheckResult {
         overall_health: "healthy".to_string(),
         physical_status: "optimal".to_string(),
@@ -28,7 +28,10 @@ pub async fn singularity_self_check() -> Result<SingularitySelfCheckResult, Tita
             .unwrap()
             .as_secs(),
     };
-    
-    log::info!("[SINGULARITY] ✅ Self-check completed: {}", result.overall_health);
+
+    log::info!(
+        "[SINGULARITY] ✅ Self-check completed: {}",
+        result.overall_health
+    );
     Ok(result)
 }

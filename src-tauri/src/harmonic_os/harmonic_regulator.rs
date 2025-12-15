@@ -137,13 +137,11 @@ mod tests {
     async fn test_high_dissonance_severity() {
         let regulator = HarmonicRegulator::default();
         let state = HarmonicState::default();
-        let dissonances = vec![
-            Dissonance {
-                source: "test".to_string(),
-                severity: 0.5,
-                description: "High severity".to_string(),
-            },
-        ];
+        let dissonances = vec![Dissonance {
+            source: "test".to_string(),
+            severity: 0.5,
+            description: "High severity".to_string(),
+        }];
 
         let corrections = regulator.regulate(&state, &dissonances).await.unwrap();
         assert!(corrections.adjust_omega_depth);

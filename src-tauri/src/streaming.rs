@@ -117,9 +117,7 @@ impl StreamBuffer {
         self.buffer.push_str(&token);
 
         // Flush if buffer full or time elapsed
-        if self.buffer.len() >= self.threshold
-            || self.last_flush.elapsed() > self.flush_interval
-        {
+        if self.buffer.len() >= self.threshold || self.last_flush.elapsed() > self.flush_interval {
             let chunk = self.buffer.clone();
             self.buffer.clear();
             self.last_flush = std::time::Instant::now();
@@ -147,9 +145,7 @@ impl StreamBuffer {
 
 /// Tokenize text into words (simple whitespace split)
 pub fn tokenize(text: &str) -> Vec<String> {
-    text.split_whitespace()
-        .map(|s| format!("{} ", s))
-        .collect()
+    text.split_whitespace().map(|s| format!("{} ", s)).collect()
 }
 
 /// Send stream chunk through channel

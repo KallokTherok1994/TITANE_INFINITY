@@ -325,10 +325,12 @@ class UnifiedMemorySystem {
         return scopeId === this.chatEngineScopeId;
       });
 
+      const scopeStart = this.chatEngineScopeStartTimestamp;
+
       const scoped =
-        this.chatEngineScopeStartTimestamp === null
+        scopeStart === null
           ? scopedById
-          : scopedById.filter(e => e.timestamp >= this.chatEngineScopeStartTimestamp);
+          : scopedById.filter(e => e.timestamp >= scopeStart);
       const sorted = scoped.sort((a, b) => {
         if (b.importance !== a.importance) return b.importance - a.importance;
         return b.timestamp - a.timestamp;

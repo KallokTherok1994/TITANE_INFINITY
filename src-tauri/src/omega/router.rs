@@ -766,7 +766,10 @@ mod tests {
 
     #[test]
     fn test_execution_mode_balanced() {
-        assert_eq!(Intent::Conversation.execution_mode(), ExecutionMode::Balanced);
+        assert_eq!(
+            Intent::Conversation.execution_mode(),
+            ExecutionMode::Balanced
+        );
         assert_eq!(Intent::Help.execution_mode(), ExecutionMode::Balanced);
     }
 

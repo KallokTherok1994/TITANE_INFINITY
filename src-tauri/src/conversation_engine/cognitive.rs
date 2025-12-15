@@ -280,10 +280,7 @@ mod tests {
     #[test]
     fn test_extract_links_previous_context() {
         let compressor = CognitiveCompressor::new();
-        let links = compressor.extract_links(
-            "Comme précédemment mentionné...",
-            "réponse",
-        );
+        let links = compressor.extract_links("Comme précédemment mentionné...", "réponse");
 
         assert!(links.contains(&"previous_context".to_string()));
     }

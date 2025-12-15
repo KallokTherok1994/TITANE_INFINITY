@@ -2,22 +2,22 @@
  * ═══════════════════════════════════════════════════════════════════
  * TITANE∞ v∞ — SINGULARITY META-PROCESSING (Chat IA Specific)
  * ═══════════════════════════════════════════════════════════════════
- * 
+ *
  * Rôle: Meta-cognitive validation des conversations Chat IA
  * Scope: Conversation-specific (ConversationPipeline Step 12 uniquement)
  * Usage: process_message() → ConversationPipeline → Singularity
- * 
+ *
  * Fonctionnalités:
  * - Validation cohérence (réponse ↔ intention détectée)
  * - Analyse style (French-only, détection fuites anglais)
  * - Critères LTM (suggestions consolidation mémoire)
  * - Détection ambiguïtés (marqueurs incertitude)
  * - Enrichissement metadata (meta-tags, coherence scores)
- * 
+ *
  * IMPORTANT: Ce module est DISTINCT de `singularity_state/mod.rs`
  * (System-wide monitoring 5 layers). Voir ARCHITECTURE_DUAL_STATE.md
  * pour clarification rôles.
- * 
+ *
  * Documentation: SINGULARITY_INTEGRATION_COMPLETE.md
  * Tests: omega_p2_performance_test.rs (3/3 passing)
  * Status: ✅ Production-ready (commit 47d8e3a, 10 déc 2025)
@@ -179,7 +179,7 @@ impl SingularityState {
             &context.ai_response,
             &context.intention,
         );
-        
+
         if !coherence_ok {
             log::warn!("[SINGULARITY] ⚠️ Incohérence détectée");
             meta_tags.push("coherence_warning".to_string());
@@ -231,11 +231,7 @@ impl SingularityState {
     // HELPER METHODS
     // ═══════════════════════════════════════════════════════════════
 
-    fn validate_response_coherence(
-        user_message: &str,
-        ai_response: &str,
-        intention: &str,
-    ) -> bool {
+    fn validate_response_coherence(user_message: &str, ai_response: &str, intention: &str) -> bool {
         if ai_response.is_empty() {
             return false;
         }
@@ -249,8 +245,10 @@ impl SingularityState {
 
     fn validate_style_identity(response: &str) -> bool {
         let english_markers = ["the ", "is ", "are ", "you ", "your "];
-        let has_english = english_markers.iter().any(|m| response.to_lowercase().contains(m));
-        
+        let has_english = english_markers
+            .iter()
+            .any(|m| response.to_lowercase().contains(m));
+
         !has_english && response.len() >= 10
     }
 
@@ -262,7 +260,6 @@ impl SingularityState {
         long_conversation || rich_tags || high_valence
     }
 }
-
 
 #[tauri::command]
 pub async fn singularity_get_state() -> Result<SingularityState, String> {

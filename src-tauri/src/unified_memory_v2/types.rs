@@ -119,11 +119,7 @@ pub struct MemoryEntry {
 
 impl MemoryEntry {
     /// Create new memory entry
-    pub fn new(
-        content: String,
-        importance: f32,
-        memory_type: MemoryType,
-    ) -> Self {
+    pub fn new(content: String, importance: f32, memory_type: MemoryType) -> Self {
         let now = chrono::Utc::now().timestamp_millis();
         Self {
             id: uuid::Uuid::new_v4().to_string(),
@@ -156,10 +152,8 @@ impl MemoryEntry {
     pub fn relevance_score(&self) -> f32 {
         let recency_factor = self.recency_factor();
         let access_factor = (self.access_count as f32).ln().max(0.0) / 10.0;
-        
-        (self.importance * 0.5)
-            + (recency_factor * 0.3)
-            + (access_factor * 0.2)
+
+        (self.importance * 0.5) + (recency_factor * 0.3) + (access_factor * 0.2)
     }
 
     /// Calculate recency factor [0.0-1.0]
@@ -167,7 +161,7 @@ impl MemoryEntry {
         let now = chrono::Utc::now().timestamp_millis();
         let age_ms = (now - self.created_at) as f32;
         let age_hours = age_ms / (1000.0 * 3600.0);
-        
+
         // Exponential decay: 1.0 → 0.5 in 24h
         (-(age_hours / 24.0)).exp()
     }
@@ -243,12 +237,8 @@ mod tests {
 
     #[test]
     fn test_memory_entry_creation() {
-        let entry = MemoryEntry::new(
-            "Test memory".to_string(),
-            0.8,
-            MemoryType::Conversation,
-        );
-        
+        let entry = MemoryEntry::new("Test memory".to_string(), 0.8, MemoryType::Conversation);
+
         assert_eq!(entry.tier, MemoryTier::STM);
         assert_eq!(entry.importance, 0.8);
         assert_eq!(entry.access_count, 0);
@@ -263,16 +253,15 @@ mod tests {
 
     #[test]
     fn test_memory_type_importance() {
-        assert!(MemoryType::Decision.default_importance() > MemoryType::Conversation.default_importance());
+        assert!(
+            MemoryType::Decision.default_importance()
+                > MemoryType::Conversation.default_importance()
+        );
     }
 
     #[test]
     fn test_relevance_score() {
-        let entry = MemoryEntry::new(
-            "Test".to_string(),
-            0.8,
-            MemoryType::Decision,
-        );
+        let entry = MemoryEntry::new("Test".to_string(), 0.8, MemoryType::Decision);
         let score = entry.relevance_score();
         assert!(score > 0.0 && score <= 1.0);
     }

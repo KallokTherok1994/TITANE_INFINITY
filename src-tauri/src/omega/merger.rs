@@ -683,7 +683,10 @@ mod tests {
         assert_eq!(merger.extract_text(&data2), Some("World".to_string()));
 
         let data3 = serde_json::json!({"code": "fn main() {}"});
-        assert_eq!(merger.extract_text(&data3), Some("fn main() {}".to_string()));
+        assert_eq!(
+            merger.extract_text(&data3),
+            Some("fn main() {}".to_string())
+        );
 
         let data4 = serde_json::json!({"analysis": "Result"});
         assert_eq!(merger.extract_text(&data4), Some("Result".to_string()));
@@ -731,16 +734,14 @@ mod tests {
     #[test]
     fn test_calculate_quality_with_unsafe() {
         let merger = ResultMerger::new();
-        let results = vec![
-            TaskResult {
-                task_id: "safety".to_string(),
-                success: true,
-                data: serde_json::json!({ "safe": false }),
-                execution_ms: 10,
-                error: None,
-                cached: false,
-            },
-        ];
+        let results = vec![TaskResult {
+            task_id: "safety".to_string(),
+            success: true,
+            data: serde_json::json!({ "safe": false }),
+            execution_ms: 10,
+            error: None,
+            cached: false,
+        }];
 
         let quality = merger.calculate_quality(&results, 0.9);
         assert!(quality < 0.5); // Should be penalized
@@ -881,16 +882,14 @@ mod tests {
     #[test]
     fn test_all_failed_results() {
         let merger = ResultMerger::new();
-        let results = vec![
-            TaskResult {
-                task_id: "test".to_string(),
-                success: false,
-                data: serde_json::json!({}),
-                execution_ms: 10,
-                error: Some("Error".to_string()),
-                cached: false,
-            },
-        ];
+        let results = vec![TaskResult {
+            task_id: "test".to_string(),
+            success: false,
+            data: serde_json::json!({}),
+            execution_ms: 10,
+            error: Some("Error".to_string()),
+            cached: false,
+        }];
 
         let (_, confidence) = merger.merge_concatenate(&results);
         assert!((confidence - 0.5).abs() < 0.01);

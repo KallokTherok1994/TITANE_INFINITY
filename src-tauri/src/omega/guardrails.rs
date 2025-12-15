@@ -756,7 +756,10 @@ mod tests {
         ];
 
         assert_eq!(types.len(), 8);
-        assert_ne!(GuardrailType::ContentSafety, GuardrailType::PrivacyProtection);
+        assert_ne!(
+            GuardrailType::ContentSafety,
+            GuardrailType::PrivacyProtection
+        );
     }
 
     #[test]
@@ -898,7 +901,8 @@ mod tests {
     #[test]
     fn test_ethics_check_multiple_claims() {
         let checker = SafetyChecker::new();
-        let check = checker.check_ethics("I guarantee guaranteed results with 100% certain success");
+        let check =
+            checker.check_ethics("I guarantee guaranteed results with 100% certain success");
 
         assert!(check.score < 0.8);
     }

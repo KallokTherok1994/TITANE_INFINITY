@@ -2,10 +2,10 @@
 // SYSTEM CENTER COMMANDS - TITANE∞ v21.5.3
 // ═══════════════════════════════════════════════════════════════════
 
+use crate::error::TitaneError;
+use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
 use std::sync::Mutex;
-use lazy_static::lazy_static;
-use crate::error::TitaneError;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct LogEntry {
@@ -31,13 +31,14 @@ lazy_static! {
 #[tauri::command]
 pub async fn sc_clear_logs() -> Result<(), TitaneError> {
     log::debug!("[SYSTEM_CENTER] sc_clear_logs called");
-    
-    let mut logs = SYSTEM_LOGS.lock()
+
+    let mut logs = SYSTEM_LOGS
+        .lock()
         .map_err(|e| TitaneError::InternalError(format!("Failed to lock SYSTEM_LOGS: {}", e)))?;
-    
+
     let count = logs.len();
     logs.clear();
-    
+
     log::info!("[SYSTEM_CENTER] ✅ Cleared {} log entries", count);
     Ok(())
 }
@@ -45,10 +46,11 @@ pub async fn sc_clear_logs() -> Result<(), TitaneError> {
 #[tauri::command]
 pub async fn sc_add_log(level: String, source: String, message: String) -> Result<(), TitaneError> {
     log::debug!("[SYSTEM_CENTER] sc_add_log: {} - {}", level, message);
-    
-    let mut logs = SYSTEM_LOGS.lock()
+
+    let mut logs = SYSTEM_LOGS
+        .lock()
         .map_err(|e| TitaneError::InternalError(format!("Failed to lock SYSTEM_LOGS: {}", e)))?;
-    
+
     let entry = LogEntry {
         timestamp: std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
@@ -58,23 +60,28 @@ pub async fn sc_add_log(level: String, source: String, message: String) -> Resul
         source,
         message,
     };
-    
+
     logs.push(entry);
-    
+
     if logs.len() > 5000 {
         logs.drain(0..500);
     }
-    
+
     Ok(())
 }
 
 #[tauri::command]
 pub async fn sc_initialize_cluster(node_id: String, port: u16) -> Result<(), TitaneError> {
-    log::info!("[SYSTEM_CENTER] sc_initialize_cluster: {} on port {}", node_id, port);
-    
-    let mut nodes = CLUSTER_NODES.lock()
+    log::info!(
+        "[SYSTEM_CENTER] sc_initialize_cluster: {} on port {}",
+        node_id,
+        port
+    );
+
+    let mut nodes = CLUSTER_NODES
+        .lock()
         .map_err(|e| TitaneError::InternalError(format!("Failed to lock CLUSTER_NODES: {}", e)))?;
-    
+
     let node = ClusterNode {
         node_id: node_id.clone(),
         port,
@@ -84,9 +91,9 @@ pub async fn sc_initialize_cluster(node_id: String, port: u16) -> Result<(), Tit
             .unwrap()
             .as_secs(),
     };
-    
+
     nodes.push(node);
-    
+
     log::info!("[SYSTEM_CENTER] ✅ Cluster node '{}' initialized", node_id);
     Ok(())
 }
@@ -94,13 +101,14 @@ pub async fn sc_initialize_cluster(node_id: String, port: u16) -> Result<(), Tit
 #[tauri::command]
 pub async fn sc_shutdown_cluster() -> Result<(), TitaneError> {
     log::info!("[SYSTEM_CENTER] sc_shutdown_cluster called");
-    
-    let mut nodes = CLUSTER_NODES.lock()
+
+    let mut nodes = CLUSTER_NODES
+        .lock()
         .map_err(|e| TitaneError::InternalError(format!("Failed to lock CLUSTER_NODES: {}", e)))?;
-    
+
     let count = nodes.len();
     nodes.clear();
-    
+
     log::info!("[SYSTEM_CENTER] ✅ Shutdown {} cluster nodes", count);
     Ok(())
 }
@@ -119,6 +127,9 @@ pub async fn sc_hypervision_clear_anomalies() -> Result<(), TitaneError> {
 
 #[tauri::command]
 pub async fn sc_hypervision_resolve_anomaly(anomaly_id: String) -> Result<(), TitaneError> {
-    log::info!("[SYSTEM_CENTER] sc_hypervision_resolve_anomaly: {}", anomaly_id);
+    log::info!(
+        "[SYSTEM_CENTER] sc_hypervision_resolve_anomaly: {}",
+        anomaly_id
+    );
     Ok(())
 }

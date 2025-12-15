@@ -463,7 +463,10 @@ mod tests {
             required_rate: 0.95,
             actual_rate: 0.80,
         };
-        assert!(matches!(v, ContractViolation::InsufficientSuccessRate { .. }));
+        assert!(matches!(
+            v,
+            ContractViolation::InsufficientSuccessRate { .. }
+        ));
     }
 
     #[test]
@@ -560,7 +563,13 @@ mod tests {
             actual_seconds: 90,
         };
         let cloned = v.clone();
-        assert!(matches!(cloned, ContractViolation::TimeoutExceeded { allowed_seconds: 60, .. }));
+        assert!(matches!(
+            cloned,
+            ContractViolation::TimeoutExceeded {
+                allowed_seconds: 60,
+                ..
+            }
+        ));
     }
 
     #[test]
@@ -737,7 +746,10 @@ mod tests {
         let contract = AgentContract::default_for_role(&AgentRole::Observer);
         let cloned = contract.clone();
         assert_eq!(cloned.role, contract.role);
-        assert_eq!(cloned.max_execution_time_seconds, contract.max_execution_time_seconds);
+        assert_eq!(
+            cloned.max_execution_time_seconds,
+            contract.max_execution_time_seconds
+        );
     }
 
     #[test]

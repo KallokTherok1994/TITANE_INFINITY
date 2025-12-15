@@ -763,7 +763,8 @@ mod tests {
 
     #[test]
     fn test_mesh_stats_deserialize() {
-        let json = r#"{"node_id":"deser-stats","total_peers":20,"active_peers":18,"avg_health":92}"#;
+        let json =
+            r#"{"node_id":"deser-stats","total_peers":20,"active_peers":18,"avg_health":92}"#;
         let stats: MeshStats = serde_json::from_str(json).unwrap();
         assert_eq!(stats.node_id, "deser-stats");
         assert_eq!(stats.total_peers, 20);

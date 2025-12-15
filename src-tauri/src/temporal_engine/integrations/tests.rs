@@ -4,11 +4,11 @@
 
 #[cfg(test)]
 mod tests {
+    use crate::temporal_engine::integrations::agi_integration::AlignmentPriority;
+    use crate::temporal_engine::integrations::memory_integration::ConsolidationPriority;
     use crate::temporal_engine::integrations::*;
     use crate::temporal_engine::time_model::{Moment, Season, TimeOfDay};
     use crate::temporal_engine::{PlanningHorizon, TemporalContext};
-    use crate::temporal_engine::integrations::memory_integration::ConsolidationPriority;
-    use crate::temporal_engine::integrations::agi_integration::AlignmentPriority;
 
     fn create_test_context(hour: u8, day_of_week: u8, season: Season) -> TemporalContext {
         TemporalContext {

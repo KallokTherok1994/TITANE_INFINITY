@@ -373,8 +373,14 @@ mod tests {
         };
 
         assert_eq!(summary.total_components, 5);
-        assert_eq!(summary.operational_count + summary.degraded_count + summary.failed_count, 5);
-        assert_eq!(summary.critical_count + summary.error_count + summary.warning_count, 10);
+        assert_eq!(
+            summary.operational_count + summary.degraded_count + summary.failed_count,
+            5
+        );
+        assert_eq!(
+            summary.critical_count + summary.error_count + summary.warning_count,
+            10
+        );
     }
 
     #[test]
@@ -704,7 +710,9 @@ mod tests {
     fn test_diagnostic_report_with_all_status_types() {
         struct UnknownChecker;
         impl ComponentChecker for UnknownChecker {
-            fn component_name(&self) -> &str { "unknown" }
+            fn component_name(&self) -> &str {
+                "unknown"
+            }
             fn run_diagnostics(&self) -> ComponentDiagnostic {
                 ComponentDiagnostic {
                     component_name: "unknown".to_string(),
@@ -732,7 +740,9 @@ mod tests {
     fn test_critical_findings_collection() {
         struct MultiCriticalChecker;
         impl ComponentChecker for MultiCriticalChecker {
-            fn component_name(&self) -> &str { "multi" }
+            fn component_name(&self) -> &str {
+                "multi"
+            }
             fn run_diagnostics(&self) -> ComponentDiagnostic {
                 ComponentDiagnostic {
                     component_name: "multi".to_string(),
@@ -810,7 +820,9 @@ mod tests {
     fn test_mixed_findings_count() {
         struct MixedFindingsChecker;
         impl ComponentChecker for MixedFindingsChecker {
-            fn component_name(&self) -> &str { "mixed" }
+            fn component_name(&self) -> &str {
+                "mixed"
+            }
             fn run_diagnostics(&self) -> ComponentDiagnostic {
                 ComponentDiagnostic {
                     component_name: "mixed".to_string(),
