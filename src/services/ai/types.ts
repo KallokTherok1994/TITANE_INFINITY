@@ -20,9 +20,7 @@ export interface AIMessage {
   content: string;
   timestamp: number;
   provider?: string;
-  metadata?: {
-    [key: string]: any;
-  };
+  metadata?: Record<string, unknown>;
 }
 
 export type AIProviderName =
@@ -45,19 +43,28 @@ export type AIProviderName =
 // ✨ v21 - Provider choice for UI selection
 export type ProviderChoice = 'auto' | 'openai' | 'claude' | 'gemini' | 'ollama' | 'local';
 
+/** Response metadata interface with known fields */
+export interface AIResponseMetadata {
+  latencyMs?: number;
+  fallbackUsed?: boolean;
+  retriesCount?: number;
+  errorDetails?: string;
+  model?: string;
+  tokensUsed?: number;
+  promptTokens?: number;
+  completionTokens?: number;
+  finishReason?: string;
+  cached?: boolean;
+  [key: string]: unknown;
+}
+
 export interface AIResponse {
   content: string;
   provider: AIProviderName;
   timestamp: number;
   model?: string;
   tokens?: number;
-  metadata?: {
-    latencyMs?: number; // ✅ Latence mesurée
-    fallbackUsed?: boolean; // ✅ Si fallback activé
-    retriesCount?: number; // ✅ Nombre de tentatives
-    errorDetails?: string; // ✅ Détails erreur si échec partiel
-    [key: string]: any;
-  };
+  metadata?: AIResponseMetadata;
 }
 
 export interface AIProvider {

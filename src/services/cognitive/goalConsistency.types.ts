@@ -387,7 +387,7 @@ export interface ConsistencyEvent {
     | 'auto_corrected';
   timestamp: string;
   conversation_id: string;
-  data: any;
+  data: Record<string, unknown>;
 }
 
 export type ConsistencyEventHandler = (event: ConsistencyEvent) => void;

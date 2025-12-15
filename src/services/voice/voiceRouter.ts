@@ -34,7 +34,7 @@ import { audioStateMachine } from '@/services/audio/audioStateMachine';
 import type { AIMessage } from '@/services/ai/types';
 import { emotionalAnalyzer } from './emotionalAnalyzer';
 import { emotionalTTS } from './emotionalTTS';
-import type { EmotionalContext, EmotionType } from './emotionalIntent';
+import type { EmotionalIntent, EmotionalContext, EmotionType } from './emotionalIntent';
 import { wakeWordEngine as _wakeWordEngine, type WakeWordEvent } from './wakeWordEngine';
 import { attentionEngine } from './attentionEngine';
 import { interruptionController } from './interruptionController';
@@ -355,7 +355,7 @@ class VoiceRouterService {
    */
   private async speakEmotionalWithTimeout(
     text: string,
-    intent: any,
+    intent: EmotionalIntent,
     useOnline: boolean,
     timeout: number
   ): Promise<void> {

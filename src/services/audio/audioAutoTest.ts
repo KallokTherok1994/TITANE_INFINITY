@@ -18,7 +18,7 @@ export interface TestResult {
   passed: boolean;
   duration: number;
   error?: string;
-  details?: any;
+  details?: Record<string, unknown>;
 }
 
 export interface TestSuite {
@@ -247,7 +247,7 @@ class AudioAutoTest {
         name: 'TTS Availability',
         passed: status.available,
         duration: Date.now() - startTime,
-        details: status,
+        details: { ...status } as Record<string, unknown>,
       };
     } catch (error) {
       return {

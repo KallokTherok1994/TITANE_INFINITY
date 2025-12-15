@@ -19,6 +19,16 @@ const logger = createLogger('[AUTO-HEAL]');
 // TYPES AUTO-HEAL
 // ─────────────────────────────────────────────────────────────────
 
+export interface SelfTestResult {
+  test: string;
+  success: boolean;
+  errorId?: string;
+  classified?: string;
+  action?: string;
+  stats?: boolean;
+  error?: string;
+}
+
 export interface AutoHealError {
   id: string;
   timestamp: number;
@@ -665,7 +675,7 @@ class AutoHealEngine {
   /**
    * Test de fonctionnement
    */
-  async selfTest(): Promise<{ success: boolean; results: any[] }> {
+  async selfTest(): Promise<{ success: boolean; results: SelfTestResult[] }> {
     const results = [];
     let allSuccess = true;
 

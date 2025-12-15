@@ -277,7 +277,7 @@ export interface MemoryEvent {
     | 'memory_deleted'
     | 'cleanup_performed';
   timestamp: string;
-  data: any;
+  data: Record<string, unknown>;
 }
 
 export type MemoryEventHandler = (event: MemoryEvent) => void;
