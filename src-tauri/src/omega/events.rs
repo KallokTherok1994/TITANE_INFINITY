@@ -383,7 +383,10 @@ mod tests {
             success: false,
         };
 
-        if let OmegaEvent::SelfHealing { success, action, .. } = event {
+        if let OmegaEvent::SelfHealing {
+            success, action, ..
+        } = event
+        {
             assert!(!success);
             assert_eq!(action, "memory_cleanup");
         }

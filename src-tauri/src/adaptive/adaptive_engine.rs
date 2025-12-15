@@ -584,7 +584,10 @@ mod tests {
     #[test]
     fn test_adaptive_condition_cognitive_stability() {
         let condition = AdaptiveCondition::CognitiveStabilityBelow(0.5);
-        assert!(matches!(condition, AdaptiveCondition::CognitiveStabilityBelow(_)));
+        assert!(matches!(
+            condition,
+            AdaptiveCondition::CognitiveStabilityBelow(_)
+        ));
     }
 
     #[test]
@@ -1090,7 +1093,10 @@ mod tests {
         let profile = PreferenceProfile::default();
         assert!(matches!(profile.ai_style, AiPreference::Balanced));
         assert!(matches!(profile.system_mode, SystemBehaviorMode::Adaptive));
-        assert!(matches!(profile.optimization_bias, OptimizationBias::Balanced));
+        assert!(matches!(
+            profile.optimization_bias,
+            OptimizationBias::Balanced
+        ));
         assert!(profile.auto_learn);
     }
 
@@ -1434,7 +1440,9 @@ mod tests {
         };
         engine.capture_sample(sample);
         let actions = engine.evaluate_rules();
-        assert!(actions.iter().any(|a| matches!(a, AdaptiveAction::ReduceAIComplexity)));
+        assert!(actions
+            .iter()
+            .any(|a| matches!(a, AdaptiveAction::ReduceAIComplexity)));
     }
 
     #[test]
@@ -1446,7 +1454,9 @@ mod tests {
         };
         engine.capture_sample(sample);
         let actions = engine.evaluate_rules();
-        assert!(actions.iter().any(|a| matches!(a, AdaptiveAction::SimplifyUITransitions)));
+        assert!(actions
+            .iter()
+            .any(|a| matches!(a, AdaptiveAction::SimplifyUITransitions)));
     }
 
     #[test]
@@ -1458,6 +1468,8 @@ mod tests {
         };
         engine.capture_sample(sample);
         let actions = engine.evaluate_rules();
-        assert!(actions.iter().any(|a| matches!(a, AdaptiveAction::SwitchToStableMode)));
+        assert!(actions
+            .iter()
+            .any(|a| matches!(a, AdaptiveAction::SwitchToStableMode)));
     }
 }

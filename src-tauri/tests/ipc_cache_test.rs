@@ -192,7 +192,14 @@ async fn test_cache_concurrent_access() {
 
     let cache = Arc::new(IPCCache::<i32>::new(10));
 
-    // Spawn multiple tasks accessing the same cache
+    // First, populate the cache with initial values (sequential to guarantee entries exist)
+    for i in 0..3 {
+        cache
+            .get_or_compute_async(&format!("key{}", i), || async move { i * 10 })
+            .await;
+    }
+
+    // Now spawn concurrent tasks that should get cache hits
     let mut handles = vec![];
 
     for i in 0..10 {
@@ -201,7 +208,7 @@ async fn test_cache_concurrent_access() {
             cache_clone
                 .get_or_compute_async(&format!("key{}", i % 3), || async {
                     sleep(Duration::from_millis(10)).await;
-                    i * 10
+                    i * 100 // Different value to detect if compute was called
                 })
                 .await
         });
@@ -215,7 +222,7 @@ async fn test_cache_concurrent_access() {
 
     let stats = cache.get_stats();
     assert_eq!(stats.total_entries, 3); // Should have 3 unique keys (0, 1, 2)
-    assert!(stats.total_hits > 0); // Should have some cache hits
+    assert!(stats.total_hits >= 10); // All 10 concurrent accesses should be hits
 }
 
 #[tokio::test]

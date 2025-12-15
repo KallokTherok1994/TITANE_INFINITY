@@ -65,8 +65,13 @@ mod tests {
 
     #[test]
     fn test_collaboration_pattern_pipeline() {
-        let agents = vec![AgentId::from_string("a1".to_string()), AgentId::from_string("a2".to_string())];
-        let pattern = CollaborationPattern::Pipeline { agents: agents.clone() };
+        let agents = vec![
+            AgentId::from_string("a1".to_string()),
+            AgentId::from_string("a2".to_string()),
+        ];
+        let pattern = CollaborationPattern::Pipeline {
+            agents: agents.clone(),
+        };
         if let CollaborationPattern::Pipeline { agents: ids } = pattern {
             assert_eq!(ids.len(), 2);
         } else {
@@ -76,8 +81,14 @@ mod tests {
 
     #[test]
     fn test_collaboration_pattern_parallel() {
-        let agents = vec![AgentId::from_string("a1".to_string()), AgentId::from_string("a2".to_string()), AgentId::from_string("a3".to_string())];
-        let pattern = CollaborationPattern::Parallel { agents: agents.clone() };
+        let agents = vec![
+            AgentId::from_string("a1".to_string()),
+            AgentId::from_string("a2".to_string()),
+            AgentId::from_string("a3".to_string()),
+        ];
+        let pattern = CollaborationPattern::Parallel {
+            agents: agents.clone(),
+        };
         if let CollaborationPattern::Parallel { agents: ids } = pattern {
             assert_eq!(ids.len(), 3);
         } else {
@@ -87,9 +98,17 @@ mod tests {
 
     #[test]
     fn test_collaboration_pattern_committee() {
-        let agents = vec![AgentId::from_string("a1".to_string()), AgentId::from_string("a2".to_string()), AgentId::from_string("a3".to_string())];
+        let agents = vec![
+            AgentId::from_string("a1".to_string()),
+            AgentId::from_string("a2".to_string()),
+            AgentId::from_string("a3".to_string()),
+        ];
         let pattern = CollaborationPattern::Committee { agents, quorum: 2 };
-        if let CollaborationPattern::Committee { agents: ids, quorum } = pattern {
+        if let CollaborationPattern::Committee {
+            agents: ids,
+            quorum,
+        } = pattern
+        {
             assert_eq!(ids.len(), 3);
             assert_eq!(quorum, 2);
         } else {
@@ -99,21 +118,27 @@ mod tests {
 
     #[test]
     fn test_collaboration_pattern_debug() {
-        let pattern = CollaborationPattern::Pipeline { agents: vec![AgentId::from_string("a1".to_string())] };
+        let pattern = CollaborationPattern::Pipeline {
+            agents: vec![AgentId::from_string("a1".to_string())],
+        };
         let debug_str = format!("{:?}", pattern);
         assert!(debug_str.contains("Pipeline"));
     }
 
     #[test]
     fn test_collaboration_pattern_clone() {
-        let pattern = CollaborationPattern::Parallel { agents: vec![AgentId::from_string("a1".to_string())] };
+        let pattern = CollaborationPattern::Parallel {
+            agents: vec![AgentId::from_string("a1".to_string())],
+        };
         let cloned = pattern.clone();
         assert!(matches!(cloned, CollaborationPattern::Parallel { .. }));
     }
 
     #[test]
     fn test_collaboration_pattern_serialize_pipeline() {
-        let pattern = CollaborationPattern::Pipeline { agents: vec![AgentId::from_string("a1".to_string())] };
+        let pattern = CollaborationPattern::Pipeline {
+            agents: vec![AgentId::from_string("a1".to_string())],
+        };
         let json = serde_json::to_string(&pattern).unwrap();
         assert!(json.contains("Pipeline"));
         assert!(json.contains("a1"));
@@ -160,45 +185,67 @@ mod tests {
 
     #[test]
     fn test_collaboration_protocol_pipeline() {
-        let agents = vec![AgentId::from_string("a1".to_string()), AgentId::from_string("a2".to_string())];
+        let agents = vec![
+            AgentId::from_string("a1".to_string()),
+            AgentId::from_string("a2".to_string()),
+        ];
         let protocol = CollaborationProtocol::pipeline(agents);
-        assert!(matches!(protocol.pattern, CollaborationPattern::Pipeline { .. }));
+        assert!(matches!(
+            protocol.pattern,
+            CollaborationPattern::Pipeline { .. }
+        ));
         assert_eq!(protocol.timeout_seconds, 300);
     }
 
     #[test]
     fn test_collaboration_protocol_parallel() {
-        let agents = vec![AgentId::from_string("a1".to_string()), AgentId::from_string("a2".to_string())];
+        let agents = vec![
+            AgentId::from_string("a1".to_string()),
+            AgentId::from_string("a2".to_string()),
+        ];
         let protocol = CollaborationProtocol::parallel(agents);
-        assert!(matches!(protocol.pattern, CollaborationPattern::Parallel { .. }));
+        assert!(matches!(
+            protocol.pattern,
+            CollaborationPattern::Parallel { .. }
+        ));
         assert_eq!(protocol.timeout_seconds, 60);
     }
 
     #[test]
     fn test_collaboration_protocol_committee() {
-        let agents = vec![AgentId::from_string("a1".to_string()), AgentId::from_string("a2".to_string()), AgentId::from_string("a3".to_string())];
+        let agents = vec![
+            AgentId::from_string("a1".to_string()),
+            AgentId::from_string("a2".to_string()),
+            AgentId::from_string("a3".to_string()),
+        ];
         let protocol = CollaborationProtocol::committee(agents, 2);
-        assert!(matches!(protocol.pattern, CollaborationPattern::Committee { .. }));
+        assert!(matches!(
+            protocol.pattern,
+            CollaborationPattern::Committee { .. }
+        ));
         assert_eq!(protocol.timeout_seconds, 120);
     }
 
     #[test]
     fn test_collaboration_protocol_debug() {
-        let protocol = CollaborationProtocol::pipeline(vec![AgentId::from_string("a1".to_string())]);
+        let protocol =
+            CollaborationProtocol::pipeline(vec![AgentId::from_string("a1".to_string())]);
         let debug_str = format!("{:?}", protocol);
         assert!(debug_str.contains("CollaborationProtocol"));
     }
 
     #[test]
     fn test_collaboration_protocol_clone() {
-        let protocol = CollaborationProtocol::parallel(vec![AgentId::from_string("a1".to_string())]);
+        let protocol =
+            CollaborationProtocol::parallel(vec![AgentId::from_string("a1".to_string())]);
         let cloned = protocol.clone();
         assert_eq!(cloned.timeout_seconds, protocol.timeout_seconds);
     }
 
     #[test]
     fn test_collaboration_protocol_serialize() {
-        let protocol = CollaborationProtocol::committee(vec![AgentId::from_string("v1".to_string())], 1);
+        let protocol =
+            CollaborationProtocol::committee(vec![AgentId::from_string("v1".to_string())], 1);
         let json = serde_json::to_string(&protocol).unwrap();
         assert!(json.contains("Committee"));
         assert!(json.contains("timeout_seconds"));
@@ -208,13 +255,19 @@ mod tests {
     fn test_collaboration_protocol_deserialize() {
         let json = r#"{"pattern":{"Pipeline":{"agents":["a1"]}},"timeout_seconds":500}"#;
         let protocol: CollaborationProtocol = serde_json::from_str(json).unwrap();
-        assert!(matches!(protocol.pattern, CollaborationPattern::Pipeline { .. }));
+        assert!(matches!(
+            protocol.pattern,
+            CollaborationPattern::Pipeline { .. }
+        ));
         assert_eq!(protocol.timeout_seconds, 500);
     }
 
     #[test]
     fn test_collaboration_protocol_roundtrip() {
-        let original = CollaborationProtocol::parallel(vec![AgentId::from_string("p1".to_string()), AgentId::from_string("p2".to_string())]);
+        let original = CollaborationProtocol::parallel(vec![
+            AgentId::from_string("p1".to_string()),
+            AgentId::from_string("p2".to_string()),
+        ]);
         let json = serde_json::to_string(&original).unwrap();
         let restored: CollaborationProtocol = serde_json::from_str(&json).unwrap();
         assert_eq!(restored.timeout_seconds, 60);
@@ -309,7 +362,10 @@ mod tests {
     fn test_collaboration_result_roundtrip() {
         let original = CollaborationResult {
             success: true,
-            participating_agents: vec![AgentId::from_string("x".to_string()), AgentId::from_string("y".to_string())],
+            participating_agents: vec![
+                AgentId::from_string("x".to_string()),
+                AgentId::from_string("y".to_string()),
+            ],
             duration_ms: 5000,
             output: Some("final".to_string()),
         };
@@ -363,7 +419,10 @@ mod tests {
             output: Some("Consensus reached".to_string()),
         };
 
-        assert!(matches!(protocol.pattern, CollaborationPattern::Committee { quorum: 2, .. }));
+        assert!(matches!(
+            protocol.pattern,
+            CollaborationPattern::Committee { quorum: 2, .. }
+        ));
         assert!(result.success);
         assert_eq!(result.participating_agents.len(), 3);
     }
@@ -380,7 +439,10 @@ mod tests {
         // Pipeline has longer timeout
         assert_eq!(protocol.timeout_seconds, 300);
 
-        if let CollaborationPattern::Pipeline { agents: pipeline_agents } = protocol.pattern {
+        if let CollaborationPattern::Pipeline {
+            agents: pipeline_agents,
+        } = protocol.pattern
+        {
             assert_eq!(pipeline_agents.len(), 3);
             assert_eq!(pipeline_agents[0].as_str(), "step1");
             assert_eq!(pipeline_agents[2].as_str(), "step3");

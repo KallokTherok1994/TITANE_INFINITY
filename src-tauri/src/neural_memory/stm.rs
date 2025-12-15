@@ -3,11 +3,11 @@
 //   FIFO queue, 20 items max, <1min lifespan
 // ═══════════════════════════════════════════════════════════════
 
-use std::collections::VecDeque;
 use crate::unified_memory_v2::types::{MemoryEntry, MemoryResult, MemoryTier};
+use std::collections::VecDeque;
 
 /// Short-Term Memory (STM)
-/// 
+///
 /// FIFO queue with capacity limit. Oldest entries are evicted when full.
 /// Used for immediate context (conversation turns, temporary observations).
 pub struct ShortTermMemory {
@@ -57,12 +57,7 @@ impl ShortTermMemory {
 
     /// Get recent entries (last N)
     pub fn get_recent(&self, limit: usize) -> Vec<MemoryEntry> {
-        self.entries
-            .iter()
-            .rev()
-            .take(limit)
-            .cloned()
-            .collect()
+        self.entries.iter().rev().take(limit).cloned().collect()
     }
 
     /// Search by keyword
@@ -110,13 +105,9 @@ mod tests {
     #[test]
     fn test_stm_push_and_evict() {
         let mut stm = ShortTermMemory::new(3);
-        
+
         for i in 0..5 {
-            let entry = MemoryEntry::new(
-                format!("Entry {}", i),
-                0.5,
-                MemoryType::Conversation,
-            );
+            let entry = MemoryEntry::new(format!("Entry {}", i), 0.5, MemoryType::Conversation);
             stm.push(entry).unwrap();
         }
 
@@ -128,13 +119,9 @@ mod tests {
     #[test]
     fn test_stm_search() {
         let mut stm = ShortTermMemory::new(10);
-        
+
         for word in &["hello", "world", "test"] {
-            let entry = MemoryEntry::new(
-                word.to_string(),
-                0.5,
-                MemoryType::Conversation,
-            );
+            let entry = MemoryEntry::new(word.to_string(), 0.5, MemoryType::Conversation);
             stm.push(entry).unwrap();
         }
 

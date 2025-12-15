@@ -973,7 +973,10 @@ mod tests {
         let plan = ExecutionPlan::from_routing("task-test".to_string(), &routing, "Do something");
 
         // Should include Reasoning and CodeGen for Task intent
-        assert!(plan.tasks.iter().any(|t| t.task_type == TaskType::Reasoning));
+        assert!(plan
+            .tasks
+            .iter()
+            .any(|t| t.task_type == TaskType::Reasoning));
         assert!(plan.tasks.iter().any(|t| t.task_type == TaskType::CodeGen));
     }
 
@@ -1099,7 +1102,8 @@ mod tests {
         };
 
         let plan_fast = ExecutionPlan::from_routing("fast".to_string(), &routing_fast, "test");
-        let plan_thorough = ExecutionPlan::from_routing("thorough".to_string(), &routing_thorough, "test");
+        let plan_thorough =
+            ExecutionPlan::from_routing("thorough".to_string(), &routing_thorough, "test");
 
         // Thorough mode should have longer timeouts
         assert!(plan_thorough.estimated_time_ms >= plan_fast.estimated_time_ms);

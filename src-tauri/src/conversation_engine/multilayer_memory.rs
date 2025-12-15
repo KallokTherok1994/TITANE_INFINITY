@@ -424,11 +424,8 @@ mod tests {
     fn test_analyze_layers_episodic_on_high_emotion() {
         let manager = MultiLayerMemoryManager::new();
         let emotion = EmotionState::new(0.0, 0.9, 0.5); // Haute intensité
-        let layers = manager.analyze_memory_layers(
-            &Intention::Question,
-            &emotion,
-            "Message normal",
-        );
+        let layers =
+            manager.analyze_memory_layers(&Intention::Question, &emotion, "Message normal");
         assert!(layers.episodic);
     }
 
@@ -436,11 +433,8 @@ mod tests {
     fn test_analyze_layers_episodic_on_high_valence() {
         let manager = MultiLayerMemoryManager::new();
         let emotion = EmotionState::new(0.9, 0.5, 0.5); // Haute valence
-        let layers = manager.analyze_memory_layers(
-            &Intention::Question,
-            &emotion,
-            "Message normal",
-        );
+        let layers =
+            manager.analyze_memory_layers(&Intention::Question, &emotion, "Message normal");
         assert!(layers.episodic);
     }
 
@@ -708,11 +702,7 @@ mod tests {
     #[test]
     fn test_learn_preference_new() {
         let mut manager = MultiLayerMemoryManager::new();
-        manager.learn_preference(
-            PreferenceCategory::Format,
-            "prefers_lists".to_string(),
-            0.8,
-        );
+        manager.learn_preference(PreferenceCategory::Format, "prefers_lists".to_string(), 0.8);
 
         let prefs = manager.get_preferences(&PreferenceCategory::Format);
         assert_eq!(prefs.len(), 1);
@@ -725,18 +715,10 @@ mod tests {
         let mut manager = MultiLayerMemoryManager::new();
 
         // Premier apprentissage
-        manager.learn_preference(
-            PreferenceCategory::Format,
-            "prefers_lists".to_string(),
-            0.6,
-        );
+        manager.learn_preference(PreferenceCategory::Format, "prefers_lists".to_string(), 0.6);
 
         // Deuxième apprentissage (même règle)
-        manager.learn_preference(
-            PreferenceCategory::Format,
-            "prefers_lists".to_string(),
-            1.0,
-        );
+        manager.learn_preference(PreferenceCategory::Format, "prefers_lists".to_string(), 1.0);
 
         let prefs = manager.get_preferences(&PreferenceCategory::Format);
         assert_eq!(prefs.len(), 1);
@@ -748,21 +730,9 @@ mod tests {
     #[test]
     fn test_get_preferences_by_category() {
         let mut manager = MultiLayerMemoryManager::new();
-        manager.learn_preference(
-            PreferenceCategory::Format,
-            "format_rule".to_string(),
-            0.7,
-        );
-        manager.learn_preference(
-            PreferenceCategory::Depth,
-            "depth_rule".to_string(),
-            0.8,
-        );
-        manager.learn_preference(
-            PreferenceCategory::Style,
-            "style_rule".to_string(),
-            0.9,
-        );
+        manager.learn_preference(PreferenceCategory::Format, "format_rule".to_string(), 0.7);
+        manager.learn_preference(PreferenceCategory::Depth, "depth_rule".to_string(), 0.8);
+        manager.learn_preference(PreferenceCategory::Style, "style_rule".to_string(), 0.9);
 
         let format_prefs = manager.get_preferences(&PreferenceCategory::Format);
         assert_eq!(format_prefs.len(), 1);
@@ -778,11 +748,7 @@ mod tests {
 
         // Ajouter 60 préférences différentes
         for i in 0..60 {
-            manager.learn_preference(
-                PreferenceCategory::Format,
-                format!("rule_{}", i),
-                0.5,
-            );
+            manager.learn_preference(PreferenceCategory::Format, format!("rule_{}", i), 0.5);
         }
 
         // Devrait être limité à 50
@@ -997,7 +963,10 @@ mod tests {
         let emotion = EmotionState::new(0.7, 0.6, 0.8);
 
         // 1. Ajouter des messages
-        manager.add_to_immediate("Question sur SingularityState".to_string(), "Réponse".to_string());
+        manager.add_to_immediate(
+            "Question sur SingularityState".to_string(),
+            "Réponse".to_string(),
+        );
 
         // 2. Sauvegarder un épisode
         manager.save_episode(
@@ -1031,7 +1000,12 @@ mod tests {
         assert!(!manager.get_immediate_context().is_empty());
         assert_eq!(manager.episodic.len(), 1);
         assert!(manager.get_concept("SingularityState").is_some());
-        assert!(!manager.get_preferences(&PreferenceCategory::Depth).is_empty());
-        assert_eq!(manager.get_evaluation_average(&EvaluationDimension::Clarity), 0.9);
+        assert!(!manager
+            .get_preferences(&PreferenceCategory::Depth)
+            .is_empty());
+        assert_eq!(
+            manager.get_evaluation_average(&EvaluationDimension::Clarity),
+            0.9
+        );
     }
 }

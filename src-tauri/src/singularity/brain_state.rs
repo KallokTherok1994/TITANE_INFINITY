@@ -470,7 +470,9 @@ mod tests {
     fn test_conversation_mode_description() {
         assert!(ConversationMode::Coach.description().contains("Warm"));
         assert!(ConversationMode::Expert.description().contains("technical"));
-        assert!(ConversationMode::Creative.description().contains("imaginative"));
+        assert!(ConversationMode::Creative
+            .description()
+            .contains("imaginative"));
     }
 
     #[test]

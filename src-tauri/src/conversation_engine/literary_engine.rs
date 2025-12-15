@@ -857,8 +857,12 @@ mod tests {
     #[test]
     fn test_kevin_style_profile_metaphor_types() {
         let profile = KevinStyleProfile::default();
-        assert!(profile.metaphor_types.contains(&"corps et espace".to_string()));
-        assert!(profile.metaphor_types.contains(&"nature et vivant".to_string()));
+        assert!(profile
+            .metaphor_types
+            .contains(&"corps et espace".to_string()));
+        assert!(profile
+            .metaphor_types
+            .contains(&"nature et vivant".to_string()));
     }
 
     #[test]
@@ -871,8 +875,12 @@ mod tests {
     #[test]
     fn test_kevin_style_profile_structural_patterns() {
         let profile = KevinStyleProfile::default();
-        assert!(profile.structural_patterns.contains(&"triptyque".to_string()));
-        assert!(profile.structural_patterns.contains(&"parallélisme".to_string()));
+        assert!(profile
+            .structural_patterns
+            .contains(&"triptyque".to_string()));
+        assert!(profile
+            .structural_patterns
+            .contains(&"parallélisme".to_string()));
     }
 
     #[test]

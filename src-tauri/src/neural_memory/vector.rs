@@ -4,8 +4,8 @@
 //   Migré et simplifié depuis memory_os/vector_store.rs
 // ═══════════════════════════════════════════════════════════════
 
+use crate::unified_memory_v2::types::{MemoryEntry, MemoryError, MemoryResult};
 use std::collections::HashMap;
-use crate::unified_memory_v2::types::{MemoryEntry, MemoryResult, MemoryError};
 
 /// Default embedding dimension (sentence-transformers)
 pub const EMBEDDING_DIM: usize = 384;
@@ -55,12 +55,10 @@ impl VectorStore {
 
         // Normalize for cosine similarity
         let normalized = Self::normalize_vector(&embedding);
-        
+
         self.vectors.insert(entry.id.clone(), normalized);
-        self.metadata.insert(
-            entry.id.clone(),
-            entry.content.chars().take(100).collect(),
-        );
+        self.metadata
+            .insert(entry.id.clone(), entry.content.chars().take(100).collect());
 
         Ok(())
     }
@@ -142,12 +140,8 @@ mod tests {
     #[test]
     fn test_vector_store_insert_search() {
         let mut store = VectorStore::new();
-        
-        let entry = MemoryEntry::new(
-            "Test content".to_string(),
-            0.8,
-            MemoryType::Conversation,
-        );
+
+        let entry = MemoryEntry::new("Test content".to_string(), 0.8, MemoryType::Conversation);
 
         let embedding = vec![0.5; EMBEDDING_DIM];
         store.insert(&entry, embedding.clone()).unwrap();

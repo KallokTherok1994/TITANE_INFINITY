@@ -40,9 +40,9 @@ pub struct KevinMetrics {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use super::supervisor::EvolutionSupervisor;
     use super::pattern_learning::PatternType;
+    use super::supervisor::EvolutionSupervisor;
+    use super::*;
 
     // ─────────────────────────────────────────────────────────────
     // EvolutionSupervisor Tests

@@ -43,7 +43,9 @@ pub use french_mastery::FrenchMasteryProcessor;
 pub use literary_engine::LiteraryEngine;
 pub use memory::ConversationMemoryEngine;
 pub use multilayer_memory::MultiLayerMemoryManager;
-pub use omega_integration::{OmegaConversationBridge, OmegaBridgeConfig, OmegaPipelineResult, OmegaHealthReport}; // R05 P1
+pub use omega_integration::{
+    OmegaBridgeConfig, OmegaConversationBridge, OmegaHealthReport, OmegaPipelineResult,
+}; // R05 P1
 pub use pipeline::ConversationPipeline;
 pub use realism::ConversationalRealismProcessor;
 pub use self_healing::SelfHealingConversation;
@@ -162,14 +164,16 @@ impl ConversationEngineState {
 
                 // P2 OPTIMIZATION: Convert OMEGA → ConversationResponse directly
                 // This bypasses legacy pipeline while preserving FrenchMastery quality
-                let conversation_id = request.conversation_id.clone()
+                let conversation_id = request
+                    .conversation_id
+                    .clone()
                     .unwrap_or_else(|| uuid::Uuid::new_v4().to_string());
 
-                match self.omega_bridge.convert_to_conversation_response(
-                    omega_result,
-                    &request,
-                    conversation_id,
-                ).await {
+                match self
+                    .omega_bridge
+                    .convert_to_conversation_response(omega_result, &request, conversation_id)
+                    .await
+                {
                     Ok(response) => {
                         log::info!(
                             "[CONV-ENGINE] 🚀 P2 Direct conversion | bypass_legacy=true | total_latency={}ms",

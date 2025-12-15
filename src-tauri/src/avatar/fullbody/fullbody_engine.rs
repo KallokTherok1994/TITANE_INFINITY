@@ -1156,14 +1156,20 @@ mod tests {
     fn test_fullbody_engine_activate_gesture() {
         let mut engine = FullBodyAvatarEngine::new();
         engine.activate_gesture("explaining");
-        assert_eq!(engine.motion_layer.current_gesture.as_ref().unwrap().name, "explaining");
+        assert_eq!(
+            engine.motion_layer.current_gesture.as_ref().unwrap().name,
+            "explaining"
+        );
     }
 
     #[test]
     fn test_fullbody_engine_update_expression() {
         let mut engine = FullBodyAvatarEngine::new();
         engine.update_expression(FacialExpression::SoftSmile, 0.9);
-        assert_eq!(engine.expression_bridge.current_expression, FacialExpression::SoftSmile);
+        assert_eq!(
+            engine.expression_bridge.current_expression,
+            FacialExpression::SoftSmile
+        );
     }
 
     #[test]
@@ -1189,7 +1195,10 @@ mod tests {
     fn test_fullbody_engine_on_wake_word() {
         let mut engine = FullBodyAvatarEngine::new();
         engine.on_wake_word();
-        assert_eq!(engine.motion_layer.current_gesture.as_ref().unwrap().name, "attention_shift");
+        assert_eq!(
+            engine.motion_layer.current_gesture.as_ref().unwrap().name,
+            "attention_shift"
+        );
     }
 
     #[test]

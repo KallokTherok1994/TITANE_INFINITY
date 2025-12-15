@@ -5,9 +5,7 @@
 //   AUTH OS — TAURI COMMANDS
 // ═══════════════════════════════════════════════════════════════
 
-use crate::auth::{
-    ApiKeyManager, ApiKeysInput, AuthStatusDto, DevTokenManager, RoleManager,
-};
+use crate::auth::{ApiKeyManager, ApiKeysInput, AuthStatusDto, DevTokenManager, RoleManager};
 use log::{error, info};
 
 /// Obtenir statut global de l'authentification

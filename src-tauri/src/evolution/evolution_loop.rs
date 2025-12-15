@@ -477,7 +477,8 @@ mod tests {
 
     #[test]
     fn test_evolution_metrics_deserialize() {
-        let json = r#"{"stability":85.0,"coherence":90.0,"performance":80.0,"cognitive_depth":75.0}"#;
+        let json =
+            r#"{"stability":85.0,"coherence":90.0,"performance":80.0,"cognitive_depth":75.0}"#;
         let metrics: EvolutionMetrics = serde_json::from_str(json).unwrap();
         assert_eq!(metrics.stability, 85.0);
         assert_eq!(metrics.cognitive_depth, 75.0);

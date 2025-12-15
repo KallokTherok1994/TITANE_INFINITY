@@ -489,10 +489,16 @@ mod tests {
         let mut matrix = IdentityMatrix::new();
 
         matrix.set_dimension("Rationalité-Émotivité", 5.0);
-        assert_eq!(matrix.get_dimension("Rationalité-Émotivité").unwrap().value, 1.0);
+        assert_eq!(
+            matrix.get_dimension("Rationalité-Émotivité").unwrap().value,
+            1.0
+        );
 
         matrix.set_dimension("Rationalité-Émotivité", -5.0);
-        assert_eq!(matrix.get_dimension("Rationalité-Émotivité").unwrap().value, -1.0);
+        assert_eq!(
+            matrix.get_dimension("Rationalité-Émotivité").unwrap().value,
+            -1.0
+        );
     }
 
     #[test]
@@ -513,7 +519,13 @@ mod tests {
     fn test_profiles_professional() {
         let profile = IdentityProfiles::professional();
         // Professional should be formal and serious
-        assert!(profile.get_dimension("Formalité-Familiarité").unwrap().value < 0.0);
+        assert!(
+            profile
+                .get_dimension("Formalité-Familiarité")
+                .unwrap()
+                .value
+                < 0.0
+        );
         assert!(profile.get_dimension("Sérieux-Ludique").unwrap().value < 0.0);
     }
 
@@ -535,8 +547,20 @@ mod tests {
     fn test_profiles_technical() {
         let profile = IdentityProfiles::technical();
         // Technical should be specialist and rational
-        assert!(profile.get_dimension("Généraliste-Spécialiste").unwrap().value > 0.5);
-        assert!(profile.get_dimension("Rationalité-Émotivité").unwrap().value < 0.0);
+        assert!(
+            profile
+                .get_dimension("Généraliste-Spécialiste")
+                .unwrap()
+                .value
+                > 0.5
+        );
+        assert!(
+            profile
+                .get_dimension("Rationalité-Émotivité")
+                .unwrap()
+                .value
+                < 0.0
+        );
     }
 
     #[test]

@@ -194,7 +194,11 @@ mod tests {
         let adapter = SymbolicAdapter::new();
         let translation = adapter.translate_to_ai().await;
 
-        let modules: Vec<&str> = translation.states.iter().map(|s| s.module.as_str()).collect();
+        let modules: Vec<&str> = translation
+            .states
+            .iter()
+            .map(|s| s.module.as_str())
+            .collect();
         assert!(modules.contains(&"CognitiveEngine"));
         assert!(modules.contains(&"SymbolicEngine"));
         assert!(modules.contains(&"AdaptiveEngine"));

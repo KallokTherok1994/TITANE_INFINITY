@@ -389,7 +389,7 @@ mod tests {
 
         assert!(!results[0].is_valid); // vide
         assert!(!results[1].is_valid); // trop court
-        assert!(results[2].is_valid);  // assez long
+        assert!(results[2].is_valid); // assez long
     }
 
     #[test]

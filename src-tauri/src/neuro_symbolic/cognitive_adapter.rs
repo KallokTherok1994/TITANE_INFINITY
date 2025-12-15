@@ -82,7 +82,9 @@ mod tests {
     #[tokio::test]
     async fn test_adapt_memory_intent() {
         let adapter = CognitiveAdapter::new();
-        let intent = adapter.adapt("Remember this important fact".to_string()).await;
+        let intent = adapter
+            .adapt("Remember this important fact".to_string())
+            .await;
 
         assert_eq!(intent.target_module, "MemoryCore");
         assert!(intent.confidence >= 0.90);
@@ -92,7 +94,9 @@ mod tests {
     #[tokio::test]
     async fn test_adapt_learn_intent() {
         let adapter = CognitiveAdapter::new();
-        let intent = adapter.adapt("Learn from this experience".to_string()).await;
+        let intent = adapter
+            .adapt("Learn from this experience".to_string())
+            .await;
 
         assert_eq!(intent.target_module, "CognitiveEngine");
         assert!(intent.confidence >= 0.85);
@@ -110,7 +114,9 @@ mod tests {
     #[tokio::test]
     async fn test_adapt_evolve_intent() {
         let adapter = CognitiveAdapter::new();
-        let intent = adapter.adapt("Evolve and adapt to new conditions".to_string()).await;
+        let intent = adapter
+            .adapt("Evolve and adapt to new conditions".to_string())
+            .await;
 
         assert_eq!(intent.target_module, "AdaptiveEngine");
         assert!(intent.confidence >= 0.87);

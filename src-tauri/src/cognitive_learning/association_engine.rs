@@ -302,15 +302,13 @@ mod tests {
     fn test_association_report_serialization() {
         let report = AssociationReport {
             total_associations: 15,
-            strongest_links: vec![
-                Association {
-                    concept_a: "a".to_string(),
-                    concept_b: "b".to_string(),
-                    strength: 0.9,
-                    frequency: 20,
-                    last_reinforced: 111,
-                },
-            ],
+            strongest_links: vec![Association {
+                concept_a: "a".to_string(),
+                concept_b: "b".to_string(),
+                strength: 0.9,
+                frequency: 20,
+                last_reinforced: 111,
+            }],
             network_density: 0.8,
         };
         let json = serde_json::to_string(&report).unwrap();
@@ -321,10 +319,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_tauri_command_create() {
-        let result = cognitive_create_association(
-            "concept1".to_string(),
-            "concept2".to_string(),
-        ).await;
+        let result =
+            cognitive_create_association("concept1".to_string(), "concept2".to_string()).await;
         assert!(result.is_ok());
     }
 

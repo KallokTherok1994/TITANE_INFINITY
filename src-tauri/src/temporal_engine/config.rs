@@ -451,7 +451,10 @@ mod tests {
         assert!(config.anticipation_enabled);
         assert!(!config.alignment_enabled);
         assert!(config.persist_state);
-        assert_eq!(config.state_file_path, Some("custom_state.json".to_string()));
+        assert_eq!(
+            config.state_file_path,
+            Some("custom_state.json".to_string())
+        );
     }
 
     #[test]

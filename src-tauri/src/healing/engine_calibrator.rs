@@ -393,7 +393,10 @@ mod tests {
         let config = CalibratorConfig::default();
         let cloned = config.clone();
         assert_eq!(config.sample_window_size, cloned.sample_window_size);
-        assert_eq!(config.drift_threshold_percent, cloned.drift_threshold_percent);
+        assert_eq!(
+            config.drift_threshold_percent,
+            cloned.drift_threshold_percent
+        );
     }
 
     #[test]
@@ -573,7 +576,10 @@ mod tests {
     #[test]
     fn test_drift_recommendation_equality() {
         assert_eq!(DriftRecommendation::NoAction, DriftRecommendation::NoAction);
-        assert_ne!(DriftRecommendation::NoAction, DriftRecommendation::MonitorClosely);
+        assert_ne!(
+            DriftRecommendation::NoAction,
+            DriftRecommendation::MonitorClosely
+        );
     }
 
     #[test]

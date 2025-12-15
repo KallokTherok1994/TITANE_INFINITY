@@ -370,7 +370,9 @@ mod tests {
     #[test]
     fn test_templates_contain_typescript() {
         let engine = CreationEngine::new();
-        assert!(engine.templates.contains_key(&TargetType::TypeScriptComponent));
+        assert!(engine
+            .templates
+            .contains_key(&TargetType::TypeScriptComponent));
     }
 
     #[tokio::test]
@@ -589,7 +591,10 @@ mod tests {
     #[test]
     fn test_typescript_template_contains_markers() {
         let engine = CreationEngine::new();
-        let template = engine.templates.get(&TargetType::TypeScriptComponent).unwrap();
+        let template = engine
+            .templates
+            .get(&TargetType::TypeScriptComponent)
+            .unwrap();
 
         assert!(template.contains("{{NAME}}"));
         assert!(template.contains("{{PROPS}}"));

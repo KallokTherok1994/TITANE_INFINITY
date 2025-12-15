@@ -243,7 +243,8 @@ mod tests {
 
     #[test]
     fn test_agent_health_deserialize() {
-        let json = r#"{"agent_id":"test_agent","is_healthy":false,"last_check":999,"success_rate":0.4}"#;
+        let json =
+            r#"{"agent_id":"test_agent","is_healthy":false,"last_check":999,"success_rate":0.4}"#;
         let health: AgentHealth = serde_json::from_str(json).unwrap();
         assert_eq!(health.agent_id.as_str(), "test_agent");
         assert!(!health.is_healthy);
@@ -313,7 +314,7 @@ mod tests {
     async fn test_monitor_all_with_agents() {
         let registry = Arc::new(AgentRegistry::new(100));
 
-        use crate::agents::{Agent, AgentRole, CapabilitySet, AgentContract};
+        use crate::agents::{Agent, AgentContract, AgentRole, CapabilitySet};
         let agent = Agent::with_id(
             AgentId::from_string("agent1".to_string()),
             AgentRole::Observer,
@@ -331,7 +332,7 @@ mod tests {
     async fn test_check_health() {
         let registry = Arc::new(AgentRegistry::new(100));
 
-        use crate::agents::{Agent, AgentRole, CapabilitySet, AgentContract};
+        use crate::agents::{Agent, AgentContract, AgentRole, CapabilitySet};
         let agent = Agent::with_id(
             AgentId::from_string("agent1".to_string()),
             AgentRole::Observer,
@@ -365,7 +366,7 @@ mod tests {
     async fn test_stats_with_agents() {
         let registry = Arc::new(AgentRegistry::new(100));
 
-        use crate::agents::{Agent, AgentRole, CapabilitySet, AgentContract};
+        use crate::agents::{Agent, AgentContract, AgentRole, CapabilitySet};
         for i in 0..3 {
             let agent = Agent::with_id(
                 AgentId::from_string(format!("agent{}", i)),
@@ -389,6 +390,9 @@ mod tests {
         let stats = supervisor.stats().await;
 
         // healthy + unhealthy = total
-        assert_eq!(stats.healthy_agents + stats.unhealthy_agents, stats.total_monitored);
+        assert_eq!(
+            stats.healthy_agents + stats.unhealthy_agents,
+            stats.total_monitored
+        );
     }
 }

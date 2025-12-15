@@ -26,15 +26,15 @@ impl MemoryEncryption {
         // Derive key with Argon2id
         let salt = SaltString::generate(&mut OsRng);
         let argon2 = Argon2::default();
-        
+
         let password_hash = argon2
             .hash_password(password.as_bytes(), &salt)
             .map_err(|e| MemoryError::EncryptionError(format!("Argon2 error: {}", e)))?;
 
         // Extract 32-byte key
-        let key_bytes = password_hash.hash.ok_or_else(|| {
-            MemoryError::EncryptionError("Failed to extract hash".to_string())
-        })?;
+        let key_bytes = password_hash
+            .hash
+            .ok_or_else(|| MemoryError::EncryptionError("Failed to extract hash".to_string()))?;
 
         let key: [u8; 32] = key_bytes.as_bytes()[..32]
             .try_into()
@@ -91,7 +91,8 @@ impl MemoryEncryption {
 
     /// Decrypt string
     pub fn decrypt_string(&self, encrypted: &str) -> MemoryResult<String> {
-        let encrypted_bytes = general_purpose::STANDARD.decode(encrypted)
+        let encrypted_bytes = general_purpose::STANDARD
+            .decode(encrypted)
             .map_err(|e| MemoryError::DecryptionError(format!("Base64 error: {}", e)))?;
 
         let plaintext = self.decrypt(&encrypted_bytes)?;
@@ -108,11 +109,11 @@ mod tests {
     #[test]
     fn test_encryption_roundtrip() {
         let enc = MemoryEncryption::new("test_password_123").unwrap();
-        
+
         let plaintext = "Hello, World!";
         let encrypted = enc.encrypt_string(plaintext).unwrap();
         let decrypted = enc.decrypt_string(&encrypted).unwrap();
-        
+
         assert_eq!(plaintext, decrypted);
     }
 
@@ -120,10 +121,10 @@ mod tests {
     fn test_encryption_different_passwords() {
         let enc1 = MemoryEncryption::new("password1").unwrap();
         let enc2 = MemoryEncryption::new("password2").unwrap();
-        
+
         let plaintext = "Secret data";
         let encrypted = enc1.encrypt_string(plaintext).unwrap();
-        
+
         // Should fail with different password
         assert!(enc2.decrypt_string(&encrypted).is_err());
     }

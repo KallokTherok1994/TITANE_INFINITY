@@ -534,7 +534,10 @@ mod tests {
         assert!(result.is_ok());
         let update = result.unwrap();
         assert!(update.accessories.is_some());
-        assert_eq!(update.accessories.unwrap().glasses, Some("lunettes".to_string()));
+        assert_eq!(
+            update.accessories.unwrap().glasses,
+            Some("lunettes".to_string())
+        );
     }
 
     #[test]

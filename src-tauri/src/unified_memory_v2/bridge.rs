@@ -3,10 +3,10 @@
 //   Bridge vers neural_memory/ (implémentation privée)
 // ═══════════════════════════════════════════════════════════════
 
-use crate::neural_memory::{
-    ShortTermMemory, MidTermMemory, LongTermMemory, VectorStore, Consolidator,
-};
 use super::types::{MemoryEntry, MemoryResult, MemoryTier};
+use crate::neural_memory::{
+    Consolidator, LongTermMemory, MidTermMemory, ShortTermMemory, VectorStore,
+};
 
 /// Bridge to neural_memory implementation
 ///
@@ -78,14 +78,22 @@ impl MemoryBridge {
         }
 
         // Sort by relevance and limit
-        results.sort_by(|a, b| b.relevance_score().partial_cmp(&a.relevance_score()).unwrap());
+        results.sort_by(|a, b| {
+            b.relevance_score()
+                .partial_cmp(&a.relevance_score())
+                .unwrap()
+        });
         results.truncate(limit);
 
         Ok(results)
     }
 
     /// Get by tier
-    pub async fn get_by_tier(&self, tier: MemoryTier, limit: usize) -> MemoryResult<Vec<MemoryEntry>> {
+    pub async fn get_by_tier(
+        &self,
+        tier: MemoryTier,
+        limit: usize,
+    ) -> MemoryResult<Vec<MemoryEntry>> {
         match tier {
             MemoryTier::STM => Ok(self.stm.get_recent(limit)),
             MemoryTier::MTM => Ok(self.mtm.get_top(limit)),
@@ -104,11 +112,10 @@ impl MemoryBridge {
 
     /// Run consolidation
     pub async fn consolidate(&mut self) -> MemoryResult<()> {
-        let _result = self.consolidator.consolidate(
-            &mut self.stm,
-            &mut self.mtm,
-            &mut self.ltm,
-        ).await;
+        let _result = self
+            .consolidator
+            .consolidate(&mut self.stm, &mut self.mtm, &mut self.ltm)
+            .await;
         Ok(())
     }
 
@@ -154,4 +161,3 @@ pub struct MemoryBridgeStats {
     pub ltm_count: usize,
     pub vector_count: usize,
 }
-

@@ -497,7 +497,11 @@ mod tests {
         conv.add_entry(MessageRole::User, "Hello!".to_string(), 1);
         conv.add_entry(MessageRole::Assistant, "Hi! How can I help?".to_string(), 5);
         conv.add_entry(MessageRole::User, "What's the weather?".to_string(), 4);
-        conv.add_entry(MessageRole::Assistant, "I don't have access to weather data.".to_string(), 8);
+        conv.add_entry(
+            MessageRole::Assistant,
+            "I don't have access to weather data.".to_string(),
+            8,
+        );
 
         // Verify state
         assert_eq!(conv.metadata.message_count, 5);
@@ -523,10 +527,7 @@ mod tests {
         let mut conv2 = Conversation::new("Conv 2".to_string());
         conv2.add_entry(MessageRole::User, "Hello".to_string(), 5);
 
-        let summaries: Vec<ConversationSummary> = vec![
-            (&conv1).into(),
-            (&conv2).into(),
-        ];
+        let summaries: Vec<ConversationSummary> = vec![(&conv1).into(), (&conv2).into()];
 
         let total_messages: usize = summaries.iter().map(|s| s.message_count).sum();
 

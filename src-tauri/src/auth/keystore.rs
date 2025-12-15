@@ -37,8 +37,8 @@ impl ApiKeysStore {
 impl Keystore {
     /// Chemin du keystore
     pub fn path() -> AuthResult<PathBuf> {
-        let home = std::env::var("HOME")
-            .map_err(|_| AuthError::IoError("HOME env var not set".into()))?;
+        let home =
+            std::env::var("HOME").map_err(|_| AuthError::IoError("HOME env var not set".into()))?;
         Ok(PathBuf::from(home)
             .join(".local")
             .join("share")

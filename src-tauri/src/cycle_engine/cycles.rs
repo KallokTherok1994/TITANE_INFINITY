@@ -264,12 +264,18 @@ mod tests {
 
     #[test]
     fn test_cognitive_mode_morning() {
-        assert_eq!(DailyPhase::Morning.cognitive_mode(), CognitiveMode::Analytical);
+        assert_eq!(
+            DailyPhase::Morning.cognitive_mode(),
+            CognitiveMode::Analytical
+        );
     }
 
     #[test]
     fn test_cognitive_mode_afternoon() {
-        assert_eq!(DailyPhase::Afternoon.cognitive_mode(), CognitiveMode::Execution);
+        assert_eq!(
+            DailyPhase::Afternoon.cognitive_mode(),
+            CognitiveMode::Execution
+        );
     }
 
     #[test]
@@ -279,7 +285,10 @@ mod tests {
 
     #[test]
     fn test_cognitive_mode_night() {
-        assert_eq!(DailyPhase::Night.cognitive_mode(), CognitiveMode::Consolidation);
+        assert_eq!(
+            DailyPhase::Night.cognitive_mode(),
+            CognitiveMode::Consolidation
+        );
     }
 
     #[test]

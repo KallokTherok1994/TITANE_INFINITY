@@ -5,7 +5,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 use crate::core::tapi_error::TAPIError;
-use crate::core::{UnifiedMemory, MemoryType};
+use crate::core::{MemoryType, UnifiedMemory};
 use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
@@ -18,17 +18,17 @@ use tokio::sync::RwLock;
 
 /// Timeout adaptatif selon la longueur du message et le provider
 /// Résout R02: "Timeout 50s trop élevé" (Audit v21)
-const TIMEOUT_QUICK_SECS: u64 = 10;      // Messages courts (<500 chars)
-const TIMEOUT_STANDARD_SECS: u64 = 30;   // Messages standards (500-2000 chars)
-const TIMEOUT_EXTENDED_SECS: u64 = 60;   // Messages longs ou streaming (>2000 chars)
-const TIMEOUT_LOCAL_SECS: u64 = 45;      // Ollama/Local (généralement plus rapides)
+const TIMEOUT_QUICK_SECS: u64 = 10; // Messages courts (<500 chars)
+const TIMEOUT_STANDARD_SECS: u64 = 30; // Messages standards (500-2000 chars)
+const TIMEOUT_EXTENDED_SECS: u64 = 60; // Messages longs ou streaming (>2000 chars)
+const TIMEOUT_LOCAL_SECS: u64 = 45; // Ollama/Local (généralement plus rapides)
 
 /// Calcule le timeout adaptatif basé sur la longueur du message
 fn calculate_adaptive_timeout(message_length: usize, is_local: bool) -> u64 {
     if is_local {
         return TIMEOUT_LOCAL_SECS;
     }
-    
+
     if message_length < 500 {
         TIMEOUT_QUICK_SECS
     } else if message_length < 2000 {
@@ -165,7 +165,7 @@ pub fn init() -> ChatOrchestratorState {
     } else {
         println!("[CHAT] ✅ UnifiedMemory initialized (STM/MTM/LTM ready)");
     }
-    
+
     ChatOrchestratorState {
         conversations: Arc::new(RwLock::new(Vec::new())),
         provider_status: Arc::new(RwLock::new(Vec::new())),
@@ -334,33 +334,30 @@ async fn store_in_unified_memory(
     response: &ChatMessage,
 ) {
     let mut memory = state.unified_memory.write().await;
-    
+
     // Combine user message + AI response for context
     let combined_content = format!(
         "User: {}\nAssistant ({}): {}",
-        request.message,
-        response.provider,
-        response.content
+        request.message, response.provider, response.content
     );
-    
+
     // Calculate importance based on message length and provider
     let importance = calculate_message_importance(request, response);
-    
+
     // Build tags for semantic search
     let tags = vec![
         response.provider.clone(),
         response.model.clone(),
         format!("tokens:{}", response.tokens.unwrap_or(0)),
-        if request.system_prompt.is_some() { "custom_prompt".to_string() } else { "default_prompt".to_string() },
+        if request.system_prompt.is_some() {
+            "custom_prompt".to_string()
+        } else {
+            "default_prompt".to_string()
+        },
     ];
-    
+
     // Store in UnifiedMemory (will go to STM first, then auto-consolidate to MTM/LTM)
-    match memory.store(
-        combined_content,
-        MemoryType::Conversation,
-        importance,
-        tags,
-    ) {
+    match memory.store(combined_content, MemoryType::Conversation, importance, tags) {
         Ok(memory_id) => {
             println!(
                 "[CHAT] 💾 Stored in UnifiedMemory: {} (importance: {:.2}, STM → MTM → LTM pipeline active)",
@@ -388,7 +385,10 @@ fn calculate_message_importance(request: &ChatRequest, response: &ChatMessage) -
     }
 
     // Cloud providers (higher quality) = more important
-    if matches!(response.provider.as_str(), "openai" | "anthropic" | "gemini") {
+    if matches!(
+        response.provider.as_str(),
+        "openai" | "anthropic" | "gemini"
+    ) {
         importance += 0.1;
     }
 
@@ -455,11 +455,11 @@ pub async fn chat_send_message(
     // Cascade multi-providers avec fallback intelligent
     let providers_to_try: Vec<String> = if request.provider == "auto" {
         vec![
-            "ollama".to_string(),      // Premier choix: Ollama local rapide
-            "openai".to_string(),      // Fallback 1: OpenAI GPT
-            "anthropic".to_string(),   // Fallback 2: Claude
-            "gemini".to_string(),      // Fallback 3: Google Gemini
-            "local".to_string(),       // Fallback final: Noyau local infaillible
+            "ollama".to_string(),    // Premier choix: Ollama local rapide
+            "openai".to_string(),    // Fallback 1: OpenAI GPT
+            "anthropic".to_string(), // Fallback 2: Claude
+            "gemini".to_string(),    // Fallback 3: Google Gemini
+            "local".to_string(),     // Fallback final: Noyau local infaillible
         ]
     } else {
         vec![request.provider.clone()] // Provider spécifique direct
@@ -469,17 +469,23 @@ pub async fn chat_send_message(
 
     // 🔍 DEBUG ROUTING — Log la cascade complète
     println!("[CHAT ROUTER] 📋 Provider cascade = {:?}", providers_to_try);
-    println!("[CHAT ROUTER] 📨 Sending prompt length = {}", request.message.len());
+    println!(
+        "[CHAT ROUTER] 📨 Sending prompt length = {}",
+        request.message.len()
+    );
 
     // Boucle de fallback (au lieu de récursion)
     for provider in providers_to_try {
         // 🔍 DEBUG — Log AVANT le check de disponibilité
         println!("[CHAT ROUTER] 🧪 Testing provider = {}", provider);
-        
+
         // Vérifier disponibilité via heartbeat (avec cache)
         let is_available = is_provider_available(&provider, &state).await;
-        println!("[CHAT ROUTER] ⚡ Provider {} availability = {}", provider, is_available);
-        
+        println!(
+            "[CHAT ROUTER] ⚡ Provider {} availability = {}",
+            provider, is_available
+        );
+
         if !is_available {
             println!("[CHAT] ⏭️ Provider {} non disponible (skip)", provider);
             last_error = Some(TAPIError::provider_unavailable(&provider));
@@ -516,7 +522,7 @@ pub async fn chat_send_message(
                 if let Some(conv_id) = &request.conversation_id {
                     store_message(&state, conv_id, &message).await;
                 }
-                
+
                 // R04 FIX: Store in UnifiedMemory (STM → MTM → LTM pipeline)
                 store_in_unified_memory(&state, &request, &message).await;
 
@@ -582,7 +588,10 @@ async fn send_to_gemini(
 
     // Adaptive timeout based on message length (R02 fix)
     let timeout_secs = calculate_adaptive_timeout(request.message.len(), false);
-    println!("[CHAT] 🌐 Gemini API call: {} (adaptive timeout {}s)", model, timeout_secs);
+    println!(
+        "[CHAT] 🌐 Gemini API call: {} (adaptive timeout {}s)",
+        model, timeout_secs
+    );
 
     // System prompt TITANE∞ en français (toujours actif)
     let default_system_prompt = "Tu es TITANE∞, un assistant IA avancé créé par l'équipe TITANE. \
@@ -733,7 +742,10 @@ async fn send_to_ollama(
 
     // Adaptive timeout for Ollama (local, typically faster)
     let timeout_secs = calculate_adaptive_timeout(request.message.len(), true);
-    println!("[CHAT] 🦙 Ollama API call: {} (adaptive timeout {}s)", model, timeout_secs);
+    println!(
+        "[CHAT] 🦙 Ollama API call: {} (adaptive timeout {}s)",
+        model, timeout_secs
+    );
 
     // System prompt TITANE∞ en français
     let system_prompt = request.system_prompt.as_deref().unwrap_or(
@@ -833,7 +845,10 @@ async fn send_to_openai(
 
     // Adaptive timeout based on message length (R02 fix)
     let timeout_secs = calculate_adaptive_timeout(request.message.len(), false);
-    println!("[CHAT] 🤖 OpenAI API call: {} (adaptive timeout {}s)", model, timeout_secs);
+    println!(
+        "[CHAT] 🤖 OpenAI API call: {} (adaptive timeout {}s)",
+        model, timeout_secs
+    );
 
     // System prompt TITANE∞
     let default_system_prompt = "Tu es TITANE∞, un assistant IA avancé créé par l'équipe TITANE. \
@@ -1129,7 +1144,7 @@ async fn send_to_local(
 ) -> Result<ChatMessage, TAPIError> {
     // ✅ Fallback local RÉACTIVÉ — Réponse garantie même si tous les LLM échouent
     println!("[CHAT] 🔧 Local fallback activated (all LLM providers failed)");
-    
+
     let user_message = request.message.to_lowercase();
     let response_content = generate_local_response(&user_message, &request.message);
 
@@ -1220,7 +1235,7 @@ pub async fn chat_get_memory_stats(
 ) -> Result<serde_json::Value, String> {
     let memory = state.unified_memory.read().await;
     let stats = memory.stats();
-    
+
     Ok(serde_json::json!({
         "stm_count": stats.stm_count,
         "mtm_count": stats.mtm_count,

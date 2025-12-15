@@ -14,11 +14,8 @@ mod stm_tests {
 
         // Add 7 entries (exceeds capacity of 5)
         for i in 0..7 {
-            let mut entry = MemoryEntry::new(
-                format!("Content {}", i),
-                0.5,
-                MemoryType::Conversation,
-            );
+            let mut entry =
+                MemoryEntry::new(format!("Content {}", i), 0.5, MemoryType::Conversation);
             entry.id = format!("id_{}", i);
             entry.created_at = i as i64;
             stm.push(entry).unwrap();
@@ -29,7 +26,10 @@ mod stm_tests {
         assert_eq!(all.len(), 5, "STM should maintain FIFO with capacity limit");
 
         // Newest entries first (reversed order), id_6 should be first
-        assert_eq!(all[0].id, "id_6", "FIFO: newest entry should be first in get_all");
+        assert_eq!(
+            all[0].id, "id_6",
+            "FIFO: newest entry should be first in get_all"
+        );
     }
 
     #[test]
@@ -38,11 +38,7 @@ mod stm_tests {
 
         // Add test entries
         for keyword in &["rust", "javascript", "rust async"] {
-            let entry = MemoryEntry::new(
-                keyword.to_string(),
-                0.5,
-                MemoryType::Factual,
-            );
+            let entry = MemoryEntry::new(keyword.to_string(), 0.5, MemoryType::Factual);
             stm.push(entry).unwrap();
         }
 
@@ -84,11 +80,7 @@ mod mtm_tests {
         // Add entries with different importance (unsorted)
         let importances = vec![0.3, 0.9, 0.5, 0.7, 0.1];
         for (i, &imp) in importances.iter().enumerate() {
-            let mut entry = MemoryEntry::new(
-                format!("Content {}", i),
-                imp,
-                MemoryType::Factual,
-            );
+            let mut entry = MemoryEntry::new(format!("Content {}", i), imp, MemoryType::Factual);
             entry.id = format!("id_{}", i);
             mtm.push(entry).unwrap();
         }
@@ -164,7 +156,10 @@ mod vector_tests {
         // Verify it's gone
         let query = vec![1.0, 0.0];
         let results = store.search(&query, 10);
-        assert!(!results.iter().any(|r| r.id == "doc1"), "Removed doc should not appear in search");
+        assert!(
+            !results.iter().any(|r| r.id == "doc1"),
+            "Removed doc should not appear in search"
+        );
     }
 
     #[test]
@@ -230,7 +225,13 @@ mod consolidation_tests {
         // Run consolidation
         let result = consolidator.consolidate(&mut stm, &mut mtm, &mut ltm).await;
 
-        assert!(result.stm_to_mtm >= 2, "Should transfer old entries from STM to MTM");
-        assert!(stm.get_all().len() <= 1, "Old entries should be moved out of STM");
+        assert!(
+            result.stm_to_mtm >= 2,
+            "Should transfer old entries from STM to MTM"
+        );
+        assert!(
+            stm.get_all().len() <= 1,
+            "Old entries should be moved out of STM"
+        );
     }
 }

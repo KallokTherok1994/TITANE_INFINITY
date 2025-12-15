@@ -297,7 +297,11 @@ mod tests {
         let cache: TemporalCache<String> = TemporalCache::new(100, adapter);
 
         cache
-            .set("hit_test".to_string(), "value".to_string(), "/test".to_string())
+            .set(
+                "hit_test".to_string(),
+                "value".to_string(),
+                "/test".to_string(),
+            )
             .await;
 
         // Plusieurs accès au même key

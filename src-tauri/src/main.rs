@@ -175,7 +175,7 @@ mod core {
         include!("core/legacy.rs");
     }
     // Re-export from library for overdrive modules compatibility
-    pub use titane_infinity::core::{UnifiedMemory, MemoryType};
+    pub use titane_infinity::core::{MemoryType, UnifiedMemory};
     // Re-export legacy for API modules
     pub use legacy::{HeliosCore, MemoryCore};
 }
@@ -222,9 +222,9 @@ mod config;
 // ═══════════════════════════════════════════════════════════════
 // SUPPORT MODULES (v21.5 AUTO-FIX) - Types, Memory, Utils
 // ═══════════════════════════════════════════════════════════════
-mod types;
 mod memory;
 mod memory_compactor;
+mod types;
 mod utils;
 
 // System Center v∞ (Diagnostics, DevTools, Cluster)
@@ -346,15 +346,16 @@ fn main() {
         .ok()
         .or_else(|| Some("default-dev-passphrase-change-in-production".to_string()));
 
-    let secrets_engine = match security::secrets_engine::SecureSecretsEngine::new(secrets_passphrase) {
-        Ok(engine) => engine,
-        Err(e) => {
-            eprintln!("❌ TITANE∞ FATAL: Failed to initialize Secure Secrets Engine");
-            eprintln!("   Error: {:?}", e);
-            eprintln!("   → Please check your security configuration and try again.");
-            std::process::exit(1);
-        }
-    };
+    let secrets_engine =
+        match security::secrets_engine::SecureSecretsEngine::new(secrets_passphrase) {
+            Ok(engine) => engine,
+            Err(e) => {
+                eprintln!("❌ TITANE∞ FATAL: Failed to initialize Secure Secrets Engine");
+                eprintln!("   Error: {:?}", e);
+                eprintln!("   → Please check your security configuration and try again.");
+                std::process::exit(1);
+            }
+        };
 
     // Initialize Chat Orchestrator with provider management
     let chat_orchestrator = overdrive::chat_orchestrator::init();
@@ -395,27 +396,27 @@ fn main() {
             } else {
                 log::info!("✅ AUTH OS v∞ initialized successfully");
             }
-            
+
             // Initialize SingularityEngine with app_handle
             let singularity_engine = Arc::new(singularity_state::SingularityEngine::new(app.handle().clone()));
             app.manage(singularity_engine.clone());
-            
+
             // 🎯 Initialize OMEGA Conversation Engine (v19.5.2)
             let storage_dir = app.path().app_data_dir()
                 .unwrap_or_else(|_| std::path::PathBuf::from("/tmp/titane"));
             let password = std::env::var("TITANE_SECRETS_PASSPHRASE")
                 .unwrap_or_else(|_| "default-dev-passphrase-change-in-production".to_string());
-            
+
             // AIRouter initialization (for OMEGA pipeline)
             let ai_router = Arc::new(tokio::sync::RwLock::new(
                 titane_infinity::ai::router::AIRouter::new(None, None) // Will be configured later
             ));
-            
+
             // SingularityState reference (already managed)
             let singularity_state = Arc::new(tokio::sync::RwLock::new(
                 titane_infinity::singularity::singularity_state::SingularityState::default()
             ));
-            
+
             let conversation_engine = Arc::new(
                 titane_infinity::conversation_engine::ConversationEngineState::new(
                     storage_dir,
@@ -429,10 +430,10 @@ fn main() {
                     std::process::exit(1);
                 }).unwrap()
             );
-            
+
             app.manage(conversation_engine);
             log::info!("✅ OMEGA Conversation Engine v19.5.2 initialized");
-            
+
             // Initialize providers asynchronously within Tauri's async runtime
             let chat_orch_clone = chat_orchestrator.clone();
             tauri::async_runtime::spawn(async move {

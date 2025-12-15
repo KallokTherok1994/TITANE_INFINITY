@@ -241,7 +241,8 @@ mod tests {
     async fn test_different_providers() {
         let adapter = Arc::new(TemporalApiAdapter::new());
 
-        let limiter1 = TemporalRateLimiter::new("provider_a".to_string(), 100, 1000, adapter.clone());
+        let limiter1 =
+            TemporalRateLimiter::new("provider_a".to_string(), 100, 1000, adapter.clone());
         let limiter2 = TemporalRateLimiter::new("provider_b".to_string(), 50, 500, adapter);
 
         limiter1.acquire_permit().await.unwrap();

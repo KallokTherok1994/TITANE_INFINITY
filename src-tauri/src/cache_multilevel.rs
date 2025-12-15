@@ -125,7 +125,9 @@ pub struct L1Cache<V> {
 impl<V: Clone> L1Cache<V> {
     pub fn new(capacity: usize, ttl_seconds: u64) -> Self {
         Self {
-            cache: LruCache::new(NonZeroUsize::new(capacity).unwrap_or(NonZeroUsize::new(1000).unwrap())),
+            cache: LruCache::new(
+                NonZeroUsize::new(capacity).unwrap_or(NonZeroUsize::new(1000).unwrap()),
+            ),
             ttl: Duration::from_secs(ttl_seconds),
             access_times: HashMap::new(),
         }
@@ -169,7 +171,9 @@ pub struct L2Cache {
 impl L2Cache {
     pub fn new(capacity: usize) -> Self {
         Self {
-            cache: LruCache::new(NonZeroUsize::new(capacity).unwrap_or(NonZeroUsize::new(5000).unwrap())),
+            cache: LruCache::new(
+                NonZeroUsize::new(capacity).unwrap_or(NonZeroUsize::new(5000).unwrap()),
+            ),
         }
     }
 
@@ -284,11 +288,7 @@ where
     }
 
     /// Get value from cache or compute
-    pub async fn get_or_compute<F, Fut>(
-        &self,
-        key: &CacheKey,
-        compute: F,
-    ) -> TitaneResult<V>
+    pub async fn get_or_compute<F, Fut>(&self, key: &CacheKey, compute: F) -> TitaneResult<V>
     where
         F: FnOnce() -> Fut,
         Fut: std::future::Future<Output = TitaneResult<V>>,
@@ -316,8 +316,9 @@ where
 
         // Try L3
         if let Some(disk_data) = self.l3.get(key).await? {
-            let value: V = bincode::deserialize(&disk_data)
-                .map_err(|e| TitaneError::InternalError(format!("Deserialization failed: {}", e)))?;
+            let value: V = bincode::deserialize(&disk_data).map_err(|e| {
+                TitaneError::InternalError(format!("Deserialization failed: {}", e))
+            })?;
 
             // Populate L2 and L1
             let compressed = self.compress(&value)?;
@@ -399,7 +400,10 @@ mod tests {
         cache.insert(CacheKey::new("key1"), "value1".to_string());
         cache.insert(CacheKey::new("key2"), "value2".to_string());
 
-        assert_eq!(cache.get(&CacheKey::new("key1")), Some("value1".to_string()));
+        assert_eq!(
+            cache.get(&CacheKey::new("key1")),
+            Some("value1".to_string())
+        );
         assert_eq!(cache.len(), 2);
     }
 
@@ -432,11 +436,10 @@ mod tests {
         // Ensure isolation even if a previous run left artifacts.
         let _ = tokio::fs::remove_dir_all(&cache_dir).await;
         let cache = MultiLevelCache::<String>::new(
-            100,  // L1 capacity
-            60,   // L1 TTL
-            500,  // L2 capacity
-            cache_dir,
-            1_000_000, // 1MB L3
+            100, // L1 capacity
+            60,  // L1 TTL
+            500, // L2 capacity
+            cache_dir, 1_000_000, // 1MB L3
         );
 
         let key = CacheKey::new("test_key");

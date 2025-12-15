@@ -72,10 +72,7 @@ impl RoleManager {
     /// Ajouter un role binding (dev, user)
     pub fn grant_role(user: &str, role: &str) -> AuthResult<()> {
         if role != "dev" && role != "user" {
-            return Err(AuthError::RoleMissing(format!(
-                "Role invalide: {}",
-                role
-            )));
+            return Err(AuthError::RoleMissing(format!("Role invalide: {}", role)));
         }
 
         let mut keystore = Keystore::load()?;

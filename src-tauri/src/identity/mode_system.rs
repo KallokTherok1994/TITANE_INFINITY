@@ -680,14 +680,18 @@ mod tests {
     #[test]
     fn test_mode_system_engine_set_mode_creative() {
         let mut engine = ModeSystemEngine::default();
-        engine.set_mode(OperationalMode::Creative, "Testing").unwrap();
+        engine
+            .set_mode(OperationalMode::Creative, "Testing")
+            .unwrap();
         assert_eq!(engine.current(), OperationalMode::Creative);
     }
 
     #[test]
     fn test_mode_system_engine_set_mode_learning() {
         let mut engine = ModeSystemEngine::default();
-        engine.set_mode(OperationalMode::Learning, "Testing").unwrap();
+        engine
+            .set_mode(OperationalMode::Learning, "Testing")
+            .unwrap();
         assert_eq!(engine.current(), OperationalMode::Learning);
     }
 
@@ -708,7 +712,9 @@ mod tests {
     #[test]
     fn test_mode_system_engine_set_mode_emergency() {
         let mut engine = ModeSystemEngine::default();
-        engine.set_mode(OperationalMode::Emergency, "Testing").unwrap();
+        engine
+            .set_mode(OperationalMode::Emergency, "Testing")
+            .unwrap();
         assert_eq!(engine.current(), OperationalMode::Emergency);
     }
 
@@ -949,7 +955,10 @@ mod tests {
     #[test]
     fn test_emergency_mode_config() {
         let engine = ModeSystemEngine::default();
-        let config = engine.mode_configs.get(&OperationalMode::Emergency).unwrap();
+        let config = engine
+            .mode_configs
+            .get(&OperationalMode::Emergency)
+            .unwrap();
         assert_eq!(config.constraints.max_response_length, Some(200));
         assert_eq!(config.constraints.max_thinking_time_ms, Some(1000));
         assert_eq!(config.rigor, 1.0);

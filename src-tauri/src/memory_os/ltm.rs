@@ -622,7 +622,11 @@ mod tests {
         let (ltm, _temp) = create_test_ltm().await;
 
         let entry1 = MemoryEntry::new("Knowledge entry".to_string(), 0.5, MemoryType::Knowledge);
-        let entry2 = MemoryEntry::new("Conversation entry".to_string(), 0.5, MemoryType::Conversation);
+        let entry2 = MemoryEntry::new(
+            "Conversation entry".to_string(),
+            0.5,
+            MemoryType::Conversation,
+        );
 
         ltm.store(entry1).await.unwrap();
         ltm.store(entry2).await.unwrap();
@@ -711,8 +715,12 @@ mod tests {
 
     #[test]
     fn test_ltm_metadata_from_entry() {
-        let entry = MemoryEntry::new("Test content for metadata".to_string(), 0.75, MemoryType::Knowledge)
-            .with_tags(vec!["tag1".to_string(), "tag2".to_string()]);
+        let entry = MemoryEntry::new(
+            "Test content for metadata".to_string(),
+            0.75,
+            MemoryType::Knowledge,
+        )
+        .with_tags(vec!["tag1".to_string(), "tag2".to_string()]);
 
         let metadata = LTMMetadata::from_entry(&entry, "test.json".to_string());
 

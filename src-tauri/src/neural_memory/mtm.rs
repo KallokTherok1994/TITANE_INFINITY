@@ -26,7 +26,7 @@ impl MidTermMemory {
     /// Add entry (auto-sorted by relevance)
     pub fn push(&mut self, mut entry: MemoryEntry) -> MemoryResult<()> {
         entry.tier = MemoryTier::MTM;
-        
+
         self.entries.push(entry);
         self.sort_by_relevance();
 
@@ -40,8 +40,11 @@ impl MidTermMemory {
 
     /// Sort entries by relevance score (highest first)
     fn sort_by_relevance(&mut self) {
-        self.entries
-            .sort_by(|a, b| b.relevance_score().partial_cmp(&a.relevance_score()).unwrap());
+        self.entries.sort_by(|a, b| {
+            b.relevance_score()
+                .partial_cmp(&a.relevance_score())
+                .unwrap()
+        });
     }
 
     /// Get all entries (sorted by relevance)
@@ -128,7 +131,7 @@ mod tests {
     #[test]
     fn test_mtm_relevance_sorting() {
         let mut mtm = MidTermMemory::new(10);
-        
+
         for i in 0..5 {
             let entry = MemoryEntry::new(
                 format!("Entry {}", i),
@@ -146,12 +149,8 @@ mod tests {
     #[test]
     fn test_mtm_decay() {
         let mut mtm = MidTermMemory::new(10);
-        
-        let entry = MemoryEntry::new(
-            "Test".to_string(),
-            1.0,
-            MemoryType::Conversation,
-        );
+
+        let entry = MemoryEntry::new("Test".to_string(), 1.0, MemoryType::Conversation);
         mtm.push(entry).unwrap();
 
         mtm.apply_decay(0.1); // 10% decay
@@ -164,7 +163,7 @@ mod tests {
     #[test]
     fn test_mtm_prune() {
         let mut mtm = MidTermMemory::new(10);
-        
+
         for i in 0..5 {
             let entry = MemoryEntry::new(
                 format!("Entry {}", i),

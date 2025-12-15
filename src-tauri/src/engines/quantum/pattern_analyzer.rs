@@ -248,29 +248,32 @@ impl PatternAnalyzer {
         // Prédictions basées sur les transitions
         // Si la dernière action n'a pas (encore) de transitions sortantes, utiliser
         // la dernière action antérieure qui en a pour éviter de retourner un vecteur vide.
-        let transition_source: Option<&str> = self.last_action.as_deref().or_else(|| {
-            self.current_session.events.last().map(|s| s.as_str())
-        }).and_then(|last| {
-            if self.action_transitions.contains_key(last) {
-                Some(last)
-            } else {
-                None
-            }
-        }).or_else(|| {
-            // Fallback: remonter l'historique (en ignorant la dernière action)
-            self.current_session
-                .events
-                .iter()
-                .rev()
-                .skip(1)
-                .find_map(|event_type| {
-                    if self.action_transitions.contains_key(event_type) {
-                        Some(event_type.as_str())
-                    } else {
-                        None
-                    }
-                })
-        });
+        let transition_source: Option<&str> = self
+            .last_action
+            .as_deref()
+            .or_else(|| self.current_session.events.last().map(|s| s.as_str()))
+            .and_then(|last| {
+                if self.action_transitions.contains_key(last) {
+                    Some(last)
+                } else {
+                    None
+                }
+            })
+            .or_else(|| {
+                // Fallback: remonter l'historique (en ignorant la dernière action)
+                self.current_session
+                    .events
+                    .iter()
+                    .rev()
+                    .skip(1)
+                    .find_map(|event_type| {
+                        if self.action_transitions.contains_key(event_type) {
+                            Some(event_type.as_str())
+                        } else {
+                            None
+                        }
+                    })
+            });
 
         if let Some(source) = transition_source {
             if let Some(transitions) = self.action_transitions.get(source) {

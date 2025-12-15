@@ -292,7 +292,9 @@ mod tests {
     #[tokio::test]
     async fn test_build_from_conversation_short() {
         let builder = MemoryBuilder::new();
-        let block = builder.build_from_conversation("Hello world".to_string()).await;
+        let block = builder
+            .build_from_conversation("Hello world".to_string())
+            .await;
 
         assert!(block.id.starts_with("mem_"));
         assert_eq!(block.content, "Hello world");
@@ -332,17 +334,21 @@ mod tests {
         assert_eq!(block1.importance, 0.0);
 
         // Some long words
-        let block2 = builder.build_from_conversation("Programming development testing".to_string()).await;
+        let block2 = builder
+            .build_from_conversation("Programming development testing".to_string())
+            .await;
         assert!(block2.importance > 0.0);
     }
 
     #[tokio::test]
     async fn test_build_from_file() {
         let builder = MemoryBuilder::new();
-        let block = builder.build_from_file(
-            "test.rs".to_string(),
-            "Function implementation with multiple features and capabilities".to_string()
-        ).await;
+        let block = builder
+            .build_from_file(
+                "test.rs".to_string(),
+                "Function implementation with multiple features and capabilities".to_string(),
+            )
+            .await;
 
         assert!(block.id.starts_with("mem_file_"));
         assert!(matches!(block.source, MemorySource::FileImport));
@@ -355,7 +361,9 @@ mod tests {
         let builder = MemoryBuilder::new();
         let content = "Implementation development architecture configuration \
                        optimization performance functionality integration";
-        let block = builder.build_from_file("code.rs".to_string(), content.to_string()).await;
+        let block = builder
+            .build_from_file("code.rs".to_string(), content.to_string())
+            .await;
 
         // Takes up to 20 concepts for files
         assert!(block.concepts_extracted.len() <= 20);

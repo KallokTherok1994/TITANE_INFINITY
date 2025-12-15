@@ -371,8 +371,7 @@ mod tests {
                 0.8,
                 vec!["test".to_string()],
             )
-            .await
-            ;
+            .await;
 
         let id = match id {
             Ok(v) => v,

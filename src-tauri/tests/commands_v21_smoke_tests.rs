@@ -25,7 +25,10 @@ mod governance_tests {
     #[tokio::test]
     async fn test_governance_toggle_nonexistent_policy() {
         let result = toggle_ia_policy("nonexistent_policy_id".to_string(), true).await;
-        assert!(result.is_err(), "toggle nonexistent policy should return error");
+        assert!(
+            result.is_err(),
+            "toggle nonexistent policy should return error"
+        );
     }
 }
 
@@ -64,7 +67,10 @@ mod memory_os_tests {
     #[tokio::test]
     async fn test_memory_os_promote_nonexistent() {
         let result = memory_promote("nonexistent_node".to_string()).await;
-        assert!(result.is_err(), "promote nonexistent node should return error");
+        assert!(
+            result.is_err(),
+            "promote nonexistent node should return error"
+        );
     }
 
     #[tokio::test]
@@ -109,16 +115,25 @@ mod whisper_tests {
         };
 
         let start_result = start_whisper_streaming(config).await;
-        assert!(start_result.is_ok(), "start_whisper_streaming should not panic");
+        assert!(
+            start_result.is_ok(),
+            "start_whisper_streaming should not panic"
+        );
 
         let stop_result = stop_whisper_streaming().await;
-        assert!(stop_result.is_ok(), "stop_whisper_streaming should not panic");
+        assert!(
+            stop_result.is_ok(),
+            "stop_whisper_streaming should not panic"
+        );
     }
 
     #[tokio::test]
     async fn test_whisper_send_chunk_when_inactive() {
         let result = send_audio_chunk(vec![0u8; 1024]).await;
-        assert!(result.is_err(), "sending chunk when inactive should return error");
+        assert!(
+            result.is_err(),
+            "sending chunk when inactive should return error"
+        );
     }
 }
 
@@ -129,13 +144,19 @@ mod persistent_memory_tests {
     #[tokio::test]
     async fn test_persistent_memory_promote_nonexistent() {
         let result = persistent_memory_promote_entry("nonexistent_id".to_string()).await;
-        assert!(result.is_err(), "promote nonexistent entry should return error");
+        assert!(
+            result.is_err(),
+            "promote nonexistent entry should return error"
+        );
     }
 
     #[tokio::test]
     async fn test_persistent_memory_delete() {
         let result = persistent_memory_delete_entry("any_id".to_string()).await;
-        assert!(result.is_ok(), "delete should not panic even if entry missing");
+        assert!(
+            result.is_ok(),
+            "delete should not panic even if entry missing"
+        );
     }
 
     #[tokio::test]
@@ -190,10 +211,7 @@ mod self_healing_tests {
         let _ = self_healing_disable().await;
 
         let result = self_healing_trigger("test_action".to_string()).await;
-        assert!(
-            result.is_err(),
-            "trigger when disabled should return error"
-        );
+        assert!(result.is_err(), "trigger when disabled should return error");
     }
 
     #[tokio::test]
@@ -202,7 +220,10 @@ mod self_healing_tests {
         assert!(result.is_ok(), "get_status should not panic");
 
         let status = result.unwrap();
-        assert!(!status.enabled || status.enabled, "status should have enabled field");
+        assert!(
+            !status.enabled || status.enabled,
+            "status should have enabled field"
+        );
     }
 }
 
@@ -216,7 +237,10 @@ mod singularity_tests {
         assert!(result.is_ok(), "singularity_self_check should not panic");
 
         let check_result = result.unwrap();
-        assert!(!check_result.overall_health.is_empty(), "should return health status");
+        assert!(
+            !check_result.overall_health.is_empty(),
+            "should return health status"
+        );
         assert_eq!(
             check_result.physical_status, "optimal",
             "default physical status should be optimal"
