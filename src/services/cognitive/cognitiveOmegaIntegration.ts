@@ -36,7 +36,7 @@ import {
   type ConsistencyViolation,
   type CognitiveTrace as _CognitiveTrace,
   type DecisionLog as _DecisionLog,
-  type SubGoal,
+  type SubGoal as _SubGoal,
 } from '@/services/cognitive';
 
 import type { AIMessage as _AIMessage } from '@/services/ai/types';
@@ -57,7 +57,7 @@ interface MemorySearchResult {
 /**
  * Subgoal update structure
  */
-interface SubGoalUpdate {
+interface _SubGoalUpdate {
   id: string;
   status?: 'pending' | 'in_progress' | 'completed' | 'failed';
   label?: string;
@@ -349,7 +349,10 @@ class CognitiveOmegaOrchestrator {
 
       // Should correct if high/critical violations
       const shouldCorrect = violations.some(
-        (v: ConsistencyViolation) => v.severity === 'high' || v.severity === 'critical'
+        (v: ConsistencyViolation) =>
+          (typeof v.severity === 'string' &&
+            (v.severity === 'high' || v.severity === 'critical')) ||
+          (typeof v.severity === 'number' && v.severity >= 0.7)
       );
 
       this.stats.totalViolationsDetected += violations.length;
@@ -633,11 +636,7 @@ class CognitiveOmegaOrchestrator {
    */
   async updateGoal(
     conversationId: string,
-    updates: {
-      main_goal?: string;
-      add_subgoals?: Partial<SubGoal>[];
-      update_subgoals?: SubGoalUpdate[];
-    }
+    updates: Parameters<GoalConsistencyEngine['updateGoal']>[1]
   ): Promise<ConversationGoal | null> {
     await this.ensureInitialized();
     return this.goalConsistency.updateGoal(conversationId, updates);
