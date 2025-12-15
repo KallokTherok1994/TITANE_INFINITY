@@ -484,7 +484,16 @@ export const AudioCenterPage: React.FC = () => {
                       type="checkbox"
                       checked={config.input[key as keyof typeof config.input] as boolean}
                       onChange={() => {
-                        /* TODO */
+                        const currentValue = config.input[
+                          key as keyof typeof config.input
+                        ] as boolean;
+                        setInputOption(
+                          key as
+                            | 'noiseSuppression'
+                            | 'echoCancellation'
+                            | 'autoGainControl',
+                          !currentValue
+                        );
                       }}
                       className="w-4 h-4 accent-cyan-500"
                     />

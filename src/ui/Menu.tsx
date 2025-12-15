@@ -125,16 +125,9 @@ const MENU_SECTIONS: MenuSection[] = [
   {
     id: 'orchestration',
     icon: '🎛️',
-    label: 'Orchestration',
-    description: 'Multi-IA, coordination agents',
+    label: 'Intelligence IA',
+    description: 'Orchestration Multi-IA, Meta-cognition',
     route: '/orchestration-center',
-  },
-  {
-    id: 'meta',
-    icon: '🌐',
-    label: 'Meta Orchestrator',
-    description: 'Méta-cognition, supervision globale',
-    route: '/meta-center',
   },
   {
     id: 'memory',
