@@ -1,43 +1,80 @@
 /**
- * TITANE∞ OS - Control Panel Principal
+ * TITANE∞ OS v24.7 - Control Panel Principal
  * Interface de configuration système avancée
+ * Optimisé avec lazy loading pour réduire le bundle initial
  *
  * @module ControlPanel
- * @version v19.1.0
+ * @version v24.7.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense, useCallback, memo } from 'react';
 import { secureInvoke } from '@/lib/security';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
 import { SystemInfo } from '../../../types/tauri';
 import { ControlPanelLayout } from './components/ControlPanelLayout';
-import { SystemSection } from './sections/SystemSection';
-import { AppearanceSection } from './sections/AppearanceSection';
-import { SingularitySection } from './sections/SingularitySection';
-import { AISection } from './sections/AISection';
-import { MemorySection } from './sections/MemorySection';
-import { ModulesSection } from './sections/ModulesSection';
-import { NetworkSection } from './sections/NetworkSection';
-import { UpdatesSection } from './sections/UpdatesSection';
-import { LogsSection } from './sections/LogsSection';
-import { SecuritySection } from './sections/SecuritySection';
 import './ControlPanel.css';
 
 export type { ControlPanelSection } from './types';
 import type { ControlPanelSection } from './types';
+
+// ═══════════════════════════════════════════════════════════════════
+// Lazy Loading des sections (réduit bundle initial de ~50KB)
+// ═══════════════════════════════════════════════════════════════════
+
+const SystemSection = lazy(() =>
+  import('./sections/SystemSection').then(m => ({ default: m.SystemSection }))
+);
+const AppearanceSection = lazy(() =>
+  import('./sections/AppearanceSection').then(m => ({ default: m.AppearanceSection }))
+);
+const SingularitySection = lazy(() =>
+  import('./sections/SingularitySection').then(m => ({ default: m.SingularitySection }))
+);
+const AISection = lazy(() =>
+  import('./sections/AISection').then(m => ({ default: m.AISection }))
+);
+const MemorySection = lazy(() =>
+  import('./sections/MemorySection').then(m => ({ default: m.MemorySection }))
+);
+const ModulesSection = lazy(() =>
+  import('./sections/ModulesSection').then(m => ({ default: m.ModulesSection }))
+);
+const NetworkSection = lazy(() =>
+  import('./sections/NetworkSection').then(m => ({ default: m.NetworkSection }))
+);
+const UpdatesSection = lazy(() =>
+  import('./sections/UpdatesSection').then(m => ({ default: m.UpdatesSection }))
+);
+const LogsSection = lazy(() =>
+  import('./sections/LogsSection').then(m => ({ default: m.LogsSection }))
+);
+const SecuritySection = lazy(() =>
+  import('./sections/SecuritySection').then(m => ({ default: m.SecuritySection }))
+);
+
+// ═══════════════════════════════════════════════════════════════════
+// Composant de chargement
+// ═══════════════════════════════════════════════════════════════════
+
+const SectionLoader = memo(function SectionLoader() {
+  return (
+    <div className="cp-loading">
+      <div className="cp-spinner" />
+      <p>Chargement de la section...</p>
+    </div>
+  );
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// Composant Principal
+// ═══════════════════════════════════════════════════════════════════
 
 export const ControlPanel: React.FC = () => {
   const [activeSection, setActiveSection] = useState<ControlPanelSection>('system');
   const [systemInfo, setSystemInfo] = useState<SystemInfo | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadSystemInfo();
-    const interval = setInterval(loadSystemInfo, REFRESH_INTERVALS.NORMAL); // Refresh toutes les 5s
-    return () => clearInterval(interval);
-  }, []);
-
-  const loadSystemInfo = async () => {
+  const loadSystemInfo = useCallback(async () => {
     try {
       const info = await secureInvoke<SystemInfo>('get_system_info');
       setSystemInfo(info);
@@ -46,10 +83,16 @@ export const ControlPanel: React.FC = () => {
       console.error('Erreur chargement system info:', error);
       setLoading(false);
     }
-  };
+  }, []);
 
-  const renderSection = () => {
-    if (loading) {
+  useEffect(() => {
+    loadSystemInfo();
+    const interval = setInterval(loadSystemInfo, REFRESH_INTERVALS.NORMAL);
+    return () => clearInterval(interval);
+  }, [loadSystemInfo]);
+
+  const renderSection = useCallback(() => {
+    if (loading && activeSection === 'system') {
       return (
         <div className="cp-loading">
           <div className="cp-spinner" />
@@ -58,35 +101,24 @@ export const ControlPanel: React.FC = () => {
       );
     }
 
-    switch (activeSection) {
-      case 'system':
-        return systemInfo ? (
-          <SystemSection systemInfo={systemInfo} onRefresh={loadSystemInfo} />
-        ) : null;
-      case 'appearance':
-        return <AppearanceSection />;
-      case 'singularity':
-        return <SingularitySection />;
-      case 'ai':
-        return <AISection />;
-      case 'memory':
-        return <MemorySection />;
-      case 'modules':
-        return <ModulesSection />;
-      case 'network':
-        return <NetworkSection />;
-      case 'updates':
-        return <UpdatesSection />;
-      case 'logs':
-        return <LogsSection />;
-      case 'security':
-        return <SecuritySection />;
-      default:
-        return systemInfo ? (
-          <SystemSection systemInfo={systemInfo} onRefresh={loadSystemInfo} />
-        ) : null;
-    }
-  };
+    // Mapping des sections vers les composants lazy-loaded
+    const sectionComponents: Record<ControlPanelSection, JSX.Element | null> = {
+      system: systemInfo ? (
+        <SystemSection systemInfo={systemInfo} onRefresh={loadSystemInfo} />
+      ) : null,
+      appearance: <AppearanceSection />,
+      singularity: <SingularitySection />,
+      ai: <AISection />,
+      memory: <MemorySection />,
+      modules: <ModulesSection />,
+      network: <NetworkSection />,
+      updates: <UpdatesSection />,
+      logs: <LogsSection />,
+      security: <SecuritySection />,
+    };
+
+    return sectionComponents[activeSection] ?? sectionComponents.system;
+  }, [activeSection, loading, systemInfo, loadSystemInfo]);
 
   return (
     <ControlPanelLayout
@@ -94,7 +126,11 @@ export const ControlPanel: React.FC = () => {
       onSectionChange={setActiveSection}
       systemInfo={systemInfo || null}
     >
-      <div className="cp-content">{renderSection()}</div>
+      <div className="cp-content">
+        <Suspense fallback={<SectionLoader />}>{renderSection()}</Suspense>
+      </div>
     </ControlPanelLayout>
   );
 };
+
+export default ControlPanel;

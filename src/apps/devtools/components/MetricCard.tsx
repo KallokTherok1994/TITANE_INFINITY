@@ -47,7 +47,7 @@ const trendIcons = {
  * />
  * ```
  */
-export function MetricCard({
+export const MetricCard = React.memo(function MetricCard({
   label,
   value,
   unit,
@@ -121,4 +121,4 @@ export function MetricCard({
       )}
     </div>
   );
-}
+});

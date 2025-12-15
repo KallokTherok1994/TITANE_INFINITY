@@ -4,7 +4,7 @@
 // Licensed under MIT License
 // ============================================================================
 
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useQAMonitoring } from './useQAMonitoring';
 import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
@@ -34,35 +34,38 @@ interface StatCardProps {
   variant?: 'success' | 'warning' | 'error' | 'info';
 }
 
-const StatCard = ({
-  label,
-  value,
-  icon,
-  variant = 'info',
-}: StatCardProps): JSX.Element => (
-  <div className={`qa-stat-card qa-stat-card--${variant}`}>
-    <span className="qa-stat-icon">{icon}</span>
-    <div className="qa-stat-content">
-      <span className="qa-stat-value">{value}</span>
-      <span className="qa-stat-label">{label}</span>
+const StatCard = React.memo(
+  ({ label, value, icon, variant = 'info' }: StatCardProps): JSX.Element => (
+    <div className={`qa-stat-card qa-stat-card--${variant}`}>
+      <span className="qa-stat-icon">{icon}</span>
+      <div className="qa-stat-content">
+        <span className="qa-stat-value">{value}</span>
+        <span className="qa-stat-label">{label}</span>
+      </div>
     </div>
-  </div>
+  )
 );
 
 interface SeverityBadgeProps {
   severity: string;
 }
 
-const SeverityBadge = ({ severity }: SeverityBadgeProps): JSX.Element => (
-  <span className={`qa-severity qa-severity--${severity}`}>{severity.toUpperCase()}</span>
+const SeverityBadge = React.memo(
+  ({ severity }: SeverityBadgeProps): JSX.Element => (
+    <span className={`qa-severity qa-severity--${severity}`}>
+      {severity.toUpperCase()}
+    </span>
+  )
 );
 
 interface StatusBadgeProps {
   status: string;
 }
 
-const StatusBadge = ({ status }: StatusBadgeProps): JSX.Element => (
-  <span className={`qa-status qa-status--${status}`}>{status}</span>
+const StatusBadge = React.memo(
+  ({ status }: StatusBadgeProps): JSX.Element => (
+    <span className={`qa-status qa-status--${status}`}>{status}</span>
+  )
 );
 
 // ============================================================================

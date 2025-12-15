@@ -13,6 +13,7 @@
 /* CSS IMPORTS (must precede all other statements)                  */
 /* ═══════════════════════════════════════════════════════════════ */
 @import './styles/css-vars.css';
+@import './styles/unified-tokens.css'; /* v24.7 - Unified design tokens */
 @import './styles/animations.css';
 @import './styles/a11y.css';
 
