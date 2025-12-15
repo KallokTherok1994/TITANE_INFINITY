@@ -46,6 +46,10 @@ export type {
 // Hook principal (composition)
 export { useChat } from './useChat';
 
+// Performance Optimization Hooks (v24.5.0)
+export * from './useDebounce';
+export * from './useThrottle';
+
 // Hooks spécialisés (isolation)
 export { useChatCore } from './useChatCore';
 export { useChatUI } from './useChatUI';

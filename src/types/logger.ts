@@ -8,7 +8,7 @@
  */
 
 /**
- * Valid log arguments - can be primitive, object, or error
+ * Valid log arguments - can be primitive, object, error, or any unknown value
  */
 export type LogArg =
   | string
@@ -18,7 +18,8 @@ export type LogArg =
   | undefined
   | Error
   | Record<string, unknown>
-  | unknown[];
+  | unknown[]
+  | unknown; // Allow unknown for maximum compatibility
 
 /**
  * Array of log arguments
@@ -35,4 +36,5 @@ export type LogParts = (string | LogArg)[];
  */
 export type TableData =
   | Record<string, unknown>[]
-  | Record<string, Record<string, unknown>>;
+  | Record<string, Record<string, unknown>>
+  | unknown; // Allow unknown for compatibility
