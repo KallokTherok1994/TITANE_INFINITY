@@ -25,15 +25,22 @@ vi.setConfig({
 });
 
 // Helper to keep these tests deterministic and fast without hitting real providers.
-const createDeterministicResponse = (message: string, history: AIMessage[] = []) => ({
-  content: `OMEGA deterministic response :: ${message || '<<empty>>'}`,
-  provider: 'titane-local',
-  timestamp: Date.now(),
-  metadata: {
-    historyCount: history.length,
-    deterministic: true,
-  },
-});
+const createDeterministicResponse = (message: string, history: AIMessage[] = []) => {
+  const historyContext = history
+    .map(item => item.content)
+    .join(' | ')
+    .slice(0, 500);
+
+  return {
+    content: `OMEGA deterministic response :: ${message || '<<empty>>'} :: context: ${historyContext}`,
+    provider: 'titane-local',
+    timestamp: Date.now(),
+    metadata: {
+      historyCount: history.length,
+      deterministic: true,
+    },
+  };
+};
 
 const runWithDeterministicOrchestrator = async (callback: () => Promise<void>) => {
   const generateSpy = vi
@@ -94,26 +101,29 @@ describe('🟣 OMEGA Phase 7Ω - E2E Validation', () => {
   });
 
   it('should handle conversation context correctly', async () => {
-    const context: AIMessage[] = [
-      {
-        role: 'user',
-        content: 'My favorite programming language is TypeScript',
-        timestamp: Date.now() - 5000,
-      },
-      {
-        role: 'assistant',
-        content: 'TypeScript is excellent for type-safe development!',
-        timestamp: Date.now() - 4000,
-      },
-    ];
+    await runWithDeterministicOrchestrator(async () => {
+      const context: AIMessage[] = [
+        {
+          role: 'user',
+          content: 'My favorite programming language is TypeScript',
+          timestamp: Date.now() - 5000,
+        },
+        {
+          role: 'assistant',
+          content: 'TypeScript is excellent for type-safe development!',
+          timestamp: Date.now() - 4000,
+        },
+      ];
 
-    const result = await aiOrchestrator.generate(
-      'What did I tell you about programming?',
-      context
-    );
+      const result = await aiOrchestrator.generate(
+        'What did I tell you about programming?',
+        context
+      );
 
-    expect(result).toBeDefined();
-    expect(result.content.toLowerCase()).toMatch(/(typescript|programming|language)/);
+      expect(result).toBeDefined();
+      expect(result.content.toLowerCase()).toMatch(/(typescript|programming|language)/);
+      expect(result.metadata.historyCount).toBe(context.length);
+    });
   });
 
   it('should recover gracefully when external providers fail', async () => {
