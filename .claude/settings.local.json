@@ -57,7 +57,6 @@
       "Bash(npm run format:*)",
       "Bash(cargo fmt:*)",
       "Bash(git checkout:*)",
-      "Bash(1)",
       "Bash(git reset:*)",
       "Bash(timeout 120 cargo test:*)",
       "Bash(src-tauri/src/api_hub/provider_registry.rs )",
@@ -77,8 +76,8 @@
       "Bash(src-tauri/src/identity/identity_matrix.rs)",
       "Bash(git pull:*)",
       "Bash(git stash:*)",
-      "Bash(timeout 60 cargo test:*)",
-      "Bash(timeout 90 cargo test:*)"
+      "Bash(do echo \"=== Run $i ===\")",
+      "Bash(do cargo test --test ipc_cache_test test_cache_concurrent_access -- --exact)"
     ],
     "deny": [],
     "ask": []
