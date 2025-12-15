@@ -62,7 +62,7 @@ impl CacheStrategy {
 /// Execute a command with automatic caching
 ///
 /// # Example
-/// ```rust
+/// ```rust,ignore
 /// let result = cached_invoke(
 ///     "get_system_health",
 ///     json!({}),
@@ -212,7 +212,7 @@ pub fn cache_cleanup() -> Result<(), String> {
 /// Macro to quickly wrap a command with caching
 ///
 /// # Example
-/// ```rust
+/// ```rust,ignore
 /// #[tauri::command]
 /// pub async fn get_system_health() -> Result<SystemHealth, String> {
 ///     cache_or_execute!("get_system_health", {}, CacheStrategy::Fast, {

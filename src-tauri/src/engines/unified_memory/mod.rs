@@ -23,7 +23,7 @@ use vector_store::VectorStore;
 /// Unified Memory Engine v2 — Central memory orchestrator
 ///
 /// Architecture:
-/// ```
+/// ```text
 /// ┌─────────────────────────────────────────────┐
 /// │  STM (Short-Term)                          │
 /// │  • FIFO buffer (100 messages)              │

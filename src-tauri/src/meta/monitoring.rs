@@ -147,88 +147,99 @@ impl MetaMonitoringEngine {
 
     /// Record META-COGNITION evaluation
     pub async fn record_evaluation(&self, report: &MetaCognitiveReport) {
-        let mut metrics = self.metrics.write().await;
-        let mut history = self.evaluation_history.write().await;
-
-        // Update metrics
-        metrics.total_evaluations += 1;
-        if report.anomaly_detected {
-            metrics.total_anomalies += 1;
-        }
-
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
+            .unwrap_or_default()
             .as_secs();
 
-        metrics.last_evaluation = Some(timestamp);
-        metrics.anomaly_rate = metrics.total_anomalies as f32 / metrics.total_evaluations as f32;
-
-        // Calculate average coherence (last 100)
-        let recent_count = history.len().min(100);
-        if recent_count > 0 {
-            let sum: f32 = history
-                .iter()
-                .rev()
-                .take(recent_count)
-                .map(|e| e.coherence_score)
-                .sum();
-            metrics.avg_coherence = (sum + report.coherence_score) / (recent_count + 1) as f32;
-        } else {
-            metrics.avg_coherence = report.coherence_score;
-        }
-
-        // Update uptime
-        metrics.uptime = std::time::SystemTime::now()
+        let uptime = std::time::SystemTime::now()
             .duration_since(self.start_time)
-            .unwrap()
+            .unwrap_or_default()
             .as_secs();
 
-        // Add to history
-        let entry = EvaluationHistoryEntry {
-            timestamp,
-            coherence_score: report.coherence_score,
-            confidence: report.confidence,
-            anomaly_detected: report.anomaly_detected,
-            recommended_action: report.recommended_next_state.clone(),
-            issues_count: report.detected_issues.len(),
-        };
+        let should_warning_alert = report.anomaly_detected;
+        let warning_message = format!(
+            "Anomaly detected: coherence={:.2}, issues={}",
+            report.coherence_score,
+            report.detected_issues.len()
+        );
+        let warning_context = serde_json::json!({
+            "coherence_score": report.coherence_score,
+            "confidence": report.confidence,
+            "issues": report.detected_issues,
+            "recommended_action": format!("{:?}", report.recommended_next_state),
+        });
 
-        if history.len() >= MAX_HISTORY_SIZE {
-            history.pop_front();
+        let should_critical_alert = report.coherence_score < 0.3;
+        let critical_message = format!("Critical coherence: {:.2}", report.coherence_score);
+        let critical_context = serde_json::json!({
+            "coherence_score": report.coherence_score,
+            "anomaly_detected": report.anomaly_detected,
+        });
+
+        {
+            let mut metrics = self.metrics.write().await;
+            let mut history = self.evaluation_history.write().await;
+
+            // Update metrics
+            metrics.total_evaluations += 1;
+            if report.anomaly_detected {
+                metrics.total_anomalies += 1;
+            }
+
+            metrics.last_evaluation = Some(timestamp);
+            metrics.anomaly_rate = metrics.total_anomalies as f32 / metrics.total_evaluations as f32;
+
+            // Calculate average coherence (last 100)
+            let recent_count = history.len().min(100);
+            if recent_count > 0 {
+                let sum: f32 = history
+                    .iter()
+                    .rev()
+                    .take(recent_count)
+                    .map(|e| e.coherence_score)
+                    .sum();
+                metrics.avg_coherence = (sum + report.coherence_score) / (recent_count + 1) as f32;
+            } else {
+                metrics.avg_coherence = report.coherence_score;
+            }
+
+            // Update uptime
+            metrics.uptime = uptime;
+
+            // Add to history
+            let entry = EvaluationHistoryEntry {
+                timestamp,
+                coherence_score: report.coherence_score,
+                confidence: report.confidence,
+                anomaly_detected: report.anomaly_detected,
+                recommended_action: report.recommended_next_state.clone(),
+                issues_count: report.detected_issues.len(),
+            };
+
+            if history.len() >= MAX_HISTORY_SIZE {
+                history.pop_front();
+            }
+            history.push_back(entry);
         }
-        history.push_back(entry);
 
-        // Generate alert if anomaly detected
-        if report.anomaly_detected {
+        // Génération d’alertes hors verrous (évite deadlock async)
+        if should_warning_alert {
             self.generate_alert(
                 AlertSeverity::Warning,
                 "META-COGNITION",
-                format!(
-                    "Anomaly detected: coherence={:.2}, issues={}",
-                    report.coherence_score,
-                    report.detected_issues.len()
-                ),
-                serde_json::json!({
-                    "coherence_score": report.coherence_score,
-                    "confidence": report.confidence,
-                    "issues": report.detected_issues,
-                    "recommended_action": format!("{:?}", report.recommended_next_state),
-                }),
+                warning_message,
+                warning_context,
             )
             .await;
         }
 
-        // Critical alert if coherence very low
-        if report.coherence_score < 0.3 {
+        if should_critical_alert {
             self.generate_alert(
                 AlertSeverity::Critical,
                 "META-COGNITION",
-                format!("Critical coherence: {:.2}", report.coherence_score),
-                serde_json::json!({
-                    "coherence_score": report.coherence_score,
-                    "anomaly_detected": report.anomaly_detected,
-                }),
+                critical_message,
+                critical_context,
             )
             .await;
         }
@@ -236,22 +247,53 @@ impl MetaMonitoringEngine {
 
     /// Record DEEP SYNC operation
     pub async fn record_sync(&self, sync_state: &SyncedState) {
-        let mut metrics = self.metrics.write().await;
-        let mut history = self.sync_history.write().await;
-
-        // Update metrics
-        metrics.total_syncs += 1;
-        if !sync_state.success {
-            metrics.total_sync_failures += 1;
-        }
-
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
+            .unwrap_or_default()
             .as_secs();
 
-        metrics.last_sync = Some(timestamp);
-        metrics.sync_failure_rate = metrics.total_sync_failures as f32 / metrics.total_syncs as f32;
+        let engines_in_sync = sync_state
+            .engine_alignment
+            .iter()
+            .filter(|(_, a)| a.is_aligned)
+            .count();
+        let engines_out_of_sync = sync_state.engine_alignment.len() - engines_in_sync;
+
+        let should_error_alert = !sync_state.success;
+        let error_message = format!(
+            "Sync failed: quality={:?}, issues={}",
+            sync_state.quality,
+            sync_state.issues.len()
+        );
+        let error_context = serde_json::json!({
+            "quality": format!("{:?}", sync_state.quality),
+            "engines_in_sync": engines_in_sync,
+            "engines_out_of_sync": engines_out_of_sync,
+            "issues": sync_state.issues,
+        });
+
+        let should_warning_alert = matches!(
+            sync_state.quality,
+            crate::meta::SyncQuality::Degraded | crate::meta::SyncQuality::Poor
+        );
+        let warning_message = format!("Degraded sync quality: {:?}", sync_state.quality);
+        let warning_context = serde_json::json!({
+            "quality": format!("{:?}", sync_state.quality),
+            "engines_out_of_sync": engines_out_of_sync,
+        });
+
+        {
+            let mut metrics = self.metrics.write().await;
+            let mut history = self.sync_history.write().await;
+
+            // Update metrics
+            metrics.total_syncs += 1;
+            if !sync_state.success {
+                metrics.total_sync_failures += 1;
+            }
+
+            metrics.last_sync = Some(timestamp);
+            metrics.sync_failure_rate = metrics.total_sync_failures as f32 / metrics.total_syncs as f32;
 
         // Calculate average sync quality (last 100)
         let quality_score = match sync_state.quality {
@@ -285,62 +327,40 @@ impl MetaMonitoringEngine {
             metrics.avg_sync_quality = quality_score;
         }
 
-        // Add to history
-        let engines_in_sync = sync_state
-            .engine_alignment
-            .iter()
-            .filter(|(_, a)| a.is_aligned)
-            .count();
-        let engines_out_of_sync = sync_state.engine_alignment.len() - engines_in_sync;
+            // Add to history
+            let entry = SyncHistoryEntry {
+                timestamp,
+                quality: format!("{:?}", sync_state.quality),
+                success: sync_state.success,
+                engines_in_sync,
+                engines_out_of_sync,
+                issues_count: sync_state.issues.len(),
+                integrity_hash: sync_state.integrity_hash.clone(),
+            };
 
-        let entry = SyncHistoryEntry {
-            timestamp,
-            quality: format!("{:?}", sync_state.quality),
-            success: sync_state.success,
-            engines_in_sync,
-            engines_out_of_sync,
-            issues_count: sync_state.issues.len(),
-            integrity_hash: sync_state.integrity_hash.clone(),
-        };
-
-        if history.len() >= MAX_HISTORY_SIZE {
-            history.pop_front();
+            if history.len() >= MAX_HISTORY_SIZE {
+                history.pop_front();
+            }
+            history.push_back(entry);
         }
-        history.push_back(entry);
 
-        // Generate alert if sync failed
-        if !sync_state.success {
+        // Génération d’alertes hors verrous (évite deadlock async)
+        if should_error_alert {
             self.generate_alert(
                 AlertSeverity::Error,
                 "DEEP-SYNC",
-                format!(
-                    "Sync failed: quality={:?}, issues={}",
-                    sync_state.quality,
-                    sync_state.issues.len()
-                ),
-                serde_json::json!({
-                    "quality": format!("{:?}", sync_state.quality),
-                    "engines_in_sync": engines_in_sync,
-                    "engines_out_of_sync": engines_out_of_sync,
-                    "issues": sync_state.issues,
-                }),
+                error_message,
+                error_context,
             )
             .await;
         }
 
-        // Warning if quality degraded
-        if matches!(
-            sync_state.quality,
-            crate::meta::SyncQuality::Degraded | crate::meta::SyncQuality::Poor
-        ) {
+        if should_warning_alert {
             self.generate_alert(
                 AlertSeverity::Warning,
                 "DEEP-SYNC",
-                format!("Degraded sync quality: {:?}", sync_state.quality),
-                serde_json::json!({
-                    "quality": format!("{:?}", sync_state.quality),
-                    "engines_out_of_sync": engines_out_of_sync,
-                }),
+                warning_message,
+                warning_context,
             )
             .await;
         }
@@ -359,7 +379,7 @@ impl MetaMonitoringEngine {
 
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
+            .unwrap_or_default()
             .as_secs();
 
         let alert = MetaAlert {
