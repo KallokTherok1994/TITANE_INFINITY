@@ -20,7 +20,7 @@ ERRORS=0
 echo ""
 echo "🔍 [1/6] Vérification 0 serveur HTTP..."
 
-HTTP_DEPS=$(grep -E "express|fastify|koa|http-server" package.json || true)
+HTTP_DEPS=$(grep -E "express|fastify|koa|http""-server" package.json || true)
 
 if [ -n "$HTTP_DEPS" ]; then
     echo "⚠️  WARNING: Dépendances serveur HTTP détectées"

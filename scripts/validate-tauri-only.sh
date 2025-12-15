@@ -141,8 +141,8 @@ echo "6️⃣  Scan des scripts pour serveurs HTTP..."
 HTTP_PATTERN='http\.server|http-server|serve dist|vite preview|vite dev|http://localhost:(5173|4173|1420|8080)'
 HTTP_SCRIPTS=$(grep -lRE "${HTTP_PATTERN}" \
     --include='*.sh' \
-    --exclude='./scripts/validate-tauri-only.sh' \
-    --exclude='./scripts/verify_conformite_tauri_local_v14.sh' \
+    --exclude='*validate-tauri-only.sh' \
+    --exclude='*verify_conformite_tauri_local_v14.sh' \
     . \
     2>/dev/null | wc -l)
 
@@ -150,7 +150,7 @@ if [ "$HTTP_SCRIPTS" -gt 0 ]; then
     echo "   ⚠️  WARNING: $HTTP_SCRIPTS script(s) utilisent des serveurs HTTP"
     while read -r file; do
         [ -n "$file" ] && echo "      - ${file#./}"
-    done < <(grep -lRE "${HTTP_PATTERN}" --include='*.sh' --exclude='./scripts/validate-tauri-only.sh' --exclude='./scripts/verify_conformite_tauri_local_v14.sh' . 2>/dev/null | sort -u)
+    done < <(grep -lRE "${HTTP_PATTERN}" --include='*.sh' --exclude='*validate-tauri-only.sh' --exclude='*verify_conformite_tauri_local_v14.sh' . 2>/dev/null | sort -u)
     WARNINGS=$((WARNINGS + 1))
 else
     echo "   ✅ Aucun script HTTP détecté"
