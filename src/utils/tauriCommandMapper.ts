@@ -8,6 +8,8 @@
  */
 
 import { safeInvokeTauri } from './tauriProtector';
+import type { SingularityState } from '@/types/singularityState';
+import type { TauriCommandArgs } from '@/types/tauri';
 
 // ══════════════════════════════════════════════════════════════════
 // COMMAND MAPPING TABLE
@@ -53,7 +55,10 @@ const COMMAND_MAPPING: Record<string, string | string[]> = {
  * Commandes qui doivent retourner des objets partiels
  * depuis singularity_get_full_state
  */
-const PARTIAL_STATE_EXTRACTORS: Record<string, (fullState: any) => any> = {
+const PARTIAL_STATE_EXTRACTORS: Record<
+  string,
+  (fullState: SingularityState | null) => unknown
+> = {
   singularity_get_physical: full => full?.physical || null,
   singularity_get_cognitive: full => full?.cognitive || null,
   singularity_get_symbolic: full => full?.symbolic || null,
@@ -64,11 +69,11 @@ const PARTIAL_STATE_EXTRACTORS: Record<string, (fullState: any) => any> = {
 /**
  * Commandes qui nécessitent une agrégation de plusieurs résultats
  */
-const AGGREGATED_COMMANDS: Record<string, (results: any[]) => any> = {
+const AGGREGATED_COMMANDS: Record<string, (results: unknown[]) => unknown> = {
   get_helios_state: results => {
     const [systemState, metrics] = results;
     return {
-      ...systemState,
+      ...(systemState && typeof systemState === 'object' ? systemState : {}),
       metrics: metrics || {},
       timestamp: Date.now(),
     };
@@ -77,7 +82,7 @@ const AGGREGATED_COMMANDS: Record<string, (results: any[]) => any> = {
   get_memory_state: results => {
     const [state, stats] = results;
     return {
-      ...state,
+      ...(state && typeof state === 'object' ? state : {}),
       stats: stats || {},
       timestamp: Date.now(),
     };
@@ -85,8 +90,10 @@ const AGGREGATED_COMMANDS: Record<string, (results: any[]) => any> = {
 
   check_system_integrity: results => {
     const [selfCheck, hardening] = results;
+    const selfCheckObj = selfCheck as Record<string, unknown> | null;
+    const hardeningObj = hardening as Record<string, unknown> | null;
     return {
-      passed: selfCheck?.success !== false && hardening?.success !== false,
+      passed: selfCheckObj?.success !== false && hardeningObj?.success !== false,
       checks: [
         { id: 'singularity_self_check', result: selfCheck },
         { id: 'hardening_selftest', result: hardening },
@@ -97,8 +104,10 @@ const AGGREGATED_COMMANDS: Record<string, (results: any[]) => any> = {
 
   sync_singularity: results => {
     const [selfCheck, update] = results;
+    const selfCheckObj = selfCheck as Record<string, unknown> | null;
+    const updateObj = update as Record<string, unknown> | null;
     return {
-      synced: selfCheck?.success !== false && update?.success !== false,
+      synced: selfCheckObj?.success !== false && updateObj?.success !== false,
       self_check: selfCheck,
       state_update: update,
       timestamp: Date.now(),
@@ -113,7 +122,10 @@ const AGGREGATED_COMMANDS: Record<string, (results: any[]) => any> = {
 /**
  * Invoke une commande en appliquant le mapping automatique si nécessaire
  */
-export async function mappedInvoke<T>(command: string, args?: any): Promise<T> {
+export async function mappedInvoke<T>(
+  command: string,
+  args?: TauriCommandArgs
+): Promise<T> {
   // Si la commande a un mapping
   if (COMMAND_MAPPING[command]) {
     const mapped = COMMAND_MAPPING[command];
@@ -241,7 +253,9 @@ export async function scanAvailableCommands(): Promise<{
 /**
  * Répare un état Singularity avec des valeurs par défaut intelligentes
  */
-export function repairSingularityState(state: any): any {
+export function repairSingularityState(
+  state: SingularityState | null
+): SingularityState | null {
   if (!state) return null;
 
   const repaired = { ...state };
@@ -305,7 +319,7 @@ export function repairSingularityState(state: any): any {
 /**
  * Calcule un titaneAlignment valide depuis un état Singularity
  */
-export function calculateTitaneAlignment(state: any): number {
+export function calculateTitaneAlignment(state: SingularityState | null): number {
   if (!state) return 100; // Fallback sûr
 
   const weights = {

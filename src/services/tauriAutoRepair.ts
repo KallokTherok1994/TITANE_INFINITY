@@ -14,6 +14,9 @@ import {
   calculateTitaneAlignment,
 } from '@/utils/tauriCommandMapper';
 import { secureInvoke } from '@/lib/security';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('TauriAutoRepair');
 
 // ══════════════════════════════════════════════════════════════════
 // TYPES
@@ -291,6 +294,20 @@ export class TauriAutoRepairEngine {
 
       // Réparer l'état
       const repairedState = repairSingularityState(rawState);
+
+      // Vérifier que l'état réparé existe
+      if (!repairedState) {
+        console.warn('⚠️  Failed to repair singularity state');
+        const failResult: SingularityRepairResult = {
+          stability_before: 0,
+          stability_after: 0,
+          titane_alignment_before: 0,
+          titane_alignment_after: 0,
+          repairs_applied: ['repair_failed: no state returned'],
+        };
+        this.report.phase4_singularity = failResult;
+        return failResult;
+      }
 
       // Appliquer réparations spécifiques
       if (stability_before === 0 || isNaN(stability_before)) {
