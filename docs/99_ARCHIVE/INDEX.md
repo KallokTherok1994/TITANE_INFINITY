@@ -1,7 +1,7 @@
 # 📦 TITANE∞ — Archive Index Principal
 
 **Dernière mise à jour:** 15 décembre 2025  
-**Fichiers archivés:** 29 (Phase 3 partial)
+**Fichiers archivés:** 36 (+7 depuis Phase 3 initiale)
 
 ---
 
@@ -84,7 +84,68 @@ docs/99_ARCHIVE/
 
 ---
 
-## 🔍 RECHERCHE PAR TYPE
+## � VERSIONS ARCHIVÉES
+
+### Versions v19
+
+| Fichier | Description |
+|---------|-------------|
+| ACTIVATION_COGNITIVE_LEARNING_v19.1.md | Activation cognitive learning |
+| AUDIT_API_INTEGRATION_v19.3.md | Audit API integration v19.3 |
+| CERTIFICATION_PRODUCTION_v19.5.2.md | Certification production v19.5.2 |
+| SESSION_TESTING_COMPREHENSIVE_v19.5.2.md | Session tests comprehensive v19.5.2 |
+| STABILISATION_FINAL_v19.5.2.md | Stabilisation finale v19.5.2 |
+
+**Total** : 5 fichiers  
+**Index complet** : [v19/INDEX.md](./versions/v19/INDEX.md)
+
+---
+
+### Versions v20
+
+| Fichier | Description |
+|---------|-------------|
+| PHASE1_RAPPORT_FINAL_COMPLET_v20.0.md | Rapport final phase 1 complet |
+| PHASE1_RAPPORT_FINAL_v20.0.md | Rapport final phase 1 |
+| P0_2_VOICE_FINGERPRINTING_REPORT_v20.0.md | Voice fingerprinting P0-2 |
+| P0_7_TESTS_USEVAD_REPORT_v20.0.md | Tests useVAD P0-7 |
+| AI_SYSTEM_QUICKSTART_v20Ω.md | Quick start système IA |
+| + 5 autres fichiers | OMEGA Guide, Changelog, Stats |
+
+**Total** : 10 fichiers  
+**Index complet** : [v20/INDEX.md](./versions/v20/INDEX.md)
+
+---
+
+### Versions v21
+
+| Fichier | Description |
+|---------|-------------|
+| AUDIT_INTEGRATION_API_CHAT_v21.5.md | Audit intégration API Chat |
+| AUTO_ALL_BACKEND_REBUILD_SUCCESS_v21.5.3.md | Rebuild backend success |
+| AUTO_ALL_CHAT_PIPELINE_AUTO_REPAIR_v21.5.md | Chat pipeline auto-repair |
+| AUTO_ALL_COMPLETE_v21.md | AUTO ALL complet v21 |
+| AUTO_ALL_RESUME_EXECUTIF_v21.5.md | Résumé exécutif AUTO ALL |
+| BACKEND_REBUILD_STABILISATION_v21.5.3.md | Rebuild backend stabilisation |
+| SESSION_COMPLETE_UI_POLISH_v21.md | Session UI polish v21 |
+
+**Total** : 7 fichiers  
+**Index complet** : [v21/INDEX.md](./versions/v21/INDEX.md)
+
+---
+
+### Versions v22
+
+| Fichier | Description |
+|---------|-------------|
+| TOKIO_RUNTIME_FIX_v22.0.0.md | Corrections runtime Tokio |
+| DEVTOOLS_INTEGRATION_v22.0.0.md | Intégration DevTools v22 |
+| OPTIMIZATION_ROADMAP_v22.md | Roadmap optimisations v22 |
+| DEV_SUDO_SUPER_PROMPTS_UNIFIED_v22.0.md | Dev Sudo Super Prompts |
+| TEST_PLAN_DEV_SUDO_v22.0.md | Plan tests Dev Sudo |
+
+**Total** : 5 fichiers  
+**Index complet** : [v22/INDEX.md](./versions/v22/INDEX.md)
 
 ### Sessions Développement
 - [sessions/2025-12/](./sessions/2025-12/) — 11 fichiers
@@ -119,12 +180,14 @@ docs/99_ARCHIVE/
 ### Phase 3 (Suite)
 
 - [ ] Archiver versions v14, v15, v17
-- [ ] Archiver versions v20, v22, v23
+- [x] Archiver version v20 ✅ (7 fichiers)
+- [x] Archiver version v22 ✅ (3 fichiers)
+- [ ] Archiver version v23
 - [ ] Archiver sessions novembre 2025
 - [ ] Archiver roadmaps obsolètes
 - [ ] Archiver rapports anciens
 
-**Estimation:** 150+ fichiers supplémentaires
+**Estimation:** 100+ fichiers supplémentaires
 
 ---
 
@@ -163,8 +226,8 @@ docs/99_ARCHIVE/
 ---
 
 **Mainteneur:** TITANE Documentation Evolution Engine  
-**Dernière opération:** Phase 3 Partial (27 fichiers archivés)  
-**Prochain audit:** Phase 3 continuation (versions v14-v23)
+**Dernière opération:** Phase 3 Continuation (36 fichiers archivés, +7 v20/v22)  
+**Prochain audit:** Phase 3 continuation (versions v14, v15, v17, v23)
 
 ---
 
