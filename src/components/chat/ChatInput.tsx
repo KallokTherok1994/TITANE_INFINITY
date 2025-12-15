@@ -16,6 +16,7 @@ import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { autoHealEngine } from '../../services/ai/system';
 import { FileUploadButton, type AnalyzedFile } from './FileUploadButton';
 import { DictationButton } from './DictationButton';
+import { UI_DELAYS } from '@/constants/timeouts';
 import './ChatInput.css';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -287,7 +288,7 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
     // ═══ PHASE 5.3: ERROR AUTO-RECOVERY ═══
     useEffect(() => {
       if (inputState.inputError) {
-        const timer = setTimeout(resetError, 5000);
+        const timer = setTimeout(resetError, UI_DELAYS.ERROR_DISMISS);
         return () => clearTimeout(timer);
       }
     }, [inputState.inputError, resetError]);

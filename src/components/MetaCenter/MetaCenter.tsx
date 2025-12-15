@@ -13,6 +13,7 @@ import { invoke } from '@tauri-apps/api/core';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
 import { useSingularityStateSafe } from '@/hooks/useSingularityStateSafe';
+import { REFRESH_INTERVALS } from '@/constants/timeouts';
 import './MetaCenter.css';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -212,7 +213,7 @@ const MetaCenterContent: React.FC = () => {
   // Auto-refresh
   useEffect(() => {
     if (!autoRefresh) return;
-    const interval = setInterval(loadState, 5000);
+    const interval = setInterval(loadState, REFRESH_INTERVALS.NORMAL);
     return () => clearInterval(interval);
   }, [autoRefresh]);
 

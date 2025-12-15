@@ -11,6 +11,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { secureInvoke } from '@/lib/security';
+import { REFRESH_INTERVALS } from '@/constants/timeouts';
 // import './TransitionTimeline.css';
 
 interface TransitionEntry {
@@ -26,7 +27,7 @@ export const TransitionTimeline: React.FC = () => {
     fetchHistory();
 
     // Rafraîchir toutes les 5 secondes
-    const interval = setInterval(fetchHistory, 5000);
+    const interval = setInterval(fetchHistory, REFRESH_INTERVALS.NORMAL);
     return () => clearInterval(interval);
   }, []);
 

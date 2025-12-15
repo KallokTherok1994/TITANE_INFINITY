@@ -10,6 +10,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { secureInvoke } from '@/lib/security';
+import { REFRESH_INTERVALS } from '@/constants/timeouts';
 import './TimeNavigator.css';
 
 interface Snapshot {
@@ -48,7 +49,7 @@ export const TimeNavigator: React.FC = () => {
   useEffect(() => {
     loadSnapshots();
     loadStats();
-    const interval = setInterval(loadStats, 30000); // Refresh every 30s
+    const interval = setInterval(loadStats, REFRESH_INTERVALS.SLOW); // Refresh every 30s
     return () => clearInterval(interval);
   }, []);
 

@@ -11,6 +11,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import { HUDFrame } from '../components/HUDFrame';
+import { REFRESH_INTERVALS } from '@/constants/timeouts';
 import './styles/SelfHealingDashboard.css';
 
 // ═══════════════════════════════════════════════════════════════
@@ -300,7 +301,7 @@ export const SelfHealingDashboard: React.FC = () => {
     fetchData();
 
     if (autoRefresh) {
-      const interval = setInterval(fetchData, 5000);
+      const interval = setInterval(fetchData, REFRESH_INTERVALS.NORMAL);
       return () => clearInterval(interval);
     }
   }, [autoRefresh, fetchData]);

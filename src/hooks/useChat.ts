@@ -18,6 +18,7 @@ import { useChatMemory } from '@hooks/useChatMemory';
 import { type ChatMode, type ChatEngineResponse } from '../services/ai';
 import type { AIMessage, AIProviderName } from '../services/ai/types';
 import { hybridTTS } from '@services/tts/hybridTTS';
+import { REFRESH_INTERVALS } from '@/constants/timeouts';
 import {
   chatService,
   type ChatMessage as BackendChatMessage,
@@ -360,7 +361,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     checkProvidersAvailability();
 
     // Re-check every 30s (in case API keys are added dynamically)
-    const interval = setInterval(checkProvidersAvailability, 30000);
+    const interval = setInterval(checkProvidersAvailability, REFRESH_INTERVALS.SLOW);
     return () => clearInterval(interval);
   }, [preferredProviderState]);
   const [uiIntegrity, setUiIntegrity] = useState({

@@ -12,6 +12,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { tauriClient, type ProviderStatus } from '../services/tauriClient';
+import { REFRESH_INTERVALS } from '@/constants/timeouts';
 
 export interface ConnectionStatus {
   online: boolean;
@@ -114,7 +115,7 @@ export function useConnection() {
 
   // Auto-check every 30 seconds
   useEffect(() => {
-    const interval = setInterval(checkConnection, 30000);
+    const interval = setInterval(checkConnection, REFRESH_INTERVALS.SLOW);
     return () => clearInterval(interval);
   }, [checkConnection]);
 

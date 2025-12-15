@@ -10,6 +10,7 @@ import { invoke } from '@tauri-apps/api/core';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
 import { useSingularityStateSafe } from '@/hooks/useSingularityStateSafe';
+import { REFRESH_INTERVALS } from '@/constants/timeouts';
 import './HyperCenter.css';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -226,7 +227,7 @@ const HyperCenterContent: React.FC = () => {
 
   useEffect(() => {
     loadState();
-    const interval = setInterval(loadState, 5000);
+    const interval = setInterval(loadState, REFRESH_INTERVALS.NORMAL);
     return () => clearInterval(interval);
   }, [loadState]);
 
