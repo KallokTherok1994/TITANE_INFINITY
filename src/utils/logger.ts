@@ -10,6 +10,8 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
+import type { LogArgs, LogParts, TableData } from '@/types/logger';
+
 /**
  * Log levels (par ordre de priorité)
  */
@@ -65,8 +67,8 @@ class Logger {
   /**
    * Format message avec préfixe et timestamp
    */
-  private format(level: string, ...args: any[]): any[] {
-    const parts: any[] = [];
+  private format(level: string, ...args: LogArgs): LogParts {
+    const parts: LogParts = [];
 
     if (this.config.timestamps) {
       const timestamp = new Date().toISOString();
@@ -93,7 +95,7 @@ class Logger {
   /**
    * TRACE - Debug très verbeux (dev only)
    */
-  trace(...args: any[]) {
+  trace(...args: LogArgs) {
     if (!this.shouldLog(LogLevel.TRACE)) return;
     console.log(...this.format('TRACE', ...args));
   }
@@ -101,7 +103,7 @@ class Logger {
   /**
    * DEBUG - Informations debug (dev only)
    */
-  debug(...args: any[]) {
+  debug(...args: LogArgs) {
     if (!this.shouldLog(LogLevel.DEBUG)) return;
     console.log(...this.format('DEBUG', ...args));
   }
@@ -109,7 +111,7 @@ class Logger {
   /**
    * INFO - Informations générales (production OK)
    */
-  info(...args: any[]) {
+  info(...args: LogArgs) {
     if (!this.shouldLog(LogLevel.INFO)) return;
     console.info(...this.format('INFO', ...args));
   }
@@ -117,7 +119,7 @@ class Logger {
   /**
    * WARN - Warnings (production OK)
    */
-  warn(...args: any[]) {
+  warn(...args: LogArgs) {
     if (!this.shouldLog(LogLevel.WARN)) return;
     console.warn(...this.format('WARN', ...args));
   }
@@ -125,7 +127,7 @@ class Logger {
   /**
    * ERROR - Erreurs (production OK)
    */
-  error(...args: any[]) {
+  error(...args: LogArgs) {
     if (!this.shouldLog(LogLevel.ERROR)) return;
     console.error(...this.format('ERROR', ...args));
   }
@@ -133,7 +135,7 @@ class Logger {
   /**
    * FATAL - Erreurs critiques (toujours loggé)
    */
-  fatal(...args: any[]) {
+  fatal(...args: LogArgs) {
     console.error(...this.format('FATAL', ...args));
   }
 
@@ -157,7 +159,7 @@ class Logger {
   /**
    * Table display (dev only)
    */
-  table(data: any) {
+  table(data: TableData) {
     if (this.config.isProduction) return;
     console.table(data);
   }
