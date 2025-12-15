@@ -202,7 +202,7 @@ if [ "$FAIL" -eq 0 ]; then
     echo "║  🎯 TITANE∞ v24.2.0 OMEGA                 ║"
     echo "║  Chat IA système complet opérationnel     ║"
     echo "║                                            ║"
-    echo "║  Application: http://localhost:5173       ║"
+    echo "║  Application: ouvrir Titan-Dev (Tauri)    ║"
     echo "╚════════════════════════════════════════════╝"
     exit 0
 else

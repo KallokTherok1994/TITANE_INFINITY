@@ -44,81 +44,9 @@ echo -e "${GREEN}✅ Build completed${NC}"
 
 echo ""
 echo -e "${YELLOW}⚠️  TAURI-ONLY: étape Lighthouse/preview HTTP désactivée${NC}"
-echo "   (aucun serveur http://localhost:* autorisé)"
+echo "   (aucun serveur HTTP autorisé)"
 echo ""
 exit 0
-
-# ────────────────────────────────────────────────────────────────
-# STEP 2: Start dev server for Lighthouse
-# ────────────────────────────────────────────────────────────────
-
-echo ""
-echo -e "${BLUE}🚀 STEP 2: Starting dev server...${NC}"
-
-# Start dev server in background
-npm run preview &
-SERVER_PID=$!
-
-# Wait for server to be ready
-echo "Waiting for server to start..."
-sleep 5
-
-# Check if server is running
-if ! curl -s http://localhost:4173 > /dev/null; then
-  echo -e "${RED}❌ Server failed to start${NC}"
-  kill $SERVER_PID 2>/dev/null || true
-  exit 1
-fi
-
-echo -e "${GREEN}✅ Server running at http://localhost:4173${NC}"
-
-# ────────────────────────────────────────────────────────────────
-# STEP 3: Run Lighthouse CI
-# ────────────────────────────────────────────────────────────────
-
-echo ""
-echo -e "${BLUE}💡 STEP 3: Running Lighthouse audit...${NC}"
-
-# Check if lighthouse is installed
-if ! command -v lighthouse &> /dev/null; then
-  echo -e "${YELLOW}⚠️  Lighthouse not found, installing globally...${NC}"
-  npm install -g lighthouse
-fi
-
-# Run Lighthouse with mobile & desktop
-echo "Running Lighthouse (mobile)..."
-lighthouse http://localhost:4173 \
-  --output html \
-  --output json \
-  --output-path "$REPORTS_DIR/lighthouse-mobile" \
-  --chrome-flags="--headless" \
-  --preset=perf \
-  --throttling-method=devtools \
-  --no-enable-error-reporting \
-  --quiet 2>&1 | grep -v "We're constantly trying"
-
-if [ ${PIPESTATUS[0]} -eq 0 ]; then
-  echo -e "${GREEN}✅ Lighthouse mobile report: $REPORTS_DIR/lighthouse-mobile.html${NC}"
-else
-  echo -e "${YELLOW}⚠️  Lighthouse mobile audit failed${NC}"
-fi
-
-echo "Running Lighthouse (desktop)..."
-lighthouse http://localhost:4173 \
-  --output html \
-  --output json \
-  --output-path "$REPORTS_DIR/lighthouse-desktop" \
-  --chrome-flags="--headless" \
-  --preset=desktop \
-  --throttling-method=devtools \
-  --no-enable-error-reporting \
-  --quiet 2>&1 | grep -v "We're constantly trying"
-
-if [ ${PIPESTATUS[0]} -eq 0 ]; then
-  echo -e "${GREEN}✅ Lighthouse desktop report: $REPORTS_DIR/lighthouse-desktop.html${NC}"
-else
-  echo -e "${YELLOW}⚠️  Lighthouse desktop audit failed${NC}"
-fi
 
 # ────────────────────────────────────────────────────────────────
 # STEP 4: Extract key metrics from JSON
@@ -178,7 +106,7 @@ import puppeteer from 'puppeteer';
     vitals.fcp = metrics.FirstContentfulPaint;
   });
   
-  await page.goto('http://localhost:4173', { waitUntil: 'networkidle2' });
+  await page.goto('tauri://localhost', { waitUntil: 'networkidle2' });
   
   // LCP
   const lcp = await page.evaluate(() => {

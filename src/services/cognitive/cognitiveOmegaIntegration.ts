@@ -347,12 +347,9 @@ class CognitiveOmegaOrchestrator {
       const consistencyScore =
         await this.goalConsistency.calculateConsistencyScore(conversationId);
 
-      // Should correct if high/critical violations
+      // Should correct if high/critical violations (severity >= 0.7)
       const shouldCorrect = violations.some(
-        (v: ConsistencyViolation) =>
-          (typeof v.severity === 'string' &&
-            (v.severity === 'high' || v.severity === 'critical')) ||
-          (typeof v.severity === 'number' && v.severity >= 0.7)
+        (v: ConsistencyViolation) => v.severity >= 0.7
       );
 
       this.stats.totalViolationsDetected += violations.length;
