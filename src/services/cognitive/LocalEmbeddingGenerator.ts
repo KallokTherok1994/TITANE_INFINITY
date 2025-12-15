@@ -19,8 +19,10 @@
 import type { EmbeddingGenerator } from './semanticMemory.types';
 
 // Types pour Transformers.js (sans import direct pour éviter erreurs de build)
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Pipeline = any; // External library type - too complex to type correctly
+type Pipeline = {
+  (text: string | string[], options?: Record<string, unknown>): Promise<unknown>;
+  dispose(): Promise<void>;
+};
 
 /**
  * Configuration LocalEmbeddingGenerator

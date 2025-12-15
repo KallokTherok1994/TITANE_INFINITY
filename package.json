@@ -75,6 +75,7 @@
     "react-router-dom": "^7.10.1",
     "recharts": "^3.5.1",
     "remark-gfm": "^4.0.1",
+    "three": "^0.181.0",
     "web-vitals": "^5.1.0",
     "zod": "^4.1.13",
     "zustand": "^5.0.9"
@@ -118,6 +119,7 @@
     "husky": "^9.1.7",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.7.0",
+    "jest-axe": "^10.0.0",
     "jest-environment-jsdom": "^30.2.0",
     "jsdom": "^27.2.0",
     "lint-staged": "^16.2.7",

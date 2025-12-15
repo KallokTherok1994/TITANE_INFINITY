@@ -26,6 +26,7 @@ export interface SelfTestResult {
   classified?: string;
   action?: string;
   stats?: boolean;
+  healthScore?: number;
   error?: string;
 }
 
@@ -676,7 +677,7 @@ class AutoHealEngine {
    * Test de fonctionnement
    */
   async selfTest(): Promise<{ success: boolean; results: SelfTestResult[] }> {
-    const results = [];
+    const results: SelfTestResult[] = [];
     let allSuccess = true;
 
     try {
