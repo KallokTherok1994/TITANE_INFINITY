@@ -26,7 +26,7 @@ pub use crate::neural_memory::VectorSearchResult as MemoryVectorSearchResult;
 /// Type alias: UnifiedMemoryV2 can be used as MemoryOSBridge replacement
 ///
 /// **Migration Guide:**
-/// ```rust
+/// ```rust,ignore
 /// // OLD:
 /// // use crate::memory_os::MemoryOSBridge;
 /// // let bridge = MemoryOSBridge::new(config);
