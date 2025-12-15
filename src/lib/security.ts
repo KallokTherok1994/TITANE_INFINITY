@@ -32,6 +32,9 @@ export const VOID_COMMANDS = new Set<string>([
   'voice_stop_speaking',
   'voice_cancel_recording',
   'voice_stop_listening',
+  // Audio Streaming commands that return ()
+  'audio_stop_streaming',
+  'audio_force_stop',
   // Recording commands that return ()
   'cancel_recording',
   'stop_recording',
@@ -42,6 +45,8 @@ export const VOID_COMMANDS = new Set<string>([
   'memory_delete',
   'clear_memory',
   'clear_logs',
+  'clear_all_memory',
+  'memory_clear',
   // Session commands
   'session_end',
   'end_session',
@@ -49,9 +54,31 @@ export const VOID_COMMANDS = new Set<string>([
   'state_save',
   'singularity_save_state',
   'singularity_reset',
+  'delete_state',
   // Persistence commands that return ()
   'titan_persist_event',
   'titan_force_snapshot',
+  'titan_persistence_init',
+  'titan_persistence_shutdown',
+  // Logging commands that return ()
+  'log_to_file',
+  'clear_system_logs',
+  'clear_event_stream',
+  // Whisper commands that return ()
+  'stop_whisper_streaming',
+  'send_audio_chunk',
+  // Config commands that return ()
+  'save_ui_theme',
+  'delete_config_preset',
+  // Evolution commands that return ()
+  'sync_evolution_state',
+  // Devtools commands that return ()
+  'devtools_enable',
+  'devtools_disable',
+  'devtools_debug_clear',
+  'engine_reset',
+  // Self-healing commands that return ()
+  'autoheal_reset',
 ]);
 
 /**
@@ -659,6 +686,207 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'evolution_approve_suggestion',
   'evolution_reject_suggestion',
   'evolution_create_action',
+
+  // ═══════════════════════════════════════════════════════════════
+  // META & ORCHESTRATION (v24.4+)
+  // ═══════════════════════════════════════════════════════════════
+  'meta_get_state',
+  'meta_get_alignment',
+  'meta_get_report',
+  'meta_get_monitoring_metrics',
+  'meta_selftest_all',
+  'meta_trigger_sync',
+  'orchestrator_set_mode',
+  'orchestrator_run_cycle',
+
+  // ═══════════════════════════════════════════════════════════════
+  // IDENTITY CENTER (v24.4+)
+  // ═══════════════════════════════════════════════════════════════
+  'identity_set_mode',
+  'identity_set_voice_profile',
+  'identity_enable_rule',
+  'identity_disable_rule',
+  'identity_set_matrix',
+
+  // ═══════════════════════════════════════════════════════════════
+  // REALITY CENTER (v24.4+)
+  // ═══════════════════════════════════════════════════════════════
+  'reality_set_render_config',
+  'reality_toggle_physics',
+  'reality_add_entity',
+
+  // ═══════════════════════════════════════════════════════════════
+  // HYPER CENTER (v24.4+)
+  // ═══════════════════════════════════════════════════════════════
+  'hyper_set_mode',
+
+  // ═══════════════════════════════════════════════════════════════
+  // NEXUS & SENTINEL (v24.4+)
+  // ═══════════════════════════════════════════════════════════════
+  'nexus_get_graph',
+  'sentinel_get_alerts',
+  'harmonia_get_flows',
+
+  // ═══════════════════════════════════════════════════════════════
+  // CONFIG HUB (v24.4+)
+  // ═══════════════════════════════════════════════════════════════
+  'update_runtime_config',
+  'update_chat_engine_config',
+  'save_config_preset',
+  'load_config_preset',
+  'delete_config_preset',
+  'save_ui_theme',
+
+  // ═══════════════════════════════════════════════════════════════
+  // SYSTEM & DIAGNOSTIC (v24.4+)
+  // ═══════════════════════════════════════════════════════════════
+  'get_system_status',
+  'system_get_status',
+  'clear_system_logs',
+  'clear_event_stream',
+  'restart_cores',
+  'ping',
+  'check_sqlite_available',
+  'toggle_safe_mode',
+  'engine_reset',
+
+  // ═══════════════════════════════════════════════════════════════
+  // SINGULARITY EXTENDED (v24.4+)
+  // ═══════════════════════════════════════════════════════════════
+  'singularity_check_coherence',
+  'singularity_check_integrity',
+  'singularity_get_diagnostics',
+  'singularity_get_metrics',
+  'singularity_get_fusion_state',
+  'singularity_create_snapshot',
+  'singularity_restore_snapshot',
+  'singularity_perform_sync',
+  'titan_state_get',
+  'titan_persistence_init',
+  'titan_persistence_shutdown',
+
+  // ═══════════════════════════════════════════════════════════════
+  // MEMORY EXTENDED (v24.4+)
+  // ═══════════════════════════════════════════════════════════════
+  'memory_parse',
+  'memory_synthesize',
+  'memory_cluster',
+  'memory_extract_patterns',
+  'memory_check_and_repair',
+  'memory_grow',
+  'memory_create_backup',
+  'memory_scan',
+  'memory_demote',
+  'parse_document',
+
+  // ═══════════════════════════════════════════════════════════════
+  // CONVERSATIONS (v24.4+)
+  // ═══════════════════════════════════════════════════════════════
+  'delete_conversation',
+  'complete_onboarding',
+
+  // ═══════════════════════════════════════════════════════════════
+  // VECTOR STORE (v24.4+)
+  // ═══════════════════════════════════════════════════════════════
+  'vector_store_insert',
+  'vector_store_update',
+  'vector_store_delete',
+
+  // ═══════════════════════════════════════════════════════════════
+  // WHISPER STREAMING (v24.4+)
+  // ═══════════════════════════════════════════════════════════════
+  'start_whisper_streaming',
+  'stop_whisper_streaming',
+  'send_audio_chunk',
+
+  // ═══════════════════════════════════════════════════════════════
+  // AI EXTENDED (v24.4+)
+  // ═══════════════════════════════════════════════════════════════
+  'ai_check_ollama_status',
+  'ai_generate_local_stream',
+  'cognitive_get_map',
+
+  // ═══════════════════════════════════════════════════════════════
+  // PIPELINE (v24.4+)
+  // ═══════════════════════════════════════════════════════════════
+  'pipeline_analyze_intention',
+  'pipeline_generate_cognitive_response',
+  'pipeline_prepare_tts',
+  'pipeline_prepare_avatar_animation',
+  'pipeline_get_stats',
+  'pipeline_validate',
+
+  // ═══════════════════════════════════════════════════════════════
+  // FUSION ENGINE (v24.4+)
+  // ═══════════════════════════════════════════════════════════════
+  'fusion_sync',
+  'fusion_merge',
+
+  // ═══════════════════════════════════════════════════════════════
+  // CLOUD CENTER (v24.4+)
+  // ═══════════════════════════════════════════════════════════════
+  'cloud_remove_device',
+  'cloud_restore_vault',
+  'cloud_update_config',
+
+  // ═══════════════════════════════════════════════════════════════
+  // DEVTOOLS (v24.4+)
+  // ═══════════════════════════════════════════════════════════════
+  'devtools_enable',
+  'devtools_disable',
+  'devtools_debug_clear',
+  'camera_start',
+
+  // ═══════════════════════════════════════════════════════════════
+  // DEV SUDO (v24.4+)
+  // ═══════════════════════════════════════════════════════════════
+  'dev_inspect_file',
+  'dev_apply_patch',
+  'dev_run_command',
+  'dev_get_logs',
+  'hybrid_analyze_code',
+
+  // ═══════════════════════════════════════════════════════════════
+  // SELF-HEALING EXTENDED (v24.4+)
+  // ═══════════════════════════════════════════════════════════════
+  'self_healing_trigger',
+  'confirm_self_healing_action',
+  'reject_self_healing_action',
+  'autoheal_detect_broken_modules',
+  'autoheal_heal_avatar_module',
+  'autoheal_heal_cognitive_module',
+  'autoheal_resync_state',
+  'autoheal_get_history',
+  'autoheal_reset',
+
+  // ═══════════════════════════════════════════════════════════════
+  // CRASHGUARD (v24.4+)
+  // ═══════════════════════════════════════════════════════════════
+  'crashguard_detect_threats',
+  'crashguard_get_active_threats',
+  'crashguard_get_stats',
+
+  // ═══════════════════════════════════════════════════════════════
+  // SECURITY EXTENDED (v24.4+)
+  // ═══════════════════════════════════════════════════════════════
+  'secure_store_key',
+
+  // ═══════════════════════════════════════════════════════════════
+  // STATE & PERSISTENCE (v24.4+)
+  // ═══════════════════════════════════════════════════════════════
+  'set_state',
+  'delete_state',
+
+  // ═══════════════════════════════════════════════════════════════
+  // LOGGING (v24.4+)
+  // ═══════════════════════════════════════════════════════════════
+  'log_to_file',
+  'log_entries',
+
+  // ═══════════════════════════════════════════════════════════════
+  // EVOLUTION SYNC (v24.4+)
+  // ═══════════════════════════════════════════════════════════════
+  'sync_evolution_state',
 ]);
 
 /**

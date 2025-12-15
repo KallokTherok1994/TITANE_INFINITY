@@ -451,15 +451,12 @@ pub async fn chat_send_message(
         return Err(TAPIError::validation("Message too long (max 10000 chars)").into());
     }
 
-    // ═══ PHASE 4 ÉTAPE 4: Cascade complète réactivée ═══
-    // Cascade multi-providers avec fallback intelligent
+    // 🔒 LOCAL-FIRST: mode offline par défaut
+    // APIs externes (OpenAI/Anthropic/Gemini) = uniquement si provider demandé explicitement.
     let providers_to_try: Vec<String> = if request.provider == "auto" {
         vec![
-            "ollama".to_string(),    // Premier choix: Ollama local rapide
-            "openai".to_string(),    // Fallback 1: OpenAI GPT
-            "anthropic".to_string(), // Fallback 2: Claude
-            "gemini".to_string(),    // Fallback 3: Google Gemini
-            "local".to_string(),     // Fallback final: Noyau local infaillible
+            "ollama".to_string(), // #1 Priorité: Ollama local
+            "local".to_string(),  // #2 Fallback: noyau local
         ]
     } else {
         vec![request.provider.clone()] // Provider spécifique direct
