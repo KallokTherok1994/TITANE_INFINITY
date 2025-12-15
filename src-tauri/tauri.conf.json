@@ -38,6 +38,7 @@
         "decorations": true,
         "transparent": false,
         "center": true,
+        "visible": true,
         "devtools": true
       },
       {

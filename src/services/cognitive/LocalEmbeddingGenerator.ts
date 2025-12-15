@@ -146,7 +146,8 @@ export class LocalEmbeddingGenerator implements EmbeddingGenerator {
         });
 
         // Extraire le vecteur
-        embedding = Array.from(output.data);
+        const outputData = (output as { data?: Float32Array })?.data;
+        embedding = Array.from(outputData || []);
 
         // Normaliser (si pas déjà fait)
         embedding = this.normalizeVector(embedding);
@@ -207,11 +208,12 @@ export class LocalEmbeddingGenerator implements EmbeddingGenerator {
           });
 
           // Extraire les vecteurs
+          const outputData = (output as { data?: Float32Array })?.data;
           for (let i = 0; i < uncachedTexts.length; i++) {
             const startIdx = i * this.config.dimensions;
             const endIdx = startIdx + this.config.dimensions;
             const embedding = Array.from(
-              output.data?.slice(startIdx, endIdx) || []
+              outputData?.slice(startIdx, endIdx) || []
             ) as number[];
             const normalizedEmbedding = this.normalizeVector(embedding);
 
