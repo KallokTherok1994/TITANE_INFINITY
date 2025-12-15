@@ -181,3 +181,32 @@ export interface CoreResponse<T = unknown> {
   error?: string;
   timestamp: number;
 }
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// TAURI INVOKE TYPES
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * Generic Tauri command arguments
+ */
+export type TauriCommandArgs = Record<string, unknown> | undefined;
+
+/**
+ * Generic Tauri invoke result
+ */
+export type TauriInvokeResult<T = unknown> = Promise<T>;
+
+/**
+ * Tauri core bridge interface
+ */
+export interface TauriCore {
+  invoke: <T = unknown>(command: string, args?: TauriCommandArgs) => TauriInvokeResult<T>;
+}
+
+/**
+ * Cache entry for invoke results
+ */
+export interface TauriCacheEntry<T = unknown> {
+  result: T;
+  timestamp: number;
+}

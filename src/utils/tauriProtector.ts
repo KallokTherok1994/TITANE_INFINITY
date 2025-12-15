@@ -14,11 +14,10 @@ import type {
   SingularityState,
   SymbolicLayer,
 } from '@/types/singularityState';
+import type { TauriCore, TauriCommandArgs, TauriCacheEntry } from '@/types/tauri';
 
 type TauriCoreBridge = {
-  core?: {
-    invoke?: (command: string, args?: any) => Promise<any>;
-  };
+  core?: TauriCore;
 };
 
 export const createFallbackPhysical = (): PhysicalLayer => {
@@ -180,7 +179,7 @@ const getTauriGlobal = (): TauriCoreBridge | undefined => {
 export class TauriInvokeProtector {
   private static instance: TauriInvokeProtector;
   private isTauriAvailable: boolean | null = null;
-  private checkCache: { [key: string]: { result: any; timestamp: number } } = {};
+  private checkCache: Record<string, TauriCacheEntry> = {};
   private pendingInvokes: Map<string, Promise<any>> = new Map(); // ✅ Anti-debounce
   private readonly CACHE_DURATION = 5000; // 5s cache
   private readonly isTestEnv: boolean =
@@ -244,7 +243,11 @@ export class TauriInvokeProtector {
    * Invoke protégé avec fallback intelligent
    * ✅ v∞: Anti-debounce pour start_recording et autres commandes critiques
    */
-  async safeInvoke<T>(command: string, args?: any, timeoutMs = 10000): Promise<T> {
+  async safeInvoke<T>(
+    command: string,
+    args?: TauriCommandArgs,
+    timeoutMs = 10000
+  ): Promise<T> {
     const cacheKey = `${command}:${JSON.stringify(args)}`;
 
     // ✅ ANTI-DEBOUNCE: For recording commands, prevent duplicate calls
@@ -266,7 +269,7 @@ export class TauriInvokeProtector {
     ) {
       const cached = this.checkCache[cacheKey];
       if (cached && Date.now() - cached.timestamp < this.CACHE_DURATION) {
-        return cached.result;
+        return cached.result as T;
       }
     }
 
@@ -303,7 +306,7 @@ export class TauriInvokeProtector {
    */
   private async performInvoke<T>(
     command: string,
-    args: any,
+    args: TauriCommandArgs,
     timeoutMs: number,
     cacheKey: string
   ): Promise<T> {
@@ -372,7 +375,7 @@ export class TauriInvokeProtector {
   /**
    * Génère une réponse de fallback intelligente selon le type de commande
    */
-  private createFallbackResponse<T>(command: string | undefined, error: any): T {
+  private createFallbackResponse<T>(command: string | undefined, error: unknown): T {
     const safeCommand = command || 'unknown_command';
     console.log(`[TauriProtector] Using fallback for ${safeCommand}`);
 
@@ -482,7 +485,7 @@ export const tauriProtector = TauriInvokeProtector.getInstance();
  */
 export async function safeInvokeTauri<T>(
   command: string,
-  args?: any,
+  args?: TauriCommandArgs,
   timeoutMs?: number
 ): Promise<T> {
   return tauriProtector.safeInvoke<T>(command, args, timeoutMs);
