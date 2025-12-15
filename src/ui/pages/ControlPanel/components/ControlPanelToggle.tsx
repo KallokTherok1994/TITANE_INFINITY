@@ -4,7 +4,7 @@
  * Élimine ~200 lignes de duplication dans 4+ sections
  */
 
-import React, { memo, useCallback } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 
 export interface ControlPanelToggleProps {
   /** État actuel du toggle */
@@ -62,6 +62,21 @@ export const ControlPanelToggle = memo(function ControlPanelToggle({
     }
   }, [onChange, disabled]);
 
+  // Memoize les classes CSS du switch
+  const switchClasses = useMemo(
+    () =>
+      ['cp-switch', checked ? 'active' : '', disabled ? 'disabled' : '']
+        .filter(Boolean)
+        .join(' '),
+    [checked, disabled]
+  );
+
+  // Memoize le label aria
+  const computedAriaLabel = useMemo(
+    () => ariaLabel || `${title} - ${checked ? 'activé' : 'désactivé'}`,
+    [ariaLabel, title, checked]
+  );
+
   return (
     <div className="cp-switch-row">
       <div className="cp-switch-label">
@@ -72,11 +87,11 @@ export const ControlPanelToggle = memo(function ControlPanelToggle({
         {description && <div className="cp-switch-description">{description}</div>}
       </div>
       <div
-        className={`cp-switch ${checked ? 'active' : ''} ${disabled ? 'disabled' : ''}`}
+        className={switchClasses}
         onClick={handleClick}
         role="switch"
         aria-checked={checked}
-        aria-label={ariaLabel || `${title} - ${checked ? 'activé' : 'désactivé'}`}
+        aria-label={computedAriaLabel}
         aria-disabled={disabled}
         tabIndex={disabled ? -1 : 0}
         onKeyDown={handleKeyDown}

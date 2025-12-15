@@ -184,6 +184,8 @@ export const AppearanceSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'interface' | 'dashboard' | 'menu'>(
     'interface'
   );
+  const [isSaving, setIsSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   const loadConfig = useCallback(async () => {
     try {
@@ -200,10 +202,17 @@ export const AppearanceSection: React.FC = () => {
 
   const saveConfig = useCallback(async (newConfig: DesignSystemConfig) => {
     try {
+      setIsSaving(true);
+      setSaved(false);
       await secureInvoke('cp_set_design_config', { config: newConfig });
       setConfig(newConfig);
+      setSaved(true);
+      // Reset saved indicator après 2s
+      setTimeout(() => setSaved(false), 2000);
     } catch (error) {
       console.error('Erreur sauvegarde config:', error);
+    } finally {
+      setIsSaving(false);
     }
   }, []);
 
@@ -270,6 +279,10 @@ export const AppearanceSection: React.FC = () => {
     <div className="cp-section">
       <div className="cp-section-header">
         <h2 className="cp-section-title">Apparence</h2>
+        <div className="cp-section-actions">
+          {saved && <span className="cp-badge success">✅ Sauvegardé</span>}
+          {isSaving && <span className="cp-badge">⏳ Enregistrement…</span>}
+        </div>
       </div>
 
       {/* Onglets de navigation */}
