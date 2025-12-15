@@ -79,9 +79,69 @@ Documentation guides organisée pour:
 
 ---
 
+## 🚀 ADVANCED GUIDES
+
+**Path:** `docs/04_guides/advanced/` (Phase 7 — NEW)
+
+### [TROUBLESHOOTING.md](advanced/TROUBLESHOOTING.md) (1,200+ lignes) ⭐⭐⭐
+**Description:** Guide diagnostique complet pour résoudre problèmes courants  
+**Consolidation:** Troubleshooting scattered → guide centralisé opérationnel
+
+**Contenu:**
+- 🚨 **Diagnostic Rapide** - Checklist 2 min (versions, dependencies, clean build, logs)
+- 🦀 **Problèmes Backend** - Tauri commands, database locked, OMEGA pipeline, memory leaks
+- ⚛️ **Problèmes Frontend** - Hydration mismatch, re-renders excessifs, Tauri invoke failed
+- ⚡ **Problèmes Performance** - OMEGA pipeline lent, FPS bas, optimizations
+- 🧠 **Problèmes AI/Memory** - Memory recall vide, AI response incohérent, context building
+- 🏗️ **Problèmes Build/Deployment** - Out of memory, linker errors, dependencies manquantes
+- 🛠️ **Outils Diagnostic** - Backend (logging, profiling, testing), Frontend (React DevTools, Chrome Performance, bundle analysis)
+- 📊 **Monitoring Production** - Health checks, performance monitoring, emergency recovery
+
+**Target audience:** Développeurs, DevOps, SRE  
+**Prerequisites:** SETUP.md recommended, production deployment context helpful  
+**Temps lecture:** 40-50 minutes (référence)
+
+### [DEPLOYMENT.md](advanced/DEPLOYMENT.md) (1,100+ lignes) ⭐⭐⭐
+**Description:** Guide complet déploiement production TITANE∞  
+**Consolidation:** Deployment knowledge → production-ready guide
+
+**Contenu:**
+- ✅ **Pre-Deployment Checklist** - Code quality, dependencies, config, documentation
+- 🏗️ **Environment Setup** - Production variables (.env.production), system requirements
+- 🛠️ **Build Optimization** - Frontend (Vite config, bundle analysis), Backend (Rust release, Cargo.toml), Tauri bundle
+- 🔒 **Security Hardening** - CSP, API keys management, rate limiting, input validation, database security
+- 📊 **Monitoring & Observability** - Health checks, structured logging (tracing), metrics (Prometheus), error tracking (Sentry)
+- 🚢 **Deployment Strategies** - Desktop (Linux/Windows/macOS bundles), auto-update (Tauri updater)
+- ✅ **Post-Deployment Validation** - Smoke tests, performance baseline
+- 📈 **Scaling & Performance** - Database migration (SQLite → PostgreSQL), Vector Store HNSW, load balancing (nginx), rollback procedure
+
+**Target audience:** DevOps, SRE, Release Engineers  
+**Prerequisites:** SETUP.md, TESTING.md, production infrastructure knowledge  
+**Temps lecture:** 45-60 minutes (référence)
+
+### [PERFORMANCE_OPTIMIZATION.md](advanced/PERFORMANCE_OPTIMIZATION.md) (1,300+ lignes) ⭐⭐⭐
+**Description:** Guide complet optimisation performances TITANE∞  
+**Consolidation:** Performance knowledge → optimization recipes
+
+**Contenu:**
+- 🎯 **Performance Budgets** - Targets backend (<100ms OMEGA), frontend (≥55 FPS), AI (<500ms)
+- 🔬 **Profiling & Benchmarking** - Backend (flamegraph, heaptrack, criterion.rs), Frontend (React Profiler, Chrome Performance, bundle analysis)
+- 🦀 **Backend Optimization** - Reduce allocations, efficient data structures, parallel processing (rayon), async batching, database optimization, caching (LRU)
+- ⚛️ **Frontend Optimization** - Memoization (React.memo, useMemo, useCallback), virtual scrolling (react-window), code splitting (lazy), debounce/throttle, optimize re-renders
+- 🤖 **AI Pipeline Optimization** - OMEGA tuning (parallel stages, caching, streaming), AI provider selection (routing)
+- 💾 **Memory & Storage** - Vector Store (linear vs HNSW), database tuning (SQLite WAL/PRAGMA), memory tier optimization
+- 📊 **Monitoring & Tuning** - PerformanceEngine integration, AdaptiveEngine, performance dashboard
+- 🎯 **Optimization Checklist** - Quick wins (LRU cache, WAL mode, React.memo), medium wins (HNSW, PostgreSQL, code splitting), long-term wins (OpenTelemetry, autoscaling, GPU)
+
+**Target audience:** Performance Engineers, Backend/Frontend Developers, Architects  
+**Prerequisites:** SETUP.md, TESTING.md, profiling tools familiarity  
+**Temps lecture:** 50-70 minutes (référence)
+
+---
+
 ## 🎨 FEATURES GUIDES (À VENIR)
 
-**Path:** `docs/04_guides/features/` (Phase 5 pending)
+**Path:** `docs/04_guides/features/` (Phase 8+ pending)
 
 **Guides spécialisés à organiser:**
 
@@ -148,12 +208,17 @@ Documentation guides organisée pour:
 
 ## 📊 MÉTRIQUES GUIDES
 
-| Guide          | Lignes | Sections | Exemples Code | Cross-refs | Target Audience      |
-| -------------- | ------ | -------- | ------------- | ---------- | -------------------- |
-| QUICKSTART.md  | 850    | 6        | 25+           | 10+        | Nouveaux utilisateurs |
-| SETUP.md       | 650    | 7        | 30+           | 8+         | Développeurs          |
-| TESTING.md     | 750    | 8        | 40+           | 6+         | Devs + QA             |
-| **TOTAL**      | **2,250** | **21** | **95+**      | **24+**    | -                     |
+| Guide                        | Lignes | Sections | Exemples Code | Cross-refs | Target Audience            |
+| ---------------------------- | ------ | -------- | ------------- | ---------- | -------------------------- |
+| QUICKSTART.md                | 850    | 6        | 25+           | 10+        | Nouveaux utilisateurs      |
+| SETUP.md                     | 650    | 7        | 30+           | 8+         | Développeurs               |
+| TESTING.md                   | 750    | 8        | 40+           | 6+         | Devs + QA                  |
+| **TROUBLESHOOTING.md** ⭐    | 1,200+ | 9        | 60+           | 12+        | Devs + DevOps + SRE        |
+| **DEPLOYMENT.md** ⭐          | 1,100+ | 8        | 50+           | 10+        | DevOps + SRE + Release Eng |
+| **PERFORMANCE_OPTIMIZATION.md** ⭐ | 1,300+ | 7  | 70+           | 15+        | Perf Eng + Devs + Architects |
+| **TOTAL**                    | **5,850** | **45** | **275+**     | **61+**    | -                          |
+
+**Phase 7 complete:** 3 advanced guides created (TROUBLESHOOTING, DEPLOYMENT, PERFORMANCE_OPTIMIZATION) — +3,600 lignes, +180 exemples, +37 cross-refs
 
 ---
 
@@ -161,9 +226,9 @@ Documentation guides organisée pour:
 
 | Critère           | Score      | Notes                                      |
 | ----------------- | ---------- | ------------------------------------------ |
-| **Complétude**    | ⭐⭐⭐⭐⭐ | Coverage exhaustif (installation → tests) |
+| **Complétude**    | ⭐⭐⭐⭐⭐ | Coverage exhaustif (installation → production → optimization) |
 | **Structure**     | ⭐⭐⭐⭐⭐ | Navigation logique, sections claires       |
-| **Exemples**      | ⭐⭐⭐⭐⭐ | Code snippets pratiques, commandes ready   |
+| **Exemples**      | ⭐⭐⭐⭐⭐ | Code snippets pratiques, commandes ready (275+ total)   |
 | **Cross-refs**    | ⭐⭐⭐⭐☆  | Liens vers architecture + guides spécialisés |
 | **Maintenance**   | ⭐⭐⭐⭐⭐ | Centralisé = updates faciles               |
 | **Factualité**    | ⭐⭐⭐⭐⭐ | Code v24.2.0 réel (pas hallucinations)     |
