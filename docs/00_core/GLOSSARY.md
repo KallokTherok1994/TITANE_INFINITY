@@ -77,7 +77,7 @@ pub struct ChatOrchestratorState {
 **Commandes** : `devtools_enable`, `get_devtools_logs`
 
 ### Diagnostics
-**Fichier** : `src-tauri/src/omega/diagnostics.rs` (~200 lignes)  
+**Fichier** : `src-tauri/src/omega/diagnostics.rs` (725 lignes)  
 **Définition** : Module métriques Pipeline OMEGA.  
 **Métriques collectées** :
 - Latence par étape (Router, Executor, Merger, Guardrails)
@@ -90,7 +90,7 @@ pub struct ChatOrchestratorState {
 ## E
 
 ### Executor
-**Fichier** : `src-tauri/src/omega/executor.rs` (~600 lignes)  
+**Fichier** : `src-tauri/src/omega/executor.rs` (1139 lignes)  
 **Définition** : ÉTAPE 2 Pipeline OMEGA — exécution tâches parallèles.  
 **Fonctionnalités** :
 - Workers parallèles (max 4)
@@ -123,7 +123,7 @@ pub struct ChatOrchestratorState {
 **Commandes** : `get_ia_policies`, `toggle_ia_policy`, `get_security_log`
 
 ### Guardrails
-**Fichier** : `src-tauri/src/omega/guardrails.rs` (~450 lignes)  
+**Fichier** : `src-tauri/src/omega/guardrails.rs` (1087 lignes)  
 **Définition** : ÉTAPE 4 Pipeline OMEGA — validation sécurité.  
 **Checks** :
 - Contenu inapproprié
@@ -170,7 +170,7 @@ pub struct GuardrailResult {
 ## M
 
 ### Merger
-**Fichier** : `src-tauri/src/omega/merger.rs` (~350 lignes)  
+**Fichier** : `src-tauri/src/omega/merger.rs` (897 lignes)  
 **Définition** : ÉTAPE 3 Pipeline OMEGA — fusion résultats.  
 **Stratégies** :
 - `SelectBest` : Sélectionne meilleure réponse (score)
@@ -193,7 +193,7 @@ pub struct GuardrailResult {
 ## O
 
 ### OMEGA Pipeline
-**Fichier** : `src-tauri/src/omega/pipeline.rs` (589 lignes)  
+**Fichier** : `src-tauri/src/omega/pipeline.rs` (588 lignes)  
 **Définition** : Pipeline traitement requêtes en 4 étapes.  
 **Étapes** :
 1. **Router** : Analyse intent, routing
@@ -239,7 +239,7 @@ pub trait ChatProvider {
 ## R
 
 ### Router
-**Fichier** : `src-tauri/src/omega/router.rs` (~400 lignes)  
+**Fichier** : `src-tauri/src/omega/router.rs` (900 lignes)  
 **Définition** : ÉTAPE 1 Pipeline OMEGA — routage intelligent.  
 **Analyse** :
 - Intent (question, commande, conversation)

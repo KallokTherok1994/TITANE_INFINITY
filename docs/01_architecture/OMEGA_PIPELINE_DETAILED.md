@@ -2,7 +2,7 @@
 
 **Date:** 15 décembre 2025  
 **Version:** v24.2.0  
-**Source:** [`src-tauri/src/omega/pipeline.rs`](../../src-tauri/src/omega/pipeline.rs) (589 lignes)
+**Source:** [`src-tauri/src/omega/pipeline.rs`](../../src-tauri/src/omega/pipeline.rs) (588 lignes)
 
 ---
 
@@ -403,13 +403,13 @@ curl -X POST http://localhost:1420/omega/process \
 
 | Fichier | Lignes | Composant |
 |---------|--------|-----------|
-| [`omega/pipeline.rs`](../../src-tauri/src/omega/pipeline.rs) | 589 | Pipeline principal |
-| `omega/router.rs` | ~400 | Router étape 1 |
-| `omega/executor.rs` | ~600 | Executor étape 2 |
-| `omega/merger.rs` | ~350 | Merger étape 3 |
-| `omega/guardrails.rs` | ~450 | Guardrails étape 4 |
-| `omega/diagnostics.rs` | ~200 | Métriques & monitoring |
-| `omega/scheduler.rs` | ~180 | Job scheduling |
+| [`omega/pipeline.rs`](../../src-tauri/src/omega/pipeline.rs) | 588 | Pipeline principal |
+| `omega/router.rs` | 900 | Router étape 1 |
+| `omega/executor.rs` | 1139 | Executor étape 2 |
+| `omega/merger.rs` | 897 | Merger étape 3 |
+| `omega/guardrails.rs` | 1087 | Guardrails étape 4 |
+| `omega/diagnostics.rs` | 725 | Métriques & monitoring |
+| `omega/scheduler.rs` | 966 | Job scheduling |
 
 ---
 
