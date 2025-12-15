@@ -1,9 +1,10 @@
 /**
- * TITANE∞ OS - Section Logs
+ * TITANE∞ OS v24.7 - Section Logs
  * Visualisation logs temps réel
+ * Optimisé avec useCallback et useMemo
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { secureInvoke } from '@/lib/security';
 
 interface LogEntry {
@@ -13,10 +14,25 @@ interface LogEntry {
   source: string;
 }
 
+const LOG_LEVEL_CLASSES: Record<string, string> = {
+  error: 'cp-log-error',
+  warn: 'cp-log-warn',
+  info: 'cp-log-info',
+};
+
 export const LogsSection: React.FC = () => {
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [filter, setFilter] = useState<string>('all');
+
+  const loadLogs = useCallback(async () => {
+    try {
+      const logEntries = await secureInvoke<LogEntry[]>('get_logs', { limit: 100 });
+      setLogs(logEntries);
+    } catch (error) {
+      console.error('Erreur chargement logs:', error);
+    }
+  }, []);
 
   useEffect(() => {
     loadLogs();
@@ -24,41 +40,33 @@ export const LogsSection: React.FC = () => {
       const interval = setInterval(loadLogs, 2000);
       return () => clearInterval(interval);
     }
-  }, [autoRefresh]);
+  }, [autoRefresh, loadLogs]);
 
-  const loadLogs = async () => {
-    try {
-      const logEntries = await secureInvoke<LogEntry[]>('get_logs', { limit: 100 });
-      setLogs(logEntries);
-    } catch (error) {
-      console.error('Erreur chargement logs:', error);
-    }
-  };
-
-  const clearLogs = async () => {
+  const clearLogs = useCallback(async () => {
     try {
       await secureInvoke('clear_logs');
       setLogs([]);
     } catch (error) {
       console.error('Erreur nettoyage logs:', error);
     }
-  };
+  }, []);
 
-  const filteredLogs = logs.filter(log => {
-    if (filter === 'all') return true;
-    return log.level === filter;
-  });
+  const toggleAutoRefresh = useCallback(() => {
+    setAutoRefresh(prev => !prev);
+  }, []);
 
-  const getLevelClass = (level: string) => {
-    switch (level) {
-      case 'error':
-        return 'cp-log-error';
-      case 'warn':
-        return 'cp-log-warn';
-      default:
-        return 'cp-log-info';
-    }
-  };
+  const handleFilterChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFilter(e.target.value);
+  }, []);
+
+  const filteredLogs = useMemo(() => {
+    if (filter === 'all') return logs;
+    return logs.filter(log => log.level === filter);
+  }, [logs, filter]);
+
+  const getLevelClass = useCallback((level: string) => {
+    return LOG_LEVEL_CLASSES[level] || 'cp-log-info';
+  }, []);
 
   return (
     <div className="cp-section">
@@ -68,8 +76,9 @@ export const LogsSection: React.FC = () => {
           <select
             className="cp-input"
             value={filter}
-            onChange={e => setFilter(e.target.value)}
+            onChange={handleFilterChange}
             style={{ width: '150px' }}
+            aria-label="Filtrer les logs par niveau"
           >
             <option value="all">Tous</option>
             <option value="info">Info</option>
@@ -78,7 +87,8 @@ export const LogsSection: React.FC = () => {
           </select>
           <button
             className={`cp-button secondary ${autoRefresh ? 'active' : ''}`}
-            onClick={() => setAutoRefresh(!autoRefresh)}
+            onClick={toggleAutoRefresh}
+            aria-pressed={autoRefresh}
           >
             {autoRefresh ? '⏸️ Pause' : '▶️ Auto-refresh'}
           </button>
@@ -89,14 +99,17 @@ export const LogsSection: React.FC = () => {
       </div>
 
       <div className="cp-card">
-        <div className="cp-logs-container">
+        <div className="cp-logs-container" role="log" aria-live="polite">
           {filteredLogs.length === 0 ? (
             <div className="cp-logs-empty">
               <p>Aucun log disponible</p>
             </div>
           ) : (
             filteredLogs.map((log, index) => (
-              <div key={index} className={`cp-log-entry ${getLevelClass(log.level)}`}>
+              <div
+                key={`${log.timestamp}-${index}`}
+                className={`cp-log-entry ${getLevelClass(log.level)}`}
+              >
                 <span className="cp-log-timestamp">{log.timestamp}</span>
                 <span className="cp-log-level">{log.level.toUpperCase()}</span>
                 <span className="cp-log-source">[{log.source}]</span>

@@ -1,9 +1,10 @@
 /**
- * TITANE∞ OS - Section Mises à jour
+ * TITANE∞ OS v24.7 - Section Mises à jour
  * Auto-update et gestion des versions
+ * Optimisé avec useCallback
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { secureInvoke } from '@/lib/security';
 
 interface UpdateInfo {
@@ -18,11 +19,7 @@ export const UpdatesSection: React.FC = () => {
   const [checking, setChecking] = useState(false);
   const [updating, setUpdating] = useState(false);
 
-  useEffect(() => {
-    checkForUpdates();
-  }, []);
-
-  const checkForUpdates = async () => {
+  const checkForUpdates = useCallback(async () => {
     setChecking(true);
     try {
       const info = await secureInvoke<UpdateInfo>('check_for_updates');
@@ -32,9 +29,13 @@ export const UpdatesSection: React.FC = () => {
     } finally {
       setChecking(false);
     }
-  };
+  }, []);
 
-  const installUpdate = async () => {
+  useEffect(() => {
+    checkForUpdates();
+  }, [checkForUpdates]);
+
+  const installUpdate = useCallback(async () => {
     setUpdating(true);
     try {
       await secureInvoke('install_update');
@@ -44,7 +45,7 @@ export const UpdatesSection: React.FC = () => {
     } finally {
       setUpdating(false);
     }
-  };
+  }, [checkForUpdates]);
 
   return (
     <div className="cp-section">
@@ -54,6 +55,7 @@ export const UpdatesSection: React.FC = () => {
           className="cp-button secondary"
           onClick={checkForUpdates}
           disabled={checking}
+          aria-busy={checking}
         >
           {checking ? '⏳ Vérification...' : '🔍 Vérifier'}
         </button>
@@ -83,7 +85,7 @@ export const UpdatesSection: React.FC = () => {
           <div className="cp-card-content">
             {updateInfo?.update_available ? (
               <>
-                <span className="cp-badge warning">
+                <span className="cp-badge warning" role="status">
                   <span className="cp-badge-dot" />
                   Mise à jour disponible
                 </span>
@@ -91,13 +93,14 @@ export const UpdatesSection: React.FC = () => {
                   className="cp-button"
                   onClick={installUpdate}
                   disabled={updating}
+                  aria-busy={updating}
                   style={{ marginTop: '16px' }}
                 >
                   {updating ? '⏳ Installation...' : '⬇️ Installer la mise à jour'}
                 </button>
               </>
             ) : (
-              <span className="cp-badge success">
+              <span className="cp-badge success" role="status">
                 <span className="cp-badge-dot" />À jour
               </span>
             )}

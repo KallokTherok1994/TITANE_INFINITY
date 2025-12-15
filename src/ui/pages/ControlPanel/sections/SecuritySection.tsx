@@ -1,11 +1,15 @@
 /**
  * TITANE∞ OS v24.7 - Section Sécurité
  * Permissions et H-N security
- * Optimisé avec useControlPanelToggles
+ * Optimisé avec ControlPanelToggleList
  */
 
 import React, { useCallback } from 'react';
 import { useControlPanelSection } from '@/hooks/useControlPanelSection';
+import {
+  ControlPanelToggleList,
+  type ToggleConfig,
+} from '../components/ControlPanelToggle';
 
 interface SecurityConfig {
   hn_security_enabled: boolean;
@@ -21,28 +25,28 @@ const DEFAULT_SECURITY_CONFIG: SecurityConfig = {
   audit_logging: true,
 };
 
-const SECURITY_TOGGLES = [
+const SECURITY_TOGGLES: readonly ToggleConfig<keyof SecurityConfig>[] = [
   {
-    key: 'hn_security_enabled' as const,
+    key: 'hn_security_enabled',
     title: 'H-N Security',
     description: 'Activer la sécurité Humain-Non Humain',
   },
   {
-    key: 'secure_mode' as const,
+    key: 'secure_mode',
     title: 'Mode sécurisé',
     description: 'Restrictions accrues et validations supplémentaires',
   },
   {
-    key: 'encryption_enabled' as const,
+    key: 'encryption_enabled',
     title: 'Chiffrement',
     description: 'Chiffrer les données sensibles localement',
   },
   {
-    key: 'audit_logging' as const,
+    key: 'audit_logging',
     title: 'Audit logging',
     description: 'Enregistrer toutes les actions de sécurité',
   },
-] as const;
+];
 
 export const SecuritySection: React.FC = () => {
   const { config, setConfig, saveConfig, isSaving, saved, error, hasChanges } =
@@ -78,29 +82,11 @@ export const SecuritySection: React.FC = () => {
       <div className="cp-card">
         <h3 className="cp-card-title">Paramètres de sécurité</h3>
         <div className="cp-card-content">
-          {SECURITY_TOGGLES.map(({ key, title, description }) => (
-            <div key={key} className="cp-switch-row">
-              <div className="cp-switch-label">
-                <div className="cp-switch-title">{title}</div>
-                <div className="cp-switch-description">{description}</div>
-              </div>
-              <div
-                className={`cp-switch ${config[key] ? 'active' : ''}`}
-                onClick={() => toggleField(key)}
-                role="switch"
-                aria-checked={config[key]}
-                tabIndex={0}
-                onKeyDown={e => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    toggleField(key);
-                  }
-                }}
-              >
-                <div className="cp-switch-thumb" />
-              </div>
-            </div>
-          ))}
+          <ControlPanelToggleList<keyof SecurityConfig>
+            config={config}
+            toggles={SECURITY_TOGGLES}
+            onToggle={toggleField}
+          />
         </div>
       </div>
 
