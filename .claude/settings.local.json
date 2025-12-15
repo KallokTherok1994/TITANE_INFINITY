@@ -76,7 +76,9 @@
       "Bash(src-tauri/src/singularity/emotion_controller.rs )",
       "Bash(src-tauri/src/identity/identity_matrix.rs)",
       "Bash(git pull:*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(timeout 60 cargo test:*)",
+      "Bash(timeout 90 cargo test:*)"
     ],
     "deny": [],
     "ask": []
