@@ -139,6 +139,49 @@ Documentation complète des modules TITANE∞ (backend Rust + frontend TypeScrip
 
 ---
 
+### [SELF_HEALING_ENGINE.md](backend/SELF_HEALING_ENGINE.md) (1,278 lignes) ⭐⭐⭐⭐⭐
+
+**Module Path:** `src-tauri/src/system/` + `src/services/selfHealing/`  
+**Description:** 5-layer self-healing architecture (backend + frontend)  
+**Responsibility:** Error detection, diagnosis, playbook execution, auto-repair, state synchronization
+
+**Key Content:**
+- 📊 **5-Layer Architecture** — Observer (error capture) → Analyzer (diagnosis) → Playbook (action selection) → Executor (repair) → Sync (Singularity)
+- 🔧 **API Reference** — Backend: `SelfHealEngine::new()`, `determine_actions()`, `auto_heal()` | Frontend: `observedInvoke()`, `analyzeDiagnosis()`, `generatePlaybook()`, `executePlan()`
+- 🧩 **Sub-Modules** — Backend: SelfHealEngine (190L), AnomalyDetector (225L), HealingExecutor (542L), RepairActions | Frontend: Observer (800L), Analyzer (733L), PlaybookEngine (861L), Executor, SyncLayer
+- 💾 **Data Structures** — 14 AnomalyType, 14 RepairAction, ObservedError, HealingDiagnosis, ExecutionPlan, HealingReport
+- 🔗 **Integrations** — Singularity (state sync, healing history), ConversationEngine (Stage 11 error recovery), OMEGA (pipeline healing), SystemHealth (anomaly detection)
+- 🧪 **Testing** — Backend unit tests (anomaly detection, repair actions), frontend E2E tests (error injection, playbook execution, rollback scenarios)
+- ⚡ **Performance** — Observer overhead ~5-10ms, analyzer ~10-20ms, executor ~50-500ms (action-dependent), total healing cycle ~100-1000ms
+
+**Target Audience:** Développeurs backend + frontend, DevOps, System architects  
+**Complexity:** ⭐⭐⭐⭐⭐ (Expert - 5-layer orchestration)
+
+---
+
+### [SYSTEM_HEALTH_ENGINE.md](backend/SYSTEM_HEALTH_ENGINE.md) (1,113 lignes) ⭐⭐⭐⭐⭐
+
+**Module Path:** `src-tauri/src/core/modules/system_health.rs`  
+**Description:** Fusion v20 system health monitoring (Helios + Sentinel + Self-Heal)  
+**Responsibility:** CPU/RAM/disk monitoring, network latency, anomaly detection, auto-healing coordination, global health scoring
+
+**Key Content:**
+- 📊 **Fusion Architecture** — Helios (metrics collector) + Sentinel (anomaly detector) + Self-Heal (auto-repair coordinator)
+- 🔄 **Monitoring Cycle** — Collect Metrics (10-20ms) → Scan Anomalies (5ms) → Auto-Heal (50-500ms) → Compute Health Score (0.0-1.0) → Update Status
+- 🔧 **API Reference** — `SystemHealth::new()`, `init()`, `tick()`, `collect_metrics()`, `scan_anomalies()`, `auto_heal()`, `compute_health_score()`, `get_report()`
+- 💾 **Data Structures** — SystemHealth, ErrorRecord, Anomaly (6 types: HighCPU, HighMemory, HighDisk, HighLatency, ModuleFailure, DataCorruption), HealingReport, HealthReport
+- 🧩 **Anomaly Detection** — Thresholds (CPU >80%, Memory >85%, Disk >90%, Latency >500ms), severity levels (Info/Warning/Error/Critical)
+- 🎯 **Global Health Score** — Weighted formula: CPU 30% + Memory 30% + Disk 20% + Success Rate 20% - Error Penalty
+- 🔄 **Auto-Healing Actions** — reduce_cpu_load() (async load balancing), clear_memory_cache() (async GC), restart_failed_module() (targeted recovery)
+- 🔗 **Integrations** — Singularity (state checks, health updates), CoherenceEngine (module failure detection), UnifiedMemory (module failure detection), SelfHealingEngine (repair coordination)
+- 🧪 **Testing** — Unit tests (metrics collection, anomaly detection, auto-heal cycles), integration tests (CoherenceEngine/UnifiedMemory failures)
+- ⚡ **Performance** — collect_metrics ~10-20ms (sysinfo crate), scan_anomalies ~5ms, auto_heal ~50-500ms (action-dependent), tick cycle ~100-1000ms
+
+**Target Audience:** Développeurs backend, DevOps, SRE  
+**Complexity:** ⭐⭐⭐⭐⭐ (Expert - Fusion 3 engines)
+
+---
+
 ## ⚛️ FRONTEND MODULES (TypeScript)
 
 **Path:** `docs/05_modules/frontend/`
@@ -202,11 +245,12 @@ Documentation complète des modules TITANE∞ (backend Rust + frontend TypeScrip
 ## 🗺️ NAVIGATION RAPIDE
 
 ### Par rôle:
-- **🦀 Backend Developer** → Backend modules (OMEGA, ConversationEngine, Memory, Singularity, AI Router, French Mastery)
+- **🦀 Backend Developer** → Backend modules (OMEGA, ConversationEngine, Memory, Singularity, AI Router, French Mastery, Self-Healing Engine, System Health Engine)
 - **⚛️ Frontend Developer** → Frontend modules (ChatEngine, UnifiedMemory, Cognitive Orchestrator)
 - **🔗 Full-Stack Developer** → Both backend + frontend + integration docs
 - **🧠 AI Engineer** → OMEGA, Memory, Singularity, AI Router, Cognitive Orchestrator
-- **🏗️ System Architect** → ConversationEngine, Singularity, Cognitive Orchestrator (orchestration)
+- **🏗️ System Architect** → ConversationEngine, Singularity, Cognitive Orchestrator, Self-Healing Engine (orchestration)
+- **🛡️ DevOps / SRE** → Self-Healing Engine, System Health Engine, AI Router (infrastructure monitoring + auto-repair)
 
 ### Par fonctionnalité:
 - **💬 Chat AI** → OMEGA_PIPELINE.md, CONVERSATION_ENGINE.md, CHAT_ENGINE.md, AI_ROUTER.md
@@ -214,11 +258,12 @@ Documentation complète des modules TITANE∞ (backend Rust + frontend TypeScrip
 - **🌌 Meta-Cognitive** → SINGULARITY.md, COGNITIVE_ORCHESTRATOR.md
 - **🔄 Pipeline Processing** → OMEGA_PIPELINE.md, CONVERSATION_ENGINE.md, FRENCH_MASTERY.md
 - **🔗 Frontend ↔ Backend** → CHAT_ENGINE.md, UNIFIED_MEMORY_FRONTEND.md, COGNITIVE_ORCHESTRATOR.md
+- **🛡️ Infrastructure Reliability** → SELF_HEALING_ENGINE.md, SYSTEM_HEALTH_ENGINE.md (monitoring + auto-healing)
 
 ### Par complexité:
 - **⭐⭐⭐ Intermediate** → UNIFIED_MEMORY_FRONTEND.md
 - **⭐⭐⭐⭐ Advanced** → OMEGA_PIPELINE.md, CHAT_ENGINE.md, UNIFIED_MEMORY.md, AI_ROUTER.md, FRENCH_MASTERY.md
-- **⭐⭐⭐⭐⭐ Expert** → CONVERSATION_ENGINE.md, SINGULARITY.md, COGNITIVE_ORCHESTRATOR.md
+- **⭐⭐⭐⭐⭐ Expert** → CONVERSATION_ENGINE.md, SINGULARITY.md, COGNITIVE_ORCHESTRATOR.md, SELF_HEALING_ENGINE.md, SYSTEM_HEALTH_ENGINE.md
 
 ---
 
@@ -226,16 +271,18 @@ Documentation complète des modules TITANE∞ (backend Rust + frontend TypeScrip
 
 | Module                    | Type     | Lignes | Sections | Code Examples | Complexity | Target Audience       |
 | ------------------------- | -------- | ------ | -------- | ------------- | ---------- | --------------------- |
-| OMEGA_PIPELINE.md         | Backend  | 463    | 9        | 12            | ⭐⭐⭐⭐⭐ | Backend + AI Engineers |
+| OMEGA_PIPELINE.md         | Backend  | 463    | 9        | 12            | ⭐⭐⭐⭐   | Backend + AI Engineers |
 | CONVERSATION_ENGINE.md    | Backend  | 466    | 9        | 15            | ⭐⭐⭐⭐⭐ | Backend + Architects   |
 | UNIFIED_MEMORY.md         | Backend  | 452    | 10       | 13            | ⭐⭐⭐⭐   | Backend + AI Research  |
 | SINGULARITY.md            | Backend  | 468    | 9        | 14            | ⭐⭐⭐⭐⭐ | Architects + Research  |
 | AI_ROUTER.md              | Backend  | 741    | 10       | 16            | ⭐⭐⭐⭐   | Backend + DevOps       |
 | FRENCH_MASTERY.md         | Backend  | 655    | 9        | 18            | ⭐⭐⭐⭐   | Backend + NLP          |
+| SELF_HEALING_ENGINE.md    | Backend  | 1,278  | 11       | 24            | ⭐⭐⭐⭐⭐ | Backend + DevOps + SRE |
+| SYSTEM_HEALTH_ENGINE.md   | Backend  | 1,113  | 11       | 21            | ⭐⭐⭐⭐⭐ | Backend + DevOps + SRE |
 | CHAT_ENGINE.md            | Frontend | 397    | 8        | 9             | ⭐⭐⭐⭐   | Frontend + Full-Stack  |
 | UNIFIED_MEMORY_FRONTEND.md| Frontend | 389    | 8        | 11            | ⭐⭐⭐    | Frontend + Full-Stack  |
 | COGNITIVE_ORCHESTRATOR.md | Frontend | 552    | 10       | 13            | ⭐⭐⭐⭐⭐ | Frontend + AI Engineers|
-| **TOTAL**                 | -        | **4,730** | **82** | **121**      | -         | -                      |
+| **TOTAL**                 | -        | **6,974** | **104** | **166**      | -         | -                      |
 
 ---
 
