@@ -100,6 +100,45 @@ Documentation complète des modules TITANE∞ (backend Rust + frontend TypeScrip
 
 ---
 
+### [AI_ROUTER.md](backend/AI_ROUTER.md) (741 lignes) ⭐⭐⭐⭐
+
+**Module Path:** `src-tauri/src/ai/router.rs`  
+**Description:** Intelligent AI provider routing + cascade fallback  
+**Responsibility:** Provider selection, health checks, cascade fallback (UnifiedIA → Gemini → Ollama), response caching
+
+**Key Content:**
+- 📊 **Cascade Strategy Flow** — Cache (0ms) → UnifiedIA (Claude→OpenAI, ~800-1500ms) → Gemini (~800-1200ms) → Ollama (~500-800ms)
+- 🔧 **API Reference** — `AIRouter::new()`, `query()`, `query_ollama_direct()`, `get_status()`, `health_check()`
+- 🧩 **Sub-Modules** — cache.rs (LRU cache 5min TTL), gemini.rs (Gemini client), ollama.rs (Ollama local client)
+- 💾 **Data Structures** — `AIRequest`, `AIResponse`, `AIProvider`, `AIRouterStatus`
+- 🔗 **Integrations** — OMEGA Pipeline (Stage 5 AI generation), ConversationEngine (Stage 7 dispatch)
+- 🧪 **Testing** — Router initialization, cache hit, cascade fallback, local mode force
+- ⚡ **Performance** — Cache hit rate ~60-80%, latency reduction -60% (cached responses)
+
+**Target Audience:** Développeurs backend, DevOps  
+**Complexity:** ⭐⭐⭐⭐ (Advanced)
+
+---
+
+### [FRENCH_MASTERY.md](backend/FRENCH_MASTERY.md) (655 lignes) ⭐⭐⭐⭐
+
+**Module Path:** `src-tauri/src/conversation_engine/french_mastery.rs`  
+**Description:** French language quality post-processing  
+**Responsibility:** Grammar correction, style optimization, sentence optimization, pedagogical enrichment, quality scoring
+
+**Key Content:**
+- 📊 **French Mastery Processing Flow** — 5 modes (Correction, Optimization, Simplification, Enrichment, Double)
+- 🔧 **API Reference** — `FrenchMasteryProcessor::new()`, `process()`, `correct_language()`, `optimize_structure()`, `evaluate_quality()`
+- 💾 **Data Structures** — `FrenchMasteryRequest`, `FrenchMasteryResponse`, `ProcessingMode`, `QualityScores`
+- 🔗 **Integrations** — ConversationEngine (Stage 8 post-processing), OMEGA Pipeline (Stage 6.5)
+- 🧪 **Testing** — Grammar correction, clarity scoring, pedagogical enrichment, quality evaluation
+- ⚡ **Performance** — Processing latency ~15-25ms (Optimization mode, 1-2% OMEGA overhead)
+
+**Target Audience:** Développeurs backend, NLP engineers  
+**Complexity:** ⭐⭐⭐⭐ (Advanced)
+
+---
+
 ## ⚛️ FRONTEND MODULES (TypeScript)
 
 **Path:** `docs/05_modules/frontend/`
@@ -141,26 +180,45 @@ Documentation complète des modules TITANE∞ (backend Rust + frontend TypeScrip
 
 ---
 
+### [COGNITIVE_ORCHESTRATOR.md](frontend/COGNITIVE_ORCHESTRATOR.md) (552 lignes) ⭐⭐⭐⭐⭐
+
+**Module Path:** `src/services/cognitive/cognitiveOmegaIntegration.ts`  
+**Description:** 4 cognitive engines orchestration (frontend brain)  
+**Responsibility:** Semantic memory, goal/consistency tracking, conversation evaluation, cognitive observability
+
+**Key Content:**
+- 📊 **4 Cognitive Engines** — SemanticMemoryEngine (vector search, 384-dim embeddings), GoalConsistencyEngine (multi-turn coherence), ConversationEvaluationEngine (quality metrics), CognitiveObservabilityEngine (tracing, debug panel)
+- 🔧 **API Reference** — `enrichContext()`, `checkConsistency()`, `applyCorrections()`, `storeMemory()`, `evaluateQuality()`, `trace()`
+- 💾 **Data Structures** — `EnrichedContext`, `ConsistencyCheckResult`, `ConversationMetrics`, `CognitiveStats`
+- 🔗 **Integrations** — ChatEngine (Phase 1.3.2 enrich, Phase 1.5.1 consistency, Phase 1.6 memory, Phase 1.7.2 corrections)
+- 🧪 **Testing** — Enrich context, consistency check, auto-correction, memory storage, quality evaluation, trace logging
+- ⚡ **Performance** — Total cognitive overhead ~100-200ms (enrich 50-100ms, consistency 20-40ms, memory 30-60ms)
+
+**Target Audience:** Développeurs frontend, AI engineers, system architects  
+**Complexity:** ⭐⭐⭐⭐⭐ (Expert - 4 engines orchestration)
+
+---
+
 ## 🗺️ NAVIGATION RAPIDE
 
 ### Par rôle:
-- **🦀 Backend Developer** → Backend modules (OMEGA, ConversationEngine, Memory, Singularity)
-- **⚛️ Frontend Developer** → Frontend modules (ChatEngine, UnifiedMemory)
+- **🦀 Backend Developer** → Backend modules (OMEGA, ConversationEngine, Memory, Singularity, AI Router, French Mastery)
+- **⚛️ Frontend Developer** → Frontend modules (ChatEngine, UnifiedMemory, Cognitive Orchestrator)
 - **🔗 Full-Stack Developer** → Both backend + frontend + integration docs
-- **🧠 AI Engineer** → OMEGA, Memory, Singularity (neural/cognitive architecture)
-- **🏗️ System Architect** → ConversationEngine, Singularity (high-level orchestration)
+- **🧠 AI Engineer** → OMEGA, Memory, Singularity, AI Router, Cognitive Orchestrator
+- **🏗️ System Architect** → ConversationEngine, Singularity, Cognitive Orchestrator (orchestration)
 
 ### Par fonctionnalité:
-- **💬 Chat AI** → OMEGA_PIPELINE.md, CONVERSATION_ENGINE.md, CHAT_ENGINE.md
-- **🧠 Memory System** → UNIFIED_MEMORY.md, UNIFIED_MEMORY_FRONTEND.md
-- **🌌 Meta-Cognitive** → SINGULARITY.md
-- **🔄 Pipeline Processing** → OMEGA_PIPELINE.md, CONVERSATION_ENGINE.md
-- **🔗 Frontend ↔ Backend** → CHAT_ENGINE.md, UNIFIED_MEMORY_FRONTEND.md
+- **💬 Chat AI** → OMEGA_PIPELINE.md, CONVERSATION_ENGINE.md, CHAT_ENGINE.md, AI_ROUTER.md
+- **🧠 Memory System** → UNIFIED_MEMORY.md, UNIFIED_MEMORY_FRONTEND.md, COGNITIVE_ORCHESTRATOR.md (semantic)
+- **🌌 Meta-Cognitive** → SINGULARITY.md, COGNITIVE_ORCHESTRATOR.md
+- **🔄 Pipeline Processing** → OMEGA_PIPELINE.md, CONVERSATION_ENGINE.md, FRENCH_MASTERY.md
+- **🔗 Frontend ↔ Backend** → CHAT_ENGINE.md, UNIFIED_MEMORY_FRONTEND.md, COGNITIVE_ORCHESTRATOR.md
 
 ### Par complexité:
 - **⭐⭐⭐ Intermediate** → UNIFIED_MEMORY_FRONTEND.md
-- **⭐⭐⭐⭐ Advanced** → OMEGA_PIPELINE.md, CHAT_ENGINE.md
-- **⭐⭐⭐⭐⭐ Expert** → CONVERSATION_ENGINE.md, UNIFIED_MEMORY.md, SINGULARITY.md
+- **⭐⭐⭐⭐ Advanced** → OMEGA_PIPELINE.md, CHAT_ENGINE.md, UNIFIED_MEMORY.md, AI_ROUTER.md, FRENCH_MASTERY.md
+- **⭐⭐⭐⭐⭐ Expert** → CONVERSATION_ENGINE.md, SINGULARITY.md, COGNITIVE_ORCHESTRATOR.md
 
 ---
 
@@ -168,13 +226,16 @@ Documentation complète des modules TITANE∞ (backend Rust + frontend TypeScrip
 
 | Module                    | Type     | Lignes | Sections | Code Examples | Complexity | Target Audience       |
 | ------------------------- | -------- | ------ | -------- | ------------- | ---------- | --------------------- |
-| OMEGA_PIPELINE.md         | Backend  | 463    | 9        | 15+           | ⭐⭐⭐⭐   | Backend + AI Engineers |
-| CONVERSATION_ENGINE.md    | Backend  | 466    | 9        | 12+           | ⭐⭐⭐⭐⭐ | Backend + Architects   |
-| UNIFIED_MEMORY.md         | Backend  | 452    | 10       | 18+           | ⭐⭐⭐⭐⭐ | Backend + AI Research  |
-| SINGULARITY.md            | Backend  | 468    | 9        | 10+           | ⭐⭐⭐⭐⭐ | Architects + Research  |
-| CHAT_ENGINE.md            | Frontend | 397    | 8        | 12+           | ⭐⭐⭐⭐   | Frontend + Full-Stack  |
-| UNIFIED_MEMORY_FRONTEND.md| Frontend | 389    | 8        | 10+           | ⭐⭐⭐⭐   | Frontend + Full-Stack  |
-| **TOTAL**                 | -        | **2,635** | **53** | **77+**      | -         | -                      |
+| OMEGA_PIPELINE.md         | Backend  | 463    | 9        | 12            | ⭐⭐⭐⭐⭐ | Backend + AI Engineers |
+| CONVERSATION_ENGINE.md    | Backend  | 466    | 9        | 15            | ⭐⭐⭐⭐⭐ | Backend + Architects   |
+| UNIFIED_MEMORY.md         | Backend  | 452    | 10       | 13            | ⭐⭐⭐⭐   | Backend + AI Research  |
+| SINGULARITY.md            | Backend  | 468    | 9        | 14            | ⭐⭐⭐⭐⭐ | Architects + Research  |
+| AI_ROUTER.md              | Backend  | 741    | 10       | 16            | ⭐⭐⭐⭐   | Backend + DevOps       |
+| FRENCH_MASTERY.md         | Backend  | 655    | 9        | 18            | ⭐⭐⭐⭐   | Backend + NLP          |
+| CHAT_ENGINE.md            | Frontend | 397    | 8        | 9             | ⭐⭐⭐⭐   | Frontend + Full-Stack  |
+| UNIFIED_MEMORY_FRONTEND.md| Frontend | 389    | 8        | 11            | ⭐⭐⭐    | Frontend + Full-Stack  |
+| COGNITIVE_ORCHESTRATOR.md | Frontend | 552    | 10       | 13            | ⭐⭐⭐⭐⭐ | Frontend + AI Engineers|
+| **TOTAL**                 | -        | **4,730** | **82** | **121**      | -         | -                      |
 
 ---
 
@@ -184,7 +245,7 @@ Documentation complète des modules TITANE∞ (backend Rust + frontend TypeScrip
 | -------------------- | ---------- | --------------------------------------------------- |
 | **Complétude**       | ⭐⭐⭐⭐⭐ | Coverage exhaustif (architecture → API → testing)  |
 | **Clarté**           | ⭐⭐⭐⭐⭐ | Diagrammes flows, examples pratiques, explanations |
-| **Code Examples**    | ⭐⭐⭐⭐⭐ | 77+ examples Rust/TypeScript commentés             |
+| **Code Examples**    | ⭐⭐⭐⭐⭐ | 121 examples Rust/TypeScript commentés             |
 | **API Reference**    | ⭐⭐⭐⭐⭐ | Signatures complètes, parameters, returns          |
 | **Integrations**     | ⭐⭐⭐⭐⭐ | Cross-module integration examples                  |
 | **Testing**          | ⭐⭐⭐⭐⭐ | Unit tests, integration tests, benchmarks          |
@@ -226,33 +287,41 @@ Documentation complète des modules TITANE∞ (backend Rust + frontend TypeScrip
 │         (Orchestration, Streaming, Fallback)                │
 └─────────────────────────────────────────────────────────────┘
         ↓ ↑ (memory)                    ↓ ↑ (Tauri commands)
-┌─────────────────────┐         ┌────────────────────────────┐
-│ UNIFIED_MEMORY_     │         │ CONVERSATION_ENGINE.md     │
-│ FRONTEND.md         │←────────│ (Backend Rust 12 stages)   │
-│ (Frontend Service)  │         └────────────────────────────┘
-└─────────────────────┘                    ↓ ↑
-        ↓ ↑                         ┌──────────────────┐
-        │                           │ OMEGA_PIPELINE.md│
-        │                           │ (Backend Rust    │
-        │                           │  10 stages)      │
-        │                           └──────────────────┘
-        │                                  ↓ ↑ ↓ ↑
-        │                          ┌────────┴───┴────────┐
-        └──────────────────────────┤ UNIFIED_MEMORY.md   │
-                                   │ (Backend Rust       │
-                                   │  STM/MTM/LTM)       │
-                                   └─────────────────────┘
-                                             ↓ ↑
-                                   ┌─────────────────────┐
-                                   │ SINGULARITY.md      │
-                                   │ (Meta-cognitive)    │
-                                   └─────────────────────┘
+┌────────────────────────┐       ┌────────────────────────────┐
+│ UNIFIED_MEMORY_        │       │ CONVERSATION_ENGINE.md     │
+│ FRONTEND.md            │←──────│ (Backend Rust 12 stages)   │
+│ (Frontend Service)     │       └────────────────────────────┘
+└────────────────────────┘                  ↓ ↑
+        ↓ ↑                          ┌──────────────────┐
+┌────────────────────────┐           │ OMEGA_PIPELINE.md│
+│ COGNITIVE_ORCHESTRATOR │           │ (Backend Rust    │
+│ .md (4 engines)        │←──────────│  10 stages)      │
+└────────────────────────┘           └──────────────────┘
+                                        ↓ ↑        ↓ ↑
+                               ┌────────┴──┐   ┌──┴────────┐
+                               │ AI_ROUTER │   │ FRENCH_   │
+                               │ .md       │   │ MASTERY.md│
+                               └───────────┘   └───────────┘
+                                     ↓ ↑
+                             ┌────────────────────┐
+                             │ UNIFIED_MEMORY.md  │
+                             │ (Backend Rust      │
+                             │  STM/MTM/LTM)      │
+                             └────────────────────┘
+                                     ↓ ↑
+                             ┌────────────────────┐
+                             │ SINGULARITY.md     │
+                             │ (Meta-cognitive)   │
+                             └────────────────────┘
 ```
 
 **Key Dependencies:**
-- **ChatEngine** depends on: UnifiedMemory (frontend), Tauri commands (backend)
-- **ConversationEngine** depends on: OMEGA Pipeline, UnifiedMemory, Singularity
-- **OMEGA Pipeline** depends on: UnifiedMemory, Singularity, AI Router
+- **ChatEngine** depends on: UnifiedMemory (frontend), Tauri commands (backend), Cognitive Orchestrator (4 engines)
+- **ConversationEngine** depends on: OMEGA Pipeline, UnifiedMemory, Singularity, French Mastery
+- **OMEGA Pipeline** depends on: UnifiedMemory, Singularity, AI Router, French Mastery
+- **AI Router** depends on: UnifiedIA, Gemini client, Ollama client, LRU cache
+- **French Mastery** depends on: Grammar rules, TITANE style guidelines
+- **Cognitive Orchestrator** depends on: SemanticMemoryEngine, GoalConsistencyEngine, ConversationEvaluationEngine, CognitiveObservabilityEngine
 - **UnifiedMemory** (backend) depends on: Vector store, SQLite/PostgreSQL
 - **Singularity** depends on: Cognitive fields, System consciousness
 
@@ -334,7 +403,7 @@ npm run dev:tauri  # Launch Titan-Dev
 2. **API Reference accuracy:** Signatures exactes (Rust/TypeScript)
 3. **Code examples tested:** Examples validés (compilent + executent)
 4. **Integrations documented:** Cross-module dependencies claires
-5. **Versioning:** Update numéro version à chaque modification API
+5. **VersC: Documentation modules additionnels (Self-Healing Engine, Vector Store
 
 **Évolutions futures:**
 - Phase 6 continuation: Documentation modules additionnels (AI Router, Cognitive engines, etc.)
