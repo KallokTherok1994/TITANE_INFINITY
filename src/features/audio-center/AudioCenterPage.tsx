@@ -223,6 +223,8 @@ export const AudioCenterPage: React.FC = () => {
     testSpeaker,
     testMicrophone,
     refreshDevices,
+    setBalance,
+    setInputOption,
   } = useAudio();
 
   const [activeTab, setActiveTab] = useState<
@@ -421,9 +423,7 @@ export const AudioCenterPage: React.FC = () => {
                   value={config.output.balance}
                   min={-1}
                   max={1}
-                  onChange={_balance => {
-                    /* TODO */
-                  }}
+                  onChange={balance => setBalance(balance)}
                 />
               </div>
 

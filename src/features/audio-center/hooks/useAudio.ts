@@ -41,6 +41,13 @@ interface UseAudioReturn {
 
   // Refresh
   refreshDevices: () => Promise<void>;
+
+  // v24.7 - Extended controls
+  setBalance: (balance: number) => Promise<void>;
+  setInputOption: (
+    option: 'noiseSuppression' | 'echoCancellation' | 'autoGainControl',
+    value: boolean
+  ) => Promise<void>;
 }
 
 export function useAudio(): UseAudioReturn {
@@ -165,6 +172,24 @@ export function useAudio(): UseAudioReturn {
     }
   }, []);
 
+  // v24.7 - Balance control
+  const setBalance = useCallback(async (balance: number) => {
+    await audioService.updateOutputSettings({ balance });
+    setConfig(audioService.getConfig());
+  }, []);
+
+  // v24.7 - Input processing options
+  const setInputOption = useCallback(
+    async (
+      option: 'noiseSuppression' | 'echoCancellation' | 'autoGainControl',
+      value: boolean
+    ) => {
+      await audioService.updateInputSettings({ [option]: value });
+      setConfig(audioService.getConfig());
+    },
+    []
+  );
+
   return {
     config,
     outputDevices,
@@ -183,5 +208,7 @@ export function useAudio(): UseAudioReturn {
     testSpeaker,
     testMicrophone,
     refreshDevices,
+    setBalance,
+    setInputOption,
   };
 }

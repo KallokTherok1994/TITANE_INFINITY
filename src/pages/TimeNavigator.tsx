@@ -56,7 +56,7 @@ export const TimeNavigator: React.FC = () => {
   const loadSnapshots = async () => {
     try {
       setLoading(true);
-      // TODO: Appeler commande Tauri list_snapshots
+      // v24.7 - Appel Tauri list_snapshots
       const response = await secureInvoke<Snapshot[]>('list_snapshots');
       setSnapshots(response.sort((a, b) => b.timestamp - a.timestamp));
     } catch (error) {
@@ -68,7 +68,7 @@ export const TimeNavigator: React.FC = () => {
 
   const loadStats = async () => {
     try {
-      // TODO: Appeler commande Tauri get_travel_stats
+      // v24.7 - Appel Tauri get_travel_stats
       const response = await secureInvoke<TravelStats>('get_travel_stats');
       setStats(response);
     } catch (error) {
@@ -89,7 +89,7 @@ export const TimeNavigator: React.FC = () => {
       setLoading(true);
       await secureInvoke('restore_snapshot', { snapshot_id: snapshot.id });
       alert('✅ Restauration réussie ! Redémarrage requis.');
-      // TODO: Recharger l'application
+      // v24.7 - Recharge l'application après restauration
       window.location.reload();
     } catch (error) {
       alert(`❌ Erreur lors de la restauration: ${error}`);
