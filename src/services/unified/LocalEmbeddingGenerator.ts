@@ -15,6 +15,14 @@ import type { IEmbeddingGenerator } from './UnifiedMemory';
 /**
  * Configuration
  */
+export interface EmbeddingProgress {
+  status: 'download' | 'progress' | 'done';
+  file?: string;
+  progress?: number;
+  loaded?: number;
+  total?: number;
+}
+
 export interface LocalEmbeddingGeneratorConfig {
   modelName: string;
   dimensions: number;
@@ -22,7 +30,7 @@ export interface LocalEmbeddingGeneratorConfig {
   maxCacheSize?: number;
   pipelineOptions?: {
     quantized?: boolean;
-    progress_callback?: (progress: any) => void;
+    progress_callback?: (progress: EmbeddingProgress) => void;
   };
 }
 
@@ -30,8 +38,15 @@ export interface LocalEmbeddingGeneratorConfig {
  * Pipeline type for Transformers.js
  */
 interface Pipeline {
-  (text: string | string[], options?: any): Promise<any>;
+  (
+    text: string | string[],
+    options?: { pooling?: string; normalize?: boolean }
+  ): Promise<{
+    data: Float32Array;
+    dims: number[];
+  }>;
   dispose(): Promise<void>;
+  [key: string]: unknown; // Allow additional properties from FeatureExtractionPipeline
 }
 
 /**
@@ -95,12 +110,12 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
         throw new Error(`Unknown model: ${this.config.modelName}`);
       }
 
-      // Create pipeline
-      this.pipeline = await pipeline(
+      // Create pipeline with safe type assertion
+      this.pipeline = (await pipeline(
         'feature-extraction',
         modelInfo.id,
         this.config.pipelineOptions
-      );
+      )) as unknown as Pipeline;
 
       this.isInitialized = true;
       console.log('[LocalEmbedding] Model loaded successfully');

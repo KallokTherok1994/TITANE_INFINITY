@@ -64,6 +64,8 @@ export interface AutoHealStats {
   actionsByType: Record<string, number>;
   lastHeal: number;
   healthScore: number; // 0-100
+  /** Index signature for AutoHealStatus compatibility */
+  [key: string]: unknown;
 }
 
 export interface AutoHealConfig {
