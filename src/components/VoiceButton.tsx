@@ -11,7 +11,7 @@
  * Press-to-talk ou VAD auto • Shimmer + pulse minimal
  */
 
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo, memo } from 'react';
 import { motion } from 'framer-motion';
 // import './VoiceButton.css';
 
@@ -32,7 +32,7 @@ interface VoiceButtonProps {
   label?: string;
 }
 
-export const VoiceButton: React.FC<VoiceButtonProps> = ({
+export const VoiceButton = memo(function VoiceButton({
   active = false,
   mode = 'vad-auto',
   onActivate,
@@ -40,17 +40,20 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
   size = 80,
   disabled = false,
   label,
-}) => {
+}: VoiceButtonProps) {
   const [isPressed, setIsPressed] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
   // P2: Respect prefers-reduced-motion (WCAG 2.3.3 AAA)
-  const prefersReducedMotion =
-    typeof window !== 'undefined'
-      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      : false;
+  const prefersReducedMotion = useMemo(
+    () =>
+      typeof window !== 'undefined'
+        ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        : false,
+    []
+  );
 
-  const handlePress = () => {
+  const handlePress = useCallback(() => {
     if (disabled) return;
 
     if (mode === 'push-to-talk') {
@@ -63,16 +66,44 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
         onActivate?.();
       }
     }
-  };
+  }, [disabled, mode, active, onActivate, onDeactivate]);
 
-  const handleRelease = () => {
+  const handleRelease = useCallback(() => {
     if (mode === 'push-to-talk') {
       setIsPressed(false);
       onDeactivate?.();
     }
-  };
+  }, [mode, onDeactivate]);
 
   const isActive = mode === 'push-to-talk' ? isPressed : active;
+
+  const handleMouseEnter = useCallback(() => setIsHovered(true), []);
+  const handleMouseLeave = useCallback(() => {
+    setIsHovered(false);
+    handleRelease();
+  }, [handleRelease]);
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (disabled) return;
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        handlePress();
+      }
+    },
+    [disabled, handlePress]
+  );
+
+  const handleKeyUp = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (disabled) return;
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        handleRelease();
+      }
+    },
+    [disabled, handleRelease]
+  );
 
   return (
     <div
@@ -116,27 +147,12 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
         }}
         onMouseDown={handlePress}
         onMouseUp={handleRelease}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => {
-          setIsHovered(false);
-          handleRelease();
-        }}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
         onTouchStart={handlePress}
         onTouchEnd={handleRelease}
-        onKeyDown={e => {
-          if (disabled) return;
-          if (e.key === ' ' || e.key === 'Enter') {
-            e.preventDefault();
-            handlePress();
-          }
-        }}
-        onKeyUp={e => {
-          if (disabled) return;
-          if (e.key === ' ' || e.key === 'Enter') {
-            e.preventDefault();
-            handleRelease();
-          }
-        }}
+        onKeyDown={handleKeyDown}
+        onKeyUp={handleKeyUp}
         whileHover={{ scale: disabled || prefersReducedMotion ? 1 : 1.05 }}
         whileTap={{ scale: disabled || prefersReducedMotion ? 1 : 0.95 }}
         animate={{
@@ -273,6 +289,6 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
       </div>
     </div>
   );
-};
+});
 
 export default VoiceButton;

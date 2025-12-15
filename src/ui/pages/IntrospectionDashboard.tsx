@@ -3,7 +3,7 @@
  * Super-Prompt T: Codebase health scanning & auto-fix
  */
 
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo, memo } from 'react';
 import { secureInvoke } from '@/lib/security';
 
 interface CodeIssue {
@@ -26,7 +26,7 @@ interface ScanReport {
   auto_fixes_applied: number;
 }
 
-const IntrospectionDashboard: React.FC = () => {
+const IntrospectionDashboard = memo(function IntrospectionDashboard() {
   const [report, setReport] = useState<ScanReport | null>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [isFixing, setIsFixing] = useState(false);
@@ -35,7 +35,7 @@ const IntrospectionDashboard: React.FC = () => {
   );
   const [selectedSeverity, setSelectedSeverity] = useState<string>('all');
 
-  const handleScan = async () => {
+  const handleScan = useCallback(async () => {
     setIsScanning(true);
     try {
       const result = await secureInvoke<ScanReport>('introspection_scan', {
@@ -47,9 +47,9 @@ const IntrospectionDashboard: React.FC = () => {
     } finally {
       setIsScanning(false);
     }
-  };
+  }, [projectPath]);
 
-  const handleAutoFix = async () => {
+  const handleAutoFix = useCallback(async () => {
     setIsFixing(true);
     try {
       const result = await secureInvoke<ScanReport>('introspection_auto_fix', {
@@ -61,9 +61,9 @@ const IntrospectionDashboard: React.FC = () => {
     } finally {
       setIsFixing(false);
     }
-  };
+  }, [projectPath]);
 
-  const getSeverityColor = (severity: string) => {
+  const getSeverityColor = useCallback((severity: string) => {
     switch (severity) {
       case 'Critical':
         return 'text-red-400 bg-red-500/20 border-red-500/50';
@@ -76,9 +76,9 @@ const IntrospectionDashboard: React.FC = () => {
       default:
         return 'text-gray-400 bg-gray-500/20 border-gray-500/50';
     }
-  };
+  }, []);
 
-  const getCategoryIcon = (category: string) => {
+  const getCategoryIcon = useCallback((category: string) => {
     switch (category) {
       case 'DeadCode':
         return '☠️';
@@ -97,12 +97,15 @@ const IntrospectionDashboard: React.FC = () => {
       default:
         return '❓';
     }
-  };
+  }, []);
 
-  const filteredIssues =
-    report?.issues.filter(
-      issue => selectedSeverity === 'all' || issue.severity === selectedSeverity
-    ) || [];
+  const filteredIssues = useMemo(
+    () =>
+      report?.issues.filter(
+        issue => selectedSeverity === 'all' || issue.severity === selectedSeverity
+      ) || [],
+    [report?.issues, selectedSeverity]
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-red-900 to-gray-900 p-6">
@@ -287,6 +290,6 @@ const IntrospectionDashboard: React.FC = () => {
       )}
     </div>
   );
-};
+});
 
 export default IntrospectionDashboard;

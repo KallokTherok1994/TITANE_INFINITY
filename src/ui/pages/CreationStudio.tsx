@@ -3,7 +3,7 @@
  * Super-Prompt S: AI-powered code generation
  */
 
-import React, { useState } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import { secureInvoke } from '@/lib/security';
 
 interface GeneratedArtifact {
@@ -25,14 +25,14 @@ const TARGET_TYPES = [
   { value: 'DataModel', label: '📊 Data Model', color: 'green' },
 ];
 
-const CreationStudio: React.FC = () => {
+const CreationStudio = memo(function CreationStudio() {
   const [intent, setIntent] = useState('');
   const [targetType, setTargetType] = useState('RustModule');
   const [artifact, setArtifact] = useState<GeneratedArtifact | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleGenerate = async () => {
+  const handleGenerate = useCallback(async () => {
     if (!intent.trim()) {
       setError('Veuillez décrire ce que vous souhaitez créer');
       return;
@@ -52,11 +52,11 @@ const CreationStudio: React.FC = () => {
     } finally {
       setIsGenerating(false);
     }
-  };
+  }, [intent, targetType]);
 
-  const copyToClipboard = (text: string) => {
+  const copyToClipboard = useCallback((text: string) => {
     navigator.clipboard.writeText(text);
-  };
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 p-6">
@@ -245,6 +245,6 @@ const CreationStudio: React.FC = () => {
       </div>
     </div>
   );
-};
+});
 
 export default CreationStudio;
