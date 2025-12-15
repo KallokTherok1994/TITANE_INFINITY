@@ -433,4 +433,182 @@ mod tests {
 
         Ok(())
     }
+
+    // ═══════════════════════════════════════════════════════════════
+    // PLAN INFINITY - Additional Tests v24.6
+    // ═══════════════════════════════════════════════════════════════
+
+    #[tokio::test]
+    async fn test_vault_delete() -> Result<(), Box<dyn std::error::Error>> {
+        let master_key = MasterKey::generate();
+        let vault = VaultEngine::new(&master_key).await?;
+
+        vault.save("to_delete", &"temporary data").await?;
+
+        // Verify file exists
+        let loaded: String = vault.load("to_delete").await?;
+        assert_eq!(loaded, "temporary data");
+
+        // Delete
+        vault.delete("to_delete").await?;
+
+        // Verify file no longer exists
+        let result: Result<String, _> = vault.load("to_delete").await;
+        assert!(result.is_err());
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_vault_stats() -> Result<(), Box<dyn std::error::Error>> {
+        let master_key = MasterKey::generate();
+        let vault = VaultEngine::new(&master_key).await?;
+
+        let stats_empty = vault.stats().await;
+        assert_eq!(stats_empty.total_files, 0);
+        assert_eq!(stats_empty.total_original_bytes, 0);
+
+        vault.save("stats_test_1", &"small").await?;
+        vault.save("stats_test_2", &"medium data here").await?;
+
+        let stats = vault.stats().await;
+        assert_eq!(stats.total_files, 2);
+        assert!(stats.total_original_bytes > 0);
+        assert!(stats.total_encrypted_bytes > 0);
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_vault_list_files() -> Result<(), Box<dyn std::error::Error>> {
+        let master_key = MasterKey::generate();
+        let vault = VaultEngine::new(&master_key).await?;
+
+        vault.save("list_test_a", &1).await?;
+        vault.save("list_test_b", &2).await?;
+        vault.save("list_test_c", &3).await?;
+
+        let files = vault.list_files().await;
+        assert_eq!(files.len(), 3);
+
+        let ids: Vec<&str> = files.iter().map(|m| m.file_id.as_str()).collect();
+        assert!(ids.contains(&"list_test_a"));
+        assert!(ids.contains(&"list_test_b"));
+        assert!(ids.contains(&"list_test_c"));
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_vault_overwrite() -> Result<(), Box<dyn std::error::Error>> {
+        let master_key = MasterKey::generate();
+        let vault = VaultEngine::new(&master_key).await?;
+
+        vault.save("overwrite_test", &"version 1").await?;
+        let v1: String = vault.load("overwrite_test").await?;
+        assert_eq!(v1, "version 1");
+
+        vault.save("overwrite_test", &"version 2").await?;
+        let v2: String = vault.load("overwrite_test").await?;
+        assert_eq!(v2, "version 2");
+
+        // Index should only have one entry
+        let files = vault.list_files().await;
+        let overwrite_files: Vec<_> = files
+            .iter()
+            .filter(|m| m.file_id == "overwrite_test")
+            .collect();
+        assert_eq!(overwrite_files.len(), 1);
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_vault_large_data_compression() -> Result<(), Box<dyn std::error::Error>> {
+        let master_key = MasterKey::generate();
+        let vault = VaultEngine::new(&master_key).await?;
+
+        // Data > 1KB should be compressed
+        let large_data: String = "TITANE INFINITY ".repeat(100); // ~1600 bytes
+        let metadata = vault.save("large_data", &large_data).await?;
+
+        // Encrypted size should be smaller than original due to compression
+        // (repetitive data compresses well)
+        assert!(metadata.encrypted_size < metadata.original_size);
+
+        let loaded: String = vault.load("large_data").await?;
+        assert_eq!(loaded, large_data);
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_vault_metadata_fields() -> Result<(), Box<dyn std::error::Error>> {
+        let master_key = MasterKey::generate();
+        let vault = VaultEngine::new(&master_key).await?;
+
+        let data = vec![1, 2, 3, 4, 5];
+        let metadata = vault.save("metadata_test", &data).await?;
+
+        assert_eq!(metadata.file_id, "metadata_test");
+        assert!(metadata.original_size > 0);
+        assert!(metadata.encrypted_size > 0);
+        assert!(!metadata.checksum.is_empty());
+        assert!(metadata.timestamp > 0);
+        assert_eq!(metadata.version, "v∞");
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_vault_error_display() {
+        let errors = vec![
+            VaultError::EncryptionFailed("test".to_string()),
+            VaultError::DecryptionFailed("test".to_string()),
+            VaultError::CorruptionDetected("test".to_string()),
+            VaultError::IoError("test".to_string()),
+            VaultError::SerializationError("test".to_string()),
+        ];
+
+        for error in errors {
+            let display = format!("{}", error);
+            assert!(!display.is_empty());
+            assert!(display.contains("test"));
+        }
+    }
+
+    #[tokio::test]
+    async fn test_vault_complex_data_types() -> Result<(), Box<dyn std::error::Error>> {
+        let master_key = MasterKey::generate();
+        let vault = VaultEngine::new(&master_key).await?;
+
+        #[derive(Serialize, Deserialize, Debug, PartialEq)]
+        struct ComplexData {
+            strings: Vec<String>,
+            nested: NestedData,
+            optional: Option<i32>,
+        }
+
+        #[derive(Serialize, Deserialize, Debug, PartialEq)]
+        struct NestedData {
+            value: f64,
+            flag: bool,
+        }
+
+        let data = ComplexData {
+            strings: vec!["a".to_string(), "b".to_string(), "c".to_string()],
+            nested: NestedData {
+                value: 3.14159,
+                flag: true,
+            },
+            optional: Some(42),
+        };
+
+        vault.save("complex_data", &data).await?;
+        let loaded: ComplexData = vault.load("complex_data").await?;
+
+        assert_eq!(loaded, data);
+
+        Ok(())
+    }
 }

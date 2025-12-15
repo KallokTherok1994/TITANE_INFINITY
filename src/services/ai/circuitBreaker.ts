@@ -116,7 +116,11 @@ class CircuitBreaker {
         halfOpenAttempts: 0,
       });
     }
-    return this.circuits.get(provider)!;
+    const circuit = this.circuits.get(provider);
+    if (!circuit) {
+      throw new Error(`Circuit for provider ${provider} not found after initialization`);
+    }
+    return circuit;
   }
 
   /**
@@ -127,7 +131,11 @@ class CircuitBreaker {
       const providerConfig = PROVIDER_CIRCUIT_CONFIGS[provider] || {};
       this.configs.set(provider, { ...DEFAULT_CIRCUIT_CONFIG, ...providerConfig });
     }
-    return this.configs.get(provider)!;
+    const config = this.configs.get(provider);
+    if (!config) {
+      throw new Error(`Config for provider ${provider} not found after initialization`);
+    }
+    return config;
   }
 
   /**

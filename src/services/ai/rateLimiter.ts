@@ -170,7 +170,11 @@ class RateLimiter {
       const providerConfig = PROVIDER_RATE_CONFIGS[provider] || {};
       this.configs.set(provider, { ...DEFAULT_RATE_CONFIG, ...providerConfig });
     }
-    return this.configs.get(provider)!;
+    const config = this.configs.get(provider);
+    if (!config) {
+      throw new Error(`Rate limit config for provider ${provider} not found`);
+    }
+    return config;
   }
 
   /**
@@ -180,7 +184,11 @@ class RateLimiter {
     if (!this.minuteCounters.has(provider)) {
       this.minuteCounters.set(provider, new SlidingWindowCounter(60000)); // 1 minute
     }
-    return this.minuteCounters.get(provider)!;
+    const counter = this.minuteCounters.get(provider);
+    if (!counter) {
+      throw new Error(`Minute counter for provider ${provider} not found`);
+    }
+    return counter;
   }
 
   /**
@@ -190,7 +198,11 @@ class RateLimiter {
     if (!this.hourCounters.has(provider)) {
       this.hourCounters.set(provider, new SlidingWindowCounter(3600000)); // 1 hour
     }
-    return this.hourCounters.get(provider)!;
+    const counter = this.hourCounters.get(provider);
+    if (!counter) {
+      throw new Error(`Hour counter for provider ${provider} not found`);
+    }
+    return counter;
   }
 
   /**

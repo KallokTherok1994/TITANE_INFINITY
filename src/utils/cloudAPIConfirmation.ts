@@ -14,6 +14,22 @@
 import { getAIConfig } from '../config/offline-first';
 
 /**
+ * Échapper les caractères HTML pour prévenir XSS
+ * @param str - String à échapper
+ * @returns String échappée sécurisée
+ */
+function escapeHtml(str: string): string {
+  const htmlEscapes: Record<string, string> = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  };
+  return str.replace(/[&<>"']/g, char => htmlEscapes[char] || char);
+}
+
+/**
  * État du système de confirmation
  */
 interface ConfirmationState {
@@ -134,9 +150,9 @@ async function showConfirmationDialog(
           Accès API Cloud Requis
         </h2>
         <p style="color: #ffffff; margin: 0 0 8px 0; font-size: 16px;">
-          <strong>${provider}</strong> nécessite une connexion Internet.
+          <strong>${escapeHtml(provider)}</strong> nécessite une connexion Internet.
         </p>
-        ${reason ? `<p style="color: #aaaaaa; margin: 0 0 24px 0; font-size: 14px;">${reason}</p>` : ''}
+        ${reason ? `<p style="color: #aaaaaa; margin: 0 0 24px 0; font-size: 14px;">${escapeHtml(reason)}</p>` : ''}
         <p style="color: #ffaa00; margin: 0 0 24px 0; font-size: 14px;">
           ⚠️ Mode OFFLINE FIRST activé - Votre permission est requise
         </p>

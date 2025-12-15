@@ -240,12 +240,29 @@ function extractMemoryInsight(history: AIMessage[]): string | null {
  *  PHASE 4Ω: GÉNÉRATION RESPONSE OMEGA + CONTEXTE INTELLIGENT
  * ═══════════════════════════════════════════════════════════════════
  */
+
+interface LocalResponseMetadata {
+  intent_analysis: {
+    intent: string;
+    confidence: number;
+    patterns: string[];
+    emergency: boolean;
+  };
+  response_mode: string;
+  conversation_length: number;
+  processing_time: number;
+  omega_enhanced: boolean;
+  local_only: boolean;
+  autonomous: boolean;
+  version: string;
+}
+
 function generateResponse(
   message: string,
   history: AIMessage[]
 ): {
   content: string;
-  metadata: any;
+  metadata: LocalResponseMetadata;
 } {
   const analysis = detectIntent(message);
   const startTime = Date.now();

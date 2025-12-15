@@ -559,6 +559,90 @@
   }
 }
 
+/* ═══ PHASE 1 OPTIMIZATIONS: Mobile Touch Targets (WCAG 2.1 AAA) ═══ */
+@media (max-width: 639px) {
+  /* Touch targets minimum 44x44px */
+  .chat-action-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .chat-provider-select {
+    min-height: 44px;
+    padding: 12px;
+  }
+
+  /* Adequate spacing between interactive elements */
+  .chat-header-actions {
+    gap: 12px;
+  }
+
+  /* Chat Input Mobile Optimization */
+  .chat-input-container {
+    padding: 12px 8px;
+    gap: 8px;
+  }
+
+  .chat-input,
+  .chat-input textarea {
+    font-size: 16px !important; /* Prevent iOS zoom on focus */
+    padding: 10px 12px;
+  }
+
+  .chat-voice-btn {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
+  }
+
+  /* Settings Panel Full-Screen Mobile */
+  .chat-settings-panel {
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important; /* Dynamic viewport height */
+    max-width: none;
+    border-radius: 0;
+    margin: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transform: none !important;
+  }
+
+  .chat-settings-content {
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Status Bar Responsive Collapse */
+  .chat-status-bar {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 12px;
+    justify-content: flex-start;
+  }
+
+  .chat-status-item {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  /* Ensure provider status always visible */
+  .chat-status-provider {
+    order: -1;
+    font-weight: 600;
+  }
+}
+
+/* Very small screens - show only essential */
+@media (max-width: 374px) {
+  .chat-status-preference {
+    display: none;
+  }
+}
+
 /* Small Mobile (max-width: 479px) */
 @media (max-width: 479px) {
   .chat-header-main {

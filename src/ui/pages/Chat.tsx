@@ -8,6 +8,7 @@
  *   TITANE∞ v19.2Ω — CHAT PAGE OMEGA (UI ANTI-CRASH)
  *   PHASE 5Ω: Protection render • État stable • Récupération auto
  *   Chat IA avec protection render loops et gestion états corrompus
+ *   PHASE 2 v24.7.4: Keyboard shortcuts, Focus trap, Code splitting
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -37,6 +38,9 @@ import type { ChatModeId } from '../../services/ai/chatModes.config';
 import { autoHealEngine } from '../../services/ai/system';
 // Phase 1.9: Audio Feedback - VAD + TTS integration
 import useVAD, { useVADWithTTS, useBargeInHandler } from '../../hooks/useVAD';
+// Phase 2 v24.7.4: Keyboard shortcuts & Focus trap
+import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
 import './styles/Chat.css';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -499,6 +503,7 @@ const CHAT_MODE_STORAGE_KEY = 'titane-chat-mode';
 
 export const Chat: React.FC = () => {
   const mountedRef = useRef(false);
+  const settingsPanelRef = useRef<HTMLDivElement>(null);
 
   const { pageState, handleRenderError, resetError } = useOmegaRenderProtection();
   const [showSettings, setShowSettings] = useState(false);
@@ -792,6 +797,57 @@ export const Chat: React.FC = () => {
     };
   }, []);
 
+  // ═══ PHASE 2 v24.7.4: KEYBOARD SHORTCUTS ═══
+  const startNewConversation = useCallback(() => {
+    // Trigger new conversation logic
+    window.location.reload(); // Temporary: reload to reset state
+  }, []);
+
+  const toggleDebugPanel = useCallback(() => {
+    setDebugPanelVisible(prev => !prev);
+  }, []);
+
+  useKeyboardShortcuts({
+    shortcuts: [
+      {
+        key: '/',
+        ctrl: true,
+        action: toggleSettings,
+        description: 'Afficher/masquer les paramètres',
+      },
+      {
+        key: 'Escape',
+        action: () => {
+          if (showSettings) {
+            setShowSettings(false);
+          }
+        },
+        description: 'Fermer les fenêtres modales',
+      },
+      {
+        key: 'n',
+        ctrl: true,
+        action: startNewConversation,
+        description: 'Nouvelle conversation',
+      },
+      {
+        key: 'd',
+        ctrl: true,
+        shift: true,
+        action: toggleDebugPanel,
+        description: 'Afficher/masquer le panneau de debug',
+      },
+    ],
+    enabled: true,
+  });
+
+  // ═══ PHASE 2 v24.7.4: FOCUS TRAP FOR SETTINGS MODAL ═══
+  useFocusTrap({
+    ref: settingsPanelRef,
+    isActive: showSettings,
+    onEscape: () => setShowSettings(false),
+  });
+
   // ═══ PHASE 5.6: CORRUPTION RECOVERY STATE ═══
   if (pageState.renderError && pageState.isCorrupted) {
     return (
@@ -906,7 +962,9 @@ export const Chat: React.FC = () => {
             <div className="chat-status-item chat-status-provider">
               <span
                 className={`status-indicator status-${providerStatus.status}`}
-                aria-label={`Provider ${providerStatus.status}`}
+                role="status"
+                aria-live="polite"
+                aria-label={`Provider ${providerStatus.name} : statut ${providerStatus.status}`}
               />
               <span className="status-label">Actif:</span>
               <span
@@ -1070,14 +1128,22 @@ export const Chat: React.FC = () => {
                 border: '1px solid rgba(102, 126, 234, 0.2)',
               }}
             >
-              <VoiceConversation
-                onTranscript={text => {
-                  isDev && console.log('[OMEGA] Voice transcript:', text);
-                }}
-                onResponse={response => {
-                  isDev && console.log('[OMEGA] Voice response:', response);
-                }}
-              />
+              <React.Suspense
+                fallback={
+                  <div style={{ padding: '1rem', textAlign: 'center', color: '#93b399' }}>
+                    🎤 Chargement conversation vocale...
+                  </div>
+                }
+              >
+                <VoiceConversation
+                  onTranscript={text => {
+                    isDev && console.log('[OMEGA] Voice transcript:', text);
+                  }}
+                  onResponse={response => {
+                    isDev && console.log('[OMEGA] Voice response:', response);
+                  }}
+                />
+              </React.Suspense>
             </div>
           )}
 
@@ -1123,10 +1189,23 @@ export const Chat: React.FC = () => {
         {/* Settings Panel (Modal) with OMEGA Stats */}
         {showSettings && (
           <div className="chat-settings-overlay" onClick={toggleSettings}>
-            <div className="chat-settings-panel" onClick={e => e.stopPropagation()}>
+            <div
+              ref={settingsPanelRef}
+              className="chat-settings-panel"
+              onClick={e => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="settings-title"
+            >
               <div className="chat-settings-header">
-                <h2 className="chat-settings-title">Paramètres OMEGA v19.2Ω</h2>
-                <button className="chat-settings-close" onClick={toggleSettings}>
+                <h2 id="settings-title" className="chat-settings-title">
+                  Paramètres OMEGA v19.2Ω
+                </h2>
+                <button
+                  className="chat-settings-close"
+                  onClick={toggleSettings}
+                  aria-label="Fermer les paramètres"
+                >
                   ✕
                 </button>
               </div>
@@ -1146,6 +1225,7 @@ export const Chat: React.FC = () => {
                       className="chat-provider-select"
                       value={preferredProvider}
                       onChange={handlePreferredProviderChange}
+                      aria-label="Sélection du provider IA préféré"
                     >
                       {PROVIDER_PREFERENCE_OPTIONS.map(option => (
                         <option key={option} value={option}>

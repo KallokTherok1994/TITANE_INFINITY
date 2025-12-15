@@ -28,6 +28,20 @@ import './styles/exp-fusion.css'; // 🎯 XP Advanced Features (unique)
 import './pages/styles.css'; // 📄 Pages styles (minimal)
 
 // Phase 8: Production Hardening
+
+/**
+ * Échapper les caractères HTML pour prévenir XSS dans les fallbacks d'erreur
+ */
+const escapeHtmlForError = (str: string): string => {
+  const htmlEscapes: Record<string, string> = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  };
+  return str.replace(/[&<>"']/g, char => htmlEscapes[char] || char);
+};
 import { ErrorBoundary as ProductionErrorBoundary } from './components/common/ErrorBoundary';
 // import { PerformanceMonitor } from './lib/performanceBudget'; // DÉSACTIVÉ pour diagnostic progressif
 import { injectSROnlyStyles } from './lib/accessibility';
@@ -304,8 +318,8 @@ if (!rootElement) {
     ">
       <div>
         <h1 style="font-size: 2rem; margin-bottom: 1rem;">⚠️ TITANE∞ Boot Error</h1>
-        <p style="font-size: 1.2rem; margin-bottom: 2rem;">${errorMsg}</p>
-        <pre style="background: #1a1a1a; padding: 1rem; border-radius: 8px; text-align: left; overflow: auto;">${document.documentElement.outerHTML}</pre>
+        <p style="font-size: 1.2rem; margin-bottom: 2rem;">${escapeHtmlForError(errorMsg)}</p>
+        <pre style="background: #1a1a1a; padding: 1rem; border-radius: 8px; text-align: left; overflow: auto;">${escapeHtmlForError(document.documentElement.outerHTML)}</pre>
       </div>
     </div>
   `;
@@ -368,10 +382,10 @@ try {
     ">
       <div style="max-width: 800px;">
         <h1 style="font-size: 2rem; margin-bottom: 1rem;">⚠️ TITANE∞ React Mount Error</h1>
-        <p style="font-size: 1.2rem; margin-bottom: 2rem; color: #ff8888;">${errorMsg}</p>
+        <p style="font-size: 1.2rem; margin-bottom: 2rem; color: #ff8888;">${escapeHtmlForError(errorMsg)}</p>
         <details style="text-align: left; background: #1a1a1a; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
           <summary style="cursor: pointer; color: #888; margin-bottom: 0.5rem;">Stack Trace</summary>
-          <pre style="font-size: 0.75rem; color: #aaa; overflow: auto;">${errorStack}</pre>
+          <pre style="font-size: 0.75rem; color: #aaa; overflow: auto;">${escapeHtmlForError(errorStack || '')}</pre>
         </details>
         <p style="color: #888; font-size: 0.875rem;">Appuyez sur F12 pour ouvrir la console DevTools</p>
         <button

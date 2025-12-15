@@ -149,31 +149,31 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
 
     // Provider selection logic
     let selectedProvider: string;
-    let reason: string;
+    let _reason: string;
 
     // Fast latency requirement → use local provider
     if (latency === 'fast') {
       selectedProvider = 'ollama';
-      reason = 'Local provider selected for fast latency';
+      _reason = 'Local provider selected for fast latency';
     }
     // Cognitive mode → use cloud providers
     else if (mode === 'cognitive') {
       const cloudProviders = ['anthropic', 'openai', 'google'];
       selectedProvider =
         cloudProviders[Math.floor(Math.random() * cloudProviders.length)];
-      reason = `Cloud provider selected for cognitive mode`;
+      _reason = `Cloud provider selected for cognitive mode`;
     }
     // Vision requirement → use vision-capable providers
     else if (requiresVision) {
       const visionProviders = ['google', 'openai'];
       selectedProvider =
         visionProviders[Math.floor(Math.random() * visionProviders.length)];
-      reason = `Vision-capable provider selected`;
+      _reason = `Vision-capable provider selected`;
     }
     // Default: local provider
     else {
       selectedProvider = 'ollama';
-      reason = 'Default local provider selected';
+      _reason = 'Default local provider selected';
     }
 
     const confidence = Math.random() * 0.5 + 0.5; // 0.5-1.0

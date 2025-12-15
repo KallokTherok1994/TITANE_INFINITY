@@ -234,7 +234,11 @@ async function checkEndpointHealth(): Promise<boolean> {
 /**
  * OMEGA: Error handler avec auto-heal integration
  */
-function handleOllamaError(error: unknown, context: string, metadata?: any): void {
+function handleOllamaError(
+  error: unknown,
+  context: string,
+  metadata?: Record<string, unknown>
+): void {
   errorCount++;
 
   const errorObj = error instanceof Error ? error : new Error(String(error));
@@ -243,7 +247,7 @@ function handleOllamaError(error: unknown, context: string, metadata?: any): voi
   autoHealEngine.heal('ollama', errorObj, 'provider', {
     context,
     errorCount,
-    metadata,
+    ...metadata,
     timestamp: Date.now(),
   });
 
