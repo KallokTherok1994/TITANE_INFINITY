@@ -226,7 +226,7 @@ class MCPCognitiveIntegrationClass {
 
       // 3. Retrieve from Semantic Memory Engine
       // const memories = await this.cognitiveOrchestrator.retrieveMemories(query, topK);
-      const memories: any[] = []; // Stub: retrieveMemories not implemented
+      const memories: Message[] = []; // Stub: retrieveMemories not implemented
 
       this.log(`Retrieved ${memories.length} memories for query: ${query}`);
       return memories;

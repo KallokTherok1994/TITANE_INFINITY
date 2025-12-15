@@ -86,8 +86,11 @@ const SyncConfig: React.FC<SyncConfigProps> = ({ status, onUpdate }) => {
       });
       setMessage({ type: 'success', text: 'Configuration sauvegardée avec succès!' });
       onUpdate();
-    } catch (err: any) {
-      setMessage({ type: 'error', text: err.toString() });
+    } catch (err: unknown) {
+      setMessage({
+        type: 'error',
+        text: err instanceof Error ? err.message : String(err),
+      });
     } finally {
       setSaving(false);
     }

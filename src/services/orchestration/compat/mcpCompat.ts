@@ -407,7 +407,7 @@ export const MCPOrchestrator = {
    * Validate output
    * (Wrapped for compatibility)
    */
-  async validateOutput(output: string, _criteria: any): Promise<ValidatedOutput> {
+  async validateOutput(output: string, _criteria: unknown): Promise<ValidatedOutput> {
     // Simplified validation
     return {
       data: output,

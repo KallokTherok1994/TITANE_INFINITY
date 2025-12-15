@@ -432,13 +432,13 @@ class AIOrchestrator {
     }
   }
 
-  private isValidOmnisResponse(response: any): boolean {
+  private isValidOmnisResponse(response: unknown): boolean {
+    if (!response || typeof response !== 'object') return false;
+    const r = response as Record<string, unknown>;
     return (
-      response &&
-      typeof response === 'object' &&
-      typeof response.content === 'string' &&
-      response.content.trim().length > 0 &&
-      response.content.length < 100000
+      typeof r.content === 'string' &&
+      r.content.trim().length > 0 &&
+      r.content.length < 100000
     ); // Sanity check
   }
 

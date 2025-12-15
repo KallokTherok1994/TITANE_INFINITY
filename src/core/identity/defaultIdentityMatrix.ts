@@ -250,22 +250,22 @@ export const DEFAULT_IDENTITY_MATRIX: IdentityMatrix = {
  * @param matrix Matrice à valider
  * @returns true si valide, false sinon
  */
-export function validateIdentityMatrix(matrix: any): matrix is IdentityMatrix {
+export function validateIdentityMatrix(matrix: unknown): matrix is IdentityMatrix {
   if (!matrix || typeof matrix !== 'object') return false;
-  if (!matrix.version || typeof matrix.version !== 'string') return false;
-  if (!matrix.lastUpdated || typeof matrix.lastUpdated !== 'number') return false;
-  if (!Array.isArray(matrix.values)) return false;
 
-  for (const value of matrix.values) {
-    if (
-      !value.id ||
-      !value.label ||
-      !value.description ||
-      typeof value.weight !== 'number'
-    ) {
+  // v24.7 - Type-safe access with type guard
+  const m = matrix as Record<string, unknown>;
+  if (!m.version || typeof m.version !== 'string') return false;
+  if (!m.lastUpdated || typeof m.lastUpdated !== 'number') return false;
+  if (!Array.isArray(m.values)) return false;
+
+  for (const value of m.values) {
+    if (!value || typeof value !== 'object') return false;
+    const v = value as Record<string, unknown>;
+    if (!v.id || !v.label || !v.description || typeof v.weight !== 'number') {
       return false;
     }
-    if (value.weight < 0 || value.weight > 1) return false;
+    if (v.weight < 0 || v.weight > 1) return false;
   }
 
   return true;

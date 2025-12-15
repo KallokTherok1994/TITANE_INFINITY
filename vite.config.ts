@@ -76,6 +76,9 @@ export default defineConfig({
   },
 
   build: {
+    // 🚀 OPTIMIZATION v24.7.6: Enable advanced compression & tree-shaking
+    reportCompressedSize: true,
+    cssMinify: 'lightningcss', // Faster CSS minification
     rollupOptions: {
       // ✅ FIX: Ne PAS externaliser @tauri-apps/api/* en mode Tauri!
       // Tauri v2 fournit ces modules directement, ils doivent être bundlés
@@ -87,6 +90,12 @@ export default defineConfig({
         'file-uri-to-path',
         // ❌ REMOVED: @tauri-apps/api/* - Let Vite bundle them normally for Tauri
       ],
+      // 🚀 OPTIMIZATION: Tree-shaking des modules inutilisés
+      treeshake: {
+        moduleSideEffects: false,
+        propertyReadSideEffects: false,
+        tryCatchDeoptimization: false,
+      },
       onwarn(warning, warn) {
         // Ignorer le warning d'eval pour onnxruntime-web (nécessaire pour WASM)
         if (warning.code === 'EVAL' && warning.id?.includes('onnxruntime-web')) {
@@ -135,6 +144,14 @@ export default defineConfig({
             // Web vitals
             if (id.includes('web-vitals')) {
               return 'web-vitals';
+            }
+            // 🚀 OPTIMIZATION: Sentry séparé (lazy-loadable en production)
+            if (id.includes('@sentry')) {
+              return 'monitoring';
+            }
+            // Chart.js séparé (gros et optionnel)
+            if (id.includes('chart.js') || id.includes('chartjs')) {
+              return 'charts';
             }
             // Autres vendors groupés
             return 'vendor-utils';
