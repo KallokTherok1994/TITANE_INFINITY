@@ -186,8 +186,8 @@ export interface TestScenarioResult {
   messages: Array<{
     role: 'user' | 'assistant';
     content: string;
-    expected?: any;
-    actual?: any;
+    expected?: unknown;
+    actual?: unknown;
     evaluation: MessageEvaluationResult;
   }>;
 
@@ -385,12 +385,28 @@ export interface EvaluationStats {
 }
 
 /**
+ * Données d'un événement d'évaluation
+ */
+export interface EvaluationEventData {
+  test_id?: string;
+  scenario_id?: string;
+  result?: TestScenarioResult;
+  error?: unknown;
+  alert?: {
+    metric: MetricType;
+    threshold: number;
+    actual_value: number;
+    message: string;
+  };
+}
+
+/**
  * Événements du moteur d'évaluation
  */
 export interface EvaluationEvent {
   type: 'test_started' | 'test_completed' | 'test_failed' | 'live_eval_alert';
   timestamp: string;
-  data: any;
+  data: EvaluationEventData;
 }
 
 export type EvaluationEventHandler = (event: EvaluationEvent) => void;

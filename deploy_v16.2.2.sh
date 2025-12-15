@@ -32,10 +32,11 @@ else
     echo -e "  ${YELLOW}⚠${NC}  Ollama server inactif (optionnel)"
 fi
 
-if curl -s http://localhost:5173/ > /dev/null 2>&1; then
-    echo -e "  ${GREEN}✓${NC} Vite dev actif"
+# TAURI-ONLY: pas de serveur HTTP, on vérifie la présence du build dist/
+if [ -d "dist" ] && [ -f "dist/index.html" ]; then
+    echo -e "  ${GREEN}✓${NC} Build dist/ présent"
 else
-    echo -e "  ${RED}✗${NC} Vite dev inactif (requis pour tests)"
+    echo -e "  ${YELLOW}⚠${NC}  Build dist/ absent (exécutez: npm run build)"
 fi
 
 if pgrep -f titane-infinity > /dev/null 2>&1; then
@@ -170,7 +171,7 @@ echo "  4. ✓ Fix state management (.manage() + .env + runtime)"
 echo ""
 
 echo -e "${YELLOW}⏳ PHASES EN ATTENTE (USER):${NC}"
-echo "  5. Tests diagnostic UI (http://localhost:5173/)"
+echo "  5. Tests diagnostic UI (dans l'app Titan-Dev)"
 echo "  6. Tests Chat UI manuel (/chat)"
 echo "  7. Tests TTS voice mode (🎤)"
 echo ""
@@ -183,7 +184,7 @@ echo "  • CHAT_IA_REPAIR_SUCCESS_v16.2.2.md (guide complet)"
 echo ""
 
 echo -e "${BLUE}🎯 PROCHAINE ACTION:${NC}"
-echo "  URL: http://localhost:5173/"
+echo "  Action: Ouvrir Titan-Dev (Tauri)"
 echo "  Action: Cliquer 'Lancer Diagnostic' (overlay haut droite)"
 echo "  Durée: 5 minutes"
 echo ""

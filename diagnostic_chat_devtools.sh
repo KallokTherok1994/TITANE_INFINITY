@@ -84,12 +84,11 @@ devUrl=$(grep '"devUrl"' src-tauri/tauri.conf.json | grep -o 'http://[^"]*\|taur
 echo "   Current devUrl: $devUrl"
 
 if [[ "$devUrl" == "http://localhost:"* ]]; then
-    echo "   ✅ devUrl: CORRECT (HTTP with port)"
+    echo "   ❌ devUrl: INCORRECT (TAURI-ONLY: pas de devUrl HTTP)"
 elif [[ "$devUrl" == "tauri://"* ]]; then
-    echo "   ⚠️  devUrl: INCORRECT (needs HTTP with port for dev mode)"
-    echo "   💡 Should be: http://localhost:5173"
+    echo "   ✅ devUrl: CORRECT (TAURI-ONLY)"
 else
-    echo "   ❌ devUrl: INVALID format"
+    echo "   ✅ devUrl: NON DÉFINI (OK en TAURI-ONLY)"
 fi
 echo ""
 

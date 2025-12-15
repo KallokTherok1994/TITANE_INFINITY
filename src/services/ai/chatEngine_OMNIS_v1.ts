@@ -161,13 +161,15 @@ class ChatEngineOmnis {
   /**
    * OMNIS Message Validation - Pure predicate
    */
-  private isValidMessage(msg: any): boolean {
+  private isValidMessage(msg: unknown): msg is AIMessage {
+    if (!msg || typeof msg !== 'object') return false;
+    const candidate = msg as Record<string, unknown>;
     return (
-      msg &&
-      typeof msg === 'object' &&
-      (msg.role === 'user' || msg.role === 'assistant' || msg.role === 'system') &&
-      typeof msg.content === 'string' &&
-      msg.content.trim().length > 0
+      (candidate.role === 'user' ||
+        candidate.role === 'assistant' ||
+        candidate.role === 'system') &&
+      typeof candidate.content === 'string' &&
+      (candidate.content as string).trim().length > 0
     );
   }
 
@@ -217,20 +219,27 @@ class ChatEngineOmnis {
   /**
    * OMNIS Response Normalization - Always returns valid AIMessage
    */
-  private normalizeResponse(response: any, status: string, startTime: number): AIMessage {
+  private normalizeResponse(
+    response: unknown,
+    status: string,
+    startTime: number
+  ): AIMessage {
     const duration = Date.now() - startTime;
 
+    // Type guard for response object
+    const candidate = response as { content?: unknown; provider?: string };
+
     // If we have a valid response
-    if (response && response.content && typeof response.content === 'string') {
+    if (candidate && candidate.content && typeof candidate.content === 'string') {
       return {
         role: 'assistant',
-        content: response.content,
-        provider: response.provider || 'unknown',
+        content: candidate.content,
+        provider: candidate.provider || 'unknown',
         timestamp: Date.now(),
         metadata: {
           status: 'success',
           duration,
-          originalProvider: response.provider,
+          originalProvider: candidate.provider,
         },
       };
     }
@@ -272,12 +281,13 @@ class ChatEngineOmnis {
   /**
    * OMNIS Metadata Enhancement - Pure function
    */
-  private enhanceMetadata(response: AIMessage, context: any): AIMessage {
+  private enhanceMetadata(response: AIMessage, context: unknown): AIMessage {
+    const ctx = context as { history?: unknown[] };
     return {
       ...response,
       metadata: {
         ...response.metadata,
-        contextSize: context.history?.length || 0,
+        contextSize: ctx.history?.length || 0,
         messageLength: response.content.length,
         generationTime: Date.now(),
         engine: 'omnis-v1.0',

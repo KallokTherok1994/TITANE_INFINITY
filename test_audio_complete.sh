@@ -112,7 +112,7 @@ fi
 echo "Test 2.2: Test microphone backend..."
 if pgrep -f "titane_infinity" > /dev/null; then
     echo "   ⚠️  Test manuel requis:"
-    echo "   1. Ouvrir http://localhost:5173"
+    echo "   1. Ouvrir l'application Titan-Dev (fenêtre Tauri)"
     echo "   2. Activer mode vocal (🎤)"
     echo "   3. Vérifier visualisation audio"
     test_result "Microphone Backend" "SKIP" "Test manuel requis"
@@ -170,11 +170,7 @@ echo ""
 # Test 4.1: Chat interface
 echo "Test 4.1: Interface chat accessible..."
 if pgrep -f "titane_infinity" > /dev/null; then
-    if curl -s http://localhost:5173/chat > /dev/null 2>&1; then
-        test_result "Chat Interface" "PASS"
-    else
-        test_result "Chat Interface" "FAIL" "Page not accessible"
-    fi
+    test_result "Chat Interface" "SKIP" "TAURI-ONLY (pas de check HTTP); valider dans la fenêtre"
 else
     test_result "Chat Interface" "SKIP" "App not running"
 fi
@@ -182,7 +178,7 @@ fi
 # Test 4.2: Envoi message
 echo "Test 4.2: Envoi message IA..."
 echo "   ⚠️  Test manuel requis:"
-echo "   1. Accéder à http://localhost:5173/chat"
+echo "   1. Accéder à /chat dans la fenêtre Tauri"
 echo "   2. Envoyer: 'Bonjour TITANE'"
 echo "   3. Vérifier réponse en <3s"
 test_result "Envoi Message IA" "SKIP" "Test manuel requis"

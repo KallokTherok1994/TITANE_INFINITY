@@ -14,12 +14,12 @@ echo "🏗️ Architecture: OMNIS Ultra-Refactorization (9/9 Phases)"
 echo "🎯 Status: SYSTÈME OPÉRATIONNEL"
 echo ""
 
-# Vérification Vite Dev Server
+# Validation Frontend (TAURI-ONLY)
 echo "⚡ VALIDATION FRONTEND:"
-if curl -s http://localhost:5173/ > /dev/null 2>&1; then
-    echo "✅ Vite Dev Server: OPÉRATIONNEL (port 5173)"
+if pgrep -f 'titane-infinity' > /dev/null 2>&1; then
+    echo "✅ Runtime Tauri: ACTIF (frontend dans la fenêtre native)"
 else
-    echo "⚠️ Vite Dev Server: En cours de démarrage..."
+    echo "⚠️ Runtime Tauri: NON LANCÉ (lancer Titan-Dev)"
 fi
 
 # Vérification build récent
@@ -168,7 +168,7 @@ echo "✅ SYSTÈME CERTIFIÉ PRODUCTION READY"
 
 echo ""
 echo "🚀 NEXT ACTIONS:"
-echo "1. 🌐 Application disponible: http://localhost:5173/"
+echo "1. 🖥️ Application disponible dans la fenêtre Tauri (TAURI-ONLY)"
 echo "2. 🔧 Backend Tauri: Compilation en cours"
 echo "3. 💻 Interface: Prête pour interaction"
 echo "4. 🧪 Tests: Prêts pour exécution"

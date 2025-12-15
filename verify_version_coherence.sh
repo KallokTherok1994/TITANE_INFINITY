@@ -50,7 +50,7 @@ fi
 echo ""
 echo "📋 Corrections Récentes Appliquées:"
 echo "────────────────────────────────────────────────────────────"
-echo "✅ Chat IA Fix:         devUrl → http://localhost:5173"
+echo "✅ Chat IA Fix:         TAURI-ONLY (pas de devUrl HTTP)"
 echo "✅ Vite Dev Server:     npm run vite:dev (au lieu de build:watch)"
 echo "✅ Backend:             758 lignes Rust (Gemini + Ollama + Local)"
 echo "✅ Cognitive Layer:     v16 (4 engines)"

@@ -161,8 +161,7 @@ case $ENVIRONMENT in
     local)
         echo -e "${BLUE}Deploying locally (dev mode)...${NC}"
         npm run dev &
-        echo -e "${GREEN}✅ Development server started${NC}"
-        echo -e "${BLUE}URL: http://localhost:5173${NC}"
+        echo -e "${GREEN}✅ Titan-Dev lancé (TAURI-ONLY)${NC}"
         ;;
         
     *)
