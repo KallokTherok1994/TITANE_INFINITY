@@ -68,8 +68,8 @@ const CloudCenter: React.FC = () => {
       setInitialized(true);
       setShowInitForm(false);
       setPassphrase('');
-    } catch (err: any) {
-      setError(err.toString());
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
     }
@@ -83,8 +83,8 @@ const CloudCenter: React.FC = () => {
     try {
       await invoke<SyncResult>('cloud_sync_push');
       await loadStatus();
-    } catch (err: any) {
-      setError(err.toString());
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
     }
@@ -98,8 +98,8 @@ const CloudCenter: React.FC = () => {
     try {
       await invoke<SyncResult>('cloud_sync_pull');
       await loadStatus();
-    } catch (err: any) {
-      setError(err.toString());
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
     }
@@ -117,8 +117,8 @@ const CloudCenter: React.FC = () => {
       } else {
         setError("⚠️ Le vault présente des problèmes d'intégrité");
       }
-    } catch (err: any) {
-      setError(err.toString());
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
     }
@@ -132,8 +132,8 @@ const CloudCenter: React.FC = () => {
     try {
       const backupPath = await invoke<string>('cloud_backup_vault');
       alert(`✅ Sauvegarde créée: ${backupPath}`);
-    } catch (err: any) {
-      setError(err.toString());
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
     }
