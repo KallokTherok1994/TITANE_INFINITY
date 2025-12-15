@@ -33,11 +33,8 @@ echo ""
 echo "🏗️  TEST 1: Infrastructure Runtime"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-if curl -s http://localhost:5173 > /dev/null; then
-    check_pass "Vite dev server accessible (http://localhost:5173)"
-else
-    check_fail "Vite dev server non accessible"
-fi
+echo "TAURI-ONLY: pas de serveur HTTP frontend (skip)"
+check_pass "Frontend: TAURI-only (aucun serveur HTTP)"
 
 if pgrep -f "titane-infinity" > /dev/null; then
     check_pass "Tauri backend running"

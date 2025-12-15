@@ -11,6 +11,75 @@
  */
 
 /**
+ * Données du panneau mémoire
+ */
+export interface MemoryPanelData {
+  conversation_id: string;
+  facts_count: number;
+  recent_facts: Array<{
+    content: string;
+    confidence: number;
+    timestamp: number;
+  }>;
+}
+
+/**
+ * Données du panneau objectifs
+ */
+export interface GoalsPanelData {
+  active_goals: Array<{
+    id: string;
+    description: string;
+    status: 'active' | 'completed' | 'failed';
+    priority: 'high' | 'medium' | 'low';
+    progress: number;
+  }>;
+}
+
+/**
+ * Données du panneau cohérence
+ */
+export interface ConsistencyPanelData {
+  violations: Array<{
+    type: string;
+    severity: number;
+    description: string;
+  }>;
+  score: number;
+}
+
+/**
+ * Données du panneau métriques
+ */
+export interface MetricsPanelData {
+  response_time_ms: number;
+  tokens_used: number;
+  quality_score: number;
+}
+
+/**
+ * Décision récente
+ */
+export interface RecentDecision {
+  id: string;
+  type: string;
+  description: string;
+  timestamp: number;
+  confidence: number;
+}
+
+/**
+ * Trace récente
+ */
+export interface RecentTrace {
+  id: string;
+  phase: string;
+  duration_ms: number;
+  status: 'success' | 'error' | 'pending';
+  timestamp: number;
+}
+
+/**
  * Phase du pipeline cognitif
  */
 export enum CognitivePhase {
@@ -80,12 +149,18 @@ export interface DecisionLog {
 export interface DebugPanel {
   conversation_id?: string;
   current_turn?: number;
-  memory_panel?: any;
-  goals_panel?: any;
-  consistency_panel?: any;
-  metrics_panel?: any;
-  recent_decisions?: any[];
-  recent_traces?: any[];
+  memory_panel?: unknown;
+  goals_panel?: unknown;
+  consistency_panel?: unknown;
+  metrics_panel?: unknown;
+  recent_decisions?: DecisionLog[];
+  recent_traces?: Array<{
+    trace_id: string;
+    turn_number?: number;
+    duration_ms?: number;
+    status: 'error' | 'success';
+    phases_completed: number;
+  }>;
   traces: CognitiveTrace[];
   current_trace?: CognitiveTrace;
   snapshot: CognitiveSnapshot;
@@ -486,6 +561,17 @@ export interface CognitiveLogger {
 export type ICognitiveObservabilityEngine = CognitiveLogger;
 
 /**
+ * Données d'un événement d'observabilité
+ */
+export interface ObservabilityEventData {
+  trace_id?: string;
+  phase?: string;
+  duration_ms?: number;
+  error?: unknown;
+  decision?: RecentDecision;
+}
+
+/**
  * Événements d'observabilité
  */
 export interface ObservabilityEvent {
@@ -496,7 +582,7 @@ export interface ObservabilityEvent {
     | 'error_logged'
     | 'decision_made';
   timestamp: string;
-  data: any;
+  data: ObservabilityEventData;
 }
 
 export type ObservabilityEventHandler = (event: ObservabilityEvent) => void;

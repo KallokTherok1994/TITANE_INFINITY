@@ -5,27 +5,12 @@ echo "🧪 QUICK NETWORK TEST"
 echo "===================="
 echo ""
 
+echo "TAURI-ONLY: pas de serveur HTTP frontend à tester (skip)"
+echo "Ouvrez Titan-Dev (fenêtre Tauri) pour valider l'UI."
+exit 0
+
 LOCAL_IP=$(hostname -I | awk '{print $1}')
 PASS=0
 FAIL=0
 
-# Test Local
-echo "TEST 1: Local (localhost:5173)"
-if curl -s -o /dev/null -w "%{http_code}" http://localhost:5173 2>/dev/null | grep -q "200"; then
-    echo "✅ PASS"
-    ((PASS++))
-else
-    echo "⚠️  SKIP (dev server not running)"
-fi
 
-# Test LAN
-echo "TEST 2: LAN ($LOCAL_IP:5173)"
-if curl -s -o /dev/null -w "%{http_code}" http://$LOCAL_IP:5173 2>/dev/null | grep -q "200"; then
-    echo "✅ PASS"
-    ((PASS++))
-else
-    echo "⚠️  SKIP (dev server not running)"
-fi
-
-echo ""
-echo "SUMMARY: $PASS tests passed"
