@@ -6,30 +6,19 @@ echo "   TEST CHAT IA BACKEND - TITANE∞ v16.2.2"
 echo "═══════════════════════════════════════════════════════════════"
 echo ""
 
-# 1. Vérifier serveur Vite
-echo "1️⃣  Vérification serveur Vite..."
-HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5173/)
-if [ "$HTTP_CODE" = "200" ]; then
-    echo "   ✅ Serveur Vite: HTTP 200 OK"
-else
-    echo "   ❌ Serveur Vite: HTTP $HTTP_CODE (attendu: 200)"
-    exit 1
-fi
-echo ""
-
-# 2. Vérifier processus Tauri
-echo "2️⃣  Vérification processus Tauri..."
+# 1. Vérifier runtime Tauri
+echo "1️⃣  Vérification runtime Tauri..."
 PROCESS_COUNT=$(ps aux | grep "titane-infinity" | grep -v grep | wc -l)
 if [ "$PROCESS_COUNT" -ge 1 ]; then
     echo "   ✅ Processus Tauri: $PROCESS_COUNT actif(s)"
 else
-    echo "   ❌ Aucun processus Tauri trouvé"
+    echo "   ❌ Aucun processus Tauri trouvé (lancer Titan-Dev)"
     exit 1
 fi
 echo ""
 
-# 3. Instructions test Chat IA Console
-echo "3️⃣  Instructions test Chat IA:"
+# 2. Instructions test Chat IA Console
+echo "2️⃣  Instructions test Chat IA:"
 echo "   ┌─────────────────────────────────────────────────────────────"
 echo "   │ OUVRIR DEVTOOLS (F12) puis COLLER dans Console:"
 echo "   │"
@@ -55,8 +44,8 @@ echo "   │ }"
 echo "   └─────────────────────────────────────────────────────────────"
 echo ""
 
-# 4. Instructions test Chat UI
-echo "4️⃣  Instructions test Chat UI:"
+# 3. Instructions test Chat UI
+echo "3️⃣  Instructions test Chat UI:"
 echo "   1. Cliquer sur 💬 Chat dans sidebar"
 echo "   2. Écrire message: 'Bonjour'"
 echo "   3. Appuyer Entrée"
@@ -70,13 +59,11 @@ echo "      [CHAT_SEND_MESSAGE] Try: local → SUCCESS ✅"
 echo "   5. Vérifier UI: Message 'Echo: Bonjour' + badge 'Local'"
 echo ""
 
-# 5. Résumé corrections
-echo "5️⃣  Corrections appliquées (v19.3):"
-echo "   ✅ tauri.conf.json: beforeDevCommand → 'vite:dev'"
-echo "   ✅ package.json: Script vite:dev → serveur HTTP port 5173"
-echo "   ✅ Serveur Vite: ACTIF (HTTP 200)"
-echo "   ✅ Application: LANCÉE (2 processus)"
-echo "   ✅ Backend Chat IA: INITIALISÉ (758 lignes Rust)"
+# 4. Résumé
+echo "4️⃣  Résumé (TAURI-ONLY):"
+echo "   ✅ Aucun serveur HTTP requis"
+echo "   ✅ Application: LANCÉE (processus Tauri)"
+echo "   ✅ Backend Chat IA: prêt via invoke()"
 echo ""
 
 echo "═══════════════════════════════════════════════════════════════"

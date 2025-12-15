@@ -87,15 +87,8 @@ else
     echo "   → Lancer: npm run tauri:dev"
 fi
 
-# Vérifier Vite dev server
-if curl -s http://localhost:5173/ > /dev/null 2>&1; then
-    echo -e "🔍 Vite dev server (5173)... ${GREEN}✅ PASS${NC}"
-    ((TESTS_PASSED++))
-else
-    echo -e "🔍 Vite dev server (5173)... ${RED}❌ FAIL${NC}"
-    ((TESTS_FAILED++))
-    echo "   → Lancer: npm run tauri:dev"
-fi
+# TAURI-ONLY: pas de serveur HTTP frontend
+echo -e "🔍 Frontend HTTP... ${YELLOW}⚠️  SKIP (TAURI-ONLY)${NC}"
 
 echo ""
 echo "🎯 VÉRIFICATION FICHIERS CLÉS"
@@ -169,7 +162,7 @@ if [ $TESTS_FAILED -eq 0 ]; then
     echo -e "${GREEN}✅ TOUTES LES VÉRIFICATIONS PASSENT !${NC}"
     echo ""
     echo "🎯 PROCHAINES ÉTAPES:"
-    echo "  1. Ouvrir http://localhost:5173/"
+    echo "  1. Ouvrir Titan-Dev (fenêtre Tauri)"
     echo "  2. Cliquer bouton 'Lancer Diagnostic' (overlay haut droite)"
     echo "  3. Tester Chat UI /chat avec message réel"
     echo "  4. Tester voice mode TTS (bouton 🎤)"

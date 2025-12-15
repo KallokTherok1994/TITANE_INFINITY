@@ -15,13 +15,6 @@ if [ ! -f "package.json" ]; then
     exit 1
 fi
 
-# Libérer le port 5173 si occupé
-if lsof -ti:5173 >/dev/null 2>&1; then
-    echo "🔄 Libération du port 5173..."
-    lsof -ti:5173 | xargs -r kill -9
-    sleep 1
-fi
-
 echo "✅ Prérequis OK"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -37,14 +30,12 @@ echo "📊 Configuration:"
 echo "   CHOKIDAR_USEPOLLING=true"
 echo "   CHOKIDAR_INTERVAL=300ms"
 echo ""
-echo "🌐 URLs:"
-echo "   Local:   http://localhost:5173/"
-echo "   Network: http://192.168.2.16:5173/"
+echo "🖥️ Mode TAURI-ONLY: aucun serveur HTTP"
 echo ""
 echo "⚡ Commandes Tauri disponibles (npm run):"
 echo "   • dev:tauri    → Lance Tauri + Vite (recommandé)"
 echo "   • tauri:dev    → Alias de dev:tauri"
-echo "   • dev          → Lance seulement Vite (sans Tauri)"
+echo "   • dev          → Lance Titan-Dev (TAURI-ONLY)"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""

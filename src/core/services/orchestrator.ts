@@ -15,6 +15,7 @@
 import type { AIMessage, AIResponse, AIConfig } from './types';
 import { buildSystemPrompt as buildTitanePrompt } from '@/core/prompts';
 import type { Provider as PromptProvider, PromptContext } from '@/core/prompts';
+import type { MetricsData } from '@/types/cognitiveKernel';
 import { titaneLocalProvider } from '../../services/ai/providers/titaneLocal'; // ← PREMIER (noyau infaillible)
 import { tauriChatProvider } from '../../services/ai/providers/tauriChat';
 import { geminiProvider } from '../../services/ai/providers/gemini';

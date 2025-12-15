@@ -64,18 +64,22 @@ echo ""
 
 echo "3️⃣  Vérification vite.config.ts..."
 
-if grep -q 'hmr:.*false' vite.config.ts; then
-    echo "   ✅ HMR désactivé (mode Tauri)"
+if ! grep -qE '^[[:space:]]*server:' vite.config.ts; then
+    echo "   ✅ Aucun serveur Vite configuré (TAURI-only)"
 else
-    echo "   ⚠️  WARNING: HMR actif (peut causer des conflits)"
-    WARNINGS=$((WARNINGS + 1))
-fi
+    if grep -q 'hmr:.*false' vite.config.ts; then
+        echo "   ✅ HMR désactivé (mode Tauri)"
+    else
+        echo "   ⚠️  WARNING: HMR actif (peut causer des conflits)"
+        WARNINGS=$((WARNINGS + 1))
+    fi
 
-if grep -q 'strictPort:.*true' vite.config.ts; then
-    echo "   ✅ strictPort activé"
-else
-    echo "   ⚠️  WARNING: strictPort désactivé"
-    WARNINGS=$((WARNINGS + 1))
+    if grep -q 'strictPort:.*true' vite.config.ts; then
+        echo "   ✅ strictPort activé"
+    else
+        echo "   ⚠️  WARNING: strictPort désactivé"
+        WARNINGS=$((WARNINGS + 1))
+    fi
 fi
 
 echo ""
@@ -133,13 +137,18 @@ echo ""
 
 echo "6️⃣  Scan des scripts pour serveurs HTTP..."
 
-HTTP_SCRIPTS=$(grep -l "http.server\|vite preview\|vite dev\|npm run dev" *.sh 2>/dev/null | wc -l)
+# Détecte uniquement les éléments explicitement interdits (serveurs/URLs app)
+HTTP_PATTERN='http\.server|http-server|serve dist|vite preview|vite dev|http://localhost:(5173|4173|1420|8080)'
+HTTP_SCRIPTS=$(grep -lRE "${HTTP_PATTERN}" \
+    --include='*.sh' \
+    . \
+    2>/dev/null | wc -l)
 
 if [ "$HTTP_SCRIPTS" -gt 0 ]; then
     echo "   ⚠️  WARNING: $HTTP_SCRIPTS script(s) utilisent des serveurs HTTP"
-    grep -l "http.server\|vite preview\|vite dev" *.sh 2>/dev/null | head -5 | while read file; do
-        echo "      - $file"
-    done
+    while read -r file; do
+        [ -n "$file" ] && echo "      - ${file#./}"
+    done < <(grep -lRE "${HTTP_PATTERN}" --include='*.sh' . 2>/dev/null | sort -u)
     WARNINGS=$((WARNINGS + 1))
 else
     echo "   ✅ Aucun script HTTP détecté"

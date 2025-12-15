@@ -23,8 +23,8 @@ const isTauriContext = typeof window !== 'undefined' && '__TAURI__' in window;
 // TAURI IMPORTS (Lazy loaded to avoid errors in browser-only builds)
 // ═══════════════════════════════════════════════════════════════════════════
 
-let tauriFs: any = null;
-let tauriPath: any = null;
+let tauriFs: typeof import('@tauri-apps/plugin-fs') | null = null;
+let tauriPath: typeof import('@tauri-apps/api/path') | null = null;
 
 async function ensureTauriApis() {
   if (!isTauriContext) return;
@@ -128,7 +128,7 @@ export async function existsSync(path: string): Promise<boolean> {
       if (tauriPath && tauriFs) {
         const appDir = await tauriPath.appDataDir();
         const fullPath = await tauriPath.join(appDir, path);
-        return await tauriFs.exists(fullPath, { dir: tauriFs.BaseDirectory.AppData });
+        return await tauriFs.exists(fullPath);
       }
     }
     return localStorageExists(path);
@@ -150,9 +150,7 @@ export async function readFileSync(path: string, _encoding?: string): Promise<st
       if (tauriPath && tauriFs) {
         const appDir = await tauriPath.appDataDir();
         const fullPath = await tauriPath.join(appDir, path);
-        return await tauriFs.readTextFile(fullPath, {
-          dir: tauriFs.BaseDirectory.AppData,
-        });
+        return await tauriFs.readTextFile(fullPath);
       }
     }
     return localStorageRead(path);
@@ -174,9 +172,7 @@ export async function writeFileSync(path: string, data: string): Promise<void> {
       if (tauriPath && tauriFs) {
         const appDir = await tauriPath.appDataDir();
         const fullPath = await tauriPath.join(appDir, path);
-        await tauriFs.writeTextFile(fullPath, data, {
-          dir: tauriFs.BaseDirectory.AppData,
-        });
+        await tauriFs.writeTextFile(fullPath, data);
         return;
       }
     }
@@ -197,7 +193,7 @@ export const promises = {
   /**
    * Read file content (async)
    */
-  async readFile(path: string, _encoding?: any): Promise<string> {
+  async readFile(path: string, _encoding?: BufferEncoding): Promise<string> {
     return await readFileSync(path);
   },
 
@@ -239,10 +235,7 @@ export const promises = {
         if (tauriPath && tauriFs) {
           const appDir = await tauriPath.appDataDir();
           const fullPath = await tauriPath.join(appDir, path);
-          await tauriFs.createDir(fullPath, {
-            dir: tauriFs.BaseDirectory.AppData,
-            recursive: options?.recursive,
-          });
+          await tauriFs.create(fullPath);
         }
       }
       // Browser: no-op, localStorage doesn't need directories
@@ -266,9 +259,7 @@ export const promises = {
         if (tauriPath && tauriFs) {
           const appDir = await tauriPath.appDataDir();
           const fullPath = await tauriPath.join(appDir, path);
-          const entries = await tauriFs.readDir(fullPath, {
-            dir: tauriFs.BaseDirectory.AppData,
-          });
+          const entries = await tauriFs.readDir(fullPath);
           return entries.map((entry: { name?: string }) => entry.name || '');
         }
       }

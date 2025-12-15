@@ -120,7 +120,7 @@ export const cognitiveOmega = {
     let context = '';
     if (memories.length > 0) {
       context += '## Relevant Memories:\n';
-      memories.forEach((mem: any) => {
+      memories.forEach((mem: { content: string; relevance: number }) => {
         context += `- ${mem.content} (relevance: ${mem.relevance.toFixed(2)})\n`;
       });
       context += '\n';
@@ -139,8 +139,8 @@ export const cognitiveOmega = {
     mode?: ChatMode;
   }): Promise<{
     processed: boolean;
-    violations: any[];
-    corrections: any[];
+    violations: unknown[];
+    corrections: unknown[];
   }> {
     const strategy = await getCognitiveStrategy();
     const _result = await strategy.execute('processConversation', params);
@@ -195,7 +195,7 @@ export const cognitiveOmega = {
    */
   async checkConsistency(params: { messages: AIMessage[]; response: string }): Promise<{
     isConsistent: boolean;
-    violations: any[];
+    violations: unknown[];
     score: number;
   }> {
     const strategy = await getCognitiveStrategy();

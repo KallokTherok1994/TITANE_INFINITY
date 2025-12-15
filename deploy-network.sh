@@ -35,13 +35,9 @@ MODE=${1:-"dev"}
 
 case $MODE in
     "dev")
-        echo "🚀 Mode: Development (Hot Reload)"
+        echo "🚀 Mode: Development (TAURI-ONLY)"
         echo ""
-        echo "📊 URLs d'accès:"
-        echo "   Local:   http://localhost:5173"
-        echo "   Réseau:  http://$LOCAL_IP:5173"
-        echo ""
-        echo "🖥️  Application Tauri accessible sur cette machine"
+        echo "🖥️  L'application s'ouvre dans la fenêtre Tauri (aucun serveur HTTP)"
         echo ""
 
         # Lancer en mode dev avec Tauri
@@ -49,35 +45,13 @@ case $MODE in
         ;;
 
     "web")
-        echo "🌐 Mode: Web Only (sans Tauri)"
-        echo ""
-        echo "📊 URLs d'accès:"
-        echo "   Local:   http://localhost:5173"
-        echo "   Réseau:  http://$LOCAL_IP:5173"
-        echo ""
-        echo "⚠️  Mode web uniquement - certaines fonctions Tauri désactivées"
-        echo ""
-
-        # Lancer uniquement Vite
-        npm run vite:dev
+        echo "❌ Mode web-only désactivé (TAURI-ONLY)"
+        exit 1
         ;;
 
     "preview")
-        echo "📦 Mode: Production Preview"
-        echo ""
-
-        # Build production
-        echo "🔨 Building production assets..."
-        npm run build
-
-        echo ""
-        echo "📊 URLs d'accès:"
-        echo "   Local:   http://localhost:4173"
-        echo "   Réseau:  http://$LOCAL_IP:4173"
-        echo ""
-
-        # Lancer le serveur de preview
-        npm run preview -- --host
+        echo "❌ Mode preview HTTP désactivé (TAURI-ONLY)"
+        exit 1
         ;;
 
     "build")
