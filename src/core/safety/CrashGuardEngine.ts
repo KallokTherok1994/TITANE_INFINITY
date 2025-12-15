@@ -212,7 +212,7 @@ export class CrashGuardEngine {
   /**
    * Gère promesse rejetée non gérée
    */
-  private handleUnhandledRejection(reason: any): void {
+  private handleUnhandledRejection(reason: unknown): void {
     const threat: CrashThreat = {
       id: `threat-${Date.now()}`,
       type: 'exception',

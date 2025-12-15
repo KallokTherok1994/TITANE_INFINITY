@@ -220,12 +220,24 @@ export const omnisOrchestrator = {
     }>
   > {
     const strategy = await getAIStrategy();
-    const providers = (await strategy.execute('getAvailableProviders', {})) as any;
+    const result = await strategy.execute('getAvailableProviders', {});
+    const providers =
+      (result as unknown as Array<{
+        id: string;
+        name: string;
+        available: boolean;
+        cognitiveFeatures?: string[];
+      }>) || [];
 
-    // Filter for cognitive-capable providers
-    return (providers || []).filter((p: any) =>
-      ['anthropic', 'openai', 'google'].includes(p.id)
-    );
+    // Filter for cognitive-capable providers and map to correct type
+    return providers
+      .filter(p => ['anthropic', 'openai', 'google'].includes(p.id))
+      .map(p => ({
+        id: p.id as unknown as AIProvider,
+        name: p.name,
+        available: p.available,
+        cognitiveFeatures: p.cognitiveFeatures || [],
+      }));
   },
 
   /**

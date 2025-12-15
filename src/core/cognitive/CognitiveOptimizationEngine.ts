@@ -465,7 +465,7 @@ export class CognitiveOptimizationEngine {
   // CACHE MANAGEMENT
   // ═══════════════════════════════════════════════════════════════════
 
-  private updateCache(key: string, value: any): void {
+  private updateCache(key: string, value: unknown): void {
     if (this.shortTermCache.size >= this.MAX_CACHE_SIZE) {
       // Supprimer entrée la plus ancienne (FIFO)
       const firstKey = this.shortTermCache.keys().next().value;
