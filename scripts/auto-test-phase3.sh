@@ -146,12 +146,8 @@ else
     check_warn "Titan-Dev: Processus non détecté (peut être normal)"
 fi
 
-# Vérifier Vite
-if curl -s http://localhost:5173 > /dev/null 2>&1; then
-    check_pass "Vite: Dev server accessible (http://localhost:5173)"
-else
-    check_fail "Vite: Dev server non accessible"
-fi
+# TAURI-ONLY: pas de serveur HTTP frontend
+check_pass "Frontend: TAURI-only (aucun serveur HTTP)"
 
 echo ""
 

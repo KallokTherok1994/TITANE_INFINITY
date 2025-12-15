@@ -42,6 +42,12 @@ fi
 
 echo -e "${GREEN}✅ Build completed${NC}"
 
+echo ""
+echo -e "${YELLOW}⚠️  TAURI-ONLY: étape Lighthouse/preview HTTP désactivée${NC}"
+echo "   (aucun serveur http://localhost:* autorisé)"
+echo ""
+exit 0
+
 # ────────────────────────────────────────────────────────────────
 # STEP 2: Start dev server for Lighthouse
 # ────────────────────────────────────────────────────────────────

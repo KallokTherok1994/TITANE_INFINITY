@@ -382,6 +382,17 @@ export function profileSync<T>(name: string, fn: () => T): T {
 }
 
 /**
+ * Web Vitals metric interface
+ */
+interface WebVitalsMetric {
+  value: number;
+  name: string;
+  delta: number;
+  id: string;
+  rating?: 'good' | 'needs-improvement' | 'poor';
+}
+
+/**
  * Capture les métriques de performance Web Vitals
  */
 export function captureWebVitals(): void {
@@ -392,23 +403,23 @@ export function captureWebVitals(): void {
   // Importer dynamiquement web-vitals
   import('web-vitals')
     .then(({ onCLS, onCLS: onFID, onFCP, onLCP, onTTFB }) => {
-      onCLS((metric: any) => {
+      onCLS((metric: WebVitalsMetric) => {
         Sentry.setMeasurement('CLS', metric.value, 'none');
       });
 
-      onFID((metric: any) => {
+      onFID((metric: WebVitalsMetric) => {
         Sentry.setMeasurement('FID', metric.value, 'millisecond');
       });
 
-      onFCP((metric: any) => {
+      onFCP((metric: WebVitalsMetric) => {
         Sentry.setMeasurement('FCP', metric.value, 'millisecond');
       });
 
-      onLCP((metric: any) => {
+      onLCP((metric: WebVitalsMetric) => {
         Sentry.setMeasurement('LCP', metric.value, 'millisecond');
       });
 
-      onTTFB((metric: any) => {
+      onTTFB((metric: WebVitalsMetric) => {
         Sentry.setMeasurement('TTFB', metric.value, 'millisecond');
       });
     })

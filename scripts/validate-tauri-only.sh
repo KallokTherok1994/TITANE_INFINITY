@@ -42,7 +42,7 @@ echo ""
 
 echo "2️⃣  Vérification tauri.conf.json..."
 
-if grep -q '"devUrl".*"http://localhost:5173"' src-tauri/tauri.conf.json; then
+if grep -qE '"devUrl"[[:space:]]*:[[:space:]]*"http://(localhost|127\.0\.0\.1):' src-tauri/tauri.conf.json; then
     echo "   ⚠️  WARNING: devUrl pointe vers HTTP (devrait utiliser dist/)"
     WARNINGS=$((WARNINGS + 1))
 else
@@ -141,6 +141,8 @@ echo "6️⃣  Scan des scripts pour serveurs HTTP..."
 HTTP_PATTERN='http\.server|http-server|serve dist|vite preview|vite dev|http://localhost:(5173|4173|1420|8080)'
 HTTP_SCRIPTS=$(grep -lRE "${HTTP_PATTERN}" \
     --include='*.sh' \
+    --exclude='./scripts/validate-tauri-only.sh' \
+    --exclude='./scripts/verify_conformite_tauri_local_v14.sh' \
     . \
     2>/dev/null | wc -l)
 
@@ -148,7 +150,7 @@ if [ "$HTTP_SCRIPTS" -gt 0 ]; then
     echo "   ⚠️  WARNING: $HTTP_SCRIPTS script(s) utilisent des serveurs HTTP"
     while read -r file; do
         [ -n "$file" ] && echo "      - ${file#./}"
-    done < <(grep -lRE "${HTTP_PATTERN}" --include='*.sh' . 2>/dev/null | sort -u)
+    done < <(grep -lRE "${HTTP_PATTERN}" --include='*.sh' --exclude='./scripts/validate-tauri-only.sh' --exclude='./scripts/verify_conformite_tauri_local_v14.sh' . 2>/dev/null | sort -u)
     WARNINGS=$((WARNINGS + 1))
 else
     echo "   ✅ Aucun script HTTP détecté"
@@ -202,9 +204,9 @@ else
         echo "      1. Corriger package.json:"
         echo "         \"dev\": \"tauri dev\""
     fi
-    if grep -q '"devUrl".*"http://localhost:5173"' src-tauri/tauri.conf.json; then
+    if grep -qE '"devUrl"[[:space:]]*:[[:space:]]*"http://(localhost|127\.0\.0\.1):' src-tauri/tauri.conf.json; then
         echo "      2. Corriger tauri.conf.json:"
-        echo "         \"devUrl\": \"http://localhost:1420\""
+        echo "         Supprimer devUrl HTTP (TAURI-only)"
     fi
     if lsof -i :4173 &>/dev/null; then
         echo "      3. Arrêter vite preview:"
