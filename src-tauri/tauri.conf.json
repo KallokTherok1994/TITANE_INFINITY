@@ -4,7 +4,8 @@
   "version": "24.2.0",
   "identifier": "com.titane.infinity",
   "build": {
-    "beforeDevCommand": "npm run build",
+    "devUrl": "http://localhost:5173",
+    "beforeDevCommand": "npm run vite -- --port 5173 --host 0.0.0.0",
     "beforeBuildCommand": "npm run build",
     "frontendDist": "../dist"
   },
