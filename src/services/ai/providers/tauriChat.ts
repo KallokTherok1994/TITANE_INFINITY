@@ -215,7 +215,11 @@ class TauriChatProvider implements AIProvider {
   /**
    * OMEGA: Error handler avec auto-heal integration
    */
-  private handleInvokeError(error: unknown, context: string, metadata?: any): void {
+  private handleInvokeError(
+    error: unknown,
+    context: string,
+    metadata?: Record<string, unknown>
+  ): void {
     this.errorCount++;
 
     const errorObj = error instanceof Error ? error : new Error(String(error));

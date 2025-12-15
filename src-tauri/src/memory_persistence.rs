@@ -107,7 +107,19 @@ async fn migrate_legacy_data() {
     log::info!("🔄 [VAULT] Migrating legacy unencrypted data...");
 
     let legacy_files: Vec<StoredFile> = match fs::read_to_string(MEMORY_DB_LEGACY_PATH) {
-        Ok(data) => serde_json::from_str(&data).unwrap_or_default(),
+        Ok(data) => match serde_json::from_str(&data) {
+            Ok(files) => files,
+            Err(e) => {
+                log::warn!(
+                    "⚠️ [VAULT] Legacy data parsing failed (possible corruption): {}",
+                    e
+                );
+                // Backup corrupted file before discarding
+                let backup_path = format!("{}.corrupted", MEMORY_DB_LEGACY_PATH);
+                let _ = fs::copy(MEMORY_DB_LEGACY_PATH, &backup_path);
+                return;
+            }
+        },
         Err(_) => return,
     };
 
@@ -202,7 +214,13 @@ fn load_legacy_readonly() -> Result<MemoryDatabase, String> {
     }
 
     let data = fs::read_to_string(MEMORY_DB_LEGACY_PATH).map_err(|e| e.to_string())?;
-    let files: Vec<StoredFile> = serde_json::from_str(&data).unwrap_or_default();
+    let files: Vec<StoredFile> = serde_json::from_str(&data).map_err(|e| {
+        log::warn!(
+            "⚠️ [VAULT] Legacy data parse error in load_legacy_readonly: {}",
+            e
+        );
+        format!("Legacy data corrupted: {}", e)
+    })?;
 
     let total_size: usize = files.iter().map(|f| f.size).sum();
     let hashes: HashSet<String> = files.iter().map(|f| f.content_hash.clone()).collect();

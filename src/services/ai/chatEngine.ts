@@ -617,7 +617,7 @@ class ChatEngineOmega {
    * ═══════════════════════════════════════════════════════════════════
    */
   private handlePipelineFailure(
-    error: any,
+    error: Error | unknown,
     message: string,
     history: AIMessage[],
     config: Partial<ChatEngineConfig> | undefined,
