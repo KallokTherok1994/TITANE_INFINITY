@@ -254,6 +254,11 @@ docs/
 4. ⏸️ **PHASE 3** : Réorganisation SAFE (déplacements sans modif)
 5. ⏸️ **PHASE 4** : Consolidation instructions IA
 
+**Documents Phase 1** :
+- [📊 PRE_UPDATE_ANALYSIS.md](./PRE_UPDATE_ANALYSIS.md) (ce document)
+- [📂 DOCS_INVENTORY.md](./DOCS_INVENTORY.md) (inventaire 1738 fichiers)
+- [🗺️ DOCS_RISK_MAP.md](./DOCS_RISK_MAP.md) (matrice risques)
+
 ---
 
 **Statut** : ✅ Phase 1 Analyse terminée — AUCUNE modification effectuée  

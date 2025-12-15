@@ -313,4 +313,12 @@ Phase 3 — Réorganisation SAFE
 
 ---
 
+## 📚 DOCUMENTS PHASE 1
+
+- [📊 PRE_UPDATE_ANALYSIS.md](./PRE_UPDATE_ANALYSIS.md) — Analyse baseline (1738 .md, conflits, vérité code)
+- [📂 DOCS_INVENTORY.md](./DOCS_INVENTORY.md) — Inventaire exhaustif (CORE/SUPPORT/MÉMOIRE/ARCHIVE)
+- [🗺️ DOCS_RISK_MAP.md](./DOCS_RISK_MAP.md) — Ce document (matrice risques + protocole sécurité)
+
+---
+
 *TITANE∞ Documentation Evolution Engine vΩ — 15 décembre 2025*
