@@ -17,6 +17,7 @@ import { useChatCore, type UseChatCoreReturn } from '@hooks/useChatCore';
 import { useChatMemory } from '@hooks/useChatMemory';
 import { type ChatMode, type ChatEngineResponse } from '../services/ai';
 import type { AIMessage, AIProviderName } from '../services/ai/types';
+import type { HarmonizedMessage } from '@/types/cognitiveKernel';
 import { hybridTTS } from '@services/tts/hybridTTS';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
 import {
@@ -473,7 +474,9 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
       // 🧠 NOUVEAU v22Ω: Harmoniser les messages avec Cognitive Kernel
       const harmonizedNormalized = hasMessages
-        ? cognitiveKernel.harmonizeChatMessages(normalized)
+        ? cognitiveKernel.harmonizeChatMessages(
+            normalized as Array<Partial<HarmonizedMessage>>
+          )
         : normalized;
 
       if (!allowEmpty && !hasMessages && stateVaultRef.current.stable.length > 0) {

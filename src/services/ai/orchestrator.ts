@@ -21,6 +21,7 @@ import type {
 } from './types';
 import type { AutoHealStats } from './autoHealEngine';
 import type { AggregatedMetrics } from './metricsEngine';
+import type { MetricsData } from '@/types/cognitiveKernel';
 import { buildSystemPrompt as buildTitanePrompt } from '@/core/prompts';
 import type { Provider as PromptProvider, PromptContext } from '@/core/prompts';
 import { titaneLocalProvider } from './providers/titaneLocal'; // ← PREMIER (noyau infaillible)
@@ -32,6 +33,8 @@ import { ollamaProvider } from './providers/ollama';
 import { autoHealEngine } from './autoHealEngine';
 import { metricsEngine } from './metricsEngine';
 import { cognitiveKernel } from './cognitiveKernel'; // ← NOUVEAU v22Ω: Cognitive Kernel
+import { circuitBreaker } from './circuitBreaker'; // ← v24.5: Circuit Breaker Pattern
+import { rateLimiter } from './rateLimiter'; // ← v24.5: Frontend Rate Limiting
 import { createLogger } from '@/utils/logger';
 
 const logger = createLogger('Orchestrator');
@@ -580,7 +583,7 @@ class AIOrchestrator {
       const cognitiveDecision = cognitiveKernel.executeCognitiveProcess({
         message: sanitized,
         providers: this.providers.map(p => p.name),
-        metrics: realtimeMetrics,
+        metrics: { ...realtimeMetrics } as unknown as MetricsData,
       });
 
       // Sélection neurale standard (avec préférence optionnelle)
@@ -670,6 +673,22 @@ class AIOrchestrator {
         // EVOLUTION v21Ω: Track per-provider latency separately from total request time
         const providerStartTime = Date.now();
 
+        // ═══ v24.5: CIRCUIT BREAKER CHECK ═══
+        if (providerName !== 'titane-local' && !circuitBreaker.canExecute(providerName)) {
+          logger.debug(`⚡ Circuit OPEN for ${providerName}, skipping...`);
+          continue;
+        }
+
+        // ═══ v24.5: RATE LIMITER CHECK ═══
+        const estimatedTokens = rateLimiter.estimateTokens(sanitized, history);
+        const rateLimitStatus = rateLimiter.checkLimit(providerName, estimatedTokens);
+        if (!rateLimitStatus.allowed && providerName !== 'titane-local') {
+          logger.debug(
+            `🚦 Rate limited for ${providerName}: ${rateLimitStatus.reason}, retry in ${rateLimitStatus.retryAfterMs}ms`
+          );
+          continue;
+        }
+
         try {
           logger.debug(
             `\n🔍 [${attempts}/${providersToTry.length}] Trying ${providerName}...`
@@ -714,6 +733,10 @@ class AIOrchestrator {
 
           // AUTOFIX v19.3Ω: Clear quick-fail cache on success
           this.quickFailCache.delete(providerName);
+
+          // ═══ v24.5: Record success in Circuit Breaker + Rate Limiter ═══
+          circuitBreaker.recordSuccess(providerName);
+          rateLimiter.recordRequest(providerName, response.tokens || estimatedTokens);
 
           // 📊 METRICS: Enregistrer succès
           const { metrics: _metricsLoaded } = await ensureEngines();
@@ -779,6 +802,9 @@ class AIOrchestrator {
           if (providerName !== 'titane-local') {
             this.quickFailCache.set(providerName, Date.now());
           }
+
+          // ═══ v24.5: Record failure in Circuit Breaker ═══
+          circuitBreaker.recordFailure(providerName, lastError);
 
           // 📊 METRICS: Enregistrer erreur with provider-specific latency
           const { metrics: _metricsLoaded } = await ensureEngines();
@@ -1115,6 +1141,24 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
   async *stream(message: string, history: AIMessage[] = []): AsyncGenerator<string> {
     const { sanitized, valid, issues } = this.sanitizeMessage(message);
 
+    // ═══ v24.5: STREAM TOTAL TIMEOUT - Global timeout for entire stream ═══
+    const STREAM_TOTAL_TIMEOUT_MS = 120000; // 2 minutes max for entire stream
+    const streamStartTime = Date.now();
+    let streamAborted = false;
+
+    // Setup global timeout that will abort the stream
+    const checkTotalTimeout = () => {
+      if (Date.now() - streamStartTime > STREAM_TOTAL_TIMEOUT_MS) {
+        streamAborted = true;
+        logger.warn('Stream total timeout exceeded', {
+          elapsed: Date.now() - streamStartTime,
+          limit: STREAM_TOTAL_TIMEOUT_MS,
+        });
+        return true;
+      }
+      return false;
+    };
+
     if (!valid) {
       const { autoHeal: _autoHealLoaded } = await ensureEngines();
       _autoHealLoaded.heal(
@@ -1132,8 +1176,20 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
     let hasStreamed = false;
 
     for (const providerName of providersToTry) {
+      // ═══ v24.5: Check total timeout before trying each provider ═══
+      if (checkTotalTimeout()) {
+        yield '\n\n⏱️ Temps de streaming dépassé. Réponse partielle fournie.';
+        return;
+      }
+
       const provider = this.providers.find(p => p.name === providerName);
       if (!provider) continue;
+
+      // ═══ v24.5: Circuit Breaker check for streaming ═══
+      if (providerName !== 'titane-local' && !circuitBreaker.canExecute(providerName)) {
+        logger.debug(`⚡ Circuit OPEN for ${providerName} in stream, skipping...`);
+        continue;
+      }
 
       try {
         const isAvailable = await Promise.race([
@@ -1146,19 +1202,30 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
         if (!isAvailable) continue;
 
         if (provider.stream) {
-          // Streaming natif avec timeout
+          // Streaming natif avec timeout per-chunk + total timeout
           let streamTimeout: NodeJS.Timeout | null = null;
           const streamPromise = provider.stream(sanitized, history);
 
           try {
             for await (const chunk of streamPromise) {
-              // Reset timeout à chaque chunk
+              // ═══ v24.5: Check total timeout during streaming ═══
+              if (checkTotalTimeout() || streamAborted) {
+                if (streamTimeout) clearTimeout(streamTimeout);
+                yield '\n\n⏱️ Temps de streaming dépassé.';
+                circuitBreaker.recordFailure(
+                  providerName,
+                  new Error('Stream total timeout')
+                );
+                return;
+              }
+
+              // Reset per-chunk timeout
               if (streamTimeout) {
                 clearTimeout(streamTimeout);
               }
               streamTimeout = setTimeout(() => {
-                throw new Error('Stream timeout');
-              }, 10000);
+                streamAborted = true;
+              }, 10000); // 10s per chunk
 
               if (chunk && typeof chunk === 'string') {
                 yield chunk;
@@ -1168,11 +1235,17 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
             if (streamTimeout) {
               clearTimeout(streamTimeout);
             }
+            // ═══ v24.5: Record success in circuit breaker ═══
+            circuitBreaker.recordSuccess(providerName);
             return; // Streaming successful
           } catch (streamError) {
             if (streamTimeout) {
               clearTimeout(streamTimeout);
             }
+            circuitBreaker.recordFailure(
+              providerName,
+              streamError instanceof Error ? streamError : new Error(String(streamError))
+            );
             throw streamError;
           }
         } else {

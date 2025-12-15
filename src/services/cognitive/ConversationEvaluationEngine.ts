@@ -21,6 +21,7 @@
  */
 
 import { EventEmitter } from 'events';
+import type { ConversationTurn, Fact } from '@/types/conversationEvaluation';
 
 // Types propres pour le Conversation Evaluation Engine
 interface ConversationMetrics {
@@ -222,7 +223,7 @@ export class ConversationEvaluationEngine extends EventEmitter {
   /**
    * Evaluate consistency (alignment with facts and previous statements)
    */
-  private async evaluateConsistency(turn: any): Promise<number> {
+  private async evaluateConsistency(turn: ConversationTurn): Promise<number> {
     const { assistant_response, context } = turn;
 
     if (!context?.facts || context.facts.length === 0) {
@@ -233,7 +234,8 @@ export class ConversationEvaluationEngine extends EventEmitter {
     const responseLower = assistant_response.toLowerCase();
 
     for (const fact of context.facts) {
-      const factLower = fact.toLowerCase();
+      const factContent = typeof fact === 'string' ? fact : fact.content;
+      const factLower = factContent.toLowerCase();
       const factKeywords = this.extractKeywords(factLower);
 
       // Check for keyword presence and negation
@@ -253,7 +255,7 @@ export class ConversationEvaluationEngine extends EventEmitter {
   /**
    * Evaluate goal completion (progress towards stated goal)
    */
-  private async evaluateGoalCompletion(turn: any): Promise<number> {
+  private async evaluateGoalCompletion(turn: ConversationTurn): Promise<number> {
     const { assistant_response, context } = turn;
 
     if (!context?.goal) {
@@ -284,7 +286,7 @@ export class ConversationEvaluationEngine extends EventEmitter {
   /**
    * Evaluate coherence (logical flow and structure)
    */
-  private async evaluateCoherence(turn: any): Promise<number> {
+  private async evaluateCoherence(turn: ConversationTurn): Promise<number> {
     const { assistant_response } = turn;
 
     // Check for coherence markers
@@ -320,7 +322,7 @@ export class ConversationEvaluationEngine extends EventEmitter {
   /**
    * Evaluate clarity (easy to understand)
    */
-  private async evaluateClarity(turn: any): Promise<number> {
+  private async evaluateClarity(turn: ConversationTurn): Promise<number> {
     const { assistant_response } = turn;
 
     // Penalize overly complex language
@@ -354,7 +356,7 @@ export class ConversationEvaluationEngine extends EventEmitter {
   /**
    * Evaluate conciseness (not overly verbose)
    */
-  private async evaluateConciseness(turn: any): Promise<number> {
+  private async evaluateConciseness(turn: ConversationTurn): Promise<number> {
     const { user_message, assistant_response } = turn;
 
     const userWords = user_message.split(/\s+/).length;
@@ -381,7 +383,7 @@ export class ConversationEvaluationEngine extends EventEmitter {
   /**
    * Evaluate relevance (on-topic)
    */
-  private async evaluateRelevance(turn: any): Promise<number> {
+  private async evaluateRelevance(turn: ConversationTurn): Promise<number> {
     const { user_message, assistant_response } = turn;
 
     const userKeywords = this.extractKeywords(user_message);
@@ -416,7 +418,7 @@ export class ConversationEvaluationEngine extends EventEmitter {
   /**
    * Evaluate factual accuracy (verifiable correctness)
    */
-  private async evaluateFactualAccuracy(turn: any): Promise<number> {
+  private async evaluateFactualAccuracy(turn: ConversationTurn): Promise<number> {
     const { assistant_response, context } = turn;
 
     // Check against known facts
@@ -437,8 +439,9 @@ export class ConversationEvaluationEngine extends EventEmitter {
       const statementLower = statement.toLowerCase();
 
       // Check if statement is supported by any fact
-      const isSupported = context.facts.some((fact: any) => {
-        const factKeywords = this.extractKeywords(fact);
+      const isSupported = context.facts.some((fact: string | Fact) => {
+        const factContent = typeof fact === 'string' ? fact : fact.content;
+        const factKeywords = this.extractKeywords(factContent);
         return factKeywords.some(kw => statementLower.includes(kw));
       });
 
@@ -452,7 +455,7 @@ export class ConversationEvaluationEngine extends EventEmitter {
   /**
    * Evaluate user satisfaction (positive sentiment, helpful tone)
    */
-  private async evaluateUserSatisfaction(turn: any): Promise<number> {
+  private async evaluateUserSatisfaction(turn: ConversationTurn): Promise<number> {
     const { assistant_response } = turn;
 
     // Check for positive indicators
@@ -493,7 +496,7 @@ export class ConversationEvaluationEngine extends EventEmitter {
   /**
    * Evaluate technical correctness (for code/technical content)
    */
-  private async evaluateTechnicalCorrectness(turn: any): Promise<number> {
+  private async evaluateTechnicalCorrectness(turn: ConversationTurn): Promise<number> {
     const { assistant_response } = turn;
 
     // Check if response contains code
@@ -834,14 +837,14 @@ export class ConversationEvaluationEngine extends EventEmitter {
   private averageMetrics(metricsList: ConversationMetrics[]): ConversationMetrics {
     if (metricsList.length === 0) return this.getDefaultMetrics();
 
-    const result: any = {};
+    const result: Partial<ConversationMetrics> = {};
 
     for (const metric of this.config.metrics_to_track) {
       const sum = metricsList.reduce((acc, m) => acc + m[metric], 0);
       result[metric] = sum / metricsList.length;
     }
 
-    return result;
+    return result as ConversationMetrics;
   }
 
   /**
@@ -1002,7 +1005,7 @@ export class ConversationEvaluationEngine extends EventEmitter {
    */
   private log(
     message: string,
-    data?: any,
+    data?: Record<string, unknown>,
     level: 'info' | 'warn' | 'error' = 'info'
   ): void {
     const timestamp = new Date().toISOString();

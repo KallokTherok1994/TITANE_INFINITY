@@ -4,10 +4,9 @@
   "version": "24.2.0-dev",
   "identifier": "com.titane.infinity.dev",
   "build": {
-    "beforeDevCommand": "npm run vite:dev",
+    "beforeDevCommand": "npm run build",
     "beforeBuildCommand": "npm run build",
-    "frontendDist": "../dist",
-    "devUrl": "http://localhost:5173"
+    "frontendDist": "../dist"
   },
   "bundle": {
     "active": false,

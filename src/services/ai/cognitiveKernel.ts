@@ -16,6 +16,13 @@
  */
 
 import { createLogger } from '@/utils/logger';
+import type {
+  MemoryData,
+  CognitiveContext,
+  MetricsData,
+  HarmonizedMessage,
+  HarmonizedError,
+} from '@/types/cognitiveKernel';
 
 const logger = createLogger('CognitiveKernel');
 
@@ -78,7 +85,7 @@ export interface EphemeralMemory {
 export interface CognitiveProcess {
   perception: {
     systemState: EnvironmentState;
-    lastResult: any;
+    lastResult: MetricsData;
     microHistory: EphemeralMemory;
     structuralCoherence: number;
   };
@@ -95,7 +102,7 @@ export interface CognitiveProcess {
   };
   decision: {
     selectedProvider: string;
-    modelConfig: any;
+    modelConfig: Record<string, unknown>;
     fallbackStrategy: string[];
     structuralCorrections: string[];
   };
@@ -240,25 +247,32 @@ class CognitiveKernel {
   /**
    * Enregistrer dans la mémoire éphémère
    */
-  recordInMemory(type: 'provider' | 'error' | 'model' | 'adaptation', data: any): void {
+  recordInMemory(
+    type: 'provider' | 'error' | 'model' | 'adaptation',
+    data: MemoryData
+  ): void {
     const now = Date.now();
 
     if (type === 'provider') {
-      this.ephemeralMemory.lastEffectiveProviders.unshift(data.provider);
+      const providerData = data as { provider: string };
+      this.ephemeralMemory.lastEffectiveProviders.unshift(providerData.provider);
       // Garder seulement les 5 derniers
       if (this.ephemeralMemory.lastEffectiveProviders.length > 5) {
         this.ephemeralMemory.lastEffectiveProviders.pop();
       }
     } else if (type === 'error') {
-      const count = this.ephemeralMemory.recentErrorPatterns.get(data.pattern) || 0;
-      this.ephemeralMemory.recentErrorPatterns.set(data.pattern, count + 1);
+      const errorData = data as { pattern: string };
+      const count = this.ephemeralMemory.recentErrorPatterns.get(errorData.pattern) || 0;
+      this.ephemeralMemory.recentErrorPatterns.set(errorData.pattern, count + 1);
     } else if (type === 'model') {
-      this.ephemeralMemory.bestModelsByContext.set(data.context, data.model);
+      const modelData = data as { context: string; model: string };
+      this.ephemeralMemory.bestModelsByContext.set(modelData.context, modelData.model);
     } else if (type === 'adaptation') {
+      const adaptationData = data as { type: string; impact: number };
       this.ephemeralMemory.recentAdaptations.push({
         timestamp: now,
-        type: data.type,
-        impact: data.impact,
+        type: adaptationData.type,
+        impact: adaptationData.impact,
       });
       // Garder seulement les 10 dernières
       if (this.ephemeralMemory.recentAdaptations.length > 10) {
@@ -297,11 +311,7 @@ class CognitiveKernel {
   /**
    * Exécuter le pipeline cognitif complet
    */
-  executeCognitiveProcess(context: {
-    message: string;
-    providers: string[];
-    metrics: any;
-  }): CognitiveDecision {
+  executeCognitiveProcess(context: CognitiveContext): CognitiveDecision {
     // 1. PERCEPTION
     const perception = this.perceive(context);
 
@@ -330,7 +340,7 @@ class CognitiveKernel {
   /**
    * 1. Perception: Lire l'état du système
    */
-  private perceive(context: any): CognitiveProcess['perception'] {
+  private perceive(context: CognitiveContext): CognitiveProcess['perception'] {
     return {
       systemState: this.environmentState,
       lastResult: context.metrics,
@@ -344,7 +354,7 @@ class CognitiveKernel {
    */
   private evaluate(
     perception: CognitiveProcess['perception'],
-    context: any
+    context: CognitiveContext
   ): CognitiveProcess['evaluation'] {
     // Scorer chaque provider disponible
     const providerScores = context.providers.map((provider: string) => {
@@ -379,7 +389,7 @@ class CognitiveKernel {
    */
   private project(
     evaluation: CognitiveProcess['evaluation'],
-    context: any
+    context: CognitiveContext
   ): CognitiveProcess['projection'] {
     const nextStep = evaluation.adaptationNeeded ? 'optimize-fallback' : 'execute-normal';
 
@@ -410,7 +420,7 @@ class CognitiveKernel {
    */
   private decide(
     projection: CognitiveProcess['projection'],
-    _context: any
+    _context: CognitiveContext
   ): {
     provider: string;
     reason: string;
@@ -499,20 +509,25 @@ class CognitiveKernel {
   /**
    * Harmoniser les messages du chat
    */
-  harmonizeChatMessages(messages: any[]): any[] {
-    return messages.map(msg => ({
-      ...msg,
-      // Structure uniforme
-      role: msg.role || 'user',
-      content: this.enhanceMessageClarity(msg.content),
-      timestamp: msg.timestamp || Date.now(),
-      // Métadonnées cohérentes
-      metadata: {
-        ...msg.metadata,
-        structured: true,
-        coherenceScore: this.calculateCoherenceScore(),
-      },
-    }));
+  harmonizeChatMessages(
+    messages: Array<Partial<HarmonizedMessage>>
+  ): HarmonizedMessage[] {
+    return messages.map(
+      msg =>
+        ({
+          ...msg,
+          // Structure uniforme
+          role: msg.role || 'user',
+          content: this.enhanceMessageClarity(msg.content || ''),
+          timestamp: msg.timestamp || Date.now(),
+          // Métadonnées cohérentes
+          metadata: {
+            ...msg.metadata,
+            structured: true,
+            coherenceScore: this.calculateCoherenceScore(),
+          },
+        }) as HarmonizedMessage
+    );
   }
 
   /**
@@ -536,16 +551,15 @@ class CognitiveKernel {
   /**
    * Harmoniser les erreurs
    */
-  harmonizeError(error: any): {
-    message: string;
-    type: string;
-    recovery: string;
-    userFriendly: boolean;
-  } {
+  harmonizeError(error: unknown): HarmonizedError {
     const errorType = this.classifyError(error);
+    const errorMessage =
+      error && typeof error === 'object' && 'message' in error
+        ? String((error as { message: unknown }).message)
+        : String(error);
 
     return {
-      message: this.makeErrorUserFriendly(error.message || String(error)),
+      message: this.makeErrorUserFriendly(errorMessage),
       type: errorType,
       recovery: this.suggestRecovery(errorType),
       userFriendly: true,
@@ -555,8 +569,12 @@ class CognitiveKernel {
   /**
    * Classifier une erreur
    */
-  private classifyError(error: any): string {
-    const message = String(error.message || error).toLowerCase();
+  private classifyError(error: unknown): string {
+    const errorMessage =
+      error && typeof error === 'object' && 'message' in error
+        ? String((error as { message: unknown }).message)
+        : String(error);
+    const message = errorMessage.toLowerCase();
 
     if (message.includes('timeout')) return 'timeout';
     if (message.includes('network')) return 'network';
