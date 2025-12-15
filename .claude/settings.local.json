@@ -77,7 +77,9 @@
       "Bash(git pull:*)",
       "Bash(git stash:*)",
       "Bash(do echo \"=== Run $i ===\")",
-      "Bash(do cargo test --test ipc_cache_test test_cache_concurrent_access -- --exact)"
+      "Bash(do cargo test --test ipc_cache_test test_cache_concurrent_access -- --exact)",
+      "Bash(timeout 90 npm run build:*)",
+      "Bash(timeout 120 npm run build:*)"
     ],
     "deny": [],
     "ask": []

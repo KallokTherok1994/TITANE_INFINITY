@@ -1,0 +1,112 @@
+/**
+ * TITANE∞ v24.7 — UNIFIED DESIGN TOKENS
+ *
+ * Ce fichier unifie les variables CSS entre:
+ * - css-vars.css (design system principal)
+ * - titane-fusion.css (theme monochrome)
+ *
+ * Principe: titane-fusion.css est la source de vérité pour le thème monochrome.
+ * Ce fichier ajoute des alias de compatibilité pour les anciennes variables.
+ */
+
+:root {
+  /* ═══════════════════════════════════════════════════════════════
+     TRANSITIONS UNIFIÉES
+     Source de vérité: titane-fusion.css (120ms/200ms/300ms)
+     ═══════════════════════════════════════════════════════════════ */
+
+  /* Standard transitions (utilisé partout) */
+  --transition-fast: 120ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Easing standardisé */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-decelerate: cubic-bezier(0, 0, 0.2, 1);
+  --ease-accelerate: cubic-bezier(0.4, 0, 1, 1);
+
+  /* ═══════════════════════════════════════════════════════════════
+     BORDER RADIUS UNIFIÉS
+     Source de vérité: titane-fusion.css (4px base)
+     ═══════════════════════════════════════════════════════════════ */
+
+  /* Standard values (px) */
+  --radius-none: 0;
+  --radius-xs: 2px; /* Très petit */
+  --radius-sm: 4px; /* Petit - équivalent à --radius */
+  --radius: 4px; /* Base */
+  --radius-md: 6px; /* Moyen */
+  --radius-lg: 8px; /* Grand */
+  --radius-xl: 12px; /* Très grand */
+  --radius-2xl: 16px; /* Extra grand */
+  --radius-3xl: 24px; /* XXL */
+  --radius-full: 9999px; /* Cercle */
+
+  /* Alias pour compatibilité css-vars.css (rem values) */
+  --radius-sm-rem: 0.25rem; /* 4px */
+  --radius-md-rem: 0.5rem; /* 8px */
+  --radius-lg-rem: 0.75rem; /* 12px */
+  --radius-xl-rem: 1rem; /* 16px */
+  --radius-2xl-rem: 1.5rem; /* 24px */
+
+  /* ═══════════════════════════════════════════════════════════════
+     SPACING ALIAS (compatibilité)
+     ═══════════════════════════════════════════════════════════════ */
+
+  /* Alias semantic pour spacing */
+  --spacing-xs: var(--space-xs, 4px);
+  --spacing-sm: var(--space-sm, 8px);
+  --spacing-md: var(--space-md, 16px);
+  --spacing-lg: var(--space-lg, 24px);
+  --spacing-xl: var(--space-xl, 32px);
+  --spacing-2xl: var(--space-2xl, 48px);
+
+  /* ═══════════════════════════════════════════════════════════════
+     TEXT COLORS ALIAS
+     ═══════════════════════════════════════════════════════════════ */
+
+  /* Unifié depuis titane-fusion.css */
+  --text-primary: rgba(255, 255, 255, 0.96);
+  --text-secondary: rgba(255, 255, 255, 0.72);
+  --text-tertiary: rgba(255, 255, 255, 0.48);
+  --text-disabled: rgba(255, 255, 255, 0.3);
+  --text-muted: var(--text-tertiary);
+
+  /* ═══════════════════════════════════════════════════════════════
+     BORDER ALIAS
+     ═══════════════════════════════════════════════════════════════ */
+
+  /* Alias standardisés */
+  --border-primary: var(--border-default, rgba(255, 255, 255, 0.08));
+  --border-secondary: var(--border-subtle, rgba(255, 255, 255, 0.04));
+
+  /* ═══════════════════════════════════════════════════════════════
+     ACCENT VARIANTS (nouvelles variables pour gradients)
+     ═══════════════════════════════════════════════════════════════ */
+
+  --accent: #93b399;
+  --accent-light: #a4bbaf;
+  --accent-dark: #7a9682;
+  --accent-10: rgba(147, 179, 153, 0.1);
+  --accent-20: rgba(147, 179, 153, 0.2);
+  --accent-30: rgba(147, 179, 153, 0.3);
+
+  --primary-light: #8f9296;
+  --primary-dark: #5a636b;
+
+  /* ═══════════════════════════════════════════════════════════════
+     Z-INDEX UNIFIÉS
+     Source de vérité: css-vars.css (valeurs plus hautes pour éviter conflits)
+     ═══════════════════════════════════════════════════════════════ */
+
+  --z-base: 0;
+  --z-dropdown: 1000;
+  --z-sticky: 1100;
+  --z-fixed: 1200;
+  --z-modal-backdrop: 1300;
+  --z-modal: 1400;
+  --z-popover: 1500;
+  --z-tooltip: 1600;
+  --z-toast: 1700;
+  --z-max: 9999;
+}

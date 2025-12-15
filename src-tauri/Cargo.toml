@@ -8,6 +8,18 @@ repository   = "https://github.com/KallokTherok1994/TITANE_INFINITY"
 edition      = "2021"
 rust-version = "1.70"
 
+[profile.dev]
+opt-level = 1         # Basic optimizations in dev mode (faster builds)
+debug = true          # Keep debug symbols
+incremental = true    # Enable incremental compilation
+
+[profile.release]
+opt-level = 3         # Maximum optimizations
+lto = "thin"          # Thin LTO for faster linking (20-30% faster than "fat")
+codegen-units = 1     # Single codegen unit (better optimization)
+strip = true          # Strip symbols for smaller binary
+panic = "abort"       # Abort on panic (no unwinding overhead)
+
 [build-dependencies]
 tauri-build = { version = "2.0", features = [] }
 
@@ -97,21 +109,6 @@ audio-capture = [
     "cpal",
 ] # Enable real-time audio capture (requires libasound2-dev)
 onnx = ["ort"] # Enable ONNX Runtime for vision models (optional)
-
-[profile.dev]
-# ═══════════════════════════════════════════════════════════════
-# CPU OPTIMIZATION: Reduced compilation time in development
-# ═══════════════════════════════════════════════════════════════
-opt-level   = 1     # Light optimization (vs 0 default) → faster execution
-debug       = false # Disable debug symbols → 50% faster compilation
-incremental = true  # Faster rebuilds
-
-[profile.release]
-panic         = "abort"
-codegen-units = 1
-lto           = "thin"  # Changed from true to thin - allows Tauri bundler symbol injection
-opt-level     = "z"
-strip         = "none"  # Required for Tauri bundler to inject __TAURI_BUNDLE_TYPE
 
 [dev-dependencies]
 tempfile = "3.8"

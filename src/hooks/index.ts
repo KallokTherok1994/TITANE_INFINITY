@@ -50,6 +50,17 @@ export { useChat } from './useChat';
 export * from './useDebounce';
 export * from './useThrottle';
 
+// Control Panel Section Hook (v24.7)
+export {
+  useControlPanelSection,
+  useControlPanelToggles,
+  default as useControlPanelSectionDefault,
+} from './useControlPanelSection';
+export type {
+  UseControlPanelSectionOptions,
+  UseControlPanelSectionReturn,
+} from './useControlPanelSection';
+
 // Hooks spécialisés (isolation)
 export { useChatCore } from './useChatCore';
 export { useChatUI } from './useChatUI';

@@ -1,10 +1,11 @@
 /**
- * TITANE∞ OS - Section Sécurité
+ * TITANE∞ OS v24.7 - Section Sécurité
  * Permissions et H-N security
+ * Optimisé avec useControlPanelToggles
  */
 
-import React, { useState, useEffect } from 'react';
-import { secureInvoke } from '@/lib/security';
+import React, { useCallback } from 'react';
+import { useControlPanelSection } from '@/hooks/useControlPanelSection';
 
 interface SecurityConfig {
   hn_security_enabled: boolean;
@@ -13,115 +14,93 @@ interface SecurityConfig {
   audit_logging: boolean;
 }
 
+const DEFAULT_SECURITY_CONFIG: SecurityConfig = {
+  hn_security_enabled: true,
+  secure_mode: false,
+  encryption_enabled: true,
+  audit_logging: true,
+};
+
+const SECURITY_TOGGLES = [
+  {
+    key: 'hn_security_enabled' as const,
+    title: 'H-N Security',
+    description: 'Activer la sécurité Humain-Non Humain',
+  },
+  {
+    key: 'secure_mode' as const,
+    title: 'Mode sécurisé',
+    description: 'Restrictions accrues et validations supplémentaires',
+  },
+  {
+    key: 'encryption_enabled' as const,
+    title: 'Chiffrement',
+    description: 'Chiffrer les données sensibles localement',
+  },
+  {
+    key: 'audit_logging' as const,
+    title: 'Audit logging',
+    description: 'Enregistrer toutes les actions de sécurité',
+  },
+] as const;
+
 export const SecuritySection: React.FC = () => {
-  const [config, setConfig] = useState<SecurityConfig>({
-    hn_security_enabled: true,
-    secure_mode: false,
-    encryption_enabled: true,
-    audit_logging: true,
-  });
-  const [saved, setSaved] = useState(false);
+  const { config, setConfig, saveConfig, isSaving, saved, error, hasChanges } =
+    useControlPanelSection<SecurityConfig>({
+      loadCommand: 'get_security_config',
+      saveCommand: 'set_security_config',
+      defaultConfig: DEFAULT_SECURITY_CONFIG,
+      saveParamKey: 'config',
+    });
 
-  useEffect(() => {
-    loadConfig();
-  }, []);
-
-  const loadConfig = async () => {
-    try {
-      const securityConfig = await secureInvoke<SecurityConfig>('get_security_config');
-      setConfig(securityConfig);
-    } catch (error) {
-      console.error('Erreur chargement config sécurité:', error);
-    }
-  };
-
-  const saveConfig = async () => {
-    try {
-      await secureInvoke('set_security_config', { config });
-      setSaved(true);
-      setTimeout(() => setSaved(false), 2000);
-    } catch (error) {
-      console.error('Erreur sauvegarde config:', error);
-    }
-  };
+  const toggleField = useCallback(
+    (key: keyof SecurityConfig) => {
+      setConfig(prev => ({ ...prev, [key]: !prev[key] }));
+    },
+    [setConfig]
+  );
 
   return (
     <div className="cp-section">
       <div className="cp-section-header">
         <h2 className="cp-section-title">Sécurité</h2>
-        <button className="cp-button" onClick={saveConfig}>
-          {saved ? '✅ Sauvegardé' : '💾 Sauvegarder'}
+        <button
+          className="cp-button"
+          onClick={saveConfig}
+          disabled={isSaving || !hasChanges}
+        >
+          {saved ? '✅ Sauvegardé' : isSaving ? '⏳ Enregistrement…' : '💾 Sauvegarder'}
         </button>
       </div>
+
+      {error && <p className="cp-error">{error}</p>}
 
       <div className="cp-card">
         <h3 className="cp-card-title">Paramètres de sécurité</h3>
         <div className="cp-card-content">
-          <div className="cp-switch-row">
-            <div className="cp-switch-label">
-              <div className="cp-switch-title">H-N Security</div>
-              <div className="cp-switch-description">
-                Activer la sécurité Humain-Non Humain
+          {SECURITY_TOGGLES.map(({ key, title, description }) => (
+            <div key={key} className="cp-switch-row">
+              <div className="cp-switch-label">
+                <div className="cp-switch-title">{title}</div>
+                <div className="cp-switch-description">{description}</div>
+              </div>
+              <div
+                className={`cp-switch ${config[key] ? 'active' : ''}`}
+                onClick={() => toggleField(key)}
+                role="switch"
+                aria-checked={config[key]}
+                tabIndex={0}
+                onKeyDown={e => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleField(key);
+                  }
+                }}
+              >
+                <div className="cp-switch-thumb" />
               </div>
             </div>
-            <div
-              className={`cp-switch ${config.hn_security_enabled ? 'active' : ''}`}
-              onClick={() =>
-                setConfig({ ...config, hn_security_enabled: !config.hn_security_enabled })
-              }
-            >
-              <div className="cp-switch-thumb" />
-            </div>
-          </div>
-
-          <div className="cp-switch-row">
-            <div className="cp-switch-label">
-              <div className="cp-switch-title">Mode sécurisé</div>
-              <div className="cp-switch-description">
-                Restrictions accrues et validations supplémentaires
-              </div>
-            </div>
-            <div
-              className={`cp-switch ${config.secure_mode ? 'active' : ''}`}
-              onClick={() => setConfig({ ...config, secure_mode: !config.secure_mode })}
-            >
-              <div className="cp-switch-thumb" />
-            </div>
-          </div>
-
-          <div className="cp-switch-row">
-            <div className="cp-switch-label">
-              <div className="cp-switch-title">Chiffrement</div>
-              <div className="cp-switch-description">
-                Chiffrer les données sensibles localement
-              </div>
-            </div>
-            <div
-              className={`cp-switch ${config.encryption_enabled ? 'active' : ''}`}
-              onClick={() =>
-                setConfig({ ...config, encryption_enabled: !config.encryption_enabled })
-              }
-            >
-              <div className="cp-switch-thumb" />
-            </div>
-          </div>
-
-          <div className="cp-switch-row">
-            <div className="cp-switch-label">
-              <div className="cp-switch-title">Audit logging</div>
-              <div className="cp-switch-description">
-                Enregistrer toutes les actions de sécurité
-              </div>
-            </div>
-            <div
-              className={`cp-switch ${config.audit_logging ? 'active' : ''}`}
-              onClick={() =>
-                setConfig({ ...config, audit_logging: !config.audit_logging })
-              }
-            >
-              <div className="cp-switch-thumb" />
-            </div>
-          </div>
+          ))}
         </div>
       </div>
 
