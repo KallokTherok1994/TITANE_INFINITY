@@ -97,6 +97,20 @@ export const ModeBadge = memo(function ModeBadge({
   const handleMouseEnter = useCallback(() => setIsHovered(true), []);
   const handleMouseLeave = useCallback(() => setIsHovered(false), []);
 
+  // Handler clavier memoizé
+  const handleKeyDown = useMemo(
+    () =>
+      onClick
+        ? (e: React.KeyboardEvent) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              onClick();
+            }
+          }
+        : undefined,
+    [onClick]
+  );
+
   // Memoize les classes CSS
   const badgeClasses = useMemo(
     () =>
@@ -126,16 +140,7 @@ export const ModeBadge = memo(function ModeBadge({
       onMouseLeave={handleMouseLeave}
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
-      onKeyDown={
-        onClick
-          ? e => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                onClick();
-              }
-            }
-          : undefined
-      }
+      onKeyDown={handleKeyDown}
     >
       <span className="mode-badge__icon">{modeConfig.icon}</span>
       {showLabel && <span className="mode-badge__label">{modeConfig.label}</span>}
