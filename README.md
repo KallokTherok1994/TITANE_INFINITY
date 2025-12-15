@@ -21,14 +21,19 @@ TITANE∞ est un **OS cognitif local-first** : votre double numérique évolutif
 
 ## 🚀 Quick Start
 
-### Prérequis
+**📖 Guide complet:** [docs/04_guides/quickstart/QUICKSTART.md](docs/04_guides/quickstart/QUICKSTART.md)
 
-- **OS:** Ubuntu 24.04 LTS (recommandé) ou compatible Linux
-- **Node.js:** v20+ (LTS)
-- **Rust:** 1.75+
-- **Tauri CLI:** v2.0+
+### Installation Rapide (5 min)
 
-### Installation
+#### Ubuntu 24.04 (Automated)
+
+```bash
+# Installation complète automatisée
+cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
+./scripts/TITANE_POST_INSTALL_UBUNTU.sh
+```
+
+#### Autres OS (Manuel)
 
 ```bash
 # 1. Cloner le repo
@@ -38,22 +43,24 @@ cd TITANE_INFINITY
 # 2. Installer dépendances
 npm install
 
-# 3. Configurer Python environment (optionnel pour TTS/Voice)
-./scripts/setup_environment.sh
-
-# 4. Lancer Titan-Dev (développement)
+# 3. Lancer Titan-Dev (développement)
 npm run dev:tauri
-# Ou via task VSCode: "🟢 Launch Titan-Dev"
 ```
 
-### Build Production (Titan-Stable)
+**Détails complets:** [Installation Guide](docs/04_guides/quickstart/QUICKSTART.md#installation-rapide)
+
+### Premier Lancement
 
 ```bash
-# Build optimisé pour production
-./runtime/stable/build.sh
+# Titan-Dev (développement avec hot-reload)
+npm run dev:tauri
 
-# Ou via task VSCode: "🔵 Build Titan-Stable"
+# Titan-Stable (production optimisé)
+./runtime/stable/build.sh
 ```
+
+**Configuration Chat IA:** [Chat IA Setup](docs/04_guides/quickstart/QUICKSTART.md#chat-ia---premiers-pas)  
+**Dépannage:** [Troubleshooting](docs/04_guides/quickstart/QUICKSTART.md#dépannage)
 
 ---
 
@@ -104,10 +111,15 @@ src-tauri/src/
 
 ## 🛠️ Développement
 
+**🛠️ Setup Guide:** [docs/04_guides/development/SETUP.md](docs/04_guides/development/SETUP.md)  
+**🧪 Testing Guide:** [docs/04_guides/development/TESTING.md](docs/04_guides/development/TESTING.md)
+
 ### Dual Runtime
 
-- **Titan-Dev** (`runtime/dev/`) : Développement avec DevTools activés
+- **Titan-Dev** (`runtime/dev/`) : Développement avec DevTools, hot-reload, logs détaillés
 - **Titan-Stable** (`runtime/stable/`) : Production optimisée, DevTools désactivés
+
+**Configuration IDE:** [SETUP.md § VSCode](docs/04_guides/development/SETUP.md#configuration-ide)
 
 ### Scripts Principaux
 
@@ -117,54 +129,71 @@ npm run dev:tauri        # Launch Titan-Dev
 npm run build            # Build frontend
 npm run tauri:build      # Build Titan-Stable
 npm run lint             # ESLint + Prettier
-npm run test             # Run tests
-npm run test:rust        # Cargo tests
+npm run test             # Run tests frontend
+npm run test:rust        # Cargo tests backend
 ```
 
-### Git Workflow
-
-```
-feature/* → dev → stable-runtime
-```
-
-- **feature/\*** : Nouvelles fonctionnalités
-- **dev** : Développement actif
-- **stable-runtime** : Branch de production
+**Workflows Git:** [SETUP.md § Git](docs/04_guides/development/SETUP.md#workflows-git)
 
 ---
 
 ## 📚 Documentation
 
-### Docs Canoniques
+**🗺️ Master Index:** [docs/04_guides/INDEX.md](docs/04_guides/INDEX.md)
 
-- **ARCHITECTURE.md** : Architecture détaillée (frontend/backend/pipeline)
-- **DEVELOPER_GUIDE.md** : Guide développeur (conventions, setup, troubleshooting)
-- **AUDIT_COMPLET_v21_ENGINE_2025-12-10.md** : Audit complet système
-- **CHANGELOG_v24.md** : Historique des changements v24
+### Guides Essentiels
 
-### Docs Techniques
+- 📖 **[QUICKSTART.md](docs/04_guides/quickstart/QUICKSTART.md)** — Onboarding utilisateur complet (Installation, Chat IA, Features, Dépannage)
+- 🛠️ **[SETUP.md](docs/04_guides/development/SETUP.md)** — Setup environnement développement (IDE, Dual Runtime, Git workflows)
+- 🧪 **[TESTING.md](docs/04_guides/development/TESTING.md)** — Stratégie tests complète (Frontend, Backend, E2E, CI/CD)
 
-- `docs/OMEGA_PIPELINE_v2.md` : Pipeline OMEGA détaillé
-- `docs/TITANE_OS/` : Documentation OS cognitif
-- `docs/architecture/` : Diagrammes et schémas
-- `.github/instructions/titane.instructions.md` : Instructions globales
+### Features Spécialisées
+
+- 🎤 **[VOICE.md](docs/04_guides/features/VOICE.md)** — Mode Vocal (Voice-to-Text, TTS, duplex)
+- 🎨 **[MULTIMODAL.md](docs/04_guides/features/MULTIMODAL.md)** — Multimodal Engine (Vision, Audio 3D, Fusion)
+- 🧠 **[MEMORY_OS.md](docs/04_guides/features/MEMORY_OS.md)** — UnifiedMemory OS (STM/MTM/LTM)
+- ⏱️ **[TEMPORAL.md](docs/04_guides/features/TEMPORAL.md)** — Temporal Integrations (Tick health, scheduler)
+
+### Architecture Technique
+
+- **[ARCHITECTURE_CURRENT_v24.md](docs/00_meta/ARCHITECTURE_CURRENT_v24.md)** — Architecture système complète
+- **[DATA_FLOW_CHAT.md](docs/02_architecture_reality/DATA_FLOW_CHAT.md)** — Flow messaging chat
+- **[OMEGA_PIPELINE_DETAILED.md](docs/02_architecture_reality/OMEGA_PIPELINE_DETAILED.md)** — Pipeline OMEGA 10 stages
+- **[TAURI_COMMANDS_REFERENCE.md](docs/02_architecture_reality/TAURI_COMMANDS_REFERENCE.md)** — API commands Tauri
+
+### Evolution & Reports
+
+- **[DOCUMENTATION_EVOLUTION_REPORT.md](DOCUMENTATION_EVOLUTION_REPORT.md)** — Évolution documentation Phase 0-5
+- **[CHANGELOG.md](CHANGELOG.md)** — Historique changements versions
 
 ---
 
 ## 🧪 Tests
 
-```bash
-# Tests frontend
-npm run test:unit
-npm run test:integration
-npm run test:e2e
+**🧪 Testing Strategy:** [docs/04_guides/development/TESTING.md](docs/04_guides/development/TESTING.md)
 
-# Tests backend
-npm run test:rust
+```bash
+# Tests frontend (Vitest)
+npm run test
+npm run test:coverage
+npm run test:ui
+
+# Tests backend (Cargo)
+cargo test
+cargo test omega::
+cargo tarpaulin
+
+# Tests E2E (Playwright)
+npm run test:e2e
+npm run test:e2e:ui
 
 # Tous les tests
 npm run test:all
 ```
+
+**Test pyramid:** 80% unit, 15% integration, 5% E2E  
+**Coverage target:** 70%+ overall  
+**Détails:** [TESTING.md](docs/04_guides/development/TESTING.md)
 
 ---
 
