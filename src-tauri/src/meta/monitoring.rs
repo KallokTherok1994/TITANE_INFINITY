@@ -188,7 +188,8 @@ impl MetaMonitoringEngine {
             }
 
             metrics.last_evaluation = Some(timestamp);
-            metrics.anomaly_rate = metrics.total_anomalies as f32 / metrics.total_evaluations as f32;
+            metrics.anomaly_rate =
+                metrics.total_anomalies as f32 / metrics.total_evaluations as f32;
 
             // Calculate average coherence (last 100)
             let recent_count = history.len().min(100);
@@ -293,39 +294,40 @@ impl MetaMonitoringEngine {
             }
 
             metrics.last_sync = Some(timestamp);
-            metrics.sync_failure_rate = metrics.total_sync_failures as f32 / metrics.total_syncs as f32;
+            metrics.sync_failure_rate =
+                metrics.total_sync_failures as f32 / metrics.total_syncs as f32;
 
-        // Calculate average sync quality (last 100)
-        let quality_score = match sync_state.quality {
-            crate::meta::SyncQuality::Perfect => 1.0,
-            crate::meta::SyncQuality::Excellent => 0.95,
-            crate::meta::SyncQuality::Good => 0.85,
-            crate::meta::SyncQuality::Acceptable => 0.75,
-            crate::meta::SyncQuality::Degraded => 0.60,
-            crate::meta::SyncQuality::Poor => 0.40,
-            crate::meta::SyncQuality::Failed => 0.20,
-        };
+            // Calculate average sync quality (last 100)
+            let quality_score = match sync_state.quality {
+                crate::meta::SyncQuality::Perfect => 1.0,
+                crate::meta::SyncQuality::Excellent => 0.95,
+                crate::meta::SyncQuality::Good => 0.85,
+                crate::meta::SyncQuality::Acceptable => 0.75,
+                crate::meta::SyncQuality::Degraded => 0.60,
+                crate::meta::SyncQuality::Poor => 0.40,
+                crate::meta::SyncQuality::Failed => 0.20,
+            };
 
-        let recent_count = history.len().min(100);
-        if recent_count > 0 {
-            let sum: f32 = history
-                .iter()
-                .rev()
-                .take(recent_count)
-                .map(|e| match e.quality.as_str() {
-                    "Perfect" => 1.0,
-                    "Excellent" => 0.95,
-                    "Good" => 0.85,
-                    "Acceptable" => 0.75,
-                    "Degraded" => 0.60,
-                    "Poor" => 0.40,
-                    _ => 0.20,
-                })
-                .sum();
-            metrics.avg_sync_quality = (sum + quality_score) / (recent_count + 1) as f32;
-        } else {
-            metrics.avg_sync_quality = quality_score;
-        }
+            let recent_count = history.len().min(100);
+            if recent_count > 0 {
+                let sum: f32 = history
+                    .iter()
+                    .rev()
+                    .take(recent_count)
+                    .map(|e| match e.quality.as_str() {
+                        "Perfect" => 1.0,
+                        "Excellent" => 0.95,
+                        "Good" => 0.85,
+                        "Acceptable" => 0.75,
+                        "Degraded" => 0.60,
+                        "Poor" => 0.40,
+                        _ => 0.20,
+                    })
+                    .sum();
+                metrics.avg_sync_quality = (sum + quality_score) / (recent_count + 1) as f32;
+            } else {
+                metrics.avg_sync_quality = quality_score;
+            }
 
             // Add to history
             let entry = SyncHistoryEntry {
@@ -374,33 +376,44 @@ impl MetaMonitoringEngine {
         message: String,
         context: serde_json::Value,
     ) {
-        let mut alerts = self.alerts.write().await;
-        let mut metrics = self.metrics.write().await;
-
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
             .unwrap_or_default()
             .as_secs();
 
-        let alert = MetaAlert {
-            id: format!("ALERT-{}-{}", timestamp, alerts.len()),
-            timestamp,
-            severity,
-            category: category.to_string(),
-            message,
-            context,
-            acknowledged: false,
+        let alert = {
+            let mut alerts = self.alerts.write().await;
+
+            let alert = MetaAlert {
+                id: format!("ALERT-{}-{}", timestamp, alerts.len()),
+                timestamp,
+                severity,
+                category: category.to_string(),
+                message,
+                context,
+                acknowledged: false,
+            };
+
+            alerts.push(alert.clone());
+
+            // Keep only last 500 alerts in memory
+            if alerts.len() > 500 {
+                alerts.drain(0..100);
+            }
+
+            alert
         };
 
-        match severity {
-            AlertSeverity::Critical => metrics.critical_alerts += 1,
-            AlertSeverity::Warning => metrics.warning_alerts += 1,
-            _ => {}
+        {
+            let mut metrics = self.metrics.write().await;
+            match severity {
+                AlertSeverity::Critical => metrics.critical_alerts += 1,
+                AlertSeverity::Warning => metrics.warning_alerts += 1,
+                _ => {}
+            }
         }
 
-        alerts.push(alert.clone());
-
-        // Log alert
+        // Log alert (hors verrous)
         match severity {
             AlertSeverity::Critical => {
                 log::error!("🚨 CRITICAL ALERT [{}]: {}", category, alert.message)
@@ -410,11 +423,6 @@ impl MetaMonitoringEngine {
                 log::warn!("⚠️  WARNING ALERT [{}]: {}", category, alert.message)
             }
             AlertSeverity::Info => log::info!("ℹ️  INFO ALERT [{}]: {}", category, alert.message),
-        }
-
-        // Keep only last 500 alerts in memory
-        if alerts.len() > 500 {
-            alerts.drain(0..100);
         }
     }
 
