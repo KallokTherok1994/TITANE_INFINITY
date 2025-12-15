@@ -213,47 +213,8 @@ export default defineConfig({
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // 🌐 NETWORK DEPLOYMENT - HOST MODE (OPTIMIZED FOR CPU)
+  // 🔒 TAURI-ONLY
   // ═══════════════════════════════════════════════════════════════════════════
-  server: {
-    host: 'localhost', // Only localhost (reduces network scanning CPU)
-    port: 5173, // Default port
-    strictPort: true, // Fail if port is in use
-    cors: true, // Enable CORS for API calls
-    hmr: {
-      host: 'localhost', // HMR local only
-      overlay: true, // Show errors in overlay
-    },
-    watch: {
-      // Optimisation watchers pour réduire CPU et éviter ENOSPC
-      ignored: [
-        '**/node_modules/**',
-        '**/dist/**',
-        '**/target/**',
-        '**/.git/**',
-        '**/src-tauri/target/**',
-        '**/*.md',
-        '**/coverage/**',
-        '**/docs/**',
-        '**/runtime/*/logs/**',
-        '**/.vite/**',
-        '**/.cache/**',
-        '**/build/**',
-        '**/*.log',
-        '**/tmp/**',
-        '**/temp/**',
-      ],
-      usePolling: false, // Disable polling (use native FS events)
-    },
-  },
-
-  preview: {
-    host: 'localhost', // Preview server local only
-    port: 4173, // Preview port
-    strictPort: true,
-    cors: true,
-  },
-
   clearScreen: false,
   envPrefix: ['VITE_', 'TAURI_'],
 });

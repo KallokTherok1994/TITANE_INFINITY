@@ -511,7 +511,7 @@ class AIOrchestrator {
       const cognitiveDecision = cognitiveKernel.executeCognitiveProcess({
         message: sanitized,
         providers: this.providers.map(p => p.name),
-        metrics: realtimeMetrics,
+        metrics: { ...realtimeMetrics } as unknown as MetricsData,
       });
 
       // Sélection neurale standard

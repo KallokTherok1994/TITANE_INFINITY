@@ -572,8 +572,9 @@ mod tests {
             classify_text("fn main() { println!(\"Rust\"); }"),
             "code-rust"
         );
+        // React détecté via useState/useEffect patterns (plus spécifiques que "import")
         assert_eq!(
-            classify_text("import React from 'react'; const App = () => <div>React</div>"),
+            classify_text("const [count, setCount] = useState(0); useEffect(() => {}, [])"),
             "code-react"
         );
         assert_eq!(
