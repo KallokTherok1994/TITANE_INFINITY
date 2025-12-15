@@ -90,15 +90,16 @@ interface NeuralSelection {
 // ─────────────────────────────────────────────────────────────────
 
 class AIOrchestrator {
-  // ═══ PHASE 4 ÉTAPE 3: Providers complets réactivés ═══
-  // Cascade multi-providers avec fallback
+  // ═══ v24.3: CLOUD FIRST - Mode EN LIGNE prioritaire ═══
+  // Ordre: Cloud APIs (qualité) → Backend Rust → Ollama (mémoire locale) → Local (fallback)
+  // IMPORTANT: APIs cloud = réponses de meilleure qualité, Ollama = mémoire persistante
   private providers = [
-    tauriChatProvider, // Backend Rust (cascade Ollama→OpenAI→etc.)
-    geminiProvider, // Google Gemini
-    ollamaProvider, // Ollama frontend direct
-    openaiProvider, // OpenAI GPT
-    claudeProvider, // Anthropic Claude
-    titaneLocalProvider, // Fallback local (noyau infaillible)
+    claudeProvider, // 🥇 #1 Anthropic Claude (meilleur raisonnement)
+    openaiProvider, // 🥈 #2 OpenAI GPT (polyvalent, rapide)
+    geminiProvider, // 🥉 #3 Google Gemini (multimodal)
+    tauriChatProvider, // #4 Backend Rust (cascade interne)
+    ollamaProvider, // #5 Ollama (mémoire locale + analyse permanente)
+    titaneLocalProvider, // #6 Fallback local (noyau infaillible)
   ];
 
   private providerStats: Map<string, ProviderStats> = new Map();
@@ -386,45 +387,57 @@ class AIOrchestrator {
         );
       }
 
-      // Bonus selon le type de provider
+      // ═══ v24.3: CLOUD FIRST SCORING - Mode EN LIGNE prioritaire ═══
+      // Les APIs cloud ont des BONUS MASSIFS car elles offrent la meilleure qualité
+      // Ollama = mémoire locale (toujours actif en background pour sauvegarde)
       switch (provider.name) {
-        case 'titane-local':
-          // `titane-local` doit rester le fallback ultime, pas le choix par défaut.
-          // Garder un léger bonus pour le temps réel, mais éviter de dominer la sélection.
-          score += 5;
-          score += requiresRealtime ? 20 : 0;
-          break;
-
-        case 'tauri-backend':
-          score += isComplexQuery ? 20 : 10; // Bonus complexité
-          score -= contextLength > 10000 ? 15 : 0; // Malus gros contexte
+        case 'claude':
+          // 🥇 PRIORITÉ #1: Claude = meilleur raisonnement, contexte long
+          score += 50; // CLOUD PRIORITY BOOST
+          score += isComplexQuery ? 35 : 25; // Excellent sur complexité
+          score += contextLength > 5000 ? 25 : 10; // Superbe contexte long
+          score -= !IS_VITEST && stats.status === 'offline' ? 30 : 0; // Malus réduit
           break;
 
         case 'openai':
+          // 🥈 PRIORITÉ #2: OpenAI = polyvalent, rapide
+          score += 45; // CLOUD PRIORITY BOOST
           score += isComplexQuery ? 30 : 20; // Excellent sur complexité
-          score += messageLength > 1000 ? 15 : 0; // Bon sur longs messages
-          score -= !IS_VITEST && stats.status === 'offline' ? 50 : 0; // Malus hors ligne
-          break;
-
-        case 'claude':
-          score += isComplexQuery ? 28 : 18; // Très bon sur raisonnement
-          score += contextLength > 5000 ? 20 : 0; // Excellent contexte long
-          score -= !IS_VITEST && stats.status === 'offline' ? 50 : 0; // Malus hors ligne
+          score += messageLength > 1000 ? 15 : 5; // Bon sur longs messages
+          score -= !IS_VITEST && stats.status === 'offline' ? 30 : 0; // Malus réduit
           break;
 
         case 'gemini':
-          score += isComplexQuery ? 25 : 15; // Excellent sur complexe
-          score -= !IS_VITEST && stats.status === 'offline' ? 50 : 0; // Malus hors ligne
+          // 🥉 PRIORITÉ #3: Gemini = multimodal, gratuit
+          score += 40; // CLOUD PRIORITY BOOST
+          score += isComplexQuery ? 25 : 15; // Bon sur complexe
+          score += requiresRealtime ? 15 : 0; // Bonus temps réel
+          score -= !IS_VITEST && stats.status === 'offline' ? 30 : 0; // Malus réduit
+          break;
+
+        case 'tauri-backend':
+          // #4: Backend Rust (cascade interne)
+          score += 20; // Bonus modéré
+          score += isComplexQuery ? 15 : 10;
+          score -= contextLength > 10000 ? 10 : 0;
           break;
 
         case 'ollama':
-          // ✨ v21 - BOOST MASSIF en mode local forcé
+          // #5: Ollama = MÉMOIRE LOCALE (toujours actif pour analyse/sauvegarde)
+          // Pas de boost sauf si mode local explicitement demandé
           if (preferredProvider === 'local') {
-            score += 200; // Priorité absolue au local
-            logger.debug('   🏠 LOCAL MODE: Ollama boosted to top priority');
+            score += 200; // Mode local forcé uniquement
+            logger.debug('   🏠 LOCAL MODE FORCÉ: Ollama prioritaire');
+          } else {
+            score += 5; // Score faible = fallback seulement
           }
-          score += messageLength < 500 ? 15 : 5; // Bon sur court
-          score += stats.avgResponseTime < 3000 ? 10 : -10; // Bonus vitesse
+          score += messageLength < 500 ? 10 : 0; // Légèrement bon sur court
+          break;
+
+        case 'titane-local':
+          // #6: Fallback ultime (noyau infaillible)
+          score += requiresRealtime ? 15 : 0; // Bonus temps réel seulement
+          // Pas de boost de base = dernier recours
           break;
       }
 
