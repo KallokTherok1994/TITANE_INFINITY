@@ -13,7 +13,7 @@
  * ═══════════════════════════════════════════════════════════
  */
 
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo, memo } from 'react';
 import { HUDFrame } from '../components/HUDFrame';
 import { ProjectCard } from '../components/ProjectCard';
 import './styles/Projects.css';
@@ -62,21 +62,29 @@ const MOCK_PROJECTS: Project[] = [
   },
 ];
 
-export const ProjectsPage: React.FC = () => {
+export const ProjectsPage = memo(function ProjectsPage() {
   const [projects] = useState<Project[]>(MOCK_PROJECTS);
   const [_selectedProject, setSelectedProject] = useState<string | null>(null); // TODO: Ajouter highlight projet
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredProjects = projects.filter(
-    p =>
-      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.description.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredProjects = useMemo(
+    () =>
+      projects.filter(
+        p =>
+          p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          p.description.toLowerCase().includes(searchQuery.toLowerCase())
+      ),
+    [projects, searchQuery]
   );
 
-  const handleOpenChat = (_projectId: string) => {
+  const handleOpenChat = useCallback((_projectId: string) => {
     // TODO: Router navigation avec contexte projet
     // Le paramètre sera utilisé pour la navigation contextuelle
-  };
+  }, []);
+
+  const handleSelectProject = useCallback((projectId: string) => {
+    setSelectedProject(projectId);
+  }, []);
 
   return (
     <div className="projects-page">
@@ -117,7 +125,7 @@ export const ProjectsPage: React.FC = () => {
         <div className="projects-grid">
           {filteredProjects.map(project => (
             <div key={project.id} className="projects-item">
-              <ProjectCard {...project} onClick={() => setSelectedProject(project.id)} />
+              <ProjectCard {...project} onClick={() => handleSelectProject(project.id)} />
               <button
                 className="projects-chat-btn"
                 onClick={e => {
@@ -142,4 +150,4 @@ export const ProjectsPage: React.FC = () => {
       </HUDFrame>
     </div>
   );
-};
+});

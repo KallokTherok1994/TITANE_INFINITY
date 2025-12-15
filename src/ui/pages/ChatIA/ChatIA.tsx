@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import './ChatIA.css';
 import { ModeEditor } from './ModeEditor';
@@ -41,7 +41,7 @@ interface OllamaModel {
   modified_at: string;
 }
 
-export const ChatIA: React.FC = () => {
+export const ChatIA = memo(function ChatIA() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -414,4 +414,4 @@ export const ChatIA: React.FC = () => {
       </div>
     </div>
   );
-};
+});
