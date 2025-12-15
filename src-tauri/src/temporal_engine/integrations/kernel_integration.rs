@@ -88,7 +88,7 @@ impl TemporalKernelBridge {
 
     fn calculate_max_cpu(hour: u8) -> f32 {
         match hour {
-            10..=11 => 95.0,        // Peak: max CPU
+            10..=11 => 95.0,         // Peak: max CPU
             22..=23 | 0..=5 => 30.0, // Night: reduced
             _ => 70.0,
         }
