@@ -598,7 +598,7 @@ mod tests {
         let data = ComplexData {
             strings: vec!["a".to_string(), "b".to_string(), "c".to_string()],
             nested: NestedData {
-                value: 3.14159,
+                value: std::f64::consts::PI,
                 flag: true,
             },
             optional: Some(42),
