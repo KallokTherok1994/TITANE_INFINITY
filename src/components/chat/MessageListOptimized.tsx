@@ -41,9 +41,11 @@ const MessageBubble = memo<MessageBubbleProps>(
     const [isSpeaking, setIsSpeaking] = React.useState(false);
 
     const isUser = message.role === 'user';
-    const isStreaming = message.metadata?.status === 'streaming';
-    const hasError = message.metadata?.status === 'error';
-    const provider = message.provider || message.metadata?.provider;
+    const metadataStatus = message.metadata?.status as string | undefined;
+    const isStreaming = metadataStatus === 'streaming';
+    const hasError = metadataStatus === 'error';
+    const metadataProvider = message.metadata?.provider as string | undefined;
+    const provider = message.provider || metadataProvider;
 
     // Format timestamp
     const formattedTime = useMemo(() => {
@@ -260,15 +262,21 @@ export const MessageListOptimized: React.FC<MessageListOptimizedProps> = ({
       {/* Messages or empty state */}
       {validMessages.length > 0 ? (
         <div className="message-list-content">
-          {validMessages.map((message, index) => (
-            <MessageBubble
-              key={message.metadata?.uiId || `msg-${index}-${message.timestamp}`}
-              message={message}
-              index={index}
-              onCopy={onCopyMessage}
-              enableTTS={enableTTS}
-            />
-          ))}
+          {validMessages.map((message, index) => {
+            const uiId = message.metadata?.uiId;
+            const key =
+              (typeof uiId === 'string' ? uiId : null) ||
+              `msg-${index}-${message.timestamp}`;
+            return (
+              <MessageBubble
+                key={key}
+                message={message}
+                index={index}
+                onCopy={onCopyMessage}
+                enableTTS={enableTTS}
+              />
+            );
+          })}
         </div>
       ) : !isLoading ? (
         emptyState

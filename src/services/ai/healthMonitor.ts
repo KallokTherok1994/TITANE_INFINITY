@@ -108,7 +108,7 @@ class AIHealthMonitor {
           totalErrors: number;
           totalFixes: number;
           successRate: number;
-          [key: string]: any;
+          [key: string]: string | number | boolean;
         }
       );
       this.analyzeOrchestrator(orchestratorHealth);
@@ -183,7 +183,7 @@ class AIHealthMonitor {
     totalErrors: number;
     totalFixes: number;
     successRate: number;
-    [key: string]: any;
+    [key: string]: string | number | boolean;
   }): void {
     // Trop d'erreurs
     if (stats.totalErrors > 50) {
@@ -198,7 +198,8 @@ class AIHealthMonitor {
     }
 
     // Taux de guérison faible
-    if (stats.successRate < 70 && stats.totalHeals > 0) {
+    const totalHeals = typeof stats.totalHeals === 'number' ? stats.totalHeals : 0;
+    if (stats.successRate < 70 && totalHeals > 0) {
       this.addAlert({
         severity: 'critical',
         component: 'autoheal',

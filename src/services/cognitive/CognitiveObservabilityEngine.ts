@@ -635,9 +635,10 @@ export class CognitiveObservabilityEngine extends EventEmitter {
     const maxTracesInMemory =
       this.config.max_traces_in_memory ?? this.config.max_traces ?? 100;
     if (this.traces.size > maxTracesInMemory) {
-      const sorted: [string, any][] = Array.from(this.traces.entries()).sort(
-        (a: any, b: any) =>
-          new Date(b[1].start_time).getTime() - new Date(a[1].start_time).getTime()
+      const sorted = Array.from(this.traces.entries()).sort(
+        (a, b) =>
+          new Date(b[1].start_time ?? 0).getTime() -
+          new Date(a[1].start_time ?? 0).getTime()
       );
 
       const toKeep = sorted.slice(0, maxTracesInMemory);
@@ -715,7 +716,7 @@ export class CognitiveObservabilityEngine extends EventEmitter {
    */
   private log(
     message: string,
-    data?: any,
+    data?: unknown,
     level: 'info' | 'warn' | 'error' = 'info'
   ): void {
     const timestamp = new Date().toISOString();

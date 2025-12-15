@@ -240,7 +240,11 @@ export class VocalMicroFXEngine {
     suffix?: MicroExpression;
   } {
     const preferredTypes = MOOD_MICROFX_PREFERENCES[emotionState.mood];
-    const result: any = {};
+    const result: {
+      prefix?: MicroExpression;
+      inline?: MicroExpression;
+      suffix?: MicroExpression;
+    } = {};
 
     // Prefix (si question response ou réaction émotionnelle forte)
     if (context?.isQuestionResponse || emotionState.energy > 0.6) {

@@ -57,46 +57,50 @@ export const MessageListSimple: React.FC<MessageListSimpleProps> = ({
 
       {/* Messages */}
       {messages && messages.length > 0 ? (
-        messages.map((message, index) => (
-          <div
-            key={message.metadata?.uiId || `msg-${index}`}
-            style={{
-              padding: '12px 16px',
-              borderRadius: '12px',
-              background:
-                message.role === 'user'
-                  ? 'rgba(0, 150, 255, 0.15)'
-                  : 'rgba(128, 0, 255, 0.15)',
-              border:
-                message.role === 'user'
-                  ? '1px solid rgba(0, 150, 255, 0.3)'
-                  : '1px solid rgba(128, 0, 255, 0.3)',
-              alignSelf: message.role === 'user' ? 'flex-end' : 'flex-start',
-              maxWidth: '80%',
-            }}
-          >
+        messages.map((message, index) => {
+          const uiId = message.metadata?.uiId;
+          const key = (typeof uiId === 'string' ? uiId : null) || `msg-${index}`;
+          return (
             <div
+              key={key}
               style={{
-                fontSize: '10px',
-                opacity: 0.7,
-                marginBottom: '4px',
-                textTransform: 'uppercase',
+                padding: '12px 16px',
+                borderRadius: '12px',
+                background:
+                  message.role === 'user'
+                    ? 'rgba(0, 150, 255, 0.15)'
+                    : 'rgba(128, 0, 255, 0.15)',
+                border:
+                  message.role === 'user'
+                    ? '1px solid rgba(0, 150, 255, 0.3)'
+                    : '1px solid rgba(128, 0, 255, 0.3)',
+                alignSelf: message.role === 'user' ? 'flex-end' : 'flex-start',
+                maxWidth: '80%',
               }}
             >
-              {message.role === 'user' ? '👤 Vous' : '🤖 TITANE∞'}
+              <div
+                style={{
+                  fontSize: '10px',
+                  opacity: 0.7,
+                  marginBottom: '4px',
+                  textTransform: 'uppercase',
+                }}
+              >
+                {message.role === 'user' ? '👤 Vous' : '🤖 TITANE∞'}
+              </div>
+              <div
+                style={{
+                  fontSize: '14px',
+                  lineHeight: '1.5',
+                  whiteSpace: 'pre-wrap',
+                  wordBreak: 'break-word',
+                }}
+              >
+                {message.content || '(contenu vide)'}
+              </div>
             </div>
-            <div
-              style={{
-                fontSize: '14px',
-                lineHeight: '1.5',
-                whiteSpace: 'pre-wrap',
-                wordBreak: 'break-word',
-              }}
-            >
-              {message.content || '(contenu vide)'}
-            </div>
-          </div>
-        ))
+          );
+        })
       ) : (
         <div
           style={{

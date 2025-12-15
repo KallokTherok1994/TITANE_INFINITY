@@ -19,10 +19,8 @@
 import type { EmbeddingGenerator } from './semanticMemory.types';
 
 // Types pour Transformers.js (sans import direct pour éviter erreurs de build)
-interface Pipeline {
-  (text: string | string[], options?: any): Promise<any>;
-  dispose(): Promise<void>;
-}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Pipeline = any; // External library type - too complex to type correctly
 
 /**
  * Configuration LocalEmbeddingGenerator
@@ -37,7 +35,7 @@ export interface LocalEmbeddingGeneratorConfig {
   /** Options du pipeline */
   pipelineOptions?: {
     quantized?: boolean;
-    progress_callback?: (progress: any) => void;
+    progress_callback?: (progress: { status: string; progress?: number }) => void;
   };
 
   /** Cache des embeddings */

@@ -157,7 +157,10 @@ function deduplicateMessages(messages: AIMessage[]): AIMessage[] {
   const seen = new Set<string>();
   return messages.filter(msg => {
     // Utiliser uiId si disponible, sinon timestamp+contenu tronqué
-    const key = msg.metadata?.uiId || `${msg.timestamp}-${msg.content.substring(0, 50)}`;
+    const uiId = msg.metadata?.uiId;
+    const key =
+      (typeof uiId === 'string' ? uiId : null) ||
+      `${msg.timestamp}-${msg.content.substring(0, 50)}`;
     if (seen.has(key)) {
       console.log(
         '[useChat OMNIS] ⚠️ Message dupliqué détecté et filtré:',

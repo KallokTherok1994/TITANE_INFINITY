@@ -229,11 +229,15 @@ export const VirtualMessageList = memo(function VirtualMessageList({
         onScroll={handleScroll}
         style={{ overflowY: 'auto', height: '100%' }}
       >
-        {messages.map((message, index) => (
-          <div key={message.metadata?.uiId ?? `msg-${index}`}>
-            {renderMessage(message, index, index === messages.length - 1)}
-          </div>
-        ))}
+        {messages.map((message, index) => {
+          const uiId = message.metadata?.uiId;
+          const key = (typeof uiId === 'string' ? uiId : null) ?? `msg-${index}`;
+          return (
+            <div key={key}>
+              {renderMessage(message, index, index === messages.length - 1)}
+            </div>
+          );
+        })}
 
         {isLoading && (
           <div className="virtual-message-list__loading">
@@ -268,10 +272,13 @@ export const VirtualMessageList = memo(function VirtualMessageList({
           {visibleMessages.map((message, relativeIndex) => {
             const absoluteIndex = visibleRange.start + relativeIndex;
             const isLast = absoluteIndex === messages.length - 1;
+            const uiId = message.metadata?.uiId;
+            const key =
+              (typeof uiId === 'string' ? uiId : null) ?? `msg-${absoluteIndex}`;
 
             return (
               <div
-                key={message.metadata?.uiId ?? `msg-${absoluteIndex}`}
+                key={key}
                 ref={el => measureItem(absoluteIndex, el)}
                 data-index={absoluteIndex}
               >
