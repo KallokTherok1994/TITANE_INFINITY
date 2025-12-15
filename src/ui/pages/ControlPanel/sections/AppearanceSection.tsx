@@ -7,7 +7,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { secureInvoke } from '@/lib/security';
 import {
-  ControlPanelToggle,
   ControlPanelToggleList,
   type ToggleConfig,
 } from '../components/ControlPanelToggle';
