@@ -1,0 +1,196 @@
+{
+  "hash": "6ed86ab3",
+  "configHash": "0a89e598",
+  "lockfileHash": "b5675305",
+  "browserHash": "f42af495",
+  "optimized": {
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "883e6c85",
+      "needsInterop": true
+    },
+    "react-dom": {
+      "src": "../../node_modules/react-dom/index.js",
+      "file": "react-dom.js",
+      "fileHash": "c6b6cc8c",
+      "needsInterop": true
+    },
+    "react/jsx-runtime": {
+      "src": "../../node_modules/react/jsx-runtime.js",
+      "file": "react_jsx-runtime.js",
+      "fileHash": "596ddb01",
+      "needsInterop": true
+    },
+    "react/jsx-dev-runtime": {
+      "src": "../../node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "2cdaa069",
+      "needsInterop": true
+    },
+    "@sentry/react": {
+      "src": "../../node_modules/@sentry/react/build/esm/index.js",
+      "file": "@sentry_react.js",
+      "fileHash": "7a00913a",
+      "needsInterop": false
+    },
+    "@tauri-apps/api/core": {
+      "src": "../../node_modules/@tauri-apps/api/core.js",
+      "file": "@tauri-apps_api_core.js",
+      "fileHash": "467100b9",
+      "needsInterop": false
+    },
+    "@tauri-apps/api/event": {
+      "src": "../../node_modules/@tauri-apps/api/event.js",
+      "file": "@tauri-apps_api_event.js",
+      "fileHash": "5b729ab7",
+      "needsInterop": false
+    },
+    "@tauri-apps/api/path": {
+      "src": "../../node_modules/@tauri-apps/api/path.js",
+      "file": "@tauri-apps_api_path.js",
+      "fileHash": "0e8595e3",
+      "needsInterop": false
+    },
+    "@tauri-apps/plugin-fs": {
+      "src": "../../node_modules/@tauri-apps/plugin-fs/dist-js/index.js",
+      "file": "@tauri-apps_plugin-fs.js",
+      "fileHash": "0282ce01",
+      "needsInterop": false
+    },
+    "@xenova/transformers": {
+      "src": "../../node_modules/@xenova/transformers/src/transformers.js",
+      "file": "@xenova_transformers.js",
+      "fileHash": "ee2fd8f0",
+      "needsInterop": false
+    },
+    "chart.js": {
+      "src": "../../node_modules/chart.js/dist/chart.js",
+      "file": "chart__js.js",
+      "fileHash": "6d2ed5ce",
+      "needsInterop": false
+    },
+    "clsx": {
+      "src": "../../node_modules/clsx/dist/clsx.mjs",
+      "file": "clsx.js",
+      "fileHash": "781ff58d",
+      "needsInterop": false
+    },
+    "eventemitter3": {
+      "src": "../../node_modules/eventemitter3/index.mjs",
+      "file": "eventemitter3.js",
+      "fileHash": "5fff123e",
+      "needsInterop": false
+    },
+    "events": {
+      "src": "../../node_modules/eventemitter3/index.mjs",
+      "file": "events.js",
+      "fileHash": "1c47d65a",
+      "needsInterop": false
+    },
+    "framer-motion": {
+      "src": "../../node_modules/framer-motion/dist/es/index.mjs",
+      "file": "framer-motion.js",
+      "fileHash": "efd70174",
+      "needsInterop": false
+    },
+    "i18next": {
+      "src": "../../node_modules/i18next/dist/esm/i18next.js",
+      "file": "i18next.js",
+      "fileHash": "e351fec5",
+      "needsInterop": false
+    },
+    "i18next-browser-languagedetector": {
+      "src": "../../node_modules/i18next-browser-languagedetector/dist/esm/i18nextBrowserLanguageDetector.js",
+      "file": "i18next-browser-languagedetector.js",
+      "fileHash": "e6881e30",
+      "needsInterop": false
+    },
+    "lucide-react": {
+      "src": "../../node_modules/lucide-react/dist/esm/lucide-react.js",
+      "file": "lucide-react.js",
+      "fileHash": "bd1e1deb",
+      "needsInterop": false
+    },
+    "react-chartjs-2": {
+      "src": "../../node_modules/react-chartjs-2/dist/index.js",
+      "file": "react-chartjs-2.js",
+      "fileHash": "d744eba5",
+      "needsInterop": false
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "a8584534",
+      "needsInterop": true
+    },
+    "react-i18next": {
+      "src": "../../node_modules/react-i18next/dist/es/index.js",
+      "file": "react-i18next.js",
+      "fileHash": "de1f20d8",
+      "needsInterop": false
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/react-router-dom/dist/index.mjs",
+      "file": "react-router-dom.js",
+      "fileHash": "f77e6cbd",
+      "needsInterop": false
+    },
+    "uuid": {
+      "src": "../../node_modules/uuid/dist/index.js",
+      "file": "uuid.js",
+      "fileHash": "1757d355",
+      "needsInterop": false
+    },
+    "web-vitals": {
+      "src": "../../node_modules/web-vitals/dist/web-vitals.js",
+      "file": "web-vitals.js",
+      "fileHash": "30695ec3",
+      "needsInterop": false
+    },
+    "zod": {
+      "src": "../../node_modules/zod/index.js",
+      "file": "zod.js",
+      "fileHash": "d1380645",
+      "needsInterop": false
+    },
+    "zustand": {
+      "src": "../../node_modules/zustand/esm/index.mjs",
+      "file": "zustand.js",
+      "fileHash": "8041d52d",
+      "needsInterop": false
+    },
+    "zustand/middleware": {
+      "src": "../../node_modules/zustand/esm/middleware.mjs",
+      "file": "zustand_middleware.js",
+      "fileHash": "4c09be60",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-SI4HXDLV": {
+      "file": "chunk-SI4HXDLV.js"
+    },
+    "chunk-ZJ3H4KAC": {
+      "file": "chunk-ZJ3H4KAC.js"
+    },
+    "chunk-LJXWR6UH": {
+      "file": "chunk-LJXWR6UH.js"
+    },
+    "chunk-JO3Y3TZY": {
+      "file": "chunk-JO3Y3TZY.js"
+    },
+    "chunk-65KY755N": {
+      "file": "chunk-65KY755N.js"
+    },
+    "chunk-3JNWUA4Y": {
+      "file": "chunk-3JNWUA4Y.js"
+    },
+    "chunk-OSEMFSYY": {
+      "file": "chunk-OSEMFSYY.js"
+    },
+    "chunk-V4OQ3NZ2": {
+      "file": "chunk-V4OQ3NZ2.js"
+    }
+  }
+}

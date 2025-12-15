@@ -39,12 +39,18 @@ export default defineConfig({
   // ═══════════════════════════════════════════════════════════════════════════
   // 🚀 OPTIMISATIONS CPU & WATCHERS
   // ═══════════════════════════════════════════════════════════════════════════
+
+  // 🚀 OPTIMIZATION v24.7.7: Persistent cache for faster dev startup
+  cacheDir: '.vite-cache',
+
   optimizeDeps: {
     // En mode dev browser, on peut inclure @tauri-apps/api
     // En mode Tauri, il sera automatiquement géré
     include: ['react', 'react-dom', 'react/jsx-runtime'],
     // Exclure modules Node.js purs incompatibles browser
     exclude: ['better-sqlite3', 'sqlite3', 'bindings'],
+    // 🚀 OPTIMIZATION v24.7.7: Don't force re-optimize if cache is valid
+    force: false,
     esbuildOptions: {
       target: 'esnext',
       // ✨ v21.5 Sprint 1: Drop logs/debugger in production optimized deps
@@ -79,6 +85,10 @@ export default defineConfig({
     // 🚀 OPTIMIZATION v24.7.6: Enable advanced compression & tree-shaking
     reportCompressedSize: true,
     cssMinify: 'lightningcss', // Faster CSS minification
+
+    // 🚀 OPTIMIZATION v24.7.7: Parallel minification with esbuild (faster than terser)
+    minify: 'esbuild',
+
     rollupOptions: {
       // ✅ FIX: Ne PAS externaliser @tauri-apps/api/* en mode Tauri!
       // Tauri v2 fournit ces modules directement, ils doivent être bundlés
@@ -199,14 +209,9 @@ export default defineConfig({
         },
       },
     },
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true, // ✨ v21.5: Strip console.* in production
-        drop_debugger: true, // ✨ v21.5: Strip debugger statements
-        pure_funcs: ['console.log', 'console.debug', 'console.info'], // Extra safety
-      },
-    },
+    // 🚀 OPTIMIZATION v24.7.7: Faster minification with esbuild (removed terser)
+    // minify: 'esbuild' configured above - terser options removed for speed
+
     // Réduit à 800KB pour forcer plus de découpage
     chunkSizeWarningLimit: 800,
     // Optimisations supplémentaires
@@ -219,6 +224,11 @@ export default defineConfig({
   esbuild: {
     drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
     legalComments: 'none', // Remove comments in production
+  },
+
+  // 🚀 OPTIMIZATION v24.7.7: CSS source maps for debugging
+  css: {
+    devSourcemap: true,
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
