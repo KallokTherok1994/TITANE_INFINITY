@@ -182,6 +182,79 @@ Documentation complète des modules TITANE∞ (backend Rust + frontend TypeScrip
 
 ---
 
+### [VECTOR_STORE.md](backend/VECTOR_STORE.md) (1,283 lignes) ⭐⭐⭐⭐⭐
+
+**Module Path:** `src-tauri/src/api/vector_store_api.rs`, `src-tauri/src/memory_os/vector_store.rs`, `src/services/cognitive/TauriVectorStore.ts`  
+**Description:** Vector embeddings storage + semantic similarity search (SQLite backend + frontend adapter)  
+**Responsibility:** Vector persistence (384-dim embeddings), cosine similarity search, multi-tier memory support, hybrid retrieval
+
+**Key Content:**
+- 🗄️ **Architecture** — SQLite Backend (Rust API + memory_os) + Frontend Adapter (TauriVectorStore) + Tauri Bridge
+- 🔍 **Search Algorithm** — k-NN linear search O(n), cosine similarity (dot product / magnitudes), top-K sorted by score, normalized vectors
+- 🧠 **Embeddings** — 384-dim all-MiniLM-L6-v2 model, multi-tier memory (SHORT_TERM, MEDIUM_TERM, LONG_TERM, META_MEMORY)
+- 🎯 **Hybrid Retrieval** — Similarity 70% + Importance 20% + Recency 10%, configurable weights
+- 🔧 **API Reference Backend** — `VectorStore::new(config)`, `insert(entry)`, `search(embedding, options)`, `get(id)`, `update(id, updates)`, `delete(id)`, `get_stats()`
+- 🔧 **API Reference Frontend** — `TauriVectorStore::initialize()`, `add(entry)`, `addBatch(entries)`, `search(embedding, limit, filters)`, `get(id)`, `getStats()`
+- 💾 **Data Structures** — VectorStoreConfig, VectorEntry, SearchOptions, SearchResult, VectorStoreStats, SemanticMemoryEntry
+- ⚡ **Performance** — Search latency <10ms (linear, <10K vectors), future HNSW upgrade for >10K vectors, SQLite WAL mode optimizations
+- 🔗 **Integrations** — UnifiedMemory (STM/MTM/LTM vector storage), SemanticMemoryEngine (semantic recall), OMEGA (embedding generation Stage 2)
+- 🧪 **Testing** — Backend unit tests (insert, search, similarity), frontend E2E tests (Tauri integration, batch operations)
+
+**Target Audience:** Développeurs backend, AI engineers  
+**Complexity:** ⭐⭐⭐⭐⭐ (Expert - Vector embeddings + semantic search)
+
+---
+
+### [PERFORMANCE_ENGINE.md](backend/PERFORMANCE_ENGINE.md) (812 lignes) ⭐⭐⭐⭐⭐
+
+**Module Path:** `src/services/performanceEngine/`, `src-tauri/src/singularity_fusion/performance.rs`  
+**Description:** Performance monitoring + optimization infrastructure (4-stage cycle)  
+**Responsibility:** Real-time metrics collection, anomaly detection, recommendation generation, self-healing integration
+
+**Key Content:**
+- 🔄 **4-Stage Architecture** — MetricsCollector (multi-source) → PerformanceAnalyzer (anomaly detection) → PerformanceAdvisor (recommendations) → PerformanceReporter (dashboard + self-healing)
+- 📊 **Monitoring Cycle** — Collect (1s) → Analyze (detect anomalies) → Advise (generate recommendations) → Report (dashboard update) → Repeat
+- 📈 **Metrics Tracked** — FPS (≥55), frame time (<16.67ms), CPU/Memory usage, AI latency, render time, network latency, GC time
+- 🎯 **Performance Profiles** — Development (relaxed), Production (strict, DEFAULT), Benchmark (extreme), LowPower (conservative)
+- 📊 **Grading System** — A (>90%), B (80-90%), C (70-80%), D (60-70%), F (<60%)
+- 🔧 **API Reference** — `PerformanceEngine::start()`, `stop()`, `runCycle()`, `getState()`, `getLatestSnapshot()`, MetricsCollector, PerformanceAnalyzer, PerformanceAdvisor
+- 💾 **Data Structures** — MetricsSnapshot, PerformanceIssue, Recommendation, PerformanceProfile, ThresholdConfig, PerformanceGrade
+- 🚨 **Anomaly Types** — HighCPU (>80%), HighMemory (>85%), LowFPS (<55), HighLatency (>500ms), RenderBottleneck, MemoryLeak, LongTasks
+- 🔧 **Recommendations** — Reduce animations, throttle UI updates, clear caches, optimize components, lazy load modules, simplify renders
+- ⚡ **Performance** — Cycle overhead ~5-10ms, metrics collection ~2-5ms, analysis ~3-7ms, total impact <1% CPU
+- 🔗 **Integrations** — SelfHealingEngine (auto-repair triggers), Singularity (health sync), OMEGA (AI latency tracking)
+- 🧪 **Testing** — Unit tests (collectors, analyzers, advisors), integration tests (full cycles, self-healing triggers, auto-apply)
+
+**Target Audience:** Développeurs backend, DevOps, SRE  
+**Complexity:** ⭐⭐⭐⭐⭐ (Expert - Real-time monitoring + optimization)
+
+---
+
+### [ADAPTIVE_ENGINE.md](backend/ADAPTIVE_ENGINE.md) (780 lignes) ⭐⭐⭐⭐⭐
+
+**Module Path:** `src-tauri/src/adaptive/`, `src/engines/cognitive/cognitiveLayoutEngine.ts`  
+**Description:** Adaptive learning + behavior adjustment (continuous pattern detection + preference optimization)  
+**Responsibility:** Pattern detection, preference learning, rule-based adaptation, system auto-tuning
+
+**Key Content:**
+- 🔄 **Learning Cycle** — Sample Capture → Pattern Detection → Preference Adjustment → Rule Execution → Learning Update → Repeat
+- 📊 **5 Adaptive Rules** — LatencyAIAbove(5000ms) → ReduceAIComplexity, CognitiveStabilityBelow(0.5) → TriggerDeepSync, FpsBelow(40) → SimplifyUITransitions, SyncQualityBelow(0.7) → ReanchorTimeline, HashIntegrityFailed → SwitchToStableMode
+- 🧠 **Pattern Detection** — High CPU (>80%), High latency (>3000ms), Low stability (<0.7%), pattern library growth
+- 🎯 **Preference Profile** — AI Style (Balanced/Fast/Thorough/Creative), System Mode (Adaptive/Performance/Balanced/Stability), Optimization Bias (Speed/Quality/Balanced), Auto-Learn (bool)
+- 📈 **Learning State** — Total samples (cumulative), patterns detected, optimization cycles, learning rate (0.1, decay 0.999), last learn timestamp
+- 🔧 **API Reference Backend** — `AdaptiveOptimizationEngine::new()`, `capture_sample(sample)`, `evaluate_rules()`, `learn()`, `get_summary()`
+- 🔧 **API Reference Commands** — `adaptive_capture_sample()`, `adaptive_evaluate_rules()`, `adaptive_learn()`, `adaptive_get_summary()`, `adaptive_update_preferences(profile)`
+- 💾 **Data Structures** — SystemPerformanceSample, AdaptiveRule, AdaptiveCondition, AdaptiveAction, LearningState, PreferenceProfile, AdaptiveSummary
+- 🚀 **Adaptive Actions** — ReduceAIComplexity, TriggerDeepSync, SimplifyUITransitions, ReanchorTimeline, SwitchToStableMode, OptimizeMemory, ThrottleAnimations
+- ⚡ **Performance** — Sample capture ~1ms, rule evaluation ~5-10ms (5 rules), learning cycle ~20-50ms (100 samples analysis)
+- 🔗 **Integrations** — SystemHealth (sample capture), PerformanceEngine (metric triggers), Singularity (cognitive state awareness)
+- 🧪 **Testing** — Backend unit tests (rule evaluation, pattern detection), integration tests (multi-sample learning, preference adjustment)
+
+**Target Audience:** Développeurs backend, AI engineers  
+**Complexity:** ⭐⭐⭐⭐⭐ (Expert - Adaptive learning + pattern detection)
+
+---
+
 ## ⚛️ FRONTEND MODULES (TypeScript)
 
 **Path:** `docs/05_modules/frontend/`
@@ -245,25 +318,25 @@ Documentation complète des modules TITANE∞ (backend Rust + frontend TypeScrip
 ## 🗺️ NAVIGATION RAPIDE
 
 ### Par rôle:
-- **🦀 Backend Developer** → Backend modules (OMEGA, ConversationEngine, Memory, Singularity, AI Router, French Mastery, Self-Healing Engine, System Health Engine)
+- **🦀 Backend Developer** → Backend modules (OMEGA, ConversationEngine, Memory, Singularity, AI Router, French Mastery, Self-Healing Engine, System Health Engine, Vector Store, Performance Engine, Adaptive Engine)
 - **⚛️ Frontend Developer** → Frontend modules (ChatEngine, UnifiedMemory, Cognitive Orchestrator)
 - **🔗 Full-Stack Developer** → Both backend + frontend + integration docs
-- **🧠 AI Engineer** → OMEGA, Memory, Singularity, AI Router, Cognitive Orchestrator
+- **🧠 AI Engineer** → OMEGA, Memory, Singularity, AI Router, Cognitive Orchestrator, Vector Store, Adaptive Engine
 - **🏗️ System Architect** → ConversationEngine, Singularity, Cognitive Orchestrator, Self-Healing Engine (orchestration)
-- **🛡️ DevOps / SRE** → Self-Healing Engine, System Health Engine, AI Router (infrastructure monitoring + auto-repair)
+- **🛡️ DevOps / SRE** → Self-Healing Engine, System Health Engine, Performance Engine, AI Router (infrastructure monitoring + auto-repair + optimization)
 
 ### Par fonctionnalité:
 - **💬 Chat AI** → OMEGA_PIPELINE.md, CONVERSATION_ENGINE.md, CHAT_ENGINE.md, AI_ROUTER.md
-- **🧠 Memory System** → UNIFIED_MEMORY.md, UNIFIED_MEMORY_FRONTEND.md, COGNITIVE_ORCHESTRATOR.md (semantic)
-- **🌌 Meta-Cognitive** → SINGULARITY.md, COGNITIVE_ORCHESTRATOR.md
+- **🧠 Memory System** → UNIFIED_MEMORY.md, UNIFIED_MEMORY_FRONTEND.md, COGNITIVE_ORCHESTRATOR.md (semantic), VECTOR_STORE.md (embeddings)
+- **🌌 Meta-Cognitive** → SINGULARITY.md, COGNITIVE_ORCHESTRATOR.md, ADAPTIVE_ENGINE.md (continuous learning)
 - **🔄 Pipeline Processing** → OMEGA_PIPELINE.md, CONVERSATION_ENGINE.md, FRENCH_MASTERY.md
 - **🔗 Frontend ↔ Backend** → CHAT_ENGINE.md, UNIFIED_MEMORY_FRONTEND.md, COGNITIVE_ORCHESTRATOR.md
-- **🛡️ Infrastructure Reliability** → SELF_HEALING_ENGINE.md, SYSTEM_HEALTH_ENGINE.md (monitoring + auto-healing)
+- **🛡️ Infrastructure Reliability** → SELF_HEALING_ENGINE.md, SYSTEM_HEALTH_ENGINE.md, PERFORMANCE_ENGINE.md (monitoring + auto-healing + optimization)
 
 ### Par complexité:
 - **⭐⭐⭐ Intermediate** → UNIFIED_MEMORY_FRONTEND.md
 - **⭐⭐⭐⭐ Advanced** → OMEGA_PIPELINE.md, CHAT_ENGINE.md, UNIFIED_MEMORY.md, AI_ROUTER.md, FRENCH_MASTERY.md
-- **⭐⭐⭐⭐⭐ Expert** → CONVERSATION_ENGINE.md, SINGULARITY.md, COGNITIVE_ORCHESTRATOR.md, SELF_HEALING_ENGINE.md, SYSTEM_HEALTH_ENGINE.md
+- **⭐⭐⭐⭐⭐ Expert** → CONVERSATION_ENGINE.md, SINGULARITY.md, COGNITIVE_ORCHESTRATOR.md, SELF_HEALING_ENGINE.md, SYSTEM_HEALTH_ENGINE.md, VECTOR_STORE.md, PERFORMANCE_ENGINE.md, ADAPTIVE_ENGINE.md
 
 ---
 
@@ -279,10 +352,13 @@ Documentation complète des modules TITANE∞ (backend Rust + frontend TypeScrip
 | FRENCH_MASTERY.md         | Backend  | 655    | 9        | 18            | ⭐⭐⭐⭐   | Backend + NLP          |
 | SELF_HEALING_ENGINE.md    | Backend  | 1,278  | 11       | 24            | ⭐⭐⭐⭐⭐ | Backend + DevOps + SRE |
 | SYSTEM_HEALTH_ENGINE.md   | Backend  | 1,113  | 11       | 21            | ⭐⭐⭐⭐⭐ | Backend + DevOps + SRE |
+| VECTOR_STORE.md           | Backend  | 1,283  | 11       | 22            | ⭐⭐⭐⭐⭐ | Backend + AI Engineers |
+| PERFORMANCE_ENGINE.md     | Backend  | 812    | 10       | 16            | ⭐⭐⭐⭐⭐ | Backend + DevOps + SRE |
+| ADAPTIVE_ENGINE.md        | Backend  | 780    | 10       | 14            | ⭐⭐⭐⭐⭐ | Backend + AI Engineers |
 | CHAT_ENGINE.md            | Frontend | 397    | 8        | 9             | ⭐⭐⭐⭐   | Frontend + Full-Stack  |
 | UNIFIED_MEMORY_FRONTEND.md| Frontend | 389    | 8        | 11            | ⭐⭐⭐    | Frontend + Full-Stack  |
 | COGNITIVE_ORCHESTRATOR.md | Frontend | 552    | 10       | 13            | ⭐⭐⭐⭐⭐ | Frontend + AI Engineers|
-| **TOTAL**                 | -        | **6,974** | **104** | **166**      | -         | -                      |
+| **TOTAL**                 | -        | **9,849** | **137** | **210**      | -         | -                      |
 
 ---
 
