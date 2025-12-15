@@ -15,7 +15,7 @@ import type {
   MetricsSummary,
   Metric,
   AIProviderOperation,
-  AIProviderInfo as _AIProviderInfo,
+  AIProviderInfo,
 } from '../types';
 
 // Import existing AI Orchestrators
@@ -132,7 +132,14 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
   // PROVIDER OPERATIONS
   // ───────────────────────────────────────────────────────────────────────
 
-  async selectProvider(criteria?: any): Promise<any> {
+  async selectProvider(criteria?: {
+    preferLocal?: boolean;
+    maxLatency?: number;
+    mode?: string;
+    latency?: string;
+    requiresCode?: boolean;
+    requiresVision?: boolean;
+  }): Promise<AIProviderInfo> {
     // Determine which orchestrator to use based on criteria
     const mode = criteria?.mode || 'standard';
     const latency = criteria?.latency;
@@ -183,37 +190,39 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
     });
 
     return {
-      provider: selectedProvider,
-      reason,
-      confidence,
+      id: selectedProvider,
+      name: selectedProvider,
+      isAvailable: true,
+      healthScore: confidence,
+      latency: latency === 'low' ? 100 : latency === 'medium' ? 500 : 1000,
     };
   }
 
-  getAvailableProviders(): any[] {
+  getAvailableProviders(): AIProviderInfo[] {
     return [
       {
         id: 'ollama',
         name: 'Ollama (Local)',
-        available: true,
-        models: ['llama2', 'neural-chat', 'mistral'],
+        isAvailable: true,
+        healthScore: 90,
       },
       {
         id: 'anthropic',
         name: 'Anthropic (Claude)',
-        available: true,
-        models: ['claude-3-opus', 'claude-3-sonnet'],
+        isAvailable: true,
+        healthScore: 85,
       },
       {
         id: 'openai',
         name: 'OpenAI (GPT)',
-        available: true,
-        models: ['gpt-4', 'gpt-4-turbo', 'gpt-3.5-turbo'],
+        isAvailable: true,
+        healthScore: 95,
       },
       {
         id: 'google',
         name: 'Google (Gemini)',
-        available: true,
-        models: ['gemini-pro', 'gemini-pro-vision'],
+        isAvailable: true,
+        healthScore: 88,
       },
     ];
   }

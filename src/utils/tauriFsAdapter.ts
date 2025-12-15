@@ -228,7 +228,7 @@ export const promises = {
    * Tauri: uses @tauri-apps/api/fs createDir()
    * Browser: no-op (localStorage has no dirs)
    */
-  async mkdir(path: string, options?: { recursive?: boolean }): Promise<void> {
+  async mkdir(path: string, _options?: { recursive?: boolean }): Promise<void> {
     try {
       if (isTauriContext) {
         await ensureTauriApis();

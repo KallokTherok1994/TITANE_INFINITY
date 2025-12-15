@@ -12,7 +12,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import type { AIMessage, AIResponse, AIConfig } from './types';
+import type { AIMessage, AIResponse, AIConfig, AIProvider } from './types';
 import { buildSystemPrompt as buildTitanePrompt } from '@/core/prompts';
 import type { Provider as PromptProvider, PromptContext } from '@/core/prompts';
 import type { MetricsData } from '@/types/cognitiveKernel';
@@ -55,6 +55,30 @@ interface OrchestratorMetrics {
   fallbackRate: number;
   autoHealTriggers: number;
   lastActivity: number;
+}
+
+/**
+ * AutoHealStatus - Compatible avec AutoHealStats de autoHealEngine
+ * Tous les champs sont optionnels pour supporter les deux formats
+ */
+interface AutoHealStatus {
+  // Champs AutoHealStats
+  totalErrors?: number;
+  totalHeals?: number;
+  successRate?: number;
+  avgHealTime?: number;
+  errorsByType?: Record<string, number>;
+  actionsByType?: Record<string, number>;
+  lastHeal?: number;
+  healthScore?: number;
+  // Champs legacy
+  enabled?: boolean;
+  activeHealings?: number;
+  totalHealed?: number;
+  lastHealTimestamp?: number;
+  error?: string;
+  providers?: Record<string, unknown>;
+  [key: string]: unknown;
 }
 
 interface NeuralSelection {
@@ -888,7 +912,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
   }
 
   private async executeProviderIsolated(
-    provider: any,
+    provider: AIProvider,
     message: string,
     history: AIMessage[],
     timeout: number,
@@ -1142,7 +1166,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
   async getProvidersStatus(): Promise<{
     providers: ProviderStats[];
     orchestrator: OrchestratorMetrics;
-    autoHeal: any;
+    autoHeal: AutoHealStatus;
     metrics?: ReturnType<typeof metricsEngine.getAggregatedMetrics>;
     timestamp: number;
   }> {
@@ -1177,7 +1201,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
       return {
         providers: Array.from(this.providerStats.values()),
         orchestrator: { ...this.orchestratorMetrics },
-        autoHeal: autoHealEngine.getStats(),
+        autoHeal: autoHealEngine.getStats() as unknown as AutoHealStatus,
         metrics: metricsEngine.getAggregatedMetrics(), // 📊 NOUVEAU: Métriques détaillées
         timestamp: Date.now(),
       };
@@ -1238,7 +1262,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
   async healthCheck(): Promise<{
     overall: 'healthy' | 'degraded' | 'critical';
     providers: { name: string; status: string; available: boolean }[];
-    autoHeal: any;
+    autoHeal: AutoHealStatus;
     recommendations: string[];
   }> {
     const status = await this.getProvidersStatus();
@@ -1260,7 +1284,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
 
     // Check auto-heal effectiveness
     const autoHealStats = status.autoHeal;
-    if (autoHealStats.successRate < 80) {
+    if (autoHealStats.successRate && autoHealStats.successRate < 80) {
       recommendations.push('Auto-heal effectiveness is low');
     }
 

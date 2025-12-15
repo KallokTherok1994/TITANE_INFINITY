@@ -37,6 +37,7 @@ import {
   type CognitiveTrace as _CognitiveTrace,
   type DecisionLog as _DecisionLog,
   type SubGoal as _SubGoal,
+  type GoalPriority as _GoalPriority,
 } from '@/services/cognitive';
 
 import type { AIMessage as _AIMessage } from '@/services/ai/types';

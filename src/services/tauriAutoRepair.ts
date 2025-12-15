@@ -16,7 +16,7 @@ import {
 import { secureInvoke } from '@/lib/security';
 import { createLogger } from '@/utils/logger';
 
-const logger = createLogger('TauriAutoRepair');
+const _logger = createLogger('TauriAutoRepair');
 
 // ══════════════════════════════════════════════════════════════════
 // TYPES

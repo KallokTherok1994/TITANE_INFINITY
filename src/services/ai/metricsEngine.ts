@@ -58,6 +58,8 @@ export interface AggregatedMetrics {
     errors: number;
   };
   uptime: number;
+  /** Index signature for MetricsData compatibility */
+  [key: string]: unknown;
 }
 
 // ─────────────────────────────────────────────────────────────────

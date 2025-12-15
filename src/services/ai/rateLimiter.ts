@@ -307,7 +307,8 @@ class RateLimiter {
    * Get stats for a provider
    */
   getStats(provider: string): RateLimitStats {
-    const config = this.getConfig(provider);
+    // Initialize config to ensure provider exists
+    this.getConfig(provider);
     const minuteCounter = this.getMinuteCounter(provider);
     const hourCounter = this.getHourCounter(provider);
     const now = Date.now();
