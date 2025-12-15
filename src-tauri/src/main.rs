@@ -505,6 +505,34 @@ fn main() {
                     }
                 });
             }
+
+            // ✅ CRITICAL FIX: Show main window that was auto-created from tauri.conf.json
+            // In Tauri v2, windows defined in app.windows are created but start HIDDEN
+            match app.get_webview_window("main") {
+                Some(main_window) => {
+                    log::info!("📱 Main window found in app context");
+                    
+                    if let Err(err) = main_window.show() {
+                        eprintln!("❌ Failed to show main window: {err}");
+                    } else {
+                        // Auto-open DevTools in dev mode
+                        #[cfg(debug_assertions)]
+                        {
+                            main_window.open_devtools();
+                            log::info!("🛠️ DevTools opened automatically (dev mode)");
+                        }
+
+                        log::info!("✅ Main window shown successfully");
+                    }
+                }
+                None => {
+                    eprintln!("⚠️ CRITICAL WARNING: Main window not found!");
+                    eprintln!("   This means tauri.conf.json app.windows['main'] was not processed");
+                    eprintln!("   Available windows: {:?}", app.webview_windows().keys().collect::<Vec<_>>());
+                    // Don't fail setup, but log loudly
+                }
+            }
+
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
