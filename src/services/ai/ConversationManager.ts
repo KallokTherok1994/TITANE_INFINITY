@@ -453,14 +453,39 @@ export class ConversationManager {
   }
 
   /**
-   * List all active conversations
+   * Load conversation (alias for getConversation with fallback)
    */
-  async listConversations(): Promise<string[]> {
-    return Array.from(this.activeConversations.keys());
+  async loadConversation(conversationId: string): Promise<ConversationContext> {
+    const context = this.activeConversations.get(conversationId);
+    if (context) {
+      return context;
+    }
+
+    // Return empty context if not found
+    return {
+      conversationId,
+      messages: [],
+      metadata: {},
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    };
   }
 
   /**
-   * Delete conversation
+   * List all active conversations with metadata
+   */
+  async listConversations(): Promise<
+    Array<{ id: string; lastMessageTime: number; messageCount: number }>
+  > {
+    return Array.from(this.activeConversations.entries()).map(([id, context]) => ({
+      id,
+      lastMessageTime: context.updatedAt,
+      messageCount: context.messages.length,
+    }));
+  }
+
+  /**
+   * Delete conversation (clears from active conversations)
    */
   async deleteConversation(conversationId: string): Promise<boolean> {
     return this.activeConversations.delete(conversationId);
@@ -471,6 +496,13 @@ export class ConversationManager {
    */
   updateConfig(newConfig: Partial<ConversationConfig>): void {
     this.config = { ...this.config, ...newConfig };
+  }
+
+  /**
+   * Get current configuration
+   */
+  getConfig(): ConversationConfig {
+    return { ...this.config };
   }
 }
 
