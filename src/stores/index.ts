@@ -12,7 +12,6 @@ export { useSystemStore } from './systemStore';
 export { useMemoryStore } from './memoryStore';
 export { useEvolutionStore } from './evolutionStore';
 export { useUIStore, type Toast } from './uiStore';
-export { useSelfHealingStore as useSelfHealingCoreStore } from './selfHealingStore';
 
 // Visual Engine v19 (Legacy)
 export { useVisualStateStore } from './visualStateStore';
