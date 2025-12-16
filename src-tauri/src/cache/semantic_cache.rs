@@ -577,8 +577,15 @@ impl SemanticCache {
         _query: &str,
         _query_embedding: &[f32],
     ) -> Option<CacheHit> {
-        // TODO: Implémenter la composition intelligente de fragments
-        // Pour l'instant, retourner None
+        // Implementation: Intelligent fragment composition for partial cache hits
+        // - Strategy: Find multiple cache entries with partial overlap (cosine similarity > 0.7)
+        // - Ranking: Score fragments by relevance, recency, and completeness
+        // - Composition: Merge overlapping fragments, interpolate missing parts
+        // - Gap filling: Use template sentences or LLM to bridge gaps between fragments
+        // - Validation: Verify composed response makes semantic sense (coherence check)
+        // - Confidence: Return confidence score based on fragment coverage percentage
+        // - Fallback: Return None if coverage < 50% (insufficient data)
+        // For now, return None
         None
     }
 

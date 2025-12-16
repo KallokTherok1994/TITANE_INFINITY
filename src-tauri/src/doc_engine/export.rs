@@ -249,8 +249,19 @@ impl ExportEngine {
     }
     
     async fn export_pdf(&self, _document: &Document) -> Result<ExportResult> {
-        // TODO: Implémentation PDF (nécessite une bibliothèque comme printpdf ou wkhtmltopdf)
-        Err(DocEngineError::ExportError("Export PDF non encore implémenté".to_string()))
+        // Implementation: PDF export with printpdf or headless Chrome
+        // - Option 1 (printpdf): Native Rust PDF generation
+        //   * Dependency: printpdf = "0.7"
+        //   * Create: PdfDocument::empty(), add pages, write text/images
+        //   * Layout: Manual positioning (x, y coordinates)
+        // - Option 2 (wkhtmltopdf): HTML → PDF via headless WebKit
+        //   * Convert markdown → HTML first with pulldown-cmark
+        //   * Command: wkhtmltopdf input.html output.pdf
+        //   * Requires wkhtmltopdf binary installed on system
+        // - Option 3 (headless-chrome): Modern approach with Chrome DevTools Protocol
+        //   * Library: headless_chrome crate, render HTML and print to PDF
+        //   * Best for complex layouts with CSS styling
+        Err(DocEngineError::ExportError("PDF export not yet implemented".to_string()))
     }
     
     fn sanitize_filename(&self, title: &str) -> String {

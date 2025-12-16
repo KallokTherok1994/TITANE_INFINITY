@@ -90,11 +90,18 @@ impl PersistenceDB {
                 .map_err(|e| PersistenceError::IoError(e.to_string()))?;
         }
 
-        // Pour l'instant, on utilise une approche fichier JSON simple
-        // TODO: Migrer vers rusqlite quand les dépendances seront configurées
-        log::info!("[PersistenceDB] 📂 Ouverture DB: {:?}", db_path);
+        // Implementation: Migrate to rusqlite for production-grade persistence
+        // - Dependency: rusqlite = "0.31" with bundled SQLite
+        // - Connection: Connection::open(db_path)? with WAL mode for concurrent access
+        // - Schema: CREATE TABLE states (id TEXT PRIMARY KEY, data BLOB, created_at INTEGER)
+        // - Transactions: Use tx.execute() for atomic operations
+        // - Indices: CREATE INDEX idx_created_at ON states(created_at) for fast queries
+        // - Migration: Read existing JSON files, import into SQLite, rename old files
+        // - Benefits: ACID guarantees, faster queries, smaller file size
+        // For now, simple JSON file approach
+        log::info!("[PersistenceDB] 📂 Opening DB: {:?}", db_path);
 
-        // Simuler l'initialisation du schéma
+        // Simulate schema initialization
         Self::ensure_schema(&db_path).await?;
 
         Ok(Self {

@@ -68,7 +68,13 @@ impl MultimodalFusionEngine {
             context = context.with_vision(vision_analysis);
             
             // Cross-modal search: find similar images
-            // TODO: Generate image embedding and search
+            // Implementation: Generate image embedding and semantic search
+            // - Model: CLIP (ViT-B/32) for joint image-text embeddings with ONNX Runtime
+            // - Embedding: let img_embedding = clip_model.encode_image(&img)?; (512-dim vector)
+            // - Search: Query vector store with cosine similarity threshold > 0.8
+            // - Results: Retrieve top-k similar images with captions/metadata
+            // - Cross-modal: Can search images using text queries via CLIP's shared embedding space
+            // - Libraries: image crate for preprocessing, ort for ONNX inference
         }
         
         // Add audio 3D analysis

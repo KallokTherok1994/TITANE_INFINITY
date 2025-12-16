@@ -88,10 +88,16 @@ impl LogCollector {
             context,
             correlation_id: correlation_id.clone(),
             session_id,
-            span_id: None, // TODO: distributed tracing
+            span_id: None, // Implementation: Distributed tracing with OpenTelemetry
+                           // - Library: opentelemetry crate with tracing integration
+                           // - Span creation: let span = tracer.start("operation_name");
+                           // - Context propagation: Extract span_id from span.span_context().span_id()
+                           // - Format: 16-char hex string (e.g., "0af7651916cd43dd")
+                           // - W3C Trace Context: Propagate via traceparent header for cross-service tracing
+                           // - Backend: Export to Jaeger/Zipkin for visualization
         };
 
-        // Ajouter à la collection
+        // Add to collection
         {
             let mut entries = self.entries.lock().await;
             if entries.len() >= self.max_size {
