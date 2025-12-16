@@ -25,10 +25,8 @@ describe('🔒 Tauri-Only Compliance', () => {
       forbiddenImports.forEach(pkg => {
         const importRegex = new RegExp(`import.*['"]${pkg}['"]|from ['"]${pkg}['"]`);
 
-        expect(content).not.toMatch(
-          importRegex,
-          `File ${file} imports forbidden HTTP server package: ${pkg}`
-        );
+        // File should not import forbidden HTTP server packages
+        expect(content).not.toMatch(importRegex);
       });
     });
   });
@@ -43,10 +41,8 @@ describe('🔒 Tauri-Only Compliance', () => {
 
     // Preview doit soit être absent, soit bloquer explicitement
     if (previewScript) {
-      expect(previewScript).toMatch(
-        /exit 1/i,
-        'vite preview script must exit with error (Tauri-only violation)'
-      );
+      // vite preview script must exit with error (Tauri-only violation)
+      expect(previewScript).toMatch(/exit 1/i);
     }
   });
 
@@ -59,10 +55,8 @@ describe('🔒 Tauri-Only Compliance', () => {
     const devScript = packageJson.scripts?.dev;
 
     expect(devScript).toBeDefined();
-    expect(devScript).toMatch(
-      /tauri dev/i,
-      'dev script must use "tauri dev" (Tauri-only requirement)'
-    );
+    // dev script must use "tauri dev" (Tauri-only requirement)
+    expect(devScript).toMatch(/tauri dev/i);
   });
 
   /**
@@ -84,9 +78,8 @@ describe('🔒 Tauri-Only Compliance', () => {
     };
 
     forbiddenDeps.forEach(dep => {
-      expect(allDeps[dep]).toBeUndefined(
-        `Package ${dep} is forbidden (standalone SPA framework, use Tauri instead)`
-      );
+      // Package should be undefined (forbidden standalone SPA framework)
+      expect(allDeps[dep]).toBeUndefined();
     });
   });
 
@@ -114,10 +107,8 @@ describe('🔒 Tauri-Only Compliance', () => {
               .find(line => line.includes('chat_send_message'));
 
             // Autorisé seulement si commenté ou dans migration
-            expect(lineContent).toMatch(
-              /\/\/|\/\*|\*|@deprecated|legacy/i,
-              `File ${file} uses legacy chat_send_message (use ConversationManager instead)`
-            );
+            // File should not use legacy chat_send_message (use ConversationManager instead)
+            expect(lineContent).toMatch(/\/\/|\/\*|\*|@deprecated|legacy/i);
           }
         }
       }
