@@ -634,7 +634,7 @@ G) **Intégration**: Peut incarner cela maintenant?
  */
 export const CONSTITUTIONAL_CONFIG = {
   version: '1.0',
-  sealedDate: '2025-12-16',
+  sealedDate: '16 décembre 2025',
   auditReference: 'AUDIT_FINAL_13.md',
   status: 'ACTIVE & SEALED',
   requiresRefoundationForChanges: true,
