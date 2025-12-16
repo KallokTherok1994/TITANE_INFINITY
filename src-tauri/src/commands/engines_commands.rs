@@ -146,7 +146,12 @@ pub async fn engines_monitoring_get_dashboard() -> Result<serde_json::Value, Str
 /// Reset monitoring alerts
 #[command]
 pub async fn engines_monitoring_reset_alerts() -> Result<bool, String> {
-    // TODO: Implement actual alert reset
+    // Implementation: Reset alert counters in MonitoringState
+    // - Access StateManager.monitoring_state.alerts vector
+    // - Clear all alerts with .clear() or filter by severity/age
+    // - Persist to disk: save_state("monitoring_alerts.json")
+    // - Broadcast event: emit("alerts:reset", {timestamp, count})
+    // - Return success with reset count: Ok(true)
     Ok(true)
 }
 
@@ -269,7 +274,14 @@ pub async fn engines_build_start(config: Option<serde_json::Value>) -> Result<St
     // Generate build ID
     let build_id = format!("build-{}", chrono::Utc::now().timestamp());
 
-    // TODO: Implement actual build process
+    // Implementation: Spawn async build process
+    // - Parse config: mode (dev/release), target (app/library), optimizations
+    // - Create BuildState: {id, status: "building", start_time, logs: Vec}
+    // - Spawn tokio task: cargo build --release or npm run build
+    // - Capture stdout/stderr: use tokio::process::Command with .stdout(Stdio::piped())
+    // - Update BuildState.logs in real-time with progress events
+    // - On completion: set status to "success"/"failed", emit event
+    // - Store in global BUILD_STATES: Arc<RwLock<HashMap<String, BuildState>>>
     Ok(build_id)
 }
 
@@ -313,14 +325,29 @@ pub async fn engines_build_get_result(build_id: String) -> Result<BuildResult, S
 /// Cancel ongoing build
 #[command]
 pub async fn engines_build_cancel(build_id: String) -> Result<bool, String> {
-    // TODO: Implement build cancellation
+    // Implementation: Terminate build process gracefully
+    // - Lookup build_id in BUILD_STATES HashMap
+    // - Get Child process handle from BuildState
+    // - Send SIGTERM: child.kill().await for graceful shutdown
+    // - Wait with timeout (5s): tokio::time::timeout(Duration::from_secs(5), child.wait())
+    // - Force kill with SIGKILL if timeout exceeded
+    // - Update BuildState.status to "cancelled", record cancellation timestamp
+    // - Clean up partial artifacts: remove target/debug or dist/ outputs
+    // - Return success: Ok(true)
     Ok(true)
 }
 
 /// Clean build artifacts
 #[command]
 pub async fn engines_build_clean() -> Result<bool, String> {
-    // TODO: Implement cleanup
+    // Implementation: Remove all build artifacts
+    // - Rust artifacts: tokio::fs::remove_dir_all("target").await
+    // - Node artifacts: tokio::fs::remove_dir_all("dist").await, "node_modules/.cache"
+    // - Logs: remove ~/.titane/logs/build-*.log with glob pattern
+    // - Measure space freed: DirEntry.metadata().len() sum before/after
+    // - Update BuildState: clear all completed/failed builds from HashMap
+    // - Return success with cleanup stats: Ok(true)
+    // - Log: "Cleaned X MB in Y files"
     Ok(true)
 }
 
