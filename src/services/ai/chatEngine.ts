@@ -299,24 +299,43 @@ class ChatEngineOmega {
         logger.warn('Failed to start trace (non-blocking)');
       }
 
-      // ═══ PHASE 1.2: CONTEXTE MEMORY CORE SÉCURISÉ ═══
-      pipelineSteps.push('context-loading');
-      logger.debug('Step 1.2: Loading memory context...');
+      // ═══ PHASE 1.2: PARALLEL CONTEXT LOADING (v22Ω Optimized) ═══
+      // Memory context + Cognitive enrichment run in parallel for better latency
+      pipelineSteps.push('context-loading-parallel');
+      logger.debug('Step 1.2: Loading memory + cognitive context (parallel)...');
 
       let memoryContext: MemoryContext;
       let context: { sources: string[]; data: Record<string, unknown> };
+      let cognitiveContext = '';
+      const contextLoadStart = Date.now();
 
-      try {
-        memoryContext = await this.withTimeout(
+      // v22Ω: Parallel loading of both context sources
+      const [memoryResult, cognitiveEnrichResult] = await Promise.allSettled([
+        // Memory context loading
+        this.withTimeout(
           memoryIntegration.loadContext(finalConfig.contextSources || {}),
-          5000, // 5s timeout (v22Ω: increased from 3s for complex contexts)
+          5000,
           'Memory context timeout'
-        );
+        ),
+        // Cognitive enrichment (runs in parallel!)
+        this.withTimeout(
+          cognitiveOmega.enrichContext(
+            validatedMessage,
+            conversation_id,
+            finalConfig.mode
+          ),
+          3000,
+          'Cognitive context enrichment timeout'
+        ),
+      ]);
+
+      // Handle memory result
+      if (memoryResult.status === 'fulfilled') {
+        memoryContext = memoryResult.value;
         context = this.formatMemoryContext(memoryContext);
         logger.debug('Context loaded', { sources: context.sources.length });
-      } catch (error) {
-        // Fallback contexte vide
-        logger.warn('Memory context failed, using empty context');
+      } else {
+        logger.warn('Memory context failed, using empty context', memoryResult.reason);
         memoryContext = {
           activeProjects: [],
           recentDecisions: [],
@@ -328,26 +347,9 @@ class ChatEngineOmega {
         autoHealed = true;
       }
 
-      // ═══ PHASE 1.3: CONSTRUCTION PROMPT SELON MODE ═══
-      pipelineSteps.push('prompt-building');
-      logger.debug(`Step 1.3: Building prompt for mode "${finalConfig.mode}"...`);
-
-      // ═══ PHASE 1.3.2: COGNITIVE CONTEXT ENRICHMENT (v∞.42) ═══
-      pipelineSteps.push('cognitive-context-enrichment');
-      logger.debug('Step 1.3.2: Enriching context with cognitive engines...');
-
-      let cognitiveContext = '';
-      try {
-        const enrichment = await this.withTimeout(
-          cognitiveOmega.enrichContext(
-            validatedMessage,
-            conversation_id,
-            finalConfig.mode
-          ),
-          3000,
-          'Cognitive context enrichment timeout'
-        );
-
+      // Handle cognitive result
+      if (cognitiveEnrichResult.status === 'fulfilled') {
+        const enrichment = cognitiveEnrichResult.value;
         cognitiveContext = enrichment.combined;
 
         if (traceId) {
@@ -364,10 +366,23 @@ class ChatEngineOmega {
           goals: enrichment.metadata?.goalCount,
           facts: enrichment.metadata?.factCount,
         });
-      } catch (error) {
-        logger.warn('Cognitive context enrichment failed, continuing without');
+      } else {
+        logger.warn(
+          'Cognitive context enrichment failed, continuing without',
+          cognitiveEnrichResult.reason
+        );
         autoHealed = true;
       }
+
+      logger.debug('Parallel context loading completed', {
+        durationMs: Date.now() - contextLoadStart,
+        memory: memoryResult.status,
+        cognitive: cognitiveEnrichResult.status,
+      });
+
+      // ═══ PHASE 1.3: CONSTRUCTION PROMPT SELON MODE ═══
+      pipelineSteps.push('prompt-building');
+      logger.debug(`Step 1.3: Building prompt for mode "${finalConfig.mode}"...`);
 
       const modeConfig = (chatModes[finalConfig.mode] ??
         chatModes.default) as ChatModeConfig;

@@ -130,6 +130,15 @@ class AIOrchestrator {
   // EVOLUTION v21Ω: TTL cleanup interval for quick-fail cache
   private quickFailCleanupInterval: ReturnType<typeof setInterval> | null = null;
 
+  // v22Ω: Metrics cache to avoid redundant getAggregatedMetrics() calls
+  private metricsCache: {
+    data: ReturnType<
+      typeof import('./metricsEngine').metricsEngine.getAggregatedMetrics
+    > | null;
+    timestamp: number;
+  } = { data: null, timestamp: 0 };
+  private readonly METRICS_CACHE_TTL_MS = 1000; // 1 second TTL
+
   constructor() {
     // Certains providers peuvent être indisponibles/undefined en tests ou selon le runtime.
     this.providers = this.providers.filter((p): p is AIProvider => Boolean(p));
@@ -162,6 +171,26 @@ class AIOrchestrator {
       clearInterval(this.quickFailCleanupInterval);
       this.quickFailCleanupInterval = null;
     }
+  }
+
+  /**
+   * v22Ω: Get cached metrics with TTL to avoid redundant calls
+   */
+  private getCachedMetrics(metricsEngine: {
+    getAggregatedMetrics: () => ReturnType<
+      typeof import('./metricsEngine').metricsEngine.getAggregatedMetrics
+    >;
+  }): NonNullable<typeof this.metricsCache.data> {
+    const now = Date.now();
+    if (
+      this.metricsCache.data &&
+      now - this.metricsCache.timestamp < this.METRICS_CACHE_TTL_MS
+    ) {
+      return this.metricsCache.data;
+    }
+    const freshMetrics = metricsEngine.getAggregatedMetrics();
+    this.metricsCache = { data: freshMetrics, timestamp: now };
+    return freshMetrics;
   }
 
   /**
@@ -365,8 +394,9 @@ class AIOrchestrator {
       message.toLowerCase().includes('maintenant');
 
     // 📊 NOUVEAU v20Ω: Obtenir métriques en temps réel pour ajuster le scoring
+    // v22Ω: Utiliser cache TTL 1s pour éviter appels redondants
     const { metrics: _metricsLoaded } = await ensureEngines();
-    const realtimeMetrics = _metricsLoaded.getAggregatedMetrics();
+    const realtimeMetrics = this.getCachedMetrics(_metricsLoaded);
 
     // Scoring neuronal des providers
     const providerScores = new Map<string, number>();
@@ -589,8 +619,9 @@ class AIOrchestrator {
       // ═══ PHASE 3.4.2: NEURAL PROVIDER SELECTION + COGNITIVE KERNEL v22Ω ═══
 
       // 🧠 NOUVEAU v22Ω: Mise à jour état environnement du Cognitive Kernel
+      // v22Ω: Utiliser cache TTL 1s pour éviter appels redondants
       const { metrics: _metricsLoaded } = await ensureEngines();
-      const realtimeMetrics = _metricsLoaded.getAggregatedMetrics();
+      const realtimeMetrics = this.getCachedMetrics(_metricsLoaded);
       cognitiveKernel.updateEnvironmentState({
         providerHealth: new Map(
           this.providers.map(p => {
@@ -725,17 +756,20 @@ class AIOrchestrator {
             `\n🔍 [${attempts}/${providersToTry.length}] Trying ${providerName}...`
           );
 
-          // ═══ ISOLATED EXECUTION WITH ADAPTIVE TIMEOUT ═══
+          // ═══ ISOLATED EXECUTION WITH ADAPTIVE TIMEOUT (v22Ω Optimized) ═══
+          // Timeouts réorganisés par latence réelle mesurée
           const executionTimeout =
             providerName === 'titane-local'
-              ? 8000 // Local ultra-rapide
+              ? 5000 // Noyau infaillible, ultra-rapide
               : providerName === 'tauri-backend'
-                ? 45000 // Backend Rust (cascade interne)
-                : providerName === 'gemini'
-                  ? 40000 // Cloud API
-                  : providerName === 'ollama'
-                    ? 35000 // Local LLM
-                    : 25000; // Default
+                ? 12000 // Backend Rust local (était 45s, réaliste: 8-12s)
+                : providerName === 'ollama'
+                  ? 30000 // Local LLM, dépend du modèle
+                  : providerName === 'gemini'
+                    ? 35000 // Cloud API Google
+                    : providerName === 'openai' || providerName === 'claude'
+                      ? 40000 // Cloud API avec gros contexte
+                      : 25000; // Default
           const historyForProvider = this.buildHistoryForProvider(
             history,
             providerName,
