@@ -391,7 +391,7 @@ export class MCPStrategy
     return {
       totalRequests: jobsCreated,
       successRate: jobsCreated > 0 ? jobsEvaluated / jobsCreated : 1.0,
-      averageLatency: 0, // TODO: Calculate from metrics
+      averageLatency: this.calculateAverageLatency(), // Calculate from stored metrics: sum(latencies) / count
       errorCount: 0,
       timestamp: Date.now(),
       details: {

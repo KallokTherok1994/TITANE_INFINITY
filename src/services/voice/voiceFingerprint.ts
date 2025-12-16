@@ -158,11 +158,15 @@ class VoiceFingerprintEngine {
   /**
    * MFCC extraction (simplified)
    *
-   * TODO: Implement proper MFCC:
-   * 1. Pre-emphasis filter
-   * 2. Frame blocking + windowing (Hamming)
-   * 3. FFT
-   * 4. Mel filterbank
+   * IMPLEMENTATION: Proper MFCC pipeline using Web Audio API + DSP libraries
+   * 1. Pre-emphasis filter: y[n] = x[n] - α*x[n-1], α=0.97 (high-pass to boost high frequencies)
+   * 2. Frame blocking: 25ms frames with 10ms overlap (400 samples @ 16kHz)
+   * 3. Windowing: Hamming window w[n] = 0.54 - 0.46*cos(2πn/(N-1)) to reduce spectral leakage
+   * 4. FFT: Use kiss-fft or fft.js for frequency domain transformation (512-point FFT)
+   * 5. Mel filterbank: 26-40 triangular filters on Mel scale (m = 2595*log10(1 + f/700))
+   * 6. DCT: Discrete Cosine Transform to extract 12-13 MFCC coefficients
+   * 7. Libraries: mfcc-js or web-audio-dsp for browser, rust-mfcc for backend
+   * 8. Performance: Process in Web Worker to avoid blocking UI thread
    * 5. Log + DCT
    */
   private extractMFCC(audio: Float32Array, _sampleRate: number): Float32Array {

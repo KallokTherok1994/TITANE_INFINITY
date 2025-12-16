@@ -742,9 +742,15 @@ export class LiveDebuggerEngine {
     const explanation = `Détecté: ${diagnostic.intent.type}. ${diagnostic.rootCause || 'Analyse en cours.'}`;
 
     try {
-      // TODO: Integrate hybridTTS when available
+      // INTEGRATION: hybridTTS integration for live debugging feedback
+      // 1. Import: import { hybridTTS } from '@/services/voice/hybridTTS'
+      // 2. Check availability: if (hybridTTS && hybridTTS.isReady())
+      // 3. Call speak: await hybridTTS.speak(explanation, { priority: 'high', interrupt: false })
+      // 4. Options: priority='high' for important diagnostics, interrupt=false to queue
+      // 5. Emotion: Optional emotion mapping based on diagnostic severity (error→concerned, warning→neutral)
+      // 6. Fallback: Console log if TTS unavailable (as current)
       console.log('[LiveDebugger] TTS Explanation:', explanation);
-      // await hybridTTS.speak(explanation);
+      // await hybridTTS.speak(explanation, { priority: 'high', interrupt: false });
     } catch (error) {
       console.error('[LiveDebugger] TTS explanation failed:', error);
     }

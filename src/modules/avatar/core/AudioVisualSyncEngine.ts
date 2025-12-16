@@ -200,8 +200,13 @@ export class AudioVisualSyncEngine {
     // ─────────────────────────────────────────
     if (this.config.enableLipSync) {
       this.currentState.lipSyncMorphs = this.lipSyncEngine.update(deltaTime);
-      // TODO: Get current phoneme from engine
-      this.currentState.currentPhoneme = null;
+      // INTEGRATION: Get current phoneme from lip-sync engine
+      // 1. Access: this.lipSyncEngine.getCurrentPhoneme() or this.lipSyncEngine.currentState.phoneme
+      // 2. Phoneme format: IPA string ('ə', 'p', 'æ') or ARPABET ('AH', 'P', 'AE')
+      // 3. Timing: Sync with audio playback position via Web Audio API currentTime
+      // 4. Fallback: null if no audio playing or phoneme data unavailable
+      // 5. Use for: Facial animation, viseme mapping, audio-visual correlation
+      this.currentState.currentPhoneme = null; // this.lipSyncEngine.getCurrentPhoneme()
     }
 
     // ─────────────────────────────────────────

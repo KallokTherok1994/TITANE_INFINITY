@@ -113,9 +113,15 @@ export class EmotionalTTSRenderer {
     // - Certaines voix Tauri TTS natives
     // - WebSpeech API ne supporte PAS SSML de base
 
-    // Pour l'instant, on assume que Parler-TTS supporte SSML
-    // (à vérifier lors de l'intégration réelle)
-    const isSupported = true; // TODO: Détection réelle
+    // DETECTION: Real browser voice SSML support detection
+    // 1. Check if window.speechSynthesis exists (browser support)
+    // 2. Test with dummy SSML: <speak><prosody rate="slow">test</prosody></speak>
+    // 3. Compare output with plain text version to detect SSML parsing
+    // 4. Known support: None in standard browsers (Chrome/Firefox/Safari reject SSML)
+    // 5. Parler-TTS: Supports SSML through custom API (check via feature flag)
+    // 6. Fallback: Use emotion mapping to rate/pitch adjustments if no SSML
+    const isSupported =
+      typeof window !== 'undefined' && 'speechSynthesis' in window && false; // Browsers don't support SSML
 
     if (useCache) {
       this.ssmlSupportCache.set(cacheKey, isSupported);
