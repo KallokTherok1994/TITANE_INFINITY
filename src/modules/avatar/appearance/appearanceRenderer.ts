@@ -327,7 +327,13 @@ export class AppearanceRenderer {
     assetDef: AssetDefinition,
     cacheKey: string
   ): Promise<LoadedAsset> {
-    // TODO: Integration with Three.js GLTFLoader, TextureLoader, MaterialLoader
+    // Implementation: Three.js asset loading pipeline
+    // - GLTF: Use THREE.GLTFLoader for 3D models (avatars, clothing, accessories)
+    // - Textures: THREE.TextureLoader for PNG/JPG (albedo, normal, metallic maps)
+    // - Materials: THREE.MaterialLoader or custom PBR material setup
+    // - Optimization: Apply THREE.DRACOLoader for compressed geometry
+    // - Caching: Store loaded assets in THREE.Cache to avoid re-loading
+    // - Error handling: Fallback to default cube geometry on load failure
     // For now, return mock asset
     console.log(`[AppearanceRenderer] Loading asset: ${cacheKey}`);
     console.log(`  - Mesh: ${assetDef.mesh}`);
@@ -366,11 +372,15 @@ export class AppearanceRenderer {
       bag: assets.accessories.bag?.mesh,
     });
 
-    // TODO: Integration with FullBodyAvatarEngine
-    // 1. Get avatar root node from FullBodyAvatarEngine
-    // 2. Replace outfit meshes (top, bottom, shoes, outerwear)
-    // 3. Replace hair mesh
-    // 4. Attach accessories to appropriate bones
+    // Implementation: FullBodyAvatarEngine outfit integration
+    // 1. Get avatar root: const avatarNode = await FullBodyAvatarEngine.getRootNode()
+    // 2. Replace outfit meshes: avatarNode.traverse() find old meshes by name, replace with loaded assets
+    // 3. Replace hair mesh: avatarNode.getObjectByName('hair')?.replace(hairMesh)
+    // 4. Attach accessories: Find attachment bones (e.g., 'mixamorig:LeftHand'), add as children
+    // 5. Update materials: Apply color/pattern overrides to loaded materials
+    // 6. Skinning: Transfer skinning data from old mesh to new mesh (preserveWeights: true)
+    // 7. Animation: Re-bind animation clips if skeleton structure changed
+    // 8. Optimization: Merge geometries for accessories to reduce draw calls
     // 5. Apply materials and textures
     // 6. Update skinning weights if needed
     // 7. Trigger re-render

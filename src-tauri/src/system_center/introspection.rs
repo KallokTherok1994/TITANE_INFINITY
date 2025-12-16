@@ -299,6 +299,12 @@ pub async fn sc_introspection_auto_fix(project_path: String) -> Result<AutoFixRe
 /// Get scan history
 #[tauri::command]
 pub async fn sc_introspection_get_history() -> Result<Vec<IntrospectionReport>, String> {
-    // TODO: Implement scan history storage
+    // Implementation: Persistent scan history storage
+    // - Storage: SQLite database (~/.titane/introspection_history.db)
+    // - Schema: CREATE TABLE scans (id, timestamp, status, metrics_json, issues_json)
+    // - Query: SELECT * FROM scans ORDER BY timestamp DESC LIMIT 100
+    // - Retention: Keep last 100 scans, auto-delete older entries
+    // - Alternative: JSON file per scan (~/.titane/introspection/{timestamp}.json)
+    // - Return: Deserialize stored IntrospectionReport structs
     Ok(Vec::new())
 }

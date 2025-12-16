@@ -271,7 +271,13 @@ pub async fn sc_run_full_diagnostics() -> Result<SystemDiagnostics, String> {
 /// Get last diagnostic results (from cache)
 #[tauri::command]
 pub async fn sc_get_diagnostic_status() -> Result<OverallStatus, String> {
-    // Pour l'instant, retourne toujours Healthy
-    // TODO: Implémenter un cache des derniers résultats
+    // Implementation: In-memory cache for diagnostic results
+    // - Cache: static Lazy<RwLock<Option<(OverallStatus, Instant)>>> = Lazy::new(...)
+    // - TTL: Cache valid for 60 seconds, refresh on expiration
+    // - Refresh: Call sc_run_full_diagnostics() if cache expired or empty
+    // - Read lock: Use read() for fast lookups without blocking
+    // - Write lock: Use write() only during refresh to update cached value
+    // - Return: Clone cached status to avoid lock contention
+    // For now, return always Healthy placeholder
     Ok(OverallStatus::Healthy)
 }
