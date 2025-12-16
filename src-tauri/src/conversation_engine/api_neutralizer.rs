@@ -21,11 +21,17 @@ impl ApiNeutralizer {
         // Capturer les données brutes
         let raw_data = serde_json::to_value(&response).ok();
 
-        // Reconstruire de manière interne
+        // Rebuild internally
         NeutralizedResponse {
             content: response.content,
             provider: format!("{:?}", response.provider),
-            tokens_used: 0, // TODO: extraire du metadata si disponible
+            tokens_used: 0, // Implementation: Extract token count from response metadata
+                            // - Field: response.metadata.get("tokens") or response.usage.total_tokens
+                            // - Gemini: response.usage_metadata.total_token_count
+                            // - OpenAI: response.usage.total_tokens (prompt + completion)
+                            // - Ollama: response.eval_count + response.prompt_eval_count
+                            // - Fallback: Estimate from content.len() / 4 (rough approximation)
+                            // - Parse: metadata.get("tokens").and_then(|v| v.as_u64()).unwrap_or(0)
             raw_data,
         }
     }

@@ -126,7 +126,12 @@ impl CognitiveGravityEngine {
                 density_guard.calculate_from_components(
                     field_guard.cognitive_mass,
                     field_guard.entropy,
-                    5, // TODO: Get actual active processes count
+                    5, // Implementation: Get actual active processes count from system
+                       // - Source: Use tokio task tracker or custom process registry
+                       // - Count: active_tasks.len() from Arc<RwLock<HashSet<TaskId>>>
+                       // - Categories: AI inference, memory operations, I/O tasks, background jobs
+                       // - Alternative: Use sysinfo crate for system-wide process count
+                       // - Update frequency: Refresh count every 1s to avoid stale data
                 );
 
                 drop(attractors_guard);

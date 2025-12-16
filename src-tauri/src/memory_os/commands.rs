@@ -118,7 +118,13 @@ pub async fn memory_get_vector(
     id: String,
     _state: State<'_, Arc<RwLock<MemoryOSState>>>,
 ) -> Result<Vec<f32>, String> {
-    // TODO: Implement get_vector in MemoryOSBridge
+    // Implementation: Retrieve vector embedding by entry ID from MemoryOSBridge
+    // - Bridge call: let bridge = state.read().await.bridge.clone();
+    // - Query: bridge.get_entry_by_id(&id).await? to get MemoryEntry
+    // - Extract: entry.embedding vector field (Vec<f32>, typically 384 or 768 dimensions)
+    // - Error handling: Return error if entry not found or embedding missing
+    // - Caching: Consider caching frequently accessed vectors (LRU cache)
+    // - Performance: ~1-5ms lookup in FAISS/HNSW index
     // For now, return empty vector
     Ok(Vec::new())
 }

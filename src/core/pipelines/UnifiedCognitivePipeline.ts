@@ -522,7 +522,7 @@ export class UnifiedCognitivePipeline {
     };
   }
 
-  private createErrorResponse(_error: any): CognitiveResponse {
+  private createErrorResponse(_error: Error | unknown): CognitiveResponse {
     return {
       text: 'Je rencontre une difficulté technique. Pouvez-vous reformuler votre demande ?',
       reasoning: ['Erreur de traitement'],
