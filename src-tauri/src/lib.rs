@@ -31,8 +31,8 @@ pub mod cache_multilevel; // ✅ v21.1Ω - Multi-level caching system (NEW)
 pub mod cognitive; // ✅ Cognitive Layer v16 (NEW)
 pub mod core; // ✅ SingularityEngine v16 + modules
 pub mod engine; // ✅ Auto-Evolution & Engine Diagnostics v16 (existing)
-pub mod engine_trait; // ✅ v24 - Engine trait + OrchestratorEngine (TODO #13)
-pub mod error; // ✅ v24 - Unified TitaneError enum (TODO #12)
+pub mod engine_trait; // ✅ v24 - Engine trait + OrchestratorEngine (stable, in use)
+pub mod error; // ✅ v24 - Unified TitaneError enum (stable, in use)
 pub mod errors;
 pub mod meta; // ✅ Meta-Cognition & Deep Sync v18 (NEW)
 pub mod narrative; // ✅ NarrativeEngine v22 (NEW)
@@ -91,8 +91,12 @@ pub mod multi_agents; // ✅ v∞.19.3Ω: Multi-Agents avec permissions IA (NEW)
 mod neural_memory; // ✅ v24.2: Private neural implementation
 pub mod unified_memory_v2; // ✅ v24.2: Unified Memory API (consolidation 5→2 modules)
 
-// TODO Phase 2.4: Add #[deprecated] attributes after full migration
-// Conversation types (Conversation, MessageRole) will remain for chat history
+// Phase 2.4: Partial deprecation - system memory functions moved to unified_memory_v2
+// Conversation types (Conversation, MessageRole) remain active for chat history
+#[deprecated(
+    since = "24.2.0",
+    note = "System memory functions moved to unified_memory_v2. Use unified_memory_v2::get_state() instead of memory::get_system_state(). Chat types (Conversation, MessageRole) remain active."
+)]
 pub mod memory; // ⚠️ Phase 2.4: Partial deprecation (system memory → unified_memory_v2, chat types stay)
 
 // ═══════════════════════════════════════════════════════════════
@@ -101,8 +105,18 @@ pub mod memory; // ⚠️ Phase 2.4: Partial deprecation (system memory → unif
 
 pub mod control_panel_commands; // ✅ Control Panel
 pub mod harmonia_engine; // ✅ Harmonia CPU monitoring
-                         // TODO Phase 2.4: Add #[deprecated] after migration complete
+
+// Phase 2.4: Deprecated - functionality moved to unified_memory_v2
+#[deprecated(
+    since = "24.2.0",
+    note = "Use unified_memory_v2::consolidate() instead"
+)]
 pub mod memory_compactor; // ⚠️ Phase 2.4: → unified_memory_v2::consolidate()
+
+#[deprecated(
+    since = "24.2.0",
+    note = "Use unified_memory_v2::persistence module instead"
+)]
 pub mod memory_persistence; // ⚠️ Phase 2.4: → unified_memory_v2::persistence
 pub mod overdrive; // ✅ Chat orchestrator (always active)
 pub mod persistence; // ✅ v∞.MPE - 100% SAVE Persistence Engine (NEW)
@@ -184,7 +198,11 @@ pub mod cloud; // ✅ Cloud Sync Engine v∞ (Vault chiffré, Multi-device, AES-
 // MEMORY EVOLUTION ENGINE++ v∞ (OPUS #14)
 // ═══════════════════════════════════════════════════════════════
 
-// TODO Phase 2.4: Add #[deprecated] after migration complete
+// Phase 2.4: Deprecated - functionality moved to neural_memory (via unified_memory_v2)
+#[deprecated(
+    since = "24.2.0",
+    note = "Use unified_memory_v2 API which wraps neural_memory::evolution internally"
+)]
 pub mod memory_evolution; // ⚠️ Phase 2.4: → neural_memory::evolution (via unified_memory_v2)
 
 // ═══════════════════════════════════════════════════════════════
@@ -263,7 +281,11 @@ pub mod services;
 // MEMORY OS vΩ (SUPER PROMPT #12)
 // ═══════════════════════════════════════════════════════════════
 
-// TODO Phase 2.4: Add #[deprecated] after migration complete
+// Phase 2.4: Deprecated - use unified_memory_v2 (neural_memory is private)
+#[deprecated(
+    since = "24.2.0",
+    note = "Use unified_memory_v2 API instead. Neural memory implementation is now private."
+)]
 pub mod memory_os; // ⚠️ Phase 2.4: → unified_memory_v2 (neural_memory/ is private)
 
 // ═══════════════════════════════════════════════════════════════
