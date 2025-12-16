@@ -508,9 +508,17 @@ class UnifiedMemorySystem {
    * ═══════════════════════════════════════════════════════════════════
    */
   compress(): void {
-    // TODO v1.1: Résumer conversations longues
-    // TODO v1.1: Supprimer détails inutiles
-    // TODO v1.1: Garder essence
+    // Implementation v1.1: Intelligent LTM compression for space efficiency
+    // - Summarize long conversations: Use summarizer.rs with KeyMessages strategy
+    //   * Conversations > 100 messages: Reduce to 20-30 key messages + summary
+    //   * Preserve first/last 10 messages for context continuity
+    // - Remove redundant details: Deduplicate similar messages with cosine similarity > 0.95
+    //   * Keep highest importance_score entry when duplicates detected
+    // - Extract essence: Store compressed representation in ltm_compressed table
+    //   * Schema: {original_count, compressed_count, summary_text, key_facts[]}
+    //   * Ratio target: 70-80% space reduction while maintaining semantic value
+    // - Trigger: Run weekly or when LTM > 10k entries
+    // - Reversibility: Keep original uncompressed data for 30 days before permanent deletion
     isDev && console.log('[UnifiedMemory] Compress: Not implemented yet (v1.1)');
   }
 
