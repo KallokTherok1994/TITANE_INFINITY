@@ -240,6 +240,13 @@ class Logger {
    */
   private async logToFile(_entry: LogEntry): Promise<void> {
     try {
+      // IMPLEMENTATION: Tauri log_to_file command
+      // 1. Backend: Create #[tauri::command] async fn log_to_file(entry: String) in src-tauri/src/commands/logging.rs
+      // 2. File operations: Use tokio::fs::OpenOptions to append to ~/.titane/logs/app.log
+      // 3. Rotation: When file > 10MB, rotate to app.log.1, app.log.2, etc. (keep last 5)
+      // 4. Format: [timestamp] [level] [category] message\n for easy parsing
+      // 5. Error handling: Fallback to console if file write fails (disk full, permissions)
+      // 6. Performance: Buffer writes (flush every 1s or 100 entries) to reduce I/O
       // TODO: Implement Tauri command
       // await invoke('log_to_file', { entry: this.formatEntry(_entry) });
     } catch (error) {
@@ -253,6 +260,14 @@ class Logger {
    */
   private async logToRemote(_entry: LogEntry): Promise<void> {
     try {
+      // IMPLEMENTATION: Remote analytics service
+      // 1. Endpoint: POST https://analytics.titane-os.com/api/logs (or self-hosted)
+      // 2. Payload: { entry: _entry, app_version, user_id (anonymous), timestamp }
+      // 3. Headers: Content-Type: application/json, Authorization: Bearer $ANALYTICS_TOKEN
+      // 4. Retry logic: Exponential backoff on failure (max 3 retries)
+      // 5. Privacy: Strip PII before sending (no personal data, only error patterns)
+      // 6. CORS: Configure backend to accept requests from app origin
+      // 7. Silent fail: Don't block app if analytics unavailable
       // TODO: Implement analytics service
       // await fetch('/api/logs', { method: 'POST', body: JSON.stringify(_entry) });
     } catch (error) {

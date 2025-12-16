@@ -482,7 +482,14 @@ export class UnifiedCognitivePipeline {
     };
 
     // Mise à jour cognitive basée sur l'intention
-    // TODO: Réactiver quand CognitiveLayer aura focus, clarity, depth, metacognition
+    // REACTIVATION: When CognitiveLayer has focus, clarity, depth, metacognition fields
+    // 1. Define fields in CognitiveLayer interface: focus, clarity, depth, metacognition (all 0-1)
+    // 2. Populate from intention: focus = intention.requires_reasoning ? 0.9 : 0.5
+    // 3. Calculate clarity: clarity = response.confidence (higher confidence = clearer reasoning)
+    // 4. Depth metric: depth = intention.complexity (0=simple, 1=complex reasoning)
+    // 5. Metacognition: Track self-awareness (0.8 for introspective tasks, lower for routine)
+    // 6. Apply updates: cognitiveKernel.updateLayer('cognitive', updates.cognitive)
+    // TODO: Reactivate when CognitiveLayer has focus, clarity, depth, metacognition
     // if (intention.requires_reasoning) {
     //   updates.cognitive = {
     //     focus: 0.9,
@@ -493,7 +500,13 @@ export class UnifiedCognitivePipeline {
     // }
 
     // Mise à jour adaptive basée sur l'émotion
-    // TODO: Réactiver quand AdaptiveLayer aura responsiveness, learning_rate, adaptation_speed
+    // REACTIVATION: When AdaptiveLayer has responsiveness, learning_rate, adaptation_speed
+    // 1. Define fields in AdaptiveLayer: responsiveness, learning_rate, adaptation_speed (all 0-1)
+    // 2. Emotion mapping: high arousal → high responsiveness (0.9), neutral → moderate (0.5)
+    // 3. Learning rate: Adjust based on feedback quality (0.7 default, 0.9 for high-quality feedback)
+    // 4. Adaptation speed: Fast for dynamic contexts (0.8), slow for stable (0.3)
+    // 5. Apply updates: cognitiveKernel.updateLayer('adaptive', updates.adaptive)
+    // TODO: Reactivate when AdaptiveLayer has responsiveness, learning_rate, adaptation_speed
     // if (intention.emotional_tone !== 'neutral') {
     //   updates.adaptive = {
     //     responsiveness: 0.9,

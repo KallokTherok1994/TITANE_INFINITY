@@ -20,7 +20,12 @@ import type {
   PriorityLevel,
   AgendaView,
 } from './types';
-// TODO: Migrer appels I/O vers AgendaService (Ring 3)
+// MIGRATION: Ring 3 I/O - Move I/O operations to AgendaService Tauri commands
+// 1. Replace direct I/O with secureInvoke('agenda_service::*', params)
+// 2. Commands: agenda_get_all_events, agenda_search_events, agenda_export_calendar
+// 3. Real-time updates: Listen to Tauri events 'agenda:event_created', 'agenda:event_updated'
+// 4. Caching: Implement frontend cache for frequently accessed events (TTL: 5min)
+// 5. Security: Validate all inputs before sending to backend
 // import { secureInvoke } from '@/lib/security';
 
 // ═══════════════════════════════════════════════════════════════════

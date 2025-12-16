@@ -406,6 +406,14 @@ export class MCPStrategy
     this.metrics = [];
   }
 
+  private calculateAverageLatency(): number {
+    const latencyMetrics = this.metrics.filter(m => m.value !== undefined && m.value > 0);
+    if (latencyMetrics.length === 0) return 0;
+
+    const totalLatency = latencyMetrics.reduce((sum, m) => sum + (m.value || 0), 0);
+    return totalLatency / latencyMetrics.length;
+  }
+
   // ───────────────────────────────────────────────────────────────────────
   // SHUTDOWN
   // ───────────────────────────────────────────────────────────────────────

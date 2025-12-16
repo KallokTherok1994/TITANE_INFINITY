@@ -20,6 +20,7 @@
  */
 
 import { emit } from '@tauri-apps/api/event';
+import { invoke } from '@tauri-apps/api/core';
 import type {
   ConversationMessage,
   ConversationResponse,
@@ -156,6 +157,10 @@ export class ConversationManager {
     return context;
   }
 
+  private getContext(conversationId: string): ConversationContext | undefined {
+    return this.activeConversations.get(conversationId);
+  }
+
   /**
    * Build AI request with context window management
    */
@@ -281,8 +286,6 @@ export class ConversationManager {
     messages: ConversationMessage[];
     config: ConversationConfig;
   }): Promise<ConversationResponse> {
-    const { invoke } = await import('@tauri-apps/api/tauri');
-
     try {
       const result = await invoke<{
         content: string;
@@ -317,8 +320,6 @@ export class ConversationManager {
     messages: ConversationMessage[];
     config: ConversationConfig;
   }): Promise<ConversationResponse> {
-    const { invoke } = await import('@tauri-apps/api/tauri');
-
     try {
       const result = await invoke<{
         content: string;
@@ -353,8 +354,6 @@ export class ConversationManager {
     messages: ConversationMessage[];
     config: ConversationConfig;
   }): Promise<ConversationResponse> {
-    const { invoke } = await import('@tauri-apps/api/tauri');
-
     try {
       const result = await invoke<{
         content: string;
@@ -389,8 +388,6 @@ export class ConversationManager {
     messages: ConversationMessage[];
     config: ConversationConfig;
   }): Promise<ConversationResponse> {
-    const { invoke } = await import('@tauri-apps/api/tauri');
-
     try {
       const result = await invoke<{
         content: string;

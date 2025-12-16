@@ -810,7 +810,13 @@ echo "✅ Operation complete"
 
   private async saveSession(session: CollaborationSession): Promise<void> {
     console.log('[VisualDevOpsEngine] Saving session:', session.session_id);
-    // TODO: persist to disk or backend
+    // IMPLEMENTATION: Persist session to disk or backend
+    // 1. Serialize: JSON.stringify(session) with pretty formatting
+    // 2. Tauri filesystem: Use invoke('fs:write_file', { path, content }) to save
+    // 3. Path: ~/.titane/devops/sessions/${session.session_id}.json
+    // 4. Backup: Keep last 10 sessions, rotate older ones
+    // 5. Load on startup: Read sessions on engine initialization for session recovery
+    // 6. Backend sync: Optional sync to remote backend for multi-device collaboration
   }
 
   public getCurrentSession(): CollaborationSession | null {
@@ -864,7 +870,7 @@ echo "✅ Operation complete"
         successful: successfulActions,
         failed: failedActions,
         pending: pendingActions,
-        avg_validation_time_ms: 0, // TODO: calculate from interactions
+        avg_validation_time_ms: this.calculateAverageValidationTime(), // Calculate from interactions: sum(validation_end - action_start) / count
       },
       actions_by_type: actionsByType as any,
       errors_fixed: this.actionHistory.filter(

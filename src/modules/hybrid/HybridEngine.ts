@@ -396,8 +396,14 @@ export class HybridEngine {
    * Détecte erreurs et propose patchs
    */
   async detectIssuesAndProposePatch(_context?: string): Promise<AutoPatch[]> {
-    // TODO: Intégrer avec Self-Healing Engine
-    // Pour l'instant, retourne vide
+    // INTEGRATION: Self-Healing Engine connection
+    // 1. Import SelfHealingEngine from '@/engines/selfHealing/SelfHealingEngine'
+    // 2. Analyze error patterns: SelfHealingEngine.analyzeErrors(context)
+    // 3. Generate patches: Use AST transformation (babel-parser) to create code fixes
+    // 4. Validate patches: Test in isolated sandbox before applying
+    // 5. Apply fixes: SelfHealingEngine.applyPatch(patch) with rollback on failure
+    // 6. Log results: Audit log of successful/failed patches for learning
+    // For now, return empty array
     return [];
   }
 

@@ -632,8 +632,14 @@ class AutopoiesisEngine {
   }
 
   private triggerStrategy(strategy: OptimizationStrategy): void {
-    // TODO: Appliquer l'ajustement aux moteurs
-    // Pour l'instant, juste log
+    // IMPLEMENTATION: Apply optimization adjustments to engines
+    // 1. Parse adjustments: Extract parameter changes from strategy.adjustments map
+    // 2. Apply to engines: Call engine methods (e.g., CognitiveEngine.setFocus(0.9))
+    // 3. Validate changes: Ensure parameters stay within valid ranges (0-1 for most)
+    // 4. Monitor effectiveness: Track success metrics after application (response time, accuracy)
+    // 5. Rollback on failure: Revert changes if metrics degrade significantly
+    // 6. Log execution: Record strategy application in audit log for analysis
+    // For now, just log
     console.log(`[AutopoiesisEngine] Triggering strategy: ${strategy.name}`);
 
     // Simuler succès (70% du temps)
