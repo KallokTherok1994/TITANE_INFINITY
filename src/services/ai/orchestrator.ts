@@ -40,6 +40,8 @@ import {
   getProviderTimeout,
   CACHE_TTL,
   CIRCUIT_BREAKER,
+  STREAM_CONFIG,
+  AVAILABILITY_CACHE,
 } from '@/config/aiTimeouts.config'; // ← v22Ω: Centralized timeouts
 
 const logger = createLogger('Orchestrator');
@@ -144,6 +146,10 @@ class AIOrchestrator {
     timestamp: number;
   } = { data: null, timestamp: 0 };
 
+  // v22Ω OPT12: Provider availability cache (60s TTL)
+  private availabilityCache: Map<string, { available: boolean; timestamp: number }> =
+    new Map();
+
   // v22Ω: Critical error tracking for degraded mode (using centralized config)
   private criticalErrorHistory: number[] = []; // timestamps of critical errors
   private readonly CRITICAL_ERROR_WINDOW_MS = CIRCUIT_BREAKER.criticalErrorWindow;
@@ -192,6 +198,7 @@ class AIOrchestrator {
   destroy(): void {
     this.stopQuickFailCleanup();
     this.quickFailCache.clear();
+    this.availabilityCache.clear(); // v22Ω OPT12: Clear availability cache
     this.metricsCache = { data: null, timestamp: 0 };
     this.criticalErrorHistory = [];
     this.isDegradedMode = false;
@@ -216,6 +223,47 @@ class AIOrchestrator {
     const freshMetrics = metricsEngine.getAggregatedMetrics();
     this.metricsCache = { data: freshMetrics, timestamp: now };
     return freshMetrics;
+  }
+
+  /**
+   * v22Ω OPT12: Check provider availability with 60s TTL cache
+   * Reduces redundant availability checks from ~6/request to ~1/minute
+   */
+  private async checkAvailabilityWithCache(provider: AIProvider): Promise<boolean> {
+    const now = Date.now();
+    const cached = this.availabilityCache.get(provider.name);
+
+    // Return cached value if fresh (within TTL)
+    if (cached && now - cached.timestamp < AVAILABILITY_CACHE.ttlMs) {
+      return cached.available;
+    }
+
+    // Perform fresh availability check with timeout
+    try {
+      const isAvailable = await Promise.race([
+        provider.isAvailable(),
+        new Promise<boolean>((_, reject) =>
+          setTimeout(
+            () => reject(new Error('Availability check timeout')),
+            AVAILABILITY_CACHE.checkTimeoutMs
+          )
+        ),
+      ]);
+
+      // Cache the result
+      this.availabilityCache.set(provider.name, {
+        available: isAvailable,
+        timestamp: now,
+      });
+      return isAvailable;
+    } catch (error) {
+      // On timeout/error, cache as unavailable for shorter period (5s)
+      this.availabilityCache.set(provider.name, {
+        available: false,
+        timestamp: now - AVAILABILITY_CACHE.ttlMs + 5000,
+      });
+      return false;
+    }
   }
 
   /**
@@ -1145,16 +1193,8 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
         requestId,
         provider: provider.name,
       });
-      // Availability check with short timeout
-      const availabilityPromise = provider.isAvailable();
-      const availabilityTimeout = new Promise<boolean>((_, reject) =>
-        setTimeout(
-          () => reject(new Error(`Availability check timeout (${requestId})`)),
-          3000
-        )
-      );
-
-      const isAvailable = await Promise.race([availabilityPromise, availabilityTimeout]);
+      // v22Ω OPT12: Use cached availability check (60s TTL)
+      const isAvailable = await this.checkAvailabilityWithCache(provider);
 
       if (!isAvailable) {
         throw new Error(`Provider ${provider.name} is not available`);
@@ -1273,18 +1313,17 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
   async *stream(message: string, history: AIMessage[] = []): AsyncGenerator<string> {
     const { sanitized, valid, issues } = this.sanitizeMessage(message);
 
-    // ═══ v24.5: STREAM TOTAL TIMEOUT - Global timeout for entire stream ═══
-    const STREAM_TOTAL_TIMEOUT_MS = 120000; // 2 minutes max for entire stream
+    // ═══ v22Ω: STREAM CONFIG from centralized config ═══
     const streamStartTime = Date.now();
     let streamAborted = false;
 
     // Setup global timeout that will abort the stream
     const checkTotalTimeout = () => {
-      if (Date.now() - streamStartTime > STREAM_TOTAL_TIMEOUT_MS) {
+      if (Date.now() - streamStartTime > STREAM_CONFIG.totalTimeoutMs) {
         streamAborted = true;
         logger.warn('Stream total timeout exceeded', {
           elapsed: Date.now() - streamStartTime,
-          limit: STREAM_TOTAL_TIMEOUT_MS,
+          limit: STREAM_CONFIG.totalTimeoutMs,
         });
         return true;
       }
@@ -1324,25 +1363,29 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
       }
 
       try {
-        const isAvailable = await Promise.race([
-          provider.isAvailable(),
-          new Promise<boolean>((_, reject) =>
-            setTimeout(() => reject(new Error('Timeout')), 3000)
-          ),
-        ]);
-
+        // v22Ω OPT12: Use cached availability check
+        const isAvailable = await this.checkAvailabilityWithCache(provider);
         if (!isAvailable) continue;
 
         if (provider.stream) {
-          // Streaming natif avec timeout per-chunk + total timeout
+          // v22Ω OPT11: Streaming with chunk batching + timeout
           let streamTimeout: NodeJS.Timeout | null = null;
           const streamPromise = provider.stream(sanitized, history);
 
+          // OPT11: Chunk batching buffer
+          let chunkBuffer: string[] = [];
+          let lastFlushTime = Date.now();
+
           try {
             for await (const chunk of streamPromise) {
-              // ═══ v24.5: Check total timeout during streaming ═══
+              // Check total timeout during streaming
               if (checkTotalTimeout() || streamAborted) {
                 if (streamTimeout) clearTimeout(streamTimeout);
+                // Flush remaining buffer before timeout message
+                if (chunkBuffer.length > 0) {
+                  yield chunkBuffer.join('');
+                  chunkBuffer = [];
+                }
                 yield '\n\n⏱️ Temps de streaming dépassé.';
                 circuitBreaker.recordFailure(
                   providerName,
@@ -1357,13 +1400,31 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
               }
               streamTimeout = setTimeout(() => {
                 streamAborted = true;
-              }, 10000); // 10s per chunk
+              }, STREAM_CONFIG.perChunkTimeoutMs);
 
               if (chunk && typeof chunk === 'string') {
-                yield chunk;
+                // OPT11: Add to buffer instead of yielding immediately
+                chunkBuffer.push(chunk);
                 hasStreamed = true;
+
+                const now = Date.now();
+                const shouldFlush =
+                  chunkBuffer.length >= STREAM_CONFIG.chunkBatchSize ||
+                  now - lastFlushTime >= STREAM_CONFIG.chunkBatchDelayMs;
+
+                if (shouldFlush) {
+                  yield chunkBuffer.join('');
+                  chunkBuffer = [];
+                  lastFlushTime = now;
+                }
               }
             }
+
+            // Flush remaining buffer
+            if (chunkBuffer.length > 0) {
+              yield chunkBuffer.join('');
+            }
+
             if (streamTimeout) {
               clearTimeout(streamTimeout);
             }
@@ -1371,6 +1432,10 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
             circuitBreaker.recordSuccess(providerName);
             return; // Streaming successful
           } catch (streamError) {
+            // Flush buffer on error before cleanup
+            if (chunkBuffer.length > 0) {
+              yield chunkBuffer.join('');
+            }
             if (streamTimeout) {
               clearTimeout(streamTimeout);
             }
@@ -1390,13 +1455,13 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
             `stream_${Date.now()}`
           );
 
-          // Simulate typing effet
-          for (let i = 0; i < response.content.length; i++) {
-            const char = response.content[i];
-            if (char) {
-              yield char;
+          // v22Ω OPT11: Batch simulated streaming (yield words instead of chars)
+          const words = response.content.split(/(\s+)/);
+          for (const word of words) {
+            if (word) {
+              yield word;
               hasStreamed = true;
-              await new Promise(resolve => setTimeout(resolve, 15));
+              await new Promise(resolve => setTimeout(resolve, 20));
             }
           }
           return; // Simulation successful
@@ -1442,15 +1507,10 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
     timestamp: number;
   }> {
     try {
-      // Update provider availability in parallel
+      // v22Ω OPT12: Update provider availability using cache (parallel)
       const availabilityChecks = this.providers.map(async provider => {
         try {
-          const isAvailable = await Promise.race([
-            provider.isAvailable(),
-            new Promise<boolean>((_, reject) =>
-              setTimeout(() => reject(new Error('Timeout')), 2000)
-            ),
-          ]);
+          const isAvailable = await this.checkAvailabilityWithCache(provider);
 
           const stats = this.providerStats.get(provider.name);
           if (stats && !isAvailable && stats.status !== 'offline') {
