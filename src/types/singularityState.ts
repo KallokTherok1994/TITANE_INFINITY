@@ -120,6 +120,7 @@ export interface SystemHealth {
   errors_count: number;
   warnings_count: number;
   uptime: number;
+  last_error?: string | null; // ✨ v24.3 - Last error message for useEngineVitals
 }
 
 export interface PerformanceMetrics {

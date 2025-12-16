@@ -9,7 +9,8 @@ export {
   type DevSudoCommand,
   type DevSudoResult,
   type DevSudoAction,
-  type DevSudoExecutedAction,
 } from './devSudoHandler';
+
+export { type DevSudoExecutedAction } from './types';
 
 export { handleDevSudoInChat } from './devSudoIntegration';

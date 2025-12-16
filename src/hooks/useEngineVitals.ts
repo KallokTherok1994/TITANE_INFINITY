@@ -39,7 +39,7 @@ export interface EngineVitals {
   sentinel: {
     errors: number;
     anomalies: number;
-    lastError: number | null;
+    lastError: string | null; // Error message from backend
   };
 
   // SelfHeal++

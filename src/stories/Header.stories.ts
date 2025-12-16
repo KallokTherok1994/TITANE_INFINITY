@@ -1,8 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-
-import { fn } from 'storybook/test';
+import { vi } from 'vitest';
 
 import { Header } from './Header';
+
+// Storybook-compatible mock function using vitest
+const fn = vi.fn;
 
 const meta = {
   title: 'Example/Header',

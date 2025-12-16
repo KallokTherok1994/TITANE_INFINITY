@@ -178,7 +178,7 @@ pub async fn titan_persistence_shutdown() -> Result<(), String> {
 /// Migrer l'état vers la version actuelle du schéma
 #[tauri::command]
 pub async fn titan_migrate_state(state_json: String) -> Result<MigrationReportDto, String> {
-    use super::migrations::MigrationEngine;
+    use crate::persistence::migrations::MigrationEngine;
 
     let mut state: serde_json::Value =
         serde_json::from_str(&state_json).map_err(|e| format!("JSON parse error: {}", e))?;
@@ -212,7 +212,7 @@ pub struct MigrationReportDto {
 /// Obtenir la version actuelle du schéma
 #[tauri::command]
 pub fn titan_get_schema_version() -> u32 {
-    super::migrations::CURRENT_SCHEMA_VERSION
+    crate::persistence::migrations::CURRENT_SCHEMA_VERSION
 }
 
 /// Exporter les données vers une archive
@@ -221,7 +221,7 @@ pub async fn titan_export_data(
     path: String,
     description: Option<String>,
 ) -> Result<ExportReportDto, String> {
-    use super::backup::BackupEngine;
+    use crate::persistence::backup::BackupEngine;
 
     let mut engine = BackupEngine::new();
     let report = engine
@@ -253,7 +253,7 @@ pub struct ExportReportDto {
 /// Valider une archive avant import
 #[tauri::command]
 pub async fn titan_validate_archive(path: String) -> Result<ArchiveValidationDto, String> {
-    use super::backup::BackupEngine;
+    use crate::persistence::backup::BackupEngine;
 
     let engine = BackupEngine::new();
     let validation = engine
@@ -289,7 +289,7 @@ pub struct ArchiveValidationDto {
 /// Importer une archive
 #[tauri::command]
 pub async fn titan_import_data(path: String, mode: String) -> Result<ImportReportDto, String> {
-    use super::backup::{BackupEngine, ImportMode};
+    use crate::persistence::backup::{BackupEngine, ImportMode};
 
     let import_mode = match mode.as_str() {
         "replace" => ImportMode::Replace,
@@ -337,7 +337,7 @@ pub struct ImportReportDto {
 /// Obtenir l'état de santé de la mémoire
 #[tauri::command]
 pub async fn titan_get_memory_health() -> Result<MemoryHealthDto, String> {
-    use super::memory_health::MEMORY_HEALTH_ENGINE;
+    use crate::persistence::memory_health::MEMORY_HEALTH_ENGINE;
 
     let mut engine = MEMORY_HEALTH_ENGINE.write().await;
     let health = engine.diagnose().await;
@@ -420,7 +420,7 @@ pub struct RecommendationDto {
 /// Lancer le Self-Healing automatique
 #[tauri::command]
 pub async fn titan_run_self_healing() -> Result<SelfHealingReportDto, String> {
-    use super::memory_health::MEMORY_HEALTH_ENGINE;
+    use crate::persistence::memory_health::MEMORY_HEALTH_ENGINE;
 
     let mut engine = MEMORY_HEALTH_ENGINE.write().await;
     let report = engine.auto_heal().await;
@@ -571,38 +571,38 @@ pub struct FullIntegrityReportDto {
 
 /// Diagnostic complet du système de mémoire
 #[tauri::command]
-pub async fn titan_memory_doctor_diagnose() -> Result<super::memory_doctor::DoctorReport, String> {
-    let mut doctor = super::memory_doctor::MemoryDoctor::new();
+pub async fn titan_memory_doctor_diagnose() -> Result<crate::persistence::memory_doctor::DoctorReport, String> {
+    let mut doctor = crate::persistence::memory_doctor::MemoryDoctor::new();
     Ok(doctor.diagnose().await)
 }
 
 /// Obtenir un résumé textuel du diagnostic
 #[tauri::command]
 pub async fn titan_memory_doctor_summary() -> Result<String, String> {
-    let mut doctor = super::memory_doctor::MemoryDoctor::new();
+    let mut doctor = crate::persistence::memory_doctor::MemoryDoctor::new();
     let report = doctor.diagnose().await;
-    Ok(super::memory_doctor::MemoryDoctor::generate_summary(
+    Ok(crate::persistence::memory_doctor::MemoryDoctor::generate_summary(
         &report,
     ))
 }
 
 /// Lancer le Self-Healing via Memory Doctor
 #[tauri::command]
-pub async fn titan_memory_doctor_heal() -> Result<super::memory_health::SelfHealingReport, String> {
-    let mut doctor = super::memory_doctor::MemoryDoctor::new();
+pub async fn titan_memory_doctor_heal() -> Result<crate::persistence::memory_health::SelfHealingReport, String> {
+    let mut doctor = crate::persistence::memory_doctor::MemoryDoctor::new();
     Ok(doctor.heal().await)
 }
 
 /// Compacter le journal via Memory Doctor
 #[tauri::command]
-pub async fn titan_memory_doctor_compact() -> Result<super::types::CompactionReport, String> {
-    let doctor = super::memory_doctor::MemoryDoctor::new();
+pub async fn titan_memory_doctor_compact() -> Result<crate::persistence::types::CompactionReport, String> {
+    let doctor = crate::persistence::memory_doctor::MemoryDoctor::new();
     doctor.compact().await
 }
 
 /// Exporter un backup via Memory Doctor
 #[tauri::command]
 pub async fn titan_memory_doctor_export(path: String, description: String) -> Result<(), String> {
-    let mut doctor = super::memory_doctor::MemoryDoctor::new();
+    let mut doctor = crate::persistence::memory_doctor::MemoryDoctor::new();
     doctor.export(&path, &description).await
 }

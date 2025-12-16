@@ -139,7 +139,7 @@ export const MetaDashboardRouter: React.FC = () => {
         <ActiveDashboard />
       </main>
 
-      <style jsx>{`
+      <style>{`
         .meta-dashboard {
           min-height: 100vh;
           background: linear-gradient(135deg, #0a0e27 0%, #151b3d 100%);

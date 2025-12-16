@@ -32,11 +32,7 @@ const globalQueryClient = new QueryClient({
       retry: false,
     },
   },
-  logger: {
-    log: () => {},
-    warn: () => {},
-    error: () => {},
-  },
+  // Note: logger was removed in React Query v5
 });
 
 // Global wrapper for tests
