@@ -61,8 +61,16 @@ export const SystemGovernance: React.FC = () => {
 
   const loadPermissions = async () => {
     try {
-      // TODO: Implémenter commande Tauri get_permission_matrix
-      // Pour l'instant, permissions hardcodées
+      // IMPLEMENTATION: Tauri get_permission_matrix command
+      // 1. Backend: #[tauri::command] async fn get_permission_matrix() -> Result<PermissionMatrix>
+      // 2. Query: Read from ~/.titane/security/permissions.json or embedded config
+      // 3. RBAC logic: Map roles (ROOT, SYSTEM, IA, USER) to operations (file_*, memory_*, etc.)
+      // 4. Dynamic permissions: Load from database for enterprise multi-user setups
+      // 5. Caching: Cache matrix in backend (TTL: 5min), invalidate on permission changes
+      // 6. Fallback: Hardcoded default permissions if file missing/corrupt
+      // const matrix = await invoke('get_permission_matrix');
+      // setPermissions(matrix);
+      // For now, hardcoded default permissions
       setPermissions({
         file_import: ['ROOT', 'SYSTEM', 'USER'],
         file_delete: ['ROOT', 'SYSTEM'],

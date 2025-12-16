@@ -30,6 +30,13 @@ pub mod kernel_integration;
 pub mod memory_integration;
 pub mod omega_integration;
 
+// INTEGRATION: Fix cycle_engine commands module type issues
+// 1. Problem: Command enum conflicts with Tauri's Command trait or parameter type mismatches
+// 2. Solution: Rename enum to CycleCommand or use fully qualified paths
+// 3. Type alignment: Ensure all command handlers use Tauri 2.0 #[tauri::command] signature
+// 4. Async bounds: Add Send + Sync bounds for async command return types
+// 5. State access: Fix AppState type conflicts, use tauri::State<AppState> correctly
+// 6. Testing: Re-enable after fixes, ensure commands compile and integrate with Tauri runtime
 // pub mod commands; // TODO: Fix type issues
 
 // Re-exports — Components

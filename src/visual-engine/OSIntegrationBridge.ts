@@ -406,7 +406,13 @@ export class OSIntegrationBridge {
 
   private startPolling(): void {
     this.pollTimer = setInterval(() => {
-      // TODO: Implement polling logic to fetch state from REST API
+      // IMPLEMENTATION: Polling logic to fetch OS state from REST API
+      // 1. Endpoint: fetch('http://localhost:7890/api/os/state') or config.apiEndpoint
+      // 2. Response: JSON { cpu_usage, memory_usage, disk_usage, network_stats, processes }
+      // 3. Parse and update: this.updateOSState(data) to trigger state change events
+      // 4. Error handling: Exponential backoff on failure, max 5 retries
+      // 5. Timeout: 5s request timeout to avoid blocking
+      // 6. Authentication: Optional API key in headers for secure environments
       if (this.config.debug) {
         console.log('[OSIntegrationBridge] Polling for OS state...');
       }

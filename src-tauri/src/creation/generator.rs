@@ -186,6 +186,13 @@ export const {{NAME}}: React.FC = () => {
     }
 
     fn generate_tests(&self, _code: &str) -> String {
+        // IMPLEMENTATION: Generate comprehensive tests from code AST
+        // 1. Parse code: Use syn crate to parse Rust AST, identify functions/structs
+        // 2. Test generation: For each public function, generate test_function_name()
+        // 3. Arrange-Act-Assert: Setup inputs, call function, assert outputs
+        // 4. Edge cases: Test empty inputs, null values, boundary conditions
+        // 5. Property-based: Use proptest for randomized testing (optional)
+        // 6. Template: "#[test] fn test_{fn_name}() { let input = ...; let result = {fn_name}(input); assert_eq!(result, expected); }"
         "#[cfg(test)]\nmod tests {\n    use super::*;\n    \n    #[test]\n    fn test_creation() {\n        // TODO: Add tests\n    }\n}".to_string()
     }
 

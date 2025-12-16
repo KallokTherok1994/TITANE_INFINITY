@@ -146,7 +146,11 @@ export class ConversationManager {
       return newContext;
     }
 
-    const context = this.activeConversations.get(conversationId)!;
+    const context = this.activeConversations.get(conversationId);
+    if (!context) {
+      throw new Error(`Conversation ${conversationId} not found`);
+    }
+
     context.updatedAt = Date.now();
 
     // Merge partial context

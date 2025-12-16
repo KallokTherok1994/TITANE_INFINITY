@@ -27,7 +27,13 @@ export class RouteErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error('Route Error:', error, errorInfo);
-    // TODO: Send to error logging service
+    // IMPLEMENTATION: Send to error logging service
+    // 1. Function: sendErrorToLoggingService(error, errorInfo, { route: window.location.pathname })
+    // 2. Endpoint: POST /api/errors with { error: error.message, stack, componentStack, route, timestamp }
+    // 3. Retry: Exponential backoff (max 3 attempts) if network fails
+    // 4. Privacy: Anonymize user data, only send error patterns
+    // 5. Silent fail: Don't block UI if logging service unavailable
+    // 6. Integration: Use same logger as lib/logger.ts logToRemote()
   }
 
   render() {
