@@ -13,7 +13,7 @@ export { useMemoryCore } from './useMemoryCore';
 export { useLivingEngines } from './useLivingEngines';
 export { useEngineSubscription } from './useEngineSubscription';
 export { useAIChatStreaming } from './useAIChatStreaming';
-export { useBatchCommands } from './useBatchCommands';
+// REMOVED v24.8: useBatchCommands (dead code, 0 imports)
 export { useFileOperations } from './useFileOperations';
 export { useRAG } from './useRAG';
 export type { LivingEnginesState } from './useLivingEngines';
@@ -50,16 +50,7 @@ export { useChat } from './useChat';
 export * from './useDebounce';
 export * from './useThrottle';
 
-// Control Panel Section Hook (v24.7)
-export {
-  useControlPanelSection,
-  useControlPanelToggles,
-  default as useControlPanelSectionDefault,
-} from './useControlPanelSection';
-export type {
-  UseControlPanelSectionOptions,
-  UseControlPanelSectionReturn,
-} from './useControlPanelSection';
+// REMOVED v24.8: useControlPanelSection (dead code, 0 imports)
 
 // Hooks spécialisés (isolation)
 export { useChatCore } from './useChatCore';
@@ -154,13 +145,7 @@ export type {
   UseVoiceEngineReturn,
 } from './useVoiceEngine';
 
-// Audio Settings & Diagnostics
-export { useAudioSettings, default as useAudioSettingsDefault } from './useAudioSettings';
-export type {
-  AudioDiagnosticStep,
-  AudioHealthSummary,
-  UseAudioSettingsReturn,
-} from './useAudioSettings';
+// REMOVED v24.8: useAudioSettings (dead code, 0 imports - use useVoiceEngine instead)
 
 // ═══════════════════════════════════════════════════════════════
 // v∞.2 - Device Permissions & Self-Healing (OPUS DEVICE-SHE)
