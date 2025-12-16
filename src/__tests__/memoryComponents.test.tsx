@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@/test-utils';
 import '@testing-library/jest-dom/vitest';
 import { MemoryViewer } from '../components/chat/MemoryViewer';
 import type {

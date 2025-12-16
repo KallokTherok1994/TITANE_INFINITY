@@ -11,7 +11,7 @@
  */
 
 import { describe, test, expect, vi, beforeEach } from 'vitest';
-import { renderHook, act, waitFor } from '@testing-library/react';
+import { renderHook, act, waitFor } from '@/test-utils';
 import { useChat } from '../hooks/useChat';
 import type { AIMessage } from '../services/ai/types';
 

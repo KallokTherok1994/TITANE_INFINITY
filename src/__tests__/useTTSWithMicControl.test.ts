@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v20.0 — useTTSWithMicControl TESTS
+ *   TITANE∞ v25.0 — useTTSWithMicControl TESTS
  *   [P0-6] Tests unitaires hook auto-mute microphone pendant TTS
  *
  *   Objectif Coverage: >80%
@@ -13,7 +13,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import { renderHook, act, waitFor } from '@testing-library/react';
+import { renderHook, act, waitFor } from '@/test-utils';
 import { useTTSWithMicControl } from '@/hooks/useTTSWithMicControl';
 import { voiceService } from '@/services/api/voice';
 import type { UseVADReturn } from '@/hooks/useVAD';

@@ -13,14 +13,7 @@
 
 import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import {
-  render,
-  renderHook,
-  screen,
-  fireEvent,
-  waitFor,
-  act,
-} from '@testing-library/react';
+import { render, renderHook, screen, fireEvent, waitFor, act } from '@/test-utils';
 import { chatEngine } from '../services/ai/chatEngine';
 import { aiOrchestrator } from '../services/ai/orchestrator';
 import { autoHealEngine } from '../services/ai/autoHealEngine';

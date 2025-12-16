@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@/test-utils';
 import { ChatPanel } from '../ChatPanel';
 import { MemoryPanel } from '../MemoryPanel';
 import { GovernancePanel } from '../GovernancePanel';
