@@ -10,7 +10,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import React, { createContext, useContext, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode, useMemo } from 'react';
 import { usePerformanceMonitor } from '../hooks/usePerformanceMonitor';
 
 interface AnimationConfig {
@@ -52,12 +52,16 @@ export const AnimationProvider: React.FC<AnimationProviderProps> = ({
   const { metrics, shouldReduceMotion, shouldThrottle, animationConfig } =
     usePerformanceMonitor({ fpsThreshold, cpuThreshold });
 
-  const value: AnimationContextValue = {
-    animationConfig,
-    shouldReduceMotion,
-    shouldThrottle,
-    fps: metrics.fps,
-  };
+  // ✨ v24.2.1: Memoize context value to prevent unnecessary re-renders
+  const value = useMemo<AnimationContextValue>(
+    () => ({
+      animationConfig,
+      shouldReduceMotion,
+      shouldThrottle,
+      fps: metrics.fps,
+    }),
+    [animationConfig, shouldReduceMotion, shouldThrottle, metrics.fps]
+  );
 
   return <AnimationContext.Provider value={value}>{children}</AnimationContext.Provider>;
 };

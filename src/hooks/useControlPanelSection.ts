@@ -11,7 +11,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { secureInvoke } from '@/lib/security';
 
 /**
@@ -108,6 +108,24 @@ export function useControlPanelSection<TConfig extends object>(
   const [persistedConfig, setPersistedConfig] = useState<TConfig>(() => ({
     ...defaultConfig,
   }));
+
+  // ✨ v24.2.1 FIX: Ref for timeout cleanup to prevent memory leak
+  const savedTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // ✨ v24.2.1 FIX: Track mount state to prevent state updates after unmount
+  const isMountedRef = useRef(true);
+
+  // ✨ v24.2.1 FIX: Cleanup timeout and track unmount
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+      if (savedTimeoutRef.current !== null) {
+        clearTimeout(savedTimeoutRef.current);
+        savedTimeoutRef.current = null;
+      }
+    };
+  }, []);
+
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -150,8 +168,18 @@ export function useControlPanelSection<TConfig extends object>(
       onSaveSuccess?.();
       console.log(`✅ [ControlPanel] Config saved: ${saveCommand}`);
 
+      // ✨ v24.2.1 FIX: Store timeout in ref for cleanup on unmount
       // Reset du message "Sauvegardé" après délai
-      setTimeout(() => setSaved(false), savedMessageDuration);
+      if (savedTimeoutRef.current !== null) {
+        clearTimeout(savedTimeoutRef.current);
+      }
+      savedTimeoutRef.current = setTimeout(() => {
+        // ✨ v24.2.1 FIX: Check if still mounted before state update
+        if (isMountedRef.current) {
+          setSaved(false);
+        }
+        savedTimeoutRef.current = null;
+      }, savedMessageDuration);
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Erreur de sauvegarde';
       setError(errorMsg);

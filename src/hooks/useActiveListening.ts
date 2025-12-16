@@ -126,6 +126,8 @@ export function useActiveListening(
   const mountedRef = useRef(true);
   const pendingTranscriptRef = useRef<string>('');
   const awaitingCommandRef = useRef(false);
+  // ✨ v24.2.1: Track restart timeout for cleanup
+  const restartTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // ═══ AUDIO STREAMING ═══
 
@@ -200,6 +202,12 @@ export function useActiveListening(
     return () => {
       mountedRef.current = false;
       unsubscribeAttention();
+
+      // ✨ v24.2.1: Clear restart timeout to prevent memory leak
+      if (restartTimeoutRef.current) {
+        clearTimeout(restartTimeoutRef.current);
+        restartTimeoutRef.current = null;
+      }
 
       // Cleanup
       if (streaming.isStreaming) {
@@ -309,7 +317,12 @@ export function useActiveListening(
         attentionEngine.getState() === 'awaiting_command'
       ) {
         console.log('[ActiveListening] 🔄 Restarting streaming for command');
-        setTimeout(() => {
+        // ✨ v24.2.1: Track timeout for cleanup
+        if (restartTimeoutRef.current) {
+          clearTimeout(restartTimeoutRef.current);
+        }
+        restartTimeoutRef.current = setTimeout(() => {
+          restartTimeoutRef.current = null;
           if (mountedRef.current) {
             streaming.startStreaming();
           }

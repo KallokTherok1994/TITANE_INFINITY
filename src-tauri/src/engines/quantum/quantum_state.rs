@@ -187,7 +187,8 @@ impl QuantumState {
             .map(|a| (a.action.clone(), a.probability()))
             .collect();
 
-        predictions.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
+        // FIX: Handle NaN values safely to prevent panic
+        predictions.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
         predictions
     }
 
@@ -227,9 +228,10 @@ impl QuantumState {
 
     /// Retourne l'état le plus probable
     pub fn get_most_probable(&self) -> Option<&QuantumAmplitude> {
+        // FIX: Handle NaN values safely to prevent panic
         self.superposition
             .iter()
-            .max_by(|a, b| a.probability().partial_cmp(&b.probability()).unwrap())
+            .max_by(|a, b| a.probability().partial_cmp(&b.probability()).unwrap_or(std::cmp::Ordering::Equal))
     }
 
     /// Réinitialise l'état (collapse complet)

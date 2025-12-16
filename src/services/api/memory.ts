@@ -41,6 +41,9 @@ import type {
  * Service Memory Core unifié
  * Centralise tous les appels Tauri liés à la mémoire
  */
+// ✨ v24.2.1: Cache size limit to prevent unbounded memory growth
+const MAX_CACHE_SIZE = 100;
+
 export class MemoryService {
   private cache: Map<string, { data: unknown; timestamp: number }> = new Map();
   private readonly CACHE_TTL = 60000; // 1 minute
@@ -228,8 +231,24 @@ export class MemoryService {
 
   /**
    * Enregistre dans le cache
+   * ✨ v24.2.1: Evict oldest entries when cache exceeds limit
    */
   private setCache(key: string, data: unknown): void {
+    // Evict oldest entries if cache is full
+    if (this.cache.size >= MAX_CACHE_SIZE && !this.cache.has(key)) {
+      // Find and delete oldest entry
+      let oldestKey: string | null = null;
+      let oldestTime = Infinity;
+      for (const [k, v] of this.cache.entries()) {
+        if (v.timestamp < oldestTime) {
+          oldestTime = v.timestamp;
+          oldestKey = k;
+        }
+      }
+      if (oldestKey) {
+        this.cache.delete(oldestKey);
+      }
+    }
     this.cache.set(key, { data, timestamp: Date.now() });
   }
 }

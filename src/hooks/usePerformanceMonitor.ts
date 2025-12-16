@@ -57,12 +57,15 @@ export function usePerformanceMonitor(
   const frameCountRef = useRef(0);
   const lastTimeRef = useRef(performance.now());
   const rafIdRef = useRef<number>();
+  // ✨ v24.2.1: Track running state to prevent RAF after unmount
+  const isRunningRef = useRef(false);
 
   /**
    * FPS tracking via requestAnimationFrame
+   * ✨ v24.2.1: Use isRunningRef to prevent RAF scheduling after cleanup
    */
   const trackFPS = useCallback(() => {
-    if (!enabled) return;
+    if (!enabled || !isRunningRef.current) return;
 
     frameCountRef.current++;
     const now = performance.now();
@@ -83,7 +86,10 @@ export function usePerformanceMonitor(
       lastTimeRef.current = now;
     }
 
-    rafIdRef.current = requestAnimationFrame(trackFPS);
+    // ✨ v24.2.1: Only schedule next frame if still running
+    if (isRunningRef.current) {
+      rafIdRef.current = requestAnimationFrame(trackFPS);
+    }
   }, [enabled, fpsThreshold, cpuThreshold]);
 
   /**
@@ -111,13 +117,17 @@ export function usePerformanceMonitor(
 
   /**
    * Start FPS tracking
+   * ✨ v24.2.1: Use isRunningRef for clean RAF lifecycle
    */
   useEffect(() => {
     if (!enabled) return;
 
+    isRunningRef.current = true;
     rafIdRef.current = requestAnimationFrame(trackFPS);
 
     return () => {
+      // ✨ v24.2.1: Stop the loop first, then cancel pending RAF
+      isRunningRef.current = false;
       if (rafIdRef.current) {
         cancelAnimationFrame(rafIdRef.current);
       }

@@ -116,6 +116,10 @@ const INVALID_COMMAND_ALTERNATIVES: Record<string, CommandMapping> = {
 // ERROR DETECTION ENGINE
 // ═══════════════════════════════════════════════════════════════
 
+// ✨ v24.2.1: Size limits to prevent memory leaks
+const MAX_DETECTED_ERRORS = 100;
+const MAX_FIX_HISTORY = 50;
+
 export class SystemCenterAutoFixEngine {
   private detectedErrors: DetectedError[] = [];
   private fixHistory: AutoFixResult[] = [];
@@ -162,7 +166,11 @@ export class SystemCenterAutoFixEngine {
       detected.originalCommand = commandMatch[1];
     }
 
+    // ✨ v24.2.1: Enforce size limit (LRU-like behavior)
     this.detectedErrors.push(detected);
+    if (this.detectedErrors.length > MAX_DETECTED_ERRORS) {
+      this.detectedErrors = this.detectedErrors.slice(-MAX_DETECTED_ERRORS);
+    }
     return detected;
   }
 
@@ -227,16 +235,22 @@ export class SystemCenterAutoFixEngine {
     try {
       await secureInvoke(newCommand, {});
 
-      this.fixHistory.push({
+      const result: AutoFixResult = {
         success: true,
         errorFixed: error,
         appliedFix: 'WHITELIST_REPLACED',
         newCommand,
         fallbackApplied: false,
         message: `Commande remplacée: "${error.originalCommand}" → "${newCommand}"`,
-      });
+      };
 
-      return this.fixHistory[this.fixHistory.length - 1];
+      // ✨ v24.2.1: Enforce size limit (LRU-like behavior)
+      this.fixHistory.push(result);
+      if (this.fixHistory.length > MAX_FIX_HISTORY) {
+        this.fixHistory = this.fixHistory.slice(-MAX_FIX_HISTORY);
+      }
+
+      return result;
     } catch (testError) {
       // Fallback: utiliser get_system_health comme safe default
       return {

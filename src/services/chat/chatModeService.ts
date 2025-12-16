@@ -49,7 +49,8 @@ class ChatModeService {
 
   private state: ChatModeState;
   private userXP: number = 0;
-  private listeners: ModeChangeCallback[] = [];
+  // ✨ v24.2.1: Use Set for O(1) add/delete instead of Array O(n)
+  private listeners: Set<ModeChangeCallback> = new Set();
   private initialized: boolean = false;
 
   private constructor() {
@@ -404,11 +405,12 @@ class ChatModeService {
 
   /**
    * S'abonner aux changements de mode
+   * ✨ v24.2.1: O(1) add/delete with Set
    */
   public onModeChange(callback: ModeChangeCallback): () => void {
-    this.listeners.push(callback);
+    this.listeners.add(callback);
     return () => {
-      this.listeners = this.listeners.filter(cb => cb !== callback);
+      this.listeners.delete(callback);
     };
   }
 

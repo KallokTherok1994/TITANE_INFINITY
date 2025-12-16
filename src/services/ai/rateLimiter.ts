@@ -108,6 +108,9 @@ export const PROVIDER_RATE_CONFIGS: Record<string, Partial<RateLimitConfig>> = {
 // SLIDING WINDOW COUNTER
 // ═══════════════════════════════════════════════════════════════
 
+// ✨ v24.2.1: Max entries to prevent unbounded growth between cleanups
+const MAX_WINDOW_ENTRIES = 1000;
+
 interface WindowEntry {
   timestamp: number;
   tokens: number;
@@ -139,6 +142,10 @@ class SlidingWindowCounter {
   private cleanup(): void {
     const cutoff = Date.now() - this.windowMs;
     this.entries = this.entries.filter(e => e.timestamp > cutoff);
+    // ✨ v24.2.1: Enforce absolute size limit
+    if (this.entries.length > MAX_WINDOW_ENTRIES) {
+      this.entries = this.entries.slice(-MAX_WINDOW_ENTRIES);
+    }
   }
 
   clear(): void {

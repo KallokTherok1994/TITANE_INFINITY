@@ -8,8 +8,11 @@
  *   TITANE∞ v20.0Ω — Session Manager
  *   Gestion des sessions de conversation avec persistence localStorage
  *   Phase 1 minimal : CRUD sessions, métadonnées, export
+ *   ✨ v24.2.1: Debounced storage to reduce I/O on frequent updates
  * ═══════════════════════════════════════════════════════════════
  */
+
+import { getDebouncedStorage } from '@/utils/debouncedStorage';
 
 export interface SessionMessage {
   id: string;
@@ -64,6 +67,8 @@ export class SessionManager {
   private sessions: Map<string, Session> = new Map();
   private currentSessionId: string | null = null;
   private initialized = false;
+  // ✨ v24.2.1: Debounced storage to batch writes
+  private debouncedStorage = getDebouncedStorage();
 
   constructor() {
     this.loadFromStorage();
@@ -71,10 +76,12 @@ export class SessionManager {
 
   /**
    * Charge les sessions depuis localStorage
+   * ✨ v24.2.1: Uses debounced storage for consistent read-after-write
    */
   private loadFromStorage(): void {
     try {
-      const stored = localStorage.getItem(STORAGE_KEY);
+      // ✨ v24.2.1: Use debounced storage (checks pending writes first)
+      const stored = this.debouncedStorage.getItem(STORAGE_KEY);
       if (stored) {
         const data = JSON.parse(stored) as Session[];
         for (const session of data) {
@@ -82,7 +89,7 @@ export class SessionManager {
         }
       }
 
-      const currentId = localStorage.getItem(CURRENT_SESSION_KEY);
+      const currentId = this.debouncedStorage.getItem(CURRENT_SESSION_KEY);
       if (currentId && this.sessions.has(currentId)) {
         this.currentSessionId = currentId;
       }
@@ -96,18 +103,27 @@ export class SessionManager {
 
   /**
    * Sauvegarde les sessions dans localStorage
+   * ✨ v24.2.1: Uses debounced storage to batch writes
    */
   private saveToStorage(): void {
     try {
       const data = Array.from(this.sessions.values());
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      // ✨ v24.2.1: Use debounced storage instead of direct localStorage
+      this.debouncedStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 
       if (this.currentSessionId) {
-        localStorage.setItem(CURRENT_SESSION_KEY, this.currentSessionId);
+        this.debouncedStorage.setItem(CURRENT_SESSION_KEY, this.currentSessionId);
       }
     } catch (error) {
       console.error('[SessionManager] Erreur sauvegarde:', error);
     }
+  }
+
+  /**
+   * ✨ v24.2.1: Force flush pending writes (call before shutdown)
+   */
+  flushStorage(): void {
+    this.debouncedStorage.flush();
   }
 
   /**
@@ -393,12 +409,14 @@ export class SessionManager {
 
   /**
    * Vide toutes les sessions
+   * ✨ v24.2.1: Uses debounced storage for consistency
    */
   clearAllSessions(): void {
     this.sessions.clear();
     this.currentSessionId = null;
-    localStorage.removeItem(STORAGE_KEY);
-    localStorage.removeItem(CURRENT_SESSION_KEY);
+    // ✨ v24.2.1: Use debounced storage removeItem
+    this.debouncedStorage.removeItem(STORAGE_KEY);
+    this.debouncedStorage.removeItem(CURRENT_SESSION_KEY);
   }
 
   /**

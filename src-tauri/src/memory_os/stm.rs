@@ -145,7 +145,8 @@ impl ShortTermMemory {
     pub async fn top_important(&self, n: usize) -> Vec<MemoryEntry> {
         let entries = self.entries.read().await;
         let mut sorted: Vec<_> = entries.iter().cloned().collect();
-        sorted.sort_by(|a, b| b.importance.partial_cmp(&a.importance).unwrap());
+        // FIX: Handle NaN values safely to prevent panic
+        sorted.sort_by(|a, b| b.importance.partial_cmp(&a.importance).unwrap_or(std::cmp::Ordering::Equal));
         sorted.truncate(n);
         sorted
     }

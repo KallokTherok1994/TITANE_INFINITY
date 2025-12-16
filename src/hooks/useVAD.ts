@@ -112,6 +112,8 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
   const animationFrameRef = useRef<number | null>(null);
   const suspendedRef = useRef<boolean>(false);
   const bargeInEnabledRef = useRef<boolean>(false);
+  // ✨ v24.2.1: Track resumeAfterTTS timeout for cleanup
+  const resumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Initialize config on mount
   useEffect(() => {
@@ -132,6 +134,11 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
       }
       if (audioContextRef.current?.state !== 'closed') {
         audioContextRef.current?.close();
+      }
+      // ✨ v24.2.1: Clear resumeAfterTTS timeout on unmount
+      if (resumeTimeoutRef.current) {
+        clearTimeout(resumeTimeoutRef.current);
+        resumeTimeoutRef.current = null;
       }
     };
   }, []);
@@ -400,9 +407,14 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
    */
   const resumeAfterTTS = useCallback((delayMs: number = 200) => {
     console.log(`[useVAD] 🔊 Resuming VAD after TTS (delay: ${delayMs}ms)`);
-    setTimeout(() => {
+    // ✨ v24.2.1: Clear any pending timeout before setting a new one
+    if (resumeTimeoutRef.current) {
+      clearTimeout(resumeTimeoutRef.current);
+    }
+    resumeTimeoutRef.current = setTimeout(() => {
       suspendedRef.current = false;
       setIsSuspended(false);
+      resumeTimeoutRef.current = null;
       console.log('[useVAD] ✅ VAD resumed, ready for user speech');
     }, delayMs);
   }, []);

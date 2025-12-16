@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { ScreenReaderOnly } from '@/a11y/ScreenReader';
 
 interface MessageProps {
@@ -9,7 +9,17 @@ interface MessageProps {
   onDelete?: () => void;
 }
 
-export function Message({ content, role, timestamp, onEdit, onDelete }: MessageProps) {
+/**
+ * Message component with React.memo optimization
+ * FIX: Prevents unnecessary re-renders when parent updates
+ */
+export const Message = memo(function Message({
+  content,
+  role,
+  timestamp,
+  onEdit,
+  onDelete,
+}: MessageProps) {
   const [focused, setFocused] = useState(false);
 
   function handleKeyDown(e: React.KeyboardEvent) {
@@ -73,4 +83,6 @@ export function Message({ content, role, timestamp, onEdit, onDelete }: MessageP
       </ScreenReaderOnly>
     </article>
   );
-}
+});
+
+Message.displayName = 'Message';

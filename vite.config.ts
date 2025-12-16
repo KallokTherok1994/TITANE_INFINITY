@@ -201,9 +201,20 @@ export default defineConfig({
               return 'services-common';
             }
 
-            // Components UI
-            if (id.includes('/components/') || id.includes('/ui/')) {
-              return 'ui-components';
+            // Components UI - Split by domain for better code splitting
+            // FIX v24.2.1: Split ui-components (302KB) into smaller chunks
+            if (id.includes('/components/')) {
+              if (id.includes('/chat/')) return 'ui-chat';
+              if (id.includes('/audio/')) return 'ui-audio';
+              if (id.includes('/monitoring/')) return 'ui-monitoring';
+              if (id.includes('/layout/')) return 'ui-layout';
+              if (id.includes('/voice/')) return 'ui-voice';
+              if (id.includes('/experience/')) return 'ui-experience';
+              if (id.includes('/evolution/')) return 'ui-evolution';
+              return 'ui-common';
+            }
+            if (id.includes('/ui/')) {
+              return 'ui-primitives';
             }
           }
         },

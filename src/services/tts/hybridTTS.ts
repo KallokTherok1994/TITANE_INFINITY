@@ -65,11 +65,20 @@ interface TTSQueueItem {
 /**
  * Service TTS hybride
  */
+// ✨ v24.2.1: TTL cache for availability checks (30s)
+const AVAILABILITY_CACHE_TTL_MS = 30000;
+
+interface AvailabilityCache {
+  value: boolean;
+  timestamp: number;
+}
+
 class HybridTTSService {
   private speaking = false;
   private currentUtterance: SpeechSynthesisUtterance | null = null;
-  private parlerTTSAvailable: boolean | null = null;
-  private tauriAvailable: boolean | null = null;
+  // ✨ v24.2.1: TTL-based cache instead of permanent null-check
+  private parlerTTSCache: AvailabilityCache | null = null;
+  private tauriCache: AvailabilityCache | null = null;
 
   // [P0.4 ANTI-ECHO] Listeners pour événements TTS
   private eventListeners: Set<TTSEventListener> = new Set();
@@ -103,18 +112,31 @@ class HybridTTSService {
   }
 
   /**
+   * ✨ v24.2.1: Check if cache is still valid (within TTL)
+   */
+  private isCacheValid(cache: AvailabilityCache | null): boolean {
+    if (!cache) return false;
+    return Date.now() - cache.timestamp < AVAILABILITY_CACHE_TTL_MS;
+  }
+
+  /**
    * [v24.1 PARLER-TTS] Vérifie disponibilité Parler-TTS local
+   * ✨ v24.2.1: Uses 30s TTL cache instead of permanent cache
    */
   private async checkParlerTTSAvailable(): Promise<boolean> {
-    if (this.parlerTTSAvailable !== null) {
-      return this.parlerTTSAvailable;
+    // ✨ v24.2.1: Return cached value if within TTL
+    if (this.isCacheValid(this.parlerTTSCache) && this.parlerTTSCache) {
+      return this.parlerTTSCache.value;
     }
 
     try {
       const health = await parlerTTSBridge.healthCheck();
-      this.parlerTTSAvailable = health.status === 'healthy' && health.modelLoaded;
+      const available = health.status === 'healthy' && health.modelLoaded;
 
-      if (this.parlerTTSAvailable) {
+      // ✨ v24.2.1: Store with timestamp
+      this.parlerTTSCache = { value: available, timestamp: Date.now() };
+
+      if (available) {
         console.log('✅ TTS: Parler-TTS local available');
         console.log(
           `   Device: ${health.device}${health.gpuName ? ` (${health.gpuName})` : ''}`
@@ -123,49 +145,61 @@ class HybridTTSService {
       } else {
         console.warn('⚠️ TTS: Parler-TTS local unavailable or initializing');
       }
+
+      return available;
     } catch (error) {
-      this.parlerTTSAvailable = false;
+      // ✨ v24.2.1: Cache failure with shorter TTL (10s) to retry sooner
+      this.parlerTTSCache = {
+        value: false,
+        timestamp: Date.now() - AVAILABILITY_CACHE_TTL_MS + 10000,
+      };
       console.warn(
         '⚠️ TTS: Parler-TTS connection failed, falling back to other providers',
         error
       );
+      return false;
     }
-
-    return this.parlerTTSAvailable;
   }
 
   /**
    * Vérifie disponibilité Tauri Backend
+   * ✨ v24.2.1: Uses 30s TTL cache instead of permanent cache
    */
   private async checkTauriAvailable(): Promise<boolean> {
-    if (this.tauriAvailable !== null) {
-      return this.tauriAvailable;
+    // ✨ v24.2.1: Return cached value if within TTL
+    if (this.isCacheValid(this.tauriCache) && this.tauriCache) {
+      return this.tauriCache.value;
     }
 
     if (typeof window === 'undefined') {
-      this.tauriAvailable = false;
+      this.tauriCache = { value: false, timestamp: Date.now() };
       return false;
     }
 
     const env = detectEnvironment();
     if (!env.isTauri) {
-      this.tauriAvailable = false;
+      // ✨ v24.2.1: Long cache for non-Tauri environment (won't change)
+      this.tauriCache = { value: false, timestamp: Date.now() };
       return false;
     }
 
     try {
       await chatEngineHealthCheck();
-      this.tauriAvailable = true;
+      this.tauriCache = { value: true, timestamp: Date.now() };
       console.log('✅ TTS: Tauri backend available');
+      return true;
     } catch (error) {
-      this.tauriAvailable = false;
+      // ✨ v24.2.1: Cache failure with shorter TTL (10s) to retry sooner
+      this.tauriCache = {
+        value: false,
+        timestamp: Date.now() - AVAILABILITY_CACHE_TTL_MS + 10000,
+      };
       console.warn(
         '⚠️ TTS: Tauri backend unavailable, using Web Speech API fallback',
         error
       );
+      return false;
     }
-
-    return this.tauriAvailable;
   }
 
   /**
@@ -431,7 +465,8 @@ class HybridTTSService {
     console.log('⏹️ TTS: Stopping...');
 
     // v19.3.0: Arrêt Tauri via commande tts_stop (audio::commands)
-    if (this.tauriAvailable) {
+    // ✨ v24.2.1: Check cached value instead of property
+    if (this.tauriCache?.value) {
       try {
         await secureInvoke('tts_stop');
         console.log('✅ TTS: Tauri backend stopped');
@@ -615,10 +650,11 @@ class HybridTTSService {
 
   /**
    * Reset cache Tauri et Parler-TTS disponibilité
+   * ✨ v24.2.1: Clears TTL cache to force fresh checks
    */
   resetCache(): void {
-    this.parlerTTSAvailable = null;
-    this.tauriAvailable = null;
+    this.parlerTTSCache = null;
+    this.tauriCache = null;
   }
 
   /**
@@ -638,7 +674,7 @@ class HybridTTSService {
       console.log('[HybridTTS] ✅ Voice style updated successfully');
 
       // Reset cache pour forcer re-check
-      this.parlerTTSAvailable = null;
+      this.parlerTTSCache = null;
     } catch (error) {
       console.error('[HybridTTS] ❌ Failed to update voice style:', error);
       throw error;

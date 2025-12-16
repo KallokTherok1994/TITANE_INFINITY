@@ -313,7 +313,8 @@ impl PatternAnalyzer {
         }
 
         // Trier et limiter
-        predictions.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
+        // FIX: Handle NaN values safely to prevent panic
+        predictions.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
         predictions.dedup_by(|a, b| std::mem::discriminant(&a.0) == std::mem::discriminant(&b.0));
         predictions.truncate(count);
 

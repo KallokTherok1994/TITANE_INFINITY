@@ -180,7 +180,8 @@ impl IntentionDetector {
         scores.push((UserIntention::Frustration, frustration_score.min(1.0)));
 
         // Trouver l'intention avec le score le plus élevé
-        scores.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
+        // FIX: Handle NaN values safely to prevent panic
+        scores.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
 
         if let Some((intention, score)) = scores.first() {
             if *score > 0.2 {

@@ -459,7 +459,8 @@ impl ContextGraph {
             .collect();
 
         // Sort by weight descending
-        results.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
+        // FIX: Handle NaN values safely to prevent panic
+        results.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
         results
     }
 
@@ -491,7 +492,8 @@ impl ContextGraph {
         }
 
         let mut results: Vec<_> = expansions.into_iter().collect();
-        results.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
+        // FIX: Handle NaN values safely to prevent panic
+        results.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
         results
     }
 

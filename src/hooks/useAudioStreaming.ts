@@ -62,6 +62,19 @@ export function useAudioStreaming(
   const statsIntervalRef = useRef<number | null>(null);
   const isMountedRef = useRef(true);
 
+  // ✨ v24.2.1 FIX: Store callbacks in refs to prevent re-subscription on every render
+  const onStateChangeRef = useRef(options.onStateChange);
+  const onAudioChunkRef = useRef(options.onAudioChunk);
+
+  // Keep refs updated without triggering re-subscriptions
+  useEffect(() => {
+    onStateChangeRef.current = options.onStateChange;
+  }, [options.onStateChange]);
+
+  useEffect(() => {
+    onAudioChunkRef.current = options.onAudioChunk;
+  }, [options.onAudioChunk]);
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -72,36 +85,27 @@ export function useAudioStreaming(
     };
   }, []);
 
-  // Register state change listener
-  useEffect(() => {
-    if (!options.onStateChange) {
-      return;
-    }
-
-    const unsubscribe = audioStreamingService.onStateChange(options.onStateChange);
-    return unsubscribe;
-  }, [options.onStateChange]);
-
-  // Register audio chunk listener
-  useEffect(() => {
-    if (!options.onAudioChunk) {
-      return;
-    }
-
-    const unsubscribe = audioStreamingService.onAudioChunk(options.onAudioChunk);
-    return unsubscribe;
-  }, [options.onAudioChunk]);
-
-  // Update internal state based on service
+  // ✨ v24.2.1 FIX: Single unified state listener with stable ref-based callback
+  // This prevents re-subscription when parent component re-renders
   useEffect(() => {
     const unsubscribe = audioStreamingService.onStateChange(newState => {
       if (isMountedRef.current) {
         setState(newState);
+        // Call user callback via ref (stable reference)
+        onStateChangeRef.current?.(newState);
       }
     });
 
     return unsubscribe;
-  }, []);
+  }, []); // Empty deps - subscribe once, use ref for callback
+
+  // ✨ v24.2.1 FIX: Register audio chunk listener with stable ref
+  useEffect(() => {
+    const unsubscribe = audioStreamingService.onAudioChunk(chunk => {
+      onAudioChunkRef.current?.(chunk);
+    });
+    return unsubscribe;
+  }, []); // Empty deps - subscribe once
 
   // Start monitoring stats when streaming
   useEffect(() => {

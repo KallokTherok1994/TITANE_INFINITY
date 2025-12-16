@@ -13,6 +13,8 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import type { VisualState, StateVisualConfig } from '@/design-system/visual-states';
 import { TitaneVisualEngine } from '@/visual-engine/TitaneVisualEngine';
 
+// ✨ v24.2.1: Track mounted state for RAF cleanup
+
 export interface UseVisualStateReturn {
   state: VisualState;
   visuals: StateVisualConfig;
@@ -50,10 +52,13 @@ export function useVisualState(engine: TitaneVisualEngine | null): UseVisualStat
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [transitionProgress, setTransitionProgress] = useState(1);
   const rafId = useRef<number | null>(null);
+  // ✨ v24.2.1: Track mounted state to prevent RAF after unmount
+  const isMountedRef = useRef(true);
 
   // Update visuals on render loop
+  // ✨ v24.2.1: Check mounted state before scheduling RAF
   const updateVisuals = useCallback(() => {
-    if (!engine) return;
+    if (!engine || !isMountedRef.current) return;
 
     const currentVisuals = engine.getCurrentVisuals();
     const currentState = engine.getCurrentState();
@@ -65,30 +70,35 @@ export function useVisualState(engine: TitaneVisualEngine | null): UseVisualStat
     setTransitionProgress(progress);
     setIsTransitioning(transitioning);
 
-    // Continue updating if transitioning
-    if (transitioning) {
+    // Continue updating if transitioning AND still mounted
+    if (transitioning && isMountedRef.current) {
       rafId.current = requestAnimationFrame(updateVisuals);
     }
   }, [engine]);
 
   // Subscribe to engine events
+  // ✨ v24.2.1: Track mounted state for cleanup
   useEffect(() => {
+    isMountedRef.current = true;
     if (!engine) return;
 
     const handleStateChange = (newState: VisualState) => {
+      if (!isMountedRef.current) return;
       setStateValue(newState);
       updateVisuals();
     };
 
     const handleTransitionStart = () => {
+      if (!isMountedRef.current) return;
       setIsTransitioning(true);
       // Start update loop
-      if (rafId.current === null) {
+      if (rafId.current === null && isMountedRef.current) {
         rafId.current = requestAnimationFrame(updateVisuals);
       }
     };
 
     const handleTransitionComplete = () => {
+      if (!isMountedRef.current) return;
       setIsTransitioning(false);
       setTransitionProgress(1);
       updateVisuals();
@@ -102,6 +112,9 @@ export function useVisualState(engine: TitaneVisualEngine | null): UseVisualStat
     updateVisuals();
 
     return () => {
+      // ✨ v24.2.1: Mark unmounted before cleanup
+      isMountedRef.current = false;
+
       engine.off('visualStateChange', handleStateChange);
       engine.off('transitionStart', handleTransitionStart);
       engine.off('transitionComplete', handleTransitionComplete);

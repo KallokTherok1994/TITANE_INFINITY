@@ -15,7 +15,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import React, { useEffect, useState, Suspense, lazy } from 'react';
+import React, { useEffect, useState, Suspense, lazy, useMemo, useCallback } from 'react';
 import {
   BrowserRouter,
   Routes,
@@ -148,7 +148,8 @@ import { cognitiveLayoutEngine } from './engines/cognitive/cognitiveLayoutEngine
 // import './components/presence/MultimodalPresencePanel.css';
 
 // ✨ v∞.29-32 - Deep Psyche Engines (Super Prompts XXIX, XXX, XXXII, X)
-import { DeepPsychePanel as _DeepPsychePanel } from './components/psyche/DeepPsychePanel';
+// ✨ v24.2.1 PERF: Removed unused DeepPsychePanel import (~22KB savings)
+// import { DeepPsychePanel as _DeepPsychePanel } from './components/psyche/DeepPsychePanel';
 // ✨ PHASE 4.2 - Lazy load psyche engines (defer ~300KB) - Typed stubs
 interface EngineStub {
   start: () => void;
@@ -160,12 +161,14 @@ const _embodiedPresenceEngine: EngineStub = { start: () => {}, stop: () => {} };
 import { neuralVoiceBlendingEngine as _neuralVoiceBlendingEngine } from './engines/voice/neuralVoiceBlendingEngine';
 
 // ✨ v∞.33 - Presence OS Panel (Super Prompt XII - TITANE∞ PRESENCE OS 🌌)
-import { PresenceOSPanel as _PresenceOSPanel } from './components/presence/PresenceOSPanel';
-import './components/presence/PresenceOSPanel.css';
+// ✨ v24.2.1 PERF: Removed unused PresenceOSPanel import (~19KB savings)
+// import { PresenceOSPanel as _PresenceOSPanel } from './components/presence/PresenceOSPanel';
+// import './components/presence/PresenceOSPanel.css';
 
 // ✨ v∞.34 - Physiological Panel (Super Prompts XI + XIII - HOLOPHONIC + INTEROCEPTION 🌬️)
-import { PhysiologicalPanel as _PhysiologicalPanel } from './components/physiological/PhysiologicalPanel';
-import './components/physiological/PhysiologicalPanel.css';
+// ✨ v24.2.1 PERF: Removed unused PhysiologicalPanel import (~22KB savings)
+// import { PhysiologicalPanel as _PhysiologicalPanel } from './components/physiological/PhysiologicalPanel';
+// import './components/physiological/PhysiologicalPanel.css';
 
 // ✨ v∞.31-33 - Expression Engines (SUPER PROMPTS XXXI-XXXIII + Aura Ultra)
 // ✨ PHASE 4.2 - Lazy load expression engines (defer ~500KB) - Typed stubs
@@ -586,80 +589,118 @@ const AppRouter: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [livingEngines.state.initialized]);
 
+  // ✨ v24.2.1: Memoized sidebar items to prevent re-renders
   // Sidebar items configuration - v∞.19.3 COMPLETE
-  const sidebarItems = [
-    // ═══ PRINCIPAL ═══
-    { id: '/', label: 'Tableau de bord', icon: '📊' },
-    { id: '/chat', label: 'Chat IA', icon: '💬', badge: 'OMEGA' },
-    { id: '/cognitive', label: 'État Cognitif', icon: '🧠' },
-    { id: '/progression', label: 'Progression', icon: '⚡' },
+  const sidebarItems = useMemo(
+    () => [
+      // ═══ PRINCIPAL ═══
+      { id: '/', label: 'Tableau de bord', icon: '📊' },
+      { id: '/chat', label: 'Chat IA', icon: '💬', badge: 'OMEGA' },
+      { id: '/cognitive', label: 'État Cognitif', icon: '🧠' },
+      { id: '/progression', label: 'Progression', icon: '⚡' },
 
-    // ✨ v24.2 - NOUVEAU CENTRE TEMPS UNIFIÉ
-    {
-      id: '/temporal-center',
-      label: 'Centre Temps & Navigation',
-      icon: '⏳',
-      badge: 'v24.2',
+      // ✨ v24.2 - NOUVEAU CENTRE TEMPS UNIFIÉ
+      {
+        id: '/temporal-center',
+        label: 'Centre Temps & Navigation',
+        icon: '⏳',
+        badge: 'v24.2',
+      },
+
+      // Anciens (à migrer vers Centre Temps)
+      { id: '/agenda', label: 'Agenda', icon: '📅', badge: 'legacy' },
+      { id: '/camera', label: 'Vision', icon: '📷', badge: 'v∞' },
+
+      // ═══ CENTRES UNIFIÉS ═══
+      { id: '/one-core', label: 'ONE CORE', icon: '🎯', badge: 'OPUS#6' },
+      { id: '/system-center', label: 'Centre Système', icon: '⚙️' },
+      { id: '/configuration', label: 'Configuration Hub', icon: '🎛️', badge: 'v19.5.2' },
+      { id: '/audio-center', label: 'Audio & Voix', icon: '🔊', badge: 'v19.3' },
+      { id: '/design-center', label: 'Design & Apparence', icon: '🎨' },
+      { id: '/governance-center', label: 'Gouvernance', icon: '🛡️' },
+      { id: '/qa-monitoring', label: 'QA & Monitoring', icon: '🧪', badge: 'OPUS#7' },
+      { id: '/developer-mode', label: 'Mode Développeur', icon: '💻', badge: 'OPUS#10' },
+
+      // ═══ CENTRES COGNITIFS ═══
+      {
+        id: '/evolution-center',
+        label: 'Évolution Cognitive',
+        icon: '🧬',
+        badge: 'OPUS#4',
+      },
+
+      // ✨ v24.1 - NOUVEAUX CENTRES UNIFIÉS (10 modules → 2 centres)
+      {
+        id: '/orchestration-intelligence',
+        label: 'Orchestration & Intelligence',
+        icon: '🔥',
+        badge: 'v24.1',
+      },
+      {
+        id: '/identity-memory-evolution',
+        label: 'Identity & Memory Evolution',
+        icon: '🧠',
+        badge: 'v24.1',
+      },
+
+      // Anciens centres (à migrer vers les nouveaux)
+      {
+        id: '/orchestration-center',
+        label: 'Orchestration',
+        icon: '🎛️',
+        badge: 'OPUS#5',
+      },
+      { id: '/meta-center', label: 'Meta Orchestrator', icon: '🌐', badge: 'OPUS#18' },
+      { id: '/hyper-center', label: 'Hyper Intelligence', icon: '✨', badge: 'OPUS#20' },
+      { id: '/quantum-center', label: 'Quantum Layer', icon: '⚛️', badge: 'OPUS#17' },
+      { id: '/identity-center', label: 'Identité Système', icon: '🎭', badge: 'OPUS#15' },
+      {
+        id: '/memory-evolution',
+        label: 'Mémoire Évolutive',
+        icon: '🧠',
+        badge: 'OPUS#14',
+      },
+      { id: '/reality-center', label: 'Reality Renderer', icon: '🌌', badge: 'OPUS#19' },
+
+      // ═══ MOTEURS ═══
+      { id: '/multi-ai', label: 'Système Multi-IA', icon: '🤖' },
+      { id: '/helios', label: 'Helios', icon: '☀️' },
+      { id: '/nexus', label: 'Nexus', icon: '🔗' },
+      { id: '/harmonia', label: 'Harmonia', icon: '🎵' },
+      { id: '/memory', label: 'Mémoire', icon: '💾' },
+    ],
+    []
+  ); // Empty deps = stable reference
+
+  // ✨ v24.2.1: Memoized onItemClick to prevent re-renders
+  const handleSidebarClick = useCallback(
+    (item: { id: string }) => {
+      navigate(item.id);
     },
+    [navigate]
+  );
 
-    // Anciens (à migrer vers Centre Temps)
-    { id: '/agenda', label: 'Agenda', icon: '📅', badge: 'legacy' },
-    { id: '/camera', label: 'Vision', icon: '📷', badge: 'v∞' },
+  // ✨ v24.2.1: Stable callback for XP bar navigation
+  const handleXPBarClick = useCallback(() => {
+    navigate('/progression');
+  }, [navigate]);
 
-    // ═══ CENTRES UNIFIÉS ═══
-    { id: '/one-core', label: 'ONE CORE', icon: '🎯', badge: 'OPUS#6' },
-    { id: '/system-center', label: 'Centre Système', icon: '⚙️' },
-    { id: '/configuration', label: 'Configuration Hub', icon: '🎛️', badge: 'v19.5.2' },
-    { id: '/audio-center', label: 'Audio & Voix', icon: '🔊', badge: 'v19.3' },
-    { id: '/design-center', label: 'Design & Apparence', icon: '🎨' },
-    { id: '/governance-center', label: 'Gouvernance', icon: '🛡️' },
-    { id: '/qa-monitoring', label: 'QA & Monitoring', icon: '🧪', badge: 'OPUS#7' },
-    { id: '/developer-mode', label: 'Mode Développeur', icon: '💻', badge: 'OPUS#10' },
-
-    // ═══ CENTRES COGNITIFS ═══
-    {
-      id: '/evolution-center',
-      label: 'Évolution Cognitive',
-      icon: '🧬',
-      badge: 'OPUS#4',
-    },
-
-    // ✨ v24.1 - NOUVEAUX CENTRES UNIFIÉS (10 modules → 2 centres)
-    {
-      id: '/orchestration-intelligence',
-      label: 'Orchestration & Intelligence',
-      icon: '🔥',
-      badge: 'v24.1',
-    },
-    {
-      id: '/identity-memory-evolution',
-      label: 'Identity & Memory Evolution',
-      icon: '🧠',
-      badge: 'v24.1',
-    },
-
-    // Anciens centres (à migrer vers les nouveaux)
-    { id: '/orchestration-center', label: 'Orchestration', icon: '🎛️', badge: 'OPUS#5' },
-    { id: '/meta-center', label: 'Meta Orchestrator', icon: '🌐', badge: 'OPUS#18' },
-    { id: '/hyper-center', label: 'Hyper Intelligence', icon: '✨', badge: 'OPUS#20' },
-    { id: '/quantum-center', label: 'Quantum Layer', icon: '⚛️', badge: 'OPUS#17' },
-    { id: '/identity-center', label: 'Identité Système', icon: '🎭', badge: 'OPUS#15' },
-    { id: '/memory-evolution', label: 'Mémoire Évolutive', icon: '🧠', badge: 'OPUS#14' },
-    { id: '/reality-center', label: 'Reality Renderer', icon: '🌌', badge: 'OPUS#19' },
-
-    // ═══ MOTEURS ═══
-    { id: '/multi-ai', label: 'Système Multi-IA', icon: '🤖' },
-    { id: '/helios', label: 'Helios', icon: '☀️' },
-    { id: '/nexus', label: 'Nexus', icon: '🔗' },
-    { id: '/harmonia', label: 'Harmonia', icon: '🎵' },
-    { id: '/memory', label: 'Mémoire', icon: '💾' },
-  ];
+  // ✨ v24.2.1: Memoized sidebar items with active state
+  const sidebarItemsWithActive = useMemo(
+    () =>
+      sidebarItems.map(item => ({
+        ...item,
+        active: item.id === location.pathname,
+      })),
+    [sidebarItems, location.pathname]
+  );
 
   // ✨ v19.5.2 - Handler onboarding completion
-  const handleOnboardingComplete = async () => {
+  // ✨ v24.2.1: useCallback for stable reference
+  const handleOnboardingComplete = useCallback(async () => {
     console.log('✅ [ONBOARDING] User completed onboarding flow');
     setOnboardingComplete(true);
-  };
+  }, []);
 
   // ✨ v19.5.2 - Show loading while checking onboarding status
   if (checkingOnboarding) {
@@ -689,13 +730,8 @@ const AppRouter: React.FC = () => {
     <AppShell
       sidebar={
         <Sidebar
-          items={sidebarItems.map(item => ({
-            ...item,
-            active: item.id === location.pathname,
-          }))}
-          onItemClick={item => {
-            navigate(item.id);
-          }}
+          items={sidebarItemsWithActive}
+          onItemClick={handleSidebarClick}
           collapsed={sidebarCollapsed}
           header={
             <>
@@ -708,13 +744,7 @@ const AppRouter: React.FC = () => {
                 />
               </div>
               {/* Compact XP Bar */}
-              {!sidebarCollapsed && (
-                <CompactXPBar
-                  onClick={() => {
-                    navigate('/progression');
-                  }}
-                />
-              )}
+              {!sidebarCollapsed && <CompactXPBar onClick={handleXPBarClick} />}
             </>
           }
         />

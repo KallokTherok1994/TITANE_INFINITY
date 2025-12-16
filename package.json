@@ -8,6 +8,8 @@
     "dev": "npm run dev:tauri",
     "dev:tauri": "tauri dev",
     "build": "vite build",
+    "build:compressed": "vite build && npm run compress",
+    "compress": "node scripts/brotli-compress.mjs",
     "build:watch": "vite build --watch",
     "preview": "echo '🔒 TAURI-ONLY MODE' && exit 1",
     "tauri": "tauri",

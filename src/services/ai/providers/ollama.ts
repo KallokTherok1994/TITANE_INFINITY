@@ -539,11 +539,27 @@ export const ollamaProvider: AIProvider = {
       const decoder = new TextDecoder();
       let buffer = '';
 
-      while (true) {
+      // ✨ v24.2.1: Add timeout and iteration limits to prevent infinite loops
+      const STREAM_TIMEOUT_MS = 60000; // 60s max stream duration
+      const MAX_ITERATIONS = 50000; // Safety limit
+      const streamStart = Date.now();
+      let iterations = 0;
+
+      while (iterations < MAX_ITERATIONS) {
+        // Check timeout
+        if (Date.now() - streamStart > STREAM_TIMEOUT_MS) {
+          logger.warn('Ollama stream timeout reached', {
+            iterations,
+            elapsed: Date.now() - streamStart,
+          });
+          break;
+        }
+
         const { done, value } = await reader.read();
 
         if (done) break;
 
+        iterations++;
         buffer += decoder.decode(value, { stream: true });
         const lines = buffer.split('\n');
         buffer = lines.pop() || '';

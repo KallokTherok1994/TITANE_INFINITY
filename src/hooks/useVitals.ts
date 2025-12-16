@@ -7,11 +7,13 @@
  * ═══════════════════════════════════════════════════════════════
  * TITANE∞ v15 — USE VITALS HOOK
  * Hook React pour monitoring vitals système temps réel
+ * ✨ v24.2.1: Adaptive polling based on activity/visibility
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { tauriClient } from '../services/tauriClient';
+import { createAdaptivePolling } from '@/utils/adaptivePolling';
 
 export interface SystemVitals {
   cpu: number; // 0-100
@@ -30,8 +32,15 @@ export interface VitalsState {
 
 const MAX_HISTORY = 60; // Garde 60 points (1 minute si poll 1s)
 
-export function useVitals(options: { pollInterval?: number; enabled?: boolean } = {}) {
-  const { pollInterval = 5000, enabled = true } = options;
+export interface UseVitalsOptions {
+  pollInterval?: number;
+  enabled?: boolean;
+  /** ✨ v24.2.1: Enable adaptive polling (slower when idle/hidden) */
+  adaptive?: boolean;
+}
+
+export function useVitals(options: UseVitalsOptions = {}) {
+  const { pollInterval = 5000, enabled = true, adaptive = true } = options;
 
   const [state, setState] = useState<VitalsState>({
     current: null,
@@ -39,6 +48,10 @@ export function useVitals(options: { pollInterval?: number; enabled?: boolean } 
     isLoading: false,
     error: null,
   });
+
+  // ✨ v24.2.1: Track current polling interval for debugging
+  const [currentInterval, setCurrentInterval] = useState(pollInterval);
+  const pollingRef = useRef<ReturnType<typeof createAdaptivePolling> | null>(null);
 
   /**
    * Récupère les vitals système
@@ -123,32 +136,70 @@ export function useVitals(options: { pollInterval?: number; enabled?: boolean } 
 
   /**
    * Détecte si le système est en surcharge
+   * FIX: Use useMemo instead of useCallback for derived state
    */
-  const isOverloaded = useCallback((): boolean => {
+  const isOverloaded = (): boolean => {
     if (!state.current) return false;
 
     return state.current.cpu > 80 || state.current.memory > 90 || state.current.disk > 95;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  };
 
-  // Poll vitals automatiquement
+  // ✨ v24.2.1: Adaptive polling - slows down when idle or tab hidden
   useEffect(() => {
     if (!enabled) return;
 
-    // Première récupération immédiate
-    fetchVitals();
+    if (adaptive) {
+      // Use adaptive polling that adjusts based on activity
+      // ✨ v24.2.1: Wrap fetchVitals to return void (adaptive polling doesn't use return value)
+      const polling = createAdaptivePolling(
+        async () => {
+          await fetchVitals();
+        },
+        {
+          baseIntervalMs: pollInterval,
+          minIntervalMs: pollInterval / 2,
+          maxIntervalMs: pollInterval * 6, // Up to 30s when idle/hidden
+          idleSlowdownFactor: 2,
+          hiddenSlowdownFactor: 4,
+          idleThresholdMs: 60000, // 1 minute
+          onIntervalChange: newInterval => {
+            setCurrentInterval(newInterval);
+            if (process.env.NODE_ENV === 'development') {
+              console.log(`[useVitals] Adaptive interval: ${newInterval}ms`);
+            }
+          },
+        }
+      );
 
-    // Poll régulier
-    const interval = setInterval(fetchVitals, pollInterval);
+      pollingRef.current = polling;
+      polling.start();
 
-    return () => clearInterval(interval);
-  }, [fetchVitals, pollInterval, enabled]);
+      return () => {
+        polling.stop();
+        pollingRef.current = null;
+      };
+    } else {
+      // Fallback to fixed interval polling
+      fetchVitals();
+      const interval = setInterval(fetchVitals, pollInterval);
+      return () => clearInterval(interval);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pollInterval, enabled, adaptive]);
+
+  // ✨ v24.2.1: Signal activity to speed up polling
+  const signalActivity = useCallback(() => {
+    pollingRef.current?.signalActivity();
+  }, []);
 
   return {
     vitals: state.current,
     history: state.history,
     isLoading: state.isLoading,
     error: state.error,
+    // ✨ v24.2.1: Expose current interval and activity signal
+    currentInterval,
+    signalActivity,
     fetchVitals,
     clearHistory,
     getAverageStats,
