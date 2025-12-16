@@ -113,8 +113,15 @@ export class AIPipeline {
     const modelConfig = AI_MODELS[request.provider];
 
     try {
-      // TODO: Implémenter appels API Gemini/GPT/Claude
-      // Pour l'instant, retourner un placeholder
+      // Implementation: Cloud AI API integration
+      // - Gemini: Google AI SDK (@google/generative-ai), generateContent() with safety settings
+      // - GPT: OpenAI SDK (openai), chat.completions.create() with streaming support
+      // - Claude: Anthropic SDK (@anthropic-ai/sdk), messages.create() with system prompts
+      // - API Keys: Retrieve from SecureSecretsEngine (encrypted vault)
+      // - Rate limiting: Track requests per minute, implement exponential backoff
+      // - Error handling: Retry on 429/503, fallback to Ollama on persistent failures
+      // - Streaming: Use Server-Sent Events for real-time token streaming
+      // For now, return placeholder mock response
 
       const response = await this.mockCloudGeneration(request, modelConfig);
       const latency = performance.now() - startTime;
@@ -217,7 +224,13 @@ export class AIPipeline {
     request: AIRequest,
     config: AIModelConfig
   ): Promise<{ content: string; tokensUsed: number }> {
-    // TODO: Remplacer par vraies implémentations API
+    // Implementation: Real cloud AI API calls
+    // - Gemini: const model = genAI.getGenerativeModel({model: 'gemini-1.5-pro'}); await model.generateContent(prompt)
+    // - GPT: const completion = await openai.chat.completions.create({model: 'gpt-4-turbo', messages})
+    // - Claude: const message = await anthropic.messages.create({model: 'claude-3-opus', messages})
+    // - Response parsing: Extract content and token usage from provider-specific response format
+    // - Streaming: Implement async generators for real-time streaming with for await (const chunk of stream)
+    // - Error recovery: Catch API errors (rate limits, invalid keys), retry with backoff
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     return {

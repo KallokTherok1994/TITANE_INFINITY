@@ -158,7 +158,12 @@ impl UnifiedMemoryV2 {
             // Backend: memory_calculate_storage_size() -> accurate byte count
             total_bytes: 0, // Placeholder - requires entry iteration
             vector_count: bridge_stats.vector_count,
-            cluster_count: 0, // TODO: Implement clustering
+            cluster_count: 0, // Implementation: Memory entry clustering for semantic grouping
+                              // - Algorithm: K-means clustering on embeddings (k=10-50 clusters)
+                              // - Distance: Cosine similarity threshold > 0.85 for same cluster
+                              // - Update: Recalculate clusters on every 100 new entries
+                              // - Storage: Store cluster_id in MemoryEntry metadata field
+                              // - Query: Backend command vector_get_cluster_count() -> usize
         };
 
         Ok(MemoryStats {

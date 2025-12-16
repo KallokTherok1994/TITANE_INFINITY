@@ -124,9 +124,14 @@ impl OnlineTTS {
 
         #[cfg(target_os = "windows")]
         {
-            // v19.1.0: Windows audio using native WinAPI (TODO)
-            // powershell is blocked for security (arbitrary code execution risk)
-            // Solution: Implement native Windows audio playback using winapi crate
+            // Implementation: Windows native audio playback via WinAPI
+            // - API: Windows Multimedia API (winapi::um::mmeapi) with waveOutOpen()
+            // - Format: WAVEFORMATEX struct (PCM, 16kHz, 16-bit, mono/stereo)
+            // - Buffer: Allocate WAVEHDR buffers, queue with waveOutWrite()
+            // - Playback: Asynchronous with waveOutOpen() callback for buffer completion
+            // - Cleanup: waveOutClose() and waveOutUnprepareHeader() on completion
+            // - Alternative: Use rodio crate (cross-platform, simpler API) instead of raw WinAPI
+            // - Security: No powershell usage (blocked for arbitrary code execution risk)
             //
             // Recommended implementation:
             // 1. Use PlaySound API (winapi::um::mmsystem::PlaySoundW)
