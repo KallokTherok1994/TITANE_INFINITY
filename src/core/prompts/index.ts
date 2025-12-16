@@ -140,6 +140,15 @@ export { promptProfiles };
 export { promptRoles };
 export { promptPresets };
 export { buildMemoryPrompt, getMemoryTemplate, listMemoryTemplates };
+export {
+  FULL_CONSTITUTIONAL_PROMPT,
+  requiresClarityAudit,
+  detectSaturation,
+  checkTruthConfidence,
+  generateProtectionModeResponse,
+  createClarityAuditTemplate,
+  CONSTITUTIONAL_CONFIG,
+} from './constitution';
 export type {
   TitanePromptProfile,
   PromptContext,
@@ -153,3 +162,4 @@ export type {
   StructuredMemoryEntry,
   MemoryWriteTarget,
 } from './memoryTemplates';
+export type { ClarityAuditResult } from './constitution';

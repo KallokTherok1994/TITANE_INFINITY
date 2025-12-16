@@ -15,6 +15,13 @@ import { DEFAULT_AI_CONFIG } from './types';
 import type { AIMessage, AIResponse, AIConfig, AIProviderName } from './types';
 import { buildSystemPrompt as buildTitanePrompt } from '@/core/prompts';
 import type { PromptContext } from '@/core/prompts';
+import {
+  requiresClarityAudit,
+  detectSaturation,
+  checkTruthConfidence,
+  generateProtectionModeResponse,
+  createClarityAuditTemplate,
+} from '@/core/prompts';
 import { aiOrchestrator } from './orchestrator';
 import { memoryIntegration } from './memoryIntegration';
 import type { MemoryContext } from './memoryIntegration';
@@ -223,6 +230,54 @@ class ChatEngineOmega {
 
       logger.debug('Validated', { length: validatedMessage.length });
 
+      // ═══ PHASE 1.1.5: CONSTITUTIONAL CHECKS (TITANE∞ v1.0) ═══
+      pipelineSteps.push('constitutional-checks');
+
+      // CONSTITUTION LAW #8: Saturation Detection (Priority Override)
+      const saturationDetected = detectSaturation(validatedMessage, history);
+      if (saturationDetected) {
+        logger.warn('⚠️ SATURATION DETECTED — Activating Protection Mode (Law #8)');
+        pipelineSteps.push('protection-mode-activated');
+
+        const saturationSigns = ['fatigue', 'surcharge', 'urgence'];
+        const protectionResponse = generateProtectionModeResponse(saturationSigns);
+
+        return {
+          content: protectionResponse,
+          provider: 'titane-constitutional',
+          model: 'protection-mode-v1.0',
+          timestamp: Date.now(),
+          mode: finalConfig.mode,
+          contextUsed: ['constitutional-law-8'],
+          suggestions: [
+            'Prendre une pause (15-30 min)',
+            'Simplifier la demande',
+            'Reporter décisions complexes',
+          ],
+          omegaMetadata: {
+            pipelineSteps,
+            validationScore: 1.0,
+            autoHealed: true,
+            failureHandled: false,
+            processingTime: Date.now() - pipelineStartTime,
+            constitutionalProtection: 'law-8-saturation',
+          },
+        };
+      }
+
+      // CONSTITUTION LAW #2: Clarity Audit Check
+      const needsClarityAudit = requiresClarityAudit(validatedMessage);
+      if (needsClarityAudit) {
+        logger.info('📋 Clarity Audit required (Law #2) — Complex request detected');
+        pipelineSteps.push('clarity-audit-flagged');
+        // Note: Audit sera intégré dans le system prompt, pas bloquant
+      }
+
+      logger.debug('Constitutional checks complete', {
+        saturation: saturationDetected,
+        clarityAudit: needsClarityAudit,
+      });
+
       // Generate or retrieve conversation ID
       const conversation_id =
         this.getConversationId(finalConfig.mode) ||
@@ -325,6 +380,22 @@ class ChatEngineOmega {
       // Build system prompt with cognitive context
       let systemPrompt = this.buildSystemPrompt(modeConfig, context, promptContext, '');
 
+      // CONSTITUTION LAW #2: Inject Clarity Audit if needed
+      if (needsClarityAudit) {
+        const clarityTemplate = createClarityAuditTemplate(validatedMessage);
+        systemPrompt = `${systemPrompt}
+
+═══════════════════════════════════════════════════════════════════
+⚠️ CLARITY AUDIT REQUIS (Constitution Loi #2)
+═══════════════════════════════════════════════════════════════════
+
+${clarityTemplate}
+
+OBLIGATION: Réponds d'abord au Clarity Audit, PUIS fournis ta réponse principale.
+Format: [Audit complet] + [Réponse utilisateur]
+`;
+      }
+
       // Inject cognitive context (memories + goals + facts)
       if (cognitiveContext.trim().length > 0) {
         systemPrompt = `${systemPrompt}\n\n${cognitiveContext}`;
@@ -381,6 +452,19 @@ class ChatEngineOmega {
       }
 
       logger.debug('Orchestrator response received');
+
+      // ═══ PHASE 1.4.5: CONSTITUTIONAL TRUTH CHECK (LAW #10) ═══
+      pipelineSteps.push('truth-check');
+      logger.debug('Step 1.4.5: Truth confidence check (Law #10)...');
+
+      const truthCheck = checkTruthConfidence(response.content);
+      if (truthCheck.requiresDisclaimer && truthCheck.certainty < 80) {
+        logger.warn(`⚠️ Low certainty detected: ${truthCheck.certainty}%`);
+        const disclaimer = `\n\n---\n⚠️ **Note de vérité** (Constitution Loi #10): Niveau de certitude ${truthCheck.certainty}%. Si tu as besoin d'informations critiques vérifiées, consulte des sources officielles ou experts humains.`;
+        response.content = response.content + disclaimer;
+        autoHealed = true;
+        pipelineSteps.push('truth-disclaimer-added');
+      }
 
       // ═══ PHASE 1.5: VALIDATION NEXUS & SENTINEL ═══
       pipelineSteps.push('nexus-sentinel-validation');
