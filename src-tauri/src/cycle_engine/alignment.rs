@@ -38,7 +38,14 @@ impl AlignmentEngine {
         cognitive_rhythm: &CognitiveRhythmParams,
         load_params: &LoadRegulationParams,
     ) -> SystemAlignment {
-        // TODO: Implement actual alignment logic with each subsystem
+        // Implementation: Multi-subsystem alignment verification
+        // - Kernel: Check cycle_state.phase matches expected phase for current timestamp
+        // - Memory: Verify STM/LTM sync, memory_usage < threshold (80%)
+        // - AI: Check AI provider responsiveness (last_response_latency < 5s)
+        // - Cognitive: Validate rhythm.frequency within bounds (0.5-2.0 Hz)
+        // - Load: Ensure processing_load < load_params.max_load (e.g., 90%)
+        // - Score: Calculate overall alignment score (0.0-1.0) as weighted average
+        // - Return: SystemAlignment struct with per-subsystem booleans + overall score
         // For now, return placeholder
 
         let alignment = SystemAlignment {

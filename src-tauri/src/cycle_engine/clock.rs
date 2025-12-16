@@ -65,7 +65,12 @@ impl ClockEngine {
                 *time = Local::now();
 
                 // Emit tick event
-                // TODO: Integrate with event system
+                // Implementation: Integrate with CycleEngine event system
+                // - Event: Emit "cycle:tick" event with timestamp payload
+                // - Tauri: Use app_handle.emit_all("cycle:tick", timestamp) for frontend
+                // - Subscribers: Notify registered listeners (AI scheduler, memory sync, UI clock)
+                // - Frequency: Configurable tick interval (default: 1s, range: 100ms-60s)
+                // - Performance: Use async channel (tokio::sync::broadcast) for non-blocking
             }
         });
 

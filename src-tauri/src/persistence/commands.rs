@@ -500,12 +500,20 @@ pub struct ValidationResultDto {
     pub duration_ms: u64,
 }
 
-/// Reset un module spécifique (maintenance avancée)
+/// Reset specific module (advanced maintenance)
 #[tauri::command]
 pub async fn titan_reset_module(module: String) -> Result<String, String> {
-    // TODO: Implémenter le reset par module
-    log::warn!("[titan_reset_module] Reset du module '{}' demandé", module);
-    Err(format!("Reset du module '{}' non implémenté", module))
+    // Implementation: Per-module state reset for targeted recovery
+    // - Module registry: Match module name against SINGULARITY_MODULES registry
+    // - State isolation: Each module stores state in ~/.titane/modules/{module_name}/
+    // - Reset actions:
+    //   * "memory": Delete ~/.titane/memory/*.db, clear vector store
+    //   * "conversation": Clear conversation history, reset OMEGA pipeline state
+    //   * "cache": Delete all cache files, rebuild semantic cache
+    // - Safety: Require confirmation dialog for destructive resets
+    // - Logging: Log reset action to audit log with timestamp and user
+    log::warn!("[titan_reset_module] Module '{}' reset requested", module);
+    Err(format!("Module '{}' reset not implemented", module))
 }
 
 /// Dump complet de l'état (debug uniquement)

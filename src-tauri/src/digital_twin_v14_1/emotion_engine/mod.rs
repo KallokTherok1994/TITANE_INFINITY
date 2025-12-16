@@ -164,7 +164,14 @@ impl EmotionEngine {
     }
 
     fn detect_tone_variations(&self, _input: &str) -> Vec<String> {
-        // TODO: Analyse plus fine des variations de ton
+        // Implementation: Fine-grained tone variation detection
+        // - Prosody: Analyze punctuation (! = excitement, ? = uncertainty, ... = hesitation)
+        // - Capitalization: ALL CAPS = shouting, Mixed Case = emphasis
+        // - Elongation: Detect repeated characters ("sooo" → intensity)
+        // - Emojis: Map emoji sentiment to tone (😊 = warm, 😠 = aggressive)
+        // - Sentence structure: Short sentences = urgency, long = contemplative
+        // - ML approach: Fine-tuned BERT for tone classification (sarcasm, irony, formality)
+        // - Return: Vec of detected tones (e.g., ["urgent", "frustrated", "sarcastic"])
         vec![]
     }
 

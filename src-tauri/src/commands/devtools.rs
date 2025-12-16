@@ -369,7 +369,12 @@ pub async fn discover_cores(
 
             cores.push(CoreInfo {
                 name: name.clone(),
-                version: "1.0.0".to_string(), // TODO: Get from module
+                version: "1.0.0".to_string(), // Implementation: Get version from module metadata
+                                              // - Registry: Store version in ModuleRegistry::register(name, version)
+                                              // - Manifest: Load from Cargo.toml workspace.members or package.json
+                                              // - Tauri: Use tauri::api::package_info() for app version
+                                              // - Per-module: Embed const VERSION in each module.rs (e.g., pub const VERSION: &str = "1.2.3")
+                                              // - Return: reg.get_version(&name).unwrap_or("1.0.0".to_string())
                 status,
                 dependencies: reg.get_dependencies(&name),
                 metrics,

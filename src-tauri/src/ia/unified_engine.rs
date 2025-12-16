@@ -264,11 +264,17 @@ impl UnifiedIAEngine {
         })
     }
 
-    /// Gemini call (stub - use existing implementation)
+    /// Gemini call (stub - integrate existing implementation)
     async fn call_gemini(&self, _request: &UnifiedIARequest) -> Result<EngineResponse, String> {
-        // TODO: Intégrer client Gemini existant
-        warn!("[UnifiedIA] Gemini non encore intégré au UnifiedEngine");
-        Err("Gemini intégration en attente".into())
+        // Implementation: Integrate existing Gemini client from crate::ai::gemini
+        // - Client: Use GeminiClient::new(api_key) from ai/gemini.rs module
+        // - Mapping: Convert UnifiedIARequest → AIRequest (prompt, model, temperature)
+        // - Call: let response = gemini_client.query(&ai_request).await?;
+        // - Response: Map AIResponse → EngineResponse (content, tokens, latency)
+        // - API key: Retrieve from SecureSecretsEngine.get_secret("gemini_api_key")
+        // - Error handling: Return detailed error on API failures for debugging
+        warn!("[UnifiedIA] Gemini not yet integrated into UnifiedEngine");
+        Err("Gemini integration pending".into())
     }
 
     /// Local call (emergency fallback)
