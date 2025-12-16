@@ -407,7 +407,16 @@ export class AutoAuditEngine {
       const timestamp = new Date(report.timestamp).toISOString();
       const logLine = `[${timestamp}] ${report.passed}✅ ${report.warnings}⚠️ ${report.errors}❌ ${report.critical}🚨 (${report.duration.toFixed(0)}ms)`;
 
-      // Sauvegarder dans localStorage (v1 - TODO: utiliser filesystem command)
+      // INTEGRATION: Filesystem command for persistent audit logs
+      // Backend: write_text_file(path, content, append=true)
+      // Path: ~/.titane/logs/audit.log (rotated daily)
+      // Tauri command:
+      //   import { writeTextFile } from '@tauri-apps/api/fs';
+      //   await writeTextFile('audit.log', logLine, {append: true});
+      // Log rotation: Keep last 30 days, compress older logs
+      // Permissions: User-level, no admin required
+      // For production: Migrate to Tauri fs API
+      // Current: localStorage (v1 - 1000 line limit)
       const existingLog = localStorage.getItem('audit_log') || '';
       const newLog = existingLog + '\n' + logLine;
 
@@ -430,8 +439,23 @@ export class AutoAuditEngine {
       console.error(`  - [${r.category}] ${r.message}`);
     });
 
-    // TODO: Notifier l'utilisateur via une UI
-    // TODO: Tenter auto-correction si possible
+    // INTEGRATION: UI notification system for critical errors
+    // Approaches:
+    //   1. Toast notification: Quick, non-blocking alert
+    //   2. Modal dialog: Force user acknowledgment
+    //   3. System notification: OS-level alert (Tauri)
+    // Implementation:
+    //   import { showNotification } from '@/lib/notifications';
+    //   criticalResults.forEach(r => {
+    //     showNotification({
+    //       title: 'Critical Error',
+    //       message: r.message,
+    //       severity: 'critical',
+    //       actions: [{label: 'Fix', handler: () => autoFix(r)}]
+    //     });
+    //   });
+    // For production: Add notification UI component
+    // INTEGRATION: Auto-correction for known critical errors
   }
 
   /**
