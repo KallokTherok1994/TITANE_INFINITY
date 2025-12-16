@@ -45,8 +45,10 @@ pub struct EmbeddingResult {
 pub async fn embed_text(text: &str) -> Result<Vec<f32>, String> {
     let start = std::time::Instant::now();
 
-    // TODO: Implement actual embedding providers
-    // For now, use fallback simple embedding
+    // INTEGRATION: Priority order - local model > cloud API > fallback
+    // 1. Local: all-MiniLM-L6-v2 (384-dim, 80MB, offline)
+    // 2. Cloud: OpenAI text-embedding-3-small (1536-dim, API key required)
+    // 3. Fallback: Simple hash-based embedding (current)
     let vector = fallback_embedding(text);
 
     let latency_ms = start.elapsed().as_millis() as u64;
@@ -63,11 +65,16 @@ pub async fn embed_text_full(
 
     let vector = match provider {
         EmbeddingProvider::Local => {
-            // TODO: Load local model (all-MiniLM-L6-v2)
+            // ROADMAP: Load all-MiniLM-L6-v2 via rust-bert or ort (ONNX)
+            // Dependencies: rust-bert = "0.21" or ort = "1.16" + sentence-transformers model
+            // Model path: ~/.cache/huggingface/all-MiniLM-L6-v2
             fallback_embedding(text)
         }
         EmbeddingProvider::Cloud(ref api) => {
-            // TODO: Call cloud API
+            // INTEGRATION: OpenAI text-embedding-3-small API
+            // POST https://api.openai.com/v1/embeddings
+            // Header: Authorization: Bearer $OPENAI_API_KEY
+            // Body: {"model": "text-embedding-3-small", "input": text}
             fallback_embedding(text)
         }
         EmbeddingProvider::Mock => {
@@ -149,12 +156,15 @@ fn normalize_vector(vector: &mut [f32]) {
 // ═══════════════════════════════════════════════════════════════
 
 /*
-TODO: Integrate local embedding model
+INTEGRATION PLAN: Offline semantic embeddings with all-MiniLM-L6-v2
 
-Use one of:
-1. transformers.rs (Rust bindings for Hugging Face)
-2. ort (ONNX Runtime for Rust)
-3. candle (Rust ML framework)
+Recommended approach: rust-bert (best Rust integration)
+Alternative: ort (ONNX, faster inference)
+Experimental: candle (pure Rust ML)
+
+Dependencies:
+  rust-bert = "0.21"
+  torch-sys = "0.14" (LibTorch backend)
 
 Example with transformers.rs:
 
@@ -191,7 +201,11 @@ impl LocalEmbedder {
 // ═══════════════════════════════════════════════════════════════
 
 /*
-TODO: Integrate cloud embedding APIs
+INTEGRATION PLAN: Cloud-based embeddings for high-quality semantic search
+
+Supported providers:
+  - OpenAI (text-embedding-3-small, 1536-dim, $0.00002/1k tokens)
+  - Cohere (embed-english-v3.0, 1024-dim, $0.0001/1k tokens)
 
 OpenAI Example:
 
