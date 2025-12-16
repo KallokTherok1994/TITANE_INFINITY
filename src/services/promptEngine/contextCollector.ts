@@ -607,8 +607,14 @@ export class ContextCollector {
   // ─────────────────────────────────────────────────────────────────────────
 
   private async collectMemorySession(): Promise<unknown> {
-    // TODO: Connecter au service mémoire réel
-    // Pour l'instant, retourne des données mockées
+    // INTEGRATION: Real memory service connection
+    // 1. Import UnifiedMemoryV2 from '@/services/memory/UnifiedMemoryV2'
+    // 2. Call UnifiedMemoryV2.getSessionContext(sessionId) to fetch STM messages
+    // 3. Retrieve recent messages (last 50-100) from STM for context
+    // 4. Include MTM summaries for longer-term context (past hour)
+    // 5. Format: { messages: Message[], summaries: string[], context: string }
+    // 6. Error handling: Fallback to empty session if service unavailable
+    // For now, return mocked data for development
     return {
       messages: [],
       context: 'Session active',

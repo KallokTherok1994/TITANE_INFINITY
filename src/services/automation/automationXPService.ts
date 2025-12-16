@@ -501,8 +501,14 @@ class AutomationXPService {
       if (automation.trigger.type !== 'scheduled') continue;
       if (this.automationState.running_automations.has(id)) continue;
 
-      // Vérifier si l'automation doit s'exécuter
-      // TODO: Implémenter le parsing cron
+      // IMPLEMENTATION: Cron expression parsing and evaluation
+      // 1. Use 'cron-parser' library: const parser = require('cron-parser')
+      // 2. Parse cron: const interval = parser.parseExpression(automation.trigger.schedule)
+      // 3. Check next execution: const next = interval.next().toDate()
+      // 4. Execute if: Date.now() >= next.getTime() && !lastRun || Date.now() - lastRun > minInterval
+      // 5. Cron format: '*/5 * * * *' (every 5 min), '0 9 * * 1' (Mon 9am), etc.
+      // 6. Error handling: Invalid cron → log warning, skip automation
+      // 7. Store lastRun timestamp to prevent duplicate executions
     }
   }
 

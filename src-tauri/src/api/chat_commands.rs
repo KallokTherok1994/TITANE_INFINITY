@@ -59,8 +59,15 @@ pub async fn chat_send_message(
         return Err("Message vide".to_string());
     }
 
-    // TODO: Implémenter appel API Gemini
-    // Pour l'instant, retourne un message de test
+    // INTEGRATION: Gemini API implementation
+    // 1. Use google-generativeai crate: reqwest + serde_json for API calls
+    // 2. Endpoint: POST https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent
+    // 3. Headers: x-goog-api-key: $GEMINI_API_KEY, Content-Type: application/json
+    // 4. Request body: { "contents": [{ "parts": [{ "text": message }] }] }
+    // 5. Response parsing: response.candidates[0].content.parts[0].text
+    // 6. Error handling: Rate limit (429), invalid key (401), timeout (30s)
+    // 7. Caching: Optional caching layer for repeated queries (TTL: 1h)
+    // For now, return test response for development
     Ok(format!("Réponse de test à: {}", message))
 }
 

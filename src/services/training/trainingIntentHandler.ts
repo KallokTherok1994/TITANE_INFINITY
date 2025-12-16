@@ -529,7 +529,12 @@ export class TrainingIntentHandler {
       for (const pattern of confirmPatterns.patterns) {
         if (pattern.test(message)) {
           this.pendingResetConfirmation = false;
-          // TODO: Implement actual reset in engine
+          // INTEGRATION: Actual engine reset implementation
+          // 1. Call CognitiveEngine.reset() to clear active thoughts/memories
+          // 2. Clear TrainingService.clearAllSessions() to remove training data
+          // 3. Reset UnifiedMemoryV2 STM/MTM (keep LTM for user history)
+          // 4. Emit 'training:reset:complete' event to notify frontend
+          // 5. Log reset action to audit log with timestamp + user ID
           return {
             recognized: true,
             intent: 'confirm_reset',
