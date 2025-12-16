@@ -20,6 +20,17 @@ use serde::{Deserialize, Serialize};
 use std::f32::consts::PI;
 use std::sync::{Arc, Mutex};
 
+/// Macro for safe mutex locking with poison recovery
+/// ✨ v24.2.1: Prevents panic on poisoned mutex
+macro_rules! lock_or_recover {
+    ($mutex:expr) => {
+        $mutex.lock().unwrap_or_else(|poisoned| {
+            log::warn!("[VoiceFingerprint] Mutex poisoned, recovering...");
+            poisoned.into_inner()
+        })
+    };
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct VoiceFeatures {
     /// Fundamental frequency (Hz)
@@ -118,7 +129,8 @@ impl VoiceFingerprint {
         };
 
         // Store profile
-        let mut titane = self.titane_profile.lock().unwrap();
+        // ✨ v24.2.1: Use lock_or_recover! macro for safe mutex access
+        let mut titane = lock_or_recover!(self.titane_profile);
         *titane = Some(profile.clone());
 
         println!("[VoiceFingerprint] ✅ TITANE voice profile calibrated:");
@@ -147,14 +159,13 @@ impl VoiceFingerprint {
      * @return (is_titane, similarity_score)
      */
     pub fn is_titane_speaking(&self, samples: &[f32]) -> (bool, f32) {
-        let titane = self.titane_profile.lock().unwrap();
+        let titane = lock_or_recover!(self.titane_profile);
 
-        if titane.is_none() {
+        // ✨ v24.2.1: Use if-let for safer Option handling
+        let Some(profile) = titane.as_ref() else {
             println!("[VoiceFingerprint] ⚠️ TITANE profile not calibrated, returning false");
             return (false, 0.0);
-        }
-
-        let profile = titane.as_ref().unwrap();
+        };
 
         // Extract features from current audio
         let current_features = self.extract_features(samples);
@@ -178,7 +189,7 @@ impl VoiceFingerprint {
      * Check if TITANE profile is calibrated
      */
     pub fn is_calibrated(&self) -> bool {
-        let titane = self.titane_profile.lock().unwrap();
+        let titane = lock_or_recover!(self.titane_profile);
         titane.is_some()
     }
 
@@ -186,7 +197,7 @@ impl VoiceFingerprint {
      * Get TITANE profile info (if calibrated)
      */
     pub fn get_profile_info(&self) -> Option<(usize, f32)> {
-        let titane = self.titane_profile.lock().unwrap();
+        let titane = lock_or_recover!(self.titane_profile);
         titane
             .as_ref()
             .map(|profile| (profile.sample_count, self.similarity_threshold))
