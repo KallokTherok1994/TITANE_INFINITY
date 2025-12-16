@@ -41,16 +41,16 @@ import {
   shouldBlockLoading,
   logEnvironmentWarnings,
 } from './core/tauri/environment';
-import { autoAuditEngine } from './services/autoAuditEngine'; // ✨ v∞ - Auto-Audit Engine
+// ✨ OPT-10: autoAuditEngine lazy-loaded below (removed static import)
 import { TitaneLogo } from './components/branding/TitaneLogo'; // ✨ v∞ - Logo Reactor
 import { OnboardingFlow } from './components/Onboarding'; // ✨ v19.5.2 - User Onboarding System
 import { PageLoadingFallback } from './ui/components/PageLoadingFallback'; // ✨ v19.5.2 - Enhanced loading
-import { initializeMicroInteractions } from './ui/motion'; // ✨ v21 - TITANE∞ Polish Phase
+// ✨ OPT-10: initializeMicroInteractions lazy-loaded below (removed static import)
 import { ToastContainer } from './ui/components/Toast'; // ✨ v19.5.2 - Toast notifications
 import { useUIStore } from './stores/uiStore'; // ✨ v19.5.2 - UI state management
 import { initializeOllama } from './services/ai/providers/ollama'; // ✨ v21 - Local AI initialization
-import { connectCacheToSingularity } from './services/ai'; // ✨ v21.5 Sprint 1 - Cognitive Cache
-import './i18n';
+// ✨ OPT-12: connectCacheToSingularity lazy-loaded below (removed static import)
+// ✨ OPT-7: i18n is now lazy-loaded in useEffect below (removed static import)
 
 /**
  * 🔒 POLITIQUE DE SÉCURITÉ ENVIRONNEMENT
@@ -132,7 +132,7 @@ const CognitiveLayoutControl = lazy(() =>
     default: m.CognitiveLayoutControl,
   }))
 );
-import { cognitiveLayoutEngine } from './engines/cognitive/cognitiveLayoutEngine';
+// ✨ OPT-11: cognitiveLayoutEngine lazy-loaded below (removed static import)
 
 // ✨ v∞.27.0 - Unified Presence Engine (Super Prompt #3 - EXPERIENTIAL IDENTITY)
 // REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
@@ -369,13 +369,24 @@ const AppRouter: React.FC = () => {
     });
   }, []);
 
-  // ✨ v21.5 Sprint 1 - Connecter Cognitive Cache au SingularityKernel
+  // ✨ OPT-7 - Initialize i18n asynchronously (non-blocking, lazy-loaded)
+  useEffect(() => {
+    import('./i18n')
+      .then(({ initI18nAsync }) => {
+        initI18nAsync(); // Background load, doesn't block UI
+      })
+      .catch(error => {
+        console.warn('⚠️ [i18n] Lazy initialization failed:', error);
+      });
+  }, []);
+
+  // ✨ v21.5 Sprint 1 + OPT-12 - Lazy-load Cognitive Cache Connection
   useEffect(() => {
     console.log('🧠 [COGNITIVE-CACHE] Connecting to SingularityKernel...');
 
-    // Import dynamique pour éviter circular dependency
-    import('./services/ai/singularityKernel')
-      .then(({ singularityKernel }) => {
+    // OPT-12: Import dynamique complet (évite circular dependency + lazy-load)
+    Promise.all([import('./services/ai/singularityKernel'), import('./services/ai')])
+      .then(([{ singularityKernel }, { connectCacheToSingularity }]) => {
         try {
           connectCacheToSingularity(singularityKernel);
           console.log('✅ [COGNITIVE-CACHE] Connected successfully');
@@ -384,19 +395,26 @@ const AppRouter: React.FC = () => {
         }
       })
       .catch(error => {
-        console.warn('⚠️ [COGNITIVE-CACHE] SingularityKernel not available:', error);
+        console.warn('⚠️ [COGNITIVE-CACHE] Failed to load:', error);
       });
   }, []);
 
-  // ✨ v∞ - Démarrer Auto-Audit Engine au chargement
+  // ✨ OPT-10 - Lazy-load Auto-Audit Engine
   useEffect(() => {
-    console.log('🔍 [AUTO-AUDIT] Starting automatic audits...');
-    autoAuditEngine.start();
+    console.log('🔍 [AUTO-AUDIT] Loading automatic audits...');
+    import('./services/autoAuditEngine')
+      .then(({ autoAuditEngine }) => {
+        autoAuditEngine.start();
+        console.log('✅ [AUTO-AUDIT] Started');
 
-    return () => {
-      console.log('🛑 [AUTO-AUDIT] Stopping audits...');
-      autoAuditEngine.stop();
-    };
+        // Cleanup
+        return () => {
+          autoAuditEngine.stop();
+        };
+      })
+      .catch(err => {
+        console.warn('⚠️ [AUTO-AUDIT] Failed to load:', err);
+      });
   }, []);
 
   // ✨ v∞ Phase 4 - Initialiser Multi-Agent System
@@ -427,28 +445,40 @@ const AppRouter: React.FC = () => {
   }, []);
   */
 
-  // ✨ v∞.27.0 - Initialiser Cognitive Layout Engine
+  // ✨ OPT-11 - Lazy-load Cognitive Layout Engine
   useEffect(() => {
-    console.log('🧠 [COGNITIVE] Starting Cognitive Layout Engine...');
-    cognitiveLayoutEngine.start();
+    console.log('🧠 [COGNITIVE] Loading Cognitive Layout Engine...');
+    import('./engines/cognitive/cognitiveLayoutEngine')
+      .then(({ cognitiveLayoutEngine }) => {
+        cognitiveLayoutEngine.start();
+        console.log('✅ [COGNITIVE] Cognitive Layout Engine started');
 
-    return () => {
-      console.log('🛑 [COGNITIVE] Stopping Cognitive Layout Engine...');
-      cognitiveLayoutEngine.stop();
-    };
+        return () => {
+          cognitiveLayoutEngine.stop();
+        };
+      })
+      .catch(err => {
+        console.warn('⚠️ [COGNITIVE] Failed to load Cognitive Layout Engine:', err);
+      });
   }, []);
 
-  // ✨ v21 POLISH — Initialize TITANE∞ Micro-Interactions
+  // ✨ OPT-10 - Lazy-load TITANE∞ Micro-Interactions
   useEffect(() => {
-    console.log('✨ [UI-POLISH] Initializing TITANE∞ micro-interactions...');
-    try {
-      initializeMicroInteractions();
-      console.log(
-        '✅ [UI-POLISH] Micro-interactions initialized (Ripple, Magnetism, Focus Glow, Tooltips)'
-      );
-    } catch (error) {
-      console.error('❌ [UI-POLISH] Failed to initialize micro-interactions:', error);
-    }
+    console.log('✨ [UI-POLISH] Loading TITANE∞ micro-interactions...');
+    import('./ui/motion')
+      .then(({ initializeMicroInteractions }) => {
+        try {
+          initializeMicroInteractions();
+          console.log(
+            '✅ [UI-POLISH] Micro-interactions initialized (Ripple, Magnetism, Focus Glow, Tooltips)'
+          );
+        } catch (error) {
+          console.error('❌ [UI-POLISH] Failed to initialize micro-interactions:', error);
+        }
+      })
+      .catch(err => {
+        console.warn('⚠️ [UI-POLISH] Failed to load motion module:', err);
+      });
   }, []);
 
   // ✨ v∞.27.0 - Initialiser Unified Presence Engine (Super Prompt #3)

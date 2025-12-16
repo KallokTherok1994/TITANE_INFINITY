@@ -16,7 +16,7 @@ import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGlobalAIChat } from '../hooks/useGlobalAIChat';
 import { MessageBubble } from './chat/MessageBubble';
-import type { Message } from '../core/ARCHITECTURE_TYPES_v∞';
+import type { Message as _Message } from '../core/ARCHITECTURE_TYPES_v∞';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES

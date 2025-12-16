@@ -15,8 +15,8 @@ import ReactDOM from 'react-dom/client';
 // import AppMinimal from './AppMinimal'; // 🔍 DEBUG: Minimal test app (valide le rendu)
 import App from './App'; // ✅ v16.2.2: App principal activé
 
-// ✨ v19.5.2 - Sentry Error Monitoring & Performance Tracking (Phase 1 - Quick Wins)
-import { initSentry, captureWebVitals } from './services/monitoring';
+// ✨ v25.3.0 OPT-9 - Monitoring lazy-loaded (non-blocking initialization)
+// Moved to async initialization in bootstrap() below
 
 // ✅ v8.0 DESIGN SYSTEM - Tailwind CSS + TITANE∞ Tokens
 import './index.css'; // 🎨 v8.0: Tailwind CSS + Design Tokens (css-vars.css)
@@ -189,21 +189,31 @@ console.log('║  🌌 TITANE∞ v19 - BOOT SEQUENCE                            
 console.log('║  Timestamp: ' + new Date().toISOString() + '                  ║');
 console.log('╚════════════════════════════════════════════════════════════════╝\n');
 
-// ✨ v25.3.0 - YOLO OPT: Defer Sentry init après boot (-200 KB gzip)
-console.log('[1/7] 🔍 Sentry: Deferred initialization (post-boot optimization)...');
+// ✨ v25.3.0 OPT-9 - Monitoring lazy-loaded (non-blocking)
+console.log('[1/7] 🔍 Monitoring: Lazy initialization (background load)...');
 if (import.meta.env.PROD) {
-  // Différer init Sentry après First Contentful Paint (3s)
+  // Load monitoring in background after First Contentful Paint
   setTimeout(() => {
-    console.log('      ⚡ Lazy-loading Sentry monitoring...');
-    initSentry();
-    captureWebVitals();
-    console.log('      ✅ Sentry: Ready for error tracking and performance monitoring');
+    console.log('      ⚡ Lazy-loading monitoring infrastructure...');
+    import('./services/monitoring')
+      .then(({ initMonitoringAsync }) => {
+        initMonitoringAsync();
+        console.log('      ✅ Monitoring: Ready for error tracking and performance');
+      })
+      .catch(err => {
+        console.warn('      ⚠️ Monitoring initialization failed:', err);
+      });
   }, 3000);
 } else {
-  // Dev mode: init immédiat pour debugging
-  initSentry();
-  captureWebVitals();
-  console.log('      ✅ Sentry: Ready (dev mode - immediate)');
+  // Dev mode: lazy init for debugging
+  import('./services/monitoring')
+    .then(({ initMonitoringAsync }) => {
+      initMonitoringAsync();
+      console.log('      ✅ Monitoring: Ready (dev mode - lazy)');
+    })
+    .catch(err => {
+      console.warn('      ⚠️ Monitoring initialization failed (dev):', err);
+    });
 }
 
 // Initialize UILogger (overrides console.* in production)

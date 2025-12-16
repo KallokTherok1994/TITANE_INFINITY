@@ -205,26 +205,27 @@ export class AppearanceFloatingIntegration {
 
   /**
    * Apply color palette to materials
+   * v24.3.0: Use setHex() since palette colors are hex numbers, not THREE.Color
    */
   private applyColorPalette(palette: ColorPalette): void {
     if (!this.materials) return;
 
     // Body uses secondary color
-    this.materials.body.color.copy(palette.secondary);
+    this.materials.body.color.setHex(palette.secondary);
     this.materials.body.needsUpdate = true;
 
     // Head uses primary color (lighter)
-    this.materials.head.color.copy(palette.primary);
+    this.materials.head.color.setHex(palette.primary);
     this.materials.head.needsUpdate = true;
 
     // Outfit uses neutral color
     this.materials.outfit.forEach(mat => {
-      mat.color.copy(palette.neutral);
+      mat.color.setHex(palette.neutral);
       mat.needsUpdate = true;
     });
 
     // Hair uses accent color
-    this.materials.hair.color.copy(palette.accent);
+    this.materials.hair.color.setHex(palette.accent);
     this.materials.hair.needsUpdate = true;
   }
 
@@ -310,18 +311,18 @@ export class AppearanceFloatingIntegration {
     property: 'color' | 'metalness' | 'roughness',
     value: THREE.Color | number
   ): void {
-    if (!this.materials) return;
+    if (!this.materials || !this.THREE) return;
 
     const materials =
       target === 'outfit' ? this.materials.outfit : [this.materials[target]];
 
     materials.forEach(mat => {
-      if (property === 'color' && value instanceof THREE.Color) {
+      if (property === 'color' && value instanceof this.THREE.Color) {
         mat.color.copy(value);
       } else if (property === 'metalness' && typeof value === 'number') {
-        mat.metalness = THREE.MathUtils.clamp(value, 0, 1);
+        mat.metalness = this.THREE.MathUtils.clamp(value, 0, 1);
       } else if (property === 'roughness' && typeof value === 'number') {
-        mat.roughness = THREE.MathUtils.clamp(value, 0, 1);
+        mat.roughness = this.THREE.MathUtils.clamp(value, 0, 1);
       }
       mat.needsUpdate = true;
     });
@@ -361,11 +362,25 @@ export class AppearanceFloatingIntegration {
 // HELPER FUNCTIONS
 // ═══════════════════════════════════════════════════════════════════════════
 
+// Module-level THREE cache for helper functions
+let cachedTHREE: THREE | null = null;
+
 /**
- * Parse CSS hex color to THREE.Color
+ * Parse CSS hex color to THREE.Color (async - requires THREE to be loaded)
  */
-export function parseColor(hexString: string): THREE.Color {
-  return new THREE.Color(hexString);
+export async function parseColor(hexString: string): Promise<THREE.Color> {
+  if (!cachedTHREE) {
+    cachedTHREE = await loadThreeJS();
+  }
+  return new cachedTHREE.Color(hexString);
+}
+
+/**
+ * Parse CSS hex color synchronously (requires THREE already loaded)
+ * @deprecated Use parseColor async version instead
+ */
+export function parseColorSync(hexString: string, threeModule: THREE): THREE.Color {
+  return new threeModule.Color(hexString);
 }
 
 /**

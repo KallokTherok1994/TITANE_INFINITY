@@ -3,7 +3,7 @@
 //   Intelligent camera with vocal zoom, breathing parallax, 3 modes
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { loadThreeJS } from '../core/ThreeJSLazyLoader';
+import { loadThreeJS as _loadThreeJS } from '../core/ThreeJSLazyLoader';
 type THREE = typeof import('three');
 
 // ═══════════════════════════════════════════════════════════════════════════

@@ -11,7 +11,7 @@
  */
 
 import React, { useState } from 'react';
-import { ChatMessage } from '@/features/chat/ChatMessage';
+import { ChatMessage as _ChatMessage } from '@/features/chat/ChatMessage';
 import { ChatProviderSelector } from '@/features/chat/ChatProviderSelector';
 
 export const ChatPage: React.FC = () => {

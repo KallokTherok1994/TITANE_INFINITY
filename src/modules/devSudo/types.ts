@@ -172,13 +172,77 @@ export type DevSudoAction =
   | 'dataset-sync-memory'
   | 'dataset-export'
 
-  // Hybrid Engine
+  // Hybrid Engine (Super Prompt #16) v∞.26.0
   | 'hybrid-open'
   | 'hybrid-close'
   | 'hybrid-console'
   | 'hybrid-bubble'
   | 'hybrid-heal'
-  | 'hybrid-inspect';
+  | 'hybrid-inspect'
+  | 'hybrid-fix'
+  | 'hybrid-apply'
+  | 'hybrid-run'
+  | 'hybrid-logs'
+
+  // Fusion Engine (Super Prompt #17) v∞.27.0
+  | 'fusion-collect'
+  | 'fusion-sync'
+  | 'fusion-build-dataset'
+  | 'fusion-clean-dataset'
+  | 'fusion-compress'
+  | 'fusion-export'
+  | 'fusion-merge'
+  | 'fusion-package-training'
+  | 'fusion-stats'
+
+  // Vocal Dev Console (Super Prompt #18) v∞.28.0
+  | 'vocal-start'
+  | 'vocal-stop'
+  | 'vocal-console'
+  | 'vocal-heal'
+  | 'vocal-run'
+  | 'vocal-logs'
+  | 'vocal-patch'
+  | 'vocal-compile'
+  | 'vocal-inspect'
+  | 'vocal-set-model'
+  | 'vocal-fullscreen'
+  | 'vocal-silence'
+
+  // Live Debugger Vocal (Super Prompt #19) v∞.29.0
+  | 'live-on'
+  | 'live-off'
+  | 'live-heal'
+  | 'live-inspect'
+  | 'live-patch'
+  | 'live-logs'
+  | 'live-restart'
+  | 'live-reset'
+  | 'live-console'
+  | 'live-set-mode'
+
+  // Talk-To-TITANE Suite (Super Prompts #20-24) v∞.30.0
+  | 'talk-on'
+  | 'talk-off'
+  | 'talk-mode'
+  | 'talk-calibrate'
+  | 'talk-history'
+  | 'talk-console'
+  | 'conversation-save'
+  | 'conversation-heal'
+  | 'conversation-timeline'
+  | 'conversation-export'
+  | 'timeline-build'
+  | 'timeline-show'
+  | 'timeline-export'
+  | 'timeline-sessions'
+  | 'timeline-stats'
+  | 'autosave-on'
+  | 'autosave-off'
+  | 'autosave-flush'
+  | 'selfheal-scan'
+  | 'selfheal-heal'
+  | 'selfheal-rebuild';
 
 export interface DevSudoResult {
   handled: boolean;
@@ -187,6 +251,15 @@ export interface DevSudoResult {
   data?: unknown;
   error?: string;
   metadata?: DevSudoMetadata;
+  message?: string; // Backward compatibility
+  actions?: DevSudoExecutedAction[]; // Backward compatibility
+}
+
+export interface DevSudoExecutedAction {
+  type: string;
+  description: string;
+  result: 'success' | 'error' | 'pending';
+  details?: string;
 }
 
 export interface DevSudoMetadata {

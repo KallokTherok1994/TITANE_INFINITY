@@ -1,16 +1,21 @@
 /**
- * TITANE_INFINITY v∞.19.5.2 — Proprietary License
+ * TITANE_INFINITY v25.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   MONITORING MODULE - Public exports
+ *   MONITORING MODULE - Lazy Loader Exports (OPT-9)
+ *   Monitoring infrastructure lazy-loaded to reduce main bundle
  * ═══════════════════════════════════════════════════════════════
  */
 
+// Export lazy loader functions
 export {
-  initSentry,
+  getMonitoring,
+  initMonitoringAsync,
+  isMonitoringLoaded,
+  getMonitoringIfLoaded,
   captureClassifiedError,
   captureMessage,
   addBreadcrumb,
@@ -21,7 +26,7 @@ export {
   startTransaction,
   profileAsync,
   profileSync,
-  captureWebVitals,
-  testSentry,
-  Sentry,
-} from './sentry';
+} from './monitoringLazyLoader';
+
+// Direct exports for backward compatibility (will be lazy-loaded)
+export { initSentry, captureWebVitals, testSentry, Sentry } from './sentry';

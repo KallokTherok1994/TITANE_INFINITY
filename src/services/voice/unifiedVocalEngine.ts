@@ -34,7 +34,7 @@ import {
   type InnerDialogueState as _InnerDialogueState,
   type ThinkingState as _ThinkingState,
 } from './innerDialogueController';
-import type { EmotionalState } from './emotionalStateEstimator';
+import type { EmotionalState as _EmotionalState } from './emotionalStateEstimator';
 import type { EmotionalState as EmotionalStateString } from '@/types/voice';
 
 // ═══════════════════════════════════════════════════════════════════
