@@ -4,6 +4,13 @@ use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
 use tauri::State;
+
+/// Get config directory path
+fn get_config_dir() -> PathBuf {
+    dirs::config_dir()
+        .unwrap_or_else(|| PathBuf::from("."))
+        .join("titane-infinity")
+}
 /**
  * TITANE∞ OS - Commandes Tauri Control Panel
  * Backend handlers pour toutes les sections du Control Panel
@@ -174,6 +181,10 @@ fn config_base_dir() -> Result<PathBuf, String> {
         fs::create_dir_all(&path).map_err(|e| format!("Failed to create config dir: {}", e))?;
     }
     Ok(path)
+}
+
+fn get_config_dir() -> Result<PathBuf, String> {
+    config_base_dir()
 }
 
 fn ai_config_path() -> Result<PathBuf, String> {
