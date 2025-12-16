@@ -17,7 +17,7 @@ import { StatusIndicator } from './StatusIndicator';
 import { VitalsPanel } from './VitalsPanel';
 import { ChatFileImport } from './chat/ChatFileImport';
 import { useSingularityState } from '../core/state/SingularityState';
-import type { Message } from '../core/ARCHITECTURE_TYPES_v∞';
+import type { Message as _Message } from '../core/ARCHITECTURE_TYPES_v∞';
 import { listPromptPresets } from '@/core/prompts';
 import type { ChatMode } from '@/services/ai';
 import './ChatWindow.css';

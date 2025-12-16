@@ -20,11 +20,7 @@ import { talkToTitaneEngine } from '@/modules/talkToTitane/TalkToTitaneEngine';
 import type { LiveDebuggerMode } from '@/modules/liveDebugger/LiveDebuggerEngine';
 
 // YOLO OPT-5: Lazy-load handlers instead of static imports
-import {
-  getHandlerForAction,
-  getActionDomain,
-  type HandlerDomain,
-} from './devSudoLazyLoader';
+import { getHandlerForAction, getActionDomain } from './devSudoLazyLoader';
 
 // Note: Handler modules (IDE, Singularity, Vision, Backend, Memory, TitaneOne, Extended)
 // are now lazy-loaded dynamically instead of static imports
@@ -127,262 +123,13 @@ const liveDebugger = {
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
-// TYPES
+// TYPES - YOLO OPT-5: Import from types.ts to avoid duplication
 // ═══════════════════════════════════════════════════════════════════════════
 
-export interface DevSudoCommand {
-  type: 'dev-sudo';
-  action: DevSudoAction;
-  params: Record<string, unknown>;
-  raw: string;
-}
+import type { DevSudoCommand, DevSudoAction, DevSudoResult } from './types';
 
-export type DevSudoAction =
-  // Corrections & Fixes
-  | 'fix-deps'
-  | 'fix-opus'
-  | 'fix-error'
-  | 'repair-component'
-  | 'self-heal'
-  | 'deep-heal'
-  | 'auto-fix'
-
-  // Diagnostic & Analysis
-  | 'diagnostic'
-  | 'status-full'
-  | 'introspect'
-  | 'analyze-module'
-  | 'scan-modules'
-  | 'scan-opus'
-  | 'scan-errors'
-  | 'health-check'
-  | 'analyze-rust'
-  | 'analyze-tauri'
-
-  // Dev Operations
-  | 'restart-tauri'
-  | 'test-bubble'
-  | 'test-module'
-  | 'show-code'
-  | 'whitelist-tauri'
-  | 'create-component'
-  | 'add-feature'
-  | 'merge-opus'
-
-  // Console Commands
-  | 'console-ls'
-  | 'console-open'
-  | 'console-patch'
-  | 'console-rebuild'
-
-  // Optimization
-  | 'optimize-build'
-  | 'optimize-ui'
-  | 'optimize-rust'
-  | 'optimize-react'
-
-  // API & Connections
-  | 'connect-api'
-  | 'test-api'
-  | 'verify-keys'
-
-  // DevOps
-  | 'full-sync'
-  | 'verify-architecture'
-  | 'generate-report'
-
-  // IDE Mode (Super Prompt #7)
-  | 'open-file'
-  | 'view-file'
-  | 'create-file'
-  | 'patch-file'
-  | 'goto-function'
-  | 'goto-component'
-  | 'goto-handler'
-  | 'copilot-suggest'
-  | 'auto-complete'
-  | 'refactor-component'
-  | 'refactor-hook'
-  | 'refactor-handler'
-  | 'explain-code'
-  | 'auto-import'
-  | 'generate-module'
-  | 'run-tests'
-  | 'master-analysis'
-  | 'architect-refactor'
-  | 'code-review'
-
-  // Singularity Mind Engine (Super Prompt #8)
-  | 'singularity-scan'
-  | 'brain-analysis'
-  | 'cognitive-check'
-  | 'meta-repair'
-  | 'evolution-report'
-  | 'coherence-check'
-
-  // Vision Engine (Super Prompt #9)
-  | 'vision-analyze'
-  | 'ui-diagnostic'
-  | 'design-review'
-  | 'frontend-optimize'
-  | 'visual-repair'
-
-  // Backend & API Master (Super Prompt #10)
-  | 'backend-analysis'
-  | 'fix-handler'
-  | 'create-api'
-  | 'whitelist-command'
-  | 'optimize-cargo'
-  | 'build-backend'
-  | 'analyze-security'
-
-  // Memory Eternal Engine (Super Prompt #11)
-  | 'memory-scan'
-  | 'memory-heal'
-  | 'memory-deepheal'
-  | 'memory-snapshot'
-  | 'memory-export'
-  | 'memory-import'
-  | 'memory-rebuild'
-  | 'memory-optimize'
-
-  // TITANE∞ ONE Unified Brain (Super Prompt #SINGULARITY)
-  | 'titane-one-introspect'
-  | 'titane-one-evolve'
-  | 'titane-one-heal'
-  | 'titane-one-fullheal'
-  | 'titane-one-unify'
-  | 'titane-one-optimize'
-  | 'titane-one-vision-all'
-  | 'titane-one-analyze-dev'
-  | 'titane-one-analyze-ui'
-  | 'titane-one-analyze-backend'
-  | 'titane-one-analyze-memory'
-  | 'titane-one-singularity-scan'
-
-  // AI Local Model (Super Prompt #12)
-  | 'ia-add'
-  | 'ia-test'
-  | 'ia-set-default'
-  | 'ia-enable-devmode'
-  | 'ia-scan'
-  | 'ia-status'
-
-  // AI Local Training (Super Prompt #13)
-  | 'ia-train'
-  | 'ia-dataset'
-  | 'ia-test-model'
-  | 'ia-benchmark'
-
-  // AI Bubble Engine (Super Prompt #14)
-  | 'chat-open'
-  | 'chat-close'
-  | 'chat-minimize'
-  | 'chat-maximize'
-  | 'chat-clear'
-  | 'chat-set-model'
-  | 'chat-dev'
-  | 'chat-inspect'
-  | 'chat-autoheal'
-  | 'chat-fullscreen'
-  | 'chat-follow'
-
-  // Data Collector Engine (Super Prompt #15)
-  | 'dataset-collect'
-  | 'dataset-clean'
-  | 'dataset-generate'
-  | 'dataset-training-pack'
-  | 'dataset-compress'
-  | 'dataset-add'
-  | 'dataset-sync-memory'
-  | 'dataset-export'
-
-  // Hybrid Engine (Super Prompt #16) v∞.26.0
-  | 'hybrid-open'
-  | 'hybrid-close'
-  | 'hybrid-console'
-  | 'hybrid-bubble'
-  | 'hybrid-heal'
-  | 'hybrid-inspect'
-  | 'hybrid-fix'
-  | 'hybrid-apply'
-  | 'hybrid-run'
-  | 'hybrid-logs'
-
-  // Fusion Engine (Super Prompt #17) v∞.27.0
-  | 'fusion-collect'
-  | 'fusion-sync'
-  | 'fusion-build-dataset'
-  | 'fusion-clean-dataset'
-  | 'fusion-compress'
-  | 'fusion-export'
-  | 'fusion-merge'
-  | 'fusion-package-training'
-  | 'fusion-stats'
-
-  // Vocal Dev Console (Super Prompt #18) v∞.28.0
-  | 'vocal-start'
-  | 'vocal-stop'
-  | 'vocal-console'
-  | 'vocal-heal'
-  | 'vocal-run'
-  | 'vocal-logs'
-  | 'vocal-patch'
-  | 'vocal-compile'
-  | 'vocal-inspect'
-  | 'vocal-set-model'
-  | 'vocal-fullscreen'
-  | 'vocal-silence'
-
-  // Live Debugger Vocal (Super Prompt #19) v∞.29.0
-  | 'live-on'
-  | 'live-off'
-  | 'live-heal'
-  | 'live-inspect'
-  | 'live-patch'
-  | 'live-logs'
-  | 'live-restart'
-  | 'live-reset'
-  | 'live-console'
-  | 'live-set-mode'
-
-  // Talk-To-TITANE Suite (Super Prompts #20-24) v∞.30.0
-  | 'talk-on'
-  | 'talk-off'
-  | 'talk-mode'
-  | 'talk-calibrate'
-  | 'talk-history'
-  | 'talk-console'
-  | 'conversation-save'
-  | 'conversation-heal'
-  | 'conversation-timeline'
-  | 'conversation-export'
-  | 'timeline-build'
-  | 'timeline-show'
-  | 'timeline-export'
-  | 'timeline-sessions'
-  | 'timeline-stats'
-  | 'autosave-on'
-  | 'autosave-off'
-  | 'autosave-flush'
-  | 'selfheal-scan'
-  | 'selfheal-heal'
-  | 'selfheal-rebuild';
-
-export interface DevSudoResult {
-  handled: boolean;
-  response: string;
-  success: boolean;
-  actions?: DevSudoExecutedAction[];
-  error?: string;
-}
-
-export interface DevSudoExecutedAction {
-  type: string;
-  description: string;
-  result: 'success' | 'error' | 'pending';
-  details?: string;
-}
+// Re-export types for external consumers
+export type { DevSudoCommand, DevSudoAction, DevSudoResult } from './types';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // PATTERNS DE DÉTECTION
@@ -1602,6 +1349,7 @@ function extractParams(
 async function callLazyHandler(
   action: DevSudoAction,
   handlerName: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ...args: any[]
 ): Promise<DevSudoResult> {
   try {
@@ -1617,17 +1365,19 @@ async function callLazyHandler(
     } else {
       console.error(`[DEV-SUDO LAZY] Handler "${handlerName}" not found in module`);
       return {
+        handled: true,
         success: false,
-        message: `Handler function "${handlerName}" not found`,
-        executedActions: [],
+        response: `Handler function "${handlerName}" not found`,
+        actions: [],
       };
     }
   } catch (error) {
     console.error(`[DEV-SUDO LAZY] Error calling lazy handler "${handlerName}":`, error);
     return {
+      handled: true,
       success: false,
-      message: `Lazy handler error: ${error instanceof Error ? error.message : String(error)}`,
-      executedActions: [],
+      response: `Lazy handler error: ${error instanceof Error ? error.message : String(error)}`,
+      actions: [],
     };
   }
 }
@@ -1678,67 +1428,87 @@ export async function executeDevSudoCommand(
 
       // Extended handlers (v∞.22.0)
       case 'deep-heal':
-        return await ExtendedHandlers.handleDeepHeal();
+        return await callLazyHandler(command.action, 'handleDeepHeal');
 
       case 'auto-fix':
-        return await ExtendedHandlers.handleAutoFix();
+        return await callLazyHandler(command.action, 'handleAutoFix');
 
       case 'scan-modules':
-        return await ExtendedHandlers.handleScanModules();
+        return await callLazyHandler(command.action, 'handleScanModules');
 
       case 'scan-opus':
-        return await ExtendedHandlers.handleScanOpus();
+        return await callLazyHandler(command.action, 'handleScanOpus');
 
       case 'scan-errors':
-        return await ExtendedHandlers.handleScanErrors();
+        return await callLazyHandler(command.action, 'handleScanErrors');
 
       case 'health-check':
-        return await ExtendedHandlers.handleHealthCheck();
+        return await callLazyHandler(command.action, 'handleHealthCheck');
 
       case 'console-ls':
-        return await ExtendedHandlers.handleConsoleLs(command.params.path as string);
+        return await callLazyHandler(
+          command.action,
+          'handleConsoleLs',
+          command.params.path
+        );
 
       case 'console-open':
-        return await ExtendedHandlers.handleConsoleOpen(command.params.target as string);
+        return await callLazyHandler(
+          command.action,
+          'handleConsoleOpen',
+          command.params.target
+        );
 
       case 'console-patch':
-        return await ExtendedHandlers.handleConsolePatch(command.params.target as string);
+        return await callLazyHandler(
+          command.action,
+          'handleConsolePatch',
+          command.params.target
+        );
 
       case 'console-rebuild':
-        return await ExtendedHandlers.handleConsoleRebuild();
+        return await callLazyHandler(command.action, 'handleConsoleRebuild');
 
       case 'optimize-build':
-        return await ExtendedHandlers.handleOptimizeBuild();
+        return await callLazyHandler(command.action, 'handleOptimizeBuild');
 
       case 'optimize-ui':
-        return await ExtendedHandlers.handleOptimizeUI();
+        return await callLazyHandler(command.action, 'handleOptimizeUI');
 
       case 'optimize-rust':
-        return await ExtendedHandlers.handleOptimizeRust();
+        return await callLazyHandler(command.action, 'handleOptimizeRust');
 
       case 'optimize-react':
-        return await ExtendedHandlers.handleOptimizeReact();
+        return await callLazyHandler(command.action, 'handleOptimizeReact');
 
       case 'connect-api':
-        return await ExtendedHandlers.handleConnectAPI(command.params.api as string);
+        return await callLazyHandler(
+          command.action,
+          'handleConnectAPI',
+          command.params.api
+        );
 
       case 'test-api':
-        return await ExtendedHandlers.handleTestAPI(command.params.api as string);
+        return await callLazyHandler(command.action, 'handleTestAPI', command.params.api);
 
       case 'verify-keys':
-        return await ExtendedHandlers.handleVerifyKeys();
+        return await callLazyHandler(command.action, 'handleVerifyKeys');
 
       case 'full-sync':
-        return await ExtendedHandlers.handleFullSync();
+        return await callLazyHandler(command.action, 'handleFullSync');
 
       case 'verify-architecture':
-        return await ExtendedHandlers.handleVerifyArchitecture();
+        return await callLazyHandler(command.action, 'handleVerifyArchitecture');
 
       case 'generate-report':
-        return await ExtendedHandlers.handleGenerateReport();
+        return await callLazyHandler(command.action, 'handleGenerateReport');
 
       case 'test-module':
-        return await ExtendedHandlers.handleTestModule(command.params.module as string);
+        return await callLazyHandler(
+          command.action,
+          'handleTestModule',
+          command.params.module
+        );
 
       // IDE Mode handlers (v∞.23.0 - Super Prompt #7) - YOLO OPT-5: Lazy-loaded
       case 'open-file':
@@ -1785,179 +1555,231 @@ export async function executeDevSudoCommand(
         );
 
       case 'goto-handler':
-        return await IDEHandlers.handleGoToRustHandler(command.params.handler as string);
+        return await callLazyHandler(
+          command.action,
+          'handleGoToRustHandler',
+          command.params.handler
+        );
 
       case 'copilot-suggest':
-        return await IDEHandlers.handleCopilotSuggest(command.params.context as string);
+        return await callLazyHandler(
+          command.action,
+          'handleCopilotSuggest',
+          command.params.context
+        );
 
       case 'auto-complete':
-        return await IDEHandlers.handleAutoComplete(command.params.context as string);
+        return await callLazyHandler(
+          command.action,
+          'handleAutoComplete',
+          command.params.context
+        );
 
       case 'refactor-component':
-        return await IDEHandlers.handleRefactorComponent(
-          command.params.component as string
+        return await callLazyHandler(
+          command.action,
+          'handleRefactorComponent',
+          command.params.component
         );
 
       case 'refactor-hook':
-        return await IDEHandlers.handleRefactorHook(command.params.hook as string);
+        return await callLazyHandler(
+          command.action,
+          'handleRefactorHook',
+          command.params.hook
+        );
 
       case 'refactor-handler':
-        return await IDEHandlers.handleRefactorRustHandler(
-          command.params.handler as string
+        return await callLazyHandler(
+          command.action,
+          'handleRefactorRustHandler',
+          command.params.handler
         );
 
       case 'explain-code':
-        return await IDEHandlers.handleExplainCode(command.params.file as string);
+        return await callLazyHandler(
+          command.action,
+          'handleExplainCode',
+          command.params.file
+        );
 
       case 'auto-import':
-        return await IDEHandlers.handleAutoImport();
+        return await callLazyHandler(command.action, 'handleAutoImport');
 
       case 'generate-module':
-        return await IDEHandlers.handleGenerateModule(command.params.module as string);
+        return await callLazyHandler(
+          command.action,
+          'handleGenerateModule',
+          command.params.module
+        );
 
       case 'run-tests':
-        return await IDEHandlers.handleRunTests(command.params.target as string);
+        return await callLazyHandler(
+          command.action,
+          'handleRunTests',
+          command.params.target
+        );
 
       case 'master-analysis':
-        return await IDEHandlers.handleMasterAnalysis();
+        return await callLazyHandler(command.action, 'handleMasterAnalysis');
 
       case 'architect-refactor':
-        return await IDEHandlers.handleArchitectRefactor();
+        return await callLazyHandler(command.action, 'handleArchitectRefactor');
 
       case 'code-review':
-        return await IDEHandlers.handleCodeReview(command.params.target as string);
+        return await callLazyHandler(
+          command.action,
+          'handleCodeReview',
+          command.params.target
+        );
 
       case 'analyze-rust':
-        return await IDEHandlers.handleAnalyzeRust();
+        return await callLazyHandler(command.action, 'handleAnalyzeRust');
 
       case 'analyze-tauri':
-        return await IDEHandlers.handleAnalyzeTauri();
+        return await callLazyHandler(command.action, 'handleAnalyzeTauri');
 
       // Singularity Mind Engine handlers (v∞.24.0 - Super Prompt #8)
       case 'singularity-scan':
-        return await SingularityHandlers.handleSingularityScan();
+        return await callLazyHandler(command.action, 'handleSingularityScan');
 
       case 'brain-analysis':
-        return await SingularityHandlers.handleBrainAnalysis();
+        return await callLazyHandler(command.action, 'handleBrainAnalysis');
 
       case 'cognitive-check':
-        return await SingularityHandlers.handleCognitiveCheck();
+        return await callLazyHandler(command.action, 'handleCognitiveCheck');
 
       case 'meta-repair':
-        return await SingularityHandlers.handleMetaRepair();
+        return await callLazyHandler(command.action, 'handleMetaRepair');
 
       case 'evolution-report':
-        return await SingularityHandlers.handleEvolutionReport();
+        return await callLazyHandler(command.action, 'handleEvolutionReport');
 
       case 'coherence-check':
-        return await SingularityHandlers.handleCoherenceCheck();
+        return await callLazyHandler(command.action, 'handleCoherenceCheck');
 
       case 'repair-component':
-        return await SingularityHandlers.handleRepairComponent(
-          command.params.target as string
+        return await callLazyHandler(
+          command.action,
+          'handleRepairComponent',
+          command.params.target
         );
 
       // Vision Engine handlers (v∞.24.0 - Super Prompt #9)
       case 'vision-analyze':
-        return await VisionHandlers.handleVisionAnalyze();
+        return await callLazyHandler(command.action, 'handleVisionAnalyze');
 
       case 'ui-diagnostic':
-        return await VisionHandlers.handleUIDiagnostic();
+        return await callLazyHandler(command.action, 'handleUIDiagnostic');
 
       case 'design-review':
-        return await VisionHandlers.handleDesignReview();
+        return await callLazyHandler(command.action, 'handleDesignReview');
 
       case 'frontend-optimize':
-        return await VisionHandlers.handleFrontendOptimize();
+        return await callLazyHandler(command.action, 'handleFrontendOptimize');
 
       case 'visual-repair':
-        return await VisionHandlers.handleVisualRepair();
+        return await callLazyHandler(command.action, 'handleVisualRepair');
 
       // Backend & API Master Engine (Super Prompt #10)
       case 'backend-analysis':
-        return await BackendHandlers.handleBackendAnalysis();
+        return await callLazyHandler(command.action, 'handleBackendAnalysis');
 
       case 'fix-handler':
-        return await BackendHandlers.handleFixHandler(command.params.target as string);
+        return await callLazyHandler(
+          command.action,
+          'handleFixHandler',
+          command.params.target
+        );
 
       case 'create-api':
-        return await BackendHandlers.handleCreateAPI(command.params.name as string);
+        return await callLazyHandler(
+          command.action,
+          'handleCreateAPI',
+          command.params.name
+        );
 
       case 'whitelist-command':
-        return await BackendHandlers.handleWhitelistCommand(
-          command.params.commandName as string
+        return await callLazyHandler(
+          command.action,
+          'handleWhitelistCommand',
+          command.params.commandName
         );
 
       case 'optimize-cargo':
-        return await BackendHandlers.handleOptimizeCargo();
+        return await callLazyHandler(command.action, 'handleOptimizeCargo');
 
       case 'build-backend':
-        return await BackendHandlers.handleBuildBackend();
+        return await callLazyHandler(command.action, 'handleBuildBackend');
 
       case 'analyze-security':
-        return await BackendHandlers.handleAnalyzeSecurity();
+        return await callLazyHandler(command.action, 'handleAnalyzeSecurity');
 
       // Memory Eternal Engine (Super Prompt #11)
       case 'memory-scan':
-        return await MemoryHandlers.handleMemoryScan();
+        return await callLazyHandler(command.action, 'handleMemoryScan');
 
       case 'memory-heal':
-        return await MemoryHandlers.handleMemoryHeal();
+        return await callLazyHandler(command.action, 'handleMemoryHeal');
 
       case 'memory-deepheal':
-        return await MemoryHandlers.handleMemoryDeepHeal();
+        return await callLazyHandler(command.action, 'handleMemoryDeepHeal');
 
       case 'memory-snapshot':
-        return await MemoryHandlers.handleMemorySnapshot();
+        return await callLazyHandler(command.action, 'handleMemorySnapshot');
 
       case 'memory-export':
-        return await MemoryHandlers.handleMemoryExport();
+        return await callLazyHandler(command.action, 'handleMemoryExport');
 
       case 'memory-import':
-        return await MemoryHandlers.handleMemoryImport(command.params.filePath as string);
+        return await callLazyHandler(
+          command.action,
+          'handleMemoryImport',
+          command.params.filePath
+        );
 
       case 'memory-rebuild':
-        return await MemoryHandlers.handleMemoryRebuild();
+        return await callLazyHandler(command.action, 'handleMemoryRebuild');
 
       case 'memory-optimize':
-        return await MemoryHandlers.handleMemoryOptimize();
+        return await callLazyHandler(command.action, 'handleMemoryOptimize');
 
       // TITANE∞ ONE Unified Brain (Super Prompt #SINGULARITY)
       case 'titane-one-introspect':
-        return await TitaneOneHandlers.handleTitaneOneIntrospect();
+        return await callLazyHandler(command.action, 'handleTitaneOneIntrospect');
 
       case 'titane-one-evolve':
-        return await TitaneOneHandlers.handleTitaneOneEvolve();
+        return await callLazyHandler(command.action, 'handleTitaneOneEvolve');
 
       case 'titane-one-heal':
-        return await TitaneOneHandlers.handleTitaneOneHeal();
+        return await callLazyHandler(command.action, 'handleTitaneOneHeal');
 
       case 'titane-one-fullheal':
-        return await TitaneOneHandlers.handleTitaneOneFullHeal();
+        return await callLazyHandler(command.action, 'handleTitaneOneFullHeal');
 
       case 'titane-one-unify':
-        return await TitaneOneHandlers.handleTitaneOneUnify();
+        return await callLazyHandler(command.action, 'handleTitaneOneUnify');
 
       case 'titane-one-optimize':
-        return await TitaneOneHandlers.handleTitaneOneOptimize();
+        return await callLazyHandler(command.action, 'handleTitaneOneOptimize');
 
       case 'titane-one-vision-all':
-        return await TitaneOneHandlers.handleTitaneOneVisionAll();
+        return await callLazyHandler(command.action, 'handleTitaneOneVisionAll');
 
       case 'titane-one-analyze-dev':
-        return await TitaneOneHandlers.handleTitaneOneAnalyzeDev();
+        return await callLazyHandler(command.action, 'handleTitaneOneAnalyzeDev');
 
       case 'titane-one-analyze-ui':
-        return await TitaneOneHandlers.handleTitaneOneAnalyzeUI();
+        return await callLazyHandler(command.action, 'handleTitaneOneAnalyzeUI');
 
       case 'titane-one-analyze-backend':
-        return await TitaneOneHandlers.handleTitaneOneAnalyzeBackend();
+        return await callLazyHandler(command.action, 'handleTitaneOneAnalyzeBackend');
 
       case 'titane-one-analyze-memory':
-        return await TitaneOneHandlers.handleTitaneOneAnalyzeMemory();
+        return await callLazyHandler(command.action, 'handleTitaneOneAnalyzeMemory');
 
       case 'titane-one-singularity-scan':
-        return await TitaneOneHandlers.handleTitaneOneSingularityScan();
+        return await callLazyHandler(command.action, 'handleTitaneOneSingularityScan');
 
       // AI Local Model (Super Prompt #12)
       case 'ia-add':

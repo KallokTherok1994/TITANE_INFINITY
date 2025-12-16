@@ -24,6 +24,7 @@ export type HandlerDomain =
 
 export interface HandlerModule {
   // Each handler module exports functions matching actions
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: (...args: any[]) => Promise<any>;
 }
 
@@ -207,13 +208,13 @@ export async function loadHandlerModule(domain: HandlerDomain): Promise<HandlerM
   // Return cached module if already loaded
   if (handlerCache[domain]) {
     console.log(`[DEV-SUDO LAZY] ✅ Handler "${domain}" already loaded (cached)`);
-    return handlerCache[domain]!;
+    return handlerCache[domain] as HandlerModule;
   }
 
   // Return loading promise if currently loading
   if (loadingPromises[domain]) {
     console.log(`[DEV-SUDO LAZY] ⏳ Handler "${domain}" currently loading (awaiting)`);
-    return loadingPromises[domain]!;
+    return loadingPromises[domain] as Promise<HandlerModule>;
   }
 
   // Start loading

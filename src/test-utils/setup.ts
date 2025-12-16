@@ -5,7 +5,7 @@
 
 import '@testing-library/jest-dom';
 import { cleanup } from '@testing-library/react';
-import { afterEach, vi } from 'vitest';
+import { afterEach, vi as _vi } from 'vitest';
 import React from 'react';
 
 // Cleanup after each test automatically
@@ -40,6 +40,7 @@ const globalQueryClient = new QueryClient({
 });
 
 // Global wrapper for tests
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Test utility globalThis typing
 (globalThis as any).__TEST_WRAPPER__ = ({ children }: { children: React.ReactNode }) =>
   React.createElement(QueryClientProvider, { client: globalQueryClient }, children);
 
@@ -67,6 +68,7 @@ global.IntersectionObserver = class IntersectionObserver {
     return [];
   }
   unobserve() {}
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Mock class for test environment
 } as any;
 
 // Mock ResizeObserver
@@ -75,4 +77,5 @@ global.ResizeObserver = class ResizeObserver {
   disconnect() {}
   observe() {}
   unobserve() {}
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Mock class for test environment
 } as any;

@@ -4,7 +4,7 @@
 //   Premium WebGL rendering with PBR, TAA, Bloom, Studio Lighting
 // ═════════════════════════════════════════════════════════════════════════════
 
-import { loadThreeJS } from '../core/ThreeJSLazyLoader';
+import { loadThreeJS as _loadThreeJS } from '../core/ThreeJSLazyLoader';
 import type { SkeletonSnapshot } from '../fullbody/fullbody_engine';
 import { PBRMaterialSystem } from '../rendering/PBRMaterialSystem';
 import { StudioLightingRig, type AppearanceStyle } from '../rendering/StudioLightingRig';

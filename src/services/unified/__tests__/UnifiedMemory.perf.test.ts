@@ -1,21 +1,43 @@
 /**
- * TITANE_INFINITY v∞.42 — Proprietary License
+ * TITANE_INFINITY v24.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+ *
+ * v22Ω AI Performance Optimizations Compatible
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
  *   UNIFIED MEMORY — Performance Benchmarks (Vitest)
+ *   NOTE: These tests require native better-sqlite3 bindings.
+ *   They are skipped in environments where bindings are not available.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { UnifiedMemory, LocalEmbeddingGenerator } from '../index';
-import { SQLiteVectorStore } from '../SQLiteVectorStore';
 import path from 'path';
 import fs from 'fs';
 
-describe('UnifiedMemory Benchmarks', () => {
+// Check if better-sqlite3 bindings are available
+let hasSQLiteBindings = false;
+let UnifiedMemory: typeof import('../index').UnifiedMemory;
+let LocalEmbeddingGenerator: typeof import('../index').LocalEmbeddingGenerator;
+let SQLiteVectorStore: typeof import('../SQLiteVectorStore').SQLiteVectorStore;
+
+try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires -- Dynamic require for optional native module
+  require('better-sqlite3');
+  hasSQLiteBindings = true;
+  // eslint-disable-next-line @typescript-eslint/no-var-requires -- Conditional import based on runtime check
+  const indexModule = require('../index');
+  UnifiedMemory = indexModule.UnifiedMemory;
+  LocalEmbeddingGenerator = indexModule.LocalEmbeddingGenerator;
+  // eslint-disable-next-line @typescript-eslint/no-var-requires -- Conditional import based on runtime check
+  SQLiteVectorStore = require('../SQLiteVectorStore').SQLiteVectorStore;
+} catch {
+  hasSQLiteBindings = false;
+}
+
+describe.skipIf(!hasSQLiteBindings)('UnifiedMemory Benchmarks', () => {
   let memory: UnifiedMemory | null = null;
   let vectorStore: SQLiteVectorStore;
   let embeddingGenerator: LocalEmbeddingGenerator;

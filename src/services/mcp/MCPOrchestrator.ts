@@ -10,7 +10,17 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { nanoid } from 'nanoid';
+// v24.3.0: Use native crypto.randomUUID() instead of nanoid (removes dependency)
+const generateId = (): string => {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID().slice(0, 21); // Match nanoid default length
+  }
+  // Fallback for older environments
+  return (
+    Math.random().toString(36).substring(2, 15) +
+    Math.random().toString(36).substring(2, 8)
+  );
+};
 import type {
   MCPState,
   MCPOperations,
@@ -251,7 +261,7 @@ class MCPOrchestratorClass implements MCPOperations {
 
   public async createJob(input: Job['input'], type: JobType): Promise<Job> {
     const job: Job = {
-      id: `job_${nanoid()}`,
+      id: `job_${generateId()}`,
       type,
       status: JobStatus.PENDING,
       priority: this.calculatePriority(type),
@@ -695,7 +705,7 @@ class MCPOrchestratorClass implements MCPOperations {
   ): Promise<string> {
     const memory: MemoryEntry = {
       ...entry,
-      id: nanoid(),
+      id: generateId(),
       created: Date.now(),
       accessed: Date.now(),
       accessCount: 1,

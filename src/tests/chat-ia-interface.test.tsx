@@ -147,8 +147,12 @@ describe('🧪 CHAT IA INTERFACE - VERIFICATION COMPLÈTE', () => {
 
     render(<ChatWindow />);
 
+    // User message renders immediately
     expect(screen.getByText('Question test')).toBeInTheDocument();
-    expect(screen.getByText('Réponse de TITANE∞')).toBeInTheDocument();
+    // Assistant message uses lazy-loaded markdown, wait for it
+    await waitFor(() => {
+      expect(screen.getByText('Réponse de TITANE∞')).toBeInTheDocument();
+    });
   });
 
   test('6️⃣ Gestion des erreurs Chat IA', async () => {

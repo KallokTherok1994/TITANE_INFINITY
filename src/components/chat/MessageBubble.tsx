@@ -20,9 +20,15 @@ import './MessageBubble.css';
 // YOLO OPT-6: Lazy-load ReactMarkdown (-80 KB gzip)
 // Markdown uniquement pour messages assistant (pas user)
 const LazyReactMarkdown = lazy(() => import('react-markdown'));
-const lazyRemarkGfm = () => import('remark-gfm').then(m => m.default);
+import remarkGfm from 'remark-gfm';
 
-type Components = any; // Type simplif pour éviter import statique
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Type simplifié pour éviter import statique
+type Components = any;
+type CodeProps = {
+  className?: string;
+  children?: React.ReactNode;
+  [key: string]: unknown;
+};
 
 interface MessageBubbleProps {
   role: 'user' | 'assistant' | 'system';
@@ -33,7 +39,7 @@ interface MessageBubbleProps {
 
 // Composants markdown memoizés (définis en dehors pour éviter recréation)
 const markdownComponents: Components = {
-  code: ({ className, children, ...props }) => {
+  code: ({ className, children, ...props }: CodeProps) => {
     const inline = !className;
     return inline ? (
       <code className="inline-code" {...props}>
@@ -45,16 +51,15 @@ const markdownComponents: Components = {
       </code>
     );
   },
-  pre: ({ children }) => <pre className="code-block">{children}</pre>,
-  a: ({ href, children }) => (
+  pre: ({ children }: { children?: React.ReactNode }) => (
+    <pre className="code-block">{children}</pre>
+  ),
+  a: ({ href, children }: { href?: string; children?: React.ReactNode }) => (
     <a href={href} target="_blank" rel="noopener noreferrer" className="markdown-link">
       {children}
     </a>
   ),
 };
-
-// Plugins remarkGfm memoizé
-const remarkPlugins = [remarkGfm];
 
 /**
  * Formate un timestamp en heure locale
@@ -136,7 +141,7 @@ export const MessageBubble = memo(function MessageBubble({
         return (
           <Suspense fallback={<div className="markdown-loading">Chargement...</div>}>
             <LazyReactMarkdown
-              remarkPlugins={[lazyRemarkGfm]}
+              remarkPlugins={[remarkGfm]}
               components={markdownComponents}
             >
               {content}

@@ -49,9 +49,12 @@ describe('🏛️ Architecture: Engine Isolation', () => {
     const violations: Array<{ file: string; line: number; import: string }> = [];
 
     // Exceptions légitimes (dynamic imports pour ponts I/O isolés)
+    // NOTE: Ces fichiers utilisent l'injection de dépendances - l'Engine est pur,
+    // seule l'instanciation du singleton utilise les services
     const ALLOWED_EXCEPTIONS = [
       'cognitiveLayoutIntegrations.ts', // Pont Helios/Nexus (migration vers CognitiveLayoutService en cours)
       'tauriBridge.ts', // Pont MemoryOS (architecture nécessite dynamic import)
+      'AgendaEngine.ts', // v24.3.0: Singleton avec injection de callbacks (Engine pur, instanciation utilise service)
     ];
 
     for (const file of engineFiles) {

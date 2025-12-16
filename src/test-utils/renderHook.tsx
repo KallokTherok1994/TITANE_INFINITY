@@ -28,6 +28,7 @@ export function renderHook<TProps, TResult>(
 
   // Use global wrapper if available (from setup.ts)
   const wrapper =
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Test utility globalThis typing
     (globalThis as any).__TEST_WRAPPER__ ||
     (({ children }: { children: ReactNode }) => (
       <TestProviders queryClient={queryClient}>{children}</TestProviders>

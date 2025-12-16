@@ -4,7 +4,7 @@
 //   Physically-Based Rendering materials for avatar (skin, cloth, hair)
 // ═════════════════════════════════════════════════════════════════════════════
 
-import { loadThreeJS } from '../core/ThreeJSLazyLoader';
+import { loadThreeJS as _loadThreeJS } from '../core/ThreeJSLazyLoader';
 
 // YOLO OPT-1: Types importés statiquement, implémentation lazy
 type THREE = typeof import('three');
