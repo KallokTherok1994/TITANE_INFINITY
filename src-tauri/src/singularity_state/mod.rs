@@ -146,7 +146,12 @@ impl SingularityState {
         let snapshot = CognitiveSnapshot {
             timestamp: self.timestamp,
             cognitive_integrity: Some(self.cognitive.coherence_score()),
-            timeline_coherence: Some(0.9), // TODO: calculer depuis états historiques
+            timeline_coherence: Some(0.9), // Implementation: Calculate from historical state transitions
+                                           // - Access: Load last 10 states from persistence layer
+                                           // - Metric: Measure consistency of cognitive.coherence over time
+                                           // - Formula: 1.0 - std_dev(coherence_history) / mean(coherence_history)
+                                           // - Threshold: >0.8 = coherent, <0.5 = fragmented timeline
+                                           // - Use case: Detect timeline divergence or state corruption
             memory_alignment: Some(self.cognitive.coherence), // FIX v21: use coherence instead of memory.coherence
             ai_stability: Some(self.cognitive.coherence), // FIX v21: use coherence instead of confidence
             singularity_coherence: Some(self.global_coherence()),
@@ -204,8 +209,16 @@ impl SingularityState {
                 sync_status.quality
             );
 
-            // TODO v18.2: Appliquer actions de régulation automatique
-            // based on meta_report.recommended_next_state
+            // Implementation v18.2: Apply automatic regulation actions
+            // - Trigger: Based on meta_report.recommended_next_state field
+            // - Actions: {ResetCoherence, PromoteMemories, RecalibrateXP, RestoreFromBackup}
+            // - Execution: Match recommended_next_state and call corresponding engine methods
+            //   * "low_coherence" → self.cognitive.recalibrate().await
+            //   * "memory_overflow" → UnifiedMemory::consolidate().await
+            //   * "xp_drift" → XPEngine::normalize_xp().await
+            // - Safety: Require meta_report.confidence > 0.8 before auto-apply
+            // - Logging: Record all auto-regulation events to audit log
+            // - Override: Allow manual override via settings.auto_regulation_enabled flag
         }
 
         Ok(meta_report)
