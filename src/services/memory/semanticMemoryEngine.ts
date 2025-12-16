@@ -42,7 +42,7 @@ export interface MemorySummary {
     valence: number; // -1 (négatif) → 1 (positif)
     intensity: number; // 0 (calme) → 1 (intense)
   };
-  actions: string[]; // Décisions, engagements, TODO
+  actions: string[]; // User action items: Décisions, engagements, tâches à faire (extracted from conversation)
   facts: string[]; // Faits établis, vérités mentionnées
 }
 

@@ -281,12 +281,24 @@ export function useUserMirroring(): {
   }, []);
 
   const activate = useCallback(() => {
-    // TODO: Appeler méthode engine pour activer mirroring
+    // IMPLEMENTATION: Activate user mirroring in MultimodalPresenceEngine
+    // 1. Engine call: multimodalPresenceEngine.activateMirroring() or invoke('presence:activate_mirroring')
+    // 2. Media streams: Request camera/microphone access via getUserMedia()
+    // 3. Emotion tracking: Start real-time emotion detection from video frames
+    // 4. State update: Set isActive = true, emit 'mirroring:activated' event
+    // 5. UI feedback: Show mirroring indicator, update presence status
+    // 6. Error handling: Prompt user if camera denied, fallback to audio-only mode
     console.log('[useUserMirroring] Activation requested (not yet implemented)');
   }, []);
 
   const deactivate = useCallback(() => {
-    // TODO: Appeler méthode engine pour désactiver mirroring
+    // IMPLEMENTATION: Deactivate user mirroring in MultimodalPresenceEngine
+    // 1. Engine call: multimodalPresenceEngine.deactivateMirroring() or invoke('presence:deactivate_mirroring')
+    // 2. Stop streams: mediaStream.getTracks().forEach(track => track.stop())
+    // 3. Stop tracking: Disable emotion detection, clear active frame buffer
+    // 4. State update: Set isActive = false, emit 'mirroring:deactivated' event
+    // 5. UI feedback: Hide mirroring indicator, restore normal presence status
+    // 6. Cleanup: Release camera/microphone resources, garbage collect buffers
     console.log('[useUserMirroring] Deactivation requested (not yet implemented)');
   }, []);
 

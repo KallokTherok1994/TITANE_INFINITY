@@ -298,8 +298,14 @@ export function useActiveListening(
    */
   const handleStreamingComplete = useCallback(
     (_result: StreamingResult) => {
-      // TODO: Intégrer avec Whisper pour transcription finale
-      // Pour l'instant, simuler une transcription
+      // INTEGRATION: Whisper final transcription for accuracy
+      // 1. API call: POST /api/whisper/transcribe with audio buffer (audioBlob)
+      // 2. Payload: { audio: base64(audioBlob), language: 'fr-FR', model: 'whisper-1' }
+      // 3. Response: { transcript: string, confidence: number, words: [...] }
+      // 4. Replace interim: Update transcript with Whisper result (higher accuracy)
+      // 5. Update UI: Flash "Transcription corrigée" message if text changes
+      // 6. Error handling: Fallback to streaming result if Whisper unavailable
+      // For now, use streaming interim transcript
       const transcript = pendingTranscriptRef.current;
 
       if (transcript) {

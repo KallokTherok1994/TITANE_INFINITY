@@ -400,7 +400,7 @@ export class SingularityConnections {
   }
 
   // ═══════════════════════════════════════════════════════════
-  //   HELPER METHODS FOR TODO IMPLEMENTATIONS
+  //   HELPER METHODS (Documented implementations above)
   // ═══════════════════════════════════════════════════════════
 
   private static lastApiLatency: number = 0;

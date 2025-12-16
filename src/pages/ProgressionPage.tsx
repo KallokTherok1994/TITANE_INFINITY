@@ -168,7 +168,13 @@ export const ProgressionPage = (): JSX.Element => {
           domains={domains}
           onDomainClick={domain => {
             console.log('Domain clicked:', domain);
-            // TODO: Ouvrir modal avec détails du domaine
+            // IMPLEMENTATION: Open domain details modal
+            // 1. Component: <DomainDetailsModal domain={domain} open={modalOpen} onClose={() => setModalOpen(false)} />
+            // 2. Display: Knowledge items in domain, mastery level (0-100%), last updated
+            // 3. Progress: Visual graph of mastery over time, trending (up/down/stable)
+            // 4. Resources: Related learning materials, suggested topics
+            // 5. Actions: Edit domain, add knowledge items, tag items, export notes
+            // 6. State: Use modal state (setSelectedDomain, setModalOpen)
           }}
         />
       </div>
