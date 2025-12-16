@@ -1,0 +1,4 @@
+=== NPM Licenses ===
+Need to install the following packages:
+license-checker@25.0.1
+Ok to proceed? (y) 
