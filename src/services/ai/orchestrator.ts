@@ -137,6 +137,12 @@ class AIOrchestrator {
     > | null;
     timestamp: number;
   } = { data: null, timestamp: 0 };
+
+  // v22Ω: Critical error tracking for degraded mode
+  private criticalErrorHistory: number[] = []; // timestamps of critical errors
+  private readonly CRITICAL_ERROR_WINDOW_MS = 300000; // 5 minutes
+  private readonly CRITICAL_ERROR_THRESHOLD = 3; // 3 errors in window = degrade
+  private isDegradedMode = false;
   private readonly METRICS_CACHE_TTL_MS = 1000; // 1 second TTL
 
   constructor() {
@@ -171,6 +177,19 @@ class AIOrchestrator {
       clearInterval(this.quickFailCleanupInterval);
       this.quickFailCleanupInterval = null;
     }
+  }
+
+  /**
+   * v22Ω: Cleanup all resources to prevent memory leaks
+   * Call this when shutting down the orchestrator
+   */
+  destroy(): void {
+    this.stopQuickFailCleanup();
+    this.quickFailCache.clear();
+    this.metricsCache = { data: null, timestamp: 0 };
+    this.criticalErrorHistory = [];
+    this.isDegradedMode = false;
+    logger.info('Orchestrator destroyed and resources cleaned up');
   }
 
   /**
@@ -618,6 +637,35 @@ class AIOrchestrator {
 
       // ═══ PHASE 3.4.2: NEURAL PROVIDER SELECTION + COGNITIVE KERNEL v22Ω ═══
 
+      // v22Ω: Check degraded mode - if active, force titane-local only
+      if (this.isDegradedMode) {
+        logger.warn('⚠️ DEGRADED MODE: Using titane-local only for stability');
+        const localProvider = this.providers.find(p => p.name === 'titane-local');
+        if (localProvider) {
+          try {
+            const response = await this.executeProviderIsolated(
+              localProvider,
+              sanitized,
+              history,
+              5000,
+              requestId
+            );
+            // Success in degraded mode - check if we can exit
+            this.criticalErrorHistory = this.criticalErrorHistory.filter(
+              ts => Date.now() - ts < this.CRITICAL_ERROR_WINDOW_MS
+            );
+            if (this.criticalErrorHistory.length < this.CRITICAL_ERROR_THRESHOLD) {
+              this.isDegradedMode = false;
+              logger.info('✅ DEGRADED MODE DEACTIVATED: System recovered');
+            }
+            return response;
+          } catch (degradedError) {
+            logger.error('Degraded mode fallback also failed:', degradedError);
+            // Continue to emergency response below
+          }
+        }
+      }
+
       // 🧠 NOUVEAU v22Ω: Mise à jour état environnement du Cognitive Kernel
       // v22Ω: Utiliser cache TTL 1s pour éviter appels redondants
       const { metrics: _metricsLoaded } = await ensureEngines();
@@ -952,9 +1000,28 @@ Le système s'auto-répare en continu. Que puis-je t'aider à explorer ?`,
         },
       };
     } catch (criticalError) {
-      // ═══ CRITICAL ERROR HANDLER ═══
+      // ═══ CRITICAL ERROR HANDLER (v22Ω Enhanced) ═══
       const responseTime = Date.now() - requestStartTime;
       this.orchestratorMetrics.totalFailures++;
+
+      // v22Ω: Track critical errors for degraded mode detection
+      const now = Date.now();
+      this.criticalErrorHistory.push(now);
+      // Clean old errors outside window
+      this.criticalErrorHistory = this.criticalErrorHistory.filter(
+        ts => now - ts < this.CRITICAL_ERROR_WINDOW_MS
+      );
+
+      // Check if we should enter degraded mode
+      if (
+        this.criticalErrorHistory.length >= this.CRITICAL_ERROR_THRESHOLD &&
+        !this.isDegradedMode
+      ) {
+        this.isDegradedMode = true;
+        logger.warn(
+          `⚠️ DEGRADED MODE ACTIVATED: ${this.criticalErrorHistory.length} critical errors in ${this.CRITICAL_ERROR_WINDOW_MS / 60000}min window`
+        );
+      }
 
       const { autoHeal: _autoHealLoaded } = await ensureEngines();
       _autoHealLoaded.heal(
@@ -964,10 +1031,15 @@ Le système s'auto-répare en continu. Que puis-je t'aider à explorer ?`,
         {
           requestId,
           responseTime,
+          degradedMode: this.isDegradedMode,
+          criticalErrorCount: this.criticalErrorHistory.length,
         }
       );
 
-      logger.error(`Critical error [${requestId}]`, criticalError);
+      logger.error(`Critical error [${requestId}]`, {
+        criticalError,
+        degradedMode: this.isDegradedMode,
+      });
 
       return {
         content: `🔴 **Récupération Critique OMEGA** [${requestId.substring(0, 8)}]
