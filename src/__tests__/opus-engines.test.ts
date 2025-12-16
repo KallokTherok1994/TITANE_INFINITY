@@ -146,6 +146,8 @@ describe('OPUS v∞.4 - PredictiveStateEngine', () => {
 // ============================================================================
 
 // REMOVED: engines/stress supprimé en PHASE 1 (OPTION B)
+// Commented out due to missing ../engines/stress/_stubs file
+/*
 import { StressRegulationEngine } from '../engines/stress/_stubs';
 import {
   getDefaultStressRegulationState,
@@ -336,12 +338,15 @@ describe('OPUS v∞.5 - StressRegulationEngine', () => {
     });
   });
 });
+*/
 
 // ============================================================================
 // OPUS v∞.6 - HUMAN RHYTHM ENGINE TESTS
 // ============================================================================
 
 // REMOVED: engines/rhythm supprimé en PHASE 1 (OPTION B)
+// Commented out due to missing ../engines/rhythm/_stubs file
+/*
 import { HumanRhythmEngine } from '../engines/rhythm/_stubs';
 import {
   getDefaultHumanRhythmState,
@@ -541,11 +546,14 @@ describe('OPUS v∞.6 - HumanRhythmEngine', () => {
     });
   });
 });
+*/
 
 // ============================================================================
 // TESTS DES UTILITAIRES
 // ============================================================================
 
+// Commented out - utilities from removed engines
+/*
 describe('Utilitaires Human Rhythm', () => {
   describe('getDayMomentFromHour', () => {
     it('devrait retourner earlyMorning pour 5-7h', () => {
@@ -605,11 +613,14 @@ describe('Utilitaires Human Rhythm', () => {
     });
   });
 });
+*/
 
 // ============================================================================
 // TESTS D'INTÉGRATION
 // ============================================================================
 
+// Commented out - integration tests for removed engines
+/*
 describe('Intégration OPUS Engines', () => {
   let predictiveEngine: PredictiveStateEngine;
   let stressEngine: ReturnType<typeof StressRegulationEngine.getInstance>;
@@ -680,3 +691,4 @@ describe('Intégration OPUS Engines', () => {
     }
   });
 });
+*/
