@@ -491,7 +491,14 @@ class AIOrchestrator {
         score -= 20;
       }
 
-      providerScores.set(provider.name, Math.max(0, score));
+      // v22Ω: Validate score is finite and in valid range
+      const finalScore = Math.max(0, score);
+      if (!Number.isFinite(finalScore)) {
+        logger.error(`Invalid score for ${provider.name}: ${score}, defaulting to 0`);
+        providerScores.set(provider.name, 0);
+      } else {
+        providerScores.set(provider.name, finalScore);
+      }
     });
 
     const sortedProviders = Array.from(providerScores.entries()).sort(

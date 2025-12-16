@@ -309,7 +309,7 @@ class ChatEngineOmega {
       try {
         memoryContext = await this.withTimeout(
           memoryIntegration.loadContext(finalConfig.contextSources || {}),
-          3000, // 3s timeout optimisé
+          5000, // 5s timeout (v22Ω: increased from 3s for complex contexts)
           'Memory context timeout'
         );
         context = this.formatMemoryContext(memoryContext);
