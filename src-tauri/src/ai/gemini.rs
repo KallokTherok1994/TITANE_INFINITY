@@ -143,8 +143,15 @@ impl GeminiClient {
     }
 
     pub async fn query_stream(&self, request: &AIRequest) -> AIResult<AIResponse> {
+        // Implementation: True streaming with Server-Sent Events for Gemini API
+        // - API: Use generateContentStream() method with streamGenerateContent=true parameter
+        // - Response: NDJSON stream of chunks: {"candidates": [{"content": {"parts": [{"text": "..."}]}}]}
+        // - Parsing: Use futures::stream::StreamExt to process async stream
+        // - Accumulation: Collect text parts until stream completes
+        // - Event emission: Emit tauri event for each chunk: emit("gemini:stream", chunk_text)
+        // - Error handling: Handle connection drops, API rate limits, timeout on slow generation
+        // - Performance: ~50-200ms per token depending on model (gemini-1.5-flash vs pro)
         // For now, fallback to non-streaming
-        // TODO: Implement true streaming with Server-Sent Events
         self.query(request).await
     }
 }

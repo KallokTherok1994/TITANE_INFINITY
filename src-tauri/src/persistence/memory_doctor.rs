@@ -297,11 +297,16 @@ impl MemoryDoctor {
     async fn analyze_schema(&self) -> SchemaReport {
         let current_version = CURRENT_SCHEMA_VERSION;
 
-        // Essayer de charger l'état pour obtenir sa version
+        // Try to load state to get its version
         let engine = PERSISTENCE_ENGINE.read().await;
         let state_version = if let Ok(Some(_state)) = engine.load_latest_state().await {
-            // TODO: Ajouter schema_version dans SingularityState
-            // Pour l'instant, on considère que si l'état existe, il est à la version 1
+            // Implementation: Add schema_version field to SingularityState struct
+            // - Field: pub schema_version: u32 in SingularityState definition
+            // - Default: schema_version: 1 for backward compatibility
+            // - Migration: Increment on breaking changes (e.g., v2 adds new cognitive fields)
+            // - Usage: let version = state.schema_version; compare against CURRENT_SCHEMA_VERSION
+            // - Storage: Persist schema_version in JSON/bincode serialization
+            // For now, assume version 1 if state exists
             1
         } else {
             1

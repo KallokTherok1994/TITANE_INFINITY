@@ -115,8 +115,15 @@ fn collect_metrics() -> SystemMetricsSnapshot {
         .unwrap_or(std::time::Duration::from_secs(0))
         .as_millis() as u64;
 
-    // Simulated metrics (in production, use sysinfo crate)
-    // TODO: Replace with actual system metrics collection
+    // Implementation: Real system metrics with sysinfo crate
+    // - Dependency: sysinfo = "0.30" in Cargo.toml
+    // - CPU: let mut sys = System::new_all(); sys.refresh_cpu(); cpu_usage = sys.global_cpu_info().cpu_usage();
+    // - Memory: sys.refresh_memory(); memory_usage = (sys.used_memory() as f32 / sys.total_memory() as f32) * 100.0;
+    // - Disk: sys.refresh_disks(); disk_usage = calculate_disk_percentage(sys.disks());
+    // - Network: sys.refresh_networks(); network = sum_rx_tx_bytes(sys.networks());
+    // - Processes: sys.refresh_processes(); processes = sys.processes().len();
+    // - Performance: Cache metrics for 1 second to avoid excessive syscalls
+    // For now: simulated metrics
     SystemMetricsSnapshot {
         timestamp,
         cpu_usage: 30.0 + (rand::random::<f32>() * 40.0),

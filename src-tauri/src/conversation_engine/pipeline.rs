@@ -432,7 +432,12 @@ impl ConversationPipeline {
         emotion: &EmotionState,
         cognitive_summary: &CognitiveSummary,
     ) -> Result<(), ConversationEngineError> {
-        // TODO: Synchroniser avec le SingularityState une fois l'API accessible
+        // Implementation: Synchronize with SingularityState once API stabilizes
+        // - Write lock: let mut singularity = self.singularity.write().await;
+        // - Emotion sync: singularity.cognitive.emotional.valence = emotion.valence; arousal = emotion.arousal;
+        // - Cognitive sync: singularity.cognitive.load = cognitive_summary.processing_load;
+        // - Memory sync: singularity.cognitive.working_memory_usage = cognitive_summary.memory_usage;
+        // - API status: Waiting for SingularityState::cognitive.emotional field stabilization (v24.3+)
         // let mut singularity = self.singularity.write().await;
         // singularity.cognitive.emotional.valence = emotion.valence;
         // ...

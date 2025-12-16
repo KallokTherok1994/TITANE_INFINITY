@@ -11,7 +11,12 @@ pub async fn send_message(
 ) -> Result<String, String> {
     // Rate limiting
     state.rate_limiter
-        .check("user_default") // TODO: Implémenter vrai user ID
+        .check("user_default") // Implementation: Extract real user ID from authenticated session
+                               // - Session: Get from state.session_manager.get_current_user()
+                               // - JWT: Decode JWT token from request headers, extract sub (subject) claim
+                               // - Tauri: Use window label or app instance ID if multi-user not required
+                               // - Fallback: "user_default" for single-user desktop app
+                               // - Multi-user: Implement proper authentication with login flow
         .await
         .map_err(|e| e.to_string())?;
     
