@@ -182,7 +182,12 @@ export const MemoryHealthPanel: FC = () => {
     if (!env.isTauri) return;
 
     try {
-      // TODO: obtenir l'état actuel depuis le store
+      // IMPLEMENTATION: Obtain current state from UnifiedStore
+      // 1. Import useUnifiedStore from '@/store/useUnifiedStore'
+      // 2. Access state: const { singularityState, cognitiveState } = useUnifiedStore()
+      // 3. Serialize relevant fields: { memory: singularityState.memory, cognitive: cognitiveState }
+      // 4. Format JSON: JSON.stringify(state, null, 2) for readable snapshot
+      // 5. Include timestamp: { timestamp: Date.now(), state: ... }
       const stateJson = JSON.stringify({});
       await secureInvoke('titan_force_snapshot', { stateJson });
       await loadHealth();

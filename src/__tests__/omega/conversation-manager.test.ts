@@ -18,9 +18,9 @@ import type { ConversationMessage } from '../../types/conversation';
 describe('🧠 ConversationManager (OMEGA v2)', () => {
   beforeEach(async () => {
     // Clear all conversations before each test
-    const ids = await conversationManager.listConversations();
+    const conversations = await conversationManager.listConversations();
     await Promise.all(
-      ids.map((id: string) => conversationManager.deleteConversation(id))
+      conversations.map(conv => conversationManager.deleteConversation(conv.id))
     );
   });
 

@@ -33,13 +33,24 @@ export function Engines() {
 
   const handleInspect = (id: string) => {
     setSelectedEngine(id);
-    // TODO: Open detailed modal
+    // IMPLEMENTATION: Open detailed engine inspection modal
+    // 1. Component: Create <EngineDetailModal engine={selectedEngine} onClose={() => setSelectedEngine(null)} />
+    // 2. Display: Comprehensive metrics (latency, throughput, error rate, memory usage)
+    // 3. Configuration: Show current engine config, allow runtime adjustments
+    // 4. State: Display internal state (queues, caches, active operations)
+    // 5. Performance: Real-time graphs (last 5min) using Chart.js or Recharts
+    // 6. Actions: Restart, reset, export logs, run diagnostics
     console.log('Inspect engine:', id);
   };
 
   const handleViewLogs = (id: string) => {
     setSelectedEngine(id);
-    // TODO: Switch to Logs section with filter
+    // IMPLEMENTATION: Switch to Logs section with engine filter
+    // 1. Callback: onSwitchSection('Logs', { filterByEngine: id })
+    // 2. Logs tab: Receive filter prop, update LogViewer to show only engine-specific logs
+    // 3. Filter UI: Display "Showing logs for: {engineName}" with clear filter button
+    // 4. Log query: Filter by log.source === id or log.tags.includes(engineName)
+    // 5. Persistence: Save filter state in sessionStorage for tab switches
     console.log('View logs for:', id);
   };
 

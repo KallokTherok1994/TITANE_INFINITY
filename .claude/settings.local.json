@@ -90,7 +90,16 @@
       "Bash(git ls-tree:*)",
       "Bash(npm run)",
       "Bash(for file in /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/components/test/ParlerTTSTestPanel.tsx /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/components/debug/ChatDebugPanel.tsx /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/components/GoogleCloudTester.tsx /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/components/vision/VisionDebugOverlay.tsx /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/components/LiveDebuggerConsole.tsx)",
-      "Bash(do echo \"=== $file ===\" wc -l \"$file\" grep \"^import\\|^export\" \"$file\")"
+      "Bash(do echo \"=== $file ===\" wc -l \"$file\" grep \"^import\\|^export\" \"$file\")",
+      "Bash(tail -n 1 wc -l /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/performanceEngine/*.ts)",
+      "Bash(tail -n 1 wc -l /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/searchTools/*.ts)",
+      "Bash(tail -n 1 wc -l /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/selfHealing/*.ts)",
+      "Bash(tail -n 1 wc -l /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/promptEngine/*.ts)",
+      "Bash(for module in ai avatar camera dataCollector devSudo fusion hybrid liveDebugger singularity talkToTitane vocalDev)",
+      "Bash(do echo \"=== MODULE: $module ===\" find /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/modules/$module -type f \\( -name \"*.ts\" -o -name \"*.tsx\" -o -name \"*.js\" -o -name \"*.jsx\" \\))",
+      "Bash(for dir in /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/*/)",
+      "Bash(do basename \"$dir\")",
+      "Bash(do find /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/modules/$module -type f \\( -name \"*.ts\" -o -name \"*.tsx\" \\) -exec wc -l {} +)"
     ],
     "deny": [],
     "ask": []
