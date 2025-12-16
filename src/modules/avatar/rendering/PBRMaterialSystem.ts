@@ -1,9 +1,13 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v25.0 — PBR MATERIAL SYSTEM
+//   TITANE∞ v25.3.0 — PBR MATERIAL SYSTEM
+//   YOLO OPT-1: Lazy-loaded Three.js
 //   Physically-Based Rendering materials for avatar (skin, cloth, hair)
-// ═══════════════════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════════════════════════════
 
-import * as THREE from 'three';
+import { loadThreeJS } from '../core/ThreeJSLazyLoader';
+
+// YOLO OPT-1: Types importés statiquement, implémentation lazy
+type THREE = typeof import('three');
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES

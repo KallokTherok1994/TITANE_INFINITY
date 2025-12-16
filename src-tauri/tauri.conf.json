@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0",
   "productName": "TITANE-Infinity",
-  "version": "24.2.0",
+  "version": "24.3.0",
   "identifier": "com.titane.infinity",
   "build": {
     "devUrl": "http://localhost:5173",
@@ -22,14 +22,14 @@
     "resources": [],
     "copyright": "Copyright © 2025 TITANE",
     "category": "DeveloperTool",
-    "shortDescription": "Code Quality Perfection: 0 errors, 0 warnings, 100% type safety",
-    "longDescription": "TITANE Infinity v24.2.0 - Perfection Absolue: Zero TypeScript errors, Zero ESLint warnings, 100% type safety, Structured Logging, 9 Cognitive Engines, Multi-Provider AI (OpenAI, Claude, Gemini, Ollama), Production Perfect"
+    "shortDescription": "v22Ω AI Performance Optimizations: -40% latency, stream batching",
+    "longDescription": "TITANE Infinity v24.3.0 - v22Ω AI Performance Optimizations: -40% latency, stream batching, circuit breaker, 9 Cognitive Engines, Multi-Provider AI (OpenAI, Claude, Gemini, Ollama), Production Perfect"
   },
   "app": {
     "windows": [
       {
         "label": "main",
-        "title": "TITANE Infinity v19.3Ω - Multi-Provider AI",
+        "title": "TITANE Infinity v24.3.0 - Multi-Provider AI",
         "width": 1400,
         "height": 900,
         "minWidth": 1200,

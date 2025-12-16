@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v8.0 — MAIN STYLESHEET
+ * TITANE∞ v24.3.0 — MAIN STYLESHEET
  *
  * Import order:
  * 1. CSS imports (must be first)
@@ -7,13 +7,15 @@
  * 3. Tailwind components
  * 4. Tailwind utilities
  * 5. Custom component classes
+ *
+ * v22Ω AI Performance Optimizations Compatible
  */
 
 /* ═══════════════════════════════════════════════════════════════ */
 /* CSS IMPORTS (must precede all other statements)                  */
 /* ═══════════════════════════════════════════════════════════════ */
 @import './styles/css-vars.css';
-@import './styles/unified-tokens.css'; /* v24.7 - Unified design tokens */
+@import './styles/unified-tokens.css'; /* v24.3.0 - Unified design tokens */
 @import './styles/animations.css';
 @import './styles/a11y.css';
 

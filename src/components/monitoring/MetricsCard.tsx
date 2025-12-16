@@ -55,7 +55,7 @@ export const MetricsCard: React.FC<MetricsCardProps> = ({
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <p className="text-sm opacity-70 mb-1">{title}</p>
-          <p className="text-2xl font-bold">{value}</p>
+          <p className="text-2xl font-bold">{String(value)}</p>
           {trend && trendValue && (
             <p className="text-xs mt-1 opacity-60">
               {trendIcons[trend]} {trendValue}

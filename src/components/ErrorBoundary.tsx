@@ -1,10 +1,11 @@
 /**
- * TITANE∞ v19 - Error Boundary Component
+ * TITANE∞ v24.3.0 — Error Boundary Component
  *
  * Capture et gestion des erreurs React non catchées.
  * Empêche la propagation des erreurs et affiche UI de secours.
+ * v22Ω AI Performance Optimizations Compatible
  *
- * @license Proprietary - TITANE Team 2025
+ * © 2025 TITANE Team. All rights reserved.
  */
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';

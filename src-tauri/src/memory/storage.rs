@@ -4,6 +4,9 @@
 // Encrypted persistent storage for conversations
 // Phase 5: Memory Hardening with MemoryCompactor integration
 
+// TODO v25.x: Migrer vers unified_memory_v2::persistence
+#![allow(deprecated)]
+
 use super::encryption::MemoryEncryption;
 use super::model::{Conversation, ConversationSummary, MemoryIndex};
 use super::{MemoryError, MemoryResult};

@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v∞ — System Center Page
+ * TITANE∞ v24.3.0 — System Center Page
  *
  * Page principale du Centre Système unifié avec 5 onglets :
  * - Diagnostics
@@ -8,6 +8,7 @@
  * - Introspection
  * - HyperVision
  *
+ * v22Ω AI Performance Optimizations Compatible
  * © 2025 TITANE Team. All rights reserved.
  */
 

@@ -1,14 +1,14 @@
 /**
- * TITANE∞ v19.2Ω — Proprietary License
+ * TITANE∞ v24.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2Ω — CHAT INPUT OMEGA (UI ANTI-CRASH)
- *   PHASE 5Ω: Validation input • Anti-spam • Sanitisation sécurisée
- *   Zone de saisie avec protection contre injection et états corrompus
- *   + Import de fichiers pour analyse IA
+ *   TITANE∞ v24.3.0 — CHAT INPUT OMEGA (UI ANTI-CRASH)
+ *   Validation input • Anti-spam • Sanitisation sécurisée
+ *   Zone de saisie avec protection + Import fichiers pour analyse IA
+ *   v22Ω AI Performance Optimizations Compatible
  * ═══════════════════════════════════════════════════════════════════
  */
 

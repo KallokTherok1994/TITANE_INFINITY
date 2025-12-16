@@ -1,8 +1,9 @@
 /**
- * TITANE∞ - Centre Design & Apparence
+ * TITANE∞ v24.3.0 — Centre Design & Apparence
  * Page unifiée Design System + Paramètres
+ * v22Ω AI Performance Optimizations Compatible
  *
- * @license AGPL-3.0 - TITANE AI Project
+ * © 2025 TITANE Team. All rights reserved.
  */
 
 import React, { useState } from 'react';

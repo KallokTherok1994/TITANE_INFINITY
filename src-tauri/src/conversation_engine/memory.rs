@@ -1,9 +1,14 @@
+// TODO v25.x: Migrer vers unified_memory_v2::persistence
+// Warnings supprimés temporairement - migration planifiée
+#![allow(deprecated)]
+
 /**
  * ═══════════════════════════════════════════════════════════════════
  * TITANE∞ v∞ — CONVERSATION MEMORY ENGINE
  * Moteur de mémoire conversationnelle avec autosave et snapshots
  * ═══════════════════════════════════════════════════════════════════
  */
+
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use uuid::Uuid;

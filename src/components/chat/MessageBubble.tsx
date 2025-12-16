@@ -14,10 +14,15 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import React, { memo, useMemo } from 'react';
-import ReactMarkdown, { Components } from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import React, { memo, useMemo, lazy, Suspense } from 'react';
 import './MessageBubble.css';
+
+// YOLO OPT-6: Lazy-load ReactMarkdown (-80 KB gzip)
+// Markdown uniquement pour messages assistant (pas user)
+const LazyReactMarkdown = lazy(() => import('react-markdown'));
+const lazyRemarkGfm = () => import('remark-gfm').then(m => m.default);
+
+type Components = any; // Type simplif pour éviter import statique
 
 interface MessageBubbleProps {
   role: 'user' | 'assistant' | 'system';
@@ -123,14 +128,20 @@ export const MessageBubble = memo(function MessageBubble({
     [role]
   );
 
-  // Contenu du message
+  // Contenu du message avec lazy markdown
   const messageContent = useMemo(() => {
     if (role === 'assistant') {
       if (content.length > 0) {
+        // YOLO OPT: Lazy-load markdown pour assistant uniquement
         return (
-          <ReactMarkdown remarkPlugins={remarkPlugins} components={markdownComponents}>
-            {content}
-          </ReactMarkdown>
+          <Suspense fallback={<div className="markdown-loading">Chargement...</div>}>
+            <LazyReactMarkdown
+              remarkPlugins={[lazyRemarkGfm]}
+              components={markdownComponents}
+            >
+              {content}
+            </LazyReactMarkdown>
+          </Suspense>
         );
       }
       return <TypingIndicator />;

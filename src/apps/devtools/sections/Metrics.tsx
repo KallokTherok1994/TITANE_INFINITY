@@ -252,7 +252,11 @@ export function Metrics() {
                               : 'var(--text-muted, rgba(255,255,255,0.60))',
                       }}
                     >
-                      {metric.trend === 'up' ? '↗' : metric.trend === 'down' ? '↘' : '→'}
+                      {metric.trend === 'up'
+                        ? '↗'
+                        : metric.trend === 'down'
+                          ? '↘'
+                          : '→'}
                     </span>
                   </td>
                   <td

@@ -1,13 +1,17 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v25.0 — ENHANCED THREE.JS AVATAR RENDERER
+//   TITANE∞ v25.3.0 — ENHANCED THREE.JS AVATAR RENDERER
+//   YOLO OPT-1: Lazy-loaded Three.js (-400 KB gzip)
 //   Premium WebGL rendering with PBR, TAA, Bloom, Studio Lighting
-// ═══════════════════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════════════════════════════
 
-import * as THREE from 'three';
+import { loadThreeJS } from '../core/ThreeJSLazyLoader';
 import type { SkeletonSnapshot } from '../fullbody/fullbody_engine';
 import { PBRMaterialSystem } from '../rendering/PBRMaterialSystem';
 import { StudioLightingRig, type AppearanceStyle } from '../rendering/StudioLightingRig';
 import { PostProcessingPipeline } from '../rendering/PostProcessingPipeline';
+
+// YOLO OPT-1: Type THREE importé statiquement (0 KB runtime), implémentation lazy
+type THREE = typeof import('three');
 
 // Debug flag (disable in production)
 const DEBUG = import.meta.env.DEV;

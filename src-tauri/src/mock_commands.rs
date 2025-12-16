@@ -3,6 +3,9 @@
 //   Stubs pour développement frontend-only
 // ═══════════════════════════════════════════════════════════════════
 
+// Warnings supprimés: Mock commands pour tests - utilise API legacy intentionnellement
+// Migration vers unified_memory_v2 planifiée pour v25.x
+
 use crate::memory::telemetry;
 use crate::security::permission_guard::PERMISSION_GUARD;
 use crate::security::permissions::Role;

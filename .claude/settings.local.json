@@ -111,7 +111,10 @@
       "Bash(# Commit the fix - restoring security files that were falsely deleted\ngit add src/lib/security/ && git commit -m \"\"$(cat <<''EOF''\nfix(lib): Restore falsely deleted security modules\n\nsecurity/AIInputSanitizer.ts, AIRateLimiter.ts, AIResponseValidator.ts,\nSecureAIService.ts are used by providers/ollama.ts - NOT orphans\n\nBuild verified: ✓ 11.37s\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\"\")",
       "Bash(timeout 120 npx vitest run:*)",
       "Bash(timeout 60 npx vitest run:*)",
-      "Bash(timeout 90 npx vitest run:*)"
+      "Bash(timeout 90 npx vitest run:*)",
+      "Bash(./titane.sh health:*)",
+      "Bash(npm run format:check:*)",
+      "Bash(npm audit:*)"
     ],
     "deny": [],
     "ask": []

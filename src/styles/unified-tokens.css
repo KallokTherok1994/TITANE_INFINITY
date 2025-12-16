@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v24.7 — UNIFIED DESIGN TOKENS
+ * TITANE∞ v24.3.0 — UNIFIED DESIGN TOKENS
  *
  * Ce fichier unifie les variables CSS entre:
  * - css-vars.css (design system principal)
@@ -7,6 +7,8 @@
  *
  * Principe: titane-fusion.css est la source de vérité pour le thème monochrome.
  * Ce fichier ajoute des alias de compatibilité pour les anciennes variables.
+ *
+ * v22Ω AI Performance Optimizations Compatible
  */
 
 :root {

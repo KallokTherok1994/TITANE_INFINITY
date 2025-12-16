@@ -19,6 +19,10 @@
 #![allow(dead_code)]
 #![allow(unused_variables)]
 
+// Suppress deprecation warnings (legacy API still used for backward compat)
+// TODO v25.x: Complete migration to unified_memory_v2
+#![allow(deprecated)]
+
 // ═══════════════════════════════════════════════════════════════
 // CORE MODULES v16 (Always Active)
 // ═══════════════════════════════════════════════════════════════

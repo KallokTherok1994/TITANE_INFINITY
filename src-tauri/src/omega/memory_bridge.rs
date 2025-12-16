@@ -3,6 +3,10 @@
 //   SUPER PROMPT #8: Seamless memory integration into pipeline
 // ═══════════════════════════════════════════════════════════════
 
+// TODO v25.x: Migrer vers unified_memory_v2::bridge
+// Warnings supprimés temporairement - migration planifiée Phase 3
+#![allow(deprecated)]
+
 use crate::core::modules::unified_memory::UnifiedMemory;
 use crate::memory_os::{MemoryOSBridge, MemoryOSBridgeConfig, MemoryOSResult};
 use crate::omega::context_v2::OmegaContextV2;

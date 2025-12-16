@@ -1,11 +1,12 @@
 /**
- * TITANE_INFINITY v∞ — Proprietary License
+ * TITANE∞ v24.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * ═══════════════════════════════════════════════════════════════
  *   CENTRE GOUVERNANCE & SÉCURITÉ TITANE∞
  *   Page principale avec 4 onglets unifiés
  *   Secrets / Politiques IA / Permissions / Journal
+ *   v22Ω AI Performance Optimizations Compatible
  * ═══════════════════════════════════════════════════════════════
  */
 

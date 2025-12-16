@@ -217,8 +217,9 @@ export class LiveDebuggerEngine {
 
     try {
       // Démarrer recording via Vocal Dev Console
-      const { vocalDevConsole } =
-        await import('@/modules/vocalDev/VocalDevConsoleEngine');
+      const { vocalDevConsole } = await import(
+        '@/modules/vocalDev/VocalDevConsoleEngine'
+      );
       await vocalDevConsole.startRecording();
 
       this.state.isListening = true;
@@ -290,8 +291,9 @@ export class LiveDebuggerEngine {
 
     try {
       // Récupérer la transcription actuelle (via VocalDevConsole state)
-      const { vocalDevConsole } =
-        await import('@/modules/vocalDev/VocalDevConsoleEngine');
+      const { vocalDevConsole } = await import(
+        '@/modules/vocalDev/VocalDevConsoleEngine'
+      );
       const vocalState = vocalDevConsole.getState();
       // Note: VocalDevState doesn't have direct transcript, need to implement retrieval
       // For now, use lastCommand as placeholder
