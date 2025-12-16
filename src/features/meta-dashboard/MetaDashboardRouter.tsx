@@ -39,11 +39,6 @@ type DashboardView =
   | 'overview' // System health overview
   | 'singularity' // Singularity engine dashboard
   | 'monitoring' // Full monitoring dashboard
-  | 'hypervision'; // HyperVision real-time
-type DashboardView =
-  | 'overview' // System health overview
-  | 'singularity' // Singularity engine dashboard
-  | 'monitoring' // Full monitoring dashboard
   | 'hypervision' // HyperVision real-time
   | 'performance'; // Performance metrics
 
