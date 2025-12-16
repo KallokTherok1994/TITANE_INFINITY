@@ -304,19 +304,19 @@ class AIOrchestrator {
    */
   private determineGovernanceStatus(
     metrics: AggregatedMetrics
-  ): 'full' | 'partial' | 'limited' {
+  ): 'configured' | 'partial' | 'unconfigured' {
     const successRate = metrics.successRate || 0;
     const errorFrequency =
       metrics.totalErrors / Math.max(1, metrics.uptime / (60 * 60 * 1000));
 
-    // Full governance: high success rate, low errors
+    // Configured governance: high success rate, low errors
     if (successRate >= 0.9 && errorFrequency < 1) {
-      return 'full';
+      return 'configured';
     }
 
-    // Limited governance: low success rate or high errors
+    // Unconfigured governance: low success rate or high errors
     if (successRate < 0.5 || errorFrequency > 5) {
-      return 'limited';
+      return 'unconfigured';
     }
 
     // Partial governance: everything in between
