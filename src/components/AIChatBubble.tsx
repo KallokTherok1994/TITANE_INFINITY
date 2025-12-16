@@ -365,7 +365,9 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
           {messages.map((message, index) => (
             <MessageBubble
               key={message.timestamp ? `${message.timestamp}-${index}` : `msg-${index}`}
-              message={message as Message}
+              role={message.role}
+              content={message.content}
+              timestamp={message.timestamp}
             />
           ))}
 
