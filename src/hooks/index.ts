@@ -640,44 +640,8 @@ export type {
 } from './useAdaptiveFPS';
 
 // ═══════════════════════════════════════════════════════════════
-// v∞.38 - Phase 3 Hooks (Autopoiesis + Meta-Singularity + Phase-Space)
+// v∞.38 - Phase 3 Hooks (Phase-Space)
 // ═══════════════════════════════════════════════════════════════
-
-// Autopoiesis Hooks
-export {
-  useAutopoiesis,
-  useAutopoiesisLearning,
-  useAutopoiesisPerformance,
-  useEffectivePatterns,
-  useEvolutionRules,
-  useOptimizationStrategies,
-  useAutopoiesisMetrics,
-  useTotalObservations,
-  usePatternsLearned,
-  useAverageEffectiveness,
-  useTrendDirection,
-  useAutopoiesisActions,
-} from './useAutopoiesis';
-
-// Meta-Singularity Hooks
-export {
-  useMetaSingularity,
-  useMetaCoherence,
-  // useGlobalCoherence already exported as useMetaGlobalCoherence in Identity section
-  useActiveEmergences,
-  useRecentInsights,
-  useUnresolvedConflicts,
-  useOrchestrationQuality,
-  useSystemStability,
-  useEmergentComplexity,
-  useCoherenceTrend,
-  useHarmonics,
-  useDissonance,
-  useTotalEmergences,
-  useTotalInsights,
-  useAverageCoherence,
-  useMetaSingularityActions,
-} from './useMetaSingularity';
 
 // Phase-Space Hooks
 export {
