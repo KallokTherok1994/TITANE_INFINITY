@@ -26,7 +26,7 @@ import type {
 // 3. Real-time updates: Listen to Tauri events 'agenda:event_created', 'agenda:event_updated'
 // 4. Caching: Implement frontend cache for frequently accessed events (TTL: 5min)
 // 5. Security: Validate all inputs before sending to backend
-// import { secureInvoke } from '@/lib/security';
+import { secureInvoke } from '@/lib/security';
 
 // ═══════════════════════════════════════════════════════════════════
 // CONSTANTES
@@ -185,7 +185,7 @@ export class AgendaEngine {
     try {
       const events = await secureInvoke<AgendaEvent[]>('agenda_load_events');
       this.events.clear();
-      events.forEach(event => this.events.set(event.id, event));
+      events.forEach((event: AgendaEvent) => this.events.set(event.id, event));
       this.notifyListeners();
       console.log('[AgendaEngine] 📥 Événements chargés:', events.length);
     } catch (error) {

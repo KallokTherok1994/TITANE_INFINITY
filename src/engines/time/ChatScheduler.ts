@@ -26,7 +26,7 @@ import { agendaEngine } from './AgendaEngine';
 // 3. Commands: agenda_create_event, agenda_update_event, agenda_delete_event, agenda_get_events
 // 4. Error handling: Catch Tauri command errors and propagate to UI with user-friendly messages
 // 5. Synchronization: Ensure frontend state stays in sync with backend via Tauri events
-// import { secureInvoke } from '@/lib/security';
+import { secureInvoke } from '@/lib/security';
 
 // ═══════════════════════════════════════════════════════════════════
 // CONSTANTES
