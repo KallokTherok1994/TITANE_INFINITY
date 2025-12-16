@@ -90,7 +90,10 @@ const MOOD_MICROFX_PREFERENCES: Record<UserMood, MicroExpressionType[]> = {
   frustrated: ['hesitation', 'breath'],
   happy: ['smile', 'agreement', 'acknowledgment'],
   sad: ['empathy', 'breath', 'hesitation'],
-  neutral: ['thinking', 'agreement', 'transition'],
+  neutral: ['thinking', 'agreement', 'transition'], // Added missing UserMood states
+  relaxed: ['breath', 'agreement', 'smile'],
+  angry: ['hesitation', 'breath'],
+  anxious: ['hesitation', 'breath', 'thinking'],
 };
 
 /**
