@@ -36,6 +36,11 @@ import { cognitiveKernel } from './cognitiveKernel'; // ← NOUVEAU v22Ω: Cogni
 import { circuitBreaker } from './circuitBreaker'; // ← v24.5: Circuit Breaker Pattern
 import { rateLimiter } from './rateLimiter'; // ← v24.5: Frontend Rate Limiting
 import { createLogger } from '@/utils/logger';
+import {
+  getProviderTimeout,
+  CACHE_TTL,
+  CIRCUIT_BREAKER,
+} from '@/config/aiTimeouts.config'; // ← v22Ω: Centralized timeouts
 
 const logger = createLogger('Orchestrator');
 
@@ -124,7 +129,8 @@ class AIOrchestrator {
   private readonly diversityThreshold = 2;
 
   // AUTOFIX v19.3Ω: Quick-fail cache for providers that failed very recently
-  private readonly QUICK_FAIL_COOLDOWN_MS = 5000; // 5 seconds
+  // v22Ω: Using centralized config from aiTimeouts.config.ts
+  private readonly QUICK_FAIL_COOLDOWN_MS = CACHE_TTL.quickFailCooldown;
   private quickFailCache: Map<string, number> = new Map(); // provider -> failedAt timestamp
 
   // EVOLUTION v21Ω: TTL cleanup interval for quick-fail cache
@@ -138,12 +144,12 @@ class AIOrchestrator {
     timestamp: number;
   } = { data: null, timestamp: 0 };
 
-  // v22Ω: Critical error tracking for degraded mode
+  // v22Ω: Critical error tracking for degraded mode (using centralized config)
   private criticalErrorHistory: number[] = []; // timestamps of critical errors
-  private readonly CRITICAL_ERROR_WINDOW_MS = 300000; // 5 minutes
-  private readonly CRITICAL_ERROR_THRESHOLD = 3; // 3 errors in window = degrade
+  private readonly CRITICAL_ERROR_WINDOW_MS = CIRCUIT_BREAKER.criticalErrorWindow;
+  private readonly CRITICAL_ERROR_THRESHOLD = CIRCUIT_BREAKER.criticalErrorThreshold;
   private isDegradedMode = false;
-  private readonly METRICS_CACHE_TTL_MS = 1000; // 1 second TTL
+  private readonly METRICS_CACHE_TTL_MS = CACHE_TTL.metrics;
 
   constructor() {
     // Certains providers peuvent être indisponibles/undefined en tests ou selon le runtime.
@@ -805,19 +811,8 @@ class AIOrchestrator {
           );
 
           // ═══ ISOLATED EXECUTION WITH ADAPTIVE TIMEOUT (v22Ω Optimized) ═══
-          // Timeouts réorganisés par latence réelle mesurée
-          const executionTimeout =
-            providerName === 'titane-local'
-              ? 5000 // Noyau infaillible, ultra-rapide
-              : providerName === 'tauri-backend'
-                ? 12000 // Backend Rust local (était 45s, réaliste: 8-12s)
-                : providerName === 'ollama'
-                  ? 30000 // Local LLM, dépend du modèle
-                  : providerName === 'gemini'
-                    ? 35000 // Cloud API Google
-                    : providerName === 'openai' || providerName === 'claude'
-                      ? 40000 // Cloud API avec gros contexte
-                      : 25000; // Default
+          // v22Ω: Using centralized timeout config
+          const executionTimeout = getProviderTimeout(providerName);
           const historyForProvider = this.buildHistoryForProvider(
             history,
             providerName,
