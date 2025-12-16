@@ -28,5 +28,6 @@ export {
   profileSync,
 } from './monitoringLazyLoader';
 
-// Direct exports for backward compatibility (will be lazy-loaded)
-export { initSentry, captureWebVitals, testSentry, Sentry } from './sentry';
+// ✅ OPT-9 FIX: All exports now through lazy loader (no static sentry.ts import)
+// Removed: export { initSentry, captureWebVitals, testSentry, Sentry } from './sentry';
+// Use: initMonitoringAsync() instead of initSentry() for lazy initialization
