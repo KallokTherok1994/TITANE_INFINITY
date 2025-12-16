@@ -764,24 +764,30 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
       // ✅ v∞.FIX P0-3: Timeout adaptatif selon provider et longueur message
       // ✨ v24.2.1: Use ref for stable dependency
+      // v22Ω: Cap global à 45s pour éviter UI freeze
       const getAdaptiveTimeout = (): number => {
+        const MAX_TIMEOUT_MS = 45000; // v22Ω: Hard cap to prevent UI freeze
         const messageLength = cleanMessage.length;
         const configTimeout = omnisTimeoutRef.current;
 
         // Si timeout manuel configuré, l'utiliser comme minimum
         const minTimeout = configTimeout || 0;
 
+        let calculatedTimeout: number;
+
         // Ajuster selon le provider sélectionné
         if (preferredProviderState === 'local') {
-          return Math.max(minTimeout, messageLength > 1000 ? 20000 : 10000); // Local: 10-20s
+          calculatedTimeout = messageLength > 1000 ? 15000 : 8000; // Local: 8-15s (was 10-20s)
         } else if (preferredProviderState === 'ollama') {
-          return Math.max(minTimeout, messageLength > 1000 ? 30000 : 15000); // Ollama: 15-30s
+          calculatedTimeout = messageLength > 1000 ? 25000 : 12000; // Ollama: 12-25s (was 15-30s)
         } else {
-          // Auto (cloud providers OpenAI/Anthropic/Gemini): 30-90s
-          const cloudTimeout =
-            messageLength > 2000 ? 90000 : messageLength > 500 ? 60000 : 30000;
-          return Math.max(minTimeout, cloudTimeout);
+          // Auto (cloud providers): 25-45s (was 30-90s - reduced for better UX)
+          calculatedTimeout =
+            messageLength > 2000 ? 45000 : messageLength > 500 ? 35000 : 25000;
         }
+
+        // v22Ω: Apply global cap while respecting minimum
+        return Math.min(MAX_TIMEOUT_MS, Math.max(minTimeout, calculatedTimeout));
       };
       const timeoutMs = getAdaptiveTimeout();
       chatLogger.debug('⏱️ Adaptive timeout configured', {
