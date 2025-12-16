@@ -24,6 +24,7 @@ import { claudeProvider } from '../../services/ai/providers/claude'; // ← NOUV
 import { ollamaProvider } from '../../services/ai/providers/ollama';
 import { autoHealEngine } from './systemHealth'; // ← NOUVEAU: Auto-heal intégré
 import { metricsEngine } from './metrics'; // ← NOUVEAU: Metrics Engine v20Ω
+import type { AggregatedMetrics } from '../../services/ai/metricsEngine';
 import { cognitiveKernel } from './cognitiveKernel'; // ← NOUVEAU v22Ω: Cognitive Kernel
 
 const isDev = process.env.NODE_ENV === 'development';

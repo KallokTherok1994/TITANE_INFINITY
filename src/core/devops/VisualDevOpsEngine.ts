@@ -896,8 +896,8 @@ echo "✅ Operation complete"
     if (completedActions.length === 0) return 0;
 
     const totalValidationTime = completedActions.reduce((sum, action) => {
-      // Calculate time from action creation to final status
-      const validationTime = action.created_at ? Date.now() - action.created_at : 0;
+      // Calculate time from action creation (timestamp) to now
+      const validationTime = action.timestamp ? Date.now() - action.timestamp : 0;
       return sum + validationTime;
     }, 0);
 
