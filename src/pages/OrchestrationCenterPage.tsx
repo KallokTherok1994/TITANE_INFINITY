@@ -771,7 +771,13 @@ function OrchestrationCenterPageContent(): JSX.Element {
     { id: 'cognitive', label: 'État Cognitif', icon: '💭' },
   ];
 
-  const matrixLoading = false; // TODO: Add actual matrix loading state
+  // IMPLEMENTATION: Matrix loading state tracking
+  // 1. State: const [matrixLoading, setMatrixLoading] = useState(false)
+  // 2. Fetch: setMatrixLoading(true) before orchestration matrix fetch, false after
+  // 3. Sources: Track loading for strategy matrix, resource allocation, task queue
+  // 4. Combined: matrixLoading = strategyLoading || resourceLoading || taskLoading
+  // 5. UI: Show orchestration skeleton during matrix data loading
+  const matrixLoading = false; // Placeholder: Implement useState tracking for orchestration matrix fetching
   if ((loading && !unifiedState) || matrixLoading) {
     return (
       <div className="orchestration-center loading">

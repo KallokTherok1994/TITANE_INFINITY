@@ -12,7 +12,7 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useChat } from '../hooks/useChat';
 import { useConnection } from '../hooks/useConnection';
-import { MessageBubble } from './MessageBubble';
+import { MessageBubble } from './chat/MessageBubble';
 import { StatusIndicator } from './StatusIndicator';
 import { VitalsPanel } from './VitalsPanel';
 import { ChatFileImport } from './chat/ChatFileImport';

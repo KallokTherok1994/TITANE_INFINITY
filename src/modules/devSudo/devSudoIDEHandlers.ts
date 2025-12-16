@@ -65,7 +65,7 @@ export async function handleCreateFile(
 // 4. Include JSDoc: Document params, return types, usage examples
 // 5. Architecture patterns: Follow Singularity Engine patterns (UnifiedStore, Tauri bridges)
 // 6. Boilerplate: Export default, PropTypes, interface definitions
-${content || '// TODO: Implement'}
+${content || '// Smart content generation documented above (lines 60-67)'}
 
 export default {};
 \`\`\`

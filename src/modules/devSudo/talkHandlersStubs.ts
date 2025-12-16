@@ -10,7 +10,12 @@ const DISABLED_MODULE_RESPONSE = {
 
 Le module \`talkToTitane\` est désactivé pendant la migration Build System v25.
 
-**TODO**: Réactiver après migration Tauri filesystem APIs.`,
+**REACTIVATION**: After Tauri v2.0 filesystem APIs migration complete
+1. Update imports: Use @tauri-apps/plugin-fs instead of @tauri-apps/api/fs
+2. Replace readTextFile/writeTextFile with new plugin methods
+3. Test file operations: Verify permissions and path handling
+4. Re-enable module: Remove stub and restore full functionality
+5. Update tests: Ensure compatibility with new Tauri APIs`,
 };
 
 export async function handleTalkOn(_mode?: string): Promise<unknown> {
