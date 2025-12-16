@@ -57,16 +57,6 @@ export {
   selectHealthByCategory,
 } from './useSelfHealingStore';
 
-// Super Prompt #6 - Search & Tools Engine
-export { useSearchToolsStore } from './useSearchToolsStore';
-
-// Super Prompt #7 - Prompt Engine
-export {
-  usePromptEngineStore,
-  selectPrompts,
-  selectChains,
-} from './usePromptEngineStore';
-
 // Super Prompt #8 - Performance Engine
 export {
   usePerformanceStore,
