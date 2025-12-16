@@ -120,7 +120,8 @@
       "Bash(timeout 300 cargo build:*)",
       "Bash(timeout 150 npx vitest:*)",
       "Bash(./titane.sh deploy:*)",
-      "Bash(npx tauri build:*)"
+      "Bash(npx tauri build:*)",
+      "Bash(timeout 120 npm test:*)"
     ],
     "deny": [],
     "ask": []

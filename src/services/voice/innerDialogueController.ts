@@ -24,7 +24,8 @@ import {
   type AttentionState as _AttentionState,
 } from './attentionEngine';
 import { haloEngine as _haloEngine, type HaloState } from './haloEngine';
-import type { ThinkingState, MentalColor } from '@/types/voice';
+import type { ThinkingState } from '@/types/voice';
+// MentalColor is declared locally below
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
@@ -56,7 +57,11 @@ export type MentalColor =
   | 'cyan' // Analyse froide
   | 'gold' // Alignement parfait
   | 'silver' // Réflexion neutre
-  | 'amber'; // Auto-correction
+  | 'amber' // Auto-correction
+  | 'green' // Créatif
+  | 'purple' // Contemplatif
+  | 'orange' // Énergique
+  | 'white'; // Neutre
 
 /**
  * Pensée interne (log invisible)

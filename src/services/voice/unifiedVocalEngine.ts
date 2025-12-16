@@ -32,8 +32,8 @@ import { hybridTTS } from '../tts/hybridTTS';
 import {
   innerDialogueController as _innerDialogueController,
   type InnerDialogueState as _InnerDialogueState,
-  type ThinkingState as _ThinkingState,
 } from './innerDialogueController';
+import type { ThinkingState as _ThinkingState } from '@/types/voice';
 import type { EmotionalState as _EmotionalState } from './emotionalStateEstimator';
 import type { EmotionalState as EmotionalStateString } from '@/types/voice';
 

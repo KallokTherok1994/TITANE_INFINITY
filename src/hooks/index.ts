@@ -38,7 +38,12 @@ export { useChat } from './useChat';
 export * from './useDebounce';
 export * from './useThrottle';
 
-// REMOVED v24.8: useControlPanelSection (dead code, 0 imports)
+// ControlPanel hooks (restored v24.3.0 for NetworkSection/SecuritySection)
+export { useControlPanelSection } from './useControlPanelSection';
+export type {
+  UseControlPanelSectionOptions,
+  UseControlPanelSectionReturn,
+} from './useControlPanelSection';
 
 // Hooks spécialisés (isolation)
 export { useChatCore } from './useChatCore';

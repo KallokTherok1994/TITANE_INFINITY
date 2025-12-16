@@ -401,11 +401,16 @@ const AppRouter: React.FC = () => {
 
   // ✨ OPT-10 - Lazy-load Auto-Audit Engine
   useEffect(() => {
+    let started = false;
+
     console.log('🔍 [AUTO-AUDIT] Loading automatic audits...');
     import('./services/autoAuditEngine')
       .then(({ autoAuditEngine }) => {
-        autoAuditEngine.start();
-        console.log('✅ [AUTO-AUDIT] Started');
+        if (!started) {
+          autoAuditEngine.start();
+          started = true;
+          console.log('✅ [AUTO-AUDIT] Started');
+        }
 
         // Cleanup
         return () => {
@@ -447,11 +452,16 @@ const AppRouter: React.FC = () => {
 
   // ✨ OPT-11 - Lazy-load Cognitive Layout Engine
   useEffect(() => {
+    let started = false;
+
     console.log('🧠 [COGNITIVE] Loading Cognitive Layout Engine...');
     import('./engines/cognitive/cognitiveLayoutEngine')
       .then(({ cognitiveLayoutEngine }) => {
-        cognitiveLayoutEngine.start();
-        console.log('✅ [COGNITIVE] Cognitive Layout Engine started');
+        if (!started) {
+          cognitiveLayoutEngine.start();
+          started = true;
+          console.log('✅ [COGNITIVE] Cognitive Layout Engine started');
+        }
 
         return () => {
           cognitiveLayoutEngine.stop();

@@ -1,8 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-
-import { fn } from 'storybook/test';
+import { vi } from 'vitest';
 
 import { Button } from './Button';
+
+// Storybook-compatible mock function using vitest
+const fn = vi.fn;
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {

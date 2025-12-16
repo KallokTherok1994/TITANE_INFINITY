@@ -260,6 +260,9 @@ export class ChatScheduler {
         category: command.meta?.category || 'work',
         priority: command.meta?.priority || 'medium',
         tags: command.meta?.tags || [],
+        status: 'scheduled',
+        allDay: false,
+        reminders: [],
       });
 
       return {

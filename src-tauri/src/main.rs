@@ -261,6 +261,9 @@ use titane_infinity::ai::orchestrator_multi::OrchestratorState;
 
 // System Identity Engine v∞ (OPUS #15)
 
+// Use persistence module from lib.rs (includes all commands)
+use titane_infinity::persistence;
+
 /// Cognitive System State (v16)
 pub struct CognitiveSystemState {
     pub analysis: Arc<Mutex<AnalysisEngine>>,
@@ -697,6 +700,34 @@ fn main() {
             commands_v21::self_healing_commands::self_healing_disable,
             // Singularity Extra Commands (1 command)
             commands_v21::singularity_commands::singularity_self_check,
+            // Titan Persistence Commands (26 commands) - 100% SAVE System
+            persistence::commands::titan_persistence_init,
+            persistence::commands::titan_persist_event,
+            persistence::commands::titan_force_snapshot,
+            persistence::commands::titan_get_persistence_status,
+            persistence::commands::titan_check_integrity,
+            persistence::commands::titan_compact_journal,
+            persistence::commands::titan_load_state,
+            persistence::commands::titan_get_events_since,
+            persistence::commands::titan_list_snapshots,
+            persistence::commands::titan_recover_state,
+            persistence::commands::titan_verify_integrity,
+            persistence::commands::titan_persistence_shutdown,
+            persistence::commands::titan_migrate_state,
+            persistence::commands::titan_get_schema_version,
+            persistence::commands::titan_export_data,
+            persistence::commands::titan_validate_archive,
+            persistence::commands::titan_import_data,
+            persistence::commands::titan_get_memory_health,
+            persistence::commands::titan_run_self_healing,
+            persistence::commands::titan_reset_module,
+            persistence::commands::titan_dump_raw_state,
+            persistence::commands::titan_run_full_integrity_check,
+            persistence::commands::titan_memory_doctor_diagnose,
+            persistence::commands::titan_memory_doctor_summary,
+            persistence::commands::titan_memory_doctor_heal,
+            persistence::commands::titan_memory_doctor_compact,
+            persistence::commands::titan_memory_doctor_export,
         ])
         .run(tauri::generate_context!())
         .unwrap_or_else(|e| {

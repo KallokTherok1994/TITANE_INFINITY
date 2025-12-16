@@ -14,7 +14,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import type { AIMessage } from './aiService';
+import type { AIMessage } from './ai/types';
 
 const STORAGE_KEY = 'titane_chat_history';
 const MAX_MESSAGES = 100;
