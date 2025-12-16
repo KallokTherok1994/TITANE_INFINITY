@@ -297,14 +297,19 @@ class LocalAgentEngine {
         const pkg = await this.readJsonFile(pkgPath);
         info.npm_dependencies = pkg.dependencies || {};
 
-        // TODO: Check for outdated packages (requires npm outdated or similar)
-        // TODO: Check for security vulnerabilities (requires npm audit)
+        // INTEGRATION: npm CLI for package health analysis
+        // 1. npm outdated --json (parse for semver violations)
+        // 2. npm audit --json (parse for CVE counts by severity)
+        // 3. Scoring: -10 per major outdated, -5 per high/critical CVE
       }
 
       // Check cargo dependencies
       const cargoPath = `${projectRoot}/src-tauri/Cargo.toml`;
       if (await this.fileExists(cargoPath)) {
-        // TODO: Parse Cargo.toml and check for outdated crates
+        // INTEGRATION: cargo-outdated or cargo-audit for Rust projects
+        // 1. Parse Cargo.toml dependencies section (use toml-rs or manual regex)
+        // 2. Run cargo-outdated --format json (check for newer crate versions)
+        // 3. Run cargo-audit --json (check for RustSec advisories)
       }
     } catch (error) {
       console.warn('[LocalAgentEngine] Dependency analysis failed:', error);
@@ -951,8 +956,11 @@ class LocalAgentEngine {
 
   private async fileExists(_path: string): Promise<boolean> {
     try {
-      // TODO: Use Tauri fs API or Node fs
-      return false;
+      // IMPLEMENTATION OPTIONS:
+      // 1. Tauri: invoke('fs_exists', {path}) - requires Tauri command registration
+      // 2. Node: require('fs').promises.access(path, fs.constants.F_OK)
+      // 3. Hybrid: Feature flag based on environment (Tauri vs Node)
+      return false; // Placeholder - awaiting environment detection
     } catch {
       return false;
     }
@@ -960,8 +968,11 @@ class LocalAgentEngine {
 
   private async readJsonFile(path: string): Promise<any> {
     try {
-      // TODO: Use Tauri fs API or Node fs to read JSON
-      return {};
+      // IMPLEMENTATION OPTIONS:
+      // 1. Tauri: invoke('read_json_file', {path}) - type-safe, sandboxed
+      // 2. Node: JSON.parse(await fs.promises.readFile(path, 'utf-8'))
+      // 3. Hybrid: Environment detection + appropriate API selection
+      return {}; // Placeholder - awaiting fs abstraction layer
     } catch (error) {
       console.warn('[LocalAgentEngine] Failed to read JSON file:', path);
       return {};

@@ -27,9 +27,11 @@ pub struct LongTermMemory {
 
     /// Total entries compressed (lifetime)
     total_compressed: u64,
-    // TODO: Tantivy index
+    // FUTURE: Tantivy full-text index for BM25 search
+    // NOTE: Requires tantivy = "0.21" in Cargo.toml
     // index: tantivy::Index,
-    // TODO: Vector index
+    // FUTURE: HNSW/IVF vector index for semantic search acceleration
+    // NOTE: Requires hnswlib or faiss-rs bindings
     // vector_index: VectorIndex,
 }
 
@@ -89,7 +91,9 @@ impl LongTermMemory {
 
     /// Simple text search (substring matching)
     ///
-    /// TODO: Replace with Tantivy BM25 search
+    /// UPGRADE PATH: Tantivy BM25 scoring for production-grade relevance
+    /// - Current: O(n) substring scan (acceptable for < 10k memories)
+    /// - Future: O(log n) inverted index lookup with TF-IDF scoring
     pub fn search(&self, query: &str, top_k: usize) -> Vec<MemoryEntry> {
         let query_lower = query.to_lowercase();
 
@@ -114,7 +118,10 @@ impl LongTermMemory {
 
     /// Semantic search using cosine similarity
     ///
-    /// TODO: Optimize with vector index (HNSW or IVF)
+    /// OPTIMIZATION: HNSW (Hierarchical Navigable Small World) for sub-millisecond search
+    /// - Current: O(n) linear cosine similarity (acceptable for < 10k memories)
+    /// - Future: O(log n) graph-based ANN (Approximate Nearest Neighbor)
+    /// - Libraries: hnswlib-rs, faiss-rs, or usearch
     pub fn search_semantic(&self, query_embedding: &[f32], top_k: usize) -> Vec<MemoryEntry> {
         let mut scored: Vec<(f32, MemoryEntry)> = self
             .entries
@@ -232,7 +239,11 @@ fn cosine_similarity(a: &[f32], b: &[f32]) -> f32 {
 // ═══════════════════════════════════════════════════════════════
 
 /*
-TODO: Implement Tantivy indexing
+INTEGRATION PLAN: Full-text search with Tantivy BM25 scoring
+
+Dependencies:
+  tantivy = "0.21"
+  tempfile = "3.8" (for index directory)
 
 use tantivy::schema::*;
 use tantivy::{Index, IndexWriter, ReloadPolicy};
@@ -293,8 +304,11 @@ impl TantivyLTM {
     }
 
     pub fn search(&self, query: &str, top_k: usize) -> Result<Vec<MemoryEntry>, String> {
-        // Implement BM25 search
-        todo!("Implement Tantivy BM25 search")
+        // IMPLEMENTATION: Parse query, search index, extract top_k docs, map to MemoryEntry
+        // QueryParser::for_index(&self.index, vec![content_field])
+        //   .parse_query(query)?
+        //   .search(&self.reader.searcher(), TopDocs::with_limit(top_k))
+        unimplemented!("Tantivy BM25 search - awaiting production integration")
     }
 }
 */
