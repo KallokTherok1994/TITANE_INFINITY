@@ -8,6 +8,7 @@ import type { AvatarAppearanceState } from '../appearance/appearanceState';
 import { DEFAULT_APPEARANCE_STATE } from '../appearance/appearanceState';
 import type { ThreeJSAvatarRenderer } from './ThreeJSAvatarRenderer';
 import { secureInvoke } from '@/lib/security';
+import { loadThreeJS } from '../core/ThreeJSLazyLoader';
 
 // Debug flag (disable in production)
 const DEBUG = import.meta.env.DEV;
@@ -73,7 +74,7 @@ const COLOR_PALETTES: Record<string, ColorPalette> = {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export class AppearanceFloatingIntegration {
-  private THREE!: THREE; // YOLO OPT-1: Lazy-loaded Three.js
+  private THREE!: typeof THREE; // YOLO OPT-1: Lazy-loaded Three.js
   private renderer: ThreeJSAvatarRenderer;
   private materials: AppearanceMaterialMap | null = null;
   private currentAppearance: AvatarAppearanceState | null = null;
@@ -362,7 +363,7 @@ export class AppearanceFloatingIntegration {
 // ═══════════════════════════════════════════════════════════════════════════
 
 // Module-level THREE cache for helper functions
-let cachedTHREE: THREE | null = null;
+let cachedTHREE: typeof THREE | null = null;
 
 /**
  * Parse CSS hex color to THREE.Color (async - requires THREE to be loaded)
@@ -378,7 +379,10 @@ export async function parseColor(hexString: string): Promise<THREE.Color> {
  * Parse CSS hex color synchronously (requires THREE already loaded)
  * @deprecated Use parseColor async version instead
  */
-export function parseColorSync(hexString: string, threeModule: THREE): THREE.Color {
+export function parseColorSync(
+  hexString: string,
+  threeModule: typeof THREE
+): THREE.Color {
   return new threeModule.Color(hexString);
 }
 

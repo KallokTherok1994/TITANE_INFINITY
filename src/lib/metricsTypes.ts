@@ -8,21 +8,22 @@
 export interface ServiceMetric {
   service: string;
   command: string;
-  timestamp: number;
-  latency: number;
   success: boolean;
-  cached: boolean;
-  retried: boolean;
   error?: string;
-  // Extended fields for tracking
-  startTime?: number;
+  // Tracking fields
+  startTime: number;
   endTime?: number;
   duration?: number;
-  retries?: number;
+  retries: number;
+  // Optional fields (for backwards compatibility)
+  timestamp?: number;
+  latency?: number;
+  cached?: boolean;
+  retried?: boolean;
 }
 
 export interface ServiceStats {
-  service: string;
+  service?: string;
   totalCalls: number;
   successRate: number;
   averageLatency: number;
@@ -32,22 +33,24 @@ export interface ServiceStats {
   errorRate: number;
   cacheHitRate: number;
   retryRate: number;
-  lastUpdated: number;
-  // Extended fields
-  successfulCalls?: number;
-  failedCalls?: number;
-  totalRetries?: number;
+  lastUpdated?: number;
+  // Required fields (used by serviceMetrics.ts)
+  successfulCalls: number;
+  failedCalls: number;
+  totalRetries: number;
+  minLatency?: number;
+  maxLatency?: number;
 }
 
 export interface CommandStats {
   command: string;
-  service: string;
-  totalCalls: number;
-  successRate: number;
-  averageLatency: number;
+  service?: string;
+  totalCalls?: number;
+  successRate?: number;
+  averageLatency?: number;
   errorRate: number;
-  // Extended fields
-  calls?: number;
-  avgLatency?: number;
-  lastCall?: number;
+  // Required fields (used by serviceMetrics.ts)
+  calls: number;
+  avgLatency: number;
+  lastCall: number;
 }

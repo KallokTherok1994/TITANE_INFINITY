@@ -10,6 +10,7 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { TAARenderPass } from 'three/examples/jsm/postprocessing/TAARenderPass';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
+import { loadThreeJS } from '../core/ThreeJSLazyLoader';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // VIGNETTE SHADER
@@ -67,7 +68,7 @@ export interface PostProcessingConfig {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export class PostProcessingPipeline {
-  private THREE!: THREE; // YOLO OPT-1: Lazy-loaded Three.js
+  private THREE!: typeof THREE; // YOLO OPT-1: Lazy-loaded Three.js
   private renderer!: THREE.WebGLRenderer;
   private scene!: THREE.Scene;
   private camera!: THREE.Camera;

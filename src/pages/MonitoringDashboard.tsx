@@ -65,8 +65,8 @@ export const MonitoringDashboard: React.FC = () => {
         m.service,
         m.success ? 'true' : 'false',
         m.duration?.toString() || '',
-        m.retries.toString(),
-        new Date(m.startTime).toISOString(),
+        (m.retries ?? 0).toString(),
+        new Date(m.startTime ?? m.timestamp).toISOString(),
       ]);
 
       const csv = [

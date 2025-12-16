@@ -4,6 +4,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 import * as THREE from 'three';
+import { loadThreeJS } from '../core/ThreeJSLazyLoader';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -85,7 +86,7 @@ const STYLE_LIGHTING_PRESETS: Record<AppearanceStyle, Partial<LightingConfig>> =
 // ═══════════════════════════════════════════════════════════════════════════
 
 export class StudioLightingRig {
-  private THREE!: THREE; // YOLO OPT-1: Lazy-loaded Three.js
+  private THREE!: typeof THREE; // YOLO OPT-1: Lazy-loaded Three.js
   private scene!: THREE.Scene;
   private keyLight!: THREE.DirectionalLight;
   private fillLight!: THREE.DirectionalLight;

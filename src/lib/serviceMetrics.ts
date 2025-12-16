@@ -46,11 +46,16 @@ export class ServiceMetrics {
       .toString(36)
       .substr(2, 9)}`;
 
+    const now = Date.now();
     const metric: ServiceMetric = {
       command,
       service,
-      startTime: Date.now(),
+      timestamp: now,
+      latency: 0,
       success: false,
+      cached: false,
+      retried: false,
+      startTime: now,
       retries: 0,
     };
 
@@ -69,10 +74,15 @@ export class ServiceMetrics {
     const metric = this.activeMetrics.get(id);
     if (!metric) return;
 
-    metric.endTime = Date.now();
-    metric.duration = metric.endTime - metric.startTime;
+    const endTime = Date.now();
+    const startTime = metric.startTime ?? metric.timestamp;
+
+    metric.endTime = endTime;
+    metric.duration = endTime - startTime;
+    metric.latency = metric.duration;
     metric.success = success;
-    metric.retries = retries;
+    metric.retries = retries ?? 0;
+    metric.retried = (retries ?? 0) > 0;
     metric.error = error;
 
     // Ajouter aux métriques historiques
@@ -156,7 +166,10 @@ export class ServiceMetrics {
     const windowStart = timeWindow ? now - timeWindow : 0;
 
     const serviceMetrics = this.metrics.filter(
-      m => m.service === service && m.startTime >= windowStart && m.duration !== undefined
+      m =>
+        m.service === service &&
+        (m.startTime ?? m.timestamp) >= windowStart &&
+        m.duration !== undefined
     );
 
     if (serviceMetrics.length === 0) {
@@ -169,6 +182,9 @@ export class ServiceMetrics {
         minLatency: 0,
         maxLatency: 0,
         errorRate: 0,
+        successRate: 0,
+        cacheHitRate: 0,
+        retryRate: 0,
         p50Latency: 0,
         p95Latency: 0,
         p99Latency: 0,
@@ -178,7 +194,7 @@ export class ServiceMetrics {
     const totalCalls = serviceMetrics.length;
     const successfulCalls = serviceMetrics.filter(m => m.success).length;
     const failedCalls = totalCalls - successfulCalls;
-    const totalRetries = serviceMetrics.reduce((sum, m) => sum + m.retries, 0);
+    const totalRetries = serviceMetrics.reduce((sum, m) => sum + (m.retries ?? 0), 0);
 
     const durations = serviceMetrics
       .map(m => m.duration as number)
@@ -196,6 +212,9 @@ export class ServiceMetrics {
     const p95Index = Math.floor(durations.length * 0.95);
     const p99Index = Math.floor(durations.length * 0.99);
 
+    const successRate = totalCalls > 0 ? successfulCalls / totalCalls : 0;
+    const retryRate = totalCalls > 0 ? totalRetries / totalCalls : 0;
+
     return {
       totalCalls,
       successfulCalls,
@@ -205,6 +224,9 @@ export class ServiceMetrics {
       minLatency,
       maxLatency,
       errorRate: Math.round(errorRate * 100) / 100,
+      successRate: Math.round(successRate * 100) / 100,
+      cacheHitRate: 0, // TODO: track cache hits
+      retryRate: Math.round(retryRate * 100) / 100,
       p50Latency: durations[p50Index] || 0,
       p95Latency: durations[p95Index] || 0,
       p99Latency: durations[p99Index] || 0,
@@ -246,7 +268,7 @@ export class ServiceMetrics {
       const avgLatency = durations.reduce((sum, d) => sum + d, 0) / durations.length || 0;
       const failed = metrics.filter(m => !m.success).length;
       const errorRate = failed / metrics.length || 0;
-      const lastCall = Math.max(...metrics.map(m => m.startTime));
+      const lastCall = Math.max(...metrics.map(m => m.startTime ?? m.timestamp ?? 0));
 
       commandStats.push({
         command,
@@ -297,7 +319,7 @@ export class ServiceMetrics {
       const avgLatency = durations.reduce((sum, d) => sum + d, 0) / durations.length || 0;
       const failed = metrics.filter(m => !m.success).length;
       const errorRate = failed / metrics.length || 0;
-      const lastCall = Math.max(...metrics.map(m => m.startTime));
+      const lastCall = Math.max(...metrics.map(m => m.startTime ?? m.timestamp ?? 0));
 
       commandStats.push({
         command,
@@ -346,7 +368,7 @@ export class ServiceMetrics {
       const avgLatency = durations.reduce((sum, d) => sum + d, 0) / durations.length || 0;
       const failed = metrics.filter(m => !m.success).length;
       const errorRate = failed / metrics.length || 0;
-      const lastCall = Math.max(...metrics.map(m => m.startTime));
+      const lastCall = Math.max(...metrics.map(m => m.startTime ?? m.timestamp ?? 0));
 
       if (failed > 0) {
         commandStats.push({
@@ -388,7 +410,7 @@ export class ServiceMetrics {
     globalAvgLatency: number;
   } {
     const services = [...new Set(this.metrics.map(m => m.service))];
-    const totalRetries = this.metrics.reduce((sum, m) => sum + m.retries, 0);
+    const totalRetries = this.metrics.reduce((sum, m) => sum + (m.retries ?? 0), 0);
     const failed = this.metrics.filter(m => !m.success).length;
     const globalErrorRate = this.metrics.length > 0 ? failed / this.metrics.length : 0;
     const durations = this.metrics
