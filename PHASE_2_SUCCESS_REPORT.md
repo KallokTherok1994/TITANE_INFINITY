@@ -299,6 +299,7 @@ git log --oneline --graph HEAD~3..HEAD
    - Test only changed files (fast)
 
 3. **Coverage Enforcement:**
+
    ```typescript
    // vitest.config.ts
    coverage: {

@@ -142,6 +142,7 @@ of the body of a function component.
    - Automatic cleanup after each test
 
 4. **index.tsx** (8 lines)
+
    ```typescript
    export * from './TestProviders';
    export * from './renderHook';
@@ -172,6 +173,7 @@ of the body of a function component.
    - Ensures all tests have proper React context
 
 2. **package.json**
+
    ```bash
    npm install @tanstack/react-query
    ```
@@ -284,6 +286,7 @@ Duration:    46.02s
    - Priority: Low (E2E workflow test)
 
 4. **titane_e2e.test.ts - Scenario 3: Advanced Web Search**
+
    ```
    Expected: "OK"
    Received: "FAIL"
