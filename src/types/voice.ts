@@ -113,7 +113,10 @@ export type ThinkingState =
   | 'emotional_sense' // Sens émotionnel (Muse)
   | 'fast_thinking' // Pensée rapide (Muse/Architecte)
   | 'perceiving' // Perception (Muse)
-  | 'planning'; // Planification (Architecte)
+  | 'planning' // Planification (Architecte)
+  // Inner dialogue states
+  | 'silent' // Silencieux (inner dialogue)
+  | 'preparing_speech'; // Préparation parole (inner dialogue)
 
 /**
  * Couleur mentale (état cognitif visuel)
@@ -124,4 +127,10 @@ export type MentalColor =
   | 'purple' // Contemplatif
   | 'orange' // Énergique
   | 'white' // Neutre
-  | 'gold'; // Illumination
+  | 'gold' // Illumination
+  // Inner dialogue colors
+  | 'silver' // Argenté (neutre)
+  | 'violet' // Violet (réflexion)
+  | 'cyan' // Cyan (analyse)
+  | 'amber' // Ambre (attention)
+  | 'rose'; // Rose (empathie)

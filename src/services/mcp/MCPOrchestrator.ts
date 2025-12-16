@@ -741,7 +741,7 @@ class MCPOrchestratorClass implements MCPOperations {
   public async purifyMemory(): Promise<MemoryOperations> {
     let cleanupCount = 0;
     let compressCount = 0;
-    const fuseCount = 0;
+    let fuseCount = 0; // Changed to let
     let archiveCount = 0;
     let normalizeCount = 0;
 
@@ -770,7 +770,7 @@ class MCPOrchestratorClass implements MCPOperations {
     // Integration: Use vector embeddings to find similar content
     // Similarity threshold: 0.9+ = merge candidates
     const seenHashes = new Set<string>();
-    let fuseCount = 0; // Change const to let
+    // fuseCount already declared above - removed duplicate
     validEntries.forEach((e, idx) => {
       if (e.summary && seenHashes.has(e.summary)) return;
 

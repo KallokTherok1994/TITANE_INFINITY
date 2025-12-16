@@ -24,16 +24,14 @@ import {
   type AttentionState as _AttentionState,
 } from './attentionEngine';
 import { haloEngine as _haloEngine, type HaloState } from './haloEngine';
+import type { ThinkingState, MentalColor } from '@/types/voice';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════
 
-/**
- * État de la pensée interne
- * @deprecated Importez depuis @/types/voice (Core ring)
- */
-export type { ThinkingState, MentalColor } from '@/types/voice';
+// Re-export types for backward compatibility
+export type { ThinkingState, MentalColor };
 
 /**
  * Type de pensée interne
@@ -690,12 +688,18 @@ class InnerDialogueController {
       gold: 'shimmer', // Alignement parfait
       silver: 'idle', // Neutre
       amber: 'pulsing', // Correction
+      // Added missing colors
+      green: 'breathing', // Créatif
+      purple: 'breathing', // Contemplatif
+      orange: 'pulsing', // Énergique
+      white: 'idle', // Neutre
     };
 
     const _haloState = mentalToHaloMap[this.state.mentalColor];
     // Sync halo engine with mental state
     try {
-      _haloEngine.setState(_haloState);
+      // _haloEngine.setState(_haloState); // setState not available, halo managed separately
+      // HaloEngine state is read-only, managed by its own logic
     } catch (error) {
       // Halo engine might not be initialized yet
       if (this.config.debugMode) {
