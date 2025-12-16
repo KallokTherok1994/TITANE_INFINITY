@@ -300,6 +300,30 @@ class AIOrchestrator {
   }
 
   /**
+   * Determine governance status based on metrics
+   */
+  private determineGovernanceStatus(
+    metrics: AggregatedMetrics
+  ): 'full' | 'partial' | 'limited' {
+    const successRate = metrics.successRate || 0;
+    const errorFrequency =
+      metrics.totalErrors / Math.max(1, metrics.uptime / (60 * 60 * 1000));
+
+    // Full governance: high success rate, low errors
+    if (successRate >= 0.9 && errorFrequency < 1) {
+      return 'full';
+    }
+
+    // Limited governance: low success rate or high errors
+    if (successRate < 0.5 || errorFrequency > 5) {
+      return 'limited';
+    }
+
+    // Partial governance: everything in between
+    return 'partial';
+  }
+
+  /**
    * ═══════════════════════════════════════════════════════════════════
    * PHASE 3.3: NEURAL PROVIDER SELECTION (Intelligence Adaptive)
    * ═══════════════════════════════════════════════════════════════════

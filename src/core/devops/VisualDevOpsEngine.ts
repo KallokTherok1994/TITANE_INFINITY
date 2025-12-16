@@ -888,6 +888,22 @@ echo "✅ Operation complete"
     };
   }
 
+  private calculateAverageValidationTime(): number {
+    const completedActions = this.actionHistory.filter(
+      a => a.status === 'executed' || a.status === 'rejected'
+    );
+
+    if (completedActions.length === 0) return 0;
+
+    const totalValidationTime = completedActions.reduce((sum, action) => {
+      // Calculate time from action creation to final status
+      const validationTime = action.created_at ? Date.now() - action.created_at : 0;
+      return sum + validationTime;
+    }, 0);
+
+    return Math.round(totalValidationTime / completedActions.length);
+  }
+
   private enrichTechnicalContentFromContext(
     content: TechnicalContent,
     context?: string
