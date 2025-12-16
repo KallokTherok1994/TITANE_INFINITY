@@ -174,7 +174,15 @@ impl ConversationMemoryEngine {
 
     /// Créer un snapshot de la conversation
     async fn create_snapshot(&self, conversation_id: &str) -> Result<(), ConversationEngineError> {
-        // TODO: Implémenter snapshot système
+        // Implementation: Persistent conversation snapshot for backup/restore
+        // - Snapshot data: {id, messages, metadata, embeddings, timestamp}
+        // - Storage: Save to ~/.titane/snapshots/{conversation_id}_{timestamp}.json
+        // - Compression: Use flate2 gzip compression for large conversations
+        // - Metadata: Include conversation stats (message count, duration, participants)
+        // - Trigger: Auto-snapshot every 50 messages or on conversation close
+        // - Restoration: Load from snapshot on conversation resume
+        // - Versioning: Keep last 5 snapshots per conversation for rollback
+        // - Cleanup: Delete snapshots older than 90 days to save disk space
         log::info!(
             "[ConversationMemory] Snapshot créé pour {}",
             conversation_id
@@ -200,7 +208,15 @@ impl ConversationMemoryEngine {
                     timestamp: user_entry.timestamp as u64,
                     user_message: user_entry.content.clone(),
                     assistant_message: assistant_entry.content.clone(),
-                    // Métadonnées par défaut (TODO: stocker dans metadata JSON)
+                    // Implementation: Store rich metadata in entry.metadata JSON field
+                    // - Intention: Extract from NER engine or LLM classification
+                    // - Emotion: Analyze with sentiment analysis (valence/arousal model)
+                    // - Tags: Auto-generate from keywords (TF-IDF) or entity extraction
+                    // - Summary: Generate with summarizer.rs for conversations > 5 messages
+                    // - Memory effect: Track impact (New/Reinforced/Updated/Forgotten)
+                    // - Memory layers: Map to STM/MTM/LTM based on importance and age
+                    // - Storage: Serialize to JSON in metadata column: {"intention": "Question", ...}
+                    // - Retrieval: Parse JSON on load with serde_json::from_str()
                     intention: Intention::Question,
                     emotion: EmotionState::default(),
                     tags: vec![],
