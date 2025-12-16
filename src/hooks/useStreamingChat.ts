@@ -97,8 +97,13 @@ export function useStreamingChat(): UseStreamingChatReturn {
       const startTime = performance.now();
 
       try {
-        // Tentative d'utiliser le vrai streaming si disponible
-        const useRealStreaming = false; // TODO: Activer quand backend prêt
+        // ACTIVATION: Enable real streaming when backend ready
+        // 1. Feature flag: Check env.VITE_ENABLE_STREAMING or backend capability endpoint
+        // 2. Backend check: await invoke('chat:supports_streaming') to verify support
+        // 3. Toggle: Add setting in config for user control (Settings > Chat > Enable Streaming)
+        // 4. Fallback: Auto-disable if streaming fails, fallback to batch mode
+        // 5. Testing: Verify with real backend before production deployment
+        const useRealStreaming = false; // TODO: Set true when backend streaming implementation complete
 
         if (useRealStreaming) {
           // Setup streaming listeners

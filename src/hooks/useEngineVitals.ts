@@ -128,7 +128,7 @@ export function useEngineVitals(
         sentinel: {
           errors: singularityState.physical?.system_health?.errors_count || 0,
           anomalies: singularityState.physical?.system_health?.warnings_count || 0,
-          lastError: null, // TODO: Ajouter last_error à SystemHealth
+          lastError: singularityState.physical?.system_health?.last_error || null, // INTEGRATION: Add last_error to SystemHealth backend type { message, timestamp, severity }
         },
         selfheal: {
           interventions: singularityState.adaptive?.auto_heal?.errors_healed || 0,
