@@ -38,7 +38,8 @@ export type AIProviderName =
   | 'emergency-fallback'
   | 'ultimate-fallback'
   | 'omnis-emergency'
-  | 'omnis-fallback';
+  | 'omnis-fallback'
+  | 'titane-constitutional';
 
 // ✨ v21 - Provider choice for UI selection
 export type ProviderChoice = 'auto' | 'openai' | 'claude' | 'gemini' | 'ollama' | 'local';

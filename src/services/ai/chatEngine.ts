@@ -107,6 +107,7 @@ export interface ChatEngineResponse extends AIResponse {
     autoHealed: boolean;
     failureHandled: boolean;
     processingTime: number;
+    constitutionalProtection?: string; // CONSTITUTION v1.0: Law #8 saturation, Law #2 clarity, etc.
   };
 }
 
