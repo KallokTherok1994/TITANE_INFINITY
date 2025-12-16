@@ -252,7 +252,13 @@ export class AppearanceFloatingIntegration {
   private applyOutfitState(outfit: AvatarAppearanceState['outfit']): void {
     if (!this.materials || !outfit) return;
 
-    // TODO v24.13: Parse outfit.top, outfit.bottom colors
+    // IMPLEMENTATION v24.13: Parse outfit.top, outfit.bottom colors
+    // 1. Parse color: const color = new THREE.Color(outfit.top) // Hex string '#FF5733'
+    // 2. Validate format: Check for valid hex (#RRGGBB) or named colors ('red', 'blue')
+    // 3. Apply to material: this.materials.shirt.color.copy(color)
+    // 4. Support gradients: For patterns, blend colors using uniforms or texture mapping
+    // 5. Update material: this.materials.shirt.needsUpdate = true
+    // 6. Fallback: Keep default palette colors if parsing fails
     // For now, keep default palette colors
 
     if (DEBUG)

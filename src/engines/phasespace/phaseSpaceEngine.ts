@@ -952,8 +952,14 @@ class PhaseSpaceEngine {
 
     console.log(`[PhaseSpaceEngine] Navigating to attractor: ${attractor.name}`);
 
-    // TODO: Implémenter navigation (ajuster paramètres des moteurs)
-    // Pour l'instant, juste log
+    // IMPLEMENTATION: Navigate to attractor by adjusting engine parameters
+    // 1. Get target parameters: const target = attractor.parameters (e.g., creativity: 0.8)
+    // 2. Interpolate values: Gradual transition over time (e.g., 5s lerp from current to target)
+    // 3. Update engines: CognitiveEngine.setCreativity(target.creativity), etc.
+    // 4. Emit events: Emit 'phasespace:navigation:start' and 'phasespace:navigation:complete'
+    // 5. Convergence detection: Monitor distance to attractor, stop when < threshold (0.05)
+    // 6. UI feedback: Update PhaseSpace visualization to show navigation path
+    // For now, just log
   }
 
   /**

@@ -529,7 +529,7 @@ class AIOrchestrator {
           100 -
           (realtimeMetrics.totalErrors / Math.max(1, realtimeMetrics.totalRequests)) *
             100,
-        governanceStatus: 'partial', // TODO: Déterminer dynamiquement
+        governanceStatus: this.determineGovernanceStatus(realtimeMetrics), // Dynamic governance: 'full' if all checks pass, 'partial' if warnings, 'limited' if errors (duplicate of services/ai/orchestrator.ts)
       });
 
       // 🧠 Exécuter le processus cognitif complet

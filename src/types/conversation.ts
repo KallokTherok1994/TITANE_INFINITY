@@ -24,6 +24,11 @@ export interface ConversationResponse {
   content: string;
   role: 'assistant';
   timestamp: number;
+  conversationId?: string;
+  memoryContext?: {
+    memoriesUsed: number;
+    summary: string;
+  };
   metadata?: {
     model?: string;
     tokensUsed?: number;

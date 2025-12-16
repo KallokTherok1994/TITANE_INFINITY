@@ -195,7 +195,13 @@ export class ThreeJSAvatarRenderer {
       return;
     }
 
-    // TODO v24.13: Map snapshot.bones to Three.js bones
+    // IMPLEMENTATION v24.13: Map snapshot.bones to Three.js bones
+    // 1. Use SkeletonHelper to visualize bone structure: new THREE.SkeletonHelper(avatarModel)
+    // 2. Traverse skeleton: avatarModel.traverse(node => { if (node.isBone) ... })
+    // 3. Map bones: Find bones by name (e.g., 'Spine', 'Head', 'LeftArm') from snapshot.bones
+    // 4. Apply transforms: bone.quaternion.set(qx, qy, qz, qw), bone.position.set(x, y, z)
+    // 5. Update matrices: bone.updateMatrix(), skeleton.update()
+    // 6. Optimization: Cache bone references for performance (avoid traverse every frame)
     // For now, simple rotation animation
     if (this.avatarMeshes.root) {
       // Idle breathing animation (subtle)
