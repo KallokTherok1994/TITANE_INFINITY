@@ -87,7 +87,18 @@ export type ThinkingState =
   | 'reflecting' // Réflexion
   | 'synthesizing' // Synthèse
   | 'waiting' // Attente input
-  | 'idle'; // Inactif
+  | 'idle' // Inactif
+  // Archetype-specific states
+  | 'slow_thinking' // Pensée lente (Sage)
+  | 'deep_reflection' // Réflexion profonde (Sage)
+  | 'evaluating' // Évaluation (Sage/Gardien/Architecte)
+  | 'narrative_alignment' // Alignement narratif (Sage)
+  | 'validating' // Validation (Gardien)
+  | 'self_correcting' // Auto-correction (Gardien)
+  | 'emotional_sense' // Sens émotionnel (Muse)
+  | 'fast_thinking' // Pensée rapide (Muse/Architecte)
+  | 'perceiving' // Perception (Muse)
+  | 'planning'; // Planification (Architecte)
 
 /**
  * Couleur mentale (état cognitif visuel)
