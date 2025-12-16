@@ -1,0 +1,39 @@
+=== Global Imports (to optimize) ===
+src/modules/avatar/core/AudioVisualSyncEngine.ts:import * as THREE from 'three';
+src/modules/avatar/voice/VoiceReactionSystem.ts:import * as THREE from 'three';
+src/modules/avatar/gesture/BodyGestureFluidityEngine.ts:import * as THREE from 'three';
+src/modules/avatar/rendering/PBRMaterialSystem.ts:import * as THREE from 'three';
+src/modules/avatar/rendering/StudioLightingRig.ts:import * as THREE from 'three';
+src/modules/avatar/rendering/PostProcessingPipeline.ts:import * as THREE from 'three';
+src/modules/avatar/floating/floating.perf.test.ts:import * as THREE from 'three';
+src/modules/avatar/floating/appearanceFloatingIntegration.test.ts:import * as THREE from 'three';
+src/modules/avatar/floating/ThreeJSAvatarRenderer.ts:import * as THREE from 'three';
+src/modules/avatar/floating/appearanceFloatingIntegration.ts:import * as THREE from 'three';
+src/modules/avatar/floating/useFloatingWindow.ts:import * as FloatingEngine from './avatarFloatingEngine';
+src/modules/avatar/camera/CameraDynamismEngine.ts:import * as THREE from 'three';
+src/modules/devSudo/devSudoHandler.ts:import * as ExtendedHandlers from './devSudoExtendedHandlers';
+src/modules/devSudo/devSudoHandler.ts:import * as IDEHandlers from './devSudoIDEHandlers';
+src/modules/devSudo/devSudoHandler.ts:import * as SingularityHandlers from './devSudoSingularityHandlers';
+src/modules/devSudo/devSudoHandler.ts:import * as VisionHandlers from './devSudoVisionHandlers';
+src/modules/devSudo/devSudoHandler.ts:import * as BackendHandlers from './devSudoBackendHandlers';
+src/modules/devSudo/devSudoHandler.ts:import * as MemoryHandlers from './devSudoMemoryHandlers';
+src/modules/devSudo/devSudoHandler.ts:import * as TitaneOneHandlers from './devSudoTitaneOneHandlers';
+src/test/useBatchCommands.test.ts:import * as tauriBridge from '../services/tauriBridge';
+
+=== Deep Imports (potential coupling) ===
+src/engines/flow/__tests__/FlowEngine.test.ts:import type { MultimodalState } from '../../../types/multimodalFusion';
+src/engines/flow/__tests__/FlowEngine.test.ts:import { getDefaultMultimodalState } from '../../../types/multimodalFusion';
+src/services/ai/providers/tauriChat.ts:import { TAURI_COMMANDS } from '../../../core/commands/TAURI_COMMANDS';
+src/services/ai/providers/tauriChat.ts:import { safeInvokeTauri } from '../../../utils/tauriProtector';
+src/services/ai/providers/gemini.ts:import { logger } from '../../../utils/logger';
+src/ui/pages/ControlPanel/sections/SystemSection.tsx:import { SystemInfo } from '../../../../types/tauri';
+src/ui/pages/ControlPanel/ControlPanel.tsx:import { SystemInfo } from '../../../types/tauri';
+src/ui/pages/ControlPanel/components/ControlPanelLayout.tsx:import { SystemInfo } from '../../../../types/tauri';
+src/ui/pages/ChatIA/ModeEditor.tsx:import { useUIStore } from '../../../stores/uiStore';
+src/features/governance-center/components/AIProvidersTester.tsx:import { safeInvoke } from '../../../utils/invoke';
+src/__tests__/services/performanceEngine/performanceEngine.test.ts:} from '../../../services/performanceEngine/performanceEngine.config';
+src/__tests__/services/performanceEngine/performanceEngine.test.ts:} from '../../../services/performanceEngine/performanceEngine.config';
+src/__tests__/services/adminEngine/adminEngine.test.ts:} from '../../../services/adminEngine';
+
+=== Absolute Imports ===
+785

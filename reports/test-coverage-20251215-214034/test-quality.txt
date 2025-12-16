@@ -1,0 +1,17 @@
+=== Test Assertions ===
+4148
+
+=== Mock Usage ===
+129
+
+=== Async Tests ===
+5
+
+=== Snapshot Tests ===
+0
+
+=== Test Hooks ===
+beforeEach: 199
+afterEach: 67
+beforeAll: 11
+afterAll: 8

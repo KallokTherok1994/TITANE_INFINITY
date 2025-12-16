@@ -270,8 +270,33 @@ export class ConversationManager {
     messages: ConversationMessage[];
     config: ConversationConfig;
   }): Promise<ConversationResponse> {
-    // TODO: Implement Tauri backend call
-    throw new Error('Local LLM not yet implemented');
+    const { invoke } = await import('@tauri-apps/api/tauri');
+
+    try {
+      const result = await invoke<{
+        content: string;
+        model: string;
+        tokens_used: number;
+      }>('chat_send_message', {
+        prompt: request.messages[request.messages.length - 1].content,
+        provider: 'ollama',
+        streaming: config.enableStreaming || false,
+      });
+
+      return {
+        content: result.content,
+        role: 'assistant',
+        timestamp: Date.now(),
+        metadata: {
+          model: result.model || 'llama3',
+          tokensUsed: result.tokens_used || 0,
+          provider: 'local',
+        },
+      };
+    } catch (error) {
+      console.error('[ConversationManager] Local LLM invocation failed:', error);
+      throw new Error(`Local LLM failed: ${error}`);
+    }
   }
 
   /**
@@ -281,8 +306,33 @@ export class ConversationManager {
     messages: ConversationMessage[];
     config: ConversationConfig;
   }): Promise<ConversationResponse> {
-    // TODO: Implement OpenAI API call
-    throw new Error('OpenAI not yet implemented');
+    const { invoke } = await import('@tauri-apps/api/tauri');
+
+    try {
+      const result = await invoke<{
+        content: string;
+        model: string;
+        tokens_used: number;
+      }>('chat_send_message', {
+        prompt: request.messages[request.messages.length - 1].content,
+        provider: 'openai',
+        streaming: config.enableStreaming || false,
+      });
+
+      return {
+        content: result.content,
+        role: 'assistant',
+        timestamp: Date.now(),
+        metadata: {
+          model: result.model || 'gpt-4',
+          tokensUsed: result.tokens_used || 0,
+          provider: 'openai',
+        },
+      };
+    } catch (error) {
+      console.error('[ConversationManager] OpenAI API call failed:', error);
+      throw new Error(`OpenAI failed: ${error}`);
+    }
   }
 
   /**
@@ -292,8 +342,33 @@ export class ConversationManager {
     messages: ConversationMessage[];
     config: ConversationConfig;
   }): Promise<ConversationResponse> {
-    // TODO: Implement Gemini API call
-    throw new Error('Gemini not yet implemented');
+    const { invoke } = await import('@tauri-apps/api/tauri');
+
+    try {
+      const result = await invoke<{
+        content: string;
+        model: string;
+        tokens_used: number;
+      }>('chat_send_message', {
+        prompt: request.messages[request.messages.length - 1].content,
+        provider: 'gemini',
+        streaming: config.enableStreaming || false,
+      });
+
+      return {
+        content: result.content,
+        role: 'assistant',
+        timestamp: Date.now(),
+        metadata: {
+          model: result.model || 'gemini-pro',
+          tokensUsed: result.tokens_used || 0,
+          provider: 'gemini',
+        },
+      };
+    } catch (error) {
+      console.error('[ConversationManager] Gemini API call failed:', error);
+      throw new Error(`Gemini failed: ${error}`);
+    }
   }
 
   /**
@@ -303,8 +378,33 @@ export class ConversationManager {
     messages: ConversationMessage[];
     config: ConversationConfig;
   }): Promise<ConversationResponse> {
-    // TODO: Implement Anthropic API call
-    throw new Error('Anthropic not yet implemented');
+    const { invoke } = await import('@tauri-apps/api/tauri');
+
+    try {
+      const result = await invoke<{
+        content: string;
+        model: string;
+        tokens_used: number;
+      }>('chat_send_message', {
+        prompt: request.messages[request.messages.length - 1].content,
+        provider: 'anthropic',
+        streaming: config.enableStreaming || false,
+      });
+
+      return {
+        content: result.content,
+        role: 'assistant',
+        timestamp: Date.now(),
+        metadata: {
+          model: result.model || 'claude-3-opus',
+          tokensUsed: result.tokens_used || 0,
+          provider: 'anthropic',
+        },
+      };
+    } catch (error) {
+      console.error('[ConversationManager] Anthropic API call failed:', error);
+      throw new Error(`Anthropic failed: ${error}`);
+    }
   }
 
   /**
