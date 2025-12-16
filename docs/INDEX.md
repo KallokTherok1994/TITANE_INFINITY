@@ -2,7 +2,21 @@
 
 **Version:** v24.2.0  
 **Mise à jour:** 15 décembre 2025  
+**Status:** ⏸️ **VALIDATION PAUSE** (Phase 0-7 Complete → Testing before Phase 8+)  
 **Navigation complète** documentation projet
+
+---
+
+## 🚀 Quick Start by Role
+
+**New to TITANE∞?** → [Getting Started Hub](GETTING_STARTED.md) ⭐ **NEW**
+
+**Choose your path:**
+- 👤 **New User** → [QUICKSTART](04_guides/quickstart/QUICKSTART.md) (30 min to productivity)
+- 👨‍💻 **Developer** → [CONTRIBUTING](../CONTRIBUTING.md) (2-4h to first PR)
+- 🚀 **DevOps/SRE** → [DEPLOYMENT](04_guides/advanced/DEPLOYMENT.md) (4-8h to production)
+- ⚡ **Performance Engineer** → [PERFORMANCE_OPTIMIZATION](04_guides/advanced/PERFORMANCE_OPTIMIZATION.md) (4-6h to 20% improvement)
+- 🏛️ **Architect** → [Executive Summary](00_core/DOCUMENTATION_EXECUTIVE_SUMMARY.md) (1-2h to strategic decision)
 
 ---
 
@@ -13,17 +27,19 @@
 | Document | Description | Lecteurs |
 |----------|-------------|----------|
 | [README.md](../README.md) | Vue d'ensemble + Quick Start | **Tous** 👥 |
+| [GETTING_STARTED.md](GETTING_STARTED.md) | **Documentation Hub** ⭐ **NEW** | **Tous** 👥 |
+| [CONTRIBUTING.md](../CONTRIBUTING.md) | Guide contributeur complet | Dev 👥 |
 | [LICENSE.md](../LICENSE.md) | Licence propriétaire | Légal 📜 |
 | [CHANGELOG.md](../CHANGELOG.md) | Historique versions | Dev 👨‍💻 |
-| [DEVELOPER_GUIDE.md](../DEVELOPER_GUIDE.md) | Guide développeur complet | Dev 👨‍💻 |
 
-### Documentation Structurée (NEW)
+### Documentation Structurée
 
 | Dossier | Contenu | Mise à jour |
 |---------|---------|-------------|
-| [docs/00_core/](./00_core/) | Documentation core système | ✅ 15 déc 2025 |
+| [docs/00_core/](./00_core/) | Documentation core + **validation** 🧪 | ✅ 15 déc 2025 |
 | [docs/01_architecture/](./01_architecture/) | Architecture technique | ✅ 15 déc 2025 |
-| [docs/06_api/](./06_api/) | Référence API | ✅ 15 déc 2025 |
+| [docs/04_guides/](./04_guides/) | Guides utilisateurs + avancés | ✅ 15 déc 2025 |
+| [docs/06_api/](./06_api/) | Référence API (14/14 modules) | ✅ 15 déc 2025 |
 | [docs/99_ARCHIVE/](./99_ARCHIVE/) | Archives versions/sessions | ✅ 15 déc 2025 |
 
 ---
@@ -38,9 +54,13 @@
 | [DOCS_INVENTORY.md](./00_core/DOCS_INVENTORY.md) | 281 | Inventaire exhaustif documentation |
 | [DOCS_RISK_MAP.md](./00_core/DOCS_RISK_MAP.md) | 316 | Matrice risques actions |
 | [GLOSSARY.md](./00_core/GLOSSARY.md) | 396 | 45 termes techniques définis |
+| [DOCUMENTATION_EXECUTIVE_SUMMARY.md](./00_core/DOCUMENTATION_EXECUTIVE_SUMMARY.md) | 559 | Executive Summary Phase 0-7 |
+| [PHASE_7_COMPLETE_REPORT.md](./00_core/PHASE_7_COMPLETE_REPORT.md) | 465 | Phase 7 impact analysis ⭐⭐⭐ |
+| [STRATEGIC_VISION_POST_PHASE7.md](./00_core/STRATEGIC_VISION_POST_PHASE7.md) | 411 | Strategic roadmap + PAUSE recommendation 🎯 |
+| [validation/](./00_core/validation/) | **NEW** 🧪 | **Validation Campaign** (4 tests + metrics) |
 
-**Total** : 1258 lignes  
-**Statut** : ✅ Phase 1 Complete (baseline établie)
+**Total** : ~2,693 lignes (+ validation templates)  
+**Statut** : ✅ Phase 0-7 Complete + ⏸️ **Validation Ready**
 
 ---
 
