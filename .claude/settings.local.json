@@ -87,7 +87,8 @@
       "Bash(timeout 60 npm run test:unit:*)",
       "Bash(git log:*)",
       "Bash(test:*)",
-      "Bash(git ls-tree:*)"
+      "Bash(git ls-tree:*)",
+      "Bash(npm run)"
     ],
     "deny": [],
     "ask": []
