@@ -377,9 +377,9 @@ impl EvolutionEngineStore {
             prefix,
             std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
-                .unwrap()
-                .as_millis(),
-            uuid::Uuid::new_v4().to_string().split('-').next().unwrap()
+                .map(|d| d.as_millis())
+                .unwrap_or(0),
+            uuid::Uuid::new_v4().to_string().split('-').next().unwrap_or("unknown")
         )
     }
 
@@ -387,8 +387,8 @@ impl EvolutionEngineStore {
     fn current_timestamp() -> u64 {
         std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_secs()
+            .map(|d| d.as_secs())
+            .unwrap_or(0)
     }
 }
 

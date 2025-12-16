@@ -423,12 +423,12 @@ fn main() {
                     password,
                     ai_router,
                     singularity_state,
-                ).map_err(|e| {
+                ).unwrap_or_else(|e| {
                     eprintln!("❌ TITANE∞ FATAL: Failed to initialize OMEGA Conversation Engine");
                     eprintln!("   Error: {:?}", e);
                     eprintln!("   → Please check your configuration and storage permissions.");
                     std::process::exit(1);
-                }).unwrap()
+                })
             );
 
             app.manage(conversation_engine);
@@ -698,13 +698,12 @@ fn main() {
             commands_v21::singularity_commands::singularity_self_check,
         ])
         .run(tauri::generate_context!())
-        .map_err(|e| {
+        .unwrap_or_else(|e| {
             eprintln!("❌ TITANE∞ FATAL: Tauri application failed to start");
             eprintln!("   Error: {:?}", e);
             eprintln!("   → Please check logs and system requirements.");
             std::process::exit(1);
-        })
-        .unwrap();
+        });
 
     log::info!("TITANE∞ v19.5.2 shutdown - Security System offline");
 }

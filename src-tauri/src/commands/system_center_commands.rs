@@ -54,8 +54,8 @@ pub async fn sc_add_log(level: String, source: String, message: String) -> Resul
     let entry = LogEntry {
         timestamp: std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_secs(),
+            .map(|d| d.as_secs())
+            .unwrap_or(0),
         level,
         source,
         message,
@@ -88,8 +88,8 @@ pub async fn sc_initialize_cluster(node_id: String, port: u16) -> Result<(), Tit
         status: "initializing".to_string(),
         connected_at: std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_secs(),
+            .map(|d| d.as_secs())
+            .unwrap_or(0),
     };
 
     nodes.push(node);
