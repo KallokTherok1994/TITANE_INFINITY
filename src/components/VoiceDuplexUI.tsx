@@ -13,10 +13,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { WakewordIndicator } from './WakewordIndicator';
+// import { WakewordIndicator } from './WakewordIndicator'; // REMOVED: Component deleted
 import { VoiceCircle } from './VoiceCircle';
 import { FullDuplexWave } from './FullDuplexWave';
-import { ListeningIndicator } from './ListeningIndicator';
+import { ListeningIndicator } from './audio/ListeningIndicator';
 import { useAnimation } from '../contexts/AnimationContext';
 import './VoiceDuplexUI.css';
 
@@ -139,12 +139,13 @@ export const VoiceDuplexUI: React.FC<VoiceDuplexUIProps> = ({
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.3 }}
             >
-              <WakewordIndicator
-                keyword="TITANE"
-                state={wakewordState}
-                confidence={0.85}
-                size={180}
-              />
+              {/* REMOVED: WakewordIndicator component deleted */}
+              <div
+                className="wakeword-placeholder"
+                style={{ fontSize: '48px', padding: '40px' }}
+              >
+                🎙️ Say "TITANE"
+              </div>
 
               <motion.button
                 className="manual-activate-btn glass"
