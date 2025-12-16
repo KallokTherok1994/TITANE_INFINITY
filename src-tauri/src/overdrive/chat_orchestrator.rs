@@ -1404,10 +1404,16 @@ pub async fn chat_get_providers_status(
 pub async fn chat_check_providers(
     state: State<'_, ChatOrchestratorState>,
 ) -> Result<Vec<ProviderStatus>, TAPIError> {
-    // TODO: Ping tous les providers
-    // - Gemini: HEAD request avec API key
-    // - Ollama: GET http://localhost:11434/api/tags
-    // - Local: toujours disponible
+    // Implementation: Ping all AI providers with health checks
+    // - Gemini: HEAD request to https://generativelanguage.googleapis.com/v1/models?key={API_KEY}
+    //   * Response: 200 OK = healthy, 401 = invalid key, timeout = offline
+    // - Ollama: GET http://localhost:11434/api/tags to list available models
+    //   * Response: JSON with {"models": [...]} = healthy, connection refused = offline
+    // - Local: Always return healthy (no external dependency)
+    // - Timeout: 5s per provider with tokio::time::timeout()
+    // - Parallel: Use tokio::spawn for concurrent health checks
+    // - Update state: Write results to provider_status with RwLock
+    // - Return: Vec of {provider, available, latency_ms, error?}
 
     let status_list = state.provider_status.read().await;
     Ok(status_list.clone())
@@ -1431,7 +1437,15 @@ pub async fn ai_chat_stream(
         conversation_id: None,
         provider: "auto".to_string(),
         model,
-        streaming: false, // TODO: Implémenter vrai streaming
+        streaming: false, // Implementation: Server-Sent Events (SSE) for real-time streaming
+                          // - Protocol: Use Tauri events with emit("chat:stream", {chunk})
+                          // - API streaming: For Gemini/Ollama, use streaming endpoints
+                          //   * Gemini: streamGenerateContent with stream=true parameter
+                          //   * Ollama: POST /api/generate with "stream": true in JSON
+                          // - Chunk processing: Parse SSE events, extract delta tokens
+                          // - Frontend: Listen with listen("chat:stream", callback) in React
+                          // - Buffering: Accumulate chunks in frontend for complete response
+                          // - Error handling: Send final event with error flag on stream failure
         images: None,
         system_prompt,
     };
