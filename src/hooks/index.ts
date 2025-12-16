@@ -25,19 +25,7 @@ export {
   useSingularityField,
 } from './useSingularity';
 
-// v∞ - Enhanced Singularity Metrics
-export {
-  useSingularityMetrics,
-  default as useSingularityMetricsDefault,
-} from './useSingularityMetrics';
-export type {
-  SystemMetrics,
-  EngineMetrics,
-  HealthScore,
-  Alert as MetricsAlert,
-  SingularityMetricsState,
-  UseSingularityMetricsOptions,
-} from './useSingularityMetrics';
+// REMOVED: useSingularityMetrics (orphan - use useSingularity instead)
 
 // ═══════════════════════════════════════════════════════════════
 // v15 - Chat IA Architecture (Composition + Isolation)
@@ -400,18 +388,8 @@ export type {
 // v∞.13 - Physiological State (Interoception + Holophonic)
 // ═══════════════════════════════════════════════════════════════
 
-export {
-  useInteroception,
-  useInternalEnergy,
-  useCognitiveLoad as useInteroceptionCognitiveLoad,
-  useMentalClarity,
-  useBreathingPhase,
-  useHomeostasis,
-  useHolophonic,
-  useSpatialPosition as useHolophonicPosition,
-  useCognitiveSounds,
-  usePhysiologicalState,
-} from './usePhysiological';
+// REMOVED: usePhysiological (orphan)
+// Types from engines also removed
 
 export type {
   InteroceptionState,
