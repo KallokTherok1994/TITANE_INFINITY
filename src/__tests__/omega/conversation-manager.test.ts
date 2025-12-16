@@ -148,9 +148,9 @@ describe('🧠 ConversationManager (OMEGA v2)', () => {
     const conversations = await conversationManager.listConversations();
 
     expect(conversations).toHaveLength(3);
-    expect(conversations).toContain('conv-1');
-    expect(conversations).toContain('conv-2');
-    expect(conversations).toContain('conv-3');
+    expect(conversations.map(c => c.id)).toContain('conv-1');
+    expect(conversations.map(c => c.id)).toContain('conv-2');
+    expect(conversations.map(c => c.id)).toContain('conv-3');
   });
 
   /**
