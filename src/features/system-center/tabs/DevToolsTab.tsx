@@ -15,9 +15,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { invoke } from '@tauri-apps/api/core';
-import { LogViewer } from '@/components/devtools/LogViewer';
-import { MetricsDisplay } from '@/components/devtools/MetricsDisplay';
-import { CoreHealthMonitor } from '@/components/devtools/CoreHealthMonitor';
+// 🔧 v20.1: Consolidated DevTools components (migrated from src/components/devtools/)
+import { LogViewer, MetricsDisplay, CoreHealthMonitor } from '@/apps/devtools/components';
 
 // ══════════════════════════════════════════════════════════════════
 // TYPES

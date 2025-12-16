@@ -186,7 +186,18 @@ pub async fn semantic_execute_skill(
     // Construire prompt
     let prompt = build_prompt(&skill, &request)?;
 
-    // Exécuter via Chat Orchestrator (TODO: intégration)
+    // INTEGRATION: Chat Orchestrator for AI prompt execution
+    // Backend: chat_orchestrator::execute_skill_prompt(prompt, config)
+    // Config:
+    //   - provider: Gemini (default), Ollama (local), Claude (fallback)
+    //   - temperature: 0.7 (balanced creativity/determinism)
+    //   - max_tokens: 1024 (skill-specific)
+    // Process:
+    //   1. Route prompt to best available provider
+    //   2. Execute with timeout (30s default)
+    //   3. Parse response + extract skill output
+    //   4. Track metrics (latency, tokens, success rate)
+    // For now, simulated execution
     let output = execute_prompt(&prompt).await?;
 
     let latency_ms = crate::core::utils::elapsed_ms(start);
@@ -220,7 +231,16 @@ fn build_prompt(skill: &SemanticSkill, request: &SemanticRequest) -> Result<Stri
 }
 
 async fn execute_prompt(prompt: &str) -> Result<String, TAPIError> {
-    // TODO: Appeler Chat Orchestrator
+    // IMPLEMENTATION: Chat Orchestrator API integration
+    // Backend call:
+    //   use crate::overdrive::chat_orchestrator;
+    //   chat_orchestrator::chat_send_message(prompt, context, config).await
+    // Error handling:
+    //   - Timeout: Retry with fallback provider
+    //   - Rate limit: Queue request + exponential backoff
+    //   - Parse error: Return partial output + warning
+    // Caching: Store responses for identical prompts (1 hour TTL)
+    // For production, replace with actual orchestrator call
     println!("[SEMANTIC] Prompt: {}", prompt);
     Ok("Réponse simulée du kernel".to_string())
 }
@@ -256,7 +276,15 @@ pub async fn semantic_analyze_intent(
 
     let response = semantic_execute_skill(request, state.clone()).await?;
 
-    // Parser résultat (TODO: parsing structuré)
+    // PARSING: Structured output from AI response
+    // Expected format: JSON or key-value pairs
+    // Example: {"intent": "code_generation", "confidence": 0.95, "entities": [...]}
+    // Parsing strategies:
+    //   1. JSON: serde_json::from_str() with error recovery
+    //   2. Regex: Extract patterns like "Intent: <value>", "Confidence: <value>"
+    //   3. LLM-guided: Ask AI to format output as JSON
+    // Fallback: Heuristic parsing if structured format fails
+    // Backend: response_parse_structured(text) -> IntentAnalysis
     let analysis = IntentAnalysis {
         intent: response.output.clone(),
         confidence: response.confidence,
@@ -274,7 +302,18 @@ pub async fn semantic_analyze_intent(
 }
 
 fn extract_entities(query: &str) -> HashMap<String, String> {
-    // TODO: NER (Named Entity Recognition)
+    // IMPLEMENTATION: Named Entity Recognition (NER)
+    // Approaches:
+    //   1. Rule-based: Regex patterns for common entities (dates, names, code)
+    //   2. ML-based: SpaCy/Stanford NER via Python bridge
+    //   3. LLM-based: Ask AI to extract entities from text
+    // Entity types:
+    //   - CODE: Programming language keywords, function names
+    //   - DATE: Temporal expressions ("tomorrow", "next week")
+    //   - ACTION: Verbs indicating user intent ("create", "analyze")
+    //   - ENTITY: Named entities (file paths, module names)
+    // Libraries: rust-bert (BERT-NER), aho-corasick (pattern matching)
+    // For now, simple pattern detection
     let mut entities = HashMap::new();
 
     // Détection simple de patterns

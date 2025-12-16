@@ -27,3 +27,12 @@ export type { LogFiltersProps } from './LogFilters';
 
 export { MemoryTree } from './MemoryTree';
 export type { MemoryTreeProps } from './MemoryTree';
+
+// ─────────────────────────────────────────────────────────────────
+// 🔧 CONSOLIDATED DEVTOOLS COMPONENTS (v20.1)
+// Migrated from src/components/devtools/
+// ─────────────────────────────────────────────────────────────────
+export { LogViewer } from './LogViewer';
+export { MetricsDisplay } from './MetricsDisplay';
+export { CoreHealthMonitor } from './CoreHealthMonitor';
+export { EventStream } from './EventStream';
