@@ -244,7 +244,9 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(
                 (message as { metadata?: { uiId?: string } })?.metadata?.uiId ??
                 `msg-${message.timestamp}`
               }
-              message={message as Message}
+              role={message.role}
+              content={message.content}
+              timestamp={message.timestamp}
             />
           ))}
 
