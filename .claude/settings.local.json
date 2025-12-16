@@ -99,7 +99,9 @@
       "Bash(do echo \"=== MODULE: $module ===\" find /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/modules/$module -type f \\( -name \"*.ts\" -o -name \"*.tsx\" -o -name \"*.js\" -o -name \"*.jsx\" \\))",
       "Bash(for dir in /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/*/)",
       "Bash(do basename \"$dir\")",
-      "Bash(do find /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/modules/$module -type f \\( -name \"*.ts\" -o -name \"*.tsx\" \\) -exec wc -l {} +)"
+      "Bash(do find /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/modules/$module -type f \\( -name \"*.ts\" -o -name \"*.tsx\" \\) -exec wc -l {} +)",
+      "Bash(while read f)",
+      "Bash(do wc -l \"$f\")"
     ],
     "deny": [],
     "ask": []

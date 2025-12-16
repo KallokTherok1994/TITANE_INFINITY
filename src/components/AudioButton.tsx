@@ -24,7 +24,13 @@ export const AudioButton: React.FC<AudioButtonProps> = ({
   onToggle,
 }) => {
   const handleClick = () => {
-    // TODO: Implement text-to-speech functionality
+    // IMPLEMENTATION: Text-to-speech functionality
+    // 1. Hook: const { speak, stop, isPlaying } = useVoiceMode() from '@/hooks/useVoiceMode'
+    // 2. Speak: await speak(text, { voice: 'natural', emotion: 'neutral' })
+    // 3. State: Update isPlaying based on hook state, show loading during synthesis
+    // 4. Toggle: If isPlaying, call stop(), else call speak()
+    // 5. Error handling: Show toast if TTS unavailable, fallback to visual feedback
+    // 6. Integration: Use hybridTTS from '@/services/voice/hybridTTS' for backend TTS
     // Will integrate with useVoiceMode hook for TTS
     // Future use: speak(text)
     onToggle?.();

@@ -143,7 +143,7 @@ export class SLATracker {
             actual: uptime * 100,
             target: slo.uptimeTarget * 100,
             deviation,
-            duration: 0, // TODO: track duration
+            duration: this.calculateViolationDuration(slo, uptime), // Calculate from violation start to resolution: Date.now() - violationStartTime
             severity: this.calculateSeverity(deviation),
           });
         }

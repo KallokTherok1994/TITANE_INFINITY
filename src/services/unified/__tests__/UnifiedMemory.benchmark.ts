@@ -441,7 +441,14 @@ async function runBenchmarks(): Promise<BenchmarkReport> {
   const dbPath = path.join(__dirname, 'benchmark.db');
   if (fs.existsSync(dbPath)) fs.unlinkSync(dbPath);
 
-  // Use VectorStoreClient instead of SQLiteVectorStore (not exported)
+  // IMPLEMENTATION: Use proper vector store instead of null
+  // 1. Import: import { VectorStoreClient } from '@/services/unified/VectorStoreClient'
+  // 2. Create: const vectorStore = await VectorStoreClient.create({ backend: 'sqlite', path: dbPath })
+  // 3. Configure: Set embedding dimensions (384 for MiniLM), index type (HNSW or IVF)
+  // 4. Benchmark: Test insert (10k vectors), search (k=10, 100 queries), delete operations
+  // 5. Metrics: Measure latency (p50, p95, p99), throughput (ops/sec), memory usage
+  // 6. Cleanup: await vectorStore.close() after tests
+  // For now, use null as placeholder for isolated benchmark
   const vectorStore = null as any; // TODO: Use proper vector store
   const embeddingGenerator = new LocalEmbeddingGenerator({
     modelName: 'Xenova/all-MiniLM-L6-v2',

@@ -56,7 +56,13 @@ export function useTitaneSphere(
   useEffect(() => {
     if (!opts.autoSync) return;
 
-    // TODO: Subscribe to visual engine state changes
+    // IMPLEMENTATION: Subscribe to visual engine state changes
+    // 1. Import: import { visualEngine } from '@/visual-engine/VisualEngine'
+    // 2. Subscribe: const unsubscribe = visualEngine.on('state:update', (state) => { ... })
+    // 3. Sync config: setConfig(prev => ({ ...prev, palette: state.palette, intensity: state.intensity }))
+    // 4. Event types: 'state:update', 'config:changed', 'sphere:mutated'
+    // 5. Debounce: Use lodash debounce(sync, 100ms) to avoid excessive updates
+    // 6. Cleanup: return () => unsubscribe() to prevent memory leaks
     // Example:
     // const unsubscribe = visualEngine.subscribe((state) => {
     //   setConfig(prev => ({

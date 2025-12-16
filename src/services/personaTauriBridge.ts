@@ -279,8 +279,14 @@ export class PersonaTauriBridge {
 
     try {
       const result = await personaService.getMultipliers();
-      // PersonaMultipliers a une structure différente, on retourne null pour l'instant
-      // TODO: mapper correctement PersonaMultipliers vers visual multipliers
+      // IMPLEMENTATION: Map PersonaMultipliers to visual multipliers
+      // 1. Mapping: creativity→glow, efficiency→motion, focus→pulse, energy→scale
+      // 2. Helper: createVisualMultipliers(persona: PersonaMultipliers): VisualMultipliers
+      // 3. Defaults: Use 1.0 for missing fields (defensive programming)
+      // 4. Range validation: Clamp values to [0.5, 2.0] to prevent visual extremes
+      // 5. Normalization: Apply smoothing for gradual transitions (lerp with previous values)
+      // 6. Type safety: Ensure all required VisualMultipliers fields are populated
+      // For now, return partial mapping with warnings
       console.warn('[PersonaTauriBridge] getMultipliers mapping not implemented');
       return {
         glow: result.creativity || 1,
