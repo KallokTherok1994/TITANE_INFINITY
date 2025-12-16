@@ -1,10 +1,11 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v25.0 — POST-PROCESSING PIPELINE
+//   TITANE∞ v25.3.0 — POST-PROCESSING PIPELINE (YOLO OPT-1: Three.js lazy)
 //   TAA, Bloom, Vignette for premium visual quality
 //   NOTE: Nécessite three-stdlib ou three@latest pour imports postprocessing
 // ═══════════════════════════════════════════════════════════════════════════
 
-import * as THREE from 'three';
+import { loadThreeJS } from '../core/ThreeJSLazyLoader';
+type THREE = typeof import('three');
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { TAARenderPass } from 'three/examples/jsm/postprocessing/TAARenderPass';
@@ -67,17 +68,24 @@ export interface PostProcessingConfig {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export class PostProcessingPipeline {
-  private renderer: THREE.WebGLRenderer;
-  private scene: THREE.Scene;
-  private camera: THREE.Camera;
-  private composer: EffectComposer;
+  private THREE!: THREE; // YOLO OPT-1: Lazy-loaded Three.js
+  private renderer!: THREE.WebGLRenderer;
+  private scene!: THREE.Scene;
+  private camera!: THREE.Camera;
+  private composer!: EffectComposer;
   private config: PostProcessingConfig;
 
   // Passes
-  private renderPass: RenderPass;
+  private renderPass!: RenderPass;
   private taaPass: TAARenderPass | null = null;
   private bloomPass: UnrealBloomPass | null = null;
   private vignettePass: ShaderPass | null = null;
+
+  // Constructor params storage
+  private _renderer: THREE.WebGLRenderer;
+  private _scene: THREE.Scene;
+  private _camera: THREE.Camera;
+  private _config: Partial<PostProcessingConfig>;
 
   constructor(
     renderer: THREE.WebGLRenderer,
@@ -85,9 +93,10 @@ export class PostProcessingPipeline {
     camera: THREE.Camera,
     config: Partial<PostProcessingConfig> = {}
   ) {
-    this.renderer = renderer;
-    this.scene = scene;
-    this.camera = camera;
+    this._renderer = renderer;
+    this._scene = scene;
+    this._camera = camera;
+    this._config = config;
 
     // Default config
     this.config = {
@@ -102,12 +111,23 @@ export class PostProcessingPipeline {
       vignetteDarkness: 1.5,
       ...config,
     };
+  }
+
+  /**
+   * YOLO OPT-1: Async initialization after Three.js lazy-load
+   */
+  async init(): Promise<void> {
+    // Lazy-load Three.js
+    this.THREE = await loadThreeJS();
+    this.renderer = this._renderer;
+    this.scene = this._scene;
+    this.camera = this._camera;
 
     // Create composer
-    this.composer = new EffectComposer(renderer);
+    this.composer = new EffectComposer(this.renderer);
 
     // Add render pass (always first)
-    this.renderPass = new RenderPass(scene, camera);
+    this.renderPass = new RenderPass(this.scene, this.camera);
     this.composer.addPass(this.renderPass);
 
     // Build pipeline

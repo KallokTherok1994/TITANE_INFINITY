@@ -114,7 +114,10 @@
       "Bash(timeout 90 npx vitest run:*)",
       "Bash(./titane.sh health:*)",
       "Bash(npm run format:check:*)",
-      "Bash(npm audit:*)"
+      "Bash(npm audit:*)",
+      "Bash(timeout 300 npm run tauri build:*)",
+      "Bash(timeout 300 npx tauri build:*)",
+      "Bash(timeout 300 cargo build:*)"
     ],
     "deny": [],
     "ask": []
