@@ -245,22 +245,22 @@ export class ConversationManager {
       }
 
       // Auto mode: fallback chain (local → OpenAI → Gemini → Anthropic)
+      // v22Ω: Refactored cascade pattern for better error handling
       if (preferredProvider === 'auto') {
-        try {
-          return await this.invokeLocalLLM(request);
-        } catch (localError) {
-          console.warn('[ConversationManager] Local LLM failed, trying cloud providers');
+        const cascadeProviders = ['local', 'openai', 'gemini', 'anthropic'] as const;
+        let lastError: Error | null = null;
 
+        for (const provider of cascadeProviders) {
           try {
-            return await this.invokeOpenAI(request);
-          } catch (openaiError) {
-            try {
-              return await this.invokeGemini(request);
-            } catch (geminiError) {
-              return await this.invokeAnthropic(request);
-            }
+            return await this.invokeProvider(provider, request);
+          } catch (error) {
+            console.warn(`[ConversationManager] ${provider} failed, trying next...`);
+            lastError = error instanceof Error ? error : new Error(String(error));
           }
         }
+
+        // All providers failed
+        throw lastError || new Error('All providers exhausted');
       }
     } catch (error) {
       console.error('[ConversationManager] All AI providers failed:', error);
@@ -284,139 +284,82 @@ export class ConversationManager {
   }
 
   /**
-   * Invoke local LLM via Tauri backend
+   * v22Ω: Unified provider invocation with factory pattern
+   * Reduces code duplication from 4 methods (~130 lines) to 1 method (~30 lines)
    */
+  private static readonly PROVIDER_CONFIG: Record<
+    string,
+    { backendProvider: string; defaultModel: string }
+  > = {
+    local: { backendProvider: 'ollama', defaultModel: 'llama3' },
+    openai: { backendProvider: 'openai', defaultModel: 'gpt-4' },
+    gemini: { backendProvider: 'gemini', defaultModel: 'gemini-pro' },
+    anthropic: { backendProvider: 'anthropic', defaultModel: 'claude-3-opus' },
+  };
+
+  private async invokeProvider(
+    providerName: string,
+    request: { messages: ConversationMessage[]; config: ConversationConfig }
+  ): Promise<ConversationResponse> {
+    const config = ConversationManager.PROVIDER_CONFIG[providerName];
+    if (!config) {
+      throw new Error(`Unknown provider: ${providerName}`);
+    }
+
+    try {
+      const result = await invoke<{
+        content: string;
+        model: string;
+        tokens_used: number;
+      }>('chat_send_message', {
+        prompt: request.messages[request.messages.length - 1].content,
+        provider: config.backendProvider,
+        streaming: request.config.enableStreaming || false,
+      });
+
+      return {
+        content: result.content,
+        role: 'assistant',
+        timestamp: Date.now(),
+        metadata: {
+          model: result.model || config.defaultModel,
+          tokensUsed: result.tokens_used || 0,
+          provider: providerName,
+        },
+      };
+    } catch (error) {
+      console.error(`[ConversationManager] ${providerName} invocation failed:`, error);
+      throw new Error(`${providerName} failed: ${error}`);
+    }
+  }
+
+  // Legacy aliases for backwards compatibility (redirect to unified invokeProvider)
   private async invokeLocalLLM(request: {
     messages: ConversationMessage[];
     config: ConversationConfig;
   }): Promise<ConversationResponse> {
-    try {
-      const result = await invoke<{
-        content: string;
-        model: string;
-        tokens_used: number;
-      }>('chat_send_message', {
-        prompt: request.messages[request.messages.length - 1].content,
-        provider: 'ollama',
-        streaming: request.config.enableStreaming || false,
-      });
-
-      return {
-        content: result.content,
-        role: 'assistant',
-        timestamp: Date.now(),
-        metadata: {
-          model: result.model || 'llama3',
-          tokensUsed: result.tokens_used || 0,
-          provider: 'local',
-        },
-      };
-    } catch (error) {
-      console.error('[ConversationManager] Local LLM invocation failed:', error);
-      throw new Error(`Local LLM failed: ${error}`);
-    }
+    return this.invokeProvider('local', request);
   }
 
-  /**
-   * Invoke OpenAI API
-   */
   private async invokeOpenAI(request: {
     messages: ConversationMessage[];
     config: ConversationConfig;
   }): Promise<ConversationResponse> {
-    try {
-      const result = await invoke<{
-        content: string;
-        model: string;
-        tokens_used: number;
-      }>('chat_send_message', {
-        prompt: request.messages[request.messages.length - 1].content,
-        provider: 'openai',
-        streaming: request.config.enableStreaming || false,
-      });
-
-      return {
-        content: result.content,
-        role: 'assistant',
-        timestamp: Date.now(),
-        metadata: {
-          model: result.model || 'gpt-4',
-          tokensUsed: result.tokens_used || 0,
-          provider: 'openai',
-        },
-      };
-    } catch (error) {
-      console.error('[ConversationManager] OpenAI API call failed:', error);
-      throw new Error(`OpenAI failed: ${error}`);
-    }
+    return this.invokeProvider('openai', request);
   }
 
-  /**
-   * Invoke Gemini API
-   */
   private async invokeGemini(request: {
     messages: ConversationMessage[];
     config: ConversationConfig;
   }): Promise<ConversationResponse> {
-    try {
-      const result = await invoke<{
-        content: string;
-        model: string;
-        tokens_used: number;
-      }>('chat_send_message', {
-        prompt: request.messages[request.messages.length - 1].content,
-        provider: 'gemini',
-        streaming: request.config.enableStreaming || false,
-      });
-
-      return {
-        content: result.content,
-        role: 'assistant',
-        timestamp: Date.now(),
-        metadata: {
-          model: result.model || 'gemini-pro',
-          tokensUsed: result.tokens_used || 0,
-          provider: 'gemini',
-        },
-      };
-    } catch (error) {
-      console.error('[ConversationManager] Gemini API call failed:', error);
-      throw new Error(`Gemini failed: ${error}`);
-    }
+    return this.invokeProvider('gemini', request);
   }
 
-  /**
-   * Invoke Anthropic (Claude) API
-   */
   private async invokeAnthropic(request: {
     messages: ConversationMessage[];
     config: ConversationConfig;
   }): Promise<ConversationResponse> {
-    try {
-      const result = await invoke<{
-        content: string;
-        model: string;
-        tokens_used: number;
-      }>('chat_send_message', {
-        prompt: request.messages[request.messages.length - 1].content,
-        provider: 'anthropic',
-        streaming: request.config.enableStreaming || false,
-      });
-
-      return {
-        content: result.content,
-        role: 'assistant',
-        timestamp: Date.now(),
-        metadata: {
-          model: result.model || 'claude-3-opus',
-          tokensUsed: result.tokens_used || 0,
-          provider: 'anthropic',
-        },
-      };
-    } catch (error) {
-      console.error('[ConversationManager] Anthropic API call failed:', error);
-      throw new Error(`Anthropic failed: ${error}`);
-    }
+    return this.invokeProvider('anthropic', request);
   }
 
   /**
