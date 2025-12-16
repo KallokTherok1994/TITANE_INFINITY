@@ -9,15 +9,19 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { conversationManager, sendAIMessage } from '@/services/ai/ConversationManager';
-import type { ConversationMessage } from '@/types/conversation';
+import {
+  conversationManager,
+  sendAIMessage,
+} from '../../services/ai/ConversationManager';
+import type { ConversationMessage } from '../../types/conversation';
 
 describe('🧠 ConversationManager (OMEGA v2)', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     // Clear all conversations before each test
-    conversationManager.listConversations().then(ids => {
-      ids.forEach(id => conversationManager.deleteConversation(id));
-    });
+    const ids = await conversationManager.listConversations();
+    await Promise.all(
+      ids.map((id: string) => conversationManager.deleteConversation(id))
+    );
   });
 
   /**
