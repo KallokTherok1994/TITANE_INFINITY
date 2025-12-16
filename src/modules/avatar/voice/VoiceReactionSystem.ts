@@ -1,9 +1,13 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v25.0 — VOICE REACTION SYSTEM
+//   TITANE∞ v25.3.0 — VOICE REACTION SYSTEM
+//   YOLO OPT-1: Lazy-loaded Three.js
 //   Real-time physical reactions to voice (head, torso, breathing)
-// ═══════════════════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════════════════════════════
 
-import * as THREE from 'three';
+import { loadThreeJS } from '../core/ThreeJSLazyLoader';
+
+// YOLO OPT-1: Types importés statiquement, implémentation lazy
+type THREE = typeof import('three');
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES

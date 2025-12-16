@@ -1,3 +1,6 @@
+// TODO v25.x: Migrer vers unified_memory_v2
+#![allow(deprecated)]
+
 pub mod anthology_engine;
 pub mod api_neutralizer;
 pub mod behavioral_consistency;

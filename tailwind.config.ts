@@ -1,8 +1,10 @@
 /**
- * TITANE∞ v8.0 — TAILWIND CSS CONFIGURATION
+ * TITANE∞ v24.3.0 — TAILWIND CSS CONFIGURATION
  *
  * Design System: Titane Métallique + Violet Énergie + Sage Subtil
  * Mobile-first, responsive, type-safe
+ *
+ * v22Ω AI Performance Optimizations Compatible
  */
 
 import type { Config } from 'tailwindcss';

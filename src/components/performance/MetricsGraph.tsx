@@ -5,20 +5,30 @@
  * @license TITANE_INFINITY_∞_OMEGA+_LICENSE
  */
 
-import React, { useMemo, useCallback, useState } from 'react';
+import React, { useMemo, useCallback, useState, lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
-import {
-  LineChart,
-  Line,
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  ReferenceLine,
-} from 'recharts';
+
+// YOLO OPT-2: Lazy-load Recharts (-175 KB gzip)
+const LazyLineChart = lazy(() =>
+  import('recharts').then(m => ({ default: m.LineChart }))
+);
+const LazyAreaChart = lazy(() =>
+  import('recharts').then(m => ({ default: m.AreaChart }))
+);
+const LazyLine = lazy(() => import('recharts').then(m => ({ default: m.Line })));
+const LazyArea = lazy(() => import('recharts').then(m => ({ default: m.Area })));
+const LazyXAxis = lazy(() => import('recharts').then(m => ({ default: m.XAxis })));
+const LazyYAxis = lazy(() => import('recharts').then(m => ({ default: m.YAxis })));
+const LazyCartesianGrid = lazy(() =>
+  import('recharts').then(m => ({ default: m.CartesianGrid }))
+);
+const LazyTooltip = lazy(() => import('recharts').then(m => ({ default: m.Tooltip })));
+const LazyResponsiveContainer = lazy(() =>
+  import('recharts').then(m => ({ default: m.ResponsiveContainer }))
+);
+const LazyReferenceLine = lazy(() =>
+  import('recharts').then(m => ({ default: m.ReferenceLine }))
+);
 import {
   TrendingUp,
   TrendingDown,
@@ -364,108 +374,110 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
     );
   }, [metrics, visibleSeries, trends, showLegend, toggleSeries]);
 
-  // Rendu du graphique
+  // Rendu du graphique avec lazy Recharts
   const renderChart = () => {
-    const ChartComponent = graphType === 'area' ? AreaChart : LineChart;
-    // DataComponent utilisé dynamiquement via graphType
-    const _DataComponent = graphType === 'area' ? Area : Line;
+    // YOLO OPT: Composants lazy-loadés
+    const ChartComponent = graphType === 'area' ? LazyAreaChart : LazyLineChart;
+    const DataComponent = graphType === 'area' ? LazyArea : LazyLine;
 
     return (
-      <ResponsiveContainer width="100%" height={height * zoomLevel}>
-        <ChartComponent data={filteredData}>
-          {showGrid && (
-            <CartesianGrid
-              strokeDasharray="3 3"
-              stroke="rgba(148, 163, 184, 0.1)"
-              vertical={false}
+      <Suspense fallback={<div className="metrics-loading">Chargement graphique...</div>}>
+        <LazyResponsiveContainer width="100%" height={height * zoomLevel}>
+          <ChartComponent data={filteredData}>
+            {showGrid && (
+              <LazyCartesianGrid
+                strokeDasharray="3 3"
+                stroke="rgba(148, 163, 184, 0.1)"
+                vertical={false}
+              />
+            )}
+
+            <LazyXAxis
+              dataKey="time"
+              stroke="#64748b"
+              tick={{ fontSize: 11 }}
+              tickLine={false}
+              axisLine={{ stroke: '#334155' }}
             />
-          )}
 
-          <XAxis
-            dataKey="time"
-            stroke="#64748b"
-            tick={{ fontSize: 11 }}
-            tickLine={false}
-            axisLine={{ stroke: '#334155' }}
-          />
-
-          <YAxis
-            yAxisId="left"
-            stroke="#64748b"
-            tick={{ fontSize: 11 }}
-            tickLine={false}
-            axisLine={{ stroke: '#334155' }}
-            tickFormatter={value => formatCompactNumber(value)}
-          />
-
-          <YAxis
-            yAxisId="right"
-            orientation="right"
-            stroke="#64748b"
-            tick={{ fontSize: 11 }}
-            tickLine={false}
-            axisLine={{ stroke: '#334155' }}
-            tickFormatter={value => `${value}%`}
-          />
-
-          {showTooltip && <Tooltip content={<CustomTooltip />} />}
-
-          {/* Lignes de seuil */}
-          {thresholdLines.map((threshold, index) => (
-            <ReferenceLine
-              key={index}
-              y={threshold.value}
+            <LazyYAxis
               yAxisId="left"
-              stroke={threshold.color}
-              strokeDasharray="5 5"
-              label={{
-                value: threshold.label,
-                position: 'right',
-                fill: threshold.color,
-                fontSize: 10,
-              }}
+              stroke="#64748b"
+              tick={{ fontSize: 11 }}
+              tickLine={false}
+              axisLine={{ stroke: '#334155' }}
+              tickFormatter={value => formatCompactNumber(value)}
             />
-          ))}
 
-          {/* Séries de données */}
-          {metrics.map((metric, index) => {
-            if (!visibleSeries.has(metric.key)) return null;
-            const color = metric.color || DEFAULT_COLORS[index];
+            <LazyYAxis
+              yAxisId="right"
+              orientation="right"
+              stroke="#64748b"
+              tick={{ fontSize: 11 }}
+              tickLine={false}
+              axisLine={{ stroke: '#334155' }}
+              tickFormatter={value => `${value}%`}
+            />
 
-            if (graphType === 'area') {
+            {showTooltip && <LazyTooltip content={<CustomTooltip />} />}
+
+            {/* Lignes de seuil */}
+            {thresholdLines.map((threshold, index) => (
+              <LazyReferenceLine
+                key={index}
+                y={threshold.value}
+                yAxisId="left"
+                stroke={threshold.color}
+                strokeDasharray="5 5"
+                label={{
+                  value: threshold.label,
+                  position: 'right',
+                  fill: threshold.color,
+                  fontSize: 10,
+                }}
+              />
+            ))}
+
+            {/* Séries de données */}
+            {metrics.map((metric, index) => {
+              if (!visibleSeries.has(metric.key)) return null;
+              const color = metric.color || DEFAULT_COLORS[index];
+
+              if (graphType === 'area') {
+                return (
+                  <DataComponent
+                    key={metric.key}
+                    type="monotone"
+                    dataKey={metric.key}
+                    yAxisId={metric.yAxisId || 'left'}
+                    stroke={color}
+                    fill={color}
+                    fillOpacity={0.2}
+                    strokeWidth={2}
+                    dot={false}
+                    isAnimationActive={animated}
+                    animationDuration={500}
+                  />
+                );
+              }
+
               return (
-                <Area
+                <DataComponent
                   key={metric.key}
                   type="monotone"
                   dataKey={metric.key}
                   yAxisId={metric.yAxisId || 'left'}
                   stroke={color}
-                  fill={color}
-                  fillOpacity={0.2}
                   strokeWidth={2}
                   dot={false}
                   isAnimationActive={animated}
                   animationDuration={500}
                 />
               );
-            }
-
-            return (
-              <Line
-                key={metric.key}
-                type="monotone"
-                dataKey={metric.key}
-                yAxisId={metric.yAxisId || 'left'}
-                stroke={color}
-                strokeWidth={2}
-                dot={false}
-                isAnimationActive={animated}
-                animationDuration={500}
-              />
-            );
-          })}
-        </ChartComponent>
-      </ResponsiveContainer>
+            })}
+          </ChartComponent>
+        </LazyResponsiveContainer>
+      </Suspense>
     );
   };
 

@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v19.5.2 — Proprietary License
+ * TITANE_INFINITY v24.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -9,7 +9,7 @@
 // 🛡️ TAURI INVOKE PROTECTION - Applied first
 import './tauri-protection-patch';
 
-// TITANE∞ v19.5.2 - Main Entry Point - Production Ready: Phase A+B Complete
+// TITANE∞ v24.3.0 - Main Entry Point - v22Ω AI Performance Optimizations
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 // import AppMinimal from './AppMinimal'; // 🔍 DEBUG: Minimal test app (valide le rendu)
@@ -189,11 +189,22 @@ console.log('║  🌌 TITANE∞ v19 - BOOT SEQUENCE                            
 console.log('║  Timestamp: ' + new Date().toISOString() + '                  ║');
 console.log('╚════════════════════════════════════════════════════════════════╝\n');
 
-// ✨ v19.5.2 - Initialize Sentry Error Monitoring (Phase 1 - Quick Wins)
-console.log('[1/7] 🔍 Sentry: Initializing error monitoring...');
-initSentry();
-captureWebVitals();
-console.log('      ✅ Sentry: Ready for error tracking and performance monitoring');
+// ✨ v25.3.0 - YOLO OPT: Defer Sentry init après boot (-200 KB gzip)
+console.log('[1/7] 🔍 Sentry: Deferred initialization (post-boot optimization)...');
+if (import.meta.env.PROD) {
+  // Différer init Sentry après First Contentful Paint (3s)
+  setTimeout(() => {
+    console.log('      ⚡ Lazy-loading Sentry monitoring...');
+    initSentry();
+    captureWebVitals();
+    console.log('      ✅ Sentry: Ready for error tracking and performance monitoring');
+  }, 3000);
+} else {
+  // Dev mode: init immédiat pour debugging
+  initSentry();
+  captureWebVitals();
+  console.log('      ✅ Sentry: Ready (dev mode - immediate)');
+}
 
 // Initialize UILogger (overrides console.* in production)
 logInfo('🔒 UILogger initialized', {

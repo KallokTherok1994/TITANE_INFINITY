@@ -3,6 +3,10 @@
 //   Backward compatibility adapters for old API
 // ═══════════════════════════════════════════════════════════════
 
+// Warnings supprimés: Ce fichier est intentionnellement "legacy" et doit
+// utiliser les anciennes API pour la compatibilité backward.
+// Migration vers unified_memory_v2 planifiée pour v25.x
+
 use crate::memory::telemetry;
 use crate::types::{
     ChatInteraction, DecisionSummary, HeliosState, ImpactLevel, KnowledgeEntry, LogEntry,

@@ -1,7 +1,7 @@
 {
   "name": "titane-infinity",
-  "version": "24.2.0",
-  "description": "TITANE∞ v24.2.0 - Cognitive Operating System: Dual Runtime (Titan-Dev/Titan-Stable), OMEGA Pipeline v2, 9 Unified Engines, UnifiedMemory OS, Production Ready",
+  "version": "24.3.0",
+  "description": "TITANE∞ v24.3.0 - Cognitive Operating System: v22Ω AI Performance Optimizations, Dual Runtime, OMEGA Pipeline v2, 9 Unified Engines, UnifiedMemory OS, Production Ready",
   "type": "module",
   "license": "SEE LICENSE.md",
   "scripts": {
@@ -121,6 +121,8 @@
     "playwright": "^1.56.1",
     "postcss": "^8.4.31",
     "prettier": "^3.6.2",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
     "rollup-plugin-visualizer": "^6.0.5",
     "tailwindcss": "^3.4.0",
     "typescript": "^5.9.3",

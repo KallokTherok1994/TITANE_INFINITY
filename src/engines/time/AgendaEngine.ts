@@ -20,13 +20,16 @@ import type {
   PriorityLevel,
   AgendaView,
 } from './types';
-// MIGRATION: Ring 3 I/O - Move I/O operations to AgendaService Tauri commands
-// 1. Replace direct I/O with secureInvoke('agenda_service::*', params)
-// 2. Commands: agenda_get_all_events, agenda_search_events, agenda_export_calendar
-// 3. Real-time updates: Listen to Tauri events 'agenda:event_created', 'agenda:event_updated'
-// 4. Caching: Implement frontend cache for frequently accessed events (TTL: 5min)
-// 5. Security: Validate all inputs before sending to backend
-import { secureInvoke } from '@/lib/security';
+// ARCHITECTURE RINGS COMPLIANT: Engines (Ring 2) don't import from Services (Ring 3)
+// I/O operations injected via storage callbacks at initialization
+// See docs/ARCHITECTURE_RINGS.md for details
+
+// Storage operations will be injected from Services layer
+export type AgendaStorageCallbacks = {
+  loadEvents: () => Promise<AgendaEvent[]>;
+  saveEvents: (events: AgendaEvent[]) => Promise<void>;
+  exportCalendar: () => Promise<string>;
+};
 
 // ═══════════════════════════════════════════════════════════════════
 // CONSTANTES
@@ -145,13 +148,13 @@ export class AgendaEngine {
   private events: Map<string, AgendaEvent>;
   private meta: AgendaMeta;
   private listeners: Set<AgendaEventListener>;
-  private useTauriSync: boolean;
+  private storage: AgendaStorageCallbacks | null;
 
-  constructor(useTauriSync: boolean = true) {
+  constructor(storage?: AgendaStorageCallbacks) {
     this.events = new Map();
     this.meta = { ...DEFAULT_AGENDA_META };
     this.listeners = new Set();
-    this.useTauriSync = useTauriSync;
+    this.storage = storage ?? null; // I/O injected from Services layer
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -164,7 +167,7 @@ export class AgendaEngine {
   async init(): Promise<void> {
     console.log('[AgendaEngine] 📅 Initialisation...');
 
-    if (this.useTauriSync) {
+    if (this.storage) {
       await this.loadEvents();
     }
 
@@ -182,8 +185,10 @@ export class AgendaEngine {
    * Charge les événements depuis Tauri (stockage local)
    */
   async loadEvents(): Promise<void> {
+    if (!this.storage) return; // No storage injected
+
     try {
-      const events = await secureInvoke<AgendaEvent[]>('agenda_load_events');
+      const events = await this.storage.loadEvents();
       this.events.clear();
       events.forEach((event: AgendaEvent) => this.events.set(event.id, event));
       this.notifyListeners();
@@ -198,11 +203,11 @@ export class AgendaEngine {
    * Sauvegarde les événements vers Tauri
    */
   private async saveEvents(): Promise<void> {
-    if (!this.useTauriSync) return;
+    if (!this.storage) return; // No storage injected
 
     try {
       const eventsArray = Array.from(this.events.values());
-      await secureInvoke('agenda_save_events', { events: eventsArray });
+      await this.storage.saveEvents(eventsArray);
       console.log('[AgendaEngine] 💾 Événements sauvegardés:', eventsArray.length);
     } catch (error) {
       console.error('[AgendaEngine] Erreur sauvegarde:', error);
@@ -607,10 +612,17 @@ export class AgendaEngine {
 // SINGLETON EXPORT
 // ═══════════════════════════════════════════════════════════════════
 
+// Import agendaService for storage callbacks injection
+import { agendaService } from '@/services/agendaService';
+
 /**
- * Instance singleton de l'AgendaEngine
+ * Instance singleton de l'AgendaEngine avec storage callbacks injectés
  */
-export const agendaEngine = new AgendaEngine();
+export const agendaEngine = new AgendaEngine({
+  loadEvents: () => agendaService.loadAllEvents(),
+  saveEvents: events => agendaService.saveAllEvents(events),
+  exportCalendar: () => agendaService.exportCalendar(),
+});
 
 /**
  * Utilitaires exportés

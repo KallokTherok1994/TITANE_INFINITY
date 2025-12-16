@@ -891,8 +891,9 @@ describe('SelfHealing Configuration', () => {
   });
 
   it('should have proper severity weights', async () => {
-    const { SEVERITY_WEIGHTS, CATEGORY_PRIORITIES } =
-      await import('../selfHealing.config');
+    const { SEVERITY_WEIGHTS, CATEGORY_PRIORITIES } = await import(
+      '../selfHealing.config'
+    );
 
     expect(SEVERITY_WEIGHTS.info).toBe(1);
     expect(SEVERITY_WEIGHTS.low).toBe(10);

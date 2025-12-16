@@ -1,14 +1,14 @@
 /**
- * TITANE∞ v19.2Ω — Proprietary License
+ * TITANE∞ v24.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2Ω — AI ORCHESTRATOR OMEGA (NEURAL ORDER v∞.Ω)
- *   PHASE 3Ω: Orchestrator neural • Isolation absolue • Auto-heal intégré
+ *   TITANE∞ v24.3.0 — AI ORCHESTRATOR OMEGA (NEURAL ORDER)
+ *   Orchestrator neural • Isolation absolue • Auto-heal intégré
  *   Architecture: Local-first → Sandbox providers → Fallback garanti → Never throw
- *   Pipeline: Validate → Neural Selection → Isolated Execution → Auto-Heal → Normalize
+ *   v22Ω AI Performance Optimizations: Circuit breaker, stream batching, availability cache
  * ═══════════════════════════════════════════════════════════════════
  */
 

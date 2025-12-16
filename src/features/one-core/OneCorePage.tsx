@@ -1,11 +1,12 @@
 /**
- * TITANE_INFINITY v16.2.3 — Proprietary License
+ * TITANE∞ v24.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ ONE CORE PAGE v∞ — Unified Command Center (OPUS #6)
+ *   TITANE∞ v24.3.0 — ONE CORE PAGE — Unified Command Center
+ *   v22Ω AI Performance Optimizations Compatible
  * ═══════════════════════════════════════════════════════════════════
  */
 

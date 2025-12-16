@@ -9,6 +9,7 @@
 
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 #![allow(dead_code)]
+#![allow(deprecated)] // TODO v25.x: Migrate to conversation_engine::conversation_generate
 
 // ═══════════════════════════════════════════════════════════════
 // TITANE∞ HARDENING: Import Hygiene v19.5.2

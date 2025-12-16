@@ -3,6 +3,9 @@
 //   Validation complète de tous les systèmes de sécurité
 // ═══════════════════════════════════════════════════════════════
 
+// TODO v25.x: Migrer vers unified_memory_v2::encryption
+#![allow(deprecated)]
+
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
