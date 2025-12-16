@@ -302,6 +302,7 @@ export const useMemoryEngineStore = create<MemoryEngineStore>()(
               metadata: {
                 source: 'compression',
                 sessionId: memories[0]?.metadata.sessionId || 'unknown',
+                conversationId: memories[0]?.metadata.conversationId || 'unknown', // ✨ v24.2.1: OMEGA v2 required
                 confidence: 0.8,
                 topics: [...new Set(memories.flatMap(m => m.metadata.topics))],
                 entities: [],

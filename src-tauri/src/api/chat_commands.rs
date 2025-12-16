@@ -33,11 +33,28 @@ impl ChatState {
     }
 }
 
+/// **DEPRECATED**: Use `conversation_generate` from OMEGA Pipeline v2 instead.
+/// This legacy command will be removed in v25.0.0
+/// 
+/// Migration guide:
+/// ```rust
+/// // OLD (deprecated)
+/// chat_send_message(message, state)
+/// 
+/// // NEW (OMEGA v2)
+/// conversation_generate(message, conversation_id, mode, provider, system_prompt)
+/// ```
 #[tauri::command]
+#[deprecated(
+    since = "24.2.0",
+    note = "Use conversation_generate from OMEGA Pipeline v2 instead"
+)]
 pub async fn chat_send_message(
     message: String,
     state: tauri::State<'_, ChatState>,
 ) -> Result<String, String> {
+    log::warn!("[DEPRECATED] chat_send_message called - migrate to OMEGA v2 conversation_generate");
+    
     if message.trim().is_empty() {
         return Err("Message vide".to_string());
     }

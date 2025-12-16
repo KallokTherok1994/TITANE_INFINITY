@@ -230,31 +230,20 @@ export function useChatOmnis(options: UseChatOmnisOptions = {}): UseChatOmnisRet
   /**
    * OMNIS AI Response Normalization - Always returns valid AIMessage
    */
-  function normalizeAI(response: unknown, startTime: number): AIMessage {
+  function normalizeAI(response: any, startTime: number): AIMessage {
     const duration = Date.now() - startTime;
 
     // Valid response path
-    if (
-      response &&
-      typeof response === 'object' &&
-      'content' in response &&
-      response.content
-    ) {
-      const typedResponse = response as {
-        content: unknown;
-        provider?: string;
-        metadata?: { engine?: string };
-      };
-
+    if (response && typeof response === 'object' && response.content) {
       return {
         role: 'assistant',
-        content: String(typedResponse.content),
+        content: String(response.content),
         timestamp: Date.now(),
-        provider: typedResponse.provider || 'omnis-engine',
+        provider: response.provider || 'omnis-engine',
         metadata: {
           status: 'success',
           duration,
-          engineVersion: typedResponse.metadata?.engine || 'omnis-v1.0',
+          engineVersion: response.metadata?.engine || 'omnis-v1.0',
         },
       };
     }
@@ -300,7 +289,7 @@ export function useChatOmnis(options: UseChatOmnisOptions = {}): UseChatOmnisRet
    */
   async function performAutoRepair(
     message: string,
-    error: Error | unknown,
+    error: any,
     startTime: number
   ): Promise<AIMessage | null> {
     try {

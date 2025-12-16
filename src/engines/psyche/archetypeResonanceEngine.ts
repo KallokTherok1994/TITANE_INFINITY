@@ -36,10 +36,7 @@ import {
   type ExpressiveIntention,
 } from '../presence/multimodalPresenceEngine';
 */
-import type {
-  ThinkingState,
-  MentalColor as _MentalColor,
-} from '@/services/voice/innerDialogueController';
+import type { ThinkingState, MentalColor as _MentalColor } from '@/types/voice';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES

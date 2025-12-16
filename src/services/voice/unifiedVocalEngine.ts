@@ -57,16 +57,9 @@ export type CognitiveState =
 
 /**
  * États émotionnels détectés (Super Prompt XXIV)
+ * @deprecated Importez depuis @/types/voice (Core ring)
  */
-export type EmotionalState =
-  | 'calm'
-  | 'joyful'
-  | 'stressed'
-  | 'tired'
-  | 'excited'
-  | 'focused'
-  | 'sad'
-  | 'neutral';
+export type { EmotionalState, UserMood, UserIntention } from '@/types/voice';
 
 /**
  * Types d'intentions vocales
