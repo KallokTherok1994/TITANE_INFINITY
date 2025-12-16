@@ -3,7 +3,7 @@
  * Phase V: Prédiction, Accélération, Régénération
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import { secureInvoke } from '@/lib/security';
 import {
   Activity,
@@ -51,14 +51,14 @@ interface AccelerationReport {
   execution_speed: number;
 }
 
-export const HyperEvolutionDashboard: React.FC = () => {
+export const HyperEvolutionDashboard = memo(function HyperEvolutionDashboard() {
   const [predictionReport, setPredictionReport] = useState<PredictionReport | null>(null);
   const [accelerationReport, setAccelerationReport] = useState<AccelerationReport | null>(
     null
   );
   const [loading, setLoading] = useState(false);
 
-  const loadPredictions = async () => {
+  const loadPredictions = useCallback(async () => {
     setLoading(true);
     try {
       const report = await secureInvoke<PredictionReport>('hyper_predict_issues');
@@ -68,9 +68,9 @@ export const HyperEvolutionDashboard: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const loadAcceleration = async () => {
+  const loadAcceleration = useCallback(async () => {
     setLoading(true);
     try {
       const report = await secureInvoke<AccelerationReport>('hyper_accelerate');
@@ -80,15 +80,15 @@ export const HyperEvolutionDashboard: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadPredictions();
     loadAcceleration();
-  }, []);
+  }, [loadPredictions, loadAcceleration]);
 
   // Design System TITANE — Couleurs monochromes pour sévérité
-  const getSeverityColor = (severity: string) => {
+  const getSeverityColor = useCallback((severity: string) => {
     switch (severity.toLowerCase()) {
       case 'critical':
         return 'text-[#8f7a7a]'; // danger (rouge-gris désaturé)
@@ -99,7 +99,7 @@ export const HyperEvolutionDashboard: React.FC = () => {
       default:
         return 'text-[#8899aa]'; // info (bleu-gris)
     }
-  };
+  }, []);
 
   return (
     <div className="min-h-screen p-6 bg-gradient-to-br from-[#111416] to-[#1a1d20]">
@@ -259,4 +259,4 @@ export const HyperEvolutionDashboard: React.FC = () => {
       </div>
     </div>
   );
-};
+});

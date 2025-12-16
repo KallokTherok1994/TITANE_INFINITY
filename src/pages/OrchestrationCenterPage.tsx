@@ -6,7 +6,7 @@
  * Fusion: Multi-AI + Nexus + Harmonia + Timeline + Cognitive State
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, memo, useMemo } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
 import { useSingularityStateSafe } from '@/hooks/useSingularityStateSafe';
@@ -114,20 +114,22 @@ interface OrchestrationUnifiedState {
 
 type TabId = 'overview' | 'multi-ai' | 'nexus' | 'harmonia' | 'timeline' | 'cognitive';
 
-// Components
-function ScoreGauge(props: {
+// Components - Memoized for performance v24.7
+const ScoreGauge = memo(function ScoreGauge(props: {
   value: number;
   label: string;
   color?: string;
 }): JSX.Element {
   const { value, label, color } = props;
 
-  const getColor = (): string => {
+  const gaugeColor = useMemo(() => {
     if (color) return color;
     if (value >= 80) return 'var(--success)';
     if (value >= 60) return 'var(--warning)';
     return 'var(--error)';
-  };
+  }, [color, value]);
+
+  const strokeDasharray = useMemo(() => `${value * 2.83} 283`, [value]);
 
   return (
     <div className="score-gauge">
@@ -146,10 +148,10 @@ function ScoreGauge(props: {
             cy="50"
             r="45"
             fill="none"
-            stroke={getColor()}
+            stroke={gaugeColor}
             strokeWidth="8"
             strokeLinecap="round"
-            strokeDasharray={`${value * 2.83} 283`}
+            strokeDasharray={strokeDasharray}
             transform="rotate(-90 50 50)"
           />
         </svg>
@@ -158,12 +160,12 @@ function ScoreGauge(props: {
       <div className="score-gauge__label">{label}</div>
     </div>
   );
-}
+});
 
-function StatusBadge(props: { status: string }): JSX.Element {
+const StatusBadge = memo(function StatusBadge(props: { status: string }): JSX.Element {
   const { status } = props;
 
-  const getClass = (): string => {
+  const badgeClass = useMemo(() => {
     switch (status) {
       case 'optimal':
       case 'available':
@@ -183,10 +185,10 @@ function StatusBadge(props: { status: string }): JSX.Element {
       default:
         return 'status-badge--neutral';
     }
-  };
+  }, [status]);
 
-  return <span className={`status-badge ${getClass()}`}>{status.toUpperCase()}</span>;
-}
+  return <span className={`status-badge ${badgeClass}`}>{status.toUpperCase()}</span>;
+});
 
 // Tab Components
 function OverviewTab(props: {

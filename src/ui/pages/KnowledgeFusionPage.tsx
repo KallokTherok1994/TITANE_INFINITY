@@ -3,7 +3,7 @@
  * Super-Prompt Q: Universal document ingestion & classification
  */
 
-import React, { useState } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import { secureInvoke } from '@/lib/security';
 
 interface KnowledgeDocument {
@@ -26,7 +26,7 @@ interface DocumentMetadata {
   keywords: string[];
 }
 
-const KnowledgeFusionPage: React.FC = () => {
+const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
   const [selectedFile, setSelectedFile] = useState<string>('');
   const [detectedFormat, setDetectedFormat] = useState<string | null>(null);
   const [parsedDoc, setParsedDoc] = useState<KnowledgeDocument | null>(null);
@@ -34,7 +34,7 @@ const KnowledgeFusionPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [vault, setVault] = useState<KnowledgeDocument[]>([]);
 
-  const handleFileSelect = async () => {
+  const handleFileSelect = useCallback(async () => {
     try {
       // In real implementation, use Tauri file picker
       const filePath = prompt('Chemin du fichier :');
@@ -51,9 +51,9 @@ const KnowledgeFusionPage: React.FC = () => {
     } catch (err) {
       setError(`Détection du format échouée : ${err}`);
     }
-  };
+  }, []);
 
-  const handleParse = async () => {
+  const handleParse = useCallback(async () => {
     if (!selectedFile) return;
 
     setIsProcessing(true);
@@ -72,9 +72,9 @@ const KnowledgeFusionPage: React.FC = () => {
     } finally {
       setIsProcessing(false);
     }
-  };
+  }, [selectedFile]);
 
-  const getFormatColor = (format: string) => {
+  const getFormatColor = useCallback((format: string) => {
     switch (format.toLowerCase()) {
       case 'pdf':
         return 'text-red-400';
@@ -89,9 +89,9 @@ const KnowledgeFusionPage: React.FC = () => {
       default:
         return 'text-yellow-400';
     }
-  };
+  }, []);
 
-  const getCategoryColor = (category: string) => {
+  const getCategoryColor = useCallback((category: string) => {
     switch (category) {
       case 'code':
         return 'bg-blue-500/20 text-blue-300';
@@ -104,7 +104,7 @@ const KnowledgeFusionPage: React.FC = () => {
       default:
         return 'bg-gray-500/20 text-gray-300';
     }
-  };
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900 to-gray-900 p-6">
@@ -320,6 +320,6 @@ const KnowledgeFusionPage: React.FC = () => {
       </div>
     </div>
   );
-};
+});
 
 export default KnowledgeFusionPage;

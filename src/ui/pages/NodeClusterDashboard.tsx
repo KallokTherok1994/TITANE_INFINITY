@@ -3,7 +3,7 @@
  * Super-Prompt P: Mesh networking visualization
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import { secureInvoke } from '@/lib/security';
 
 interface NodeInfo {
@@ -25,7 +25,7 @@ interface MeshStats {
   uptime_seconds: number;
 }
 
-const NodeClusterDashboard: React.FC = () => {
+const NodeClusterDashboard = memo(function NodeClusterDashboard() {
   const [stats, setStats] = useState<MeshStats | null>(null);
   const [peers, setPeers] = useState<NodeInfo[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
@@ -33,7 +33,7 @@ const NodeClusterDashboard: React.FC = () => {
   const [nodeId, setNodeId] = useState(`node-${Date.now()}`);
   const [port, setPort] = useState(9999);
 
-  const initialize = async () => {
+  const initialize = useCallback(async () => {
     try {
       await secureInvoke('mesh_initialize', { node_id: nodeId, port });
       setIsInitialized(true);
@@ -41,7 +41,7 @@ const NodeClusterDashboard: React.FC = () => {
     } catch (err) {
       setError(`Initialization failed: ${err}`);
     }
-  };
+  }, [nodeId, port]);
 
   useEffect(() => {
     if (isInitialized) {
@@ -74,7 +74,7 @@ const NodeClusterDashboard: React.FC = () => {
     }
   }, [isInitialized, port]);
 
-  const getRoleColor = (role: string) => {
+  const getRoleColor = useCallback((role: string) => {
     switch (role) {
       case 'Root':
         return 'text-purple-400';
@@ -87,14 +87,14 @@ const NodeClusterDashboard: React.FC = () => {
       default:
         return 'text-gray-400';
     }
-  };
+  }, []);
 
-  const getHealthColor = (health: number) => {
+  const getHealthColor = useCallback((health: number) => {
     if (health >= 90) return 'bg-green-500';
     if (health >= 70) return 'bg-yellow-500';
     if (health >= 50) return 'bg-orange-500';
     return 'bg-red-500';
-  };
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 p-6">
@@ -252,6 +252,6 @@ const NodeClusterDashboard: React.FC = () => {
       )}
     </div>
   );
-};
+});
 
 export default NodeClusterDashboard;

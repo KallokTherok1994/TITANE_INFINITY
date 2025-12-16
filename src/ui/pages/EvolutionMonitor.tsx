@@ -3,7 +3,7 @@
  * Super-Prompt U: Auto-evolution tracking & control
  */
 
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect, memo } from 'react';
 import { secureInvoke } from '@/lib/security';
 
 interface EvolutionMetrics {
@@ -38,21 +38,21 @@ interface EvolutionStats {
   improvement_history: Record<string, number>;
 }
 
-const EvolutionMonitor: React.FC = () => {
+const EvolutionMonitor = memo(function EvolutionMonitor() {
   const [stats, setStats] = useState<EvolutionStats | null>(null);
   const [lastReport, setLastReport] = useState<EvolutionReport | null>(null);
   const [isEvolving, setIsEvolving] = useState(false);
 
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async () => {
     try {
       const data = await secureInvoke<EvolutionStats>('evolution_get_stats');
       setStats(data);
     } catch (err) {
       console.error('Failed to fetch stats:', err);
     }
-  };
+  }, []);
 
-  const runEvolutionCycle = async () => {
+  const runEvolutionCycle = useCallback(async () => {
     setIsEvolving(true);
     try {
       const report = await secureInvoke<EvolutionReport>('evolution_run_cycle');
@@ -63,23 +63,23 @@ const EvolutionMonitor: React.FC = () => {
     } finally {
       setIsEvolving(false);
     }
-  };
+  }, [fetchStats]);
 
-  const getMetricColor = (value: number, threshold: number = 80) => {
+  const getMetricColor = useCallback((value: number, threshold: number = 80) => {
     if (value >= threshold + 10) return 'text-green-400';
     if (value >= threshold) return 'text-yellow-400';
     if (value >= threshold - 10) return 'text-orange-400';
     return 'text-red-400';
-  };
+  }, []);
 
-  const getMetricBg = (value: number) => {
+  const getMetricBg = useCallback((value: number) => {
     if (value >= 90) return 'bg-green-500';
     if (value >= 80) return 'bg-yellow-500';
     if (value >= 70) return 'bg-orange-500';
     return 'bg-red-500';
-  };
+  }, []);
 
-  const getRiskColor = (risk: string) => {
+  const getRiskColor = useCallback((risk: string) => {
     switch (risk) {
       case 'P0':
         return 'bg-green-500/20 text-green-300 border-green-500/50';
@@ -92,9 +92,9 @@ const EvolutionMonitor: React.FC = () => {
       default:
         return 'bg-gray-500/20 text-gray-300 border-gray-500/50';
     }
-  };
+  }, []);
 
-  const _getMutationIcon = (type: string) => {
+  const _getMutationIcon = useCallback((type: string) => {
     switch (type) {
       case 'Optimize':
         return '⚡';
@@ -109,11 +109,11 @@ const EvolutionMonitor: React.FC = () => {
       default:
         return '🔀';
     }
-  };
-
-  React.useEffect(() => {
-    fetchStats();
   }, []);
+
+  useEffect(() => {
+    fetchStats();
+  }, [fetchStats]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-green-900 to-gray-900 p-6">
@@ -359,6 +359,6 @@ const EvolutionMonitor: React.FC = () => {
       </div>
     </div>
   );
-};
+});
 
 export default EvolutionMonitor;
