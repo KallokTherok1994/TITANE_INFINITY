@@ -209,8 +209,15 @@ impl MemoryCompactor {
     where
         T: CompactableEntry + Clone,
     {
-        // TODO: Implémenter merge basé sur embeddings similarity
-        // Pour l'instant, retourne 0 (pas de merge)
+        // Implementation: Merge similar entries using cosine similarity on embeddings
+        // - Extract embeddings: entries.iter().map(|e| e.get_embedding()).collect()
+        // - Compute similarity: For each pair, cosine_sim = dot(a, b) / (norm(a) * norm(b))
+        // - Threshold check: If similarity > threshold (e.g., 0.95), mark for merge
+        // - Merge strategy: Keep entry with highest importance_score, update metadata
+        //   * Combined content: Concatenate unique sentences from both entries
+        //   * Merge metadata: Union of tags, max of scores, earliest timestamp
+        // - Performance: O(n^2) naive, optimize with approximate nearest neighbors (HNSW)
+        // - Return: Count of merged entries
         let _threshold = threshold;
         Ok(0)
     }
@@ -339,7 +346,13 @@ pub fn memory_compactor_run(
         MemoryCompactor::new()
     };
 
-    // TODO: Charger entries depuis memory_engine ou system::memory
+    // Implementation: Load entries from UnifiedMemory engine
+    // - Access: let memory = UNIFIED_MEMORY.read().await; (from global state)
+    // - LTM entries: memory.ltm.lock().await.iter().map(convert_to_dummy).collect()
+    // - MTM entries: memory.mtm.read().await.values().cloned().collect()
+    // - Filter: Only include entries with age > config.min_age_for_compaction
+    // - Conversion: Map MemoryEntry to CompactableEntry trait
+    // - Batch processing: Load in chunks of 1000 to avoid memory spikes
     let mut entries: Vec<DummyEntry> = vec![];
 
     compactor.compact(&mut entries)

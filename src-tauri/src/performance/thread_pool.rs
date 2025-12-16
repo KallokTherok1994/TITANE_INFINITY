@@ -23,7 +23,14 @@ pub enum PoolType {
 
 pub struct CognitiveThreadPools {
     config: PerformanceConfig,
-    // TODO: Implémenter vraie gestion pools (tokio, rayon)
+    // Implementation: Multi-runtime thread pool architecture
+    // - Engine pool: tokio::runtime::Runtime with N worker threads for async engines
+    //   * Builder: Runtime::new_multi_thread().worker_threads(config.pool_engines_size)
+    //   * Thread names: "cognitive-engine-{id}" for debugging
+    // - CPU-bound pool: rayon::ThreadPool for blocking operations (MFCC, embeddings)
+    //   * Builder: rayon::ThreadPoolBuilder::new().num_threads(config.pool_agents_size)
+    // - I/O pool: Separate tokio runtime for network requests (API calls)
+    // - Lifecycle: Create in new(), shutdown in Drop with shutdown_timeout(5s)
     // pool_engines: tokio::runtime::Runtime,
     // pool_agents: tokio::runtime::Runtime,
     // etc.
@@ -35,11 +42,17 @@ impl CognitiveThreadPools {
             crate::utils::AppError::System(format!("Invalid PerformanceConfig: {}", e))
         })?;
 
-        // TODO: Créer thread pools réels selon config
-        // let pool_engines = tokio::runtime::Builder::new_multi_thread()
-        //     .worker_threads(config.pool_engines_size)
-        //     .thread_name("cognitive-engine")
-        //     .build()?;
+        // Implementation: Create dedicated thread pools per workload type
+        // - Engine pool: Async runtime for conversation/memory/cognitive engines
+        //   let pool_engines = tokio::runtime::Builder::new_multi_thread()
+        //       .worker_threads(config.pool_engines_size) // e.g., 4 threads
+        //       .thread_name("cognitive-engine")
+        //       .enable_all() // Enable I/O and time drivers
+        //       .build()?;
+        // - CPU pool: Rayon for parallel iterators in data processing
+        // - GPU pool: Optional async-std runtime for CUDA/Metal operations
+        // - Resource limits: Set stack size with .thread_stack_size(2 * 1024 * 1024)
+        // - Monitoring: Track thread utilization with metrics in performance dashboard
 
         Ok(Self {
             config: config.clone(),

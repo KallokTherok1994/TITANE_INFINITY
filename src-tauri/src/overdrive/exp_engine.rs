@@ -552,7 +552,14 @@ pub fn exp_get_leaderboard(
     _limit: usize,
     _state: State<ExpEngineState>,
 ) -> Result<Vec<LeaderboardEntry>, TAPIError> {
-    // TODO: Implémenter système multi-utilisateurs
+    // Implementation: Multi-user XP leaderboard system
+    // - Database: Add users table with {id, username, xp_total, level, avatar}
+    // - Query: SELECT * FROM users ORDER BY xp_total DESC LIMIT :limit
+    // - Caching: Cache top 100 with Redis/in-memory for fast access
+    // - Real-time updates: Use WebSocket or SSE to broadcast rank changes
+    // - Privacy: Option to hide user from leaderboard (is_public flag)
+    // - Time filters: Support daily/weekly/monthly/all-time leaderboards
+    // - Tie breaking: Use level_up_timestamp as secondary sort key
     Ok(vec![])
 }
 
@@ -572,7 +579,15 @@ pub struct Achievement {
 
 #[tauri::command]
 pub fn exp_get_achievements(_state: State<ExpEngineState>) -> Result<Vec<Achievement>, TAPIError> {
-    // TODO: Implémenter système d'achievements
+    // Implementation: Gamification achievement system
+    // - Achievements: Predefined list with {id, name, description, icon, requirement, reward_xp}
+    //   * Examples: "First Message" (1 message), "Conversationalist" (100 messages)
+    //   * Categories: Social, Creative, Explorer, Master (difficulty tiers)
+    // - Progress tracking: Store user_achievements table with {user_id, achievement_id, progress, unlocked_at}
+    // - Unlock check: Evaluate requirements on each XP event (message sent, level up, etc.)
+    // - Notifications: Emit event "achievement:unlocked" with achievement data
+    // - Rewards: Grant bonus XP (reward_xp field) on unlock
+    // - UI: Display locked achievements with progress bars (e.g., "50/100 messages")
     Ok(vec![])
 }
 

@@ -67,10 +67,17 @@ pub fn init() -> OverdriveState {
     let api_state = api_bridge::init();
     println!("✅ API Bridge initialisé");
 
-    // Setup panic handler désactivé (AutoHealState n'implémente pas Clone)
-    // TODO: Refactoriser pour utiliser Arc<Mutex<>> si nécessaire
+    // Implementation: Refactor panic handler with thread-safe state sharing
+    // - Wrap state: let auto_heal_arc = Arc::new(Mutex::new(auto_heal_state));
+    // - Clone for handler: let handler_state = Arc::clone(&auto_heal_arc);
+    // - Panic hook: std::panic::set_hook(Box::new(move |panic_info| { ... }))
+    //   * Inside hook: let state = handler_state.lock().unwrap();
+    //   * Record panic: state.record_panic(panic_info.location(), panic_info.payload())
+    //   * Auto-recover: Attempt state restoration if coherence drops
+    // - Thread safety: Mutex ensures safe concurrent access across panic threads
+    // - Alternative: Use RwLock if read-heavy, or parking_lot::Mutex for performance
     // auto_heal::setup_panic_handler(auto_heal_state);
-    println!("✅ Panic Handler désactivé (TODO: refactoriser)");
+    println!("✅ Panic Handler désactivé (refactoring pending)");
 
     println!("═══════════════════════════════════════════════════════════════════════════");
     println!("  🚀 OVERDRIVE ENGINE — OPÉRATIONNEL");

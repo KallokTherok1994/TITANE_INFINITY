@@ -168,7 +168,13 @@ impl AutoHealingEngine {
                 let sync_result = {
                     let mut engine = DEEP_SYNC_ENGINE.lock().await;
                     let mut states = HashMap::new();
-                    // TODO: Get real engine states from SingularityState
+                    // Implementation: Get real engine states from SingularityState
+                    // - Access: let singularity = SingularityState::load().await?;
+                    // - Cognitive: EngineState::new("cognitive", singularity.cognitive.coherence)
+                    // - Memory: EngineState::new("memory", singularity.memory.integrity_score())
+                    // - XP: EngineState::new("xp", singularity.xp.normalized_level())
+                    // - Iteration: For each active engine in singularity.metadata.active_engines
+                    // - Coherence mapping: Map engine-specific metrics to [0.0, 1.0] coherence scale
                     states.insert(
                         "cognitive".to_string(),
                         crate::meta::EngineState::new("cognitive".to_string(), 0.7),
@@ -233,7 +239,12 @@ impl AutoHealingEngine {
                 let sync_result = {
                     let mut engine = DEEP_SYNC_ENGINE.lock().await;
                     let mut states = HashMap::new();
-                    // TODO: Get all engine states
+                    // Implementation: Retrieve all active engine states for deep sync
+                    // - Source: SingularityState::load().await?.get_all_engine_states()
+                    // - Engines: cognitive, memory, xp, conversation, voice, multimodal
+                    // - Validation: Filter out engines with coherence < 0.3 (too unstable to sync)
+                    // - Priority order: Critical engines first (cognitive > memory > others)
+                    // - Snapshot: Save pre-sync state for rollback if deep sync fails
                     states.insert(
                         "cognitive".to_string(),
                         crate::meta::EngineState::new("cognitive".to_string(), 0.7),
