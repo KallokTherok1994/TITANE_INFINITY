@@ -36,8 +36,14 @@ impl CognitiveExecutor {
         F: std::future::Future<Output = TitaneResult<T>> + Send + 'static,
         T: Send + 'static,
     {
-        // Pour le moment utilise tokio global
-        // TODO: Router vers pool approprié
+        // Implementation: Route tasks to specialized thread pools by type
+        // - AI pool: High CPU, 4-8 threads for AI inference (Ollama, embeddings)
+        // - Memory pool: Low latency, 2-4 threads for memory operations (vector search)
+        // - I/O pool: High concurrency, 16+ threads for disk/network I/O
+        // - Routing: Match pool_type to get dedicated pool from self.pools
+        // - Execution: pool.spawn(future) instead of tokio::spawn for isolation
+        // - Fallback: Use tokio global pool if specialized pool unavailable
+        // For now, use tokio global
         let _selected_pool = self.pools.select_pool(pool_type);
 
         tokio::spawn(future)

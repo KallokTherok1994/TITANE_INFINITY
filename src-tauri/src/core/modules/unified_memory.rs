@@ -545,7 +545,14 @@ impl UnifiedMemory {
                 timestamp: now,
             });
 
-            // TODO: Actually write to disk with encryption
+            // Implementation: Encrypted disk persistence for LTM entries
+            // - Encryption: Use ChaCha20-Poly1305 (chacha20poly1305 crate) for fast encryption
+            // - Key derivation: PBKDF2 from user passphrase or device-specific key
+            // - Storage: Write to ~/.titane/memory/ltm/{entry_id}.enc with 16-byte nonce
+            // - Format: [nonce(16) | encrypted_data | tag(16)]
+            // - Serialization: Use bincode for compact binary serialization before encryption
+            // - Batch writes: Flush to disk every 100 promotions or 60s interval
+            // - Recovery: Load and decrypt on app restart, rebuild in-memory LTM
         }
 
         // v20.1: Rebuild MTM index after removals

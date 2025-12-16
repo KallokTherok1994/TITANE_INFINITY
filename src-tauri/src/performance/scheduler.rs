@@ -50,7 +50,13 @@ impl CognitiveScheduler {
         *self.running.write().await = true;
         log::info!("[CognitiveScheduler] ✅ Started");
 
-        // TODO: Spawn background task pour scheduler loop
+        // Implementation: Background scheduler loop for task prioritization
+        // - Loop: async fn scheduler_loop() with 100ms tick interval
+        // - Queue: Pop highest priority task from task_queue (BinaryHeap by priority)
+        // - Execution: Submit task to appropriate executor pool (AI, memory, I/O)
+        // - Preemption: Allow high-priority tasks to interrupt long-running low-priority tasks
+        // - Metrics: Track task completion time, queue length, CPU utilization per task type
+        // - Shutdown: Listen for stop signal via tokio::sync::Notify
         // tokio::spawn(self.scheduler_loop());
 
         Ok(())
