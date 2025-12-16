@@ -221,7 +221,7 @@ pub struct OmegaEventSubscriber {
     // - Performance: Non-blocking async iteration with tokio::select!
 }
 
-#cfg(test)
+#[cfg(test)]
 mod tests {
     use super::*;
 
