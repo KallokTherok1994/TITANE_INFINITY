@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react';
+import { renderHook } from '@/test-utils';
 import { useFocusTrap } from '@/a11y';
 
 describe('useFocusTrap', () => {

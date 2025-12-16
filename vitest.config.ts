@@ -75,7 +75,7 @@ export const sharedTestConfig = defineConfig({
     name: 'core',
     globals: true,
     environment: 'happy-dom',
-    setupFiles: ['./src/test/setup.ts'],
+    setupFiles: ['./src/test/setup.ts', './src/test-utils/setup.ts'],
     testTimeout: 45000,
     hookTimeout: 20000,
     teardownTimeout: 10000,

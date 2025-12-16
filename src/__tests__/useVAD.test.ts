@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v20.0 — useVAD TESTS
+ *   TITANE∞ v25.0 — useVAD TESTS
  *   [P0-7] Tests unitaires hook Voice Activity Detection
  *
  *   Objectif Coverage: >70%
@@ -13,7 +13,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import { renderHook, act, waitFor } from '@testing-library/react';
+import { renderHook, act, waitFor } from '@/test-utils';
 import { useVAD } from '@/hooks/useVAD';
 import { audioService } from '@/features/audio-center/services/audioService';
 import { audioStateMachine } from '@/services/audio/audioStateMachine';
