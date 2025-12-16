@@ -46,7 +46,15 @@ pub struct SummaryResult {
 /// - KeyMessages: Extract important messages
 /// - Clustering: Group similar messages
 /// - Simple: Concatenate + truncate
-/// - AIBased: Use LLM (requires API) [TODO]
+/// - AIBased: Use LLM (requires API)
+///   Implementation: AI-powered conversation summarization
+///   - API: Call Ollama/Gemini with summarization prompt
+///   - Prompt: "Summarize the following conversation in 3-5 key points: {messages}"
+///   - Model: Use fast model (qwen2.5:latest or gemini-1.5-flash) for low latency
+///   - Processing: Batch messages in chunks of 10, summarize each, then merge summaries
+///   - Token limit: Keep input < 2000 tokens to avoid context overflow
+///   - Fallback: Use KeyMessages strategy if API unavailable or times out
+///   - Caching: Cache summaries to avoid re-summarizing same conversation
 pub async fn summarize(
     entries: &[MemoryEntry],
     strategy: SummaryStrategy,

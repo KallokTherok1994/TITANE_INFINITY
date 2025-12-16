@@ -231,8 +231,16 @@ pub async fn update_chat_engine_config(update: ChatEngineConfigUpdate) -> Result
         log::info!("✅ [CONFIG] Temperature validated: {}", temperature);
     }
 
-    // TODO: Persister ces valeurs dans un state management ChatEngineConfig
-    // Pour l'instant, on valide seulement
+    // Implementation: Persist chat engine config to state management
+    // - State: Store in global ChatEngineConfig singleton wrapped in Arc<RwLock>
+    //   * Update: CHAT_CONFIG.write().await.set_model(model);
+    //   * Update: CHAT_CONFIG.write().await.set_temperature(temperature);
+    // - Persistence: Save to ~/.titane/config/chat_engine.json for recovery on restart
+    //   * Serialize: serde_json::to_string_pretty(&config)?
+    //   * Write: tokio::fs::write(config_path, json).await?
+    // - Notification: Emit Tauri event "config:updated" to notify frontend
+    // - Validation: Already done above, safe to persist validated values
+    // For now, validation only
 
     log::info!("✅ [CONFIG] Chat engine configuration validated successfully");
     log::warn!("⚠️  [CONFIG] Chat engine config changes not persisted (state management needed)");

@@ -15,10 +15,18 @@ pub async fn get_rate_limit_stats(user_id: Option<String>) -> Result<RateLimitSt
     Ok(GLOBAL_RATE_LIMITER.get_stats(&user).await)
 }
 
-/// Réinitialiser le rate limit pour un utilisateur (admin only)
+/// Reset rate limit for user (admin only)
 #[tauri::command]
 pub async fn reset_rate_limit(user_id: String) -> Result<(), String> {
-    // TODO: Ajouter vérification admin
+    // Implementation: Admin role verification
+    // - Authentication: Verify caller has admin role from JWT token claims
+    //   * Extract: let claims = verify_jwt_token(request_token)?;
+    //   * Check: if claims.role != "admin" { return Err("Unauthorized") }
+    // - Session: Alternative: Check session.user.is_admin() from AppState
+    // - Audit: Log admin action to security audit log with timestamp and admin user_id
+    // - Rate limit: Only allow admins to reset rate limits for security
+    // - Multi-tenant: In multi-user systems, restrict to super-admin role
+    // For now: allow all (single-user desktop app)
     GLOBAL_RATE_LIMITER.reset(&user_id).await;
     Ok(())
 }

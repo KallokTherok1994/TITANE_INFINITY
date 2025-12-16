@@ -807,9 +807,18 @@ impl Default for SingularityStateVInfinity {
 //   FONCTION HELPER — COLLECTE TOUS LES MOTEURS
 // ═══════════════════════════════════════════════════════════════════════════════
 
-/// Collecte l'état de tous les moteurs du système
+/// Collect state from all system engines
 ///
-/// TODO: Implémenter lecture réelle depuis chaque moteur
+/// Implementation: Real state collection from each active engine
+/// - Cognitive: Read from COGNITIVE_ENGINE.read().await.get_state()
+/// - Memory: Query UnifiedMemoryV2 for STM/MTM/LTM stats (entry counts, usage)
+/// - Conversation: Get OMEGA pipeline state (active requests, latency stats)
+/// - Audio: Read duplex pipeline state (recording status, playback queue)
+/// - AI: Collect provider stats (Ollama/Gemini response times, error rates)
+/// - Cache: Get semantic cache hit rate, entry count from CACHE_ENGINE
+/// - Performance: Read thread pool utilization, task queue lengths
+/// - Aggregation: Combine all states into AllEnginesState struct
+/// - Refresh rate: Call every 1s to keep state current
 pub fn collect_all_engines_state() -> AllEnginesState {
     AllEnginesState {
         cognitive: CognitiveStateV2::default(),

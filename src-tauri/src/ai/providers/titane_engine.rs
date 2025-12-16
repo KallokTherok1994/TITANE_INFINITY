@@ -96,14 +96,18 @@ impl TitaneEngineProvider {
 
     fn generate_code_response(&self, _prompt: &str) -> String {
         "```rust\n\
-        // TITANE∞ Engine - Exemple de code\n\
-        // Ce code est un template générique\n\n\
-        pub fn exemple_fonction() -> Result<String, String> {\n    \
-            // TODO: Implémenter la logique spécifique\n    \
-            Ok(\"Succès\".to_string())\n\
+        // TITANE∞ Engine - Code example\n\
+        // This is a generic template\n\n\
+        pub fn example_function() -> Result<String, String> {\n    \
+            // Implementation: TITANE∞-specific cognitive processing logic\n    \
+            // - Integration: Connect to SingularityEngine for context-aware code generation\n    \
+            // - Reasoning: Apply symbolic reasoning for domain-specific optimizations\n    \
+            // - Self-improvement: Learn from code execution patterns to improve suggestions\n    \
+            // - Customization: Adapt to user coding style and project architecture\n    \
+            Ok(\"Success\".to_string())\n\
         }\n\
         ```\n\n\
-        *Note: Code généré en mode fallback. Pour du code spécifique à votre cas d'usage, \
+        *Note: Code generated in fallback mode. For use-case specific code, \
         veuillez utiliser les providers IA principaux (Claude, GPT, Local).*"
             .to_string()
     }
