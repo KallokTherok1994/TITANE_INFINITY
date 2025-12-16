@@ -1,10 +1,15 @@
 // ═══════════════════════════════════════════════════════════════
 //   TITANE∞ v19.8 - TESTS END-TO-END
 //   Scénarios d'usage complets pour validation système
+//   NOTE: These tests require a running Tauri backend
+//   Skip in CI/unit test runs, run manually for E2E validation
 // ═══════════════════════════════════════════════════════════════
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { invoke } from '@tauri-apps/api/core';
+
+// Skip E2E tests in unit test runs (require running Tauri app)
+const SKIP_E2E = !process.env.RUN_E2E_TESTS;
 
 /**
  * Trace JSON pour chaque scénario E2E
@@ -79,7 +84,7 @@ function extractChatContent(response: unknown): string {
 //   First launch → IA welcome → Memory save
 // ═══════════════════════════════════════════════════════════════
 
-describe('E2E Scenario 1: New User Onboarding', () => {
+describe.skipIf(SKIP_E2E)('E2E Scenario 1: New User Onboarding', () => {
   let trace: E2ETrace;
   const scenarioStart = performance.now();
 
@@ -190,7 +195,7 @@ describe('E2E Scenario 1: New User Onboarding', () => {
 //   Import template → Edit → Save
 // ═══════════════════════════════════════════════════════════════
 
-describe('E2E Scenario 2: Legal Designer Workflow', () => {
+describe.skipIf(SKIP_E2E)('E2E Scenario 2: Legal Designer Workflow', () => {
   let trace: E2ETrace;
   const scenarioStart = performance.now();
 
@@ -294,7 +299,7 @@ describe('E2E Scenario 2: Legal Designer Workflow', () => {
 //   Query → Parse → Display
 // ═══════════════════════════════════════════════════════════════
 
-describe('E2E Scenario 3: Advanced Web Search', () => {
+describe.skipIf(SKIP_E2E)('E2E Scenario 3: Advanced Web Search', () => {
   let trace: E2ETrace;
   const scenarioStart = performance.now();
 
@@ -384,7 +389,7 @@ describe('E2E Scenario 3: Advanced Web Search', () => {
 //   Deep Sync → Meta Alignment
 // ═══════════════════════════════════════════════════════════════
 
-describe('E2E Scenario 4: Complete Cognitive Loop', () => {
+describe.skipIf(SKIP_E2E)('E2E Scenario 4: Complete Cognitive Loop', () => {
   let trace: E2ETrace;
   const scenarioStart = performance.now();
 
@@ -476,7 +481,7 @@ describe('E2E Scenario 4: Complete Cognitive Loop', () => {
 //   Workflow combinant plusieurs modules TITANE∞
 // ═══════════════════════════════════════════════════════════════
 
-describe('E2E Scenario 5: Complex Multi-Module Interaction', () => {
+describe.skipIf(SKIP_E2E)('E2E Scenario 5: Complex Multi-Module Interaction', () => {
   let trace: E2ETrace;
   const scenarioStart = performance.now();
 
