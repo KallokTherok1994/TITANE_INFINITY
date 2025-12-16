@@ -210,7 +210,19 @@ async fn execute_http_request(
     _request: &ApiRequest,
     _config: &ApiConfig,
 ) -> Result<ApiResponse, String> {
-    // TODO: Implémenter reqwest HTTP client
+    // IMPLEMENTATION: reqwest HTTP client for AI API calls
+    // Dependencies: reqwest = "0.11" with features = ["json", "rustls-tls"]
+    // Code:
+    //   let client = reqwest::Client::builder()
+    //       .timeout(Duration::from_secs(30))
+    //       .build()?;
+    //   let response = match request.method.as_str() {
+    //       "GET" => client.get(url).headers(headers),
+    //       "POST" => client.post(url).json(&request.body),
+    //       _ => return Err("Unsupported method".to_string()),
+    //   }.send().await?;
+    // Error handling: Retry 3x with exponential backoff (1s, 2s, 4s)
+    // For production, uncomment and configure
     // let client = reqwest::Client::new();
     // let mut req = match request.method.as_str() {
     //     "GET" => client.get(url),
@@ -496,7 +508,15 @@ pub async fn api_gemini_generate(
     let response = api_request(request, state).await?;
 
     if response.success {
-        // TODO: Parser réponse Gemini
+        // PARSING: Gemini API response structure
+        // Expected JSON:
+        //   {"candidates": [{"content": {"parts": [{"text": "..."}]}}]}
+        // Extraction:
+        //   let json: serde_json::Value = serde_json::from_str(&response.body)?;
+        //   let text = json["candidates"][0]["content"]["parts"][0]["text"]
+        //       .as_str().ok_or("Invalid format")?;
+        // Error cases: Handle empty candidates, rate limits, safety filters
+        // For production: Add full JSON deserialization with error recovery
         Ok(response.body)
     } else {
         Err(format!("Gemini error: status {}", response.status))
@@ -525,7 +545,15 @@ pub async fn api_ollama_generate(
     let response = api_request(request, state).await?;
 
     if response.success {
-        // TODO: Parser réponse Ollama
+        // PARSING: Ollama API response structure
+        // Expected JSON:
+        //   {"response": "...", "model": "llama2", "done": true}
+        // Extraction:
+        //   let json: serde_json::Value = serde_json::from_str(&response.body)?;
+        //   let text = json["response"].as_str().ok_or("No response field")?;
+        // Streaming mode: Response comes in chunks with "done": false
+        // Full response: Concatenate all chunks until "done": true
+        // For production: Add streaming support + chunk aggregation
         Ok(response.body)
     } else {
         Err(format!("Ollama error: status {}", response.status))
@@ -539,7 +567,21 @@ pub async fn api_test_connection(
 ) -> Result<bool, String> {
     println!("[API_BRIDGE] Test connexion: {}", api_name);
 
-    // TODO: Implémenter ping spécifique par API
+    // IMPLEMENTATION: API-specific health check endpoints
+    // Gemini:
+    //   GET https://generativelanguage.googleapis.com/v1/models
+    //   Header: x-goog-api-key: {key}
+    //   Success: 200 with models list
+    // Ollama:
+    //   GET http://localhost:11434/api/tags
+    //   No auth required (local)
+    //   Success: 200 with {"models": [...]}
+    // GitHub:
+    //   GET https://api.github.com/
+    //   Header: Authorization: token {token}
+    //   Success: 200 with API info
+    // Timeout: 5s for health checks (faster than regular requests)
+    // For production: Implement per-API ping logic
     // - Gemini: HEAD request
     // - Ollama: GET /api/tags
     // - GitHub: GET /

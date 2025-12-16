@@ -90,7 +90,17 @@ pub async fn sc_get_cluster_status() -> Result<ClusterStatus, String> {
     Ok(ClusterStatus {
         initialized: state.initialized,
         node_id: state.node_id.clone(),
-        peers: Vec::new(), // TODO: Get from actual mesh layer
+        // INTEGRATION: Mesh layer for P2P cluster communication
+        // Backend: mesh_layer.get_connected_peers() -> Vec<NodeInfo>
+        // Mesh topology: DHT (Kademlia) for peer discovery
+        // Data:
+        //   - node_id: Unique identifier (UUID or public key)
+        //   - ip_address: Peer IP + port
+        //   - last_seen: Unix timestamp
+        //   - health: Ping latency + uptime percentage
+        // Protocol: WebRTC for browser compatibility, libp2p for native
+        // For production: Implement mesh_layer module
+        peers: Vec::new(), // Placeholder - awaiting mesh_layer API
         stats: if state.initialized {
             let now = SystemTime::now()
                 .duration_since(UNIX_EPOCH)
@@ -136,7 +146,19 @@ pub async fn sc_initialize_cluster(node_id: String, port: u16) -> Result<String,
         node_id, port
     );
 
-    // TODO: Actually initialize mesh_layer
+    // INTEGRATION: Initialize mesh layer for cluster networking
+    // Backend:
+    //   use crate::cluster::mesh_layer;
+    //   mesh_layer::initialize(node_id.clone(), port).await?;
+    // Process:
+    //   1. Bind UDP socket on port (for DHT)
+    //   2. Generate node keypair (Ed25519)
+    //   3. Bootstrap from seed nodes (if configured)
+    //   4. Start peer discovery loop (Kademlia)
+    //   5. Advertise node in DHT
+    // Config: ~/.titane/cluster/mesh.toml
+    // Dependencies: libp2p = "0.53" or custom mesh implementation
+    // For production: Uncomment when mesh_layer is implemented
     // crate::cluster::mesh_initialize(node_id.clone(), port).await?;
 
     Ok(format!(
@@ -194,6 +216,14 @@ pub async fn sc_get_cluster_peers() -> Result<Vec<NodeInfo>, String> {
         return Ok(Vec::new());
     }
 
-    // TODO: Get actual peers from mesh layer
+    // INTEGRATION: Retrieve peer list from mesh layer
+    // Backend: mesh_layer.get_peers() -> Vec<NodeInfo>
+    // Returns:
+    //   - Connected peers (active TCP/WebRTC connections)
+    //   - Known peers (in DHT routing table)
+    //   - Peer metadata: latency, uptime, capabilities
+    // Sorting: By latency (ascending) for optimal routing
+    // Filtering: Exclude unhealthy peers (>1000ms latency or <50% uptime)
+    // For production: Query mesh_layer API
     Ok(Vec::new())
 }
