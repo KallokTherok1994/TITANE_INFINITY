@@ -20,7 +20,8 @@ import type {
   PriorityLevel,
   AgendaView,
 } from './types';
-import { secureInvoke } from '@/lib/security';
+// TODO: Migrer appels I/O vers AgendaService (Ring 3)
+// import { secureInvoke } from '@/lib/security';
 
 // ═══════════════════════════════════════════════════════════════════
 // CONSTANTES

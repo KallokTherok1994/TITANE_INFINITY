@@ -105,7 +105,7 @@ export interface Memory {
 export interface MemoryMetadata {
   source: MemorySource;
   sessionId: string;
-  conversationId?: string;
+  conversationId: string; // ✅ OMEGA v2: conversationId obligatoire (pas de sessions implicites)
   userId?: string;
 
   // Contexte

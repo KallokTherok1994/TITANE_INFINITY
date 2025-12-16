@@ -404,11 +404,21 @@ fn calculate_message_importance(request: &ChatRequest, response: &ChatMessage) -
 // ORCHESTRATION PRINCIPALE
 // ─────────────────────────────────────────────────────────────────────────────
 
+/// **DEPRECATED**: Use `conversation_generate` from ConversationEngine (OMEGA Pipeline v2)
+/// This legacy orchestrator will be removed in v25.0.0
+/// 
+/// Migration: Use conversation_engine::commands::conversation_generate instead
 #[tauri::command]
+#[deprecated(
+    since = "24.2.0",
+    note = "Use conversation_generate from OMEGA Pipeline v2 (conversation_engine)"
+)]
 pub async fn chat_send_message(
     mut request: ChatRequest,
     state: State<'_, ChatOrchestratorState>,
 ) -> Result<ChatResponse, String> {
+    log::warn!("[DEPRECATED] overdrive::chat_send_message called - migrate to conversation_engine::conversation_generate");
+    
     println!(
         "[CHAT] 📨 chat_send_message appelé - provider: {}, message: {}...",
         request.provider,

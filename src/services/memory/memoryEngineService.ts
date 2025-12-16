@@ -1072,6 +1072,7 @@ function extractMetadata(content: string, source: MemorySource): MemoryMetadata 
   return {
     source,
     sessionId: state.context?.sessionId ?? 'unknown',
+    conversationId: state.context?.id ?? 'unknown', // ✨ v24.2.1: OMEGA v2 required (uses context.id)
     confidence: 0.8,
     topics: extractTopics(content),
     entities: [],

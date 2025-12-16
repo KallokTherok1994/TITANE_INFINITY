@@ -116,16 +116,20 @@ describe('E2E Scenario 1: New User Onboarding', () => {
     trace.steps.push({ step: 2, action: 'Initialize Singularity', ...step2 });
     expect(step2.status).toBe('OK');
 
-    // Step 3: Générer message de bienvenue IA
+    // Step 3: Générer message de bienvenue IA via OMEGA Pipeline
     const step3 = await measureStep('Generate AI welcome message', async () => {
-      const response = await invoke('chat_send_message', {
-        request: {
-          message: 'Bonjour, je suis un nouvel utilisateur',
-          conversation_id: 'onboarding-001',
-        },
+      const response = await invoke('conversation_generate', {
+        message: 'Bonjour, je suis un nouvel utilisateur',
+        conversationId: 'onboarding-001',
+        mode: 'coach',
       });
       expect(response).toBeDefined();
-      return extractChatContent(response);
+      // Extract content from OMEGA response
+      const content =
+        typeof response === 'object' && response !== null && 'content' in response
+          ? (response as any).content
+          : String(response);
+      return content;
     });
     trace.steps.push({ step: 3, action: 'Generate AI welcome', ...step3 });
     expect(step3.status).toBe('OK');
@@ -226,16 +230,19 @@ describe('E2E Scenario 2: Legal Designer Workflow', () => {
     trace.steps.push({ step: 2, action: 'Parse template', ...step2 });
     expect(step2.status).toBe('OK');
 
-    // Step 3: Générer analyse IA du document
+    // Step 3: Générer analyse IA du document via OMEGA Pipeline
     const step3 = await measureStep('AI document analysis', async () => {
-      const analysis = await invoke('chat_send_message', {
-        request: {
-          message: 'Analyse ce contrat: CONTRAT DE PRESTATION - Article 1: Objet',
-          conversation_id: 'legal-001',
-        },
+      const analysis = await invoke('conversation_generate', {
+        message: 'Analyse ce contrat: CONTRAT DE PRESTATION - Article 1: Objet',
+        conversationId: 'legal-001',
+        mode: 'synthesis',
       });
       expect(analysis).toBeDefined();
-      return extractChatContent(analysis);
+      const content =
+        typeof analysis === 'object' && analysis !== null && 'content' in analysis
+          ? (analysis as any).content
+          : String(analysis);
+      return content;
     });
     trace.steps.push({ step: 3, action: 'AI analysis', ...step3 });
     expect(step3.status).toBe('OK');
@@ -326,16 +333,19 @@ describe('E2E Scenario 3: Advanced Web Search', () => {
     trace.steps.push({ step: 2, action: 'Parse results', ...step2 });
     expect(step2.status).toBe('OK');
 
-    // Step 3: Générer synthèse IA des résultats
+    // Step 3: Générer synthèse IA des résultats via OMEGA Pipeline
     const step3 = await measureStep('AI synthesis', async () => {
-      const synthesis = await invoke('chat_send_message', {
-        request: {
-          message: 'Synthétise ces résultats web: Cognitive Architecture, TITANE Design',
-          conversation_id: 'websearch-001',
-        },
+      const synthesis = await invoke('conversation_generate', {
+        message: 'Synthétise ces résultats web: Cognitive Architecture, TITANE Design',
+        conversationId: 'websearch-001',
+        mode: 'synthesis',
       });
       expect(synthesis).toBeDefined();
-      return extractChatContent(synthesis);
+      const content =
+        typeof synthesis === 'object' && synthesis !== null && 'content' in synthesis
+          ? (synthesis as any).content
+          : String(synthesis);
+      return content;
     });
     trace.steps.push({ step: 3, action: 'AI synthesis', ...step3 });
     expect(step3.status).toBe('OK');

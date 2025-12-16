@@ -28,7 +28,7 @@ import {
   archetypeResonanceEngine,
   type ArchetypeType,
 } from '../psyche/archetypeResonanceEngine';
-import type { EmotionalState } from '@/services/voice/unifiedVocalEngine';
+import type { EmotionalState } from '@/types/voice';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES

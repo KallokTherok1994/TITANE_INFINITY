@@ -31,20 +31,9 @@ import { haloEngine as _haloEngine, type HaloState } from './haloEngine';
 
 /**
  * État de la pensée interne
+ * @deprecated Importez depuis @/types/voice (Core ring)
  */
-export type ThinkingState =
-  | 'silent' // Repos mental complet
-  | 'perceiving' // Perception/observation
-  | 'fast_thinking' // Pensée réflexe (<100ms)
-  | 'slow_thinking' // Réflexion profonde (>500ms)
-  | 'planning' // Élaboration de plan
-  | 'evaluating' // Évaluation cohérence
-  | 'emotional_sense' // Ressenti émotionnel
-  | 'validating' // Validation finale
-  | 'preparing_speech' // Préparation vocal output
-  | 'self_correcting' // Auto-correction détectée
-  | 'narrative_alignment' // Alignement avec identité
-  | 'deep_reflection'; // Méditation/introspection profonde
+export type { ThinkingState, MentalColor } from '@/types/voice';
 
 /**
  * Type de pensée interne

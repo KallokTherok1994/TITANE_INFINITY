@@ -19,6 +19,7 @@ import {
   useEffect,
   ReactNode,
   useCallback,
+  useMemo,
 } from 'react';
 
 // ─────────────────────────────────────────────────────────────────
@@ -403,18 +404,33 @@ export function OmnisUIProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'RESET' });
   }, []);
 
-  const contextValue: OmnisUIContextType = {
-    state,
-    dispatch,
-    reportComponentError,
-    reportComponentRecovery,
-    setDegradedMode,
-    backupCurrentState,
-    restoreFromBackup,
-    getComponentHealth,
-    getOverallHealth,
-    resetOmnisState,
-  };
+  // ✨ v24.2.1: Memoize context value to prevent unnecessary re-renders
+  const contextValue = useMemo<OmnisUIContextType>(
+    () => ({
+      state,
+      dispatch,
+      reportComponentError,
+      reportComponentRecovery,
+      setDegradedMode,
+      backupCurrentState,
+      restoreFromBackup,
+      getComponentHealth,
+      getOverallHealth,
+      resetOmnisState,
+    }),
+    [
+      state,
+      dispatch,
+      reportComponentError,
+      reportComponentRecovery,
+      setDegradedMode,
+      backupCurrentState,
+      restoreFromBackup,
+      getComponentHealth,
+      getOverallHealth,
+      resetOmnisState,
+    ]
+  );
 
   return (
     <OmnisUIContext.Provider value={contextValue}>{children}</OmnisUIContext.Provider>

@@ -108,6 +108,11 @@ export interface LiveDebuggerConfig {
   continuousAnalysis: boolean;
 }
 
+// ✨ v24.2.1: Limits for bounded memory growth
+const MAX_DIAGNOSTICS = 100;
+const MAX_APPLIED_PATCHES = 50;
+const MAX_ANALYSIS_QUEUE = 20;
+
 // ═══════════════════════════════════════════════════════════════════
 // LIVE DEBUGGER ENGINE
 // ═══════════════════════════════════════════════════════════════════
@@ -309,6 +314,11 @@ export class LiveDebuggerEngine {
           // Ajouter à la queue d'analyse
           this.analysisQueue.push(segment);
 
+          // ✨ v24.2.1: Limit analysis queue to prevent unbounded growth
+          if (this.analysisQueue.length > MAX_ANALYSIS_QUEUE) {
+            this.analysisQueue.shift();
+          }
+
           // Analyser immédiatement si continuous analysis
           if (this.config.continuousAnalysis && !this.state.isAnalyzing) {
             await this.analyzeSegment(segment);
@@ -340,6 +350,11 @@ export class LiveDebuggerEngine {
         const diagnostic = await this.diagnoseIssue(intent);
         this.state.diagnostics.push(diagnostic);
         this.state.totalDiagnostics++;
+
+        // ✨ v24.2.1: Limit diagnostics array to prevent unbounded growth
+        if (this.state.diagnostics.length > MAX_DIAGNOSTICS) {
+          this.state.diagnostics = this.state.diagnostics.slice(-MAX_DIAGNOSTICS);
+        }
 
         // 3. En mode auto-heal, appliquer micro-patch si safe
         if (this.config.autoHealEnabled && diagnostic.microPatch?.safe) {
@@ -699,6 +714,11 @@ export class LiveDebuggerEngine {
 
       this.state.appliedPatches.push(patch);
       this.state.totalPatches++;
+
+      // ✨ v24.2.1: Limit applied patches to prevent unbounded growth
+      if (this.state.appliedPatches.length > MAX_APPLIED_PATCHES) {
+        this.state.appliedPatches = this.state.appliedPatches.slice(-MAX_APPLIED_PATCHES);
+      }
 
       // Recalculer health score
       this.updateHealthScore();
