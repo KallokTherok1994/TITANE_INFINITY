@@ -11,7 +11,8 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import type { EmotionalState, UserMood } from '@/types/voice';
+import type { UserMood } from '@/types/voice';
+import type { EmotionalState } from './emotionalStateEstimator';
 
 /**
  * Type de micro-expression vocale
