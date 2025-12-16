@@ -1,9 +1,10 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v24.12 — APPEARANCE FLOATING INTEGRATION
+//   TITANE∞ v25.3.0 — APPEARANCE FLOATING INTEGRATION (YOLO OPT-1: Three.js lazy)
 //   Connect AppearanceEngine v24.9 with Three.js Materials
 // ═══════════════════════════════════════════════════════════════════════════
 
-import * as THREE from 'three';
+import { loadThreeJS } from '../core/ThreeJSLazyLoader';
+type THREE = typeof import('three');
 import type { AvatarAppearanceState } from '../appearance/appearanceState';
 import { DEFAULT_APPEARANCE_STATE } from '../appearance/appearanceState';
 import type { ThreeJSAvatarRenderer } from './ThreeJSAvatarRenderer';
@@ -25,46 +26,46 @@ export interface AppearanceMaterialMap {
 }
 
 export interface ColorPalette {
-  primary: THREE.Color;
-  secondary: THREE.Color;
-  accent: THREE.Color;
-  neutral: THREE.Color;
+  primary: number; // YOLO OPT-1: Stored as hex numbers, converted to THREE.Color when needed
+  secondary: number;
+  accent: number;
+  neutral: number;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// COLOR PALETTE PRESETS
+// COLOR PALETTE PRESETS (hex numbers, converted to THREE.Color dynamically)
 // ═══════════════════════════════════════════════════════════════════════════
 
 const COLOR_PALETTES: Record<string, ColorPalette> = {
   neutre: {
-    primary: new THREE.Color(0xf5f5f5), // Off-white
-    secondary: new THREE.Color(0x6b7280), // Gray-500
-    accent: new THREE.Color(0x6366f1), // Indigo-500 (TITANE)
-    neutral: new THREE.Color(0x1f2937), // Gray-800
+    primary: 0xf5f5f5, // Off-white
+    secondary: 0x6b7280, // Gray-500
+    accent: 0x6366f1, // Indigo-500 (TITANE)
+    neutral: 0x1f2937, // Gray-800
   },
   pastel: {
-    primary: new THREE.Color(0xfce7f3), // Pink-100
-    secondary: new THREE.Color(0xddd6fe), // Violet-200
-    accent: new THREE.Color(0xc4b5fd), // Violet-300
-    neutral: new THREE.Color(0xf3e8ff), // Violet-100
+    primary: 0xfce7f3, // Pink-100
+    secondary: 0xddd6fe, // Violet-200
+    accent: 0xc4b5fd, // Violet-300
+    neutral: 0xf3e8ff, // Violet-100
   },
   terre: {
-    primary: new THREE.Color(0xfef3c7), // Amber-100
-    secondary: new THREE.Color(0xfcd34d), // Amber-300
-    accent: new THREE.Color(0xf59e0b), // Amber-500
-    neutral: new THREE.Color(0x78350f), // Amber-900
+    primary: 0xfef3c7, // Amber-100
+    secondary: 0xfcd34d, // Amber-300
+    accent: 0xf59e0b, // Amber-500
+    neutral: 0x78350f, // Amber-900
   },
   monochrome: {
-    primary: new THREE.Color(0xffffff), // White
-    secondary: new THREE.Color(0x9ca3af), // Gray-400
-    accent: new THREE.Color(0x4b5563), // Gray-600
-    neutral: new THREE.Color(0x111827), // Gray-900
+    primary: 0xffffff, // White
+    secondary: 0x9ca3af, // Gray-400
+    accent: 0x4b5563, // Gray-600
+    neutral: 0x111827, // Gray-900
   },
   professional: {
-    primary: new THREE.Color(0xf8fafc), // Slate-50
-    secondary: new THREE.Color(0x334155), // Slate-700
-    accent: new THREE.Color(0x6366f1), // Indigo-500
-    neutral: new THREE.Color(0x0f172a), // Slate-900
+    primary: 0xf8fafc, // Slate-50
+    secondary: 0x334155, // Slate-700
+    accent: 0x6366f1, // Indigo-500
+    neutral: 0x0f172a, // Slate-900
   },
 };
 
@@ -73,6 +74,7 @@ const COLOR_PALETTES: Record<string, ColorPalette> = {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export class AppearanceFloatingIntegration {
+  private THREE!: THREE; // YOLO OPT-1: Lazy-loaded Three.js
   private renderer: ThreeJSAvatarRenderer;
   private materials: AppearanceMaterialMap | null = null;
   private currentAppearance: AvatarAppearanceState | null = null;
@@ -82,31 +84,34 @@ export class AppearanceFloatingIntegration {
   }
 
   /**
-   * Initialize materials for avatar meshes
+   * YOLO OPT-1: Initialize materials for avatar meshes (async)
    */
-  public initializeMaterials(meshes: THREE.Mesh[]): AppearanceMaterialMap {
-    const bodyMaterial = new THREE.MeshStandardMaterial({
+  public async initializeMaterials(meshes: THREE.Mesh[]): Promise<AppearanceMaterialMap> {
+    // Lazy-load Three.js
+    this.THREE = await loadThreeJS();
+
+    const bodyMaterial = new this.THREE.MeshStandardMaterial({
       color: 0x6366f1, // Indigo-500 default
       metalness: 0.2,
       roughness: 0.7,
       name: 'avatar_body',
     });
 
-    const headMaterial = new THREE.MeshStandardMaterial({
+    const headMaterial = new this.THREE.MeshStandardMaterial({
       color: 0x818cf8, // Indigo-400
       metalness: 0.1,
       roughness: 0.6,
       name: 'avatar_head',
     });
 
-    const outfitMaterial = new THREE.MeshStandardMaterial({
+    const outfitMaterial = new this.THREE.MeshStandardMaterial({
       color: 0xf3f4f6, // Gray-100 (default outfit)
       metalness: 0.1,
       roughness: 0.8,
       name: 'avatar_outfit',
     });
 
-    const hairMaterial = new THREE.MeshStandardMaterial({
+    const hairMaterial = new this.THREE.MeshStandardMaterial({
       color: 0x1f2937, // Gray-800 (default hair)
       metalness: 0.05,
       roughness: 0.9,

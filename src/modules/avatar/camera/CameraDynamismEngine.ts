@@ -1,9 +1,10 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v25.0 — CAMERA DYNAMISM ENGINE
+//   TITANE∞ v25.3.0 — CAMERA DYNAMISM ENGINE (YOLO OPT-1: Three.js lazy)
 //   Intelligent camera with vocal zoom, breathing parallax, 3 modes
 // ═══════════════════════════════════════════════════════════════════════════
 
-import * as THREE from 'three';
+import { loadThreeJS } from '../core/ThreeJSLazyLoader';
+type THREE = typeof import('three');
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES

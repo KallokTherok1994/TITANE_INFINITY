@@ -1,9 +1,10 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v25.0 — BODY GESTURE FLUIDITY ENGINE
+//   TITANE∞ v25.3.0 — BODY GESTURE FLUIDITY ENGINE (YOLO OPT-1: Three.js lazy)
 //   Enhanced IK smoother, posture dynamics, gesture-voice synchronization
 // ═══════════════════════════════════════════════════════════════════════════
 
-import * as THREE from 'three';
+import { loadThreeJS } from '../core/ThreeJSLazyLoader';
+type THREE = typeof import('three');
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES

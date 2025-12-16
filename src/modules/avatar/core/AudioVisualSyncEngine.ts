@@ -1,9 +1,10 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v25.0 — AUDIO-VISUAL SYNC ENGINE
+//   TITANE∞ v25.3.0 — AUDIO-VISUAL SYNC ENGINE (YOLO OPT-1: Three.js lazy)
 //   Central coordination pipeline: Audio → Phonemes → Morphs → Expressions → Render
 // ═══════════════════════════════════════════════════════════════════════════
 
-import * as THREE from 'three';
+import { loadThreeJS } from './ThreeJSLazyLoader';
+type THREE = typeof import('three');
 import {
   LipSyncPrecisionEngine,
   type Phoneme,
@@ -69,17 +70,18 @@ export interface SyncConfig {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export class AudioVisualSyncEngine {
+  private THREE!: THREE; // YOLO OPT-1: Lazy-loaded Three.js
   private config: SyncConfig;
 
   // Sub-engines
-  private lipSyncEngine: LipSyncPrecisionEngine;
-  private expressionEngine: FacialExpressionEngine;
-  private voiceReactionSystem: VoiceReactionSystem;
-  private bodyGestureEngine: BodyGestureFluidityEngine;
+  private lipSyncEngine!: LipSyncPrecisionEngine;
+  private expressionEngine!: FacialExpressionEngine;
+  private voiceReactionSystem!: VoiceReactionSystem;
+  private bodyGestureEngine!: BodyGestureFluidityEngine;
   private cameraEngine: CameraDynamismEngine | null = null;
 
   // State
-  private currentState: AudioVisualState;
+  private currentState!: AudioVisualState;
   private lastAudioTimestamp: number = 0;
   private lastVisualTimestamp: number = 0;
 
@@ -87,10 +89,17 @@ export class AudioVisualSyncEngine {
   private frameCount: number = 0;
   private startTime: number = Date.now();
 
+  // Constructor params storage
+  private _cameraEngine: CameraDynamismEngine | null;
+  private _config: Partial<SyncConfig>;
+
   constructor(
     cameraEngine: CameraDynamismEngine | null = null,
     config: Partial<SyncConfig> = {}
   ) {
+    this._cameraEngine = cameraEngine;
+    this._config = config;
+
     this.config = {
       targetLatency: 50, // 50ms target
       enableLipSync: true,
@@ -100,6 +109,14 @@ export class AudioVisualSyncEngine {
       enableCameraDynamism: true,
       ...config,
     };
+  }
+
+  /**
+   * YOLO OPT-1: Async initialization after Three.js lazy-load
+   */
+  async init(): Promise<void> {
+    // Lazy-load Three.js
+    this.THREE = await loadThreeJS();
 
     // Initialize engines
     this.lipSyncEngine = new LipSyncPrecisionEngine({
@@ -123,7 +140,7 @@ export class AudioVisualSyncEngine {
       vocalToneInfluence: 0.7,
     });
 
-    this.cameraEngine = cameraEngine;
+    this.cameraEngine = this._cameraEngine;
 
     // Initialize state
     this.currentState = this.createInitialState();

@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v∞.25.0 — DEV-SUDO MODE HANDLER
+ *   TITANE∞ v25.3.0 — DEV-SUDO MODE HANDLER (YOLO OPT-5: Lazy handlers)
  *   Détection et exécution des commandes développeur dans le Chat IA
  *   Intégration SUPER PROMPTS #4 à #11 UNIFIÉS
  *   Super Prompt #7: MASTER DEV ENGINE — Full IDE Mode
@@ -8,6 +8,8 @@
  *   Super Prompt #9: VISION ENGINE — Analyse UI/UX + Design System
  *   Super Prompt #10: BACKEND & API MASTER — Rust/Tauri/Cargo Expert
  *   Super Prompt #11: MEMORY ETERNAL ENGINE — Mémoire persistente éternelle
+ *
+ *   YOLO OPT-5: Handlers lazy-loadés par domaine (-150 KB gzip estimé)
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
@@ -16,13 +18,23 @@ import { autoHealEngine } from '@/services/ai/system';
 import { autoSaveConversationEngine } from '@/modules/talkToTitane/AutoSaveConversationEngine';
 import { talkToTitaneEngine } from '@/modules/talkToTitane/TalkToTitaneEngine';
 import type { LiveDebuggerMode } from '@/modules/liveDebugger/LiveDebuggerEngine';
-import * as ExtendedHandlers from './devSudoExtendedHandlers';
-import * as IDEHandlers from './devSudoIDEHandlers';
-import * as SingularityHandlers from './devSudoSingularityHandlers';
-import * as VisionHandlers from './devSudoVisionHandlers';
-import * as BackendHandlers from './devSudoBackendHandlers';
-import * as MemoryHandlers from './devSudoMemoryHandlers';
-import * as TitaneOneHandlers from './devSudoTitaneOneHandlers';
+
+// YOLO OPT-5: Lazy-load handlers instead of static imports
+import {
+  getHandlerForAction,
+  getActionDomain,
+  type HandlerDomain,
+} from './devSudoLazyLoader';
+
+// Note: Handler modules (IDE, Singularity, Vision, Backend, Memory, TitaneOne, Extended)
+// are now lazy-loaded dynamically instead of static imports
+// OLD: import * as ExtendedHandlers from './devSudoExtendedHandlers';
+// OLD: import * as IDEHandlers from './devSudoIDEHandlers';
+// OLD: import * as SingularityHandlers from './devSudoSingularityHandlers';
+// OLD: import * as VisionHandlers from './devSudoVisionHandlers';
+// OLD: import * as BackendHandlers from './devSudoBackendHandlers';
+// OLD: import * as MemoryHandlers from './devSudoMemoryHandlers';
+// OLD: import * as TitaneOneHandlers from './devSudoTitaneOneHandlers';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // STUBS - Modules supprimés en PHASE 1 (OPTION B)
@@ -1580,6 +1592,47 @@ function extractParams(
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// YOLO OPT-5: LAZY HANDLER DISPATCHER
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * YOLO OPT-5: Dispatch handler call with lazy-loading
+ * Automatically loads the appropriate handler module and calls the function
+ */
+async function callLazyHandler(
+  action: DevSudoAction,
+  handlerName: string,
+  ...args: any[]
+): Promise<DevSudoResult> {
+  try {
+    // Get domain and load handler module
+    const domain = getActionDomain(action);
+    console.log(`[DEV-SUDO LAZY] Action "${action}" → Domain "${domain}"`);
+
+    const handlerModule = await getHandlerForAction(action);
+
+    // Call handler function
+    if (typeof handlerModule[handlerName] === 'function') {
+      return await handlerModule[handlerName](...args);
+    } else {
+      console.error(`[DEV-SUDO LAZY] Handler "${handlerName}" not found in module`);
+      return {
+        success: false,
+        message: `Handler function "${handlerName}" not found`,
+        executedActions: [],
+      };
+    }
+  } catch (error) {
+    console.error(`[DEV-SUDO LAZY] Error calling lazy handler "${handlerName}":`, error);
+    return {
+      success: false,
+      message: `Lazy handler error: ${error instanceof Error ? error.message : String(error)}`,
+      executedActions: [],
+    };
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // EXÉCUTION DES COMMANDES
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -1687,27 +1740,49 @@ export async function executeDevSudoCommand(
       case 'test-module':
         return await ExtendedHandlers.handleTestModule(command.params.module as string);
 
-      // IDE Mode handlers (v∞.23.0 - Super Prompt #7)
+      // IDE Mode handlers (v∞.23.0 - Super Prompt #7) - YOLO OPT-5: Lazy-loaded
       case 'open-file':
-        return await IDEHandlers.handleOpenFile(command.params.file as string);
+        return await callLazyHandler(
+          command.action,
+          'handleOpenFile',
+          command.params.file
+        );
 
       case 'view-file':
-        return await IDEHandlers.handleViewFile(command.params.file as string);
+        return await callLazyHandler(
+          command.action,
+          'handleViewFile',
+          command.params.file
+        );
 
       case 'create-file':
-        return await IDEHandlers.handleCreateFile(
-          command.params.file as string,
-          command.params.content as string
+        return await callLazyHandler(
+          command.action,
+          'handleCreateFile',
+          command.params.file,
+          command.params.content
         );
 
       case 'patch-file':
-        return await IDEHandlers.handlePatchFile(command.params.file as string);
+        return await callLazyHandler(
+          command.action,
+          'handlePatchFile',
+          command.params.file
+        );
 
       case 'goto-function':
-        return await IDEHandlers.handleGoToFunction(command.params.function as string);
+        return await callLazyHandler(
+          command.action,
+          'handleGoToFunction',
+          command.params.function
+        );
 
       case 'goto-component':
-        return await IDEHandlers.handleGoToComponent(command.params.component as string);
+        return await callLazyHandler(
+          command.action,
+          'handleGoToComponent',
+          command.params.component
+        );
 
       case 'goto-handler':
         return await IDEHandlers.handleGoToRustHandler(command.params.handler as string);

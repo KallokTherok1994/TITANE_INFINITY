@@ -1,9 +1,10 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v25.0 — STUDIO LIGHTING RIG
+//   TITANE∞ v25.3.0 — STUDIO LIGHTING RIG (YOLO OPT-1: Three.js lazy)
 //   Professional 3-point lighting with appearance style adaptation
 // ═══════════════════════════════════════════════════════════════════════════
 
-import * as THREE from 'three';
+import { loadThreeJS } from '../core/ThreeJSLazyLoader';
+type THREE = typeof import('three');
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -85,16 +86,22 @@ const STYLE_LIGHTING_PRESETS: Record<AppearanceStyle, Partial<LightingConfig>> =
 // ═══════════════════════════════════════════════════════════════════════════
 
 export class StudioLightingRig {
-  private scene: THREE.Scene;
-  private keyLight: THREE.DirectionalLight;
-  private fillLight: THREE.DirectionalLight;
-  private rimLight: THREE.DirectionalLight;
-  private ambientLight: THREE.AmbientLight;
+  private THREE!: THREE; // YOLO OPT-1: Lazy-loaded Three.js
+  private scene!: THREE.Scene;
+  private keyLight!: THREE.DirectionalLight;
+  private fillLight!: THREE.DirectionalLight;
+  private rimLight!: THREE.DirectionalLight;
+  private ambientLight!: THREE.AmbientLight;
   private config: LightingConfig;
   private currentStyle: AppearanceStyle = 'bureau';
 
+  // Constructor params storage
+  private _scene: THREE.Scene;
+  private _config: Partial<LightingConfig>;
+
   constructor(scene: THREE.Scene, config: Partial<LightingConfig> = {}) {
-    this.scene = scene;
+    this._scene = scene;
+    this._config = config;
 
     // Default config
     this.config = {
@@ -108,6 +115,15 @@ export class StudioLightingRig {
       rimColor: 0xffffff,
       ...config,
     };
+  }
+
+  /**
+   * YOLO OPT-1: Async initialization after Three.js lazy-load
+   */
+  async init(): Promise<void> {
+    // Lazy-load Three.js
+    this.THREE = await loadThreeJS();
+    this.scene = this._scene;
 
     // Create lights
     this.keyLight = this.createKeyLight();
@@ -127,7 +143,7 @@ export class StudioLightingRig {
   // ═════════════════════════════════════════════════════════════════════════
 
   private createKeyLight(): THREE.DirectionalLight {
-    const light = new THREE.DirectionalLight(
+    const light = new this.THREE.DirectionalLight(
       this.config.keyColor,
       this.config.keyIntensity
     );
@@ -151,7 +167,7 @@ export class StudioLightingRig {
   }
 
   private createFillLight(): THREE.DirectionalLight {
-    const light = new THREE.DirectionalLight(
+    const light = new this.THREE.DirectionalLight(
       this.config.fillColor,
       this.config.fillIntensity
     );
@@ -164,7 +180,7 @@ export class StudioLightingRig {
   }
 
   private createRimLight(): THREE.DirectionalLight {
-    const light = new THREE.DirectionalLight(
+    const light = new this.THREE.DirectionalLight(
       this.config.rimColor,
       this.config.rimIntensity
     );
@@ -177,7 +193,7 @@ export class StudioLightingRig {
   }
 
   private createAmbientLight(): THREE.AmbientLight {
-    return new THREE.AmbientLight(0xffffff, this.config.ambientIntensity);
+    return new this.THREE.AmbientLight(0xffffff, this.config.ambientIntensity);
   }
 
   // ═════════════════════════════════════════════════════════════════════════
