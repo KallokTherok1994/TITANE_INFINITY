@@ -32,7 +32,13 @@ export type UserMood =
   | 'anxious'
   | 'relaxed'
   | 'excited'
-  | 'tired';
+  | 'tired'
+  // Extended states from emotionalStateEstimator
+  | 'calm'
+  | 'curious'
+  | 'focused'
+  | 'stressed'
+  | 'frustrated';
 
 /**
  * Intention utilisateur détectée
@@ -44,7 +50,16 @@ export type UserIntention =
   | 'exploration'
   | 'problem-solving'
   | 'creative-work'
-  | 'learning';
+  | 'learning'
+  // Extended states from emotionalStateEstimator
+  | 'doubt'
+  | 'affirmation'
+  | 'urgency'
+  | 'casual'
+  | 'reflection'
+  | 'complaint'
+  | 'thanks'
+  | 'unknown';
 
 /**
  * Configuration vocale de base

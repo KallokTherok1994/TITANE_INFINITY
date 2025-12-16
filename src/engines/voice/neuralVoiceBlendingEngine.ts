@@ -312,7 +312,7 @@ class NeuralVoiceBlendingEngine {
 
     // Adapter selon émotion
     switch (context.emotionState) {
-      case 'stressed':
+      case 'concerned':
         synthetic = 0.2;
         inspired = 0.8;
         ctxt = 'empathetic-comfort';
@@ -327,8 +327,8 @@ class NeuralVoiceBlendingEngine {
         inspired = 0.2;
         ctxt = 'analytical-precise';
         break;
-      case 'joyful':
-      case 'excited':
+      case 'playful':
+      case 'enthusiastic':
         synthetic = 0.3;
         inspired = 0.7;
         ctxt = 'warm-inspiring';
@@ -428,9 +428,9 @@ class NeuralVoiceBlendingEngine {
     let tone = archetypeToneMap[context.archetype];
 
     // Override selon émotion
-    if (context.emotionState === 'stressed') {
+    if (context.emotionState === 'concerned') {
       tone = 'empathetic';
-    } else if (context.emotionState === 'joyful') {
+    } else if (context.emotionState === 'playful') {
       tone = 'warm';
     } else if (context.emotionState === 'focused') {
       tone = 'professional';
