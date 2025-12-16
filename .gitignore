@@ -72,9 +72,12 @@ deploy/
 .cache/
 .vite/
 .vite-cache/
+.turbo/
 .parcel-cache/
 node_modules/.cache/
 node_modules/.vite/
+.eslintcache
+.stylelintcache
 
 # Backups & Archives
 *.backup*
@@ -95,6 +98,23 @@ tsc
 💥
 *Phase
 test_persona_v24/
+playwright-report/
+test-results/
+.vscode-test/
+storybook-static/
+
+# Logs étendus
+*.log.*
+npm-debug*.log
+yarn-debug*.log
+pnpm-debug*.log
+
+# Build artifacts additionnels
+*.AppImage
+*.exe
+*.dmg
+*.deb
+*.rpm
 
 add_license_headers*.sh
 
