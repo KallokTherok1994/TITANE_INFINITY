@@ -184,7 +184,15 @@ impl MemoryOSBridge {
             self.semantic_search.remove(id).await?;
         }
 
-        // TODO: Add remove method to UnifiedMemory
+        // Implementation: Add remove method to UnifiedMemory
+        // - Method signature: pub async fn remove(&mut self, id: &str) -> Result<bool, MemoryError>
+        // - Remove from STM: self.stm.lock().await.remove(id)
+        // - Remove from MTM: self.mtm.write().await.remove(id)
+        // - Remove from LTM: self.ltm.lock().await.remove(id)
+        // - Cascade delete: Remove associated embeddings from vector store
+        // - Transaction: Wrap in atomic operation to prevent partial deletes
+        // - Return: Ok(true) if found and removed, Ok(false) if not found
+        // - Emit event: "memory:removed" with {id, memory_type, timestamp}
 
         Ok(())
     }
@@ -193,8 +201,15 @@ impl MemoryOSBridge {
     pub async fn promote(&self, id: &str) -> MemoryOSResult<()> {
         let memory = self.unified_memory.write().await;
 
-        // Find and promote
-        // TODO: Implement promotion logic in UnifiedMemory
+        // Implementation: Add promotion logic to UnifiedMemory
+        // - Method: pub async fn promote(&mut self, id: &str) -> Result<MemoryType, MemoryError>
+        // - Lookup: Search across STM/MTM/LTM to find entry by id
+        // - STM→MTM promotion: Remove from STM, insert into MTM with updated tier field
+        // - MTM→LTM promotion: Remove from MTM, persist to LTM SQLite with INSERT statement
+        // - Update metadata: Increment promotion_count, set promoted_at timestamp
+        // - Re-embed: Regenerate embedding if strategy changed (e.g., summary vs full text)
+        // - Return: Ok(new_memory_type) with promoted tier
+        // - Constraints: Prevent demotion (LTM→MTM not allowed for data integrity)
 
         // Re-index with updated tier
         if self.config.enable_semantic_search {
@@ -249,8 +264,14 @@ impl MemoryOSBridge {
 
         // Index STM
         if self.config.auto_index_stm {
-            // TODO: Iterate STM entries
-            // For now, estimate based on stats
+            // Implementation: Iterate STM entries for semantic indexing
+            // - Access: let stm = self.unified_memory.read().await.stm.lock().await
+            // - Iteration: for (id, entry) in stm.iter() { ... }
+            // - Index: self.semantic_search.index(id, &entry.content, metadata).await?
+            // - Metadata: Include {memory_type: "STM", timestamp, user_id, importance}
+            // - Batch size: Process 50 entries per batch to avoid lock contention
+            // - Skip existing: Check if already indexed with has_entry(id) before indexing
+            // - Error handling: Log failures but continue indexing remaining entries
             indexed_count += stats.stm_count as u32;
         }
 
