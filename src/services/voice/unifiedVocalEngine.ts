@@ -35,6 +35,7 @@ import {
   type ThinkingState as _ThinkingState,
 } from './innerDialogueController';
 import type { EmotionalState } from './emotionalStateEstimator';
+import type { EmotionalState as EmotionalStateString } from '@/types/voice';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES
@@ -79,7 +80,7 @@ export type IntentType =
 export interface UserVoiceProfile {
   avgPitch: number; // Hauteur moyenne (Hz)
   speechRate: number; // Rythme (1.0 = normal)
-  emotionBaseline: EmotionalState;
+  emotionBaseline: EmotionalStateString; // Use string union
   jitter: number; // Micro-variations de fréquence
   shimmer: number; // Micro-variations d'amplitude
   pauseRate: number; // Taux de pauses
@@ -119,7 +120,7 @@ export interface UnifiedVocalConfig {
  */
 export interface UnifiedVocalState {
   cognitiveState: CognitiveState;
-  emotionalState: EmotionalState;
+  emotionalState: EmotionalStateString; // Use string union, not interface
   intentType: IntentType;
   audioState: AudioConversationState;
   attentionState: AttentionState;
@@ -362,14 +363,14 @@ class UnifiedVocalEngine {
     // Mise à jour du UserVoiceProfile (Super Prompt XXVI)
 
     // Simulé pour l'instant - sera connecté à l'analyse audio réelle
-    const _emotions: EmotionalState[] = [
+    const _emotions: EmotionalStateString[] = [
       'calm',
-      'joyful',
-      'stressed',
-      'tired',
-      'excited',
+      'playful', // was 'joyful'
+      'concerned', // was 'stressed'
+      'contemplative', // was 'tired'
+      'enthusiastic', // was 'excited'
       'focused',
-      'sad',
+      'empathetic', // was 'sad'
     ];
 
     // Détection basée sur intensité audio, rythme, pauses
@@ -574,7 +575,7 @@ class UnifiedVocalEngine {
   /**
    * Adaptation lente du style TITANE∞ (Super Prompt XXVI)
    */
-  adaptTitaneStyle(emotionalContext: EmotionalState, intensity: number): void {
+  adaptTitaneStyle(emotionalContext: EmotionalStateString, intensity: number): void {
     const rate = this.config.styleAdaptationRate;
     const signature = this.state.titaneSignature;
 
@@ -584,14 +585,14 @@ class UnifiedVocalEngine {
         signature.calm = Math.min(1, signature.calm + rate * intensity);
         signature.warmth = Math.max(0, signature.warmth - rate * 0.5 * intensity);
         break;
-      case 'joyful':
+      case 'playful': // was 'joyful'
         signature.warmth = Math.min(1, signature.warmth + rate * intensity);
         signature.clarity = Math.min(1, signature.clarity + rate * 0.5 * intensity);
         break;
-      case 'stressed':
+      case 'concerned': // was 'stressed'
         signature.calm = Math.max(0, signature.calm - rate * intensity);
         break;
-      case 'tired':
+      case 'contemplative': // was 'tired'
         signature.presence = Math.max(0, signature.presence - rate * 0.3 * intensity);
         break;
       case 'focused':

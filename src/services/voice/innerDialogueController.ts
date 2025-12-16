@@ -30,8 +30,8 @@ import type { ThinkingState, MentalColor } from '@/types/voice';
 // TYPES
 // ═══════════════════════════════════════════════════════════════════
 
-// Re-export types for backward compatibility
-export type { ThinkingState, MentalColor };
+// Types are imported from @/types/voice above
+// Re-exports removed to avoid conflicts
 
 /**
  * Type de pensée interne
