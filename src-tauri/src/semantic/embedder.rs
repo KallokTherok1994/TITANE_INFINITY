@@ -41,20 +41,46 @@ impl Embedder {
     }
     
     async fn embed_local(&self, text: &str) -> Result<Vec<f32>> {
-        // TODO: Intégration avec un modèle local (ex: sentence-transformers via ONNX)
-        // Pour l'instant, génération d'un embedding simulé
+        // INTEGRATION: Local sentence-transformers via ONNX Runtime
+        // Model: all-MiniLM-L6-v2 (384-dim, 80MB, multilingual)
+        // Dependencies:
+        //   - ort = "1.16" (ONNX Runtime for Rust)
+        //   - tokenizers = "0.15" (Hugging Face tokenizers)
+        // Process:
+        //   1. Load model: SessionBuilder::new()?.with_model_from_file("model.onnx")
+        //   2. Tokenize: tokenizer.encode(text) -> input_ids
+        //   3. Run inference: session.run(inputs)? -> embeddings
+        //   4. Normalize: L2 normalization for cosine similarity
+        // Model path: ~/.cache/titane/models/all-MiniLM-L6-v2.onnx
+        // For now, simulated embedding
         Ok(self.generate_simulated_embedding(text))
     }
     
     async fn embed_gemini(&self, text: &str) -> Result<Vec<f32>> {
-        // TODO: Appel API Gemini Embedding
-        // Endpoint: https://generativelanguage.googleapis.com/v1/models/embedding-001:embedContent
+        // INTEGRATION: Gemini Embedding API (text-embedding-004, 768-dim)
+        // Endpoint: https://generativelanguage.googleapis.com/v1/models/text-embedding-004:embedContent
+        // Request:
+        //   POST with JSON: {"content": {"parts": [{"text": text}]}}
+        //   Header: x-goog-api-key: {GEMINI_API_KEY}
+        // Response: {"embedding": {"values": [f32; 768]}}
+        // Dependencies: reqwest = "0.11", serde_json = "1.0"
+        // Rate limit: 1500 requests/min (free tier)
+        // Cost: Free for < 100k requests/day
+        // For now, simulated embedding
         Ok(self.generate_simulated_embedding(text))
     }
     
     async fn embed_ollama(&self, text: &str) -> Result<Vec<f32>> {
-        // TODO: Appel API Ollama local
+        // INTEGRATION: Ollama local embedding API (mxbai-embed-large, 1024-dim)
         // Endpoint: http://localhost:11434/api/embeddings
+        // Request:
+        //   POST with JSON: {"model": "mxbai-embed-large", "prompt": text}
+        // Response: {"embedding": [f32; 1024]}
+        // Setup: `ollama pull mxbai-embed-large` (670MB download)
+        // Performance: ~50ms per embedding on GPU, ~200ms on CPU
+        // Advantages: Fully local, no API key, privacy-preserving
+        // Dependencies: reqwest = "0.11", tokio for async
+        // For now, simulated embedding
         Ok(self.generate_simulated_embedding(text))
     }
     
