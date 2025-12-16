@@ -3,5 +3,4 @@
 // ═══════════════════════════════════════════════════════════════
 
 export * from './audio';
-export * from './presence';
 export * from './ai';

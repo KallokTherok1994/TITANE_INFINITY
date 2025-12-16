@@ -102,7 +102,11 @@
       "Bash(do find /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/modules/$module -type f \\( -name \"*.ts\" -o -name \"*.tsx\" \\) -exec wc -l {} +)",
       "Bash(while read f)",
       "Bash(do wc -l \"$f\")",
-      "Bash(do wc -l \"$file\")"
+      "Bash(do wc -l \"$file\")",
+      "Bash(git rev-list:*)",
+      "Bash(for f in /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/types/*.ts)",
+      "Bash(do basename \"$f\")",
+      "Bash(python3:*)"
     ],
     "deny": [],
     "ask": []
