@@ -7,7 +7,13 @@
  */
 
 import { createBrotliCompress, constants } from 'zlib';
-import { createReadStream, createWriteStream, readdirSync, statSync, existsSync } from 'fs';
+import {
+  createReadStream,
+  createWriteStream,
+  readdirSync,
+  statSync,
+  existsSync,
+} from 'fs';
 import { join, extname } from 'path';
 import { pipeline } from 'stream/promises';
 
@@ -108,7 +114,9 @@ async function main() {
 
   console.log('\n' + '━'.repeat(50));
   console.log(`✅ Compressed ${successCount}/${files.length} files in ${duration}s`);
-  console.log(`📊 Total: ${totalOriginalMB} MB → ${totalCompressedMB} MB (${totalRatio}% saved)`);
+  console.log(
+    `📊 Total: ${totalOriginalMB} MB → ${totalCompressedMB} MB (${totalRatio}% saved)`
+  );
 }
 
 main().catch(console.error);
