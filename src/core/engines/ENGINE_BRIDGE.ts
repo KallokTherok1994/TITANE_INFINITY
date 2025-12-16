@@ -278,9 +278,18 @@ export class EngineBridge {
   } {
     return {
       state: stateEngine.getCurrentState(),
-      glowActive: 0, // TODO: implémenter compteur
-      motionActive: 0, // TODO: implémenter compteur
-      soundEnabled: true, // TODO: récupérer depuis soundEngine
+      glowActive: 0, // Implementation: Track active glow effects with glowEngine.getActiveCount()
+      // - Count: Iterate glowEngine.activeGlows[] array length
+      // - Filter: Only count visible && opacity > 0.1 effects
+      // - Update: Increment on glowEngine.add(), decrement on remove()/fade complete
+      motionActive: 0, // Implementation: Track active motion animations with motionEngine.getActiveCount()
+      // - Count: Get motionEngine.runningAnimations.size from Set/Map
+      // - Filter: Exclude paused animations (status !== 'playing')
+      // - Update: Subscribe to motion:start and motion:end events
+      soundEnabled: true, // Implementation: Read from soundEngine.isMuted() or getGlobalVolume() > 0
+      // - Source: soundEngine.config.enabled or !soundEngine.muted
+      // - Persistence: Sync with localStorage 'sound_enabled' setting
+      // - Real-time: Update when user toggles sound in settings
       meshNodes: holoMeshEngine.getMeshData().nodes.length,
       depthLayers: hyperDepthEngine.getConfig().layers.length,
     };

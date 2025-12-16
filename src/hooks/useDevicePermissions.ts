@@ -203,8 +203,15 @@ async function checkCamera(env: EnvironmentInfo): Promise<DevicePermission> {
   // Sur Linux/WebKitGTK, le support caméra est très limité
 
   if (env.isTauri) {
-    // Tauri: marquer comme non supporté pour l'instant
-    // TODO: Implémenter via plugin Tauri ou WebRTC quand stable
+    // Implementation: Tauri camera access via plugin or WebRTC bridge
+    // - Option 1 (Native): tauri-plugin-camera with permissions in tauri.conf.json
+    // - Option 2 (WebView): navigator.mediaDevices.getUserMedia() in Tauri webview
+    // - Option 3 (WebRTC): Create custom Tauri command wrapping v4l2/AVFoundation/DirectShow
+    // - Permissions: Add "camera" to tauri.conf.json allowlist
+    // - Error handling: Catch PermissionDenied, DeviceNotFound, DeviceBusy
+    // - Fallback: If camera unavailable, disable video features gracefully
+    // - Detection: Check window.__TAURI__.plugins?.camera or test getUserMedia() support
+    // - Future: Wait for stable tauri-plugin-camera release (currently experimental)
     return {
       type: 'camera',
       status: 'unsupported',
@@ -254,8 +261,15 @@ async function checkCamera(env: EnvironmentInfo): Promise<DevicePermission> {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 async function checkScreen(env: EnvironmentInfo): Promise<DevicePermission> {
-  // Capture d'écran nécessite un plugin Tauri spécifique
-  // TODO: Intégrer tauri-plugin-screenshots ou équivalent
+  // Implementation: Screen capture via Tauri plugin
+  // - Plugin: Add tauri-plugin-screenshots to Cargo.toml dependencies
+  // - API: await invoke('plugin:screenshots|capture', {monitor: 0})
+  // - Permissions: Add "screenshots" to tauri.conf.json allowlist
+  // - Monitor selection: Get available displays with getDisplays() first
+  // - Format: Save as PNG/JPEG, return base64 or file path
+  // - Alternative: Use native APIs (X11/Wayland on Linux, Quartz on macOS, DXGI on Windows)
+  // - Privacy: Request permission on first use, respect system privacy settings
+  // - Use cases: Screenshot tool, visual memory capture, bug reporting
 
   if (env.isTauri) {
     return {
@@ -296,10 +310,18 @@ async function checkScreen(env: EnvironmentInfo): Promise<DevicePermission> {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 async function checkKeyboard(env: EnvironmentInfo): Promise<DevicePermission> {
-  // Les raccourcis globaux nécessitent tauri-plugin-global-shortcut
+  // Implementation: Global shortcuts via tauri-plugin-global-shortcut
+  // - Plugin: Already available in Tauri v2 core (tauri-plugin-global-shortcut)
+  // - Registration: await register('CommandOrControl+Shift+T', () => handleShortcut())
+  // - Shortcuts: Support Ctrl/Cmd, Shift, Alt modifiers + any key
+  // - Detection: Check window.__TAURI_INTERNALS__?.metadata?.plugins?.globalShortcut
+  // - Conflicts: Detect and warn if shortcut already registered by OS/other apps
+  // - Unregister: Call unregister('shortcut') or unregisterAll() on cleanup
+  // - Platform differences: Cmd on macOS, Ctrl on Windows/Linux
+  // - Use cases: Quick capture (Ctrl+Space), show/hide window, voice activation
+  // - Permissions: May require accessibility permissions on macOS
 
   if (env.isTauri) {
-    // TODO: Vérifier si le plugin global-shortcut est disponible
     return {
       type: 'keyboard',
       status: 'unsupported',

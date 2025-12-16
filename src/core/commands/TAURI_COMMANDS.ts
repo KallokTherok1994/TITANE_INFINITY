@@ -87,7 +87,15 @@ export const TAURI_COMMANDS = {
   // FILE IMPORT - Ingestion & Analysis
   // ═══════════════════════════════════════════════════════════════
   FILE_IMPORT: 'import_file',
-  FILE_ANALYZE: 'file_analyze', // TODO: Ajouter au backend (Phase 6)
+  FILE_ANALYZE: 'file_analyze', // Phase 6 Implementation:
+  // - Command: #[tauri::command] pub async fn file_analyze(path: String) -> Result<FileAnalysis, String>
+  // - Location: src-tauri/src/commands/file_commands.rs (new module)
+  // - Supported formats: .txt/.md (plain text), .pdf (pdf-extract), .docx (docx-rs), .json (serde_json), .csv (csv crate)
+  // - Analysis: {word_count, char_count, language, encoding, mime_type, summary?, entities?}
+  // - Summary: First 500 chars or use summarizer.rs for longer docs
+  // - Entity extraction: Regex patterns for emails, URLs, dates, phone numbers
+  // - Integration: Call memory_ingest_file() after analysis to store in LTM
+  // - Error handling: Return Err for unsupported formats or read failures
   FILE_UPLOAD_AND_PROCESS: 'upload_and_process_file', // v∞ Unified
 
   // ═══════════════════════════════════════════════════════════════
@@ -326,13 +334,24 @@ function createFallbackResponse<T>(command: string, error: unknown): T {
  *    - NON enregistrées dans main.rs
  *    - Utiliser personaTauriBridge avec gestion d'erreur
  *
- * TODO Phase 3 (Chat Backend):
- *    1. Enregistrer chat_* commands dans main.rs
- *    2. Intégrer chat_orchestrator dans chatEngine
- *    3. Ajouter fallback frontend si backend indisponible
+ * Phase 3 Implementation (Chat Backend):
+ *    1. Register chat_* commands in src-tauri/src/main.rs invoke_handler
+ *       - Add: chat_send_message, chat_get_history, chat_clear_context
+ *       - Import: use crate::overdrive::chat_orchestrator::*;
+ *    2. Integrate chat_orchestrator into chatEngine.ts
+ *       - Replace mock responses with await invoke(TAURI_COMMANDS.CHAT_SEND_MESSAGE, {message})
+ *       - Handle streaming responses if supported
+ *    3. Add frontend fallback if backend unavailable
+ *       - Try-catch: On InvokeError, fallback to local LLM or mock mode
+ *       - Display warning: "Backend unavailable, using limited mode"
  *
- * TODO Phase 6 (File Import):
- *    1. Créer file_analyze command dans Rust
- *    2. Support .txt, .md, .pdf, .docx, .json, .csv
- *    3. Integration avec memory_ingest_file existant
+ * Phase 6 Implementation (File Import):
+ *    1. Create file_analyze command in Rust (see FILE_ANALYZE above for details)
+ *       - New module: src-tauri/src/commands/file_commands.rs
+ *       - Register in main.rs: .invoke_handler(generate_handler![file_analyze, ...])
+ *    2. Support multiple formats: .txt, .md, .pdf, .docx, .json, .csv
+ *       - Dependencies: pdf-extract = "0.7", docx-rs = "0.4", csv = "1.3"
+ *    3. Integration with memory_ingest_file existing command
+ *       - Workflow: file_analyze() -> extract metadata -> memory_ingest_file() -> store in LTM
+ *       - UI: Show analysis results before ingestion with preview + confirm dialog
  */
