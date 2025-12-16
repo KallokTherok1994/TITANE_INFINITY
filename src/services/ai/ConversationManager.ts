@@ -94,6 +94,17 @@ export class ConversationManager {
     // 4. Route to appropriate AI backend (local LLM, OpenAI, Gemini, etc.)
     const response = await this.routeToAI(aiRequest, conversationContext);
 
+    // Add conversationId to response
+    response.conversationId = conversationId;
+
+    // Add memory context if RAG was used
+    if (aiRequest.messages.some(m => m.role === 'system')) {
+      response.memoryContext = {
+        memoriesUsed: aiRequest.messages.filter(m => m.role === 'system').length,
+        summary: aiRequest.messages.find(m => m.role === 'system')?.content || '',
+      };
+    }
+
     // 5. Store assistant response in context
     conversationContext.messages.push({
       role: 'assistant',
@@ -280,7 +291,7 @@ export class ConversationManager {
       }>('chat_send_message', {
         prompt: request.messages[request.messages.length - 1].content,
         provider: 'ollama',
-        streaming: config.enableStreaming || false,
+        streaming: request.config.enableStreaming || false,
       });
 
       return {
@@ -316,7 +327,7 @@ export class ConversationManager {
       }>('chat_send_message', {
         prompt: request.messages[request.messages.length - 1].content,
         provider: 'openai',
-        streaming: config.enableStreaming || false,
+        streaming: request.config.enableStreaming || false,
       });
 
       return {
@@ -352,7 +363,7 @@ export class ConversationManager {
       }>('chat_send_message', {
         prompt: request.messages[request.messages.length - 1].content,
         provider: 'gemini',
-        streaming: config.enableStreaming || false,
+        streaming: request.config.enableStreaming || false,
       });
 
       return {
@@ -388,7 +399,7 @@ export class ConversationManager {
       }>('chat_send_message', {
         prompt: request.messages[request.messages.length - 1].content,
         provider: 'anthropic',
-        streaming: config.enableStreaming || false,
+        streaming: request.config.enableStreaming || false,
       });
 
       return {
