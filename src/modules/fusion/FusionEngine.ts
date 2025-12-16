@@ -402,8 +402,12 @@ export class FusionEngine {
     const entries: DatasetEntry[] = [];
 
     try {
-      // TODO: Fix LogEngine.getLogs() method signature
-      return entries; // Temporarily disabled
+      // Implementation: Update LogEngine.getLogs() call for new signature
+      // - Old: await LogEngine.getLogs({ limit: 500 })
+      // - New: await LogEngine.query({ filters: { level: 'info' }, limit: 500 })
+      // - Alternative: Use LogEngine.stream() for real-time log collection
+      // - Return type: Array<{timestamp, level, message, metadata}>
+      return entries; // Temporarily disabled until LogEngine API updated
       /*
       const logs = await this.logEngine.getLogs({ limit: 500 });
 
@@ -437,9 +441,13 @@ export class FusionEngine {
     const entries: DatasetEntry[] = [];
 
     try {
-      // TODO: Fix - SingularityIntrospectionEngine has no getState() method
-      // Use performFullIntrospection() instead when needed
-      return entries; // Temporarily disabled
+      // Implementation: Use performFullIntrospection() instead of removed getState()
+      // - New API: const state = await SingularityIntrospectionEngine.performFullIntrospection()
+      // - Returns: {cognitive: {...}, meta: {...}, modules: {...}, diagnostics: {...}}
+      // - Extract: state.cognitive for active/inactive status, state.modules for module states
+      // - Async: Changed from sync getState() to async performFullIntrospection()
+      // - Migration: See SINGULARITY_V24_MIGRATION.md Section 3.2
+      return entries; // Temporarily disabled until refactored
       /*
       const introspection = SingularityIntrospectionEngine.getState();
 
