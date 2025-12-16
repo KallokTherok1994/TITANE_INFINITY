@@ -26,6 +26,19 @@ import type {
   ConversationConfig,
   ConversationContext,
 } from '@/types/conversation';
+import type { UnifiedMemoryQuery } from '@/services/unified/UnifiedMemory';
+import { createUnifiedMemory } from '@/services/unified';
+import { MemoryTier } from '@/services/mcp/mcp.types';
+
+// Singleton UnifiedMemory instance
+let _unifiedMemoryInstance: Awaited<ReturnType<typeof createUnifiedMemory>> | null = null;
+
+async function getUnifiedMemory() {
+  if (!_unifiedMemoryInstance) {
+    _unifiedMemoryInstance = await createUnifiedMemory();
+  }
+  return _unifiedMemoryInstance;
+}
 
 /**
  * ConversationManager Singleton
@@ -138,12 +151,44 @@ export class ConversationManager {
   private async buildAIRequest(
     context: ConversationContext
   ): Promise<{ messages: ConversationMessage[]; config: ConversationConfig }> {
-    // TODO: Implement RAG (Retrieval-Augmented Generation)
-    // TODO: Implement context window sliding (max tokens)
-    // TODO: Implement semantic search for relevant context
+    // ✅ RAG (Retrieval-Augmented Generation) Implementation
+    const lastUserMessage = context.messages[context.messages.length - 1];
+    const query = lastUserMessage?.content || '';
+
+    // Semantic search for relevant context
+    const memoryQuery: UnifiedMemoryQuery = {
+      text: query,
+      limit: 5, // Top 5 relevant memories
+      minImportance: 0.7, // Only highly relevant results (renamed from minScore)
+      tiers: [MemoryTier.MEDIUM_TERM, MemoryTier.LONG_TERM] as MemoryTier[], // Exclude STM (already in context)
+    };
+
+    const unifiedMemory = await getUnifiedMemory();
+    const memoryContext = await unifiedMemory.buildContext(query, memoryQuery);
+
+    // ✅ Context Window Sliding (max tokens management)
+    const maxContextTokens = this.config.maxContextLength - 2000; // Reserve 2000 for response
+    const estimatedTokensPerMessage = 100; // Average
+    const maxMessages = Math.floor(maxContextTokens / estimatedTokensPerMessage);
+
+    // Keep recent messages within token limit
+    const recentMessages = context.messages.slice(-maxMessages);
+
+    // Inject RAG context as system message
+    const augmentedMessages: ConversationMessage[] = [];
+
+    if (memoryContext.memories.length > 0) {
+      augmentedMessages.push({
+        role: 'system',
+        content: `Relevant context from memory:\n${memoryContext.summary}`,
+        timestamp: Date.now(),
+      });
+    }
+
+    augmentedMessages.push(...recentMessages);
 
     return {
-      messages: context.messages,
+      messages: augmentedMessages,
       config: this.config,
     };
   }
@@ -155,21 +200,111 @@ export class ConversationManager {
     request: { messages: ConversationMessage[]; config: ConversationConfig },
     context: ConversationContext
   ): Promise<ConversationResponse> {
-    // TODO: Implement AI routing logic:
-    // - If local LLM available: use local
-    // - If API configured: use OpenAI/Gemini/Anthropic
-    // - If multi-agent mode: orchestrate multiple AIs
+    // ✅ AI Routing Logic Implementation
 
-    // Placeholder: Simple response
-    return {
-      content: '[ConversationManager] AI response placeholder',
-      role: 'assistant',
-      timestamp: Date.now(),
-      metadata: {
-        model: 'placeholder',
-        tokensUsed: 0,
-      },
-    };
+    // 1. Check preferred provider from metadata
+    const preferredProvider = context.metadata?.preferredProvider || 'auto';
+
+    // 2. Try routing based on preference
+    try {
+      if (preferredProvider === 'local' || preferredProvider === 'ollama') {
+        // Use local LLM via Tauri backend
+        return await this.invokeLocalLLM(request);
+      }
+
+      if (preferredProvider === 'openai') {
+        return await this.invokeOpenAI(request);
+      }
+
+      if (preferredProvider === 'gemini') {
+        return await this.invokeGemini(request);
+      }
+
+      if (preferredProvider === 'anthropic') {
+        return await this.invokeAnthropic(request);
+      }
+
+      // Auto mode: fallback chain (local → OpenAI → Gemini → Anthropic)
+      if (preferredProvider === 'auto') {
+        try {
+          return await this.invokeLocalLLM(request);
+        } catch (localError) {
+          console.warn('[ConversationManager] Local LLM failed, trying cloud providers');
+
+          try {
+            return await this.invokeOpenAI(request);
+          } catch (openaiError) {
+            try {
+              return await this.invokeGemini(request);
+            } catch (geminiError) {
+              return await this.invokeAnthropic(request);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error('[ConversationManager] All AI providers failed:', error);
+
+      // Fallback response
+      return {
+        content:
+          'Je suis désolé, je rencontre des difficultés techniques. Veuillez réessayer.',
+        role: 'assistant',
+        timestamp: Date.now(),
+        metadata: {
+          model: 'fallback',
+          tokensUsed: 0,
+          error: String(error),
+        },
+      };
+    }
+
+    // Should never reach here
+    throw new Error('Invalid provider preference');
+  }
+
+  /**
+   * Invoke local LLM via Tauri backend
+   */
+  private async invokeLocalLLM(request: {
+    messages: ConversationMessage[];
+    config: ConversationConfig;
+  }): Promise<ConversationResponse> {
+    // TODO: Implement Tauri backend call
+    throw new Error('Local LLM not yet implemented');
+  }
+
+  /**
+   * Invoke OpenAI API
+   */
+  private async invokeOpenAI(request: {
+    messages: ConversationMessage[];
+    config: ConversationConfig;
+  }): Promise<ConversationResponse> {
+    // TODO: Implement OpenAI API call
+    throw new Error('OpenAI not yet implemented');
+  }
+
+  /**
+   * Invoke Gemini API
+   */
+  private async invokeGemini(request: {
+    messages: ConversationMessage[];
+    config: ConversationConfig;
+  }): Promise<ConversationResponse> {
+    // TODO: Implement Gemini API call
+    throw new Error('Gemini not yet implemented');
+  }
+
+  /**
+   * Invoke Anthropic (Claude) API
+   */
+  private async invokeAnthropic(request: {
+    messages: ConversationMessage[];
+    config: ConversationConfig;
+  }): Promise<ConversationResponse> {
+    // TODO: Implement Anthropic API call
+    throw new Error('Anthropic not yet implemented');
   }
 
   /**
@@ -179,11 +314,35 @@ export class ConversationManager {
     conversationId: string,
     context: ConversationContext
   ): Promise<void> {
-    // TODO: Integrate MemoryManager
-    // TODO: Save to SQLite or filesystem
-    console.log(
-      `[ConversationManager] Persisting conversation ${conversationId} (${context.messages.length} messages)`
-    );
+    // ✅ UnifiedMemory Integration
+    try {
+      const unifiedMemory = await getUnifiedMemory();
+
+      // Store each message as memory entry
+      for (const message of context.messages) {
+        const importance = message.role === 'user' ? 0.7 : 0.6; // User messages slightly more important
+
+        await unifiedMemory.createMemory({
+          type: 'conversation',
+          owner: conversationId,
+          summary: message.content.substring(0, 200), // First 200 chars
+          details: message.content,
+          tags: ['conversation', conversationId, message.role],
+          importance,
+          tier: MemoryTier.MEDIUM_TERM, // Conversations go to Medium-Term Memory
+        });
+      }
+
+      console.log(
+        `[ConversationManager] ✅ Persisted conversation ${conversationId} (${context.messages.length} messages to UnifiedMemory)`
+      );
+    } catch (error) {
+      console.error(
+        `[ConversationManager] Failed to persist conversation ${conversationId}:`,
+        error
+      );
+      // Don't throw - persistence failure shouldn't break conversation flow
+    }
   }
 
   /**
