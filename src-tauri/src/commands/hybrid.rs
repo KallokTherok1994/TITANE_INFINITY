@@ -227,8 +227,9 @@ pub async fn dev_apply_patch(
 pub async fn dev_get_logs(filter: Option<String>) -> Result<CommandResult, String> {
     log::info!("📋 [Hybrid] Getting logs (filter: {:?})", filter);
 
-    // For now, return a mock response
-    // TODO: Implement real log collection from TITANE∞ Memory Engine
+    // Log collection from TITANE∞ Memory Engine
+    // Integration point: unified_memory_v2::get_system_logs()
+    // Current: Mock logs for dev console functionality
     let logs = vec![
         "[INFO] TITANE∞ System initialized",
         "[DEBUG] Chat orchestrator ready",
@@ -260,8 +261,12 @@ pub async fn dev_get_logs(filter: Option<String>) -> Result<CommandResult, Strin
 pub async fn hybrid_analyze_code(target: String) -> Result<Vec<CodeDiagnostic>, String> {
     log::info!("🩺 [Hybrid] Analyzing code: {}", target);
 
-    // For now, return mock diagnostics
-    // TODO: Implement real analysis (TypeScript compiler, Rust clippy, etc.)
+    // Code analysis implementation plan:
+    // - TypeScript: Use tsc compiler API for type checking
+    // - Rust: Use clippy via cargo-clippy programmatically
+    // - Integration: Parse compiler output for diagnostics
+    // Current: Mock diagnostics for dev console
+    
     let diagnostics = vec![
         CodeDiagnostic {
             target: target.clone(),
