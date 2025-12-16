@@ -79,8 +79,8 @@ impl IPCProfiler {
 
         let count = durations.len() as u64;
         let total: u64 = durations.iter().sum();
-        let min = *durations.first().unwrap();
-        let max = *durations.last().unwrap();
+        let min = durations.first().copied().unwrap_or(0);
+        let max = durations.last().copied().unwrap_or(0);
         let avg = total as f64 / count as f64;
 
         let p50_idx = (count as f64 * 0.50) as usize;
@@ -122,12 +122,10 @@ impl IPCProfiler {
             return vec![];
         }
 
-        let records = self.records.lock().ok();
-        if records.is_none() {
-            return vec![];
-        }
-
-        let records = records.unwrap();
+        let records = match self.records.lock().ok() {
+            Some(r) => r,
+            None => return vec![],
+        };
         let mut metrics = vec![];
 
         for command_name in records.keys() {
@@ -204,8 +202,9 @@ impl Drop for ProfileGuard {
 
             let timestamp = std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
-                .unwrap()
-                .as_secs();
+                .ok()
+                .map(|d| d.as_secs())
+                .unwrap_or(0);
 
             if let Ok(mut records) = records.lock() {
                 records

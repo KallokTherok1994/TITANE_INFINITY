@@ -118,22 +118,22 @@ impl QueryEngine {
         // Calcule les scores
         for keyword in informational_keywords {
             if query_lower.contains(keyword) {
-                *scores.get_mut(&SearchIntent::Informational).unwrap() += 1;
+                *scores.entry(SearchIntent::Informational).or_insert(0) += 1;
             }
         }
         for keyword in navigational_keywords {
             if query_lower.contains(keyword) {
-                *scores.get_mut(&SearchIntent::Navigational).unwrap() += 1;
+                *scores.entry(SearchIntent::Navigational).or_insert(0) += 1;
             }
         }
         for keyword in transactional_keywords {
             if query_lower.contains(keyword) {
-                *scores.get_mut(&SearchIntent::Transactional).unwrap() += 1;
+                *scores.entry(SearchIntent::Transactional).or_insert(0) += 1;
             }
         }
         for keyword in exploratory_keywords {
             if query_lower.contains(keyword) {
-                *scores.get_mut(&SearchIntent::Exploratory).unwrap() += 1;
+                *scores.entry(SearchIntent::Exploratory).or_insert(0) += 1;
             }
         }
 

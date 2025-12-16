@@ -74,8 +74,8 @@ impl ConfigSnapshot {
             chat_engine,
             timestamp: SystemTime::now()
                 .duration_since(UNIX_EPOCH)
-                .unwrap()
-                .as_secs(),
+                .map(|d| d.as_secs())
+                .unwrap_or(0),
             version: env!("CARGO_PKG_VERSION").to_string(),
         }
     }
@@ -107,8 +107,8 @@ pub async fn get_all_configs() -> Result<ConfigSnapshot, String> {
         gemini_configured: false,              // TODO: Check SecureSecretsEngine
         timestamp: SystemTime::now()
             .duration_since(UNIX_EPOCH)
-            .unwrap()
-            .as_secs(),
+            .map(|d| d.as_secs())
+            .unwrap_or(0),
     };
 
     // Récupérer chat engine config (hardcoded defaults pour l'instant)

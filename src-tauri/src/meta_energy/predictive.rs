@@ -235,8 +235,14 @@ impl EnergyPredictor {
             return current;
         }
 
-        let first = recent.last().unwrap();
-        let last = recent.first().unwrap();
+        let first = match recent.last() {
+            Some(f) => f,
+            None => return current,
+        };
+        let last = match recent.first() {
+            Some(l) => l,
+            None => return current,
+        };
 
         let time_diff = (last.timestamp - first.timestamp) as f32;
         if time_diff == 0.0 {
@@ -303,8 +309,14 @@ impl EnergyPredictor {
             return 0.0;
         }
 
-        let (t1, v1) = recent.last().unwrap();
-        let (t2, v2) = recent.first().unwrap();
+        let (t1, v1) = match recent.last() {
+            Some(tuple) => *tuple,
+            None => return 0.0,
+        };
+        let (t2, v2) = match recent.first() {
+            Some(tuple) => *tuple,
+            None => return 0.0,
+        };
 
         let time_diff_min = (t2 - t1) as f32 / 60000.0;
         if time_diff_min == 0.0 {
