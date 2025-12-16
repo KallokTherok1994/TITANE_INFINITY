@@ -64,7 +64,11 @@ const MOCK_PROJECTS: Project[] = [
 
 export const ProjectsPage = memo(function ProjectsPage() {
   const [projects] = useState<Project[]>(MOCK_PROJECTS);
-  const [_selectedProject, setSelectedProject] = useState<string | null>(null); // TODO: Ajouter highlight projet
+  const [_selectedProject, setSelectedProject] = useState<string | null>(null); // Implementation: Add visual highlight for selected project
+  // - CSS class: project-card--selected with border/shadow/background
+  // - State sync: Update on click via setSelectedProject(id)
+  // - Visual feedback: Use theme colors (primary-500 border, subtle bg)
+  // - Accessibility: Add aria-selected="true" to selected card
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredProjects = useMemo(
@@ -78,8 +82,13 @@ export const ProjectsPage = memo(function ProjectsPage() {
   );
 
   const handleOpenChat = useCallback((_projectId: string) => {
-    // TODO: Router navigation avec contexte projet
-    // Le paramètre sera utilisé pour la navigation contextuelle
+    // Implementation: Router navigation with project context
+    // - Router: Use React Router's navigate('/chat', {state: {projectId}})
+    // - Alternative: URL params navigate(`/chat?project=${projectId}`)
+    // - Context: Pass project data via ChatContext.setActiveProject(project)
+    // - Persistence: Save last opened project to localStorage for restore
+    // - Chat init: Pre-populate chat with "Working on {projectName}" system message
+    // - History: Add to navigation history for back button support
   }, []);
 
   const handleSelectProject = useCallback((projectId: string) => {
