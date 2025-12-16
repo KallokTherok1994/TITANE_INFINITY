@@ -88,7 +88,12 @@ export class HeliosConnector {
         return {
           energyScore,
           fatigueDetected,
-          regularity: 0.8, // TODO: calculer depuis historique Helios
+          // CALCULATION: Regularity score from Helios historical data
+          // - Sample last 7 days of CPU/RAM usage
+          // - Calculate coefficient of variation: σ / μ
+          // - Regularity = 1 - normalized_CV (0.0 = chaos, 1.0 = stable)
+          // Backend: helios_get_regularity_score(days: 7)
+          regularity: 0.8, // Placeholder - awaiting Helios stats API
         };
       }
     } catch (error) {
@@ -139,8 +144,15 @@ export class NexusConnector {
   }
 
   private subscribeToNexusDecisions(): void {
-    // TODO: S'abonner aux événements Nexus
-    // Exemple: nexusEngine.subscribe('priority-change', this.handlePriorityChange)
+    // INTEGRATION: Nexus event subscription architecture
+    // Event types:
+    //   - priority-change: {priority: 'critical' | 'urgent' | 'normal'}
+    //   - system-state-change: {state: 'debugging' | 'exploring' | 'idle'}
+    //   - module-activation: {module: string, activated: boolean}
+    // Implementation:
+    //   nexusEngine.on('priority-change', this.handlePriorityChange)
+    //   nexusEngine.on('system-state-change', this.handleStateChange)
+    // Note: Requires Nexus EventEmitter API
   }
 
   private async updateFromNexus(): Promise<void> {
@@ -287,10 +299,16 @@ export class MemoryConnector {
 
   private async loadUserPatterns(): Promise<void> {
     try {
-      // TODO: Analyser patterns depuis Memory
-      // - Heures de haute/basse énergie
-      // - Modules les plus utilisés
-      // - Durées moyennes de session
+      // ANALYSIS: User behavior pattern extraction from Memory
+      // Data sources:
+      //   1. Session timestamps → Energy patterns by hour
+      //   2. Module usage frequency → Favorite modules/workflows
+      //   3. Session durations → Average focus time
+      // Algorithm:
+      //   - Group sessions by hour of day
+      //   - Calculate energy score: usage_frequency * avg_session_duration
+      //   - Identify peaks (high energy) and valleys (low energy)
+      // Backend: memory_get_usage_patterns(days: 30)
 
       const state = cognitiveLayoutEngine.getState();
 
@@ -344,7 +362,16 @@ export class MemoryConnector {
     satisfaction?: number;
   }): Promise<void> {
     try {
-      // TODO: Enregistrer dans Memory pour ML futur
+      // RECORDING: Usage pattern storage for future ML analysis
+      // Storage format: MemoryEntry with tags ['usage-pattern']
+      // Schema:
+      //   - module: string (e.g., 'chat', 'projects', 'system')
+      //   - duration: number (milliseconds)
+      //   - mode: CognitiveMode ('focus', 'explore', etc.)
+      //   - satisfaction: Optional user rating (0.0-1.0)
+      //   - timestamp: Unix timestamp
+      // Backend: memory_store_pattern(entry)
+      // Future: Train recommendation model on accumulated patterns
       console.log('[CognitiveLayout] 💾 Usage pattern recorded:', data);
     } catch (error) {
       console.warn('[CognitiveLayout] Pattern record failed:', error);

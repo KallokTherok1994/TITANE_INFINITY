@@ -84,7 +84,10 @@
       "Bash(npm run compress:*)",
       "Bash(node scripts/brotli-compress.mjs:*)",
       "Bash(timeout 120 npm run test:unit:*)",
-      "Bash(timeout 60 npm run test:unit:*)"
+      "Bash(timeout 60 npm run test:unit:*)",
+      "Bash(git log:*)",
+      "Bash(test:*)",
+      "Bash(git ls-tree:*)"
     ],
     "deny": [],
     "ask": []

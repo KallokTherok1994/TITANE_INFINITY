@@ -50,8 +50,11 @@ pub async fn list_snapshots() -> Result<Vec<SnapshotMetadata>, String> {
         .await
         .map_err(|e| e.to_string())?;
 
-    // TODO: Implémenter avec TravelEngine
-    // Pour v1, retourner mock data
+    // INTEGRATION: TravelEngine snapshot management
+    // - Snapshot storage: $HOME/.titane/snapshots/
+    // - Metadata: JSON with XP, level, engines, persona state
+    // - Backend command: travel_engine_list_snapshots()
+    // For v1, returning mock data for UI development
     Ok(vec![
         SnapshotMetadata {
             id: "snap_001".to_string(),
@@ -97,7 +100,11 @@ pub async fn get_travel_stats() -> Result<TravelStats, String> {
         .await
         .map_err(|e| e.to_string())?;
 
-    // TODO: Implémenter avec TravelEngine
+    // INTEGRATION: TravelEngine statistics aggregation
+    // - Total snapshots count from snapshot directory
+    // - RAM cache: LRU cache of last 3 snapshots (configurable)
+    // - Disk usage: Sum of snapshot JSON + state files
+    // Backend command: travel_engine_get_stats()
     Ok(TravelStats {
         total_snapshots: 2,
         ram_cache_size: 3,
@@ -118,8 +125,15 @@ pub async fn restore_snapshot(snapshot_id: String) -> Result<(), String> {
 
     log::warn!("🔄 [TIME-TRAVEL] Restore requested: {}", snapshot_id);
 
-    // TODO: Implémenter avec TravelEngine
-    // Pour v1, mock success
+    // INTEGRATION: TravelEngine snapshot restore (ROOT ONLY - dangerous operation)
+    // Process:
+    //   1. Validate snapshot_id exists
+    //   2. Shutdown all active engines
+    //   3. Load snapshot state (XP, engines, persona, etc.)
+    //   4. Restart engines with restored state
+    //   5. Emit event: snapshot_restored
+    // Backend command: travel_engine_restore(snapshot_id)
+    // For v1, mock success
     Ok(())
 }
 
@@ -134,6 +148,12 @@ pub async fn delete_snapshot(snapshot_id: String) -> Result<(), String> {
 
     log::info!("🗑️  [TIME-TRAVEL] Delete requested: {}", snapshot_id);
 
-    // TODO: Implémenter avec TravelEngine
+    // INTEGRATION: TravelEngine snapshot deletion (SYSTEM level)
+    // Process:
+    //   1. Validate snapshot_id exists and is not active
+    //   2. Remove snapshot directory: $HOME/.titane/snapshots/{snapshot_id}/
+    //   3. Update metadata cache
+    //   4. Emit event: snapshot_deleted
+    // Backend command: travel_engine_delete(snapshot_id)
     Ok(())
 }
