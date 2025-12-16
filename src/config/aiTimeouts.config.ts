@@ -57,6 +57,24 @@ export const CIRCUIT_BREAKER = {
 } as const;
 
 /**
+ * Streaming configuration (OPT11: Chunk batching)
+ */
+export const STREAM_CONFIG = {
+  chunkBatchSize: 5, // Batch N chunks before yielding (reduces UI updates)
+  chunkBatchDelayMs: 50, // Max delay before flushing batch
+  totalTimeoutMs: 120000, // 2 minutes max for entire stream
+  perChunkTimeoutMs: 10000, // 10s max between chunks
+} as const;
+
+/**
+ * Provider availability cache (OPT12: 60s TTL)
+ */
+export const AVAILABILITY_CACHE = {
+  ttlMs: 60000, // Cache availability for 60 seconds
+  checkTimeoutMs: 2000, // Max time for availability check
+} as const;
+
+/**
  * Get provider timeout by name
  */
 export function getProviderTimeout(providerName: string): number {
