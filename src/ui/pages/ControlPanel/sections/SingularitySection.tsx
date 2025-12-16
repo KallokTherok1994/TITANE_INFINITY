@@ -1,9 +1,10 @@
 /**
- * TITANE∞ OS - Section Singularité
+ * TITANE∞ OS v24.7 - Section Singularité
  * Contrôle du moteur de singularité
+ * Optimisé avec useCallback et useMemo
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { secureInvoke } from '@/lib/security';
 
 interface SingularityStatus {
@@ -17,11 +18,7 @@ export const SingularitySection: React.FC = () => {
   const [status, setStatus] = useState<SingularityStatus | null>(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    loadStatus();
-  }, []);
-
-  const loadStatus = async () => {
+  const loadStatus = useCallback(async () => {
     try {
       const singularityStatus = await secureInvoke<SingularityStatus>(
         'get_singularity_status'
@@ -30,9 +27,13 @@ export const SingularitySection: React.FC = () => {
     } catch (error) {
       console.error('Erreur chargement statut singularité:', error);
     }
-  };
+  }, []);
 
-  const toggleSingularity = async () => {
+  useEffect(() => {
+    loadStatus();
+  }, [loadStatus]);
+
+  const toggleSingularity = useCallback(async () => {
     setLoading(true);
     try {
       await secureInvoke('toggle_singularity');
@@ -42,7 +43,17 @@ export const SingularitySection: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [loadStatus]);
+
+  const buttonText = useMemo(() => {
+    if (loading) return '⏳ Traitement...';
+    return status?.active ? '⏸️ Désactiver' : '▶️ Activer';
+  }, [loading, status?.active]);
+
+  const progressStyle = useMemo(
+    () => ({ width: `${status?.power_level || 0}%` }),
+    [status?.power_level]
+  );
 
   return (
     <div className="cp-section">
@@ -52,15 +63,17 @@ export const SingularitySection: React.FC = () => {
           className={`cp-button ${status?.active ? 'danger' : ''}`}
           onClick={toggleSingularity}
           disabled={loading}
+          aria-busy={loading}
+          aria-pressed={status?.active}
         >
-          {loading ? '⏳ Traitement...' : status?.active ? '⏸️ Désactiver' : '▶️ Activer'}
+          {buttonText}
         </button>
       </div>
 
       <div className="cp-grid cp-grid-2">
         <div className="cp-card cp-stat-card">
           <span className="cp-stat-label">État Singularité</span>
-          <span className={`cp-badge ${status?.active ? 'success' : ''}`}>
+          <span className={`cp-badge ${status?.active ? 'success' : ''}`} role="status">
             <span className="cp-badge-dot" />
             {status?.active ? 'ACTIVE' : 'INACTIVE'}
           </span>
@@ -69,11 +82,14 @@ export const SingularitySection: React.FC = () => {
         <div className="cp-card cp-stat-card">
           <span className="cp-stat-label">Niveau de puissance</span>
           <span className="cp-stat-value">{status?.power_level || 0}%</span>
-          <div className="cp-stat-progress">
-            <div
-              className="cp-stat-progress-bar"
-              style={{ width: `${status?.power_level || 0}%` }}
-            />
+          <div
+            className="cp-stat-progress"
+            role="progressbar"
+            aria-valuenow={status?.power_level || 0}
+            aria-valuemin={0}
+            aria-valuemax={100}
+          >
+            <div className="cp-stat-progress-bar" style={progressStyle} />
           </div>
         </div>
       </div>

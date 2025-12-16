@@ -1,10 +1,12 @@
 /**
- * TITANE∞ OS - Section Réseau
+ * TITANE∞ OS v24.7 - Section Réseau
  * Configuration connectivité et proxy
+ * Optimisé avec ControlPanelToggle
  */
 
-import React, { useState, useEffect } from 'react';
-import { secureInvoke } from '@/lib/security';
+import React, { useCallback } from 'react';
+import { useControlPanelSection } from '@/hooks/useControlPanelSection';
+import { ControlPanelToggle } from '../components/ControlPanelToggle';
 
 interface NetworkConfig {
   online_mode: boolean;
@@ -13,98 +15,82 @@ interface NetworkConfig {
   auto_sync: boolean;
 }
 
+const DEFAULT_NETWORK_CONFIG: NetworkConfig = {
+  online_mode: true,
+  proxy_enabled: false,
+  proxy_url: '',
+  auto_sync: true,
+};
+
 export const NetworkSection: React.FC = () => {
-  const [config, setConfig] = useState<NetworkConfig>({
-    online_mode: true,
-    proxy_enabled: false,
-    proxy_url: '',
-    auto_sync: true,
-  });
-  const [saved, setSaved] = useState(false);
+  const { config, setConfig, saveConfig, isSaving, saved, error, hasChanges } =
+    useControlPanelSection<NetworkConfig>({
+      loadCommand: 'get_network_config',
+      saveCommand: 'set_network_config',
+      defaultConfig: DEFAULT_NETWORK_CONFIG,
+      saveParamKey: 'config',
+    });
 
-  useEffect(() => {
-    loadConfig();
-  }, []);
+  const toggleOnlineMode = useCallback(() => {
+    setConfig(prev => ({ ...prev, online_mode: !prev.online_mode }));
+  }, [setConfig]);
 
-  const loadConfig = async () => {
-    try {
-      const networkConfig = await secureInvoke<NetworkConfig>('get_network_config');
-      setConfig(networkConfig);
-    } catch (error) {
-      console.error('Erreur chargement config réseau:', error);
-    }
-  };
+  const toggleAutoSync = useCallback(() => {
+    setConfig(prev => ({ ...prev, auto_sync: !prev.auto_sync }));
+  }, [setConfig]);
 
-  const saveConfig = async () => {
-    try {
-      await secureInvoke('set_network_config', { config });
-      setSaved(true);
-      setTimeout(() => setSaved(false), 2000);
-    } catch (error) {
-      console.error('Erreur sauvegarde config:', error);
-    }
-  };
+  const toggleProxy = useCallback(() => {
+    setConfig(prev => ({ ...prev, proxy_enabled: !prev.proxy_enabled }));
+  }, [setConfig]);
+
+  const updateProxyUrl = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setConfig(prev => ({ ...prev, proxy_url: e.target.value }));
+    },
+    [setConfig]
+  );
 
   return (
     <div className="cp-section">
       <div className="cp-section-header">
         <h2 className="cp-section-title">Réseau</h2>
-        <button className="cp-button" onClick={saveConfig}>
-          {saved ? '✅ Sauvegardé' : '💾 Sauvegarder'}
+        <button
+          className="cp-button"
+          onClick={saveConfig}
+          disabled={isSaving || !hasChanges}
+        >
+          {saved ? '✅ Sauvegardé' : isSaving ? '⏳ Enregistrement…' : '💾 Sauvegarder'}
         </button>
       </div>
+
+      {error && <p className="cp-error">{error}</p>}
 
       <div className="cp-card">
         <h3 className="cp-card-title">Configuration</h3>
         <div className="cp-card-content">
-          <div className="cp-switch-row">
-            <div className="cp-switch-label">
-              <div className="cp-switch-title">Mode en ligne</div>
-              <div className="cp-switch-description">
-                Activer les fonctionnalités en ligne (APIs, sync)
-              </div>
-            </div>
-            <div
-              className={`cp-switch ${config.online_mode ? 'active' : ''}`}
-              onClick={() => setConfig({ ...config, online_mode: !config.online_mode })}
-            >
-              <div className="cp-switch-thumb" />
-            </div>
-          </div>
-
-          <div className="cp-switch-row">
-            <div className="cp-switch-label">
-              <div className="cp-switch-title">Synchronisation automatique</div>
-              <div className="cp-switch-description">
-                Synchroniser les données automatiquement
-              </div>
-            </div>
-            <div
-              className={`cp-switch ${config.auto_sync ? 'active' : ''}`}
-              onClick={() => setConfig({ ...config, auto_sync: !config.auto_sync })}
-            >
-              <div className="cp-switch-thumb" />
-            </div>
-          </div>
+          <ControlPanelToggle
+            checked={config.online_mode}
+            onChange={toggleOnlineMode}
+            title="Mode en ligne"
+            description="Activer les fonctionnalités en ligne (APIs, sync)"
+          />
+          <ControlPanelToggle
+            checked={config.auto_sync}
+            onChange={toggleAutoSync}
+            title="Synchronisation automatique"
+            description="Synchroniser les données automatiquement"
+          />
         </div>
       </div>
 
       <div className="cp-card">
         <h3 className="cp-card-title">Configuration proxy</h3>
         <div className="cp-card-content">
-          <div className="cp-switch-row">
-            <div className="cp-switch-label">
-              <div className="cp-switch-title">Activer le proxy</div>
-            </div>
-            <div
-              className={`cp-switch ${config.proxy_enabled ? 'active' : ''}`}
-              onClick={() =>
-                setConfig({ ...config, proxy_enabled: !config.proxy_enabled })
-              }
-            >
-              <div className="cp-switch-thumb" />
-            </div>
-          </div>
+          <ControlPanelToggle
+            checked={config.proxy_enabled}
+            onChange={toggleProxy}
+            title="Activer le proxy"
+          />
 
           {config.proxy_enabled && (
             <div className="cp-input-group">
@@ -113,7 +99,7 @@ export const NetworkSection: React.FC = () => {
                 type="text"
                 className="cp-input"
                 value={config.proxy_url}
-                onChange={e => setConfig({ ...config, proxy_url: e.target.value })}
+                onChange={updateProxyUrl}
                 placeholder="http://proxy.example.com:8080"
               />
             </div>

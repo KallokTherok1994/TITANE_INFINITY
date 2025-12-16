@@ -10,7 +10,7 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, memo } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
 import { useSingularityStateSafe } from '@/hooks/useSingularityStateSafe';
@@ -65,62 +65,66 @@ interface StatCardProps {
   subtitle?: string;
 }
 
-const StatCard = ({
+const StatCard = memo(function StatCard({
   title,
   value,
   icon,
   color,
   subtitle,
-}: StatCardProps): JSX.Element => (
-  <div
-    style={{
-      background: `linear-gradient(135deg, ${color}20, ${color}10)`,
-      border: `1px solid ${color}40`,
-      borderRadius: '12px',
-      padding: spacing[4],
-      minWidth: '150px',
-    }}
-  >
+}: StatCardProps): JSX.Element {
+  return (
     <div
       style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: spacing[2],
-        marginBottom: spacing[2],
+        background: `linear-gradient(135deg, ${color}20, ${color}10)`,
+        border: `1px solid ${color}40`,
+        borderRadius: '12px',
+        padding: spacing[4],
+        minWidth: '150px',
       }}
     >
-      <span
-        style={{
-          fontSize: '1.5rem',
-          width: '40px',
-          height: '40px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: `${color}30`,
-          borderRadius: '8px',
-        }}
-      >
-        {icon}
-      </span>
-      <span style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>{title}</span>
-    </div>
-    <div style={{ fontSize: fontSizes['2xl'], fontWeight: fontWeights.bold, color }}>
-      {value}
-    </div>
-    {subtitle && (
       <div
         style={{
-          fontSize: fontSizes.xs,
-          color: colors.neutral[500],
-          marginTop: spacing[1],
+          display: 'flex',
+          alignItems: 'center',
+          gap: spacing[2],
+          marginBottom: spacing[2],
         }}
       >
-        {subtitle}
+        <span
+          style={{
+            fontSize: '1.5rem',
+            width: '40px',
+            height: '40px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: `${color}30`,
+            borderRadius: '8px',
+          }}
+        >
+          {icon}
+        </span>
+        <span style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
+          {title}
+        </span>
       </div>
-    )}
-  </div>
-);
+      <div style={{ fontSize: fontSizes['2xl'], fontWeight: fontWeights.bold, color }}>
+        {value}
+      </div>
+      {subtitle && (
+        <div
+          style={{
+            fontSize: fontSizes.xs,
+            color: colors.neutral[500],
+            marginTop: spacing[1],
+          }}
+        >
+          {subtitle}
+        </div>
+      )}
+    </div>
+  );
+});
 
 interface ProgressBarProps {
   value: number;
@@ -128,26 +132,32 @@ interface ProgressBarProps {
   color: string;
 }
 
-const ProgressBar = ({ value, max, color }: ProgressBarProps): JSX.Element => (
-  <div
-    style={{
-      width: '100%',
-      height: '8px',
-      background: colors.neutral[800],
-      borderRadius: '4px',
-    }}
-  >
+const ProgressBar = memo(function ProgressBar({
+  value,
+  max,
+  color,
+}: ProgressBarProps): JSX.Element {
+  return (
     <div
       style={{
-        width: `${Math.min((value / max) * 100, 100)}%`,
-        height: '100%',
-        background: `linear-gradient(90deg, ${color}, ${color}cc)`,
+        width: '100%',
+        height: '8px',
+        background: colors.neutral[800],
         borderRadius: '4px',
-        transition: 'width 0.3s ease',
       }}
-    />
-  </div>
-);
+    >
+      <div
+        style={{
+          width: `${Math.min((value / max) * 100, 100)}%`,
+          height: '100%',
+          background: `linear-gradient(90deg, ${color}, ${color}cc)`,
+          borderRadius: '4px',
+          transition: 'width 0.3s ease',
+        }}
+      />
+    </div>
+  );
+});
 
 interface TabButtonProps {
   label: string;
@@ -156,32 +166,39 @@ interface TabButtonProps {
   onClick: () => void;
 }
 
-const TabButton = ({ label, icon, active, onClick }: TabButtonProps): JSX.Element => (
-  <button
-    onClick={onClick}
-    style={{
-      display: 'flex',
-      alignItems: 'center',
-      gap: spacing[2],
-      padding: `${spacing[2]} ${spacing[4]}`,
-      background: active
-        ? `linear-gradient(135deg, ${colors.emeraude.primary[500]}30, ${colors.emeraude.primary[600]}20)`
-        : 'transparent',
-      border: active
-        ? `1px solid ${colors.emeraude.primary[500]}50`
-        : '1px solid transparent',
-      borderRadius: '8px',
-      color: active ? colors.emeraude.primary[400] : colors.neutral[400],
-      cursor: 'pointer',
-      transition: 'all 0.2s ease',
-      fontSize: fontSizes.sm,
-      fontWeight: active ? fontWeights.semibold : fontWeights.normal,
-    }}
-  >
-    <span>{icon}</span>
-    <span>{label}</span>
-  </button>
-);
+const TabButton = memo(function TabButton({
+  label,
+  icon,
+  active,
+  onClick,
+}: TabButtonProps): JSX.Element {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: spacing[2],
+        padding: `${spacing[2]} ${spacing[4]}`,
+        background: active
+          ? `linear-gradient(135deg, ${colors.emeraude.primary[500]}30, ${colors.emeraude.primary[600]}20)`
+          : 'transparent',
+        border: active
+          ? `1px solid ${colors.emeraude.primary[500]}50`
+          : '1px solid transparent',
+        borderRadius: '8px',
+        color: active ? colors.emeraude.primary[400] : colors.neutral[400],
+        cursor: 'pointer',
+        transition: 'all 0.2s ease',
+        fontSize: fontSizes.sm,
+        fontWeight: active ? fontWeights.semibold : fontWeights.normal,
+      }}
+    >
+      <span>{icon}</span>
+      <span>{label}</span>
+    </button>
+  );
+});
 
 // ─────────────────────────────────────────────────────────────────
 // Main Component
