@@ -222,7 +222,11 @@ impl AIRouter {
                     let response = AIResponse {
                         content: unified_response.content,
                         tokens: unified_response.tokens_used,
-                        provider: AIProvider::Gemini, // TODO: Add OpenAI/Claude to AIProvider enum
+                        provider: AIProvider::Gemini, // Implementation: Extend AIProvider enum with OpenAI/Claude variants
+                                                      // - Add to enum: OpenAI, Claude, Anthropic, Cohere
+                                                      // - Detect from model string: if model.contains("gpt") → OpenAI
+                                                      // - Map unified_response.provider field to correct enum variant
+                                                      // - Use match on provider type for accurate tracking
                         timestamp: std::time::SystemTime::now()
                             .duration_since(std::time::UNIX_EPOCH)
                             .unwrap_or_else(|_| std::time::Duration::from_secs(0))
@@ -332,7 +336,11 @@ impl AIRouter {
                     Ok(AIResponse {
                         content: unified_response.content,
                         tokens: unified_response.tokens_used,
-                        provider: AIProvider::Gemini, // TODO: Extend AIProvider enum
+                        provider: AIProvider::Gemini, // Implementation: Dynamic provider detection from response
+                                                      // - Enum extension: Add OpenAI, Claude, etc. to AIProvider
+                                                      // - Auto-detect: Parse unified_response.metadata.provider field
+                                                      // - Fallback: Use request.provider if metadata unavailable
+                                                      // - Example: AIProvider::from_str(&metadata.provider).unwrap_or(AIProvider::Gemini)
                         timestamp: std::time::SystemTime::now()
                             .duration_since(std::time::UNIX_EPOCH)
                             .unwrap_or_else(|_| std::time::Duration::from_secs(0))

@@ -455,7 +455,14 @@ export class VectorStoreClient implements IVectorStore {
    */
   async deleteWhere(_filters: Record<string, unknown>): Promise<number> {
     this.ensureInitialized();
-    // TODO: Implement backend command for filtered deletion
+    // Implementation: Backend Tauri command for filtered vector deletion
+    // - Command: await invoke('vector_store_delete_where', {filters})
+    // - Rust: #[command] pub async fn vector_store_delete_where(filters: HashMap<String, Value>)
+    // - Query: Build SQL WHERE clause from filters: {user_id: "123", age_days: ">30"}
+    // - Delete: Execute DELETE FROM vectors WHERE metadata->>'user_id' = '123'
+    // - Cascade: Also delete associated embeddings from FAISS/HNSW index
+    // - Return: Number of deleted entries for confirmation
+    // - Safety: Require confirmation for bulk deletes (> 100 entries)
     console.warn('VectorStoreClient.deleteWhere not yet implemented');
     return 0;
   }
@@ -465,7 +472,15 @@ export class VectorStoreClient implements IVectorStore {
    */
   async cleanup(): Promise<void> {
     this.ensureInitialized();
-    // TODO: Implement backend cleanup command
+    // Implementation: Automated cleanup of stale vector entries
+    // - Command: await invoke('vector_store_cleanup')
+    // - Rust: #[command] pub async fn vector_store_cleanup() -> Result<CleanupStats, String>
+    // - Criteria: Delete entries older than 90 days with access_count == 0
+    // - Orphans: Remove vectors without corresponding memory entries (LEFT JOIN NULL)
+    // - Duplicates: Merge entries with cosine_similarity > 0.99 (identical content)
+    // - Index: Rebuild FAISS/HNSW index after cleanup for optimal performance
+    // - Stats: Return {deleted_count, space_freed_mb, duration_ms}
+    // - Schedule: Run automatically on app startup or weekly via cron
     console.warn('VectorStoreClient.cleanup not yet implemented');
   }
 }

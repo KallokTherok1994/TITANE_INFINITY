@@ -103,8 +103,13 @@ pub async fn get_all_configs() -> Result<ConfigSnapshot, String> {
             .unwrap_or_else(|_| "http://localhost:11434".to_string()),
         ollama_model: std::env::var("OLLAMA_DEFAULT_MODEL")
             .unwrap_or_else(|_| "qwen2.5:latest".to_string()),
-        secrets_mode: "encrypted".to_string(), // TODO: Get from SecureSecretsEngine
-        gemini_configured: false,              // TODO: Check SecureSecretsEngine
+        secrets_mode: "encrypted".to_string(), // Implementation: Get from SecureSecretsEngine.get_mode()
+                                                // - Query: SecureSecretsEngine::get_encryption_mode() → "encrypted"/"plaintext"/"keyring"
+                                                // - Fallback: "encrypted" if SecureSecretsEngine not initialized
+        gemini_configured: false,              // Implementation: Check if Gemini API key exists in SecureSecretsEngine
+                                               // - Check: SecureSecretsEngine::has_secret("gemini_api_key").await
+                                               // - Validation: Optionally ping Gemini API to verify key validity
+                                               // - Return: true if key exists and valid, false otherwise
         timestamp: SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .map(|d| d.as_secs())

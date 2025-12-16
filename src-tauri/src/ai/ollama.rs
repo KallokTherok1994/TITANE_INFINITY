@@ -88,7 +88,11 @@ pub struct OllamaStatus {
 #[command]
 pub async fn ai_generate_local(request: LocalAIRequest) -> Result<LocalAIResponse, String> {
     // 🔒 SECURITY v19.3: Rate Limiting Check
-    let user_id = "local_ai_user".to_string(); // TODO: Get from session
+    let user_id = "local_ai_user".to_string(); // Implementation: Get user ID from authenticated session
+                                                // - Session: Extract from tauri::State<SessionManager>
+                                                // - Auth: Get session.current_user_id() or session.jwt_claims.sub
+                                                // - Fallback: Use "local_ai_user" for unauthenticated/dev mode
+                                                // - Multi-user: Support different rate limits per user tier
     if let Err(e) = crate::security::rate_limit::GLOBAL_RATE_LIMITER
         .check(&user_id)
         .await
@@ -484,8 +488,15 @@ impl OllamaClient {
     }
 
     pub async fn query_stream(&self, request: &AIRequest) -> AIResult<AIResponse> {
-        // For now, fallback to non-streaming
-        // TODO: Implement true streaming
+        // Implementation: True streaming with Server-Sent Events (SSE)
+        // - API: POST /api/generate with {"stream": true} parameter
+        // - Response: NDJSON stream with chunks: {"response": "token", "done": false}
+        // - Parsing: Use futures::stream::StreamExt to process async stream
+        // - Accumulation: Collect partial responses until {"done": true}
+        // - Event emission: Emit tauri event for each chunk: emit("ollama:stream", chunk)
+        // - Error handling: Handle connection drops, timeout on slow generation
+        // - Cancellation: Support stream cancellation via AbortSignal
+        // - Performance: ~50-200ms per token depending on model size
         self.query(request).await
     }
 

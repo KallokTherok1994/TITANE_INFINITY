@@ -88,7 +88,9 @@
       "Bash(git log:*)",
       "Bash(test:*)",
       "Bash(git ls-tree:*)",
-      "Bash(npm run)"
+      "Bash(npm run)",
+      "Bash(for file in /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/components/test/ParlerTTSTestPanel.tsx /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/components/debug/ChatDebugPanel.tsx /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/components/GoogleCloudTester.tsx /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/components/vision/VisionDebugOverlay.tsx /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/components/LiveDebuggerConsole.tsx)",
+      "Bash(do echo \"=== $file ===\" wc -l \"$file\" grep \"^import\\|^export\" \"$file\")"
     ],
     "deny": [],
     "ask": []
