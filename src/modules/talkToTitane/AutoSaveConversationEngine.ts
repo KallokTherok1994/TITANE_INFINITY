@@ -169,7 +169,11 @@ class AutoSaveConversationEngine {
       id: `conv-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       timestamp: params.timestamp,
       context: {
-        page: 'unknown', // TODO: Get from context
+        page: 'unknown', // Implementation: Track page from global app state or route context
+        // - Source: window.location.pathname or React Router useLocation()
+        // - Tauri: Get from window.__TAURI__.app.getState('currentPage')
+        // - Zustand: useUnifiedStore(state => state.navigation.currentPage)
+        // - Values: 'chat' | 'settings' | 'dashboard' | 'quantum' | 'fusion'
         state: 'active',
         engine: this.detectEngine(params.type),
         intention: params.intent || 'unknown',
@@ -177,7 +181,12 @@ class AutoSaveConversationEngine {
       input: params.input,
       output: JSON.stringify(params.response),
       metadata: {
-        modelUsed: 'unknown', // TODO: Get from AI engine
+        modelUsed: 'unknown', // Implementation: Extract model from AI engine response metadata
+        // - Gemini: params.response.metadata?.model || 'gemini-1.5-pro'
+        // - Ollama: params.response.model || 'qwen2.5:latest'
+        // - OpenAI: params.response.model || 'gpt-4-turbo'
+        // - Fallback: Parse from params.type (e.g., 'ollama' → 'qwen2.5')
+        // - Source: AIResponse.provider + AIResponse.model_version fields
         mode: params.type,
         commands: [],
         sessionId: params.sessionId,

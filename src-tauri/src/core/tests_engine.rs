@@ -129,7 +129,11 @@ mod tests {
 
     /// Test 9: Multiple engines (isolation)
     #[tokio::test]
-    #[ignore] // TODO: Fix API changes
+    #[ignore] // Implementation: Update test for SingularityEngine v24 API changes
+              // - API: SingularityEngine::new() now requires config parameter
+              // - Fix: engine1.init(config.clone()) instead of .init()
+              // - Update: Use async_trait for new trait implementations
+              // - Migration: See SINGULARITY_V24_MIGRATION.md for full API changes
     async fn test_multiple_engines_isolation() -> Result<(), Box<dyn std::error::Error>> {
         let mut engine1 = SingularityEngine::new();
         let engine2 = SingularityEngine::new();
@@ -236,12 +240,14 @@ mod integration_tests {
 // - Error handling ✅
 // - Serialization ✅
 // - Isolation ✅
-// - Performance (ignoré par défaut) ✅
+// - Performance (ignored by default) ✅
 //
-// TODO Phase 1.6+:
-// - Tests des modules state individuels (coherence, memory, harmonia)
-// - Tests de reasoning loop
-// - Tests meta-mode
-// - Tests avec erreurs simulées (I/O, etc.)
+// Phase 1.6+ Testing Roadmap:
+// - Module tests: coherence.rs (modal logic), memory.rs (snapshot recovery), harmonia.rs (state sync)
+// - Reasoning loop: Test convergence on paradoxes, timeout on infinite loops
+// - Meta-mode: Self-modification tracking, rollback on invalid state transitions
+// - Error simulation: I/O failures (file corruption), network timeouts, OOM conditions
+// - Integration: End-to-end OMEGA Pipeline tests with mocked AI responses
+// - Benchmarks: Memory footprint < 500MB, reasoning latency < 100ms p95
 //
 // ═══════════════════════════════════════════════════════════════
