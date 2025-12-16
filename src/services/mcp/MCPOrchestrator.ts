@@ -770,23 +770,27 @@ class MCPOrchestratorClass implements MCPOperations {
     // Integration: Use vector embeddings to find similar content
     // Similarity threshold: 0.9+ = merge candidates
     const seenHashes = new Set<string>();
+    let fuseCount = 0; // Change const to let
     validEntries.forEach((e, idx) => {
-      if (seenHashes.has(e.summary)) return;
+      if (e.summary && seenHashes.has(e.summary)) return;
 
       // Find similar entries (simplified: exact summary match)
       const similar = validEntries
         .slice(idx + 1)
-        .filter(other => other.summary === e.summary && !seenHashes.has(other.summary));
+        .filter(
+          other =>
+            other.summary && other.summary === e.summary && !seenHashes.has(other.summary)
+        );
 
       if (similar.length > 0) {
         // Merge: keep strongest, add access counts
         e.accessCount += similar.reduce((sum, s) => sum + s.accessCount, 0);
         e.strength = Math.max(e.strength, ...similar.map(s => s.strength));
-        similar.forEach(s => seenHashes.add(s.summary));
+        similar.forEach(s => s.summary && seenHashes.add(s.summary));
         fuseCount += similar.length;
       }
 
-      seenHashes.add(e.summary);
+      if (e.summary) seenHashes.add(e.summary);
     });
 
     // 4. Archive: Move old to higher tier

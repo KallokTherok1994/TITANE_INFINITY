@@ -199,6 +199,7 @@ export interface MemoryEntry {
   id: string;
   tier: MemoryTier;
   content: unknown;
+  summary?: string; // Optional summary for memory fusion
   metadata: {
     isUseful: boolean;
     isTrue: boolean;
