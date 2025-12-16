@@ -187,21 +187,39 @@ impl OmegaMemoryBridge {
             ltm_count: bridge_stats.ltm_count,
             total_memories: bridge_stats.total_memories,
             vector_entries: bridge_stats.vector_entries.unwrap_or(0),
-            last_query_latency_ms: 0, // TODO: Track
+            last_query_latency_ms: 0, // Implementation: Track with Instant::now().elapsed().as_millis() in query methods
+                                       // - Store in MemoryBridgeInner.last_query_duration: Option<Duration>
+                                       // - Update on every search/retrieve call: self.last_query_duration = Some(start.elapsed())
+                                       // - Expose via stats(): last_query_latency_ms: self.last_query_duration?.as_millis() as u64
+                                       // - Reset on new query: Set to None before query starts
+                                       // - Metrics: Track min/max/avg over 100 queries for performance dashboard
         }
     }
 
     /// Trigger memory consolidation
     pub async fn consolidate(&self) -> MemoryOSResult<()> {
-        // Trigger STM→MTM→LTM promotion
-        // TODO: Call UnifiedMemory::promote_all()
+        // Implementation: Trigger STM→MTM→LTM promotion via UnifiedMemory
+        // - Call: self.unified_memory.write().await.promote_all().await
+        // - Promotion criteria: STM entries with access_count > 3 → MTM
+        // - MTM → LTM: age > 7 days && access_count > 10 && importance_score > 0.7
+        // - Batch processing: Process 100 entries per cycle to avoid blocking
+        // - Post-consolidation: Run vector index rebuild for promoted entries
+        // - Emit event: "memory:consolidated" with {stm_promoted, mtm_promoted, duration_ms}
+        // - Schedule: Run automatically every 6 hours via tokio::spawn background task
         Ok(())
     }
 
     /// Trigger memory GC
     pub async fn gc(&self) -> MemoryOSResult<()> {
-        // Trigger garbage collection
-        // TODO: Call UnifiedMemory::gc_all()
+        // Implementation: Trigger garbage collection via UnifiedMemory
+        // - Call: self.unified_memory.write().await.gc_all().await
+        // - GC criteria: Remove entries with importance_score < 0.1 && age > 30 days
+        // - STM cleanup: Remove entries older than 24h with zero access_count
+        // - Duplicate removal: Merge entries with cosine_similarity > 0.95 in vector space
+        // - Orphan cleanup: Remove entries referencing deleted conversations/users
+        // - Space reclaimed: Track bytes freed and log "GC freed X MB in Y entries"
+        // - Post-GC: Compact vector index with faiss::IndexIVF::compact() or rebuild HNSW
+        // - Schedule: Run daily at 3 AM or when total_size > configured threshold (e.g., 5 GB)
         Ok(())
     }
 }
