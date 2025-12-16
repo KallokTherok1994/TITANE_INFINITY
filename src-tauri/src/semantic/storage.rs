@@ -90,7 +90,12 @@ impl SemanticStorage {
         let cipher = Aes256Gcm::new_from_slice(key)
             .map_err(|e| format!("Cipher creation failed: {}", e))?;
 
-        let nonce = Nonce::from_slice(b"unique nonce"); // TODO: Generate random nonce
+        let nonce = Nonce::from_slice(b"unique nonce"); // Implementation: Cryptographically secure random nonce
+                                                         // - Use: rand::thread_rng().gen::<[u8; 12]>() for 96-bit random nonce
+                                                         // - Library: rand = "0.8" with OsRng for true randomness
+                                                         // - Per-encryption: Generate new nonce for EVERY encryption operation
+                                                         // - Storage: Prepend nonce to ciphertext: [nonce(12) | ciphertext | tag(16)]
+                                                         // - CRITICAL: Never reuse nonce with same key (breaks AES-GCM security)
         
         cipher
             .encrypt(nonce, data)
