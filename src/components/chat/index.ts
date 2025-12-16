@@ -15,6 +15,7 @@
 
 export { MessageBubble } from './MessageBubble';
 export { MessageList } from './MessageList';
+export { MessageListOptimized } from './MessageListOptimized';
 export { VirtualMessageList, useMessageListScroll } from './VirtualMessageList';
 export { ChatInput } from './ChatInput';
 export { ChatFileImport } from './ChatFileImport';

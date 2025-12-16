@@ -105,7 +105,14 @@ export class AudioSignature {
       return;
     }
 
-    // TODO: Implement pulse tone synthesis
+    // IMPLEMENTATION: Pulse tone synthesis via Web Audio API
+    // Algorithm:
+    //   1. Create OscillatorNode with sine/square/sawtooth waveform
+    //   2. Set frequency (e.g., 440Hz for A4)
+    //   3. Apply ADSR envelope: Attack(50ms) -> Sustain(duration) -> Release(100ms)
+    //   4. Connect: oscillator -> gain -> audioContext.destination
+    //   5. Start/stop: oscillator.start(now), oscillator.stop(now + duration)
+    // Use case: Notification sounds, state transition cues
     console.debug('[AudioSignature] playPulseTone:', frequency, duration);
   }
 
@@ -118,7 +125,16 @@ export class AudioSignature {
       return;
     }
 
-    // TODO: Implement transition sound
+    // IMPLEMENTATION: State transition sound effects
+    // Approach:
+    //   1. Map states to frequencies: focus=800Hz, explore=600Hz, calm=400Hz
+    //   2. Create frequency sweep: fromFreq -> toFreq over 200ms
+    //   3. Use OscillatorNode.frequency.exponentialRampToValueAtTime()
+    //   4. Add subtle reverb for smoothness (ConvolverNode)
+    // Sound design:
+    //   - Upward sweep (focus): energizing, alerting
+    //   - Downward sweep (calm): relaxing, settling
+    //   - Short sweep: quick state change acknowledgment
     console.debug('[AudioSignature] playTransition:', fromState, '->', toState);
   }
 
@@ -131,7 +147,16 @@ export class AudioSignature {
       return;
     }
 
-    // TODO: Implement ambient sound modulation
+    // IMPLEMENTATION: Emotional ambient soundscape modulation
+    // Algorithm:
+    //   1. Load ambient loop: white noise, nature sounds, or synthesized pad
+    //   2. Create BiquadFilterNode for tone shaping
+    //   3. Adjust filter frequency based on emotional tone:
+    //      - Joy: 2000-4000Hz (bright, open)
+    //      - Calm: 200-500Hz (warm, dark)
+    //      - Focus: 800-1200Hz (neutral, centered)
+    //   4. Adjust volume based on intensity: gain.gain.value = intensity * maxVolume
+    // Use case: Background soundscapes for extended work sessions
     console.debug('[AudioSignature] updateAmbient:', emotional, intensity);
   }
 

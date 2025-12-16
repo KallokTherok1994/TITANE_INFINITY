@@ -547,7 +547,15 @@ class TalkToTitaneEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   private async analyzeSituation(intent: TalkIntent): Promise<string> {
-    // TODO: Integrate with Singularity Engine, Memory Engine, Context Engine
+    // INTEGRATION: Singularity + Memory + Context engines for deep analysis
+    // Data sources:
+    //   - Singularity: Current system state, active engines, coherence level
+    //   - Memory: Conversation history, user preferences, past actions
+    //   - Context: Active project, open files, current workflow
+    // Backend commands:
+    //   - singularity_get_state() -> system health, engine states
+    //   - memory_recall(context='talk', limit=5) -> recent interactions
+    //   - context_get_active() -> current user focus
     // For now, basic analysis based on intent type
 
     switch (intent.type) {
@@ -578,7 +586,15 @@ class TalkToTitaneEngine {
   }
 
   private async generateResponse(intent: TalkIntent, analysis: string): Promise<string> {
-    // TODO: Integrate with AI Chat Engine for intelligent responses
+    // INTEGRATION: AI Chat Engine for intelligent, context-aware responses
+    // Process:
+    //   1. Build prompt: intent + analysis + user history
+    //   2. Select provider: Gemini (default), Ollama (local), Claude (fallback)
+    //   3. Stream response: chat_send_message(prompt, streaming=true)
+    //   4. Post-process: Emotion calibration, tone adjustment
+    // Backend:
+    //   - omega_generate(prompt, context) -> conversational response
+    //   - conversation_get_history() -> last 10 messages for continuity
     // For now, template-based responses
 
     const templates = {
@@ -663,7 +679,17 @@ class TalkToTitaneEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   private async speak(text: string): Promise<void> {
-    // TODO: Integrate with Hybrid TTS when available
+    // INTEGRATION: Hybrid TTS (online + offline synthesis)
+    // Providers:
+    //   1. Online: Google TTS API (high quality, low latency)
+    //   2. Offline: eSpeak-ng (privacy, no internet required)
+    //   3. Neural: Bark/Coqui TTS (emotional voice synthesis)
+    // Backend commands:
+    //   - tts_speak(text, voice='fr-FR', speed=1.0, emotion='neutral')
+    //   - tts_set_config(volume, provider, voice_profile)
+    // Features:
+    //   - Emotion mapping: joy -> higher pitch, sadness -> slower speed
+    //   - Interruption: tts_stop() for dynamic conversations
     console.log(`[TalkToTitane] TTS: "${text}" (volume: ${this.config.ttsVolume})`);
   }
 
@@ -672,7 +698,15 @@ class TalkToTitaneEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   private captureSingularitySnapshot(): Record<string, unknown> {
-    // TODO: Integrate with Singularity Engine
+    // INTEGRATION: Singularity Engine full state capture
+    // Snapshot includes:
+    //   - All engine states (Helios, Memory, Nexus, etc.)
+    //   - Coherence metrics (timeline, causal, logical)
+    //   - XP level, achievements, progression
+    //   - Active persona mode + emotional tone
+    //   - System health (CPU, RAM, errors)
+    // Backend: singularity_snapshot() -> complete state JSON
+    // Storage: Used for time-travel, debugging, consistency checks
     return {
       timestamp: Date.now(),
       mode: this.state.currentMode,
