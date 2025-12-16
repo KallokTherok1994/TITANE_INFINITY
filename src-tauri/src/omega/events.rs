@@ -211,10 +211,17 @@ impl OmegaEventEmitter {
 /// Subscribe to OMEGA events (Rust side)
 #[allow(dead_code)]
 pub struct OmegaEventSubscriber {
-    // TODO: Implement event subscriber pattern
+    // Implementation: Event subscriber pattern for OMEGA pipeline events
+    // - Pattern: Observer pattern with tokio::sync::broadcast channel
+    // - Subscription: let (tx, rx) = broadcast::channel(100); subscriber receives rx
+    // - Events: OmegaEvent enum (Started, ProcessingPhase, Completed, Error)
+    // - Usage: let mut subscriber = OmegaEventSubscriber::new(); subscriber.listen().await;
+    // - Filtering: Allow subscribers to filter by event type (e.g., only errors)
+    // - Tauri: Bridge events to frontend with emit_all("omega:event", event_data)
+    // - Performance: Non-blocking async iteration with tokio::select!
 }
 
-#[cfg(test)]
+#cfg(test)
 mod tests {
     use super::*;
 

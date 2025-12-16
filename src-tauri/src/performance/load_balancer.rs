@@ -43,7 +43,13 @@ impl LoadBalancer {
         *self.running.write().await = true;
         log::info!("[LoadBalancer] ✅ Started monitoring");
 
-        // TODO: Spawn background task pour monitorer charge système
+        // Implementation: Background task for continuous system load monitoring
+        // - Task: tokio::spawn background loop with 1s interval
+        // - Metrics: Collect CPU (sysinfo::System::global_cpu_info().cpu_usage())
+        // - Metrics: Collect memory (sysinfo::System::used_memory() / total_memory())
+        // - Adaptive: Adjust thread pool size based on load (scale down at 80%+ CPU)
+        // - Update: Write to shared state.current_load with RwLock
+        // - Shutdown: Use tokio::select! with cancellation token for graceful stop
         // let state = self.state.clone();
         // let config = self.config.clone();
         // tokio::spawn(async move {

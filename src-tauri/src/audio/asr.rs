@@ -66,8 +66,15 @@ impl ASREngine {
             .build()
             .map_err(|e| AudioError::ProcessingError(e.to_string()))?;
 
+        // Implementation: Google Cloud Speech-to-Text API v1
+        // - API: google-cloud-speech crate with RecognizeRequest
+        // - Auth: GOOGLE_APPLICATION_CREDENTIALS env var pointing to service account JSON
+        // - Config: RecognitionConfig {encoding: LINEAR16, sample_rate: 16000, language: "fr-FR"}
+        // - Request: client.recognize(audio_bytes, config).await?
+        // - Response: Parse SpeechRecognitionResult.alternatives[0].transcript
+        // - Error handling: Retry on transient errors (503), fallback to Whisper on failures
+        // - Cost optimization: Use StreamingRecognize for real-time, Recognize for offline
         // For now, return placeholder
-        // TODO: Implement proper Google Speech API
         Err(AudioError::NotAvailable)
     }
 

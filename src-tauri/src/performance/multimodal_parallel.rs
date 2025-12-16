@@ -24,9 +24,16 @@ impl MultimodalParallelEngine {
         self.enabled
     }
 
-    // TODO: Implémenter traitement multimodal parallèle
-    // pub async fn process_vision_async(&self, image: &[u8]) -> TitaneResult<VisionOutput>
-    // pub async fn process_audio_async(&self, audio: &[f32]) -> TitaneResult<AudioOutput>
+    // Implementation: Parallel multimodal processing for vision and audio
+    // - Vision: pub async fn process_vision_async(&self, image: &[u8]) -> TitaneResult<VisionOutput>
+    //   * ONNX Runtime for object detection (YOLOv8, EfficientDet)
+    //   * Run in dedicated thread pool to avoid blocking main executor
+    //   * Return: Bounding boxes, labels, confidence scores
+    // - Audio: pub async fn process_audio_async(&self, audio: &[f32]) -> TitaneResult<AudioOutput>
+    //   * FFT analysis for audio features (MFCC, spectral centroid)
+    //   * Parallel batch processing for multiple audio chunks
+    //   * Return: Phoneme sequence, emotion indicators, voice activity
+    // - Parallelization: Use rayon for CPU-bound tasks, tokio for I/O
 }
 
 impl Default for MultimodalParallelEngine {

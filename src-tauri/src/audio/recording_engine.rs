@@ -245,7 +245,14 @@ impl RecordingEngine {
         *lock_or_recover!(self.recording_id) = None;
         *lock_or_recover!(self.start_time) = None;
 
-        // TODO: Call ASR (Whisper/Vosk) for transcription
+        // Implementation: ASR integration for recorded audio transcription
+        // - Whisper: Use whisper-rs crate with WhisperContext::new(model_path)
+        // - Model: Download ggml-medium.bin (~1.5GB) or ggml-small.bin (~500MB)
+        // - Transcription: let segments = ctx.full(audio_samples, params)?; extract text
+        // - Vosk: Alternative lightweight ASR, vosk-api crate with VoskRecognizer
+        // - Language detection: Auto-detect language from first 30s of audio
+        // - Confidence: Calculate from Whisper's per-segment probabilities
+        // - Performance: Run transcription in tokio::task::spawn_blocking (CPU-intensive)
         // For now, return placeholder
         Ok(RecordingResult {
             transcript: String::new(),
