@@ -589,33 +589,25 @@ Format: [Audit complet] + [Réponse utilisateur]
       const processedResponse = this.postProcess(response, finalConfig);
       logger.debug('Response processed');
 
-      // ═══ PHASE 1.7: SAUVEGARDE UNIFIED MEMORY (Single Source of Truth) ═══
-      pipelineSteps.push('memory-saving');
-      logger.debug('Step 1.7: Saving to unified memory...');
+      // ═══ PHASE 1.7: PARALLEL MEMORY SAVING (v22Ω Optimization) ═══
+      pipelineSteps.push('memory-saving-parallel');
+      logger.debug('Step 1.7: Saving to memory engines (parallel)...');
 
-      try {
-        // Importance calculée selon le mode
-        const importance = this.calculateImportance(finalConfig.mode, validatedMessage);
-        await unifiedMemory.store(
+      const importance = this.calculateImportance(finalConfig.mode, validatedMessage);
+      const memorySaveStart = Date.now();
+
+      // v22Ω: Parallel memory saves for better performance
+      const [unifiedResult, cognitiveResult] = await Promise.allSettled([
+        // Unified Memory save
+        unifiedMemory.store(
           `${validatedMessage}\n\n${processedResponse.content}`,
           'assistant',
           importance,
           finalConfig.conversationId,
           [finalConfig.mode, 'conversation']
-        );
-
-        logger.debug('Interaction saved to unified memory');
-      } catch (error) {
-        logger.warn('Memory save failed (non-blocking)', error);
-        autoHealed = true;
-      }
-
-      // ═══ PHASE 1.7: COGNITIVE MEMORY SAVING (v∞.42) ═══
-      pipelineSteps.push('cognitive-memory-saving');
-      logger.debug('Step 1.7: Saving to cognitive engines...');
-
-      try {
-        await this.withTimeout(
+        ),
+        // Cognitive Memory save with timeout
+        this.withTimeout(
           cognitiveOmega.saveInteraction(
             conversation_id,
             validatedMessage,
@@ -629,22 +621,34 @@ Format: [Audit complet] + [Réponse utilisateur]
           ),
           4000,
           'Cognitive memory save timeout'
-        );
+        ),
+      ]);
 
-        if (traceId) {
-          await cognitiveOmega.logPhase(traceId, 'memory_saved', {
-            conversation_id,
-            mode: finalConfig.mode,
-          });
-        }
-
-        logger.debug('Interaction saved to cognitive engines', {
-          engines: ['memory', 'goals', 'facts', 'evaluation'],
-        });
-      } catch (error) {
-        logger.warn('Cognitive memory save failed (continuing)', { error });
+      // Handle results
+      if (unifiedResult.status === 'rejected') {
+        logger.warn('Unified memory save failed (non-blocking)', unifiedResult.reason);
         autoHealed = true;
       }
+
+      if (cognitiveResult.status === 'rejected') {
+        logger.warn(
+          'Cognitive memory save failed (non-blocking)',
+          cognitiveResult.reason
+        );
+        autoHealed = true;
+      } else if (traceId) {
+        await cognitiveOmega.logPhase(traceId, 'memory_saved', {
+          conversation_id,
+          mode: finalConfig.mode,
+        });
+      }
+
+      logger.debug('Memory saves completed', {
+        parallel: true,
+        durationMs: Date.now() - memorySaveStart,
+        unified: unifiedResult.status,
+        cognitive: cognitiveResult.status,
+      });
 
       // End observability trace
       if (traceId) {
@@ -1303,7 +1307,7 @@ Que souhaites-tu explorer ?`;
       try {
         memoryContext = await this.withTimeout(
           memoryIntegration.loadContext(finalConfig.contextSources || {}),
-          3000,
+          5000, // v22Ω: unified with generate() timeout
           'Memory context timeout (stream)'
         );
         context = this.formatMemoryContext(memoryContext);
