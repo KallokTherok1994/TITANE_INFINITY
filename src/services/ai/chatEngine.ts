@@ -48,6 +48,7 @@ import type {
   ChatEngineCompletion,
 } from '@services/tauri';
 import { semanticMemoryEngine as _semanticMemoryEngine } from '@/services/memory/semanticMemoryEngine';
+import { MEMORY_TIMEOUTS } from '@/config/aiTimeouts.config'; // v22Ω: Centralized timeouts
 import { consistencyEngine as _consistencyEngine } from '@/services/consistency/consistencyEngine';
 import { cognitiveOmega } from '@/services/cognitive/cognitiveOmegaIntegration';
 import { createLogger } from '@/utils/logger';
@@ -309,12 +310,12 @@ class ChatEngineOmega {
       let cognitiveContext = '';
       const contextLoadStart = Date.now();
 
-      // v22Ω: Parallel loading of both context sources
+      // v22Ω: Parallel loading of both context sources (using centralized timeouts)
       const [memoryResult, cognitiveEnrichResult] = await Promise.allSettled([
         // Memory context loading
         this.withTimeout(
           memoryIntegration.loadContext(finalConfig.contextSources || {}),
-          5000,
+          MEMORY_TIMEOUTS.contextLoad,
           'Memory context timeout'
         ),
         // Cognitive enrichment (runs in parallel!)
@@ -324,7 +325,7 @@ class ChatEngineOmega {
             conversation_id,
             finalConfig.mode
           ),
-          3000,
+          MEMORY_TIMEOUTS.cognitiveEnrichment,
           'Cognitive context enrichment timeout'
         ),
       ]);
@@ -634,7 +635,7 @@ Format: [Audit complet] + [Réponse utilisateur]
               processingTime: Date.now() - pipelineStartTime,
             }
           ),
-          4000,
+          MEMORY_TIMEOUTS.memorySave,
           'Cognitive memory save timeout'
         ),
       ]);
