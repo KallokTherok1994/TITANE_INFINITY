@@ -168,6 +168,8 @@ describe('SessionManager v20.0Ω', () => {
   it('should list sessions sorted by most recent', async () => {
     const { SessionManager } = await import('@/services/sessions/SessionManager');
     const manager = new SessionManager();
+    // ✨ v24.2.1: Clear sessions first due to shared debounced storage
+    manager.clearAllSessions();
 
     manager.createSession({ title: 'Session 1' });
     await new Promise(r => setTimeout(r, 10));

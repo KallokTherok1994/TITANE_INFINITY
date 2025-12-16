@@ -86,6 +86,8 @@ export class LRUCache<T = unknown> {
   private cache: Map<string, CacheEntry<T>>;
   private config: CacheConfig;
   private accessOrder: string[]; // LRU tracking
+  // ✨ v24.2.1: Store interval for cleanup
+  private cleanupInterval: ReturnType<typeof setInterval> | null = null;
   private stats = {
     hits: 0,
     misses: 0,
@@ -100,9 +102,10 @@ export class LRUCache<T = unknown> {
     this.cache = new Map();
     this.accessOrder = [];
 
+    // ✨ v24.2.1: Store interval reference for proper cleanup
     // Cleanup timer toutes les 30s
     if (this.config.enabled) {
-      setInterval(() => this.cleanup(), REFRESH_INTERVALS.SLOW);
+      this.cleanupInterval = setInterval(() => this.cleanup(), REFRESH_INTERVALS.SLOW);
     }
   }
 
@@ -301,6 +304,19 @@ export class LRUCache<T = unknown> {
       cognitiveBypass: 0,
       patternExtensions: 0,
     };
+  }
+
+  /**
+   * ✨ v24.2.1: Destroy cache and cleanup interval
+   * Call this when the cache is no longer needed to prevent memory leaks
+   */
+  destroy(): void {
+    if (this.cleanupInterval) {
+      clearInterval(this.cleanupInterval);
+      this.cleanupInterval = null;
+    }
+    this.clear();
+    logger.info('Cache destroyed and interval cleared');
   }
 
   /**

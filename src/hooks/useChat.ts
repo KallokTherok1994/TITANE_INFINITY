@@ -20,6 +20,8 @@ import type { AIMessage, AIProviderName } from '../services/ai/types';
 import type { HarmonizedMessage } from '@/types/cognitiveKernel';
 import { hybridTTS } from '@services/tts/hybridTTS';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
+// ✨ v24.2.1 - Streaming Debounce for Performance
+import { createStreamingBatcher } from '@/utils/streamingDebounce';
 import {
   chatService,
   type ChatMessage as BackendChatMessage,
@@ -295,6 +297,17 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     useState<ProviderPreference>(() => readStoredPreferredProvider());
   const [lastProviderUsed, setLastProviderUsed] = useState<AIProviderName | null>(null);
   const debugEntriesRef = useRef<ChatDebugEntry[]>([]);
+
+  // ✨ v24.2.1: Refs for stable sendMessage dependencies
+  const voiceEnabledRef = useRef(options.voiceEnabled);
+  const omnisTimeoutRef = useRef(options.omnisConfig?.timeoutMs ?? 20000);
+
+  // ✨ v24.2.1: Update refs when options change
+  useEffect(() => {
+    voiceEnabledRef.current = options.voiceEnabled;
+    omnisTimeoutRef.current = options.omnisConfig?.timeoutMs ?? 20000;
+  }, [options.voiceEnabled, options.omnisConfig?.timeoutMs]);
+
   const [debugEntries, setDebugEntries] = useState<ChatDebugEntry[]>([]);
 
   // ✨ v24.3.0 - Provider Readiness Check (P1 fix)
@@ -750,9 +763,10 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       const historyBuffer = applyMessagesSafely(bufferedMessages, 'user-message');
 
       // ✅ v∞.FIX P0-3: Timeout adaptatif selon provider et longueur message
+      // ✨ v24.2.1: Use ref for stable dependency
       const getAdaptiveTimeout = (): number => {
         const messageLength = cleanMessage.length;
-        const configTimeout = omnisConfig.timeoutMs;
+        const configTimeout = omnisTimeoutRef.current;
 
         // Si timeout manuel configuré, l'utiliser comme minimum
         const minTimeout = configTimeout || 0;
@@ -875,6 +889,30 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         const iterator = stream(cleanMessage, historyBuffer);
         let completed = false;
 
+        // ✨ v24.2.1 - Streaming Batcher: reduces UI updates from 50-100x/sec to ~10-20x/sec
+        const batcher = createStreamingBatcher({
+          batchSize: 5,
+          maxWaitMs: 100,
+          onFlush: (batchedContent, batchChunkCount) => {
+            aggregatedContent = batchedContent;
+            chunkCount = batchChunkCount;
+
+            updateAssistant(
+              message => ({
+                ...message,
+                content: aggregatedContent,
+              }),
+              'assistant-stream-update',
+              {
+                status: 'streaming',
+                streamChunks: chunkCount,
+                mode: currentModeState,
+                provider: 'tauri-backend',
+              }
+            );
+          },
+        });
+
         const streamingTask = (async (): Promise<ChatEngineResponse> => {
           let next = await iterator.next();
 
@@ -882,26 +920,15 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
             const value = next.value;
 
             if (typeof value === 'string' && value.length > 0) {
-              aggregatedContent += value;
-              chunkCount += 1;
-
-              updateAssistant(
-                message => ({
-                  ...message,
-                  content: aggregatedContent,
-                }),
-                'assistant-stream-update',
-                {
-                  status: 'streaming',
-                  streamChunks: chunkCount,
-                  mode: currentModeState,
-                  provider: 'tauri-backend',
-                }
-              );
+              // ✨ v24.2.1 - Push to batcher instead of immediate update
+              batcher.push(value);
             }
 
             next = await iterator.next();
           }
+
+          // ✨ v24.2.1 - Flush remaining content before completing
+          batcher.flush();
 
           const response = next.value ?? null;
           if (!response) {
@@ -1230,7 +1257,8 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           console.warn('[Chat] Memory integration warning:', memoryError);
         }
 
-        if (options.voiceEnabled && assistantMessage.content) {
+        // ✨ v24.2.1: Use ref for stable dependency
+        if (voiceEnabledRef.current && assistantMessage.content) {
           try {
             hybridTTS.speak(assistantMessage.content);
           } catch (voiceError) {
@@ -1302,13 +1330,12 @@ Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation 
         chatLogger.debug('🔓 Operation lock RELEASED (finally)');
       }
     },
+    // ✨ v24.2.1: Removed omnisConfig.timeoutMs and options.voiceEnabled - now using refs
     [
       applyMessagesSafely,
       currentModeState,
       debugEntriesRef,
       generate,
-      omnisConfig.timeoutMs,
-      options.voiceEnabled,
       preferredProviderState,
       saveMessage,
       stream,

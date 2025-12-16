@@ -7,8 +7,11 @@
  * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ v∞.40 — METRICS COLLECTOR (Phase 10)
  *   Collecteur de métriques Prometheus-compatible
+ *   ✨ v24.2.1: Debounced storage to reduce I/O from 100+/sec to ~2/sec
  * ═══════════════════════════════════════════════════════════════════
  */
+
+import { getDebouncedStorage } from '@/utils/debouncedStorage';
 
 export type MetricType = 'counter' | 'gauge' | 'histogram' | 'summary';
 
@@ -53,11 +56,22 @@ export interface MetricsCollectorConfig {
  * ═══════════════════════════════════════════════════════════════════
  */
 
+// ✨ v24.2.1: Pre-computed histogram bucket counts for O(buckets) instead of O(n*buckets)
+interface HistogramBucketState {
+  bucketCounts: number[]; // Count per bucket (incremental)
+  sum: number;
+  count: number;
+}
+
 class MetricsCollector {
   private config: MetricsCollectorConfig;
   private metrics: Map<string, Metric> = new Map();
   private histogramData: Map<string, number[]> = new Map();
+  // ✨ v24.2.1: Pre-computed bucket states for O(1) bucket updates
+  private histogramBucketStates: Map<string, HistogramBucketState> = new Map();
   private readonly STORAGE_KEY = 'titane_metrics';
+  // ✨ v24.2.1: Debounced storage instance
+  private debouncedStorage = getDebouncedStorage();
 
   constructor(config?: Partial<MetricsCollectorConfig>) {
     this.config = {
@@ -125,6 +139,7 @@ class MetricsCollector {
 
   /**
    * Record histogram observation (e.g., request duration)
+   * ✨ v24.2.1: Optimized from O(n*buckets) to O(buckets) per observation
    */
   recordHistogram(
     name: string,
@@ -134,20 +149,44 @@ class MetricsCollector {
   ): void {
     const key = this.getMetricKey(name, labels);
 
-    // Store raw observations
+    // Store raw observations (still needed for exports)
+    // ✨ v24.2.1: Limit raw observations to prevent unbounded growth
+    const MAX_HISTOGRAM_OBSERVATIONS = 1000;
     const dataKey = `${key}_data`;
     const data = this.histogramData.get(dataKey) || [];
     data.push(value);
+    // Enforce size limit (sliding window)
+    if (data.length > MAX_HISTOGRAM_OBSERVATIONS) {
+      data.splice(0, data.length - MAX_HISTOGRAM_OBSERVATIONS);
+    }
     this.histogramData.set(dataKey, data);
 
-    // Calculate buckets
-    const buckets = this.config.histogramBuckets.map(le => ({
-      le,
-      count: data.filter(v => v <= le).length,
-    }));
+    // ✨ v24.2.1: Use incremental bucket state instead of recalculating all
+    let bucketState = this.histogramBucketStates.get(key);
+    if (!bucketState) {
+      bucketState = {
+        bucketCounts: new Array(this.config.histogramBuckets.length).fill(0),
+        sum: 0,
+        count: 0,
+      };
+      this.histogramBucketStates.set(key, bucketState);
+    }
 
-    const sum = data.reduce((acc, v) => acc + v, 0);
-    const count = data.length;
+    // ✨ v24.2.1: O(buckets) update - increment only buckets where value fits
+    bucketState.sum += value;
+    bucketState.count++;
+    for (let i = 0; i < this.config.histogramBuckets.length; i++) {
+      if (value <= this.config.histogramBuckets[i]) {
+        bucketState.bucketCounts[i]++;
+      }
+    }
+
+    // Build buckets from pre-computed state
+    const currentState = bucketState; // Already guaranteed to exist
+    const buckets = this.config.histogramBuckets.map((le, i) => ({
+      le,
+      count: currentState.bucketCounts[i],
+    }));
 
     const histogramMetric: HistogramMetric = {
       name,
@@ -157,8 +196,8 @@ class MetricsCollector {
       timestamp: Date.now(),
       help,
       buckets,
-      sum,
-      count,
+      sum: bucketState.sum,
+      count: bucketState.count,
     };
 
     this.metrics.set(key, histogramMetric);
@@ -177,9 +216,15 @@ class MetricsCollector {
     const key = this.getMetricKey(name, labels);
 
     // Store raw observations
+    // ✨ v24.2.1: Limit raw observations to prevent unbounded growth
+    const MAX_SUMMARY_OBSERVATIONS = 1000;
     const dataKey = `${key}_data`;
     const data = this.histogramData.get(dataKey) || [];
     data.push(value);
+    // Enforce size limit (sliding window)
+    if (data.length > MAX_SUMMARY_OBSERVATIONS) {
+      data.splice(0, data.length - MAX_SUMMARY_OBSERVATIONS);
+    }
     this.histogramData.set(dataKey, data);
 
     // Calculate quantiles
@@ -234,10 +279,12 @@ class MetricsCollector {
 
   /**
    * Clear all metrics
+   * ✨ v24.2.1: Also clear bucket states
    */
   clearMetrics(): void {
     this.metrics.clear();
     this.histogramData.clear();
+    this.histogramBucketStates.clear();
     this.saveMetricsToStorage();
   }
 
@@ -372,13 +419,15 @@ class MetricsCollector {
 
   /**
    * Save metrics to localStorage
+   * ✨ v24.2.1: Uses debounced storage to reduce I/O from 100+/sec to ~2/sec
    */
   private saveMetricsToStorage(): void {
     if (!this.config.enableStorage) return;
 
     try {
       const metricsArray = this.getAllMetrics().slice(-this.config.maxStoredMetrics);
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(metricsArray));
+      // ✨ v24.2.1: Use debounced storage instead of direct localStorage
+      this.debouncedStorage.setItem(this.STORAGE_KEY, JSON.stringify(metricsArray));
     } catch (error) {
       console.error('[MetricsCollector] Failed to save metrics to storage:', error);
     }
@@ -386,12 +435,14 @@ class MetricsCollector {
 
   /**
    * Load metrics from localStorage
+   * ✨ v24.2.1: Uses debounced storage for consistent read-after-write
    */
   private loadMetricsFromStorage(): void {
     if (!this.config.enableStorage) return;
 
     try {
-      const stored = localStorage.getItem(this.STORAGE_KEY);
+      // ✨ v24.2.1: Use debounced storage (checks pending writes first)
+      const stored = this.debouncedStorage.getItem(this.STORAGE_KEY);
       if (stored) {
         const metricsArray: Metric[] = JSON.parse(stored);
         metricsArray.forEach(metric => {
@@ -402,6 +453,13 @@ class MetricsCollector {
     } catch (error) {
       console.error('[MetricsCollector] Failed to load metrics from storage:', error);
     }
+  }
+
+  /**
+   * ✨ v24.2.1: Force flush pending writes (call before shutdown)
+   */
+  flushStorage(): void {
+    this.debouncedStorage.flush();
   }
 }
 

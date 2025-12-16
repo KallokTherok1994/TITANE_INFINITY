@@ -10,7 +10,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { chatEngine, type ChatMode, type ChatEngineResponse } from '../services/ai';
 import type { AIMessage } from '../services/ai/types';
 import { chatValidator } from '../services/chatValidator';
@@ -52,6 +52,7 @@ export interface UseChatCoreReturn {
  * - Génération IA avec provider configurable
  * - Timeout dynamique (Gemini 60s, Ollama 45s, Local 15s)
  * - Reset cognitif automatique si changement mode
+ * ✨ v24.2.1: Fixed unstable options reference causing callback re-creations
  */
 export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn {
   const [currentMode, setCurrentMode] = useState<ChatMode>(options.mode || 'default');
@@ -61,8 +62,21 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
   const [anomalyCount, setAnomalyCount] = useState(0);
   const [lastResponseProvider, setLastResponseProvider] = useState<string | null>(null);
 
+  // ✨ v24.2.1: Use refs for callbacks to avoid unstable dependency array
+  const onResponseRef = useRef(options.onResponse);
+  const onErrorRef = useRef(options.onError);
+  const emotionStateRef = useRef(options.emotionState);
+
+  // ✨ v24.2.1: Update refs when options change
+  useEffect(() => {
+    onResponseRef.current = options.onResponse;
+    onErrorRef.current = options.onError;
+    emotionStateRef.current = options.emotionState;
+  }, [options.onResponse, options.onError, options.emotionState]);
+
   /**
    * Génère réponse IA avec timeout dynamique par provider
+   * ✨ v24.2.1: Uses refs for stable callbacks
    */
   const generate = useCallback(
     async (message: string, history: AIMessage[]): Promise<ChatEngineResponse> => {
@@ -77,7 +91,7 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
         // Configure mode (reset cognitif automatique dans chatEngine)
         chatEngine.setProvider(currentProvider);
         chatEngine.setMode(currentMode, {
-          emotionState: options.emotionState,
+          emotionState: emotionStateRef.current,
         });
 
         // Timeout dynamique par provider
@@ -128,8 +142,8 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
           );
         }
 
-        // Callback success
-        options.onResponse?.(response);
+        // Callback success (✨ v24.2.1: use ref)
+        onResponseRef.current?.(response);
 
         console.log('╚════════════════════════════════════════════════════════════╝\n');
         return response;
@@ -137,17 +151,18 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
         const error = err instanceof Error ? err : new Error('Unknown AI error');
         console.error('❌ USE CHAT CORE: Error', error);
 
-        // Callback error
-        options.onError?.(error);
+        // Callback error (✨ v24.2.1: use ref)
+        onErrorRef.current?.(error);
 
         throw error;
       }
     },
-    [currentMode, currentProvider, options]
+    [currentMode, currentProvider] // ✨ v24.2.1: Removed unstable 'options' from deps
   );
 
   /**
    * Lance une génération streaming avec la même configuration que generate()
+   * ✨ v24.2.1: Uses refs for stable callbacks
    */
   const stream = useCallback(
     (
@@ -164,12 +179,12 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
       try {
         chatEngine.setProvider(currentProvider);
         chatEngine.setMode(currentMode, {
-          emotionState: options.emotionState,
+          emotionState: emotionStateRef.current,
         });
 
         const baseStream = chatEngine.stream(message, history, {
           mode: currentMode,
-          emotionState: options.emotionState,
+          emotionState: emotionStateRef.current,
         });
 
         return (async function* streamWrapper(): AsyncGenerator<
@@ -208,14 +223,16 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
               setAnomalyCount(prev => prev + 1);
             }
 
-            options.onResponse?.(finalResponse);
+            // ✨ v24.2.1: Use ref
+            onResponseRef.current?.(finalResponse);
             completed = true;
             return finalResponse;
           } catch (err) {
             const error =
               err instanceof Error ? err : new Error('Unknown AI stream error');
             console.error('❌ USE CHAT CORE: Stream error', error);
-            options.onError?.(error);
+            // ✨ v24.2.1: Use ref
+            onErrorRef.current?.(error);
             throw error;
           } finally {
             if (!completed && typeof baseStream.return === 'function') {
@@ -230,11 +247,12 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
       } catch (err) {
         const error = err instanceof Error ? err : new Error('Unknown AI stream error');
         console.error('❌ USE CHAT CORE: Failed to start stream', error);
-        options.onError?.(error);
+        // ✨ v24.2.1: Use ref
+        onErrorRef.current?.(error);
         throw error;
       }
     },
-    [currentMode, currentProvider, options]
+    [currentMode, currentProvider] // ✨ v24.2.1: Removed unstable 'options' from deps
   );
 
   /**

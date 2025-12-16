@@ -19,6 +19,7 @@ import {
   useEffect,
   useCallback,
   useRef,
+  useMemo,
 } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
@@ -554,14 +555,18 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
     };
   }, [state.dirty, forceSnapshot]);
 
-  const value: TitanContextValue = {
-    state,
-    dispatch,
-    persistEvent,
-    forceSnapshot,
-    checkIntegrity,
-    getPersistenceStatus,
-  };
+  // ✨ v24.2.1: Memoize context value to prevent unnecessary re-renders
+  const value = useMemo<TitanContextValue>(
+    () => ({
+      state,
+      dispatch,
+      persistEvent,
+      forceSnapshot,
+      checkIntegrity,
+      getPersistenceStatus,
+    }),
+    [state, dispatch, persistEvent, forceSnapshot, checkIntegrity, getPersistenceStatus]
+  );
 
   return <TitanContext.Provider value={value}>{children}</TitanContext.Provider>;
 }

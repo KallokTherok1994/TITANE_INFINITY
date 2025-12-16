@@ -21,6 +21,14 @@ import { secureInvoke } from '@/lib/security';
 import { audioService } from '@/features/audio-center/services/audioService';
 import { hybridTTS } from '@/services/tts/hybridTTS';
 
+// ✨ v24.2.1: Adaptive backoff configuration for health checks
+const HEALTH_CHECK_CONFIG = {
+  minIntervalMs: 10000, // 10s when degraded/critical
+  baseIntervalMs: 30000, // 30s when healthy
+  maxIntervalMs: 120000, // 2min when consistently healthy
+  healthyStreakForSlowdown: 3, // 3 consecutive healthy checks to slow down
+} as const;
+
 /**
  * Résultat d'un test de santé individuel
  */
@@ -91,6 +99,9 @@ export function logDeviceIssue(
 class AudioHealthService {
   private lastReport: AudioHealthReport | null = null;
   private checkInterval: NodeJS.Timeout | null = null;
+  // ✨ v24.2.1: Adaptive backoff state
+  private healthyStreak: number = 0;
+  private currentIntervalMs: number = HEALTH_CHECK_CONFIG.baseIntervalMs;
 
   /**
    * Vérifie l'accès au microphone
@@ -417,14 +428,88 @@ class AudioHealthService {
   }
 
   /**
+   * ✨ v24.2.1: Calculate next interval based on health status
+   */
+  private calculateNextInterval(status: AudioHealthReport['overallStatus']): number {
+    if (status === 'healthy') {
+      this.healthyStreak++;
+
+      // Slow down after consecutive healthy checks
+      if (this.healthyStreak >= HEALTH_CHECK_CONFIG.healthyStreakForSlowdown) {
+        return Math.min(this.currentIntervalMs * 1.5, HEALTH_CHECK_CONFIG.maxIntervalMs);
+      }
+      return HEALTH_CHECK_CONFIG.baseIntervalMs;
+    }
+
+    // Reset streak on any issue
+    this.healthyStreak = 0;
+
+    // Speed up checks when degraded/critical
+    if (status === 'critical') {
+      return HEALTH_CHECK_CONFIG.minIntervalMs;
+    }
+    if (status === 'degraded') {
+      return Math.max(
+        HEALTH_CHECK_CONFIG.minIntervalMs,
+        HEALTH_CHECK_CONFIG.baseIntervalMs / 2
+      );
+    }
+
+    return HEALTH_CHECK_CONFIG.baseIntervalMs;
+  }
+
+  /**
+   * ✨ v24.2.1: Schedule next health check with adaptive interval
+   */
+  private scheduleNextCheck(): void {
+    if (this.checkInterval) {
+      clearTimeout(this.checkInterval);
+    }
+
+    this.checkInterval = setTimeout(async () => {
+      try {
+        const report = await this.getAudioHealth();
+        const newInterval = this.calculateNextInterval(report.overallStatus);
+
+        // Log interval change if significant
+        if (Math.abs(newInterval - this.currentIntervalMs) > 5000) {
+          console.log(
+            `[AudioHealth] ⏱️ Interval adjusted: ${this.currentIntervalMs}ms → ${newInterval}ms (status: ${report.overallStatus})`
+          );
+        }
+
+        this.currentIntervalMs = newInterval;
+      } catch (error) {
+        console.error('[AudioHealth] Check failed:', error);
+        this.healthyStreak = 0;
+        this.currentIntervalMs = HEALTH_CHECK_CONFIG.minIntervalMs;
+      }
+
+      this.scheduleNextCheck();
+    }, this.currentIntervalMs);
+  }
+
+  /**
    * Démarrer le monitoring périodique
+   * ✨ v24.2.1: Now uses adaptive backoff instead of fixed interval
    */
   startMonitoring(intervalMs: number = 30000): void {
     this.stopMonitoring();
-    this.checkInterval = setInterval(() => {
-      this.getAudioHealth().catch(console.error);
-    }, intervalMs);
-    console.log(`[AudioHealth] 🔄 Monitoring started (${intervalMs}ms interval)`);
+    this.currentIntervalMs = intervalMs;
+    this.healthyStreak = 0;
+
+    // Initial check immediately
+    this.getAudioHealth()
+      .then(report => {
+        this.currentIntervalMs = this.calculateNextInterval(report.overallStatus);
+        this.scheduleNextCheck();
+      })
+      .catch(error => {
+        console.error('[AudioHealth] Initial check failed:', error);
+        this.scheduleNextCheck();
+      });
+
+    console.log(`[AudioHealth] 🔄 Adaptive monitoring started (base: ${intervalMs}ms)`);
   }
 
   /**
@@ -432,10 +517,18 @@ class AudioHealthService {
    */
   stopMonitoring(): void {
     if (this.checkInterval) {
-      clearInterval(this.checkInterval);
+      clearTimeout(this.checkInterval);
       this.checkInterval = null;
+      this.healthyStreak = 0;
       console.log('[AudioHealth] ⏹️ Monitoring stopped');
     }
+  }
+
+  /**
+   * ✨ v24.2.1: Get current monitoring interval
+   */
+  getCurrentInterval(): number {
+    return this.currentIntervalMs;
   }
 
   // ═══════════════════════════════════════════════════════════════════════════

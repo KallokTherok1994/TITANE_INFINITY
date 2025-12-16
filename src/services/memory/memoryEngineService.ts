@@ -8,11 +8,14 @@
  *    - Gestion du contexte
  *    - Synchronisation backend
  *
+ * ✨ v24.2.1: Integrated LRU cache for bounded memory storage
+ *
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.
  */
 
 import { invoke as _invoke } from '@tauri-apps/api/core';
 import { secureInvoke } from '@/lib/security';
+import { LRUCache, cacheRegistry } from '@/utils/LRUCache';
 import {
   MEMORY_ENGINE_CONFIG,
   RETENTION_POLICIES,
@@ -57,9 +60,19 @@ import type {
 // ÉTAT INTERNE
 // ============================================================================
 
+// ✨ v24.2.1: LRU cache configuration for bounded memory
+const MEMORY_CACHE_CONFIG = {
+  maxSize: 5000, // Maximum memories in local cache
+  ttlMs: 24 * 60 * 60 * 1000, // 24h TTL for cached memories
+} as const;
+
+// ✨ v24.2.1: Pending sync queue limit to prevent unbounded memory growth
+const MAX_PENDING_SYNC = 500;
+
 interface MemoryServiceState {
   isInitialized: boolean;
-  memories: Map<string, Memory>;
+  // ✨ v24.2.1: Replace unbounded Map with LRU cache
+  memories: LRUCache<Memory>;
   context: ConversationContext | null;
   stats: MemoryStats;
   pendingSync: Memory[];
@@ -68,9 +81,23 @@ interface MemoryServiceState {
   syncTimer: NodeJS.Timeout | null;
 }
 
+// ✨ v24.2.1: Create bounded LRU cache for memories
+const memoriesCache = new LRUCache<Memory>({
+  maxSize: MEMORY_CACHE_CONFIG.maxSize,
+  ttlMs: MEMORY_CACHE_CONFIG.ttlMs,
+  onEvict: (key, memory) => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[MemoryEngine] Evicted memory: ${key}`, (memory as Memory)?.tier);
+    }
+  },
+});
+
+// Register cache for monitoring
+cacheRegistry.register('memoryEngine', memoriesCache);
+
 const state: MemoryServiceState = {
   isInitialized: false,
-  memories: new Map(),
+  memories: memoriesCache,
   context: null,
   stats: createEmptyStats(),
   pendingSync: [],
@@ -196,8 +223,12 @@ export async function storeMemory(
   state.memories.set(id, memory);
   updateStats();
 
-  // Ajouter à la file de sync
+  // Ajouter à la file de sync (with bounded size)
   state.pendingSync.push(memory);
+  // ✨ v24.2.1: Limit pending sync queue to prevent unbounded growth
+  if (state.pendingSync.length > MAX_PENDING_SYNC) {
+    state.pendingSync = state.pendingSync.slice(-MAX_PENDING_SYNC);
+  }
 
   // Callback
   state.callbacks.onMemoryCreated?.(memory);
@@ -263,6 +294,10 @@ export async function updateMemory(
   }
 
   state.pendingSync.push(memory);
+  // ✨ v24.2.1: Limit pending sync queue
+  if (state.pendingSync.length > MAX_PENDING_SYNC) {
+    state.pendingSync = state.pendingSync.slice(-MAX_PENDING_SYNC);
+  }
   state.callbacks.onMemoryUpdated?.(memory, changes);
 
   return memory;
@@ -794,8 +829,13 @@ export async function runMaintenance(): Promise<MaintenanceEvent> {
 
 /**
  * Démarre le timer de maintenance
+ * FIX: Clear existing timer before creating a new one to prevent duplicates
  */
 function startMaintenanceTimer(): void {
+  if (state.maintenanceTimer) {
+    clearInterval(state.maintenanceTimer);
+    state.maintenanceTimer = null;
+  }
   state.maintenanceTimer = setInterval(
     () => runMaintenance(),
     MAINTENANCE_CONFIG.checkIntervalMs
@@ -875,8 +915,13 @@ async function restoreFromBackend(): Promise<number> {
 
 /**
  * Démarre le timer de sync
+ * FIX: Clear existing timer before creating a new one to prevent duplicates
  */
 function startSyncTimer(): void {
+  if (state.syncTimer) {
+    clearInterval(state.syncTimer);
+    state.syncTimer = null;
+  }
   state.syncTimer = setInterval(() => syncToBackend(), SYNC_CONFIG.intervalMs);
 }
 

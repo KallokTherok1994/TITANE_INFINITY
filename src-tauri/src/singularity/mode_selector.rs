@@ -117,10 +117,11 @@ impl ModeSelector {
         self.apply_history_scores();
 
         // Get highest scoring mode
+        // FIX: Handle NaN values safely to prevent panic
         let best_mode = self
             .mode_scores
             .iter()
-            .max_by(|a, b| a.1.partial_cmp(b.1).unwrap())
+            .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(std::cmp::Ordering::Equal))
             .map(|(mode, _)| *mode)
             .unwrap_or(ConversationMode::Neutral);
 

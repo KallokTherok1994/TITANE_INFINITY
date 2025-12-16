@@ -65,6 +65,19 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(
       []
     );
 
+    // ✨ v24.2.1 FIX: Memoize filtered messages to prevent filter recalculation on every render
+    const filteredMessages = useMemo(() => {
+      if (!Array.isArray(messages)) return [];
+      return messages.filter(
+        message =>
+          message &&
+          message.role &&
+          ['user', 'assistant'].includes(message.role) &&
+          message.content &&
+          message.content.trim().length > 0
+      );
+    }, [messages]);
+
     const handleRestoreHistory = useCallback(() => {
       if (!uiIntegrity?.hasSnapshot) {
         return;
@@ -224,24 +237,16 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(
             </div>
           )}
 
-          {messages
-            .filter(
-              message =>
-                message &&
-                message.role &&
-                ['user', 'assistant'].includes(message.role) &&
-                message.content &&
-                message.content.trim().length > 0
-            )
-            .map((message, index) => (
-              <MessageBubble
-                key={
-                  (message as { metadata?: { uiId?: string } })?.metadata?.uiId ??
-                  `${message.timestamp}-${index}`
-                }
-                message={message as Message}
-              />
-            ))}
+          {/* ✨ v24.2.1 FIX: Use memoized filtered messages - see filteredMessages useMemo above */}
+          {filteredMessages.map(message => (
+            <MessageBubble
+              key={
+                (message as { metadata?: { uiId?: string } })?.metadata?.uiId ??
+                `msg-${message.timestamp}`
+              }
+              message={message as Message}
+            />
+          ))}
 
           {isLoading && (
             <div

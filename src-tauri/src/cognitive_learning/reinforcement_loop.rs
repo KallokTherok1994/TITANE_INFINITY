@@ -71,7 +71,8 @@ impl ReinforcementLoop {
 
     pub fn get_top_patterns(&self, limit: usize) -> Vec<Pattern> {
         let mut patterns: Vec<Pattern> = self.patterns.values().cloned().collect();
-        patterns.sort_by(|a, b| b.strength.partial_cmp(&a.strength).unwrap());
+        // FIX: Handle NaN values safely to prevent panic
+        patterns.sort_by(|a, b| b.strength.partial_cmp(&a.strength).unwrap_or(std::cmp::Ordering::Equal));
         patterns.into_iter().take(limit).collect()
     }
 

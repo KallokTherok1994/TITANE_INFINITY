@@ -355,7 +355,8 @@ impl VoiceFingerprint {
         }
 
         // Return first 3 formants (F1, F2, F3)
-        formants.sort_by(|a, b| a.partial_cmp(b).unwrap());
+        // FIX: Handle NaN values safely to prevent panic
+        formants.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
         while formants.len() < 3 {
             formants.push(0.0);
         }

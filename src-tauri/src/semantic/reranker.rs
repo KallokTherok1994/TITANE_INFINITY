@@ -76,7 +76,8 @@ impl ContextualReranker {
         }
 
         // Trie par score composite décroissant
-        ranked_results.sort_by(|a, b| b.composite_score.partial_cmp(&a.composite_score).unwrap());
+        // FIX: Handle NaN values safely to prevent panic
+        ranked_results.sort_by(|a, b| b.composite_score.partial_cmp(&a.composite_score).unwrap_or(std::cmp::Ordering::Equal));
 
         ranked_results
     }

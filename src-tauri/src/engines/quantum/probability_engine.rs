@@ -180,7 +180,8 @@ impl ProbabilityEngine {
             }
         }
 
-        posteriors.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
+        // FIX: Handle NaN values safely to prevent panic
+        posteriors.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
         posteriors
     }
 
@@ -214,9 +215,10 @@ impl ProbabilityEngine {
 
     /// Retourne le prior le plus probable
     pub fn get_most_likely_action(&self) -> Option<&str> {
+        // FIX: Handle NaN values safely to prevent panic
         self.priors
             .iter()
-            .max_by(|a, b| a.1.prior.partial_cmp(&b.1.prior).unwrap())
+            .max_by(|a, b| a.1.prior.partial_cmp(&b.1.prior).unwrap_or(std::cmp::Ordering::Equal))
             .map(|(k, _)| k.as_str())
     }
 

@@ -49,8 +49,9 @@ export interface StreamingStats {
 class AudioStreamingService {
   private sessionId: string | null = null;
   private isStreaming: boolean = false;
-  private stateListeners: Array<(state: StreamingState) => void> = [];
-  private chunkListeners: Array<(chunk: number[]) => void> = [];
+  // ✨ v24.2.1: Use Set for O(1) add/delete instead of Array O(n)
+  private stateListeners: Set<(state: StreamingState) => void> = new Set();
+  private chunkListeners: Set<(chunk: number[]) => void> = new Set();
 
   /**
    * Start real-time audio streaming
@@ -209,28 +210,20 @@ class AudioStreamingService {
 
   /**
    * Add state change listener
+   * ✨ v24.2.1: O(1) add/delete with Set
    */
   onStateChange(callback: (state: StreamingState) => void): () => void {
-    this.stateListeners.push(callback);
-    return () => {
-      const index = this.stateListeners.indexOf(callback);
-      if (index > -1) {
-        this.stateListeners.splice(index, 1);
-      }
-    };
+    this.stateListeners.add(callback);
+    return () => this.stateListeners.delete(callback);
   }
 
   /**
    * Add audio chunk listener (for real-time processing)
+   * ✨ v24.2.1: O(1) add/delete with Set
    */
   onAudioChunk(callback: (chunk: number[]) => void): () => void {
-    this.chunkListeners.push(callback);
-    return () => {
-      const index = this.chunkListeners.indexOf(callback);
-      if (index > -1) {
-        this.chunkListeners.splice(index, 1);
-      }
-    };
+    this.chunkListeners.add(callback);
+    return () => this.chunkListeners.delete(callback);
   }
 
   // ═══════════════════════════════════════════════════════════════

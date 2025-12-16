@@ -97,8 +97,13 @@ export function useAdaptiveFPS(): UseAdaptiveFPSReturn {
     let lastTime = performance.now();
     const fpsHistory: number[] = [];
     const maxHistory = 60; // Track last 60 frames
+    // ✨ v24.2.1: Track RAF ID for proper cleanup of recursive calls
+    let rafId: number | null = null;
+    let isRunning = true;
 
     const measureFPS = () => {
+      // ✨ v24.2.1: Check if still running before scheduling next frame
+      if (!isRunning) return;
       frameCount++;
 
       if (frameCount >= 10) {
@@ -181,13 +186,20 @@ export function useAdaptiveFPS(): UseAdaptiveFPSReturn {
         lastTime = now;
       }
 
-      requestAnimationFrame(measureFPS);
+      // ✨ v24.2.1: Store RAF ID and check running state
+      if (isRunning) {
+        rafId = requestAnimationFrame(measureFPS);
+      }
     };
 
-    const rafId = requestAnimationFrame(measureFPS);
+    rafId = requestAnimationFrame(measureFPS);
 
     return () => {
-      cancelAnimationFrame(rafId);
+      // ✨ v24.2.1: Stop the loop and cancel any pending RAF
+      isRunning = false;
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
     };
   }, []);
 

@@ -104,17 +104,20 @@ async function testCSPEnforcement(): Promise<UITestResult> {
 
     document.addEventListener('securitypolicyviolation', violationHandler);
 
+    // ✨ v24.2.1: Use try/finally to ensure listener cleanup even on exceptions
     try {
-      document.head.appendChild(testScript);
-      document.head.removeChild(testScript);
-    } catch {
-      // Normal si CSP bloque
+      try {
+        document.head.appendChild(testScript);
+        document.head.removeChild(testScript);
+      } catch {
+        // Normal si CSP bloque
+      }
+
+      // Attendre event
+      await new Promise(resolve => setTimeout(resolve, 100));
+    } finally {
+      document.removeEventListener('securitypolicyviolation', violationHandler);
     }
-
-    // Attendre event
-    await new Promise(resolve => setTimeout(resolve, 100));
-
-    document.removeEventListener('securitypolicyviolation', violationHandler);
 
     // En production, CSP doit bloquer
     const isProd = import.meta.env.PROD;

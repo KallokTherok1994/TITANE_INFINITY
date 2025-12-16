@@ -241,7 +241,8 @@ impl LongTermMemory {
             .collect();
 
         // Sort by importance
-        results.sort_by(|a, b| b.importance.partial_cmp(&a.importance).unwrap());
+        // FIX: Handle NaN values safely to prevent panic
+        results.sort_by(|a, b| b.importance.partial_cmp(&a.importance).unwrap_or(std::cmp::Ordering::Equal));
         results.truncate(limit);
 
         let duration = start.elapsed();
@@ -284,7 +285,8 @@ impl LongTermMemory {
     pub async fn top_important(&self, n: usize) -> Vec<LTMMetadata> {
         let index = self.index.read().await;
         let mut results: Vec<_> = index.values().cloned().collect();
-        results.sort_by(|a, b| b.importance.partial_cmp(&a.importance).unwrap());
+        // FIX: Handle NaN values safely to prevent panic
+        results.sort_by(|a, b| b.importance.partial_cmp(&a.importance).unwrap_or(std::cmp::Ordering::Equal));
         results.truncate(n);
         results
     }

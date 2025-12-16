@@ -217,10 +217,11 @@ impl OperationalTwin {
 
     /// Recommande un workflow pour un contexte
     pub fn recommend_workflow(&self, domain: &str) -> Option<&ObservedWorkflow> {
+        // FIX: Handle NaN values safely to prevent panic
         self.workflows
             .iter()
             .filter(|w| w.domain == domain)
-            .max_by(|a, b| a.effectiveness.partial_cmp(&b.effectiveness).unwrap())
+            .max_by(|a, b| a.effectiveness.partial_cmp(&b.effectiveness).unwrap_or(std::cmp::Ordering::Equal))
     }
 
     /// Obtient une méthode

@@ -90,6 +90,9 @@ export const PROVIDER_CIRCUIT_CONFIGS: Record<string, Partial<CircuitBreakerConf
 // CIRCUIT BREAKER CLASS
 // ═══════════════════════════════════════════════════════════════
 
+// ✨ v24.2.1: Max timestamps per provider to prevent unbounded growth
+const MAX_FAILURE_TIMESTAMPS = 100;
+
 class CircuitBreaker {
   private circuits: Map<string, CircuitStats> = new Map();
   private configs: Map<string, CircuitBreakerConfig> = new Map();
@@ -218,11 +221,13 @@ class CircuitBreaker {
     // Track failure timestamp
     const timestamps = this.failureTimestamps.get(provider) || [];
     timestamps.push(now);
-    // Keep only recent timestamps
-    this.failureTimestamps.set(
-      provider,
-      timestamps.filter(t => t > now - config.failureWindowMs)
-    );
+    // Keep only recent timestamps + enforce max size
+    let filtered = timestamps.filter(t => t > now - config.failureWindowMs);
+    // ✨ v24.2.1: Enforce absolute size limit
+    if (filtered.length > MAX_FAILURE_TIMESTAMPS) {
+      filtered = filtered.slice(-MAX_FAILURE_TIMESTAMPS);
+    }
+    this.failureTimestamps.set(provider, filtered);
 
     if (circuit.state === 'HALF_OPEN') {
       // Any failure in half-open returns to open
