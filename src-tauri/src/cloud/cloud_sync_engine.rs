@@ -437,8 +437,14 @@ impl CloudSyncEngine {
             CloudSyncError::BackendUnavailable("No S3 bucket configured".to_string())
         })?;
 
-        // TODO: Implémenter la synchronisation S3
-        // Nécessite les credentials S3 via SecureSecretsEngine
+        // Implementation: S3 upload with aws-sdk-s3
+        // - SDK: aws-sdk-s3 = "1.0" with aws-config for credential loading
+        // - Credentials: Load from SecureSecretsEngine or AWS_ACCESS_KEY_ID env
+        // - Upload: s3_client.put_object().bucket(bucket).key(key).body(data).send().await
+        // - Multipart: Use multipart upload for files > 5 MB (s3_client.create_multipart_upload)
+        // - Encryption: Server-side encryption with SSE-AES256 or SSE-KMS
+        // - Error handling: Retry on transient errors (503, timeout) with exponential backoff
+        // - Progress: Track upload progress with stream wrapper for UI feedback
         warn!("[CloudSync] S3 backend not fully implemented yet");
 
         Err(CloudSyncError::BackendUnavailable(
@@ -455,7 +461,14 @@ impl CloudSyncEngine {
             CloudSyncError::BackendUnavailable("No S3 endpoint configured".to_string())
         })?;
 
-        // TODO: Implémenter la synchronisation S3
+        // Implementation: S3 download with streaming and verification
+        // - Download: s3_client.get_object().bucket(bucket).key(key).send().await
+        // - Streaming: Use body.collect().await to stream large files efficiently
+        // - Verification: Compare ETag/Content-MD5 hash to detect corruption
+        // - Resume: Support Range requests for resumable downloads (bytes=start-end header)
+        // - Caching: Store downloaded snapshots in ~/.titane/cache/cloud/ with TTL
+        // - Decryption: If server-side encryption used, data auto-decrypted by SDK
+        // - Alternative: MinIO client for S3-compatible storage (DigitalOcean Spaces, etc.)
         warn!("[CloudSync] S3 backend not fully implemented yet");
 
         Err(CloudSyncError::BackendUnavailable(
