@@ -11,7 +11,8 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import type { EmotionalState, UserMood, UserIntention } from '@/types/voice';
+import type { UserMood, UserIntention } from '@/types/voice';
+import type { EmotionalState } from './emotionalStateEstimator';
 import type { MicroExpression } from './vocalMicroFXEngine';
 import { vocalMicroFXEngine } from './vocalMicroFXEngine';
 
