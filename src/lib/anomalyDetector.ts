@@ -5,7 +5,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { MetricsHistory, type MetricsSnapshot } from './metricsHistory';
+import { MetricsHistory, type ServiceHistoryPoint } from './metricsHistory';
 import { ServiceMetrics } from './serviceMetrics';
 
 // ────────────────────────────────────────────────────────────────
@@ -92,14 +92,8 @@ export class AnomalyDetector {
 
       // Stats actuelles
       const currentStats = ServiceMetrics.getServiceStats(service);
-      const current: MetricsSnapshot = {
+      const current: ServiceHistoryPoint = {
         timestamp: Date.now(),
-        service,
-        totalCalls: currentStats.totalCalls,
-        successRate:
-          currentStats.totalCalls > 0
-            ? currentStats.successfulCalls / currentStats.totalCalls
-            : 0,
         avgLatency: currentStats.averageLatency,
         errorRate: currentStats.errorRate,
         retryRate:
@@ -129,8 +123,8 @@ export class AnomalyDetector {
   private static detectMetricAnomaly(
     service: string,
     metric: 'latency' | 'errorRate' | 'retryRate',
-    current: MetricsSnapshot,
-    history: MetricsSnapshot[]
+    current: ServiceHistoryPoint,
+    history: ServiceHistoryPoint[]
   ): AnomalyDetection | null {
     // Calculer baseline (moyenne + stddev sur historique)
     const baseline = this.calculateBaseline(history, metric);
@@ -173,7 +167,7 @@ export class AnomalyDetector {
    * Calculer baseline stats (rolling window)
    */
   private static calculateBaseline(
-    history: MetricsSnapshot[],
+    history: ServiceHistoryPoint[],
     metric: 'latency' | 'errorRate' | 'retryRate'
   ): BaselineStats {
     if (history.length === 0) {
@@ -208,7 +202,7 @@ export class AnomalyDetector {
    * Extraire valeur métrique depuis snapshot
    */
   private static getMetricValue(
-    snapshot: MetricsSnapshot,
+    snapshot: ServiceHistoryPoint,
     metric: 'latency' | 'errorRate' | 'retryRate'
   ): number {
     switch (metric) {

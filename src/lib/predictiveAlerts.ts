@@ -5,7 +5,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { MetricsHistory } from './metricsHistory';
+import { MetricsHistory, type ServiceHistoryPoint } from './metricsHistory';
 import { ServiceMetrics } from './serviceMetrics';
 
 // ────────────────────────────────────────────────────────────────
@@ -148,7 +148,7 @@ export class PredictiveAlerts {
     }
 
     // Préparer les données (x = temps relatif, y = valeur métrique)
-    const dataPoints = history.map((snapshot, index) => {
+    const dataPoints = history.map((snapshot: ServiceHistoryPoint, index: number) => {
       let value: number;
       switch (metric) {
         case 'latency':
