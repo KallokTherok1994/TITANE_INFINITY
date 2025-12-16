@@ -3,8 +3,7 @@
 //   Professional 3-point lighting with appearance style adaptation
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { loadThreeJS } from '../core/ThreeJSLazyLoader';
-type THREE = typeof import('three');
+import * as THREE from 'three';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES

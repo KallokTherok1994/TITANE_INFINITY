@@ -4,8 +4,7 @@
 //   NOTE: Nécessite three-stdlib ou three@latest pour imports postprocessing
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { loadThreeJS } from '../core/ThreeJSLazyLoader';
-type THREE = typeof import('three');
+import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { TAARenderPass } from 'three/examples/jsm/postprocessing/TAARenderPass';

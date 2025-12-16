@@ -17,7 +17,7 @@ incremental = true    # Enable incremental compilation
 opt-level = 3         # Maximum optimizations
 lto = "thin"          # Thin LTO for faster linking (20-30% faster than "fat")
 codegen-units = 1     # Single codegen unit (better optimization)
-strip = true          # Strip symbols for smaller binary
+strip = false         # TAURI FIX: Keep symbols for bundler metadata (__TAURI_BUNDLE_TYPE)
 panic = "abort"       # Abort on panic (no unwinding overhead)
 
 [build-dependencies]

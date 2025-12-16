@@ -3,8 +3,7 @@
 //   Central coordination pipeline: Audio → Phonemes → Morphs → Expressions → Render
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { loadThreeJS } from './ThreeJSLazyLoader';
-type THREE = typeof import('three');
+import * as THREE from 'three';
 import {
   LipSyncPrecisionEngine,
   type Phoneme,
@@ -70,7 +69,7 @@ export interface SyncConfig {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export class AudioVisualSyncEngine {
-  private THREE!: THREE; // YOLO OPT-1: Lazy-loaded Three.js
+  private THREE = THREE; // Now directly imported
   private config: SyncConfig;
 
   // Sub-engines
@@ -115,8 +114,7 @@ export class AudioVisualSyncEngine {
    * YOLO OPT-1: Async initialization after Three.js lazy-load
    */
   async init(): Promise<void> {
-    // Lazy-load Three.js
-    this.THREE = await loadThreeJS();
+    // Three.js is now directly imported (no lazy-loading needed)
 
     // Initialize engines
     this.lipSyncEngine = new LipSyncPrecisionEngine({

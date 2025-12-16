@@ -299,7 +299,7 @@ build() {
     
     if [ "$mode" = "stable" ]; then
         info "Using stable runtime configuration..."
-        npm run tauri build -- --config runtime/stable/tauri.conf.json
+        npx tauri build --config runtime/stable/tauri.conf.json
         
         # Copy to runtime/stable
         print_section "Copying build artifacts..."
@@ -314,7 +314,7 @@ build() {
         fi
     else
         info "Using dev runtime configuration..."
-        npm run tauri build -- --config runtime/dev/tauri.conf.json
+        npx tauri build --config runtime/dev/tauri.conf.json
         success "Dev runtime built"
     fi
     

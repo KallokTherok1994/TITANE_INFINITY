@@ -388,8 +388,62 @@ export type {
 // v∞.13 - Physiological State (Interoception + Holophonic)
 // ═══════════════════════════════════════════════════════════════
 
-// REMOVED: usePhysiological (orphan)
-// Types from engines also removed
+// Stub hooks for PhysiologicalPanel (v24.3.0 - restored for build compatibility)
+export function useInteroception() {
+  return {
+    state: {
+      energy: 0.75,
+      cognitiveLoad: 0.5,
+      clarity: 0.8,
+      stability: 0.85,
+      emotionalTemperature: 0.0,
+      entropy: 0.2,
+      depth: 0.6,
+    },
+    setEnergy: () => {},
+    setCognitiveLoad: () => {},
+    setClarity: () => {},
+    setStability: () => {},
+    setEmotionalTemperature: () => {},
+  };
+}
+
+export function useHolophonic() {
+  return {
+    spatialState: { x: 0, y: 0, z: 0.5, width: 0.5, focus: 0.8, distance: 0.3 },
+    setSpatialState: () => {},
+    setPreset: () => {},
+    playCue: () => {},
+    setSoundIntensity: () => {},
+  };
+}
+
+export function useCognitiveSounds() {
+  const noop = () => {};
+  return {
+    playThinking: noop,
+    playInsight: noop,
+    playModeSwitch: noop,
+    playErrorSoft: noop,
+    playHealComplete: noop,
+    playWakeWord: noop,
+    playListening: noop,
+    playProcessing: noop,
+  };
+}
+
+export function usePhysiologicalState() {
+  return {
+    energy: 0.75,
+    cognitiveLoad: 0.5,
+    clarity: 0.8,
+    stability: 0.85,
+    breathingPhase: 0.5,
+    homeostasis: 0.9,
+    position: { x: 0, y: 0, z: 0.5 },
+    distance: 0.3,
+  };
+}
 
 export type {
   InteroceptionState,
