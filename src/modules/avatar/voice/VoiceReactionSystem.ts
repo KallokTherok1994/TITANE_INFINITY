@@ -4,10 +4,7 @@
 //   Real-time physical reactions to voice (head, torso, breathing)
 // ═════════════════════════════════════════════════════════════════════════════
 
-import { loadThreeJS as _loadThreeJS } from '../core/ThreeJSLazyLoader';
-
-// YOLO OPT-1: Types importés statiquement, implémentation lazy
-type THREE = typeof import('three');
+import * as THREE from 'three';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES

@@ -3,8 +3,7 @@
 //   Connect AppearanceEngine v24.9 with Three.js Materials
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { loadThreeJS } from '../core/ThreeJSLazyLoader';
-type THREE = typeof import('three');
+import * as THREE from 'three';
 import type { AvatarAppearanceState } from '../appearance/appearanceState';
 import { DEFAULT_APPEARANCE_STATE } from '../appearance/appearanceState';
 import type { ThreeJSAvatarRenderer } from './ThreeJSAvatarRenderer';

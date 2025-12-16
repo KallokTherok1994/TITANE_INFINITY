@@ -3,8 +3,7 @@
 //   Enhanced IK smoother, posture dynamics, gesture-voice synchronization
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { loadThreeJS as _loadThreeJS } from '../core/ThreeJSLazyLoader';
-type THREE = typeof import('three');
+import * as THREE from 'three';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
