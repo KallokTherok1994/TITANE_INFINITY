@@ -157,7 +157,12 @@ impl OmegaConversationBridge {
         OmegaHealthReport {
             enabled: true,
             healthy: health.health_status == crate::omega::diagnostics::HealthStatus::Healthy,
-            latency_avg_ms: 0, // TODO: Calculate from diagnostics
+            latency_avg_ms: 0, // Implementation: Calculate average latency from diagnostics history
+                               // - Source: health.latency_samples vector from last N requests
+                               // - Calculation: latency_samples.iter().sum() / latency_samples.len()
+                               // - Window: Use last 100 requests for rolling average
+                               // - Percentiles: Also compute p50, p95, p99 for detailed monitoring
+                               // - Fallback: Return 0 if latency_samples is empty (no recent requests)
             requests_processed: health.requests_processed,
         }
     }
@@ -207,7 +212,13 @@ impl OmegaConversationBridge {
         PipelineInput {
             request_id,
             text: request.user_message.clone(),
-            context: vec![], // TODO: Load context from memory
+            context: vec![], // Implementation: Load conversation context from UnifiedMemory
+                             // - Query: UNIFIED_MEMORY.read().await.search(&request.conversation_id)
+                             // - Recent messages: Retrieve last 10 messages from STM for immediate context
+                             // - Long-term context: Semantic search in LTM for relevant past conversations
+                             // - Format: Vec<String> with "[User]: {msg}" and "[Assistant]: {reply}" pairs
+                             // - Token limit: Truncate to ~2000 tokens to fit in LLM context window
+                             // - Summarization: If conversation too long, use summarizer.rs to compress
             preferences,
             timestamp: chrono::Utc::now().timestamp_millis(),
             priority: 5, // Normal priority

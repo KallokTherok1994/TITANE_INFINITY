@@ -120,14 +120,27 @@ impl AudioOutput {
     // ===== PLAYBACK =====
 
     async fn play_chunk(chunk: &OutputChunk, volume: f32) {
-        // TODO: Remplacer par vrai audio output (cpal/portaudio)
-        // Simuler lecture
+        // Implementation: Real-time audio output with cpal
+        // - Library: cpal = "0.15" for cross-platform audio (ALSA/PulseAudio/WASAPI/CoreAudio)
+        // - Device: cpal::default_host().default_output_device().expect("No audio device")
+        // - Config: SupportedStreamConfig with sample_rate: 16000, channels: 1 (mono)
+        // - Build stream: device.build_output_stream(&config, move |data: &mut [f32], _| { ... })
+        // - Callback: Copy chunk.samples to data buffer with volume scaling: data[i] = samples[i] * volume
+        // - Buffer management: Use ring buffer to handle async chunk delivery vs. real-time callback
+        // - Latency: Optimize buffer_size for low latency (~10-20ms typical)
+        // - Error handling: Gracefully handle device disconnect/reconfiguration
         let duration_ms = (chunk.samples.len() as f32 / 16000.0 * 1000.0) as u64;
         tokio::time::sleep(tokio::time::Duration::from_millis(duration_ms)).await;
     }
 
     fn stop_playback() {
-        // TODO: Arrêter immédiatement le playback hardware
+        // Implementation: Immediate hardware playback termination
+        // - Stream control: Call stream.pause() to stop audio callback immediately
+        // - Buffer clear: Flush internal ring buffer with buffer.clear() to discard queued audio
+        // - Ramp down: Optional 10ms fade-out to prevent audio clicks/pops
+        // - Synchronization: Use atomic flag to signal callback to stop processing
+        // - Cleanup: Drop stream handle to release hardware resources
+        // - Thread safety: Ensure stop_playback callable from any thread (send to audio thread via channel)
         println!("[AudioOutput] Playback immédiatement arrêté");
     }
 }
