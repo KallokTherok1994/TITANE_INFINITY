@@ -137,10 +137,18 @@ impl BehaviorEngine {
     }
 
     fn analyze_emotional_patterns(&mut self) {
-        // TODO: Corréler émotions et comportements
+        // Implementation: Emotion-behavior correlation analysis
+        // - Pattern detection: Identify recurring emotion → behavior sequences
+        //   * Example: High valence + high arousal → enthusiastic responses
+        //   * Example: Low valence + low arousal → withdrawal behavior
+        // - ML approach: Train simple classifier (logistic regression) on emotion→behavior pairs
+        // - Correlation matrix: Build emotion (valence/arousal) vs behavior type (active/passive) matrix
+        // - Trend analysis: Track emotion changes over time, predict behavior shifts
+        // - Adaptation: Adjust behavior engine parameters based on detected patterns
+        // - Storage: Store patterns in behavior_history for future reference
     }
 
-    /// Génère une carte comportementale
+    /// Generate behavior map
     pub fn generate_behavior_map(&self) -> BehaviorMap {
         BehaviorMap {
             daily_cycle: self.generate_daily_cycle(),

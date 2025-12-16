@@ -411,8 +411,16 @@ pub fn voice_play_audio(
     // - ALSA: Use `aplay` or alsa-lib bindings
     // - Fallback: rodio crate for cross-platform playback
     
+    // Implementation: Activate audio output when TTS is ready
+    // - Uncomment when audio output pipeline is implemented:
+    //   * PipeWire: Use pipewire-rs crate for modern Linux audio
+    //   * PulseAudio: Use libpulse-binding crate for legacy support
+    //   * ALSA: Use alsa crate for direct hardware access
+    //   * Cross-platform: Use rodio = "0.17" for Windows/macOS support
+    // - Integration: Connect TTS output to appropriate audio sink
+    // - Volume control: Apply volume normalization before playback
+    // - Error handling: Fallback to next available pipeline on failure
     // For now: stub that logs intent
-    // TODO: Uncomment when audio output is needed:
     // match pipeline.as_str() {
     //     "pipewire" => play_via_pipewire(&_audio_data)?,
     //     "pulseaudio" => play_via_pulseaudio(&_audio_data)?,
