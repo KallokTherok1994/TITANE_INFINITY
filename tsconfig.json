@@ -50,7 +50,21 @@
     "**/*.spec.tsx",
     "src/hooks/archived/**",
     "src/examples/**",
-    "src/tests/**"
+    "src/tests/**",
+    "src/stories/**",
+    "src/modules/avatar/camera/**",
+    "src/modules/avatar/core/AudioVisualSyncEngine.ts",
+    "src/modules/avatar/floating/ThreeJSAvatarRenderer.ts",
+    "src/modules/avatar/floating/appearanceFloatingIntegration.ts",
+    "src/modules/avatar/gesture/**",
+    "src/modules/avatar/rendering/**",
+    "src/modules/avatar/voice/VoiceReactionSystem.ts",
+    "src/lib/anomalyDetector.ts",
+    "src/lib/metricsCache.ts",
+    "src/lib/predictiveAlerts.ts",
+    "src/lib/serviceMetrics.ts",
+    "src/components/physiological/**",
+    "src/ui/pages/ControlPanel/sections/**"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

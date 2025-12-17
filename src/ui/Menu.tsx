@@ -152,7 +152,12 @@ export const Menu: React.FC<MenuProps> = ({
   onNavigate,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [menuSections, setMenuSections] = useState(MENU_SECTIONS);
+  const [menuSections, setMenuSections] = useState(() => {
+    // v25.2.1: Forcer reload depuis source (ignorer localStorage temporairement)
+    // Pour éviter cache avec ancienne config sans "État Cognitif"
+    localStorage.removeItem('titane_menu_config'); // Clear old cache
+    return MENU_SECTIONS;
+  });
 
   const handleSectionClick = (section: MenuSection) => {
     onNavigate(section.route);
