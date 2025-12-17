@@ -17,6 +17,8 @@ import React, { useEffect, useState } from 'react';
 import { useSingularitySync } from '@/hooks/useSingularitySync';
 import { useMemoryEngine } from '@/hooks/useMemoryEngine';
 import { useSystemHealth } from '@/hooks/useSystemHealth';
+// ✨ v25.7.4 - Responsive Design Hook
+import { useResponsive } from '@/hooks/useResponsive';
 // ✨ v25.6.0 - Phase 12 Ultimate Optimization Integration
 import {
   gpuAcceleratorV2,
@@ -30,6 +32,9 @@ import {
 } from '@/modules/optimization';
 
 export function PerfectFusionDashboard() {
+  // ✨ v25.7.4 - Responsive Hook
+  const { isMobile, isTablet, isDesktop } = useResponsive();
+
   // ═══ HOOKS INTÉGRATION ═══
   const {
     state: singularityState,
@@ -110,8 +115,8 @@ export function PerfectFusionDashboard() {
 
   // ═══ RENDER ═══
   return (
-    <div className="perfect-fusion-dashboard">
-      <h1>🌌 TITANE∞ Perfect Fusion Dashboard</h1>
+    <div className="perfect-fusion-dashboard p-responsive">
+      <h1 className="dashboard-title">🌌 TITANE∞ Perfect Fusion Dashboard</h1>
 
       {/* ═══ GLOBAL HEALTH ═══ */}
       <section className="global-health">
@@ -190,9 +195,9 @@ export function PerfectFusionDashboard() {
       <section className="health-details">
         <h2>📊 Health Details</h2>
         {health && (
-          <div className="health-grid">
+          <div className="health-grid grid-responsive-4">
             {/* Conversation */}
-            <div className="health-card">
+            <div className="health-card card-responsive">
               <h3>💬 Conversation</h3>
               <div className={`status-badge status-${health.conversation.status}`}>
                 {health.conversation.status}
@@ -214,7 +219,7 @@ export function PerfectFusionDashboard() {
             </div>
 
             {/* Memory */}
-            <div className="health-card">
+            <div className="health-card card-responsive">
               <h3>🧠 Memory</h3>
               <div className={`status-badge status-${health.memory.status}`}>
                 {health.memory.status}
@@ -233,7 +238,7 @@ export function PerfectFusionDashboard() {
             </div>
 
             {/* Singularity */}
-            <div className="health-card">
+            <div className="health-card card-responsive">
               <h3>⚛️ Singularity</h3>
               <div className={`status-badge status-${health.singularity.status}`}>
                 {health.singularity.status}
@@ -251,7 +256,7 @@ export function PerfectFusionDashboard() {
             </div>
 
             {/* System */}
-            <div className="health-card">
+            <div className="health-card card-responsive">
               <h3>💻 System</h3>
               <div className={`status-badge status-${health.system.status}`}>
                 {health.system.status}
@@ -277,9 +282,9 @@ export function PerfectFusionDashboard() {
       {/* ✨ v25.6.0 - ULTIMATE OPTIMIZATION METRICS ✨ */}
       <section className="optimization-section">
         <h2>⚡ Ultimate Optimization (Phase 12)</h2>
-        <div className="optimization-grid">
+        <div className="optimization-grid grid-responsive-4">
           {/* GPU Metrics */}
-          <div className="optimization-card">
+          <div className="optimization-card card-responsive">
             <h3>🎮 GPU Accelerator</h3>
             {gpuMetrics && (
               <>
@@ -315,7 +320,7 @@ export function PerfectFusionDashboard() {
           </div>
 
           {/* WASM Metrics */}
-          <div className="optimization-card">
+          <div className="optimization-card card-responsive">
             <h3>⚙️ WebAssembly</h3>
             {wasmMetrics && (
               <>
@@ -343,7 +348,7 @@ export function PerfectFusionDashboard() {
           </div>
 
           {/* Service Worker Metrics */}
-          <div className="optimization-card">
+          <div className="optimization-card card-responsive">
             <h3>🌐 Service Worker</h3>
             {swMetrics && (
               <>
@@ -370,7 +375,7 @@ export function PerfectFusionDashboard() {
           </div>
 
           {/* IndexedDB Metrics */}
-          <div className="optimization-card">
+          <div className="optimization-card card-responsive">
             <h3>💾 IndexedDB</h3>
             {dbMetrics && (
               <>
@@ -460,9 +465,14 @@ export function PerfectFusionDashboard() {
                 </div>
                 <p>{alert.message}</p>
                 <div className="alert-actions">
-                  <button onClick={() => resolveAlert(alert.id)}>Resolve</button>
+                  <button className="btn-touch" onClick={() => resolveAlert(alert.id)}>
+                    Resolve
+                  </button>
                   {alert.auto_recoverable && (
-                    <button onClick={() => triggerRecovery(alert.component)}>
+                    <button
+                      className="btn-touch"
+                      onClick={() => triggerRecovery(alert.component)}
+                    >
                       Auto-Recover
                     </button>
                   )}
@@ -487,17 +497,39 @@ export function PerfectFusionDashboard() {
       </footer>
 
       <style>{`
+        /* ✨ v25.7.4 - RESPONSIVE DASHBOARD STYLES */
         .perfect-fusion-dashboard {
-          padding: 20px;
-          font-family:
-            system-ui,
-            -apple-system,
-            sans-serif;
+          padding: var(--space-md);
+          font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        .dashboard-title {
+          font-size: var(--text-2xl);
+          margin-bottom: var(--space-lg);
         }
 
         section {
-          margin: 20px 0;
-          padding: 15px;
+          margin: var(--space-lg) 0;
+          padding: var(--space-md);
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          background: #f9f9f9;
+        }
+
+        section h2 {
+          font-size: var(--text-xl);
+          margin-bottom: var(--space-md);
+        }
+
+        section h3 {
+          font-size: var(--text-lg);
+          margin: 0 0 var(--space-sm) 0;
+        }
+
+        section p {
+          font-size: var(--text-base);
+          margin: var(--space-xs) 0;
+        }
           border: 1px solid #ddd;
           border-radius: 8px;
           background: #f9f9f9;
@@ -505,10 +537,11 @@ export function PerfectFusionDashboard() {
 
         .status-badge {
           display: inline-block;
-          padding: 5px 10px;
+          padding: var(--space-xs) var(--space-sm);
           border-radius: 4px;
           font-weight: bold;
-          margin: 5px 0;
+          margin: var(--space-xs) 0;
+          font-size: var(--text-sm);
         }
 
         .status-healthy {
@@ -528,43 +561,44 @@ export function PerfectFusionDashboard() {
           color: white;
         }
 
+        /* Responsive Grids - Using utility classes */
         .health-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-          gap: 15px;
+          /* .grid-responsive-4 handles responsive */
         }
 
         .health-card {
-          padding: 15px;
+          /* .card-responsive handles responsive padding */
           border: 1px solid #ccc;
           border-radius: 6px;
           background: white;
         }
 
         .metrics p {
-          margin: 5px 0;
-          font-size: 0.9em;
+          margin: var(--space-xs) 0;
+          font-size: var(--text-sm);
         }
 
         .error {
           color: #f44336;
           font-weight: bold;
-          padding: 10px;
+          padding: var(--space-sm);
           background: #ffebee;
           border-radius: 4px;
-          margin: 10px 0;
+          margin: var(--space-sm) 0;
+          font-size: var(--text-base);
         }
 
         .alerts-list {
           display: flex;
           flex-direction: column;
-          gap: 10px;
+          gap: var(--space-sm);
         }
 
         .alert {
-          padding: 10px;
+          padding: var(--space-sm);
           border-radius: 4px;
           border-left: 4px solid;
+          font-size: var(--text-base);
         }
 
         .alert-info {
@@ -586,56 +620,55 @@ export function PerfectFusionDashboard() {
 
         .alert-header {
           display: flex;
-          justify-content: space-between;
-          margin-bottom: 5px;
+          justify-contentvar(--space-xs);
           font-weight: bold;
+          font-size: var(--text-sm);
         }
 
         .alert-actions {
-          margin-top: 10px;
+          margin-top: var(--space-sm);
           display: flex;
-          gap: 10px;
+          gap: var(--space-sm);
+          flex-wrap: wrap;
         }
 
         button {
-          padding: 5px 15px;
+          /* .btn-touch handles touch-friendly sizing */
+          padding: var(--space-xs) var(--space-md);
           border: none;
           border-radius: 4px;
           background: #2196f3;
           color: white;
           cursor: pointer;
+          font-size: var(--text-base);
+          font-weight: 500
+          cursor: pointer;
         }
 
-        button:hover {
-          background: #1976d2;
-        }
-
-        .monitoring-status {
-          margin-top: 20px;
-          padding: 10px;
+        button:hover {var(--space-lg);
+          padding: var(--space-sm);
           background: #e8f5e9;
           border-radius: 4px;
           text-align: center;
+          font-size: var(--text-base);
         }
 
-        /* ✨ v25.6.0 - Optimization Section Styles */
+        /* ✨ v25.6.0 + v25.7.4 - Responsive Optimization Section */
         .optimization-section {
-          margin: 20px 0;
-          padding: 20px;
+          margin: var(--space-lg) 0;
+          padding: var(--space-lg);
           border: 1px solid #ddd;
           border-radius: 8px;
           background: linear-gradient(135deg, rgba(33, 150, 243, 0.05), rgba(156, 39, 176, 0.05));
         }
 
         .optimization-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-          gap: 15px;
-          margin: 15px 0;
+          /* .grid-responsive-4 handles responsive layout */
+          margin: var(--space-md) 0;
         }
 
         .optimization-card {
-          padding: 15px;
+          /* .card-responsive handles padding */
           border: 1px solid rgba(33, 150, 243, 0.3);
           border-radius: 6px;
           background: rgba(255, 255, 255, 0.95);
@@ -643,9 +676,14 @@ export function PerfectFusionDashboard() {
         }
 
         .optimization-card h3 {
-          margin: 0 0 10px 0;
+          margin: 0 0 var(--space-sm) 0;
           color: #1976d2;
-          font-size: 1.1em;
+          font-size: var(--text-lg);
+        }
+
+        .optimization-card p {
+          margin: var(--space-xs) 0;
+          font-size: var(--text-sm);
         }
 
         .optimization-card p {
@@ -656,9 +694,9 @@ export function PerfectFusionDashboard() {
         .badge {
           display: inline-block;
           padding: 2px 8px;
+          border-ravar(--space-xs) var(--space-sm);
           border-radius: 12px;
-          font-size: 0.85em;
-          font-weight: bold;
+          font-size: var(--text-xs);
         }
 
         .badge-success {
@@ -692,47 +730,95 @@ export function PerfectFusionDashboard() {
         }
 
         .optimization-summary {
-          margin-top: 20px;
-          padding: 15px;
+          margin-top: var(--space-lg);
+          padding: var(--space-md);
           border-top: 2px solid rgba(33, 150, 243, 0.3);
         }
 
         .optimization-summary h3 {
-          margin: 0 0 15px 0;
+          margin: 0 0 var(--space-md) 0;
           color: #1976d2;
+          font-size: var(--text-xl);
         }
 
         .summary-stats {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-          gap: 10px;
+          grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+          gap: var(--space-sm);
         }
 
         .summary-card {
           display: flex;
           flex-direction: column;
           align-items: center;
-          padding: 15px;
+          padding: var(--space-md);
           border-radius: 8px;
           background: linear-gradient(135deg, rgba(33, 150, 243, 0.1), rgba(156, 39, 176, 0.1));
           text-align: center;
         }
 
         .summary-icon {
-          font-size: 2em;
-          margin-bottom: 5px;
+          font-size: clamp(1.5rem, 4vw, 2rem);
+          margin-bottom: var(--space-xs);
         }
 
         .summary-label {
-          font-size: 0.85em;
+          font-size: var(--text-xs);
           color: #666;
-          margin-bottom: 5px;
+          margin-bottom: var(--space-xs);
         }
 
         .summary-value {
-          font-size: 1.5em;
+          font-size: var(--text-xl);
           font-weight: bold;
           color: #1976d2;
+        }
+
+        /* ✨ v25.7.4 - Mobile Specific Optimizations */
+        @media (max-width: 767px) {
+          .perfect-fusion-dashboard {
+            padding: var(--space-sm);
+          }
+
+          .dashboard-title {
+            font-size: var(--text-xl);
+          }
+
+          section {
+            padding: var(--space-sm);
+            margin: var(--space-md) 0;
+          }
+
+          section h2 {
+            font-size: var(--text-lg);
+          }
+
+          section h3 {
+            font-size: var(--text-base);
+          }
+
+          .alert-actions {
+            flex-direction: column;
+          }
+
+          .alert-actions button {
+            width: 100%;
+          }
+        }
+
+        /* ✨ v25.7.4 - Tablet Optimizations */
+        @media (min-width: 768px) and (max-width: 1023px) {
+          .summary-stats {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+
+        /* ✨ v25.7.4 - Desktop Optimizations */
+        @media (min-width: 1024px) {
+          .perfect-fusion-dashboard {
+            max-width: 1536px;
+            margin: 0 auto;
+          }
         }
       `}</style>
     </div>

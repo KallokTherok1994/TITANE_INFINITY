@@ -415,7 +415,7 @@ impl RealFeedbackCollector {
         // Completion rate correlates with efficient CPU usage
         let cpu_usage = Self::get_cpu_usage().await;
         // Optimal range: 0.4-0.8 (not too low, not maxed out)
-        if cpu_usage >= 0.4 && cpu_usage <= 0.8 {
+        if (0.4..=0.8).contains(&cpu_usage) {
             0.85 + (0.1 * (1.0 - ((cpu_usage - 0.6).abs() / 0.2)))
         } else if cpu_usage < 0.4 {
             0.6 + (cpu_usage * 0.625) // Scale from 0.6 to 0.85

@@ -8,14 +8,16 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v16.1 — APP LAYOUT OPTIMISÉ
- *   Layout responsive avec mobile overlay et accessibilité
+ *   TITANE∞ v25.7.4 — APP LAYOUT OPTIMISÉ
+ *   Layout responsive avec useResponsive hook
  * ═══════════════════════════════════════════════════════════════
  */
 
 import React, { useState, useEffect } from 'react';
 import { Menu } from './Menu';
 import { GlobalExpBar } from '../components/experience/GlobalExpBar';
+// ✨ v25.7.4 - Responsive Hook
+import { useIsMobile } from '@/hooks/useResponsive';
 import './styles/AppLayout.css';
 
 interface AppLayoutProps {
@@ -33,19 +35,9 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
 }) => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
 
-  // Détecter si on est en mode mobile
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  // ✨ v25.7.4 - Utilise le hook responsive centralisé
+  const isMobile = useIsMobile();
 
   // Fermer le menu mobile lors de la navigation
   useEffect(() => {

@@ -17,6 +17,7 @@
 import { type ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { useAnimation } from '../../contexts/AnimationContext';
+import { useIsMobile, useIsTablet } from '@/hooks/useResponsive';
 import { cn } from '@/utils/cn';
 
 // ─────────────────────────────────────────────────────────────────
@@ -55,6 +56,11 @@ export const Sidebar = ({
   className,
 }: SidebarProps): JSX.Element => {
   const { animationConfig, shouldReduceMotion } = useAnimation();
+  const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
+
+  // ✨ v25.7.4 - Responsive width
+  const sidebarWidth = isMobile ? '100%' : isTablet ? '240px' : '280px';
 
   const handleClick = (item: SidebarItem): void => {
     if (onItemClick) {

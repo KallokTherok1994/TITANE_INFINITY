@@ -16,6 +16,7 @@
 
 import { type ReactNode, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useIsMobile } from '@/hooks/useResponsive';
 import { cn } from '@/utils/cn';
 import type { SidebarItem } from './Sidebar';
 
@@ -43,6 +44,8 @@ export const MobileNav = ({
   className,
 }: MobileNavProps): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
+  // ✨ v25.7.4 - Responsive hook
+  const isMobile = useIsMobile();
 
   // Close menu on route change
   useEffect(() => {

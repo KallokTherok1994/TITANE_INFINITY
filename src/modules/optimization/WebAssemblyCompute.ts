@@ -15,6 +15,9 @@
  * @phase 12 - Ultimate Optimization
  */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// Note: WebAssembly API requires 'any' types for module exports and dynamic memory operations
+
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════

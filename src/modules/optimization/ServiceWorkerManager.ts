@@ -14,6 +14,9 @@
  * @phase 12 - Ultimate Optimization
  */
 
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+// Note: Service Worker API requires non-null assertions for registration.waiting/active states
+
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════

@@ -15,6 +15,9 @@
  * @phase 11 - Advanced Features
  */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// Note: Performance API requires 'any' types for PerformanceObserver entries and memory metrics
+
 import { secureInvoke } from '@/lib/security';
 
 // ═══════════════════════════════════════════════════════════════════════════

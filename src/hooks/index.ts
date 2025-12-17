@@ -7,6 +7,21 @@
 // TITANE∞ v∞.19.2.3Ω - Hooks Central Export
 // ═══════════════════════════════════════════════════════════════
 
+// ═══ v25.7.4 RESPONSIVE DESIGN HOOKS ═══
+export {
+  useResponsive,
+  useIsMobile,
+  useIsTablet,
+  useIsDesktop,
+  useBreakpoint,
+  useScreenWidth,
+  useOrientation,
+  useIsTouchDevice,
+  type ResponsiveState,
+  type Breakpoint,
+  type Device,
+} from './useResponsive';
+
 // ═══ v25.3.2 PERFECT FUSION HOOKS ═══
 export {
   useSingularitySync,
