@@ -16,6 +16,7 @@
 /* ═══════════════════════════════════════════════════════════════ */
 @import './styles/css-vars.css';
 @import './styles/unified-tokens.css'; /* v24.3.0 - Unified design tokens */
+@import './styles/tech-effects.css'; /* v25.4.2 - Metallic & tech UI effects */
 @import './styles/animations.css';
 @import './styles/a11y.css';
 

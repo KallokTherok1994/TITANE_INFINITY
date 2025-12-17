@@ -304,6 +304,225 @@
   --font-weight-medium: var(--font-medium);
   --font-weight-semibold: var(--font-semibold);
   --font-weight-bold: var(--font-bold);
+
+  /* ═══════════════════════════════════════════════════════════════ */
+  /* ACCENT & INTERACTION v25.4.2 — Global Accent Variables          */
+  /* ═══════════════════════════════════════════════════════════════ */
+
+  /* Main accent (émeraude TITANE∞) */
+  --accent: #10b981;
+  --accent-light: #34d399;
+  --accent-dark: #059669;
+  --accent-rgb: 16, 185, 129;
+  --accent-glow: rgba(16, 185, 129, 0.5);
+
+  /* Secondary accent (violet) */
+  --accent-secondary: var(--color-violet-600);
+  --accent-secondary-light: var(--color-violet-500);
+  --accent-secondary-dark: var(--color-violet-700);
+
+  /* ═══════════════════════════════════════════════════════════════ */
+  /* BACKGROUND LAYERS v25.4.2 — Panel/Card/Glass Backgrounds        */
+  /* ═══════════════════════════════════════════════════════════════ */
+
+  /* Base backgrounds */
+  --bg-base: var(--color-bg-primary);
+  --bg-surface: var(--color-bg-secondary);
+  --bg-elevated: var(--color-bg-elevated);
+  --bg-overlay: var(--color-bg-overlay);
+
+  /* Component backgrounds */
+  --bg-card: rgba(30, 41, 59, 0.8);
+  --bg-card-hover: rgba(51, 65, 85, 0.9);
+  --bg-panel: rgba(15, 23, 42, 0.95);
+  --bg-panel-light: rgba(30, 41, 59, 0.7);
+  --bg-glass: rgba(255, 255, 255, 0.05);
+  --bg-glass-strong: rgba(255, 255, 255, 0.1);
+  --bg-input: rgba(15, 23, 42, 0.6);
+  --bg-hover: rgba(71, 85, 105, 0.4);
+  --bg-active: rgba(124, 58, 237, 0.2);
+
+  /* Chat-specific backgrounds */
+  --chat-input-bg: rgba(15, 23, 42, 0.8);
+  --chat-input-border: var(--color-border-default);
+  --chat-bubble-user: rgba(124, 58, 237, 0.15);
+  --chat-bubble-ai: rgba(16, 185, 129, 0.1);
+
+  /* ═══════════════════════════════════════════════════════════════ */
+  /* ADMIN PANEL v25.4.2 — Admin-specific Variables                  */
+  /* ═══════════════════════════════════════════════════════════════ */
+
+  --admin-bg-start: #0f172a;
+  --admin-bg-end: #1e293b;
+  --admin-header-bg-start: rgba(30, 41, 59, 0.9);
+  --admin-header-bg-end: rgba(15, 23, 42, 0.95);
+  --admin-spacing-xl: var(--space-8);
+  --admin-font-mono: var(--font-mono);
+
+  /* Admin Design Panel (ADP) */
+  --adp-accent: var(--accent);
+  --adp-bg: var(--bg-panel);
+  --adp-border: var(--color-border-default);
+  --adp-error: var(--color-error-500);
+  --adp-radius: var(--radius-lg);
+
+  /* Cloud/API Panel */
+  --cloud-accent: var(--color-info-500);
+  --cloud-bg: var(--bg-card);
+  --cloud-border: var(--color-border-subtle);
+
+  /* ═══════════════════════════════════════════════════════════════ */
+  /* AURA EFFECTS v25.4.2 — Quantum/Visual Effect Variables          */
+  /* ═══════════════════════════════════════════════════════════════ */
+
+  /* Aura color palette */
+  --aura-amber: #f59e0b;
+  --aura-blue: #3b82f6;
+  --aura-cyan: #06b6d4;
+  --aura-emerald: #10b981;
+  --aura-green: #22c55e;
+  --aura-indigo: #6366f1;
+  --aura-orange: #f97316;
+  --aura-pink: #ec4899;
+  --aura-purple: #a855f7;
+  --aura-red: #ef4444;
+  --aura-rose: #f43f5e;
+  --aura-sky: #0ea5e9;
+  --aura-teal: #14b8a6;
+  --aura-violet: #8b5cf6;
+  --aura-yellow: #eab308;
+
+  /* Aura gradients */
+  --aura-gradient-1: linear-gradient(135deg, var(--aura-violet), var(--aura-cyan));
+  --aura-gradient-2: linear-gradient(135deg, var(--aura-emerald), var(--aura-teal));
+  --aura-gradient-rainbow: linear-gradient(
+    135deg,
+    var(--aura-red),
+    var(--aura-orange),
+    var(--aura-yellow),
+    var(--aura-green),
+    var(--aura-cyan),
+    var(--aura-blue),
+    var(--aura-violet)
+  );
+
+  /* Aura animation durations */
+  --aura-pulse-duration: 2s;
+  --aura-float-duration: 6s;
+  --aura-rotate-duration: 20s;
+  --aura-glow-duration: 3s;
+
+  /* Aura intensities */
+  --aura-intensity-low: 0.3;
+  --aura-intensity-medium: 0.5;
+  --aura-intensity-high: 0.8;
+  --aura-intensity-max: 1;
+
+  /* ═══════════════════════════════════════════════════════════════ */
+  /* TITANE∞ EMERALD THEME v25.4.2 — Arc Reactor Identity            */
+  /* ═══════════════════════════════════════════════════════════════ */
+
+  /* Emerald core colors (Arc Reactor) */
+  --emerald-core: #10b981;
+  --emerald-glow: #34d399;
+  --emerald-bright: #6ee7b7;
+  --emerald-pale: #a7f3d0;
+  --emerald-deep: #059669;
+  --emerald-dark: #047857;
+
+  /* Emerald gradients */
+  --emerald-gradient-core: radial-gradient(
+    circle,
+    var(--emerald-bright) 0%,
+    var(--emerald-glow) 40%,
+    var(--emerald-core) 70%,
+    var(--emerald-deep) 100%
+  );
+  --emerald-gradient-glow: radial-gradient(
+    circle,
+    rgba(110, 231, 183, 0.6) 0%,
+    rgba(52, 211, 153, 0.3) 50%,
+    transparent 70%
+  );
+
+  /* Emerald shadows */
+  --shadow-emerald-sm: 0 0 10px rgba(16, 185, 129, 0.3);
+  --shadow-emerald-md: 0 0 20px rgba(16, 185, 129, 0.4);
+  --shadow-emerald-lg: 0 0 30px rgba(16, 185, 129, 0.5);
+  --shadow-emerald-xl: 0 0 40px rgba(16, 185, 129, 0.6);
+  --shadow-emerald-glow: 0 0 60px rgba(52, 211, 153, 0.7);
+
+  /* ═══════════════════════════════════════════════════════════════ */
+  /* METALLIC EFFECTS v25.4.2 — Premium Tech UI Effects              */
+  /* ═══════════════════════════════════════════════════════════════ */
+
+  /* Metallic silver/titanium gradients */
+  --metallic-silver: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(230, 230, 230, 0.9) 20%,
+    rgba(192, 192, 192, 0.85) 40%,
+    rgba(255, 255, 255, 0.9) 60%,
+    rgba(211, 211, 211, 0.85) 80%,
+    rgba(255, 255, 255, 0.95) 100%
+  );
+  --metallic-titanium: linear-gradient(
+    135deg,
+    var(--color-titane-300) 0%,
+    var(--color-titane-400) 25%,
+    var(--color-titane-300) 50%,
+    var(--color-titane-500) 75%,
+    var(--color-titane-300) 100%
+  );
+  --metallic-violet: linear-gradient(
+    135deg,
+    var(--color-violet-300) 0%,
+    var(--color-violet-400) 30%,
+    var(--color-violet-300) 50%,
+    var(--color-violet-500) 70%,
+    var(--color-violet-300) 100%
+  );
+
+  /* Tech glow effects */
+  --glow-violet-soft: 0 0 12px rgba(168, 85, 247, 0.4);
+  --glow-violet-medium: 0 0 20px rgba(168, 85, 247, 0.5);
+  --glow-violet-intense: 0 0 30px rgba(168, 85, 247, 0.7);
+  --glow-titane-soft: 0 0 12px rgba(114, 123, 129, 0.4);
+  --glow-titane-medium: 0 0 20px rgba(114, 123, 129, 0.5);
+  --glow-titane-intense: 0 0 30px rgba(114, 123, 129, 0.7);
+  --glow-silver: 0 0 15px rgba(255, 255, 255, 0.3);
+
+  /* Tech shadows (depth & realism) */
+  --shadow-tech-inset:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+  --shadow-tech-button:
+    0 2px 4px rgba(0, 0, 0, 0.3), 0 4px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  --shadow-tech-card:
+    0 4px 12px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --shadow-tech-panel: 0 8px 32px rgba(0, 0, 0, 0.5), 0 16px 48px rgba(0, 0, 0, 0.3);
+  --shadow-tech-floating: 0 12px 40px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.4);
+
+  /* Border effects */
+  --border-tech-subtle: 1px solid rgba(255, 255, 255, 0.08);
+  --border-tech-light: 1px solid rgba(255, 255, 255, 0.12);
+  --border-tech-medium: 1px solid rgba(255, 255, 255, 0.18);
+  --border-tech-glow-violet: 1px solid rgba(168, 85, 247, 0.5);
+  --border-tech-glow-emerald: 1px solid rgba(16, 185, 129, 0.5);
+
+  /* Glass morphism advanced */
+  --glass-tech-bg: rgba(15, 23, 42, 0.7);
+  --glass-tech-bg-light: rgba(30, 41, 59, 0.6);
+  --glass-tech-border: rgba(255, 255, 255, 0.1);
+  --glass-tech-blur: 16px;
+  --glass-tech-backdrop: blur(16px) saturate(180%);
+
+  /* Text effects */
+  --text-shadow-tech: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --text-shadow-glow-violet: 0 0 8px rgba(168, 85, 247, 0.5);
+  --text-shadow-glow-titane: 0 0 8px rgba(192, 192, 192, 0.5);
+  --text-shadow-emboss: 0 1px 0 rgba(255, 255, 255, 0.1), 0 -1px 0 rgba(0, 0, 0, 0.3);
 }
 
 /* ═══════════════════════════════════════════════════════════════ */
