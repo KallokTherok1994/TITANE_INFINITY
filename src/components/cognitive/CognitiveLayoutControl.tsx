@@ -5,7 +5,7 @@
  * Panneau de contrôle du Cognitive Layout Engine
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo, useMemo, useCallback } from 'react';
 import { useCognitiveLayout, type UIMode } from '@/hooks/useCognitiveLayout';
 import './CognitiveLayoutControl.css';
 
@@ -30,7 +30,11 @@ const MODE_DESCRIPTIONS: Record<UIMode, string> = {
   neutral: 'Mode équilibré par défaut',
 };
 
-export function CognitiveLayoutControl() {
+/**
+ * Panneau de contrôle Cognitive Layout
+ * Optimisé avec React.memo pour éviter re-renders inutiles
+ */
+export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
   const {
     currentMode,
     suggestion,
@@ -62,17 +66,21 @@ export function CognitiveLayoutControl() {
   }, [isCollapsed]);
 
   // Raccourci clavier Ctrl+K pour toggle collapse/expand
+  const handleToggleCollapse = useCallback(() => {
+    setIsCollapsed(prev => !prev);
+  }, []);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.ctrlKey && e.key === 'k') {
         e.preventDefault();
-        setIsCollapsed(prev => !prev);
+        handleToggleCollapse();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [handleToggleCollapse]);
 
   if (!currentMode) return null;
 
@@ -219,12 +227,16 @@ export function CognitiveLayoutControl() {
       {/* Fin contenu collapsible */}
     </div>
   );
-}
+});
+
+// DisplayName pour React DevTools
+CognitiveLayoutControl.displayName = 'CognitiveLayoutControl';
 
 /**
  * Version compacte pour la toolbar
+ * Optimisée avec React.memo
  */
-export function CognitiveLayoutBadge() {
+export const CognitiveLayoutBadge = memo(function CognitiveLayoutBadge() {
   const { currentMode, hasSuggestion } = useCognitiveLayout();
 
   if (!currentMode) return null;
@@ -235,4 +247,7 @@ export function CognitiveLayoutBadge() {
       {hasSuggestion && <span className="clc-badge-dot">●</span>}
     </div>
   );
-}
+});
+
+// DisplayName pour React DevTools
+CognitiveLayoutBadge.displayName = 'CognitiveLayoutBadge';

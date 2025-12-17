@@ -38,8 +38,9 @@
 }
 
 /* Position variants */
+/* ✨ v25.4.2 - Ajusté pour éviter conflit avec ChatBubble (bottom: 2rem + 80px + 24px) */
 .aura-control-toggle--bottom-right {
-  bottom: 24px;
+  bottom: 130px;
   right: 24px;
 }
 
@@ -145,8 +146,9 @@
 }
 
 /* Position variants */
+/* ✨ v25.4.2 - Ajusté pour éviter conflit avec ChatBubble */
 .aura-control-panel--bottom-right {
-  bottom: 90px;
+  bottom: 200px;
   right: 24px;
 }
 

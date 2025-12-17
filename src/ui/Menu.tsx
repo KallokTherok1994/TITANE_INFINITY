@@ -10,25 +10,36 @@
  * ═══════════════════════════════════════════════════════════════
  *   TITANE∞ v25.4.2 — MENU NAVIGATION (DESIGN FINAL)
  *   Module TITANE - LE CŒUR DU SYSTÈME (fusion Chat IA + Vision + EVO)
- *   FUSION DEV: Dev Mode + ONE CORE + QA & Tests + Orchestration (4→1)
- *   Menu simplifié: 8→5 items (-37.5%)
- *   Logo: Arc Reactor Émeraude v25.4.1
+ *   7 sections: TITANE, TIME, STATS, ADMIN, DEV, FUSION, OPTIMIZE
+ *   Icons: Lucide React (Atom, Timer, TrendingUp, Settings, Wrench, Sparkles, Zap)
+ *   Logo: Arc Reactor Émeraude v25.4.2
  * ═══════════════════════════════════════════════════════════════
  */
 
 import React, { useState } from 'react';
-import { Edit3, Atom, Timer, TrendingUp, Settings, Wrench } from 'lucide-react';
+import {
+  Edit3,
+  Atom,
+  Timer,
+  TrendingUp,
+  Settings,
+  Wrench,
+  Sparkles,
+  Zap,
+} from 'lucide-react';
 import { MenuEditor } from '../features/menu-editor/MenuEditor';
 import { TitaneLogo } from '../components/branding/TitaneLogo';
 import './styles/Menu.css';
 
-// ✨ v25.4.1 - Icon mapping for Lucide icons (professional, themeable)
+// ✨ v25.4.2 - Icon mapping for Lucide icons (professional, themeable)
 const MENU_ICONS: Record<string, React.ReactNode> = {
   titane: <Atom size={20} className="menu-lucide-icon" />,
   time: <Timer size={20} className="menu-lucide-icon" />,
   stats: <TrendingUp size={20} className="menu-lucide-icon" />,
   admin: <Settings size={20} className="menu-lucide-icon" />,
   dev: <Wrench size={20} className="menu-lucide-icon" />,
+  fusion: <Sparkles size={20} className="menu-lucide-icon" />,
+  optimization: <Zap size={20} className="menu-lucide-icon" />,
 };
 
 interface MenuProps {
@@ -65,6 +76,7 @@ const MENU_SECTIONS: MenuSection[] = [
     description: 'Centre Temporel - Agenda, Navigation, Snapshots, Intelligence, Flow',
     route: '/time',
   },
+  // ✨ v25.2.0 STATS - Métriques système consolidées
   {
     id: 'stats',
     icon: '📈',
@@ -89,6 +101,22 @@ const MENU_SECTIONS: MenuSection[] = [
       'Centre DEV Unifié - Dev Tools, Command Center, QA & Tests, Orchestration, Sécurité, Métriques',
     route: '/dev',
   },
+  // ✨ v25.3.2 FUSION - Perfect Backend/Frontend Integration Dashboard
+  {
+    id: 'fusion',
+    icon: '✨',
+    label: 'FUSION',
+    description: 'Dashboard Fusion Backend/Frontend - Singularity, Memory, Health Sync',
+    route: '/fusion',
+  },
+  // ⚡ v25.6.0 OPTIMIZE - Ultimate Performance Dashboard (GPU/WASM/Cache/IndexedDB)
+  {
+    id: 'optimization',
+    icon: '⚡',
+    label: 'OPTIMIZE',
+    description: 'Optimisation Ultime - GPU, WASM, Service Worker, IndexedDB, Cache',
+    route: '/optimization',
+  },
 ];
 
 export const Menu: React.FC<MenuProps> = ({
@@ -99,8 +127,8 @@ export const Menu: React.FC<MenuProps> = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [menuSections, setMenuSections] = useState(() => {
-    // v25.4.1: Migration one-time only (not every mount)
-    const MENU_VERSION = 'v25.4.1-stable';
+    // v25.4.2: Migration one-time only (not every mount) - FUSION + OPTIMIZE ajoutés
+    const MENU_VERSION = 'v25.4.2-fusion-optimize';
     const storedVersion = localStorage.getItem('titane_menu_version');
 
     // Only clear localStorage on version upgrade (not every mount)
