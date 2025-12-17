@@ -484,7 +484,7 @@
   }
 }
 
-/* Mobile (max-width: 767px) */
+/* Mobile (max-width: 767px) - v26.0 Responsive Optimizations */
 @media (max-width: 767px) {
   .chat-header-main {
     padding: 12px 16px;
@@ -508,19 +508,22 @@
   }
 
   .chat-header-subtitle {
-    font-size: 0.75rem;
+    font-size: max(0.75rem, 12px); /* v26.0 FIX: Minimum 12px */
     text-align: center;
     display: none;
   }
 
   .chat-header-actions {
     justify-content: center;
+    gap: 12px; /* v26.0 FIX: Adequate spacing for touch */
   }
 
+  /* v26.0 FIX: Touch targets 44px minimum on mobile */
   .chat-action-btn {
-    width: 36px;
-    height: 36px;
+    min-width: 44px;
+    min-height: 44px;
     font-size: 16px;
+    padding: 10px;
   }
 
   .chat-status-bar {
@@ -530,8 +533,9 @@
     justify-content: center;
   }
 
+  /* v26.0 FIX: Minimum 12px font-size */
   .chat-status-item {
-    font-size: 0.7rem;
+    font-size: max(0.75rem, 12px);
   }
 
   /* Hide less important status items on mobile */
@@ -643,7 +647,7 @@
   }
 }
 
-/* Small Mobile (max-width: 479px) */
+/* Small Mobile (max-width: 479px) - v26.0 WCAG Compliance */
 @media (max-width: 479px) {
   .chat-header-main {
     padding: 10px 12px;
@@ -658,10 +662,14 @@
     font-size: 0.9rem;
   }
 
+  /* v26.0 FIX: Touch targets MUST be 44x44px minimum (WCAG 2.1 AAA) */
   .chat-action-btn {
-    width: 32px;
-    height: 32px;
-    font-size: 14px;
+    min-width: 44px;
+    min-height: 44px;
+    width: 44px;
+    height: 44px;
+    font-size: 16px;
+    padding: 10px;
   }
 
   .chat-status-bar {
@@ -669,8 +677,9 @@
     gap: 6px 12px;
   }
 
+  /* v26.0 FIX: Minimum 12px font-size to prevent iOS zoom */
   .chat-status-item {
-    font-size: 0.65rem;
+    font-size: max(0.75rem, 12px);
   }
 }
 
@@ -686,5 +695,66 @@
 
   .chat-settings-panel {
     background: linear-gradient(135deg, #0a0e1a 0%, #000000 100%);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   v26.0 RESPONSIVE OPTIMIZATION - GLOBAL MOBILE FIXES
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* GPU Acceleration for smooth animations */
+.chat-action-btn,
+.chat-settings-panel,
+.chat-header {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+/* Reduce backdrop-filter on mobile for performance */
+@media (max-width: 767px) {
+  .chat-header,
+  .chat-settings-overlay {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+}
+
+/* iOS Input Zoom Prevention - CRITICAL */
+input,
+textarea,
+select,
+.chat-input,
+.chat-input textarea {
+  font-size: max(16px, 1rem) !important; /* Prevents iOS zoom on focus */
+}
+
+/* Safe Area Support for iOS notch/home indicator */
+.chat-footer {
+  padding-bottom: calc(var(--spacing-md, 16px) + env(safe-area-inset-bottom, 0px));
+}
+
+.chat-header {
+  padding-top: calc(var(--spacing-md, 16px) + env(safe-area-inset-top, 0px));
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .chat-action-btn,
+  .chat-settings-panel,
+  .chat-header-icon,
+  .status-indicator {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .chat-action-btn {
+    border-width: 2px;
+  }
+
+  .status-indicator {
+    border: 2px solid currentColor;
   }
 }

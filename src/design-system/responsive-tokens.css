@@ -220,6 +220,73 @@
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   v26.0 Z-INDEX SCALE
+   Coherent, predictable layering system
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+:root {
+  /* Base layers */
+  --z-base: 0;
+  --z-above: 1;
+
+  /* Interactive elements */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+
+  /* Overlays */
+  --z-drawer: 400;
+  --z-modal-backdrop: 500;
+  --z-modal: 600;
+  --z-popover: 700;
+
+  /* Top-level */
+  --z-tooltip: 800;
+  --z-toast: 900;
+  --z-critical: 1000;
+  --z-dev-tools: 9999;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   v26.0 MOBILE PERFORMANCE OPTIMIZATIONS
+   Reduce heavy effects on mobile devices
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+@media (max-width: 767px) {
+  :root {
+    /* Reduce blur intensity on mobile for performance */
+    --glass-blur: blur(8px);
+    --glass-blur-strong: blur(12px) saturate(150%);
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast: 0.01ms;
+    --transition-normal: 0.01ms;
+    --transition-slow: 0.01ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Save data mode - reduce everything */
+@media (prefers-reduced-data: reduce) {
+  :root {
+    --glass-blur: none;
+    --glass-blur-strong: none;
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    USAGE EXAMPLES
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

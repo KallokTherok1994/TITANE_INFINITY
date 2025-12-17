@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v8.0 — Proprietary License
+ * TITANE∞ v26.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,16 +8,16 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v8.0 - Sidebar Component (Tailwind CSS)
- * Sidebar intelligente avec navigation
- * Migration: Inline styles → Tailwind classes
+ * TITANE∞ v26.0 - Sidebar Component (Responsive Optimized)
+ * Sidebar intelligente avec navigation adaptive
+ * v26.0: Breakpoint-based width, touch targets, performance
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { type ReactNode } from 'react';
+import { type ReactNode, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useAnimation } from '../../contexts/AnimationContext';
-import { useIsMobile, useIsTablet } from '@/hooks/useResponsive';
+import { useIsMobile, useIsTablet, useResponsive } from '@/hooks/useResponsive';
 import { cn } from '@/utils/cn';
 
 // ─────────────────────────────────────────────────────────────────
@@ -47,6 +47,15 @@ export interface SidebarProps {
 // COMPONENT
 // ─────────────────────────────────────────────────────────────────
 
+// v26.0: Breakpoint-based sidebar widths
+const SIDEBAR_WIDTHS = {
+  mobile: '100%',
+  tablet: '240px',
+  desktop: '260px',
+  desktopLarge: '280px',
+  desktopXL: '300px',
+} as const;
+
 export const Sidebar = ({
   items,
   onItemClick,
@@ -58,9 +67,16 @@ export const Sidebar = ({
   const { animationConfig, shouldReduceMotion } = useAnimation();
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
+  const { windowWidth } = useResponsive();
 
-  // ✨ v25.7.4 - Responsive width
-  const sidebarWidth = isMobile ? '100%' : isTablet ? '240px' : '280px';
+  // v26.0: Adaptive sidebar width based on exact breakpoint
+  const sidebarWidth = useMemo(() => {
+    if (isMobile) return SIDEBAR_WIDTHS.mobile;
+    if (isTablet) return SIDEBAR_WIDTHS.tablet;
+    if (windowWidth >= 1536) return SIDEBAR_WIDTHS.desktopXL;
+    if (windowWidth >= 1280) return SIDEBAR_WIDTHS.desktopLarge;
+    return SIDEBAR_WIDTHS.desktop;
+  }, [isMobile, isTablet, windowWidth]);
 
   const handleClick = (item: SidebarItem): void => {
     if (onItemClick) {
@@ -75,9 +91,10 @@ export const Sidebar = ({
       <motion.div
         key={item.id}
         className={cn(
-          // Base styles
+          // Base styles - v26.0: 44px min-height for touch
           'flex items-center gap-3 px-4 py-3 rounded-md cursor-pointer',
           'transition-all duration-200 text-sm text-text-secondary mb-1',
+          'min-h-[44px]', // v26.0: WCAG touch target
           // Active state
           isActive && 'bg-bg-tertiary text-violet-400 border-l-3 border-violet-500',
           // Hover state (not active)
