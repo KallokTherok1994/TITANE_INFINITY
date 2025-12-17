@@ -9,3 +9,6 @@ npm exec lint-staged || {
   echo "❌ Erreur lint-staged"
   exit 1
 }
+
+# COPILOT-XS gate
+npm run copilot-xs:precommit

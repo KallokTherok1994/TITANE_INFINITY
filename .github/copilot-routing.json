@@ -1,0 +1,24 @@
+{
+  "_meta": {
+    "creator": "Kevin Thibault",
+    "project": "TITANE∞",
+    "generatedWith": "GitHub Copilot (GPT-5.2)",
+    "license": "See LICENSE.md"
+  },
+  "version": 1,
+  "routing_rules": [
+    {
+      "priority": 1,
+      "when": "security",
+      "agents": ["security_auditor", "code_reviewer"]
+    },
+    { "priority": 2, "when": "infra", "agents": ["devops_engineer", "security_auditor"] },
+    { "priority": 3, "when": "ai_ml", "agents": ["ai_ml_engineer", "data_scientist"] },
+    {
+      "priority": 4,
+      "when": "architecture",
+      "agents": ["systems_architect", "code_reviewer"]
+    },
+    { "priority": 9, "when": "default", "agents": ["code_reviewer"] }
+  ]
+}
