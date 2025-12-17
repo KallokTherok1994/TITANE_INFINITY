@@ -27,3 +27,4 @@ export { MemoryDashboard } from './MemoryDashboard';
 export { MemoryViewer } from './MemoryViewer';
 export { DictationButton } from './DictationButton';
 export { FileUploadButton } from './FileUploadButton';
+export { ChatToolbar } from './ChatToolbar';
