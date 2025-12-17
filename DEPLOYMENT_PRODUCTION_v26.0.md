@@ -41,7 +41,7 @@ fcd1be14 - MobileNav + Grid improvements ← LATEST
 
 ## 🎯 OPTIONS DE DÉPLOIEMENT
 
-### Option 1: Serveur Personnel (Nginx/Apache) - Contrôle Total
+### Option 1: Serveur Personnel (Nginx/Apache) - Contrôle Total ⭐ RECOMMANDÉ
 
 **Prérequis:**
 
@@ -50,7 +50,48 @@ fcd1be14 - MobileNav + Grid improvements ← LATEST
 - Git installé
 - Accès SSH root ou sudo
 
-#### A. Déploiement sur Serveur
+**✅ Infrastructure v26.1 Complète Disponible:**
+
+- Script déploiement automatique 8-phase
+- Configuration Nginx production-grade
+- Admin access avec htpasswd
+- Documentation complète
+
+#### A. Déploiement Automatique (NOUVEAU v26.1) - Méthode Recommandée
+
+**⚡ 3 Commandes Seulement:**
+
+```bash
+# 1. ÉDITER configuration serveur (2 min)
+nano deployment/deploy-to-server.sh
+# Modifier lignes 18-25:
+# SERVER_HOST="203.0.113.50"  # ← Votre IP serveur
+# DOMAIN="titane-infinity.com"  # ← Votre domaine
+
+# 2. EXÉCUTER déploiement automatique (10-15 min)
+chmod +x deployment/*.sh
+./deployment/deploy-to-server.sh
+
+# 3. VALIDER déploiement (5 min)
+# Tests automatiques fournis dans le script
+curl -I https://VOTRE-DOMAINE.com/sw.js | grep "cache-control: no-cache"
+lighthouse https://VOTRE-DOMAINE.com --view
+```
+
+**Le script automatique fait:**
+
+- [1/8] Valide build local (dist/, sw.js, manifest.json, 64 fichiers .br)
+- [2/8] Test connexion SSH serveur
+- [3/8] Backup version existante (timestamped)
+- [4/8] Upload via rsync avec compression
+- [5/8] Configure Nginx + Brotli + security headers
+- [6/8] **Setup admin access** (htpasswd interactive)
+- [7/8] Génère SSL Let's Encrypt automatique
+- [8/8] Restart Nginx + validation
+
+**Documentation complète:** `deployment/QUICK_DEPLOY.md`
+
+#### B. Déploiement Manuel (Alternative)
 
 ```bash
 # 1. Sur le serveur, cloner ou pull
@@ -60,7 +101,7 @@ cd TITANE_INFINITY
 
 # OU si déjà cloné:
 git pull origin MAIN
-git checkout fcd1be14  # commit exact v26.0
+git checkout b5927db3  # commit exact v26.1 (deployment infrastructure)
 
 # 2. Install + Build
 npm install --production
@@ -71,7 +112,19 @@ sudo cp -r dist/* /var/www/html/titane-infinity/
 sudo chown -R www-data:www-data /var/www/html/titane-infinity/
 ```
 
-#### B. Configuration Nginx (CRITIQUE pour Brotli)
+#### C. Configuration Nginx (CRITIQUE pour Brotli)
+
+**Option Automatique (Recommandé):**
+
+```bash
+# Utiliser config production-grade fournie
+sudo cp deployment/nginx/titane-infinity.conf /etc/nginx/sites-available/titane-infinity
+sudo sed -i "s/titane-infinity.local/VOTRE-DOMAINE.com/g" /etc/nginx/sites-available/titane-infinity
+sudo ln -s /etc/nginx/sites-available/titane-infinity /etc/nginx/sites-enabled/
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+**Option Manuelle (si modification nécessaire):**
 
 Créer `/etc/nginx/sites-available/titane-infinity`:
 
