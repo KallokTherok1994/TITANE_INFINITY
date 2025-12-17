@@ -589,6 +589,63 @@
   backdrop-filter: blur(10px);
 }
 
+.conversation-filters {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--glass-border);
+  background: rgba(0, 0, 0, 0.22);
+  position: relative;
+  z-index: 1;
+}
+
+.conversation-filters-search {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-text);
+}
+
+.conversation-filters-search input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--color-text);
+  font-size: 0.875rem;
+}
+
+.conversation-filters-search input::placeholder {
+  color: var(--color-text-secondary);
+  opacity: 0.75;
+}
+
+.conversation-filters-role {
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  color: var(--color-text);
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.conversation-filters-count {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  opacity: 0.85;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
 .conversation-toolbar-left,
 .conversation-toolbar-right {
   display: flex;
@@ -870,6 +927,50 @@
   font-size: 0.75rem;
   color: var(--color-text-secondary);
   opacity: 0.7;
+}
+
+.conversation-message-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 0.25rem;
+}
+
+.conversation-message.user .conversation-message-actions {
+  justify-content: flex-start;
+}
+
+.conversation-message-action {
+  padding: 0.35rem 0.6rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-text);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: var(--titane-transition);
+}
+
+.conversation-message-action:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
+}
+
+.conversation-message-action:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.conversation-message-action.danger {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+.conversation-message-action.danger:hover {
+  background: rgba(239, 68, 68, 0.18);
+  border-color: rgba(239, 68, 68, 0.35);
 }
 
 .meta-intention {

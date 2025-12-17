@@ -63,6 +63,7 @@ export interface UseConversationEngineReturn {
   // Actions
   sendMessage: (content: string) => Promise<ConversationResponse | null>;
   clearMessages: () => void;
+  deleteMessage: (messageId: string) => void;
 
   // Health & Stats
   healthReport: ConversationHealthReport | null;
@@ -242,6 +243,11 @@ export function useConversationEngine(
     setError(null);
   }, []);
 
+  // ═══ DELETE MESSAGE (local only) ═══
+  const deleteMessage = useCallback((messageId: string) => {
+    setMessages(prev => prev.filter(m => m.id !== messageId));
+  }, []);
+
   // ═══ SET MODE ═══
   const setModeCallback = useCallback((mode: ConversationMode) => {
     setCurrentMode(mode);
@@ -258,6 +264,7 @@ export function useConversationEngine(
     setMode: setModeCallback,
     sendMessage,
     clearMessages,
+    deleteMessage,
     healthReport,
     refreshHealth,
     lastResponse,

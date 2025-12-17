@@ -58,6 +58,10 @@ import { Camera } from 'lucide-react';
 import type { ProgressionState } from '@/cognitive/types';
 import type { VisualLevel } from '@/types/visionAffect';
 import { useVoiceEngine } from '@/hooks/useVoiceEngine';
+import { VisionMetricsChart } from '@/features/vision/VisionMetricsChart';
+import { DetectionOverlay } from '@/features/vision/DetectionOverlay';
+import { MemoryTreeViewer } from '@/features/memory/MemoryTreeViewer';
+import { MemorySearchPanel } from '@/features/memory/MemorySearchPanel';
 import './TitanePage.css';
 
 // ═══ HELPER FUNCTIONS FOR OPTIMIZATION ═══
@@ -160,6 +164,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
     setMode,
     sendMessage,
     clearMessages,
+    deleteMessage,
     healthReport,
     refreshHealth,
   } = useConversationEngine({
@@ -176,6 +181,8 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [customModes, setCustomModes] = useState<CustomMode[]>([]);
   const [_attachedImages, setAttachedImages] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterRole, setFilterRole] = useState<'all' | 'user' | 'assistant'>('all');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // ═══ THINKING STEPS (v25.6.0) ═══
@@ -260,6 +267,21 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
     console.log('Mode personnalisé sauvegardé:', mode);
   }, []);
 
+  const filteredMessages = useMemo(() => {
+    let result = messages;
+
+    if (searchQuery.trim()) {
+      const needle = searchQuery.toLowerCase();
+      result = result.filter(m => m.content.toLowerCase().includes(needle));
+    }
+
+    if (filterRole !== 'all') {
+      result = result.filter(m => m.role === filterRole);
+    }
+
+    return result;
+  }, [messages, searchQuery, filterRole]);
+
   // ═══ AUTO-SCROLL ═══
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -306,6 +328,28 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
       thinking.stopThinking();
     }
   }, [inputValue, isLoading, sendMessage, audioEnabled, thinking]);
+
+  const handleCopyMessage = useCallback(async (content: string) => {
+    try {
+      await navigator.clipboard.writeText(content);
+    } catch (err) {
+      console.warn('[TitanePage] Copy message failed:', err);
+      alert('❌ Impossible de copier le message');
+    }
+  }, []);
+
+  const handleRetryMessage = useCallback(
+    async (content: string) => {
+      if (!content.trim() || isLoading) return;
+      thinking.startThinking();
+      try {
+        await sendMessage(content);
+      } finally {
+        thinking.stopThinking();
+      }
+    },
+    [isLoading, sendMessage, thinking]
+  );
 
   const handleKeyPress = useCallback(
     (e: React.KeyboardEvent) => {
@@ -463,6 +507,35 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
           </div>
         </div>
 
+        {/* ═══ SEARCH / FILTERS ═══ */}
+        <div className="conversation-filters">
+          <div className="conversation-filters-search">
+            <Search size={16} />
+            <input
+              type="search"
+              placeholder="Rechercher..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              aria-label="Rechercher dans la conversation"
+            />
+          </div>
+
+          <select
+            className="conversation-filters-role"
+            value={filterRole}
+            onChange={e => setFilterRole(e.target.value as typeof filterRole)}
+            aria-label="Filtrer par rôle"
+          >
+            <option value="all">Tous</option>
+            <option value="user">Utilisateur</option>
+            <option value="assistant">TITANE</option>
+          </select>
+
+          <div className="conversation-filters-count">
+            {filteredMessages.length}/{messages.length}
+          </div>
+        </div>
+
         {/* ═══ THINKING PANEL ═══ */}
         <ThinkingPanel steps={thinking.steps} isThinking={thinking.isThinking} />
 
@@ -494,7 +567,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
             </div>
           )}
 
-          {messages.map((msg, index) => (
+          {filteredMessages.map((msg, index) => (
             <div
               key={msg.id || `msg-${index}`}
               className={`conversation-message ${msg.role}`}
@@ -523,6 +596,38 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
                     <span className="meta-intention">{msg.metadata.intention}</span>
                   </div>
                 )}
+
+                <div className="conversation-message-actions">
+                  <button
+                    type="button"
+                    className="conversation-message-action"
+                    onClick={() => handleCopyMessage(msg.content)}
+                    title="Copier le message"
+                  >
+                    📋 Copier
+                  </button>
+
+                  {msg.role === 'user' && (
+                    <button
+                      type="button"
+                      className="conversation-message-action"
+                      onClick={() => handleRetryMessage(msg.content)}
+                      title="Renvoyer ce message"
+                      disabled={isLoading}
+                    >
+                      🔄 Retry
+                    </button>
+                  )}
+
+                  <button
+                    type="button"
+                    className="conversation-message-action danger"
+                    onClick={() => deleteMessage(msg.id)}
+                    title="Supprimer ce message"
+                  >
+                    🗑️
+                  </button>
+                </div>
               </div>
             </div>
           ))}
@@ -630,18 +735,21 @@ const VisionSection: React.FC<VisionSectionProps> = () => {
     <div className="titane-section titane-section-vision">
       <TSectionHeader
         title="📷 Vision & Perception"
-        subtitle="Analyse visuelle et estimation affective"
+        subtitle="Analyse visuelle et estimation affective en temps réel"
       />
 
       <Grid columns={2} gap={4}>
-        {/* Camera Preview */}
+        {/* Camera Preview avec Detection Overlay */}
         <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Caméra & Analyse</h3>
+          <h3 style={{ marginBottom: spacing[4] }}>Caméra & Détections</h3>
           <StatusIndicator active={isCameraActive} label="Caméra Active" />
 
           <div className="vision-camera-container">
             {env.isTauri ? (
-              <CameraPreview />
+              <div style={{ position: 'relative' }}>
+                <CameraPreview />
+                <DetectionOverlay />
+              </div>
             ) : (
               <div className="vision-placeholder">
                 <Camera size={48} color={colors.neutral[400]} />
@@ -651,9 +759,17 @@ const VisionSection: React.FC<VisionSectionProps> = () => {
               </div>
             )}
           </div>
+
+          <div className="vision-ethical-disclaimer" style={{ marginTop: spacing[4] }}>
+            <h4>⚠️ Information Importante</h4>
+            <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
+              Le module Vision est <strong>100% local</strong> — aucune donnée n'est
+              envoyée vers le cloud.
+            </p>
+          </div>
         </Card>
 
-        {/* Vision Stats */}
+        {/* Vision Stats - Placeholder pour compatibilité */}
         <Card>
           <h3 style={{ marginBottom: spacing[4] }}>Métriques Vision</h3>
 
@@ -662,16 +778,14 @@ const VisionSection: React.FC<VisionSectionProps> = () => {
             <TMetric label="Affect Estimation" value="Moyen" color="info" />
             <TMetric label="Reconnaissance" value="75%" color="primary" />
           </Stack>
-
-          <div className="vision-ethical-disclaimer" style={{ marginTop: spacing[6] }}>
-            <h4>⚠️ Information Importante</h4>
-            <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
-              Le module Vision est <strong>100% local</strong> — aucune donnée n'est
-              envoyée vers le cloud.
-            </p>
-          </div>
         </Card>
       </Grid>
+
+      {/* Vision Metrics Charts */}
+      <div style={{ marginTop: spacing[6] }}>
+        <h3 style={{ marginBottom: spacing[4] }}>📈 Graphiques de Métriques</h3>
+        <VisionMetricsChart />
+      </div>
     </div>
   );
 };
@@ -814,13 +928,25 @@ interface MemorySectionProps {
 }
 
 const MemorySection: React.FC<MemorySectionProps> = ({ stats }) => {
+  const [selectedNode, setSelectedNode] = useState<any>(null);
+
+  const handleNodeClick = useCallback((node: any) => {
+    setSelectedNode(node);
+    console.log('Node clicked:', node);
+  }, []);
+
+  const handleEntryClick = useCallback((entry: any) => {
+    console.log('Memory entry clicked:', entry);
+  }, []);
+
   return (
     <div className="titane-section titane-section-memory">
       <TSectionHeader
         title="💾 Mémoire Triple"
-        subtitle="Architecture court/moyen/long terme"
+        subtitle="Architecture court/moyen/long terme avec visualisation hiérarchique"
       />
 
+      {/* Stats Cards */}
       <Grid columns={3} gap={4}>
         <Card>
           <h3 style={{ marginBottom: spacing[4] }}>Court Terme</h3>
@@ -872,6 +998,26 @@ const MemorySection: React.FC<MemorySectionProps> = ({ stats }) => {
           </p>
         </Card>
       </Grid>
+
+      {/* Memory Tree Visualization */}
+      <div style={{ marginTop: spacing[6] }}>
+        <h3 style={{ marginBottom: spacing[4] }}>🌳 Arbre de la Mémoire</h3>
+        <MemoryTreeViewer onNodeClick={handleNodeClick} showAttributes={true} />
+        {selectedNode && (
+          <Card style={{ marginTop: spacing[4] }}>
+            <h4>Nœud sélectionné</h4>
+            <pre style={{ fontSize: fontSizes.xs, color: colors.neutral[400] }}>
+              {JSON.stringify(selectedNode, null, 2)}
+            </pre>
+          </Card>
+        )}
+      </div>
+
+      {/* Memory Search */}
+      <div style={{ marginTop: spacing[6] }}>
+        <h3 style={{ marginBottom: spacing[4] }}>🔍 Recherche Sémantique</h3>
+        <MemorySearchPanel onEntryClick={handleEntryClick} />
+      </div>
     </div>
   );
 };
