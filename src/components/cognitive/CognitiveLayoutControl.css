@@ -604,6 +604,78 @@ body.sidebar-autohide:not(:hover) {
 }
 
 /* ═════════════════════════════════════════════════════════════════
+   ANIMATIONS POLISH v25.7.3
+   ═════════════════════════════════════════════════════════════════ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+/* Apply animations */
+.cognitive-layout-control {
+  animation: scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.clc-content {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.clc-mode-btn:hover:not(:disabled) {
+  animation: shimmer 2s linear infinite;
+  background: linear-gradient(
+    90deg,
+    var(--surface-hover, #2a2a2a) 25%,
+    var(--surface-elevated, #333) 50%,
+    var(--surface-hover, #2a2a2a) 75%
+  );
+  background-size: 200% 100%;
+}
+
+.clc-suggestion {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.clc-preset-dialog {
+  animation: scaleIn 0.2s ease-out;
+}
+
+/* Smooth transitions */
+.clc-mode-btn,
+.clc-btn,
+.clc-history-btn,
+.clc-preset-load,
+.cognitive-layout-badge {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ═════════════════════════════════════════════════════════════════
    ACCESSIBILITY - Screen Reader Only Utility
    ═════════════════════════════════════════════════════════════════ */
 

@@ -242,12 +242,16 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
             // Import mode
             setMode(config.currentMode);
 
+            // v25.7.3: Audio feedback
+            playSound('success');
             alert('✅ Configuration imported successfully!');
           } else {
+            playSound('error');
             alert('❌ Invalid configuration file');
           }
         } catch (error) {
           console.error('Import error:', error);
+          playSound('error');
           alert('❌ Error importing configuration');
         }
       };
@@ -258,6 +262,47 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
     },
     [setMode, setPosition]
   );
+
+  // v25.7.3: Audio feedback system (subtle, optional)
+  const playSound = useCallback((type: 'click' | 'success' | 'error') => {
+    // Only in browser with user interaction
+    if (typeof window === 'undefined' || !window.AudioContext) return;
+
+    try {
+      const audioContext = new (window.AudioContext ||
+        (window as any).webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      // Subtle volume
+      gainNode.gain.value = 0.1;
+
+      // Different frequencies for different actions
+      switch (type) {
+        case 'click':
+          oscillator.frequency.value = 800;
+          gainNode.gain.setTargetAtTime(0, audioContext.currentTime, 0.05);
+          break;
+        case 'success':
+          oscillator.frequency.value = 1200;
+          gainNode.gain.setTargetAtTime(0, audioContext.currentTime, 0.1);
+          break;
+        case 'error':
+          oscillator.frequency.value = 400;
+          gainNode.gain.setTargetAtTime(0, audioContext.currentTime, 0.15);
+          break;
+      }
+
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.1);
+    } catch (error) {
+      // Silently fail if audio not supported
+      console.debug('Audio feedback not available:', error);
+    }
+  }, []);
 
   // Log performance stats in DEV
   useEffect(() => {
@@ -483,10 +528,22 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
             </div>
 
             <div className="clc-suggestion-actions">
-              <button className="clc-btn clc-btn-primary" onClick={acceptSuggestion}>
+              <button
+                className="clc-btn clc-btn-primary"
+                onClick={() => {
+                  playSound('success');
+                  acceptSuggestion();
+                }}
+              >
                 Appliquer
               </button>
-              <button className="clc-btn clc-btn-secondary" onClick={refuseSuggestion}>
+              <button
+                className="clc-btn clc-btn-secondary"
+                onClick={() => {
+                  playSound('click');
+                  refuseSuggestion();
+                }}
+              >
                 Refuser
               </button>
             </div>
@@ -506,6 +563,8 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
                 key={mode}
                 className={`clc-mode-btn ${currentMode === mode ? 'active' : ''}`}
                 onClick={() => {
+                  // v25.7.3: Audio feedback
+                  playSound('click');
                   // v25.6.9: Performance tracking on mode change
                   const stop = measure('setMode', 'user-interaction');
                   setMode(mode);
