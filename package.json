@@ -45,7 +45,12 @@
     "build-storybook": "storybook build",
     "docs": "typedoc",
     "docs:serve": "echo '🔒 TAURI-ONLY MODE' && exit 1",
-    "prepare": "husky"
+    "prepare": "husky",
+    "copilot-xs:validate": "node .github/copilot-xs/scripts/validate.js",
+    "copilot-xs:precommit": "node .github/copilot-xs/scripts/precommit.js",
+    "copilot-xs:status": "node .github/copilot-xs/scripts/agent-status.js",
+    "copilot-xs:security-scan": "node .github/copilot-xs/scripts/security-scan.js",
+    "copilot-xs:test": "npm run copilot-xs:validate && npm run test:all"
   },
   "dependencies": {
     "@sentry/react": "^10.29.0",
