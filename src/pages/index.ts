@@ -15,6 +15,12 @@ export { CognitivePage } from './CognitivePage';
 export { ProgressionPage } from './ProgressionPage';
 export { DesignSystemPage } from './DesignSystemPage';
 
+// ✨ v25 EVO - Centre d'Évolution Totale (fusion Dashboard + Identity + Memory + Evolution + Progression)
+export { EvoPage } from './EvoPage';
+
+// ✨ v25.1 TIME - Centre Temporel Unifié (fusion Temporal Flow + Agenda + Time Navigator)
+export { TimePage } from './TimePage';
+
 // Engine Pages
 export { Stats } from './Stats'; // v25.2.0: Unified Nexus + Helios + Harmonia
 export { Sentinel } from './Sentinel';

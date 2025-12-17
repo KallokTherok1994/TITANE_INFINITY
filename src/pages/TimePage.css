@@ -1,0 +1,169 @@
+/**
+ * TITANE∞ v25.1 — TIME PAGE STYLES
+ * Centre temporel unifié — Agenda + Navigation + Snapshots + Intelligence + Flow
+ */
+
+.time-page {
+  /* Variables */
+  --time-primary: #3b82f6;
+  --time-secondary: #06b6d4;
+  --time-accent: #8b5cf6;
+  --time-success: #10b981;
+  --time-warning: #f59e0b;
+  --time-error: #ef4444;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════════════════════════ */
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
+  }
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTIONS
+   ═══════════════════════════════════════════════════════════════ */
+
+.time-page .now-section,
+.time-page .agenda-section,
+.time-page .timeline-section,
+.time-page .snapshots-section,
+.time-page .intelligence-section,
+.time-page .flow-section {
+  animation: slide-in 0.3s ease-out;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TIME BLOCKS
+   ═══════════════════════════════════════════════════════════════ */
+
+.time-block {
+  position: relative;
+  border-left: 4px solid var(--time-primary);
+  transition: all 0.2s ease;
+}
+
+.time-block:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+  border-left-color: var(--time-secondary);
+}
+
+.time-block.active {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TIMELINE
+   ═══════════════════════════════════════════════════════════════ */
+
+.timeline-dot {
+  position: absolute;
+  left: -12px;
+  top: 8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--time-primary), var(--time-secondary));
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+  z-index: 1;
+}
+
+.timeline-line {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--time-primary), var(--time-accent));
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SNAPSHOTS
+   ═══════════════════════════════════════════════════════════════ */
+
+.snapshot-card {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.snapshot-card:hover {
+  transform: translateX(4px);
+  border-color: var(--time-primary);
+}
+
+.snapshot-card.selected {
+  background-color: rgba(59, 130, 246, 0.2);
+  border-color: var(--time-primary);
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FLOW STATE
+   ═══════════════════════════════════════════════════════════════ */
+
+.flow-indicator {
+  position: relative;
+  overflow: hidden;
+}
+
+.flow-indicator.active::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, transparent 70%);
+  animation: flow-pulse 3s ease-in-out infinite;
+}
+
+@keyframes flow-pulse {
+  0%,
+  100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .time-page .tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .time-page .tabs button {
+    flex-shrink: 0;
+  }
+
+  .timeline-dot {
+    left: -8px;
+    width: 16px;
+    height: 16px;
+  }
+}

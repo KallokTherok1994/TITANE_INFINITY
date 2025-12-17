@@ -84,25 +84,28 @@ if (typeof window !== 'undefined') {
 }
 
 // ✨ v24 P2-4 - Performance: Lazy load ALL pages except Dashboard
-// ✨ PHASE 4.3 - Lazy load Dashboard pour réduire FCP de ~400ms
-const DashboardPage = lazy(() =>
-  import('./pages/DashboardPage').then(m => ({ default: m.DashboardPage }))
+// ❌ SUPPRIMÉ v24.3.8: DashboardPage (fusionné dans EvoPage)
+// const DashboardPage = lazy(() => import('./pages/DashboardPage')...);
+
+// ✨ v25 EVO - Centre d'Évolution Totale (Fusion Dashboard + Identity + Memory + Evolution + Progression)
+const EvoPage = lazy(() => import('./pages/EvoPage').then(m => ({ default: m.EvoPage })));
+
+// ✨ v25.1 TIME - Centre Temporel Unifié (Fusion Temporal Flow + Agenda + Time Navigator)
+const TimePage = lazy(() =>
+  import('./pages/TimePage').then(m => ({ default: m.TimePage }))
 );
 
 // ✨ v24 P2-4 - Lazy loaded pages (code splitting)
 const ChatPage = lazy(() => import('./ui/pages/Chat').then(m => ({ default: m.Chat })));
-const CognitivePage = lazy(() =>
-  import('./pages/CognitivePage').then(m => ({ default: m.CognitivePage }))
-);
-const ProgressionPage = lazy(() =>
-  import('./pages/ProgressionPage').then(m => ({ default: m.ProgressionPage }))
-);
+// ❌ SUPPRIMÉ v25.1: CognitivePage (redirigé vers /stats)
+// const CognitivePage = lazy(() => import('./pages/CognitivePage')...);
+// ❌ SUPPRIMÉ v24.3.8: ProgressionPage (fusionné dans EvoPage)
+// const ProgressionPage = lazy(() => import('./pages/ProgressionPage')...);
 const Experience = lazy(() =>
   import('./pages/Experience').then(m => ({ default: m.Experience }))
 );
-const ConfigurationHub = lazy(() =>
-  import('./pages/ConfigurationHub').then(m => ({ default: m.ConfigurationHub }))
-);
+// ❌ SUPPRIMÉ v25.1: ConfigurationHub (redirigé vers /admin)
+// const ConfigurationHub = lazy(() => import('./pages/ConfigurationHub')...);
 // Diagnostics, DevTools, Cluster, Introspection, HyperVision → System Center
 
 // ✨ v24 - Performance: Lazy load SingularityMonitor
@@ -149,16 +152,7 @@ const CognitiveLayoutControl = lazy(() =>
 // import './components/presence/MultimodalPresencePanel.css';
 
 // ✨ v∞.29-32 - Deep Psyche Engines (Super Prompts XXIX, XXX, XXXII, X)
-// ✨ v24.2.1 PERF: Removed unused DeepPsychePanel import (~22KB savings)
-// import { DeepPsychePanel as _DeepPsychePanel } from './components/psyche/DeepPsychePanel';
-// ✨ PHASE 4.2 - Lazy load psyche engines (defer ~300KB) - Typed stubs
-interface EngineStub {
-  start: () => void;
-  stop: () => void;
-}
-const _archetypeResonanceEngine: EngineStub = { start: () => {}, stop: () => {} };
-const _metaContinuumEngine: EngineStub = { start: () => {}, stop: () => {} };
-const _embodiedPresenceEngine: EngineStub = { start: () => {}, stop: () => {} };
+// ❌ SUPPRIMÉ v24.3.8: Stubs engines inutilisés (archetypeResonanceEngine, metaContinuumEngine, embodiedPresenceEngine)
 import { neuralVoiceBlendingEngine as _neuralVoiceBlendingEngine } from './engines/voice/neuralVoiceBlendingEngine';
 
 // ✨ v∞.33 - Presence OS Panel (Super Prompt XII - TITANE∞ PRESENCE OS 🌌)
@@ -172,10 +166,7 @@ import { neuralVoiceBlendingEngine as _neuralVoiceBlendingEngine } from './engin
 // import './components/physiological/PhysiologicalPanel.css';
 
 // ✨ v∞.31-33 - Expression Engines (SUPER PROMPTS XXXI-XXXIII + Aura Ultra)
-// ✨ PHASE 4.2 - Lazy load expression engines (defer ~500KB) - Typed stubs
-const _synestheticEmotionEngine: EngineStub = { start: () => {}, stop: () => {} };
-const _unifiedMultimodalOutputEngine: EngineStub = { start: () => {}, stop: () => {} };
-const _auraEngine: EngineStub = { start: () => {}, stop: () => {} };
+// ❌ SUPPRIMÉ v24.3.8: Stubs engines inutilisés (synestheticEmotionEngine, unifiedMultimodalOutputEngine, auraEngine)
 import './components/psyche/DeepPsychePanel.css';
 
 // ✨ v∞.12 - Presence OS (Unified Multimodal Identity System)
@@ -206,36 +197,24 @@ const KnowledgeFusionPage = lazy(() => import('./ui/pages/KnowledgeFusionPage'))
 const CreationStudio = lazy(() => import('./ui/pages/CreationStudio'));
 const EvolutionMonitor = lazy(() => import('./ui/pages/EvolutionMonitor'));
 
-// ✨ SYSTEM CENTER - Centre Système Unifié v∞
-const SystemCenterPage = lazy(() =>
-  import('./features/system-center').then(m => ({ default: m.SystemCenterPage }))
+// ✨ v25.2.2 ADMIN CENTER - Module ADMIN Unifié (Système, Config, Audio, Design, Gouvernance)
+const AdminPage = lazy(() =>
+  import('./features/admin').then(m => ({ default: m.AdminPage }))
 );
 
-// ✨ DESIGN CENTER - Centre Design & Apparence v16
-const DesignCenterPage = lazy(() =>
-  import('./features/design-center').then(m => ({ default: m.DesignCenterPage }))
-);
-
-// ✨ GOVERNANCE CENTER - Centre Gouvernance & Sécurité v∞
-const GovernanceCenterPage = lazy(() =>
-  import('./features/governance-center').then(m => ({ default: m.GovernanceCenterPage }))
-);
-
-// ✨ AUDIO CENTER - Centre Audio & Voix v19.2
-const AudioCenterPage = lazy(() =>
-  import('./features/audio-center').then(m => ({ default: m.AudioCenterPage }))
-);
-
-// ✨ EVOLUTION CENTER - Centre d'Évolution Cognitive v19.3 (OPUS #4)
-const EvolutionCenterPage = lazy(() =>
-  import('./pages/EvolutionCenterPage').then(m => ({ default: m.EvolutionCenterPage }))
-);
+// ❌ SUPPRIMÉ v24.3.8: EvolutionCenterPage (fusionné dans EvoPage)
+// const EvolutionCenterPage = lazy(() => import('./pages/EvolutionCenterPage')...);
 
 // ✨ ORCHESTRATION META CENTER - Centre Unifié v24 (TODO #9 - Fusion Meta + Orchestration)
 const OrchestrationMetaCenter = lazy(() =>
   import('./pages/OrchestrationMetaCenter').then(m => ({
     default: m.OrchestrationMetaCenter,
   }))
+);
+
+// ✨ v25.2 ADMIN CENTER - Centre Admin Unifié (Fusion Système + Config + Audio + Design + Gouvernance)
+const AdminPage = lazy(() =>
+  import('./features/admin/AdminPage').then(m => ({ default: m.AdminPage }))
 );
 
 // ✨ ONE CORE - Centre de Commande Unifié v19.5 (OPUS #6)
@@ -290,20 +269,14 @@ const OrchestrationIntelligenceCenter = lazy(
   () => import('./modules/OrchestrationIntelligenceCenter')
 );
 
-// ✨ v24.1 - IDENTITY & MEMORY EVOLUTION CENTER (FUSION 4 modules → 1 centre)
-const IdentityMemoryEvolutionCenter = lazy(
-  () => import('./modules/IdentityMemoryEvolutionCenter')
-);
+// ❌ SUPPRIMÉ v24.3.8: IdentityMemoryEvolutionCenter (fusionné dans EvoPage)
+// const IdentityMemoryEvolutionCenter = lazy(() => import('./modules/IdentityMemoryEvolutionCenter'));
 
-// ✨ v24.2 - TEMPORAL FLOW & AGENDA CENTER (FUSION 2 modules → 1 centre)
-const TemporalFlowCenter = lazy(() => import('./modules/TemporalFlowCenter'));
+// ❌ SUPPRIMÉ v25.1: TemporalFlowCenter (fusionné dans TimePage)
+// const TemporalFlowCenter = lazy(() => import('./modules/TemporalFlowCenter'));
 
 // ✨ v24 P2-4 - Engine & System pages (lazy loaded for code splitting)
-const Helios = lazy(() => import('./pages/Helios').then(m => ({ default: m.Helios })));
-const Nexus = lazy(() => import('./pages/Nexus').then(m => ({ default: m.Nexus })));
-const Harmonia = lazy(() =>
-  import('./pages/Harmonia').then(m => ({ default: m.Harmonia }))
-);
+// ❌ SUPPRIMÉ v25.2.1: Helios, Nexus, Harmonia → fusionnés dans /stats (Stats.tsx)
 const Sentinel = lazy(() =>
   import('./pages/Sentinel').then(m => ({ default: m.Sentinel }))
 );
@@ -642,84 +615,32 @@ const AppRouter: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [livingEngines.state.initialized]);
 
-  // ✨ v24.2.1: Memoized sidebar items to prevent re-renders
-  // Sidebar items configuration - v∞.19.3 COMPLETE
+  // ✨ v25.2.1: Sidebar items - Architecture FINALE CLEAN
+  // SUPPRESSIONS DÉFINITIVES: Helios, Nexus, Harmonia, État Cognitif, Mémoire
   const sidebarItems = useMemo(
     () => [
       // ═══ PRINCIPAL ═══
-      { id: '/', label: 'Tableau de bord', icon: '📊' },
       { id: '/chat', label: 'Chat IA', icon: '💬', badge: 'OMEGA' },
-      { id: '/cognitive', label: 'État Cognitif', icon: '🧠' },
-      { id: '/progression', label: 'Progression', icon: '⚡' },
+      { id: '/evo', label: 'EVO', icon: '🧬', badge: 'v25.0' }, // FUSION: Dashboard+Identity+Memory+Evolution+Progression
+      { id: '/time', label: 'TIME', icon: '🕐', badge: 'v25.1' }, // FUSION: Temporal+Agenda+TimeNav
+      { id: '/stats', label: 'STATS', icon: '📊', badge: 'v25.2' }, // FUSION: Nexus+Helios+Harmonia+Cognitif
 
-      // ✨ v24.2 - NOUVEAU CENTRE TEMPS UNIFIÉ
-      {
-        id: '/temporal-center',
-        label: 'Centre Temps & Navigation',
-        icon: '⏳',
-        badge: 'v24.2',
-      },
-
-      // Anciens (à migrer vers Centre Temps)
-      { id: '/agenda', label: 'Agenda', icon: '📅', badge: 'legacy' },
-      { id: '/camera', label: 'Vision', icon: '📷', badge: 'v∞' },
+      // ═══ CENTRES VISION ═══
+      { id: '/camera', label: 'Vision', icon: '📷' },
 
       // ═══ CENTRES UNIFIÉS ═══
       { id: '/one-core', label: 'ONE CORE', icon: '🎯', badge: 'OPUS#6' },
-      { id: '/system-center', label: 'Centre Système', icon: '⚙️' },
-      { id: '/configuration', label: 'Configuration Hub', icon: '🎛️', badge: 'v19.5.2' },
-      { id: '/audio-center', label: 'Audio & Voix', icon: '🔊', badge: 'v19.3' },
-      { id: '/design-center', label: 'Design & Apparence', icon: '🎨' },
-      { id: '/governance-center', label: 'Gouvernance', icon: '🛡️' },
-      { id: '/qa-monitoring', label: 'QA & Monitoring', icon: '🧪', badge: 'OPUS#7' },
-      { id: '/developer-mode', label: 'Mode Développeur', icon: '💻', badge: 'OPUS#10' },
+      { id: '/admin', label: 'ADMIN', icon: '👑', badge: 'v25.2' }, // FUSION: Système + Config + Audio + Design + Gouvernance
+      { id: '/qa-monitoring', label: 'QA & Tests', icon: '🧪', badge: 'OPUS#7' },
+      { id: '/developer-mode', label: 'Dev Mode', icon: '💻', badge: 'OPUS#10' },
 
-      // ═══ CENTRES COGNITIFS ═══
-      {
-        id: '/evolution-center',
-        label: 'Évolution Cognitive',
-        icon: '🧬',
-        badge: 'OPUS#4',
-      },
-
-      // ✨ v24.1 - NOUVEAUX CENTRES UNIFIÉS (10 modules → 2 centres)
+      // ═══ CENTRES COGNITIFS AVANCÉS ═══
       {
         id: '/orchestration-intelligence',
-        label: 'Orchestration & Intelligence',
+        label: 'Orchestration & IA',
         icon: '🔥',
         badge: 'v24.1',
       },
-      {
-        id: '/identity-memory-evolution',
-        label: 'Identity & Memory Evolution',
-        icon: '🧠',
-        badge: 'v24.1',
-      },
-
-      // Anciens centres (à migrer vers les nouveaux)
-      {
-        id: '/orchestration-center',
-        label: 'Orchestration',
-        icon: '🎛️',
-        badge: 'OPUS#5',
-      },
-      { id: '/meta-center', label: 'Meta Orchestrator', icon: '🌐', badge: 'OPUS#18' },
-      { id: '/hyper-center', label: 'Hyper Intelligence', icon: '✨', badge: 'OPUS#20' },
-      { id: '/quantum-center', label: 'Quantum Layer', icon: '⚛️', badge: 'OPUS#17' },
-      { id: '/identity-center', label: 'Identité Système', icon: '🎭', badge: 'OPUS#15' },
-      {
-        id: '/memory-evolution',
-        label: 'Mémoire Évolutive',
-        icon: '🧠',
-        badge: 'OPUS#14',
-      },
-      { id: '/reality-center', label: 'Reality Renderer', icon: '🌌', badge: 'OPUS#19' },
-
-      // ═══ MOTEURS ═══
-      { id: '/helios', label: 'Helios', icon: '☀️' },
-      { id: '/nexus', label: 'Nexus', icon: '🔗' },
-      { id: '/harmonia', label: 'Harmonia', icon: '🎵' },
-      { id: '/memory', label: 'Mémoire', icon: '💾' },
     ],
     []
   ); // Empty deps = stable reference
@@ -734,7 +655,7 @@ const AppRouter: React.FC = () => {
 
   // ✨ v24.2.1: Stable callback for XP bar navigation
   const handleXPBarClick = useCallback(() => {
-    navigate('/progression');
+    navigate('/evo'); // v25.2.1: Progression fusionné dans EVO
   }, [navigate]);
 
   // ✨ v24.2.1: Memoized sidebar items with active state
@@ -828,7 +749,27 @@ const AppRouter: React.FC = () => {
       <Suspense fallback={<PageLoadingFallback />}>
         <Routes>
           {/* Main Routes v15.2+ */}
-          <Route path="/" element={<DashboardPage />} />
+          <Route path="/" element={<Navigate to="/evo" replace />} />
+          {/* ✨ v25 EVO - CENTRE D'ÉVOLUTION TOTALE (Fusion ultime 5 modules) */}
+          <Route
+            path="/evo"
+            element={
+              <ErrorBoundary context="EvoPage">
+                <EvoPage />
+              </ErrorBoundary>
+            }
+          />
+          {/* Redirections vers EVO depuis anciennes routes fusionnées */}
+          <Route path="/dashboard" element={<Navigate to="/evo" replace />} />
+          <Route path="/evolution-center" element={<Navigate to="/evo" replace />} />
+          <Route path="/cognitive-evolution" element={<Navigate to="/evo" replace />} />
+          <Route
+            path="/identity-memory-evolution"
+            element={<Navigate to="/evo" replace />}
+          />
+          {/* ✨ v24.3.8: Routes /identity-center et /memory-evolution ont des composants dédiés plus bas */}
+          <Route path="/progression" element={<Navigate to="/evo" replace />} />
+          <Route path="/xp" element={<Navigate to="/evo" replace />} />
           <Route
             path="/chat"
             element={
@@ -837,33 +778,22 @@ const AppRouter: React.FC = () => {
               </ErrorBoundary>
             }
           />
-          <Route
-            path="/cognitive"
-            element={
-              <ErrorBoundary context="CognitivePage">
-                <CognitivePage />
-              </ErrorBoundary>
-            }
-          />
-          <Route path="/progression" element={<ProgressionPage />} />
+          {/* ❌ v25.2.1: /cognitive redirigé vers /stats (Section 4: État Cognitif) */}
+          <Route path="/cognitive" element={<Navigate to="/stats" replace />} />
           <Route path="/experience" element={<Experience />} /> {/* ✨ v∞.D5 - Page XP */}
-          <Route path="/configuration" element={<ConfigurationHub />} />{' '}
-          {/* 🎯 v19.5.2 - Configuration Hub (Phase 2) */}
-          {/* ✨ v24.2 TEMPORAL FLOW & AGENDA CENTER - Fusion Agenda + Navigation Temporelle */}
+          {/* ✨ v25.1 TIME CENTER - Fusion Temporal Flow + Agenda + Time Navigator */}
           <Route
-            path="/temporal-center"
+            path="/time"
             element={
-              <ErrorBoundary context="TemporalFlowCenter">
-                <TemporalFlowCenter />
+              <ErrorBoundary context="TimePage">
+                <TimePage />
               </ErrorBoundary>
             }
           />
-          {/* ✨ v∞ AGENDA - Gestion Planning & Événements (Legacy - redirige vers temporal-center) */}
-          <Route path="/agenda" element={<Navigate to="/temporal-center" replace />} />
-          <Route
-            path="/time-navigator"
-            element={<Navigate to="/temporal-center" replace />}
-          />
+          {/* Redirections vers TIME */}
+          <Route path="/temporal-center" element={<Navigate to="/time" replace />} />
+          <Route path="/agenda" element={<Navigate to="/time" replace />} />
+          <Route path="/time-navigator" element={<Navigate to="/time" replace />} />
           {/* ✨ v∞ CAMERA - Centre Vision & Analyse Visuelle */}
           <Route
             path="/camera"
@@ -873,97 +803,39 @@ const AppRouter: React.FC = () => {
               </ErrorBoundary>
             }
           />
-          {/* ✨ v16 - DESIGN CENTER UNIFIÉ (Design System + Apparence + Tokens Dynamiques) */}
+          {/* ✨ v25.2.2 ADMIN CENTER - Module ADMIN Unifié */}
           <Route
-            path="/design-center"
+            path="/admin"
             element={
-              <ErrorBoundary context="DesignCenter">
-                <DesignCenterPage />
+              <ErrorBoundary context="AdminCenter">
+                <AdminPage />
               </ErrorBoundary>
             }
           />
-          {/* Redirections vers Design Center pour anciennes routes */}
-          <Route
-            path="/design-system"
-            element={<Navigate to="/design-center" replace />}
-          />
-          <Route path="/settings" element={<Navigate to="/design-center" replace />} />
-          {/* ✨ v∞ - SYSTÈME CENTER UNIFIÉ (Diagnostic + DevTools + Cluster + Introspection + HyperVision) */}
-          <Route
-            path="/system-center"
-            element={
-              <ErrorBoundary context="SystemCenter">
-                <SystemCenterPage />
-              </ErrorBoundary>
-            }
-          />
-          {/* Redirections vers System Center pour anciennes routes */}
-          <Route path="/diagnostics" element={<Navigate to="/system-center" replace />} />
-          <Route path="/devtools" element={<Navigate to="/system-center" replace />} />
-          <Route path="/cluster" element={<Navigate to="/system-center" replace />} />
-          <Route
-            path="/introspection"
-            element={<Navigate to="/system-center" replace />}
-          />
-          <Route path="/hypervision" element={<Navigate to="/system-center" replace />} />
-          {/* ✨ v∞ GOVERNANCE CENTER - Centre Gouvernance & Sécurité Unifié */}
-          <Route
-            path="/governance-center"
-            element={
-              <ErrorBoundary context="GovernanceCenter">
-                <GovernanceCenterPage />
-              </ErrorBoundary>
-            }
-          />
-          {/* Redirections vers Governance Center pour anciennes routes */}
-          <Route
-            path="/governance"
-            element={<Navigate to="/governance-center" replace />}
-          />
-          <Route path="/secure" element={<Navigate to="/governance-center" replace />} />
-          {/* ✨ v19.2 AUDIO CENTER - Centre Audio & Voix */}
-          <Route
-            path="/audio-center"
-            element={
-              <ErrorBoundary context="AudioCenter">
-                <AudioCenterPage />
-              </ErrorBoundary>
-            }
-          />
-          {/* Redirections vers Audio Center pour anciennes routes */}
-          <Route path="/audio" element={<Navigate to="/audio-center" replace />} />
-          <Route path="/voice" element={<Navigate to="/audio-center" replace />} />
-          <Route path="/tts" element={<Navigate to="/audio-center" replace />} />
-          {/* ✨ v19.3 EVOLUTION CENTER - Centre d'Évolution Cognitive (OPUS #4) */}
-          <Route
-            path="/evolution-center"
-            element={
-              <ErrorBoundary context="EvolutionCenter">
-                <EvolutionCenterPage />
-              </ErrorBoundary>
-            }
-          />
-          {/* Redirections vers Evolution Center pour anciennes routes */}
-          <Route
-            path="/cognitive-evolution"
-            element={<Navigate to="/evolution-center" replace />}
-          />
-          <Route path="/xp" element={<Navigate to="/evolution-center" replace />} />
+          {/* Redirections vers ADMIN Center */}
+          <Route path="/system-center" element={<Navigate to="/admin" replace />} />
+          <Route path="/diagnostics" element={<Navigate to="/admin" replace />} />
+          <Route path="/devtools" element={<Navigate to="/admin" replace />} />
+          <Route path="/cluster" element={<Navigate to="/admin" replace />} />
+          <Route path="/introspection" element={<Navigate to="/admin" replace />} />
+          <Route path="/hypervision" element={<Navigate to="/admin" replace />} />
+          <Route path="/configuration" element={<Navigate to="/admin" replace />} />
+          <Route path="/design-center" element={<Navigate to="/admin" replace />} />
+          <Route path="/design-system" element={<Navigate to="/admin" replace />} />
+          <Route path="/settings" element={<Navigate to="/admin" replace />} />
+          <Route path="/governance-center" element={<Navigate to="/admin" replace />} />
+          <Route path="/governance" element={<Navigate to="/admin" replace />} />
+          <Route path="/secure" element={<Navigate to="/admin" replace />} />
+          <Route path="/audio-center" element={<Navigate to="/admin" replace />} />
+          <Route path="/audio" element={<Navigate to="/admin" replace />} />
+          <Route path="/voice" element={<Navigate to="/admin" replace />} />
+          <Route path="/tts" element={<Navigate to="/admin" replace />} />
           {/* ✨ v24.1 ORCHESTRATION & INTELLIGENCE CENTER - Fusion 6 modules (QA, Meta, Orchestration, Quantum, Multi-IA, Reality) */}
           <Route
             path="/orchestration-intelligence"
             element={
               <ErrorBoundary context="OrchestrationIntelligenceCenter">
                 <OrchestrationIntelligenceCenter />
-              </ErrorBoundary>
-            }
-          />
-          {/* ✨ v24.1 IDENTITY & MEMORY EVOLUTION CENTER - Fusion 4 modules (Identité, Mémoire, Mémoire Évolutive, Évolution Cognitive) */}
-          <Route
-            path="/identity-memory-evolution"
-            element={
-              <ErrorBoundary context="IdentityMemoryEvolutionCenter">
-                <IdentityMemoryEvolutionCenter />
               </ErrorBoundary>
             }
           />
@@ -1119,9 +991,7 @@ const AppRouter: React.FC = () => {
             }
           />
           {/* Engine Routes */}
-          <Route path="/helios" element={<Helios />} />
-          <Route path="/nexus" element={<Nexus />} />
-          <Route path="/harmonia" element={<Harmonia />} />
+          {/* ❌ SUPPRIMÉ v25.2.1: /helios, /nexus, /harmonia → fusionnés dans /stats */}
           <Route path="/sentinel" element={<Sentinel />} />
           <Route path="/watchdog" element={<Watchdog />} />
           <Route path="/selfheal" element={<SelfHeal />} />

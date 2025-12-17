@@ -52,7 +52,7 @@ export class SystemCenterErrorBoundary extends React.Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     // Log complet pour les développeurs
-    const errorLog = formatErrorForLog(error, {
+    const _errorLog = formatErrorForLog(error, {
       componentStack: errorInfo.componentStack,
       errorId: this.state.errorId,
     });

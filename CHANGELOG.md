@@ -1,10 +1,10 @@
 <!--
-  TITANE_INFINITY v24.3.0 — Proprietary License
+  TITANE_INFINITY v25.2.2 — Proprietary License
   © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
   See LICENSE.md for full legal terms (FR/EN).
 -->
 
-# CHANGELOG — TITANE∞ v24.3.0
+# CHANGELOG — TITANE∞ v25.2.2
 
 **© 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.**
 
@@ -12,6 +12,221 @@ Toutes les modifications notables de ce projet sont documentées dans ce fichier
 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/),
 et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
+
+---
+
+## [25.2.2] - 2025-12-16 - FUSION ADMIN CENTER 👑
+
+### 🎯 ACCOMPLISSEMENT MAJEUR
+
+**Module ADMIN Unifié** — Consolidation de 5 modules d'administration en une seule interface avec système à onglets. Réduction de 23% du menu latéral et amélioration significative de l'UX.
+
+#### Added - Module ADMIN
+
+- **`src/features/admin/AdminPage.tsx`** — Composant principal avec 5 onglets
+  - Onglet 1: ⚙️ Système (Centre Système complet)
+  - Onglet 2: 🎛️ Configuration (Configuration HUB)
+  - Onglet 3: 🔊 Audio & Voix (Centre Audio)
+  - Onglet 4: 🎨 Design (Design System + Apparence)
+  - Onglet 5: 🛡️ Gouvernance (Sécurité + Politiques)
+- **`src/features/admin/AdminPage.css`** — Styles unifiés (280 lignes)
+  - Header gradient doré (#ffd700 → #ffed4e)
+  - Navigation onglets cyan (#00ffff)
+  - Animations Framer Motion optimisées
+  - Responsive design complet
+- **`src/features/admin/types.ts`** — Types TypeScript
+  - `AdminTab` type (5 onglets)
+  - `AdminTabDefinition` interface
+  - `ADMIN_TABS` array (configuration complète)
+- **`src/features/admin/index.ts`** — Exports publics
+
+#### Changed - App.tsx
+
+- **Sidebar** 13 → 10 items (-23%)
+  - ❌ Supprimé: Centre Système, Audio & Voix, Design, Gouvernance
+  - ✅ Ajouté: ADMIN 👑 (badge v25.2)
+- **Imports** lazy loading consolidé
+  - ❌ Supprimé: 5 imports (SystemCenter, AudioCenter, DesignCenter, GovernanceCenter, ConfigHub)
+  - ✅ Ajouté: 1 import AdminPage
+- **Routes** 5 → 1 route principale
+  - ✅ Route `/admin` avec ErrorBoundary
+  - ✅ 18 redirections rétrocompatibles
+
+#### Removed - Routes Obsolètes (Redirigées)
+
+- **`/system-center`** → `/admin`
+- **`/configuration`** → `/admin`
+- **`/audio-center`** → `/admin`
+- **`/design-center`** → `/admin`
+- **`/governance-center`** → `/admin`
+- **Plus 13 routes alias** (diagnostics, devtools, cluster, settings, etc.)
+
+#### Performance
+
+- **Lazy Loading** optimisé pour chaque onglet
+- **ErrorBoundary** isolation par sous-module
+- **Suspense** avec LoadingSpinner contextuels
+- **Framer Motion** animations mode "wait"
+- **v22Ω Compatible** AI Performance Optimizations
+
+#### Documentation
+
+- **`FUSION_ADMIN_v25.2.2.md`** — Guide complet fusion (400+ lignes)
+- **`RAPPORT_FUSION_ADMIN_v25.2.2.md`** — Rapport détaillé (700+ lignes)
+- **`ARCHITECTURE.md`** mis à jour (v25.2.2)
+  - Section Fusion ADMIN ajoutée
+  - Routes actualisées
+  - 18 redirections documentées
+
+#### Tests
+
+- ✅ TypeScript: 0 erreurs
+- ✅ ESLint: Clean
+- ✅ Imports: Tous résolus
+- ✅ Lazy loading: Fonctionnel
+- ✅ ErrorBoundary: Actif
+- ✅ Redirections: 18/18 OK
+
+#### Statistiques
+
+| Métrique             | Avant | Après | Amélioration |
+| -------------------- | ----- | ----- | ------------ |
+| Boutons Menu         | 13    | 10    | -23%         |
+| Routes Principales   | 5     | 1     | -80%         |
+| Imports Lazy         | 5     | 1     | -80%         |
+| Composants Top-Level | 5     | 1     | -80%         |
+
+---
+
+## [25.2.1] - 2025-12-16 - MENU CLEAN & ARCHITECTURE CONSOLIDATION 🧹
+
+### 🎯 ACCOMPLISSEMENT MAJEUR
+
+**Nettoyage définitif menu + Fusion Stats** — Suppression routes obsolètes, nettoyage localStorage forcé, fusion complète Helios/Nexus/Harmonia.
+
+#### Fixed - Menu Navigation
+
+- **localStorage** nettoyage forcé à chaque chargement (v25.2.1-clean-final)
+- **MenuEditor** sauvegarde désactivée (empêche persistance anciennes sections)
+- **Menu.tsx** versioning automatique avec logs console détaillés
+- **Sections menu** 18 → 13 (suppression définitive Helios/Nexus/Harmonia/Mémoire)
+
+#### Removed - Routes Obsolètes
+
+- **`/helios`** — Fusionné dans `/stats` Section 2 (Système Vital)
+- **`/nexus`** — Fusionné dans `/stats` Section 1 (Réseau Cognitif)
+- **`/harmonia`** — Fusionné dans `/stats` Section 3 (Équilibre Flux)
+- **Imports lazy** Helios/Nexus/Harmonia (App.tsx lignes 305-308)
+- **Routes** /helios /nexus /harmonia (App.tsx lignes 1122-1124)
+
+#### Changed - Stats Page
+
+- **Stats.tsx** 4 sections fusionnées (373 lignes)
+  - Section 1: 🧠 Réseau Cognitif (Nexus)
+  - Section 2: 💓 Système Vital (Helios)
+  - Section 3: ⚖️ Équilibre des Flux (Harmonia)
+  - Section 4: 🧠 État Cognitif (nouveau - 6 métriques)
+- **CognitiveMetrics** interface type-safe (9 champs)
+- **Polling** toutes les 5s avec cleanup mounted flag
+
+#### Documentation
+
+- **MENU_FUSION_CORRECTION_v25.2.1.md** — Rapport correction routes
+- **MENU_CLEAN_FINAL_v25.2.1.md** — Rapport nettoyage localStorage
+- **ARCHITECTURE.md** — Mise à jour routes v25.2.1
+- **README.md** — Mise à jour structure v25.2.1
+
+---
+
+## [25.2.0] - 2025-12-16 - STATS COGNITIVE FUSION 📊
+
+### Added - État Cognitif
+
+- **Stats.tsx Section 4** — État Cognitif (6 ModuleCards)
+  - Score Cognitif (0-100%)
+  - Stabilité (0-100%)
+  - Charge Mentale (0-100%)
+  - Qualité Raisonnement (0-100%)
+  - Profondeur Cognitive (0-10)
+  - Processus Actifs (count)
+- **Backend** `orchestration_get_cognitive_state` (Rust Tauri)
+  - Agrégation Multi-AI + Nexus + Harmonia
+  - Formule: `score = 0.3×stability + 0.2×(depth×10) + 0.3×quality - 0.2×load`
+
+#### Changed
+
+- **Menu.tsx** description Stats mise à jour
+  - Ancienne: "Métriques moteurs"
+  - Nouvelle: "Métriques moteurs : Nexus, Helios, Harmonia, État Cognitif"
+
+---
+
+## [25.0.0] - 2025-12-16 - EVO MODULE FUSION 🧬
+
+### 🚀 FUSION ULTIME — 5 modules → 1 module unifié
+
+**EVO — Centre d'Évolution Totale** — Fusion complète Dashboard + Identity + Memory + Evolution + Progression.
+
+#### Added - EvoPage
+
+- **src/pages/EvoPage.tsx** (1,228 lignes)
+  - 6 sections internes avec navigation par onglets
+  - Badge v25.0 avec gradient
+  - Personnalisation contextuelle
+- **Section 1: 📊 Vue d'Ensemble**
+  - Dashboard système complet
+  - Métriques temps réel
+  - Stats EVO intégrées
+- **Section 2: 🧬 Identité & ADN**
+  - Matrice identitaire 8D
+  - Valeurs fondamentales
+  - Modes de fonctionnement
+  - Pacte Kevin ↔ TITANE
+- **Section 3: 💾 Mémoire Triple**
+  - Court terme (247 items)
+  - Moyen terme (1,832 items)
+  - Long terme (4,521 items)
+- **Section 4: 🔄 Évolution Mémoire**
+  - Opérations automatiques
+  - Journal d'évolution
+  - Paramètres Memory Core
+- **Section 5: ⚡ Progression & XP**
+  - Système XP complet
+  - Milestones & Talents
+  - Stats progression
+- **Section 6: 🌱 Transformation**
+  - Lignes d'évolution
+  - Paliers franchis
+  - Métriques croissance
+
+#### Changed - Menu Navigation
+
+- **Menu.tsx** section EVO ajoutée (position #2)
+- **Menu.tsx** version v25.0-evo-fusion
+- **Menu.tsx** 13 → 11 sections (suppression 2 entrées obsolètes)
+- **App.tsx** import EvoPage lazy-loaded
+- **App.tsx** 9 redirections vers /evo configurées
+
+#### Changed - Routes
+
+- **`/`** → redirect `/evo`
+- **`/dashboard`** → redirect `/evo`
+- **`/identity-center`** → redirect `/evo`
+- **`/memory-evolution`** → redirect `/evo`
+- **`/evolution-center`** → redirect `/evo`
+- **`/cognitive-evolution`** → redirect `/evo`
+- **`/identity-memory-evolution`** → redirect `/evo`
+- **`/progression`** → redirect `/evo`
+- **`/xp`** → redirect `/evo`
+
+#### Removed - Sidebar Obsolète
+
+- **Anciennes 27 entrées** → 13 entrées unifiées
+- **Sections supprimées:** Dashboard, Identity, Memory, Evolution, Progression
+
+#### Documentation
+
+- **FUSION_EVO_v25.0_COMPLETE.md** — Documentation complète (580+ lignes)
 
 ---
 

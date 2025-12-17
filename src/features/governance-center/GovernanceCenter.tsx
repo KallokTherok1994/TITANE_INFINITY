@@ -59,7 +59,7 @@ export const GovernanceCenter: React.FC = () => {
       });
       await loadGeminiStatus();
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : String(err);
+      const _message = err instanceof Error ? err.message : String(err);
       logger.error(
         'Failed to configure Gemini API key',
         { component: 'GovernanceCenter', action: 'setGeminiKey' },
@@ -78,7 +78,7 @@ export const GovernanceCenter: React.FC = () => {
       });
       await loadOpenAIStatus();
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : String(err);
+      const _message = err instanceof Error ? err.message : String(err);
       logger.error(
         'Failed to configure OpenAI API key',
         { component: 'GovernanceCenter', action: 'setOpenAIKey' },
@@ -97,7 +97,7 @@ export const GovernanceCenter: React.FC = () => {
       });
       await loadAnthropicStatus();
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : String(err);
+      const _message = err instanceof Error ? err.message : String(err);
       logger.error(
         'Failed to configure Anthropic API key',
         { component: 'GovernanceCenter', action: 'setAnthropicKey' },

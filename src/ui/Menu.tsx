@@ -8,8 +8,9 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v15 — MENU NAVIGATION
- *   7 sections: Chat IA, Système, Projets, Paramètres, Admin, Heal, Historique
+ *   TITANE∞ v25.0 — MENU NAVIGATION
+ *   Centre EVO unifié + Centres spécialisés (Audio, Système, etc.)
+ *   FUSION: 5 modules → 1 module EVO (Dashboard, Identity, Memory, Evolution, Progression)
  * ═══════════════════════════════════════════════════════════════
  */
 
@@ -37,25 +38,27 @@ interface MenuSection {
 const MENU_SECTIONS: MenuSection[] = [
   // ═══ PRINCIPAL ═══
   {
-    id: 'dashboard',
-    icon: '📊',
-    label: 'Tableau de bord',
-    description: "Vue d'ensemble du système",
-    route: '/',
-  },
-  {
     id: 'chat',
     icon: '💬',
     label: 'Chat IA',
     description: 'Module central - Intelligence conversationnelle',
     route: '/chat',
   },
+  // ✨ v25.0 EVO - FUSION ULTIME (Dashboard + Identity + Memory + Evolution + Progression)
   {
-    id: 'agenda',
-    icon: '📅',
-    label: 'Agenda',
-    description: 'Temps, énergie, planning intelligent',
-    route: '/agenda',
+    id: 'evo',
+    icon: '🧬',
+    label: 'EVO',
+    description: "Centre d'Évolution Totale - Dashboard, Identité, Mémoire, Progression",
+    route: '/evo',
+  },
+  // ✨ v25.1 TIME - FUSION TEMPORELLE ULTIME (Temporal Flow + Agenda + Time Navigator)
+  {
+    id: 'time',
+    icon: '🕐',
+    label: 'TIME',
+    description: 'Centre Temporel - Agenda, Navigation, Snapshots, Intelligence, Flow',
+    route: '/time',
   },
   {
     id: 'camera',
@@ -79,69 +82,22 @@ const MENU_SECTIONS: MenuSection[] = [
     description: 'Métriques moteurs : Nexus, Helios, Harmonia, État Cognitif',
     route: '/stats',
   },
+  // ✨ v25.2 ADMIN - FUSION (Système + Config + Audio + Design + Gouvernance + QA + Dev)
   {
-    id: 'system',
-    icon: '⚙️',
-    label: 'Centre Système',
-    description: 'Performances, diagnostics, monitoring',
-    route: '/system-center',
+    id: 'admin',
+    icon: '👑',
+    label: 'ADMIN',
+    description:
+      'Centre Admin Unifié - Système, Config, Audio, Design, Gouvernance, QA, Dev',
+    route: '/admin',
   },
-  {
-    id: 'audio',
-    icon: '🔊',
-    label: 'Audio & Voix',
-    description: 'TTS, reconnaissance vocale, synthèse',
-    route: '/audio-center',
-  },
-  {
-    id: 'design',
-    icon: '🎨',
-    label: 'Design & Apparence',
-    description: 'Thèmes, tokens, personnalisation',
-    route: '/design-center',
-  },
-  {
-    id: 'governance',
-    icon: '🛡️',
-    label: 'Gouvernance',
-    description: 'Sécurité, auto-heal, watchdog',
-    route: '/governance-center',
-  },
-  {
-    id: 'qa',
-    icon: '🧪',
-    label: 'QA & Monitoring',
-    description: 'Tests, qualité, métriques',
-    route: '/qa-monitoring',
-  },
-  {
-    id: 'developer',
-    icon: '💻',
-    label: 'Mode Développeur',
-    description: 'Terminal, debug, commandes système',
-    route: '/developer-mode',
-  },
-  // ═══ CENTRES COGNITIFS ═══
-  {
-    id: 'evolution',
-    icon: '🧬',
-    label: 'Évolution Cognitive',
-    description: 'Apprentissage, adaptation, XP',
-    route: '/evolution-center',
-  },
+  // ═══ CENTRES COGNITIFS AVANCÉS ═══
   {
     id: 'orchestration',
-    icon: '🎛️',
-    label: 'Intelligence IA',
+    icon: '🔥',
+    label: 'Orchestration & IA',
     description: 'Orchestration Multi-IA, Meta-cognition',
-    route: '/orchestration-center',
-  },
-  {
-    id: 'memory',
-    icon: '💾',
-    label: 'Mémoire Évolutive',
-    description: 'Historique, contexte, souvenirs',
-    route: '/memory-evolution',
+    route: '/orchestration-intelligence',
   },
 ];
 
@@ -153,9 +109,26 @@ export const Menu: React.FC<MenuProps> = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [menuSections, setMenuSections] = useState(() => {
-    // v25.2.1: Forcer reload depuis source (ignorer localStorage temporairement)
-    // Pour éviter cache avec ancienne config sans "État Cognitif"
-    localStorage.removeItem('titane_menu_config'); // Clear old cache
+    // v25.2.1: FINAL CLEAN - Menu synchronisé avec sidebar, ADMIN unifié
+    const MENU_VERSION = 'v25.2.1-final-clean';
+
+    // FORCER le nettoyage total à chaque chargement jusqu'à stabilisation
+    localStorage.removeItem('titane_menu_config');
+    localStorage.removeItem('titane_menu_sections');
+    localStorage.removeItem('menu_config');
+    localStorage.removeItem('navigation_config');
+    localStorage.removeItem('menuSections'); // Ancienne clé possible
+    localStorage.removeItem('sidebar_config'); // Ancienne clé possible
+    localStorage.setItem('titane_menu_version', MENU_VERSION);
+
+    console.log('🔄 Menu nettoyé et réinitialisé vers', MENU_VERSION);
+    console.log(
+      '📋 Sections actives:',
+      MENU_SECTIONS.length,
+      '→',
+      MENU_SECTIONS.map(s => s.label).join(', ')
+    );
+
     return MENU_SECTIONS;
   });
 
@@ -164,10 +137,17 @@ export const Menu: React.FC<MenuProps> = ({
   };
 
   const handleSaveMenu = (newSections: MenuSection[]) => {
+    // v25.2.1: DÉSACTIVER la sauvegarde localStorage pour éviter persistance anciennes sections
+    // L'utilisateur peut réorganiser visuellement mais pas sauvegarder définitivement
     setMenuSections(newSections);
-    // Optionally save to localStorage or backend
-    localStorage.setItem('titane_menu_config', JSON.stringify(newSections));
-    console.log('✅ Menu sauvegardé:', newSections.length, 'sections');
+    console.log(
+      'ℹ️ Menu réorganisé temporairement:',
+      newSections.length,
+      'sections (non sauvegardé)'
+    );
+    console.warn(
+      '⚠️ Les modifications du menu ne sont plus persistées pour éviter les anciennes configurations'
+    );
   };
 
   return (
