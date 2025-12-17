@@ -22,6 +22,7 @@ import type {
   SystemMetrics,
 } from '@/features/qa-monitoring/types';
 import type { OneCoreState } from '@/features/one-core/types';
+// ✨ v25.4.1 - Web Vitals monitoring (planned for future implementation)
 import './DevPage.css';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -548,6 +549,12 @@ const MetricsSection = memo<{
       <header className="dev-section-header">
         <h2>📈 Metrics & Diagnostics</h2>
       </header>
+
+      {/* ✨ v25.4.1 - Web Vitals Performance Dashboard (planned for future) */}
+      <div className="dev-performance-vitals">
+        <h3>⚡ Core Web Vitals (Google Standards)</h3>
+        <p className="dev-coming-soon">Performance monitoring coming soon...</p>
+      </div>
 
       {metrics && (
         <div className="dev-metrics-grid">

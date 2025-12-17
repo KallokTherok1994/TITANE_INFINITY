@@ -7,6 +7,35 @@
 // TITANE∞ v∞.19.2.3Ω - Hooks Central Export
 // ═══════════════════════════════════════════════════════════════
 
+// ═══ v25.3.2 PERFECT FUSION HOOKS ═══
+export {
+  useSingularitySync,
+  type SingularitySyncOptions,
+  type SingularitySyncMetrics,
+  type SingularitySyncReturn,
+} from './useSingularitySync';
+
+export {
+  useMemoryEngine,
+  type MemoryType,
+  type MemoryEntry,
+  type MemoryStats,
+  type MemorySearchResult,
+  type UseMemoryEngineReturn,
+} from './useMemoryEngine';
+
+export {
+  useSystemHealth,
+  type HealthStatus,
+  type ConversationHealth,
+  type MemoryHealth,
+  type SingularityHealth,
+  type SystemHealth,
+  type UnifiedHealth,
+  type HealthAlert,
+  type UseSystemHealthReturn,
+} from './useSystemHealth';
+
 // Legacy hooks
 export { useTitaneCore } from './useTitaneCore';
 export { useMemoryCore } from './useMemoryCore';

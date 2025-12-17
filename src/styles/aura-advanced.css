@@ -1,0 +1,829 @@
+/**
+ * ═══════════════════════════════════════════════════════════════
+ *   TITANE∞ v25.3.1 — AURA EFFECTS ADVANCED SYSTEM
+ *   Effets Aura avancés pour tous les composants TITANE
+ *   Extension du système base (aura-effects.css)
+ * ═══════════════════════════════════════════════════════════════
+ */
+
+/* ═══════════════════════════════════════════════════════════════
+   NOUVELLES COULEURS AURA ÉTENDUES
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* AURA SECONDAIRES */
+  --aura-emerald: rgba(16, 185, 129, 0.6);
+  --aura-emerald-light: rgba(52, 211, 153, 0.4);
+  --aura-amber: rgba(251, 146, 60, 0.6);
+  --aura-amber-light: rgba(253, 186, 116, 0.4);
+  --aura-red: rgba(239, 68, 68, 0.6);
+  --aura-red-light: rgba(248, 113, 113, 0.4);
+  --aura-purple: rgba(168, 85, 247, 0.6);
+  --aura-purple-light: rgba(192, 132, 252, 0.4);
+  --aura-pink: rgba(236, 72, 153, 0.6);
+  --aura-pink-light: rgba(244, 114, 182, 0.4);
+  --aura-sky: rgba(14, 165, 233, 0.6);
+  --aura-sky-light: rgba(56, 189, 248, 0.4);
+  --aura-lime: rgba(132, 204, 22, 0.6);
+  --aura-lime-light: rgba(163, 230, 53, 0.4);
+
+  /* AURA GRADIENTS MULTI-COULEURS */
+  --aura-gradient-rainbow: radial-gradient(
+    circle at center,
+    rgba(124, 58, 237, 0.3) 0%,
+    rgba(59, 130, 246, 0.25) 20%,
+    rgba(6, 182, 212, 0.2) 40%,
+    rgba(16, 185, 129, 0.15) 60%,
+    rgba(251, 146, 60, 0.1) 80%,
+    transparent 100%
+  );
+
+  --aura-gradient-sunset: radial-gradient(
+    circle at center,
+    rgba(236, 72, 153, 0.4) 0%,
+    rgba(251, 146, 60, 0.3) 50%,
+    rgba(239, 68, 68, 0.2) 100%
+  );
+
+  --aura-gradient-ocean: radial-gradient(
+    circle at center,
+    rgba(6, 182, 212, 0.4) 0%,
+    rgba(59, 130, 246, 0.3) 50%,
+    rgba(124, 58, 237, 0.2) 100%
+  );
+
+  --aura-gradient-forest: radial-gradient(
+    circle at center,
+    rgba(16, 185, 129, 0.4) 0%,
+    rgba(132, 204, 22, 0.3) 50%,
+    rgba(52, 211, 153, 0.2) 100%
+  );
+
+  --aura-gradient-fire: radial-gradient(
+    circle at center,
+    rgba(239, 68, 68, 0.5) 0%,
+    rgba(251, 146, 60, 0.4) 40%,
+    rgba(253, 224, 71, 0.2) 100%
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   STATS CARDS AURA (Vue d'Ensemble)
+   ═══════════════════════════════════════════════════════════════ */
+
+.stats-card-aura {
+  position: relative;
+  overflow: visible;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stats-card-aura::before {
+  content: '';
+  position: absolute;
+  inset: -12px;
+  background: radial-gradient(
+    circle at center,
+    rgba(124, 58, 237, 0.3) 0%,
+    rgba(59, 130, 246, 0.2) 40%,
+    transparent 70%
+  );
+  filter: blur(20px);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: -1;
+  border-radius: inherit;
+}
+
+.stats-card-aura:hover {
+  transform: translateY(-4px) scale(1.02);
+}
+
+.stats-card-aura:hover::before {
+  opacity: 1;
+  animation: aura-pulse-dynamic 2.5s ease-in-out infinite;
+}
+
+/* Stats Card - Valeur haute (Success) */
+.stats-card-aura[data-value='high']::before {
+  background: radial-gradient(
+    circle at center,
+    var(--aura-emerald) 0%,
+    rgba(52, 211, 153, 0.3) 40%,
+    transparent 70%
+  );
+}
+
+/* Stats Card - Valeur moyenne (Info) */
+.stats-card-aura[data-value='medium']::before {
+  background: radial-gradient(
+    circle at center,
+    var(--aura-blue) 0%,
+    rgba(96, 165, 250, 0.3) 40%,
+    transparent 70%
+  );
+}
+
+/* Stats Card - Valeur basse (Warning/Danger) */
+.stats-card-aura[data-value='low']::before {
+  background: radial-gradient(
+    circle at center,
+    var(--aura-amber) 0%,
+    var(--aura-red-light) 40%,
+    transparent 70%
+  );
+}
+
+@keyframes aura-pulse-dynamic {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   XP PROGRESS BAR AURA (Progression)
+   ═══════════════════════════════════════════════════════════════ */
+
+.xp-progress-aura {
+  position: relative;
+  overflow: visible;
+}
+
+.xp-progress-aura::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  background: linear-gradient(
+    90deg,
+    rgba(124, 58, 237, 0.4) 0%,
+    rgba(16, 185, 129, 0.4) var(--xp-percent, 50%),
+    transparent calc(var(--xp-percent, 50%) + 10%)
+  );
+  filter: blur(12px);
+  animation: aura-xp-flow 3s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+  border-radius: inherit;
+}
+
+.xp-progress-aura::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: var(--xp-percent, 50%);
+  width: 20px;
+  height: 20px;
+  background: radial-gradient(
+    circle,
+    rgba(16, 185, 129, 1) 0%,
+    rgba(16, 185, 129, 0.5) 50%,
+    transparent 100%
+  );
+  filter: blur(8px);
+  transform: translate(-50%, -50%);
+  animation: xp-cursor-pulse 1.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes aura-xp-flow {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scaleX(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scaleX(1.02);
+  }
+}
+
+@keyframes xp-cursor-pulse {
+  0%,
+  100% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.3);
+  }
+}
+
+/* XP Particles (émergent de la barre) */
+.xp-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: radial-gradient(
+    circle,
+    rgba(16, 185, 129, 1) 0%,
+    rgba(16, 185, 129, 0.5) 50%,
+    transparent 100%
+  );
+  border-radius: 50%;
+  animation: xp-particle-rise 2s ease-out infinite;
+  pointer-events: none;
+  filter: blur(1px);
+}
+
+.xp-particle:nth-child(1) {
+  left: 20%;
+  animation-delay: 0s;
+}
+.xp-particle:nth-child(2) {
+  left: 40%;
+  animation-delay: 0.4s;
+}
+.xp-particle:nth-child(3) {
+  left: 60%;
+  animation-delay: 0.8s;
+}
+.xp-particle:nth-child(4) {
+  left: 80%;
+  animation-delay: 1.2s;
+}
+
+@keyframes xp-particle-rise {
+  0% {
+    bottom: 0;
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    bottom: 100%;
+    transform: translateY(-30px) scale(0.5);
+    opacity: 0;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   VISION CAMERA SCAN AURA (Vision & Perception)
+   ═══════════════════════════════════════════════════════════════ */
+
+.vision-scan-aura {
+  position: relative;
+  overflow: visible;
+}
+
+/* Rotating scan Aura (conic gradient) */
+.vision-scan-aura::before {
+  content: '';
+  position: absolute;
+  inset: -15px;
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    rgba(6, 182, 212, 0.6) 0deg,
+    transparent 60deg,
+    transparent 300deg,
+    rgba(6, 182, 212, 0.6) 360deg
+  );
+  filter: blur(20px);
+  animation: vision-scan-rotate 4s linear infinite;
+  pointer-events: none;
+  z-index: -1;
+  border-radius: 50%;
+}
+
+/* Horizontal scan line */
+.vision-scan-aura::after {
+  content: '';
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(6, 182, 212, 0.8) 50%,
+    transparent
+  );
+  filter: blur(2px) drop-shadow(0 0 4px rgba(6, 182, 212, 0.6));
+  animation: vision-scan-line 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes vision-scan-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes vision-scan-line {
+  0%,
+  100% {
+    top: -5%;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    top: 105%;
+    opacity: 0;
+  }
+}
+
+/* Vision Active Indicator */
+.vision-scan-aura.active::before {
+  animation-duration: 2s;
+  filter: blur(25px);
+}
+
+.vision-scan-aura.active::after {
+  animation-duration: 2s;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(16, 185, 129, 0.9) 50%,
+    transparent
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MEMORY CARDS TRIPLE AURA (Mémoire Triple)
+   ═══════════════════════════════════════════════════════════════ */
+
+.memory-card-aura {
+  position: relative;
+  overflow: visible;
+}
+
+.memory-card-aura::before {
+  content: '';
+  position: absolute;
+  inset: -12px;
+  pointer-events: none;
+  z-index: -1;
+  border-radius: inherit;
+  filter: blur(18px);
+  opacity: 0.5;
+  transition: opacity 0.4s ease;
+}
+
+.memory-card-aura:hover::before {
+  opacity: 1;
+}
+
+/* Memory Card - Court Terme (Cyan - Rapide) */
+.memory-card-short::before {
+  background: radial-gradient(
+    circle at center,
+    var(--aura-cyan) 0%,
+    var(--aura-cyan-light) 50%,
+    transparent 100%
+  );
+  animation: memory-pulse-fast 2s ease-in-out infinite;
+}
+
+/* Memory Card - Moyen Terme (Blue - Modéré) */
+.memory-card-mid::before {
+  background: radial-gradient(
+    circle at center,
+    var(--aura-blue) 0%,
+    rgba(96, 165, 250, 0.3) 50%,
+    transparent 100%
+  );
+  animation: memory-pulse-medium 3s ease-in-out infinite;
+}
+
+/* Memory Card - Long Terme (Violet - Lent) */
+.memory-card-long::before {
+  background: radial-gradient(
+    circle at center,
+    var(--aura-violet) 0%,
+    var(--aura-violet-light) 50%,
+    transparent 100%
+  );
+  animation: memory-pulse-slow 4s ease-in-out infinite;
+}
+
+@keyframes memory-pulse-fast {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes memory-pulse-medium {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes memory-pulse-slow {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.03);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   IDENTITY MODE DYNAMIC AURA (Identité & ADN)
+   ═══════════════════════════════════════════════════════════════ */
+
+.identity-aura {
+  position: relative;
+  overflow: visible;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.identity-aura::before {
+  content: '';
+  position: absolute;
+  inset: -15px;
+  pointer-events: none;
+  z-index: -1;
+  border-radius: inherit;
+  filter: blur(22px);
+  opacity: 0.6;
+  animation: identity-pulse 3s ease-in-out infinite;
+}
+
+.identity-aura:hover::before {
+  opacity: 0.9;
+  filter: blur(28px);
+}
+
+/* Mode: Creative (Purple + Pink) */
+.identity-aura[data-mode='creative']::before {
+  background: radial-gradient(
+    circle at center,
+    var(--aura-purple) 0%,
+    var(--aura-pink) 50%,
+    transparent 100%
+  );
+}
+
+/* Mode: Analytical (Blue + Sky) */
+.identity-aura[data-mode='analytical']::before {
+  background: radial-gradient(
+    circle at center,
+    var(--aura-blue) 0%,
+    var(--aura-sky) 50%,
+    transparent 100%
+  );
+}
+
+/* Mode: Empathetic (Emerald + Lime) */
+.identity-aura[data-mode='empathetic']::before {
+  background: radial-gradient(
+    circle at center,
+    var(--aura-emerald) 0%,
+    var(--aura-lime) 50%,
+    transparent 100%
+  );
+}
+
+/* Mode: Balanced (Tech Gradient) */
+.identity-aura[data-mode='balanced']::before {
+  background: var(--aura-gradient-tech);
+}
+
+/* Mode: Focused (Violet intense) */
+.identity-aura[data-mode='focused']::before {
+  background: radial-gradient(
+    circle at center,
+    var(--aura-violet) 0%,
+    rgba(124, 58, 237, 0.4) 40%,
+    transparent 100%
+  );
+}
+
+@keyframes identity-pulse {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.05) rotate(5deg);
+  }
+}
+
+/* Mode Switch Animation */
+.identity-aura.mode-switched::before {
+  animation:
+    mode-switch-flash 0.6s ease-out,
+    identity-pulse 3s ease-in-out infinite 0.6s;
+}
+
+@keyframes mode-switch-flash {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+    filter: blur(40px);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+    filter: blur(15px);
+  }
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+    filter: blur(22px);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TABS AURA (Navigation)
+   ═══════════════════════════════════════════════════════════════ */
+
+.tab-aura {
+  position: relative;
+  overflow: visible;
+}
+
+.tab-aura::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  background: radial-gradient(
+    circle at bottom,
+    rgba(59, 130, 246, 0.4) 0%,
+    transparent 60%
+  );
+  filter: blur(12px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: -1;
+  border-radius: inherit;
+}
+
+.tab-aura.active::before {
+  opacity: 1;
+  animation: tab-pulse 2.5s ease-in-out infinite;
+}
+
+.tab-aura:hover::before {
+  opacity: 0.6;
+}
+
+@keyframes tab-pulse {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scaleY(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleY(1.1);
+  }
+}
+
+/* Tab switch transition */
+.tab-aura.switching::before {
+  animation: tab-switch-flash 0.4s ease-out;
+}
+
+@keyframes tab-switch-flash {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HEADER AURA (Page Header)
+   ═══════════════════════════════════════════════════════════════ */
+
+.header-aura {
+  position: relative;
+  overflow: visible;
+}
+
+.header-aura::before {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: linear-gradient(180deg, var(--aura-gradient-tech), transparent);
+  filter: blur(15px);
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   EVOLUTION ENTRY AURA (Mémoire Évolution)
+   ═══════════════════════════════════════════════════════════════ */
+
+.evolution-entry-aura {
+  position: relative;
+  overflow: visible;
+}
+
+.evolution-entry-aura::before {
+  content: '';
+  position: absolute;
+  left: -15px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(
+    180deg,
+    var(--aura-cyan) 0%,
+    var(--aura-blue) 50%,
+    var(--aura-violet) 100%
+  );
+  filter: blur(4px) drop-shadow(0 0 8px var(--aura-blue));
+  animation: evolution-flow 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes evolution-flow {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scaleY(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleY(1.05);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TRANSFORMATION MILESTONE AURA
+   ═══════════════════════════════════════════════════════════════ */
+
+.milestone-aura {
+  position: relative;
+  overflow: visible;
+}
+
+.milestone-aura::before {
+  content: '';
+  position: absolute;
+  inset: -20px;
+  background: var(--aura-gradient-rainbow);
+  filter: blur(25px);
+  opacity: 0.4;
+  animation: milestone-rainbow-rotate 10s linear infinite;
+  pointer-events: none;
+  z-index: -1;
+  border-radius: 50%;
+}
+
+.milestone-aura.achieved::before {
+  opacity: 0.8;
+  animation:
+    milestone-achieved-burst 1s ease-out,
+    milestone-rainbow-rotate 10s linear infinite 1s;
+}
+
+@keyframes milestone-rainbow-rotate {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.05);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+@keyframes milestone-achieved-burst {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+    filter: blur(50px);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.3);
+    filter: blur(15px);
+  }
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
+    filter: blur(25px);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE ADJUSTMENTS
+   ═══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  /* Reduce blur intensity on mobile */
+  .stats-card-aura::before,
+  .xp-progress-aura::before,
+  .vision-scan-aura::before,
+  .memory-card-aura::before,
+  .identity-aura::before,
+  .tab-aura::before,
+  .milestone-aura::before {
+    filter: blur(12px);
+  }
+
+  /* Disable some animations on mobile for performance */
+  .xp-particle,
+  .evolution-entry-aura::before {
+    display: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ACCESSIBILITY - REDUCED MOTION
+   ═══════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Disable all advanced animations */
+  .stats-card-aura::before,
+  .xp-progress-aura::before,
+  .xp-progress-aura::after,
+  .vision-scan-aura::before,
+  .vision-scan-aura::after,
+  .memory-card-aura::before,
+  .identity-aura::before,
+  .tab-aura::before,
+  .evolution-entry-aura::before,
+  .milestone-aura::before,
+  .xp-particle {
+    animation: none !important;
+  }
+
+  /* Keep opacity transitions only */
+  .stats-card-aura:hover::before,
+  .tab-aura.active::before {
+    animation: none !important;
+    opacity: 1;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DARK MODE OPTIMIZATIONS
+   ═══════════════════════════════════════════════════════════════ */
+
+@media (prefers-color-scheme: dark) {
+  /* Increase Aura intensity in dark mode for better visibility */
+  .stats-card-aura::before,
+  .xp-progress-aura::before,
+  .vision-scan-aura::before,
+  .memory-card-aura::before,
+  .identity-aura::before,
+  .tab-aura::before {
+    opacity: 0.7;
+  }
+
+  .stats-card-aura:hover::before,
+  .tab-aura.active::before,
+  .memory-card-aura:hover::before {
+    opacity: 1.2;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HIGH REFRESH RATE SUPPORT (144Hz+)
+   ═══════════════════════════════════════════════════════════════ */
+
+@media (min-resolution: 120dpi) {
+  /* Smoother animations for high refresh rate displays */
+  .xp-progress-aura::before,
+  .vision-scan-aura::before,
+  .milestone-aura::before {
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}

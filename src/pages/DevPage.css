@@ -733,6 +733,30 @@
  * Metrics
  * ============================================================================ */
 
+/* ✨ v25.4.1 - Performance Vitals Section */
+.dev-performance-vitals {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: linear-gradient(
+    135deg,
+    rgba(76, 175, 80, 0.05) 0%,
+    rgba(33, 150, 243, 0.05) 100%
+  );
+  border: 1px solid var(--dev-border);
+  border-radius: 12px;
+  box-shadow: var(--dev-shadow);
+}
+
+.dev-performance-vitals h3 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--dev-text);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .dev-metrics-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));

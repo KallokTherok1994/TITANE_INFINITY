@@ -199,6 +199,11 @@ mod ia_commands {
     include!("commands/ia_commands.rs");
 }
 
+// AI Prompt Generator v25.4.2 - Mode Builder AI
+mod ai_prompt_generator {
+    include!("commands/ai_prompt_generator.rs");
+}
+
 // Multi-Agents Commands v19.5.2 - Agent permissions management
 mod multi_agents_commands {
     include!("commands/multi_agents_commands.rs");
@@ -613,6 +618,8 @@ fn main() {
             commands::chat_generate_commands::chat_generate_gemini,
             commands::chat_generate_commands::chat_generate_openai,
             commands::chat_generate_commands::chat_generate_claude,
+            // AI Prompt Generator v25.4.2 (Mode Builder)
+            ai_prompt_generator::generate_mode_prompt,
             // Ollama AI Provider Status Check
             titane_infinity::ai::ollama::ai_check_ollama_status,
             // Auth OS Commands v∞ (Unified Authentication System)

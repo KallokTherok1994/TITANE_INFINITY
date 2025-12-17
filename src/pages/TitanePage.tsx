@@ -24,7 +24,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef, memo } from 'react';
 import { Container, Stack, Grid } from '@components/layout';
 import { Card } from '../ui';
 import { XPProgressBar } from '@features/progression';
@@ -46,26 +46,13 @@ import { detectEnvironment } from '@/core/tauri/environment';
 import { Camera } from 'lucide-react';
 import type { ProgressionState } from '@/cognitive/types';
 import type { VisualLevel } from '@/types/visionAffect';
+import { useVoiceEngine } from '@/hooks/useVoiceEngine';
 import './TitanePage.css';
 
 // ═══ HELPER FUNCTIONS FOR OPTIMIZATION ═══
 
 /**
- * Debounce function pour optimiser les inputs rapides
- */
-function debounce<T extends (...args: any[]) => any>(
-  func: T,
-  delay: number
-): (...args: Parameters<T>) => void {
-  let timeoutId: NodeJS.Timeout;
-  return (...args: Parameters<T>) => {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => func(...args), delay);
-  };
-}
-
-/**
- * Sanitize input pour sécurité renforcée
+ * Sanitize input pour sécurité renforcée (XSS prevention)
  */
 function sanitizeInput(input: string): string {
   return input
@@ -138,12 +125,13 @@ const _levelToColor = (level: VisualLevel): string => {
 // SUB-COMPONENTS
 // ═══════════════════════════════════════════════════════════════════════════
 
-const StatusIndicator: React.FC<StatusIndicatorProps> = ({ active, label }) => (
+const StatusIndicator: React.FC<StatusIndicatorProps> = memo(({ active, label }) => (
   <div className={`titane-status-indicator ${active ? 'active' : ''}`}>
     <span className="status-dot" />
     <span className="status-label">{label}</span>
   </div>
-);
+));
+StatusIndicator.displayName = 'StatusIndicator';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // SECTION 1: CONVERSATION
@@ -177,6 +165,18 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [customModes, setCustomModes] = useState<CustomMode[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // ═══ VOICE ENGINE INTEGRATION (v25.4.2) ═══
+  const voiceEngine = useVoiceEngine({
+    language: 'fr-FR',
+    onTranscript: text => {
+      // Auto-insert transcript into input
+      setInputValue(prev => (prev ? `${prev} ${text}` : text));
+    },
+    onError: error => {
+      console.error('[TitanePage] Voice recognition error:', error);
+    },
+  });
 
   // Available providers
   const availableProviders = [
@@ -303,17 +303,31 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
     }
   }, [clearMessages]);
 
-  const handleVoiceInput = useCallback(() => {
-    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-      alert('Reconnaissance vocale non supportée dans ce navigateur');
+  const handleVoiceInput = useCallback(async () => {
+    // ✅ v25.4.2: Speech Recognition implementation avec useVoiceEngine
+    if (!voiceEngine.status.isMicAvailable) {
+      alert('🎤 Microphone non disponible. Vérifiez les permissions.');
       return;
     }
 
-    setIsRecording(prev => !prev);
-
-    // TODO: Implémenter Speech Recognition
-    console.log('Voice input toggled:', !isRecording);
-  }, [isRecording]);
+    try {
+      if (voiceEngine.status.isRecording) {
+        // Stop dictation et récupérer le transcript
+        const finalTranscript = await voiceEngine.stopDictation();
+        setIsRecording(false);
+        console.log('[TitanePage] Voice dictation stopped:', finalTranscript);
+      } else {
+        // Start dictation
+        await voiceEngine.startDictation();
+        setIsRecording(true);
+        console.log('[TitanePage] Voice dictation started');
+      }
+    } catch (error) {
+      console.error('[TitanePage] Voice input error:', error);
+      setIsRecording(false);
+      alert('❌ Erreur reconnaissance vocale. Consultez la console.');
+    }
+  }, [voiceEngine]);
 
   return (
     <div className="titane-section titane-section-conversation">
@@ -1017,60 +1031,104 @@ export const TitanePage: React.FC = () => {
             </div>
           </div>
 
-          {/* ═══ NAVIGATION TABS ═══ */}
-          <div className="titane-tabs">
+          {/* ═══ NAVIGATION TABS (A11Y Enhanced v25.4.1) ═══ */}
+          <div
+            className="titane-tabs"
+            role="tablist"
+            aria-label="Sections principales TITANE"
+          >
             <button
               className={`titane-tab ${activeTab === 'conversation' ? 'active' : ''}`}
               onClick={() => setActiveTab('conversation')}
+              role="tab"
+              aria-selected={activeTab === 'conversation'}
+              aria-controls="titane-panel-conversation"
+              id="titane-tab-conversation"
             >
               💬 Conversation
             </button>
             <button
               className={`titane-tab ${activeTab === 'vision' ? 'active' : ''}`}
               onClick={() => setActiveTab('vision')}
+              role="tab"
+              aria-selected={activeTab === 'vision'}
+              aria-controls="titane-panel-vision"
+              id="titane-tab-vision"
             >
               📷 Vision
             </button>
             <button
               className={`titane-tab ${activeTab === 'overview' ? 'active' : ''}`}
               onClick={() => setActiveTab('overview')}
+              role="tab"
+              aria-selected={activeTab === 'overview'}
+              aria-controls="titane-panel-overview"
+              id="titane-tab-overview"
             >
               📊 Vue
             </button>
             <button
               className={`titane-tab ${activeTab === 'identity' ? 'active' : ''}`}
               onClick={() => setActiveTab('identity')}
+              role="tab"
+              aria-selected={activeTab === 'identity'}
+              aria-controls="titane-panel-identity"
+              id="titane-tab-identity"
             >
               🧬 Identité
             </button>
             <button
               className={`titane-tab ${activeTab === 'memory-map' ? 'active' : ''}`}
               onClick={() => setActiveTab('memory-map')}
+              role="tab"
+              aria-selected={activeTab === 'memory-map'}
+              aria-controls="titane-panel-memory"
+              id="titane-tab-memory"
             >
               💾 Mémoire
             </button>
             <button
               className={`titane-tab ${activeTab === 'memory-evolution' ? 'active' : ''}`}
               onClick={() => setActiveTab('memory-evolution')}
+              role="tab"
+              aria-selected={activeTab === 'memory-evolution'}
+              aria-controls="titane-panel-evolution"
+              id="titane-tab-evolution"
             >
               🔄 Évolution
             </button>
             <button
               className={`titane-tab ${activeTab === 'progression' ? 'active' : ''}`}
               onClick={() => setActiveTab('progression')}
+              role="tab"
+              aria-selected={activeTab === 'progression'}
+              aria-controls="titane-panel-progression"
+              id="titane-tab-progression"
             >
               ⚡ Progression
             </button>
             <button
               className={`titane-tab ${activeTab === 'transformation' ? 'active' : ''}`}
               onClick={() => setActiveTab('transformation')}
+              role="tab"
+              aria-selected={activeTab === 'transformation'}
+              aria-controls="titane-panel-transformation"
+              id="titane-tab-transformation"
             >
               🌱 Transform
             </button>
           </div>
 
-          {/* ═══ CONTENT AREA ═══ */}
-          <div className="titane-content">{renderActiveSection()}</div>
+          {/* ═══ CONTENT AREA (A11Y Enhanced) ═══ */}
+          <div
+            className="titane-content"
+            role="tabpanel"
+            id={`titane-panel-${activeTab}`}
+            aria-labelledby={`titane-tab-${activeTab.replace('-', '')}`}
+            tabIndex={0}
+          >
+            {renderActiveSection()}
+          </div>
         </Stack>
       </Container>
     </ErrorBoundary>

@@ -1,12 +1,13 @@
 /**
- * TITANE∞ v25.3.0 — TitanePage Styles
+ * TITANE∞ v25.3.1 — TitanePage Styles
  * Module TITANE — Le Cœur du Système
  * © 2025 TITANE Team. All rights reserved.
  */
 
-/* Import Tech Fonts & Aura Effects */
+/* Import Tech Fonts & Aura Effects (v25.3.1 Advanced) */
 @import '../styles/tech-fonts.css';
 @import '../styles/aura-effects.css';
+@import '../styles/aura-advanced.css';
 
 /* ═══════════════════════════════════════════════════════════════════════════
    VARIABLES TITANE
@@ -463,6 +464,7 @@
   cursor: pointer;
   transition: var(--titane-transition);
   font-size: 1.125rem;
+  will-change: transform; /* GPU optimization */
 }
 
 .conversation-icon-btn:hover {
@@ -595,6 +597,7 @@
   display: flex;
   gap: 1rem;
   animation: message-slide-in 0.3s ease-out;
+  will-change: transform, opacity; /* GPU optimization */
 }
 
 @keyframes message-slide-in {
@@ -1076,3 +1079,417 @@
     transform: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   AURA ADVANCED APPLICATION v25.3.1
+   Effets Aura étendus à toutes les sections TITANE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────────────────────
+   VUE D'ENSEMBLE - STATS CARDS AURA
+   ───────────────────────────────────────────────────────────────────────── */
+
+.titane-section-overview .card,
+.titane-section-overview [class*='metric'] {
+  /* Apply stats card Aura */
+  position: relative;
+  overflow: visible;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.titane-section-overview .card::before {
+  content: '';
+  position: absolute;
+  inset: -12px;
+  background: radial-gradient(
+    circle at center,
+    rgba(124, 58, 237, 0.3) 0%,
+    rgba(59, 130, 246, 0.2) 40%,
+    transparent 70%
+  );
+  filter: blur(20px);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: -1;
+  border-radius: inherit;
+}
+
+.titane-section-overview .card:hover {
+  transform: translateY(-4px) scale(1.02);
+}
+
+.titane-section-overview .card:hover::before {
+  opacity: 1;
+  animation: aura-pulse-dynamic 2.5s ease-in-out infinite;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   VISION & PERCEPTION - CAMERA SCAN AURA
+   ───────────────────────────────────────────────────────────────────────── */
+
+.titane-section-vision .vision-camera-container,
+.titane-section-vision .camera-preview-container {
+  position: relative;
+  overflow: visible;
+}
+
+/* Rotating scan Aura (conic gradient) */
+.titane-section-vision .vision-camera-container::before {
+  content: '';
+  position: absolute;
+  inset: -15px;
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    rgba(6, 182, 212, 0.6) 0deg,
+    transparent 60deg,
+    transparent 300deg,
+    rgba(6, 182, 212, 0.6) 360deg
+  );
+  filter: blur(20px);
+  animation: vision-scan-rotate 4s linear infinite;
+  pointer-events: none;
+  z-index: -1;
+  border-radius: 12px;
+}
+
+/* Horizontal scan line */
+.titane-section-vision .vision-camera-container::after {
+  content: '';
+  position: absolute;
+  left: -5%;
+  right: -5%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(6, 182, 212, 0.8) 50%,
+    transparent
+  );
+  filter: blur(2px) drop-shadow(0 0 4px rgba(6, 182, 212, 0.6));
+  animation: vision-scan-line 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   PROGRESSION - XP BAR AURA
+   ───────────────────────────────────────────────────────────────────────── */
+
+.titane-section-progression .xp-progress-bar,
+.xp-progress-container {
+  position: relative;
+  overflow: visible;
+}
+
+.titane-section-progression .xp-progress-bar::before,
+.xp-progress-container::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  background: linear-gradient(
+    90deg,
+    rgba(124, 58, 237, 0.4) 0%,
+    rgba(16, 185, 129, 0.4) 50%,
+    transparent 70%
+  );
+  filter: blur(12px);
+  animation: aura-xp-flow 3s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+  border-radius: inherit;
+}
+
+/* XP Progress glow cursor */
+.titane-section-progression .xp-progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  background: radial-gradient(
+    circle,
+    rgba(16, 185, 129, 1) 0%,
+    rgba(16, 185, 129, 0.5) 50%,
+    transparent 100%
+  );
+  filter: blur(6px);
+  transform: translate(50%, -50%);
+  animation: xp-cursor-pulse 1.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   IDENTITÉ & ADN - MODE DYNAMIC AURA
+   ───────────────────────────────────────────────────────────────────────── */
+
+.titane-section-identity .card,
+.titane-section-identity .identity-card {
+  position: relative;
+  overflow: visible;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.titane-section-identity .card::before {
+  content: '';
+  position: absolute;
+  inset: -15px;
+  pointer-events: none;
+  z-index: -1;
+  border-radius: inherit;
+  filter: blur(22px);
+  opacity: 0.6;
+  animation: identity-pulse 3s ease-in-out infinite;
+  /* Default: Balanced mode - Tech Gradient */
+  background: radial-gradient(
+    circle at center,
+    rgba(124, 58, 237, 0.3) 0%,
+    rgba(59, 130, 246, 0.2) 30%,
+    rgba(6, 182, 212, 0.1) 60%,
+    transparent 100%
+  );
+}
+
+.titane-section-identity .card:hover::before {
+  opacity: 0.9;
+  filter: blur(28px);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   MÉMOIRE TRIPLE - 3 COULEURS AURA DISTINCTES
+   ───────────────────────────────────────────────────────────────────────── */
+
+.titane-section-memory-map .card {
+  position: relative;
+  overflow: visible;
+}
+
+.titane-section-memory-map .card::before {
+  content: '';
+  position: absolute;
+  inset: -12px;
+  pointer-events: none;
+  z-index: -1;
+  border-radius: inherit;
+  filter: blur(18px);
+  opacity: 0.5;
+  transition: opacity 0.4s ease;
+}
+
+.titane-section-memory-map .card:hover::before {
+  opacity: 1;
+}
+
+/* Memory Court Terme (Cyan - Rapide) */
+.titane-section-memory-map .card:nth-child(1)::before {
+  background: radial-gradient(
+    circle at center,
+    rgba(6, 182, 212, 0.5) 0%,
+    rgba(34, 211, 238, 0.3) 50%,
+    transparent 100%
+  );
+  animation: memory-pulse-fast 2s ease-in-out infinite;
+}
+
+/* Memory Moyen Terme (Blue - Modéré) */
+.titane-section-memory-map .card:nth-child(2)::before {
+  background: radial-gradient(
+    circle at center,
+    rgba(59, 130, 246, 0.5) 0%,
+    rgba(96, 165, 250, 0.3) 50%,
+    transparent 100%
+  );
+  animation: memory-pulse-medium 3s ease-in-out infinite;
+}
+
+/* Memory Long Terme (Violet - Lent) */
+.titane-section-memory-map .card:nth-child(3)::before {
+  background: radial-gradient(
+    circle at center,
+    rgba(124, 58, 237, 0.5) 0%,
+    rgba(167, 139, 250, 0.3) 50%,
+    transparent 100%
+  );
+  animation: memory-pulse-slow 4s ease-in-out infinite;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   ÉVOLUTION MÉMOIRE - TIMELINE AURA
+   ───────────────────────────────────────────────────────────────────────── */
+
+.titane-section-memory-evolution .evolution-entry {
+  position: relative;
+  overflow: visible;
+  padding-left: 2rem;
+}
+
+.titane-section-memory-evolution .evolution-entry::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(
+    180deg,
+    rgba(6, 182, 212, 0.7) 0%,
+    rgba(59, 130, 246, 0.6) 50%,
+    rgba(124, 58, 237, 0.7) 100%
+  );
+  filter: blur(4px) drop-shadow(0 0 8px rgba(59, 130, 246, 0.6));
+  animation: evolution-flow 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   TRANSFORMATION - MILESTONE RAINBOW AURA
+   ───────────────────────────────────────────────────────────────────────── */
+
+.titane-section-transformation .card,
+.titane-section-transformation .milestone-item {
+  position: relative;
+  overflow: visible;
+}
+
+.titane-section-transformation .card::before {
+  content: '';
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(
+    circle at center,
+    rgba(124, 58, 237, 0.3) 0%,
+    rgba(59, 130, 246, 0.25) 20%,
+    rgba(6, 182, 212, 0.2) 40%,
+    rgba(16, 185, 129, 0.15) 60%,
+    rgba(251, 146, 60, 0.1) 80%,
+    transparent 100%
+  );
+  filter: blur(25px);
+  opacity: 0.4;
+  animation: milestone-rainbow-rotate 10s linear infinite;
+  pointer-events: none;
+  z-index: -1;
+  border-radius: inherit;
+}
+
+.titane-section-transformation .card:hover::before {
+  opacity: 0.7;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   HEADER & TABS - ENHANCED AURA
+   ───────────────────────────────────────────────────────────────────────── */
+
+.titane-header {
+  position: relative;
+  overflow: visible;
+}
+
+.titane-header::before {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: linear-gradient(
+    180deg,
+    radial-gradient(
+      circle at 30% 50%,
+      rgba(124, 58, 237, 0.3) 0%,
+      rgba(59, 130, 246, 0.2) 30%,
+      rgba(6, 182, 212, 0.1) 60%,
+      transparent 100%
+    ),
+    transparent
+  );
+  filter: blur(15px);
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Enhanced Tab Aura */
+.titane-tab {
+  position: relative;
+  overflow: visible;
+}
+
+.titane-tab::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  background: radial-gradient(
+    circle at bottom,
+    rgba(59, 130, 246, 0.4) 0%,
+    transparent 60%
+  );
+  filter: blur(12px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: -1;
+  border-radius: inherit;
+}
+
+.titane-tab.active::before {
+  opacity: 1;
+  animation: tab-pulse 2.5s ease-in-out infinite;
+}
+
+.titane-tab:hover::before {
+  opacity: 0.6;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   MOBILE OPTIMIZATIONS
+   ───────────────────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  /* Reduce blur on mobile for performance */
+  .titane-section-overview .card::before,
+  .titane-section-vision .vision-camera-container::before,
+  .titane-section-progression .xp-progress-bar::before,
+  .titane-section-identity .card::before,
+  .titane-section-memory-map .card::before,
+  .titane-section-transformation .card::before {
+    filter: blur(12px);
+  }
+
+  /* Hide scan line on mobile */
+  .titane-section-vision .vision-camera-container::after,
+  .titane-section-memory-evolution .evolution-entry::before {
+    display: none;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   ACCESSIBILITY - REDUCED MOTION
+   ───────────────────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Disable all Aura animations */
+  .titane-section-overview .card::before,
+  .titane-section-vision .vision-camera-container::before,
+  .titane-section-vision .vision-camera-container::after,
+  .titane-section-progression .xp-progress-bar::before,
+  .titane-section-progression .xp-progress-fill::after,
+  .titane-section-identity .card::before,
+  .titane-section-memory-map .card::before,
+  .titane-section-memory-evolution .evolution-entry::before,
+  .titane-section-transformation .card::before,
+  .titane-tab::before {
+    animation: none !important;
+  }
+
+  /* Keep hover opacity transitions only */
+  .titane-section-overview .card:hover::before,
+  .titane-tab.active::before {
+    animation: none !important;
+    opacity: 1;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   END AURA ADVANCED APPLICATION v25.3.1
+   ═══════════════════════════════════════════════════════════════════════════ */

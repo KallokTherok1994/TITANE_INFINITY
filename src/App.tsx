@@ -52,6 +52,12 @@ import { useUIStore } from './stores/uiStore'; // ✨ v19.5.2 - UI state managem
 import { initializeOllama } from './services/ai/providers/ollama'; // ✨ v21 - Local AI initialization
 // ✨ OPT-12: connectCacheToSingularity lazy-loaded below (removed static import)
 // ✨ OPT-7: i18n is now lazy-loaded in useEffect below (removed static import)
+// ✨ v25.4.1 - A11Y & Performance monitoring (utilities planned for future implementation)
+// ✨ v25.3.1 - Aura Quantum Particles Background
+import { QuantumParticles } from './components/aura/QuantumParticles';
+// QuantumParticlesPresets disponible si besoin: import { QuantumParticlesPresets } from './components/aura/QuantumParticles'
+import { AuraControlPanel } from './components/aura/AuraControlPanel';
+import { useAura } from './hooks/useAuraOrchestrator';
 
 /**
  * 🔒 POLITIQUE DE SÉCURITÉ ENVIRONNEMENT
@@ -87,16 +93,16 @@ if (typeof window !== 'undefined') {
 // ❌ SUPPRIMÉ v24.3.8: DashboardPage (fusionné dans EvoPage)
 // const DashboardPage = lazy(() => import('./pages/DashboardPage')...);
 
-// ✨ v25 EVO - Centre d'Évolution Totale (Fusion Dashboard + Identity + Memory + Evolution + Progression)
-const EvoPage = lazy(() => import('./pages/EvoPage').then(m => ({ default: m.EvoPage })));
+// ❌ SUPPRIMÉ v25.3.0: EvoPage (fusionné dans TitanePage - le cœur du système)
+// const EvoPage = lazy(() => import('./pages/EvoPage').then(m => ({ default: m.EvoPage })));
 
 // ✨ v25.1 TIME - Centre Temporel Unifié (Fusion Temporal Flow + Agenda + Time Navigator)
 const TimePage = lazy(() =>
   import('./pages/TimePage').then(m => ({ default: m.TimePage }))
 );
 
-// ✨ v24 P2-4 - Lazy loaded pages (code splitting)
-const ChatPage = lazy(() => import('./ui/pages/Chat').then(m => ({ default: m.Chat })));
+// ❌ SUPPRIMÉ v25.3.0: ChatPage (fusionné dans TitanePage - le cœur du système)
+// const ChatPage = lazy(() => import('./ui/pages/Chat').then(m => ({ default: m.Chat })));
 // ❌ SUPPRIMÉ v25.1: CognitivePage (redirigé vers /stats)
 // const CognitivePage = lazy(() => import('./pages/CognitivePage')...);
 // ❌ SUPPRIMÉ v24.3.8: ProgressionPage (fusionné dans EvoPage)
@@ -220,6 +226,11 @@ const OrchestrationMetaCenter = lazy(() =>
 // ✨ v25.4.0 DEV CENTER - Fusion Complete (Dev Mode + ONE CORE + QA & Tests + Orchestration)
 const DevPage = lazy(() => import('./pages/DevPage').then(m => ({ default: m.DevPage })));
 
+// ✨ v25.3.2 FUSION DASHBOARD - Perfect Backend/Frontend Fusion (Singularity + Memory + Health)
+const PerfectFusionDashboard = lazy(() =>
+  import('./components/PerfectFusionDashboard').then(m => ({ default: m.default }))
+);
+
 // ❌ DEPRECATED v25.4.0: Modules fusionnés dans DevPage
 // - ONE CORE (Centre de Commande Unifié)
 // - QA MONITORING (Centre QA & Monitoring)
@@ -288,9 +299,10 @@ const Memory = lazy(() => import('./pages/Memory').then(m => ({ default: m.Memor
 const _AgendaPage = lazy(() =>
   import('./pages/AgendaPage').then(m => ({ default: m.AgendaPage }))
 );
-const CameraPage = lazy(() =>
-  import('./pages/CameraPage').then(m => ({ default: m.CameraPage }))
-);
+// ❌ SUPPRIMÉ v25.3.0: CameraPage (fusionné dans TitanePage via Vision tab)
+// const CameraPage = lazy(() =>
+//   import('./pages/CameraPage').then(m => ({ default: m.CameraPage }))
+// );
 
 /**
  * ═══════════════════════════════════════════════════════════════
@@ -596,6 +608,8 @@ const AppRouter: React.FC = () => {
     };
   }, []);
 
+  // ✨ v25.4.1 - A11Y & Performance: Keyboard shortcuts and Web Vitals planned
+
   // 🌟 Initialize Living Engines v21-v24
   const livingEngines = useLivingEngines(100); // Update every 100ms
 
@@ -622,6 +636,7 @@ const AppRouter: React.FC = () => {
       // ═══ CENTRES UNIFIÉS ═══
       { id: '/admin', label: 'ADMIN', icon: '👑', badge: 'v25.2' }, // FUSION: Système + Config + Audio + Design + Gouvernance
       { id: '/dev', label: 'DEV', icon: '🔧', badge: 'v25.4' }, // FUSION: Dev Mode + ONE CORE + QA & Tests + Orchestration
+      { id: '/fusion', label: 'FUSION', icon: '🌌', badge: 'v25.3.2' }, // ✨ NEW: Backend/Frontend Perfect Fusion Dashboard
     ],
     []
   ); // Empty deps = stable reference
@@ -799,6 +814,15 @@ const AppRouter: React.FC = () => {
           <Route path="/audio" element={<Navigate to="/admin" replace />} />
           <Route path="/voice" element={<Navigate to="/admin" replace />} />
           <Route path="/tts" element={<Navigate to="/admin" replace />} />
+          {/* ✨ v25.3.2 - FUSION DASHBOARD - Perfect Backend/Frontend Integration */}
+          <Route
+            path="/fusion"
+            element={
+              <Suspense fallback={<PageLoadingFallback variant="dashboard" />}>
+                <PerfectFusionDashboard />
+              </Suspense>
+            }
+          />
           {/* ✨ v24.1 ORCHESTRATION & INTELLIGENCE CENTER - Fusion 6 modules (QA, Meta, Orchestration, Quantum, Multi-IA, Reality) */}
           <Route
             path="/orchestration-intelligence"
@@ -1006,6 +1030,8 @@ const AppRouter: React.FC = () => {
       {/* MASQUÉ - Analyse UI */}
       {/* <PhysiologicalPanel /> */}
 
+      {/* ✨ v25.4.1 - Keyboard Shortcuts Help: Planned for future release */}
+
       {/* ✨ v19.5.2 - Toast Notifications System */}
       <ToastContainer
         toasts={toasts.map(t => ({
@@ -1032,6 +1058,12 @@ const App: React.FC = () => {
     <ThemeProvider>
       <AnimationProvider fpsThreshold={40} cpuThreshold={80}>
         <TitanStateProvider>
+          {/* ✨ v25.3.1 - Aura Control System */}
+          <AuraControlPanel position="bottom-right" defaultOpen={false} />
+
+          {/* ✨ v25.3.1 - Quantum Particles Background (Global) - Connected to Aura Orchestrator */}
+          <AuraConnectedParticles />
+
           <BrowserRouter>
             <AutoHealErrorBoundary>
               <AppRouter />
@@ -1041,6 +1073,64 @@ const App: React.FC = () => {
       </AnimationProvider>
     </ThemeProvider>
   );
+};
+
+/**
+ * Component wrapper qui connecte QuantumParticles à l'orchestrateur Aura
+ */
+const AuraConnectedParticles: React.FC = () => {
+  const aura = useAura();
+
+  // Convertir config Aura en props QuantumParticles
+  const particlesProps = {
+    count: aura.config.particleCount,
+    connectionDistance: aura.config.connectionDistance,
+    mouseForce: aura.config.mouseAttraction ? 0.02 : 0,
+    opacity: aura.globalIntensity * 0.6,
+    colors: React.useMemo(() => {
+      const themeColors = {
+        default: [
+          'rgba(124, 58, 237, 0.8)',
+          'rgba(6, 182, 212, 0.8)',
+          'rgba(59, 130, 246, 0.8)',
+        ],
+        ocean: [
+          'rgba(6, 182, 212, 0.8)',
+          'rgba(59, 130, 246, 0.8)',
+          'rgba(124, 58, 237, 0.8)',
+        ],
+        sunset: [
+          'rgba(236, 72, 153, 0.8)',
+          'rgba(251, 146, 60, 0.8)',
+          'rgba(239, 68, 68, 0.8)',
+        ],
+        forest: [
+          'rgba(16, 185, 129, 0.8)',
+          'rgba(132, 204, 22, 0.8)',
+          'rgba(52, 211, 153, 0.8)',
+        ],
+        fire: [
+          'rgba(239, 68, 68, 0.8)',
+          'rgba(251, 146, 60, 0.8)',
+          'rgba(253, 224, 71, 0.8)',
+        ],
+        rainbow: [
+          'rgba(124, 58, 237, 0.8)',
+          'rgba(59, 130, 246, 0.8)',
+          'rgba(6, 182, 212, 0.8)',
+          'rgba(16, 185, 129, 0.8)',
+          'rgba(251, 146, 60, 0.8)',
+        ],
+      };
+      return themeColors[aura.theme] || themeColors.default;
+    }, [aura.theme]),
+  };
+
+  if (!aura.enabled || !aura.config.particlesEnabled) {
+    return null;
+  }
+
+  return <QuantumParticles {...particlesProps} />;
 };
 
 export default App;
