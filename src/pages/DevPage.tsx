@@ -23,6 +23,8 @@ import type {
 } from '@/features/qa-monitoring/types';
 import type { OneCoreState } from '@/features/one-core/types';
 // ✨ v25.4.1 - Web Vitals monitoring (planned for future implementation)
+// ✨ v25.6.0 - Ultimate Optimization Dashboard (Phase 12)
+import { UltimateOptimizationDashboard } from '@/components/optimization/UltimateOptimizationDashboard';
 import './DevPage.css';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -37,7 +39,8 @@ type SectionId =
   | 'qa-tests'
   | 'orchestration'
   | 'security'
-  | 'metrics';
+  | 'metrics'
+  | 'optimization';
 
 interface OrchestrationState {
   multiAi: {
@@ -756,6 +759,7 @@ function DevPageContent(): JSX.Element {
     { id: 'orchestration' as const, label: 'Orchestration', icon: '🔥' },
     { id: 'security' as const, label: 'Security', icon: '🛡️' },
     { id: 'metrics' as const, label: 'Metrics', icon: '📈' },
+    { id: 'optimization' as const, label: 'Ultimate Optimization', icon: '⚡' },
   ];
 
   return (
@@ -809,6 +813,11 @@ function DevPageContent(): JSX.Element {
         )}
         {activeSection === 'metrics' && (
           <MetricsSection metrics={metrics} oneCoreMetrics={oneCoreState} />
+        )}
+        {activeSection === 'optimization' && (
+          <div className="dev-section">
+            <UltimateOptimizationDashboard />
+          </div>
         )}
       </main>
     </div>
