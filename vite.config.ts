@@ -11,9 +11,11 @@ import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { visualizer } from 'rollup-plugin-visualizer';
+import viteCompression from 'vite-plugin-compression';
 
 // TITANE∞ v17.3.0 - Vite Configuration OPTIMIZED (CPU < 50%)
 // Phase 5: Bundle analysis + code splitting
+// P2-A: Brotli compression for -15% bundle size
 // https://vitejs.dev/config/
 export default defineConfig({
   root: '.',
@@ -33,6 +35,24 @@ export default defineConfig({
       filename: 'dist/stats.html',
       gzipSize: true,
       brotliSize: true,
+    }),
+    // P2-A: Brotli compression (-15% vs gzip)
+    viteCompression({
+      verbose: true,
+      disable: false,
+      threshold: 10240, // 10 KB minimum
+      algorithm: 'brotliCompress',
+      ext: '.br',
+      deleteOriginFile: false,
+    }),
+    // Gzip fallback for older browsers
+    viteCompression({
+      verbose: true,
+      disable: false,
+      threshold: 10240,
+      algorithm: 'gzip',
+      ext: '.gz',
+      deleteOriginFile: false,
     }),
   ],
 
