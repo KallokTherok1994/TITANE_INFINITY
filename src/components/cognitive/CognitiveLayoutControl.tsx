@@ -17,6 +17,7 @@ import React, {
 import { useCognitiveLayout, type UIMode } from '@/hooks/useCognitiveLayout';
 import { usePanelState } from '@/hooks/usePanelState';
 import { usePanelsStore } from '@/stores/panelsStore';
+import { usePerformanceProfiler } from '@/hooks/usePerformanceProfiler';
 import './CognitiveLayoutControl.css';
 
 const MODE_LABELS: Record<UIMode, string> = {
@@ -81,6 +82,25 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
       collapsedOnMobile: false,
     });
   }, [registerPanel]);
+
+  // v25.6.9: Performance profiling (DEV only)
+  const { measure, stats } = usePerformanceProfiler('CognitiveLayoutControl', {
+    enabled: process.env.NODE_ENV === 'development',
+    monitorFPS: false,
+    memoryInterval: 0,
+    statsInterval: 10000,
+  });
+
+  // Log performance stats in DEV
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development' && stats) {
+      console.log('[CognitiveLayout] Performance Stats:', {
+        avgRenderTime: stats.avgTime?.toFixed(2) + 'ms',
+        renderCount: stats.count,
+        lastRender: stats.lastTime?.toFixed(2) + 'ms',
+      });
+    }
+  }, [stats]);
 
   // Position draggable avec persistence localStorage
   const POSITION_KEY = 'titane-cognitive-layout-position';
@@ -289,7 +309,12 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
               <button
                 key={mode}
                 className={`clc-mode-btn ${currentMode === mode ? 'active' : ''}`}
-                onClick={() => setMode(mode)}
+                onClick={() => {
+                  // v25.6.9: Performance tracking on mode change
+                  const stop = measure('setMode', 'user-interaction');
+                  setMode(mode);
+                  stop();
+                }}
                 role="radio"
                 aria-checked={currentMode === mode}
                 aria-label={`${MODE_LABELS[mode]}: ${MODE_DESCRIPTIONS[mode]}`}
