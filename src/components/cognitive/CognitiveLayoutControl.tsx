@@ -5,7 +5,7 @@
  * Panneau de contrôle du Cognitive Layout Engine
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useCognitiveLayout, type UIMode } from '@/hooks/useCognitiveLayout';
 import './CognitiveLayoutControl.css';
 
@@ -42,13 +42,29 @@ export function CognitiveLayoutControl() {
     hasSuggestion,
   } = useCognitiveLayout();
 
+  // État collapse/expand
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
   if (!currentMode) return null;
 
   return (
-    <div className="cognitive-layout-control">
+    <div className={`cognitive-layout-control ${isCollapsed ? 'collapsed' : ''}`}>
       {/* Header */}
       <div className="clc-header">
         <h3>🧠 Cognitive Layout</h3>
+
+        {/* Bouton Expand/Collapse */}
+        <button
+          className="clc-collapse-btn"
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          aria-label={isCollapsed ? 'Agrandir le panneau' : 'Réduire le panneau'}
+          title={isCollapsed ? 'Agrandir' : 'Réduire'}
+        >
+          <span className={`clc-collapse-arrow ${isCollapsed ? 'collapsed' : ''}`}>
+            ▼
+          </span>
+        </button>
+
         <label className="clc-toggle">
           <input
             type="checkbox"
@@ -59,115 +75,119 @@ export function CognitiveLayoutControl() {
         </label>
       </div>
 
-      {/* Mode actuel */}
-      <div className="clc-current-mode">
-        <div className="clc-mode-badge">{MODE_LABELS[currentMode]}</div>
-        <p className="clc-mode-desc">{MODE_DESCRIPTIONS[currentMode]}</p>
-      </div>
+      {/* Contenu collapsible */}
+      <div className={`clc-content ${isCollapsed ? 'collapsed' : ''}`}>
+        {/* Mode actuel */}
+        <div className="clc-current-mode">
+          <div className="clc-mode-badge">{MODE_LABELS[currentMode]}</div>
+          <p className="clc-mode-desc">{MODE_DESCRIPTIONS[currentMode]}</p>
+        </div>
 
-      {/* Suggestion d'adaptation */}
-      {hasSuggestion && suggestion && (
-        <div className="clc-suggestion">
-          <div className="clc-suggestion-header">
-            <span className="clc-suggestion-icon">💡</span>
-            <span className="clc-suggestion-title">Suggestion</span>
-            <span className="clc-suggestion-confidence">
-              {(suggestion.confidence * 100).toFixed(0)}%
-            </span>
+        {/* Suggestion d'adaptation */}
+        {hasSuggestion && suggestion && (
+          <div className="clc-suggestion">
+            <div className="clc-suggestion-header">
+              <span className="clc-suggestion-icon">💡</span>
+              <span className="clc-suggestion-title">Suggestion</span>
+              <span className="clc-suggestion-confidence">
+                {(suggestion.confidence * 100).toFixed(0)}%
+              </span>
+            </div>
+
+            <div className="clc-suggestion-body">
+              <p className="clc-suggestion-mode">
+                Passer en mode <strong>{MODE_LABELS[suggestion.suggestedMode]}</strong>
+              </p>
+              <p className="clc-suggestion-reason">{suggestion.reasoning}</p>
+            </div>
+
+            <div className="clc-suggestion-actions">
+              <button className="clc-btn clc-btn-primary" onClick={acceptSuggestion}>
+                Appliquer
+              </button>
+              <button className="clc-btn clc-btn-secondary" onClick={refuseSuggestion}>
+                Refuser
+              </button>
+            </div>
           </div>
+        )}
 
-          <div className="clc-suggestion-body">
-            <p className="clc-suggestion-mode">
-              Passer en mode <strong>{MODE_LABELS[suggestion.suggestedMode]}</strong>
-            </p>
-            <p className="clc-suggestion-reason">{suggestion.reasoning}</p>
-          </div>
-
-          <div className="clc-suggestion-actions">
-            <button className="clc-btn clc-btn-primary" onClick={acceptSuggestion}>
-              Appliquer
-            </button>
-            <button className="clc-btn clc-btn-secondary" onClick={refuseSuggestion}>
-              Refuser
-            </button>
+        {/* Sélecteur de mode manuel */}
+        <div className="clc-mode-selector">
+          <h4>Changer de mode</h4>
+          <div className="clc-mode-grid">
+            {(Object.keys(MODE_LABELS) as UIMode[]).map(mode => (
+              <button
+                key={mode}
+                className={`clc-mode-btn ${currentMode === mode ? 'active' : ''}`}
+                onClick={() => setMode(mode)}
+                title={MODE_DESCRIPTIONS[mode]}
+              >
+                {MODE_LABELS[mode]}
+              </button>
+            ))}
           </div>
         </div>
-      )}
 
-      {/* Sélecteur de mode manuel */}
-      <div className="clc-mode-selector">
-        <h4>Changer de mode</h4>
-        <div className="clc-mode-grid">
-          {(Object.keys(MODE_LABELS) as UIMode[]).map(mode => (
-            <button
-              key={mode}
-              className={`clc-mode-btn ${currentMode === mode ? 'active' : ''}`}
-              onClick={() => setMode(mode)}
-              title={MODE_DESCRIPTIONS[mode]}
-            >
-              {MODE_LABELS[mode]}
-            </button>
-          ))}
-        </div>
-      </div>
+        {/* Signaux cognitifs */}
+        {signals && (
+          <div className="clc-signals">
+            <h4>Signaux cognitifs</h4>
+            <div className="clc-signal-grid">
+              <div className="clc-signal">
+                <span className="clc-signal-label">⚡ Énergie</span>
+                <div className="clc-signal-bar">
+                  <div
+                    className="clc-signal-fill"
+                    style={{ width: `${signals.energyLevel * 100}%` }}
+                  />
+                </div>
+              </div>
 
-      {/* Signaux cognitifs */}
-      {signals && (
-        <div className="clc-signals">
-          <h4>Signaux cognitifs</h4>
-          <div className="clc-signal-grid">
-            <div className="clc-signal">
-              <span className="clc-signal-label">⚡ Énergie</span>
-              <div className="clc-signal-bar">
-                <div
-                  className="clc-signal-fill"
-                  style={{ width: `${signals.energyLevel * 100}%` }}
-                />
+              <div className="clc-signal">
+                <span className="clc-signal-label">🎯 Focus</span>
+                <div className="clc-signal-bar">
+                  <div
+                    className="clc-signal-fill"
+                    style={{ width: `${signals.focusScore * 100}%` }}
+                  />
+                </div>
+              </div>
+
+              <div className="clc-signal">
+                <span className="clc-signal-label">🧠 Charge</span>
+                <div className="clc-signal-bar">
+                  <div
+                    className="clc-signal-fill clc-signal-negative"
+                    style={{ width: `${signals.cognitiveLoad * 100}%` }}
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="clc-signal">
-              <span className="clc-signal-label">🎯 Focus</span>
-              <div className="clc-signal-bar">
-                <div
-                  className="clc-signal-fill"
-                  style={{ width: `${signals.focusScore * 100}%` }}
-                />
-              </div>
-            </div>
-
-            <div className="clc-signal">
-              <span className="clc-signal-label">🧠 Charge</span>
-              <div className="clc-signal-bar">
-                <div
-                  className="clc-signal-fill clc-signal-negative"
-                  style={{ width: `${signals.cognitiveLoad * 100}%` }}
-                />
-              </div>
+            <div className="clc-signal-info">
+              <span>⏱️ Session: {signals.sessionDuration.toFixed(0)} min</span>
+              {signals.fatigueEstimated && (
+                <span className="clc-warning">⚠️ Fatigue détectée</span>
+              )}
+              {signals.blockageDetected && (
+                <span className="clc-warning">🔄 Blocage détecté</span>
+              )}
             </div>
           </div>
+        )}
 
-          <div className="clc-signal-info">
-            <span>⏱️ Session: {signals.sessionDuration.toFixed(0)} min</span>
-            {signals.fatigueEstimated && (
-              <span className="clc-warning">⚠️ Fatigue détectée</span>
-            )}
-            {signals.blockageDetected && (
-              <span className="clc-warning">🔄 Blocage détecté</span>
-            )}
-          </div>
+        {/* Actions rapides */}
+        <div className="clc-actions">
+          <button className="clc-btn clc-btn-small" onClick={revertMode}>
+            ⏮️ Mode précédent
+          </button>
+          <button className="clc-btn clc-btn-small" onClick={resetMode}>
+            ⚖️ Reset neutre
+          </button>
         </div>
-      )}
-
-      {/* Actions rapides */}
-      <div className="clc-actions">
-        <button className="clc-btn clc-btn-small" onClick={revertMode}>
-          ⏮️ Mode précédent
-        </button>
-        <button className="clc-btn clc-btn-small" onClick={resetMode}>
-          ⚖️ Reset neutre
-        </button>
       </div>
+      {/* Fin contenu collapsible */}
     </div>
   );
 }
