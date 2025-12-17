@@ -1,7 +1,7 @@
 # 🏗️ ARCHITECTURE FRONTEND TITANE∞
 
-**Version:** 25.2.2  
-**Date:** 16 décembre 2025  
+**Version:** 25.4.0  
+**Date:** Janvier 2025  
 **Auteurs:** Équipe TITANE∞
 
 ---
@@ -48,9 +48,33 @@
 - QA & Monitoring (/qa-monitoring) → `/admin` Onglet 6
 - Mode Développeur (/developer-mode) → `/admin` Onglet 7
 
-### 🧹 Menu Navigation (v25.2.2)
+### 🔧 Fusion DEV (v25.4.0) — **NOUVELLE FUSION MAJEURE**
 
-**18 sections → 10 sections** (-44%)
+**4 modules → 1 module DEV unifié**
+
+- Dev Mode (/developer-mode) → `/dev` Section 2
+- ONE CORE (/one-core) → `/dev` Sections 1, 3, 4
+- QA & Tests (/qa-monitoring) → `/dev` Sections 5, 7
+- Orchestration & IA (/orchestration-intelligence) → `/dev` Section 6
+
+**8 sections internes** :
+
+1. 🎯 **Overview** — Vue d'ensemble santé système
+2. 💻 **Dev Tools** — Patch, refactor, test, rollback (Dev Mode)
+3. 🎯 **Command Center** — ONE CORE dashboard, centers health
+4. 📊 **System Commands** — sync_all, optimize, repair, gc
+5. 🧪 **QA & Tests** — Tests automatisés, monitoring
+6. 🔥 **Orchestration** — Multi-IA, Meta-orchestrateur
+7. 🛡️ **Security** — Hardening, audits, alerts
+8. 📈 **Metrics** — Performance, diagnostics
+
+**Impact Menu** : 8→5 items (-37.5%)  
+**Code** : 821 lignes DevPage + 629 lignes CSS  
+**Redirections** : 16 anciennes URLs → `/dev`
+
+### 🧹 Menu Navigation (v25.4.0)
+
+**8 sections → 5 sections** (-37.5%)
 
 - localStorage nettoyage forcé
 - MenuEditor sauvegarde désactivée
@@ -59,35 +83,33 @@
 
 ---
 
-## 🗺️ Routes Principales v25.2.2
+## 🗺️ Routes Principales v25.4.0
 
 ### Routes Actives
 
 ```
 /chat                Chat IA (Multi-Provider)
-/evo                 EVO — Centre d'Évolution Totale (fusion 5 modules)
-/time                TIME — Centre Temporel (fusion 3 modules) ⏱️ v25.1
-/camera              Vision & Reconnaissance
-/one-core            ONE CORE — Commande Unifiée
-/stats               Statistiques Moteurs (fusion 4 modules)
+/titane              TITANE — Le Cœur du Système (fusion Chat + Vision + EVO) ⚡ v25.3.0
+/time                TIME — Centre Temporel (fusion 3 modules) 🕐 v25.1
+/stats               STATS — Statistiques Moteurs (fusion 4 modules) 📊 v25.2
 /admin               ADMIN — Centre Administration (fusion 7 modules) 👑 v25.2.2
-/orchestration-intelligence  Intelligence IA Multi-Agents
+/dev                 DEV — Centre Développement (fusion 4 modules) 🔧 v25.4.0
 ```
 
-### Routes Obsolètes (Redirigées v25.2.2)
+### Routes Obsolètes (Redirigées v25.4.0)
 
 ```
-❌ /                     → /evo (redirect)
-❌ /dashboard            → /evo (redirect)
+❌ /                     → /evo (redirect) → /titane (redirect v25.3.0)
+❌ /dashboard            → /evo (redirect) → /titane (redirect v25.3.0)
 ❌ /helios               → /stats (redirect)
 ❌ /nexus                → /stats (redirect)
 ❌ /harmonia             → /stats (redirect)
-❌ /identity-center      → /evo (redirect)
-❌ /memory-evolution     → /evo (redirect)
-❌ /evolution-center     → /evo (redirect)
-❌ /cognitive-evolution  → /evo (redirect)
-❌ /progression          → /evo (redirect)
-❌ /xp                   → /evo (redirect)
+❌ /identity-center      → /evo (redirect) → /titane (redirect v25.3.0)
+❌ /memory-evolution     → /evo (redirect) → /titane (redirect v25.3.0)
+❌ /evolution-center     → /evo (redirect) → /titane (redirect v25.3.0)
+❌ /cognitive-evolution  → /evo (redirect) → /titane (redirect v25.3.0)
+❌ /progression          → /evo (redirect) → /titane (redirect v25.3.0)
+❌ /xp                   → /evo (redirect) → /titane (redirect v25.3.0)
 
 🆕 Module TIME - Redirections v25.1:
 ❌ /temporal-center      → /time (redirect)
@@ -112,6 +134,24 @@
 ❌ /audio                → /admin (redirect)
 ❌ /voice                → /admin (redirect)
 ❌ /tts                  → /admin (redirect)
+
+🆕 Module DEV - Redirections v25.4.0:
+❌ /one-core             → /dev (redirect)
+❌ /command-center       → /dev (redirect)
+❌ /unified              → /dev (redirect)
+❌ /singularity          → /dev (redirect)
+❌ /qa-monitoring        → /dev (redirect)
+❌ /qa                   → /dev (redirect)
+❌ /monitoring           → /dev (redirect)
+❌ /tests                → /dev (redirect)
+❌ /developer-mode       → /dev (redirect)
+❌ /dev-mode             → /dev (redirect)
+❌ /devmode              → /dev (redirect)
+❌ /ia-dev               → /dev (redirect)
+❌ /orchestration-intelligence → /dev (redirect)
+❌ /orchestration-center → /dev (redirect)
+❌ /orchestration        → /dev (redirect)
+❌ /meta-center          → /dev (redirect)
 ```
 
 ---

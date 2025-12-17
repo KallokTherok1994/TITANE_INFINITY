@@ -202,6 +202,11 @@ const AdminPage = lazy(() =>
   import('./features/admin').then(m => ({ default: m.AdminPage }))
 );
 
+// ✨ v25.3.0 TITANE - Le Cœur du Système (fusion Chat IA + Vision + EVO)
+const TitanePage = lazy(() =>
+  import('./pages/TitanePage').then(m => ({ default: m.TitanePage }))
+);
+
 // ❌ SUPPRIMÉ v24.3.8: EvolutionCenterPage (fusionné dans EvoPage)
 // const EvolutionCenterPage = lazy(() => import('./pages/EvolutionCenterPage')...);
 
@@ -212,25 +217,15 @@ const OrchestrationMetaCenter = lazy(() =>
   }))
 );
 
-// ✨ v25.2 ADMIN CENTER - Centre Admin Unifié (Fusion Système + Config + Audio + Design + Gouvernance)
-const AdminPage = lazy(() =>
-  import('./features/admin/AdminPage').then(m => ({ default: m.AdminPage }))
-);
+// ✨ v25.4.0 DEV CENTER - Fusion Complete (Dev Mode + ONE CORE + QA & Tests + Orchestration)
+const DevPage = lazy(() => import('./pages/DevPage').then(m => ({ default: m.DevPage })));
 
-// ✨ ONE CORE - Centre de Commande Unifié v19.5 (OPUS #6)
-const OneCorePage = lazy(() =>
-  import('./features/one-core').then(m => ({ default: m.OneCorePage }))
-);
-
-// ✨ QA MONITORING CENTER - Centre QA & Monitoring v19.6 (OPUS #7)
-const QAMonitoringPage = lazy(() =>
-  import('./features/qa-monitoring').then(m => ({ default: m.QAMonitoringPage }))
-);
-
-// ✨ DEVELOPER MODE - IA Developer Mode v∞ (OPUS #10)
-const DeveloperModePage = lazy(() =>
-  import('./features/developer-mode').then(m => ({ default: m.DeveloperModePage }))
-);
+// ❌ DEPRECATED v25.4.0: Modules fusionnés dans DevPage
+// - ONE CORE (Centre de Commande Unifié)
+// - QA MONITORING (Centre QA & Monitoring)
+// - DEVELOPER MODE (IA Developer Mode)
+// - ORCHESTRATION (Orchestration & IA)
+// Ces modules sont maintenant accessibles via /dev
 
 // ✨ REALITY CENTER - Reality Rendering Layer v∞ (OPUS #19)
 const RealityCenter = lazy(() =>
@@ -615,32 +610,18 @@ const AppRouter: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [livingEngines.state.initialized]);
 
-  // ✨ v25.2.1: Sidebar items - Architecture FINALE CLEAN
-  // SUPPRESSIONS DÉFINITIVES: Helios, Nexus, Harmonia, État Cognitif, Mémoire
+  // ✨ v25.3.0: Sidebar items - Architecture FINALE avec TITANE CORE
+  // FUSION v25.3.0: Chat IA + Vision + EVO → TITANE (le cœur du système)
   const sidebarItems = useMemo(
     () => [
       // ═══ PRINCIPAL ═══
-      { id: '/chat', label: 'Chat IA', icon: '💬', badge: 'OMEGA' },
-      { id: '/evo', label: 'EVO', icon: '🧬', badge: 'v25.0' }, // FUSION: Dashboard+Identity+Memory+Evolution+Progression
+      { id: '/titane', label: 'TITANE', icon: '⚡', badge: 'v25.3' }, // FUSION: Chat+Vision+EVO
       { id: '/time', label: 'TIME', icon: '🕐', badge: 'v25.1' }, // FUSION: Temporal+Agenda+TimeNav
       { id: '/stats', label: 'STATS', icon: '📊', badge: 'v25.2' }, // FUSION: Nexus+Helios+Harmonia+Cognitif
 
-      // ═══ CENTRES VISION ═══
-      { id: '/camera', label: 'Vision', icon: '📷' },
-
       // ═══ CENTRES UNIFIÉS ═══
-      { id: '/one-core', label: 'ONE CORE', icon: '🎯', badge: 'OPUS#6' },
       { id: '/admin', label: 'ADMIN', icon: '👑', badge: 'v25.2' }, // FUSION: Système + Config + Audio + Design + Gouvernance
-      { id: '/qa-monitoring', label: 'QA & Tests', icon: '🧪', badge: 'OPUS#7' },
-      { id: '/developer-mode', label: 'Dev Mode', icon: '💻', badge: 'OPUS#10' },
-
-      // ═══ CENTRES COGNITIFS AVANCÉS ═══
-      {
-        id: '/orchestration-intelligence',
-        label: 'Orchestration & IA',
-        icon: '🔥',
-        badge: 'v24.1',
-      },
+      { id: '/dev', label: 'DEV', icon: '🔧', badge: 'v25.4' }, // FUSION: Dev Mode + ONE CORE + QA & Tests + Orchestration
     ],
     []
   ); // Empty deps = stable reference
@@ -748,36 +729,33 @@ const AppRouter: React.FC = () => {
       {/* Phase 9: Suspense boundary for lazy-loaded routes */}
       <Suspense fallback={<PageLoadingFallback />}>
         <Routes>
-          {/* Main Routes v15.2+ */}
-          <Route path="/" element={<Navigate to="/evo" replace />} />
-          {/* ✨ v25 EVO - CENTRE D'ÉVOLUTION TOTALE (Fusion ultime 5 modules) */}
+          {/* Main Routes v25.3.0 - TITANE Homepage */}
+          <Route path="/" element={<Navigate to="/titane" replace />} />
+          {/* ⚡ v25.3.0 TITANE - LE CŒUR DU SYSTÈME (Fusion Chat IA + Vision + EVO) */}
           <Route
-            path="/evo"
+            path="/titane"
             element={
-              <ErrorBoundary context="EvoPage">
-                <EvoPage />
+              <ErrorBoundary context="TitanePage">
+                <TitanePage />
               </ErrorBoundary>
             }
           />
-          {/* Redirections vers EVO depuis anciennes routes fusionnées */}
-          <Route path="/dashboard" element={<Navigate to="/evo" replace />} />
-          <Route path="/evolution-center" element={<Navigate to="/evo" replace />} />
-          <Route path="/cognitive-evolution" element={<Navigate to="/evo" replace />} />
+          {/* Redirections vers TITANE (fusion v25.3.0) */}
+          <Route path="/chat" element={<Navigate to="/titane" replace />} />
+          <Route path="/camera" element={<Navigate to="/titane" replace />} />
+          <Route path="/evo" element={<Navigate to="/titane" replace />} />
+          <Route path="/dashboard" element={<Navigate to="/titane" replace />} />
+          <Route path="/evolution-center" element={<Navigate to="/titane" replace />} />
+          <Route
+            path="/cognitive-evolution"
+            element={<Navigate to="/titane" replace />}
+          />
           <Route
             path="/identity-memory-evolution"
-            element={<Navigate to="/evo" replace />}
+            element={<Navigate to="/titane" replace />}
           />
-          {/* ✨ v24.3.8: Routes /identity-center et /memory-evolution ont des composants dédiés plus bas */}
-          <Route path="/progression" element={<Navigate to="/evo" replace />} />
-          <Route path="/xp" element={<Navigate to="/evo" replace />} />
-          <Route
-            path="/chat"
-            element={
-              <ErrorBoundary context="ChatPage">
-                <ChatPage />
-              </ErrorBoundary>
-            }
-          />
+          <Route path="/progression" element={<Navigate to="/titane" replace />} />
+          <Route path="/xp" element={<Navigate to="/titane" replace />} />
           {/* ❌ v25.2.1: /cognitive redirigé vers /stats (Section 4: État Cognitif) */}
           <Route path="/cognitive" element={<Navigate to="/stats" replace />} />
           <Route path="/experience" element={<Experience />} /> {/* ✨ v∞.D5 - Page XP */}
@@ -794,15 +772,6 @@ const AppRouter: React.FC = () => {
           <Route path="/temporal-center" element={<Navigate to="/time" replace />} />
           <Route path="/agenda" element={<Navigate to="/time" replace />} />
           <Route path="/time-navigator" element={<Navigate to="/time" replace />} />
-          {/* ✨ v∞ CAMERA - Centre Vision & Analyse Visuelle */}
-          <Route
-            path="/camera"
-            element={
-              <ErrorBoundary context="CameraPage">
-                <CameraPage />
-              </ErrorBoundary>
-            }
-          />
           {/* ✨ v25.2.2 ADMIN CENTER - Module ADMIN Unifié */}
           <Route
             path="/admin"
@@ -870,45 +839,35 @@ const AppRouter: React.FC = () => {
             path="/cognitive-state"
             element={<Navigate to="/orchestration-center" replace />}
           />
-          {/* ✨ v19.5 ONE CORE - Centre de Commande Unifié (OPUS #6) */}
+          {/* ✨ v25.4.0 DEV CENTER - Fusion Complete (4 modules → 1) */}
           <Route
-            path="/one-core"
+            path="/dev"
             element={
-              <ErrorBoundary context="OneCore">
-                <OneCorePage />
+              <ErrorBoundary context="DevCenter">
+                <DevPage />
               </ErrorBoundary>
             }
           />
-          {/* Redirections vers ONE CORE pour anciennes routes */}
-          <Route path="/command-center" element={<Navigate to="/one-core" replace />} />
-          <Route path="/unified" element={<Navigate to="/one-core" replace />} />
-          <Route path="/singularity" element={<Navigate to="/one-core" replace />} />
-          {/* ✨ v19.6 QA MONITORING CENTER - Centre QA & Monitoring (OPUS #7) */}
+          {/* Redirections des anciens modules vers DEV */}
+          <Route path="/one-core" element={<Navigate to="/dev" replace />} />
+          <Route path="/command-center" element={<Navigate to="/dev" replace />} />
+          <Route path="/unified" element={<Navigate to="/dev" replace />} />
+          <Route path="/singularity" element={<Navigate to="/dev" replace />} />
+          <Route path="/qa-monitoring" element={<Navigate to="/dev" replace />} />
+          <Route path="/qa" element={<Navigate to="/dev" replace />} />
+          <Route path="/monitoring" element={<Navigate to="/dev" replace />} />
+          <Route path="/tests" element={<Navigate to="/dev" replace />} />
+          <Route path="/developer-mode" element={<Navigate to="/dev" replace />} />
+          <Route path="/dev-mode" element={<Navigate to="/dev" replace />} />
+          <Route path="/devmode" element={<Navigate to="/dev" replace />} />
+          <Route path="/ia-dev" element={<Navigate to="/dev" replace />} />
           <Route
-            path="/qa-monitoring"
-            element={
-              <ErrorBoundary context="QAMonitoring">
-                <QAMonitoringPage />
-              </ErrorBoundary>
-            }
+            path="/orchestration-intelligence"
+            element={<Navigate to="/dev" replace />}
           />
-          {/* Alias pour QA Center */}
-          <Route path="/qa" element={<Navigate to="/qa-monitoring" replace />} />
-          <Route path="/monitoring" element={<Navigate to="/qa-monitoring" replace />} />
-          <Route path="/tests" element={<Navigate to="/qa-monitoring" replace />} />
-          {/* ✨ v∞ DEVELOPER MODE - IA Developer Mode (OPUS #10) */}
-          <Route
-            path="/developer-mode"
-            element={
-              <ErrorBoundary context="DeveloperMode">
-                <DeveloperModePage />
-              </ErrorBoundary>
-            }
-          />
-          {/* Alias pour Developer Mode */}
-          <Route path="/dev-mode" element={<Navigate to="/developer-mode" replace />} />
-          <Route path="/devmode" element={<Navigate to="/developer-mode" replace />} />
-          <Route path="/ia-dev" element={<Navigate to="/developer-mode" replace />} />
+          <Route path="/orchestration-center" element={<Navigate to="/dev" replace />} />
+          <Route path="/orchestration" element={<Navigate to="/dev" replace />} />
+          <Route path="/meta-center" element={<Navigate to="/dev" replace />} />
           {/* ✨ REALITY CENTER - Reality Rendering Layer v∞ (OPUS #19) */}
           <Route
             path="/reality-center"

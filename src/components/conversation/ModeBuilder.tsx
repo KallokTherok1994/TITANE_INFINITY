@@ -1,0 +1,395 @@
+/**
+ * TITANE∞ v25.3.0 — Proprietary License
+ * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+ */
+
+/**
+ * ═══════════════════════════════════════════════════════════════════
+ * MODE BUILDER — Créateur de Modes Conversationnels Personnalisés
+ * Assistant IA pour développer des modes spécialisés sur mesure
+ * ═══════════════════════════════════════════════════════════════════
+ */
+
+import React, { useState, useCallback } from 'react';
+import { colors, spacing } from '@themes/tokens';
+import './ModeBuilder.css';
+
+export interface CustomMode {
+  id: string;
+  name: string;
+  icon: string;
+  description: string;
+  systemPrompt: string;
+  temperature: number;
+  tags: string[];
+  examples: string[];
+}
+
+interface ModeBuilderProps {
+  onClose: () => void;
+  onSave: (mode: CustomMode) => void;
+}
+
+export const ModeBuilder: React.FC<ModeBuilderProps> = ({ onClose, onSave }) => {
+  // ═══ STATE ═══
+  const [step, setStep] = useState<'concept' | 'details' | 'prompt' | 'preview'>(
+    'concept'
+  );
+  const [concept, setConcept] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const [mode, setMode] = useState<Partial<CustomMode>>({
+    name: '',
+    icon: '🎯',
+    description: '',
+    systemPrompt: '',
+    temperature: 0.7,
+    tags: [],
+    examples: [],
+  });
+
+  // ═══ ICONS DISPONIBLES ═══
+  const availableIcons = [
+    '🎯',
+    '💡',
+    '🚀',
+    '🔬',
+    '🎨',
+    '📊',
+    '🧪',
+    '⚡',
+    '🌟',
+    '🔥',
+    '💎',
+    '🎭',
+    '🎪',
+    '🎬',
+    '🎤',
+    '🎧',
+    '📚',
+    '✏️',
+    '🖋️',
+    '📝',
+    '🔍',
+    '🔭',
+    '🔮',
+    '⚙️',
+  ];
+
+  // ═══ TEMPLATES DE MODES SUGGÉRÉS ═══
+  const modeTemplates = [
+    {
+      name: 'Expert Technique',
+      icon: '🔬',
+      description: 'Analyse technique approfondie avec expertise',
+      prompt:
+        'Tu es un expert technique spécialisé. Fournis des analyses détaillées, précises et étayées par des sources.',
+    },
+    {
+      name: 'Coach Créatif',
+      icon: '🎨',
+      description: "Stimule la créativité et l'innovation",
+      prompt:
+        "Tu es un coach créatif. Stimule l'imagination, propose des perspectives nouvelles et encourage l'exploration d'idées audacieuses.",
+    },
+    {
+      name: 'Analyste Stratégique',
+      icon: '📊',
+      description: 'Vision stratégique et planification',
+      prompt:
+        "Tu es un analyste stratégique. Identifie les enjeux, propose des stratégies et planifie les étapes d'exécution.",
+    },
+    {
+      name: 'Mentor Pédagogique',
+      icon: '📚',
+      description: 'Enseignement clair et pédagogique',
+      prompt:
+        'Tu es un mentor pédagogique. Explique les concepts complexes de manière simple, progressive et avec des exemples concrets.',
+    },
+  ];
+
+  // ═══ GÉNÉRATION IA DU SYSTEM PROMPT ═══
+  const generateSystemPrompt = useCallback(async () => {
+    if (!concept.trim()) {
+      alert('Veuillez décrire le concept de votre mode');
+      return;
+    }
+
+    setIsGenerating(true);
+
+    try {
+      // TODO: Appel au backend pour générer le prompt via IA
+      // Pour l'instant, génération basique basée sur le concept
+
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
+
+      const generatedPrompt = `Tu es un assistant IA spécialisé dans le domaine suivant: ${concept}.
+
+Tes caractéristiques principales:
+- Expertise approfondie et actualisée
+- Communication claire et adaptée à l'utilisateur
+- Approche structurée et méthodique
+- Propositions concrètes et actionnables
+
+Ton rôle est d'accompagner l'utilisateur dans ${concept} en fournissant des conseils pertinents, des analyses détaillées et un soutien adapté à ses besoins.
+
+Principes de communication:
+1. Comprendre précisément la demande
+2. Structurer les réponses de manière claire
+3. Fournir des exemples concrets
+4. Encourager la réflexion et l'autonomie
+`;
+
+      setMode(prev => ({
+        ...prev,
+        systemPrompt: generatedPrompt,
+        description: `Mode spécialisé pour ${concept}`,
+      }));
+
+      setStep('prompt');
+    } catch (error) {
+      console.error('Erreur génération prompt:', error);
+      alert('Erreur lors de la génération du prompt');
+    } finally {
+      setIsGenerating(false);
+    }
+  }, [concept]);
+
+  // ═══ APPLIQUER UN TEMPLATE ═══
+  const applyTemplate = useCallback((template: (typeof modeTemplates)[0]) => {
+    setMode(prev => ({
+      ...prev,
+      name: template.name,
+      icon: template.icon,
+      description: template.description,
+      systemPrompt: template.prompt,
+    }));
+    setStep('preview');
+  }, []);
+
+  // ═══ SAUVEGARDER LE MODE ═══
+  const handleSave = useCallback(() => {
+    if (!mode.name || !mode.systemPrompt) {
+      alert('Veuillez remplir le nom et le prompt système');
+      return;
+    }
+
+    const customMode: CustomMode = {
+      id: `custom-${Date.now()}`,
+      name: mode.name || 'Mode Personnalisé',
+      icon: mode.icon || '🎯',
+      description: mode.description || '',
+      systemPrompt: mode.systemPrompt || '',
+      temperature: mode.temperature || 0.7,
+      tags: mode.tags || [],
+      examples: mode.examples || [],
+    };
+
+    // Sauvegarder dans localStorage
+    const existingModes = JSON.parse(localStorage.getItem('titane_custom_modes') || '[]');
+    localStorage.setItem(
+      'titane_custom_modes',
+      JSON.stringify([...existingModes, customMode])
+    );
+
+    onSave(customMode);
+    onClose();
+  }, [mode, onSave, onClose]);
+
+  // ═══ RENDER STEPS ═══
+  const renderStep = () => {
+    switch (step) {
+      case 'concept':
+        return (
+          <div className="mode-builder-step">
+            <h3>🎯 Décrivez votre Mode Personnalisé</h3>
+            <p style={{ color: colors.neutral[400], marginBottom: spacing[4] }}>
+              Quelle spécialisation souhaitez-vous pour TITANE ?
+            </p>
+
+            <textarea
+              className="mode-builder-textarea"
+              placeholder="Ex: Développement d'applications React avec TypeScript, optimisation de performance et best practices"
+              value={concept}
+              onChange={e => setConcept(e.target.value)}
+              rows={5}
+            />
+
+            <div className="mode-builder-templates">
+              <h4>💡 Ou choisissez un template:</h4>
+              <div className="templates-grid">
+                {modeTemplates.map((template, idx) => (
+                  <button
+                    key={idx}
+                    className="template-card"
+                    onClick={() => applyTemplate(template)}
+                  >
+                    <span className="template-icon">{template.icon}</span>
+                    <span className="template-name">{template.name}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mode-builder-actions">
+              <button className="mode-builder-btn secondary" onClick={onClose}>
+                Annuler
+              </button>
+              <button
+                className="mode-builder-btn primary"
+                onClick={generateSystemPrompt}
+                disabled={!concept.trim() || isGenerating}
+              >
+                {isGenerating ? '⏳ Génération...' : '✨ Générer avec IA'}
+              </button>
+            </div>
+          </div>
+        );
+
+      case 'details':
+      case 'prompt':
+        return (
+          <div className="mode-builder-step">
+            <h3>🎨 Configuration du Mode</h3>
+
+            <div className="mode-builder-field">
+              <label>Nom du Mode</label>
+              <input
+                type="text"
+                placeholder="Ex: Expert React"
+                value={mode.name || ''}
+                onChange={e => setMode(prev => ({ ...prev, name: e.target.value }))}
+              />
+            </div>
+
+            <div className="mode-builder-field">
+              <label>Icône</label>
+              <div className="icon-selector">
+                {availableIcons.map((icon, idx) => (
+                  <button
+                    key={idx}
+                    className={`icon-option ${mode.icon === icon ? 'selected' : ''}`}
+                    onClick={() => setMode(prev => ({ ...prev, icon }))}
+                  >
+                    {icon}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mode-builder-field">
+              <label>Description courte</label>
+              <input
+                type="text"
+                placeholder="Ex: Expertise React, TypeScript, optimisations"
+                value={mode.description || ''}
+                onChange={e =>
+                  setMode(prev => ({ ...prev, description: e.target.value }))
+                }
+              />
+            </div>
+
+            <div className="mode-builder-field">
+              <label>System Prompt (Instructions pour TITANE)</label>
+              <textarea
+                className="mode-builder-textarea"
+                value={mode.systemPrompt || ''}
+                onChange={e =>
+                  setMode(prev => ({ ...prev, systemPrompt: e.target.value }))
+                }
+                rows={10}
+              />
+            </div>
+
+            <div className="mode-builder-field">
+              <label>Température (Créativité)</label>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.1"
+                value={mode.temperature || 0.7}
+                onChange={e =>
+                  setMode(prev => ({ ...prev, temperature: parseFloat(e.target.value) }))
+                }
+              />
+              <span className="temperature-value">{mode.temperature?.toFixed(1)}</span>
+            </div>
+
+            <div className="mode-builder-actions">
+              <button
+                className="mode-builder-btn secondary"
+                onClick={() => setStep('concept')}
+              >
+                ← Retour
+              </button>
+              <button
+                className="mode-builder-btn primary"
+                onClick={() => setStep('preview')}
+              >
+                Aperçu →
+              </button>
+            </div>
+          </div>
+        );
+
+      case 'preview':
+        return (
+          <div className="mode-builder-step">
+            <h3>👁️ Aperçu du Mode</h3>
+
+            <div className="mode-preview-card">
+              <div className="mode-preview-header">
+                <span className="mode-preview-icon">{mode.icon}</span>
+                <div>
+                  <h4>{mode.name}</h4>
+                  <p>{mode.description}</p>
+                </div>
+              </div>
+
+              <div className="mode-preview-prompt">
+                <strong>System Prompt:</strong>
+                <pre>{mode.systemPrompt}</pre>
+              </div>
+
+              <div className="mode-preview-settings">
+                <span>Température: {mode.temperature}</span>
+              </div>
+            </div>
+
+            <div className="mode-builder-actions">
+              <button
+                className="mode-builder-btn secondary"
+                onClick={() => setStep('prompt')}
+              >
+                ← Modifier
+              </button>
+              <button className="mode-builder-btn primary success" onClick={handleSave}>
+                ✅ Sauvegarder
+              </button>
+            </div>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="mode-builder-overlay" onClick={onClose}>
+      <div className="mode-builder-modal" onClick={e => e.stopPropagation()}>
+        <div className="mode-builder-header">
+          <h2>🎨 Créateur de Mode Personnalisé</h2>
+          <button className="mode-builder-close" onClick={onClose}>
+            ✕
+          </button>
+        </div>
+
+        <div className="mode-builder-body">{renderStep()}</div>
+      </div>
+    </div>
+  );
+};
+
+export default ModeBuilder;

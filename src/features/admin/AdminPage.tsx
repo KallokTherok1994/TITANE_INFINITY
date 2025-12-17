@@ -14,11 +14,26 @@
  * © 2025 TITANE Team. All rights reserved.
  */
 
-import React, { useState, useCallback, lazy, Suspense } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useCallback, lazy, Suspense, memo } from 'react';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { type AdminTab, ADMIN_TABS } from './types';
 import './AdminPage.css';
+
+// ══════════════════════════════════════════════════════════════════
+// ANIMATION VARIANTS - Performance Constants
+// ══════════════════════════════════════════════════════════════════
+
+const contentVariants: Variants = {
+  initial: { opacity: 0, x: 20 },
+  animate: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: -20 },
+};
+
+const headerVariants: Variants = {
+  initial: { opacity: 0, y: -20 },
+  animate: { opacity: 1, y: 0 },
+};
 
 // ══════════════════════════════════════════════════════════════════
 // LAZY IMPORTS - Performance Optimization
@@ -121,7 +136,7 @@ const TabContent: React.FC<TabContentProps> = ({ tab }) => {
 // MAIN ADMIN PAGE COMPONENT
 // ══════════════════════════════════════════════════════════════════
 
-export const AdminPage: React.FC = () => {
+const AdminPageComponent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<AdminTab>('system');
 
   const handleTabChange = useCallback((tab: AdminTab) => {
@@ -133,8 +148,9 @@ export const AdminPage: React.FC = () => {
       {/* Header */}
       <motion.header
         className="admin-header"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
+        variants={headerVariants}
+        initial="initial"
+        animate="animate"
         transition={{ duration: 0.3 }}
       >
         <div className="admin-header-content">
@@ -177,9 +193,10 @@ export const AdminPage: React.FC = () => {
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
+            variants={contentVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
             transition={{ duration: 0.2 }}
             className="admin-content-wrapper"
           >
@@ -190,5 +207,9 @@ export const AdminPage: React.FC = () => {
     </div>
   );
 };
+
+// Memoization pour optimiser les re-renders
+export const AdminPage = memo(AdminPageComponent);
+AdminPage.displayName = 'AdminPage';
 
 export default AdminPage;

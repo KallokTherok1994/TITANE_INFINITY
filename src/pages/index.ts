@@ -21,6 +21,9 @@ export { EvoPage } from './EvoPage';
 // ✨ v25.1 TIME - Centre Temporel Unifié (fusion Temporal Flow + Agenda + Time Navigator)
 export { TimePage } from './TimePage';
 
+// ✨ v25.3 TITANE - Le Cœur du Système (fusion Chat IA + Vision + EVO)
+export { TitanePage } from './TitanePage';
+
 // Engine Pages
 export { Stats } from './Stats'; // v25.2.0: Unified Nexus + Helios + Harmonia
 export { Sentinel } from './Sentinel';
