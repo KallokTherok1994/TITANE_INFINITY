@@ -280,6 +280,19 @@
   font-size: 12px;
 }
 
+.clc-export-actions {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.1));
+}
+
+.clc-import-btn {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* ═════════════════════════════════════════════════════════════════
    PRESET LAYOUTS v25.7.1
    ═════════════════════════════════════════════════════════════════ */
