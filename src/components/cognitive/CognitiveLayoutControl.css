@@ -443,6 +443,51 @@ body.sidebar-autohide:not(:hover) {
 }
 
 /* ═════════════════════════════════════════════════════════════════
+   ACCESSIBILITY - Screen Reader Only Utility
+   ═════════════════════════════════════════════════════════════════ */
+
+.clc-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Focus visible for keyboard navigation */
+.cognitive-layout-control *:focus-visible {
+  outline: 2px solid var(--primary, #00d4ff);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .cognitive-layout-control {
+    border: 2px solid currentColor;
+  }
+
+  .clc-mode-btn.active {
+    border: 3px solid var(--primary, #00d4ff);
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .cognitive-layout-control,
+  .clc-mode-btn,
+  .cognitive-layout-badge,
+  .clc-badge-dot {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ═════════════════════════════════════════════════════════════════
    COGNITIVE LAYOUT BADGE (Mini-mode)
    v25.6.7: Compact toolbar button
    ═════════════════════════════════════════════════════════════════ */

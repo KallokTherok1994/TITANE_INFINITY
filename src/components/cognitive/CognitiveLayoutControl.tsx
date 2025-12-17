@@ -230,20 +230,32 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
 
       {/* Contenu collapsible */}
       <div className={`clc-content ${isCollapsed ? 'collapsed' : ''}`}>
-        {/* Mode actuel */}
-        <div className="clc-current-mode">
+        {/* Mode actuel - ARIA live region */}
+        <div
+          className="clc-current-mode"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
           <div className="clc-mode-badge">{MODE_LABELS[currentMode]}</div>
           <p className="clc-mode-desc">{MODE_DESCRIPTIONS[currentMode]}</p>
         </div>
 
-        {/* Suggestion d'adaptation */}
+        {/* Suggestion d'adaptation - ARIA alert */}
         {hasSuggestion && suggestion && (
-          <div className="clc-suggestion">
+          <div
+            className="clc-suggestion"
+            role="alert"
+            aria-live="assertive"
+            aria-atomic="true"
+          >
             <div className="clc-suggestion-header">
-              <span className="clc-suggestion-icon">💡</span>
+              <span className="clc-suggestion-icon" aria-hidden="true">
+                💡
+              </span>
               <span className="clc-suggestion-title">Suggestion</span>
               <span className="clc-suggestion-confidence">
-                {(suggestion.confidence * 100).toFixed(0)}%
+                {(suggestion.confidence * 100).toFixed(0)}% confidence
               </span>
             </div>
 
@@ -267,14 +279,22 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
 
         {/* Sélecteur de mode manuel */}
         <div className="clc-mode-selector">
-          <h4>Changer de mode</h4>
-          <div className="clc-mode-grid">
+          <h4 id="mode-selector-label">Changer de mode</h4>
+          <div
+            className="clc-mode-grid"
+            role="radiogroup"
+            aria-labelledby="mode-selector-label"
+          >
             {(Object.keys(MODE_LABELS) as UIMode[]).map(mode => (
               <button
                 key={mode}
                 className={`clc-mode-btn ${currentMode === mode ? 'active' : ''}`}
                 onClick={() => setMode(mode)}
+                role="radio"
+                aria-checked={currentMode === mode}
+                aria-label={`${MODE_LABELS[mode]}: ${MODE_DESCRIPTIONS[mode]}`}
                 title={MODE_DESCRIPTIONS[mode]}
+                tabIndex={currentMode === mode ? 0 : -1}
               >
                 {MODE_LABELS[mode]}
               </button>
