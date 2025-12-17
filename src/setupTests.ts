@@ -11,4 +11,5 @@ import * as matchers from '@testing-library/jest-dom/matchers';
 expect.extend(matchers);
 
 // Setup global test environment
-(globalThis as any).IS_REACT_ACT_ENVIRONMENT = true;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(globalThis as Record<string, unknown>).IS_REACT_ACT_ENVIRONMENT = true;

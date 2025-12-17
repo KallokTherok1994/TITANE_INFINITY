@@ -15,6 +15,9 @@
  * @phase 12 - Ultimate Optimization
  */
 
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-unused-vars */
+// Note: IndexedDB API requires 'any' types for dynamic data storage and non-null assertions for cursor operations
+
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════

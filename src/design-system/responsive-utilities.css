@@ -1,0 +1,470 @@
+/**
+ * TITANE∞ v25.7.4 — Proprietary License
+ * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+ */
+
+/**
+ * ═══════════════════════════════════════════════════════════════════
+ *   TITANE∞ v25.7.4 — RESPONSIVE UTILITIES
+ *   Ready-to-use CSS classes for responsive layouts
+ *   Mobile-first, progressively enhanced
+ * ═══════════════════════════════════════════════════════════════════
+ */
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   DISPLAY CONTROL
+   Show/hide elements based on screen size
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* Mobile: Show */
+.mobile-only {
+  display: block;
+}
+.mobile-only-flex {
+  display: flex;
+}
+.mobile-only-grid {
+  display: grid;
+}
+
+/* Tablet/Desktop: Hide */
+.tablet-only,
+.desktop-only {
+  display: none;
+}
+
+/* Tablet (768px+): Show tablet, hide mobile/desktop */
+@media (min-width: 768px) {
+  .mobile-only,
+  .mobile-only-flex,
+  .mobile-only-grid {
+    display: none;
+  }
+
+  .tablet-only {
+    display: block;
+  }
+  .tablet-only-flex {
+    display: flex;
+  }
+  .tablet-only-grid {
+    display: grid;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+}
+
+/* Desktop (1024px+): Show desktop, hide mobile/tablet */
+@media (min-width: 1024px) {
+  .tablet-only,
+  .tablet-only-flex,
+  .tablet-only-grid {
+    display: none;
+  }
+
+  .desktop-only {
+    display: block;
+  }
+  .desktop-only-flex {
+    display: flex;
+  }
+  .desktop-only-grid {
+    display: grid;
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   RESPONSIVE GRID
+   Auto-adapting grid columns
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.grid-responsive {
+  display: grid;
+  gap: var(--gap-md, 16px);
+  grid-template-columns: 1fr; /* Mobile: 1 column */
+}
+
+.grid-responsive-2,
+.grid-responsive-3,
+.grid-responsive-4 {
+  display: grid;
+  gap: var(--gap-md, 16px);
+  grid-template-columns: 1fr; /* Mobile: 1 column */
+}
+
+/* Tablet: 2 columns for 3-4 col grids */
+@media (min-width: 768px) {
+  .grid-responsive {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .grid-responsive-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .grid-responsive-3,
+  .grid-responsive-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop: Full columns */
+@media (min-width: 1024px) {
+  .grid-responsive-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .grid-responsive-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   TOUCH-FRIENDLY BUTTONS
+   Ensures minimum touch target sizes on mobile
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.btn-touch {
+  min-width: var(--touch-min, 44px);
+  min-height: var(--touch-min, 44px);
+  padding: var(--space-sm, 8px) var(--space-md, 12px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs, 4px);
+}
+
+/* Desktop: Reduce size */
+@media (min-width: 1024px) {
+  .btn-touch {
+    min-width: auto;
+    min-height: 36px;
+    padding: 8px 16px;
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   RESPONSIVE CONTAINER
+   Centered content with max-width constraints
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.container-responsive {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: var(--space-md, 16px);
+}
+
+/* Tablet: Add max-width */
+@media (min-width: 768px) {
+  .container-responsive {
+    max-width: var(--container-md, 768px);
+    padding-inline: var(--space-lg, 24px);
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .container-responsive {
+    max-width: var(--container-lg, 1024px);
+    padding-inline: var(--space-xl, 32px);
+  }
+}
+
+/* Large Desktop */
+@media (min-width: 1280px) {
+  .container-responsive {
+    max-width: var(--container-xl, 1280px);
+  }
+}
+
+/* Ultra-wide */
+@media (min-width: 1536px) {
+  .container-responsive {
+    max-width: var(--container-2xl, 1536px);
+  }
+}
+
+/* Container variants with fixed max-widths */
+.container-sm {
+  max-width: var(--container-sm, 640px);
+  margin-inline: auto;
+  padding-inline: var(--space-md, 16px);
+}
+
+.container-md {
+  max-width: var(--container-md, 768px);
+  margin-inline: auto;
+  padding-inline: var(--space-md, 16px);
+}
+
+.container-lg {
+  max-width: var(--container-lg, 1024px);
+  margin-inline: auto;
+  padding-inline: var(--space-lg, 24px);
+}
+
+.container-xl {
+  max-width: var(--container-xl, 1280px);
+  margin-inline: auto;
+  padding-inline: var(--space-xl, 32px);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   STACK DIRECTION
+   Vertical on mobile, horizontal on larger screens
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.stack-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-md, 16px);
+}
+
+.stack-horizontal-md {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-md, 16px);
+}
+
+.stack-horizontal-lg {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-md, 16px);
+}
+
+/* Tablet: Horizontal for -md variant */
+@media (min-width: 768px) {
+  .stack-horizontal-md {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+/* Desktop: Horizontal for -lg variant */
+@media (min-width: 1024px) {
+  .stack-horizontal-lg {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   RESPONSIVE PADDING
+   Adaptive padding based on screen size
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.p-responsive {
+  padding: var(--space-md, 16px);
+}
+
+.px-responsive {
+  padding-inline: var(--space-md, 16px);
+}
+
+.py-responsive {
+  padding-block: var(--space-md, 16px);
+}
+
+@media (min-width: 768px) {
+  .p-responsive {
+    padding: var(--space-lg, 24px);
+  }
+  .px-responsive {
+    padding-inline: var(--space-lg, 24px);
+  }
+  .py-responsive {
+    padding-block: var(--space-lg, 24px);
+  }
+}
+
+@media (min-width: 1024px) {
+  .p-responsive {
+    padding: var(--space-xl, 32px);
+  }
+  .px-responsive {
+    padding-inline: var(--space-xl, 32px);
+  }
+  .py-responsive {
+    padding-block: var(--space-xl, 32px);
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   RESPONSIVE GAP
+   Adaptive gap for flex/grid containers
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.gap-responsive {
+  gap: var(--gap-sm, 12px);
+}
+
+@media (min-width: 768px) {
+  .gap-responsive {
+    gap: var(--gap-md, 16px);
+  }
+}
+
+@media (min-width: 1024px) {
+  .gap-responsive {
+    gap: var(--gap-lg, 24px);
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   RESPONSIVE TEXT SIZE
+   Fluid typography utilities
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.text-responsive-sm {
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal, 1.5);
+}
+
+.text-responsive-base {
+  font-size: var(--text-base);
+  line-height: var(--leading-normal, 1.5);
+}
+
+.text-responsive-lg {
+  font-size: var(--text-lg);
+  line-height: var(--leading-snug, 1.375);
+}
+
+.text-responsive-xl {
+  font-size: var(--text-xl);
+  line-height: var(--leading-tight, 1.25);
+}
+
+.text-responsive-2xl {
+  font-size: var(--text-2xl);
+  line-height: var(--leading-tight, 1.25);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   RESPONSIVE CARD
+   Card component with adaptive styling
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.card-responsive {
+  padding: var(--space-md, 16px);
+  border-radius: var(--radius-base, 8px);
+  background: var(--bg-card, #fff);
+  border: 1px solid var(--border-default, rgba(0, 0, 0, 0.1));
+}
+
+@media (min-width: 768px) {
+  .card-responsive {
+    padding: var(--space-lg, 24px);
+    border-radius: var(--radius-md, 12px);
+  }
+}
+
+@media (min-width: 1024px) {
+  .card-responsive {
+    padding: var(--space-xl, 32px);
+    border-radius: var(--radius-lg, 16px);
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ASPECT RATIO
+   Responsive aspect ratio containers
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.aspect-video {
+  aspect-ratio: 16 / 9;
+}
+
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
+
+.aspect-portrait {
+  aspect-ratio: 3 / 4;
+}
+
+/* Mobile: Force square for video on small screens */
+@media (max-width: 767px) {
+  .aspect-video-responsive {
+    aspect-ratio: 1 / 1;
+  }
+}
+
+@media (min-width: 768px) {
+  .aspect-video-responsive {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SAFE AREA SUPPORT
+   iOS notch / Android punch-hole support
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.safe-top {
+  padding-top: calc(var(--space-md, 16px) + var(--safe-area-top, 0px));
+}
+
+.safe-bottom {
+  padding-bottom: calc(var(--space-md, 16px) + var(--safe-area-bottom, 0px));
+}
+
+.safe-left {
+  padding-left: calc(var(--space-md, 16px) + var(--safe-area-left, 0px));
+}
+
+.safe-right {
+  padding-right: calc(var(--space-md, 16px) + var(--safe-area-right, 0px));
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   OVERFLOW UTILITIES
+   Prevent horizontal scroll on mobile
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.overflow-x-hidden {
+  overflow-x: hidden;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
+}
+
+.overflow-scroll-touch {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   USAGE EXAMPLES
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+   Display Control:
+   <div class="mobile-only">Visible on mobile only</div>
+   <div class="desktop-only-flex">Flex on desktop only</div>
+
+   Responsive Grid:
+   <div class="grid-responsive-4">
+     <!-- 1 col mobile, 2 cols tablet, 4 cols desktop -->
+   </div>
+
+   Touch Buttons:
+   <button class="btn-touch">44x44px on mobile</button>
+
+   Container:
+   <div class="container-responsive">
+     <!-- Centered with padding -->
+   </div>
+
+   Stack Direction:
+   <div class="stack-horizontal-lg">
+     <!-- Vertical mobile, horizontal desktop -->
+   </div>
+
+   Safe Area:
+   <div class="safe-bottom">
+     <!-- Respects iOS notch -->
+   </div>
+
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */

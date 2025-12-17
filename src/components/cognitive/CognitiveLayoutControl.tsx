@@ -10,7 +10,6 @@ import React, {
   useEffect,
   useRef,
   memo,
-  useMemo,
   useCallback,
   type PointerEventHandler,
 } from 'react';
@@ -52,6 +51,16 @@ const PRESETS_KEY = 'titane-cognitive-layout-presets';
  * Optimisé avec React.memo pour éviter re-renders inutiles
  */
 export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
+  // Position draggable avec persistence localStorage (moved to top to fix TS error)
+  const POSITION_KEY = 'titane-cognitive-layout-position';
+  const [position, setPosition] = useState<{ x: number; y: number }>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem(POSITION_KEY);
+      return saved ? JSON.parse(saved) : { x: 20, y: 80 }; // Default top-right
+    }
+    return { x: 20, y: 80 };
+  });
+
   const {
     currentMode,
     suggestion,
@@ -101,7 +110,7 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
   });
 
   // v25.7.0: Mode history (undo/redo)
-  const [modeHistory, setModeHistory] = useState<UIMode[]>([currentMode]);
+  const [modeHistory, setModeHistory] = useState<UIMode[]>([currentMode ?? 'neutral']);
   const [historyIndex, setHistoryIndex] = useState(0);
 
   // Track mode changes
@@ -166,7 +175,7 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
 
     const newPreset: PresetLayout = {
       name: presetName.trim(),
-      mode: currentMode,
+      mode: currentMode ?? 'neutral',
       timestamp: Date.now(),
     };
 
@@ -192,6 +201,48 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
     },
     [presets]
   );
+
+  // v25.7.3: Audio feedback system (subtle, optional) - Moved before importConfig
+  const playSound = useCallback((type: 'click' | 'success' | 'error') => {
+    // Only in browser with user interaction
+    if (typeof window === 'undefined' || !window.AudioContext) return;
+
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+      const audioContext = new AudioContextClass();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      // Subtle volume
+      gainNode.gain.value = 0.1;
+
+      // Different frequencies for different actions
+      switch (type) {
+        case 'click':
+          oscillator.frequency.value = 800;
+          gainNode.gain.setTargetAtTime(0, audioContext.currentTime, 0.05);
+          break;
+        case 'success':
+          oscillator.frequency.value = 1200;
+          gainNode.gain.setTargetAtTime(0, audioContext.currentTime, 0.1);
+          break;
+        case 'error':
+          oscillator.frequency.value = 400;
+          gainNode.gain.setTargetAtTime(0, audioContext.currentTime, 0.15);
+          break;
+      }
+
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.1);
+    } catch (error) {
+      // Silently fail if audio not supported
+      console.debug('Audio feedback not available:', error);
+    }
+  }, []);
 
   // v25.7.2: Export/Import configuration
   const exportConfig = useCallback(() => {
@@ -260,49 +311,8 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
       // Reset input
       event.target.value = '';
     },
-    [setMode, setPosition]
+    [setMode, setPosition, playSound]
   );
-
-  // v25.7.3: Audio feedback system (subtle, optional)
-  const playSound = useCallback((type: 'click' | 'success' | 'error') => {
-    // Only in browser with user interaction
-    if (typeof window === 'undefined' || !window.AudioContext) return;
-
-    try {
-      const audioContext = new (window.AudioContext ||
-        (window as any).webkitAudioContext)();
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
-
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
-
-      // Subtle volume
-      gainNode.gain.value = 0.1;
-
-      // Different frequencies for different actions
-      switch (type) {
-        case 'click':
-          oscillator.frequency.value = 800;
-          gainNode.gain.setTargetAtTime(0, audioContext.currentTime, 0.05);
-          break;
-        case 'success':
-          oscillator.frequency.value = 1200;
-          gainNode.gain.setTargetAtTime(0, audioContext.currentTime, 0.1);
-          break;
-        case 'error':
-          oscillator.frequency.value = 400;
-          gainNode.gain.setTargetAtTime(0, audioContext.currentTime, 0.15);
-          break;
-      }
-
-      oscillator.start(audioContext.currentTime);
-      oscillator.stop(audioContext.currentTime + 0.1);
-    } catch (error) {
-      // Silently fail if audio not supported
-      console.debug('Audio feedback not available:', error);
-    }
-  }, []);
 
   // Log performance stats in DEV
   useEffect(() => {
@@ -310,20 +320,10 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
       console.log('[CognitiveLayout] Performance Stats:', {
         avgRenderTime: stats.avgTime?.toFixed(2) + 'ms',
         renderCount: stats.count,
-        lastRender: stats.lastTime?.toFixed(2) + 'ms',
+        maxRender: stats.maxTime?.toFixed(2) + 'ms',
       });
     }
   }, [stats]);
-
-  // Position draggable avec persistence localStorage
-  const POSITION_KEY = 'titane-cognitive-layout-position';
-  const [position, setPosition] = useState<{ x: number; y: number }>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem(POSITION_KEY);
-      return saved ? JSON.parse(saved) : { x: 20, y: 80 }; // Default top-right
-    }
-    return { x: 20, y: 80 };
-  });
 
   // Drag state ref
   const dragRef = useRef<{

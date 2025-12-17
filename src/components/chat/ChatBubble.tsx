@@ -113,7 +113,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const { messages, isLoading, sendMessage, clearMessages } = useChat({});
+  const { messages, isLoading, sendMessage, clearChat } = useChat({});
 
   const {
     isObservationActive: isCameraActive,
@@ -154,7 +154,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
   // ✨ v∞ - Audio Chat Integration
   const {
     isListening,
-    isSpeaking,
+    isSpeaking: _isSpeaking,
     transcript,
     startListening,
     stopListening,
@@ -315,11 +315,11 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
 
   // ✨ v25.4.2 - Clear conversation
   const handleClearConversation = useCallback(() => {
-    if (clearMessages) {
-      clearMessages();
+    if (clearChat) {
+      clearChat();
     }
     setImportedFiles([]);
-  }, [clearMessages]);
+  }, [clearChat]);
 
   // ═══ RENDER ═══
   return (

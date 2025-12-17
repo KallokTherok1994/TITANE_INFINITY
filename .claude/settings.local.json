@@ -138,7 +138,11 @@
       "Bash(tail -1 echo echo 'Binary size (if built):' ls -lh src-tauri/target/release/titane-infinity)",
       "Bash(echo:*)",
       "Bash(timeout 90 npx tsc:*)",
-      "Bash(comm:*)"
+      "Bash(comm:*)",
+      "Bash(npm i:*)",
+      "Bash(cargo audit:*)",
+      "Bash(time timeout 150 npx vitest run:*)",
+      "Bash(for ext in js css svg)"
     ],
     "deny": [],
     "ask": []

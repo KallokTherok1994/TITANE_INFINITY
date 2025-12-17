@@ -31,6 +31,10 @@ import App from './App'; // ✅ v16.2.2: App principal activé
 // ✅ v8.0 DESIGN SYSTEM - Tailwind CSS + TITANE∞ Tokens
 import './index.css'; // 🎨 v8.0: Tailwind CSS + Design Tokens (css-vars.css)
 
+// ✨ v25.7.4 RESPONSIVE DESIGN SYSTEM - Mobile-First Tokens & Utilities
+import './design-system/responsive-tokens.css'; // 🎯 Fluid spacing, typography, layout
+import './design-system/responsive-utilities.css'; // 🛠️ Utility classes (grid-responsive, btn-touch, etc.)
+
 // ✅ v17 DESIGN SYSTEM FUSION - Compatibility layer (will be migrated)
 // import './design-system/titane-fusion.css'; // 🎨 Design System v17: Fusion complète (2000 lignes vs 5700)
 import './styles/experience.css'; // ✨ v∞.D - XP System Styles (unique)

@@ -55,9 +55,7 @@ const result = await gpuAcceleratorV2.vectorAdd(a, b);
 // result = [7, 9, 11, 13, 15]
 
 // Matrix multiplication
-const matrix = await gpuAcceleratorV2.matrixMultiply(
-  a, b, rowsA, colsA, colsB
-);
+const matrix = await gpuAcceleratorV2.matrixMultiply(a, b, rowsA, colsA, colsB);
 
 // Custom compute shader
 const task: GPUTask = {
@@ -129,8 +127,14 @@ const dot = await webAssemblyCompute.dotProduct(a, b);
 // dot = 2*1 + 4*3 + 6*5 = 44
 
 // Matrix multiplication
-const A = [[1, 2], [3, 4]];
-const B = [[5, 6], [7, 8]];
+const A = [
+  [1, 2],
+  [3, 4],
+];
+const B = [
+  [5, 6],
+  [7, 8],
+];
 const C = await webAssemblyCompute.matrixMultiply(A, B);
 // C = [[19, 22], [43, 50]]
 
@@ -166,6 +170,7 @@ const metrics = webAssemblyCompute.getMetrics();
 ### Module 3: Service Worker Manager
 
 **Fichiers**:
+
 - `public/sw.js` (650 lignes) - Service Worker
 - `src/modules/optimization/ServiceWorkerManager.ts` (320 lignes) - Client
 
@@ -226,7 +231,7 @@ await serviceWorkerManager.checkForUpdates();
 await serviceWorkerManager.precacheUrls([
   '/api/critical',
   '/images/logo.png',
-  '/fonts/custom.woff2'
+  '/fonts/custom.woff2',
 ]);
 
 // Get metrics
@@ -274,16 +279,14 @@ await indexedDBOptimizer.initialize([
     name: 'memory',
     keyPath: 'id',
     autoIncrement: true,
-    indexes: [
-      { name: 'type', keyPath: 'type', unique: false },
-    ],
+    indexes: [{ name: 'type', keyPath: 'type', unique: false }],
   },
 ]);
 
 // Write (avec compression + chunking auto)
 await indexedDBOptimizer.put('cache', {
   key: 'conversation_123',
-  data: largeConversation,  // Auto-compressed + chunked si >1MB
+  data: largeConversation, // Auto-compressed + chunked si >1MB
   timestamp: Date.now(),
   provider: 'ollama',
 });
@@ -386,45 +389,45 @@ function App() {
 
 #### GPU Accelerator V2
 
-| Opération | CPU (ms) | GPU WebGPU (ms) | Speedup |
-|-----------|----------|-----------------|---------|
-| Vector Add (1M elements) | 45.2 | 3.5 | **12.9x** |
-| Matrix Mul (512×512) | 2340.0 | 125.0 | **18.7x** |
-| Dot Product (10K) | 8.3 | 0.9 | **9.2x** |
+| Opération                | CPU (ms) | GPU WebGPU (ms) | Speedup   |
+| ------------------------ | -------- | --------------- | --------- |
+| Vector Add (1M elements) | 45.2     | 3.5             | **12.9x** |
+| Matrix Mul (512×512)     | 2340.0   | 125.0           | **18.7x** |
+| Dot Product (10K)        | 8.3      | 0.9             | **9.2x**  |
 
 **Moyenne**: **13.6x faster** avec GPU WebGPU
 
 #### WebAssembly Compute
 
-| Opération | JavaScript (ms) | WASM (ms) | Speedup |
-|-----------|-----------------|-----------|---------|
-| Vector Add (100K) | 5.2 | 2.1 | **2.5x** |
-| Dot Product (50K) | 3.8 | 1.5 | **2.5x** |
-| Matrix Mul (128×128) | 89.0 | 35.0 | **2.5x** |
-| Sort (10K elements) | 12.0 | 4.8 | **2.5x** |
+| Opération            | JavaScript (ms) | WASM (ms) | Speedup  |
+| -------------------- | --------------- | --------- | -------- |
+| Vector Add (100K)    | 5.2             | 2.1       | **2.5x** |
+| Dot Product (50K)    | 3.8             | 1.5       | **2.5x** |
+| Matrix Mul (128×128) | 89.0            | 35.0      | **2.5x** |
+| Sort (10K elements)  | 12.0            | 4.8       | **2.5x** |
 
 **Moyenne**: **2.5x faster** avec WASM
 
 #### Service Worker Cache
 
-| Scénario | Sans SW (ms) | Avec SW (ms) | Amélioration |
-|----------|--------------|--------------|---------------|
-| First Load | 3420 | 3420 | 0% (même) |
-| Second Load | 3420 | 180 | **-95%** |
-| Offline Access | FAIL | 180 | **∞** (impossible→possible) |
-| API Call (cached) | 450 | 8 | **-98%** |
+| Scénario          | Sans SW (ms) | Avec SW (ms) | Amélioration                |
+| ----------------- | ------------ | ------------ | --------------------------- |
+| First Load        | 3420         | 3420         | 0% (même)                   |
+| Second Load       | 3420         | 180          | **-95%**                    |
+| Offline Access    | FAIL         | 180          | **∞** (impossible→possible) |
+| API Call (cached) | 450          | 8            | **-98%**                    |
 
 **Cache Hit Rate**: **85-95%** après 1 semaine d'utilisation
 
 #### IndexedDB Optimizer
 
-| Métrique | Sans Optimizer | Avec Optimizer | Amélioration |
-|----------|----------------|----------------|---------------|
-| Read Time (avg) | 12.3 ms | 1.8 ms | **-85%** |
-| Write Time (avg) | 18.5 ms | 2.3 ms | **-88%** |
-| Cache Hit Rate | 0% | 78.5% | **+78.5%** |
-| DB Size (1000 records) | 8.2 MB | 8.2 MB | 0% (compression disabled in v1) |
-| Query Time (indexed) | 45.0 ms | 3.2 ms | **-93%** |
+| Métrique               | Sans Optimizer | Avec Optimizer | Amélioration                    |
+| ---------------------- | -------------- | -------------- | ------------------------------- |
+| Read Time (avg)        | 12.3 ms        | 1.8 ms         | **-85%**                        |
+| Write Time (avg)       | 18.5 ms        | 2.3 ms         | **-88%**                        |
+| Cache Hit Rate         | 0%             | 78.5%          | **+78.5%**                      |
+| DB Size (1000 records) | 8.2 MB         | 8.2 MB         | 0% (compression disabled in v1) |
+| Query Time (indexed)   | 45.0 ms        | 3.2 ms         | **-93%**                        |
 
 ---
 
@@ -532,22 +535,20 @@ async function initializeOptimizations() {
   // GPU Accelerator
   await gpuAcceleratorV2.initialize();
   console.log('✅ GPU Accelerator ready');
-  
+
   // WebAssembly Compute
   await webAssemblyCompute.initialize();
   console.log('✅ WASM Compute ready');
-  
+
   // Service Worker (auto-initialized)
   console.log('✅ Service Worker active');
-  
+
   // IndexedDB Optimizer
   await indexedDBOptimizer.initialize([
     {
       name: 'cache',
       keyPath: 'key',
-      indexes: [
-        { name: 'timestamp', keyPath: 'timestamp', unique: false },
-      ],
+      indexes: [{ name: 'timestamp', keyPath: 'timestamp', unique: false }],
     },
   ]);
   console.log('✅ IndexedDB Optimizer ready');
@@ -603,10 +604,7 @@ const result = await gpuAcceleratorV2.executeTask(task);
 
 ```typescript
 // Matrix multiplication pour neural network
-async function forwardPass(
-  weights: number[][],
-  inputs: number[][]
-): Promise<number[][]> {
+async function forwardPass(weights: number[][], inputs: number[][]): Promise<number[][]> {
   // Use WASM for acceleration
   const output = await webAssemblyCompute.matrixMultiply(weights, inputs);
   return output; // 2.5x faster than JS
@@ -635,12 +633,16 @@ async function fetchData(url: string): Promise<any> {
 ```typescript
 // Save conversation
 async function saveConversation(id: string, messages: Message[]): Promise<void> {
-  await indexedDBOptimizer.put('conversations', {
-    id,
-    messages,
-    timestamp: Date.now(),
-  }, id);
-  
+  await indexedDBOptimizer.put(
+    'conversations',
+    {
+      id,
+      messages,
+      timestamp: Date.now(),
+    },
+    id
+  );
+
   // Automatic compression + chunking if >1MB
   // In-memory cache for fast retrieval
 }
@@ -649,7 +651,7 @@ async function saveConversation(id: string, messages: Message[]): Promise<void> 
 async function loadConversation(id: string): Promise<Message[]> {
   const data = await indexedDBOptimizer.get('conversations', id);
   return data?.messages || [];
-  
+
   // Served from cache if accessed recently (78% hit rate)
 }
 ```
@@ -776,7 +778,7 @@ Phase 12 v25.6.0 apporte une **révolution de performance** à TITANE∞:
 🚀 **13.6x faster** sur calculs GPU  
 ⚡ **2.5x faster** sur calculs WASM  
 💨 **95% faster** sur chargements répétés (cache SW)  
-📦 **85% faster** sur accès database (IndexedDB optimisé)  
+📦 **85% faster** sur accès database (IndexedDB optimisé)
 
 **TOTAL**: Application **10-15x plus rapide** sur scénarios réels  
 **OFFLINE**: Fonctionne 100% sans internet  
