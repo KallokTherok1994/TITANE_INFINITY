@@ -15,10 +15,9 @@ import React, {
   type PointerEventHandler,
 } from 'react';
 import { useCognitiveLayout, type UIMode } from '@/hooks/useCognitiveLayout';
+import { usePanelState } from '@/hooks/usePanelState';
+import { usePanelsStore } from '@/stores/panelsStore';
 import './CognitiveLayoutControl.css';
-
-// LocalStorage key pour persistence
-const STORAGE_KEY = 'titane-cognitive-layout-collapsed';
 
 const MODE_LABELS: Record<UIMode, string> = {
   focus_deep: '🎯 Focus Profond',
@@ -57,14 +56,31 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
     hasSuggestion,
   } = useCognitiveLayout();
 
-  // État collapse/expand avec persistence localStorage
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? JSON.parse(saved) : false;
-    }
-    return false;
+  // v25.6.6: Panel state management (usePanelState integration)
+  const { isCollapsed, zIndex, toggle, bringToFront } = usePanelState({
+    panelId: 'cognitive-layout',
+    defaultCollapsed: false,
+    defaultVisible: true,
+    defaultZIndex: 1000,
+    persistState: true,
   });
+
+  // v25.6.6: Register panel in global store
+  const registerPanel = usePanelsStore(state => state.registerPanel);
+  useEffect(() => {
+    registerPanel({
+      id: 'cognitive-layout',
+      title: 'Cognitive Layout',
+      isVisible: true,
+      isCollapsed: false,
+      isPinned: false,
+      zIndex: 1000,
+      position: { x: null, y: null },
+      size: { width: null, height: null },
+      hiddenOnMobile: false,
+      collapsedOnMobile: false,
+    });
+  }, [registerPanel]);
 
   // Position draggable avec persistence localStorage
   const POSITION_KEY = 'titane-cognitive-layout-position';
@@ -83,13 +99,6 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
     offsetY: number;
   } | null>(null);
 
-  // Sauvegarder état dans localStorage quand il change
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(isCollapsed));
-    }
-  }, [isCollapsed]);
-
   // Sauvegarder position dans localStorage
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -98,21 +107,17 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
   }, [position]);
 
   // Raccourci clavier Ctrl+K pour toggle collapse/expand
-  const handleToggleCollapse = useCallback(() => {
-    setIsCollapsed(prev => !prev);
-  }, []);
-
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.ctrlKey && e.key === 'k') {
         e.preventDefault();
-        handleToggleCollapse();
+        toggle(); // usePanelState toggle function
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleToggleCollapse]);
+  }, [toggle]);
 
   // Drag & Drop handlers (ChatDebugPanel pattern)
   const clampPosition = useCallback(
@@ -184,7 +189,9 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
+        zIndex, // usePanelState zIndex
       }}
+      onClick={bringToFront} // Auto bring to front on click
     >
       {/* Header draggable */}
       <div
@@ -199,7 +206,10 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
         {/* Bouton Expand/Collapse */}
         <button
           className="clc-collapse-btn"
-          onClick={() => setIsCollapsed(!isCollapsed)}
+          onClick={e => {
+            e.stopPropagation(); // Prevent bringToFront on collapse button
+            toggle(); // usePanelState toggle
+          }}
           aria-label={isCollapsed ? 'Agrandir le panneau' : 'Réduire le panneau'}
           title={isCollapsed ? 'Agrandir (Ctrl+K)' : 'Réduire (Ctrl+K)'}
         >
