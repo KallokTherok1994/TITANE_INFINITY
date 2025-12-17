@@ -12,6 +12,37 @@ import { resolve } from 'path';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { visualizer } from 'rollup-plugin-visualizer';
 import viteCompression from 'vite-plugin-compression';
+import { injectManifest } from 'workbox-build';
+import type { Plugin } from 'vite';
+
+// P2-B: Workbox Service Worker plugin
+function workboxPlugin(): Plugin {
+  return {
+    name: 'workbox-inject',
+    apply: 'build',
+    closeBundle: async () => {
+      try {
+        const { count, size, warnings } = await injectManifest({
+          swSrc: 'public/sw-source.js',
+          swDest: 'dist/sw.js',
+          globDirectory: 'dist',
+          globPatterns: ['assets/**/*.{js,css,woff2}', 'index.html'],
+          maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MB max
+        });
+
+        console.log(
+          `✅ Workbox: ${count} files precached (${(size / 1024).toFixed(2)} KB)`
+        );
+        if (warnings.length > 0) {
+          console.warn('⚠️ Workbox warnings:', warnings);
+        }
+      } catch (error) {
+        console.error('❌ Workbox inject failed:', error);
+        throw error;
+      }
+    },
+  };
+}
 
 // TITANE∞ v17.3.0 - Vite Configuration OPTIMIZED (CPU < 50%)
 // Phase 5: Bundle analysis + code splitting
@@ -54,6 +85,8 @@ export default defineConfig({
       ext: '.gz',
       deleteOriginFile: false,
     }),
+    // P2-B: Service Worker for -400ms repeat visit TTI
+    workboxPlugin(),
   ],
 
   // ═══════════════════════════════════════════════════════════════════════════

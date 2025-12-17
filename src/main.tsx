@@ -418,6 +418,31 @@ try {
   console.log('\n╔════════════════════════════════════════════════════════════════╗');
   console.log('║  ✅ TITANE∞ REACT ROOT MOUNTED (App Complet Actif)           ║');
   console.log('╚════════════════════════════════════════════════════════════════╝\n');
+
+  // ✨ P2-B: Register Service Worker for offline caching (-400ms repeat visit)
+  if ('serviceWorker' in navigator && import.meta.env.PROD) {
+    navigator.serviceWorker
+      .register('/sw.js', { scope: '/' })
+      .then(registration => {
+        console.log('✅ Service Worker registered:', registration.scope);
+
+        // Update on page reload
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          if (newWorker) {
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                console.log('🔄 New Service Worker available. Refresh to update.');
+                // Optional: Show update notification to user
+              }
+            });
+          }
+        });
+      })
+      .catch(error => {
+        console.warn('⚠️ Service Worker registration failed:', error);
+      });
+  }
 } catch (error) {
   logger.error(
     'CRITICAL: React mount failed',
