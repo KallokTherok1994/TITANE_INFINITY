@@ -27,6 +27,7 @@ import {
 import { invoke } from '@tauri-apps/api/core';
 import { useLivingEngines } from './hooks';
 import { useSingularityState } from './core/state/SingularityState';
+import { logger } from './lib/logger';
 import { ThemeProvider } from './themes/ThemeProvider';
 import { AnimationProvider } from './contexts/AnimationContext';
 import { TitanStateProvider } from './context/TitanStateContext'; // ✨ v∞.MPE - Persistence
@@ -365,7 +366,11 @@ const AppRouter: React.FC = () => {
   useEffect(() => {
     console.log('🤖 [OLLAMA] Initializing local AI provider...');
     initializeOllama().catch(error => {
-      console.error('❌ [OLLAMA] Failed to initialize:', error);
+      logger.error(
+        'Failed to initialize OLLAMA',
+        { component: 'App', service: 'Ollama' },
+        error as Error
+      );
     });
   }, []);
 
@@ -391,7 +396,11 @@ const AppRouter: React.FC = () => {
           connectCacheToSingularity(singularityKernel);
           console.log('✅ [COGNITIVE-CACHE] Connected successfully');
         } catch (error) {
-          console.error('❌ [COGNITIVE-CACHE] Connection failed:', error);
+          logger.error(
+            'Connection failed',
+            { component: 'App', service: 'CognitiveCache' },
+            error as Error
+          );
         }
       })
       .catch(error => {
@@ -483,7 +492,11 @@ const AppRouter: React.FC = () => {
             '✅ [UI-POLISH] Micro-interactions initialized (Ripple, Magnetism, Focus Glow, Tooltips)'
           );
         } catch (error) {
-          console.error('❌ [UI-POLISH] Failed to initialize micro-interactions:', error);
+          logger.error(
+            'Failed to initialize micro-interactions',
+            { component: 'App', service: 'UIPolish' },
+            error as Error
+          );
         }
       })
       .catch(err => {
