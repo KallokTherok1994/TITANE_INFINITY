@@ -6,7 +6,7 @@
  * Consolidates orchestrator.ts (998 lines) + orchestrator_OMNIS_v1.ts (510 lines)
  */
 
-import { logger } from '@/lib/logger';
+import { logger as _logger } from '@/lib/logger';
 import type {
   IOrchestrationStrategy,
   OrchestrationStrategyType,

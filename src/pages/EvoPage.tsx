@@ -24,9 +24,9 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Container, Stack, Grid } from '@components/layout';
-import { Card, Badge } from '../ui';
+import { Card } from '../ui';
 import { XPProgressBar } from '@features/progression';
 import { colors, spacing, fontSizes, fontWeights } from '@themes/tokens';
 import { PersonaMoodIndicator } from '@components/PersonaMoodIndicator';
@@ -36,12 +36,7 @@ import { TBadge, TMetric, TSectionHeader } from '../design-system';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import { xpEngine } from '@/cognitive/progression/xpEngine';
 import { Settings, TrendingUp, Brain, Database, Zap, Sprout } from 'lucide-react';
-import type {
-  ProgressionState,
-  KnowledgeVaultState,
-  EvolutionState,
-  MemoryState,
-} from '@/cognitive/types';
+import type { ProgressionState } from '@/cognitive/types';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -360,7 +355,7 @@ const OverviewSection: React.FC<OverviewSectionProps> = ({ stats, progression })
         />
         <TMetric
           label="Talents Débloqués"
-          value={`${progression?.unlockedTalents?.length || 0}`}
+          value={`${progression?.milestones?.filter(m => m.unlockedAt).length || 0}`}
           icon="🎯"
         />
       </Grid>
@@ -1035,27 +1030,30 @@ const ProgressionSection: React.FC<ProgressionSectionProps> = ({ progression }) 
                 gap: spacing[3],
               }}
             >
-              {(progression.unlockedTalents || []).slice(0, 6).map((talentId, index) => (
-                <div
-                  key={talentId || index}
-                  style={{
-                    padding: spacing[3],
-                    background: 'linear-gradient(135deg, #3b82f630, #8b5cf620)',
-                    border: `1px solid ${colors.saphir.primary[500]}40`,
-                    borderRadius: '8px',
-                  }}
-                >
+              {progression.milestones
+                .filter(m => m.unlockedAt)
+                .slice(0, 6)
+                .map(milestone => (
                   <div
+                    key={milestone.id}
                     style={{
-                      fontSize: fontSizes.sm,
-                      color: colors.neutral[200],
-                      fontWeight: '600',
+                      padding: spacing[3],
+                      background: 'linear-gradient(135deg, #3b82f630, #8b5cf620)',
+                      border: `1px solid ${colors.saphir.primary[500]}40`,
+                      borderRadius: '8px',
                     }}
                   >
-                    {talentId || `Talent ${index + 1}`}
+                    <div
+                      style={{
+                        fontSize: fontSizes.sm,
+                        color: colors.neutral[200],
+                        fontWeight: '600',
+                      }}
+                    >
+                      {milestone.icon} {milestone.name}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </Card>
         </>

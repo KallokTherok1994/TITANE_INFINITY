@@ -16,7 +16,7 @@
  */
 
 import React, { useState, useCallback } from 'react';
-import { logger } from '@/lib/logger';
+import { logger as _logger } from '@/lib/logger';
 import { useVoiceEngine } from '@/hooks/useVoiceEngine';
 import { useActiveListening } from '@/hooks/useActiveListening';
 import { WakeWordIndicator } from './WakeWordIndicator';

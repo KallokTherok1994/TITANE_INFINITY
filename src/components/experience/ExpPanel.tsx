@@ -10,7 +10,7 @@
 // Vue globale : XP, catégories, projets, talents, timeline
 
 import React, { useState, useEffect } from 'react';
-import { logger } from '@/lib/logger';
+import { logger as _logger } from '@/lib/logger';
 import { invoke } from '@tauri-apps/api/core';
 import '../../styles/exp-fusion.css';
 import { TalentTree } from './TalentTree';

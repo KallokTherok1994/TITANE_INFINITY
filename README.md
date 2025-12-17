@@ -1,7 +1,7 @@
 # TITANE∞ — Cognitive Operating System
 
-**Version:** v24.2.0  
-**Status:** Beta Avancée (Production Ready)  
+**Version:** v25.2.1  
+**Status:** Production Ready  
 **License:** Proprietary — © 2025 Humain Total / Kevin Thibault
 
 ---
@@ -10,7 +10,7 @@
 
 TITANE∞ est un **OS cognitif local-first** : votre double numérique évolutif, privé et auto-réparateur.
 
-- 🧠 **9 Moteurs Unifiés** : Architecture cognitive modulaire
+- 🧠 **Architecture Modulaire** : 13 centres unifiés + 9 moteurs cognitifs
 - 🔄 **Pipeline OMEGA v2** : 10 étapes de traitement intelligent
 - 💾 **UnifiedMemory OS** : STM → MTM → LTM Neural
 - 🎭 **Dual Runtime** : Titan-Dev (expérimentation) + Titan-Stable (production)
@@ -57,19 +57,62 @@ npm run dev:tauri
 
 ---
 
-## 📐 Architecture v24
+## 📐 Architecture v25.2.1
+
+### 🗺️ Navigation (13 Centres Unifiés)
+
+```
+TITANE∞ v25.2.1
+
+📂 PRINCIPAL
+├─ 💬 Chat IA → /chat
+├─ 🧬 EVO → /evo (Fusion: Dashboard+Identity+Memory+Evolution+Progression)
+├─ 📅 Agenda → /agenda
+└─ 📷 Vision → /camera
+
+📂 CENTRES UNIFIÉS
+├─ 🎯 ONE CORE → /one-core
+├─ 📊 Statistiques → /stats (Fusion: Nexus+Helios+Harmonia+État Cognitif)
+├─ ⚙️ Centre Système → /system-center
+├─ 🔊 Audio & Voix → /audio-center
+├─ 🎨 Design & Apparence → /design-center
+├─ 🛡️ Gouvernance → /governance-center
+├─ 🧪 QA & Monitoring → /qa-monitoring
+└─ 💻 Mode Développeur → /developer-mode
+
+📂 CENTRES COGNITIFS
+└─ 🎛️ Intelligence IA → /orchestration-center
+```
+
+### ✨ Fusions Majeures v25
+
+**EVO Module (v25.0)** — 5 modules → 1 centre unifié
+
+- Dashboard (/) → Section 1: Vue d'Ensemble
+- Identity Center → Section 2: Identité & ADN
+- Memory Evolution → Section 3-4: Mémoire Triple + Évolution
+- Evolution Center → Section 5-6: Progression & Transformation
+- Progression (/progression) → Section 5: Progression & XP
+
+**Stats Module (v25.2)** — 4 modules → 1 page unifiée
+
+- Nexus (/nexus) → Section 1: 🧠 Réseau Cognitif
+- Helios (/helios) → Section 2: 💓 Système Vital
+- Harmonia (/harmonia) → Section 3: ⚖️ Équilibre des Flux
+- État Cognitif (nouveau) → Section 4: 🧠 État Cognitif
 
 ### Frontend (React + TypeScript)
 
 ```
 src/
+├── pages/            # Routes principales (EvoPage, Stats, Chat...)
 ├── engines/          # 14 moteurs cognitifs (selfHealing, flow, time...)
 ├── core/             # Cœur système (pipelines, healing, safety)
 ├── services/         # Services métier (ai, api, memory, voice, tts)
 ├── stores/           # State management (Zustand)
 ├── hooks/            # Custom React hooks
 ├── features/         # Modules métier (chat, memory, dashboard)
-└── ui/               # Composants UI + Pages
+└── ui/               # Composants UI + Menu
 ```
 
 ### Backend (Tauri v2 + Rust)

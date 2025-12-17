@@ -1,12 +1,122 @@
 # 🏗️ ARCHITECTURE FRONTEND TITANE∞
 
-**Version:** 17.1.0  
-**Date:** 22 novembre 2025  
+**Version:** 25.2.2  
+**Date:** 16 décembre 2025  
 **Auteurs:** Équipe TITANE∞
 
 ---
 
-## 📐 Structure Canonique
+## 🎯 Évolutions Majeures v25
+
+### ✨ Fusion EVO (v25.0)
+
+**5 modules → 1 module unifié**
+
+- Dashboard (/) → `/evo` Section 1
+- Identity Center (/identity-center) → `/evo` Section 2
+- Memory Evolution (/memory-evolution) → `/evo` Section 3-4
+- Evolution Center (/evolution-center) → `/evo` Section 5-6
+- Progression (/progression) → `/evo` Section 5
+
+### � Fusion TIME (v25.1)
+
+**3 modules → 1 module unifié**
+
+- Temporal Flow Center (/temporal-center) → `/time` Section 6
+- Agenda (/agenda) → `/time` Section 2
+- Time Navigator (/time-navigator) → `/time` Section 3
+- 6 sections internes: NOW, Agenda, Timeline, Snapshots, Intelligence, Flow
+
+### �📊 Fusion Stats (v25.2)
+
+**4 modules → 1 page unifiée**
+
+- Helios (/helios) → `/stats` Section 2
+- Nexus (/nexus) → `/stats` Section 1
+- Harmonia (/harmonia) → `/stats` Section 3
+- État Cognitif (nouveau) → `/stats` Section 4
+
+### 👑 Fusion ADMIN (v25.2.2)
+
+**7 modules → 1 module ADMIN unifié**
+
+- Centre Système (/system-center) → `/admin` Onglet 1
+- Configuration HUB (/configuration) → `/admin` Onglet 2
+- Audio & Voix (/audio-center) → `/admin` Onglet 3
+- Design / Gesign (/design-center) → `/admin` Onglet 4
+- Gouvernance (/governance-center) → `/admin` Onglet 5
+- QA & Monitoring (/qa-monitoring) → `/admin` Onglet 6
+- Mode Développeur (/developer-mode) → `/admin` Onglet 7
+
+### 🧹 Menu Navigation (v25.2.2)
+
+**18 sections → 10 sections** (-44%)
+
+- localStorage nettoyage forcé
+- MenuEditor sauvegarde désactivée
+- Source unique : MENU_SECTIONS
+- Synchronisation Menu.tsx ↔ Sidebar App.tsx
+
+---
+
+## 🗺️ Routes Principales v25.2.2
+
+### Routes Actives
+
+```
+/chat                Chat IA (Multi-Provider)
+/evo                 EVO — Centre d'Évolution Totale (fusion 5 modules)
+/time                TIME — Centre Temporel (fusion 3 modules) ⏱️ v25.1
+/camera              Vision & Reconnaissance
+/one-core            ONE CORE — Commande Unifiée
+/stats               Statistiques Moteurs (fusion 4 modules)
+/admin               ADMIN — Centre Administration (fusion 7 modules) 👑 v25.2.2
+/orchestration-intelligence  Intelligence IA Multi-Agents
+```
+
+### Routes Obsolètes (Redirigées v25.2.2)
+
+```
+❌ /                     → /evo (redirect)
+❌ /dashboard            → /evo (redirect)
+❌ /helios               → /stats (redirect)
+❌ /nexus                → /stats (redirect)
+❌ /harmonia             → /stats (redirect)
+❌ /identity-center      → /evo (redirect)
+❌ /memory-evolution     → /evo (redirect)
+❌ /evolution-center     → /evo (redirect)
+❌ /cognitive-evolution  → /evo (redirect)
+❌ /progression          → /evo (redirect)
+❌ /xp                   → /evo (redirect)
+
+🆕 Module TIME - Redirections v25.1:
+❌ /temporal-center      → /time (redirect)
+❌ /agenda               → /time (redirect)
+❌ /time-navigator       → /time (redirect)
+
+🆕 Module ADMIN - Redirections v25.2.2:
+❌ /system-center        → /admin (redirect)
+❌ /configuration        → /admin (redirect)
+❌ /audio-center         → /admin (redirect)
+❌ /design-center        → /admin (redirect)
+❌ /governance-center    → /admin (redirect)
+❌ /diagnostics          → /admin (redirect)
+❌ /devtools             → /admin (redirect)
+❌ /cluster              → /admin (redirect)
+❌ /introspection        → /admin (redirect)
+❌ /hypervision          → /admin (redirect)
+❌ /design-system        → /admin (redirect)
+❌ /settings             → /admin (redirect)
+❌ /governance           → /admin (redirect)
+❌ /secure               → /admin (redirect)
+❌ /audio                → /admin (redirect)
+❌ /voice                → /admin (redirect)
+❌ /tts                  → /admin (redirect)
+```
+
+---
+
+## �📐 Structure Canonique
 
 ```
 src/

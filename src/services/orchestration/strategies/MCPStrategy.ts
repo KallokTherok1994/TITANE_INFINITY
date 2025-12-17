@@ -6,7 +6,7 @@
  * Extracted from MCPOrchestrator (1,156 lines)
  */
 
-import { logger } from '@/lib/logger';
+import { logger as _logger } from '@/lib/logger';
 import type {
   IOrchestrationStrategy,
   OrchestrationStrategyType,
