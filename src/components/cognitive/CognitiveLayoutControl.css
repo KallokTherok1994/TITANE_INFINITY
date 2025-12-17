@@ -280,6 +280,116 @@
   font-size: 12px;
 }
 
+/* ═════════════════════════════════════════════════════════════════
+   PRESET LAYOUTS v25.7.1
+   ═════════════════════════════════════════════════════════════════ */
+
+.clc-presets {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-subtle, #333);
+}
+
+.clc-presets h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+}
+
+.clc-presets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.clc-preset-item {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.clc-preset-load {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--surface-hover, #2a2a2a);
+  border: 1px solid var(--border-subtle, #333);
+  border-radius: 6px;
+  color: var(--text-primary, #e0e0e0);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 13px;
+}
+
+.clc-preset-load:hover {
+  background: var(--surface-elevated, #333);
+  border-color: var(--primary, #00d4ff);
+}
+
+.clc-preset-name {
+  font-weight: 500;
+}
+
+.clc-preset-mode {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.clc-preset-delete {
+  padding: 6px 10px;
+  background: rgba(255, 0, 0, 0.1);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  border-radius: 6px;
+  color: #ff6b6b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.clc-preset-delete:hover {
+  background: rgba(255, 0, 0, 0.2);
+  border-color: rgba(255, 0, 0, 0.5);
+}
+
+.clc-preset-dialog {
+  margin-top: 16px;
+  padding: 16px;
+  background: var(--surface-elevated, #2a2a2a);
+  border: 1px solid var(--primary, #00d4ff);
+  border-radius: 8px;
+}
+
+.clc-preset-dialog h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  color: var(--text-primary, #fff);
+}
+
+.clc-preset-input {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--surface-base, #1e1e1e);
+  border: 1px solid var(--border-subtle, #333);
+  border-radius: 6px;
+  color: var(--text-primary, #fff);
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.clc-preset-input:focus {
+  outline: none;
+  border-color: var(--primary, #00d4ff);
+}
+
+.clc-preset-dialog-actions {
+  display: flex;
+  gap: 8px;
+}
+
 /* Mode Selector */
 .clc-mode-selector {
   margin-bottom: 20px;

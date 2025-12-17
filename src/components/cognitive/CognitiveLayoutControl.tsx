@@ -38,6 +38,15 @@ const MODE_DESCRIPTIONS: Record<UIMode, string> = {
   neutral: 'Mode équilibré par défaut',
 };
 
+// v25.7.1: Preset layouts interface
+interface PresetLayout {
+  name: string;
+  mode: UIMode;
+  timestamp: number;
+}
+
+const PRESETS_KEY = 'titane-cognitive-layout-presets';
+
 /**
  * Panneau de contrôle Cognitive Layout
  * Optimisé avec React.memo pour éviter re-renders inutiles
@@ -139,6 +148,50 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleUndo, handleRedo]);
+
+  // v25.7.1: Preset layouts management
+  const [presets, setPresets] = useState<PresetLayout[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem(PRESETS_KEY);
+      return saved ? JSON.parse(saved) : [];
+    }
+    return [];
+  });
+
+  const [showPresetDialog, setShowPresetDialog] = useState(false);
+  const [presetName, setPresetName] = useState('');
+
+  const savePreset = useCallback(() => {
+    if (!presetName.trim()) return;
+
+    const newPreset: PresetLayout = {
+      name: presetName.trim(),
+      mode: currentMode,
+      timestamp: Date.now(),
+    };
+
+    const updatedPresets = [...presets, newPreset];
+    setPresets(updatedPresets);
+    localStorage.setItem(PRESETS_KEY, JSON.stringify(updatedPresets));
+    setPresetName('');
+    setShowPresetDialog(false);
+  }, [presetName, currentMode, presets]);
+
+  const loadPreset = useCallback(
+    (preset: PresetLayout) => {
+      setMode(preset.mode);
+    },
+    [setMode]
+  );
+
+  const deletePreset = useCallback(
+    (index: number) => {
+      const updatedPresets = presets.filter((_, i) => i !== index);
+      setPresets(updatedPresets);
+      localStorage.setItem(PRESETS_KEY, JSON.stringify(updatedPresets));
+    },
+    [presets]
+  );
 
   // Log performance stats in DEV
   useEffect(() => {
@@ -460,7 +513,72 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
           <button className="clc-btn clc-btn-small" onClick={resetMode}>
             ⚖️ Reset neutre
           </button>
+          <button
+            className="clc-btn clc-btn-small clc-btn-primary"
+            onClick={() => setShowPresetDialog(true)}
+          >
+            💾 Save Preset
+          </button>
         </div>
+
+        {/* v25.7.1: Preset layouts list */}
+        {presets.length > 0 && (
+          <div className="clc-presets">
+            <h4>📌 Presets</h4>
+            <div className="clc-presets-list">
+              {presets.map((preset, index) => (
+                <div key={index} className="clc-preset-item">
+                  <button
+                    className="clc-preset-load"
+                    onClick={() => loadPreset(preset)}
+                    title={`Load ${preset.name} - ${MODE_LABELS[preset.mode]}`}
+                  >
+                    <span className="clc-preset-name">{preset.name}</span>
+                    <span className="clc-preset-mode">{MODE_LABELS[preset.mode]}</span>
+                  </button>
+                  <button
+                    className="clc-preset-delete"
+                    onClick={() => deletePreset(index)}
+                    title="Delete preset"
+                    aria-label={`Delete preset ${preset.name}`}
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* v25.7.1: Preset save dialog */}
+        {showPresetDialog && (
+          <div className="clc-preset-dialog">
+            <h4>Save Current Layout</h4>
+            <input
+              type="text"
+              className="clc-preset-input"
+              placeholder="Preset name..."
+              value={presetName}
+              onChange={e => setPresetName(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter') savePreset();
+                if (e.key === 'Escape') setShowPresetDialog(false);
+              }}
+              autoFocus
+            />
+            <div className="clc-preset-dialog-actions">
+              <button className="clc-btn clc-btn-primary" onClick={savePreset}>
+                Save
+              </button>
+              <button
+                className="clc-btn clc-btn-secondary"
+                onClick={() => setShowPresetDialog(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
       </div>
       {/* Fin contenu collapsible */}
     </div>
