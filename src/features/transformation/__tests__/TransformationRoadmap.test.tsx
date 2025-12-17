@@ -14,7 +14,7 @@ describe('TransformationRoadmap', () => {
 
   it('should render without crashing', () => {
     render(<TransformationRoadmap />);
-    expect(screen.getByText(/roadmap de transformation/i)).toBeTruthy();
+    expect(screen.getByText(/roadmap de transformation/i)).toBeInTheDocument();
   });
 
   it('should display status filters', () => {
@@ -22,34 +22,34 @@ describe('TransformationRoadmap', () => {
 
     expect(
       screen.getByRole('button', {
-        name: 'Afficher tous les milestones de la roadmap',
+        name: /afficher tous les milestones de la roadmap/i,
       })
-    ).toBeTruthy();
+    ).toBeInTheDocument();
 
     expect(
-      screen.getByRole('button', { name: 'Filtrer par statut: Complété' })
-    ).toBeTruthy();
+      screen.getByRole('button', { name: /filtrer par statut:\s*complété/i })
+    ).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: 'Filtrer par statut: En cours' })
-    ).toBeTruthy();
+      screen.getByRole('button', { name: /filtrer par statut:\s*en cours/i })
+    ).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: 'Filtrer par statut: Planifié' })
-    ).toBeTruthy();
+      screen.getByRole('button', { name: /filtrer par statut:\s*planifié/i })
+    ).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: 'Filtrer par statut: Futur' })
-    ).toBeTruthy();
+      screen.getByRole('button', { name: /filtrer par statut:\s*futur/i })
+    ).toBeInTheDocument();
   });
 
   it('should filter milestones by status', async () => {
     render(<TransformationRoadmap />);
 
     const completedButton = screen.getByRole('button', {
-      name: 'Filtrer par statut: Complété',
+      name: /filtrer par statut:\s*complété/i,
     });
 
     fireEvent.click(completedButton);
     await waitFor(() => {
-      expect(completedButton.classList.contains('active')).toBe(true);
+      expect(completedButton).toHaveClass('active');
     });
   });
 
@@ -71,7 +71,7 @@ describe('TransformationRoadmap', () => {
       fireEvent.click(firstMilestoneCard);
 
       await waitFor(() => {
-        expect(screen.getByText(/features clés/i)).toBeTruthy();
+        expect(screen.getByText(/features clés/i)).toBeInTheDocument();
       });
     }
   });
@@ -121,7 +121,7 @@ describe('TransformationRoadmap', () => {
       fireEvent.click(firstMilestoneCard);
 
       await waitFor(() => {
-        expect(screen.getByText(/importance:/i)).toBeTruthy();
+        expect(screen.getByText(/importance:/i)).toBeInTheDocument();
       });
     }
   });
@@ -130,7 +130,7 @@ describe('TransformationRoadmap', () => {
     render(<TransformationRoadmap />);
 
     const stats = screen.getByTestId('roadmap-stats');
-    expect(stats).toBeTruthy();
+    expect(stats).toBeInTheDocument();
 
     const statsText = stats.textContent || '';
     expect(statsText).toMatch(/Total Milestones/i);
@@ -172,18 +172,18 @@ describe('TransformationRoadmap', () => {
 
     // Filter first
     const plannedButton = screen.getByRole('button', {
-      name: 'Filtrer par statut: Planifié',
+      name: /filtrer par statut:\s*planifié/i,
     });
     fireEvent.click(plannedButton);
 
     // Then reset
     const allButton = screen.getByRole('button', {
-      name: 'Afficher tous les milestones de la roadmap',
+      name: /afficher tous les milestones de la roadmap/i,
     });
     fireEvent.click(allButton);
 
     await waitFor(() => {
-      expect(allButton.classList.contains('active')).toBe(true);
+      expect(allButton).toHaveClass('active');
     });
   });
 
@@ -192,21 +192,21 @@ describe('TransformationRoadmap', () => {
 
     expect(
       screen.getByRole('button', {
-        name: 'Afficher tous les milestones de la roadmap',
+        name: /afficher tous les milestones de la roadmap/i,
       })
-    ).toBeTruthy();
+    ).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: 'Filtrer par statut: Complété' })
-    ).toBeTruthy();
+      screen.getByRole('button', { name: /filtrer par statut:\s*complété/i })
+    ).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: 'Filtrer par statut: En cours' })
-    ).toBeTruthy();
+      screen.getByRole('button', { name: /filtrer par statut:\s*en cours/i })
+    ).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: 'Filtrer par statut: Planifié' })
-    ).toBeTruthy();
+      screen.getByRole('button', { name: /filtrer par statut:\s*planifié/i })
+    ).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: 'Filtrer par statut: Futur' })
-    ).toBeTruthy();
+      screen.getByRole('button', { name: /filtrer par statut:\s*futur/i })
+    ).toBeInTheDocument();
   });
 
   it('should handle custom milestones prop', () => {
@@ -225,6 +225,6 @@ describe('TransformationRoadmap', () => {
     ];
 
     render(<TransformationRoadmap milestones={customMilestones} />);
-    expect(screen.getByText(/Custom Milestone/i)).toBeTruthy();
+    expect(screen.getByText(/Custom Milestone/i)).toBeInTheDocument();
   });
 });

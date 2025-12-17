@@ -58,7 +58,11 @@ NODE_ENV=production npm run build
 # Build Tauri app (production)
 echo ""
 echo "🦀 Building Tauri app (production)..."
-npm run tauri build -- --config runtime/stable/tauri.conf.json
+if node -e "const p=require('./package.json'); process.exit(p.scripts && p.scripts.tauri ? 0 : 1)"; then
+    npm run tauri build -- --config runtime/stable/tauri.conf.json
+else
+    npx tauri build --config runtime/stable/tauri.conf.json
+fi
 
 # Copy build to runtime/stable/
 echo ""
