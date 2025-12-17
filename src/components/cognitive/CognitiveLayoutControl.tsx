@@ -193,6 +193,72 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
     [presets]
   );
 
+  // v25.7.2: Export/Import configuration
+  const exportConfig = useCallback(() => {
+    const config = {
+      version: '25.7.2',
+      currentMode,
+      presets,
+      position,
+      isCollapsed,
+      timestamp: Date.now(),
+    };
+
+    const dataStr = JSON.stringify(config, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+    const exportFileDefaultName = `cognitive-layout-${new Date().toISOString().split('T')[0]}.json`;
+
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+  }, [currentMode, presets, position, isCollapsed]);
+
+  const importConfig = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const config = JSON.parse(e.target?.result as string);
+
+          // Validate config
+          if (config.version && config.currentMode) {
+            // Import presets
+            if (config.presets) {
+              setPresets(config.presets);
+              localStorage.setItem(PRESETS_KEY, JSON.stringify(config.presets));
+            }
+
+            // Import position
+            if (config.position) {
+              setPosition(config.position);
+              localStorage.setItem(POSITION_KEY, JSON.stringify(config.position));
+            }
+
+            // Import mode
+            setMode(config.currentMode);
+
+            alert('✅ Configuration imported successfully!');
+          } else {
+            alert('❌ Invalid configuration file');
+          }
+        } catch (error) {
+          console.error('Import error:', error);
+          alert('❌ Error importing configuration');
+        }
+      };
+      reader.readAsText(file);
+
+      // Reset input
+      event.target.value = '';
+    },
+    [setMode, setPosition]
+  );
+
   // Log performance stats in DEV
   useEffect(() => {
     if (process.env.NODE_ENV === 'development' && stats) {
@@ -519,6 +585,22 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
           >
             💾 Save Preset
           </button>
+        </div>
+
+        {/* v25.7.2: Export/Import actions */}
+        <div className="clc-actions clc-export-actions">
+          <button className="clc-btn clc-btn-small" onClick={exportConfig}>
+            📤 Export Config
+          </button>
+          <label className="clc-btn clc-btn-small clc-import-btn">
+            📥 Import Config
+            <input
+              type="file"
+              accept=".json"
+              onChange={importConfig}
+              style={{ display: 'none' }}
+            />
+          </label>
         </div>
 
         {/* v25.7.1: Preset layouts list */}
