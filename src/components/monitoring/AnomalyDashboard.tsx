@@ -14,6 +14,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import { logger } from '@/lib/logger';
 import { AnomalyDetector, type AnomalyDetection } from '../../lib/anomalyDetector';
 import { AlertTriangle, TrendingUp, Clock, Activity } from '../icons';
 
@@ -40,7 +41,11 @@ export const AnomalyDashboard: React.FC<AnomalyDashboardProps> = ({
       setAnomalies(AnomalyDetector.getAnomalies(limit, minSeverity));
       setStats(AnomalyDetector.getAnomalyStats());
     } catch (error) {
-      console.error('Erreur chargement anomalies:', error);
+      logger.error(
+        'Failed to load anomalies',
+        { component: 'AnomalyDashboard', action: 'loadData', limit, minSeverity },
+        error as Error
+      );
     }
   }, [limit, minSeverity]);
 

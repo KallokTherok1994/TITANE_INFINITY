@@ -15,6 +15,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { hybridTTS, type TTSStatus } from '../services/tts/hybridTTS';
+import { logger } from '@/lib/logger';
 import './VoiceControlPanel.css';
 
 export interface VoiceControlPanelProps {
@@ -62,7 +63,12 @@ export const VoiceControlPanel: React.FC<VoiceControlPanelProps> = ({
         }
       );
     } catch (error) {
-      console.error('Test TTS failed:', error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
+        'Test TTS failed',
+        { component: 'VoiceControlPanel', action: 'testTTS' },
+        err
+      );
     } finally {
       setTestInProgress(false);
       await loadStatus();

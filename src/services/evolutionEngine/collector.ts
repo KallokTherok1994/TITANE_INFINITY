@@ -13,6 +13,7 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import { logger } from '@/lib/logger';
 import type {
   EvolutionDataPoint,
   DataCategory,
@@ -178,7 +179,12 @@ export class Collector {
 
       this.state.lastCollectTime = Date.now();
     } catch (error) {
-      console.error('[Collector] Erreur cycle collecte:', error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
+        'Evolution collector cycle failed',
+        { component: 'EvolutionCollector', action: 'collect' },
+        err
+      );
     } finally {
       this.state.isCollecting = false;
     }
@@ -458,7 +464,12 @@ export class Collector {
       try {
         listener(dataPoint);
       } catch (e) {
-        console.error('[Collector] Listener error:', e);
+        const err = e instanceof Error ? e : new Error(String(e));
+        logger.error(
+          'Evolution collector listener error',
+          { component: 'EvolutionCollector', action: 'notifyDataPoint' },
+          err
+        );
       }
     });
 
@@ -537,13 +548,27 @@ export class Collector {
         try {
           listener(batch);
         } catch (e) {
-          console.error('[Collector] Batch listener error:', e);
+          const err = e instanceof Error ? e : new Error(String(e));
+          logger.error(
+            'Evolution collector batch listener error',
+            { component: 'EvolutionCollector', action: 'flushBatch' },
+            err
+          );
         }
       });
     } catch (error) {
       // En cas d'erreur, remettre dans le batch
       this.pendingBatch = [...batch, ...this.pendingBatch];
-      console.error('[Collector] Flush batch error:', error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
+        'Evolution collector flush batch failed',
+        {
+          component: 'EvolutionCollector',
+          action: 'flushBatch',
+          batchSize: batch.length,
+        },
+        err
+      );
     }
   }
 

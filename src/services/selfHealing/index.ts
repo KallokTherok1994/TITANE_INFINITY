@@ -17,6 +17,8 @@
  * @created 2025-01-07
  */
 
+import { logger } from '@/lib/logger';
+
 // Re-export des types et configurations
 export * from './selfHealing.config';
 
@@ -183,7 +185,10 @@ class SelfHealingEngineOrchestrator {
    */
   public async initialize(): Promise<void> {
     if (this.state.initialized) {
-      console.warn('[SelfHealingEngine] Already initialized');
+      logger.warn('SelfHealingEngine already initialized', {
+        component: 'SelfHealingEngine',
+        action: 'initialize',
+      });
       return;
     }
 
@@ -215,7 +220,10 @@ class SelfHealingEngineOrchestrator {
     }
 
     if (this.state.active) {
-      console.warn('[SelfHealingEngine] Already active');
+      logger.warn('SelfHealingEngine already active', {
+        component: 'SelfHealingEngine',
+        action: 'activate',
+      });
       return;
     }
 
@@ -534,10 +542,10 @@ class SelfHealingEngineOrchestrator {
           console.log(prefix, message);
           break;
         case 'warn':
-          console.warn(prefix, message);
+          logger.warn(message, { component: 'SelfHealingEngine', action: 'log' });
           break;
         case 'error':
-          console.error(prefix, message);
+          logger.error(message, { component: 'SelfHealingEngine', action: 'log' });
           break;
       }
     }

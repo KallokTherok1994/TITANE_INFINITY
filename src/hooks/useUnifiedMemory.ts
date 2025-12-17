@@ -68,10 +68,17 @@ interface UseUnifiedMemoryReturn extends UseUnifiedMemoryState {
  * @param memory UnifiedMemory instance (must be initialized externally)
  * @param autoRefreshStats Auto-refresh stats interval (ms), default: 60000 (1min)
  */
+// ✨ v24.3.7: Minimum interval to prevent excessive memory operations
+const MIN_REFRESH_INTERVAL = 5000; // 5s minimum
+
 export function useUnifiedMemory(
   memory: UnifiedMemory | null,
   autoRefreshStats = 60000
 ): UseUnifiedMemoryReturn {
+  // ✨ v24.3.7: Validate and clamp refresh interval
+  const safeRefreshInterval =
+    autoRefreshStats > 0 ? Math.max(autoRefreshStats, MIN_REFRESH_INTERVAL) : 0;
+
   const [state, setState] = useState<UseUnifiedMemoryState>({
     isInitialized: false,
     isLoading: false,
@@ -107,9 +114,9 @@ export function useUnifiedMemory(
     // Initial stats fetch
     refreshStats();
 
-    // Setup auto-refresh
-    if (autoRefreshStats > 0) {
-      statsIntervalRef.current = setInterval(refreshStats, autoRefreshStats);
+    // ✨ v24.3.7: Use validated interval (min 5s) to prevent excessive operations
+    if (safeRefreshInterval > 0) {
+      statsIntervalRef.current = setInterval(refreshStats, safeRefreshInterval);
     }
 
     // Cleanup on unmount
@@ -118,7 +125,7 @@ export function useUnifiedMemory(
         clearInterval(statsIntervalRef.current);
       }
     };
-  }, [memory, autoRefreshStats, refreshStats]);
+  }, [memory, safeRefreshInterval, refreshStats]);
 
   /**
    * Create memory

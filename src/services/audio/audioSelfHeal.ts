@@ -8,6 +8,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
+import { logger } from '@/lib/logger';
 import { voiceService } from '@/services/api/voice';
 import { audioStateMachine } from '@/services/audio/audioStateMachine';
 import { secureInvoke } from '@/lib/security';
@@ -47,11 +48,17 @@ class AudioSelfHeal {
    */
   start(): void {
     if (this.checkTimer) {
-      console.warn('[AudioSelfHeal] Already running');
+      logger.warn('AudioSelfHeal already running', {
+        component: 'AudioSelfHeal',
+        action: 'start',
+      });
       return;
     }
 
-    console.log('[AudioSelfHeal] 🛡️ Starting automatic health monitoring');
+    logger.info('Starting automatic audio health monitoring', {
+      component: 'AudioSelfHeal',
+      action: 'start',
+    });
     this.checkTimer = setInterval(() => this.performHealthCheck(), this.CHECK_INTERVAL);
     this.performHealthCheck(); // Initial check
   }
@@ -63,7 +70,10 @@ class AudioSelfHeal {
     if (this.checkTimer) {
       clearInterval(this.checkTimer);
       this.checkTimer = null;
-      console.log('[AudioSelfHeal] Stopped health monitoring');
+      logger.info('Stopped audio health monitoring', {
+        component: 'AudioSelfHeal',
+        action: 'stop',
+      });
     }
   }
 
@@ -114,11 +124,21 @@ class AudioSelfHeal {
         !this.healthStatus.isHealthy &&
         this.healthStatus.healAttempts < this.MAX_HEAL_ATTEMPTS
       ) {
-        console.warn('[AudioSelfHeal] 🚨 Issues detected:', issues);
+        logger.warn('AudioSelfHeal issues detected', {
+          component: 'AudioSelfHeal',
+          action: 'checkHealth',
+          issues: issues.join(', '),
+          healAttempts: this.healthStatus.healAttempts,
+        });
         await this.performAutoHeal();
       }
     } catch (error) {
-      console.error('[AudioSelfHeal] Health check error:', error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
+        'AudioSelfHeal health check failed',
+        { component: 'AudioSelfHeal', action: 'checkHealth' },
+        err
+      );
     }
   }
 
@@ -186,7 +206,12 @@ class AudioSelfHeal {
         try {
           await voiceService.cancelRecording();
         } catch (error) {
-          console.warn('[AudioSelfHeal] Cancel recording failed:', error);
+          const err = error instanceof Error ? error : new Error(String(error));
+          logger.warn('Cancel recording failed during auto-heal', {
+            component: 'AudioSelfHeal',
+            action: 'performAutoHeal',
+            error: err.message,
+          });
         }
       }
 
@@ -219,7 +244,16 @@ class AudioSelfHeal {
         }
       }, 10000);
     } catch (error) {
-      console.error('[AudioSelfHeal] Auto-heal error:', error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
+        'AudioSelfHeal auto-heal failed',
+        {
+          component: 'AudioSelfHeal',
+          action: 'performAutoHeal',
+          healAttempts: this.healthStatus.healAttempts,
+        },
+        err
+      );
     }
   }
 
@@ -227,7 +261,10 @@ class AudioSelfHeal {
    * Manual heal trigger
    */
   async manualHeal(): Promise<void> {
-    console.log('[AudioSelfHeal] 🔧 Manual heal triggered');
+    logger.info('Manual heal triggered', {
+      component: 'AudioSelfHeal',
+      action: 'manualHeal',
+    });
     this.healthStatus.healAttempts = 0; // Reset counter for manual heal
     await this.performAutoHeal();
   }
@@ -243,7 +280,10 @@ class AudioSelfHeal {
    * Force complete reset
    */
   async forceReset(): Promise<void> {
-    console.warn('[AudioSelfHeal] 🚨 FORCE RESET - Emergency cleanup');
+    logger.warn('AudioSelfHeal force reset initiated - Emergency cleanup', {
+      component: 'AudioSelfHeal',
+      action: 'forceReset',
+    });
 
     try {
       // Cancel recording
@@ -265,7 +305,12 @@ class AudioSelfHeal {
 
       console.log('[AudioSelfHeal] ✅ Force reset completed');
     } catch (error) {
-      console.error('[AudioSelfHeal] Force reset error:', error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
+        'AudioSelfHeal force reset failed',
+        { component: 'AudioSelfHeal', action: 'forceReset' },
+        err
+      );
     }
   }
 }

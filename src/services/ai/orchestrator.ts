@@ -288,12 +288,21 @@ class AIOrchestrator {
     });
   }
 
+  /**
+   * ✨ v24.3.6: Optimized warmup with global timeout
+   * - Global 3s timeout prevents hanging on slow networks
+   * - Per-provider 1s timeout for fast failover
+   * - Non-blocking: app can start while warmup completes
+   */
   private async startWarmup(): Promise<void> {
     if (this.isWarmup) return;
     this.isWarmup = true;
 
+    const GLOBAL_WARMUP_TIMEOUT = 3000; // ✨ v24.3.6: 3s max total warmup
+    const PER_PROVIDER_TIMEOUT = 1000; // ✨ v24.3.6: 1s per provider (was 1.5s)
+
     try {
-      logger.info('Starting provider warmup (optimized)...');
+      logger.info('Starting provider warmup (v24.3.6 optimized)...');
 
       // Warmup en parallèle avec timeout court pour performance
       const warmupPromises = this.providers.map(async provider => {
@@ -301,8 +310,11 @@ class AIOrchestrator {
           const isAvailable = await Promise.race([
             provider.isAvailable(),
             new Promise<boolean>(resolve =>
-              setTimeout(() => resolve(provider.name === 'titane-local'), 1500)
-            ), // 1.5s timeout, local toujours dispo
+              setTimeout(
+                () => resolve(provider.name === 'titane-local'),
+                PER_PROVIDER_TIMEOUT
+              )
+            ),
           ]);
 
           const stats = this.providerStats.get(provider.name);
@@ -311,7 +323,7 @@ class AIOrchestrator {
           }
 
           return { provider: provider.name, available: isAvailable };
-        } catch (error) {
+        } catch {
           const stats = this.providerStats.get(provider.name);
           if (stats) {
             stats.status = 'degraded';
@@ -320,9 +332,22 @@ class AIOrchestrator {
         }
       });
 
-      const warmupResults = await Promise.allSettled(warmupPromises);
+      // ✨ v24.3.6: Global timeout to prevent hanging
+      const warmupResults = await Promise.race([
+        Promise.allSettled(warmupPromises),
+        new Promise<PromiseSettledResult<{ provider: string; available: boolean }>[]>(
+          resolve =>
+            setTimeout(() => {
+              logger.warn(
+                `Warmup global timeout (${GLOBAL_WARMUP_TIMEOUT}ms), proceeding with available providers`
+              );
+              resolve([]);
+            }, GLOBAL_WARMUP_TIMEOUT)
+        ),
+      ]);
+
       logger.info(
-        'Warmup complete:',
+        `Warmup complete (${warmupResults.length} providers):`,
         warmupResults.map(r => (r.status === 'fulfilled' ? r.value : { error: true }))
       );
     } catch (error) {

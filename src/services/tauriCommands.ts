@@ -6,6 +6,7 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import { logger } from '@/lib/logger';
 import type { CoreResponse } from '../core/ARCHITECTURE_TYPES_v∞';
 import type {
   SingularityState,
@@ -288,7 +289,11 @@ export async function invokeTauriCommand<T = unknown>(
   const cmd = TAURI_COMMANDS[command];
 
   if (!cmd) {
-    console.warn(`⚠️ Unknown Tauri command: ${command}`);
+    logger.warn('Unknown Tauri command', {
+      component: 'tauriCommands',
+      action: 'executeCommand',
+      command,
+    });
     return {
       success: false,
       error: `Unknown command: ${command}`,
@@ -297,7 +302,11 @@ export async function invokeTauriCommand<T = unknown>(
   }
 
   if (!cmd.active) {
-    console.warn(`⚠️ Inactive command: ${command}`);
+    logger.warn('Inactive Tauri command', {
+      component: 'tauriCommands',
+      action: 'executeCommand',
+      command,
+    });
     return {
       success: false,
       error: `Command not active: ${command}`,
@@ -313,7 +322,12 @@ export async function invokeTauriCommand<T = unknown>(
       timestamp: Date.now(),
     };
   } catch (error) {
-    console.error(`❌ Error invoking ${command}:`, error);
+    const err = error instanceof Error ? error : new Error(String(error));
+    logger.error(
+      'Tauri command invocation failed',
+      { component: 'tauriCommands', action: 'executeCommand', command },
+      err
+    );
     return {
       success: false,
       error: String(error),

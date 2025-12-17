@@ -7,6 +7,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { secureInvoke } from '@/lib/security';
+import { logger } from '@/lib/logger';
 import type { EngineMetrics, ModuleInfo } from '../types/tauri';
 
 export function SingularityMonitor() {
@@ -52,11 +53,21 @@ export function SingularityMonitor() {
 
             setLastUpdate(new Date());
           } catch (error) {
-            console.error('Engine poll error:', error);
+            const err = error instanceof Error ? error : new Error(String(error));
+            logger.error(
+              'Singularity engine poll failed',
+              { component: 'SingularityMonitor', action: 'pollMetrics' },
+              err
+            );
           }
         }, 1000);
       } catch (error) {
-        console.error('Engine init error:', error);
+        const err = error instanceof Error ? error : new Error(String(error));
+        logger.error(
+          'Singularity engine initialization failed',
+          { component: 'SingularityMonitor', action: 'init' },
+          err
+        );
       }
     };
 
@@ -65,7 +76,14 @@ export function SingularityMonitor() {
     return () => {
       mounted = false;
       clearInterval(interval);
-      secureInvoke('engine_stop').catch(console.error);
+      secureInvoke('engine_stop').catch(err => {
+        const error = err instanceof Error ? err : new Error(String(err));
+        logger.error(
+          'Engine stop failed during cleanup',
+          { component: 'SingularityMonitor', action: 'cleanup' },
+          error
+        );
+      });
     };
   }, []);
 

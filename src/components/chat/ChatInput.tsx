@@ -13,6 +13,7 @@
  */
 
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { logger } from '@/lib/logger';
 import { autoHealEngine } from '../../services/ai/system';
 import { FileUploadButton, type AnalyzedFile } from './FileUploadButton';
 import { DictationButton } from './DictationButton';
@@ -90,7 +91,13 @@ function useOmegaInputProtection() {
         recoveryCount: prev.recoveryCount + 1,
       }));
 
-      isDev && console.error('[OMEGA CHAT INPUT] Error handled:', error, context);
+      if (isDev) {
+        logger.error(
+          'Chat input error handled',
+          { component: 'ChatInput', action: 'handleError', context },
+          error
+        );
+      }
     },
     []
   );
@@ -334,9 +341,10 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
         // ⭐ PHASE 4 ÉTAPE 1: Timeout restauré 10s (testing si cause blocage)
         const resetTimeout = setTimeout(() => {
           if (messageSent.current && mountedRef.current) {
-            console.warn(
-              '[OMEGA ChatInput] ⚠️ messageSent.current reset forcé après timeout 10s'
-            );
+            logger.warn('messageSent.current force reset after 10s timeout', {
+              component: 'ChatInput',
+              action: 'handleSend',
+            });
             messageSent.current = false;
           }
         }, 10000); // PHASE 4: Timeout restauré à 10s
@@ -804,7 +812,13 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
       );
     } catch (memoError) {
       // Si la memoization plante, on re-render
-      isDev && console.error('[OMEGA CHAT INPUT] Memo comparison failed:', memoError);
+      if (isDev) {
+        logger.error(
+          'Memo comparison failed',
+          { component: 'ChatInput', action: 'memo' },
+          memoError as Error
+        );
+      }
       return false;
     }
   }

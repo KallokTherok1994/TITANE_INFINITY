@@ -11,6 +11,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
+import { logger } from '@/lib/logger';
 import { bargeInDetector, type BargeInEvent } from './bargeInDetector';
 import { ttsDuckingEngine } from './ttsDuckingEngine';
 import { hybridTTS } from '../tts/hybridTTS';
@@ -89,7 +90,11 @@ export class FullDuplexOrchestrator {
       resumeDelayMs: config.resumeDelayMs ?? 500,
     };
 
-    console.log('[FullDuplexOrchestrator] 🔄 Initialized:', this.config);
+    logger.debug('FullDuplexOrchestrator initialized', {
+      component: 'FullDuplexOrchestrator',
+      action: 'constructor',
+      config: this.config,
+    });
 
     // Subscribe to barge-in events
     bargeInDetector.onBargeIn(this.handleBargeIn.bind(this));
@@ -100,12 +105,18 @@ export class FullDuplexOrchestrator {
    */
   async enable(): Promise<void> {
     if (this.config.enabled) {
-      console.warn('[FullDuplexOrchestrator] Already enabled');
+      logger.warn('FullDuplex already enabled', {
+        component: 'FullDuplexOrchestrator',
+        action: 'enable',
+      });
       return;
     }
 
     this.config.enabled = true;
-    console.log('[FullDuplexOrchestrator] ✅ Full duplex mode enabled');
+    logger.info('Full duplex mode enabled', {
+      component: 'FullDuplexOrchestrator',
+      action: 'enable',
+    });
     this.emitEvent({ type: 'state_change', state: this.state, timestamp: Date.now() });
   }
 
@@ -202,11 +213,17 @@ export class FullDuplexOrchestrator {
    */
   async startListening(): Promise<void> {
     if (this.isListening) {
-      console.warn('[FullDuplexOrchestrator] Already listening');
+      logger.warn('Already listening', {
+        component: 'FullDuplexOrchestrator',
+        action: 'startListening',
+      });
       return;
     }
 
-    console.log('[FullDuplexOrchestrator] 👂 Starting listening (full duplex)');
+    logger.debug('Starting listening (full duplex)', {
+      component: 'FullDuplexOrchestrator',
+      action: 'startListening',
+    });
 
     this.isListening = true;
 
@@ -396,7 +413,15 @@ export class FullDuplexOrchestrator {
       try {
         callback(event);
       } catch (error) {
-        console.error('[FullDuplexOrchestrator] Callback error:', error);
+        logger.error(
+          'Callback error',
+          {
+            component: 'FullDuplexOrchestrator',
+            action: 'emitEvent',
+            eventType: event.type,
+          },
+          error as Error
+        );
       }
     });
   }

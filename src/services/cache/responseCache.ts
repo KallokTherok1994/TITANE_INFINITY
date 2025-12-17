@@ -10,6 +10,7 @@
  * - Impact: -80% latence pour requêtes similaires
  */
 
+import { logger } from '@/lib/logger';
 import { cachePersistence } from './cachePersistence';
 
 interface CacheEntry {
@@ -39,6 +40,7 @@ interface CacheStats {
 
 /**
  * Cache intelligent avec LRU + prédiction
+ * ✨ v24.3.6: Optimisation fuzzy matching avec index préfixe O(k) au lieu de O(n)
  */
 export class ResponseCache {
   private cache = new Map<string, CacheEntry>();
@@ -48,10 +50,15 @@ export class ResponseCache {
     hits: 0,
     misses: 0,
     evictions: 0,
+    fuzzyHits: 0, // ✨ v24.3.6: Track fuzzy match successes
   };
 
   // Pattern de détection pour recommandations
   private commonPatterns: Map<string, string[]> = new Map();
+
+  // ✨ v24.3.6: Index par préfixe pour fuzzy matching rapide
+  // Structure: préfixe (3 premiers mots normalisés) → Set<cacheKey>
+  private prefixIndex: Map<string, Set<string>> = new Map();
 
   constructor(options: { maxSize?: number; ttlMs?: number } = {}) {
     this.maxSize = options.maxSize ?? 100; // 100 entrées max
@@ -76,9 +83,17 @@ export class ResponseCache {
         }
       }
 
-      console.log(`[ResponseCache] Loaded ${this.cache.size} entries from persistence`);
+      logger.debug('Cache loaded from persistence', {
+        component: 'ResponseCache',
+        action: 'loadFromPersistence',
+        entries: this.cache.size,
+      });
     } catch (error) {
-      console.warn('[ResponseCache] Failed to load from persistence:', error);
+      logger.warn('Failed to load cache from persistence', {
+        component: 'ResponseCache',
+        action: 'loadFromPersistence',
+        error: (error as Error).message,
+      });
     }
   }
 
@@ -97,7 +112,52 @@ export class ResponseCache {
   }
 
   /**
-   * Calcule un score de similarité entre deux messages
+   * ✨ v24.3.6: Extract prefix for indexing (3 first words, normalized)
+   */
+  private extractPrefix(message: string): string {
+    return message
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .split(/\s+/)
+      .filter(w => w.length > 2)
+      .slice(0, 3)
+      .join(' ');
+  }
+
+  /**
+   * ✨ v24.3.6: Add entry to prefix index
+   */
+  private indexEntry(cacheKey: string, message: string): void {
+    const prefix = this.extractPrefix(message);
+    if (!prefix) return;
+
+    let keys = this.prefixIndex.get(prefix);
+    if (!keys) {
+      keys = new Set();
+      this.prefixIndex.set(prefix, keys);
+    }
+    keys.add(cacheKey);
+  }
+
+  /**
+   * ✨ v24.3.6: Remove entry from prefix index
+   */
+  private unindexEntry(cacheKey: string, message: string): void {
+    const prefix = this.extractPrefix(message);
+    if (!prefix) return;
+
+    const keys = this.prefixIndex.get(prefix);
+    if (keys) {
+      keys.delete(cacheKey);
+      if (keys.size === 0) {
+        this.prefixIndex.delete(prefix);
+      }
+    }
+  }
+
+  /**
+   * Calcule un score de similarité entre deux messages (Jaccard)
    */
   private similarityScore(msg1: string, msg2: string): number {
     const words1 = new Set(msg1.toLowerCase().split(/\s+/));
@@ -114,26 +174,38 @@ export class ResponseCache {
 
   /**
    * Recherche une entrée similaire dans le cache
+   * ✨ v24.3.6: Optimized with prefix index - O(k) instead of O(n)
+   * ✨ v24.3.6: Single Date.now() call for all TTL checks
    */
   get(key: CacheKey): CacheEntry | null {
     const cacheKey = this.generateKey(key);
+    const now = Date.now(); // ✨ v24.3.6: Single timestamp for all TTL checks
 
-    // 1. Exact match
+    // 1. Exact match (O(1))
     const exact = this.cache.get(cacheKey);
-    if (exact && Date.now() - exact.timestamp < this.ttlMs) {
+    if (exact && now - exact.timestamp < this.ttlMs) {
       exact.hitCount++;
       this.stats.hits++;
       return exact;
     }
 
-    // 2. Fuzzy match (similarité > 80%)
+    // 2. ✨ v24.3.6: Fuzzy match with prefix index (O(k) where k << n)
     const threshold = 0.8;
+    const prefix = this.extractPrefix(key.message);
+    const candidateKeys = this.prefixIndex.get(prefix);
+
+    // If no candidates with same prefix, fall back to full scan (rare)
+    const keysToCheck =
+      candidateKeys && candidateKeys.size > 0
+        ? Array.from(candidateKeys)
+        : Array.from(this.cache.keys());
+
     let bestMatch: { key: string; entry: CacheEntry; score: number } | null = null;
 
-    for (const [storedKey, entry] of this.cache.entries()) {
-      if (Date.now() - entry.timestamp > this.ttlMs) continue;
+    for (const storedKey of keysToCheck) {
+      const entry = this.cache.get(storedKey);
+      if (!entry || now - entry.timestamp > this.ttlMs) continue;
 
-      // Compare original messages, not cache keys
       const score = this.similarityScore(key.message, entry.originalMessage);
       if (score >= threshold && (!bestMatch || score > bestMatch.score)) {
         bestMatch = { key: storedKey, entry, score };
@@ -143,6 +215,7 @@ export class ResponseCache {
     if (bestMatch) {
       bestMatch.entry.hitCount++;
       this.stats.hits++;
+      this.stats.fuzzyHits++;
       return bestMatch.entry;
     }
 
@@ -152,14 +225,19 @@ export class ResponseCache {
 
   /**
    * Stocke une réponse dans le cache
+   * ✨ v24.3.6: Maintains prefix index for fast fuzzy matching
    */
   set(key: CacheKey, content: string, metadata: Partial<CacheEntry> = {}): void {
     const cacheKey = this.generateKey(key);
 
-    // LRU éviction si plein
+    // LRU eviction if full
     if (this.cache.size >= this.maxSize) {
       const lru = this.findLRU();
       if (lru) {
+        const oldEntry = this.cache.get(lru);
+        if (oldEntry) {
+          this.unindexEntry(lru, oldEntry.originalMessage); // ✨ v24.3.6: Remove from index
+        }
         this.cache.delete(lru);
         this.stats.evictions++;
       }
@@ -176,10 +254,15 @@ export class ResponseCache {
     };
 
     this.cache.set(cacheKey, entry);
+    this.indexEntry(cacheKey, key.message); // ✨ v24.3.6: Add to prefix index
 
     // Sauvegarde asynchrone dans IndexedDB (non-bloquante)
     cachePersistence.save(key, entry).catch(err => {
-      console.warn('[ResponseCache] Failed to persist entry:', err);
+      logger.warn('Failed to persist cache entry', {
+        component: 'ResponseCache',
+        action: 'set',
+        error: (err as Error).message,
+      });
     });
 
     // Enregistrer le pattern pour prédiction
@@ -188,14 +271,16 @@ export class ResponseCache {
 
   /**
    * Trouve l'entrée LRU (Least Recently Used)
+   * ✨ v24.3.6: Single Date.now() call for performance
    */
   private findLRU(): string | null {
     let lruKey: string | null = null;
     let lruScore = Infinity;
+    const now = Date.now(); // ✨ v24.3.6: Single timestamp for all comparisons
 
     for (const [key, entry] of this.cache.entries()) {
-      // Score = récence * popularité (plus bas = LRU)
-      const age = Date.now() - entry.timestamp;
+      // Score = age / popularity (lower = LRU)
+      const age = now - entry.timestamp;
       const score = age / (entry.hitCount + 1);
 
       if (score < lruScore) {
@@ -207,21 +292,38 @@ export class ResponseCache {
     return lruKey;
   }
 
+  // ✨ v24.3.6: Max patterns to prevent unbounded growth
+  private static readonly MAX_PATTERNS = 500;
+
   /**
    * Enregistre un pattern pour prédiction
+   * ✨ v24.3.6: LRU eviction to prevent unbounded growth
    */
   private recordPattern(message: string): void {
-    const words = message.toLowerCase().split(/\s+/).slice(0, 3); // 3 premiers mots
+    const words = message.toLowerCase().split(/\s+/).slice(0, 3);
     const pattern = words.join(' ');
 
-    if (!this.commonPatterns.has(pattern)) {
-      this.commonPatterns.set(pattern, []);
+    // ✨ v24.3.6: Evict oldest pattern if at capacity
+    if (
+      !this.commonPatterns.has(pattern) &&
+      this.commonPatterns.size >= ResponseCache.MAX_PATTERNS
+    ) {
+      // Remove first (oldest) pattern - Map maintains insertion order
+      const firstKey = this.commonPatterns.keys().next().value;
+      if (firstKey) {
+        this.commonPatterns.delete(firstKey);
+      }
     }
 
-    const variations = this.commonPatterns.get(pattern) ?? [];
+    let variations = this.commonPatterns.get(pattern);
+    if (!variations) {
+      variations = [];
+      this.commonPatterns.set(pattern, variations);
+    }
+
     if (!variations.includes(message)) {
       variations.push(message);
-      if (variations.length > 5) variations.shift(); // Garder 5 max
+      if (variations.length > 5) variations.shift();
     }
   }
 
@@ -237,6 +339,7 @@ export class ResponseCache {
 
   /**
    * Nettoie les entrées expirées
+   * ✨ v24.3.6: Also cleans prefix index
    */
   cleanup(): number {
     const now = Date.now();
@@ -244,6 +347,7 @@ export class ResponseCache {
 
     for (const [key, entry] of this.cache.entries()) {
       if (now - entry.timestamp > this.ttlMs) {
+        this.unindexEntry(key, entry.originalMessage); // ✨ v24.3.6: Remove from index
         this.cache.delete(key);
         removed++;
       }
@@ -251,7 +355,11 @@ export class ResponseCache {
 
     // Nettoyer aussi IndexedDB (asynchrone)
     cachePersistence.cleanup(this.ttlMs).catch(err => {
-      console.warn('[ResponseCache] Failed to cleanup persistence:', err);
+      logger.warn('Failed to cleanup persistence', {
+        component: 'ResponseCache',
+        action: 'cleanup',
+        error: (err as Error).message,
+      });
     });
 
     return removed;
@@ -259,19 +367,26 @@ export class ResponseCache {
 
   /**
    * Vide tout le cache
+   * ✨ v24.3.6: Also clears prefix index
    */
   clear(): void {
     this.cache.clear();
     this.commonPatterns.clear();
+    this.prefixIndex.clear(); // ✨ v24.3.6: Clear prefix index
     this.stats = {
       hits: 0,
       misses: 0,
       evictions: 0,
+      fuzzyHits: 0,
     };
 
     // Vider IndexedDB aussi (asynchrone)
     cachePersistence.clear().catch(err => {
-      console.warn('[ResponseCache] Failed to clear persistence:', err);
+      logger.warn('Failed to clear persistence', {
+        component: 'ResponseCache',
+        action: 'clear',
+        error: (err as Error).message,
+      });
     });
   }
 
@@ -318,7 +433,10 @@ export class ResponseCache {
    */
   startAutoCleanup(): void {
     if (this.cleanupInterval) {
-      console.warn('[ResponseCache] Auto-cleanup already started');
+      logger.warn('Auto-cleanup already started', {
+        component: 'ResponseCache',
+        action: 'startAutoCleanup',
+      });
       return;
     }
 
@@ -326,13 +444,21 @@ export class ResponseCache {
       () => {
         const removed = this.cleanup();
         if (removed > 0) {
-          console.log(`[ResponseCache] Cleaned ${removed} expired entries`);
+          logger.debug('Cleaned expired cache entries', {
+            component: 'ResponseCache',
+            action: 'autoCleanup',
+            removed,
+          });
         }
       },
       1000 * 60 * 5
     ); // 5 minutes
 
-    console.log('[ResponseCache] Auto-cleanup started (5min interval)');
+    logger.debug('Auto-cleanup started', {
+      component: 'ResponseCache',
+      action: 'startAutoCleanup',
+      intervalMs: 300000,
+    });
   }
 
   /**
@@ -342,7 +468,10 @@ export class ResponseCache {
     if (this.cleanupInterval) {
       clearInterval(this.cleanupInterval);
       this.cleanupInterval = null;
-      console.log('[ResponseCache] Auto-cleanup stopped');
+      logger.debug('Auto-cleanup stopped', {
+        component: 'ResponseCache',
+        action: 'stopAutoCleanup',
+      });
     }
   }
 
@@ -352,7 +481,10 @@ export class ResponseCache {
   destroy(): void {
     this.stopAutoCleanup();
     this.clear();
-    console.log('[ResponseCache] Destroyed');
+    logger.debug('ResponseCache destroyed', {
+      component: 'ResponseCache',
+      action: 'destroy',
+    });
   }
 }
 

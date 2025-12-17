@@ -8,6 +8,7 @@
  */
 
 import { responseCache, type CacheKey } from './responseCache';
+import { logger } from '@/lib/logger';
 
 interface PreloadQueueItem {
   key: CacheKey;
@@ -141,7 +142,12 @@ export class PredictivePreloader {
         // Simuler ou charger réellement (selon stratégie)
         await this.preloadItem(item);
       } catch (error) {
-        console.warn('[PredictivePreloader] Preload failed:', error);
+        const err = error instanceof Error ? error : new Error(String(error));
+        logger.warn('Predictive preload failed', {
+          component: 'PredictivePreloader',
+          action: 'processQueue',
+          error: err.message,
+        });
       }
 
       // Pause entre chargements pour ne pas surcharger

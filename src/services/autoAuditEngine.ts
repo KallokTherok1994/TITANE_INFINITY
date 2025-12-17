@@ -9,6 +9,7 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import { logger } from '@/lib/logger';
 
 interface MemoryState {
   snapshots_count?: number;
@@ -63,7 +64,10 @@ export class AutoAuditEngine {
    */
   start(): void {
     if (this.isRunning) {
-      console.warn('[AUTO-AUDIT] Already running');
+      logger.warn('AutoAudit already running', {
+        component: 'AutoAuditEngine',
+        action: 'start',
+      });
       return;
     }
 
@@ -71,11 +75,25 @@ export class AutoAuditEngine {
     this.isRunning = true;
 
     // Premier scan immédiat
-    this.runAudit().catch(console.error);
+    this.runAudit().catch(err => {
+      const error = err instanceof Error ? err : new Error(String(err));
+      logger.error(
+        'AutoAudit initial run failed',
+        { component: 'AutoAuditEngine', action: 'start' },
+        error
+      );
+    });
 
     // Puis toutes les 30s
     this.intervalId = setInterval(() => {
-      this.runAudit().catch(console.error);
+      this.runAudit().catch(err => {
+        const error = err instanceof Error ? err : new Error(String(err));
+        logger.error(
+          'AutoAudit periodic run failed',
+          { component: 'AutoAuditEngine', action: 'interval' },
+          error
+        );
+      });
     }, this.SCAN_INTERVAL);
   }
 
@@ -151,7 +169,13 @@ export class AutoAuditEngine {
 
     // Si erreurs critiques, notifier
     if (report.critical > 0) {
-      console.error('🚨 [AUTO-AUDIT] CRITICAL ERRORS DETECTED!');
+      logger.error('AutoAudit critical errors detected', {
+        component: 'AutoAuditEngine',
+        action: 'runAudit',
+        criticalCount: report.critical,
+        errorCount: report.errors,
+        warningCount: report.warnings,
+      });
       this.handleCriticalErrors(report);
     }
   }
@@ -187,7 +211,11 @@ export class AutoAuditEngine {
           status: 'warning',
           message: errorMsg,
         });
-        console.warn('[AUTO-AUDIT] Vault integrity warning:', errorMsg);
+        logger.warn('Vault integrity warning', {
+          component: 'AutoAuditEngine',
+          action: 'checkFilesystem',
+          error: errorMsg,
+        });
       }
     } catch (error) {
       results.push({
@@ -196,7 +224,12 @@ export class AutoAuditEngine {
         status: 'error',
         message: `Filesystem check error: ${error}`,
       });
-      console.error('[AUTO-AUDIT] Filesystem check error:', error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
+        'Filesystem check failed',
+        { component: 'AutoAuditEngine', action: 'checkFilesystem' },
+        err
+      );
     }
 
     return results;
@@ -299,7 +332,11 @@ export class AutoAuditEngine {
           status: 'error',
           message: `Crypto integrity warning: ${errorMsg}`,
         });
-        console.warn('[AUTO-AUDIT] Crypto integrity warning:', errorMsg);
+        logger.warn('Crypto integrity warning', {
+          component: 'AutoAuditEngine',
+          action: 'checkCrypto',
+          error: errorMsg,
+        });
       }
     } catch (error) {
       results.push({
@@ -308,7 +345,12 @@ export class AutoAuditEngine {
         status: 'error',
         message: `Crypto check error: ${error}`,
       });
-      console.error('[AUTO-AUDIT] Crypto check error:', error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
+        'Crypto check failed',
+        { component: 'AutoAuditEngine', action: 'checkCrypto' },
+        err
+      );
     }
 
     return results;
@@ -424,7 +466,12 @@ export class AutoAuditEngine {
       const lines = newLog.split('\n').slice(-1000);
       localStorage.setItem('audit_log', lines.join('\n'));
     } catch (error) {
-      console.error('[AUTO-AUDIT] Failed to write audit.log:', error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
+        'Failed to write audit log',
+        { component: 'AutoAuditEngine', action: 'saveAuditLog' },
+        err
+      );
     }
   }
 
@@ -434,9 +481,11 @@ export class AutoAuditEngine {
   private handleCriticalErrors(report: AuditReport): void {
     const criticalResults = report.results.filter(r => r.status === 'critical');
 
-    console.error('🚨 CRITICAL ERRORS:');
-    criticalResults.forEach(r => {
-      console.error(`  - [${r.category}] ${r.message}`);
+    logger.error('AutoAudit critical errors summary', {
+      component: 'AutoAuditEngine',
+      action: 'handleCriticalErrors',
+      count: criticalResults.length,
+      errors: criticalResults.map(r => `[${r.category}] ${r.message}`),
     });
 
     // INTEGRATION: UI notification system for critical errors

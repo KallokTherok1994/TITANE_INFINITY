@@ -20,6 +20,7 @@
 
 import { secureInvoke } from '@/lib/security';
 import { emit } from '@tauri-apps/api/event';
+import { logger } from '@/lib/logger';
 import {
   type HealingAction,
   type HealingActionType,
@@ -354,7 +355,12 @@ export class SelfHealingExecutor {
         rollbackPerformed = true;
       }
     } catch (error) {
-      console.error('[SelfHealingExecutor] Plan execution error:', error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
+        'SelfHealing plan execution failed',
+        { component: 'SelfHealingExecutor', action: 'executePlan', planId: plan.id },
+        err
+      );
 
       if (this.config.notifyOnError) {
         await this.emitNotification('healing_error', {
@@ -499,7 +505,18 @@ export class SelfHealingExecutor {
       const endTime = Date.now();
       const isTimeout = error instanceof Error && error.message === 'Action timeout';
 
-      console.error(`[SelfHealingExecutor] ❌ Action failed: ${action.type}`, error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
+        'SelfHealing action failed',
+        {
+          component: 'SelfHealingExecutor',
+          action: 'executeAction',
+          actionType: action.type,
+          targetModule: action.targetModule,
+          timeout: isTimeout,
+        },
+        err
+      );
 
       return {
         actionId: plannedAction.id,
@@ -636,7 +653,13 @@ export class SelfHealingExecutor {
     try {
       await emit(`selfheal://${type}`, data);
     } catch (error) {
-      console.warn(`[SelfHealingExecutor] Could not emit notification:`, error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.warn('Failed to emit selfhealing notification', {
+        component: 'SelfHealingExecutor',
+        action: 'emitNotification',
+        type,
+        error: err.message,
+      });
     }
   }
 
@@ -645,7 +668,12 @@ export class SelfHealingExecutor {
       try {
         callback(this.state, actionResult);
       } catch (error) {
-        console.error('[SelfHealingExecutor] Progress callback error:', error);
+        const err = error instanceof Error ? error : new Error(String(error));
+        logger.error(
+          'SelfHealing progress callback error',
+          { component: 'SelfHealingExecutor', action: 'notifyProgress' },
+          err
+        );
       }
     }
   }

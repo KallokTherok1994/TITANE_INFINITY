@@ -9,6 +9,7 @@
  */
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { logger } from '@/lib/logger';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -54,23 +55,26 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     const { context = 'Unknown', onError } = this.props;
 
     // Log structuré avec contexte
-    console.error(`[ErrorBoundary:${context}] Error caught:`, {
-      error: {
-        message: error.message,
-        stack: error.stack,
-        name: error.name,
+    logger.error(
+      'Error caught in component tree',
+      {
+        component: 'ErrorBoundary',
+        context,
+        action: 'componentDidCatch',
       },
-      componentStack: errorInfo.componentStack,
-      timestamp: new Date().toISOString(),
-      context,
-    });
+      error
+    );
 
     // Callback personnalisé
     if (onError) {
       try {
         onError(error, errorInfo);
       } catch (callbackError) {
-        console.error('[ErrorBoundary] onError callback failed:', callbackError);
+        logger.error(
+          'onError callback failed',
+          { component: 'ErrorBoundary', context },
+          callbackError as Error
+        );
       }
     }
 

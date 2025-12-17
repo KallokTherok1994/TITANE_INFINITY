@@ -14,6 +14,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import { logger } from '@/lib/logger';
 import { ServiceMetrics } from '../../lib/serviceMetrics';
 import { MetricsCard } from './MetricsCard';
 import { BarChart3, TrendingUp, AlertCircle, RefreshCw } from 'lucide-react';
@@ -39,7 +40,11 @@ export const GlobalMetricsSummary: React.FC<GlobalMetricsSummaryProps> = ({
       const globalStats = ServiceMetrics.getGlobalStats();
       setStats(globalStats);
     } catch (error) {
-      console.error('Erreur chargement stats globales:', error);
+      logger.error(
+        'Failed to load global stats',
+        { component: 'GlobalMetricsSummary', action: 'loadStats' },
+        error as Error
+      );
     }
   }, []);
 

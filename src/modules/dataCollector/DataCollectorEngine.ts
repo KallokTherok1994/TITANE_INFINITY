@@ -49,6 +49,8 @@ export interface DataMetadata {
   importance: number; // 0-1 (importance pour l'entraînement)
   tags: string[];
   originEngine?: string; // Moteur source
+  // ✨ v24.3.5: Allow additional metadata for fusion/introspection
+  [key: string]: unknown;
 }
 
 export interface DatasetStats {

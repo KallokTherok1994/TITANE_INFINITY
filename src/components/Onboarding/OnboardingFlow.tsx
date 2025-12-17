@@ -13,6 +13,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { invoke } from '@tauri-apps/api/core';
+import { logger } from '@/lib/logger';
 import type { OnboardingStep, OnboardingFlowProps, OnboardingPreferences } from './types';
 import { WelcomeStep } from './WelcomeStep';
 import { PrivacyStep } from './PrivacyStep';
@@ -81,7 +82,12 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
         });
         onComplete();
       } catch (error) {
-        console.error("Erreur lors de la sauvegarde de l'onboarding:", error);
+        const err = error instanceof Error ? error : new Error(String(error));
+        logger.error(
+          'Failed to save onboarding preferences',
+          { component: 'OnboardingFlow', action: 'saveOnboarding' },
+          err
+        );
         // Fallback : compléter quand même côté frontend
         localStorage.setItem('onboarding_completed', 'true');
         localStorage.setItem('onboarding_preferences', JSON.stringify(preferences));

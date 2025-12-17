@@ -8,6 +8,7 @@
  */
 
 import { openaiProvider } from '@/services/ai/providers/openai';
+import { logger } from '@/lib/logger';
 import { geminiProvider } from '@/services/ai/providers/gemini';
 import { claudeProvider } from '@/services/ai/providers/claude';
 
@@ -199,7 +200,12 @@ class ParallelProviderLoader {
    */
   preload(): void {
     this.loadAll().catch(error => {
-      console.warn('[ParallelLoader] Background preload failed:', error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.warn('Background preload failed', {
+        component: 'ParallelLoader',
+        action: 'preload',
+        error: err.message,
+      });
     });
   }
 

@@ -1,5 +1,6 @@
 // TITANE∞ v16.0 — Auto-Heal Error Boundary React
 import { Component, ErrorInfo, ReactNode } from 'react';
+import { logger } from '@/lib/logger';
 import { autoHealClient } from '../utils/autoHealClient';
 import './AutoHealErrorBoundary.css';
 
@@ -32,7 +33,14 @@ export class AutoHealErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    console.error('[ErrorBoundary] Erreur capturée:', error, errorInfo);
+    logger.error(
+      'Error captured, initiating auto-heal',
+      {
+        component: 'AutoHealErrorBoundary',
+        action: 'componentDidCatch',
+      },
+      error
+    );
 
     this.setState({
       error,
@@ -63,7 +71,14 @@ export class AutoHealErrorBoundary extends Component<Props, State> {
 
       // Étape 4: Reload (géré par errorHandler.handleError)
     } catch (err) {
-      console.error('[ErrorBoundary] Échec auto-heal:', err);
+      logger.error(
+        'Auto-heal process failed',
+        {
+          component: 'AutoHealErrorBoundary',
+          action: 'performAutoHeal',
+        },
+        err as Error
+      );
       this.setState({
         isHealing: false,
         healingProgress: '❌ Auto-réparation échouée. Rechargement manuel requis.',

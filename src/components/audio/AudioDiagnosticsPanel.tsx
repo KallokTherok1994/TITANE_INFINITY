@@ -12,6 +12,7 @@
  */
 
 import { useState } from 'react';
+import { logger } from '@/lib/logger';
 import { useAudioSettings, type AudioDiagnosticStep } from '@/hooks/useAudioSettings';
 import './AudioDiagnosticsPanel.css';
 

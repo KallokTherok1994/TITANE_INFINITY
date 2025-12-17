@@ -12,7 +12,7 @@
  *   Gère les transitions et prévient les états incohérents
  * ═══════════════════════════════════════════════════════════════════
  */
-
+import { logger } from '@/lib/logger';
 /**
  * États possibles de la conversation audio
  */

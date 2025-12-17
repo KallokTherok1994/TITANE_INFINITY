@@ -13,6 +13,7 @@
 import { useState, useEffect } from 'react';
 import { audioService } from '@/features/audio-center/services/audioService';
 import type { TTSSettings, AudioDevice } from '@/features/audio-center/types';
+import { logger } from '@/lib/logger';
 
 const cardStyle = {
   padding: '1.5rem',
@@ -94,7 +95,12 @@ export const AudioSettings = () => {
       setOutputDevices(outputs);
       setInputDevices(inputs);
     } catch (error) {
-      console.error('Erreur chargement périphériques:', error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
+        'Erreur chargement périphériques audio',
+        { component: 'AudioSettings', action: 'loadDevices' },
+        err
+      );
     }
   };
 
@@ -119,7 +125,12 @@ export const AudioSettings = () => {
       await audioService.speak(testText);
       setTestStatus('success');
     } catch (error) {
-      console.error('[AudioSettings] TTS test error:', error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
+        'TTS test failed',
+        { component: 'AudioSettings', action: 'testTTS' },
+        err
+      );
       setTestStatus('error');
       setErrorMessage(error instanceof Error ? error.message : 'Erreur inconnue');
     } finally {

@@ -10,6 +10,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Brain, Settings, Shield, Zap, TestTube, Check, X } from 'lucide-react';
+import { logger } from '@/lib/logger';
 import { useGovernance } from './hooks/useGovernance';
 import { useAuth } from '@/core/auth';
 import { APIProviderCard } from './components/APIProviderCard';
@@ -52,11 +53,18 @@ export const GovernanceCenter: React.FC = () => {
   const handleSetGeminiKey = async (key: string) => {
     try {
       await setGeminiKey(key);
-      console.log('✅ Clé Gemini configurée avec succès');
+      logger.info('Gemini API key configured successfully', {
+        component: 'GovernanceCenter',
+        action: 'setGeminiKey',
+      });
       await loadGeminiStatus();
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
-      console.error('❌ Erreur Gemini:', message);
+      logger.error(
+        'Failed to configure Gemini API key',
+        { component: 'GovernanceCenter', action: 'setGeminiKey' },
+        err as Error
+      );
       throw err;
     }
   };
@@ -64,11 +72,18 @@ export const GovernanceCenter: React.FC = () => {
   const handleSetOpenAIKey = async (key: string) => {
     try {
       await setOpenAIKey(key);
-      console.log('✅ Clé OpenAI configurée avec succès');
+      logger.info('OpenAI API key configured successfully', {
+        component: 'GovernanceCenter',
+        action: 'setOpenAIKey',
+      });
       await loadOpenAIStatus();
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
-      console.error('❌ Erreur OpenAI:', message);
+      logger.error(
+        'Failed to configure OpenAI API key',
+        { component: 'GovernanceCenter', action: 'setOpenAIKey' },
+        err as Error
+      );
       throw err;
     }
   };
@@ -76,11 +91,18 @@ export const GovernanceCenter: React.FC = () => {
   const handleSetAnthropicKey = async (key: string) => {
     try {
       await setAnthropicKey(key);
-      console.log('✅ Clé Anthropic configurée avec succès');
+      logger.info('Anthropic API key configured successfully', {
+        component: 'GovernanceCenter',
+        action: 'setAnthropicKey',
+      });
       await loadAnthropicStatus();
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
-      console.error('❌ Erreur Anthropic:', message);
+      logger.error(
+        'Failed to configure Anthropic API key',
+        { component: 'GovernanceCenter', action: 'setAnthropicKey' },
+        err as Error
+      );
       throw err;
     }
   };

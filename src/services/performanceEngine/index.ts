@@ -11,6 +11,7 @@
 // ════════════════════════════════════════════════════════════════════════════════
 
 // Config & Types
+import { logger } from '@/lib/logger';
 import {
   DEFAULT_PERFORMANCE_CONFIG,
   createEmptySnapshot,
@@ -140,7 +141,11 @@ export class PerformanceEngine {
     // Connecter les événements internes
     this.setupInternalEvents();
 
-    console.log('[PerformanceEngine] Initialisé avec profil:', this.config.profile);
+    logger.debug('PerformanceEngine initialized', {
+      component: 'PerformanceEngine',
+      action: 'constructor',
+      profile: this.config.profile,
+    });
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -152,7 +157,10 @@ export class PerformanceEngine {
    */
   start(): void {
     if (this.state.running) {
-      console.warn("[PerformanceEngine] Déjà en cours d'exécution");
+      logger.warn('PerformanceEngine already running', {
+        component: 'PerformanceEngine',
+        action: 'start',
+      });
       return;
     }
 
@@ -173,7 +181,11 @@ export class PerformanceEngine {
       timestamp: this.state.startedAt,
     });
 
-    console.log('[PerformanceEngine] Démarré');
+    logger.info('PerformanceEngine started', {
+      component: 'PerformanceEngine',
+      action: 'start',
+      profile: this.config.profile,
+    });
   }
 
   /**
@@ -181,7 +193,10 @@ export class PerformanceEngine {
    */
   stop(): void {
     if (!this.state.running) {
-      console.warn("[PerformanceEngine] Pas en cours d'exécution");
+      logger.warn('PerformanceEngine not running', {
+        component: 'PerformanceEngine',
+        action: 'stop',
+      });
       return;
     }
 
@@ -530,7 +545,11 @@ export class PerformanceEngine {
         try {
           listener(event);
         } catch (error) {
-          console.error(`[PerformanceEngine] Erreur listener ${eventType}:`, error);
+          logger.error(
+            'Event listener failed',
+            { component: 'PerformanceEngine', action: 'emit', eventType },
+            error as Error
+          );
         }
       }
     }

@@ -201,7 +201,7 @@ const PerformanceTest = lazy(() =>
 const _TimeNavigator = lazy(() =>
   import('./pages/TimeNavigator').then(m => ({ default: m.TimeNavigator }))
 );
-const MultiAIDashboard = lazy(() => import('./ui/pages/MultiAIDashboard'));
+// ❌ SUPPRIMÉ v24.3.7: MultiAIDashboard (deprecated stub)
 const KnowledgeFusionPage = lazy(() => import('./ui/pages/KnowledgeFusionPage'));
 const CreationStudio = lazy(() => import('./ui/pages/CreationStudio'));
 const EvolutionMonitor = lazy(() => import('./ui/pages/EvolutionMonitor'));
@@ -716,7 +716,6 @@ const AppRouter: React.FC = () => {
       { id: '/reality-center', label: 'Reality Renderer', icon: '🌌', badge: 'OPUS#19' },
 
       // ═══ MOTEURS ═══
-      { id: '/multi-ai', label: 'Système Multi-IA', icon: '🤖' },
       { id: '/helios', label: 'Helios', icon: '☀️' },
       { id: '/nexus', label: 'Nexus', icon: '🔗' },
       { id: '/harmonia', label: 'Harmonia', icon: '🎵' },
@@ -1105,15 +1104,7 @@ const AppRouter: React.FC = () => {
           />
           <Route path="/cloud-sync" element={<Navigate to="/cloud" replace />} />
           <Route path="/vault" element={<Navigate to="/cloud" replace />} />
-          {/* v∞ Phase 4 - Multi-Agent System (Super-Prompt O) (Phase 9: lazy loaded) */}
-          <Route
-            path="/multi-ai"
-            element={
-              <ErrorBoundary context="MultiAIDashboard">
-                <MultiAIDashboard />
-              </ErrorBoundary>
-            }
-          />
+          {/* ❌ SUPPRIMÉ v24.3.7: Route /multi-ai (deprecated stub) */}
           {/* v∞ Phases 5-10 - Knowledge, Creation, Evolution (Phase 9: lazy loaded) */}
           <Route path="/knowledge" element={<KnowledgeFusionPage />} />
           <Route path="/creation" element={<CreationStudio />} />

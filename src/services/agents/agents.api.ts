@@ -6,6 +6,7 @@
  */
 
 import { invoke } from '@tauri-apps/api/core';
+import { logger } from '@/lib/logger';
 import type {
   AgentConfig,
   CreateAgentRequest,
@@ -32,7 +33,12 @@ export class AgentsAPIService {
 
       return result.data;
     } catch (error) {
-      console.error('❌ [AgentsAPI] Error listing agents:', error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
+        'Failed to list agents',
+        { component: 'AgentsAPI', action: 'listAgents' },
+        err
+      );
       throw error;
     }
   }
@@ -54,7 +60,12 @@ export class AgentsAPIService {
 
       return result.data;
     } catch (error) {
-      console.error(`❌ [AgentsAPI] Error getting agent ${agentId}:`, error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
+        'Failed to get agent',
+        { component: 'AgentsAPI', action: 'getAgent', agentId },
+        err
+      );
       throw error;
     }
   }
@@ -79,7 +90,12 @@ export class AgentsAPIService {
       );
       return result.data;
     } catch (error) {
-      console.error('❌ [AgentsAPI] Error creating agent:', error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
+        'Failed to create agent',
+        { component: 'AgentsAPI', action: 'createAgent', request },
+        err
+      );
       throw error;
     }
   }
@@ -102,7 +118,12 @@ export class AgentsAPIService {
       console.log(`✅ [AgentsAPI] Permission updated: ${result.data}`);
       return result.data;
     } catch (error) {
-      console.error('❌ [AgentsAPI] Error updating permission:', error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
+        'Failed to update agent permission',
+        { component: 'AgentsAPI', action: 'updatePermission', request },
+        err
+      );
       throw error;
     }
   }
@@ -126,7 +147,12 @@ export class AgentsAPIService {
 
       return result.data ?? false;
     } catch (error) {
-      console.error(`❌ [AgentsAPI] Error checking provider permission:`, error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
+        'Failed to check provider permission',
+        { component: 'AgentsAPI', action: 'canUseProvider', agentId, provider },
+        err
+      );
       throw error;
     }
   }
@@ -149,7 +175,12 @@ export class AgentsAPIService {
 
       return result.data ?? null;
     } catch (error) {
-      console.error(`❌ [AgentsAPI] Error getting recommended provider:`, error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
+        'Failed to get recommended provider',
+        { component: 'AgentsAPI', action: 'getRecommendedProvider', agentId },
+        err
+      );
       throw error;
     }
   }
@@ -170,7 +201,12 @@ export class AgentsAPIService {
 
       return result.data;
     } catch (error) {
-      console.error('❌ [AgentsAPI] Error getting stats:', error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
+        'Failed to get agent permission stats',
+        { component: 'AgentsAPI', action: 'getStats' },
+        err
+      );
       throw error;
     }
   }

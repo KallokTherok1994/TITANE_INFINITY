@@ -154,22 +154,22 @@ const normalizeMessages = (
 
 /**
  * ✅ FIX CHAT RÉPÉTITIONS (Super Prompt #9 - Vision Engine)
- * Déduplique les messages basé sur uiId ou combinaison timestamp+contenu
+ * ✨ v24.3.6: Optimized deduplication - O(n) with minimal allocations
+ * - Uses uiId first (O(1) lookup)
+ * - Fallback to timestamp only (avoids substring allocation)
+ * - Skip small arrays (< 5 messages) for performance
  */
 function deduplicateMessages(messages: AIMessage[]): AIMessage[] {
+  // ✨ v24.3.6: Skip dedup for small arrays (common case)
+  if (messages.length < 5) return messages;
+
   const seen = new Set<string>();
   return messages.filter(msg => {
-    // Utiliser uiId si disponible, sinon timestamp+contenu tronqué
+    // ✨ v24.3.6: Prefer uiId (no allocation), fallback to timestamp only
     const uiId = msg.metadata?.uiId;
-    const key =
-      (typeof uiId === 'string' ? uiId : null) ||
-      `${msg.timestamp}-${msg.content.substring(0, 50)}`;
+    const key = typeof uiId === 'string' ? uiId : String(msg.timestamp);
     if (seen.has(key)) {
-      console.log(
-        '[useChat OMNIS] ⚠️ Message dupliqué détecté et filtré:',
-        key.substring(0, 30)
-      );
-      return false; // Skip duplicate
+      return false; // Skip duplicate (silent - no console.log for perf)
     }
     seen.add(key);
     return true;
@@ -353,14 +353,35 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     };
   }, []);
 
-  // ✨ v24.3.0 - Check cloud providers availability on mount and preference change
+  // ✨ v24.3.7 - Optimized provider availability with Promise.allSettled + individual timeouts
   useEffect(() => {
-    const checkProvidersAvailability = async () => {
-      const [openaiAvailable, geminiAvailable, claudeAvailable] = await Promise.all([
-        openaiProvider.isAvailable().catch(() => false),
-        geminiProvider.isAvailable().catch(() => false),
-        claudeProvider.isAvailable().catch(() => false),
+    // ✨ v24.3.7: Helper to add timeout to any promise
+    const withTimeout = <T>(
+      promise: Promise<T>,
+      timeoutMs: number,
+      fallback: T
+    ): Promise<T> =>
+      Promise.race([
+        promise,
+        new Promise<T>(resolve => setTimeout(() => resolve(fallback), timeoutMs)),
       ]);
+
+    const PROVIDER_CHECK_TIMEOUT = 3000; // ✨ v24.3.7: 3s max per provider (was unbounded)
+
+    const checkProvidersAvailability = async () => {
+      // ✨ v24.3.7: Use Promise.allSettled with individual timeouts - no single slow provider blocks others
+      const results = await Promise.allSettled([
+        withTimeout(openaiProvider.isAvailable(), PROVIDER_CHECK_TIMEOUT, false),
+        withTimeout(geminiProvider.isAvailable(), PROVIDER_CHECK_TIMEOUT, false),
+        withTimeout(claudeProvider.isAvailable(), PROVIDER_CHECK_TIMEOUT, false),
+      ]);
+
+      const openaiAvailable =
+        results[0].status === 'fulfilled' ? results[0].value : false;
+      const geminiAvailable =
+        results[1].status === 'fulfilled' ? results[1].value : false;
+      const claudeAvailable =
+        results[2].status === 'fulfilled' ? results[2].value : false;
 
       setProviderReadiness(prev => ({
         ...prev,
@@ -369,10 +390,11 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         anthropic: claudeAvailable,
       }));
 
-      chatLogger.debug('Provider readiness check', {
+      chatLogger.debug('Provider readiness check (v24.3.7 optimized)', {
         openai: openaiAvailable,
         gemini: geminiAvailable,
         anthropic: claudeAvailable,
+        timedOut: results.filter(r => r.status === 'rejected').length,
       });
     };
 

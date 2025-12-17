@@ -107,7 +107,8 @@ class ParlerTTSBridge {
         uptimeSeconds: data.uptime_seconds,
       };
     } catch (error) {
-      console.error('[ParlerTTS] Health check error:', error);
+      // ✅ v24.3.8: Silent fallback si serveur TTS non démarré (optionnel)
+      // console.error('[ParlerTTS] Health check error:', error);
       return {
         status: 'error',
         modelLoaded: false,

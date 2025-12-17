@@ -22,6 +22,12 @@ const __MAX_MESSAGES_PER_MODE = 50; // Reserved for future use
 const COMPRESSION_THRESHOLD = 30; // Compresser si > 30 messages
 const COMPRESSION_TARGET = 20; // Garder 20 messages après compression
 
+// ✨ v24.3.7: requestIdleCallback polyfill for Safari/older browsers
+const scheduleIdleTask =
+  typeof window !== 'undefined' && 'requestIdleCallback' in window
+    ? window.requestIdleCallback
+    : (cb: () => void) => setTimeout(cb, 1); // Fallback: next tick
+
 // ─────────────────────────────────────────────────────────────────
 // TYPES
 // ─────────────────────────────────────────────────────────────────
@@ -62,29 +68,54 @@ class ChatMemoryCompactor {
     }
   }
 
+  // ✨ v24.3.7: Pending saves queue to batch writes
+  private pendingSaves = new Map<ChatMode, AIMessage[]>();
+  private saveScheduled = false;
+
   /**
    * Sauvegarde l'historique d'un mode avec compression auto
+   * ✨ v24.3.7: Uses requestIdleCallback to avoid blocking main thread
    */
   saveForMode(mode: ChatMode, messages: AIMessage[]): void {
-    try {
-      // Charger mémoire existante
-      let memory = this.loadMemoryObject(mode);
+    // ✨ v24.3.7: Queue the save instead of executing immediately
+    this.pendingSaves.set(mode, messages);
 
-      // Ajouter nouveaux messages
-      memory.messages = messages;
-
-      // Compression si nécessaire
-      if (messages.length > COMPRESSION_THRESHOLD) {
-        console.log(`[MemoryCompactor] Compressing ${mode} (${messages.length} msgs)`);
-        memory = this.compress(memory);
-      }
-
-      // Sauvegarder
-      const key = `${STORAGE_KEY_PREFIX}${mode}`;
-      localStorage.setItem(key, JSON.stringify(memory));
-    } catch (error) {
-      console.error(`[MemoryCompactor] Failed to save ${mode}:`, error);
+    // Schedule idle write if not already scheduled
+    if (!this.saveScheduled) {
+      this.saveScheduled = true;
+      scheduleIdleTask(() => this.flushPendingSaves());
     }
+  }
+
+  /**
+   * ✨ v24.3.7: Flush all pending saves during idle time
+   */
+  private flushPendingSaves(): void {
+    this.saveScheduled = false;
+
+    for (const [mode, messages] of this.pendingSaves.entries()) {
+      try {
+        // Charger mémoire existante
+        let memory = this.loadMemoryObject(mode);
+
+        // Ajouter nouveaux messages
+        memory.messages = messages;
+
+        // Compression si nécessaire
+        if (messages.length > COMPRESSION_THRESHOLD) {
+          console.log(`[MemoryCompactor] Compressing ${mode} (${messages.length} msgs)`);
+          memory = this.compress(memory);
+        }
+
+        // Sauvegarder
+        const key = `${STORAGE_KEY_PREFIX}${mode}`;
+        localStorage.setItem(key, JSON.stringify(memory));
+      } catch (error) {
+        console.error(`[MemoryCompactor] Failed to save ${mode}:`, error);
+      }
+    }
+
+    this.pendingSaves.clear();
   }
 
   /**
