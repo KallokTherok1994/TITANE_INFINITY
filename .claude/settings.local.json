@@ -150,7 +150,11 @@
       "Bash(do echo \"=== $provider ===\" head -30 /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/ai/providers/$provider.ts)",
       "Bash(time npx vitest:*)",
       "Bash(git remote set-url:*)",
-      "Bash(timeout 600 npx tauri build:*)"
+      "Bash(timeout 600 npx tauri build:*)",
+      "Bash(# Vérification intégrité des fichiers v26.2 echo \"\"═══════════════════════════════════════════════════════════════\"\" echo \"\" VÉRIFICATION APPROFONDIE TITANE v26.2\"\" echo \"\"═══════════════════════════════════════════════════════════════\"\" echo \"\"\"\" echo \"\"📁 1. FICHIERS SOURCES CRITIQUES\"\" echo \"\"─────────────────────────────────\"\" # Features Chat echo \"\"features/chat:\"\" ls -la /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/features/chat/)",
+      "Bash(head -15 echo \"\" echo \"🎨 Fichiers CSS principaux (top 10):\" ls -lhS /home/titane-os/Documents/GitHub/TITANE_INFINITY/dist/assets/*.css)",
+      "Bash(# Vérifier que les composants v26.2 sont dans le bundle echo \"\"═══════════════════════════════════════════════════════════════\"\" echo \"\"🔍 VÉRIFICATION COMPOSANTS v26.2 DANS LE BUNDLE\"\" echo \"\"─────────────────────────────────────────────────────────────\"\" echo \"\"\"\" echo \"\"✓ ThinkingPanel:\"\" grep -l \"\"ThinkingPanel\\|thinking-panel\\|OMEGA analyse\"\" /home/titane-os/Documents/GitHub/TITANE_INFINITY/dist/assets/*.js)",
+      "Bash(# Statistiques finales echo \"\"═══════════════════════════════════════════════════════════════\"\" echo \"\"📊 7. STATISTIQUES FINALES\"\" echo \"\"─────────────────────────────────────────────────────────────\"\" echo \"\"\"\" echo \"\"📂 Fichiers sources TypeScript/TSX:\"\" find /home/titane-os/Documents/GitHub/TITANE_INFINITY/src -name \"\"*.ts\"\" -o -name \"\"*.tsx\"\")"
     ],
     "deny": [],
     "ask": []

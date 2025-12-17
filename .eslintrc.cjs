@@ -3,6 +3,15 @@
 // TypeScript strict + React Hooks
 // ═══════════════════════════════════════════════════════════════
 
+const hasStorybook = (() => {
+  try {
+    require.resolve('storybook');
+    return true;
+  } catch {
+    return false;
+  }
+})();
+
 module.exports = {
   root: true,
   env: {
@@ -15,7 +24,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
     'prettier',
-    'plugin:storybook/recommended',
+    ...(hasStorybook ? ['plugin:storybook/recommended'] : []),
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {

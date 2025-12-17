@@ -60,7 +60,11 @@ export const EvolutionTimeline: React.FC<EvolutionTimelineProps> = ({
 
   const typeConfig = {
     milestone: { label: 'Milestones', icon: <Award size={14} />, color: '#f59e0b' },
-    consolidation: { label: 'Consolidations', icon: <Brain size={14} />, color: '#8b5cf6' },
+    consolidation: {
+      label: 'Consolidations',
+      icon: <Brain size={14} />,
+      color: '#8b5cf6',
+    },
     achievement: { label: 'Achievements', icon: <Zap size={14} />, color: '#10b981' },
     learning: { label: 'Apprentissages', icon: <Code size={14} />, color: '#3b82f6' },
     optimization: { label: 'Optimisations', icon: <Zap size={14} />, color: '#ec4899' },
@@ -74,6 +78,7 @@ export const EvolutionTimeline: React.FC<EvolutionTimelineProps> = ({
           <button
             className={`filter-btn ${selectedType === 'all' ? 'active' : ''}`}
             onClick={() => setSelectedType('all')}
+            aria-label="Filtrer les événements: Tous"
           >
             <Calendar size={14} />
             Tous ({timelineEvents.length})
@@ -85,6 +90,7 @@ export const EvolutionTimeline: React.FC<EvolutionTimelineProps> = ({
                 key={key}
                 className={`filter-btn ${selectedType === key ? 'active' : ''}`}
                 onClick={() => setSelectedType(key)}
+                aria-label={`Filtrer les événements: ${config.label}`}
                 style={{
                   borderColor: selectedType === key ? config.color : 'transparent',
                 }}
@@ -130,7 +136,7 @@ export const EvolutionTimeline: React.FC<EvolutionTimelineProps> = ({
               cardTitle: '1rem',
               title: '0.8125rem',
             }}
-            onItemSelected={(item) => {
+            onItemSelected={(item: { index: number }) => {
               const event = filteredEvents[item.index];
               setSelectedEvent(event);
             }}
@@ -142,6 +148,7 @@ export const EvolutionTimeline: React.FC<EvolutionTimelineProps> = ({
             <button
               className="reset-filter-btn"
               onClick={() => setSelectedType('all')}
+              aria-label="Réinitialiser les filtres"
             >
               Réinitialiser les filtres
             </button>
@@ -153,10 +160,13 @@ export const EvolutionTimeline: React.FC<EvolutionTimelineProps> = ({
       {selectedEvent && (
         <div className="event-details-panel">
           <div className="event-header">
-            <div className="event-type-badge" style={{
-              background: `${typeConfig[selectedEvent.type].color}22`,
-              borderColor: typeConfig[selectedEvent.type].color,
-            }}>
+            <div
+              className="event-type-badge"
+              style={{
+                background: `${typeConfig[selectedEvent.type].color}22`,
+                borderColor: typeConfig[selectedEvent.type].color,
+              }}
+            >
               {typeConfig[selectedEvent.type].icon}
               <span>{typeConfig[selectedEvent.type].label}</span>
             </div>
@@ -184,7 +194,8 @@ function generateMockEvents(): TimelineEvent[] {
       title: 'Déc 2024',
       cardTitle: 'Phase 1: Achievements & Charts',
       cardSubtitle: 'Consolidation majeure',
-      cardDetailedText: 'Implémentation du système d\'achievements avec AchievementCard, RealTimeCharts dashboard, et ThinkingPanel pour Deep Research mode.',
+      cardDetailedText:
+        "Implémentation du système d'achievements avec AchievementCard, RealTimeCharts dashboard, et ThinkingPanel pour Deep Research mode.",
       date: '15 Décembre 2024',
       type: 'milestone',
       importance: 'critical',
@@ -194,7 +205,8 @@ function generateMockEvents(): TimelineEvent[] {
       title: 'Déc 2024',
       cardTitle: 'Phase 2: Vision & Mémoire',
       cardSubtitle: 'Capacités perceptuelles',
-      cardDetailedText: 'Ajout de VisionMetricsChart avec 3 types de graphiques, DetectionOverlay canvas, MemoryTreeViewer D3, et MemorySearchPanel sémantique.',
+      cardDetailedText:
+        'Ajout de VisionMetricsChart avec 3 types de graphiques, DetectionOverlay canvas, MemoryTreeViewer D3, et MemorySearchPanel sémantique.',
       date: '17 Décembre 2024',
       type: 'consolidation',
       importance: 'critical',
@@ -204,7 +216,8 @@ function generateMockEvents(): TimelineEvent[] {
       title: 'Nov 2024',
       cardTitle: 'Optimisation Performance',
       cardSubtitle: 'Bundle size réduit',
-      cardDetailedText: 'Réduction de 30% du bundle size via code splitting, lazy loading, et optimisation des chunks Vite.',
+      cardDetailedText:
+        'Réduction de 30% du bundle size via code splitting, lazy loading, et optimisation des chunks Vite.',
       date: '28 Novembre 2024',
       type: 'optimization',
       importance: 'high',
@@ -214,7 +227,8 @@ function generateMockEvents(): TimelineEvent[] {
       title: 'Nov 2024',
       cardTitle: 'Achievement: Code Master',
       cardSubtitle: 'Milestone débloqué',
-      cardDetailedText: 'Déverrouillage de l\'achievement "Code Master" après 1000 lignes de code TypeScript strict avec 0 erreurs.',
+      cardDetailedText:
+        'Déverrouillage de l\'achievement "Code Master" après 1000 lignes de code TypeScript strict avec 0 erreurs.',
       date: '20 Novembre 2024',
       type: 'achievement',
       importance: 'medium',
@@ -224,7 +238,8 @@ function generateMockEvents(): TimelineEvent[] {
       title: 'Nov 2024',
       cardTitle: 'Apprentissage: React 19',
       cardSubtitle: 'Migration réussie',
-      cardDetailedText: 'Migration complète vers React 19 avec hooks optimisés, Server Components, et nouvelles APIs.',
+      cardDetailedText:
+        'Migration complète vers React 19 avec hooks optimisés, Server Components, et nouvelles APIs.',
       date: '10 Novembre 2024',
       type: 'learning',
       importance: 'high',
@@ -234,7 +249,8 @@ function generateMockEvents(): TimelineEvent[] {
       title: 'Oct 2024',
       cardTitle: 'Consolidation Mémoire',
       cardSubtitle: '5000 entrées compressées',
-      cardDetailedText: 'Consolidation automatique de 5000 entrées court terme vers 250 entrées moyen terme avec 87% d\'efficacité.',
+      cardDetailedText:
+        "Consolidation automatique de 5000 entrées court terme vers 250 entrées moyen terme avec 87% d'efficacité.",
       date: '25 Octobre 2024',
       type: 'consolidation',
       importance: 'medium',
@@ -244,7 +260,8 @@ function generateMockEvents(): TimelineEvent[] {
       title: 'Oct 2024',
       cardTitle: 'Milestone: v25.0 Release',
       cardSubtitle: 'Version majeure',
-      cardDetailedText: 'Release de TITANE v25.0 avec fusion Chat + Vision + EVO, architecture complètement refactorée.',
+      cardDetailedText:
+        'Release de TITANE v25.0 avec fusion Chat + Vision + EVO, architecture complètement refactorée.',
       date: '1 Octobre 2024',
       type: 'milestone',
       importance: 'critical',
@@ -254,7 +271,8 @@ function generateMockEvents(): TimelineEvent[] {
       title: 'Sep 2024',
       cardTitle: 'Optimisation TypeScript',
       cardSubtitle: 'Strict mode activé',
-      cardDetailedText: 'Activation du TypeScript strict mode sur l\'ensemble du codebase avec résolution de 2500+ erreurs.',
+      cardDetailedText:
+        "Activation du TypeScript strict mode sur l'ensemble du codebase avec résolution de 2500+ erreurs.",
       date: '15 Septembre 2024',
       type: 'optimization',
       importance: 'high',

@@ -45,7 +45,7 @@ export const TransformationRoadmap: React.FC<TransformationRoadmapProps> = ({
   // Filter milestones
   const filteredMilestones = useMemo(() => {
     let filtered = roadmapMilestones;
-    
+
     if (!showCompleted) {
       filtered = filtered.filter(m => m.status !== 'completed');
     }
@@ -59,7 +59,11 @@ export const TransformationRoadmap: React.FC<TransformationRoadmapProps> = ({
 
   const statusConfig = {
     completed: { label: 'Complété', color: '#10b981', icon: <CheckCircle size={16} /> },
-    'in-progress': { label: 'En cours', color: '#3b82f6', icon: <TrendingUp size={16} /> },
+    'in-progress': {
+      label: 'En cours',
+      color: '#3b82f6',
+      icon: <TrendingUp size={16} />,
+    },
     planned: { label: 'Planifié', color: '#f59e0b', icon: <Target size={16} /> },
     future: { label: 'Futur', color: '#64748b', icon: <Circle size={16} /> },
   };
@@ -87,6 +91,8 @@ export const TransformationRoadmap: React.FC<TransformationRoadmapProps> = ({
           <button
             className={`status-filter ${filterStatus === 'all' ? 'active' : ''}`}
             onClick={() => setFilterStatus('all')}
+            aria-label="Afficher tous les milestones de la roadmap"
+            role="button"
           >
             Tous
           </button>
@@ -95,6 +101,8 @@ export const TransformationRoadmap: React.FC<TransformationRoadmapProps> = ({
               key={key}
               className={`status-filter ${filterStatus === key ? 'active' : ''}`}
               onClick={() => setFilterStatus(key)}
+              aria-label={`Filtrer par statut: ${config.label}`}
+              role="button"
               style={{
                 borderColor: filterStatus === key ? config.color : 'transparent',
               }}
@@ -117,15 +125,21 @@ export const TransformationRoadmap: React.FC<TransformationRoadmapProps> = ({
               key={milestone.id}
               className={`milestone-item ${milestone.status} ${isSelected ? 'selected' : ''}`}
               onClick={() => setSelectedMilestone(milestone)}
+              role="button"
+              tabIndex={0}
+              aria-label={`Milestone ${milestone.version}: ${milestone.name}, statut ${statusInfo.label}, progression ${milestone.progress}%`}
+              onKeyDown={e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  setSelectedMilestone(milestone);
+                }
+              }}
             >
               {/* Connector line */}
               {index > 0 && <div className="milestone-connector" />}
 
               {/* Milestone node */}
-              <div
-                className="milestone-node"
-                style={{ background: statusInfo.color }}
-              >
+              <div className="milestone-node" style={{ background: statusInfo.color }}>
                 {milestone.status === 'completed' ? (
                   <CheckCircle size={20} />
                 ) : milestone.status === 'in-progress' ? (
@@ -252,7 +266,7 @@ export const TransformationRoadmap: React.FC<TransformationRoadmapProps> = ({
       )}
 
       {/* Stats */}
-      <div className="roadmap-stats">
+      <div className="roadmap-stats" data-testid="roadmap-stats">
         <div className="stat-card">
           <span className="stat-label">Total Milestones</span>
           <span className="stat-value">{roadmapMilestones.length}</span>
@@ -287,7 +301,8 @@ function generateMockMilestones(): Milestone[] {
       id: '1',
       version: 'v25.0',
       name: 'Fusion Chat + Vision + EVO',
-      description: 'Fusion complète des 3 modules majeurs en une interface unifiée TITANE.',
+      description:
+        'Fusion complète des 3 modules majeurs en une interface unifiée TITANE.',
       status: 'completed',
       progress: 100,
       features: [
@@ -303,7 +318,8 @@ function generateMockMilestones(): Milestone[] {
       id: '2',
       version: 'v26.0',
       name: 'Vision & Mémoire Advanced',
-      description: 'Amélioration des capacités perceptuelles et mémorielles avec visualisations.',
+      description:
+        'Amélioration des capacités perceptuelles et mémorielles avec visualisations.',
       status: 'in-progress',
       progress: 75,
       features: [
@@ -319,7 +335,8 @@ function generateMockMilestones(): Milestone[] {
       id: '3',
       version: 'v27.0',
       name: 'Identité & Transformation',
-      description: 'Mode Matrix 6x6, Persona Editor, et Evolution Timeline pour personnalisation avancée.',
+      description:
+        'Mode Matrix 6x6, Persona Editor, et Evolution Timeline pour personnalisation avancée.',
       status: 'in-progress',
       progress: 45,
       features: [
@@ -367,7 +384,8 @@ function generateMockMilestones(): Milestone[] {
       id: '6',
       version: 'v30.0',
       name: 'Quantum Leap',
-      description: 'Architecture quantique avec capacités prédictives et auto-amélioration.',
+      description:
+        'Architecture quantique avec capacités prédictives et auto-amélioration.',
       status: 'future',
       progress: 0,
       features: [

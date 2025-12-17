@@ -8,7 +8,7 @@
  * Affiche les étapes de réflexion pendant la génération
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Brain, Sparkles, Loader2, Check } from 'lucide-react';
 import './ThinkingPanel.css';
