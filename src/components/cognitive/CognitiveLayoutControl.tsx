@@ -5,7 +5,15 @@
  * Panneau de contrôle du Cognitive Layout Engine
  */
 
-import React, { useState, useEffect, memo, useMemo, useCallback } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  memo,
+  useMemo,
+  useCallback,
+  type PointerEventHandler,
+} from 'react';
 import { useCognitiveLayout, type UIMode } from '@/hooks/useCognitiveLayout';
 import './CognitiveLayoutControl.css';
 
@@ -58,12 +66,36 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
     return false;
   });
 
+  // Position draggable avec persistence localStorage
+  const POSITION_KEY = 'titane-cognitive-layout-position';
+  const [position, setPosition] = useState<{ x: number; y: number }>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem(POSITION_KEY);
+      return saved ? JSON.parse(saved) : { x: 20, y: 80 }; // Default top-right
+    }
+    return { x: 20, y: 80 };
+  });
+
+  // Drag state ref
+  const dragRef = useRef<{
+    pointerId: number;
+    offsetX: number;
+    offsetY: number;
+  } | null>(null);
+
   // Sauvegarder état dans localStorage quand il change
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(isCollapsed));
     }
   }, [isCollapsed]);
+
+  // Sauvegarder position dans localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(POSITION_KEY, JSON.stringify(position));
+    }
+  }, [position]);
 
   // Raccourci clavier Ctrl+K pour toggle collapse/expand
   const handleToggleCollapse = useCallback(() => {
@@ -82,12 +114,86 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleToggleCollapse]);
 
+  // Drag & Drop handlers (ChatDebugPanel pattern)
+  const clampPosition = useCallback(
+    (
+      next: { x: number; y: number },
+      panelWidth: number,
+      panelHeight: number
+    ): { x: number; y: number } => {
+      if (typeof window === 'undefined') {
+        return next;
+      }
+      const maxX = window.innerWidth - panelWidth - 16;
+      const maxY = window.innerHeight - panelHeight - 16;
+      return {
+        x: Math.max(16, Math.min(next.x, maxX)),
+        y: Math.max(16, Math.min(next.y, maxY)),
+      };
+    },
+    []
+  );
+
+  const handlePointerDown = useCallback<PointerEventHandler<HTMLDivElement>>(
+    event => {
+      const header = event.currentTarget;
+      dragRef.current = {
+        pointerId: event.pointerId,
+        offsetX: event.clientX - position.x,
+        offsetY: event.clientY - position.y,
+      };
+      header.setPointerCapture(event.pointerId);
+    },
+    [position.x, position.y]
+  );
+
+  const handlePointerMove = useCallback<PointerEventHandler<HTMLDivElement>>(
+    event => {
+      const dragState = dragRef.current;
+      if (!dragState || dragState.pointerId !== event.pointerId) {
+        return;
+      }
+
+      const panelWidth = isCollapsed ? 200 : 400;
+      const panelHeight = isCollapsed ? 80 : 500;
+      const nextPosition = clampPosition(
+        {
+          x: event.clientX - dragState.offsetX,
+          y: event.clientY - dragState.offsetY,
+        },
+        panelWidth,
+        panelHeight
+      );
+      setPosition(nextPosition);
+    },
+    [clampPosition, isCollapsed]
+  );
+
+  const handlePointerUp = useCallback<PointerEventHandler<HTMLDivElement>>(event => {
+    if (dragRef.current?.pointerId === event.pointerId) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+      dragRef.current = null;
+    }
+  }, []);
+
   if (!currentMode) return null;
 
   return (
-    <div className={`cognitive-layout-control ${isCollapsed ? 'collapsed' : ''}`}>
-      {/* Header */}
-      <div className="clc-header">
+    <div
+      className={`cognitive-layout-control ${isCollapsed ? 'collapsed' : ''}`}
+      style={{
+        left: `${position.x}px`,
+        top: `${position.y}px`,
+      }}
+    >
+      {/* Header draggable */}
+      <div
+        className="clc-header"
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        style={{ cursor: 'move' }}
+      >
         <h3>🧠 Cognitive Layout</h3>
 
         {/* Bouton Expand/Collapse */}

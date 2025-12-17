@@ -4,8 +4,7 @@
 
 .cognitive-layout-control {
   position: fixed;
-  top: 80px;
-  right: 20px;
+  /* Position dynamique via style inline (drag & drop) */
   z-index: 1000;
   background: var(--surface-elevated, #1e1e1e);
   border-radius: 12px;
@@ -14,6 +13,7 @@
   max-width: 400px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   animation: slideInRight 0.3s ease-out;
+  user-select: none; /* Prevent text selection during drag */
 }
 
 @keyframes slideInRight {
