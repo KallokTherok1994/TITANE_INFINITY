@@ -24,6 +24,8 @@ import {
   LazyLivingEnginesCard as LivingEnginesCard,
   LazyChatDiagnostic as ChatDiagnostic,
 } from './DevToolsLazy';
+// P1-B OPTIMIZATION: Tab-based lazy loading for -100 KB bundle split
+import { DevToolsTabs, type DevToolsTab } from './DevToolsTabs';
 import type { SystemStatus } from '../components/monitoring/SystemStatusCard';
 import { useTitaneCore } from '../hooks/useTitaneCore';
 import { useLivingEngines } from '../hooks/useLivingEngines';
@@ -52,7 +54,7 @@ export const DevTools = () => {
     '[INFO] Frontend connected',
     '[INFO] 🌟 Living Engines v21-v24 activated',
   ]);
-  const [activeTab, setActiveTab] = useState<'system' | 'logs' | 'performance'>('system');
+  const [activeTab, setActiveTab] = useState<DevToolsTab>('system');
   const [debugMode, setDebugMode] = useState(false);
 
   const loadGeminiStatus = useCallback(async () => {
@@ -370,9 +372,9 @@ export const DevTools = () => {
         </div>
       </div>
 
-      {/* Tabs Navigation */}
+      {/* Tabs Navigation - P1-B: Added diagnostic tab */}
       <div className="devtools-tabs">
-        {(['system', 'logs', 'performance'] as const).map(tab => (
+        {(['system', 'logs', 'performance', 'diagnostic'] as const).map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -382,130 +384,22 @@ export const DevTools = () => {
               ? '🖥️ Système'
               : tab === 'logs'
                 ? '📋 Logs'
-                : '⚡ Performance'}
+                : tab === 'performance'
+                  ? '⚡ Performance'
+                  : '🔧 Diagnostic'}
           </button>
         ))}
       </div>
 
-      {/* Tab Content */}
-      <div className="devtools-panel">
-        {activeTab === 'system' && (
-          <div className="devtools-panel__content">
-            <div className="devtools-panel__header">
-              <h3 className="devtools-panel__title">État du Système</h3>
-              <span className="devtools-panel__badge devtools-panel__badge--success">
-                Actif
-              </span>
-            </div>
-            <div className="devtools-code-block">
-              <pre>
-                {typeof systemStatus === 'object'
-                  ? JSON.stringify(systemStatus, null, 2)
-                  : String(systemStatus)}
-              </pre>
-            </div>
-            {error && (
-              <div className="devtools-alert devtools-alert--error">
-                <div className="devtools-alert__icon">⚠️</div>
-                <div className="devtools-alert__content">
-                  <div className="devtools-alert__title">Erreur Détectée</div>
-                  <div className="devtools-alert__message">{String(error)}</div>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {activeTab === 'logs' && (
-          <div className="devtools-panel__content">
-            <div className="devtools-panel__header">
-              <h3 className="devtools-panel__title">Logs Système</h3>
-              <span className="devtools-panel__count">{logs.length} entrées</span>
-            </div>
-            <div className="devtools-logs">
-              {logs
-                .slice()
-                .reverse()
-                .map((log, i) => (
-                  <div
-                    key={i}
-                    className={`devtools-log-item ${
-                      log.includes('[ERROR]')
-                        ? 'devtools-log-item--error'
-                        : log.includes('[WARN]')
-                          ? 'devtools-log-item--warning'
-                          : 'devtools-log-item--info'
-                    }`}
-                  >
-                    <span className="devtools-log-item__dot" />
-                    <span className="devtools-log-item__text">{log}</span>
-                  </div>
-                ))}
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'performance' && (
-          <div className="devtools-panel__content">
-            <div className="devtools-panel__header">
-              <h3 className="devtools-panel__title">Métriques de Performance</h3>
-            </div>
-            <div className="devtools-metrics-grid">
-              <div className="devtools-metric-card devtools-metric-card--success">
-                <div className="devtools-metric-card__label">CPU Usage</div>
-                <div className="devtools-metric-card__value">
-                  {moduleMetrics.helios.value}%
-                </div>
-                <div className="devtools-metric-card__bar">
-                  <div
-                    className="devtools-metric-card__bar-fill"
-                    style={{ width: `${moduleMetrics.helios.value}%` }}
-                  />
-                </div>
-              </div>
-
-              <div className="devtools-metric-card devtools-metric-card--info">
-                <div className="devtools-metric-card__label">Memory Usage</div>
-                <div className="devtools-metric-card__value">
-                  {moduleMetrics.memory.value}%
-                </div>
-                <div className="devtools-metric-card__bar">
-                  <div
-                    className="devtools-metric-card__bar-fill"
-                    style={{ width: `${moduleMetrics.memory.value}%` }}
-                  />
-                </div>
-              </div>
-
-              <div className="devtools-metric-card devtools-metric-card--primary">
-                <div className="devtools-metric-card__label">Network Activity</div>
-                <div className="devtools-metric-card__value">
-                  {moduleMetrics.nexus.value}%
-                </div>
-                <div className="devtools-metric-card__bar">
-                  <div
-                    className="devtools-metric-card__bar-fill"
-                    style={{ width: `${moduleMetrics.nexus.value}%` }}
-                  />
-                </div>
-              </div>
-
-              <div className="devtools-metric-card devtools-metric-card--success">
-                <div className="devtools-metric-card__label">System Balance</div>
-                <div className="devtools-metric-card__value">
-                  {moduleMetrics.harmonia.value}%
-                </div>
-                <div className="devtools-metric-card__bar">
-                  <div
-                    className="devtools-metric-card__bar-fill"
-                    style={{ width: `${moduleMetrics.harmonia.value}%` }}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+      {/* Tab Content - P1-B: Using lazy-loaded DevToolsTabs for -100 KB bundle split */}
+      <DevToolsTabs
+        activeTab={activeTab}
+        systemStatus={getSystemStatus()}
+        logs={logs}
+        livingEngines={livingEngines}
+        moduleMetrics={moduleMetrics}
+        errorCount={errorCount}
+      />
     </div>
   );
 };

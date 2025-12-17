@@ -169,6 +169,14 @@ export default defineConfig({
 
           // Application code splitting
           if (id.includes('/src/')) {
+            // v25.7.5 P1-B: Split DevTools tabs for lazy loading (-100 KB)
+            if (id.includes('/pages/tabs/DevTools/SystemTab')) return 'devtools-system';
+            if (id.includes('/pages/tabs/DevTools/LogsTab')) return 'devtools-logs';
+            if (id.includes('/pages/tabs/DevTools/PerformanceTab'))
+              return 'devtools-performance';
+            if (id.includes('/pages/tabs/DevTools/DiagnosticTab'))
+              return 'devtools-diagnostic';
+
             // Pages principales
             if (id.includes('/pages/Chat') || id.includes('/features/chat')) {
               return 'page-chat';
