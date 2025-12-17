@@ -16,9 +16,18 @@
  */
 
 import React, { useState } from 'react';
-import { Edit3 } from 'lucide-react';
+import { Edit3, Atom, Timer, TrendingUp, Settings, Wrench } from 'lucide-react';
 import { MenuEditor } from '../features/menu-editor/MenuEditor';
 import './styles/Menu.css';
+
+// ✨ v25.4.1 - Icon mapping for Lucide icons (professional, themeable)
+const MENU_ICONS: Record<string, React.ReactNode> = {
+  titane: <Atom size={20} className="menu-lucide-icon" />,
+  time: <Timer size={20} className="menu-lucide-icon" />,
+  stats: <TrendingUp size={20} className="menu-lucide-icon" />,
+  admin: <Settings size={20} className="menu-lucide-icon" />,
+  dev: <Wrench size={20} className="menu-lucide-icon" />,
+};
 
 interface MenuProps {
   isCollapsed: boolean;
@@ -40,7 +49,7 @@ const MENU_SECTIONS: MenuSection[] = [
   // ⚡ v25.3.0 TITANE - LE CŒUR DU SYSTÈME (Fusion Chat IA + Vision + EVO)
   {
     id: 'titane',
-    icon: '⚡',
+    icon: '⚛️',
     label: 'TITANE',
     description:
       'Le Cœur du Système - Conversation, Vision, Overview, Identité, Mémoire, Évolution, Progression, Transformation',
@@ -49,14 +58,14 @@ const MENU_SECTIONS: MenuSection[] = [
   // ✨ v25.1 TIME - FUSION TEMPORELLE ULTIME (Temporal Flow + Agenda + Time Navigator)
   {
     id: 'time',
-    icon: '🕐',
+    icon: '⏱️',
     label: 'TIME',
     description: 'Centre Temporel - Agenda, Navigation, Snapshots, Intelligence, Flow',
     route: '/time',
   },
   {
     id: 'stats',
-    icon: '📊',
+    icon: '📈',
     label: 'STATS',
     description: 'Métriques moteurs : Nexus, Helios, Harmonia, État Cognitif',
     route: '/stats',
@@ -64,7 +73,7 @@ const MENU_SECTIONS: MenuSection[] = [
   // ✨ v25.2 ADMIN - FUSION (Système + Config + Audio + Design + Gouvernance)
   {
     id: 'admin',
-    icon: '👑',
+    icon: '⚙️',
     label: 'ADMIN',
     description: 'Centre Admin Unifié - Système, Config, Audio, Design, Gouvernance',
     route: '/admin',
@@ -72,7 +81,7 @@ const MENU_SECTIONS: MenuSection[] = [
   // ⚡ v25.4.0 DEV - FUSION COMPLÈTE (Dev Mode + ONE CORE + QA & Tests + Orchestration)
   {
     id: 'dev',
-    icon: '🔧',
+    icon: '🛠️',
     label: 'DEV',
     description:
       'Centre DEV Unifié - Dev Tools, Command Center, QA & Tests, Orchestration, Sécurité, Métriques',
@@ -88,25 +97,28 @@ export const Menu: React.FC<MenuProps> = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [menuSections, setMenuSections] = useState(() => {
-    // v25.4.0: DEV FUSION - Menu 8→5 items
-    const MENU_VERSION = 'v25.4.0-dev-fusion';
+    // v25.4.1: Migration one-time only (not every mount)
+    const MENU_VERSION = 'v25.4.1-stable';
+    const storedVersion = localStorage.getItem('titane_menu_version');
 
-    // FORCER le nettoyage total pour transition vers DEV unified
-    localStorage.removeItem('titane_menu_config');
-    localStorage.removeItem('titane_menu_sections');
-    localStorage.removeItem('menu_config');
-    localStorage.removeItem('navigation_config');
-    localStorage.removeItem('menuSections');
-    localStorage.removeItem('sidebar_config');
-    localStorage.setItem('titane_menu_version', MENU_VERSION);
+    // Only clear localStorage on version upgrade (not every mount)
+    if (storedVersion !== MENU_VERSION) {
+      localStorage.removeItem('titane_menu_config');
+      localStorage.removeItem('titane_menu_sections');
+      localStorage.removeItem('menu_config');
+      localStorage.removeItem('navigation_config');
+      localStorage.removeItem('menuSections');
+      localStorage.removeItem('sidebar_config');
+      localStorage.setItem('titane_menu_version', MENU_VERSION);
 
-    console.log('🔧 Menu v25.4.0 - DEV FUSION activée (8→5 items, -37.5%)');
-    console.log(
-      '📋 Sections actives:',
-      MENU_SECTIONS.length,
-      '→',
-      MENU_SECTIONS.map(s => s.label).join(', ')
-    );
+      console.log('🔧 Menu v25.4.1 - Migration one-time completed');
+      console.log(
+        '📋 Sections actives:',
+        MENU_SECTIONS.length,
+        '→',
+        MENU_SECTIONS.map(s => s.label).join(', ')
+      );
+    }
 
     return MENU_SECTIONS;
   });
@@ -131,7 +143,11 @@ export const Menu: React.FC<MenuProps> = ({
 
   return (
     <>
-      <nav className="menu-container">
+      <nav
+        className="menu-container"
+        role="navigation"
+        aria-label="Menu principal de navigation TITANE∞"
+      >
         {/* Header avec toggle */}
         <div className="menu-header">
           {!isCollapsed && (
@@ -146,35 +162,64 @@ export const Menu: React.FC<MenuProps> = ({
               <button
                 className="menu-toggle"
                 onClick={() => setIsEditing(true)}
-                aria-label="Éditer le menu"
+                aria-label="Éditer le menu - Ouvrir l'éditeur de configuration du menu latéral"
                 title="Éditer le menu"
+                aria-describedby="menu-edit-description"
                 style={{ background: '#3b82f6' }}
               >
-                <Edit3 size={16} />
+                <Edit3 size={16} aria-hidden="true" />
+                <span id="menu-edit-description" className="sr-only">
+                  Permet de personnaliser l'ordre et la visibilité des éléments du menu
+                </span>
               </button>
             )}
             <button
               className="menu-toggle"
               onClick={onToggle}
-              aria-label={isCollapsed ? 'Étendre le menu' : 'Réduire le menu'}
+              aria-label={
+                isCollapsed ? 'Étendre le menu latéral' : 'Réduire le menu latéral'
+              }
+              aria-expanded={!isCollapsed}
+              aria-controls="menu-sections"
             >
-              {isCollapsed ? '→' : '←'}
+              <span aria-hidden="true">{isCollapsed ? '→' : '←'}</span>
+              <span className="sr-only">
+                {isCollapsed ? 'Afficher les labels' : 'Masquer les labels'}
+              </span>
             </button>
           </div>
         </div>
 
         {/* Sections de navigation */}
-        <div className="menu-sections">
+        <div
+          className="menu-sections"
+          id="menu-sections"
+          role="menubar"
+          aria-label="Sections de navigation principales"
+        >
           {menuSections
             .filter(s => ('visible' in s ? s.visible !== false : true))
-            .map(section => (
+            .map((section, index) => (
               <button
                 key={section.id}
                 className={`menu-item ${currentRoute === section.route ? 'active' : ''}`}
                 onClick={() => handleSectionClick(section)}
-                title={isCollapsed ? section.label : undefined}
+                role="menuitem"
+                aria-label={`${section.label} - ${section.description}`}
+                aria-current={currentRoute === section.route ? 'page' : undefined}
+                aria-posinset={index + 1}
+                aria-setsize={
+                  menuSections.filter(s => ('visible' in s ? s.visible !== false : true))
+                    .length
+                }
+                title={
+                  isCollapsed ? `${section.label}: ${section.description}` : undefined
+                }
+                tabIndex={0}
               >
-                <span className="menu-item-icon">{section.icon}</span>
+                <span className="menu-item-icon" aria-hidden="true">
+                  {MENU_ICONS[section.id] || section.icon}
+                </span>
                 {!isCollapsed && (
                   <div className="menu-item-content">
                     <span className="menu-item-label">{section.label}</span>

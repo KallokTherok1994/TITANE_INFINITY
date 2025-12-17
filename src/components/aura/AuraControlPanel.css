@@ -1,0 +1,555 @@
+/**
+ * ═══════════════════════════════════════════════════════════════
+ *   TITANE∞ v25.3.1 — AURA CONTROL PANEL STYLES
+ * ═══════════════════════════════════════════════════════════════
+ */
+
+/* ═══ TOGGLE BUTTON ═══ */
+
+.aura-control-toggle {
+  position: fixed;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7c3aed, #3b82f6);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 8px 24px rgba(124, 58, 237, 0.4),
+    0 0 40px rgba(124, 58, 237, 0.2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  z-index: 9999;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+}
+
+.aura-control-toggle:hover {
+  transform: scale(1.1);
+  box-shadow:
+    0 12px 32px rgba(124, 58, 237, 0.6),
+    0 0 60px rgba(124, 58, 237, 0.3);
+}
+
+.aura-control-toggle:active {
+  transform: scale(0.95);
+}
+
+/* Position variants */
+.aura-control-toggle--bottom-right {
+  bottom: 24px;
+  right: 24px;
+}
+
+.aura-control-toggle--bottom-left {
+  bottom: 24px;
+  left: 24px;
+}
+
+.aura-control-toggle--top-right {
+  top: 24px;
+  right: 24px;
+}
+
+.aura-control-toggle--top-left {
+  top: 24px;
+  left: 24px;
+}
+
+.aura-icon {
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
+  animation: aura-icon-pulse 2s ease-in-out infinite;
+}
+
+@keyframes aura-icon-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+.aura-status-dot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #10b981;
+  border: 2px solid white;
+  animation: status-pulse 2s ease-in-out infinite;
+}
+
+.aura-status-dot[data-intensity='minimal'] {
+  background: #94a3b8;
+}
+.aura-status-dot[data-intensity='low'] {
+  background: #3b82f6;
+}
+.aura-status-dot[data-intensity='medium'] {
+  background: #10b981;
+}
+.aura-status-dot[data-intensity='high'] {
+  background: #f59e0b;
+}
+.aura-status-dot[data-intensity='maximum'] {
+  background: #ef4444;
+}
+
+@keyframes status-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0);
+  }
+}
+
+/* ═══ CONTROL PANEL ═══ */
+
+.aura-control-panel {
+  position: fixed;
+  width: 360px;
+  max-height: 80vh;
+  background: rgba(20, 20, 20, 0.95);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(124, 58, 237, 0.3);
+  border-radius: 16px;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.6),
+    0 0 40px rgba(124, 58, 237, 0.2),
+    inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  z-index: 9998;
+  overflow: hidden;
+  animation: panel-slide-in 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes panel-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Position variants */
+.aura-control-panel--bottom-right {
+  bottom: 90px;
+  right: 24px;
+}
+
+.aura-control-panel--bottom-left {
+  bottom: 90px;
+  left: 24px;
+}
+
+.aura-control-panel--top-right {
+  top: 90px;
+  right: 24px;
+}
+
+.aura-control-panel--top-left {
+  top: 90px;
+  left: 24px;
+}
+
+/* ═══ HEADER ═══ */
+
+.aura-control-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  background: rgba(124, 58, 237, 0.1);
+  border-bottom: 1px solid rgba(124, 58, 237, 0.2);
+}
+
+.aura-control-header h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #fff;
+}
+
+.aura-control-close {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.aura-control-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+/* ═══ CONTENT ═══ */
+
+.aura-control-content {
+  padding: 1.25rem;
+  max-height: calc(80vh - 64px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(124, 58, 237, 0.5) transparent;
+}
+
+.aura-control-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.aura-control-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.aura-control-content::-webkit-scrollbar-thumb {
+  background: rgba(124, 58, 237, 0.5);
+  border-radius: 3px;
+}
+
+/* ═══ SECTIONS ═══ */
+
+.aura-control-section {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.aura-control-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.aura-control-section h4 {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ═══ TOGGLE LABEL ═══ */
+
+.aura-control-toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.aura-control-toggle-label:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.aura-control-toggle-label input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #7c3aed;
+}
+
+.aura-control-toggle-label span {
+  color: #fff;
+  font-size: 0.9375rem;
+}
+
+/* ═══ PRESETS ═══ */
+
+.aura-preset-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+.aura-preset-btn {
+  padding: 0.625rem;
+  background: rgba(124, 58, 237, 0.1);
+  border: 1px solid rgba(124, 58, 237, 0.3);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.aura-preset-btn:hover {
+  background: rgba(124, 58, 237, 0.2);
+  border-color: rgba(124, 58, 237, 0.5);
+  transform: translateY(-2px);
+}
+
+/* ═══ SLIDER ═══ */
+
+.aura-slider-container {
+  margin-bottom: 0.5rem;
+}
+
+.aura-slider {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.aura-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7c3aed, #3b82f6);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.5);
+}
+
+.aura-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7c3aed, #3b82f6);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.5);
+}
+
+.aura-slider-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+}
+
+.aura-slider-labels span {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+  transition: color 0.2s;
+}
+
+.aura-slider-labels span.active {
+  color: #7c3aed;
+  font-weight: 600;
+}
+
+/* ═══ VALUE DISPLAY ═══ */
+
+.aura-value-display {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(124, 58, 237, 0.1);
+  border-radius: 6px;
+  text-align: center;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+}
+
+/* ═══ SELECT ═══ */
+
+.aura-select {
+  width: 100%;
+  padding: 0.625rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.aura-select:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(124, 58, 237, 0.4);
+}
+
+.aura-select:focus {
+  outline: none;
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+}
+
+/* ═══ THEME GRID ═══ */
+
+.aura-theme-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+.aura-theme-btn {
+  padding: 0.625rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
+
+.aura-theme-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.aura-theme-btn.active {
+  background: rgba(124, 58, 237, 0.2);
+  border-color: rgba(124, 58, 237, 0.5);
+  color: #fff;
+}
+
+.theme-preview {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.theme-preview[data-theme='default'] {
+  background: linear-gradient(135deg, #7c3aed, #3b82f6);
+}
+
+.theme-preview[data-theme='ocean'] {
+  background: linear-gradient(135deg, #06b6d4, #3b82f6);
+}
+
+.theme-preview[data-theme='sunset'] {
+  background: linear-gradient(135deg, #ec4899, #fb923c);
+}
+
+.theme-preview[data-theme='forest'] {
+  background: linear-gradient(135deg, #10b981, #84cc16);
+}
+
+.theme-preview[data-theme='fire'] {
+  background: linear-gradient(135deg, #ef4444, #fb923c);
+}
+
+.theme-preview[data-theme='rainbow'] {
+  background: linear-gradient(90deg, #7c3aed, #3b82f6, #06b6d4, #10b981, #fb923c);
+}
+
+/* ═══ INFO ═══ */
+
+.aura-info {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(59, 130, 246, 0.1);
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ═══ METRICS ═══ */
+
+.aura-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.aura-metric {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  font-size: 0.875rem;
+}
+
+.aura-metric span:first-child {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.aura-metric span:last-child {
+  font-weight: 600;
+}
+
+.aura-metric span.success {
+  color: #10b981;
+}
+
+.aura-metric span.warning {
+  color: #f59e0b;
+}
+
+/* ═══ RESET BUTTON ═══ */
+
+.aura-reset-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  color: #f87171;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.aura-reset-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.5);
+  transform: translateY(-2px);
+}
+
+/* ═══ MOBILE ═══ */
+
+@media (max-width: 480px) {
+  .aura-control-panel {
+    width: calc(100vw - 48px);
+    max-height: 70vh;
+  }
+
+  .aura-preset-grid,
+  .aura-theme-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ═══ ACCESSIBILITY ═══ */
+
+@media (prefers-reduced-motion: reduce) {
+  .aura-control-toggle,
+  .aura-control-panel,
+  .aura-icon {
+    animation: none !important;
+  }
+
+  .aura-control-toggle:hover {
+    transform: none;
+  }
+}

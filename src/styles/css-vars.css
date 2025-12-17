@@ -250,6 +250,60 @@
   --header-height: 64px;
   --footer-height: 48px;
   --max-content-width: 1280px;
+
+  /* ═══════════════════════════════════════════════════════════════ */
+  /* SEMANTIC ALIASES v25.4.1 — For Component Compatibility          */
+  /* Maps Button.css, Card.css, etc. variables to design tokens      */
+  /* ═══════════════════════════════════════════════════════════════ */
+
+  /* Primary color semantic mapping */
+  --primary-main: var(--color-violet-600);
+  --primary-light: var(--color-violet-500);
+  --primary-dark: var(--color-violet-700);
+  --primary-rgb: 124, 58, 237;
+
+  /* Neutral scale (for component variants) */
+  --neutral-0: #ffffff;
+  --neutral-5: #fafafa;
+  --neutral-10: #f5f5f5;
+  --neutral-20: #e5e5e5;
+  --neutral-30: #d4d4d4;
+  --neutral-40: #a3a3a3;
+  --neutral-50: #737373;
+  --neutral-60: #525252;
+  --neutral-70: #404040;
+  --neutral-80: #262626;
+  --neutral-90: #171717;
+  --neutral-100: #0a0a0a;
+
+  /* Semantic states */
+  --danger: var(--color-error-500);
+  --danger-hover: var(--color-error-700);
+  --danger-active: var(--color-error-900);
+  --warning: var(--color-warning-500);
+  --success: var(--color-success-500);
+  --info: var(--color-info-500);
+
+  /* Glass morphism effects */
+  --glass-alpha: rgba(255, 255, 255, 0.1);
+  --glass-blur-sm: 8px;
+  --glass-blur-md: 12px;
+  --glass-blur-lg: 20px;
+
+  /* Font size aliases (used by Button.css) */
+  --font-size-small: var(--text-sm);
+  --font-size-body: var(--text-base);
+  --font-size-h5: var(--text-lg);
+  --font-size-h4: var(--text-xl);
+  --font-size-h3: var(--text-2xl);
+  --font-size-h2: var(--text-3xl);
+  --font-size-h1: var(--text-4xl);
+
+  /* Font weight aliases */
+  --font-weight-normal: var(--font-normal);
+  --font-weight-medium: var(--font-medium);
+  --font-weight-semibold: var(--font-semibold);
+  --font-weight-bold: var(--font-bold);
 }
 
 /* ═══════════════════════════════════════════════════════════════ */
