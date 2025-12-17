@@ -31,7 +31,15 @@ import { XPProgressBar } from '@features/progression';
 import { colors, spacing, fontSizes } from '@themes/tokens';
 import { PersonaMoodIndicator } from '@components/PersonaMoodIndicator';
 import { useVisualEngines } from '@hooks/useVisualEngines';
-import { useVisionStore, selectIsCameraActive } from '@/stores/useVisionStore';
+import {
+  useVisionStore,
+  selectIsCameraActive,
+  selectIsObservationActive,
+  selectEnergyLevel,
+  selectTensionLevel,
+  selectEngagementLevel,
+  selectConfidence,
+} from '@/stores/useVisionStore';
 import { useConversationEngine } from '@hooks/useConversationEngine';
 import type { ConversationMode } from '@/services/conversationEngine';
 import { TitaneLogo } from '@components/branding/TitaneLogo';
@@ -62,6 +70,13 @@ import { VisionMetricsChart } from '@/features/vision/VisionMetricsChart';
 import { DetectionOverlay } from '@/features/vision/DetectionOverlay';
 import { MemoryTreeViewer } from '@/features/memory/MemoryTreeViewer';
 import { MemorySearchPanel } from '@/features/memory/MemorySearchPanel';
+import { MemoryDashboard } from '@/components/chat/MemoryDashboard';
+import MemoryEvolutionCenter from '@/components/MemoryEvolution/MemoryEvolutionCenter';
+import IdentityCenter from '@/components/IdentityCenter/IdentityCenter';
+import { ModeMatrix } from '@/features/identity/ModeMatrix';
+import { PersonaEditor } from '@/features/identity/PersonaEditor';
+import { EvolutionTimeline } from '@/features/evolution/EvolutionTimeline';
+import { TransformationRoadmap } from '@/features/transformation/TransformationRoadmap';
 import './TitanePage.css';
 
 // ═══ HELPER FUNCTIONS FOR OPTIMIZATION ═══
@@ -133,6 +148,19 @@ const _levelToColor = (level: VisualLevel): string => {
       return 'var(--titane-secondary)';
     default:
       return 'var(--titane-secondary)';
+  }
+};
+
+const _levelToLabel = (level: VisualLevel): string => {
+  switch (level) {
+    case 'low':
+      return 'Faible';
+    case 'medium':
+      return 'Moyen';
+    case 'high':
+      return 'Élevé';
+    default:
+      return '—';
   }
 };
 
@@ -729,6 +757,11 @@ interface VisionSectionProps {}
 const VisionSection: React.FC<VisionSectionProps> = () => {
   const env = detectEnvironment();
   const isCameraActive = useVisionStore(selectIsCameraActive);
+  const isObservationActive = useVisionStore(selectIsObservationActive);
+  const energyLevel = useVisionStore(selectEnergyLevel);
+  const tensionLevel = useVisionStore(selectTensionLevel);
+  const engagementLevel = useVisionStore(selectEngagementLevel);
+  const confidence = useVisionStore(selectConfidence);
   const [_error, _setError] = useState<string | null>(null);
 
   return (
@@ -774,9 +807,31 @@ const VisionSection: React.FC<VisionSectionProps> = () => {
           <h3 style={{ marginBottom: spacing[4] }}>Métriques Vision</h3>
 
           <Stack direction="vertical" gap={3}>
-            <TMetric label="Body Language" value="Actif" color="success" />
-            <TMetric label="Affect Estimation" value="Moyen" color="info" />
-            <TMetric label="Reconnaissance" value="75%" color="primary" />
+            <TMetric
+              label="Observation"
+              value={isObservationActive ? 'Active' : 'Inactive'}
+              color={isObservationActive ? 'success' : 'warning'}
+            />
+            <TMetric
+              label="Énergie (indice)"
+              value={`${_levelToLabel(energyLevel)} (${_levelToPercent(energyLevel)}%)`}
+              color="success"
+            />
+            <TMetric
+              label="Tension (indice)"
+              value={`${_levelToLabel(tensionLevel)} (${_levelToPercent(tensionLevel)}%)`}
+              color="warning"
+            />
+            <TMetric
+              label="Engagement (indice)"
+              value={`${_levelToLabel(engagementLevel)} (${_levelToPercent(engagementLevel)}%)`}
+              color="info"
+            />
+            <TMetric
+              label="Confiance"
+              value={`${Math.round((confidence || 0) * 100)}%`}
+              color="primary"
+            />
           </Stack>
         </Card>
       </Grid>
@@ -879,6 +934,8 @@ const OverviewSection: React.FC<OverviewSectionProps> = ({ stats }) => {
 interface IdentitySectionProps {}
 
 const IdentitySection: React.FC<IdentitySectionProps> = () => {
+  const env = detectEnvironment();
+
   return (
     <div className="titane-section titane-section-identity">
       <TSectionHeader
@@ -888,33 +945,45 @@ const IdentitySection: React.FC<IdentitySectionProps> = () => {
 
       <Grid columns={2} gap={4}>
         <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Matrice Identité</h3>
-          <Stack direction="vertical" gap={3}>
-            <TMetric label="Mode Actuel" value="Création" color="primary" />
-            <TMetric label="Persona" value="Stable" color="success" />
-            <TMetric label="État" value="Actif" color="info" />
-          </Stack>
+          <h3 style={{ marginBottom: spacing[4] }}>Matrice de Modes</h3>
+          <ModeMatrix />
         </Card>
 
         <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Pacte Fondateur</h3>
-          <p style={{ color: colors.neutral[400], fontSize: fontSizes.sm }}>
-            <strong>Excellence Systémique</strong>
-            <br />
-            Architecture cohérente et maintenable
-            <br />
-            <br />
-            <strong>Innovation Continue</strong>
-            <br />
-            Évolution permanente du système
-            <br />
-            <br />
-            <strong>Cohérence Totale</strong>
-            <br />
-            Zéro duplication, source unique de vérité
-          </p>
+          <h3 style={{ marginBottom: spacing[4] }}>Personnalité TITANE</h3>
+          <PersonaEditor />
         </Card>
       </Grid>
+
+      <Card style={{ marginTop: spacing[4] }}>
+        <h3 style={{ marginBottom: spacing[4] }}>Pacte Fondateur</h3>
+        <p style={{ color: colors.neutral[400], fontSize: fontSizes.sm }}>
+          <strong>Excellence Systémique</strong>
+          <br />
+          Architecture cohérente et maintenable
+          <br />
+          <br />
+          <strong>Innovation Continue</strong>
+          <br />
+          Évolution permanente du système
+          <br />
+          <br />
+          <strong>Cohérence Totale</strong>
+          <br />
+          Zéro duplication, source unique de vérité
+        </p>
+      </Card>
+
+      <Card style={{ marginTop: spacing[4] }}>
+        <h3 style={{ marginBottom: spacing[4] }}>Identity Center</h3>
+        {env.isTauri ? (
+          <IdentityCenter />
+        ) : (
+          <p style={{ color: colors.neutral[400], fontSize: fontSizes.sm }}>
+            Disponible en mode Tauri uniquement
+          </p>
+        )}
+      </Card>
     </div>
   );
 };
@@ -999,6 +1068,13 @@ const MemorySection: React.FC<MemorySectionProps> = ({ stats }) => {
         </Card>
       </Grid>
 
+      <div style={{ marginTop: spacing[6] }}>
+        <Card>
+          <h3 style={{ marginBottom: spacing[4] }}>📚 Dashboard Mémoire</h3>
+          <MemoryDashboard modeId="default" compact={true} />
+        </Card>
+      </div>
+
       {/* Memory Tree Visualization */}
       <div style={{ marginTop: spacing[6] }}>
         <h3 style={{ marginBottom: spacing[4] }}>🌳 Arbre de la Mémoire</h3>
@@ -1029,6 +1105,8 @@ const MemorySection: React.FC<MemorySectionProps> = ({ stats }) => {
 interface MemoryEvolutionSectionProps {}
 
 const MemoryEvolutionSection: React.FC<MemoryEvolutionSectionProps> = () => {
+  const env = detectEnvironment();
+
   return (
     <div className="titane-section titane-section-memory-evolution">
       <TSectionHeader
@@ -1037,29 +1115,20 @@ const MemoryEvolutionSection: React.FC<MemoryEvolutionSectionProps> = () => {
       />
 
       <Card>
-        <h3 style={{ marginBottom: spacing[4] }}>Journal Évolutif</h3>
-        <Stack direction="vertical" gap={3}>
-          <div className="evolution-entry">
-            <TBadge variant="success">Consolidation</TBadge>
-            <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
-              247 entrées court terme → 12 entrées moyen terme
+        <h3 style={{ marginBottom: spacing[4] }}>Centre d'Évolution Mémoire</h3>
+        {env.isTauri ? (
+          <MemoryEvolutionCenter />
+        ) : (
+          <div>
+            <p style={{ color: colors.neutral[400], fontSize: fontSizes.sm }}>
+              Disponible en mode Tauri uniquement
             </p>
+            <div style={{ marginTop: spacing[4] }}>
+              <h4 style={{ marginBottom: spacing[3] }}>Timeline d'Évolution</h4>
+              <EvolutionTimeline />
+            </div>
           </div>
-
-          <div className="evolution-entry">
-            <TBadge variant="info">Optimisation</TBadge>
-            <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
-              Compression mémoire active: 87% efficacité
-            </p>
-          </div>
-
-          <div className="evolution-entry">
-            <TBadge variant="info">Apprentissage</TBadge>
-            <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
-              3 nouveaux patterns détectés dans conversations récentes
-            </p>
-          </div>
-        </Stack>
+        )}
       </Card>
     </div>
   );
@@ -1283,7 +1352,12 @@ const TransformationSection: React.FC<TransformationSectionProps> = () => {
         subtitle="Lignes d'évolution et paliers franchis"
       />
 
-      <Grid columns={2} gap={4}>
+      <Card>
+        <h3 style={{ marginBottom: spacing[4] }}>Roadmap Évolutif</h3>
+        <TransformationRoadmap />
+      </Card>
+
+      <Grid columns={2} gap={4} style={{ marginTop: spacing[4] }}>
         <Card>
           <h3 style={{ marginBottom: spacing[4] }}>Lignes d'Évolution</h3>
           <Stack direction="vertical" gap={3}>

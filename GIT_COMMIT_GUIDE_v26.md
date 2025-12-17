@@ -261,6 +261,7 @@ git checkout dev
 ## 🏆 Commit Message Convention
 
 ### Format
+
 ```
 <type>(<scope>): <subject>
 
@@ -270,6 +271,7 @@ git checkout dev
 ```
 
 ### Types
+
 - ✨ `feat`: New feature
 - 🐛 `fix`: Bug fix
 - 📚 `docs`: Documentation
@@ -280,6 +282,7 @@ git checkout dev
 - 🔧 `chore`: Maintenance
 
 ### Examples
+
 ```bash
 # Feature
 git commit -m "✨ feat(progression): Add achievements system"
@@ -365,6 +368,6 @@ git push origin dev --tags
 **Status:** Ready to commit ✅  
 **Files Changed:** 13 files (~2,940 insertions)  
 **Build:** ✅ SUCCESS  
-**TypeScript:** ✅ 0 ERRORS  
+**TypeScript:** ✅ 0 ERRORS
 
 🚀 **Ready to push to repository!**

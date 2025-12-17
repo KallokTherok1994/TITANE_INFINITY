@@ -12,8 +12,8 @@ import React, { useMemo } from 'react';
 import {
   LineChart,
   Line,
-  AreaChart,
   Area,
+  AreaChart,
   RadarChart,
   Radar,
   PolarGrid,
@@ -43,67 +43,76 @@ export const VisionMetricsChart: React.FC<VisionMetricsChartProps> = ({
   showAffect = true,
   showBodyLanguage = true,
 }) => {
-  // Pour l'instant, utilise des données mock
-  // TODO: Décommenter quand les propriétés seront ajoutées au visionStore
-  // const { detectionHistory, affectHistory, bodyLanguageMetrics, isActive } = useVisionStore();
-  const isActive = false; // Mock
+  const { isActive, affectHistory, bodyLanguage } = useVisionStore(state => ({
+    isActive: state.isObservationActive && state.visionInput.streamActive,
+    affectHistory: state.affectEstimation.history,
+    bodyLanguage: state.bodyLanguage,
+  }));
 
-  // Suppress unused warning
-  void timeRange;
+  const cutoffTimestamp = useMemo(() => Date.now() - timeRange * 60_000, [timeRange]);
+
+  const levelToPercent = (level: string): number => {
+    switch (level) {
+      case 'low':
+        return 25;
+      case 'medium':
+        return 50;
+      case 'high':
+        return 75;
+      default:
+        return 0;
+    }
+  };
 
   // Données pour graphique détection
   const detectionData = useMemo(() => {
-    // Toujours utiliser mock data pour l'instant
-    return generateMockDetectionData(20);
-    // TODO: Activer quand detectionHistory existe
-    // if (!detectionHistory?.length) {
-    //   return generateMockDetectionData(20);
-    // }
-    // return detectionHistory.slice(-20).map((item: any, _i: number) => ({
-    //   time: new Date(item.timestamp).toLocaleTimeString('fr-FR', {
-    //     hour: '2-digit',
-    //     minute: '2-digit',
-    //   }),
-    //   confidence: item.confidence * 100,
-    //   objects: item.objectCount || 0,
-    // }));
-  }, []);
+    const recent = (affectHistory || [])
+      .filter(item => item.timestamp >= cutoffTimestamp)
+      .slice(-60);
+
+    return recent.map(item => ({
+      time: new Date(item.timestamp).toLocaleTimeString('fr-FR', {
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+      confidence: Math.round((item.confidence || 0) * 100),
+      objects: 0,
+    }));
+  }, [affectHistory, cutoffTimestamp]);
 
   // Données pour graphique affect
   const affectData = useMemo(() => {
-    // Toujours utiliser mock data pour l'instant
-    return generateMockAffectData(20);
-    // TODO: Activer quand affectHistory existe
-    // if (!affectHistory?.length) {
-    //   return generateMockAffectData(20);
-    // }
-    // return affectHistory.slice(-20).map((item: any, _i: number) => ({
-    //   time: new Date(item.timestamp).toLocaleTimeString('fr-FR', {
-    //     hour: '2-digit',
-    //     minute: '2-digit',
-    //   }),
-    //   valence: (item.valence || 0.5) * 100,
-    //   arousal: (item.arousal || 0.5) * 100,
-    //   engagement: (item.engagement || 0.5) * 100,
-    // }));
-  }, []);
+    const recent = (affectHistory || [])
+      .filter(item => item.timestamp >= cutoffTimestamp)
+      .slice(-60);
+
+    return recent.map(item => ({
+      time: new Date(item.timestamp).toLocaleTimeString('fr-FR', {
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+      energy: levelToPercent(item.energy),
+      tension: levelToPercent(item.tension),
+      engagement: levelToPercent(item.engagement),
+    }));
+  }, [affectHistory, cutoffTimestamp]);
 
   // Données pour radar body language
   const bodyLanguageData = useMemo(() => {
-    // Toujours utiliser mock data pour l'instant
-    return generateMockBodyLanguageData();
-    // TODO: Activer quand bodyLanguageMetrics existe
-    // if (!bodyLanguageMetrics) {
-    //   return generateMockBodyLanguageData();
-    // }
-    // return [
-    //   { metric: 'Posture', value: bodyLanguageMetrics.posture || 75 },
-    //   { metric: 'Gestes', value: bodyLanguageMetrics.gestures || 60 },
-    //   { metric: 'Expression', value: bodyLanguageMetrics.facial || 85 },
-    //   { metric: 'Regard', value: bodyLanguageMetrics.gaze || 70 },
-    //   { metric: 'Mouvement', value: bodyLanguageMetrics.movement || 50 },
-    // ];
-  }, []);
+    return [
+      { metric: 'Posture', value: Math.round((bodyLanguage.postureScore || 0) * 100) },
+      { metric: 'Mouvement', value: Math.round((bodyLanguage.movementScore || 0) * 100) },
+      {
+        metric: 'Regard',
+        value: Math.round((bodyLanguage.gazeStabilityScore || 0) * 100),
+      },
+      { metric: 'Visage', value: Math.round((bodyLanguage.facialActivity || 0) * 100) },
+      {
+        metric: 'Symétrie',
+        value: Math.round((bodyLanguage.shoulderSymmetry || 0) * 100),
+      },
+    ];
+  }, [bodyLanguage]);
 
   // Custom Tooltip avec types corrects
   interface TooltipProps {
@@ -196,19 +205,19 @@ export const VisionMetricsChart: React.FC<VisionMetricsChartProps> = ({
               <Legend />
               <Line
                 type="monotone"
-                dataKey="valence"
+                dataKey="energy"
                 stroke="#10b981"
                 strokeWidth={2}
                 dot={{ r: 3 }}
-                name="Valence"
+                name="Énergie"
               />
               <Line
                 type="monotone"
-                dataKey="arousal"
+                dataKey="tension"
                 stroke="#f59e0b"
                 strokeWidth={2}
                 dot={{ r: 3 }}
-                name="Arousal"
+                name="Tension"
               />
               <Line
                 type="monotone"
@@ -252,39 +261,3 @@ export const VisionMetricsChart: React.FC<VisionMetricsChartProps> = ({
     </div>
   );
 };
-
-// Mock data generators (used when no real data available)
-function generateMockDetectionData(count: number) {
-  return Array.from({ length: count }, (_, i) => {
-    const now = new Date();
-    now.setMinutes(now.getMinutes() - (count - i));
-    return {
-      time: now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
-      confidence: 70 + Math.random() * 25,
-      objects: Math.floor(Math.random() * 5),
-    };
-  });
-}
-
-function generateMockAffectData(count: number) {
-  return Array.from({ length: count }, (_, i) => {
-    const now = new Date();
-    now.setMinutes(now.getMinutes() - (count - i));
-    return {
-      time: now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
-      valence: 45 + Math.random() * 35,
-      arousal: 40 + Math.random() * 40,
-      engagement: 50 + Math.random() * 30,
-    };
-  });
-}
-
-function generateMockBodyLanguageData() {
-  return [
-    { metric: 'Posture', value: 75 },
-    { metric: 'Gestes', value: 60 },
-    { metric: 'Expression', value: 85 },
-    { metric: 'Regard', value: 70 },
-    { metric: 'Mouvement', value: 50 },
-  ];
-}

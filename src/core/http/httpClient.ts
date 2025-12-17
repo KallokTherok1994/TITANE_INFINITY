@@ -35,8 +35,8 @@ const isFetchMocked = (): boolean => {
   };
   return Boolean(
     candidate.mock ||
-      candidate.getMockImplementation ||
-      (candidate as any)._isMockFunction
+    candidate.getMockImplementation ||
+    (candidate as any)._isMockFunction
   );
 };
 

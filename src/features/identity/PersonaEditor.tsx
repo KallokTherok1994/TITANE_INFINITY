@@ -14,7 +14,7 @@ import './PersonaEditor.css';
 
 interface PersonaProfile {
   name: string;
-  tone: 'formal' | 'casual' | 'technical' | 'creative' | 'friendly';
+  tone: 'balanced' | 'formal' | 'casual' | 'technical' | 'creative' | 'friendly';
   verbosity: 'concise' | 'balanced' | 'detailed';
   formality: number; // 0-100
   creativity: number; // 0-100
@@ -49,13 +49,13 @@ export const PersonaEditor: React.FC<PersonaEditorProps> = ({
 
   const [hasChanges, setHasChanges] = useState(false);
 
-  const updateProfile = useCallback(<K extends keyof PersonaProfile>(
-    key: K,
-    value: PersonaProfile[K]
-  ) => {
-    setProfile(prev => ({ ...prev, [key]: value }));
-    setHasChanges(true);
-  }, []);
+  const updateProfile = useCallback(
+    <K extends keyof PersonaProfile>(key: K, value: PersonaProfile[K]) => {
+      setProfile(prev => ({ ...prev, [key]: value }));
+      setHasChanges(true);
+    },
+    []
+  );
 
   const handleSave = useCallback(() => {
     onSave?.(profile);
@@ -79,11 +79,42 @@ export const PersonaEditor: React.FC<PersonaEditorProps> = ({
   }, []);
 
   const tonePresets = [
-    { value: 'formal' as const, label: 'Formel', icon: '🎩', description: 'Professionnel et précis' },
-    { value: 'casual' as const, label: 'Décontracté', icon: '😊', description: 'Amical et accessible' },
-    { value: 'technical' as const, label: 'Technique', icon: '🔧', description: 'Focus sur la précision' },
-    { value: 'creative' as const, label: 'Créatif', icon: '🎨', description: 'Imaginatif et inspirant' },
-    { value: 'friendly' as const, label: 'Amical', icon: '💙', description: 'Chaleureux et empathique' },
+    {
+      value: 'balanced' as const,
+      label: 'Équilibré',
+      icon: '⚖️',
+      description: 'Polyvalent et stable',
+    },
+    {
+      value: 'formal' as const,
+      label: 'Formel',
+      icon: '🎩',
+      description: 'Professionnel et précis',
+    },
+    {
+      value: 'casual' as const,
+      label: 'Décontracté',
+      icon: '😊',
+      description: 'Amical et accessible',
+    },
+    {
+      value: 'technical' as const,
+      label: 'Technique',
+      icon: '🔧',
+      description: 'Focus sur la précision',
+    },
+    {
+      value: 'creative' as const,
+      label: 'Créatif',
+      icon: '🎨',
+      description: 'Imaginatif et inspirant',
+    },
+    {
+      value: 'friendly' as const,
+      label: 'Amical',
+      icon: '💙',
+      description: 'Chaleureux et empathique',
+    },
   ];
 
   return (
@@ -98,11 +129,7 @@ export const PersonaEditor: React.FC<PersonaEditorProps> = ({
           </div>
         </div>
         <div className="header-actions">
-          <button
-            className="btn-reset"
-            onClick={handleReset}
-            title="Réinitialiser"
-          >
+          <button className="btn-reset" onClick={handleReset} title="Réinitialiser">
             <RotateCcw size={16} />
             Réinitialiser
           </button>
@@ -266,7 +293,9 @@ export const PersonaEditor: React.FC<PersonaEditorProps> = ({
           <div className="setting-group">
             <label className="setting-label">Verbosité</label>
             <div className="radio-group">
-              <label className={`radio-option ${profile.verbosity === 'concise' ? 'active' : ''}`}>
+              <label
+                className={`radio-option ${profile.verbosity === 'concise' ? 'active' : ''}`}
+              >
                 <input
                   type="radio"
                   name="verbosity"
@@ -276,7 +305,9 @@ export const PersonaEditor: React.FC<PersonaEditorProps> = ({
                 />
                 <span>Concis</span>
               </label>
-              <label className={`radio-option ${profile.verbosity === 'balanced' ? 'active' : ''}`}>
+              <label
+                className={`radio-option ${profile.verbosity === 'balanced' ? 'active' : ''}`}
+              >
                 <input
                   type="radio"
                   name="verbosity"
@@ -286,7 +317,9 @@ export const PersonaEditor: React.FC<PersonaEditorProps> = ({
                 />
                 <span>Équilibré</span>
               </label>
-              <label className={`radio-option ${profile.verbosity === 'detailed' ? 'active' : ''}`}>
+              <label
+                className={`radio-option ${profile.verbosity === 'detailed' ? 'active' : ''}`}
+              >
                 <input
                   type="radio"
                   name="verbosity"
@@ -303,7 +336,9 @@ export const PersonaEditor: React.FC<PersonaEditorProps> = ({
           <div className="setting-group">
             <label className="setting-label">Explications</label>
             <div className="radio-group">
-              <label className={`radio-option ${profile.explanations === 'minimal' ? 'active' : ''}`}>
+              <label
+                className={`radio-option ${profile.explanations === 'minimal' ? 'active' : ''}`}
+              >
                 <input
                   type="radio"
                   name="explanations"
@@ -313,7 +348,9 @@ export const PersonaEditor: React.FC<PersonaEditorProps> = ({
                 />
                 <span>Minimales</span>
               </label>
-              <label className={`radio-option ${profile.explanations === 'moderate' ? 'active' : ''}`}>
+              <label
+                className={`radio-option ${profile.explanations === 'moderate' ? 'active' : ''}`}
+              >
                 <input
                   type="radio"
                   name="explanations"
@@ -323,7 +360,9 @@ export const PersonaEditor: React.FC<PersonaEditorProps> = ({
                 />
                 <span>Modérées</span>
               </label>
-              <label className={`radio-option ${profile.explanations === 'extensive' ? 'active' : ''}`}>
+              <label
+                className={`radio-option ${profile.explanations === 'extensive' ? 'active' : ''}`}
+              >
                 <input
                   type="radio"
                   name="explanations"
@@ -367,15 +406,15 @@ export const PersonaEditor: React.FC<PersonaEditorProps> = ({
             {profile.formality > 70
               ? 'Je vous présente mes salutations distinguées.'
               : profile.formality > 30
-              ? 'Bonjour ! Comment puis-je vous aider ?'
-              : 'Salut ! Que puis-je faire pour toi ?'}
+                ? 'Bonjour ! Comment puis-je vous aider ?'
+                : 'Salut ! Que puis-je faire pour toi ?'}
           </p>
           <p>
             {profile.technicality > 70
-              ? 'J\'utilise une approche algorithmique optimisée pour résoudre ce problème.'
+              ? "J'utilise une approche algorithmique optimisée pour résoudre ce problème."
               : profile.technicality > 30
-              ? 'Voici une solution efficace pour ton besoin.'
-              : 'Laisse-moi t\'aider avec ça de manière simple.'}
+                ? 'Voici une solution efficace pour ton besoin.'
+                : "Laisse-moi t'aider avec ça de manière simple."}
           </p>
           {profile.codeExamples && (
             <pre className="preview-code">

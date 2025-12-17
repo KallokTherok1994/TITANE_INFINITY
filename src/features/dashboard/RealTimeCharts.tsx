@@ -8,7 +8,7 @@
  * Affiche métriques système, performance, et activité
  */
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import {
   LineChart,
   Line,
@@ -21,7 +21,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend,
 } from 'recharts';
 import { Activity, Cpu, MessageSquare, Zap } from 'lucide-react';
 import './RealTimeCharts.css';
@@ -45,8 +44,16 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
   cpuData = generateMockData(30),
   activityData = generateMockData(24),
 }) => {
-  // Custom Tooltip
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  // Custom Tooltip avec typing strict
+  const CustomTooltip = ({
+    active,
+    payload,
+    label,
+  }: {
+    active?: boolean;
+    payload?: Array<{ name: string; value: number }>;
+    label?: string;
+  }) => {
     if (active && payload && payload.length) {
       return (
         <div className="chart-tooltip">

@@ -412,6 +412,7 @@ export const ModeMatrix: React.FC<ModeMatrixProps> = ({
         <button
           className={`category-btn ${selectedCategory === 'all' ? 'active' : ''}`}
           onClick={() => setSelectedCategory('all')}
+          aria-label="Filtrer par catégorie: Tous"
         >
           Tous ({modes.filter(m => showLocked || m.unlocked).length})
         </button>
@@ -420,6 +421,7 @@ export const ModeMatrix: React.FC<ModeMatrixProps> = ({
             key={key}
             className={`category-btn ${selectedCategory === key ? 'active' : ''}`}
             onClick={() => setSelectedCategory(key)}
+            aria-label={`Filtrer par catégorie: ${config.label}`}
             style={{
               borderColor: selectedCategory === key ? config.color : 'transparent',
             }}
@@ -439,10 +441,20 @@ export const ModeMatrix: React.FC<ModeMatrixProps> = ({
           return (
             <div
               key={mode.id}
+              data-testid={`mode-card-${mode.id}`}
               className={`mode-card ${isActive ? 'active' : ''} ${isSelected ? 'selected' : ''} ${
                 !mode.unlocked ? 'locked' : ''
               }`}
               onClick={() => handleModeClick(mode)}
+              role="button"
+              tabIndex={0}
+              aria-label={`Mode ${mode.name}: ${mode.description}${mode.unlocked ? '' : ' (Verrouillé)'}`}
+              onKeyDown={e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleModeClick(mode);
+                }
+              }}
               style={{
                 borderColor:
                   isActive || isSelected ? categoryColor : 'rgba(100, 116, 139, 0.3)',
@@ -450,7 +462,7 @@ export const ModeMatrix: React.FC<ModeMatrixProps> = ({
             >
               {/* Lock indicator */}
               {!mode.unlocked && (
-                <div className="lock-overlay">
+                <div className="lock-overlay" data-testid={`lock-overlay-${mode.id}`}>
                   <span className="lock-icon">🔒</span>
                 </div>
               )}
@@ -512,6 +524,7 @@ export const ModeMatrix: React.FC<ModeMatrixProps> = ({
             <button
               className="mode-activate-btn"
               onClick={() => handleModeClick(selectedMode)}
+              aria-label={`Activer le mode ${selectedMode.name}`}
             >
               Activer ce mode
             </button>
