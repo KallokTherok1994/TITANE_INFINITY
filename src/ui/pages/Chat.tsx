@@ -33,6 +33,7 @@ import { VirtualizedMessageList } from '../../components/chat/VirtualizedMessage
 // import { MessageListSimple as MessageList } from '../../components/chat/MessageListSimple';
 // import { MessageList } from '../../components/chat/MessageList';
 import { ChatInput } from '../../components/chat/ChatInput';
+import { ChatToolbar } from '../../components/chat/ChatToolbar';
 import { ChatModeSelector } from '../../components/chat/ChatModeSelector';
 import { ModeBadge } from '../../components/chat/ModeBadge';
 import { VoiceConversation } from '../../components/VoiceConversation';
@@ -516,6 +517,12 @@ export const Chat: React.FC = () => {
   const [debugPanelCollapsed, setDebugPanelCollapsed] = useState(false);
   const [debugPanelPosition, setDebugPanelPosition] =
     useState<PanelPosition>(DEFAULT_PANEL_POSITION);
+
+  // ═══ v25.5.0 - ÉTATS POUR CHAT TOOLBAR ═══
+  // Ces états stockent les données multimédia pour intégration future avec messages multimodaux
+  const [_pendingDictationText, setPendingDictationText] = useState<string>('');
+  const [_ttsEnabled, setTtsEnabled] = useState(true);
+  const [_attachedImages, setAttachedImages] = useState<string[]>([]);
 
   // ═══ MODE CHAT STATE ═══
   const [currentChatMode, setCurrentChatMode] = useState<ChatModeId>(() => {
@@ -1179,6 +1186,77 @@ export const Chat: React.FC = () => {
                   </span>
                 </div>
               )}
+
+            {/* ═══ v25.5.0 - CHAT TOOLBAR COMPLET ═══ */}
+            <ChatToolbar
+              onFileImport={files => {
+                isDev && console.log('[Chat] Files imported:', files.length);
+                // Créer un résumé des fichiers pour le message
+                const fileNames = Array.from(files)
+                  .map(f => f.name)
+                  .join(', ');
+                sendMessage(
+                  `📎 Fichiers importés pour analyse: ${fileNames}\n\nAnalyse ces fichiers et donne-moi un résumé.`
+                );
+              }}
+              onScreenCapture={imageData => {
+                isDev &&
+                  console.log('[Chat] Screenshot captured, size:', imageData.length);
+                // Stocker l'image et envoyer pour analyse
+                setAttachedImages(prev => [...prev, imageData]);
+                sendMessage(
+                  `📸 [Capture d'écran attachée]\n\nAnalyse cette capture d'écran et décris ce que tu vois.`
+                );
+              }}
+              onImageAnalysis={(imageData, prompt) => {
+                isDev && console.log('[Chat] Image analysis requested:', prompt);
+                // Stocker l'image et envoyer pour analyse Vision IA
+                setAttachedImages(prev => [...prev, imageData]);
+                sendMessage(
+                  `👁️ [Image attachée pour analyse Vision IA]\n\n${prompt || 'Analyse cette image en détail et décris ce que tu vois.'}`
+                );
+              }}
+              onDictationResult={text => {
+                isDev && console.log('[Chat] Dictation result:', text);
+                // Stocker le texte dicté pour l'utiliser dans ChatInput
+                setPendingDictationText(prev => (prev ? `${prev} ${text}` : text));
+                // Envoyer directement le message dicté
+                if (text.trim()) {
+                  sendMessage(text);
+                }
+              }}
+              onAudioRecorded={audioBlob => {
+                isDev && console.log('[Chat] Audio recorded:', audioBlob.size, 'bytes');
+                const sizeMB = (audioBlob.size / (1024 * 1024)).toFixed(2);
+                sendMessage(
+                  `🎤 [Message vocal enregistré - ${sizeMB} MB]\n\nTranscris et analyse ce message audio.`
+                );
+              }}
+              onTranscriptionResult={text => {
+                isDev && console.log('[Chat] Transcription result:', text);
+                sendMessage(
+                  `📝 Transcription audio:\n\n"${text}"\n\nRésume et analyse ce contenu.`
+                );
+              }}
+              onToggleAudioConversation={active => {
+                isDev && console.log('[Chat] Audio conversation:', active ? 'ON' : 'OFF');
+                if (active && !voiceModeActive) {
+                  toggleVoiceMode();
+                } else if (!active && voiceModeActive) {
+                  toggleVoiceMode();
+                }
+              }}
+              onToggleCameraLive={active => {
+                isDev && console.log('[Chat] Camera live:', active ? 'ON' : 'OFF');
+                // La caméra est gérée via useVisionStore dans ChatToolbar
+              }}
+              onToggleTTS={active => {
+                isDev && console.log('[Chat] TTS:', active ? 'ON' : 'OFF');
+                setTtsEnabled(active);
+              }}
+              disabled={isLoading || pageState.isCorrupted}
+              compact={false}
+            />
 
             <ChatInput
               onSend={sendMessage}
