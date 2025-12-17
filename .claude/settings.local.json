@@ -121,7 +121,20 @@
       "Bash(timeout 150 npx vitest:*)",
       "Bash(./titane.sh deploy:*)",
       "Bash(npx tauri build:*)",
-      "Bash(timeout 120 npm test:*)"
+      "Bash(timeout 120 npm test:*)",
+      "Bash(time npm run build:*)",
+      "Bash(for f in dist/assets/*.js)",
+      "Bash(do echo -n \"$f: \")",
+      "Bash(gzip:*)",
+      "Bash(numfmt:*)",
+      "Bash(npm run type-check:*)",
+      "Bash(echo \"Exit code: $?\")",
+      "Bash(npm --version:*)",
+      "Bash(npm run verify:*)",
+      "Bash(timeout 90 npm run test:unit:*)",
+      "Bash(timeout 90 npm test:*)",
+      "Bash(timeout 60 npm test:*)",
+      "Bash(tail -1 echo echo Components: find src/components -name *.tsx)"
     ],
     "deny": [],
     "ask": []

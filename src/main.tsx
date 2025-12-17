@@ -6,6 +6,15 @@
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
+// 🛡️ Type augmentation for Sentry on window
+declare global {
+  interface Window {
+    Sentry?: {
+      captureException: (error: unknown, options?: Record<string, unknown>) => void;
+    };
+  }
+}
+
 // 🛡️ TAURI INVOKE PROTECTION - Applied first
 import './tauri-protection-patch';
 
@@ -42,7 +51,7 @@ const escapeHtmlForError = (str: string): string => {
   };
   return str.replace(/[&<>"']/g, char => htmlEscapes[char] || char);
 };
-import { ErrorBoundary as ProductionErrorBoundary } from './components/common/ErrorBoundary';
+import { ErrorBoundary } from './components/ErrorBoundary'; // ✨ v24.3.0 - Unified Error Boundary
 // import { PerformanceMonitor } from './lib/performanceBudget'; // DÉSACTIVÉ pour diagnostic progressif
 import { injectSROnlyStyles } from './lib/accessibility';
 import { safeInvokeTauri } from './utils/tauriProtector';
@@ -361,7 +370,8 @@ try {
 
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
-      <ProductionErrorBoundary
+      <ErrorBoundary
+        context="App"
         onError={(error, errorInfo) => {
           console.error('[TITANE∞] Production Error Boundary caught:', error);
           console.error('[TITANE∞] Component stack:', errorInfo.componentStack);
@@ -375,7 +385,7 @@ try {
         }}
       >
         <App />
-      </ProductionErrorBoundary>
+      </ErrorBoundary>
     </React.StrictMode>
   );
 

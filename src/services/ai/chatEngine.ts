@@ -54,6 +54,10 @@ import { consistencyEngine as _consistencyEngine } from '@/services/consistency/
 import { cognitiveOmega } from '@/services/cognitive/cognitiveOmegaIntegration';
 import { createLogger } from '@/utils/logger';
 
+// 🚀 v24.3.1 - Performance Optimizations
+import { responseCache } from '@/services/cache/responseCache';
+import { predictivePreloader } from '@/services/cache/predictivePreloader';
+
 const logger = createLogger('ChatEngine');
 
 type BackendStreamMetadata = {
@@ -97,6 +101,12 @@ export interface ChatEngineConfig {
     enableSanitizer?: boolean;
     enableAutoHeal?: boolean;
   };
+  // 🚀 v24.3.1 - Performance Features
+  performanceConfig?: {
+    enableCache?: boolean; // Défaut: true
+    enablePredictive?: boolean; // Défaut: true
+    cacheHitBonus?: boolean; // XP bonus si cache hit
+  };
 }
 
 export interface ChatEngineResponse extends AIResponse {
@@ -110,6 +120,10 @@ export interface ChatEngineResponse extends AIResponse {
     failureHandled: boolean;
     processingTime: number;
     constitutionalProtection?: string; // CONSTITUTION v1.0: Law #8 saturation, Law #2 clarity, etc.
+    // 🚀 v24.3.1 - Performance Metrics
+    cacheHit?: boolean;
+    cacheAge?: number;
+    streamSimulated?: boolean;
   };
 }
 
@@ -211,6 +225,54 @@ class ChatEngineOmega {
 
     try {
       const finalConfig = { ...this.config, ...config };
+
+      // 🚀 v24.3.1 - PHASE 0: CACHE CHECK (Ultra-Fast Response)
+      const enableCache = finalConfig.performanceConfig?.enableCache !== false; // Défaut: true
+      if (enableCache) {
+        pipelineSteps.push('cache-check');
+        const cached = responseCache.get({
+          message,
+          mode: finalConfig.mode,
+          provider: 'auto',
+        });
+
+        if (cached) {
+          logger.info('⚡ CACHE HIT - Instant response', {
+            provider: cached.provider,
+            age: Date.now() - cached.timestamp,
+            hitCount: cached.hitCount,
+          });
+
+          pipelineSteps.push('cache-hit');
+
+          // Précharger les messages similaires en arrière-plan
+          if (finalConfig.performanceConfig?.enablePredictive !== false) {
+            predictivePreloader.recordUserMessage(message, finalConfig.mode);
+          }
+
+          return {
+            content: cached.content,
+            provider: cached.provider as AIProviderName,
+            model: cached.model,
+            timestamp: Date.now(),
+            mode: finalConfig.mode,
+            contextUsed: [],
+            suggestions: this.generateSuggestions(finalConfig.mode),
+            metadata: cached.metadata,
+            omegaMetadata: {
+              pipelineSteps,
+              validationScore: 1.0,
+              autoHealed: false,
+              failureHandled: false,
+              processingTime: Date.now() - pipelineStartTime,
+              cacheHit: true,
+              cacheAge: Date.now() - cached.timestamp,
+            },
+          };
+        }
+
+        logger.debug('Cache miss - proceeding with full pipeline');
+      }
 
       logger.group('OMEGA Pipeline Starting');
       logger.info(`Mode: ${finalConfig.mode}`, {
@@ -694,6 +756,38 @@ Format: [Audit complet] + [Réponse utilisateur]
           processingTime,
         },
       };
+
+      // 🚀 v24.3.1 - PHASE 1.9: CACHE INTELLIGENT (Sauvegarder pour réponses ultra-rapides)
+      if (finalConfig.performanceConfig?.enableCache !== false) {
+        pipelineSteps.push('cache-save');
+        responseCache.set(
+          {
+            message,
+            mode: finalConfig.mode,
+            provider: 'auto',
+          },
+          processedResponse.content,
+          {
+            provider: processedResponse.provider,
+            model: processedResponse.model ?? 'unknown',
+            metadata: {
+              validationScore: validation.score,
+              processingTime,
+              pipelineSteps,
+            },
+          }
+        );
+
+        logger.debug('Response saved to cache', {
+          message: message.slice(0, 50),
+          mode: finalConfig.mode,
+        });
+
+        // Préchargement prédictif en arrière-plan
+        if (finalConfig.performanceConfig?.enablePredictive !== false) {
+          predictivePreloader.recordUserMessage(message, finalConfig.mode);
+        }
+      }
 
       // Reset compteur failures si succès
       this.pipelineFailures = 0;
@@ -1308,6 +1402,59 @@ Que souhaites-tu explorer ?`;
     try {
       const finalConfig = { ...this.config, ...config };
 
+      // 🚀 v24.3.1 - PHASE 0: CACHE CHECK (Instant Streaming)
+      const enableCache = finalConfig.performanceConfig?.enableCache !== false;
+      if (enableCache) {
+        pipelineSteps.push('cache-check');
+        const cached = responseCache.get({
+          message,
+          mode: finalConfig.mode,
+          provider: 'auto',
+        });
+
+        if (cached) {
+          logger.info('⚡ CACHE HIT - Instant streaming response', {
+            provider: cached.provider,
+            age: Date.now() - cached.timestamp,
+          });
+
+          pipelineSteps.push('cache-hit-stream');
+
+          // Stream le contenu du cache (illusion de streaming)
+          const words = cached.content.split(' ');
+          for (let i = 0; i < words.length; i++) {
+            yield words[i] + (i < words.length - 1 ? ' ' : '');
+            // Micro-délai pour effet de streaming naturel
+            await new Promise(resolve => setTimeout(resolve, 15));
+          }
+
+          // Préchargement prédictif
+          if (finalConfig.performanceConfig?.enablePredictive !== false) {
+            predictivePreloader.recordUserMessage(message, finalConfig.mode);
+          }
+
+          return {
+            content: cached.content,
+            provider: cached.provider as AIProviderName,
+            model: cached.model,
+            timestamp: Date.now(),
+            mode: finalConfig.mode,
+            contextUsed: [],
+            suggestions: this.generateSuggestions(finalConfig.mode),
+            metadata: cached.metadata,
+            omegaMetadata: {
+              pipelineSteps,
+              validationScore: 1.0,
+              autoHealed: false,
+              failureHandled: false,
+              processingTime: Date.now() - startTime,
+              cacheHit: true,
+              streamSimulated: true,
+            },
+          };
+        }
+      }
+
       // Validation rapide
       pipelineSteps.push('stream-validation');
       const validatedMessage = inputValidator.validate(message?.trim() || '');
@@ -1424,6 +1571,33 @@ Que souhaites-tu explorer ?`;
         .catch(error => {
           logger.warn('Stream memory save failed', { error });
         });
+
+      // 🚀 v24.3.1 - Sauvegarder dans le cache pour réponses ultra-rapides
+      if (finalConfig.performanceConfig?.enableCache !== false) {
+        pipelineSteps.push('stream-cache-save');
+        responseCache.set(
+          {
+            message: validatedMessage,
+            mode: finalConfig.mode,
+            provider: 'auto',
+          },
+          finalContent,
+          {
+            provider: 'tauri-chat',
+            model: 'omega-stream-v19.2Ω',
+            metadata: {
+              validationScore: validation.score,
+              processingTime: Date.now() - startTime,
+              streamMode: true,
+            },
+          }
+        );
+
+        // Préchargement prédictif
+        if (finalConfig.performanceConfig?.enablePredictive !== false) {
+          predictivePreloader.recordUserMessage(validatedMessage, finalConfig.mode);
+        }
+      }
 
       // Retour final
       return {

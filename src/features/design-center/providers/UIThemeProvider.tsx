@@ -14,6 +14,7 @@ import React, {
   useReducer,
 } from 'react';
 import { invoke } from '@tauri-apps/api/core';
+import { logger } from '@/lib/logger';
 import {
   DEFAULT_UI_THEME_TOKENS,
   type UIThemeContext,
@@ -48,7 +49,12 @@ function uiThemeReducer(
 ): UIThemeContextState {
   switch (action.type) {
     case 'SET_TOKENS':
-      return { ...state, tokens: action.tokens, isLoading: false, error: null };
+      return {
+        ...state,
+        tokens: action.tokens || DEFAULT_UI_THEME_TOKENS,
+        isLoading: false,
+        error: null,
+      };
     case 'SET_LOADING':
       return { ...state, isLoading: action.isLoading };
     case 'SET_ERROR':
@@ -59,6 +65,13 @@ function uiThemeReducer(
       return { ...state, previousTokens: action.previousTokens };
     case 'UPDATE_TOKEN': {
       const { category, key, value } = action;
+      // Guard: vérifier que state.tokens est valide
+      if (!state.tokens) {
+        logger.error('tokens est null dans UPDATE_TOKEN', {
+          component: 'UIThemeReducer',
+        });
+        return state;
+      }
       if (
         category === 'version' ||
         category === 'name' ||
@@ -89,6 +102,13 @@ function uiThemeReducer(
     }
     case 'UPDATE_CATEGORY': {
       const { category, values } = action;
+      // Guard: vérifier que state.tokens est valide
+      if (!state.tokens) {
+        logger.error('tokens est null dans UPDATE_CATEGORY', {
+          component: 'UIThemeReducer',
+        });
+        return state;
+      }
       const currentValue = state.tokens[category];
       if (typeof currentValue === 'object' && currentValue !== null) {
         return {
@@ -136,8 +156,18 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
   const loadTokens = useCallback(async () => {
     dispatch({ type: 'SET_LOADING', isLoading: true });
     try {
-      const tokens = await invoke<UIThemeTokens>('load_ui_theme');
-      dispatch({ type: 'SET_TOKENS', tokens });
+      const tokens = await invoke<UIThemeTokens | null>('load_ui_theme');
+
+      // Si le backend retourne null, utiliser les valeurs par défaut
+      if (!tokens) {
+        console.warn(
+          '[UIThemeProvider] Aucun thème chargé, utilisation des valeurs par défaut'
+        );
+        dispatch({ type: 'SET_TOKENS', tokens: DEFAULT_UI_THEME_TOKENS });
+      } else {
+        dispatch({ type: 'SET_TOKENS', tokens });
+      }
+
       dispatch({ type: 'SET_DIRTY', isDirty: false });
     } catch (err) {
       console.error('[UIThemeProvider] Erreur chargement tokens:', err);
@@ -156,6 +186,13 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
   // ────────────────────────────────────────────────────────────
   const applyTokensToDOM = useCallback(() => {
     const { tokens } = state;
+
+    // Guard: vérifier que tokens est défini et valide
+    if (!tokens || !tokens.colors || !tokens.typography || !tokens.spacing) {
+      console.warn('[UIThemeProvider] Tokens invalides ou non chargés');
+      return;
+    }
+
     const root = document.documentElement;
 
     // Colors
@@ -226,7 +263,7 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
       root.classList.remove('reduced-motion');
     }
 
-    console.log('[UIThemeProvider] Tokens appliqués au DOM');
+    logger.debug('Tokens appliqués au DOM', { component: 'UIThemeProvider' });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.tokens]);
 
@@ -246,6 +283,11 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
       key: keyof UIThemeTokens[K],
       value: UIThemeTokens[K][keyof UIThemeTokens[K]]
     ) => {
+      // Guard: vérifier que tokens est valide
+      if (!state.tokens) {
+        console.warn('[UIThemeProvider] Impossible de mettre à jour: tokens non définis');
+        return;
+      }
       // Sauvegarder l'état précédent pour undo
       if (!state.isDirty) {
         dispatch({ type: 'SET_PREVIOUS', previousTokens: state.tokens });
@@ -257,6 +299,11 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
 
   const updateCategory = useCallback(
     <K extends keyof UIThemeTokens>(category: K, values: Partial<UIThemeTokens[K]>) => {
+      // Guard: vérifier que tokens est valide
+      if (!state.tokens) {
+        console.warn('[UIThemeProvider] Impossible de mettre à jour: tokens non définis');
+        return;
+      }
       if (!state.isDirty) {
         dispatch({ type: 'SET_PREVIOUS', previousTokens: state.tokens });
       }
@@ -266,15 +313,27 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
   );
 
   const saveTokens = useCallback(async () => {
+    // Guard: vérifier que tokens est valide
+    if (!state.tokens) {
+      logger.error('Impossible de sauvegarder: tokens non définis', {
+        component: 'UIThemeProvider',
+        action: 'saveTokens',
+      });
+      return;
+    }
     dispatch({ type: 'SET_LOADING', isLoading: true });
     try {
       await invoke('save_ui_theme', { tokens: state.tokens });
       dispatch({ type: 'SET_DIRTY', isDirty: false });
       dispatch({ type: 'SET_PREVIOUS', previousTokens: null });
       dispatch({ type: 'SET_LOADING', isLoading: false });
-      console.log('[UIThemeProvider] Tokens sauvegardés');
+      logger.info('Tokens sauvegardés', { component: 'UIThemeProvider' });
     } catch (err) {
-      console.error('[UIThemeProvider] Erreur sauvegarde:', err);
+      logger.error(
+        'Erreur sauvegarde',
+        { component: 'UIThemeProvider', action: 'saveTokens' },
+        err as Error
+      );
       dispatch({ type: 'SET_ERROR', error: String(err) });
     }
   }, [state.tokens]);
@@ -286,14 +345,26 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
   const resetToDefaults = useCallback(async () => {
     dispatch({ type: 'SET_LOADING', isLoading: true });
     try {
-      const tokens = await invoke<UIThemeTokens>('reset_ui_theme');
-      dispatch({ type: 'SET_TOKENS', tokens });
+      const tokens = await invoke<UIThemeTokens | null>('reset_ui_theme');
+
+      // Si le backend retourne null, utiliser les valeurs par défaut
+      if (!tokens) {
+        console.warn(
+          '[UIThemeProvider] Reset retourné null, utilisation des valeurs par défaut'
+        );
+        dispatch({ type: 'SET_TOKENS', tokens: DEFAULT_UI_THEME_TOKENS });
+      } else {
+        dispatch({ type: 'SET_TOKENS', tokens });
+      }
+
       dispatch({ type: 'SET_DIRTY', isDirty: false });
       dispatch({ type: 'SET_PREVIOUS', previousTokens: null });
       console.log('[UIThemeProvider] Tokens réinitialisés');
     } catch (err) {
       console.error('[UIThemeProvider] Erreur reset:', err);
       dispatch({ type: 'SET_ERROR', error: String(err) });
+      // En cas d'erreur, utiliser les valeurs par défaut
+      dispatch({ type: 'SET_TOKENS', tokens: DEFAULT_UI_THEME_TOKENS });
     }
   }, []);
 
@@ -350,4 +421,9 @@ export function useUITheme(): UIThemeContext {
   return context;
 }
 
+// ============================================================================
+// EXPORT DEFAULT
+// ============================================================================
+
+// Export par défaut pour compatibilité et Fast Refresh
 export default UIThemeProvider;
