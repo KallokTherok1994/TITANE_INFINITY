@@ -349,19 +349,36 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
 CognitiveLayoutControl.displayName = 'CognitiveLayoutControl';
 
 /**
- * Version compacte pour la toolbar
+ * Version compacte pour la toolbar (Mini-mode badge)
  * Optimisée avec React.memo
+ * v25.6.7: Click to expand full panel + hover tooltip
  */
 export const CognitiveLayoutBadge = memo(function CognitiveLayoutBadge() {
   const { currentMode, hasSuggestion } = useCognitiveLayout();
+  const { expand } = usePanelState({
+    panelId: 'cognitive-layout',
+    defaultCollapsed: false,
+    defaultVisible: true,
+    defaultZIndex: 1000,
+    persistState: true,
+  });
 
   if (!currentMode) return null;
 
   return (
-    <div className="cognitive-layout-badge">
+    <button
+      className="cognitive-layout-badge"
+      onClick={expand}
+      title={`Cognitive Layout: ${MODE_LABELS[currentMode]}${hasSuggestion ? ' (Suggestion disponible)' : ''}`}
+      aria-label={`Open Cognitive Layout panel - Current mode: ${MODE_LABELS[currentMode]}`}
+    >
       {MODE_LABELS[currentMode]}
-      {hasSuggestion && <span className="clc-badge-dot">●</span>}
-    </div>
+      {hasSuggestion && (
+        <span className="clc-badge-dot" title="Suggestion disponible">
+          ●
+        </span>
+      )}
+    </button>
   );
 });
 

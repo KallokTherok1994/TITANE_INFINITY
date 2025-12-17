@@ -441,3 +441,57 @@ body.sidebar-autohide:not(:hover) {
     font-size: 16px;
   }
 }
+
+/* ═════════════════════════════════════════════════════════════════
+   COGNITIVE LAYOUT BADGE (Mini-mode)
+   v25.6.7: Compact toolbar button
+   ═════════════════════════════════════════════════════════════════ */
+
+.cognitive-layout-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--surface-elevated, #1e1e1e);
+  border: 1px solid var(--border-subtle, #333);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary, #e0e0e0);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.cognitive-layout-badge:hover {
+  background: var(--surface-hover, #2a2a2a);
+  border-color: var(--primary, #00d4ff);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 212, 255, 0.2);
+}
+
+.cognitive-layout-badge:active {
+  transform: translateY(0);
+}
+
+.clc-badge-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--warning, #ffaa00);
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.2);
+  }
+}
