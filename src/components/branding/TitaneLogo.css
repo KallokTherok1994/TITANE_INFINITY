@@ -1,0 +1,239 @@
+/**
+ * ═══════════════════════════════════════════════════════════════
+ * TITANE∞ v25.4.1 - Logo Premium Effects CSS
+ * Effets visuels avancés pour le logo Arc Reactor Émeraude
+ * ═══════════════════════════════════════════════════════════════
+ */
+
+/* Base logo container */
+.titane-logo {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease;
+}
+
+.titane-logo:hover {
+  transform: scale(1.02);
+}
+
+.titane-logo img {
+  transition:
+    filter 0.3s ease,
+    transform 0.3s ease;
+}
+
+/* Pulse animation keyframes */
+@keyframes titane-logo-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+/* Glow pulse animation (émeraude) */
+@keyframes titane-glow-pulse-emerald {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 16px rgba(16, 185, 129, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 28px rgba(52, 211, 153, 0.7));
+  }
+}
+
+/* Glow pulse animation (cyan) */
+@keyframes titane-glow-pulse-cyan {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 16px rgba(155, 229, 255, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 28px rgba(140, 221, 255, 0.7));
+  }
+}
+
+/* Rotation lente (style réacteur) */
+@keyframes titane-reactor-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Classes utilitaires pour variantes */
+.titane-logo--emerald img {
+  filter: drop-shadow(0 0 16px rgba(16, 185, 129, 0.45));
+}
+
+.titane-logo--emerald.titane-logo--animated img {
+  animation: titane-glow-pulse-emerald 3s ease-in-out infinite;
+}
+
+.titane-logo--cyan img {
+  filter: drop-shadow(0 0 16px rgba(155, 229, 255, 0.45));
+}
+
+.titane-logo--cyan.titane-logo--animated img {
+  animation: titane-glow-pulse-cyan 3s ease-in-out infinite;
+}
+
+/* Effet de brillance au survol */
+.titane-logo:hover img {
+  filter: drop-shadow(0 0 24px rgba(52, 211, 153, 0.6)) brightness(1.1);
+}
+
+.titane-logo--cyan:hover img {
+  filter: drop-shadow(0 0 24px rgba(155, 229, 255, 0.6)) brightness(1.1);
+}
+
+/* Text glow effect */
+.titane-logo-text {
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  font-size: 0.875rem;
+  transition:
+    text-shadow 0.3s ease,
+    color 0.3s ease;
+}
+
+.titane-logo--emerald .titane-logo-text {
+  color: #6ee7b7;
+  text-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+}
+
+.titane-logo--cyan .titane-logo-text {
+  color: #9be5ff;
+  text-shadow: 0 0 8px rgba(155, 229, 255, 0.4);
+}
+
+.titane-logo:hover .titane-logo-text {
+  text-shadow: 0 0 12px currentColor;
+}
+
+/* Intensités de glow */
+.titane-logo--glow-1 img {
+  filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.35));
+}
+
+.titane-logo--glow-2 img {
+  filter: drop-shadow(0 0 16px rgba(16, 185, 129, 0.45));
+}
+
+.titane-logo--glow-3 img {
+  filter: drop-shadow(0 0 24px rgba(16, 185, 129, 0.55));
+}
+
+/* Mode sombre amélioré */
+@media (prefers-color-scheme: dark) {
+  .titane-logo--emerald img {
+    filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.55));
+  }
+
+  .titane-logo--cyan img {
+    filter: drop-shadow(0 0 20px rgba(155, 229, 255, 0.55));
+  }
+}
+
+/* Réduction des animations si préférence utilisateur */
+@media (prefers-reduced-motion: reduce) {
+  .titane-logo img,
+  .titane-logo--animated img {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .titane-logo:hover {
+    transform: none;
+  }
+}
+
+/* Tailles prédéfinies */
+.titane-logo--xs img {
+  width: 16px;
+  height: 16px;
+}
+.titane-logo--sm img {
+  width: 24px;
+  height: 24px;
+}
+.titane-logo--md img {
+  width: 32px;
+  height: 32px;
+}
+.titane-logo--lg img {
+  width: 48px;
+  height: 48px;
+}
+.titane-logo--xl img {
+  width: 64px;
+  height: 64px;
+}
+.titane-logo--2xl img {
+  width: 96px;
+  height: 96px;
+}
+.titane-logo--hero img {
+  width: 128px;
+  height: 128px;
+}
+
+/* Effet "Arc Reactor Active" */
+.titane-logo--active::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120%;
+  height: 120%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(52, 211, 153, 0.15) 0%,
+    rgba(16, 185, 129, 0.05) 50%,
+    transparent 70%
+  );
+  animation: titane-reactor-pulse 2.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes titane-reactor-pulse {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.15);
+    opacity: 0.3;
+  }
+}
+
+/* Effet scanline futuriste */
+.titane-logo--scanlines::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(16, 185, 129, 0.03) 2px,
+    rgba(16, 185, 129, 0.03) 4px
+  );
+  pointer-events: none;
+  border-radius: 50%;
+}
