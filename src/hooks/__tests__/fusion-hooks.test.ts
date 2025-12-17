@@ -22,8 +22,25 @@ vi.mock('@tauri-apps/api/core', () => ({
   invoke: vi.fn(),
 }));
 
+// Mock lib/security
+vi.mock('@/lib/security', () => ({
+  secureInvoke: vi.fn(),
+}));
+
+// Mock singularityEngine
+vi.mock('@/core/engines/SINGULARITY_ENGINE', () => ({
+  singularityEngine: {
+    getState: vi.fn(),
+    setState: vi.fn(),
+    subscribe: vi.fn(() => vi.fn()),
+    unsubscribe: vi.fn(),
+  },
+}));
+
 // Import après mocks
 import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
+import { singularityEngine } from '@/core/engines/SINGULARITY_ENGINE';
 
 describe('useSingularitySync', () => {
   beforeEach(() => {
@@ -31,11 +48,11 @@ describe('useSingularitySync', () => {
   });
 
   test('should initialize with default state', () => {
-    const { result } = renderHook(() => useSingularitySync());
+    const { result } = renderHook(() => useSingularitySync({ autoSync: false }));
 
-    expect(result.current.data).toBeDefined();
-    expect(result.current.isLoading).toBe(false);
-    expect(result.current.error).toBeNull();
+    expect(result.current.state).toBeNull();
+    expect(result.current.isSyncing).toBe(false);
+    expect(result.current.lastError).toBeNull();
   });
 
   test('should fetch backend state on mount when autoSync is true', async () => {

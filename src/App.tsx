@@ -228,7 +228,7 @@ const DevPage = lazy(() => import('./pages/DevPage').then(m => ({ default: m.Dev
 
 // ✨ v25.3.2 FUSION DASHBOARD - Perfect Backend/Frontend Fusion (Singularity + Memory + Health)
 const PerfectFusionDashboard = lazy(() =>
-  import('./components/PerfectFusionDashboard').then(m => ({ default: m.default }))
+  import('./components/fusion/PerfectFusionDashboard').then(m => ({ default: m.default }))
 );
 
 // ❌ DEPRECATED v25.4.0: Modules fusionnés dans DevPage

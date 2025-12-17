@@ -10,5 +10,5 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-export { PerfectFusionDashboard } from '../PerfectFusionDashboard';
-export { default as PerfectFusionDashboardDefault } from '../PerfectFusionDashboard';
+export { PerfectFusionDashboard } from './PerfectFusionDashboard';
+export { default as PerfectFusionDashboardDefault } from './PerfectFusionDashboard';
