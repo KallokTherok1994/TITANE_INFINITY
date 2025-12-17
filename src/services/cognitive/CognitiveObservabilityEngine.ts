@@ -57,6 +57,9 @@ export class CognitiveObservabilityEngine extends EventEmitter {
   private totalDecisions = 0;
   private totalPhases = 0;
 
+  // ✨ v24.3.4: Cleanup interval management
+  private cleanupInterval: ReturnType<typeof setInterval> | null = null;
+
   constructor(config?: Partial<ObservabilityConfig>) {
     super();
 
@@ -88,8 +91,8 @@ export class CognitiveObservabilityEngine extends EventEmitter {
 
     this.log('CognitiveObservabilityEngine initialized', this.config);
 
-    // Periodic cleanup
-    setInterval(() => this.cleanupOldTraces(), 60 * 60 * 1000); // Every hour
+    // ✨ v24.3.4 FIX: Start cleanup with proper lifecycle management
+    this.startAutoCleanup();
   }
 
   /**
@@ -730,6 +733,41 @@ export class CognitiveObservabilityEngine extends EventEmitter {
     }
 
     this.emit('log', { timestamp, level, message, data });
+  }
+
+  /**
+   * ✨ v24.3.4: Cleanup lifecycle methods
+   */
+  private startAutoCleanup(): void {
+    if (this.cleanupInterval) {
+      return; // Already started
+    }
+
+    this.cleanupInterval = setInterval(
+      () => {
+        this.cleanupOldTraces();
+      },
+      60 * 60 * 1000
+    ); // Every hour
+
+    this.log('Auto-cleanup started (1h interval)');
+  }
+
+  public stopAutoCleanup(): void {
+    if (this.cleanupInterval) {
+      clearInterval(this.cleanupInterval);
+      this.cleanupInterval = null;
+      this.log('Auto-cleanup stopped');
+    }
+  }
+
+  /**
+   * Destroy: cleanup + clear
+   */
+  public destroy(): void {
+    this.stopAutoCleanup();
+    this.traces.clear();
+    this.log('CognitiveObservabilityEngine destroyed');
   }
 }
 

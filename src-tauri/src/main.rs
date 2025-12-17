@@ -628,13 +628,27 @@ fn main() {
             // ═══════════════════════════════════════════════════════════════
             // CRITICAL COMMANDS (v21.5 AUTO-FIX) - Audio + Helios + Memory
             // ═══════════════════════════════════════════════════════════════
-            // Audio System Commands (TTS + Microphone Testing + Device Detection)
+            // ═══════════════════════════════════════════════════════════════
+            // AUDIO SYSTEM COMMANDS (v24.3.3 FIX) - 13 commands
+            // ═══════════════════════════════════════════════════════════════
+            // TTS Commands (3)
             audio::commands::tts_speak,
             audio::commands::tts_stop,
             audio::commands::test_tts,
+            // Microphone Commands (1)
             audio::commands::test_microphone,
+            // Device Detection (2)
             audio::commands::get_audio_output_devices,
             audio::commands::get_audio_input_devices,
+            // Device Selection (2) - ✅ v24.3.3 FIX: AJOUTÉ
+            audio::commands::set_audio_output_device,
+            audio::commands::set_audio_input_device,
+            // VAD Commands (5) - ✅ v24.3.3 FIX: AJOUTÉ
+            audio::commands::vad_get_state,
+            audio::commands::vad_process_frame,
+            audio::commands::vad_configure,
+            audio::commands::vad_reset,
+            audio::commands::vad_test,
             // Helios API Commands (System Monitoring) - ONLY get_helios_state
             api::helios_api::get_helios_state,
             // Memory API Commands (Storage + Timeline)
@@ -700,6 +714,19 @@ fn main() {
             commands_v21::self_healing_commands::self_healing_disable,
             // Singularity Extra Commands (1 command)
             commands_v21::singularity_commands::singularity_self_check,
+            // ═══════════════════════════════════════════════════════════════
+            // CONFIGURATION HUB COMMANDS (v24.3.3 FIX) - 10 commands
+            // ═══════════════════════════════════════════════════════════════
+            config::get_all_configs,
+            config::update::update_runtime_config,
+            config::update::update_chat_engine_config,
+            config::io::export_config,
+            config::io::import_config,
+            // Note: export_full_state n'existe pas encore dans config::io
+            config::presets::list_config_presets,
+            config::presets::save_config_preset,
+            config::presets::load_config_preset,
+            config::presets::delete_config_preset,
             // Titan Persistence Commands (26 commands) - 100% SAVE System
             persistence::commands::titan_persistence_init,
             persistence::commands::titan_persist_event,

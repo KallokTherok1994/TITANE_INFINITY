@@ -37,7 +37,7 @@ export interface StreamingBatcherOptions {
  * ```
  */
 export function createStreamingBatcher(options: StreamingBatcherOptions) {
-  const { batchSize = 5, maxWaitMs = 100, onFlush } = options;
+  const { batchSize = 10, maxWaitMs = 50, onFlush } = options;
 
   let buffer: string[] = [];
   let totalContent = '';
@@ -95,6 +95,21 @@ export function createStreamingBatcher(options: StreamingBatcherOptions) {
       buffer = [];
       totalContent = '';
       chunkCount = 0;
+    },
+
+    /**
+     * Enable turbo mode for instant flushing (bypasses batching)
+     */
+    enableTurbo() {
+      return {
+        ...this,
+        push(chunk: string) {
+          if (!chunk || chunk.length === 0) return;
+          totalContent += chunk;
+          chunkCount += 1;
+          onFlush(totalContent, chunkCount);
+        },
+      };
     },
 
     /**

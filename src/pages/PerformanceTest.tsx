@@ -15,6 +15,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { useLivingEngines } from '../hooks';
+import PerformanceDashboard from '../components/PerformanceDashboard';
 
 interface PerformanceMetrics {
   fps: number;
@@ -573,6 +574,11 @@ export const PerformanceTest = () => {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Chat AI Performance Dashboard */}
+        <div style={{ marginTop: '24px' }}>
+          <PerformanceDashboard />
         </div>
       </div>
     </div>
