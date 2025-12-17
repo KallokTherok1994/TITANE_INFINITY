@@ -100,6 +100,44 @@
   margin: 0;
 }
 
+/* ═════════════════════════════════════════════════════════════════
+   HISTORY CONTROLS (Undo/Redo) v25.7.0
+   ═════════════════════════════════════════════════════════════════ */
+
+.clc-history-controls {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+  margin-right: 8px;
+}
+
+.clc-history-btn {
+  background: var(--surface-hover, #2a2a2a);
+  border: 1px solid var(--border-subtle, #333);
+  border-radius: 6px;
+  color: var(--text-primary, #e0e0e0);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  padding: 4px 8px;
+  transition: all 0.2s ease;
+}
+
+.clc-history-btn:hover:not(:disabled) {
+  background: var(--surface-elevated, #333);
+  border-color: var(--primary, #00d4ff);
+  transform: scale(1.05);
+}
+
+.clc-history-btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.clc-history-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
 /* Contenu collapsible */
 .clc-content {
   transition:
