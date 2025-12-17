@@ -148,12 +148,12 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
     } = useVisionStore();
 
     const {
-      isListening,
-      transcript,
+      isListening: _isListening,
+      transcript: _transcript,
       startListening,
       stopListening,
-      speak,
-      resetTranscript,
+      speak: _speak,
+      resetTranscript: _resetTranscript,
     } = useAudioChat({ enabled: true, autoListen: false });
 
     const voiceEngine = useVoiceEngine({
