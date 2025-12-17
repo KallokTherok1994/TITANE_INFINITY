@@ -142,7 +142,9 @@
       "Bash(npm i:*)",
       "Bash(cargo audit:*)",
       "Bash(time timeout 150 npx vitest run:*)",
-      "Bash(for ext in js css svg)"
+      "Bash(for ext in js css svg)",
+      "Bash(time timeout 600 npm run tauri build:*)",
+      "Bash(time timeout 600 npx tauri build:*)"
     ],
     "deny": [],
     "ask": []

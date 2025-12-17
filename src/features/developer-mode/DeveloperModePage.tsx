@@ -28,6 +28,7 @@ import {
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
 import { useSingularityStateSafe } from '@/hooks/useSingularityStateSafe';
+import { useResponsive } from '@/hooks/useResponsive';
 import { useAuth } from '@/core/auth';
 import {
   useDeveloperMode,
@@ -45,6 +46,9 @@ import './DeveloperModePage.css';
 // ═══════════════════════════════════════════════════════════════════════════════
 
 function DeveloperModePageContent(): JSX.Element {
+  // ✨ v25.7.4 - Responsive hook
+  const { isMobile, isTablet } = useResponsive();
+
   const { state, loading, error, enable, disable } = useDeveloperMode();
   const {
     matrix: _matrix,
