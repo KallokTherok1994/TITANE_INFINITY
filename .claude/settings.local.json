@@ -149,7 +149,8 @@
       "Bash(for provider in gemini ollama openai claude tauriChat titaneLocal)",
       "Bash(do echo \"=== $provider ===\" head -30 /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/ai/providers/$provider.ts)",
       "Bash(time npx vitest:*)",
-      "Bash(git remote set-url:*)"
+      "Bash(git remote set-url:*)",
+      "Bash(timeout 600 npx tauri build:*)"
     ],
     "deny": [],
     "ask": []
