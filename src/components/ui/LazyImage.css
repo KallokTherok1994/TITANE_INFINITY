@@ -1,0 +1,72 @@
+/**
+ * LazyImage CSS - Phase 6 Image Optimization
+ * 
+ * Provides blur-up placeholder transition for smooth loading UX
+ */
+
+.lazy-image {
+  /* Transition smooth pour blur-up effect */
+  transition:
+    filter 0.3s ease-in-out,
+    opacity 0.3s ease-in-out;
+
+  /* Prevent layout shift pendant chargement */
+  display: block;
+  max-width: 100%;
+  height: auto;
+
+  /* GPU acceleration (performance) */
+  will-change: filter, opacity;
+  transform: translateZ(0);
+}
+
+.lazy-image.loading {
+  /* Blur effect avant chargement complet */
+  filter: blur(10px);
+  opacity: 0.6;
+
+  /* Couleur background placeholder (si SVG placeholder transparent) */
+  background-color: var(--color-surface-secondary, #1a1a1a);
+}
+
+.lazy-image.loaded {
+  /* Clear après chargement */
+  filter: blur(0);
+  opacity: 1;
+  will-change: auto; /* Libérer GPU après transition */
+}
+
+.lazy-image.error {
+  /* Style en cas d'erreur chargement */
+  opacity: 0.3;
+  filter: grayscale(100%);
+}
+
+/* Responsive comportement */
+@media (prefers-reduced-motion: reduce) {
+  .lazy-image {
+    /* Respect reduced motion préférence utilisateur */
+    transition: none;
+  }
+
+  .lazy-image.loading {
+    /* Pas de blur si reduced motion */
+    filter: none;
+    opacity: 0.8;
+  }
+}
+
+/* Mobile performance: Réduire blur pour GPU faible */
+@media (max-width: 768px) {
+  .lazy-image.loading {
+    filter: blur(5px); /* Réduit de 10px → 5px pour mobile */
+  }
+}
+
+/* Print styles: Toujours afficher images chargées */
+@media print {
+  .lazy-image {
+    filter: none !important;
+    opacity: 1 !important;
+  }
+}
