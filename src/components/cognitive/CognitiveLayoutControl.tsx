@@ -91,6 +91,55 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
     statsInterval: 10000,
   });
 
+  // v25.7.0: Mode history (undo/redo)
+  const [modeHistory, setModeHistory] = useState<UIMode[]>([currentMode]);
+  const [historyIndex, setHistoryIndex] = useState(0);
+
+  // Track mode changes
+  useEffect(() => {
+    if (currentMode && modeHistory[historyIndex] !== currentMode) {
+      // New mode change - truncate history after current index and add new mode
+      const newHistory = [...modeHistory.slice(0, historyIndex + 1), currentMode];
+      setModeHistory(newHistory);
+      setHistoryIndex(newHistory.length - 1);
+    }
+  }, [currentMode, historyIndex, modeHistory]);
+
+  // Undo/Redo handlers
+  const canUndo = historyIndex > 0;
+  const canRedo = historyIndex < modeHistory.length - 1;
+
+  const handleUndo = useCallback(() => {
+    if (canUndo) {
+      const newIndex = historyIndex - 1;
+      setHistoryIndex(newIndex);
+      setMode(modeHistory[newIndex]);
+    }
+  }, [canUndo, historyIndex, modeHistory, setMode]);
+
+  const handleRedo = useCallback(() => {
+    if (canRedo) {
+      const newIndex = historyIndex + 1;
+      setHistoryIndex(newIndex);
+      setMode(modeHistory[newIndex]);
+    }
+  }, [canRedo, historyIndex, modeHistory, setMode]);
+
+  // Keyboard shortcuts: Ctrl+Z (undo), Ctrl+Y (redo)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.key === 'z' && !e.shiftKey) {
+        e.preventDefault();
+        handleUndo();
+      } else if (e.ctrlKey && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
+        e.preventDefault();
+        handleRedo();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleUndo, handleRedo]);
+
   // Log performance stats in DEV
   useEffect(() => {
     if (process.env.NODE_ENV === 'development' && stats) {
@@ -222,6 +271,34 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
         style={{ cursor: 'move' }}
       >
         <h3>🧠 Cognitive Layout</h3>
+
+        {/* v25.7.0: History controls (Undo/Redo) */}
+        <div className="clc-history-controls">
+          <button
+            className="clc-history-btn"
+            onClick={e => {
+              e.stopPropagation();
+              handleUndo();
+            }}
+            disabled={!canUndo}
+            title="Undo mode change (Ctrl+Z)"
+            aria-label="Undo mode change"
+          >
+            ↶
+          </button>
+          <button
+            className="clc-history-btn"
+            onClick={e => {
+              e.stopPropagation();
+              handleRedo();
+            }}
+            disabled={!canRedo}
+            title="Redo mode change (Ctrl+Y)"
+            aria-label="Redo mode change"
+          >
+            ↷
+          </button>
+        </div>
 
         {/* Bouton Expand/Collapse */}
         <button
