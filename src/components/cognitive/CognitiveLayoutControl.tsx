@@ -5,9 +5,12 @@
  * Panneau de contrôle du Cognitive Layout Engine
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCognitiveLayout, type UIMode } from '@/hooks/useCognitiveLayout';
 import './CognitiveLayoutControl.css';
+
+// LocalStorage key pour persistence
+const STORAGE_KEY = 'titane-cognitive-layout-collapsed';
 
 const MODE_LABELS: Record<UIMode, string> = {
   focus_deep: '🎯 Focus Profond',
@@ -42,8 +45,34 @@ export function CognitiveLayoutControl() {
     hasSuggestion,
   } = useCognitiveLayout();
 
-  // État collapse/expand
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  // État collapse/expand avec persistence localStorage
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      return saved ? JSON.parse(saved) : false;
+    }
+    return false;
+  });
+
+  // Sauvegarder état dans localStorage quand il change
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(isCollapsed));
+    }
+  }, [isCollapsed]);
+
+  // Raccourci clavier Ctrl+K pour toggle collapse/expand
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.key === 'k') {
+        e.preventDefault();
+        setIsCollapsed(prev => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   if (!currentMode) return null;
 
@@ -58,7 +87,7 @@ export function CognitiveLayoutControl() {
           className="clc-collapse-btn"
           onClick={() => setIsCollapsed(!isCollapsed)}
           aria-label={isCollapsed ? 'Agrandir le panneau' : 'Réduire le panneau'}
-          title={isCollapsed ? 'Agrandir' : 'Réduire'}
+          title={isCollapsed ? 'Agrandir (Ctrl+K)' : 'Réduire (Ctrl+K)'}
         >
           <span className={`clc-collapse-arrow ${isCollapsed ? 'collapsed' : ''}`}>
             ▼
