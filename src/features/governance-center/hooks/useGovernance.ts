@@ -89,7 +89,7 @@ export function useGovernance() {
   }, []);
 
   const loadOllamaStatus = useCallback(async () => {
-    // Ollama status is checked via health check (no API key)
+    // ✅ v24.3.8: Ollama status checked with timeout + silent fallback
     const status: OllamaStatus = {
       provider_enabled: false,
       available: false,
@@ -98,7 +98,15 @@ export function useGovernance() {
     };
 
     try {
-      const response = await fetch('http://localhost:11434/api/tags');
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3000); // 3s timeout
+
+      const response = await fetch('http://localhost:11434/api/tags', {
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
       if (response.ok) {
         const data = await response.json();
         status.provider_enabled = true;
@@ -106,7 +114,7 @@ export function useGovernance() {
         status.models = data.models?.map((m: { name: string }) => m.name) || [];
       }
     } catch {
-      // Ollama not running
+      // ✅ v24.3.8: Silent fallback - Ollama est optionnel
     }
 
     setState(prev => ({ ...prev, ollamaStatus: status }));

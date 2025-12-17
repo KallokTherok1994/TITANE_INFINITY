@@ -14,6 +14,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import { logger } from '@/lib/logger';
 import { ServiceMetrics } from '../../lib/serviceMetrics';
 import { ArrowUp, ArrowDown, Clock, AlertCircle, Activity } from 'lucide-react';
 
@@ -56,7 +57,11 @@ export const CommandStatsTable: React.FC<CommandStatsTableProps> = ({
           break;
       }
     } catch (error) {
-      console.error('Erreur chargement command stats:', error);
+      logger.error(
+        'Failed to load command stats',
+        { component: 'CommandStatsTable', action: 'loadStats', mode },
+        error as Error
+      );
     }
   }, [limit, mode]);
 

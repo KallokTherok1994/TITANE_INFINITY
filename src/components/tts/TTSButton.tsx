@@ -7,6 +7,7 @@
 
 import { useCallback, useState } from 'react';
 import { useTTS } from '@/hooks/useTTS';
+import { logger } from '@/lib/logger';
 import './TTSButton.css';
 
 export interface TTSButtonProps {
@@ -44,7 +45,8 @@ export function TTSButton({
       onSpeakStart?.();
       await speak(text);
     } catch (error) {
-      console.error('TTS Error:', error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error('TTS Error', { component: 'TTSButton', action: 'handleSpeak' }, err);
     } finally {
       setIsPlaying(false);
       onSpeakEnd?.();

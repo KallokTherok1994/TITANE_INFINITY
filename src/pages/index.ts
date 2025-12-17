@@ -16,14 +16,17 @@ export { ProgressionPage } from './ProgressionPage';
 export { DesignSystemPage } from './DesignSystemPage';
 
 // Engine Pages
-export { Helios } from './Helios';
-export { Nexus } from './Nexus';
-export { Harmonia } from './Harmonia';
+export { Stats } from './Stats'; // v25.2.0: Unified Nexus + Helios + Harmonia
 export { Sentinel } from './Sentinel';
 export { Watchdog } from './Watchdog';
 export { SelfHeal } from './SelfHeal';
 export { AdaptiveEngine } from './AdaptiveEngine';
 export { Memory } from './Memory';
+
+// Legacy Engine Pages (deprecated v25.2.0, merged into Stats)
+// export { Helios } from './Helios';
+// export { Nexus } from './Nexus';
+// export { Harmonia } from './Harmonia';
 
 // Utility Pages
 export { Settings } from './Settings';

@@ -6,6 +6,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { logger } from '@/lib/logger';
 import { useQAMonitoring } from './useQAMonitoring';
 import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
 import { useSingularityStateSafe } from '@/hooks/useSingularityStateSafe';
@@ -791,7 +792,11 @@ function QAMonitoringPageContent(): JSX.Element {
       setLogs(logsData);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur de chargement');
-      console.error('QA Loading error:', err);
+      logger.error(
+        'QA data loading failed',
+        { component: 'QAMonitoringPage', action: 'loadData' },
+        err as Error
+      );
     } finally {
       setLoading(false);
     }
@@ -808,7 +813,11 @@ function QAMonitoringPageContent(): JSX.Element {
       const results = await qa.runTestSuite(suiteId);
       setTestResults(results);
     } catch (err) {
-      console.error('Test run error:', err);
+      logger.error(
+        'Test suite execution failed',
+        { component: 'QAMonitoringPage', action: 'runTestSuite', suiteId },
+        err as Error
+      );
     } finally {
       setIsRunningTests(false);
     }
@@ -820,7 +829,11 @@ function QAMonitoringPageContent(): JSX.Element {
       const updated = await qa.listMonitors();
       setMonitors(updated);
     } catch (err) {
-      console.error('Monitor toggle error:', err);
+      logger.error(
+        'Monitor toggle failed',
+        { component: 'QAMonitoringPage', action: 'toggleMonitor', monitorId },
+        err as Error
+      );
     }
   };
 
@@ -830,7 +843,11 @@ function QAMonitoringPageContent(): JSX.Element {
       const updated = await qa.listMonitors();
       setMonitors(updated);
     } catch (err) {
-      console.error('Monitor delete error:', err);
+      logger.error(
+        'Monitor deletion failed',
+        { component: 'QAMonitoringPage', action: 'deleteMonitor', monitorId },
+        err as Error
+      );
     }
   };
 
@@ -840,7 +857,11 @@ function QAMonitoringPageContent(): JSX.Element {
       const updated = await qa.listAlerts(showResolvedAlerts);
       setAlerts(updated);
     } catch (err) {
-      console.error('Alert acknowledge error:', err);
+      logger.error(
+        'Alert acknowledgement failed',
+        { component: 'QAMonitoringPage', action: 'acknowledgeAlert', alertId },
+        err as Error
+      );
     }
   };
 
@@ -850,7 +871,11 @@ function QAMonitoringPageContent(): JSX.Element {
       const updated = await qa.listAlerts(showResolvedAlerts);
       setAlerts(updated);
     } catch (err) {
-      console.error('Alert resolve error:', err);
+      logger.error(
+        'Alert resolution failed',
+        { component: 'QAMonitoringPage', action: 'resolveAlert', alertId },
+        err as Error
+      );
     }
   };
 
@@ -860,7 +885,11 @@ function QAMonitoringPageContent(): JSX.Element {
       const result = await qa.runSecurityAudit();
       setAuditResult(result);
     } catch (err) {
-      console.error('Security audit error:', err);
+      logger.error(
+        'Security audit execution failed',
+        { component: 'QAMonitoringPage', action: 'runSecurityAudit' },
+        err as Error
+      );
     } finally {
       setIsAuditing(false);
     }
@@ -872,7 +901,11 @@ function QAMonitoringPageContent(): JSX.Element {
       const report = await qa.getPerformanceReport(period);
       setPerfReport(report);
     } catch (err) {
-      console.error('Performance report error:', err);
+      logger.error(
+        'Performance report generation failed',
+        { component: 'QAMonitoringPage', action: 'getPerformanceReport', period },
+        err as Error
+      );
     }
   };
 

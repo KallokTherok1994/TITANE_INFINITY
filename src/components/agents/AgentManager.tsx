@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 import { AgentsAPIService } from '../../services/agents/agents.api';
 import {
   AgentConfig,
@@ -204,7 +205,12 @@ const AgentDetailModal: React.FC<AgentDetailModalProps> = ({
       await onUpdatePermission(agent.id, selectedPermission);
       onClose();
     } catch (err) {
-      console.error('Error updating permission:', err);
+      const error = err instanceof Error ? err : new Error(String(err));
+      logger.error(
+        'Failed to update agent permission',
+        { component: 'AgentManager', action: 'updatePermission', agentId: agent.id },
+        error
+      );
     } finally {
       setUpdating(false);
     }

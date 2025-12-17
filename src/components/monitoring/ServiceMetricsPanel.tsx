@@ -14,6 +14,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import { logger } from '@/lib/logger';
 import { ServiceMetrics } from '../../lib/serviceMetrics';
 import { MetricsCard } from './MetricsCard';
 import { Activity, CheckCircle, XCircle, RefreshCw, Database } from 'lucide-react';
@@ -41,7 +42,11 @@ export const ServiceMetricsPanel: React.FC<ServiceMetricsPanelProps> = ({
       const serviceStats = ServiceMetrics.getServiceStats(service);
       setStats(serviceStats);
     } catch (error) {
-      console.error(`Erreur chargement stats ${service}:`, error);
+      logger.error(
+        'Failed to load service stats',
+        { component: 'ServiceMetricsPanel', action: 'loadStats', service },
+        error as Error
+      );
     }
   }, [service]);
 

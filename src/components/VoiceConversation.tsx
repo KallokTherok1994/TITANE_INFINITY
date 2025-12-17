@@ -12,6 +12,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { logger } from '@/lib/logger';
 import { useVoiceEngine } from '@/hooks/useVoiceEngine';
 import { useAudioStreaming } from '@/hooks/useAudioStreaming'; // ✅ v∞.8: Real audio streaming
 import { chatEngineCommands } from '@/services/tauri/chatEngine.commands';
@@ -106,7 +107,11 @@ export const VoiceConversation = ({
         });
         return response.content || "Je n'ai pas pu générer de réponse.";
       } catch (error) {
-        console.error('[VoiceConversation] OMEGA error:', error);
+        logger.error(
+          'Voice conversation OMEGA error',
+          { component: 'VoiceConversation', action: 'handleTranscript' },
+          error as Error
+        );
         return generateLocalResponse(input);
       }
     },
@@ -129,7 +134,12 @@ export const VoiceConversation = ({
       onTranscript?.(text);
     },
     onError: error => {
-      console.error('[VoiceConversation] Error:', error);
+      const err = typeof error === 'string' ? new Error(error) : (error as Error);
+      logger.error(
+        'Voice conversation error',
+        { component: 'VoiceConversation', action: 'onError' },
+        err
+      );
     },
   });
 
@@ -143,7 +153,10 @@ export const VoiceConversation = ({
 
     // Détecter la fin d'enregistrement (listening → processing)
     if (prevState === 'listening' && currentState === 'processing') {
-      console.log('[VoiceConversation] 🎯 Recording stopped, triggering completeTurn');
+      logger.debug('Recording stopped, triggering completeTurn', {
+        component: 'VoiceConversation',
+        action: 'autoCompleteTurn',
+      });
       completeTurn();
     }
 
@@ -164,7 +177,10 @@ export const VoiceConversation = ({
 
       // ✅ En browser uniquement: utiliser getUserMedia pour la visualisation
       if (!navigator.mediaDevices?.getUserMedia) {
-        console.warn('[VoiceConversation] getUserMedia not available');
+        logger.warn('getUserMedia not available', {
+          component: 'VoiceConversation',
+          action: 'startAudioVisualization',
+        });
         return;
       }
 
@@ -188,7 +204,11 @@ export const VoiceConversation = ({
       };
       updateLevel();
     } catch (error) {
-      console.error('[VoiceConversation] Audio visualization error:', error);
+      logger.error(
+        'Audio visualization error',
+        { component: 'VoiceConversation', action: 'startAudioVisualization' },
+        error as Error
+      );
     }
   }, [startStreaming]);
 
@@ -197,7 +217,10 @@ export const VoiceConversation = ({
 
     // Stop CPAL streaming in Tauri mode
     if (env.isTauri && isStreaming) {
-      console.log('[VoiceConversation] Stopping CPAL audio streaming');
+      logger.debug('Stopping CPAL audio streaming', {
+        component: 'VoiceConversation',
+        action: 'stopAudioVisualization',
+      });
       await stopStreaming();
     }
 

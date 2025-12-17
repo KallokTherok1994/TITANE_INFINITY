@@ -148,15 +148,13 @@ class HybridTTSService {
 
       return available;
     } catch (error) {
-      // ✨ v24.2.1: Cache failure with shorter TTL (10s) to retry sooner
+      // ✨ v24.3.8: Silent fallback si serveur TTS optionnel non démarré
+      // Cache failure with shorter TTL (10s) to retry sooner
       this.parlerTTSCache = {
         value: false,
         timestamp: Date.now() - AVAILABILITY_CACHE_TTL_MS + 10000,
       };
-      console.warn(
-        '⚠️ TTS: Parler-TTS connection failed, falling back to other providers',
-        error
-      );
+      // Silent: console.warn('⚠️ TTS: Parler-TTS connection failed, falling back to other providers', error);
       return false;
     }
   }

@@ -16,6 +16,7 @@
  */
 
 import { invokeTauriCommand } from './tauriBridge';
+import { logger } from '@/lib/logger';
 
 /**
  * Document chunk with metadata
@@ -82,7 +83,12 @@ class RAGService {
       }
       this.initialized = true;
     } catch (error) {
-      console.error('[RAG] Initialization failed:', error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
+        'RAG initialization failed',
+        { component: 'RAGService', action: 'initialize' },
+        err
+      );
       throw error;
     }
   }
@@ -260,7 +266,16 @@ class RAGService {
         }));
       }
     } catch (error) {
-      console.error('[RAG] Embedding generation failed:', error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
+        'RAG embedding generation failed',
+        {
+          component: 'RAGService',
+          action: 'generateEmbeddings',
+          chunkCount: chunks.length,
+        },
+        err
+      );
     }
 
     return chunks;

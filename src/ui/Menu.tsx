@@ -73,6 +73,13 @@ const MENU_SECTIONS: MenuSection[] = [
     route: '/one-core',
   },
   {
+    id: 'stats',
+    icon: '📊',
+    label: 'Statistiques',
+    description: 'Métriques moteurs : Nexus, Helios, Harmonia, État Cognitif',
+    route: '/stats',
+  },
+  {
     id: 'system',
     icon: '⚙️',
     label: 'Centre Système',

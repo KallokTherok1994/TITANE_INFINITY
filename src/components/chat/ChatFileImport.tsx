@@ -12,6 +12,7 @@
  */
 
 import React, { useState, useCallback, useRef } from 'react';
+import { logger } from '@/lib/logger';
 import { invokeTauri, TAURI_COMMANDS } from '@/core/commands/TAURI_COMMANDS';
 import './ChatFileImport.css';
 
@@ -81,7 +82,11 @@ export const ChatFileImport: React.FC<ChatFileImportProps> = ({
     );
 
     if (!file.type && hasValidExtension) {
-      console.warn(`⚠️  MIME type vide pour ${file.name}, validé par extension`);
+      logger.warn('MIME type empty, validated by extension', {
+        component: 'ChatFileImport',
+        action: 'validateFileMimeType',
+        filename: file.name,
+      });
       return true;
     }
 
@@ -154,17 +159,24 @@ export const ChatFileImport: React.FC<ChatFileImportProps> = ({
         // Lecture du fichier
         const content = await file.text();
 
-        console.log(`📄 Fichier importé: ${file.name} (${file.size} bytes)`);
+        logger.debug('File imported', {
+          component: 'ChatFileImport',
+          action: 'handleFileImport',
+          filename: file.name,
+          size: file.size,
+        });
 
         // Analyse locale
         const analysis = analyzeFileContent(file.name, content);
 
-        console.log('✅ Analyse complète:', {
+        logger.debug('File analysis completed', {
+          component: 'ChatFileImport',
+          action: 'handleFileImport',
           filename: analysis.filename,
           type: analysis.type,
           lines: analysis.lines,
           words: analysis.wordCount,
-          size: `${(analysis.size / 1024).toFixed(2)} KB`,
+          sizeKB: (analysis.size / 1024).toFixed(2),
         });
 
         // Appel backend pour ingestion (si disponible)
@@ -179,18 +191,33 @@ export const ChatFileImport: React.FC<ChatFileImportProps> = ({
               wordCount: analysis.wordCount,
             },
           });
-          console.log('✅ Fichier ingéré dans Memory backend');
+          logger.info('File ingested in Memory backend', {
+            component: 'ChatFileImport',
+            action: 'handleFileImport',
+            filename: file.name,
+          });
         } catch (error) {
-          console.warn(
-            '⚠️  Backend Memory non disponible, analyse frontend only:',
-            error
-          );
+          const err = error as Error;
+          logger.warn('Backend Memory unavailable, using frontend-only analysis', {
+            component: 'ChatFileImport',
+            action: 'handleFileImport',
+            filename: file.name,
+            error: err.message,
+          });
         }
 
         // Callback avec résultat
         onFileAnalyzed(analysis);
       } catch (error) {
-        console.error('❌ Erreur import fichier:', error);
+        logger.error(
+          'File import failed',
+          {
+            component: 'ChatFileImport',
+            action: 'handleFileImport',
+            filename: file.name,
+          },
+          error as Error
+        );
         alert(
           `Erreur lors de l'import du fichier: ${error instanceof Error ? error.message : 'Erreur inconnue'}`
         );

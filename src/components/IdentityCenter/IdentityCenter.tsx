@@ -11,6 +11,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { invoke } from '@tauri-apps/api/core';
+import { logger } from '@/lib/logger';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
 import { useSingularityStateSafe } from '@/hooks/useSingularityStateSafe';
@@ -167,7 +168,11 @@ const IdentityCenterContent: React.FC = () => {
       setRules(rulesData);
       setCoherenceScore(coherenceData);
     } catch (err) {
-      console.error('Erreur chargement identité:', err);
+      logger.error(
+        'Failed to load identity data',
+        { component: 'IdentityCenter', action: 'loadData' },
+        err as Error
+      );
       setError("Erreur lors du chargement des données d'identité");
       loadMockData();
     } finally {
@@ -378,7 +383,11 @@ const IdentityCenterContent: React.FC = () => {
       const newMode = availableModes.find(m => m.type === modeType);
       if (newMode) setCurrentMode(newMode);
     } catch (err) {
-      console.error('Erreur changement mode:', err);
+      logger.error(
+        'Failed to change identity mode',
+        { component: 'IdentityCenter', action: 'handleModeChange', modeType },
+        err as Error
+      );
     }
   };
 
@@ -391,7 +400,11 @@ const IdentityCenterContent: React.FC = () => {
         setVoiceProfiles(voiceProfiles.map(v => ({ ...v, is_active: v.id === voiceId })));
       }
     } catch (err) {
-      console.error('Erreur changement voix:', err);
+      logger.error(
+        'Failed to change voice profile',
+        { component: 'IdentityCenter', action: 'handleVoiceChange', voiceId },
+        err as Error
+      );
     }
   };
 
@@ -407,7 +420,11 @@ const IdentityCenterContent: React.FC = () => {
       }
       setRules(rules.map(r => (r.id === ruleId ? { ...r, is_active: !r.is_active } : r)));
     } catch (err) {
-      console.error('Erreur toggle règle:', err);
+      logger.error(
+        'Failed to toggle identity rule',
+        { component: 'IdentityCenter', action: 'handleRuleToggle', ruleId },
+        err as Error
+      );
     }
   };
 

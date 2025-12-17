@@ -13,6 +13,7 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import { logger } from '@/lib/logger';
 import type {
   EvolutionSuggestion,
   EvolutionAction,
@@ -638,7 +639,12 @@ export class Executor {
       try {
         listener(entry);
       } catch (e) {
-        console.error('[Executor] History listener error:', e);
+        const err = e instanceof Error ? e : new Error(String(e));
+        logger.error(
+          'Evolution executor history listener error',
+          { component: 'EvolutionExecutor', action: 'notifyHistory' },
+          err
+        );
       }
     });
   }
@@ -648,7 +654,12 @@ export class Executor {
       try {
         listener(result);
       } catch (e) {
-        console.error('[Executor] Result listener error:', e);
+        const err = e instanceof Error ? e : new Error(String(e));
+        logger.error(
+          'Evolution executor result listener error',
+          { component: 'EvolutionExecutor', action: 'notifyResult' },
+          err
+        );
       }
     });
   }

@@ -135,7 +135,8 @@
       "Bash(timeout 90 npm test:*)",
       "Bash(timeout 60 npm test:*)",
       "Bash(tail -1 echo echo Components: find src/components -name *.tsx)",
-      "Bash(tail -1 echo echo 'Binary size (if built):' ls -lh src-tauri/target/release/titane-infinity)"
+      "Bash(tail -1 echo echo 'Binary size (if built):' ls -lh src-tauri/target/release/titane-infinity)",
+      "Bash(echo:*)"
     ],
     "deny": [],
     "ask": []

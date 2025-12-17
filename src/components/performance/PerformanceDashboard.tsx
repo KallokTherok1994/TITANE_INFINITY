@@ -7,6 +7,7 @@
  */
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { logger } from '@/lib/logger';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Activity,
@@ -353,7 +354,12 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
       const dashboardData = engine.getDashboardData();
       setData(dashboardData);
     } catch (error) {
-      console.error('[PerformanceDashboard] Erreur rafraîchissement:', error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
+        'Performance dashboard refresh failed',
+        { component: 'PerformanceDashboard', action: 'refresh' },
+        err
+      );
     }
   }, [engine]);
 

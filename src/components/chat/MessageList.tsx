@@ -13,6 +13,7 @@
  */
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
+import { logger } from '@/lib/logger';
 import { MessageBubble } from './MessageBubble';
 import type { AIMessage } from '../../services/ai/types';
 import { autoHealEngine } from '../../services/ai/autoHealEngine';
@@ -103,7 +104,13 @@ function useOmegaErrorBoundary() {
         };
       });
 
-      isDev && console.error('[OMEGA MESSAGE LIST] Error handled:', error, context);
+      if (isDev) {
+        logger.error(
+          'Message list error handled',
+          { component: 'MessageList', action: 'handleError', context },
+          error
+        );
+      }
     },
     []
   );
@@ -264,13 +271,14 @@ export const MessageList = React.memo(function MessageList({
                 typeof message !== 'object' ||
                 typeof message.content !== 'string'
               ) {
-                isDev &&
-                  console.warn(
-                    '[OMEGA MESSAGE LIST] Skipping invalid message at index',
+                if (isDev) {
+                  logger.warn('Skipping invalid message', {
+                    component: 'MessageList',
+                    action: 'render',
                     index,
-                    'message:',
-                    message
-                  );
+                    messageType: typeof message,
+                  });
+                }
                 return null;
               }
 

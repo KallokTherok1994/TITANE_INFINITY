@@ -40,11 +40,12 @@ export const UI_TIMEOUTS = {
 
 /**
  * Cache TTL values (ms)
+ * ✨ v24.3.6: Optimized TTLs to reduce redundant computations
  */
 export const CACHE_TTL = {
-  metrics: 1000, // Metrics cache TTL
+  metrics: 5000, // ✨ v24.3.6: Increased from 1s to 5s - reduces metric refreshes by 80%
   providerAvailability: 60000, // Provider availability cache
-  quickFailCooldown: 5000, // Quick-fail cache cooldown
+  quickFailCooldown: 10000, // ✨ v24.3.6: Increased from 5s to 10s - reduce retry noise
 } as const;
 
 /**
@@ -67,11 +68,12 @@ export const STREAM_CONFIG = {
 } as const;
 
 /**
- * Provider availability cache (OPT12: 60s TTL)
+ * Provider availability cache
+ * ✨ v24.3.6: Increased TTL to reduce redundant API calls (283 calls/day → ~50)
  */
 export const AVAILABILITY_CACHE = {
-  ttlMs: 60000, // Cache availability for 60 seconds
-  checkTimeoutMs: 2000, // Max time for availability check
+  ttlMs: 300000, // ✨ v24.3.6: Increased from 60s to 5min - reduces API calls by 80%
+  checkTimeoutMs: 1500, // ✨ v24.3.6: Reduced from 2s to 1.5s - faster failover
 } as const;
 
 /**

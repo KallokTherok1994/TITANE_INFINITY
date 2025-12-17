@@ -10,6 +10,7 @@
 // Main chat interface with messages, input, and status
 
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { logger } from '@/lib/logger';
 import { useChat } from '../hooks/useChat';
 import { useConnection } from '../hooks/useConnection';
 import { MessageBubble } from './chat/MessageBubble';
@@ -108,7 +109,14 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(
             setAIError(null);
             return;
           } catch (err) {
-            console.warn(`Tentative ${attempt + 1}/${retries} échouée:`, err);
+            const error = err as Error;
+            logger.warn('Chat retry attempt failed', {
+              component: 'ChatWindow',
+              action: 'handleSendWithRetry',
+              attempt: attempt + 1,
+              retries,
+              error: error.message,
+            });
 
             if (attempt < retries - 1) {
               // Exponential backoff: 1s, 2s, 4s
@@ -156,7 +164,14 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(
           try {
             setMode(mappedMode);
           } catch (error) {
-            console.warn('[ChatWindow] preset mode switch failed', error);
+            const err = error as Error;
+            logger.warn('Preset mode switch failed', {
+              component: 'ChatWindow',
+              action: 'handlePresetSelect',
+              presetId,
+              mappedMode,
+              error: err.message,
+            });
           }
         }
       },
@@ -293,7 +308,12 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(
           <div className="chat-file-import-section">
             <ChatFileImport
               onFileAnalyzed={analysis => {
-                console.log('✅ Fichier analysé:', analysis);
+                logger.info('File analyzed successfully', {
+                  component: 'ChatWindow',
+                  action: 'onFileAnalyzed',
+                  filename: analysis.filename,
+                  lines: analysis.lines,
+                });
                 // Injecte résumé fichier dans input
                 setInput(
                   `Analyse ce fichier:
@@ -309,7 +329,12 @@ Que peux-tu en dire?`
                 );
                 setShowFileImport(false);
                 // Award +20 XP Memory (si backend disponible)
-                console.log('🎁 +20 XP Memory (fichier analysé)');
+                logger.info('+20 XP Memory awarded', {
+                  component: 'ChatWindow',
+                  action: 'onFileAnalyzed',
+                  xpType: 'memory',
+                  amount: 20,
+                });
               }}
               disabled={isLoading}
             />

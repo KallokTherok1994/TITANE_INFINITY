@@ -8,6 +8,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { invoke } from '@tauri-apps/api/core';
+import { logger } from '@/lib/logger';
 import './MemoryEvolutionCenter.css';
 
 // Types
@@ -453,7 +454,11 @@ export const MemoryEvolutionCenter: React.FC = () => {
         setLastResult(statusData.last_evolution);
       }
     } catch (err) {
-      console.error('Failed to fetch status:', err);
+      logger.error(
+        'Failed to fetch memory evolution status',
+        { component: 'MemoryEvolutionCenter', action: 'fetchStatus' },
+        err as Error
+      );
     }
   }, []);
 
@@ -462,7 +467,11 @@ export const MemoryEvolutionCenter: React.FC = () => {
       const healthData = await invoke<HierarchyHealth>('memory_hierarchy_health');
       setHealth(healthData);
     } catch (err) {
-      console.error('Failed to fetch health:', err);
+      logger.error(
+        'Failed to fetch memory hierarchy health',
+        { component: 'MemoryEvolutionCenter', action: 'fetchHealth' },
+        err as Error
+      );
     }
   }, []);
 
@@ -471,7 +480,11 @@ export const MemoryEvolutionCenter: React.FC = () => {
       const clustersData = await invoke<MemoryCluster[]>('memory_get_clusters');
       setClusters(clustersData);
     } catch (err) {
-      console.error('Failed to fetch clusters:', err);
+      logger.error(
+        'Failed to fetch memory clusters',
+        { component: 'MemoryEvolutionCenter', action: 'fetchClusters' },
+        err as Error
+      );
     }
   }, []);
 
@@ -534,7 +547,15 @@ export const MemoryEvolutionCenter: React.FC = () => {
       await fetchStatus();
       await fetchHealth();
     } catch (err) {
-      console.error(`Action ${action} failed:`, err);
+      logger.error(
+        'Memory evolution action failed',
+        {
+          component: 'MemoryEvolutionCenter',
+          action: 'handleAction',
+          actionType: action,
+        },
+        err as Error
+      );
       setError(String(err));
     } finally {
       setIsLoading(false);

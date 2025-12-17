@@ -12,6 +12,7 @@
  */
 
 import React, { useRef, useEffect, useCallback, useMemo, memo } from 'react';
+import { logger } from '@/lib/logger';
 import type { AIMessage } from '../../services/ai/types';
 import { hybridTTS } from '../../services/tts/hybridTTS';
 import './MessageList.css';
@@ -67,7 +68,11 @@ const MessageBubble = memo<MessageBubbleProps>(
         onCopy?.(message.content);
         setTimeout(() => setIsCopied(false), 2000);
       } catch (err) {
-        console.error('[MessageBubble] Copy failed:', err);
+        logger.error(
+          'Message copy failed',
+          { component: 'MessageListOptimized', action: 'handleCopy' },
+          err as Error
+        );
       }
     }, [message.content, onCopy]);
 
@@ -79,7 +84,11 @@ const MessageBubble = memo<MessageBubbleProps>(
         setIsSpeaking(true);
         await hybridTTS.speak(message.content);
       } catch (err) {
-        console.error('[MessageBubble] TTS failed:', err);
+        logger.error(
+          'TTS speak failed',
+          { component: 'MessageListOptimized', action: 'handleSpeak' },
+          err as Error
+        );
       } finally {
         setIsSpeaking(false);
       }
@@ -91,7 +100,11 @@ const MessageBubble = memo<MessageBubbleProps>(
         await hybridTTS.stop();
         setIsSpeaking(false);
       } catch (err) {
-        console.error('[MessageBubble] Stop TTS failed:', err);
+        logger.error(
+          'TTS stop failed',
+          { component: 'MessageListOptimized', action: 'handleStopSpeak' },
+          err as Error
+        );
       }
     }, []);
 

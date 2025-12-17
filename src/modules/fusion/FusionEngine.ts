@@ -29,7 +29,7 @@ import {
 import { MemoryEngine } from '@/cognitive/memory/memoryEngine';
 import type { MemoryEntry, MemoryType as _MemoryType } from '@/cognitive/types';
 import { getLogEngine } from '@/services/adminEngine/logEngine';
-import { SingularityIntrospectionEngine as _SingularityIntrospectionEngine } from '@/modules/singularity/SingularityIntrospectionEngine';
+import { SingularityIntrospectionEngine } from '@/modules/singularity/SingularityIntrospectionEngine';
 import type { LogEntry as _LogEntry } from '@/lib/UILogger';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -402,34 +402,54 @@ export class FusionEngine {
     const entries: DatasetEntry[] = [];
 
     try {
-      // Implementation: Update LogEngine.getLogs() call for new signature
-      // - Old: await LogEngine.getLogs({ limit: 500 })
-      // - New: await LogEngine.query({ filters: { level: 'info' }, limit: 500 })
-      // - Alternative: Use LogEngine.stream() for real-time log collection
-      // - Return type: Array<{timestamp, level, message, metadata}>
-      return entries; // Temporarily disabled until LogEngine API updated
-      /*
-      const logs = await this.logEngine.getLogs({ limit: 500 });
+      // ✨ v24.3.5: Use LogEngine.searchLogs() with proper API
+      const searchResult = this.logEngine.searchLogs({
+        limit: 500,
+        severities: ['WARN', 'ERROR', 'CRITICAL', 'INFO'],
+        sortOrder: 'desc',
+      });
 
-      for (const log of logs) {
+      for (const log of searchResult.logs) {
         // Filtrer logs utiles (errors, warnings, key events)
-        if (log.level === 'debug') continue;
+        if (log.severity === 'DEBUG') continue;
+
+        // Calculer qualité et importance basées sur sévérité
+        const qualityMap: Record<string, number> = {
+          CRITICAL: 0.95,
+          ERROR: 0.9,
+          WARN: 0.7,
+          INFO: 0.5,
+        };
+        const importanceMap: Record<string, number> = {
+          CRITICAL: 0.98,
+          ERROR: 0.95,
+          WARN: 0.6,
+          INFO: 0.4,
+        };
 
         entries.push({
-          prompt: `Que s'est-il passé ici ?`,
-          response: log.message,
-          category: 'auto-heal',
+          prompt: `Événement système: ${log.category} - ${log.moduleId}`,
+          response: `${log.message}${log.details ? `\n\nDétails: ${log.details}` : ''}`,
+          category: log.category === 'ERROR' ? 'auto-heal' : 'style',
           metadata: {
             source: 'log-engine',
             timestamp: log.timestamp,
-            quality: log.level === 'error' ? 0.9 : 0.6,
-            importance: log.level === 'error' ? 0.95 : 0.5,
-            tags: ['log', log.level, log.category || 'system'],
+            quality: qualityMap[log.severity] ?? 0.5,
+            importance: importanceMap[log.severity] ?? 0.4,
+            tags: [
+              'log',
+              log.severity.toLowerCase(),
+              log.category.toLowerCase(),
+              ...log.tags,
+            ],
             originEngine: 'LogEngine',
+            moduleId: log.moduleId,
+            correlationId: log.correlationId,
           },
         });
       }
-      */
+
+      console.log(`[FusionEngine] Collected ${entries.length} logs from LogEngine`);
     } catch (error) {
       console.warn('[FusionEngine] Log collection failed:', error);
     }
@@ -441,32 +461,71 @@ export class FusionEngine {
     const entries: DatasetEntry[] = [];
 
     try {
-      // Implementation: Use performFullIntrospection() instead of removed getState()
-      // - New API: const state = await SingularityIntrospectionEngine.performFullIntrospection()
-      // - Returns: {cognitive: {...}, meta: {...}, modules: {...}, diagnostics: {...}}
-      // - Extract: state.cognitive for active/inactive status, state.modules for module states
-      // - Async: Changed from sync getState() to async performFullIntrospection()
-      // - Migration: See SINGULARITY_V24_MIGRATION.md Section 3.2
-      return entries; // Temporarily disabled until refactored
-      /*
-      const introspection = SingularityIntrospectionEngine.getState();
+      // ✨ v24.3.5: Use performFullIntrospection() async API
+      const introspection =
+        await SingularityIntrospectionEngine.performFullIntrospection('quick');
 
       if (introspection) {
+        // Entrée principale: résumé d'introspection
         entries.push({
-          prompt: 'Introspection du système TITANE∞',
-          response: JSON.stringify(introspection, null, 2),
+          prompt: 'Introspection complète du système TITANE∞',
+          response: `
+## État Global TITANE∞
+- **Cohérence globale**: ${introspection.internalVision.globalCoherence}%
+- **Moteurs actifs**: ${introspection.internalVision.activeEngines}/${introspection.internalVision.totalEngines}
+- **Score confiance**: ${introspection.confidenceScore}%
+- **Niveau introspection**: ${introspection.introspectionLevel}
+
+## Vision Interne
+${introspection.internalVision.layers.map(l => `- ${l.name}: ${l.health} (${l.coherence}%)`).join('\n')}
+
+## Diagnostic
+- Issues critiques: ${introspection.diagnostic.criticalIssues.length}
+- Warnings: ${introspection.diagnostic.warnings.length}
+- Optimisations suggérées: ${introspection.diagnostic.optimizations.length}
+- Auto-healing appliqué: ${introspection.diagnostic.selfHealingApplied.length} corrections
+
+## Vision Future
+${introspection.futureVision.priorityImprovements
+  .slice(0, 5)
+  .map(i => `- ${i}`)
+  .join('\n')}
+`.trim(),
           category: 'introspection',
           metadata: {
             source: 'singularity-engine',
             timestamp: Date.now(),
             quality: 0.95,
             importance: 0.9,
-            tags: ['introspection', 'singularity', 'meta'],
+            tags: ['introspection', 'singularity', 'meta', 'système'],
             originEngine: 'SingularityIntrospectionEngine',
+            globalCoherence: introspection.internalVision.globalCoherence,
+            confidenceScore: introspection.confidenceScore,
           },
         });
+
+        // Entrées pour chaque issue critique détectée
+        for (const issue of introspection.diagnostic.criticalIssues) {
+          entries.push({
+            prompt: `Issue critique détectée: ${issue.category}`,
+            response: `**${issue.description}**\n\nCause racine: ${issue.rootCause}\n\nSolution: ${issue.solution}\n\nMoteurs affectés: ${issue.affectedEngines.join(', ')}`,
+            category: 'auto-heal',
+            metadata: {
+              source: 'singularity-engine',
+              timestamp: Date.now(),
+              quality: 0.98,
+              importance: 0.99,
+              tags: ['diagnostic', 'critical', issue.category],
+              originEngine: 'SingularityIntrospectionEngine',
+              autoFixable: issue.autoFixable,
+            },
+          });
+        }
+
+        console.log(
+          `[FusionEngine] Collected Singularity data: 1 introspection + ${introspection.diagnostic.criticalIssues.length} issues`
+        );
       }
-      */
     } catch (error) {
       console.warn('[FusionEngine] Singularity collection failed:', error);
     }
@@ -796,16 +855,37 @@ export class FusionEngine {
     return `fusion-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
   }
 
+  /**
+   * ✨ v24.3.5: Hash sémantique robuste avec DJB2 + normalisation
+   * - Normalise accents, ponctuation, espaces multiples
+   * - Utilise DJB2 (meilleure distribution que shift-add)
+   * - Inclut category pour éviter faux positifs cross-category
+   */
   private computeSemanticHash(entry: DatasetEntry): string {
-    const content = (entry.prompt + entry.response).toLowerCase().trim();
-    // Hash simple (CRC32-like)
-    let hash = 0;
-    for (let i = 0; i < content.length; i++) {
-      const char = content.charCodeAt(i);
-      hash = (hash << 5) - hash + char;
-      hash = hash & hash; // Convert to 32-bit integer
+    // 1. Normalisation avancée
+    const normalized = (entry.prompt + '|||' + entry.response + '|||' + entry.category)
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // Retire accents
+      .replace(/[^\w\s]/g, ' ') // Retire ponctuation
+      .replace(/\s+/g, ' ') // Espaces multiples → simple
+      .trim();
+
+    // 2. DJB2 hash (meilleure distribution)
+    let hash = 5381;
+    for (let i = 0; i < normalized.length; i++) {
+      const char = normalized.charCodeAt(i);
+      hash = ((hash << 5) + hash) ^ char; // hash * 33 ^ char
     }
-    return `hash-${Math.abs(hash).toString(36)}`;
+
+    // 3. Fingerprint court basé sur mots-clés significatifs
+    const keywords = normalized
+      .split(' ')
+      .filter(w => w.length > 3)
+      .slice(0, 5)
+      .join('-');
+
+    return `h2-${Math.abs(hash).toString(36)}-${keywords.slice(0, 20)}`;
   }
 
   private calculateSimilarity(a: FusionEntry, b: FusionEntry): number {

@@ -7,6 +7,7 @@
  */
 
 import React from 'react';
+import { logger } from '@/lib/logger';
 import {
   formatUserError,
   formatErrorForLog,
@@ -56,7 +57,16 @@ export class SystemCenterErrorBoundary extends React.Component<Props, State> {
       errorId: this.state.errorId,
     });
 
-    console.error('[SystemCenter] Error caught:', errorLog);
+    logger.error(
+      'System Center error caught',
+      {
+        component: 'SystemCenterErrorBoundary',
+        action: 'componentDidCatch',
+        errorId: this.state.errorId,
+        critical: isErrorCritical(error),
+      },
+      error
+    );
 
     // Callback optionnel (pour reporting, analytics, etc.)
     if (this.props.onError) {

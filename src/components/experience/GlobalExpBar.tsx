@@ -11,6 +11,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { secureInvoke } from '@/lib/security';
+import { logger } from '@/lib/logger';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
 import '../../styles/exp-fusion.css';
 
@@ -42,7 +43,12 @@ export const GlobalExpBar: React.FC<{ onOpenPanel: () => void }> = ({ onOpenPane
       const state = await secureInvoke<GlobalExpState>('exp_get_global_state');
       setExpState(state);
     } catch (error) {
-      console.error('Erreur fetch EXP state:', error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
+        'Failed to fetch EXP state',
+        { component: 'GlobalExpBar', action: 'fetchExpState' },
+        err
+      );
     }
   };
 

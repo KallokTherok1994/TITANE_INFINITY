@@ -23,9 +23,7 @@ import { AppLayout } from './ui/AppLayout';
 
 const Dashboard = lazy(() => import('./pages').then(m => ({ default: m.DashboardPage })));
 const Chat = lazy(() => import('./ui/pages/Chat').then(m => ({ default: m.Chat })));
-const Helios = lazy(() => import('./pages').then(m => ({ default: m.Helios })));
-const Nexus = lazy(() => import('./pages').then(m => ({ default: m.Nexus })));
-const Harmonia = lazy(() => import('./pages').then(m => ({ default: m.Harmonia })));
+const Stats = lazy(() => import('./pages/Stats').then(m => ({ default: m.Stats })));
 const Sentinel = lazy(() => import('./pages').then(m => ({ default: m.Sentinel })));
 const Watchdog = lazy(() => import('./pages').then(m => ({ default: m.Watchdog })));
 const SelfHeal = lazy(() => import('./pages').then(m => ({ default: m.SelfHeal })));
@@ -138,28 +136,10 @@ const router = createBrowserRouter([
     errorElement: <ErrorFallback />,
   },
   {
-    path: '/helios',
+    path: '/stats',
     element: (
       <LayoutWrapper>
-        <Helios />
-      </LayoutWrapper>
-    ),
-    errorElement: <ErrorFallback />,
-  },
-  {
-    path: '/nexus',
-    element: (
-      <LayoutWrapper>
-        <Nexus />
-      </LayoutWrapper>
-    ),
-    errorElement: <ErrorFallback />,
-  },
-  {
-    path: '/harmonia',
-    element: (
-      <LayoutWrapper>
-        <Harmonia />
+        <Stats />
       </LayoutWrapper>
     ),
     errorElement: <ErrorFallback />,

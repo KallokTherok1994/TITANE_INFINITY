@@ -8,6 +8,7 @@
  */
 
 import { type CacheKey, type CacheEntry } from './responseCache';
+import { logger } from '@/lib/logger';
 
 const DB_NAME = 'titane_response_cache';
 const DB_VERSION = 1;
@@ -298,6 +299,11 @@ export const cachePersistence = new CachePersistence();
 // Auto-init au chargement
 if (typeof window !== 'undefined') {
   cachePersistence.init().catch(err => {
-    console.error('[CachePersistence] Failed to initialize IndexedDB:', err);
+    const error = err instanceof Error ? err : new Error(String(err));
+    logger.error(
+      'Failed to initialize IndexedDB cache',
+      { component: 'CachePersistence', action: 'auto-init' },
+      error
+    );
   });
 }

@@ -8,6 +8,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import { logger } from '@/lib/logger';
 import { responseCache } from '@/services/cache/responseCache';
 import { predictivePreloader } from '@/services/cache/predictivePreloader';
 import { cachePersistence } from '@/services/cache/cachePersistence';
@@ -53,7 +54,11 @@ export const PerformanceDashboard: React.FC<{ compact?: boolean }> = ({
         persistence: persistenceStats,
       });
     } catch (error) {
-      console.error('[PerformanceDashboard] Failed to refresh metrics:', error);
+      logger.error(
+        'Failed to refresh performance metrics',
+        { component: 'PerformanceDashboard', action: 'refreshMetrics' },
+        error as Error
+      );
     } finally {
       setIsRefreshing(false);
     }
