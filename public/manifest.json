@@ -1,0 +1,71 @@
+{
+  "name": "TITANE INFINITY",
+  "short_name": "TITANE",
+  "description": "Cognitive Operating System v26 - Intelligence Augmentee",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0a0a0a",
+  "theme_color": "#93b399",
+  "scope": "/",
+  "lang": "fr",
+  "dir": "ltr",
+  "categories": ["productivity", "utilities", "developer tools"],
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/vite.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Chat IA",
+      "short_name": "Chat",
+      "description": "Ouvrir la conversation IA",
+      "url": "/titane",
+      "icons": []
+    },
+    {
+      "name": "Statistiques",
+      "short_name": "Stats",
+      "description": "Voir les metriques systeme",
+      "url": "/stats",
+      "icons": []
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "display_override": ["window-controls-overlay", "standalone", "browser"],
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "handle_links": "preferred",
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  },
+  "share_target": {
+    "action": "/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "media",
+          "accept": ["image/*", "text/*", "application/pdf"]
+        }
+      ]
+    }
+  }
+}
