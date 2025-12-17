@@ -17,6 +17,7 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { ModuleCard } from '../components/ModuleCard';
 import { useEngineSubscription } from '../hooks/useEngineSubscription';
+import { useResponsive } from '@/hooks/useResponsive';
 import { extractNumber } from '../utils/dataUtils';
 import { invoke } from '@tauri-apps/api/core';
 import '../pages/ModulePages.css';
@@ -65,6 +66,9 @@ interface CognitiveMetrics {
 // ─────────────────────────────────────────────────────────────────
 
 export const Stats: React.FC = () => {
+  // ✨ v25.7.4 - Responsive hook
+  const { isMobile: _isMobile } = useResponsive();
+
   // ═══ Souscriptions aux 3 moteurs ═══
   const nexusData = useEngineSubscription('nexus');
   const heliosData = useEngineSubscription('helios');
@@ -194,7 +198,7 @@ export const Stats: React.FC = () => {
           <span className="stats-section-icon">🧠</span>
           Réseau Cognitif
         </h2>
-        <div className="module-grid">
+        <div className="module-grid grid-responsive-3">
           <ModuleCard
             title="Nœuds Actifs"
             value={nodeCount.toFixed(0)}

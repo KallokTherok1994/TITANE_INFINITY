@@ -41,6 +41,8 @@ import useVAD, { useVADWithTTS, useBargeInHandler } from '../../hooks/useVAD';
 // Phase 2 v24.7.4: Keyboard shortcuts & Focus trap
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
+// ✨ v25.7.4: Responsive Chat Layout wrapper
+import { ResponsiveChatLayout } from '../../layouts/ResponsiveChatLayout';
 import './styles/Chat.css';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -879,457 +881,462 @@ export const Chat: React.FC = () => {
     );
   }
 
-  // ═══ PHASE 5.7: MAIN RENDER WITH PROTECTION ═══
+  // ═══ PHASE 5.7: MAIN RENDER WITH PROTECTION + v25.7.4 RESPONSIVE ═══
   try {
     return (
-      <div
-        className="chat-page"
-        data-omega-version="v19.2Ω"
-        data-state-version={pageState.stateVersion}
-      >
-        {/* Enhanced Header with Status Bar + OMEGA Protection */}
-        <div className="chat-header">
-          <div className="chat-header-main">
-            <div className="chat-header-info">
-              <div className="chat-header-icon">🟣</div>
-              <div className="chat-header-text">
-                <h1 className="chat-header-title">Chat IA TITANE∞ OMEGA</h1>
-                <p className="chat-header-subtitle">
-                  Intelligence artificielle cognitive avec architecture auto-guérison
-                </p>
-              </div>
-            </div>
-
-            {/* ═══ SÉLECTEUR DE MODE ═══ */}
-            <div className="chat-header-mode">
-              <ChatModeSelector
-                currentMode={currentChatMode}
-                onModeChange={handleModeChange}
-                userPermissionLevel={3}
-                variant="dropdown"
-                disabled={isLoading}
-              />
-            </div>
-
-            <div className="chat-header-actions">
-              <button
-                className="chat-action-btn"
-                onClick={handleClearChat}
-                disabled={messages.length === 0 || isLoading}
-                title="Effacer le chat"
-                aria-label="Effacer l'historique du chat"
-              >
-                🗑️
-              </button>
-              <button
-                className="chat-action-btn"
-                onClick={handleRestoreHistory}
-                disabled={!uiIntegrity?.hasSnapshot}
-                title="Restaurer la dernière session stable"
-                aria-label="Restaurer l'historique sauvegardé"
-              >
-                🛡️
-              </button>
-              <button
-                className="chat-action-btn"
-                onClick={toggleDebugPanelVisibility}
-                title={
-                  debugPanelVisible
-                    ? 'Masquer le panneau debug'
-                    : 'Afficher le panneau debug'
-                }
-                aria-label={
-                  debugPanelVisible
-                    ? 'Masquer le panneau debug chat'
-                    : 'Afficher le panneau debug chat'
-                }
-              >
-                🛠️
-              </button>
-              <button
-                className="chat-action-btn"
-                onClick={toggleSettings}
-                title="Paramètres OMEGA"
-                aria-label="Ouvrir les paramètres"
-              >
-                ⚙️
-              </button>
-            </div>
-          </div>
-
-          {/* OMEGA Status Bar */}
-          <div className="chat-status-bar chat-status-omega">
-            <div className="chat-status-item chat-status-provider">
-              <span
-                className={`status-indicator status-${providerStatus.status}`}
-                role="status"
-                aria-live="polite"
-                aria-label={`Provider ${providerStatus.name} : statut ${providerStatus.status}`}
-              />
-              <span className="status-label">Actif:</span>
-              <span
-                className="status-value"
-                title={
-                  providerStatus.attemptedProviders?.length
-                    ? `Tentatives: ${providerStatus.attemptedProviders
-                        .map(provider => resolveProviderDisplayName(provider))
-                        .join(' → ')}`
-                    : undefined
-                }
-              >
-                {providerStatus.name}
-              </span>
-              {providerStatus.autoHealed && (
-                <span
-                  className="status-badge status-healed"
-                  title="Auto-guérison activée"
-                >
-                  🔄
-                </span>
-              )}
-              {providerStatus.lastError && (
-                <span
-                  className="status-badge status-error"
-                  title={providerStatus.lastError}
-                >
-                  ⚠️
-                </span>
-              )}
-            </div>
-
-            {/* Mode Badge compact dans status bar */}
-            <div className="chat-status-item chat-status-mode">
-              <ModeBadge
-                mode={currentChatMode}
-                size="small"
-                showLabel={true}
-                showTooltip={true}
-              />
-            </div>
-
-            <div className="chat-status-item chat-status-preference">
-              <span className="status-label">Préférence:</span>
-              <select
-                className="chat-provider-select"
-                value={preferredProvider}
-                onChange={handlePreferredProviderChange}
-                aria-label="Sélection du provider IA"
-              >
-                {PROVIDER_PREFERENCE_OPTIONS.map(option => (
-                  <option key={option} value={option}>
-                    {PROVIDER_PREFERENCE_LABELS[option]}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {typeof providerStatus.latency === 'number' && (
-              <div className="chat-status-item">
-                <span className="status-label">Latence:</span>
-                <span className="status-value">{providerStatus.latency}ms</span>
-              </div>
-            )}
-
-            <div className="chat-status-item">
-              <span className="status-label">Messages:</span>
-              <span className="status-value">{messages?.length || 0}</span>
-            </div>
-
-            <div className="chat-status-item">
-              <span className="status-label">Pipeline:</span>
-              <span className={`status-value status-${omnisStatsSafe.pipelineHealth}`}>
-                {omnisStatsSafe.pipelineHealth}
-              </span>
-            </div>
-
-            {omnisStatsSafe.autoHealCount > 0 && (
-              <div className="chat-status-item chat-status-heal">
-                <span className="status-icon">🩹</span>
-                <span className="status-label">Auto-heal:</span>
-                <span className="status-value">{omnisStatsSafe.autoHealCount}</span>
-              </div>
-            )}
-
-            {voiceModeActive && (
-              <div className="chat-status-item chat-status-voice">
-                <span className="status-icon">🎤</span>
-                <span className="status-label">Voice Mode</span>
-              </div>
-            )}
-
-            {pageState.recoveryCount > 0 && (
-              <div className="chat-status-item chat-status-recovery">
-                <span className="status-icon">🔄</span>
-                <span className="status-label">Récupérations:</span>
-                <span className="status-value">{pageState.recoveryCount}</span>
-              </div>
-            )}
-
-            {uiIntegrity?.preventedResets > 0 && (
-              <div className="chat-status-item chat-status-ui-shield">
-                <span className="status-icon">🛡️</span>
-                <span className="status-label">UI Shield:</span>
-                <span className="status-value">{uiIntegrity.preventedResets}</span>
-              </div>
-            )}
-
-            {debugEntries.length > 0 && (
-              <div
-                className="chat-status-item chat-status-debug"
-                title="Entrées du panneau debug"
-              >
-                <span className="status-label">Debug:</span>
-                <span className="status-value">{debugEntries.length}</span>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Messages Container with Protection */}
-        <div className="chat-content">
-          {error && pageState.renderError ? (
-            <div className="chat-error-combined">
-              <div className="chat-error-omega">
-                <span className="chat-error-icon">⚠️</span>
-                <div className="chat-error-content">
-                  <strong>Erreurs multiples détectées</strong>
-                  <p>Chat: {error}</p>
-                  <p>Render: {pageState.renderError}</p>
-                  <span className="chat-error-recovery">
-                    OMEGA maintient la stabilité du système
-                  </span>
+      <ResponsiveChatLayout>
+        <div
+          className="chat-page"
+          data-omega-version="v19.2Ω"
+          data-state-version={pageState.stateVersion}
+        >
+          {/* Enhanced Header with Status Bar + OMEGA Protection */}
+          <div className="chat-header">
+            <div className="chat-header-main">
+              <div className="chat-header-info">
+                <div className="chat-header-icon">🟣</div>
+                <div className="chat-header-text">
+                  <h1 className="chat-header-title">Chat IA TITANE∞ OMEGA</h1>
+                  <p className="chat-header-subtitle">
+                    Intelligence artificielle cognitive avec architecture auto-guérison
+                  </p>
                 </div>
               </div>
-            </div>
-          ) : (
-            <MessageList
-              messages={messages || []}
-              isLoading={isLoading}
-              error={error}
-              enableTTS={true}
-              autoScroll={true}
-              onCopyMessage={content => {
-                isDev && console.log('[OMEGA] Message copié:', content?.substring(0, 30));
-              }}
-            />
-          )}
-        </div>
 
-        {/* Enhanced Input with Voice Button + Protection */}
-        <div className="chat-footer">
-          {/* Voice Conversation Panel when active */}
-          {voiceModeActive && (
-            <div
-              style={{
-                padding: '1rem',
-                background: 'rgba(102, 126, 234, 0.1)',
-                borderRadius: '12px',
-                marginBottom: '1rem',
-                border: '1px solid rgba(102, 126, 234, 0.2)',
-              }}
-            >
-              <React.Suspense
-                fallback={
-                  <div style={{ padding: '1rem', textAlign: 'center', color: '#93b399' }}>
-                    🎤 Chargement conversation vocale...
-                  </div>
-                }
-              >
-                <VoiceConversation
-                  onTranscript={text => {
-                    isDev && console.log('[OMEGA] Voice transcript:', text);
-                  }}
-                  onResponse={response => {
-                    isDev && console.log('[OMEGA] Voice response:', response);
-                  }}
+              {/* ═══ SÉLECTEUR DE MODE ═══ */}
+              <div className="chat-header-mode">
+                <ChatModeSelector
+                  currentMode={currentChatMode}
+                  onModeChange={handleModeChange}
+                  userPermissionLevel={3}
+                  variant="dropdown"
+                  disabled={isLoading}
                 />
-              </React.Suspense>
-            </div>
-          )}
-
-          {/* ✨ v24.3.0 - Provider Readiness Warning */}
-          {preferredProvider !== 'auto' &&
-            preferredProvider !== 'local' &&
-            preferredProvider !== 'ollama' &&
-            !providerReadiness[preferredProvider] && (
-              <div
-                className="chat-provider-warning"
-                style={{
-                  padding: '12px 16px',
-                  marginBottom: '8px',
-                  backgroundColor: 'rgba(255, 193, 7, 0.1)',
-                  border: '1px solid rgba(255, 193, 7, 0.3)',
-                  borderRadius: '8px',
-                  color: '#ffc107',
-                  fontSize: '14px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                }}
-              >
-                <span style={{ fontSize: '18px' }}>⚠️</span>
-                <span>
-                  <strong>{preferredProvider.toUpperCase()}</strong> n'est pas configuré.
-                  Le système basculera automatiquement vers un provider disponible. Pour
-                  utiliser {preferredProvider}, ajoutez votre clé API dans{' '}
-                  <strong>Gouvernance → Secrets</strong>.
-                </span>
               </div>
-            )}
 
-          <ChatInput
-            onSend={sendMessage}
-            disabled={isLoading || pageState.isCorrupted}
-            voiceModeActive={voiceModeActive}
-            onToggleVoiceMode={toggleVoiceMode}
-            placeholder={chatInputPlaceholder}
-          />
-        </div>
-
-        {/* Settings Panel (Modal) with OMEGA Stats */}
-        {showSettings && (
-          <div className="chat-settings-overlay" onClick={toggleSettings}>
-            <div
-              ref={settingsPanelRef}
-              className="chat-settings-panel"
-              onClick={e => e.stopPropagation()}
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="settings-title"
-            >
-              <div className="chat-settings-header">
-                <h2 id="settings-title" className="chat-settings-title">
-                  Paramètres OMEGA v19.2Ω
-                </h2>
+              <div className="chat-header-actions">
                 <button
-                  className="chat-settings-close"
-                  onClick={toggleSettings}
-                  aria-label="Fermer les paramètres"
+                  className="chat-action-btn"
+                  onClick={handleClearChat}
+                  disabled={messages.length === 0 || isLoading}
+                  title="Effacer le chat"
+                  aria-label="Effacer l'historique du chat"
                 >
-                  ✕
+                  🗑️
+                </button>
+                <button
+                  className="chat-action-btn"
+                  onClick={handleRestoreHistory}
+                  disabled={!uiIntegrity?.hasSnapshot}
+                  title="Restaurer la dernière session stable"
+                  aria-label="Restaurer l'historique sauvegardé"
+                >
+                  🛡️
+                </button>
+                <button
+                  className="chat-action-btn"
+                  onClick={toggleDebugPanelVisibility}
+                  title={
+                    debugPanelVisible
+                      ? 'Masquer le panneau debug'
+                      : 'Afficher le panneau debug'
+                  }
+                  aria-label={
+                    debugPanelVisible
+                      ? 'Masquer le panneau debug chat'
+                      : 'Afficher le panneau debug chat'
+                  }
+                >
+                  🛠️
+                </button>
+                <button
+                  className="chat-action-btn"
+                  onClick={toggleSettings}
+                  title="Paramètres OMEGA"
+                  aria-label="Ouvrir les paramètres"
+                >
+                  ⚙️
                 </button>
               </div>
+            </div>
 
-              <div className="chat-settings-content">
-                <div className="chat-setting-section">
-                  <h3 className="chat-setting-section-title">🤖 Provider IA</h3>
-                  <div className="chat-setting-item">
-                    <label
-                      className="chat-setting-label"
-                      htmlFor="omega-provider-preference"
-                    >
-                      Préférence moteur
-                    </label>
-                    <select
-                      id="omega-provider-preference"
-                      className="chat-provider-select"
-                      value={preferredProvider}
-                      onChange={handlePreferredProviderChange}
-                      aria-label="Sélection du provider IA préféré"
-                    >
-                      {PROVIDER_PREFERENCE_OPTIONS.map(option => (
-                        <option key={option} value={option}>
-                          {PROVIDER_PREFERENCE_LABELS[option]}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="chat-setting-item">
-                    <label className="chat-setting-label">Dernier provider actif</label>
-                    <div className="chat-setting-value">
-                      {providerStatus.name}
-                      {typeof providerStatus.latency === 'number'
-                        ? ` • ${providerStatus.latency}ms`
-                        : ''}
-                    </div>
-                  </div>
-                  <div className="chat-setting-item">
-                    <label className="chat-setting-label">Dernière erreur</label>
-                    <div className="chat-setting-value">
-                      {providerStatus.lastError ?? 'Aucune'}
-                    </div>
-                  </div>
-                  <div className="chat-setting-item">
-                    <label className="chat-setting-label">Entrées debug</label>
-                    <div className="chat-setting-value">{debugEntries.length}</div>
-                  </div>
-                  {providerStatus.attemptedProviders?.length ? (
-                    <div className="chat-setting-item">
-                      <label className="chat-setting-label">Ordre tentatives</label>
-                      <div className="chat-setting-value">
-                        {providerStatus.attemptedProviders
+            {/* OMEGA Status Bar */}
+            <div className="chat-status-bar chat-status-omega">
+              <div className="chat-status-item chat-status-provider">
+                <span
+                  className={`status-indicator status-${providerStatus.status}`}
+                  role="status"
+                  aria-live="polite"
+                  aria-label={`Provider ${providerStatus.name} : statut ${providerStatus.status}`}
+                />
+                <span className="status-label">Actif:</span>
+                <span
+                  className="status-value"
+                  title={
+                    providerStatus.attemptedProviders?.length
+                      ? `Tentatives: ${providerStatus.attemptedProviders
                           .map(provider => resolveProviderDisplayName(provider))
-                          .join(' → ')}
+                          .join(' → ')}`
+                      : undefined
+                  }
+                >
+                  {providerStatus.name}
+                </span>
+                {providerStatus.autoHealed && (
+                  <span
+                    className="status-badge status-healed"
+                    title="Auto-guérison activée"
+                  >
+                    🔄
+                  </span>
+                )}
+                {providerStatus.lastError && (
+                  <span
+                    className="status-badge status-error"
+                    title={providerStatus.lastError}
+                  >
+                    ⚠️
+                  </span>
+                )}
+              </div>
+
+              {/* Mode Badge compact dans status bar */}
+              <div className="chat-status-item chat-status-mode">
+                <ModeBadge
+                  mode={currentChatMode}
+                  size="small"
+                  showLabel={true}
+                  showTooltip={true}
+                />
+              </div>
+
+              <div className="chat-status-item chat-status-preference">
+                <span className="status-label">Préférence:</span>
+                <select
+                  className="chat-provider-select"
+                  value={preferredProvider}
+                  onChange={handlePreferredProviderChange}
+                  aria-label="Sélection du provider IA"
+                >
+                  {PROVIDER_PREFERENCE_OPTIONS.map(option => (
+                    <option key={option} value={option}>
+                      {PROVIDER_PREFERENCE_LABELS[option]}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {typeof providerStatus.latency === 'number' && (
+                <div className="chat-status-item">
+                  <span className="status-label">Latence:</span>
+                  <span className="status-value">{providerStatus.latency}ms</span>
+                </div>
+              )}
+
+              <div className="chat-status-item">
+                <span className="status-label">Messages:</span>
+                <span className="status-value">{messages?.length || 0}</span>
+              </div>
+
+              <div className="chat-status-item">
+                <span className="status-label">Pipeline:</span>
+                <span className={`status-value status-${omnisStatsSafe.pipelineHealth}`}>
+                  {omnisStatsSafe.pipelineHealth}
+                </span>
+              </div>
+
+              {omnisStatsSafe.autoHealCount > 0 && (
+                <div className="chat-status-item chat-status-heal">
+                  <span className="status-icon">🩹</span>
+                  <span className="status-label">Auto-heal:</span>
+                  <span className="status-value">{omnisStatsSafe.autoHealCount}</span>
+                </div>
+              )}
+
+              {voiceModeActive && (
+                <div className="chat-status-item chat-status-voice">
+                  <span className="status-icon">🎤</span>
+                  <span className="status-label">Voice Mode</span>
+                </div>
+              )}
+
+              {pageState.recoveryCount > 0 && (
+                <div className="chat-status-item chat-status-recovery">
+                  <span className="status-icon">🔄</span>
+                  <span className="status-label">Récupérations:</span>
+                  <span className="status-value">{pageState.recoveryCount}</span>
+                </div>
+              )}
+
+              {uiIntegrity?.preventedResets > 0 && (
+                <div className="chat-status-item chat-status-ui-shield">
+                  <span className="status-icon">🛡️</span>
+                  <span className="status-label">UI Shield:</span>
+                  <span className="status-value">{uiIntegrity.preventedResets}</span>
+                </div>
+              )}
+
+              {debugEntries.length > 0 && (
+                <div
+                  className="chat-status-item chat-status-debug"
+                  title="Entrées du panneau debug"
+                >
+                  <span className="status-label">Debug:</span>
+                  <span className="status-value">{debugEntries.length}</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Messages Container with Protection */}
+          <div className="chat-content">
+            {error && pageState.renderError ? (
+              <div className="chat-error-combined">
+                <div className="chat-error-omega">
+                  <span className="chat-error-icon">⚠️</span>
+                  <div className="chat-error-content">
+                    <strong>Erreurs multiples détectées</strong>
+                    <p>Chat: {error}</p>
+                    <p>Render: {pageState.renderError}</p>
+                    <span className="chat-error-recovery">
+                      OMEGA maintient la stabilité du système
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <MessageList
+                messages={messages || []}
+                isLoading={isLoading}
+                error={error}
+                enableTTS={true}
+                autoScroll={true}
+                onCopyMessage={content => {
+                  isDev &&
+                    console.log('[OMEGA] Message copié:', content?.substring(0, 30));
+                }}
+              />
+            )}
+          </div>
+
+          {/* Enhanced Input with Voice Button + Protection */}
+          <div className="chat-footer">
+            {/* Voice Conversation Panel when active */}
+            {voiceModeActive && (
+              <div
+                style={{
+                  padding: '1rem',
+                  background: 'rgba(102, 126, 234, 0.1)',
+                  borderRadius: '12px',
+                  marginBottom: '1rem',
+                  border: '1px solid rgba(102, 126, 234, 0.2)',
+                }}
+              >
+                <React.Suspense
+                  fallback={
+                    <div
+                      style={{ padding: '1rem', textAlign: 'center', color: '#93b399' }}
+                    >
+                      🎤 Chargement conversation vocale...
+                    </div>
+                  }
+                >
+                  <VoiceConversation
+                    onTranscript={text => {
+                      isDev && console.log('[OMEGA] Voice transcript:', text);
+                    }}
+                    onResponse={response => {
+                      isDev && console.log('[OMEGA] Voice response:', response);
+                    }}
+                  />
+                </React.Suspense>
+              </div>
+            )}
+
+            {/* ✨ v24.3.0 - Provider Readiness Warning */}
+            {preferredProvider !== 'auto' &&
+              preferredProvider !== 'local' &&
+              preferredProvider !== 'ollama' &&
+              !providerReadiness[preferredProvider] && (
+                <div
+                  className="chat-provider-warning"
+                  style={{
+                    padding: '12px 16px',
+                    marginBottom: '8px',
+                    backgroundColor: 'rgba(255, 193, 7, 0.1)',
+                    border: '1px solid rgba(255, 193, 7, 0.3)',
+                    borderRadius: '8px',
+                    color: '#ffc107',
+                    fontSize: '14px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                  }}
+                >
+                  <span style={{ fontSize: '18px' }}>⚠️</span>
+                  <span>
+                    <strong>{preferredProvider.toUpperCase()}</strong> n'est pas
+                    configuré. Le système basculera automatiquement vers un provider
+                    disponible. Pour utiliser {preferredProvider}, ajoutez votre clé API
+                    dans <strong>Gouvernance → Secrets</strong>.
+                  </span>
+                </div>
+              )}
+
+            <ChatInput
+              onSend={sendMessage}
+              disabled={isLoading || pageState.isCorrupted}
+              voiceModeActive={voiceModeActive}
+              onToggleVoiceMode={toggleVoiceMode}
+              placeholder={chatInputPlaceholder}
+            />
+          </div>
+
+          {/* Settings Panel (Modal) with OMEGA Stats */}
+          {showSettings && (
+            <div className="chat-settings-overlay" onClick={toggleSettings}>
+              <div
+                ref={settingsPanelRef}
+                className="chat-settings-panel"
+                onClick={e => e.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="settings-title"
+              >
+                <div className="chat-settings-header">
+                  <h2 id="settings-title" className="chat-settings-title">
+                    Paramètres OMEGA v19.2Ω
+                  </h2>
+                  <button
+                    className="chat-settings-close"
+                    onClick={toggleSettings}
+                    aria-label="Fermer les paramètres"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <div className="chat-settings-content">
+                  <div className="chat-setting-section">
+                    <h3 className="chat-setting-section-title">🤖 Provider IA</h3>
+                    <div className="chat-setting-item">
+                      <label
+                        className="chat-setting-label"
+                        htmlFor="omega-provider-preference"
+                      >
+                        Préférence moteur
+                      </label>
+                      <select
+                        id="omega-provider-preference"
+                        className="chat-provider-select"
+                        value={preferredProvider}
+                        onChange={handlePreferredProviderChange}
+                        aria-label="Sélection du provider IA préféré"
+                      >
+                        {PROVIDER_PREFERENCE_OPTIONS.map(option => (
+                          <option key={option} value={option}>
+                            {PROVIDER_PREFERENCE_LABELS[option]}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="chat-setting-item">
+                      <label className="chat-setting-label">Dernier provider actif</label>
+                      <div className="chat-setting-value">
+                        {providerStatus.name}
+                        {typeof providerStatus.latency === 'number'
+                          ? ` • ${providerStatus.latency}ms`
+                          : ''}
                       </div>
                     </div>
-                  ) : null}
-                </div>
+                    <div className="chat-setting-item">
+                      <label className="chat-setting-label">Dernière erreur</label>
+                      <div className="chat-setting-value">
+                        {providerStatus.lastError ?? 'Aucune'}
+                      </div>
+                    </div>
+                    <div className="chat-setting-item">
+                      <label className="chat-setting-label">Entrées debug</label>
+                      <div className="chat-setting-value">{debugEntries.length}</div>
+                    </div>
+                    {providerStatus.attemptedProviders?.length ? (
+                      <div className="chat-setting-item">
+                        <label className="chat-setting-label">Ordre tentatives</label>
+                        <div className="chat-setting-value">
+                          {providerStatus.attemptedProviders
+                            .map(provider => resolveProviderDisplayName(provider))
+                            .join(' → ')}
+                        </div>
+                      </div>
+                    ) : null}
+                  </div>
 
-                <div className="chat-setting-section">
-                  <h3 className="chat-setting-section-title">📊 Statistiques OMEGA</h3>
-                  <div className="chat-setting-item">
-                    <label className="chat-setting-label">Messages en mémoire</label>
-                    <div className="chat-setting-value">
-                      {messages?.length || 0} messages
+                  <div className="chat-setting-section">
+                    <h3 className="chat-setting-section-title">📊 Statistiques OMEGA</h3>
+                    <div className="chat-setting-item">
+                      <label className="chat-setting-label">Messages en mémoire</label>
+                      <div className="chat-setting-value">
+                        {messages?.length || 0} messages
+                      </div>
+                    </div>
+                    <div className="chat-setting-item">
+                      <label className="chat-setting-label">Pipeline Health</label>
+                      <div className="chat-setting-value">
+                        {omnisStatsSafe.pipelineHealth}
+                      </div>
+                    </div>
+                    <div className="chat-setting-item">
+                      <label className="chat-setting-label">Auto-guérisons</label>
+                      <div className="chat-setting-value">
+                        {omnisStatsSafe.autoHealCount} réparations automatiques
+                      </div>
+                    </div>
+                    <div className="chat-setting-item">
+                      <label className="chat-setting-label">Récupérations UI</label>
+                      <div className="chat-setting-value">
+                        {pageState.recoveryCount} récupérations render
+                      </div>
+                    </div>
+                    <div className="chat-setting-item">
+                      <label className="chat-setting-label">UI Shield</label>
+                      <div className="chat-setting-value">
+                        {uiIntegrity?.preventedResets ?? 0} protections — version{' '}
+                        {uiIntegrity?.version ?? 1}
+                      </div>
                     </div>
                   </div>
-                  <div className="chat-setting-item">
-                    <label className="chat-setting-label">Pipeline Health</label>
-                    <div className="chat-setting-value">
-                      {omnisStatsSafe.pipelineHealth}
-                    </div>
-                  </div>
-                  <div className="chat-setting-item">
-                    <label className="chat-setting-label">Auto-guérisons</label>
-                    <div className="chat-setting-value">
-                      {omnisStatsSafe.autoHealCount} réparations automatiques
-                    </div>
-                  </div>
-                  <div className="chat-setting-item">
-                    <label className="chat-setting-label">Récupérations UI</label>
-                    <div className="chat-setting-value">
-                      {pageState.recoveryCount} récupérations render
-                    </div>
-                  </div>
-                  <div className="chat-setting-item">
-                    <label className="chat-setting-label">UI Shield</label>
-                    <div className="chat-setting-value">
-                      {uiIntegrity?.preventedResets ?? 0} protections — version{' '}
-                      {uiIntegrity?.version ?? 1}
-                    </div>
-                  </div>
-                </div>
 
-                <div className="chat-setting-section">
-                  <h3 className="chat-setting-section-title">🔧 Configuration</h3>
-                  <div className="chat-setting-item">
-                    <label className="chat-setting-label">Version OMEGA</label>
-                    <div className="chat-setting-value">
-                      v19.2Ω (État: v{pageState.stateVersion})
+                  <div className="chat-setting-section">
+                    <h3 className="chat-setting-section-title">🔧 Configuration</h3>
+                    <div className="chat-setting-item">
+                      <label className="chat-setting-label">Version OMEGA</label>
+                      <div className="chat-setting-value">
+                        v19.2Ω (État: v{pageState.stateVersion})
+                      </div>
                     </div>
-                  </div>
-                  <div className="chat-setting-item">
-                    <label className="chat-setting-label">API Keys</label>
-                    <div className="chat-setting-value">
-                      Voir .env pour VITE_GEMINI_API_KEY
+                    <div className="chat-setting-item">
+                      <label className="chat-setting-label">API Keys</label>
+                      <div className="chat-setting-value">
+                        Voir .env pour VITE_GEMINI_API_KEY
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        <ChatDebugPanel
-          visible={debugPanelVisible}
-          collapsed={debugPanelCollapsed}
-          onToggleCollapsed={toggleDebugPanelCollapsed}
-          onToggleVisible={toggleDebugPanelVisibility}
-          position={debugPanelPosition}
-          onPositionChange={handleDebugPanelPositionChange}
-          entries={debugEntries}
-        />
-      </div>
+          <ChatDebugPanel
+            visible={debugPanelVisible}
+            collapsed={debugPanelCollapsed}
+            onToggleCollapsed={toggleDebugPanelCollapsed}
+            onToggleVisible={toggleDebugPanelVisibility}
+            position={debugPanelPosition}
+            onPositionChange={handleDebugPanelPositionChange}
+            entries={debugEntries}
+          />
+        </div>
+      </ResponsiveChatLayout>
     );
   } catch (renderError) {
     // ═══ ULTIMATE FALLBACK RENDER ═══
