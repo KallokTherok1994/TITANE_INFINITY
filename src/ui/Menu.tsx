@@ -8,9 +8,10 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v25.0 — MENU NAVIGATION
- *   Centre EVO unifié + Centres spécialisés (Audio, Système, etc.)
- *   FUSION: 5 modules → 1 module EVO (Dashboard, Identity, Memory, Evolution, Progression)
+ *   TITANE∞ v25.4.0 — MENU NAVIGATION
+ *   Module TITANE - LE CŒUR DU SYSTÈME (fusion Chat IA + Vision + EVO)
+ *   FUSION DEV: Dev Mode + ONE CORE + QA & Tests + Orchestration (4→1)
+ *   Menu simplifié: 8→5 items (-37.5%)
  * ═══════════════════════════════════════════════════════════════
  */
 
@@ -36,21 +37,14 @@ interface MenuSection {
 }
 
 const MENU_SECTIONS: MenuSection[] = [
-  // ═══ PRINCIPAL ═══
+  // ⚡ v25.3.0 TITANE - LE CŒUR DU SYSTÈME (Fusion Chat IA + Vision + EVO)
   {
-    id: 'chat',
-    icon: '💬',
-    label: 'Chat IA',
-    description: 'Module central - Intelligence conversationnelle',
-    route: '/chat',
-  },
-  // ✨ v25.0 EVO - FUSION ULTIME (Dashboard + Identity + Memory + Evolution + Progression)
-  {
-    id: 'evo',
-    icon: '🧬',
-    label: 'EVO',
-    description: "Centre d'Évolution Totale - Dashboard, Identité, Mémoire, Progression",
-    route: '/evo',
+    id: 'titane',
+    icon: '⚡',
+    label: 'TITANE',
+    description:
+      'Le Cœur du Système - Conversation, Vision, Overview, Identité, Mémoire, Évolution, Progression, Transformation',
+    route: '/titane',
   },
   // ✨ v25.1 TIME - FUSION TEMPORELLE ULTIME (Temporal Flow + Agenda + Time Navigator)
   {
@@ -61,43 +55,28 @@ const MENU_SECTIONS: MenuSection[] = [
     route: '/time',
   },
   {
-    id: 'camera',
-    icon: '📷',
-    label: 'Vision',
-    description: 'Analyse visuelle et reconnaissance',
-    route: '/camera',
-  },
-  // ═══ CENTRES UNIFIÉS ═══
-  {
-    id: 'one-core',
-    icon: '🎯',
-    label: 'ONE CORE',
-    description: 'Centre de commande unifié',
-    route: '/one-core',
-  },
-  {
     id: 'stats',
     icon: '📊',
-    label: 'Statistiques',
+    label: 'STATS',
     description: 'Métriques moteurs : Nexus, Helios, Harmonia, État Cognitif',
     route: '/stats',
   },
-  // ✨ v25.2 ADMIN - FUSION (Système + Config + Audio + Design + Gouvernance + QA + Dev)
+  // ✨ v25.2 ADMIN - FUSION (Système + Config + Audio + Design + Gouvernance)
   {
     id: 'admin',
     icon: '👑',
     label: 'ADMIN',
-    description:
-      'Centre Admin Unifié - Système, Config, Audio, Design, Gouvernance, QA, Dev',
+    description: 'Centre Admin Unifié - Système, Config, Audio, Design, Gouvernance',
     route: '/admin',
   },
-  // ═══ CENTRES COGNITIFS AVANCÉS ═══
+  // ⚡ v25.4.0 DEV - FUSION COMPLÈTE (Dev Mode + ONE CORE + QA & Tests + Orchestration)
   {
-    id: 'orchestration',
-    icon: '🔥',
-    label: 'Orchestration & IA',
-    description: 'Orchestration Multi-IA, Meta-cognition',
-    route: '/orchestration-intelligence',
+    id: 'dev',
+    icon: '🔧',
+    label: 'DEV',
+    description:
+      'Centre DEV Unifié - Dev Tools, Command Center, QA & Tests, Orchestration, Sécurité, Métriques',
+    route: '/dev',
   },
 ];
 
@@ -109,19 +88,19 @@ export const Menu: React.FC<MenuProps> = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [menuSections, setMenuSections] = useState(() => {
-    // v25.2.1: FINAL CLEAN - Menu synchronisé avec sidebar, ADMIN unifié
-    const MENU_VERSION = 'v25.2.1-final-clean';
+    // v25.4.0: DEV FUSION - Menu 8→5 items
+    const MENU_VERSION = 'v25.4.0-dev-fusion';
 
-    // FORCER le nettoyage total à chaque chargement jusqu'à stabilisation
+    // FORCER le nettoyage total pour transition vers DEV unified
     localStorage.removeItem('titane_menu_config');
     localStorage.removeItem('titane_menu_sections');
     localStorage.removeItem('menu_config');
     localStorage.removeItem('navigation_config');
-    localStorage.removeItem('menuSections'); // Ancienne clé possible
-    localStorage.removeItem('sidebar_config'); // Ancienne clé possible
+    localStorage.removeItem('menuSections');
+    localStorage.removeItem('sidebar_config');
     localStorage.setItem('titane_menu_version', MENU_VERSION);
 
-    console.log('🔄 Menu nettoyé et réinitialisé vers', MENU_VERSION);
+    console.log('🔧 Menu v25.4.0 - DEV FUSION activée (8→5 items, -37.5%)');
     console.log(
       '📋 Sections actives:',
       MENU_SECTIONS.length,

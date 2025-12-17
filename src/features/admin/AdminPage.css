@@ -5,6 +5,35 @@
  */
 
 /* ══════════════════════════════════════════════════════════════════
+   CSS CUSTOM PROPERTIES - Theme Variables
+   ══════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Colors - Admin Theme */
+  --admin-gold-start: #ffd700;
+  --admin-gold-end: #ffed4e;
+  --admin-cyan: #00ffff;
+  --admin-bg-start: #0a0e17;
+  --admin-bg-end: #141922;
+  --admin-header-bg-start: #1a1f2e;
+  --admin-header-bg-end: #0f1319;
+
+  /* Spacing */
+  --admin-spacing-xs: 0.5rem;
+  --admin-spacing-sm: 0.75rem;
+  --admin-spacing-md: 1rem;
+  --admin-spacing-lg: 1.5rem;
+  --admin-spacing-xl: 2rem;
+
+  /* Animation */
+  --admin-transition-fast: 0.2s;
+  --admin-transition-normal: 0.3s;
+
+  /* Typography */
+  --admin-font-mono: 'Courier New', monospace;
+}
+
+/* ══════════════════════════════════════════════════════════════════
    ADMIN PAGE CONTAINER
    ══════════════════════════════════════════════════════════════════ */
 
@@ -12,7 +41,7 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background: linear-gradient(135deg, #0a0e17 0%, #141922 100%);
+  background: linear-gradient(135deg, var(--admin-bg-start) 0%, var(--admin-bg-end) 100%);
   overflow: hidden;
 }
 
@@ -21,9 +50,13 @@
    ══════════════════════════════════════════════════════════════════ */
 
 .admin-header {
-  background: linear-gradient(135deg, #1a1f2e 0%, #0f1319 100%);
+  background: linear-gradient(
+    135deg,
+    var(--admin-header-bg-start) 0%,
+    var(--admin-header-bg-end) 100%
+  );
   border-bottom: 2px solid rgba(0, 255, 255, 0.2);
-  padding: 1.5rem 2rem;
+  padding: var(--admin-spacing-lg) var(--admin-spacing-xl);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
@@ -49,7 +82,11 @@
 .admin-header h1 {
   font-size: 2rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  background: linear-gradient(
+    135deg,
+    var(--admin-gold-start) 0%,
+    var(--admin-gold-end) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -75,10 +112,10 @@
   background: rgba(0, 255, 255, 0.1);
   border: 1px solid rgba(0, 255, 255, 0.3);
   border-radius: 6px;
-  color: #00ffff;
+  color: var(--admin-cyan);
   font-size: 0.85rem;
   font-weight: 600;
-  font-family: 'Courier New', monospace;
+  font-family: var(--admin-font-mono);
 }
 
 /* ══════════════════════════════════════════════════════════════════
@@ -163,8 +200,8 @@
   padding: 0.15rem 0.5rem;
   background: rgba(0, 255, 255, 0.2);
   border-radius: 4px;
-  color: #00ffff;
-  font-family: 'Courier New', monospace;
+  color: var(--admin-cyan);
+  font-family: var(--admin-font-mono);
   font-weight: 700;
 }
 

@@ -1,0 +1,885 @@
+/**
+ * TITANE∞ v25.4.0 — DEV Page Styles
+ * © 2025 Kevin Thibault — Licence MIT
+ */
+
+/* ============================================================================
+ * Variables
+ * ============================================================================ */
+
+.dev-page {
+  --dev-primary: #4caf50;
+  --dev-secondary: #2196f3;
+  --dev-accent: #ff9800;
+  --dev-danger: #f44336;
+  --dev-success: #4caf50;
+  --dev-warning: #ff9800;
+  --dev-error: #f44336;
+  --dev-info: #2196f3;
+  --dev-bg: #0a0a0a;
+  --dev-surface: #1a1a1a;
+  --dev-border: #2a2a2a;
+  --dev-text: #e8e8e8;
+  --dev-text-dim: #a8a8a8;
+  --dev-hover: #2a2a2a;
+  --dev-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --dev-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --dev-transition: all 0.2s ease;
+}
+
+/* ============================================================================
+ * Layout
+ * ============================================================================ */
+
+.dev-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--dev-bg);
+  color: var(--dev-text);
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+  overflow: hidden;
+}
+
+/* ============================================================================
+ * Header
+ * ============================================================================ */
+
+.dev-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  background: linear-gradient(
+    135deg,
+    rgba(76, 175, 80, 0.1) 0%,
+    rgba(33, 150, 243, 0.1) 100%
+  );
+  border-bottom: 1px solid var(--dev-border);
+  box-shadow: var(--dev-shadow);
+}
+
+.dev-header-content {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.dev-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--dev-primary), var(--dev-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dev-version {
+  font-size: 0.875rem;
+  color: var(--dev-text-dim);
+  font-weight: 500;
+}
+
+/* ============================================================================
+ * Tabs Navigation
+ * ============================================================================ */
+
+.dev-tabs {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  background: var(--dev-surface);
+  border-bottom: 1px solid var(--dev-border);
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--dev-border) transparent;
+}
+
+.dev-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--dev-text-dim);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--dev-transition);
+  white-space: nowrap;
+}
+
+.dev-tab:hover {
+  background: var(--dev-hover);
+  color: var(--dev-text);
+}
+
+.dev-tab--active {
+  background: linear-gradient(
+    135deg,
+    rgba(76, 175, 80, 0.2) 0%,
+    rgba(33, 150, 243, 0.2) 100%
+  );
+  border-color: var(--dev-primary);
+  color: var(--dev-text);
+}
+
+.dev-tab-icon {
+  font-size: 1.125rem;
+}
+
+/* ============================================================================
+ * Main Content
+ * ============================================================================ */
+
+.dev-main {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--dev-border) transparent;
+}
+
+.dev-section {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.dev-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.dev-section-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.dev-section-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* ============================================================================
+ * Stats Grid
+ * ============================================================================ */
+
+.dev-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.dev-stat-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: var(--dev-surface);
+  border: 1px solid var(--dev-border);
+  border-radius: 12px;
+  box-shadow: var(--dev-shadow);
+  transition: var(--dev-transition);
+}
+
+.dev-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--dev-shadow-lg);
+}
+
+.dev-stat-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.dev-stat-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.dev-stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.dev-stat-label {
+  font-size: 0.875rem;
+  color: var(--dev-text-dim);
+  font-weight: 500;
+}
+
+.dev-stat-card--success {
+  border-color: var(--dev-success);
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, transparent 100%);
+}
+
+.dev-stat-card--warning {
+  border-color: var(--dev-warning);
+  background: linear-gradient(135deg, rgba(255, 152, 0, 0.1) 0%, transparent 100%);
+}
+
+.dev-stat-card--error {
+  border-color: var(--dev-error);
+  background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, transparent 100%);
+}
+
+.dev-stat-card--info {
+  border-color: var(--dev-info);
+  background: linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, transparent 100%);
+}
+
+/* ============================================================================
+ * Health Bars
+ * ============================================================================ */
+
+.dev-health-bar {
+  margin-bottom: 1rem;
+}
+
+.dev-health-bar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.dev-health-bar-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--dev-text-dim);
+}
+
+.dev-health-bar-value {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--dev-text);
+}
+
+.dev-health-bar-track {
+  height: 8px;
+  background: var(--dev-border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.dev-health-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition:
+    width 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.dev-health-bar-fill--success {
+  background: linear-gradient(90deg, var(--dev-success), #66bb6a);
+}
+
+.dev-health-bar-fill--warning {
+  background: linear-gradient(90deg, var(--dev-warning), #ffb74d);
+}
+
+.dev-health-bar-fill--error {
+  background: linear-gradient(90deg, var(--dev-error), #ef5350);
+}
+
+/* ============================================================================
+ * Consciousness Section
+ * ============================================================================ */
+
+.dev-consciousness-section {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: var(--dev-surface);
+  border: 1px solid var(--dev-border);
+  border-radius: 12px;
+}
+
+.dev-consciousness-section h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.dev-consciousness-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.dev-consciousness-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: var(--dev-bg);
+  border: 1px solid var(--dev-border);
+  border-radius: 8px;
+}
+
+.dev-consciousness-label {
+  font-size: 0.75rem;
+  color: var(--dev-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dev-consciousness-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--dev-primary);
+}
+
+/* ============================================================================
+ * Operations Grid (Dev Tools)
+ * ============================================================================ */
+
+.dev-operations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.dev-operation-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.5rem 1rem;
+  background: var(--dev-surface);
+  border: 2px solid var(--dev-border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: var(--dev-transition);
+  text-align: center;
+}
+
+.dev-operation-card:hover {
+  border-color: var(--dev-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--dev-shadow);
+}
+
+.dev-operation-card--active {
+  background: linear-gradient(
+    135deg,
+    rgba(76, 175, 80, 0.2) 0%,
+    rgba(33, 150, 243, 0.2) 100%
+  );
+  border-color: var(--dev-primary);
+}
+
+.dev-operation-icon {
+  font-size: 2rem;
+}
+
+.dev-operation-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--dev-text);
+}
+
+.dev-operation-desc {
+  font-size: 0.75rem;
+  color: var(--dev-text-dim);
+}
+
+.dev-operation-panel {
+  padding: 1.5rem;
+  background: var(--dev-surface);
+  border: 1px solid var(--dev-border);
+  border-radius: 12px;
+}
+
+.dev-operation-panel h3 {
+  margin: 0 0 1rem 0;
+}
+
+.dev-operation-info {
+  margin-bottom: 1.5rem;
+  color: var(--dev-text-dim);
+  font-size: 0.875rem;
+}
+
+/* ============================================================================
+ * Centers Grid
+ * ============================================================================ */
+
+.dev-centers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.dev-center-card {
+  padding: 1.5rem;
+  background: var(--dev-surface);
+  border: 1px solid var(--dev-border);
+  border-radius: 12px;
+  box-shadow: var(--dev-shadow);
+  transition: var(--dev-transition);
+}
+
+.dev-center-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--dev-shadow-lg);
+}
+
+.dev-center-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.dev-center-name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--dev-text);
+}
+
+.dev-center-category {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  background: var(--dev-border);
+  border-radius: 12px;
+  color: var(--dev-text-dim);
+}
+
+.dev-center-stats {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.dev-center-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.dev-center-stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--dev-primary);
+}
+
+.dev-center-stat-label {
+  font-size: 0.75rem;
+  color: var(--dev-text-dim);
+}
+
+/* ============================================================================
+ * Commands Grid
+ * ============================================================================ */
+
+.dev-commands-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.dev-command-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.5rem 1rem;
+  background: var(--dev-surface);
+  border: 2px solid var(--dev-border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: var(--dev-transition);
+  color: var(--dev-text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.dev-command-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--dev-shadow);
+}
+
+.dev-command-btn--primary {
+  border-color: var(--dev-primary);
+}
+
+.dev-command-btn--primary:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(76, 175, 80, 0.2) 0%,
+    rgba(33, 150, 243, 0.2) 100%
+  );
+  border-color: var(--dev-primary);
+}
+
+.dev-command-btn--danger {
+  border-color: var(--dev-danger);
+}
+
+.dev-command-btn--danger:hover {
+  background: linear-gradient(135deg, rgba(244, 67, 54, 0.2) 0%, transparent 100%);
+  border-color: var(--dev-danger);
+}
+
+.dev-command-icon {
+  font-size: 1.5rem;
+}
+
+.dev-command-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.dev-command-category {
+  font-size: 0.75rem;
+  color: var(--dev-text-dim);
+}
+
+/* ============================================================================
+ * QA Stats & Suites
+ * ============================================================================ */
+
+.dev-qa-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.dev-suites-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.dev-suite-card {
+  padding: 1.5rem;
+  background: var(--dev-surface);
+  border: 1px solid var(--dev-border);
+  border-radius: 12px;
+  box-shadow: var(--dev-shadow);
+}
+
+.dev-suite-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.dev-suite-name {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.dev-suite-category {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  background: var(--dev-border);
+  border-radius: 12px;
+  color: var(--dev-text-dim);
+}
+
+.dev-suite-stats {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.dev-suite-stat {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.dev-suite-stat--success {
+  color: var(--dev-success);
+}
+
+.dev-suite-stat--error {
+  color: var(--dev-error);
+}
+
+.dev-suite-stat--info {
+  color: var(--dev-info);
+}
+
+/* ============================================================================
+ * Orchestration Cards
+ * ============================================================================ */
+
+.dev-orchestration-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.dev-orch-card {
+  padding: 1.5rem;
+  background: var(--dev-surface);
+  border: 1px solid var(--dev-border);
+  border-radius: 12px;
+  box-shadow: var(--dev-shadow);
+}
+
+.dev-orch-card h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.dev-orch-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--dev-border);
+}
+
+.dev-orch-stat:last-child {
+  border-bottom: none;
+}
+
+.dev-orch-label {
+  font-size: 0.875rem;
+  color: var(--dev-text-dim);
+}
+
+.dev-orch-value {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--dev-primary);
+}
+
+/* ============================================================================
+ * Security & Alerts
+ * ============================================================================ */
+
+.dev-security-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.dev-alerts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dev-alert {
+  padding: 1.5rem;
+  background: var(--dev-surface);
+  border-left: 4px solid;
+  border-radius: 8px;
+  box-shadow: var(--dev-shadow);
+}
+
+.dev-alert--critical {
+  border-color: var(--dev-error);
+  background: linear-gradient(90deg, rgba(244, 67, 54, 0.1) 0%, transparent 100%);
+}
+
+.dev-alert--warning {
+  border-color: var(--dev-warning);
+  background: linear-gradient(90deg, rgba(255, 152, 0, 0.1) 0%, transparent 100%);
+}
+
+.dev-alert--info {
+  border-color: var(--dev-info);
+  background: linear-gradient(90deg, rgba(33, 150, 243, 0.1) 0%, transparent 100%);
+}
+
+.dev-alert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.dev-alert-name {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.dev-alert-time {
+  font-size: 0.75rem;
+  color: var(--dev-text-dim);
+}
+
+.dev-alert-message {
+  margin: 0.5rem 0 1rem 0;
+  font-size: 0.875rem;
+  color: var(--dev-text-dim);
+}
+
+/* ============================================================================
+ * Metrics
+ * ============================================================================ */
+
+.dev-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.dev-metric-card {
+  padding: 1.5rem;
+  background: var(--dev-surface);
+  border: 1px solid var(--dev-border);
+  border-radius: 12px;
+  box-shadow: var(--dev-shadow);
+}
+
+.dev-metric-card h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.dev-uptime-section {
+  padding: 1.5rem;
+  background: var(--dev-surface);
+  border: 1px solid var(--dev-border);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.dev-uptime-section h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.dev-uptime-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--dev-primary);
+}
+
+/* ============================================================================
+ * Buttons
+ * ============================================================================ */
+
+.dev-btn {
+  padding: 0.75rem 1.5rem;
+  background: var(--dev-surface);
+  border: 1px solid var(--dev-border);
+  border-radius: 8px;
+  color: var(--dev-text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--dev-transition);
+  white-space: nowrap;
+}
+
+.dev-btn:hover {
+  background: var(--dev-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--dev-shadow);
+}
+
+.dev-btn--primary {
+  background: linear-gradient(135deg, var(--dev-primary), #66bb6a);
+  border-color: var(--dev-primary);
+  color: white;
+}
+
+.dev-btn--primary:hover {
+  background: linear-gradient(135deg, #66bb6a, var(--dev-primary));
+  box-shadow: var(--dev-shadow-lg);
+}
+
+.dev-btn--small {
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+}
+
+/* ============================================================================
+ * Loading & Error States
+ * ============================================================================ */
+
+.dev-loading,
+.dev-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  min-height: 400px;
+}
+
+.dev-loading-icon,
+.dev-error-icon {
+  font-size: 4rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.dev-loading-text {
+  font-size: 1.125rem;
+  color: var(--dev-text-dim);
+}
+
+.dev-empty {
+  padding: 2rem;
+  text-align: center;
+  color: var(--dev-text-dim);
+  font-size: 0.875rem;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* ============================================================================
+ * Responsive
+ * ============================================================================ */
+
+@media (max-width: 768px) {
+  .dev-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .dev-stats-grid,
+  .dev-operations-grid,
+  .dev-centers-grid,
+  .dev-commands-grid,
+  .dev-orchestration-cards,
+  .dev-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dev-tabs {
+    padding: 0.75rem 1rem;
+  }
+
+  .dev-main {
+    padding: 1rem;
+  }
+}

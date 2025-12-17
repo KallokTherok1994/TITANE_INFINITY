@@ -46,6 +46,7 @@ export interface UseConversationEngineOptions {
   onResponse?: (response: ConversationResponse) => void;
   onError?: (error: Error) => void;
   autoHealthCheck?: boolean;
+  maxMessages?: number; // Limite d'historique (défaut: 500)
 }
 
 export interface UseConversationEngineReturn {
@@ -132,9 +133,12 @@ export function useConversationEngine(
     }
   }, []);
 
-  // ═══ SEND MESSAGE ═══
+  // ═══ SEND MESSAGE (avec Retry Logic) ═══
   const sendMessage = useCallback(
-    async (content: string): Promise<ConversationResponse | null> => {
+    async (content: string, retryCount = 0): Promise<ConversationResponse | null> => {
+      const MAX_RETRIES = 3;
+      const RETRY_DELAY = 1000; // Base delay 1s
+
       // Prévenir double-envoi
       if (isProcessingRef.current) {
         console.warn('[ConversationEngine] Message déjà en cours de traitement');
@@ -153,7 +157,12 @@ export function useConversationEngine(
         timestamp: Date.now(),
       };
 
-      setMessages(prev => [...prev, userMessage]);
+      setMessages(prev => {
+        const maxMessages = options.maxMessages || 500;
+        const updated = [...prev, userMessage];
+        // Garder seulement les N derniers messages pour éviter surcharge mémoire
+        return updated.length > maxMessages ? updated.slice(-maxMessages) : updated;
+      });
 
       try {
         // Traiter le message via Conversation Engine
@@ -198,10 +207,24 @@ export function useConversationEngine(
         return response;
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Erreur inconnue';
+
+        // Retry logic avec backoff exponentiel
+        if (retryCount < MAX_RETRIES && errorMessage.includes('network')) {
+          const delay = RETRY_DELAY * Math.pow(2, retryCount);
+          console.warn(
+            `[ConversationEngine] Tentative ${retryCount + 1}/${MAX_RETRIES} échouée, retry dans ${delay}ms`
+          );
+
+          await new Promise(resolve => setTimeout(resolve, delay));
+          isProcessingRef.current = false;
+          setIsLoading(false);
+          return sendMessage(content, retryCount + 1);
+        }
+
         setError(errorMessage);
         options.onError?.(err as Error);
 
-        console.error('[ConversationEngine] Erreur:', err);
+        console.error('[ConversationEngine] Erreur finale:', err);
         return null;
       } finally {
         setIsLoading(false);
