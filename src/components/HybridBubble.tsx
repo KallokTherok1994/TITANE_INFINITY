@@ -386,12 +386,12 @@ export const HybridBubble: React.FC<HybridBubbleProps> = ({ initialMode = 'bubbl
                 <div
                   style={{
                     whiteSpace: 'pre-wrap',
-                    color: exec.exitCode === 0 ? '#C4C4C4' : '#ff6b6b',
+                    color: exec.exitCode === 0 ? '#C4C4C4' : '#ef4444',
                     fontSize: '12px',
                     padding: '8px',
                     background: 'rgba(0, 0, 0, 0.3)',
                     borderRadius: '6px',
-                    border: `1px solid ${exec.exitCode === 0 ? 'rgba(114, 123, 129, 0.2)' : 'rgba(255, 107, 107, 0.3)'}`,
+                    border: `1px solid ${exec.exitCode === 0 ? 'rgba(114, 123, 129, 0.2)' : 'rgba(239, 68, 68, 0.3)'}`,
                   }}
                 >
                   {exec.output ||
@@ -407,7 +407,7 @@ export const HybridBubble: React.FC<HybridBubbleProps> = ({ initialMode = 'bubbl
                     gap: '8px',
                     marginTop: '6px',
                     fontSize: '11px',
-                    color: exec.exitCode === 0 ? '#4ade80' : '#ff6b6b',
+                    color: exec.exitCode === 0 ? '#10b981' : '#ef4444',
                   }}
                 >
                   {exec.exitCode === 0 ? '✅' : '❌'} Exit code: {exec.exitCode}

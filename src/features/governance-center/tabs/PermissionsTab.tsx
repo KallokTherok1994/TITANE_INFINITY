@@ -21,10 +21,10 @@ interface PermissionsTabProps {
 }
 
 const roleColors: Record<Role, string> = {
-  Root: '#ff0000',
-  System: '#ff8800',
-  Ia: '#00aaff',
-  User: '#00ff88',
+  Root: '#ef4444',
+  System: '#f59e0b',
+  Ia: '#06b6d4',
+  User: '#10b981',
 };
 
 const roleLabels: Record<Role, { label: string; icon: string }> = {

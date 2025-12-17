@@ -198,11 +198,11 @@
 }
 
 .vision-feedback__suggestion--medium {
-  border-left: 3px solid #ffd93d;
+  border-left: 3px solid #f59e0b;
 }
 
 .vision-feedback__suggestion--low {
-  border-left: 3px solid #6bcb77;
+  border-left: 3px solid #10b981;
 }
 
 .vision-feedback__suggestion-message {

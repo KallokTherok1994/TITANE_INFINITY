@@ -85,15 +85,15 @@
   }
 
   .badge-success {
-    @apply bg-success-500/20 text-success-300 ring-1 ring-success-500/30;
+    @apply bg-emerald-500/20 text-emerald-300 ring-1 ring-emerald-500/30;
   }
 
   .badge-error {
-    @apply bg-error-500/20 text-error-300 ring-1 ring-error-500/30;
+    @apply bg-red-500/20 text-red-300 ring-1 ring-red-500/30;
   }
 
   .badge-warning {
-    @apply bg-warning-500/20 text-warning-300 ring-1 ring-warning-500/30;
+    @apply bg-amber-500/20 text-amber-300 ring-1 ring-amber-500/30;
   }
 
   /* Input base styles */

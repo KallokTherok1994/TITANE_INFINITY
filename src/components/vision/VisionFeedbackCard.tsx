@@ -39,11 +39,11 @@ export interface VisionFeedbackCardProps {
 const levelToColor = (level: VisualLevel): string => {
   switch (level) {
     case 'low':
-      return 'var(--color-warning, #ff6b6b)';
+      return 'var(--color-warning, #ef4444)';
     case 'medium':
-      return 'var(--color-neutral, #ffd93d)';
+      return 'var(--color-neutral, #f59e0b)';
     case 'high':
-      return 'var(--color-success, #6bcb77)';
+      return 'var(--color-success, #10b981)';
   }
 };
 

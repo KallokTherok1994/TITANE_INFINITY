@@ -41,13 +41,13 @@ export interface VisionDebugOverlayProps {
 const levelToColor = (level: VisualLevel): string => {
   switch (level) {
     case 'low':
-      return '#ff6b6b';
+      return '#ef4444';
     case 'medium':
-      return '#ffd93d';
+      return '#f59e0b';
     case 'high':
-      return '#6bcb77';
+      return '#10b981';
     default:
-      return '#888';
+      return '#6b7280';
   }
 };
 

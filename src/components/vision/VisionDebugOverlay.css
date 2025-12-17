@@ -125,15 +125,15 @@
    ============================================================================ */
 
 .text-green {
-  color: #6bcb77 !important;
+  color: #10b981 !important;
 }
 
 .text-red {
-  color: var(--danger, #8f7a7a) !important;
+  color: #ef4444 !important;
 }
 
 .text-yellow {
-  color: #ffd93d !important;
+  color: #f59e0b !important;
 }
 
 /* ============================================================================
