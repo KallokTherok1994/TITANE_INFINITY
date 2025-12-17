@@ -1,0 +1,386 @@
+<svg
+  width="1024"
+  height="1024"
+  viewBox="0 0 1024 1024"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <defs>
+    <!-- FOND: Profondeur abyssale sombre -->
+    <radialGradient id="bgDeep" cx="50%" cy="50%" r="70%">
+      <stop offset="0%"   stop-color="#0A0F14"/>
+      <stop offset="50%"  stop-color="#050809"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </radialGradient>
+
+    <!-- HALO EMERAUDE EXTERNE (Glow ambiant) -->
+    <radialGradient id="emeraldHalo" cx="50%" cy="50%" r="65%">
+      <stop offset="0%"   stop-color="#34D399" stop-opacity="0.35"/>
+      <stop offset="35%"  stop-color="#10B981" stop-opacity="0.20"/>
+      <stop offset="70%"  stop-color="#059669" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- ANNEAU EXTERNE METALLIQUE (Titane brossé) -->
+    <linearGradient id="outerMetalRing" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#E8ECEF"/>
+      <stop offset="20%"  stop-color="#C5CCD2"/>
+      <stop offset="50%"  stop-color="#8B959D"/>
+      <stop offset="80%"  stop-color="#5D666E"/>
+      <stop offset="100%" stop-color="#3D444B"/>
+    </linearGradient>
+
+    <!-- EFFET CHROME SUR ANNEAU -->
+    <linearGradient id="chromeHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="0.95"/>
+      <stop offset="25%"  stop-color="#D4D9DD" stop-opacity="0.85"/>
+      <stop offset="50%"  stop-color="#9CA5AD" stop-opacity="0.70"/>
+      <stop offset="100%" stop-color="#5C656D" stop-opacity="0.60"/>
+    </linearGradient>
+
+    <!-- ANNEAU ENERGIE EMERAUDE (Principal) -->
+    <radialGradient id="emeraldEnergyRing" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#ECFDF5" stop-opacity="1"/>
+      <stop offset="25%"  stop-color="#A7F3D0" stop-opacity="0.95"/>
+      <stop offset="55%"  stop-color="#34D399" stop-opacity="0.85"/>
+      <stop offset="85%"  stop-color="#10B981" stop-opacity="0.70"/>
+      <stop offset="100%" stop-color="#065F46" stop-opacity="0.30"/>
+    </radialGradient>
+
+    <!-- COEUR ARC REACTOR EMERAUDE (Ultra lumineux) -->
+    <radialGradient id="arcCore" cx="50%" cy="45%" r="55%">
+      <stop offset="0%"   stop-color="#FFFFFF"/>
+      <stop offset="15%"  stop-color="#F0FDF9"/>
+      <stop offset="35%"  stop-color="#A7F3D0"/>
+      <stop offset="60%"  stop-color="#6EE7B7"/>
+      <stop offset="85%"  stop-color="#34D399"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </radialGradient>
+
+    <!-- COEUR INTERNE BRILLANT -->
+    <radialGradient id="innerCoreGlow" cx="50%" cy="40%" r="60%">
+      <stop offset="0%"   stop-color="#FFFFFF"/>
+      <stop offset="30%"  stop-color="#ECFDF5"/>
+      <stop offset="60%"  stop-color="#D1FAE5"/>
+      <stop offset="100%" stop-color="#6EE7B7"/>
+    </radialGradient>
+
+    <!-- TRIANGLE ENERGIE (Symbole central) -->
+    <linearGradient id="triangleEnergy" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%"   stop-color="#FFFFFF"/>
+      <stop offset="25%"  stop-color="#F0FDF9"/>
+      <stop offset="50%"  stop-color="#A7F3D0"/>
+      <stop offset="100%" stop-color="#34D399"/>
+    </linearGradient>
+
+    <!-- BORDS TRIANGLE (Glow line) -->
+    <linearGradient id="triangleStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#FFFFFF"/>
+      <stop offset="50%"  stop-color="#6EE7B7"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </linearGradient>
+
+    <!-- AWEN BEAMS EMERAUDE -->
+    <linearGradient id="awenEmerald" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#FFFFFF"/>
+      <stop offset="40%"  stop-color="#A7F3D0"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+
+    <!-- POINTS AWEN -->
+    <radialGradient id="awenDot" cx="50%" cy="30%" r="70%">
+      <stop offset="0%"   stop-color="#FFFFFF"/>
+      <stop offset="50%"  stop-color="#D1FAE5"/>
+      <stop offset="100%" stop-color="#34D399"/>
+    </radialGradient>
+
+    <!-- SEGMENTS ANNEAU (alternance) -->
+    <linearGradient id="segmentLight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#F3F4F6"/>
+      <stop offset="50%"  stop-color="#D1D5DB"/>
+      <stop offset="100%" stop-color="#9CA3AF"/>
+    </linearGradient>
+    <linearGradient id="segmentDark" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#6B7280"/>
+      <stop offset="50%"  stop-color="#4B5563"/>
+      <stop offset="100%" stop-color="#374151"/>
+    </linearGradient>
+
+    <!-- CAPSULES METALLIQUES -->
+    <linearGradient id="capsuleGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#F9FAFB"/>
+      <stop offset="40%"  stop-color="#D1D5DB"/>
+      <stop offset="100%" stop-color="#6B7280"/>
+    </linearGradient>
+
+    <!-- VIS METALLIQUES -->
+    <radialGradient id="screwMetal" cx="50%" cy="35%" r="80%">
+      <stop offset="0%"   stop-color="#FFFFFF"/>
+      <stop offset="40%"  stop-color="#E5E7EB"/>
+      <stop offset="100%" stop-color="#6B7280"/>
+    </radialGradient>
+
+    <!-- RAINURE VIS -->
+    <linearGradient id="screwGroove" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#374151" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#111827" stop-opacity="0.95"/>
+    </linearGradient>
+
+    <!-- TICKS INTERNES -->
+    <linearGradient id="tickGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#D1D5DB"/>
+      <stop offset="100%" stop-color="#6B7280"/>
+    </linearGradient>
+
+    <!-- ANNEAU INTERNE SOMBRE -->
+    <linearGradient id="innerDarkRing" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#374151"/>
+      <stop offset="50%"  stop-color="#1F2937"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+
+    <!-- GLOW PULSE EMERAUDE -->
+    <radialGradient id="pulseGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#34D399" stop-opacity="0.8"/>
+      <stop offset="50%"  stop-color="#10B981" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#059669" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- FILTRE OMBRE PROFONDE -->
+    <filter id="deepShadow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="15" stdDeviation="30" flood-color="#000000" flood-opacity="0.9"/>
+    </filter>
+
+    <!-- FILTRE GLOW EMERAUDE -->
+    <filter id="emeraldGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="15" result="blur"/>
+      <feFlood flood-color="#34D399" flood-opacity="0.6"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- FILTRE GLOW INTENSE COEUR -->
+    <filter id="coreGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="25" result="blur"/>
+      <feFlood flood-color="#6EE7B7" flood-opacity="0.7"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- FOND PROFOND -->
+  <rect width="1024" height="1024" fill="url(#bgDeep)"/>
+
+  <!-- GROUPE PRINCIPAL AVEC OMBRE -->
+  <g filter="url(#deepShadow)">
+
+    <!-- HALO EMERAUDE GLOBAL (Aura externe) -->
+    <circle cx="512" cy="512" r="480" fill="url(#emeraldHalo)">
+      <animate attributeName="opacity" values="0.7;1;0.7" dur="4s" repeatCount="indefinite"/>
+    </circle>
+
+    <!-- ANNEAU METALLIQUE EXTERNE -->
+    <circle cx="512" cy="512" r="400" fill="none" stroke="url(#outerMetalRing)" stroke-width="18"/>
+    <circle cx="512" cy="512" r="400" fill="none" stroke="url(#chromeHighlight)" stroke-width="3" opacity="0.8"/>
+
+    <!-- ANNEAU ENERGIE EMERAUDE (Glow principal) -->
+    <circle cx="512" cy="512" r="355" fill="none" stroke="url(#emeraldEnergyRing)" stroke-width="32" filter="url(#emeraldGlow)">
+      <animate attributeName="stroke-width" values="30;35;30" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.85;1;0.85" dur="2s" repeatCount="indefinite"/>
+    </circle>
+
+    <!-- SEGMENTS ANNEAU (12 points cardinaux) -->
+    <g id="ringSegments">
+      <circle cx="512" cy="132" r="18" fill="url(#segmentLight)"/>
+      <circle cx="841" cy="183" r="18" fill="url(#segmentDark)"/>
+      <circle cx="892" cy="512" r="18" fill="url(#segmentLight)"/>
+      <circle cx="841" cy="841" r="18" fill="url(#segmentDark)"/>
+      <circle cx="512" cy="892" r="18" fill="url(#segmentLight)"/>
+      <circle cx="183" cy="841" r="18" fill="url(#segmentDark)"/>
+      <circle cx="132" cy="512" r="18" fill="url(#segmentLight)"/>
+      <circle cx="183" cy="183" r="18" fill="url(#segmentDark)"/>
+      <circle cx="687" cy="161" r="15" fill="url(#segmentLight)"/>
+      <circle cx="863" cy="337" r="15" fill="url(#segmentDark)"/>
+      <circle cx="863" cy="687" r="15" fill="url(#segmentLight)"/>
+      <circle cx="687" cy="863" r="15" fill="url(#segmentDark)"/>
+    </g>
+
+    <!-- ANNEAU INTERNE SOMBRE (Métal) -->
+    <circle cx="512" cy="512" r="300" fill="none" stroke="url(#innerDarkRing)" stroke-width="14"/>
+
+    <!-- CAPSULES DIRECTIONNELLES (4 points) -->
+    <g id="capsules">
+      <!-- Haut -->
+      <ellipse cx="512" cy="212" rx="32" ry="16" fill="url(#capsuleGrad)"/>
+      <rect x="494" y="212" width="36" height="48" fill="url(#capsuleGrad)"/>
+      <ellipse cx="512" cy="260" rx="32" ry="16" fill="url(#capsuleGrad)"/>
+
+      <!-- Droite -->
+      <ellipse cx="812" cy="512" rx="16" ry="32" fill="url(#capsuleGrad)"/>
+      <rect x="764" y="494" width="48" height="36" fill="url(#capsuleGrad)"/>
+      <ellipse cx="764" cy="512" rx="16" ry="32" fill="url(#capsuleGrad)"/>
+
+      <!-- Bas -->
+      <ellipse cx="512" cy="812" rx="32" ry="16" fill="url(#capsuleGrad)"/>
+      <rect x="494" y="764" width="36" height="48" fill="url(#capsuleGrad)"/>
+      <ellipse cx="512" cy="764" rx="32" ry="16" fill="url(#capsuleGrad)"/>
+
+      <!-- Gauche -->
+      <ellipse cx="212" cy="512" rx="16" ry="32" fill="url(#capsuleGrad)"/>
+      <rect x="212" y="494" width="48" height="36" fill="url(#capsuleGrad)"/>
+      <ellipse cx="260" cy="512" rx="16" ry="32" fill="url(#capsuleGrad)"/>
+    </g>
+
+    <!-- VIS SUR CAPSULES -->
+    <g id="screws">
+      <circle cx="512" cy="226" r="7" fill="url(#screwMetal)"/>
+      <circle cx="512" cy="246" r="7" fill="url(#screwMetal)"/>
+      <circle cx="798" cy="512" r="7" fill="url(#screwMetal)"/>
+      <circle cx="778" cy="512" r="7" fill="url(#screwMetal)"/>
+      <circle cx="512" cy="798" r="7" fill="url(#screwMetal)"/>
+      <circle cx="512" cy="778" r="7" fill="url(#screwMetal)"/>
+      <circle cx="226" cy="512" r="7" fill="url(#screwMetal)"/>
+      <circle cx="246" cy="512" r="7" fill="url(#screwMetal)"/>
+    </g>
+
+    <!-- RAINURES VIS -->
+    <g id="screwGrooves">
+      <line x1="506" y1="226" x2="518" y2="226" stroke="url(#screwGroove)" stroke-width="2"/>
+      <line x1="506" y1="246" x2="518" y2="246" stroke="url(#screwGroove)" stroke-width="2"/>
+      <line x1="798" y1="506" x2="798" y2="518" stroke="url(#screwGroove)" stroke-width="2"/>
+      <line x1="778" y1="506" x2="778" y2="518" stroke="url(#screwGroove)" stroke-width="2"/>
+      <line x1="506" y1="798" x2="518" y2="798" stroke="url(#screwGroove)" stroke-width="2"/>
+      <line x1="506" y1="778" x2="518" y2="778" stroke="url(#screwGroove)" stroke-width="2"/>
+      <line x1="226" y1="506" x2="226" y2="518" stroke="url(#screwGroove)" stroke-width="2"/>
+      <line x1="246" y1="506" x2="246" y2="518" stroke="url(#screwGroove)" stroke-width="2"/>
+    </g>
+
+    <!-- TICKS INTERNES (24 marqueurs) -->
+    <g id="innerTicks">
+      <line x1="512" y1="212" x2="512" y2="235" stroke="url(#tickGrad)" stroke-width="2.5"/>
+      <line x1="580" y1="220" x2="571" y2="242" stroke="url(#tickGrad)" stroke-width="2.5"/>
+      <line x1="645" y1="244" x2="630" y2="262" stroke="url(#tickGrad)" stroke-width="2.5"/>
+      <line x1="700" y1="280" x2="682" y2="294" stroke="url(#tickGrad)" stroke-width="2.5"/>
+      <line x1="746" y1="328" x2="726" y2="338" stroke="url(#tickGrad)" stroke-width="2.5"/>
+      <line x1="782" y1="384" x2="760" y2="392" stroke="url(#tickGrad)" stroke-width="2.5"/>
+      <line x1="804" y1="446" x2="782" y2="451" stroke="url(#tickGrad)" stroke-width="2.5"/>
+      <line x1="812" y1="512" x2="789" y2="512" stroke="url(#tickGrad)" stroke-width="2.5"/>
+      <line x1="806" y1="578" x2="784" y2="574" stroke="url(#tickGrad)" stroke-width="2.5"/>
+      <line x1="786" y1="640" x2="766" y2="632" stroke="url(#tickGrad)" stroke-width="2.5"/>
+      <line x1="754" y1="698" x2="736" y2="686" stroke="url(#tickGrad)" stroke-width="2.5"/>
+      <line x1="710" y1="748" x2="695" y2="732" stroke="url(#tickGrad)" stroke-width="2.5"/>
+      <line x1="512" y1="812" x2="512" y2="789" stroke="url(#tickGrad)" stroke-width="2.5"/>
+      <line x1="444" y1="804" x2="453" y2="782" stroke="url(#tickGrad)" stroke-width="2.5"/>
+      <line x1="379" y1="782" x2="394" y2="764" stroke="url(#tickGrad)" stroke-width="2.5"/>
+      <line x1="324" y1="748" x2="342" y2="734" stroke="url(#tickGrad)" stroke-width="2.5"/>
+      <line x1="278" y1="702" x2="298" y2="692" stroke="url(#tickGrad)" stroke-width="2.5"/>
+      <line x1="242" y1="648" x2="264" y2="640" stroke="url(#tickGrad)" stroke-width="2.5"/>
+      <line x1="220" y1="588" x2="242" y2="582" stroke="url(#tickGrad)" stroke-width="2.5"/>
+      <line x1="212" y1="524" x2="235" y2="522" stroke="url(#tickGrad)" stroke-width="2.5"/>
+      <line x1="218" y1="458" x2="240" y2="462" stroke="url(#tickGrad)" stroke-width="2.5"/>
+      <line x1="238" y1="396" x2="258" y2="404" stroke="url(#tickGrad)" stroke-width="2.5"/>
+      <line x1="270" y1="338" x2="288" y2="350" stroke="url(#tickGrad)" stroke-width="2.5"/>
+      <line x1="314" y1="290" x2="329" y2="305" stroke="url(#tickGrad)" stroke-width="2.5"/>
+    </g>
+
+    <!-- COEUR ARC REACTOR (Zone centrale) -->
+    <g filter="url(#coreGlow)">
+      <!-- Cercle principal du coeur -->
+      <circle cx="512" cy="512" r="195" fill="url(#arcCore)">
+        <animate attributeName="opacity" values="0.95;1;0.95" dur="1.5s" repeatCount="indefinite"/>
+      </circle>
+
+      <!-- Anneau interne lumineux -->
+      <circle cx="512" cy="512" r="195" fill="none" stroke="#FFFFFF" stroke-width="4" opacity="0.5"/>
+
+      <!-- Coeur ultra-brillant central -->
+      <circle cx="512" cy="512" r="140" fill="url(#innerCoreGlow)">
+        <animate attributeName="r" values="138;142;138" dur="1.5s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+
+    <!-- TRIANGLE ENERGIE (Symbole Arc Reactor) -->
+    <g id="coreTriangle">
+      <path
+        d="M 512 345 L 658 627 L 366 627 Z"
+        fill="url(#triangleEnergy)"
+        stroke="url(#triangleStroke)"
+        stroke-width="5"
+        opacity="0.92"
+        filter="url(#emeraldGlow)"
+      >
+        <animate attributeName="opacity" values="0.88;1;0.88" dur="1.8s" repeatCount="indefinite"/>
+      </path>
+    </g>
+
+    <!-- SYMBOLE AWEN (3 rayons) -->
+    <g id="awenSymbol">
+      <!-- Rayon gauche -->
+      <line x1="420" y1="577" x2="408" y2="480" stroke="url(#awenEmerald)" stroke-width="8" stroke-linecap="round">
+        <animate attributeName="opacity" values="0.85;1;0.85" dur="2s" repeatCount="indefinite"/>
+      </line>
+
+      <!-- Rayon central (plus large) -->
+      <line x1="512" y1="577" x2="512" y2="470" stroke="url(#awenEmerald)" stroke-width="10" stroke-linecap="round">
+        <animate attributeName="opacity" values="0.9;1;0.9" dur="2s" repeatCount="indefinite"/>
+      </line>
+
+      <!-- Rayon droit -->
+      <line x1="604" y1="577" x2="616" y2="480" stroke="url(#awenEmerald)" stroke-width="8" stroke-linecap="round">
+        <animate attributeName="opacity" values="0.85;1;0.85" dur="2s" repeatCount="indefinite"/>
+      </line>
+
+      <!-- Points Awen (sommets) -->
+      <circle cx="408" cy="465" r="8" fill="url(#awenDot)">
+        <animate attributeName="r" values="7;9;7" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="512" cy="455" r="10" fill="url(#awenDot)">
+        <animate attributeName="r" values="9;11;9" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="616" cy="465" r="8" fill="url(#awenDot)">
+        <animate attributeName="r" values="7;9;7" dur="2s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+
+    <!-- PULSE ENERGIE (Cercles expansifs) -->
+    <circle cx="512" cy="512" r="160" fill="none" stroke="#34D399" stroke-width="3" opacity="0">
+      <animate attributeName="r" values="160;220;160" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0.6;0" dur="3s" repeatCount="indefinite"/>
+    </circle>
+
+    <circle cx="512" cy="512" r="180" fill="none" stroke="#6EE7B7" stroke-width="2" opacity="0">
+      <animate attributeName="r" values="180;250;180" dur="3.5s" repeatCount="indefinite" begin="0.5s"/>
+      <animate attributeName="opacity" values="0;0.4;0" dur="3.5s" repeatCount="indefinite" begin="0.5s"/>
+    </circle>
+
+    <circle cx="512" cy="512" r="200" fill="none" stroke="#A7F3D0" stroke-width="1.5" opacity="0">
+      <animate attributeName="r" values="200;280;200" dur="4s" repeatCount="indefinite" begin="1s"/>
+      <animate attributeName="opacity" values="0;0.3;0" dur="4s" repeatCount="indefinite" begin="1s"/>
+    </circle>
+
+    <!-- SPARK POINTS (Particules brillantes) -->
+    <g id="sparkPoints">
+      <circle cx="420" cy="420" r="3" fill="#FFFFFF" opacity="0.8">
+        <animate attributeName="opacity" values="0.3;1;0.3" dur="1.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="604" cy="420" r="3" fill="#FFFFFF" opacity="0.8">
+        <animate attributeName="opacity" values="0.3;1;0.3" dur="1.7s" repeatCount="indefinite" begin="0.3s"/>
+      </circle>
+      <circle cx="512" cy="620" r="3" fill="#FFFFFF" opacity="0.8">
+        <animate attributeName="opacity" values="0.3;1;0.3" dur="1.6s" repeatCount="indefinite" begin="0.6s"/>
+      </circle>
+      <circle cx="380" cy="512" r="2.5" fill="#A7F3D0" opacity="0.7">
+        <animate attributeName="opacity" values="0.2;0.9;0.2" dur="2s" repeatCount="indefinite" begin="0.2s"/>
+      </circle>
+      <circle cx="644" cy="512" r="2.5" fill="#A7F3D0" opacity="0.7">
+        <animate attributeName="opacity" values="0.2;0.9;0.2" dur="2s" repeatCount="indefinite" begin="0.8s"/>
+      </circle>
+    </g>
+
+  </g>
+</svg>
