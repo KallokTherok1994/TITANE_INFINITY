@@ -137,7 +137,8 @@
       "Bash(tail -1 echo echo Components: find src/components -name *.tsx)",
       "Bash(tail -1 echo echo 'Binary size (if built):' ls -lh src-tauri/target/release/titane-infinity)",
       "Bash(echo:*)",
-      "Bash(timeout 90 npx tsc:*)"
+      "Bash(timeout 90 npx tsc:*)",
+      "Bash(comm:*)"
     ],
     "deny": [],
     "ask": []

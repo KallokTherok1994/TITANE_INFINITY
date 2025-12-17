@@ -8,16 +8,18 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v25.4.0 — MENU NAVIGATION
+ *   TITANE∞ v25.4.2 — MENU NAVIGATION (DESIGN FINAL)
  *   Module TITANE - LE CŒUR DU SYSTÈME (fusion Chat IA + Vision + EVO)
  *   FUSION DEV: Dev Mode + ONE CORE + QA & Tests + Orchestration (4→1)
  *   Menu simplifié: 8→5 items (-37.5%)
+ *   Logo: Arc Reactor Émeraude v25.4.1
  * ═══════════════════════════════════════════════════════════════
  */
 
 import React, { useState } from 'react';
 import { Edit3, Atom, Timer, TrendingUp, Settings, Wrench } from 'lucide-react';
 import { MenuEditor } from '../features/menu-editor/MenuEditor';
+import { TitaneLogo } from '../components/branding/TitaneLogo';
 import './styles/Menu.css';
 
 // ✨ v25.4.1 - Icon mapping for Lucide icons (professional, themeable)
@@ -148,14 +150,30 @@ export const Menu: React.FC<MenuProps> = ({
         role="navigation"
         aria-label="Menu principal de navigation TITANE∞"
       >
-        {/* Header avec toggle */}
+        {/* Header avec toggle - Logo Arc Reactor Émeraude v25.4.2 */}
         <div className="menu-header">
-          {!isCollapsed && (
+          {!isCollapsed ? (
             <div className="menu-brand">
-              <span className="menu-brand-icon">⚡</span>
-              <span className="menu-brand-text">TITANE∞</span>
-              <span className="menu-brand-version">v19.5.2</span>
+              <TitaneLogo
+                size={36}
+                variant="emerald"
+                glow={true}
+                glowIntensity={2}
+                className="menu-brand-logo"
+              />
+              <div className="menu-brand-info">
+                <span className="menu-brand-text">TITANE∞</span>
+                <span className="menu-brand-version">v25.4.2</span>
+              </div>
             </div>
+          ) : (
+            <TitaneLogo
+              size={32}
+              variant="emerald"
+              glow={true}
+              glowIntensity={2}
+              className="menu-brand-logo-collapsed"
+            />
           )}
           <div style={{ display: 'flex', gap: '8px' }}>
             {!isCollapsed && (
