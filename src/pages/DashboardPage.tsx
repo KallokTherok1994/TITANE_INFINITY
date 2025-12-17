@@ -15,10 +15,16 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { Container, Grid, Stack } from '@components/layout';
-import { Card, Badge } from '../ui';
-import { XPProgressBar } from '@features/progression';
-import { colors, spacing, fontSizes, fontWeights } from '@themes/tokens';
+import { Container } from '@components/layout/Container';
+import { Grid } from '@components/layout/Grid';
+import { Stack } from '@components/layout/Stack';
+import { Card } from '../ui/Card';
+import { Badge } from '../ui/Badge';
+import { XPProgressBar } from '@features/progression/XPProgressBar';
+import { colors } from '@themes/tokens/colors';
+import { spacing } from '@themes/tokens/spacing';
+import { fontSizes } from '@themes/tokens/typography';
+import { fontWeights } from '@themes/tokens/typography';
 import { PersonaMoodIndicator } from '@components/PersonaMoodIndicator';
 import { useVisualEngines } from '@hooks/useVisualEngines';
 import { TitaneLogo } from '@components/branding/TitaneLogo'; // ✨ v∞ - Logo Reactor

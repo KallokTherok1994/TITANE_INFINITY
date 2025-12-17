@@ -25,7 +25,9 @@
  */
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Container, Stack, Grid } from '@components/layout';
+import { Container } from '@components/layout/Container';
+import { Stack } from '@components/layout/Stack';
+import { Grid } from '@components/layout/Grid';
 import { Card } from '../ui';
 import { XPProgressBar } from '@features/progression';
 import { colors, spacing, fontSizes, fontWeights } from '@themes/tokens';
