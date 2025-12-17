@@ -26,8 +26,10 @@ import {
   type ProviderPreference,
   type ChatDebugEntry,
 } from '../../hooks/useChat';
-// OMEGA v19.2Ω: Utiliser MessageListOptimized pour production
-import { MessageListOptimized as MessageList } from '../../components/chat/MessageListOptimized';
+// P1-A OPTIMIZATION: Use VirtualizedMessageList for 50+ messages performance
+import { VirtualizedMessageList } from '../../components/chat/VirtualizedMessageList';
+// OMEGA v19.2Ω: MessageListOptimized as fallback (commented for P1 test)
+// import { MessageListOptimized as MessageList } from '../../components/chat/MessageListOptimized';
 // import { MessageListSimple as MessageList } from '../../components/chat/MessageListSimple';
 // import { MessageList } from '../../components/chat/MessageList';
 import { ChatInput } from '../../components/chat/ChatInput';
@@ -1105,16 +1107,11 @@ export const Chat: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <MessageList
+              // P1-A: Use VirtualizedMessageList for performance (50+ messages → virtualization)
+              <VirtualizedMessageList
                 messages={messages || []}
                 isLoading={isLoading}
                 error={error}
-                enableTTS={true}
-                autoScroll={true}
-                onCopyMessage={content => {
-                  isDev &&
-                    console.log('[OMEGA] Message copié:', content?.substring(0, 30));
-                }}
               />
             )}
           </div>

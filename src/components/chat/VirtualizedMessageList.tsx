@@ -18,6 +18,7 @@
  */
 
 import React, { useRef, useEffect, useMemo } from 'react';
+// @ts-expect-error - react-window types may not match exactly
 import { FixedSizeList as List } from 'react-window';
 import { MessageBubble } from './MessageBubble';
 import type { AIMessage } from '../../services/ai/types';
