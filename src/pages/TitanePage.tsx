@@ -68,18 +68,65 @@ import type { VisualLevel } from '@/types/visionAffect';
 import { useVoiceEngine } from '@/hooks/useVoiceEngine';
 import { VisionMetricsChart } from '@/features/vision/VisionMetricsChart';
 import { DetectionOverlay } from '@/features/vision/DetectionOverlay';
-import { MemoryTreeViewer } from '@/features/memory/MemoryTreeViewer';
-import { MemorySearchPanel } from '@/features/memory/MemorySearchPanel';
-import { MemoryDashboard } from '@/components/chat/MemoryDashboard';
-import MemoryEvolutionCenter from '@/components/MemoryEvolution/MemoryEvolutionCenter';
-import IdentityCenter from '@/components/IdentityCenter/IdentityCenter';
-import { ModeMatrix } from '@/features/identity/ModeMatrix';
-import { PersonaEditor } from '@/features/identity/PersonaEditor';
-import { EvolutionTimeline } from '@/features/evolution/EvolutionTimeline';
-import { TransformationRoadmap } from '@/features/transformation/TransformationRoadmap';
+import { createLogger } from '@/utils/logger';
+// NOTE: Heavy tab components are lazy-loaded below (Phase 5.2)
 import './TitanePage.css';
 
+const pageLogger = createLogger('TitanePage');
+
 // ═══ HELPER FUNCTIONS FOR OPTIMIZATION ═══
+
+// ═══ LAZY-LOADED TAB COMPONENTS (Phase 5.2 Code Splitting) ═══
+
+const LazyMemoryTreeViewer = React.lazy(() =>
+  import('@/features/memory/MemoryTreeViewer').then(m => ({
+    default: m.MemoryTreeViewer,
+  }))
+);
+
+const LazyMemorySearchPanel = React.lazy(() =>
+  import('@/features/memory/MemorySearchPanel').then(m => ({
+    default: m.MemorySearchPanel,
+  }))
+);
+
+const LazyMemoryDashboard = React.lazy(() =>
+  import('@/components/chat/MemoryDashboard').then(m => ({
+    default: m.MemoryDashboard,
+  }))
+);
+
+const LazyMemoryEvolutionCenter = React.lazy(
+  () => import('@/components/MemoryEvolution/MemoryEvolutionCenter')
+);
+
+const LazyEvolutionTimeline = React.lazy(() =>
+  import('@/features/evolution/EvolutionTimeline').then(m => ({
+    default: m.EvolutionTimeline,
+  }))
+);
+
+const LazyIdentityCenter = React.lazy(
+  () => import('@/components/IdentityCenter/IdentityCenter')
+);
+
+const LazyModeMatrix = React.lazy(() =>
+  import('@/features/identity/ModeMatrix').then(m => ({
+    default: m.ModeMatrix,
+  }))
+);
+
+const LazyPersonaEditor = React.lazy(() =>
+  import('@/features/identity/PersonaEditor').then(m => ({
+    default: m.PersonaEditor,
+  }))
+);
+
+const LazyTransformationRoadmap = React.lazy(() =>
+  import('@/features/transformation/TransformationRoadmap').then(m => ({
+    default: m.TransformationRoadmap,
+  }))
+);
 
 /**
  * Sanitize input pour sécurité renforcée (XSS prevention)
@@ -224,7 +271,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
       setInputValue(prev => (prev ? `${prev} ${text}` : text));
     },
     onError: error => {
-      console.error('[TitanePage] Voice recognition error:', error);
+      pageLogger.error('Voice recognition error', error);
     },
   });
 
@@ -285,14 +332,14 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
         setCustomModes(JSON.parse(stored));
       }
     } catch (error) {
-      console.error('Erreur chargement modes custom:', error);
+      pageLogger.error('Erreur chargement modes custom', error);
     }
   }, []);
 
   // ═══ HANDLERS ═══
   const handleSaveCustomMode = useCallback((mode: CustomMode) => {
     setCustomModes(prev => [...prev, mode]);
-    console.log('Mode personnalisé sauvegardé:', mode);
+    pageLogger.debug('Mode personnalisé sauvegardé', mode);
   }, []);
 
   const filteredMessages = useMemo(() => {
@@ -322,7 +369,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
     // Sanitize input pour sécurité
     const sanitized = sanitizeInput(inputValue);
     if (!sanitized || sanitized.length === 0) {
-      console.warn('Input vide apres sanitization');
+      pageLogger.debug('Input vide apres sanitization');
       return;
     }
 
@@ -347,12 +394,12 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
             lang: 'fr-FR',
           });
         } catch (ttsError) {
-          console.warn('TTS error (non-critical):', ttsError);
+          pageLogger.warn('TTS error (non-critical)', ttsError);
           setAudioEnabled(false);
         }
       }
     } catch (err) {
-      console.error('Send message error:', err);
+      pageLogger.error('Send message error', err);
       thinking.stopThinking();
     }
   }, [inputValue, isLoading, sendMessage, audioEnabled, thinking]);
@@ -361,7 +408,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
     try {
       await navigator.clipboard.writeText(content);
     } catch (err) {
-      console.warn('[TitanePage] Copy message failed:', err);
+      pageLogger.warn('Copy message failed', err);
       alert('❌ Impossible de copier le message');
     }
   }, []);
@@ -407,15 +454,15 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
         // Stop dictation et récupérer le transcript
         const finalTranscript = await voiceEngine.stopDictation();
         setIsRecording(false);
-        console.log('[TitanePage] Voice dictation stopped:', finalTranscript);
+        pageLogger.debug('Voice dictation stopped', finalTranscript);
       } else {
         // Start dictation
         await voiceEngine.startDictation();
         setIsRecording(true);
-        console.log('[TitanePage] Voice dictation started');
+        pageLogger.debug('Voice dictation started');
       }
     } catch (error) {
-      console.error('[TitanePage] Voice input error:', error);
+      pageLogger.error('Voice input error', error);
       setIsRecording(false);
       alert('❌ Erreur reconnaissance vocale. Consultez la console.');
     }
@@ -946,12 +993,16 @@ const IdentitySection: React.FC<IdentitySectionProps> = () => {
       <Grid columns={2} gap={4}>
         <Card>
           <h3 style={{ marginBottom: spacing[4] }}>Matrice de Modes</h3>
-          <ModeMatrix />
+          <React.Suspense fallback={null}>
+            <LazyModeMatrix />
+          </React.Suspense>
         </Card>
 
         <Card>
           <h3 style={{ marginBottom: spacing[4] }}>Personnalité TITANE</h3>
-          <PersonaEditor />
+          <React.Suspense fallback={null}>
+            <LazyPersonaEditor />
+          </React.Suspense>
         </Card>
       </Grid>
 
@@ -977,7 +1028,9 @@ const IdentitySection: React.FC<IdentitySectionProps> = () => {
       <Card style={{ marginTop: spacing[4] }}>
         <h3 style={{ marginBottom: spacing[4] }}>Identity Center</h3>
         {env.isTauri ? (
-          <IdentityCenter />
+          <React.Suspense fallback={null}>
+            <LazyIdentityCenter />
+          </React.Suspense>
         ) : (
           <p style={{ color: colors.neutral[400], fontSize: fontSizes.sm }}>
             Disponible en mode Tauri uniquement
@@ -1001,11 +1054,11 @@ const MemorySection: React.FC<MemorySectionProps> = ({ stats }) => {
 
   const handleNodeClick = useCallback((node: any) => {
     setSelectedNode(node);
-    console.log('Node clicked:', node);
+    pageLogger.debug('Node clicked', node);
   }, []);
 
   const handleEntryClick = useCallback((entry: any) => {
-    console.log('Memory entry clicked:', entry);
+    pageLogger.debug('Memory entry clicked', entry);
   }, []);
 
   return (
@@ -1071,14 +1124,18 @@ const MemorySection: React.FC<MemorySectionProps> = ({ stats }) => {
       <div style={{ marginTop: spacing[6] }}>
         <Card>
           <h3 style={{ marginBottom: spacing[4] }}>📚 Dashboard Mémoire</h3>
-          <MemoryDashboard modeId="default" compact={true} />
+          <React.Suspense fallback={null}>
+            <LazyMemoryDashboard modeId="default" compact={true} />
+          </React.Suspense>
         </Card>
       </div>
 
       {/* Memory Tree Visualization */}
       <div style={{ marginTop: spacing[6] }}>
         <h3 style={{ marginBottom: spacing[4] }}>🌳 Arbre de la Mémoire</h3>
-        <MemoryTreeViewer onNodeClick={handleNodeClick} showAttributes={true} />
+        <React.Suspense fallback={null}>
+          <LazyMemoryTreeViewer onNodeClick={handleNodeClick} showAttributes={true} />
+        </React.Suspense>
         {selectedNode && (
           <Card style={{ marginTop: spacing[4] }}>
             <h4>Nœud sélectionné</h4>
@@ -1092,7 +1149,9 @@ const MemorySection: React.FC<MemorySectionProps> = ({ stats }) => {
       {/* Memory Search */}
       <div style={{ marginTop: spacing[6] }}>
         <h3 style={{ marginBottom: spacing[4] }}>🔍 Recherche Sémantique</h3>
-        <MemorySearchPanel onEntryClick={handleEntryClick} />
+        <React.Suspense fallback={null}>
+          <LazyMemorySearchPanel onEntryClick={handleEntryClick} />
+        </React.Suspense>
       </div>
     </div>
   );
@@ -1117,7 +1176,9 @@ const MemoryEvolutionSection: React.FC<MemoryEvolutionSectionProps> = () => {
       <Card>
         <h3 style={{ marginBottom: spacing[4] }}>Centre d'Évolution Mémoire</h3>
         {env.isTauri ? (
-          <MemoryEvolutionCenter />
+          <React.Suspense fallback={null}>
+            <LazyMemoryEvolutionCenter />
+          </React.Suspense>
         ) : (
           <div>
             <p style={{ color: colors.neutral[400], fontSize: fontSizes.sm }}>
@@ -1125,7 +1186,9 @@ const MemoryEvolutionSection: React.FC<MemoryEvolutionSectionProps> = () => {
             </p>
             <div style={{ marginTop: spacing[4] }}>
               <h4 style={{ marginBottom: spacing[3] }}>Timeline d'Évolution</h4>
-              <EvolutionTimeline />
+              <React.Suspense fallback={null}>
+                <LazyEvolutionTimeline />
+              </React.Suspense>
             </div>
           </div>
         )}
@@ -1354,7 +1417,9 @@ const TransformationSection: React.FC<TransformationSectionProps> = () => {
 
       <Card>
         <h3 style={{ marginBottom: spacing[4] }}>Roadmap Évolutif</h3>
-        <TransformationRoadmap />
+        <React.Suspense fallback={null}>
+          <LazyTransformationRoadmap />
+        </React.Suspense>
       </Card>
 
       <Grid columns={2} gap={4} style={{ marginTop: spacing[4] }}>
@@ -1444,7 +1509,7 @@ export const TitanePage: React.FC = () => {
         const state = await xpEngine.getState();
         setProgression(state);
       } catch (error) {
-        console.error('❌ Erreur chargement progression:', error);
+        pageLogger.error('Erreur chargement progression', error);
       }
     };
     loadProgression();

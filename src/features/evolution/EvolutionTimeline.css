@@ -85,36 +85,36 @@
 }
 
 /* Chrono overrides */
-.timeline-chrono-wrapper :global(.timeline-main-wrapper) {
+.timeline-chrono-wrapper .timeline-main-wrapper {
   color: #e2e8f0 !important;
 }
 
-.timeline-chrono-wrapper :global(.card-title) {
+.timeline-chrono-wrapper .card-title {
   font-weight: 600 !important;
   color: #cbd5e1 !important;
 }
 
-.timeline-chrono-wrapper :global(.card-sub-title) {
+.timeline-chrono-wrapper .card-sub-title {
   color: #94a3b8 !important;
 }
 
-.timeline-chrono-wrapper :global(.card-description) {
+.timeline-chrono-wrapper .card-description {
   color: #e2e8f0 !important;
   line-height: 1.6 !important;
 }
 
-.timeline-chrono-wrapper :global(.timeline-circle) {
+.timeline-chrono-wrapper .timeline-circle {
   background: #8b5cf6 !important;
   border-color: #6366f1 !important;
 }
 
-.timeline-chrono-wrapper :global(.timeline-card-content) {
+.timeline-chrono-wrapper .timeline-card-content {
   background: rgba(30, 41, 59, 0.9) !important;
   border: 1px solid rgba(100, 116, 139, 0.3) !important;
   border-radius: 0.5rem !important;
 }
 
-.timeline-chrono-wrapper :global(.timeline-card-content:hover) {
+.timeline-chrono-wrapper .timeline-card-content:hover {
   border-color: rgba(139, 92, 246, 0.5) !important;
   box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2) !important;
 }
