@@ -76,8 +76,8 @@
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   RESPONSIVE GRID
-   Auto-adapting grid columns
+   RESPONSIVE GRID v26.0
+   Auto-adapting grid columns with auto-fit/auto-fill
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 .grid-responsive {
@@ -94,6 +94,32 @@
   grid-template-columns: 1fr; /* Mobile: 1 column */
 }
 
+/* v26.0: Auto-fit grids - intelligent column distribution */
+.grid-auto-fit {
+  display: grid;
+  gap: var(--gap-md, 16px);
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+}
+
+.grid-auto-fit-sm {
+  display: grid;
+  gap: var(--gap-sm, 12px);
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+}
+
+.grid-auto-fit-lg {
+  display: grid;
+  gap: var(--gap-lg, 24px);
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+}
+
+/* v26.0: Auto-fill grids - always fill available space */
+.grid-auto-fill {
+  display: grid;
+  gap: var(--gap-md, 16px);
+  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+}
+
 /* Tablet: 2 columns for 3-4 col grids */
 @media (min-width: 768px) {
   .grid-responsive {
@@ -104,7 +130,11 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .grid-responsive-3,
+  /* v26.0: Allow 3 columns on tablet if space permits */
+  .grid-responsive-3 {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+
   .grid-responsive-4 {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -118,6 +148,13 @@
 
   .grid-responsive-4 {
     grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* v26.0: Large desktop - allow 5-6 columns */
+@media (min-width: 1536px) {
+  .grid-responsive-4 {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   }
 }
 
