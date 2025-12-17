@@ -231,6 +231,13 @@ const PerfectFusionDashboard = lazy(() =>
   import('./components/fusion/PerfectFusionDashboard').then(m => ({ default: m.default }))
 );
 
+// ✨ v25.6.0 ULTIMATE OPTIMIZATION - Phase 12: GPU + WASM + Service Worker + IndexedDB
+const UltimateOptimizationDashboard = lazy(() =>
+  import('./components/optimization/UltimateOptimizationDashboard').then(m => ({
+    default: m.UltimateOptimizationDashboard,
+  }))
+);
+
 // ❌ DEPRECATED v25.4.0: Modules fusionnés dans DevPage
 // - ONE CORE (Centre de Commande Unifié)
 // - QA MONITORING (Centre QA & Monitoring)
@@ -636,7 +643,8 @@ const AppRouter: React.FC = () => {
       // ═══ CENTRES UNIFIÉS ═══
       { id: '/admin', label: 'ADMIN', icon: '👑', badge: 'v25.2' }, // FUSION: Système + Config + Audio + Design + Gouvernance
       { id: '/dev', label: 'DEV', icon: '🔧', badge: 'v25.4' }, // FUSION: Dev Mode + ONE CORE + QA & Tests + Orchestration
-      { id: '/fusion', label: 'FUSION', icon: '🌌', badge: 'v25.3.2' }, // ✨ NEW: Backend/Frontend Perfect Fusion Dashboard
+      { id: '/fusion', label: 'FUSION', icon: '🌌', badge: 'v25.3.2' }, // ✨ Backend/Frontend Perfect Fusion Dashboard
+      { id: '/optimization', label: 'OPTIMIZE', icon: '⚡', badge: 'v25.6' }, // ✨ Phase 12: GPU/WASM/Cache/IndexedDB Ultimate Performance
     ],
     []
   ); // Empty deps = stable reference
@@ -820,6 +828,15 @@ const AppRouter: React.FC = () => {
             element={
               <Suspense fallback={<PageLoadingFallback variant="dashboard" />}>
                 <PerfectFusionDashboard />
+              </Suspense>
+            }
+          />
+          {/* ✨ v25.6.0 - ULTIMATE OPTIMIZATION - Phase 12: GPU/WASM/Cache/IndexedDB */}
+          <Route
+            path="/optimization"
+            element={
+              <Suspense fallback={<PageLoadingFallback variant="dashboard" />}>
+                <UltimateOptimizationDashboard />
               </Suspense>
             }
           />
