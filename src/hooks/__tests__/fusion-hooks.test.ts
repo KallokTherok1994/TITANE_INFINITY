@@ -1,13 +1,13 @@
 /**
- * TITANE∞ v25.3.2 — Proprietary License
+ * TITANE∞ v25.4.2 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v25.3.2 — FUSION HOOKS TESTS
- *   Tests unitaires de base pour useSingularitySync, useMemoryEngine,
- *   et useSystemHealth
+ *   TITANE∞ v25.4.2 — FUSION HOOKS TESTS
+ *   Tests unitaires complets pour useSingularitySync, useMemoryEngine,
+ *   et useSystemHealth avec mocks appropriés
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -34,6 +34,19 @@ vi.mock('@/core/engines/SINGULARITY_ENGINE', () => ({
     setState: vi.fn(),
     subscribe: vi.fn(() => vi.fn()),
     unsubscribe: vi.fn(),
+  },
+}));
+
+// Mock external dependencies that don't exist yet
+vi.mock('@/lib/security', () => ({
+  secureInvoke: vi.fn().mockResolvedValue({}),
+}));
+
+vi.mock('@/core/engines/SINGULARITY_ENGINE', () => ({
+  singularityEngine: {
+    getState: vi.fn().mockReturnValue({}),
+    setState: vi.fn(),
+    sync: vi.fn().mockResolvedValue(undefined),
   },
 }));
 
@@ -100,6 +113,25 @@ describe('useSingularitySync', () => {
     const mockState = {
       consciousness: 1,
       autoCoherence: 0.7,
+      unity: {},
+      quantum: { coherence: 0.85 },
+      convergence: { convergenceLevel: 0.7 },
+      overmind: {},
+      omnipresence: {},
+      selfReference: true,
+      autoStabilization: true,
+      expressionQuality: 0.8,
+      singularityField: {
+        energy: 0.75,
+        motion: 0.7,
+        symbolism: 0.85,
+        depth: 0.8,
+        presence: 0.85,
+      },
+      formStability: 0.82,
+      evolutionCapacity: 0.88,
+      signature: 'TITANE-TEST',
+      essence: 'Test essence',
       timestamp: Date.now(),
     };
 
@@ -301,25 +333,74 @@ describe('useSystemHealth', () => {
       avg_response_time_ms: 1500,
       error_rate: 0.15, // 15% - should trigger alert
     };
+    const mockMemStats = {
+      total_entries: 80,
+      total_size_bytes: 4096,
+      health_score: 0.75,
+    };
+    const mockSingState = {
+      engines: Array(18).fill({ name: 'test', status: 'active' }),
+    };
+    const mockSysHealth = {
+      uptime_ms: 3600000,
+      cpu_usage: 50,
+      memory_usage_mb: 300,
+    };
 
-    vi.mocked(secureInvoke).mockResolvedValueOnce(mockConvHealth);
+    vi.mocked(secureInvoke)
+      .mockResolvedValueOnce(mockConvHealth)
+      .mockResolvedValueOnce(mockMemStats)
+      .mockResolvedValueOnce(mockSingState)
+      .mockResolvedValueOnce(mockSysHealth);
 
     const { result } = renderHook(() => useSystemHealth());
 
     await result.current.refreshHealth();
 
     await waitFor(() => {
+      expect(result.current.health).not.toBeNull();
       expect(result.current.health?.alerts.length).toBeGreaterThan(0);
     });
 
-    const errorAlert = result.current.health?.alerts.find(a =>
-      a.message.includes('error rate')
+    const errorAlert = result.current.health?.alerts.find(
+      a =>
+        a.message.toLowerCase().includes('error') ||
+        a.message.toLowerCase().includes('taux')
     );
     expect(errorAlert).toBeDefined();
     expect(errorAlert?.severity).toMatch(/warning|critical/);
   });
 
   test('should start and stop monitoring', async () => {
+    // Mock les 4 appels secureInvoke pour refreshHealth
+    const mockConvHealth = {
+      status: 'healthy',
+      active_conversations: 3,
+      total_messages: 50,
+      avg_response_time_ms: 200,
+      error_rate: 0.01,
+    };
+    const mockMemStats = {
+      total_entries: 100,
+      total_size_bytes: 5120,
+      health_score: 0.9,
+    };
+    const mockSingState = {
+      engines: Array(18).fill({ name: 'test', status: 'active' }),
+    };
+    const mockSysHealth = {
+      uptime_ms: 3600000,
+      cpu_usage: 30,
+      memory_usage_mb: 200,
+    };
+
+    vi.mocked(secureInvoke).mockImplementation(async () => mockConvHealth);
+    vi.mocked(secureInvoke)
+      .mockResolvedValueOnce(mockConvHealth)
+      .mockResolvedValueOnce(mockMemStats)
+      .mockResolvedValueOnce(mockSingState)
+      .mockResolvedValueOnce(mockSysHealth);
+
     const { result } = renderHook(() => useSystemHealth());
 
     result.current.startMonitoring(100); // 100ms interval
@@ -330,7 +411,9 @@ describe('useSystemHealth', () => {
 
     result.current.stopMonitoring();
 
-    expect(result.current.isMonitoring).toBe(false);
+    await waitFor(() => {
+      expect(result.current.isMonitoring).toBe(false);
+    });
   });
 
   test('should resolve alerts', async () => {
@@ -339,16 +422,34 @@ describe('useSystemHealth', () => {
       active_conversations: 1,
       total_messages: 10,
       avg_response_time_ms: 2000,
-      error_rate: 0.2,
+      error_rate: 0.2, // High error rate triggers alerts
+    };
+    const mockMemStats = {
+      total_entries: 50,
+      total_size_bytes: 2048,
+      health_score: 0.4, // Low health score triggers alerts
+    };
+    const mockSingState = {
+      engines: Array(18).fill({ name: 'test', status: 'active' }),
+    };
+    const mockSysHealth = {
+      uptime_ms: 1800000,
+      cpu_usage: 85, // High CPU triggers alerts
+      memory_usage_mb: 450,
     };
 
-    vi.mocked(secureInvoke).mockResolvedValue(mockConvHealth);
+    vi.mocked(secureInvoke)
+      .mockResolvedValueOnce(mockConvHealth)
+      .mockResolvedValueOnce(mockMemStats)
+      .mockResolvedValueOnce(mockSingState)
+      .mockResolvedValueOnce(mockSysHealth);
 
     const { result } = renderHook(() => useSystemHealth());
 
     await result.current.refreshHealth();
 
     await waitFor(() => {
+      expect(result.current.health).not.toBeNull();
       expect(result.current.health?.alerts.length).toBeGreaterThan(0);
     });
 
@@ -357,7 +458,10 @@ describe('useSystemHealth', () => {
 
     await result.current.resolveAlert(alertId);
 
-    expect(result.current.health!.alerts.length).toBe(initialAlertCount - 1);
+    // Wait for state update after resolveAlert
+    await waitFor(() => {
+      expect(result.current.health!.alerts.length).toBe(initialAlertCount - 1);
+    });
   });
 
   test('should calculate global status correctly', async () => {
@@ -375,9 +479,21 @@ describe('useSystemHealth', () => {
       health_score: 0.5, // Degraded memory
     };
 
+    const mockSingState = {
+      engines: Array(18).fill({ name: 'test', status: 'active' }),
+    };
+
+    const mockSysHealth = {
+      uptime_ms: 7200000,
+      cpu_usage: 50,
+      memory_usage_mb: 300,
+    };
+
     vi.mocked(secureInvoke)
       .mockResolvedValueOnce(mockConvHealth)
-      .mockResolvedValueOnce(mockMemStats);
+      .mockResolvedValueOnce(mockMemStats)
+      .mockResolvedValueOnce(mockSingState)
+      .mockResolvedValueOnce(mockSysHealth);
 
     const { result } = renderHook(() => useSystemHealth());
 
@@ -387,17 +503,60 @@ describe('useSystemHealth', () => {
       expect(result.current.health).not.toBeNull();
     });
 
-    // Global status should be degraded because memory is degraded
+    // Global status should be degraded because memory health_score is low (0.5)
     expect(result.current.health?.global_status).toMatch(/degraded|critical/);
   });
 });
 
 describe('Integration Tests', () => {
   test('should work together: save to memory + monitor health', async () => {
-    vi.mocked(secureInvoke).mockResolvedValue({ total_entries: 1 });
+    // Mock pour useMemoryEngine (stats fetch on mount + save)
+    const mockMemStats = {
+      total_entries: 100,
+      short_term: 40,
+      medium_term: 40,
+      long_term: 20,
+      total_size_bytes: 5120,
+      last_compression: null,
+      health_score: 0.85,
+    };
+
+    // Mock pour useSystemHealth (4 appels)
+    const mockConvHealth = {
+      status: 'healthy',
+      active_conversations: 5,
+      total_messages: 100,
+      avg_response_time_ms: 200,
+      error_rate: 0.02,
+    };
+    const mockSingState = {
+      engines: Array(18).fill({ name: 'test', status: 'active' }),
+    };
+    const mockSysHealth = {
+      uptime_ms: 3600000,
+      cpu_usage: 35,
+      memory_usage_mb: 250,
+    };
+
+    // Use mockImplementation to handle dynamic calls
+    let callCount = 0;
+    vi.mocked(secureInvoke).mockImplementation(async (cmd: string) => {
+      callCount++;
+      if (cmd === 'memory_get_stats') return mockMemStats;
+      if (cmd === 'memory_save_entry') return undefined;
+      if (cmd === 'conversation_health_check') return mockConvHealth;
+      if (cmd === 'engine_get_singularity_state') return mockSingState;
+      if (cmd === 'system_health') return mockSysHealth;
+      return undefined;
+    });
 
     const memoryHook = renderHook(() => useMemoryEngine());
     const healthHook = renderHook(() => useSystemHealth());
+
+    // Wait for memory stats to load
+    await waitFor(() => {
+      expect(memoryHook.result.current.stats).not.toBeNull();
+    });
 
     // Save memory
     await memoryHook.result.current.saveToMemory('Integration test', 'short');
@@ -406,8 +565,10 @@ describe('Integration Tests', () => {
     await healthHook.result.current.refreshHealth();
 
     await waitFor(() => {
-      expect(memoryHook.result.current.stats).not.toBeNull();
       expect(healthHook.result.current.health).not.toBeNull();
     });
+
+    expect(memoryHook.result.current.stats?.total_entries).toBe(100);
+    expect(healthHook.result.current.health?.global_status).toBe('healthy');
   });
 });
