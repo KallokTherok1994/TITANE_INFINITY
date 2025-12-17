@@ -144,7 +144,10 @@
       "Bash(time timeout 150 npx vitest run:*)",
       "Bash(for ext in js css svg)",
       "Bash(time timeout 600 npm run tauri build:*)",
-      "Bash(time timeout 600 npx tauri build:*)"
+      "Bash(time timeout 600 npx tauri build:*)",
+      "Bash(time timeout 120 npm run build:*)",
+      "Bash(for provider in gemini ollama openai claude tauriChat titaneLocal)",
+      "Bash(do echo \"=== $provider ===\" head -30 /home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/ai/providers/$provider.ts)"
     ],
     "deny": [],
     "ask": []
