@@ -67,16 +67,16 @@ export const Sidebar = ({
   const { animationConfig, shouldReduceMotion } = useAnimation();
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
-  const { windowWidth } = useResponsive();
+  const { width } = useResponsive();
 
   // v26.0: Adaptive sidebar width based on exact breakpoint
-  const sidebarWidth = useMemo(() => {
+  const _sidebarWidth = useMemo(() => {
     if (isMobile) return SIDEBAR_WIDTHS.mobile;
     if (isTablet) return SIDEBAR_WIDTHS.tablet;
-    if (windowWidth >= 1536) return SIDEBAR_WIDTHS.desktopXL;
-    if (windowWidth >= 1280) return SIDEBAR_WIDTHS.desktopLarge;
+    if (width >= 1536) return SIDEBAR_WIDTHS.desktopXL;
+    if (width >= 1280) return SIDEBAR_WIDTHS.desktopLarge;
     return SIDEBAR_WIDTHS.desktop;
-  }, [isMobile, isTablet, windowWidth]);
+  }, [isMobile, isTablet, width]);
 
   const handleClick = (item: SidebarItem): void => {
     if (onItemClick) {
