@@ -21,6 +21,7 @@ import './tauri-protection-patch';
 // TITANE∞ v24.3.0 - Main Entry Point - v22Ω AI Performance Optimizations
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { logger } from './lib/logger';
 // import AppMinimal from './AppMinimal'; // 🔍 DEBUG: Minimal test app (valide le rendu)
 import App from './App'; // ✅ v16.2.2: App principal activé
 
@@ -182,7 +183,11 @@ if (typeof window !== 'undefined') {
           .getCurrent()
           .openDevtools()
           .catch((err: Error) => {
-            console.error('[DevTools] Failed to open:', err);
+            logger.error(
+              'Failed to open DevTools',
+              { component: 'DevTools' },
+              err as Error
+            );
           });
       }
     });
@@ -247,7 +252,7 @@ singularityEngine.initialize().then(() => {
   console.log('🌌 Consciousness Level:', singularityEngine.getState().consciousness);
   console.log('🔮 Auto-Coherence:', (singularityEngine.getState().autoCoherence * 100).toFixed(1) + '%');
 }).catch((err) => {
-  console.error('❌ SingularityEngine initialization failed:', err);
+  logger.error('SingularityEngine initialization failed', { component: 'SingularityEngine' }, err as Error);
 });
 */
 
@@ -280,12 +285,19 @@ SingularityBridge.initialize()
         console.log('   → UI Router → MetaLayer');
       })
       .catch(err => {
-        console.error('❌ SingularityConnections failed:', err);
+        logger.error(
+          'SingularityConnections failed',
+          { component: 'SingularityBridge' },
+          err as Error
+        );
       });
   })
   .catch(err => {
-    console.error('❌ SingularityBridge initialization failed:', err);
-    console.error('   → Backend state sync disabled, frontend-only mode active');
+    logger.error(
+      'SingularityBridge initialization failed - Backend state sync disabled',
+      { component: 'SingularityBridge', mode: 'frontend-only' },
+      err as Error
+    );
   });
 
 // Phase 8: Initialize Performance Monitoring - DÉSACTIVÉ pour debug
@@ -314,11 +326,15 @@ console.log('♿ Accessibility styles injected (WCAG 2.1 AA)');
 
 // 🔧 Global error handlers (catch unhandled errors)
 window.addEventListener('error', event => {
-  console.error('[TITANE] Global error caught:', event.error);
+  logger.error('Global error caught', { component: 'GlobalErrorHandler' }, event.error);
 });
 
 window.addEventListener('unhandledrejection', event => {
-  console.error('[TITANE] Unhandled promise rejection:', event.reason);
+  logger.error(
+    'Unhandled promise rejection',
+    { component: 'GlobalErrorHandler' },
+    event.reason instanceof Error ? event.reason : new Error(String(event.reason))
+  );
 });
 
 console.log('✅ TITANE∞ frontend loaded successfully');
@@ -331,7 +347,7 @@ const rootElement = document.getElementById('root');
 
 if (!rootElement) {
   const errorMsg = '❌ CRITICAL: #root element not found in DOM!';
-  console.error(errorMsg);
+  logger.error(errorMsg, { component: 'RootElement' });
 
   // Fallback visuel si #root manque
   document.body.innerHTML = `
@@ -373,8 +389,14 @@ try {
       <ErrorBoundary
         context="App"
         onError={(error, errorInfo) => {
-          console.error('[TITANE∞] Production Error Boundary caught:', error);
-          console.error('[TITANE∞] Component stack:', errorInfo.componentStack);
+          logger.error(
+            'Production Error Boundary caught',
+            {
+              component: 'ErrorBoundary',
+              componentStack: errorInfo.componentStack,
+            },
+            error
+          );
 
           // Hook for Sentry/LogRocket integration
           if (window.Sentry) {
@@ -393,7 +415,11 @@ try {
   console.log('║  ✅ TITANE∞ REACT ROOT MOUNTED (App Complet Actif)           ║');
   console.log('╚════════════════════════════════════════════════════════════════╝\n');
 } catch (error) {
-  console.error('❌ CRITICAL: React mount failed:', error);
+  logger.error(
+    'CRITICAL: React mount failed',
+    { component: 'ReactMount' },
+    error as Error
+  );
 
   // Fallback visuel en cas d'erreur React
   const errorMsg = error instanceof Error ? error.message : String(error);
