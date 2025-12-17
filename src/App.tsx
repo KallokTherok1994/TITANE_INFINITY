@@ -33,8 +33,13 @@ import { AnimationProvider } from './contexts/AnimationContext';
 import { TitanStateProvider } from './context/TitanStateContext'; // ✨ v∞.MPE - Persistence
 import { AppShell, Sidebar, Header } from '@components/layout';
 import { Button } from './ui';
-import { CompactXPBar } from './components/experience/CompactXPBar';
-import { XPBar } from './components/experience/XPBar'; // ✨ v∞.D4 - Barre XP
+// ✨ P3: Lazy-load XP bars for smaller initial bundle
+const CompactXPBar = lazy(() =>
+  import('./components/experience/CompactXPBar').then(m => ({ default: m.CompactXPBar }))
+);
+const XPBar = lazy(() =>
+  import('./components/experience/XPBar').then(m => ({ default: m.XPBar }))
+);
 import { AutoHealErrorBoundary } from './components/AutoHealErrorBoundary';
 import { ErrorBoundary } from './components/ErrorBoundary'; // ✨ v19 - Security Hardening
 import {
@@ -53,10 +58,17 @@ import { initializeOllama } from './services/ai/providers/ollama'; // ✨ v21 - 
 // ✨ OPT-12: connectCacheToSingularity lazy-loaded below (removed static import)
 // ✨ OPT-7: i18n is now lazy-loaded in useEffect below (removed static import)
 // ✨ v25.4.1 - A11Y & Performance monitoring (utilities planned for future implementation)
-// ✨ v25.3.1 - Aura Quantum Particles Background
-import { QuantumParticles } from './components/aura/QuantumParticles';
-// QuantumParticlesPresets disponible si besoin: import { QuantumParticlesPresets } from './components/aura/QuantumParticles'
-import { AuraControlPanel } from './components/aura/AuraControlPanel';
+// ✨ v25.3.1 + P3: Lazy-load Aura components (heavy graphics)
+const QuantumParticles = lazy(() =>
+  import('./components/aura/QuantumParticles').then(m => ({
+    default: m.QuantumParticles,
+  }))
+);
+const AuraControlPanel = lazy(() =>
+  import('./components/aura/AuraControlPanel').then(m => ({
+    default: m.AuraControlPanel,
+  }))
+);
 import { useAura } from './hooks/useAuraOrchestrator';
 
 /**

@@ -254,16 +254,21 @@ export default defineConfig({
             }
 
             // Services (engines)
+            // ✨ P3: Split services more granularly
             if (id.includes('/services/')) {
               if (id.includes('cognitive')) return 'service-cognitive';
               if (id.includes('audio') || id.includes('voice')) return 'service-audio';
               if (id.includes('memory')) return 'service-memory';
               if (id.includes('fusion')) return 'service-fusion';
+              if (id.includes('performanceEngine')) return 'service-performance';
+              if (id.includes('orchestration')) return 'service-orchestration';
+              if (id.includes('ai/')) return 'service-ai';
+              if (id.includes('analytics')) return 'service-analytics';
               return 'services-common';
             }
 
             // Components UI - Split by domain for better code splitting
-            // FIX v24.2.1: Split ui-components (302KB) into smaller chunks
+            // FIX v24.2.1 + P3: Split ui-components (302KB) into smaller chunks
             if (id.includes('/components/')) {
               if (id.includes('/chat/')) return 'ui-chat';
               if (id.includes('/audio/')) return 'ui-audio';
@@ -272,6 +277,19 @@ export default defineConfig({
               if (id.includes('/voice/')) return 'ui-voice';
               if (id.includes('/experience/')) return 'ui-experience';
               if (id.includes('/evolution/')) return 'ui-evolution';
+              // ✨ P3: Further split ui-common into domain-specific chunks
+              if (id.includes('/aura/')) return 'ui-aura';
+              if (id.includes('/performance/')) return 'ui-performance';
+              if (id.includes('/admin/')) return 'ui-admin';
+              if (id.includes('/dev/')) return 'ui-dev';
+              if (id.includes('/fusion/')) return 'ui-fusion';
+              if (id.includes('/QuantumCenter/')) return 'ui-quantum';
+              if (id.includes('/HyperCenter/')) return 'ui-hyper';
+              if (id.includes('/RealityCenter/')) return 'ui-reality';
+              if (id.includes('/IdentityCenter/')) return 'ui-identity';
+              if (id.includes('/MemoryEvolution/')) return 'ui-memory-evolution';
+              if (id.includes('/optimization/')) return 'ui-optimization';
+              if (id.includes('/branding/')) return 'ui-branding';
               return 'ui-common';
             }
             if (id.includes('/ui/')) {
