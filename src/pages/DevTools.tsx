@@ -14,17 +14,19 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
-import { MonitoringHeader } from '../components/monitoring/MonitoringHeader';
+// P0-2 OPTIMIZATION: Lazy load monitoring components
 import {
-  SystemStatusCard,
-  SystemStatus,
-} from '../components/monitoring/SystemStatusCard';
-import { LogsCard } from '../components/monitoring/LogsCard';
-import { ErrorsCard } from '../components/monitoring/ErrorsCard';
-import { CognitiveModuleCard } from '../components/monitoring/CognitiveModuleCard';
-import { LivingEnginesCard } from '../components/monitoring/LivingEnginesCard';
-import { useTitaneCore } from '../hooks';
-import { useLivingEngines } from '../hooks';
+  LazyMonitoringHeader as MonitoringHeader,
+  LazySystemStatusCard as SystemStatusCard,
+  LazyLogsCard as LogsCard,
+  LazyErrorsCard as ErrorsCard,
+  LazyCognitiveModuleCard as CognitiveModuleCard,
+  LazyLivingEnginesCard as LivingEnginesCard,
+  LazyChatDiagnostic as ChatDiagnostic,
+} from './DevToolsLazy';
+import type { SystemStatus } from '../components/monitoring/SystemStatusCard';
+import { useTitaneCore } from '../hooks/useTitaneCore';
+import { useLivingEngines } from '../hooks/useLivingEngines';
 import {
   getGeminiKeyStatus,
   hasSecureData,
@@ -32,7 +34,6 @@ import {
   type GeminiKeyStatus,
 } from '../utils/secureSecrets';
 import { isTauriRuntimeAvailable } from '../utils/tauriProtector';
-import { ChatDiagnostic } from '../components/ChatDiagnostic';
 
 export const DevTools = () => {
   const { systemStatus, error } = useTitaneCore();

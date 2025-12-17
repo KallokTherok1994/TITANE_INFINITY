@@ -124,6 +124,7 @@
     "prettier": "^3.6.2",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
+    "react-window": "^2.2.3",
     "rollup-plugin-visualizer": "^6.0.5",
     "tailwindcss": "^3.4.0",
     "typescript": "^5.9.3",
