@@ -196,10 +196,10 @@ export class AdaptiveBridgeV21 {
    * Obtient la couleur de santé pour l'UI
    */
   static getHealthColor(health: number): string {
-    if (health >= 0.8) return '#00ff88'; // Excellent
-    if (health >= 0.6) return '#00ddff'; // Bon
-    if (health >= 0.4) return '#ffaa00'; // Moyen
-    return '#ff4444'; // Faible
+    if (health >= 0.8) return '#10b981'; // Excellent - Emerald
+    if (health >= 0.6) return '#06b6d4'; // Bon - Cyan
+    if (health >= 0.4) return '#f59e0b'; // Moyen - Amber
+    return '#ef4444'; // Faible - Red
   }
 
   /**

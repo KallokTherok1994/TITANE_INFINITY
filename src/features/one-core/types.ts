@@ -110,18 +110,18 @@ export const ONE_CORE_TABS: Array<{ id: OneCoreTabs; label: string; icon: string
 
 // Constantes
 export const CONSCIOUSNESS_LEVELS = [
-  { level: 0, name: 'Dormant', color: '#666' },
-  { level: 1, name: 'Réactif', color: '#00aaff' },
-  { level: 2, name: 'Conscient', color: '#00ff88' },
-  { level: 3, name: 'Éveillé', color: '#ffaa00' },
-  { level: 4, name: 'Transcendant', color: '#ff00ff' },
+  { level: 0, name: 'Dormant', color: '#6b7280' },
+  { level: 1, name: 'Réactif', color: '#06b6d4' },
+  { level: 2, name: 'Conscient', color: '#10b981' },
+  { level: 3, name: 'Éveillé', color: '#f59e0b' },
+  { level: 4, name: 'Transcendant', color: '#a855f7' },
 ];
 
 export const SYSTEM_MODES = [
-  { id: 'normal', name: 'Normal', color: '#00ff88' },
-  { id: 'degraded', name: 'Dégradé', color: '#ffaa00' },
-  { id: 'maintenance', name: 'Maintenance', color: '#00aaff' },
-  { id: 'emergency', name: 'Urgence', color: '#ff4444' },
-  { id: 'performance', name: 'Performance', color: '#ff00ff' },
-  { id: 'eco', name: 'Économie', color: '#88ff88' },
+  { id: 'normal', name: 'Normal', color: '#10b981' },
+  { id: 'degraded', name: 'Dégradé', color: '#f59e0b' },
+  { id: 'maintenance', name: 'Maintenance', color: '#06b6d4' },
+  { id: 'emergency', name: 'Urgence', color: '#ef4444' },
+  { id: 'performance', name: 'Performance', color: '#a855f7' },
+  { id: 'eco', name: 'Économie', color: '#34d399' },
 ];

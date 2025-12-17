@@ -29,7 +29,7 @@ const defaultConfig: StateConfig = {
     error: '#ff0000',
     warning: '#ff8800',
     danger: '#ff0000',
-    stable: '#00ff88',
+    stable: '#10b981',
     offline: '#444444',
   },
   transitions: {

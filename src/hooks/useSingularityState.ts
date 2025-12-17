@@ -270,15 +270,15 @@ export function useSingularityState(
 export function getHealthColor(health: string): string {
   switch (health) {
     case 'Healthy':
-      return '#00ff88';
+      return '#10b981';
     case 'Degraded':
-      return '#ffaa00';
+      return '#f59e0b';
     case 'Failing':
-      return '#ff3344';
+      return '#ef4444';
     case 'Offline':
-      return '#666666';
+      return '#6b7280';
     default:
-      return '#ffffff';
+      return '#f1f5f9';
   }
 }
 

@@ -337,7 +337,7 @@ export const RealityCenter: React.FC = () => {
         <StatsCard
           label="FPS"
           value={state.fps.toFixed(1)}
-          color={state.fps >= 60 ? '#00ff88' : state.fps >= 30 ? '#ffaa00' : '#ff4444'}
+          color={state.fps >= 60 ? '#10b981' : state.fps >= 30 ? '#f59e0b' : '#ef4444'}
         />
         <StatsCard label="Frame Time" value={state.frame_time_ms.toFixed(2)} unit="ms" />
         <StatsCard label="Scenes" value={state.scene_count} />

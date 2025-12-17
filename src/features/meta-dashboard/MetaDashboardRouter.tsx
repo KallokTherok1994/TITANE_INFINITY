@@ -163,7 +163,7 @@ export const MetaDashboardRouter: React.FC = () => {
         .dashboard-title {
           font-size: 2rem;
           font-weight: 800;
-          background: linear-gradient(135deg, #00d4ff, #a855f7);
+          background: linear-gradient(135deg, #06b6d4, #a855f7);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           margin: 0 0 0.5rem;
@@ -209,7 +209,7 @@ export const MetaDashboardRouter: React.FC = () => {
 
         .dashboard-tab:hover {
           background: rgba(21, 27, 61, 0.8);
-          border-color: rgba(0, 212, 255, 0.5);
+          border-color: rgba(6, 182, 212, 0.5);
           color: #f8fafc;
           transform: translateY(-2px);
         }
@@ -217,12 +217,12 @@ export const MetaDashboardRouter: React.FC = () => {
         .dashboard-tab.active {
           background: linear-gradient(
             135deg,
-            rgba(0, 212, 255, 0.2),
+            rgba(6, 182, 212, 0.2),
             rgba(168, 85, 247, 0.2)
           );
-          border-color: #00d4ff;
+          border-color: #06b6d4;
           color: #f8fafc;
-          box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+          box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
         }
 
         .tab-icon {

@@ -23,7 +23,7 @@ import './OneCorePage.css';
 
 function HealthBar({ value, label }: { value: number; label: string }): JSX.Element {
   const percentage = Math.round(value * 100);
-  const color = percentage >= 90 ? '#00ff88' : percentage >= 70 ? '#ffaa00' : '#ff4444';
+  const color = percentage >= 90 ? '#10b981' : percentage >= 70 ? '#f59e0b' : '#ef4444';
 
   return (
     <div className="one-core-health-bar">
@@ -73,10 +73,10 @@ function CenterCard({
 }): JSX.Element {
   const healthColor =
     center.global_health >= 0.9
-      ? '#00ff88'
+      ? '#10b981'
       : center.global_health >= 0.7
-        ? '#ffaa00'
-        : '#ff4444';
+        ? '#f59e0b'
+        : '#ef4444';
 
   return (
     <div className="one-core-center-card" onClick={onClick}>
@@ -308,10 +308,10 @@ function DiagnosticTab({
   onRun: () => void;
 }): JSX.Element {
   const statusColors: Record<string, string> = {
-    optimal: '#00ff88',
-    good: '#88ff88',
-    degraded: '#ffaa00',
-    critical: '#ff4444',
+    optimal: '#10b981',
+    good: '#34d399',
+    degraded: '#f59e0b',
+    critical: '#ef4444',
   };
 
   return (
