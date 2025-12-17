@@ -1,7 +1,27 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v25.3.0 — AURA EFFECTS SYSTEM
+ *   TITANE∞ v25.4.2 — AURA EFFECTS SYSTEM (Base)
  *   Effets Aura dynamiques pour interface technologique moderne
+ * ═══════════════════════════════════════════════════════════════
+ *
+ * ARCHITECTURE AURA TITANE:
+ * ┌─────────────────────────────────────────────────────────────┐
+ * │  FICHIER              │  RÔLE                               │
+ * ├─────────────────────────────────────────────────────────────┤
+ * │  aura-effects.css     │  Classes de base (pulse, glow)      │
+ * │  aura-advanced.css    │  Composants avancés (stats, memory) │
+ * │  tech-effects.css     │  Glass morphism + hover auras       │
+ * └─────────────────────────────────────────────────────────────┘
+ *
+ * COULEURS AURA OFFICIELLES:
+ * - Violet (UI Principal): rgba(139, 92, 246, x) → #8b5cf6
+ * - Cyan (AI/Tech): rgba(6, 182, 212, x) → #06b6d4
+ * - Emerald (Logo/Arc): rgba(16, 185, 129, x) → #10b981
+ *
+ * USAGE:
+ * - .aura-layer + .aura-pulse-violet → aura de fond violet
+ * - .chat-message-aura → aura interactive sur hover
+ * - .button-aura → effet aura pour boutons
  * ═══════════════════════════════════════════════════════════════
  */
 
@@ -10,12 +30,13 @@
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
-  /* AURA COLORS */
-  --aura-violet: rgba(124, 58, 237, 0.6);
-  --aura-violet-light: rgba(167, 139, 250, 0.4);
-  --aura-cyan: rgba(6, 182, 212, 0.6);
-  --aura-cyan-light: rgba(34, 211, 238, 0.4);
-  --aura-blue: rgba(59, 130, 246, 0.6);
+  /* AURA COLORS - Harmonisé v25.4.2 */
+  --aura-violet: rgba(139, 92, 246, 0.6); /* #8b5cf6 - UI Principal */
+  --aura-violet-light: rgba(168, 85, 247, 0.4); /* #a855f7 - Accent */
+  --aura-violet-intense: rgba(124, 58, 237, 0.7); /* #7c3aed - Intense */
+  --aura-cyan: rgba(6, 182, 212, 0.6); /* #06b6d4 - AI/Tech */
+  --aura-cyan-light: rgba(103, 232, 249, 0.4); /* #67e8f9 - Light */
+  --aura-blue: rgba(59, 130, 246, 0.6); /* #3b82f6 - Info */
   --aura-white: rgba(255, 255, 255, 0.3);
 
   /* AURA GRADIENTS */

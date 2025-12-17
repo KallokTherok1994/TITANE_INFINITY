@@ -582,22 +582,33 @@
   gap: 1rem;
 }
 
+/* Premium scrollbar - v25.4.2 Harmonisé */
 .conversation-messages::-webkit-scrollbar {
   width: 8px;
 }
 
 .conversation-messages::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(30, 40, 55, 0.3);
   border-radius: 4px;
 }
 
 .conversation-messages::-webkit-scrollbar-thumb {
-  background: rgba(59, 130, 246, 0.3);
+  background: linear-gradient(
+    180deg,
+    rgba(139, 92, 246, 0.5) 0%,
+    rgba(6, 182, 212, 0.4) 100%
+  );
   border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.2s ease;
 }
 
 .conversation-messages::-webkit-scrollbar-thumb:hover {
-  background: rgba(59, 130, 246, 0.5);
+  background: linear-gradient(
+    180deg,
+    rgba(139, 92, 246, 0.7) 0%,
+    rgba(6, 182, 212, 0.6) 100%
+  );
 }
 
 .conversation-empty {
@@ -837,29 +848,54 @@
 .conversation-input-container {
   display: flex;
   gap: 0.75rem;
-  padding: 1rem;
-  background: rgba(0, 0, 0, 0.2);
-  border-top: 1px solid rgba(59, 130, 246, 0.1);
+  padding: 1rem 1.25rem;
+  /* Glass tech bar */
+  background: linear-gradient(
+    180deg,
+    rgba(20, 25, 40, 0.92) 0%,
+    rgba(15, 20, 35, 0.98) 100%
+  );
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-top: 1px solid rgba(139, 92, 246, 0.2);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 -4px 16px rgba(0, 0, 0, 0.2);
 }
 
 .conversation-input {
   flex: 1;
-  padding: 0.75rem 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+  padding: 0.875rem 1.25rem;
+  /* Glass tech input */
+  background: linear-gradient(
+    180deg,
+    rgba(35, 40, 55, 0.85) 0%,
+    rgba(25, 30, 45, 0.9) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
   color: var(--color-text);
   font-family: inherit;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   resize: none;
-  transition: var(--titane-transition);
+  transition: all 220ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.3),
+    0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .conversation-input:focus {
   outline: none;
-  background: rgba(255, 255, 255, 0.08);
-  border-color: var(--titane-primary);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  background: linear-gradient(
+    180deg,
+    rgba(40, 45, 60, 0.9) 0%,
+    rgba(30, 35, 50, 0.95) 100%
+  );
+  border-color: rgba(139, 92, 246, 0.5);
+  box-shadow:
+    0 0 0 3px rgba(139, 92, 246, 0.15),
+    0 0 20px rgba(139, 92, 246, 0.1),
+    inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .conversation-input:disabled {
@@ -868,21 +904,61 @@
 }
 
 .conversation-send-btn {
-  padding: 0.75rem 1.5rem;
-  background: var(--titane-gradient);
-  border: none;
-  border-radius: 8px;
+  padding: 0.875rem 1.75rem;
+  /* Metallic gradient button */
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.9) 0%,
+    rgba(139, 92, 246, 0.85) 50%,
+    rgba(168, 85, 247, 0.9) 100%
+  );
+  border: 1px solid rgba(168, 85, 247, 0.5);
+  border-radius: 10px;
   color: white;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.875rem;
+  letter-spacing: 0.02em;
   cursor: pointer;
-  transition: var(--titane-transition);
-  box-shadow: var(--titane-shadow);
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 4px 12px rgba(139, 92, 246, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Shine effect */
+.conversation-send-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  transition: left 0.4s ease;
+}
+
+.conversation-send-btn:hover::before {
+  left: 100%;
 }
 
 .conversation-send-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+  box-shadow:
+    0 8px 24px rgba(139, 92, 246, 0.4),
+    0 4px 8px rgba(0, 0, 0, 0.3),
+    0 0 30px rgba(168, 85, 247, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.conversation-send-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow:
+    0 2px 8px rgba(139, 92, 246, 0.3),
+    inset 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .conversation-send-btn:disabled {

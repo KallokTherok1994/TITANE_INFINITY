@@ -78,7 +78,7 @@ export class IndexedDBOptimizer {
   private stores: Map<string, StoreConfig> = new Map();
 
   // In-memory cache for frequently accessed data
-  private cache: Map<string, { data: any; timestamp: number }> = new Map();
+  private cache: Map<string, { data: unknown; timestamp: number }> = new Map();
   private cacheSize = 0;
 
   // Metrics

@@ -1,8 +1,26 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v25.3.1 — AURA EFFECTS ADVANCED SYSTEM
+ *   TITANE∞ v25.4.2 — AURA EFFECTS ADVANCED SYSTEM
  *   Effets Aura avancés pour tous les composants TITANE
  *   Extension du système base (aura-effects.css)
+ * ═══════════════════════════════════════════════════════════════
+ *
+ * COMPOSANTS AURA AVANCÉS:
+ * ┌─────────────────────────────────────────────────────────────┐
+ * │  CLASSE               │  USAGE                              │
+ * ├─────────────────────────────────────────────────────────────┤
+ * │  .stats-card-aura     │  Cartes statistiques dashboard      │
+ * │  .xp-progress-aura    │  Barre de progression XP            │
+ * │  .vision-scan-aura    │  Interface caméra/vision            │
+ * │  .memory-card-*       │  Cartes mémoire (short/mid/long)    │
+ * │  .identity-aura       │  Modes identité (creative/focus)    │
+ * │  .tab-aura            │  Navigation onglets                 │
+ * │  .milestone-aura      │  Jalons d'évolution                 │
+ * └─────────────────────────────────────────────────────────────┘
+ *
+ * DATA ATTRIBUTES:
+ * - data-value="high|medium|low" → couleur dynamique stats
+ * - data-mode="creative|analytical|empathetic|balanced|focused"
  * ═══════════════════════════════════════════════════════════════
  */
 
