@@ -1,11 +1,11 @@
-/* TITANE∞ v12 - Modal Styles */
+/* TITANE∞ v25.4.2 - Modal Styles — Premium Glass Tech */
 
 .modal__overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,22 +14,47 @@
 }
 
 .modal__content {
+  /* Glass morphism premium */
   background: linear-gradient(
-    135deg,
-    rgba(18, 18, 22, 0.95) 0%,
-    rgba(15, 15, 18, 0.98) 100%
+    180deg,
+    rgba(25, 32, 48, 0.95) 0%,
+    rgba(15, 23, 42, 0.98) 100%
   );
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(139, 92, 246, 0.25);
   border-radius: 16px;
+  /* Multi-layer tech shadows */
   box-shadow:
-    0 24px 64px rgba(0, 0, 0, 0.6),
-    0 0 32px rgba(99, 102, 241, 0.15);
+    0 24px 64px rgba(0, 0, 0, 0.7),
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 60px rgba(139, 92, 246, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
   max-height: 90vh;
   display: flex;
   flex-direction: column;
   animation: slideUpModal 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Top accent glow line */
+.modal__content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(139, 92, 246, 0.8) 20%,
+    rgba(168, 85, 247, 1) 50%,
+    rgba(139, 92, 246, 0.8) 80%,
+    transparent 100%
+  );
+  border-radius: 16px 16px 0 0;
 }
 
 @keyframes fadeInBackdrop {
@@ -72,18 +97,32 @@
   align-items: center;
   justify-content: space-between;
   padding: 20px 28px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(139, 92, 246, 0.15);
+  /* Glass tech header */
   background: linear-gradient(
-    135deg,
-    rgba(25, 25, 30, 0.98) 0%,
-    rgba(20, 20, 25, 0.99) 100%
+    180deg,
+    rgba(30, 38, 55, 0.95) 0%,
+    rgba(22, 30, 48, 0.98) 100%
   );
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
 .modal__title {
   font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
-  color: var(--text-primary);
+  font-weight: var(--font-weight-bold);
+  /* Metallic gradient text */
+  background: linear-gradient(
+    135deg,
+    rgba(241, 245, 249, 1) 0%,
+    rgba(203, 213, 225, 0.95) 40%,
+    rgba(241, 245, 249, 1) 60%,
+    rgba(192, 192, 200, 0.95) 100%
+  );
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
   margin: 0;
 }
 
@@ -93,28 +132,87 @@
   justify-content: center;
   width: 36px;
   height: 36px;
-  background: rgba(15, 15, 18, 0.5);
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  /* Glass tech button */
+  background: linear-gradient(
+    180deg,
+    rgba(45, 55, 72, 0.85) 0%,
+    rgba(30, 40, 55, 0.9) 100%
+  );
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  color: var(--text-secondary);
+  color: rgba(203, 213, 225, 0.9);
   cursor: pointer;
-  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 220ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .modal__close:hover {
-  background: rgba(25, 25, 30, 0.8);
-  border-color: var(--color-danger-500);
-  color: var(--color-danger-500);
-  box-shadow: 0 0 16px rgba(239, 68, 68, 0.3);
+  background: linear-gradient(
+    180deg,
+    rgba(239, 68, 68, 0.2) 0%,
+    rgba(185, 28, 28, 0.15) 100%
+  );
+  border-color: rgba(239, 68, 68, 0.5);
+  color: rgba(248, 113, 113, 0.95);
+  box-shadow:
+    0 0 20px rgba(239, 68, 68, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
   transform: scale(1.05) rotate(90deg);
 }
 
 .modal__close:active {
   transform: scale(0.95) rotate(90deg);
+  box-shadow:
+    0 0 12px rgba(239, 68, 68, 0.25),
+    inset 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .modal__body {
   padding: 28px;
   overflow-y: auto;
+  color: rgba(203, 213, 225, 0.9);
+}
+
+/* Footer actions */
+.modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  padding: 20px 28px;
+  border-top: 1px solid rgba(139, 92, 246, 0.1);
+  background: linear-gradient(
+    180deg,
+    rgba(22, 30, 48, 0.95) 0%,
+    rgba(18, 26, 44, 0.98) 100%
+  );
+}
+
+/* ═══════════════════════════════════
+   ACCESSIBILITY
+   ═══════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .modal__overlay,
+  .modal__content,
+  .modal__close {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .modal__close:hover {
+    transform: none;
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .modal__content {
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+  }
 }

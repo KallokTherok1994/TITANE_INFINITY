@@ -1,4 +1,4 @@
-/* TITANE∞ v17.1 - Button Component - Design System Optimisé */
+/* TITANE∞ v25.4.2 - Button Component - Premium Tech Design System */
 
 .button {
   /* Layout */
@@ -9,19 +9,43 @@
 
   /* Typography */
   font-family: var(--font-sans);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold);
   white-space: nowrap;
+  letter-spacing: 0.01em;
 
-  /* Visual */
-  border: none;
+  /* Visual - Glass Tech Base */
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-md);
   cursor: pointer;
   user-select: none;
   position: relative;
   overflow: hidden;
 
+  /* Tech depth shadows */
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+
   /* Transition fluide */
-  transition: all 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Shine effect overlay */
+.button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.4s ease;
+  pointer-events: none;
+}
+
+.button:hover::after {
+  left: 100%;
 }
 
 /* Focus state - Accessibilité */
@@ -66,36 +90,84 @@
    VARIANTS - Design System Premium
    ═══════════════════════════════════ */
 
-/* PRIMARY - Action principale */
+/* PRIMARY - Action principale (Violet Tech) */
 .button--primary {
-  background: var(--primary-main);
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.95) 0%,
+    rgba(124, 58, 237, 0.9) 50%,
+    rgba(168, 85, 247, 0.95) 100%
+  );
   color: white;
-  box-shadow: 0 2px 8px rgba(var(--primary-rgb), 0.25);
+  border-color: rgba(168, 85, 247, 0.5);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 2px 8px rgba(139, 92, 246, 0.35),
+    0 4px 16px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .button--primary:hover:not(:disabled) {
-  background: var(--primary-light);
-  box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.35);
+  background: linear-gradient(
+    135deg,
+    rgba(168, 85, 247, 0.98) 0%,
+    rgba(139, 92, 246, 0.95) 50%,
+    rgba(196, 132, 252, 0.98) 100%
+  );
+  border-color: rgba(196, 132, 252, 0.6);
+  box-shadow:
+    0 4px 16px rgba(139, 92, 246, 0.45),
+    0 8px 24px rgba(0, 0, 0, 0.3),
+    0 0 30px rgba(168, 85, 247, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 .button--primary:active:not(:disabled) {
-  background: var(--primary-dark);
+  background: linear-gradient(
+    135deg,
+    rgba(124, 58, 237, 0.95) 0%,
+    rgba(91, 33, 182, 0.9) 100%
+  );
+  box-shadow:
+    0 1px 4px rgba(139, 92, 246, 0.3),
+    inset 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* SECONDARY - Action secondaire */
+/* SECONDARY - Action secondaire (Glass Tech) */
 .button--secondary {
-  background: var(--neutral-10);
-  color: var(--neutral-80);
-  border: 1px solid var(--neutral-20);
+  background: linear-gradient(
+    180deg,
+    rgba(45, 55, 72, 0.85) 0%,
+    rgba(30, 41, 59, 0.9) 100%
+  );
+  color: rgba(241, 245, 249, 0.95);
+  border-color: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .button--secondary:hover:not(:disabled) {
-  background: var(--neutral-5);
-  border-color: var(--neutral-30);
+  background: linear-gradient(
+    180deg,
+    rgba(55, 65, 82, 0.9) 0%,
+    rgba(40, 50, 65, 0.95) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.35),
+    0 0 20px rgba(192, 192, 192, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .button--secondary:active:not(:disabled) {
-  background: var(--neutral-20);
+  background: linear-gradient(
+    180deg,
+    rgba(35, 45, 60, 0.95) 0%,
+    rgba(25, 35, 50, 0.98) 100%
+  );
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    inset 0 2px 4px rgba(0, 0, 0, 0.25);
 }
 
 /* GHOST - Action subtile */

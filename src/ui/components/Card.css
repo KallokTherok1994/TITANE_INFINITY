@@ -1,16 +1,28 @@
-/* TITANE∞ v12 - Card Styles — Premium UI/UX */
+/* TITANE∞ v25.4.2 - Card Styles — Premium Glass Tech UI */
 
 .card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
+  /* Glass morphism background */
+  background: linear-gradient(
+    180deg,
+    rgba(30, 41, 59, 0.85) 0%,
+    rgba(20, 28, 45, 0.95) 100%
+  );
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-xl);
   padding: var(--space-5);
-  transition: all var(--duration-base) var(--ease-out);
+  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  overflow: hidden;
-  box-shadow: var(--shadow-xs);
+  overflow: visible;
+  /* Tech depth shadows */
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.4),
+    0 8px 32px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
+/* Top accent gradient bar */
 .card::before {
   content: '';
   position: absolute;
@@ -18,18 +30,51 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, var(--color-primary-500), var(--color-primary-400));
+  background: linear-gradient(
+    90deg,
+    rgba(139, 92, 246, 0.8) 0%,
+    rgba(168, 85, 247, 0.9) 50%,
+    rgba(139, 92, 246, 0.8) 100%
+  );
   opacity: 0;
-  transition: opacity var(--duration-fast) var(--ease-out);
+  transition: opacity 200ms ease;
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+/* Aura glow effect */
+.card::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  background: radial-gradient(
+    circle at center,
+    rgba(139, 92, 246, 0.15) 0%,
+    rgba(59, 130, 246, 0.08) 50%,
+    transparent 70%
+  );
+  filter: blur(16px);
+  opacity: 0;
+  transition: opacity 300ms ease;
+  pointer-events: none;
+  z-index: -1;
+  border-radius: inherit;
 }
 
 .card--hoverable:hover {
-  border-color: var(--border-default);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-4px);
+  border-color: rgba(139, 92, 246, 0.3);
+  transform: translateY(-4px) scale(1.01);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.5),
+    0 16px 48px rgba(0, 0, 0, 0.3),
+    0 0 30px rgba(139, 92, 246, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .card--hoverable:hover::before {
+  opacity: 1;
+}
+
+.card--hoverable:hover::after {
   opacity: 1;
 }
 
@@ -49,20 +94,112 @@
 
 .card__title {
   font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  color: var(--text-primary);
+  font-weight: var(--font-weight-bold);
+  color: rgba(241, 245, 249, 0.95);
   margin: 0 0 var(--space-1) 0;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.01em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .card__subtitle {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: rgba(148, 163, 184, 0.85);
   margin: 0;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }
 
 .card__content {
-  color: var(--text-secondary);
+  color: rgba(203, 213, 225, 0.9);
   font-size: var(--font-size-base);
-  line-height: 1.6;
+  line-height: 1.7;
+}
+
+/* ═══════════════════════════════════
+   CARD VARIANTS - Tech Themes
+   ═══════════════════════════════════ */
+
+/* Success variant (emerald glow) */
+.card--success {
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.card--success::before {
+  background: linear-gradient(
+    90deg,
+    rgba(16, 185, 129, 0.8) 0%,
+    rgba(52, 211, 153, 0.9) 50%,
+    rgba(16, 185, 129, 0.8) 100%
+  );
+  opacity: 1;
+}
+
+.card--success::after {
+  background: radial-gradient(
+    circle at center,
+    rgba(16, 185, 129, 0.15) 0%,
+    rgba(52, 211, 153, 0.08) 50%,
+    transparent 70%
+  );
+}
+
+/* Warning variant (amber glow) */
+.card--warning {
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.card--warning::before {
+  background: linear-gradient(
+    90deg,
+    rgba(245, 158, 11, 0.8) 0%,
+    rgba(251, 191, 36, 0.9) 50%,
+    rgba(245, 158, 11, 0.8) 100%
+  );
+  opacity: 1;
+}
+
+/* Error variant (red glow) */
+.card--error {
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.card--error::before {
+  background: linear-gradient(
+    90deg,
+    rgba(239, 68, 68, 0.8) 0%,
+    rgba(248, 113, 113, 0.9) 50%,
+    rgba(239, 68, 68, 0.8) 100%
+  );
+  opacity: 1;
+}
+
+/* ═══════════════════════════════════
+   ACCESSIBILITY - Reduced Motion
+   ═══════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card::before,
+  .card::after {
+    transition: none !important;
+  }
+
+  .card--hoverable:hover {
+    transform: none;
+  }
+
+  .card--hoverable:hover::after {
+    opacity: 0;
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .card {
+    backdrop-filter: blur(10px) saturate(150%);
+    -webkit-backdrop-filter: blur(10px) saturate(150%);
+  }
+
+  .card::after {
+    filter: blur(10px);
+  }
 }

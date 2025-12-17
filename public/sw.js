@@ -283,7 +283,7 @@ function getCacheConfig(request) {
   const pathname = url.pathname;
 
   // Check each config's patterns
-  for (const [name, config] of Object.entries(CACHE_CONFIG)) {
+  for (const [_name, config] of Object.entries(CACHE_CONFIG)) {
     for (const pattern of config.patterns) {
       if (pattern.test(pathname) || pattern.test(url.href)) {
         return config;
@@ -478,7 +478,7 @@ self.addEventListener('push', event => {
 self.addEventListener('notificationclick', event => {
   event.notification.close();
 
-  event.waitUntil(clients.openWindow(event.notification.data.url || '/'));
+  event.waitUntil(self.clients.openWindow(event.notification.data.url || '/'));
 });
 
 console.log('[ServiceWorker] Loaded v' + VERSION);

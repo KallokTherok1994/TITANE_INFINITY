@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v24.3.0 — CSS CUSTOM PROPERTIES (DESIGN TOKENS)
+ * TITANE∞ v25.4.2 — CSS CUSTOM PROPERTIES (DESIGN TOKENS)
  *
  * Design System centralisé pour TITANE_INFINITY
- * Palette: Titane Métallique + Violet Énergie + Sage Subtil
+ * Palette: Titane Métallique + Violet Énergie + Cyan Tech + Émeraude Arc Reactor
  * Mobile-first, responsive, accessible
  *
- * v22Ω AI Performance Optimizations Compatible
+ * v25.4.2 Premium Glass Tech System
  */
 
 :root {
@@ -523,6 +523,38 @@
   --text-shadow-glow-violet: 0 0 8px rgba(168, 85, 247, 0.5);
   --text-shadow-glow-titane: 0 0 8px rgba(192, 192, 192, 0.5);
   --text-shadow-emboss: 0 1px 0 rgba(255, 255, 255, 0.1), 0 -1px 0 rgba(0, 0, 0, 0.3);
+
+  /* ═══════════════════════════════════════════════════════════════ */
+  /* CYAN TECH v25.4.2 — Official Cyan Variables                    */
+  /* ═══════════════════════════════════════════════════════════════ */
+
+  /* Cyan officiel TITANE (cohérent avec aura-cyan) */
+  --color-cyan-official: #06b6d4;
+  --color-cyan-light: #67e8f9;
+  --color-cyan-dark: #0891b2;
+  --color-cyan-glow: rgba(6, 182, 212, 0.5);
+
+  /* Cyan shadows */
+  --shadow-cyan-sm: 0 0 10px rgba(6, 182, 212, 0.3);
+  --shadow-cyan-md: 0 0 20px rgba(6, 182, 212, 0.4);
+  --shadow-cyan-lg: 0 0 30px rgba(6, 182, 212, 0.5);
+  --shadow-cyan-glow: 0 0 40px rgba(103, 232, 249, 0.6);
+
+  /* ═══════════════════════════════════════════════════════════════ */
+  /* VIOLET ENERGY v25.4.2 — Consolidated Violet Variables          */
+  /* ═══════════════════════════════════════════════════════════════ */
+
+  /* Violet officiel (139, 92, 246) */
+  --color-violet-official: #8b5cf6;
+  --color-violet-light: #c4b5fd;
+  --color-violet-bright: #a78bfa;
+  --color-violet-glow: rgba(139, 92, 246, 0.5);
+
+  /* Violet shadows */
+  --shadow-violet-sm: 0 0 10px rgba(139, 92, 246, 0.3);
+  --shadow-violet-md: 0 0 20px rgba(139, 92, 246, 0.4);
+  --shadow-violet-lg: 0 0 30px rgba(139, 92, 246, 0.5);
+  --shadow-violet-glow: 0 0 40px rgba(168, 85, 247, 0.6);
 }
 
 /* ═══════════════════════════════════════════════════════════════ */
