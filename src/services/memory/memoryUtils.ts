@@ -499,7 +499,7 @@ export function generateAutoTitle(entries: MemoryEntry[]): string {
   );
 
   const topicLabel = MEMORY_TOPIC_LABELS[dominantTopic.topic].label;
-  const date = new Date(entries[0].metadata.createdAt).toLocaleDateString('fr-FR');
+  const date = new Date(entries[0]!.metadata.createdAt).toLocaleDateString('fr-FR');
 
   return `${topicLabel} - ${date} (${entries.length} éléments)`;
 }

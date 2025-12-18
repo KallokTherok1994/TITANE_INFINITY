@@ -478,7 +478,7 @@ export class ParticleSignature {
     const index = Math.floor(this.colorIndex) % colors.length;
     this.colorIndex += colorCycleSpeed;
 
-    return colors[index];
+    return colors[index] ?? '#ffffff';
   }
 
   private calculateLifespan(): number {

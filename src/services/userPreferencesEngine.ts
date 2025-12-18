@@ -305,7 +305,7 @@ class UserPreferencesEngine {
 
     for (const pattern of namePatterns) {
       const match = message.match(pattern);
-      if (match) {
+      if (match && match[1]) {
         this.setName(match[1]);
         break;
       }

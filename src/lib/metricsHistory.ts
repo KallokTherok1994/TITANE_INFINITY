@@ -43,7 +43,9 @@ export class MetricsHistory {
   }
 
   static getLatestSnapshot(): MetricsSnapshot | null {
-    return this.history.length > 0 ? this.history[this.history.length - 1] : null;
+    return this.history.length > 0
+      ? (this.history[this.history.length - 1] ?? null)
+      : null;
   }
 
   static clear(): void {

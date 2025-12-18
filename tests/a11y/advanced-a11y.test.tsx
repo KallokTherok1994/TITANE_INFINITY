@@ -1,8 +1,27 @@
 import { render, screen } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import userEvent from '@testing-library/user-event';
+import App from '@/App';
 
 expect.extend(toHaveNoViolations);
+
+// Mock components for testing
+const Form = () => (
+  <form>
+    <button type="submit">Submit</button>
+  </form>
+);
+
+const Modal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+  if (!isOpen) return null;
+  return (
+    <div role="dialog">
+      <button>First Button</button>
+      <button onClick={onClose}>Close</button>
+      <button>Last Button</button>
+    </div>
+  );
+};
 
 describe('♿ Advanced Accessibility Tests', () => {
   describe('Keyboard Navigation Flow', () => {

@@ -97,13 +97,13 @@ export function getPromptProfile(id?: string): TitanePromptProfile {
     promptProfiles.core ??
     promptProfiles[Object.keys(promptProfiles)[0]!] ?? {
       id: 'core',
-      name: 'Core',
+      label: 'Core',
       description: 'Default core profile',
       defaultRole: 'assistant',
       capabilities: [],
       constraints: [],
       examples: [],
-    }
+    } as TitanePromptProfile
   );
 }
 

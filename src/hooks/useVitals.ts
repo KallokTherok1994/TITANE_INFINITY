@@ -11,7 +11,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { tauriClient } from '../services/tauriClient';
 import { createAdaptivePolling } from '@/utils/adaptivePolling';
 

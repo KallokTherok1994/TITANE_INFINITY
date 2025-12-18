@@ -215,7 +215,7 @@ class StructuredLoggerImpl {
   ): void {
     const color = LEVEL_COLORS[entry.level];
     const levelStr = entry.level.toUpperCase().padEnd(5);
-    const time = entry.timestamp.split('T')[1].split('.')[0];
+    const time = entry.timestamp?.split('T')[1].split('.')[0];
 
     let output = `${color}[${levelStr}]${RESET} ${time} [${entry.category}] ${entry.message}`;
 
