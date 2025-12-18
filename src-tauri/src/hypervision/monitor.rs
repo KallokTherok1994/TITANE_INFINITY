@@ -127,7 +127,7 @@ impl HyperVisionEngine {
     async fn collect_system_metrics() -> SystemMetrics {
         let timestamp = SystemTime::now()
             .duration_since(UNIX_EPOCH)
-            .unwrap()
+            .unwrap_or_default()
             .as_secs();
 
         // Simulated metrics (in production, use sysinfo crate)
@@ -201,9 +201,7 @@ impl HyperVisionEngine {
 
     /// Get layer metrics
     pub fn get_layer_metrics(&self) -> Vec<LayerMetrics> {
-        self.layer_metrics
-            .lock()
-            .unwrap()
+        lock_or_recover!(self.layer_metrics)
             .values()
             .cloned()
             .collect()

@@ -4,8 +4,21 @@
 
 import { LazyCognitiveModuleCard } from '../../DevToolsLazy';
 
+interface LivingEnginesState {
+  cognitiveLoad: number;
+  activeThreads: number;
+  rhythmScore: number;
+  glow: number;
+  [key: string]: unknown;
+}
+
+interface LivingEngines {
+  state: LivingEnginesState;
+  [key: string]: unknown;
+}
+
 interface PerformanceTabProps {
-  livingEngines: any;
+  livingEngines: LivingEngines;
   moduleMetrics: Record<
     string,
     { value: number; label: string; status: 'stable' | 'active' | 'critical' }
@@ -130,7 +143,7 @@ const PerformanceTab = ({ livingEngines, moduleMetrics }: PerformanceTabProps) =
           {Object.entries(moduleMetrics).map(([key, metric]) => (
             <LazyCognitiveModuleCard
               key={key}
-              module={key as any}
+              module={key as 'helios' | 'nexus' | 'harmonia' | 'memory'}
               value={metric.value}
               label={metric.label}
               status={metric.status}

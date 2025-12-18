@@ -147,7 +147,7 @@ fn generate_report(
 ) -> IntrospectionReport {
     let timestamp = SystemTime::now()
         .duration_since(UNIX_EPOCH)
-        .unwrap()
+        .unwrap_or_default()
         .as_secs();
 
     let mut by_severity: std::collections::HashMap<String, usize> =

@@ -226,7 +226,7 @@ impl IntrospectionScanner {
         ScanReport {
             timestamp: std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
-                .unwrap()
+                .unwrap_or_default()
                 .as_secs(),
             total_files_scanned: total_files,
             total_issues: self.issues.len(),

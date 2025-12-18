@@ -218,10 +218,7 @@ impl EnergyDiagnostics {
 
         // Chute rapide
         let recent: Vec<_> = history.iter().rev().take(5).collect();
-        if recent.len() >= 2 {
-            let first = recent.last().unwrap();
-            let last = recent.first().unwrap();
-
+        if let (Some(first), Some(last)) = (recent.last(), recent.first()) {
             let drop = first.global_energy - last.global_energy;
             if drop > 0.2 {
                 detected.push(Anomaly {
