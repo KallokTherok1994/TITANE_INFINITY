@@ -104,7 +104,7 @@ export const EventStream: React.FC = () => {
   // Clear events
   const handleClear = async () => {
     try {
-      await invoke('clear_event_stream');
+      await secureInvoke('clear_event_stream');
       setEvents([]);
       setFilteredEvents([]);
     } catch (error) {

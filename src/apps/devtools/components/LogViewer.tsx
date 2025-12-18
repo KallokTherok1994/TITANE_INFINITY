@@ -114,7 +114,7 @@ export const LogViewer: React.FC = () => {
   // Clear logs
   const handleClear = async () => {
     try {
-      await invoke('clear_system_logs');
+      await secureInvoke('clear_system_logs');
       setLogs([]);
       setFilteredLogs([]);
     } catch (error) {

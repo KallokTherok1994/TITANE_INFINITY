@@ -24,7 +24,7 @@ import {
   useLocation,
   useNavigate,
 } from 'react-router-dom';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { useLivingEngines } from './hooks';
 import { useSingularityState } from './core/state/SingularityState';
 import { logger } from './lib/logger';
@@ -896,8 +896,14 @@ const AppRouter: React.FC = () => {
           <Route path="/devmode" element={<Navigate to="/dev" replace />} />
           <Route path="/ia-dev" element={<Navigate to="/dev" replace />} />
           {/* Note: /orchestration-intelligence et /orchestration-center ont leurs propres composants ci-dessus */}
-          <Route path="/orchestration" element={<Navigate to="/orchestration-intelligence" replace />} />
-          <Route path="/meta-center" element={<Navigate to="/orchestration-center" replace />} />
+          <Route
+            path="/orchestration"
+            element={<Navigate to="/orchestration-intelligence" replace />}
+          />
+          <Route
+            path="/meta-center"
+            element={<Navigate to="/orchestration-center" replace />}
+          />
           {/* ✨ REALITY CENTER - Reality Rendering Layer v∞ (OPUS #19) */}
           <Route
             path="/reality-center"

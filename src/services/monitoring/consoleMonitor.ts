@@ -312,6 +312,14 @@ class ConsoleMonitor {
    * Handle detected error with advanced categorization
    */
   private handleError(entry: ConsoleLogEntry): void {
+    // 🛡️ PROTECTION: Ignorer les erreurs du système AUTO-HEAL pour éviter boucle infinie
+    if (
+      entry.message.includes('[[AUTO-HEAL]]') ||
+      entry.message.includes('autoHealEngine')
+    ) {
+      return; // Skip self-generated errors
+    }
+
     // Track error count
     const errorKey = entry.message.substring(0, 100);
     this.errorCounts.set(errorKey, (this.errorCounts.get(errorKey) || 0) + 1);
