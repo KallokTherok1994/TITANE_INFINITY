@@ -74,7 +74,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
     if (currentStep === STEPS.length - 1) {
       // Dernier step, sauvegarder et compléter
       try {
-        await invoke('complete_onboarding', {
+        await secureInvoke('complete_onboarding', {
           preferences: {
             ...preferences,
             completedAt: new Date().toISOString(),

@@ -434,7 +434,7 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
       };
 
       try {
-        await invoke('titan_persist_event', { event });
+        await secureInvoke('titan_persist_event', { event });
         lastPersistRef.current = Date.now();
         console.log('[TitanState] ✅ Event persisté:', action.type);
       } catch (error) {
@@ -446,7 +446,7 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
   // Persist event directement
   const persistEvent = useCallback(async (event: TitanEvent) => {
     try {
-      await invoke('titan_persist_event', { event });
+      await secureInvoke('titan_persist_event', { event });
       lastPersistRef.current = Date.now();
     } catch (error) {
       console.error('[TitanState] ❌ Erreur persistEvent:', error);
@@ -457,7 +457,7 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
   const forceSnapshot = useCallback(async () => {
     try {
       const stateJson = JSON.stringify(state);
-      await invoke('titan_force_snapshot', { stateJson });
+      await secureInvoke('titan_force_snapshot', { stateJson });
       baseDispatch({ type: 'system/markClean' });
       console.log('[TitanState] 📸 Snapshot forcé créé');
     } catch (error) {
@@ -492,7 +492,7 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
     const init = async () => {
       try {
         // Initialiser le moteur de persistence
-        await invoke('titan_persistence_init');
+        await secureInvoke('titan_persistence_init');
         console.log('[TitanState] 🚀 Persistence initialisée');
 
         // Charger l'état sauvegardé
@@ -543,7 +543,7 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
           if (state.dirty) {
             await forceSnapshot();
           }
-          await invoke('titan_persistence_shutdown');
+          await secureInvoke('titan_persistence_shutdown');
         });
 
         return unlisten;

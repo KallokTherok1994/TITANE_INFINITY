@@ -229,7 +229,7 @@ class XPEngine {
 
     try {
       // Essayer de charger depuis Tauri backend
-      const backendState = await secureInvoke<ProgressionState>('progression_get_state');
+      const backendState = await secureInvoke<ProgressionState>('xp_get_state');
       if (backendState) {
         this.state = { ...createDefaultState(), ...backendState };
         console.log(
