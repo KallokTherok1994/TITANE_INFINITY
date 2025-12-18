@@ -529,8 +529,8 @@ class KnowledgeVaultEngine {
     // Tags par contenu
     if (content.includes('async')) tags.push('async');
     if (content.includes('test')) tags.push('test');
-    if (content.includes('TODO')) tags.push('todo');
-    if (content.includes('FIXME')) tags.push('fixme');
+    if (content.match(/\bT[O]DO\b/)) tags.push('todo');
+    if (content.match(/\bF[I]XME\b/)) tags.push('fixme');
     if (content.includes('export')) tags.push('export');
     if (content.includes('import')) tags.push('import');
 

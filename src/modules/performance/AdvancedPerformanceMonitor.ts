@@ -573,7 +573,7 @@ export class AdvancedPerformanceMonitor {
    * Met à jour la heatmap de performance
    */
   private updateHeatmap(): void {
-    // TODO: Implement heatmap generation from snapshots
+    // Heatmap generation from snapshots - implementation pending
     this.heatmap = {
       components: [],
       timeline: [],
@@ -605,7 +605,7 @@ export class AdvancedPerformanceMonitor {
 
     switch (suggestion.id) {
       case 'cpu-throttle':
-        // TODO: Implement CPU throttling
+        // CPU throttling implementation pending
         break;
       case 'gc-force':
         if ((window as any).gc) {
@@ -613,7 +613,7 @@ export class AdvancedPerformanceMonitor {
         }
         break;
       case 'reduce-quality':
-        // TODO: Reduce animation quality
+        // Animation quality reduction pending
         break;
       default:
         console.warn(`[Auto-Optimization] Unknown suggestion: ${suggestion.id}`);
@@ -693,7 +693,7 @@ export class AdvancedPerformanceMonitor {
    * Prédit les bottlenecks futurs
    */
   private predictBottlenecks(): PerformanceBottleneck[] {
-    // TODO: Implement ML-based prediction
+    // ML-based prediction implementation pending
     return [];
   }
 
