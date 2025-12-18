@@ -272,7 +272,14 @@ export class AdvancedPerformanceMonitor {
    * Collecte les métriques mémoire
    */
   private collectMemoryMetrics(): MemoryMetrics {
-    const memory = (performance as any).memory;
+    // Use type assertion with proper interface
+    interface PerformanceMemory {
+      usedJSHeapSize: number;
+      totalJSHeapSize: number;
+      jsHeapSizeLimit: number;
+    }
+
+    const memory = (performance as unknown as { memory?: PerformanceMemory }).memory;
 
     if (!memory) {
       return {
@@ -369,7 +376,9 @@ export class AdvancedPerformanceMonitor {
     const latency = navTiming.responseStart - navTiming.requestStart;
     const resources = performance.getEntriesByType('resource');
 
-    const cacheHits = resources.filter(r => (r as any).transferSize === 0).length;
+    // Calculate cache hit rate (resources with transferSize = 0 are cached)
+    const resourceEntries = resources as PerformanceResourceTiming[];
+    const cacheHits = resourceEntries.filter(r => r.transferSize === 0).length;
     const cacheHitRate = resources.length > 0 ? cacheHits / resources.length : 0;
 
     return {
@@ -393,8 +402,9 @@ export class AdvancedPerformanceMonitor {
       const resources = performance.getEntriesByType('resource');
       const jsResources = resources.filter(r => r.name.endsWith('.js'));
 
-      const totalSize = jsResources.reduce(
-        (sum, r) => sum + ((r as any).transferSize || 0),
+      const resourceEntries = jsResources as PerformanceResourceTiming[];
+      const totalSize = resourceEntries.reduce(
+        (sum, r) => sum + (r.transferSize || 0),
         0
       );
 
@@ -607,11 +617,17 @@ export class AdvancedPerformanceMonitor {
       case 'cpu-throttle':
         // CPU throttling implementation pending
         break;
-      case 'gc-force':
-        if ((window as any).gc) {
-          (window as any).gc();
+      case 'gc-force': {
+        // Force garbage collection if available (Chrome --js-flags=--expose-gc)
+        interface WindowWithGC extends Window {
+          gc?: () => void;
+        }
+        const windowWithGC = window as unknown as WindowWithGC;
+        if (windowWithGC.gc) {
+          windowWithGC.gc();
         }
         break;
+      }
       case 'reduce-quality':
         // Animation quality reduction pending
         break;
