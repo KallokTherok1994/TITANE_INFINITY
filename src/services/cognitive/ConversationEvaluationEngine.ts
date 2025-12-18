@@ -574,8 +574,10 @@ export class ConversationEvaluationEngine extends EventEmitter {
     const turnMetrics: ConversationMetrics[] = [];
 
     for (let i = 0; i < scenario.conversation_turns.length; i += 2) {
-      const userMessage = scenario.conversation_turns[i].content;
-      const assistantResponse = actualResponses[Math.floor(i / 2)] || '';
+      const userTurn = scenario.conversation_turns[i];
+      if (!userTurn) continue;
+      const userMessage = userTurn.content;
+      const assistantResponse = actualResponses[Math.floor(i / 2)] ?? '';
 
       const metrics = await this.evaluateConversation('test_' + scenario_id, {
         user_message: userMessage,
@@ -680,7 +682,11 @@ export class ConversationEvaluationEngine extends EventEmitter {
       const currentValue = current[metric];
       const baselineValue = baseline[metric];
 
-      if (currentValue < baselineValue - this.config.regression_threshold) {
+      if (
+        currentValue !== undefined &&
+        baselineValue !== undefined &&
+        currentValue < baselineValue - this.config.regression_threshold
+      ) {
         degradedMetrics.push(metric);
       }
     }
@@ -758,7 +764,7 @@ export class ConversationEvaluationEngine extends EventEmitter {
     // Calculate per-metric trends
     const metricTrends: Record<MetricName, number[]> = {} as any;
     for (const metric of this.config.metrics_to_track) {
-      metricTrends[metric] = evaluations.map(e => e.metrics[metric]);
+      metricTrends[metric] = evaluations.map(e => e.metrics[metric] ?? 0);
     }
 
     // Identify strengths and weaknesses
@@ -768,16 +774,23 @@ export class ConversationEvaluationEngine extends EventEmitter {
     // Generate recommendations
     const _recommendations = this.generateRecommendations(weaknesses);
 
+    const firstEval = evaluations[0];
+    const lastEval = evaluations[evaluations.length - 1];
+
     const report: EvaluationReport = {
       conversation_id,
       period: {
         start:
-          typeof evaluations[0].timestamp === 'number'
-            ? evaluations[0].timestamp
-            : Date.parse(evaluations[0].timestamp),
-        end: (typeof evaluations[evaluations.length - 1].timestamp === 'number'
-          ? evaluations[evaluations.length - 1].timestamp
-          : Date.parse(String(evaluations[evaluations.length - 1].timestamp))) as number,
+          firstEval && typeof firstEval.timestamp === 'number'
+            ? firstEval.timestamp
+            : firstEval
+              ? Date.parse(firstEval.timestamp as string)
+              : Date.now(),
+        end: (lastEval && typeof lastEval.timestamp === 'number'
+          ? lastEval.timestamp
+          : lastEval
+            ? Date.parse(String(lastEval.timestamp))
+            : Date.now()) as number,
       },
       totalEvaluations: evaluations.length,
       averageMetrics: overallMetrics,
@@ -840,7 +853,10 @@ export class ConversationEvaluationEngine extends EventEmitter {
     const result: Partial<ConversationMetrics> = {};
 
     for (const metric of this.config.metrics_to_track) {
-      const sum = metricsList.reduce((acc, m) => acc + m[metric], 0);
+      const sum = metricsList.reduce((acc, m) => {
+        const value = m[metric];
+        return acc + (value ?? 0);
+      }, 0);
       result[metric] = sum / metricsList.length;
     }
 
@@ -860,7 +876,8 @@ export class ConversationEvaluationEngine extends EventEmitter {
     // Check minimum metric thresholds
     if (criteria.min_metrics) {
       for (const [metric, threshold] of Object.entries(criteria.min_metrics)) {
-        if (metrics[metric as MetricName] < (threshold as number)) {
+        const metricValue = metrics[metric as MetricName];
+        if (metricValue !== undefined && metricValue < (threshold as number)) {
           return false;
         }
       }
@@ -916,7 +933,8 @@ export class ConversationEvaluationEngine extends EventEmitter {
     const strengths: string[] = [];
 
     for (const metric of this.config.metrics_to_track) {
-      if (metrics[metric] >= 0.85) {
+      const metricValue = metrics[metric];
+      if (metricValue !== undefined && metricValue >= 0.85) {
         strengths.push(`Excellent ${metric.replace(/_/g, ' ')}`);
       }
     }
@@ -931,7 +949,8 @@ export class ConversationEvaluationEngine extends EventEmitter {
     const weaknesses: string[] = [];
 
     for (const metric of this.config.metrics_to_track) {
-      if (metrics[metric] < 0.6) {
+      const metricValue = metrics[metric];
+      if (metricValue !== undefined && metricValue < 0.6) {
         weaknesses.push(`Needs improvement: ${metric.replace(/_/g, ' ')}`);
       }
     }

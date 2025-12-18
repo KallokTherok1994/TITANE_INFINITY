@@ -200,7 +200,8 @@ const createDefaultState = (): ProgressionState => ({
   unlockedMilestones: [],
   lastXPGain: null,
   streakDays: 0,
-  lastActiveDate: new Date().toISOString().split('T')[0],
+  lastActiveDate:
+    new Date().toISOString().split('T')[0] ?? new Date().toLocaleDateString(),
   createdAt: Date.now(),
   updatedAt: Date.now(),
 });
@@ -321,7 +322,7 @@ class XPEngine {
    * Raccourci pour gain XP avec source
    */
   async gain(source: XPSource, description?: string): Promise<XPEvent> {
-    const amount = XP_AMOUNTS[source];
+    const amount = XP_AMOUNTS[source] ?? 0;
     return this.addXP(amount, source, description || `Gain XP: ${source}`);
   }
 
@@ -403,7 +404,7 @@ class XPEngine {
       auto_repair: 75,
       evolution_cycle: 100,
     };
-    return bonuses[milestoneId] || 0;
+    return bonuses[milestoneId] ?? 0;
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -411,7 +412,8 @@ class XPEngine {
   // ─────────────────────────────────────────────────────────────────
 
   private checkStreak(): void {
-    const today = new Date().toISOString().split('T')[0];
+    const today =
+      new Date().toISOString().split('T')[0] ?? new Date().toLocaleDateString();
     const lastDate = this.state.lastActiveDate;
 
     if (lastDate === today) {
@@ -419,7 +421,9 @@ class XPEngine {
       return;
     }
 
-    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+    const yesterday =
+      new Date(Date.now() - 86400000).toISOString().split('T')[0] ??
+      new Date(Date.now() - 86400000).toLocaleDateString();
 
     if (lastDate === yesterday) {
       // Streak continue

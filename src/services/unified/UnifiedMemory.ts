@@ -845,16 +845,18 @@ export class UnifiedMemory {
       const toDelete: string[] = [];
 
       for (let i = 0; i < memories.length; i++) {
-        if (toDelete.includes(memories[i].id)) continue;
-        if (!memories[i].embedding) continue;
+        const memI = memories[i];
+        if (!memI || toDelete.includes(memI.id)) continue;
+        if (!memI.embedding) continue;
 
         for (let j = i + 1; j < memories.length; j++) {
-          if (toDelete.includes(memories[j].id)) continue;
-          if (!memories[j].embedding) continue;
+          const memJ = memories[j];
+          if (!memJ || toDelete.includes(memJ.id)) continue;
+          if (!memJ.embedding) continue;
 
           // Calculate similarity
-          const mem1Embedding = memories[i].embedding;
-          const mem2Embedding = memories[j].embedding;
+          const mem1Embedding = memI.embedding;
+          const mem2Embedding = memJ.embedding;
           if (mem1Embedding && mem2Embedding) {
             const similarity = this.cosineSimilarity(mem1Embedding, mem2Embedding);
 
@@ -862,9 +864,7 @@ export class UnifiedMemory {
             if (similarity >= threshold) {
               // Keep the one with higher importance
               const [keep, discard] =
-                memories[i].importance >= memories[j].importance
-                  ? [memories[i], memories[j]]
-                  : [memories[j], memories[i]];
+                memI.importance >= memJ.importance ? [memI, memJ] : [memJ, memI];
 
               // Update kept memory
               const combinedTags = [...new Set([...keep.tags, ...discard.tags])];
@@ -922,9 +922,11 @@ export class UnifiedMemory {
     let normB = 0;
 
     for (let i = 0; i < a.length; i++) {
-      dotProduct += a[i] * b[i];
-      normA += a[i] * a[i];
-      normB += b[i] * b[i];
+      const ai = a[i] ?? 0;
+      const bi = b[i] ?? 0;
+      dotProduct += ai * bi;
+      normA += ai * ai;
+      normB += bi * bi;
     }
 
     normA = Math.sqrt(normA);

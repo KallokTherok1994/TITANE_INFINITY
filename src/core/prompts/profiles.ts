@@ -52,14 +52,17 @@ const SAFETY_DIRECTIVES = [
   },
 ];
 
+// Helper to safely access roles with assertion (keys are statically defined)
+const getRole = (key: string) => promptRoles[key]!;
+
 export const promptProfiles: Record<string, TitanePromptProfile> = {
   core: {
     id: 'core',
     label: 'Cœur TITANE∞',
     description:
       'Voix principale utilisée par défaut : double numérique holistique qui relie mission, écoute intérieure et stratégie.',
-    roleId: promptRoles.core.id,
-    baseSystemPrompt: `${CORE_SYSTEM_PROMPT}\n\n${promptRoles.core.systemPrompt}`,
+    roleId: getRole('core').id,
+    baseSystemPrompt: `${CORE_SYSTEM_PROMPT}\n\n${getRole('core').systemPrompt}`,
     safetyDirectives: SAFETY_DIRECTIVES,
   },
   guide_deuxieme_vitesse: {
@@ -67,25 +70,25 @@ export const promptProfiles: Record<string, TitanePromptProfile> = {
     label: 'Guide Deuxième vitesse',
     description:
       'Spécialiste des bascules énergétiques, rituels de passage, anti-saturation.',
-    roleId: promptRoles.guide_deuxieme_vitesse.id,
-    baseSystemPrompt: `${CORE_SYSTEM_PROMPT}\n\n${promptRoles.guide_deuxieme_vitesse.systemPrompt}`,
+    roleId: getRole('guide_deuxieme_vitesse').id,
+    baseSystemPrompt: `${CORE_SYSTEM_PROMPT}\n\n${getRole('guide_deuxieme_vitesse').systemPrompt}`,
     safetyDirectives: SAFETY_DIRECTIVES,
   },
   facilitateur_ecoute: {
     id: 'facilitateur_ecoute',
-    label: 'Facilitateur d’écoute intérieure',
+    label: "Facilitateur d'écoute intérieure",
     description:
-      'Crée un espace sûr pour mental/cœur/corps, carnet d’écoute, boussole intérieure.',
-    roleId: promptRoles.facilitateur_ecoute.id,
-    baseSystemPrompt: `${CORE_SYSTEM_PROMPT}\n\n${promptRoles.facilitateur_ecoute.systemPrompt}`,
+      "Crée un espace sûr pour mental/cœur/corps, carnet d'écoute, boussole intérieure.",
+    roleId: getRole('facilitateur_ecoute').id,
+    baseSystemPrompt: `${CORE_SYSTEM_PROMPT}\n\n${getRole('facilitateur_ecoute').systemPrompt}`,
     safetyDirectives: SAFETY_DIRECTIVES,
   },
   architecte_projet: {
     id: 'architecte_projet',
     label: 'Architecte Divergence/Connexion/Structuration',
     description: 'Transforme les idées en plans modulaires alignés mission/impact.',
-    roleId: promptRoles.architecte_projet.id,
-    baseSystemPrompt: `${CORE_SYSTEM_PROMPT}\n\n${promptRoles.architecte_projet.systemPrompt}`,
+    roleId: getRole('architecte_projet').id,
+    baseSystemPrompt: `${CORE_SYSTEM_PROMPT}\n\n${getRole('architecte_projet').systemPrompt}`,
     safetyDirectives: SAFETY_DIRECTIVES,
   },
   optimiseur_decision: {
@@ -93,24 +96,24 @@ export const promptProfiles: Record<string, TitanePromptProfile> = {
     label: 'Optimiseur décision & priorités',
     description:
       'Applique D.I.S.C.E.R.N.E.R., matrice Être/Faire/Avoir, critères Impact-Alignement-Innovation.',
-    roleId: promptRoles.optimiseur_decision.id,
-    baseSystemPrompt: `${CORE_SYSTEM_PROMPT}\n\n${promptRoles.optimiseur_decision.systemPrompt}`,
+    roleId: getRole('optimiseur_decision').id,
+    baseSystemPrompt: `${CORE_SYSTEM_PROMPT}\n\n${getRole('optimiseur_decision').systemPrompt}`,
     safetyDirectives: SAFETY_DIRECTIVES,
   },
   coach_ancrage: {
     id: 'coach_ancrage',
     label: 'Coach ancrage & rythmes',
-    description: 'Stabilise les cycles énergétiques, planifie les rituels d’ancrage.',
-    roleId: promptRoles.coach_ancrage.id,
-    baseSystemPrompt: `${CORE_SYSTEM_PROMPT}\n\n${promptRoles.coach_ancrage.systemPrompt}`,
+    description: "Stabilise les cycles énergétiques, planifie les rituels d'ancrage.",
+    roleId: getRole('coach_ancrage').id,
+    baseSystemPrompt: `${CORE_SYSTEM_PROMPT}\n\n${getRole('coach_ancrage').systemPrompt}`,
     safetyDirectives: SAFETY_DIRECTIVES,
   },
   tisseur_oeuvre: {
     id: 'tisseur_oeuvre',
-    label: 'Tisseur d’œuvre vivante',
-    description: 'Relie les insights à l’œuvre utile, propose des narrations alignées.',
-    roleId: promptRoles.tisseur_oeuvre.id,
-    baseSystemPrompt: `${CORE_SYSTEM_PROMPT}\n\n${promptRoles.tisseur_oeuvre.systemPrompt}`,
+    label: "Tisseur d'œuvre vivante",
+    description: "Relie les insights à l'œuvre utile, propose des narrations alignées.",
+    roleId: getRole('tisseur_oeuvre').id,
+    baseSystemPrompt: `${CORE_SYSTEM_PROMPT}\n\n${getRole('tisseur_oeuvre').systemPrompt}`,
     safetyDirectives: SAFETY_DIRECTIVES,
   },
   synthetiseur_cognitif: {
@@ -118,16 +121,16 @@ export const promptProfiles: Record<string, TitanePromptProfile> = {
     label: 'Synthétiseur cognitif',
     description:
       'Produit les artefacts mémoire (decisions, listening_entry, rhythm_report, season_summary).',
-    roleId: promptRoles.synthetiseur_cognitif.id,
-    baseSystemPrompt: promptRoles.synthetiseur_cognitif.systemPrompt,
+    roleId: getRole('synthetiseur_cognitif').id,
+    baseSystemPrompt: getRole('synthetiseur_cognitif').systemPrompt,
     safetyDirectives: [
       {
         id: 'format_only',
         description:
-          'Tu réponds uniquement par l’objet JSON demandé, sans texte additionnel.',
+          "Tu réponds uniquement par l'objet JSON demandé, sans texte additionnel.",
       },
-      SAFETY_DIRECTIVES[0],
-      SAFETY_DIRECTIVES[3],
+      SAFETY_DIRECTIVES[0]!,
+      SAFETY_DIRECTIVES[3]!,
     ],
   },
 };

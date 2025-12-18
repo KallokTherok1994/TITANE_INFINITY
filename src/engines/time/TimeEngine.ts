@@ -98,7 +98,9 @@ const DEFAULT_WORK_HOURS = {
  * Convertit une heure HH:mm en minutes depuis minuit
  */
 function timeToMinutes(time: string): number {
-  const [hours, minutes] = time.split(':').map(Number);
+  const parts = time.split(':').map(Number);
+  const hours = parts[0] ?? 0;
+  const minutes = parts[1] ?? 0;
   return hours * 60 + minutes;
 }
 
@@ -140,7 +142,9 @@ function createInitialTimeState(): TimeState {
   const currentSegment =
     DEFAULT_DAY_SEGMENTS.find(segment =>
       isTimeInRange(currentMinutes, segment.startTime, segment.endTime)
-    ) || DEFAULT_DAY_SEGMENTS[0];
+    ) ??
+    DEFAULT_DAY_SEGMENTS[0] ??
+    null;
 
   // Vérifier si jour travaillé
   const dayProfile = DEFAULT_WEEK_TEMPLATE.find(d => d.day === currentDayOfWeek);
@@ -290,7 +294,9 @@ export class TimeEngine {
     const currentSegment =
       this.state.daySegments.find(segment =>
         isTimeInRange(currentMinutes, segment.startTime, segment.endTime)
-      ) || this.state.daySegments[0];
+      ) ??
+      this.state.daySegments[0] ??
+      null;
 
     // Vérifier jour travaillé
     const dayProfile = this.state.weekTemplate.find(d => d.day === currentDayOfWeek);
@@ -325,10 +331,13 @@ export class TimeEngine {
     }
 
     // Fusionner avec les segments par défaut
-    return DEFAULT_DAY_SEGMENTS.map((defaultSegment, index) => ({
-      ...defaultSegment,
-      ...customSegments[index],
-    }));
+    return DEFAULT_DAY_SEGMENTS.map((defaultSegment, index) => {
+      const customSegment = customSegments[index];
+      return {
+        ...defaultSegment,
+        ...(customSegment ?? {}),
+      };
+    });
   }
 
   /**
@@ -336,10 +345,13 @@ export class TimeEngine {
    */
   initWeekTemplate(customTemplate?: Partial<DayProfile>[]): void {
     if (customTemplate && customTemplate.length > 0) {
-      this.state.weekTemplate = DEFAULT_WEEK_TEMPLATE.map((defaultDay, index) => ({
-        ...defaultDay,
-        ...customTemplate[index],
-      }));
+      this.state.weekTemplate = DEFAULT_WEEK_TEMPLATE.map((defaultDay, index) => {
+        const customDay = customTemplate[index];
+        return {
+          ...defaultDay,
+          ...(customDay ?? {}),
+        };
+      });
     } else {
       this.state.weekTemplate = DEFAULT_WEEK_TEMPLATE;
     }
@@ -361,8 +373,10 @@ export class TimeEngine {
   updateDayProfile(day: number, profile: Partial<DayProfile>): void {
     const index = this.state.weekTemplate.findIndex(d => d.day === day);
     if (index !== -1) {
+      const existingProfile = this.state.weekTemplate[index];
+      if (!existingProfile) return;
       this.state.weekTemplate[index] = {
-        ...this.state.weekTemplate[index],
+        ...existingProfile,
         ...profile,
       };
       this.updateCurrentDateTime();

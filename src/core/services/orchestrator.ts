@@ -919,11 +919,14 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
       const systemIndex = cloned.findIndex(msg => msg.role === 'system');
 
       if (systemIndex >= 0) {
-        cloned[systemIndex] = {
-          ...cloned[systemIndex],
-          content: prompt,
-          timestamp: Date.now(),
-        };
+        const systemMsg = cloned[systemIndex];
+        if (systemMsg) {
+          cloned[systemIndex] = {
+            ...systemMsg,
+            content: prompt,
+            timestamp: Date.now(),
+          };
+        }
       } else {
         cloned.unshift({ role: 'system', content: prompt, timestamp: Date.now() });
       }

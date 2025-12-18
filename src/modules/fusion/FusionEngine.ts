@@ -172,6 +172,34 @@ export class FusionEngine {
     this.isFusing = true;
     const startTime = Date.now();
     const steps = this.createPipelineSteps();
+
+    // Type-safe step extraction (avoids noUncheckedIndexedAccess errors)
+    const step0 = steps[0];
+    const step1 = steps[1];
+    const step2 = steps[2];
+    const step3 = steps[3];
+    const step4 = steps[4];
+    const step5 = steps[5];
+    const step6 = steps[6];
+    const step7 = steps[7];
+    const step8 = steps[8];
+    const step9 = steps[9];
+
+    if (
+      !step0 ||
+      !step1 ||
+      !step2 ||
+      !step3 ||
+      !step4 ||
+      !step5 ||
+      !step6 ||
+      !step7 ||
+      !step8 ||
+      !step9
+    ) {
+      throw new Error('Failed to create pipeline steps');
+    }
+
     const errors: string[] = [];
     const warnings: string[] = [];
     const tempDataset: FusionEntry[] = [];
@@ -181,9 +209,9 @@ export class FusionEngine {
       // ─────────────────────────────────────────────────────────────────────
       // STEP 1: Charger mémoire persistente (Memory Eternal)
       // ─────────────────────────────────────────────────────────────────────
-      await this.executeStep(steps[0], async () => {
+      await this.executeStep(step0, async () => {
         if (!this.config.enableMemorySync) {
-          steps[0].message = 'Skipped (disabled)';
+          step0.message = 'Skipped (disabled)';
           return;
         }
 
@@ -207,7 +235,7 @@ export class FusionEngine {
           }));
 
           originalDataMap.set('memory', memoryEntries);
-          steps[0].itemsProcessed = memoryEntries.length;
+          step0.itemsProcessed = memoryEntries.length;
         } catch (error) {
           warnings.push(`Memory sync partial: ${error}`);
         }
@@ -216,16 +244,16 @@ export class FusionEngine {
       // ─────────────────────────────────────────────────────────────────────
       // STEP 2: Collecter logs IA + logs dev + logs système
       // ─────────────────────────────────────────────────────────────────────
-      await this.executeStep(steps[1], async () => {
+      await this.executeStep(step1, async () => {
         if (!this.config.enableLogsSync) {
-          steps[1].message = 'Skipped (disabled)';
+          step1.message = 'Skipped (disabled)';
           return;
         }
 
         try {
           const logEntries = await this.collectLogs();
           originalDataMap.set('logs', logEntries);
-          steps[1].itemsProcessed = logEntries.length;
+          step1.itemsProcessed = logEntries.length;
         } catch (error) {
           warnings.push(`Logs sync failed: ${error}`);
         }
@@ -234,30 +262,30 @@ export class FusionEngine {
       // ─────────────────────────────────────────────────────────────────────
       // STEP 3: Extraire dataset précédent (DataCollectorEngine)
       // ─────────────────────────────────────────────────────────────────────
-      await this.executeStep(steps[2], async () => {
+      await this.executeStep(step2, async () => {
         if (!this.config.enableDatasetSync) {
-          steps[2].message = 'Skipped (disabled)';
+          step2.message = 'Skipped (disabled)';
           return;
         }
 
         const existingDataset = this.dataCollector.getDataset();
         originalDataMap.set('dataset', existingDataset);
-        steps[2].itemsProcessed = existingDataset.length;
+        step2.itemsProcessed = existingDataset.length;
       });
 
       // ─────────────────────────────────────────────────────────────────────
       // STEP 4: Collecter introspections Singularity
       // ─────────────────────────────────────────────────────────────────────
-      await this.executeStep(steps[3], async () => {
+      await this.executeStep(step3, async () => {
         if (!this.config.enableSingularitySync) {
-          steps[3].message = 'Skipped (disabled)';
+          step3.message = 'Skipped (disabled)';
           return;
         }
 
         try {
           const singularityEntries = await this.collectSingularityData();
           originalDataMap.set('singularity', singularityEntries);
-          steps[3].itemsProcessed = singularityEntries.length;
+          step3.itemsProcessed = singularityEntries.length;
         } catch (error) {
           warnings.push(`Singularity sync failed: ${error}`);
         }
@@ -266,7 +294,7 @@ export class FusionEngine {
       // ─────────────────────────────────────────────────────────────────────
       // STEP 5: Fusionner les trois sources (MEMORY × LOGS × DATASET)
       // ─────────────────────────────────────────────────────────────────────
-      await this.executeStep(steps[4], async () => {
+      await this.executeStep(step4, async () => {
         for (const [source, entries] of originalDataMap.entries()) {
           for (const entry of entries) {
             const fusionEntry = this.convertToFusionEntry(entry, [
@@ -275,57 +303,57 @@ export class FusionEngine {
             tempDataset.push(fusionEntry);
           }
         }
-        steps[4].itemsProcessed = tempDataset.length;
+        step4.itemsProcessed = tempDataset.length;
       });
 
       // ─────────────────────────────────────────────────────────────────────
       // STEP 6: Nettoyer (retirer bruit, répétitions, normaliser)
       // ─────────────────────────────────────────────────────────────────────
-      await this.executeStep(steps[5], async () => {
+      await this.executeStep(step5, async () => {
         const beforeCount = tempDataset.length;
         const cleaned = this.cleanDataset(tempDataset);
         tempDataset.length = 0;
         tempDataset.push(...cleaned);
         const removed = beforeCount - tempDataset.length;
-        steps[5].itemsProcessed = removed;
+        step5.itemsProcessed = removed;
         if (removed > 0) {
-          steps[5].message = `${removed} entrées nettoyées`;
+          step5.message = `${removed} entrées nettoyées`;
         }
       });
 
       // ─────────────────────────────────────────────────────────────────────
       // STEP 7: Dédupliquer (sémantique + hash)
       // ─────────────────────────────────────────────────────────────────────
-      await this.executeStep(steps[6], async () => {
+      await this.executeStep(step6, async () => {
         const beforeCount = tempDataset.length;
         const deduplicated = this.deduplicateDataset(tempDataset);
         tempDataset.length = 0;
         tempDataset.push(...deduplicated);
         const removed = beforeCount - tempDataset.length;
-        steps[6].itemsProcessed = removed;
+        step6.itemsProcessed = removed;
         if (removed > 0) {
-          steps[6].message = `${removed} duplications supprimées`;
+          step6.message = `${removed} duplications supprimées`;
         }
       });
 
       // ─────────────────────────────────────────────────────────────────────
       // STEP 8: Compresser cognitivement
       // ─────────────────────────────────────────────────────────────────────
-      await this.executeStep(steps[7], async () => {
+      await this.executeStep(step7, async () => {
         const compressed = await this.compressDataset(tempDataset);
         const compressionRatio = 1 - compressed.length / tempDataset.length;
         tempDataset.length = 0;
         tempDataset.push(...compressed);
-        steps[7].itemsProcessed = Math.round(compressionRatio * 100);
-        steps[7].message = `Compression ${steps[7].itemsProcessed}%`;
+        step7.itemsProcessed = Math.round(compressionRatio * 100);
+        step7.message = `Compression ${step7.itemsProcessed}%`;
       });
 
       // ─────────────────────────────────────────────────────────────────────
       // STEP 9: Clustering par moteurs TITANE∞
       // ─────────────────────────────────────────────────────────────────────
-      await this.executeStep(steps[8], async () => {
+      await this.executeStep(step8, async () => {
         if (!this.config.clusteringEnabled) {
-          steps[8].message = 'Skipped (disabled)';
+          step8.message = 'Skipped (disabled)';
           return;
         }
 
@@ -337,18 +365,18 @@ export class FusionEngine {
         const clustered = this.limitPerCluster(tempDataset);
         tempDataset.length = 0;
         tempDataset.push(...clustered);
-        steps[8].itemsProcessed = tempDataset.length;
+        step8.itemsProcessed = tempDataset.length;
       });
 
       // ─────────────────────────────────────────────────────────────────────
       // STEP 10: Exporter dataset final
       // ─────────────────────────────────────────────────────────────────────
-      await this.executeStep(steps[9], async () => {
+      await this.executeStep(step9, async () => {
         this.fusedDataset = [...tempDataset];
         this.updateStats();
         await this.saveFusedDataset();
         this.lastFusionTime = Date.now();
-        steps[9].itemsProcessed = this.fusedDataset.length;
+        step9.itemsProcessed = this.fusedDataset.length;
       });
 
       // ─────────────────────────────────────────────────────────────────────
@@ -507,15 +535,15 @@ ${introspection.futureVision.priorityImprovements
         // Entrées pour chaque issue critique détectée
         for (const issue of introspection.diagnostic.criticalIssues) {
           entries.push({
-            prompt: `Issue critique détectée: ${issue.category}`,
-            response: `**${issue.description}**\n\nCause racine: ${issue.rootCause}\n\nSolution: ${issue.solution}\n\nMoteurs affectés: ${issue.affectedEngines.join(', ')}`,
+            prompt: `Issue critique détectée: ${issue.category ?? 'system'}`,
+            response: `**${issue.description ?? 'Issue détectée'}**\n\nCause racine: ${issue.rootCause ?? 'À déterminer'}\n\nSolution: ${issue.solution ?? 'À analyser'}\n\nMoteurs affectés: ${issue.affectedEngines?.join(', ') ?? 'system'}`,
             category: 'auto-heal',
             metadata: {
               source: 'singularity-engine',
               timestamp: Date.now(),
               quality: 0.98,
               importance: 0.99,
-              tags: ['diagnostic', 'critical', issue.category],
+              tags: ['diagnostic', 'critical', issue.category ?? 'system'],
               originEngine: 'SingularityIntrospectionEngine',
               autoFixable: issue.autoFixable,
             },
@@ -561,9 +589,10 @@ ${introspection.futureVision.priorityImprovements
       const groups = this.groupBySimilarity(clusterEntries);
 
       for (const group of groups) {
-        if (group.length === 1) {
-          compressed.push(group[0]);
-        } else {
+        const firstEntry = group[0];
+        if (group.length === 1 && firstEntry) {
+          compressed.push(firstEntry);
+        } else if (firstEntry) {
           // Fusionner groupe en une seule entrée
           const merged = this.mergeEntries(group);
           compressed.push(merged);
@@ -603,6 +632,9 @@ ${introspection.futureVision.priorityImprovements
 
   private mergeEntries(entries: FusionEntry[]): FusionEntry {
     const first = entries[0];
+    if (!first) {
+      throw new Error('Cannot merge empty entries array');
+    }
     const allSources = new Set<FusionSource>();
     let totalOriginalCount = 0;
 
@@ -660,18 +692,16 @@ ${introspection.futureVision.priorityImprovements
     for (const entry of entries) {
       const hash = entry.semanticHash;
 
-      if (!seen.has(hash)) {
+      const existing = seen.get(hash);
+      if (!existing) {
         seen.set(hash, entry);
       } else {
         // Fusionner sources
-        const existing = seen.get(hash);
-        if (existing) {
-          const mergedSources = Array.from(
-            new Set([...existing.sources, ...entry.sources])
-          );
-          existing.sources = mergedSources;
-          existing.originalCount += entry.originalCount;
-        }
+        const mergedSources = Array.from(
+          new Set([...existing.sources, ...entry.sources])
+        );
+        existing.sources = mergedSources;
+        existing.originalCount += entry.originalCount;
       }
     }
 

@@ -175,7 +175,8 @@ export class MotionFrameEngine {
   ): string {
     const id = `anim_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const duration = options.duration ?? this.defaultDuration;
-    const easing = TITANE_EASINGS[options.easing ?? 'standard'];
+    const easingKey = options.easing ?? 'standard';
+    const easing = TITANE_EASINGS[easingKey] ?? TITANE_EASINGS.standard;
 
     // Créer l'animation Web Animations API
     const animation = element.animate(keyframes, {
@@ -261,7 +262,11 @@ export class MotionFrameEngine {
       down: { from: 'translateY(20px)', to: 'translateY(0)' },
     };
 
-    const { from, to } = transforms[direction];
+    const transform = transforms[direction];
+    if (!transform) {
+      throw new Error(`Invalid direction: ${direction}`);
+    }
+    const { from, to } = transform;
     return this.animate(
       element,
       [

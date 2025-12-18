@@ -315,6 +315,7 @@ export class SelfHealingExecutor {
       // Exécuter les actions
       for (let i = 0; i < plan.actions.length; i++) {
         const plannedAction = plan.actions[i];
+        if (!plannedAction) continue;
 
         // Vérifier l'annulation
         if (this.abortController.signal.aborted) {

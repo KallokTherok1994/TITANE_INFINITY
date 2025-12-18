@@ -193,7 +193,9 @@ export class StateIntegrityEngine {
    * Obtient le dernier snapshot
    */
   public getLatestSnapshot(): StateSnapshot | null {
-    return this.snapshots.length > 0 ? this.snapshots[this.snapshots.length - 1] : null;
+    return this.snapshots.length > 0
+      ? (this.snapshots[this.snapshots.length - 1] ?? null)
+      : null;
   }
 
   /**

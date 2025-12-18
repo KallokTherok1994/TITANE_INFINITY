@@ -21,7 +21,7 @@ import {
   useRef,
   useMemo,
 } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { listen } from '@tauri-apps/api/event';
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -353,7 +353,8 @@ const initialState: TitanState = {
     xpInCurrentLevel: 0,
     xpToNextLevel: XP_PER_LEVEL,
     streakDays: 0,
-    lastActiveDate: new Date().toISOString().split('T')[0],
+    lastActiveDate:
+      new Date().toISOString().split('T')[0] ?? new Date().toLocaleDateString(),
   },
   memory: {
     totalMemories: 0,
@@ -422,9 +423,13 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
       action.type !== 'system/sync' &&
       action.type !== 'system/markClean'
     ) {
+      const parts = action.type.split('/');
+      const module = parts[0] ?? 'unknown';
+      const eventType = parts[1] ?? 'unknown';
+
       const event: TitanEvent = {
-        module: action.type.split('/')[0],
-        event_type: action.type.split('/')[1],
+        module,
+        event_type: eventType,
         payload: 'payload' in action ? (action.payload as Record<string, unknown>) : {},
       };
 

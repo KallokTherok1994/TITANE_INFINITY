@@ -325,7 +325,9 @@ class EvolutionEngine {
 
     for (let i = phases.length - 1; i >= 0; i--) {
       const phase = phases[i];
-      const threshold = PHASE_THRESHOLDS[phase];
+      if (!phase) continue;
+      const threshold = PHASE_THRESHOLDS[phase as keyof typeof PHASE_THRESHOLDS];
+      if (!threshold) continue;
 
       if (
         this.state.totalCycles >= threshold.minCycles &&
@@ -352,9 +354,11 @@ class EvolutionEngine {
   // ─────────────────────────────────────────────────────────────────
 
   addChangelogEntry(entry: Omit<ChangelogEntry, 'date'>): void {
+    const dateStr =
+      new Date().toISOString().split('T')[0] ?? new Date().toLocaleDateString();
     const fullEntry: ChangelogEntry = {
       ...entry,
-      date: new Date().toISOString().split('T')[0],
+      date: dateStr,
     };
 
     this.state.changelog.unshift(fullEntry);
@@ -425,7 +429,8 @@ class EvolutionEngine {
       'singularity',
     ];
     const currentIdx = phases.indexOf(this.state.phase);
-    const nextPhase = currentIdx < phases.length - 1 ? phases[currentIdx + 1] : null;
+    const nextPhase =
+      currentIdx < phases.length - 1 ? (phases[currentIdx + 1] ?? null) : null;
 
     if (!nextPhase) {
       return { current: this.state.phase, progress: 100, nextPhase: null };

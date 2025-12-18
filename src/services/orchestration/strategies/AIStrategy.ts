@@ -160,15 +160,23 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
     // Cognitive mode → use cloud providers
     else if (mode === 'cognitive') {
       const cloudProviders = ['anthropic', 'openai', 'google'];
-      selectedProvider =
-        cloudProviders[Math.floor(Math.random() * cloudProviders.length)];
+      const randomIndex = Math.floor(Math.random() * cloudProviders.length);
+      const chosenProvider = cloudProviders[randomIndex];
+      if (!chosenProvider) {
+        throw new Error('Failed to select cloud provider');
+      }
+      selectedProvider = chosenProvider;
       _reason = `Cloud provider selected for cognitive mode`;
     }
     // Vision requirement → use vision-capable providers
     else if (requiresVision) {
       const visionProviders = ['google', 'openai'];
-      selectedProvider =
-        visionProviders[Math.floor(Math.random() * visionProviders.length)];
+      const randomIndex = Math.floor(Math.random() * visionProviders.length);
+      const chosenProvider = visionProviders[randomIndex];
+      if (!chosenProvider) {
+        throw new Error('Failed to select vision provider');
+      }
+      selectedProvider = chosenProvider;
       _reason = `Vision-capable provider selected`;
     }
     // Default: local provider

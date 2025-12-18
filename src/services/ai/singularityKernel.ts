@@ -847,8 +847,9 @@ class SingularityKernel {
     // Détecter bottlenecks
     const bottlenecks: string[] = [];
     metaReport.holisticAnalysis.systemMap.flows.forEach(flow => {
-      if (flow.efficiency < 80) {
-        bottlenecks.push(`${flow.name} (${flow.efficiency}%)`);
+      const efficiency = flow.efficiency;
+      if (efficiency !== undefined && efficiency < 80) {
+        bottlenecks.push(`${flow.name} (${efficiency}%)`);
       }
     });
 
@@ -888,6 +889,8 @@ class SingularityKernel {
     const recent = values.slice(-3);
     const avg = recent.reduce((sum, val) => sum + val, 0) / recent.length;
     const first = values[0];
+
+    if (first === undefined) return 'stable';
 
     if (avg > first + 2) return 'improving';
     if (avg < first - 2) return 'degrading';
@@ -1200,15 +1203,18 @@ class SingularityKernel {
 
     // Enregistrer transformations
     if (this.systemExpression && this.systemExpression.globalCorrections.length > 0) {
-      this.singularityMemory.evolution.successfulTransformations.push({
-        type: 'global-correction',
-        impact: this.systemExpression.globalCorrections[0].impact,
-        timestamp: Date.now(),
-      });
+      const firstCorrection = this.systemExpression.globalCorrections[0];
+      if (firstCorrection) {
+        this.singularityMemory.evolution.successfulTransformations.push({
+          type: 'global-correction',
+          impact: firstCorrection.impact,
+          timestamp: Date.now(),
+        });
 
-      // Limiter à 100 transformations
-      if (this.singularityMemory.evolution.successfulTransformations.length > 100) {
-        this.singularityMemory.evolution.successfulTransformations.shift();
+        // Limiter à 100 transformations
+        if (this.singularityMemory.evolution.successfulTransformations.length > 100) {
+          this.singularityMemory.evolution.successfulTransformations.shift();
+        }
       }
     }
 

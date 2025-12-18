@@ -306,7 +306,9 @@ export class AdvancedPerformanceMonitor {
     const recentSnapshots = this.snapshots.slice(-10);
     const memoryGrowth = recentSnapshots.map((s, i) => {
       if (i === 0) return 0;
-      return s.memory.heapUsed - recentSnapshots[i - 1].memory.heapUsed;
+      const prevSnapshot = recentSnapshots[i - 1];
+      if (!prevSnapshot) return 0;
+      return s.memory.heapUsed - prevSnapshot.memory.heapUsed;
     });
 
     const avgGrowth = memoryGrowth.reduce((sum, g) => sum + g, 0) / memoryGrowth.length;
@@ -327,10 +329,13 @@ export class AdvancedPerformanceMonitor {
 
     // Calcul FPS approximatif
     if (this.snapshots.length >= 2) {
-      const timeDiff = Date.now() - this.snapshots[this.snapshots.length - 1].timestamp;
-      fps = Math.round(1000 / timeDiff);
+      const lastSnapshot = this.snapshots[this.snapshots.length - 1];
+      if (lastSnapshot) {
+        const timeDiff = Date.now() - lastSnapshot.timestamp;
+        fps = Math.round(1000 / timeDiff);
 
-      if (fps < 55) droppedFrames = Math.round(((60 - fps) / 60) * 100);
+        if (fps < 55) droppedFrames = Math.round(((60 - fps) / 60) * 100);
+      }
     }
 
     return {
@@ -348,9 +353,8 @@ export class AdvancedPerformanceMonitor {
    * Collecte les métriques réseau
    */
   private collectNetworkMetrics(): NetworkMetrics {
-    const navTiming = performance.getEntriesByType(
-      'navigation'
-    )[0] as PerformanceNavigationTiming;
+    const navEntries = performance.getEntriesByType('navigation');
+    const navTiming = navEntries[0] as PerformanceNavigationTiming | undefined;
 
     if (!navTiming) {
       return {
@@ -412,6 +416,7 @@ export class AdvancedPerformanceMonitor {
     if (this.snapshots.length === 0) return;
 
     const latest = this.snapshots[this.snapshots.length - 1];
+    if (!latest) return;
 
     // Analyse CPU
     this.analyzeComponent('cpu', latest.cpu.usage, this.THRESHOLDS.cpu, [

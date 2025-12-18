@@ -307,11 +307,16 @@ export const MCPOrchestrator = {
       throw new Error('No jobs found to merge');
     }
 
+    const firstJob = jobs[0];
+    if (!firstJob) {
+      throw new Error('No jobs found to merge');
+    }
+
     // Create merged job (simplified)
     return {
       id: `merged-${Date.now()}`,
-      type: jobs[0].type,
-      priority: jobs[0].priority,
+      type: firstJob.type,
+      priority: firstJob.priority,
       status: JobStatus.PENDING,
       context: {},
       createdAt: Date.now(),

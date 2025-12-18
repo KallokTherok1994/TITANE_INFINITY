@@ -139,7 +139,7 @@ export function startMockActivity(intervalMs = 2000): () => void {
     try {
       // Random engine status update
       if (Math.random() > 0.7) {
-        const engine = engines[Math.floor(Math.random() * engines.length)];
+        const engine = engines[Math.floor(Math.random() * engines.length)] ?? 'unknown';
         await sendEngineStatusUpdate(engine, {
           cpuUsage: Math.random() * 100,
           memoryUsage: Math.random() * 200,
@@ -155,7 +155,7 @@ export function startMockActivity(intervalMs = 2000): () => void {
           'cpu-usage',
           'memory-usage',
         ];
-        const metric = metrics[Math.floor(Math.random() * metrics.length)];
+        const metric = metrics[Math.floor(Math.random() * metrics.length)] ?? 'cpu-usage';
         const value = metric.includes('latency')
           ? Math.random() * 100
           : metric.includes('duration')
@@ -166,23 +166,26 @@ export function startMockActivity(intervalMs = 2000): () => void {
 
       // Random log line
       if (Math.random() > 0.3) {
-        const level = logLevels[Math.floor(Math.random() * logLevels.length)];
-        const message = logMessages[Math.floor(Math.random() * logMessages.length)];
-        const source = engines[Math.floor(Math.random() * engines.length)];
+        const level = logLevels[Math.floor(Math.random() * logLevels.length)] ?? 'info';
+        const message =
+          logMessages[Math.floor(Math.random() * logMessages.length)] ?? 'Log message';
+        const source = engines[Math.floor(Math.random() * engines.length)] ?? 'unknown';
         await sendLogLine(level, message, source);
       }
 
       // Random error (rare)
       if (Math.random() > 0.95) {
-        const engine = engines[Math.floor(Math.random() * engines.length)];
+        const engine = engines[Math.floor(Math.random() * engines.length)] ?? 'unknown';
         const impacts: Array<'high' | 'medium' | 'low'> = ['high', 'medium', 'low'];
         const impact = impacts[Math.floor(Math.random() * impacts.length)];
-        await sendError(
-          engine,
-          'Unexpected error occurred',
-          impact,
-          `Error at ${engine}:42:15\n  at handleRequest (engine.ts:42:15)\n  at process (core.ts:87:20)`
-        );
+        if (engine && impact) {
+          await sendError(
+            engine,
+            'Unexpected error occurred',
+            impact,
+            `Error at ${engine}:42:15\n  at handleRequest (engine.ts:42:15)\n  at process (core.ts:87:20)`
+          );
+        }
       }
     } catch (error) {
       console.error('[MockEvents] Tick error:', error);

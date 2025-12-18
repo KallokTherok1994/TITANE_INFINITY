@@ -599,7 +599,8 @@ export function getNextLevel(currentLevel: UserLevel): LevelConfig | null {
     return null;
   }
 
-  return LEVEL_CONFIGS[levels[currentIndex + 1]];
+  const nextLevel = levels[currentIndex + 1];
+  return nextLevel ? LEVEL_CONFIGS[nextLevel] : null;
 }
 
 /**

@@ -174,7 +174,8 @@
       "Bash(for:*)",
       "Bash(npm outdated:*)",
       "Bash(while read dir)",
-      "Bash(if [ -d \"/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/$dir\" ])"
+      "Bash(if [ -d \"/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/$dir\" ])",
+      "Bash(npx eslint:*)"
     ],
     "deny": [],
     "ask": []

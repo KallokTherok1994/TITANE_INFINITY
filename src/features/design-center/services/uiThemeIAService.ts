@@ -138,7 +138,7 @@ export const uiThemeIAService = {
 
     // Color
     const colorMatch = message.match(COMMAND_PATTERNS.color);
-    if (colorMatch) {
+    if (colorMatch && colorMatch[1] && colorMatch[2]) {
       return {
         type: 'set_color',
         key: colorMatch[1].toLowerCase(),
@@ -149,7 +149,7 @@ export const uiThemeIAService = {
 
     // Font size
     const fontSizeMatch = message.match(COMMAND_PATTERNS.fontSize);
-    if (fontSizeMatch) {
+    if (fontSizeMatch && fontSizeMatch[1]) {
       return {
         type: 'set_typography',
         key: 'fontSize',
@@ -160,7 +160,7 @@ export const uiThemeIAService = {
 
     // Density
     const densityMatch = message.match(COMMAND_PATTERNS.density);
-    if (densityMatch) {
+    if (densityMatch && densityMatch[1]) {
       return {
         type: 'set_spacing',
         key: 'density',
@@ -171,7 +171,7 @@ export const uiThemeIAService = {
 
     // Animations
     const animMatch = message.match(COMMAND_PATTERNS.animations);
-    if (animMatch) {
+    if (animMatch && animMatch[1]) {
       const enabled = /enable|activer/i.test(animMatch[1]);
       return {
         type: 'set_animations',
@@ -185,7 +185,7 @@ export const uiThemeIAService = {
 
     // Contrast
     const contrastMatch = message.match(COMMAND_PATTERNS.contrast);
-    if (contrastMatch) {
+    if (contrastMatch && contrastMatch[1]) {
       const level = /high|haut|élevé/i.test(contrastMatch[1]) ? 'high' : 'normal';
       return {
         type: 'set_contrast',
@@ -229,7 +229,7 @@ export const uiThemeIAService = {
           };
 
           await secureInvoke<UIThemeTokens>('update_ui_token', {
-            category: categoryMap[category] || category,
+            category: categoryMap[category] ?? category,
             key: command.key,
             value: command.value,
           });

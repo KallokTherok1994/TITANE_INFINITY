@@ -225,7 +225,8 @@ export class InternalNarrativeEngine {
 
     // Activer la pensée la plus prioritaire
     const sorted = [...this.state.innerMonologue].sort((a, b) => b.priority - a.priority);
-    this.state.activeThought = sorted[0] || null;
+    const topThought = sorted[0];
+    this.state.activeThought = topThought ?? null;
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -294,10 +295,14 @@ export class InternalNarrativeEngine {
 
     // Sélection basée sur contexte
     if (context.cognitiveLoad && context.cognitiveLoad > 0.7) {
-      return structures[0]; // Simple et direct
+      const simpleStructure = structures[0];
+      return (
+        simpleStructure ?? structures[1] ?? 'Structure envisagée : simple et directe'
+      );
     }
 
-    return structures[Math.floor(Math.random() * structures.length)];
+    const randomStructure = structures[Math.floor(Math.random() * structures.length)];
+    return randomStructure ?? structures[0] ?? 'Structure envisagée : standard';
   }
 
   private generateMetaThought(context: NarrativeContext): string {
@@ -320,7 +325,8 @@ export class InternalNarrativeEngine {
       return 'Session longue → surveiller fatigue cognitive utilisateur';
     }
 
-    return metaThoughts[Math.floor(Math.random() * metaThoughts.length)];
+    const randomThought = metaThoughts[Math.floor(Math.random() * metaThoughts.length)];
+    return randomThought ?? 'Maintenir cohérence narrative';
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -448,8 +454,8 @@ export class InternalNarrativeEngine {
     // Extraire thèmes récents
     const recentThoughts = this.state.innerMonologue.slice(-10);
     const anticipatedThemes = [
-      ...new Set(recentThoughts.map(t => t.content.split(' ')[0])),
-    ];
+      ...new Set(recentThoughts.map(t => t.content.split(' ')[0] ?? '')),
+    ].filter(theme => theme !== '');
 
     // Structure recommandée basée sur direction
     const structures: Record<IntentDirection, string[]> = {
@@ -472,10 +478,16 @@ export class InternalNarrativeEngine {
         : '',
     ].filter(Boolean);
 
+    const recommendedStructure = structures[this.state.intentDirection] ?? [
+      'intro',
+      'développement',
+      'conclusion',
+    ];
+
     return {
       narrativeAnchor: this.state.narrativeAnchor,
       intentDirection: this.state.intentDirection,
-      recommendedStructure: structures[this.state.intentDirection],
+      recommendedStructure,
       anticipatedThemes: anticipatedThemes.slice(0, 5),
       coherenceGuidelines,
     };

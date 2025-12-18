@@ -65,6 +65,8 @@ export const ConfirmDialog = ({
         const firstElement = focusableElements[0];
         const lastElement = focusableElements[focusableElements.length - 1];
 
+        if (!firstElement || !lastElement) return;
+
         if (e.shiftKey) {
           if (document.activeElement === firstElement) {
             e.preventDefault();
@@ -121,6 +123,8 @@ export const ConfirmDialog = ({
     default: <span className="confirm-dialog__default-icon">?</span>,
   };
 
+  const defaultIcon = defaultIcons[variant] ?? defaultIcons.default;
+
   return (
     <div className={overlayClasses} onClick={onCancel} role="presentation">
       <div
@@ -134,7 +138,7 @@ export const ConfirmDialog = ({
       >
         <div className="confirm-dialog__header">
           <div className={`confirm-dialog__icon confirm-dialog__icon--${variant}`}>
-            {icon || defaultIcons[variant]}
+            {icon || defaultIcon}
           </div>
           <h2 id="confirm-dialog-title" className="confirm-dialog__title">
             {title}

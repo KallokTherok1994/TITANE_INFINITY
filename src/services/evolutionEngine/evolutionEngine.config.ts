@@ -1358,29 +1358,31 @@ export function checkPreconditions(
         break;
       case 'METRIC_THRESHOLD': {
         const metricValue = context.metrics[precondition.target];
-        if (metricValue !== undefined) {
-          switch (precondition.operator) {
-            case 'GT':
-              satisfied = metricValue > (precondition.value as number);
-              break;
-            case 'LT':
-              satisfied = metricValue < (precondition.value as number);
-              break;
-            case 'GTE':
-              satisfied = metricValue >= (precondition.value as number);
-              break;
-            case 'LTE':
-              satisfied = metricValue <= (precondition.value as number);
-              break;
-            case 'EQ':
-              satisfied = metricValue === precondition.value;
-              break;
-            case 'NE':
-              satisfied = metricValue !== precondition.value;
-              break;
-            default:
-              satisfied = false;
-          }
+        if (metricValue === undefined) {
+          satisfied = false;
+          break;
+        }
+        switch (precondition.operator) {
+          case 'GT':
+            satisfied = metricValue > (precondition.value as number);
+            break;
+          case 'LT':
+            satisfied = metricValue < (precondition.value as number);
+            break;
+          case 'GTE':
+            satisfied = metricValue >= (precondition.value as number);
+            break;
+          case 'LTE':
+            satisfied = metricValue <= (precondition.value as number);
+            break;
+          case 'EQ':
+            satisfied = metricValue === precondition.value;
+            break;
+          case 'NE':
+            satisfied = metricValue !== precondition.value;
+            break;
+          default:
+            satisfied = false;
         }
         break;
       }
@@ -1425,17 +1427,27 @@ export function calculateTimeSeriesStats(values: number[]): {
   const sorted = [...values].sort((a, b) => a - b);
   const sum = values.reduce((a, b) => a + b, 0);
   const average = sum / values.length;
-  const min = sorted[0];
-  const max = sorted[sorted.length - 1];
+  const minValue = sorted[0];
+  const maxValue = sorted[sorted.length - 1];
+
+  if (minValue === undefined || maxValue === undefined) {
+    return { average: 0, min: 0, max: 0, stdDeviation: 0, percentile95: 0 };
+  }
 
   const variance =
     values.reduce((acc, val) => acc + Math.pow(val - average, 2), 0) / values.length;
   const stdDeviation = Math.sqrt(variance);
 
   const p95Index = Math.ceil(0.95 * sorted.length) - 1;
-  const percentile95 = sorted[p95Index];
+  const percentile95Value = sorted[p95Index];
 
-  return { average, min, max, stdDeviation, percentile95 };
+  return {
+    average,
+    min: minValue,
+    max: maxValue,
+    stdDeviation,
+    percentile95: percentile95Value ?? 0,
+  };
 }
 
 /**

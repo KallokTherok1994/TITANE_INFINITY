@@ -260,10 +260,13 @@ class RAGService {
       );
 
       if (response.success && response.data) {
-        return chunks.map((chunk, index) => ({
-          ...chunk,
-          embedding: response.data?.embeddings[index] || [],
-        }));
+        return chunks.map((chunk, index) => {
+          const embedding = response.data?.embeddings[index];
+          return {
+            ...chunk,
+            embedding: embedding || [],
+          };
+        });
       }
     } catch (error) {
       const err = error instanceof Error ? error : new Error(String(error));
@@ -317,9 +320,12 @@ class RAGService {
     let normB = 0;
 
     for (let i = 0; i < a.length; i++) {
-      dotProduct += a[i] * b[i];
-      normA += a[i] * a[i];
-      normB += b[i] * b[i];
+      const valA = a[i];
+      const valB = b[i];
+      if (valA === undefined || valB === undefined) continue;
+      dotProduct += valA * valB;
+      normA += valA * valA;
+      normB += valB * valB;
     }
 
     if (normA === 0 || normB === 0) return 0;
@@ -342,11 +348,12 @@ class RAGService {
     const index = sameSource.findIndex(c => c.id === chunkId);
 
     // Get previous and next chunks
-    const contextChunks = [
-      sameSource[index - 1],
-      sameSource[index],
-      sameSource[index + 1],
-    ].filter(Boolean);
+    const prev = sameSource[index - 1];
+    const curr = sameSource[index];
+    const next = sameSource[index + 1];
+    const contextChunks = [prev, curr, next].filter(
+      (c): c is DocumentChunk => c !== undefined
+    );
 
     return contextChunks.map(c => c.content).join('\n\n');
   }

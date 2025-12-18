@@ -288,7 +288,7 @@ export async function invokeTauriCommand<T = unknown>(
 ): Promise<CoreResponse<T>> {
   const cmd = TAURI_COMMANDS[command];
 
-  if (!cmd) {
+  if (!cmd || cmd === undefined) {
     logger.warn('Unknown Tauri command', {
       component: 'tauriCommands',
       action: 'executeCommand',
@@ -410,11 +410,17 @@ export const TauriAPI = {
 // ═══════════════════════════════════════════════════════════════
 
 export function getActiveCommands(): string[] {
-  return Object.keys(TAURI_COMMANDS).filter(key => TAURI_COMMANDS[key].active);
+  return Object.keys(TAURI_COMMANDS).filter(key => {
+    const cmd = TAURI_COMMANDS[key];
+    return cmd !== undefined && cmd.active;
+  });
 }
 
 export function getInactiveCommands(): string[] {
-  return Object.keys(TAURI_COMMANDS).filter(key => !TAURI_COMMANDS[key].active);
+  return Object.keys(TAURI_COMMANDS).filter(key => {
+    const cmd = TAURI_COMMANDS[key];
+    return cmd !== undefined && !cmd.active;
+  });
 }
 
 export function validateCommand(command: string): boolean {

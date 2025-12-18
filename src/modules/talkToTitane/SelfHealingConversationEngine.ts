@@ -216,8 +216,11 @@ class SelfHealingConversationEngine {
 
     // Parse JSON
     for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      if (!line) continue;
+
       try {
-        const entry = JSON.parse(lines[i]) as ConversationEntry;
+        const entry = JSON.parse(line) as ConversationEntry;
         entries.push(entry);
 
         // Check missing fields
@@ -263,14 +266,19 @@ class SelfHealingConversationEngine {
     const sorted = [...entries].sort((a, b) => a.timestamp - b.timestamp);
 
     for (let i = 1; i < sorted.length; i++) {
-      const gap = sorted[i].timestamp - sorted[i - 1].timestamp;
+      const currentEntry = sorted[i];
+      const previousEntry = sorted[i - 1];
+
+      if (!currentEntry || !previousEntry) continue;
+
+      const gap = currentEntry.timestamp - previousEntry.timestamp;
       if (gap > this.config.maxGapTolerance) {
         issues.push({
           type: 'chronological-gap',
           severity: 'medium',
           location,
           description: `Large time gap: ${gap}ms between entries`,
-          entry: sorted[i],
+          entry: currentEntry,
         });
       }
     }
@@ -378,10 +386,15 @@ class SelfHealingConversationEngine {
   ): Record<CorruptionType, CorruptionIssue[]> {
     const grouped: Record<string, CorruptionIssue[]> = {};
     for (const issue of issues) {
-      if (!grouped[issue.type]) {
-        grouped[issue.type] = [];
+      const issueType = issue.type;
+      const existingGroup = grouped[issueType];
+      if (!existingGroup) {
+        grouped[issueType] = [];
       }
-      grouped[issue.type].push(issue);
+      const group = grouped[issueType];
+      if (group) {
+        group.push(issue);
+      }
     }
     return grouped as Record<CorruptionType, CorruptionIssue[]>;
   }

@@ -58,7 +58,7 @@ const formatFileSize = (bytes: number): string => {
   const k = 1024;
   const sizes = ['B', 'KB', 'MB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i] ?? 'B'}`;
 };
 
 const classifyFile = (filename: string): ImportedFile['type'] => {
@@ -179,7 +179,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
   useEffect(() => {
     if (!isOpen && messages.length > 0) {
       const lastMessage = messages[messages.length - 1];
-      if (lastMessage.role === 'assistant') {
+      if (lastMessage && lastMessage.role === 'assistant') {
         setUnreadCount(prev => prev + 1);
         // ✨ TITANE parle sa réponse si autoSpeak activé
         if (lastMessage.content && autoSpeak) {
@@ -267,7 +267,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
       }
 
       newFiles.push({
-        id: `file-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        id: `file-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
         name: file.name,
         size: file.size,
         type,

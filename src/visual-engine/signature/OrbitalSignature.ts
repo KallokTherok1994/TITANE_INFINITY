@@ -230,6 +230,7 @@ export class OrbitalSignature {
 
       case 'fibonacci': {
         const fib = OrbitalSignature.FIBONACCI[index % OrbitalSignature.FIBONACCI.length];
+        if (!fib) return 0;
         return (fib / 21) * 2 * Math.PI; // Normalize to 0-2π
       }
 
@@ -255,6 +256,7 @@ export class OrbitalSignature {
 
     for (let i = 0; i < this.rings.length; i++) {
       const ring = this.rings[i];
+      if (!ring) continue;
 
       // Base rotation
       ring.angle += ring.velocity * deltaSeconds;
@@ -280,7 +282,9 @@ export class OrbitalSignature {
 
     for (let i = 0; i < this.rings.length; i++) {
       if (i !== ringIndex) {
-        sum += this.rings[i].angle;
+        const ring = this.rings[i];
+        if (!ring) continue;
+        sum += ring.angle;
         count++;
       }
     }
@@ -288,7 +292,9 @@ export class OrbitalSignature {
     if (count === 0) return 0;
 
     const averageAngle = sum / count;
-    const currentAngle = this.rings[ringIndex].angle;
+    const currentRing = this.rings[ringIndex];
+    if (!currentRing) return 0;
+    const currentAngle = currentRing.angle;
 
     // Calculate angular difference
     let diff = averageAngle - currentAngle;

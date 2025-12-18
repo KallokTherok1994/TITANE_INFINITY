@@ -152,10 +152,12 @@ export class FrameHarmonizer {
         ? times.reduce((a, b) => a + b, 0) / times.length
         : this.targetFrameTime;
 
+    const lastFrameTime = times[times.length - 1] ?? this.targetFrameTime;
+
     return {
-      currentFPS: times.length > 0 ? 1000 / times[times.length - 1] : this.targetHz,
+      currentFPS: times.length > 0 ? 1000 / lastFrameTime : this.targetHz,
       targetFPS: this.targetHz,
-      frameTime: times.length > 0 ? times[times.length - 1] : this.targetFrameTime,
+      frameTime: times.length > 0 ? lastFrameTime : this.targetFrameTime,
       avgFrameTime,
       minFrameTime: times.length > 0 ? Math.min(...times) : this.targetFrameTime,
       maxFrameTime: times.length > 0 ? Math.max(...times) : this.targetFrameTime,

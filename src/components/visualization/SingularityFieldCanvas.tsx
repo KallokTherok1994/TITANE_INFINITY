@@ -106,7 +106,7 @@ export const SingularityFieldCanvas = memo(function SingularityFieldCanvas({
 
     for (let layer = 0; layer < 6; layer++) {
       const layerRadius = ((layer + 1) / 6) * (Math.min(width, height) / 2 - 40);
-      const color = LAYER_COLORS[layer];
+      const color = LAYER_COLORS[layer] ?? { h: 0, s: 50, l: 50 };
 
       for (let i = 0; i < particlesPerLayer; i++) {
         const angle = (i / particlesPerLayer) * Math.PI * 2 + Math.random() * 0.5;
@@ -130,10 +130,14 @@ export const SingularityFieldCanvas = memo(function SingularityFieldCanvas({
     // Generate connections
     const connections: Connection[] = [];
     for (let i = 0; i < particles.length; i++) {
+      const pI = particles[i];
+      if (!pI) continue;
       for (let j = i + 1; j < particles.length; j++) {
-        if (Math.abs(particles[i].layer - particles[j].layer) <= 1) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
+        const pJ = particles[j];
+        if (!pJ) continue;
+        if (Math.abs(pI.layer - pJ.layer) <= 1) {
+          const dx = pI.x - pJ.x;
+          const dy = pI.y - pJ.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
           if (distance < 60) {
@@ -228,10 +232,14 @@ export const SingularityFieldCanvas = memo(function SingularityFieldCanvas({
     connections.length = 0;
 
     for (let i = 0; i < particles.length; i++) {
+      const pI = particles[i];
+      if (!pI) continue;
       for (let j = i + 1; j < particles.length; j++) {
-        if (Math.abs(particles[i].layer - particles[j].layer) <= 1) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
+        const pJ = particles[j];
+        if (!pJ) continue;
+        if (Math.abs(pI.layer - pJ.layer) <= 1) {
+          const dx = pI.x - pJ.x;
+          const dy = pI.y - pJ.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
           if (dist < 60) {
@@ -267,7 +275,7 @@ export const SingularityFieldCanvas = memo(function SingularityFieldCanvas({
 
     for (let layer = 0; layer < 6; layer++) {
       const layerRadius = ((layer + 1) / 6) * (Math.min(width, height) / 2 - 40);
-      const color = LAYER_COLORS[layer];
+      const color = LAYER_COLORS[layer] ?? { h: 0, s: 50, l: 50 };
 
       ctx.beginPath();
       ctx.arc(centerX, centerY, layerRadius, 0, Math.PI * 2);
@@ -281,8 +289,9 @@ export const SingularityFieldCanvas = memo(function SingularityFieldCanvas({
       connections.forEach(connection => {
         const from = particles[connection.from];
         const to = particles[connection.to];
+        if (!from || !to) return;
         const avgLayer = Math.floor((from.layer + to.layer) / 2);
-        const color = LAYER_COLORS[avgLayer];
+        const color = LAYER_COLORS[avgLayer] ?? { h: 0, s: 50, l: 50 };
 
         ctx.beginPath();
         ctx.moveTo(from.x, from.y);
@@ -295,7 +304,7 @@ export const SingularityFieldCanvas = memo(function SingularityFieldCanvas({
 
     // Draw particles
     particles.forEach(particle => {
-      const color = LAYER_COLORS[particle.layer];
+      const color = LAYER_COLORS[particle.layer] ?? { h: 0, s: 50, l: 50 };
       const glow = particle.energy * 10;
 
       // Glow effect
@@ -332,10 +341,11 @@ export const SingularityFieldCanvas = memo(function SingularityFieldCanvas({
 
       for (let layer = 0; layer < 6; layer++) {
         const layerRadius = ((layer + 1) / 6) * (Math.min(width, height) / 2 - 40);
-        const color = LAYER_COLORS[layer];
+        const color = LAYER_COLORS[layer] ?? { h: 0, s: 50, l: 50 };
+        const layerName = LAYER_NAMES[layer] ?? '';
 
         ctx.fillStyle = `hsla(${color.h}, ${color.s}%, ${color.l}%, 0.7)`;
-        ctx.fillText(LAYER_NAMES[layer], centerX, centerY - layerRadius - 8);
+        ctx.fillText(layerName, centerX, centerY - layerRadius - 8);
       }
     }
 

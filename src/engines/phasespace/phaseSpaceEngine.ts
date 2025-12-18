@@ -433,10 +433,10 @@ class PhaseSpaceEngine {
     // Calculer longueur euclidienne
     let length = 0;
     for (let i = 1; i < recentPoints.length; i++) {
-      length += this.distance(
-        recentPoints[i - 1].coordinates,
-        recentPoints[i].coordinates
-      );
+      const prevPoint = recentPoints[i - 1];
+      const currPoint = recentPoints[i];
+      if (!prevPoint || !currPoint) continue;
+      length += this.distance(prevPoint.coordinates, currPoint.coordinates);
     }
 
     // Calculer smoothness (variation de vitesse)
@@ -450,10 +450,10 @@ class PhaseSpaceEngine {
     // Calculer courbure (changement de direction)
     let curvature = 0;
     for (let i = 2; i < recentPoints.length; i++) {
-      const angle = this.angleBetweenVectors(
-        recentPoints[i - 1].velocity,
-        recentPoints[i].velocity
-      );
+      const prevPoint = recentPoints[i - 1];
+      const currPoint = recentPoints[i];
+      if (!prevPoint || !currPoint) continue;
+      const angle = this.angleBetweenVectors(prevPoint.velocity, currPoint.velocity);
       curvature += Math.abs(angle);
     }
     curvature /= recentPoints.length - 2;
@@ -466,10 +466,14 @@ class PhaseSpaceEngine {
       nearestAttractor !== null &&
       this.state.metrics.distanceToNearestAttractor < nearestAttractor.radius;
 
+    const firstPoint = recentPoints[0];
+    const lastPoint = recentPoints[recentPoints.length - 1];
+    if (!firstPoint || !lastPoint) return;
+
     const trajectory: PhaseTrajectory = {
       id: `trajectory-${Date.now()}`,
-      startTime: recentPoints[0].timestamp,
-      endTime: recentPoints[recentPoints.length - 1].timestamp,
+      startTime: firstPoint.timestamp,
+      endTime: lastPoint.timestamp,
       points: recentPoints,
       length,
       smoothness,
@@ -655,7 +659,10 @@ class PhaseSpaceEngine {
   private findNearestAttractor(point: PhasePoint): Attractor | null {
     if (this.state.attractors.length === 0) return null;
 
-    let nearest = this.state.attractors[0];
+    const firstAttractor = this.state.attractors[0];
+    if (!firstAttractor) return null;
+
+    let nearest = firstAttractor;
     let minDistance = this.distance(point.coordinates, nearest.center);
 
     this.state.attractors.forEach(attractor => {
@@ -690,15 +697,24 @@ class PhaseSpaceEngine {
 
     // Si angle > 45°, c'est une bifurcation
     if (Math.abs(angle) > Math.PI / 4) {
+      const midpointData = recent[midpoint];
+      const firstBefore = before[0];
+      const lastBefore = before[before.length - 1];
+      const firstAfter = after[0];
+      const lastAfter = after[after.length - 1];
+
+      if (!midpointData || !firstBefore || !lastBefore || !firstAfter || !lastAfter)
+        return;
+
       const bifurcation: Bifurcation = {
         id: `bifurcation-${Date.now()}`,
         timestamp: Date.now(),
         type: 'saddle-node', // Simplification
-        location: recent[midpoint].coordinates,
+        location: midpointData.coordinates,
         preBranch: {
           id: 'pre',
-          startTime: before[0].timestamp,
-          endTime: before[before.length - 1].timestamp,
+          startTime: firstBefore.timestamp,
+          endTime: lastBefore.timestamp,
           points: before,
           length: 0,
           smoothness: 0,
@@ -709,8 +725,8 @@ class PhaseSpaceEngine {
         postBranches: [
           {
             id: 'post',
-            startTime: after[0].timestamp,
-            endTime: after[after.length - 1].timestamp,
+            startTime: firstAfter.timestamp,
+            endTime: lastAfter.timestamp,
             points: after,
             length: 0,
             smoothness: 0,
@@ -720,7 +736,7 @@ class PhaseSpaceEngine {
           },
         ],
         criticalParameter: 'coherence',
-        criticalValue: recent[midpoint].coordinates.coherence,
+        criticalValue: midpointData.coordinates.coherence,
         severityIndex: Math.min(1, Math.abs(angle) / Math.PI),
         predictability: 0.3, // Bifurcations sont peu prévisibles
       };
@@ -902,19 +918,29 @@ class PhaseSpaceEngine {
   ): Partial<PhasePoint['coordinates']> {
     const avg: Record<string, number> = {};
 
-    const firstVelocity = points[0].velocity;
+    const firstPoint = points[0];
+    if (!firstPoint) return {};
+
+    const firstVelocity = firstPoint.velocity;
     Object.keys(firstVelocity).forEach(key => {
       avg[key] = 0;
     });
 
     points.forEach(point => {
       Object.keys(point.velocity).forEach(key => {
-        avg[key] += point.velocity[key as keyof PhasePoint['coordinates']] || 0;
+        const currentVal = avg[key];
+        if (currentVal !== undefined) {
+          avg[key] =
+            currentVal + (point.velocity[key as keyof PhasePoint['coordinates']] || 0);
+        }
       });
     });
 
     Object.keys(avg).forEach(key => {
-      avg[key] /= points.length;
+      const val = avg[key];
+      if (val !== undefined) {
+        avg[key] = val / points.length;
+      }
     });
 
     return avg;

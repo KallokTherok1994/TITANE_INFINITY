@@ -296,6 +296,7 @@ export class WakeWordEngine {
     // Chercher dans les 3 premiers mots
     for (let i = 0; i < Math.min(words.length, 3); i++) {
       const word = words[i];
+      if (!word) continue;
 
       // Ignorer mots trop courts ou trop longs
       if (word.length < 4 || word.length > 10) continue;
@@ -325,24 +326,40 @@ export class WakeWordEngine {
     }
 
     for (let j = 0; j <= a.length; j++) {
-      matrix[0][j] = j;
+      const row = matrix[0];
+      if (!row) continue;
+      row[j] = j;
     }
 
     for (let i = 1; i <= b.length; i++) {
       for (let j = 1; j <= a.length; j++) {
+        const currentRow = matrix[i];
+        const prevRow = matrix[i - 1];
+        if (!currentRow || !prevRow) continue;
+
         if (b.charAt(i - 1) === a.charAt(j - 1)) {
-          matrix[i][j] = matrix[i - 1][j - 1];
+          const prevDiag = prevRow[j - 1];
+          if (prevDiag === undefined) continue;
+          currentRow[j] = prevDiag;
         } else {
-          matrix[i][j] = Math.min(
-            matrix[i - 1][j - 1] + 1, // substitution
-            matrix[i][j - 1] + 1, // insertion
-            matrix[i - 1][j] + 1 // deletion
+          const prevDiag = prevRow[j - 1];
+          const prevLeft = currentRow[j - 1];
+          const prevUp = prevRow[j];
+          if (prevDiag === undefined || prevLeft === undefined || prevUp === undefined)
+            continue;
+
+          currentRow[j] = Math.min(
+            prevDiag + 1, // substitution
+            prevLeft + 1, // insertion
+            prevUp + 1 // deletion
           );
         }
       }
     }
 
-    return matrix[b.length][a.length];
+    const lastRow = matrix[b.length];
+    const result = lastRow?.[a.length];
+    return result ?? 0;
   }
 
   /**
@@ -439,7 +456,8 @@ export class WakeWordEngine {
       if (startIdx > 0) startIdx++; // espace
 
       // Trouver la fin du wake word
-      const wakeWordLength = originalWords[wordsBefore]?.length || match.variant.length;
+      const wakeWord = originalWords[wordsBefore];
+      const wakeWordLength = wakeWord?.length ?? match.variant.length;
       endIdx = startIdx + wakeWordLength;
     }
 

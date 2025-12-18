@@ -207,6 +207,7 @@ export class ParticleSystem extends EventEmitter {
     // Update existing particles
     for (let i = this.particles.length - 1; i >= 0; i--) {
       const particle = this.particles[i];
+      if (!particle) continue;
       particle.update(deltaTime);
 
       // Apply pattern-specific forces
@@ -373,7 +374,7 @@ export class ParticleSystem extends EventEmitter {
       if (this.particlePool.length === 0) break;
 
       const particle = this.particlePool.pop();
-      if (!particle) break;
+      if (!particle) continue;
 
       const config = this.createParticleConfig();
       particle.reset(config);
@@ -394,12 +395,12 @@ export class ParticleSystem extends EventEmitter {
       const blend = this.colorIndex - currentIndex;
 
       // Randomly choose current or next for smooth color transitions
+      const nextColor = this.config.colors[nextIndex];
+      const currentColor = this.config.colors[currentIndex];
       color =
-        blend > Math.random()
-          ? this.config.colors[nextIndex]
-          : this.config.colors[currentIndex];
+        blend > Math.random() ? (nextColor ?? '#ffffff') : (currentColor ?? '#ffffff');
     } else {
-      color = this.config.colors[0];
+      color = this.config.colors[0] ?? '#ffffff';
     }
 
     const size =

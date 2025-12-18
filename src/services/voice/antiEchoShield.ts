@@ -276,7 +276,8 @@ class AntiEchoShieldEngine {
 
       let sum = 0;
       for (let j = start; j < end; j++) {
-        sum += Math.abs(audio[j]);
+        const val = audio[j];
+        if (val !== undefined) sum += Math.abs(val);
       }
 
       profile[i] = sum / (end - start);
@@ -286,7 +287,8 @@ class AntiEchoShieldEngine {
     const max = Math.max(...profile);
     if (max > 0) {
       for (let i = 0; i < numBands; i++) {
-        profile[i] /= max;
+        const val = profile[i];
+        if (val !== undefined) profile[i] = val / max;
       }
     }
 
@@ -307,9 +309,12 @@ class AntiEchoShieldEngine {
     let normB = 0;
 
     for (let i = 0; i < Math.min(audioProfile.length, profile.length); i++) {
-      dotProduct += audioProfile[i] * profile[i];
-      normA += audioProfile[i] * audioProfile[i];
-      normB += profile[i] * profile[i];
+      const audioVal = audioProfile[i];
+      const profileVal = profile[i];
+      if (audioVal === undefined || profileVal === undefined) continue;
+      dotProduct += audioVal * profileVal;
+      normA += audioVal * audioVal;
+      normB += profileVal * profileVal;
     }
 
     normA = Math.sqrt(normA);

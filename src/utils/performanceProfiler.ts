@@ -235,8 +235,12 @@ export class PerformanceProfiler {
 
     const percentile = (p: number): number => {
       const index = Math.ceil((p / 100) * count) - 1;
-      return durations[Math.max(0, index)];
+      const value = durations[Math.max(0, index)];
+      return value ?? 0;
     };
+
+    const firstDuration = durations[0];
+    const lastDuration = durations[count - 1];
 
     return {
       name,
@@ -244,8 +248,8 @@ export class PerformanceProfiler {
       count,
       totalTime,
       avgTime: totalTime / count,
-      minTime: durations[0],
-      maxTime: durations[count - 1],
+      minTime: firstDuration ?? 0,
+      maxTime: lastDuration ?? 0,
       p50: percentile(50),
       p95: percentile(95),
       p99: percentile(99),
@@ -296,12 +300,16 @@ export class PerformanceProfiler {
     }
 
     const recent = this.memorySnapshots.slice(-10);
-    const first = recent[0].usedJSHeapSize;
-    const last = recent[recent.length - 1].usedJSHeapSize;
-    const timeSpan = recent[recent.length - 1].timestamp - recent[0].timestamp;
+    const first = recent[0];
+    const last = recent[recent.length - 1];
+    if (!first || !last) {
+      return { detected: false, growthRate: 0 };
+    }
+
+    const timeSpan = last.timestamp - first.timestamp;
 
     // Growth rate in bytes per second
-    const growthRate = ((last - first) / timeSpan) * 1000;
+    const growthRate = ((last.usedJSHeapSize - first.usedJSHeapSize) / timeSpan) * 1000;
 
     // Consider leak if growing > 1MB per minute
     const detected = growthRate > (1024 * 1024) / 60;
@@ -356,11 +364,15 @@ export class PerformanceProfiler {
     const sorted = [...this.fpsBuffer].sort((a, b) => a - b);
     const avg = this.fpsBuffer.reduce((sum, f) => sum + f, 0) / this.fpsBuffer.length;
 
+    const currentFps = this.fpsBuffer[this.fpsBuffer.length - 1];
+    const minFps = sorted[0];
+    const maxFps = sorted[sorted.length - 1];
+
     return {
-      current: this.fpsBuffer[this.fpsBuffer.length - 1],
+      current: currentFps ?? 0,
       avg: Math.round(avg),
-      min: Math.round(sorted[0]),
-      max: Math.round(sorted[sorted.length - 1]),
+      min: Math.round(minFps ?? 0),
+      max: Math.round(maxFps ?? 0),
       samples: [...this.fpsBuffer],
     };
   }

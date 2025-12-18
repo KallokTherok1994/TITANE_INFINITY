@@ -37,37 +37,45 @@ const SystemTab = ({
         <LazyLivingEnginesCard state={livingEngines.state} />
 
         <div className="devtools-grid devtools-grid--modules">
-          <LazyCognitiveModuleCard
-            module="helios"
-            value={moduleMetrics.helios.value}
-            label={moduleMetrics.helios.label}
-            status={moduleMetrics.helios.status}
-            subtitle="Température optimale"
-          />
+          {moduleMetrics.helios && (
+            <LazyCognitiveModuleCard
+              module="helios"
+              value={moduleMetrics.helios.value}
+              label={moduleMetrics.helios.label}
+              status={moduleMetrics.helios.status}
+              subtitle="Température optimale"
+            />
+          )}
 
-          <LazyCognitiveModuleCard
-            module="nexus"
-            value={moduleMetrics.nexus.value}
-            label={moduleMetrics.nexus.label}
-            status={moduleMetrics.nexus.status}
-            subtitle="Réseau stable"
-          />
+          {moduleMetrics.nexus && (
+            <LazyCognitiveModuleCard
+              module="nexus"
+              value={moduleMetrics.nexus.value}
+              label={moduleMetrics.nexus.label}
+              status={moduleMetrics.nexus.status}
+              subtitle="Réseau stable"
+            />
+          )}
 
-          <LazyCognitiveModuleCard
-            module="harmonia"
-            value={moduleMetrics.harmonia.value}
-            label={moduleMetrics.harmonia.label}
-            status={moduleMetrics.harmonia.status}
-            subtitle="Parfait équilibre"
-          />
+          {moduleMetrics.harmonia && (
+            <LazyCognitiveModuleCard
+              module="harmonia"
+              value={moduleMetrics.harmonia.value}
+              label={moduleMetrics.harmonia.label}
+              status={moduleMetrics.harmonia.status}
+              subtitle="Parfait équilibre"
+            />
+          )}
 
-          <LazyCognitiveModuleCard
-            module="memory"
-            value={moduleMetrics.memory.value}
-            label={moduleMetrics.memory.label}
-            status={moduleMetrics.memory.status}
-            subtitle="Couches optimisées"
-          />
+          {moduleMetrics.memory && (
+            <LazyCognitiveModuleCard
+              module="memory"
+              value={moduleMetrics.memory.value}
+              label={moduleMetrics.memory.label}
+              status={moduleMetrics.memory.status}
+              subtitle="Couches optimisées"
+            />
+          )}
         </div>
       </div>
     </div>

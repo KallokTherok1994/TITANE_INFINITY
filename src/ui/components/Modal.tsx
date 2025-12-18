@@ -73,6 +73,11 @@ export const Modal = ({
         const firstElement = focusableElements[0];
         const lastElement = focusableElements[focusableElements.length - 1];
 
+        if (!firstElement || !lastElement) {
+          e.preventDefault();
+          return;
+        }
+
         // Shift+Tab from first element -> focus last element
         if (e.shiftKey && document.activeElement === firstElement) {
           e.preventDefault();
@@ -100,7 +105,10 @@ export const Modal = ({
           const focusableElements =
             modalRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR);
           if (focusableElements && focusableElements.length > 0) {
-            focusableElements[0].focus();
+            const firstElement = focusableElements[0];
+            if (firstElement) {
+              firstElement.focus();
+            }
           }
         });
       }

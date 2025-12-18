@@ -215,37 +215,37 @@ export class EmotionalIntentAnalyzer {
     // Exclamations → excited, playful, inspiring
     const exclamations = (text.match(EXPRESSIVENESS_MARKERS.exclamation) || []).length;
     if (exclamations > 0) {
-      scores.excited += exclamations * 0.3;
-      scores.playful += exclamations * 0.2;
-      scores.inspiring += exclamations * 0.2;
+      scores.excited = (scores.excited ?? 0) + exclamations * 0.3;
+      scores.playful = (scores.playful ?? 0) + exclamations * 0.2;
+      scores.inspiring = (scores.inspiring ?? 0) + exclamations * 0.2;
     }
 
     // Questions → empathetic, thoughtful
     const questions = (text.match(EXPRESSIVENESS_MARKERS.question) || []).length;
     if (questions > 0) {
-      scores.empathetic += questions * 0.2;
-      scores.thoughtful += questions * 0.2;
+      scores.empathetic = (scores.empathetic ?? 0) + questions * 0.2;
+      scores.thoughtful = (scores.thoughtful ?? 0) + questions * 0.2;
     }
 
     // Ellipses → thoughtful, calm
     const ellipsis = (text.match(EXPRESSIVENESS_MARKERS.ellipsis) || []).length;
     if (ellipsis > 0) {
-      scores.thoughtful += ellipsis * 0.3;
-      scores.calm += ellipsis * 0.2;
+      scores.thoughtful = (scores.thoughtful ?? 0) + ellipsis * 0.3;
+      scores.calm = (scores.calm ?? 0) + ellipsis * 0.2;
     }
 
     // Emojis → playful, warm
     const emojis = (text.match(EXPRESSIVENESS_MARKERS.emoji) || []).length;
     if (emojis > 0) {
-      scores.playful += emojis * 0.3;
-      scores.warm += emojis * 0.2;
+      scores.playful = (scores.playful ?? 0) + emojis * 0.3;
+      scores.warm = (scores.warm ?? 0) + emojis * 0.2;
     }
 
     // CAPS → excited, confident
     const caps = (text.match(EXPRESSIVENESS_MARKERS.caps) || []).length;
     if (caps > 0) {
-      scores.excited += caps * 0.2;
-      scores.confident += caps * 0.2;
+      scores.excited = (scores.excited ?? 0) + caps * 0.2;
+      scores.confident = (scores.confident ?? 0) + caps * 0.2;
     }
 
     // Longueur des phrases (courtes = excited, longues = thoughtful)
@@ -253,11 +253,11 @@ export class EmotionalIntentAnalyzer {
     const avgLength =
       sentences.reduce((sum, s) => sum + s.length, 0) / Math.max(1, sentences.length);
     if (avgLength < 30) {
-      scores.excited += 0.2;
-      scores.playful += 0.1;
+      scores.excited = (scores.excited ?? 0) + 0.2;
+      scores.playful = (scores.playful ?? 0) + 0.1;
     } else if (avgLength > 80) {
-      scores.thoughtful += 0.2;
-      scores.serious += 0.1;
+      scores.thoughtful = (scores.thoughtful ?? 0) + 0.2;
+      scores.serious = (scores.serious ?? 0) + 0.1;
     }
 
     return scores as Record<EmotionType, number>;
@@ -288,25 +288,25 @@ export class EmotionalIntentAnalyzer {
     if (context?.userState) {
       switch (context.userState) {
         case 'stressed':
-          scores.calm += 0.5;
-          scores.empathetic += 0.4;
-          scores.gentle += 0.3;
+          scores.calm = (scores.calm ?? 0) + 0.5;
+          scores.empathetic = (scores.empathetic ?? 0) + 0.4;
+          scores.gentle = (scores.gentle ?? 0) + 0.3;
           break;
         case 'calm':
-          scores.warm += 0.3;
-          scores.thoughtful += 0.2;
+          scores.warm = (scores.warm ?? 0) + 0.3;
+          scores.thoughtful = (scores.thoughtful ?? 0) + 0.2;
           break;
         case 'curious':
-          scores.inspiring += 0.3;
-          scores.confident += 0.2;
+          scores.inspiring = (scores.inspiring ?? 0) + 0.3;
+          scores.confident = (scores.confident ?? 0) + 0.2;
           break;
         case 'confused':
-          scores.empathetic += 0.4;
-          scores.gentle += 0.3;
+          scores.empathetic = (scores.empathetic ?? 0) + 0.4;
+          scores.gentle = (scores.gentle ?? 0) + 0.3;
           break;
         case 'happy':
-          scores.playful += 0.4;
-          scores.warm += 0.3;
+          scores.playful = (scores.playful ?? 0) + 0.4;
+          scores.warm = (scores.warm ?? 0) + 0.3;
           break;
       }
     }
@@ -315,16 +315,16 @@ export class EmotionalIntentAnalyzer {
     if (context?.timeOfDay) {
       switch (context.timeOfDay) {
         case 'morning':
-          scores.inspiring += 0.2;
-          scores.confident += 0.2;
+          scores.inspiring = (scores.inspiring ?? 0) + 0.2;
+          scores.confident = (scores.confident ?? 0) + 0.2;
           break;
         case 'evening':
-          scores.calm += 0.3;
-          scores.warm += 0.2;
+          scores.calm = (scores.calm ?? 0) + 0.3;
+          scores.warm = (scores.warm ?? 0) + 0.2;
           break;
         case 'night':
-          scores.gentle += 0.3;
-          scores.calm += 0.3;
+          scores.gentle = (scores.gentle ?? 0) + 0.3;
+          scores.calm = (scores.calm ?? 0) + 0.3;
           break;
       }
     }
@@ -332,7 +332,9 @@ export class EmotionalIntentAnalyzer {
     // Historique (cohérence émotionnelle)
     if (this.history.length > 0) {
       const recentEmotion = this.history[this.history.length - 1];
-      scores[recentEmotion] += 0.2; // Bonus de continuité
+      if (recentEmotion) {
+        scores[recentEmotion] = (scores[recentEmotion] ?? 0) + 0.2; // Bonus de continuité
+      }
     }
 
     return scores as Record<EmotionType, number>;

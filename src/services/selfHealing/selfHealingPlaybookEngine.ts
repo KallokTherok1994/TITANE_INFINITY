@@ -581,6 +581,7 @@ export class SelfHealingPlaybookEngine {
     }
 
     const best = matches[0];
+    if (!best) return null;
     console.log(
       `[PlaybookEngine] 📋 Selected playbook: ${best.playbook.name} (score: ${best.score})`
     );
@@ -733,17 +734,18 @@ export class SelfHealingPlaybookEngine {
       i++
     ) {
       const action = playbook.actions[i];
+      if (!action) continue;
 
       // Résoudre le module cible si dynamique
       const resolvedAction = this.resolveActionTarget(action, diagnosis);
 
+      const estimatedDuration = ACTION_DURATION_ESTIMATES[action.type];
       planned.push({
         id: `${playbook.id}_action_${i}`,
         sequence: i,
         action: resolvedAction,
         dependencies: i > 0 ? [`${playbook.id}_action_${i - 1}`] : [],
-        estimatedDuration:
-          ACTION_DURATION_ESTIMATES[action.type] || this.config.defaultTimeout,
+        estimatedDuration: estimatedDuration ?? this.config.defaultTimeout,
         canParallelize: i === 0 || action.onFailure === 'continue',
         status: i === 0 ? 'ready' : 'pending',
       });
@@ -770,7 +772,7 @@ export class SelfHealingPlaybookEngine {
   }
 
   private calculateOverallRisk(actions: PlannedAction[]): 'safe' | 'moderate' | 'risky' {
-    const risks = actions.map(a => ACTION_RISK[a.action.type] || 'safe');
+    const risks = actions.map(a => ACTION_RISK[a.action.type] ?? 'safe');
 
     if (risks.includes('risky')) return 'risky';
     if (risks.includes('moderate')) return 'moderate';

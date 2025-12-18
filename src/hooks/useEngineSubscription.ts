@@ -22,6 +22,11 @@ type EngineType =
   | 'selfheal'
   | 'adaptive';
 
+export interface UseEngineSubscriptionReturn {
+  data: unknown | null;
+  loading: boolean;
+}
+
 /**
  * Hook pour s'abonner aux mises à jour d'un engine
  * Remplace le pattern useState + setInterval
@@ -29,15 +34,13 @@ type EngineType =
  * @example
  * ```tsx
  * export const Helios = () => {
- *   useEngineSubscription('helios');
- *   const heliosData = useSingularityState(selectEngineData('helios'));
- *   const { data: metrics, loading } = heliosData;
+ *   const { data: metrics, loading } = useEngineSubscription('helios');
  *   // ...
  * }
  * ```
  */
-export function useEngineSubscription(engine: EngineType): void {
-  // Note: engineData is read by the component, not this hook
+export function useEngineSubscription(engine: EngineType): UseEngineSubscriptionReturn {
+  const engineData = useSingularityState(state => state.enginesData[engine]);
   const setEngineData = useSingularityState(state => state.setEngineData);
   const setEngineLoading = useSingularityState(state => state.setEngineLoading);
 
@@ -114,4 +117,9 @@ export function useEngineSubscription(engine: EngineType): void {
     getSelfHealData,
     getAdaptiveData,
   ]);
+
+  return {
+    data: engineData?.data ?? null,
+    loading: engineData?.loading ?? false,
+  };
 }

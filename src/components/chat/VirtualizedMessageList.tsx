@@ -92,6 +92,7 @@ export const VirtualizedMessageList = React.memo(function VirtualizedMessageList
   // Render individual message row
   const Row = ({ index, style }: { index: number; style: React.CSSProperties }) => {
     const msg = validMessages[index];
+    if (!msg) return null;
     const isLatest = index === validMessages.length - 1;
 
     return (
@@ -151,7 +152,8 @@ export const VirtualizedMessageList = React.memo(function VirtualizedMessageList
  * Helper: Estimate message height for FixedSizeList
  * Average message height ~120px (2-3 lines + padding)
  */
-export const estimateMessageHeight = (message: AIMessage): number => {
+export const estimateMessageHeight = (message: AIMessage | undefined): number => {
+  if (!message) return 80;
   const baseHeight = 80; // Avatar + timestamp + padding
   const lineHeight = 24;
   const charsPerLine = 60;
@@ -164,5 +166,8 @@ export const estimateMessageHeight = (message: AIMessage): number => {
  * Hook for calculating dynamic heights (future enhancement)
  */
 export const useMessageHeights = (messages: AIMessage[]) => {
-  return useMemo(() => messages.map(msg => estimateMessageHeight(msg)), [messages]);
+  return useMemo(
+    () => messages.map(msg => (msg ? estimateMessageHeight(msg) : 0)),
+    [messages]
+  );
 };

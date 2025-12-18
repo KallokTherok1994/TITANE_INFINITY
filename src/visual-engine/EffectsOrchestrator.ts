@@ -475,14 +475,18 @@ export class EffectsOrchestrator {
     // Try to process queue
     const processedIndices: number[] = [];
     for (let i = 0; i < this.queue.length; i++) {
-      if (this.requestEffect(this.queue[i])) {
+      const request = this.queue[i];
+      if (request && this.requestEffect(request)) {
         processedIndices.push(i);
       }
     }
 
     // Remove processed items
     for (let i = processedIndices.length - 1; i >= 0; i--) {
-      this.queue.splice(processedIndices[i], 1);
+      const indexToRemove = processedIndices[i];
+      if (indexToRemove !== undefined) {
+        this.queue.splice(indexToRemove, 1);
+      }
     }
 
     this.metrics.queuedCount = this.queue.length;
@@ -498,11 +502,14 @@ export class EffectsOrchestrator {
       });
 
     if (gpuEffects.length > 0) {
-      const [id] = gpuEffects[0];
-      if (this.debug) {
-        console.log('[EffectsOrchestrator] Throttling: stopping effect', id);
+      const firstEffect = gpuEffects[0];
+      if (firstEffect) {
+        const [id] = firstEffect;
+        if (this.debug) {
+          console.log('[EffectsOrchestrator] Throttling: stopping effect', id);
+        }
+        this.stopEffect(id);
       }
-      this.stopEffect(id);
     }
   }
 

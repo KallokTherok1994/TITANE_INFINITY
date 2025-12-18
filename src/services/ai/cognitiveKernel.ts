@@ -262,7 +262,7 @@ class CognitiveKernel {
       }
     } else if (type === 'error') {
       const errorData = data as { pattern: string };
-      const count = this.ephemeralMemory.recentErrorPatterns.get(errorData.pattern) || 0;
+      const count = this.ephemeralMemory.recentErrorPatterns.get(errorData.pattern) ?? 0;
       this.ephemeralMemory.recentErrorPatterns.set(errorData.pattern, count + 1);
     } else if (type === 'model') {
       const modelData = data as { context: string; model: string };
@@ -358,7 +358,7 @@ class CognitiveKernel {
   ): CognitiveProcess['evaluation'] {
     // Scorer chaque provider disponible
     const providerScores = context.providers.map((provider: string) => {
-      const health = perception.systemState.providerHealth.get(provider) || 0;
+      const health = perception.systemState.providerHealth.get(provider) ?? 0;
       const recentSuccess =
         perception.microHistory.lastEffectiveProviders.includes(provider);
       const score = health * 0.7 + (recentSuccess ? 30 : 0);
@@ -371,7 +371,7 @@ class CognitiveKernel {
         b.score - a.score
     );
 
-    const bestProvider = providerScores[0]?.provider || 'titane-local';
+    const bestProvider = providerScores[0]?.provider ?? 'titane-local';
     const stabilityScore = perception.systemState.chatStability;
     const adaptationNeeded = perception.systemState.errorFrequency > 3;
     const robustnessImpact = this.principles.robustness;
@@ -428,7 +428,7 @@ class CognitiveKernel {
     alternatives: string[];
     adaptations: string[];
   } {
-    const provider = projection.bestSequence[0];
+    const provider = projection.bestSequence[0] ?? 'titane-local';
     const reason = this.determineReason(provider, projection);
     const confidence = this.calculateConfidence(provider, projection);
     const alternatives = projection.bestSequence.slice(1);
@@ -453,7 +453,8 @@ class CognitiveKernel {
     if (projection.potentialRisks.length > 0) {
       return 'Sélection conservatrice (risques détectés)';
     }
-    if (this.ephemeralMemory.lastEffectiveProviders[0] === provider) {
+    const lastEffective = this.ephemeralMemory.lastEffectiveProviders[0];
+    if (lastEffective && lastEffective === provider) {
       return 'Continuité cognitive (dernier provider efficace)';
     }
     return 'Sélection optimale (scoring neural)';
@@ -466,7 +467,7 @@ class CognitiveKernel {
     provider: string,
     projection: CognitiveProcess['projection']
   ): number {
-    const health = this.environmentState.providerHealth.get(provider) || 50;
+    const health = this.environmentState.providerHealth.get(provider) ?? 50;
     const riskPenalty = projection.potentialRisks.length * 10;
     return Math.max(0, Math.min(100, health - riskPenalty));
   }
@@ -614,7 +615,9 @@ class CognitiveKernel {
       unknown: 'Utiliser fallback provider',
     };
 
-    return recoveryMap[errorType] || recoveryMap.unknown;
+    return (
+      recoveryMap[errorType] ?? recoveryMap['unknown'] ?? 'Utiliser fallback provider'
+    );
   }
 
   /**
@@ -628,7 +631,7 @@ class CognitiveKernel {
    */
   updateProviderPreferences(provider: string, success: boolean, latency: number): void {
     // Mettre à jour la santé du provider
-    const currentHealth = this.environmentState.providerHealth.get(provider) || 50;
+    const currentHealth = this.environmentState.providerHealth.get(provider) ?? 50;
     const healthChange = success ? 5 : -10;
     const latencyPenalty = latency > 3000 ? -5 : 0;
     const newHealth = Math.max(

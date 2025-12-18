@@ -138,7 +138,7 @@ export const EvolutionTimeline: React.FC<EvolutionTimelineProps> = ({
             }}
             onItemSelected={(item: { index: number }) => {
               const event = filteredEvents[item.index];
-              setSelectedEvent(event);
+              setSelectedEvent(event ?? null);
             }}
           />
         ) : (

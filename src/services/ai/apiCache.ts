@@ -147,6 +147,7 @@ export class LRUCache<T = unknown> {
 
     // Première entrée = least recently used
     const keyToEvict = this.accessOrder[0];
+    if (!keyToEvict) return;
     this.cache.delete(keyToEvict);
     this.accessOrder.shift();
     this.stats.evictions++;
@@ -272,9 +273,11 @@ export class LRUCache<T = unknown> {
     let oldestEntry: number | null = null;
     if (this.cache.size > 0 && this.accessOrder.length > 0) {
       const oldestKey = this.accessOrder[0];
-      const entry = this.cache.get(oldestKey);
-      if (entry) {
-        oldestEntry = entry.timestamp;
+      if (oldestKey) {
+        const entry = this.cache.get(oldestKey);
+        if (entry) {
+          oldestEntry = entry.timestamp;
+        }
       }
     }
 

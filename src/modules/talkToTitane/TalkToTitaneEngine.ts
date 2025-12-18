@@ -213,9 +213,13 @@ class TalkToTitaneEngine {
         }
 
         // Process remaining text after wake phrase
-        const afterWake = text.split(phrase)[1]?.trim();
-        if (afterWake && afterWake.length > 5) {
-          this.processUserInput(afterWake);
+        const splitText = text.split(phrase);
+        const afterWakePart = splitText[1];
+        if (afterWakePart) {
+          const afterWake = afterWakePart.trim();
+          if (afterWake.length > 5) {
+            this.processUserInput(afterWake);
+          }
         }
 
         break;
@@ -255,7 +259,20 @@ class TalkToTitaneEngine {
       memory: this.calculateMemoryScore(text),
     };
 
-    const topIntent = Object.entries(intentScores).sort((a, b) => b[1] - a[1])[0];
+    const sortedIntents = Object.entries(intentScores).sort((a, b) => b[1] - a[1]);
+    const topIntent = sortedIntents[0];
+
+    if (!topIntent) {
+      // Fallback to conversation intent if no intent detected
+      return {
+        type: 'conversation' as TalkIntentType,
+        confidence: 0.5,
+        text,
+        keywords: this.extractKeywords(text),
+        emotionalTone: this.detectEmotionalTone(text),
+        priority: 'low' as const,
+      };
+    }
 
     const emotionalTone = this.detectEmotionalTone(text);
     const priority = this.calculatePriority(topIntent[0] as TalkIntentType, topIntent[1]);

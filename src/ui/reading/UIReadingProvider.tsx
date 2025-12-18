@@ -84,7 +84,9 @@ export function UIReadingProvider({ children }: UIReadingProviderProps): JSX.Ele
     setSettings(prev => {
       const currentIndex = ValidZoomLevels.indexOf(prev.zoomLevel);
       const nextIndex = Math.min(currentIndex + 1, ValidZoomLevels.length - 1);
-      return { ...prev, zoomLevel: ValidZoomLevels[nextIndex], preset: null };
+      const nextZoom = ValidZoomLevels[nextIndex];
+      if (!nextZoom) return prev;
+      return { ...prev, zoomLevel: nextZoom, preset: null };
     });
   }, []);
 
@@ -92,7 +94,9 @@ export function UIReadingProvider({ children }: UIReadingProviderProps): JSX.Ele
     setSettings(prev => {
       const currentIndex = ValidZoomLevels.indexOf(prev.zoomLevel);
       const nextIndex = Math.max(currentIndex - 1, 0);
-      return { ...prev, zoomLevel: ValidZoomLevels[nextIndex], preset: null };
+      const nextZoom = ValidZoomLevels[nextIndex];
+      if (!nextZoom) return prev;
+      return { ...prev, zoomLevel: nextZoom, preset: null };
     });
   }, []);
 
@@ -363,9 +367,10 @@ export function UIReadingProvider({ children }: UIReadingProviderProps): JSX.Ele
           '5': 'dev',
         };
 
-        if (e.key in presetMap) {
+        const presetKey = presetMap[e.key];
+        if (presetKey) {
           e.preventDefault();
-          applyPreset(presetMap[e.key]);
+          applyPreset(presetKey);
         }
       }
     };

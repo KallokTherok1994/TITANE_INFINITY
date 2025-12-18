@@ -438,7 +438,7 @@ class MCPOrchestratorClass implements MCPOperations {
         query: `Merged: ${jobs.map(j => j.input.query).join(' + ')}`,
         context: jobs.reduce((acc, j) => ({ ...acc, ...j.input.context }), {}),
       },
-      jobs[0].type
+      jobs[0]?.type ?? JobType.REACTIVE
     );
 
     // Cancel original jobs
@@ -476,8 +476,9 @@ class MCPOrchestratorClass implements MCPOperations {
 
     const helios = await this.scanStability();
     const nexus = await this.scanCoherence(this.state);
-    const harmonia = await this.scanCognitiveLoad(this.state.jobs.running[0] || null);
-    const sentinel = await this.scanSecurity(this.state.jobs.running[0] || null);
+    const runningJob = this.state.jobs.running[0] ?? null;
+    const harmonia = await this.scanCognitiveLoad(runningJob);
+    const sentinel = await this.scanSecurity(runningJob);
     const memoryCore = await this.scanMemory();
 
     const allScores = [helios, nexus, harmonia, sentinel, memoryCore];
@@ -553,7 +554,7 @@ class MCPOrchestratorClass implements MCPOperations {
     const issues: string[] = [];
     let score = 1.0;
 
-    if (job) {
+    if (job && job.evaluation) {
       const load = job.evaluation.cognitiveLoad;
       if (load > 0.8) {
         issues.push(`High cognitive load: ${(load * 100).toFixed(0)}%`);
@@ -582,7 +583,7 @@ class MCPOrchestratorClass implements MCPOperations {
     const issues: string[] = [];
     let score = 1.0;
 
-    if (job) {
+    if (job && job.evaluation) {
       const risk = job.evaluation.securityRisk;
       if (risk > 0.5) {
         issues.push(`High security risk: ${(risk * 100).toFixed(0)}%`);
@@ -630,16 +631,22 @@ class MCPOrchestratorClass implements MCPOperations {
 
     // Priority: Security > Complexity > Speed
     if (job.permissions.requiresSensitiveData) {
-      selectedModel = AI_MODELS['phi-3.5-mini'];
+      selectedModel =
+        AI_MODELS['phi-3.5-mini'] ??
+        AI_MODELS['claude-haiku'] ??
+        Object.values(AI_MODELS)[0]!;
       reasoning = 'Local model required for sensitive data';
     } else if (job.evaluation.cognitiveLoad > 0.7) {
-      selectedModel = AI_MODELS['claude-sonnet'];
+      selectedModel =
+        AI_MODELS['claude-sonnet'] ??
+        AI_MODELS['claude-haiku'] ??
+        Object.values(AI_MODELS)[0]!;
       reasoning = 'High complexity task requires deep model';
     } else if (job.priority === JobPriority.CRITICAL) {
-      selectedModel = AI_MODELS['claude-haiku'];
+      selectedModel = AI_MODELS['claude-haiku'] ?? Object.values(AI_MODELS)[0]!;
       reasoning = 'Fast response required for critical priority';
     } else {
-      selectedModel = AI_MODELS['phi-3.5-mini'];
+      selectedModel = AI_MODELS['phi-3.5-mini'] ?? Object.values(AI_MODELS)[0]!;
       reasoning = 'Default local model for standard tasks';
     }
 
@@ -1193,6 +1200,8 @@ class MCPOrchestratorClass implements MCPOperations {
     if (jobs.length < 2) return [];
 
     const first = jobs[0];
+    if (!first) return [];
+
     const similar = jobs.filter(j => {
       if (j.id === first.id) return false;
       const similarity = this.calculateStringSimilarity(first.input.query, j.input.query);

@@ -468,8 +468,11 @@ export class GPUAcceleratorV2 {
     // Interleave a and b for single buffer
     const inputData = new Float32Array(a.length * 2);
     for (let i = 0; i < a.length; i++) {
-      inputData[i * 2] = a[i];
-      inputData[i * 2 + 1] = b[i];
+      const aVal = a[i];
+      const bVal = b[i];
+      if (aVal === undefined || bVal === undefined) continue;
+      inputData[i * 2] = aVal;
+      inputData[i * 2 + 1] = bVal;
     }
 
     const shaderCode = `

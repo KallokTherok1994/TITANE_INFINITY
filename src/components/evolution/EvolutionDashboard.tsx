@@ -269,7 +269,7 @@ const OverallScoreGauge: React.FC<GaugeProps> = React.memo(({ score, trend }) =>
         </span>
         <TrendIndicator direction={trend} />
       </div>
-      <div className="gauge-label">Score Global d'Évolution</div>
+      <div className="gauge-label">Score Global d&apos;Évolution</div>
     </div>
   );
 });
@@ -330,8 +330,8 @@ export const EvolutionDashboard: React.FC<EvolutionDashboardProps> = ({
     return (
       <div className={`evolution-dashboard no-data ${className}`}>
         <div className="no-data-icon">📊</div>
-        <h3>Aucune donnée d'évolution</h3>
-        <p>Le moteur d'évolution collecte des données...</p>
+        <h3>Aucune donnée d&apos;évolution</h3>
+        <p>Le moteur d&apos;évolution collecte des données...</p>
         {onRefresh && (
           <button className="btn-refresh" onClick={onRefresh}>
             Rafraîchir
@@ -364,7 +364,7 @@ export const EvolutionDashboard: React.FC<EvolutionDashboardProps> = ({
           className={`tab ${activeTab === 'overview' ? 'active' : ''}`}
           onClick={() => setActiveTab('overview')}
         >
-          Vue d'ensemble
+          Vue d&apos;ensemble
         </button>
         <button
           className={`tab ${activeTab === 'suggestions' ? 'active' : ''}`}
@@ -397,28 +397,28 @@ export const EvolutionDashboard: React.FC<EvolutionDashboardProps> = ({
                 label="Stabilité"
                 value={scores.stabilityIndex}
                 trend={overallTrend}
-                color={SCORE_COLORS.stability}
+                color={SCORE_COLORS.stability ?? '#22c55e'}
                 icon="🛡️"
               />
               <ScoreCard
                 label="Efficacité Cognitive"
                 value={scores.cognitiveEfficiency}
                 trend={overallTrend}
-                color={SCORE_COLORS.cognitiveEfficiency}
+                color={SCORE_COLORS.cognitiveEfficiency ?? '#3b82f6'}
                 icon="🧠"
               />
               <ScoreCard
                 label="Pertinence Contextuelle"
                 value={scores.contextRelevance}
                 trend={overallTrend}
-                color={SCORE_COLORS.contextRelevance}
+                color={SCORE_COLORS.contextRelevance ?? '#a855f7'}
                 icon="🎯"
               />
               <ScoreCard
                 label="Fiabilité Moteurs"
                 value={scores.engineReliability}
                 trend={overallTrend}
-                color={SCORE_COLORS.engineReliability}
+                color={SCORE_COLORS.engineReliability ?? '#f59e0b'}
                 icon="⚙️"
               />
             </section>

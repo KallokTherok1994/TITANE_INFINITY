@@ -397,7 +397,8 @@ class KnowledgeVaultEngine {
 
     // Extract snippet
     let snippet = '';
-    const idx = contentLower.indexOf(queryWords[0] || queryLower);
+    const firstQueryWord = queryWords[0];
+    const idx = contentLower.indexOf(firstQueryWord || queryLower);
     if (idx !== -1) {
       const start = Math.max(0, idx - 50);
       const end = Math.min(entry.content.length, idx + 150);
@@ -425,7 +426,8 @@ class KnowledgeVaultEngine {
     const ext = this.getExtension(path);
 
     // Par extension
-    if (EXTENSION_CATEGORIES[ext]) {
+    const extCategory = EXTENSION_CATEGORIES[ext];
+    if (extCategory) {
       // Vérifier si c'est du code Tauri
       if (
         ext === '.rs' &&
@@ -433,7 +435,7 @@ class KnowledgeVaultEngine {
       ) {
         return 'code-tauri';
       }
-      return EXTENSION_CATEGORIES[ext];
+      return extCategory;
     }
 
     // Par contenu
@@ -448,7 +450,7 @@ class KnowledgeVaultEngine {
 
   private detectFormat(path: string): KnowledgeFormat {
     const ext = this.getExtension(path);
-    return EXTENSION_FORMATS[ext] || 'unknown';
+    return EXTENSION_FORMATS[ext] ?? 'unknown';
   }
 
   private extractTitle(path: string, content: string): string {
@@ -457,11 +459,11 @@ class KnowledgeVaultEngine {
     for (const line of lines.slice(0, 10)) {
       // Markdown title
       const mdMatch = line.match(/^#\s+(.+)/);
-      if (mdMatch) return mdMatch[1].trim();
+      if (mdMatch?.[1]) return mdMatch[1].trim();
 
       // JSDoc title
       const jsdocMatch = line.match(/\*\s+@title\s+(.+)/);
-      if (jsdocMatch) return jsdocMatch[1].trim();
+      if (jsdocMatch?.[1]) return jsdocMatch[1].trim();
     }
 
     // Utiliser le nom de fichier
@@ -615,6 +617,7 @@ class KnowledgeVaultEngine {
     if (idx === -1) return false;
 
     const entry = this.state.entries[idx];
+    if (!entry) return false;
     this.state.entries.splice(idx, 1);
     this.state.totalDocuments--;
     this.state.totalSizeBytes -= entry.metadata.sizeBytes;

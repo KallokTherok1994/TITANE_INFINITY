@@ -100,9 +100,10 @@ const TrendChart: React.FC<TrendChartProps> = React.memo(({ trend, onClick }) =>
 
   const changePercent = useMemo(() => {
     if (samples.length < 2) return 0;
-    const first = samples[0].value;
-    const last = samples[samples.length - 1].value;
-    return first !== 0 ? ((last - first) / first) * 100 : 0;
+    const first = samples[0];
+    const last = samples[samples.length - 1];
+    if (!first || !last) return 0;
+    return first.value !== 0 ? ((last.value - first.value) / first.value) * 100 : 0;
   }, [samples]);
 
   return (
@@ -233,7 +234,9 @@ export const EvolutionTrends: React.FC<EvolutionTrendsProps> = ({
           <div className="empty-trends">
             <span className="empty-icon">📈</span>
             <p>Pas assez de données pour les tendances</p>
-            <small>Les tendances apparaîtront après quelques heures d'utilisation</small>
+            <small>
+              Les tendances apparaîtront après quelques heures d&apos;utilisation
+            </small>
           </div>
         ) : (
           sortedTrends.map(trend => (

@@ -592,6 +592,7 @@ class AudioScheduler {
     }
 
     const chunk = this.schedule.chunks[this.schedule.currentIndex];
+    if (!chunk) return;
     this.schedule.currentIndex++;
 
     this.currentSource = this.audioContext.createBufferSource();

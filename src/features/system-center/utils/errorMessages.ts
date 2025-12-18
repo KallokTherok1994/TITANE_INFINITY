@@ -142,21 +142,27 @@ export function sanitizeErrorForUser(error: string): string {
   // Supprimer la liste complète de commandes autorisées
   if (error.includes('Allowed:')) {
     const parts = error.split('Allowed:');
-    const baseMessage = parts[0].trim();
+    const baseMessage = parts[0];
+    if (!baseMessage) return error;
+
+    const trimmedMessage = baseMessage.trim();
 
     // Extraire juste le nom de la commande
-    const commandMatch = baseMessage.match(/Command "([^"]+)"/);
-    if (commandMatch) {
-      return `La commande "${commandMatch[1]}" n'est pas disponible. Consultez les détails techniques pour plus d'informations.`;
+    const commandMatch = trimmedMessage.match(/Command "([^"]+)"/);
+    const commandName = commandMatch?.[1];
+    if (commandName) {
+      return `La commande "${commandName}" n'est pas disponible. Consultez les détails techniques pour plus d'informations.`;
     }
 
-    return baseMessage + ' (voir détails techniques)';
+    return trimmedMessage + ' (voir détails techniques)';
   }
 
   // Masquer les stack traces
   if (error.includes('@') && error.includes(':')) {
     const lines = error.split('\n');
-    return lines[0]; // Garder juste la première ligne
+    const firstLine = lines[0];
+    if (!firstLine) return error;
+    return firstLine; // Garder juste la première ligne
   }
 
   // Limiter la longueur

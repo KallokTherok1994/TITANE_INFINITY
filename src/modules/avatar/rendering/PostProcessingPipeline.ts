@@ -165,8 +165,14 @@ export class PostProcessingPipeline {
     // Vignette (frame darkening)
     if (this.config.enableVignette) {
       this.vignettePass = new ShaderPass(VignetteShader);
-      this.vignettePass.uniforms['offset'].value = this.config.vignetteOffset;
-      this.vignettePass.uniforms['darkness'].value = this.config.vignetteDarkness;
+      const offsetUniform = this.vignettePass.uniforms['offset'];
+      const darknessUniform = this.vignettePass.uniforms['darkness'];
+      if (offsetUniform) {
+        offsetUniform.value = this.config.vignetteOffset;
+      }
+      if (darknessUniform) {
+        darknessUniform.value = this.config.vignetteDarkness;
+      }
       this.vignettePass.renderToScreen = true;
       this.composer.addPass(this.vignettePass);
     }
@@ -254,7 +260,10 @@ export class PostProcessingPipeline {
    */
   public setVignetteDarkness(darkness: number): void {
     if (this.vignettePass) {
-      this.vignettePass.uniforms['darkness'].value = darkness;
+      const darknessUniform = this.vignettePass.uniforms['darkness'];
+      if (darknessUniform) {
+        darknessUniform.value = darkness;
+      }
     }
   }
 

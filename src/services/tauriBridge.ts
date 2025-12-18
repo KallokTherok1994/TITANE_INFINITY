@@ -234,11 +234,8 @@ export async function sendChatMessage(messages: ChatMessage[], config: ChatConfi
     .reverse()
     .find(m => (m as any)?.role === 'user')?.content;
 
-  const userMessage = (
-    lastUserMessage ??
-    messages[messages.length - 1]?.content ??
-    ''
-  ).trim();
+  const lastMessage = messages[messages.length - 1];
+  const userMessage = (lastUserMessage ?? lastMessage?.content ?? '').trim();
 
   const history = messages
     .slice(-20)
@@ -481,7 +478,7 @@ export async function batchInvoke<T = any>(
     // Execute all commands in parallel
     const promises = commands.map(async (cmd, index) => {
       const cmdStartTime = Date.now();
-      const cmdId = cmd.id || `cmd_${index}`;
+      const cmdId = cmd.id ?? `cmd_${index}`;
 
       try {
         updateProgress(cmd.command);
@@ -526,8 +523,9 @@ export async function batchInvoke<T = any>(
     // Sequential execution
     for (let i = 0; i < commands.length; i++) {
       const cmd = commands[i];
+      if (!cmd) continue;
       const cmdStartTime = Date.now();
-      const cmdId = cmd.id || `cmd_${i}`;
+      const cmdId = cmd.id ?? `cmd_${i}`;
 
       updateProgress(cmd.command);
 

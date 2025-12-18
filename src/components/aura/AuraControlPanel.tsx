@@ -103,7 +103,9 @@ export const AuraControlPanel: React.FC<AuraControlPanelProps> = ({
                       step="1"
                       value={intensities.indexOf(aura.intensity)}
                       onChange={e =>
-                        aura.setIntensity(intensities[parseInt(e.target.value)])
+                        aura.setIntensity(
+                          intensities[parseInt(e.target.value)] ?? 'medium'
+                        )
                       }
                       className="aura-slider"
                     />

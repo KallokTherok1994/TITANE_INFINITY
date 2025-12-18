@@ -178,9 +178,10 @@ class RenderTimeTracker {
   } {
     const times = this.renderTimes;
     const elapsed = (Date.now() - this.lastResetTime) / 1000;
+    const lastTime = times[times.length - 1];
 
     return {
-      lastTime: times.length > 0 ? times[times.length - 1] : 0,
+      lastTime: lastTime ?? 0,
       averageTime: times.length > 0 ? times.reduce((a, b) => a + b, 0) / times.length : 0,
       rerenderCount: elapsed > 0 ? Math.round(this.rerenderCount / elapsed) : 0,
       slowRenders: times.filter(t => t > 16).length,
@@ -1066,7 +1067,8 @@ export class MetricsCollector {
    * Retourne le dernier snapshot
    */
   getLastSnapshot(): MetricsSnapshot | null {
-    return this.history.length > 0 ? this.history[this.history.length - 1] : null;
+    const lastSnapshot = this.history[this.history.length - 1];
+    return lastSnapshot ?? null;
   }
 
   /**
@@ -1094,7 +1096,8 @@ export class MetricsCollector {
    * Retourne les statistiques
    */
   getStats(): CollectorStats {
-    const elapsed = Date.now() - (this.history[0]?.timestamp || Date.now());
+    const firstSnapshot = this.history[0];
+    const elapsed = Date.now() - (firstSnapshot?.timestamp ?? Date.now());
     const minutes = elapsed / 60000;
 
     return {

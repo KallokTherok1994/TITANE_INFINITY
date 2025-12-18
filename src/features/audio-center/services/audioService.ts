@@ -415,7 +415,9 @@ class AudioService {
 
           let sum = 0;
           for (let i = 0; i < dataArray.length; i++) {
-            const value = (dataArray[i] - 128) / 128;
+            const dataValue = dataArray[i];
+            if (dataValue === undefined) continue;
+            const value = (dataValue - 128) / 128;
             sum += value * value;
             if (Math.abs(value) > peakLevel) {
               peakLevel = Math.abs(value);

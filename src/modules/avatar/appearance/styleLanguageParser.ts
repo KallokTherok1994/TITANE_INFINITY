@@ -146,7 +146,8 @@ export class StyleLanguageParser {
       sport: 'Sport_Dynamic',
       montagne: 'Montagne_Nordic',
     };
-    return presetMap[style] || style;
+    const preset = presetMap[style];
+    return preset ?? style;
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -310,17 +311,26 @@ export class StyleLanguageParser {
       /nouvel?\s+(?:archétype|style)\s*:?\s+(.+?)(?:\.|$)/i
     );
     if (archetypeMatch) {
-      result.name = archetypeMatch[1].trim();
+      const matchedName = archetypeMatch[1];
+      if (matchedName) {
+        result.name = matchedName.trim();
+      }
     }
 
     // Pattern: "Style [name] avec [keywords]"
     const styleMatch = cmd.match(/style\s+(.+?)\s+avec\s+(.+?)(?:\.|$)/i);
     if (styleMatch) {
-      result.name = styleMatch[1].trim();
-      result.keywords = styleMatch[2]
-        .split(/[,+]/)
-        .map(kw => kw.trim())
-        .filter(kw => kw.length > 0);
+      const matchedStyleName = styleMatch[1];
+      const matchedKeywords = styleMatch[2];
+      if (matchedStyleName) {
+        result.name = matchedStyleName.trim();
+      }
+      if (matchedKeywords) {
+        result.keywords = matchedKeywords
+          .split(/[,+]/)
+          .map(kw => kw.trim())
+          .filter(kw => kw.length > 0);
+      }
     }
 
     return result;

@@ -24,7 +24,7 @@ export function Dashboard() {
     metrics['omega-duration'],
     metrics['cpu-usage'],
     metrics['memory-usage'],
-  ].filter(Boolean);
+  ].filter((m): m is NonNullable<typeof m> => m !== undefined);
 
   return (
     <div className="space-y-6">

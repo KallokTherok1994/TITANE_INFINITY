@@ -101,18 +101,22 @@ export class ChatScheduler {
     );
 
     while ((match = structuredPattern.exec(response)) !== null) {
-      const jsonStr = match[1].trim();
-      const parsed = this.parseAgendaCommand(jsonStr);
-      if (parsed) commands.push(parsed);
+      const jsonStr = match[1]?.trim();
+      if (jsonStr) {
+        const parsed = this.parseAgendaCommand(jsonStr);
+        if (parsed) commands.push(parsed);
+      }
     }
 
     // Méthode 2: Pattern JSON inline (fallback)
     if (commands.length === 0) {
       const inlinePattern = /\[AGENDA\]\s*(\{[\s\S]*?\})\s*\[\/AGENDA\]/g;
       while ((match = inlinePattern.exec(response)) !== null) {
-        const jsonStr = match[1].trim();
-        const parsed = this.parseAgendaCommand(jsonStr);
-        if (parsed) commands.push(parsed);
+        const jsonStr = match[1]?.trim();
+        if (jsonStr) {
+          const parsed = this.parseAgendaCommand(jsonStr);
+          if (parsed) commands.push(parsed);
+        }
       }
     }
 
