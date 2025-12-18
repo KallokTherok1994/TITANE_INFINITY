@@ -52,8 +52,14 @@ const SAFETY_DIRECTIVES = [
   },
 ];
 
-// Helper to safely access roles with assertion (keys are statically defined)
-const getRole = (key: string) => promptRoles[key]!;
+// Helper to safely access roles with proper typing
+const getRole = (key: string): (typeof promptRoles)[keyof typeof promptRoles] => {
+  const role = promptRoles[key];
+  if (!role) {
+    throw new Error(`Prompt role "${key}" not found`);
+  }
+  return role;
+};
 
 export const promptProfiles: Record<string, TitanePromptProfile> = {
   core: {
@@ -129,8 +135,8 @@ export const promptProfiles: Record<string, TitanePromptProfile> = {
         description:
           "Tu réponds uniquement par l'objet JSON demandé, sans texte additionnel.",
       },
-      SAFETY_DIRECTIVES[0]!,
-      SAFETY_DIRECTIVES[3]!,
+      ...(SAFETY_DIRECTIVES[0] ? [SAFETY_DIRECTIVES[0]] : []),
+      ...(SAFETY_DIRECTIVES[3] ? [SAFETY_DIRECTIVES[3]] : []),
     ],
   },
 };

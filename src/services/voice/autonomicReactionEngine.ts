@@ -373,14 +373,14 @@ export class AutonomicReactionEngine {
     if (emotionState.energy > 0.7) {
       // High energy → réactions courtes et dynamiques
       const shortReactions = library.filter(r => r.length < 15);
-      return this.pickRandom(shortReactions.length > 0 ? shortReactions : library);
+      return this.pickRandom(shortReactions.length > 0 ? shortReactions : library) ?? '';
     } else if (emotionState.valence < -0.4) {
       // Negative valence → réactions empathiques longues
       const longReactions = library.filter(r => r.length > 10);
-      return this.pickRandom(longReactions.length > 0 ? longReactions : library);
+      return this.pickRandom(longReactions.length > 0 ? longReactions : library) ?? '';
     } else {
       // Default: random
-      return this.pickRandom(library);
+      return this.pickRandom(library) ?? '';
     }
   }
 
@@ -420,8 +420,9 @@ export class AutonomicReactionEngine {
   /**
    * Pick random element
    */
-  private pickRandom<T>(arr: T[]): T {
-    return arr[Math.floor(Math.random() * arr.length)]!;
+  private pickRandom<T>(arr: T[]): T | undefined {
+    if (arr.length === 0) return undefined;
+    return arr[Math.floor(Math.random() * arr.length)];
   }
 }
 

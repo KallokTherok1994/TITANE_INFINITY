@@ -180,9 +180,10 @@ export class MCPStrategy
       generic: 'REACTIVE' as JobType,
     };
 
+    const jobType = typeMap[type] ?? typeMap['generic'] ?? 'REACTIVE';
     const job = await this.mcpOrchestrator.createJob(
       { query: `Job type: ${type}`, context: {} },
-      typeMap[type]! ?? typeMap['generic']
+      jobType as JobType
     );
 
     this.recordMetric({
