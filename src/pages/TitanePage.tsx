@@ -1059,15 +1059,30 @@ interface MemorySectionProps {
   stats: TitaneStats;
 }
 
-const MemorySection: React.FC<MemorySectionProps> = ({ stats }) => {
-  const [selectedNode, setSelectedNode] = useState<any>(null);
+interface MemoryNode {
+  id: string;
+  type?: string;
+  content?: string;
+  timestamp?: number;
+  [key: string]: unknown;
+}
 
-  const handleNodeClick = useCallback((node: any) => {
+interface MemoryEntry {
+  id: string;
+  content?: string;
+  metadata?: Record<string, unknown>;
+  [key: string]: unknown;
+}
+
+const MemorySection: React.FC<MemorySectionProps> = ({ stats }) => {
+  const [selectedNode, setSelectedNode] = useState<MemoryNode | null>(null);
+
+  const handleNodeClick = useCallback((node: MemoryNode) => {
     setSelectedNode(node);
     pageLogger.debug('Node clicked', node);
   }, []);
 
-  const handleEntryClick = useCallback((entry: any) => {
+  const handleEntryClick = useCallback((entry: MemoryEntry) => {
     pageLogger.debug('Memory entry clicked', entry);
   }, []);
 

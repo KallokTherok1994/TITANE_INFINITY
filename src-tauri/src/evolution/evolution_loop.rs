@@ -101,7 +101,7 @@ impl EvolutionEngine {
             cycle: self.cycle_count,
             timestamp: std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
-                .unwrap()
+                .unwrap_or_default()
                 .as_secs(),
             metrics,
             mutations_proposed: mutations,
@@ -227,7 +227,7 @@ impl EvolutionEngine {
         );
         stats.insert(
             "improvements".to_string(),
-            serde_json::to_value(&self.improvements).unwrap(),
+            serde_json::to_value(&self.improvements).unwrap_or_default(),
         );
 
         stats

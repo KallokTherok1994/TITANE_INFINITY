@@ -119,7 +119,7 @@ impl UniversalParser {
             confidence: 0.9,
             timestamp: std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
-                .unwrap()
+                .unwrap_or_default()
                 .as_secs(),
         })
     }
@@ -139,9 +139,8 @@ impl UniversalParser {
             id: format!("doc_{}", uuid::Uuid::new_v4()),
             title: Path::new(file_path)
                 .file_stem()
-                .unwrap()
-                .to_string_lossy()
-                .to_string(),
+                .map(|s| s.to_string_lossy().to_string())
+                .unwrap_or_else(|| "untitled".to_string()),
             content,
             format: FileFormat::JSON,
             metadata,
@@ -149,7 +148,7 @@ impl UniversalParser {
             confidence: 0.95,
             timestamp: std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
-                .unwrap()
+                .unwrap_or_default()
                 .as_secs(),
         })
     }
