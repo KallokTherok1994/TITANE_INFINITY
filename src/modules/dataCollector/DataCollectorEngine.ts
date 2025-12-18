@@ -22,6 +22,7 @@
 import { MemoryEngine } from '@/cognitive/memory/memoryEngine';
 import type { MemoryType } from '@/cognitive/types';
 import { SingularityIntrospectionEngine } from '@/modules/singularity/SingularityIntrospectionEngine';
+import { logger } from '@/lib/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES — DATASET STRUCTURE
@@ -374,7 +375,7 @@ export class DataCollectorEngine {
         },
       });
     } catch (error) {
-      console.warn('[DataCollector] Introspection extraction failed:', error);
+      logger.warn('[DataCollector] Introspection extraction failed:', error);
     }
 
     return entries;
@@ -655,7 +656,7 @@ echo "════════════════════════�
       };
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
     } catch (error) {
-      console.warn('[DataCollector] Save failed:', error);
+      logger.warn('[DataCollector] Save failed:', error);
     }
   }
 
@@ -668,7 +669,7 @@ echo "════════════════════════�
         this.stats = data.stats || this.createEmptyStats();
       }
     } catch (error) {
-      console.warn('[DataCollector] Load failed:', error);
+      logger.warn('[DataCollector] Load failed:', error);
     }
   }
 

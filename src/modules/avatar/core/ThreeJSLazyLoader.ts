@@ -4,6 +4,8 @@
 //   Charge Three.js dynamiquement uniquement quand avatar activé
 // ═══════════════════════════════════════════════════════════════════════════
 
+import { logger } from '@/lib/logger';
+
 /**
  * Three.js Lazy Loader
  *
@@ -36,15 +38,15 @@ export async function loadThreeJS(): Promise<typeof import('three')> {
   }
 
   // Démarrer le chargement
-  console.log('⚡ [YOLO OPT-1] Lazy-loading Three.js (38 MB)...');
+  logger.info('⚡ [YOLO OPT-1] Lazy-loading Three.js (38 MB)...');
   loadingPromise = import('three')
     .then(THREE => {
       cachedTHREE = THREE;
-      console.log('✅ [YOLO OPT-1] Three.js loaded and cached');
+      logger.info('✅ [YOLO OPT-1] Three.js loaded and cached');
       return THREE;
     })
     .catch(error => {
-      console.error('❌ [YOLO OPT-1] Failed to load Three.js:', error);
+      logger.error('❌ [YOLO OPT-1] Failed to load Three.js:', error);
       loadingPromise = null; // Reset pour retry
       throw error;
     });
@@ -66,7 +68,7 @@ export function isThreeJSLoaded(): boolean {
  */
 export function preloadThreeJS(): void {
   if (!cachedTHREE && !loadingPromise) {
-    console.log('🔄 [YOLO OPT-1] Preloading Three.js in background...');
+    logger.info('🔄 [YOLO OPT-1] Preloading Three.js in background...');
     loadThreeJS().catch(() => {
       // Silent fail, sera retry à l'usage
     });
