@@ -4,7 +4,7 @@
  * Détecte les commandes cassées, manquantes ou avec erreurs
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 interface CommandTest {
   name: string;
@@ -317,7 +317,7 @@ async function testCommand(cmd: CommandTest, timeout = 5000): Promise<TestResult
     });
 
     // Execute command with timeout
-    await Promise.race([invoke(cmd.name, cmd.payload || {}), timeoutPromise]);
+    await Promise.race([secureInvoke(cmd.name, cmd.payload || {}), timeoutPromise]);
 
     const duration = performance.now() - startTime;
 

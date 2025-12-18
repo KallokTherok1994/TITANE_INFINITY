@@ -64,7 +64,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
     enableAnalytics: false,
   });
 
-  const step = STEPS[currentStep] ?? STEPS[0];
+  const _step = STEPS[currentStep] ?? STEPS[0];
   const progress = ((currentStep + 1) / STEPS.length) * 100;
 
   /**

@@ -5,7 +5,6 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
 import type {
   IAProvider,
   SetAPIKeyRequest,

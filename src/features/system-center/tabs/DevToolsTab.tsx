@@ -14,7 +14,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 // 🔧 v20.1: Consolidated DevTools components (migrated from src/components/devtools/)
 import { LogViewer, MetricsDisplay, CoreHealthMonitor } from '@/apps/devtools/components';
 
@@ -225,7 +225,7 @@ const DebuggerPanel: React.FC = () => {
   }, [autoRefresh, fetchDebugger]);
 
   const handleClear = async () => {
-    await invoke('devtools_debug_clear');
+    await secureInvoke('devtools_debug_clear');
     fetchDebugger();
   };
 
@@ -740,9 +740,9 @@ export const DevToolsTab: React.FC = () => {
   const toggleDevTools = async () => {
     try {
       if (status?.enabled) {
-        await invoke('devtools_disable');
+        await secureInvoke('devtools_disable');
       } else {
-        await invoke('devtools_enable');
+        await secureInvoke('devtools_enable');
       }
       const res = await invoke<DevToolsResponse<DevToolsStatus>>('devtools_status');
       if (res.success && res.data) setStatus(res.data);

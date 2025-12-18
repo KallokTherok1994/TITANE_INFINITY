@@ -11,7 +11,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { ConfigSection, ConfigFieldEditable } from '../components/config';
 import './ModulePages.css';
 
@@ -139,7 +139,7 @@ export const ConfigurationHub: React.FC = () => {
       // Save runtime config if changed
       if (Object.keys(editedRuntime).length > 0) {
         console.log('📤 [ConfigHub] Updating runtime config:', editedRuntime);
-        await invoke('update_runtime_config', {
+        await secureInvoke('update_runtime_config', {
           update: {
             ollama_url: editedRuntime.ollama_url,
             ollama_model: editedRuntime.ollama_model,
@@ -151,7 +151,7 @@ export const ConfigurationHub: React.FC = () => {
       // Save chat engine config if changed
       if (Object.keys(editedChatEngine).length > 0) {
         console.log('📤 [ConfigHub] Updating chat engine config:', editedChatEngine);
-        await invoke('update_chat_engine_config', {
+        await secureInvoke('update_chat_engine_config', {
           update: editedChatEngine,
         });
         console.log('✅ [ConfigHub] Chat engine config updated');
@@ -249,7 +249,7 @@ export const ConfigurationHub: React.FC = () => {
     const description = prompt('Description (optionnel):') || '';
 
     try {
-      await invoke('save_config_preset', { name, description });
+      await secureInvoke('save_config_preset', { name, description });
       alert(`✅ Preset "${name}" sauvegardé!`);
       await loadPresets();
     } catch (err) {
@@ -266,7 +266,7 @@ export const ConfigurationHub: React.FC = () => {
     }
 
     try {
-      await invoke('load_config_preset', { name });
+      await secureInvoke('load_config_preset', { name });
       await loadConfig();
       alert(`✅ Preset "${name}" chargé!`);
     } catch (err) {
@@ -281,7 +281,7 @@ export const ConfigurationHub: React.FC = () => {
     }
 
     try {
-      await invoke('delete_config_preset', { name });
+      await secureInvoke('delete_config_preset', { name });
       alert(`✅ Preset "${name}" supprimé!`);
       await loadPresets();
     } catch (err) {

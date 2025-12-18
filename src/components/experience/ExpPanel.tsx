@@ -11,7 +11,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { logger as _logger } from '@/lib/logger';
-import { invoke } from '@tauri-apps/api/core';
 import '../../styles/exp-fusion.css';
 import { TalentTree } from './TalentTree';
 import { TimelineChart } from './TimelineChart';

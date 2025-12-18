@@ -48,6 +48,19 @@ export const LogViewer: React.FC = () => {
     critical: 0,
   });
 
+  // Update statistics
+  const updateStats = useCallback((logEntries: LogEntry[]) => {
+    const newStats: LogStats = {
+      total: logEntries.length,
+      debug: logEntries.filter(l => l.level === 'DEBUG').length,
+      info: logEntries.filter(l => l.level === 'INFO').length,
+      warn: logEntries.filter(l => l.level === 'WARN').length,
+      error: logEntries.filter(l => l.level === 'ERROR').length,
+      critical: logEntries.filter(l => l.level === 'CRITICAL').length,
+    };
+    setStats(newStats);
+  }, []);
+
   // Fetch logs from backend
   const fetchLogs = useCallback(async () => {
     try {
@@ -61,18 +74,7 @@ export const LogViewer: React.FC = () => {
     } catch (error) {
       console.error('Failed to fetch logs:', error);
     }
-  }, [updateStats]); // useCallback deps
-
-  // Update statistics
-  const updateStats = (logEntries: LogEntry[]) => {
-    const newStats: LogStats = {
-      total: logEntries.length,
-      debug: logEntries.filter(l => l.level === 'DEBUG').length,
-      info: logEntries.filter(l => l.level === 'INFO').length,
-      warn: logEntries.filter(l => l.level === 'WARN').length,
-      error: logEntries.filter(l => l.level === 'ERROR').length,
-      critical: logEntries.filter(l => l.level === 'CRITICAL').length,
-    };
+  }, [updateStats]);
     setStats(newStats);
   };
 

@@ -9,7 +9,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { HUDFrame } from '../components/HUDFrame';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
 import './styles/SelfHealingDashboard.css';
@@ -267,7 +267,7 @@ export const SelfHealingDashboard: React.FC = () => {
   // Confirm pending action
   const handleConfirmAction = async (action: string) => {
     try {
-      await invoke('confirm_self_healing_action', { action });
+      await secureInvoke('confirm_self_healing_action', { action });
       setPendingActions(prev => prev.filter(a => a !== action));
       await fetchData();
     } catch {
@@ -278,7 +278,7 @@ export const SelfHealingDashboard: React.FC = () => {
   // Reject pending action
   const handleRejectAction = async (action: string) => {
     try {
-      await invoke('reject_self_healing_action', { action });
+      await secureInvoke('reject_self_healing_action', { action });
       setPendingActions(prev => prev.filter(a => a !== action));
     } catch {
       console.warn('Action rejection not available');
@@ -288,7 +288,7 @@ export const SelfHealingDashboard: React.FC = () => {
   // Toggle Safe Mode
   const handleToggleSafeMode = async () => {
     try {
-      await invoke('toggle_safe_mode', { enable: !healingState.safe_mode_active });
+      await secureInvoke('toggle_safe_mode', { enable: !healingState.safe_mode_active });
       await fetchData();
     } catch {
       // Toggle locally for demo

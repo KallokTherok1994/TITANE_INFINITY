@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import './CoreHealthMonitor.css';
 
 type CoreHealth = 'Healthy' | 'Degraded' | 'Failing' | 'Unknown';
@@ -56,7 +56,7 @@ export const CoreHealthMonitor: React.FC = () => {
     try {
       const failingCores = cores.filter(c => c.health === 'Failing').map(c => c.id);
       if (failingCores.length > 0) {
-        await invoke('restart_cores', { coreIds: failingCores });
+        await secureInvoke('restart_cores', { coreIds: failingCores });
         fetchCoreHealth();
       }
     } catch (error) {

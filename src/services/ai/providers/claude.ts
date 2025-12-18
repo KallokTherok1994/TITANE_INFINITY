@@ -9,7 +9,6 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
 import type { AIProvider, AIMessage, AIResponse } from '../types';
 import { autoHealEngine } from '../system';
 import { withRetry, getRetryConfig } from '../retryStrategy';

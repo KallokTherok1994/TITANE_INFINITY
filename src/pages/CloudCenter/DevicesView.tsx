@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { DeviceIdentity } from './types';
 
 interface DevicesResponse {
@@ -44,7 +44,7 @@ const DevicesView: React.FC = () => {
 
     setRemoving(deviceId);
     try {
-      await invoke('cloud_remove_device', { deviceId });
+      await secureInvoke('cloud_remove_device', { deviceId });
       await loadDevices();
     } catch (err) {
       console.error('[DevicesView] Failed to remove device:', err);

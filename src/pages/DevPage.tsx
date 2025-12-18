@@ -14,7 +14,6 @@ import { logger } from '@/lib/logger';
 import { useDeveloperMode } from '@/features/developer-mode/useDeveloperMode';
 import { useOneCore } from '@/features/one-core/useOneCore';
 import { useQAMonitoring } from '@/features/qa-monitoring/useQAMonitoring';
-import { invoke } from '@tauri-apps/api/core';
 import type {
   QASystemState,
   TestSuite,

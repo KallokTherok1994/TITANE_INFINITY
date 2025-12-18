@@ -5,7 +5,6 @@
  */
 
 import { useState, useEffect, useCallback, memo } from 'react';
-import { invoke } from '@tauri-apps/api/core';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
