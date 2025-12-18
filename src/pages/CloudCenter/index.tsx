@@ -1,5 +1,4 @@
 /**
-import { secureInvoke } from '@/lib/security';
  * ═══════════════════════════════════════════════════════════════
  *   TITANE∞ v∞ — CLOUD CENTER PAGE
  *   Interface de gestion Cloud Sync Engine
@@ -7,6 +6,7 @@ import { secureInvoke } from '@/lib/security';
  * ═══════════════════════════════════════════════════════════════
  */
 
+import { secureInvoke } from '@/lib/security';
 import React, { useState, useEffect, useCallback } from 'react';
 import VaultStatus from './VaultStatus';
 import SyncConfig from './SyncConfig';

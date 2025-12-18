@@ -1,5 +1,4 @@
 /**
-import { secureInvoke } from '@/lib/security';
  * TITANE∞ v19.3Ω — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
@@ -10,6 +9,7 @@ import { secureInvoke } from '@/lib/security';
  * ═══════════════════════════════════════════════════════════════════
  */
 
+import { secureInvoke } from '@/lib/security';
 import type { AIProvider, AIMessage, AIResponse } from '../types';
 import { autoHealEngine } from '../system';
 import { withRetry, getRetryConfig } from '../retryStrategy';

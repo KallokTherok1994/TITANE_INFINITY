@@ -1,5 +1,4 @@
 /**
-import { secureInvoke } from '@/lib/security';
  * ═══════════════════════════════════════════════════════════════════════════
  * TITANE∞ v25.4.0 — DEV PAGE (Fusion Complete)
  * Centre unifié développement: Dev Mode + ONE CORE + QA & Tests + Orchestration
@@ -9,6 +8,7 @@ import { secureInvoke } from '@/lib/security';
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
+import { secureInvoke } from '@/lib/security';
 import React, { useState, useEffect, useCallback, memo } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { logger } from '@/lib/logger';

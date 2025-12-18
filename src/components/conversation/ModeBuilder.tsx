@@ -1,5 +1,4 @@
 /**
-import { secureInvoke } from '@/lib/security';
  * TITANE∞ v25.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
@@ -11,6 +10,7 @@ import { secureInvoke } from '@/lib/security';
  * ═══════════════════════════════════════════════════════════════════
  */
 
+import { secureInvoke } from '@/lib/security';
 import React, { useState, useCallback } from 'react';
 import { colors, spacing } from '@themes/tokens';
 import './ModeBuilder.css';

@@ -182,7 +182,7 @@ export class MCPStrategy
 
     const job = await this.mcpOrchestrator.createJob(
       { query: `Job type: ${type}`, context: {} },
-      typeMap[type!] ?? typeMap['generic']
+      typeMap[type]! ?? typeMap['generic']
     );
 
     this.recordMetric({

@@ -375,7 +375,7 @@ export class DataCollectorEngine {
         },
       });
     } catch (error) {
-      logger.warn('[DataCollector] Introspection extraction failed:', error);
+      logger.warn('[DataCollector] Introspection extraction failed:');
     }
 
     return entries;
@@ -656,7 +656,7 @@ echo "════════════════════════�
       };
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
     } catch (error) {
-      logger.warn('[DataCollector] Save failed:', error);
+      logger.warn('[DataCollector] Save failed:');
     }
   }
 
@@ -669,7 +669,7 @@ echo "════════════════════════�
         this.stats = data.stats || this.createEmptyStats();
       }
     } catch (error) {
-      logger.warn('[DataCollector] Load failed:', error);
+      logger.warn('[DataCollector] Load failed:');
     }
   }
 

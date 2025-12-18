@@ -1,5 +1,4 @@
 /**
-import { secureInvoke } from '@/lib/security';
  * TITANE∞ v∞ — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
@@ -19,6 +18,7 @@ import { secureInvoke } from '@/lib/security';
  * ═══════════════════════════════════════════════════════════════════
  */
 
+import { secureInvoke } from '@/lib/security';
 import React, { useState, useEffect, useCallback, memo } from 'react';
 import { useSingularity } from '@/hooks/useSingularity';
 

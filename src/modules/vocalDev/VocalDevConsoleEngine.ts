@@ -909,7 +909,7 @@ export class VocalDevConsoleEngine {
 
     // Console output in dev mode
     if (this.config.debugMode) {
-      logger.info(`[VocalDev:${level}]`, message, metadata || '');
+      logger.info(`[VocalDev:${level}] ${message} ${metadata || ''}`);
     }
   }
 

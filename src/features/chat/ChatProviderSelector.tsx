@@ -63,3 +63,5 @@ export const ChatProviderSelector: React.FC<ChatProviderSelectorProps> = React.m
     );
   }
 );
+
+ChatProviderSelector.displayName = 'ChatProviderSelector';

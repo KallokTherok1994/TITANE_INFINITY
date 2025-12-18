@@ -95,12 +95,15 @@ export function getPromptProfile(id?: string): TitanePromptProfile {
   }
   return (
     promptProfiles.core ??
-    promptProfiles[Object.keys(promptProfiles)[0]!] ??
+    promptProfiles[Object.keys(promptProfiles)[0] ?? "core"] ??
     ({
       id: 'core',
       label: 'Core',
       description: 'Default core profile',
+      roleId: 'assistant',
       defaultRole: 'assistant',
+      baseSystemPrompt: '',
+      safetyDirectives: [],
       capabilities: [],
       constraints: [],
       examples: [],
