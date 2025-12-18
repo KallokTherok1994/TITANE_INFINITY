@@ -228,7 +228,7 @@ const TitanePage = lazy(() =>
 // ❌ SUPPRIMÉ v24.3.8: EvolutionCenterPage (fusionné dans EvoPage)
 // const EvolutionCenterPage = lazy(() => import('./pages/EvolutionCenterPage')...);
 
-// ✨ ORCHESTRATION META CENTER - Centre Unifié v24 (TODO #9 - Fusion Meta + Orchestration)
+// ✨ ORCHESTRATION META CENTER - Centre Unifié v24 (#9 - Fusion Meta + Orchestration)
 const OrchestrationMetaCenter = lazy(() =>
   import('./pages/OrchestrationMetaCenter').then(m => ({
     default: m.OrchestrationMetaCenter,
@@ -371,6 +371,30 @@ const AppRouter: React.FC = () => {
         error as Error
       );
     });
+  }, []);
+
+  // ✨ v26.2 - Enable local network security mode for private home network
+  useEffect(() => {
+    import('./lib/security')
+      .then(({ enableLocalNetworkMode }) => {
+        enableLocalNetworkMode();
+        console.log('🏠 [SECURITY] Local network mode enabled - reduced restrictions');
+      })
+      .catch(err => {
+        console.warn('⚠️ [SECURITY] Failed to enable local network mode:', err);
+      });
+  }, []);
+
+  // ✨ v26.2 - Initialize auto-backup service (6-hour intervals)
+  useEffect(() => {
+    import('./services/backup/AutoBackupService')
+      .then(({ autoBackupService }) => {
+        autoBackupService.initialize();
+        console.log('💾 [BACKUP] Auto-backup service initialized (6h intervals)');
+      })
+      .catch(err => {
+        console.warn('⚠️ [BACKUP] Failed to initialize auto-backup:', err);
+      });
   }, []);
 
   // ✨ OPT-7 - Initialize i18n asynchronously (non-blocking, lazy-loaded)
@@ -861,7 +885,7 @@ const AppRouter: React.FC = () => {
               </ErrorBoundary>
             }
           />
-          {/* ✨ v24 ORCHESTRATION META CENTER - Centre Unifié (TODO #9) */}
+          {/* ✨ v24 ORCHESTRATION META CENTER - Centre Unifié (#9) */}
           <Route
             path="/orchestration-center"
             element={

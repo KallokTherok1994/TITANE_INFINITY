@@ -8,7 +8,6 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppShell, type AppShellProps } from './AppShell';
 import { DevToolsApp } from '@/apps/devtools';
-import { useIsMobile, useIsTablet, useIsDesktop } from '@/hooks/useResponsive';
 import { cn } from '@/utils/cn';
 
 // ─────────────────────────────────────────────────────────────────
@@ -75,14 +74,6 @@ export const AppShellWithDevTools = ({
   ...appShellProps
 }: AppShellWithDevToolsProps): JSX.Element => {
   const [devToolsOpen, setDevToolsOpen] = useState(devToolsDefaultOpen);
-
-  // ✨ v25.7.4 - Responsive hooks
-  const isMobile = useIsMobile();
-  const isTablet = useIsTablet();
-  const isDesktop = useIsDesktop();
-
-  // Responsive DevTools width
-  const devToolsWidth = isMobile ? '100vw' : isTablet ? 360 : DEVTOOLS_WIDTH_DESKTOP;
 
   // Si DevTools désactivés, retourner AppShell standard
   if (!devToolsEnabled) {

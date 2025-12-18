@@ -8,7 +8,7 @@
  * Affiche les étapes de réflexion pendant la génération
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Brain, Sparkles, Loader2, Check } from 'lucide-react';
 import './ThinkingPanel.css';
@@ -33,6 +33,14 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
   onClose,
 }) => {
   const [expandedSteps, setExpandedSteps] = useState<Set<string>>(new Set());
+
+  // v26.2 - Auto-expand active steps for visibility
+  useEffect(() => {
+    const activeStep = steps.find(s => s.status === 'active');
+    if (activeStep) {
+      setExpandedSteps(prev => new Set([...prev, activeStep.id]));
+    }
+  }, [steps]);
 
   const toggleStep = (id: string) => {
     setExpandedSteps(prev => {

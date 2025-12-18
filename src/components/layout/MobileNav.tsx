@@ -19,7 +19,7 @@
 
 import { type ReactNode, useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useIsMobile, useResponsive } from '@/hooks/useResponsive';
+import { useResponsive } from '@/hooks/useResponsive';
 import { cn } from '@/utils/cn';
 import type { SidebarItem } from './Sidebar';
 
@@ -48,7 +48,6 @@ export const MobileNav = ({
 }: MobileNavProps): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
   // v26.0: Enhanced responsive hooks
-  const isMobile = useIsMobile();
   const { reducedMotion } = useResponsive();
 
   // Close menu on route change

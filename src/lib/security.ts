@@ -786,6 +786,38 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'complete_onboarding',
 
   // ═══════════════════════════════════════════════════════════════
+  // OMEGA CONVERSATION ENGINE (v26.2)
+  // Pipeline de conversation 12 étapes - Cerveau IA TITANE
+  // ═══════════════════════════════════════════════════════════════
+  'conversation_process_message',
+  'conversation_generate',
+  'conversation_health_check',
+  'conversation_memory_stats',
+  'conversation_french_postprocess',
+  'conversation_realism_process',
+  'conversation_emotional_process',
+  'conversation_behavioral_check',
+
+  // ═══════════════════════════════════════════════════════════════
+  // LITERARY ENGINE (v26.2)
+  // Moteur littéraire OMEGA pour style et ton
+  // ═══════════════════════════════════════════════════════════════
+  'literary_engine_process',
+  'literary_engine_update_style',
+  'literary_engine_get_style_profile',
+
+  // ═══════════════════════════════════════════════════════════════
+  // ANTHOLOGY ENGINE (v26.2)
+  // Intégration anthologie et ADN littéraire
+  // ═══════════════════════════════════════════════════════════════
+  'anthology_integrate_text',
+  'anthology_get_literary_dna',
+  'anthology_search_by_tag',
+  'anthology_search_by_layer',
+  'anthology_get_top_lexical_fields',
+  'anthology_get_statistics',
+
+  // ═══════════════════════════════════════════════════════════════
   // VECTOR STORE (v24.4+)
   // ═══════════════════════════════════════════════════════════════
   'vector_store_insert',
@@ -924,6 +956,65 @@ interface CallTracker {
 }
 
 const callTracking = new Map<string, CallTracker>();
+
+// ═══════════════════════════════════════════════════════════════
+// v26.2 - LOCAL NETWORK SECURITY MODE
+// Pour réseau domestique sécurisé privé - restrictions réduites
+// ═══════════════════════════════════════════════════════════════
+
+export interface LocalNetworkSecurityConfig {
+  enabled: boolean;
+  maxCallsPerSecond: number;
+  trackingWindowMs: number;
+  skipInjectionCheckForLocalCmds: boolean;
+  trustedCommands: Set<string>;
+}
+
+let localNetworkMode: LocalNetworkSecurityConfig = {
+  enabled: false,
+  maxCallsPerSecond: 50,
+  trackingWindowMs: 1000,
+  skipInjectionCheckForLocalCmds: true,
+  trustedCommands: new Set([
+    'conversation_process_message',
+    'chat_send_message',
+    'chat_stream_message',
+    'memory_get_state',
+    'memory_store',
+    'get_system_health',
+    'singularity_get_state',
+    'tts_speak',
+    'voice_synthesize_speech',
+  ]),
+};
+
+/**
+ * Activer le mode réseau local sécurisé
+ */
+export function enableLocalNetworkMode(
+  config?: Partial<LocalNetworkSecurityConfig>
+): void {
+  localNetworkMode = { ...localNetworkMode, enabled: true, ...(config || {}) };
+  console.log('[Security] 🏠 Mode réseau local activé');
+}
+
+/**
+ * Désactiver le mode réseau local
+ */
+export function disableLocalNetworkMode(): void {
+  localNetworkMode.enabled = false;
+  console.log('[Security] 🔒 Mode réseau local désactivé');
+}
+
+/**
+ * Obtenir la configuration du mode local
+ */
+export function getLocalNetworkConfig(): LocalNetworkSecurityConfig {
+  return { ...localNetworkMode };
+}
+
+const getMaxCallsPerSecond = () =>
+  localNetworkMode.enabled ? localNetworkMode.maxCallsPerSecond : 10;
 const MAX_CALLS_PER_SECOND = 10;
 const TRACKING_WINDOW_MS = 1000;
 
@@ -1076,10 +1167,16 @@ export function detectInfiniteLoop(command: string): CommandValidationResult {
   tracker.count += 1;
   tracker.lastCall = now;
 
-  // Vérifier dépassement
-  if (tracker.count > MAX_CALLS_PER_SECOND) {
+  // Vérifier dépassement - utilise le mode local si actif
+  const maxCalls = getMaxCallsPerSecond();
+  const effectiveMax =
+    localNetworkMode.enabled && localNetworkMode.trustedCommands.has(command)
+      ? maxCalls * 2
+      : maxCalls;
+
+  if (tracker.count > effectiveMax) {
     const errors = [
-      `Infinite loop detected: "${command}" called ${tracker.count} times in ${TRACKING_WINDOW_MS}ms (max: ${MAX_CALLS_PER_SECOND})`,
+      `Infinite loop detected: "${command}" called ${tracker.count} times in ${TRACKING_WINDOW_MS}ms (max: ${effectiveMax})`,
     ];
     return { valid: false, errors };
   }

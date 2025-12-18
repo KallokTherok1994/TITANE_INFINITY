@@ -47,7 +47,7 @@ import './DeveloperModePage.css';
 
 function DeveloperModePageContent(): JSX.Element {
   // ✨ v25.7.4 - Responsive hook
-  const { isMobile, isTablet } = useResponsive();
+  useResponsive();
 
   const { state, loading, error, enable, disable } = useDeveloperMode();
   const {

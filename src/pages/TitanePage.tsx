@@ -258,7 +258,9 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
   const [_attachedImages, setAttachedImages] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterRole, setFilterRole] = useState<'all' | 'user' | 'assistant'>('all');
+  const [_cameraActive, setCameraActive] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const sendingRef = useRef(false); // v26.2 - Protection contre double-envoi
 
   // ═══ THINKING STEPS (v25.6.0) ═══
   const thinking = useThinkingSteps();
@@ -364,12 +366,15 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
 
   // ═══ HANDLERS ═══
   const handleSend = useCallback(async () => {
-    if (!inputValue.trim() || isLoading) return;
+    // v26.2 - Protection double-envoi
+    if (!inputValue.trim() || isLoading || sendingRef.current) return;
+    sendingRef.current = true;
 
     // Sanitize input pour sécurité
     const sanitized = sanitizeInput(inputValue);
     if (!sanitized || sanitized.length === 0) {
       pageLogger.debug('Input vide apres sanitization');
+      sendingRef.current = false;
       return;
     }
 
@@ -378,11 +383,14 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
 
     // Start thinking visualization
     thinking.startThinking();
+    thinking.addStep('analysis', 'Analyse de votre message...');
 
     try {
+      thinking.addStep('reasoning', 'Traitement par le pipeline OMEGA...');
       const response = await sendMessage(messageText);
 
       // Stop thinking
+      thinking.addStep('synthesis', 'Génération de la réponse...');
       thinking.stopThinking();
 
       // TTS si actif et reponse valide
@@ -401,6 +409,8 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
     } catch (err) {
       pageLogger.error('Send message error', err);
       thinking.stopThinking();
+    } finally {
+      sendingRef.current = false;
     }
   }, [inputValue, isLoading, sendMessage, audioEnabled, thinking]);
 
@@ -757,7 +767,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
             sendMessage(`📝 Transcription:\n\n"${text}"\n\nAnalyse ce contenu.`);
           }}
           onToggleAudioConversation={active => setAudioEnabled(active)}
-          onToggleCameraLive={() => {}}
+          onToggleCameraLive={() => setCameraActive(prev => !prev)}
           onToggleTTS={active => setAudioEnabled(active)}
           disabled={isLoading}
           compact={false}
