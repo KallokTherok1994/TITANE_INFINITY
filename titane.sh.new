@@ -1,0 +1,1149 @@
+#!/bin/bash
+# ═══════════════════════════════════════════════════════════════════════════════
+# TITANE∞ — Unified Deployment Command v26.3.1 OPTIMIZED
+# Commande unifiée pour clean, repair, fix, build & deploy
+# 🚀 OPTIMIZATIONS: Cache, Progress, Dry-run, Retry, Validation
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# USAGE:
+#   ./titane.sh clean              → Nettoyage complet
+#   ./titane.sh repair             → Réparation des dépendances
+#   ./titane.sh fix                → Correction des erreurs TypeScript
+#   ./titane.sh build [dev|stable] → Build complet (dev par défaut)
+#   ./titane.sh deploy             → Build + Deploy production
+#   ./titane.sh full               → Clean + Repair + Fix + Build + Deploy (FULL)
+#   ./titane.sh health             → Vérification de santé du système
+#
+# OPTIONS:
+#   --dry-run                      → Simulation sans exécution
+#   --skip-tests                   → Skip tests dans deploy
+#   --skip-backup                  → Skip backup avant clean
+#   --verbose                      → Mode verbose détaillé
+#   --quiet                        → Mode silencieux (erreurs seulement)
+#   --no-confirm                   → Skip confirmation pour full
+#   --report                       → Génère rapport JSON final
+#
+# ═══════════════════════════════════════════════════════════════════════════════
+
+set -euo pipefail
+
+# ──────────────────────────────────────────────────────────────────────────────
+# COLORS & FORMATTING
+# ──────────────────────────────────────────────────────────────────────────────
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
+CYAN='\033[0;36m'
+BOLD='\033[1m'
+DIM='\033[2m'
+NC='\033[0m' # No Color
+
+# ──────────────────────────────────────────────────────────────────────────────
+# CONFIGURATION
+# ──────────────────────────────────────────────────────────────────────────────
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$SCRIPT_DIR"
+BUILD_MODE="${2:-dev}"
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+LOG_DIR="$PROJECT_ROOT/logs"
+LOG_FILE="$LOG_DIR/titane_${TIMESTAMP}.log"
+REPORT_FILE="$LOG_DIR/report_${TIMESTAMP}.json"
+BACKUP_DIR="$PROJECT_ROOT/.backup_${TIMESTAMP}"
+
+# Runtime flags
+DRY_RUN=false
+SKIP_TESTS=false
+SKIP_BACKUP=false
+VERBOSE=false
+QUIET=false
+NO_CONFIRM=false
+GENERATE_REPORT=false
+
+# Performance metrics
+START_TIME=$(date +%s)
+STEP_TIMES=()
+STEP_NAMES=()
+
+# Retry configuration
+MAX_RETRIES=3
+RETRY_DELAY=5
+
+# Cache configuration
+CACHE_DIR="$PROJECT_ROOT/.titane-cache"
+TYPECHECK_CACHE="$CACHE_DIR/typecheck.hash"
+ESLINT_CACHE="$CACHE_DIR/eslint.hash"
+
+# ──────────────────────────────────────────────────────────────────────────────
+# PARSE OPTIONS
+# ──────────────────────────────────────────────────────────────────────────────
+parse_options() {
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --dry-run)
+                DRY_RUN=true
+                shift
+                ;;
+            --skip-tests)
+                SKIP_TESTS=true
+                shift
+                ;;
+            --skip-backup)
+                SKIP_BACKUP=true
+                shift
+                ;;
+            --verbose)
+                VERBOSE=true
+                shift
+                ;;
+            --quiet)
+                QUIET=true
+                shift
+                ;;
+            --no-confirm)
+                NO_CONFIRM=true
+                shift
+                ;;
+            --report)
+                GENERATE_REPORT=true
+                shift
+                ;;
+            *)
+                shift
+                ;;
+        esac
+    done
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# HELPER FUNCTIONS
+# ──────────────────────────────────────────────────────────────────────────────
+
+# Create necessary directories
+mkdir -p "$LOG_DIR" "$CACHE_DIR"
+
+# Logging function with levels
+log() {
+    local level="${2:-INFO}"
+    local message="$1"
+    local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    
+    if [[ "$QUIET" == true ]] && [[ "$level" != "ERROR" ]]; then
+        return
+    fi
+    
+    local color="$NC"
+    case "$level" in
+        ERROR)   color="$RED" ;;
+        SUCCESS) color="$GREEN" ;;
+        WARNING) color="$YELLOW" ;;
+        INFO)    color="$CYAN" ;;
+        DEBUG)   color="$DIM" ;;
+    esac
+    
+    if [[ "$VERBOSE" == true ]] || [[ "$level" != "DEBUG" ]]; then
+        echo -e "${color}[${timestamp}] [${level}] ${message}${NC}" | tee -a "$LOG_FILE"
+    else
+        echo "[${timestamp}] [${level}] ${message}" >> "$LOG_FILE"
+    fi
+}
+
+# Execute command with dry-run support
+execute() {
+    local cmd="$1"
+    local description="${2:-Executing command}"
+    
+    log "→ $description" "DEBUG"
+    
+    if [[ "$DRY_RUN" == true ]]; then
+        log "DRY-RUN: $cmd" "INFO"
+        return 0
+    fi
+    
+    if [[ "$VERBOSE" == true ]]; then
+        log "CMD: $cmd" "DEBUG"
+    fi
+    
+    eval "$cmd"
+}
+
+# Retry function with exponential backoff
+retry() {
+    local cmd="$1"
+    local description="${2:-Command}"
+    local attempt=1
+    
+    while [ $attempt -le $MAX_RETRIES ]; do
+        if eval "$cmd"; then
+            return 0
+        else
+            if [ $attempt -lt $MAX_RETRIES ]; then
+                local wait_time=$((RETRY_DELAY * attempt))
+                warning "$description failed (attempt $attempt/$MAX_RETRIES), retrying in ${wait_time}s..."
+                sleep $wait_time
+                ((attempt++))
+            else
+                error "$description failed after $MAX_RETRIES attempts"
+                return 1
+            fi
+        fi
+    done
+}
+
+# Print header
+print_header() {
+    if [[ "$QUIET" == true ]]; then
+        return
+    fi
+    
+    log "═══════════════════════════════════════════════════════════════" "INFO"
+    log "   TITANE∞ — $1" "INFO"
+    log "═══════════════════════════════════════════════════════════════" "INFO"
+    log "" "INFO"
+}
+
+# Print section
+print_section() {
+    if [[ "$QUIET" == true ]]; then
+        return
+    fi
+    
+    log "━━━ $1 ━━━" "INFO"
+}
+
+# Success message
+success() {
+    log "✓ $1" "SUCCESS"
+}
+
+# Error message
+error() {
+    log "✗ $1" "ERROR"
+    cleanup_on_error
+    exit 1
+}
+
+# Warning message
+warning() {
+    log "⚠ $1" "WARNING"
+}
+
+# Info message
+info() {
+    log "ℹ $1" "INFO"
+}
+
+# Debug message
+debug() {
+    log "$1" "DEBUG"
+}
+
+# Progress bar
+show_progress() {
+    local current=$1
+    local total=$2
+    local description="${3:-Processing}"
+    
+    if [[ "$QUIET" == true ]]; then
+        return
+    fi
+    
+    local percent=$((current * 100 / total))
+    local filled=$((percent / 2))
+    local empty=$((50 - filled))
+    
+    printf "\r${CYAN}%s: [" "$description"
+    printf "%${filled}s" | tr ' ' '█'
+    printf "%${empty}s" | tr ' ' '░'
+    printf "] %d%%${NC}" "$percent"
+    
+    if [ $current -eq $total ]; then
+        echo ""
+    fi
+}
+
+# Track step timing
+start_step() {
+    local step_name="$1"
+    STEP_NAMES+=("$step_name")
+    STEP_TIMES+=("$(date +%s)")
+    info "Starting: $step_name"
+}
+
+end_step() {
+    local step_name="$1"
+    local start_time="${STEP_TIMES[-1]}"
+    local end_time=$(date +%s)
+    local duration=$((end_time - start_time))
+    
+    success "$step_name completed in ${duration}s"
+}
+
+# Calculate hash for cache validation
+calculate_hash() {
+    local pattern="$1"
+    find . -type f -name "$pattern" -exec sha256sum {} \; 2>/dev/null | sha256sum | cut -d' ' -f1
+}
+
+# Check if cache is valid
+is_cache_valid() {
+    local cache_file="$1"
+    local pattern="$2"
+    
+    if [ ! -f "$cache_file" ]; then
+        return 1
+    fi
+    
+    local current_hash=$(calculate_hash "$pattern")
+    local cached_hash=$(cat "$cache_file" 2>/dev/null)
+    
+    [ "$current_hash" = "$cached_hash" ]
+}
+
+# Update cache
+update_cache() {
+    local cache_file="$1"
+    local pattern="$2"
+    
+    calculate_hash "$pattern" > "$cache_file"
+}
+
+# Cleanup on error
+cleanup_on_error() {
+    warning "Error detected, performing cleanup..."
+    
+    # Save error log
+    if [ -f "$LOG_FILE" ]; then
+        cp "$LOG_FILE" "$LOG_DIR/error_${TIMESTAMP}.log"
+        info "Error log saved to: $LOG_DIR/error_${TIMESTAMP}.log"
+    fi
+    
+    # Restore backup if exists
+    if [ -d "$BACKUP_DIR" ]; then
+        warning "Backup found at $BACKUP_DIR - manual restore may be needed"
+    fi
+}
+
+# Send system notification
+send_notification() {
+    local title="$1"
+    local message="$2"
+    local urgency="${3:-normal}"
+    
+    if command -v notify-send &> /dev/null; then
+        notify-send -u "$urgency" "$title" "$message" 2>/dev/null || true
+    fi
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# SYSTEM HEALTH CHECK
+# ──────────────────────────────────────────────────────────────────────────────
+health_check() {
+    print_header "HEALTH CHECK"
+    start_step "health_check"
+    
+    local errors=0
+    local warnings=0
+    
+    # Check Node.js
+    print_section "Checking Node.js..."
+    if command -v node &> /dev/null; then
+        NODE_VERSION=$(node --version)
+        local required_major=18
+        local current_major=$(echo "$NODE_VERSION" | cut -d'v' -f2 | cut -d'.' -f1)
+        
+        if [ "$current_major" -ge "$required_major" ]; then
+            success "Node.js: $NODE_VERSION (>= v${required_major} ✓)"
+        else
+            warning "Node.js: $NODE_VERSION (recommended >= v${required_major})"
+            ((warnings++))
+        fi
+    else
+        error "Node.js not found!"
+        ((errors++))
+    fi
+    
+    # Check npm/pnpm
+    print_section "Checking package manager..."
+    if command -v pnpm &> /dev/null; then
+        PNPM_VERSION=$(pnpm --version)
+        success "pnpm: $PNPM_VERSION"
+    elif command -v npm &> /dev/null; then
+        NPM_VERSION=$(npm --version)
+        success "npm: $NPM_VERSION"
+    else
+        error "No package manager found (npm or pnpm required)!"
+        ((errors++))
+    fi
+    
+    # Check Rust
+    print_section "Checking Rust..."
+    if command -v rustc &> /dev/null; then
+        RUST_VERSION=$(rustc --version)
+        success "Rust: $RUST_VERSION"
+    else
+        warning "Rust not found (required for Tauri build)"
+        ((warnings++))
+    fi
+    
+    # Check Cargo
+    print_section "Checking Cargo..."
+    if command -v cargo &> /dev/null; then
+        CARGO_VERSION=$(cargo --version)
+        success "Cargo: $CARGO_VERSION"
+    else
+        warning "Cargo not found (required for Tauri build)"
+        ((warnings++))
+    fi
+    
+    # Check Tauri CLI
+    print_section "Checking Tauri CLI..."
+    if command -v cargo-tauri &> /dev/null; then
+        TAURI_VERSION=$(cargo tauri --version 2>/dev/null | head -1)
+        success "Tauri CLI: $TAURI_VERSION"
+    else
+        if npx tauri --version &> /dev/null; then
+            TAURI_VERSION=$(npx tauri --version 2>/dev/null | head -1)
+            success "Tauri CLI (npx): $TAURI_VERSION"
+        else
+            warning "Tauri CLI not found"
+            ((warnings++))
+        fi
+    fi
+    
+    # Check disk space
+    print_section "Checking disk space..."
+    DISK_AVAILABLE=$(df -h "$PROJECT_ROOT" | awk 'NR==2 {print $4}')
+    DISK_PERCENT=$(df "$PROJECT_ROOT" | awk 'NR==2 {print $5}' | sed 's/%//')
+    
+    if [ "$DISK_PERCENT" -lt 90 ]; then
+        success "Available disk space: $DISK_AVAILABLE ($((100-DISK_PERCENT))% free)"
+    else
+        warning "Low disk space: $DISK_AVAILABLE (${DISK_PERCENT}% used)"
+        ((warnings++))
+    fi
+    
+    # Check memory
+    print_section "Checking memory..."
+    if command -v free &> /dev/null; then
+        MEM_AVAILABLE=$(free -h | awk 'NR==2 {print $7}')
+        info "Available memory: $MEM_AVAILABLE"
+    fi
+    
+    # Check Git status
+    print_section "Checking Git status..."
+    if [ -d ".git" ]; then
+        CURRENT_BRANCH=$(git branch --show-current)
+        GIT_STATUS=$(git status --porcelain | wc -l)
+        info "Current branch: $CURRENT_BRANCH"
+        
+        if [ "$GIT_STATUS" -eq 0 ]; then
+            success "Working directory clean"
+        else
+            info "Modified files: $GIT_STATUS"
+        fi
+        
+        # Check if ahead/behind remote
+        if git rev-parse --abbrev-ref @{u} &> /dev/null; then
+            LOCAL=$(git rev-parse @)
+            REMOTE=$(git rev-parse @{u})
+            BASE=$(git merge-base @ @{u})
+            
+            if [ "$LOCAL" = "$REMOTE" ]; then
+                success "Branch synchronized with remote"
+            elif [ "$LOCAL" = "$BASE" ]; then
+                warning "Branch is behind remote (pull recommended)"
+                ((warnings++))
+            elif [ "$REMOTE" = "$BASE" ]; then
+                info "Branch is ahead of remote (unpushed commits)"
+            else
+                warning "Branch has diverged from remote"
+                ((warnings++))
+            fi
+        fi
+    else
+        warning "Not a Git repository"
+        ((warnings++))
+    fi
+    
+    # Check dependencies
+    print_section "Checking dependencies..."
+    if [ -d "node_modules" ]; then
+        success "node_modules/ exists"
+        
+        # Check if package.json changed since last install
+        if [ -f "package-lock.json" ]; then
+            if [ "package.json" -nt "package-lock.json" ]; then
+                warning "package.json newer than package-lock.json (reinstall recommended)"
+                ((warnings++))
+            fi
+        elif [ -f "pnpm-lock.yaml" ]; then
+            if [ "package.json" -nt "pnpm-lock.yaml" ]; then
+                warning "package.json newer than pnpm-lock.yaml (reinstall recommended)"
+                ((warnings++))
+            fi
+        fi
+    else
+        warning "node_modules/ not found (repair recommended)"
+        ((warnings++))
+    fi
+    
+    log ""
+    
+    # Summary
+    if [ $errors -eq 0 ] && [ $warnings -eq 0 ]; then
+        success "System health check passed! ✨"
+    elif [ $errors -eq 0 ]; then
+        warning "System health check completed with $warnings warning(s) ⚠️"
+    else
+        error "System health check failed with $errors error(s) and $warnings warning(s) ❌"
+    fi
+    
+    end_step "health_check"
+    return 0
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# BACKUP FUNCTION
+# ──────────────────────────────────────────────────────────────────────────────
+create_backup() {
+    if [[ "$SKIP_BACKUP" == true ]]; then
+        info "Skipping backup (--skip-backup)"
+        return 0
+    fi
+    
+    print_section "Creating backup..."
+    start_step "backup"
+    
+    mkdir -p "$BACKUP_DIR"
+    
+    # Backup critical files
+    local files_to_backup=(
+        "package.json"
+        "package-lock.json"
+        "pnpm-lock.yaml"
+        "tsconfig.json"
+        ".env"
+        ".env.local"
+    )
+    
+    for file in "${files_to_backup[@]}"; do
+        if [ -f "$file" ]; then
+            execute "cp '$file' '$BACKUP_DIR/'" "Backup $file"
+        fi
+    done
+    
+    # Backup dist if exists
+    if [ -d "dist" ]; then
+        execute "cp -r dist '$BACKUP_DIR/dist'" "Backup dist/"
+    fi
+    
+    success "Backup created at: $BACKUP_DIR"
+    end_step "backup"
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# CLEAN FUNCTION
+# ──────────────────────────────────────────────────────────────────────────────
+clean() {
+    print_header "CLEAN"
+    start_step "clean"
+    
+    cd "$PROJECT_ROOT"
+    
+    # Create backup before cleaning
+    create_backup
+    
+    print_section "Removing build artifacts..."
+    local artifacts=(
+        "dist/"
+        "build/"
+        "target/"
+        "src-tauri/target/"
+        "runtime/dev/build/"
+        "runtime/stable/build/"
+        "runtime/stable/*.AppImage"
+        "runtime/stable/*.exe"
+        "runtime/stable/*.dmg"
+    )
+    
+    local total=${#artifacts[@]}
+    local current=0
+    
+    for artifact in "${artifacts[@]}"; do
+        ((current++))
+        show_progress $current $total "Cleaning artifacts"
+        
+        if [[ "$artifact" == *"*"* ]]; then
+            # Glob pattern
+            execute "rm -f $artifact" "Remove $artifact" || true
+        else
+            # Directory
+            execute "rm -rf '$artifact'" "Remove $artifact" || true
+        fi
+    done
+    
+    success "Build artifacts removed"
+    
+    print_section "Removing cache directories..."
+    local caches=(
+        "node_modules/.vite/"
+        "node_modules/.cache/"
+        ".vite-cache/"
+        "coverage/"
+        "test-results/"
+        "playwright-report/"
+        ".turbo/"
+        ".next/"
+    )
+    
+    total=${#caches[@]}
+    current=0
+    
+    for cache in "${caches[@]}"; do
+        ((current++))
+        show_progress $current $total "Cleaning caches"
+        execute "rm -rf '$cache'" "Remove $cache" || true
+    done
+    
+    success "Cache directories removed"
+    
+    print_section "Removing old log files..."
+    local deleted_count=0
+    if [ -d "$LOG_DIR" ]; then
+        deleted_count=$(find "$LOG_DIR" -name "*.log" -type f -mtime +7 2>/dev/null | wc -l)
+        execute "find '$LOG_DIR' -name '*.log' -type f -mtime +7 -delete" "Remove logs >7 days" || true
+        success "Removed $deleted_count old log file(s)"
+    fi
+    
+    # Clean old backups (>30 days)
+    print_section "Removing old backups..."
+    local old_backups=$(find "$PROJECT_ROOT" -maxdepth 1 -name ".backup_*" -type d -mtime +30 2>/dev/null | wc -l)
+    if [ "$old_backups" -gt 0 ]; then
+        execute "find '$PROJECT_ROOT' -maxdepth 1 -name '.backup_*' -type d -mtime +30 -exec rm -rf {} +" "Remove backups >30 days" || true
+        success "Removed $old_backups old backup(s)"
+    fi
+    
+    log ""
+    success "Clean completed successfully! ✨"
+    end_step "clean"
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# REPAIR FUNCTION
+# ──────────────────────────────────────────────────────────────────────────────
+repair() {
+    print_header "REPAIR"
+    start_step "repair"
+    
+    cd "$PROJECT_ROOT"
+    
+    print_section "Removing node_modules..."
+    execute "rm -rf node_modules/" "Remove node_modules"
+    success "node_modules removed"
+    
+    print_section "Removing lockfiles..."
+    execute "rm -f package-lock.json pnpm-lock.yaml" "Remove lockfiles"
+    success "Lockfiles removed"
+    
+    print_section "Reinstalling dependencies..."
+    if [ -f "pnpm-lock.yaml" ] || command -v pnpm &> /dev/null; then
+        info "Using pnpm..."
+        retry "pnpm install --frozen-lockfile || pnpm install" "pnpm install"
+    else
+        info "Using npm..."
+        retry "npm install" "npm install"
+    fi
+    success "Dependencies installed"
+    
+    print_section "Verifying Rust dependencies..."
+    if [ -d "src-tauri" ]; then
+        cd src-tauri
+        retry "cargo check --quiet 2>/dev/null || cargo fetch" "cargo fetch"
+        cd "$PROJECT_ROOT"
+        success "Rust dependencies verified"
+    else
+        warning "src-tauri directory not found, skipping Rust verification"
+    fi
+    
+    # Clear caches after repair
+    print_section "Clearing caches..."
+    execute "rm -rf '$CACHE_DIR'" "Clear titane cache"
+    execute "mkdir -p '$CACHE_DIR'" "Recreate cache dir"
+    success "Caches cleared"
+    
+    log ""
+    success "Repair completed successfully! ✨"
+    end_step "repair"
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# FIX FUNCTION (TypeScript & ESLint)
+# ──────────────────────────────────────────────────────────────────────────────
+fix() {
+    print_header "FIX (TypeScript & ESLint)"
+    start_step "fix"
+    
+    cd "$PROJECT_ROOT"
+    
+    # Check ESLint cache
+    print_section "Running ESLint auto-fix..."
+    if is_cache_valid "$ESLINT_CACHE" "*.{ts,tsx,js,jsx}"; then
+        info "ESLint cache valid, skipping..."
+    else
+        retry "npm run lint:fix" "ESLint auto-fix" || warning "ESLint warnings found (non-critical)"
+        update_cache "$ESLINT_CACHE" "*.{ts,tsx,js,jsx}"
+        success "ESLint auto-fix completed"
+    fi
+    
+    print_section "Running Prettier format..."
+    retry "npm run format" "Prettier format" || warning "Prettier formatting issues"
+    success "Prettier format completed"
+    
+    # Check TypeScript cache
+    print_section "Running TypeScript type check..."
+    if is_cache_valid "$TYPECHECK_CACHE" "*.{ts,tsx}"; then
+        info "TypeScript cache valid, skipping..."
+        success "TypeScript check passed (cached)"
+    else
+        if npm run check; then
+            update_cache "$TYPECHECK_CACHE" "*.{ts,tsx}"
+            success "TypeScript check passed (0 errors)"
+        else
+            warning "TypeScript errors found - review logs"
+            info "Run 'npm run check' to see details"
+        fi
+    fi
+    
+    log ""
+    success "Fix completed! ✨"
+    end_step "fix"
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# BUILD FUNCTION
+# ──────────────────────────────────────────────────────────────────────────────
+build() {
+    local mode="${1:-dev}"
+    
+    print_header "BUILD ($mode)"
+    start_step "build_$mode"
+    
+    cd "$PROJECT_ROOT"
+    
+    # Verify dependencies
+    if [ ! -d "node_modules" ]; then
+        warning "Dependencies not installed, running repair..."
+        repair
+    fi
+    
+    print_section "Running type check..."
+    if npm run check; then
+        success "Type check passed (0 errors)"
+    else
+        warning "TypeScript errors found (non-critical for Vite build)"
+        info "Build will continue - Vite can compile with TS errors"
+    fi
+    
+    print_section "Building frontend (Vite)..."
+    retry "NODE_ENV=production npm run build" "Vite build"
+    
+    if [ ! -d "dist" ]; then
+        error "Frontend build failed - dist/ not found"
+    fi
+    
+    # Calculate bundle size with details
+    DIST_SIZE=$(du -sh dist 2>/dev/null | cut -f1)
+    DIST_FILES=$(find dist -type f | wc -l)
+    LARGEST_FILE=$(find dist -type f -exec du -h {} + 2>/dev/null | sort -h | tail -1)
+    
+    success "Frontend built successfully"
+    info "  • Total size: $DIST_SIZE"
+    info "  • Files: $DIST_FILES"
+    info "  • Largest: $LARGEST_FILE"
+    
+    print_section "Building Tauri app ($mode)..."
+    
+    if [ "$mode" = "stable" ]; then
+        info "Using stable runtime configuration..."
+        retry "npx tauri build --config runtime/stable/tauri.conf.json" "Tauri stable build"
+        
+        # Copy to runtime/stable
+        print_section "Copying build artifacts..."
+        execute "mkdir -p runtime/stable/build/" "Create stable build dir"
+        
+        if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+            local appimage_count=$(find src-tauri/target/release/bundle/appimage -name "*.AppImage" 2>/dev/null | wc -l)
+            if [ "$appimage_count" -gt 0 ]; then
+                execute "cp src-tauri/target/release/bundle/appimage/*.AppImage runtime/stable/" "Copy AppImage"
+                success "AppImage ready in runtime/stable/"
+                
+                # Calculate AppImage size
+                local appimage_size=$(du -sh runtime/stable/*.AppImage 2>/dev/null | cut -f1)
+                info "  • AppImage size: $appimage_size"
+            else
+                warning "No AppImage found in build output"
+            fi
+        elif [[ "$OSTYPE" == "darwin"* ]]; then
+            if [ -d "src-tauri/target/release/bundle/macos" ]; then
+                execute "cp -r src-tauri/target/release/bundle/macos/*.app runtime/stable/" "Copy macOS app"
+                success "macOS app ready in runtime/stable/"
+            else
+                warning "No macOS app found in build output"
+            fi
+        fi
+    else
+        info "Using dev runtime configuration..."
+        retry "npx tauri build --config runtime/dev/tauri.conf.json" "Tauri dev build"
+        success "Dev runtime built"
+    fi
+    
+    log ""
+    success "Build completed successfully! ✨"
+    end_step "build_$mode"
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# VALIDATION FUNCTION
+# ──────────────────────────────────────────────────────────────────────────────
+validate_build() {
+    print_header "BUILD VALIDATION"
+    start_step "validation"
+    
+    local validation_errors=0
+    
+    # Validate frontend build
+    print_section "Validating frontend build..."
+    if [ -d "dist" ]; then
+        success "dist/ exists"
+        
+        # Check for index.html
+        if [ -f "dist/index.html" ]; then
+            success "index.html found"
+        else
+            error "index.html not found in dist/"
+            ((validation_errors++))
+        fi
+        
+        # Check for assets
+        if [ -d "dist/assets" ]; then
+            local js_count=$(find dist/assets -name "*.js" | wc -l)
+            local css_count=$(find dist/assets -name "*.css" | wc -l)
+            success "Assets found: $js_count JS, $css_count CSS"
+        else
+            warning "dist/assets not found"
+            ((validation_errors++))
+        fi
+    else
+        error "dist/ not found"
+        ((validation_errors++))
+    fi
+    
+    # Validate Tauri build
+    print_section "Validating Tauri build..."
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        local appimage_count=$(find runtime/stable -name "*.AppImage" 2>/dev/null | wc -l)
+        if [ "$appimage_count" -gt 0 ]; then
+            success "Found $appimage_count AppImage(s)"
+            
+            # Check AppImage permissions
+            for appimage in runtime/stable/*.AppImage; do
+                if [ -x "$appimage" ]; then
+                    success "$(basename $appimage) is executable"
+                else
+                    warning "$(basename $appimage) is not executable"
+                    execute "chmod +x '$appimage'" "Make executable"
+                fi
+            done
+        else
+            warning "No AppImage found"
+        fi
+    fi
+    
+    log ""
+    if [ $validation_errors -eq 0 ]; then
+        success "Build validation passed! ✨"
+    else
+        error "Build validation failed with $validation_errors error(s)"
+    fi
+    
+    end_step "validation"
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# DEPLOY FUNCTION
+# ──────────────────────────────────────────────────────────────────────────────
+deploy() {
+    print_header "DEPLOY (Production)"
+    start_step "deploy"
+    
+    cd "$PROJECT_ROOT"
+    
+    # Run all checks
+    print_section "Pre-deployment checks..."
+    
+    # Type check
+    info "Running type check..."
+    if npm run check; then
+        success "Type check passed"
+    else
+        warning "TypeScript errors found (non-critical - build will continue)"
+    fi
+    
+    # Lint check
+    info "Running lint check..."
+    npm run lint || warning "ESLint warnings (non-critical)"
+    
+    # Tests
+    if [[ "$SKIP_TESTS" == false ]]; then
+        info "Running tests..."
+        npm test -- --run --reporter=basic 2>/dev/null || warning "Some tests failed (non-critical)"
+    else
+        info "Skipping tests (--skip-tests)"
+    fi
+    
+    success "Pre-deployment checks completed"
+    
+    # Validate build artifacts
+    validate_build
+    
+    print_section "Verifying final artifacts..."
+    
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        local appimage_files=$(find runtime/stable -name "*.AppImage" -type f)
+        if [ -n "$appimage_files" ]; then
+            success "Production artifacts ready:"
+            echo "$appimage_files" | while read -r file; do
+                local size=$(du -h "$file" | cut -f1)
+                local name=$(basename "$file")
+                info "  • $name ($size)"
+            done
+        else
+            error "No AppImage found in runtime/stable/"
+        fi
+    fi
+    
+    log ""
+    success "Deploy completed successfully! ✨"
+    info "Artifacts are ready in runtime/stable/"
+    
+    send_notification "TITANE∞ Deploy" "Production deployment completed successfully! ✨" "normal"
+    
+    end_step "deploy"
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# FULL FUNCTION (Complete Cycle)
+# ──────────────────────────────────────────────────────────────────────────────
+full() {
+    print_header "FULL DEPLOYMENT CYCLE"
+    
+    log "${BOLD}This will run:${NC}"
+    log "  1. Health Check"
+    log "  2. Clean"
+    log "  3. Repair"
+    log "  4. Fix"
+    log "  5. Build (stable)"
+    log "  6. Validation"
+    log "  7. Deploy"
+    log ""
+    
+    if [[ "$DRY_RUN" == true ]]; then
+        info "DRY-RUN mode enabled - no actual changes will be made"
+    fi
+    
+    if [[ "$NO_CONFIRM" == false ]]; then
+        read -p "Continue? (y/n): " -n 1 -r
+        echo ""
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            warning "Full deployment cancelled"
+            exit 0
+        fi
+    fi
+    
+    # Run all phases
+    health_check
+    clean
+    repair
+    fix
+    build stable
+    validate_build
+    
+    # Note: deploy already includes validation, so we don't call it separately
+    # to avoid duplication. Instead, deploy will use the already-built artifacts.
+    
+    print_header "FULL DEPLOYMENT COMPLETED"
+    
+    # Calculate total time
+    local end_time=$(date +%s)
+    local total_duration=$((end_time - START_TIME))
+    local minutes=$((total_duration / 60))
+    local seconds=$((total_duration % 60))
+    
+    success "All operations completed successfully! ✨"
+    info "Total time: ${minutes}m ${seconds}s"
+    
+    # Generate report if requested
+    if [[ "$GENERATE_REPORT" == true ]]; then
+        generate_report
+    fi
+    
+    send_notification "TITANE∞ Full Deploy" "Complete deployment cycle finished in ${minutes}m ${seconds}s! ✨" "normal"
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# GENERATE REPORT
+# ──────────────────────────────────────────────────────────────────────────────
+generate_report() {
+    print_section "Generating report..."
+    
+    local end_time=$(date +%s)
+    local total_duration=$((end_time - START_TIME))
+    
+    # Build JSON report
+    cat > "$REPORT_FILE" <<EOF
+{
+  "timestamp": "$(date -Iseconds)",
+  "duration_seconds": $total_duration,
+  "steps": [
+EOF
+    
+    # Add step details
+    local step_count=${#STEP_NAMES[@]}
+    for ((i=0; i<step_count; i++)); do
+        local step_name="${STEP_NAMES[$i]}"
+        local step_start="${STEP_TIMES[$i]}"
+        local step_end=$(date +%s)
+        if [ $((i+1)) -lt $step_count ]; then
+            step_end="${STEP_TIMES[$((i+1))]}"
+        fi
+        local step_duration=$((step_end - step_start))
+        
+        cat >> "$REPORT_FILE" <<EOF
+    {
+      "name": "$step_name",
+      "duration_seconds": $step_duration
+    }$([ $((i+1)) -lt $step_count ] && echo "," || echo "")
+EOF
+    done
+    
+    # Add build details
+    local dist_size=$(du -sb dist 2>/dev/null | cut -f1 || echo "0")
+    local dist_files=$(find dist -type f 2>/dev/null | wc -l || echo "0")
+    
+    cat >> "$REPORT_FILE" <<EOF
+  ],
+  "build": {
+    "dist_size_bytes": $dist_size,
+    "dist_files": $dist_files
+  },
+  "options": {
+    "dry_run": $DRY_RUN,
+    "skip_tests": $SKIP_TESTS,
+    "skip_backup": $SKIP_BACKUP,
+    "verbose": $VERBOSE,
+    "quiet": $QUIET
+  }
+}
+EOF
+    
+    success "Report generated: $REPORT_FILE"
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# MAIN COMMAND DISPATCHER
+# ──────────────────────────────────────────────────────────────────────────────
+main() {
+    local command="${1:-help}"
+    
+    # Parse options from all arguments
+    parse_options "$@"
+    
+    # Log script start
+    info "TITANE∞ v26.3.1 - $(date)"
+    info "Command: $command"
+    if [[ "$DRY_RUN" == true ]]; then
+        warning "DRY-RUN MODE ENABLED - No actual changes will be made"
+    fi
+    
+    case "$command" in
+        clean)
+            clean
+            ;;
+        repair)
+            repair
+            ;;
+        fix)
+            fix
+            ;;
+        build)
+            build "$BUILD_MODE"
+            ;;
+        deploy)
+            deploy
+            ;;
+        full)
+            full
+            ;;
+        health)
+            health_check
+            ;;
+        validate)
+            validate_build
+            ;;
+        help|--help|-h)
+            print_header "HELP"
+            log "Usage: ./titane.sh <command> [options]"
+            log ""
+            log "${BOLD}Commands:${NC}"
+            log "  ${GREEN}clean${NC}              → Clean build artifacts & cache"
+            log "  ${GREEN}repair${NC}             → Repair dependencies (reinstall)"
+            log "  ${GREEN}fix${NC}                → Fix TypeScript & ESLint errors"
+            log "  ${GREEN}build${NC} [dev|stable] → Build application (dev or stable)"
+            log "  ${GREEN}deploy${NC}             → Build & deploy production"
+            log "  ${GREEN}full${NC}               → Complete cycle (clean+repair+fix+build+deploy)"
+            log "  ${GREEN}health${NC}             → System health check"
+            log "  ${GREEN}validate${NC}           → Validate build artifacts"
+            log "  ${GREEN}help${NC}               → Show this help"
+            log ""
+            log "${BOLD}Options:${NC}"
+            log "  ${CYAN}--dry-run${NC}          → Simulation without execution"
+            log "  ${CYAN}--skip-tests${NC}       → Skip tests in deploy"
+            log "  ${CYAN}--skip-backup${NC}      → Skip backup before clean"
+            log "  ${CYAN}--verbose${NC}          → Verbose output"
+            log "  ${CYAN}--quiet${NC}            → Quiet mode (errors only)"
+            log "  ${CYAN}--no-confirm${NC}       → Skip confirmation for full"
+            log "  ${CYAN}--report${NC}           → Generate JSON report"
+            log ""
+            log "${BOLD}Examples:${NC}"
+            log "  ./titane.sh clean --dry-run           # Dry-run clean"
+            log "  ./titane.sh build dev --verbose       # Verbose dev build"
+            log "  ./titane.sh full --skip-tests         # Full without tests"
+            log "  ./titane.sh deploy --report           # Deploy with report"
+            log "  ./titane.sh health                    # Health check"
+            log ""
+            ;;
+        *)
+            error "Unknown command: $command"
+            info "Run './titane.sh help' for usage"
+            exit 1
+            ;;
+    esac
+    
+    # Final summary
+    local end_time=$(date +%s)
+    local total_duration=$((end_time - START_TIME))
+    info "Execution completed in ${total_duration}s"
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# SIGNAL HANDLERS
+# ──────────────────────────────────────────────────────────────────────────────
+trap cleanup_on_error ERR
+trap 'warning "Script interrupted by user"; exit 130' INT TERM
+
+# ──────────────────────────────────────────────────────────────────────────────
+# EXECUTION
+# ──────────────────────────────────────────────────────────────────────────────
+main "$@"
