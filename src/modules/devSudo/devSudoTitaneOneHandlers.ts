@@ -906,7 +906,8 @@ export async function handleTitaneOneSingularityScan(): Promise<DevSudoResult> {
 
   output += '━━━ ÉTAT SINGULARITY ━━━\n\n';
   output += `🧠 Cohérence Unifiée: ${result.internalVision.globalCoherence}%\n`;
-  output += `🔮 Singularity Layer Health: ${result.internalVision.layers[5]!.health.toUpperCase()}\n`;
+  const singularityLayer = result.internalVision.layers[5];
+  output += `🔮 Singularity Layer Health: ${singularityLayer?.health.toUpperCase() ?? 'UNKNOWN'}\n`;
   output += `⚙️  20 Moteurs: ${result.internalVision.activeEngines}/${result.internalVision.totalEngines} opérationnels\n\n`;
 
   output += '━━━ MATRICE DE COHÉRENCE (6 x 20) ━━━\n\n';

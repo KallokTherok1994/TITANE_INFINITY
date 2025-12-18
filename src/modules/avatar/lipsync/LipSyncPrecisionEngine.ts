@@ -351,7 +351,8 @@ export class LipSyncPrecisionEngine {
   public predictNextPhoneme(current: Phoneme, _history: Phoneme[]): Phoneme {
     // Anticipation simple: si queue non vide, retourne suivant
     if (this.phonemeQueue.length > 0) {
-      return this.phonemeQueue[0]!;
+      const next = this.phonemeQueue[0];
+      if (next) return next;
     }
 
     // Sinon, prolonge phonème actuel

@@ -496,7 +496,7 @@ export class MemorySelfHealEngine {
     const byLayer = toRepair.reduce(
       (acc, c) => {
         if (!acc[c.layer]) acc[c.layer] = [];
-        acc[c.layer]!.push(c);
+        acc[c.layer]?.push(c);
         return acc;
       },
       {} as Record<string, MemoryCorruption[]>

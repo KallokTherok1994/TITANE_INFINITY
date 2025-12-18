@@ -82,7 +82,9 @@ class MCPCognitiveIntegrationClass {
 
       if (criticalViolations.length > 0) {
         await MCPOrchestrator.cancelJob(job.id, 'Critical law violations detected');
-        throw new Error(`MCP blocked request: ${criticalViolations[0]!.description}`);
+        const firstViolation = criticalViolations[0];
+        const description = firstViolation?.description ?? 'Unknown violation';
+        throw new Error(`MCP blocked request: ${description}`);
       }
 
       // 4. Approve job

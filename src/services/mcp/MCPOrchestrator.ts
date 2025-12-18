@@ -140,6 +140,21 @@ const AI_MODELS: Record<string, AIModel> = {
   },
 };
 
+/**
+ * Helper function to safely get fallback AI model with proper typing
+ */
+function getFallbackModel(): AIModel {
+  const models = Object.values(AI_MODELS);
+  if (models.length === 0) {
+    throw new Error('No AI models available');
+  }
+  const fallback = models[0];
+  if (!fallback) {
+    throw new Error('Fallback model is undefined');
+  }
+  return fallback;
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // MCP ORCHESTRATOR CLASS
 // ═══════════════════════════════════════════════════════════════════════════
@@ -632,21 +647,17 @@ class MCPOrchestratorClass implements MCPOperations {
     // Priority: Security > Complexity > Speed
     if (job.permissions.requiresSensitiveData) {
       selectedModel =
-        AI_MODELS['phi-3.5-mini'] ??
-        AI_MODELS['claude-haiku'] ??
-        Object.values(AI_MODELS)[0]!;
+        AI_MODELS['phi-3.5-mini'] ?? AI_MODELS['claude-haiku'] ?? getFallbackModel();
       reasoning = 'Local model required for sensitive data';
     } else if (job.evaluation.cognitiveLoad > 0.7) {
       selectedModel =
-        AI_MODELS['claude-sonnet'] ??
-        AI_MODELS['claude-haiku'] ??
-        Object.values(AI_MODELS)[0]!;
+        AI_MODELS['claude-sonnet'] ?? AI_MODELS['claude-haiku'] ?? getFallbackModel();
       reasoning = 'High complexity task requires deep model';
     } else if (job.priority === JobPriority.CRITICAL) {
-      selectedModel = AI_MODELS['claude-haiku'] ?? Object.values(AI_MODELS)[0]!;
+      selectedModel = AI_MODELS['claude-haiku'] ?? getFallbackModel();
       reasoning = 'Fast response required for critical priority';
     } else {
-      selectedModel = AI_MODELS['phi-3.5-mini'] ?? Object.values(AI_MODELS)[0]!;
+      selectedModel = AI_MODELS['phi-3.5-mini'] ?? getFallbackModel();
       reasoning = 'Default local model for standard tasks';
     }
 

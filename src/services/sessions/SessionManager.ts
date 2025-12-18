@@ -263,7 +263,8 @@ export class SessionManager {
     if (this.currentSessionId === id) {
       // Sélectionner la session la plus récente
       const sessions = this.listSessions();
-      this.currentSessionId = sessions.length > 0 ? sessions[0]!.id : null;
+      const firstSession = sessions[0];
+      this.currentSessionId = firstSession ? firstSession.id : null;
     }
 
     this.saveToStorage();

@@ -1188,12 +1188,15 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
       const systemIndex = cloned.findIndex(msg => msg.role === 'system');
 
       if (systemIndex >= 0) {
-        cloned[systemIndex] = {
-          ...cloned[systemIndex]!,
-          role: 'system' as const,
-          content: prompt,
-          timestamp: Date.now(),
-        };
+        const existing = cloned[systemIndex];
+        if (existing) {
+          cloned[systemIndex] = {
+            ...existing,
+            role: 'system' as const,
+            content: prompt,
+            timestamp: Date.now(),
+          };
+        }
       } else {
         cloned.unshift({ role: 'system', content: prompt, timestamp: Date.now() });
       }

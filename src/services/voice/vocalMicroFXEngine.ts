@@ -196,11 +196,12 @@ export class VocalMicroFXEngine {
         ) as MicroExpressionType) || preferredTypes[0];
     } else {
       // Default → random from preferred
-      selectedType = this.pickRandom(preferredTypes);
+      selectedType = (this.pickRandom(preferredTypes) ??
+        preferredTypes[0]) as MicroExpressionType;
     }
 
     // Obtenir texte
-    const expressionText = this.pickRandom(MICRO_EXPRESSIONS[selectedType]);
+    const expressionText = this.pickRandom(MICRO_EXPRESSIONS[selectedType]) ?? '';
 
     return {
       type: selectedType,
@@ -261,7 +262,7 @@ export class VocalMicroFXEngine {
       if (prefixType) {
         result.prefix = {
           type: prefixType,
-          text: this.pickRandom(MICRO_EXPRESSIONS[prefixType]),
+          text: this.pickRandom(MICRO_EXPRESSIONS[prefixType]) ?? '',
           position: 'before',
           confidence: emotionState.confidence,
         };
@@ -277,7 +278,7 @@ export class VocalMicroFXEngine {
       if (inlineType) {
         result.inline = {
           type: inlineType,
-          text: this.pickRandom(MICRO_EXPRESSIONS[inlineType]),
+          text: this.pickRandom(MICRO_EXPRESSIONS[inlineType]) ?? '',
           position: 'inline',
           confidence: emotionState.confidence,
         };
@@ -288,12 +289,15 @@ export class VocalMicroFXEngine {
     if (emotionState.mood === 'happy' || emotionState.mood === 'excited') {
       if (Math.random() < 0.3) {
         const suffixType = this.pickRandom(['smile', 'agreement']);
-        result.suffix = {
-          type: suffixType as MicroExpressionType,
-          text: this.pickRandom(MICRO_EXPRESSIONS[suffixType as MicroExpressionType]),
-          position: 'after',
-          confidence: emotionState.confidence,
-        };
+        if (suffixType) {
+          result.suffix = {
+            type: suffixType as MicroExpressionType,
+            text:
+              this.pickRandom(MICRO_EXPRESSIONS[suffixType as MicroExpressionType]) ?? '',
+            position: 'after',
+            confidence: emotionState.confidence,
+          };
+        }
       }
     }
 
@@ -319,8 +323,9 @@ export class VocalMicroFXEngine {
   /**
    * Pick random element from array
    */
-  private pickRandom<T>(arr: T[]): T {
-    return arr[Math.floor(Math.random() * arr.length)]!;
+  private pickRandom<T>(arr: T[]): T | undefined {
+    if (arr.length === 0) return undefined;
+    return arr[Math.floor(Math.random() * arr.length)];
   }
 }
 

@@ -292,9 +292,10 @@ export const useAuraOrchestrator = create<AuraOrchestratorState>()(
           const currentIndex = qualities.indexOf(currentQuality);
 
           if (currentIndex > 0) {
-            get().setQuality(qualities[currentIndex - 1]!);
+            const newQuality = qualities[currentIndex - 1] ?? 'low';
+            get().setQuality(newQuality);
             console.warn(
-              `🎨 Aura: Auto-downgrade quality to ${qualities[currentIndex - 1]} (low FPS detected)`
+              `🎨 Aura: Auto-downgrade quality to ${newQuality} (low FPS detected)`
             );
           }
         }

@@ -212,7 +212,10 @@ export const usePerformanceStore = create<PerformanceEngineStore>()(
           set(state => {
             const idx = state.profileSessions.findIndex(s => s.id === sessionId);
             if (idx !== -1) {
-              state.profileSessions[idx]!.endedAt = Date.now();
+              const session = state.profileSessions[idx];
+              if (session) {
+                session.endedAt = Date.now();
+              }
             }
             state.isProfiling = state.profileSessions.some(s => !s.endedAt);
           });

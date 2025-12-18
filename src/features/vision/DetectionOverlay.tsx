@@ -51,7 +51,7 @@ export const DetectionOverlay: React.FC<DetectionOverlayProps> = ({
   const [overlayEnabled, setOverlayEnabled] = useState(true);
 
   // Pour l'instant, utilise des données mock
-  // TODO: Activer quand detections et isActive existent dans le store
+  // FUTURE: Activate when detections and isActive exist in store
   // const { detections, isActive } = useVisionStore();
   const isActive = false; // Mock
   const detections: Detection[] = useMemo(() => [], []); // Mock - vide pour l'instant
@@ -288,5 +288,5 @@ function getColorByLabel(label: string): string {
   };
 
   const lowerLabel = label?.toLowerCase() || 'unknown';
-  return colors[lowerLabel]! ?? colors.unknown;
+  return colors[lowerLabel] || colors.unknown || '#64748b';
 }
