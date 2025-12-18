@@ -16,11 +16,12 @@
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import type { UnifiedMemoryEntry } from '../UnifiedMemory';
+import { MemoryTier } from '../../mcp/mcp.types';
 import path from 'path';
 import fs from 'fs';
 
 // Check if better-sqlite3 bindings are available
-let SQLiteVectorStore: typeof import('../SQLiteVectorStore').SQLiteVectorStore;
+let SQLiteVectorStoreCtor: typeof import('../SQLiteVectorStore').SQLiteVectorStore;
 let hasSQLiteBindings = false;
 
 try {
@@ -29,7 +30,7 @@ try {
   require('better-sqlite3');
   hasSQLiteBindings = true;
   // eslint-disable-next-line @typescript-eslint/no-var-requires -- Conditional import based on runtime check
-  SQLiteVectorStore = require('../SQLiteVectorStore').SQLiteVectorStore;
+  SQLiteVectorStoreCtor = require('../SQLiteVectorStore').SQLiteVectorStore;
 } catch {
   // Native bindings not available - tests will be skipped
   hasSQLiteBindings = false;
@@ -37,7 +38,7 @@ try {
 
 // Use describe.skipIf to skip all tests when bindings are unavailable
 describe.skipIf(!hasSQLiteBindings)('SQLiteVectorStore', () => {
-  let store: SQLiteVectorStore;
+  let store: import('../SQLiteVectorStore').SQLiteVectorStore;
   const testDbPath = path.join(__dirname, 'test-vector-store.db');
 
   beforeEach(async () => {
@@ -46,7 +47,7 @@ describe.skipIf(!hasSQLiteBindings)('SQLiteVectorStore', () => {
       fs.unlinkSync(testDbPath);
     }
 
-    store = new SQLiteVectorStore({ dbPath: testDbPath });
+    store = new SQLiteVectorStoreCtor({ dbPath: testDbPath });
     await store.initialize();
   });
 
@@ -69,12 +70,12 @@ describe.skipIf(!hasSQLiteBindings)('SQLiteVectorStore', () => {
     const now = Date.now();
     return {
       id: `test-${Math.random().toString(36).substr(2, 9)}`,
-      tier: 'SHORT_TERM',
+      tier: MemoryTier.SHORT_TERM,
       type: 'fact',
       owner: 'test_user',
       summary: 'Test summary',
       details: 'Test details',
-      embedding: new Array(384).fill(0).map(() => Math.random()),
+      embedding: Array.from({ length: 384 }, () => Math.random()),
       tags: ['test'],
       source: {
         type: 'manual',
@@ -95,20 +96,19 @@ describe.skipIf(!hasSQLiteBindings)('SQLiteVectorStore', () => {
       isStructuring: true,
       isStable: true,
       isReusable: true,
-      supersedes: null,
       ...overrides,
     };
   };
 
   describe('Initialization', () => {
     it('should initialize successfully', async () => {
-      const newStore = new SQLiteVectorStore({ dbPath: ':memory:' });
+      const newStore = new SQLiteVectorStoreCtor({ dbPath: ':memory:' });
       await expect(newStore.initialize()).resolves.not.toThrow();
       await newStore.close();
     });
 
     it('should create tables on initialization', async () => {
-      const newStore = new SQLiteVectorStore({ dbPath: ':memory:' });
+      const newStore = new SQLiteVectorStoreCtor({ dbPath: ':memory:' });
       await newStore.initialize();
 
       const stats = await newStore.getStats();
@@ -143,7 +143,7 @@ describe.skipIf(!hasSQLiteBindings)('SQLiteVectorStore', () => {
     });
 
     it('should preserve embedding vectors', async () => {
-      const embedding = new Array(384).fill(0).map((_, i) => i / 384);
+      const embedding = Array.from({ length: 384 }, (_, i) => i / 384);
       const entry = createTestEntry({ embedding });
 
       await store.add(entry);
@@ -218,14 +218,14 @@ describe.skipIf(!hasSQLiteBindings)('SQLiteVectorStore', () => {
 
     it('should delete entries matching filters', async () => {
       await store.addBatch([
-        createTestEntry({ importance: 0.2, tier: 'SHORT_TERM' }),
-        createTestEntry({ importance: 0.3, tier: 'SHORT_TERM' }),
-        createTestEntry({ importance: 0.8, tier: 'LONG_TERM' }),
+        createTestEntry({ importance: 0.2, tier: MemoryTier.SHORT_TERM }),
+        createTestEntry({ importance: 0.3, tier: MemoryTier.SHORT_TERM }),
+        createTestEntry({ importance: 0.8, tier: MemoryTier.LONG_TERM }),
       ]);
 
       const deleted = await store.deleteWhere({
         importance: { $lt: 0.5 },
-        tier: 'SHORT_TERM',
+        tier: MemoryTier.SHORT_TERM,
       });
 
       expect(deleted).toBe(2);
@@ -238,9 +238,9 @@ describe.skipIf(!hasSQLiteBindings)('SQLiteVectorStore', () => {
   describe('Search Operations', () => {
     beforeEach(async () => {
       const embeddings = [
-        new Array(384).fill(1).map(() => Math.random()),
-        new Array(384).fill(1).map(() => Math.random()),
-        new Array(384).fill(1).map(() => Math.random()),
+        Array.from({ length: 384 }, () => Math.random()),
+        Array.from({ length: 384 }, () => Math.random()),
+        Array.from({ length: 384 }, () => Math.random()),
       ];
 
       await store.addBatch([
@@ -266,7 +266,7 @@ describe.skipIf(!hasSQLiteBindings)('SQLiteVectorStore', () => {
     });
 
     it('should search by embedding vector', async () => {
-      const queryEmbedding = new Array(384).fill(0).map(() => Math.random());
+      const queryEmbedding = Array.from({ length: 384 }, () => Math.random());
       const results = await store.search(queryEmbedding, 5, {});
 
       expect(results.length).toBeGreaterThan(0);
@@ -280,7 +280,7 @@ describe.skipIf(!hasSQLiteBindings)('SQLiteVectorStore', () => {
     });
 
     it('should filter by type', async () => {
-      const queryEmbedding = new Array(384).fill(0).map(() => Math.random());
+      const queryEmbedding = Array.from({ length: 384 }, () => Math.random());
       const results = await store.search(queryEmbedding, 5, {
         types: ['milestone'],
       });
@@ -290,18 +290,18 @@ describe.skipIf(!hasSQLiteBindings)('SQLiteVectorStore', () => {
     });
 
     it('should filter by tier', async () => {
-      await store.add(createTestEntry({ tier: 'LONG_TERM', importance: 0.9 }));
+      await store.add(createTestEntry({ tier: MemoryTier.LONG_TERM, importance: 0.9 }));
 
-      const queryEmbedding = new Array(384).fill(0).map(() => Math.random());
+      const queryEmbedding = Array.from({ length: 384 }, () => Math.random());
       const results = await store.search(queryEmbedding, 10, {
-        tiers: ['LONG_TERM'],
+        tiers: [MemoryTier.LONG_TERM],
       });
 
-      expect(results.every(r => r.entry.tier === 'LONG_TERM')).toBe(true);
+      expect(results.every(r => r.entry.tier === MemoryTier.LONG_TERM)).toBe(true);
     });
 
     it('should filter by minimum importance', async () => {
-      const queryEmbedding = new Array(384).fill(0).map(() => Math.random());
+      const queryEmbedding = Array.from({ length: 384 }, () => Math.random());
       const results = await store.search(queryEmbedding, 10, {
         minImportance: 0.8,
       });
@@ -310,18 +310,20 @@ describe.skipIf(!hasSQLiteBindings)('SQLiteVectorStore', () => {
     });
 
     it('should limit results', async () => {
-      const queryEmbedding = new Array(384).fill(0).map(() => Math.random());
+      const queryEmbedding = Array.from({ length: 384 }, () => Math.random());
       const results = await store.search(queryEmbedding, 2, {});
 
       expect(results.length).toBeLessThanOrEqual(2);
     });
 
     it('should sort by similarity score', async () => {
-      const queryEmbedding = new Array(384).fill(0).map(() => Math.random());
+      const queryEmbedding = Array.from({ length: 384 }, () => Math.random());
       const results = await store.search(queryEmbedding, 10, {});
 
       for (let i = 1; i < results.length; i++) {
-        expect(results[i - 1].similarity).toBeGreaterThanOrEqual(results[i].similarity);
+        const prev = results[i - 1].similarity ?? 0;
+        const curr = results[i].similarity ?? 0;
+        expect(prev).toBeGreaterThanOrEqual(curr);
       }
     });
   });
@@ -329,11 +331,23 @@ describe.skipIf(!hasSQLiteBindings)('SQLiteVectorStore', () => {
   describe('Statistics', () => {
     beforeEach(async () => {
       await store.addBatch([
-        createTestEntry({ tier: 'SHORT_TERM', type: 'fact', importance: 0.3 }),
-        createTestEntry({ tier: 'SHORT_TERM', type: 'preference', importance: 0.5 }),
-        createTestEntry({ tier: 'MEDIUM_TERM', type: 'fact', importance: 0.7 }),
-        createTestEntry({ tier: 'LONG_TERM', type: 'milestone', importance: 0.9 }),
-        createTestEntry({ tier: 'META_MEMORY', type: 'milestone', importance: 1.0 }),
+        createTestEntry({ tier: MemoryTier.SHORT_TERM, type: 'fact', importance: 0.3 }),
+        createTestEntry({
+          tier: MemoryTier.SHORT_TERM,
+          type: 'preference',
+          importance: 0.5,
+        }),
+        createTestEntry({ tier: MemoryTier.MEDIUM_TERM, type: 'fact', importance: 0.7 }),
+        createTestEntry({
+          tier: MemoryTier.LONG_TERM,
+          type: 'milestone',
+          importance: 0.9,
+        }),
+        createTestEntry({
+          tier: MemoryTier.META_MEMORY,
+          type: 'milestone',
+          importance: 1.0,
+        }),
       ]);
     });
 

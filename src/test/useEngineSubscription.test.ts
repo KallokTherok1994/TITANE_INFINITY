@@ -47,14 +47,17 @@ const createCoreMock = () => ({
 });
 
 describe('useEngineSubscription Hook', () => {
-  let coreMock: ReturnType<typeof useTitaneCore>;
+  type TitaneCore = ReturnType<typeof useTitaneCore>;
+  type CoreMock = ReturnType<typeof createCoreMock>;
+
+  let coreMock: CoreMock;
 
   beforeEach(() => {
     vi.clearAllMocks();
     vi.useFakeTimers();
     resetEngineStore();
-    coreMock = createCoreMock() as ReturnType<typeof useTitaneCore>;
-    mockedUseTitaneCore.mockReturnValue(coreMock);
+    coreMock = createCoreMock();
+    mockedUseTitaneCore.mockReturnValue(coreMock as unknown as TitaneCore);
   });
 
   afterEach(() => {

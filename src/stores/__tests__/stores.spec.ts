@@ -9,7 +9,7 @@ import { useVisualStore } from '../visualStore';
 import { usePanelsStore } from '../panelsStore';
 import { useEffectsStore } from '../effectsStore';
 import type { VisualState } from '@/visual-engine/StateManager';
-import type { EffectType } from '@/visual-engine/effects/EffectsOrchestrator';
+import type { EffectType } from '@/visual-engine/EffectsOrchestrator';
 
 describe('visualStore', () => {
   beforeEach(() => {
@@ -33,17 +33,7 @@ describe('visualStore', () => {
   it('should update currentState and track previousState', () => {
     const { result } = renderHook(() => useVisualStore());
 
-    const newState: VisualState = {
-      id: 'focus',
-      name: 'Focus',
-      description: 'Focus mode',
-      background: '#1a1a2e',
-      primary: '#3b82f6',
-      secondary: '#8b5cf6',
-      accent: '#06b6d4',
-      text: '#ffffff',
-      glow: '0 0 20px rgba(59, 130, 246, 0.5)',
-    };
+    const newState: VisualState = 'focus';
 
     act(() => {
       result.current.setState(newState, 500);
@@ -101,29 +91,9 @@ describe('visualStore', () => {
   it('should track state history', () => {
     const { result } = renderHook(() => useVisualStore());
 
-    const state1: VisualState = {
-      id: 'idle',
-      name: 'Idle',
-      description: 'Idle state',
-      background: '#0f172a',
-      primary: '#64748b',
-      secondary: '#475569',
-      accent: '#94a3b8',
-      text: '#e2e8f0',
-      glow: '0 0 10px rgba(148, 163, 184, 0.3)',
-    };
+    const state1: VisualState = 'idle';
 
-    const state2: VisualState = {
-      id: 'focus',
-      name: 'Focus',
-      description: 'Focus mode',
-      background: '#1a1a2e',
-      primary: '#3b82f6',
-      secondary: '#8b5cf6',
-      accent: '#06b6d4',
-      text: '#ffffff',
-      glow: '0 0 20px rgba(59, 130, 246, 0.5)',
-    };
+    const state2: VisualState = 'focus';
 
     act(() => {
       result.current.setState(state1, 500);
@@ -456,10 +426,11 @@ describe('effectsStore', () => {
 
     const effect = {
       id: 'test-effect-1',
-      type: 'glow' as EffectType,
+      type: 'auraGlow' as EffectType,
+      priority: 'low' as const,
       startTime: Date.now(),
-      duration: 1000,
-      intensity: 0.8,
+      endTime: Date.now() + 1000,
+      gpuIntensive: false,
     };
 
     act(() => {
@@ -475,10 +446,11 @@ describe('effectsStore', () => {
 
     const effect = {
       id: 'test-effect-1',
-      type: 'glow' as EffectType,
+      type: 'auraGlow' as EffectType,
+      priority: 'low' as const,
       startTime: Date.now(),
-      duration: 1000,
-      intensity: 0.8,
+      endTime: Date.now() + 1000,
+      gpuIntensive: false,
     };
 
     act(() => {
@@ -498,10 +470,12 @@ describe('effectsStore', () => {
     const { result } = renderHook(() => useEffectsStore());
 
     const newMetrics = {
+      activeCount: 2,
+      queuedCount: 0,
       totalTriggered: 50,
       totalBlocked: 5,
-      averageIntensity: 0.75,
       gpuLoad: 0.4,
+      averageFrameTime: 16.67,
     };
 
     act(() => {
@@ -514,14 +488,15 @@ describe('effectsStore', () => {
   it('should track effect history', () => {
     const { result } = renderHook(() => useEffectsStore());
 
+    const startTime = Date.now();
     const historyEntry = {
       id: 'test-effect-1',
-      type: 'glow' as EffectType,
-      timestamp: Date.now(),
+      type: 'auraGlow' as EffectType,
+      priority: 'low' as const,
+      startTime,
+      endTime: startTime + 1000,
       duration: 1000,
-      intensity: 0.8,
       wasBlocked: false,
-      trigger: 'user-interaction',
     };
 
     act(() => {
@@ -535,24 +510,25 @@ describe('effectsStore', () => {
   it('should update stats automatically', () => {
     const { result } = renderHook(() => useEffectsStore());
 
+    const now = Date.now();
     const historyEntry1 = {
       id: 'test-effect-1',
-      type: 'glow' as EffectType,
-      timestamp: Date.now(),
+      type: 'auraGlow' as EffectType,
+      priority: 'low' as const,
+      startTime: now,
+      endTime: now + 1000,
       duration: 1000,
-      intensity: 0.8,
       wasBlocked: false,
-      trigger: 'user-interaction',
     };
 
     const historyEntry2 = {
       id: 'test-effect-2',
-      type: 'pulse' as EffectType,
-      timestamp: Date.now(),
+      type: 'particlesBurst' as EffectType,
+      priority: 'high' as const,
+      startTime: now + 50,
+      endTime: now + 850,
       duration: 800,
-      intensity: 0.6,
       wasBlocked: false,
-      trigger: 'state-change',
     };
 
     act(() => {
@@ -567,13 +543,13 @@ describe('effectsStore', () => {
   it('should toggle effect type', () => {
     const { result } = renderHook(() => useEffectsStore());
 
-    const initialEnabled = result.current.preferences.enabledEffects.has('glow');
+    const initialEnabled = result.current.preferences.enabledEffects.has('auraGlow');
 
     act(() => {
-      result.current.toggleEffect('glow');
+      result.current.toggleEffect('auraGlow');
     });
 
-    const afterToggle = result.current.preferences.enabledEffects.has('glow');
+    const afterToggle = result.current.preferences.enabledEffects.has('auraGlow');
     expect(afterToggle).toBe(!initialEnabled);
   });
 
@@ -666,10 +642,11 @@ describe('Stores Integration Tests', () => {
 
       effectsResult.current.addEffect({
         id: 'test-effect',
-        type: 'glow' as EffectType,
+        type: 'auraGlow' as EffectType,
+        priority: 'low' as const,
         startTime: Date.now(),
-        duration: 1000,
-        intensity: 0.8,
+        endTime: Date.now() + 1000,
+        gpuIntensive: false,
       });
     });
 

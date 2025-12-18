@@ -194,9 +194,12 @@ export const openaiProvider: AIProvider = {
   async generate(
     message: string,
     history: AIMessage[] = [],
-    config?: Partial<OpenAIConfig>
+    config?: unknown
   ): Promise<AIResponse> {
-    const finalConfig = { ...DEFAULT_CONFIG, ...config };
+    const finalConfig = {
+      ...DEFAULT_CONFIG,
+      ...(config as Partial<OpenAIConfig> | undefined),
+    };
 
     // ✨ v21 Phase 3: Cache intelligent pour réduire coûts API
     return withCache(

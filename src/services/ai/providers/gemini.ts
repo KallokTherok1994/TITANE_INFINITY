@@ -74,10 +74,13 @@ export const geminiProvider: AIProvider = {
   async generate(
     message: string,
     history: AIMessage[] = [],
-    config?: Partial<GeminiConfig>
+    config?: unknown
   ): Promise<AIResponse> {
     const startTime = Date.now();
-    const finalConfig = { ...DEFAULT_CONFIG, ...config };
+    const finalConfig = {
+      ...DEFAULT_CONFIG,
+      ...(config as Partial<GeminiConfig> | undefined),
+    };
 
     // ✨ v21 Phase 3: Cache intelligent pour réduire coûts API
     return withCache(

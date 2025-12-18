@@ -11,7 +11,7 @@ import { vi, beforeEach, afterEach, describe, test, expect } from 'vitest';
 // Mock Tauri API inline (pattern ConversationManager)
 vi.mock('@tauri-apps/api/core', () => ({
   invoke: vi.fn((cmd: string, args?: any) => {
-    if (cmd === 'vector_store_init') return Promise.resolve({ storeId: 'test-123' });
+    if (cmd === 'vector_store_init') return Promise.resolve('test-123');
     if (cmd === 'vector_store_insert') return Promise.resolve({ success: true });
     if (cmd === 'vector_search') {
       return Promise.resolve([
@@ -65,7 +65,11 @@ describe('VectorStoreClient P0 Tests', () => {
 
   beforeEach(async () => {
     vi.clearAllMocks();
-    client = new VectorStoreClient({ dbPath: ':memory:' });
+    client = new VectorStoreClient({
+      dbPath: ':memory:',
+      tableName: 'unified_memories',
+      dimensions: 384,
+    });
     await client.initialize();
   });
 
@@ -76,7 +80,11 @@ describe('VectorStoreClient P0 Tests', () => {
 
   describe('✅ Initialization', () => {
     test('should initialize successfully', async () => {
-      const newClient = new VectorStoreClient({ dbPath: 'test.db' });
+      const newClient = new VectorStoreClient({
+        dbPath: 'test.db',
+        tableName: 'unified_memories',
+        dimensions: 384,
+      });
       await expect(newClient.initialize()).resolves.not.toThrow();
       await newClient.close();
     });
