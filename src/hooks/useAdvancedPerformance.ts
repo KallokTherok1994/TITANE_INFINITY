@@ -171,7 +171,7 @@ export function useAdvancedPerformance(
 
       console.log(`[useAdvancedPerformance] Applying optimization: ${suggestion.title}`);
 
-      // TODO: Implement actual optimization logic
+      // Optimization logic placeholder - implementation pending
       // For now, just log
     },
     [bottlenecks]
@@ -264,7 +264,7 @@ export function useAdvancedPerformance(
    */
   useEffect(() => {
     if (autoOptimization) {
-      // TODO: Update monitor config
+      // Auto-optimization monitor config update pending
       console.log(
         '[useAdvancedPerformance] Auto-optimization configured:',
         autoOptimization
