@@ -38,7 +38,7 @@ import {
 import { isTauriRuntimeAvailable } from '../utils/tauriProtector';
 
 export const DevTools = () => {
-  const { systemStatus, error } = useTitaneCore();
+  const { error } = useTitaneCore();
 
   // 🌟 Living Engines Integration v21-v24
   const livingEngines = useLivingEngines(100);

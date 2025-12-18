@@ -137,25 +137,12 @@ export const MessageList = React.memo(function MessageList({
   // Safe messages to render (filtered and validated)
   const messages = errorState.hasCorruption ? errorState.safeMessages : rawMessages;
 
-  // OMEGA DEBUG LOG - TRACE MESSAGES
+  // Debug logging only in dev mode (cleaned up v26.2)
   useEffect(() => {
-    console.log(
-      '[OMEGA MESSAGE LIST DEBUG] rawMessages:',
-      rawMessages?.length,
-      'messages:',
-      messages?.length
-    );
-    if (rawMessages?.length > 0) {
-      rawMessages.forEach((msg, idx) => {
-        console.log(`[OMEGA MESSAGE LIST DEBUG] Message ${idx}:`, {
-          role: msg?.role,
-          contentLength: msg?.content?.length,
-          contentPreview: msg?.content?.substring?.(0, 50),
-          hasMetadata: !!msg?.metadata,
-        });
-      });
+    if (isDev && rawMessages?.length > 0) {
+      console.log('[MessageList] Messages:', rawMessages.length);
     }
-  }, [rawMessages, messages]);
+  }, [rawMessages]);
 
   // ═══ PHASE 5.1: MOUNT SAFETY ═══
   useEffect(() => {
@@ -250,20 +237,11 @@ export const MessageList = React.memo(function MessageList({
     }
 
     // ═══ MAIN RENDER WITH ISOLATION ═══
-    console.log('[OMEGA MESSAGE LIST RENDER] 🎨 Rendering', messages.length, 'messages');
-
     return (
       <div className="message-list-container" ref={containerRef}>
         <div className="message-list">
           {/* Messages avec protection individuelle */}
           {messages.map((message, index) => {
-            console.log(
-              '[OMEGA MESSAGE LIST RENDER] 📝 Rendering message',
-              index,
-              ':',
-              message?.role,
-              message?.content?.substring(0, 30)
-            );
             try {
               // Validation message avant render - OMEGA FIX: permet content vide pour streaming placeholder
               if (

@@ -33,7 +33,7 @@ import {
 
 export function PerfectFusionDashboard() {
   // ✨ v25.7.4 - Responsive Hook
-  const { isMobile, isTablet, isDesktop } = useResponsive();
+  useResponsive();
 
   // ═══ HOOKS INTÉGRATION ═══
   const {

@@ -17,7 +17,6 @@
 import React, { useState, useCallback, lazy, Suspense, memo } from 'react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { useResponsive } from '@/hooks/useResponsive';
 import { type AdminTab, ADMIN_TABS } from './types';
 import './AdminPage.css';
 
