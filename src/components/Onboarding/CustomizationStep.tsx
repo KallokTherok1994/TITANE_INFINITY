@@ -28,7 +28,7 @@ const ThemeOption: React.FC<ThemeOptionProps> = ({
   void value;
   return (
     <motion.div
-      className={`theme-option ${selected ? 'selected&apos; : ''}`}
+      className={`theme-option ${selected ? 'selected' : ''}`}
       onClick={onClick}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}

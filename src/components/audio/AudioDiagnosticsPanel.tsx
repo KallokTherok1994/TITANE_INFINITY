@@ -418,7 +418,7 @@ export const AudioDiagnosticsPanel = ({
                 <div
                   className={`adp-status-item ${healthSummary.speakerOk ? 'ok' : 'error'}`}
                 >
-                  <span>{healthSummary.speakerOk ? '✅' : '❌&apos;}</span>
+                  <span>{healthSummary.speakerOk ? '✅' : '❌'}</span>
                   <span>Haut-parleur</span>
                 </div>
                 <div
