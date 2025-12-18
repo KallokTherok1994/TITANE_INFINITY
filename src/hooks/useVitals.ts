@@ -152,13 +152,13 @@ export function useVitals(options: UseVitalsOptions = {}): UseVitalsReturn {
 
   /**
    * Détecte si le système est en surcharge
-   * FIX: Use useMemo instead of useCallback for derived state
+   * FIX: Use useMemo for derived state (optimized recalculation)
    */
-  const isOverloaded = (): boolean => {
+  const isOverloaded = useMemo((): boolean => {
     if (!state.current) return false;
 
     return state.current.cpu > 80 || state.current.memory > 90 || state.current.disk > 95;
-  };
+  }, [state.current]);
 
   // ✨ v24.2.1: Adaptive polling - slows down when idle or tab hidden
   useEffect(() => {
@@ -227,6 +227,6 @@ export function useVitals(options: UseVitalsOptions = {}): UseVitalsReturn {
         uptime: stats.uptime ?? 0,
       };
     },
-    isOverloaded: isOverloaded(),
+    isOverloaded, // Now a memoized value, not a function call
   };
 }
