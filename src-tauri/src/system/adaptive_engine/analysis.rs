@@ -3,7 +3,7 @@
 // ║ Analyse multi-dimensionnelle des états système pour régulation adaptative   ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
-use crate::shared::types::ModuleHealth;
+use crate::types::shared::ModuleHealthInfo as ModuleHealth;
 use crate::shared::utils::clamp;
 use crate::system::memory::MemoryModule;
 /// Rapport d'analyse adaptative du système
@@ -92,7 +92,7 @@ pub fn analyze(
 
 /// Convertit un état de santé en score normalisé (0.0 à 1.0)
 fn health_to_score(health: &ModuleHealth) -> f32 {
-    use crate::shared::types::HealthStatus;
+    use crate::types::shared::HealthStatus;
     match health.status {
         HealthStatus::Healthy => 1.0,
         HealthStatus::Degraded => 0.6,

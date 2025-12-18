@@ -18,7 +18,7 @@ import { useChatMemory } from '@hooks/useChatMemory';
 import { type ChatMode, type ChatEngineResponse } from '../services/ai';
 import type { AIMessage, AIProviderName } from '../services/ai/types';
 import type { HarmonizedMessage } from '@/types/cognitiveKernel';
-import { hybridTTS } from '@services/tts/hybridTTS';
+import { hybridTTS } from '@/services/tts/hybridTTS';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
 // ✨ v24.2.1 - Streaming Debounce for Performance
 import { createStreamingBatcher } from '@/utils/streamingDebounce';

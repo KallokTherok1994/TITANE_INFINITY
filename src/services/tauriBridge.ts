@@ -7,6 +7,7 @@
 
 import { secureInvoke } from '@/lib/security';
 import { detectEnvironment } from '@/core/tauri/environment';
+import { createLogger } from '@/utils/logger';
 import type {
   CoreResponse,
   CoreError,
@@ -25,6 +26,8 @@ import type {
 } from '../core/ARCHITECTURE_TYPES_v∞';
 import type { SingularityFrontendState } from '../core/state/SingularityState';
 
+const logger = createLogger('[TAURI-BRIDGE]');
+
 // ═══════════════════════════════════════════════════════════════
 // LOGGING & DEBUG
 // ═══════════════════════════════════════════════════════════════
@@ -33,18 +36,31 @@ const DEBUG_MODE = import.meta.env.DEV;
 
 function logCommand(command: string, params?: Record<string, unknown>): void {
   if (DEBUG_MODE) {
-    console.log(`[TauriBridge] → ${command}`, params ?? '');
+    logger.debug(`Command invoked: ${command}`, {
+      component: 'TauriBridge',
+      command,
+      params,
+    });
   }
 }
 
 function logResponse(command: string, response: unknown, duration: number): void {
   if (DEBUG_MODE) {
-    console.log(`[TauriBridge] ← ${command} (${duration}ms)`, response);
+    logger.debug(`Command completed: ${command}`, {
+      component: 'TauriBridge',
+      command,
+      durationMs: duration,
+      response,
+    });
   }
 }
 
 function logError(command: string, error: unknown): void {
-  console.error(`[TauriBridge] ✗ ${command}`, error);
+  logger.error(
+    `Command failed: ${command}`,
+    { component: 'TauriBridge', command },
+    error as Error
+  );
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -562,9 +578,12 @@ export async function batchInvoke<T = any>(
 
   const totalDuration = Date.now() - startTime;
   if (DEBUG_MODE) {
-    console.log(
-      `[TauriBridge] Batch complete: ${commands.length} commands in ${totalDuration}ms (${mode} mode)`
-    );
+    logger.info('Batch complete', {
+      component: 'TauriBridge',
+      commandsCount: commands.length,
+      totalDurationMs: totalDuration,
+      mode,
+    });
   }
 
   return results;

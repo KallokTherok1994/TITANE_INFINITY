@@ -6,6 +6,7 @@
  */
 
 import { invoke } from '@tauri-apps/api/core';
+import { logger as _logger } from '@/lib/logger';
 
 /**
  * DESIGN PRINCIPLES

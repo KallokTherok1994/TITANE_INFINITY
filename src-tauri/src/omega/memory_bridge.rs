@@ -192,11 +192,11 @@ impl OmegaMemoryBridge {
             total_memories: bridge_stats.total_memories,
             vector_entries: bridge_stats.vector_entries.unwrap_or(0),
             last_query_latency_ms: 0, // Implementation: Track with Instant::now().elapsed().as_millis() in query methods
-                                       // - Store in MemoryBridgeInner.last_query_duration: Option<Duration>
-                                       // - Update on every search/retrieve call: self.last_query_duration = Some(start.elapsed())
-                                       // - Expose via stats(): last_query_latency_ms: self.last_query_duration?.as_millis() as u64
-                                       // - Reset on new query: Set to None before query starts
-                                       // - Metrics: Track min/max/avg over 100 queries for performance dashboard
+                                      // - Store in MemoryBridgeInner.last_query_duration: Option<Duration>
+                                      // - Update on every search/retrieve call: self.last_query_duration = Some(start.elapsed())
+                                      // - Expose via stats(): last_query_latency_ms: self.last_query_duration?.as_millis() as u64
+                                      // - Reset on new query: Set to None before query starts
+                                      // - Metrics: Track min/max/avg over 100 queries for performance dashboard
         }
     }
 

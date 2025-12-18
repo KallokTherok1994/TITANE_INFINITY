@@ -21,7 +21,7 @@ import {
   chatEngineHealthCheck,
   chatEngineSpeakText,
   type ChatEngineSpeechMode,
-} from '@services/tauri';
+} from '@/services/tauri';
 import { audioStateMachine } from '@/services/audio/audioStateMachine';
 import { parlerTTSBridge, playAudioBlob, type ParlerTTSConfig } from './parlerTTSBridge';
 import { antiEchoShield } from '@/services/voice/antiEchoShield';

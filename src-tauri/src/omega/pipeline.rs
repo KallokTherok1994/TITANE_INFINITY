@@ -507,7 +507,11 @@ mod tests {
     async fn test_pipeline_creation() {
         let pipeline = OmegaPipeline::default();
         let result = pipeline.initialize().await;
-        assert!(result.is_ok(), "Pipeline initialization failed: {:?}", result.err());
+        assert!(
+            result.is_ok(),
+            "Pipeline initialization failed: {:?}",
+            result.err()
+        );
 
         let health = pipeline.health_check().await;
         assert!(health.initialized);
@@ -517,12 +521,20 @@ mod tests {
     async fn test_pipeline_process() {
         let pipeline = OmegaPipeline::default();
         let result = pipeline.initialize().await;
-        assert!(result.is_ok(), "Pipeline initialization failed: {:?}", result.err());
+        assert!(
+            result.is_ok(),
+            "Pipeline initialization failed: {:?}",
+            result.err()
+        );
 
         let input = PipelineInput::new("Hello, how are you?");
         let output = pipeline.process(input).await;
-        assert!(output.is_ok(), "Pipeline process failed: {:?}", output.err());
-        
+        assert!(
+            output.is_ok(),
+            "Pipeline process failed: {:?}",
+            output.err()
+        );
+
         let output = output.unwrap();
         assert!(!output.request_id.is_empty());
         assert!(output.total_latency_ms > 0);
@@ -532,7 +544,11 @@ mod tests {
     async fn test_pipeline_quick_process() {
         let pipeline = OmegaPipeline::default();
         let result = pipeline.initialize().await;
-        assert!(result.is_ok(), "Pipeline initialization failed: {:?}", result.err());
+        assert!(
+            result.is_ok(),
+            "Pipeline initialization failed: {:?}",
+            result.err()
+        );
 
         let result = pipeline.quick_process("Test query").await;
         assert!(result.is_ok(), "Quick process failed: {:?}", result.err());

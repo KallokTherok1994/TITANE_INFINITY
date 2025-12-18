@@ -218,7 +218,11 @@ impl ProbabilityEngine {
         // FIX: Handle NaN values safely to prevent panic
         self.priors
             .iter()
-            .max_by(|a, b| a.1.prior.partial_cmp(&b.1.prior).unwrap_or(std::cmp::Ordering::Equal))
+            .max_by(|a, b| {
+                a.1.prior
+                    .partial_cmp(&b.1.prior)
+                    .unwrap_or(std::cmp::Ordering::Equal)
+            })
             .map(|(k, _)| k.as_str())
     }
 

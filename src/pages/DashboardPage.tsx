@@ -337,3 +337,6 @@ export const DashboardPage = (): JSX.Element => {
     </Container>
   );
 };
+
+// v24.3.1 FIX: Add missing default export for lazy loading
+export default DashboardPage;

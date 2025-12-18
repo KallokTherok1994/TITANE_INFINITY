@@ -32,9 +32,11 @@
       "@cognitive/*": ["src/cognitive/*"]
     },
 
-    /* Linting - Relaxed for P0 */
+    /* Linting - Enhanced Strict (Progressive) */
     "strict": true,
-    "noUncheckedIndexedAccess": false,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": false, // TODO: Enable after refactoring optional props
+    "noPropertyAccessFromIndexSignature": false, // TODO: Enable after CSS modules refactoring
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,

@@ -239,7 +239,7 @@ impl LiveSelfTestEngine {
 
         // Test with minimal AI call (health check)
         let simulated_success = true; // Placeholder: would call chat_send_message("ping")
-        // In production: let result = chat_send_message("ping").await;
+                                      // In production: let result = chat_send_message("ping").await;
 
         if simulated_success {
             MicroTestResult {
@@ -267,7 +267,7 @@ impl LiveSelfTestEngine {
 
         // Check Deep Sync health: assume healthy if system responsive
         let sync_healthy = true; // Placeholder: would check actual sync state
-        // In production: query deep_sync_engine.get_health_status()
+                                 // In production: query deep_sync_engine.get_health_status()
 
         if sync_healthy {
             MicroTestResult {
@@ -295,7 +295,7 @@ impl LiveSelfTestEngine {
 
         // Test frontend-backend communication by checking process state
         let bridge_active = true; // Placeholder: would ping frontend via Tauri event
-        // In production: emit ping event and wait for pong response
+                                  // In production: emit ping event and wait for pong response
 
         if bridge_active {
             MicroTestResult {
@@ -323,7 +323,7 @@ impl LiveSelfTestEngine {
 
         // Test TTS with short phrase (simulated for now)
         let tts_working = true; // Placeholder: would call tts_engine.speak("test")
-        // In production: let result = tts_engine.speak("ping").await;
+                                // In production: let result = tts_engine.speak("ping").await;
 
         if tts_working {
             MicroTestResult {
@@ -467,15 +467,15 @@ impl LiveSelfTestEngine {
         // 1. Restore Timeline snapshot
         log::info!("[Rollback] Step 1: Restoring Timeline snapshot");
         // timeline_engine.restore_snapshot("last_stable")
-        
+
         // 2. Reinitialize failed modules
         log::info!("[Rollback] Step 2: Reinitializing failed modules");
         // module_manager.reinit_all()
-        
+
         // 3. Validate SingularityState coherence
         log::info!("[Rollback] Step 3: Validating state coherence");
         // singularity_state.validate_coherence()
-        
+
         log::info!("[Rollback] Rollback complete");
         Ok(())
     }

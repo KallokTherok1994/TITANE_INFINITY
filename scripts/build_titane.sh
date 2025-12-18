@@ -1,6 +1,6 @@
 #!/bin/bash
 # ═══════════════════════════════════════════════════════════════════════════════
-# TITANE∞ v∞ — BUILD SCRIPT
+# TITANE∞ v24.3.0 — BUILD SCRIPT
 # Build complet : Frontend (Vite) + Backend (Rust/Tauri)
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -22,7 +22,7 @@ SKIP_FRONTEND="${SKIP_FRONTEND:-false}"
 SKIP_BACKEND="${SKIP_BACKEND:-false}"
 
 echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
-echo -e "${BLUE}   TITANE∞ v∞ — BUILD PIPELINE${NC}"
+echo -e "${BLUE}   TITANE∞ v24.3.0 — BUILD PIPELINE${NC}"
 echo -e "${BLUE}   Mode: ${CYAN}$BUILD_MODE${NC}"
 echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
 echo ""
@@ -152,11 +152,21 @@ else
 fi
 
 # ─────────────────────────────────────────────────────────────────────────────
-# RÉSUMÉ
+# 6. COPILOT-XS VALIDATION (optionnel)
 # ─────────────────────────────────────────────────────────────────────────────
+if [ -f ".github/copilot-xs/scripts/validate.js" ]; then
+    echo -e "${YELLOW}[6/6] Running copilot-xs validation...${NC}"
+    if node .github/copilot-xs/scripts/validate.js > /dev/null 2>&1; then
+        echo -e "${GREEN}✓ copilot-xs validation passed${NC}"
+    else
+        echo -e "${YELLOW}⚠ copilot-xs validation has warnings (non-blocking)${NC}"
+    fi
+    echo ""
+fi
+
 echo ""
 echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
-echo -e "${GREEN}✓ BUILD COMPLETE — TITANE∞ v∞${NC}"
+echo -e "${GREEN}✓ BUILD COMPLETE — TITANE∞ v24.3.0${NC}"
 echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
 
 # Afficher les chemins des artifacts

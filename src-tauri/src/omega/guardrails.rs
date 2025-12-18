@@ -703,7 +703,8 @@ mod tests {
         let engine = GuardrailsEngine::new();
         let merge_result = mock_merge_result();
 
-        let result = engine.check(&merge_result)
+        let result = engine
+            .check(&merge_result)
             .expect("Guardrails check should succeed");
 
         assert!(!result.was_blocked);
@@ -721,7 +722,8 @@ mod tests {
         let mut merge_result = mock_merge_result();
         merge_result.response = "This contains forbidden_word".to_string();
 
-        let result = engine.check(&merge_result)
+        let result = engine
+            .check(&merge_result)
             .expect("Guardrails check should succeed");
 
         // Should have a failing check for the forbidden pattern
@@ -976,7 +978,8 @@ mod tests {
         let mut merge_result = mock_merge_result();
         merge_result.response = "how to hack into systems and create a bomb".to_string();
 
-        let result = engine.check(&merge_result)
+        let result = engine
+            .check(&merge_result)
             .expect("Guardrails check should succeed");
         assert!(result.was_blocked);
         assert!(result.block_reason.is_some());
@@ -991,7 +994,8 @@ mod tests {
         let mut merge_result = mock_merge_result();
         merge_result.response = "Contact me at test@example.com".to_string();
 
-        let result = engine.check(&merge_result)
+        let result = engine
+            .check(&merge_result)
             .expect("Guardrails check should succeed");
         assert!(result.was_blocked);
     }

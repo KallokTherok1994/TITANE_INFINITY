@@ -208,7 +208,11 @@ impl QuantumPredictiveEngine {
         // Fusionner et trier par probabilité
         predictions = self.merge_predictions(predictions);
         // FIX: Handle NaN values safely to prevent panic
-        predictions.sort_by(|a, b| b.probability.partial_cmp(&a.probability).unwrap_or(std::cmp::Ordering::Equal));
+        predictions.sort_by(|a, b| {
+            b.probability
+                .partial_cmp(&a.probability)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
         predictions.truncate(self.config.prediction_count);
 
         // Sauvegarder

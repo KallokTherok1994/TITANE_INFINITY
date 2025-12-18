@@ -39,7 +39,7 @@ import type {
 import { inputValidator } from './inputValidator';
 import { chatModes, type ChatModeConfig } from './chatModes';
 import { chatValidator } from '../chatValidator';
-import { chatEngineCommands } from '@services/tauri';
+import { chatEngineCommands } from '@/services/tauri';
 import type { ChatMode } from './chatTypes';
 // Re-export for convenience
 export type { ChatMode } from './chatTypes';
@@ -47,10 +47,8 @@ import type {
   ChatEngineProviderPreference,
   ChatEngineRequestArgs,
   ChatEngineCompletion,
-} from '@services/tauri';
-import { semanticMemoryEngine as _semanticMemoryEngine } from '@/services/memory/semanticMemoryEngine';
+} from '@/services/tauri';
 import { MEMORY_TIMEOUTS } from '@/config/aiTimeouts.config'; // v22Ω: Centralized timeouts
-import { consistencyEngine as _consistencyEngine } from '@/services/consistency/consistencyEngine';
 import { cognitiveOmega } from '@/services/cognitive/cognitiveOmegaIntegration';
 import { createLogger } from '@/utils/logger';
 

@@ -12,6 +12,7 @@
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 import type {
   ConversationMode,
   ConversationResponse,
@@ -142,7 +143,9 @@ export function useConversationEngine(
 
       // Prévenir double-envoi
       if (isProcessingRef.current) {
-        console.warn('[ConversationEngine] Message déjà en cours de traitement');
+        logger.warn('Message already being processed', {
+          component: 'ConversationEngine',
+        });
         return null;
       }
 

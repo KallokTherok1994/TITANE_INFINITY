@@ -408,7 +408,7 @@ fn calculate_message_importance(request: &ChatRequest, response: &ChatMessage) -
 
 /// **DEPRECATED**: Use `conversation_generate` from ConversationEngine (OMEGA Pipeline v2)
 /// This legacy orchestrator will be removed in v25.0.0
-/// 
+///
 /// Migration: Use conversation_engine::commands::conversation_generate instead
 #[tauri::command]
 #[deprecated(
@@ -420,7 +420,7 @@ pub async fn chat_send_message(
     state: State<'_, ChatOrchestratorState>,
 ) -> Result<ChatResponse, String> {
     log::warn!("[DEPRECATED] overdrive::chat_send_message called - migrate to conversation_engine::conversation_generate");
-    
+
     println!(
         "[CHAT] 📨 chat_send_message appelé - provider: {}, message: {}...",
         request.provider,
@@ -1440,14 +1440,14 @@ pub async fn ai_chat_stream(
         provider: "auto".to_string(),
         model,
         streaming: false, // Implementation: Server-Sent Events (SSE) for real-time streaming
-                          // - Protocol: Use Tauri events with emit("chat:stream", {chunk})
-                          // - API streaming: For Gemini/Ollama, use streaming endpoints
-                          //   * Gemini: streamGenerateContent with stream=true parameter
-                          //   * Ollama: POST /api/generate with "stream": true in JSON
-                          // - Chunk processing: Parse SSE events, extract delta tokens
-                          // - Frontend: Listen with listen("chat:stream", callback) in React
-                          // - Buffering: Accumulate chunks in frontend for complete response
-                          // - Error handling: Send final event with error flag on stream failure
+        // - Protocol: Use Tauri events with emit("chat:stream", {chunk})
+        // - API streaming: For Gemini/Ollama, use streaming endpoints
+        //   * Gemini: streamGenerateContent with stream=true parameter
+        //   * Ollama: POST /api/generate with "stream": true in JSON
+        // - Chunk processing: Parse SSE events, extract delta tokens
+        // - Frontend: Listen with listen("chat:stream", callback) in React
+        // - Buffering: Accumulate chunks in frontend for complete response
+        // - Error handling: Send final event with error flag on stream failure
         images: None,
         system_prompt,
     };

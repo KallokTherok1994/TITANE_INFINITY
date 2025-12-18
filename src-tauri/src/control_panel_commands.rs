@@ -316,11 +316,11 @@ pub(crate) async fn apply_ai_config(
 
 #[tauri::command]
 pub async fn cp_get_system_info() -> Result<SystemInfo, String> {
-    use sysinfo::{System, Pid};
-    
+    use sysinfo::{Pid, System};
+
     let mut sys = System::new_all();
     sys.refresh_all();
-    
+
     // Calculate uptime from process start time
     let pid = Pid::from_u32(std::process::id());
     let uptime = if let Some(process) = sys.process(pid) {
@@ -332,16 +332,16 @@ pub async fn cp_get_system_info() -> Result<SystemInfo, String> {
     } else {
         0
     };
-    
+
     // Calculate CPU usage
     let cpu_usage = sys.global_cpu_info().cpu_usage() as f64;
-    
+
     // Calculate memory usage
     let memory_usage = (sys.used_memory() as f64 / sys.total_memory() as f64) * 100.0;
-    
+
     // Calculate disk usage (simple average)
     let disk_usage = 50.0; // Simplified placeholder
-    
+
     Ok(SystemInfo {
         version: env!("CARGO_PKG_VERSION").to_string(),
         uptime,
@@ -355,12 +355,12 @@ pub async fn cp_get_system_info() -> Result<SystemInfo, String> {
 #[tauri::command]
 pub async fn cp_run_system_diagnostic() -> Result<String, String> {
     use sysinfo::System;
-    
+
     let mut sys = System::new_all();
     sys.refresh_all();
-    
+
     let mut report = Vec::new();
-    
+
     // Check CPU
     let cpu_usage = sys.global_cpu_info().cpu_usage();
     if cpu_usage < 90.0 {
@@ -368,7 +368,7 @@ pub async fn cp_run_system_diagnostic() -> Result<String, String> {
     } else {
         report.push(format!("⚠️ CPU: {:.1}% utilisé (critique)", cpu_usage));
     }
-    
+
     // Check Memory
     let mem_usage = (sys.used_memory() as f64 / sys.total_memory() as f64) * 100.0;
     if mem_usage < 90.0 {
@@ -376,13 +376,13 @@ pub async fn cp_run_system_diagnostic() -> Result<String, String> {
     } else {
         report.push(format!("⚠️ Mémoire: {:.1}% utilisée (critique)", mem_usage));
     }
-    
+
     // Check Disk
     report.push("✅ Disque: OK".to_string());
-    
+
     // Check Network (placeholder)
     report.push("✅ Réseau: Connectivité OK".to_string());
-    
+
     Ok(report.join("\n"))
 }
 
@@ -394,19 +394,17 @@ pub async fn cp_run_system_diagnostic() -> Result<String, String> {
 pub async fn cp_get_design_config() -> Result<DesignSystemConfig, String> {
     // Try to load from config file
     let config_path = get_config_dir()?.join("design_config.json");
-    
+
     if config_path.exists() {
         match std::fs::read_to_string(&config_path) {
-            Ok(content) => {
-                match serde_json::from_str::<DesignSystemConfig>(&content) {
-                    Ok(config) => return Ok(config),
-                    Err(e) => eprintln!("Failed to parse design config: {}", e),
-                }
-            }
+            Ok(content) => match serde_json::from_str::<DesignSystemConfig>(&content) {
+                Ok(config) => return Ok(config),
+                Err(e) => eprintln!("Failed to parse design config: {}", e),
+            },
             Err(e) => eprintln!("Failed to read design config: {}", e),
         }
     }
-    
+
     // Return default config
     Ok(DesignSystemConfig {
         mode: "auto".to_string(),
@@ -419,20 +417,20 @@ pub async fn cp_get_design_config() -> Result<DesignSystemConfig, String> {
 #[tauri::command]
 pub async fn cp_set_design_config(config: DesignSystemConfig) -> Result<(), String> {
     let config_path = get_config_dir()?.join("design_config.json");
-    
+
     // Ensure config directory exists
     if let Some(parent) = config_path.parent() {
         std::fs::create_dir_all(parent)
             .map_err(|e| format!("Failed to create config directory: {}", e))?;
     }
-    
+
     // Serialize and save
     let json = serde_json::to_string_pretty(&config)
         .map_err(|e| format!("Failed to serialize config: {}", e))?;
-    
+
     std::fs::write(&config_path, json)
         .map_err(|e| format!("Failed to write config file: {}", e))?;
-    
+
     println!("Design config updated: {:?}", config);
     Ok(())
 }
@@ -447,10 +445,10 @@ pub async fn cp_get_singularity_status() -> Result<SingularityStatus, String> {
     // Note: Singularity engine runs continuously in background
     // Status reflects current optimization phase
     use std::sync::atomic::{AtomicBool, Ordering};
-    
+
     // Simple status indicator (can be extended with actual engine state)
     static SINGULARITY_ACTIVE: AtomicBool = AtomicBool::new(true);
-    
+
     Ok(SingularityStatus {
         active: SINGULARITY_ACTIVE.load(Ordering::Relaxed),
         power_level: 75, // Based on CPU/memory health
@@ -465,10 +463,12 @@ pub async fn cp_toggle_singularity() -> Result<(), String> {
     // Note: Actual implementation would integrate with singularity module
     // For safety, this is a stub to prevent accidental engine shutdown
     log::warn!("[ControlPanel] Singularity toggle requested - using safe stub");
-    log::info!("[ControlPanel] Singularity engine state management reserved for system-level operations");
-    
+    log::info!(
+        "[ControlPanel] Singularity engine state management reserved for system-level operations"
+    );
+
     println!("Singularity toggled (safe mode - no actual state change)");
-    
+
     // Return error to prevent UI from assuming state changed
     Err("Singularity toggle requires system-level permissions".to_string())
 }
@@ -497,11 +497,11 @@ pub async fn cp_set_ai_config(
 
 #[tauri::command]
 pub async fn cp_get_memory_stats() -> Result<MemoryStats, String> {
-    use sysinfo::{System, Pid};
-    
+    use sysinfo::{Pid, System};
+
     let mut sys = System::new_all();
     sys.refresh_all();
-    
+
     // Get process memory usage
     let pid = Pid::from_u32(std::process::id());
     let (used_size, cache_size) = if let Some(process) = sys.process(pid) {
@@ -509,13 +509,13 @@ pub async fn cp_get_memory_stats() -> Result<MemoryStats, String> {
     } else {
         (1024 * 1024 * 45, 1024 * 1024 * 10)
     };
-    
+
     // Estimate total memory budget
     let total_size = 1024 * 1024 * 100;
-    
+
     // Estimate vector count
     let vector_count = (used_size / 1024).min(10000) as u32;
-    
+
     Ok(MemoryStats {
         total_size,
         used_size,
@@ -530,14 +530,14 @@ pub async fn cp_clear_memory_cache() -> Result<(), String> {
     // In Rust, this is mostly handled automatically
     // But we can suggest to OS to release memory
     println!("Memory cache clear requested");
-    
+
     // Integrate with unified_memory_v2 cache clearing
     // Note: Actual cache clear handled by unified_memory_v2::clear_cache()
     log::info!("[ControlPanel] Memory cache clear initiated");
-    
+
     // Future integration point:
     // unified_memory_v2::clear_cache().await.map_err(|e| e.to_string())?;
-    
+
     eprintln!("[ControlPanel] Memory cache cleared successfully");
     Ok(())
 }
@@ -593,7 +593,7 @@ pub async fn cp_get_modules_status() -> Result<Vec<ModuleStatus>, String> {
 pub async fn cp_toggle_module(module_id: String) -> Result<(), String> {
     // Log module toggle action
     eprintln!("[ControlPanel] Module toggle requested: {}", module_id);
-    
+
     // Validate module ID against registered modules
     // Integration point: Module registry would provide dynamic module list
     const VALID_MODULES: &[&str] = &[
@@ -601,20 +601,26 @@ pub async fn cp_toggle_module(module_id: String) -> Result<(), String> {
         "ai_core",
         "memory_system",
         "cognitive_gravity",
-        "harmonic_os"
+        "harmonic_os",
     ];
-    
+
     if VALID_MODULES.contains(&module_id.as_str()) {
         log::info!("[ControlPanel] Module '{}' toggle acknowledged", module_id);
         println!("Module {} toggled", module_id);
-        
+
         // Future integration:
         // module_registry::toggle(&module_id).await.map_err(|e| e.to_string())?;
-        
+
         Ok(())
     } else {
-        log::warn!("[ControlPanel] Unknown module toggle attempted: {}", module_id);
-        Err(format!("Unknown module: {}. Valid modules: {:?}", module_id, VALID_MODULES))
+        log::warn!(
+            "[ControlPanel] Unknown module toggle attempted: {}",
+            module_id
+        );
+        Err(format!(
+            "Unknown module: {}. Valid modules: {:?}",
+            module_id, VALID_MODULES
+        ))
     }
 }
 
@@ -625,19 +631,17 @@ pub async fn cp_toggle_module(module_id: String) -> Result<(), String> {
 #[tauri::command]
 pub async fn cp_get_network_config() -> Result<NetworkConfig, String> {
     let config_path = get_config_dir()?.join("network_config.json");
-    
+
     if config_path.exists() {
         match std::fs::read_to_string(&config_path) {
-            Ok(content) => {
-                match serde_json::from_str::<NetworkConfig>(&content) {
-                    Ok(config) => return Ok(config),
-                    Err(e) => eprintln!("Failed to parse network config: {}", e),
-                }
-            }
+            Ok(content) => match serde_json::from_str::<NetworkConfig>(&content) {
+                Ok(config) => return Ok(config),
+                Err(e) => eprintln!("Failed to parse network config: {}", e),
+            },
             Err(e) => eprintln!("Failed to read network config: {}", e),
         }
     }
-    
+
     // Return default config
     Ok(NetworkConfig {
         online_mode: true,
@@ -650,18 +654,18 @@ pub async fn cp_get_network_config() -> Result<NetworkConfig, String> {
 #[tauri::command]
 pub async fn cp_set_network_config(config: NetworkConfig) -> Result<(), String> {
     let config_path = get_config_dir()?.join("network_config.json");
-    
+
     if let Some(parent) = config_path.parent() {
         std::fs::create_dir_all(parent)
             .map_err(|e| format!("Failed to create config directory: {}", e))?;
     }
-    
+
     let json = serde_json::to_string_pretty(&config)
         .map_err(|e| format!("Failed to serialize config: {}", e))?;
-    
+
     std::fs::write(&config_path, json)
         .map_err(|e| format!("Failed to write config file: {}", e))?;
-    
+
     println!("Network config updated: {:?}", config);
     Ok(())
 }
@@ -673,20 +677,23 @@ pub async fn cp_set_network_config(config: NetworkConfig) -> Result<(), String> 
 #[tauri::command]
 pub async fn cp_check_for_updates() -> Result<UpdateInfo, String> {
     let current_version = env!("CARGO_PKG_VERSION").to_string();
-    
+
     // Query GitHub API for latest release
     // Implementation note: Requires reqwest dependency
     // API endpoint: https://api.github.com/repos/KallokTherok1994/TITANE_INFINITY/releases/latest
-    
-    log::info!("[ControlPanel] Checking for updates (current: {})", current_version);
-    
+
+    log::info!(
+        "[ControlPanel] Checking for updates (current: {})",
+        current_version
+    );
+
     // Future implementation with reqwest:
     // let response = reqwest::get("https://api.github.com/repos/KallokTherok1994/TITANE_INFINITY/releases/latest")
     //     .await
     //     .map_err(|e| format!("Failed to check updates: {}", e))?;
     // let release: GitHubRelease = response.json().await.map_err(|e| format!("Failed to parse release: {}", e))?;
     // let latest_version = release.tag_name.trim_start_matches('v');
-    
+
     // For now, return current version as latest (safe default)
     Ok(UpdateInfo {
         current_version: current_version.clone(),
@@ -705,16 +712,16 @@ pub async fn cp_install_update() -> Result<(), String> {
     // 3. Extract archive to temporary directory
     // 4. Run platform-specific installer (requires elevated permissions)
     // 5. Restart application
-    
+
     log::warn!("[ControlPanel] Update installation requested - feature not yet implemented");
     eprintln!("[ControlPanel] Update installation requires:");
     eprintln!("  1. HTTPS download with signature verification");
     eprintln!("  2. SHA256 checksum validation");
     eprintln!("  3. Platform-specific installer execution");
     eprintln!("  4. Elevated permissions handling");
-    
+
     println!("Update installation feature in development");
-    
+
     Err("Automatic updates not yet implemented. Please update manually from: https://github.com/KallokTherok1994/TITANE_INFINITY/releases".to_string())
 }
 
@@ -725,11 +732,11 @@ pub async fn cp_install_update() -> Result<(), String> {
 #[tauri::command]
 pub async fn cp_get_logs(limit: usize) -> Result<Vec<LogEntry>, String> {
     use chrono::Local;
-    
+
     // Try to read from actual log files if they exist
     let log_dir = get_config_dir()?.join("logs");
     let mut logs = Vec::new();
-    
+
     // Add some default logs
     logs.push(LogEntry {
         timestamp: Local::now().format("%Y-%m-%d %H:%M:%S").to_string(),
@@ -737,18 +744,18 @@ pub async fn cp_get_logs(limit: usize) -> Result<Vec<LogEntry>, String> {
         message: "Application started successfully".to_string(),
         source: "main".to_string(),
     });
-    
+
     logs.push(LogEntry {
         timestamp: Local::now().format("%Y-%m-%d %H:%M:%S").to_string(),
         level: "info".to_string(),
         message: "Singularity engine initialized".to_string(),
         source: "singularity".to_string(),
     });
-    
+
     // Check for log files and parse them
     if log_dir.exists() {
         eprintln!("[ControlPanel] Log directory found: {:?}", log_dir);
-        
+
         // Parse log files (newest first)
         match std::fs::read_dir(&log_dir) {
             Ok(entries) => {
@@ -762,10 +769,16 @@ pub async fn cp_get_logs(limit: usize) -> Result<Vec<LogEntry>, String> {
                                 if let Some((level, message)) = line.split_once(']') {
                                     let level = level.trim_start_matches('[').to_lowercase();
                                     logs.push(LogEntry {
-                                        timestamp: Local::now().format("%Y-%m-%d %H:%M:%S").to_string(),
+                                        timestamp: Local::now()
+                                            .format("%Y-%m-%d %H:%M:%S")
+                                            .to_string(),
                                         level,
                                         message: message.trim().to_string(),
-                                        source: path.file_name().and_then(|n| n.to_str()).unwrap_or("unknown").to_string(),
+                                        source: path
+                                            .file_name()
+                                            .and_then(|n| n.to_str())
+                                            .unwrap_or("unknown")
+                                            .to_string(),
                                     });
                                 }
                             }
@@ -776,7 +789,7 @@ pub async fn cp_get_logs(limit: usize) -> Result<Vec<LogEntry>, String> {
             Err(e) => eprintln!("[ControlPanel] Failed to read log directory: {}", e),
         }
     }
-    
+
     // Limit results
     Ok(logs.into_iter().take(limit).collect())
 }
@@ -784,7 +797,7 @@ pub async fn cp_get_logs(limit: usize) -> Result<Vec<LogEntry>, String> {
 #[tauri::command]
 pub async fn cp_clear_logs() -> Result<(), String> {
     let log_dir = get_config_dir()?.join("logs");
-    
+
     if log_dir.exists() {
         match std::fs::remove_dir_all(&log_dir) {
             Ok(_) => {
@@ -801,7 +814,7 @@ pub async fn cp_clear_logs() -> Result<(), String> {
     } else {
         println!("No logs to clear");
     }
-    
+
     Ok(())
 }
 
@@ -812,19 +825,17 @@ pub async fn cp_clear_logs() -> Result<(), String> {
 #[tauri::command]
 pub async fn cp_get_security_config() -> Result<SecurityConfig, String> {
     let config_path = get_config_dir()?.join("security_config.json");
-    
+
     if config_path.exists() {
         match std::fs::read_to_string(&config_path) {
-            Ok(content) => {
-                match serde_json::from_str::<SecurityConfig>(&content) {
-                    Ok(config) => return Ok(config),
-                    Err(e) => eprintln!("Failed to parse security config: {}", e),
-                }
-            }
+            Ok(content) => match serde_json::from_str::<SecurityConfig>(&content) {
+                Ok(config) => return Ok(config),
+                Err(e) => eprintln!("Failed to parse security config: {}", e),
+            },
             Err(e) => eprintln!("Failed to read security config: {}", e),
         }
     }
-    
+
     // Return secure defaults
     Ok(SecurityConfig {
         hn_security_enabled: true,
@@ -837,18 +848,18 @@ pub async fn cp_get_security_config() -> Result<SecurityConfig, String> {
 #[tauri::command]
 pub async fn cp_set_security_config(config: SecurityConfig) -> Result<(), String> {
     let config_path = get_config_dir()?.join("security_config.json");
-    
+
     if let Some(parent) = config_path.parent() {
         std::fs::create_dir_all(parent)
             .map_err(|e| format!("Failed to create config directory: {}", e))?;
     }
-    
+
     let json = serde_json::to_string_pretty(&config)
         .map_err(|e| format!("Failed to serialize config: {}", e))?;
-    
+
     std::fs::write(&config_path, json)
         .map_err(|e| format!("Failed to write config file: {}", e))?;
-    
+
     println!("Security config updated: {:?}", config);
     Ok(())
 }

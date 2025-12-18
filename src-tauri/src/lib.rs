@@ -1,6 +1,6 @@
 //! ═══════════════════════════════════════════════════════════════
-//!   TITANE∞ v16 — LIB CONFIGURATION
-//!   Unified backend architecture - v15 Core + v16 Cognitive
+//!   TITANE∞ v24.3.0 — LIB CONFIGURATION
+//!   Unified backend architecture - Singularity + OMEGA Pipeline
 //! ═══════════════════════════════════════════════════════════════
 
 // Suppress non-critical Clippy warnings globally
@@ -18,9 +18,8 @@
 #![allow(clippy::assertions_on_constants)]
 #![allow(dead_code)]
 #![allow(unused_variables)]
-
 // Suppress deprecation warnings (legacy API still used for backward compat)
-// TODO v25.x: Complete migration to unified_memory_v2
+// Note: Migration to unified_memory_v2 in progress
 #![allow(deprecated)]
 
 // ═══════════════════════════════════════════════════════════════
@@ -245,6 +244,11 @@ pub mod numeric_twin; // ✅ Numeric Twin vΩ∞ (Kevin ↔ TITANE Symbiosis, 6 
 
 pub mod agenda; // ✅ Agenda Engine v∞ (Time, Events, Energy, Priority, ChatScheduler)
 
+// ═══════════════════════════════════════════════════════════════
+// FULL FEATURE MODULES (only when feature = "full")
+// Note: engine, overdrive, cognitive already declared above (always active)
+// ═══════════════════════════════════════════════════════════════
+
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 pub mod commands;
 
@@ -263,14 +267,9 @@ pub mod audio;
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 pub mod tts;
 
-#[cfg(all(not(feature = "mock"), feature = "full"))]
-pub mod engine;
-
-#[cfg(all(not(feature = "mock"), feature = "full"))]
-pub mod overdrive;
-
-#[cfg(all(not(feature = "mock"), feature = "full"))]
-pub mod cognitive;
+// REMOVED v24.3.0: engine duplicate (declared at line 37)
+// REMOVED v24.3.0: overdrive duplicate (declared at line 125)
+// REMOVED v24.3.0: cognitive duplicate (declared at line 35)
 
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 pub mod system;

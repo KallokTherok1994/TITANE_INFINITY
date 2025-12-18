@@ -242,7 +242,11 @@ impl LongTermMemory {
 
         // Sort by importance
         // FIX: Handle NaN values safely to prevent panic
-        results.sort_by(|a, b| b.importance.partial_cmp(&a.importance).unwrap_or(std::cmp::Ordering::Equal));
+        results.sort_by(|a, b| {
+            b.importance
+                .partial_cmp(&a.importance)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
         results.truncate(limit);
 
         let duration = start.elapsed();
@@ -286,7 +290,11 @@ impl LongTermMemory {
         let index = self.index.read().await;
         let mut results: Vec<_> = index.values().cloned().collect();
         // FIX: Handle NaN values safely to prevent panic
-        results.sort_by(|a, b| b.importance.partial_cmp(&a.importance).unwrap_or(std::cmp::Ordering::Equal));
+        results.sort_by(|a, b| {
+            b.importance
+                .partial_cmp(&a.importance)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
         results.truncate(n);
         results
     }

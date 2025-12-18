@@ -571,7 +571,8 @@ pub struct FullIntegrityReportDto {
 
 /// Diagnostic complet du système de mémoire
 #[tauri::command]
-pub async fn titan_memory_doctor_diagnose() -> Result<crate::persistence::memory_doctor::DoctorReport, String> {
+pub async fn titan_memory_doctor_diagnose(
+) -> Result<crate::persistence::memory_doctor::DoctorReport, String> {
     let mut doctor = crate::persistence::memory_doctor::MemoryDoctor::new();
     Ok(doctor.diagnose().await)
 }
@@ -581,21 +582,21 @@ pub async fn titan_memory_doctor_diagnose() -> Result<crate::persistence::memory
 pub async fn titan_memory_doctor_summary() -> Result<String, String> {
     let mut doctor = crate::persistence::memory_doctor::MemoryDoctor::new();
     let report = doctor.diagnose().await;
-    Ok(crate::persistence::memory_doctor::MemoryDoctor::generate_summary(
-        &report,
-    ))
+    Ok(crate::persistence::memory_doctor::MemoryDoctor::generate_summary(&report))
 }
 
 /// Lancer le Self-Healing via Memory Doctor
 #[tauri::command]
-pub async fn titan_memory_doctor_heal() -> Result<crate::persistence::memory_health::SelfHealingReport, String> {
+pub async fn titan_memory_doctor_heal(
+) -> Result<crate::persistence::memory_health::SelfHealingReport, String> {
     let mut doctor = crate::persistence::memory_doctor::MemoryDoctor::new();
     Ok(doctor.heal().await)
 }
 
 /// Compacter le journal via Memory Doctor
 #[tauri::command]
-pub async fn titan_memory_doctor_compact() -> Result<crate::persistence::types::CompactionReport, String> {
+pub async fn titan_memory_doctor_compact(
+) -> Result<crate::persistence::types::CompactionReport, String> {
     let doctor = crate::persistence::memory_doctor::MemoryDoctor::new();
     doctor.compact().await
 }

@@ -221,7 +221,11 @@ impl OperationalTwin {
         self.workflows
             .iter()
             .filter(|w| w.domain == domain)
-            .max_by(|a, b| a.effectiveness.partial_cmp(&b.effectiveness).unwrap_or(std::cmp::Ordering::Equal))
+            .max_by(|a, b| {
+                a.effectiveness
+                    .partial_cmp(&b.effectiveness)
+                    .unwrap_or(std::cmp::Ordering::Equal)
+            })
     }
 
     /// Obtient une méthode

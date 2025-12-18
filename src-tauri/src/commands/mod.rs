@@ -80,7 +80,7 @@ pub use self_healing_commands::*;
 pub use singularity_commands::*;
 pub use ui_theme_commands::*; // ✅ v19.7: Export QA monitoring commands
 
-use crate::shared::types::ModuleHealth;
+use crate::types::ModuleHealthInfo as ModuleHealth;
 use crate::TitaneCore;
 use std::sync::{Arc, Mutex};
 use tauri::State;

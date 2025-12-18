@@ -8,8 +8,8 @@ use std::time::Instant;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GeneratePromptRequest {
     pub concept: String,
-    pub expertise: Option<String>,   // "beginner", "intermediate", "advanced", "expert"
-    pub tone: Option<String>,         // "professional", "casual", "friendly", "formal"
+    pub expertise: Option<String>, // "beginner", "intermediate", "advanced", "expert"
+    pub tone: Option<String>,      // "professional", "casual", "friendly", "formal"
     pub include_examples: Option<bool>,
     pub max_tokens: Option<u32>,
 }
@@ -30,7 +30,7 @@ pub async fn generate_mode_prompt(
     request: GeneratePromptRequest,
 ) -> Result<GeneratePromptResponse, String> {
     let start = Instant::now();
-    
+
     // Validate input
     if request.concept.trim().is_empty() {
         return Ok(GeneratePromptResponse {
@@ -90,11 +90,15 @@ Format the response as a complete, ready-to-use system prompt."#,
             })
         }
         Err(ollama_error) => {
-            eprintln!("[AI Prompt Generator] Ollama failed: {}, falling back to template", ollama_error);
-            
+            eprintln!(
+                "[AI Prompt Generator] Ollama failed: {}, falling back to template",
+                ollama_error
+            );
+
             // Fallback: Template-based generation
-            let fallback_prompt = generate_template_prompt(&request.concept, &expertise, &tone, include_examples);
-            
+            let fallback_prompt =
+                generate_template_prompt(&request.concept, &expertise, &tone, include_examples);
+
             let latency = start.elapsed().as_millis() as u64;
             Ok(GeneratePromptResponse {
                 prompt: fallback_prompt,
@@ -112,18 +116,17 @@ Format the response as a complete, ready-to-use system prompt."#,
 async fn call_ollama_api(prompt: &str, max_tokens: u32) -> Result<String, String> {
     use reqwest::Client;
     use serde_json::json;
-    
+
     let client = Client::builder()
         .timeout(std::time::Duration::from_secs(30))
         .build()
         .map_err(|e| format!("HTTP client error: {}", e))?;
-    
-    let ollama_url = std::env::var("OLLAMA_URL")
-        .unwrap_or_else(|_| "http://127.0.0.1:11434".to_string());
-    
-    let model = std::env::var("OLLAMA_MODEL")
-        .unwrap_or_else(|_| "llama3.1".to_string());
-    
+
+    let ollama_url =
+        std::env::var("OLLAMA_URL").unwrap_or_else(|_| "http://127.0.0.1:11434".to_string());
+
+    let model = std::env::var("OLLAMA_MODEL").unwrap_or_else(|_| "llama3.1".to_string());
+
     let request_body = json!({
         "model": model,
         "prompt": prompt,
@@ -134,23 +137,23 @@ async fn call_ollama_api(prompt: &str, max_tokens: u32) -> Result<String, String
             "top_p": 0.9,
         }
     });
-    
+
     let response = client
         .post(format!("{}/api/generate", ollama_url))
         .json(&request_body)
         .send()
         .await
         .map_err(|e| format!("Ollama request failed: {}", e))?;
-    
+
     if !response.status().is_success() {
         return Err(format!("Ollama returned status: {}", response.status()));
     }
-    
+
     let response_json: serde_json::Value = response
         .json()
         .await
         .map_err(|e| format!("Failed to parse Ollama response: {}", e))?;
-    
+
     response_json["response"]
         .as_str()
         .map(|s| s.to_string())
@@ -158,14 +161,19 @@ async fn call_ollama_api(prompt: &str, max_tokens: u32) -> Result<String, String
 }
 
 /// Template-based prompt generation (fallback)
-fn generate_template_prompt(concept: &str, expertise: &str, tone: &str, include_examples: bool) -> String {
+fn generate_template_prompt(
+    concept: &str,
+    expertise: &str,
+    tone: &str,
+    include_examples: bool,
+) -> String {
     let intro = match expertise {
         "beginner" => format!("Tu es un assistant IA accessible et pédagogique, spécialisé dans {}. Tu expliques les concepts de manière simple.", concept),
         "intermediate" => format!("Tu es un assistant IA compétent, spécialisé dans {}. Tu fournis des explications claires avec des détails techniques appropriés.", concept),
         "advanced" | "expert" => format!("Tu es un expert de haut niveau dans le domaine de {}. Tu fournis des analyses approfondies et des insights avancés.", concept),
         _ => format!("Tu es un assistant IA spécialisé dans {}.", concept),
     };
-    
+
     let tone_desc = match tone {
         "professional" => "Ton langage est professionnel, précis et structuré.",
         "casual" => "Ton langage est décontracté, accessible et engageant.",
@@ -173,7 +181,7 @@ fn generate_template_prompt(concept: &str, expertise: &str, tone: &str, include_
         "formal" => "Ton langage est formel, académique et rigoureux.",
         _ => "Ton langage est clair et adapté au contexte.",
     };
-    
+
     let examples_section = if include_examples {
         format!(
             "\n\nExemples d'application:\n- Analyse de problèmes liés à {}\n- Conseil stratégique sur {}\n- Résolution de défis dans {}",
@@ -182,7 +190,7 @@ fn generate_template_prompt(concept: &str, expertise: &str, tone: &str, include_
     } else {
         String::new()
     };
-    
+
     format!(
         r#"{}
 
@@ -217,13 +225,9 @@ mod tests {
 
     #[test]
     fn test_template_generation() {
-        let prompt = generate_template_prompt(
-            "développement web",
-            "advanced",
-            "professional",
-            true,
-        );
-        
+        let prompt =
+            generate_template_prompt("développement web", "advanced", "professional", true);
+
         assert!(prompt.contains("développement web"));
         assert!(prompt.contains("expert de haut niveau"));
         assert!(prompt.contains("Exemples d'application"));
@@ -231,13 +235,8 @@ mod tests {
 
     #[test]
     fn test_beginner_prompt() {
-        let prompt = generate_template_prompt(
-            "cuisine française",
-            "beginner",
-            "friendly",
-            false,
-        );
-        
+        let prompt = generate_template_prompt("cuisine française", "beginner", "friendly", false);
+
         assert!(prompt.contains("cuisine française"));
         assert!(prompt.contains("accessible et pédagogique"));
         assert!(!prompt.contains("Exemples d'application"));

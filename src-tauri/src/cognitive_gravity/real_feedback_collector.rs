@@ -54,10 +54,10 @@ impl RealFeedbackCollector {
 
         let reflection_depth = Self::estimate_omega_depth().await;
         let coherence_score = Self::estimate_omega_coherence().await;
-        
+
         // Contradiction tracking: integrate with omega::contradiction_detector
         let contradiction_count = 0; // Future: omega::contradiction_detector::count()
-        
+
         let complexity = Self::estimate_omega_complexity().await;
 
         Ok(OmegaFeedback {
@@ -95,10 +95,10 @@ impl RealFeedbackCollector {
 
         let consensus_score = Self::estimate_agents_consensus().await;
         let active_agents = Self::count_active_agents().await;
-        
+
         // Conflict tracking: integrate with multi_agents::conflict_resolver
         let conflict_count = 0; // Future: multi_agents::conflict_resolver::count()
-        
+
         let coordination = Self::estimate_agents_coordination().await;
 
         Ok(AgentsFeedback {
@@ -117,10 +117,10 @@ impl RealFeedbackCollector {
 
         let global_harmony = Self::estimate_harmonic_harmony().await;
         let resonance_score = Self::estimate_harmonic_resonance().await;
-        
+
         // Dissonance tracking: integrate with harmonic_os::dissonance_detector
         let dissonance_count = 0; // Future: harmonic_os::dissonance_detector::count()
-        
+
         let stability = Self::estimate_harmonic_stability().await;
 
         Ok(HarmonicFeedback {
@@ -350,15 +350,14 @@ impl RealFeedbackCollector {
         if cpus.is_empty() {
             return 0.7;
         }
-        
+
         let usages: Vec<f32> = cpus.iter().map(|cpu| cpu.cpu_usage()).collect();
         let avg = usages.iter().sum::<f32>() / usages.len() as f32;
-        
+
         // Calculate variance
-        let variance: f32 = usages.iter()
-            .map(|u| (u - avg).powi(2))
-            .sum::<f32>() / usages.len() as f32;
-        
+        let variance: f32 =
+            usages.iter().map(|u| (u - avg).powi(2)).sum::<f32>() / usages.len() as f32;
+
         // Lower variance = better balance
         let balance_score = 1.0 - (variance.sqrt() / 100.0).min(0.4);
         balance_score.clamp(0.6, 0.95)
@@ -421,7 +420,8 @@ impl RealFeedbackCollector {
             0.6 + (cpu_usage * 0.625) // Scale from 0.6 to 0.85
         } else {
             0.85 - ((cpu_usage - 0.8) * 0.5) // Decrease if overloaded
-        }.clamp(0.5, 0.95)
+        }
+        .clamp(0.5, 0.95)
     }
 }
 

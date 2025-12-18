@@ -1,7 +1,9 @@
 // TITANE∞ v8.0 - WATCHDOG Module (Optimized)
 // Module health monitoring & logging - No unwrap
 
-use crate::shared::types::{HealthStatus, LogEntry, LogLevel, ModuleHealth, TitaneResult};
+use crate::types::shared::{HealthStatus, LogLevel, ModuleHealthInfo as ModuleHealth};
+use crate::types::memory::LogEntry;
+type TitaneResult<T> = Result<T, String>;
 use crate::shared::utils::current_timestamp;
 use std::collections::VecDeque;
 const MODULE_NAME: &str = "Watchdog";

@@ -1,6 +1,6 @@
 #!/bin/bash
 # ═══════════════════════════════════════════════════════════════════════════
-# TITANE∞ v19.2.0 — Auto-Verify Engine
+# TITANE∞ v24.3.0 — Auto-Verify Engine
 # ═══════════════════════════════════════════════════════════════════════════
 # Modes: quick-scan (<200ms) | deep-scan (complet)
 # Usage: ./scripts/verify_system.sh [quick|deep]
@@ -261,7 +261,7 @@ main() {
     echo -e "${BLUE}"
     echo "╔═══════════════════════════════════════════════════════════════════╗"
     echo "║                  TITANE∞ AUTO-VERIFY ENGINE                       ║"
-    echo "║                        v19.2.0                                    ║"
+    echo "║                        v24.3.0                                    ║"
     echo "╚═══════════════════════════════════════════════════════════════════╝"
     echo -e "${NC}"
 

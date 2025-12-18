@@ -6,7 +6,8 @@
 #![allow(dead_code)] // Module architecture - scheduler integration pending
 
 mod regulation;
-use crate::shared::types::{HealthStatus, ModuleHealth, TitaneResult};
+use crate::types::shared::{HealthStatus, ModuleHealthInfo as ModuleHealth};
+type TitaneResult<T> = Result<T, String>;
 use crate::shared::utils::current_timestamp;
 pub use regulation::AdaptiveState;
 

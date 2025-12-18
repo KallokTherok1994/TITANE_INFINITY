@@ -1,18 +1,16 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// TITANE∞ v16.1 — OVERDRIVE MODULE (PARTIAL ACTIVATION)
+// TITANE∞ v24.3.0 — OVERDRIVE MODULE
 // ═══════════════════════════════════════════════════════════════════════════
 // Module principal exportant les sous-modules Overdrive actifs
-// TEMP DISABLED: semantic_kernel, memory_compactor (TAPIError API mismatch)
+// Note: memory_compactor consolidated into crate::memory_compactor (root level)
 // ═══════════════════════════════════════════════════════════════════════════
 
 pub mod api_bridge;
 pub mod auto_heal;
-pub mod chat_orchestrator; // ✅ ACTIVE v16.1
+pub mod chat_orchestrator;
 pub mod exp_engine;
-// pub mod memory_compactor; // ❌ DISABLED v16.1: TAPIError::storage/internal/parse signature changed
 pub mod memory_engine;
 pub mod project_autopilot;
-// pub mod semantic_kernel; // ❌ DISABLED v16.1: TAPIError API mismatch
 pub mod voice_engine;
 
 use crate::core::tapi_error::TAPIError;
@@ -39,7 +37,7 @@ pub struct OverdriveState {
 
 pub fn init() -> OverdriveState {
     println!("═══════════════════════════════════════════════════════════════════════════");
-    println!("  TITANE∞ v16 — OVERDRIVE ENGINE INITIALIZATION");
+    println!("  TITANE∞ v24 — OVERDRIVE ENGINE INITIALIZATION");
     println!("═══════════════════════════════════════════════════════════════════════════");
 
     let auto_heal_state = auto_heal::init();
