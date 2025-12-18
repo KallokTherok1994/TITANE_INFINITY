@@ -348,7 +348,7 @@ const AppRouter: React.FC = () => {
   useEffect(() => {
     import('./i18n')
       .then(({ initI18nAsync }) => {
-        initI18nAsync(); // Background load, doesn't block UI
+        initI18nAsync(); // Background load, doesn&apos;t block UI
       })
       .catch(error => {
         logger.warn('i18n lazy initialization failed', { component: 'i18n', error });

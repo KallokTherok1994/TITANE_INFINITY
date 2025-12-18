@@ -82,7 +82,7 @@ describe('Menu Accessibility', () => {
     it('should not mark inactive items with aria-current', () => {
       renderMenu('/titane');
 
-      // Get all menu items and check that non-active ones don't have aria-current
+      // Get all menu items and check that non-active ones don&apos;t have aria-current
       const menuItems = screen.getAllByRole('menuitem');
       const inactiveItems = menuItems.filter(
         item => !item.textContent?.toLowerCase().includes('titane')
@@ -107,7 +107,7 @@ describe('Menu Accessibility', () => {
       let titaneItem = screen.getByRole('menuitem', { name: /titane/i });
       expect(titaneItem).toHaveAttribute('aria-current', 'page');
 
-      // Simulate navigation to /stats (using a route that doesn't have duplicates)
+      // Simulate navigation to /stats (using a route that doesn&apos;t have duplicates)
       rerender(
         <MemoryRouter initialEntries={['/stats']}>
           <Menu

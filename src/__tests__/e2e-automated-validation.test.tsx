@@ -476,7 +476,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Full System Integration', () => {
     expect(healStats).toBeDefined();
     expect(healStats).toHaveProperty('providers');
 
-    // 5. Isoler erreurs (error isolation) - multiple errors shouldn't propagate
+    // 5. Isoler erreurs (error isolation) - multiple errors shouldn&apos;t propagate
     const errorResponses = await Promise.all([
       aiOrchestrator.generate('Test 1 during errors', []),
       aiOrchestrator.generate('Test 2 during errors', []),
@@ -1021,7 +1021,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Full System Integration', () => {
     expect(healStats).toBeDefined();
     expect(healStats).toHaveProperty('providers');
 
-    // 5. Isoler erreurs (error isolation) - multiple errors shouldn't propagate
+    // 5. Isoler erreurs (error isolation) - multiple errors shouldn&apos;t propagate
     const errorResponses = await Promise.all([
       aiOrchestrator.generate('Test 1 during errors', []),
       aiOrchestrator.generate('Test 2 during errors', []),
@@ -1544,7 +1544,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Full System Integration', () => {
     // Already tested in provider tests
 
     // 5. Isoler erreurs (error isolation)
-    // Error in one message shouldn't affect others
+    // Error in one message shouldn&apos;t affect others
     await act(async () => {
       await result.current.sendMessage('OMEGA Test: Error isolation works');
     });

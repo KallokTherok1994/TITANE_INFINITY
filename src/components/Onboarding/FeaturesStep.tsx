@@ -63,14 +63,14 @@ export const FeaturesStep: React.FC = () => {
         />
         <Feature
           icon="📝"
-          title="Assistance à l'Écriture"
+          title="Assistance à l&apos;Écriture"
           description="Rédaction, correction, amélioration de textes. TITANE vous aide à communiquer avec clarté."
           delay={0.2}
         />
         <Feature
           icon="💡"
           title="Brainstorming & Idéation"
-          description="Génération d'idées créatives et résolution de problèmes complexes ensemble."
+          description="Génération d&apos;idées créatives et résolution de problèmes complexes ensemble."
           delay={0.3}
         />
         <Feature

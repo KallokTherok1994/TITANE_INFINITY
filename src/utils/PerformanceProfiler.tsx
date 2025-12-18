@@ -209,7 +209,7 @@ export const PerformanceProfiler: React.FC<PerformanceProfilerProps> = ({
       baseDuration,
       startTime,
       commitTime,
-      interactions: new Set(), // React 18 doesn't provide interactions anymore
+      interactions: new Set(), // React 18 doesn&apos;t provide interactions anymore
     };
 
     recordMetric(metric);

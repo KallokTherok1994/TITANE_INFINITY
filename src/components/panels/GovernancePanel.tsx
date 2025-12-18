@@ -157,7 +157,7 @@ export const GovernancePanel: React.FC<GovernancePanelProps> = ({ className = ''
     setIsMonitoring(integrityChecker.isMonitoring);
   }, []);
 
-  // v21: Don't render if not visible
+  // v21: Don&apos;t render if not visible
   if (!isVisible) return null;
 
   // Health score color

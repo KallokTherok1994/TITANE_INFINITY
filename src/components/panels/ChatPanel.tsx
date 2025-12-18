@@ -94,7 +94,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ className = '', children }
     setColors([visuals.particleColor, visuals.accent, visuals.secondary]);
   }, [state, visuals, setPattern, setColors, setEmissionRate]);
 
-  // v21: Don't render if not visible
+  // v21: Don&apos;t render if not visible
   if (!isVisible) return null;
 
   return (
@@ -201,7 +201,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ className = '', children }
           {/* v21: Collapse/Expand button */}
           <button
             onClick={e => {
-              e.stopPropagation(); // Don't trigger bring-to-front
+              e.stopPropagation(); // Don&apos;t trigger bring-to-front
               toggle();
             }}
             style={{
