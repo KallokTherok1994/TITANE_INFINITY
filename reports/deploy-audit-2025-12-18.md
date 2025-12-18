@@ -3,7 +3,7 @@
 ## Executive Summary
 
 - **Status:** ✅ PASS (tests + security scan + stable build succeeded)
-- **Deployment readiness (local-first/Tauri):** ✅ Ready to proceed to release packaging, pending commit/merge of local changes.
+- **Deployment readiness (local-first/Tauri):** ✅ Ready to proceed to release packaging (audit changes committed + pushed).
 
 ## Scope & Constraints
 
@@ -70,9 +70,21 @@ If these changes are intended for release, they should be committed and pushed (
 
 ## Recommended Next Steps
 
-1. **Commit** the 3 modified files above (or revert if they’re experimental).
+1. Run release packaging (e.g. Tauri build) and capture artifact sizes/hashes.
 2. Optionally run **COPILOT-XS Test Gate** (`npm run copilot-xs:test`) to bundle validate + full tests in one step.
-3. If the release target includes a packaged binary: run **Tauri build** (stable packaging) and capture artifact sizes/hashes.
+3. Optional: address bundle size warning via manual chunking/lazy loading.
+
+## Post-push Evidence (After Audit)
+
+The audit-driven changes were committed and pushed to `origin/MAIN` on 2025-12-18:
+
+- `8913f2e7` audit(deploy): stabilize tests and capture deploy gate report
+- `3bfe9bc9` chore: harden Rust timestamps and tighten UI typing
+- `086db65b` chore(devtools): tighten livingEngines typing
+
+Post-push verification (clean working tree):
+- `npm run copilot-xs:test` ✅ PASS
+- “🔵 Build Titan-Stable” ✅ PASS
 
 ## Appendix — Evidence
 
