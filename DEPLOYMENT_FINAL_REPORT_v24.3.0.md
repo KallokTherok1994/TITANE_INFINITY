@@ -32,7 +32,13 @@ TITANE∞ v24.3.0 est **100% prêt pour la production** avec:
 **Installation**:
 
 ```bash
-sudo dpkg -i TITANE-Infinity_24.3.0_amd64.deb
+DEB="./src-tauri/target/release/bundle/deb/TITANE-Infinity_24.3.0_amd64.deb"
+
+# Recommandé (résout automatiquement les dépendances)
+sudo apt install "$DEB"
+
+# Alternative (si vous préférez dpkg)
+sudo dpkg -i "$DEB"
 sudo apt-get install -f  # Si dépendances manquantes
 ```
 
@@ -253,7 +259,8 @@ gh release create v24.3.0 \
 
 ```bash
 # Test installation DEB
-sudo dpkg -i TITANE-Infinity_24.3.0_amd64.deb
+DEB="./src-tauri/target/release/bundle/deb/TITANE-Infinity_24.3.0_amd64.deb"
+sudo apt install "$DEB"
 titane-infinity --version
 titane-infinity
 
