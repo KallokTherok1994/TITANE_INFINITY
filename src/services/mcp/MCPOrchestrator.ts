@@ -548,7 +548,7 @@ class MCPOrchestratorClass implements MCPOperations {
 
     // Check for rapid changes
     const recentJobs = this.state.jobs.completed.filter(
-      j => (j as any).completedAt && Date.now() - (j as any).completedAt < 60000 // Last minute
+      (j): j is CompletedJob => !!j.completedAt && Date.now() - j.completedAt < 60000 // Last minute
     );
 
     if (recentJobs.length > 20) {
