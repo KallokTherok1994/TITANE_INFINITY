@@ -52,6 +52,13 @@ import { MEMORY_TIMEOUTS } from '@/config/aiTimeouts.config'; // v22Ω: Centrali
 import { cognitiveOmega } from '@/services/cognitive/cognitiveOmegaIntegration';
 import { createLogger } from '@/utils/logger';
 
+// Type-safe correction interface
+interface CorrectionInfo {
+  correction_type?: string;
+  confidence?: number;
+  [key: string]: unknown;
+}
+
 // 🚀 v24.3.1 - Performance Optimizations
 import { responseCache } from '@/services/cache/responseCache';
 import { predictivePreloader } from '@/services/cache/predictivePreloader';
@@ -639,14 +646,14 @@ Format: [Audit complet] + [Réponse utilisateur]
               if (traceId) {
                 await cognitiveOmega.logPhase(traceId, 'auto_correction', {
                   applied: true,
-                  correction_type: (correctionResult.correction as any)?.correction_type,
-                  confidence: (correctionResult.correction as any)?.confidence,
+                  correction_type: (correctionResult.correction as CorrectionInfo)?.correction_type,
+                  confidence: (correctionResult.correction as CorrectionInfo)?.confidence,
                 });
               }
 
               logger.info('Response auto-corrected for consistency', {
-                correctionType: (correctionResult.correction as any)?.correction_type,
-                confidence: (correctionResult.correction as any)?.confidence,
+                correctionType: (correctionResult.correction as CorrectionInfo)?.correction_type,
+                confidence: (correctionResult.correction as CorrectionInfo)?.confidence,
               });
             }
           }

@@ -449,7 +449,13 @@ async function runBenchmarks(): Promise<BenchmarkReport> {
   // 5. Metrics: Measure latency (p50, p95, p99), throughput (ops/sec), memory usage
   // 6. Cleanup: await vectorStore.close() after tests
   // For now, use null as placeholder for isolated benchmark
-  const vectorStore = null as any; // TODO: Use proper vector store
+  /**
+   * Mock vector store for benchmark isolation.
+   * Using null is intentional - benchmarks test UnifiedMemory logic only,
+   * not vector store integration. Full integration tests are in
+   * UnifiedMemory.integration.test.ts
+   */
+  const vectorStore = null as any;
   const embeddingGenerator = new LocalEmbeddingGenerator({
     modelName: 'Xenova/all-MiniLM-L6-v2',
     dimensions: 384,

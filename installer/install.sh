@@ -21,7 +21,7 @@ echo "🔍 [0/9] Validation pre-flight..."
 
 # Vérifier espace disque (besoin ~2GB)
 REQUIRED_SPACE_MB=2048
-AVAILABLE_SP9CE_MB=$(df -m "$(dirname "$0")" | awk 'NR==2 {print $4}')
+AVAILABLE_SPACE_MB=$(df -m "$(dirname "$0")" | awk 'NR==2 {print $4}')
 if [ "$AVAILABLE_SPACE_MB" -lt "$REQUIRED_SPACE_MB" ]; then
     echo "❌ Espace disque insuffisant: ${AVAILABLE_SPACE_MB}MB disponibles, ${REQUIRED_SPACE_MB}MB requis"
     exit 1
