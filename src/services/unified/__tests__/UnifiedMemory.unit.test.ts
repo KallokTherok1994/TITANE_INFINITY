@@ -14,6 +14,7 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { UnifiedMemory } from '../UnifiedMemory';
+import { MemoryTier } from '../../mcp/mcp.types';
 import type {
   IVectorStore,
   IEmbeddingGenerator,
@@ -115,10 +116,10 @@ class MockVectorStore implements IVectorStore {
     const entries = Array.from(this.memories.values());
 
     const byTier = {
-      SHORT_TERM: entries.filter(e => e.tier === 'SHORT_TERM').length,
-      MEDIUM_TERM: entries.filter(e => e.tier === 'MEDIUM_TERM').length,
-      LONG_TERM: entries.filter(e => e.tier === 'LONG_TERM').length,
-      META_MEMORY: entries.filter(e => e.tier === 'META_MEMORY').length,
+      SHORT_TERM: entries.filter(e => e.tier === MemoryTier.SHORT_TERM).length,
+      MEDIUM_TERM: entries.filter(e => e.tier === MemoryTier.MEDIUM_TERM).length,
+      LONG_TERM: entries.filter(e => e.tier === MemoryTier.LONG_TERM).length,
+      META_MEMORY: entries.filter(e => e.tier === MemoryTier.META_MEMORY).length,
     };
 
     const byType = entries.reduce((acc, e) => {
@@ -313,7 +314,7 @@ describe('UnifiedMemory', () => {
         summary: 'Test',
         tags: [],
       });
-      expect(entry.tier).toBe('SHORT_TERM');
+      expect(entry.tier).toBe(MemoryTier.SHORT_TERM);
     });
 
     it('should set MCP metadata flags', async () => {
@@ -523,12 +524,12 @@ describe('UnifiedMemory', () => {
       await memory.promoteMemory(entry.id);
 
       const updated = await vectorStore.get(entry.id);
-      expect(updated!.tier).toBe('MEDIUM_TERM');
+      expect(updated!.tier).toBe(MemoryTier.MEDIUM_TERM);
     });
 
     it('should promote MEDIUM_TERM to LONG_TERM after 50 accesses', async () => {
       const entry = await memory.createMemory({
-        tier: 'MEDIUM_TERM',
+        tier: MemoryTier.MEDIUM_TERM,
         type: 'fact',
         owner: 'test',
         summary: 'Test',
@@ -539,12 +540,12 @@ describe('UnifiedMemory', () => {
       await memory.promoteMemory(entry.id);
 
       const updated = await vectorStore.get(entry.id);
-      expect(updated!.tier).toBe('LONG_TERM');
+      expect(updated!.tier).toBe(MemoryTier.LONG_TERM);
     });
 
     it('should promote LONG_TERM to META_MEMORY with high importance', async () => {
       const entry = await memory.createMemory({
-        tier: 'LONG_TERM',
+        tier: MemoryTier.LONG_TERM,
         type: 'milestone',
         owner: 'test',
         summary: 'Test',
@@ -556,7 +557,7 @@ describe('UnifiedMemory', () => {
       await memory.promoteMemory(entry.id);
 
       const updated = await vectorStore.get(entry.id);
-      expect(updated!.tier).toBe('META_MEMORY');
+      expect(updated!.tier).toBe(MemoryTier.META_MEMORY);
     });
   });
 
@@ -639,7 +640,7 @@ describe('UnifiedMemory', () => {
       const oldDate = now - 365 * 24 * 60 * 60 * 1000; // 1 year ago
 
       const entry = await memory.createMemory({
-        tier: 'META_MEMORY',
+        tier: MemoryTier.META_MEMORY,
         type: 'milestone',
         owner: 'test',
         summary: 'Critical memory',

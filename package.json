@@ -113,8 +113,8 @@
     "@typescript-eslint/eslint-plugin": "^7.13.1",
     "@typescript-eslint/parser": "^7.13.1",
     "@vitejs/plugin-react": "^4.3.1",
-    "@vitest/coverage-v8": "^4.0.15",
-    "@vitest/ui": "^4.0.13",
+    "@vitest/coverage-v8": "^4.0.16",
+    "@vitest/ui": "^4.0.16",
     "autoprefixer": "^10.4.16",
     "axe-core": "^4.11.0",
     "cross-env": "^10.1.0",
@@ -142,9 +142,17 @@
     "vite": "^6.4.1",
     "vite-plugin-compression": "^0.5.1",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^4.0.13",
+    "vitest": "^4.0.16",
     "workbox-build": "^7.4.0",
     "workbox-window": "^7.4.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "better-sqlite3",
+      "esbuild",
+      "protobufjs",
+      "sharp"
+    ]
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [

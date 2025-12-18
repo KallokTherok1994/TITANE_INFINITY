@@ -473,8 +473,9 @@ export const AudioDiagnosticsPanel = ({
                 className="adp-btn primary"
                 onClick={async () => {
                   try {
-                    const { audioHealthService } =
-                      await import('@/services/audio/audioHealthCheck');
+                    const { audioHealthService } = await import(
+                      '@/services/audio/audioHealthCheck'
+                    );
                     const result = await audioHealthService.diagnoseAndRepair();
                     console.log('[AudioDiagnosticsPanel] Auto-repair result:', result);
                     // Rafraîchir l'UI après réparation

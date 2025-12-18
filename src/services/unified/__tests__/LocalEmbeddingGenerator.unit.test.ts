@@ -12,21 +12,29 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { LocalEmbeddingGenerator } from '../LocalEmbeddingGenerator';
 
+vi.mock('@xenova/transformers', () => ({
+  pipeline: vi.fn(async () => {
+    throw new Error('Transformers.js unavailable (test)');
+  }),
+}));
+
 describe('LocalEmbeddingGenerator', () => {
   let generator: LocalEmbeddingGenerator;
 
   beforeEach(async () => {
     generator = new LocalEmbeddingGenerator({
-      model: 'Xenova/all-MiniLM-L6-v2',
+      modelName: 'all-MiniLM-L6-v2',
       dimensions: 384,
-      useFallback: true, // Use fallback for testing
     });
     await generator.initialize();
   });
 
   describe('Initialization', () => {
     it('should initialize successfully', async () => {
-      const gen = new LocalEmbeddingGenerator();
+      const gen = new LocalEmbeddingGenerator({
+        modelName: 'all-MiniLM-L6-v2',
+        dimensions: 384,
+      });
       await expect(gen.initialize()).resolves.not.toThrow();
     });
 
@@ -238,9 +246,8 @@ describe('LocalEmbeddingGenerator', () => {
   describe('Fallback Generator', () => {
     it('should use fallback when Transformers.js unavailable', async () => {
       const fallbackGen = new LocalEmbeddingGenerator({
-        model: 'Xenova/all-MiniLM-L6-v2',
+        modelName: 'all-MiniLM-L6-v2',
         dimensions: 384,
-        useFallback: true,
       });
       await fallbackGen.initialize();
 
@@ -252,7 +259,8 @@ describe('LocalEmbeddingGenerator', () => {
 
     it('should generate deterministic fallback embeddings', async () => {
       const fallbackGen = new LocalEmbeddingGenerator({
-        useFallback: true,
+        modelName: 'all-MiniLM-L6-v2',
+        dimensions: 384,
       });
       await fallbackGen.initialize();
 

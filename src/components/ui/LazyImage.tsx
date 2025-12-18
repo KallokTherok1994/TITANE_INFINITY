@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useRef, ImgHTMLAttributes } from 'react';
 import './LazyImage.css';
 
-export interface LazyImageProps extends Omit<
-  ImgHTMLAttributes<HTMLImageElement>,
-  'src' | 'placeholder'
-> {
+export interface LazyImageProps
+  extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src' | 'placeholder'> {
   src: string;
   alt: string;
   placeholder?: string;

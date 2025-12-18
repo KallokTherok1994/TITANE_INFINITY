@@ -68,11 +68,19 @@ export interface AIResponse {
   metadata?: AIResponseMetadata;
 }
 
-export interface AIProvider {
+export interface AIProvider<TConfig = unknown> {
   name: AIProviderName;
   isAvailable: () => Promise<boolean>;
-  generate: (message: string, history: AIMessage[]) => Promise<AIResponse>;
-  stream?: (message: string, history: AIMessage[]) => AsyncGenerator<string>;
+  generate: (
+    message: string,
+    history?: AIMessage[],
+    config?: TConfig
+  ) => Promise<AIResponse>;
+  stream?: (
+    message: string,
+    history?: AIMessage[],
+    config?: TConfig
+  ) => AsyncGenerator<string>;
   resetErrors?: () => void;
   getStats?: () => Record<string, unknown>;
   description?: string;

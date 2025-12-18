@@ -104,7 +104,7 @@ export type VisualStore = VisualEngineState & VisualStoreActions;
 /**
  * État initial par défaut
  */
-const initialState: VisualEngineState = {
+const getInitialState = (): VisualEngineState => ({
   // Visual State
   currentState: 'idle',
   previousState: null,
@@ -134,8 +134,14 @@ const initialState: VisualEngineState = {
   debug: import.meta.env.DEV && !process.env.VITEST,
 
   // History
-  stateHistory: [],
-};
+  stateHistory: [
+    {
+      state: 'idle',
+      timestamp: Date.now(),
+      duration: 0,
+    },
+  ],
+});
 
 /**
  * Store Zustand pour le Visual Engine v21
@@ -172,7 +178,7 @@ export const useVisualStore = create<VisualStore>()(
   devtools(
     persist(
       (set, get) => ({
-        ...initialState,
+        ...getInitialState(),
 
         // ═══════════════════════════════════════════════════════════
         // STATE MANAGEMENT
@@ -285,9 +291,7 @@ export const useVisualStore = create<VisualStore>()(
         },
 
         reset: () => {
-          set({
-            ...initialState,
-          });
+          set(getInitialState());
 
           if (get().debug) {
             console.log('[visualStore] Visual Engine réinitialisé');

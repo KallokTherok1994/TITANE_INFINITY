@@ -54,6 +54,7 @@ vi.mock('@/core/engines/SINGULARITY_ENGINE', () => ({
 import { invoke } from '@tauri-apps/api/core';
 import { secureInvoke } from '@/lib/security';
 import { singularityEngine } from '@/core/engines/SINGULARITY_ENGINE';
+import type { SingularityState } from '@/core/ARCHITECTURE_TYPES_v24-v∞';
 
 describe('useSingularitySync', () => {
   beforeEach(() => {
@@ -94,8 +95,10 @@ describe('useSingularitySync', () => {
       timestamp: Date.now(),
     };
 
-    vi.mocked(secureInvoke).mockResolvedValue(mockState);
-    vi.mocked(singularityEngine.getState).mockReturnValue(mockState);
+    vi.mocked(secureInvoke).mockResolvedValue(mockState as unknown as SingularityState);
+    vi.mocked(singularityEngine.getState).mockReturnValue(
+      mockState as unknown as SingularityState
+    );
 
     const { result } = renderHook(() =>
       useSingularitySync({ autoSync: true, syncInterval: 100 })
@@ -135,8 +138,10 @@ describe('useSingularitySync', () => {
       timestamp: Date.now(),
     };
 
-    vi.mocked(secureInvoke).mockResolvedValue(mockState);
-    vi.mocked(singularityEngine.getState).mockReturnValue(mockState);
+    vi.mocked(secureInvoke).mockResolvedValue(mockState as unknown as SingularityState);
+    vi.mocked(singularityEngine.getState).mockReturnValue(
+      mockState as unknown as SingularityState
+    );
 
     const { result } = renderHook(() => useSingularitySync());
 
@@ -234,7 +239,12 @@ describe('useMemoryEngine', () => {
     const saveCall = vi
       .mocked(secureInvoke)
       .mock.calls.find((call: unknown[]) => call[0] === 'memory_save_entry');
-    const savedEntry = JSON.parse(saveCall![1].value as string);
+
+    expect(saveCall).toBeDefined();
+
+    const rawValue = (saveCall?.[1] as { value?: unknown } | undefined)?.value;
+    expect(typeof rawValue).toBe('string');
+    const savedEntry = JSON.parse(rawValue as string);
 
     expect(savedEntry.tags).toBeDefined();
     expect(savedEntry.tags.length).toBeGreaterThan(0);

@@ -312,9 +312,12 @@ export const ollamaProvider: AIProvider = {
   async generate(
     message: string,
     history: AIMessage[] = [],
-    config: AIConfig = {}
+    config?: unknown
   ): Promise<AIResponse> {
-    const finalConfig = { ...DEFAULT_AI_CONFIG, ...config };
+    const finalConfig = {
+      ...DEFAULT_AI_CONFIG,
+      ...(config as Partial<AIConfig> | undefined),
+    };
 
     // OMEGA: Pre-check endpoint health
     const isHealthy = await this.isAvailable();

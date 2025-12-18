@@ -195,9 +195,12 @@ export const claudeProvider: AIProvider = {
   async generate(
     message: string,
     history: AIMessage[] = [],
-    config?: Partial<ClaudeConfig>
+    config?: unknown
   ): Promise<AIResponse> {
-    const finalConfig = { ...DEFAULT_CONFIG, ...config };
+    const finalConfig = {
+      ...DEFAULT_CONFIG,
+      ...(config as Partial<ClaudeConfig> | undefined),
+    };
 
     // ✨ v21 Phase 3: Cache intelligent pour réduire coûts API
     return withCache(

@@ -26,14 +26,14 @@ const canRunWebGLTests =
   typeof window !== 'undefined' && typeof WebGLRenderingContext !== 'undefined';
 
 // Lazy import to prevent errors when WebGL is unavailable
-let ThreeJSAvatarRenderer: typeof import('./ThreeJSAvatarRenderer').ThreeJSAvatarRenderer;
+let ThreeJSAvatarRendererCtor: typeof import('./ThreeJSAvatarRenderer').ThreeJSAvatarRenderer;
 let hasThreeJSRenderer = false;
 
 try {
   if (canRunWebGLTests) {
     // eslint-disable-next-line @typescript-eslint/no-var-requires -- Dynamic require for optional native module
     const module = require('./ThreeJSAvatarRenderer');
-    ThreeJSAvatarRenderer = module.ThreeJSAvatarRenderer;
+    ThreeJSAvatarRendererCtor = module.ThreeJSAvatarRenderer;
     hasThreeJSRenderer = true;
   }
 } catch {
@@ -42,6 +42,7 @@ try {
 }
 
 import type { SkeletonSnapshot } from '../fullbody/fullbody_engine';
+import type { ThreeJSAvatarRenderer } from './ThreeJSAvatarRenderer';
 
 const createRendererStub = (three: typeof import('three')) => ({
   setSize: vi.fn(),
@@ -275,7 +276,7 @@ async function detectMemoryLeaks(cycles: number): Promise<MemoryLeakReport> {
   for (let i = 0; i < cycles; i++) {
     // Create renderer (mount)
     const canvas = new MockCanvas() as any;
-    const renderer = new ThreeJSAvatarRenderer(canvas, {
+    const renderer = new ThreeJSAvatarRendererCtor(canvas, {
       width: 400,
       height: 600,
     });
@@ -358,7 +359,7 @@ describe.skipIf(!hasThreeJSRenderer)('Floating Window Performance Tests', () => 
     mockTime = 0;
     deterministicRandom = createDeterministicRandomGenerator();
     canvas = new MockCanvas();
-    renderer = new ThreeJSAvatarRenderer(canvas, {
+    renderer = new ThreeJSAvatarRendererCtor(canvas, {
       width: 400,
       height: 600,
       antialias: false, // Disable for performance tests

@@ -19,9 +19,9 @@ import fs from 'fs';
 
 // Check if better-sqlite3 bindings are available
 let hasSQLiteBindings = false;
-let UnifiedMemory: typeof import('../index').UnifiedMemory;
-let LocalEmbeddingGenerator: typeof import('../index').LocalEmbeddingGenerator;
-let SQLiteVectorStore: typeof import('../SQLiteVectorStore').SQLiteVectorStore;
+let UnifiedMemoryCtor: typeof import('../index').UnifiedMemory;
+let LocalEmbeddingGeneratorCtor: typeof import('../index').LocalEmbeddingGenerator;
+let SQLiteVectorStoreCtor: typeof import('../SQLiteVectorStore').SQLiteVectorStore;
 
 try {
   // eslint-disable-next-line @typescript-eslint/no-var-requires -- Dynamic require for optional native module
@@ -29,18 +29,18 @@ try {
   hasSQLiteBindings = true;
   // eslint-disable-next-line @typescript-eslint/no-var-requires -- Conditional import based on runtime check
   const indexModule = require('../index');
-  UnifiedMemory = indexModule.UnifiedMemory;
-  LocalEmbeddingGenerator = indexModule.LocalEmbeddingGenerator;
+  UnifiedMemoryCtor = indexModule.UnifiedMemory;
+  LocalEmbeddingGeneratorCtor = indexModule.LocalEmbeddingGenerator;
   // eslint-disable-next-line @typescript-eslint/no-var-requires -- Conditional import based on runtime check
-  SQLiteVectorStore = require('../SQLiteVectorStore').SQLiteVectorStore;
+  SQLiteVectorStoreCtor = require('../SQLiteVectorStore').SQLiteVectorStore;
 } catch {
   hasSQLiteBindings = false;
 }
 
 describe.skipIf(!hasSQLiteBindings)('UnifiedMemory Benchmarks', () => {
-  let memory: UnifiedMemory | null = null;
-  let vectorStore: SQLiteVectorStore;
-  let embeddingGenerator: LocalEmbeddingGenerator;
+  let memory!: InstanceType<typeof UnifiedMemoryCtor>;
+  let vectorStore!: InstanceType<typeof SQLiteVectorStoreCtor>;
+  let embeddingGenerator!: InstanceType<typeof LocalEmbeddingGeneratorCtor>;
   const dbPath = path.join(__dirname, 'benchmark-test.db');
 
   function getMemoryUsage(): number {
@@ -51,14 +51,14 @@ describe.skipIf(!hasSQLiteBindings)('UnifiedMemory Benchmarks', () => {
   beforeAll(async () => {
     if (fs.existsSync(dbPath)) fs.unlinkSync(dbPath);
 
-    vectorStore = new SQLiteVectorStore({ dbPath });
-    embeddingGenerator = new LocalEmbeddingGenerator({
+    vectorStore = new SQLiteVectorStoreCtor({ dbPath });
+    embeddingGenerator = new LocalEmbeddingGeneratorCtor({
       modelName: 'all-MiniLM-L6-v2',
       dimensions: 384,
       enableCache: false,
     });
 
-    memory = new UnifiedMemory(vectorStore, embeddingGenerator, {
+    memory = new UnifiedMemoryCtor(vectorStore, embeddingGenerator, {
       enabled: true,
       cleanup: { enabled: false, intervalMs: 0, removeBelowScore: 0.3 },
       consolidation: { enabled: false, intervalMs: 0, mergeSimilarThreshold: 0.9 },
@@ -69,9 +69,7 @@ describe.skipIf(!hasSQLiteBindings)('UnifiedMemory Benchmarks', () => {
   });
 
   afterAll(async () => {
-    if (memory) {
-      await memory.shutdown();
-    }
+    await memory.shutdown();
     if (fs.existsSync(dbPath)) fs.unlinkSync(dbPath);
   });
 
