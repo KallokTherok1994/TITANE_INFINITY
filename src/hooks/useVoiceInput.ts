@@ -14,7 +14,17 @@ interface AudioConstraints {
   channelCount?: number;
 }
 
-export function useVoiceInput(config?: AudioConstraints) {
+export interface UseVoiceInputReturn {
+  isListening: boolean;
+  transcript: string;
+  error: string | null;
+  audioStream: MediaStream | null;
+  startListening: () => Promise<void>;
+  stopListening: () => void;
+  cancelListening: () => Promise<void>;
+}
+
+export function useVoiceInput(config?: AudioConstraints): UseVoiceInputReturn {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -48,6 +58,7 @@ export function useVoiceInput(config?: AudioConstraints) {
 
       // Verify echo cancellation is actually enabled
       const audioTrack = stream.getAudioTracks()[0];
+      if (!audioTrack) throw new Error('No audio track found');
       const settings = audioTrack.getSettings();
 
       console.log('[useVoiceInput] Audio track settings:', {

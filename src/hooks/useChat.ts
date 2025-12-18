@@ -376,12 +376,16 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         withTimeout(claudeProvider.isAvailable(), PROVIDER_CHECK_TIMEOUT, false),
       ]);
 
+      const result0 = results[0];
+      const result1 = results[1];
+      const result2 = results[2];
+
       const openaiAvailable =
-        results[0].status === 'fulfilled' ? results[0].value : false;
+        result0 && result0.status === 'fulfilled' ? result0.value : false;
       const geminiAvailable =
-        results[1].status === 'fulfilled' ? results[1].value : false;
+        result1 && result1.status === 'fulfilled' ? result1.value : false;
       const claudeAvailable =
-        results[2].status === 'fulfilled' ? results[2].value : false;
+        result2 && result2.status === 'fulfilled' ? result2.value : false;
 
       setProviderReadiness(prev => ({
         ...prev,
@@ -1062,8 +1066,10 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           // Ajouter le contexte au premier message utilisateur
           const firstUserMsgIndex = backendHistory.findIndex(m => m.role === 'user');
           if (firstUserMsgIndex >= 0) {
-            backendHistory[firstUserMsgIndex].content =
-              `${preferencesContext}\n\n${backendHistory[firstUserMsgIndex].content}`;
+            const firstUserMsg = backendHistory[firstUserMsgIndex];
+            if (firstUserMsg) {
+              firstUserMsg.content = `${preferencesContext}\n\n${firstUserMsg.content}`;
+            }
           }
         }
 
@@ -1073,7 +1079,8 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         let chatServiceError: string | null = null;
 
         if (backendHistory.length > 0) {
-          const requestConfig: StreamConfig = { provider: providerCandidates[0] };
+          const firstCandidate = providerCandidates[0];
+          const requestConfig: StreamConfig = { provider: firstCandidate ?? 'auto' };
           for (const candidate of providerCandidates) {
             try {
               requestConfig.provider = candidate;

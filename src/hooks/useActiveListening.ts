@@ -214,8 +214,9 @@ export function useActiveListening(
         streaming.forceStop();
       }
     };
+    // Note: Only run on unmount, other deps would cause unnecessary cleanups
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [streaming]);
 
   // ═══ WAKE WORD DETECTION ═══
 

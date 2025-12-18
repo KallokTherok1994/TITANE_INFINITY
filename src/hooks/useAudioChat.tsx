@@ -79,18 +79,28 @@ export function useAudioChat(config: AudioChatConfig = { enabled: true }) {
       let finalTranscript = '';
 
       for (let i = event.resultIndex; i < event.results.length; i++) {
-        const transcript = event.results[i][0].transcript;
-        if (event.results[i].isFinal) {
+        const result = event.results[i];
+        if (!result) continue;
+
+        const alternative = result[0];
+        if (!alternative) continue;
+
+        const transcript = alternative.transcript;
+        if (result.isFinal) {
           finalTranscript += transcript + ' ';
         } else {
           interimTranscript += transcript;
         }
       }
 
+      const firstResult = event.results[0];
+      const firstAlternative = firstResult?.[0];
+      const confidence = firstAlternative?.confidence ?? 0;
+
       setState(prev => ({
         ...prev,
         transcript: finalTranscript || interimTranscript,
-        confidence: event.results[0]?.[0]?.confidence || 0,
+        confidence,
       }));
     };
 

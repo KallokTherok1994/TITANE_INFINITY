@@ -17,6 +17,29 @@ import { useState, useEffect } from 'react';
 import { singularityEngine } from '../core/engines/SINGULARITY_ENGINE';
 import type { SingularityState } from '../core/ARCHITECTURE_TYPES_v24-v∞';
 
+export interface UseSingularityReturn {
+  state: SingularityState;
+  consciousness: number;
+  autoCoherence: number;
+  formStability: number;
+  expressionQuality: number;
+  field: SingularityState['singularityField'];
+  unity: SingularityState['unity'];
+  quantum: SingularityState['quantum'];
+  convergence: SingularityState['convergence'];
+  overmind: SingularityState['overmind'];
+  omnipresence: SingularityState['omnipresence'];
+  globalHarmony: number;
+  globalEntropy: number;
+  systemHealth: number;
+  isInitialized: boolean;
+  updateState: (partial: Partial<SingularityState>) => void;
+  reset: () => void;
+  signature: string;
+  essence: string;
+  timestamp: number;
+}
+
 /**
  * Hook pour accéder à l'état de singularité
  *
@@ -37,7 +60,7 @@ import type { SingularityState } from '../core/ARCHITECTURE_TYPES_v24-v∞';
  * }
  * ```
  */
-export function useSingularity(autoInit = true) {
+export function useSingularity(autoInit = true): UseSingularityReturn {
   const [state, setState] = useState<SingularityState>(singularityEngine.getState());
   const [isInitialized, setIsInitialized] = useState(false);
 
@@ -101,7 +124,16 @@ export function useSingularity(autoInit = true) {
 /**
  * Hook simplifié pour n'obtenir que les métriques principales
  */
-export function useSingularityMetrics() {
+export interface UseSingularityMetricsReturn {
+  consciousness: number;
+  autoCoherence: number;
+  formStability: number;
+  expressionQuality: number;
+  globalHarmony: number;
+  systemHealth: number;
+}
+
+export function useSingularityMetrics(): UseSingularityMetricsReturn {
   const {
     consciousness,
     autoCoherence,
@@ -124,7 +156,7 @@ export function useSingularityMetrics() {
 /**
  * Hook pour n'obtenir que le champ de singularité
  */
-export function useSingularityField() {
+export function useSingularityField(): SingularityState['singularityField'] {
   const { field } = useSingularity();
   return field;
 }

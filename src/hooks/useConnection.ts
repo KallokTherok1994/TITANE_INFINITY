@@ -23,7 +23,14 @@ export interface ConnectionStatus {
   latency: number;
 }
 
-export function useConnection() {
+export interface UseConnectionReturn {
+  status: ConnectionStatus;
+  isChecking: boolean;
+  checkConnection: () => Promise<boolean>;
+  getProvidersStatus: () => Promise<ProviderStatus[]>;
+}
+
+export function useConnection(): UseConnectionReturn {
   const [status, setStatus] = useState<ConnectionStatus>({
     online: false,
     lastCheck: 0,
@@ -47,19 +54,25 @@ export function useConnection() {
       const latency = Date.now() - startTime;
 
       // Trouve le premier provider disponible (cascade: gemini → ollama → local)
-      const availableProvider = providers.find(p => p.available);
-      const online = providers.some(p => p.available && p.provider !== 'local');
+      const availableProvider = providers.find(p => {
+        if (!p) return false;
+        return p.available;
+      });
+      const online = providers.some(p => {
+        if (!p) return false;
+        return p.available && p.provider !== 'local';
+      });
 
       setStatus({
         online,
         lastCheck: Date.now(),
-        provider: availableProvider?.provider || 'local',
+        provider: availableProvider?.provider ?? 'local',
         availableProviders: providers,
         latency,
       });
 
       console.log(
-        `🔗 Connection check: ${providers.length} providers, best: ${availableProvider?.provider}`
+        `🔗 Connection check: ${providers.length} providers, best: ${availableProvider?.provider ?? 'none'}`
       );
 
       return online;

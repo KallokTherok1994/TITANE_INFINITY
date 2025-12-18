@@ -259,6 +259,7 @@ export function useTrackedEffect(
     stop();
 
     return cleanup;
+    // Note: profiler and effect intentionally excluded from deps (wrapper pattern)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 }
@@ -280,6 +281,7 @@ export function useTrackedCallback<T extends (...args: unknown[]) => unknown>(
         stop();
       }
     },
+    // Note: callback intentionally excluded (wrapper pattern, callbackName tracks identity)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [callbackName, ...deps]
   ) as T;

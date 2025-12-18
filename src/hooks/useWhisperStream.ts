@@ -25,7 +25,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 /**
  * Transcription event from backend
@@ -84,12 +84,26 @@ export interface WhisperStreamState {
   error: string | null;
 }
 
+export interface UseWhisperStreamReturn extends WhisperStreamState {
+  start: () => Promise<void>;
+  stop: () => Promise<void>;
+  reset: () => void;
+  sendChunk: (
+    data: Float32Array,
+    sampleRate: number,
+    hasSpeech: boolean,
+    vadConfidence: number
+  ) => Promise<void>;
+}
+
 /**
  * ═══════════════════════════════════════════════════════════════════
  *   HOOK: useWhisperStream
  * ═══════════════════════════════════════════════════════════════════
  */
-export function useWhisperStream(config: WhisperStreamConfig = {}) {
+export function useWhisperStream(
+  config: WhisperStreamConfig = {}
+): UseWhisperStreamReturn {
   // State
   const [state, setState] = useState<WhisperStreamState>({
     partial: '',
@@ -114,7 +128,7 @@ export function useWhisperStream(config: WhisperStreamConfig = {}) {
       console.log('[useWhisperStream] 🎙️ Starting...');
 
       // Start backend streaming
-      await invoke('start_whisper_streaming', {
+      await secureInvoke('start_whisper_streaming', {
         model: config.model || 'base',
         language: config.language || 'fr',
       });
@@ -201,7 +215,7 @@ export function useWhisperStream(config: WhisperStreamConfig = {}) {
       console.log('[useWhisperStream] 🛑 Stopping...');
 
       // Stop backend streaming
-      await invoke('stop_whisper_streaming');
+      await secureInvoke('stop_whisper_streaming');
 
       // Unlisten events
       if (unlistenPartialRef.current) {
@@ -264,7 +278,7 @@ export function useWhisperStream(config: WhisperStreamConfig = {}) {
       vadConfidence: number
     ) => {
       try {
-        await invoke('send_audio_chunk', {
+        await secureInvoke('send_audio_chunk', {
           data: Array.from(data),
           sampleRate,
           hasSpeech,
@@ -293,7 +307,7 @@ export function useWhisperStream(config: WhisperStreamConfig = {}) {
       }
 
       // Stop streaming
-      invoke('stop_whisper_streaming').catch(console.error);
+      secureInvoke('stop_whisper_streaming').catch(console.error);
     };
   }, []);
 

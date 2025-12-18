@@ -27,7 +27,23 @@ interface UseTTSWithMicControlOptions {
   vadHook?: UseVADReturn;
 }
 
-export function useTTSWithMicControl(options: UseTTSWithMicControlOptions = {}) {
+export interface UseTTSWithMicControlReturn {
+  isSpeaking: boolean;
+  text: string;
+  error: string | null;
+  speak: (textToSpeak: string, config?: TTSConfig) => Promise<void>;
+  stopSpeaking: () => Promise<void>;
+  isMicSuspended: boolean;
+  isBargeInEnabled: boolean;
+  suspendMic: () => void;
+  resumeMic: (delay?: number) => void;
+  enableBargeIn: () => void;
+  disableBargeIn: () => void;
+}
+
+export function useTTSWithMicControl(
+  options: UseTTSWithMicControlOptions = {}
+): UseTTSWithMicControlReturn {
   const {
     resumeDelay = 500, // Default: 500ms delay (same as useVAD TTS_ECHO_DELAY_MS)
     enableDuplex = false,
