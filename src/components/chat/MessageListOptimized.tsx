@@ -239,7 +239,7 @@ export const MessageListOptimized: React.FC<MessageListOptimizedProps> = ({
           Posez votre première question pour commencer la conversation.
         </div>
         <div className="empty-suggestions">
-          <span className="suggestion-chip">Qu'est-ce que tu sais faire ?</span>
+          <span className="suggestion-chip">Qu&apos;est-ce que tu sais faire ?</span>
           <span className="suggestion-chip">Aide-moi à coder</span>
           <span className="suggestion-chip">Explique-moi un concept</span>
         </div>

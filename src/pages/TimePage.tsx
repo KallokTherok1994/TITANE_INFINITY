@@ -384,9 +384,9 @@ const NowSection: React.FC<NowSectionProps> = ({
           ✨ Suggestion TITANE
         </h3>
         <p className="text-purple-100">
-          Avec ton énergie actuelle à {currentEnergy}%, c'est le moment idéal pour des
-          tâches créatives ou de la stratégie légère. Évite les tâches ultra-concentrées.
-          Prévois une pause récupération dans 90 minutes.
+          Avec ton énergie actuelle à {currentEnergy}%, c&apos;est le moment idéal pour
+          des tâches créatives ou de la stratégie légère. Évite les tâches
+          ultra-concentrées. Prévois une pause récupération dans 90 minutes.
         </p>
       </div>
     </div>
@@ -472,8 +472,9 @@ const AgendaSection: React.FC = () => {
         </div>
         <div className="mt-4 p-4 bg-blue-900/20 rounded border border-blue-800">
           <div className="text-sm text-blue-300">
-            💡 TITANE analysera ton temps disponible, tes niveaux d'énergie habituels, et
-            l'importance du projet pour proposer les meilleurs créneaux.
+            💡 TITANE analysera ton temps disponible, tes niveaux d&apos;énergie
+            habituels, et l&apos;importance du projet pour proposer les meilleurs
+            créneaux.
           </div>
         </div>
       </div>
@@ -931,7 +932,8 @@ const IntelligenceSection: React.FC = () => {
             <div>
               <div className="font-medium mb-1">Protège ton pic matinal</div>
               <div className="text-sm opacity-90">
-                Réserve 9h-11h pour deep work uniquement. Pas de réunions, pas d'emails.
+                Réserve 9h-11h pour deep work uniquement. Pas de réunions, pas
+                d&apos;emails.
               </div>
             </div>
           </div>
@@ -950,7 +952,7 @@ const IntelligenceSection: React.FC = () => {
               <div className="font-medium mb-1">Installe des rituels de récupération</div>
               <div className="text-sm opacity-90">
                 15min de pause tous les 90min. Marche, respiration, ou changement
-                d'activité.
+                d&apos;activité.
               </div>
             </div>
           </div>
@@ -1033,7 +1035,7 @@ const FlowSection: React.FC<FlowSectionProps> = ({ flowState }) => {
             <div className="text-2xl font-bold">{flowState.flowDuration} min</div>
           </div>
           <div className="bg-black/20 p-4 rounded">
-            <div className="text-sm text-gray-400 mb-1">Flow Aujourd'hui</div>
+            <div className="text-sm text-gray-400 mb-1">Flow Aujourd&apos;hui</div>
             <div className="text-2xl font-bold">{flowState.totalFlowToday} min</div>
           </div>
         </div>

@@ -9,7 +9,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════
  * TITANE∞ v16.0.0 - Dashboard Page
- * Vue d'ensemble du système avec métriques réelles
+ * Vue d&apos;ensemble du système avec métriques réelles
  * + INTÉGRATION: PersonaMoodIndicator + Visual Engines
  * Real stats: 407 Tauri commands, 294 Rust modules, 355 TS files
  * ═══════════════════════════════════════════════════════════════
@@ -94,7 +94,7 @@ export const DashboardPage = (): JSX.Element => {
                   color: colors.neutral[400],
                 }}
               >
-                Système d'intelligence cognitive v∞.19.3Ω — Singularity Architecture
+                Système d&apos;intelligence cognitive v∞.19.3Ω — Singularity Architecture
                 Active
               </p>
             </div>

@@ -2,7 +2,7 @@
  * TITANE∞ v∞ — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
- * LISTENING INDICATOR — Indicateur d'écoute active
+ * LISTENING INDICATOR — Indicateur d&apos;écoute active
  * Visualisation audio avec barres animées
  */
 
@@ -97,7 +97,7 @@ export const ListeningIndicator: React.FC<ListeningIndicatorProps> = React.memo(
               fontStyle: 'italic',
             }}
           >
-            "{transcript}"
+            &quot;{transcript}&quot;
           </div>
         )}
       </div>

@@ -157,7 +157,7 @@ export const MemorySearchPanel: React.FC<MemorySearchPanelProps> = ({
           onChange={e => setDateRange(e.target.value)}
         >
           <option value="all">Toutes dates</option>
-          <option value="today">Aujourd'hui</option>
+          <option value="today">Aujourd&apos;hui</option>
           <option value="week">Cette semaine</option>
           <option value="month">Ce mois</option>
         </select>

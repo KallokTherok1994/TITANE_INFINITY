@@ -185,7 +185,7 @@ export const AvatarFloatingPopup: React.FC<AvatarFloatingPopupProps> = ({
             {/* Anchor Grid */}
             <div className="space-y-2">
               <label className="text-xs font-medium text-gray-300">
-                Position d'ancrage
+                Position d&apos;ancrage
               </label>
               <div className="grid grid-cols-3 gap-2">
                 {[

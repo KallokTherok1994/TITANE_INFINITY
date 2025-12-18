@@ -446,8 +446,8 @@ function EvolutionCenterPageContent(): JSX.Element {
                     color: colors.neutral[500],
                   }}
                 >
-                  {progression.xpToNextLevel - progression.xpInCurrentLevel} XP jusqu'au
-                  niveau {progression.level + 1}
+                  {progression.xpToNextLevel - progression.xpInCurrentLevel} XP
+                  jusqu&apos;au niveau {progression.level + 1}
                 </div>
               </div>
 
@@ -854,7 +854,7 @@ function EvolutionCenterPageContent(): JSX.Element {
                 padding: spacing[6],
               }}
             >
-              Chargement de l'évolution...
+              Chargement de l&apos;évolution...
             </div>
           )}
         </Card>
@@ -1127,7 +1127,7 @@ function EvolutionCenterPageContent(): JSX.Element {
         style={{ paddingTop: spacing[6], paddingBottom: spacing[6], textAlign: 'center' }}
       >
         <div style={{ fontSize: fontSizes['2xl'], color: colors.neutral[400] }}>
-          🔄 Chargement du Centre d'Évolution...
+          🔄 Chargement du Centre d&apos;Évolution...
         </div>
       </Container>
     );
@@ -1150,7 +1150,7 @@ function EvolutionCenterPageContent(): JSX.Element {
             }}
           >
             <span style={{ fontSize: '2rem' }}>🧠</span>
-            Centre d'Évolution Cognitive
+            Centre d&apos;Évolution Cognitive
           </h1>
           <p
             style={{

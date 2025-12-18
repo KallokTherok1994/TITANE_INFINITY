@@ -2,7 +2,7 @@
  * TITANE∞ - System Identity Engine v∞
  * Identity Center React Component
  *
- * Interface de visualisation et contrôle de l'identité système
+ * Interface de visualisation et contrôle de l&apos;identité système
  * Big Five traits, modes, voix, personnalité cohérente
  *
  * Copyright (c) 2025 Kevin Thibault
@@ -173,7 +173,7 @@ const IdentityCenterContent: React.FC = () => {
         { component: 'IdentityCenter', action: 'loadData' },
         err as Error
       );
-      setError("Erreur lors du chargement des données d'identité");
+      setError('Erreur lors du chargement des données d&apos;identité');
       loadMockData();
     } finally {
       setIsLoading(false);
@@ -982,7 +982,7 @@ const IdentityCenterContent: React.FC = () => {
       <header className="identity-header">
         <h1>
           <span className="header-icon">🎭</span>
-          Centre d'Identité
+          Centre d&apos;Identité
         </h1>
         <div className="header-status">
           <span className="status-dot"></span>

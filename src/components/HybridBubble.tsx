@@ -340,7 +340,7 @@ export const HybridBubble: React.FC<HybridBubbleProps> = ({ initialMode = 'bubbl
               TITANE∞ HYBRID ENGINE v∞
             </div>
             <div style={{ fontSize: '12px', opacity: 0.7 }}>
-              Ready for commands. Type 'help' for available actions.
+              Ready for commands. Type &apos;help&apos; for available actions.
             </div>
           </div>
         ) : (
@@ -494,7 +494,7 @@ export const HybridBubble: React.FC<HybridBubbleProps> = ({ initialMode = 'bubbl
         >
           <span>💡 Try: inspect, logs, fix, diagnostic</span>
           <span>•</span>
-          <span>📘 Type 'help' for all commands</span>
+          <span>📘 Type &apos;help&apos; for all commands</span>
         </div>
       </div>
     </motion.div>

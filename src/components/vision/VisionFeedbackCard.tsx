@@ -105,7 +105,7 @@ export const VisionFeedbackCard: React.FC<VisionFeedbackCardProps> = ({
         </div>
         <div className="vision-feedback__body">
           <p className="vision-feedback__message vision-feedback__message--inactive">
-            Le mode observation n'est pas actif.
+            Le mode observation n&apos;est pas actif.
           </p>
         </div>
       </div>
@@ -126,7 +126,7 @@ export const VisionFeedbackCard: React.FC<VisionFeedbackCardProps> = ({
         <div className="vision-feedback__body">
           <p className="vision-feedback__message">
             La confiance dans les indices visuels est trop faible pour un feedback fiable.
-            Assure-toi d'être bien visible par la caméra.
+            Assure-toi d&apos;être bien visible par la caméra.
           </p>
         </div>
       </div>

@@ -10,7 +10,7 @@
  *   Panneau de contrôle unifié pour la voix:
  *   - Mode push-to-talk classique
  *   - Mode wake word ("Titane ?")
- *   - Indicateur visuel d'attention
+ *   - Indicateur visuel d&apos;attention
  *   - Integration complète streaming + VoiceEngine
  * ═══════════════════════════════════════════════════════════════════
  */
@@ -209,7 +209,7 @@ export const VoiceControlPanelWithWakeWord: React.FC<
 
         {voiceEngine.status.transcript && (
           <p className="text-xs text-gray-500 dark:text-gray-400 italic">
-            "{voiceEngine.status.transcript}"
+            &quot;{voiceEngine.status.transcript}&quot;
           </p>
         )}
       </div>

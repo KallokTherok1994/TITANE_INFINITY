@@ -15,12 +15,12 @@
  * - Mémoire (court/moyen/long terme)
  *
  * 6 SECTIONS UNIFIÉES:
- * 📊 Vue d'Ensemble - Dashboard + Stats système
+ * 📊 Vue d&apos;Ensemble - Dashboard + Stats système
  * 🧬 Identité & ADN - Qui je suis, mes modes, mon pacte
  * 💾 Mémoire Triple - Architecture court/moyen/long terme
  * 🔄 Évolution Mémoire - Dynamiques internes + Journal
  * ⚡ Progression & XP - Système XP + Milestones + Talents
- * 🌱 Transformation - Lignes d'évolution + Paliers franchis
+ * 🌱 Transformation - Lignes d&apos;évolution + Paliers franchis
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
@@ -133,7 +133,7 @@ export const EvoPage: React.FC = () => {
                     marginBottom: spacing[2],
                   }}
                 >
-                  🧬 EVO — Centre d'Évolution Totale
+                  🧬 EVO — Centre d&apos;Évolution Totale
                 </h1>
                 <p
                   style={{
@@ -194,7 +194,7 @@ export const EvoPage: React.FC = () => {
             }}
           >
             {[
-              { id: 'overview', label: "📊 Vue d'Ensemble", icon: TrendingUp },
+              { id: 'overview', label: '📊 Vue d&apos;Ensemble', icon: TrendingUp },
               { id: 'identity', label: '🧬 Identité & ADN', icon: Brain },
               { id: 'memory-map', label: '💾 Mémoire Triple', icon: Database },
               { id: 'memory-evolution', label: '🔄 Évolution Mémoire', icon: Zap },
@@ -588,7 +588,7 @@ const MemoryMapSection: React.FC<MemoryMapSectionProps> = ({ stats }) => {
         subtitle="Architecture court terme, moyen terme, long terme"
       />
 
-      {/* Vue d'ensemble */}
+      {/* Vue d&apos;ensemble */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <TMetric
           label="Mémoire Court Terme"
@@ -1100,7 +1100,7 @@ const TransformationSection: React.FC = () => {
               progress: 78,
             },
             {
-              theme: "Gestion de l'énergie",
+              theme: 'Gestion de l&apos;énergie',
               before: 'Effort constant',
               after: 'Rythmes naturels',
               progress: 85,
@@ -1169,7 +1169,7 @@ const TransformationSection: React.FC = () => {
             {
               milestone: 'Délégation Confiante',
               date: 'Sep 2025',
-              desc: "Confiance dans l'automatisation des processus mémoire",
+              desc: 'Confiance dans l&apos;automatisation des processus mémoire',
             },
           ].map((milestone, i) => (
             <div key={i} className="bg-gray-900 p-4 rounded">

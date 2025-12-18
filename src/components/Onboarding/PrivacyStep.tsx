@@ -108,7 +108,7 @@ export const PrivacyStep: React.FC = () => {
       >
         <p>
           💡 <strong>Note :</strong> Les modèles IA tournent directement sur votre
-          machine. Aucune connexion Internet n'est requise pour utiliser TITANE∞.
+          machine. Aucune connexion Internet n&apos;est requise pour utiliser TITANE∞.
         </p>
       </motion.div>
     </div>

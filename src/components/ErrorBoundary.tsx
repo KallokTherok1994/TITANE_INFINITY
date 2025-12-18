@@ -123,12 +123,12 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             color: '#8f7a7a',
           }}
         >
-          <h2 style={{ margin: '0 0 1rem 0', fontSize: '1.25rem', fontWeight: 'bold&apos; }}>
+          <h2 style={{ margin: '0 0 1rem 0', fontSize: '1.25rem', fontWeight: 'bold' }}>
             ⚠️ Erreur dans {context}
           </h2>
           <p style={{ margin: '0 0 1rem 0', color: '#9ca3af' }}>
-            Une erreur inattendue s&apos;est produite. Le composant a été isolé pour protéger
-            l&apos;application.
+            Une erreur inattendue s&apos;est produite. Le composant a été isolé pour
+            protéger l&apos;application.
           </p>
           {error && (
             <details style={{ marginBottom: '1rem' }}>

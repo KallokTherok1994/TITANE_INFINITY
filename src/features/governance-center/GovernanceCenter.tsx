@@ -126,7 +126,7 @@ export const GovernanceCenter: React.FC = () => {
             <div>
               <h1 className="text-3xl font-bold text-white">Centre de Gouvernance IA</h1>
               <p className="text-sm text-gray-400">
-                Configuration des providers d'intelligence artificielle
+                Configuration des providers d&apos;intelligence artificielle
               </p>
             </div>
           </div>
@@ -227,7 +227,7 @@ export const GovernanceCenter: React.FC = () => {
               </p>
               <p className="text-xs text-blue-300/70">
                 Les clés API sont chiffrées avec AES-256-GCM et purgées des variables
-                d'environnement
+                d&apos;environnement
               </p>
             </div>
           </div>
@@ -284,7 +284,7 @@ export const GovernanceCenter: React.FC = () => {
             <div>
               <p className="mb-1 font-semibold text-white">🧹 Purge environnement</p>
               <p className="text-xs text-gray-400">
-                Variables d'environnement nettoyées automatiquement
+                Variables d&apos;environnement nettoyées automatiquement
               </p>
             </div>
             <div>

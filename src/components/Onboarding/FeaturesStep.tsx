@@ -63,14 +63,14 @@ export const FeaturesStep: React.FC = () => {
         />
         <Feature
           icon="📝"
-          title="Assistance à l&apos;Écriture"
+          title="Assistance à l'Écriture"
           description="Rédaction, correction, amélioration de textes. TITANE vous aide à communiquer avec clarté."
           delay={0.2}
         />
         <Feature
           icon="💡"
           title="Brainstorming & Idéation"
-          description="Génération d&apos;idées créatives et résolution de problèmes complexes ensemble."
+          description="Génération d'idées créatives et résolution de problèmes complexes ensemble."
           delay={0.3}
         />
         <Feature
@@ -88,7 +88,7 @@ export const FeaturesStep: React.FC = () => {
         <Feature
           icon="🧠"
           title="Mémoire Évolutive"
-          description="TITANE se souvient de vos préférences et s&apos;adapte à votre style au fil du temps."
+          description="TITANE se souvient de vos préférences et s'adapte à votre style au fil du temps."
           delay={0.6}
         />
       </div>
@@ -101,8 +101,8 @@ export const FeaturesStep: React.FC = () => {
       >
         <div className="features-footer-icon">⚡</div>
         <p>
-          Et ce n&apos;est que le début ! TITANE∞ évolue constamment avec 20+ engines IA qui
-          travaillent en harmonie pour vous offrir la meilleure expérience possible.
+          Et ce n&apos;est que le début ! TITANE∞ évolue constamment avec 20+ engines IA
+          qui travaillent en harmonie pour vous offrir la meilleure expérience possible.
         </p>
       </motion.div>
     </div>

@@ -81,7 +81,7 @@ export const PoliciesTab: React.FC<PoliciesTabProps> = ({
               fontSize: '0.9rem',
             }}
           >
-            Règles et restrictions pour encadrer les comportements de l'IA
+            Règles et restrictions pour encadrer les comportements de l&apos;IA
           </p>
         </div>
         <Button variant="ghost" onClick={onRefresh} disabled={loading}>

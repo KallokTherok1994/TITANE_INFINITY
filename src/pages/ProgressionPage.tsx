@@ -26,7 +26,7 @@ export const ProgressionPage = (): JSX.Element => {
     return (
       <div style={{ maxWidth: '1280px', margin: '0 auto', padding: spacing[6] }}>
         <div style={{ textAlign: 'center', padding: '48px', color: '#727b81' }}>
-          Chargement du système d'expérience...
+          Chargement du système d&apos;expérience...
         </div>
       </div>
     );

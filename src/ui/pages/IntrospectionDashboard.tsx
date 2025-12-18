@@ -280,7 +280,7 @@ const IntrospectionDashboard = memo(function IntrospectionDashboard() {
         <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-12 border border-red-500/30 text-center">
           <div className="text-6xl mb-4">🔍</div>
           <h2 className="text-2xl font-semibold text-white mb-2">
-            Démarrer l'introspection de code
+            Démarrer l&apos;introspection de code
           </h2>
           <p className="text-gray-400">
             Analysez votre base de code pour détecter les problèmes et améliorer la santé

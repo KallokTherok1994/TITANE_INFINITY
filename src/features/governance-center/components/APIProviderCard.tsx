@@ -154,7 +154,8 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
                   </>
                 ) : (
                   <>
-                    ⚠️ Ollama n'est pas détecté. Assurez-vous qu'il est installé et lancé.
+                    ⚠️ Ollama n&apos;est pas détecté. Assurez-vous qu&apos;il est installé
+                    et lancé.
                   </>
                 )}
               </p>

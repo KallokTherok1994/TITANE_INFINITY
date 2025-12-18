@@ -9,7 +9,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════
  *   TITANE∞ v15 — SENTINEL PAGE (FIXED)
- *   Gardien de l'intégrité avec sérialisation sécurisée
+ *   Gardien de l&apos;intégrité avec sérialisation sécurisée
  * ═══════════════════════════════════════════════════════════════
  */
 
@@ -45,10 +45,10 @@ export const Sentinel = () => {
       <div className="module-page__header">
         <h1 className="module-page__title">
           <span className="module-page__icon">🛡️</span>
-          Sentinel — Gardien de l'Intégrité
+          Sentinel — Gardien de l&apos;Intégrité
         </h1>
         <p className="module-page__subtitle">
-          Protection et surveillance de l'intégrité système
+          Protection et surveillance de l&apos;intégrité système
         </p>
       </div>
 

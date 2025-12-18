@@ -26,7 +26,7 @@ interface MessageState {
 
 const initialMessage: MessageState = {
   tone: 'warning',
-  text: "Aucune clé Gemini détectée. Configurez la clé sécurisée pour activer l'IA cloud.",
+  text: 'Aucune clé Gemini détectée. Configurez la clé sécurisée pour activer l&apos;IA cloud.',
 };
 
 const statusLabel = (status: GeminiKeyStatus | null): string => {
@@ -187,7 +187,7 @@ export const SecureSettings: React.FC = () => {
         tone: 'danger',
         text:
           response.error ??
-          "Impossible d'enregistrer la clé Gemini. Vérifiez la passphrase TITANE_SECRETS_PASSPHRASE.",
+          'Impossible d&apos;enregistrer la clé Gemini. Vérifiez la passphrase TITANE_SECRETS_PASSPHRASE.',
       });
     }
   };
@@ -230,7 +230,7 @@ export const SecureSettings: React.FC = () => {
         tone: 'danger',
         text:
           response.error ??
-          "Impossible d'enregistrer la clé OpenAI. Vérifiez la passphrase.",
+          'Impossible d&apos;enregistrer la clé OpenAI. Vérifiez la passphrase.',
       });
     }
   };
@@ -273,7 +273,7 @@ export const SecureSettings: React.FC = () => {
         tone: 'danger',
         text:
           response.error ??
-          "Impossible d'enregistrer la clé Anthropic. Vérifiez la passphrase.",
+          'Impossible d&apos;enregistrer la clé Anthropic. Vérifiez la passphrase.',
       });
     }
   };
@@ -576,13 +576,14 @@ export const SecureSettings: React.FC = () => {
           }}
         >
           <li>
-            Définir <code>TITANE_SECRETS_PASSPHRASE</code> dans l&apos;environnement (avant
-            lancement Tauri).
+            Définir <code>TITANE_SECRETS_PASSPHRASE</code> dans l&apos;environnement
+            (avant lancement Tauri).
           </li>
           <li>Ouvrir cette page et coller la clé Gemini fournie par Google AI Studio.</li>
           <li>Valider pour stocker la clé avec chiffrement AES-256-GCM + Argon2id.</li>
           <li>
-            Vérifier que l'état indique « Gemini opérationnel » et que la clé est masquée.
+            Vérifier que l&apos;état indique « Gemini opérationnel » et que la clé est
+            masquée.
           </li>
           <li>
             Confirmer que <code>.env</code> ne contient plus la variable{' '}
