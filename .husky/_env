@@ -1,3 +1,21 @@
 #!/bin/sh
 # Correction PATH pour environnements limités (GitHub Desktop, Pop!_OS, Flatpak…)
-export PATH="/usr/local/bin:/usr/bin:/bin:$HOME/.nvm/versions/node/v24.11.1/bin:$PATH"
+
+BASE_PATH="/usr/local/bin:/usr/bin:/bin"
+
+# Prefer whatever Node is already available in the environment.
+if command -v node >/dev/null 2>&1; then
+	export PATH="$BASE_PATH:$PATH"
+	exit 0
+fi
+
+# Fallback: try to locate the newest NVM-managed Node install.
+if [ -d "$HOME/.nvm/versions/node" ]; then
+	NVM_NODE_BIN="$(ls -1d "$HOME/.nvm/versions/node"/v*/bin 2>/dev/null | sort -V | tail -n 1)"
+	if [ -n "$NVM_NODE_BIN" ] && [ -x "$NVM_NODE_BIN/node" ]; then
+		export PATH="$BASE_PATH:$NVM_NODE_BIN:$PATH"
+		exit 0
+	fi
+fi
+
+export PATH="$BASE_PATH:$PATH"

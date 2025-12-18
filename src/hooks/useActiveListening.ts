@@ -154,6 +154,11 @@ export function useActiveListening(
     },
   });
 
+  // Keep a stable reference for effects/callbacks that should not depend on
+  // streaming object identity (prevents infinite loops with test mocks).
+  const streamingRef = useRef(streaming);
+  streamingRef.current = streaming;
+
   // ═══ INITIALIZATION ═══
 
   useEffect(() => {
@@ -168,6 +173,8 @@ export function useActiveListening(
     // Subscribe to attention engine
     const unsubscribeAttention = attentionEngine.onStateChange(event => {
       if (!mountedRef.current) return;
+
+      const currentStreaming = streamingRef.current;
 
       console.log('[ActiveListening] 🧠 Attention:', event.state);
 
@@ -187,9 +194,9 @@ export function useActiveListening(
         awaitingCommandRef.current = true;
 
         // Si pas déjà en streaming, démarrer
-        if (!streaming.isStreaming) {
+        if (!currentStreaming.isStreaming) {
           console.log('[ActiveListening] 🎤 Auto-starting streaming for command');
-          streaming.startStreaming();
+          currentStreaming.startStreaming();
         }
       }
     });
@@ -210,13 +217,14 @@ export function useActiveListening(
       }
 
       // Cleanup
-      if (streaming.isStreaming) {
-        streaming.forceStop();
+      const currentStreaming = streamingRef.current;
+      if (currentStreaming.isStreaming) {
+        currentStreaming.forceStop();
       }
     };
     // Note: Only run on unmount, other deps would cause unnecessary cleanups
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [streaming]);
+  }, []);
 
   // ═══ WAKE WORD DETECTION ═══
 
