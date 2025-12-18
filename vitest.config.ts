@@ -85,11 +85,6 @@ export const sharedTestConfig = defineConfig({
     teardownTimeout: 10000,
     minThreads: 1,
     maxThreads: maxThreadBudget,
-    poolOptions: {
-      threads: {
-        singleThread: maxThreadBudget === 1,
-      },
-    },
     include: [
       'src/**/*.{test,spec}.{ts,tsx}',
       'tests/unit/**/*.{test,spec}.{ts,tsx}',
