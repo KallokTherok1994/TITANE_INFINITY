@@ -535,7 +535,9 @@ export class IndexedDBOptimizer {
     const toRemove = Math.ceil(entries.length * 0.25);
 
     for (let i = 0; i < toRemove; i++) {
-      const entry = entries[i]; if (!entry) continue; const [key, value] = entry;
+      const entry = entries[i];
+      if (!entry) continue;
+      const [key, value] = entry;
       this.cacheSize -= this.estimateSize(value.data);
       this.cache.delete(key);
     }

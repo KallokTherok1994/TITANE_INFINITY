@@ -158,7 +158,9 @@ export function HarmoniaFlow() {
             </p>
           )}
           {harmonia.stabilization_level === 'Adjusting' && (
-            <p>⚠️ Harmonia effectue des corrections pour rétablir l&apos;équilibre système.</p>
+            <p>
+              ⚠️ Harmonia effectue des corrections pour rétablir l&apos;équilibre système.
+            </p>
           )}
           {harmonia.stabilization_level === 'Critical' && (
             <p>🚨 Déséquilibre critique détecté. Intervention immédiate recommandée.</p>

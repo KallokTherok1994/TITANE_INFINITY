@@ -219,9 +219,9 @@ export const RealityCenter: React.FC = () => {
 
   const loadState = useCallback(async () => {
     try {
-      const currentState = await secureInvoke<RealityRendererState>('reality_get_state').catch(
-        async () => secureInvoke<RealityRendererState>('reality_init')
-      );
+      const currentState = await secureInvoke<RealityRendererState>(
+        'reality_get_state'
+      ).catch(async () => secureInvoke<RealityRendererState>('reality_init'));
       setState(currentState);
       setError(null);
     } catch (err) {
@@ -405,7 +405,9 @@ export const RealityCenter: React.FC = () => {
                   label="Shadows"
                   checked={state.render_config.shadows}
                   onChange={v =>
-                    secureInvoke('reality_set_render_config', { shadows: v }).then(loadState)
+                    secureInvoke('reality_set_render_config', { shadows: v }).then(
+                      loadState
+                    )
                   }
                 />
                 <ToggleSwitch
