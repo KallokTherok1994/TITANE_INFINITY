@@ -201,8 +201,8 @@ export function useConversationEngine(
           intention: response.detected_intention,
           emotion: response.detected_emotion,
           tags: response.cognitive_tags,
-          latency: response.metadata.latency_ms,
-          provider: response.metadata.provider_used,
+          latency: response.metadata?.latency_ms ?? 0,
+          provider: response.metadata?.provider_used ?? 'unknown',
         });
 
         return response;

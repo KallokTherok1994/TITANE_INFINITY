@@ -24,9 +24,10 @@ fi
 
 # 3. Vérifier requêtes réseau annotées
 echo "🌐 Check: Appels réseau annotés..."
-NETWORK_CALLS=$(grep -r "fetch\|axios\|XMLHttpRequest" src/ --include="*.ts" --include="*.tsx" | \
+# NOTE: l'ancien grep matchait des faux positifs (ex: "prefetch", commentaires, identifiants contenant "fetch").
+# On détecte maintenant des patterns d'appel réseau plus stricts.
+NETWORK_CALLS=$(grep -RInE "(^|[^A-Za-z0-9_])(fetch[[:space:]]*\(|axios[[:space:]]*(\.|\()|new[[:space:]]+XMLHttpRequest\\b)" src/ --include="*.ts" --include="*.tsx" 2>/dev/null | \
                 grep -v "// @network-allowed" | \
-                grep -v "node_modules" | \
                 wc -l)
 
 if [ "$NETWORK_CALLS" -gt 0 ]; then

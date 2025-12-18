@@ -66,6 +66,27 @@ export interface ConversationMetadata {
   links_to_contexts: string[];
 }
 
+function isMemoryEffect(val: unknown): val is MemoryEffect {
+  return val === 'New' || val === 'Recall' || val === 'Connect' || val === 'Evolve';
+}
+
+function normalizeConversationMetadata(meta: unknown): ConversationMetadata {
+  const m = (meta ?? {}) as Record<string, unknown>;
+
+  const links = Array.isArray(m.links_to_contexts)
+    ? m.links_to_contexts.filter((v): v is string => typeof v === 'string')
+    : [];
+
+  return {
+    timestamp: typeof m.timestamp === 'number' ? m.timestamp : Date.now(),
+    provider_used: typeof m.provider_used === 'string' ? m.provider_used : 'unknown',
+    latency_ms: typeof m.latency_ms === 'number' ? m.latency_ms : 0,
+    tokens_used: typeof m.tokens_used === 'number' ? m.tokens_used : 0,
+    memory_effect: isMemoryEffect(m.memory_effect) ? m.memory_effect : 'New',
+    links_to_contexts: links,
+  };
+}
+
 export interface ConversationHealthReport {
   status: 'Healthy' | 'Warning' | 'Critical';
   anomalies_detected: Anomaly[];
@@ -106,13 +127,20 @@ export async function processMessage(
     emotionContext?: EmotionState;
   }
 ): Promise<ConversationResponse> {
-  return secureInvoke<ConversationResponse>('conversation_process_message', {
+  const raw = (await secureInvoke<unknown>('conversation_process_message', {
     user_message: userMessage,
     conversation_id: options?.conversationId,
     mode: options?.mode || 'default',
     ai_config: null,
     emotion_context: options?.emotionContext || null,
-  });
+  })) as ConversationResponse;
+
+  return {
+    ...raw,
+    metadata: normalizeConversationMetadata(
+      (raw as unknown as { metadata?: unknown }).metadata
+    ),
+  };
 }
 
 /**
