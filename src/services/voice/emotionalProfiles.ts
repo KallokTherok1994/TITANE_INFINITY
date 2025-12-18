@@ -144,6 +144,13 @@ export const EMOTION_PRESETS: Record<string, EmotionalIntent> = {
 };
 
 /**
+ * Helper function to safely access emotion presets with proper typing
+ */
+function getPreset(name: keyof typeof EMOTION_PRESETS): EmotionalIntent {
+  return EMOTION_PRESETS[name];
+}
+
+/**
  * ═══════════════════════════════════════════════════════════════════
  *   PROFILS ÉMOTIONNELS COMPLETS
  * ═══════════════════════════════════════════════════════════════════

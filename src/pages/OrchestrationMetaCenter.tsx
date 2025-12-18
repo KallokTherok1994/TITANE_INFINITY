@@ -727,13 +727,15 @@ const OrchestrationMetaCenterContent: React.FC = () => {
       });
 
       // Load Cognitive orchestration states (with fallbacks)
-      const multiAiState = await secureInvoke<MultiAIState>('multi_ai_get_state').catch(() => ({
-        providers: [],
-        bestProvider: 'claude',
-        autoMode: true,
-        globalScore: 85,
-        lastUpdate: Date.now(),
-      }));
+      const multiAiState = await secureInvoke<MultiAIState>('multi_ai_get_state').catch(
+        () => ({
+          providers: [],
+          bestProvider: 'claude',
+          autoMode: true,
+          globalScore: 85,
+          lastUpdate: Date.now(),
+        })
+      );
 
       const nexusState = await secureInvoke<NexusState>('nexus_get_state').catch(() => ({
         activeNodes: 12,
@@ -757,19 +759,19 @@ const OrchestrationMetaCenterContent: React.FC = () => {
         })
       );
 
-      const cognitiveState = await secureInvoke<CognitiveState>('cognitive_get_state').catch(
-        () => ({
-          provider: 'claude',
-          mode: 'deep',
-          depth: 7,
-          stability: 92,
-          cognitiveScore: 87,
-          mentalLoad: 42,
-          reasoningQuality: 91,
-          activeProcesses: [],
-          lastUpdate: Date.now(),
-        })
-      );
+      const cognitiveState = await secureInvoke<CognitiveState>(
+        'cognitive_get_state'
+      ).catch(() => ({
+        provider: 'claude',
+        mode: 'deep',
+        depth: 7,
+        stability: 92,
+        cognitiveScore: 87,
+        mentalLoad: 42,
+        reasoningQuality: 91,
+        activeProcesses: [],
+        lastUpdate: Date.now(),
+      }));
 
       // Calculate global score
       const globalScore = Math.round(

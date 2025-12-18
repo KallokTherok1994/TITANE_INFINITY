@@ -107,9 +107,12 @@ export class AgentsAPIService {
    */
   static async updateAgentPermission(request: UpdatePermissionRequest): Promise<string> {
     try {
-      const result = await secureInvoke<CommandResult<string>>('update_agent_permission', {
-        request,
-      });
+      const result = await secureInvoke<CommandResult<string>>(
+        'update_agent_permission',
+        {
+          request,
+        }
+      );
 
       if (!result.success || !result.data) {
         throw new Error(result.error || 'Failed to update permission');
@@ -136,10 +139,13 @@ export class AgentsAPIService {
    */
   static async canAgentUseProvider(agentId: string, provider: string): Promise<boolean> {
     try {
-      const result = await secureInvoke<CommandResult<boolean>>('can_agent_use_provider', {
-        agentId,
-        provider,
-      });
+      const result = await secureInvoke<CommandResult<boolean>>(
+        'can_agent_use_provider',
+        {
+          agentId,
+          provider,
+        }
+      );
 
       if (!result.success) {
         throw new Error(result.error || 'Failed to check permission');

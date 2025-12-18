@@ -57,7 +57,9 @@ class NumericTwinService {
   async submitObservation(observation: TwinObservationRequest): Promise<string> {
     console.log(`${this.LOG_PREFIX} submitObservation:`, observation.observationType);
     try {
-      const syncId = await secureInvoke<string>('twin_submit_observation', { observation });
+      const syncId = await secureInvoke<string>('twin_submit_observation', {
+        observation,
+      });
       return syncId;
     } catch (error) {
       console.error(`${this.LOG_PREFIX} submitObservation error:`, error);
@@ -101,7 +103,9 @@ class NumericTwinService {
   async getEvolutionProfile(): Promise<TwinEvolutionProfile> {
     console.log(`${this.LOG_PREFIX} getEvolutionProfile`);
     try {
-      const profile = await secureInvoke<TwinEvolutionProfile>('twin_get_evolution_profile');
+      const profile = await secureInvoke<TwinEvolutionProfile>(
+        'twin_get_evolution_profile'
+      );
       return profile;
     } catch (error) {
       console.error(`${this.LOG_PREFIX} getEvolutionProfile error:`, error);

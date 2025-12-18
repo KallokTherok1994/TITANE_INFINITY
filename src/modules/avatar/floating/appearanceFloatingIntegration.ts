@@ -200,9 +200,8 @@ export class AppearanceFloatingIntegration {
    */
   private getPaletteForAppearance(style: AvatarAppearanceState['style']): ColorPalette {
     const paletteName = style.color_palette || 'neutre';
-    return (
-      (COLOR_PALETTES[paletteName as keyof typeof COLOR_PALETTES] ?? COLOR_PALETTES.neutre) as ColorPalette
-    );
+    return (COLOR_PALETTES[paletteName as keyof typeof COLOR_PALETTES] ??
+      COLOR_PALETTES.neutre) as ColorPalette;
   }
 
   /**

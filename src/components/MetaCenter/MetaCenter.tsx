@@ -229,9 +229,9 @@ const MetaCenterContent: React.FC = () => {
 
       setState(currentState);
 
-      const currentMetrics = await secureInvoke<MetaMetrics>('orchestrator_get_metrics').catch(
-        () => null
-      );
+      const currentMetrics = await secureInvoke<MetaMetrics>(
+        'orchestrator_get_metrics'
+      ).catch(() => null);
       if (currentMetrics) {
         setMetrics(currentMetrics);
         setSelectedMode(currentMetrics.orchestration_mode.toLowerCase());

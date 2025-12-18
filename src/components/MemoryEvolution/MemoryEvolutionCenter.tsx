@@ -448,7 +448,9 @@ export const MemoryEvolutionCenter: React.FC = () => {
   // Fetch initial data
   const fetchStatus = useCallback(async () => {
     try {
-      const statusData = await secureInvoke<MemoryEvolutionStatus>('memory_evolution_status');
+      const statusData = await secureInvoke<MemoryEvolutionStatus>(
+        'memory_evolution_status'
+      );
       setStatus(statusData);
       if (statusData.last_evolution) {
         setLastResult(statusData.last_evolution);

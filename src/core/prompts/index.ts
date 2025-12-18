@@ -95,7 +95,7 @@ export function getPromptProfile(id?: string): TitanePromptProfile {
   }
   return (
     promptProfiles.core ??
-    promptProfiles[Object.keys(promptProfiles)[0] ?? "core"] ??
+    promptProfiles[Object.keys(promptProfiles)[0] ?? 'core'] ??
     ({
       id: 'core',
       label: 'Core',

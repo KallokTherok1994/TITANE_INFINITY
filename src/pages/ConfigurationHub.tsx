@@ -214,7 +214,9 @@ export const ConfigurationHub: React.FC = () => {
     try {
       console.log('📥 [ConfigHub] Importing configuration from:', filePath);
 
-      const importedConfig = await secureInvoke<ConfigSnapshot>('import_config', { filePath });
+      const importedConfig = await secureInvoke<ConfigSnapshot>('import_config', {
+        filePath,
+      });
       console.log('✅ [ConfigHub] Configuration imported:', importedConfig);
 
       // Reload config to show imported values
@@ -235,7 +237,9 @@ export const ConfigurationHub: React.FC = () => {
   const loadPresets = async () => {
     try {
       const presetsList =
-        await secureInvoke<Array<{ name: string; description: string }>>('list_config_presets');
+        await secureInvoke<Array<{ name: string; description: string }>>(
+          'list_config_presets'
+        );
       setPresets(presetsList);
     } catch (err) {
       console.error('❌ [ConfigHub] Failed to load presets:', err);
