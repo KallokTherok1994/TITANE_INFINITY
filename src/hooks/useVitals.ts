@@ -158,7 +158,7 @@ export function useVitals(options: UseVitalsOptions = {}): UseVitalsReturn {
     if (!state.current) return false;
 
     return state.current.cpu > 80 || state.current.memory > 90 || state.current.disk > 95;
-  }, [state.current]);
+  }, []);
 
   // ✨ v24.2.1: Adaptive polling - slows down when idle or tab hidden
   useEffect(() => {

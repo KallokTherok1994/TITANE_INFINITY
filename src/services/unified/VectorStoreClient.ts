@@ -66,7 +66,7 @@ export class VectorStoreClient implements IVectorStore {
     if (this.isInitialized) return;
 
     try {
-      this.storeId = await invoke<string>('vector_store_init', {
+      this.storeId = await secureInvoke<string>('vector_store_init', {
         config: {
           dbPath: this.config.dbPath,
           tableName: this.config.tableName,
@@ -190,7 +190,7 @@ export class VectorStoreClient implements IVectorStore {
         ownerFilter: options.ownerFilter,
       };
 
-      const results = await invoke<
+      const results = await secureInvoke<
         Array<{
           entry: unknown;
           score: number;
@@ -220,7 +220,7 @@ export class VectorStoreClient implements IVectorStore {
     this.ensureInitialized();
 
     try {
-      const entry = await invoke<unknown | null>('vector_store_get', {
+      const entry = await secureInvoke<unknown | null>('vector_store_get', {
         storeId: this.storeId,
         id,
       });
@@ -274,7 +274,7 @@ export class VectorStoreClient implements IVectorStore {
     this.ensureInitialized();
 
     try {
-      const stats = await invoke<{
+      const stats = await secureInvoke<{
         totalEntries: number;
         byTier: Record<string, number>;
         byType: Record<string, number>;

@@ -220,16 +220,16 @@ const MetaCenterContent: React.FC = () => {
   const loadState = async () => {
     try {
       // Try to get state, if not initialized, init first
-      const currentState = await invoke<MetaOrchestratorState>(
+      const currentState = await secureInvoke<MetaOrchestratorState>(
         'orchestrator_get_state'
       ).catch(async () => {
         // Initialize if not done
-        return invoke<MetaOrchestratorState>('orchestrator_init');
+        return secureInvoke<MetaOrchestratorState>('orchestrator_init');
       });
 
       setState(currentState);
 
-      const currentMetrics = await invoke<MetaMetrics>('orchestrator_get_metrics').catch(
+      const currentMetrics = await secureInvoke<MetaMetrics>('orchestrator_get_metrics').catch(
         () => null
       );
       if (currentMetrics) {

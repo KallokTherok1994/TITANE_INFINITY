@@ -33,7 +33,7 @@ export const CoreHealthMonitor: React.FC = () => {
   // Fetch core health
   const fetchCoreHealth = async () => {
     try {
-      const response = await invoke<CoreHealthResponse>('get_core_info');
+      const response = await secureInvoke<CoreHealthResponse>('get_core_info');
       if (response.success && response.data) {
         setCores(response.data);
       }

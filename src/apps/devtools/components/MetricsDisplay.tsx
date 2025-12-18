@@ -73,7 +73,7 @@ export const MetricsDisplay: React.FC = () => {
   // Fetch metrics
   const fetchMetrics = async () => {
     try {
-      const response = await invoke<MetricsResponse>('get_dashboard_metrics');
+      const response = await secureInvoke<MetricsResponse>('get_dashboard_metrics');
       if (response.success && response.data) {
         const newMetrics = response.data;
         setMetrics(newMetrics);

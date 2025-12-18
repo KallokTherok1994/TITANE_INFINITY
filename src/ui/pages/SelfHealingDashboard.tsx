@@ -228,9 +228,9 @@ export const SelfHealingDashboard: React.FC = () => {
     try {
       // Try to invoke Tauri commands
       const [healthData, stateData, predictionData] = await Promise.all([
-        invoke<SystemHealth>('get_self_healing_health').catch(() => null),
-        invoke<HealingState>('get_self_healing_state').catch(() => null),
-        invoke<AnomalyPrediction>('get_self_healing_prediction').catch(() => null),
+        secureInvoke<SystemHealth>('get_self_healing_health').catch(() => null),
+        secureInvoke<HealingState>('get_self_healing_state').catch(() => null),
+        secureInvoke<AnomalyPrediction>('get_self_healing_prediction').catch(() => null),
       ]);
 
       if (healthData) setHealth(healthData);
@@ -256,7 +256,7 @@ export const SelfHealingDashboard: React.FC = () => {
   // Force evaluation
   const handleForceEvaluation = async () => {
     try {
-      const report = await invoke<HealingReport>('force_self_healing_evaluation');
+      const report = await secureInvoke<HealingReport>('force_self_healing_evaluation');
       setHistory(prev => [report, ...prev].slice(0, 10));
       await fetchData();
     } catch {

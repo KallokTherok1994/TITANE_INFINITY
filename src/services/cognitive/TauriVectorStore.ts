@@ -51,7 +51,7 @@ export class TauriVectorStore implements VectorStore {
 
     try {
       // Initialiser le VectorStore côté backend
-      this.storeId = await invoke<string>('vector_store_init', {
+      this.storeId = await secureInvoke<string>('vector_store_init', {
         config: {
           db_path: this.config.dbPath,
           table_name: this.config.collectionName,
@@ -155,7 +155,7 @@ export class TauriVectorStore implements VectorStore {
   ): Promise<SemanticMemoryResult[]> {
     if (!this.storeId) throw new Error('Store not initialized');
 
-    const results = await invoke<
+    const results = await secureInvoke<
       Array<{
         entry: Record<string, unknown>;
         score: number;
@@ -186,7 +186,7 @@ export class TauriVectorStore implements VectorStore {
   async get(id: string): Promise<SemanticMemoryEntry | null> {
     if (!this.storeId) throw new Error('Store not initialized');
 
-    const entry = await invoke<Record<string, unknown> | null>('vector_store_get', {
+    const entry = await secureInvoke<Record<string, unknown> | null>('vector_store_get', {
       storeId: this.storeId,
       id,
     });
@@ -241,7 +241,7 @@ export class TauriVectorStore implements VectorStore {
   async getStats(): Promise<SemanticMemoryStats> {
     if (!this.storeId) throw new Error('Store not initialized');
 
-    const stats = await invoke<{
+    const stats = await secureInvoke<{
       total_entries: number;
       by_tier: Record<string, number>;
       by_type: Record<string, number>;
@@ -435,7 +435,7 @@ export async function createVectorStore(
 
   // Essayer d'abord le backend Tauri
   try {
-    const available = await invoke<boolean>('check_sqlite_available');
+    const available = await secureInvoke<boolean>('check_sqlite_available');
     if (available) {
       const store = new TauriVectorStore(config);
       await store.initialize();

@@ -24,7 +24,7 @@ export class AgentsAPIService {
    */
   static async listAgents(): Promise<AgentConfig[]> {
     try {
-      const result = await invoke<CommandResult<AgentConfig[]>>('list_agents');
+      const result = await secureInvoke<CommandResult<AgentConfig[]>>('list_agents');
 
       if (!result.success || !result.data) {
         throw new Error(result.error || 'Failed to list agents');
@@ -49,7 +49,7 @@ export class AgentsAPIService {
    */
   static async getAgent(agentId: string): Promise<AgentConfig> {
     try {
-      const result = await invoke<CommandResult<AgentConfig>>('get_agent', {
+      const result = await secureInvoke<CommandResult<AgentConfig>>('get_agent', {
         agentId,
       });
 
@@ -76,7 +76,7 @@ export class AgentsAPIService {
    */
   static async createAgent(request: CreateAgentRequest): Promise<AgentConfig> {
     try {
-      const result = await invoke<CommandResult<AgentConfig>>('create_agent', {
+      const result = await secureInvoke<CommandResult<AgentConfig>>('create_agent', {
         request,
       });
 
@@ -106,7 +106,7 @@ export class AgentsAPIService {
    */
   static async updateAgentPermission(request: UpdatePermissionRequest): Promise<string> {
     try {
-      const result = await invoke<CommandResult<string>>('update_agent_permission', {
+      const result = await secureInvoke<CommandResult<string>>('update_agent_permission', {
         request,
       });
 
@@ -135,7 +135,7 @@ export class AgentsAPIService {
    */
   static async canAgentUseProvider(agentId: string, provider: string): Promise<boolean> {
     try {
-      const result = await invoke<CommandResult<boolean>>('can_agent_use_provider', {
+      const result = await secureInvoke<CommandResult<boolean>>('can_agent_use_provider', {
         agentId,
         provider,
       });
@@ -163,7 +163,7 @@ export class AgentsAPIService {
    */
   static async getAgentRecommendedProvider(agentId: string): Promise<string | null> {
     try {
-      const result = await invoke<CommandResult<string | null>>(
+      const result = await secureInvoke<CommandResult<string | null>>(
         'get_agent_recommended_provider',
         { agentId }
       );
@@ -190,7 +190,7 @@ export class AgentsAPIService {
    */
   static async getPermissionStats(): Promise<PermissionStats> {
     try {
-      const result = await invoke<CommandResult<PermissionStats>>(
+      const result = await secureInvoke<CommandResult<PermissionStats>>(
         'get_agent_permission_stats'
       );
 

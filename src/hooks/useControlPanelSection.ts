@@ -47,7 +47,7 @@ export function useControlPanelSection<T>({
     setIsLoading(true);
     setError(null);
     try {
-      const result = await invoke<T>(loadCommand);
+      const result = await secureInvoke<T>(loadCommand);
       setConfig(result);
       setOriginalConfig(result);
     } catch (err) {

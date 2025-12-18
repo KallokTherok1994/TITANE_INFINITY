@@ -82,7 +82,7 @@ export const Stats: React.FC = () => {
 
     const fetchCognitive = async () => {
       try {
-        const data = await invoke<CognitiveMetrics>('orchestration_get_cognitive_state');
+        const data = await secureInvoke<CognitiveMetrics>('orchestration_get_cognitive_state');
         if (mounted) {
           setCognitiveMetrics(data);
           setCognitiveLoading(false);

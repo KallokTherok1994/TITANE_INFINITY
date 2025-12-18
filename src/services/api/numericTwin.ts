@@ -28,7 +28,7 @@ class NumericTwinService {
   async getState(): Promise<TwinState> {
     console.log(`${this.LOG_PREFIX} getState`);
     try {
-      const state = await invoke<TwinState>('twin_get_state');
+      const state = await secureInvoke<TwinState>('twin_get_state');
       return state;
     } catch (error) {
       console.error(`${this.LOG_PREFIX} getState error:`, error);
@@ -42,7 +42,7 @@ class NumericTwinService {
   async getFusionIndex(): Promise<FusionIndex> {
     console.log(`${this.LOG_PREFIX} getFusionIndex`);
     try {
-      const index = await invoke<FusionIndex>('twin_get_fusion_index');
+      const index = await secureInvoke<FusionIndex>('twin_get_fusion_index');
       return index;
     } catch (error) {
       console.error(`${this.LOG_PREFIX} getFusionIndex error:`, error);
@@ -56,7 +56,7 @@ class NumericTwinService {
   async submitObservation(observation: TwinObservationRequest): Promise<string> {
     console.log(`${this.LOG_PREFIX} submitObservation:`, observation.observationType);
     try {
-      const syncId = await invoke<string>('twin_submit_observation', { observation });
+      const syncId = await secureInvoke<string>('twin_submit_observation', { observation });
       return syncId;
     } catch (error) {
       console.error(`${this.LOG_PREFIX} submitObservation error:`, error);
@@ -70,7 +70,7 @@ class NumericTwinService {
   async applyEvolution(evolution: TwinEvolutionRequest): Promise<TwinEvolutionResult> {
     console.log(`${this.LOG_PREFIX} applyEvolution:`, evolution.evolutionType);
     try {
-      const result = await invoke<TwinEvolutionResult>('twin_apply_evolution', {
+      const result = await secureInvoke<TwinEvolutionResult>('twin_apply_evolution', {
         evolution,
       });
       return result;
@@ -86,7 +86,7 @@ class NumericTwinService {
   async validateSync(validation: TwinSyncValidationRequest): Promise<boolean> {
     console.log(`${this.LOG_PREFIX} validateSync:`, validation.syncId);
     try {
-      const result = await invoke<boolean>('twin_validate_sync', { validation });
+      const result = await secureInvoke<boolean>('twin_validate_sync', { validation });
       return result;
     } catch (error) {
       console.error(`${this.LOG_PREFIX} validateSync error:`, error);
@@ -100,7 +100,7 @@ class NumericTwinService {
   async getEvolutionProfile(): Promise<TwinEvolutionProfile> {
     console.log(`${this.LOG_PREFIX} getEvolutionProfile`);
     try {
-      const profile = await invoke<TwinEvolutionProfile>('twin_get_evolution_profile');
+      const profile = await secureInvoke<TwinEvolutionProfile>('twin_get_evolution_profile');
       return profile;
     } catch (error) {
       console.error(`${this.LOG_PREFIX} getEvolutionProfile error:`, error);
@@ -114,7 +114,7 @@ class NumericTwinService {
   async getIdentity(): Promise<TwinIdentityCore> {
     console.log(`${this.LOG_PREFIX} getIdentity`);
     try {
-      const identity = await invoke<TwinIdentityCore>('twin_get_identity');
+      const identity = await secureInvoke<TwinIdentityCore>('twin_get_identity');
       return identity;
     } catch (error) {
       console.error(`${this.LOG_PREFIX} getIdentity error:`, error);
@@ -128,7 +128,7 @@ class NumericTwinService {
   async recalculateFusion(): Promise<number> {
     console.log(`${this.LOG_PREFIX} recalculateFusion`);
     try {
-      const score = await invoke<number>('twin_recalculate_fusion');
+      const score = await secureInvoke<number>('twin_recalculate_fusion');
       return score;
     } catch (error) {
       console.error(`${this.LOG_PREFIX} recalculateFusion error:`, error);

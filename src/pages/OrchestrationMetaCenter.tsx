@@ -712,14 +712,14 @@ const OrchestrationMetaCenterContent: React.FC = () => {
   const loadAllState = useCallback(async () => {
     try {
       // Load Meta Orchestrator state
-      const metaState = await invoke<MetaOrchestratorState>(
+      const metaState = await secureInvoke<MetaOrchestratorState>(
         'orchestrator_get_state'
       ).catch(async () => {
         return invoke<MetaOrchestratorState>('orchestrator_init');
       });
 
       // Load Cognitive orchestration states (with fallbacks)
-      const multiAiState = await invoke<MultiAIState>('multi_ai_get_state').catch(() => ({
+      const multiAiState = await secureInvoke<MultiAIState>('multi_ai_get_state').catch(() => ({
         providers: [],
         bestProvider: 'claude',
         autoMode: true,
@@ -727,7 +727,7 @@ const OrchestrationMetaCenterContent: React.FC = () => {
         lastUpdate: Date.now(),
       }));
 
-      const nexusState = await invoke<NexusState>('nexus_get_state').catch(() => ({
+      const nexusState = await secureInvoke<NexusState>('nexus_get_state').catch(() => ({
         activeNodes: 12,
         totalNodes: 15,
         linkCount: 45,
@@ -737,7 +737,7 @@ const OrchestrationMetaCenterContent: React.FC = () => {
         lastUpdate: Date.now(),
       }));
 
-      const harmoniaState = await invoke<HarmoniaState>('harmonia_get_state').catch(
+      const harmoniaState = await secureInvoke<HarmoniaState>('harmonia_get_state').catch(
         () => ({
           activeFlows: [],
           cpuUsage: 35,
@@ -749,7 +749,7 @@ const OrchestrationMetaCenterContent: React.FC = () => {
         })
       );
 
-      const cognitiveState = await invoke<CognitiveState>('cognitive_get_state').catch(
+      const cognitiveState = await secureInvoke<CognitiveState>('cognitive_get_state').catch(
         () => ({
           provider: 'claude',
           mode: 'deep',

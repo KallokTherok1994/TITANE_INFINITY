@@ -219,7 +219,7 @@ ${aiAssistRequest}
 
 Les instructions doivent être en français, claires et directes.`;
 
-      const response = await invoke<{
+      const response = await secureInvoke<{
         ok: boolean;
         data: { content: string } | null;
         error: string | null;

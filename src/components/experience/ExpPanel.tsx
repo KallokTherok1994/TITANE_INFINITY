@@ -72,10 +72,10 @@ export const ExpPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const fetchAllData = async () => {
     try {
       const [global, cats, projs, tals] = await Promise.all([
-        invoke<GlobalExpState>('exp_get_global_state'),
-        invoke<CategoryState[]>('exp_get_categories'),
-        invoke<ProjectState[]>('exp_get_projects'),
-        invoke<TalentTreeState>('exp_get_talents'),
+        secureInvoke<GlobalExpState>('exp_get_global_state'),
+        secureInvoke<CategoryState[]>('exp_get_categories'),
+        secureInvoke<ProjectState[]>('exp_get_projects'),
+        secureInvoke<TalentTreeState>('exp_get_talents'),
       ]);
       setGlobalState(global);
       setCategories(cats);

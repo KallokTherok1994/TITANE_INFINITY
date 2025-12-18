@@ -22,7 +22,7 @@ const SyncLogs: React.FC = () => {
   const loadLogs = async () => {
     setLoading(true);
     try {
-      const result = await invoke<SyncHistoryResponse>('cloud_get_sync_history', {
+      const result = await secureInvoke<SyncHistoryResponse>('cloud_get_sync_history', {
         limit: 100,
       });
       setLogs(result.entries);

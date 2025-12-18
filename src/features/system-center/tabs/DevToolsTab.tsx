@@ -205,8 +205,8 @@ const DebuggerPanel: React.FC = () => {
   const fetchDebugger = useCallback(async () => {
     try {
       const [eventsRes, statsRes] = await Promise.all([
-        invoke<DevToolsResponse<DebuggerEvent[]>>('devtools_debug_last', { n: 50 }),
-        invoke<DevToolsResponse<DebuggerStats>>('devtools_debug_stats'),
+        secureInvoke<DevToolsResponse<DebuggerEvent[]>>('devtools_debug_last', { n: 50 }),
+        secureInvoke<DevToolsResponse<DebuggerStats>>('devtools_debug_stats'),
       ]);
       if (eventsRes.success && eventsRes.data) setEvents(eventsRes.data);
       if (statsRes.success && statsRes.data) setStats(statsRes.data);
@@ -320,8 +320,8 @@ const MemoryPanel: React.FC = () => {
     setLoading(true);
     try {
       const [statsRes, healthRes] = await Promise.all([
-        invoke<DevToolsResponse<MemorySystemStats>>('devtools_memory_stats'),
-        invoke<DevToolsResponse<MemoryHealthReport>>('devtools_memory_health'),
+        secureInvoke<DevToolsResponse<MemorySystemStats>>('devtools_memory_stats'),
+        secureInvoke<DevToolsResponse<MemoryHealthReport>>('devtools_memory_health'),
       ]);
       if (statsRes.success && statsRes.data) setStats(statsRes.data);
       if (healthRes.success && healthRes.data) setHealth(healthRes.data);
@@ -338,7 +338,7 @@ const MemoryPanel: React.FC = () => {
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
     try {
-      const res = await invoke<DevToolsResponse<unknown[]>>('devtools_memory_search', {
+      const res = await secureInvoke<DevToolsResponse<unknown[]>>('devtools_memory_search', {
         query: searchQuery,
         limit: 10,
       });
@@ -351,7 +351,7 @@ const MemoryPanel: React.FC = () => {
   const handleKNN = async () => {
     if (!searchQuery.trim()) return;
     try {
-      const res = await invoke<DevToolsResponse<unknown[]>>('devtools_knn', {
+      const res = await secureInvoke<DevToolsResponse<unknown[]>>('devtools_knn', {
         text: searchQuery,
         k: 5,
       });
@@ -535,7 +535,7 @@ const AnalyzerPanel: React.FC = () => {
   const runAnalysis = async () => {
     setLoading(true);
     try {
-      const res = await invoke<DevToolsResponse<AnalyzerReport>>('devtools_analyze', {
+      const res = await secureInvoke<DevToolsResponse<AnalyzerReport>>('devtools_analyze', {
         systemMetrics: null,
       });
       if (res.success && res.data) setReport(res.data);
@@ -728,7 +728,7 @@ export const DevToolsTab: React.FC = () => {
   useEffect(() => {
     const fetchStatus = async () => {
       try {
-        const res = await invoke<DevToolsResponse<DevToolsStatus>>('devtools_status');
+        const res = await secureInvoke<DevToolsResponse<DevToolsStatus>>('devtools_status');
         if (res.success && res.data) setStatus(res.data);
       } catch {
         // DevTools may not be available
@@ -744,7 +744,7 @@ export const DevToolsTab: React.FC = () => {
       } else {
         await secureInvoke('devtools_enable');
       }
-      const res = await invoke<DevToolsResponse<DevToolsStatus>>('devtools_status');
+      const res = await secureInvoke<DevToolsResponse<DevToolsStatus>>('devtools_status');
       if (res.success && res.data) setStatus(res.data);
     } catch {
       // Silently fail

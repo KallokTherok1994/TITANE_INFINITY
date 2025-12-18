@@ -44,7 +44,7 @@ export class TauriBridge {
     this.state.pendingCommands++;
 
     try {
-      const result = await invoke<R>(command, args as Record<string, unknown>);
+      const result = await secureInvoke<R>(command, args as Record<string, unknown>);
       this.state.lastSync = Date.now();
       return result;
     } catch (error) {

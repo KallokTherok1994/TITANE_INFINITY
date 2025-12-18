@@ -44,7 +44,7 @@ export const SystemHealthMonitor = memo(function SystemHealthMonitor({
   // Fetch system metrics
   const fetchMetrics = useCallback(async () => {
     try {
-      const result = await invoke<SystemMetrics>('get_system_metrics');
+      const result = await secureInvoke<SystemMetrics>('get_system_metrics');
       setMetrics(result);
       setLastUpdate(Date.now());
       setError(null);
@@ -63,7 +63,7 @@ export const SystemHealthMonitor = memo(function SystemHealthMonitor({
   // Fetch engine statuses
   const fetchEngines = useCallback(async () => {
     try {
-      const result = await invoke<EngineStatus[]>('get_engines_status');
+      const result = await secureInvoke<EngineStatus[]>('get_engines_status');
       setEngines(result);
     } catch {
       // Fallback avec engines mock

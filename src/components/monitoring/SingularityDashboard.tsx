@@ -775,7 +775,7 @@ export const SingularityDashboard = memo(function SingularityDashboard({
   // Fetch system metrics
   const fetchSystemMetrics = useCallback(async () => {
     try {
-      const result = await invoke<SystemMetrics>('get_system_metrics');
+      const result = await secureInvoke<SystemMetrics>('get_system_metrics');
       setSystemMetrics(result);
       setLastUpdate(Date.now());
     } catch {

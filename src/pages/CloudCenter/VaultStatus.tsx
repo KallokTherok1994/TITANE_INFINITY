@@ -41,7 +41,7 @@ const VaultStatus: React.FC<VaultStatusProps> = ({ status, onRefresh }) => {
 
   const loadBackups = async () => {
     try {
-      const list = await invoke<BackupInfo[]>('cloud_list_backups');
+      const list = await secureInvoke<BackupInfo[]>('cloud_list_backups');
       setBackups(list);
     } catch (e) {
       console.error('[VaultStatus] Failed to load backups:', e);
@@ -51,7 +51,7 @@ const VaultStatus: React.FC<VaultStatusProps> = ({ status, onRefresh }) => {
   const handleAutoHeal = async () => {
     setIsHealing(true);
     try {
-      const report = await invoke<HealReport>('cloud_auto_heal');
+      const report = await secureInvoke<HealReport>('cloud_auto_heal');
       setHealReport(report);
       if (report.backup_created) {
         await loadBackups();
@@ -67,7 +67,7 @@ const VaultStatus: React.FC<VaultStatusProps> = ({ status, onRefresh }) => {
   const handleCreateBackup = async () => {
     setIsCreatingBackup(true);
     try {
-      await invoke<string>('cloud_backup_vault');
+      await secureInvoke<string>('cloud_backup_vault');
       await loadBackups();
     } catch (e) {
       console.error('[VaultStatus] Backup failed:', e);
