@@ -258,6 +258,10 @@ export class AdaptiveThresholdEngine {
    * Démarrer la boucle d'ajustement
    */
   private startAdjustmentLoop(): void {
+    // Idempotent: avoid spawning multiple intervals if enabled repeatedly
+    // (e.g., React effects re-running in tests/dev).
+    if (this.adjustmentTimer) return;
+
     this.adjustmentTimer = setInterval(() => {
       this.adjustThresholds();
     }, this.config.adjustmentInterval);
@@ -294,6 +298,12 @@ export class AdaptiveThresholdEngine {
    * Activer/désactiver
    */
   setEnabled(enabled: boolean): void {
+    // Fast-path: no-op if already in desired state
+    if (this.config.enabled === enabled) {
+      if (enabled) this.startAdjustmentLoop();
+      return;
+    }
+
     this.config.enabled = enabled;
 
     if (enabled) {
