@@ -1,4 +1,5 @@
 /**
+import { secureInvoke } from '@/lib/security';
  * TITANE∞ v25.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */

@@ -1,4 +1,5 @@
 /**
+import { secureInvoke } from '@/lib/security';
  * TITANE∞ v22.0 — MetricsDisplay Component
  * Real-time dashboard metrics with Chart.js visualization
  */

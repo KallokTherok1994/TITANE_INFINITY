@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { secureInvoke } from '@/lib/security';
 import { InstructionMode, instructionModeManager } from './InstructionModeManager';
 import { useUIStore } from '../../../stores/uiStore';
 import './ModeEditor.css';

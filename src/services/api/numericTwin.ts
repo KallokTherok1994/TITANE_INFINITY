@@ -1,4 +1,5 @@
 /**
+import { secureInvoke } from '@/lib/security';
  * TITANE∞ vΩ∞ — Numeric Twin Service
  * © 2025 TITANE∞ — Proprietary License
  * Service API pour le Numeric Twin Engine

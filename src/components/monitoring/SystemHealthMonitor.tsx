@@ -1,4 +1,5 @@
 /**
+import { secureInvoke } from '@/lib/security';
  * TITANE∞ v∞ — SYSTEM HEALTH MONITOR
  * Composant temps réel pour monitoring système
  * Design System: Monochrome TITANE

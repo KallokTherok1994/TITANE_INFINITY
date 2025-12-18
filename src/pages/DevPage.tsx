@@ -1,4 +1,5 @@
 /**
+import { secureInvoke } from '@/lib/security';
  * ═══════════════════════════════════════════════════════════════════════════
  * TITANE∞ v25.4.0 — DEV PAGE (Fusion Complete)
  * Centre unifié développement: Dev Mode + ONE CORE + QA & Tests + Orchestration

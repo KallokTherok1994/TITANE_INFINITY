@@ -1,4 +1,5 @@
 /**
+import { secureInvoke } from '@/lib/security';
  * 🧠 TITANE∞ ConversationManager
  *
  * Service centralisé pour gérer TOUTES les conversations IA (OMEGA v2 spec):

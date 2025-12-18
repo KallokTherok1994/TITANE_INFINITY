@@ -22,7 +22,7 @@ describe('Claude Provider', () => {
 
   describe('isAvailable()', () => {
     it('devrait retourner true si la clé est configurée', async () => {
-      vi.mocked(invoke).mockResolvedValue({
+      vi.mocked(secureInvoke).mockResolvedValue({
         ok: true,
         data: { configured: true },
       });
@@ -34,7 +34,7 @@ describe('Claude Provider', () => {
     });
 
     it("devrait retourner false si la clé n'est pas configurée", async () => {
-      vi.mocked(invoke).mockResolvedValue({
+      vi.mocked(secureInvoke).mockResolvedValue({
         ok: true,
         data: { configured: false },
       });
@@ -45,7 +45,7 @@ describe('Claude Provider', () => {
     });
 
     it("devrait retourner false en cas d'erreur backend", async () => {
-      vi.mocked(invoke).mockRejectedValue(new Error('Backend error'));
+      vi.mocked(secureInvoke).mockRejectedValue(new Error('Backend error'));
 
       const result = await claudeProvider.isAvailable();
 
@@ -53,7 +53,7 @@ describe('Claude Provider', () => {
     });
 
     it('devrait retourner false si la réponse est invalide', async () => {
-      vi.mocked(invoke).mockResolvedValue({
+      vi.mocked(secureInvoke).mockResolvedValue({
         ok: false,
         data: null,
       });
@@ -77,7 +77,7 @@ describe('Claude Provider', () => {
         error: null,
       };
 
-      vi.mocked(invoke).mockResolvedValue(mockResponse);
+      vi.mocked(secureInvoke).mockResolvedValue(mockResponse);
 
       const result = await claudeProvider.generate('Question test');
 
@@ -102,7 +102,7 @@ describe('Claude Provider', () => {
     });
 
     it('devrait gérer une clé API invalide (401)', async () => {
-      vi.mocked(invoke).mockResolvedValue({
+      vi.mocked(secureInvoke).mockResolvedValue({
         ok: false,
         data: null,
         error: 'invalid_api_key: clé invalide',
@@ -114,7 +114,7 @@ describe('Claude Provider', () => {
     });
 
     it('devrait gérer un rate limit (429)', async () => {
-      vi.mocked(invoke).mockResolvedValue({
+      vi.mocked(secureInvoke).mockResolvedValue({
         ok: false,
         data: null,
         error: 'rate_limit_exceeded',
@@ -126,7 +126,7 @@ describe('Claude Provider', () => {
     });
 
     it('devrait gérer un timeout', async () => {
-      vi.mocked(invoke).mockResolvedValue({
+      vi.mocked(secureInvoke).mockResolvedValue({
         ok: false,
         data: null,
         error: 'Request timed out after 30s',
@@ -138,7 +138,7 @@ describe('Claude Provider', () => {
     });
 
     it('devrait gérer une surcharge serveur (529)', async () => {
-      vi.mocked(invoke).mockResolvedValue({
+      vi.mocked(secureInvoke).mockResolvedValue({
         ok: false,
         data: null,
         error: 'overloaded_error: Serveurs surchargés',
@@ -150,7 +150,7 @@ describe('Claude Provider', () => {
     });
 
     it('devrait gérer un quota insuffisant', async () => {
-      vi.mocked(invoke).mockResolvedValue({
+      vi.mocked(secureInvoke).mockResolvedValue({
         ok: false,
         data: null,
         error: 'insufficient_quota: Quota épuisé',
@@ -162,7 +162,7 @@ describe('Claude Provider', () => {
     });
 
     it("devrait convertir l'historique correctement", async () => {
-      vi.mocked(invoke).mockResolvedValue({
+      vi.mocked(secureInvoke).mockResolvedValue({
         ok: true,
         data: { content: 'Réponse', model: 'claude-3-sonnet' },
         error: null,
@@ -186,7 +186,7 @@ describe('Claude Provider', () => {
     });
 
     it('devrait accepter une config personnalisée', async () => {
-      vi.mocked(invoke).mockResolvedValue({
+      vi.mocked(secureInvoke).mockResolvedValue({
         ok: true,
         data: { content: 'OK', model: 'claude-3-opus' },
         error: null,
@@ -212,7 +212,7 @@ describe('Claude Provider', () => {
 
   describe('testConnection()', () => {
     it('devrait réussir le test de connexion', async () => {
-      vi.mocked(invoke).mockResolvedValue({
+      vi.mocked(secureInvoke).mockResolvedValue({
         ok: true,
         data: { content: 'Test OK', model: 'claude-3-5-sonnet-20241022' },
         error: null,
@@ -226,7 +226,7 @@ describe('Claude Provider', () => {
     });
 
     it('devrait échouer le test de connexion', async () => {
-      vi.mocked(invoke).mockResolvedValue({
+      vi.mocked(secureInvoke).mockResolvedValue({
         ok: false,
         data: null,
         error: 'Connexion échouée',

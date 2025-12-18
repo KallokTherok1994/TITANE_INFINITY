@@ -1,4 +1,5 @@
 /**
+import { secureInvoke } from '@/lib/security';
  * TITANE∞ v20Ω — Tauri Bridge
  * Pont de communication avec le backend Rust
  */
