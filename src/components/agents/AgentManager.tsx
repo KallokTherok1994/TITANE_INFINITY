@@ -374,7 +374,7 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({ onClose, onCreated 
           )}
 
           <div className="form-group">
-            <label>Nom de l'agent *</label>
+            <label>Nom de l&apos;agent *</label>
             <input
               type="text"
               value={formData.name}

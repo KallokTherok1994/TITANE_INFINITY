@@ -278,7 +278,7 @@ const EvolutionControls: React.FC<{
 
   return (
     <div className="evolution-controls">
-      <h3>⚙️ Contrôles d'Évolution</h3>
+      <h3>⚙️ Contrôles d&apos;Évolution</h3>
 
       <div className="controls-grid">
         <button onClick={onParse} disabled={isLoading} className="control-btn parse">

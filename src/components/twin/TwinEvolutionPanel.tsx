@@ -338,7 +338,7 @@ const EvolutionTab: React.FC<EvolutionTabProps> = ({
     <div className="twin-tab twin-tab--evolution">
       {/* Phase actuelle */}
       <div className="twin-evolution__phase">
-        <h3>Phase d'Évolution</h3>
+        <h3>Phase d&apos;Évolution</h3>
         <div className="twin-evolution__phase-indicator">
           <span className="twin-evolution__phase-current">
             {getPhaseLabel(currentPhase ?? 'Observation')}
@@ -390,7 +390,7 @@ const EvolutionTab: React.FC<EvolutionTabProps> = ({
       {/* Suggestions */}
       {suggestions.length > 0 && (
         <div className="twin-evolution__suggestions">
-          <h3>Suggestions d'Ajustements</h3>
+          <h3>Suggestions d&apos;Ajustements</h3>
           <div className="twin-evolution__suggestions-list">
             {suggestions.map((s, i) => (
               <div
@@ -492,7 +492,7 @@ const AdminTab: React.FC<AdminTabProps> = ({ onRecalculate, onTransition }) => {
       <div className="twin-admin__info">
         <h4>Contraintes de Sécurité</h4>
         <ul>
-          <li>❌ Pas d'imitation artificielle de Kevin</li>
+          <li>❌ Pas d&apos;imitation artificielle de Kevin</li>
           <li>❌ Pas de fabrication de souvenirs</li>
           <li>❌ Pas de manipulation émotionnelle</li>
           <li>❌ Pas de dépendance réciproque</li>

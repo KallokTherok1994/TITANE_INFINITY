@@ -174,7 +174,7 @@ const CloudCenter: React.FC = () => {
               <h2>🔑 Initialisation du Vault</h2>
 
               <div className="form-group">
-                <label htmlFor="deviceName">Nom de l'appareil</label>
+                <label htmlFor="deviceName">Nom de l&apos;appareil</label>
                 <input
                   id="deviceName"
                   type="text"

@@ -408,7 +408,7 @@ const MemoryEvolutionSection: React.FC = () => {
 
       {/* Journal d'Évolution */}
       <div className="bg-gray-800 rounded-lg p-6">
-        <h3 className="text-xl font-bold mb-4">📜 Journal d'Évolution Mémoire</h3>
+        <h3 className="text-xl font-bold mb-4">📜 Journal d&apos;Évolution Mémoire</h3>
         <div className="space-y-3">
           {[
             {
@@ -519,7 +519,7 @@ const CognitiveEvolutionSection: React.FC = () => {
 
       {/* Lignes d'Évolution */}
       <div className="bg-gray-800 rounded-lg p-6">
-        <h3 className="text-xl font-bold mb-4">🌱 Lignes d'Évolution par Thème</h3>
+        <h3 className="text-xl font-bold mb-4">🌱 Lignes d&apos;Évolution par Thème</h3>
         <div className="space-y-4">
           {[
             {

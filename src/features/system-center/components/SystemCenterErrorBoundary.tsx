@@ -151,7 +151,7 @@ export class SystemCenterErrorBoundary extends React.Component<Props, State> {
                 {/* ID d'erreur */}
                 {this.state.errorId && (
                   <div className="sc-error-id">
-                    <strong>ID d'erreur :</strong>
+                    <strong>ID d&apos;erreur :</strong>
                     <code>{this.state.errorId}</code>
                   </div>
                 )}

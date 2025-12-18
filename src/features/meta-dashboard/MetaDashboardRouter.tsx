@@ -26,7 +26,7 @@ const MonitoringDashboard = React.lazy(() => import('@/pages/MonitoringDashboard
 // Placeholder for missing dashboards
 const PlaceholderDashboard = () => (
   <div style={{ padding: '2rem', textAlign: 'center', color: '#94a3b8' }}>
-    <h2>Dashboard en cours d'implémentation</h2>
+    <h2>Dashboard en cours d&apos;implémentation</h2>
     <p>Ce tableau de bord sera intégré prochainement.</p>
   </div>
 );

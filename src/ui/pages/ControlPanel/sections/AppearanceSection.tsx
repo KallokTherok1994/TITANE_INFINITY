@@ -314,7 +314,7 @@ export const AppearanceSection: React.FC = () => {
         <>
           {/* Mode d'affichage */}
           <div className="cp-card">
-            <h3 className="cp-card-title">🌗 Mode d'affichage</h3>
+            <h3 className="cp-card-title">🌗 Mode d&apos;affichage</h3>
             <div className="cp-card-content">
               <div className="cp-mode-selector">
                 <button
@@ -344,7 +344,7 @@ export const AppearanceSection: React.FC = () => {
 
           {/* Couleur d'accent */}
           <div className="cp-card">
-            <h3 className="cp-card-title">🎨 Couleur d'accent</h3>
+            <h3 className="cp-card-title">🎨 Couleur d&apos;accent</h3>
             <div className="cp-card-content">
               <div className="cp-color-picker">
                 {ACCENT_COLORS.map(({ value, label, emoji }) => (
@@ -430,7 +430,7 @@ export const AppearanceSection: React.FC = () => {
             <h3 className="cp-card-title">📐 Densité & Style</h3>
             <div className="cp-card-content">
               <div className="cp-input-group">
-                <label className="cp-input-label">Densité d'affichage</label>
+                <label className="cp-input-label">Densité d&apos;affichage</label>
                 <div className="cp-density-selector">
                   <button
                     className={`cp-density-option ${config.density === 'compact' ? 'active' : ''}`}
@@ -651,7 +651,7 @@ export const AppearanceSection: React.FC = () => {
 
           {/* Style du menu */}
           <div className="cp-card">
-            <h3 className="cp-card-title">🎨 Style d'affichage</h3>
+            <h3 className="cp-card-title">🎨 Style d&apos;affichage</h3>
             <div className="cp-card-content">
               <div className="cp-menu-style-selector">
                 <button

@@ -61,7 +61,7 @@ export function HarmoniaFlow() {
       {/* Balance Score */}
       <Card className="p-6">
         <div className="flex items-center justify-between mb-4">
-          <span className="text-sm text-gray-400">Score d'Équilibre</span>
+          <span className="text-sm text-gray-400">Score d&apos;Équilibre</span>
           <span className="text-2xl font-bold">{harmonia.balance_score.toFixed(1)}%</span>
         </div>
 
@@ -131,7 +131,7 @@ export function HarmoniaFlow() {
         </div>
 
         <div className="mt-4 p-4 bg-gray-800 rounded-lg">
-          <div className="text-xs text-gray-400 mb-2">Fréquence d'ajustement</div>
+          <div className="text-xs text-gray-400 mb-2">Fréquence d&apos;ajustement</div>
           <div className="flex items-center gap-2">
             <div className="flex-1 bg-gray-700 rounded-full h-2">
               <div
@@ -158,7 +158,7 @@ export function HarmoniaFlow() {
             </p>
           )}
           {harmonia.stabilization_level === 'Adjusting' && (
-            <p>⚠️ Harmonia effectue des corrections pour rétablir l'équilibre système.</p>
+            <p>⚠️ Harmonia effectue des corrections pour rétablir l&apos;équilibre système.</p>
           )}
           {harmonia.stabilization_level === 'Critical' && (
             <p>🚨 Déséquilibre critique détecté. Intervention immédiate recommandée.</p>

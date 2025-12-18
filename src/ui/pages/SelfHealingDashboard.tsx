@@ -393,7 +393,7 @@ export const SelfHealingDashboard: React.FC = () => {
               <span className="prob-value">
                 {Math.round(prediction.probability * 100)}%
               </span>
-              <span className="prob-label">Probabilité d'anomalie</span>
+              <span className="prob-label">Probabilité d&apos;anomalie</span>
             </div>
             <TrendIndicator trend={prediction.trend} />
           </div>

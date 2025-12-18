@@ -88,7 +88,7 @@ export const FeaturesStep: React.FC = () => {
         <Feature
           icon="🧠"
           title="Mémoire Évolutive"
-          description="TITANE se souvient de vos préférences et s'adapte à votre style au fil du temps."
+          description="TITANE se souvient de vos préférences et s&apos;adapte à votre style au fil du temps."
           delay={0.6}
         />
       </div>
@@ -101,7 +101,7 @@ export const FeaturesStep: React.FC = () => {
       >
         <div className="features-footer-icon">⚡</div>
         <p>
-          Et ce n'est que le début ! TITANE∞ évolue constamment avec 20+ engines IA qui
+          Et ce n&apos;est que le début ! TITANE∞ évolue constamment avec 20+ engines IA qui
           travaillent en harmonie pour vous offrir la meilleure expérience possible.
         </p>
       </motion.div>

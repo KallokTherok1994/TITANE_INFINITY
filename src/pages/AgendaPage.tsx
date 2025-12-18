@@ -635,7 +635,7 @@ export const AgendaPage: React.FC = () => {
     return (
       <div className="agenda-page agenda-loading">
         <div className="loading-spinner">⏳</div>
-        <span>Chargement de l'agenda...</span>
+        <span>Chargement de l&apos;agenda...</span>
       </div>
     );
   }

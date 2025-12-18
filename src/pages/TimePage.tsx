@@ -887,7 +887,7 @@ const IntelligenceSection: React.FC = () => {
         <div className="space-y-4">
           <div className="bg-gray-900 p-4 rounded">
             <div className="flex items-center justify-between mb-2">
-              <div className="font-medium">Pic d'efficacité</div>
+              <div className="font-medium">Pic d&apos;efficacité</div>
               <TBadge variant="success">Optimal</TBadge>
             </div>
             <div className="text-sm text-gray-400">

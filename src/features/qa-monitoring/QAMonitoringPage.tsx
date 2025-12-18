@@ -97,7 +97,7 @@ const OverviewTab = ({
   return (
     <div className="qa-tab-content">
       <div className="qa-section-header">
-        <h2>🎯 Vue d'ensemble QA</h2>
+        <h2>🎯 Vue d&apos;ensemble QA</h2>
         <button className="qa-btn qa-btn--primary" onClick={onRefresh}>
           🔄 Rafraîchir
         </button>
@@ -531,7 +531,7 @@ const SecurityTab = ({
 
       {auditResult && (
         <div className="qa-audit-section">
-          <h3>Résultat de l'Audit</h3>
+          <h3>Résultat de l&apos;Audit</h3>
           <div className="qa-audit-score">
             <div
               className={`qa-audit-score-circle qa-audit-score-circle--${auditResult.score >= 90 ? 'success' : auditResult.score >= 70 ? 'warning' : 'error'}`}

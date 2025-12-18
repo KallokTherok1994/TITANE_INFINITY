@@ -215,9 +215,9 @@ const DevicesView: React.FC = () => {
         <h4>ℹ️ À propos des appareils</h4>
         <ul>
           <li>Chaque appareil possède une paire de clés Ed25519 unique</li>
-          <li>La clé privée ne quitte jamais l'appareil</li>
+          <li>La clé privée ne quitte jamais l&apos;appareil</li>
           <li>Seule la clé publique est partagée pour vérifier les signatures</li>
-          <li>Retirer un appareil l'empêche de synchroniser ses modifications</li>
+          <li>Retirer un appareil l&apos;empêche de synchroniser ses modifications</li>
         </ul>
       </section>
     </div>

@@ -237,7 +237,7 @@ export const PredictiveAlertsDashboard: React.FC<PredictiveAlertsDashboardProps>
               <div className="text-2xl font-bold text-gray-900">
                 {stats.byMetric.errorRate}
               </div>
-              <div className="text-xs text-gray-600 mt-1">Taux d'erreur</div>
+              <div className="text-xs text-gray-600 mt-1">Taux d&apos;erreur</div>
             </div>
             <div className="text-center p-3 bg-gray-50 rounded-lg">
               <div className="text-2xl font-bold text-gray-900">

@@ -269,7 +269,7 @@ function InternalTab({ interoception }: { interoception: InteroceptionHookReturn
       <div className="physiological-card">
         <h4>⚡ Énergie Interne</h4>
         <ProgressBar value={state.energy} label={`${Math.round(state.energy * 100)}%`} />
-        <p className="metric-description">Niveau d'énergie disponible du système</p>
+        <p className="metric-description">Niveau d&apos;énergie disponible du système</p>
       </div>
 
       <div className="physiological-card">
