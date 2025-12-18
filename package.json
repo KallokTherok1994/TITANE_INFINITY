@@ -152,7 +152,10 @@
       "esbuild",
       "protobufjs",
       "sharp"
-    ]
+    ],
+    "overrides": {
+      "mdast-util-to-hast": "^13.2.1"
+    }
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
