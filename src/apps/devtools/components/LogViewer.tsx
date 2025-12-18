@@ -3,8 +3,8 @@
  * Real-time log streaming with advanced filtering capabilities
  */
 
-import React, { useState, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import React, { useState, useEffect, useCallback } from 'react';
+import { secureInvoke } from '@/lib/security';
 import './LogViewer.css';
 
 interface LogEntry {
@@ -49,9 +49,11 @@ export const LogViewer: React.FC = () => {
   });
 
   // Fetch logs from backend
-  const fetchLogs = async () => {
+  const fetchLogs = useCallback(async () => {
     try {
-      const response = await invoke<LogsResponse>('get_system_logs', { limit: 500 });
+      const response = await secureInvoke<LogsResponse>('get_system_logs', {
+        limit: 500,
+      });
       if (response.success && response.data) {
         setLogs(response.data);
         updateStats(response.data);
@@ -59,7 +61,7 @@ export const LogViewer: React.FC = () => {
     } catch (error) {
       console.error('Failed to fetch logs:', error);
     }
-  };
+  }, [updateStats]); // useCallback deps
 
   // Update statistics
   const updateStats = (logEntries: LogEntry[]) => {
@@ -107,8 +109,7 @@ export const LogViewer: React.FC = () => {
       const interval = setInterval(fetchLogs, 2000);
       return () => clearInterval(interval);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [autoRefresh]);
+  }, [autoRefresh, fetchLogs]); // Fixed deps
 
   // Clear logs
   const handleClear = async () => {

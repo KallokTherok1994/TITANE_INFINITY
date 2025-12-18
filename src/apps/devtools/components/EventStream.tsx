@@ -3,8 +3,8 @@
  * Real-time event streaming with filtering and replay
  */
 
-import React, { useState, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import React, { useState, useEffect, useCallback } from 'react';
+import { secureInvoke } from '@/lib/security';
 import './EventStream.css';
 
 type EventType = 'System' | 'Core' | 'Memory' | 'IPC' | 'User' | 'Error';
@@ -37,11 +37,11 @@ export const EventStream: React.FC = () => {
   const [isPaused, setIsPaused] = useState(false);
 
   // Fetch events
-  const fetchEvents = async () => {
+  const fetchEvents = useCallback(async () => {
     if (isPaused) return;
 
     try {
-      const response = await invoke<EventStreamResponse>('get_event_stream', {
+      const response = await secureInvoke<EventStreamResponse>('get_event_stream', {
         limit: 100,
       });
       if (response.success && response.data) {
@@ -50,15 +50,20 @@ export const EventStream: React.FC = () => {
     } catch (error) {
       console.error('Failed to fetch events:', error);
     }
-  };
+  }, [isPaused]); // useCallback deps
 
   // Auto-refresh
   useEffect(() => {
-    fetchEvents();
-    const interval = setInterval(fetchEvents, 1000);
+    if (!isPaused) {
+      fetchEvents();
+    }
+    const interval = setInterval(() => {
+      if (!isPaused) {
+        fetchEvents();
+      }
+    }, 1000);
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isPaused]);
+  }, [isPaused, fetchEvents]); // Fixed deps
 
   // Apply filters
   useEffect(() => {

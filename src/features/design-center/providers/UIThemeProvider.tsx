@@ -13,7 +13,7 @@ import React, {
   useMemo,
   useReducer,
 } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { logger } from '@/lib/logger';
 import {
   DEFAULT_UI_THEME_TOKENS,
@@ -264,8 +264,7 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
     }
 
     logger.debug('Tokens appliqués au DOM', { component: 'UIThemeProvider' });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.tokens]);
+  }, [state]); // Fixed deps: include state
 
   // Appliquer automatiquement quand les tokens changent
   useEffect(() => {
