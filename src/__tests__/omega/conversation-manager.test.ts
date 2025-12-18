@@ -16,8 +16,8 @@ import {
 import type { ConversationMessage } from '../../types/conversation';
 
 // Mock secureInvoke with proper isolation
-vi.mock('@/lib/security', async (importOriginal) => {
-  const actual = await importOriginal() as any;
+vi.mock('@/lib/security', async importOriginal => {
+  const actual = (await importOriginal()) as any;
   return {
     ...actual,
     secureInvoke: vi.fn((cmd: string, args?: any) => {
@@ -33,11 +33,11 @@ vi.mock('@/lib/security', async (importOriginal) => {
           content: `Mock response: ${args?.prompt || 'test'}`,
           model: 'mock-gpt4',
           tokens_used: 42,
-          finish_reason: 'stop'
+          finish_reason: 'stop',
         });
       }
       return Promise.resolve({ success: true });
-    })
+    }),
   };
 });
 
