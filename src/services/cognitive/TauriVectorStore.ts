@@ -342,9 +342,7 @@ class InMemoryVectorStore implements VectorStore {
     this.entries.delete(id);
   }
 
-  async deleteWhere(
-    _filters: Record<string, unknown>
-  ): Promise<number> {
+  async deleteWhere(_filters: Record<string, unknown>): Promise<number> {
     if (!this.initialized) throw new Error('Store not initialized');
     const count = this.entries.size;
     this.entries.clear();

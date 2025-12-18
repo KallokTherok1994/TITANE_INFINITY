@@ -746,7 +746,7 @@ class CognitiveOmegaOrchestrator {
 
     let totalScore = 0;
     for (const [metric, weight] of Object.entries(weights)) {
-      totalScore += metrics[metric as keyof ConversationMetrics] * weight;
+      totalScore += metrics[metric as keyof ConversationMetrics] ?? 0 ?? 0 * weight;
     }
 
     return totalScore;

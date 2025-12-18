@@ -324,7 +324,7 @@ export class GoalConsistencyEngine extends EventEmitter {
         f => f.id === fullFact.supersedes
       );
       if (supersededIndex >= 0) {
-        conversationFacts[supersededIndex].valid_until = now;
+        conversationFacts[supersededIndex]!.valid_until = now;
       }
     }
 

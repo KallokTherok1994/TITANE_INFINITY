@@ -451,7 +451,7 @@ export const getWeekDayFromIndex = (index: number): WeekDay => {
     'friday',
     'saturday',
   ];
-  return days[index % 7];
+  return days[index % 7]!;
 };
 
 /**

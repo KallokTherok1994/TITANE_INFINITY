@@ -92,7 +92,7 @@ function TabNavigation({ tabs, activeTab, onTabChange }: TabNavigationProps) {
 // ============================================================================
 
 function DesignCenterContent() {
-  const [activeTab, setActiveTab] = useState(DESIGN_CENTER_TABS[0].id);
+  const [activeTab, setActiveTab] = useState(DESIGN_CENTER_TABS[0]?.id ?? 'templates');
 
   return (
     <div className="dc-page">

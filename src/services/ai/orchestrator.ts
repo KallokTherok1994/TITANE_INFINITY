@@ -1189,7 +1189,8 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
 
       if (systemIndex >= 0) {
         cloned[systemIndex] = {
-          ...cloned[systemIndex],
+          ...cloned[systemIndex]!,
+          role: 'system' as const,
           content: prompt,
           timestamp: Date.now(),
         };

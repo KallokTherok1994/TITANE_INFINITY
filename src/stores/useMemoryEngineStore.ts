@@ -203,7 +203,8 @@ export const useMemoryEngineStore = create<MemoryEngineStore>()(
           set(state => {
             const index = state.memories.findIndex(m => m.id === id);
             if (index !== -1) {
-              state.memories[index] = { ...state.memories[index], ...updates };
+              const current = state.memories[index]!;
+              state.memories[index] = { ...current, ...updates } as Memory;
             }
           });
           get().updateStats();

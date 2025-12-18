@@ -177,7 +177,7 @@ class AudioSelfHeal {
     }
 
     const lastTransition = history[history.length - 1];
-    const timeSinceLastTransition = Date.now() - lastTransition.timestamp;
+    const timeSinceLastTransition = Date.now() - (lastTransition?.timestamp ?? 0);
 
     // If in non-idle state for too long, consider stuck
     const currentState = audioStateMachine.getState();

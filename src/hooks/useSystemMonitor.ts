@@ -112,7 +112,7 @@ export function useSystemMonitor(
     engineLoading,
     engineError,
     globalHealth: globalHealth(),
-    isSystemOverloaded: isOverloaded(),
+    isSystemOverloaded: isOverloaded,
     criticalIssues: criticalIssues(),
     refreshSystem,
     refreshEngines,

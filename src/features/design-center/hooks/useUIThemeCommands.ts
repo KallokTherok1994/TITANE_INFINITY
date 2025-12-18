@@ -285,7 +285,7 @@ export function useUIThemeCommands() {
       /(enable|disable|activer|désactiver)\s+animations?/i
     );
     if (animMatch) {
-      const enabled = animMatch[1].match(/enable|activer/i) !== null;
+      const enabled = animMatch[1]?.match(/enable|activer/i) !== null;
       return {
         type: 'set_animations',
         key: 'enabled',
@@ -301,7 +301,7 @@ export function useUIThemeCommands() {
       /(?:set|activer)\s+(high|normal|haut|élevé)\s+contrast/i
     );
     if (contrastMatch) {
-      const level = contrastMatch[1].match(/high|haut|élevé/i) ? 'high' : 'normal';
+      const level = contrastMatch[1]?.match(/high|haut|élevé/i) ? 'high' : 'normal';
       return {
         type: 'set_contrast',
         key: 'level',

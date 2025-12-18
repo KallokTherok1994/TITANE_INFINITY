@@ -421,7 +421,7 @@ export class AutonomicReactionEngine {
    * Pick random element
    */
   private pickRandom<T>(arr: T[]): T {
-    return arr[Math.floor(Math.random() * arr.length)];
+    return arr[Math.floor(Math.random() * arr.length)]!;
   }
 }
 

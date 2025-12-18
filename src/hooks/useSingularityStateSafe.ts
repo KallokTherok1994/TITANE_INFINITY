@@ -60,7 +60,7 @@ export function useSingularityStateSafe<T = SingularityFrontendState>(
       : (state: SingularityFrontendState) => state as unknown as T
   );
 
-  return result;
+  return result as T extends undefined ? SingularityFrontendState : T;
 }
 
 /**

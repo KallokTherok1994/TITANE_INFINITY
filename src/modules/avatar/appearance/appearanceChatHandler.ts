@@ -242,5 +242,8 @@ export function getAppearanceResponse(
   category: keyof typeof APPEARANCE_RESPONSES
 ): string {
   const responses = APPEARANCE_RESPONSES[category];
-  return responses[Math.floor(Math.random() * responses.length)];
+  return (
+    responses[Math.floor(Math.random() * responses.length)] ??
+    'Configuration mise à jour !'
+  );
 }

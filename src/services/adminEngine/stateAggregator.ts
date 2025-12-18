@@ -469,7 +469,7 @@ export class StateAggregator {
    */
   private getCurrentFps(): number {
     if (this.fpsHistory.length === 0) return 60;
-    return this.fpsHistory[this.fpsHistory.length - 1];
+    return this.fpsHistory[this.fpsHistory.length - 1] ?? 60;
   }
 
   // ===========================================================================

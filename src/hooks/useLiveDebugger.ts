@@ -193,7 +193,7 @@ export function useLiveDebugger(): UseLiveDebuggerReturn {
     // Diagnostics
     diagnostics: state.diagnostics,
     recentDiagnostics,
-    lastDiagnostic,
+    lastDiagnostic ?? null,
 
     // Patches
     appliedPatches: state.appliedPatches,

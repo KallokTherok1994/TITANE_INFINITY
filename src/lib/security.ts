@@ -820,9 +820,13 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // ═══════════════════════════════════════════════════════════════
   // VECTOR STORE (v24.4+)
   // ═══════════════════════════════════════════════════════════════
+  'vector_store_init',
   'vector_store_insert',
   'vector_store_update',
   'vector_store_delete',
+  'vector_store_get',
+  'vector_store_search',
+  'vector_store_stats',
 
   // ═══════════════════════════════════════════════════════════════
   // WHISPER STREAMING (v24.4+)

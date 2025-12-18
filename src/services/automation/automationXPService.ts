@@ -257,7 +257,7 @@ class AutomationXPService {
     if (logs.length === 0) return true;
 
     const lastAction = logs[logs.length - 1];
-    return Date.now() - lastAction >= action.cooldown_ms;
+    return Date.now() - (lastAction ?? 0) >= action.cooldown_ms;
   }
 
   private checkDailyLimit(actionId: XPActionId): boolean {

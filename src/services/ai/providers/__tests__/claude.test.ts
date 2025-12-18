@@ -4,11 +4,11 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { claudeProvider, CLAUDE_MODELS } from '../claude';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
-// Mock Tauri invoke
-vi.mock('@tauri-apps/api/core', () => ({
-  invoke: vi.fn(),
+// Mock Tauri secureInvoke
+vi.mock('@/lib/security', () => ({
+  secureInvoke: vi.fn(),
 }));
 
 describe('Claude Provider', () => {
