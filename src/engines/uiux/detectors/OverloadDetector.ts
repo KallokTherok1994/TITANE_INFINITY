@@ -125,12 +125,18 @@ export class OverloadDetector {
     // Détecter le scroll erratique (changements de direction fréquents)
     if (this.scrollPositions.length >= 3) {
       const last3 = this.scrollPositions.slice(-3);
-      const dir1 = last3[1] - last3[0];
-      const dir2 = last3[2] - last3[1];
+      const pos0 = last3[0];
+      const pos1 = last3[1];
+      const pos2 = last3[2];
 
-      // Si changement de direction
-      if ((dir1 > 0 && dir2 < 0) || (dir1 < 0 && dir2 > 0)) {
-        this.metrics.erraticScroll++;
+      if (pos0 !== undefined && pos1 !== undefined && pos2 !== undefined) {
+        const dir1 = pos1 - pos0;
+        const dir2 = pos2 - pos1;
+
+        // Si changement de direction
+        if ((dir1 > 0 && dir2 < 0) || (dir1 < 0 && dir2 > 0)) {
+          this.metrics.erraticScroll++;
+        }
       }
     }
   }
@@ -166,8 +172,14 @@ export class OverloadDetector {
     // Détecter le backtracking (retour en arrière)
     if (this.navigationHistory.length >= 3) {
       const recent = this.navigationHistory.slice(-3);
-      if (recent[0] === recent[2] && recent[0] !== recent[1]) {
-        this.metrics.backtracking++;
+      const nav0 = recent[0];
+      const nav1 = recent[1];
+      const nav2 = recent[2];
+
+      if (nav0 !== undefined && nav1 !== undefined && nav2 !== undefined) {
+        if (nav0 === nav2 && nav0 !== nav1) {
+          this.metrics.backtracking++;
+        }
       }
     }
   }

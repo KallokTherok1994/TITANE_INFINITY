@@ -313,11 +313,12 @@ export const useDevToolsStore = create<DevToolsState>(set => ({
       if (!metric) return state;
 
       const newHistory = [...metric.history, value].slice(-20);
+      const prevValue = newHistory[newHistory.length - 2] ?? 0;
       const trend =
-        newHistory.length >= 2
-          ? value > newHistory[newHistory.length - 2]
+        newHistory.length >= 2 && prevValue !== undefined
+          ? value > prevValue
             ? 'up'
-            : value < newHistory[newHistory.length - 2]
+            : value < prevValue
               ? 'down'
               : 'stable'
           : 'stable';

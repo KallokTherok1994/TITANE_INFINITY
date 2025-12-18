@@ -335,9 +335,10 @@ class MetaContinuumEngine {
     // Propagate to ShortFlux (avec smoothing)
     const shortVector = this.state.temporalField.shortFlux.stateVector;
     const blendFactor = 0.05; // 5% nouveau, 95% ancien
-    this.state.temporalField.shortFlux.stateVector = shortVector.map((v, i) =>
-      this.lerp(v, stateVector[i], blendFactor)
-    );
+    this.state.temporalField.shortFlux.stateVector = shortVector.map((v, i) => {
+      const newVal = stateVector[i];
+      return this.lerp(v, newVal ?? 0, blendFactor);
+    });
 
     // Calculate drift
     const drift = this.calculateDrift(stateVector, shortVector);
@@ -348,7 +349,10 @@ class MetaContinuumEngine {
    * Calculer dérive entre deux vecteurs
    */
   private calculateDrift(current: number[], reference: number[]): number {
-    const diff = current.map((v, i) => Math.abs(v - reference[i]));
+    const diff = current.map((v, i) => {
+      const refVal = reference[i];
+      return Math.abs(v - (refVal ?? 0));
+    });
     return diff.reduce((a, b) => a + b, 0) / diff.length;
   }
 
@@ -403,8 +407,8 @@ class MetaContinuumEngine {
 
     // Predict next state (simple linear projection)
     const predictedVector = currentVector.map((v, i) => {
-      const trend = evolutionDir[i] || 0;
-      return Math.max(0, Math.min(1, v + trend * 0.1));
+      const trend = evolutionDir[i];
+      return Math.max(0, Math.min(1, v + (trend ?? 0) * 0.1));
     });
 
     // Calculate predicted coherence
@@ -414,11 +418,11 @@ class MetaContinuumEngine {
     const projection: FutureProjection = {
       timestamp: now + 1000, // 1s ahead
       predictedState: {
-        presenceEnergy: predictedVector[1],
+        presenceEnergy: predictedVector[1] ?? 0.5,
         breathing: {
           phase: 0,
           cycleDuration: 4000,
-          amplitude: predictedVector[2],
+          amplitude: predictedVector[2] ?? 0.5,
         },
       },
       confidence: this.state.memory.evolutionVector.confidence,
@@ -534,8 +538,8 @@ class MetaContinuumEngine {
 
     // Update direction (weighted average)
     const newDirection = current.direction.map((v, i) => {
-      const target = impact.direction[i] || 0;
-      return v + (target - v) * learningRate;
+      const target = impact.direction[i];
+      return v + ((target ?? 0) - v) * learningRate;
     });
 
     // Update magnitude

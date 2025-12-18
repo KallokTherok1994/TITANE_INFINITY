@@ -16,7 +16,7 @@
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -222,9 +222,14 @@ export class HybridEngine {
     // Extract parameters (key=value pairs)
     for (let i = 2; i < parts.length; i++) {
       const part = parts[i];
+      if (!part) continue;
       if (part.includes('=')) {
-        const [key, value] = part.split('=');
-        params[key] = value;
+        const splitParts = part.split('=');
+        const key = splitParts[0];
+        const value = splitParts[1];
+        if (key && value !== undefined) {
+          params[key] = value;
+        }
       }
     }
 

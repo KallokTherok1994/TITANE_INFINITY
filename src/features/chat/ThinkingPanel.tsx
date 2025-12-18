@@ -180,7 +180,8 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
               {steps.filter(s => s.status === 'complete').length} / {steps.length} étapes
             </span>
             <span className="thinking-stat">
-              Durée: {Math.round((Date.now() - steps[0].timestamp) / 1000)}s
+              Durée:{' '}
+              {Math.round((Date.now() - (steps[0]?.timestamp ?? Date.now())) / 1000)}s
             </span>
           </div>
         )}

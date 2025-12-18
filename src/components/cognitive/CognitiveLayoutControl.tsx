@@ -130,16 +130,22 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
   const handleUndo = useCallback(() => {
     if (canUndo) {
       const newIndex = historyIndex - 1;
-      setHistoryIndex(newIndex);
-      setMode(modeHistory[newIndex]);
+      const mode = modeHistory[newIndex];
+      if (mode) {
+        setHistoryIndex(newIndex);
+        setMode(mode);
+      }
     }
   }, [canUndo, historyIndex, modeHistory, setMode]);
 
   const handleRedo = useCallback(() => {
     if (canRedo) {
       const newIndex = historyIndex + 1;
-      setHistoryIndex(newIndex);
-      setMode(modeHistory[newIndex]);
+      const mode = modeHistory[newIndex];
+      if (mode) {
+        setHistoryIndex(newIndex);
+        setMode(mode);
+      }
     }
   }, [canRedo, historyIndex, modeHistory, setMode]);
 

@@ -159,7 +159,8 @@ export const VirtualMessageList = memo(function VirtualMessageList({
 
     let startIndex = 0;
     for (let i = 0; i < messages.length; i++) {
-      if (offsets[i] + CONFIG.ESTIMATED_ITEM_HEIGHT >= scrollTop) {
+      const offset = offsets[i];
+      if (offset !== undefined && offset + CONFIG.ESTIMATED_ITEM_HEIGHT >= scrollTop) {
         startIndex = i;
         break;
       }
@@ -167,7 +168,8 @@ export const VirtualMessageList = memo(function VirtualMessageList({
 
     let endIndex = messages.length;
     for (let i = startIndex; i < messages.length; i++) {
-      if (offsets[i] > scrollBottom) {
+      const offset = offsets[i];
+      if (offset !== undefined && offset > scrollBottom) {
         endIndex = i;
         break;
       }

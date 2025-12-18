@@ -93,7 +93,18 @@ export function getPromptProfile(id?: string): TitanePromptProfile {
   if (id && promptProfiles[id]) {
     return promptProfiles[id];
   }
-  return promptProfiles.core;
+  return (
+    promptProfiles.core ??
+    promptProfiles[Object.keys(promptProfiles)[0]!] ?? {
+      id: 'core',
+      name: 'Core',
+      description: 'Default core profile',
+      defaultRole: 'assistant',
+      capabilities: [],
+      constraints: [],
+      examples: [],
+    }
+  );
 }
 
 export function listPromptProfiles(): TitanePromptProfile[] {

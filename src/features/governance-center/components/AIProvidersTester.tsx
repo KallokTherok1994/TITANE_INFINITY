@@ -31,10 +31,15 @@ export const AIProvidersTester: React.FC = () => {
   const [isTestingAll, setIsTestingAll] = useState(false);
 
   const testProvider = async (provider: 'gemini' | 'openai' | 'anthropic' | 'ollama') => {
-    setTests(prev => ({
-      ...prev,
-      [provider]: { ...prev[provider], status: 'testing', error: undefined },
-    }));
+    setTests(prev => {
+      const currentTest = prev[provider];
+      if (!currentTest) return prev;
+
+      return {
+        ...prev,
+        [provider]: { ...currentTest, status: 'testing', error: undefined },
+      };
+    });
 
     const startTime = performance.now();
 
@@ -56,32 +61,42 @@ export const AIProvidersTester: React.FC = () => {
           message: { content: string; provider: string; model: string };
           success: boolean;
         };
-        setTests(prev => ({
-          ...prev,
-          [provider]: {
-            ...prev[provider],
-            status: 'success',
-            latency,
-            response: data.message.content,
-            timestamp: Date.now(),
-          },
-        }));
+        setTests(prev => {
+          const currentTest = prev[provider];
+          if (!currentTest) return prev;
+
+          return {
+            ...prev,
+            [provider]: {
+              ...currentTest,
+              status: 'success',
+              latency,
+              response: data.message.content,
+              timestamp: Date.now(),
+            },
+          };
+        });
       } else {
         const errorData = result as { error?: string } | null;
         throw new Error(errorData?.error || 'Unknown error');
       }
     } catch (err) {
       const latency = Math.round(performance.now() - startTime);
-      setTests(prev => ({
-        ...prev,
-        [provider]: {
-          ...prev[provider],
-          status: 'error',
-          latency,
-          error: err instanceof Error ? err.message : String(err),
-          timestamp: Date.now(),
-        },
-      }));
+      setTests(prev => {
+        const currentTest = prev[provider];
+        if (!currentTest) return prev;
+
+        return {
+          ...prev,
+          [provider]: {
+            ...currentTest,
+            status: 'error',
+            latency,
+            error: err instanceof Error ? err.message : String(err),
+            timestamp: Date.now(),
+          },
+        };
+      });
     }
   };
 
@@ -166,6 +181,7 @@ export const AIProvidersTester: React.FC = () => {
       <div className="grid gap-4 md:grid-cols-2">
         {Object.entries(tests).map(([key, test]) => {
           const config = providerConfig[key as keyof typeof providerConfig];
+          if (!config) return null;
 
           return (
             <div
@@ -239,7 +255,7 @@ export const AIProvidersTester: React.FC = () => {
                 {/* Idle state */}
                 {test.status === 'idle' && (
                   <div className="py-8 text-center text-sm text-gray-500">
-                    Cliquez sur "Tester" pour vérifier ce provider
+                    Cliquez sur &quot;Tester&quot; pour vérifier ce provider
                   </div>
                 )}
               </div>

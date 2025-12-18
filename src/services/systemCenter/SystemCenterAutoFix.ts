@@ -232,6 +232,16 @@ export class SystemCenterAutoFixEngine {
 
     // Essayer la première alternative
     const newCommand = mapping.alternatives[0];
+    if (!newCommand) {
+      return {
+        success: false,
+        errorFixed: error,
+        appliedFix: 'WHITELIST_NO_ALTERNATIVE',
+        fallbackApplied: false,
+        message: `Aucune alternative disponible pour "${error.originalCommand}"`,
+      };
+    }
+
     try {
       await secureInvoke(newCommand, {});
 
@@ -285,8 +295,9 @@ export class SystemCenterAutoFixEngine {
       domain = 'cognition';
     }
 
-    const alternatives = DOMAIN_COMMAND_MAP[domain] || DOMAIN_COMMAND_MAP.diagnostics;
-    const newCommand = alternatives[0];
+    const alternatives =
+      DOMAIN_COMMAND_MAP[domain] ?? DOMAIN_COMMAND_MAP.diagnostics ?? [];
+    const newCommand = alternatives[0] ?? 'get_system_health';
 
     return {
       success: true,

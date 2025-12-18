@@ -59,11 +59,17 @@ const SCALE_PATTERNS_FR = [
   // Valeurs spécifiques
   {
     pattern: /taille\s+(?:à\s+)?(\d+(?:\.\d+)?)\s*%/i,
-    extract: (match: RegExpMatchArray) => parseFloat(match[1]) / 100,
+    extract: (match: RegExpMatchArray) => {
+      const val = match[1];
+      return val ? parseFloat(val) / 100 : 1.0;
+    },
   },
   {
     pattern: /échelle\s+(?:de\s+)?(\d+(?:\.\d+)?)/i,
-    extract: (match: RegExpMatchArray) => parseFloat(match[1]),
+    extract: (match: RegExpMatchArray) => {
+      const val = match[1];
+      return val ? parseFloat(val) : 1.0;
+    },
   },
 ];
 
@@ -84,11 +90,17 @@ const OPACITY_PATTERNS_FR = [
   // Valeurs spécifiques
   {
     pattern: /opacité\s+(?:à\s+)?(\d+)\s*%/i,
-    extract: (match: RegExpMatchArray) => parseFloat(match[1]) / 100,
+    extract: (match: RegExpMatchArray) => {
+      const val = match[1];
+      return val ? parseFloat(val) / 100 : 1.0;
+    },
   },
   {
     pattern: /transparence\s+(?:de\s+)?(\d+)\s*%/i,
-    extract: (match: RegExpMatchArray) => 1 - parseFloat(match[1]) / 100,
+    extract: (match: RegExpMatchArray) => {
+      const val = match[1];
+      return val ? 1 - parseFloat(val) / 100 : 1.0;
+    },
   },
 ];
 
@@ -143,7 +155,10 @@ const ANCHOR_PATTERNS_FR = [
 const SCREEN_PATTERNS_FR = [
   {
     pattern: /(?:va|passe)\s+(?:sur\s+(?:l')?)?écran\s+(?:numéro\s+)?(\d+)/i,
-    extract: (match: RegExpMatchArray) => parseInt(match[1]) - 1,
+    extract: (match: RegExpMatchArray) => {
+      const val = match[1];
+      return val ? parseInt(val) - 1 : 0;
+    },
   },
   {
     pattern:
@@ -250,7 +265,10 @@ const SCALE_PATTERNS_EN = [
   { pattern: /normal\s+size/i, value: 1.0 },
   {
     pattern: /size\s+(?:to\s+)?(\d+(?:\.\d+)?)\s*%/i,
-    extract: (match: RegExpMatchArray) => parseFloat(match[1]) / 100,
+    extract: (match: RegExpMatchArray) => {
+      const val = match[1];
+      return val ? parseFloat(val) / 100 : 1.0;
+    },
   },
 ];
 
@@ -260,7 +278,10 @@ const OPACITY_PATTERNS_EN = [
   { pattern: /(?:become|get|be)\s+(?:fully\s+)?opaque/i, value: 1.0 },
   {
     pattern: /opacity\s+(?:to\s+)?(\d+)\s*%/i,
-    extract: (match: RegExpMatchArray) => parseFloat(match[1]) / 100,
+    extract: (match: RegExpMatchArray) => {
+      const val = match[1];
+      return val ? parseFloat(val) / 100 : 1.0;
+    },
   },
 ];
 
@@ -284,7 +305,10 @@ const ANCHOR_PATTERNS_EN = [
 const SCREEN_PATTERNS_EN = [
   {
     pattern: /(?:go|move)\s+to\s+screen\s+(?:#)?(\d+)/i,
-    extract: (match: RegExpMatchArray) => parseInt(match[1]) - 1,
+    extract: (match: RegExpMatchArray) => {
+      const val = match[1];
+      return val ? parseInt(val) - 1 : 0;
+    },
   },
   { pattern: /(?:go|move)\s+to\s+(?:the\s+)?(?:second|2nd)\s+screen/i, value: 1 },
   { pattern: /(?:go|move)\s+back\s+to\s+(?:the\s+)?main\s+screen/i, value: 0 },
@@ -437,13 +461,13 @@ function matchPatterns(
   message: string,
   patterns: Pattern[]
 ): number | string | AnchorPosition | null {
-  for (const { pattern, value, extract } of patterns) {
-    const match = message.match(pattern);
+  for (const patternObj of patterns) {
+    const match = message.match(patternObj.pattern);
     if (match) {
-      if (extract) {
-        return extract(match);
+      if (patternObj.extract) {
+        return patternObj.extract(match);
       }
-      return value ?? null;
+      return patternObj.value ?? null;
     }
   }
   return null;
@@ -459,14 +483,14 @@ function matchTogglePatterns(
   message: string,
   patterns: TogglePattern[]
 ): FloatingWindowCommand | null {
-  for (const { pattern, type, value } of patterns) {
-    const match = message.match(pattern);
+  for (const patternObj of patterns) {
+    const match = message.match(patternObj.pattern);
     if (match) {
       return {
         handled: true,
-        type: type as FloatingWindowCommandType,
-        value,
-        response: generateToggleResponse(type, value),
+        type: patternObj.type as FloatingWindowCommandType,
+        value: patternObj.value,
+        response: generateToggleResponse(patternObj.type, patternObj.value),
       };
     }
   }
@@ -496,7 +520,7 @@ function generateOpacityResponse(opacity: number | string | AnchorPosition): str
 }
 
 function generateAnchorResponse(anchor: AnchorPosition): string {
-  const anchorMap: Record<AnchorPosition, string> = {
+  const anchorMap: Record<AnchorPosition, string | undefined> = {
     [AnchorEnum.TopLeft]: '✅ Je me place en haut à gauche.',
     [AnchorEnum.TopCenter]: '✅ Je me place en haut au centre.',
     [AnchorEnum.TopRight]: '✅ Je me place en haut à droite.',
@@ -508,7 +532,7 @@ function generateAnchorResponse(anchor: AnchorPosition): string {
     [AnchorEnum.BottomRight]: '✅ Je me place en bas à droite.',
     [AnchorEnum.Free]: '✅ Position libre.',
   };
-  return anchorMap[anchor] || '✅ Position mise à jour.';
+  return anchorMap[anchor] ?? '✅ Position mise à jour.';
 }
 
 function generateScreenResponse(screenIndex: number): string {

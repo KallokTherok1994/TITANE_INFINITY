@@ -487,7 +487,8 @@ class VisualDevOpsEngine {
     if (errors.length === 0) return undefined;
 
     const firstError = errors[0];
-    if (!firstError.file_path || !firstError.suggested_fixes[0]) return undefined;
+    if (!firstError || !firstError.file_path || !firstError.suggested_fixes[0])
+      return undefined;
 
     // Appeler backend pour générer patch
     try {
@@ -503,9 +504,9 @@ class VisualDevOpsEngine {
       return {
         file_path: firstError.file_path,
         original_code: '// Original code with error',
-        patched_code: `// Fixed: ${firstError.suggested_fixes[0]}`,
+        patched_code: `// Fixed: ${firstError.suggested_fixes[0] ?? 'Apply fix'}`,
         diff: '// Diff would be here',
-        explanation: firstError.suggested_fixes[0],
+        explanation: firstError.suggested_fixes[0] ?? 'Apply recommended fix',
         risk_level: 'moderate',
         backup_recommended: true,
       };
@@ -836,7 +837,7 @@ echo "✅ Operation complete"
 
     const actionsByType: Record<string, number> = {};
     for (const action of this.actionHistory) {
-      actionsByType[action.action_type] = (actionsByType[action.action_type] || 0) + 1;
+      actionsByType[action.action_type] = (actionsByType[action.action_type] ?? 0) + 1;
     }
 
     // Extraire top issues
@@ -1012,7 +1013,7 @@ echo "✅ Operation complete"
     return {
       error_type: 'runtime',
       severity: 'high',
-      message: firstLine,
+      message: firstLine ?? 'Unknown error',
       stack_trace: text,
       suggested_fixes: ['Check stack trace for error location', 'Debug step by step'],
     };

@@ -347,6 +347,7 @@ class TTSEngineService {
 
     this.isProcessing = true;
     const item = this.queue[0];
+    if (!item) return;
     item.status = 'processing';
 
     this.updateState({
@@ -572,7 +573,7 @@ class TTSEngineService {
 
   private isProviderAvailable(provider: TTSProvider): boolean {
     const status = this.state.providerStatus[provider];
-    return status === 'available' || status === 'unknown';
+    return status === 'available' || status === 'unknown' || !status;
   }
 
   private getVoiceSettingsForEmotion(emotion: TTSEmotion): TTSVoiceSettings {
@@ -609,7 +610,7 @@ class TTSEngineService {
       disciplined: { rateMultiplier: 1.0, pitchMultiplier: 1.02 },
       inspired: { rateMultiplier: 1.05, pitchMultiplier: 1.08 },
     };
-    return modifiers[emotion];
+    return modifiers[emotion] ?? { rateMultiplier: 1.0, pitchMultiplier: 1.0 };
   }
 
   private initializeAudioContext(): void {

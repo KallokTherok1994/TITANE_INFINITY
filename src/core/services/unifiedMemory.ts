@@ -636,6 +636,7 @@ class UnifiedMemorySystem {
     const stmEntryIndex = this.stm.findIndex(e => e.id === id);
     if (stmEntryIndex >= 0) {
       const entry = this.stm[stmEntryIndex];
+      if (!entry) return false;
       this.stm.splice(stmEntryIndex, 1);
       entry.tier = 'MTM';
       this.mtm.set(id, entry);

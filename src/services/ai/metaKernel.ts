@@ -868,7 +868,7 @@ class MetaKernel {
   }
 
   private getKernelConstraints(kernel: string): string[] {
-    const constraints: Record<string, string[]> = {
+    const constraints: Record<string, string[] | undefined> = {
       // Frontend Kernels
       stability: [
         'Preserve existing functionality',
@@ -906,11 +906,11 @@ class MetaKernel {
         'Self-healing cycles',
       ],
     };
-    return constraints[kernel] || [];
+    return constraints[kernel] ?? [];
   }
 
   private predictKernelImpact(kernel: string): string {
-    const impacts: Record<string, string> = {
+    const impacts: Record<string, string | undefined> = {
       // Frontend Kernels
       stability: 'Increased system robustness +15%',
       autofix: 'Reduced error rate -20%',
@@ -924,7 +924,7 @@ class MetaKernel {
       metaSingularity: 'Global coherence +35%',
       autonomyEngine: 'Autonomy level +40%',
     };
-    return impacts[kernel] || 'Unknown impact';
+    return impacts[kernel] ?? 'Unknown impact';
   }
 
   private detectKernelConflicts(actions: OrchestrationAction[]): string[] {
@@ -932,11 +932,15 @@ class MetaKernel {
 
     // Détecter si plusieurs kernels veulent modifier la même zone
     for (let i = 0; i < actions.length; i++) {
+      const actionI = actions[i];
+      if (!actionI) continue;
+
       for (let j = i + 1; j < actions.length; j++) {
-        if (actions[i].context === actions[j].context) {
-          conflicts.push(
-            `${actions[i].kernel} vs ${actions[j].kernel} on ${actions[i].context}`
-          );
+        const actionJ = actions[j];
+        if (!actionJ) continue;
+
+        if (actionI.context === actionJ.context) {
+          conflicts.push(`${actionI.kernel} vs ${actionJ.kernel} on ${actionI.context}`);
         }
       }
     }
@@ -1224,8 +1228,12 @@ class MetaKernel {
     // Vérifier nœuds similaires
     const nodesByType = this.systemMap.nodes.reduce(
       (acc, node) => {
-        if (!acc[node.type]) acc[node.type] = [];
-        acc[node.type].push(node);
+        let typeNodes = acc[node.type];
+        if (!typeNodes) {
+          typeNodes = [];
+          acc[node.type] = typeNodes;
+        }
+        typeNodes.push(node);
         return acc;
       },
       {} as Record<string, SystemNode[]>
@@ -1380,7 +1388,7 @@ class MetaKernel {
     const weakPrinciple = Object.entries(this.titanePrinciples).sort(
       ([, a], [, b]) => a - b
     )[0];
-    if (weakPrinciple[1] < 90) {
+    if (weakPrinciple && weakPrinciple[1] < 90) {
       orientations.push(`Améliorer: ${weakPrinciple[0]}`);
     }
 

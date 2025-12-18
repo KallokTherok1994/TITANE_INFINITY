@@ -184,10 +184,16 @@ class VoiceFingerprintEngine {
 
       let sum = 0;
       for (let j = start; j < end; j++) {
-        sum += Math.abs(audio[j]);
+        const audioValue = audio[j];
+        if (audioValue !== undefined) {
+          sum += Math.abs(audioValue);
+        }
       }
 
-      mfcc[i] = sum / bandSize;
+      const mfccValue = mfcc[i];
+      if (mfccValue !== undefined) {
+        mfcc[i] = sum / bandSize;
+      }
     }
 
     return mfcc;
@@ -208,7 +214,11 @@ class VoiceFingerprintEngine {
       let corr = 0;
 
       for (let i = 0; i < audio.length - lag; i++) {
-        corr += audio[i] * audio[i + lag];
+        const audioI = audio[i];
+        const audioLag = audio[i + lag];
+        if (audioI !== undefined && audioLag !== undefined) {
+          corr += audioI * audioLag;
+        }
       }
 
       if (corr > maxCorr) {
@@ -226,7 +236,10 @@ class VoiceFingerprintEngine {
   private calculateEnergy(audio: Float32Array): number {
     let sum = 0;
     for (let i = 0; i < audio.length; i++) {
-      sum += audio[i] * audio[i];
+      const audioValue = audio[i];
+      if (audioValue !== undefined) {
+        sum += audioValue * audioValue;
+      }
     }
     return Math.sqrt(sum / audio.length);
   }
@@ -238,7 +251,13 @@ class VoiceFingerprintEngine {
     let crossings = 0;
 
     for (let i = 1; i < audio.length; i++) {
-      if ((audio[i - 1] >= 0 && audio[i] < 0) || (audio[i - 1] < 0 && audio[i] >= 0)) {
+      const audioPrev = audio[i - 1];
+      const audioCurr = audio[i];
+      if (
+        audioPrev !== undefined &&
+        audioCurr !== undefined &&
+        ((audioPrev >= 0 && audioCurr < 0) || (audioPrev < 0 && audioCurr >= 0))
+      ) {
         crossings++;
       }
     }
@@ -357,25 +376,44 @@ class VoiceFingerprintEngine {
     const mfccSum = new Float32Array(13);
     for (const sample of samples) {
       for (let i = 0; i < 13; i++) {
-        mfccSum[i] += sample.mfcc[i];
+        const mfccSumValue = mfccSum[i];
+        const sampleMfccValue = sample.mfcc[i];
+        if (mfccSumValue !== undefined && sampleMfccValue !== undefined) {
+          mfccSum[i] = mfccSumValue + sampleMfccValue;
+        }
       }
     }
 
     for (let i = 0; i < 13; i++) {
-      fingerprint.mfccMean[i] = mfccSum[i] / n;
+      const mfccSumValue = mfccSum[i];
+      if (mfccSumValue !== undefined) {
+        fingerprint.mfccMean[i] = mfccSumValue / n;
+      }
     }
 
     // Update MFCC std
     const mfccSumSq = new Float32Array(13);
     for (const sample of samples) {
       for (let i = 0; i < 13; i++) {
-        const diff = sample.mfcc[i] - fingerprint.mfccMean[i];
-        mfccSumSq[i] += diff * diff;
+        const sampleMfccValue = sample.mfcc[i];
+        const meanValue = fingerprint.mfccMean[i];
+        const sumSqValue = mfccSumSq[i];
+        if (
+          sampleMfccValue !== undefined &&
+          meanValue !== undefined &&
+          sumSqValue !== undefined
+        ) {
+          const diff = sampleMfccValue - meanValue;
+          mfccSumSq[i] = sumSqValue + diff * diff;
+        }
       }
     }
 
     for (let i = 0; i < 13; i++) {
-      fingerprint.mfccStd[i] = Math.sqrt(mfccSumSq[i] / n);
+      const sumSqValue = mfccSumSq[i];
+      if (sumSqValue !== undefined) {
+        fingerprint.mfccStd[i] = Math.sqrt(sumSqValue / n);
+      }
     }
 
     // Update prosodic features (running average)
@@ -430,9 +468,13 @@ class VoiceFingerprintEngine {
     let normB = 0;
 
     for (let i = 0; i < a.length; i++) {
-      dotProduct += a[i] * b[i];
-      normA += a[i] * a[i];
-      normB += b[i] * b[i];
+      const aValue = a[i];
+      const bValue = b[i];
+      if (aValue !== undefined && bValue !== undefined) {
+        dotProduct += aValue * bValue;
+        normA += aValue * aValue;
+        normB += bValue * bValue;
+      }
     }
 
     normA = Math.sqrt(normA);

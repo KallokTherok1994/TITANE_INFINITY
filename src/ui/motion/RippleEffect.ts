@@ -102,7 +102,9 @@ export function attachRipple(
       x = event.clientX;
       y = event.clientY;
     } else {
-      const touch = event.touches[0] || event.changedTouches[0];
+      const touch = event.touches[0] ?? event.changedTouches[0];
+      if (!touch) return;
+
       x = touch.clientX;
       y = touch.clientY;
     }

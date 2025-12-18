@@ -148,8 +148,12 @@ function OverviewTab({
   if (!state) return <div className="one-core-loading">Chargement...</div>;
 
   const consciousness =
-    CONSCIOUSNESS_LEVELS[state.consciousness_level] || CONSCIOUSNESS_LEVELS[0];
-  const systemMode = SYSTEM_MODES.find(m => m.id === state.mode) || SYSTEM_MODES[0];
+    CONSCIOUSNESS_LEVELS[state.consciousness_level] ?? CONSCIOUSNESS_LEVELS[0];
+  const systemMode = SYSTEM_MODES.find(m => m.id === state.mode) ?? SYSTEM_MODES[0];
+
+  if (!consciousness || !systemMode) {
+    return <div className="one-core-loading">Configuration invalide...</div>;
+  }
 
   return (
     <div className="one-core-overview">
@@ -412,7 +416,7 @@ function MetricsTab({
             <span>{metrics.active_connections}</span>
           </div>
           <div className="one-core-metric-row">
-            <span>Profondeur file d'attente</span>
+            <span>Profondeur file d&apos;attente</span>
             <span>{metrics.queue_depth}</span>
           </div>
         </div>

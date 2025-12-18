@@ -146,15 +146,19 @@ export const Experience = (): JSX.Element => {
       >
         <h2>📊 Statistiques par Source</h2>
         <div className="exp-sources-grid">
-          {sources.map(source => (
-            <div key={source} className="exp-source-card">
-              <div className="exp-source-name">{formatSource(source)}</div>
-              <div className="exp-source-stats">
-                <span>{stats[source].total} XP</span>
-                <span className="exp-source-count">{stats[source].count} événements</span>
+          {sources.map(source => {
+            const sourceStat = stats[source];
+            if (!sourceStat) return null;
+            return (
+              <div key={source} className="exp-source-card">
+                <div className="exp-source-name">{formatSource(source)}</div>
+                <div className="exp-source-stats">
+                  <span>{sourceStat.total} XP</span>
+                  <span className="exp-source-count">{sourceStat.count} événements</span>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </motion.div>
 
@@ -171,15 +175,19 @@ export const Experience = (): JSX.Element => {
         >
           Tout ({state.history.length})
         </button>
-        {sources.map(source => (
-          <button
-            key={source}
-            className={filter === source ? 'active' : ''}
-            onClick={() => setFilter(source)}
-          >
-            {formatSource(source)} ({stats[source].count})
-          </button>
-        ))}
+        {sources.map(source => {
+          const sourceStat = stats[source];
+          if (!sourceStat) return null;
+          return (
+            <button
+              key={source}
+              className={filter === source ? 'active' : ''}
+              onClick={() => setFilter(source)}
+            >
+              {formatSource(source)} ({sourceStat.count})
+            </button>
+          );
+        })}
       </motion.div>
 
       {/* Historique */}

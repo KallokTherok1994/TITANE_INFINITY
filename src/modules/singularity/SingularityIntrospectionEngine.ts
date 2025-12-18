@@ -335,8 +335,10 @@ export class SingularityIntrospectionEngine {
     let totalWeight = 0;
 
     layers.forEach((layer, idx) => {
-      weightedSum += layer.coherence * weights[idx];
-      totalWeight += weights[idx];
+      const weight = weights[idx];
+      if (weight === undefined) return;
+      weightedSum += layer.coherence * weight;
+      totalWeight += weight;
     });
 
     return Math.round(weightedSum / totalWeight);

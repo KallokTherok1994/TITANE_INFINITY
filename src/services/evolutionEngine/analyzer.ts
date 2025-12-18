@@ -249,14 +249,18 @@ export class Analyzer {
 
       if (stats.average > 500) {
         // > 500ms moyenne
+        const firstPoint = latencyPoints[0];
+        const lastPoint = latencyPoints[latencyPoints.length - 1];
+        if (!firstPoint || !lastPoint) return patterns;
+
         patterns.push({
           id: generateEvolutionId('pat'),
           type: 'INEFFICIENCY',
           moduleId,
           description: `Latence moyenne élevée (${stats.average.toFixed(0)}ms)`,
           occurrences: latencyPoints.length,
-          firstSeen: latencyPoints[0].timestamp,
-          lastSeen: latencyPoints[latencyPoints.length - 1].timestamp,
+          firstSeen: firstPoint.timestamp,
+          lastSeen: lastPoint.timestamp,
           confidence: Math.min(90, 50 + latencyPoints.length),
           impact: stats.average > 1000 ? 'HIGH' : 'MEDIUM',
           relatedMetrics: ['avg_latency'],
@@ -273,14 +277,18 @@ export class Analyzer {
         0
       );
       if (totalErrors > 10) {
+        const firstError = errorPoints[0];
+        const lastError = errorPoints[errorPoints.length - 1];
+        if (!firstError || !lastError) return patterns;
+
         patterns.push({
           id: generateEvolutionId('pat'),
           type: 'INEFFICIENCY',
           moduleId,
           description: `Taux d'erreurs élevé (${totalErrors} erreurs détectées)`,
           occurrences: totalErrors,
-          firstSeen: errorPoints[0].timestamp,
-          lastSeen: errorPoints[errorPoints.length - 1].timestamp,
+          firstSeen: firstError.timestamp,
+          lastSeen: lastError.timestamp,
           confidence: Math.min(95, 60 + totalErrors),
           impact: totalErrors > 50 ? 'HIGH' : 'MEDIUM',
           relatedMetrics: ['error_count', 'error_rate'],
@@ -306,20 +314,27 @@ export class Analyzer {
     if (callPoints.length > 20) {
       const intervals: number[] = [];
       for (let i = 1; i < callPoints.length; i++) {
-        intervals.push(callPoints[i].timestamp - callPoints[i - 1].timestamp);
+        const currPoint = callPoints[i];
+        const prevPoint = callPoints[i - 1];
+        if (!currPoint || !prevPoint) continue;
+        intervals.push(currPoint.timestamp - prevPoint.timestamp);
       }
 
       const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
       if (avgInterval < 1000) {
         // Appels toutes les secondes ou moins
+        const firstCall = callPoints[0];
+        const lastCall = callPoints[callPoints.length - 1];
+        if (!firstCall || !lastCall) return patterns;
+
         patterns.push({
           id: generateEvolutionId('pat'),
           type: 'REPETITION',
           moduleId,
           description: `Appels très fréquents (interval moyen: ${avgInterval.toFixed(0)}ms)`,
           occurrences: callPoints.length,
-          firstSeen: callPoints[0].timestamp,
-          lastSeen: callPoints[callPoints.length - 1].timestamp,
+          firstSeen: firstCall.timestamp,
+          lastSeen: lastCall.timestamp,
           confidence: 75,
           impact: 'MEDIUM',
           relatedMetrics: ['total_calls'],
@@ -347,14 +362,18 @@ export class Analyzer {
     if (cpuPoints.length > 5) {
       const highCpuCount = cpuPoints.filter(p => (p.value as number) > 80).length;
       if (highCpuCount > cpuPoints.length * 0.3) {
+        const firstCpu = cpuPoints[0];
+        const lastCpu = cpuPoints[cpuPoints.length - 1];
+        if (!firstCpu || !lastCpu) return patterns;
+
         patterns.push({
           id: generateEvolutionId('pat'),
           type: 'OVERLOAD',
           moduleId,
           description: `CPU fréquemment élevé (>80% dans ${((highCpuCount / cpuPoints.length) * 100).toFixed(0)}% des cas)`,
           occurrences: highCpuCount,
-          firstSeen: cpuPoints[0].timestamp,
-          lastSeen: cpuPoints[cpuPoints.length - 1].timestamp,
+          firstSeen: firstCpu.timestamp,
+          lastSeen: lastCpu.timestamp,
           confidence: 80,
           impact: 'HIGH',
           relatedMetrics: ['cpu'],
@@ -370,14 +389,18 @@ export class Analyzer {
     if (ramPoints.length > 5) {
       const highRamCount = ramPoints.filter(p => (p.value as number) > 85).length;
       if (highRamCount > ramPoints.length * 0.3) {
+        const firstRam = ramPoints[0];
+        const lastRam = ramPoints[ramPoints.length - 1];
+        if (!firstRam || !lastRam) return patterns;
+
         patterns.push({
           id: generateEvolutionId('pat'),
           type: 'OVERLOAD',
           moduleId,
           description: `RAM fréquemment élevée (>85% dans ${((highRamCount / ramPoints.length) * 100).toFixed(0)}% des cas)`,
           occurrences: highRamCount,
-          firstSeen: ramPoints[0].timestamp,
-          lastSeen: ramPoints[ramPoints.length - 1].timestamp,
+          firstSeen: firstRam.timestamp,
+          lastSeen: lastRam.timestamp,
           confidence: 80,
           impact: 'HIGH',
           relatedMetrics: ['ram'],
@@ -409,14 +432,18 @@ export class Analyzer {
       const anomalies = detectAnomalies(values, this.config.anomalyDetectionSensitivity);
 
       if (anomalies.length > 3) {
+        const firstLatency = latencyPoints[0];
+        const lastLatency = latencyPoints[latencyPoints.length - 1];
+        if (!firstLatency || !lastLatency) return patterns;
+
         patterns.push({
           id: generateEvolutionId('pat'),
           type: 'LATENCY',
           moduleId,
           description: `Pics de latence détectés (${anomalies.length} anomalies)`,
           occurrences: anomalies.length,
-          firstSeen: latencyPoints[0].timestamp,
-          lastSeen: latencyPoints[latencyPoints.length - 1].timestamp,
+          firstSeen: firstLatency.timestamp,
+          lastSeen: lastLatency.timestamp,
           confidence: 70,
           impact: 'MEDIUM',
           relatedMetrics: ['latency', 'avg_latency'],
@@ -448,14 +475,18 @@ export class Analyzer {
       const successRate = ((totalCalls - totalErrors) / totalCalls) * 100;
 
       if (successRate > 98) {
+        const firstPoint = points[0];
+        const lastPoint = points[points.length - 1];
+        if (!firstPoint || !lastPoint) return patterns;
+
         patterns.push({
           id: generateEvolutionId('pat'),
           type: 'SUCCESS',
           moduleId,
           description: `Taux de succès excellent (${successRate.toFixed(1)}%)`,
           occurrences: totalCalls,
-          firstSeen: points[0].timestamp,
-          lastSeen: points[points.length - 1].timestamp,
+          firstSeen: firstPoint.timestamp,
+          lastSeen: lastPoint.timestamp,
           confidence: 90,
           impact: 'LOW',
           relatedMetrics: ['success_rate'],
@@ -810,16 +841,19 @@ export class Analyzer {
           this.config.anomalyDetectionSensitivity
         );
 
-        trends.push({
-          metric,
-          samples: series,
-          average: stats.average,
-          min: stats.min,
-          max: stats.max,
-          stdDeviation: stats.stdDeviation,
-          trend: determineTrend(values),
-          anomalyCount: anomalies.length,
-        });
+        const firstSample = series[0];
+        if (firstSample) {
+          trends.push({
+            metric,
+            samples: series,
+            average: stats.average,
+            min: stats.min,
+            max: stats.max,
+            stdDeviation: stats.stdDeviation,
+            trend: determineTrend(values),
+            anomalyCount: anomalies.length,
+          });
+        }
       }
     }
 

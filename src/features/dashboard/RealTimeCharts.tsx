@@ -59,7 +59,7 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
         <div className="chart-tooltip">
           <p className="chart-tooltip-label">{label}</p>
           <p className="chart-tooltip-value">
-            {payload[0].name}: <strong>{payload[0].value}</strong>
+            {payload[0]?.name ?? 'Value'}: <strong>{payload[0]?.value ?? 'N/A'}</strong>
           </p>
         </div>
       );

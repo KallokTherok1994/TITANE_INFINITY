@@ -402,20 +402,36 @@ export class WebAssemblyCompute {
 
           if (operation === 'add') {
             for (let i = 0; i < len; i++) {
-              output[i] = input[i] + input[len + i];
+              const inputA = input[i];
+              const inputB = input[len + i];
+              if (inputA !== undefined && inputB !== undefined) {
+                output[i] = inputA + inputB;
+              }
             }
           } else if (operation === 'sub') {
             for (let i = 0; i < len; i++) {
-              output[i] = input[i] - input[len + i];
+              const inputA = input[i];
+              const inputB = input[len + i];
+              if (inputA !== undefined && inputB !== undefined) {
+                output[i] = inputA - inputB;
+              }
             }
           } else if (operation === 'mul') {
             for (let i = 0; i < len; i++) {
-              output[i] = input[i] * input[len + i];
+              const inputA = input[i];
+              const inputB = input[len + i];
+              if (inputA !== undefined && inputB !== undefined) {
+                output[i] = inputA * inputB;
+              }
             }
           } else if (operation === 'dot') {
             let sum = 0;
             for (let i = 0; i < len; i++) {
-              sum += input[i] * input[len + i];
+              const inputA = input[i];
+              const inputB = input[len + i];
+              if (inputA !== undefined && inputB !== undefined) {
+                sum += inputA * inputB;
+              }
             }
             return {
               taskId: task.id,
@@ -447,17 +463,35 @@ export class WebAssemblyCompute {
             }
 
             const rowsA = A.length;
-            const colsA = A[0].length;
-            const colsB = B[0].length;
+            const firstRowA = A[0];
+            const firstRowB = B[0];
+            if (!firstRowA || !firstRowB) {
+              throw new Error('Invalid matrix dimensions');
+            }
+            const colsA = firstRowA.length;
+            const colsB = firstRowB.length;
 
             const result: number[][] = Array(rowsA)
               .fill(0)
               .map(() => Array(colsB).fill(0));
 
             for (let i = 0; i < rowsA; i++) {
+              const rowA = A[i];
+              const resultRow = result[i];
+              if (!rowA || !resultRow) continue;
               for (let j = 0; j < colsB; j++) {
                 for (let k = 0; k < colsA; k++) {
-                  result[i][j] += A[i][k] * B[k][j];
+                  const aVal = rowA[k];
+                  const rowB = B[k];
+                  const bVal = rowB?.[j];
+                  const currentVal = resultRow[j];
+                  if (
+                    aVal !== undefined &&
+                    bVal !== undefined &&
+                    currentVal !== undefined
+                  ) {
+                    resultRow[j] = currentVal + aVal * bVal;
+                  }
                 }
               }
             }
@@ -569,7 +603,12 @@ export class WebAssemblyCompute {
       throw new Error(result.error || 'Dot product failed');
     }
 
-    return (result.output as Float32Array)[0];
+    const outputArray = result.output as Float32Array;
+    const firstValue = outputArray[0];
+    if (firstValue === undefined) {
+      throw new Error('Dot product result is undefined');
+    }
+    return firstValue;
   }
 
   async matrixMultiply(A: number[][], B: number[][]): Promise<number[][]> {
@@ -587,7 +626,11 @@ export class WebAssemblyCompute {
 
     // Reshape to 2D
     const rowsA = A.length;
-    const colsB = B[0].length;
+    const firstRowB = B[0];
+    if (!firstRowB) {
+      throw new Error('Invalid matrix B dimensions');
+    }
+    const colsB = firstRowB.length;
     const flat = result.output as number[];
 
     const matrix: number[][] = [];

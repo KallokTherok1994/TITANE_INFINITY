@@ -26,7 +26,7 @@ const colorStyles: Record<string, { icon: string; trend: string }> = {
   info: { icon: 'var(--text-info, #727b81)', trend: 'var(--bg-primary, #727b81)' },
 };
 
-const trendIcons = {
+const trendIcons: Record<string, string> = {
   up: '↗',
   down: '↘',
   stable: '→',
@@ -57,7 +57,8 @@ export const MetricCard = React.memo(function MetricCard({
   color = 'primary',
   className = '',
 }: MetricCardProps) {
-  const colors = colorStyles[color];
+  const colors = colorStyles[color] ??
+    colorStyles.primary ?? { icon: '#727b81', trend: '#727b81' };
 
   return (
     <div
@@ -71,7 +72,7 @@ export const MetricCard = React.memo(function MetricCard({
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">
           {icon && (
-            <div className="text-lg" style={{ color: colors.icon }}>
+            <div className="text-lg" style={{ color: colors?.icon ?? '#727b81' }}>
               {icon}
             </div>
           )}
@@ -87,11 +88,11 @@ export const MetricCard = React.memo(function MetricCard({
         <span
           className="text-xs font-medium px-1.5 py-0.5 rounded"
           style={{
-            color: colors.trend,
-            background: `${colors.trend}15`,
+            color: colors?.trend ?? '#727b81',
+            background: `${colors?.trend ?? '#727b81'}15`,
           }}
         >
-          {trendIcons[trend]}
+          {trendIcons[trend] ?? '→'}
         </span>
       </div>
 
@@ -116,7 +117,7 @@ export const MetricCard = React.memo(function MetricCard({
       {/* Mini Graph */}
       {history.length > 0 && (
         <div className="h-12">
-          <TrendGraph data={history} color={colors.trend} />
+          <TrendGraph data={history} color={colors?.trend ?? '#727b81'} />
         </div>
       )}
     </div>

@@ -169,10 +169,10 @@ export const DashboardEditor: React.FC<DashboardEditorProps> = ({
     if (index === 0) return;
     setWidgets(prev => {
       const newWidgets = [...prev];
-      [newWidgets[index - 1], newWidgets[index]] = [
-        newWidgets[index],
-        newWidgets[index - 1],
-      ];
+      const current = newWidgets[index];
+      const previous = newWidgets[index - 1];
+      if (!current || !previous) return prev;
+      [newWidgets[index - 1], newWidgets[index]] = [current, previous];
       return newWidgets;
     });
   }, []);
@@ -181,10 +181,10 @@ export const DashboardEditor: React.FC<DashboardEditorProps> = ({
     setWidgets(prev => {
       if (index === prev.length - 1) return prev;
       const newWidgets = [...prev];
-      [newWidgets[index], newWidgets[index + 1]] = [
-        newWidgets[index + 1],
-        newWidgets[index],
-      ];
+      const current = newWidgets[index];
+      const next = newWidgets[index + 1];
+      if (!current || !next) return prev;
+      [newWidgets[index], newWidgets[index + 1]] = [next, current];
       return newWidgets;
     });
   }, []);
@@ -201,6 +201,7 @@ export const DashboardEditor: React.FC<DashboardEditorProps> = ({
       setWidgets(prev => {
         const newWidgets = [...prev];
         const draggedWidget = newWidgets[draggedIndex];
+        if (!draggedWidget) return prev;
         newWidgets.splice(draggedIndex, 1);
         newWidgets.splice(index, 0, draggedWidget);
         return newWidgets;
@@ -619,7 +620,7 @@ export const DashboardEditor: React.FC<DashboardEditorProps> = ({
               <Settings className="h-12 w-12 mx-auto mb-2 opacity-30" />
               <p>Aucun widget configuré</p>
               <p style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>
-                Cliquez sur "Ajouter un Widget" pour commencer
+                Cliquez sur &quot;Ajouter un Widget&quot; pour commencer
               </p>
             </div>
           )}

@@ -181,10 +181,16 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
   onApply,
   onDismiss,
 }) => {
-  const categoryConfig = CATEGORY_CONFIG[recommendation.category];
-  const impactConfig = IMPACT_CONFIG[recommendation.impact];
-  const effortConfig = EFFORT_CONFIG[recommendation.effort];
-  const CategoryIcon = categoryConfig.icon;
+  const categoryConfig =
+    CATEGORY_CONFIG[recommendation.category] ?? CATEGORY_CONFIG.general;
+  const impactConfig = IMPACT_CONFIG[recommendation.impact] ?? IMPACT_CONFIG.low;
+  const effortConfig = EFFORT_CONFIG[recommendation.effort] ??
+    EFFORT_CONFIG.medium ?? {
+      label: 'Moyen',
+      color: 'text-amber-400',
+      order: 2,
+    };
+  const CategoryIcon = categoryConfig?.icon ?? Settings;
 
   return (
     <motion.div
@@ -232,16 +238,22 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
             )}
           </div>
           <div className="flex items-center gap-3 mt-1 text-xs text-slate-400">
-            <span className={categoryConfig.color}>{categoryConfig.label}</span>
-            <span>•</span>
-            <span className={`flex items-center gap-1 ${impactConfig.color}`}>
-              <Target size={10} />
-              Impact {impactConfig.label}
+            <span className={categoryConfig?.color ?? 'text-slate-400'}>
+              {categoryConfig?.label ?? 'General'}
             </span>
             <span>•</span>
-            <span className={`flex items-center gap-1 ${effortConfig.color}`}>
+            <span
+              className={`flex items-center gap-1 ${impactConfig?.color ?? 'text-slate-400'}`}
+            >
+              <Target size={10} />
+              Impact {impactConfig?.label ?? 'Low'}
+            </span>
+            <span>•</span>
+            <span
+              className={`flex items-center gap-1 ${effortConfig?.color ?? 'text-amber-400'}`}
+            >
               <Clock size={10} />
-              Effort {effortConfig.label}
+              Effort {effortConfig?.label ?? 'Moyen'}
             </span>
           </div>
         </div>

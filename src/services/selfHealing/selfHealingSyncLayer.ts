@@ -356,7 +356,8 @@ export class SelfHealingSyncLayer {
 
   private calculateLevel(xp: number): number {
     for (let level = XP_PER_LEVEL.length - 1; level >= 0; level--) {
-      if (xp >= XP_PER_LEVEL[level]) {
+      const threshold = XP_PER_LEVEL[level];
+      if (threshold !== undefined && xp >= threshold) {
         return level + 1;
       }
     }
@@ -365,8 +366,9 @@ export class SelfHealingSyncLayer {
 
   public getXPProgress(): { current: number; nextLevel: number; progress: number } {
     const level = this.profile.evolutionLevel;
-    const currentThreshold = XP_PER_LEVEL[level - 1] || 0;
-    const nextThreshold = XP_PER_LEVEL[level] || XP_PER_LEVEL[XP_PER_LEVEL.length - 1];
+    const currentThreshold = XP_PER_LEVEL[level - 1] ?? 0;
+    const lastThreshold = XP_PER_LEVEL[XP_PER_LEVEL.length - 1];
+    const nextThreshold = XP_PER_LEVEL[level] ?? lastThreshold ?? 0;
 
     const current = this.profile.healingXP - currentThreshold;
     const nextLevel = nextThreshold - currentThreshold;

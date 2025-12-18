@@ -431,8 +431,8 @@ export class EmotionAnalyzer {
     _dominant: TTSEmotion
   ): number {
     const sortedScores = Object.values(scores).sort((a, b) => b - a);
-    const topScore = sortedScores[0];
-    const secondScore = sortedScores[1] || 0;
+    const topScore = sortedScores[0] ?? 0;
+    const secondScore = sortedScores[1] ?? 0;
 
     // Confiance basée sur l'écart entre top 1 et top 2
     const gap = topScore - secondScore;

@@ -462,7 +462,7 @@ export function calculateAdjustedImportance(
 
   for (const modifier of modifiers) {
     if (modifier in IMPORTANCE_MODIFIERS) {
-      adjusted += IMPORTANCE_MODIFIERS[modifier];
+      adjusted += IMPORTANCE_MODIFIERS[modifier] ?? 0;
     }
   }
 

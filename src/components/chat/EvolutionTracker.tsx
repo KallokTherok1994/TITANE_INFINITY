@@ -193,11 +193,13 @@ export const EvolutionTracker: React.FC<EvolutionTrackerProps> = ({
   // Capabilities débloquées
   const unlockedCapabilities = useMemo(() => {
     if (evolutionState?.capabilities) {
-      return Object.keys(evolutionState.capabilities).filter(
-        id =>
-          evolutionState.capabilities[id].status === 'unlocked' ||
-          evolutionState.capabilities[id].status === 'mastered'
-      );
+      return Object.keys(evolutionState.capabilities).filter(id => {
+        const capability = evolutionState.capabilities?.[id];
+        return (
+          capability &&
+          (capability.status === 'unlocked' || capability.status === 'mastered')
+        );
+      });
     }
     // Par défaut: capabilities initiales de la phase 1
     return EVOLUTION_PHASES.phase_1_nascent.unlockedCapabilities;
@@ -341,15 +343,18 @@ export const EvolutionTracker: React.FC<EvolutionTrackerProps> = ({
             Capabilities disponibles ({unlockableCapabilities.length})
           </div>
           <div className="evolution-tracker__capabilities-grid">
-            {unlockableCapabilities.slice(0, 4).map(cap => (
-              <CapabilityCard
-                key={cap.id}
-                capability={cap}
-                status="unlockable"
-                canUnlock={true}
-                onUnlock={() => onUnlockCapability?.(cap.id)}
-              />
-            ))}
+            {unlockableCapabilities.slice(0, 4).map(cap => {
+              if (!cap) return null;
+              return (
+                <CapabilityCard
+                  key={cap.id}
+                  capability={cap}
+                  status="unlockable"
+                  canUnlock={true}
+                  onUnlock={() => onUnlockCapability?.(cap.id)}
+                />
+              );
+            })}
           </div>
         </div>
       )}

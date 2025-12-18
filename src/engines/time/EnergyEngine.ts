@@ -88,7 +88,8 @@ function createInitialEnergyState(chronotype: Chronotype = 'intermediate'): Ener
  */
 function interpolateEnergy(time: string, points: EnergyPoint[]): number {
   if (points.length === 0) return 0.5;
-  if (points.length === 1) return points[0].level;
+  const firstPoint = points[0];
+  if (points.length === 1) return firstPoint?.level ?? 0.5;
 
   const currentMinutes = TimeEngineUtils.timeToMinutes(time);
 
@@ -101,22 +102,28 @@ function interpolateEnergy(time: string, points: EnergyPoint[]): number {
   // Trouver les deux points les plus proches
   let before = sortedPoints[sortedPoints.length - 1];
   let after = sortedPoints[0];
+  if (!before || !after) return 0.5;
 
   for (let i = 0; i < sortedPoints.length; i++) {
-    const pointMinutes = TimeEngineUtils.timeToMinutes(sortedPoints[i].time);
+    const point = sortedPoints[i];
+    if (!point) continue;
+    const pointMinutes = TimeEngineUtils.timeToMinutes(point.time);
     if (pointMinutes <= currentMinutes) {
-      before = sortedPoints[i];
+      before = point;
     }
     if (pointMinutes > currentMinutes && i === 0) {
       // Le premier point est après l'heure actuelle
-      before = sortedPoints[sortedPoints.length - 1];
+      const lastPoint = sortedPoints[sortedPoints.length - 1];
+      if (lastPoint) before = lastPoint;
     }
   }
 
   for (let i = sortedPoints.length - 1; i >= 0; i--) {
-    const pointMinutes = TimeEngineUtils.timeToMinutes(sortedPoints[i].time);
+    const point = sortedPoints[i];
+    if (!point) continue;
+    const pointMinutes = TimeEngineUtils.timeToMinutes(point.time);
     if (pointMinutes > currentMinutes) {
-      after = sortedPoints[i];
+      after = point;
     }
   }
 
@@ -302,7 +309,7 @@ export class EnergyEngine {
       night: '23:30',
     };
 
-    const time = segmentTimes[segmentId] || '12:00';
+    const time = segmentTimes[segmentId] ?? '12:00';
     return this.inferEnergyLevelFromTime(time);
   }
 
@@ -442,10 +449,10 @@ export class EnergyEngine {
 
     if (futurePeaks.length === 0) {
       // Retourner le premier pic du lendemain
-      return this.state.peaks[0] || null;
+      return this.state.peaks[0] ?? null;
     }
 
-    return futurePeaks[0];
+    return futurePeaks[0] ?? null;
   }
 
   /**
@@ -453,9 +460,10 @@ export class EnergyEngine {
    */
   recommendHighEnergySlot(): string {
     const forecast = this.state.forecast;
+    const firstForecast = forecast[0];
     const bestSlot = forecast.reduce(
       (best, point) => (point.level > best.level ? point : best),
-      forecast[0] || { time: '10:00', level: 0.5, label: '' }
+      firstForecast ?? { time: '10:00', level: 0.5, label: '' }
     );
 
     return bestSlot.time;

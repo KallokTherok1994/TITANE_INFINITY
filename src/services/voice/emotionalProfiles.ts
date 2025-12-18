@@ -154,7 +154,7 @@ export const EMOTIONAL_PROFILES: Record<string, EmotionalProfile> = {
   sage: {
     name: 'TITANE Sage',
     description: 'Voix calme, posée, réfléchie. Idéale pour guidance et sagesse.',
-    defaultIntent: EMOTION_PRESETS.calm,
+    defaultIntent: EMOTION_PRESETS.calm!,
     contextModifiers: {
       topic: {
         meditation: { warmth: 0.9, speed: 0.7, energy: 0.2 },
@@ -178,7 +178,7 @@ export const EMOTIONAL_PROFILES: Record<string, EmotionalProfile> = {
   inspiring: {
     name: 'TITANE Inspirant',
     description: 'Voix motivante, énergisante, positive. Pour coaching et motivation.',
-    defaultIntent: EMOTION_PRESETS.inspiring,
+    defaultIntent: EMOTION_PRESETS.inspiring!,
     contextModifiers: {
       userState: {
         stressed: { intensity: 0.6, warmth: 0.95 },
@@ -195,7 +195,7 @@ export const EMOTIONAL_PROFILES: Record<string, EmotionalProfile> = {
   companion: {
     name: 'TITANE Compagnon',
     description: 'Voix chaleureuse, empathique, proche. Pour conversations intimes.',
-    defaultIntent: EMOTION_PRESETS.empathetic,
+    defaultIntent: EMOTION_PRESETS.empathetic!,
     contextModifiers: {
       topic: {
         personal: { warmth: 1.0, intensity: 0.7 },
@@ -212,7 +212,7 @@ export const EMOTIONAL_PROFILES: Record<string, EmotionalProfile> = {
   playful: {
     name: 'TITANE Ludique',
     description: 'Voix légère, enjouée, amusante. Pour moments de détente.',
-    defaultIntent: EMOTION_PRESETS.playful,
+    defaultIntent: EMOTION_PRESETS.playful!,
     contextModifiers: {
       userState: {
         happy: { intensity: 1.0, energy: 1.0 },
@@ -225,7 +225,7 @@ export const EMOTIONAL_PROFILES: Record<string, EmotionalProfile> = {
   professional: {
     name: 'TITANE Professionnel',
     description: 'Voix claire, confiante, professionnelle. Pour travail et technique.',
-    defaultIntent: EMOTION_PRESETS.confident,
+    defaultIntent: EMOTION_PRESETS.confident!,
     contextModifiers: {
       topic: {
         technical: { warmth: 0.4, intensity: 0.8, energy: 0.85 },
@@ -239,7 +239,7 @@ export const EMOTIONAL_PROFILES: Record<string, EmotionalProfile> = {
     name: 'TITANE Méditatif',
     description: 'Voix très douce, lente, apaisante. Pour méditation et relaxation.',
     defaultIntent: {
-      ...EMOTION_PRESETS.gentle,
+      ...EMOTION_PRESETS.gentle!,
       speed: 0.7,
       energy: 0.2,
       warmth: 1.0,
@@ -263,14 +263,22 @@ export const EMOTIONAL_PROFILES: Record<string, EmotionalProfile> = {
  * Récupérer un preset d'émotion
  */
 export function getEmotionPreset(emotion: string): EmotionalIntent {
-  return EMOTION_PRESETS[emotion] || EMOTION_PRESETS.neutral;
+  const preset = EMOTION_PRESETS[emotion];
+  if (preset) return preset;
+  const neutralPreset = EMOTION_PRESETS.neutral;
+  if (!neutralPreset) throw new Error('neutral preset not found');
+  return neutralPreset;
 }
 
 /**
  * Récupérer un profil émotionnel
  */
 export function getEmotionalProfile(profileName: string): EmotionalProfile {
-  return EMOTIONAL_PROFILES[profileName] || EMOTIONAL_PROFILES.sage;
+  const profile = EMOTIONAL_PROFILES[profileName];
+  if (profile) return profile;
+  const sageProfile = EMOTIONAL_PROFILES.sage;
+  if (!sageProfile) throw new Error('sage profile not found');
+  return sageProfile;
 }
 
 /**
@@ -318,6 +326,6 @@ export function blendIntents(
     speed: blend(intent1.speed, intent2.speed),
     pitch: blend(intent1.pitch, intent2.pitch),
     energy: blend(intent1.energy, intent2.energy),
-    confidence: Math.min(intent1.confidence || 1, intent2.confidence || 1),
+    confidence: Math.min(intent1.confidence ?? 1, intent2.confidence ?? 1),
   };
 }

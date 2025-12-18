@@ -45,6 +45,7 @@ export const MenuEditor: React.FC<MenuEditorProps> = ({ sections, onSave, onClos
 
     const newSections = [...editableSections];
     const draggedItem = newSections[draggedIndex];
+    if (!draggedItem) return;
     newSections.splice(draggedIndex, 1);
     newSections.splice(index, 0, draggedItem);
 
@@ -59,20 +60,20 @@ export const MenuEditor: React.FC<MenuEditorProps> = ({ sections, onSave, onClos
   const moveUp = (index: number) => {
     if (index === 0) return;
     const newSections = [...editableSections];
-    [newSections[index - 1], newSections[index]] = [
-      newSections[index],
-      newSections[index - 1],
-    ];
+    const current = newSections[index];
+    const previous = newSections[index - 1];
+    if (!current || !previous) return;
+    [newSections[index - 1], newSections[index]] = [current, previous];
     setEditableSections(newSections);
   };
 
   const moveDown = (index: number) => {
     if (index === editableSections.length - 1) return;
     const newSections = [...editableSections];
-    [newSections[index], newSections[index + 1]] = [
-      newSections[index + 1],
-      newSections[index],
-    ];
+    const current = newSections[index];
+    const next = newSections[index + 1];
+    if (!current || !next) return;
+    [newSections[index], newSections[index + 1]] = [next, current];
     setEditableSections(newSections);
   };
 

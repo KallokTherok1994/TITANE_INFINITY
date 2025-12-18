@@ -173,13 +173,18 @@ export class BehaviorDetector {
 
     let totalDistance = 0;
     for (let i = 1; i < scrollSamples.length; i++) {
-      const prev = scrollSamples[i - 1].data as { y: number };
-      const curr = scrollSamples[i].data as { y: number };
-      totalDistance += Math.abs(curr.y - prev.y);
+      const prev = scrollSamples[i - 1];
+      const curr = scrollSamples[i];
+      if (!prev || !curr) continue;
+      const prevData = prev.data as { y: number };
+      const currData = curr.data as { y: number };
+      totalDistance += Math.abs(currData.y - prevData.y);
     }
 
-    const timeSpan =
-      scrollSamples[scrollSamples.length - 1].timestamp - scrollSamples[0].timestamp;
+    const lastSample = scrollSamples[scrollSamples.length - 1];
+    const firstSample = scrollSamples[0];
+    if (!lastSample || !firstSample) return 0;
+    const timeSpan = lastSample.timestamp - firstSample.timestamp;
     return timeSpan > 0 ? (totalDistance / timeSpan) * 1000 : 0;
   }
 
@@ -205,7 +210,10 @@ export class BehaviorDetector {
     const recentKeys = this.keypressTimestamps.filter(t => Date.now() - t < 60000);
     if (recentKeys.length < 2) return 0;
 
-    const timeSpan = recentKeys[recentKeys.length - 1] - recentKeys[0];
+    const lastKey = recentKeys[recentKeys.length - 1];
+    const firstKey = recentKeys[0];
+    if (lastKey === undefined || firstKey === undefined) return 0;
+    const timeSpan = lastKey - firstKey;
     const keysPerMinute = timeSpan > 0 ? (recentKeys.length / timeSpan) * 60000 : 0;
 
     // Approximation: 5 caractères = 1 mot
@@ -279,6 +287,7 @@ export class BehaviorDetector {
     const recentClicks = this.clickPositions.filter(c => now - c.t < 3000);
     if (recentClicks.length >= 3) {
       const first = recentClicks[0];
+      if (!first) return signals;
       const sameArea = recentClicks.filter(
         c => Math.abs(c.x - first.x) < 50 && Math.abs(c.y - first.y) < 50
       );

@@ -144,12 +144,12 @@ export function useAdvancedPerformance(
 
     newIds.forEach(id => {
       const bottleneck = newBottlenecks.find(b => b.id === id);
-      if (bottleneck) {
-        onBottleneckDetected?.(bottleneck);
+      if (!bottleneck) return;
 
-        if (bottleneck.severity === 'critical') {
-          onCriticalIssue?.(bottleneck);
-        }
+      onBottleneckDetected?.(bottleneck);
+
+      if (bottleneck.severity === 'critical') {
+        onCriticalIssue?.(bottleneck);
       }
     });
 
@@ -161,9 +161,8 @@ export function useAdvancedPerformance(
    */
   const applyOptimization = useCallback(
     async (suggestionId: string) => {
-      const suggestion = bottlenecks
-        .flatMap(b => b.suggestions)
-        .find(s => s.id === suggestionId);
+      const allSuggestions = bottlenecks.flatMap(b => b.suggestions);
+      const suggestion = allSuggestions.find(s => s.id === suggestionId);
 
       if (!suggestion) {
         console.warn(`[useAdvancedPerformance] Suggestion not found: ${suggestionId}`);
@@ -192,6 +191,14 @@ export function useAdvancedPerformance(
     }
 
     const latest = snapshots[snapshots.length - 1];
+    if (!latest) {
+      return {
+        cpu: 0,
+        memory: 0,
+        fps: 60,
+        latency: 0,
+      };
+    }
 
     return {
       cpu: latest.cpu.usage,
@@ -216,6 +223,15 @@ export function useAdvancedPerformance(
     }
 
     const latest = snapshots[snapshots.length - 1];
+    if (!latest) {
+      return {
+        overall: 100,
+        cpu: 100,
+        memory: 100,
+        rendering: 100,
+        network: 100,
+      };
+    }
 
     // CPU score (inverse of usage)
     const cpuScore = Math.max(0, 100 - latest.cpu.usage);

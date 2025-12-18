@@ -671,6 +671,9 @@ export class GoalConsistencyEngine extends EventEmitter {
     });
 
     const topViolation = sortedViolations[0];
+    if (!topViolation) {
+      return null;
+    }
     let correctedResponse = response;
     let correctionType: string;
     let reasoning: string = 'Correction automatique appliquée';
@@ -776,7 +779,8 @@ export class GoalConsistencyEngine extends EventEmitter {
     ];
 
     const marker =
-      uncertaintyMarkers[Math.floor(Math.random() * uncertaintyMarkers.length)];
+      uncertaintyMarkers[Math.floor(Math.random() * uncertaintyMarkers.length)] ??
+      'À vérifier:';
     return `${marker} ${response}`;
   }
 

@@ -122,7 +122,7 @@ export const AdvancedPerformanceDashboard: React.FC = () => {
         <div className="mini-chart-header">
           <span className="mini-chart-label">{label}</span>
           <span className="mini-chart-value" style={{ color }}>
-            {data[data.length - 1].toFixed(1)} {unit}
+            {(data[data.length - 1] ?? 0).toFixed(1)} {unit}
           </span>
         </div>
         <svg className="mini-chart-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -383,11 +383,14 @@ export const AdvancedPerformanceDashboard: React.FC = () => {
             {predictive.recommendedActions.length > 0 && (
               <div className="predictive-actions">
                 <h3>Actions Recommandées</h3>
-                {predictive.recommendedActions.slice(0, 3).map(action => (
-                  <div key={action.id} className="predictive-action">
-                    • {action.title} (+{action.estimatedImpact}%)
-                  </div>
-                ))}
+                {predictive.recommendedActions.slice(0, 3).map(action => {
+                  if (!action) return null;
+                  return (
+                    <div key={action.id} className="predictive-action">
+                      • {action.title} (+{action.estimatedImpact}%)
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>

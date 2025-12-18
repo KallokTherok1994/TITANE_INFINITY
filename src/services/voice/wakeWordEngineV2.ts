@@ -260,9 +260,14 @@ export class WakeWordEngineV2 {
     const words = normalized.split(' ');
 
     for (let i = 0; i < words.length; i++) {
-      if (words[i] === variant) {
+      const currentWord = words[i];
+      if (!currentWord) continue;
+
+      if (currentWord === variant) {
         const position = i;
-        const isStart = i === 0 || this.prefixes.includes(words[i - 1]);
+        const prevWord = words[i - 1];
+        const isStart =
+          i === 0 || (prevWord !== undefined && this.prefixes.includes(prevWord));
         const hasCommandAfter = i < words.length - 1;
 
         const mode: WakeWordMode = hasCommandAfter && isStart ? 'one_shot' : 'wake_only';
@@ -291,18 +296,23 @@ export class WakeWordEngineV2 {
     const words = normalized.split(' ');
 
     for (let i = 0; i < words.length; i++) {
-      const distance = this.levenshteinDistance(words[i], variant);
+      const currentWord = words[i];
+      if (!currentWord) continue;
+
+      const distance = this.levenshteinDistance(currentWord, variant);
 
       if (distance <= this.config.levenshteinThreshold) {
         const position = i;
-        const isStart = i === 0 || this.prefixes.includes(words[i - 1]);
+        const prevWord = words[i - 1];
+        const isStart =
+          i === 0 || (prevWord !== undefined && this.prefixes.includes(prevWord));
         const hasCommandAfter = i < words.length - 1;
 
         const mode: WakeWordMode = hasCommandAfter && isStart ? 'one_shot' : 'wake_only';
         const cleanedText =
           mode === 'one_shot' ? words.slice(i + 1).join(' ') : originalText;
 
-        const confidence = 1 - distance / Math.max(words[i].length, variant.length);
+        const confidence = 1 - distance / Math.max(currentWord.length, variant.length);
 
         return {
           detected: confidence >= this.config.confidenceThreshold,
@@ -326,24 +336,36 @@ export class WakeWordEngineV2 {
     }
 
     for (let j = 0; j <= a.length; j++) {
-      matrix[0][j] = j;
+      const row = matrix[0];
+      if (!row) continue;
+      row[j] = j;
     }
 
     for (let i = 1; i <= b.length; i++) {
       for (let j = 1; j <= a.length; j++) {
+        const currentRow = matrix[i];
+        const prevRow = matrix[i - 1];
+        if (!currentRow || !prevRow) continue;
+
         if (b.charAt(i - 1) === a.charAt(j - 1)) {
-          matrix[i][j] = matrix[i - 1][j - 1];
+          const prevDiag = prevRow[j - 1];
+          if (prevDiag === undefined) continue;
+          currentRow[j] = prevDiag;
         } else {
-          matrix[i][j] = Math.min(
-            matrix[i - 1][j - 1] + 1,
-            matrix[i][j - 1] + 1,
-            matrix[i - 1][j] + 1
-          );
+          const prevDiag = prevRow[j - 1];
+          const prevLeft = currentRow[j - 1];
+          const prevUp = prevRow[j];
+          if (prevDiag === undefined || prevLeft === undefined || prevUp === undefined)
+            continue;
+
+          currentRow[j] = Math.min(prevDiag + 1, prevLeft + 1, prevUp + 1);
         }
       }
     }
 
-    return matrix[b.length][a.length];
+    const lastRow = matrix[b.length];
+    const result = lastRow?.[a.length];
+    return result ?? 0;
   }
 
   private createNegativeResult(text: string): WakeWordEvent {

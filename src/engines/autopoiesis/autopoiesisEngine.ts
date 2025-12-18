@@ -405,7 +405,7 @@ class AutopoiesisEngine {
       tone: observations.reduce((s, o) => s + o.identity.signature.tone, 0) / count,
       energy: observations.reduce((s, o) => s + o.identity.signature.energy, 0) / count,
       warmth: observations.reduce((s, o) => s + o.identity.signature.warmth, 0) / count,
-      narrativeStyle: observations[0].identity.signature.narrativeStyle,
+      narrativeStyle: observations[0]?.identity.signature.narrativeStyle ?? 'balanced',
       cognitiveSpeed:
         observations.reduce((s, o) => s + o.identity.cognitive.speed, 0) / count,
       intensity:
@@ -417,7 +417,7 @@ class AutopoiesisEngine {
         observations.reduce((s, o) => s + o.expression.voice.prosody.rate, 0) / count,
       voicePitch:
         observations.reduce((s, o) => s + o.expression.voice.prosody.pitch, 0) / count,
-      haloPattern: observations[0].expression.halo.pattern,
+      haloPattern: observations[0]?.expression.halo.pattern ?? 'pulse',
       haloIntensity:
         observations.reduce((s, o) => s + o.expression.halo.dynamics.intensity, 0) /
         count,
@@ -444,7 +444,11 @@ class AutopoiesisEngine {
       identitySnapshot: avgIdentity,
       expressionConfig: avgExpression,
       outcomes: avgOutcomes,
-      context: observations[0].context,
+      context: observations[0]?.context ?? {
+        taskType: 'conversation',
+        userMood: 'calm',
+        timeOfDay: 'afternoon',
+      },
       effectiveness,
       usageCount: count,
       successRate: effectiveness,
@@ -460,10 +464,12 @@ class AutopoiesisEngine {
     if (existingIndex >= 0) {
       // Mettre à jour
       const existing = this.state.effectivePatterns[existingIndex];
-      existing.usageCount += pattern.usageCount;
-      existing.successRate = (existing.successRate + pattern.successRate) / 2;
-      existing.effectiveness = (existing.effectiveness + pattern.effectiveness) / 2;
-      existing.timestamp = Date.now();
+      if (existing) {
+        existing.usageCount += pattern.usageCount;
+        existing.successRate = (existing.successRate + pattern.successRate) / 2;
+        existing.effectiveness = (existing.effectiveness + pattern.effectiveness) / 2;
+        existing.timestamp = Date.now();
+      }
     } else {
       // Ajouter nouveau
       this.state.effectivePatterns.push(pattern);
@@ -578,8 +584,10 @@ class AutopoiesisEngine {
     if (existingIndex >= 0) {
       // Mettre à jour confidence
       const existing = this.state.evolutionRules[existingIndex];
-      existing.confidence = Math.max(existing.confidence, rule.confidence);
-      existing.priority = Math.max(existing.priority, rule.priority);
+      if (existing) {
+        existing.confidence = Math.max(existing.confidence, rule.confidence);
+        existing.priority = Math.max(existing.priority, rule.priority);
+      }
     } else {
       // Ajouter
       this.state.evolutionRules.push(rule);
@@ -747,7 +755,7 @@ class AutopoiesisEngine {
 
     // Retourner le meilleur
     const best = matchingPatterns.sort((a, b) => b.effectiveness - a.effectiveness)[0];
-    return best.expressionConfig;
+    return best?.expressionConfig ?? null;
   }
 
   /**

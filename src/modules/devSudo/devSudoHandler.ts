@@ -13,7 +13,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { autoHealEngine } from '@/services/ai/system';
 import { autoSaveConversationEngine } from '@/modules/talkToTitane/AutoSaveConversationEngine';
 import { talkToTitaneEngine } from '@/modules/talkToTitane/TalkToTitaneEngine';
@@ -1174,46 +1174,46 @@ function extractParams(
     case 'analyze-module':
     case 'repair-component':
     case 'show-code':
-      params.target = match[2] || match[1];
+      params.target = match[2] ?? match[1] ?? '';
       break;
 
     case 'fix-error':
-      params.error = match[4] || match[2];
+      params.error = match[4] ?? match[2] ?? '';
       break;
 
     case 'merge-opus':
-      params.opus1 = match[1];
-      params.opus2 = match[3] || match[2];
+      params.opus1 = match[1] ?? '';
+      params.opus2 = match[3] ?? match[2] ?? '';
       break;
 
     case 'create-component':
     case 'add-feature':
-      params.name = match[2] || match[1];
+      params.name = match[2] ?? match[1] ?? '';
       break;
 
     case 'whitelist-tauri':
-      params.command = match[1] || match[2];
+      params.command = match[1] ?? match[2] ?? '';
       break;
 
     // Console commands
     case 'console-ls':
-      params.path = match[3] || match[2] || '/src';
+      params.path = match[3] ?? match[2] ?? '/src';
       break;
 
     case 'console-open':
     case 'console-patch':
-      params.target = match[2] || match[1];
+      params.target = match[2] ?? match[1] ?? '';
       break;
 
     // Test commands
     case 'test-module':
-      params.module = match[2] || match[1];
+      params.module = match[2] ?? match[1] ?? '';
       break;
 
     // API commands
     case 'connect-api':
     case 'test-api':
-      params.api = match[1];
+      params.api = match[1] ?? '';
       break;
 
     // IDE Mode commands
@@ -1221,88 +1221,91 @@ function extractParams(
     case 'view-file':
     case 'patch-file':
     case 'explain-code':
-      params.file = match[1];
+      params.file = match[1] ?? '';
       break;
 
     case 'create-file':
-      params.file = match[3] || match[1];
+      params.file = match[3] ?? match[1] ?? '';
       params.content = '';
       break;
 
     case 'goto-function':
-      params.function = match[2] || match[1];
+      params.function = match[2] ?? match[1] ?? '';
       break;
 
     case 'goto-component':
-      params.component = match[2] || match[1];
+      params.component = match[2] ?? match[1] ?? '';
       break;
 
     case 'goto-handler':
-      params.handler = match[2] || match[1];
+      params.handler = match[2] ?? match[1] ?? '';
       break;
 
     case 'copilot-suggest':
     case 'auto-complete':
-      params.context = match[1] || '';
+      params.context = match[1] ?? '';
       break;
 
     case 'refactor-component':
-      params.component = match[2] || match[1];
+      params.component = match[2] ?? match[1] ?? '';
       break;
 
     case 'refactor-hook':
-      params.hook = match[2] || match[1];
+      params.hook = match[2] ?? match[1] ?? '';
       break;
 
     case 'refactor-handler':
-      params.handler = match[3] || match[2] || match[1];
+      params.handler = match[3] ?? match[2] ?? match[1] ?? '';
       break;
 
     case 'generate-module':
-      params.module = match[3] || match[2] || match[1];
+      params.module = match[3] ?? match[2] ?? match[1] ?? '';
       break;
 
     case 'code-review':
-      params.target = match[3] || match[2] || match[1];
+      params.target = match[3] ?? match[2] ?? match[1] ?? '';
       break;
 
     // Backend & API Master commands
     case 'fix-handler':
-      params.target = match[1];
+      params.target = match[1] ?? '';
       break;
 
     case 'create-api':
-      params.name = match[1];
+      params.name = match[1] ?? '';
       break;
 
     case 'whitelist-command':
-      params.commandName = match[1];
+      params.commandName = match[1] ?? '';
       break;
 
     // Memory Eternal Engine commands
     case 'memory-import':
-      params.filePath = match[1];
+      params.filePath = match[1] ?? '';
       break;
 
     // Hybrid Engine commands (Super Prompt #16) v∞.26.0
     case 'hybrid-heal': {
       // Extraire target= si présent
       const healMatch = action.match(/target=(\S+)/);
-      params.target = healMatch ? healMatch[1] : 'all';
+      const healTarget = healMatch?.[1];
+      params.target = healTarget ?? 'all';
       break;
     }
 
     case 'hybrid-inspect': {
       // Extraire path= depuis le raw command
       const inspectMatch = action.match(/path=(\S+)/);
-      params.path = inspectMatch ? inspectMatch[1] : match[1];
+      const inspectPath = inspectMatch?.[1];
+      params.path = inspectPath ?? match[1] ?? '';
       break;
     }
 
     case 'hybrid-fix': {
       // Extraire target= depuis le raw command
       const fixMatch = action.match(/target=(\S+)/);
-      params.target = fixMatch ? fixMatch[1] : match[1];
+      const fixTarget = fixMatch?.[1];
+      params.target = fixTarget ?? match[1] ?? '';
       break;
     }
 
@@ -1312,10 +1315,16 @@ function extractParams(
         /file=(\S+)\s+lineStart=(\d+)\s+lineEnd=(\d+)\s+newCode=(.+)/
       );
       if (applyMatch) {
-        params.file = applyMatch[1];
-        params.lineStart = parseInt(applyMatch[2], 10);
-        params.lineEnd = parseInt(applyMatch[3], 10);
-        params.newCode = applyMatch[4];
+        const file = applyMatch[1];
+        const lineStartStr = applyMatch[2];
+        const lineEndStr = applyMatch[3];
+        const newCode = applyMatch[4];
+        if (file && lineStartStr && lineEndStr && newCode) {
+          params.file = file;
+          params.lineStart = parseInt(lineStartStr, 10);
+          params.lineEnd = parseInt(lineEndStr, 10);
+          params.newCode = newCode;
+        }
       }
       break;
     }
@@ -1323,14 +1332,16 @@ function extractParams(
     case 'hybrid-run': {
       // Extraire command= depuis le raw command
       const runMatch = action.match(/command="?(.+?)"?$/);
-      params.command = runMatch ? runMatch[1] : match[1];
+      const runCommand = runMatch?.[1];
+      params.command = runCommand ?? match[1] ?? '';
       break;
     }
 
     case 'hybrid-logs': {
       // Extraire filter= si présent
       const logsMatch = action.match(/filter=(\S+)/);
-      params.filter = logsMatch ? logsMatch[1] : undefined;
+      const logsFilter = logsMatch?.[1];
+      params.filter = logsFilter;
       break;
     }
   }
@@ -3575,13 +3586,14 @@ ${report.warnings.length > 0 ? `\n⚠️ **Warnings**: ${report.warnings.length}
         ],
       };
     } else {
+      const firstError = report.errors[0];
       return {
         handled: true,
         success: false,
         response: `❌ **DATA COLLECTOR — Erreur**
 
 Erreurs: ${report.errors.join(', ')}`,
-        error: report.errors[0],
+        error: firstError ?? 'Unknown error',
       };
     }
   } catch (error) {
@@ -5117,7 +5129,8 @@ async function handleVocalPatch(): Promise<DevSudoResult> {
     const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
 
     const state = vocalDevConsole.getState();
-    const lastExecution = state.executionHistory[0];
+    const executionHistory = state.executionHistory;
+    const lastExecution = executionHistory[0];
 
     if (!lastExecution?.patch) {
       return {
@@ -5708,8 +5721,9 @@ async function handleLivePatch(): Promise<DevSudoResult> {
     const { liveDebugger } = await import('@/modules/liveDebugger/LiveDebuggerEngine');
 
     const recentDiagnostics = liveDebugger.getRecentDiagnostics(1);
+    const firstDiagnostic = recentDiagnostics[0];
 
-    if (recentDiagnostics.length === 0 || !recentDiagnostics[0].microPatch) {
+    if (recentDiagnostics.length === 0 || !firstDiagnostic?.microPatch) {
       return {
         handled: true,
         success: false,
@@ -5724,7 +5738,7 @@ Le Live Debugger n'a pas généré de patch récemment.
       };
     }
 
-    const diagnostic = recentDiagnostics[0];
+    const diagnostic = firstDiagnostic;
     const patch = diagnostic.microPatch;
     if (!patch) {
       return {

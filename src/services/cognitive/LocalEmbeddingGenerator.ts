@@ -147,7 +147,10 @@ export class LocalEmbeddingGenerator implements EmbeddingGenerator {
 
         // Extraire le vecteur
         const outputData = (output as { data?: Float32Array })?.data;
-        embedding = Array.from(outputData || []);
+        if (!outputData) {
+          throw new Error('No embedding data received from model');
+        }
+        embedding = Array.from(outputData);
 
         // Normaliser (si pas déjà fait)
         embedding = this.normalizeVector(embedding);
@@ -209,29 +212,39 @@ export class LocalEmbeddingGenerator implements EmbeddingGenerator {
 
           // Extraire les vecteurs
           const outputData = (output as { data?: Float32Array })?.data;
+          if (!outputData) {
+            throw new Error('No embedding data received from model');
+          }
           for (let i = 0; i < uncachedTexts.length; i++) {
             const startIdx = i * this.config.dimensions;
             const endIdx = startIdx + this.config.dimensions;
-            const embedding = Array.from(
-              outputData?.slice(startIdx, endIdx) || []
-            ) as number[];
+            const embedding = Array.from(outputData.slice(startIdx, endIdx)) as number[];
             const normalizedEmbedding = this.normalizeVector(embedding);
 
-            results[uncachedIndices[i]] = normalizedEmbedding;
+            const targetIndex = uncachedIndices[i];
+            if (targetIndex === undefined) continue;
+            results[targetIndex] = normalizedEmbedding;
 
             // Cache
             if (this.config.enableCache) {
-              this.addToCache(uncachedTexts[i], normalizedEmbedding);
+              const text = uncachedTexts[i];
+              if (text !== undefined) {
+                this.addToCache(text, normalizedEmbedding);
+              }
             }
           }
         } else {
           // Fallback
           for (let i = 0; i < uncachedTexts.length; i++) {
-            const embedding = this.generateFallbackEmbedding(uncachedTexts[i]);
-            results[uncachedIndices[i]] = embedding;
+            const text = uncachedTexts[i];
+            const targetIndex = uncachedIndices[i];
+            if (text === undefined || targetIndex === undefined) continue;
+
+            const embedding = this.generateFallbackEmbedding(text);
+            results[targetIndex] = embedding;
 
             if (this.config.enableCache) {
-              this.addToCache(uncachedTexts[i], embedding);
+              this.addToCache(text, embedding);
             }
           }
         }
@@ -239,10 +252,11 @@ export class LocalEmbeddingGenerator implements EmbeddingGenerator {
         console.error('[LocalEmbedding] Batch generation failed:', error);
         // Fallback pour les manquants
         for (let i = 0; i < uncachedTexts.length; i++) {
-          if (!results[uncachedIndices[i]]) {
-            results[uncachedIndices[i]] = this.generateFallbackEmbedding(
-              uncachedTexts[i]
-            );
+          const text = uncachedTexts[i];
+          const targetIndex = uncachedIndices[i];
+          if (text === undefined || targetIndex === undefined) continue;
+          if (!results[targetIndex]) {
+            results[targetIndex] = this.generateFallbackEmbedding(text);
           }
         }
       }
@@ -345,7 +359,10 @@ export class LocalEmbeddingGenerator implements EmbeddingGenerator {
     for (let i = 0; i < text.length; i++) {
       const charCode = text.charCodeAt(i);
       const index = (charCode * (i + 1)) % dimensions;
-      embedding[index] += charCode / 1000;
+      const current = embedding[index];
+      if (current !== undefined) {
+        embedding[index] = current + charCode / 1000;
+      }
     }
 
     // Ajouter des composantes basées sur les n-grams
@@ -353,7 +370,10 @@ export class LocalEmbeddingGenerator implements EmbeddingGenerator {
     ngrams.forEach((ngram, _idx) => {
       const hash = this.simpleHash(ngram);
       const index = hash % dimensions;
-      embedding[index] += 0.5;
+      const current = embedding[index];
+      if (current !== undefined) {
+        embedding[index] = current + 0.5;
+      }
     });
 
     // Normaliser

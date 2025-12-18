@@ -134,8 +134,11 @@ export const XP = {
       if (!stats[event.source]) {
         stats[event.source] = { count: 0, total: 0 };
       }
-      stats[event.source].count++;
-      stats[event.source].total += event.amount;
+      const sourceStat = stats[event.source];
+      if (sourceStat) {
+        sourceStat.count++;
+        sourceStat.total += event.amount;
+      }
     }
 
     return stats;

@@ -43,7 +43,7 @@ export interface TabsProps {
  * ```
  */
 export function Tabs({ tabs, defaultTab, onTabChange, children }: TabsProps) {
-  const [activeTab, setActiveTab] = useState(defaultTab || tabs[0]?.id);
+  const [activeTab, setActiveTab] = useState(defaultTab || tabs[0]?.id || '');
 
   const handleTabClick = (tabId: string, disabled?: boolean) => {
     if (disabled) return;
@@ -69,8 +69,9 @@ export function Tabs({ tabs, defaultTab, onTabChange, children }: TabsProps) {
       e.preventDefault();
     }
 
-    if (nextIndex !== currentIndex && !tabs[nextIndex].disabled) {
-      handleTabClick(tabs[nextIndex].id, tabs[nextIndex].disabled);
+    const nextTab = tabs[nextIndex];
+    if (nextIndex !== currentIndex && nextTab && !nextTab.disabled) {
+      handleTabClick(nextTab.id, nextTab.disabled ?? false);
       (e.currentTarget.parentElement?.children[nextIndex] as HTMLElement)?.focus();
     }
   };

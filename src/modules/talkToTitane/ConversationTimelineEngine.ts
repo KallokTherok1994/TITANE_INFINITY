@@ -259,7 +259,7 @@ class ConversationTimelineEngine {
   }
 
   private normalizeEngineName(name: string): string {
-    const normalizeMap: Record<string, string> = {
+    const normalizeMap: Record<string, string | undefined> = {
       ChatEngine: 'Chat',
       BubbleEngine: 'Bubble',
       DevConsoleEngine: 'DevConsole',
@@ -268,7 +268,7 @@ class ConversationTimelineEngine {
       DevSudoHandler: 'SUDO',
       SystemEngine: 'System',
     };
-    return normalizeMap[name] || name;
+    return normalizeMap[name] ?? name;
   }
 
   private normalizeIntentType(type: string): string {
@@ -312,28 +312,28 @@ class ConversationTimelineEngine {
     const sessionMap = new Map<string, TimelineEntry[]>();
 
     for (const entry of timeline) {
-      if (!sessionMap.has(entry.sessionId)) {
-        sessionMap.set(entry.sessionId, []);
+      let sessionEntries = sessionMap.get(entry.sessionId);
+      if (!sessionEntries) {
+        sessionEntries = [];
+        sessionMap.set(entry.sessionId, sessionEntries);
       }
-      const sessionEntries = sessionMap.get(entry.sessionId);
-      if (sessionEntries) {
-        sessionEntries.push(entry);
-      }
+      sessionEntries.push(entry);
     }
 
     const sessions: TimelineSession[] = [];
 
     for (const [sessionId, entries] of sessionMap.entries()) {
       const sorted = entries.sort((a, b) => a.timestamp - b.timestamp);
-      const startTime = sorted[0].timestamp;
-      const endTime = sorted[sorted.length - 1].timestamp;
+      const first = sorted[0];
+      const last = sorted[sorted.length - 1];
+      if (!first || !last) continue;
 
       sessions.push({
         sessionId,
-        startTime,
-        endTime,
-        duration: endTime - startTime,
-        engine: sorted[0].engineName,
+        startTime: first.timestamp,
+        endTime: last.timestamp,
+        duration: last.timestamp - first.timestamp,
+        engine: first.engineName,
         interactions: sorted.length,
         entries: sorted,
       });
@@ -351,24 +351,27 @@ class ConversationTimelineEngine {
     const engineMap = new Map<string, TimelineEntry[]>();
 
     for (const entry of timeline) {
-      if (!engineMap.has(entry.engineName)) {
-        engineMap.set(entry.engineName, []);
+      let engineEntries = engineMap.get(entry.engineName);
+      if (!engineEntries) {
+        engineEntries = [];
+        engineMap.set(entry.engineName, engineEntries);
       }
-      const engineEntries = engineMap.get(entry.engineName);
-      if (engineEntries) {
-        engineEntries.push(entry);
-      }
+      engineEntries.push(entry);
     }
 
     const segments: TimelineSegment[] = [];
 
     for (const [engine, entries] of engineMap.entries()) {
       const sorted = entries.sort((a, b) => a.timestamp - b.timestamp);
+      const first = sorted[0];
+      const last = sorted[sorted.length - 1];
+      if (!first || !last) continue;
+
       segments.push({
         id: `engine-${engine}`,
-        startTime: sorted[0].timestamp,
-        endTime: sorted[sorted.length - 1].timestamp,
-        duration: sorted[sorted.length - 1].timestamp - sorted[0].timestamp,
+        startTime: first.timestamp,
+        endTime: last.timestamp,
+        duration: last.timestamp - first.timestamp,
         type: 'engine',
         label: engine,
         entries: sorted,
@@ -436,10 +439,12 @@ class ConversationTimelineEngine {
   private exportHtml(timeline: TimelineEntry[]): string {
     const sessions = timeline.reduce(
       (acc, entry) => {
-        if (!acc[entry.sessionId]) {
-          acc[entry.sessionId] = [];
+        let sessionEntries = acc[entry.sessionId];
+        if (!sessionEntries) {
+          sessionEntries = [];
+          acc[entry.sessionId] = sessionEntries;
         }
-        acc[entry.sessionId].push(entry);
+        sessionEntries.push(entry);
         return acc;
       },
       {} as Record<string, TimelineEntry[]>

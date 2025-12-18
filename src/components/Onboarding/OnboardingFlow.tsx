@@ -12,7 +12,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { logger } from '@/lib/logger';
 import type { OnboardingStep, OnboardingFlowProps, OnboardingPreferences } from './types';
 import { WelcomeStep } from './WelcomeStep';
@@ -64,7 +64,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
     enableAnalytics: false,
   });
 
-  const step = STEPS[currentStep];
+  const step = STEPS[currentStep] ?? STEPS[0];
   const progress = ((currentStep + 1) / STEPS.length) * 100;
 
   /**
@@ -109,6 +109,8 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
    * Render du step actuel
    */
   const renderStep = () => {
+    const step = STEPS[currentStep];
+    if (!step) return null;
     switch (step.id) {
       case 'welcome':
         return <WelcomeStep />;
@@ -152,15 +154,17 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
 
         {/* Step header */}
         <div className="onboarding-header">
-          <h1 className="onboarding-title">{step.title}</h1>
-          <p className="onboarding-description">{step.description}</p>
+          <h1 className="onboarding-title">{STEPS[currentStep]?.title ?? ''}</h1>
+          <p className="onboarding-description">
+            {STEPS[currentStep]?.description ?? ''}
+          </p>
         </div>
 
         {/* Step content avec animations */}
         <div className="onboarding-content">
           <AnimatePresence mode="wait">
             <motion.div
-              key={step.id}
+              key={STEPS[currentStep]?.id ?? 'default'}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}

@@ -285,7 +285,16 @@ export async function selectPlaybook(symptoms: string): Promise<PlaybookPlan> {
     return false;
   });
 
-  return match ?? PLAYBOOK_REGISTRY[0];
+  return (
+    match ??
+    PLAYBOOK_REGISTRY[0] ?? {
+      id: 'unknown',
+      name: 'Unknown Playbook',
+      description: 'Default fallback playbook',
+      triggers: [],
+      actions: [],
+    }
+  );
 }
 
 export async function buildPrompt(

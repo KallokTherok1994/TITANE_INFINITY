@@ -129,7 +129,10 @@ export class ThemeAdapter {
    */
   setAccentColor(color: keyof typeof ACCENT_COLORS | string): void {
     if (color in ACCENT_COLORS) {
-      this.currentTheme.accentColor = ACCENT_COLORS[color as keyof typeof ACCENT_COLORS];
+      const accentColor = ACCENT_COLORS[color as keyof typeof ACCENT_COLORS];
+      if (accentColor) {
+        this.currentTheme.accentColor = accentColor;
+      }
     } else if (color.startsWith('#')) {
       this.currentTheme.accentColor = color;
     }
@@ -164,13 +167,16 @@ export class ThemeAdapter {
       strong: '0 10px 25px rgba(0,0,0,0.25)',
     };
 
+    const borderRadius = borderRadiusValues[theme.borderRadius];
+    const shadow = shadowValues[theme.shadowIntensity];
+
     return {
       '--theme-scheme': theme.colorScheme,
       '--theme-accent': theme.accentColor,
       '--theme-accent-rgb': this.hexToRgb(theme.accentColor),
       '--theme-surface-opacity': String(theme.surfaceOpacity),
-      '--theme-border-radius': borderRadiusValues[theme.borderRadius],
-      '--theme-shadow': shadowValues[theme.shadowIntensity],
+      '--theme-border-radius': borderRadius ?? '8px',
+      '--theme-shadow': shadow ?? 'none',
       '--theme-contrast': theme.contrastMode,
     };
   }
@@ -181,7 +187,12 @@ export class ThemeAdapter {
   private hexToRgb(hex: string): string {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     if (result) {
-      return `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`;
+      const r = result[1];
+      const g = result[2];
+      const b = result[3];
+      if (r && g && b) {
+        return `${parseInt(r, 16)}, ${parseInt(g, 16)}, ${parseInt(b, 16)}`;
+      }
     }
     return '99, 102, 241'; // Default indigo
   }

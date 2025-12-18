@@ -75,7 +75,9 @@ export const QuantumParticles: React.FC<QuantumParticlesProps> = ({
           vx: (Math.random() - 0.5) * 0.5,
           vy: (Math.random() - 0.5) * 0.5,
           size: Math.random() * 3 + 1,
-          color: colors[Math.floor(Math.random() * colors.length)],
+          color:
+            colors[Math.floor(Math.random() * colors.length)] ??
+            'rgba(124, 58, 237, 0.8)',
           opacity: baseOpacity,
           baseOpacity,
         };

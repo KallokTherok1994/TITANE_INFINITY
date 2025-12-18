@@ -130,6 +130,7 @@ export class AntiJitterEngine {
 
       const current = snapshots[snapshots.length - 1];
       const previous = snapshots[snapshots.length - 2];
+      if (!current || !previous) continue;
 
       // Vérifier le décalage de position
       const positionDelta =
@@ -305,6 +306,7 @@ export class AntiJitterEngine {
 
       const current = snapshots[snapshots.length - 1];
       const previous = snapshots[snapshots.length - 2];
+      if (!current || !previous) continue;
 
       const positionDelta =
         Math.abs(current.rect.top - previous.rect.top) +

@@ -261,7 +261,9 @@ export const ChatFileImport: React.FC<ChatFileImportProps> = ({
 
       // Import uniquement le premier fichier
       const file = files[0];
-      await handleFileImport(file);
+      if (file) {
+        await handleFileImport(file);
+      }
     },
     [disabled, handleFileImport]
   );
@@ -281,7 +283,10 @@ export const ChatFileImport: React.FC<ChatFileImportProps> = ({
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    await handleFileImport(files[0]);
+    const file = files[0];
+    if (file) {
+      await handleFileImport(file);
+    }
 
     // Reset input
     e.target.value = '';

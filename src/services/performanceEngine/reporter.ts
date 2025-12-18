@@ -340,9 +340,9 @@ export class PerformanceReporter {
     const advisorResults = this.state.advisorBuffer;
 
     // Période couverte
-    const startTime = snapshots.length > 0 ? snapshots[0].timestamp : now;
+    const startTime = snapshots.length > 0 ? (snapshots[0]?.timestamp ?? now) : now;
     const endTime =
-      snapshots.length > 0 ? snapshots[snapshots.length - 1].timestamp : now;
+      snapshots.length > 0 ? (snapshots[snapshots.length - 1]?.timestamp ?? now) : now;
 
     // Dernier snapshot et analyse
     const latestSnapshot = snapshots[snapshots.length - 1];
@@ -427,10 +427,11 @@ export class PerformanceReporter {
    */
   getDashboardData(): DashboardData {
     const latestSnapshot =
-      this.state.snapshotBuffer[this.state.snapshotBuffer.length - 1];
+      this.state.snapshotBuffer[this.state.snapshotBuffer.length - 1] ?? null;
     const latestAnalysis =
-      this.state.analysisBuffer[this.state.analysisBuffer.length - 1];
-    const latestAdvisor = this.state.advisorBuffer[this.state.advisorBuffer.length - 1];
+      this.state.analysisBuffer[this.state.analysisBuffer.length - 1] ?? null;
+    const latestAdvisor =
+      this.state.advisorBuffer[this.state.advisorBuffer.length - 1] ?? null;
 
     return {
       timestamp: Date.now(),
@@ -594,6 +595,9 @@ export class PerformanceReporter {
     }
 
     const latest = snapshots[snapshots.length - 1];
+    if (!latest) {
+      return this.getEmptyMetricsSummary();
+    }
 
     // CPU
     const cpuValues = snapshots.map(s => s.system.cpu.global);

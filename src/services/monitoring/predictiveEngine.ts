@@ -135,7 +135,7 @@ class PredictiveErrorEngine {
       unknown: 1,
     };
 
-    const weight = categoryWeights[category] || 1;
+    const weight = categoryWeights[category] ?? 1;
     const score = weight * Math.log(frequency + 1);
 
     if (score > 8) return 'critical';
@@ -170,18 +170,22 @@ class PredictiveErrorEngine {
         existingPattern.frequency++;
 
         // Calculate average timespan
-        const timespan =
-          recentErrors[i + windowSize - 1].timestamp - recentErrors[i].timestamp;
+        const firstError = recentErrors[i];
+        const lastError = recentErrors[i + windowSize - 1];
+        if (!firstError || !lastError) continue;
+        const timespan = lastError.timestamp - firstError.timestamp;
         existingPattern.averageTimespan =
           (existingPattern.averageTimespan * (existingPattern.frequency - 1) + timespan) /
           existingPattern.frequency;
       } else if (this.isSignificantPattern(sequence)) {
+        const firstError = recentErrors[i];
+        const lastError = recentErrors[i + windowSize - 1];
+        if (!firstError || !lastError) continue;
         this.patternSequences.push({
           sequence,
           frequency: 1,
           leadsToCrash: this.predictsCrash(sequence),
-          averageTimespan:
-            recentErrors[i + windowSize - 1].timestamp - recentErrors[i].timestamp,
+          averageTimespan: lastError.timestamp - firstError.timestamp,
         });
       }
     }
@@ -204,7 +208,9 @@ class PredictiveErrorEngine {
     if (hasCritical) return true;
 
     // Same category repeated is significant
-    const allSame = sequence.every(c => c === sequence[0]);
+    const firstCategory = sequence[0];
+    if (!firstCategory) return false;
+    const allSame = sequence.every(c => c === firstCategory);
     return allSame;
   }
 

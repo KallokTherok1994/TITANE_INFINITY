@@ -221,7 +221,9 @@ class ContextualAttentionEngineV2 {
     // 1. Niveau sonore ambiant (RMS)
     let rms = 0;
     for (let i = 0; i < audioBuffer.length; i++) {
-      rms += audioBuffer[i] * audioBuffer[i];
+      const sample = audioBuffer[i];
+      if (sample === undefined) continue;
+      rms += sample * sample;
     }
     rms = Math.sqrt(rms / audioBuffer.length);
 
@@ -259,7 +261,9 @@ class ContextualAttentionEngineV2 {
 
       let sum = 0;
       for (let j = start; j < end; j++) {
-        sum += Math.abs(audio[j]);
+        const sample = audio[j];
+        if (sample === undefined) continue;
+        sum += Math.abs(sample);
       }
 
       bandEnergies.push(sum / (end - start));

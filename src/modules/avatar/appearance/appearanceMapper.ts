@@ -141,6 +141,7 @@ function mapOutfitTop(outfit: OutfitState): AssetDefinition {
   // Parse item: "chemise claire" → item="chemise", variant="claire"
   const parts = outfit.top.split(' ');
   const item = parts[0];
+  if (!item) return OUTFITS.fallback.top;
   const variant = parts.slice(1).join('_') || 'basic';
 
   const topCategory = OUTFITS.outfits.tops[item];
@@ -150,7 +151,7 @@ function mapOutfitTop(outfit: OutfitState): AssetDefinition {
   if (!asset) {
     // Try first variant as fallback
     const firstVariant = Object.values(topCategory.variants)[0];
-    return firstVariant || OUTFITS.fallback.top;
+    return firstVariant ?? OUTFITS.fallback.top;
   }
 
   return asset;
@@ -164,6 +165,7 @@ function mapOutfitBottom(outfit: OutfitState): AssetDefinition {
 
   const parts = outfit.bottom.split(' ');
   const item = parts[0];
+  if (!item) return OUTFITS.fallback.bottom;
   const variant = parts.slice(1).join('_') || 'basic';
 
   const bottomCategory = OUTFITS.outfits.bottoms[item];
@@ -172,7 +174,7 @@ function mapOutfitBottom(outfit: OutfitState): AssetDefinition {
   const asset = bottomCategory.variants[variant];
   if (!asset) {
     const firstVariant = Object.values(bottomCategory.variants)[0];
-    return firstVariant || OUTFITS.fallback.bottom;
+    return firstVariant ?? OUTFITS.fallback.bottom;
   }
 
   return asset;
@@ -186,6 +188,7 @@ function mapOutfitShoes(outfit: OutfitState): AssetDefinition {
 
   const parts = outfit.shoes.split(' ');
   const item = parts[0];
+  if (!item) return OUTFITS.fallback.shoes;
   const variant = parts.slice(1).join('_') || 'classiques';
 
   const shoesCategory = OUTFITS.outfits.shoes[item];
@@ -194,7 +197,7 @@ function mapOutfitShoes(outfit: OutfitState): AssetDefinition {
   const asset = shoesCategory.variants[variant];
   if (!asset) {
     const firstVariant = Object.values(shoesCategory.variants)[0];
-    return firstVariant || OUTFITS.fallback.shoes;
+    return firstVariant ?? OUTFITS.fallback.shoes;
   }
 
   return asset;
@@ -208,13 +211,14 @@ function mapOutfitOuterwear(outfit: OutfitState): AssetDefinition | undefined {
 
   const parts = outfit.outerwear.split(' ');
   const item = parts[0];
+  if (!item) return undefined;
   const variant = parts.slice(1).join('_') || 'basic';
 
   const outerwearCategory = OUTFITS.outfits.outerwear[item];
   if (!outerwearCategory) return undefined;
 
   const asset = outerwearCategory.variants[variant];
-  return asset || Object.values(outerwearCategory.variants)[0];
+  return asset ?? Object.values(outerwearCategory.variants)[0];
 }
 
 // ============================================================================
@@ -272,7 +276,7 @@ function mapHair(hair: HairState): AssetDefinition {
   const asset = hairCategory.variants[variant];
   if (!asset) {
     const firstVariant = Object.values(hairCategory.variants)[0];
-    return firstVariant || OUTFITS.fallback.hair;
+    return firstVariant ?? OUTFITS.fallback.hair;
   }
 
   // Apply hair color if specified
@@ -309,7 +313,7 @@ function mapGlasses(accessories: AccessoriesState): AssetDefinition | undefined 
   if (!asset) {
     // Fallback to first available glasses
     const firstGlasses = Object.values(OUTFITS.accessories.glasses)[0];
-    return firstGlasses;
+    return firstGlasses ?? undefined;
   }
 
   return asset;
@@ -336,7 +340,7 @@ function mapJewelry(accessories: AccessoriesState): AssetDefinition[] | undefine
         jewelryAssets.push(asset);
       } else {
         const firstVariant = Object.values(jewelryCategory.variants)[0];
-        if (firstVariant) jewelryAssets.push(firstVariant);
+        if (firstVariant !== undefined) jewelryAssets.push(firstVariant);
       }
     }
   }
@@ -373,7 +377,7 @@ function mapBag(accessories: AccessoriesState): AssetDefinition | undefined {
   if (!bagCategory) return undefined;
 
   const asset = bagCategory.variants[variant];
-  return asset || Object.values(bagCategory.variants)[0];
+  return asset ?? Object.values(bagCategory.variants)[0];
 }
 
 /**
@@ -405,10 +409,12 @@ function mapOtherAccessories(
  * Get color palette for style
  */
 export function getColorPalette(style: StyleState): string[] {
-  if (!style.color_palette) return OUTFITS.color_palettes.neutre;
+  const neutrePalette = OUTFITS.color_palettes.neutre;
+  if (!neutrePalette) return [];
+  if (!style.color_palette) return neutrePalette;
 
   const palette = OUTFITS.color_palettes[style.color_palette.toLowerCase()];
-  return palette || OUTFITS.color_palettes.neutre;
+  return palette ?? neutrePalette;
 }
 
 /**
@@ -420,6 +426,9 @@ export function applyColorToAsset(
   colorIndex: number = 0
 ): AssetDefinition {
   const color = colorPalette[colorIndex % colorPalette.length];
+  if (!color) {
+    return asset;
+  }
 
   return {
     ...asset,

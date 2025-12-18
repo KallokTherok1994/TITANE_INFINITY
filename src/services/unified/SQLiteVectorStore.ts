@@ -612,7 +612,9 @@ export class SQLiteVectorStore implements IVectorStore {
   private serializeEmbedding(embedding: number[]): Buffer {
     const buffer = Buffer.allocUnsafe(embedding.length * 4);
     for (let i = 0; i < embedding.length; i++) {
-      buffer.writeFloatLE(embedding[i], i * 4);
+      const value = embedding[i];
+      if (value === undefined) continue;
+      buffer.writeFloatLE(value, i * 4);
     }
     return buffer;
   }
@@ -677,9 +679,12 @@ export class SQLiteVectorStore implements IVectorStore {
     let normB = 0;
 
     for (let i = 0; i < a.length; i++) {
-      dotProduct += a[i] * b[i];
-      normA += a[i] * a[i];
-      normB += b[i] * b[i];
+      const valA = a[i];
+      const valB = b[i];
+      if (valA === undefined || valB === undefined) continue;
+      dotProduct += valA * valB;
+      normA += valA * valA;
+      normB += valB * valB;
     }
 
     normA = Math.sqrt(normA);

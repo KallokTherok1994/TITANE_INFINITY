@@ -181,7 +181,9 @@ export class ModeDetector {
     ];
 
     modeEntries.sort((a, b) => b[1] - a[1]);
-    const [bestMode, bestScore] = modeEntries[0];
+    const topEntry = modeEntries[0];
+    if (!topEntry) return this.currentMode;
+    const [bestMode, bestScore] = topEntry;
 
     // Seuil de confiance pour changer de mode
     if (bestScore > 0.4) {

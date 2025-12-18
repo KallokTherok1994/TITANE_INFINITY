@@ -782,7 +782,7 @@ class LocalAgentEngine {
         commands: action.commands || [],
         dependencies:
           pipelineStages.length > 0
-            ? [pipelineStages[pipelineStages.length - 1].name]
+            ? [pipelineStages[pipelineStages.length - 1]?.name ?? 'unknown']
             : [],
         allow_failure: stageName === 'deploy',
         timeout: '10 minutes',

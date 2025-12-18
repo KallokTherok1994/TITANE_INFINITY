@@ -269,17 +269,20 @@ export class BargeInDetector {
     // RMS amplitude
     let sum = 0;
     for (let i = 0; i < audioChunk.length; i++) {
-      sum += audioChunk[i] * audioChunk[i];
+      const sample = audioChunk[i];
+      if (sample === undefined) continue;
+      sum += sample * sample;
     }
     const rmsAmplitude = Math.sqrt(sum / audioChunk.length);
 
     // Zero-crossing rate
     let zeroCrossings = 0;
     for (let i = 1; i < audioChunk.length; i++) {
-      if (
-        (audioChunk[i] >= 0 && audioChunk[i - 1] < 0) ||
-        (audioChunk[i] < 0 && audioChunk[i - 1] >= 0)
-      ) {
+      const current = audioChunk[i];
+      const previous = audioChunk[i - 1];
+      if (current === undefined || previous === undefined) continue;
+
+      if ((current >= 0 && previous < 0) || (current < 0 && previous >= 0)) {
         zeroCrossings++;
       }
     }
@@ -291,8 +294,10 @@ export class BargeInDetector {
     let spectrumSum = 0;
 
     for (let i = 0; i < spectrum.length; i++) {
-      weightedSum += i * spectrum[i];
-      spectrumSum += spectrum[i];
+      const value = spectrum[i];
+      if (value === undefined) continue;
+      weightedSum += i * value;
+      spectrumSum += value;
     }
 
     const spectralCentroid = spectrumSum > 0 ? weightedSum / spectrumSum : 0;
@@ -301,7 +306,10 @@ export class BargeInDetector {
     let spectralFlux = 0;
     if (this.previousSpectrum) {
       for (let i = 0; i < spectrum.length && i < this.previousSpectrum.length; i++) {
-        const diff = spectrum[i] - this.previousSpectrum[i];
+        const current = spectrum[i];
+        const previous = this.previousSpectrum[i];
+        if (current === undefined || previous === undefined) continue;
+        const diff = current - previous;
         spectralFlux += diff * diff;
       }
       spectralFlux = Math.sqrt(spectralFlux);
@@ -342,9 +350,13 @@ export class BargeInDetector {
     let mag2 = 0;
 
     for (let i = 0; i < minLength; i++) {
-      dotProduct += spectrum1[i] * spectrum2[i];
-      mag1 += spectrum1[i] * spectrum1[i];
-      mag2 += spectrum2[i] * spectrum2[i];
+      const val1 = spectrum1[i];
+      const val2 = spectrum2[i];
+      if (val1 === undefined || val2 === undefined) continue;
+
+      dotProduct += val1 * val2;
+      mag1 += val1 * val1;
+      mag2 += val2 * val2;
     }
 
     const magnitude = Math.sqrt(mag1) * Math.sqrt(mag2);

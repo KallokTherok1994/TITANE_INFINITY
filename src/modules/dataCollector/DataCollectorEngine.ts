@@ -120,68 +120,98 @@ export class DataCollectorEngine {
 
     try {
       // Step 1: Récupérer historique Memory Eternal
-      await this.executeStep(steps[0], async () => {
-        const memoryEntries = await this.extractMemoryHistory();
-        newEntries.push(...memoryEntries);
-      });
+      const step0 = steps[0];
+      if (step0) {
+        await this.executeStep(step0, async () => {
+          const memoryEntries = await this.extractMemoryHistory();
+          newEntries.push(...memoryEntries);
+        });
+      }
 
       // Step 2: Récupérer super prompts
-      await this.executeStep(steps[1], async () => {
-        const superPrompts = await this.extractSuperPrompts();
-        newEntries.push(...superPrompts);
-      });
+      const step1 = steps[1];
+      if (step1) {
+        await this.executeStep(step1, async () => {
+          const superPrompts = await this.extractSuperPrompts();
+          newEntries.push(...superPrompts);
+        });
+      }
 
       // Step 3: Extraire corrections dev
-      await this.executeStep(steps[2], async () => {
-        const devCorrections = await this.extractDevCorrections();
-        newEntries.push(...devCorrections);
-      });
+      const step2 = steps[2];
+      if (step2) {
+        await this.executeStep(step2, async () => {
+          const devCorrections = await this.extractDevCorrections();
+          newEntries.push(...devCorrections);
+        });
+      }
 
       // Step 4: Extraire introspections Singularity
-      await this.executeStep(steps[3], async () => {
-        const introspections = await this.extractIntrospections();
-        newEntries.push(...introspections);
-      });
+      const step3 = steps[3];
+      if (step3) {
+        await this.executeStep(step3, async () => {
+          const introspections = await this.extractIntrospections();
+          newEntries.push(...introspections);
+        });
+      }
 
       // Step 5: Extraire interactions IA
-      await this.executeStep(steps[4], async () => {
-        const interactions = await this.extractAIInteractions();
-        newEntries.push(...interactions);
-      });
+      const step4 = steps[4];
+      if (step4) {
+        await this.executeStep(step4, async () => {
+          const interactions = await this.extractAIInteractions();
+          newEntries.push(...interactions);
+        });
+      }
 
       // Step 6: Filtrer bruit / doublons
-      await this.executeStep(steps[5], async () => {
-        const beforeCount = newEntries.length;
-        const filtered = this.filterDataset(newEntries);
-        const removed = beforeCount - filtered.length;
-        if (removed > 0) {
-          warnings.push(`Filtered ${removed} duplicate/low-quality entries`);
-        }
-        newEntries.length = 0;
-        newEntries.push(...filtered);
-      });
+      const step5 = steps[5];
+      if (step5) {
+        await this.executeStep(step5, async () => {
+          const beforeCount = newEntries.length;
+          const filtered = this.filterDataset(newEntries);
+          const removed = beforeCount - filtered.length;
+          if (removed > 0) {
+            warnings.push(`Filtered ${removed} duplicate/low-quality entries`);
+          }
+          newEntries.length = 0;
+          newEntries.push(...filtered);
+        });
+      }
 
       // Step 7: Normaliser (input/output)
-      await this.executeStep(steps[6], async () => {
-        newEntries.forEach(entry => this.normalizeEntry(entry));
-      });
+      const step6 = steps[6];
+      if (step6) {
+        await this.executeStep(step6, async () => {
+          newEntries.forEach(entry => this.normalizeEntry(entry));
+        });
+      }
 
       // Step 8: Structurer dataset JSONL
-      await this.executeStep(steps[7], async () => {
-        // Ajouter au dataset global
-        this.dataset.push(...newEntries);
-      });
+      const step7 = steps[7];
+      if (step7) {
+        await this.executeStep(step7, async () => {
+          // Ajouter au dataset global
+          this.dataset.push(...newEntries);
+        });
+      }
 
       // Step 9: Nettoyer
-      await this.executeStep(steps[8], async () => {
-        this.cleanDataset();
-      });
+      const step8 = steps[8];
+      if (step8) {
+        await this.executeStep(step8, async () => {
+          this.cleanDataset();
+        });
+      }
 
       // Step 10: Export (sauvegarde automatique)
-      await this.executeStep(steps[9], async () => {
-        await this.saveDataset();
-        this.updateStats();
-      });
+      const step9 = steps[9];
+      if (step9) {
+        await this.executeStep(step9, async () => {
+          await this.saveDataset();
+          this.updateStats();
+        });
+      }
 
       const duration = Date.now() - startTime;
       this.lastCollectionTime = Date.now();
@@ -812,10 +842,13 @@ echo "════════════════════════�
     const qMatch = content.match(/Q:\s*(.+?)\s*A:/s);
     const aMatch = content.match(/A:\s*(.+)/s);
 
-    if (qMatch && aMatch) {
+    const question = qMatch?.[1];
+    const answer = aMatch?.[1];
+
+    if (question && answer) {
       return {
-        question: qMatch[1].trim(),
-        answer: aMatch[1].trim(),
+        question: question.trim(),
+        answer: answer.trim(),
       };
     }
 
@@ -826,8 +859,8 @@ echo "════════════════════════�
     const internalVision = introspection.internalVision as Record<string, unknown>;
     const diagnostic = introspection.diagnostic as Record<string, unknown>;
     const futureVision = introspection.futureVision as Record<string, unknown>;
-    const issues = diagnostic.issues as Array<Record<string, unknown>>;
-    const improvements = futureVision.priorityImprovements as string[];
+    const issues = (diagnostic.issues as Array<Record<string, unknown>>) || [];
+    const improvements = (futureVision.priorityImprovements as string[]) || [];
 
     return `## INTROSPECTION SINGULARITY
 
