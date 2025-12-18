@@ -79,7 +79,7 @@ const CreationStudio = memo(function CreationStudio() {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm text-gray-400 mb-2">
-                  Description de l'intention
+                  Description de l&apos;intention
                 </label>
                 <textarea
                   value={intent}

@@ -474,7 +474,7 @@ export const AudioCenterPage: React.FC = () => {
               <div className="mt-4 flex flex-wrap gap-4">
                 {[
                   { key: 'noiseSuppression', label: 'Réduction du bruit' },
-                  { key: 'echoCancellation', label: "Annulation de l'écho" },
+                  { key: 'echoCancellation', label: 'Annulation de l&apos;écho' },
                   { key: 'autoGainControl', label: 'Gain automatique' },
                 ].map(({ key, label }) => (
                   <label
@@ -557,7 +557,7 @@ export const AudioCenterPage: React.FC = () => {
                            text-white placeholder-neutral-500 focus:border-cyan-500 focus:outline-none"
                 />
                 <p className="text-xs text-neutral-500 mt-1">
-                  Optionnel. Permet d'utiliser les voix ElevenLabs ultra-réalistes.
+                  Optionnel. Permet d&apos;utiliser les voix ElevenLabs ultra-réalistes.
                 </p>
               </div>
 

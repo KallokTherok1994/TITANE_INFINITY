@@ -189,14 +189,14 @@ export const MessageList = React.memo(function MessageList({
             Auto-réparation OMEGA en cours...
           </h3>
           <p className="message-list-recovery-text">
-            Une erreur d'affichage a été détectée et corrigée automatiquement.
+            Une erreur d&apos;affichage a été détectée et corrigée automatiquement.
           </p>
           <div className="message-list-recovery-details">
             <span>Messages récupérés : {errorState.safeMessages.length}</span>
             <span>Tentative #{errorState.recoveryCount}</span>
           </div>
           <button onClick={resetError} className="message-list-recovery-button">
-            Reprendre l'affichage
+            Reprendre l&apos;affichage
           </button>
         </div>
         <div ref={endRef} />
@@ -373,7 +373,7 @@ export const MessageList = React.memo(function MessageList({
             onClick={() => window.location.reload()}
             className="message-list-critical-reload"
           >
-            Redémarrer l'interface
+            Redémarrer l&apos;interface
           </button>
         </div>
         <div ref={endRef} />

@@ -1,7 +1,7 @@
 /**
  * TITANE∞ vΩ∞ — Twin Evolution Panel
  * © 2025 TITANE∞ — Proprietary License
- * Panneau d'évolution du Numeric Twin
+ * Panneau d&apos;évolution du Numeric Twin
  */
 
 import React, { useState } from 'react';
@@ -21,8 +21,8 @@ interface TwinEvolutionPanelProps {
 }
 
 /**
- * Panneau d'évolution du Numeric Twin
- * Affiche l'état de la symbiose Kevin ↔ TITANE
+ * Panneau d&apos;évolution du Numeric Twin
+ * Affiche l&apos;état de la symbiose Kevin ↔ TITANE
  */
 export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
   isAdmin = false,
@@ -468,7 +468,7 @@ const AdminTab: React.FC<AdminTabProps> = ({ onRecalculate, onTransition }) => {
       <h3>⚙️ Administration Twin</h3>
       <p className="twin-admin__warning">
         ⚠️ Ces actions sont réservées aux administrateurs et peuvent affecter profondément
-        l'état du Twin.
+        l&apos;état du Twin.
       </p>
 
       <div className="twin-admin__actions">

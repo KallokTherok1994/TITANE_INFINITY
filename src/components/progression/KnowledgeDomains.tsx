@@ -278,8 +278,9 @@ export const KnowledgeDomains = ({
             textAlign: 'center',
           }}
         >
-          💡 <strong>Astuce</strong> : Gagnez de l'XP en envoyant des messages (💬 +5 XP),
-          en important des fichiers (📂 +20 XP) ou via des événements système (⚙️ +10 XP)
+          💡 <strong>Astuce</strong> : Gagnez de l&apos;XP en envoyant des messages (💬 +5
+          XP), en important des fichiers (📂 +20 XP) ou via des événements système (⚙️ +10
+          XP)
         </div>
       </motion.div>
     </Card>

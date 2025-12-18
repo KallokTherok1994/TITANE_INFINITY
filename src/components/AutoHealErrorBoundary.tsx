@@ -72,10 +72,10 @@ export class AutoHealErrorBoundary extends Component<Props, State> {
       // Étape 4: Reload (géré par errorHandler.handleError)
     } catch (err) {
       logger.error(
-        'Auto-heal process failed&apos;,
+        'Auto-heal process failed',
         {
           component: 'AutoHealErrorBoundary',
-          action: 'performAutoHeal&apos;,
+          action: 'performAutoHeal',
         },
         err as Error
       );

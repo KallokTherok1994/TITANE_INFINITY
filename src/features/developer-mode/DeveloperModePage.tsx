@@ -523,7 +523,7 @@ function PatchHistoryCard(): JSX.Element {
                 padding: '2rem',
               }}
             >
-              Aucun patch dans l'historique
+              Aucun patch dans l&apos;historique
             </div>
           )}
         </div>

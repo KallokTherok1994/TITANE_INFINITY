@@ -45,15 +45,15 @@ const EthicalDisclaimer: React.FC = () => (
   <div className="camera-ethical-disclaimer">
     <h4>⚠️ Information Importante</h4>
     <p>
-      Le module Vision est <strong>100% local</strong> — aucune donnée n&apos;est envoyée vers
-      le cloud.
+      Le module Vision est <strong>100% local</strong> — aucune donnée n&apos;est envoyée
+      vers le cloud.
     </p>
     <p>
       Les analyses émotionnelles sont des <strong>indices approximatifs</strong>, pas des
       diagnostics cliniques.
     </p>
     <p>
-      L'activation nécessite votre <strong>consentement explicite</strong> (opt-in).
+      L&apos;activation nécessite votre <strong>consentement explicite</strong> (opt-in).
     </p>
   </div>
 );
@@ -181,7 +181,7 @@ export const CameraPage: React.FC = () => {
       {!env.isTauri && (
         <div className="camera-warning">
           <strong>Note:</strong> En mode navigateur, certaines fonctionnalités peuvent
-          être limitées. Pour une expérience complète, utilisez l'application Tauri
+          être limitées. Pour une expérience complète, utilisez l&apos;application Tauri
           native.
         </div>
       )}
@@ -248,7 +248,7 @@ export const CameraPage: React.FC = () => {
               <span className="placeholder-icon">📷</span>
               <p>Caméra inactive</p>
               <p className="placeholder-hint">
-                Cliquez sur "Démarrer Caméra" pour activer
+                Cliquez sur &quot;Démarrer Caméra&quot; pour activer
               </p>
             </div>
           )}
@@ -362,7 +362,7 @@ export const CameraPage: React.FC = () => {
               <span className="placeholder-icon">🔒</span>
               <p>Vision Engine désactivé</p>
               <p className="placeholder-hint">
-                Activez le Vision Engine pour voir l'analyse en temps réel
+                Activez le Vision Engine pour voir l&apos;analyse en temps réel
               </p>
             </div>
           )}

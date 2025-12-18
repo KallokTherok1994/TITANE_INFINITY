@@ -367,7 +367,7 @@ const SyncConfig: React.FC<SyncConfigProps> = ({ status, onUpdate }) => {
               <span className="toggle-label">
                 <span className="toggle-title">Limiter pendant Training Mode</span>
                 <span className="toggle-desc">
-                  Évite les conflits pendant l'apprentissage
+                  Évite les conflits pendant l&apos;apprentissage
                 </span>
               </span>
             </label>
@@ -383,7 +383,7 @@ const SyncConfig: React.FC<SyncConfigProps> = ({ status, onUpdate }) => {
               <span className="toggle-label">
                 <span className="toggle-title">Limiter pendant Developer Mode</span>
                 <span className="toggle-desc">
-                  Préserve l'état de développement local
+                  Préserve l&apos;état de développement local
                 </span>
               </span>
             </label>

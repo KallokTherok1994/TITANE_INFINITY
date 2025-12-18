@@ -128,7 +128,7 @@ export const CustomizationStep: React.FC<CustomizationStepProps> = ({
             <br />
             <small>
               Aide à améliorer TITANE∞ en partageant des données anonymisées (aucune
-              conversation n'est envoyée)
+              conversation n&apos;est envoyée)
             </small>
           </span>
         </motion.label>

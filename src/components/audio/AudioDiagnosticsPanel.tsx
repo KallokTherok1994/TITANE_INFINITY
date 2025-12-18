@@ -210,7 +210,7 @@ export const AudioDiagnosticsPanel = ({
                 {permissions.microphone === 'prompt' && (
                   <div className="permission-prompt">
                     <p className="permission-help">
-                      Cliquez pour tester l'accès au microphone.
+                      Cliquez pour tester l&apos;accès au microphone.
                     </p>
                     <button
                       className="adp-btn primary"
@@ -424,7 +424,7 @@ export const AudioDiagnosticsPanel = ({
                 <div
                   className={`adp-status-item ${healthSummary.permissionsOk ? 'ok' : 'error'}`}
                 >
-                  <span>{healthSummary.permissionsOk ? '✅' : '❌&apos;}</span>
+                  <span>{healthSummary.permissionsOk ? '✅' : '❌'}</span>
                   <span>Permissions</span>
                 </div>
               </div>

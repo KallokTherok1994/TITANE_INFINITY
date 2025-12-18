@@ -48,7 +48,7 @@ export const Watchdog = () => {
           Watchdog — Surveillance Temps Réel
         </h1>
         <p className="module-page__subtitle">
-          Monitoring continu et détection d'anomalies
+          Monitoring continu et détection d&apos;anomalies
         </p>
       </div>
 

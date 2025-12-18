@@ -159,7 +159,7 @@ const AdminPageComponent: React.FC = () => {
             <div>
               <h1>ADMIN</h1>
               <p className="admin-header-subtitle">
-                Centre d'Administration TITANE∞ — Système, Config, Audio, Design,
+                Centre d&apos;Administration TITANE∞ — Système, Config, Audio, Design,
                 Gouvernance
               </p>
             </div>

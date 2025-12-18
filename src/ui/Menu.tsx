@@ -215,7 +215,8 @@ export const Menu: React.FC<MenuProps> = ({
               >
                 <Edit3 size={16} aria-hidden="true" />
                 <span id="menu-edit-description" className="sr-only">
-                  Permet de personnaliser l'ordre et la visibilité des éléments du menu
+                  Permet de personnaliser l&apos;ordre et la visibilité des éléments du
+                  menu
                 </span>
               </button>
             )}

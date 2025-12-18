@@ -6,7 +6,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
  *   Physiological State Panel - Interoception + Holophonic
- *   Visualisation de l'état interne et spatial de TITANE∞
+ *   Visualisation de l&apos;état interne et spatial de TITANE∞
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
@@ -144,7 +144,7 @@ export function PhysiologicalPanel() {
               className={activeTab === 'overview' ? 'active' : ''}
               onClick={() => setActiveTab('overview')}
             >
-              📊 Vue d'ensemble
+              📊 Vue d&apos;ensemble
             </button>
             <button
               className={activeTab === 'internal' ? 'active' : ''}
@@ -318,7 +318,7 @@ function InternalTab({ interoception }: { interoception: InteroceptionHookReturn
           label={`${Math.round(state.entropy * 100)}%`}
         />
         <p className="metric-description">
-          Niveau d'agitation interne (fluctuations naturelles)
+          Niveau d&apos;agitation interne (fluctuations naturelles)
         </p>
       </div>
 

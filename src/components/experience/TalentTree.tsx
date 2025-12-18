@@ -33,7 +33,7 @@ export const TalentTree: React.FC<TalentTreeProps> = () => {
         Tous les talents sont débloqués par défaut
       </div>
       <div style={{ marginTop: '2rem', color: 'var(--text-muted)' }}>
-        Visualisation de l'arbre de talents à venir...
+        Visualisation de l&apos;arbre de talents à venir...
       </div>
     </div>
   );

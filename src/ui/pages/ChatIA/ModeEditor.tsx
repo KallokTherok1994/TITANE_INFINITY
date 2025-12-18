@@ -75,7 +75,7 @@ export const ModeEditor: React.FC<ModeEditorProps> = ({
   const handleDelete = () => {
     if (!selectedMode || !selectedMode.isCustom) return;
     // Note: Pour une vraie confirmation, utiliser ConfirmDialog component
-    // Pour l'instant, delete direct avec toast de confirmation
+    // Pour l&apos;instant, delete direct avec toast de confirmation
     const modeName = selectedMode.name;
     instructionModeManager.deleteMode(selectedMode.id);
     setSelectedMode(null);
@@ -203,19 +203,19 @@ export const ModeEditor: React.FC<ModeEditorProps> = ({
     setAIAssistResponse('');
 
     try {
-      const systemPrompt = `Tu es un expert en conception d'instructions system prompt pour assistants IA.
-Ton rôle est d'aider à créer des instructions claires, précises et efficaces en français.
+      const systemPrompt = `Tu es un expert en conception d&apos;instructions system prompt pour assistants IA.
+Ton rôle est d&apos;aider à créer des instructions claires, précises et efficaces en français.
 Réponds UNIQUEMENT avec les instructions améliorées, sans explications supplémentaires.`;
 
       const userMessage = formPrompt.trim()
         ? `Instructions actuelles:
 ${formPrompt}
 
-Demande d'amélioration:
+Demande d&apos;amélioration:
 ${aiAssistRequest}
 
 Améliore ces instructions selon la demande.`
-        : `Crée des instructions system prompt pour un mode d'assistant IA avec cette description:
+        : `Crée des instructions system prompt pour un mode d&apos;assistant IA avec cette description:
 ${aiAssistRequest}
 
 Les instructions doivent être en français, claires et directes.`;
@@ -436,7 +436,7 @@ Les instructions doivent être en français, claires et directes.`;
                       rows={12}
                     />
                     <small>
-                      Instructions qui définissent le comportement de l'IA (français
+                      Instructions qui définissent le comportement de l&apos;IA (français
                       recommandé)
                     </small>
                   </div>

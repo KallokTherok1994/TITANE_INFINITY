@@ -119,7 +119,8 @@ const HyperVisionDashboard: React.FC = React.memo(() => {
             Démarrer la surveillance système
           </h2>
           <p className="text-[#9ca3af]">
-            Cliquez sur le bouton ci-dessus pour commencer l'observation en temps réel
+            Cliquez sur le bouton ci-dessus pour commencer l&apos;observation en temps
+            réel
           </p>
         </div>
       ) : (

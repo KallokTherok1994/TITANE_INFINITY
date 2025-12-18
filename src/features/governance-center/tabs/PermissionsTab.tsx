@@ -82,13 +82,13 @@ export const PermissionsTab: React.FC<PermissionsTabProps> = ({
       if (!groups[category]) {
         groups[category] = [];
       }
-      groups[category]!.push(action);
+      groups[category].push(action);
     }
 
     return groups;
   }, [permissionMatrix]);
 
-  // Filtrer l'audit
+  // Filtrer l&apos;audit
   const filteredAudit = useMemo(() => {
     return permissionAudit
       .filter(entry => {
@@ -279,7 +279,7 @@ export const PermissionsTab: React.FC<PermissionsTabProps> = ({
                 onClick={onClearAudit}
                 disabled={loading}
               >
-                🗑️ Effacer l'audit
+                🗑️ Effacer l&apos;audit
               </Button>
             </div>
           </Card>
@@ -289,7 +289,7 @@ export const PermissionsTab: React.FC<PermissionsTabProps> = ({
             <div style={{ maxHeight: '500px', overflow: 'auto' }}>
               {filteredAudit.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '40px', opacity: 0.5 }}>
-                  Aucune entrée d'audit
+                  Aucune entrée d&apos;audit
                 </div>
               ) : (
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>

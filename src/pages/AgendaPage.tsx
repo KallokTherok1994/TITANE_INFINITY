@@ -107,7 +107,7 @@ const AgendaToolbar: React.FC<ToolbarProps> = ({
     <div className="agenda-toolbar">
       <div className="agenda-toolbar-left">
         <button className="agenda-btn agenda-btn-today" onClick={onToday}>
-          Aujourd'hui
+          Aujourd&apos;hui
         </button>
         <div className="agenda-nav-group">
           <button className="agenda-btn agenda-btn-nav" onClick={onPrevious}>
@@ -446,7 +446,7 @@ const AgendaSidebar: React.FC<SidebarProps> = ({ stats, todayEvents, onEventClic
     <aside className="agenda-sidebar">
       {/* Résumé du jour */}
       <div className="sidebar-section">
-        <h3 className="sidebar-title">📊 Aujourd'hui</h3>
+        <h3 className="sidebar-title">📊 Aujourd&apos;hui</h3>
         <div className="sidebar-stats">
           <div className="stat-item">
             <span className="stat-value">{stats.eventsToday}</span>
@@ -504,7 +504,7 @@ const AgendaSidebar: React.FC<SidebarProps> = ({ stats, todayEvents, onEventClic
         <h3 className="sidebar-title">📅 À venir</h3>
         <div className="upcoming-events">
           {todayEvents.length === 0 ? (
-            <div className="no-events">Aucun événement aujourd'hui</div>
+            <div className="no-events">Aucun événement aujourd&apos;hui</div>
           ) : (
             todayEvents
               .slice(0, 5)

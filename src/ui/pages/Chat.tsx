@@ -876,7 +876,7 @@ export const Chat: React.FC = () => {
           </div>
           <div className="chat-critical-actions">
             <button onClick={resetError} className="chat-critical-reset">
-              Réinitialiser l'interface
+              Réinitialiser l&apos;interface
             </button>
             <button
               onClick={() => window.location.reload()}
@@ -1202,15 +1202,15 @@ export const Chat: React.FC = () => {
               onScreenCapture={imageData => {
                 isDev &&
                   console.log('[Chat] Screenshot captured, size:', imageData.length);
-                // Stocker l'image et envoyer pour analyse
+                // Stocker l&apos;image et envoyer pour analyse
                 setAttachedImages(prev => [...prev, imageData]);
                 sendMessage(
-                  `📸 [Capture d'écran attachée]\n\nAnalyse cette capture d'écran et décris ce que tu vois.`
+                  `📸 [Capture d&apos;écran attachée]\n\nAnalyse cette capture d&apos;écran et décris ce que tu vois.`
                 );
               }}
               onImageAnalysis={(imageData, prompt) => {
                 isDev && console.log('[Chat] Image analysis requested:', prompt);
-                // Stocker l'image et envoyer pour analyse Vision IA
+                // Stocker l&apos;image et envoyer pour analyse Vision IA
                 setAttachedImages(prev => [...prev, imageData]);
                 sendMessage(
                   `👁️ [Image attachée pour analyse Vision IA]\n\n${prompt || 'Analyse cette image en détail et décris ce que tu vois.'}`
@@ -1218,7 +1218,7 @@ export const Chat: React.FC = () => {
               }}
               onDictationResult={text => {
                 isDev && console.log('[Chat] Dictation result:', text);
-                // Stocker le texte dicté pour l'utiliser dans ChatInput
+                // Stocker le texte dicté pour l&apos;utiliser dans ChatInput
                 setPendingDictationText(prev => (prev ? `${prev} ${text}` : text));
                 // Envoyer directement le message dicté
                 if (text.trim()) {
@@ -1426,7 +1426,7 @@ export const Chat: React.FC = () => {
           <h1>🆘 OMEGA Emergency Mode</h1>
           <p>Erreur de rendu critique interceptée. Système en mode sécurisé.</p>
           <button onClick={() => window.location.reload()}>
-            Recharger l'application
+            Recharger l&apos;application
           </button>
         </div>
       </div>

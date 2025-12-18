@@ -79,7 +79,7 @@ export const TimeNavigator: React.FC = () => {
   const handleRestore = async (snapshot: Snapshot) => {
     if (
       !window.confirm(
-        `Restaurer l'état du ${formatDate(snapshot.timestamp)} ?\n\nCette action nécessite les permissions ROOT.`
+        `Restaurer l&apos;état du ${formatDate(snapshot.timestamp)} ?\n\nCette action nécessite les permissions ROOT.`
       )
     ) {
       return;
@@ -89,7 +89,7 @@ export const TimeNavigator: React.FC = () => {
       setLoading(true);
       await secureInvoke('restore_snapshot', { snapshot_id: snapshot.id });
       alert('✅ Restauration réussie ! Redémarrage requis.');
-      // v24.7 - Recharge l'application après restauration
+      // v24.7 - Recharge l&apos;application après restauration
       window.location.reload();
     } catch (error) {
       alert(`❌ Erreur lors de la restauration: ${error}`);
@@ -280,7 +280,7 @@ export const TimeNavigator: React.FC = () => {
       <header className="navigator-header">
         <h1>⏱️ Navigateur Temporel</h1>
         <p>
-          Naviguez dans l'historique d'état de TITANE∞ et restaurez les versions
+          Naviguez dans l&apos;historique d&apos;état de TITANE∞ et restaurez les versions
           précédentes
         </p>
       </header>
