@@ -7,7 +7,7 @@
  */
 
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
-import { invokeWithRetry, LONG_COMMAND_OPTIONS } from '../../lib/serviceInvoker';
+import { invokeWithRetry, LONG_COMMAND_OPTIONS } from '@/lib/serviceInvoker';
 
 /**
  * Type pour l'ID de conversation OMEGA
@@ -158,6 +158,19 @@ interface NormalizedCompleteEvent {
 class ChatService {
   private lastEndpoint: 'OMEGA' | 'LEGACY' | null = null;
 
+  private resolveProvider(
+    backendProvider: unknown,
+    configProvider: string | undefined
+  ): string {
+    return typeof backendProvider === 'string' && backendProvider.length > 0
+      ? backendProvider
+      : (configProvider ?? 'auto');
+  }
+
+  private resolveLatencyMs(latencyMs: unknown): number {
+    return typeof latencyMs === 'number' && Number.isFinite(latencyMs) ? latencyMs : 0;
+  }
+
   public getLastEndpoint(): 'OMEGA' | 'LEGACY' | null {
     return this.lastEndpoint;
   }
@@ -221,9 +234,12 @@ class ChatService {
 
       console.log('[ChatService-OMEGA] 📥 Réponse reçue:', {
         success: backendResponse.success,
-        provider: backendResponse.message?.provider,
+        provider: this.resolveProvider(
+          backendResponse.message?.provider,
+          config?.provider
+        ),
         contentLength: backendResponse.message?.content?.length ?? 0,
-        latencyMs: backendResponse.latency_ms,
+        latencyMs: this.resolveLatencyMs(backendResponse.latency_ms),
       });
 
       if (!backendResponse.success || !backendResponse.message) {
@@ -263,9 +279,12 @@ class ChatService {
 
       console.log('[ChatService] 📥 Réponse reçue:', {
         success: backendResponse.success,
-        provider: backendResponse.message?.provider,
+        provider: this.resolveProvider(
+          backendResponse.message?.provider,
+          config?.provider
+        ),
         contentLength: backendResponse.message?.content?.length ?? 0,
-        latencyMs: backendResponse.latency_ms,
+        latencyMs: this.resolveLatencyMs(backendResponse.latency_ms),
       });
 
       return this.normalizeResponse(backendResponse, config);
@@ -778,13 +797,16 @@ class ChatService {
           }
         : undefined;
 
+    const provider = this.resolveProvider(backend.message?.provider, config?.provider);
+    const latencyMs = this.resolveLatencyMs(backend.latency_ms);
+
     return {
       content: backend.message.content,
       usage,
       finishReason: backend.error ? 'error' : 'stop',
       model: backend.message.model || config?.model || 'auto',
-      provider: backend.message.provider,
-      latencyMs: backend.latency_ms,
+      provider,
+      latencyMs,
       metadata: {
         messageId: backend.message.id,
         timestamp:
@@ -824,8 +846,8 @@ class ChatService {
       usage,
       finishReason: payload?.error ? 'error' : 'stop',
       model: payload?.model || config?.model || 'auto',
-      provider: payload?.provider,
-      latencyMs: payload?.latencyMs,
+      provider: this.resolveProvider(payload?.provider, config?.provider),
+      latencyMs: this.resolveLatencyMs(payload?.latencyMs),
       metadata: {
         chunkCount,
         source: 'tauri-event',
