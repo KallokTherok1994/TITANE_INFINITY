@@ -156,7 +156,7 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
   const loadTokens = useCallback(async () => {
     dispatch({ type: 'SET_LOADING', isLoading: true });
     try {
-      const tokens = await invoke<UIThemeTokens | null>('load_ui_theme');
+      const tokens = await secureInvoke<UIThemeTokens | null>('load_ui_theme');
 
       // Si le backend retourne null, utiliser les valeurs par défaut
       if (!tokens) {
@@ -322,7 +322,7 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
     }
     dispatch({ type: 'SET_LOADING', isLoading: true });
     try {
-      await invoke('save_ui_theme', { tokens: state.tokens });
+      await secureInvoke('save_ui_theme', { tokens: state.tokens });
       dispatch({ type: 'SET_DIRTY', isDirty: false });
       dispatch({ type: 'SET_PREVIOUS', previousTokens: null });
       dispatch({ type: 'SET_LOADING', isLoading: false });
@@ -344,7 +344,7 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
   const resetToDefaults = useCallback(async () => {
     dispatch({ type: 'SET_LOADING', isLoading: true });
     try {
-      const tokens = await invoke<UIThemeTokens | null>('reset_ui_theme');
+      const tokens = await secureInvoke<UIThemeTokens | null>('reset_ui_theme');
 
       // Si le backend retourne null, utiliser les valeurs par défaut
       if (!tokens) {

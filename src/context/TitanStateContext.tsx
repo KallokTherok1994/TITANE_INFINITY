@@ -468,7 +468,7 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
   // Check integrity
   const checkIntegrity = useCallback(async (): Promise<boolean> => {
     try {
-      const report = await invoke<{ is_valid: boolean }>('titan_check_integrity');
+      const report = await secureInvoke<{ is_valid: boolean }>('titan_check_integrity');
       return report?.is_valid ?? false;
     } catch (error) {
       console.error('[TitanState] ❌ Erreur checkIntegrity:', error);
@@ -480,7 +480,7 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
   const getPersistenceStatus =
     useCallback(async (): Promise<PersistenceStatus | null> => {
       try {
-        return await invoke<PersistenceStatus>('titan_get_persistence_status');
+        return await secureInvoke<PersistenceStatus>('titan_get_persistence_status');
       } catch (error) {
         console.error('[TitanState] ❌ Erreur getPersistenceStatus:', error);
         return null;
@@ -496,7 +496,7 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
         console.log('[TitanState] 🚀 Persistence initialisée');
 
         // Charger l'état sauvegardé
-        const savedState = await invoke<TitanState | null>('titan_load_state');
+        const savedState = await secureInvoke<TitanState | null>('titan_load_state');
         if (savedState) {
           baseDispatch({
             type: 'system/init',
