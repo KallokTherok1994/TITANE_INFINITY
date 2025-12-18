@@ -160,7 +160,7 @@ export async function handleScanOpus(): Promise<DevSudoResult> {
 export async function handleScanErrors(): Promise<DevSudoResult> {
   try {
     // Tentative d'appel diagnostic backend
-    const diagnosticResult = await invoke<{
+    const diagnosticResult = await secureInvoke<{
       errors: Array<{ module: string; error: string; severity: string }>;
     }>('sc_diagnostics_run_quick').catch(() => null);
 
@@ -213,7 +213,7 @@ ${errorsList}
 
 export async function handleHealthCheck(): Promise<DevSudoResult> {
   try {
-    const health = await invoke<{ status: string; healthy: boolean }>(
+    const health = await secureInvoke<{ status: string; healthy: boolean }>(
       'quick_health_check'
     );
 

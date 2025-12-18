@@ -42,7 +42,7 @@ async function generateOpenAIUncached(
 
     const response = await withRetry(
       async () => {
-        return await invoke<{
+        return await secureInvoke<{
           ok: boolean;
           data: {
             content: string;
@@ -173,7 +173,7 @@ export const openaiProvider: AIProvider = {
    */
   async isAvailable(): Promise<boolean> {
     try {
-      const response = await invoke<{
+      const response = await secureInvoke<{
         ok: boolean;
         data: { configured: boolean } | null;
       }>('get_openai_key_status');

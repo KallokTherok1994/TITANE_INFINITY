@@ -41,7 +41,7 @@ async function generateClaudeUncached(
 
     const response = await withRetry(
       async () => {
-        return await invoke<{
+        return await secureInvoke<{
           ok: boolean;
           data: {
             content: string;
@@ -174,7 +174,7 @@ export const claudeProvider: AIProvider = {
    */
   async isAvailable(): Promise<boolean> {
     try {
-      const response = await invoke<{
+      const response = await secureInvoke<{
         ok: boolean;
         data: { configured: boolean } | null;
       }>('get_anthropic_key_status');

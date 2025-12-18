@@ -38,7 +38,7 @@ export class IAService {
       }
 
       const request: SetAPIKeyRequest = { service, key };
-      const result = await invoke<CommandResult<string>>('set_api_key', { request });
+      const result = await secureInvoke<CommandResult<string>>('set_api_key', { request });
 
       // ✅ Auto-test après configuration réussie
       if (result.success) {
@@ -62,7 +62,7 @@ export class IAService {
    */
   static async deleteAPIKey(service: IAProvider): Promise<CommandResult<string>> {
     try {
-      const result = await invoke<CommandResult<string>>('delete_api_key', { service });
+      const result = await secureInvoke<CommandResult<string>>('delete_api_key', { service });
       return result;
     } catch (error) {
       return {
@@ -77,7 +77,7 @@ export class IAService {
    */
   static async listProviders(): Promise<CommandResult<IAProvider[]>> {
     try {
-      const result = await invoke<CommandResult<IAProvider[]>>('list_ai_providers');
+      const result = await secureInvoke<CommandResult<IAProvider[]>>('list_ai_providers');
       return result;
     } catch (error) {
       return {
@@ -92,7 +92,7 @@ export class IAService {
    */
   static async testAPIKey(service: IAProvider): Promise<CommandResult<boolean>> {
     try {
-      const result = await invoke<CommandResult<boolean>>('test_api_key', { service });
+      const result = await secureInvoke<CommandResult<boolean>>('test_api_key', { service });
       return result;
     } catch (error) {
       return {
@@ -109,7 +109,7 @@ export class IAService {
     request: IAGenerateRequest
   ): Promise<CommandResult<IAGenerateResponse>> {
     try {
-      const result = await invoke<CommandResult<IAGenerateResponse>>('ia_generate', {
+      const result = await secureInvoke<CommandResult<IAGenerateResponse>>('ia_generate', {
         request,
       });
       return result;
@@ -126,7 +126,7 @@ export class IAService {
    */
   static async getAvailableEngines(): Promise<CommandResult<IAEngine[]>> {
     try {
-      const result = await invoke<CommandResult<IAEngine[]>>('get_available_engines');
+      const result = await secureInvoke<CommandResult<IAEngine[]>>('get_available_engines');
       return result;
     } catch (error) {
       return {

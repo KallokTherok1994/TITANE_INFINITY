@@ -53,7 +53,7 @@ export const geminiProvider: AIProvider = {
    */
   async isAvailable(): Promise<boolean> {
     try {
-      const response = await invoke<{
+      const response = await secureInvoke<{
         ok: boolean;
         data: { configured: boolean } | null;
       }>('get_gemini_key_status');
@@ -105,7 +105,7 @@ export const geminiProvider: AIProvider = {
           const response = await withRetry(
             async () => {
               // Appel backend sécurisé via Rust
-              return await invoke<{
+              return await secureInvoke<{
                 ok: boolean;
                 data: {
                   content: string;

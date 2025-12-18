@@ -448,7 +448,7 @@ export const MemoryEvolutionCenter: React.FC = () => {
   // Fetch initial data
   const fetchStatus = useCallback(async () => {
     try {
-      const statusData = await invoke<MemoryEvolutionStatus>('memory_evolution_status');
+      const statusData = await secureInvoke<MemoryEvolutionStatus>('memory_evolution_status');
       setStatus(statusData);
       if (statusData.last_evolution) {
         setLastResult(statusData.last_evolution);
@@ -464,7 +464,7 @@ export const MemoryEvolutionCenter: React.FC = () => {
 
   const fetchHealth = useCallback(async () => {
     try {
-      const healthData = await invoke<HierarchyHealth>('memory_hierarchy_health');
+      const healthData = await secureInvoke<HierarchyHealth>('memory_hierarchy_health');
       setHealth(healthData);
     } catch (err) {
       logger.error(
@@ -477,7 +477,7 @@ export const MemoryEvolutionCenter: React.FC = () => {
 
   const fetchClusters = useCallback(async () => {
     try {
-      const clustersData = await invoke<MemoryCluster[]>('memory_get_clusters');
+      const clustersData = await secureInvoke<MemoryCluster[]>('memory_get_clusters');
       setClusters(clustersData);
     } catch (err) {
       logger.error(
@@ -536,7 +536,7 @@ export const MemoryEvolutionCenter: React.FC = () => {
           result = await secureInvoke('memory_create_backup');
           break;
         case 'full':
-          result = await invoke<EvolutionResult>('memory_evolve_full', {
+          result = await secureInvoke<EvolutionResult>('memory_evolve_full', {
             kevin_authorized: kevinAuthorized,
           });
           if (result) setLastResult(result);

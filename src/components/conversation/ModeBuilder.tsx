@@ -128,7 +128,7 @@ export const ModeBuilder: React.FC<ModeBuilderProps> = ({ onClose, onSave }) => 
 
     try {
       // ✅ v25.4.2: Appel au backend Tauri pour générer le prompt via IA
-      const response = await invoke<GeneratePromptResponse>('generate_mode_prompt', {
+      const response = await secureInvoke<GeneratePromptResponse>('generate_mode_prompt', {
         request: {
           concept: concept.trim(),
           expertise: 'advanced',

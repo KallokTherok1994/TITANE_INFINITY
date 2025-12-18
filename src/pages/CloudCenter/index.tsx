@@ -35,7 +35,7 @@ const CloudCenter: React.FC = () => {
   // Charger le statut initial
   const loadStatus = useCallback(async () => {
     try {
-      const result = await invoke<CloudStatus>('cloud_get_status');
+      const result = await secureInvoke<CloudStatus>('cloud_get_status');
       setStatus(result);
       setInitialized(result.initialized);
     } catch (err) {
@@ -59,7 +59,7 @@ const CloudCenter: React.FC = () => {
     setError(null);
 
     try {
-      const result = await invoke<CloudStatus>('cloud_init', {
+      const result = await secureInvoke<CloudStatus>('cloud_init', {
         passphrase,
         deviceName,
       });
@@ -80,7 +80,7 @@ const CloudCenter: React.FC = () => {
     setError(null);
 
     try {
-      await invoke<SyncResult>('cloud_sync_push');
+      await secureInvoke<SyncResult>('cloud_sync_push');
       await loadStatus();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : String(err));
@@ -95,7 +95,7 @@ const CloudCenter: React.FC = () => {
     setError(null);
 
     try {
-      await invoke<SyncResult>('cloud_sync_pull');
+      await secureInvoke<SyncResult>('cloud_sync_pull');
       await loadStatus();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : String(err));
@@ -110,7 +110,7 @@ const CloudCenter: React.FC = () => {
     setError(null);
 
     try {
-      const isValid = await invoke<boolean>('cloud_verify_integrity');
+      const isValid = await secureInvoke<boolean>('cloud_verify_integrity');
       if (isValid) {
         alert("✅ L'intégrité du vault est validée");
       } else {
@@ -129,7 +129,7 @@ const CloudCenter: React.FC = () => {
     setError(null);
 
     try {
-      const backupPath = await invoke<string>('cloud_backup_vault');
+      const backupPath = await secureInvoke<string>('cloud_backup_vault');
       alert(`✅ Sauvegarde créée: ${backupPath}`);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : String(err));

@@ -23,7 +23,7 @@ const DevicesView: React.FC = () => {
   const loadDevices = async () => {
     setLoading(true);
     try {
-      const result = await invoke<DevicesResponse>('cloud_get_devices');
+      const result = await secureInvoke<DevicesResponse>('cloud_get_devices');
       setLocalDevice(result.local_device);
       setKnownDevices(result.known_devices);
     } catch (err) {

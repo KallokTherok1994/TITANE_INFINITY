@@ -314,7 +314,7 @@ export class ConversationManager {
     }
 
     try {
-      const result = await invoke<{
+      const result = await secureInvoke<{
         content: string;
         model: string;
         tokens_used: number;

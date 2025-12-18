@@ -372,7 +372,7 @@ interface APIGateway {
  */
 export async function exampleUsage() {
   // ✨ v21.5: Appel unifié au lieu de orchestrator.ts complexe
-  const response = await invoke<UnifiedChatResponse>('unified_chat', {
+  const response = await secureInvoke<UnifiedChatResponse>('unified_chat', {
     request: {
       message: 'Explique la relativité générale',
       history: [],

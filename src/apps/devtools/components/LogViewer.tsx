@@ -75,8 +75,6 @@ export const LogViewer: React.FC = () => {
       console.error('Failed to fetch logs:', error);
     }
   }, [updateStats]);
-    setStats(newStats);
-  };
 
   // Apply filters
   useEffect(() => {

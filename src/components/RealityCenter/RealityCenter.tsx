@@ -219,8 +219,8 @@ export const RealityCenter: React.FC = () => {
 
   const loadState = useCallback(async () => {
     try {
-      const currentState = await invoke<RealityRendererState>('reality_get_state').catch(
-        async () => invoke<RealityRendererState>('reality_init')
+      const currentState = await secureInvoke<RealityRendererState>('reality_get_state').catch(
+        async () => secureInvoke<RealityRendererState>('reality_init')
       );
       setState(currentState);
       setError(null);
@@ -240,7 +240,7 @@ export const RealityCenter: React.FC = () => {
 
     const interval = setInterval(async () => {
       try {
-        const stats = await invoke<FrameStats>('reality_render_frame');
+        const stats = await secureInvoke<FrameStats>('reality_render_frame');
         setFrameStats(stats);
         await loadState();
       } catch (err) {
@@ -280,7 +280,7 @@ export const RealityCenter: React.FC = () => {
 
   const handleRenderFrame = async () => {
     try {
-      const stats = await invoke<FrameStats>('reality_render_frame');
+      const stats = await secureInvoke<FrameStats>('reality_render_frame');
       setFrameStats(stats);
       await loadState();
     } catch (err) {

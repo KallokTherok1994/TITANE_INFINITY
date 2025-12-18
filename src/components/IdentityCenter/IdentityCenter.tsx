@@ -146,16 +146,16 @@ const IdentityCenterContent: React.FC = () => {
         rulesData,
         coherenceData,
       ] = await Promise.all([
-        invoke<IdentityMatrix>('identity_get_matrix').catch(() => null),
-        invoke<PersonalitySnapshot>('identity_get_personality_snapshot').catch(
+        secureInvoke<IdentityMatrix>('identity_get_matrix').catch(() => null),
+        secureInvoke<PersonalitySnapshot>('identity_get_personality_snapshot').catch(
           () => null
         ),
-        invoke<VoiceProfile[]>('identity_get_voice_profiles').catch(() => []),
-        invoke<ToneState>('identity_get_current_tone').catch(() => null),
-        invoke<OperationalMode>('identity_get_current_mode').catch(() => null),
-        invoke<OperationalMode[]>('identity_get_available_modes').catch(() => []),
-        invoke<BehaviorRule[]>('identity_get_active_rules').catch(() => []),
-        invoke<number>('identity_get_coherence_score').catch(() => 0.85),
+        secureInvoke<VoiceProfile[]>('identity_get_voice_profiles').catch(() => []),
+        secureInvoke<ToneState>('identity_get_current_tone').catch(() => null),
+        secureInvoke<OperationalMode>('identity_get_current_mode').catch(() => null),
+        secureInvoke<OperationalMode[]>('identity_get_available_modes').catch(() => []),
+        secureInvoke<BehaviorRule[]>('identity_get_active_rules').catch(() => []),
+        secureInvoke<number>('identity_get_coherence_score').catch(() => 0.85),
       ]);
 
       setIdentityMatrix(matrixData);

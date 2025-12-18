@@ -206,15 +206,15 @@ const HyperCenterContent: React.FC = () => {
 
   const loadState = useCallback(async () => {
     try {
-      const currentState = await invoke<HyperIntelligenceState>('hyper_get_state').catch(
-        async () => invoke<HyperIntelligenceState>('hyper_init')
+      const currentState = await secureInvoke<HyperIntelligenceState>('hyper_get_state').catch(
+        async () => secureInvoke<HyperIntelligenceState>('hyper_init')
       );
       setState(currentState);
 
-      const recentThoughts = await invoke<Thought[]>('hyper_get_thoughts', { limit: 10 });
+      const recentThoughts = await secureInvoke<Thought[]>('hyper_get_thoughts', { limit: 10 });
       setThoughts(recentThoughts);
 
-      const recentInsights = await invoke<Insight[]>('hyper_get_insights', { limit: 5 });
+      const recentInsights = await secureInvoke<Insight[]>('hyper_get_insights', { limit: 5 });
       setInsights(recentInsights);
 
       setError(null);
@@ -244,7 +244,7 @@ const HyperCenterContent: React.FC = () => {
     if (!thinkPrompt.trim()) return;
     setThinking(true);
     try {
-      const thought = await invoke<Thought>('hyper_think', { prompt: thinkPrompt });
+      const thought = await secureInvoke<Thought>('hyper_think', { prompt: thinkPrompt });
       setThoughts(prev => [thought, ...prev].slice(0, 10));
       setThinkPrompt('');
       await loadState();
@@ -262,7 +262,7 @@ const HyperCenterContent: React.FC = () => {
       return;
     }
     try {
-      const result = await invoke<Conclusion>('hyper_reason', {
+      const result = await secureInvoke<Conclusion>('hyper_reason', {
         premises: validPremises,
       });
       setConclusion(result);
@@ -274,7 +274,7 @@ const HyperCenterContent: React.FC = () => {
   const handleImagine = async () => {
     if (!imagineSeed.trim()) return;
     try {
-      const result = await invoke<Imagination>('hyper_imagine', { seed: imagineSeed });
+      const result = await secureInvoke<Imagination>('hyper_imagine', { seed: imagineSeed });
       setImagination(result);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
@@ -283,7 +283,7 @@ const HyperCenterContent: React.FC = () => {
 
   const handleGenerateInsight = async () => {
     try {
-      await invoke<Insight>('hyper_generate_insight', {
+      await secureInvoke<Insight>('hyper_generate_insight', {
         context: thinkPrompt || 'current context',
       });
       await loadState();

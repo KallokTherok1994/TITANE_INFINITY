@@ -632,7 +632,7 @@ function DevPageContent(): JSX.Element {
 
       // Load orchestration state
       try {
-        const orchState = await invoke<OrchestrationState>(
+        const orchState = await secureInvoke<OrchestrationState>(
           'orchestration_get_unified_state'
         );
         setOrchestration(orchState);
