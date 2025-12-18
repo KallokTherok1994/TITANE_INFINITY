@@ -18,6 +18,84 @@ import { useVoiceEngine } from '../hooks/useVoiceEngine';
 import { wakeWordEngine } from '../services/voice/wakeWordEngine';
 import { attentionEngine } from '../services/voice/attentionEngine';
 
+type MockAttentionState =
+  | 'inactive'
+  | 'armed'
+  | 'awaiting_command'
+  | 'processing'
+  | 'responding'
+  | 'cooldown';
+
+type MockWakeWordMode = 'wake_only' | 'one_shot';
+
+type MockWakeWordEvent = {
+  detected: boolean;
+  mode: MockWakeWordMode;
+  cleanedText: string;
+  confidence: number;
+  matchedVariant: string;
+};
+
+// NOTE: vi.mock() factories are hoisted by Vitest.
+// Define mocks using vi.hoisted() so they exist at mock-evaluation time.
+const hoistedMocks = vi.hoisted(() => {
+  const attentionEngineMock = (() => {
+    let state: MockAttentionState = 'inactive';
+    const listeners = new Set<
+      (event: { state: MockAttentionState; wakeEvent?: MockWakeWordEvent }) => void
+    >();
+
+    const emit = (next: MockAttentionState, wakeEvent?: MockWakeWordEvent) => {
+      state = next;
+      for (const listener of listeners) listener({ state: next, wakeEvent });
+    };
+
+    return {
+      getState: () => state,
+      onStateChange: (
+        cb: (event: { state: MockAttentionState; wakeEvent?: MockWakeWordEvent }) => void
+      ) => {
+        listeners.add(cb);
+        return () => {
+          listeners.delete(cb);
+        };
+      },
+      activate: () => emit('armed'),
+      deactivate: () => emit('inactive'),
+      reset: () => emit('inactive'),
+      handleWakeWord: (wakeEvent: MockWakeWordEvent) => {
+        if (wakeEvent.detected) emit('awaiting_command', wakeEvent);
+      },
+      startProcessing: () => emit('processing'),
+    };
+  })();
+
+  const wakeWordEngineMock = {
+    detect: (text: string): MockWakeWordEvent | null => {
+      if (!text.toLowerCase().includes('titane')) return null;
+      const isOneShot = text.includes(',') || text.toLowerCase().includes('ouvre');
+      const cleanedText = text
+        .replace(/titane\s*,?/i, '')
+        .replace(/\?/g, '')
+        .trim();
+      return {
+        detected: true,
+        mode: isOneShot ? 'one_shot' : 'wake_only',
+        cleanedText,
+        confidence: 0.9,
+        matchedVariant: 'titane',
+      };
+    },
+    detectStreaming: (text: string): MockWakeWordEvent | null =>
+      wakeWordEngineMock.detect(text),
+  };
+
+  return {
+    attentionEngineMock,
+    wakeWordEngineMock,
+  };
+});
+
 /**
  * ═══════════════════════════════════════════════════════════════════
  *   MOCKS
@@ -38,6 +116,67 @@ vi.mock('../hooks/useAudioStreaming', () => ({
   })),
 }));
 
+// Prevent Tauri-only branches in tests (avoids secureInvoke('test_microphone') noise)
+vi.mock('@/core/tauri/environment', () => ({
+  detectEnvironment: () => ({
+    isTauri: false,
+    isBrowser: true,
+    protocol: 'http',
+    origin: 'http://localhost',
+    isDev: true,
+  }),
+}));
+
+// IMPORTANT: hooks use alias imports (@/...) for voice stack.
+// We mock the alias versions to prevent heavy engine initialization (OOM in CI/dev).
+vi.mock('@/services/voice/attentionEngine', () => ({
+  attentionEngine: hoistedMocks.attentionEngineMock,
+}));
+vi.mock('../services/voice/attentionEngine', () => ({
+  attentionEngine: hoistedMocks.attentionEngineMock,
+}));
+
+vi.mock('@/services/voice/wakeWordEngine', () => ({
+  wakeWordEngine: hoistedMocks.wakeWordEngineMock,
+}));
+vi.mock('../services/voice/wakeWordEngine', () => ({
+  wakeWordEngine: hoistedMocks.wakeWordEngineMock,
+}));
+
+vi.mock('@/services/voice/adaptiveThresholdEngine', () => ({
+  adaptiveThresholdEngine: {
+    setEnabled: vi.fn(),
+    setSensitivity: vi.fn(),
+    recordDetection: vi.fn(),
+  },
+}));
+
+vi.mock('@/services/voice/interruptionController', () => ({
+  interruptionController: {
+    processPartialTranscript: vi.fn(),
+  },
+}));
+
+vi.mock('@/services/voice/fullDuplexOrchestrator', () => ({
+  fullDuplexOrchestrator: {
+    enable: vi.fn().mockResolvedValue(undefined),
+    disable: vi.fn().mockResolvedValue(undefined),
+    getState: vi.fn(() => ({ enabled: false })),
+    onEvent: vi.fn(() => () => undefined),
+    isSpeakingNow: vi.fn(() => false),
+    isListeningNow: vi.fn(() => false),
+    interrupt: vi.fn().mockResolvedValue(undefined),
+    injectInterruption: vi.fn().mockResolvedValue(undefined),
+  },
+}));
+
+vi.mock('@/services/voice/haloEngine', () => ({
+  haloEngine: {
+    setEnabled: vi.fn(),
+    sync: vi.fn(),
+  },
+}));
+
 // Mock voiceService
 vi.mock('../services/api', () => ({
   voiceService: {
@@ -47,8 +186,24 @@ vi.mock('../services/api', () => ({
   },
 }));
 
+vi.mock('@/services/api', () => ({
+  voiceService: {
+    startRecording: vi.fn().mockResolvedValue({}),
+    stopRecording: vi.fn().mockResolvedValue({ transcript: 'test transcript' }),
+    cancelRecording: vi.fn().mockResolvedValue({}),
+  },
+}));
+
 // Mock hybridTTS
 vi.mock('../services/tts/hybridTTS', () => ({
+  hybridTTS: {
+    speak: vi.fn().mockResolvedValue({}),
+    stop: vi.fn().mockResolvedValue({}),
+    getStatus: vi.fn().mockResolvedValue({ available: true }),
+  },
+}));
+
+vi.mock('@/services/tts/hybridTTS', () => ({
   hybridTTS: {
     speak: vi.fn().mockResolvedValue({}),
     stop: vi.fn().mockResolvedValue({}),
@@ -67,8 +222,24 @@ vi.mock('../services/voice/voiceRouter', () => ({
   },
 }));
 
+vi.mock('@/services/voice/voiceRouter', () => ({
+  voiceRouter: {
+    processVoiceTurn: vi.fn().mockResolvedValue({
+      success: true,
+      duration: 1000,
+    }),
+    abort: vi.fn().mockResolvedValue({}),
+  },
+}));
+
 // Mock useChat
 vi.mock('../hooks/useChat', () => ({
+  useChat: () => ({
+    sendMessage: vi.fn().mockResolvedValue({ content: 'test response' }),
+  }),
+}));
+
+vi.mock('@/hooks/useChat', () => ({
   useChat: () => ({
     sendMessage: vi.fn().mockResolvedValue({ content: 'test response' }),
   }),
@@ -81,13 +252,22 @@ vi.mock('../hooks/useChat', () => ({
  */
 
 describe('useActiveListening', () => {
+  let consoleLogSpy: ReturnType<typeof vi.spyOn> | null = null;
+
   beforeEach(() => {
     vi.clearAllMocks();
-    attentionEngine.reset();
+    consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => undefined);
+    act(() => {
+      attentionEngine.reset();
+    });
   });
 
   afterEach(() => {
-    attentionEngine.reset();
+    act(() => {
+      attentionEngine.reset();
+    });
+    consoleLogSpy?.mockRestore();
+    consoleLogSpy = null;
   });
 
   describe('Initialization', () => {

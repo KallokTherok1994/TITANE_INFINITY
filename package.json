@@ -26,7 +26,7 @@
     "test:watch": "cross-env NODE_OPTIONS='--max-old-space-size=12288' vitest --watch",
     "test:coverage": "cross-env NODE_OPTIONS='--max-old-space-size=12288' vitest run --coverage",
     "test:e2e": "playwright test",
-    "test:rust": "cd src-tauri && cargo test",
+    "test:rust": "mkdir -p dist && cd src-tauri && cargo test",
     "test:tauri": "npm run test:rust",
     "test:architecture": "cross-env NODE_OPTIONS='--max-old-space-size=8192' vitest run src/__tests__/architecture",
     "test:compliance": "cross-env NODE_OPTIONS='--max-old-space-size=8192' vitest run src/__tests__/compliance",

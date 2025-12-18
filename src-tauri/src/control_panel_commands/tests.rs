@@ -225,7 +225,6 @@ mod control_panel_tests {
         assert!(stats.total_size > 0, "Total size should be positive");
         // ✅ Phase 2: Allow used > total in edge cases (memory pressure, cache)
         // Just verify both values are reasonable
-        assert!(stats.used_size >= 0, "Used size should be non-negative");
         if stats.used_size > stats.total_size {
             eprintln!(
                 "⚠️  Warning: used_size ({}) > total_size ({}) - memory pressure detected",

@@ -6,6 +6,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { renderHook, act, waitFor } from '@/test-utils';
 import { useChat } from '../hooks/useChat';
+import { chatService } from '../services/api';
+import * as experienceService from '../services/experienceService';
 import type { ChatMode } from '../services/ai';
 import type { AIMessage } from '../services/ai/types';
 
@@ -86,11 +88,22 @@ const mockModules = vi.hoisted(() => {
   } as const;
 });
 
+let sendMessageLegacySpy: ReturnType<typeof vi.spyOn>;
+let awardExperienceSpy: ReturnType<typeof vi.spyOn>;
+
 vi.mock('../hooks/useChatCore', () => ({
   useChatCore: mockModules.useChatCoreMock,
 }));
 
+vi.mock('@hooks/useChatCore', () => ({
+  useChatCore: mockModules.useChatCoreMock,
+}));
+
 vi.mock('../hooks/useChatMemory', () => ({
+  useChatMemory: mockModules.useChatMemoryMock,
+}));
+
+vi.mock('@hooks/useChatMemory', () => ({
   useChatMemory: mockModules.useChatMemoryMock,
 }));
 
@@ -115,6 +128,32 @@ vi.mock('../services/tts/hybridTTS', () => ({
   },
 }));
 
+vi.mock('@/modules/camera/cameraChatIntegration', () => ({
+  handleCameraInChat: vi.fn(async () => ({ handled: false })),
+}));
+
+vi.mock('@/modules/devSudo/devSudoIntegration', () => ({
+  handleDevSudoInChat: vi.fn(async () => ({ handled: false })),
+}));
+
+vi.mock('@/services/ai/providers/openai', () => ({
+  openaiProvider: {
+    isAvailable: vi.fn(async () => false),
+  },
+}));
+
+vi.mock('@/services/ai/providers/gemini', () => ({
+  geminiProvider: {
+    isAvailable: vi.fn(async () => false),
+  },
+}));
+
+vi.mock('@/services/ai/providers/claude', () => ({
+  claudeProvider: {
+    isAvailable: vi.fn(async () => false),
+  },
+}));
+
 vi.mock('../services/errorTracker', () => ({
   errorTracker: {
     track: vi.fn(),
@@ -126,6 +165,19 @@ vi.mock('../services/errorTracker', () => ({
 describe('Chat IA - Stabilité des Messages (FIX v15.1)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    sendMessageLegacySpy = vi
+      .spyOn(chatService, 'sendMessageLegacy')
+      .mockImplementation(async () => ({
+        content: 'Réponse IA (mock)',
+        provider: 'gemini',
+        latencyMs: 1,
+        metadata: {},
+      }));
+
+    awardExperienceSpy = vi
+      .spyOn(experienceService, 'awardExperience')
+      .mockResolvedValue(undefined);
+
     resetCurrentMode();
     memoryMessages.length = 0;
     memoryStats.count = 0;
@@ -238,14 +290,41 @@ describe('Chat IA - Stabilité des Messages (FIX v15.1)', () => {
 
     expect(result.current.isLoading).toBe(false);
 
+    // Bloquer la réponse backend pour rendre l'état loading observable.
+    let resolveBackend: ((value: unknown) => void) | null = null;
+    sendMessageLegacySpy.mockImplementationOnce(
+      async () =>
+        await new Promise(resolve => {
+          resolveBackend = resolve;
+        })
+    );
+
+    let sendPromise: Promise<unknown> | null = null;
+
     // Envoyer message (ne pas await)
-    act(() => {
-      void result.current.sendMessage('Test loading');
+    await act(async () => {
+      sendPromise = result.current.sendMessage('Test loading');
+      // Laisser la microtask queue avancer pour que setIsLoading(true) prenne effet.
+      await Promise.resolve();
     });
 
     // isLoading doit passer à true
     await waitFor(() => {
       expect(result.current.isLoading).toBe(true);
+    });
+
+    // Débloquer la réponse et attendre la fin du cycle
+    act(() => {
+      resolveBackend?.({
+        content: 'Réponse IA (mock)',
+        provider: 'gemini',
+        latencyMs: 25,
+        metadata: {},
+      });
+    });
+
+    await act(async () => {
+      await sendPromise;
     });
 
     // Puis revenir à false après réponse
@@ -260,7 +339,9 @@ describe('Chat IA - Stabilité des Messages (FIX v15.1)', () => {
   });
 
   it('SCÉNARIO E: Erreur IA ne fait pas crasher', async () => {
-    // Mock d'erreur dans generate
+    // Simuler une erreur backend ET une erreur de fallback core
+    // pour forcer le chemin d'auto-récupération (catch global du pipeline).
+    sendMessageLegacySpy.mockRejectedValueOnce(new Error('Provider unavailable'));
     coreGenerateMock.mockRejectedValueOnce(new Error('Provider unavailable'));
 
     const { result } = renderHook(() => useChat());
