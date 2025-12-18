@@ -192,12 +192,18 @@ Success Rate: 3/3 (100%)
 **Debian/Ubuntu**:
 
 ```bash
+DEB="./src-tauri/target/release/bundle/deb/TITANE-Infinity_24.3.0_amd64.deb"
+
 # 1. Vérifier checksum
-sha256sum TITANE-Infinity_24.3.0_amd64.deb
+sha256sum "$DEB"
 # Doit correspondre: 456d650ca7f78ddcece52bf994ad0ca42c32608ff92ee80e418834d41be1860d
 
 # 2. Installer
-sudo dpkg -i TITANE-Infinity_24.3.0_amd64.deb
+# Recommandé (résout automatiquement les dépendances)
+sudo apt install "$DEB"
+
+# Alternative (si vous préférez dpkg)
+sudo dpkg -i "$DEB"
 sudo apt-get install -f  # Si dépendances
 ```
 

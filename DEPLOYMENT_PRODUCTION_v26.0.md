@@ -41,6 +41,38 @@ fcd1be14 - MobileNav + Grid improvements ← LATEST
 
 ## 🎯 OPTIONS DE DÉPLOIEMENT
 
+### Option 0: Desktop Linux (Tauri) — Package .deb (Debian/Ubuntu)
+
+Le package est généré par Tauri ici:
+
+```bash
+src-tauri/target/release/bundle/deb/TITANE-Infinity_24.3.0_amd64.deb
+```
+
+Vérifications (sans installation, sans sudo):
+
+```bash
+DEB="./src-tauri/target/release/bundle/deb/TITANE-Infinity_24.3.0_amd64.deb"
+dpkg-deb -I "$DEB" | sed -n '1,80p'
+dpkg-deb -c "$DEB" | sed -n '1,40p'
+```
+
+Installation recommandée (gère les dépendances automatiquement):
+
+```bash
+DEB="./src-tauri/target/release/bundle/deb/TITANE-Infinity_24.3.0_amd64.deb"
+sudo apt install "$DEB"
+```
+
+Si vous utilisez `dpkg` directement:
+
+```bash
+sudo dpkg -i "$DEB" || true
+sudo apt-get install -f
+```
+
+Note: un `dpkg -i TITANE-Infinity_24.3.0_amd64.deb` (sans chemin) échoue souvent avec un exit code 2 si vous n’êtes pas dans le bon dossier.
+
 ### Option 1: Serveur Personnel (Nginx/Apache) - Contrôle Total ⭐ RECOMMANDÉ
 
 **Prérequis:**
