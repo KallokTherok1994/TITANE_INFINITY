@@ -87,6 +87,20 @@ Post-push verification (clean working tree):
 - `npm run copilot-xs:test` ✅ PASS
 - “🔵 Build Titan-Stable” ✅ PASS
 
+## Production Packaging Evidence (Tauri)
+
+`npm run build:production` completed successfully on 2025-12-18 and produced the following bundles:
+
+| Artifact | Size (bytes) | SHA256 |
+|---|---:|---|
+| src-tauri/target/release/bundle/appimage/TITANE-Infinity_24.3.0_amd64.AppImage | 84945400 | 6d58bc3e273615ca43ee4712f5a01903c695ae6696ae7b1cccbf5212315f4dd8 |
+| src-tauri/target/release/bundle/deb/TITANE-Infinity_24.3.0_amd64.deb | 9206392 | 071143aa5c99d9d0e1ba8e269bca7308c67cc91b2baaf649d29e4a95ff49e77c |
+| src-tauri/target/release/bundle/rpm/TITANE-Infinity-24.3.0-1.x86_64.rpm | 9207643 | 0588ea1dc9f89c8a5d7e64ee14472c80513fe2cf945eb041c784937c3cf49da9 |
+| src-tauri/target/release/bundle/deb/Titan-Stable_24.2.0_amd64.deb | 9206086 | 745781d5bfba97d620d9e05bd7ec1998508444a62309d4cd7c602524a2070ca0 |
+
+### Packaging Note
+- Tauri bundler emitted: “`__TAURI_BUNDLE_TYPE variable not found in binary`”. This can affect the updater plugin; consider ensuring symbol stripping is disabled for release builds and that `tauri` crate / `tauri-cli` versions are aligned.
+
 ## Appendix — Evidence
 
 - Gates executed via VS Code tasks:
