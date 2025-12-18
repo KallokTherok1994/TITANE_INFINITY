@@ -23,6 +23,7 @@ import {
 } from 'react';
 import { secureInvoke } from '@/lib/security';
 import { listen } from '@tauri-apps/api/event';
+import { logger } from '@/lib/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -436,9 +437,9 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
       try {
         await secureInvoke('titan_persist_event', { event });
         lastPersistRef.current = Date.now();
-        console.log('[TitanState] ✅ Event persisté:', action.type);
+        logger.info('[TitanState] ✅ Event persisté:', action.type);
       } catch (error) {
-        console.error('[TitanState] ❌ Erreur persistence:', error);
+        logger.error('[TitanState] ❌ Erreur persistence:', error);
       }
     }
   }, []);
@@ -449,7 +450,7 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
       await secureInvoke('titan_persist_event', { event });
       lastPersistRef.current = Date.now();
     } catch (error) {
-      console.error('[TitanState] ❌ Erreur persistEvent:', error);
+      logger.error('[TitanState] ❌ Erreur persistEvent:', error);
     }
   }, []);
 
@@ -459,9 +460,9 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
       const stateJson = JSON.stringify(state);
       await secureInvoke('titan_force_snapshot', { stateJson });
       baseDispatch({ type: 'system/markClean' });
-      console.log('[TitanState] 📸 Snapshot forcé créé');
+      logger.info('[TitanState] 📸 Snapshot forcé créé');
     } catch (error) {
-      console.error('[TitanState] ❌ Erreur forceSnapshot:', error);
+      logger.error('[TitanState] ❌ Erreur forceSnapshot:', error);
     }
   }, [state]);
 
@@ -471,7 +472,7 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
       const report = await secureInvoke<{ is_valid: boolean }>('titan_check_integrity');
       return report?.is_valid ?? false;
     } catch (error) {
-      console.error('[TitanState] ❌ Erreur checkIntegrity:', error);
+      logger.error('[TitanState] ❌ Erreur checkIntegrity:', error);
       return false;
     }
   }, []);
@@ -482,7 +483,7 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
       try {
         return await secureInvoke<PersistenceStatus>('titan_get_persistence_status');
       } catch (error) {
-        console.error('[TitanState] ❌ Erreur getPersistenceStatus:', error);
+        logger.error('[TitanState] ❌ Erreur getPersistenceStatus:', error);
         return null;
       }
     }, []);
@@ -493,7 +494,7 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
       try {
         // Initialiser le moteur de persistence
         await secureInvoke('titan_persistence_init');
-        console.log('[TitanState] 🚀 Persistence initialisée');
+        logger.info('[TitanState] 🚀 Persistence initialisée');
 
         // Charger l'état sauvegardé
         const savedState = await secureInvoke<TitanState | null>('titan_load_state');
@@ -502,13 +503,13 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
             type: 'system/init',
             payload: { ...initialState, ...savedState },
           });
-          console.log('[TitanState] 📂 État restauré depuis persistence');
+          logger.info('[TitanState] 📂 État restauré depuis persistence');
         } else {
           baseDispatch({ type: 'system/init', payload: initialState });
-          console.log('[TitanState] 🆕 Nouvel état initialisé');
+          logger.info('[TitanState] 🆕 Nouvel état initialisé');
         }
       } catch (error) {
-        console.error('[TitanState] ❌ Erreur init:', error);
+        logger.error('[TitanState] ❌ Erreur init:', error);
         baseDispatch({ type: 'system/init', payload: initialState });
       }
     };
@@ -522,7 +523,7 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
 
     autoSaveTimerRef.current = setInterval(async () => {
       if (state.dirty) {
-        console.log('[TitanState] ⏰ Auto-save 30min...');
+        logger.info('[TitanState] ⏰ Auto-save 30min...');
         await forceSnapshot();
       }
     }, THIRTY_MINUTES);
@@ -539,7 +540,7 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
     const setupShutdownListener = async () => {
       try {
         const unlisten = await listen('tauri://close-requested', async () => {
-          console.log('[TitanState] 🛑 Fermeture détectée - sauvegarde finale...');
+          logger.info('[TitanState] 🛑 Fermeture détectée - sauvegarde finale...');
           if (state.dirty) {
             await forceSnapshot();
           }
@@ -548,7 +549,7 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
 
         return unlisten;
       } catch (error) {
-        console.warn("[TitanState] ⚠️ Impossible d'écouter close-requested:", error);
+        logger.warn("[TitanState] ⚠️ Impossible d'écouter close-requested:", error);
         return () => {};
       }
     };

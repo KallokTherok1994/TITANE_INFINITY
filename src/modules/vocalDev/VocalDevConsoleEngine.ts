@@ -34,6 +34,7 @@ import { voiceService as _voiceService } from '@/services/api';
 import { hybridTTS } from '@/services/tts/hybridTTS';
 import { autoHealEngine } from '@/services/ai/system';
 import type { AutoHealError as _AutoHealError } from '@/services/ai/autoHealEngine';
+import { logger } from '@/lib/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -908,7 +909,7 @@ export class VocalDevConsoleEngine {
 
     // Console output in dev mode
     if (this.config.debugMode) {
-      console.log(`[VocalDev:${level}]`, message, metadata || '');
+      logger.info(`[VocalDev:${level}]`, message, metadata || '');
     }
   }
 

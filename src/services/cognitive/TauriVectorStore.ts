@@ -290,7 +290,6 @@ class InMemoryVectorStore implements VectorStore {
   private entries = new Map<string, SemanticMemoryEntry>();
   private initialized = false;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   constructor(_dimensions: number) {}
 
   async initialize(): Promise<void> {
@@ -312,7 +311,6 @@ class InMemoryVectorStore implements VectorStore {
   async search(
     embedding: number[],
     limit: number,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _filters?: Record<string, unknown>
   ): Promise<SemanticMemoryResult[]> {
     if (!this.initialized) throw new Error('Store not initialized');
@@ -345,7 +343,6 @@ class InMemoryVectorStore implements VectorStore {
   }
 
   async deleteWhere(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _filters: Record<string, unknown>
   ): Promise<number> {
     if (!this.initialized) throw new Error('Store not initialized');
