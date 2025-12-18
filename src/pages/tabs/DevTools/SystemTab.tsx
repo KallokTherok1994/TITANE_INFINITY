@@ -9,9 +9,22 @@ import {
 } from '../../DevToolsLazy';
 import type { SystemStatus } from '../../../components/monitoring/SystemStatusCard';
 
+interface LivingEnginesState {
+  cognitiveLoad: number;
+  activeThreads: number;
+  rhythmScore: number;
+  glow: number;
+  [key: string]: unknown;
+}
+
+interface LivingEngines {
+  state: LivingEnginesState;
+  [key: string]: unknown;
+}
+
 interface SystemTabProps {
   systemStatus: SystemStatus;
-  livingEngines: any;
+  livingEngines: LivingEngines;
   moduleMetrics: Record<
     string,
     { value: number; label: string; status: 'stable' | 'active' | 'critical' }
