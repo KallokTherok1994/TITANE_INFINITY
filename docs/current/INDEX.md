@@ -25,10 +25,11 @@ docs/current/
 - [Audit Final](./audits/AUDIT_FINAL_v26.2_COMPLETE.md)
 
 ### Guides
-- [Quick Start Ubuntu](./guides/QUICKSTART_UBUNTU_24.04.md)
-- [Deployment Guide](./guides/DEPLOYMENT_GUIDE_v25.7.5.md)
+- [Quick Start Ubuntu](../../QUICKSTART_UBUNTU_24.04.md)
+- [Quick Start Chat IA v19.5.2](./guides/QUICK_START_CHAT_IA_v19.5.2.md)
 - [Multimodal Guide](./guides/MULTIMODAL_QUICK_START.md)
 - [Aura Quick Start](./guides/AURA_QUICK_START_GUIDE.md)
+- [Vocal README](./guides/VOCAL_README.md)
 
 ### Architecture
 - [Governance Map](./architecture/GOVERNANCE_MAP.md)

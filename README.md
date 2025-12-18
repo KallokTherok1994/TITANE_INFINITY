@@ -181,34 +181,30 @@ feature/* → dev → stable-runtime
 ## 📚 Documentation
 
 > **🎯 NEW: World-Class Documentation (200% Coverage - Dec 2025)**  
-> **Quick Navigation:** [Getting Started](docs/04_guides/GETTING_STARTED.md) • [Contributing](CONTRIBUTING.md) • [Master Index](docs/INDEX.md)
+> **Quick Navigation:** [Getting Started](docs/GETTING_STARTED.md) • [Contributing](CONTRIBUTING.md) • [Master Index](docs/INDEX.md)
 
 ### 🚀 Start Here (New to TITANE∞?)
 
 **Role-Based Quick Start:**
 
-- **First Time User:** [Getting Started Guide](docs/04_guides/GETTING_STARTED.md) → <2h to productivity
+- **First Time User:** [Getting Started Guide](docs/GETTING_STARTED.md) → <2h to productivity
 - **Want to Contribute:** [Contributing Guide](CONTRIBUTING.md) → Onboarding <2h with validation
-- **Need API Reference:** [API Index](docs/06_api/INDEX.md) → 14 modules, 100% coverage
-- **Strategic Overview:** [Strategic Vision](docs/00_core/STRATEGIC_VISION_POST_PHASE7.md) → Roadmap Phase 8-11
-- **Troubleshooting:** [Advanced Troubleshooting](docs/04_guides/advanced/TROUBLESHOOTING.md) → 10+ scenarios
+- **Need API Reference:** [API Reference v24.30](docs/API_REFERENCE_v24.30.md) → 14 modules, comprehensive coverage
 
 ### 📖 Complete Documentation Structure (50 Documents, ~24,300 Lines)
 
 #### Core Documentation (`docs/00_core/`)
 
 - **[Master INDEX](docs/INDEX.md)** — Navigation centrale (200% coverage achieved)
+- **[Getting Started](docs/GETTING_STARTED.md)** — <2h to first PR (validated)
 - **[Mission Complete Report](docs/00_core/MISSION_COMPLETE_REPORT.md)** — 0% → 200% transformation journey
-- **[Strategic Vision Post-Phase 7](docs/00_core/STRATEGIC_VISION_POST_PHASE7.md)** — Roadmap Phase 8-11
 - **[Handoff Guide](docs/00_core/HANDOFF_GUIDE_VALIDATION.md)** — Validation team comprehensive guide
 - **[Validation Campaign](docs/00_core/validation/)** — 4 validation tests ready to execute
 
 #### Essential Guides (`docs/04_guides/`)
 
-- **[Getting Started](docs/04_guides/GETTING_STARTED.md)** — <2h to first PR (validated)
-- **[Troubleshooting](docs/04_guides/advanced/TROUBLESHOOTING.md)** — 10 scenarios, 80% self-service target
-- **[Deployment](docs/04_guides/advanced/DEPLOYMENT.md)** — Production deployment <4h
-- **[Performance Optimization](docs/04_guides/advanced/PERFORMANCE_OPTIMIZATION.md)** — 20% improvement guides
+- **[Getting Started](docs/GETTING_STARTED.md)** — <2h to first PR (validated)
+- **[Deployment Guide](docs/DEPLOYMENT.md)** — Production deployment guide
 
 #### API Reference (`docs/06_api/` - 100% Coverage)
 
@@ -421,7 +417,6 @@ git push origin feature/my-awesome-feature
 
 - [Validation Campaign README](docs/00_core/validation/README.md)
 - [Handoff Guide](docs/00_core/HANDOFF_GUIDE_VALIDATION.md)
-- [Strategic Vision](docs/00_core/STRATEGIC_VISION_POST_PHASE7.md)
 
 ### 🚀 Phase 8-11: Post-Validation (Conditional)
 
@@ -500,9 +495,8 @@ git push origin feature/my-awesome-feature
 **Quick Links:**
 
 - 📖 **Documentation:** [Master Index](docs/INDEX.md) — Complete navigation (200% coverage)
-- 🚀 **Getting Started:** [Quick Start Guide](docs/04_guides/GETTING_STARTED.md) — <2h to productivity
-- 🐛 **Troubleshooting:** [Advanced Guide](docs/04_guides/advanced/TROUBLESHOOTING.md) — 10 scenarios
-- 🔧 **API Reference:** [API Index](docs/06_api/INDEX.md) — 14 modules, 100% coverage
+- 🚀 **Getting Started:** [Quick Start Guide](docs/GETTING_STARTED.md) — <2h to productivity
+- **API Reference:** [API Reference v24.30](docs/API_REFERENCE_v24.30.md) — 14 modules, comprehensive coverage
 - 💬 **Contributing:** [CONTRIBUTING.md](CONTRIBUTING.md) — <2h onboarding
 
 ### 🐛 Report Issues
@@ -516,9 +510,8 @@ git push origin feature/my-awesome-feature
 **Before Reporting:**
 
 1. ✅ Search [existing issues](https://github.com/KallokTherok1994/TITANE_INFINITY/issues)
-2. ✅ Check [TROUBLESHOOTING.md](docs/04_guides/advanced/TROUBLESHOOTING.md)
-3. ✅ Verify you're on latest version (v24.2.0)
-4. ✅ Provide reproduction steps + environment details
+2. ✅ Verify you're on latest version (v24.2.0)
+3. ✅ Provide reproduction steps + environment details
 
 ### 💡 Feature Requests
 
@@ -526,11 +519,10 @@ git push origin feature/my-awesome-feature
 
 - Current Phase: **VALIDATION PAUSE** (before Phase 8+)
 - Next Phases: i18n → Interactive docs → Auto-sync → Advanced features
-- See: [Strategic Vision](docs/00_core/STRATEGIC_VISION_POST_PHASE7.md)
 
 **How to Propose:**
 
-1. Check [roadmap](docs/00_core/STRATEGIC_VISION_POST_PHASE7.md) for planned features
+1. Check roadmap (Phase 8-11 section above) for planned features
 2. Use [Feature Request Template](.github/ISSUE_TEMPLATE/feature_request.md)
 3. Provide use case + impact estimation
 4. Community votes on features via GitHub reactions
