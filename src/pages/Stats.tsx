@@ -19,7 +19,6 @@ import { ModuleCard } from '../components/ModuleCard';
 import { useEngineSubscription } from '../hooks/useEngineSubscription';
 import { useResponsive } from '@/hooks/useResponsive';
 import { extractNumber } from '../utils/dataUtils';
-import { invoke } from '@tauri-apps/api/core';
 import '../pages/ModulePages.css';
 
 // ─────────────────────────────────────────────────────────────────

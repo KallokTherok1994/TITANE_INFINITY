@@ -5,7 +5,6 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
 import { logger } from '@/lib/logger';
 import type {
   AgentConfig,

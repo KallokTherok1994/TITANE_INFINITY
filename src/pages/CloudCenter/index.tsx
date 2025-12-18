@@ -7,7 +7,6 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { invoke } from '@tauri-apps/api/core';
 import VaultStatus from './VaultStatus';
 import SyncConfig from './SyncConfig';
 import SyncLogs from './SyncLogs';

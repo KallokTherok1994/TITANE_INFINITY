@@ -12,7 +12,6 @@
 
 import React, { useState, useCallback } from 'react';
 import { colors, spacing } from '@themes/tokens';
-import { invoke } from '@tauri-apps/api/core';
 import './ModeBuilder.css';
 
 export interface CustomMode {

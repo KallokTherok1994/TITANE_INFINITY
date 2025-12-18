@@ -5,7 +5,7 @@
  * Remplace SQLiteVectorStore pour le mode navigateur
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import type {
   SemanticMemoryEntry,
   SemanticMemoryResult,
@@ -130,7 +130,7 @@ export class TauriVectorStore implements VectorStore {
   async add(entry: SemanticMemoryEntry): Promise<void> {
     if (!this.storeId) throw new Error('Store not initialized');
 
-    await invoke('vector_store_insert', {
+    await secureInvoke('vector_store_insert', {
       storeId: this.storeId,
       entry: this.toVectorEntry(entry),
     });
@@ -208,7 +208,7 @@ export class TauriVectorStore implements VectorStore {
     if (updates.access_count !== undefined)
       updateData.access_count = updates.access_count;
 
-    await invoke('vector_store_update', {
+    await secureInvoke('vector_store_update', {
       storeId: this.storeId,
       id,
       updates: updateData,
@@ -221,7 +221,7 @@ export class TauriVectorStore implements VectorStore {
   async delete(id: string): Promise<void> {
     if (!this.storeId) throw new Error('Store not initialized');
 
-    await invoke('vector_store_delete', {
+    await secureInvoke('vector_store_delete', {
       storeId: this.storeId,
       id,
     });

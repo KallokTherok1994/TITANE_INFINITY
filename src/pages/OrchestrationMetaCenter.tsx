@@ -9,7 +9,7 @@
  */
 
 import React, { useState, useEffect, useMemo, useCallback, memo } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
 import { useSingularityStateSafe } from '@/hooks/useSingularityStateSafe';
@@ -798,7 +798,7 @@ const OrchestrationMetaCenterContent: React.FC = () => {
   const handleModeChange = useCallback(
     async (mode: string) => {
       try {
-        await invoke('orchestrator_set_mode', { mode });
+        await secureInvoke('orchestrator_set_mode', { mode });
         await loadAllState();
       } catch (err) {
         setError(err instanceof Error ? err.message : String(err));
@@ -809,7 +809,7 @@ const OrchestrationMetaCenterContent: React.FC = () => {
 
   const handleRunCycle = useCallback(async () => {
     try {
-      await invoke('orchestrator_run_cycle');
+      await secureInvoke('orchestrator_run_cycle');
       await loadAllState();
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));

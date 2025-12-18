@@ -4,7 +4,7 @@
  */
 
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 export interface UseControlPanelSectionOptions<T> {
   loadCommand: string;
@@ -68,7 +68,7 @@ export function useControlPanelSection<T>({
     setSaved(false);
 
     try {
-      await invoke(saveCommand, { [saveParamKey]: config });
+      await secureInvoke(saveCommand, { [saveParamKey]: config });
       setOriginalConfig(config);
       setSaved(true);
 

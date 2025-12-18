@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { CloudStatus } from './types';
 
 interface BackupInfo {
@@ -80,7 +80,7 @@ const VaultStatus: React.FC<VaultStatusProps> = ({ status, onRefresh }) => {
     if (!confirm('Restaurer cette sauvegarde ? Les données actuelles seront écrasées.'))
       return;
     try {
-      await invoke('cloud_restore_vault', { backupPath: path });
+      await secureInvoke('cloud_restore_vault', { backupPath: path });
       onRefresh();
     } catch (e) {
       console.error('[VaultStatus] Restore failed:', e);

@@ -10,7 +10,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { logger } from '@/lib/logger';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
@@ -379,7 +379,7 @@ const IdentityCenterContent: React.FC = () => {
 
   const handleModeChange = async (modeType: string) => {
     try {
-      await invoke('identity_set_mode', { mode: modeType });
+      await secureInvoke('identity_set_mode', { mode: modeType });
       const newMode = availableModes.find(m => m.type === modeType);
       if (newMode) setCurrentMode(newMode);
     } catch (err) {
@@ -393,7 +393,7 @@ const IdentityCenterContent: React.FC = () => {
 
   const handleVoiceChange = async (voiceId: string) => {
     try {
-      await invoke('identity_set_voice_profile', { profileId: voiceId });
+      await secureInvoke('identity_set_voice_profile', { profileId: voiceId });
       const newVoice = voiceProfiles.find(v => v.id === voiceId);
       if (newVoice) {
         setActiveVoice(newVoice);
@@ -414,9 +414,9 @@ const IdentityCenterContent: React.FC = () => {
 
     try {
       if (rule.is_active) {
-        await invoke('identity_disable_rule', { ruleId });
+        await secureInvoke('identity_disable_rule', { ruleId });
       } else {
-        await invoke('identity_enable_rule', { ruleId });
+        await secureInvoke('identity_enable_rule', { ruleId });
       }
       setRules(rules.map(r => (r.id === ruleId ? { ...r, is_active: !r.is_active } : r)));
     } catch (err) {

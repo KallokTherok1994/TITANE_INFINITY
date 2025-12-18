@@ -14,7 +14,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import type {
   UnifiedMemoryEntry,
   UnifiedMemoryResult,
@@ -89,7 +89,7 @@ export class VectorStoreClient implements IVectorStore {
     this.ensureInitialized();
 
     try {
-      await invoke('vector_store_insert', {
+      await secureInvoke('vector_store_insert', {
         storeId: this.storeId,
         entry: this.toBackendEntry(entry),
       });
@@ -239,7 +239,7 @@ export class VectorStoreClient implements IVectorStore {
     this.ensureInitialized();
 
     try {
-      await invoke('vector_store_update', {
+      await secureInvoke('vector_store_update', {
         storeId: this.storeId,
         id,
         updates,
@@ -257,7 +257,7 @@ export class VectorStoreClient implements IVectorStore {
     this.ensureInitialized();
 
     try {
-      await invoke('vector_store_delete', {
+      await secureInvoke('vector_store_delete', {
         storeId: this.storeId,
         id,
       });
@@ -456,7 +456,7 @@ export class VectorStoreClient implements IVectorStore {
   async deleteWhere(_filters: Record<string, unknown>): Promise<number> {
     this.ensureInitialized();
     // Implementation: Backend Tauri command for filtered vector deletion
-    // - Command: await invoke('vector_store_delete_where', {filters})
+    // - Command: await secureInvoke('vector_store_delete_where', {filters})
     // - Rust: #[command] pub async fn vector_store_delete_where(filters: HashMap<String, Value>)
     // - Query: Build SQL WHERE clause from filters: {user_id: "123", age_days: ">30"}
     // - Delete: Execute DELETE FROM vectors WHERE metadata->>'user_id' = '123'
@@ -473,7 +473,7 @@ export class VectorStoreClient implements IVectorStore {
   async cleanup(): Promise<void> {
     this.ensureInitialized();
     // Implementation: Automated cleanup of stale vector entries
-    // - Command: await invoke('vector_store_cleanup')
+    // - Command: await secureInvoke('vector_store_cleanup')
     // - Rust: #[command] pub async fn vector_store_cleanup() -> Result<CleanupStats, String>
     // - Criteria: Delete entries older than 90 days with access_count == 0
     // - Orphans: Remove vectors without corresponding memory entries (LEFT JOIN NULL)

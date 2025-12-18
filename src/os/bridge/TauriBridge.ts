@@ -3,7 +3,6 @@
  * Pont de communication avec le backend Rust
  */
 
-import { invoke } from '@tauri-apps/api/core';
 import { listen, emit as tauriEmit, type UnlistenFn } from '@tauri-apps/api/event';
 import type { BridgeState, TauriCommand } from '../types';
 
@@ -29,7 +28,7 @@ export class TauriBridge {
   async init(): Promise<void> {
     try {
       // Tester la connexion avec un ping
-      await this.invoke('ping');
+      await this.secureInvoke('ping');
       this.state.connected = true;
       this.state.lastSync = Date.now();
     } catch (error) {
@@ -159,7 +158,7 @@ export class TauriBridge {
    * Batch multiple commandes
    */
   async batch<R = unknown>(commands: Array<TauriCommand>): Promise<R[]> {
-    return Promise.all(commands.map(cmd => this.invoke(cmd.name, cmd.args))) as Promise<
+    return Promise.all(commands.map(cmd => this.secureInvoke(cmd.name, cmd.args))) as Promise<
       R[]
     >;
   }
@@ -169,7 +168,7 @@ export class TauriBridge {
    */
   async checkConnection(): Promise<boolean> {
     try {
-      await this.invoke('ping');
+      await this.secureInvoke('ping');
       this.state.connected = true;
       return true;
     } catch {

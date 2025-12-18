@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
 import { useSingularityStateSafe } from '@/hooks/useSingularityStateSafe';
@@ -233,7 +233,7 @@ const HyperCenterContent: React.FC = () => {
 
   const handleModeChange = async (mode: string) => {
     try {
-      await invoke('hyper_set_mode', { mode });
+      await secureInvoke('hyper_set_mode', { mode });
       await loadState();
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));

@@ -4,7 +4,6 @@
  * Service API pour le Numeric Twin Engine
  */
 
-import { invoke } from '@tauri-apps/api/core';
 import type {
   TwinState,
   FusionIndex,

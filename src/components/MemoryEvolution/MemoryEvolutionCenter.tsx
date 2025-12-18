@@ -7,7 +7,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { logger } from '@/lib/logger';
 import './MemoryEvolutionCenter.css';
 
@@ -511,29 +511,29 @@ export const MemoryEvolutionCenter: React.FC = () => {
       let result;
       switch (action) {
         case 'parse':
-          result = await invoke('memory_parse');
+          result = await secureInvoke('memory_parse');
           break;
         case 'synthesize':
-          result = await invoke('memory_synthesize');
+          result = await secureInvoke('memory_synthesize');
           break;
         case 'cluster':
-          result = await invoke('memory_cluster');
+          result = await secureInvoke('memory_cluster');
           await fetchClusters();
           break;
         case 'compress':
-          result = await invoke('memory_compress');
+          result = await secureInvoke('memory_compress');
           break;
         case 'patterns':
-          result = await invoke('memory_extract_patterns');
+          result = await secureInvoke('memory_extract_patterns');
           break;
         case 'stability':
-          result = await invoke('memory_check_and_repair');
+          result = await secureInvoke('memory_check_and_repair');
           break;
         case 'grow':
-          result = await invoke('memory_grow');
+          result = await secureInvoke('memory_grow');
           break;
         case 'backup':
-          result = await invoke('memory_create_backup');
+          result = await secureInvoke('memory_create_backup');
           break;
         case 'full':
           result = await invoke<EvolutionResult>('memory_evolve_full', {

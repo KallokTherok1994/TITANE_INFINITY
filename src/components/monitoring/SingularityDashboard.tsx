@@ -20,7 +20,6 @@
 
 import React, { useState, useEffect, useCallback, memo } from 'react';
 import { useSingularity } from '@/hooks/useSingularity';
-import { invoke } from '@tauri-apps/api/core';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES

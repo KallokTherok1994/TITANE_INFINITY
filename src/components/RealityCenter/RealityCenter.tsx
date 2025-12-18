@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import './RealityCenter.css';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -253,7 +253,7 @@ export const RealityCenter: React.FC = () => {
 
   const handleRenderModeChange = async (mode: string) => {
     try {
-      await invoke('reality_set_render_config', { mode });
+      await secureInvoke('reality_set_render_config', { mode });
       await loadState();
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
@@ -262,7 +262,7 @@ export const RealityCenter: React.FC = () => {
 
   const handleTogglePhysics = async (enabled: boolean) => {
     try {
-      await invoke('reality_toggle_physics', { enabled });
+      await secureInvoke('reality_toggle_physics', { enabled });
       await loadState();
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
@@ -271,7 +271,7 @@ export const RealityCenter: React.FC = () => {
 
   const handleCreateEntity = async (params: CreateEntityParams) => {
     try {
-      await invoke('reality_add_entity', { params });
+      await secureInvoke('reality_add_entity', { params });
       await loadState();
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
@@ -396,7 +396,7 @@ export const RealityCenter: React.FC = () => {
                   label="Antialiasing"
                   checked={state.render_config.antialiasing}
                   onChange={v =>
-                    invoke('reality_set_render_config', { antialiasing: v }).then(
+                    secureInvoke('reality_set_render_config', { antialiasing: v }).then(
                       loadState
                     )
                   }
@@ -405,7 +405,7 @@ export const RealityCenter: React.FC = () => {
                   label="Shadows"
                   checked={state.render_config.shadows}
                   onChange={v =>
-                    invoke('reality_set_render_config', { shadows: v }).then(loadState)
+                    secureInvoke('reality_set_render_config', { shadows: v }).then(loadState)
                   }
                 />
                 <ToggleSwitch

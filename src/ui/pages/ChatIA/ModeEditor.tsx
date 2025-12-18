@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { InstructionMode, instructionModeManager } from './InstructionModeManager';
-import { invoke } from '@tauri-apps/api/core';
 import { useUIStore } from '../../../stores/uiStore';
 import './ModeEditor.css';
 

@@ -4,7 +4,6 @@
  */
 
 import React, { useState, useEffect, lazy, Suspense } from 'react';
-import { invoke } from '@tauri-apps/api/core';
 import './MetricsDisplay.css';
 
 // YOLO OPT-2: Lazy-load Chart.js (-175 KB gzip)
