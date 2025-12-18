@@ -646,13 +646,15 @@ Format: [Audit complet] + [Réponse utilisateur]
               if (traceId) {
                 await cognitiveOmega.logPhase(traceId, 'auto_correction', {
                   applied: true,
-                  correction_type: (correctionResult.correction as CorrectionInfo)?.correction_type,
+                  correction_type: (correctionResult.correction as CorrectionInfo)
+                    ?.correction_type,
                   confidence: (correctionResult.correction as CorrectionInfo)?.confidence,
                 });
               }
 
               logger.info('Response auto-corrected for consistency', {
-                correctionType: (correctionResult.correction as CorrectionInfo)?.correction_type,
+                correctionType: (correctionResult.correction as CorrectionInfo)
+                  ?.correction_type,
                 confidence: (correctionResult.correction as CorrectionInfo)?.confidence,
               });
             }
