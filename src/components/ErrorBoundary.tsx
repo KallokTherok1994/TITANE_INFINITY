@@ -71,7 +71,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
         onError(error, errorInfo);
       } catch (callbackError) {
         logger.error(
-          'onError callback failed&apos;,
+          'onError callback failed',
           { component: 'ErrorBoundary', context },
           callbackError as Error
         );

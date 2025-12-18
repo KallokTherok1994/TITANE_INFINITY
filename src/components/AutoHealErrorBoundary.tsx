@@ -34,7 +34,7 @@ export class AutoHealErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     logger.error(
-      'Error captured, initiating auto-heal&apos;,
+      'Error captured, initiating auto-heal',
       {
         component: 'AutoHealErrorBoundary',
         action: 'componentDidCatch',
