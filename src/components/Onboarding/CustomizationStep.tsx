@@ -28,7 +28,7 @@ const ThemeOption: React.FC<ThemeOptionProps> = ({
   void value;
   return (
     <motion.div
-      className={`theme-option ${selected ? 'selected' : ''}`}
+      className={`theme-option ${selected ? 'selected&apos; : ''}`}
       onClick={onClick}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
@@ -63,12 +63,12 @@ export const CustomizationStep: React.FC<CustomizationStepProps> = ({
         animate={{ opacity: 1 }}
         transition={{ delay: 0.1 }}
       >
-        Configurez l'application selon vos préférences
+        Configurez l&apos;application selon vos préférences
       </motion.p>
 
       {/* Sélection du thème */}
       <div className="preference-section">
-        <label className="preference-label">Thème d'interface</label>
+        <label className="preference-label">Thème d&apos;interface</label>
         <div className="theme-selector">
           <ThemeOption
             value="light"
@@ -97,7 +97,7 @@ export const CustomizationStep: React.FC<CustomizationStepProps> = ({
       {/* Sélection de la langue */}
       <div className="preference-section">
         <label className="preference-label" htmlFor="language-select">
-          Langue de l'interface
+          Langue de l&apos;interface
         </label>
         <select
           id="language-select"
@@ -124,7 +124,7 @@ export const CustomizationStep: React.FC<CustomizationStepProps> = ({
             }
           />
           <span className="checkbox-text">
-            <strong>Envoyer des statistiques d'utilisation anonymes</strong>
+            <strong>Envoyer des statistiques d&apos;utilisation anonymes</strong>
             <br />
             <small>
               Aide à améliorer TITANE∞ en partageant des données anonymisées (aucune
@@ -142,7 +142,7 @@ export const CustomizationStep: React.FC<CustomizationStepProps> = ({
       >
         <p>
           💡 <strong>Note :</strong> Vous pourrez modifier ces paramètres à tout moment
-          dans les réglages de l'application.
+          dans les réglages de l&apos;application.
         </p>
       </motion.div>
     </div>

@@ -55,7 +55,7 @@ export interface RenderOptions {
 
 /**
  * Custom render function that includes all providers
- * Use this instead of @testing-library/react's render
+ * Use this instead of @testing-library/react&apos;s render
  */
 export function renderWithProviders(
   ui: React.ReactElement,

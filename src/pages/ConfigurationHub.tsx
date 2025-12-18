@@ -203,8 +203,8 @@ export const ConfigurationHub: React.FC = () => {
   };
 
   const handleImport = async () => {
-    // For now, we'll use a prompt to get the file path
-    // In a real app, you'd use a file picker dialog
+    // For now, we&apos;ll use a prompt to get the file path
+    // In a real app, you&apos;d use a file picker dialog
     const filePath = prompt('Entrez le chemin du fichier JSON à importer:');
 
     if (!filePath) {

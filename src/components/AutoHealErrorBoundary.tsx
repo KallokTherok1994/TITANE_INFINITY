@@ -34,7 +34,7 @@ export class AutoHealErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     logger.error(
-      'Error captured, initiating auto-heal',
+      'Error captured, initiating auto-heal&apos;,
       {
         component: 'AutoHealErrorBoundary',
         action: 'componentDidCatch',
@@ -72,10 +72,10 @@ export class AutoHealErrorBoundary extends Component<Props, State> {
       // Étape 4: Reload (géré par errorHandler.handleError)
     } catch (err) {
       logger.error(
-        'Auto-heal process failed',
+        'Auto-heal process failed&apos;,
         {
           component: 'AutoHealErrorBoundary',
-          action: 'performAutoHeal',
+          action: 'performAutoHeal&apos;,
         },
         err as Error
       );
@@ -137,7 +137,7 @@ export class AutoHealErrorBoundary extends Component<Props, State> {
                 )}
                 <div className="error-actions">
                   <button onClick={this.handleManualReload} className="btn-primary">
-                    🔄 Recharger l'application
+                    🔄 Recharger l&apos;application
                   </button>
                   <button onClick={this.handleReset} className="btn-secondary">
                     ↩️ Réessayer

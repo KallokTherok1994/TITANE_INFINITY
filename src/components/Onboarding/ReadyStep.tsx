@@ -57,7 +57,7 @@ export const ReadyStep: React.FC = () => {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.4 }}
       >
-        TITANE∞ est configuré et prêt à l'emploi.
+        TITANE∞ est configuré et prêt à l&apos;emploi.
         <br />
         Vous pouvez commencer à discuter dès maintenant.
       </motion.p>

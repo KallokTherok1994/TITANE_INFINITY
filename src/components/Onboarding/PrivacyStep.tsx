@@ -48,7 +48,7 @@ export const PrivacyStep: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
-        Votre Vie Privée d'Abord
+        Votre Vie Privée d&apos;Abord
       </motion.h2>
 
       <motion.p

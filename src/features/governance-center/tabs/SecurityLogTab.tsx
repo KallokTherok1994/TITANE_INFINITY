@@ -107,7 +107,7 @@ export const SecurityLogTab: React.FC<SecurityLogTabProps> = ({
 
   const handleExport = async (format: 'json' | 'csv') => {
     await onExportLog(format);
-    // IMPLEMENTATION: Download exported file to user's system
+    // IMPLEMENTATION: Download exported file to user&apos;s system
     // 1. Format data: onExportLog returns formatted string (JSON or CSV)
     // 2. Create blob: const blob = new Blob([data], { type: 'application/json' or 'text/csv' })
     // 3. Download: const url = URL.createObjectURL(blob); anchor.download = `security_log_${Date.now()}.${format}`

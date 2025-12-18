@@ -404,7 +404,7 @@ describe('GovernancePanel', () => {
     const instance = UIIntegrityChecker.getInstance();
     const runCheckSpy = vi.spyOn(instance, 'runCheck');
 
-    // With fake timers enabled, `waitFor` polling won't progress unless timers advance.
+    // With fake timers enabled, `waitFor` polling won&apos;t progress unless timers advance.
     // Wrap initial render + effect flush in `act` to avoid React warnings.
     let unmount: (() => void) | null = null;
     await act(async () => {

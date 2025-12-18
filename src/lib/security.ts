@@ -827,6 +827,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'vector_store_get',
   'vector_store_search',
   'vector_store_stats',
+  'vector_store_get_stats', // Alias for vector_store_stats
 
   // ═══════════════════════════════════════════════════════════════
   // WHISPER STREAMING (v24.4+)

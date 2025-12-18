@@ -83,7 +83,7 @@ export const ProjectsPage = memo(function ProjectsPage() {
 
   const handleOpenChat = useCallback((_projectId: string) => {
     // Implementation: Router navigation with project context
-    // - Router: Use React Router's navigate('/chat', {state: {projectId}})
+    // - Router: Use React Router&apos;s navigate('/chat', {state: {projectId}})
     // - Alternative: URL params navigate(`/chat?project=${projectId}`)
     // - Context: Pass project data via ChatContext.setActiveProject(project)
     // - Persistence: Save last opened project to localStorage for restore

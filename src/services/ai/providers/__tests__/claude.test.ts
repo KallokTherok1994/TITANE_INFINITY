@@ -30,7 +30,7 @@ describe('Claude Provider', () => {
       const result = await claudeProvider.isAvailable();
 
       expect(result).toBe(true);
-      expect(invoke).toHaveBeenCalledWith('get_anthropic_key_status');
+      expect(secureInvoke).toHaveBeenCalledWith('get_anthropic_key_status');
     });
 
     it("devrait retourner false si la clé n'est pas configurée", async () => {
@@ -86,7 +86,7 @@ describe('Claude Provider', () => {
       expect(result.model).toBe('claude-3-5-sonnet-20241022');
       expect(result.tokens).toBe(58);
       expect(result.metadata?.latencyMs).toBeGreaterThanOrEqual(0);
-      expect(invoke).toHaveBeenCalledWith('chat_generate_claude', {
+      expect(secureInvoke).toHaveBeenCalledWith('chat_generate_claude', {
         message: 'Question test',
         history: [],
         config: expect.objectContaining({
@@ -175,7 +175,7 @@ describe('Claude Provider', () => {
 
       await claudeProvider.generate('Question', history);
 
-      expect(invoke).toHaveBeenCalledWith('chat_generate_claude', {
+      expect(secureInvoke).toHaveBeenCalledWith('chat_generate_claude', {
         message: 'Question',
         history: [
           { role: 'user', content: 'Bonjour' },
@@ -198,7 +198,7 @@ describe('Claude Provider', () => {
         maxTokens: 4096,
       });
 
-      expect(invoke).toHaveBeenCalledWith('chat_generate_claude', {
+      expect(secureInvoke).toHaveBeenCalledWith('chat_generate_claude', {
         message: 'Test',
         history: [],
         config: expect.objectContaining({

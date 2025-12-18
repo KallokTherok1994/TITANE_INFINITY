@@ -25,7 +25,7 @@ interface ErrorBoundaryState {
 }
 
 /**
- * ErrorBoundary - Composant de capture d'erreurs React
+ * ErrorBoundary - Composant de capture d&apos;erreurs React
  *
  * Usage:
  * ```tsx
@@ -71,7 +71,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
         onError(error, errorInfo);
       } catch (callbackError) {
         logger.error(
-          'onError callback failed',
+          'onError callback failed&apos;,
           { component: 'ErrorBoundary', context },
           callbackError as Error
         );
@@ -123,12 +123,12 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             color: '#8f7a7a',
           }}
         >
-          <h2 style={{ margin: '0 0 1rem 0', fontSize: '1.25rem', fontWeight: 'bold' }}>
+          <h2 style={{ margin: '0 0 1rem 0', fontSize: '1.25rem', fontWeight: 'bold&apos; }}>
             ⚠️ Erreur dans {context}
           </h2>
           <p style={{ margin: '0 0 1rem 0', color: '#9ca3af' }}>
-            Une erreur inattendue s'est produite. Le composant a été isolé pour protéger
-            l'application.
+            Une erreur inattendue s&apos;est produite. Le composant a été isolé pour protéger
+            l&apos;application.
           </p>
           {error && (
             <details style={{ marginBottom: '1rem' }}>

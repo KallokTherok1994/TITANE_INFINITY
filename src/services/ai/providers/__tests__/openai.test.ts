@@ -30,7 +30,7 @@ describe('OpenAI Provider', () => {
       const result = await openaiProvider.isAvailable();
 
       expect(result).toBe(true);
-      expect(invoke).toHaveBeenCalledWith('get_openai_key_status');
+      expect(secureInvoke).toHaveBeenCalledWith('get_openai_key_status');
     });
 
     it("devrait retourner false si la clé n'est pas configurée", async () => {
@@ -86,7 +86,7 @@ describe('OpenAI Provider', () => {
       expect(result.model).toBe('gpt-4o');
       expect(result.tokens).toBe(42);
       expect(result.metadata?.latencyMs).toBeGreaterThanOrEqual(0);
-      expect(invoke).toHaveBeenCalledWith('chat_generate_openai', {
+      expect(secureInvoke).toHaveBeenCalledWith('chat_generate_openai', {
         message: 'Question test',
         history: [],
         config: expect.objectContaining({
@@ -163,7 +163,7 @@ describe('OpenAI Provider', () => {
 
       await openaiProvider.generate('Question', history);
 
-      expect(invoke).toHaveBeenCalledWith('chat_generate_openai', {
+      expect(secureInvoke).toHaveBeenCalledWith('chat_generate_openai', {
         message: 'Question',
         history: [
           { role: 'user', content: 'Bonjour' },
@@ -186,7 +186,7 @@ describe('OpenAI Provider', () => {
         maxTokens: 4096,
       });
 
-      expect(invoke).toHaveBeenCalledWith('chat_generate_openai', {
+      expect(secureInvoke).toHaveBeenCalledWith('chat_generate_openai', {
         message: 'Test',
         history: [],
         config: expect.objectContaining({

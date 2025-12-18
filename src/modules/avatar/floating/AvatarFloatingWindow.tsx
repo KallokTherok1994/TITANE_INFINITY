@@ -206,12 +206,12 @@ export const AvatarFloatingWindow: React.FC<AvatarFloatingWindowProps> = ({
   // RENDER CONDITIONS
   // ═════════════════════════════════════════════════════════════════
 
-  // Don't render if not in floating mode
+  // Don&apos;t render if not in floating mode
   if (displayState.mode !== AvatarDisplayMode.Floating) {
     return null;
   }
 
-  // Don't render if hidden
+  // Don&apos;t render if hidden
   if (!displayState.visible) {
     return null;
   }
