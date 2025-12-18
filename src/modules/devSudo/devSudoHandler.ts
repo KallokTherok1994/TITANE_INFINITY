@@ -2329,7 +2329,7 @@ Créer \`useSingularityUnifiedStore.ts\` avec état par défaut:
 async function handleStatusFull(): Promise<DevSudoResult> {
   try {
     // Appel au backend pour diagnostic complet
-    const diagnostic = await invoke<{
+    const diagnostic = await secureInvoke<{
       status: string;
       modules: Array<{ name: string; status: string }>;
       errors: string[];
@@ -2444,7 +2444,7 @@ async function handleDiagnostic(): Promise<DevSudoResult> {
 
 async function handleIntrospect(): Promise<DevSudoResult> {
   try {
-    const state = await invoke<Record<string, unknown>>('titan_state_get');
+    const state = await secureInvoke<Record<string, unknown>>('titan_state_get');
 
     return {
       handled: true,
@@ -2578,7 +2578,7 @@ cd /home/titane/Documents/TITANE_INFINITY
  */
 async function handleIATest(): Promise<DevSudoResult> {
   try {
-    const status = await invoke<{ available: boolean; models: string[] }>(
+    const status = await secureInvoke<{ available: boolean; models: string[] }>(
       'ai_check_ollama_status'
     );
 
@@ -2608,7 +2608,7 @@ curl http://localhost:11434/api/tags
     }
 
     // Test avec un prompt simple
-    const testResponse = await invoke<{ content: string; model: string }>(
+    const testResponse = await secureInvoke<{ content: string; model: string }>(
       'ai_generate_local',
       {
         request: {
@@ -2691,7 +2691,7 @@ async function handleIASetDefault(modelName: string): Promise<DevSudoResult> {
   }
 
   try {
-    const result = await invoke<string>('ai_set_local_model', { modelName });
+    const result = await secureInvoke<string>('ai_set_local_model', { modelName });
 
     return {
       handled: true,
@@ -2785,7 +2785,7 @@ async function handleIAEnableDevMode(): Promise<DevSudoResult> {
  */
 async function handleIAScan(): Promise<DevSudoResult> {
   try {
-    const models = await invoke<string[]>('ai_scan_local_models');
+    const models = await secureInvoke<string[]>('ai_scan_local_models');
 
     if (models.length === 0) {
       return {
@@ -2856,7 +2856,7 @@ ia set-default <model>
  */
 async function handleIAStatus(): Promise<DevSudoResult> {
   try {
-    const status = await invoke<{
+    const status = await secureInvoke<{
       available: boolean;
       version?: string;
       models: string[];
@@ -2960,7 +2960,7 @@ ${modelsList}
  */
 async function handleIATrain(): Promise<DevSudoResult> {
   try {
-    const result = await invoke<string>('execute_shell_command', {
+    const result = await secureInvoke<string>('execute_shell_command', {
       command: './train_titane_local.sh',
       workingDir: '.',
     });
@@ -3023,7 +3023,7 @@ ${result}
  */
 async function handleIADataset(): Promise<DevSudoResult> {
   try {
-    const result = await invoke<string>('execute_shell_command', {
+    const result = await secureInvoke<string>('execute_shell_command', {
       command: 'python3 build_titane_dataset.py',
       workingDir: '.',
     });
@@ -3085,13 +3085,13 @@ ${result}
 async function handleIATestModel(): Promise<DevSudoResult> {
   try {
     // Test 1: Identité
-    const test1 = await invoke<string>('execute_shell_command', {
+    const test1 = await secureInvoke<string>('execute_shell_command', {
       command: 'ollama run titane-local "Qui es-tu en une ligne ?"',
       workingDir: '.',
     });
 
     // Test 2: Singularity
-    const test2 = await invoke<string>('execute_shell_command', {
+    const test2 = await secureInvoke<string>('execute_shell_command', {
       command: 'ollama run titane-local "Liste les 6 couches Singularity"',
       workingDir: '.',
     });
@@ -3151,7 +3151,7 @@ async function handleIABenchmark(): Promise<DevSudoResult> {
 
     // Test base model
     const startBase = Date.now();
-    await invoke<string>('execute_shell_command', {
+    await secureInvoke<string>('execute_shell_command', {
       command: `ollama run llama3.1 "${testPrompt}"`,
       workingDir: '.',
     });
@@ -3159,7 +3159,7 @@ async function handleIABenchmark(): Promise<DevSudoResult> {
 
     // Test trained model
     const startTrained = Date.now();
-    await invoke<string>('execute_shell_command', {
+    await secureInvoke<string>('execute_shell_command', {
       command: `ollama run titane-local "${testPrompt}"`,
       workingDir: '.',
     });
@@ -4047,7 +4047,7 @@ async function handleHybridHeal(params: Record<string, unknown>): Promise<DevSud
     const target = params.target ? String(params.target) : 'all';
 
     // Déclencher le diagnostic
-    const _diagnostics = await invoke('hybrid_analyze_code', { target });
+    const _diagnostics = await secureInvoke('hybrid_analyze_code', { target });
 
     return {
       handled: true,
@@ -4093,7 +4093,7 @@ async function handleHybridInspect(
       };
     }
 
-    const inspection = await invoke('dev_inspect_file', { path });
+    const inspection = await secureInvoke('dev_inspect_file', { path });
     const data = inspection as {
       exists: boolean;
       size?: number;
@@ -4202,7 +4202,7 @@ async function handleHybridApply(
       };
     }
 
-    await invoke('dev_apply_patch', { file, lineStart, lineEnd, newCode });
+    await secureInvoke('dev_apply_patch', { file, lineStart, lineEnd, newCode });
 
     return {
       handled: true,
@@ -4245,7 +4245,7 @@ async function handleHybridRun(params: Record<string, unknown>): Promise<DevSudo
       };
     }
 
-    const result = await invoke('dev_run_command', { command });
+    const result = await secureInvoke('dev_run_command', { command });
     const cmdResult = result as { output: string; exitCode: number; error?: string };
 
     return {
@@ -4286,7 +4286,7 @@ async function handleHybridLogs(params: Record<string, unknown>): Promise<DevSud
   try {
     const filter = params.filter ? String(params.filter) : undefined;
 
-    const result = await invoke('dev_get_logs', { filter });
+    const result = await secureInvoke('dev_get_logs', { filter });
     const logResult = result as { output: string; exitCode: number };
 
     return {
@@ -4378,7 +4378,7 @@ ${report.errors.length > 0 ? `❌ **Errors**: ${report.errors.join(', ')}` : ''}
  */
 async function handleFusionSync(): Promise<DevSudoResult> {
   try {
-    const result = await invoke('fusion_sync');
+    const result = await secureInvoke('fusion_sync');
 
     return {
       handled: true,
@@ -4606,7 +4606,7 @@ async function handleFusionMerge(
     }
 
     // Appel backend Rust
-    const result = await invoke('fusion_merge', { sourcePath: file });
+    const result = await secureInvoke('fusion_merge', { sourcePath: file });
 
     return {
       handled: true,

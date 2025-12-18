@@ -255,7 +255,7 @@ const AppRouter: React.FC = () => {
   useEffect(() => {
     const checkOnboarding = async () => {
       try {
-        const isComplete = await invoke<boolean>('is_onboarding_complete');
+        const isComplete = await secureInvoke<boolean>('is_onboarding_complete');
         logger.info('Onboarding status', {
           component: 'Onboarding',
           status: isComplete ? 'Complete' : 'Not started',
