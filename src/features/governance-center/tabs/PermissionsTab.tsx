@@ -82,7 +82,7 @@ export const PermissionsTab: React.FC<PermissionsTabProps> = ({
       if (!groups[category]) {
         groups[category] = [];
       }
-      groups[category].push(action);
+      groups[category]?.push(action);
     }
 
     return groups;
