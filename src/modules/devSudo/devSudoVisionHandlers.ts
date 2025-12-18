@@ -839,9 +839,6 @@ function App() {
 ### **Fonts**:
 
 \`\`\`css
-/* Avant */
-@import url('https://fonts.googleapis.com/css2?family=Inter');
-
 /* Après ✅ */
 @font-face {
   font-family: 'Inter';

@@ -5,7 +5,7 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-    "typeRoots": ["./node_modules/@types"],
+    "types": ["vitest/globals", "@testing-library/jest-dom"],
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -44,10 +44,6 @@
   "include": ["src", "src/types"],
   "exclude": [
     "src/__tests__",
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "**/*.spec.ts",
-    "**/*.spec.tsx",
     "src/hooks/archived/**",
     "src/examples/**",
     "src/tests/**",
