@@ -86,7 +86,11 @@ impl VectorStore {
 
         // Sort by similarity (highest first)
         // FIX: Handle NaN values safely to prevent panic
-        results.sort_by(|a, b| b.similarity.partial_cmp(&a.similarity).unwrap_or(std::cmp::Ordering::Equal));
+        results.sort_by(|a, b| {
+            b.similarity
+                .partial_cmp(&a.similarity)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
 
         // Return top k
         results.into_iter().take(k).collect()

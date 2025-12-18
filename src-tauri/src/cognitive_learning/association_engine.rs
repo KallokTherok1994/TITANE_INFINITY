@@ -71,7 +71,11 @@ impl AssociationEngine {
     pub fn get_strongest(&self, limit: usize) -> Vec<Association> {
         let mut assocs: Vec<Association> = self.associations.values().cloned().collect();
         // FIX: Handle NaN values safely to prevent panic
-        assocs.sort_by(|a, b| b.strength.partial_cmp(&a.strength).unwrap_or(std::cmp::Ordering::Equal));
+        assocs.sort_by(|a, b| {
+            b.strength
+                .partial_cmp(&a.strength)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
         assocs.into_iter().take(limit).collect()
     }
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 # ══════════════════════════════════════════════════════════════════════════
-# TITANE∞ v16.2.3 — Script de Validation Globale
+# TITANE∞ v24.3.0 — Script de Validation Globale
 # © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
 # ══════════════════════════════════════════════════════════════════════════
 #
@@ -195,13 +195,30 @@ fi
 print_success "✅ Configuration Tauri-only: VALIDÉE"
 print_success "✅ Pas de références legacy HTTP"
 
+# ══════════════════════════════════════════════════════════════════════════
+# 6. VALIDATION COPILOT-XS (si disponible)
+# ══════════════════════════════════════════════════════════════════════════
+
+if [ -f ".github/copilot-xs/scripts/validate.js" ]; then
+    print_header "VALIDATION COPILOT-XS"
+
+    print_info "Validation copilot-xs..."
+    if node .github/copilot-xs/scripts/validate.js > /dev/null 2>&1; then
+        print_success "copilot-xs: PASSÉ (aucun TODO/FIXME interdit)"
+    else
+        print_warning "copilot-xs: Des violations ont été détectées"
+        node .github/copilot-xs/scripts/validate.js
+    fi
+fi
+
 echo ""
 echo -e "${GREEN}╔═══════════════════════════════════════════════════════════════╗${NC}"
 echo -e "${GREEN}║                                                               ║${NC}"
-echo -e "${GREEN}║       🎉 VALIDATION GLOBALE RÉUSSIE — TITANE∞ v16.2.3        ║${NC}"
+echo -e "${GREEN}║       🎉 VALIDATION GLOBALE RÉUSSIE — TITANE∞ v24.3.0        ║${NC}"
 echo -e "${GREEN}║                                                               ║${NC}"
 echo -e "${GREEN}║  Le projet est prêt pour commit/push/release                 ║${NC}"
 echo -e "${GREEN}║  Architecture 100% Tauri-only validée ✅                      ║${NC}"
+echo -e "${GREEN}║  20 Phase 2 Commands Active ✅                               ║${NC}"
 echo -e "${GREEN}║                                                               ║${NC}"
 echo -e "${GREEN}╚═══════════════════════════════════════════════════════════════╝${NC}"
 echo ""

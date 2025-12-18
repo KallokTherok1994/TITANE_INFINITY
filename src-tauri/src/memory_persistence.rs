@@ -343,12 +343,11 @@ pub fn store_file(path: &str, content: &str, category: &str) -> Result<(), Strin
             "Database size limit exceeded: {} / {} bytes",
             current, max
         )),
-        StoreResult::FileTooLarge { size, max } => {
-            Err(format!("File too large: {} bytes (max: {} bytes)", size, max))
-        }
-        StoreResult::VaultNotInitialized => {
-            Err("VaultEngine not initialized".to_string())
-        }
+        StoreResult::FileTooLarge { size, max } => Err(format!(
+            "File too large: {} bytes (max: {} bytes)",
+            size, max
+        )),
+        StoreResult::VaultNotInitialized => Err("VaultEngine not initialized".to_string()),
         StoreResult::Error(e) => Err(e),
     }
 }
@@ -373,7 +372,13 @@ const CLASSIFICATION_RULES: &[ClassificationRule] = &[
     },
     ClassificationRule {
         category: "code-react",
-        patterns: &["import React", "useState", "useEffect", "useCallback", "React.FC"],
+        patterns: &[
+            "import React",
+            "useState",
+            "useEffect",
+            "useCallback",
+            "React.FC",
+        ],
         extensions: &[".tsx", ".jsx"],
         priority: 9,
     },
@@ -525,9 +530,7 @@ pub async fn clear_memory_async() -> Result<(), String> {
 
 /// Effacer toute la mémoire (sync)
 pub fn clear_memory() -> Result<(), String> {
-    tokio::task::block_in_place(|| {
-        tokio::runtime::Handle::current().block_on(clear_memory_async())
-    })
+    tokio::task::block_in_place(|| tokio::runtime::Handle::current().block_on(clear_memory_async()))
 }
 
 // ═══════════════════════════════════════════════════════════════

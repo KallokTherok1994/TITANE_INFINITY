@@ -229,9 +229,11 @@ impl QuantumState {
     /// Retourne l'état le plus probable
     pub fn get_most_probable(&self) -> Option<&QuantumAmplitude> {
         // FIX: Handle NaN values safely to prevent panic
-        self.superposition
-            .iter()
-            .max_by(|a, b| a.probability().partial_cmp(&b.probability()).unwrap_or(std::cmp::Ordering::Equal))
+        self.superposition.iter().max_by(|a, b| {
+            a.probability()
+                .partial_cmp(&b.probability())
+                .unwrap_or(std::cmp::Ordering::Equal)
+        })
     }
 
     /// Réinitialise l'état (collapse complet)

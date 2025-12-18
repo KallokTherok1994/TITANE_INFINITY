@@ -261,7 +261,7 @@ pub fn project_analyze(
 fn detect_dependencies(path: &PathBuf) -> Vec<String> {
     // Parse package.json, Cargo.toml, requirements.txt for dependencies
     let mut dependencies = Vec::new();
-    
+
     // Check for package.json (Node.js)
     let package_json = path.join("package.json");
     if package_json.exists() {
@@ -273,38 +273,42 @@ fn detect_dependencies(path: &PathBuf) -> Vec<String> {
             }
         }
     }
-    
+
     // Check for Cargo.toml (Rust)
     let cargo_toml = path.join("Cargo.toml");
     if cargo_toml.exists() {
         dependencies.push("Cargo.toml found (Rust project)".to_string());
     }
-    
+
     // Check for requirements.txt (Python)
     let requirements = path.join("requirements.txt");
     if requirements.exists() {
         if let Ok(content) = std::fs::read_to_string(&requirements) {
-            dependencies.extend(content.lines().map(|l| l.split('=').next().unwrap_or(l).to_string()));
+            dependencies.extend(
+                content
+                    .lines()
+                    .map(|l| l.split('=').next().unwrap_or(l).to_string()),
+            );
         }
     }
-    
+
     dependencies
 }
 
 fn count_files(path: &PathBuf) -> usize {
     // Count files recursively, excluding node_modules, target, dist
     let mut count = 0;
-    
+
     if let Ok(entries) = std::fs::read_dir(path) {
         for entry in entries.flatten() {
             let entry_path = entry.path();
             let name = entry.file_name().to_string_lossy().to_string();
-            
+
             // Skip common build/dependency directories
             if name == "node_modules" || name == "target" || name == "dist" || name == ".git" {
                 continue;
             }
-            
+
             if entry_path.is_dir() {
                 count += count_files(&entry_path);
             } else {
@@ -312,26 +316,28 @@ fn count_files(path: &PathBuf) -> usize {
             }
         }
     }
-    
+
     count
 }
 
 fn count_lines(path: &PathBuf) -> usize {
     // Count lines of code recursively (source files only)
     let mut count = 0;
-    
-    let source_extensions = ["rs", "ts", "tsx", "js", "jsx", "py", "java", "cpp", "c", "h"];
-    
+
+    let source_extensions = [
+        "rs", "ts", "tsx", "js", "jsx", "py", "java", "cpp", "c", "h",
+    ];
+
     if let Ok(entries) = std::fs::read_dir(path) {
         for entry in entries.flatten() {
             let entry_path = entry.path();
             let name = entry.file_name().to_string_lossy().to_string();
-            
+
             // Skip build directories
             if name == "node_modules" || name == "target" || name == "dist" || name == ".git" {
                 continue;
             }
-            
+
             if entry_path.is_dir() {
                 count += count_lines(&entry_path);
             } else if let Some(ext) = entry_path.extension() {
@@ -343,7 +349,7 @@ fn count_lines(path: &PathBuf) -> usize {
             }
         }
     }
-    
+
     count
 }
 
@@ -354,34 +360,35 @@ fn calculate_health(path: &PathBuf) -> u8 {
     // - Linting config exists (+20)
     // - Documentation exists (+15)
     // - CI/CD config exists (+15)
-    
+
     let mut score = 0u8;
-    
+
     // Check build config
     if path.join("package.json").exists() || path.join("Cargo.toml").exists() {
         score += 20;
     }
-    
+
     // Check tests
-    if path.join("tests").exists() || path.join("test").exists() || path.join("__tests__").exists() {
+    if path.join("tests").exists() || path.join("test").exists() || path.join("__tests__").exists()
+    {
         score += 30;
     }
-    
+
     // Check linting
     if path.join(".eslintrc").exists() || path.join("clippy.toml").exists() {
         score += 20;
     }
-    
+
     // Check documentation
     if path.join("README.md").exists() || path.join("docs").exists() {
         score += 15;
     }
-    
+
     // Check CI/CD
     if path.join(".github").join("workflows").exists() || path.join(".gitlab-ci.yml").exists() {
         score += 15;
     }
-    
+
     score
 }
 
@@ -601,13 +608,19 @@ fn execute_suggestion(suggestion: &AutoPilotSuggestion) -> Result<String, String
     match suggestion.suggestion_type.as_str() {
         "optimize" => {
             // Launch auto-fix optimization
-            log::info!("[AUTOPILOT] Launching optimization: {}", suggestion.description);
+            log::info!(
+                "[AUTOPILOT] Launching optimization: {}",
+                suggestion.description
+            );
             // Future: Call optimization engine
             Ok("Optimisation lancée".to_string())
         }
         "refactor" => {
             // Suggest refactoring with AI analysis
-            log::info!("[AUTOPILOT] Suggesting refactoring: {}", suggestion.description);
+            log::info!(
+                "[AUTOPILOT] Suggesting refactoring: {}",
+                suggestion.description
+            );
             // Future: Call refactoring analyzer
             Ok("Refactoring suggéré".to_string())
         }

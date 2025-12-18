@@ -37,11 +37,22 @@ mod control_panel_tests {
 
         let diagnostic = result.unwrap();
         // ✅ Phase 2: Diagnostic contains CPU/Memory/Disk stats, not necessarily "Système"
-        let has_stats = diagnostic.contains("CPU") || diagnostic.contains("Mémoire") 
-            || diagnostic.contains("Memory") || diagnostic.contains("utilisé");
-        let has_status = diagnostic.contains("OK") || diagnostic.contains("✅") || diagnostic.contains("%");
-        assert!(has_stats, "Diagnostic should contain system stats, got: {}", diagnostic);
-        assert!(has_status, "Diagnostic should contain status indicators, got: {}", diagnostic);
+        let has_stats = diagnostic.contains("CPU")
+            || diagnostic.contains("Mémoire")
+            || diagnostic.contains("Memory")
+            || diagnostic.contains("utilisé");
+        let has_status =
+            diagnostic.contains("OK") || diagnostic.contains("✅") || diagnostic.contains("%");
+        assert!(
+            has_stats,
+            "Diagnostic should contain system stats, got: {}",
+            diagnostic
+        );
+        assert!(
+            has_status,
+            "Diagnostic should contain status indicators, got: {}",
+            diagnostic
+        );
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -216,8 +227,10 @@ mod control_panel_tests {
         // Just verify both values are reasonable
         assert!(stats.used_size >= 0, "Used size should be non-negative");
         if stats.used_size > stats.total_size {
-            eprintln!("⚠️  Warning: used_size ({}) > total_size ({}) - memory pressure detected", 
-                stats.used_size, stats.total_size);
+            eprintln!(
+                "⚠️  Warning: used_size ({}) > total_size ({}) - memory pressure detected",
+                stats.used_size, stats.total_size
+            );
         }
     }
 

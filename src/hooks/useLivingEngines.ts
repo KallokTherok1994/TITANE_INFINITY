@@ -14,6 +14,7 @@
  */
 
 import { useEffect, useState, useCallback } from 'react';
+import { logger } from '@/lib/logger';
 import type { PersonaState } from '@/types/singularityState';
 import type { MoodType } from '../core/ARCHITECTURE_TYPES_v24-v∞';
 
@@ -126,7 +127,11 @@ export const useLivingEngines = (updateInterval = 100) => {
 
         setEnginesState(prev => ({ ...prev, initialized: true }));
       } catch (error) {
-        console.error('❌ Error initializing Persona Engine:', error);
+        logger.error(
+          'Error initializing Persona Engine',
+          { component: 'PersonaEngine' },
+          error as Error
+        );
       }
     };
 
@@ -187,7 +192,11 @@ export const useLivingEngines = (updateInterval = 100) => {
           initialized: true,
         });
       } catch (error) {
-        console.error('Error updating engines state:', error);
+        logger.error(
+          'Error updating engines state',
+          { component: 'LivingEngines' },
+          error as Error
+        );
       }
     }, updateInterval);
 

@@ -11,6 +11,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { secureInvoke } from '@/lib/security';
+import { logger } from '@/lib/logger';
 
 export interface MemoryEntry {
   id: string;
@@ -62,7 +63,7 @@ export function useMemory() {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       setError(errorMessage);
-      console.error('Load conversations error:', err);
+      logger.error('Load conversations error', { component: 'Memory' }, err as Error);
     } finally {
       setIsLoading(false);
     }
@@ -84,7 +85,7 @@ export function useMemory() {
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : String(err);
         setError(errorMessage);
-        console.error('Create conversation error:', err);
+        logger.error('Create conversation error', { component: 'Memory' }, err as Error);
         return null;
       } finally {
         setIsLoading(false);

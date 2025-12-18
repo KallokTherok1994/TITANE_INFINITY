@@ -302,7 +302,7 @@ pub fn voice_detect_wake_word(
     // - Whisper: OpenAI's speech recognition for custom wake words
     log::info!("[VOICE] Wake word detection called - using stub");
     log::debug!("[VOICE] Audio data size: {} bytes", _audio_data.len());
-    
+
     // Simulation: detect "TITANE" in audio stream
     // Real implementation would:
     // 1. Convert audio_data to appropriate format
@@ -401,16 +401,16 @@ pub fn voice_play_audio(
     // Play audio via detected pipeline (PipeWire > PulseAudio > ALSA)
     let status = lock_or_recover!(state.status);
     let pipeline = &status.audio_pipeline;
-    
+
     log::info!("[VOICE] Playing audio via {} pipeline", pipeline);
     log::debug!("[VOICE] Audio data size: {} bytes", _audio_data.len());
-    
+
     // Real implementation would:
     // - PipeWire: Use `pw-play` or libpipewire bindings
     // - PulseAudio: Use `paplay` or libpulse bindings
     // - ALSA: Use `aplay` or alsa-lib bindings
     // - Fallback: rodio crate for cross-platform playback
-    
+
     // Implementation: Activate audio output when TTS is ready
     // - Uncomment when audio output pipeline is implemented:
     //   * PipeWire: Use pipewire-rs crate for modern Linux audio
@@ -480,9 +480,9 @@ pub fn voice_calibrate_microphone(state: State<VoiceEngineState>) -> Result<f32,
     // 2. Calculate RMS (Root Mean Square) for noise floor
     // 3. Set optimal gain based on ambient level
     // 4. Store calibration in VoiceConfig
-    
+
     log::info!("[VOICE] Starting microphone calibration");
-    
+
     // Stub: Simulate measurement
     // - Low ambient noise (< 30 dB): gain 0.8-1.0
     // - Medium noise (30-50 dB): gain 0.6-0.8
@@ -495,8 +495,12 @@ pub fn voice_calibrate_microphone(state: State<VoiceEngineState>) -> Result<f32,
     } else {
         0.50
     };
-    
-    log::info!("[VOICE] Ambient noise: {:.1} dB, optimal level: {:.2}", simulated_ambient_db, optimal_level);
+
+    log::info!(
+        "[VOICE] Ambient noise: {:.1} dB, optimal level: {:.2}",
+        simulated_ambient_db,
+        optimal_level
+    );
 
     let mut status = lock_or_recover!(state.status);
     status.mic_level = optimal_level;
@@ -568,13 +572,13 @@ pub fn voice_test_pipeline(state: State<VoiceEngineState>) -> Result<String, TAP
 fn test_microphone() -> bool {
     // Test microphone by recording 1s audio and verifying level
     log::info!("[VOICE] Testing microphone...");
-    
+
     // Real implementation would:
     // 1. Open microphone input via detected pipeline
     // 2. Record 1 second of audio
     // 3. Verify audio level > threshold (not silent)
     // 4. Check for clipping or distortion
-    
+
     // Stub: Simulate successful test
     println!("[VOICE] Test micro...");
     log::debug!("[VOICE] Microphone test: OK (stub)");
@@ -584,13 +588,13 @@ fn test_microphone() -> bool {
 fn test_speakers() -> bool {
     // Test speakers by playing beep and verifying output
     log::info!("[VOICE] Testing speakers...");
-    
+
     // Real implementation would:
     // 1. Generate test tone (440 Hz beep, 0.5s)
     // 2. Play via audio output pipeline
     // 3. Verify output device is working
     // 4. Optionally: check for feedback loop
-    
+
     // Stub: Simulate successful test
     println!("[VOICE] Test speakers...");
     log::debug!("[VOICE] Speaker test: OK (stub)");

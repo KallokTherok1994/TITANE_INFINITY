@@ -13,6 +13,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { tauriClient, type ProviderStatus } from '../services/tauriClient';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
+import { logger } from '@/lib/logger';
 
 export interface ConnectionStatus {
   online: boolean;
@@ -63,7 +64,7 @@ export function useConnection() {
 
       return online;
     } catch (err) {
-      console.error('❌ Connection check error:', err);
+      logger.error('Connection check error', { component: 'Connection' }, err as Error);
 
       // Fallback: mode local uniquement
       setStatus({
@@ -103,7 +104,11 @@ export function useConnection() {
 
       return providers;
     } catch (err) {
-      console.error('❌ Failed to get providers status:', err);
+      logger.error(
+        'Failed to get providers status',
+        { component: 'Connection' },
+        err as Error
+      );
       return status.availableProviders;
     }
   }, [status.availableProviders]);

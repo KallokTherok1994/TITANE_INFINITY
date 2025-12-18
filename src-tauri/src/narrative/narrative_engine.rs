@@ -457,55 +457,67 @@ impl NarrativeEngine {
 
     /// Ajuste le style en fonction de l'état adaptatif
     pub fn adjust_style(&mut self, patterns: &[String]) {
-        log::info!("[NarrativeEngine] Adjusting style based on {} patterns", patterns.len());
-        
+        log::info!(
+            "[NarrativeEngine] Adjusting style based on {} patterns",
+            patterns.len()
+        );
+
         // Dynamic style adjustment based on user interaction patterns
         // Analyze patterns for:
         // - Formality level (casual vs professional)
         // - Technical depth (simple vs detailed)
         // - Emotional tone (neutral vs warm)
-        
+
         for pattern in patterns {
             let pattern_lower = pattern.to_lowercase();
-            
+
             // Detect formality
             if pattern_lower.contains("please") || pattern_lower.contains("could you") {
                 log::debug!("[NarrativeEngine] Detected formal pattern: {}", pattern);
                 // Future: adjust self.symbolic_model.tone.formality
             }
-            
+
             // Detect technical preference
             if pattern_lower.contains("details") || pattern_lower.contains("technical") {
                 log::debug!("[NarrativeEngine] Detected technical pattern: {}", pattern);
                 // Future: adjust self.symbolic_model.tone.technical_depth
             }
         }
-        
+
         log::info!("[NarrativeEngine] Style adjustment complete");
     }
 
     /// Évolue l'identité légèrement en fonction de l'usage
     pub fn evolve_identity(&mut self, total_interactions: usize) {
-        log::info!("[NarrativeEngine] Evolving identity based on {} interactions", total_interactions);
-        
+        log::info!(
+            "[NarrativeEngine] Evolving identity based on {} interactions",
+            total_interactions
+        );
+
         // Subtle identity evolution:
         // - Every 100 interactions: slight personality adjustment
         // - Every 500 interactions: potential archetype shift
         // - Never drastic changes (preserve core identity)
-        
+
         if total_interactions % 100 == 0 {
-            log::debug!("[NarrativeEngine] Milestone: {} interactions - minor evolution", total_interactions);
+            log::debug!(
+                "[NarrativeEngine] Milestone: {} interactions - minor evolution",
+                total_interactions
+            );
             // Future: adjust self.symbolic_model.persona attributes by ±5%
         }
-        
+
         if total_interactions % 500 == 0 {
-            log::info!("[NarrativeEngine] Milestone: {} interactions - archetype evolution check", total_interactions);
+            log::info!(
+                "[NarrativeEngine] Milestone: {} interactions - archetype evolution check",
+                total_interactions
+            );
             // Future: consider archetype transition based on:
             // - User interaction style
             // - Task types performed
             // - Success/satisfaction metrics
         }
-        
+
         log::debug!("[NarrativeEngine] Identity evolution check complete");
     }
 

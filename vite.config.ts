@@ -142,6 +142,11 @@ export default defineConfig({
     // 🚀 OPTIMIZATION v24.7.7: Parallel minification with esbuild (faster than terser)
     minify: 'esbuild',
 
+    // ✨ v26.1 CONSOLE MONITOR: Drop console calls in production
+    esbuildOptions: {
+      drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
+    },
+
     rollupOptions: {
       // ✅ FIX: Ne PAS externaliser @tauri-apps/api/* en mode Tauri!
       // Tauri v2 fournit ces modules directement, ils doivent être bundlés

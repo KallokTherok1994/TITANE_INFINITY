@@ -533,7 +533,7 @@ impl QaEngine {
         // Verify TTS commands exist: speak, stop_speaking, is_speaking
         // Integration point: Check commands are registered in Tauri invoke handler
         log::debug!("[QA] Validating TTS commands existence");
-        
+
         // Commands should be registered in src-tauri/src/main.rs
         // Future: Query tauri::command_registry or use reflection
         // Current: Assume commands exist if compilation succeeded
@@ -544,11 +544,11 @@ impl QaEngine {
         // Test TTS synthesis with short text
         // Integration point: Call speak() command from ai_chat module
         log::info!("[QA] Testing TTS synthesis with sample text");
-        
+
         // Future: Actual TTS call
         // use crate::commands::ai_chat::speak;
         // speak(text.to_string(), false).await.map_err(|e| e.to_string())?;
-        
+
         // Current: Validate TTS module is available
         log::debug!("[QA] TTS synthesis test passed (stub)");
         Ok(())
@@ -558,12 +558,12 @@ impl QaEngine {
         // Test TTS mutex anti-superposition (prevent overlapping speech)
         // Integration point: Verify IS_SPEAKING Mutex in ai_chat module
         log::info!("[QA] Testing TTS mutex anti-superposition");
-        
+
         // Future: Test concurrent speak() calls and verify mutex behavior
         // 1. Start first speak() call
         // 2. Attempt second speak() call
         // 3. Verify second call waits for first to complete
-        
+
         // Current: Assume mutex is working (tested in TTS module)
         log::debug!("[QA] TTS mutex test passed (stub)");
         true
@@ -573,11 +573,11 @@ impl QaEngine {
         // Call AI analysis for text processing
         // Integration point: Use chat_send_message or conversation_generate
         log::info!("[QA] Testing AI analysis");
-        
+
         // Future: Actual AI call
         // use crate::overdrive::chat_orchestrator::chat_send_message;
         // let response = chat_send_message(text.to_string(), None, state).await?;
-        
+
         // Current: Return mock analysis result
         log::debug!("[QA] AI analysis test passed (stub)");
         Ok("{\"status\": \"ok\", \"analysis\": \"Sample AI response\"}".to_string())
@@ -587,7 +587,7 @@ impl QaEngine {
         // Verify AI response format is valid JSON
         // Integration point: Validate ConversationResponse structure
         log::debug!("[QA] Validating AI analysis JSON format");
-        
+
         // Expected format:
         // {
         //   "conversationId": "uuid",
@@ -595,7 +595,7 @@ impl QaEngine {
         //   "provider": "ollama|openai|gemini|anthropic",
         //   "metadata": {...}
         // }
-        
+
         // Future: Parse actual AI response and validate schema
         // Current: Assume format is validated by type system
         log::debug!("[QA] Analysis format validation passed");
@@ -606,20 +606,20 @@ impl QaEngine {
         // Test memory read/write operations
         // Integration point: Use unified_memory_v2 API
         log::info!("[QA] Testing memory read/write operations");
-        
+
         // Future: Actual memory test
         // use crate::unified_memory_v2;
-        // 
+        //
         // // Write test
         // unified_memory_v2::store_memory("test_key", "test_value").await?;
-        // 
+        //
         // // Read test
         // let value = unified_memory_v2::retrieve_memory("test_key").await?;
         // assert_eq!(value, "test_value");
-        // 
+        //
         // // Cleanup
         // unified_memory_v2::delete_memory("test_key").await?;
-        
+
         // Current: Validate memory module is available
         log::debug!("[QA] Memory read/write test passed (stub)");
         Ok(())

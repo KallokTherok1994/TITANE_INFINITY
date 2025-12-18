@@ -55,7 +55,7 @@ import {
   downloadMarkdown,
   copyToClipboard,
 } from '@/features/chat/exportImport';
-import { hybridTTS } from '@services/tts/hybridTTS';
+import { hybridTTS } from '@/services/tts/hybridTTS';
 import { AchievementCard } from '@/features/progression/AchievementCard';
 import { ACHIEVEMENTS } from '@/features/progression/achievements';
 import { RealTimeCharts, QuickStatCard } from '@/features/dashboard/RealTimeCharts';

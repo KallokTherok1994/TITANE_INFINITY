@@ -21,6 +21,7 @@
 
 import { emit } from '@tauri-apps/api/event';
 import { invoke } from '@tauri-apps/api/core';
+import { logger } from '@/lib/logger';
 import type {
   ConversationMessage,
   ConversationResponse,
@@ -254,7 +255,10 @@ export class ConversationManager {
           try {
             return await this.invokeProvider(provider, request);
           } catch (error) {
-            console.warn(`[ConversationManager] ${provider} failed, trying next...`);
+            logger.warn(`Provider ${provider} failed, trying next`, {
+              component: 'ConversationManager',
+              provider,
+            });
             lastError = error instanceof Error ? error : new Error(String(error));
           }
         }
@@ -263,7 +267,11 @@ export class ConversationManager {
         throw lastError || new Error('All providers exhausted');
       }
     } catch (error) {
-      console.error('[ConversationManager] All AI providers failed:', error);
+      logger.error(
+        'All AI providers failed',
+        { component: 'ConversationManager' },
+        error as Error
+      );
 
       // Fallback response
       return {
@@ -328,7 +336,11 @@ export class ConversationManager {
         },
       };
     } catch (error) {
-      console.error(`[ConversationManager] ${providerName} invocation failed:`, error);
+      logger.error(
+        `Provider ${providerName} invocation failed`,
+        { component: 'ConversationManager', provider: providerName },
+        error as Error
+      );
       throw new Error(`${providerName} failed: ${error}`);
     }
   }
@@ -388,13 +400,19 @@ export class ConversationManager {
         });
       }
 
-      console.log(
-        `[ConversationManager] ✅ Persisted conversation ${conversationId} (${context.messages.length} messages to UnifiedMemory)`
+      logger.info(
+        `Persisted conversation ${conversationId} (${context.messages.length} messages to UnifiedMemory)`,
+        {
+          component: 'ConversationManager',
+          conversationId,
+          messageCount: context.messages.length,
+        }
       );
     } catch (error) {
-      console.error(
-        `[ConversationManager] Failed to persist conversation ${conversationId}:`,
-        error
+      logger.error(
+        `Failed to persist conversation ${conversationId}`,
+        { component: 'ConversationManager', conversationId },
+        error as Error
       );
       // Don't throw - persistence failure shouldn't break conversation flow
     }

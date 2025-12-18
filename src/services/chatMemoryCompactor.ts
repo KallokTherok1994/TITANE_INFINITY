@@ -12,6 +12,9 @@
 
 import type { AIMessage } from './ai/types';
 import type { ChatMode } from './ai/chatEngine';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('[MEMORY-COMPACTOR]');
 
 // ─────────────────────────────────────────────────────────────────
 // CONFIGURATION
@@ -63,7 +66,11 @@ class ChatMemoryCompactor {
       const memory: ModeMemory = JSON.parse(stored);
       return memory.messages || [];
     } catch (error) {
-      console.error(`[MemoryCompactor] Failed to load ${mode}:`, error);
+      logger.error(
+        `Failed to load ${mode}`,
+        { component: 'MemoryCompactor', mode },
+        error as Error
+      );
       return [];
     }
   }
@@ -103,7 +110,11 @@ class ChatMemoryCompactor {
 
         // Compression si nécessaire
         if (messages.length > COMPRESSION_THRESHOLD) {
-          console.log(`[MemoryCompactor] Compressing ${mode} (${messages.length} msgs)`);
+          logger.info(`Compressing ${mode}`, {
+            component: 'MemoryCompactor',
+            mode,
+            messagesCount: messages.length,
+          });
           memory = this.compress(memory);
         }
 
@@ -111,7 +122,11 @@ class ChatMemoryCompactor {
         const key = `${STORAGE_KEY_PREFIX}${mode}`;
         localStorage.setItem(key, JSON.stringify(memory));
       } catch (error) {
-        console.error(`[MemoryCompactor] Failed to save ${mode}:`, error);
+        logger.error(
+          `Failed to save ${mode}`,
+          { component: 'MemoryCompactor', mode },
+          error as Error
+        );
       }
     }
 
@@ -135,9 +150,13 @@ class ChatMemoryCompactor {
     try {
       const key = `${STORAGE_KEY_PREFIX}${mode}`;
       localStorage.removeItem(key);
-      console.log(`[MemoryCompactor] Cleared ${mode}`);
+      logger.info(`Cleared ${mode}`, { component: 'MemoryCompactor', mode });
     } catch (error) {
-      console.error(`[MemoryCompactor] Failed to clear ${mode}:`, error);
+      logger.error(
+        `Failed to clear ${mode}`,
+        { component: 'MemoryCompactor', mode },
+        error as Error
+      );
     }
   }
 
@@ -268,9 +287,11 @@ class ChatMemoryCompactor {
     memory.messages = recent;
     memory.lastCompacted = Date.now();
 
-    console.log(
-      `[MemoryCompactor] Compressed ${toCompress.length} → summary, kept ${recent.length} recent`
-    );
+    logger.info('Compressed messages', {
+      component: 'MemoryCompactor',
+      compressed: toCompress.length,
+      keptRecent: recent.length,
+    });
 
     return memory;
   }
@@ -341,7 +362,10 @@ class ChatMemoryCompactor {
     const sizeMB = totalSize / (1024 * 1024);
 
     if (sizeMB > 5) {
-      console.warn(`🧹 SELFHEAL++: Memory cleanup triggered (${sizeMB.toFixed(2)}MB)`);
+      logger.warn(`SELFHEAL++: Memory cleanup triggered`, {
+        component: 'MemoryCompactor',
+        sizeMB: sizeMB.toFixed(2),
+      });
 
       // Compresser tous les modes
       modes.forEach(mode => {
@@ -352,7 +376,12 @@ class ChatMemoryCompactor {
           memory.messages = messages.slice(-10); // Garde seulement 10 plus récents
           const key = `${STORAGE_KEY_PREFIX}${mode}`;
           localStorage.setItem(key, JSON.stringify(memory));
-          console.log(`   Cleaned ${mode}: ${messages.length} → 10 messages`);
+          logger.info(`Cleaned ${mode}`, {
+            component: 'MemoryCompactor',
+            mode,
+            before: messages.length,
+            after: 10,
+          });
         }
       });
 

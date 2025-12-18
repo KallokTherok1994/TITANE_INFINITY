@@ -181,7 +181,11 @@ impl MidTermMemory {
 
         // Sort by relevance (importance)
         // FIX: Handle NaN values safely to prevent panic
-        results.sort_by(|a, b| b.importance.partial_cmp(&a.importance).unwrap_or(std::cmp::Ordering::Equal));
+        results.sort_by(|a, b| {
+            b.importance
+                .partial_cmp(&a.importance)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
         results.truncate(limit);
         results
     }
@@ -201,7 +205,11 @@ impl MidTermMemory {
         let entries = self.entries.read().await;
         let mut sorted = entries.clone();
         // FIX: Handle NaN values safely to prevent panic
-        sorted.sort_by(|a, b| b.importance.partial_cmp(&a.importance).unwrap_or(std::cmp::Ordering::Equal));
+        sorted.sort_by(|a, b| {
+            b.importance
+                .partial_cmp(&a.importance)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
         sorted.truncate(n);
         sorted
     }

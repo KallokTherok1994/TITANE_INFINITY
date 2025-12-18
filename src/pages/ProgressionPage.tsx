@@ -181,3 +181,6 @@ export const ProgressionPage = (): JSX.Element => {
     </div>
   );
 };
+
+// v24.3.1 FIX: Add missing default export for lazy loading
+export default ProgressionPage;

@@ -8,7 +8,6 @@
  * Moteur de mémoire conversationnelle avec autosave et snapshots
  * ═══════════════════════════════════════════════════════════════════
  */
-
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use uuid::Uuid;

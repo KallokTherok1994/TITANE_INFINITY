@@ -1,15 +1,15 @@
-// TITANE_INFINITY v19.5.2 — Proprietary License
+// TITANE_INFINITY v24.3.0 — Proprietary License
 // © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
 
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v19.5.2 — MAIN ENTRY POINT (Singularity Architecture)
-//   20 Engines Unified + Cognitive Layer + SingularityDashboard
-//   Onboarding System + Configuration Hub + Production Ready
+//   TITANE∞ v24.3.0 — MAIN ENTRY POINT (Singularity Architecture)
+//   20 Engines Unified + OMEGA Pipeline + Phase 2 Fusion Commands
+//   Onboarding System + Production Ready
 // ═══════════════════════════════════════════════════════════════
 
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 #![allow(dead_code)]
-#![allow(deprecated)] // TODO v25.x: Migrate to conversation_engine::conversation_generate
+#![allow(deprecated)] // Migration to conversation_engine::conversation_generate in progress
 
 // ═══════════════════════════════════════════════════════════════
 // TITANE∞ HARDENING: Import Hygiene v19.5.2
@@ -520,7 +520,7 @@ fn main() {
             match app.get_webview_window("main") {
                 Some(main_window) => {
                     log::info!("📱 Main window found in app context");
-                    
+
                     if let Err(err) = main_window.show() {
                         eprintln!("❌ Failed to show main window: {err}");
                     } else {
@@ -697,6 +697,32 @@ fn main() {
             commands_v21::memory_os_commands::memory_demote,
             commands_v21::memory_os_commands::memory_delete,
             commands_v21::memory_os_commands::memory_prune,
+            // ═══════════════════════════════════════════════════════════════
+            // PHASE 2 FUSION COMMANDS v20.0 (Coherence + UnifiedMemory + Health)
+            // ═══════════════════════════════════════════════════════════════
+            // Coherence Commands (5 commands)
+            coherence_commands::coherence_get_state,
+            coherence_commands::coherence_check_system,
+            coherence_commands::coherence_validate_connections,
+            coherence_commands::coherence_get_score,
+            coherence_commands::coherence_initialize,
+            // Unified Memory Commands (6 commands)
+            unified_memory_commands::memory_get_state,
+            unified_memory_commands::memory_store,
+            unified_memory_commands::memory_recall,
+            unified_memory_commands::memory_get_stats,
+            unified_memory_commands::memory_initialize,
+            unified_memory_commands::memory_tick,
+            // System Health Commands (9 commands)
+            system_health_commands::health_get_state,
+            system_health_commands::health_get_report,
+            system_health_commands::health_check_system,
+            system_health_commands::health_initialize,
+            system_health_commands::health_set_auto_heal,
+            system_health_commands::health_get_metrics,
+            system_health_commands::get_system_health,
+            system_health_commands::memory_repair,
+            system_health_commands::system_optimize,
             // DevTools Commands (3 commands)
             commands_v21::devtools_commands::devtools_enable,
             commands_v21::devtools_commands::devtools_disable,

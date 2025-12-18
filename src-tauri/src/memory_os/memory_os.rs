@@ -333,7 +333,11 @@ impl MemoryOS {
 
         // Sort by importance and deduplicate
         // FIX: Handle NaN values safely to prevent panic
-        results.sort_by(|a, b| b.importance.partial_cmp(&a.importance).unwrap_or(std::cmp::Ordering::Equal));
+        results.sort_by(|a, b| {
+            b.importance
+                .partial_cmp(&a.importance)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
         results.dedup_by(|a, b| a.id == b.id);
         results.truncate(limit);
 

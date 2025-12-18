@@ -58,6 +58,8 @@ import { initializeOllama } from './services/ai/providers/ollama'; // ✨ v21 - 
 // ✨ OPT-12: connectCacheToSingularity lazy-loaded below (removed static import)
 // ✨ OPT-7: i18n is now lazy-loaded in useEffect below (removed static import)
 // ✨ v25.4.1 - A11Y & Performance monitoring (utilities planned for future implementation)
+// ✨ CONSOLE MONITOR - Auto-Heal Integration
+import { consoleMonitor } from './services/monitoring/consoleMonitor';
 // ✨ v25.3.1 + P3: Lazy-load Aura components (heavy graphics)
 const QuantumParticles = lazy(() =>
   import('./components/aura/QuantumParticles').then(m => ({
@@ -93,38 +95,25 @@ if (typeof window !== 'undefined') {
   // En dev: JAMAIS bloquer (autoriser Vite HMR + Tauri dev)
   // En prod browser: Afficher warning dans l'UI via composant, pas via document.body
   if (shouldBlockLoading()) {
-    console.warn('⚠️ TITANE∞ - Contexte browser production détecté');
-    console.warn('   Origine:', env.origin);
-    console.warn('   Recommandation: Utiliser build Tauri natif');
+    logger.warn('Contexte browser production détecté', {
+      component: 'Environment',
+      origin: env.origin,
+    });
+    logger.warn('Recommandation: Utiliser build Tauri natif', {
+      component: 'Environment',
+    });
     // Note: Le warning sera affiché dans l'UI via un composant dédié si nécessaire,
     // mais on ne bloque plus le rendu React pour permettre l'affichage
   }
 }
 
-// ✨ v24 P2-4 - Performance: Lazy load ALL pages except Dashboard
-// ❌ SUPPRIMÉ v24.3.8: DashboardPage (fusionné dans EvoPage)
-// const DashboardPage = lazy(() => import('./pages/DashboardPage')...);
-
-// ❌ SUPPRIMÉ v25.3.0: EvoPage (fusionné dans TitanePage - le cœur du système)
-// const EvoPage = lazy(() => import('./pages/EvoPage').then(m => ({ default: m.EvoPage })));
-
-// ✨ v25.1 TIME - Centre Temporel Unifié (Fusion Temporal Flow + Agenda + Time Navigator)
+// ✨ v24.3.0 - Lazy loaded pages (code splitting)
 const TimePage = lazy(() =>
   import('./pages/TimePage').then(m => ({ default: m.TimePage }))
 );
-
-// ❌ SUPPRIMÉ v25.3.0: ChatPage (fusionné dans TitanePage - le cœur du système)
-// const ChatPage = lazy(() => import('./ui/pages/Chat').then(m => ({ default: m.Chat })));
-// ❌ SUPPRIMÉ v25.1: CognitivePage (redirigé vers /stats)
-// const CognitivePage = lazy(() => import('./pages/CognitivePage')...);
-// ❌ SUPPRIMÉ v24.3.8: ProgressionPage (fusionné dans EvoPage)
-// const ProgressionPage = lazy(() => import('./pages/ProgressionPage')...);
 const Experience = lazy(() =>
   import('./pages/Experience').then(m => ({ default: m.Experience }))
 );
-// ❌ SUPPRIMÉ v25.1: ConfigurationHub (redirigé vers /admin)
-// const ConfigurationHub = lazy(() => import('./pages/ConfigurationHub')...);
-// Diagnostics, DevTools, Cluster, Introspection, HyperVision → System Center
 
 // ✨ v24 - Performance: Lazy load SingularityMonitor
 const SingularityMonitor = lazy(() =>
@@ -137,129 +126,63 @@ const ChatBubble = lazy(() =>
   import('./components/chat/ChatBubble').then(m => ({ default: m.ChatBubble }))
 );
 
-// ✨ v∞.25.0 - AI Bubble Engine (Super Prompt #14 - BUBBLE ENGINE)
-const _AIChatBubble = lazy(() =>
-  import('./components/AIChatBubble').then(m => ({ default: m.AIChatBubble }))
-);
-
-// ✨ v∞.26.0 - Hybrid Engine (Super Prompt #16 - AI + DEV CONSOLE FUSION)
-const _HybridBubble = lazy(() =>
-  import('./components/HybridBubble').then(m => ({ default: m.HybridBubble }))
-);
-
-// ✨ v∞.27.0 - Cognitive Layout Engine (Super Prompt #2 - ADAPTIVE UI)
-// ✨ PHASE 4.2 - Lazy load cognitive layout (defer ~50KB)
+// ✨ v24.3.0 - Cognitive Layout Control
 const CognitiveLayoutControl = lazy(() =>
   import('./components/cognitive/CognitiveLayoutControl').then(m => ({
     default: m.CognitiveLayoutControl,
   }))
 );
-// ✨ OPT-11: cognitiveLayoutEngine lazy-loaded below (removed static import)
 
-// ✨ v∞.27.0 - Unified Presence Engine (Super Prompt #3 - EXPERIENTIAL IDENTITY)
-// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
-// import { UnifiedPresenceControl as _UnifiedPresenceControl } from './components/presence/UnifiedPresenceControl';
-// import { unifiedPresenceEngine } from './engines/presence/unifiedPresenceEngine';
-// import { presenceIntegrations } from './engines/presence/presenceIntegrations';
-// import { narrativeProtocol } from './engines/presence/narrativeProtocol';
-
-// ✨ v∞.28.0 - Multimodal Presence Engine (Super Prompt XXVIII - LIVING PRESENCE)
-// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
-// import { MultimodalPresencePanel as _MultimodalPresencePanel } from './components/presence/MultimodalPresencePanel';
-// import { multimodalPresenceEngine } from './engines/presence/multimodalPresenceEngine';
-// import './components/presence/MultimodalPresencePanel.css';
-
-// ✨ v∞.29-32 - Deep Psyche Engines (Super Prompts XXIX, XXX, XXXII, X)
-// ❌ SUPPRIMÉ v24.3.8: Stubs engines inutilisés (archetypeResonanceEngine, metaContinuumEngine, embodiedPresenceEngine)
-import { neuralVoiceBlendingEngine as _neuralVoiceBlendingEngine } from './engines/voice/neuralVoiceBlendingEngine';
-
-// ✨ v∞.33 - Presence OS Panel (Super Prompt XII - TITANE∞ PRESENCE OS 🌌)
-// ✨ v24.2.1 PERF: Removed unused PresenceOSPanel import (~19KB savings)
-// import { PresenceOSPanel as _PresenceOSPanel } from './components/presence/PresenceOSPanel';
-// import './components/presence/PresenceOSPanel.css';
-
-// ✨ v∞.34 - Physiological Panel (Super Prompts XI + XIII - HOLOPHONIC + INTEROCEPTION 🌬️)
-// ✨ v24.2.1 PERF: Removed unused PhysiologicalPanel import (~22KB savings)
-// import { PhysiologicalPanel as _PhysiologicalPanel } from './components/physiological/PhysiologicalPanel';
-// import './components/physiological/PhysiologicalPanel.css';
-
-// ✨ v∞.31-33 - Expression Engines (SUPER PROMPTS XXXI-XXXIII + Aura Ultra)
-// ❌ SUPPRIMÉ v24.3.8: Stubs engines inutilisés (synestheticEmotionEngine, unifiedMultimodalOutputEngine, auraEngine)
 import './components/psyche/DeepPsychePanel.css';
-
-// ✨ v∞.12 - Presence OS (Unified Multimodal Identity System)
-// STUB: engines/presence supprimé en PHASE 1 (OPTION B) - utilise stub temporaire
 import { presenceOS } from './engines/presence/_stubs';
 
-// ✨ v∞ - Multi-Agent Engine & Agents
-// REMOVED: core/ai/multi_agent_engine + agents supprimés en PHASE 1 (OPTION B)
-// import { multiAgentEngine } from './core/ai/multi_agent_engine';
-// import { HeliosAgent } from './core/ai/agents/helios_agent';
-// import { HarmoniaAgent } from './core/ai/agents/harmonia_agent';
-// import { PersonaAgent } from './core/ai/agents/persona_agent';
-// import { MemoryCoreAgent } from './core/ai/agents/memory_core_agent';
-// import { WatchdogAgent } from './core/ai/agents/watchdog_agent';
-
-// Phase 9: Lazy load heavy pages (code splitting with named exports)
-const _DesignSystemPage = lazy(() =>
-  import('./pages/DesignSystemPage').then(m => ({ default: m.DesignSystemPage }))
-);
+// ✨ v24.3.0 - Lazy loaded pages
 const PerformanceTest = lazy(() =>
   import('./pages/PerformanceTest').then(m => ({ default: m.PerformanceTest }))
 );
-const _TimeNavigator = lazy(() =>
-  import('./pages/TimeNavigator').then(m => ({ default: m.TimeNavigator }))
-);
-// ❌ SUPPRIMÉ v24.3.7: MultiAIDashboard (deprecated stub)
 const KnowledgeFusionPage = lazy(() => import('./ui/pages/KnowledgeFusionPage'));
 const CreationStudio = lazy(() => import('./ui/pages/CreationStudio'));
 const EvolutionMonitor = lazy(() => import('./ui/pages/EvolutionMonitor'));
 
-// ✨ v25.2.2 ADMIN CENTER - Module ADMIN Unifié (Système, Config, Audio, Design, Gouvernance)
+// ✨ v24.3.0 - Core pages
 const AdminPage = lazy(() =>
   import('./features/admin').then(m => ({ default: m.AdminPage }))
 );
-
-// ✨ v25.3.0 TITANE - Le Cœur du Système (fusion Chat IA + Vision + EVO)
 const TitanePage = lazy(() =>
   import('./pages/TitanePage').then(m => ({ default: m.TitanePage }))
 );
-
-// ❌ SUPPRIMÉ v24.3.8: EvolutionCenterPage (fusionné dans EvoPage)
-// const EvolutionCenterPage = lazy(() => import('./pages/EvolutionCenterPage')...);
-
-// ✨ ORCHESTRATION META CENTER - Centre Unifié v24 (#9 - Fusion Meta + Orchestration)
 const OrchestrationMetaCenter = lazy(() =>
   import('./pages/OrchestrationMetaCenter').then(m => ({
     default: m.OrchestrationMetaCenter,
   }))
 );
-
-// ✨ v25.4.0 DEV CENTER - Fusion Complete (Dev Mode + ONE CORE + QA & Tests + Orchestration)
 const DevPage = lazy(() => import('./pages/DevPage').then(m => ({ default: m.DevPage })));
-
-// ✨ v25.3.2 FUSION DASHBOARD - Perfect Backend/Frontend Fusion (Singularity + Memory + Health)
 const PerfectFusionDashboard = lazy(() =>
   import('./components/fusion/PerfectFusionDashboard').then(m => ({ default: m.default }))
 );
-
-// ✨ v25.6.0 ULTIMATE OPTIMIZATION - Phase 12: GPU + WASM + Service Worker + IndexedDB
 const UltimateOptimizationDashboard = lazy(() =>
   import('./components/optimization/UltimateOptimizationDashboard').then(m => ({
     default: m.UltimateOptimizationDashboard,
   }))
 );
 
-// ❌ DEPRECATED v25.4.0: Modules fusionnés dans DevPage
-// - ONE CORE (Centre de Commande Unifié)
-// - QA MONITORING (Centre QA & Monitoring)
-// - DEVELOPER MODE (IA Developer Mode)
-// - ORCHESTRATION (Orchestration & IA)
-// Ces modules sont maintenant accessibles via /dev
-
-// ✨ REALITY CENTER - Reality Rendering Layer v∞ (OPUS #19)
+// ✨ v24.3.0 - Center modules
 const RealityCenter = lazy(() =>
   import('./components/RealityCenter/RealityCenter').then(m => ({ default: m.default }))
+);
+
+// ✨ v26.1 CONSOLE MONITOR DASHBOARD - Dev-only monitoring UI
+const ConsoleMonitorDashboard = lazy(() =>
+  import('./components/dev/ConsoleMonitorDashboard').then(m => ({
+    default: m.ConsoleMonitorDashboard,
+  }))
+);
+
+// ✨ v26.2 PREDICTIVE DASHBOARD - ML-like error prediction & correlation
+const PredictiveDashboard = lazy(() =>
+  import('./components/dev/PredictiveDashboard').then(m => ({
+    default: m.PredictiveDashboard,
+  }))
 );
 
 // ✨ HYPER CENTER - Hyper-Intelligence Engine v∞ (OPUS #20)
@@ -289,19 +212,11 @@ const CloudCenter = lazy(() =>
   import('./pages/CloudCenter').then(m => ({ default: m.CloudCenter }))
 );
 
-// ✨ v24.1 - ORCHESTRATION & INTELLIGENCE CENTER (FUSION 6 modules → 1 centre)
 const OrchestrationIntelligenceCenter = lazy(
   () => import('./modules/OrchestrationIntelligenceCenter')
 );
 
-// ❌ SUPPRIMÉ v24.3.8: IdentityMemoryEvolutionCenter (fusionné dans EvoPage)
-// const IdentityMemoryEvolutionCenter = lazy(() => import('./modules/IdentityMemoryEvolutionCenter'));
-
-// ❌ SUPPRIMÉ v25.1: TemporalFlowCenter (fusionné dans TimePage)
-// const TemporalFlowCenter = lazy(() => import('./modules/TemporalFlowCenter'));
-
-// ✨ v24 P2-4 - Engine & System pages (lazy loaded for code splitting)
-// ❌ SUPPRIMÉ v25.2.1: Helios, Nexus, Harmonia → fusionnés dans /stats (Stats.tsx)
+// ✨ v24.3.0 - Engine pages
 const Sentinel = lazy(() =>
   import('./pages/Sentinel').then(m => ({ default: m.Sentinel }))
 );
@@ -315,13 +230,6 @@ const AdaptiveEngine = lazy(() =>
   import('./pages/AdaptiveEngine').then(m => ({ default: m.AdaptiveEngine }))
 );
 const Memory = lazy(() => import('./pages/Memory').then(m => ({ default: m.Memory })));
-const _AgendaPage = lazy(() =>
-  import('./pages/AgendaPage').then(m => ({ default: m.AgendaPage }))
-);
-// ❌ SUPPRIMÉ v25.3.0: CameraPage (fusionné dans TitanePage via Vision tab)
-// const CameraPage = lazy(() =>
-//   import('./pages/CameraPage').then(m => ({ default: m.CameraPage }))
-// );
 
 /**
  * ═══════════════════════════════════════════════════════════════
@@ -348,10 +256,16 @@ const AppRouter: React.FC = () => {
     const checkOnboarding = async () => {
       try {
         const isComplete = await invoke<boolean>('is_onboarding_complete');
-        console.log('🎨 [ONBOARDING] Status:', isComplete ? 'Complete' : 'Not started');
+        logger.info('Onboarding status', {
+          component: 'Onboarding',
+          status: isComplete ? 'Complete' : 'Not started',
+        });
         setOnboardingComplete(isComplete);
       } catch (error) {
-        console.warn('⚠️ [ONBOARDING] Failed to check status, assuming complete:', error);
+        logger.warn('Failed to check onboarding status, assuming complete', {
+          component: 'Onboarding',
+          error,
+        });
         setOnboardingComplete(true); // Fallback to main app
       } finally {
         setCheckingOnboarding(false);
@@ -363,7 +277,7 @@ const AppRouter: React.FC = () => {
 
   // ✨ v21 - Initialiser Ollama Provider au démarrage
   useEffect(() => {
-    console.log('🤖 [OLLAMA] Initializing local AI provider...');
+    logger.info('Initializing local AI provider', { component: 'Ollama' });
     initializeOllama().catch(error => {
       logger.error(
         'Failed to initialize OLLAMA',
@@ -373,15 +287,48 @@ const AppRouter: React.FC = () => {
     });
   }, []);
 
+  // ✨ CONSOLE MONITOR - Start monitoring in development mode
+  useEffect(() => {
+    if (import.meta.env.DEV) {
+      console.log(
+        '🔍 [CONSOLE-MONITOR] Starting console monitoring & auto-heal integration...'
+      );
+      try {
+        consoleMonitor.start();
+        logger.info('Console monitor started', {
+          component: 'App',
+          service: 'ConsoleMonitor',
+        });
+      } catch (error) {
+        logger.error(
+          'Failed to start console monitor',
+          { component: 'App', service: 'ConsoleMonitor' },
+          error as Error
+        );
+      }
+    }
+
+    return () => {
+      if (import.meta.env.DEV) {
+        consoleMonitor.stop();
+      }
+    };
+  }, []);
+
   // ✨ v26.2 - Enable local network security mode for private home network
   useEffect(() => {
     import('./lib/security')
       .then(({ enableLocalNetworkMode }) => {
         enableLocalNetworkMode();
-        console.log('🏠 [SECURITY] Local network mode enabled - reduced restrictions');
+        logger.info('Local network mode enabled - reduced restrictions', {
+          component: 'Security',
+        });
       })
       .catch(err => {
-        console.warn('⚠️ [SECURITY] Failed to enable local network mode:', err);
+        logger.warn('Failed to enable local network mode', {
+          component: 'Security',
+          error: err,
+        });
       });
   }, []);
 
@@ -404,7 +351,7 @@ const AppRouter: React.FC = () => {
         initI18nAsync(); // Background load, doesn't block UI
       })
       .catch(error => {
-        console.warn('⚠️ [i18n] Lazy initialization failed:', error);
+        logger.warn('i18n lazy initialization failed', { component: 'i18n', error });
       });
   }, []);
 
@@ -427,7 +374,10 @@ const AppRouter: React.FC = () => {
         }
       })
       .catch(error => {
-        console.warn('⚠️ [COGNITIVE-CACHE] Failed to load:', error);
+        logger.warn('Failed to load cognitive cache', {
+          component: 'CognitiveCache',
+          error,
+        });
       });
   }, []);
 
@@ -500,19 +450,23 @@ const AppRouter: React.FC = () => {
         };
       })
       .catch(err => {
-        console.warn('⚠️ [COGNITIVE] Failed to load Cognitive Layout Engine:', err);
+        logger.warn('Failed to load Cognitive Layout Engine', {
+          component: 'CognitiveLayout',
+          error: err,
+        });
       });
   }, []);
 
   // ✨ OPT-10 - Lazy-load TITANE∞ Micro-Interactions
   useEffect(() => {
-    console.log('✨ [UI-POLISH] Loading TITANE∞ micro-interactions...');
+    logger.info('Loading TITANE∞ micro-interactions', { component: 'UIPolish' });
     import('./ui/motion')
       .then(({ initializeMicroInteractions }) => {
         try {
           initializeMicroInteractions();
-          console.log(
-            '✅ [UI-POLISH] Micro-interactions initialized (Ripple, Magnetism, Focus Glow, Tooltips)'
+          logger.info(
+            'Micro-interactions initialized (Ripple, Magnetism, Focus Glow, Tooltips)',
+            { component: 'UIPolish' }
           );
         } catch (error) {
           logger.error(
@@ -523,7 +477,10 @@ const AppRouter: React.FC = () => {
         }
       })
       .catch(err => {
-        console.warn('⚠️ [UI-POLISH] Failed to load motion module:', err);
+        logger.warn('Failed to load motion module', {
+          component: 'UIPolish',
+          error: err,
+        });
       });
   }, []);
 
@@ -767,7 +724,7 @@ const AppRouter: React.FC = () => {
           title="TITANE∞"
           subtitle={
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <span>v19.5.2 — Singularity Architecture • 20 Engines • Full OPUS</span>
+              <span>v24.3.0 — Singularity Architecture • 20 Engines • Full OPUS</span>
               <XPBar /> {/* ✨ v∞.D4 - Barre XP */}
             </div>
           }
@@ -938,13 +895,9 @@ const AppRouter: React.FC = () => {
           <Route path="/dev-mode" element={<Navigate to="/dev" replace />} />
           <Route path="/devmode" element={<Navigate to="/dev" replace />} />
           <Route path="/ia-dev" element={<Navigate to="/dev" replace />} />
-          <Route
-            path="/orchestration-intelligence"
-            element={<Navigate to="/dev" replace />}
-          />
-          <Route path="/orchestration-center" element={<Navigate to="/dev" replace />} />
-          <Route path="/orchestration" element={<Navigate to="/dev" replace />} />
-          <Route path="/meta-center" element={<Navigate to="/dev" replace />} />
+          {/* Note: /orchestration-intelligence et /orchestration-center ont leurs propres composants ci-dessus */}
+          <Route path="/orchestration" element={<Navigate to="/orchestration-intelligence" replace />} />
+          <Route path="/meta-center" element={<Navigate to="/orchestration-center" replace />} />
           {/* ✨ REALITY CENTER - Reality Rendering Layer v∞ (OPUS #19) */}
           <Route
             path="/reality-center"
@@ -1113,6 +1066,20 @@ const App: React.FC = () => {
         <TitanStateProvider>
           {/* ✨ v25.3.1 - Aura Control System */}
           <AuraControlPanel position="bottom-right" defaultOpen={false} />
+
+          {/* ✨ v26.1 - Console Monitor Dashboard (Dev only) */}
+          {import.meta.env.DEV && (
+            <Suspense fallback={null}>
+              <ConsoleMonitorDashboard />
+            </Suspense>
+          )}
+
+          {/* ✨ v26.2 - Predictive AI Dashboard (Dev only) */}
+          {import.meta.env.DEV && (
+            <Suspense fallback={null}>
+              <PredictiveDashboard />
+            </Suspense>
+          )}
 
           {/* ✨ v25.3.1 - Quantum Particles Background (Global) - Connected to Aura Orchestrator */}
           <AuraConnectedParticles />

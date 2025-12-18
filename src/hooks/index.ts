@@ -1,10 +1,10 @@
 /**
- * TITANE_INFINITY v∞.19.2.3Ω — Proprietary License
+ * TITANE_INFINITY v24.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 // ═══════════════════════════════════════════════════════════════
-// TITANE∞ v∞.19.2.3Ω - Hooks Central Export
+// TITANE∞ v24.3.0 - Hooks Central Export
 // ═══════════════════════════════════════════════════════════════
 
 // ═══ v25.7.4 RESPONSIVE DESIGN HOOKS ═══

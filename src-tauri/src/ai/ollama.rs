@@ -89,10 +89,10 @@ pub struct OllamaStatus {
 pub async fn ai_generate_local(request: LocalAIRequest) -> Result<LocalAIResponse, String> {
     // 🔒 SECURITY v19.3: Rate Limiting Check
     let user_id = "local_ai_user".to_string(); // Implementation: Get user ID from authenticated session
-                                                // - Session: Extract from tauri::State<SessionManager>
-                                                // - Auth: Get session.current_user_id() or session.jwt_claims.sub
-                                                // - Fallback: Use "local_ai_user" for unauthenticated/dev mode
-                                                // - Multi-user: Support different rate limits per user tier
+                                               // - Session: Extract from tauri::State<SessionManager>
+                                               // - Auth: Get session.current_user_id() or session.jwt_claims.sub
+                                               // - Fallback: Use "local_ai_user" for unauthenticated/dev mode
+                                               // - Multi-user: Support different rate limits per user tier
     if let Err(e) = crate::security::rate_limit::GLOBAL_RATE_LIMITER
         .check(&user_id)
         .await
