@@ -1,9 +1,9 @@
 /**
-import { secureInvoke } from '@/lib/security';
  * TITANE∞ v20Ω — Tauri Bridge
  * Pont de communication avec le backend Rust
  */
 
+import { secureInvoke } from '@/lib/security';
 import { listen, emit as tauriEmit, type UnlistenFn } from '@tauri-apps/api/event';
 import type { BridgeState, TauriCommand } from '../types';
 
@@ -29,7 +29,7 @@ export class TauriBridge {
   async init(): Promise<void> {
     try {
       // Tester la connexion avec un ping
-      await this.secureInvoke('ping');
+      await this.invoke('ping');
       this.state.connected = true;
       this.state.lastSync = Date.now();
     } catch (error) {
@@ -159,7 +159,7 @@ export class TauriBridge {
    * Batch multiple commandes
    */
   async batch<R = unknown>(commands: Array<TauriCommand>): Promise<R[]> {
-    return Promise.all(commands.map(cmd => this.secureInvoke(cmd.name, cmd.args))) as Promise<
+    return Promise.all(commands.map(cmd => this.invoke(cmd.name, cmd.args))) as Promise<
       R[]
     >;
   }
@@ -169,7 +169,7 @@ export class TauriBridge {
    */
   async checkConnection(): Promise<boolean> {
     try {
-      await this.secureInvoke('ping');
+      await this.invoke('ping');
       this.state.connected = true;
       return true;
     } catch {

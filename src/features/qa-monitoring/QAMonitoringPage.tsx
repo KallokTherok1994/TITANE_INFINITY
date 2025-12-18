@@ -47,6 +47,8 @@ const StatCard = React.memo(
   )
 );
 
+StatCard.displayName = 'StatCard';
+
 interface SeverityBadgeProps {
   severity: string;
 }
@@ -59,6 +61,8 @@ const SeverityBadge = React.memo(
   )
 );
 
+SeverityBadge.displayName = 'SeverityBadge';
+
 interface StatusBadgeProps {
   status: string;
 }
@@ -68,6 +72,8 @@ const StatusBadge = React.memo(
     <span className={`qa-status qa-status--${status}`}>{status}</span>
   )
 );
+
+StatusBadge.displayName = 'StatusBadge';
 
 // ============================================================================
 // Tab Components

@@ -437,9 +437,9 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
       try {
         await secureInvoke('titan_persist_event', { event });
         lastPersistRef.current = Date.now();
-        logger.info('[TitanState] ✅ Event persisté:', action.type);
+        logger.info('[TitanState] ✅ Event persisté:');
       } catch (error) {
-        logger.error('[TitanState] ❌ Erreur persistence:', error);
+        logger.error('[TitanState] ❌ Erreur persistence:');
       }
     }
   }, []);
@@ -450,7 +450,7 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
       await secureInvoke('titan_persist_event', { event });
       lastPersistRef.current = Date.now();
     } catch (error) {
-      logger.error('[TitanState] ❌ Erreur persistEvent:', error);
+      logger.error('[TitanState] ❌ Erreur persistEvent:');
     }
   }, []);
 
@@ -462,7 +462,7 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
       baseDispatch({ type: 'system/markClean' });
       logger.info('[TitanState] 📸 Snapshot forcé créé');
     } catch (error) {
-      logger.error('[TitanState] ❌ Erreur forceSnapshot:', error);
+      logger.error('[TitanState] ❌ Erreur forceSnapshot:');
     }
   }, [state]);
 
@@ -472,7 +472,7 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
       const report = await secureInvoke<{ is_valid: boolean }>('titan_check_integrity');
       return report?.is_valid ?? false;
     } catch (error) {
-      logger.error('[TitanState] ❌ Erreur checkIntegrity:', error);
+      logger.error('[TitanState] ❌ Erreur checkIntegrity:');
       return false;
     }
   }, []);
@@ -483,7 +483,7 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
       try {
         return await secureInvoke<PersistenceStatus>('titan_get_persistence_status');
       } catch (error) {
-        logger.error('[TitanState] ❌ Erreur getPersistenceStatus:', error);
+        logger.error('[TitanState] ❌ Erreur getPersistenceStatus:');
         return null;
       }
     }, []);
@@ -509,7 +509,7 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
           logger.info('[TitanState] 🆕 Nouvel état initialisé');
         }
       } catch (error) {
-        logger.error('[TitanState] ❌ Erreur init:', error);
+        logger.error('[TitanState] ❌ Erreur init:');
         baseDispatch({ type: 'system/init', payload: initialState });
       }
     };
@@ -549,7 +549,7 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
 
         return unlisten;
       } catch (error) {
-        logger.warn("[TitanState] ⚠️ Impossible d'écouter close-requested:", error);
+        logger.warn("[TitanState] ⚠️ Impossible d'écouter close-requested:");
         return () => {};
       }
     };

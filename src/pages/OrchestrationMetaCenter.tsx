@@ -190,6 +190,8 @@ const HealthBar: React.FC<{ value: number; label: string; color?: string }> = me
   )
 );
 
+HealthBar.displayName = 'HealthBar';
+
 const ScoreGauge: React.FC<{ value: number; label: string; size?: number }> = memo(
   ({ value, label, size = 120 }) => {
     const getColor = (): string => {
@@ -228,6 +230,8 @@ const ScoreGauge: React.FC<{ value: number; label: string; size?: number }> = me
   }
 );
 
+ScoreGauge.displayName = 'ScoreGauge';
+
 const StatusBadge: React.FC<{ status: string }> = memo(({ status }) => {
   const getClass = (): string => {
     switch (status.toLowerCase()) {
@@ -255,6 +259,8 @@ const StatusBadge: React.FC<{ status: string }> = memo(({ status }) => {
   return <span className={`omc-badge ${getClass()}`}>{status.toUpperCase()}</span>;
 });
 
+StatusBadge.displayName = 'StatusBadge';
+
 const EngineCard: React.FC<{ engine: EngineStatus }> = memo(({ engine }) => (
   <div className="omc-engine-card">
     <div className="omc-engine-header">
@@ -281,6 +287,8 @@ const EngineCard: React.FC<{ engine: EngineStatus }> = memo(({ engine }) => (
     </div>
   </div>
 ));
+
+EngineCard.displayName = 'EngineCard';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // VIEW TABS
@@ -715,7 +723,7 @@ const OrchestrationMetaCenterContent: React.FC = () => {
       const metaState = await secureInvoke<MetaOrchestratorState>(
         'orchestrator_get_state'
       ).catch(async () => {
-        return invoke<MetaOrchestratorState>('orchestrator_init');
+        return secureInvoke<MetaOrchestratorState>('orchestrator_init');
       });
 
       // Load Cognitive orchestration states (with fallbacks)

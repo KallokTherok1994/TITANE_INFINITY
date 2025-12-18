@@ -1,5 +1,4 @@
 /**
-import { secureInvoke } from '@/lib/security';
  * TITANE∞ v15 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
@@ -10,6 +9,7 @@ import { secureInvoke } from '@/lib/security';
 // 🎯 ExpPanel — Panneau principal EXP Fusion
 // Vue globale : XP, catégories, projets, talents, timeline
 
+import { secureInvoke } from '@/lib/security';
 import React, { useState, useEffect } from 'react';
 import { logger as _logger } from '@/lib/logger';
 import '../../styles/exp-fusion.css';

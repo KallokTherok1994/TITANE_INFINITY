@@ -36,9 +36,13 @@ const globalQueryClient = new QueryClient({
 });
 
 // Global wrapper for tests
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Test utility globalThis typing
-(globalThis as any).__TEST_WRAPPER__ = ({ children }: { children: React.ReactNode }) =>
+const TestWrapper = ({ children }: { children: React.ReactNode }) =>
   React.createElement(QueryClientProvider, { client: globalQueryClient }, children);
+
+TestWrapper.displayName = 'TestWrapper';
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Test utility globalThis typing
+(globalThis as any).__TEST_WRAPPER__ = TestWrapper;
 
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {

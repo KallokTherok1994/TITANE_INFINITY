@@ -288,5 +288,5 @@ function getColorByLabel(label: string): string {
   };
 
   const lowerLabel = label?.toLowerCase() || 'unknown';
-  return colors[lowerLabel] ?? colors.unknown;
+  return colors[lowerLabel]! ?? colors.unknown;
 }

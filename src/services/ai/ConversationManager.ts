@@ -1,5 +1,4 @@
 /**
-import { secureInvoke } from '@/lib/security';
  * 🧠 TITANE∞ ConversationManager
  *
  * Service centralisé pour gérer TOUTES les conversations IA (OMEGA v2 spec):
@@ -20,6 +19,7 @@ import { secureInvoke } from '@/lib/security';
  *                          MemoryManager (persistence)
  */
 
+import { secureInvoke } from '@/lib/security';
 import { emit } from '@tauri-apps/api/event';
 import { logger } from '@/lib/logger';
 import type {
@@ -320,7 +320,7 @@ export class ConversationManager {
         model: string;
         tokens_used: number;
       }>('chat_send_message', {
-        prompt: request.messages[request.messages.length - 1].content,
+        prompt: request.messages[request.messages.length - 1]?.content ?? '',
         provider: config.backendProvider,
         streaming: request.config.enableStreaming || false,
       });

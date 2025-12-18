@@ -1,11 +1,11 @@
 /**
-import { secureInvoke } from '@/lib/security';
  * ═══════════════════════════════════════════════════════════════
  *   TITANE∞ v∞ — SYNC LOGS COMPONENT
  *   Historique des synchronisations
  * ═══════════════════════════════════════════════════════════════
  */
 
+import { secureInvoke } from '@/lib/security';
 import React, { useState, useEffect } from 'react';
 import { SyncHistoryEntry } from './types';
 

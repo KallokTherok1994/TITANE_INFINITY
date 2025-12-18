@@ -1,11 +1,11 @@
 /**
-import { secureInvoke } from '@/lib/security';
  * ═══════════════════════════════════════════════════════════════════════════
  *   TITANE∞ v∞.22.0 — DEV-SUDO EXTENDED HANDLERS
  *   Handlers avancés pour Super Prompts #4/#5/#6
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
+import { secureInvoke } from '@/lib/security';
 import type { DevSudoResult } from './types';
 
 // ═══════════════════════════════════════════════════════════════════════════

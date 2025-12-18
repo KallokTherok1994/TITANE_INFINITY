@@ -1,9 +1,9 @@
 /**
-import { secureInvoke } from '@/lib/security';
  * TITANE∞ v22.0 — MetricsDisplay Component
  * Real-time dashboard metrics with Chart.js visualization
  */
 
+import { secureInvoke } from '@/lib/security';
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 import './MetricsDisplay.css';
 
