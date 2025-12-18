@@ -1,4 +1,5 @@
 /**
+import { secureInvoke } from '@/lib/security';
  * ═══════════════════════════════════════════════════════════════════
  * TITANE∞ v∞.19.3Ω — MULTI-AGENTS API SERVICE
  * Service TypeScript pour interagir avec le backend Multi-Agents

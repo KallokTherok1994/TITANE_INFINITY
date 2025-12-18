@@ -59,7 +59,7 @@ export const LogViewer: React.FC = () => {
       critical: logEntries.filter(l => l.level === 'CRITICAL').length,
     };
     setStats(newStats);
-  };
+  }, []);
 
   // Fetch logs from backend
   const fetchLogs = useCallback(async () => {

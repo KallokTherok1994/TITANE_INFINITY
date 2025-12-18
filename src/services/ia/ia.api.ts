@@ -1,4 +1,5 @@
 /**
+import { secureInvoke } from '@/lib/security';
  * ═══════════════════════════════════════════════════════════════════
  * TITANE∞ v∞.19.3Ω — IA SERVICE API
  * Client TypeScript pour UnifiedIAEngine (OpenAI + Claude)

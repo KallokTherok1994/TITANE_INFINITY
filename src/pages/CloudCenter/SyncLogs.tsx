@@ -1,4 +1,5 @@
 /**
+import { secureInvoke } from '@/lib/security';
  * ═══════════════════════════════════════════════════════════════
  *   TITANE∞ v∞ — SYNC LOGS COMPONENT
  *   Historique des synchronisations

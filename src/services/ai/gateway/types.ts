@@ -1,4 +1,5 @@
 /**
+import { secureInvoke } from '@/lib/security';
  * ═══════════════════════════════════════════════════════════════════
  * TITANE∞ v21.5 — UNIFIED API GATEWAY (Cognitive Integration)
  * Architecture unifiée pour l'orchestration IA

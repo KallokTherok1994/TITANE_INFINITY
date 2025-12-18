@@ -287,13 +287,14 @@ export async function selectPlaybook(symptoms: string): Promise<PlaybookPlan> {
 
   return (
     match ??
-    PLAYBOOK_REGISTRY[0] ?? {
+    PLAYBOOK_REGISTRY[0] ??
+    ({
       id: 'unknown',
       label: 'Unknown Playbook',
       description: 'Default fallback playbook',
       steps: [],
       successCriteria: 'Default success criteria',
-    } as PlaybookPlan
+    } as PlaybookPlan)
   );
 }
 
