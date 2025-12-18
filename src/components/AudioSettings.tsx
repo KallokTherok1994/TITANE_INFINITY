@@ -413,7 +413,7 @@ export const AudioSettings = () => {
             }}
           >
             <div>
-              <span style={labelStyle}>Détection d'émotions</span>
+              <span style={labelStyle}>Détection d&apos;émotions</span>
               <p
                 style={{
                   color: 'rgba(255,255,255,0.4)',
@@ -421,7 +421,7 @@ export const AudioSettings = () => {
                   margin: '0.25rem 0 0',
                 }}
               >
-                Adapter l'intonation au contexte
+                Adapter l&apos;intonation au contexte
               </p>
             </div>
             <button
