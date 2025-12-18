@@ -89,7 +89,7 @@ jobs:
             libasound2-dev
 
       - name: Setup Rust
-        uses: dtolnay/rust-action@stable
+        uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           components: clippy, rustfmt
 
@@ -153,7 +153,9 @@ jobs:
           cache: 'npm'
 
       - name: Setup Rust
-        uses: dtolnay/rust-action@stable
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: clippy, rustfmt
 
       - name: Cache cargo
         uses: actions/cache@v4
