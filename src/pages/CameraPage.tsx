@@ -45,7 +45,7 @@ const EthicalDisclaimer: React.FC = () => (
   <div className="camera-ethical-disclaimer">
     <h4>⚠️ Information Importante</h4>
     <p>
-      Le module Vision est <strong>100% local</strong> — aucune donnée n'est envoyée vers
+      Le module Vision est <strong>100% local</strong> — aucune donnée n&apos;est envoyée vers
       le cloud.
     </p>
     <p>

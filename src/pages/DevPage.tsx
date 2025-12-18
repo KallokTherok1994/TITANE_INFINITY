@@ -123,7 +123,7 @@ const OverviewSection = memo<{
   return (
     <div className="dev-section">
       <header className="dev-section-header">
-        <h2>🎯 Vue d'Ensemble DEV</h2>
+        <h2>🎯 Vue d&apos;Ensemble DEV</h2>
       </header>
 
       <div className="dev-stats-grid">

@@ -169,7 +169,7 @@ export function AppearanceTab() {
       <div className="dc-tab-content dc-appearance-content">
         {/* Section Densité */}
         <section className="dc-settings-section">
-          <h4>📐 Densité de l'Interface</h4>
+          <h4>📐 Densité de l&apos;Interface</h4>
 
           <SelectField
             label="Mode de Densité"

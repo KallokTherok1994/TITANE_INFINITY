@@ -971,7 +971,7 @@ const IdentityCenterContent: React.FC = () => {
       <div className="identity-center loading">
         <div className="loading-spinner">
           <div className="spinner-ring"></div>
-          <span>Chargement de l'identité...</span>
+          <span>Chargement de l&apos;identité...</span>
         </div>
       </div>
     );
@@ -1002,7 +1002,7 @@ const IdentityCenterContent: React.FC = () => {
           className={`tab ${activeTab === 'overview' ? 'active' : ''}`}
           onClick={() => setActiveTab('overview')}
         >
-          <span>🏠</span> Vue d'ensemble
+          <span>🏠</span> Vue d&apos;ensemble
         </button>
         <button
           className={`tab ${activeTab === 'personality' ? 'active' : ''}`}

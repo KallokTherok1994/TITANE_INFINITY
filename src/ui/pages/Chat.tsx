@@ -1179,7 +1179,7 @@ export const Chat: React.FC = () => {
                 >
                   <span style={{ fontSize: '18px' }}>⚠️</span>
                   <span>
-                    <strong>{preferredProvider.toUpperCase()}</strong> n'est pas
+                    <strong>{preferredProvider.toUpperCase()}</strong> n&apos;est pas
                     configuré. Le système basculera automatiquement vers un provider
                     disponible. Pour utiliser {preferredProvider}, ajoutez votre clé API
                     dans <strong>Gouvernance → Secrets</strong>.

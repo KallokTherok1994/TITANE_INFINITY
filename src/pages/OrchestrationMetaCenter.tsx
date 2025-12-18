@@ -448,7 +448,7 @@ const MetaTab: React.FC<{
       </div>
 
       <div className="omc-section">
-        <h2>Mode d'Orchestration</h2>
+        <h2>Mode d&apos;Orchestration</h2>
         <div className="omc-mode-selector">
           {MODES.map(mode => (
             <button
@@ -828,7 +828,7 @@ const OrchestrationMetaCenterContent: React.FC = () => {
     return (
       <div className="omc-loading">
         <div className="omc-loading-spinner" />
-        <p>Initialisation du centre d'orchestration...</p>
+        <p>Initialisation du centre d&apos;orchestration...</p>
       </div>
     );
   }

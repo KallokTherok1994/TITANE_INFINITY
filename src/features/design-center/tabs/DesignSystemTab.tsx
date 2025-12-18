@@ -50,7 +50,7 @@ function ComponentPreview() {
   if (!tokens || !tokens.colors) {
     return (
       <div className="dc-component-preview">
-        <p style={{ padding: '1rem', textAlign: 'center' }}>Chargement de l'aperçu...</p>
+        <p style={{ padding: '1rem', textAlign: 'center' }}>Chargement de l&apos;aperçu...</p>
       </div>
     );
   }

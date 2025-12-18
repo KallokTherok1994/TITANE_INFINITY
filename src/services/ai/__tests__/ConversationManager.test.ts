@@ -7,19 +7,48 @@ import { ConversationManager } from '../ConversationManager';
 import type { ConversationMessage } from '@/types/conversation';
 import { vi, beforeEach, afterEach } from 'vitest';
 
-// Mock Tauri API
-vi.mock('@tauri-apps/api/tauri', () => ({
-  invoke: vi.fn((cmd: string, args?: any) => {
+// Mock secureInvoke (replaces deprecated Tauri invoke)
+vi.mock('@/lib/security', () => ({
+  secureInvoke: vi.fn((cmd: string, args?: any) => {
+    // VectorStore commands
+    if (cmd === 'vector_store_init') {
+      return Promise.resolve('test-store-id-123');
+    }
+    if (cmd === 'vector_store_search' || cmd === 'vector_search') {
+      return Promise.resolve({ results: [], count: 0, total: 0 });
+    }
+    if (cmd === 'vector_store_insert') {
+      return Promise.resolve({ success: true, id: `vector-${Date.now()}` });
+    }
+    if (cmd === 'vector_store_get_stats') {
+      return Promise.resolve({ total: 0, dimensions: 384 });
+    }
+
+    // AI/Chat commands
     if (cmd === 'chat_send_message') {
       return Promise.resolve({
-        content: `Mock response to: ${args.prompt}`,
+        content: `Mock response to: ${args?.prompt || args?.message || 'unknown'}`,
         model: 'mock-model',
         tokens_used: 42,
+        finish_reason: 'stop',
       });
     }
-    if (cmd === 'vector_store_init') {
+
+    // Memory commands
+    if (cmd === 'memory_store_conversation') {
+      return Promise.resolve({ success: true, id: args?.conversationId });
+    }
+    if (cmd === 'memory_get_conversation') {
+      return Promise.resolve(null);
+    }
+    if (cmd === 'memory_delete_conversation') {
       return Promise.resolve({ success: true });
     }
+    if (cmd === 'memory_list_conversations') {
+      return Promise.resolve({ conversations: [] });
+    }
+
+    // Default
     return Promise.resolve({ success: true });
   }),
 }));

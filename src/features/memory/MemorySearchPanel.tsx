@@ -191,7 +191,7 @@ export const MemorySearchPanel: React.FC<MemorySearchPanelProps> = ({
           <div className="no-results">
             <Search size={48} className="no-results-icon" />
             <p>Aucun résultat trouvé</p>
-            <small>Essayez d'autres mots-clés ou filtres</small>
+            <small>Essayez d&apos;autres mots-clés ou filtres</small>
           </div>
         ) : (
           filteredEntries.map(entry => (

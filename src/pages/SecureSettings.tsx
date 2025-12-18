@@ -310,7 +310,7 @@ export const SecureSettings: React.FC = () => {
         {loading ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <Spinner size="sm" />
-            <span>Chargement de l'état sécurisé…</span>
+            <span>Chargement de l&apos;état sécurisé…</span>
           </div>
         ) : (
           <>
@@ -576,7 +576,7 @@ export const SecureSettings: React.FC = () => {
           }}
         >
           <li>
-            Définir <code>TITANE_SECRETS_PASSPHRASE</code> dans l'environnement (avant
+            Définir <code>TITANE_SECRETS_PASSPHRASE</code> dans l&apos;environnement (avant
             lancement Tauri).
           </li>
           <li>Ouvrir cette page et coller la clé Gemini fournie par Google AI Studio.</li>

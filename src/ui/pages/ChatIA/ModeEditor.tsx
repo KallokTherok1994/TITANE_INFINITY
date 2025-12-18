@@ -275,7 +275,7 @@ Les instructions doivent être en français, claires et directes.`;
     <div className="mode-editor-overlay">
       <div className="mode-editor-modal">
         <div className="mode-editor-header">
-          <h2>🎭 Gestionnaire de Modes d'Instructions</h2>
+          <h2>🎭 Gestionnaire de Modes d&apos;Instructions</h2>
           <button className="close-btn" onClick={onClose}>
             ✕
           </button>

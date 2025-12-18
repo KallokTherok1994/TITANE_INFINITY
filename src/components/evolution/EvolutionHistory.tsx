@@ -200,7 +200,7 @@ export const EvolutionHistory: React.FC<EvolutionHistoryProps> = ({
   return (
     <div className={`evolution-history ${className}`}>
       <header className="history-header">
-        <h3>📜 Historique d'Évolution</h3>
+        <h3>📜 Historique d&apos;Évolution</h3>
         <div className="history-stats">
           <span className="stat success">{stats.success} ✓</span>
           <span className="stat failed">{stats.failed} ✗</span>

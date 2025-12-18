@@ -636,7 +636,7 @@ export const SecretsTab: React.FC<SecretsTabProps> = ({
           }}
         >
           <li>
-            Définir <code>TITANE_SECRETS_PASSPHRASE</code> dans l'environnement avant le
+            Définir <code>TITANE_SECRETS_PASSPHRASE</code> dans l&apos;environnement avant le
             lancement.
           </li>
           <li>Les secrets sont chiffrés avec AES-256-GCM + dérivation Argon2id.</li>

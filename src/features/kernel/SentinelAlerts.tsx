@@ -84,7 +84,7 @@ export function SentinelAlerts() {
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Sentinel — Détection d'Anomalies</h2>
+        <h2 className="text-2xl font-bold">Sentinel — Détection d&apos;Anomalies</h2>
         <div className="flex items-center gap-3">
           <Badge color={unresolvedCount > 0 ? 'red' : 'green'} size="lg">
             {unresolvedCount} non résolues
@@ -98,7 +98,7 @@ export function SentinelAlerts() {
       {/* Integrity Score */}
       <Card className="p-6">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm text-gray-400">Score d'Intégrité</span>
+          <span className="text-sm text-gray-400">Score d&apos;Intégrité</span>
           <span className="text-lg font-semibold">
             {sentinel.integrity_score.toFixed(1)}%
           </span>

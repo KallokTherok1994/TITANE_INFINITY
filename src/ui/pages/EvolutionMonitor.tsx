@@ -121,10 +121,10 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600">
-            Moniteur d'Évolution
+            Moniteur d&apos;Évolution
           </h1>
           <p className="text-gray-400 mt-2">
-            Phase 10 : Suivi & Contrôle de l'Auto-Évolution
+            Phase 10 : Suivi & Contrôle de l&apos;Auto-Évolution
           </p>
         </div>
 
@@ -206,7 +206,7 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
               <h2 className="text-xl font-semibold text-white mb-4">
-                Statistiques d'Évolution
+                Statistiques d&apos;Évolution
               </h2>
 
               <div className="space-y-4">
@@ -275,7 +275,7 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
           {lastReport && (
             <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
               <h2 className="text-xl font-semibold text-white mb-4">
-                Dernier Cycle d'Évolution #{lastReport.cycle}
+                Dernier Cycle d&apos;Évolution #{lastReport.cycle}
               </h2>
 
               <div className="grid grid-cols-4 gap-4 mb-6">
@@ -323,10 +323,10 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
         <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-12 border border-green-500/30 text-center">
           <div className="text-6xl mb-4">🧬</div>
           <h2 className="text-2xl font-semibold text-white mb-2">
-            Moteur d'Évolution Prêt
+            Moteur d&apos;Évolution Prêt
           </h2>
           <p className="text-gray-400">
-            Lancez un cycle d'évolution pour démarrer le suivi des améliorations
+            Lancez un cycle d&apos;évolution pour démarrer le suivi des améliorations
           </p>
         </div>
       )}

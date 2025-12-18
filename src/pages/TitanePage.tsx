@@ -853,7 +853,7 @@ const VisionSection: React.FC<VisionSectionProps> = () => {
           <div className="vision-ethical-disclaimer" style={{ marginTop: spacing[4] }}>
             <h4>⚠️ Information Importante</h4>
             <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
-              Le module Vision est <strong>100% local</strong> — aucune donnée n'est
+              Le module Vision est <strong>100% local</strong> — aucune donnée n&apos;est
               envoyée vers le cloud.
             </p>
           </div>
@@ -1184,7 +1184,7 @@ const MemoryEvolutionSection: React.FC<MemoryEvolutionSectionProps> = () => {
       />
 
       <Card>
-        <h3 style={{ marginBottom: spacing[4] }}>Centre d'Évolution Mémoire</h3>
+        <h3 style={{ marginBottom: spacing[4] }}>Centre d&apos;Évolution Mémoire</h3>
         {env.isTauri ? (
           <React.Suspense fallback={null}>
             <LazyMemoryEvolutionCenter />
@@ -1195,7 +1195,7 @@ const MemoryEvolutionSection: React.FC<MemoryEvolutionSectionProps> = () => {
               Disponible en mode Tauri uniquement
             </p>
             <div style={{ marginTop: spacing[4] }}>
-              <h4 style={{ marginBottom: spacing[3] }}>Timeline d'Évolution</h4>
+              <h4 style={{ marginBottom: spacing[3] }}>Timeline d&apos;Évolution</h4>
               <React.Suspense fallback={null}>
                 <LazyEvolutionTimeline />
               </React.Suspense>
@@ -1434,7 +1434,7 @@ const TransformationSection: React.FC<TransformationSectionProps> = () => {
 
       <Grid columns={2} gap={4} style={{ marginTop: spacing[4] }}>
         <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Lignes d'Évolution</h3>
+          <h3 style={{ marginBottom: spacing[4] }}>Lignes d&apos;Évolution</h3>
           <Stack direction="vertical" gap={3}>
             <div>
               <TBadge variant="info">Cognitif</TBadge>

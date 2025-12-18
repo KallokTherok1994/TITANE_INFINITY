@@ -47,7 +47,7 @@ export const SelfHeal = () => {
           <span className="module-page__icon">🛡️</span>
           SelfHeal — Auto-Réparation
         </h1>
-        <p className="module-page__subtitle">Système d'auto-correction et maintenance</p>
+        <p className="module-page__subtitle">Système d&apos;auto-correction et maintenance</p>
       </div>
 
       <div className="module-page__grid">

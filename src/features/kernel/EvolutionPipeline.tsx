@@ -227,7 +227,7 @@ export function EvolutionPipeline() {
 
       {/* Pipeline Visualization */}
       <Card className="p-6">
-        <h3 className="font-semibold mb-4">🔄 Pipeline d'Évolution</h3>
+        <h3 className="font-semibold mb-4">🔄 Pipeline d&apos;Évolution</h3>
         <div className="flex items-center justify-between gap-4">
           {['Collect', 'Diagnose', 'Decide', 'Repair', 'Record'].map((step, idx) => (
             <React.Fragment key={step}>
