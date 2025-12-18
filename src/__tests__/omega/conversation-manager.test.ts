@@ -8,14 +8,40 @@
  * - Multi-conversation support
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {
   conversationManager,
   sendAIMessage,
 } from '../../services/ai/ConversationManager';
 import type { ConversationMessage } from '../../types/conversation';
 
-describe.skip('🧠 ConversationManager (OMEGA v2)', () => {
+// Mock secureInvoke with proper isolation
+vi.mock('@/lib/security', async (importOriginal) => {
+  const actual = await importOriginal() as any;
+  return {
+    ...actual,
+    secureInvoke: vi.fn((cmd: string, args?: any) => {
+      if (cmd === 'vector_store_init') return Promise.resolve('test-store-omega');
+      if (cmd === 'vector_store_search' || cmd === 'vector_search') {
+        return Promise.resolve({ results: [], count: 0, total: 0 });
+      }
+      if (cmd === 'vector_store_insert') {
+        return Promise.resolve({ success: true, id: `vec-${Date.now()}` });
+      }
+      if (cmd === 'chat_send_message') {
+        return Promise.resolve({
+          content: `Mock response: ${args?.prompt || 'test'}`,
+          model: 'mock-gpt4',
+          tokens_used: 42,
+          finish_reason: 'stop'
+        });
+      }
+      return Promise.resolve({ success: true });
+    })
+  };
+});
+
+describe('🧠 ConversationManager (OMEGA v2)', () => {
   beforeEach(async () => {
     // Clear all conversations before each test
     const conversations = await conversationManager.listConversations();
