@@ -181,7 +181,7 @@ describe('useActiveListening', () => {
   });
 
   describe('Attention State Changes', () => {
-    it.skip('should transition through attention states', async () => {
+    it('should transition through attention states', async () => {
       const onAttentionChange = vi.fn();
 
       const { result } = renderHook(() =>

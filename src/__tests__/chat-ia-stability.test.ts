@@ -233,7 +233,7 @@ describe('Chat IA - Stabilité des Messages (FIX v15.1)', () => {
     console.log('✅ SCÉNARIO C: Aucun doublon détecté');
   });
 
-  it.skip('SCÉNARIO D: Loading state correct', async () => {
+  it('SCÉNARIO D: Loading state correct', async () => {
     const { result } = renderHook(() => useChat());
 
     expect(result.current.isLoading).toBe(false);
