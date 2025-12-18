@@ -140,7 +140,7 @@ export function useVisualEngine(
         engineRef.current = null;
       }
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [autoStart, engineConfig]);
 
   // Methods
   const setState = useCallback((state: VisualState, duration?: number) => {

@@ -271,7 +271,12 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
 
         for (let i = event.resultIndex; i < event.results.length; i++) {
           const result = event.results[i];
-          const transcript = result[0].transcript;
+          if (!result) continue;
+
+          const alternative = result[0];
+          if (!alternative) continue;
+
+          const transcript = alternative.transcript;
 
           if (result.isFinal) {
             finalTranscript += transcript;

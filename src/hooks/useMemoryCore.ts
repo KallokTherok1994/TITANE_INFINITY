@@ -22,14 +22,22 @@ const normalizeMemoryState = (
   state: Partial<MemoryState> | null | undefined
 ): MemoryState => {
   const rawEntries = Array.isArray(state?.entries) ? state.entries : [];
-  const entries = rawEntries.filter((item): item is MemoryEntry => {
-    if (!item || typeof item !== 'object') {
-      return false;
-    }
-    const candidate = item as Partial<MemoryEntry>;
-    return typeof candidate.id === 'string' && typeof candidate.content === 'string';
-  });
-  const encryptedCount = entries.filter(item => Boolean(item?.encrypted)).length;
+  const entries = rawEntries
+    .map(item => {
+      if (!item || typeof item !== 'object') {
+        return null;
+      }
+      const candidate = item as Partial<MemoryEntry>;
+      if (typeof candidate.id === 'string' && typeof candidate.content === 'string') {
+        return item as MemoryEntry;
+      }
+      return null;
+    })
+    .filter((item): item is MemoryEntry => item !== null);
+  const encryptedCount = entries.filter(item => {
+    if (!item) return false;
+    return Boolean(item.encrypted);
+  }).length;
 
   return {
     entries,
@@ -39,7 +47,17 @@ const normalizeMemoryState = (
   };
 };
 
-export const useMemoryCore = () => {
+export interface UseMemoryCoreReturn {
+  entries: MemoryEntry[];
+  loading: boolean;
+  error: string | null;
+  loadEntries: () => Promise<MemoryState>;
+  saveEntry: (content: string) => Promise<void>;
+  clearMemory: () => Promise<void>;
+  getMemoryState: () => Promise<MemoryState>;
+}
+
+export const useMemoryCore = (): UseMemoryCoreReturn => {
   const [entries, setEntries] = useState<MemoryEntry[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

@@ -528,8 +528,7 @@ export function useDevicePermissions(): DevicePermissionsResult {
   useEffect(() => {
     // Vérifier uniquement le microphone au démarrage (le plus utilisé)
     checkPermission('microphone');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [checkPermission]);
 
   return {
     permissions,

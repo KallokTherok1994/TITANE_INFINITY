@@ -56,12 +56,11 @@ export function useSingularityStateSafe<T = SingularityFrontendState>(
             console.error('[useSingularityStateSafe] Selector error:', err);
             return state;
           }
-        }) as (state: SingularityFrontendState) => unknown)
-      : (state: SingularityFrontendState) => state
+        }) as (state: SingularityFrontendState) => T)
+      : (state: SingularityFrontendState) => state as unknown as T
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return result as any;
+  return result;
 }
 
 /**

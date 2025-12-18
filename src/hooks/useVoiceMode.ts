@@ -41,7 +41,18 @@ export interface VoiceState {
   transcript: string;
 }
 
-export function useVoiceMode() {
+export interface UseVoiceModeReturn {
+  state: VoiceState;
+  error: string | null;
+  startRecording: () => Promise<void>;
+  stopRecording: () => Promise<void>;
+  transcribe: (audioData: Uint8Array) => Promise<string | null>;
+  speak: (text: string, useOnline?: boolean) => Promise<void>;
+  getVADState: () => Promise<boolean>;
+  clearTranscript: () => void;
+}
+
+export function useVoiceMode(): UseVoiceModeReturn {
   const [state, setState] = useState<VoiceState>({
     isRecording: false,
     isTranscribing: false,

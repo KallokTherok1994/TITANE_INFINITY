@@ -39,7 +39,20 @@ export interface UseVitalsOptions {
   adaptive?: boolean;
 }
 
-export function useVitals(options: UseVitalsOptions = {}) {
+export interface UseVitalsReturn {
+  vitals: SystemVitals | null;
+  history: SystemVitals[];
+  isLoading: boolean;
+  error: string | null;
+  currentInterval: number;
+  signalActivity: () => void;
+  fetchVitals: () => Promise<SystemVitals | null | undefined>;
+  clearHistory: () => void;
+  getAverageStats: () => Omit<SystemVitals, 'timestamp'>;
+  isOverloaded: boolean;
+}
+
+export function useVitals(options: UseVitalsOptions = {}): UseVitalsReturn {
   const { pollInterval = 5000, enabled = true, adaptive = true } = options;
 
   const [state, setState] = useState<VitalsState>({
@@ -66,10 +79,10 @@ export function useVitals(options: UseVitalsOptions = {}) {
 
       // Parser les vitals (format peut varier selon le backend)
       const vitals: SystemVitals = {
-        cpu: (vitalsData.cpu_usage as number) || 0,
-        memory: (vitalsData.memory_usage as number) || 0,
-        disk: (vitalsData.disk_usage as number) || 0,
-        uptime: (vitalsData.uptime as number) || 0,
+        cpu: typeof vitalsData.cpu_usage === 'number' ? vitalsData.cpu_usage : 0,
+        memory: typeof vitalsData.memory_usage === 'number' ? vitalsData.memory_usage : 0,
+        disk: typeof vitalsData.disk_usage === 'number' ? vitalsData.disk_usage : 0,
+        uptime: typeof vitalsData.uptime === 'number' ? vitalsData.uptime : 0,
         timestamp: Date.now(),
       };
 
@@ -115,12 +128,15 @@ export function useVitals(options: UseVitalsOptions = {}) {
     if (state.history.length === 0) return null;
 
     const sum = state.history.reduce(
-      (acc, v) => ({
-        cpu: acc.cpu + v.cpu,
-        memory: acc.memory + v.memory,
-        disk: acc.disk + v.disk,
-        uptime: v.uptime, // Dernier uptime
-      }),
+      (acc, v) => {
+        if (!v) return acc;
+        return {
+          cpu: acc.cpu + v.cpu,
+          memory: acc.memory + v.memory,
+          disk: acc.disk + v.disk,
+          uptime: v.uptime, // Dernier uptime
+        };
+      },
       { cpu: 0, memory: 0, disk: 0, uptime: 0 }
     );
 
@@ -184,8 +200,7 @@ export function useVitals(options: UseVitalsOptions = {}) {
       const interval = setInterval(fetchVitals, pollInterval);
       return () => clearInterval(interval);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pollInterval, enabled, adaptive]);
+  }, [pollInterval, enabled, adaptive, fetchVitals]);
 
   // ✨ v24.2.1: Signal activity to speed up polling
   const signalActivity = useCallback(() => {
@@ -202,7 +217,16 @@ export function useVitals(options: UseVitalsOptions = {}) {
     signalActivity,
     fetchVitals,
     clearHistory,
-    getAverageStats,
-    isOverloaded,
+    getAverageStats: () => {
+      const stats = getAverageStats();
+      if (!stats) return { cpu: 0, memory: 0, disk: 0, uptime: 0 };
+      return {
+        cpu: stats.cpu ?? 0,
+        memory: stats.memory ?? 0,
+        disk: stats.disk ?? 0,
+        uptime: stats.uptime ?? 0,
+      };
+    },
+    isOverloaded: isOverloaded(),
   };
 }

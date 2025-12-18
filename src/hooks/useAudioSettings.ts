@@ -145,6 +145,11 @@ export function useAudioSettings(): UseAudioSettingsReturn {
 
   const mountedRef = useRef(true);
 
+  // Refs for stable callbacks (avoid circular deps)
+  const checkPermissionsRef = useRef<() => Promise<void>>();
+  const refreshDevicesRef = useRef<() => Promise<void>>();
+  const updateHealthSummaryRef = useRef<(updates: Partial<AudioHealthSummary>) => void>();
+
   // ─────────────────────────────────────────────────────────────────
   // INITIALIZATION
   // ─────────────────────────────────────────────────────────────────
@@ -159,47 +164,54 @@ export function useAudioSettings(): UseAudioSettingsReturn {
     if (savedInput) setSelectedInputDevice(savedInput);
     if (savedOutput) setSelectedOutputDevice(savedOutput);
 
-    // Initial load
-    loadInitialData();
+    // Initial load using refs
+    const loadInitial = async () => {
+      setIsLoading(true);
+
+      try {
+        // Check permissions first
+        if (checkPermissionsRef.current) {
+          await checkPermissionsRef.current();
+        }
+
+        // Load devices
+        if (refreshDevicesRef.current) {
+          await refreshDevicesRef.current();
+        }
+
+        // Load cached health summary
+        const cachedHealth = localStorage.getItem(STORAGE_KEYS.healthSummary);
+        if (cachedHealth) {
+          try {
+            const parsed = JSON.parse(cachedHealth) as AudioHealthSummary;
+            // Only use cache if less than 5 minutes old
+            if (
+              parsed &&
+              typeof parsed.lastCheck === 'number' &&
+              Date.now() - parsed.lastCheck < 5 * 60 * 1000
+            ) {
+              setHealthSummary(parsed);
+            }
+          } catch {
+            // Ignore parse errors
+          }
+        }
+      } catch (error) {
+        console.error('[useAudioSettings] Init error:', error);
+        setLastError("Échec de l'initialisation audio");
+      } finally {
+        if (mountedRef.current) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadInitial();
 
     return () => {
       mountedRef.current = false;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const loadInitialData = async () => {
-    setIsLoading(true);
-
-    try {
-      // Check permissions first
-      await checkPermissions();
-
-      // Load devices
-      await refreshDevices();
-
-      // Load cached health summary
-      const cachedHealth = localStorage.getItem(STORAGE_KEYS.healthSummary);
-      if (cachedHealth) {
-        try {
-          const parsed = JSON.parse(cachedHealth);
-          // Only use cache if less than 5 minutes old
-          if (Date.now() - parsed.lastCheck < 5 * 60 * 1000) {
-            setHealthSummary(parsed);
-          }
-        } catch {
-          // Ignore parse errors
-        }
-      }
-    } catch (error) {
-      console.error('[useAudioSettings] Init error:', error);
-      setLastError("Échec de l'initialisation audio");
-    } finally {
-      if (mountedRef.current) {
-        setIsLoading(false);
-      }
-    }
-  };
+  }, []); // Safe: all functions via stable refs
 
   // ─────────────────────────────────────────────────────────────────
   // PERMISSIONS (Optimisé pour Tauri + Web)
@@ -348,8 +360,12 @@ export function useAudioSettings(): UseAudioSettingsReturn {
 
       return false;
     }
+    // Note: refreshDevices is not used in this callback, ESLint false positive
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [setLastError]);
+
+  // Update ref for stable access
+  checkPermissionsRef.current = checkPermissions;
 
   // ─────────────────────────────────────────────────────────────────
   // DEVICE MANAGEMENT
@@ -367,17 +383,14 @@ export function useAudioSettings(): UseAudioSettingsReturn {
         setOutputDevices(outputs);
 
         // Validate selected devices still exist
-        if (
-          selectedInputDevice !== 'default' &&
-          !inputs.find(d => d.id === selectedInputDevice)
-        ) {
+        const inputDeviceExists = inputs.find(d => d.id === selectedInputDevice);
+        if (selectedInputDevice !== 'default' && !inputDeviceExists) {
           setSelectedInputDevice('default');
           localStorage.removeItem(STORAGE_KEYS.selectedInput);
         }
-        if (
-          selectedOutputDevice !== 'default' &&
-          !outputs.find(d => d.id === selectedOutputDevice)
-        ) {
+
+        const outputDeviceExists = outputs.find(d => d.id === selectedOutputDevice);
+        if (selectedOutputDevice !== 'default' && !outputDeviceExists) {
           setSelectedOutputDevice('default');
           localStorage.removeItem(STORAGE_KEYS.selectedOutput);
         }
@@ -398,6 +411,9 @@ export function useAudioSettings(): UseAudioSettingsReturn {
       setLastError('Échec de la sélection du microphone');
     }
   }, []);
+
+  // Update ref for stable access
+  refreshDevicesRef.current = refreshDevices;
 
   const selectOutputDevice = useCallback(async (deviceId: string) => {
     try {
@@ -423,7 +439,9 @@ export function useAudioSettings(): UseAudioSettingsReturn {
 
       if (mountedRef.current) {
         setMicTestResult(result);
-        updateHealthSummary({ microphoneOk: result.success });
+        if (updateHealthSummaryRef.current) {
+          updateHealthSummaryRef.current({ microphoneOk: result.success });
+        }
       }
 
       return result;
@@ -438,7 +456,9 @@ export function useAudioSettings(): UseAudioSettingsReturn {
 
       if (mountedRef.current) {
         setMicTestResult(errorResult);
-        updateHealthSummary({ microphoneOk: false });
+        if (updateHealthSummaryRef.current) {
+          updateHealthSummaryRef.current({ microphoneOk: false });
+        }
       }
 
       return errorResult;
@@ -447,47 +467,52 @@ export function useAudioSettings(): UseAudioSettingsReturn {
         setIsTesting(false);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, []); // Safe: uses stable ref
 
-  const testSpeaker = useCallback(async (text?: string): Promise<AudioTestResult> => {
-    setIsTesting(true);
-    setSpeakerTestResult(null);
+  const testSpeaker = useCallback(
+    async (text?: string): Promise<AudioTestResult> => {
+      setIsTesting(true);
+      setSpeakerTestResult(null);
 
-    try {
-      const result = await audioService.testSpeaker(
-        text || 'Test audio TITANE Infinity. Son de sortie OK.'
-      );
+      try {
+        const result = await audioService.testSpeaker(
+          text || 'Test audio TITANE Infinity. Son de sortie OK.'
+        );
 
-      if (mountedRef.current) {
-        setSpeakerTestResult(result);
-        updateHealthSummary({ speakerOk: result.success });
+        if (mountedRef.current) {
+          setSpeakerTestResult(result);
+          if (updateHealthSummaryRef.current) {
+            updateHealthSummaryRef.current({ speakerOk: result.success });
+          }
+        }
+
+        return result;
+      } catch (error) {
+        const errorResult: AudioTestResult = {
+          success: false,
+          latencyMs: 0,
+          qualityScore: 0,
+          provider: 'unknown',
+          errorMessage:
+            error instanceof Error ? error.message : 'Échec du test haut-parleur',
+        };
+
+        if (mountedRef.current) {
+          setSpeakerTestResult(errorResult);
+          if (updateHealthSummaryRef.current) {
+            updateHealthSummaryRef.current({ speakerOk: false });
+          }
+        }
+
+        return errorResult;
+      } finally {
+        if (mountedRef.current) {
+          setIsTesting(false);
+        }
       }
-
-      return result;
-    } catch (error) {
-      const errorResult: AudioTestResult = {
-        success: false,
-        latencyMs: 0,
-        qualityScore: 0,
-        provider: 'unknown',
-        errorMessage:
-          error instanceof Error ? error.message : 'Échec du test haut-parleur',
-      };
-
-      if (mountedRef.current) {
-        setSpeakerTestResult(errorResult);
-        updateHealthSummary({ speakerOk: false });
-      }
-
-      return errorResult;
-    } finally {
-      if (mountedRef.current) {
-        setIsTesting(false);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    },
+    [] // Safe: uses stable ref
+  );
 
   // ─────────────────────────────────────────────────────────────────
   // DIAGNOSTICS
@@ -508,7 +533,9 @@ export function useAudioSettings(): UseAudioSettingsReturn {
     const issues: string[] = [];
 
     const updateStep = (id: string, update: Partial<AudioDiagnosticStep>) => {
-      setDiagnosticSteps(prev => prev.map(s => (s.id === id ? { ...s, ...update } : s)));
+      setDiagnosticSteps(prev =>
+        prev.map(s => (s && s.id === id ? { ...s, ...update } : s))
+      );
     };
 
     try {
@@ -563,11 +590,10 @@ export function useAudioSettings(): UseAudioSettingsReturn {
       const micResult = await testMicrophone();
 
       if (micResult.success) {
+        const snrValue = micResult.signalToNoise ?? null;
         updateStep('microphone', {
           status: 'success',
-          message: micResult.signalToNoise
-            ? `SNR: ${micResult.signalToNoise.toFixed(1)}dB`
-            : 'OK',
+          message: snrValue !== null ? `SNR: ${snrValue.toFixed(1)}dB` : 'OK',
         });
       } else {
         updateStep('microphone', {
@@ -583,9 +609,10 @@ export function useAudioSettings(): UseAudioSettingsReturn {
       const speakerResult = await testSpeaker();
 
       if (speakerResult.success) {
+        const providerValue = speakerResult.provider ?? null;
         updateStep('speaker', {
           status: 'success',
-          message: speakerResult.provider ? `Provider: ${speakerResult.provider}` : 'OK',
+          message: providerValue ? `Provider: ${providerValue}` : 'OK',
         });
       } else {
         updateStep('speaker', {
@@ -668,6 +695,9 @@ export function useAudioSettings(): UseAudioSettingsReturn {
     });
   }, []);
 
+  // Update ref for stable access
+  updateHealthSummaryRef.current = updateHealthSummary;
+
   // ─────────────────────────────────────────────────────────────────
   // RESET
   // ─────────────────────────────────────────────────────────────────
@@ -689,15 +719,21 @@ export function useAudioSettings(): UseAudioSettingsReturn {
 
       // Invalidate cache and reload
       audioService.invalidateDeviceCache();
-      await loadInitialData();
+
+      // Reload initial data via refs
+      if (checkPermissionsRef.current) {
+        await checkPermissionsRef.current();
+      }
+      if (refreshDevicesRef.current) {
+        await refreshDevicesRef.current();
+      }
 
       console.log('[useAudioSettings] Audio system reset');
     } catch (error) {
       console.error('[useAudioSettings] Reset error:', error);
       setLastError('Échec de la réinitialisation audio');
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, []); // Safe: uses stable refs
 
   const clearError = useCallback(() => {
     setLastError(null);

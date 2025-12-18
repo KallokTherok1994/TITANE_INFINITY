@@ -6,7 +6,11 @@
  */
 
 import { useEffect } from 'react';
-import { useSingularityState, type EngineName } from '../core/state/SingularityState';
+import {
+  useSingularityState,
+  type EngineName,
+  type EngineDataMap,
+} from '../core/state/SingularityState';
 import { useTitaneCore } from './useTitaneCore';
 
 type EngineType =
@@ -32,8 +36,8 @@ type EngineType =
  * }
  * ```
  */
-export function useEngineSubscription(engine: EngineType) {
-  const engineData = useSingularityState(state => state.enginesData[engine]);
+export function useEngineSubscription(engine: EngineType): void {
+  // Note: engineData is read by the component, not this hook
   const setEngineData = useSingularityState(state => state.setEngineData);
   const setEngineLoading = useSingularityState(state => state.setEngineLoading);
 
@@ -61,7 +65,7 @@ export function useEngineSubscription(engine: EngineType) {
       adaptive: { fn: getAdaptiveData, interval: 4000 },
     };
 
-    const config = commandMap[engine];
+    const config = commandMap[engine as keyof typeof commandMap];
     if (!config) {
       console.error(`[useEngineSubscription] Unknown engine: ${engine}`);
       return;
@@ -74,10 +78,9 @@ export function useEngineSubscription(engine: EngineType) {
       setEngineLoading(engine, true);
       try {
         const data = await config.fn();
-        if (mounted) {
-          // Note: Backend validates data structure, type assertion safe here
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          setEngineData(engine as EngineName, data as any);
+        if (mounted && data) {
+          // Backend validates data structure, type assertion needed for generic fn()
+          setEngineData(engine as EngineName, data as EngineDataMap[typeof engine]);
         }
       } catch (error) {
         console.error(`[useEngineSubscription] Error fetching ${engine}:`, error);
@@ -111,6 +114,4 @@ export function useEngineSubscription(engine: EngineType) {
     getSelfHealData,
     getAdaptiveData,
   ]);
-
-  return engineData;
 }
