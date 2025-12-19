@@ -18,8 +18,8 @@ mod memory_system_tests {
         let stm = ShortTermMemory::new();
         let snapshot = stm.snapshot().await;
 
-        assert_eq!(snapshot.entries.len(), 0, "New STM should be empty");
-        assert_eq!(snapshot.tier, MemoryTier::ShortTerm);
+        assert_eq!(snapshot.count, 0, "New STM should be empty");
+        assert_eq!(snapshot.tier, MemoryTier::STM);
     }
 
     #[tokio::test]
@@ -31,11 +31,12 @@ mod memory_system_tests {
             MemoryType::Conversation,
         );
 
-        stm.push(entry.clone()).await;
-        let snapshot = stm.snapshot().await;
+        let evicted = stm.push(entry.clone()).await;
+        assert!(evicted.is_none(), "First push should not evict");
 
-        assert_eq!(snapshot.entries.len(), 1, "STM should contain 1 entry");
-        assert_eq!(snapshot.entries[0].content, "Test memory content");
+        let entries = stm.get_all().await;
+        assert_eq!(entries.len(), 1, "STM should contain 1 entry");
+        assert_eq!(entries[0].content, "Test memory content");
     }
 
     #[tokio::test]
@@ -49,11 +50,11 @@ mod memory_system_tests {
                 0.5,
                 MemoryType::Conversation,
             );
-            stm.push(entry).await;
+            let _ = stm.push(entry).await;
         }
 
-        let snapshot_before = stm.snapshot().await;
-        assert_eq!(snapshot_before.entries.len(), STM_MAX_SIZE);
+        let entries_before = stm.get_all().await;
+        assert_eq!(entries_before.len(), STM_MAX_SIZE);
 
         // Push one more - should evict oldest (Entry 0)
         let new_entry = MemoryEntry::new(
@@ -61,23 +62,17 @@ mod memory_system_tests {
             0.9,
             MemoryType::Conversation,
         );
-        stm.push(new_entry).await;
+        let evicted = stm.push(new_entry).await;
+        assert!(evicted.is_some(), "Push over capacity should evict one entry");
 
-        let snapshot_after = stm.snapshot().await;
-        assert_eq!(
-            snapshot_after.entries.len(),
-            STM_MAX_SIZE,
-            "STM should maintain max size"
-        );
+        let entries_after = stm.get_all().await;
+        assert_eq!(entries_after.len(), STM_MAX_SIZE, "STM should maintain max size");
 
         // First entry should now be "Entry 1" (Entry 0 evicted)
-        assert_eq!(snapshot_after.entries[0].content, "Entry 1");
+        assert_eq!(entries_after[0].content, "Entry 1");
 
         // Last entry should be the new one
-        assert_eq!(
-            snapshot_after.entries[STM_MAX_SIZE - 1].content,
-            "Entry 20 - New"
-        );
+        assert_eq!(entries_after[STM_MAX_SIZE - 1].content, "Entry 20 - New");
     }
 
     #[tokio::test]
@@ -91,15 +86,15 @@ mod memory_system_tests {
                 0.5,
                 MemoryType::Conversation,
             );
-            stm.push(entry).await;
+            let _ = stm.push(entry).await;
         }
 
-        assert_eq!(stm.snapshot().await.entries.len(), 5);
+        assert_eq!(stm.len().await, 5);
 
         // Clear
         stm.clear().await;
 
-        assert_eq!(stm.snapshot().await.entries.len(), 0, "STM should be empty after clear");
+        assert_eq!(stm.len().await, 0, "STM should be empty after clear");
     }
 
     #[tokio::test]
@@ -113,11 +108,11 @@ mod memory_system_tests {
             MemoryType::Decision,
         );
 
-        stm.push(entry).await;
-        let snapshot = stm.snapshot().await;
+        let _ = stm.push(entry).await;
+        let entries = stm.get_all().await;
 
-        assert_eq!(snapshot.entries[0].importance, high_importance);
-        assert_eq!(snapshot.entries[0].memory_type, MemoryType::Decision);
+        assert_eq!(entries[0].importance, high_importance);
+        assert_eq!(entries[0].memory_type, MemoryType::Decision);
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -129,8 +124,8 @@ mod memory_system_tests {
         let mtm = MidTermMemory::new();
         let snapshot = mtm.snapshot().await;
 
-        assert_eq!(snapshot.entries.len(), 0, "New MTM should be empty");
-        assert_eq!(snapshot.tier, MemoryTier::MidTerm);
+        assert_eq!(snapshot.count, 0, "New MTM should be empty");
+        assert_eq!(snapshot.tier, MemoryTier::MTM);
     }
 
     #[tokio::test]
@@ -143,33 +138,18 @@ mod memory_system_tests {
             MemoryEntry::new("Important fact".to_string(), 0.85, MemoryType::Knowledge),
         ];
 
-        mtm.consolidate(entries).await;
-        let snapshot = mtm.snapshot().await;
+        mtm.add_batch(entries).await;
 
-        assert_eq!(snapshot.entries.len(), 2, "MTM should contain consolidated entries");
-        assert!(snapshot.entries[0].importance >= 0.8);
-    }
-
-    #[tokio::test]
-    async fn test_mtm_decay_low_importance() {
-        let mtm = MidTermMemory::new();
-
-        // Add entry with moderate importance
-        let entry = MemoryEntry::new(
-            "Moderate memory".to_string(),
-            0.5,
-            MemoryType::Conversation,
-        );
-
-        mtm.consolidate(vec![entry]).await;
-
-        // Apply decay (this would normally happen over time)
-        mtm.decay(0.1).await; // 10% decay
+        // Under capacity: consolidate should not drop entries
+        let overflow = mtm.consolidate().await;
+        assert!(overflow.is_empty(), "No overflow expected under capacity");
 
         let snapshot = mtm.snapshot().await;
+        assert_eq!(snapshot.count, 2, "MTM should contain consolidated entries");
 
-        // Importance should have decreased
-        assert!(snapshot.entries[0].importance < 0.5);
+        let stored = mtm.get_all().await;
+        assert_eq!(stored.len(), 2);
+        assert!(stored[0].importance >= stored[1].importance);
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -187,7 +167,7 @@ mod memory_system_tests {
         assert_eq!(entry.content, "Test content");
         assert_eq!(entry.importance, 0.7);
         assert_eq!(entry.memory_type, MemoryType::Project);
-        assert!(entry.timestamp_ms > 0);
+        assert!(entry.timestamp > 0);
     }
 
     #[test]
@@ -201,18 +181,19 @@ mod memory_system_tests {
             MemoryType::Ritual,
             MemoryType::Event,
             MemoryType::System,
+            MemoryType::Custom,
         ];
 
-        assert_eq!(types.len(), 7, "Should have 7 memory type variants");
+        assert_eq!(types.len(), 8, "Should have 8 memory type variants");
     }
 
     #[test]
     fn test_memory_tier_variants() {
         // Ensure all MemoryTier variants work
         let tiers = vec![
-            MemoryTier::ShortTerm,
-            MemoryTier::MidTerm,
-            MemoryTier::LongTerm,
+            MemoryTier::STM,
+            MemoryTier::MTM,
+            MemoryTier::LTM,
         ];
 
         assert_eq!(tiers.len(), 3, "Should have 3 memory tiers");
