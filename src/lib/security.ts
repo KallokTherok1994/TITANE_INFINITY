@@ -66,6 +66,9 @@ export const VOID_COMMANDS = new Set<string>([
   // Whisper commands that return ()
   'stop_whisper_streaming',
   'send_audio_chunk',
+  // Self-heal persistence/sync
+  'selfheal_save_profile',
+  'selfheal_sync_with_singularity',
   // Config commands that return ()
   'save_ui_theme',
   'delete_config_preset',
