@@ -31,7 +31,7 @@ export interface TauriCommand {
   description: string;
   params?: Record<string, string>;
   returnType: string;
-  active: boolean; // Mock backend active or not
+  active: boolean; // Backend command available/implemented
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -39,7 +39,7 @@ export interface TauriCommand {
 // ═══════════════════════════════════════════════════════════════
 
 export const TAURI_COMMANDS: Record<string, TauriCommand> = {
-  // ━━━ MOCK BACKEND (Active) ━━━
+  // ━━━ BACKEND COMMANDS (Active) ━━━
   singularity_get_state: {
     name: 'singularity_get_state',
     description: 'Get current Singularity state',

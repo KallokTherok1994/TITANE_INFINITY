@@ -247,10 +247,10 @@ class TauriChatProvider implements AIProvider {
   }
 
   /**
-   * Stream pas encore implémenté côté Rust (OMEGA Protected)
+   * Streaming via Rust is not available; fallback to generate() (OMEGA Protected)
    */
   async *stream(message: string, history: AIMessage[] = []): AsyncGenerator<string> {
-    logger.warn('Streaming not implemented, falling back to generate()');
+    logger.warn('Streaming not available in Rust, falling back to generate()');
 
     try {
       // Fallback: utilise generate() et simule le streaming

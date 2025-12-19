@@ -35,6 +35,11 @@ const createMockResponse = (content = 'Assistant response'): ChatEngineResponse 
 const summarizeMessages = (messages: AIMessage[]) =>
   messages.map(message => ({ role: message.role, content: message.content }));
 
+afterEach(() => {
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
+});
+
 // ═══════════════════════════════════════════════════════════════════
 // OMEGA E2E TEST SUITE 1: COMPLETE FLOW VALIDATION
 // ═══════════════════════════════════════════════════════════════════
@@ -172,10 +177,14 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Error Recovery', () => {
   });
 
   it('should handle concurrent request failures', async () => {
-    // Mock random failures
+    // Deterministic failures: first few fetch calls fail, then succeed.
+    // This validates that concurrent requests remain stable under provider errors
+    // without introducing flakiness via Math.random().
+    let fetchCallCount = 0;
     const mockFetch = vi.fn().mockImplementation(() => {
-      if (Math.random() > 0.5) {
-        return Promise.reject(new Error('Random failure'));
+      fetchCallCount += 1;
+      if (fetchCallCount <= 3) {
+        return Promise.reject(new Error('Simulated failure'));
       }
       return Promise.resolve({
         ok: true,
@@ -719,10 +728,14 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Error Recovery', () => {
   });
 
   it('should handle concurrent request failures', async () => {
-    // Mock random failures
+    // Deterministic failures: first few fetch calls fail, then succeed.
+    // This validates that concurrent requests remain stable under provider errors
+    // without introducing flakiness via Math.random().
+    let fetchCallCount = 0;
     const mockFetch = vi.fn().mockImplementation(() => {
-      if (Math.random() > 0.5) {
-        return Promise.reject(new Error('Random failure'));
+      fetchCallCount += 1;
+      if (fetchCallCount <= 3) {
+        return Promise.reject(new Error('Simulated failure'));
       }
       return Promise.resolve({
         ok: true,

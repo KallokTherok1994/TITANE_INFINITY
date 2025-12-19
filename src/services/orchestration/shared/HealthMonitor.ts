@@ -25,13 +25,18 @@ export class HealthMonitor implements IHealthMonitor {
       return cached;
     }
 
-    // Compute global health (placeholder - will be aggregated from strategies)
-    const result: HealthCheckResult = {
-      status: 'healthy',
-      score: 95,
-      message: 'System healthy',
-      timestamp: Date.now(),
-    };
+    const hasStrategyHealth = Array.from(this.healthCache.keys()).some(
+      k => k !== 'global'
+    );
+
+    const result: HealthCheckResult = hasStrategyHealth
+      ? this.getAggregatedHealth()
+      : {
+          status: 'healthy',
+          score: 95,
+          message: 'System healthy',
+          timestamp: Date.now(),
+        };
 
     this.healthCache.set('global', result);
     return result;
@@ -64,7 +69,9 @@ export class HealthMonitor implements IHealthMonitor {
    * Get aggregated health from all strategies
    */
   getAggregatedHealth(): HealthCheckResult {
-    const allHealth = Array.from(this.healthCache.values());
+    const allHealth = Array.from(this.healthCache.entries())
+      .filter(([k]) => k !== 'global')
+      .map(([, v]) => v);
 
     if (allHealth.length === 0) {
       return {

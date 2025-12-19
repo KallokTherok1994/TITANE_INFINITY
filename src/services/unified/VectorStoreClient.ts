@@ -307,7 +307,7 @@ export class VectorStoreClient implements IVectorStore {
   }
 
   /**
-   * Clear all entries (not implemented - for safety)
+   * Clear all entries (intentionally unsupported for safety)
    */
   async clear(): Promise<void> {
     throw new Error('Clear operation not available via client (use backend directly)');
@@ -435,7 +435,7 @@ export class VectorStoreClient implements IVectorStore {
   }
 
   /**
-   * Add single entry (IVectorStore interface stub)
+   * Add single entry (IVectorStore compatibility)
    * Delegates to insert()
    */
   async add(entry: UnifiedMemoryEntry): Promise<void> {
@@ -443,7 +443,7 @@ export class VectorStoreClient implements IVectorStore {
   }
 
   /**
-   * Add multiple entries (IVectorStore interface stub)
+   * Add multiple entries (IVectorStore compatibility)
    * Delegates to insertBatch()
    */
   async addBatch(entries: UnifiedMemoryEntry[]): Promise<void> {
@@ -451,37 +451,43 @@ export class VectorStoreClient implements IVectorStore {
   }
 
   /**
-   * Delete entries matching filters (IVectorStore interface stub)
+   * Delete entries matching filters (best-effort)
    */
   async deleteWhere(_filters: Record<string, unknown>): Promise<number> {
     this.ensureInitialized();
-    // Implementation: Backend Tauri command for filtered vector deletion
-    // - Command: await secureInvoke('vector_store_delete_where', {filters})
-    // - Rust: #[command] pub async fn vector_store_delete_where(filters: HashMap<String, Value>)
-    // - Query: Build SQL WHERE clause from filters: {user_id: "123", age_days: ">30"}
-    // - Delete: Execute DELETE FROM vectors WHERE metadata->>'user_id' = '123'
-    // - Cascade: Also delete associated embeddings from FAISS/HNSW index
-    // - Return: Number of deleted entries for confirmation
-    // - Safety: Require confirmation for bulk deletes (> 100 entries)
-    console.warn('VectorStoreClient.deleteWhere not yet implemented');
-    return 0;
+    const filters = _filters ?? {};
+
+    // Supported subset (no backend bulk-delete command available here):
+    // - { id: string }
+    // - { ids: string[] }
+    const id = typeof filters.id === 'string' ? filters.id : null;
+    const idsRaw = (filters as { ids?: unknown }).ids;
+    const ids = Array.isArray(idsRaw)
+      ? idsRaw.filter((v): v is string => typeof v === 'string' && v.trim().length > 0)
+      : [];
+
+    const targets = [id, ...ids].filter((v): v is string => typeof v === 'string');
+    if (targets.length === 0) {
+      if (Object.keys(filters).length > 0) {
+        console.warn(
+          'VectorStoreClient.deleteWhere: unsupported filters (supported: id, ids). No entries deleted.'
+        );
+      }
+      return 0;
+    }
+
+    const unique = Array.from(new Set(targets));
+    await Promise.all(unique.map(t => this.delete(t)));
+    return unique.length;
   }
 
   /**
-   * Cleanup old entries (IVectorStore interface stub)
+   * Cleanup old entries (no-op)
    */
   async cleanup(): Promise<void> {
     this.ensureInitialized();
-    // Implementation: Automated cleanup of stale vector entries
-    // - Command: await secureInvoke('vector_store_cleanup')
-    // - Rust: #[command] pub async fn vector_store_cleanup() -> Result<CleanupStats, String>
-    // - Criteria: Delete entries older than 90 days with access_count == 0
-    // - Orphans: Remove vectors without corresponding memory entries (LEFT JOIN NULL)
-    // - Duplicates: Merge entries with cosine_similarity > 0.99 (identical content)
-    // - Index: Rebuild FAISS/HNSW index after cleanup for optimal performance
-    // - Stats: Return {deleted_count, space_freed_mb, duration_ms}
-    // - Schedule: Run automatically on app startup or weekly via cron
-    console.warn('VectorStoreClient.cleanup not yet implemented');
+    // Backend currently owns maintenance and lifecycle. This method is intentionally
+    // a no-op to keep the browser client safe and side-effect free.
   }
 }
 

@@ -290,34 +290,56 @@ export class SingularityConnections {
 
   static async syncPersona(): Promise<void> {
     // Note: singularity_get_symbolic not available yet
-    // Using mock data gracefully without crashing
+    // Using existing local state gracefully without crashing
     try {
       const current = await SingularityBridge.getSymbolic();
 
-      // Mock data until backend command available
+      const nowSeconds = Math.floor(Date.now() / 1000);
+
+      const basePersona = current?.persona ?? {};
+      const baseArchetype = current?.archetype ?? {};
+      const baseVisual = current?.visual ?? {};
+
       const updated: SymbolicLayer = {
         ...current,
         persona: {
-          name: 'TITANE∞',
-          mood: 'focused',
-          intensity: 0.8,
-          evolution_level: 5,
-          last_interaction: null, // ✅ v∞.FIX - Backend will populate timestamp
+          ...basePersona,
+          name: basePersona?.name ?? 'TITANE∞',
+          mood: basePersona?.mood ?? 'focused',
+          intensity:
+            typeof basePersona?.intensity === 'number' ? basePersona.intensity : 0.8,
+          evolution_level:
+            typeof basePersona?.evolution_level === 'number'
+              ? basePersona.evolution_level
+              : 0,
+          last_interaction: basePersona?.last_interaction ?? null,
         },
         archetype: {
-          active_archetype: 'helios', // ✅ v∞.FIX - Required field for backend
-          strength: 0.95,
-          transition: null,
+          ...baseArchetype,
+          active_archetype: baseArchetype?.active_archetype ?? 'helios',
+          strength:
+            typeof baseArchetype?.strength === 'number' ? baseArchetype.strength : 0.95,
+          transition: baseArchetype?.transition ?? null,
         },
         visual: {
-          ...current.visual,
-          theme: 'dark',
-          accent_color: '#6366f1',
-          glow_intensity: 0.7,
-          motion_enabled: true,
-          depth_enabled: true,
+          ...baseVisual,
+          theme: baseVisual?.theme ?? 'dark',
+          accent_color: baseVisual?.accent_color,
+          glow_intensity:
+            typeof baseVisual?.glow_intensity === 'number'
+              ? baseVisual.glow_intensity
+              : 0.7,
+          motion_enabled:
+            typeof baseVisual?.motion_enabled === 'boolean'
+              ? baseVisual.motion_enabled
+              : true,
+          depth_enabled:
+            typeof baseVisual?.depth_enabled === 'boolean'
+              ? baseVisual.depth_enabled
+              : true,
         },
-        stability: 0.9,
+        stability: typeof current?.stability === 'number' ? current.stability : 0.9,
+        timestamp: (current as any)?.timestamp ?? nowSeconds,
       };
 
       await SingularityBridge.updateSymbolic(updated);
@@ -332,26 +354,45 @@ export class SingularityConnections {
 
   static async syncAutoHeal(): Promise<void> {
     // Note: singularity_get_adaptive not available yet
-    // Using mock data gracefully without crashing
+    // Using existing local state gracefully without crashing
     try {
       const current = await SingularityBridge.getAdaptive();
 
-      // Mock data until backend command available
+      const nowSeconds = Math.floor(Date.now() / 1000);
+      const baseEvolution = current?.evolution ?? {};
+      const baseAutoHeal = current?.auto_heal ?? {};
+
       const updated: AdaptiveLayer = {
         ...current,
         evolution: {
-          generation: current.evolution?.generation ?? 0,
-          mutation_rate: 0.1,
-          fitness_score: await this.calculateFitnessScore(), // System health-based score
-          last_evolution: null, // ✅ v∞.FIX - Backend will populate timestamp
+          ...baseEvolution,
+          generation:
+            typeof baseEvolution?.generation === 'number' ? baseEvolution.generation : 0,
+          mutation_rate:
+            typeof baseEvolution?.mutation_rate === 'number'
+              ? baseEvolution.mutation_rate
+              : 0.1,
+          fitness_score: await this.calculateFitnessScore(),
+          last_evolution: baseEvolution?.last_evolution ?? null,
         },
         auto_heal: {
-          active: true,
-          healing_capacity: 1.0,
-          errors_healed: this.errorHealingCounter || 0, // Tracked from self-repair system
-          last_heal: null,
+          ...baseAutoHeal,
+          active: typeof baseAutoHeal?.active === 'boolean' ? baseAutoHeal.active : true,
+          healing_capacity:
+            typeof baseAutoHeal?.healing_capacity === 'number'
+              ? baseAutoHeal.healing_capacity
+              : 1.0,
+          errors_healed:
+            typeof baseAutoHeal?.errors_healed === 'number'
+              ? baseAutoHeal.errors_healed
+              : this.errorHealingCounter || 0,
+          last_heal: baseAutoHeal?.last_heal ?? null,
         },
-        evolution_capacity: 0.85,
+        evolution_capacity:
+          typeof current?.evolution_capacity === 'number'
+            ? current.evolution_capacity
+            : 0.85,
+        timestamp: (current as any)?.timestamp ?? nowSeconds,
       };
 
       await SingularityBridge.updateAdaptive(updated);

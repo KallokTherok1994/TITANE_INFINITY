@@ -105,8 +105,12 @@ class VoiceFingerprintEngine {
   // ═══ LEARNING & STATS ═══
 
   getLearningAccuracy(): number {
-    // Return mock accuracy for stub
-    return 0.85;
+    const fingerprint = this.getFingerprint(this.currentUserId);
+    if (!fingerprint) return 0;
+    const accuracy = fingerprint.accuracy;
+    return typeof accuracy === 'number' && Number.isFinite(accuracy)
+      ? Math.max(0, Math.min(1, accuracy))
+      : 0;
   }
 
   getSampleCount(): number {
