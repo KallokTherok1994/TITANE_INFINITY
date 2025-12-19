@@ -199,6 +199,11 @@ export class TitaneVisualEngine extends EventEmitter {
 
     this.isRunning = false;
 
+    // v21: Disconnect OS integration bridge
+    if (this.config.enableOSIntegration) {
+      osIntegrationBridge.disconnect();
+    }
+
     // Stop render loop
     if (this.rafId !== null) {
       cancelAnimationFrame(this.rafId);
