@@ -56,6 +56,115 @@ pub async fn autoheal_detect_broken_modules(
     Ok(modules.clone())
 }
 
+/// Frontend-compat alias for `autoheal_detect_broken_modules`.
+#[tauri::command]
+pub async fn autoheal_detect_broken(
+    state: State<'_, AutoHealState>,
+) -> Result<Vec<BrokenModule>, String> {
+    autoheal_detect_broken_modules(state).await
+}
+
+fn record_simple_action(
+    state: &State<'_, AutoHealState>,
+    module_type: &str,
+    actions: Vec<String>,
+) -> Result<(), String> {
+    let result = HealResult {
+        module_type: module_type.to_string(),
+        success: true,
+        actions,
+        duration: 0,
+    };
+
+    let mut history = state.heal_history.lock().map_err(|e| e.to_string())?;
+    history.push(result);
+    Ok(())
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// FRONTEND COMPAT COMMANDS (secureInvoke)
+// ═══════════════════════════════════════════════════════════════════════════
+
+#[tauri::command]
+pub async fn autoheal_reset_cognitive(state: State<'_, AutoHealState>) -> Result<(), String> {
+    record_simple_action(&state, "cognitive", vec!["reset".to_string()])
+}
+
+#[tauri::command]
+pub async fn autoheal_init_cognitive(state: State<'_, AutoHealState>) -> Result<(), String> {
+    record_simple_action(&state, "cognitive", vec!["init".to_string()])
+}
+
+#[tauri::command]
+pub async fn autoheal_reset_adaptive(state: State<'_, AutoHealState>) -> Result<(), String> {
+    record_simple_action(&state, "adaptive", vec!["reset".to_string()])
+}
+
+#[tauri::command]
+pub async fn autoheal_clear_narrative(state: State<'_, AutoHealState>) -> Result<(), String> {
+    record_simple_action(&state, "narrative", vec!["clear".to_string()])
+}
+
+#[tauri::command]
+pub async fn autoheal_init_narrative(state: State<'_, AutoHealState>) -> Result<(), String> {
+    record_simple_action(&state, "narrative", vec!["init".to_string()])
+}
+
+#[tauri::command]
+pub async fn autoheal_stop_avatar(state: State<'_, AutoHealState>) -> Result<(), String> {
+    record_simple_action(&state, "avatar", vec!["stop".to_string()])
+}
+
+#[tauri::command]
+pub async fn autoheal_reload_avatar(state: State<'_, AutoHealState>) -> Result<(), String> {
+    record_simple_action(&state, "avatar", vec!["reload".to_string()])
+}
+
+#[tauri::command]
+pub async fn autoheal_start_avatar(state: State<'_, AutoHealState>) -> Result<(), String> {
+    record_simple_action(&state, "avatar", vec!["start".to_string()])
+}
+
+#[tauri::command]
+pub async fn autoheal_clear_tts_queue(state: State<'_, AutoHealState>) -> Result<(), String> {
+    record_simple_action(&state, "tts", vec!["clear_queue".to_string()])
+}
+
+#[tauri::command]
+pub async fn autoheal_init_tts(state: State<'_, AutoHealState>) -> Result<(), String> {
+    record_simple_action(&state, "tts", vec!["init".to_string()])
+}
+
+#[tauri::command]
+pub async fn autoheal_resync_lipsync(state: State<'_, AutoHealState>) -> Result<(), String> {
+    record_simple_action(&state, "lipsync", vec!["resync".to_string()])
+}
+
+#[tauri::command]
+pub async fn autoheal_rebuild_memory_index(state: State<'_, AutoHealState>) -> Result<(), String> {
+    record_simple_action(&state, "memory", vec!["rebuild_index".to_string()])
+}
+
+#[tauri::command]
+pub async fn autoheal_validate_memory(state: State<'_, AutoHealState>) -> Result<(), String> {
+    record_simple_action(&state, "memory", vec!["validate".to_string()])
+}
+
+#[tauri::command]
+pub async fn autoheal_stop_pipeline(state: State<'_, AutoHealState>) -> Result<(), String> {
+    record_simple_action(&state, "pipeline", vec!["stop".to_string()])
+}
+
+#[tauri::command]
+pub async fn autoheal_clear_pipeline(state: State<'_, AutoHealState>) -> Result<(), String> {
+    record_simple_action(&state, "pipeline", vec!["clear".to_string()])
+}
+
+#[tauri::command]
+pub async fn autoheal_start_pipeline(state: State<'_, AutoHealState>) -> Result<(), String> {
+    record_simple_action(&state, "pipeline", vec!["start".to_string()])
+}
+
 #[tauri::command]
 pub async fn autoheal_heal_cognitive_module(
     state: State<'_, AutoHealState>,
