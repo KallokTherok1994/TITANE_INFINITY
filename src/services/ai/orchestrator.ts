@@ -60,7 +60,14 @@ const CONTROL_CHAR_DETECTOR = /\p{Cc}/u;
 const CONTROL_CHAR_REMOVER = /\p{Cc}+/gu;
 
 const IS_VITEST =
-  typeof process !== 'undefined' && Boolean((process as any)?.env?.VITEST);
+  // Vitest exposes `import.meta.env.VITEST` and typically runs with MODE === 'test'.
+  (typeof import.meta !== 'undefined' &&
+    Boolean((import.meta as any)?.env?.VITEST) &&
+    true) ||
+  (typeof import.meta !== 'undefined' && (import.meta as any)?.env?.MODE === 'test') ||
+  // Fallbacks for non-Vite contexts.
+  (typeof process !== 'undefined' && Boolean((process as any)?.env?.VITEST)) ||
+  (typeof process !== 'undefined' && (process as any)?.env?.NODE_ENV === 'test');
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES OMEGA ORCHESTRATOR
