@@ -26,7 +26,7 @@
 
 import React, { useState, useEffect, useMemo, useCallback, useRef, memo } from 'react';
 import { Container, Stack, Grid } from '@components/layout';
-import { Card } from '../ui';
+import { Button, Card } from '../ui';
 import { XPProgressBar } from '@features/progression';
 import { colors, spacing, fontSizes } from '@themes/tokens';
 import { PersonaMoodIndicator } from '@components/PersonaMoodIndicator';
@@ -819,7 +819,41 @@ const VisionSection: React.FC<VisionSectionProps> = () => {
   const tensionLevel = useVisionStore(selectTensionLevel);
   const engagementLevel = useVisionStore(selectEngagementLevel);
   const confidence = useVisionStore(selectConfidence);
-  const [_error, _setError] = useState<string | null>(null);
+  const enableVision = useVisionStore(s => s.enableVision);
+  const requestCameraPermission = useVisionStore(s => s.requestCameraPermission);
+  const startCamera = useVisionStore(s => s.startCamera);
+  const [isStarting, setIsStarting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleStartVision = useCallback(async () => {
+    setIsStarting(true);
+    setError(null);
+    try {
+      const permission = await requestCameraPermission();
+      if (permission !== 'granted') {
+        setError('Permission caméra refusée. Autorisez la caméra pour activer Vision.');
+        return;
+      }
+
+      const enabled = await enableVision();
+      if (!enabled) {
+        setError('Activation Vision annulée ou impossible.');
+        return;
+      }
+
+      const started = await startCamera();
+      if (!started) {
+        setError('Impossible de démarrer la caméra.');
+        return;
+      }
+    } catch (e) {
+      const message = e instanceof Error ? e.message : String(e);
+      setError(message);
+      pageLogger.error('Vision start failed', e);
+    } finally {
+      setIsStarting(false);
+    }
+  }, [enableVision, requestCameraPermission, startCamera]);
 
   return (
     <div className="titane-section titane-section-vision">
@@ -837,7 +871,28 @@ const VisionSection: React.FC<VisionSectionProps> = () => {
           <div className="vision-camera-container">
             {env.isTauri ? (
               <div style={{ position: 'relative' }}>
-                <CameraPreview />
+                {!isCameraActive && (
+                  <div
+                    style={{ display: 'flex', flexDirection: 'column', gap: spacing[3] }}
+                  >
+                    <div style={{ color: colors.neutral[400] }}>
+                      Opt-in requis: activez Vision puis démarrez la caméra.
+                    </div>
+                    {error && <div style={{ color: colors.danger[400] }}>{error}</div>}
+                    <div style={{ display: 'flex', gap: spacing[3] }}>
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={handleStartVision}
+                        disabled={isStarting}
+                      >
+                        {isStarting ? 'Activation...' : 'Activer Vision & Caméra'}
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                <CameraPreview position="bottom-left" />
                 <DetectionOverlay />
               </div>
             ) : (

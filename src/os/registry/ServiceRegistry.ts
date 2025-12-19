@@ -5,6 +5,24 @@
 
 import type { ServiceId, Service, ServiceMetadata, ServiceStatus } from '../types';
 
+function isServiceHealthChecksEnabled(): boolean {
+  // Dev keeps default behavior. Prod requires explicit opt-in.
+  if (import.meta.env.DEV) return true;
+
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  const envEnabled =
+    String(import.meta.env.VITE_SERVICE_HEALTHCHECKS_ENABLED ?? '') === '1';
+  const storedEnabled = window.localStorage.getItem(
+    'titane_service_healthchecks_enabled'
+  );
+  const lsEnabled = storedEnabled === '1' || storedEnabled === 'true';
+
+  return envEnabled || lsEnabled;
+}
+
 /**
  * Registre des services
  */
@@ -97,6 +115,10 @@ export class ServiceRegistry {
    * Démarre les health checks périodiques
    */
   startHealthChecks(): void {
+    if (!isServiceHealthChecksEnabled()) {
+      return;
+    }
+
     if (this.healthCheckInterval) return;
 
     this.healthCheckInterval = setInterval(() => {

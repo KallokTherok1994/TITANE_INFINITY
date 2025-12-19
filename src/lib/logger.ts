@@ -56,6 +56,35 @@ const LOG_LEVELS: Record<LogLevel, number> = {
   critical: 4,
 };
 
+function safeJsonStringify(value: unknown): string {
+  const seen = new WeakSet<object>();
+  try {
+    return JSON.stringify(value, (_key, val) => {
+      if (val instanceof Error) {
+        return {
+          name: val.name,
+          message: val.message,
+          stack: val.stack,
+        };
+      }
+
+      if (typeof val === 'object' && val !== null) {
+        if (seen.has(val)) {
+          return '[Circular]';
+        }
+        seen.add(val);
+      }
+      return val;
+    });
+  } catch {
+    try {
+      return String(value);
+    } catch {
+      return '[Unserializable]';
+    }
+  }
+}
+
 class Logger {
   private config: LoggerConfig;
   private buffer: LogEntry[] = [];
@@ -172,7 +201,12 @@ class Logger {
    * Log vers console
    */
   private logToConsole(entry: LogEntry): void {
-    const formatted = this.formatEntry(entry);
+    let formatted: string;
+    try {
+      formatted = this.formatEntry(entry);
+    } catch {
+      formatted = `[Logger] ${entry.level.toUpperCase()} ${entry.message}`;
+    }
 
     switch (entry.level) {
       case 'debug':
@@ -201,7 +235,7 @@ class Logger {
 
     switch (this.config.format) {
       case 'json':
-        return JSON.stringify({
+        return safeJsonStringify({
           timestamp,
           level: entry.level,
           module,
@@ -215,7 +249,7 @@ class Logger {
 
       case 'text':
       default: {
-        const contextStr = entry.context ? ` ${JSON.stringify(entry.context)}` : '';
+        const contextStr = entry.context ? ` ${safeJsonStringify(entry.context)}` : '';
         return `${timestamp} [${entry.level.toUpperCase()}] [${module}] ${emoji} ${entry.message}${contextStr}`;
       }
     }

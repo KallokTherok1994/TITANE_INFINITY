@@ -80,6 +80,19 @@ class HybridTTSService {
   private parlerTTSCache: AvailabilityCache | null = null;
   private tauriCache: AvailabilityCache | null = null;
 
+  private isParlerTTSEnabled(): boolean {
+    // Opt-in only: local TTS server might not be running.
+    const envEnabled = import.meta.env.VITE_PARLER_TTS_ENABLED === '1';
+    if (envEnabled) return true;
+    if (typeof window === 'undefined') return false;
+    try {
+      const raw = window.localStorage.getItem('titane_parler_tts_enabled');
+      return raw === '1' || raw === 'true';
+    } catch {
+      return false;
+    }
+  }
+
   // [P0.4 ANTI-ECHO] Listeners pour événements TTS
   private eventListeners: Set<TTSEventListener> = new Set();
 
@@ -124,6 +137,12 @@ class HybridTTSService {
    * ✨ v24.2.1: Uses 30s TTL cache instead of permanent cache
    */
   private async checkParlerTTSAvailable(): Promise<boolean> {
+    // Avoid hammering localhost when the optional service isn't used.
+    if (!this.isParlerTTSEnabled()) {
+      this.parlerTTSCache = { value: false, timestamp: Date.now() };
+      return false;
+    }
+
     // ✨ v24.2.1: Return cached value if within TTL
     if (this.isCacheValid(this.parlerTTSCache) && this.parlerTTSCache) {
       return this.parlerTTSCache.value;

@@ -11,7 +11,7 @@ import type { AuraIntensity, AuraMode, AuraTheme } from '@/hooks/useAuraOrchestr
 import './AuraControlPanel.css';
 
 interface AuraControlPanelProps {
-  position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
+  position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left' | 'header';
   defaultOpen?: boolean;
 }
 

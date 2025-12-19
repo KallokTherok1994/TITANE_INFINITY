@@ -59,6 +59,15 @@
   left: 24px;
 }
 
+/* Inline variant for Header placement */
+.aura-control-toggle--header {
+  position: static;
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  z-index: auto;
+}
+
 .aura-icon {
   filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
   animation: aura-icon-pulse 2s ease-in-out infinite;
@@ -165,6 +174,12 @@
 .aura-control-panel--top-left {
   top: 90px;
   left: 24px;
+}
+
+/* Header variant: panel opens from top-right (non-overlapping with ChatBubble) */
+.aura-control-panel--header {
+  top: 90px;
+  right: 24px;
 }
 
 /* ═══ HEADER ═══ */

@@ -278,10 +278,70 @@ SingularityBridge.initialize()
       }
     });
 
+    const getSingularityPollingIntervalMs = (): number => {
+      // Default behavior:
+      // - Dev: keep legacy polling (5s) for fast feedback.
+      // - Prod: no background polling by default (event-driven only).
+      const defaultIntervalMs = import.meta.env.DEV ? 5000 : 0;
+
+      if (typeof window === 'undefined') {
+        return defaultIntervalMs;
+      }
+
+      // Explicit opt-in knobs.
+      // - Env: VITE_SINGULARITY_POLLING_ENABLED=1
+      // - Env: VITE_SINGULARITY_POLLING_INTERVAL_MS=5000
+      // - LocalStorage: titane_singularity_polling_enabled=true
+      // - LocalStorage: titane_singularity_polling_interval_ms=5000
+      const envEnabled =
+        String(import.meta.env.VITE_SINGULARITY_POLLING_ENABLED ?? '') === '1';
+      const storedEnabled = window.localStorage.getItem(
+        'titane_singularity_polling_enabled'
+      );
+      const lsEnabled = storedEnabled === '1' || storedEnabled === 'true';
+      const enabled = envEnabled || lsEnabled;
+
+      const envIntervalRaw = import.meta.env.VITE_SINGULARITY_POLLING_INTERVAL_MS;
+      const envIntervalMs =
+        typeof envIntervalRaw === 'string' && envIntervalRaw.trim().length > 0
+          ? Number(envIntervalRaw)
+          : NaN;
+
+      const lsIntervalRaw = window.localStorage.getItem(
+        'titane_singularity_polling_interval_ms'
+      );
+      const lsIntervalMs = lsIntervalRaw ? Number(lsIntervalRaw) : NaN;
+
+      const candidate = Number.isFinite(envIntervalMs)
+        ? envIntervalMs
+        : Number.isFinite(lsIntervalMs)
+          ? lsIntervalMs
+          : defaultIntervalMs;
+
+      // If polling isn't explicitly enabled, force event-driven.
+      if (!enabled) {
+        return 0;
+      }
+
+      // Guard rails: minimum 1s if enabled.
+      if (!Number.isFinite(candidate) || candidate <= 0) {
+        return 5000;
+      }
+
+      return Math.max(1000, Math.floor(candidate));
+    };
+
     // 🔗 v15: Start subsystem connections (Helios, Memory, Persona, AutoHeal, UI)
-    SingularityConnections.start(5000)
+    const singularityIntervalMs = getSingularityPollingIntervalMs();
+    SingularityConnections.start(singularityIntervalMs)
       .then(() => {
-        console.log('🔗 SingularityConnections started (5s polling)');
+        if (singularityIntervalMs > 0) {
+          console.log(
+            `🔗 SingularityConnections started (${singularityIntervalMs}ms polling)`
+          );
+        } else {
+          console.log('🔗 SingularityConnections started (event-driven; no polling)');
+        }
         console.log('   → Helios → PhysicalLayer');
         console.log('   → Memory → CognitiveLayer');
         console.log('   → Persona → SymbolicLayer');

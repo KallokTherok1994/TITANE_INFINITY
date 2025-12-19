@@ -97,6 +97,22 @@ export function useGovernance() {
       models: [],
     };
 
+    // Opt-in only: Ollama is an optional local service.
+    // This avoids background localhost probes in Tauri unless explicitly enabled.
+    const envEnabled = import.meta.env.VITE_OLLAMA_ENABLED === '1';
+    let userEnabled = false;
+    try {
+      const raw = localStorage.getItem('titane_ollama_enabled');
+      userEnabled = raw === '1' || raw === 'true';
+    } catch {
+      userEnabled = false;
+    }
+
+    if (!envEnabled && !userEnabled) {
+      setState(prev => ({ ...prev, ollamaStatus: status }));
+      return { ok: true, data: status, error: null };
+    }
+
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 3000); // 3s timeout
