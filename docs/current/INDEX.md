@@ -8,7 +8,7 @@
 
 ```
 docs/current/
-├── audits/          # Audits techniques v26 (6 fichiers)
+├── audits/          # Audits techniques v26 (7 fichiers)
 ├── phases/          # Phases développement + roadmap (17 complétées)
 ├── guides/          # Guides utilisateur/dev (5 fichiers)
 ├── architecture/    # Architecture système (4 fichiers)
@@ -22,6 +22,7 @@ docs/current/
 - [Audit Hooks Fixes](./audits/AUDIT_HOOKS_v26.2_FIXES_COMPLETE.md)
 - [Audit Dependencies](./audits/AUDIT_DEPENDENCIES_PRODUCTION_v26.2.md)
 - [Audit Tools](./audits/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md)
+- [Audit WebSockets & Polling](./audits/AUDIT_WEBSOCKETS_POLLING_v26.2.md)
 - [Audit Final](./audits/AUDIT_FINAL_v26.2_COMPLETE.md)
 
 ### Guides
