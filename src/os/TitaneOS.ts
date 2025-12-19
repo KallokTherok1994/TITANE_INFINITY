@@ -89,7 +89,20 @@ export class TitaneOS {
       this.services.startHealthChecks();
 
       if (this.config.metrics) {
-        this.startMetricsCollection();
+        // Silent-by-default in production/Tauri: background metrics loop must be explicitly enabled.
+        const envEnabled = import.meta.env.VITE_OS_METRICS_ENABLED === '1';
+        let userEnabled = false;
+        try {
+          const raw = localStorage.getItem('titane_os_metrics_enabled');
+          userEnabled = raw === '1' || raw === 'true';
+        } catch {
+          userEnabled = false;
+        }
+
+        const enabled = import.meta.env.DEV || envEnabled || userEnabled;
+        if (enabled) {
+          this.startMetricsCollection();
+        }
       }
     });
 

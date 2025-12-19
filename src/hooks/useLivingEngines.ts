@@ -84,6 +84,9 @@ export interface LivingEnginesState {
   cognitiveLoad: number;
   rhythmScore: number;
 
+  // Telemetry (simulated)
+  activeThreads: number;
+
   // Holography (simulated)
   holoActive: boolean;
   particleCount: number;
@@ -106,6 +109,7 @@ export const useLivingEngines = (updateInterval = 100) => {
     presenceLevel: 0.0,
     cognitiveLoad: 0.0,
     rhythmScore: 0.0,
+    activeThreads: 0,
     holoActive: false,
     particleCount: 0,
     initialized: false,
@@ -187,6 +191,7 @@ export const useLivingEngines = (updateInterval = 100) => {
           presenceLevel: presenceLevel,
           cognitiveLoad: cogLoad,
           rhythmScore: rhythm,
+          activeThreads: Math.max(1, Math.round(presenceLevel * 12)),
           holoActive: true,
           particleCount: Math.floor(Math.random() * 1000 + 500),
           initialized: true,

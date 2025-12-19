@@ -218,7 +218,7 @@ function EvolutionCenterPageContent(): JSX.Element {
     evolutionPhase: 'Initialisation',
   });
   const [loading, setLoading] = useState(true);
-  const { matrix: _matrix, isLoaded: _isLoaded } = useIdentityMatrix();
+  const { isLoaded: isIdentityMatrixLoaded } = useIdentityMatrix();
   const _singularityState = useSingularityStateSafe();
 
   // Initialize engines and fetch states
@@ -1112,14 +1112,7 @@ function EvolutionCenterPageContent(): JSX.Element {
     memory: renderMemory,
   };
 
-  // IMPLEMENTATION: Matrix loading state tracking
-  // 1. State: const [matrixLoading, setMatrixLoading] = useState(false)
-  // 2. Fetch: setMatrixLoading(true) before matrix data fetch, false after completion
-  // 3. Sources: Track loading for personality matrix, evolution matrix, adaptive matrix
-  // 4. Combined: matrixLoading = personalityLoading || evolutionLoading || adaptiveLoading
-  // 5. UI: Show matrix skeleton loader during fetch
-  // Loading state
-  const matrixLoading = false; // Placeholder: Implement useState tracking for matrix data fetching
+  const matrixLoading = !isIdentityMatrixLoaded;
   if (loading || matrixLoading) {
     return (
       <Container

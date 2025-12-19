@@ -342,7 +342,11 @@ export class ServiceWorkerManager {
 export const serviceWorkerManager = ServiceWorkerManager.getInstance();
 
 // Auto-register if in browser
-if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+if (
+  typeof window !== 'undefined' &&
+  typeof navigator !== 'undefined' &&
+  'serviceWorker' in navigator
+) {
   // Register after page load
   window.addEventListener('load', () => {
     serviceWorkerManager.register().catch(error => {

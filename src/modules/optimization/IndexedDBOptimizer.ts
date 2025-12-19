@@ -131,6 +131,11 @@ export class IndexedDBOptimizer {
 
   async initialize(stores: StoreConfig[]): Promise<boolean> {
     return new Promise((resolve, reject) => {
+      if (typeof indexedDB === 'undefined') {
+        reject(new Error('IndexedDB is not available in this environment'));
+        return;
+      }
+
       const request = indexedDB.open(this.config.dbName, this.config.version);
 
       request.onerror = () => {

@@ -99,7 +99,21 @@ export function useConversationEngine(
 
   // ═══ HEALTH CHECK AUTOMATIQUE ═══
   useEffect(() => {
-    if (options.autoHealthCheck !== false) {
+    const envEnabled = import.meta.env.VITE_CONVERSATION_HEALTHCHECK_ENABLED === '1';
+    let userEnabled = false;
+    try {
+      const raw = localStorage.getItem('titane_conversation_healthcheck_enabled');
+      userEnabled = raw === '1' || raw === 'true';
+    } catch {
+      userEnabled = false;
+    }
+
+    const enabledByDefault = import.meta.env.DEV || envEnabled || userEnabled;
+    const enabled =
+      options.autoHealthCheck === true ||
+      (options.autoHealthCheck !== false && enabledByDefault);
+
+    if (enabled) {
       // Health check toutes les 30 secondes
       healthCheckIntervalRef.current = window.setInterval(async () => {
         try {

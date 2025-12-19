@@ -232,13 +232,26 @@ export const AudioCenterPage: React.FC = () => {
     'voice' | 'devices' | 'diagnostics' | 'advanced'
   >('voice');
   const [testType, setTestType] = useState<'speaker' | 'microphone'>('speaker');
+  const [voiceMessage, setVoiceMessage] = useState<{
+    type: 'success' | 'error';
+    text: string;
+  } | null>(null);
 
   const handleVoiceSelect = async (voice: VoiceProfile) => {
-    await updateTTSSettings({
-      engine: voice.engine as TTSEngine,
-      voiceId: voice.id,
-      language: voice.language,
-    });
+    setVoiceMessage(null);
+    try {
+      await updateTTSSettings({
+        engine: voice.engine as TTSEngine,
+        voiceId: voice.id,
+        language: voice.language,
+      });
+      setVoiceMessage({ type: 'success', text: `Voix sélectionnée: ${voice.name}` });
+    } catch (e) {
+      setVoiceMessage({
+        type: 'error',
+        text: e instanceof Error ? e.message : 'Impossible de sélectionner la voix',
+      });
+    }
   };
 
   const handleTestVoice = async (voice: VoiceProfile) => {
@@ -246,8 +259,19 @@ export const AudioCenterPage: React.FC = () => {
       ? `Bonjour, je suis ${voice.name.split(' ')[0]}, votre assistante vocale TITANE Infinity.`
       : `Hello, I am ${voice.name.split(' ')[0]}, your TITANE Infinity voice assistant.`;
 
-    await updateTTSSettings({ engine: voice.engine as TTSEngine, voiceId: voice.id });
-    await speak(testText);
+    setVoiceMessage(null);
+    try {
+      await updateTTSSettings({ engine: voice.engine as TTSEngine, voiceId: voice.id });
+      await speak(testText);
+    } catch (e) {
+      setVoiceMessage({
+        type: 'error',
+        text:
+          e instanceof Error
+            ? e.message
+            : 'Test voix échoué (backend indisponible ou engine non installé)',
+      });
+    }
   };
 
   return (
@@ -302,6 +326,18 @@ export const AudioCenterPage: React.FC = () => {
         {/* Voice Tab */}
         {activeTab === 'voice' && (
           <>
+            {voiceMessage && (
+              <div
+                className={`p-3 rounded-lg border ${
+                  voiceMessage.type === 'success'
+                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+                    : 'bg-red-500/10 border-red-500/30 text-red-300'
+                }`}
+              >
+                {voiceMessage.type === 'success' ? '✅ ' : '❌ '}
+                {voiceMessage.text}
+              </div>
+            )}
             {/* Voice Selection */}
             <section className="bg-neutral-800/50 rounded-xl p-6 border border-neutral-700">
               <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">

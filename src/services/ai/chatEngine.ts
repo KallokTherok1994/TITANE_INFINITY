@@ -643,19 +643,23 @@ Format: [Audit complet] + [Réponse utilisateur]
               response.content = correctionResult.correctedResponse;
               autoHealed = true;
 
+              const violationsCount = Array.isArray(
+                correctionResult.correction?.violations
+              )
+                ? correctionResult.correction.violations.length
+                : 0;
+
               if (traceId) {
                 await cognitiveOmega.logPhase(traceId, 'auto_correction', {
                   applied: true,
-                  correction_type: (correctionResult.correction as CorrectionInfo)
-                    ?.correction_type,
-                  confidence: (correctionResult.correction as CorrectionInfo)?.confidence,
+                  correction_type: 'omega_autocorrect',
+                  violations_count: violationsCount,
                 });
               }
 
               logger.info('Response auto-corrected for consistency', {
-                correctionType: (correctionResult.correction as CorrectionInfo)
-                  ?.correction_type,
-                confidence: (correctionResult.correction as CorrectionInfo)?.confidence,
+                correctionType: 'omega_autocorrect',
+                violationsCount,
               });
             }
           }

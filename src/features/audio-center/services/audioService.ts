@@ -14,6 +14,7 @@ import { detectEnvironment } from '@/core/tauri/environment';
 import { secureInvoke } from '@/lib/security';
 import {
   type TTSSettings,
+  type VoiceProfile,
   type AudioDevice,
   type AudioOutputSettings,
   type AudioInputSettings,
@@ -103,12 +104,39 @@ class AudioService {
     // No backend sync needed - Piper/espeak use settings per-call
   }
 
-  getAvailableVoices() {
+  private async isElevenLabsConfigured(): Promise<boolean> {
+    // Prefer secure backend storage in Tauri mode
+    if (this.isTauri) {
+      try {
+        const res = await secureInvoke<{ ok: boolean; data: boolean | null }>(
+          'has_secret',
+          {
+            key: 'elevenlabs_api_key',
+          }
+        );
+        if (res && typeof res === 'object' && 'data' in res) {
+          return Boolean((res as { data: boolean | null }).data);
+        }
+        // Some backends may return a raw boolean
+        if (typeof res === 'boolean') return res;
+      } catch {
+        // fall through
+      }
+    }
+
+    // Web fallback (legacy)
+    try {
+      return Boolean(localStorage.getItem('elevenlabs_api_key'));
+    } catch {
+      return false;
+    }
+  }
+
+  async getAvailableVoices(): Promise<VoiceProfile[]> {
+    const elevenLabsReady = await this.isElevenLabsConfigured();
     return AVAILABLE_VOICES.filter(voice => {
-      // Filter based on available engines
       if (voice.engine === 'elevenlabs') {
-        // ElevenLabs requires API key
-        return !!localStorage.getItem('elevenlabs_api_key');
+        return elevenLabsReady;
       }
       return true;
     });

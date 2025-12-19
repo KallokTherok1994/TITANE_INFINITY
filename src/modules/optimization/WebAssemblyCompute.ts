@@ -95,11 +95,17 @@ export class WebAssemblyCompute {
   private speedups: number[] = [];
 
   private constructor(config: Partial<WASMConfig> = {}) {
+    const maxThreads =
+      typeof navigator !== 'undefined' &&
+      typeof navigator.hardwareConcurrency === 'number'
+        ? navigator.hardwareConcurrency
+        : 4;
+
     this.config = {
       enableWASM: true,
       useSharedMemory: false, // Requires COOP/COEP headers
       useThreads: false,
-      maxThreads: navigator.hardwareConcurrency || 4,
+      maxThreads,
       ...config,
     };
 

@@ -878,7 +878,9 @@ const VisionSection: React.FC<VisionSectionProps> = () => {
                     <div style={{ color: colors.neutral[400] }}>
                       Opt-in requis: activez Vision puis démarrez la caméra.
                     </div>
-                    {error && <div style={{ color: colors.danger[400] }}>{error}</div>}
+                    {error && (
+                      <div style={{ color: colors.semantic.error[400] }}>{error}</div>
+                    )}
                     <div style={{ display: 'flex', gap: spacing[3] }}>
                       <Button
                         variant="primary"
@@ -1114,30 +1116,30 @@ interface MemorySectionProps {
   stats: TitaneStats;
 }
 
-interface MemoryNode {
-  id: string;
-  type?: string;
-  content?: string;
-  timestamp?: number;
-  [key: string]: unknown;
-}
+type MemoryTreeNodeData = {
+  name: string;
+  attributes?: Record<string, string | number | boolean>;
+  children?: MemoryTreeNodeData[];
+};
 
-interface MemoryEntry {
+type MemorySearchEntry = {
   id: string;
-  content?: string;
-  metadata?: Record<string, unknown>;
-  [key: string]: unknown;
-}
+  content: string;
+  type: 'short' | 'mid' | 'long';
+  timestamp: number;
+  tags?: string[];
+  relevance?: number;
+};
 
 const MemorySection: React.FC<MemorySectionProps> = ({ stats }) => {
-  const [selectedNode, setSelectedNode] = useState<MemoryNode | null>(null);
+  const [selectedNode, setSelectedNode] = useState<MemoryTreeNodeData | null>(null);
 
-  const handleNodeClick = useCallback((node: MemoryNode) => {
+  const handleNodeClick = useCallback((node: MemoryTreeNodeData) => {
     setSelectedNode(node);
     pageLogger.debug('Node clicked', node);
   }, []);
 
-  const handleEntryClick = useCallback((entry: MemoryEntry) => {
+  const handleEntryClick = useCallback((entry: MemorySearchEntry) => {
     pageLogger.debug('Memory entry clicked', entry);
   }, []);
 

@@ -402,6 +402,21 @@ const AppRouter: React.FC = () => {
   useEffect(() => {
     let started = false;
 
+    // Silent-by-default in production/Tauri: background audits must be explicitly enabled.
+    const envEnabled = import.meta.env.VITE_AUTO_AUDIT_ENABLED === '1';
+    let userEnabled = false;
+    try {
+      const raw = localStorage.getItem('titane_auto_audit_enabled');
+      userEnabled = raw === '1' || raw === 'true';
+    } catch {
+      userEnabled = false;
+    }
+
+    const enabled = import.meta.env.DEV || envEnabled || userEnabled;
+    if (!enabled) {
+      return;
+    }
+
     console.log('🔍 [AUTO-AUDIT] Loading automatic audits...');
     import('./services/autoAuditEngine')
       .then(({ autoAuditEngine }) => {
@@ -842,18 +857,22 @@ const AppRouter: React.FC = () => {
           <Route
             path="/fusion"
             element={
-              <Suspense fallback={<PageLoadingFallback variant="dashboard" />}>
-                <PerfectFusionDashboard />
-              </Suspense>
+              <ErrorBoundary context="PerfectFusionDashboard">
+                <Suspense fallback={<PageLoadingFallback variant="dashboard" />}>
+                  <PerfectFusionDashboard />
+                </Suspense>
+              </ErrorBoundary>
             }
           />
           {/* ✨ v25.6.0 - ULTIMATE OPTIMIZATION - Phase 12: GPU/WASM/Cache/IndexedDB */}
           <Route
             path="/optimization"
             element={
-              <Suspense fallback={<PageLoadingFallback variant="dashboard" />}>
-                <UltimateOptimizationDashboard />
-              </Suspense>
+              <ErrorBoundary context="UltimateOptimizationDashboard">
+                <Suspense fallback={<PageLoadingFallback variant="dashboard" />}>
+                  <UltimateOptimizationDashboard />
+                </Suspense>
+              </ErrorBoundary>
             }
           />
           {/* ✨ v24.1 ORCHESTRATION & INTELLIGENCE CENTER - Fusion 6 modules (QA, Meta, Orchestration, Quantum, Multi-IA, Reality) */}

@@ -773,6 +773,10 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // ═══════════════════════════════════════════════════════════════
   // CONFIG HUB (v24.4+)
   // ═══════════════════════════════════════════════════════════════
+  'get_all_configs',
+  'export_config',
+  'import_config',
+  'list_config_presets',
   'update_runtime_config',
   'update_chat_engine_config',
   'save_config_preset',
@@ -1537,6 +1541,10 @@ export async function secureInvoke<T>(
     }
     const sanitized = sanitizeResponse(responseValidation.data);
 
+    if (sanitized === undefined) {
+      throw new Error('Sanitized response is undefined');
+    }
+
     // Si configuré, considérer explicitement les fallbacks comme des erreurs pour permettre les retries
     if (
       treatFallbackAsError &&
@@ -1548,7 +1556,7 @@ export async function secureInvoke<T>(
       throw new Error('Fallback response received');
     }
 
-    return sanitized;
+    return sanitized as T;
   } catch (error) {
     // Log et re-throw
     const errorMsg = error instanceof Error ? error.message : String(error);

@@ -281,6 +281,19 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("get_runtime_config");
 
     // ═══════════════════════════════════════════════════════════════
+    // CONFIG HUB
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("get_all_configs");
+    commands.insert("export_config");
+    commands.insert("import_config");
+    commands.insert("list_config_presets");
+    commands.insert("save_config_preset");
+    commands.insert("load_config_preset");
+    commands.insert("delete_config_preset");
+    commands.insert("update_runtime_config");
+    commands.insert("update_chat_engine_config");
+
+    // ═══════════════════════════════════════════════════════════════
     // SYSTEM CENTER DIAGNOSTICS (v∞)
     // ═══════════════════════════════════════════════════════════════
     commands.insert("sc_run_quick_diagnostics");

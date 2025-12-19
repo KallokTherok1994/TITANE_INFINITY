@@ -10,9 +10,28 @@ use crate::core::tapi_error::TAPIError;
 use crate::core::{MemoryType, UnifiedMemory};
 use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
+use std::env;
 use std::sync::Arc;
 use tauri::State;
 use tokio::sync::RwLock;
+
+fn env_flag_true(name: &str) -> bool {
+    env::var(name)
+        .ok()
+        .map(|v| {
+            let v = v.trim().to_ascii_lowercase();
+            v == "1" || v == "true" || v == "yes" || v == "on"
+        })
+        .unwrap_or(false)
+}
+
+fn is_ollama_auto_enabled() -> bool {
+    // Dev builds: keep local-first ergonomics.
+    // Release builds: default to silent-by-default (no localhost probes) unless opt-in.
+    cfg!(debug_assertions)
+        || env_flag_true("TITANE_OLLAMA_AUTO_ENABLED")
+        || env_flag_true("TITANE_LOCALHOST_PROBES_ENABLED")
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ADAPTIVE TIMEOUT CONFIGURATION (R02 - P1 FIX)
@@ -246,7 +265,11 @@ async fn initialize_providers(state: &ChatOrchestratorState) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// Vérifie rapidement si un provider est disponible (cache 30s)
-async fn is_provider_available(provider: &str, state: &ChatOrchestratorState) -> bool {
+async fn is_provider_available(
+    provider: &str,
+    state: &ChatOrchestratorState,
+    allow_ollama_probe: bool,
+) -> bool {
     const CACHE_DURATION_MS: u64 = 30000; // 30s
     const MAX_FAILURES: u32 = 3;
 
@@ -280,6 +303,9 @@ async fn is_provider_available(provider: &str, state: &ChatOrchestratorState) ->
             api_key.is_some() // Simplifié: si clé présente, considérer disponible
         }
         "ollama" => {
+            if !allow_ollama_probe {
+                return false;
+            }
             // Ping rapide http://localhost:11434/api/tags
             // ✅ FIX: Timeout augmenté 500ms → 3000ms (Ollama peut être lent au premier appel)
             match reqwest::Client::builder()
@@ -465,13 +491,19 @@ pub async fn chat_send_message(
 
     // 🔒 LOCAL-FIRST: mode offline par défaut
     // APIs externes (OpenAI/Anthropic/Gemini) = uniquement si provider demandé explicitement.
-    let providers_to_try: Vec<String> = if request.provider == "auto" {
-        vec![
-            "ollama".to_string(), // #1 Priorité: Ollama local
-            "local".to_string(),  // #2 Fallback: noyau local
-        ]
+    // In release, avoid localhost probes unless explicitly enabled.
+    let requested_provider = request.provider.clone();
+    let ollama_auto_enabled = requested_provider == "auto" && is_ollama_auto_enabled();
+
+    let providers_to_try: Vec<String> = if requested_provider == "auto" {
+        let mut cascade = Vec::with_capacity(2);
+        if ollama_auto_enabled {
+            cascade.push("ollama".to_string());
+        }
+        cascade.push("local".to_string());
+        cascade
     } else {
-        vec![request.provider.clone()] // Provider spécifique direct
+        vec![requested_provider.clone()] // Provider spécifique direct
     };
 
     let mut last_error: Option<TAPIError> = None;
@@ -489,7 +521,9 @@ pub async fn chat_send_message(
         println!("[CHAT ROUTER] 🧪 Testing provider = {}", provider);
 
         // Vérifier disponibilité via heartbeat (avec cache)
-        let is_available = is_provider_available(&provider, &state).await;
+        let allow_ollama_probe = provider == "ollama"
+            && (requested_provider == "ollama" || (requested_provider == "auto" && ollama_auto_enabled));
+        let is_available = is_provider_available(&provider, &state, allow_ollama_probe).await;
         println!(
             "[CHAT ROUTER] ⚡ Provider {} availability = {}",
             provider, is_available
@@ -1516,8 +1550,15 @@ pub async fn chat_stream_message(
     store_message(state.inner(), &conversation_id, &user_message).await;
 
     let should_use_ollama = match request.provider.as_str() {
-        "ollama" | "local" => true,
-        "auto" => is_provider_available("ollama", state.inner()).await,
+        "ollama" => true,
+        "auto" => {
+            if is_ollama_auto_enabled() {
+                is_provider_available("ollama", state.inner(), true).await
+            } else {
+                false
+            }
+        }
+        "local" => false,
         _ => false,
     };
 

@@ -47,6 +47,8 @@ import {
   MemoryTier,
 } from './mcp.types';
 
+type CompletedJob = Job & { execution: Job['execution'] & { completedAt: number } };
+
 // ═══════════════════════════════════════════════════════════════════════════
 // CONFIGURATION
 // ═══════════════════════════════════════════════════════════════════════════
@@ -548,7 +550,9 @@ class MCPOrchestratorClass implements MCPOperations {
 
     // Check for rapid changes
     const recentJobs = this.state.jobs.completed.filter(
-      (j): j is CompletedJob => !!j.completedAt && Date.now() - j.completedAt < 60000 // Last minute
+      (j): j is CompletedJob =>
+        typeof j.execution.completedAt === 'number' &&
+        Date.now() - j.execution.completedAt < 60000
     );
 
     if (recentJobs.length > 20) {
