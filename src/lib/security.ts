@@ -54,7 +54,6 @@ export const VOID_COMMANDS = new Set<string>([
   'state_save',
   'singularity_save_state',
   'singularity_reset',
-  'delete_state',
   // Persistence commands that return ()
   'titan_persist_event',
   'titan_force_snapshot',
@@ -969,6 +968,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // ═══════════════════════════════════════════════════════════════
   // STATE & PERSISTENCE (v24.4+)
   // ═══════════════════════════════════════════════════════════════
+  'get_state',
   'set_state',
   'delete_state',
 
