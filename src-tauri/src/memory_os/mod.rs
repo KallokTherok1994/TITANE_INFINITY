@@ -21,17 +21,20 @@
 
 pub mod api;
 pub mod consolidator;
+pub mod core;
 pub mod forgetting;
 pub mod indexer;
 pub mod ltm;
-#[allow(clippy::module_inception)]
-pub mod memory_os; // Same name as parent module but needed for exports
 pub mod memory_signals;
 pub mod memory_state;
 pub mod mtm;
 pub mod multimodal_memory;
 pub mod stm;
 pub mod vector_store; // SUPER PROMPT #15 - Phase 6
+
+// Tests
+#[cfg(test)]
+pub mod tests_memory_system;
 
 // NEW: SUPER PROMPTS #6-7-8 modules
 pub mod clustering;
@@ -59,9 +62,9 @@ pub use vector_index::{SearchResult, VectorIndex, VectorIndexConfig};
 
 // Re-exports for convenient access (original)
 pub use consolidator::Consolidator;
+pub use core::MemoryOS;
 pub use forgetting::ForgettingEngine;
 pub use ltm::LongTermMemory;
-pub use memory_os::MemoryOS;
 pub use memory_signals::MemorySignal;
 pub use memory_state::{MemoryEntry, MemorySnapshot, MemoryTier, MemoryType};
 pub use mtm::MidTermMemory;
