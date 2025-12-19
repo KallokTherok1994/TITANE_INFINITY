@@ -82,10 +82,12 @@ The audit-driven changes were committed and pushed to `origin/MAIN` on 2025-12-1
 - `3bfe9bc9` chore: harden Rust timestamps and tighten UI typing
 - `086db65b` chore(devtools): tighten livingEngines typing
 - `eff5fb59` fix(tauri): disable release stripping for bundle metadata
+- `26e3b0ae` chore(version): align tauri and cargo to 26.2.0
 
 Post-push verification (clean working tree):
 
 - `npm run copilot-xs:test` ✅ PASS
+- `npm run verify:tauri-configs` ✅ PASS
 - “🔵 Build Titan-Stable” ✅ PASS
 - `npm run build:production` ✅ PASS
 
