@@ -147,3 +147,76 @@ pub async fn avatar_get_state(
         },
     }))
 }
+
+/// Prépare une animation avatar synchronisée à partir des visèmes TTS
+#[tauri::command]
+#[allow(non_snake_case)]
+pub async fn avatar_prepare_animation(
+    mut visemes: Vec<serde_json::Value>,
+    duration: u32,
+    expressionIntensity: f32,
+) -> Result<serde_json::Value, String> {
+    let fps: u32 = 30;
+
+    if duration == 0 {
+        return Ok(serde_json::json!({
+            "keyframes": [],
+            "duration": duration,
+            "fps": fps,
+            "synchronized_with_audio": true
+        }));
+    }
+
+    visemes.sort_by_key(|v| v.get("start").and_then(|n| n.as_u64()).unwrap_or(0));
+
+    let expression = if expressionIntensity >= 0.66 {
+        "explain_mode"
+    } else if expressionIntensity >= 0.33 {
+        "soft_smile"
+    } else {
+        "neutral"
+    };
+
+    let frame_ms = (1000.0f32 / fps as f32).round().max(1.0) as u32;
+    let total_frames = (duration + frame_ms - 1) / frame_ms;
+
+    let mut keyframes = Vec::with_capacity(total_frames as usize);
+    for i in 0..total_frames {
+        let t = i * frame_ms;
+
+        let mouth_shape = visemes
+            .iter()
+            .find_map(|v| {
+                let start = v.get("start")?.as_u64()? as u32;
+                let dur = v.get("duration")?.as_u64()? as u32;
+                if t >= start && t < start.saturating_add(dur) {
+                    Some(
+                        v.get("shape")
+                            .and_then(|s| s.as_str())
+                            .unwrap_or("M")
+                            .to_string(),
+                    )
+                } else {
+                    None
+                }
+            })
+            .unwrap_or_else(|| "M".to_string());
+
+        let blink = (t / 1000) % 4 == 0 && (t % 1000) < frame_ms;
+
+        keyframes.push(serde_json::json!({
+            "time": t,
+            "mouth_shape": mouth_shape,
+            "expression": expression,
+            "head_rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+            "blink": blink,
+        }));
+    }
+
+    Ok(serde_json::json!({
+        "keyframes": keyframes,
+        "duration": duration,
+        "fps": fps,
+        "synchronized_with_audio": true
+    }))
+}
