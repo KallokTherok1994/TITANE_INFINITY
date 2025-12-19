@@ -185,16 +185,18 @@ describe('AIStrategy', () => {
         'Test prompt'
       );
 
-      // Should still return a response object (with stub data)
+      // Should still return a response object (fallback behavior)
       expect(result).toBeDefined();
       expect(typeof result.response).toBe('string');
     });
 
-    it('should return stub response', async () => {
+    it('should return a non-empty response', async () => {
       const response = await strategy.executeWithProvider('ollama', 'Stream test');
 
       expect(response).toBeDefined();
-      expect(response.response).toContain('Stub response');
+      expect(typeof response.response).toBe('string');
+      expect(response.response.length).toBeGreaterThan(0);
+      expect(response.response).not.toContain('Stub response');
     });
   });
 

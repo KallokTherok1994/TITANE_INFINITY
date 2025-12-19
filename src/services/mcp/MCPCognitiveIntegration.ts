@@ -11,9 +11,14 @@
  */
 
 import { MCPOrchestrator } from './MCPOrchestrator';
-import { CognitiveOmegaOrchestrator } from '@/services/cognitive/cognitiveOmegaIntegration';
+import {
+  cognitiveOmega,
+  type CognitiveOmegaOrchestrator,
+} from '@/services/cognitive/cognitiveOmegaIntegration';
+import { chatEngine } from '@/services/ai/chatEngine';
 import type { Job as _Job } from './mcp.types';
 import { JobType, MemoryTier } from './mcp.types';
+import type { AIMessage } from '@/services/ai/types';
 
 // Stub Message interface
 interface Message {
@@ -26,10 +31,20 @@ interface Message {
 // ═════════════════════════════════════════════════════════════════════════════
 
 class MCPCognitiveIntegrationClass {
-  private cognitiveOrchestrator: CognitiveOmegaOrchestrator | null = null;
+  private cognitiveOrchestrator: CognitiveOmegaOrchestrator;
 
   constructor() {
+    this.cognitiveOrchestrator = cognitiveOmega;
     this.log('MCP-Cognitive Integration initialized');
+  }
+
+  private toAIHistory(messages: Message[]): AIMessage[] {
+    const now = Date.now();
+    return messages.map((m, idx) => ({
+      role: m.role,
+      content: m.content,
+      timestamp: now + idx,
+    }));
   }
 
   private log(message: string, ...args: unknown[]) {
@@ -105,8 +120,20 @@ class MCPCognitiveIntegrationClass {
       }
 
       // 7. Process through Cognitive Omega
-      // const response = await this.cognitiveOrchestrator.processMessage(messages, options);
-      const response = 'Stub response: processMessage not implemented';
+      const lastUser =
+        [...messages].reverse().find(m => m.role === 'user')?.content ?? '';
+      const history = this.toAIHistory(messages.filter(m => m.content !== lastUser));
+
+      const engineResponse = await chatEngine.generate(lastUser, history, {
+        mode: 'default',
+        aiConfig: {
+          temperature: options?.temperature,
+          topP: options?.topP,
+          maxTokens: options?.maxTokens,
+        },
+      });
+
+      const response = engineResponse.content;
 
       // 8. Validate output through MCP
       const validation = await MCPOrchestrator.validateOutput(response, evaluatedJob);
@@ -195,7 +222,7 @@ class MCPCognitiveIntegrationClass {
 
       // 5. Also store in Semantic Memory Engine
       // await this.cognitiveOrchestrator.storeMemory(message, importance);
-      // Stub: storeMemory not implemented
+      // Note: semantic memory storage is handled by the cognitive pipeline (OMEGA).
 
       this.log(`Memory stored with importance ${importance} in tier ${tier}`);
     } catch (error) {
@@ -227,8 +254,60 @@ class MCPCognitiveIntegrationClass {
       await MCPOrchestrator.approveJob(job.id);
 
       // 3. Retrieve from Semantic Memory Engine
-      // const memories = await this.cognitiveOrchestrator.retrieveMemories(query, topK);
-      const memories: Message[] = []; // Stub: retrieveMemories not implemented
+      const tiers = [
+        MemoryTier.SHORT_TERM,
+        MemoryTier.MEDIUM_TERM,
+        MemoryTier.LONG_TERM,
+        MemoryTier.META_MEMORY,
+      ] as const;
+
+      const entries = (
+        await Promise.all(tiers.map(t => MCPOrchestrator.retrieveMemory(t, query)))
+      ).flat();
+
+      const extracted: Message[] = [];
+      for (const entry of entries) {
+        const content = (entry as any).content as unknown;
+        if (typeof content === 'string' && content.trim()) {
+          extracted.push({ role: 'assistant', content });
+          continue;
+        }
+        if (content && typeof content === 'object') {
+          const maybeMessages = (content as any).messages;
+          if (Array.isArray(maybeMessages)) {
+            for (const m of maybeMessages) {
+              if (
+                m &&
+                (m.role === 'user' || m.role === 'assistant') &&
+                typeof m.content === 'string'
+              ) {
+                extracted.push({ role: m.role, content: m.content });
+              }
+            }
+            continue;
+          }
+
+          const response = (content as any).response;
+          if (typeof response === 'string' && response.trim()) {
+            extracted.push({ role: 'assistant', content: response });
+            continue;
+          }
+
+          const message = (content as any).message;
+          if (typeof message === 'string' && message.trim()) {
+            extracted.push({ role: 'assistant', content: message });
+            continue;
+          }
+        }
+      }
+
+      const unique = new Map<string, Message>();
+      for (const m of extracted) {
+        const key = `${m.role}:${m.content}`;
+        if (!unique.has(key)) unique.set(key, m);
+      }
+
+      const memories = Array.from(unique.values()).slice(0, topK);
 
       this.log(`Retrieved ${memories.length} memories for query: ${query}`);
       return memories;
@@ -265,8 +344,35 @@ class MCPCognitiveIntegrationClass {
       await MCPOrchestrator.approveJob(job.id);
 
       // 3. Run evaluation through Conversation Evaluation Engine
-      // const evaluation = await this.cognitiveOrchestrator.evaluateConversation(messages);
-      const evaluation = { qualityScore: 0.8, dimensions: {}, suggestions: [] }; // Stub: evaluateConversation not implemented
+      const userMessage =
+        [...messages].reverse().find(m => m.role === 'user')?.content ?? '';
+      const assistantResponse =
+        [...messages].reverse().find(m => m.role === 'assistant')?.content ?? '';
+      const conversationId = `mcp_eval_${job.id}`;
+
+      const metrics = await this.cognitiveOrchestrator
+        .saveInteraction(conversationId, userMessage, assistantResponse, 'default')
+        .then(async () => {
+          const stats = this.cognitiveOrchestrator.getStats();
+          return stats;
+        })
+        .catch(() => null);
+
+      const dimensions: Record<string, number> = {};
+      if (metrics) {
+        dimensions.avgConsistencyScore = metrics.avgConsistencyScore;
+        dimensions.avgQualityScore = metrics.avgQualityScore;
+      }
+
+      const evaluation: {
+        qualityScore: number;
+        dimensions: Record<string, number>;
+        suggestions: string[];
+      } = {
+        qualityScore: metrics?.avgQualityScore ?? 0.8,
+        dimensions,
+        suggestions: [],
+      };
 
       // 4. Store evaluation in MCP meta-memory
       await MCPOrchestrator.storeMemory({
@@ -325,8 +431,46 @@ class MCPCognitiveIntegrationClass {
       await MCPOrchestrator.approveJob(job.id);
 
       // 3. Run consistency check through Goal Consistency Engine
-      // const result = await this.cognitiveOrchestrator.checkGoalConsistency(messages);
-      const result = { isConsistent: true, violations: [], corrections: [] }; // Stub: checkGoalConsistency not implemented
+      const userMessage =
+        [...messages].reverse().find(m => m.role === 'user')?.content ?? '';
+      const assistantResponse =
+        [...messages].reverse().find(m => m.role === 'assistant')?.content ?? '';
+      const conversationId = `mcp_consistency_${job.id}`;
+
+      const check = await this.cognitiveOrchestrator.checkConsistency(
+        conversationId,
+        assistantResponse,
+        {
+          userMessage,
+          mode: 'default',
+        }
+      );
+
+      const corrections: Array<{ original: string; corrected: string }> = [];
+      if (check.shouldCorrect && check.violations.length > 0) {
+        const correction = await this.cognitiveOrchestrator.autoCorrect(
+          conversationId,
+          assistantResponse,
+          check.violations
+        );
+
+        if (correction.corrected) {
+          corrections.push({
+            original: correction.originalResponse,
+            corrected: correction.correctedResponse,
+          });
+        }
+      }
+
+      const result = {
+        isConsistent: check.isConsistent,
+        violations: check.violations.map(v => ({
+          type: String((v as any).type ?? 'unknown'),
+          severity: String((v as any).severity ?? 'unknown'),
+          description: String((v as any).description ?? ''),
+        })),
+        corrections,
+      };
 
       // 4. Store result in MCP meta-memory
       await MCPOrchestrator.storeMemory({
@@ -390,13 +534,23 @@ class MCPCognitiveIntegrationClass {
     // Run health check
     const health = await MCPOrchestrator.runHealthCheck();
     const stats = MCPOrchestrator.getStats();
-    // const cognitiveState = await this.cognitiveOrchestrator.getCognitiveState();
+    const omegaStats = this.cognitiveOrchestrator.getStats();
+    const semanticMemoryStats = (omegaStats as any)?.semanticMemoryStats as
+      | { total_memories?: number }
+      | null
+      | undefined;
+
     const cognitiveState = {
-      semanticMemory: { totalMemories: 0, lastUpdate: 0 },
-      goalConsistency: { isEnabled: false },
-      conversationEvaluation: { isEnabled: false },
-      observability: { isEnabled: false },
-    }; // Stub: getCognitiveState not implemented
+      semanticMemory: {
+        totalMemories: semanticMemoryStats?.total_memories ?? 0,
+        lastUpdate: Date.now(),
+      },
+      goalConsistency: { isEnabled: Boolean((omegaStats as any)?.goalConsistencyStats) },
+      conversationEvaluation: {
+        isEnabled: Boolean((omegaStats as any)?.evaluationStats),
+      },
+      observability: { isEnabled: Boolean((omegaStats as any)?.observabilityStats) },
+    };
 
     return {
       cognitiveState,

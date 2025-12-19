@@ -96,6 +96,9 @@ export class TitaneVisualEngine extends EventEmitter {
   private config: VisualEngineConfig;
   private isRunning = false;
   private websocket: WebSocket | null = null;
+  private websocketReconnectTimer: ReturnType<typeof setTimeout> | null = null;
+  private websocketReconnectAttempts = 0;
+  private websocketConnectSeq = 0;
 
   // Performance tracking
   private lastFrameTime = 0;
@@ -211,6 +214,12 @@ export class TitaneVisualEngine extends EventEmitter {
     }
 
     // Disconnect WebSocket
+    if (this.websocketReconnectTimer) {
+      clearTimeout(this.websocketReconnectTimer);
+      this.websocketReconnectTimer = null;
+    }
+    this.websocketReconnectAttempts = 0;
+
     if (this.websocket) {
       this.websocket.close();
       this.websocket = null;
@@ -436,10 +445,30 @@ export class TitaneVisualEngine extends EventEmitter {
    */
   private connectWebSocket(url: string): void {
     try {
+      if (this.websocketReconnectTimer) {
+        clearTimeout(this.websocketReconnectTimer);
+        this.websocketReconnectTimer = null;
+      }
+
+      if (
+        this.websocket &&
+        (this.websocket.readyState === WebSocket.OPEN ||
+          this.websocket.readyState === WebSocket.CONNECTING)
+      ) {
+        return;
+      }
+
+      if (this.websocket) {
+        this.websocket.close();
+        this.websocket = null;
+      }
+
+      const connectSeq = ++this.websocketConnectSeq;
       this.websocket = new WebSocket(url);
 
       this.websocket.onopen = () => {
         console.log('[VisualEngine] WebSocket connected');
+        this.websocketReconnectAttempts = 0;
         this.emit('websocketConnected');
       };
 
@@ -462,14 +491,35 @@ export class TitaneVisualEngine extends EventEmitter {
         this.emit('websocketDisconnected');
         this.websocket = null;
 
-        // Attempt reconnection after 5 seconds
-        if (this.isRunning && this.config.enableWebSocket) {
-          setTimeout(() => {
-            if (this.config.websocketUrl) {
-              this.connectWebSocket(this.config.websocketUrl);
-            }
-          }, 5000);
+        if (
+          !this.isRunning ||
+          !this.config.enableWebSocket ||
+          !this.config.websocketUrl
+        ) {
+          return;
         }
+
+        if (this.websocketReconnectTimer) {
+          return;
+        }
+
+        const attempt = this.websocketReconnectAttempts + 1;
+        const delayMs = Math.min(5000 * 2 ** Math.min(attempt - 1, 4), 60000);
+
+        this.websocketReconnectTimer = setTimeout(() => {
+          this.websocketReconnectTimer = null;
+          if (
+            !this.isRunning ||
+            !this.config.enableWebSocket ||
+            !this.config.websocketUrl ||
+            connectSeq !== this.websocketConnectSeq
+          ) {
+            return;
+          }
+
+          this.websocketReconnectAttempts = attempt;
+          this.connectWebSocket(this.config.websocketUrl);
+        }, delayMs);
       };
     } catch (error) {
       console.error('[VisualEngine] WebSocket connection error:', error);

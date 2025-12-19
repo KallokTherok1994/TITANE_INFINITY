@@ -61,7 +61,7 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
 
     try {
       const doc = await secureInvoke<KnowledgeDocument>('parse_document', {
-        filePath: selectedFile,
+        file_path: selectedFile,
       });
       setParsedDoc(doc);
 

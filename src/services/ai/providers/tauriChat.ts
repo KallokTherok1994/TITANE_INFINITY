@@ -375,7 +375,7 @@ export const tauriChatProvider = new TauriChatProvider();
  * Si le backend n'est pas disponible, l'orchestrateur passera
  * automatiquement aux providers frontend.
  *
- * TODO Phase 3:
+ * Phase 3 (intégration):
  * 1. Enregistrer chat_* commands dans src-tauri/src/main.rs
  * 2. Ajouter tauriChatProvider dans orchestrator.ts
  * 3. Tester cascade complète

@@ -280,6 +280,14 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'xp_get_total',
   'xp_get_state',
   'experience_get_state',
+  'exp_get_global_state',
+  'exp_get_categories',
+  'exp_get_projects',
+  'exp_get_project_stats',
+  'exp_get_talents',
+  'exp_get_timeline',
+  'exp_get_timeline_stats',
+  'exp_add_knowledge',
   'experience_update_state',
 
   // ═══════════════════════════════════════════════════════════════
@@ -825,6 +833,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'memory_scan',
   'memory_demote',
   'parse_document',
+  'detect_file_format',
 
   // ═══════════════════════════════════════════════════════════════
   // CONVERSATIONS (v24.4+)
@@ -1011,6 +1020,16 @@ interface CallTracker {
 
 const callTracking = new Map<string, CallTracker>();
 
+// On-demand cleanup (no background interval by default)
+let lastCallTrackingCleanupAt = 0;
+const CALL_TRACKING_CLEANUP_THROTTLE_MS = 5000;
+
+function maybeCleanupCallTracking(now: number): void {
+  if (now - lastCallTrackingCleanupAt < CALL_TRACKING_CLEANUP_THROTTLE_MS) return;
+  lastCallTrackingCleanupAt = now;
+  cleanupCallTracking();
+}
+
 // ═══════════════════════════════════════════════════════════════
 // v26.2 - LOCAL NETWORK SECURITY MODE
 // Pour réseau domestique sécurisé privé - restrictions réduites
@@ -1187,6 +1206,9 @@ export function detectInfiniteLoop(command: string): CommandValidationResult {
   const now = Date.now();
   const key = command;
 
+  // Keep cache bounded without background polling.
+  maybeCleanupCallTracking(now);
+
   if (!callTracking.has(key)) {
     callTracking.set(key, {
       count: 1,
@@ -1278,9 +1300,7 @@ export function stopCallTrackingCleanup() {
 }
 
 // Démarrer cleanup si dans le navigateur
-if (typeof window !== 'undefined') {
-  startCallTrackingCleanup();
-}
+// NOTE: Intentionally not auto-started (silent-by-default in production/Tauri).
 
 // ────────────────────────────────────────────────────────────────
 // Type Guards

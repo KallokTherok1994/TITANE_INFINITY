@@ -71,6 +71,12 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("memory_import");
 
     // ═══════════════════════════════════════════════════════════════
+    // KNOWLEDGE FUSION (Phase 6)
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("parse_document");
+    commands.insert("detect_file_format");
+
+    // ═══════════════════════════════════════════════════════════════
     // AI / CHAT COMMANDS (v21 - CHAT PIPELINE SELF-REPAIR)
     // ═══════════════════════════════════════════════════════════════
     commands.insert("query_ai");
@@ -136,6 +142,18 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("xp_get_state");
     commands.insert("experience_get_state");
     commands.insert("experience_update_state");
+
+    // ═══════════════════════════════════════════════════════════════
+    // EXP FUSION ENGINE (v15)
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("exp_get_global_state");
+    commands.insert("exp_get_categories");
+    commands.insert("exp_get_projects");
+    commands.insert("exp_get_project_stats");
+    commands.insert("exp_get_talents");
+    commands.insert("exp_get_timeline");
+    commands.insert("exp_get_timeline_stats");
+    commands.insert("exp_add_knowledge");
 
     // ═══════════════════════════════════════════════════════════════
     // COGNITIVE LAYER

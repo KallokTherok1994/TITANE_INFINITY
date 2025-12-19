@@ -186,6 +186,21 @@ export class OSIntegrationBridge {
   public connect(): void {
     this.shouldReconnect = true;
 
+    if (this.ws) {
+      this.ws.close();
+      this.ws = null;
+    }
+
+    if (this.reconnectTimer) {
+      clearTimeout(this.reconnectTimer);
+      this.reconnectTimer = null;
+    }
+
+    if (this.pollTimer) {
+      clearInterval(this.pollTimer);
+      this.pollTimer = null;
+    }
+
     if (!this.config.websocketUrl) {
       if (this.config.debug) {
         console.log('[OSIntegrationBridge] No OS endpoint configured; skipping connect');
@@ -374,6 +389,19 @@ export class OSIntegrationBridge {
         this.reconnectTimer = null;
       }
 
+      if (
+        this.ws &&
+        (this.ws.readyState === WebSocket.OPEN ||
+          this.ws.readyState === WebSocket.CONNECTING)
+      ) {
+        return;
+      }
+
+      if (this.ws) {
+        this.ws.close();
+        this.ws = null;
+      }
+
       this.ws = new WebSocket(this.config.websocketUrl);
 
       this.ws.onopen = () => {
@@ -403,6 +431,7 @@ export class OSIntegrationBridge {
 
       this.ws.onclose = () => {
         this.metrics.connected = false;
+        this.ws = null;
 
         if (this.config.debug) {
           console.log('[OSIntegrationBridge] WebSocket closed');
@@ -419,6 +448,7 @@ export class OSIntegrationBridge {
         const delayMs = Math.min(5000 * 2 ** Math.min(attempt - 1, 4), 60000);
 
         this.reconnectTimer = setTimeout(() => {
+          this.reconnectTimer = null;
           this.metrics.reconnectAttempts = attempt;
           if (this.config.debug) {
             console.log('[OSIntegrationBridge] Reconnect attempt', attempt, { delayMs });
@@ -433,6 +463,10 @@ export class OSIntegrationBridge {
   }
 
   private startPolling(): void {
+    if (this.pollTimer) {
+      clearInterval(this.pollTimer);
+      this.pollTimer = null;
+    }
     this.pollTimer = setInterval(() => {
       // IMPLEMENTATION: Polling logic to fetch OS state from REST API
       // 1. Endpoint: fetch('http://localhost:7890/api/os/state') or config.apiEndpoint

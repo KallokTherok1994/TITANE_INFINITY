@@ -13,6 +13,9 @@ export class ContextDetector {
   private resizeObserver: ResizeObserver | null = null;
   private listeners: Set<(context: UIContext) => void> = new Set();
 
+  private usingWindowResizeListener = false;
+  private resizeHandler = () => this.detectAndNotify();
+
   // ✨ PHASE 4.4 - Store media queries and handlers for cleanup
   private darkModeQuery: MediaQueryList | null = null;
   private reducedMotionQuery: MediaQueryList | null = null;
@@ -22,6 +25,34 @@ export class ContextDetector {
   private contrastHandler = () => this.detectAndNotify();
   private orientationHandler = () => this.detectAndNotify();
 
+  private addMediaQueryListener(query: MediaQueryList | null, handler: () => void): void {
+    if (!query) return;
+
+    // Some WebViews only support the legacy addListener/removeListener API.
+    if (typeof query.addEventListener === 'function') {
+      query.addEventListener('change', handler);
+      return;
+    }
+
+    const legacy = query as unknown as { addListener?: (cb: () => void) => void };
+    legacy.addListener?.(handler);
+  }
+
+  private removeMediaQueryListener(
+    query: MediaQueryList | null,
+    handler: () => void
+  ): void {
+    if (!query) return;
+
+    if (typeof query.removeEventListener === 'function') {
+      query.removeEventListener('change', handler);
+      return;
+    }
+
+    const legacy = query as unknown as { removeListener?: (cb: () => void) => void };
+    legacy.removeListener?.(handler);
+  }
+
   /**
    * Initialise le détecteur
    */
@@ -29,20 +60,29 @@ export class ContextDetector {
     if (typeof window === 'undefined') return;
 
     // Observer les changements de taille
-    this.resizeObserver = new ResizeObserver(() => {
-      this.detectAndNotify();
-    });
-    this.resizeObserver.observe(document.documentElement);
+    try {
+      if (typeof ResizeObserver !== 'undefined') {
+        this.resizeObserver = new ResizeObserver(this.resizeHandler);
+        this.resizeObserver.observe(document.documentElement);
+      } else {
+        window.addEventListener('resize', this.resizeHandler);
+        this.usingWindowResizeListener = true;
+      }
+    } catch {
+      // Best-effort: avoid crashing the app if observers are unavailable.
+      window.addEventListener('resize', this.resizeHandler);
+      this.usingWindowResizeListener = true;
+    }
 
     // Écouter les changements de media queries
     this.darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    this.darkModeQuery.addEventListener('change', this.darkModeHandler);
+    this.addMediaQueryListener(this.darkModeQuery, this.darkModeHandler);
 
     this.reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    this.reducedMotionQuery.addEventListener('change', this.reducedMotionHandler);
+    this.addMediaQueryListener(this.reducedMotionQuery, this.reducedMotionHandler);
 
     this.contrastQuery = window.matchMedia('(prefers-contrast: more)');
-    this.contrastQuery.addEventListener('change', this.contrastHandler);
+    this.addMediaQueryListener(this.contrastQuery, this.contrastHandler);
 
     // Détecter les changements d'orientation
     window.addEventListener('orientationchange', this.orientationHandler);
@@ -55,10 +95,15 @@ export class ContextDetector {
     // Disconnect ResizeObserver
     this.resizeObserver?.disconnect();
 
+    if (typeof window !== 'undefined' && this.usingWindowResizeListener) {
+      window.removeEventListener('resize', this.resizeHandler);
+      this.usingWindowResizeListener = false;
+    }
+
     // Remove MediaQuery listeners
-    this.darkModeQuery?.removeEventListener('change', this.darkModeHandler);
-    this.reducedMotionQuery?.removeEventListener('change', this.reducedMotionHandler);
-    this.contrastQuery?.removeEventListener('change', this.contrastHandler);
+    this.removeMediaQueryListener(this.darkModeQuery, this.darkModeHandler);
+    this.removeMediaQueryListener(this.reducedMotionQuery, this.reducedMotionHandler);
+    this.removeMediaQueryListener(this.contrastQuery, this.contrastHandler);
 
     // Remove orientation listener
     if (typeof window !== 'undefined') {

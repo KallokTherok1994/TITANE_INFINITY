@@ -23,6 +23,10 @@ use tauri::Manager;
 // TITANE∞ command modules
 use std::sync::Arc;
 
+// EXP Fusion Engine (used by frontend XP/EXP UI)
+#[cfg(all(not(feature = "mock"), feature = "full"))]
+use crate::commands::exp_fusion::ExpFusionState;
+
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 use titane_infinity::chat_engine;
 
@@ -117,6 +121,12 @@ mod secure_commands {
 mod commands {
     pub mod chat_generate_commands {
         include!("commands/chat_generate_commands.rs");
+    }
+
+    // EXP Fusion Engine commands (XP/EXP UI)
+    #[cfg(all(not(feature = "mock"), feature = "full"))]
+    pub mod exp_fusion {
+        include!("commands/exp_fusion.rs");
     }
 }
 
@@ -405,14 +415,20 @@ fn main() {
     // Initialize Multi-IA Orchestrator v∞ (SUPER PROMPT #8)
     let multi_ai_orchestrator = OrchestratorState::new();
 
-    tauri::Builder::default()
+    let builder = tauri::Builder::default()
         .manage(app_state)
         .manage(singularity_cortex)
         .manage(multi_ai_orchestrator)
         .manage(secrets_engine)
         .manage(chat_orchestrator.clone())
         .manage(helios_core)
-        .manage(memory_core)
+        .manage(memory_core);
+
+    // EXP FUSION ENGINE (XP/EXP UI) - only available in full builds
+    #[cfg(all(not(feature = "mock"), feature = "full"))]
+    let builder = builder.manage(ExpFusionState::new());
+
+    builder
         .manage(std::sync::Mutex::new(onboarding::OnboardingState::default()))
         .setup(move |app| {
             // 🔐 Initialize Auth OS v∞ (Unified Authentication System)
@@ -643,6 +659,24 @@ fn main() {
             one_core_commands::one_core_run_diagnostic,
             one_core_commands::one_core_force_sync,
             one_core_commands::one_core_cleanup,
+
+            // EXP FUSION ENGINE (XP/EXP UI) - only available in full builds
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            commands::exp_fusion::exp_get_global_state,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            commands::exp_fusion::exp_get_categories,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            commands::exp_fusion::exp_get_projects,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            commands::exp_fusion::exp_get_project_stats,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            commands::exp_fusion::exp_get_talents,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            commands::exp_fusion::exp_get_timeline,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            commands::exp_fusion::exp_get_timeline_stats,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            commands::exp_fusion::exp_add_knowledge,
             // Secure API Key Management (v∞ - Super-Prompts H, I, J, K)
             // ✅ v21 Phase 1: Réactivation Gemini
             secure_commands::chat_set_gemini_key,

@@ -153,7 +153,18 @@ export const useLivingEngines = (updateInterval = 100) => {
   useEffect(() => {
     if (!enginesState.initialized) return;
 
-    const interval = setInterval(async () => {
+    // Silent-by-default in production/Tauri: polling must be explicitly enabled.
+    const envEnabled = import.meta.env.VITE_LIVING_ENGINES_POLLING_ENABLED === '1';
+    let userEnabled = false;
+    try {
+      const raw = localStorage.getItem('titane_living_engines_polling_enabled');
+      userEnabled = raw === '1' || raw === 'true';
+    } catch {
+      userEnabled = false;
+    }
+    const pollingEnabled = import.meta.env.DEV || envEnabled || userEnabled;
+
+    const updateOnce = async () => {
       try {
         let personaState: PersonaState | null = null;
         let visualMults = { glow: 1.0, motion: 1.0, depth: 0.5, sound: 0.5 };
@@ -203,6 +214,16 @@ export const useLivingEngines = (updateInterval = 100) => {
           error as Error
         );
       }
+    };
+
+    void updateOnce();
+
+    if (!pollingEnabled) {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      void updateOnce();
     }, updateInterval);
 
     return () => clearInterval(interval);
