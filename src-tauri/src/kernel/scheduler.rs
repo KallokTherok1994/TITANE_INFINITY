@@ -102,6 +102,7 @@ pub struct CognitiveScheduler {
 
 impl CognitiveScheduler {
     /// Create new scheduler
+    #[allow(clippy::arc_with_non_send_sync)]
     pub fn new(
         runtime: Arc<KernelRuntime>,
         state: Arc<tokio::sync::RwLock<KernelState>>,
