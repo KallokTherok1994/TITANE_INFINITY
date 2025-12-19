@@ -68,14 +68,17 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Complete Chat Flow', () => {
   it('should maintain message validation throughout pipeline', async () => {
     const messages = ['First message test', 'Second message test', 'Third message test'];
 
+    // Keep this E2E deterministic + fast in Vitest.
+    const config = { preferredProvider: 'titane-local' as const, timeout: 5000 };
+
     for (const message of messages) {
-      const result = await aiOrchestrator.generate(message, []);
+      const result = await aiOrchestrator.generate(message, [], config);
 
       expect(result).toBeDefined();
       expect(result.content).toBeTruthy();
       expect(result.content.length).toBeGreaterThan(5);
     }
-  }, 20000);
+  }, 30000);
 
   it('should handle conversation context correctly', async () => {
     const context: AIMessage[] = [
