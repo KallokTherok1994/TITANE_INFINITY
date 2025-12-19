@@ -94,6 +94,30 @@ pub async fn crashguard_get_active_threats(
 }
 
 #[tauri::command]
-pub async fn crashguard_get_stats() -> Result<String, String> {
-    Ok("Stats placeholder".to_string())
+pub async fn crashguard_get_stats(state: State<'_, CrashGuardState>) -> Result<String, String> {
+    let threats = state.threats.lock().map_err(|e| e.to_string())?;
+
+    let mut critical = 0u64;
+    let mut high = 0u64;
+    let mut medium = 0u64;
+    let mut low = 0u64;
+    for t in threats.iter() {
+        match t.severity.as_str() {
+            "critical" => critical += 1,
+            "high" => high += 1,
+            "medium" => medium += 1,
+            "low" => low += 1,
+            _ => {}
+        }
+    }
+
+    let json = serde_json::json!({
+        "total": threats.len(),
+        "critical": critical,
+        "high": high,
+        "medium": medium,
+        "low": low,
+    });
+
+    Ok(json.to_string())
 }

@@ -261,6 +261,12 @@ mod memory_compactor;
 mod types;
 mod utils;
 
+// Immersive Avatar Engine v23
+mod avatar;
+
+// SINGULARITY-FUSION vΩ (AutoHeal/AutoFix/CrashGuard/Performance/Pipeline)
+mod singularity_fusion;
+
 // System Center v∞ (Diagnostics, DevTools, Cluster)
 use titane_infinity::system_center;
 
@@ -426,6 +432,12 @@ fn main() {
         .manage(chat_orchestrator.clone())
         .manage(helios_core)
         .manage(memory_core)
+        .manage(avatar::AvatarEngineGlobal::default())
+        .manage(singularity_fusion::AutoFixState::default())
+        .manage(singularity_fusion::AutoHealState::default())
+        .manage(singularity_fusion::CrashGuardState::default())
+        .manage(singularity_fusion::PerformanceState::default())
+        .manage(singularity_fusion::UnifiedPipelineState::default())
         .manage(state_bridge_commands::FrontendStateStore::default());
 
     // EXP FUSION ENGINE (XP/EXP UI)
@@ -627,6 +639,138 @@ fn main() {
             overdrive::voice_engine::voice_enable_duplex,
             overdrive::voice_engine::voice_disable_duplex,
             overdrive::voice_engine::voice_check_interruption,
+
+            // Immersive Avatar Engine v23 + FullBody
+            avatar::avatar_commands::avatar_prepare_speech,
+            avatar::avatar_commands::avatar_finish_speech,
+            avatar::avatar_commands::avatar_enable_immersion,
+            avatar::avatar_commands::avatar_on_wake_word,
+            avatar::avatar_commands::avatar_get_current_morph,
+            avatar::avatar_commands::avatar_advance_lip_sync,
+            avatar::avatar_commands::avatar_get_expression,
+            avatar::avatar_commands::avatar_get_state,
+            avatar::avatar_commands::avatar_prepare_animation,
+            avatar::avatar_selftest::avatar_run_selftest,
+
+            // Avatar appearance
+            avatar::appearance_commands::avatar_get_appearance,
+            avatar::appearance_commands::avatar_set_appearance,
+            avatar::appearance_commands::avatar_update_appearance,
+            avatar::appearance_commands::avatar_apply_style_preset,
+            avatar::appearance_commands::avatar_parse_style_command,
+            avatar::appearance_commands::avatar_save_custom_style,
+            avatar::appearance_commands::avatar_load_custom_style,
+            avatar::appearance_commands::avatar_merge_styles,
+            avatar::appearance_commands::avatar_list_styles,
+            avatar::appearance_commands::avatar_add_archetype,
+
+            // Avatar floating window / display state
+            avatar::avatar_floating_commands::avatar_get_display_state,
+            avatar::avatar_floating_commands::avatar_set_display_state,
+            avatar::avatar_floating_commands::avatar_update_display_state,
+            avatar::avatar_floating_commands::avatar_reset_display_state,
+            avatar::avatar_floating_commands::avatar_mode_floating,
+            avatar::avatar_floating_commands::avatar_mode_embed,
+            avatar::avatar_floating_commands::avatar_mode_hidden,
+            avatar::avatar_floating_commands::avatar_set_position,
+            avatar::avatar_floating_commands::avatar_set_size,
+            avatar::avatar_floating_commands::avatar_set_scale,
+            avatar::avatar_floating_commands::avatar_set_opacity,
+            avatar::avatar_floating_commands::avatar_set_always_on_top,
+            avatar::avatar_floating_commands::avatar_set_locked,
+            avatar::avatar_floating_commands::avatar_set_mirror_mode,
+            avatar::avatar_floating_commands::avatar_set_click_through,
+            avatar::avatar_floating_commands::avatar_set_anchor,
+            avatar::avatar_floating_commands::avatar_set_anchor_by_name,
+            avatar::avatar_floating_commands::avatar_list_screens,
+            avatar::avatar_floating_commands::avatar_move_to_screen,
+
+            // FullBody engine
+            avatar::fullbody_commands::fullbody_initialize,
+            avatar::fullbody_commands::fullbody_advance_frame,
+            avatar::fullbody_commands::fullbody_activate_gesture,
+            avatar::fullbody_commands::fullbody_update_expression,
+            avatar::fullbody_commands::fullbody_update_lipsync,
+            avatar::fullbody_commands::fullbody_update_state,
+            avatar::fullbody_commands::fullbody_on_wake_word,
+            avatar::fullbody_commands::fullbody_export_skeleton,
+            avatar::fullbody_commands::fullbody_update_context,
+            avatar::fullbody_commands::fullbody_get_posture,
+            avatar::fullbody_commands::fullbody_get_stats,
+            avatar::fullbody_selftest::fullbody_run_selftest,
+
+            // SINGULARITY-FUSION (AutoFix/AutoHeal/CrashGuard/Performance/Pipeline)
+            singularity_fusion::autofix_detect_rust_warnings,
+            singularity_fusion::autofix_detect_typescript_errors,
+            singularity_fusion::autofix_detect_react_hook_violations,
+            singularity_fusion::autofix_detect_invalid_states,
+            singularity_fusion::autofix_fix_issue,
+            singularity_fusion::autofix_fix_all,
+            singularity_fusion::autofix_get_history,
+            singularity_fusion::autofix_get_stats,
+            singularity_fusion::autofix_reset,
+            singularity_fusion::autofix_rust_warning,
+            singularity_fusion::autofix_typescript_error,
+            singularity_fusion::autofix_reset_state,
+            singularity_fusion::autofix_restart_pipeline,
+            singularity_fusion::autofix_restart_tauri_command,
+            singularity_fusion::autofix_resync_lipsync,
+            singularity_fusion::autofix_add_mutex,
+
+            singularity_fusion::autoheal_detect_broken,
+            singularity_fusion::autoheal_detect_broken_modules,
+            singularity_fusion::autoheal_reset_cognitive,
+            singularity_fusion::autoheal_init_cognitive,
+            singularity_fusion::autoheal_reset_adaptive,
+            singularity_fusion::autoheal_clear_narrative,
+            singularity_fusion::autoheal_init_narrative,
+            singularity_fusion::autoheal_stop_avatar,
+            singularity_fusion::autoheal_reload_avatar,
+            singularity_fusion::autoheal_start_avatar,
+            singularity_fusion::autoheal_clear_tts_queue,
+            singularity_fusion::autoheal_init_tts,
+            singularity_fusion::autoheal_resync_lipsync,
+            singularity_fusion::autoheal_rebuild_memory_index,
+            singularity_fusion::autoheal_validate_memory,
+            singularity_fusion::autoheal_stop_pipeline,
+            singularity_fusion::autoheal_clear_pipeline,
+            singularity_fusion::autoheal_start_pipeline,
+            singularity_fusion::autoheal_heal_cognitive_module,
+            singularity_fusion::autoheal_heal_avatar_module,
+            singularity_fusion::autoheal_heal_tts_module,
+            singularity_fusion::autoheal_heal_lipsync_module,
+            singularity_fusion::autoheal_heal_memory_module,
+            singularity_fusion::autoheal_heal_pipeline,
+            singularity_fusion::autoheal_resync_state,
+            singularity_fusion::autoheal_get_history,
+            singularity_fusion::autoheal_reset,
+
+            singularity_fusion::crashguard_detect_threats,
+            singularity_fusion::crashguard_clear_memory,
+            singularity_fusion::crashguard_kill_thread,
+            singularity_fusion::crashguard_restart_module,
+            singularity_fusion::crashguard_emergency_shutdown,
+            singularity_fusion::crashguard_reset_pipeline,
+            singularity_fusion::crashguard_emergency_rollback,
+            singularity_fusion::crashguard_get_active_threats,
+            singularity_fusion::crashguard_get_stats,
+
+            singularity_fusion::performance_get_metrics,
+            singularity_fusion::performance_throttle_cpu,
+            singularity_fusion::performance_optimize_gpu,
+            singularity_fusion::performance_reduce_render_quality,
+            singularity_fusion::performance_compress_memory,
+            singularity_fusion::performance_reset_optimizations,
+
+            singularity_fusion::pipeline_analyze_intention,
+            singularity_fusion::pipeline_generate_cognitive_response,
+            singularity_fusion::pipeline_prepare_tts,
+            singularity_fusion::pipeline_prepare_avatar_animation,
+            singularity_fusion::pipeline_get_stats,
+            singularity_fusion::pipeline_pause,
+            singularity_fusion::pipeline_resume,
+            singularity_fusion::pipeline_reset,
+            singularity_fusion::pipeline_validate,
             // Singularity State Commands (SINGULARITY API v21 REPAIR - 18 commands)
             singularity_state::commands::singularity_get_full_state,
             singularity_state::commands::singularity_get_physical,
