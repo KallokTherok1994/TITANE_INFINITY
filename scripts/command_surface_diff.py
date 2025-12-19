@@ -14,6 +14,7 @@ This script is a dev helper and is not used by runtime.
 
 from __future__ import annotations
 
+import argparse
 import pathlib
 import re
 from collections import Counter
@@ -25,6 +26,13 @@ RUST_ALLOWLIST_RE = re.compile(r"commands\.insert\(\"([^\"]+)\"\)")
 TS_STRING_RE = re.compile(r"'([^']+)'\s*,?")
 
 
+def _strip_comments(text: str) -> str:
+    # Remove /* */ and // comments
+    text = re.sub(r"/\*.*?\*/", "", text, flags=re.S)
+    text = re.sub(r"//.*$", "", text, flags=re.M)
+    return text
+
+
 def read_text(path: pathlib.Path) -> str:
     return path.read_text(encoding="utf-8", errors="ignore")
 
@@ -33,9 +41,19 @@ def family(cmd: str) -> str:
     return cmd.split("_", 1)[0] if "_" in cmd else cmd
 
 
-def extract_frontend_commands() -> set[str]:
+def _apply_prefix_filter(cmds: set[str], prefixes: list[str] | None) -> set[str]:
+    if not prefixes:
+        return cmds
+    filtered: set[str] = set()
+    for cmd in cmds:
+        if any(cmd.startswith(p) for p in prefixes):
+            filtered.add(cmd)
+    return filtered
+
+
+def extract_frontend_commands(root: pathlib.Path) -> set[str]:
     cmds: set[str] = set()
-    for p in (ROOT / "src").rglob("*"):
+    for p in (root / "src").rglob("*"):
         if not p.is_file():
             continue
         if p.suffix not in {".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs"}:
@@ -46,33 +64,29 @@ def extract_frontend_commands() -> set[str]:
     return cmds
 
 
-def extract_handler_command_names() -> set[str]:
-    main_rs = ROOT / "src-tauri" / "src" / "main.rs"
+def extract_handler_command_names(root: pathlib.Path) -> set[str]:
+    main_rs = root / "src-tauri" / "src" / "main.rs"
     text = read_text(main_rs)
 
-    # Capture generate_handler![ ... ] inside invoke_handler(...)
-    m = re.search(r"generate_handler!\[(.*?)\]\)", text, flags=re.S)
-    if not m:
-        return set()
-
-    block = m.group(1)
-    # Remove /* */ and // comments
-    block = re.sub(r"/\*.*?\*/", "", block, flags=re.S)
-    block = re.sub(r"//.*$", "", block, flags=re.M)
-
-    identifiers = re.findall(r"([A-Za-z0-9_:]+)\s*,", block)
-    return {ident.split("::")[-1] for ident in identifiers}
+    # There can be multiple invoke_handler(...) blocks; capture all generate_handler![ ... ]
+    names: set[str] = set()
+    for m in re.finditer(r"generate_handler!\[(.*?)\]", text, flags=re.S):
+        block = _strip_comments(m.group(1))
+        identifiers = re.findall(r"([A-Za-z0-9_:]+)\s*,", block)
+        for ident in identifiers:
+            names.add(ident.split("::")[-1])
+    return names
 
 
-def extract_rust_allowlist() -> set[str]:
-    sec_rs = ROOT / "src-tauri" / "src" / "commands" / "security.rs"
+def extract_rust_allowlist(root: pathlib.Path) -> set[str]:
+    sec_rs = root / "src-tauri" / "src" / "commands" / "security.rs"
     text = read_text(sec_rs)
     return set(RUST_ALLOWLIST_RE.findall(text))
 
 
-def extract_ts_allowlist_literals() -> set[str]:
-    ts = ROOT / "src" / "lib" / "security.ts"
-    text = read_text(ts)
+def extract_ts_allowlist_literals(root: pathlib.Path) -> set[str]:
+    ts = root / "src" / "lib" / "security.ts"
+    text = _strip_comments(read_text(ts))
     return set(TS_STRING_RE.findall(text))
 
 
@@ -82,10 +96,25 @@ def top_families(cmds: set[str], n: int = 12) -> str:
 
 
 def main() -> None:
-    frontend = extract_frontend_commands()
-    handler = extract_handler_command_names()
-    allow_rust = extract_rust_allowlist()
-    allow_ts = extract_ts_allowlist_literals()
+    parser = argparse.ArgumentParser(description="Diff frontend/backend Tauri command surface")
+    parser.add_argument(
+        "--prefix",
+        action="append",
+        default=None,
+        help="Only include commands with this prefix (repeatable)",
+    )
+    parser.add_argument(
+        "--max",
+        type=int,
+        default=50,
+        help="Max number of missing commands to print",
+    )
+    args = parser.parse_args()
+
+    frontend = _apply_prefix_filter(extract_frontend_commands(ROOT), args.prefix)
+    handler = _apply_prefix_filter(extract_handler_command_names(ROOT), args.prefix)
+    allow_rust = _apply_prefix_filter(extract_rust_allowlist(ROOT), args.prefix)
+    allow_ts = _apply_prefix_filter(extract_ts_allowlist_literals(ROOT), args.prefix)
 
     missing_handler = frontend - handler
     missing_rust = frontend - allow_rust
@@ -99,8 +128,8 @@ def main() -> None:
     print(f"missing_handler: {len(missing_handler)} top={top_families(missing_handler)}")
     print(f"missing_rust_allow: {len(missing_rust)} top={top_families(missing_rust)}")
     print(f"missing_ts_allow: {len(missing_ts)} top={top_families(missing_ts)}")
-    print("--- top missing in handler (50) ---")
-    for cmd in sorted(missing_handler)[:50]:
+    print(f"--- top missing in handler ({args.max}) ---")
+    for cmd in sorted(missing_handler)[: args.max]:
         print(cmd)
 
 
