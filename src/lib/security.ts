@@ -66,6 +66,9 @@ export const VOID_COMMANDS = new Set<string>([
   // Whisper commands that return ()
   'stop_whisper_streaming',
   'send_audio_chunk',
+  // Self-heal persistence/sync
+  'selfheal_save_profile',
+  'selfheal_sync_with_singularity',
   // Config commands that return ()
   'save_ui_theme',
   'delete_config_preset',
@@ -203,11 +206,20 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'memory_store',
   'memory_store_conversation',
   'memory_get_related',
+  'memory_get_all_keys',
   'memory_rebuild_index',
   'memory_get_stats',
   'memory_prune',
   'memory_delete',
   'memory_import',
+
+  // ═══════════════════════════════════════════════════════════════
+  // MEMORY EVOLUTION ENGINE++
+  // ═══════════════════════════════════════════════════════════════
+  'memory_evolution_status',
+  'memory_evolve_full',
+  'memory_get_clusters',
+  'memory_hierarchy_health',
 
   // Memory Engine v∞ (Super Prompt #3)
   'memory_retrieve',
