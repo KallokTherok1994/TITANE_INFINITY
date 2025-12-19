@@ -136,10 +136,20 @@ export class QuantumStrategy implements IOrchestrationStrategy, QuantumOperation
       timestamp: Date.now(),
     });
 
+    const syncActive = this.syncInterval !== null;
+    const fps = this.currentFPS;
+
+    const prediction = fps >= 55 ? 'stable' : fps >= 45 ? 'degraded' : 'critical';
+    const confidenceBase = Math.max(0.3, Math.min(0.95, fps / 60));
+    const confidence = Math.max(
+      0.3,
+      Math.min(0.95, confidenceBase * (syncActive ? 1 : 0.85))
+    );
+
     return {
-      type: 'weak',
-      confidence: 0.7,
-      prediction: 'next_state_placeholder',
+      type: confidence >= 0.8 ? 'strong' : 'weak',
+      confidence,
+      prediction,
       timestamp: Date.now(),
     };
   }
@@ -178,7 +188,9 @@ export class QuantumStrategy implements IOrchestrationStrategy, QuantumOperation
       };
     }
 
-    const score = 90; // Placeholder
+    const syncActive = this.syncInterval !== null;
+    const fpsScore = Math.max(0, Math.min(100, Math.round((this.currentFPS / 60) * 100)));
+    const score = Math.max(0, Math.min(100, fpsScore - (syncActive ? 0 : 10)));
 
     return {
       status: this.scoreToStatus(score),
@@ -192,7 +204,11 @@ export class QuantumStrategy implements IOrchestrationStrategy, QuantumOperation
   }
 
   getHealthScore(): number {
-    return this.initialized ? 90 : 0;
+    if (!this.initialized) return 0;
+
+    const syncActive = this.syncInterval !== null;
+    const fpsScore = Math.max(0, Math.min(100, Math.round((this.currentFPS / 60) * 100)));
+    return Math.max(0, Math.min(100, fpsScore - (syncActive ? 0 : 10)));
   }
 
   getStatus(): HealthStatus {

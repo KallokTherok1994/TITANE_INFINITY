@@ -211,10 +211,36 @@ export class OSIntegrationBridge {
     if (this.config.websocketUrl.startsWith('ws')) {
       this.connectWebSocket();
     } else {
+      // Silent-by-default in production/Tauri: never start background polling unless explicitly enabled.
+      if (!this.isPollingEnabled()) {
+        if (this.config.debug) {
+          console.log(
+            '[OSIntegrationBridge] Polling disabled (silent-by-default); skipping connect'
+          );
+        }
+        return;
+      }
       this.startPolling();
     }
   }
 
+  private isPollingEnabled(): boolean {
+    if (import.meta.env.DEV) return true;
+
+    const envEnabled =
+      import.meta.env.VITE_TITANE_OS_POLLING_ENABLED === '1' ||
+      import.meta.env.VITE_OS_POLLING_ENABLED === '1';
+
+    let userEnabled = false;
+    try {
+      const raw = localStorage.getItem('titane_os_polling_enabled');
+      userEnabled = raw === '1' || raw === 'true';
+    } catch {
+      userEnabled = false;
+    }
+
+    return envEnabled || userEnabled;
+  }
   /**
    * Disconnect from TITANE∞ OS
    */
@@ -466,6 +492,9 @@ export class OSIntegrationBridge {
     if (this.pollTimer) {
       clearInterval(this.pollTimer);
       this.pollTimer = null;
+    }
+    if (!this.isPollingEnabled()) {
+      return;
     }
     this.pollTimer = setInterval(() => {
       // IMPLEMENTATION: Polling logic to fetch OS state from REST API

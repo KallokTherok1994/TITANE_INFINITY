@@ -252,6 +252,15 @@ initEngine({
 // Engine automatically transitions to new state
 ```
 
+### OS Integration Bridge (WebSocket vs Polling)
+
+The OS integration bridge supports WebSocket updates when configured with a `ws://` or `wss://` URL.
+
+Important: polling fallback is **disabled by default in production** (silent-by-default policy). It can be explicitly enabled via:
+
+- Env: `VITE_TITANE_OS_POLLING_ENABLED=1` (or `VITE_OS_POLLING_ENABLED=1`)
+- LocalStorage: `titane_os_polling_enabled=true` (or `1`)
+
 ## Design System
 
 ### CSS Variables

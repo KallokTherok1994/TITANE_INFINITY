@@ -362,7 +362,7 @@ impl ExpFusionEngine {
 
 /// État global partagé
 pub struct ExpFusionState {
-    pub engine: RwLock<ExpFusionEngine>,
+    engine: RwLock<ExpFusionEngine>,
 }
 
 impl ExpFusionState {
