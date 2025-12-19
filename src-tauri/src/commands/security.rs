@@ -121,6 +121,20 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("selfheal_save_profile");
     commands.insert("selfheal_sync_with_singularity");
 
+    // Self-Heal executor actions (frontend compat)
+    commands.insert("selfheal_restart_module");
+    commands.insert("selfheal_clear_cache");
+    commands.insert("selfheal_regenerate_config");
+    commands.insert("selfheal_repair_json");
+    commands.insert("selfheal_rebuild_memory");
+    commands.insert("selfheal_switch_provider");
+    commands.insert("selfheal_reset_state");
+    commands.insert("selfheal_restart_worker");
+    commands.insert("selfheal_restart_process");
+    commands.insert("selfheal_sync_state");
+    commands.insert("selfheal_mini_audit");
+    commands.insert("selfheal_isolate_module");
+
     // ═══════════════════════════════════════════════════════════════
     // SINGULARITY STATE
     // ═══════════════════════════════════════════════════════════════

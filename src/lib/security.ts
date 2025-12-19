@@ -697,6 +697,20 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'selfheal_save_profile',
   'selfheal_sync_with_singularity',
 
+  // Self-Heal executor actions (frontend compat)
+  'selfheal_restart_module',
+  'selfheal_clear_cache',
+  'selfheal_regenerate_config',
+  'selfheal_repair_json',
+  'selfheal_rebuild_memory',
+  'selfheal_switch_provider',
+  'selfheal_reset_state',
+  'selfheal_restart_worker',
+  'selfheal_restart_process',
+  'selfheal_sync_state',
+  'selfheal_mini_audit',
+  'selfheal_isolate_module',
+
   // ═══════════════════════════════════════════════════════════════
   // CONTEXT OPTIMIZER (v24.30)
   // ═══════════════════════════════════════════════════════════════
