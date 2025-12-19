@@ -81,11 +81,13 @@ The audit-driven changes were committed and pushed to `origin/MAIN` on 2025-12-1
 - `8913f2e7` audit(deploy): stabilize tests and capture deploy gate report
 - `3bfe9bc9` chore: harden Rust timestamps and tighten UI typing
 - `086db65b` chore(devtools): tighten livingEngines typing
+- `eff5fb59` fix(tauri): disable release stripping for bundle metadata
 
 Post-push verification (clean working tree):
 
 - `npm run copilot-xs:test` ✅ PASS
 - “🔵 Build Titan-Stable” ✅ PASS
+- `npm run build:production` ✅ PASS
 
 ## Production Packaging Evidence (Tauri)
 
