@@ -351,6 +351,21 @@ const AppRouter: React.FC = () => {
 
   // ✨ v26.2 - Initialize auto-backup service (6-hour intervals)
   useEffect(() => {
+    // Silent-by-default in production/Tauri: periodic background backups must be explicitly enabled.
+    const envEnabled = import.meta.env.VITE_AUTO_BACKUP_ENABLED === '1';
+    let userEnabled = false;
+    try {
+      const raw = localStorage.getItem('titane_auto_backup_enabled');
+      userEnabled = raw === '1' || raw === 'true';
+    } catch {
+      userEnabled = false;
+    }
+
+    const enabled = import.meta.env.DEV || envEnabled || userEnabled;
+    if (!enabled) {
+      return;
+    }
+
     import('./services/backup/AutoBackupService')
       .then(({ autoBackupService }) => {
         autoBackupService.initialize();
@@ -467,6 +482,21 @@ const AppRouter: React.FC = () => {
   // ✨ OPT-11 - Lazy-load Cognitive Layout Engine
   useEffect(() => {
     let started = false;
+
+    // Silent-by-default in production/Tauri: the cognitive layout observation loop must be explicitly enabled.
+    const envEnabled = import.meta.env.VITE_COGNITIVE_LAYOUT_ENGINE_ENABLED === '1';
+    let userEnabled = false;
+    try {
+      const raw = localStorage.getItem('titane_cognitive_layout_engine_enabled');
+      userEnabled = raw === '1' || raw === 'true';
+    } catch {
+      userEnabled = false;
+    }
+
+    const enabled = import.meta.env.DEV || envEnabled || userEnabled;
+    if (!enabled) {
+      return;
+    }
 
     console.log('🧠 [COGNITIVE] Loading Cognitive Layout Engine...');
     import('./engines/cognitive/cognitiveLayoutEngine')

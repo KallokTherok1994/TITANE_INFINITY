@@ -22,7 +22,7 @@ import type {
 // Import existing AI Orchestrators
 import { aiOrchestrator } from '@/services/ai/orchestrator';
 // import { aiOrchestrator } from '@/services/ai/orchestrator_OMNIS_v1'; // Not exported
-import type { AIMessage } from '@/services/ai/types';
+import type { AIConfig, AIMessage, ProviderChoice } from '@/services/ai/types';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // AI STRATEGY
@@ -245,17 +245,24 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
       ? this.cognitiveOrchestrator
       : this.standardOrchestrator;
 
-    // Execute chat request
-    const _messages: AIMessage[] = [
-      { role: 'user', content: prompt, timestamp: Date.now() },
-    ];
+    const toProviderChoice = (id: string): ProviderChoice => {
+      const lower = id.toLowerCase();
+      if (lower.includes('ollama')) return 'ollama';
+      if (lower.includes('openai') || lower.includes('gpt')) return 'openai';
+      if (lower.includes('anthropic') || lower.includes('claude')) return 'claude';
+      if (lower.includes('google') || lower.includes('gemini')) return 'gemini';
+      if (lower.includes('local') || lower.includes('titane')) return 'local';
+      return 'auto';
+    };
 
-    // const response = await orchestrator.chat(messages, {
-    //   conversationId: 'unified-orchestrator',
-    //   mode: 'chat',
-    //   enableOmegaPipeline: false
-    // });
-    const response = 'Stub response: chat method not available'; // Stub
+    const aiConfig: AIConfig = {
+      preferredProvider: toProviderChoice(providerId),
+    };
+
+    // Execute generation via orchestrator
+    const history: AIMessage[] = [];
+    const generated = await _orchestrator.generate(prompt, history, aiConfig);
+    const response = generated.content;
 
     this.recordMetric({
       name: 'ai.request.executed',
@@ -265,7 +272,7 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
       tags: { provider: providerId },
     });
 
-    return { response }; // Return string directly (stub)
+    return { response };
   }
 
   // ───────────────────────────────────────────────────────────────────────

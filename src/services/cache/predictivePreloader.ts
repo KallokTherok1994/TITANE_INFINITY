@@ -161,13 +161,35 @@ export class PredictivePreloader {
    * Précharge un item spécifique
    */
   private async preloadItem(item: PreloadQueueItem): Promise<void> {
-    // TODO: Appeler l'API de chat en arrière-plan
-    // Pour l'instant, on simule juste le préchargement
-    console.log('[PredictivePreloader] Would preload:', item.key.message.slice(0, 50));
+    // Déjà en cache → rien à faire
+    const cached = responseCache.get(item.key);
+    if (cached) return;
 
-    // Dans une vraie implémentation:
-    // const response = await chatService.sendMessage(...);
-    // responseCache.set(item.key, response.content, { ... });
+    // Préchargement uniquement côté UI (évite les exécutions Node/SSR)
+    if (typeof window === 'undefined') return;
+
+    // ⚠️ Important: éviter une dépendance statique vers chatEngine (cycle).
+    // On warm le cache via import dynamique + génération avec predictive désactivé.
+    const { chatEngine } = await import('@/services/ai/chatEngine');
+
+    const mode =
+      typeof item.key.mode === 'string' && item.key.mode.trim()
+        ? item.key.mode
+        : 'default';
+
+    logger.debug('Predictive preload: warming cache', {
+      mode,
+      preview: item.key.message.slice(0, 80),
+    });
+
+    await chatEngine.generate(item.key.message, [], {
+      mode: mode as any,
+      performanceConfig: {
+        enableCache: true,
+        enablePredictive: false,
+        cacheHitBonus: false,
+      },
+    });
   }
 
   /**

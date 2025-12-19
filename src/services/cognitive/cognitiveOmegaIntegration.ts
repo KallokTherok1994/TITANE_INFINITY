@@ -38,6 +38,7 @@ import {
   type DecisionLog as _DecisionLog,
   type SubGoal as _SubGoal,
   type GoalPriority as _GoalPriority,
+  type SemanticMemoryType,
 } from '@/services/cognitive';
 
 import type { AIMessage as _AIMessage } from '@/services/ai/types';
@@ -65,19 +66,12 @@ interface _SubGoalUpdate {
   description?: string;
 }
 
-// Stub types for missing interfaces
-interface AutoCorrection {
-  original: string;
-  corrected: string;
-  violations: ConsistencyViolation[];
-}
-
-interface ConversationMetrics {
-  conversation_consistency: number;
-  goal_completion: number;
-  coherence: number;
-  [key: string]: number;
-}
+type AutoCorrection = NonNullable<
+  Awaited<ReturnType<GoalConsistencyEngine['autoCorrect']>>
+>;
+type ConversationMetrics = Awaited<
+  ReturnType<ConversationEvaluationEngine['evaluateConversation']>
+>;
 
 // ═══════════════════════════════════════════════════════════════════
 // COGNITIVE OMEGA ORCHESTRATOR
@@ -447,23 +441,32 @@ class CognitiveOmegaOrchestrator {
       this.stats.totalInteractions++;
 
       // 1. Save to semantic memory
-      // await this.semanticMemory.ingest({
-      //   summary: `User: ${userMessage.substring(0, 100)}... | Assistant: ${assistantResponse.substring(0, 100)}...`,
-      //   details: `Conversation turn in ${mode} mode`,
-      //   content: `User: ${userMessage}\n\nAssistant: ${assistantResponse}`,
-      //   source: {
-      //     type: 'conversation',
-      //     conversation_id: conversationId,
-      //     timestamp: new Date().toISOString()
-      //   },
-      //   tags: [mode, 'conversation', 'turn'],
-      //   owner: conversationId,
-      //   type: 'context'
-      // });
+      const nowIso = new Date().toISOString();
+      const summary =
+        `User: ${userMessage.substring(0, 90)} | Assistant: ${assistantResponse.substring(0, 90)}`
+          .replace(/\s+/g, ' ')
+          .trim()
+          .slice(0, 200);
+
+      const entry = await this.semanticMemory.createMemory({
+        type: 'context',
+        owner: conversationId,
+        summary,
+        details: `Conversation turn (${mode})\n\nUser: ${userMessage}\n\nAssistant: ${assistantResponse}`,
+        source: {
+          type: 'conversation',
+          id: conversationId,
+          timestamp: nowIso,
+          context: mode,
+        },
+        tags: [mode, 'conversation', 'turn'],
+        importance: Math.min(
+          0.85,
+          Math.max(0.35, assistantResponse.length > 200 ? 0.7 : 0.55)
+        ),
+      });
 
       this.stats.totalMemoriesCreated++;
-      // const entry = await this.semanticMemory.ingest({ summary: 'stub', details: 'stub', content: 'stub', source: { type: 'conversation', id: conversationId } });
-      const entry = { id: 'stub-memory-' + Date.now() };
       this.log(`Saved memory entry: ${entry.id}`);
 
       // 2. Extract and save facts
@@ -668,6 +671,48 @@ class CognitiveOmegaOrchestrator {
       valid_from: new Date().toISOString(),
       tags: [],
     });
+  }
+
+  /**
+   * Store a simple text memory into the semantic memory engine.
+   */
+  async storeTextMemory(
+    owner: string,
+    content: string,
+    options?: {
+      type?: SemanticMemoryType;
+      tags?: string[];
+      importance?: number;
+      sourceContext?: string;
+    }
+  ): Promise<string> {
+    await this.ensureInitialized();
+
+    const summary = content.replace(/\s+/g, ' ').trim().slice(0, 200);
+    const entry = await this.semanticMemory.createMemory({
+      type: options?.type ?? 'context',
+      owner,
+      summary,
+      details: content,
+      source: {
+        type: 'system',
+        timestamp: new Date().toISOString(),
+        context: options?.sourceContext,
+      },
+      tags: options?.tags ?? [],
+      importance: options?.importance,
+    });
+
+    this.stats.totalMemoriesCreated++;
+    return entry.id;
+  }
+
+  /**
+   * Get goal progress (0.0 - 1.0) for a conversation.
+   */
+  async getGoalProgress(conversationId: string): Promise<number> {
+    await this.ensureInitialized();
+    return this.goalConsistency.getGoalProgress(conversationId);
   }
 
   /**

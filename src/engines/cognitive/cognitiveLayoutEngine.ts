@@ -380,8 +380,10 @@ class CognitiveLayoutEngine {
     // Charger préférences depuis Memory
     await this.loadPreferences();
 
-    // Démarrer observation
-    this.startObservation();
+    // Démarrer observation (dev default ON; production opt-in)
+    if (this.isObservationEnabled()) {
+      this.startObservation();
+    }
 
     // Effectuer analyse initiale
     await this.analyzeAndAdapt();
@@ -392,6 +394,7 @@ class CognitiveLayoutEngine {
   public shutdown(): void {
     if (this.observationInterval) {
       clearInterval(this.observationInterval);
+      this.observationInterval = undefined;
     }
     this.savePreferences();
     console.log('[CognitiveLayout] Engine shutdown');
@@ -401,7 +404,24 @@ class CognitiveLayoutEngine {
   // OBSERVATION LOOP
   // ═══════════════════════════════════════════════════════════════════
 
+  private isObservationEnabled(): boolean {
+    const envEnabled = import.meta.env.VITE_COGNITIVE_LAYOUT_ENGINE_ENABLED === '1';
+    let userEnabled = false;
+    try {
+      const raw = localStorage.getItem('titane_cognitive_layout_engine_enabled');
+      userEnabled = raw === '1' || raw === 'true';
+    } catch {
+      userEnabled = false;
+    }
+
+    return import.meta.env.DEV || envEnabled || userEnabled;
+  }
+
   private startObservation(): void {
+    if (this.observationInterval) {
+      return;
+    }
+
     // Boucle d'observation toutes les 30 secondes
     this.observationInterval = setInterval(() => {
       this.observe();
@@ -844,6 +864,18 @@ export const cognitiveLayoutEngine = new CognitiveLayoutEngine();
 // Auto-initialize si environnement navigateur
 if (typeof window !== 'undefined') {
   window.addEventListener('load', () => {
-    cognitiveLayoutEngine.initialize();
+    const envEnabled = import.meta.env.VITE_COGNITIVE_LAYOUT_ENGINE_ENABLED === '1';
+    let userEnabled = false;
+    try {
+      const raw = localStorage.getItem('titane_cognitive_layout_engine_enabled');
+      userEnabled = raw === '1' || raw === 'true';
+    } catch {
+      userEnabled = false;
+    }
+
+    const enabled = import.meta.env.DEV || envEnabled || userEnabled;
+    if (enabled) {
+      cognitiveLayoutEngine.initialize();
+    }
   });
 }

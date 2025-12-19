@@ -1,0 +1,8 @@
+/*
+ * Note:
+ * The EXP Fusion UI stylesheet used by the app is:
+ *   src/styles/exp-fusion.css
+ * and is bundled by Vite and imported from the React frontend.
+ *
+ * This file is intentionally kept minimal (Tauri Rust sources do not load it).
+ */

@@ -20,9 +20,7 @@ import type {
 
 // Import existing Cognitive Omega Orchestrator
 import { cognitiveOmega } from '@/services/cognitive/cognitiveOmegaIntegration';
-// import type { ChatMode } from '@/services/ai/types'; // Not exported
-
-type _ChatMode = 'chat' | 'code' | 'creative'; // Stub type
+import type { ChatMode } from '@/services/ai/chatEngine';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // COGNITIVE STRATEGY
@@ -149,15 +147,16 @@ export class CognitiveStrategy
   // MEMORY OPERATIONS
   // ───────────────────────────────────────────────────────────────────────
 
-  async storeMemory(_content: string, _importance?: number): Promise<string> {
-    // Use semantic memory engine to store
-    // const stored = await this.cognitiveOrchestrator.storeMemory({
-    //   content,
-    //   importance: importance ?? 0.5,
-    //   conversationId: 'unified-orchestrator',
-    //   timestamp: Date.now()
-    // });
-    const stored = { id: 'stub-memory-' + Date.now() }; // Stub
+  async storeMemory(content: string, importance?: number): Promise<string> {
+    const storedId = await this.cognitiveOrchestrator.storeTextMemory(
+      'unified-orchestrator',
+      content,
+      {
+        importance: importance ?? 0.5,
+        tags: ['orchestration', 'cognitive'],
+        sourceContext: 'CognitiveStrategy.storeMemory',
+      }
+    );
 
     this.recordMetric({
       name: 'cognitive.memory.stored',
@@ -166,8 +165,8 @@ export class CognitiveStrategy
       timestamp: Date.now(),
     });
 
-    this.log(`Memory stored: ${stored.id}`);
-    return stored.id;
+    this.log(`Memory stored: ${storedId}`);
+    return storedId;
   }
 
   async retrieveMemories(
@@ -178,7 +177,7 @@ export class CognitiveStrategy
     const enrichment = await this.cognitiveOrchestrator.enrichContext(
       query,
       'unified-orchestrator',
-      'chat' as any // ChatMode type mismatch
+      'default' as ChatMode
     );
 
     this.recordMetric({
@@ -206,9 +205,19 @@ export class CognitiveStrategy
   }
 
   async processConversation(messages: unknown[]): Promise<void> {
-    // Process conversation with evaluation engine
-    // await this.cognitiveOrchestrator.processConversation(messages as any);
-    // Stub: processConversation not implemented
+    // Minimal: treat the last user/assistant turn as an interaction to persist + evaluate.
+    const arr = Array.isArray(messages) ? (messages as Array<any>) : [];
+    const lastUser = [...arr].reverse().find(m => m?.role === 'user')?.content;
+    const lastAssistant = [...arr].reverse().find(m => m?.role === 'assistant')?.content;
+
+    if (typeof lastUser === 'string' && typeof lastAssistant === 'string') {
+      await this.cognitiveOrchestrator.saveInteraction(
+        'unified-orchestrator',
+        lastUser,
+        lastAssistant,
+        'default'
+      );
+    }
 
     this.recordMetric({
       name: 'cognitive.conversation.processed',
@@ -224,12 +233,13 @@ export class CognitiveStrategy
   // ───────────────────────────────────────────────────────────────────────
 
   async setGoal(_description: string, _context?: string): Promise<string> {
-    // Use goal consistency engine
-    // const goalId = await this.cognitiveOrchestrator.setGoal(
-    //   'unified-orchestrator',
-    //   description,
-    //   context ? [context] : undefined
-    const goalId = 'stub-goal-' + Date.now(); // Stub
+    const conversationId = 'unified-orchestrator';
+    await this.cognitiveOrchestrator.createGoal(conversationId, _description, {
+      description: _context,
+      constraints: _context ? [_context] : undefined,
+    });
+
+    const goalId = conversationId;
 
     this.recordMetric({
       name: 'cognitive.goal.set',
@@ -245,14 +255,8 @@ export class CognitiveStrategy
   async checkGoalProgress(
     _goalId: string
   ): Promise<{ achieved: boolean; progress: number }> {
-    // Check goal progress with consistency engine
-    // const status = await this.cognitiveOrchestrator.getGoalStatus('unified-orchestrator', goalId);
-    const status = { achieved: false, progress: 0.5 }; // Stub
-
-    return {
-      achieved: status.achieved,
-      progress: status.progress,
-    };
+    const progress = await this.cognitiveOrchestrator.getGoalProgress(_goalId);
+    return { achieved: progress >= 1.0, progress };
   }
 
   async validateConsistency(
@@ -262,7 +266,7 @@ export class CognitiveStrategy
     const check = await this.cognitiveOrchestrator.checkConsistency(
       'unified-orchestrator',
       text,
-      { userMessage: '', mode: 'chat' as any } // ChatMode type mismatch
+      { userMessage: '', mode: 'default' }
     );
 
     return {

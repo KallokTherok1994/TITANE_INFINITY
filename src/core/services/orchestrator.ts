@@ -126,39 +126,24 @@ class AIOrchestrator {
   private readonly QUICK_FAIL_COOLDOWN_MS = 5000; // 5 seconds
   private quickFailCache: Map<string, number> = new Map(); // provider -> failedAt timestamp
 
-  // EVOLUTION v21Ω: TTL cleanup interval for quick-fail cache
-  private quickFailCleanupInterval: ReturnType<typeof setInterval> | null = null;
-
   constructor() {
     this.initializeProviderStats();
     this.startWarmup();
-    this.startQuickFailCleanup();
   }
 
-  /**
-   * EVOLUTION v21Ω: Periodic cleanup of expired quick-fail cache entries
-   * Prevents memory leaks from stale entries when no requests are made
-   */
-  private startQuickFailCleanup(): void {
-    // Cleanup every 30 seconds
-    this.quickFailCleanupInterval = setInterval(() => {
-      const now = Date.now();
-      for (const [provider, failedAt] of this.quickFailCache.entries()) {
-        if (now - failedAt >= this.QUICK_FAIL_COOLDOWN_MS) {
-          this.quickFailCache.delete(provider);
-        }
+  private cleanupQuickFailCache(now: number = Date.now()): void {
+    for (const [provider, failedAt] of this.quickFailCache.entries()) {
+      if (now - failedAt >= this.QUICK_FAIL_COOLDOWN_MS) {
+        this.quickFailCache.delete(provider);
       }
-    }, 30000);
+    }
   }
 
   /**
-   * EVOLUTION v21Ω: Stop cleanup interval (for testing/shutdown)
+   * Backward-compatible no-op (interval removed; cleanup is on-demand).
    */
   stopQuickFailCleanup(): void {
-    if (this.quickFailCleanupInterval) {
-      clearInterval(this.quickFailCleanupInterval);
-      this.quickFailCleanupInterval = null;
-    }
+    // no-op
   }
 
   /**
@@ -509,6 +494,9 @@ class AIOrchestrator {
   ): Promise<AIResponse> {
     const requestId = `req_${Date.now()}_${Math.random().toString(36).substring(7)}`;
     const requestStartTime = Date.now();
+
+    // Keep caches bounded without background polling.
+    this.cleanupQuickFailCache();
 
     // Increment metrics
     this.orchestratorMetrics.totalRequests++;
@@ -1077,6 +1065,9 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
    */
 
   async *stream(message: string, history: AIMessage[] = []): AsyncGenerator<string> {
+    // Keep caches bounded without background polling.
+    this.cleanupQuickFailCache();
+
     const { sanitized, valid, issues } = this.sanitizeMessage(message);
 
     if (!valid) {

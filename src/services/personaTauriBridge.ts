@@ -279,20 +279,15 @@ export class PersonaTauriBridge {
 
     try {
       const result = await personaService.getMultipliers();
-      // IMPLEMENTATION: Map PersonaMultipliers to visual multipliers
-      // 1. Mapping: creativity→glow, efficiency→motion, focus→pulse, energy→scale
-      // 2. Helper: createVisualMultipliers(persona: PersonaMultipliers): VisualMultipliers
-      // 3. Defaults: Use 1.0 for missing fields (defensive programming)
-      // 4. Range validation: Clamp values to [0.5, 2.0] to prevent visual extremes
-      // 5. Normalization: Apply smoothing for gradual transitions (lerp with previous values)
-      // 6. Type safety: Ensure all required VisualMultipliers fields are populated
-      // For now, return partial mapping with warnings
-      console.warn('[PersonaTauriBridge] getMultipliers mapping not implemented');
+      const clamp = (value: number) => Math.min(2.0, Math.max(0.5, value));
+      const withDefault = (value: number | undefined, fallback: number) =>
+        clamp(typeof value === 'number' && Number.isFinite(value) ? value : fallback);
+
       return {
-        glow: result.creativity || 1,
-        motion: result.efficiency || 1,
-        sound: result.empathy || 1,
-        depth: result.analytical || 1,
+        glow: withDefault(result.creativity, 1.0),
+        motion: withDefault(result.efficiency, 1.0),
+        sound: withDefault(result.empathy, 1.0),
+        depth: withDefault(result.analytical, 1.0),
       };
     } catch (error) {
       console.error('[PersonaTauriBridge] Failed to get multipliers:', error);
