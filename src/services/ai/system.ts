@@ -80,8 +80,29 @@ export async function initializeAISystem(options?: {
   autoHeal: typeof autoHealEngine;
   healthMonitor: typeof aiHealthMonitor;
 }> {
-  // Démarrer health monitoring si demandé
-  if (options?.enableHealthMonitoring !== false) {
+  const isHealthMonitoringEnabledByDefault = (): boolean => {
+    // Dev: enabled by default.
+    // Prod: disabled unless explicitly enabled.
+    if (import.meta.env.DEV) return true;
+
+    if (typeof window === 'undefined') {
+      return false;
+    }
+
+    const envEnabled =
+      String(import.meta.env.VITE_AI_HEALTH_MONITORING_ENABLED ?? '') === '1';
+    const storedEnabled = window.localStorage.getItem(
+      'titane_ai_health_monitoring_enabled'
+    );
+    const lsEnabled = storedEnabled === '1' || storedEnabled === 'true';
+
+    return envEnabled || lsEnabled;
+  };
+
+  // Démarrer health monitoring si explicitement demandé (ou par défaut en dev)
+  const enableHealthMonitoring =
+    options?.enableHealthMonitoring ?? isHealthMonitoringEnabledByDefault();
+  if (enableHealthMonitoring) {
     aiHealthMonitor.startMonitoring();
   }
 

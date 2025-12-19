@@ -575,14 +575,14 @@ describe('effectsStore', () => {
     expect(result.current.preferences.effectsEnabled).toBe(!initialValue);
   });
 
-  it('should persist preferences to sessionStorage', () => {
+  it('should persist preferences to localStorage', () => {
     const { result } = renderHook(() => useEffectsStore());
 
     act(() => {
       result.current.setIntensity(0.7);
     });
 
-    const stored = sessionStorage.getItem('titane-effects-store');
+    const stored = localStorage.getItem('titane-effects-store');
     expect(stored).toBeDefined();
     const parsed = JSON.parse(stored!);
     expect(parsed.state.preferences.intensity).toBe(0.7);

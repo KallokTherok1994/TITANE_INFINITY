@@ -13,19 +13,32 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import { visualizer } from 'rollup-plugin-visualizer';
 import viteCompression from 'vite-plugin-compression';
 import { injectManifest } from 'workbox-build';
-import type { Plugin } from 'vite';
+import type { Plugin, ResolvedConfig } from 'vite';
 
 // P2-B: Workbox Service Worker plugin
 function workboxPlugin(): Plugin {
+  let resolvedConfig: ResolvedConfig | undefined;
+
   return {
     name: 'workbox-inject',
     apply: 'build',
+    configResolved: config => {
+      resolvedConfig = config;
+    },
     closeBundle: async () => {
       try {
+        if (!resolvedConfig) {
+          throw new Error('Workbox inject: Vite config not resolved');
+        }
+
+        const outDirAbs = resolve(resolvedConfig.root, resolvedConfig.build.outDir);
+        const swSrcAbs = resolve(resolvedConfig.publicDir, 'sw-source.js');
+        const swDestAbs = resolve(outDirAbs, 'sw.js');
+
         const { count, size, warnings } = await injectManifest({
-          swSrc: 'public/sw-source.js',
-          swDest: 'dist/sw.js',
-          globDirectory: 'dist',
+          swSrc: swSrcAbs,
+          swDest: swDestAbs,
+          globDirectory: outDirAbs,
           globPatterns: ['assets/**/*.{js,css,woff2}', 'index.html'],
           maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MB max
         });
@@ -49,8 +62,8 @@ function workboxPlugin(): Plugin {
 // P2-A: Brotli compression for -15% bundle size
 // https://vitejs.dev/config/
 export default defineConfig({
-  root: '.',
-  publicDir: 'public',
+  root: __dirname,
+  publicDir: resolve(__dirname, 'public'),
   base: './',
   plugins: [
     react({

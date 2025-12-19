@@ -27,6 +27,7 @@ import {
   Legend,
 } from 'recharts';
 import { useVisionStore } from '@/stores/useVisionStore';
+import { shallow } from 'zustand/shallow';
 import { Camera, Activity, Brain, User } from 'lucide-react';
 import './VisionMetricsChart.css';
 
@@ -43,11 +44,14 @@ export const VisionMetricsChart: React.FC<VisionMetricsChartProps> = ({
   showAffect = true,
   showBodyLanguage = true,
 }) => {
-  const { isActive, affectHistory, bodyLanguage } = useVisionStore(state => ({
-    isActive: state.isObservationActive && state.visionInput.streamActive,
-    affectHistory: state.affectEstimation.history,
-    bodyLanguage: state.bodyLanguage,
-  }));
+  const { isActive, affectHistory, bodyLanguage } = useVisionStore(
+    state => ({
+      isActive: state.isObservationActive && state.visionInput.streamActive,
+      affectHistory: state.affectEstimation.history,
+      bodyLanguage: state.bodyLanguage,
+    }),
+    shallow
+  );
 
   const cutoffTimestamp = useMemo(() => Date.now() - timeRange * 60_000, [timeRange]);
 

@@ -16,7 +16,7 @@
  * - ✅ Effects history
  * - ✅ Metrics aggregation
  * - ✅ User preferences
- * - ✅ SessionStorage persistence
+ * - ✅ LocalStorage persistence
  * ═══════════════════════════════════════════════════════════════
  */
 
@@ -479,7 +479,7 @@ export const useEffectsStore = create<EffectsStore>()(
 
         reset: () => {
           try {
-            sessionStorage.removeItem('titane-effects-store');
+            localStorage.removeItem('titane-effects-store');
           } catch {
             // ignore
           }
@@ -511,10 +511,10 @@ export const useEffectsStore = create<EffectsStore>()(
       }),
       {
         name: 'titane-effects-store',
-        // Utiliser sessionStorage au lieu de localStorage
+        // Utiliser localStorage pour conserver préférences après restart
         storage: {
           getItem: name => {
-            const str = sessionStorage.getItem(name);
+            const str = localStorage.getItem(name);
             if (!str) return null;
 
             const data = JSON.parse(str);
@@ -540,9 +540,9 @@ export const useEffectsStore = create<EffectsStore>()(
                 },
               },
             };
-            sessionStorage.setItem(name, JSON.stringify(data));
+            localStorage.setItem(name, JSON.stringify(data));
           },
-          removeItem: name => sessionStorage.removeItem(name),
+          removeItem: name => localStorage.removeItem(name),
         },
         // Ne persister que preferences et stats (pas activeEffects/metrics/history)
         partialize: state => ({

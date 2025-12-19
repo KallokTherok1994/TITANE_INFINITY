@@ -72,11 +72,34 @@ class ParlerTTSBridge {
     this.timeout = config?.timeout || 30000; // 30s timeout
   }
 
+  private isEnabled(): boolean {
+    const envEnabled = import.meta.env.VITE_PARLER_TTS_ENABLED === '1';
+    if (envEnabled) return true;
+    if (typeof window === 'undefined') return false;
+    try {
+      const raw = window.localStorage.getItem('titane_parler_tts_enabled');
+      return raw === '1' || raw === 'true';
+    } catch {
+      return false;
+    }
+  }
+
   /**
    * Vérifier santé du service TTS
    */
   async healthCheck(): Promise<ParlerHealthStatus> {
     if (isVitestEnv()) {
+      return {
+        status: 'error',
+        modelLoaded: false,
+        device: 'unknown',
+        cacheSizeMb: 0,
+        uptimeSeconds: 0,
+      };
+    }
+
+    // Opt-in only: avoid noisy localhost requests when the optional service isn't used.
+    if (!this.isEnabled()) {
       return {
         status: 'error',
         modelLoaded: false,
@@ -109,6 +132,17 @@ class ParlerTTSBridge {
     } catch (error) {
       // ✅ v24.3.8: Silent fallback si serveur TTS non démarré (optionnel)
       // console.error('[ParlerTTS] Health check error:', error);
+
+      // Auto-disable to prevent repeated connection-refused spam,
+      // unless explicitly enabled via env flag.
+      if (import.meta.env.VITE_PARLER_TTS_ENABLED !== '1') {
+        try {
+          window.localStorage.setItem('titane_parler_tts_enabled', '0');
+        } catch {
+          // ignore
+        }
+      }
+
       return {
         status: 'error',
         modelLoaded: false,
@@ -130,6 +164,10 @@ class ParlerTTSBridge {
     try {
       if (isVitestEnv()) {
         throw new Error('Parler-TTS disabled in Vitest environment');
+      }
+
+      if (!this.isEnabled()) {
+        throw new Error('Parler-TTS disabled (opt-in)');
       }
 
       // Payload API

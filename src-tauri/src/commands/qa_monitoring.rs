@@ -3,14 +3,14 @@
 // Copyright (c) 2024-2025 MUSIC Music Is The Music
 // Licensed under MIT License
 // ============================================================================
-//! QA Monitoring Center - Global QA, Tests, Hardening & Monitoring v∞
-//!
-//! Infrastructure complète de surveillance, tests et hardening:
-//! - Tests automatisés et manuels
-//! - Monitoring système en temps réel
-//! - Alertes et diagnostics
-//! - Hardening et sécurité
-//! - Métriques de performance
+// QA Monitoring Center - Global QA, Tests, Hardening & Monitoring v∞
+//
+// Infrastructure complète de surveillance, tests et hardening:
+// - Tests automatisés et manuels
+// - Monitoring système en temps réel
+// - Alertes et diagnostics
+// - Hardening et sécurité
+// - Métriques de performance
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;

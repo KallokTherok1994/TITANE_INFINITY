@@ -315,7 +315,9 @@ class ConsoleMonitor {
     // 🛡️ PROTECTION: Ignorer les erreurs du système AUTO-HEAL pour éviter boucle infinie
     if (
       entry.message.includes('[[AUTO-HEAL]]') ||
-      entry.message.includes('autoHealEngine')
+      entry.message.includes('[AUTO-HEAL]') ||
+      entry.message.includes('autoHealEngine') ||
+      entry.message.includes('[CONSOLE-MONITOR]')
     ) {
       return; // Skip self-generated errors
     }

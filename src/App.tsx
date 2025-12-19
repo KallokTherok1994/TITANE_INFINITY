@@ -275,7 +275,26 @@ const AppRouter: React.FC = () => {
 
   // ✨ v21 - Initialiser Ollama Provider au démarrage
   useEffect(() => {
-    logger.info('Initializing local AI provider', { component: 'Ollama' });
+    // Opt-in only: Ollama is an optional local service.
+    // Avoid background localhost probes unless explicitly enabled.
+    const envEnabled = import.meta.env.VITE_OLLAMA_ENABLED === '1';
+    let userEnabled = false;
+    try {
+      const raw = localStorage.getItem('titane_ollama_enabled');
+      userEnabled = raw === '1' || raw === 'true';
+    } catch {
+      userEnabled = false;
+    }
+
+    if (!envEnabled && !userEnabled) {
+      return;
+    }
+
+    logger.info('Initializing local AI provider', {
+      component: 'Ollama',
+      optIn: envEnabled ? 'env' : 'user',
+    });
+
     initializeOllama().catch(error => {
       logger.error(
         'Failed to initialize OLLAMA',
@@ -712,14 +731,7 @@ const AppRouter: React.FC = () => {
       }
       header={
         <Header
-          title="TITANE∞"
-          subtitle={
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <span>v24.3.0 — Singularity Architecture • 20 Engines • Full OPUS</span>
-              <XPBar /> {/* ✨ v∞.D4 - Barre XP */}
-            </div>
-          }
-          actions={
+          logo={
             <Button
               variant="ghost"
               size="sm"
@@ -728,6 +740,18 @@ const AppRouter: React.FC = () => {
             >
               {sidebarCollapsed ? 'Ouvrir' : 'Fermer'}
             </Button>
+          }
+          title="TITANE∞"
+          subtitle={
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <span>v24.3.0 — Singularity Architecture • 20 Engines • Full OPUS</span>
+              <XPBar /> {/* ✨ v∞.D4 - Barre XP */}
+            </div>
+          }
+          actions={
+            <Suspense fallback={null}>
+              <AuraControlPanel position="header" defaultOpen={false} />
+            </Suspense>
           }
         />
       }
@@ -1069,9 +1093,6 @@ const App: React.FC = () => {
     <ThemeProvider>
       <AnimationProvider fpsThreshold={40} cpuThreshold={80}>
         <TitanStateProvider>
-          {/* ✨ v25.3.1 - Aura Control System */}
-          <AuraControlPanel position="bottom-right" defaultOpen={false} />
-
           {/* ✨ v26.1 - Console Monitor Dashboard (Dev only) */}
           {import.meta.env.DEV && (
             <Suspense fallback={null}>

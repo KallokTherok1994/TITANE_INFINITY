@@ -621,7 +621,7 @@ impl Default for HarmoniaState {
 }
 
 fn calculate_harmony_score(flows: &[FlowMetrics], cpu: f32, ram: f32) -> (u8, String) {
-    let active_count = flows.iter().filter(|f| f.status == "active").count();
+    let _active_count = flows.iter().filter(|f| f.status == "active").count();
     let throttled_count = flows.iter().filter(|f| f.status == "throttled").count();
 
     let cpu_score = if cpu < 60.0 {
@@ -821,7 +821,9 @@ pub async fn orchestration_add_timeline_event(
 
     // Keep last 1000 events
     if events.len() > 1000 {
-        events.drain(0..events.len() - 1000);
+        let len = events.len();
+        let excess = len - 1000;
+        events.drain(0..excess);
     }
 
     // Save to disk

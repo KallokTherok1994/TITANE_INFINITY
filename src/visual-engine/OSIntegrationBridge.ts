@@ -153,7 +153,12 @@ export class OSIntegrationBridge {
 
   constructor(config?: BridgeConfig) {
     if (config) {
-      this.config = { ...this.config, ...config };
+      const merged = { ...this.config, ...config };
+      // Avoid overriding defaults with `undefined` when callers spread env vars.
+      if (config.websocketUrl === undefined) {
+        merged.websocketUrl = this.config.websocketUrl;
+      }
+      this.config = merged;
     }
   }
 
@@ -560,5 +565,6 @@ export class OSIntegrationBridge {
 
 export const osIntegrationBridge = new OSIntegrationBridge({
   debug: import.meta.env.DEV,
-  websocketUrl: import.meta.env.VITE_TITANE_OS_WS_URL ?? import.meta.env.VITE_OS_WS_URL,
+  websocketUrl:
+    import.meta.env.VITE_TITANE_OS_WS_URL ?? import.meta.env.VITE_OS_WS_URL ?? '',
 });
