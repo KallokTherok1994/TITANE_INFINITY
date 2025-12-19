@@ -291,6 +291,34 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'update_cognitive_mode',
 
   // ═══════════════════════════════════════════════════════════════
+  // ORCHESTRATION CENTER (Stats/Dev)
+  // ═══════════════════════════════════════════════════════════════
+  'orchestration_get_cognitive_state',
+  'orchestration_get_unified_state',
+
+  // ═══════════════════════════════════════════════════════════════
+  // QA MONITORING (Dev)
+  // ═══════════════════════════════════════════════════════════════
+  'qa_get_state',
+  'qa_get_system_metrics',
+  'qa_list_test_suites',
+  'qa_list_alerts',
+  'qa_run_test_suite',
+  'qa_acknowledge_alert',
+
+  // ═══════════════════════════════════════════════════════════════
+  // ONE CORE (Dev)
+  // ═══════════════════════════════════════════════════════════════
+  'one_core_get_state',
+  'one_core_get_metrics',
+  'one_core_list_commands',
+  'one_core_get_event_history',
+  'one_core_execute_command',
+  'one_core_run_diagnostic',
+  'one_core_force_sync',
+  'one_core_cleanup',
+
+  // ═══════════════════════════════════════════════════════════════
   // DEVTOOLS & LOGS
   // ═══════════════════════════════════════════════════════════════
   'get_logs',

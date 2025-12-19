@@ -33,10 +33,7 @@ import { AnimationProvider } from './contexts/AnimationContext';
 import { TitanStateProvider } from './context/TitanStateContext'; // ✨ v∞.MPE - Persistence
 import { AppShell, Sidebar, Header } from '@components/layout';
 import { Button } from './ui';
-// ✨ P3: Lazy-load XP bars for smaller initial bundle
-const CompactXPBar = lazy(() =>
-  import('./components/experience/CompactXPBar').then(m => ({ default: m.CompactXPBar }))
-);
+// ✨ P3: Lazy-load XP bar for smaller initial bundle
 const XPBar = lazy(() =>
   import('./components/experience/XPBar').then(m => ({ default: m.XPBar }))
 );
@@ -114,6 +111,7 @@ const TimePage = lazy(() =>
 const Experience = lazy(() =>
   import('./pages/Experience').then(m => ({ default: m.Experience }))
 );
+const Stats = lazy(() => import('./pages/Stats').then(m => ({ default: m.Stats })));
 
 // ✨ v24 - Performance: Lazy load SingularityMonitor
 const SingularityMonitor = lazy(() =>
@@ -650,11 +648,6 @@ const AppRouter: React.FC = () => {
     [navigate]
   );
 
-  // ✨ v24.2.1: Stable callback for XP bar navigation
-  const handleXPBarClick = useCallback(() => {
-    navigate('/evo'); // v25.2.1: Progression fusionné dans EVO
-  }, [navigate]);
-
   // ✨ v24.2.1: Memoized sidebar items with active state
   const sidebarItemsWithActive = useMemo(
     () =>
@@ -713,8 +706,6 @@ const AppRouter: React.FC = () => {
                   direction="column"
                 />
               </div>
-              {/* Compact XP Bar */}
-              {!sidebarCollapsed && <CompactXPBar onClick={handleXPBarClick} />}
             </>
           }
         />
@@ -774,6 +765,14 @@ const AppRouter: React.FC = () => {
           <Route path="/xp" element={<Navigate to="/titane" replace />} />
           {/* ❌ v25.2.1: /cognitive redirigé vers /stats (Section 4: État Cognitif) */}
           <Route path="/cognitive" element={<Navigate to="/stats" replace />} />
+          <Route
+            path="/stats"
+            element={
+              <ErrorBoundary context="Stats">
+                <Stats />
+              </ErrorBoundary>
+            }
+          />
           <Route path="/experience" element={<Experience />} /> {/* ✨ v∞.D5 - Page XP */}
           {/* ✨ v25.1 TIME CENTER - Fusion Temporal Flow + Agenda + Time Navigator */}
           <Route
