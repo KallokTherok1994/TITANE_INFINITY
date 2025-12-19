@@ -63,6 +63,21 @@ mod commands_v21 {
     }
 }
 
+// Orchestration Center commands (OPUS #5/6/7)
+mod orchestration_center_commands {
+    include!("commands/orchestration_center.rs");
+}
+
+// QA Monitoring Center commands (OPUS #7)
+mod qa_monitoring_commands {
+    include!("commands/qa_monitoring.rs");
+}
+
+// ONE CORE commands (OPUS #6)
+mod one_core_commands {
+    include!("commands/one_core.rs");
+}
+
 // Coherence Engine commands v20.0 (Phase 2 Fusion #1)
 mod coherence_commands {
     include!("commands/coherence_commands.rs");
@@ -606,6 +621,28 @@ fn main() {
             system_center::diagnostics::sc_run_quick_diagnostics,
             system_center::diagnostics::sc_run_full_diagnostics,
             system_center::diagnostics::sc_get_diagnostic_status,
+
+            // Orchestration Center (Stats/Dev)
+            orchestration_center_commands::orchestration_get_cognitive_state,
+            orchestration_center_commands::orchestration_get_unified_state,
+
+            // QA Monitoring Center (Dev)
+            qa_monitoring_commands::qa_get_state,
+            qa_monitoring_commands::qa_get_system_metrics,
+            qa_monitoring_commands::qa_list_test_suites,
+            qa_monitoring_commands::qa_list_alerts,
+            qa_monitoring_commands::qa_run_test_suite,
+            qa_monitoring_commands::qa_acknowledge_alert,
+
+            // ONE CORE (Dev)
+            one_core_commands::one_core_get_state,
+            one_core_commands::one_core_get_metrics,
+            one_core_commands::one_core_list_commands,
+            one_core_commands::one_core_get_event_history,
+            one_core_commands::one_core_execute_command,
+            one_core_commands::one_core_run_diagnostic,
+            one_core_commands::one_core_force_sync,
+            one_core_commands::one_core_cleanup,
             // Secure API Key Management (v∞ - Super-Prompts H, I, J, K)
             // ✅ v21 Phase 1: Réactivation Gemini
             secure_commands::chat_set_gemini_key,

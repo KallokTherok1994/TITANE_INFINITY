@@ -95,7 +95,7 @@ export function useSingularitySync(
     try {
       // 1. Fetch backend state
       const backendState = await secureInvoke<SingularityState>(
-        'engine_get_singularity_state'
+        'singularity_get_full_state'
       );
 
       // 2. Get frontend state
