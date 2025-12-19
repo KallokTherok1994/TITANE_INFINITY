@@ -124,7 +124,8 @@ export class OSIntegrationBridge {
   };
 
   private config: Required<BridgeConfig> = {
-    websocketUrl: 'ws://localhost:8080/titane-os',
+    // Disabled by default (Tauri-only, local-first). Provide a URL explicitly to enable.
+    websocketUrl: '',
     pollInterval: 1000,
     enableAutoEffects: true,
     debug: false,
@@ -139,8 +140,10 @@ export class OSIntegrationBridge {
   };
 
   private ws: WebSocket | null = null;
-  private reconnectTimer: NodeJS.Timeout | null = null;
-  private pollTimer: NodeJS.Timeout | null = null;
+  private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+  private pollTimer: ReturnType<typeof setInterval> | null = null;
+
+  private shouldReconnect = false;
 
   private listeners: Map<string, Set<(data: unknown) => void>> = new Map();
 
@@ -176,6 +179,15 @@ export class OSIntegrationBridge {
    * Connect to TITANE∞ OS
    */
   public connect(): void {
+    this.shouldReconnect = true;
+
+    if (!this.config.websocketUrl) {
+      if (this.config.debug) {
+        console.log('[OSIntegrationBridge] No OS endpoint configured; skipping connect');
+      }
+      return;
+    }
+
     if (this.config.websocketUrl.startsWith('ws')) {
       this.connectWebSocket();
     } else {
@@ -187,6 +199,8 @@ export class OSIntegrationBridge {
    * Disconnect from TITANE∞ OS
    */
   public disconnect(): void {
+    this.shouldReconnect = false;
+
     if (this.ws) {
       this.ws.close();
       this.ws = null;
@@ -350,6 +364,11 @@ export class OSIntegrationBridge {
 
   private connectWebSocket(): void {
     try {
+      if (this.reconnectTimer) {
+        clearTimeout(this.reconnectTimer);
+        this.reconnectTimer = null;
+      }
+
       this.ws = new WebSocket(this.config.websocketUrl);
 
       this.ws.onopen = () => {
@@ -386,17 +405,21 @@ export class OSIntegrationBridge {
 
         this.emit('disconnected', null);
 
-        // Attempt reconnect
+        if (!this.shouldReconnect) {
+          return;
+        }
+
+        // Attempt reconnect (bounded exponential backoff)
+        const attempt = this.metrics.reconnectAttempts + 1;
+        const delayMs = Math.min(5000 * 2 ** Math.min(attempt - 1, 4), 60000);
+
         this.reconnectTimer = setTimeout(() => {
-          this.metrics.reconnectAttempts++;
+          this.metrics.reconnectAttempts = attempt;
           if (this.config.debug) {
-            console.log(
-              '[OSIntegrationBridge] Reconnect attempt',
-              this.metrics.reconnectAttempts
-            );
+            console.log('[OSIntegrationBridge] Reconnect attempt', attempt, { delayMs });
           }
           this.connectWebSocket();
-        }, 5000);
+        }, delayMs);
       };
     } catch (error) {
       console.error('[OSIntegrationBridge] Failed to create WebSocket:', error);
@@ -537,4 +560,6 @@ export class OSIntegrationBridge {
 
 export const osIntegrationBridge = new OSIntegrationBridge({
   debug: import.meta.env.DEV,
+  websocketUrl:
+    import.meta.env.VITE_TITANE_OS_WS_URL ?? import.meta.env.VITE_OS_WS_URL,
 });
