@@ -1,0 +1,552 @@
+# 🔮 TITANE∞ — Modules Documentation INDEX
+
+**Version:** v24.2.0  
+**Dernière mise à jour:** 15 décembre 2025  
+**Structure:** docs/05_modules/
+
+---
+
+## 🎯 PURPOSE
+
+Documentation complète des modules TITANE∞ (backend Rust + frontend TypeScript):
+- 🦀 **Backend (Rust)** — Core modules (OMEGA, ConversationEngine, Memory, Singularity)
+- ⚛️ **Frontend (TypeScript)** — Services frontend (ChatEngine, UnifiedMemory)
+- 🔗 **Integration** — Backend ↔ Frontend communication (Tauri commands)
+
+**Principe:** Documentation module-by-module pour deep dive technique
+
+---
+
+## 🦀 BACKEND MODULES (Rust)
+
+**Path:** `docs/05_modules/backend/`
+
+### [OMEGA_PIPELINE.md](backend/OMEGA_PIPELINE.md) (463 lignes) ⭐⭐⭐⭐⭐
+
+**Module Path:** `src-tauri/src/omega/`  
+**Description:** Core AI processing pipeline (10 stages)  
+**Responsibility:** Orchestrate input → AI generation → output (validation, context, emotion, intent, memory, singularity)
+
+**Key Content:**
+- 📊 **10-Stage Pipeline Flow** — Input validation → AI generation → singularity sync
+- 🔧 **API Reference** — `OmegaPipeline::new()`, `process()`, `process_streaming()`
+- 🧩 **Sub-Modules** — Router (AI provider selection), Executor (AI calls), Merger (multi-source), Guardrails (safety)
+- 💾 **Data Structures** — `PipelineInput`, `PipelineOutput`, `OmegaConfig`
+- 🔗 **Integrations** — UnifiedMemory (recall/store), Singularity (meta-processing), ConversationEngine (bridge)
+- 🧪 **Testing** — Unit tests, integration tests, benchmarks
+- ⚡ **Performance** — Latency benchmarks (Ollama ~500-800ms, Gemini ~800-1200ms)
+
+**Target Audience:** Développeurs backend, AI engineers  
+**Complexity:** ⭐⭐⭐⭐ (Advanced)
+
+---
+
+### [CONVERSATION_ENGINE.md](backend/CONVERSATION_ENGINE.md) (466 lignes) ⭐⭐⭐⭐⭐
+
+**Module Path:** `src-tauri/src/conversation_engine/`  
+**Description:** Unified conversational processing (12 stages)  
+**Responsibility:** High-level orchestration (validation → OMEGA → French mastery → memory → singularity → self-healing)
+
+**Key Content:**
+- 📊 **12-Stage Pipeline** — Request validation → OMEGA dispatch → French mastery → memory persistence → singularity → self-healing
+- 🔧 **API Reference** — `ConversationEngineState::new()`, `process_message()`
+- 🧩 **Sub-Modules** — OmegaBridge (OMEGA integration), FrenchMastery (post-processing), SelfHealing (diagnostics), Memory (persistence)
+- 💾 **Data Structures** — `ConversationRequest`, `ConversationResponse`, `ConversationMode`
+- 🔗 **Integrations** — OMEGA Pipeline (dispatch Stage 7), UnifiedMemory (recall/store), Singularity (meta-processing Stage 11)
+- 🧪 **Testing** — Unit tests, integration tests (multi-turn, fallback, self-healing)
+
+**Target Audience:** Développeurs backend, system architects  
+**Complexity:** ⭐⭐⭐⭐⭐ (Expert)
+
+---
+
+### [UNIFIED_MEMORY.md](backend/UNIFIED_MEMORY.md) (452 lignes) ⭐⭐⭐⭐⭐
+
+**Module Path:** `src-tauri/src/memory_os/`  
+**Description:** Neural-inspired 3-layer memory (STM/MTM/LTM)  
+**Responsibility:** Memory persistence, consolidation, recall, decay (synaptic weights)
+
+**Key Content:**
+- 📊 **3-Layer Architecture** — STM (buffer, <1ms) → MTM (recent important, ~10ms) → LTM (permanent, ~50-100ms)
+- 🔄 **Memory Workflow** — Store → STM → Consolidate → MTM → Consolidate → LTM
+- 🔧 **API Reference** — `UnifiedMemoryEngine::new()`, `store()`, `recall()`, `consolidate()`, `decay()`
+- 🧩 **Sub-Modules** — STM (short-term buffer), MTM (mid-term indexed), LTM (long-term compressed), VectorStore (embeddings), Consolidation (transitions), Decay (forgetting)
+- 💾 **Data Structures** — `MemoryEntry`, `MemoryConfig`, `MemoryLayer`
+- 🔗 **Integrations** — OMEGA Pipeline (Stage 2 recall, Stage 9 store), ConversationEngine (Stage 3 load, Stage 10 save)
+- 🧪 **Testing** — STM/MTM/LTM tests, consolidation tests, decay tests
+- ⚡ **Performance** — Recall latency (STM <1ms, MTM ~10ms, LTM ~50-100ms), Store latency
+
+**Target Audience:** Développeurs backend, AI researchers  
+**Complexity:** ⭐⭐⭐⭐⭐ (Expert - Neural architecture)
+
+---
+
+### [SINGULARITY.md](backend/SINGULARITY.md) (468 lignes) ⭐⭐⭐⭐⭐
+
+**Module Path:** `src-tauri/src/singularity/`  
+**Description:** Meta-cognitive state management  
+**Responsibility:** System-level awareness, conversation meta-processing, cognitive fields unification
+
+**Key Content:**
+- 📊 **Singularity Cognitive Flow** — Perception → Interpretation → Intention → Expression → Memory Singularity → Operational Singularity
+- 🔧 **API Reference** — `SingularityState::new()`, `singularity_meta_process_conversation()`, `update_system_consciousness()`
+- 🧩 **Sub-Modules** — MetaProcessor (coherence, corrections, tags), CognitiveFields (perception/interpretation/intention/expression), SystemConsciousness (awareness tracking), GoalManager (goals coherence), MemorySingularity (conceptual), OperationalSingularity (self-organization)
+- 💾 **Data Structures** — `ChatContext`, `MetaOutput`, `CognitiveFields`
+- 🔗 **Integrations** — OMEGA Pipeline (Stage 10 sync), ConversationEngine (Stage 11 meta-processing)
+- 🧪 **Testing** — Meta-processing tests, cognitive fields tests, consciousness tests
+
+**Target Audience:** System architects, AI researchers  
+**Complexity:** ⭐⭐⭐⭐⭐ (Expert - Meta-cognitive systems)
+
+---
+
+### [AI_ROUTER.md](backend/AI_ROUTER.md) (741 lignes) ⭐⭐⭐⭐
+
+**Module Path:** `src-tauri/src/ai/router.rs`  
+**Description:** Intelligent AI provider routing + cascade fallback  
+**Responsibility:** Provider selection, health checks, cascade fallback (UnifiedIA → Gemini → Ollama), response caching
+
+**Key Content:**
+- 📊 **Cascade Strategy Flow** — Cache (0ms) → UnifiedIA (Claude→OpenAI, ~800-1500ms) → Gemini (~800-1200ms) → Ollama (~500-800ms)
+- 🔧 **API Reference** — `AIRouter::new()`, `query()`, `query_ollama_direct()`, `get_status()`, `health_check()`
+- 🧩 **Sub-Modules** — cache.rs (LRU cache 5min TTL), gemini.rs (Gemini client), ollama.rs (Ollama local client)
+- 💾 **Data Structures** — `AIRequest`, `AIResponse`, `AIProvider`, `AIRouterStatus`
+- 🔗 **Integrations** — OMEGA Pipeline (Stage 5 AI generation), ConversationEngine (Stage 7 dispatch)
+- 🧪 **Testing** — Router initialization, cache hit, cascade fallback, local mode force
+- ⚡ **Performance** — Cache hit rate ~60-80%, latency reduction -60% (cached responses)
+
+**Target Audience:** Développeurs backend, DevOps  
+**Complexity:** ⭐⭐⭐⭐ (Advanced)
+
+---
+
+### [FRENCH_MASTERY.md](backend/FRENCH_MASTERY.md) (655 lignes) ⭐⭐⭐⭐
+
+**Module Path:** `src-tauri/src/conversation_engine/french_mastery.rs`  
+**Description:** French language quality post-processing  
+**Responsibility:** Grammar correction, style optimization, sentence optimization, pedagogical enrichment, quality scoring
+
+**Key Content:**
+- 📊 **French Mastery Processing Flow** — 5 modes (Correction, Optimization, Simplification, Enrichment, Double)
+- 🔧 **API Reference** — `FrenchMasteryProcessor::new()`, `process()`, `correct_language()`, `optimize_structure()`, `evaluate_quality()`
+- 💾 **Data Structures** — `FrenchMasteryRequest`, `FrenchMasteryResponse`, `ProcessingMode`, `QualityScores`
+- 🔗 **Integrations** — ConversationEngine (Stage 8 post-processing), OMEGA Pipeline (Stage 6.5)
+- 🧪 **Testing** — Grammar correction, clarity scoring, pedagogical enrichment, quality evaluation
+- ⚡ **Performance** — Processing latency ~15-25ms (Optimization mode, 1-2% OMEGA overhead)
+
+**Target Audience:** Développeurs backend, NLP engineers  
+**Complexity:** ⭐⭐⭐⭐ (Advanced)
+
+---
+
+### [SELF_HEALING_ENGINE.md](backend/SELF_HEALING_ENGINE.md) (1,278 lignes) ⭐⭐⭐⭐⭐
+
+**Module Path:** `src-tauri/src/system/` + `src/services/selfHealing/`  
+**Description:** 5-layer self-healing architecture (backend + frontend)  
+**Responsibility:** Error detection, diagnosis, playbook execution, auto-repair, state synchronization
+
+**Key Content:**
+- 📊 **5-Layer Architecture** — Observer (error capture) → Analyzer (diagnosis) → Playbook (action selection) → Executor (repair) → Sync (Singularity)
+- 🔧 **API Reference** — Backend: `SelfHealEngine::new()`, `determine_actions()`, `auto_heal()` | Frontend: `observedInvoke()`, `analyzeDiagnosis()`, `generatePlaybook()`, `executePlan()`
+- 🧩 **Sub-Modules** — Backend: SelfHealEngine (190L), AnomalyDetector (225L), HealingExecutor (542L), RepairActions | Frontend: Observer (800L), Analyzer (733L), PlaybookEngine (861L), Executor, SyncLayer
+- 💾 **Data Structures** — 14 AnomalyType, 14 RepairAction, ObservedError, HealingDiagnosis, ExecutionPlan, HealingReport
+- 🔗 **Integrations** — Singularity (state sync, healing history), ConversationEngine (Stage 11 error recovery), OMEGA (pipeline healing), SystemHealth (anomaly detection)
+- 🧪 **Testing** — Backend unit tests (anomaly detection, repair actions), frontend E2E tests (error injection, playbook execution, rollback scenarios)
+- ⚡ **Performance** — Observer overhead ~5-10ms, analyzer ~10-20ms, executor ~50-500ms (action-dependent), total healing cycle ~100-1000ms
+
+**Target Audience:** Développeurs backend + frontend, DevOps, System architects  
+**Complexity:** ⭐⭐⭐⭐⭐ (Expert - 5-layer orchestration)
+
+---
+
+### [SYSTEM_HEALTH_ENGINE.md](backend/SYSTEM_HEALTH_ENGINE.md) (1,113 lignes) ⭐⭐⭐⭐⭐
+
+**Module Path:** `src-tauri/src/core/modules/system_health.rs`  
+**Description:** Fusion v20 system health monitoring (Helios + Sentinel + Self-Heal)  
+**Responsibility:** CPU/RAM/disk monitoring, network latency, anomaly detection, auto-healing coordination, global health scoring
+
+**Key Content:**
+- 📊 **Fusion Architecture** — Helios (metrics collector) + Sentinel (anomaly detector) + Self-Heal (auto-repair coordinator)
+- 🔄 **Monitoring Cycle** — Collect Metrics (10-20ms) → Scan Anomalies (5ms) → Auto-Heal (50-500ms) → Compute Health Score (0.0-1.0) → Update Status
+- 🔧 **API Reference** — `SystemHealth::new()`, `init()`, `tick()`, `collect_metrics()`, `scan_anomalies()`, `auto_heal()`, `compute_health_score()`, `get_report()`
+- 💾 **Data Structures** — SystemHealth, ErrorRecord, Anomaly (6 types: HighCPU, HighMemory, HighDisk, HighLatency, ModuleFailure, DataCorruption), HealingReport, HealthReport
+- 🧩 **Anomaly Detection** — Thresholds (CPU >80%, Memory >85%, Disk >90%, Latency >500ms), severity levels (Info/Warning/Error/Critical)
+- 🎯 **Global Health Score** — Weighted formula: CPU 30% + Memory 30% + Disk 20% + Success Rate 20% - Error Penalty
+- 🔄 **Auto-Healing Actions** — reduce_cpu_load() (async load balancing), clear_memory_cache() (async GC), restart_failed_module() (targeted recovery)
+- 🔗 **Integrations** — Singularity (state checks, health updates), CoherenceEngine (module failure detection), UnifiedMemory (module failure detection), SelfHealingEngine (repair coordination)
+- 🧪 **Testing** — Unit tests (metrics collection, anomaly detection, auto-heal cycles), integration tests (CoherenceEngine/UnifiedMemory failures)
+- ⚡ **Performance** — collect_metrics ~10-20ms (sysinfo crate), scan_anomalies ~5ms, auto_heal ~50-500ms (action-dependent), tick cycle ~100-1000ms
+
+**Target Audience:** Développeurs backend, DevOps, SRE  
+**Complexity:** ⭐⭐⭐⭐⭐ (Expert - Fusion 3 engines)
+
+---
+
+### [VECTOR_STORE.md](backend/VECTOR_STORE.md) (1,283 lignes) ⭐⭐⭐⭐⭐
+
+**Module Path:** `src-tauri/src/api/vector_store_api.rs`, `src-tauri/src/memory_os/vector_store.rs`, `src/services/cognitive/TauriVectorStore.ts`  
+**Description:** Vector embeddings storage + semantic similarity search (SQLite backend + frontend adapter)  
+**Responsibility:** Vector persistence (384-dim embeddings), cosine similarity search, multi-tier memory support, hybrid retrieval
+
+**Key Content:**
+- 🗄️ **Architecture** — SQLite Backend (Rust API + memory_os) + Frontend Adapter (TauriVectorStore) + Tauri Bridge
+- 🔍 **Search Algorithm** — k-NN linear search O(n), cosine similarity (dot product / magnitudes), top-K sorted by score, normalized vectors
+- 🧠 **Embeddings** — 384-dim all-MiniLM-L6-v2 model, multi-tier memory (SHORT_TERM, MEDIUM_TERM, LONG_TERM, META_MEMORY)
+- 🎯 **Hybrid Retrieval** — Similarity 70% + Importance 20% + Recency 10%, configurable weights
+- 🔧 **API Reference Backend** — `VectorStore::new(config)`, `insert(entry)`, `search(embedding, options)`, `get(id)`, `update(id, updates)`, `delete(id)`, `get_stats()`
+- 🔧 **API Reference Frontend** — `TauriVectorStore::initialize()`, `add(entry)`, `addBatch(entries)`, `search(embedding, limit, filters)`, `get(id)`, `getStats()`
+- 💾 **Data Structures** — VectorStoreConfig, VectorEntry, SearchOptions, SearchResult, VectorStoreStats, SemanticMemoryEntry
+- ⚡ **Performance** — Search latency <10ms (linear, <10K vectors), future HNSW upgrade for >10K vectors, SQLite WAL mode optimizations
+- 🔗 **Integrations** — UnifiedMemory (STM/MTM/LTM vector storage), SemanticMemoryEngine (semantic recall), OMEGA (embedding generation Stage 2)
+- 🧪 **Testing** — Backend unit tests (insert, search, similarity), frontend E2E tests (Tauri integration, batch operations)
+
+**Target Audience:** Développeurs backend, AI engineers  
+**Complexity:** ⭐⭐⭐⭐⭐ (Expert - Vector embeddings + semantic search)
+
+---
+
+### [PERFORMANCE_ENGINE.md](backend/PERFORMANCE_ENGINE.md) (812 lignes) ⭐⭐⭐⭐⭐
+
+**Module Path:** `src/services/performanceEngine/`, `src-tauri/src/singularity_fusion/performance.rs`  
+**Description:** Performance monitoring + optimization infrastructure (4-stage cycle)  
+**Responsibility:** Real-time metrics collection, anomaly detection, recommendation generation, self-healing integration
+
+**Key Content:**
+- 🔄 **4-Stage Architecture** — MetricsCollector (multi-source) → PerformanceAnalyzer (anomaly detection) → PerformanceAdvisor (recommendations) → PerformanceReporter (dashboard + self-healing)
+- 📊 **Monitoring Cycle** — Collect (1s) → Analyze (detect anomalies) → Advise (generate recommendations) → Report (dashboard update) → Repeat
+- 📈 **Metrics Tracked** — FPS (≥55), frame time (<16.67ms), CPU/Memory usage, AI latency, render time, network latency, GC time
+- 🎯 **Performance Profiles** — Development (relaxed), Production (strict, DEFAULT), Benchmark (extreme), LowPower (conservative)
+- 📊 **Grading System** — A (>90%), B (80-90%), C (70-80%), D (60-70%), F (<60%)
+- 🔧 **API Reference** — `PerformanceEngine::start()`, `stop()`, `runCycle()`, `getState()`, `getLatestSnapshot()`, MetricsCollector, PerformanceAnalyzer, PerformanceAdvisor
+- 💾 **Data Structures** — MetricsSnapshot, PerformanceIssue, Recommendation, PerformanceProfile, ThresholdConfig, PerformanceGrade
+- 🚨 **Anomaly Types** — HighCPU (>80%), HighMemory (>85%), LowFPS (<55), HighLatency (>500ms), RenderBottleneck, MemoryLeak, LongTasks
+- 🔧 **Recommendations** — Reduce animations, throttle UI updates, clear caches, optimize components, lazy load modules, simplify renders
+- ⚡ **Performance** — Cycle overhead ~5-10ms, metrics collection ~2-5ms, analysis ~3-7ms, total impact <1% CPU
+- 🔗 **Integrations** — SelfHealingEngine (auto-repair triggers), Singularity (health sync), OMEGA (AI latency tracking)
+- 🧪 **Testing** — Unit tests (collectors, analyzers, advisors), integration tests (full cycles, self-healing triggers, auto-apply)
+
+**Target Audience:** Développeurs backend, DevOps, SRE  
+**Complexity:** ⭐⭐⭐⭐⭐ (Expert - Real-time monitoring + optimization)
+
+---
+
+### [ADAPTIVE_ENGINE.md](backend/ADAPTIVE_ENGINE.md) (780 lignes) ⭐⭐⭐⭐⭐
+
+**Module Path:** `src-tauri/src/adaptive/`, `src/engines/cognitive/cognitiveLayoutEngine.ts`  
+**Description:** Adaptive learning + behavior adjustment (continuous pattern detection + preference optimization)  
+**Responsibility:** Pattern detection, preference learning, rule-based adaptation, system auto-tuning
+
+**Key Content:**
+- 🔄 **Learning Cycle** — Sample Capture → Pattern Detection → Preference Adjustment → Rule Execution → Learning Update → Repeat
+- 📊 **5 Adaptive Rules** — LatencyAIAbove(5000ms) → ReduceAIComplexity, CognitiveStabilityBelow(0.5) → TriggerDeepSync, FpsBelow(40) → SimplifyUITransitions, SyncQualityBelow(0.7) → ReanchorTimeline, HashIntegrityFailed → SwitchToStableMode
+- 🧠 **Pattern Detection** — High CPU (>80%), High latency (>3000ms), Low stability (<0.7%), pattern library growth
+- 🎯 **Preference Profile** — AI Style (Balanced/Fast/Thorough/Creative), System Mode (Adaptive/Performance/Balanced/Stability), Optimization Bias (Speed/Quality/Balanced), Auto-Learn (bool)
+- 📈 **Learning State** — Total samples (cumulative), patterns detected, optimization cycles, learning rate (0.1, decay 0.999), last learn timestamp
+- 🔧 **API Reference Backend** — `AdaptiveOptimizationEngine::new()`, `capture_sample(sample)`, `evaluate_rules()`, `learn()`, `get_summary()`
+- 🔧 **API Reference Commands** — `adaptive_capture_sample()`, `adaptive_evaluate_rules()`, `adaptive_learn()`, `adaptive_get_summary()`, `adaptive_update_preferences(profile)`
+- 💾 **Data Structures** — SystemPerformanceSample, AdaptiveRule, AdaptiveCondition, AdaptiveAction, LearningState, PreferenceProfile, AdaptiveSummary
+- 🚀 **Adaptive Actions** — ReduceAIComplexity, TriggerDeepSync, SimplifyUITransitions, ReanchorTimeline, SwitchToStableMode, OptimizeMemory, ThrottleAnimations
+- ⚡ **Performance** — Sample capture ~1ms, rule evaluation ~5-10ms (5 rules), learning cycle ~20-50ms (100 samples analysis)
+- 🔗 **Integrations** — SystemHealth (sample capture), PerformanceEngine (metric triggers), Singularity (cognitive state awareness)
+- 🧪 **Testing** — Backend unit tests (rule evaluation, pattern detection), integration tests (multi-sample learning, preference adjustment)
+
+**Target Audience:** Développeurs backend, AI engineers  
+**Complexity:** ⭐⭐⭐⭐⭐ (Expert - Adaptive learning + pattern detection)
+
+---
+
+## ⚛️ FRONTEND MODULES (TypeScript)
+
+**Path:** `docs/05_modules/frontend/`
+
+### [CHAT_ENGINE.md](frontend/CHAT_ENGINE.md) (397 lignes) ⭐⭐⭐⭐
+
+**Module Path:** `src/services/ai/chatEngine.ts`  
+**Description:** Frontend AI orchestration  
+**Responsibility:** Backend OMEGA dispatch, streaming, fallback, memory integration, cognitive integration
+
+**Key Content:**
+- 📊 **Chat Flow** — User input → validation → memory recall → cognitive context → backend OMEGA → memory save → cognitive save → UI update
+- 🔧 **API Reference** — `ChatEngineOmega::generate()`, `generateStreaming()`, `setMemoryContext()`
+- 💾 **Data Structures** — `ChatEngineConfig`, `ChatEngineResponse`, `MemoryContext`
+- 🔗 **Integrations** — Backend OMEGA (Tauri `conversation_generate`), UnifiedMemory (recall/store), CognitiveOrchestrator (4 engines)
+- 🧪 **Testing** — Generate tests, streaming tests, fallback tests, memory integration tests
+
+**Target Audience:** Développeurs frontend, full-stack  
+**Complexity:** ⭐⭐⭐⭐ (Advanced)
+
+---
+
+### [UNIFIED_MEMORY_FRONTEND.md](frontend/UNIFIED_MEMORY_FRONTEND.md) (389 lignes) ⭐⭐⭐⭐
+
+**Module Path:** `src/services/unified/UnifiedMemory.ts`  
+**Description:** Frontend memory orchestration  
+**Responsibility:** Backend Memory OS bridge, frontend caching, context building
+
+**Key Content:**
+- 📊 **Memory Flow** — Frontend cache check → backend dispatch → backend Memory OS (STM/MTM/LTM parallel search) → cache update → return
+- 🔧 **API Reference** — `UnifiedMemory::recall()`, `store()`, `getStats()`, `buildContext()`
+- 💾 **Data Structures** — `UnifiedMemoryEntry`, `MemoryContext`, `MemoryStats`
+- 🔗 **Integrations** — ChatEngine (recall before AI, store after AI), Backend Memory OS (Tauri `memory_recall`, `memory_store`)
+- 🧪 **Testing** — Recall tests, store tests, cache tests, stats tests
+- ⚡ **Performance** — Frontend cache hit rate, backend call reduction
+
+**Target Audience:** Développeurs frontend, full-stack  
+**Complexity:** ⭐⭐⭐ (Intermediate-Advanced)
+
+---
+
+### [COGNITIVE_ORCHESTRATOR.md](frontend/COGNITIVE_ORCHESTRATOR.md) (552 lignes) ⭐⭐⭐⭐⭐
+
+**Module Path:** `src/services/cognitive/cognitiveOmegaIntegration.ts`  
+**Description:** 4 cognitive engines orchestration (frontend brain)  
+**Responsibility:** Semantic memory, goal/consistency tracking, conversation evaluation, cognitive observability
+
+**Key Content:**
+- 📊 **4 Cognitive Engines** — SemanticMemoryEngine (vector search, 384-dim embeddings), GoalConsistencyEngine (multi-turn coherence), ConversationEvaluationEngine (quality metrics), CognitiveObservabilityEngine (tracing, debug panel)
+- 🔧 **API Reference** — `enrichContext()`, `checkConsistency()`, `applyCorrections()`, `storeMemory()`, `evaluateQuality()`, `trace()`
+- 💾 **Data Structures** — `EnrichedContext`, `ConsistencyCheckResult`, `ConversationMetrics`, `CognitiveStats`
+- 🔗 **Integrations** — ChatEngine (Phase 1.3.2 enrich, Phase 1.5.1 consistency, Phase 1.6 memory, Phase 1.7.2 corrections)
+- 🧪 **Testing** — Enrich context, consistency check, auto-correction, memory storage, quality evaluation, trace logging
+- ⚡ **Performance** — Total cognitive overhead ~100-200ms (enrich 50-100ms, consistency 20-40ms, memory 30-60ms)
+
+**Target Audience:** Développeurs frontend, AI engineers, system architects  
+**Complexity:** ⭐⭐⭐⭐⭐ (Expert - 4 engines orchestration)
+
+---
+
+## 🗺️ NAVIGATION RAPIDE
+
+### Par rôle:
+- **🦀 Backend Developer** → Backend modules (OMEGA, ConversationEngine, Memory, Singularity, AI Router, French Mastery, Self-Healing Engine, System Health Engine, Vector Store, Performance Engine, Adaptive Engine)
+- **⚛️ Frontend Developer** → Frontend modules (ChatEngine, UnifiedMemory, Cognitive Orchestrator)
+- **🔗 Full-Stack Developer** → Both backend + frontend + integration docs
+- **🧠 AI Engineer** → OMEGA, Memory, Singularity, AI Router, Cognitive Orchestrator, Vector Store, Adaptive Engine
+- **🏗️ System Architect** → ConversationEngine, Singularity, Cognitive Orchestrator, Self-Healing Engine (orchestration)
+- **🛡️ DevOps / SRE** → Self-Healing Engine, System Health Engine, Performance Engine, AI Router (infrastructure monitoring + auto-repair + optimization)
+
+### Par fonctionnalité:
+- **💬 Chat AI** → OMEGA_PIPELINE.md, CONVERSATION_ENGINE.md, CHAT_ENGINE.md, AI_ROUTER.md
+- **🧠 Memory System** → UNIFIED_MEMORY.md, UNIFIED_MEMORY_FRONTEND.md, COGNITIVE_ORCHESTRATOR.md (semantic), VECTOR_STORE.md (embeddings)
+- **🌌 Meta-Cognitive** → SINGULARITY.md, COGNITIVE_ORCHESTRATOR.md, ADAPTIVE_ENGINE.md (continuous learning)
+- **🔄 Pipeline Processing** → OMEGA_PIPELINE.md, CONVERSATION_ENGINE.md, FRENCH_MASTERY.md
+- **🔗 Frontend ↔ Backend** → CHAT_ENGINE.md, UNIFIED_MEMORY_FRONTEND.md, COGNITIVE_ORCHESTRATOR.md
+- **🛡️ Infrastructure Reliability** → SELF_HEALING_ENGINE.md, SYSTEM_HEALTH_ENGINE.md, PERFORMANCE_ENGINE.md (monitoring + auto-healing + optimization)
+
+### Par complexité:
+- **⭐⭐⭐ Intermediate** → UNIFIED_MEMORY_FRONTEND.md
+- **⭐⭐⭐⭐ Advanced** → OMEGA_PIPELINE.md, CHAT_ENGINE.md, UNIFIED_MEMORY.md, AI_ROUTER.md, FRENCH_MASTERY.md
+- **⭐⭐⭐⭐⭐ Expert** → CONVERSATION_ENGINE.md, SINGULARITY.md, COGNITIVE_ORCHESTRATOR.md, SELF_HEALING_ENGINE.md, SYSTEM_HEALTH_ENGINE.md, VECTOR_STORE.md, PERFORMANCE_ENGINE.md, ADAPTIVE_ENGINE.md
+
+---
+
+## 📊 MÉTRIQUES MODULES
+
+| Module                    | Type     | Lignes | Sections | Code Examples | Complexity | Target Audience       |
+| ------------------------- | -------- | ------ | -------- | ------------- | ---------- | --------------------- |
+| OMEGA_PIPELINE.md         | Backend  | 463    | 9        | 12            | ⭐⭐⭐⭐   | Backend + AI Engineers |
+| CONVERSATION_ENGINE.md    | Backend  | 466    | 9        | 15            | ⭐⭐⭐⭐⭐ | Backend + Architects   |
+| UNIFIED_MEMORY.md         | Backend  | 452    | 10       | 13            | ⭐⭐⭐⭐   | Backend + AI Research  |
+| SINGULARITY.md            | Backend  | 468    | 9        | 14            | ⭐⭐⭐⭐⭐ | Architects + Research  |
+| AI_ROUTER.md              | Backend  | 741    | 10       | 16            | ⭐⭐⭐⭐   | Backend + DevOps       |
+| FRENCH_MASTERY.md         | Backend  | 655    | 9        | 18            | ⭐⭐⭐⭐   | Backend + NLP          |
+| SELF_HEALING_ENGINE.md    | Backend  | 1,278  | 11       | 24            | ⭐⭐⭐⭐⭐ | Backend + DevOps + SRE |
+| SYSTEM_HEALTH_ENGINE.md   | Backend  | 1,113  | 11       | 21            | ⭐⭐⭐⭐⭐ | Backend + DevOps + SRE |
+| VECTOR_STORE.md           | Backend  | 1,283  | 11       | 22            | ⭐⭐⭐⭐⭐ | Backend + AI Engineers |
+| PERFORMANCE_ENGINE.md     | Backend  | 812    | 10       | 16            | ⭐⭐⭐⭐⭐ | Backend + DevOps + SRE |
+| ADAPTIVE_ENGINE.md        | Backend  | 780    | 10       | 14            | ⭐⭐⭐⭐⭐ | Backend + AI Engineers |
+| CHAT_ENGINE.md            | Frontend | 397    | 8        | 9             | ⭐⭐⭐⭐   | Frontend + Full-Stack  |
+| UNIFIED_MEMORY_FRONTEND.md| Frontend | 389    | 8        | 11            | ⭐⭐⭐    | Frontend + Full-Stack  |
+| COGNITIVE_ORCHESTRATOR.md | Frontend | 552    | 10       | 13            | ⭐⭐⭐⭐⭐ | Frontend + AI Engineers|
+| **TOTAL**                 | -        | **9,849** | **137** | **210**      | -         | -                      |
+
+---
+
+## ✨ QUALITÉ MODULES DOCUMENTATION
+
+| Critère              | Score      | Notes                                               |
+| -------------------- | ---------- | --------------------------------------------------- |
+| **Complétude**       | ⭐⭐⭐⭐⭐ | Coverage exhaustif (architecture → API → testing)  |
+| **Clarté**           | ⭐⭐⭐⭐⭐ | Diagrammes flows, examples pratiques, explanations |
+| **Code Examples**    | ⭐⭐⭐⭐⭐ | 121 examples Rust/TypeScript commentés             |
+| **API Reference**    | ⭐⭐⭐⭐⭐ | Signatures complètes, parameters, returns          |
+| **Integrations**     | ⭐⭐⭐⭐⭐ | Cross-module integration examples                  |
+| **Testing**          | ⭐⭐⭐⭐⭐ | Unit tests, integration tests, benchmarks          |
+| **Cross-refs**       | ⭐⭐⭐⭐⭐ | Liens vers architecture docs + other modules       |
+
+---
+
+## 🔗 CROSS-REFERENCES
+
+### Liens vers architecture:
+- [ARCHITECTURE_CURRENT_v24.md](../00_meta/ARCHITECTURE_CURRENT_v24.md) — Architecture système complète
+- [DATA_FLOW_CHAT.md](../02_architecture_reality/DATA_FLOW_CHAT.md) — Flow messaging chat complet
+- [OMEGA_PIPELINE_DETAILED.md](../02_architecture_reality/OMEGA_PIPELINE_DETAILED.md) — Pipeline OMEGA architecture détaillée
+- [TAURI_COMMANDS_REFERENCE.md](../02_architecture_reality/TAURI_COMMANDS_REFERENCE.md) — API commands Tauri complète
+
+### Liens vers guides:
+- [QUICKSTART.md](../04_guides/quickstart/QUICKSTART.md) — Quick start utilisateur
+- [SETUP.md](../04_guides/development/SETUP.md) — Setup développement
+- [TESTING.md](../04_guides/development/TESTING.md) — Stratégie tests
+
+### Liens vers features:
+- [VOICE.md](../04_guides/features/VOICE.md) — Mode Vocal
+- [MULTIMODAL.md](../04_guides/features/MULTIMODAL.md) — Multimodal Engine
+- [MEMORY_OS.md](../04_guides/features/MEMORY_OS.md) — UnifiedMemory OS (user guide)
+- [TEMPORAL.md](../04_guides/features/TEMPORAL.md) — Temporal Integrations
+
+---
+
+## 🔄 MODULE RELATIONSHIPS (Dependency Graph)
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      FRONTEND (UI)                          │
+│                    (ChatPage, Stores)                       │
+└─────────────────────────────────────────────────────────────┘
+                           ↓ ↑
+┌─────────────────────────────────────────────────────────────┐
+│              CHAT_ENGINE.md (Frontend Service)              │
+│         (Orchestration, Streaming, Fallback)                │
+└─────────────────────────────────────────────────────────────┘
+        ↓ ↑ (memory)                    ↓ ↑ (Tauri commands)
+┌────────────────────────┐       ┌────────────────────────────┐
+│ UNIFIED_MEMORY_        │       │ CONVERSATION_ENGINE.md     │
+│ FRONTEND.md            │←──────│ (Backend Rust 12 stages)   │
+│ (Frontend Service)     │       └────────────────────────────┘
+└────────────────────────┘                  ↓ ↑
+        ↓ ↑                          ┌──────────────────┐
+┌────────────────────────┐           │ OMEGA_PIPELINE.md│
+│ COGNITIVE_ORCHESTRATOR │           │ (Backend Rust    │
+│ .md (4 engines)        │←──────────│  10 stages)      │
+└────────────────────────┘           └──────────────────┘
+                                        ↓ ↑        ↓ ↑
+                               ┌────────┴──┐   ┌──┴────────┐
+                               │ AI_ROUTER │   │ FRENCH_   │
+                               │ .md       │   │ MASTERY.md│
+                               └───────────┘   └───────────┘
+                                     ↓ ↑
+                             ┌────────────────────┐
+                             │ UNIFIED_MEMORY.md  │
+                             │ (Backend Rust      │
+                             │  STM/MTM/LTM)      │
+                             └────────────────────┘
+                                     ↓ ↑
+                             ┌────────────────────┐
+                             │ SINGULARITY.md     │
+                             │ (Meta-cognitive)   │
+                             └────────────────────┘
+```
+
+**Key Dependencies:**
+- **ChatEngine** depends on: UnifiedMemory (frontend), Tauri commands (backend), Cognitive Orchestrator (4 engines)
+- **ConversationEngine** depends on: OMEGA Pipeline, UnifiedMemory, Singularity, French Mastery
+- **OMEGA Pipeline** depends on: UnifiedMemory, Singularity, AI Router, French Mastery
+- **AI Router** depends on: UnifiedIA, Gemini client, Ollama client, LRU cache
+- **French Mastery** depends on: Grammar rules, TITANE style guidelines
+- **Cognitive Orchestrator** depends on: SemanticMemoryEngine, GoalConsistencyEngine, ConversationEvaluationEngine, CognitiveObservabilityEngine
+- **UnifiedMemory** (backend) depends on: Vector store, SQLite/PostgreSQL
+- **Singularity** depends on: Cognitive fields, System consciousness
+
+---
+
+## 🛠️ DEVELOPMENT WORKFLOW
+
+### Backend Module Development
+
+1. **Read module doc** (OMEGA, ConversationEngine, Memory, Singularity)
+2. **Check API Reference** (method signatures, parameters, returns)
+3. **Run unit tests** (`cargo test module_name::`)
+4. **Check integrations** (other modules dependencies)
+5. **Benchmark** (if performance-critical)
+6. **Update docs** (if API changes)
+
+**Example:**
+```bash
+# Develop OMEGA module
+cd src-tauri
+cargo test omega::test_pipeline_basic_flow
+cargo bench omega_benchmark
+
+# Check integration with Memory
+cargo test omega::test_memory_integration
+```
+
+### Frontend Module Development
+
+1. **Read module doc** (ChatEngine, UnifiedMemory)
+2. **Check API Reference** (TypeScript interfaces, methods)
+3. **Run unit tests** (`npm run test module_name`)
+4. **Check backend integration** (Tauri commands)
+5. **Test UI integration** (React hooks, stores)
+6. **Update docs** (if API changes)
+
+**Example:**
+```bash
+# Develop ChatEngine
+npm run test chatEngine
+npm run test:coverage chatEngine
+
+# Test backend integration
+npm run dev:tauri  # Launch Titan-Dev
+```
+
+---
+
+## 📚 RELATED DOCUMENTATION
+
+**Architecture:**
+- [ARCHITECTURE_CURRENT_v24.md](../00_meta/ARCHITECTURE_CURRENT_v24.md) — System architecture
+- [DATA_FLOW_CHAT.md](../02_architecture_reality/DATA_FLOW_CHAT.md) — Data flow
+- [OMEGA_PIPELINE_DETAILED.md](../02_architecture_reality/OMEGA_PIPELINE_DETAILED.md) — OMEGA detailed
+- [TAURI_COMMANDS_REFERENCE.md](../02_architecture_reality/TAURI_COMMANDS_REFERENCE.md) — Tauri API
+
+**Guides:**
+- [docs/04_guides/INDEX.md](../04_guides/INDEX.md) — Guides navigation
+- [QUICKSTART.md](../04_guides/quickstart/QUICKSTART.md) — User quickstart
+- [SETUP.md](../04_guides/development/SETUP.md) — Dev setup
+- [TESTING.md](../04_guides/development/TESTING.md) — Testing strategy
+
+**Features:**
+- [docs/04_guides/features/INDEX.md](../04_guides/features/INDEX.md) — Features navigation
+- [VOICE.md](../04_guides/features/VOICE.md) — Voice mode
+- [MULTIMODAL.md](../04_guides/features/MULTIMODAL.md) — Multimodal engine
+- [MEMORY_OS.md](../04_guides/features/MEMORY_OS.md) — Memory OS (user guide)
+
+---
+
+## 🛠️ MAINTENANCE
+
+**Responsable:** TITANE Team  
+**Update fréquence:** À chaque release module majeure  
+**Version actuelle:** v24.2.0
+
+**Guidelines:**
+1. **Factualité FIRST:** Code réel v24.2.0 (pas intentions)
+2. **API Reference accuracy:** Signatures exactes (Rust/TypeScript)
+3. **Code examples tested:** Examples validés (compilent + executent)
+4. **Integrations documented:** Cross-module dependencies claires
+5. **VersC: Documentation modules additionnels (Self-Healing Engine, Vector Store
+
+**Évolutions futures:**
+- Phase 6 continuation: Documentation modules additionnels (AI Router, Cognitive engines, etc.)
+- Auto-generation API reference (Rustdoc + TypeDoc integration)
+- Interactive diagrams (Mermaid, PlantUML)
+
+---
+
+## 📞 SUPPORT
+
+**Questions modules?** → [GitHub Issues](https://github.com/KallokTherok1994/TITANE_INFINITY/issues)  
+**Bugs documentation?** → Ouvrir issue avec label `documentation` + `modules`  
+**Feature requests?** → Ouvrir issue avec label `feature-request`
+
+---
+
+**INDEX généré:** 15 décembre 2025  
+**Version:** v1.0.0  
+**Maintainer:** TITANE∞ Documentation Evolution Engine vΩ
+
+---
+
+_Modules documentation — Technical deep dive_ 🔮✨
