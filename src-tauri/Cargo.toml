@@ -1,7 +1,7 @@
 [package]
 name         = "titane-infinity"
-version      = "24.3.0"
-description  = "TITANE∞ v24.3.0 - v22Ω AI Performance Optimizations: -40% latency, stream batching, circuit breaker, 9 Cognitive Engines, Multi-Provider AI, Production Perfect"
+version      = "26.2.0"
+description  = "TITANE∞ v26.2.0 - Cognitive Operating System: Hooks Audit Complete, Performance Optimized, Production Ready"
 authors      = ["Kevin Thibault / Humain Total / TITANE Team"]
 license      = "SEE LICENSE.md"
 repository   = "https://github.com/KallokTherok1994/TITANE_INFINITY"

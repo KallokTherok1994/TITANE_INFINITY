@@ -95,10 +95,9 @@ Post-push verification (clean working tree):
 
 | Artifact                                                                       | Size (bytes) | SHA256                                                           |
 | ------------------------------------------------------------------------------ | -----------: | ---------------------------------------------------------------- |
-| src-tauri/target/release/bundle/appimage/TITANE-Infinity_24.3.0_amd64.AppImage |     85780984 | 1257a58f639addd15c42753432af1dcdc555f5141f599d01e76f3695804f031b |
-| src-tauri/target/release/bundle/deb/TITANE-Infinity_24.3.0_amd64.deb           |     10149794 | 2c56bde8a14bf40ffae1fa73599e845c684c43303e167e51cb7294fa33d62ab9 |
-| src-tauri/target/release/bundle/rpm/TITANE-Infinity-24.3.0-1.x86_64.rpm        |     10150265 | 5ec52f3e3327fddf8173882ec986ec0ac55cea51c656922428f42ddfb7f05fc8 |
-| src-tauri/target/release/bundle/deb/Titan-Stable_24.2.0_amd64.deb              |      9206086 | 745781d5bfba97d620d9e05bd7ec1998508444a62309d4cd7c602524a2070ca0 |
+| src-tauri/target/release/bundle/appimage/TITANE-Infinity_26.2.0_amd64.AppImage |     85776888 | e970dbaa15d56422bbef56c616d3cfa5a0eac50ab18ec870818f48fb32b1ffea |
+| src-tauri/target/release/bundle/deb/TITANE-Infinity_26.2.0_amd64.deb           |     10147240 | ad98a14f0ae39adaacd68e93dc36639851ed7f198ed66ec44129439c3dc37c40 |
+| src-tauri/target/release/bundle/rpm/TITANE-Infinity-26.2.0-1.x86_64.rpm        |     10147987 | 7cbda947e1c3a1eb2211b42bed6260ef464111cbae933b40d83a1e14a3eec5f7 |
 
 ### Packaging Note
 
