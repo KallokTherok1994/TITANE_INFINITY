@@ -41,7 +41,7 @@ Contient TOUTES les configurations partagées:
 Extend `tauri.base.json` avec:
 - `productName`: "Titan-Dev"
 - `identifier`: "com.titane.infinity.dev"
-- `version`: "24.4.0-dev" (suffix `-dev` obligatoire)
+- `version`: "26.2.0-dev" (suffix `-dev` obligatoire)
 - `bundle.active`: `false` (pas de packaging en dev)
 - `app.windows[0].devtools`: `true` (debug actif)
 - `app.windows[1]`: Dev Monitor window (optionnel)
@@ -51,7 +51,7 @@ Extend `tauri.base.json` avec:
 Extend `tauri.base.json` avec:
 - `productName`: "Titan-Stable"
 - `identifier`: "com.titane.infinity.stable"
-- `version`: "24.4.0" (SANS suffix `-dev`)
+- `version`: "26.2.0" (SANS suffix `-dev`)
 - `bundle.active`: `true` (packaging production)
 - `bundle.targets`: `["appimage", "deb"]` (formats Linux)
 - `app.windows[0].devtools`: `false` (pas de debug en prod)

@@ -33,7 +33,8 @@ if [ ! -f "runtime/stable/tauri.conf.json" ]; then
 fi
 
 # 4. Vérifier cohérence version (dev doit avoir -dev suffix)
-BASE_VERSION=$(jq -r '.version // "24.4.0"' "$BASE_CONFIG" 2>/dev/null || echo "unknown")
+# Fallback kept to avoid a hard failure if BASE_CONFIG is missing the field.
+BASE_VERSION=$(jq -r '.version // "26.2.0"' "$BASE_CONFIG" 2>/dev/null || echo "unknown")
 DEV_VERSION=$(jq -r '.version' runtime/dev/tauri.conf.json 2>/dev/null || echo "unknown")
 STABLE_VERSION=$(jq -r '.version' runtime/stable/tauri.conf.json 2>/dev/null || echo "unknown")
 

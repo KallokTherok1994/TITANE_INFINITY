@@ -76,7 +76,7 @@ pnpm run start    # ❌ Bloqué - "🔒 TAURI-ONLY MODE"
 | **Cognitive Engine** | ✅ PRODUCTION-READY | 17.2.0 | 5 fichiers, 3-Center Intelligence (Mental/Heart/Body) |
 | **Tauri Commands API** | ✅ COMPLETE | 17.2.0 | 23 commandes (18 DevTools + 5 Core System) |
 | **Security Stack** | ✅ PRODUCTION-READY | 17.3.0 | ShellGuard + StorageGuard (10 vulnérabilités corrigées) |
-| **Frontend** | ✅ PRODUCTION-READY | 24.3.0 | React 18 + TypeScript strict |
+| **Frontend** | ✅ PRODUCTION-READY | 26.2.0 | React 18 + TypeScript strict |
 | **Tests & Qualité** | ✅ EXCELLENT | 17.2.0 | 80+ tests, ratio doc/code 1.88 |
 | **Documentation** | ✅ COMPLETE | 17.2.0 | 7 documents (~7000 lignes) |
 

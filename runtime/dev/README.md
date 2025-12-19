@@ -414,7 +414,7 @@ rm -rf target/debug/
 
 **Built with ❤️ by TITANE∞**
 
-Version: 24.2.0-dev  
+Version: 26.2.0-dev  
 Runtime: Dev (Development)  
 Branch: dev or feature/\*
 
