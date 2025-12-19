@@ -3,19 +3,9 @@
  */
 
 import { LazyCognitiveModuleCard } from '../../DevToolsLazy';
+import type { LivingEnginesState } from '../../../hooks/useLivingEngines';
 
-interface LivingEnginesState {
-  cognitiveLoad: number;
-  activeThreads: number;
-  rhythmScore: number;
-  glow: number;
-  [key: string]: unknown;
-}
-
-interface LivingEngines {
-  state: LivingEnginesState;
-  [key: string]: unknown;
-}
+type LivingEngines = { state: LivingEnginesState };
 
 interface PerformanceTabProps {
   livingEngines: LivingEngines;

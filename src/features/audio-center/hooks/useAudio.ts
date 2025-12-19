@@ -72,7 +72,8 @@ export function useAudio(): UseAudioReturn {
         ]);
         setOutputDevices(outputs);
         setInputDevices(inputs);
-        setAvailableVoices(audioService.getAvailableVoices());
+        const voices = await audioService.getAvailableVoices();
+        setAvailableVoices(voices);
       } catch (error) {
         console.error('Failed to load audio devices:', error);
       } finally {
@@ -167,6 +168,8 @@ export function useAudio(): UseAudioReturn {
       ]);
       setOutputDevices(outputs);
       setInputDevices(inputs);
+      const voices = await audioService.getAvailableVoices();
+      setAvailableVoices(voices);
     } finally {
       setIsLoading(false);
     }

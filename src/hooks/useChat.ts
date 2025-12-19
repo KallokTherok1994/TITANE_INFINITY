@@ -404,6 +404,21 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
     checkProvidersAvailability();
 
+    // Silent-by-default in production/Tauri: background polling must be explicitly enabled.
+    const envEnabled = import.meta.env.VITE_PROVIDER_READINESS_POLLING_ENABLED === '1';
+    let userEnabled = false;
+    try {
+      const raw = localStorage.getItem('titane_provider_readiness_polling_enabled');
+      userEnabled = raw === '1' || raw === 'true';
+    } catch {
+      userEnabled = false;
+    }
+
+    const enabled = import.meta.env.DEV || envEnabled || userEnabled;
+    if (!enabled) {
+      return;
+    }
+
     // Re-check every 30s (in case API keys are added dynamically)
     const interval = setInterval(checkProvidersAvailability, REFRESH_INTERVALS.SLOW);
     return () => clearInterval(interval);

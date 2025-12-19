@@ -9,7 +9,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { secureInvoke } from '@/lib/security';
 import type {
   OneCoreState,
@@ -76,7 +76,7 @@ export function useOneCore(): UseOneCoreReturn {
       console.error('[ONE_CORE] Refresh error:', err);
       setError(err instanceof Error ? err.message : 'Erreur inconnue');
 
-      // Fallback mock data
+      // Fallback mock data (offline / backend unavailable)
       setState({
         version: 'v∞',
         codename: 'SINGULARITY',
@@ -329,21 +329,40 @@ export function useOneCore(): UseOneCoreReturn {
     return () => clearInterval(interval);
   }, []);
 
-  return {
-    state,
-    metrics,
-    diagnostic,
-    commands,
-    eventHistory,
-    loading,
-    error,
-    refresh,
-    executeCommand,
-    runDiagnostic,
-    forceSync,
-    cleanup,
-    setMode,
-    verifyIntegrity,
-    getEngineStatus,
-  };
+  return useMemo(
+    () => ({
+      state,
+      metrics,
+      diagnostic,
+      commands,
+      eventHistory,
+      loading,
+      error,
+      refresh,
+      executeCommand,
+      runDiagnostic,
+      forceSync,
+      cleanup,
+      setMode,
+      verifyIntegrity,
+      getEngineStatus,
+    }),
+    [
+      state,
+      metrics,
+      diagnostic,
+      commands,
+      eventHistory,
+      loading,
+      error,
+      refresh,
+      executeCommand,
+      runDiagnostic,
+      forceSync,
+      cleanup,
+      setMode,
+      verifyIntegrity,
+      getEngineStatus,
+    ]
+  );
 }

@@ -27,7 +27,7 @@ import {
   Legend,
 } from 'recharts';
 import { useVisionStore } from '@/stores/useVisionStore';
-import { shallow } from 'zustand/shallow';
+import type { AffectHistoryEntry } from '@/types/visionAffect';
 import { Camera, Activity, Brain, User } from 'lucide-react';
 import './VisionMetricsChart.css';
 
@@ -44,18 +44,15 @@ export const VisionMetricsChart: React.FC<VisionMetricsChartProps> = ({
   showAffect = true,
   showBodyLanguage = true,
 }) => {
-  const { isActive, affectHistory, bodyLanguage } = useVisionStore(
-    state => ({
-      isActive: state.isObservationActive && state.visionInput.streamActive,
-      affectHistory: state.affectEstimation.history,
-      bodyLanguage: state.bodyLanguage,
-    }),
-    shallow
+  const isActive = useVisionStore(
+    state => state.isObservationActive && state.visionInput.streamActive
   );
+  const affectHistory = useVisionStore(state => state.affectEstimation.history);
+  const bodyLanguage = useVisionStore(state => state.bodyLanguage);
 
   const cutoffTimestamp = useMemo(() => Date.now() - timeRange * 60_000, [timeRange]);
 
-  const levelToPercent = (level: string): number => {
+  const levelToPercent = (level: string | null | undefined): number => {
     switch (level) {
       case 'low':
         return 25;
@@ -71,7 +68,7 @@ export const VisionMetricsChart: React.FC<VisionMetricsChartProps> = ({
   // Données pour graphique détection
   const detectionData = useMemo(() => {
     const recent = (affectHistory || [])
-      .filter(item => item.timestamp >= cutoffTimestamp)
+      .filter((item: AffectHistoryEntry) => item.timestamp >= cutoffTimestamp)
       .slice(-60);
 
     return recent.map(item => ({
@@ -87,7 +84,7 @@ export const VisionMetricsChart: React.FC<VisionMetricsChartProps> = ({
   // Données pour graphique affect
   const affectData = useMemo(() => {
     const recent = (affectHistory || [])
-      .filter(item => item.timestamp >= cutoffTimestamp)
+      .filter((item: AffectHistoryEntry) => item.timestamp >= cutoffTimestamp)
       .slice(-60);
 
     return recent.map(item => ({

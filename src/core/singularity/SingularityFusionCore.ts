@@ -131,7 +131,23 @@ export class SingularityFusionCore extends EventEmitter {
   private constructor() {
     super();
     this.state = this.createDefaultState();
-    this.initializeAutoSystems();
+
+    // Silent-by-default in production/Tauri: background polling loops must be explicitly enabled.
+    // Dev keeps convenience by default.
+    const envEnabled =
+      import.meta.env.VITE_SINGULARITY_FUSION_AUTOSYSTEMS_ENABLED === '1';
+    let userEnabled = false;
+    try {
+      const raw = localStorage.getItem('titane_singularity_fusion_autosystems_enabled');
+      userEnabled = raw === '1' || raw === 'true';
+    } catch {
+      userEnabled = false;
+    }
+
+    const enabled = import.meta.env.DEV || envEnabled || userEnabled;
+    if (enabled) {
+      this.initializeAutoSystems();
+    }
   }
 
   /**

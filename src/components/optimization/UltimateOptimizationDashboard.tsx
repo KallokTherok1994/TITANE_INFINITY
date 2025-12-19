@@ -10,7 +10,7 @@
  * @phase 12 - Ultimate Optimization
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   gpuAcceleratorV2,
   webAssemblyCompute,
@@ -39,25 +39,45 @@ export const UltimateOptimizationDashboard: React.FC<
   const [isInitialized, setIsInitialized] = useState(false);
   const [initializationProgress, setInitializationProgress] = useState(0);
 
+  const refreshMetrics = useCallback(() => {
+    try {
+      setGpuMetrics(gpuAcceleratorV2.getMetrics());
+      setWasmMetrics(webAssemblyCompute.getMetrics());
+      setSwMetrics(serviceWorkerManager.getMetrics());
+      setDbMetrics(indexedDBOptimizer.getMetrics());
+    } catch (error) {
+      console.error('[UltimateOptimizationDashboard] Metrics refresh failed:', error);
+    }
+  }, []);
+
   // Initialize all modules
   useEffect(() => {
     let mounted = true;
 
     const initialize = async () => {
+      // Best-effort init: a failure in one module must not block the whole dashboard.
+      // GPU Accelerator V2
+      setInitializationProgress(25);
       try {
-        // GPU Accelerator V2
-        setInitializationProgress(25);
         await gpuAcceleratorV2.initialize();
+      } catch (error) {
+        console.error('[UltimateOptimizationDashboard] GPU init failed:', error);
+      }
 
-        // WebAssembly Compute
-        setInitializationProgress(50);
+      // WebAssembly Compute
+      setInitializationProgress(50);
+      try {
         await webAssemblyCompute.initialize();
+      } catch (error) {
+        console.error('[UltimateOptimizationDashboard] WASM init failed:', error);
+      }
 
-        // Service Worker Manager (already auto-initialized)
-        setInitializationProgress(75);
+      // Service Worker Manager (auto-register may be unsupported depending on runtime)
+      setInitializationProgress(75);
 
-        // IndexedDB Optimizer
-        setInitializationProgress(90);
+      // IndexedDB Optimizer
+      setInitializationProgress(90);
+      try {
         await indexedDBOptimizer.initialize([
           {
             name: 'cache',
@@ -77,15 +97,15 @@ export const UltimateOptimizationDashboard: React.FC<
             ],
           },
         ]);
-
-        setInitializationProgress(100);
-
-        if (mounted) {
-          setIsInitialized(true);
-          refreshMetrics();
-        }
       } catch (error) {
-        console.error('[UltimateOptimizationDashboard] Initialization failed:', error);
+        console.error('[UltimateOptimizationDashboard] IndexedDB init failed:', error);
+      }
+
+      setInitializationProgress(100);
+
+      if (mounted) {
+        setIsInitialized(true);
+        refreshMetrics();
       }
     };
 
@@ -98,14 +118,7 @@ export const UltimateOptimizationDashboard: React.FC<
       mounted = false;
       clearInterval(interval);
     };
-  }, []);
-
-  const refreshMetrics = () => {
-    setGpuMetrics(gpuAcceleratorV2.getMetrics());
-    setWasmMetrics(webAssemblyCompute.getMetrics());
-    setSwMetrics(serviceWorkerManager.getMetrics());
-    setDbMetrics(indexedDBOptimizer.getMetrics());
-  };
+  }, [refreshMetrics]);
 
   // Actions
   const handleTestGPU = async () => {

@@ -73,7 +73,7 @@ function GovernanceCenterPageContent(): JSX.Element {
             onSetAnthropicKey={governance.setAnthropicKey}
             onStoreSecret={governance.storeSecret}
             onDeleteSecret={governance.deleteSecret}
-            onRefresh={governance.loadGeminiStatus}
+            onRefresh={governance.refreshAll}
           />
         );
       case 'policies':

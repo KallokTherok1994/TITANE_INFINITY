@@ -64,6 +64,14 @@ export function useGovernance() {
   // SECRETS
   // ═══════════════════════════════════════════════════════════════
 
+  const loadSecretsStatus = useCallback(async () => {
+    const response = await governanceService.getSecretsStatus();
+    if (response.ok && response.data) {
+      setState(prev => ({ ...prev, secretsStatus: response.data ?? [] }));
+    }
+    return response;
+  }, []);
+
   const loadGeminiStatus = useCallback(async () => {
     const response = await governanceService.getGeminiStatus();
     if (response.ok && response.data) {
@@ -420,6 +428,7 @@ export function useGovernance() {
     setError(null);
 
     await Promise.all([
+      loadSecretsStatus(),
       loadGeminiStatus(),
       loadOpenAIStatus(),
       loadAnthropicStatus(),
@@ -458,6 +467,7 @@ export function useGovernance() {
     setError,
 
     // Actions Secrets
+    loadSecretsStatus,
     loadGeminiStatus,
     setGeminiKey,
     loadOpenAIStatus,

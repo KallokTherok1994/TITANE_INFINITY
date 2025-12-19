@@ -310,6 +310,13 @@ export class TauriInvokeProtector {
     timeoutMs: number,
     cacheKey: string
   ): Promise<T> {
+    // Hard guard: if we're not actually in a Tauri WebView, do not attempt invoke.
+    // In pure web mode, @tauri-apps/api exists but invoke will try ipc://localhost and fail.
+    if (!this.isTestEnv && !this.syncCheckTauriAvailability()) {
+      this.isTauriAvailable = false;
+      return this.createFallbackResponse<T>(command, 'Tauri not available (web mode)');
+    }
+
     // Import dynamique avec protection (détermine disponibilité réelle)
     const tauriModule = await this.safeTauriImport();
     if (!tauriModule || !tauriModule.invoke) {
@@ -350,6 +357,12 @@ export class TauriInvokeProtector {
     invoke: typeof import('@tauri-apps/api/core').invoke;
   } | null> {
     try {
+      // Avoid importing/using the module in web mode: it exists, but will fail at runtime.
+      if (!this.isTestEnv && !this.syncCheckTauriAvailability()) {
+        this.isTauriAvailable = false;
+        return null;
+      }
+
       const module = await import('@tauri-apps/api/core');
       if (module && typeof module.invoke === 'function') {
         this.isTauriAvailable = true;

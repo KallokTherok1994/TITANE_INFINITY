@@ -210,7 +210,8 @@ export class GPUAcceleratorV2 {
   }
 
   private detectCapabilities(): GPUv2Capabilities {
-    const hasWebGPU = 'gpu' in navigator;
+    const hasNavigator = typeof navigator !== 'undefined';
+    const hasWebGPU = hasNavigator && 'gpu' in navigator;
 
     // Detect WebGL capabilities
     let hasWebGL2 = false;
@@ -218,6 +219,16 @@ export class GPUAcceleratorV2 {
     let maxTextureSize = 0;
 
     try {
+      if (typeof document === 'undefined') {
+        return {
+          hasWebGPU,
+          hasWebGL2: false,
+          hasWebGL: false,
+          maxTextureSize: 0,
+          maxComputeWorkgroups: hasWebGPU ? 65535 : 0,
+          supportedFeatures: [],
+        };
+      }
       const canvas = document.createElement('canvas');
       const gl2 = canvas.getContext('webgl2');
       const gl = canvas.getContext('webgl');

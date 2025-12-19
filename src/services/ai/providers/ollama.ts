@@ -162,12 +162,7 @@ async function buildPromptWithMemory(
 
     if (memoryContext.activeProjects?.length > 0) {
       const projectNames = memoryContext.activeProjects
-        .map((p): p is MemoryProject => true)
-        .map(
-          (p, i) =>
-            (memoryContext.activeProjects[i] as MemoryProject).name ||
-            (memoryContext.activeProjects[i] as MemoryProject).title
-        )
+        .map(p => p.title)
         .filter(Boolean)
         .join(', ');
       if (projectNames) {
@@ -178,12 +173,7 @@ async function buildPromptWithMemory(
     if (memoryContext.recentDecisions?.length > 0) {
       const decisions = memoryContext.recentDecisions
         .slice(0, 3)
-        .map((d): d is MemoryDecision => true)
-        .map(
-          (d, i) =>
-            (memoryContext.recentDecisions[i] as MemoryDecision).summary ||
-            (memoryContext.recentDecisions[i] as MemoryDecision).title
-        )
+        .map(d => d.title)
         .filter(Boolean)
         .join('; ');
       if (decisions) {
