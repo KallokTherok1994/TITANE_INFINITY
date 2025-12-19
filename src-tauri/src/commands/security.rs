@@ -291,6 +291,11 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     // ═══════════════════════════════════════════════════════════════
     // STATE & SESSION
     // ═══════════════════════════════════════════════════════════════
+    commands.insert("ping");
+    commands.insert("get_state");
+    commands.insert("set_state");
+    commands.insert("delete_state");
+    commands.insert("system_get_status");
     commands.insert("get_system_state");
     commands.insert("get_module_health");
     commands.insert("start_session");

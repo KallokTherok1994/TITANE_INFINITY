@@ -217,6 +217,11 @@ mod hybrid_commands {
     include!("commands/hybrid.rs");
 }
 
+// Frontend OS State Bridge + compatibility commands
+mod state_bridge_commands {
+    include!("commands/state_bridge_commands.rs");
+}
+
 // IA Commands v19.5.2 - OpenAI + Claude + Unified Engine
 mod ia_commands {
     include!("commands/ia_commands.rs");
@@ -420,7 +425,8 @@ fn main() {
         .manage(secrets_engine)
         .manage(chat_orchestrator.clone())
         .manage(helios_core)
-        .manage(memory_core);
+        .manage(memory_core)
+        .manage(state_bridge_commands::FrontendStateStore::default());
 
     // EXP FUSION ENGINE (XP/EXP UI)
     let builder = builder.manage(ExpFusionState::new());
@@ -574,6 +580,15 @@ fn main() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
+            // Frontend OS bridge compatibility
+            state_bridge_commands::ping,
+            state_bridge_commands::get_system_state,
+            state_bridge_commands::get_module_health,
+            state_bridge_commands::system_get_status,
+            state_bridge_commands::get_state,
+            state_bridge_commands::set_state,
+            state_bridge_commands::delete_state,
+
             // Core messaging
             send_message,
             ollama_query,
