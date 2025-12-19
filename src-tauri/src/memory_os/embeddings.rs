@@ -309,17 +309,20 @@ mod tests {
 
         let text = "Test text";
 
-        // First call
-        let start = std::time::Instant::now();
-        let _ = engine.embed(text).await.unwrap();
-        let first_duration = start.elapsed();
+        // Cache should start empty
+        let cache_len_before = engine.cache.read().await.cache.len();
+        assert_eq!(cache_len_before, 0);
 
-        // Second call (cached)
-        let start = std::time::Instant::now();
-        let _ = engine.embed(text).await.unwrap();
-        let cached_duration = start.elapsed();
+        // First call populates cache
+        let embedding_1 = engine.embed(text).await.unwrap();
+        let cache = engine.cache.read().await;
+        assert!(cache.get(text).is_some());
+        assert_eq!(cache.cache.len(), 1);
+        drop(cache);
 
-        // Cached should be faster
-        assert!(cached_duration < first_duration);
+        // Second call should return the same embedding and not grow cache
+        let embedding_2 = engine.embed(text).await.unwrap();
+        assert_eq!(embedding_1, embedding_2);
+        assert_eq!(engine.cache.read().await.cache.len(), 1);
     }
 }
