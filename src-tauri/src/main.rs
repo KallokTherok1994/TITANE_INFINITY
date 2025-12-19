@@ -24,7 +24,6 @@ use tauri::Manager;
 use std::sync::Arc;
 
 // EXP Fusion Engine (used by frontend XP/EXP UI)
-#[cfg(all(not(feature = "mock"), feature = "full"))]
 use crate::commands::exp_fusion::ExpFusionState;
 
 #[cfg(all(not(feature = "mock"), feature = "full"))]
@@ -124,7 +123,6 @@ mod commands {
     }
 
     // EXP Fusion Engine commands (XP/EXP UI)
-    #[cfg(all(not(feature = "mock"), feature = "full"))]
     pub mod exp_fusion {
         include!("commands/exp_fusion.rs");
     }
@@ -424,8 +422,7 @@ fn main() {
         .manage(helios_core)
         .manage(memory_core);
 
-    // EXP FUSION ENGINE (XP/EXP UI) - only available in full builds
-    #[cfg(all(not(feature = "mock"), feature = "full"))]
+    // EXP FUSION ENGINE (XP/EXP UI)
     let builder = builder.manage(ExpFusionState::new());
 
     builder
@@ -660,22 +657,14 @@ fn main() {
             one_core_commands::one_core_force_sync,
             one_core_commands::one_core_cleanup,
 
-            // EXP FUSION ENGINE (XP/EXP UI) - only available in full builds
-            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            // EXP FUSION ENGINE (XP/EXP UI)
             commands::exp_fusion::exp_get_global_state,
-            #[cfg(all(not(feature = "mock"), feature = "full"))]
             commands::exp_fusion::exp_get_categories,
-            #[cfg(all(not(feature = "mock"), feature = "full"))]
             commands::exp_fusion::exp_get_projects,
-            #[cfg(all(not(feature = "mock"), feature = "full"))]
             commands::exp_fusion::exp_get_project_stats,
-            #[cfg(all(not(feature = "mock"), feature = "full"))]
             commands::exp_fusion::exp_get_talents,
-            #[cfg(all(not(feature = "mock"), feature = "full"))]
             commands::exp_fusion::exp_get_timeline,
-            #[cfg(all(not(feature = "mock"), feature = "full"))]
             commands::exp_fusion::exp_get_timeline_stats,
-            #[cfg(all(not(feature = "mock"), feature = "full"))]
             commands::exp_fusion::exp_add_knowledge,
             // Secure API Key Management (v∞ - Super-Prompts H, I, J, K)
             // ✅ v21 Phase 1: Réactivation Gemini
