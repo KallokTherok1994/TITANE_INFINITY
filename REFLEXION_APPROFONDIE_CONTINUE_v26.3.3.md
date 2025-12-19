@@ -139,3 +139,22 @@ Raison: la stabilité prod dépend aussi du **contrôle de périmètre**.
   - limité (backoff / TTL),
   - observable (logs contrôlés),
   - et documenté.
+
+---
+
+## 🔀 Fusion (2025-12-19) — ce qui est fusionnable vs ce qui ne l’est pas
+
+### Ce qui a été fusionné (clean + validé)
+
+- Fusion de la branche documentation “phase0” (gros ré-ordonnancement docs + index master), puis ajout d’un checkpoint “IA governance instructions”.
+- Critère: merge sans conflit applicatif, pas de changement runtime, et validation gate + test gate + security scan passent.
+
+### Ce qui n’a pas été fusionné (et pourquoi)
+
+- La branche `feature/TITANE_OS` a été tentée en merge mais a introduit des conflits sur des zones sensibles (Playwright config, mémoire OS Rust, embeddings, etc.) et un gros volume de nouveaux fichiers.
+- Décision: **ne pas forcer** l’intégration dans MAIN dans ce contexte “stabilité prod / scope minimal”, car ça augmente le risque de régression et dilue l’objectif “silent-by-default”.
+
+### Heuristique (reproductible)
+
+- **Merge** si: changements majoritairement docs/outillage, conflits faibles, gates verts.
+- **Isoler** (branche dédiée + revue) si: conflits sur Rust core / sécurité / memory, ou ajout massif de surface (E2E + CI + scripts) sans campagne de validation dédiée.
