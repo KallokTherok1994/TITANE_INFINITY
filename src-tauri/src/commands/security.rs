@@ -63,12 +63,22 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("memory_store_conversation");
     commands.insert("memory_search");
     commands.insert("memory_get_related");
+    commands.insert("memory_get_entry");
+    commands.insert("memory_get_all_keys");
     commands.insert("memory_rebuild_index");
     commands.insert("memory_get_stats");
     commands.insert("memory_prune");
     commands.insert("memory_delete");
     commands.insert("memory_export");
     commands.insert("memory_import");
+
+    // ═══════════════════════════════════════════════════════════════
+    // MEMORY EVOLUTION ENGINE++
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("memory_evolution_status");
+    commands.insert("memory_evolve_full");
+    commands.insert("memory_get_clusters");
+    commands.insert("memory_hierarchy_health");
 
     // ═══════════════════════════════════════════════════════════════
     // KNOWLEDGE FUSION (Phase 6)
@@ -102,6 +112,14 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("load_memory");
     commands.insert("reset_memory");
     commands.insert("health_check");
+
+    // ═══════════════════════════════════════════════════════════════
+    // SELF-HEAL (frontend compat)
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("selfheal_get_vitals");
+    commands.insert("selfheal_load_profile");
+    commands.insert("selfheal_save_profile");
+    commands.insert("selfheal_sync_with_singularity");
 
     // ═══════════════════════════════════════════════════════════════
     // SINGULARITY STATE
