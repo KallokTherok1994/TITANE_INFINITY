@@ -560,6 +560,5 @@ export class OSIntegrationBridge {
 
 export const osIntegrationBridge = new OSIntegrationBridge({
   debug: import.meta.env.DEV,
-  websocketUrl:
-    import.meta.env.VITE_TITANE_OS_WS_URL ?? import.meta.env.VITE_OS_WS_URL,
+  websocketUrl: import.meta.env.VITE_TITANE_OS_WS_URL ?? import.meta.env.VITE_OS_WS_URL,
 });

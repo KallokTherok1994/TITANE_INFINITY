@@ -398,6 +398,7 @@ fn main() {
         .manage(chat_orchestrator.clone())
         .manage(helios_core)
         .manage(memory_core)
+        .manage(std::sync::Mutex::new(onboarding::OnboardingState::default()))
         .setup(move |app| {
             // 🔐 Initialize Auth OS v∞ (Unified Authentication System)
             if let Err(e) = auth::init_auth() {
@@ -788,6 +789,11 @@ fn main() {
             persistence::commands::titan_memory_doctor_heal,
             persistence::commands::titan_memory_doctor_compact,
             persistence::commands::titan_memory_doctor_export,
+
+            // Onboarding commands
+            onboarding::is_onboarding_complete,
+            onboarding::complete_onboarding,
+            onboarding::get_onboarding_preferences,
         ])
         .run(tauri::generate_context!())
         .unwrap_or_else(|e| {

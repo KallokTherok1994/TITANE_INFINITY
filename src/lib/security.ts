@@ -82,6 +82,21 @@ export const VOID_COMMANDS = new Set<string>([
 ]);
 
 /**
+ * Commandes qui peuvent retourner null (Option<T> côté Rust → null en JS)
+ * Ces commandes sont valides même avec une réponse null/undefined
+ */
+export const NULLABLE_COMMANDS = new Set<string>([
+  // Persistence
+  'titan_load_state',
+  // UI theme
+  'load_ui_theme',
+  'reset_ui_theme',
+  // Memory / Vector store
+  'memory_get_entry',
+  'vector_store_get',
+]);
+
+/**
  * Whitelist des commandes Tauri autorisées
  * DOIT correspondre à commands/security.rs côté Rust
  * ✅ SYNCHRONISÉ v16.2.2+ (27 nov 2025)
@@ -784,6 +799,8 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // ═══════════════════════════════════════════════════════════════
   'delete_conversation',
   'complete_onboarding',
+  'is_onboarding_complete',
+  'get_onboarding_preferences',
 
   // ═══════════════════════════════════════════════════════════════
   // OMEGA CONVERSATION ENGINE (v26.2)
@@ -1464,6 +1481,11 @@ export async function secureInvoke<T>(
     // [6] Validation réponse - avec support des commandes void
     const isVoidCommand = VOID_COMMANDS.has(command);
 
+    // Pour les commandes nullable, null/undefined est une réponse valide
+    if (NULLABLE_COMMANDS.has(command) && (response === null || response === undefined)) {
+      return (response ?? null) as T;
+    }
+
     // Pour les commandes void, null/undefined est une réponse valide
     if (isVoidCommand && (response === null || response === undefined)) {
       // Commande void réussie - retourner un objet vide typé ou null
@@ -1478,7 +1500,11 @@ export async function secureInvoke<T>(
     }
 
     // [7] Sanitization
-    if (responseValidation.data === null || responseValidation.data === undefined) {
+    if (
+      (responseValidation.data === null || responseValidation.data === undefined) &&
+      !isVoidCommand &&
+      !validator
+    ) {
       throw new Error('Response validation succeeded but data is null/undefined');
     }
     const sanitized = sanitizeResponse(responseValidation.data);

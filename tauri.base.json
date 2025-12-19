@@ -53,6 +53,9 @@
           ],
           "allow": [
             { "command": "get_runtime_config" },
+            { "command": "is_onboarding_complete" },
+            { "command": "complete_onboarding" },
+            { "command": "get_onboarding_preferences" },
             { "command": "get_helios_state" },
             { "command": "get_system_health" },
             { "command": "get_helios_metrics" },
