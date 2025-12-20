@@ -4,7 +4,8 @@
 **Status:** Production Ready ✅  
 **License:** Proprietary — © 2025 Humain Total / Kevin Thibault
 
-**Dernière version :** Qualité validée (score 10/10, cf. CHANGELOG v26.3.0 — zéro dette technique) — ADR + validation finale 🏆
+**Dernière version :** v26.3.0  
+**Qualité :** Score 10/10 (cf. [CHANGELOG v26.3.0](CHANGELOG.md#2630---2025-12-18---perfection-1010-adr--validation-finale-)) — zéro dette technique — ADR + validation finale 🏆
 
 ---
 
@@ -108,7 +109,7 @@ TITANE∞ v26.3.0
 ```
 src/
 ├── pages/            # Routes principales (EvoPage, Stats, Chat...)
-├── engines/          # 9 moteurs cognitifs (Orchestrator, Style, Coherence, Reflection, Emotion, UnifiedMemory, Behavior, Adaptation, SystemHealth)
+├── engines/          # 9 moteurs cognitifs
 ├── core/             # Cœur système (pipelines, healing, safety)
 ├── services/         # Services métier (ai, api, memory, voice, tts)
 ├── stores/           # State management (Zustand)
@@ -116,6 +117,8 @@ src/
 ├── features/         # Modules métier (chat, memory, dashboard)
 └── ui/               # Composants UI + Menu
 ```
+
+> Moteurs cognitifs : Orchestrator, Style, Coherence, Reflection, Emotion, UnifiedMemory, Behavior, Adaptation, SystemHealth.
 
 ### Backend (Tauri v2 + Rust)
 
@@ -392,7 +395,7 @@ git push origin feature/my-awesome-feature
 
 ## 📊 Roadmap v24-v25
 
-> **🎯 Phase actuelle : v26.3.0 — Validation finale complétée (score 10/10, cf. CHANGELOG v26.3.0)**  
+> **🎯 Phase actuelle : v26.3.0 — Validation finale complétée (score 10/10, cf. [CHANGELOG v26.3.0](CHANGELOG.md#2630---2025-12-18---perfection-1010-adr--validation-finale-))**  
 > **Statut :** Couverture documentation 200% ✅ — zéro dette technique
 
 ### ✅ Phase 0-7 Complete (Dec 2025)
