@@ -110,9 +110,7 @@ class MonitoringManager {
         replaysOnErrorSampleRate: 0.5, // 50% when errors occur (reduced from 100%)
         
         integrations: [
-          Sentry.browserTracingIntegration({
-            tracePropagationTargets: ['localhost', /^\//],
-          }),
+          Sentry.browserTracingIntegration(),
           Sentry.replayIntegration({
             maskAllText: true,
             blockAllMedia: true,
