@@ -4,7 +4,7 @@
 **Status:** Production Ready ✅  
 **License:** Proprietary — © 2025 Humain Total / Kevin Thibault
 
-**Qualité (v26.3.0) :** Score 10/10 (cf. [CHANGELOG v26.3.0](CHANGELOG.md#2630)) — zéro dette technique — ADR + validation finale 🏆
+**Qualité (v26.3.0) :** Score 10/10 (cf. [CHANGELOG v26.3.0](CHANGELOG.md#v26-3-0)) — zéro dette technique — ADR + validation finale 🏆
 
 ---
 
@@ -108,7 +108,7 @@ TITANE∞ v26.3.0
 ```
 src/
 ├── pages/            # Routes principales (EvoPage, Stats, Chat...)
-├── engines/          # 9 moteurs cognitifs
+├── engines/          # 9 moteurs cognitifs (voir liste ci-dessous)
 ├── core/             # Cœur système (pipelines, healing, safety)
 ├── services/         # Services métier (ai, api, memory, voice, tts)
 ├── stores/           # State management (Zustand)
@@ -394,7 +394,7 @@ git push origin feature/my-awesome-feature
 
 ## 📊 Roadmap v24-v25
 
-> **🎯 Phase actuelle : v26.3.0 — Validation finale complétée (score 10/10, cf. [CHANGELOG v26.3.0](CHANGELOG.md#2630))**  
+> **🎯 Phase actuelle : v26.3.0 — Validation finale complétée (score 10/10, cf. [CHANGELOG v26.3.0](CHANGELOG.md#v26-3-0))**  
 > **Statut :** Couverture documentation 200% ✅ — zéro dette technique
 
 ### ✅ Phase 0-7 Complete (Dec 2025)
