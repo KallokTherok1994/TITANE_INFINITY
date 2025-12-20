@@ -73,6 +73,7 @@ mkdir -p runtime/stable/build/
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     shopt -s nullglob
     APPIMAGES=(src-tauri/target/release/bundle/appimage/*.AppImage)
+    DEBS=(src-tauri/target/release/bundle/deb/*.deb)
     if [[ ${#APPIMAGES[@]} -eq 0 ]]; then
         echo "❌ No AppImage produced in src-tauri/target/release/bundle/appimage/"
         exit 1
@@ -96,6 +97,26 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     done
 
     echo "✅ Linux AppImage ready: runtime/stable/*.AppImage"
+
+    if [[ ${#DEBS[@]} -gt 0 ]]; then
+        for src in "${DEBS[@]}"; do
+            base="$(basename "$src")"
+            tmp="runtime/stable/${base}.new"
+            dest="runtime/stable/${base}"
+
+            cp "$src" "$tmp"
+            if mv -f "$tmp" "$dest" 2>/dev/null; then
+                :
+            else
+                ts="$(date +%Y%m%d-%H%M%S)"
+                alt="runtime/stable/${base%.deb}-${ts}.deb"
+                mv -f "$tmp" "$alt"
+                echo "⚠️  Destination busy, wrote: $alt"
+            fi
+        done
+
+        echo "✅ Linux DEB ready: runtime/stable/*.deb"
+    fi
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     cp src-tauri/target/release/bundle/macos/*.app runtime/stable/
     echo "✅ macOS app ready: runtime/stable/*.app"
