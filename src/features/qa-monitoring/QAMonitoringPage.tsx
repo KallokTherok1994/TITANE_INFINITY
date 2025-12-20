@@ -1012,7 +1012,9 @@ function QAMonitoringPageContent(): JSX.Element {
       a.download = `titane-metrics-${new Date().toISOString()}.json`;
       a.click();
 
-      URL.revokeObjectURL(url);
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+      }, 100);
     } catch (err) {
       logger.error(
         'Failed to export frontend metrics',
