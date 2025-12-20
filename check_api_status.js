@@ -47,9 +47,9 @@ console.log('   OpenAI: https://platform.openai.com (API Keys section)');
 console.log('   Anthropic: https://console.anthropic.com (API Keys)');
 
 console.log('\n⚙️ Feature Flags (src/config/featureFlags.ts):');
-console.log('   ENABLE_EXTERNAL_AI: false ⚠️ (needs to be TRUE)');
-console.log('   AI_PROVIDERS.gemini: false ⚠️ (needs to be TRUE)');
-console.log('   AI_PROVIDERS.openai: false ⚠️ (needs to be TRUE)');
+console.log('   ENABLE_EXTERNAL_AI: false ✅ (default local-first)');
+console.log('   AI_PROVIDERS.gemini: false ✅ (default local-first)');
+console.log('   AI_PROVIDERS.openai: false ✅ (default local-first)');
 console.log('   AI_PROVIDERS.ollama: true ✅');
 
 console.log('\n═══════════════════════════════════════════════════════════');
@@ -62,7 +62,7 @@ if (!geminiKey && !openaiKey && !anthropicKey) {
   console.log('   1️⃣  MÉTHODE .ENV (Développement rapide):');
   console.log('      - Copier .env.example → .env');
   console.log('      - Remplir GEMINI_API_KEY, OPENAI_API_KEY, ANTHROPIC_API_KEY');
-  console.log('      - Redémarrer le serveur\n');
+  console.log('      - Relancer Titan-Dev (npm run dev:tauri)\n');
 
   console.log('   2️⃣  MÉTHODE SÉCURISÉE (Production recommandée):');
   console.log('      - Ouvrir TITANE∞ → Governance Center');
@@ -70,8 +70,7 @@ if (!geminiKey && !openaiKey && !anthropicKey) {
   console.log('      - Les clés seront chiffrées (AES-256-GCM)\n');
 
   console.log('   3️⃣  MÉTHODE CONSOLE NAVIGATEUR:');
-  console.log('      - Ouvrir http://localhost:5173/');
-  console.log('      - Ouvrir la console (F12)');
+  console.log('      - Ouvrir la console DevTools (si disponible)');
   console.log('      - Exécuter:');
   console.log(
     "         window.__TAURI_INTERNALS__.invoke('chat_set_gemini_key', {apiKey: 'votre_cle'})"
@@ -90,14 +89,9 @@ if (!geminiKey && !openaiKey && !anthropicKey) {
   console.log('   - Utiliser chat_set_*_key() pour la migration\n');
 }
 
-console.log('📝 ÉTAPE CRITIQUE: Activer les feature flags');
-console.log('   Fichier: src/config/featureFlags.ts');
-console.log('   Modifier:');
-console.log('      ENABLE_EXTERNAL_AI: true,');
-console.log('      AI_PROVIDERS: {');
-console.log('        gemini: true,');
-console.log('        openai: true,');
-console.log('        ollama: true,');
-console.log('      }\n');
+console.log('📝 ÉTAPE CRITIQUE: Activer External AI (opt-in)');
+console.log('   Guardrails (recommandé):');
+console.log('      1) Build flag: VITE_ENABLE_EXTERNAL_AI=1');
+console.log("      2) Runtime (prod uniquement): localStorage.setItem('titane.enable_external_ai','1')\n");
 
 console.log('═══════════════════════════════════════════════════════════\n');

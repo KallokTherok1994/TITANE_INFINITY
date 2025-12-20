@@ -9,6 +9,7 @@
  */
 
 import { safeInvokeTauri } from '@/utils/tauriProtector';
+import monitoring from '@/monitoring';
 
 // ────────────────────────────────────────────────────────────────
 // Constants
@@ -1621,12 +1622,34 @@ export async function secureInvoke<T>(
     treatFallbackAsError = false,
   } = options;
 
+  const startedAt = Date.now();
+  try {
+    monitoring.trackRequest();
+    monitoring.addBreadcrumb('secureInvoke start', 'tauri', {
+      command,
+      hasPayload: payload && Object.keys(payload).length > 0,
+      payloadKeysCount: payload ? Object.keys(payload).length : 0,
+    });
+  } catch {
+    // ignore monitoring errors
+  }
+
   // [1] Validation commande whitelist
   if (!skipWhitelistCheck) {
     const cmdValidation = validateCommand(command);
     if (!cmdValidation.valid) {
       const errorMsg = `Security: ${cmdValidation.errors.join('; ')}`;
       console.error(`[Security] ✗ ${errorMsg}`);
+
+      try {
+        monitoring.trackError(new Error(errorMsg), {
+          command,
+          stage: 'validateCommand',
+        });
+      } catch {
+        // ignore monitoring errors
+      }
+
       throw new Error(errorMsg);
     }
   }
@@ -1637,6 +1660,16 @@ export async function secureInvoke<T>(
     if (!injectionCheck.valid) {
       const errorMsg = `Security: ${injectionCheck.errors.join('; ')}`;
       console.error(`[Security] ✗ ${errorMsg}`);
+
+      try {
+        monitoring.trackError(new Error(errorMsg), {
+          command,
+          stage: 'detectInjection',
+        });
+      } catch {
+        // ignore monitoring errors
+      }
+
       throw new Error(errorMsg);
     }
   }
@@ -1646,6 +1679,16 @@ export async function secureInvoke<T>(
   if (!sizeCheck.valid) {
     const errorMsg = `Security: ${sizeCheck.errors.join('; ')}`;
     console.error(`[Security] ✗ ${errorMsg}`);
+
+    try {
+      monitoring.trackError(new Error(errorMsg), {
+        command,
+        stage: 'validatePayloadSize',
+      });
+    } catch {
+      // ignore monitoring errors
+    }
+
     throw new Error(errorMsg);
   }
 
@@ -1655,6 +1698,16 @@ export async function secureInvoke<T>(
     if (!loopCheck.valid) {
       const errorMsg = `Security: ${loopCheck.errors.join('; ')}`;
       console.error(`[Security] ✗ ${errorMsg}`);
+
+      try {
+        monitoring.trackError(new Error(errorMsg), {
+          command,
+          stage: 'detectInfiniteLoop',
+        });
+      } catch {
+        // ignore monitoring errors
+      }
+
       throw new Error(errorMsg);
     }
   }
@@ -1726,11 +1779,32 @@ export async function secureInvoke<T>(
       throw new Error('Fallback response received');
     }
 
+      try {
+        monitoring.addBreadcrumb('secureInvoke success', 'tauri', {
+          command,
+          latencyMs: Date.now() - startedAt,
+        });
+      } catch {
+        // ignore monitoring errors
+      }
+
     return sanitized as T;
   } catch (error) {
     // Log et re-throw
     const errorMsg = error instanceof Error ? error.message : String(error);
     console.error(`[Security] ✗ secureInvoke("${command}") failed:`, errorMsg);
+
+    try {
+      const err = error instanceof Error ? error : new Error(String(error));
+      monitoring.trackError(err, {
+        command,
+        stage: 'invoke',
+        latencyMs: Date.now() - startedAt,
+      });
+    } catch {
+      // ignore monitoring errors
+    }
+
     throw error;
   }
 }

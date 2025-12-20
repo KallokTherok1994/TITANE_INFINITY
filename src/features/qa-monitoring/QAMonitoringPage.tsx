@@ -22,6 +22,7 @@ import type {
   PerformanceReport,
   LogEntry,
 } from './types';
+import monitoring, { type PerformanceMetrics } from '@/monitoring';
 import './QAMonitoringPage.css';
 
 // ============================================================================
@@ -82,25 +83,47 @@ StatusBadge.displayName = 'StatusBadge';
 interface OverviewTabProps {
   state: QASystemState | null;
   metrics: SystemMetrics | null;
+  frontendMetrics: PerformanceMetrics | null;
   alerts: Alert[];
   onRefresh: () => void;
+  onExportFrontendMetrics: () => void;
 }
 
 const OverviewTab = ({
   state,
   metrics,
+  frontendMetrics,
   alerts,
   onRefresh,
+  onExportFrontendMetrics,
 }: OverviewTabProps): JSX.Element => {
   const activeAlerts = alerts.filter(a => !a.resolved);
+
+  const formatMs = (value: number | undefined): string =>
+    typeof value === 'number' && Number.isFinite(value) ? `${value.toFixed(0)}ms` : '—';
+
+  const formatRate = (value: number | undefined): string =>
+    typeof value === 'number' && Number.isFinite(value)
+      ? `${(value * 100).toFixed(2)}%`
+      : '—';
+
+  const formatBytesAsMB = (value: number | undefined): string =>
+    typeof value === 'number' && Number.isFinite(value)
+      ? `${(value / 1024 / 1024).toFixed(1)}MB`
+      : '—';
 
   return (
     <div className="qa-tab-content">
       <div className="qa-section-header">
         <h2>🎯 Vue d&apos;ensemble QA</h2>
-        <button className="qa-btn qa-btn--primary" onClick={onRefresh}>
-          🔄 Rafraîchir
-        </button>
+        <div className="qa-actions">
+          <button className="qa-btn qa-btn--secondary" onClick={onExportFrontendMetrics}>
+            📤 Exporter métriques
+          </button>
+          <button className="qa-btn qa-btn--primary" onClick={onRefresh}>
+            🔄 Rafraîchir
+          </button>
+        </div>
       </div>
 
       {state && (
@@ -199,6 +222,48 @@ const OverviewTab = ({
           </div>
         </div>
       )}
+
+      <div className="qa-metrics-section">
+        <h3>🧭 Observability (frontend)</h3>
+        <div className="qa-stats-grid">
+          <StatCard
+            label="Erreurs"
+            value={frontendMetrics?.errorCount ?? '—'}
+            icon="❌"
+            variant={(frontendMetrics?.errorCount ?? 0) > 0 ? 'warning' : 'success'}
+          />
+          <StatCard
+            label="Error rate"
+            value={formatRate(frontendMetrics?.errorRate)}
+            icon="📉"
+            variant={(frontendMetrics?.errorRate ?? 0) > 0.05 ? 'error' : 'success'}
+          />
+          <StatCard
+            label="Latence pipeline"
+            value={formatMs(frontendMetrics?.pipelineLatency)}
+            icon="⏱️"
+            variant={(frontendMetrics?.pipelineLatency ?? 0) > 200 ? 'warning' : 'success'}
+          />
+          <StatCard
+            label="Erreurs pipeline"
+            value={frontendMetrics?.pipelineErrors ?? '—'}
+            icon="🧯"
+            variant={(frontendMetrics?.pipelineErrors ?? 0) > 0 ? 'warning' : 'success'}
+          />
+          <StatCard
+            label="Mémoire JS"
+            value={formatBytesAsMB(frontendMetrics?.memoryUsage)}
+            icon="🧠"
+            variant="info"
+          />
+          <StatCard
+            label="LCP"
+            value={formatMs(frontendMetrics?.LCP)}
+            icon="🖥️"
+            variant="info"
+          />
+        </div>
+      </div>
 
       {activeAlerts.length > 0 && (
         <div className="qa-alerts-section">
@@ -747,6 +812,9 @@ function QAMonitoringPageContent(): JSX.Element {
   const [activeTab, setActiveTab] = useState<TabId>('overview');
   const [state, setState] = useState<QASystemState | null>(null);
   const [metrics, setMetrics] = useState<SystemMetrics | null>(null);
+  const [frontendMetrics, setFrontendMetrics] = useState<PerformanceMetrics | null>(
+    null
+  );
   const [suites, setSuites] = useState<TestSuite[]>([]);
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [monitors, setMonitors] = useState<Monitor[]>([]);
@@ -807,6 +875,24 @@ function QAMonitoringPageContent(): JSX.Element {
       setLoading(false);
     }
   }, [qa, showResolvedAlerts, perfPeriod]);
+
+  useEffect(() => {
+    try {
+      setFrontendMetrics(monitoring.getMetrics());
+    } catch {
+      // noop
+    }
+
+    const interval = window.setInterval(() => {
+      try {
+        setFrontendMetrics(monitoring.getMetrics());
+      } catch {
+        // noop
+      }
+    }, 2000);
+
+    return () => window.clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     loadData();
@@ -915,6 +1001,27 @@ function QAMonitoringPageContent(): JSX.Element {
     }
   };
 
+  const handleExportFrontendMetrics = useCallback(() => {
+    try {
+      const json = monitoring.exportMetrics();
+      const blob = new Blob([json], { type: 'application/json;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `titane-metrics-${new Date().toISOString()}.json`;
+      a.click();
+
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      logger.error(
+        'Failed to export frontend metrics',
+        { component: 'QAMonitoringPage', action: 'exportFrontendMetrics' },
+        err as Error
+      );
+    }
+  }, []);
+
   // Render
   if (loading || matrixLoading) {
     return (
@@ -975,8 +1082,10 @@ function QAMonitoringPageContent(): JSX.Element {
           <OverviewTab
             state={state}
             metrics={metrics}
+            frontendMetrics={frontendMetrics}
             alerts={alerts}
             onRefresh={loadData}
+            onExportFrontendMetrics={handleExportFrontendMetrics}
           />
         )}
         {activeTab === 'tests' && (
