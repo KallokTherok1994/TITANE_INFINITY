@@ -85,8 +85,8 @@ pub async fn {{COMMAND_NAME}}() -> Result<{{RETURN_TYPE}}, String> {
     pub async fn detect_regeneration_needs(&self) -> RegenerationReport {
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_secs();
+            .map(|d| d.as_secs())
+            .unwrap_or_else(|_| crate::core::utils::now_ms() / 1000);
 
         let tasks = vec![
             RegenerationTask {

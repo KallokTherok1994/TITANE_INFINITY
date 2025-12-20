@@ -355,7 +355,7 @@ mod tests {
 
     #[test]
     fn test_load_identity_matrix_missing_file() {
-        let temp_dir = TempDir::new().unwrap();
+        let temp_dir = TempDir::new().expect("TempDir should be creatable");
         let matrix = load_identity_matrix_robust(temp_dir.path());
 
         // Should return default
@@ -365,17 +365,21 @@ mod tests {
 
     #[test]
     fn test_save_and_load_identity_matrix() {
-        let temp_dir = TempDir::new().unwrap();
+        let temp_dir = TempDir::new().expect("TempDir should be creatable");
         let mut matrix = IdentityMatrix::new();
         matrix.set_dimension("Rationalité-Émotivité", 0.5);
 
         // Save
-        save_identity_matrix_atomic(&matrix, temp_dir.path()).unwrap();
+        save_identity_matrix_atomic(&matrix, temp_dir.path())
+            .expect("identity matrix should save atomically");
 
         // Load
         let loaded = load_identity_matrix_robust(temp_dir.path());
         assert_eq!(
-            loaded.get_dimension("Rationalité-Émotivité").unwrap().value,
+            loaded
+                .get_dimension("Rationalité-Émotivité")
+                .expect("dimension should exist")
+                .value,
             0.5
         );
     }
@@ -392,16 +396,18 @@ mod tests {
 
     #[test]
     fn test_atomic_save_creates_backup() {
-        let temp_dir = TempDir::new().unwrap();
+        let temp_dir = TempDir::new().expect("TempDir should be creatable");
         let matrix1 = IdentityMatrix::new();
         let mut matrix2 = IdentityMatrix::new();
         matrix2.set_dimension("Rationalité-Émotivité", 0.8);
 
         // First save
-        save_identity_matrix_atomic(&matrix1, temp_dir.path()).unwrap();
+        save_identity_matrix_atomic(&matrix1, temp_dir.path())
+            .expect("first atomic save should succeed");
 
         // Second save (should create backup)
-        save_identity_matrix_atomic(&matrix2, temp_dir.path()).unwrap();
+        save_identity_matrix_atomic(&matrix2, temp_dir.path())
+            .expect("second atomic save should succeed");
 
         // Check backup exists
         let backup_path = temp_dir.path().join("identity.json.backup");
@@ -490,13 +496,19 @@ mod tests {
 
         matrix.set_dimension("Rationalité-Émotivité", 5.0);
         assert_eq!(
-            matrix.get_dimension("Rationalité-Émotivité").unwrap().value,
+            matrix
+                .get_dimension("Rationalité-Émotivité")
+                .expect("dimension Rationalité-Émotivité should exist")
+                .value,
             1.0
         );
 
         matrix.set_dimension("Rationalité-Émotivité", -5.0);
         assert_eq!(
-            matrix.get_dimension("Rationalité-Émotivité").unwrap().value,
+            matrix
+                .get_dimension("Rationalité-Émotivité")
+                .expect("dimension Rationalité-Émotivité should exist")
+                .value,
             -1.0
         );
     }
@@ -504,14 +516,20 @@ mod tests {
     #[test]
     fn test_evolve() {
         let mut matrix = IdentityMatrix::new();
-        let initial = matrix.get_dimension("Prudence-Audace").unwrap().value;
+        let initial = matrix
+            .get_dimension("Prudence-Audace")
+            .expect("dimension Prudence-Audace should exist")
+            .value;
 
         let mut deltas = HashMap::new();
         deltas.insert("Prudence-Audace".to_string(), 0.5);
 
         matrix.evolve(&deltas);
 
-        let evolved = matrix.get_dimension("Prudence-Audace").unwrap().value;
+        let evolved = matrix
+            .get_dimension("Prudence-Audace")
+            .expect("dimension Prudence-Audace should exist")
+            .value;
         assert!(evolved != initial);
     }
 
@@ -522,25 +540,43 @@ mod tests {
         assert!(
             profile
                 .get_dimension("Formalité-Familiarité")
-                .unwrap()
+                .expect("dimension Formalité-Familiarité should exist")
                 .value
                 < 0.0
         );
-        assert!(profile.get_dimension("Sérieux-Ludique").unwrap().value < 0.0);
+        assert!(
+            profile
+                .get_dimension("Sérieux-Ludique")
+                .expect("dimension Sérieux-Ludique should exist")
+                .value
+                < 0.0
+        );
     }
 
     #[test]
     fn test_profiles_mentor() {
         let profile = IdentityProfiles::mentor();
         // Mentor should be proactive
-        assert!(profile.get_dimension("Réactif-Proactif").unwrap().value > 0.0);
+        assert!(
+            profile
+                .get_dimension("Réactif-Proactif")
+                .expect("dimension Réactif-Proactif should exist")
+                .value
+                > 0.0
+        );
     }
 
     #[test]
     fn test_profiles_creative() {
         let profile = IdentityProfiles::creative();
         // Creative should be audacious
-        assert!(profile.get_dimension("Prudence-Audace").unwrap().value > 0.5);
+        assert!(
+            profile
+                .get_dimension("Prudence-Audace")
+                .expect("dimension Prudence-Audace should exist")
+                .value
+                > 0.5
+        );
     }
 
     #[test]
@@ -550,14 +586,14 @@ mod tests {
         assert!(
             profile
                 .get_dimension("Généraliste-Spécialiste")
-                .unwrap()
+                .expect("dimension Généraliste-Spécialiste should exist")
                 .value
                 > 0.5
         );
         assert!(
             profile
                 .get_dimension("Rationalité-Émotivité")
-                .unwrap()
+                .expect("dimension Rationalité-Émotivité should exist")
                 .value
                 < 0.0
         );
@@ -644,7 +680,10 @@ mod tests {
         let matrix = IdentityMatrix::new();
         let dim = matrix.get_dimension("Rationalité-Émotivité");
         assert!(dim.is_some());
-        assert_eq!(dim.unwrap().name, "Rationalité-Émotivité");
+        assert_eq!(
+            dim.expect("dimension Rationalité-Émotivité should exist").name,
+            "Rationalité-Émotivité"
+        );
     }
 
     #[test]
@@ -659,7 +698,13 @@ mod tests {
         let mut matrix = IdentityMatrix::new();
         let result = matrix.set_dimension("Prudence-Audace", 0.8);
         assert!(result);
-        assert_eq!(matrix.get_dimension("Prudence-Audace").unwrap().value, 0.8);
+        assert_eq!(
+            matrix
+                .get_dimension("Prudence-Audace")
+                .expect("dimension Prudence-Audace should exist")
+                .value,
+            0.8
+        );
     }
 
     #[test]
@@ -669,14 +714,26 @@ mod tests {
         deltas.insert("Rationalité-Émotivité".to_string(), 0.3);
         deltas.insert("Prudence-Audace".to_string(), -0.2);
 
-        let initial_rat = matrix.get_dimension("Rationalité-Émotivité").unwrap().value;
-        let initial_pru = matrix.get_dimension("Prudence-Audace").unwrap().value;
+        let initial_rat = matrix
+            .get_dimension("Rationalité-Émotivité")
+            .expect("dimension Rationalité-Émotivité should exist")
+            .value;
+        let initial_pru = matrix
+            .get_dimension("Prudence-Audace")
+            .expect("dimension Prudence-Audace should exist")
+            .value;
 
         matrix.evolve(&deltas);
 
         // Values should have changed (modulated by volatility)
-        let new_rat = matrix.get_dimension("Rationalité-Émotivité").unwrap().value;
-        let new_pru = matrix.get_dimension("Prudence-Audace").unwrap().value;
+        let new_rat = matrix
+            .get_dimension("Rationalité-Émotivité")
+            .expect("dimension Rationalité-Émotivité should exist")
+            .value;
+        let new_pru = matrix
+            .get_dimension("Prudence-Audace")
+            .expect("dimension Prudence-Audace should exist")
+            .value;
 
         assert!(new_rat != initial_rat || new_pru != initial_pru);
     }
@@ -780,11 +837,12 @@ mod tests {
 
     #[test]
     fn test_load_corrupted_file() {
-        let temp_dir = TempDir::new().unwrap();
+        let temp_dir = TempDir::new().expect("TempDir should be creatable");
         let identity_path = temp_dir.path().join("identity.json");
 
         // Write invalid JSON
-        fs::write(&identity_path, "not valid json").unwrap();
+        fs::write(&identity_path, "not valid json")
+            .expect("writing corrupted identity.json fixture should succeed");
 
         let matrix = load_identity_matrix_robust(temp_dir.path());
         // Should return default on parse error
@@ -802,8 +860,10 @@ mod tests {
             volatility: 0.5,
         };
 
-        let json = serde_json::to_string(&dim).unwrap();
-        let restored: IdentityDimension = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&dim)
+            .expect("IdentityDimension should serialize to JSON");
+        let restored: IdentityDimension = serde_json::from_str(&json)
+            .expect("IdentityDimension should deserialize from JSON");
 
         assert_eq!(restored.name, dim.name);
         assert!((restored.value - dim.value).abs() < 0.0001);
@@ -812,8 +872,9 @@ mod tests {
     #[test]
     fn test_matrix_serialization_roundtrip() {
         let matrix = IdentityProfiles::creative();
-        let json = serde_json::to_string(&matrix).unwrap();
-        let restored: IdentityMatrix = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&matrix).expect("IdentityMatrix should serialize to JSON");
+        let restored: IdentityMatrix =
+            serde_json::from_str(&json).expect("IdentityMatrix should deserialize from JSON");
 
         assert_eq!(restored.dimensions.len(), matrix.dimensions.len());
         assert_eq!(restored.signature, matrix.signature);
@@ -893,7 +954,10 @@ mod tests {
         matrix2.set_dimension("Rationalité-Émotivité", 1.0);
 
         let mid = matrix1.interpolate(&matrix2, 0.5);
-        let mid_val = mid.get_dimension("Rationalité-Émotivité").unwrap().value;
+        let mid_val = mid
+            .get_dimension("Rationalité-Émotivité")
+            .expect("dimension Rationalité-Émotivité should exist")
+            .value;
 
         assert!((mid_val - 0.5).abs() < 0.01);
     }

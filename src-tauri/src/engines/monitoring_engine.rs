@@ -13,7 +13,6 @@
 //! - Historique des métriques
 
 use serde::{Deserialize, Serialize};
-use std::time::UNIX_EPOCH;
 use tauri::command;
 
 // ============================================================================
@@ -480,10 +479,6 @@ titane_uptime_seconds 86400
 
 // Helper function pour simuler des variations
 fn rand_float() -> f64 {
-    use std::time::SystemTime;
-    let seed = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .unwrap()
-        .subsec_nanos();
+    let seed = crate::core::utils::now_ms();
     ((seed % 1000) as f64) / 1000.0
 }

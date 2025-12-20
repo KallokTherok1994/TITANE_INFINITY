@@ -606,8 +606,5 @@ pub async fn api_test_connection(
 // ─────────────────────────────────────────────────────────────────────────────
 
 fn get_timestamp() -> u64 {
-    std::time::SystemTime::now()
-        .duration_since(std::time::UNIX_EPOCH)
-        .unwrap()
-        .as_secs()
+    crate::core::utils::now_ms() / 1000
 }

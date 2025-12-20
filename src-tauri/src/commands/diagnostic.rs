@@ -164,14 +164,20 @@ mod tests {
 
     #[tokio::test]
     async fn test_backend_info() {
-        let info = get_backend_info().await.unwrap();
+        let info = get_backend_info().await.expect("get_backend_info should succeed");
         assert!(info["version"].is_string());
-        assert!(info["tauri_only"].as_bool().unwrap());
+        assert!(
+            info["tauri_only"]
+                .as_bool()
+                .expect("tauri_only should be a boolean")
+        );
     }
 
     #[tokio::test]
     async fn test_validate_tauri_only() {
-        let result = validate_tauri_only().await.unwrap();
+        let result = validate_tauri_only()
+            .await
+            .expect("validate_tauri_only should succeed");
         assert!(result);
     }
 }

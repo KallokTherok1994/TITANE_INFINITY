@@ -83,8 +83,8 @@ impl ReinforcementLoop {
     pub async fn run_cycle(&mut self) -> ReinforcementReport {
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_secs();
+            .map(|d| d.as_secs())
+            .unwrap_or_else(|_| crate::core::utils::now_ms() / 1000);
 
         // Simule renforcement automatique
         let mut reinforced = 0;
@@ -174,8 +174,8 @@ mod tests {
             success_rate: 0.85,
             usage_count: 100,
         };
-        let json = serde_json::to_string(&pattern).unwrap();
-        let restored: Pattern = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&pattern).expect("Pattern should serialize to JSON");
+        let restored: Pattern = serde_json::from_str(&json).expect("Pattern should deserialize");
         assert_eq!(restored.id, "pattern-123");
         assert_eq!(restored.strength, 0.75);
     }
@@ -234,8 +234,10 @@ mod tests {
             patterns_weakened: 5,
             top_patterns: vec![],
         };
-        let json = serde_json::to_string(&report).unwrap();
-        let restored: ReinforcementReport = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&report)
+            .expect("ReinforcementReport should serialize to JSON");
+        let restored: ReinforcementReport =
+            serde_json::from_str(&json).expect("ReinforcementReport should deserialize");
         assert_eq!(restored.timestamp, 999999);
         assert_eq!(restored.patterns_reinforced, 15);
     }
@@ -264,7 +266,10 @@ mod tests {
         assert!(id.starts_with("pattern_"));
         assert_eq!(rl.patterns.len(), 1);
 
-        let pattern = rl.patterns.get(&id).unwrap();
+        let pattern = rl
+            .patterns
+            .get(&id)
+            .expect("add_pattern should insert a Pattern for returned id");
         assert_eq!(pattern.name, "Test Pattern");
         assert_eq!(pattern.strength, 0.5);
         assert_eq!(pattern.success_rate, 0.5);
@@ -290,7 +295,10 @@ mod tests {
 
         rl.reinforce_pattern(&id, true);
 
-        let pattern = rl.patterns.get(&id).unwrap();
+        let pattern = rl
+            .patterns
+            .get(&id)
+            .expect("pattern should exist after add_pattern()");
         assert_eq!(pattern.usage_count, 1);
         assert!(pattern.strength > 0.5); // Was reinforced
         assert_eq!(pattern.success_rate, 1.0); // First use was success
@@ -303,7 +311,10 @@ mod tests {
 
         rl.reinforce_pattern(&id, false);
 
-        let pattern = rl.patterns.get(&id).unwrap();
+        let pattern = rl
+            .patterns
+            .get(&id)
+            .expect("pattern should exist after add_pattern()");
         assert_eq!(pattern.usage_count, 1);
         assert!(pattern.strength < 0.5); // Was weakened
         assert_eq!(pattern.success_rate, 0.0); // First use was failure
@@ -327,7 +338,10 @@ mod tests {
             rl.reinforce_pattern(&id, true);
         }
 
-        let pattern = rl.patterns.get(&id).unwrap();
+        let pattern = rl
+            .patterns
+            .get(&id)
+            .expect("pattern should exist after add_pattern()");
         assert_eq!(pattern.usage_count, 3);
         assert!(pattern.strength > 0.5);
         assert_eq!(pattern.success_rate, 1.0);
@@ -343,7 +357,10 @@ mod tests {
             rl.reinforce_pattern(&id, true);
         }
 
-        let pattern = rl.patterns.get(&id).unwrap();
+        let pattern = rl
+            .patterns
+            .get(&id)
+            .expect("pattern should exist after add_pattern()");
         assert!(pattern.strength <= 1.0);
     }
 
@@ -357,7 +374,10 @@ mod tests {
             rl.reinforce_pattern(&id, false);
         }
 
-        let pattern = rl.patterns.get(&id).unwrap();
+        let pattern = rl
+            .patterns
+            .get(&id)
+            .expect("pattern should exist after add_pattern()");
         assert!(pattern.strength >= 0.0);
     }
 
@@ -417,12 +437,20 @@ mod tests {
             rl.reinforce_pattern(&id, true);
         }
 
-        let initial_strength = rl.patterns.get(&id).unwrap().strength;
+        let initial_strength = rl
+            .patterns
+            .get(&id)
+            .expect("pattern should exist after add_pattern()")
+            .strength;
         let report = rl.run_cycle().await;
 
         assert_eq!(report.patterns_reinforced, 1);
         // Strength should increase
-        let final_strength = rl.patterns.get(&id).unwrap().strength;
+        let final_strength = rl
+            .patterns
+            .get(&id)
+            .expect("pattern should exist after run_cycle()")
+            .strength;
         assert!(final_strength >= initial_strength);
     }
 
@@ -436,12 +464,20 @@ mod tests {
             rl.reinforce_pattern(&id, false);
         }
 
-        let initial_strength = rl.patterns.get(&id).unwrap().strength;
+        let initial_strength = rl
+            .patterns
+            .get(&id)
+            .expect("pattern should exist after add_pattern()")
+            .strength;
         let report = rl.run_cycle().await;
 
         assert_eq!(report.patterns_weakened, 1);
         // Strength should decrease
-        let final_strength = rl.patterns.get(&id).unwrap().strength;
+        let final_strength = rl
+            .patterns
+            .get(&id)
+            .expect("pattern should exist after run_cycle()")
+            .strength;
         assert!(final_strength <= initial_strength);
     }
 
@@ -464,7 +500,8 @@ mod tests {
     async fn test_tauri_cognitive_run_reinforcement() {
         let result = cognitive_run_reinforcement().await;
         assert!(result.is_ok());
-        let report = result.unwrap();
+        let report =
+            result.expect("cognitive_run_reinforcement should return Ok(ReinforcementReport)");
         assert!(report.timestamp > 0);
     }
 }

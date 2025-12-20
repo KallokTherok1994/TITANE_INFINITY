@@ -360,12 +360,7 @@ pub struct QuantumStats {
 
 /// Génère un UUID simple
 fn uuid_simple() -> String {
-    use std::time::{SystemTime, UNIX_EPOCH};
-    let timestamp = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .unwrap()
-        .as_nanos();
-    format!("{:x}", timestamp)
+    uuid::Uuid::new_v4().to_string()
 }
 
 #[cfg(test)]

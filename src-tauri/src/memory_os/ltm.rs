@@ -492,9 +492,9 @@ mod tests {
     use tempfile::TempDir;
 
     async fn create_test_ltm() -> (LongTermMemory, TempDir) {
-        let temp_dir = TempDir::new().unwrap();
+        let temp_dir = TempDir::new().expect("TempDir should be creatable");
         let ltm = LongTermMemory::new(temp_dir.path());
-        ltm.init().await.unwrap();
+        ltm.init().await.expect("LTM init should succeed");
         (ltm, temp_dir)
     }
 
@@ -505,9 +505,9 @@ mod tests {
         let entry = MemoryEntry::new("Test content".to_string(), 0.8, MemoryType::Knowledge);
         let id = entry.id;
 
-        ltm.store(entry).await.unwrap();
+        ltm.store(entry).await.expect("LTM store should succeed");
 
-        let loaded = ltm.load(&id).await.unwrap();
+        let loaded = ltm.load(&id).await.expect("LTM load should succeed");
         assert_eq!(loaded.content, "Test content");
         assert_eq!(loaded.tier, MemoryTier::LTM);
     }
@@ -520,9 +520,9 @@ mod tests {
         let entry2 = MemoryEntry::new("Goodbye world".to_string(), 0.5, MemoryType::Knowledge);
         let entry3 = MemoryEntry::new("Test entry".to_string(), 0.3, MemoryType::Knowledge);
 
-        ltm.store(entry1).await.unwrap();
-        ltm.store(entry2).await.unwrap();
-        ltm.store(entry3).await.unwrap();
+        ltm.store(entry1).await.expect("LTM store should succeed");
+        ltm.store(entry2).await.expect("LTM store should succeed");
+        ltm.store(entry3).await.expect("LTM store should succeed");
 
         let results = ltm.search("world", 10).await;
         assert_eq!(results.len(), 2);
@@ -537,10 +537,10 @@ mod tests {
         let entry = MemoryEntry::new("Test".to_string(), 0.5, MemoryType::Conversation);
         let id = entry.id;
 
-        ltm.store(entry).await.unwrap();
+        ltm.store(entry).await.expect("LTM store should succeed");
         assert!(ltm.exists(&id).await);
 
-        ltm.delete(&id).await.unwrap();
+        ltm.delete(&id).await.expect("LTM delete should succeed");
         assert!(!ltm.exists(&id).await);
     }
 
@@ -551,7 +551,7 @@ mod tests {
         let entry = MemoryEntry::new("Test".to_string(), 0.7, MemoryType::Knowledge)
             .with_tags(vec!["tag1".to_string()]);
 
-        ltm.store(entry).await.unwrap();
+        ltm.store(entry).await.expect("LTM store should succeed");
 
         let snapshot = ltm.snapshot().await;
         assert_eq!(snapshot.tier, MemoryTier::LTM);
@@ -566,7 +566,10 @@ mod tests {
             .map(|i| MemoryEntry::new(format!("Entry {}", i), 0.5, MemoryType::Conversation))
             .collect();
 
-        let stored = ltm.store_batch(entries).await.unwrap();
+        let stored = ltm
+            .store_batch(entries)
+            .await
+            .expect("LTM store_batch should succeed");
         assert_eq!(stored, 5);
         assert_eq!(ltm.len().await, 5);
     }
@@ -577,7 +580,7 @@ mod tests {
         assert!(ltm.is_empty().await);
 
         let entry = MemoryEntry::new("Test".to_string(), 0.5, MemoryType::Knowledge);
-        ltm.store(entry).await.unwrap();
+        ltm.store(entry).await.expect("LTM store should succeed");
 
         assert!(!ltm.is_empty().await);
     }
@@ -587,7 +590,7 @@ mod tests {
         let (ltm, _temp) = create_test_ltm().await;
 
         let entry = MemoryEntry::new("Test content here".to_string(), 0.5, MemoryType::Knowledge);
-        ltm.store(entry).await.unwrap();
+        ltm.store(entry).await.expect("LTM store should succeed");
 
         let size = ltm.total_size().await;
         assert!(size > 0);
@@ -599,7 +602,7 @@ mod tests {
 
         for i in 0..3 {
             let entry = MemoryEntry::new(format!("Entry {}", i), 0.5, MemoryType::Conversation);
-            ltm.store(entry).await.unwrap();
+            ltm.store(entry).await.expect("LTM store should succeed");
         }
 
         let all = ltm.list(None).await;
@@ -617,9 +620,9 @@ mod tests {
         let entry2 = MemoryEntry::new("High importance".to_string(), 0.9, MemoryType::Knowledge);
         let entry3 = MemoryEntry::new("Medium importance".to_string(), 0.5, MemoryType::Knowledge);
 
-        ltm.store(entry1).await.unwrap();
-        ltm.store(entry2).await.unwrap();
-        ltm.store(entry3).await.unwrap();
+        ltm.store(entry1).await.expect("LTM store should succeed");
+        ltm.store(entry2).await.expect("LTM store should succeed");
+        ltm.store(entry3).await.expect("LTM store should succeed");
 
         let top = ltm.top_important(2).await;
         assert_eq!(top.len(), 2);
@@ -638,8 +641,8 @@ mod tests {
             MemoryType::Conversation,
         );
 
-        ltm.store(entry1).await.unwrap();
-        ltm.store(entry2).await.unwrap();
+        ltm.store(entry1).await.expect("LTM store should succeed");
+        ltm.store(entry2).await.expect("LTM store should succeed");
 
         let knowledge = ltm.search_by_type(MemoryType::Knowledge, 10).await;
         assert_eq!(knowledge.len(), 1);
@@ -656,9 +659,12 @@ mod tests {
         let id = entry.id;
         let initial_count = entry.access_count;
 
-        ltm.store(entry).await.unwrap();
+        ltm.store(entry).await.expect("LTM store should succeed");
 
-        let loaded = ltm.load_and_access(&id).await.unwrap();
+        let loaded = ltm
+            .load_and_access(&id)
+            .await
+            .expect("LTM load_and_access should succeed");
         assert!(loaded.access_count > initial_count);
     }
 
@@ -669,7 +675,7 @@ mod tests {
         let entry = MemoryEntry::new("Test".to_string(), 0.5, MemoryType::Knowledge);
         let id = entry.id;
 
-        ltm.store(entry).await.unwrap();
+        ltm.store(entry).await.expect("LTM store should succeed");
 
         let removed = ltm.remove(&id).await;
         assert!(removed.is_some());
@@ -686,7 +692,7 @@ mod tests {
 
         for i in 0..3 {
             let entry = MemoryEntry::new(format!("Entry {}", i), 0.5, MemoryType::Conversation);
-            ltm.store(entry).await.unwrap();
+            ltm.store(entry).await.expect("LTM store should succeed");
         }
 
         assert_eq!(ltm.len().await, 3);
@@ -701,7 +707,7 @@ mod tests {
         let (ltm, _temp) = create_test_ltm().await;
 
         let entry = MemoryEntry::new("Test".to_string(), 0.5, MemoryType::Knowledge);
-        ltm.store(entry).await.unwrap();
+        ltm.store(entry).await.expect("LTM store should succeed");
 
         // Flush should succeed
         let result = ltm.flush().await;

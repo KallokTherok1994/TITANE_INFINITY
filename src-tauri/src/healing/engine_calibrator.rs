@@ -409,8 +409,10 @@ mod tests {
     #[test]
     fn test_calibrator_config_serialization() {
         let config = CalibratorConfig::default();
-        let json = serde_json::to_string(&config).unwrap();
-        let restored: CalibratorConfig = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&config)
+            .expect("CalibratorConfig should serialize to JSON");
+        let restored: CalibratorConfig = serde_json::from_str(&json)
+            .expect("CalibratorConfig should deserialize from JSON");
         assert_eq!(config.sample_window_size, restored.sample_window_size);
     }
 
@@ -480,8 +482,10 @@ mod tests {
             error_rate: 0.05,
             memory_usage_mb: 512.0,
         };
-        let json = serde_json::to_string(&sample).unwrap();
-        let restored: PerformanceSample = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&sample)
+            .expect("PerformanceSample should serialize to JSON");
+        let restored: PerformanceSample = serde_json::from_str(&json)
+            .expect("PerformanceSample should deserialize from JSON");
         assert_eq!(sample.timestamp, restored.timestamp);
         assert_eq!(sample.latency_ms, restored.latency_ms);
     }
@@ -534,8 +538,10 @@ mod tests {
             established_at: 5000,
             sample_count: 15,
         };
-        let json = serde_json::to_string(&baseline).unwrap();
-        let restored: EngineBaseline = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&baseline)
+            .expect("EngineBaseline should serialize to JSON");
+        let restored: EngineBaseline = serde_json::from_str(&json)
+            .expect("EngineBaseline should deserialize from JSON");
         assert_eq!(baseline.engine_id, restored.engine_id);
     }
 
@@ -598,8 +604,10 @@ mod tests {
     #[test]
     fn test_drift_recommendation_serialization() {
         let rec = DriftRecommendation::SoftRecalibrate;
-        let json = serde_json::to_string(&rec).unwrap();
-        let restored: DriftRecommendation = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&rec)
+            .expect("DriftRecommendation should serialize to JSON");
+        let restored: DriftRecommendation = serde_json::from_str(&json)
+            .expect("DriftRecommendation should deserialize from JSON");
         assert_eq!(rec, restored);
     }
 
@@ -629,8 +637,10 @@ mod tests {
     #[test]
     fn test_calibration_action_serialization() {
         let action = CalibrationAction::FullRecalibration;
-        let json = serde_json::to_string(&action).unwrap();
-        let restored: CalibrationAction = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&action)
+            .expect("CalibrationAction should serialize to JSON");
+        let restored: CalibrationAction = serde_json::from_str(&json)
+            .expect("CalibrationAction should deserialize from JSON");
         assert_eq!(action, restored);
     }
 
@@ -773,7 +783,7 @@ mod tests {
 
         let result = calibrator.detect_drift("stable_engine");
         assert!(result.is_some());
-        let report = result.unwrap();
+        let report = result.expect("drift report should be present");
         assert!(!report.is_drifting);
         assert_eq!(report.recommendation, DriftRecommendation::NoAction);
     }
@@ -851,8 +861,10 @@ mod tests {
             calibrations_successful: 2,
             tracked_engines: 3,
         };
-        let json = serde_json::to_string(&stats).unwrap();
-        let restored: CalibratorStatsSnapshot = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&stats)
+            .expect("CalibratorStatsSnapshot should serialize to JSON");
+        let restored: CalibratorStatsSnapshot = serde_json::from_str(&json)
+            .expect("CalibratorStatsSnapshot should deserialize from JSON");
         assert_eq!(stats.samples_collected, restored.samples_collected);
     }
 
@@ -867,8 +879,10 @@ mod tests {
             duration_ms: 50,
             timestamp: 12345,
         };
-        let json = serde_json::to_string(&result).unwrap();
-        let restored: CalibrationResult = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&result)
+            .expect("CalibrationResult should serialize to JSON");
+        let restored: CalibrationResult = serde_json::from_str(&json)
+            .expect("CalibrationResult should deserialize from JSON");
         assert_eq!(result.engine_id, restored.engine_id);
     }
 
@@ -887,8 +901,10 @@ mod tests {
             recommendation: DriftRecommendation::SoftRecalibrate,
             timestamp: 99999,
         };
-        let json = serde_json::to_string(&report).unwrap();
-        let restored: DriftReport = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&report)
+            .expect("DriftReport should serialize to JSON");
+        let restored: DriftReport = serde_json::from_str(&json)
+            .expect("DriftReport should deserialize from JSON");
         assert_eq!(report.engine_id, restored.engine_id);
         assert_eq!(report.is_drifting, restored.is_drifting);
     }

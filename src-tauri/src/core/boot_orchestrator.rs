@@ -126,7 +126,12 @@ impl BootOrchestrator {
                 .engines
                 .iter_mut()
                 .find(|e| e.name == engine_name)
-                .unwrap();
+                .ok_or_else(|| {
+                    format!(
+                        "BootOrchestrator internal error: engine '{}' not found",
+                        engine_name
+                    )
+                })?;
 
             engine_info.state = EngineBootState::Initializing;
 

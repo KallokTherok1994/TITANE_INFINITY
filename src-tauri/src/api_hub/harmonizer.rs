@@ -331,7 +331,10 @@ impl ResponseHarmonizer {
         }
 
         if responses.len() == 1 {
-            return responses.into_iter().next().unwrap();
+            return responses
+                .into_iter()
+                .next()
+                .expect("responses len() == 1 ensures one element");
         }
 
         // Fusionner les contenus textuels

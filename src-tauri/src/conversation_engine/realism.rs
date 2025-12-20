@@ -247,8 +247,9 @@ impl ConversationalRealismProcessor {
 
         // Ajouter liens si pertinents
         if !smart_links.is_empty() && matches!(intention, IntentionLevel::Exploratory) {
-            let link_text = smart_links.first().unwrap();
-            result.push_str(&format!("\n\n{}", link_text));
+            if let Some(link_text) = smart_links.first() {
+                result.push_str(&format!("\n\n{}", link_text));
+            }
         }
 
         result
@@ -260,11 +261,12 @@ impl ConversationalRealismProcessor {
 
         if sentences.len() > 3 {
             // Prendre les 3 phrases les plus importantes
+            let last_sentence = sentences.last().copied().unwrap_or("");
             format!(
                 "{}.\n{}.\n{}.",
                 sentences[0].trim(),
                 sentences[sentences.len() / 2].trim(),
-                sentences.last().unwrap().trim()
+                last_sentence.trim()
             )
         } else {
             text.to_string()

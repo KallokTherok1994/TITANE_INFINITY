@@ -332,21 +332,19 @@ pub struct TemporalStats {
 
 /// Génère un ID de snapshot
 fn generate_snapshot_id() -> String {
-    use std::time::{SystemTime, UNIX_EPOCH};
-    let timestamp = SystemTime::now()
+    use std::time::{Duration, SystemTime, UNIX_EPOCH};
+
+    let nanos = SystemTime::now()
         .duration_since(UNIX_EPOCH)
-        .unwrap()
+        .unwrap_or_else(|_| Duration::from_secs(0))
         .as_nanos();
-    format!("snap-{:x}", timestamp)
+
+    format!("snap-{:x}", nanos)
 }
 
 /// Retourne le timestamp actuel
 fn current_timestamp() -> u64 {
-    use std::time::{SystemTime, UNIX_EPOCH};
-    SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .unwrap()
-        .as_millis() as u64
+    crate::core::utils::now_ms()
 }
 
 #[cfg(test)]

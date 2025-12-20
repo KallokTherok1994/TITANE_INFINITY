@@ -795,8 +795,9 @@ mod tests {
     #[test]
     fn test_body_profile_serialization() {
         let profile = BodyProfile::default();
-        let json = serde_json::to_string(&profile).unwrap();
-        let restored: BodyProfile = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&profile).expect("BodyProfile should serialize to JSON");
+        let restored: BodyProfile =
+            serde_json::from_str(&json).expect("BodyProfile should deserialize from JSON");
         assert_eq!(restored.height, 1.68);
     }
 
@@ -826,8 +827,9 @@ mod tests {
     #[test]
     fn test_bone_transform_serialization() {
         let bone = BoneTransform::default();
-        let json = serde_json::to_string(&bone).unwrap();
-        let restored: BoneTransform = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&bone).expect("BoneTransform should serialize to JSON");
+        let restored: BoneTransform =
+            serde_json::from_str(&json).expect("BoneTransform should deserialize from JSON");
         assert_eq!(restored.position, [0.0, 0.0, 0.0]);
     }
 
@@ -866,7 +868,10 @@ mod tests {
         let mut skeleton = SkeletonModel::new(profile);
         skeleton.apply_default_posture();
 
-        let head = skeleton.bones.get("head").unwrap();
+        let head = skeleton
+            .bones
+            .get("head")
+            .expect("SkeletonModel should contain a 'head' bone");
         assert!(head.position[1] > 0.0);
     }
 
@@ -925,8 +930,10 @@ mod tests {
             duration_ms: 500,
             easing: "ease-out".to_string(),
         };
-        let json = serde_json::to_string(&keyframe).unwrap();
-        let restored: GestureKeyframe = serde_json::from_str(&json).unwrap();
+        let json =
+            serde_json::to_string(&keyframe).expect("GestureKeyframe should serialize to JSON");
+        let restored: GestureKeyframe =
+            serde_json::from_str(&json).expect("GestureKeyframe should deserialize from JSON");
         assert_eq!(restored.bone_name, "head");
     }
 
@@ -963,7 +970,15 @@ mod tests {
     fn test_motion_layer_activate_gesture() {
         let mut layer = MotionLayer::new();
         layer.activate_gesture("explaining");
-        assert_eq!(layer.current_gesture.as_ref().unwrap().name, "explaining");
+        assert_eq!(
+            layer
+                .current_gesture
+                .as_ref()
+                .expect("current_gesture should be set after activate_gesture")
+                .name
+                .as_str(),
+            "explaining"
+        );
         assert_eq!(layer.transition_progress, 0.0);
     }
 
@@ -1086,8 +1101,10 @@ mod tests {
     #[test]
     fn test_avatar_state_snapshot_serialization() {
         let snapshot = AvatarStateSnapshot::default();
-        let json = serde_json::to_string(&snapshot).unwrap();
-        let restored: AvatarStateSnapshot = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&snapshot)
+            .expect("AvatarStateSnapshot should serialize to JSON");
+        let restored: AvatarStateSnapshot =
+            serde_json::from_str(&json).expect("AvatarStateSnapshot should deserialize from JSON");
         assert_eq!(restored.cognitive_load, 0.3);
     }
 
@@ -1157,7 +1174,13 @@ mod tests {
         let mut engine = FullBodyAvatarEngine::new();
         engine.activate_gesture("explaining");
         assert_eq!(
-            engine.motion_layer.current_gesture.as_ref().unwrap().name,
+            engine
+                .motion_layer
+                .current_gesture
+                .as_ref()
+                .expect("current_gesture should be set after activate_gesture")
+                .name
+                .as_str(),
             "explaining"
         );
     }
@@ -1196,7 +1219,13 @@ mod tests {
         let mut engine = FullBodyAvatarEngine::new();
         engine.on_wake_word();
         assert_eq!(
-            engine.motion_layer.current_gesture.as_ref().unwrap().name,
+            engine
+                .motion_layer
+                .current_gesture
+                .as_ref()
+                .expect("current_gesture should be set after on_wake_word")
+                .name
+                .as_str(),
             "attention_shift"
         );
     }
@@ -1217,8 +1246,10 @@ mod tests {
     fn test_skeleton_snapshot_serialization() {
         let engine = FullBodyAvatarEngine::new();
         let snapshot = engine.export_skeleton_snapshot();
-        let json = serde_json::to_string(&snapshot).unwrap();
-        let restored: SkeletonSnapshot = serde_json::from_str(&json).unwrap();
+        let json =
+            serde_json::to_string(&snapshot).expect("SkeletonSnapshot should serialize to JSON");
+        let restored: SkeletonSnapshot =
+            serde_json::from_str(&json).expect("SkeletonSnapshot should deserialize from JSON");
         assert_eq!(restored.frame, 0);
     }
 
@@ -1229,7 +1260,9 @@ mod tests {
     #[test]
     fn test_get_fullbody_engine() {
         let engine = get_fullbody_engine();
-        let guard = engine.lock().unwrap();
+        let guard = engine
+            .lock()
+            .expect("get_fullbody_engine mutex lock should succeed");
         assert_eq!(guard.target_fps, 60);
     }
 }

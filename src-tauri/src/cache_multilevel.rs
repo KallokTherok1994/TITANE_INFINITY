@@ -126,7 +126,8 @@ impl<V: Clone> L1Cache<V> {
     pub fn new(capacity: usize, ttl_seconds: u64) -> Self {
         Self {
             cache: LruCache::new(
-                NonZeroUsize::new(capacity).unwrap_or(NonZeroUsize::new(1000).unwrap()),
+                NonZeroUsize::new(capacity)
+                    .unwrap_or_else(|| NonZeroUsize::new(1000).expect("1000 is non-zero")),
             ),
             ttl: Duration::from_secs(ttl_seconds),
             access_times: HashMap::new(),
@@ -172,7 +173,8 @@ impl L2Cache {
     pub fn new(capacity: usize) -> Self {
         Self {
             cache: LruCache::new(
-                NonZeroUsize::new(capacity).unwrap_or(NonZeroUsize::new(5000).unwrap()),
+                NonZeroUsize::new(capacity)
+                    .unwrap_or_else(|| NonZeroUsize::new(5000).expect("5000 is non-zero")),
             ),
         }
     }

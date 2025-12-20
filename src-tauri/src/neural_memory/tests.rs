@@ -18,7 +18,8 @@ mod stm_tests {
                 MemoryEntry::new(format!("Content {}", i), 0.5, MemoryType::Conversation);
             entry.id = format!("id_{}", i);
             entry.created_at = i as i64;
-            stm.push(entry).unwrap();
+            stm.push(entry)
+                .expect("STM push should succeed for a valid MemoryEntry");
         }
 
         // Should only have 5 most recent entries
@@ -39,7 +40,8 @@ mod stm_tests {
         // Add test entries
         for keyword in &["rust", "javascript", "rust async"] {
             let entry = MemoryEntry::new(keyword.to_string(), 0.5, MemoryType::Factual);
-            stm.push(entry).unwrap();
+            stm.push(entry)
+                .expect("STM push should succeed for a valid MemoryEntry");
         }
 
         // Search for "rust"
@@ -65,7 +67,8 @@ mod mtm_tests {
                 MemoryType::Conversation,
             );
             entry.id = format!("id_{}", i);
-            mtm.push(entry).unwrap();
+            mtm.push(entry)
+                .expect("MTM push should succeed for a valid MemoryEntry");
         }
 
         // Should maintain capacity and keep most important
@@ -82,7 +85,8 @@ mod mtm_tests {
         for (i, &imp) in importances.iter().enumerate() {
             let mut entry = MemoryEntry::new(format!("Content {}", i), imp, MemoryType::Factual);
             entry.id = format!("id_{}", i);
-            mtm.push(entry).unwrap();
+            mtm.push(entry)
+                .expect("MTM push should succeed for a valid MemoryEntry");
         }
 
         // Get all should be sorted by importance (descending)
@@ -118,9 +122,15 @@ mod vector_tests {
         let entry3 = create_test_entry("doc3", "metadata3");
 
         // Add vectors
-        store.insert(&entry1, vec![1.0, 0.0, 0.0]).unwrap();
-        store.insert(&entry2, vec![0.0, 1.0, 0.0]).unwrap();
-        store.insert(&entry3, vec![0.9, 0.1, 0.0]).unwrap();
+        store
+            .insert(&entry1, vec![1.0, 0.0, 0.0])
+            .expect("VectorStore insert should succeed with correct dimension");
+        store
+            .insert(&entry2, vec![0.0, 1.0, 0.0])
+            .expect("VectorStore insert should succeed with correct dimension");
+        store
+            .insert(&entry3, vec![0.9, 0.1, 0.0])
+            .expect("VectorStore insert should succeed with correct dimension");
 
         // Search for vector similar to doc1
         let query = vec![1.0, 0.0, 0.0];
@@ -147,8 +157,12 @@ mod vector_tests {
         let entry1 = create_test_entry("doc1", "meta1");
         let entry2 = create_test_entry("doc2", "meta2");
 
-        store.insert(&entry1, vec![1.0, 0.0]).unwrap();
-        store.insert(&entry2, vec![0.0, 1.0]).unwrap();
+        store
+            .insert(&entry1, vec![1.0, 0.0])
+            .expect("VectorStore insert should succeed with correct dimension");
+        store
+            .insert(&entry2, vec![0.0, 1.0])
+            .expect("VectorStore insert should succeed with correct dimension");
 
         store.remove("doc1");
         // Removal is void - just verify it's gone below
@@ -169,8 +183,12 @@ mod vector_tests {
         let entry1 = create_test_entry("doc1", "meta1");
         let entry2 = create_test_entry("doc2", "meta2");
 
-        store.insert(&entry1, vec![1.0, 0.0]).unwrap();
-        store.insert(&entry2, vec![0.0, 1.0]).unwrap();
+        store
+            .insert(&entry1, vec![1.0, 0.0])
+            .expect("VectorStore insert should succeed with correct dimension");
+        store
+            .insert(&entry2, vec![0.0, 1.0])
+            .expect("VectorStore insert should succeed with correct dimension");
 
         store.clear();
 
@@ -190,7 +208,7 @@ mod consolidation_tests {
     fn create_test_entry(id: &str, importance: f32, age_secs: i64) -> MemoryEntry {
         let now = SystemTime::now()
             .duration_since(UNIX_EPOCH)
-            .unwrap()
+            .expect("SystemTime should be after UNIX_EPOCH")
             .as_secs() as i64;
 
         let mut entry = MemoryEntry::new(
@@ -216,11 +234,14 @@ mod consolidation_tests {
         let mut ltm = LongTermMemory::default();
 
         // Add old entries to STM (should be transferred)
-        stm.push(create_test_entry("old1", 0.6, 5)).unwrap(); // 5 seconds old
-        stm.push(create_test_entry("old2", 0.7, 5)).unwrap();
+        stm.push(create_test_entry("old1", 0.6, 5))
+            .expect("STM push should succeed for a valid MemoryEntry"); // 5 seconds old
+        stm.push(create_test_entry("old2", 0.7, 5))
+            .expect("STM push should succeed for a valid MemoryEntry");
 
         // Add new entry to STM (should stay)
-        stm.push(create_test_entry("new1", 0.5, 0)).unwrap();
+        stm.push(create_test_entry("new1", 0.5, 0))
+            .expect("STM push should succeed for a valid MemoryEntry");
 
         // Run consolidation
         let result = consolidator.consolidate(&mut stm, &mut mtm, &mut ltm).await;

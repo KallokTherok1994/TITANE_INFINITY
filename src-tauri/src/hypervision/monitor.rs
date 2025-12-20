@@ -346,7 +346,8 @@ mod tests {
             coherence: 88.8,
             stability: 91.1,
         };
-        let json = serde_json::to_string(&metrics).unwrap();
+        let json = serde_json::to_string(&metrics)
+            .expect("SystemMetrics should serialize to JSON");
         assert!(json.contains("cpu_usage"));
         assert!(json.contains("coherence"));
     }
@@ -354,7 +355,8 @@ mod tests {
     #[test]
     fn test_system_metrics_deserialize() {
         let json = r#"{"timestamp":100,"cpu_usage":50.0,"memory_usage":60.0,"disk_usage":70.0,"network_rx":1000,"network_tx":500,"active_processes":100,"coherence":95.0,"stability":98.0}"#;
-        let metrics: SystemMetrics = serde_json::from_str(json).unwrap();
+        let metrics: SystemMetrics =
+            serde_json::from_str(json).expect("SystemMetrics should deserialize");
         assert_eq!(metrics.timestamp, 100);
         assert_eq!(metrics.cpu_usage, 50.0);
     }
@@ -372,8 +374,10 @@ mod tests {
             coherence: 99.9,
             stability: 99.5,
         };
-        let json = serde_json::to_string(&original).unwrap();
-        let restored: SystemMetrics = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&original)
+            .expect("SystemMetrics should serialize");
+        let restored: SystemMetrics =
+            serde_json::from_str(&json).expect("SystemMetrics should deserialize");
         assert_eq!(restored.timestamp, 55555);
     }
 
@@ -462,7 +466,8 @@ mod tests {
             errors: 3,
             warnings: 7,
         };
-        let json = serde_json::to_string(&layer).unwrap();
+        let json = serde_json::to_string(&layer)
+            .expect("LayerMetrics should serialize to JSON");
         assert!(json.contains("layer_id"));
         assert!(json.contains("Logic"));
     }
@@ -471,7 +476,8 @@ mod tests {
     fn test_layer_metrics_deserialize() {
         let json =
             r#"{"layer_id":1,"name":"Network","health":92.5,"load":35.0,"errors":2,"warnings":4}"#;
-        let layer: LayerMetrics = serde_json::from_str(json).unwrap();
+        let layer: LayerMetrics =
+            serde_json::from_str(json).expect("LayerMetrics should deserialize");
         assert_eq!(layer.layer_id, 1);
         assert_eq!(layer.name, "Network");
     }
@@ -486,8 +492,10 @@ mod tests {
             errors: 1,
             warnings: 3,
         };
-        let json = serde_json::to_string(&original).unwrap();
-        let restored: LayerMetrics = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&original)
+            .expect("LayerMetrics should serialize");
+        let restored: LayerMetrics =
+            serde_json::from_str(&json).expect("LayerMetrics should deserialize");
         assert_eq!(restored.layer_id, 3);
     }
 
@@ -575,7 +583,8 @@ mod tests {
             timestamp: 55555,
             auto_resolved: true,
         };
-        let json = serde_json::to_string(&anomaly).unwrap();
+        let json = serde_json::to_string(&anomaly)
+            .expect("Anomaly should serialize to JSON");
         assert!(json.contains("ser-anom"));
         assert!(json.contains("medium"));
     }
@@ -583,7 +592,7 @@ mod tests {
     #[test]
     fn test_anomaly_deserialize() {
         let json = r#"{"id":"deser-anom","severity":"low","layer":"Network","description":"Test","timestamp":100,"auto_resolved":true}"#;
-        let anomaly: Anomaly = serde_json::from_str(json).unwrap();
+        let anomaly: Anomaly = serde_json::from_str(json).expect("Anomaly should deserialize");
         assert_eq!(anomaly.id, "deser-anom");
         assert!(anomaly.auto_resolved);
     }
@@ -598,8 +607,9 @@ mod tests {
             timestamp: 77777,
             auto_resolved: false,
         };
-        let json = serde_json::to_string(&original).unwrap();
-        let restored: Anomaly = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&original)
+            .expect("Anomaly should serialize");
+        let restored: Anomaly = serde_json::from_str(&json).expect("Anomaly should deserialize");
         assert_eq!(restored.id, "roundtrip-anom");
     }
 
@@ -703,7 +713,13 @@ mod tests {
         };
         let anomaly = HyperVisionEngine::detect_anomaly(&metrics).await;
         assert!(anomaly.is_some());
-        assert_eq!(anomaly.unwrap().severity, "high");
+        assert_eq!(
+            anomaly
+                .as_ref()
+                .expect("detect_anomaly should return Some for high CPU")
+                .severity,
+            "high"
+        );
     }
 
     #[tokio::test]
@@ -721,6 +737,12 @@ mod tests {
         };
         let anomaly = HyperVisionEngine::detect_anomaly(&metrics).await;
         assert!(anomaly.is_some());
-        assert_eq!(anomaly.unwrap().severity, "critical");
+        assert_eq!(
+            anomaly
+                .as_ref()
+                .expect("detect_anomaly should return Some for critical memory")
+                .severity,
+            "critical"
+        );
     }
 }

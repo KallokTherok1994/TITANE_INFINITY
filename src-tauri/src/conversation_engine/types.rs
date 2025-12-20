@@ -509,14 +509,16 @@ mod tests {
     #[test]
     fn test_conversation_mode_serialize() {
         let mode = ConversationMode::Synthesis;
-        let json = serde_json::to_string(&mode).unwrap();
+        let json = serde_json::to_string(&mode)
+            .expect("ConversationMode should serialize to JSON");
         assert!(json.contains("Synthesis"));
     }
 
     #[test]
     fn test_conversation_mode_deserialize() {
         let json = "\"Planning\"";
-        let mode: ConversationMode = serde_json::from_str(json).unwrap();
+        let mode: ConversationMode =
+            serde_json::from_str(json).expect("ConversationMode should deserialize from JSON");
         assert_eq!(mode, ConversationMode::Planning);
     }
 
@@ -665,14 +667,15 @@ mod tests {
     #[test]
     fn test_intention_serialize() {
         let intention = Intention::Question;
-        let json = serde_json::to_string(&intention).unwrap();
+        let json = serde_json::to_string(&intention).expect("Intention should serialize to JSON");
         assert!(json.contains("Question"));
     }
 
     #[test]
     fn test_intention_deserialize() {
         let json = "\"Action\"";
-        let intention: Intention = serde_json::from_str(json).unwrap();
+        let intention: Intention =
+            serde_json::from_str(json).expect("Intention should deserialize from JSON");
         assert_eq!(intention, Intention::Action);
     }
 
@@ -766,14 +769,15 @@ mod tests {
     #[test]
     fn test_emotion_state_serialize() {
         let state = EmotionState::new(0.5, 0.5, 0.5);
-        let json = serde_json::to_string(&state).unwrap();
+        let json = serde_json::to_string(&state).expect("EmotionState should serialize to JSON");
         assert!(json.contains("valence"));
     }
 
     #[test]
     fn test_emotion_state_deserialize() {
         let json = r#"{"valence":0.5,"intensity":0.6,"energy":0.7}"#;
-        let state: EmotionState = serde_json::from_str(json).unwrap();
+        let state: EmotionState =
+            serde_json::from_str(json).expect("EmotionState should deserialize from JSON");
         assert_eq!(state.valence, 0.5);
         assert_eq!(state.intensity, 0.6);
         assert_eq!(state.energy, 0.7);
@@ -803,7 +807,7 @@ mod tests {
     #[test]
     fn test_memory_effect_serialize() {
         let effect = MemoryEffect::Connect;
-        let json = serde_json::to_string(&effect).unwrap();
+        let json = serde_json::to_string(&effect).expect("MemoryEffect should serialize to JSON");
         assert!(json.contains("Connect"));
     }
 
@@ -837,7 +841,7 @@ mod tests {
     #[test]
     fn test_memory_layers_serialize() {
         let layers = MemoryLayers::default();
-        let json = serde_json::to_string(&layers).unwrap();
+        let json = serde_json::to_string(&layers).expect("MemoryLayers should serialize to JSON");
         assert!(json.contains("immediate"));
     }
 
@@ -859,7 +863,7 @@ mod tests {
     #[test]
     fn test_episode_type_serialize_snake_case() {
         let episode = EpisodeType::ConversationKey;
-        let json = serde_json::to_string(&episode).unwrap();
+        let json = serde_json::to_string(&episode).expect("EpisodeType should serialize to JSON");
         assert!(json.contains("conversation_key"));
     }
 
@@ -934,7 +938,7 @@ mod tests {
     #[test]
     fn test_ai_config_serialize() {
         let config = AIConfig::default();
-        let json = serde_json::to_string(&config).unwrap();
+        let json = serde_json::to_string(&config).expect("AIConfig should serialize to JSON");
         assert!(json.contains("temperature"));
     }
 
@@ -979,7 +983,7 @@ mod tests {
     #[test]
     fn test_health_status_serialize() {
         let status = HealthStatus::Warning;
-        let json = serde_json::to_string(&status).unwrap();
+        let json = serde_json::to_string(&status).expect("HealthStatus should serialize to JSON");
         assert!(json.contains("Warning"));
     }
 

@@ -48,8 +48,8 @@ impl IdeationEngine {
     pub async fn generate_ideas(&self, _context: String) -> IdeationReport {
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_secs();
+            .map(|d| d.as_secs())
+            .unwrap_or_else(|_| crate::core::utils::now_ms() / 1000);
 
         let ideas = vec![
             Idea {

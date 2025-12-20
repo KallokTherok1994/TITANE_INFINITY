@@ -217,18 +217,27 @@ mod tests {
     #[tokio::test]
     async fn test_cognitive_gravity_lifecycle() {
         let engine = CognitiveGravityEngine::default();
-        engine.initialize().await.unwrap();
+        engine
+            .initialize()
+            .await
+            .expect("CognitiveGravityEngine should initialize in tests");
 
         let field = engine.get_field().await;
         assert!(field.cognitive_mass >= 0.0 && field.cognitive_mass <= 1.0);
 
-        engine.shutdown().await.unwrap();
+        engine
+            .shutdown()
+            .await
+            .expect("CognitiveGravityEngine should shutdown in tests");
     }
 
     #[tokio::test]
     async fn test_feedback_loop_integration() {
         let engine = CognitiveGravityEngine::default();
-        engine.initialize().await.unwrap();
+        engine
+            .initialize()
+            .await
+            .expect("CognitiveGravityEngine should initialize in tests");
 
         // Wait for at least one feedback cycle
         tokio::time::sleep(tokio::time::Duration::from_millis(150)).await;
@@ -248,7 +257,10 @@ mod tests {
         let anti_attractors = engine.get_anti_attractors().await;
         assert!(anti_attractors.overload >= 0.0 && anti_attractors.overload <= 1.0);
 
-        engine.shutdown().await.unwrap();
+        engine
+            .shutdown()
+            .await
+            .expect("CognitiveGravityEngine should shutdown in tests");
     }
 
     #[tokio::test]
@@ -261,13 +273,13 @@ mod tests {
         feedback_loop
             .feedback_cycle(&mut attractors, &mut anti_attractors)
             .await
-            .unwrap();
+            .expect("feedback_cycle should succeed in tests");
 
         // Verify feedback was applied
         let last_feedback = feedback_loop.get_last_feedback();
         assert!(last_feedback.is_some(), "Feedback should be collected");
 
-        let feedback = last_feedback.unwrap();
+        let feedback = last_feedback.expect("Feedback should be present after cycle");
         assert!(feedback.kernel.system_health >= 0.0);
         assert!(feedback.omega.reflection_depth >= 0.0);
         assert!(feedback.memory.vector_alignment >= 0.0);
@@ -294,19 +306,19 @@ mod tests {
         // Collect real feedback
         let kernel = RealFeedbackCollector::collect_kernel_feedback()
             .await
-            .unwrap();
+            .expect("collect_kernel_feedback should succeed in tests");
         let omega = RealFeedbackCollector::collect_omega_feedback()
             .await
-            .unwrap();
+            .expect("collect_omega_feedback should succeed in tests");
         let memory = RealFeedbackCollector::collect_memory_feedback()
             .await
-            .unwrap();
+            .expect("collect_memory_feedback should succeed in tests");
         let agents = RealFeedbackCollector::collect_agents_feedback()
             .await
-            .unwrap();
+            .expect("collect_agents_feedback should succeed in tests");
         let harmonic = RealFeedbackCollector::collect_harmonic_feedback()
             .await
-            .unwrap();
+            .expect("collect_harmonic_feedback should succeed in tests");
 
         // Apply feedback to attractors
         kernel.apply_to_attractors(&mut attractors);
@@ -359,22 +371,22 @@ mod tests {
         // Collect real feedback
         let kernel = RealFeedbackCollector::collect_kernel_feedback()
             .await
-            .unwrap();
+            .expect("collect_kernel_feedback should succeed in tests");
         let omega = RealFeedbackCollector::collect_omega_feedback()
             .await
-            .unwrap();
+            .expect("collect_omega_feedback should succeed in tests");
         let memory = RealFeedbackCollector::collect_memory_feedback()
             .await
-            .unwrap();
+            .expect("collect_memory_feedback should succeed in tests");
         let agents = RealFeedbackCollector::collect_agents_feedback()
             .await
-            .unwrap();
+            .expect("collect_agents_feedback should succeed in tests");
         let harmonic = RealFeedbackCollector::collect_harmonic_feedback()
             .await
-            .unwrap();
+            .expect("collect_harmonic_feedback should succeed in tests");
         let performance = RealFeedbackCollector::collect_performance_feedback()
             .await
-            .unwrap();
+            .expect("collect_performance_feedback should succeed in tests");
 
         // Apply feedback to anti-attractors
         kernel.apply_to_anti_attractors(&mut anti_attractors);
@@ -408,7 +420,10 @@ mod tests {
     #[tokio::test]
     async fn test_gravity_field_response() {
         let engine = CognitiveGravityEngine::default();
-        engine.initialize().await.unwrap();
+        engine
+            .initialize()
+            .await
+            .expect("CognitiveGravityEngine should initialize in tests");
 
         // Get initial field state
         let initial_field = engine.get_field().await;
@@ -439,13 +454,19 @@ mod tests {
         assert!(updated_field.resonance >= 0.0);
         assert!(updated_field.stability >= 0.0);
 
-        engine.shutdown().await.unwrap();
+        engine
+            .shutdown()
+            .await
+            .expect("CognitiveGravityEngine should shutdown in tests");
     }
 
     #[tokio::test]
     async fn test_harmonic_gravity_feedback_integration() {
         let engine = CognitiveGravityEngine::default();
-        engine.initialize().await.unwrap();
+        engine
+            .initialize()
+            .await
+            .expect("CognitiveGravityEngine should initialize in tests");
 
         // Simulate high harmony from HarmonicOS
         let mut attractors = engine.get_attractors().await;
@@ -476,6 +497,9 @@ mod tests {
             "Harmonic resonance should be present in field"
         );
 
-        engine.shutdown().await.unwrap();
+        engine
+            .shutdown()
+            .await
+            .expect("CognitiveGravityEngine should shutdown in tests");
     }
 }

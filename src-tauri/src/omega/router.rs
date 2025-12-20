@@ -678,7 +678,10 @@ mod tests {
     async fn test_classifier_query() {
         let classifier = IntentClassifier::new();
         let input = PipelineInput::new("Qu'est-ce que Rust?");
-        let result = classifier.classify(&input).await.unwrap();
+        let result = classifier
+            .classify(&input)
+            .await
+            .expect("IntentClassifier::classify should succeed for valid input");
 
         assert_eq!(result.intent, Intent::Query);
         assert!(result.confidence > 0.5);
@@ -688,7 +691,10 @@ mod tests {
     async fn test_classifier_task() {
         let classifier = IntentClassifier::new();
         let input = PipelineInput::new("Crée une fonction pour calculer la somme");
-        let result = classifier.classify(&input).await.unwrap();
+        let result = classifier
+            .classify(&input)
+            .await
+            .expect("IntentClassifier::classify should succeed for valid input");
 
         assert_eq!(result.intent, Intent::Task);
     }
@@ -697,7 +703,10 @@ mod tests {
     async fn test_classifier_help() {
         let classifier = IntentClassifier::new();
         let input = PipelineInput::new("Peux-tu m'aider avec ce problème?");
-        let result = classifier.classify(&input).await.unwrap();
+        let result = classifier
+            .classify(&input)
+            .await
+            .expect("IntentClassifier::classify should succeed for valid input");
 
         assert_eq!(result.intent, Intent::Help);
     }
@@ -707,10 +716,16 @@ mod tests {
         let classifier = IntentClassifier::new();
         let input = PipelineInput::new("Hello, comment ça va?");
 
-        let result1 = classifier.classify(&input).await.unwrap();
+        let result1 = classifier
+            .classify(&input)
+            .await
+            .expect("IntentClassifier::classify should succeed for valid input");
         assert!(!result1.cache_hit);
 
-        let result2 = classifier.classify(&input).await.unwrap();
+        let result2 = classifier
+            .classify(&input)
+            .await
+            .expect("IntentClassifier::classify should succeed for valid input");
         assert!(result2.cache_hit);
     }
 
@@ -718,7 +733,10 @@ mod tests {
     async fn test_router() {
         let router = Router::new();
         let input = PipelineInput::new("Debug this error");
-        let result = router.route(&input).await.unwrap();
+        let result = router
+            .route(&input)
+            .await
+            .expect("Router::route should succeed for valid input");
 
         assert_eq!(result.intent, Intent::Debug);
         assert!(result.handlers.contains(&"debugger".to_string()));
@@ -777,7 +795,10 @@ mod tests {
     async fn test_classifier_emotional() {
         let classifier = IntentClassifier::new();
         let input = PipelineInput::new("Je me sens stressé aujourd'hui");
-        let result = classifier.classify(&input).await.unwrap();
+        let result = classifier
+            .classify(&input)
+            .await
+            .expect("IntentClassifier::classify should succeed for valid input");
 
         assert_eq!(result.intent, Intent::Emotional);
     }
@@ -786,7 +807,10 @@ mod tests {
     async fn test_classifier_command() {
         let classifier = IntentClassifier::new();
         let input = PipelineInput::new("Lance le build maintenant");
-        let result = classifier.classify(&input).await.unwrap();
+        let result = classifier
+            .classify(&input)
+            .await
+            .expect("IntentClassifier::classify should succeed for valid input");
 
         assert_eq!(result.intent, Intent::Command);
     }
@@ -795,7 +819,10 @@ mod tests {
     async fn test_classifier_creative() {
         let classifier = IntentClassifier::new();
         let input = PipelineInput::new("Imagine une histoire originale");
-        let result = classifier.classify(&input).await.unwrap();
+        let result = classifier
+            .classify(&input)
+            .await
+            .expect("IntentClassifier::classify should succeed for valid input");
 
         assert_eq!(result.intent, Intent::Creative);
     }
@@ -804,7 +831,10 @@ mod tests {
     async fn test_classifier_meta() {
         let classifier = IntentClassifier::new();
         let input = PipelineInput::new("Qui es-tu?");
-        let result = classifier.classify(&input).await.unwrap();
+        let result = classifier
+            .classify(&input)
+            .await
+            .expect("IntentClassifier::classify should succeed for valid input");
 
         assert_eq!(result.intent, Intent::Meta);
     }
@@ -813,7 +843,10 @@ mod tests {
     async fn test_classifier_explanation() {
         let classifier = IntentClassifier::new();
         let input = PipelineInput::new("Explique-moi ce concept");
-        let result = classifier.classify(&input).await.unwrap();
+        let result = classifier
+            .classify(&input)
+            .await
+            .expect("IntentClassifier::classify should succeed for valid input");
 
         assert_eq!(result.intent, Intent::Explanation);
     }
@@ -822,7 +855,10 @@ mod tests {
     async fn test_classifier_conversation() {
         let classifier = IntentClassifier::new();
         let input = PipelineInput::new("Bonjour!");
-        let result = classifier.classify(&input).await.unwrap();
+        let result = classifier
+            .classify(&input)
+            .await
+            .expect("IntentClassifier::classify should succeed for valid input");
 
         assert_eq!(result.intent, Intent::Conversation);
     }
@@ -833,7 +869,10 @@ mod tests {
         let input = PipelineInput::new("Test cache clear");
 
         // Populate cache
-        let _ = classifier.classify(&input).await.unwrap();
+        let _ = classifier
+            .classify(&input)
+            .await
+            .expect("IntentClassifier::classify should succeed for valid input");
 
         // Clear cache
         classifier.clear_cache().await;
@@ -892,7 +931,10 @@ mod tests {
     async fn test_secondary_intents() {
         let classifier = IntentClassifier::new();
         let input = PipelineInput::new("Aide-moi à comprendre comment fonctionne ce code?");
-        let result = classifier.classify(&input).await.unwrap();
+        let result = classifier
+            .classify(&input)
+            .await
+            .expect("IntentClassifier::classify should succeed for valid input");
 
         // Should have secondary intents
         assert!(!result.secondary_intents.is_empty() || result.confidence > 0.5);

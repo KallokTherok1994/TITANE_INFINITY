@@ -3,7 +3,7 @@
 //   Validation complète de tous les systèmes de sécurité
 // ═══════════════════════════════════════════════════════════════
 
-// TODO v25.x: Migrer vers unified_memory_v2::encryption
+// NOTE v25.x: Migrer vers unified_memory_v2::encryption
 #![allow(deprecated)]
 
 use serde::{Deserialize, Serialize};
@@ -29,10 +29,7 @@ pub struct HardeningReport {
 impl HardeningReport {
     pub fn new() -> Self {
         Self {
-            timestamp: std::time::SystemTime::now()
-                .duration_since(std::time::UNIX_EPOCH)
-                .unwrap()
-                .as_secs(),
+            timestamp: crate::core::utils::now_ms() / 1000,
             total_tests: 0,
             passed_tests: 0,
             failed_tests: 0,

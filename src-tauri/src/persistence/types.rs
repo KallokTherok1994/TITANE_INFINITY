@@ -357,10 +357,11 @@ mod tests {
     #[test]
     fn test_event_origin_serialization() {
         let origin = EventOrigin::SelfHeal;
-        let json = serde_json::to_string(&origin).unwrap();
+        let json = serde_json::to_string(&origin).expect("EventOrigin should serialize to JSON");
         assert_eq!(json, "\"self_heal\"");
 
-        let restored: EventOrigin = serde_json::from_str(&json).unwrap();
+        let restored: EventOrigin =
+            serde_json::from_str(&json).expect("EventOrigin should deserialize from JSON");
         assert_eq!(restored, EventOrigin::SelfHeal);
     }
 
@@ -437,7 +438,7 @@ mod tests {
             TitanEvent::new("test", "action", serde_json::json!({})).with_metadata(metadata);
 
         assert!(event.metadata.is_some());
-        let meta = event.metadata.unwrap();
+        let meta = event.metadata.expect("metadata should be set by with_metadata()");
         assert!(meta.contains_key("key"));
     }
 
@@ -493,8 +494,9 @@ mod tests {
     fn test_titan_event_serialization() {
         let event = TitanEvent::new("xp", "gain", serde_json::json!({"xp": 500}));
 
-        let json = serde_json::to_string(&event).unwrap();
-        let restored: TitanEvent = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&event).expect("TitanEvent should serialize to JSON");
+        let restored: TitanEvent =
+            serde_json::from_str(&json).expect("TitanEvent should deserialize from JSON");
 
         assert_eq!(restored.module, "xp");
         assert_eq!(restored.event_type, "gain");
@@ -550,8 +552,9 @@ mod tests {
             schema_version: 3,
         };
 
-        let json = serde_json::to_string(&info).unwrap();
-        let restored: SnapshotInfo = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&info).expect("SnapshotInfo should serialize to JSON");
+        let restored: SnapshotInfo =
+            serde_json::from_str(&json).expect("SnapshotInfo should deserialize from JSON");
 
         assert_eq!(restored.id, "snap-test");
         assert_eq!(restored.size_bytes, 2048);
@@ -619,8 +622,10 @@ mod tests {
             ..Default::default()
         };
 
-        let json = serde_json::to_string(&status).unwrap();
-        let restored: PersistenceStatus = serde_json::from_str(&json).unwrap();
+        let json =
+            serde_json::to_string(&status).expect("PersistenceStatus should serialize to JSON");
+        let restored: PersistenceStatus =
+            serde_json::from_str(&json).expect("PersistenceStatus should deserialize from JSON");
 
         assert_eq!(restored.events_persisted, 100);
         assert!(restored.integrity_ok);
@@ -679,8 +684,9 @@ mod tests {
     fn test_integrity_report_serialization() {
         let report = IntegrityReport::default();
 
-        let json = serde_json::to_string(&report).unwrap();
-        let restored: IntegrityReport = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&report).expect("IntegrityReport should serialize to JSON");
+        let restored: IntegrityReport =
+            serde_json::from_str(&json).expect("IntegrityReport should deserialize from JSON");
 
         assert!(restored.is_valid);
         assert!(restored.database_ok);
@@ -754,8 +760,9 @@ mod tests {
             success: true,
         };
 
-        let json = serde_json::to_string(&report).unwrap();
-        let restored: CompactionReport = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&report).expect("CompactionReport should serialize to JSON");
+        let restored: CompactionReport =
+            serde_json::from_str(&json).expect("CompactionReport should deserialize from JSON");
 
         assert_eq!(restored.events_archived, 250);
         assert_eq!(restored.bytes_freed, 7500);
@@ -837,8 +844,9 @@ mod tests {
     fn test_persistence_error_serialization() {
         let error = PersistenceError::DatabaseError("test".to_string());
 
-        let json = serde_json::to_string(&error).unwrap();
-        let restored: PersistenceError = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&error).expect("PersistenceError should serialize to JSON");
+        let restored: PersistenceError =
+            serde_json::from_str(&json).expect("PersistenceError should deserialize from JSON");
 
         assert!(format!("{}", restored).contains("base de données"));
     }

@@ -40,11 +40,8 @@ impl MidTermMemory {
 
     /// Sort entries by relevance score (highest first)
     fn sort_by_relevance(&mut self) {
-        self.entries.sort_by(|a, b| {
-            b.relevance_score()
-                .partial_cmp(&a.relevance_score())
-                .unwrap()
-        });
+        self.entries
+            .sort_by(|a, b| b.relevance_score().total_cmp(&a.relevance_score()));
     }
 
     /// Get all entries (sorted by relevance)

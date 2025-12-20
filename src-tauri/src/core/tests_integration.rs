@@ -26,36 +26,52 @@ mod integration_tests {
         let helios = Arc::new(HeliosCoreModule::new());
         {
             let mut reg = registry.write().await;
-            reg.register_core(helios.clone()).unwrap();
+            reg.register_core(helios.clone())
+                .expect("register_core(Helios) should succeed");
         }
 
         // 3. Create orchestrator
         let orchestrator = CoreOrchestrator::new(registry.clone());
 
         // 4. Initialize all cores
-        let init_report = orchestrator.initialize_all().await.unwrap();
+        let init_report = orchestrator
+            .initialize_all()
+            .await
+            .expect("initialize_all should succeed");
         assert_eq!(init_report.successful_modules.len(), 1);
         assert_eq!(init_report.failed_modules.len(), 0);
         assert!(init_report.successful_modules.contains(&"Helios".to_string()));
 
         // 5. Check health
-        let health = helios.health_check().await.unwrap();
+        let health = helios
+            .health_check()
+            .await
+            .expect("Helios health_check should succeed");
         assert!(health.is_healthy || health.message.contains("Warning"));
         assert!(health.uptime_seconds >= 0);
 
         // 6. Collect metrics
-        let state = helios.collect().await.unwrap();
+        let state = helios
+            .collect()
+            .await
+            .expect("Helios collect should succeed");
         assert!(state.cpu_usage >= 0.0 && state.cpu_usage <= 100.0);
         assert!(state.ram_usage >= 0.0 && state.ram_usage <= 100.0);
 
         // 7. Get module metrics
-        let metrics = helios.metrics().await.unwrap();
+        let metrics = helios
+            .metrics()
+            .await
+            .expect("Helios metrics should succeed");
         assert!(metrics.contains_key("cpu_usage"));
         assert!(metrics.contains_key("ram_usage"));
         assert!(metrics.contains_key("collection_count"));
 
         // 8. Shutdown all cores
-        let shutdown_report = orchestrator.shutdown_all().await.unwrap();
+        let shutdown_report = orchestrator
+            .shutdown_all()
+            .await
+            .expect("shutdown_all should succeed");
         assert_eq!(shutdown_report.successful_shutdowns.len(), 1);
         assert_eq!(shutdown_report.failed_shutdowns.len(), 0);
     }
@@ -68,7 +84,8 @@ mod integration_tests {
         // Register
         {
             let mut reg = registry.write().await;
-            reg.register_core(helios.clone()).unwrap();
+            reg.register_core(helios.clone())
+                .expect("register_core(Helios) should succeed");
         }
 
         // List cores
@@ -105,7 +122,10 @@ mod integration_tests {
             settings: HashMap::new(),
         };
 
-        helios.initialize(&config).await.unwrap();
+        helios
+            .initialize(&config)
+            .await
+            .expect("Helios initialize should succeed");
 
         // Spawn multiple concurrent collection tasks
         let mut handles = vec![];
@@ -123,8 +143,7 @@ mod integration_tests {
 
         // All should succeed
         for result in results {
-            assert!(result.is_ok());
-            let state = result.unwrap();
+            let state = result.expect("join_all should return a completed task");
             assert!(state.is_ok());
         }
     }
@@ -141,18 +160,33 @@ mod integration_tests {
         };
 
         // Before initialization - unhealthy
-        let health_before = helios.health_check().await.unwrap();
+        let health_before = helios
+            .health_check()
+            .await
+            .expect("Helios health_check should succeed");
         assert!(!health_before.is_healthy);
         assert_eq!(health_before.uptime_seconds, 0);
 
         // After initialization - should be healthy or warning
-        helios.initialize(&config).await.unwrap();
-        let health_after = helios.health_check().await.unwrap();
+        helios
+            .initialize(&config)
+            .await
+            .expect("Helios initialize should succeed");
+        let health_after = helios
+            .health_check()
+            .await
+            .expect("Helios health_check should succeed");
         assert!(health_after.uptime_seconds > 0);
 
         // After shutdown - unhealthy again
-        helios.shutdown().await.unwrap();
-        let health_shutdown = helios.health_check().await.unwrap();
+        helios
+            .shutdown()
+            .await
+            .expect("Helios shutdown should succeed");
+        let health_shutdown = helios
+            .health_check()
+            .await
+            .expect("Helios health_check should succeed");
         assert!(!health_shutdown.is_healthy);
     }
 
@@ -167,23 +201,47 @@ mod integration_tests {
             settings: HashMap::new(),
         };
 
-        helios.initialize(&config).await.unwrap();
+        helios
+            .initialize(&config)
+            .await
+            .expect("Helios initialize should succeed");
 
         // Initial collection_count should be 1 (from initialization)
-        let metrics1 = helios.metrics().await.unwrap();
-        let count1 = metrics1.get("collection_count").unwrap();
+        let metrics1 = helios
+            .metrics()
+            .await
+            .expect("Helios metrics should succeed");
+        let count1 = metrics1
+            .get("collection_count")
+            .expect("collection_count metric should exist");
         assert_eq!(*count1, 1.0);
 
         // After manual collection
-        helios.collect().await.unwrap();
-        let metrics2 = helios.metrics().await.unwrap();
-        let count2 = metrics2.get("collection_count").unwrap();
+        helios
+            .collect()
+            .await
+            .expect("Helios collect should succeed");
+        let metrics2 = helios
+            .metrics()
+            .await
+            .expect("Helios metrics should succeed");
+        let count2 = metrics2
+            .get("collection_count")
+            .expect("collection_count metric should exist");
         assert_eq!(*count2, 2.0);
 
         // After another collection
-        helios.collect().await.unwrap();
-        let metrics3 = helios.metrics().await.unwrap();
-        let count3 = metrics3.get("collection_count").unwrap();
+        helios
+            .collect()
+            .await
+            .expect("Helios collect should succeed");
+        let metrics3 = helios
+            .metrics()
+            .await
+            .expect("Helios metrics should succeed");
+        let count3 = metrics3
+            .get("collection_count")
+            .expect("collection_count metric should exist");
         assert_eq!(*count3, 3.0);
     }
 
@@ -198,7 +256,10 @@ mod integration_tests {
             settings: HashMap::new(),
         };
 
-        helios.initialize(&config).await.unwrap();
+        helios
+            .initialize(&config)
+            .await
+            .expect("Helios initialize should succeed");
 
         // Reconfigure with new settings
         let new_config = CoreConfig {

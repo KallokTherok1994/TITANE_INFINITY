@@ -400,7 +400,10 @@ mod tests {
         indexer.index(&entry).await;
 
         assert!(indexer.exists(&id).await);
-        let retrieved = indexer.get(&id).await.unwrap();
+        let retrieved = indexer
+            .get(&id)
+            .await
+            .expect("indexed entry should be retrievable");
         assert_eq!(retrieved.id, id);
     }
 

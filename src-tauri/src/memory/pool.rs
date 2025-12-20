@@ -231,7 +231,9 @@ impl PooledString {
     }
 
     pub fn as_mut_string(&mut self) -> &mut String {
-        self.inner.as_mut().unwrap()
+        self.inner
+            .as_mut()
+            .expect("PooledString invariant violated: inner is None")
     }
 
     pub fn push_str(&mut self, s: &str) {

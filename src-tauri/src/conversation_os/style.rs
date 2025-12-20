@@ -299,16 +299,15 @@ impl StyleEngine {
         {
             // Probabilité d'ajout (simple)
             if result.len() > 50 {
-                result = format!(
-                    "Bien sûr, {}",
-                    result
-                        .chars()
-                        .next()
-                        .unwrap()
-                        .to_lowercase()
-                        .collect::<String>()
-                        + &result[1..]
-                );
+                let mut chars = result.chars();
+                if let Some(first) = chars.next() {
+                    let remainder = chars.as_str();
+                    result = format!(
+                        "Bien sûr, {}{}",
+                        first.to_lowercase().collect::<String>(),
+                        remainder
+                    );
+                }
             }
         }
 

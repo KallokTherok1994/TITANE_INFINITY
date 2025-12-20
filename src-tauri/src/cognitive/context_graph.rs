@@ -366,9 +366,7 @@ impl ContextGraph {
                     .iter()
                     .enumerate()
                     .min_by(|(_, a), (_, b)| {
-                        a.effective_weight()
-                            .partial_cmp(&b.effective_weight())
-                            .unwrap()
+                        a.effective_weight().total_cmp(&b.effective_weight())
                     })
                     .map(|(i, _)| i)
                 {

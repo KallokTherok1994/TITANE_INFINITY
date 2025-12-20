@@ -513,9 +513,5 @@ pub async fn dev_mode_generate_changelog(_since: Option<String>) -> Result<Strin
 
 // Helper function
 fn rand_u64() -> u64 {
-    use std::time::{SystemTime, UNIX_EPOCH};
-    SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .unwrap()
-        .subsec_nanos() as u64
+    crate::core::utils::now_ms()
 }

@@ -361,7 +361,7 @@ pub async fn autofix_add_mutex(
         .unwrap_or("unknown")
         .to_string();
     let symbol = args.symbol.unwrap_or_else(|| "(unspecified)".to_string());
-    let reason = args.reason.unwrap_or_else(|| "".to_string());
+    let reason = args.reason.unwrap_or_default();
 
     let action = format!("add_mutex file={target} symbol={symbol} {reason}");
     record_action(&state, &action, &target)
@@ -372,8 +372,5 @@ pub async fn autofix_add_mutex(
 // ═══════════════════════════════════════════════════════════════════════════
 
 fn current_timestamp() -> u64 {
-    std::time::SystemTime::now()
-        .duration_since(std::time::UNIX_EPOCH)
-        .unwrap()
-        .as_millis() as u64
+    crate::core::utils::now_ms()
 }

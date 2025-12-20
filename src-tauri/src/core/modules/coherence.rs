@@ -384,7 +384,9 @@ mod tests {
     #[tokio::test]
     async fn test_coherence_check() {
         let mut engine = CoherenceEngine::new();
-        engine.init().unwrap();
+        engine
+            .init()
+            .expect("CoherenceEngine::init should succeed in test setup");
 
         let state = SingularityState::default();
         let report = engine.check_coherence(&state);
@@ -398,10 +400,22 @@ mod tests {
     #[tokio::test]
     async fn test_unified_tick() {
         let mut state = SingularityState::default();
-        state.coherence.init().unwrap();
-        state.memory.init().unwrap();
-        state.harmonia.init().unwrap();
-        state.system_health.init().unwrap();
+        state
+            .coherence
+            .init()
+            .expect("state.coherence.init should succeed in test setup");
+        state
+            .memory
+            .init()
+            .expect("state.memory.init should succeed in test setup");
+        state
+            .harmonia
+            .init()
+            .expect("state.harmonia.init should succeed in test setup");
+        state
+            .system_health
+            .init()
+            .expect("state.system_health.init should succeed in test setup");
 
         // Clone state to avoid borrow issues in test
         let coherence_before = state.coherence.coordination_count;
@@ -420,7 +434,9 @@ mod tests {
     #[tokio::test]
     async fn test_connection_validation() {
         let mut engine = CoherenceEngine::new();
-        engine.init().unwrap();
+        engine
+            .init()
+            .expect("CoherenceEngine::init should succeed in test setup");
 
         let state = SingularityState::default();
         let report = engine.validate_connections(&state);
@@ -433,7 +449,9 @@ mod tests {
     #[test]
     fn test_global_coherence() {
         let mut engine = CoherenceEngine::new();
-        engine.init().unwrap();
+        engine
+            .init()
+            .expect("CoherenceEngine::init should succeed in test setup");
 
         assert_eq!(engine.global_coherence(), 1.0);
 
@@ -444,11 +462,18 @@ mod tests {
     #[test]
     fn test_module_coherence_tracking() {
         let mut engine = CoherenceEngine::new();
-        engine.init().unwrap();
+        engine
+            .init()
+            .expect("CoherenceEngine::init should succeed in test setup");
 
         let memory_coherence = engine.module_coherence("memory");
         assert!(memory_coherence.is_some());
-        assert_eq!(memory_coherence.unwrap().module_name, "memory");
+        assert_eq!(
+            memory_coherence
+                .expect("module_coherence('memory') should return Some")
+                .module_name,
+            "memory"
+        );
 
         let invalid_coherence = engine.module_coherence("nonexistent");
         assert!(invalid_coherence.is_none());

@@ -157,6 +157,10 @@ export class AgendaEngine {
     this.storage = storage ?? null; // I/O injected from Services layer
   }
 
+  public setStorageCallbacks(storage: AgendaStorageCallbacks | null): void {
+    this.storage = storage;
+  }
+
   // ═══════════════════════════════════════════════════════════════
   // LIFECYCLE
   // ═══════════════════════════════════════════════════════════════
@@ -612,17 +616,11 @@ export class AgendaEngine {
 // SINGLETON EXPORT
 // ═══════════════════════════════════════════════════════════════════
 
-// Import agendaService for storage callbacks injection
-import { agendaService } from '@/services/agendaService';
-
 /**
- * Instance singleton de l'AgendaEngine avec storage callbacks injectés
+ * Instance singleton de l'AgendaEngine (sans I/O). Les callbacks de stockage
+ * doivent être injectés depuis la couche Services (Ring 3) ou l'UI (Ring 4).
  */
-export const agendaEngine = new AgendaEngine({
-  loadEvents: () => agendaService.loadAllEvents(),
-  saveEvents: events => agendaService.saveAllEvents(events),
-  exportCalendar: () => agendaService.exportCalendar(),
-});
+export const agendaEngine = new AgendaEngine();
 
 /**
  * Utilitaires exportés

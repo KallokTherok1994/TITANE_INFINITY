@@ -110,8 +110,9 @@ mod tests {
     #[test]
     fn test_exp_source_serialization() {
         let source = ExpSource::Creation;
-        let json = serde_json::to_string(&source).unwrap();
-        let restored: ExpSource = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&source).expect("ExpSource should serialize to JSON");
+        let restored: ExpSource =
+            serde_json::from_str(&json).expect("ExpSource should deserialize from JSON");
         assert!(matches!(restored, ExpSource::Creation));
     }
 
@@ -152,8 +153,9 @@ mod tests {
             total_exp: 25000,
             level: 25,
         };
-        let json = serde_json::to_string(&state).unwrap();
-        let restored: GlobalExpState = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&state).expect("GlobalExpState should serialize");
+        let restored: GlobalExpState =
+            serde_json::from_str(&json).expect("GlobalExpState should deserialize");
         assert_eq!(restored.total_exp, 25000);
         assert_eq!(restored.level, 25);
     }
@@ -188,8 +190,8 @@ mod tests {
             source: ExpSource::Creation,
             amount: 200,
         };
-        let json = serde_json::to_string(&event).unwrap();
-        let restored: ExpEvent = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&event).expect("ExpEvent should serialize");
+        let restored: ExpEvent = serde_json::from_str(&json).expect("ExpEvent should deserialize");
         assert_eq!(restored.amount, 200);
     }
 
@@ -214,8 +216,9 @@ mod tests {
     #[test]
     fn test_exp_fusion_engine_serialization() {
         let engine = ExpFusionEngine;
-        let json = serde_json::to_string(&engine).unwrap();
-        let _restored: ExpFusionEngine = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&engine).expect("ExpFusionEngine should serialize");
+        let _restored: ExpFusionEngine =
+            serde_json::from_str(&json).expect("ExpFusionEngine should deserialize");
     }
 
     // ─────────────────────────────────────────────────────────────
@@ -245,8 +248,9 @@ mod tests {
             timestamp: 999,
             event: "test event".to_string(),
         };
-        let json = serde_json::to_string(&entry).unwrap();
-        let restored: TimelineEntry = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&entry).expect("TimelineEntry should serialize");
+        let restored: TimelineEntry =
+            serde_json::from_str(&json).expect("TimelineEntry should deserialize");
         assert_eq!(restored.timestamp, 999);
     }
 
@@ -293,8 +297,9 @@ mod tests {
             name: "Test".to_string(),
             weight: 0.5,
         };
-        let json = serde_json::to_string(&state).unwrap();
-        let restored: CategoryState = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&state).expect("CategoryState should serialize");
+        let restored: CategoryState =
+            serde_json::from_str(&json).expect("CategoryState should deserialize");
         assert_eq!(restored.name, "Test");
     }
 
@@ -325,8 +330,9 @@ mod tests {
             name: "Project X".to_string(),
             progress: 0.5,
         };
-        let json = serde_json::to_string(&state).unwrap();
-        let restored: ProjectState = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&state).expect("ProjectState should serialize");
+        let restored: ProjectState =
+            serde_json::from_str(&json).expect("ProjectState should deserialize");
         assert_eq!(restored.progress, 0.5);
     }
 
@@ -374,8 +380,9 @@ mod tests {
         let state = TalentTreeState {
             talents: vec!["test".to_string()],
         };
-        let json = serde_json::to_string(&state).unwrap();
-        let restored: TalentTreeState = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&state).expect("TalentTreeState should serialize");
+        let restored: TalentTreeState =
+            serde_json::from_str(&json).expect("TalentTreeState should deserialize");
         assert_eq!(restored.talents.len(), 1);
     }
 }

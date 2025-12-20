@@ -239,7 +239,7 @@ impl MemoryKernelBridge {
 
                 Ok(EngineOutput {
                     engine: "Memory".to_string(),
-                    output: serde_json::to_string(&data).unwrap(),
+                    output: serde_json::to_string(&data)?,
                     duration_ms,
                 })
             }

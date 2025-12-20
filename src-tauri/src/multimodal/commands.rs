@@ -443,7 +443,7 @@ mod tests {
         let mut bytes = Vec::new();
         dynamic
             .write_to(&mut std::io::Cursor::new(&mut bytes), image::ImageFormat::Png)
-            .unwrap();
+            .expect("test image should encode as PNG");
         bytes
     }
 

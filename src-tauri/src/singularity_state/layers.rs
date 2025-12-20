@@ -464,14 +464,20 @@ mod tests {
             last_update: 1234567890,
         };
         assert!(state.battery_level.is_some());
-        assert_eq!(state.battery_level.unwrap(), 0.85);
+        assert_eq!(
+            state
+                .battery_level
+                .expect("battery_level should be present in this test"),
+            0.85
+        );
     }
 
     #[test]
     fn test_helios_state_serialization() {
         let state = HeliosState::default();
-        let json = serde_json::to_string(&state).unwrap();
-        let restored: HeliosState = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&state).expect("HeliosState should serialize");
+        let restored: HeliosState =
+            serde_json::from_str(&json).expect("HeliosState should deserialize");
         assert_eq!(restored.active, state.active);
     }
 
@@ -494,8 +500,9 @@ mod tests {
             warnings_count: 5,
             uptime: 86400,
         };
-        let json = serde_json::to_string(&health).unwrap();
-        let restored: SystemHealth = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&health).expect("SystemHealth should serialize");
+        let restored: SystemHealth =
+            serde_json::from_str(&json).expect("SystemHealth should deserialize");
         assert_eq!(restored.global_health, 0.95);
         assert_eq!(restored.services_running, 10);
     }
@@ -519,8 +526,10 @@ mod tests {
             latency: 16,
             performance_score: 0.95,
         };
-        let json = serde_json::to_string(&metrics).unwrap();
-        let restored: PerformanceMetrics = serde_json::from_str(&json).unwrap();
+        let json =
+            serde_json::to_string(&metrics).expect("PerformanceMetrics should serialize");
+        let restored: PerformanceMetrics =
+            serde_json::from_str(&json).expect("PerformanceMetrics should deserialize");
         assert_eq!(restored.fps, 120.0);
     }
 
@@ -635,7 +644,13 @@ mod tests {
             last_timestamp: Some(1234567890),
         };
         assert!(state.active_session);
-        assert_eq!(state.last_message.unwrap(), "Hello");
+        assert_eq!(
+            state
+                .last_message
+                .as_deref()
+                .expect("last_message should be set in this test"),
+            "Hello"
+        );
     }
 
     #[test]
@@ -657,8 +672,9 @@ mod tests {
     #[test]
     fn test_cognitive_layer_serialization() {
         let layer = CognitiveLayer::default();
-        let json = serde_json::to_string(&layer).unwrap();
-        let restored: CognitiveLayer = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&layer).expect("CognitiveLayer should serialize");
+        let restored: CognitiveLayer =
+            serde_json::from_str(&json).expect("CognitiveLayer should deserialize");
         assert_eq!(restored.coherence, layer.coherence);
     }
 
@@ -705,7 +721,13 @@ mod tests {
             transition: Some("harmonia".to_string()),
         };
         assert!(state.transition.is_some());
-        assert_eq!(state.transition.unwrap(), "harmonia");
+        assert_eq!(
+            state
+                .transition
+                .as_deref()
+                .expect("transition should be set in this test"),
+            "harmonia"
+        );
     }
 
     #[test]
@@ -741,8 +763,9 @@ mod tests {
     #[test]
     fn test_symbolic_layer_serialization() {
         let layer = SymbolicLayer::default();
-        let json = serde_json::to_string(&layer).unwrap();
-        let restored: SymbolicLayer = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&layer).expect("SymbolicLayer should serialize");
+        let restored: SymbolicLayer =
+            serde_json::from_str(&json).expect("SymbolicLayer should deserialize");
         assert_eq!(restored.stability, layer.stability);
     }
 
@@ -802,8 +825,9 @@ mod tests {
     #[test]
     fn test_adaptive_layer_serialization() {
         let layer = AdaptiveLayer::default();
-        let json = serde_json::to_string(&layer).unwrap();
-        let restored: AdaptiveLayer = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&layer).expect("AdaptiveLayer should serialize");
+        let restored: AdaptiveLayer =
+            serde_json::from_str(&json).expect("AdaptiveLayer should deserialize");
         assert_eq!(restored.evolution_capacity, layer.evolution_capacity);
     }
 
@@ -868,8 +892,9 @@ mod tests {
     #[test]
     fn test_meta_layer_serialization() {
         let layer = MetaLayer::default();
-        let json = serde_json::to_string(&layer).unwrap();
-        let restored: MetaLayer = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&layer).expect("MetaLayer should serialize");
+        let restored: MetaLayer =
+            serde_json::from_str(&json).expect("MetaLayer should deserialize");
         assert_eq!(restored.runtime_health, layer.runtime_health);
     }
 

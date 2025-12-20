@@ -169,28 +169,40 @@ impl SecurityEngine {
 mod tests {
     use super::*;
     use std::env;
+    use std::sync::atomic::{AtomicUsize, Ordering};
+
+    static TEST_DIR_COUNTER: AtomicUsize = AtomicUsize::new(0);
 
     fn get_test_dir() -> PathBuf {
         let mut path = env::temp_dir();
-        path.push("titane_security_test");
-        fs::create_dir_all(&path).unwrap();
+        let unique = TEST_DIR_COUNTER.fetch_add(1, Ordering::Relaxed);
+        path.push(format!(
+            "titane_security_test_{}_{}",
+            std::process::id(),
+            unique
+        ));
+        fs::create_dir_all(&path).expect("should create test directory");
         path
     }
 
     #[test]
     fn test_security_engine_init() {
         let test_dir = get_test_dir();
-        let mut engine = SecurityEngine::new(test_dir).unwrap();
+        let mut engine = SecurityEngine::new(test_dir)
+            .expect("SecurityEngine::new should succeed");
         assert!(engine.init().is_ok());
     }
 
     #[test]
     fn test_set_and_get_secret() {
         let test_dir = get_test_dir();
-        let mut engine = SecurityEngine::new(test_dir).unwrap();
-        engine.init().unwrap();
+        let mut engine = SecurityEngine::new(test_dir)
+            .expect("SecurityEngine::new should succeed");
+        engine.init().expect("init should succeed");
 
-        engine.set_secret("api_key", "sk-test-123456").unwrap();
+        engine
+            .set_secret("api_key", "sk-test-123456")
+            .expect("set_secret should succeed");
 
         assert_eq!(engine.get_secret("api_key"), Some(&"sk-test-123456".to_string()));
     }
@@ -198,13 +210,18 @@ mod tests {
     #[test]
     fn test_delete_secret() {
         let test_dir = get_test_dir();
-        let mut engine = SecurityEngine::new(test_dir).unwrap();
-        engine.init().unwrap();
+        let mut engine = SecurityEngine::new(test_dir)
+            .expect("SecurityEngine::new should succeed");
+        engine.init().expect("init should succeed");
 
-        engine.set_secret("temp_key", "temp_value").unwrap();
+        engine
+            .set_secret("temp_key", "temp_value")
+            .expect("set_secret should succeed");
         assert!(engine.get_secret("temp_key").is_some());
 
-        engine.delete_secret("temp_key").unwrap();
+        engine
+            .delete_secret("temp_key")
+            .expect("delete_secret should succeed");
         assert!(engine.get_secret("temp_key").is_none());
     }
 
@@ -214,15 +231,19 @@ mod tests {
 
         // Create and save secret
         {
-            let mut engine = SecurityEngine::new(test_dir.clone()).unwrap();
-            engine.init().unwrap();
-            engine.set_secret("persist_key", "persist_value").unwrap();
+            let mut engine = SecurityEngine::new(test_dir.clone())
+                .expect("SecurityEngine::new should succeed");
+            engine.init().expect("init should succeed");
+            engine
+                .set_secret("persist_key", "persist_value")
+                .expect("set_secret should succeed");
         }
 
         // Load in new instance
         {
-            let mut engine = SecurityEngine::new(test_dir).unwrap();
-            engine.init().unwrap();
+            let mut engine = SecurityEngine::new(test_dir)
+                .expect("SecurityEngine::new should succeed");
+            engine.init().expect("init should succeed");
 
             assert_eq!(engine.get_secret("persist_key"), Some(&"persist_value".to_string()));
         }
@@ -231,11 +252,16 @@ mod tests {
     #[test]
     fn test_list_secrets() {
         let test_dir = get_test_dir();
-        let mut engine = SecurityEngine::new(test_dir).unwrap();
-        engine.init().unwrap();
+        let mut engine = SecurityEngine::new(test_dir)
+            .expect("SecurityEngine::new should succeed");
+        engine.init().expect("init should succeed");
 
-        engine.set_secret("key1", "value1").unwrap();
-        engine.set_secret("key2", "value2").unwrap();
+        engine
+            .set_secret("key1", "value1")
+            .expect("set_secret should succeed");
+        engine
+            .set_secret("key2", "value2")
+            .expect("set_secret should succeed");
 
         let keys = engine.list_secrets();
         assert_eq!(keys.len(), 2);

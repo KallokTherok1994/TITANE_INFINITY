@@ -466,14 +466,14 @@ mod tests {
     #[test]
     fn test_rule_type_serialize() {
         let rt = RuleType::Ethics;
-        let json = serde_json::to_string(&rt).unwrap();
+        let json = serde_json::to_string(&rt).expect("RuleType should serialize to JSON");
         assert!(json.contains("Ethics"));
     }
 
     #[test]
     fn test_rule_type_deserialize() {
         let json = "\"Performance\"";
-        let rt: RuleType = serde_json::from_str(json).unwrap();
+        let rt: RuleType = serde_json::from_str(json).expect("RuleType should deserialize");
         assert_eq!(rt, RuleType::Performance);
     }
 
@@ -527,7 +527,8 @@ mod tests {
     #[test]
     fn test_violation_severity_serialize() {
         let vs = ViolationSeverity::Warning;
-        let json = serde_json::to_string(&vs).unwrap();
+        let json = serde_json::to_string(&vs)
+            .expect("ViolationSeverity should serialize to JSON");
         assert!(json.contains("Warning"));
     }
 
@@ -589,7 +590,8 @@ mod tests {
             timestamp: "2024-01-01T00:00:00Z".to_string(),
             auto_corrected: false,
         };
-        let json = serde_json::to_string(&violation).unwrap();
+        let json = serde_json::to_string(&violation)
+            .expect("RuleViolation should serialize to JSON");
         assert!(json.contains("TEST-004"));
     }
 
@@ -647,7 +649,8 @@ mod tests {
             violation: None,
             duration_ms: 1,
         };
-        let json = serde_json::to_string(&eval).unwrap();
+        let json = serde_json::to_string(&eval)
+            .expect("RuleEvaluation should serialize to JSON");
         assert!(json.contains("EVAL-004"));
     }
 
@@ -747,7 +750,7 @@ mod tests {
             total_violations: 2,
             rules_by_type: HashMap::new(),
         };
-        let json = serde_json::to_string(&stats).unwrap();
+        let json = serde_json::to_string(&stats).expect("RulesStats should serialize to JSON");
         assert!(json.contains("total_rules"));
     }
 
@@ -783,7 +786,14 @@ mod tests {
     fn test_rules_engine_toggle_rule_enable() {
         let mut engine = RulesEngine::default();
         engine.toggle_rule("ETHICS-001", false);
-        assert!(!engine.rules.get("ETHICS-001").unwrap().base.enabled);
+        assert!(
+            !engine
+                .rules
+                .get("ETHICS-001")
+                .expect("default rules should contain ETHICS-001")
+                .base
+                .enabled
+        );
     }
 
     #[test]
@@ -791,7 +801,14 @@ mod tests {
         let mut engine = RulesEngine::default();
         engine.toggle_rule("ETHICS-001", false);
         engine.toggle_rule("ETHICS-001", true);
-        assert!(engine.rules.get("ETHICS-001").unwrap().base.enabled);
+        assert!(
+            engine
+                .rules
+                .get("ETHICS-001")
+                .expect("default rules should contain ETHICS-001")
+                .base
+                .enabled
+        );
     }
 
     #[test]
@@ -844,7 +861,11 @@ mod tests {
         };
         let result = engine.evaluate_rule("ETHICS-001", &ctx);
         assert!(result.is_some());
-        assert!(result.unwrap().passed);
+        assert!(
+            result
+                .expect("evaluate_rule should return Some when rule exists")
+                .passed
+        );
     }
 
     #[test]
@@ -858,7 +879,11 @@ mod tests {
         };
         let result = engine.evaluate_rule("ETHICS-001", &ctx);
         assert!(result.is_some());
-        assert!(result.unwrap().passed);
+        assert!(
+            result
+                .expect("evaluate_rule should return Some when rule exists")
+                .passed
+        );
     }
 
     #[test]
@@ -872,7 +897,7 @@ mod tests {
         };
         let result = engine.evaluate_rule("ETHICS-001", &ctx);
         assert!(result.is_some());
-        let eval = result.unwrap();
+        let eval = result.expect("evaluate_rule should return Some when rule exists");
         assert!(!eval.passed);
         assert!(eval.violation.is_some());
     }
@@ -922,7 +947,12 @@ mod tests {
     #[test]
     fn test_rules_engine_violation_count_increment() {
         let mut engine = RulesEngine::default();
-        let initial = engine.rules.get("ETHICS-001").unwrap().base.violations;
+        let initial = engine
+            .rules
+            .get("ETHICS-001")
+            .expect("default rules should contain ETHICS-001")
+            .base
+            .violations;
         let ctx = RuleContext {
             content: "contenu avec mensonge".to_string(),
             description: "test".to_string(),
@@ -930,7 +960,12 @@ mod tests {
             metadata: HashMap::new(),
         };
         engine.evaluate_rule("ETHICS-001", &ctx);
-        let after = engine.rules.get("ETHICS-001").unwrap().base.violations;
+        let after = engine
+            .rules
+            .get("ETHICS-001")
+            .expect("default rules should contain ETHICS-001")
+            .base
+            .violations;
         assert_eq!(after, initial + 1);
     }
 
@@ -958,7 +993,11 @@ mod tests {
         };
         let result = engine.evaluate_rule("ETHICS-002", &ctx);
         assert!(result.is_some());
-        assert!(!result.unwrap().passed);
+        assert!(
+            !result
+                .expect("evaluate_rule should return Some when rule exists")
+                .passed
+        );
     }
 
     #[test]

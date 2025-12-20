@@ -35,8 +35,8 @@ impl SymbolicAdapter {
     pub async fn translate_to_ai(&self) -> SymbolicTranslation {
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_secs();
+            .map(|d| d.as_secs())
+            .unwrap_or_else(|_| crate::core::utils::now_ms() / 1000);
 
         let states = vec![
             SymbolicState {

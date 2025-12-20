@@ -16,7 +16,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Edit3,
   Atom,
@@ -125,6 +125,7 @@ export const Menu: React.FC<MenuProps> = ({
   currentRoute,
   onNavigate,
 }) => {
+  const menubarRef = useRef<HTMLDivElement | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [menuSections, setMenuSections] = useState(() => {
     // v25.4.2: Migration one-time only (not every mount) - FUSION + OPTIMIZE ajoutés
@@ -155,6 +156,38 @@ export const Menu: React.FC<MenuProps> = ({
 
   const handleSectionClick = (section: MenuSection) => {
     onNavigate(section.route);
+  };
+
+  const focusMenuItem = (
+    current: HTMLButtonElement,
+    strategy: 'next' | 'prev' | 'first' | 'last'
+  ) => {
+    const container = menubarRef.current;
+    if (!container) return;
+
+    const items = Array.from(
+      container.querySelectorAll<HTMLButtonElement>('[role="menuitem"]')
+    ).filter(el => !el.disabled && el.tabIndex !== -1);
+
+    if (items.length === 0) return;
+
+    const index = items.indexOf(current);
+    if (index < 0) return;
+
+    const nextIndex = (() => {
+      switch (strategy) {
+        case 'first':
+          return 0;
+        case 'last':
+          return items.length - 1;
+        case 'next':
+          return (index + 1) % items.length;
+        case 'prev':
+          return (index - 1 + items.length) % items.length;
+      }
+    })();
+
+    items[nextIndex]?.focus();
   };
 
   const handleSaveMenu = (newSections: MenuSection[]) => {
@@ -243,6 +276,7 @@ export const Menu: React.FC<MenuProps> = ({
           id="menu-sections"
           role="menubar"
           aria-label="Sections de navigation principales"
+          ref={menubarRef}
         >
           {menuSections
             .filter(s => ('visible' in s ? s.visible !== false : true))
@@ -263,6 +297,21 @@ export const Menu: React.FC<MenuProps> = ({
                   isCollapsed ? `${section.label}: ${section.description}` : undefined
                 }
                 tabIndex={0}
+                onKeyDown={e => {
+                  if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    focusMenuItem(e.currentTarget, 'next');
+                  } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    focusMenuItem(e.currentTarget, 'prev');
+                  } else if (e.key === 'Home') {
+                    e.preventDefault();
+                    focusMenuItem(e.currentTarget, 'first');
+                  } else if (e.key === 'End') {
+                    e.preventDefault();
+                    focusMenuItem(e.currentTarget, 'last');
+                  }
+                }}
               >
                 <span className="menu-item-icon" aria-hidden="true">
                   {MENU_ICONS[section.id] || section.icon}

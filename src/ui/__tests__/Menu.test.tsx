@@ -192,7 +192,7 @@ describe('Menu Accessibility', () => {
       expect(menuItems[1]).toHaveFocus();
     });
 
-    it('should support Arrow Down navigation', () => {
+    it('should support Arrow Down navigation', async () => {
       renderMenu();
 
       const menuItems = screen.getAllByRole('menuitem');
@@ -204,12 +204,12 @@ describe('Menu Accessibility', () => {
       fireEvent.keyDown(menuItems[0], { key: 'ArrowDown' });
 
       // Next item should receive focus
-      waitFor(() => {
+      await waitFor(() => {
         expect(menuItems[1]).toHaveFocus();
       });
     });
 
-    it('should support Arrow Up navigation', () => {
+    it('should support Arrow Up navigation', async () => {
       renderMenu();
 
       const menuItems = screen.getAllByRole('menuitem');
@@ -221,12 +221,12 @@ describe('Menu Accessibility', () => {
       fireEvent.keyDown(menuItems[1], { key: 'ArrowUp' });
 
       // Previous item should receive focus
-      waitFor(() => {
+      await waitFor(() => {
         expect(menuItems[0]).toHaveFocus();
       });
     });
 
-    it('should wrap focus from last to first item with Arrow Down', () => {
+    it('should wrap focus from last to first item with Arrow Down', async () => {
       renderMenu();
 
       const menuItems = screen.getAllByRole('menuitem');
@@ -238,12 +238,12 @@ describe('Menu Accessibility', () => {
       fireEvent.keyDown(menuItems[menuItems.length - 1], { key: 'ArrowDown' });
 
       // First item should receive focus
-      waitFor(() => {
+      await waitFor(() => {
         expect(menuItems[0]).toHaveFocus();
       });
     });
 
-    it('should wrap focus from first to last item with Arrow Up', () => {
+    it('should wrap focus from first to last item with Arrow Up', async () => {
       renderMenu();
 
       const menuItems = screen.getAllByRole('menuitem');
@@ -255,7 +255,7 @@ describe('Menu Accessibility', () => {
       fireEvent.keyDown(menuItems[0], { key: 'ArrowUp' });
 
       // Last item should receive focus
-      waitFor(() => {
+      await waitFor(() => {
         expect(menuItems[menuItems.length - 1]).toHaveFocus();
       });
     });

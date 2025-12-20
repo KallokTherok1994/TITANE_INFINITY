@@ -269,7 +269,7 @@ mod tests {
     #[test]
     fn test_singularity_update_ack_serialize() {
         let ack = SingularityUpdateAck::new("serialize_test");
-        let json = serde_json::to_string(&ack).unwrap();
+        let json = serde_json::to_string(&ack).expect("SingularityUpdateAck should serialize");
         assert!(json.contains("serialize_test"));
         assert!(json.contains("ok"));
     }

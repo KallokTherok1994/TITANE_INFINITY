@@ -529,7 +529,10 @@ mod tests {
         let scheduler = JobScheduler::default();
 
         let input = PipelineInput::new("Test request");
-        let job_id = scheduler.schedule(input).await.unwrap();
+        let job_id = scheduler
+            .schedule(input)
+            .await
+            .expect("schedule should succeed");
 
         assert!(!job_id.is_empty());
 
@@ -543,14 +546,23 @@ mod tests {
 
         // Schedule low priority first
         let low = PipelineInput::new("Low").with_priority(Priority::LOW);
-        scheduler.schedule(low).await.unwrap();
+        scheduler
+            .schedule(low)
+            .await
+            .expect("scheduling low priority job should succeed");
 
         // Schedule high priority second
         let high = PipelineInput::new("High").with_priority(Priority::HIGH);
-        scheduler.schedule(high).await.unwrap();
+        scheduler
+            .schedule(high)
+            .await
+            .expect("scheduling high priority job should succeed");
 
         // High priority should come out first
-        let next = scheduler.next_job().await.unwrap();
+        let next = scheduler
+            .next_job()
+            .await
+            .expect("expected a job to be available");
         assert_eq!(next.priority, Priority::HIGH);
     }
 
@@ -562,7 +574,10 @@ mod tests {
         let input = PipelineInput::new("Test");
         let job = ScheduledJob::new(input).with_deadline(Duration::from_nanos(1));
 
-        scheduler.schedule_job(job).await.unwrap();
+        scheduler
+            .schedule_job(job)
+            .await
+            .expect("schedule_job should succeed");
 
         // Wait a bit for expiry
         tokio::time::sleep(Duration::from_millis(1)).await;
@@ -590,7 +605,10 @@ mod tests {
         let scheduler = JobScheduler::default();
 
         let input = PipelineInput::new("Test");
-        scheduler.schedule(input).await.unwrap();
+        scheduler
+            .schedule(input)
+            .await
+            .expect("schedule should succeed");
 
         let stats = scheduler.get_stats().await;
         assert_eq!(stats.total_scheduled, 1);
@@ -602,10 +620,16 @@ mod tests {
         let scheduler = JobScheduler::default();
 
         let input = PipelineInput::new("Test");
-        let job_id = scheduler.schedule(input).await.unwrap();
+        let job_id = scheduler
+            .schedule(input)
+            .await
+            .expect("schedule should succeed");
 
         // Get job
-        let _job = scheduler.next_job().await.unwrap();
+        let _job = scheduler
+            .next_job()
+            .await
+            .expect("expected a job to be available");
 
         // Complete it
         scheduler.complete_job(&job_id, true, None).await;
@@ -619,7 +643,10 @@ mod tests {
         let scheduler = JobScheduler::default();
 
         let input = PipelineInput::new("Test");
-        let job_id = scheduler.schedule(input).await.unwrap();
+        let job_id = scheduler
+            .schedule(input)
+            .await
+            .expect("schedule should succeed");
 
         let cancelled = scheduler.cancel_job(&job_id).await;
         assert!(cancelled);
@@ -862,7 +889,10 @@ mod tests {
 
         for i in 0..5 {
             let input = PipelineInput::new(&format!("Test {}", i));
-            scheduler.schedule(input).await.unwrap();
+            scheduler
+                .schedule(input)
+                .await
+                .expect("schedule should succeed");
         }
 
         let wait = scheduler.estimated_wait_ms().await;
@@ -874,8 +904,14 @@ mod tests {
         let scheduler = JobScheduler::default();
 
         let input = PipelineInput::new("Test");
-        let job_id = scheduler.schedule(input).await.unwrap();
-        let _job = scheduler.next_job().await.unwrap();
+        let job_id = scheduler
+            .schedule(input)
+            .await
+            .expect("schedule should succeed");
+        let _job = scheduler
+            .next_job()
+            .await
+            .expect("expected a job to be available");
         scheduler.complete_job(&job_id, true, None).await;
 
         scheduler.cleanup().await;
@@ -899,8 +935,14 @@ mod tests {
         let scheduler = JobScheduler::default();
 
         let input = PipelineInput::new("Test");
-        let job_id = scheduler.schedule(input).await.unwrap();
-        let _job = scheduler.next_job().await.unwrap();
+        let job_id = scheduler
+            .schedule(input)
+            .await
+            .expect("schedule should succeed");
+        let _job = scheduler
+            .next_job()
+            .await
+            .expect("expected a job to be available");
 
         scheduler.complete_job(&job_id, false, None).await;
 
@@ -913,8 +955,14 @@ mod tests {
         let scheduler = JobScheduler::default();
 
         let input = PipelineInput::new("Test");
-        let job_id = scheduler.schedule(input).await.unwrap();
-        let _job = scheduler.next_job().await.unwrap();
+        let job_id = scheduler
+            .schedule(input)
+            .await
+            .expect("schedule should succeed");
+        let _job = scheduler
+            .next_job()
+            .await
+            .expect("expected a job to be available");
 
         // Cannot cancel running job
         let cancelled = scheduler.cancel_job(&job_id).await;
@@ -940,7 +988,7 @@ mod tests {
     #[test]
     fn test_job_status_serialization() {
         let status = JobStatus::Completed;
-        let json = serde_json::to_string(&status).unwrap();
+        let json = serde_json::to_string(&status).expect("JobStatus should serialize to JSON");
         assert!(json.contains("Completed"));
     }
 

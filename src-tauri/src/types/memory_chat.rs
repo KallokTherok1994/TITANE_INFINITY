@@ -136,17 +136,20 @@ mod tests {
     #[test]
     fn test_project_status_serialization_lowercase() {
         let status = ProjectStatus::Active;
-        let json = serde_json::to_string(&status).unwrap();
+        let json = serde_json::to_string(&status)
+            .expect("ProjectStatus should serialize to JSON");
         assert_eq!(json, "\"active\"");
 
         let status = ProjectStatus::Completed;
-        let json = serde_json::to_string(&status).unwrap();
+        let json = serde_json::to_string(&status)
+            .expect("ProjectStatus should serialize to JSON");
         assert_eq!(json, "\"completed\"");
     }
 
     #[test]
     fn test_project_status_deserialization() {
-        let restored: ProjectStatus = serde_json::from_str("\"paused\"").unwrap();
+        let restored: ProjectStatus = serde_json::from_str("\"paused\"")
+            .expect("ProjectStatus should deserialize from JSON");
         assert!(matches!(restored, ProjectStatus::Paused));
     }
 
@@ -208,8 +211,10 @@ mod tests {
             last_activity: "2024-01-20".to_string(),
             tags: vec!["important".to_string()],
         };
-        let json = serde_json::to_string(&summary).unwrap();
-        let restored: ProjectSummary = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&summary)
+            .expect("ProjectSummary should serialize to JSON");
+        let restored: ProjectSummary = serde_json::from_str(&json)
+            .expect("ProjectSummary should deserialize from JSON");
         assert_eq!(restored.id, "test-proj");
         assert_eq!(restored.priority, 10);
     }
@@ -241,11 +246,13 @@ mod tests {
     #[test]
     fn test_impact_level_serialization_lowercase() {
         let level = ImpactLevel::High;
-        let json = serde_json::to_string(&level).unwrap();
+        let json = serde_json::to_string(&level)
+            .expect("ImpactLevel should serialize to JSON");
         assert_eq!(json, "\"high\"");
 
         let level = ImpactLevel::Low;
-        let json = serde_json::to_string(&level).unwrap();
+        let json = serde_json::to_string(&level)
+            .expect("ImpactLevel should serialize to JSON");
         assert_eq!(json, "\"low\"");
     }
 
@@ -306,8 +313,10 @@ mod tests {
             timestamp: "2024-01-01".to_string(),
             impact: ImpactLevel::High,
         };
-        let json = serde_json::to_string(&decision).unwrap();
-        let restored: DecisionSummary = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&decision)
+            .expect("DecisionSummary should serialize to JSON");
+        let restored: DecisionSummary = serde_json::from_str(&json)
+            .expect("DecisionSummary should deserialize from JSON");
         assert_eq!(restored.id, "dec-test");
         assert_eq!(restored.outcome, "Success");
     }
@@ -368,8 +377,10 @@ mod tests {
             relevance: 0.8,
             timestamp: "2024-01-20".to_string(),
         };
-        let json = serde_json::to_string(&entry).unwrap();
-        let restored: KnowledgeEntry = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&entry)
+            .expect("KnowledgeEntry should serialize to JSON");
+        let restored: KnowledgeEntry = serde_json::from_str(&json)
+            .expect("KnowledgeEntry should deserialize from JSON");
         assert_eq!(restored.id, "k-test");
         assert_eq!(restored.relevance, 0.8);
     }
@@ -443,8 +454,10 @@ mod tests {
             next_scheduled: Some("2024-02-01".to_string()),
             impact: "High".to_string(),
         };
-        let json = serde_json::to_string(&ritual).unwrap();
-        let restored: RitualInfo = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&ritual)
+            .expect("RitualInfo should serialize to JSON");
+        let restored: RitualInfo = serde_json::from_str(&json)
+            .expect("RitualInfo should deserialize from JSON");
         assert_eq!(restored.id, "r-test");
         assert_eq!(restored.frequency, "monthly");
     }
@@ -482,11 +495,13 @@ mod tests {
     #[test]
     fn test_timeline_entry_type_serialization_lowercase() {
         let entry_type = TimelineEntryType::Chat;
-        let json = serde_json::to_string(&entry_type).unwrap();
+        let json = serde_json::to_string(&entry_type)
+            .expect("TimelineEntryType should serialize to JSON");
         assert_eq!(json, "\"chat\"");
 
         let entry_type = TimelineEntryType::Project;
-        let json = serde_json::to_string(&entry_type).unwrap();
+        let json = serde_json::to_string(&entry_type)
+            .expect("TimelineEntryType should serialize to JSON");
         assert_eq!(json, "\"project\"");
     }
 
@@ -515,7 +530,7 @@ mod tests {
             metadata: Some(serde_json::json!({"key": "value", "count": 42})),
         };
         assert!(entry.metadata.is_some());
-        let meta = entry.metadata.unwrap();
+        let meta = entry.metadata.expect("metadata should exist");
         assert_eq!(meta["key"], "value");
         assert_eq!(meta["count"], 42);
     }
@@ -553,8 +568,10 @@ mod tests {
             content: "Feeling good".to_string(),
             metadata: Some(serde_json::json!({"mood": "happy"})),
         };
-        let json = serde_json::to_string(&entry).unwrap();
-        let restored: TimelineEntry = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&entry)
+            .expect("TimelineEntry should serialize to JSON");
+        let restored: TimelineEntry = serde_json::from_str(&json)
+            .expect("TimelineEntry should deserialize from JSON");
         assert_eq!(restored.content, "Feeling good");
     }
 
@@ -613,8 +630,10 @@ mod tests {
             intensity: 0.85,
             energy: 0.65,
         };
-        let json = serde_json::to_string(&emotion).unwrap();
-        let restored: EmotionState = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&emotion)
+            .expect("EmotionState should serialize to JSON");
+        let restored: EmotionState = serde_json::from_str(&json)
+            .expect("EmotionState should deserialize from JSON");
         assert_eq!(restored.valence, 0.75);
         assert_eq!(restored.energy, 0.65);
     }
@@ -650,7 +669,9 @@ mod tests {
             timestamp: "2024-01-15T10:05:00Z".to_string(),
         };
         assert!(interaction.emotion_state.is_some());
-        let emotion = interaction.emotion_state.unwrap();
+        let emotion = interaction
+            .emotion_state
+            .expect("emotion_state should exist");
         assert_eq!(emotion.valence, 0.9);
     }
 
@@ -698,8 +719,10 @@ mod tests {
             }),
             timestamp: "2024-01-20".to_string(),
         };
-        let json = serde_json::to_string(&interaction).unwrap();
-        let restored: ChatInteraction = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&interaction)
+            .expect("ChatInteraction should serialize to JSON");
+        let restored: ChatInteraction = serde_json::from_str(&json)
+            .expect("ChatInteraction should deserialize from JSON");
         assert_eq!(restored.user_message, "Test message");
         assert!(restored.emotion_state.is_some());
     }
@@ -713,8 +736,10 @@ mod tests {
             emotion_state: None,
             timestamp: "2024-01-20".to_string(),
         };
-        let json = serde_json::to_string(&interaction).unwrap();
-        let restored: ChatInteraction = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&interaction)
+            .expect("ChatInteraction should serialize to JSON");
+        let restored: ChatInteraction = serde_json::from_str(&json)
+            .expect("ChatInteraction should deserialize from JSON");
         assert!(restored.emotion_state.is_none());
     }
 }

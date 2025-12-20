@@ -71,8 +71,8 @@ impl SemanticMap {
         let id = format!("concept_{}", uuid::Uuid::new_v4());
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_secs();
+            .map(|d| d.as_secs())
+            .unwrap_or_else(|_| crate::core::utils::now_ms() / 1000);
 
         let concept = Concept {
             id: id.clone(),
@@ -108,8 +108,8 @@ impl SemanticMap {
             concept.access_count += 1;
             concept.last_accessed = std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
-                .unwrap()
-                .as_secs();
+                .map(|d| d.as_secs())
+                .unwrap_or_else(|_| crate::core::utils::now_ms() / 1000);
         }
     }
 
@@ -203,8 +203,9 @@ mod tests {
     #[test]
     fn test_relation_type_serialization() {
         let rt = RelationType::Uses;
-        let json = serde_json::to_string(&rt).unwrap();
-        let restored: RelationType = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&rt).expect("RelationType should serialize to JSON");
+        let restored: RelationType =
+            serde_json::from_str(&json).expect("RelationType should deserialize from JSON");
         assert!(matches!(restored, RelationType::Uses));
     }
 
@@ -273,8 +274,9 @@ mod tests {
             last_accessed: 1000,
             access_count: 10,
         };
-        let json = serde_json::to_string(&concept).unwrap();
-        let restored: Concept = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&concept).expect("Concept should serialize to JSON");
+        let restored: Concept =
+            serde_json::from_str(&json).expect("Concept should deserialize from JSON");
         assert_eq!(restored.name, "AI");
         assert_eq!(restored.weight, 3.5);
     }
@@ -327,8 +329,9 @@ mod tests {
             relation_type: RelationType::Requires,
             strength: 0.85,
         };
-        let json = serde_json::to_string(&relation).unwrap();
-        let restored: Relation = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&relation).expect("Relation should serialize to JSON");
+        let restored: Relation =
+            serde_json::from_str(&json).expect("Relation should deserialize from JSON");
         assert_eq!(restored.from, "concept1");
         assert_eq!(restored.strength, 0.85);
     }
@@ -388,8 +391,10 @@ mod tests {
             total_relations: 20,
             cognitive_depth: 5.0,
         };
-        let json = serde_json::to_string(&state).unwrap();
-        let restored: SemanticMapState = serde_json::from_str(&json).unwrap();
+        let json =
+            serde_json::to_string(&state).expect("SemanticMapState should serialize to JSON");
+        let restored: SemanticMapState =
+            serde_json::from_str(&json).expect("SemanticMapState should deserialize from JSON");
         assert_eq!(restored.total_concepts, 10);
     }
 
@@ -419,7 +424,10 @@ mod tests {
         assert!(id.starts_with("concept_"));
         assert_eq!(map.concepts.len(), 1);
 
-        let concept = map.concepts.get(&id).unwrap();
+        let concept = map
+            .concepts
+            .get(&id)
+            .expect("concept should exist after add_concept");
         assert_eq!(concept.name, "Rust");
         assert_eq!(concept.domain, "Programming");
         assert_eq!(concept.weight, 1.0);
@@ -433,12 +441,18 @@ mod tests {
         let id2 = map.add_concept("Python".to_string(), "Programming".to_string());
         let _id3 = map.add_concept("Design".to_string(), "Art".to_string());
 
-        let prog_domain = map.domains.get("Programming").unwrap();
+        let prog_domain = map
+            .domains
+            .get("Programming")
+            .expect("Programming domain should exist after adding concepts");
         assert!(prog_domain.contains(&id1));
         assert!(prog_domain.contains(&id2));
         assert_eq!(prog_domain.len(), 2);
 
-        let art_domain = map.domains.get("Art").unwrap();
+        let art_domain = map
+            .domains
+            .get("Art")
+            .expect("Art domain should exist after adding concepts");
         assert_eq!(art_domain.len(), 1);
     }
 
@@ -461,10 +475,17 @@ mod tests {
         let mut map = SemanticMap::new();
         let id = map.add_concept("Test".to_string(), "Domain".to_string());
 
-        let initial_weight = map.concepts.get(&id).unwrap().weight;
+        let initial_weight = map
+            .concepts
+            .get(&id)
+            .expect("concept should exist after add_concept")
+            .weight;
         map.strengthen_concept(&id, 0.5);
 
-        let concept = map.concepts.get(&id).unwrap();
+        let concept = map
+            .concepts
+            .get(&id)
+            .expect("concept should exist after strengthen_concept");
         assert!(concept.weight > initial_weight);
         assert_eq!(concept.access_count, 1);
     }
@@ -479,7 +500,10 @@ mod tests {
             map.strengthen_concept(&id, 1.0);
         }
 
-        let concept = map.concepts.get(&id).unwrap();
+        let concept = map
+            .concepts
+            .get(&id)
+            .expect("concept should exist after add_concept");
         assert!(concept.weight <= 10.0);
         assert!(concept.confidence <= 1.0);
     }
@@ -566,7 +590,7 @@ mod tests {
     async fn test_tauri_cognitive_get_map() {
         let result = cognitive_get_map().await;
         assert!(result.is_ok());
-        let state = result.unwrap();
+        let state = result.expect("cognitive_get_map should succeed");
         assert_eq!(state.total_concepts, 0);
     }
 
@@ -574,7 +598,7 @@ mod tests {
     async fn test_tauri_cognitive_add_concept() {
         let result = cognitive_add_concept("Test".to_string(), "Domain".to_string()).await;
         assert!(result.is_ok());
-        let id = result.unwrap();
+        let id = result.expect("cognitive_add_concept should succeed");
         assert!(id.starts_with("concept_"));
     }
 }

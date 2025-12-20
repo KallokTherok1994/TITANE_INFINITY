@@ -46,8 +46,8 @@ impl RewriteCoreEngine {
     pub async fn analyze_for_rewrite(&self) -> RewriteReport {
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_secs();
+            .map(|d| d.as_secs())
+            .unwrap_or_else(|_| crate::core::utils::now_ms() / 1000);
 
         let proposals = vec![
             RewriteProposal {

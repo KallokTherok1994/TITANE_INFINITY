@@ -169,8 +169,10 @@ mod tests {
     #[test]
     fn test_issue_severity_serialization() {
         let sev = IssueSeverity::Medium;
-        let json = serde_json::to_string(&sev).unwrap();
-        let restored: IssueSeverity = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&sev)
+            .expect("IssueSeverity should serialize to JSON");
+        let restored: IssueSeverity = serde_json::from_str(&json)
+            .expect("IssueSeverity should deserialize from JSON");
         assert_eq!(restored, IssueSeverity::Medium);
     }
 
@@ -206,8 +208,10 @@ mod tests {
     #[test]
     fn test_issue_category_serialization() {
         let cat = IssueCategory::Resource;
-        let json = serde_json::to_string(&cat).unwrap();
-        let restored: IssueCategory = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&cat)
+            .expect("IssueCategory should serialize to JSON");
+        let restored: IssueCategory = serde_json::from_str(&json)
+            .expect("IssueCategory should deserialize from JSON");
         assert!(matches!(restored, IssueCategory::Resource));
     }
 
@@ -264,8 +268,10 @@ mod tests {
             description: "Memory leak".to_string(),
             affected_module: "memory".to_string(),
         };
-        let json = serde_json::to_string(&issue).unwrap();
-        let restored: Issue = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&issue)
+            .expect("Issue should serialize to JSON");
+        let restored: Issue = serde_json::from_str(&json)
+            .expect("Issue should deserialize from JSON");
         assert_eq!(restored.id, "test-issue");
         assert_eq!(restored.description, "Memory leak");
     }
@@ -338,8 +344,10 @@ mod tests {
     #[test]
     fn test_repair_action_serialization() {
         let action = RepairAction::Log("test message".to_string());
-        let json = serde_json::to_string(&action).unwrap();
-        let restored: RepairAction = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&action)
+            .expect("RepairAction should serialize to JSON");
+        let restored: RepairAction = serde_json::from_str(&json)
+            .expect("RepairAction should deserialize from JSON");
         assert!(matches!(restored, RepairAction::Log(_)));
     }
 
@@ -392,8 +400,10 @@ mod tests {
             priority: 8,
             estimated_impact: 0.75,
         };
-        let json = serde_json::to_string(&rec).unwrap();
-        let restored: Recommendation = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&rec)
+            .expect("Recommendation should serialize to JSON");
+        let restored: Recommendation = serde_json::from_str(&json)
+            .expect("Recommendation should deserialize from JSON");
         assert_eq!(restored.id, "rec-test");
         assert_eq!(restored.priority, 8);
     }
@@ -457,8 +467,10 @@ mod tests {
             message: "Success".to_string(),
             timestamp: 999999,
         };
-        let json = serde_json::to_string(&result).unwrap();
-        let restored: RepairResult = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&result)
+            .expect("RepairResult should serialize to JSON");
+        let restored: RepairResult = serde_json::from_str(&json)
+            .expect("RepairResult should deserialize from JSON");
         assert!(restored.success);
         assert_eq!(restored.action, "rebalance");
     }
@@ -511,8 +523,10 @@ mod tests {
             repairs_applied: 10,
             outcome: "all fixed".to_string(),
         };
-        let json = serde_json::to_string(&history).unwrap();
-        let restored: EvolutionHistory = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&history)
+            .expect("EvolutionHistory should serialize to JSON");
+        let restored: EvolutionHistory = serde_json::from_str(&json)
+            .expect("EvolutionHistory should deserialize from JSON");
         assert_eq!(restored.report_id, "rep-123");
         assert_eq!(restored.repairs_applied, 10);
     }
@@ -571,8 +585,10 @@ mod tests {
             repairs_applied: 5,
             ..Default::default()
         };
-        let json = serde_json::to_string(&state).unwrap();
-        let restored: EvolutionState = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&state)
+            .expect("EvolutionState should serialize to JSON");
+        let restored: EvolutionState = serde_json::from_str(&json)
+            .expect("EvolutionState should deserialize from JSON");
         assert!(restored.active);
         assert_eq!(restored.reports_generated, 10);
     }
@@ -651,8 +667,10 @@ mod tests {
             recommendations: vec![],
             health_score: 75.5,
         };
-        let json = serde_json::to_string(&report).unwrap();
-        let restored: EvolutionReport = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&report)
+            .expect("EvolutionReport should serialize to JSON");
+        let restored: EvolutionReport = serde_json::from_str(&json)
+            .expect("EvolutionReport should deserialize from JSON");
         assert_eq!(restored.id, "rep-test");
         assert_eq!(restored.health_score, 75.5);
     }

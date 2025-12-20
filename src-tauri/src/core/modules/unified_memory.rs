@@ -695,7 +695,9 @@ mod tests {
         let mut memory = UnifiedMemory::new();
         assert!(!memory.is_initialized());
 
-        memory.init().unwrap();
+        memory
+            .init()
+            .expect("UnifiedMemory::init should succeed in tests");
         assert!(memory.is_initialized());
         assert_eq!(memory.health(), EngineHealth::Healthy);
     }
@@ -703,7 +705,9 @@ mod tests {
     #[test]
     fn test_store_memory() {
         let mut memory = UnifiedMemory::new();
-        memory.init().unwrap();
+        memory
+            .init()
+            .expect("UnifiedMemory::init should succeed in tests");
 
         let id = memory
             .store(
@@ -712,7 +716,7 @@ mod tests {
                 0.8,
                 vec!["test".to_string()],
             )
-            .unwrap();
+            .expect("UnifiedMemory::store should succeed for valid input");
 
         assert!(!id.is_empty());
         assert_eq!(memory.stm.items.len(), 1);
@@ -722,7 +726,9 @@ mod tests {
     #[test]
     fn test_recall_memories() {
         let mut memory = UnifiedMemory::new();
-        memory.init().unwrap();
+        memory
+            .init()
+            .expect("UnifiedMemory::init should succeed in tests");
 
         memory
             .store(
@@ -731,7 +737,7 @@ mod tests {
                 0.7,
                 vec!["ai".to_string()],
             )
-            .unwrap();
+            .expect("UnifiedMemory::store should succeed for valid input");
         memory
             .store(
                 "Project planning".to_string(),
@@ -739,7 +745,7 @@ mod tests {
                 0.9,
                 vec!["project".to_string()],
             )
-            .unwrap();
+            .expect("UnifiedMemory::store should succeed for valid input");
 
         let results = memory.recall("ai", 10);
         assert_eq!(results.len(), 1);
@@ -749,7 +755,9 @@ mod tests {
     #[test]
     fn test_promotion_stm_to_mtm() {
         let mut memory = UnifiedMemory::new();
-        memory.init().unwrap();
+        memory
+            .init()
+            .expect("UnifiedMemory::init should succeed in tests");
 
         // Store high-importance memory
         let id = memory
@@ -759,7 +767,7 @@ mod tests {
                 0.9,
                 vec!["decision".to_string()],
             )
-            .unwrap();
+            .expect("UnifiedMemory::store should succeed for valid input");
 
         // Simulate multiple accesses
         let _ = memory.recall("decision", 10);
@@ -768,7 +776,9 @@ mod tests {
         let _ = memory.recall("decision", 10);
 
         // Trigger promotion
-        memory.promote_stm_to_mtm().unwrap();
+        memory
+            .promote_stm_to_mtm()
+            .expect("promote_stm_to_mtm should succeed in tests");
 
         assert_eq!(memory.mtm.items.len(), 1);
         assert_eq!(memory.stm.items.len(), 0);
@@ -778,14 +788,16 @@ mod tests {
     #[test]
     fn test_memory_stats() {
         let mut memory = UnifiedMemory::new();
-        memory.init().unwrap();
+        memory
+            .init()
+            .expect("UnifiedMemory::init should succeed in tests");
 
         memory
             .store("Test 1".to_string(), MemoryType::System, 0.5, vec![])
-            .unwrap();
+            .expect("UnifiedMemory::store should succeed for valid input");
         memory
             .store("Test 2".to_string(), MemoryType::System, 0.7, vec![])
-            .unwrap();
+            .expect("UnifiedMemory::store should succeed for valid input");
 
         let stats = memory.stats();
         assert_eq!(stats.stm_count, 2);
@@ -797,11 +809,13 @@ mod tests {
     #[tokio::test]
     async fn test_unified_tick() {
         let mut memory = UnifiedMemory::new();
-        memory.init().unwrap();
+        memory
+            .init()
+            .expect("UnifiedMemory::init should succeed in tests");
 
         memory
             .store("Old memory".to_string(), MemoryType::Event, 0.3, vec![])
-            .unwrap();
+            .expect("UnifiedMemory::store should succeed for valid input");
 
         let result = memory.tick().await;
         assert!(result.is_ok());

@@ -20,11 +20,13 @@ const MAX_OBJECT_DEPTH: usize = 32;
 // Panic au démarrage si regex invalide (comportement souhaité)
 static DANGEROUS_PATTERNS: Lazy<Vec<Regex>> = Lazy::new(|| {
     vec![
-        Regex::new(r"<script[^>]*>.*?</script>").unwrap(), // Safe: static regex
-        Regex::new(r"javascript:").unwrap(),               // Safe: static regex
-        Regex::new(r"on\w+\s*=").unwrap(),                 // Safe: static regex
-        Regex::new(r"eval\s*\(").unwrap(),                 // Safe: static regex
-        Regex::new(r"(?i)(UNION|SELECT|INSERT|UPDATE|DELETE|DROP)\s+").unwrap(), // Safe: static regex
+        Regex::new(r"<script[^>]*>.*?</script>")
+            .expect("static regex: <script> pattern must compile"),
+        Regex::new(r"javascript:").expect("static regex: javascript: pattern must compile"),
+        Regex::new(r"on\w+\s*=").expect("static regex: on* attribute pattern must compile"),
+        Regex::new(r"eval\s*\(").expect("static regex: eval( pattern must compile"),
+        Regex::new(r"(?i)(UNION|SELECT|INSERT|UPDATE|DELETE|DROP)\s+")
+            .expect("static regex: SQL keyword pattern must compile"),
     ]
 });
 

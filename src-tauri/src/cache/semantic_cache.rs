@@ -272,7 +272,7 @@ impl SemanticCache {
             let similarity = cosine_similarity(query_embedding, &entry.query_embedding);
 
             if similarity >= self.config.similarity_threshold
-                && (best_match.is_none() || similarity > best_match.unwrap().1)
+                && best_match.map_or(true, |(_, best_similarity)| similarity > best_similarity)
             {
                 best_match = Some((idx, similarity));
             }
@@ -613,7 +613,7 @@ impl SemanticCache {
 
         // Pattern pour dates françaises (DD/MM/YYYY)
         let re = regex::Regex::new(r"\d{2}/\d{2}/\d{4}").unwrap_or_else(|_| {
-            regex::Regex::new(r"$^").unwrap() // Pattern impossible si regex échoue
+            regex::Regex::new(r"$^").expect("fallback regex must compile") // Pattern impossible si regex échoue
         });
 
         re.replace_all(text, now.as_str()).to_string()

@@ -60,7 +60,8 @@ mod tests {
         // Receiver should be able to receive
         let received = rx.try_recv();
         assert!(received.is_ok());
-        assert_eq!(received.unwrap().content, "test");
+        let received = received.expect("receiver should be able to receive");
+        assert_eq!(received.content, "test");
     }
 
     #[test]
@@ -213,9 +214,14 @@ mod tests {
             done: false,
         };
 
-        tx.send(chunk).await.unwrap();
+        tx.send(chunk)
+            .await
+            .expect("sending stream chunk should succeed");
 
-        let received = rx.recv().await.unwrap();
+        let received = rx
+            .recv()
+            .await
+            .expect("receiving stream chunk should succeed");
         assert_eq!(received.content, "async content");
     }
 
@@ -231,11 +237,16 @@ mod tests {
                 content: format!("msg-{}", i),
                 done: i == 4,
             };
-            tx.send(chunk).await.unwrap();
+            tx.send(chunk)
+                .await
+                .expect("sending stream chunk should succeed");
         }
 
         for i in 0..5 {
-            let received = rx.recv().await.unwrap();
+            let received = rx
+                .recv()
+                .await
+                .expect("receiving stream chunk should succeed");
             assert_eq!(received.ordinal, i);
             assert_eq!(received.content, format!("msg-{}", i));
         }

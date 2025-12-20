@@ -380,14 +380,14 @@ mod tests {
     #[test]
     fn test_node_role_serialize() {
         let role = NodeRole::Monitor;
-        let json = serde_json::to_string(&role).unwrap();
+        let json = serde_json::to_string(&role).expect("NodeRole should serialize to JSON");
         assert!(json.contains("Monitor"));
     }
 
     #[test]
     fn test_node_role_deserialize() {
         let json = r#""Worker""#;
-        let role: NodeRole = serde_json::from_str(json).unwrap();
+        let role: NodeRole = serde_json::from_str(json).expect("NodeRole should deserialize from JSON");
         assert!(matches!(role, NodeRole::Worker));
     }
 
@@ -397,7 +397,9 @@ mod tests {
 
     #[test]
     fn test_node_info_creation() {
-        let addr: SocketAddr = "127.0.0.1:8080".parse().unwrap();
+        let addr: SocketAddr = "127.0.0.1:8080"
+            .parse()
+            .expect("socket addr should parse");
         let node = NodeInfo {
             id: "node-1".to_string(),
             addr,
@@ -413,7 +415,9 @@ mod tests {
 
     #[test]
     fn test_node_info_healthy() {
-        let addr: SocketAddr = "127.0.0.1:8080".parse().unwrap();
+        let addr: SocketAddr = "127.0.0.1:8080"
+            .parse()
+            .expect("socket addr should parse");
         let node = NodeInfo {
             id: "healthy".to_string(),
             addr,
@@ -428,7 +432,9 @@ mod tests {
 
     #[test]
     fn test_node_info_unhealthy() {
-        let addr: SocketAddr = "127.0.0.1:8080".parse().unwrap();
+        let addr: SocketAddr = "127.0.0.1:8080"
+            .parse()
+            .expect("socket addr should parse");
         let node = NodeInfo {
             id: "unhealthy".to_string(),
             addr,
@@ -443,7 +449,9 @@ mod tests {
 
     #[test]
     fn test_node_info_debug() {
-        let addr: SocketAddr = "127.0.0.1:8080".parse().unwrap();
+        let addr: SocketAddr = "127.0.0.1:8080"
+            .parse()
+            .expect("socket addr should parse");
         let node = NodeInfo {
             id: "debug-node".to_string(),
             addr,
@@ -459,7 +467,9 @@ mod tests {
 
     #[test]
     fn test_node_info_clone() {
-        let addr: SocketAddr = "127.0.0.1:8080".parse().unwrap();
+        let addr: SocketAddr = "127.0.0.1:8080"
+            .parse()
+            .expect("socket addr should parse");
         let node = NodeInfo {
             id: "clone-test".to_string(),
             addr,
@@ -476,7 +486,9 @@ mod tests {
 
     #[test]
     fn test_node_info_serialize() {
-        let addr: SocketAddr = "127.0.0.1:8080".parse().unwrap();
+        let addr: SocketAddr = "127.0.0.1:8080"
+            .parse()
+            .expect("socket addr should parse");
         let node = NodeInfo {
             id: "ser-node".to_string(),
             addr,
@@ -486,7 +498,7 @@ mod tests {
             last_seen: 12345,
             capabilities: vec!["cap1".to_string()],
         };
-        let json = serde_json::to_string(&node).unwrap();
+        let json = serde_json::to_string(&node).expect("NodeInfo should serialize to JSON");
         assert!(json.contains("ser-node"));
         assert!(json.contains("health"));
     }
@@ -494,14 +506,14 @@ mod tests {
     #[test]
     fn test_node_info_deserialize() {
         let json = r#"{"id":"deser-node","addr":"192.168.1.1:9000","role":"Root","health":90,"load":10,"last_seen":0,"capabilities":[]}"#;
-        let node: NodeInfo = serde_json::from_str(json).unwrap();
+        let node: NodeInfo = serde_json::from_str(json).expect("NodeInfo should deserialize from JSON");
         assert_eq!(node.id, "deser-node");
         assert_eq!(node.health, 90);
     }
 
     #[test]
     fn test_node_info_roundtrip() {
-        let addr: SocketAddr = "10.0.0.1:5000".parse().unwrap();
+        let addr: SocketAddr = "10.0.0.1:5000".parse().expect("socket addr should parse");
         let original = NodeInfo {
             id: "roundtrip".to_string(),
             addr,
@@ -511,15 +523,18 @@ mod tests {
             last_seen: 999999,
             capabilities: vec!["mon".to_string(), "log".to_string()],
         };
-        let json = serde_json::to_string(&original).unwrap();
-        let restored: NodeInfo = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&original).expect("NodeInfo should serialize to JSON");
+        let restored: NodeInfo =
+            serde_json::from_str(&json).expect("NodeInfo should deserialize from JSON");
         assert_eq!(restored.id, "roundtrip");
         assert_eq!(restored.capabilities.len(), 2);
     }
 
     #[test]
     fn test_node_info_with_many_capabilities() {
-        let addr: SocketAddr = "127.0.0.1:8080".parse().unwrap();
+        let addr: SocketAddr = "127.0.0.1:8080"
+            .parse()
+            .expect("socket addr should parse");
         let node = NodeInfo {
             id: "multi-cap".to_string(),
             addr,
@@ -552,7 +567,9 @@ mod tests {
 
     #[test]
     fn test_mesh_message_discover_reply() {
-        let addr: SocketAddr = "127.0.0.1:8080".parse().unwrap();
+        let addr: SocketAddr = "127.0.0.1:8080"
+            .parse()
+            .expect("socket addr should parse");
         let node_info = NodeInfo {
             id: "reply-node".to_string(),
             addr,
@@ -667,7 +684,7 @@ mod tests {
         let msg = MeshMessage::Discover {
             node_id: "ser-disc".to_string(),
         };
-        let json = serde_json::to_string(&msg).unwrap();
+        let json = serde_json::to_string(&msg).expect("MeshMessage should serialize to JSON");
         assert!(json.contains("Discover"));
         assert!(json.contains("ser-disc"));
     }
@@ -679,14 +696,15 @@ mod tests {
             health: 99,
             load: 1,
         };
-        let json = serde_json::to_string(&msg).unwrap();
+        let json = serde_json::to_string(&msg).expect("MeshMessage should serialize to JSON");
         assert!(json.contains("Heartbeat"));
     }
 
     #[test]
     fn test_mesh_message_deserialize_discover() {
         let json = r#"{"Discover":{"node_id":"deser-node"}}"#;
-        let msg: MeshMessage = serde_json::from_str(json).unwrap();
+        let msg: MeshMessage =
+            serde_json::from_str(json).expect("MeshMessage should deserialize from JSON");
         if let MeshMessage::Discover { node_id } = msg {
             assert_eq!(node_id, "deser-node");
         }
@@ -695,7 +713,8 @@ mod tests {
     #[test]
     fn test_mesh_message_deserialize_heartbeat() {
         let json = r#"{"Heartbeat":{"node_id":"hb-deser","health":75,"load":25}}"#;
-        let msg: MeshMessage = serde_json::from_str(json).unwrap();
+        let msg: MeshMessage =
+            serde_json::from_str(json).expect("MeshMessage should deserialize from JSON");
         if let MeshMessage::Heartbeat {
             node_id,
             health,
@@ -756,7 +775,7 @@ mod tests {
             active_peers: 12,
             avg_health: 85,
         };
-        let json = serde_json::to_string(&stats).unwrap();
+        let json = serde_json::to_string(&stats).expect("MeshStats should serialize to JSON");
         assert!(json.contains("total_peers"));
         assert!(json.contains("avg_health"));
     }
@@ -765,7 +784,7 @@ mod tests {
     fn test_mesh_stats_deserialize() {
         let json =
             r#"{"node_id":"deser-stats","total_peers":20,"active_peers":18,"avg_health":92}"#;
-        let stats: MeshStats = serde_json::from_str(json).unwrap();
+        let stats: MeshStats = serde_json::from_str(json).expect("MeshStats should deserialize from JSON");
         assert_eq!(stats.node_id, "deser-stats");
         assert_eq!(stats.total_peers, 20);
         assert_eq!(stats.avg_health, 92);
@@ -779,8 +798,9 @@ mod tests {
             active_peers: 5,
             avg_health: 80,
         };
-        let json = serde_json::to_string(&original).unwrap();
-        let restored: MeshStats = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&original).expect("MeshStats should serialize to JSON");
+        let restored: MeshStats =
+            serde_json::from_str(&json).expect("MeshStats should deserialize from JSON");
         assert_eq!(restored.node_id, "roundtrip-stats");
         assert_eq!(restored.total_peers, 7);
     }
@@ -820,7 +840,9 @@ mod tests {
     #[test]
     fn test_mesh_layer_add_peer() {
         let mesh = MeshLayer::new("host".to_string(), NodeRole::Root, 9999);
-        let addr: SocketAddr = "192.168.1.100:9999".parse().unwrap();
+        let addr: SocketAddr = "192.168.1.100:9999"
+            .parse()
+            .expect("socket addr should parse");
         let peer = NodeInfo {
             id: "peer-1".to_string(),
             addr,
@@ -839,7 +861,9 @@ mod tests {
     fn test_mesh_layer_add_multiple_peers() {
         let mesh = MeshLayer::new("host".to_string(), NodeRole::Root, 9999);
         for i in 0..5 {
-            let addr: SocketAddr = format!("192.168.1.{}:9999", 100 + i).parse().unwrap();
+            let addr: SocketAddr = format!("192.168.1.{}:9999", 100 + i)
+                .parse()
+                .expect("socket addr should parse");
             let peer = NodeInfo {
                 id: format!("peer-{}", i),
                 addr,
@@ -869,7 +893,9 @@ mod tests {
         let mesh = MeshLayer::new("host".to_string(), NodeRole::Root, 9999);
 
         // Add healthy peer
-        let addr1: SocketAddr = "192.168.1.100:9999".parse().unwrap();
+        let addr1: SocketAddr = "192.168.1.100:9999"
+            .parse()
+            .expect("socket addr should parse");
         mesh.add_peer(NodeInfo {
             id: "healthy-peer".to_string(),
             addr: addr1,
@@ -881,7 +907,9 @@ mod tests {
         });
 
         // Add unhealthy peer
-        let addr2: SocketAddr = "192.168.1.101:9999".parse().unwrap();
+        let addr2: SocketAddr = "192.168.1.101:9999"
+            .parse()
+            .expect("socket addr should parse");
         mesh.add_peer(NodeInfo {
             id: "unhealthy-peer".to_string(),
             addr: addr2,
@@ -900,7 +928,9 @@ mod tests {
     #[test]
     fn test_mesh_layer_replace_peer() {
         let mesh = MeshLayer::new("host".to_string(), NodeRole::Root, 9999);
-        let addr: SocketAddr = "192.168.1.100:9999".parse().unwrap();
+        let addr: SocketAddr = "192.168.1.100:9999"
+            .parse()
+            .expect("socket addr should parse");
 
         // Add peer
         mesh.add_peer(NodeInfo {

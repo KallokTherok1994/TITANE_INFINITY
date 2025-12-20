@@ -252,11 +252,16 @@ mod tests {
     #[test]
     fn test_vectorstore_get() {
         let mut store = VectorStore::new(3);
-        store.add("vec1".to_string(), vec![1.0, 2.0, 3.0]).unwrap();
+        store
+            .add("vec1".to_string(), vec![1.0, 2.0, 3.0])
+            .expect("VectorStore::add should succeed for valid vector");
 
         let vec = store.get("vec1");
         assert!(vec.is_some());
-        assert_eq!(vec.unwrap(), &vec![1.0, 2.0, 3.0]);
+        assert_eq!(
+            vec.expect("VectorStore::get should return Some for existing id"),
+            &vec![1.0, 2.0, 3.0]
+        );
 
         let missing = store.get("vec2");
         assert!(missing.is_none());
@@ -265,20 +270,28 @@ mod tests {
     #[test]
     fn test_vectorstore_update() {
         let mut store = VectorStore::new(3);
-        store.add("vec1".to_string(), vec![1.0, 0.0, 0.0]).unwrap();
+        store
+            .add("vec1".to_string(), vec![1.0, 0.0, 0.0])
+            .expect("VectorStore::add should succeed for valid vector");
 
         let result = store.update("vec1", vec![0.0, 1.0, 0.0]);
         assert!(result.is_ok());
 
-        let vec = store.get("vec1").unwrap();
+        let vec = store
+            .get("vec1")
+            .expect("VectorStore::get should return Some after update");
         assert_eq!(vec, &vec![0.0, 1.0, 0.0]);
     }
 
     #[test]
     fn test_vectorstore_remove() {
         let mut store = VectorStore::new(3);
-        store.add("vec1".to_string(), vec![1.0, 0.0, 0.0]).unwrap();
-        store.add("vec2".to_string(), vec![0.0, 1.0, 0.0]).unwrap();
+        store
+            .add("vec1".to_string(), vec![1.0, 0.0, 0.0])
+            .expect("VectorStore::add should succeed for valid vector");
+        store
+            .add("vec2".to_string(), vec![0.0, 1.0, 0.0])
+            .expect("VectorStore::add should succeed for valid vector");
 
         let removed = store.remove("vec1");
         assert!(removed.is_some());
@@ -292,9 +305,15 @@ mod tests {
     fn test_vectorstore_knn() {
         let mut store = VectorStore::new(3);
 
-        store.add("vec1".to_string(), vec![1.0, 0.0, 0.0]).unwrap();
-        store.add("vec2".to_string(), vec![0.9, 0.1, 0.0]).unwrap();
-        store.add("vec3".to_string(), vec![0.0, 1.0, 0.0]).unwrap();
+        store
+            .add("vec1".to_string(), vec![1.0, 0.0, 0.0])
+            .expect("VectorStore::add should succeed for valid vector");
+        store
+            .add("vec2".to_string(), vec![0.9, 0.1, 0.0])
+            .expect("VectorStore::add should succeed for valid vector");
+        store
+            .add("vec3".to_string(), vec![0.0, 1.0, 0.0])
+            .expect("VectorStore::add should succeed for valid vector");
 
         let query = vec![1.0, 0.0, 0.0];
         let results = store.knn(&query, 2);
@@ -308,8 +327,12 @@ mod tests {
     fn test_vectorstore_knn_with_scores() {
         let mut store = VectorStore::new(3);
 
-        store.add("vec1".to_string(), vec![1.0, 0.0, 0.0]).unwrap();
-        store.add("vec2".to_string(), vec![0.0, 1.0, 0.0]).unwrap();
+        store
+            .add("vec1".to_string(), vec![1.0, 0.0, 0.0])
+            .expect("VectorStore::add should succeed for valid vector");
+        store
+            .add("vec2".to_string(), vec![0.0, 1.0, 0.0])
+            .expect("VectorStore::add should succeed for valid vector");
 
         let query = vec![1.0, 0.0, 0.0];
         let results = store.knn_with_scores(&query, 2);
@@ -323,9 +346,15 @@ mod tests {
     fn test_vectorstore_radius_search() {
         let mut store = VectorStore::new(3);
 
-        store.add("vec1".to_string(), vec![1.0, 0.0, 0.0]).unwrap();
-        store.add("vec2".to_string(), vec![0.9, 0.1, 0.0]).unwrap();
-        store.add("vec3".to_string(), vec![0.0, 1.0, 0.0]).unwrap();
+        store
+            .add("vec1".to_string(), vec![1.0, 0.0, 0.0])
+            .expect("VectorStore::add should succeed for valid vector");
+        store
+            .add("vec2".to_string(), vec![0.9, 0.1, 0.0])
+            .expect("VectorStore::add should succeed for valid vector");
+        store
+            .add("vec3".to_string(), vec![0.0, 1.0, 0.0])
+            .expect("VectorStore::add should succeed for valid vector");
 
         let query = vec![1.0, 0.0, 0.0];
         let results = store.radius_search(&query, 0.9);

@@ -47,8 +47,8 @@ impl MemoryBuilder {
         let id = format!("mem_{}", uuid::Uuid::new_v4());
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_secs();
+            .map(|d| d.as_secs())
+            .unwrap_or_else(|_| crate::core::utils::now_ms() / 1000);
 
         // Extraction simple de concepts (mots-clés)
         let concepts: Vec<String> = message
@@ -81,8 +81,8 @@ impl MemoryBuilder {
         let id = format!("mem_file_{}", uuid::Uuid::new_v4());
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_secs();
+            .map(|d| d.as_secs())
+            .unwrap_or_else(|_| crate::core::utils::now_ms() / 1000);
 
         let concepts: Vec<String> = content
             .split_whitespace()

@@ -224,47 +224,89 @@ mod tests {
     #[tokio::test]
     async fn test_integration_lifecycle() {
         let integration = HarmonicGravityIntegration::default();
-        integration.initialize().await.unwrap();
+        integration
+            .initialize()
+            .await
+            .expect("integration.initialize should succeed");
 
-        integration.integration_cycle().await.unwrap();
+        integration
+            .integration_cycle()
+            .await
+            .expect("integration.integration_cycle should succeed");
 
-        integration.shutdown().await.unwrap();
+        integration
+            .shutdown()
+            .await
+            .expect("integration.shutdown should succeed");
     }
 
     #[tokio::test]
     async fn test_bidirectional_sync() {
         let integration = HarmonicGravityIntegration::default();
-        integration.initialize().await.unwrap();
+        integration
+            .initialize()
+            .await
+            .expect("integration.initialize should succeed");
 
         // Test Harmonic → Gravity sync
-        integration.sync_harmonic_to_gravity().await.unwrap();
+        integration
+            .sync_harmonic_to_gravity()
+            .await
+            .expect("sync_harmonic_to_gravity should succeed");
 
         // Test Gravity → Harmonic sync
-        integration.sync_gravity_to_harmonic().await.unwrap();
+        integration
+            .sync_gravity_to_harmonic()
+            .await
+            .expect("sync_gravity_to_harmonic should succeed");
 
-        integration.shutdown().await.unwrap();
+        integration
+            .shutdown()
+            .await
+            .expect("integration.shutdown should succeed");
     }
 
     #[tokio::test]
     async fn test_amplify_resonance() {
         let integration = HarmonicGravityIntegration::default();
-        integration.initialize().await.unwrap();
+        integration
+            .initialize()
+            .await
+            .expect("integration.initialize should succeed");
 
         // Test resonance amplification with various strengths
-        integration.amplify_resonance(0.5).await.unwrap();
-        integration.amplify_resonance(1.0).await.unwrap();
+        integration
+            .amplify_resonance(0.5)
+            .await
+            .expect("amplify_resonance(0.5) should succeed");
+        integration
+            .amplify_resonance(1.0)
+            .await
+            .expect("amplify_resonance(1.0) should succeed");
 
-        integration.shutdown().await.unwrap();
+        integration
+            .shutdown()
+            .await
+            .expect("integration.shutdown should succeed");
     }
 
     #[tokio::test]
     async fn test_trigger_regulation() {
         let integration = HarmonicGravityIntegration::default();
-        integration.initialize().await.unwrap();
+        integration
+            .initialize()
+            .await
+            .expect("integration.initialize should succeed");
 
         // Test regulation trigger
-        integration.trigger_regulation().await.unwrap();
+        integration
+            .trigger_regulation()
+            .await
+            .expect("trigger_regulation should succeed");
 
-        integration.shutdown().await.unwrap();
+        integration
+            .shutdown()
+            .await
+            .expect("integration.shutdown should succeed");
     }
 }

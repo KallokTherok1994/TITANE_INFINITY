@@ -45,8 +45,8 @@ impl FusionCore {
     pub async fn fuse(&mut self) -> FusionReport {
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_secs();
+            .map(|d| d.as_secs())
+            .unwrap_or_else(|_| crate::core::utils::now_ms() / 1000);
 
         // Calcul de la force neuronale
         let neuronal_strength =

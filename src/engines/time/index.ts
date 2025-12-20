@@ -13,6 +13,7 @@ export { TimeEngine, timeEngine, TimeEngineUtils } from './TimeEngine';
 
 // AgendaEngine
 export { AgendaEngine, agendaEngine, AgendaEngineUtils } from './AgendaEngine';
+export type { AgendaStorageCallbacks } from './AgendaEngine';
 
 // EnergyEngine
 export { EnergyEngine, energyEngine, EnergyEngineUtils } from './EnergyEngine';
@@ -29,13 +30,13 @@ export type { CommandExecutionResult } from './ChatScheduler';
 // ═══════════════════════════════════════════════════════════════════
 
 import { timeEngine } from './TimeEngine';
-import { agendaEngine } from './AgendaEngine';
+import { agendaEngine, type AgendaStorageCallbacks } from './AgendaEngine';
 import { energyEngine } from './EnergyEngine';
 
 /**
  * Initialise tous les moteurs Time/Agenda en une seule fois
  */
-export async function initTimeAgendaSystem(): Promise<void> {
+export async function initTimeAgendaSystem(storage?: AgendaStorageCallbacks): Promise<void> {
   console.log('[TimeAgendaSystem] 🚀 Initialisation du système...');
 
   // 1. TimeEngine (synchrone)
@@ -45,6 +46,9 @@ export async function initTimeAgendaSystem(): Promise<void> {
   energyEngine.init();
 
   // 3. AgendaEngine (asynchrone - charge les événements)
+  if (storage) {
+    agendaEngine.setStorageCallbacks(storage);
+  }
   await agendaEngine.init();
 
   console.log('[TimeAgendaSystem] ✅ Système initialisé avec succès');

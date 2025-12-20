@@ -342,7 +342,7 @@ mod tests {
         let state = AvatarAppearanceState::default();
         let result = parser.parse("Je veux un look bureau", &state);
         assert!(result.is_ok());
-        let update = result.unwrap();
+        let update = result.expect("parse should succeed for bureau preset");
         assert_eq!(update.mode_preset, Some("Bureau_Pro".to_string()));
     }
 
@@ -352,7 +352,7 @@ mod tests {
         let state = AvatarAppearanceState::default();
         let result = parser.parse("Style professionnel", &state);
         assert!(result.is_ok());
-        let update = result.unwrap();
+        let update = result.expect("parse should succeed for professionnel preset");
         assert_eq!(update.mode_preset, Some("Bureau_Pro".to_string()));
     }
 
@@ -362,7 +362,7 @@ mod tests {
         let state = AvatarAppearanceState::default();
         let result = parser.parse("Je préfère casual", &state);
         assert!(result.is_ok());
-        let update = result.unwrap();
+        let update = result.expect("parse should succeed for casual preset");
         assert_eq!(update.mode_preset, Some("Casual_Light".to_string()));
     }
 
@@ -372,7 +372,7 @@ mod tests {
         let state = AvatarAppearanceState::default();
         let result = parser.parse("Look décontracté", &state);
         assert!(result.is_ok());
-        let update = result.unwrap();
+        let update = result.expect("parse should succeed for décontracté preset");
         assert_eq!(update.mode_preset, Some("Casual_Light".to_string()));
     }
 
@@ -382,7 +382,7 @@ mod tests {
         let state = AvatarAppearanceState::default();
         let result = parser.parse("Tenue de sport", &state);
         assert!(result.is_ok());
-        let update = result.unwrap();
+        let update = result.expect("parse should succeed for sport preset");
         assert_eq!(update.mode_preset, Some("Sport_Dynamic".to_string()));
     }
 
@@ -392,7 +392,7 @@ mod tests {
         let state = AvatarAppearanceState::default();
         let result = parser.parse("Style athlétique", &state);
         assert!(result.is_ok());
-        let update = result.unwrap();
+        let update = result.expect("parse should succeed for athlétique preset");
         assert_eq!(update.mode_preset, Some("Sport_Dynamic".to_string()));
     }
 
@@ -402,7 +402,7 @@ mod tests {
         let state = AvatarAppearanceState::default();
         let result = parser.parse("Look montagne", &state);
         assert!(result.is_ok());
-        let update = result.unwrap();
+        let update = result.expect("parse should succeed for montagne preset");
         assert_eq!(update.mode_preset, Some("Montagne_Nordic".to_string()));
     }
 
@@ -412,7 +412,7 @@ mod tests {
         let state = AvatarAppearanceState::default();
         let result = parser.parse("Style nordique", &state);
         assert!(result.is_ok());
-        let update = result.unwrap();
+        let update = result.expect("parse should succeed for nordique preset");
         assert_eq!(update.mode_preset, Some("Montagne_Nordic".to_string()));
     }
 
@@ -422,9 +422,9 @@ mod tests {
         let state = AvatarAppearanceState::default();
         let result = parser.parse("Mets une chemise", &state);
         assert!(result.is_ok());
-        let update = result.unwrap();
-        assert!(update.outfit.is_some());
-        assert_eq!(update.outfit.unwrap().top, "chemise");
+        let update = result.expect("parse should succeed for chemise");
+        let outfit = update.outfit.expect("outfit should be Some");
+        assert_eq!(outfit.top, "chemise");
     }
 
     #[test]
@@ -433,9 +433,9 @@ mod tests {
         let state = AvatarAppearanceState::default();
         let result = parser.parse("Je veux un t-shirt", &state);
         assert!(result.is_ok());
-        let update = result.unwrap();
-        assert!(update.outfit.is_some());
-        assert_eq!(update.outfit.unwrap().top, "t-shirt");
+        let update = result.expect("parse should succeed for t-shirt");
+        let outfit = update.outfit.expect("outfit should be Some");
+        assert_eq!(outfit.top, "t-shirt");
     }
 
     #[test]
@@ -444,9 +444,9 @@ mod tests {
         let state = AvatarAppearanceState::default();
         let result = parser.parse("Une blouse", &state);
         assert!(result.is_ok());
-        let update = result.unwrap();
-        assert!(update.outfit.is_some());
-        assert_eq!(update.outfit.unwrap().top, "blouse");
+        let update = result.expect("parse should succeed for blouse");
+        let outfit = update.outfit.expect("outfit should be Some");
+        assert_eq!(outfit.top, "blouse");
     }
 
     #[test]
@@ -455,9 +455,9 @@ mod tests {
         let state = AvatarAppearanceState::default();
         let result = parser.parse("Mets un pantalon", &state);
         assert!(result.is_ok());
-        let update = result.unwrap();
-        assert!(update.outfit.is_some());
-        assert_eq!(update.outfit.unwrap().bottom, "pantalon");
+        let update = result.expect("parse should succeed for pantalon");
+        let outfit = update.outfit.expect("outfit should be Some");
+        assert_eq!(outfit.bottom, "pantalon");
     }
 
     #[test]
@@ -466,9 +466,9 @@ mod tests {
         let state = AvatarAppearanceState::default();
         let result = parser.parse("Des jeans", &state);
         assert!(result.is_ok());
-        let update = result.unwrap();
-        assert!(update.outfit.is_some());
-        assert_eq!(update.outfit.unwrap().bottom, "jeans");
+        let update = result.expect("parse should succeed for jeans");
+        let outfit = update.outfit.expect("outfit should be Some");
+        assert_eq!(outfit.bottom, "jeans");
     }
 
     #[test]
@@ -477,9 +477,9 @@ mod tests {
         let state = AvatarAppearanceState::default();
         let result = parser.parse("Une jupe", &state);
         assert!(result.is_ok());
-        let update = result.unwrap();
-        assert!(update.outfit.is_some());
-        assert_eq!(update.outfit.unwrap().bottom, "jupe");
+        let update = result.expect("parse should succeed for jupe");
+        let outfit = update.outfit.expect("outfit should be Some");
+        assert_eq!(outfit.bottom, "jupe");
     }
 
     #[test]
@@ -488,9 +488,9 @@ mod tests {
         let state = AvatarAppearanceState::default();
         let result = parser.parse("Des leggings", &state);
         assert!(result.is_ok());
-        let update = result.unwrap();
-        assert!(update.outfit.is_some());
-        assert_eq!(update.outfit.unwrap().bottom, "leggings");
+        let update = result.expect("parse should succeed for leggings");
+        let outfit = update.outfit.expect("outfit should be Some");
+        assert_eq!(outfit.bottom, "leggings");
     }
 
     #[test]
@@ -499,9 +499,9 @@ mod tests {
         let state = AvatarAppearanceState::default();
         let result = parser.parse("Attache les cheveux", &state);
         assert!(result.is_ok());
-        let update = result.unwrap();
-        assert!(update.hair.is_some());
-        assert_eq!(update.hair.unwrap().style, "queue de cheval");
+        let update = result.expect("parse should succeed for attache cheveux");
+        let hair = update.hair.expect("hair should be Some");
+        assert_eq!(hair.style, "queue de cheval");
     }
 
     #[test]
@@ -510,9 +510,9 @@ mod tests {
         let state = AvatarAppearanceState::default();
         let result = parser.parse("Détache les cheveux", &state);
         assert!(result.is_ok());
-        let update = result.unwrap();
-        assert!(update.hair.is_some());
-        assert_eq!(update.hair.unwrap().style, "détachés");
+        let update = result.expect("parse should succeed for détache cheveux");
+        let hair = update.hair.expect("hair should be Some");
+        assert_eq!(hair.style, "détachés");
     }
 
     #[test]
@@ -521,9 +521,9 @@ mod tests {
         let state = AvatarAppearanceState::default();
         let result = parser.parse("Fais un chignon", &state);
         assert!(result.is_ok());
-        let update = result.unwrap();
-        assert!(update.hair.is_some());
-        assert_eq!(update.hair.unwrap().style, "chignon");
+        let update = result.expect("parse should succeed for chignon");
+        let hair = update.hair.expect("hair should be Some");
+        assert_eq!(hair.style, "chignon");
     }
 
     #[test]
@@ -532,10 +532,10 @@ mod tests {
         let state = AvatarAppearanceState::default();
         let result = parser.parse("Mets des lunettes", &state);
         assert!(result.is_ok());
-        let update = result.unwrap();
-        assert!(update.accessories.is_some());
+        let update = result.expect("parse should succeed for lunettes");
+        let accessories = update.accessories.expect("accessories should be Some");
         assert_eq!(
-            update.accessories.unwrap().glasses,
+            accessories.glasses,
             Some("lunettes".to_string())
         );
     }
@@ -546,9 +546,9 @@ mod tests {
         let state = AvatarAppearanceState::default();
         let result = parser.parse("Enlève les lunettes", &state);
         assert!(result.is_ok());
-        let update = result.unwrap();
-        assert!(update.accessories.is_some());
-        assert!(update.accessories.unwrap().glasses.is_none());
+        let update = result.expect("parse should succeed for enlève lunettes");
+        let accessories = update.accessories.expect("accessories should be Some");
+        assert!(accessories.glasses.is_none());
     }
 
     #[test]
@@ -557,9 +557,9 @@ mod tests {
         let state = AvatarAppearanceState::default();
         let result = parser.parse("Retire les lunettes", &state);
         assert!(result.is_ok());
-        let update = result.unwrap();
-        assert!(update.accessories.is_some());
-        assert!(update.accessories.unwrap().glasses.is_none());
+        let update = result.expect("parse should succeed for retire lunettes");
+        let accessories = update.accessories.expect("accessories should be Some");
+        assert!(accessories.glasses.is_none());
     }
 
     #[test]
@@ -568,7 +568,7 @@ mod tests {
         let state = AvatarAppearanceState::default();
         let result = parser.parse("Hello world", &state);
         assert!(result.is_ok());
-        let update = result.unwrap();
+        let update = result.expect("parse should succeed for no-match");
         assert!(update.mode_preset.is_none());
         assert!(update.outfit.is_none());
         assert!(update.hair.is_none());
@@ -581,10 +581,10 @@ mod tests {
         let state = AvatarAppearanceState::default();
         let result = parser.parse("Look bureau avec une chemise", &state);
         assert!(result.is_ok());
-        let update = result.unwrap();
+        let update = result.expect("parse should succeed for combined command");
         assert_eq!(update.mode_preset, Some("Bureau_Pro".to_string()));
-        assert!(update.outfit.is_some());
-        assert_eq!(update.outfit.unwrap().top, "chemise");
+        let outfit = update.outfit.expect("outfit should be Some");
+        assert_eq!(outfit.top, "chemise");
     }
 
     #[test]
@@ -593,7 +593,7 @@ mod tests {
         let state = AvatarAppearanceState::default();
         let result = parser.parse("BUREAU PROFESSIONNEL", &state);
         assert!(result.is_ok());
-        let update = result.unwrap();
+        let update = result.expect("parse should succeed for case-insensitive");
         assert_eq!(update.mode_preset, Some("Bureau_Pro".to_string()));
     }
 
@@ -604,19 +604,19 @@ mod tests {
     #[test]
     fn test_get_appearance_engine_returns_arc() {
         let engine = get_appearance_engine();
-        let _guard = engine.lock().unwrap();
+        let _guard = engine.lock().expect("lock APPEARANCE_ENGINE");
     }
 
     #[test]
     fn test_get_appearance_state_returns_arc() {
         let state = get_appearance_state();
-        let _guard = state.lock().unwrap();
+        let _guard = state.lock().expect("lock APPEARANCE_STATE");
     }
 
     #[test]
     fn test_appearance_engine_has_styles() {
         let engine = get_appearance_engine();
-        let guard = engine.lock().unwrap();
+        let guard = engine.lock().expect("lock APPEARANCE_ENGINE");
         assert!(!guard.styles.is_empty());
     }
 }

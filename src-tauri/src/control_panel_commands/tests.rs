@@ -22,7 +22,7 @@ mod control_panel_tests {
         let result = cp_get_system_info().await;
         assert!(result.is_ok());
 
-        let info = result.unwrap();
+        let info = result.expect("cp_get_system_info should succeed");
         // ✅ v26.2.0: Updated to match actual Cargo.toml version
         assert_eq!(info.version, "26.2.0");
         assert!(info.memory_usage >= 0.0 && info.memory_usage <= 100.0);
@@ -35,7 +35,7 @@ mod control_panel_tests {
         let result = cp_run_system_diagnostic().await;
         assert!(result.is_ok());
 
-        let diagnostic = result.unwrap();
+        let diagnostic = result.expect("cp_run_system_diagnostic should succeed");
         // ✅ Phase 2: Diagnostic contains CPU/Memory/Disk stats, not necessarily "Système"
         let has_stats = diagnostic.contains("CPU")
             || diagnostic.contains("Mémoire")
@@ -64,7 +64,7 @@ mod control_panel_tests {
         let result = cp_get_design_config().await;
         assert!(result.is_ok());
 
-        let config = result.unwrap();
+        let config = result.expect("cp_get_design_config should succeed");
         assert!(matches!(config.mode.as_str(), "light" | "dark" | "auto"));
         assert!(matches!(
             config.density.as_str(),
@@ -94,7 +94,7 @@ mod control_panel_tests {
         let result = cp_get_singularity_status().await;
         assert!(result.is_ok());
 
-        let status = result.unwrap();
+        let status = result.expect("cp_get_singularity_status should succeed");
         assert!(status.power_level <= 100);
     }
 
@@ -221,7 +221,7 @@ mod control_panel_tests {
         let result = cp_get_memory_stats().await;
         assert!(result.is_ok());
 
-        let stats = result.unwrap();
+        let stats = result.expect("cp_get_memory_stats should succeed");
         assert!(stats.total_size > 0, "Total size should be positive");
         // ✅ Phase 2: Allow used > total in edge cases (memory pressure, cache)
         // Just verify both values are reasonable
@@ -248,7 +248,7 @@ mod control_panel_tests {
         let result = cp_get_modules_status().await;
         assert!(result.is_ok());
 
-        let modules = result.unwrap();
+        let modules = result.expect("cp_get_modules_status should succeed");
         assert!(!modules.is_empty());
         assert!(modules.iter().all(|m| !m.id.is_empty()));
         assert!(modules.iter().all(|m| !m.name.is_empty()));
@@ -269,7 +269,7 @@ mod control_panel_tests {
         let result = cp_get_network_config().await;
         assert!(result.is_ok());
 
-        let config = result.unwrap();
+        let config = result.expect("cp_get_network_config should succeed");
         assert!(config.proxy_url.is_empty() || !config.proxy_url.is_empty());
     }
 
@@ -295,7 +295,7 @@ mod control_panel_tests {
         let result = cp_check_for_updates().await;
         assert!(result.is_ok());
 
-        let info = result.unwrap();
+        let info = result.expect("cp_check_for_updates should succeed");
         assert!(!info.current_version.is_empty());
         assert!(!info.latest_version.is_empty());
     }
@@ -317,7 +317,7 @@ mod control_panel_tests {
         let result = cp_get_logs(100).await;
         assert!(result.is_ok());
 
-        let logs = result.unwrap();
+        let logs = result.expect("cp_get_logs should succeed");
         assert!(logs.len() <= 100);
     }
 

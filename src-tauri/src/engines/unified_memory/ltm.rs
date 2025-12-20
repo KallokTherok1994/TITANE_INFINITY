@@ -286,11 +286,36 @@ impl TantivyLTM {
     pub fn insert(&mut self, entry: &MemoryEntry) -> Result<(), String> {
         // Add document to index
         let mut doc = Document::new();
-        doc.add_text(self.schema.get_field("id").unwrap(), &entry.id);
-        doc.add_text(self.schema.get_field("content").unwrap(), &entry.content);
-        doc.add_text(self.schema.get_field("role").unwrap(), &entry.role);
-        doc.add_i64(self.schema.get_field("timestamp").unwrap(), entry.timestamp);
-        doc.add_f64(self.schema.get_field("importance").unwrap(), entry.importance as f64);
+        doc.add_text(
+            self.schema
+                .get_field("id")
+                .expect("schema field 'id' should exist"),
+            &entry.id,
+        );
+        doc.add_text(
+            self.schema
+                .get_field("content")
+                .expect("schema field 'content' should exist"),
+            &entry.content,
+        );
+        doc.add_text(
+            self.schema
+                .get_field("role")
+                .expect("schema field 'role' should exist"),
+            &entry.role,
+        );
+        doc.add_i64(
+            self.schema
+                .get_field("timestamp")
+                .expect("schema field 'timestamp' should exist"),
+            entry.timestamp,
+        );
+        doc.add_f64(
+            self.schema
+                .get_field("importance")
+                .expect("schema field 'importance' should exist"),
+            entry.importance as f64,
+        );
 
         self.writer.add_document(doc)
             .map_err(|e| format!("Failed to add document: {}", e))?;
@@ -350,14 +375,14 @@ mod tests {
             content: "Hello world".to_string(),
             ..Default::default()
         })
-        .unwrap();
+        .expect("LongTermMemory::insert should succeed for valid entry");
 
         ltm.insert(MemoryEntry {
             id: "2".to_string(),
             content: "Goodbye world".to_string(),
             ..Default::default()
         })
-        .unwrap();
+        .expect("LongTermMemory::insert should succeed for valid entry");
 
         let results = ltm.search("world", 10);
         assert_eq!(results.len(), 2);
@@ -391,7 +416,7 @@ mod tests {
             embedding: Some(emb1),
             ..Default::default()
         })
-        .unwrap();
+        .expect("LongTermMemory::insert should succeed for valid entry");
 
         ltm.insert(MemoryEntry {
             id: "2".to_string(),
@@ -399,7 +424,7 @@ mod tests {
             embedding: Some(emb2),
             ..Default::default()
         })
-        .unwrap();
+        .expect("LongTermMemory::insert should succeed for valid entry");
 
         let results = ltm.search_semantic(&query_emb, 2);
         assert_eq!(results.len(), 2);
@@ -430,7 +455,7 @@ mod tests {
             embedding: Some(vec![0.5; 384]),
             ..Default::default()
         })
-        .unwrap();
+        .expect("LongTermMemory::insert should succeed for valid entry");
 
         ltm.insert(MemoryEntry {
             id: "2".to_string(),
@@ -438,7 +463,7 @@ mod tests {
             embedding: Some(vec![0.48; 384]),
             ..Default::default()
         })
-        .unwrap();
+        .expect("LongTermMemory::insert should succeed for valid entry");
 
         let query_emb = vec![0.5; 384];
         let results = ltm.search_hybrid("learning", Some(&query_emb), 2, 0.5);
