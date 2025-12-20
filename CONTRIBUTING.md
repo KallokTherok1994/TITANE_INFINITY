@@ -251,6 +251,57 @@ git commit -m "feat(engines): Add neural prosody blending to voiceEngine"
 
 ---
 
+## 🤖 GitHub Copilot Instructions
+
+Ce projet est configuré avec des **instructions personnalisées pour GitHub Copilot** afin d'assurer la cohérence et la qualité du code généré.
+
+### Configuration
+
+- **[.github/copilot-instructions.md](.github/copilot-instructions.md)** — Protocole COPILOT-XS (règles générales)
+- **[.github/instructions/titane.instructions.md](.github/instructions/titane.instructions.md)** — Instructions détaillées du projet
+- **[.copilot-rules-permanent.md](.copilot-rules-permanent.md)** — Règles permanentes TITANE∞
+
+### Validation Automatique
+
+Avant chaque commit, validez votre code avec les outils Copilot XS :
+
+```bash
+npm run copilot-xs:validate   # Valider le code (markers, secrets)
+npm run copilot-xs:status     # Vérifier la configuration Copilot
+npm run copilot-xs:precommit  # Validation + tests (pre-commit)
+```
+
+### Agents Spécialisés
+
+Le projet utilise des **agents Copilot spécialisés** (`.github/copilot-agents/`) :
+
+- **Guardian Agent** — Qualité et sécurité globales
+- **Dependency Guardian** — Gestion sûre des dépendances
+- **Architecture Agent** — Respect du modèle 4-Ring
+- **Security Auditor** — Audit de sécurité OWASP
+
+### Agent Skills
+
+Des **skills réutilisables** sont disponibles dans `.github/skills/` :
+
+- **Architecture Check** — Valide le respect du modèle 4-Ring
+
+Pour utiliser un skill avec Copilot :
+```
+@copilot use skill architecture-check
+```
+
+### Workflow Recommandé avec Copilot
+
+1. **Context Gathering** — Analysez les patterns existants avant de générer du code
+2. **Plan Generation** — Décrivez votre approche et les risques potentiels
+3. **Implementation** — Générez le code en respectant les instructions
+4. **Validation** — Exécutez `npm run copilot-xs:validate` et les tests
+
+Pour plus de détails : [COPILOT-XS README](.github/copilot-xs/README.md)
+
+---
+
 ## 📚 Resources
 
 - **Architecture**: [ARCHITECTURE.md](ARCHITECTURE.md)
