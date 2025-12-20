@@ -13,6 +13,12 @@ interface LogEntry {
   message: string;
 }
 
+interface LogsResponse {
+  logs: LogEntry[];
+  total: number;
+  has_more: boolean;
+}
+
 interface LogViewerProps {
   maxLines?: number;
   autoScroll?: boolean;
@@ -37,9 +43,11 @@ export const LogViewer: React.FC<LogViewerProps> = ({
     if (isPaused) return;
 
     try {
-      const result = await secureInvoke<{ logs: LogEntry[] }>('devtools_get_logs', {
-        limit: maxLines,
+      const result = await secureInvoke<LogsResponse>('get_logs', {
         level: filter === 'all' ? null : filter,
+        source: null,
+        limit: maxLines,
+        offset: 0,
       });
 
       setLogs(result.logs);
@@ -81,10 +89,15 @@ export const LogViewer: React.FC<LogViewerProps> = ({
   // Clear all logs
   const clearLogs = async () => {
     try {
-      await invoke('devtools_clear_logs');
+      await secureInvoke('clear_logs');
       setLogs([]);
     } catch (error) {
-      console.error('Failed to clear logs:', error);
+      try {
+        await secureInvoke('clear_system_logs');
+        setLogs([]);
+      } catch {
+        console.error('Failed to clear logs:', error);
+      }
     }
   };
 
