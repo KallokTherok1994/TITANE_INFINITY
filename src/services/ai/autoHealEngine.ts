@@ -759,7 +759,8 @@ class AutoHealEngine {
         errorId: autoHealError.id,
         action: healAction.action,
       });
-      throw new Error(`Chat healing failed: ${healAction.action}`);
+      // Sanitize error message to avoid exposing internal details
+      throw new Error('Chat error recovery failed. Please try again.');
     }
 
     logger.info('Chat error healed successfully', {
