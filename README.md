@@ -477,7 +477,7 @@ git push origin feature/my-awesome-feature
 
 - [ ] Lazy-load engines lourds
 - [ ] Standardiser loading states
-- [ ] Niveaux de log DevTools (LOG_LEVEL)
+- [x] Niveaux de log DevTools (LOG_LEVEL) ✅ (Runtime log level control with environment variables, localStorage, and DevTools API)
 - [x] Error boundaries ChatIA ✅ (ChatErrorBoundary with OMEGA Pipeline integration)
 
 ### Phase 5 : Documentation & Release (Semaine 7)

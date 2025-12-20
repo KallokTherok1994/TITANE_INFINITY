@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v24.3.0 — Proprietary License
+ * TITANE_INFINITY v26.2.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -18,7 +18,10 @@ declare global {
 // 🛡️ TAURI INVOKE PROTECTION - Applied first
 import './tauri-protection-patch';
 
-// TITANE∞ v24.3.0 - Main Entry Point - v22Ω AI Performance Optimizations
+// ✨ Phase 4 (Week 6): Initialize runtime log level manager
+import './config/logLevelConfig';
+
+// TITANE∞ v26.2.0 - Main Entry Point - v22Ω AI Performance Optimizations
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { logger } from './lib/logger';
