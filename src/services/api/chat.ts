@@ -8,6 +8,7 @@
 
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 import { invokeWithRetry, LONG_COMMAND_OPTIONS } from '@/lib/serviceInvoker';
+import { monitoring } from '@/monitoring';
 
 /**
  * Type pour l'ID de conversation OMEGA
@@ -214,11 +215,22 @@ class ChatService {
       throw new Error('conversationId est requis pour utiliser le pipeline OMEGA.');
     }
 
+    const startedAt = Date.now();
+    monitoring.trackRequest();
+
     const request = {
       message,
       conversation_id: conversationId,
       config,
     };
+
+    monitoring.addBreadcrumb('Chat sendMessage (OMEGA)', 'chat', {
+      endpoint: 'OMEGA',
+      conversationId,
+      provider: config?.provider ?? 'auto',
+      mode: config?.mode,
+      messageLength: message.length,
+    });
 
     console.log('[ChatService-OMEGA] 📤 Envoi message via OMEGA:', {
       conversationId,
@@ -232,6 +244,12 @@ class ChatService {
         { ...LONG_COMMAND_OPTIONS, context: 'ChatOmega' }
       );
 
+      const backendLatency = this.resolveLatencyMs(backendResponse.latency_ms);
+      const measuredLatency = Date.now() - startedAt;
+      const effectiveLatency = backendLatency > 0 ? backendLatency : measuredLatency;
+
+      monitoring.trackPipelineLatency(effectiveLatency);
+
       console.log('[ChatService-OMEGA] 📥 Réponse reçue:', {
         success: backendResponse.success,
         provider: this.resolveProvider(
@@ -239,16 +257,26 @@ class ChatService {
           config?.provider
         ),
         contentLength: backendResponse.message?.content?.length ?? 0,
-        latencyMs: this.resolveLatencyMs(backendResponse.latency_ms),
+        latencyMs: backendLatency,
       });
 
       if (!backendResponse.success || !backendResponse.message) {
+        monitoring.trackPipelineError();
         throw new Error(backendResponse.error ?? 'Réponse invalide du backend OMEGA');
       }
 
       return this.normalizeResponse(backendResponse, config);
     } catch (error) {
       console.error('[ChatService-OMEGA] ❌ Erreur sendMessage:', error);
+
+      monitoring.trackError(error, {
+        endpoint: 'OMEGA',
+        conversationId,
+        provider: config?.provider ?? 'auto',
+        mode: config?.mode,
+      });
+      monitoring.trackPipelineError();
+
       const reason = error instanceof Error ? error.message : String(error);
       throw new Error(`Chat OMEGA envoi échoué: ${reason}`);
     }
