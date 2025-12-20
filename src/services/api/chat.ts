@@ -290,7 +290,19 @@ class ChatService {
     config?: StreamConfig
   ): Promise<ChatResponse> {
     this.lastEndpoint = 'LEGACY';
+    const startedAt = Date.now();
+    monitoring.trackRequest();
+
     const request = this.buildRequest(messages, config, false);
+
+    const lastMessage = messages[messages.length - 1]?.content ?? '';
+    monitoring.addBreadcrumb('Chat sendMessage (LEGACY)', 'chat', {
+      endpoint: 'LEGACY',
+      provider: config?.provider ?? 'auto',
+      mode: config?.mode,
+      messageCount: messages.length,
+      messageLength: lastMessage.length,
+    });
 
     console.log('[ChatService] 📤 Envoi message:', {
       provider: config?.provider ?? 'auto',
@@ -305,6 +317,16 @@ class ChatService {
         { ...LONG_COMMAND_OPTIONS, context: 'Chat' }
       );
 
+      const backendLatency = this.resolveLatencyMs(backendResponse.latency_ms);
+      const measuredLatency = Date.now() - startedAt;
+      const effectiveLatency = backendLatency > 0 ? backendLatency : measuredLatency;
+      monitoring.trackPipelineLatency(effectiveLatency);
+
+      if (!backendResponse.success || !backendResponse.message) {
+        monitoring.trackPipelineError();
+        throw new Error(backendResponse.error ?? 'Réponse invalide du backend LEGACY');
+      }
+
       console.log('[ChatService] 📥 Réponse reçue:', {
         success: backendResponse.success,
         provider: this.resolveProvider(
@@ -318,6 +340,15 @@ class ChatService {
       return this.normalizeResponse(backendResponse, config);
     } catch (error) {
       console.error('[ChatService] ❌ Erreur sendMessage:', error);
+
+      monitoring.trackError(error, {
+        endpoint: 'LEGACY',
+        provider: config?.provider ?? 'auto',
+        mode: config?.mode,
+        messageCount: messages.length,
+      });
+      monitoring.trackPipelineError();
+
       const reason = error instanceof Error ? error.message : String(error);
       throw new Error(`Chat envoi échoué: ${reason}`);
     }
@@ -333,7 +364,65 @@ class ChatService {
     onError: (error: Error) => void,
     config?: StreamConfig
   ): Promise<void> {
+    this.lastEndpoint = 'LEGACY';
+    const startedAt = Date.now();
+    monitoring.trackRequest();
+
     const request = this.buildRequest(messages, config, true);
+
+    const lastMessage = messages[messages.length - 1]?.content ?? '';
+    monitoring.addBreadcrumb('Chat sendMessageStream (LEGACY)', 'chat', {
+      endpoint: 'LEGACY',
+      streaming: true,
+      provider: config?.provider ?? 'auto',
+      mode: config?.mode,
+      messageCount: messages.length,
+      messageLength: lastMessage.length,
+      conversationId: config?.conversationId,
+      messageId: config?.messageId,
+    });
+
+    const reportStreamError = (err: Error, phase: string) => {
+      try {
+        monitoring.trackError(err, {
+          endpoint: 'LEGACY_STREAM',
+          phase,
+          provider: config?.provider ?? 'auto',
+          mode: config?.mode,
+          messageCount: messages.length,
+          conversationId: config?.conversationId,
+          messageId: config?.messageId,
+        });
+        monitoring.trackPipelineError();
+      } catch {
+        // Intentionally ignore monitoring errors
+      }
+    };
+
+    const reportStreamSuccess = (response: ChatResponse, source: string) => {
+      try {
+        const measuredLatency = Date.now() - startedAt;
+        const responseLatency =
+          typeof response.latencyMs === 'number' && Number.isFinite(response.latencyMs)
+            ? response.latencyMs
+            : 0;
+        const effectiveLatency = responseLatency > 0 ? responseLatency : measuredLatency;
+        monitoring.trackPipelineLatency(effectiveLatency);
+
+        monitoring.addBreadcrumb('Chat stream completed', 'chat', {
+          endpoint: 'LEGACY',
+          source,
+          provider: response.provider ?? (config?.provider ?? 'auto'),
+          mode: config?.mode,
+          latencyMs: effectiveLatency,
+          chunkCount: response.metadata?.chunkCount,
+          conversationId: response.metadata?.conversationId,
+          messageId: response.metadata?.messageId,
+        });
+      } catch {
+        // Intentionally ignore monitoring errors
+      }
+    };
 
     let unlistenChunk: UnlistenFn | null = null;
     let unlistenComplete: UnlistenFn | null = null;
@@ -469,6 +558,7 @@ class ChatService {
           completed = true;
           cleanup();
           const err = new Error(normalized.error);
+          reportStreamError(err, 'complete');
           try {
             onError(err);
           } catch (callbackError) {
@@ -494,6 +584,8 @@ class ChatService {
           targetConversationId ?? normalized.conversationId ?? null,
           targetMessageId ?? normalized.messageId ?? null
         );
+
+        reportStreamSuccess(response, 'event');
 
         try {
           onComplete(response);
@@ -608,6 +700,8 @@ class ChatService {
 
         completed = true;
 
+        reportStreamSuccess(response, 'fallback');
+
         try {
           onComplete(response);
         } catch (callbackError) {
@@ -622,6 +716,7 @@ class ChatService {
     } catch (error) {
       cleanup();
       const err = error instanceof Error ? error : new Error(String(error));
+      reportStreamError(err, 'outer');
       try {
         onError(err);
       } catch (callbackError) {
