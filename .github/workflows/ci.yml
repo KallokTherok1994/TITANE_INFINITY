@@ -137,5 +137,5 @@ jobs:
         run: npm ci
 
       - name: Run accessibility tests
-        run: npm test -- --run
+        run: npm test
         continue-on-error: true
