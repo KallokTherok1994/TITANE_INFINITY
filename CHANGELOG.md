@@ -15,6 +15,8 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
 ---
 
+<a id="v26-3-0"></a>
+
 ## [26.3.0] - 2025-12-18 - PERFECTION 10/10: ADR + VALIDATION FINALE 🏆
 
 ### 🎯 SCORE QUALITÉ: 10.00/10 — PERFECTION ATTEINTE
