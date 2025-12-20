@@ -6,6 +6,39 @@
  * Mode par défaut: 100% LOCAL (production-ready)
  */
 
+type EnvValue = string | boolean | undefined;
+
+const env = import.meta.env as Record<string, EnvValue>;
+
+function envFlag(key: string): boolean {
+  const value = env[key];
+  if (value === true) return true;
+  if (value === false) return false;
+  if (typeof value === 'string') {
+    const normalized = value.trim().toLowerCase();
+    return normalized === '1' || normalized === 'true' || normalized === 'yes';
+  }
+  return false;
+}
+
+function runtimeFlag(key: string): boolean {
+  try {
+    if (typeof window === 'undefined') return false;
+    return window.localStorage.getItem(key) === '1';
+  } catch {
+    return false;
+  }
+}
+
+// Guardrails:
+// - Build-time allow: VITE_ENABLE_EXTERNAL_AI=1
+// - Runtime toggle (no rebuild): localStorage.setItem('titane.enable_external_ai', '1')
+//   (default off in production)
+const buildAllowsExternalAI = envFlag('VITE_ENABLE_EXTERNAL_AI');
+const runtimeAllowsExternalAI =
+  import.meta.env.DEV ? true : runtimeFlag('titane.enable_external_ai');
+const externalAIEnabled = buildAllowsExternalAI && runtimeAllowsExternalAI;
+
 export const FEATURE_FLAGS = {
   /**
    * 🔒 NETWORK ACCESS (DEFAULT: DISABLED)
@@ -13,7 +46,7 @@ export const FEATURE_FLAGS = {
    * Enable external network calls (AI APIs, etc.)
    * WARNING: Requires internet connection
    */
-  ENABLE_EXTERNAL_AI: true, // Gemini, OpenAI APIs ✅ ENABLED
+  ENABLE_EXTERNAL_AI: externalAIEnabled, // External AI gated by build + runtime
   ENABLE_LOCAL_LLM: true, // Ollama localhost (optional)
 
   /**
@@ -21,8 +54,8 @@ export const FEATURE_FLAGS = {
    * ═══════════════════════════════════════
    */
   AI_PROVIDERS: {
-    gemini: true, // Google Gemini API (requires API key) ✅ ENABLED
-    openai: true, // OpenAI API (requires API key) ✅ ENABLED
+    gemini: externalAIEnabled, // Google Gemini API (requires API key)
+    openai: externalAIEnabled, // OpenAI API (requires API key)
     ollama: true, // Local Ollama (optional, localhost:11434)
     builtin: true, // Built-in mock responses (always available)
   },
