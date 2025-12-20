@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { secureInvoke } from '@/lib/security';
+import { envFlag } from '@/config/featureFlags';
 import { ControlPanelToggle } from '../components/ControlPanelToggle';
 
 interface AIConfig {
@@ -16,21 +17,6 @@ interface AIConfig {
 
 const GEMINI_KEY_SENTINEL = '***MASKED***';
 const EXTERNAL_AI_STORAGE_KEY = 'titane.enable_external_ai';
-
-type EnvValue = string | boolean | undefined;
-
-const env = import.meta.env as Record<string, EnvValue>;
-
-function envFlag(key: string): boolean {
-  const value = env[key];
-  if (value === true) return true;
-  if (value === false) return false;
-  if (typeof value === 'string') {
-    const normalized = value.trim().toLowerCase();
-    return normalized === '1' || normalized === 'true' || normalized === 'yes';
-  }
-  return false;
-}
 
 const DEFAULT_CONFIG: AIConfig = {
   gemini_api_key: '',
@@ -118,7 +104,7 @@ export const AISection: React.FC = () => {
       setExternalAIToggleError(null);
     } catch {
       setExternalAIToggleError(
-        "Impossible d'accéder au stockage local (localStorage)."
+        "Impossible d’accéder au stockage local (localStorage)."
       );
     }
   }, []);
