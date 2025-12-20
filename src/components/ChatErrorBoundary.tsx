@@ -75,7 +75,7 @@ export class ChatErrorBoundary extends Component<
     this.state = {
       hasError: false,
       error: null,
-      errorInfo: null,
+      errorInfo: null, // Renamed to _errorInfo
       isAutoHealing: false,
       healingAttempts: 0,
       errorContext: null,
@@ -309,7 +309,7 @@ export class ChatErrorBoundary extends Component<
    * Report error to backend
    */
   private handleReportError = async (): Promise<void> => {
-    const { error, errorInfo, errorContext } = this.state;
+    const { error, errorContext } = this.state;
 
     if (!error || !errorContext) return;
 
@@ -395,7 +395,7 @@ export class ChatErrorBoundary extends Component<
                 Erreur dans le Chat IA
               </h2>
               <p className="text-gray-300">
-                Une erreur inattendue s'est produite dans le système de conversation.
+                Une erreur inattendue s&apos;est produite dans le système de conversation.
                 Vos données sont sécurisées et la conversation a été isolée.
               </p>
             </div>
@@ -456,14 +456,16 @@ export class ChatErrorBoundary extends Component<
               onClick={this.handleReportError}
               className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded font-medium transition-colors"
             >
-              Signaler l'erreur
+              Signaler l’erreur
+              Signaler l&apos;erreur
             </button>
 
             <button
               onClick={() => window.location.reload()}
               className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded font-medium transition-colors"
             >
-              Recharger l'application
+              Recharger l’application
+              Recharger l&apos;application
             </button>
           </div>
 
@@ -479,13 +481,14 @@ export class ChatErrorBoundary extends Component<
           {/* Help Text */}
           <div className="mt-4 pt-4 border-t border-gray-700 text-sm text-gray-500">
             <p className="mb-2">
-              <strong>Que faire?</strong>
+              <strong>Que faire ?</strong>
             </p>
             <ul className="list-disc list-inside space-y-1">
-              <li>Cliquez sur "Réessayer" pour tenter de reprendre la conversation</li>
-              <li>Créez une "Nouvelle Conversation" pour repartir à zéro</li>
-              <li>Si le problème persiste, rechargez l'application</li>
-              <li>Vous pouvez signaler cette erreur pour nous aider à l'améliorer</li>
+              <li>Cliquez sur « Réessayer » pour tenter de reprendre la conversation</li>
+              <li>Cliquez sur &quot;Réessayer&quot; pour tenter de reprendre la conversation</li>
+              <li>Créez une &quot;Nouvelle Conversation&quot; pour repartir à zéro</li>
+              <li>Si le problème persiste, rechargez l’application</li>
+              <li>Vous pouvez signaler cette erreur pour nous aider à l’améliorer</li>
             </ul>
           </div>
         </div>
@@ -501,8 +504,13 @@ declare module '@/services/ai/autoHealEngine' {
   interface AutoHealEngine {
     handleChatError(
       error: Error,
-      errorInfo: ErrorInfo,
-      context: ChatErrorContext
+      errorInfo: { componentStack?: string },
+      context: {
+        conversationId?: string;
+        mode?: string;
+        pipelineStep?: string;
+        timestamp: number;
+      }
     ): Promise<void>;
   }
 }

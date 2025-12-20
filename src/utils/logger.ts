@@ -14,16 +14,29 @@
 import type { LogArgs, LogParts, TableData } from '@/types/logger';
 
 // Lazy import to avoid circular dependency
-let logLevelManager: any = null;
+type RuntimeLogLevelManager = {
+  shouldLog: (source: string, level: number) => boolean;
+};
+
+let logLevelManager: RuntimeLogLevelManager | null = null;
+let logLevelManagerLoadStarted = false;
 const getLogLevelManager = () => {
-  if (!logLevelManager) {
-    try {
-      logLevelManager = require('@/config/logLevelConfig').logLevelManager;
-    } catch (error) {
-      // Fallback if not available
-      logLevelManager = null;
-    }
+  if (logLevelManager) {
+    return logLevelManager;
   }
+
+  if (!logLevelManagerLoadStarted) {
+    logLevelManagerLoadStarted = true;
+    import('@/config/logLevelConfig')
+      .then(mod => {
+        logLevelManager = (mod as unknown as { logLevelManager?: RuntimeLogLevelManager })
+          .logLevelManager ?? null;
+      })
+      .catch(() => {
+        logLevelManager = null;
+      });
+  }
+
   return logLevelManager;
 };
 

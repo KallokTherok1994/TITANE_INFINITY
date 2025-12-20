@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 interface LogEntry {
   timestamp: string;
@@ -37,7 +37,7 @@ export const LogViewer: React.FC<LogViewerProps> = ({
     if (isPaused) return;
 
     try {
-      const result = await invoke<{ logs: LogEntry[] }>('devtools_get_logs', {
+      const result = await secureInvoke<{ logs: LogEntry[] }>('devtools_get_logs', {
         limit: maxLines,
         level: filter === 'all' ? null : filter,
       });
