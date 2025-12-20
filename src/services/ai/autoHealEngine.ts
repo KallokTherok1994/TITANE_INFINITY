@@ -716,6 +716,77 @@ class AutoHealEngine {
 
     return { success: allSuccess, results };
   }
+
+  /**
+   * ═══════════════════════════════════════════════════════════════════
+   * PHASE 4 (Week 6): Chat-Specific Error Handling
+   * Handle errors from ChatErrorBoundary with OMEGA Pipeline awareness
+   * ═══════════════════════════════════════════════════════════════════
+   */
+  async handleChatError(
+    error: Error,
+    errorInfo: { componentStack?: string },
+    context: {
+      conversationId?: string;
+      mode?: string;
+      pipelineStep?: string;
+      timestamp: number;
+    }
+  ): Promise<void> {
+    logger.info('Handling chat error', {
+      error: error.message,
+      pipelineStep: context.pipelineStep,
+      conversationId: context.conversationId,
+    });
+
+    // Detect and classify the error
+    const autoHealError = this.detectError(
+      `chat:${context.conversationId || 'unknown'}`,
+      error,
+      this.mapPipelineStepToErrorType(context.pipelineStep),
+      {
+        mode: context.mode,
+        pipelineStep: context.pipelineStep,
+        componentStack: errorInfo.componentStack,
+      }
+    );
+
+    // Attempt to heal based on pipeline step
+    const healAction = await this.heal(autoHealError);
+
+    if (!healAction.success) {
+      logger.warn('Chat error healing failed', {
+        errorId: autoHealError.id,
+        action: healAction.action,
+      });
+      // Sanitize error message to avoid exposing internal details
+      throw new Error('Chat error recovery failed. Please try again.');
+    }
+
+    logger.info('Chat error healed successfully', {
+      errorId: autoHealError.id,
+      action: healAction.action,
+      duration: healAction.duration,
+    });
+  }
+
+  /**
+   * Map OMEGA Pipeline step to error type
+   */
+  private mapPipelineStepToErrorType(
+    pipelineStep?: string
+  ): AutoHealError['type'] {
+    if (!pipelineStep) return 'unknown';
+
+    const step = pipelineStep.toLowerCase();
+
+    if (step.includes('validation')) return 'validation';
+    if (step.includes('context') || step.includes('memory')) return 'memory';
+    if (step.includes('generation') || step.includes('provider')) return 'provider';
+    if (step.includes('network') || step.includes('timeout')) return 'timeout';
+
+    return 'unknown';
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────

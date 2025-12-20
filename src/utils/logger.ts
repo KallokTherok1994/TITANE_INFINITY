@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v21.1 — Proprietary License
+ * TITANE_INFINITY v26.2.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
@@ -7,10 +7,25 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  *   LOGGER UTILITIES — Production-Ready Conditional Logging
  *   Replace console.log avec filtrage basé sur environnement
+ *   Phase 4 (Week 6): Runtime LOG_LEVEL control integration
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
 import type { LogArgs, LogParts, TableData } from '@/types/logger';
+
+// Lazy import to avoid circular dependency
+let logLevelManager: any = null;
+const getLogLevelManager = () => {
+  if (!logLevelManager) {
+    try {
+      logLevelManager = require('@/config/logLevelConfig').logLevelManager;
+    } catch (error) {
+      // Fallback if not available
+      logLevelManager = null;
+    }
+  }
+  return logLevelManager;
+};
 
 /**
  * Log levels (par ordre de priorité)
@@ -36,6 +51,8 @@ interface LoggerConfig {
   timestamps?: boolean;
   /** Mode production (disable debug/trace) */
   isProduction?: boolean;
+  /** Enable runtime log level control */
+  enableRuntimeControl?: boolean;
 }
 
 /**
@@ -53,6 +70,7 @@ class Logger {
       prefix: config?.prefix || 'TITANE',
       timestamps: config?.timestamps !== false,
       isProduction: !isDev && !isTest,
+      enableRuntimeControl: true, // Enable by default
       ...config,
     };
   }
@@ -84,8 +102,19 @@ class Logger {
 
   /**
    * Check si niveau doit être loggé
+   * Now integrates with runtime log level manager if available
    */
   private shouldLog(level: LogLevel): boolean {
+    // Check runtime log level manager first (if enabled)
+    if (this.config.enableRuntimeControl) {
+      const manager = getLogLevelManager();
+      if (manager) {
+        const shouldLog = manager.shouldLog(this.config.prefix, level);
+        return shouldLog;
+      }
+    }
+
+    // Fallback to original logic
     if (this.config.isProduction && level < LogLevel.INFO) {
       return false; // Production: seulement INFO+
     }
