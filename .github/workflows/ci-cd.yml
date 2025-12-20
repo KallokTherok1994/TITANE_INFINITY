@@ -60,6 +60,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Ensure dist directory exists (Tauri frontendDist)
+        run: mkdir -p dist
+
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
 
