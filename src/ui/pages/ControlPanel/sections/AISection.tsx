@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { secureInvoke } from '@/lib/security';
+import { ControlPanelToggle } from '../components/ControlPanelToggle';
 
 interface AIConfig {
   gemini_api_key: string;
@@ -14,6 +15,22 @@ interface AIConfig {
 }
 
 const GEMINI_KEY_SENTINEL = '***MASKED***';
+const EXTERNAL_AI_STORAGE_KEY = 'titane.enable_external_ai';
+
+type EnvValue = string | boolean | undefined;
+
+const env = import.meta.env as Record<string, EnvValue>;
+
+function envFlag(key: string): boolean {
+  const value = env[key];
+  if (value === true) return true;
+  if (value === false) return false;
+  if (typeof value === 'string') {
+    const normalized = value.trim().toLowerCase();
+    return normalized === '1' || normalized === 'true' || normalized === 'yes';
+  }
+  return false;
+}
 
 const DEFAULT_CONFIG: AIConfig = {
   gemini_api_key: '',
@@ -40,6 +57,15 @@ export const AISection: React.FC = () => {
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [externalAIRuntimeEnabled, setExternalAIRuntimeEnabled] = useState(false);
+  const [externalAIToggleError, setExternalAIToggleError] = useState<string | null>(
+    null
+  );
+
+  const isDev = import.meta.env.DEV;
+  const buildAllowsExternalAI = useMemo(() => envFlag('VITE_ENABLE_EXTERNAL_AI'), []);
+  const effectiveExternalAIEnabled =
+    buildAllowsExternalAI && (isDev ? true : externalAIRuntimeEnabled);
 
   const runtimeConfig = useMemo<RuntimeConfig | null>(() => {
     if (typeof window === 'undefined') {
@@ -80,6 +106,62 @@ export const AISection: React.FC = () => {
     }
     void loadConfig();
   }, [loadConfig, runtimeConfig?.geminiConfigured]);
+
+  useEffect(() => {
+    try {
+      if (typeof window === 'undefined') {
+        return;
+      }
+      setExternalAIRuntimeEnabled(
+        window.localStorage.getItem(EXTERNAL_AI_STORAGE_KEY) === '1'
+      );
+      setExternalAIToggleError(null);
+    } catch {
+      setExternalAIToggleError(
+        "Impossible d'accéder au stockage local (localStorage)."
+      );
+    }
+  }, []);
+
+  const toggleExternalAI = useCallback(() => {
+    if (!buildAllowsExternalAI) {
+      setExternalAIToggleError(
+        'External AI non autorisée par ce build (VITE_ENABLE_EXTERNAL_AI=1 requis).'
+      );
+      return;
+    }
+
+    try {
+      if (typeof window === 'undefined') {
+        return;
+      }
+
+      const next = !externalAIRuntimeEnabled;
+      if (next) {
+        window.localStorage.setItem(EXTERNAL_AI_STORAGE_KEY, '1');
+      } else {
+        window.localStorage.removeItem(EXTERNAL_AI_STORAGE_KEY);
+      }
+
+      setExternalAIRuntimeEnabled(next);
+      setExternalAIToggleError(null);
+    } catch {
+      setExternalAIToggleError(
+        "Impossible de modifier le stockage local (localStorage)."
+      );
+    }
+  }, [buildAllowsExternalAI, externalAIRuntimeEnabled]);
+
+  const reloadApp = useCallback(() => {
+    try {
+      if (typeof window === 'undefined') {
+        return;
+      }
+      window.location.reload();
+    } catch {
+      setExternalAIToggleError('Impossible de recharger l’application.');
+    }
+  }, []);
 
   const saveConfig = useCallback(async () => {
     try {
@@ -295,6 +377,37 @@ export const AISection: React.FC = () => {
           )}
           {showUnsavedChanges && !validationError && !error && (
             <p className="cp-helper-text">Modifications en attente de sauvegarde.</p>
+          )}
+        </div>
+      </div>
+
+      <div className="cp-card">
+        <h3 className="cp-card-title">External AI (opt-in)</h3>
+        <div className="cp-card-content">
+          <ControlPanelToggle
+            checked={effectiveExternalAIEnabled}
+            onChange={toggleExternalAI}
+            title="Autoriser External AI (runtime)"
+            description={
+              buildAllowsExternalAI
+                ? isDev
+                  ? "Ce build autorise External AI en dev (runtime implicitement autorisé)."
+                  : "Active/désactive le flag runtime. Un rechargement est nécessaire pour appliquer le changement."
+                : 'Désactivé par ce build (lancer avec VITE_ENABLE_EXTERNAL_AI=1).'
+            }
+            disabled={!buildAllowsExternalAI}
+            icon="🌐"
+          />
+          {externalAIToggleError && <p className="cp-error">{externalAIToggleError}</p>}
+          {!externalAIToggleError && buildAllowsExternalAI && (
+            <p className="cp-helper-text">
+              Clé localStorage: <strong>{EXTERNAL_AI_STORAGE_KEY}</strong>
+            </p>
+          )}
+          {buildAllowsExternalAI && !isDev && (
+            <button className="cp-button secondary" onClick={reloadApp}>
+              🔄 Recharger maintenant
+            </button>
           )}
         </div>
       </div>
