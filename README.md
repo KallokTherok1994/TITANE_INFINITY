@@ -4,7 +4,7 @@
 **Status:** Production Ready ✅  
 **License:** Proprietary — © 2025 Humain Total / Kevin Thibault
 
-**Latest:** PERFECTION 10/10 — ADR + Validation finale v26.3.0 (zéro dette technique) 🏆
+**Latest:** PERFECTION 10/10 (cf. CHANGELOG v26.3.0 — zéro dette technique) — ADR + Validation finale 🏆
 
 ---
 
@@ -392,7 +392,7 @@ git push origin feature/my-awesome-feature
 
 ## 📊 Roadmap v24-v25
 
-> **🎯 Current Phase: v26.3.0 — Validation finale complétée (Score 10/10)**  
+> **🎯 Current Phase: v26.3.0 — Validation finale complétée (Score 10/10, cf. CHANGELOG v26.3.0)**  
 > **Status:** 200% Documentation Coverage Achieved ✅ — zéro dette technique
 
 ### ✅ Phase 0-7 Complete (Dec 2025)
@@ -595,4 +595,4 @@ Voir `LICENSE.md` pour détails.
 
 ---
 
-**TITANE∞ v26.3.0** — _Your Cognitive Operating System_ — Score qualité 10/10
+**TITANE∞ v26.3.0** — _Your Cognitive Operating System_ — Score qualité 10/10 (cf. CHANGELOG v26.3.0)
