@@ -122,7 +122,7 @@ export const sharedTestConfig = defineConfig({
 
   build: {
     target: 'esnext',
-    minify: 'terser',
+    minify: 'esbuild',
     cssMinify: 'lightningcss',
     rollupOptions: {
       output: {

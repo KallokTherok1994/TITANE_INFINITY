@@ -23,9 +23,15 @@ pub mod performance;
 pub mod unified_pipeline;
 
 // Réexporter les types publics
+#[allow(unused_imports)]
 pub use auto_fix::*;
+#[allow(unused_imports)]
 pub use auto_heal::*;
+#[allow(unused_imports)]
 pub use crash_guard::*;
+#[allow(unused_imports)]
 pub use fusion_engine::*;
+#[allow(unused_imports)]
 pub use performance::*;
+#[allow(unused_imports)]
 pub use unified_pipeline::*;

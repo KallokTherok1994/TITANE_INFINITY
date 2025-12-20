@@ -25,6 +25,19 @@ function run(cmd, args) {
   return { ok: true };
 }
 
+function runOrFallback(primaryCmd, primaryArgs, fallbackCmd, fallbackArgs) {
+  const primary = run(primaryCmd, primaryArgs);
+  if (primary.ok) {
+    return primary;
+  }
+
+  if (primary.reason !== 'not-found') {
+    return primary;
+  }
+
+  return run(fallbackCmd, fallbackArgs);
+}
+
 const hasPackageLock = existsSync('package-lock.json');
 const hasPnpmLock = existsSync('pnpm-lock.yaml');
 const hasYarnLock = existsSync('yarn.lock');
@@ -35,10 +48,16 @@ if (hasPackageLock) {
 }
 
 if (hasPnpmLock) {
-  const pnpmResult = run('pnpm', ['audit']);
+  const pnpmResult = runOrFallback(
+    'pnpm',
+    ['audit'],
+    'corepack',
+    ['pnpm', 'audit']
+  );
+
   if (!pnpmResult.ok) {
     console.warn(
-      '[COPILOT-XS] ⚠️ Security scan skipped: pnpm-lock.yaml detected but pnpm is not installed.'
+      '[COPILOT-XS] ⚠️ Security scan skipped: pnpm-lock.yaml detected but neither pnpm nor corepack is available.'
     );
   }
   process.exit(0);

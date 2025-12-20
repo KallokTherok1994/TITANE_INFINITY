@@ -13,6 +13,7 @@ use std::time::Duration;
 // ────────────────────────────────────────────────────────────────
 
 #[derive(Clone)]
+#[allow(dead_code)]
 struct Conversation {
     id: String,
     messages: Vec<String>,
@@ -133,6 +134,7 @@ fn benchmark_rwlock_concurrent_writes(c: &mut Criterion) {
 // Benchmark: Engine Initialization (Sequential baseline)
 // ────────────────────────────────────────────────────────────────
 
+#[allow(dead_code)]
 struct MockEngine {
     name: String,
     init_time_ms: u64,
