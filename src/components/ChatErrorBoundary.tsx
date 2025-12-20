@@ -222,9 +222,8 @@ export class ChatErrorBoundary extends Component<
 
       // Trigger auto-heal engine
       await Promise.race([
-        autoHealEngine.handleChatError(
-          error,
-          { componentStack: errorInfo.componentStack ?? undefined },
+        autoHealEngine.handleChatError(error, 
+          { componentStack: errorInfo.componentStack ?? undefined }, 
           errorContext
         ),
         this.timeout(ChatErrorBoundary.AUTO_HEAL_TIMEOUT_MS),
