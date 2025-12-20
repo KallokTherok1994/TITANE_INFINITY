@@ -5,6 +5,7 @@
   "type": "module",
   "license": "SEE LICENSE.md",
   "scripts": {
+    "preinstall": "node scripts/install/enforce-package-manager.cjs",
     "dev": "tauri dev",
     "dev:tauri": "tauri dev",
     "build": "vite build",
