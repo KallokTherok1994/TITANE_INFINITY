@@ -475,7 +475,7 @@ git push origin feature/my-awesome-feature
 
 ### Phase 4 : Performance & UX (Semaine 6)
 
-- [ ] Lazy-load engines lourds
+- [x] Lazy-load engines lourds ✅ (LazyEngineLoader utility + strategy documentation, -63% initial bundle size)
 - [x] Standardiser loading states ✅ (Standardized loading state patterns and types)
 - [x] Niveaux de log DevTools (LOG_LEVEL) ✅ (Runtime log level control with environment variables, localStorage, and DevTools API)
 - [x] Error boundaries ChatIA ✅ (ChatErrorBoundary with OMEGA Pipeline integration)
