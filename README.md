@@ -37,8 +37,12 @@ TITANE∞ est un **OS cognitif local-first** : votre double numérique évolutif
 git clone https://github.com/KallokTherok1994/TITANE_INFINITY.git
 cd TITANE_INFINITY
 
-# 2. Installer dépendances
-npm install
+# 2. Installer dépendances (pnpm + toolchain incluse au repo)
+export PATH="$PWD/.tools/node/current/bin:$PATH"
+corepack pnpm install
+
+# Alternative (réinstalle proprement):
+./titane.sh repair
 
 # 3. Configurer Python environment (optionnel pour TTS/Voice)
 ./scripts/setup_environment.sh
