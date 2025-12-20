@@ -4,7 +4,7 @@
 **Status:** Production Ready ✅  
 **License:** Proprietary — © 2025 Humain Total / Kevin Thibault
 
-**Dernière version :** PERFECTION 10/10 (cf. CHANGELOG v26.3.0 — zéro dette technique) — ADR + validation finale 🏆
+**Dernière version :** Qualité validée (score 10/10, cf. CHANGELOG v26.3.0 — zéro dette technique) — ADR + validation finale 🏆
 
 ---
 
@@ -108,7 +108,7 @@ TITANE∞ v26.3.0
 ```
 src/
 ├── pages/            # Routes principales (EvoPage, Stats, Chat...)
-├── engines/          # 9 moteurs cognitifs (ex.: selfHealing, flow, time...)
+├── engines/          # 9 moteurs cognitifs (Orchestrator, Style, Coherence, Reflection, Emotion, UnifiedMemory, Behavior, Adaptation, SystemHealth)
 ├── core/             # Cœur système (pipelines, healing, safety)
 ├── services/         # Services métier (ai, api, memory, voice, tts)
 ├── stores/           # State management (Zustand)
@@ -392,8 +392,8 @@ git push origin feature/my-awesome-feature
 
 ## 📊 Roadmap v24-v25
 
-> **🎯 Phase actuelle : v26.3.0 — Validation finale complétée (Score 10/10, cf. CHANGELOG v26.3.0)**  
-> **Status:** 200% Documentation Coverage Achieved ✅ — zéro dette technique
+> **🎯 Phase actuelle : v26.3.0 — Validation finale complétée (score 10/10, cf. CHANGELOG v26.3.0)**  
+> **Statut :** Couverture documentation 200% ✅ — zéro dette technique
 
 ### ✅ Phase 0-7 Complete (Dec 2025)
 
@@ -595,4 +595,4 @@ Voir `LICENSE.md` pour détails.
 
 ---
 
-**TITANE∞ v26.3.0** — _Votre système d'exploitation cognitif_ — Score qualité 10/10 (cf. CHANGELOG v26.3.0)
+**TITANE∞ v26.3.0** — _Votre système d'exploitation cognitif_
