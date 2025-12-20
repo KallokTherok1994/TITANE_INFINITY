@@ -1794,16 +1794,16 @@ export async function secureInvoke<T>(
     const errorMsg = error instanceof Error ? error.message : String(error);
     console.error(`[Security] ✗ secureInvoke("${command}") failed:`, errorMsg);
 
-      try {
-        const err = error instanceof Error ? error : new Error(String(error));
-        monitoring.trackError(err, {
-          command,
-          stage: 'invoke',
-          latencyMs: Date.now() - startedAt,
-        });
-      } catch {
-        // ignore monitoring errors
-      }
+    try {
+      const err = error instanceof Error ? error : new Error(String(error));
+      monitoring.trackError(err, {
+        command,
+        stage: 'invoke',
+        latencyMs: Date.now() - startedAt,
+      });
+    } catch {
+      // ignore monitoring errors
+    }
 
     throw error;
   }
