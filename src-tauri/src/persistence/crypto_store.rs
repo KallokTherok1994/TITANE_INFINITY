@@ -464,7 +464,9 @@ mod tests {
         let mut store = CryptoStore::new();
 
         // Configurer le mot de passe
-        store.set_master_password("test_password_123").unwrap();
+        store
+            .set_master_password("test_password_123")
+            .expect("set_master_password should succeed for a valid password");
         assert_eq!(store.key_state, KeyState::Unlocked);
         assert!(store.is_enabled());
 
@@ -473,7 +475,9 @@ mod tests {
         assert_eq!(store.key_state, KeyState::Locked);
 
         // Déverrouiller avec bon mot de passe
-        store.unlock("test_password_123").unwrap();
+        store
+            .unlock("test_password_123")
+            .expect("unlock should succeed with the correct password");
         assert_eq!(store.key_state, KeyState::Unlocked);
 
         // Mauvais mot de passe
@@ -485,16 +489,22 @@ mod tests {
     #[test]
     fn test_encrypt_decrypt_cycle() {
         let mut store = CryptoStore::new();
-        store.set_master_password("secure_password").unwrap();
+        store
+            .set_master_password("secure_password")
+            .expect("set_master_password should succeed for a valid password");
 
         let original = b"Hello TITANE! Secret data here.";
 
         // Chiffrer
-        let blob = store.encrypt_blob(original).unwrap();
+        let blob = store
+            .encrypt_blob(original)
+            .expect("encrypt_blob should succeed when encryption is enabled and key is unlocked");
         assert_ne!(blob.ciphertext, original.to_vec());
 
         // Déchiffrer
-        let decrypted = store.decrypt_blob(&blob).unwrap();
+        let decrypted = store
+            .decrypt_blob(&blob)
+            .expect("decrypt_blob should succeed for a valid encrypted blob");
         assert_eq!(decrypted, original.to_vec());
     }
 
@@ -505,19 +515,27 @@ mod tests {
         let data = b"test data";
 
         // Pas activé - retourne les données originales
-        let result = store.encrypt_if_enabled(data).unwrap();
+        let result = store
+            .encrypt_if_enabled(data)
+            .expect("encrypt_if_enabled should succeed when encryption is disabled");
         assert_eq!(result, data.to_vec());
 
         // Activer et rechiffrer
-        store.set_master_password("password").unwrap();
-        let encrypted = store.encrypt_if_enabled(data).unwrap();
+        store
+            .set_master_password("password")
+            .expect("set_master_password should succeed for a valid password");
+        let encrypted = store
+            .encrypt_if_enabled(data)
+            .expect("encrypt_if_enabled should succeed when encryption is enabled and key is unlocked");
         assert_ne!(encrypted, data.to_vec());
     }
 
     #[test]
     fn test_verify_password() {
         let mut store = CryptoStore::new();
-        store.set_master_password("my_password").unwrap();
+        store
+            .set_master_password("my_password")
+            .expect("set_master_password should succeed for a valid password");
         store.lock();
 
         let verification = store.verify_password("my_password");

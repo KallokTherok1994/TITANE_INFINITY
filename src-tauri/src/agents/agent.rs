@@ -409,14 +409,14 @@ mod tests {
     #[test]
     fn test_agent_id_serialize() {
         let id = AgentId::from_string("serialize-test".to_string());
-        let json = serde_json::to_string(&id).unwrap();
+        let json = serde_json::to_string(&id).expect("serialize AgentId should succeed");
         assert!(json.contains("serialize-test"));
     }
 
     #[test]
     fn test_agent_id_deserialize() {
         let json = r#""my-agent-id""#;
-        let id: AgentId = serde_json::from_str(json).unwrap();
+        let id: AgentId = serde_json::from_str(json).expect("deserialize AgentId should succeed");
         assert_eq!(id.0, "my-agent-id");
     }
 
@@ -494,14 +494,14 @@ mod tests {
     #[test]
     fn test_agent_state_serialize() {
         let state = AgentState::Error;
-        let json = serde_json::to_string(&state).unwrap();
+        let json = serde_json::to_string(&state).expect("serialize AgentState should succeed");
         assert!(json.contains("Error"));
     }
 
     #[test]
     fn test_agent_state_deserialize() {
         let json = r#""Killed""#;
-        let state: AgentState = serde_json::from_str(json).unwrap();
+        let state: AgentState = serde_json::from_str(json).expect("deserialize AgentState should succeed");
         assert_eq!(state, AgentState::Killed);
     }
 
@@ -592,14 +592,14 @@ mod tests {
     #[test]
     fn test_agent_error_serialize() {
         let err = AgentError::ContractViolation("breach".to_string());
-        let json = serde_json::to_string(&err).unwrap();
+        let json = serde_json::to_string(&err).expect("serialize AgentError should succeed");
         assert!(json.contains("ContractViolation"));
     }
 
     #[test]
     fn test_agent_error_deserialize() {
         let json = r#"{"Timeout":"expired"}"#;
-        let err: AgentError = serde_json::from_str(json).unwrap();
+        let err: AgentError = serde_json::from_str(json).expect("deserialize AgentError should succeed");
         assert!(matches!(err, AgentError::Timeout(_)));
     }
 
@@ -651,14 +651,15 @@ mod tests {
     #[test]
     fn test_agent_metrics_serialize() {
         let metrics = AgentMetrics::default();
-        let json = serde_json::to_string(&metrics).unwrap();
+        let json = serde_json::to_string(&metrics).expect("serialize AgentMetrics should succeed");
         assert!(json.contains("tasks_executed"));
     }
 
     #[test]
     fn test_agent_metrics_deserialize() {
         let json = r#"{"tasks_executed":5,"tasks_succeeded":4,"tasks_failed":1,"total_execution_time_ms":100,"messages_sent":2,"messages_received":3,"memory_usage_bytes":512,"last_activity_timestamp":0}"#;
-        let metrics: AgentMetrics = serde_json::from_str(json).unwrap();
+        let metrics: AgentMetrics = serde_json::from_str(json)
+            .expect("deserialize AgentMetrics should succeed");
         assert_eq!(metrics.tasks_executed, 5);
         assert_eq!(metrics.tasks_succeeded, 4);
     }
@@ -718,7 +719,10 @@ mod tests {
     #[tokio::test]
     async fn test_agent_pause_resume() {
         let agent = create_test_agent();
-        agent.start().await.unwrap();
+        agent
+            .start()
+            .await
+            .expect("agent.start should succeed in test_agent_pause_resume");
 
         assert!(agent.pause().await.is_ok());
         assert_eq!(agent.get_state().await, AgentState::Paused);
@@ -799,7 +803,10 @@ mod tests {
     #[tokio::test]
     async fn test_agent_can_execute_stopped() {
         let agent = create_test_agent();
-        agent.stop().await.unwrap();
+        agent
+            .stop()
+            .await
+            .expect("agent.stop should succeed in test_agent_can_execute_stopped");
         let result = agent.can_execute(&[Capability::MemoryRead]).await;
         assert!(result.is_err());
     }
@@ -815,7 +822,10 @@ mod tests {
     #[tokio::test]
     async fn test_agent_start_when_stopped() {
         let agent = create_test_agent();
-        agent.stop().await.unwrap();
+        agent
+            .stop()
+            .await
+            .expect("agent.stop should succeed in test_agent_start_when_stopped");
         let result = agent.start().await;
         assert!(result.is_err());
     }

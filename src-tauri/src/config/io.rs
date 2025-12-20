@@ -64,7 +64,7 @@ pub async fn export_config(app: AppHandle, filename: String) -> Result<String, S
         gemini_configured: false,
         timestamp: std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
+            .map_err(|e| format!("Impossible de calculer le timestamp UNIX: {e}"))?
             .as_secs(),
     };
 

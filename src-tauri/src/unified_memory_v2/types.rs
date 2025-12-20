@@ -144,8 +144,9 @@ impl MemoryEntry {
     /// Update access tracking
     pub fn touch(&mut self) {
         self.access_count += 1;
-        self.last_accessed = Some(chrono::Utc::now().timestamp_millis());
-        self.updated_at = self.last_accessed.unwrap();
+        let now = chrono::Utc::now().timestamp_millis();
+        self.last_accessed = Some(now);
+        self.updated_at = now;
     }
 
     /// Calculate relevance score (for search ranking)

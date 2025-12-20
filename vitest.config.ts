@@ -97,6 +97,10 @@ export const sharedTestConfig = defineConfig({
       reportsDirectory: 'coverage/unit',
       exclude: [
         'node_modules/',
+        '**/*.css',
+        '**/*.svg',
+        'src/assets/**',
+        'src/styles/**',
         'src/test/',
         '**/*.test.ts',
         '**/*.test.tsx',

@@ -47,8 +47,8 @@ impl AssociationEngine {
 
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_secs();
+            .map(|d| d.as_secs())
+            .unwrap_or_else(|_| crate::core::utils::now_ms() / 1000);
 
         if let Some(assoc) = self.associations.get_mut(&key) {
             assoc.frequency += 1;
@@ -148,7 +148,11 @@ mod tests {
         assert_eq!(engine.associations.len(), 1);
 
         // Should have frequency 2
-        let assoc = engine.associations.values().next().unwrap();
+        let assoc = engine
+            .associations
+            .values()
+            .next()
+            .expect("association should exist after creation");
         assert_eq!(assoc.frequency, 2);
     }
 
@@ -158,11 +162,21 @@ mod tests {
 
         // Create initial association
         engine.create_association("x".to_string(), "y".to_string());
-        let initial_strength = engine.associations.values().next().unwrap().strength;
+        let initial_strength = engine
+            .associations
+            .values()
+            .next()
+            .expect("association should exist after initial creation")
+            .strength;
 
         // Reinforce
         engine.create_association("x".to_string(), "y".to_string());
-        let reinforced_strength = engine.associations.values().next().unwrap().strength;
+        let reinforced_strength = engine
+            .associations
+            .values()
+            .next()
+            .expect("association should exist after reinforcement")
+            .strength;
 
         assert!(reinforced_strength > initial_strength);
     }
@@ -176,7 +190,12 @@ mod tests {
             engine.create_association("a".to_string(), "b".to_string());
         }
 
-        let strength = engine.associations.values().next().unwrap().strength;
+        let strength = engine
+            .associations
+            .values()
+            .next()
+            .expect("association should exist after repeated creation")
+            .strength;
         assert!(strength <= 1.0);
     }
 
@@ -275,8 +294,9 @@ mod tests {
             frequency: 10,
             last_reinforced: 1234567890,
         };
-        let json = serde_json::to_string(&assoc).unwrap();
-        let restored: Association = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&assoc).expect("Association should serialize to JSON");
+        let restored: Association =
+            serde_json::from_str(&json).expect("Association should deserialize from JSON");
         assert_eq!(restored.concept_a, "alpha");
         assert_eq!(restored.strength, 0.85);
     }
@@ -316,8 +336,10 @@ mod tests {
             }],
             network_density: 0.8,
         };
-        let json = serde_json::to_string(&report).unwrap();
-        let restored: AssociationReport = serde_json::from_str(&json).unwrap();
+        let json =
+            serde_json::to_string(&report).expect("AssociationReport should serialize to JSON");
+        let restored: AssociationReport = serde_json::from_str(&json)
+            .expect("AssociationReport should deserialize from JSON");
         assert_eq!(restored.total_associations, 15);
         assert_eq!(restored.strongest_links.len(), 1);
     }
@@ -333,7 +355,7 @@ mod tests {
     async fn test_tauri_command_get() {
         let result = cognitive_get_associations().await;
         assert!(result.is_ok());
-        let report = result.unwrap();
+        let report = result.expect("cognitive_get_associations should succeed");
         assert_eq!(report.total_associations, 0);
     }
 }

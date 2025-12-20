@@ -47,8 +47,8 @@ impl KnowledgeGrowthEngine {
     pub async fn grow(&mut self, new_knowledge: Vec<String>) -> GrowthReport {
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_secs();
+            .map(|d| d.as_secs())
+            .unwrap_or_else(|_| crate::core::utils::now_ms() / 1000);
 
         let previous_count = self.knowledge_units.len();
         self.knowledge_units.extend(new_knowledge.clone());

@@ -330,11 +330,14 @@ mod tests {
         vault
             .store_api_key(Provider::OpenAI, "sk-test-key-123")
             .await
-            .unwrap();
+            .expect("store_api_key should succeed");
 
-        let key = vault.get_api_key(Provider::OpenAI).await.unwrap();
-        assert!(key.is_some());
-        assert_eq!(key.unwrap(), "sk-test-key-123");
+        let key = vault
+            .get_api_key(Provider::OpenAI)
+            .await
+            .expect("get_api_key should succeed");
+        let key = key.expect("key should be present after store");
+        assert_eq!(key, "sk-test-key-123");
     }
 
     #[tokio::test]
@@ -344,13 +347,19 @@ mod tests {
         vault
             .store_api_key(Provider::Gemini, "test-key")
             .await
-            .unwrap();
+            .expect("store_api_key should succeed");
         assert!(vault.has_key(Provider::Gemini).await);
 
-        vault.delete_api_key(Provider::Gemini).await.unwrap();
+        vault
+            .delete_api_key(Provider::Gemini)
+            .await
+            .expect("delete_api_key should succeed");
 
         // Should still check env, so we check the internal state
-        let key = vault.get_api_key(Provider::Gemini).await.unwrap();
+        let _key = vault
+            .get_api_key(Provider::Gemini)
+            .await
+            .expect("get_api_key should succeed");
         // If no env var, should be None
         // (depends on environment)
     }
@@ -362,23 +371,36 @@ mod tests {
         vault
             .store_api_key(Provider::Anthropic, "old-key")
             .await
-            .unwrap();
+            .expect("store_api_key should succeed");
         vault
             .rotate_api_key(Provider::Anthropic, "new-key")
             .await
-            .unwrap();
+            .expect("rotate_api_key should succeed");
 
-        let key = vault.get_api_key(Provider::Anthropic).await.unwrap();
-        assert_eq!(key.unwrap(), "new-key");
+        let key = vault
+            .get_api_key(Provider::Anthropic)
+            .await
+            .expect("get_api_key should succeed");
+        let key = key.expect("key should be present after rotate");
+        assert_eq!(key, "new-key");
     }
 
     #[tokio::test]
     async fn test_vault_stats() {
         let vault = VaultBridge::new();
 
-        vault.store_api_key(Provider::OpenAI, "key1").await.unwrap();
-        vault.get_api_key(Provider::OpenAI).await.unwrap();
-        vault.get_api_key(Provider::OpenAI).await.unwrap();
+        vault
+            .store_api_key(Provider::OpenAI, "key1")
+            .await
+            .expect("store_api_key should succeed");
+        vault
+            .get_api_key(Provider::OpenAI)
+            .await
+            .expect("get_api_key should succeed");
+        vault
+            .get_api_key(Provider::OpenAI)
+            .await
+            .expect("get_api_key should succeed");
 
         let stats = vault.get_stats().await;
         // At least 2 accesses (store might also count as access internally)
@@ -389,9 +411,18 @@ mod tests {
     async fn test_audit_log() {
         let vault = VaultBridge::new();
 
-        vault.store_api_key(Provider::OpenAI, "key").await.unwrap();
-        vault.get_api_key(Provider::OpenAI).await.unwrap();
-        vault.delete_api_key(Provider::OpenAI).await.unwrap();
+        vault
+            .store_api_key(Provider::OpenAI, "key")
+            .await
+            .expect("store_api_key should succeed");
+        vault
+            .get_api_key(Provider::OpenAI)
+            .await
+            .expect("get_api_key should succeed");
+        vault
+            .delete_api_key(Provider::OpenAI)
+            .await
+            .expect("delete_api_key should succeed");
 
         let log = vault.get_audit_log(10).await;
         assert!(log.len() >= 3);
@@ -402,10 +433,14 @@ mod tests {
         let vault = VaultBridge::new();
         let original = "sk-test-secret-key-12345";
 
-        let encrypted = vault.encrypt(original).unwrap();
+        let encrypted = vault
+            .encrypt(original)
+            .expect("encrypt should succeed");
         assert_ne!(encrypted, original);
 
-        let decrypted = vault.decrypt(&encrypted).unwrap();
+        let decrypted = vault
+            .decrypt(&encrypted)
+            .expect("decrypt should succeed");
         assert_eq!(decrypted, original);
     }
 }

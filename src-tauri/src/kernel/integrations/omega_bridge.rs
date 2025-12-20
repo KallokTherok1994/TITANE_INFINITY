@@ -226,7 +226,7 @@ impl OmegaKernelBridge {
 
         Ok(EngineOutput {
             engine: "OMEGA".to_string(),
-            output: serde_json::to_string(&response).unwrap(),
+            output: serde_json::to_string(&response)?,
             duration_ms,
         })
     }

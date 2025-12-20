@@ -597,7 +597,8 @@ mod tests {
     #[test]
     fn test_narrative_perspective_serialize() {
         let p = NarrativePerspective::Collective;
-        let json = serde_json::to_string(&p).unwrap();
+        let json = serde_json::to_string(&p)
+            .expect("serialize NarrativePerspective should succeed");
         assert!(json.contains("Collective"));
     }
 
@@ -663,7 +664,8 @@ mod tests {
     #[test]
     fn test_tone_modulation_serialize() {
         let t = ToneModulation::Dynamic;
-        let json = serde_json::to_string(&t).unwrap();
+        let json = serde_json::to_string(&t)
+            .expect("serialize ToneModulation should succeed");
         assert!(json.contains("Dynamic"));
     }
 
@@ -705,7 +707,8 @@ mod tests {
     #[test]
     fn test_style_profile_serialize() {
         let s = StyleProfile::Structured;
-        let json = serde_json::to_string(&s).unwrap();
+        let json = serde_json::to_string(&s)
+            .expect("serialize StyleProfile should succeed");
         assert!(json.contains("Structured"));
     }
 
@@ -810,7 +813,8 @@ mod tests {
     #[test]
     fn test_identity_profile_serialize() {
         let profile = IdentityProfile::default();
-        let json = serde_json::to_string(&profile).unwrap();
+        let json = serde_json::to_string(&profile)
+            .expect("serialize IdentityProfile should succeed");
         assert!(json.contains("TITANE"));
     }
 
@@ -849,7 +853,8 @@ mod tests {
             qualities: vec!["Q".to_string()],
             tone_modulation: ToneModulation::Dynamic,
         };
-        let json = serde_json::to_string(&archetype).unwrap();
+        let json = serde_json::to_string(&archetype)
+            .expect("serialize NarrativeArchetype should succeed");
         assert!(json.contains("Serialize"));
     }
 
@@ -969,7 +974,8 @@ mod tests {
             symbols: vec![],
             modulation: None,
         };
-        let json = serde_json::to_string(&output).unwrap();
+        let json = serde_json::to_string(&output)
+            .expect("serialize NarrativeOutput should succeed");
         assert!(json.contains("Serialize"));
     }
 
@@ -994,7 +1000,13 @@ mod tests {
         let engine = NarrativeEngine::new();
         let archetype = engine.get_active_archetype();
         assert!(archetype.is_some());
-        assert_eq!(archetype.unwrap().name, "Architecte");
+        assert_eq!(
+            archetype
+                .as_ref()
+                .expect("get_active_archetype should return Some")
+                .name,
+            "Architecte"
+        );
     }
 
     #[test]
@@ -1017,7 +1029,13 @@ mod tests {
         let engine = NarrativeEngine::new();
         let output = engine.generate_expression(0.9, 0.5, "test");
         assert!(output.archetype.is_some());
-        assert_eq!(output.archetype.unwrap(), "Tisseur");
+        assert_eq!(
+            output
+                .archetype
+                .as_ref()
+                .expect("archetype should be Some for high stability"),
+            "Tisseur"
+        );
     }
 
     #[test]
@@ -1025,7 +1043,13 @@ mod tests {
         let engine = NarrativeEngine::new();
         let output = engine.generate_expression(0.5, 0.9, "test");
         assert!(output.archetype.is_some());
-        assert_eq!(output.archetype.unwrap(), "Cristal");
+        assert_eq!(
+            output
+                .archetype
+                .as_ref()
+                .expect("archetype should be Some for high sync"),
+            "Cristal"
+        );
     }
 
     #[test]
@@ -1033,7 +1057,13 @@ mod tests {
         let engine = NarrativeEngine::new();
         let output = engine.generate_expression(0.3, 0.5, "test");
         assert!(output.archetype.is_some());
-        assert_eq!(output.archetype.unwrap(), "Observateur");
+        assert_eq!(
+            output
+                .archetype
+                .as_ref()
+                .expect("archetype should be Some for low stability"),
+            "Observateur"
+        );
     }
 
     #[test]
@@ -1041,7 +1071,13 @@ mod tests {
         let engine = NarrativeEngine::new();
         let output = engine.generate_expression(0.6, 0.6, "test");
         assert!(output.archetype.is_some());
-        assert_eq!(output.archetype.unwrap(), "Architecte");
+        assert_eq!(
+            output
+                .archetype
+                .as_ref()
+                .expect("archetype should be Some for default path"),
+            "Architecte"
+        );
     }
 
     #[test]

@@ -211,11 +211,16 @@ mod tests {
 
     #[tokio::test]
     async fn test_pipeline_start_stop() {
-        let pipeline = DuplexPipeline::new().await.unwrap();
+        let pipeline = DuplexPipeline::new()
+            .await
+            .expect("DuplexPipeline::new should succeed");
 
         assert!(!pipeline.is_active());
 
-        pipeline.start().await.unwrap();
+        pipeline
+            .start()
+            .await
+            .expect("pipeline should start successfully");
         assert!(pipeline.is_active());
 
         pipeline.stop();

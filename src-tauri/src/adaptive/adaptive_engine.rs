@@ -525,7 +525,8 @@ mod tests {
     #[test]
     fn test_system_performance_sample_serialize() {
         let sample = SystemPerformanceSample::default();
-        let json = serde_json::to_string(&sample).unwrap();
+        let json = serde_json::to_string(&sample)
+            .expect("SystemPerformanceSample should serialize to JSON");
         assert!(json.contains("cpu_load"));
         assert!(json.contains("ui_fps"));
     }
@@ -533,7 +534,8 @@ mod tests {
     #[test]
     fn test_system_performance_sample_deserialize() {
         let json = r#"{"timestamp":100,"cpu_load":0.5,"memory_usage":0.3,"latency_ai":200,"latency_tauri_invoke":5,"ui_fps":60,"sync_quality":0.9,"cognitive_stability":0.8,"hash_integrity_ok":true}"#;
-        let sample: SystemPerformanceSample = serde_json::from_str(json).unwrap();
+        let sample: SystemPerformanceSample = serde_json::from_str(json)
+            .expect("SystemPerformanceSample should deserialize from JSON");
         assert_eq!(sample.timestamp, 100);
         assert_eq!(sample.cpu_load, 0.5);
     }
@@ -551,8 +553,10 @@ mod tests {
             cognitive_stability: 0.88,
             hash_integrity_ok: false,
         };
-        let json = serde_json::to_string(&sample).unwrap();
-        let restored: SystemPerformanceSample = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&sample)
+            .expect("SystemPerformanceSample should serialize to JSON");
+        let restored: SystemPerformanceSample = serde_json::from_str(&json)
+            .expect("SystemPerformanceSample should deserialize from JSON");
         assert_eq!(restored.timestamp, 999);
         assert!(!restored.hash_integrity_ok);
     }
@@ -628,14 +632,16 @@ mod tests {
     #[test]
     fn test_adaptive_condition_serialize() {
         let condition = AdaptiveCondition::CpuLoadAbove(0.75);
-        let json = serde_json::to_string(&condition).unwrap();
+        let json = serde_json::to_string(&condition)
+            .expect("AdaptiveCondition should serialize to JSON");
         assert!(json.contains("CpuLoadAbove"));
     }
 
     #[test]
     fn test_adaptive_condition_deserialize() {
         let json = r#"{"FpsBelow":45}"#;
-        let condition: AdaptiveCondition = serde_json::from_str(json).unwrap();
+        let condition: AdaptiveCondition = serde_json::from_str(json)
+            .expect("AdaptiveCondition should deserialize from JSON");
         assert!(matches!(condition, AdaptiveCondition::FpsBelow(45)));
     }
 
@@ -716,7 +722,8 @@ mod tests {
     #[test]
     fn test_adaptive_action_serialize() {
         let action = AdaptiveAction::TriggerDeepSync;
-        let json = serde_json::to_string(&action).unwrap();
+        let json = serde_json::to_string(&action)
+            .expect("AdaptiveAction should serialize to JSON");
         assert!(json.contains("TriggerDeepSync"));
     }
 
@@ -952,7 +959,8 @@ mod tests {
             priority: 10,
             execution_count: 5,
         };
-        let json = serde_json::to_string(&rule).unwrap();
+        let json = serde_json::to_string(&rule)
+            .expect("AdaptiveRule should serialize to JSON");
         assert!(json.contains("ser"));
         assert!(json.contains("FpsBelow"));
     }
@@ -996,7 +1004,8 @@ mod tests {
     #[test]
     fn test_ai_preference_serialize() {
         let pref = AiPreference::Conservative;
-        let json = serde_json::to_string(&pref).unwrap();
+        let json = serde_json::to_string(&pref)
+            .expect("AiPreference should serialize to JSON");
         assert!(json.contains("Conservative"));
     }
 
@@ -1038,7 +1047,8 @@ mod tests {
     #[test]
     fn test_system_behavior_serialize() {
         let mode = SystemBehaviorMode::Reliability;
-        let json = serde_json::to_string(&mode).unwrap();
+        let json = serde_json::to_string(&mode)
+            .expect("SystemBehaviorMode should serialize to JSON");
         assert!(json.contains("Reliability"));
     }
 
@@ -1080,7 +1090,8 @@ mod tests {
     #[test]
     fn test_optimization_bias_serialize() {
         let bias = OptimizationBias::UserExperience;
-        let json = serde_json::to_string(&bias).unwrap();
+        let json = serde_json::to_string(&bias)
+            .expect("OptimizationBias should serialize to JSON");
         assert!(json.contains("UserExperience"));
     }
 
@@ -1129,14 +1140,16 @@ mod tests {
     #[test]
     fn test_preference_profile_serialize() {
         let profile = PreferenceProfile::default();
-        let json = serde_json::to_string(&profile).unwrap();
+        let json = serde_json::to_string(&profile)
+            .expect("PreferenceProfile should serialize to JSON");
         assert!(json.contains("auto_learn"));
     }
 
     #[test]
     fn test_preference_profile_deserialize() {
         let json = r#"{"ai_style":"Aggressive","system_mode":"Speed","optimization_bias":"Performance","auto_learn":false}"#;
-        let profile: PreferenceProfile = serde_json::from_str(json).unwrap();
+        let profile: PreferenceProfile = serde_json::from_str(json)
+            .expect("PreferenceProfile should deserialize from JSON");
         assert!(matches!(profile.ai_style, AiPreference::Aggressive));
         assert!(!profile.auto_learn);
     }
@@ -1185,14 +1198,16 @@ mod tests {
     #[test]
     fn test_learning_state_serialize() {
         let state = LearningState::default();
-        let json = serde_json::to_string(&state).unwrap();
+        let json = serde_json::to_string(&state)
+            .expect("LearningState should serialize to JSON");
         assert!(json.contains("learning_rate"));
     }
 
     #[test]
     fn test_learning_state_deserialize() {
         let json = r#"{"total_samples":50,"patterns_detected":[],"optimization_cycles":2,"last_learn_timestamp":"","learning_rate":0.2}"#;
-        let state: LearningState = serde_json::from_str(&json).unwrap();
+        let state: LearningState = serde_json::from_str(&json)
+            .expect("LearningState should deserialize from JSON");
         assert_eq!(state.total_samples, 50);
         assert_eq!(state.learning_rate, 0.2);
     }
@@ -1312,7 +1327,8 @@ mod tests {
     #[test]
     fn test_engine_serialize() {
         let engine = AdaptiveOptimizationEngine::new();
-        let json = serde_json::to_string(&engine).unwrap();
+        let json = serde_json::to_string(&engine)
+            .expect("AdaptiveOptimizationEngine should serialize to JSON");
         assert!(json.contains("optimization_rules"));
     }
 
@@ -1395,7 +1411,8 @@ mod tests {
             current_mode: "Adaptive".to_string(),
             latest_sample: None,
         };
-        let json = serde_json::to_string(&summary).unwrap();
+        let json = serde_json::to_string(&summary)
+            .expect("AdaptiveSummary should serialize to JSON");
         assert!(json.contains("total_samples"));
         assert!(json.contains("current_mode"));
     }
@@ -1403,7 +1420,8 @@ mod tests {
     #[test]
     fn test_adaptive_summary_deserialize() {
         let json = r#"{"total_samples":10,"optimization_cycles":2,"patterns_detected":1,"active_rules":5,"avg_cpu_load":0.4,"avg_ai_latency":200,"current_mode":"Speed","latest_sample":null}"#;
-        let summary: AdaptiveSummary = serde_json::from_str(json).unwrap();
+        let summary: AdaptiveSummary = serde_json::from_str(json)
+            .expect("AdaptiveSummary should deserialize from JSON");
         assert_eq!(summary.total_samples, 10);
         assert_eq!(summary.current_mode, "Speed");
     }

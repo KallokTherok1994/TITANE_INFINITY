@@ -59,7 +59,13 @@ impl KMeansClustering {
             )));
         }
 
-        let dimension = vectors.values().next().unwrap().len();
+        let dimension = vectors
+            .values()
+            .next()
+            .map(|v| v.len())
+            .ok_or_else(|| {
+                MemoryOSError::ClusteringError("No vectors to cluster".to_string())
+            })?;
 
         // Convert to matrix format
         let data: Vec<(String, Vec<f32>)> = vectors

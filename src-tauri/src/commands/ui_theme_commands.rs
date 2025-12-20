@@ -22,6 +22,15 @@ lazy_static! {
 pub async fn save_ui_theme(tokens: serde_json::Value) -> Result<(), TitaneError> {
     log::info!("[UI_THEME] save_ui_theme called");
 
+    let created_at = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map_err(|e| {
+            TitaneError::InternalError(format!(
+                "Failed to compute UNIX timestamp for UI theme: {e}"
+            ))
+        })?
+        .as_secs();
+
     let mut theme = CURRENT_THEME
         .lock()
         .map_err(|e| TitaneError::InternalError(format!("Failed to lock CURRENT_THEME: {}", e)))?;
@@ -29,10 +38,7 @@ pub async fn save_ui_theme(tokens: serde_json::Value) -> Result<(), TitaneError>
     *theme = Some(UITheme {
         name: "custom".to_string(),
         tokens,
-        created_at: std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_secs(),
+        created_at,
     });
 
     log::info!("[UI_THEME] ✅ Theme saved");

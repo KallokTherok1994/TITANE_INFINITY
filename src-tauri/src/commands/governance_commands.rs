@@ -119,7 +119,11 @@ pub async fn toggle_ia_policy(policy_id: String, enabled: bool) -> Result<(), Ti
         policy.enabled = enabled;
         policy.updated_at = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
+            .map_err(|e| {
+                TitaneError::InternalError(format!(
+                    "Failed to compute UNIX timestamp for policy update: {e}"
+                ))
+            })?
             .as_secs();
 
         log::info!(

@@ -474,7 +474,7 @@ mod tests {
                 &mut std::io::Cursor::new(&mut bytes),
                 image::ImageFormat::Png,
             )
-            .unwrap();
+            .expect("test image should encode as PNG");
         bytes
     }
 
@@ -483,11 +483,15 @@ mod tests {
         let store = MultimodalMemoryStore::new(10, 50, 1000);
         let entry = create_test_entry("test memory", 0.8);
 
-        let id = store.store(entry).await.unwrap();
+        let id = store
+            .store(entry)
+            .await
+            .expect("store() should succeed in tests");
         let retrieved = store.get(&id).await;
 
         assert!(retrieved.is_some());
-        assert_eq!(retrieved.unwrap().base.content, "test memory");
+        let retrieved = retrieved.expect("stored entry should be retrievable");
+        assert_eq!(retrieved.base.content, "test memory");
     }
 
     #[tokio::test]
@@ -501,7 +505,10 @@ mod tests {
         assert!(entry.has_multimodal());
         assert_eq!(entry.multimodal.image_id, Some("img_001".to_string()));
 
-        store.store(entry.clone()).await.unwrap();
+        store
+            .store(entry.clone())
+            .await
+            .expect("store() should succeed in tests");
         let stats = store.stats().await;
         assert_eq!(stats.with_image, 1);
     }
@@ -521,7 +528,10 @@ mod tests {
         entry = entry.with_audio(audio_data, audio_meta);
 
         assert!(entry.has_multimodal());
-        store.store(entry).await.unwrap();
+        store
+            .store(entry)
+            .await
+            .expect("store() should succeed in tests");
 
         let stats = store.stats().await;
         assert_eq!(stats.with_audio, 1);
@@ -552,8 +562,14 @@ mod tests {
             },
         );
 
-        store.store(entry1).await.unwrap();
-        store.store(entry2).await.unwrap();
+        store
+            .store(entry1)
+            .await
+            .expect("store(entry1) should succeed in tests");
+        store
+            .store(entry2)
+            .await
+            .expect("store(entry2) should succeed in tests");
 
         // Search with query similar to first entry
         let query = vec![1.0, 0.0, 0.0];
@@ -573,8 +589,14 @@ mod tests {
         let mut entry_ltm = create_test_entry("ltm memory", 0.9);
         entry_ltm.base.tier = MemoryTier::LTM;
 
-        store.store(entry_stm).await.unwrap();
-        store.store(entry_ltm).await.unwrap();
+        store
+            .store(entry_stm)
+            .await
+            .expect("store(entry_stm) should succeed in tests");
+        store
+            .store(entry_ltm)
+            .await
+            .expect("store(entry_ltm) should succeed in tests");
 
         let stm_entries = store.get_by_tier(MemoryTier::STM).await;
         assert_eq!(stm_entries.len(), 1);
@@ -587,16 +609,31 @@ mod tests {
         let entry = create_test_entry("promotable memory", 0.9);
         let id = entry.base.id;
 
-        store.store(entry).await.unwrap();
+        store
+            .store(entry)
+            .await
+            .expect("store() should succeed in tests");
 
         // Promote STM → MTM
-        store.promote(&id).await.unwrap();
-        let retrieved = store.get(&id).await.unwrap();
+        store
+            .promote(&id)
+            .await
+            .expect("promote(STM→MTM) should succeed in tests");
+        let retrieved = store
+            .get(&id)
+            .await
+            .expect("promoted entry should be retrievable (MTM)");
         assert_eq!(retrieved.base.tier, MemoryTier::MTM);
 
         // Promote MTM → LTM
-        store.promote(&id).await.unwrap();
-        let retrieved = store.get(&id).await.unwrap();
+        store
+            .promote(&id)
+            .await
+            .expect("promote(MTM→LTM) should succeed in tests");
+        let retrieved = store
+            .get(&id)
+            .await
+            .expect("promoted entry should be retrievable (LTM)");
         assert_eq!(retrieved.base.tier, MemoryTier::LTM);
 
         // Cannot promote beyond LTM
@@ -612,7 +649,10 @@ mod tests {
         for i in 0..4 {
             let mut entry = create_test_entry(&format!("memory {}", i), (i as f32) / 10.0);
             entry.base.tier = MemoryTier::STM;
-            store.store(entry).await.unwrap();
+            store
+                .store(entry)
+                .await
+                .expect("store() should succeed in tests");
         }
 
         let stats = store.stats().await;
@@ -645,9 +685,18 @@ mod tests {
             },
         );
 
-        store.store(entry1).await.unwrap();
-        store.store(entry2).await.unwrap();
-        store.store(entry3).await.unwrap();
+        store
+            .store(entry1)
+            .await
+            .expect("store(entry1) should succeed in tests");
+        store
+            .store(entry2)
+            .await
+            .expect("store(entry2) should succeed in tests");
+        store
+            .store(entry3)
+            .await
+            .expect("store(entry3) should succeed in tests");
 
         let stats = store.stats().await;
         assert_eq!(stats.total_entries, 3);
@@ -663,15 +712,15 @@ mod tests {
         store
             .store(create_test_entry("the quick brown fox", 0.9))
             .await
-            .unwrap();
+            .expect("store(fox) should succeed in tests");
         store
             .store(create_test_entry("lazy dog sleeping", 0.8))
             .await
-            .unwrap();
+            .expect("store(dog) should succeed in tests");
         store
             .store(create_test_entry("brown bear hunting", 0.85))
             .await
-            .unwrap();
+            .expect("store(bear) should succeed in tests");
 
         let results = store.search_text("brown", 5).await;
         assert_eq!(results.len(), 2); // fox and bear entries

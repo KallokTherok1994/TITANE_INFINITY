@@ -1266,10 +1266,8 @@ pub async fn evolution_get_statistics(
     );
 
     // Scores
-    stats.insert(
-        "scores".to_string(),
-        serde_json::to_value(&store.state.scores).unwrap(),
-    );
+    let scores = serde_json::to_value(&store.state.scores).map_err(|e| e.to_string())?;
+    stats.insert("scores".to_string(), scores);
 
     Ok(stats)
 }

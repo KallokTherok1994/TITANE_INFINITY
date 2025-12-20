@@ -189,11 +189,14 @@ mod tests {
         let store = ImageMemoryStore::new(100);
         let entry = create_test_entry("test1", vec![1.0, 0.0, 0.0], vec![]);
 
-        store.store_image(entry).await.unwrap();
+        store
+            .store_image(entry)
+            .await
+            .expect("store_image should succeed");
 
         let retrieved = store.get("test1").await;
         assert!(retrieved.is_some());
-        assert_eq!(retrieved.unwrap().id, "test1");
+        assert_eq!(retrieved.expect("entry should exist").id, "test1");
     }
 
     #[tokio::test]
@@ -201,13 +204,25 @@ mod tests {
         let store = ImageMemoryStore::new(100);
 
         // Store 3 images with different embeddings
-        store.store_image(create_test_entry("img1", vec![1.0, 0.0, 0.0], vec![])).await.unwrap();
-        store.store_image(create_test_entry("img2", vec![0.9, 0.1, 0.0], vec![])).await.unwrap();
-        store.store_image(create_test_entry("img3", vec![0.0, 1.0, 0.0], vec![])).await.unwrap();
+        store
+            .store_image(create_test_entry("img1", vec![1.0, 0.0, 0.0], vec![]))
+            .await
+            .expect("store_image should succeed");
+        store
+            .store_image(create_test_entry("img2", vec![0.9, 0.1, 0.0], vec![]))
+            .await
+            .expect("store_image should succeed");
+        store
+            .store_image(create_test_entry("img3", vec![0.0, 1.0, 0.0], vec![]))
+            .await
+            .expect("store_image should succeed");
 
         // Search with query similar to img1
         let query = vec![1.0, 0.0, 0.0];
-        let results = store.search_by_image_embedding(&query, 2).await.unwrap();
+        let results = store
+            .search_by_image_embedding(&query, 2)
+            .await
+            .expect("search_by_image_embedding should succeed");
 
         assert_eq!(results.len(), 2);
         assert_eq!(results[0].id, "img1"); // Most similar
@@ -234,7 +249,10 @@ mod tests {
         for i in 0..4 {
             let mut entry = create_test_entry(&format!("img{}", i), vec![0.0; 512], vec![]);
             entry.importance = i as f32 / 10.0; // Increasing importance
-            store.store_image(entry).await.unwrap();
+            store
+                .store_image(entry)
+                .await
+                .expect("store_image should succeed");
         }
 
         let (count, _) = store.stats().await;
@@ -249,9 +267,30 @@ mod tests {
     async fn test_tag_search() {
         let store = ImageMemoryStore::new(100);
 
-        store.store_image(create_test_entry("img1", vec![0.0; 512], vec!["cat".to_string()])).await.unwrap();
-        store.store_image(create_test_entry("img2", vec![0.0; 512], vec!["dog".to_string()])).await.unwrap();
-        store.store_image(create_test_entry("img3", vec![0.0; 512], vec!["cat".to_string(), "cute".to_string()])).await.unwrap();
+        store
+            .store_image(create_test_entry(
+                "img1",
+                vec![0.0; 512],
+                vec!["cat".to_string()],
+            ))
+            .await
+            .expect("store_image should succeed");
+        store
+            .store_image(create_test_entry(
+                "img2",
+                vec![0.0; 512],
+                vec!["dog".to_string()],
+            ))
+            .await
+            .expect("store_image should succeed");
+        store
+            .store_image(create_test_entry(
+                "img3",
+                vec![0.0; 512],
+                vec!["cat".to_string(), "cute".to_string()],
+            ))
+            .await
+            .expect("store_image should succeed");
 
         let results = store.search_by_tags(&["cat".to_string()]).await;
         assert_eq!(results.len(), 2); // img1 and img3
@@ -260,25 +299,37 @@ mod tests {
     #[tokio::test]
     async fn test_update_importance() {
         let store = ImageMemoryStore::new(100);
-        store.store_image(create_test_entry("img1", vec![0.0; 512], vec![])).await.unwrap();
+        store
+            .store_image(create_test_entry("img1", vec![0.0; 512], vec![]))
+            .await
+            .expect("store_image should succeed");
 
-        store.update_importance("img1", 0.9).await.unwrap();
-        let entry = store.get("img1").await.unwrap();
+        store
+            .update_importance("img1", 0.9)
+            .await
+            .expect("update_importance should succeed");
+        let entry = store.get("img1").await.expect("entry should exist");
         assert_eq!(entry.importance, 0.9);
 
         // Test clamping
-        store.update_importance("img1", 1.5).await.unwrap();
-        let entry = store.get("img1").await.unwrap();
+        store
+            .update_importance("img1", 1.5)
+            .await
+            .expect("update_importance should succeed");
+        let entry = store.get("img1").await.expect("entry should exist");
         assert_eq!(entry.importance, 1.0);
     }
 
     #[tokio::test]
     async fn test_remove() {
         let store = ImageMemoryStore::new(100);
-        store.store_image(create_test_entry("img1", vec![0.0; 512], vec![])).await.unwrap();
+        store
+            .store_image(create_test_entry("img1", vec![0.0; 512], vec![]))
+            .await
+            .expect("store_image should succeed");
 
         assert!(store.get("img1").await.is_some());
-        store.remove("img1").await.unwrap();
+        store.remove("img1").await.expect("remove should succeed");
         assert!(store.get("img1").await.is_none());
     }
 
@@ -286,7 +337,10 @@ mod tests {
     async fn test_clear() {
         let store = ImageMemoryStore::new(100);
         for i in 0..5 {
-            store.store_image(create_test_entry(&format!("img{}", i), vec![0.0; 512], vec![])).await.unwrap();
+            store
+                .store_image(create_test_entry(&format!("img{}", i), vec![0.0; 512], vec![]))
+                .await
+                .expect("store_image should succeed");
         }
 
         let (count, _) = store.stats().await;

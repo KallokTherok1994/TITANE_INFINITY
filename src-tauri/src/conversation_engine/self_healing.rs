@@ -5,7 +5,6 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 use std::collections::{HashMap, HashSet};
-use std::time::{SystemTime, UNIX_EPOCH};
 
 use super::types::*;
 use super::ConversationEngineError;
@@ -123,10 +122,7 @@ pub struct SelfHealingStats {
 }
 
 fn current_timestamp() -> u64 {
-    SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .unwrap()
-        .as_secs()
+    crate::core::utils::now_ms() / 1000
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

@@ -12,7 +12,7 @@
 // ║ Intégration module security: whitelist, anti-injection, anti-loop          ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
-import { secureInvoke } from '../lib/security';
+import { secureInvoke } from '@/lib/security';
 
 /**
  * Unified Tauri command invocation with type safety

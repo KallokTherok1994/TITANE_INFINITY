@@ -324,14 +324,14 @@ mod tests {
     #[test]
     fn test_mutation_type_serialize() {
         let mt = MutationType::Simplify;
-        let json = serde_json::to_string(&mt).unwrap();
+        let json = serde_json::to_string(&mt).expect("MutationType should serialize to JSON");
         assert!(json.contains("Simplify"));
     }
 
     #[test]
     fn test_mutation_type_deserialize() {
         let json = r#""Fix""#;
-        let mt: MutationType = serde_json::from_str(json).unwrap();
+        let mt: MutationType = serde_json::from_str(json).expect("MutationType should deserialize");
         assert!(matches!(mt, MutationType::Fix));
     }
 
@@ -389,14 +389,14 @@ mod tests {
     #[test]
     fn test_risk_level_serialize() {
         let rl = RiskLevel::P2;
-        let json = serde_json::to_string(&rl).unwrap();
+        let json = serde_json::to_string(&rl).expect("RiskLevel should serialize to JSON");
         assert!(json.contains("P2"));
     }
 
     #[test]
     fn test_risk_level_deserialize() {
         let json = r#""P1""#;
-        let rl: RiskLevel = serde_json::from_str(json).unwrap();
+        let rl: RiskLevel = serde_json::from_str(json).expect("RiskLevel should deserialize");
         assert!(matches!(rl, RiskLevel::P1));
     }
 
@@ -470,7 +470,7 @@ mod tests {
             performance: 91.2,
             cognitive_depth: 88.8,
         };
-        let json = serde_json::to_string(&metrics).unwrap();
+        let json = serde_json::to_string(&metrics).expect("EvolutionMetrics should serialize to JSON");
         assert!(json.contains("stability"));
         assert!(json.contains("cognitive_depth"));
     }
@@ -479,7 +479,8 @@ mod tests {
     fn test_evolution_metrics_deserialize() {
         let json =
             r#"{"stability":85.0,"coherence":90.0,"performance":80.0,"cognitive_depth":75.0}"#;
-        let metrics: EvolutionMetrics = serde_json::from_str(json).unwrap();
+        let metrics: EvolutionMetrics =
+            serde_json::from_str(json).expect("EvolutionMetrics should deserialize");
         assert_eq!(metrics.stability, 85.0);
         assert_eq!(metrics.cognitive_depth, 75.0);
     }
@@ -492,8 +493,9 @@ mod tests {
             performance: 89.1,
             cognitive_depth: 82.3,
         };
-        let json = serde_json::to_string(&original).unwrap();
-        let restored: EvolutionMetrics = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&original).expect("EvolutionMetrics should serialize");
+        let restored: EvolutionMetrics =
+            serde_json::from_str(&json).expect("EvolutionMetrics should deserialize");
         assert_eq!(restored.stability, 93.7);
     }
 
@@ -566,7 +568,7 @@ mod tests {
             expected_improvement: 8.0,
             risk_level: RiskLevel::P1,
         };
-        let json = serde_json::to_string(&mutation).unwrap();
+        let json = serde_json::to_string(&mutation).expect("Mutation should serialize to JSON");
         assert!(json.contains("ser-mut"));
         assert!(json.contains("Enhance"));
     }
@@ -574,7 +576,7 @@ mod tests {
     #[test]
     fn test_mutation_deserialize() {
         let json = r#"{"id":"deser-mut","mutation_type":"Fix","target":"error","description":"Fix error","expected_improvement":4.5,"risk_level":"P0"}"#;
-        let mutation: Mutation = serde_json::from_str(json).unwrap();
+        let mutation: Mutation = serde_json::from_str(json).expect("Mutation should deserialize");
         assert_eq!(mutation.id, "deser-mut");
         assert!(matches!(mutation.mutation_type, MutationType::Fix));
     }
@@ -589,8 +591,8 @@ mod tests {
             expected_improvement: 12.0,
             risk_level: RiskLevel::P2,
         };
-        let json = serde_json::to_string(&original).unwrap();
-        let restored: Mutation = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&original).expect("Mutation should serialize");
+        let restored: Mutation = serde_json::from_str(&json).expect("Mutation should deserialize");
         assert_eq!(restored.id, "roundtrip-mut");
         assert_eq!(restored.expected_improvement, 12.0);
     }
@@ -720,7 +722,7 @@ mod tests {
             mutations_applied: 5,
             improvements: HashMap::new(),
         };
-        let json = serde_json::to_string(&report).unwrap();
+        let json = serde_json::to_string(&report).expect("EvolutionReport should serialize to JSON");
         assert!(json.contains("cycle"));
         assert!(json.contains("mutations_applied"));
     }
@@ -784,7 +786,7 @@ mod tests {
         let mut engine = EvolutionEngine::new();
         let result = engine.evolve().await;
         assert!(result.is_ok());
-        let report = result.unwrap();
+        let report = result.expect("EvolutionEngine::evolve should return Ok(EvolutionReport)");
         assert_eq!(report.cycle, 1);
         assert_eq!(engine.cycle_count, 1);
     }
@@ -831,7 +833,9 @@ mod tests {
         let mut engine = EvolutionEngine::new();
         let _ = engine.evolve().await;
         let stats = engine.get_stats();
-        let cycles = stats.get("total_cycles").unwrap();
+        let cycles = stats
+            .get("total_cycles")
+            .expect("stats should contain total_cycles after evolve");
         assert_eq!(*cycles, serde_json::json!(1));
     }
 }

@@ -244,7 +244,7 @@ mod tests {
             ],
         };
 
-        let json = serde_json::to_string(&status).unwrap();
+        let json = serde_json::to_string(&status).expect("CoreSystemStatus should serialize");
         assert!(json.contains("Helios"));
         assert!(json.contains("total_cores"));
     }

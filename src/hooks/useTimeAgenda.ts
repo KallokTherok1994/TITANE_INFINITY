@@ -13,6 +13,7 @@ import {
   priorityEngine,
   chatScheduler,
   initTimeAgendaSystem,
+  type AgendaStorageCallbacks,
   type TimeState,
   type AgendaEvent,
   type AgendaMeta,
@@ -21,6 +22,7 @@ import {
   type EventCategory,
   type CommandExecutionResult,
 } from '@/engines/time';
+import { agendaService } from '@/services/agendaService';
 
 // ═══════════════════════════════════════════════════════════════════
 // HOOK RETURN TYPE
@@ -114,10 +116,16 @@ export function useTimeAgenda(autoInit: boolean = true): UseTimeAgendaReturn {
   useEffect(() => {
     if (!autoInit) return;
 
+    const agendaStorage: AgendaStorageCallbacks = {
+      loadEvents: () => agendaService.loadAllEvents(),
+      saveEvents: events => agendaService.saveAllEvents(events),
+      exportCalendar: () => agendaService.exportCalendar(),
+    };
+
     const init = async () => {
       try {
         setLoading(true);
-        await initTimeAgendaSystem();
+        await initTimeAgendaSystem(agendaStorage);
         setInitialized(true);
       } catch (error) {
         console.error('[useTimeAgenda] Erreur init:', error);

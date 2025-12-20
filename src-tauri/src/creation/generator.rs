@@ -403,7 +403,7 @@ mod tests {
         let result = engine.create_from_intent(request).await;
         assert!(result.is_ok());
 
-        let artifact = result.unwrap();
+        let artifact = result.expect("create_from_intent should succeed");
         assert_eq!(artifact.name, "MyModule");
         assert!(artifact.code.contains("MyModule"));
     }
@@ -430,7 +430,7 @@ mod tests {
         let result = engine.create_from_intent(request).await;
         assert!(result.is_ok());
 
-        let artifact = result.unwrap();
+        let artifact = result.expect("create_from_intent should succeed");
         assert!(artifact.code.contains("React"));
         assert!(artifact.code.contains("MyComponent"));
     }
@@ -522,8 +522,10 @@ mod tests {
     #[test]
     fn test_target_type_serialization() {
         let target = TargetType::RustModule;
-        let json = serde_json::to_string(&target).unwrap();
-        let restored: TargetType = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&target)
+            .expect("TargetType should serialize to JSON");
+        let restored: TargetType = serde_json::from_str(&json)
+            .expect("TargetType should deserialize from JSON");
         assert_eq!(restored, target);
     }
 
@@ -539,8 +541,10 @@ mod tests {
         ];
 
         for t in types {
-            let json = serde_json::to_string(&t).unwrap();
-            let restored: TargetType = serde_json::from_str(&json).unwrap();
+            let json = serde_json::to_string(&t)
+                .expect("TargetType should serialize to JSON");
+            let restored: TargetType = serde_json::from_str(&json)
+                .expect("TargetType should deserialize from JSON");
             assert_eq!(restored, t);
         }
     }
@@ -588,7 +592,10 @@ mod tests {
     #[test]
     fn test_rust_template_contains_markers() {
         let engine = CreationEngine::new();
-        let template = engine.templates.get(&TargetType::RustModule).unwrap();
+        let template = engine
+            .templates
+            .get(&TargetType::RustModule)
+            .expect("RustModule template should exist");
 
         assert!(template.contains("{{NAME}}"));
         assert!(template.contains("{{FIELDS}}"));
@@ -601,7 +608,7 @@ mod tests {
         let template = engine
             .templates
             .get(&TargetType::TypeScriptComponent)
-            .unwrap();
+            .expect("TypeScriptComponent template should exist");
 
         assert!(template.contains("{{NAME}}"));
         assert!(template.contains("{{PROPS}}"));
@@ -622,7 +629,7 @@ mod tests {
         let result = engine.create_from_intent(request).await;
         assert!(result.is_ok());
 
-        let artifact = result.unwrap();
+        let artifact = result.expect("create_from_intent should succeed");
         assert_eq!(artifact.name, "Generated");
     }
 
@@ -639,7 +646,10 @@ mod tests {
         };
 
         assert!(artifact.tests.is_some());
-        assert_eq!(artifact.tests.unwrap(), "test code");
+        assert_eq!(
+            artifact.tests.expect("tests should be present"),
+            "test code"
+        );
     }
 
     #[test]
@@ -669,8 +679,10 @@ mod tests {
             parameters: params,
         };
 
-        let json = serde_json::to_string(&request).unwrap();
-        let restored: CreationRequest = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&request)
+            .expect("CreationRequest should serialize to JSON");
+        let restored: CreationRequest = serde_json::from_str(&json)
+            .expect("CreationRequest should deserialize from JSON");
 
         assert_eq!(restored.id, request.id);
         assert_eq!(restored.intent, request.intent);
@@ -688,8 +700,10 @@ mod tests {
             documentation: "Page component".to_string(),
         };
 
-        let json = serde_json::to_string(&artifact).unwrap();
-        let restored: GeneratedArtifact = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&artifact)
+            .expect("GeneratedArtifact should serialize to JSON");
+        let restored: GeneratedArtifact = serde_json::from_str(&json)
+            .expect("GeneratedArtifact should deserialize from JSON");
 
         assert_eq!(restored.id, artifact.id);
         assert_eq!(restored.dependencies.len(), 2);
@@ -710,7 +724,10 @@ mod tests {
     #[test]
     fn test_empty_parameters_handling() {
         let engine = CreationEngine::new();
-        let template = engine.templates.get(&TargetType::RustModule).unwrap();
+        let template = engine
+            .templates
+            .get(&TargetType::RustModule)
+            .expect("RustModule template should exist");
 
         // Template with no substitutions should remain with placeholders
         let code = template.clone();
@@ -722,7 +739,7 @@ mod tests {
         let result = create_module("Test intent".to_string(), "rust".to_string()).await;
         assert!(result.is_ok());
 
-        let artifact = result.unwrap();
+        let artifact = result.expect("create_module should succeed");
         assert_eq!(artifact.target_type, TargetType::RustModule);
     }
 
@@ -731,7 +748,7 @@ mod tests {
         let result = create_module("Create component".to_string(), "typescript".to_string()).await;
         assert!(result.is_ok());
 
-        let artifact = result.unwrap();
+        let artifact = result.expect("create_module should succeed");
         assert_eq!(artifact.target_type, TargetType::TypeScriptComponent);
     }
 
@@ -740,7 +757,7 @@ mod tests {
         let result = create_module("Create page".to_string(), "react".to_string()).await;
         assert!(result.is_ok());
 
-        let artifact = result.unwrap();
+        let artifact = result.expect("create_module should succeed");
         assert_eq!(artifact.target_type, TargetType::ReactPage);
     }
 

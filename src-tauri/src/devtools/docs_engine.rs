@@ -810,7 +810,8 @@ mod tests {
         let engine = DocsEngine::new();
         let doc = engine.get("titan_state_get");
         assert!(doc.is_some());
-        assert_eq!(doc.unwrap().category, CommandCategory::State);
+        let doc = doc.expect("titan_state_get doc should exist");
+        assert_eq!(doc.category, CommandCategory::State);
     }
 
     #[test]

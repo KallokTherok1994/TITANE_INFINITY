@@ -314,10 +314,10 @@ mod tests {
 
         orchestrator
             .register_engine(Box::new(MockEngine::new("Engine1", 80)))
-            .unwrap();
+            .expect("register_engine should succeed for Engine1");
         orchestrator
             .register_engine(Box::new(MockEngine::new("Engine2", 60)))
-            .unwrap();
+            .expect("register_engine should succeed for Engine2");
 
         assert!(orchestrator.init_all().is_ok());
         assert_eq!(orchestrator.state, EngineState::Running);
@@ -329,8 +329,10 @@ mod tests {
 
         orchestrator
             .register_engine(Box::new(MockEngine::new("Engine1", 50)))
-            .unwrap();
-        orchestrator.init_all().unwrap();
+            .expect("register_engine should succeed for Engine1");
+        orchestrator
+            .init_all()
+            .expect("init_all should succeed with a registered engine");
 
         assert!(orchestrator.run_cycle().is_ok());
         assert_eq!(orchestrator.total_cycles, 1);
@@ -342,17 +344,21 @@ mod tests {
 
         orchestrator
             .register_engine(Box::new(MockEngine::new("LowPriority", 10)))
-            .unwrap();
+            .expect("register_engine should succeed for LowPriority");
         orchestrator
             .register_engine(Box::new(MockEngine::new("HighPriority", 90)))
-            .unwrap();
+            .expect("register_engine should succeed for HighPriority");
         orchestrator
             .register_engine(Box::new(MockEngine::new("MediumPriority", 50)))
-            .unwrap();
+            .expect("register_engine should succeed for MediumPriority");
 
-        orchestrator.init_all().unwrap();
+        orchestrator
+            .init_all()
+            .expect("init_all should succeed with multiple registered engines");
 
-        let statuses = orchestrator.get_statuses().unwrap();
+        let statuses = orchestrator
+            .get_statuses()
+            .expect("get_statuses should succeed after initialization");
         assert_eq!(statuses.len(), 3);
     }
 }

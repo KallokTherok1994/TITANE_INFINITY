@@ -586,7 +586,7 @@ mod tests {
     #[tokio::test]
     async fn test_core_health_status_serialization() {
         let status = CoreHealthStatus::Healthy;
-        let json = serde_json::to_string(&status).unwrap();
+        let json = serde_json::to_string(&status).expect("CoreHealthStatus should serialize");
         assert_eq!(json, "\"healthy\"");
     }
 

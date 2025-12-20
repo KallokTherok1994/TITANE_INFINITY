@@ -161,8 +161,9 @@ mod tests {
     #[test]
     fn test_core_health_serialization() {
         let health = CoreHealth::Healthy;
-        let json = serde_json::to_string(&health).unwrap();
-        let restored: CoreHealth = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&health).expect("CoreHealth should serialize to JSON");
+        let restored: CoreHealth =
+            serde_json::from_str(&json).expect("CoreHealth should deserialize from JSON");
         assert_eq!(restored, CoreHealth::Healthy);
     }
 
@@ -199,8 +200,9 @@ mod tests {
     #[test]
     fn test_core_status_serialization() {
         let status = CoreStatus::Active;
-        let json = serde_json::to_string(&status).unwrap();
-        let restored: CoreStatus = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&status).expect("CoreStatus should serialize to JSON");
+        let restored: CoreStatus =
+            serde_json::from_str(&json).expect("CoreStatus should deserialize from JSON");
         assert_eq!(restored, CoreStatus::Active);
     }
 
@@ -244,8 +246,9 @@ mod tests {
             name: "sentinel".to_string(),
             status: CoreStatus::Active,
         };
-        let json = serde_json::to_string(&info).unwrap();
-        let restored: CoreInfo = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&info).expect("CoreInfo should serialize to JSON");
+        let restored: CoreInfo =
+            serde_json::from_str(&json).expect("CoreInfo should deserialize from JSON");
         assert_eq!(restored.name, "sentinel");
         assert_eq!(restored.status, CoreStatus::Active);
     }
@@ -277,8 +280,9 @@ mod tests {
     #[test]
     fn test_core_registry_serialization() {
         let registry = CoreRegistry::new();
-        let json = serde_json::to_string(&registry).unwrap();
-        let _restored: CoreRegistry = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&registry).expect("CoreRegistry should serialize to JSON");
+        let _restored: CoreRegistry = serde_json::from_str(&json)
+            .expect("CoreRegistry should deserialize from JSON");
     }
 
     // ─────────────────────────────────────────────────────────────
@@ -320,10 +324,14 @@ mod tests {
     #[tokio::test]
     async fn test_core_module_health_check() {
         let registry = RegistryModule::new();
-        let core = registry.get_core("nexus").unwrap();
-        let health = core.health_check().await;
-        assert!(health.is_ok());
-        assert_eq!(health.unwrap(), CoreHealth::Healthy);
+        let core = registry
+            .get_core("nexus")
+            .expect("RegistryModule::get_core should return Some for 'nexus'");
+        let health = core
+            .health_check()
+            .await
+            .expect("CoreModule::health_check should succeed");
+        assert_eq!(health, CoreHealth::Healthy);
     }
 
     // ─────────────────────────────────────────────────────────────

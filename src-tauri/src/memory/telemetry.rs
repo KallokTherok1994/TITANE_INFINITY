@@ -126,9 +126,15 @@ fn system_time_to_millis(time: SystemTime) -> Option<i64> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::sync::Mutex;
+
+    static ENV_LOCK: Mutex<()> = Mutex::new(());
 
     #[test]
     fn test_resolve_memory_dir_default() {
+        let _env_guard = ENV_LOCK
+            .lock()
+            .expect("ENV_LOCK mutex should not be poisoned");
         // Clear env var to test default behavior
         std::env::remove_var("TITANE_MEMORY_DIR");
 
@@ -138,6 +144,9 @@ mod tests {
 
     #[test]
     fn test_resolve_memory_dir_custom() {
+        let _env_guard = ENV_LOCK
+            .lock()
+            .expect("ENV_LOCK mutex should not be poisoned");
         std::env::set_var("TITANE_MEMORY_DIR", "/custom/memory/path");
         let dir = resolve_memory_dir();
         assert_eq!(dir.to_string_lossy(), "/custom/memory/path");
@@ -148,6 +157,9 @@ mod tests {
 
     #[test]
     fn test_resolve_memory_dir_empty_env() {
+        let _env_guard = ENV_LOCK
+            .lock()
+            .expect("ENV_LOCK mutex should not be poisoned");
         std::env::set_var("TITANE_MEMORY_DIR", "   ");
         let dir = resolve_memory_dir();
         // Should fall back to default
@@ -159,6 +171,9 @@ mod tests {
 
     #[test]
     fn test_scan_memory_directory_missing() {
+        let _env_guard = ENV_LOCK
+            .lock()
+            .expect("ENV_LOCK mutex should not be poisoned");
         std::env::set_var("TITANE_MEMORY_DIR", "/nonexistent/path/that/does/not/exist");
         let report = scan_memory_directory();
 

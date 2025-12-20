@@ -524,14 +524,14 @@ mod tests {
     #[test]
     fn test_tone_serialize() {
         let tone = Tone::Encouraging;
-        let json = serde_json::to_string(&tone).unwrap();
+        let json = serde_json::to_string(&tone).expect("tone should serialize to JSON");
         assert!(json.contains("Encouraging"));
     }
 
     #[test]
     fn test_tone_deserialize() {
         let json = "\"Instructive\"";
-        let tone: Tone = serde_json::from_str(json).unwrap();
+        let tone: Tone = serde_json::from_str(json).expect("tone should deserialize from JSON");
         assert_eq!(tone, Tone::Instructive);
     }
 
@@ -577,7 +577,7 @@ mod tests {
     #[test]
     fn test_tone_parameters_serialize() {
         let params = ToneParameters::default();
-        let json = serde_json::to_string(&params).unwrap();
+        let json = serde_json::to_string(&params).expect("ToneParameters should serialize to JSON");
         assert!(json.contains("formality"));
         assert!(json.contains("warmth"));
     }
@@ -627,7 +627,8 @@ mod tests {
     #[test]
     fn test_tone_text_markers_serialize() {
         let markers = ToneTextMarkers::default();
-        let json = serde_json::to_string(&markers).unwrap();
+        let json =
+            serde_json::to_string(&markers).expect("ToneTextMarkers should serialize to JSON");
         assert!(json.contains("prefixes"));
     }
 
@@ -689,7 +690,7 @@ mod tests {
             parameters: ToneParameters::default(),
             text_markers: ToneTextMarkers::default(),
         };
-        let json = serde_json::to_string(&config).unwrap();
+        let json = serde_json::to_string(&config).expect("ToneConfig should serialize to JSON");
         assert!(json.contains("Calm"));
     }
 
@@ -971,84 +972,108 @@ mod tests {
     #[test]
     fn test_friendly_config_warmth() {
         let engine = ToneEngine::default();
-        let config = engine.get_config(Tone::Friendly).unwrap();
+        let config = engine
+            .get_config(Tone::Friendly)
+            .expect("Tone::Friendly config should exist");
         assert_eq!(config.parameters.warmth, 0.8);
     }
 
     #[test]
     fn test_professional_config_formality() {
         let engine = ToneEngine::default();
-        let config = engine.get_config(Tone::Professional).unwrap();
+        let config = engine
+            .get_config(Tone::Professional)
+            .expect("Tone::Professional config should exist");
         assert_eq!(config.parameters.formality, 0.8);
     }
 
     #[test]
     fn test_empathetic_config_empathy() {
         let engine = ToneEngine::default();
-        let config = engine.get_config(Tone::Empathetic).unwrap();
+        let config = engine
+            .get_config(Tone::Empathetic)
+            .expect("Tone::Empathetic config should exist");
         assert_eq!(config.parameters.empathy, 1.0);
     }
 
     #[test]
     fn test_encouraging_config_energy() {
         let engine = ToneEngine::default();
-        let config = engine.get_config(Tone::Encouraging).unwrap();
+        let config = engine
+            .get_config(Tone::Encouraging)
+            .expect("Tone::Encouraging config should exist");
         assert_eq!(config.parameters.energy, 0.8);
     }
 
     #[test]
     fn test_playful_config_humor() {
         let engine = ToneEngine::default();
-        let config = engine.get_config(Tone::Playful).unwrap();
+        let config = engine
+            .get_config(Tone::Playful)
+            .expect("Tone::Playful config should exist");
         assert_eq!(config.parameters.humor, 0.8);
     }
 
     #[test]
     fn test_urgent_config_directness() {
         let engine = ToneEngine::default();
-        let config = engine.get_config(Tone::Urgent).unwrap();
+        let config = engine
+            .get_config(Tone::Urgent)
+            .expect("Tone::Urgent config should exist");
         assert_eq!(config.parameters.directness, 1.0);
     }
 
     #[test]
     fn test_serious_config_humor() {
         let engine = ToneEngine::default();
-        let config = engine.get_config(Tone::Serious).unwrap();
+        let config = engine
+            .get_config(Tone::Serious)
+            .expect("Tone::Serious config should exist");
         assert_eq!(config.parameters.humor, 0.0);
     }
 
     #[test]
     fn test_friendly_has_emojis() {
         let engine = ToneEngine::default();
-        let config = engine.get_config(Tone::Friendly).unwrap();
+        let config = engine
+            .get_config(Tone::Friendly)
+            .expect("Tone::Friendly config should exist");
         assert!(!config.text_markers.emojis.is_empty());
     }
 
     #[test]
     fn test_professional_no_emojis() {
         let engine = ToneEngine::default();
-        let config = engine.get_config(Tone::Professional).unwrap();
+        let config = engine
+            .get_config(Tone::Professional)
+            .expect("Tone::Professional config should exist");
         assert!(config.text_markers.emojis.is_empty());
     }
 
     #[test]
     fn test_empathetic_secondary_tone() {
         let engine = ToneEngine::default();
-        let config = engine.get_config(Tone::Empathetic).unwrap();
+        let config = engine
+            .get_config(Tone::Empathetic)
+            .expect("Tone::Empathetic config should exist");
         assert_eq!(config.secondary_tone, Some(Tone::Calm));
     }
 
     #[test]
     fn test_encouraging_secondary_tone() {
         let engine = ToneEngine::default();
-        let config = engine.get_config(Tone::Encouraging).unwrap();
+        let config = engine
+            .get_config(Tone::Encouraging)
+            .expect("Tone::Encouraging config should exist");
         assert_eq!(config.secondary_tone, Some(Tone::Enthusiastic));
     }
 
     #[test]
     fn test_professional_no_secondary_tone() {
         let engine = ToneEngine::default();
-        let config = engine.get_config(Tone::Professional).unwrap();
+        let config = engine
+            .get_config(Tone::Professional)
+            .expect("Tone::Professional config should exist");
         assert_eq!(config.secondary_tone, None);
     }
 }

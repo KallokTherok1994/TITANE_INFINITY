@@ -568,14 +568,15 @@ mod tests {
     #[test]
     fn test_energy_level_serialize() {
         let level = EnergyLevel::Low;
-        let json = serde_json::to_string(&level).unwrap();
+        let json = serde_json::to_string(&level).expect("EnergyLevel should serialize to JSON");
         assert!(json.contains("Low"));
     }
 
     #[test]
     fn test_energy_level_deserialize() {
         let json = "\"High\"";
-        let level: EnergyLevel = serde_json::from_str(json).unwrap();
+        let level: EnergyLevel =
+            serde_json::from_str(json).expect("EnergyLevel should deserialize from JSON");
         assert_eq!(level, EnergyLevel::High);
     }
 
@@ -611,14 +612,16 @@ mod tests {
     #[test]
     fn test_clarity_level_serialize() {
         let level = ClarityLevel::Clear;
-        let json = serde_json::to_string(&level).unwrap();
+        let json =
+            serde_json::to_string(&level).expect("ClarityLevel should serialize to JSON");
         assert!(json.contains("Clear"));
     }
 
     #[test]
     fn test_clarity_level_deserialize() {
         let json = "\"VeryFuzzy\"";
-        let level: ClarityLevel = serde_json::from_str(json).unwrap();
+        let level: ClarityLevel =
+            serde_json::from_str(json).expect("ClarityLevel should deserialize from JSON");
         assert_eq!(level, ClarityLevel::VeryFuzzy);
     }
 
@@ -654,7 +657,7 @@ mod tests {
     #[test]
     fn test_mental_load_serialize() {
         let load = MentalLoad::Normal;
-        let json = serde_json::to_string(&load).unwrap();
+        let json = serde_json::to_string(&load).expect("MentalLoad should serialize to JSON");
         assert!(json.contains("Normal"));
     }
 
@@ -702,7 +705,8 @@ mod tests {
     #[test]
     fn test_emotional_state_serialize() {
         let state = EmotionalState::Confusion;
-        let json = serde_json::to_string(&state).unwrap();
+        let json =
+            serde_json::to_string(&state).expect("EmotionalState should serialize to JSON");
         assert!(json.contains("Confusion"));
     }
 
@@ -749,7 +753,7 @@ mod tests {
     #[test]
     fn test_response_tone_serialize() {
         let tone = ResponseTone::Direct;
-        let json = serde_json::to_string(&tone).unwrap();
+        let json = serde_json::to_string(&tone).expect("ResponseTone should serialize to JSON");
         assert!(json.contains("Direct"));
     }
 
@@ -793,7 +797,8 @@ mod tests {
             conversation_velocity: 1,
             message_history: vec![],
         };
-        let json = serde_json::to_string(&request).unwrap();
+        let json =
+            serde_json::to_string(&request).expect("EmotionalRequest should serialize to JSON");
         assert!(json.contains("ctx"));
         assert!(json.contains("conversation_velocity"));
     }
@@ -873,7 +878,8 @@ mod tests {
                 cognitive_protection: 0.9,
             },
         };
-        let json = serde_json::to_string(&response).unwrap();
+        let json =
+            serde_json::to_string(&response).expect("EmotionalResponse should serialize to JSON");
         assert!(json.contains("finalized_response"));
         assert!(json.contains("detected_energy"));
     }
@@ -917,7 +923,8 @@ mod tests {
             support_level: 0.5,
             cognitive_protection: 0.5,
         };
-        let json = serde_json::to_string(&quality).unwrap();
+        let json = serde_json::to_string(&quality)
+            .expect("AdaptationQuality should serialize to JSON");
         assert!(json.contains("emotional_accuracy"));
         assert!(json.contains("subtlety"));
     }

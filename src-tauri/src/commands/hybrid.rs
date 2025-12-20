@@ -294,7 +294,7 @@ mod tests {
     async fn test_dev_run_command() {
         let result = dev_run_command("echo hello".to_string()).await;
         assert!(result.is_ok());
-        let cmd_result = result.unwrap();
+        let cmd_result = result.expect("dev_run_command should succeed");
         assert_eq!(cmd_result.exit_code, 0);
         assert!(cmd_result.output.contains("hello"));
     }
@@ -303,7 +303,7 @@ mod tests {
     async fn test_dev_inspect_file_not_found() {
         let result = dev_inspect_file("/nonexistent/file.txt".to_string()).await;
         assert!(result.is_ok());
-        let inspection = result.unwrap();
+        let inspection = result.expect("dev_inspect_file should succeed for not-found path");
         assert!(!inspection.exists);
     }
 }

@@ -18,15 +18,21 @@ pub struct SingularitySelfCheckResult {
 pub async fn singularity_self_check() -> Result<SingularitySelfCheckResult, TitaneError> {
     log::info!("[SINGULARITY] self_check called");
 
+    let timestamp = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map_err(|e| {
+            TitaneError::InternalError(format!(
+                "Failed to compute UNIX timestamp for singularity self-check: {e}"
+            ))
+        })?
+        .as_secs();
+
     let result = SingularitySelfCheckResult {
         overall_health: "healthy".to_string(),
         physical_status: "optimal".to_string(),
         cognitive_status: "stable".to_string(),
         symbolic_status: "aligned".to_string(),
-        timestamp: std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_secs(),
+        timestamp,
     };
 
     log::info!(

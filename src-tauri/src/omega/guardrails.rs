@@ -543,7 +543,7 @@ impl GuardrailsEngine {
                         // Redact potential PII
                         static EMAIL_RE: Lazy<regex::Regex> = Lazy::new(|| {
                             regex::Regex::new(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}")
-                                .unwrap()
+                                .expect("hard-coded email regex must compile")
                         });
                         modified = EMAIL_RE
                             .replace_all(&modified, "[EMAIL REDACTED]")

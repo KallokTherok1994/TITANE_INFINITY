@@ -39,8 +39,8 @@ impl ContextMapper {
     pub async fn map_context(&self, query: String) -> ContextMap {
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_secs();
+            .map(|d| d.as_secs())
+            .unwrap_or_else(|_| crate::core::utils::now_ms() / 1000);
 
         let (domain, importance, urgency) = self.analyze_query(&query);
 

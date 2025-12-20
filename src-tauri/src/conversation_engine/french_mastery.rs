@@ -600,14 +600,16 @@ mod tests {
     #[test]
     fn test_processing_mode_serialize() {
         let mode = ProcessingMode::Double;
-        let json = serde_json::to_string(&mode).unwrap();
+        let json = serde_json::to_string(&mode)
+            .expect("ProcessingMode should serialize to JSON");
         assert!(json.contains("double"));
     }
 
     #[test]
     fn test_processing_mode_deserialize() {
         let json = "\"correction\"";
-        let mode: ProcessingMode = serde_json::from_str(json).unwrap();
+        let mode: ProcessingMode =
+            serde_json::from_str(json).expect("ProcessingMode should deserialize from JSON");
         assert_eq!(mode, ProcessingMode::Correction);
     }
 
@@ -656,14 +658,14 @@ mod tests {
     #[test]
     fn test_tone_serialize() {
         let tone = Tone::Professional;
-        let json = serde_json::to_string(&tone).unwrap();
+        let json = serde_json::to_string(&tone).expect("Tone should serialize to JSON");
         assert!(json.contains("professional"));
     }
 
     #[test]
     fn test_tone_deserialize() {
         let json = "\"warm\"";
-        let tone: Tone = serde_json::from_str(json).unwrap();
+        let tone: Tone = serde_json::from_str(json).expect("Tone should deserialize from JSON");
         assert_eq!(tone, Tone::Warm);
     }
 
@@ -705,7 +707,7 @@ mod tests {
     #[test]
     fn test_length_serialize() {
         let length = Length::Short;
-        let json = serde_json::to_string(&length).unwrap();
+        let json = serde_json::to_string(&length).expect("Length should serialize to JSON");
         assert!(json.contains("short"));
     }
 
@@ -747,7 +749,8 @@ mod tests {
     #[test]
     fn test_technical_level_serialize() {
         let level = TechnicalLevel::Beginner;
-        let json = serde_json::to_string(&level).unwrap();
+        let json =
+            serde_json::to_string(&level).expect("TechnicalLevel should serialize to JSON");
         assert!(json.contains("beginner"));
     }
 
@@ -789,7 +792,8 @@ mod tests {
     #[test]
     fn test_constraints_serialize() {
         let constraints = PostProcessingConstraints::default();
-        let json = serde_json::to_string(&constraints).unwrap();
+        let json = serde_json::to_string(&constraints)
+            .expect("PostProcessingConstraints should serialize to JSON");
         assert!(json.contains("tone"));
         assert!(json.contains("length"));
     }
@@ -837,7 +841,8 @@ mod tests {
             mode: ProcessingMode::Double,
             constraints: PostProcessingConstraints::default(),
         };
-        let json = serde_json::to_string(&request).unwrap();
+        let json = serde_json::to_string(&request)
+            .expect("FrenchMasteryRequest should serialize to JSON");
         assert!(json.contains("context"));
         assert!(json.contains("draft_response"));
     }
@@ -880,7 +885,10 @@ mod tests {
             quality_scores: QualityScores::default(),
         };
         assert!(response.variant.is_some());
-        assert_eq!(response.variant.unwrap(), "Short version");
+        assert_eq!(
+            response.variant.expect("variant should be set in this test"),
+            "Short version"
+        );
     }
 
     #[test]
@@ -903,7 +911,8 @@ mod tests {
             variant: None,
             quality_scores: QualityScores::default(),
         };
-        let json = serde_json::to_string(&response).unwrap();
+        let json = serde_json::to_string(&response)
+            .expect("FrenchMasteryResponse should serialize to JSON");
         assert!(json.contains("finalized_response"));
         assert!(json.contains("quality_scores"));
     }
@@ -954,7 +963,8 @@ mod tests {
     #[test]
     fn test_quality_scores_serialize() {
         let scores = QualityScores::default();
-        let json = serde_json::to_string(&scores).unwrap();
+        let json = serde_json::to_string(&scores)
+            .expect("QualityScores should serialize to JSON");
         assert!(json.contains("linguistic_correctness"));
         assert!(json.contains("clarity"));
         assert!(json.contains("titane_style_match"));
@@ -1244,7 +1254,7 @@ mod tests {
         };
         let result = processor.process(request).await;
         assert!(result.is_ok());
-        let response = result.unwrap();
+        let response = result.expect("process(Correction) should succeed in tests");
         assert!(response.finalized_response.contains("Les données sont"));
         assert!(response.comment.is_some());
     }
@@ -1260,7 +1270,7 @@ mod tests {
         };
         let result = processor.process(request).await;
         assert!(result.is_ok());
-        let response = result.unwrap();
+        let response = result.expect("process(Optimization) should succeed in tests");
         assert!(response.finalized_response.contains("suggère"));
     }
 
@@ -1275,7 +1285,7 @@ mod tests {
         };
         let result = processor.process(request).await;
         assert!(result.is_ok());
-        let response = result.unwrap();
+        let response = result.expect("process(Simplification) should succeed in tests");
         assert!(response.quality_scores.clarity >= 0.9);
     }
 
@@ -1290,7 +1300,7 @@ mod tests {
         };
         let result = processor.process(request).await;
         assert!(result.is_ok());
-        let response = result.unwrap();
+        let response = result.expect("process(Enrichment) should succeed in tests");
         assert!(response.finalized_response.contains("journal de bord"));
     }
 
@@ -1305,7 +1315,7 @@ mod tests {
         };
         let result = processor.process(request).await;
         assert!(result.is_ok());
-        let response = result.unwrap();
+        let response = result.expect("process(Double) should succeed in tests");
         assert!(!response.finalized_response.is_empty());
         assert!(response.variant.is_some());
     }
@@ -1349,7 +1359,10 @@ mod tests {
             mode: ProcessingMode::Correction,
             constraints: PostProcessingConstraints::default(),
         };
-        let result = processor.process(request).await.unwrap();
+        let result = processor
+            .process(request)
+            .await
+            .expect("process(Correction) should succeed in tests");
         assert_eq!(result.quality_scores.linguistic_correctness, 1.0);
     }
 
@@ -1362,7 +1375,10 @@ mod tests {
             mode: ProcessingMode::Optimization,
             constraints: PostProcessingConstraints::default(),
         };
-        let result = processor.process(request).await.unwrap();
+        let result = processor
+            .process(request)
+            .await
+            .expect("process(Optimization) should succeed in tests");
         assert_eq!(result.quality_scores.titane_style_match, 0.95);
     }
 
@@ -1375,7 +1391,10 @@ mod tests {
             mode: ProcessingMode::Simplification,
             constraints: PostProcessingConstraints::default(),
         };
-        let result = processor.process(request).await.unwrap();
+        let result = processor
+            .process(request)
+            .await
+            .expect("process(Simplification) should succeed in tests");
         assert_eq!(result.quality_scores.clarity, 0.98);
         assert_eq!(result.quality_scores.optimal_density, 0.95);
     }
@@ -1389,7 +1408,10 @@ mod tests {
             mode: ProcessingMode::Enrichment,
             constraints: PostProcessingConstraints::default(),
         };
-        let result = processor.process(request).await.unwrap();
+        let result = processor
+            .process(request)
+            .await
+            .expect("process(Enrichment) should succeed in tests");
         assert_eq!(result.quality_scores.clarity, 0.92);
         assert_eq!(result.quality_scores.reusability, 0.85);
     }
@@ -1403,7 +1425,10 @@ mod tests {
             mode: ProcessingMode::Double,
             constraints: PostProcessingConstraints::default(),
         };
-        let result = processor.process(request).await.unwrap();
+        let result = processor
+            .process(request)
+            .await
+            .expect("process(Double) should succeed in tests");
         assert_eq!(result.quality_scores.clarity, 0.95);
         assert_eq!(result.quality_scores.optimal_density, 0.9);
     }

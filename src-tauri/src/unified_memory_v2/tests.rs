@@ -82,18 +82,21 @@ mod tests {
         memory
             .store("Rust programming language", 0.9, MemoryType::Factual)
             .await
-            .unwrap();
+            .expect("store(Rust programming language) should succeed in tests");
         memory
             .store("JavaScript web development", 0.7, MemoryType::Factual)
             .await
-            .unwrap();
+            .expect("store(JavaScript web development) should succeed in tests");
         memory
             .store("Rust async programming", 0.8, MemoryType::Procedural)
             .await
-            .unwrap();
+            .expect("store(Rust async programming) should succeed in tests");
 
         // Search for "Rust"
-        let results = memory.recall("Rust", 10).await.unwrap();
+        let results = memory
+            .recall("Rust", 10)
+            .await
+            .expect("recall(Rust) should succeed in tests");
         assert!(
             results.len() >= 2,
             "Should find at least 2 Rust-related entries"
@@ -118,7 +121,7 @@ mod tests {
             memory
                 .store(&format!("STM entry {}", i), 0.5, MemoryType::Conversation)
                 .await
-                .unwrap();
+                .expect("store(STM entry) should succeed in tests");
         }
 
         // Query STM specifically
@@ -147,7 +150,7 @@ mod tests {
             memory
                 .store(&format!("Entry {}", i), 0.6, MemoryType::Conversation)
                 .await
-                .unwrap();
+                .expect("store(Entry) should succeed in tests");
         }
 
         // Wait for entries to age (simulate time passing)
@@ -157,7 +160,10 @@ mod tests {
         memory.consolidate().await.expect("Consolidation failed");
 
         // Check stats - some entries should have moved to MTM
-        let stats = memory.stats().await.unwrap();
+        let stats = memory
+            .stats()
+            .await
+            .expect("stats() should succeed after consolidation");
         // Note: Actual consolidation behavior depends on age thresholds
         // This test validates the consolidation runs without errors
         assert!(stats.total_entries >= 10, "All entries should still exist");
@@ -172,7 +178,7 @@ mod tests {
         let id = memory
             .store("Temporary entry", 0.5, MemoryType::Conversation)
             .await
-            .unwrap();
+            .expect("store(Temporary entry) should succeed in tests");
 
         let removed = memory.remove(&id).await.expect("Failed to remove");
         assert!(removed, "Should successfully remove entry");
@@ -190,9 +196,12 @@ mod tests {
         let id = memory
             .store("Test with metadata", 0.7, MemoryType::Factual)
             .await
-            .unwrap();
+            .expect("store(Test with metadata) should succeed in tests");
 
-        let entry = memory.get(&id).await.unwrap();
+        let entry = memory
+            .get(&id)
+            .await
+            .expect("get() should succeed for stored entry");
 
         // Verify metadata fields
         assert_eq!(entry.tier, MemoryTier::STM, "New entries start in STM");
@@ -223,7 +232,10 @@ mod tests {
         }
 
         // Verify all entries stored
-        let stats = memory.stats().await.unwrap();
+        let stats = memory
+            .stats()
+            .await
+            .expect("stats() should succeed after concurrent stores");
         assert_eq!(stats.stm_count, 10, "All concurrent stores should succeed");
     }
 
@@ -237,14 +249,17 @@ mod tests {
             memory
                 .store(&format!("Entry {}", i), 0.5, MemoryType::Conversation)
                 .await
-                .unwrap();
+                .expect("store(Entry) should succeed in tests");
         }
 
         // Clear all
         memory.clear().await.expect("Failed to clear");
 
         // Verify empty
-        let stats = memory.stats().await.unwrap();
+        let stats = memory
+            .stats()
+            .await
+            .expect("stats() should succeed after clear()");
         assert_eq!(stats.total_entries, 0, "All entries should be cleared");
     }
 
@@ -257,18 +272,21 @@ mod tests {
         memory
             .store("Low importance", 0.3, MemoryType::Conversation)
             .await
-            .unwrap();
+            .expect("store(Low importance) should succeed in tests");
         memory
             .store("High importance", 0.9, MemoryType::Conversation)
             .await
-            .unwrap();
+            .expect("store(High importance) should succeed in tests");
         memory
             .store("Medium importance", 0.6, MemoryType::Conversation)
             .await
-            .unwrap();
+            .expect("store(Medium importance) should succeed in tests");
 
         // Search should return results sorted by relevance/importance
-        let results = memory.recall("importance", 10).await.unwrap();
+        let results = memory
+            .recall("importance", 10)
+            .await
+            .expect("recall(importance) should succeed in tests");
         assert_eq!(results.len(), 3, "Should find all 3 entries");
 
         // First result should be highest importance (if relevance is equal)
@@ -304,7 +322,7 @@ mod tests {
             memory
                 .store(&format!("Entry {}", i), 0.5, MemoryType::Conversation)
                 .await
-                .unwrap();
+                .expect("store(Entry) should succeed in tests");
         }
 
         let start = std::time::Instant::now();

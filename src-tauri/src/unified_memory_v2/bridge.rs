@@ -78,11 +78,7 @@ impl MemoryBridge {
         }
 
         // Sort by relevance and limit
-        results.sort_by(|a, b| {
-            b.relevance_score()
-                .partial_cmp(&a.relevance_score())
-                .unwrap()
-        });
+        results.sort_by(|a, b| b.relevance_score().total_cmp(&a.relevance_score()));
         results.truncate(limit);
 
         Ok(results)
