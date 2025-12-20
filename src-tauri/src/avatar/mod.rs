@@ -15,26 +15,32 @@ pub mod fullbody_commands; // v24 — Tauri Commands
 pub mod fullbody_selftest; // v24 — Self-Tests
 pub mod immersive_avatar_engine; // v24.12 — Floating Window Commands
 
+#[allow(unused_imports)]
 pub use immersive_avatar_engine::{
     AvatarEngineGlobal, ExpressionModel, FacialExpression, ImmersiveAvatarEngine,
     ImmersiveVoiceProfile, LipSyncModel, ProsodyControl,
 };
 
+#[allow(unused_imports)]
 pub use fullbody::{
     get_fullbody_engine, AvatarStateBinding, AvatarStateSnapshot, BodyPostureAI, BodyProfile,
     ConversationalContext, ExpressionBridge, FullBodyAvatarEngine, Gesture, LipSyncFeed,
     MotionLayer, PostureConfiguration, PostureType, SkeletonModel, SkeletonSnapshot,
 };
 
+#[allow(unused_imports)]
 pub use appearance_state::{
     AccessoriesState, AppearanceUpdateRequest, AvatarAppearanceState, CustomStyle, Formality,
     HairLength, HairState, MakeupState, OutfitState, StyleState,
 };
 
+#[allow(unused_imports)]
 pub use appearance_taxonomy_engine::*;
 
+#[allow(unused_imports)]
 pub use appearance_commands::{get_appearance_engine, get_appearance_state};
 
+#[allow(unused_imports)]
 pub use avatar_display_state::{
     calculate_anchored_position, get_display_state, parse_anchor_position, reset_display_state,
     set_display_state, update_display_state, AnchorPosition, AvatarDisplayMode, AvatarDisplayState,

@@ -214,10 +214,13 @@ repair() {
     success "package-lock.json removed"
     
     print_section "Reinstalling dependencies..."
-    if [ -f "pnpm-lock.yaml" ]; then
+    if [ -f "pnpm-lock.yaml" ] && command -v pnpm &> /dev/null; then
         info "Using pnpm..."
         pnpm install --frozen-lockfile || pnpm install
     else
+        if [ -f "pnpm-lock.yaml" ]; then
+            warning "pnpm-lock.yaml detected but pnpm is not installed; falling back to npm"
+        fi
         info "Using npm..."
         npm install
     fi
