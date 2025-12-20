@@ -13,11 +13,12 @@
  */
 
 import { createLogger } from '@/utils/logger';
+import type * as SentryTypes from '@sentry/react';
 
 const logger = createLogger('Monitoring');
 
 // Sentry integration (lazy-loaded)
-let Sentry: any = null;
+let Sentry: typeof SentryTypes | null = null;
 
 /**
  * Performance metrics interface
@@ -92,8 +93,7 @@ class MonitoringManager {
 
     try {
       // Lazy load Sentry SDK
-      const SentryModule = await import('@sentry/react');
-      Sentry = SentryModule;
+      Sentry = await import('@sentry/react');
 
       Sentry.init({
         dsn,
@@ -103,9 +103,9 @@ class MonitoringManager {
         // Performance Monitoring
         tracesSampleRate: parseFloat(import.meta.env.VITE_SENTRY_TRACES_SAMPLE_RATE || '0.1'),
         
-        // Session Replay (optional)
+        // Session Replay (optional) - Reduced error capture for privacy
         replaysSessionSampleRate: 0.1, // 10% of sessions
-        replaysOnErrorSampleRate: 1.0, // 100% when errors occur
+        replaysOnErrorSampleRate: 0.5, // 50% when errors occur (reduced from 100%)
         
         integrations: [
           new Sentry.BrowserTracing({
