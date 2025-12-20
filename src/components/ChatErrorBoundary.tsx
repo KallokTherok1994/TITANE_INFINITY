@@ -8,6 +8,11 @@
  * TITANE∞ v26.2.0 - Chat Error Boundary Component
  * Specialized error boundary for Chat IA with OMEGA Pipeline integration
  * Phase 4 - Week 6: Error boundaries for ChatIA
+ * 
+ * FUTURE IMPROVEMENT (Phase 5+):
+ * - Replace string-based error detection with structured error codes
+ * - Example: error.code = 'OMEGA_STEP_1_VALIDATION'
+ * - This would make detection more robust and maintainable
  * ═══════════════════════════════════════════════════════════════
  */
 
@@ -143,10 +148,20 @@ export class ChatErrorBoundary extends Component<
 
   /**
    * Detect which OMEGA Pipeline step failed based on error
+   * Uses a priority-based matching system to handle overlapping keywords
    */
   private detectPipelineStep(error: Error): string | undefined {
     const message = error.message.toLowerCase();
 
+    // Priority 1: Specific combinations (check these first)
+    if (message.includes('output') && message.includes('validation')) {
+      return 'Step 7: Output Validation';
+    }
+    if (message.includes('save') && message.includes('memory')) {
+      return 'Step 8: Memory Save';
+    }
+
+    // Priority 2: Single keywords
     if (message.includes('validation') || message.includes('sanitize')) {
       return 'Step 1: Input Validation';
     }
@@ -165,12 +180,6 @@ export class ChatErrorBoundary extends Component<
     if (message.includes('post') || message.includes('process')) {
       return 'Step 6: Post-Processing';
     }
-    if (message.includes('validation') && message.includes('output')) {
-      return 'Step 7: Output Validation';
-    }
-    if (message.includes('save') && message.includes('memory')) {
-      return 'Step 8: Memory Save';
-    }
     if (message.includes('singularity') || message.includes('sync')) {
       return 'Step 9: Singularity Sync';
     }
@@ -178,6 +187,8 @@ export class ChatErrorBoundary extends Component<
       return 'Step 10: Self-Healing Check';
     }
 
+    // TODO: Replace with structured error codes in future refactor
+    // e.g., error.code === 'OMEGA_STEP_1_VALIDATION'
     return 'Unknown Pipeline Step';
   }
 
