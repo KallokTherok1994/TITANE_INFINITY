@@ -1,3 +1,18 @@
+---
+# GitHub Copilot Instructions for TITANE_INFINITY
+# This file provides detailed coding guidelines for the entire codebase
+# Applies to: src/, src-tauri/, tests/, scripts/
+appliesTo:
+  - "src/**/*"
+  - "src-tauri/**/*"
+  - "tests/**/*"
+  - "scripts/**/*"
+  - "*.ts"
+  - "*.tsx"
+  - "*.rs"
+  - "*.js"
+---
+
 # TITANE_INFINITY — Instructions Globales
 
 **Version:** 24.3.0  

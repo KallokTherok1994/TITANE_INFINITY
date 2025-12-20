@@ -37,8 +37,12 @@ TITANE∞ est un **OS cognitif local-first** : votre double numérique évolutif
 git clone https://github.com/KallokTherok1994/TITANE_INFINITY.git
 cd TITANE_INFINITY
 
-# 2. Installer dépendances
-npm install
+# 2. Installer dépendances (pnpm + toolchain incluse au repo)
+export PATH="$PWD/.tools/node/current/bin:$PATH"
+corepack pnpm install
+
+# Alternative (réinstalle proprement):
+./titane.sh repair
 
 # 3. Configurer Python environment (optionnel pour TTS/Voice)
 ./scripts/setup_environment.sh
@@ -188,6 +192,30 @@ feature/* → dev → stable-runtime
 - **feature/\*** : Nouvelles fonctionnalités
 - **dev** : Développement actif
 - **stable-runtime** : Branch de production
+
+### GitHub Copilot Instructions
+
+Ce dépôt est configuré avec des instructions personnalisées pour GitHub Copilot :
+
+- **[.github/copilot-instructions.md](.github/copilot-instructions.md)** — Protocole COPILOT-XS (règles générales)
+- **[.github/instructions/titane.instructions.md](.github/instructions/titane.instructions.md)** — Instructions détaillées du projet
+- **[.copilot-rules-permanent.md](.copilot-rules-permanent.md)** — Règles permanentes TITANE∞
+
+**Validation automatique :**
+
+```bash
+npm run copilot-xs:validate   # Valider le code (markers, secrets)
+npm run copilot-xs:status     # Vérifier la configuration Copilot
+npm run copilot-xs:precommit  # Validation + tests (pre-commit)
+```
+
+**Agents spécialisés** (`.github/copilot-agents/`) :
+- Guardian Agent — Qualité et sécurité
+- Dependency Guardian — Gestion des dépendances
+- Architecture Agent — Respect du modèle 4-Ring
+- Security Auditor — Audit de sécurité
+
+Pour plus d'informations : [COPILOT-XS README](.github/copilot-xs/README.md)
 
 ---
 
