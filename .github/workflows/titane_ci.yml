@@ -69,10 +69,17 @@ jobs:
   backend:
     name: Rust Backend (Check, Clippy, Test)
     runs-on: ubuntu-latest
+    needs: [frontend]
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Download frontend dist artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-dist
+          path: dist/
 
       - name: Install system dependencies
         run: |
@@ -131,6 +138,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Download frontend dist artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-dist
+          path: dist/
 
       - name: Install system dependencies
         run: |
