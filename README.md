@@ -29,6 +29,7 @@ TITANE∞ est un **OS cognitif local-first** : votre double numérique évolutif
 - **Node.js:** v20+ (LTS)
 - **Rust:** 1.75+
 - **Tauri CLI:** v2.0+
+- **Git LFS:** requis (certains binaires toolchain sont versionnés via LFS)
 
 ### Installation
 
@@ -36,6 +37,10 @@ TITANE∞ est un **OS cognitif local-first** : votre double numérique évolutif
 # 1. Cloner le repo
 git clone https://github.com/KallokTherok1994/TITANE_INFINITY.git
 cd TITANE_INFINITY
+
+# 1.1 Initialiser Git LFS (recommandé)
+git lfs install
+git lfs pull
 
 # 2. Installer dépendances (pnpm + toolchain incluse au repo)
 export PATH="$PWD/.tools/node/current/bin:$PATH"
