@@ -74,6 +74,10 @@ interface LoggerConfig {
 class Logger {
   private config: LoggerConfig;
 
+  private getSourcePrefix(): string {
+    return this.config.prefix ?? 'TITANE';
+  }
+
   constructor(config?: Partial<LoggerConfig>) {
     const isDev = process.env.NODE_ENV === 'development';
     const isTest = process.env.NODE_ENV === 'test';
@@ -106,7 +110,7 @@ class Logger {
       parts.push(`[${timestamp}]`);
     }
 
-    parts.push(`[${this.config.prefix}]`);
+    parts.push(`[${this.getSourcePrefix()}]`);
     parts.push(`[${level}]`);
     parts.push(...args);
 
@@ -122,7 +126,7 @@ class Logger {
     if (this.config.enableRuntimeControl) {
       const manager = getLogLevelManager();
       if (manager) {
-        const shouldLog = manager.shouldLog(this.config.prefix, level);
+        const shouldLog = manager.shouldLog(this.getSourcePrefix(), level);
         return shouldLog;
       }
     }

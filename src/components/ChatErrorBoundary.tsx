@@ -19,6 +19,7 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { logger } from '@/lib/logger';
 import { autoHealEngine } from '@/services/ai/autoHealEngine';
+import { monitoring } from '@/monitoring';
 
 interface ChatErrorBoundaryProps {
   children: ReactNode;
@@ -113,6 +114,35 @@ export class ChatErrorBoundary extends Component<
       },
       error
     );
+
+    // Monitoring (metrics + optional Sentry)
+    try {
+      monitoring.addBreadcrumb('Chat error captured', 'chat', {
+        component: 'ChatErrorBoundary',
+        conversationId,
+        mode,
+        pipelineStep: errorContext.pipelineStep,
+      });
+
+      monitoring.trackError(error, {
+        component: 'ChatErrorBoundary',
+        context: 'Chat',
+        conversationId,
+        mode,
+        pipelineStep: errorContext.pipelineStep,
+        componentStack: errorInfo.componentStack,
+      });
+
+      if (errorContext.pipelineStep?.startsWith('Step ')) {
+        monitoring.trackPipelineError();
+      }
+    } catch (monitoringError) {
+      logger.error(
+        'Monitoring tracking failed',
+        { component: 'ChatErrorBoundary' },
+        monitoringError as Error
+      );
+    }
 
     // Log component stack
     if (errorInfo.componentStack) {
@@ -456,7 +486,6 @@ export class ChatErrorBoundary extends Component<
               onClick={this.handleReportError}
               className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded font-medium transition-colors"
             >
-              Signaler l’erreur
               Signaler l&apos;erreur
             </button>
 
@@ -464,7 +493,6 @@ export class ChatErrorBoundary extends Component<
               onClick={() => window.location.reload()}
               className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded font-medium transition-colors"
             >
-              Recharger l’application
               Recharger l&apos;application
             </button>
           </div>
@@ -473,7 +501,7 @@ export class ChatErrorBoundary extends Component<
           {healingAttempts > 0 && (
             <div className="mt-4 p-3 bg-orange-900/20 border border-orange-500/30 rounded">
               <p className="text-sm text-orange-400">
-                ℹ️ {healingAttempts} tentative(s) d'auto-réparation effectuée(s)
+                ℹ️ {healingAttempts} tentative(s) d&apos;auto-réparation effectuée(s)
               </p>
             </div>
           )}
@@ -485,7 +513,6 @@ export class ChatErrorBoundary extends Component<
             </p>
             <ul className="list-disc list-inside space-y-1">
               <li>Cliquez sur « Réessayer » pour tenter de reprendre la conversation</li>
-              <li>Cliquez sur &quot;Réessayer&quot; pour tenter de reprendre la conversation</li>
               <li>Créez une &quot;Nouvelle Conversation&quot; pour repartir à zéro</li>
               <li>Si le problème persiste, rechargez l’application</li>
               <li>Vous pouvez signaler cette erreur pour nous aider à l’améliorer</li>
