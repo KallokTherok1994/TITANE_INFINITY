@@ -10,7 +10,7 @@ type EnvValue = string | boolean | undefined;
 
 const env = import.meta.env as Record<string, EnvValue>;
 
-function envFlag(key: string): boolean {
+export function envFlag(key: string): boolean {
   const value = env[key];
   if (value === true) return true;
   if (value === false) return false;

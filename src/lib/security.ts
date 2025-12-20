@@ -1779,14 +1779,14 @@ export async function secureInvoke<T>(
       throw new Error('Fallback response received');
     }
 
-      try {
-        monitoring.addBreadcrumb('secureInvoke success', 'tauri', {
-          command,
-          latencyMs: Date.now() - startedAt,
-        });
-      } catch {
-        // ignore monitoring errors
-      }
+    try {
+      monitoring.addBreadcrumb('secureInvoke success', 'tauri', {
+        command,
+        latencyMs: Date.now() - startedAt,
+      });
+    } catch {
+      // ignore monitoring errors
+    }
 
     return sanitized as T;
   } catch (error) {
