@@ -6,12 +6,13 @@
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// 🛡️ Type augmentation for Sentry on window
+// 🛡️ Type augmentation for Sentry and Monitoring on window
 declare global {
   interface Window {
     Sentry?: {
       captureException: (error: unknown, options?: Record<string, unknown>) => void;
     };
+    __TITANE_MONITORING__?: any;
   }
 }
 
@@ -210,27 +211,36 @@ console.log('║  🌌 TITANE∞ v19 - BOOT SEQUENCE                            
 console.log('║  Timestamp: ' + new Date().toISOString() + '                  ║');
 console.log('╚════════════════════════════════════════════════════════════════╝\n');
 
-// ✨ v25.3.0 OPT-9 - Monitoring lazy-loaded (non-blocking)
-console.log('[1/7] 🔍 Monitoring: Lazy initialization (background load)...');
+// ✨ v26.2.0 Phase 5 - Monitoring Infrastructure (Priority 1)
+console.log('[1/7] 🔍 Monitoring: Initializing (Web Vitals, Errors, Performance)...');
 if (import.meta.env.PROD) {
   // Load monitoring in background after First Contentful Paint
   setTimeout(() => {
-    console.log('      ⚡ Lazy-loading monitoring infrastructure...');
-    import('./services/monitoring')
-      .then(({ initMonitoringAsync }) => {
-        initMonitoringAsync();
-        console.log('      ✅ Monitoring: Ready for error tracking and performance');
+    console.log('      ⚡ Loading monitoring infrastructure...');
+    import('./monitoring')
+      .then(({ initMonitoring, monitoring }) => {
+        initMonitoring();
+        // Expose to DevTools console
+        if (typeof window !== 'undefined') {
+          window.__TITANE_MONITORING__ = monitoring;
+        }
+        console.log('      ✅ Monitoring: Ready (access via window.__TITANE_MONITORING__)');
       })
       .catch(err => {
         console.warn('      ⚠️ Monitoring initialization failed:', err);
       });
-  }, 3000);
+  }, 2000);
 } else {
-  // Dev mode: lazy init for debugging
-  import('./services/monitoring')
-    .then(({ initMonitoringAsync }) => {
-      initMonitoringAsync();
-      console.log('      ✅ Monitoring: Ready (dev mode - lazy)');
+  // Dev mode: immediate init for debugging
+  import('./monitoring')
+    .then(({ initMonitoring, monitoring }) => {
+      initMonitoring();
+      // Expose to DevTools console
+      if (typeof window !== 'undefined') {
+        window.__TITANE_MONITORING__ = monitoring;
+      }
+      console.log('      ✅ Monitoring: Ready (dev mode - immediate)');
+      console.log('      💡 Access metrics: window.__TITANE_MONITORING__.getMetrics()');
     })
     .catch(err => {
       console.warn('      ⚠️ Monitoring initialization failed (dev):', err);

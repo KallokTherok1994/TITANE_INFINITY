@@ -13,7 +13,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { createLogger } from '@/utils/logger';
 
 const logger = createLogger('LazyEngineLoader');
