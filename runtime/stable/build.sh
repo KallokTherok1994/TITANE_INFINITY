@@ -11,6 +11,12 @@ echo ""
 # Navigate to project root
 cd "$(dirname "$0")/../.."
 
+# Prefer repo-pinned Node toolchain when available
+NODE_TOOLS_BIN="$PWD/.tools/node/current/bin"
+if [[ -d "$NODE_TOOLS_BIN" ]]; then
+    export PATH="$NODE_TOOLS_BIN:$PATH"
+fi
+
 # Check we're on stable-runtime branch
 CURRENT_BRANCH=$(git branch --show-current)
 if [[ $CURRENT_BRANCH != "stable-runtime" ]]; then
