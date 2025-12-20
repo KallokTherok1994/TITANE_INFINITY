@@ -102,19 +102,25 @@ mod tests {
     use super::*;
 
     fn unique_test_state_path() -> PathBuf {
+        use std::sync::atomic::{AtomicU64, Ordering};
         use std::time::{SystemTime, UNIX_EPOCH};
+
+        static COUNTER: AtomicU64 = AtomicU64::new(0);
 
         let nanos = SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .unwrap_or_default()
             .as_nanos();
 
+        let seq = COUNTER.fetch_add(1, Ordering::Relaxed);
+
         let mut path = std::env::temp_dir();
         path.push("TITANE_INFINITY_tests");
         path.push(format!(
-            "singularity_state_{}_{}.json",
+            "singularity_state_{}_{}_{}.json",
             std::process::id(),
-            nanos
+            nanos,
+            seq
         ));
         path
     }
@@ -130,7 +136,7 @@ mod tests {
 
         // Test load
         let loaded = persistence.load_state().await;
-        assert!(loaded.is_ok());
+        assert!(loaded.is_ok(), "{}", loaded.unwrap_err());
 
         // Cleanup
         persistence.clear_state().await.ok();
