@@ -5,16 +5,19 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v26.2.0 - Basic Monitoring Infrastructure
+ * TITANE∞ v26.2.0 - Monitoring Infrastructure with Sentry
  * Priority 1 (Week 1): Monitoring & Observability
  * 
- * Foundation for comprehensive monitoring system
+ * Quick Win #1: Sentry integration for production error tracking
  * ═══════════════════════════════════════════════════════════════
  */
 
 import { createLogger } from '@/utils/logger';
 
 const logger = createLogger('Monitoring');
+
+// Sentry integration (lazy-loaded)
+let Sentry: any = null;
 
 /**
  * Performance metrics interface
@@ -59,8 +62,11 @@ class MonitoringManager {
   /**
    * Initialize monitoring
    */
-  init(): void {
+  async init(): Promise<void> {
     logger.info('Initializing monitoring system...');
+
+    // Initialize Sentry (if DSN provided)
+    await this.initSentry();
 
     // Initialize Web Vitals monitoring
     this.initWebVitals();
@@ -72,6 +78,63 @@ class MonitoringManager {
     this.initMemoryMonitoring();
 
     logger.info('Monitoring system initialized');
+  }
+
+  /**
+   * Initialize Sentry SDK
+   */
+  private async initSentry(): Promise<void> {
+    const dsn = import.meta.env.VITE_SENTRY_DSN;
+    if (!dsn) {
+      logger.info('Sentry DSN not configured, skipping Sentry initialization');
+      return;
+    }
+
+    try {
+      // Lazy load Sentry SDK
+      const SentryModule = await import('@sentry/react');
+      Sentry = SentryModule;
+
+      Sentry.init({
+        dsn,
+        environment: import.meta.env.VITE_SENTRY_ENVIRONMENT || 'production',
+        release: `titane@${import.meta.env.VITE_APP_VERSION || 'unknown'}`,
+        
+        // Performance Monitoring
+        tracesSampleRate: parseFloat(import.meta.env.VITE_SENTRY_TRACES_SAMPLE_RATE || '0.1'),
+        
+        // Session Replay (optional)
+        replaysSessionSampleRate: 0.1, // 10% of sessions
+        replaysOnErrorSampleRate: 1.0, // 100% when errors occur
+        
+        integrations: [
+          new Sentry.BrowserTracing({
+            // Set sampling rate for performance monitoring
+            tracePropagationTargets: ['localhost', /^\//],
+          }),
+          new Sentry.Replay({
+            maskAllText: true,
+            blockAllMedia: true,
+          }),
+        ],
+
+        // Error filtering
+        beforeSend(event, hint) {
+          // Filter out errors in development
+          if (import.meta.env.DEV) {
+            return null;
+          }
+          return event;
+        },
+      });
+
+      logger.info('Sentry initialized successfully', {
+        environment: import.meta.env.VITE_SENTRY_ENVIRONMENT || 'production',
+        release: `titane@${import.meta.env.VITE_APP_VERSION || 'unknown'}`,
+      });
+    } catch (error) {
+      logger.warn('Failed to initialize Sentry:', error);
+    }
   }
 
   /**
@@ -153,7 +216,7 @@ class MonitoringManager {
   /**
    * Track an error
    */
-  trackError(error: Error | any): void {
+  trackError(error: Error | any, context?: Record<string, any>): void {
     this.errorCount++;
     this.metrics.errorCount = this.errorCount;
     this.metrics.errorRate = this.calculateErrorRate();
@@ -162,6 +225,7 @@ class MonitoringManager {
       message: error?.message || String(error),
       stack: error?.stack,
       errorRate: `${(this.metrics.errorRate * 100).toFixed(2)}%`,
+      context,
     });
 
     // Alert if error rate > 5%
@@ -173,9 +237,40 @@ class MonitoringManager {
       });
     }
 
-    // Send to Sentry if available
-    if (typeof window !== 'undefined' && (window as any).Sentry) {
-      (window as any).Sentry.captureException(error);
+    // Send to Sentry if initialized
+    if (Sentry) {
+      Sentry.captureException(error, {
+        contexts: {
+          custom: context || {},
+        },
+        tags: {
+          errorRate: `${(this.metrics.errorRate * 100).toFixed(2)}%`,
+        },
+      });
+    }
+  }
+
+  /**
+   * Set user context for error tracking
+   */
+  setUser(user: { id: string; username?: string; email?: string }): void {
+    if (Sentry) {
+      Sentry.setUser(user);
+    }
+  }
+
+  /**
+   * Add breadcrumb for debugging context
+   */
+  addBreadcrumb(message: string, category: string, data?: Record<string, any>): void {
+    if (Sentry) {
+      Sentry.addBreadcrumb({
+        message,
+        category,
+        data,
+        level: 'info',
+        timestamp: Date.now() / 1000,
+      });
     }
   }
 
@@ -255,8 +350,8 @@ export const monitoring = new MonitoringManager();
 /**
  * Initialize monitoring (call from main.tsx)
  */
-export function initMonitoring(): void {
-  monitoring.init();
+export async function initMonitoring(): Promise<void> {
+  await monitoring.init();
 }
 
 /**
