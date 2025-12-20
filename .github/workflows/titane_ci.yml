@@ -44,14 +44,14 @@ jobs:
 
       - name: Run ESLint
         run: npm run lint
-        continue-on-error: true # Don't fail on lint warnings
+        continue-on-error: true
 
       - name: Run TypeScript type check
         run: npm run check
 
       - name: Run unit tests
-        run: npm run test:unit -- --run
-        continue-on-error: true # Some tests require Tauri
+        run: npm test -- --run
+        continue-on-error: true
 
       - name: Build frontend
         run: npm run build
