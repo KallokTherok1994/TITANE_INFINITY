@@ -40,6 +40,12 @@ TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 LOG_DIR="$PROJECT_ROOT/logs"
 LOG_FILE="$LOG_DIR/titane_${TIMESTAMP}.log"
 
+# Prefer repo-pinned Node toolchain when available
+NODE_TOOLS_BIN="$PROJECT_ROOT/.tools/node/current/bin"
+if [ -d "$NODE_TOOLS_BIN" ]; then
+    export PATH="$NODE_TOOLS_BIN:$PATH"
+fi
+
 # ──────────────────────────────────────────────────────────────────────────────
 # HELPER FUNCTIONS
 # ──────────────────────────────────────────────────────────────────────────────
@@ -214,13 +220,19 @@ repair() {
     success "package-lock.json removed"
     
     print_section "Reinstalling dependencies..."
-    if [ -f "pnpm-lock.yaml" ] && command -v pnpm &> /dev/null; then
-        info "Using pnpm..."
-        pnpm install --frozen-lockfile || pnpm install
-    else
-        if [ -f "pnpm-lock.yaml" ]; then
-            warning "pnpm-lock.yaml detected but pnpm is not installed; falling back to npm"
+    if [ -f "pnpm-lock.yaml" ]; then
+        if command -v pnpm &> /dev/null; then
+            info "Using pnpm..."
+            pnpm install --frozen-lockfile || pnpm install
+        elif command -v corepack &> /dev/null; then
+            info "Using pnpm via corepack..."
+            corepack pnpm install --frozen-lockfile || corepack pnpm install
+        else
+            warning "pnpm-lock.yaml detected but neither pnpm nor corepack is available; falling back to npm"
+            info "Using npm..."
+            npm install
         fi
+    else
         info "Using npm..."
         npm install
     fi
