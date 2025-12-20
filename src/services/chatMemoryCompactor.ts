@@ -78,12 +78,25 @@ class ChatMemoryCompactor {
   // ✨ v24.3.7: Pending saves queue to batch writes
   private pendingSaves = new Map<ChatMode, AIMessage[]>();
   private saveScheduled = false;
+  // 🔒 v26.2.1 - CRITICAL FIX H2: Memory leak protection
+  private static readonly MAX_PENDING_SAVES = 100;
 
   /**
    * Sauvegarde l'historique d'un mode avec compression auto
    * ✨ v24.3.7: Uses requestIdleCallback to avoid blocking main thread
+   * 🔒 v26.2.1: Added MAX_PENDING_SAVES protection against memory leak
    */
   saveForMode(mode: ChatMode, messages: AIMessage[]): void {
+    // 🔒 v26.2.1: Force flush if max pending saves reached (memory leak protection)
+    if (this.pendingSaves.size >= ChatMemoryCompactor.MAX_PENDING_SAVES) {
+      logger.warn('Force flush - max pending saves reached', {
+        component: 'MemoryCompactor',
+        pendingCount: this.pendingSaves.size,
+        maxAllowed: ChatMemoryCompactor.MAX_PENDING_SAVES,
+      });
+      this.flushPendingSaves();
+    }
+
     // ✨ v24.3.7: Queue the save instead of executing immediately
     this.pendingSaves.set(mode, messages);
 
@@ -393,8 +406,11 @@ class ChatMemoryCompactor {
 }
 
 // ─────────────────────────────────────────────────────────────────
-// EXPORT SINGLETON
+// EXPORT SINGLETON + CLASS (for testing)
 // ─────────────────────────────────────────────────────────────────
 
 export const chatMemoryCompactor = new ChatMemoryCompactor();
 export default chatMemoryCompactor;
+
+// 🔒 v26.2.1: Export class for testing purposes
+export { ChatMemoryCompactor };
