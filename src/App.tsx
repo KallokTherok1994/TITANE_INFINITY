@@ -251,8 +251,6 @@ const AppRouter: React.FC = () => {
 
   // ✨ v19.5.2 - Check if onboarding is complete (first-run detection)
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-    
     const checkOnboarding = async () => {
       try {
         const isComplete = await secureInvoke<boolean>('is_onboarding_complete');
@@ -273,7 +271,7 @@ const AppRouter: React.FC = () => {
     };
 
     // Add timeout to prevent infinite loading (5 seconds)
-    timeoutId = setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       logger.warn('Onboarding check timeout, assuming complete', {
         component: 'Onboarding',
       });
@@ -284,9 +282,7 @@ const AppRouter: React.FC = () => {
     checkOnboarding();
 
     return () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
+      clearTimeout(timeoutId);
     };
   }, []);
 
