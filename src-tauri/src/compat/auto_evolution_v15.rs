@@ -71,8 +71,10 @@ mod tests {
     #[test]
     fn test_evolution_supervisor_serialization() {
         let supervisor = EvolutionSupervisor::new();
-        let json = serde_json::to_string(&supervisor).unwrap();
-        let _restored: EvolutionSupervisor = serde_json::from_str(&json).unwrap();
+        let json =
+            serde_json::to_string(&supervisor).expect("EvolutionSupervisor should serialize");
+        let _restored: EvolutionSupervisor =
+            serde_json::from_str(&json).expect("EvolutionSupervisor should deserialize");
     }
 
     // ─────────────────────────────────────────────────────────────
@@ -106,8 +108,9 @@ mod tests {
     #[test]
     fn test_pattern_type_serialization() {
         let pattern = PatternType::Temporal;
-        let json = serde_json::to_string(&pattern).unwrap();
-        let restored: PatternType = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&pattern).expect("PatternType should serialize");
+        let restored: PatternType =
+            serde_json::from_str(&json).expect("PatternType should deserialize");
         assert!(matches!(restored, PatternType::Temporal));
     }
 
@@ -132,8 +135,9 @@ mod tests {
     #[test]
     fn test_auto_evolution_engine_serialization() {
         let engine = AutoEvolutionEngine;
-        let json = serde_json::to_string(&engine).unwrap();
-        let _restored: AutoEvolutionEngine = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&engine).expect("AutoEvolutionEngine should serialize");
+        let _restored: AutoEvolutionEngine =
+            serde_json::from_str(&json).expect("AutoEvolutionEngine should deserialize");
     }
 
     // ─────────────────────────────────────────────────────────────
@@ -185,8 +189,9 @@ mod tests {
             adaptability: 0.85,
             coherence: 0.65,
         };
-        let json = serde_json::to_string(&metrics).unwrap();
-        let restored: KevinMetrics = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&metrics).expect("KevinMetrics should serialize");
+        let restored: KevinMetrics =
+            serde_json::from_str(&json).expect("KevinMetrics should deserialize");
         assert_eq!(restored.stability, 0.75);
         assert_eq!(restored.adaptability, 0.85);
         assert_eq!(restored.coherence, 0.65);

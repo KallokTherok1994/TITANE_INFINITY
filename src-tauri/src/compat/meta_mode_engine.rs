@@ -56,8 +56,9 @@ mod tests {
     #[test]
     fn test_meta_mode_engine_serialization() {
         let engine = MetaModeEngine;
-        let json = serde_json::to_string(&engine).unwrap();
-        let _restored: MetaModeEngine = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&engine).expect("MetaModeEngine should serialize");
+        let _restored: MetaModeEngine =
+            serde_json::from_str(&json).expect("MetaModeEngine should deserialize");
     }
 
     // ─────────────────────────────────────────────────────────────
@@ -81,8 +82,9 @@ mod tests {
     #[test]
     fn test_meta_mode_config_serialization() {
         let config = MetaModeConfig;
-        let json = serde_json::to_string(&config).unwrap();
-        let _restored: MetaModeConfig = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&config).expect("MetaModeConfig should serialize");
+        let _restored: MetaModeConfig =
+            serde_json::from_str(&json).expect("MetaModeConfig should deserialize");
     }
 
     // ─────────────────────────────────────────────────────────────
@@ -134,8 +136,9 @@ mod tests {
             success: true,
             message: "All good".to_string(),
         };
-        let json = serde_json::to_string(&response).unwrap();
-        let restored: MetaModeResponse = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&response).expect("MetaModeResponse should serialize");
+        let restored: MetaModeResponse =
+            serde_json::from_str(&json).expect("MetaModeResponse should deserialize");
         assert!(restored.success);
         assert_eq!(restored.message, "All good");
     }
@@ -193,8 +196,8 @@ mod tests {
             energy: 0.95,
             focus: 0.85,
         };
-        let json = serde_json::to_string(&state).unwrap();
-        let restored: KevinState = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&state).expect("KevinState should serialize");
+        let restored: KevinState = serde_json::from_str(&json).expect("KevinState should deserialize");
         assert_eq!(restored.energy, 0.95);
         assert_eq!(restored.focus, 0.85);
     }

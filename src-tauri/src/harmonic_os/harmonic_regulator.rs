@@ -74,7 +74,10 @@ mod tests {
     async fn test_regulation() {
         let regulator = HarmonicRegulator::default();
         let state = HarmonicState::default();
-        let corrections = regulator.regulate(&state, &[]).await.unwrap();
+        let corrections = regulator
+            .regulate(&state, &[])
+            .await
+            .expect("regulate should succeed for default state");
         assert!(!corrections.adjust_omega_depth);
     }
 
@@ -98,7 +101,10 @@ mod tests {
         let mut state = HarmonicState::default();
         state.cognitive_resonance = 0.3; // Below threshold
 
-        let corrections = regulator.regulate(&state, &[]).await.unwrap();
+        let corrections = regulator
+            .regulate(&state, &[])
+            .await
+            .expect("regulate should succeed for low cognitive resonance state");
         assert!(corrections.adjust_omega_depth);
         assert_eq!(corrections.new_omega_depth, Some(3));
     }
@@ -109,7 +115,10 @@ mod tests {
         let mut state = HarmonicState::default();
         state.memory_alignment = 0.4; // Below threshold
 
-        let corrections = regulator.regulate(&state, &[]).await.unwrap();
+        let corrections = regulator
+            .regulate(&state, &[])
+            .await
+            .expect("regulate should succeed for low memory alignment state");
         assert!(corrections.recalibrate_memory);
     }
 
@@ -119,7 +128,10 @@ mod tests {
         let mut state = HarmonicState::default();
         state.agent_sync = 0.3; // Below threshold
 
-        let corrections = regulator.regulate(&state, &[]).await.unwrap();
+        let corrections = regulator
+            .regulate(&state, &[])
+            .await
+            .expect("regulate should succeed for low agent sync state");
         assert!(corrections.reprioritize_agents);
     }
 
@@ -129,7 +141,10 @@ mod tests {
         let mut state = HarmonicState::default();
         state.energy_alignment = 0.3; // Below 0.4
 
-        let corrections = regulator.regulate(&state, &[]).await.unwrap();
+        let corrections = regulator
+            .regulate(&state, &[])
+            .await
+            .expect("regulate should succeed for low energy alignment state");
         assert!(corrections.redistribute_energy);
     }
 
@@ -143,7 +158,10 @@ mod tests {
             description: "High severity".to_string(),
         }];
 
-        let corrections = regulator.regulate(&state, &dissonances).await.unwrap();
+        let corrections = regulator
+            .regulate(&state, &dissonances)
+            .await
+            .expect("regulate should succeed for high dissonance severity input");
         assert!(corrections.adjust_omega_depth);
         assert_eq!(corrections.new_omega_depth, Some(2));
     }
@@ -157,7 +175,10 @@ mod tests {
         state.agent_sync = 0.8;
         state.energy_alignment = 0.8;
 
-        let corrections = regulator.regulate(&state, &[]).await.unwrap();
+        let corrections = regulator
+            .regulate(&state, &[])
+            .await
+            .expect("regulate should succeed when all values are OK");
         assert!(!corrections.adjust_omega_depth);
         assert!(!corrections.recalibrate_memory);
         assert!(!corrections.reprioritize_agents);
@@ -173,7 +194,10 @@ mod tests {
         state.agent_sync = 0.3;
         state.energy_alignment = 0.2;
 
-        let corrections = regulator.regulate(&state, &[]).await.unwrap();
+        let corrections = regulator
+            .regulate(&state, &[])
+            .await
+            .expect("regulate should succeed for multiple issue state");
         assert!(corrections.adjust_omega_depth);
         assert!(corrections.recalibrate_memory);
         assert!(corrections.reprioritize_agents);

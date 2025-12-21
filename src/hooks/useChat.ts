@@ -354,6 +354,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   }, []);
 
   // ✨ v24.3.7 - Optimized provider availability with Promise.allSettled + individual timeouts
+  // 🔒 v26.2.1 - CRITICAL FIX H1: Race condition protection with guard
   useEffect(() => {
     // ✨ v24.3.7: Helper to add timeout to any promise
     const withTimeout = <T>(
@@ -368,38 +369,53 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
     const PROVIDER_CHECK_TIMEOUT = 3000; // ✨ v24.3.7: 3s max per provider (was unbounded)
 
+    // 🔒 v26.2.1: Race condition guard - prevent concurrent checks
+    let checkInProgress = false;
+
     const checkProvidersAvailability = async () => {
-      // ✨ v24.3.7: Use Promise.allSettled with individual timeouts - no single slow provider blocks others
-      const results = await Promise.allSettled([
-        withTimeout(openaiProvider.isAvailable(), PROVIDER_CHECK_TIMEOUT, false),
-        withTimeout(geminiProvider.isAvailable(), PROVIDER_CHECK_TIMEOUT, false),
-        withTimeout(claudeProvider.isAvailable(), PROVIDER_CHECK_TIMEOUT, false),
-      ]);
+      // 🔒 v26.2.1: Skip if already checking
+      if (checkInProgress) {
+        chatLogger.debug('Provider readiness check skipped - already in progress');
+        return;
+      }
 
-      const result0 = results[0];
-      const result1 = results[1];
-      const result2 = results[2];
+      checkInProgress = true;
+      try {
+        // ✨ v24.3.7: Use Promise.allSettled with individual timeouts - no single slow provider blocks others
+        const results = await Promise.allSettled([
+          withTimeout(openaiProvider.isAvailable(), PROVIDER_CHECK_TIMEOUT, false),
+          withTimeout(geminiProvider.isAvailable(), PROVIDER_CHECK_TIMEOUT, false),
+          withTimeout(claudeProvider.isAvailable(), PROVIDER_CHECK_TIMEOUT, false),
+        ]);
 
-      const openaiAvailable =
-        result0 && result0.status === 'fulfilled' ? result0.value : false;
-      const geminiAvailable =
-        result1 && result1.status === 'fulfilled' ? result1.value : false;
-      const claudeAvailable =
-        result2 && result2.status === 'fulfilled' ? result2.value : false;
+        const result0 = results[0];
+        const result1 = results[1];
+        const result2 = results[2];
 
-      setProviderReadiness(prev => ({
-        ...prev,
-        openai: openaiAvailable,
-        gemini: geminiAvailable,
-        anthropic: claudeAvailable,
-      }));
+        const openaiAvailable =
+          result0 && result0.status === 'fulfilled' ? result0.value : false;
+        const geminiAvailable =
+          result1 && result1.status === 'fulfilled' ? result1.value : false;
+        const claudeAvailable =
+          result2 && result2.status === 'fulfilled' ? result2.value : false;
 
-      chatLogger.debug('Provider readiness check (v24.3.7 optimized)', {
-        openai: openaiAvailable,
-        gemini: geminiAvailable,
-        anthropic: claudeAvailable,
-        timedOut: results.filter(r => r.status === 'rejected').length,
-      });
+        setProviderReadiness(prev => ({
+          ...prev,
+          openai: openaiAvailable,
+          gemini: geminiAvailable,
+          anthropic: claudeAvailable,
+        }));
+
+        chatLogger.debug('Provider readiness check (v24.3.7 optimized)', {
+          openai: openaiAvailable,
+          gemini: geminiAvailable,
+          anthropic: claudeAvailable,
+          timedOut: results.filter(r => r.status === 'rejected').length,
+        });
+      } finally {
+        // 🔒 v26.2.1: Always release lock
+        checkInProgress = false;
+      }
     };
 
     checkProvidersAvailability();

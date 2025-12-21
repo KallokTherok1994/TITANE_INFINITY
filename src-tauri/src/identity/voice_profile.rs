@@ -333,7 +333,7 @@ mod tests {
     #[test]
     fn test_voice_characteristics_serialize() {
         let chars = VoiceCharacteristics::default();
-        let json = serde_json::to_string(&chars).unwrap();
+        let json = serde_json::to_string(&chars).expect("VoiceCharacteristics should serialize");
         assert!(json.contains("pitch"));
         assert!(json.contains("volume"));
     }
@@ -403,7 +403,7 @@ mod tests {
             emphasis_delta: 0.2,
             warmth_delta: 0.2,
         };
-        let json = serde_json::to_string(&adj).unwrap();
+        let json = serde_json::to_string(&adj).expect("VoiceAdjustment should serialize");
         assert!(json.contains("pitch_delta"));
     }
 
@@ -454,7 +454,7 @@ mod tests {
     #[test]
     fn test_voice_profile_serialize() {
         let profile = VoiceProfile::default();
-        let json = serde_json::to_string(&profile).unwrap();
+        let json = serde_json::to_string(&profile).expect("VoiceProfile should serialize");
         assert!(json.contains("TITANE Default"));
         assert!(json.contains("piper"));
     }
@@ -581,7 +581,10 @@ mod tests {
         let manager = VoiceProfileManager::default();
         let active = manager.get_active();
         assert!(active.is_some());
-        assert_eq!(active.unwrap().name, "TITANE Default");
+        assert_eq!(
+            active.expect("VoiceProfileManager should have an active profile").name,
+            "TITANE Default"
+        );
     }
 
     #[test]
@@ -618,7 +621,10 @@ mod tests {
     #[test]
     fn test_voice_profile_manager_cannot_remove_active() {
         let mut manager = VoiceProfileManager::default();
-        let active_id = manager.active_profile_id.clone().unwrap();
+        let active_id = manager
+            .active_profile_id
+            .clone()
+            .expect("VoiceProfileManager should have an active_profile_id");
 
         let removed = manager.remove_profile(&active_id);
         assert!(!removed);
@@ -634,7 +640,13 @@ mod tests {
 
         let result = manager.set_active(&new_id);
         assert!(result);
-        assert_eq!(manager.active_profile_id.as_ref().unwrap(), &new_id);
+        assert_eq!(
+            manager
+                .active_profile_id
+                .as_ref()
+                .expect("active_profile_id should be set after set_active"),
+            &new_id
+        );
     }
 
     #[test]
@@ -647,7 +659,10 @@ mod tests {
     #[test]
     fn test_voice_profile_manager_get_profile() {
         let manager = VoiceProfileManager::default();
-        let active_id = manager.active_profile_id.clone().unwrap();
+        let active_id = manager
+            .active_profile_id
+            .clone()
+            .expect("VoiceProfileManager should have an active_profile_id");
         let profile = manager.get_profile(&active_id);
         assert!(profile.is_some());
     }

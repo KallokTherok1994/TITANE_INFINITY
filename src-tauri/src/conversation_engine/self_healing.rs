@@ -100,7 +100,7 @@ impl SelfHealingConversation {
 
     /// Enregistrer une anomalie
     pub fn record_anomaly(&mut self, anomaly_type: AnomalyType) {
-        let count = self.anomaly_counts.get(&anomaly_type).unwrap_or(&0);
+        let count = self.anomaly_counts.get(&anomaly_type).copied().unwrap_or(0);
         self.anomaly_counts.insert(anomaly_type, count + 1);
     }
 
@@ -393,7 +393,7 @@ mod tests {
         let report = healing.scan_and_repair().await;
 
         assert!(report.is_ok());
-        let report = report.unwrap();
+        let report = report.expect("scan_and_repair should succeed for a clean state");
         assert!(matches!(report.status, HealthStatus::Healthy));
         assert!(report.anomalies_detected.is_empty());
     }
@@ -415,7 +415,10 @@ mod tests {
     #[tokio::test]
     async fn test_scan_and_repair_coherence_score() {
         let mut healing = SelfHealingConversation::new();
-        let report = healing.scan_and_repair().await.unwrap();
+        let report = healing
+            .scan_and_repair()
+            .await
+            .expect("scan_and_repair should succeed");
 
         assert_eq!(report.coherence_score, 0.95);
     }
@@ -437,8 +440,14 @@ mod tests {
     #[tokio::test]
     async fn test_stats_after_verify() {
         let mut healing = SelfHealingConversation::new();
-        healing.verify_state("conv-1").await.unwrap();
-        healing.verify_state("conv-2").await.unwrap();
+        healing
+            .verify_state("conv-1")
+            .await
+            .expect("verify_state should succeed for first conversation");
+        healing
+            .verify_state("conv-2")
+            .await
+            .expect("verify_state should succeed for second conversation");
 
         let stats = healing.stats();
         assert_eq!(stats.total_processed, 2);
@@ -482,14 +491,23 @@ mod tests {
         let mut healing = SelfHealingConversation::new();
 
         // Vérifier quelques conversations
-        healing.verify_state("conv-1").await.unwrap();
-        healing.verify_state("conv-2").await.unwrap();
+        healing
+            .verify_state("conv-1")
+            .await
+            .expect("verify_state should succeed for conv-1");
+        healing
+            .verify_state("conv-2")
+            .await
+            .expect("verify_state should succeed for conv-2");
 
         // Enregistrer des anomalies
         healing.record_anomaly(AnomalyType::MessageLoss);
 
         // Scanner
-        let report = healing.scan_and_repair().await.unwrap();
+        let report = healing
+            .scan_and_repair()
+            .await
+            .expect("scan_and_repair should succeed");
 
         // Vérifier stats
         let stats = healing.stats();
@@ -547,7 +565,10 @@ mod tests {
         // Vérifier 500 conversations
         for i in 0..500 {
             let id = format!("large-conv-{}", i);
-            healing.verify_state(&id).await.unwrap();
+            healing
+                .verify_state(&id)
+                .await
+                .expect("verify_state should succeed for unique conversation IDs");
         }
 
         let stats = healing.stats();

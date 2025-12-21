@@ -356,15 +356,15 @@ mod tests {
         scheduler
             .enqueue(create_test_task("low", TaskPriority::Low))
             .await
-            .unwrap();
+            .expect("enqueue should succeed for a valid task (low)");
         scheduler
             .enqueue(create_test_task("critical", TaskPriority::Critical))
             .await
-            .unwrap();
+            .expect("enqueue should succeed for a valid task (critical)");
         scheduler
             .enqueue(create_test_task("normal", TaskPriority::Normal))
             .await
-            .unwrap();
+            .expect("enqueue should succeed for a valid task (normal)");
 
         // Vérifier que la queue est triée par priorité
         let queue = scheduler.get_queue().await;
@@ -382,11 +382,11 @@ mod tests {
         scheduler
             .enqueue(create_test_task("task_1", TaskPriority::Normal))
             .await
-            .unwrap();
+            .expect("enqueue should succeed for task_1");
         scheduler
             .enqueue(create_test_task("task_2", TaskPriority::High))
             .await
-            .unwrap();
+            .expect("enqueue should succeed for task_2");
 
         let queue = scheduler.get_queue().await;
         assert_eq!(queue.len(), 2);
@@ -399,11 +399,17 @@ mod tests {
         let scheduler = PriorityScheduler::new();
         let task = create_test_task("status_test", TaskPriority::Normal);
 
-        scheduler.enqueue(task).await.unwrap();
+        scheduler
+            .enqueue(task)
+            .await
+            .expect("enqueue should succeed for status_test");
 
         let status = scheduler.get_task_status("status_test").await;
         assert!(status.is_some());
-        assert_eq!(status.unwrap(), TaskStatus::Queued);
+        assert_eq!(
+            status.expect("status_test should exist in scheduler queue"),
+            TaskStatus::Queued
+        );
 
         // Tâche inexistante
         let unknown = scheduler.get_task_status("unknown").await;
@@ -416,7 +422,7 @@ mod tests {
         scheduler
             .enqueue(create_test_task("to_cancel", TaskPriority::Normal))
             .await
-            .unwrap();
+            .expect("enqueue should succeed for to_cancel");
 
         let result = scheduler.cancel_task("to_cancel").await;
         assert!(result.is_ok());

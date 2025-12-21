@@ -254,7 +254,7 @@ mod tests {
         let dynamic_img = image::DynamicImage::ImageRgb8(img);
         let mut bytes = Vec::new();
         dynamic_img.write_to(&mut std::io::Cursor::new(&mut bytes), image::ImageFormat::Png)
-            .unwrap();
+            .expect("Test image should serialize to PNG bytes");
         bytes
     }
 
@@ -284,8 +284,14 @@ mod tests {
         let manager = VisionModelManager::new(VisionModel::CLIP, true);
         let img_bytes = create_test_image_bytes();
 
-        let embedding1 = manager.embed_image(&img_bytes).await.unwrap();
-        let embedding2 = manager.embed_image(&img_bytes).await.unwrap();
+        let embedding1 = manager
+            .embed_image(&img_bytes)
+            .await
+            .expect("embed_image should succeed for valid PNG bytes");
+        let embedding2 = manager
+            .embed_image(&img_bytes)
+            .await
+            .expect("embed_image should be deterministic for identical inputs");
 
         // Same image should produce same embedding
         assert_eq!(embedding1.len(), 512);
@@ -301,8 +307,14 @@ mod tests {
     async fn test_text_embedding_deterministic() {
         let manager = VisionModelManager::new(VisionModel::CLIP, true);
 
-        let embedding1 = manager.embed_text("hello world").await.unwrap();
-        let embedding2 = manager.embed_text("hello world").await.unwrap();
+        let embedding1 = manager
+            .embed_text("hello world")
+            .await
+            .expect("embed_text should succeed for supported model");
+        let embedding2 = manager
+            .embed_text("hello world")
+            .await
+            .expect("embed_text should be deterministic for identical inputs");
 
         // Same text should produce same embedding
         assert_eq!(embedding1.len(), 512);
@@ -310,7 +322,10 @@ mod tests {
         assert_eq!(embedding1, embedding2);
 
         // Different text should produce different embeddings
-        let embedding3 = manager.embed_text("different text").await.unwrap();
+        let embedding3 = manager
+            .embed_text("different text")
+            .await
+            .expect("embed_text should succeed for supported model");
         assert_ne!(embedding1, embedding3);
     }
 
@@ -329,7 +344,10 @@ mod tests {
         manager.switch_model(VisionModel::SigLIP);
         assert_eq!(manager.current_model(), VisionModel::SigLIP);
 
-        let embedding = manager.embed_text("test").await.unwrap();
+        let embedding = manager
+            .embed_text("test")
+            .await
+            .expect("embed_text should succeed after switching to a text-capable model");
         assert_eq!(embedding.len(), 768); // SigLIP dimension
     }
 
@@ -337,7 +355,10 @@ mod tests {
     async fn test_embedding_range() {
         let manager = VisionModelManager::new(VisionModel::CLIP, true);
         let img_bytes = create_test_image_bytes();
-        let embedding = manager.embed_image(&img_bytes).await.unwrap();
+        let embedding = manager
+            .embed_image(&img_bytes)
+            .await
+            .expect("embed_image should succeed for valid PNG bytes");
 
         // Embeddings should be in reasonable range after normalization
         for &val in &embedding {

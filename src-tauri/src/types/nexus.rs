@@ -118,8 +118,9 @@ mod tests {
     #[test]
     fn test_module_health_serialization() {
         let health = ModuleHealth::Degraded;
-        let json = serde_json::to_string(&health).unwrap();
-        let restored: ModuleHealth = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&health).expect("ModuleHealth should serialize");
+        let restored: ModuleHealth =
+            serde_json::from_str(&json).expect("ModuleHealth should deserialize");
         assert_eq!(restored, ModuleHealth::Degraded);
     }
 
@@ -177,8 +178,9 @@ mod tests {
             last_tick: 123456,
             message: "Connection lost".to_string(),
         };
-        let json = serde_json::to_string(&status).unwrap();
-        let restored: ModuleStatus = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&status).expect("ModuleStatus should serialize");
+        let restored: ModuleStatus =
+            serde_json::from_str(&json).expect("ModuleStatus should deserialize");
         assert_eq!(restored.name, "nexus");
         assert_eq!(restored.health, ModuleHealth::Failing);
     }
@@ -237,8 +239,8 @@ mod tests {
             active_connections: 5,
             ..Default::default()
         };
-        let json = serde_json::to_string(&state).unwrap();
-        let restored: NexusState = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&state).expect("NexusState should serialize");
+        let restored: NexusState = serde_json::from_str(&json).expect("NexusState should deserialize");
         assert_eq!(restored.coherence_score, 95.5);
         assert_eq!(restored.active_connections, 5);
     }

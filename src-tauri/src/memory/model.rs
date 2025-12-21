@@ -258,8 +258,9 @@ mod tests {
         let mut conv = Conversation::new("Test Conv".to_string());
         conv.add_entry(MessageRole::User, "Hello".to_string(), 5);
 
-        let json = serde_json::to_string(&conv).unwrap();
-        let restored: Conversation = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&conv).expect("Conversation should serialize to JSON");
+        let restored: Conversation =
+            serde_json::from_str(&json).expect("Conversation should deserialize from JSON");
 
         assert_eq!(restored.title, "Test Conv");
         assert_eq!(restored.entries.len(), 1);
@@ -312,8 +313,10 @@ mod tests {
             is_archived: true,
         };
 
-        let json = serde_json::to_string(&meta).unwrap();
-        let restored: ConversationMetadata = serde_json::from_str(&json).unwrap();
+        let json =
+            serde_json::to_string(&meta).expect("ConversationMetadata should serialize to JSON");
+        let restored: ConversationMetadata = serde_json::from_str(&json)
+            .expect("ConversationMetadata should deserialize from JSON");
 
         assert_eq!(restored.total_tokens, 200);
         assert!(restored.is_archived);
@@ -386,8 +389,9 @@ mod tests {
             total_messages: 30,
         };
 
-        let json = serde_json::to_string(&index).unwrap();
-        let restored: MemoryIndex = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&index).expect("MemoryIndex should serialize to JSON");
+        let restored: MemoryIndex =
+            serde_json::from_str(&json).expect("MemoryIndex should deserialize from JSON");
 
         assert_eq!(restored.total_conversations, 3);
         assert_eq!(restored.total_messages, 30);
@@ -476,8 +480,10 @@ mod tests {
             is_archived: false,
         };
 
-        let json = serde_json::to_string(&summary).unwrap();
-        let restored: ConversationSummary = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&summary)
+            .expect("ConversationSummary should serialize to JSON");
+        let restored: ConversationSummary = serde_json::from_str(&json)
+            .expect("ConversationSummary should deserialize from JSON");
 
         assert_eq!(restored.id, "summary-id");
         assert_eq!(restored.message_count, 25);

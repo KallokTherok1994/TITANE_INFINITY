@@ -287,7 +287,12 @@ mod tests {
             "schema_version": 2,
             "timestamp": 1234567890
         });
-        assert_eq!(engine.extract_version(&state).unwrap(), 2);
+        assert_eq!(
+            engine
+                .extract_version(&state)
+                .expect("extract_version should succeed for explicit schema_version"),
+            2
+        );
     }
 
     #[test]
@@ -297,7 +302,12 @@ mod tests {
             "timestamp": 1234567890
         });
         // Sans schema_version, doit retourner 1
-        assert_eq!(engine.extract_version(&state).unwrap(), 1);
+        assert_eq!(
+            engine
+                .extract_version(&state)
+                .expect("extract_version should succeed when schema_version is missing"),
+            1
+        );
     }
 
     #[test]
@@ -309,12 +319,21 @@ mod tests {
             "cognitive": {}
         });
 
-        let report = engine.migrate_to_current(&mut state).unwrap();
+        let report = engine
+            .migrate_to_current(&mut state)
+            .expect("migrate_to_current should succeed for v1 state");
 
         assert!(report.success);
         assert_eq!(report.from_version, 1);
         assert_eq!(report.to_version, 2);
-        assert_eq!(state.get("schema_version").unwrap().as_u64().unwrap(), 2);
+        assert_eq!(
+            state
+                .get("schema_version")
+                .expect("schema_version should be set after migration")
+                .as_u64()
+                .expect("schema_version should be an integer"),
+            2
+        );
         assert!(state.get("created_at").is_some());
         assert!(state.get("last_migrated_at").is_some());
     }
@@ -326,7 +345,9 @@ mod tests {
             "schema_version": CURRENT_SCHEMA_VERSION,
             "timestamp": 1234567890
         });
-        assert!(!engine.needs_migration(&state).unwrap());
+        assert!(!engine
+            .needs_migration(&state)
+            .expect("needs_migration should succeed for valid state"));
     }
 
     #[test]
@@ -336,6 +357,8 @@ mod tests {
             "schema_version": 1,
             "timestamp": 1234567890
         });
-        assert!(engine.needs_migration(&state).unwrap());
+        assert!(engine
+            .needs_migration(&state)
+            .expect("needs_migration should succeed for valid state"));
     }
 }

@@ -304,7 +304,7 @@ mod tests {
             .tick_interval(30000)
             .routines_enabled(false)
             .build()
-            .unwrap();
+            .expect("TemporalConfig builder should build valid config");
 
         assert_eq!(config.name, "test");
         assert!(!config.routines_enabled);
@@ -422,8 +422,9 @@ mod tests {
     #[test]
     fn test_config_serialization() {
         let config = TemporalConfig::default();
-        let json = serde_json::to_string(&config).unwrap();
-        let restored: TemporalConfig = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&config).expect("TemporalConfig should serialize");
+        let restored: TemporalConfig =
+            serde_json::from_str(&json).expect("TemporalConfig should deserialize");
         assert_eq!(restored.name, config.name);
         assert_eq!(restored.tick_interval_ms, config.tick_interval_ms);
     }
@@ -443,7 +444,7 @@ mod tests {
             .alignment_enabled(false)
             .persist_state(true, Some("custom_state.json".to_string()))
             .build()
-            .unwrap();
+            .expect("TemporalConfig builder should build config with all options");
 
         assert_eq!(config.name, "custom");
         assert_eq!(config.tick_interval_ms, 120000);
@@ -478,7 +479,7 @@ mod tests {
         let config = TemporalConfig::builder()
             .memory_config(mem_config)
             .build()
-            .unwrap();
+            .expect("TemporalConfig builder should build config with memory_config");
 
         assert_eq!(config.memory_config.max_traces, 5000);
     }
@@ -495,7 +496,7 @@ mod tests {
         let config = TemporalConfig::builder()
             .planner_config(planner_config)
             .build()
-            .unwrap();
+            .expect("TemporalConfig builder should build config with planner_config");
 
         assert_eq!(config.planner_config.max_tasks, 1000);
         assert!(config.planner_config.auto_prioritize);

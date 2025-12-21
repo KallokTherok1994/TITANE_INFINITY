@@ -479,16 +479,18 @@ mod tests {
     #[test]
     fn test_serialization_cognitive_state() {
         let state = CognitiveState::new();
-        let json = serde_json::to_string(&state).unwrap();
-        let restored: CognitiveState = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&state).expect("CognitiveState should serialize");
+        let restored: CognitiveState =
+            serde_json::from_str(&json).expect("CognitiveState should deserialize");
         assert_eq!(restored.coherence.global, state.coherence.global);
     }
 
     #[test]
     fn test_serialization_center_coherence() {
         let coherence = CenterCoherence::default();
-        let json = serde_json::to_string(&coherence).unwrap();
-        let restored: CenterCoherence = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&coherence).expect("CenterCoherence should serialize");
+        let restored: CenterCoherence =
+            serde_json::from_str(&json).expect("CenterCoherence should deserialize");
         assert_eq!(restored.global, coherence.global);
     }
 
@@ -498,8 +500,10 @@ mod tests {
             duration_secs: 600,
             reason: "Need rest".to_string(),
         };
-        let json = serde_json::to_string(&rec).unwrap();
-        let restored: SystemRecommendation = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&rec)
+            .expect("SystemRecommendation should serialize");
+        let restored: SystemRecommendation = serde_json::from_str(&json)
+            .expect("SystemRecommendation should deserialize");
         if let SystemRecommendation::PhysicalBreak { duration_secs, .. } = restored {
             assert_eq!(duration_secs, 600);
         }

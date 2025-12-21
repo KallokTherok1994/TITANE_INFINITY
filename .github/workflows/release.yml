@@ -40,9 +40,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'pnpm'
 
-      - name: 📦 Install dépendances Node
-        run: npm ci
+      - name: Enable Corepack (pnpm)
+        run: corepack enable
+
+      - name: 📦 Install dependencies (pnpm)
+        run: pnpm install --frozen-lockfile
 
       - name: 🦀 Setup Rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -55,21 +59,16 @@ jobs:
           workspaces: src-tauri
           cache-on-failure: true
 
-      # (Cache pnpm supprimé – utilisation npm lockfile déjà géré automatiquement par GitHub)
-
-      - name: 📦 Install frontend (npm)
-        run: npm ci
-
       - name: 🔍 Lint & Type check
         run: |
-          npm run lint
-          npm run type-check
+          pnpm run lint
+          pnpm run check
 
       - name: 🏗️ Build frontend
-        run: npm run build
+        run: pnpm run build
 
       - name: 🔨 Build Tauri app
-        run: npm run tauri:build -- --target ${{ matrix.target }}
+        run: pnpm exec tauri build
         env:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
@@ -132,9 +131,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'pnpm'
 
-      - name: 📦 Install dépendances Node
-        run: npm ci
+      - name: Enable Corepack (pnpm)
+        run: corepack enable
+
+      - name: 📦 Install dependencies (pnpm)
+        run: pnpm install --frozen-lockfile
 
       - name: 🦀 Setup Rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -144,14 +147,11 @@ jobs:
         with:
           workspaces: src-tauri
 
-      - name: 📦 Install frontend (npm)
-        run: npm ci
-
       - name: 🏗️ Build frontend
-        run: npm run build
+        run: pnpm run build
 
       - name: 🔨 Build Tauri app
-        run: npm run tauri:build
+        run: pnpm exec tauri build
         env:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
@@ -205,9 +205,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'pnpm'
 
-      - name: 📦 Install dépendances Node
-        run: npm ci
+      - name: Enable Corepack (pnpm)
+        run: corepack enable
+
+      - name: 📦 Install dependencies (pnpm)
+        run: pnpm install --frozen-lockfile
 
       - name: 🦀 Setup Rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -220,14 +224,11 @@ jobs:
           workspaces: src-tauri
           key: ${{ matrix.target }}
 
-      - name: 📦 Install frontend (npm)
-        run: npm ci
-
       - name: 🏗️ Build frontend
-        run: npm run build
+        run: pnpm run build
 
       - name: 🔨 Build Tauri app
-        run: npm run tauri:build
+        run: pnpm exec tauri build --target ${{ matrix.target }}
         env:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
@@ -296,20 +297,20 @@ jobs:
 
       - name: 📋 List artifacts
         run: |
-          - name: 📝 Generate release notes
-            id: release_notes
-            run: |
-              VERSION="${GITHUB_REF#refs/tags/}"
-              FILE="RELEASE_NOTES_${VERSION}.md"
-              if [ -f "$FILE" ]; then
-                cp "$FILE" release_notes.md
-              else
-                echo "# TITANE∞ $VERSION" > release_notes.md
-                echo "Release auto-générée. Voir PRODUCTION_READINESS_REPORT_${VERSION}.md" >> release_notes.md
-              fi
-              cat release_notes.md
-          EOF
+          echo "=== Artifacts Downloaded ==="
+          find artifacts/ -type f | head -20
 
+      - name: 📝 Generate release notes
+        id: release_notes
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/}"
+          FILE="RELEASE_NOTES_${VERSION}.md"
+          if [ -f "$FILE" ]; then
+            cp "$FILE" release_notes.md
+          else
+            echo "# TITANE∞ $VERSION" > release_notes.md
+            echo "Release auto-générée. Voir PRODUCTION_READINESS_REPORT_${VERSION}.md" >> release_notes.md
+          fi
           cat release_notes.md
 
       - name: 🚀 Create GitHub Release

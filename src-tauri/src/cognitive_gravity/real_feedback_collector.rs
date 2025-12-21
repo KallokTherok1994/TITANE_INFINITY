@@ -433,7 +433,7 @@ mod tests {
     async fn test_collect_kernel_feedback() {
         let feedback = RealFeedbackCollector::collect_kernel_feedback()
             .await
-            .unwrap();
+            .expect("collect_kernel_feedback should succeed");
 
         assert!(feedback.system_health >= 0.0 && feedback.system_health <= 1.0);
         assert!(feedback.cpu_usage >= 0.0 && feedback.cpu_usage <= 1.0);
@@ -445,22 +445,22 @@ mod tests {
     async fn test_collect_all_feedbacks() {
         let kernel = RealFeedbackCollector::collect_kernel_feedback()
             .await
-            .unwrap();
+            .expect("collect_kernel_feedback should succeed");
         let omega = RealFeedbackCollector::collect_omega_feedback()
             .await
-            .unwrap();
+            .expect("collect_omega_feedback should succeed");
         let memory = RealFeedbackCollector::collect_memory_feedback()
             .await
-            .unwrap();
+            .expect("collect_memory_feedback should succeed");
         let agents = RealFeedbackCollector::collect_agents_feedback()
             .await
-            .unwrap();
+            .expect("collect_agents_feedback should succeed");
         let harmonic = RealFeedbackCollector::collect_harmonic_feedback()
             .await
-            .unwrap();
+            .expect("collect_harmonic_feedback should succeed");
         let performance = RealFeedbackCollector::collect_performance_feedback()
             .await
-            .unwrap();
+            .expect("collect_performance_feedback should succeed");
 
         // Verify all metrics are in valid range
         assert!(kernel.system_health >= 0.0);

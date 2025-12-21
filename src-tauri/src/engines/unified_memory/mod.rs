@@ -354,17 +354,20 @@ mod tests {
         let id1 = engine
             .store("Hello world".to_string(), "user".to_string(), 0.5)
             .await
-            .unwrap();
+            .expect("store should succeed for valid memory entry (id1)");
 
         let id2 = engine
             .store("How are you?".to_string(), "user".to_string(), 0.6)
             .await
-            .unwrap();
+            .expect("store should succeed for valid memory entry (id2)");
 
         assert_eq!(engine.stats().stm_count, 2);
 
         // Recall
-        let bundle = engine.recall("hello", 10).await.unwrap();
+        let bundle = engine
+            .recall("hello", 10)
+            .await
+            .expect("recall should succeed");
         assert!(bundle.stm.len() > 0);
     }
 
@@ -377,7 +380,7 @@ mod tests {
             engine
                 .store(format!("Message {}", i), "user".to_string(), 0.8)
                 .await
-                .unwrap();
+                .expect("store should succeed while filling STM for promotion test");
         }
 
         // STM should be capped, MTM should have promoted entries
@@ -394,10 +397,13 @@ mod tests {
             engine
                 .store(format!("Test message {}", i), "user".to_string(), 0.5)
                 .await
-                .unwrap();
+                .expect("store should succeed for summarization test");
         }
 
-        let summary = engine.summarize().await.unwrap();
+        let summary = engine
+            .summarize()
+            .await
+            .expect("summarize should succeed");
         assert!(!summary.is_empty());
     }
 
@@ -410,7 +416,7 @@ mod tests {
             engine
                 .store(format!("Message {}", i), "user".to_string(), 0.7)
                 .await
-                .unwrap();
+                .expect("store should succeed for tick test");
         }
 
         // Run tick
@@ -425,7 +431,7 @@ mod tests {
         let result = engine.embed("Test text").await;
         assert!(result.is_ok());
 
-        let embedding = result.unwrap();
+        let embedding = result.expect("embed should succeed for valid input");
         assert_eq!(embedding.len(), 384);
     }
 }
