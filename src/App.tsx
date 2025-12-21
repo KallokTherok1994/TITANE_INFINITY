@@ -270,7 +270,20 @@ const AppRouter: React.FC = () => {
       }
     };
 
+    // Add timeout to prevent infinite loading (5 seconds)
+    const timeoutId = setTimeout(() => {
+      logger.warn('Onboarding check timeout, assuming complete', {
+        component: 'Onboarding',
+      });
+      setOnboardingComplete(true);
+      setCheckingOnboarding(false);
+    }, 5000);
+
     checkOnboarding();
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   // ✨ v21 - Initialiser Ollama Provider au démarrage
@@ -735,14 +748,61 @@ const AppRouter: React.FC = () => {
       <div
         style={{
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
           height: '100vh',
-          fontSize: '1.2rem',
-          color: '#727b81',
+          background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+          color: '#00d4ff',
+          fontSize: '1.5rem',
+          fontWeight: '600',
+          gap: '1.5rem',
         }}
       >
-        ⚡ Chargement...
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+          }}
+        >
+          <span
+            style={{
+              animation: 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            }}
+          >
+            ⚡
+          </span>
+          <span>TITANE∞ Initialisation...</span>
+        </div>
+        <div
+          style={{
+            width: '300px',
+            height: '4px',
+            background: 'rgba(0, 212, 255, 0.2)',
+            borderRadius: '2px',
+            overflow: 'hidden',
+          }}
+        >
+          <div
+            style={{
+              width: '50%',
+              height: '100%',
+              background: 'linear-gradient(90deg, transparent, #00d4ff, transparent)',
+              animation: 'shimmer 2s infinite',
+            }}
+          />
+        </div>
+        <style>{`
+          @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.1); }
+          }
+          @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(300%); }
+          }
+        `}</style>
       </div>
     );
   }
