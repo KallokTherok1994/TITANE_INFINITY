@@ -7,7 +7,6 @@
  */
 
 // Import de la protection
-import './tests/tauri-invoke-fix-validator';
 import { safeInvokeTauri } from './utils/tauriProtector';
 
 declare global {
@@ -18,21 +17,32 @@ declare global {
 
 // Protection globale - remplace window.__TAURI__ si défaillant
 if (typeof window !== 'undefined') {
-  // Patch du window global si nécessaire
-  const originalConsoleError = console.error;
+  // Ne pas masquer les erreurs en production: on veut de la visibilité pour diagnostiquer.
+  // En DEV uniquement, on peut filtrer certains bruits liés à l'invoke.
+  if (import.meta.env.DEV) {
+    const originalConsoleError = console.error;
 
-  console.error = (...args) => {
-    const message = args.join(' ');
-    if (message.includes('Cannot read properties') && message.includes('invoke')) {
-      console.warn('🛡️ [TauriProtector] Caught invoke error - using fallback');
-      return; // Supprimer les erreurs invoke du console
-    }
-    originalConsoleError(...args);
-  };
+    console.error = (...args) => {
+      const message = args.join(' ');
+      if (
+        message.includes('Cannot read properties') &&
+        message.includes('invoke')
+      ) {
+        console.warn('🛡️ [TauriProtector] Caught invoke error - using fallback');
+        return;
+      }
+      originalConsoleError(...args);
+    };
+  }
 
   // Information de démarrage
   console.log('🛡️ TITANE∞ Tauri Invoke Protection: ACTIVE');
   console.log('✅ Fallback mode available for browser context');
+}
+
+// Le validator d'invoke est un outil de debug; ne jamais l'exécuter en prod.
+if (typeof window !== 'undefined' && import.meta.env.DEV) {
+  void import('./tests/tauri-invoke-fix-validator');
 }
 
 if (typeof window !== 'undefined') {
