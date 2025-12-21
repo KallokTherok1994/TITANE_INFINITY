@@ -271,7 +271,10 @@ repair() {
     
     print_section "Verifying Rust dependencies..."
     cd src-tauri
-    cargo check --quiet 2>/dev/null || cargo fetch
+    # NOTE: `cargo check` peut échouer ici car `clean` supprime `dist/` et Tauri
+    # vérifie `frontendDist` pendant `generate_context!()`. `cargo fetch` ne
+    # dépend pas du build frontend et suffit pour valider le cache deps.
+    cargo fetch
     cd "$PROJECT_ROOT"
     success "Rust dependencies verified"
     
@@ -361,6 +364,10 @@ build() {
             cp -r src-tauri/target/release/bundle/macos/*.app runtime/stable/ 2>/dev/null || true
             success "macOS app ready in runtime/stable/"
         fi
+
+        # postbuild (frontend) s'exécute avant le bundling Tauri; on met à jour
+        # le .desktop ici, une fois l'artefact stable disponible.
+        bash scripts/update-desktop-icon.sh || true
     else
         info "Using dev runtime configuration..."
         pm_exec tauri build --config runtime/dev/tauri.conf.json

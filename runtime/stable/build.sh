@@ -39,7 +39,7 @@ echo "📋 Build Configuration:"
 echo "  • Mode: PRODUCTION"
 echo "  • Target: Titan-Stable (user runtime)"
 echo "  • Optimizations: MAX"
-echo "  • DevTools: DISABLED"
+echo "  • DevTools: ENABLED"
 echo "  • Hot Reload: DISABLED"
 echo "  • Logging: MINIMAL"
 echo "  • OMEGA Pipeline: FULL ACTIVATION"
@@ -53,7 +53,19 @@ rm -f runtime/stable/*.AppImage runtime/stable/*.exe runtime/stable/*.dmg
 # Install dependencies (if needed)
 if [[ ! -d "node_modules" ]]; then
     echo "📦 Installing dependencies..."
-    npm install
+    # Le repo force pnpm (preinstall). On installe donc via pnpm quand possible.
+    if [[ -f "pnpm-lock.yaml" ]]; then
+        if command -v corepack >/dev/null 2>&1; then
+            corepack pnpm install
+        elif command -v pnpm >/dev/null 2>&1; then
+            pnpm install
+        else
+            echo "❌ pnpm requis mais introuvable (corepack/pnpm)."
+            exit 1
+        fi
+    else
+        npm install
+    fi
 fi
 
 # Build frontend (production mode)
@@ -123,6 +135,10 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
 
         echo "✅ Linux DEB ready: runtime/stable/*.deb"
     fi
+
+    echo ""
+    echo "🔄 Updating desktop entry to point to Stable artifact..."
+    bash scripts/update-desktop-icon.sh || true
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     cp src-tauri/target/release/bundle/macos/*.app runtime/stable/
     echo "✅ macOS app ready: runtime/stable/*.app"

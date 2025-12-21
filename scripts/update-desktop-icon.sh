@@ -28,17 +28,48 @@ mkdir -p "$DESKTOP_INSTALL_DIR"
 
 echo -e "${YELLOW}[1/4]${NC} Mise à jour du fichier .desktop avec chemins actuels..."
 
-# Détecter le binaire (dev ou release)
+# Détecter l'exécutable à utiliser (priorité: AppImage stable → cargo release → cargo debug)
 BINARY_PATH=""
-if [ -f "$PROJECT_DIR/src-tauri/target/release/titane-infinity" ]; then
+
+shopt -s nullglob
+STABLE_APPIMAGES=("$PROJECT_DIR"/runtime/stable/*.AppImage)
+shopt -u nullglob
+
+if [ ${#STABLE_APPIMAGES[@]} -gt 0 ]; then
+    # Prendre la plus récente
+    BINARY_PATH="$(ls -t "${STABLE_APPIMAGES[@]}" 2>/dev/null | head -n 1)"
+    echo -e "      ✓ AppImage Stable trouvée"
+elif [ -f "$PROJECT_DIR/src-tauri/target/release/titane-infinity" ]; then
     BINARY_PATH="$PROJECT_DIR/src-tauri/target/release/titane-infinity"
     echo -e "      ✓ Binaire Release trouvé"
 elif [ -f "$PROJECT_DIR/src-tauri/target/debug/titane-infinity" ]; then
     BINARY_PATH="$PROJECT_DIR/src-tauri/target/debug/titane-infinity"
     echo -e "      ✓ Binaire Debug trouvé"
 else
-    echo -e "${YELLOW}      ⚠ Aucun binaire trouvé, utilisation du chemin par défaut${NC}"
+    echo -e "${YELLOW}      ⚠ Aucun exécutable trouvé, utilisation du chemin par défaut${NC}"
     BINARY_PATH="$PROJECT_DIR/src-tauri/target/release/titane-infinity"
+fi
+
+# Assurer les répertoires de logs attendus par l'action "Logs"
+mkdir -p "$HOME/.titane/logs"
+
+# Si on lance une AppImage, vérifier si FUSE est utilisable.
+# En environnement restreint, le montage AppImage peut échouer ("Operation not permitted");
+# on bascule alors sur --appimage-extract-and-run pour garantir le démarrage.
+EXEC_BASE="$BINARY_PATH"
+if [[ "$BINARY_PATH" == *.AppImage ]]; then
+    MOUNT_PROBE_OUT="$(timeout 2s "$BINARY_PATH" --appimage-mount 2>&1 || true)"
+    MOUNT_PROBE_FIRST_LINE="$(printf '%s\n' "$MOUNT_PROBE_OUT" | head -n 1)"
+
+    if [[ "$MOUNT_PROBE_OUT" == *"Cannot mount AppImage"* || "$MOUNT_PROBE_OUT" == *"mount failed"* || "$MOUNT_PROBE_OUT" == *"fusermount"* ]]; then
+        EXEC_BASE="$BINARY_PATH --appimage-extract-and-run"
+        echo -e "      ${YELLOW}⚠ FUSE indisponible → --appimage-extract-and-run${NC}"
+    elif [[ "$MOUNT_PROBE_FIRST_LINE" == /* ]]; then
+        :
+    else
+        EXEC_BASE="$BINARY_PATH --appimage-extract-and-run"
+        echo -e "      ${YELLOW}⚠ FUSE indéterminé → --appimage-extract-and-run${NC}"
+    fi
 fi
 
 # Icône principale
@@ -47,14 +78,27 @@ if [ ! -f "$ICON_PATH" ]; then
     ICON_PATH="$ICON_DIR/icon.png"
 fi
 
+# Version affichée dans le menu (évite la confusion quand plusieurs runtimes cohabitent)
+APP_VERSION=""
+if [ -f "$PROJECT_DIR/runtime/stable/tauri.conf.json" ]; then
+    APP_VERSION="$(grep -m1 '"version"' "$PROJECT_DIR/runtime/stable/tauri.conf.json" | sed -E 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')"
+fi
+if [ -z "$APP_VERSION" ] && [ -f "$PROJECT_DIR/package.json" ]; then
+    APP_VERSION="$(grep -m1 '"version"' "$PROJECT_DIR/package.json" | sed -E 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')"
+fi
+if [ -z "$APP_VERSION" ]; then
+    APP_VERSION="unknown"
+fi
+APP_NAME="TITANE∞ v$APP_VERSION"
+
 # Créer le fichier .desktop mis à jour
 cat > "$DESKTOP_FILE" << EOF
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=TITANE∞ v24.3.0
+Name=$APP_NAME
 Comment=🏛️ Cognitive OS - Multi-Provider AI - Production Perfect
-Exec=$BINARY_PATH
+Exec=$EXEC_BASE
 Icon=$ICON_PATH
 Terminal=false
 Categories=Development;Utility;AI;
@@ -65,7 +109,7 @@ Actions=DevMode;Logs;Config;
 
 [Desktop Action DevMode]
 Name=🔧 Developer Mode
-Exec=$BINARY_PATH --dev
+Exec=$EXEC_BASE --dev
 
 [Desktop Action Logs]
 Name=📋 View Logs
@@ -79,7 +123,17 @@ EOF
 echo -e "${YELLOW}[2/4]${NC} Copie du fichier .desktop dans les applications..."
 cp "$DESKTOP_FILE" "$DESKTOP_INSTALL_DIR/titane-infinity.desktop"
 chmod +x "$DESKTOP_INSTALL_DIR/titane-infinity.desktop"
-echo -e "      ✓ Fichier copié vers: $DESKTOP_INSTALL_DIR/titane-infinity.desktop"
+
+# Sur certains systèmes, une entrée globale peut exister sous un nom différent
+# (ex: /usr/share/applications/TITANE-Infinity.desktop avec Exec=titane-infinity).
+# On installe aussi un override local avec le même nom pour garantir que le menu
+# lance le bon binaire.
+cp "$DESKTOP_FILE" "$DESKTOP_INSTALL_DIR/TITANE-Infinity.desktop"
+chmod +x "$DESKTOP_INSTALL_DIR/TITANE-Infinity.desktop"
+
+echo -e "      ✓ Fichiers copiés vers:"
+echo -e "        - $DESKTOP_INSTALL_DIR/titane-infinity.desktop"
+echo -e "        - $DESKTOP_INSTALL_DIR/TITANE-Infinity.desktop"
 
 echo -e "${YELLOW}[3/4]${NC} Mise à jour du cache des icônes..."
 # Mettre à jour le cache des icônes si possible
