@@ -182,11 +182,12 @@ npm run test:rust        # Cargo tests
 Par défaut, TITANE∞ est **local-only** (aucun cloud requis) et les providers externes sont **désactivés**.
 
 - **Autoriser au build (dev/stable)** : lancer avec `VITE_ENABLE_EXTERNAL_AI=1`
-	- Exemple dev : `VITE_ENABLE_EXTERNAL_AI=1 npm run dev:tauri`
+  - Exemple dev : `VITE_ENABLE_EXTERNAL_AI=1 npm run dev:tauri`
 - **Activer au runtime (production uniquement)** : `localStorage.setItem('titane.enable_external_ai','1')`
-	- Désactiver : `localStorage.removeItem('titane.enable_external_ai')`
+  - Désactiver : `localStorage.removeItem('titane.enable_external_ai')`
 
 Notes :
+
 - En **dev**, l’activation runtime est implicitement autorisée si le build flag est présent.
 - En **stable**, l’External AI reste off tant que le build flag et le runtime toggle ne sont pas tous les deux activés.
 
@@ -217,6 +218,7 @@ npm run copilot-xs:precommit  # Validation + tests (pre-commit)
 ```
 
 **Agents spécialisés** (`.github/copilot-agents/`) :
+
 - Guardian Agent — Qualité et sécurité
 - Dependency Guardian — Gestion des dépendances
 - Architecture Agent — Respect du modèle 4-Ring

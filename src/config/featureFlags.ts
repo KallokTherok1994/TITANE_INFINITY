@@ -35,8 +35,9 @@ function runtimeFlag(key: string): boolean {
 // - Runtime toggle (no rebuild): localStorage.setItem('titane.enable_external_ai', '1')
 //   (default off in production)
 const buildAllowsExternalAI = envFlag('VITE_ENABLE_EXTERNAL_AI');
-const runtimeAllowsExternalAI =
-  import.meta.env.DEV ? true : runtimeFlag('titane.enable_external_ai');
+const runtimeAllowsExternalAI = import.meta.env.DEV
+  ? true
+  : runtimeFlag('titane.enable_external_ai');
 const externalAIEnabled = buildAllowsExternalAI && runtimeAllowsExternalAI;
 
 export const FEATURE_FLAGS = {

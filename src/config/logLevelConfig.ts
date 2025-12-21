@@ -7,7 +7,7 @@
  * ═══════════════════════════════════════════════════════════════
  * TITANE∞ v26.2.0 - Runtime Log Level Configuration
  * Phase 4 - Week 6: DevTools log levels (LOG_LEVEL)
- * 
+ *
  * Enables dynamic log level control via:
  * - Environment variables (VITE_LOG_LEVEL, LOG_LEVEL)
  * - localStorage (for persistent user preference)
@@ -17,7 +17,14 @@
 
 import { LogLevel } from '@/utils/logger';
 
-export type RuntimeLogLevel = 'TRACE' | 'DEBUG' | 'INFO' | 'WARN' | 'ERROR' | 'FATAL' | 'SILENT';
+export type RuntimeLogLevel =
+  | 'TRACE'
+  | 'DEBUG'
+  | 'INFO'
+  | 'WARN'
+  | 'ERROR'
+  | 'FATAL'
+  | 'SILENT';
 
 /**
  * Log level configuration with multiple sources
@@ -188,7 +195,10 @@ class RuntimeLogLevelManager {
       try {
         localStorage.setItem(STORAGE_KEY_MODULES, JSON.stringify(this.config.modules));
       } catch (error) {
-        console.warn('[LogLevelManager] Failed to persist modules to localStorage:', error);
+        console.warn(
+          '[LogLevelManager] Failed to persist modules to localStorage:',
+          error
+        );
       }
     }
 

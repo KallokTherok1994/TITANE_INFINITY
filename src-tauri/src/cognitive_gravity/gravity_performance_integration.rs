@@ -172,20 +172,38 @@ mod tests {
         use crate::performance::PerformanceConfig;
 
         let gravity = Arc::new(CognitiveGravityEngine::new(GravityConfig::new_default()));
-        let performance = Arc::new(PerformanceEngine::new(PerformanceConfig::default()).unwrap());
+        let performance = Arc::new(
+            PerformanceEngine::new(PerformanceConfig::default())
+                .expect("PerformanceEngine::new doit réussir avec la config par défaut"),
+        );
 
         let integration = GravityPerformanceIntegration::new(gravity.clone(), performance.clone());
 
         // Initialize engines
-        gravity.initialize().await.unwrap();
-        performance.initialize().await.unwrap();
+        gravity
+            .initialize()
+            .await
+            .expect("CognitiveGravityEngine::initialize doit réussir");
+        performance
+            .initialize()
+            .await
+            .expect("PerformanceEngine::initialize doit réussir");
 
         // Run sync cycle
-        integration.sync_cycle().await.unwrap();
+        integration
+            .sync_cycle()
+            .await
+            .expect("sync_cycle doit s'exécuter sans erreur");
 
         // Cleanup
-        gravity.shutdown().await.unwrap();
-        performance.shutdown().await.unwrap();
+        gravity
+            .shutdown()
+            .await
+            .expect("CognitiveGravityEngine::shutdown doit réussir");
+        performance
+            .shutdown()
+            .await
+            .expect("PerformanceEngine::shutdown doit réussir");
     }
 
     #[test]

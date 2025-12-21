@@ -142,8 +142,10 @@ mod tests {
             consolidation_level: 80.0,
             domains_covered: 4,
         };
-        let json = serde_json::to_string(&metrics).unwrap();
-        let restored: KnowledgeMetrics = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&metrics)
+            .expect("KnowledgeMetrics doit pouvoir être sérialisé en JSON");
+        let restored: KnowledgeMetrics = serde_json::from_str(&json)
+            .expect("KnowledgeMetrics doit pouvoir être désérialisé depuis JSON");
         assert_eq!(restored.total_knowledge_units, 200);
         assert_eq!(restored.consolidation_level, 80.0);
     }
@@ -216,8 +218,10 @@ mod tests {
             metrics,
             recent_growth: vec!["test".to_string()],
         };
-        let json = serde_json::to_string(&report).unwrap();
-        let restored: GrowthReport = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&report)
+            .expect("GrowthReport doit pouvoir être sérialisé en JSON");
+        let restored: GrowthReport = serde_json::from_str(&json)
+            .expect("GrowthReport doit pouvoir être désérialisé depuis JSON");
         assert_eq!(restored.timestamp, 999);
     }
 
@@ -337,7 +341,7 @@ mod tests {
     async fn test_tauri_cognitive_grow_knowledge() {
         let result = cognitive_grow_knowledge(vec!["test".to_string()]).await;
         assert!(result.is_ok());
-        let report = result.unwrap();
+        let report = result.expect("cognitive_grow_knowledge doit retourner Ok");
         assert_eq!(report.metrics.total_knowledge_units, 1);
     }
 
@@ -345,7 +349,7 @@ mod tests {
     async fn test_tauri_cognitive_grow_knowledge_empty() {
         let result = cognitive_grow_knowledge(vec![]).await;
         assert!(result.is_ok());
-        let report = result.unwrap();
+        let report = result.expect("cognitive_grow_knowledge doit retourner Ok");
         assert_eq!(report.metrics.total_knowledge_units, 0);
     }
 }

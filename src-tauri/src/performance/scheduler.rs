@@ -126,18 +126,27 @@ mod tests {
     #[tokio::test]
     async fn test_enqueue_dequeue() {
         let config = PerformanceConfig::default();
-        let scheduler = CognitiveScheduler::new(config).unwrap();
+        let scheduler = CognitiveScheduler::new(config)
+            .expect("CognitiveScheduler::new should succeed with default config");
 
         let task = CognitiveTask::new(TaskType::Engine, TaskPriority::High, serde_json::json!({}));
 
-        scheduler.enqueue(task.clone()).await.unwrap();
+        scheduler
+            .enqueue(task.clone())
+            .await
+            .expect("enqueue should succeed");
 
         let state = scheduler.state().await;
         assert_eq!(state.pending_tasks, 1);
 
         let dequeued = scheduler.dequeue().await;
         assert!(dequeued.is_some());
-        assert_eq!(dequeued.unwrap().id, task.id);
+        assert_eq!(
+            dequeued
+                .expect("dequeue should return a task after enqueue")
+                .id,
+            task.id
+        );
 
         let state = scheduler.state().await;
         assert_eq!(state.pending_tasks, 0);
@@ -147,12 +156,16 @@ mod tests {
     #[tokio::test]
     async fn test_mark_completed() {
         let config = PerformanceConfig::default();
-        let scheduler = CognitiveScheduler::new(config).unwrap();
+        let scheduler = CognitiveScheduler::new(config)
+            .expect("CognitiveScheduler::new should succeed with default config");
 
         let task = CognitiveTask::new(TaskType::Engine, TaskPriority::High, serde_json::json!({}));
 
-        scheduler.enqueue(task).await.unwrap();
-        scheduler.dequeue().await.unwrap();
+        scheduler.enqueue(task).await.expect("enqueue should succeed");
+        scheduler
+            .dequeue()
+            .await
+            .expect("dequeue should return a task after enqueue");
         scheduler.mark_completed().await;
 
         let state = scheduler.state().await;

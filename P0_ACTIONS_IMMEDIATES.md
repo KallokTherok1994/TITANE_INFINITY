@@ -99,6 +99,7 @@ cat unwrap_critical.txt | \
 **Résultat attendu :** Liste fichiers à corriger en priorité
 
 **Exemple fix :**
+
 ```rust
 // AVANT (risque panic)
 let value = option.unwrap();
@@ -125,7 +126,7 @@ export class AgendaEngine {
   async getEvents() {
     return agendaService.getEvents(); // ❌ Direct service call
   }
-  
+
   async createEvent(event: Event) {
     return agendaService.createEvent(event);
   }
@@ -136,11 +137,11 @@ import { IAgendaService } from '@/types/services';
 
 export class AgendaEngine {
   constructor(private agendaService: IAgendaService) {}
-  
+
   async getEvents() {
     return this.agendaService.getEvents(); // ✅ Injected
   }
-  
+
   async createEvent(event: Event) {
     return this.agendaService.createEvent(event);
   }
@@ -148,6 +149,7 @@ export class AgendaEngine {
 ```
 
 **Instanciation (dans Service layer ou App) :**
+
 ```typescript
 // src/services/time/timeService.ts ou src/App.tsx
 import { AgendaEngine } from '@/engines/time/AgendaEngine';
@@ -161,6 +163,7 @@ export { agendaEngine };
 ```
 
 **Vérification :**
+
 ```bash
 # Tester violation corrigée
 bash scripts/verify/validate-architecture.sh
@@ -175,18 +178,21 @@ bash scripts/verify/validate-architecture.sh
 ## 📊 RÉSULTATS ATTENDUS
 
 ### Métriques Avant P0
+
 - Score global : 88/100
 - Sécurité : 85/100 (audits non exécutés)
 - Tests : 82/100 (coverage non mesuré)
 - Architecture : 95/100 (1 violation)
 
 ### Métriques Après P0
+
 - Score global : **90/100** (+2 pts) ✅
 - Sécurité : **90/100** (+5 pts) ✅
 - Tests : **85/100** (+3 pts) ✅
 - Architecture : **98/100** (+3 pts) ✅
 
 ### Validation Finale
+
 ```bash
 # Exécuter tous les checks
 bash scripts/verify/enforce-tauri-only.sh
@@ -252,6 +258,7 @@ EOF
 ### Critères de Validation
 
 **P0 RÉUSSI si :**
+
 - ✅ Audits sécurité exécutés (rapports disponibles)
 - ✅ Coverage ≥70% mesuré (rapport HTML généré)
 - ✅ unwrap() critiques <50 (plan fix disponible)
@@ -259,6 +266,7 @@ EOF
 - ✅ Score global ≥90/100
 
 **P0 ÉCHOUÉ si :**
+
 - ❌ Vulnérabilités critiques détectées (non fixables rapidement)
 - ❌ Coverage <50% (trop faible)
 - ❌ unwrap() critiques >100 (trop de travail)
@@ -271,12 +279,14 @@ EOF
 ### En cas de problème
 
 **1. Dépendances manquantes :**
+
 ```bash
 # Réinstaller proprement
 ./titane.sh repair
 ```
 
 **2. Tests échouent :**
+
 ```bash
 # Vérifier node_modules
 rm -rf node_modules
@@ -287,6 +297,7 @@ npm run build
 ```
 
 **3. Rust ne compile pas :**
+
 ```bash
 # Clean + rebuild
 cd src-tauri
@@ -295,6 +306,7 @@ cargo build
 ```
 
 **4. Questions :**
+
 - Consulter : `AUDIT_COMPLET_v26.2.0_2025-12-20.md`
 - Section : "ACTIONS PRIORITAIRES" (page 38+)
 
@@ -303,17 +315,20 @@ cargo build
 ## ✅ CHECKLIST FINALE
 
 **Avant de commencer :**
+
 - [ ] Lire ce document (5 min)
 - [ ] Préparer environnement (terminaux, éditeur)
 - [ ] Allouer 1h30 sans interruption
 
 **Pendant exécution :**
+
 - [ ] Action 1: Audits sécurité (30 min)
 - [ ] Action 2: Coverage tests (15 min)
 - [ ] Action 3: Audit unwrap() (20 min)
 - [ ] Action 4: Fix architecture (15 min)
 
 **Après exécution :**
+
 - [ ] Générer rapport P0
 - [ ] Valider métriques (90/100)
 - [ ] Commit + push résultats

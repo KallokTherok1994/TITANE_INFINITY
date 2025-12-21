@@ -7,8 +7,9 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { renderHook, act } from '@/test-utils';
 import { useAudioStreaming, useStreamingState } from '@/hooks/useAudioStreaming';
 
-let stateListener: ((state: 'Idle' | 'Listening' | 'Recording' | 'Processing') => void) | null =
-  null;
+let stateListener:
+  | ((state: 'Idle' | 'Listening' | 'Recording' | 'Processing') => void)
+  | null = null;
 let chunkListener: ((chunk: number[]) => void) | null = null;
 
 const unsubscribeState = vi.fn();
@@ -25,33 +26,41 @@ vi.mock('../services/audio/audioStreaming', () => {
       return unsubscribeChunk;
     }),
 
-    startStreaming: vi.fn<
-      (config?: Record<string, unknown>) => Promise<string>
-    >().mockResolvedValue('session-1'),
-    stopStreaming: vi.fn<
-      () => Promise<{
-        audioData: number[];
-        durationMs: number;
-        sampleRate: number;
-        hasSpeech: boolean;
-        vadConfidence: number;
-      }>
-    >().mockResolvedValue({
-      audioData: [1, 2, 3],
-      durationMs: 1000,
-      sampleRate: 16000,
-      hasSpeech: true,
-      vadConfidence: 0.9,
-    }),
+    startStreaming: vi
+      .fn<(config?: Record<string, unknown>) => Promise<string>>()
+      .mockResolvedValue('session-1'),
+    stopStreaming: vi
+      .fn<
+        () => Promise<{
+          audioData: number[];
+          durationMs: number;
+          sampleRate: number;
+          hasSpeech: boolean;
+          vadConfidence: number;
+        }>
+      >()
+      .mockResolvedValue({
+        audioData: [1, 2, 3],
+        durationMs: 1000,
+        sampleRate: 16000,
+        hasSpeech: true,
+        vadConfidence: 0.9,
+      }),
     forceStop: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
 
-    getStats: vi.fn<
-      () => Promise<{ availableSamples: number; totalWritten: number; isActive: boolean }>
-    >().mockResolvedValue({
-      availableSamples: 42,
-      totalWritten: 100,
-      isActive: true,
-    }),
+    getStats: vi
+      .fn<
+        () => Promise<{
+          availableSamples: number;
+          totalWritten: number;
+          isActive: boolean;
+        }>
+      >()
+      .mockResolvedValue({
+        availableSamples: 42,
+        totalWritten: 100,
+        isActive: true,
+      }),
 
     isActive: vi.fn<() => boolean>().mockReturnValue(false),
   };
@@ -97,8 +106,11 @@ describe('useAudioStreaming', () => {
   it('ne se ré-abonne pas sur rerender et utilise la dernière callback onStateChange', async () => {
     const onStateChangeA = vi.fn();
     const { result, rerender } = renderHook(
-      ({ cb }: { cb: (state: 'Idle' | 'Listening' | 'Recording' | 'Processing') => void }) =>
-        useAudioStreaming({ onStateChange: cb }),
+      ({
+        cb,
+      }: {
+        cb: (state: 'Idle' | 'Listening' | 'Recording' | 'Processing') => void;
+      }) => useAudioStreaming({ onStateChange: cb }),
       {
         initialProps: { cb: onStateChangeA },
       }
@@ -130,7 +142,8 @@ describe('useAudioStreaming', () => {
   it('utilise la dernière callback onAudioChunk après rerender', async () => {
     const onAudioChunkA = vi.fn();
     const { rerender } = renderHook(
-      ({ cb }: { cb: (chunk: number[]) => void }) => useAudioStreaming({ onAudioChunk: cb }),
+      ({ cb }: { cb: (chunk: number[]) => void }) =>
+        useAudioStreaming({ onAudioChunk: cb }),
       {
         initialProps: { cb: onAudioChunkA },
       }
@@ -179,9 +192,7 @@ describe('useAudioStreaming', () => {
 
   it('stopStreaming retourne le résultat, reset l’état, et appelle onStreamingComplete', async () => {
     const onStreamingComplete = vi.fn();
-    const { result } = renderHook(() =>
-      useAudioStreaming({ onStreamingComplete })
-    );
+    const { result } = renderHook(() => useAudioStreaming({ onStreamingComplete }));
 
     await act(async () => {
       await result.current.startStreaming();

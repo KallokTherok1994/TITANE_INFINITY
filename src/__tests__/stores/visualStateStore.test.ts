@@ -50,7 +50,8 @@ describe('useVisualStateStore', () => {
     expect(state.engine).not.toBeNull();
     expect(state.currentState).toBe('idle');
 
-    const engine = useVisualStateStore.getState().engine as unknown as MockTitaneVisualEngine;
+    const engine = useVisualStateStore.getState()
+      .engine as unknown as MockTitaneVisualEngine;
     engine.emit('visualStateChange', 'thinking');
     expect(useVisualStateStore.getState().currentState).toBe('thinking');
 
@@ -73,7 +74,7 @@ describe('useVisualStateStore', () => {
     expect(useVisualStateStore.getState().performanceMetrics.fps).toBe(30);
   });
 
-  it('initEngine() devrait destroy l\'ancien engine si déjà initialisé', async () => {
+  it("initEngine() devrait destroy l'ancien engine si déjà initialisé", async () => {
     const { useVisualStateStore } = await import('../../stores/visualStateStore');
 
     useVisualStateStore.getState().initEngine();
@@ -98,7 +99,7 @@ describe('useVisualStateStore', () => {
     expect(useVisualStateStore.getState().currentState).toBe('idle');
   });
 
-  it('actions devraient forward vers l\'engine quand présent', async () => {
+  it("actions devraient forward vers l'engine quand présent", async () => {
     const { useVisualStateStore } = await import('../../stores/visualStateStore');
 
     useVisualStateStore.getState().initEngine();

@@ -224,7 +224,9 @@ if (import.meta.env.PROD) {
         if (typeof window !== 'undefined') {
           window.__TITANE_MONITORING__ = monitoring;
         }
-        console.log('      ✅ Monitoring: Ready (access via window.__TITANE_MONITORING__)');
+        console.log(
+          '      ✅ Monitoring: Ready (access via window.__TITANE_MONITORING__)'
+        );
       })
       .catch(err => {
         console.warn('      ⚠️ Monitoring initialization failed:', err);

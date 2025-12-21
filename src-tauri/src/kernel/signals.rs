@@ -99,9 +99,12 @@ mod tests {
         bus.send(KernelSignal::Heartbeat {
             timestamp: 123456789,
         })
-        .unwrap();
+        .expect("SignalBus::send doit réussir dans le test");
 
-        let signal = rx.recv().await.unwrap();
+        let signal = rx
+            .recv()
+            .await
+            .expect("Le subscriber doit recevoir le signal Heartbeat");
         match signal {
             KernelSignal::Heartbeat { timestamp } => {
                 assert_eq!(timestamp, 123456789);
@@ -117,11 +120,17 @@ mod tests {
         let mut rx2 = bus.subscribe();
 
         bus.send(KernelSignal::Heartbeat { timestamp: 123 })
-            .unwrap();
+            .expect("SignalBus::send doit réussir dans le test");
 
         // Both should receive
-        let signal1 = rx1.recv().await.unwrap();
-        let signal2 = rx2.recv().await.unwrap();
+        let signal1 = rx1
+            .recv()
+            .await
+            .expect("Le subscriber 1 doit recevoir le signal Heartbeat");
+        let signal2 = rx2
+            .recv()
+            .await
+            .expect("Le subscriber 2 doit recevoir le signal Heartbeat");
 
         assert!(matches!(signal1, KernelSignal::Heartbeat { .. }));
         assert!(matches!(signal2, KernelSignal::Heartbeat { .. }));

@@ -457,7 +457,7 @@ mod tests {
         let value = cache
             .get_or_compute(&key, || async { Ok("computed_value".to_string()) })
             .await
-            .unwrap();
+            .expect("get_or_compute doit réussir (cache miss) dans le test");
 
         assert_eq!(value, "computed_value");
 
@@ -465,7 +465,7 @@ mod tests {
         let value2 = cache
             .get_or_compute(&key, || async { Ok("should_not_compute".to_string()) })
             .await
-            .unwrap();
+            .expect("get_or_compute doit réussir (L1 hit) dans le test");
 
         assert_eq!(value2, "computed_value");
 

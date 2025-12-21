@@ -33,6 +33,7 @@ pnpm dev
 ```
 
 **Utilisation:**
+
 - Développement UI rapide
 - Tests de composants isolés
 - Pas de backend Rust actif
@@ -48,6 +49,7 @@ npm run tauri dev -- --verbose
 ```
 
 **Utilisation:**
+
 - Développement full-stack
 - Test des intégrations Rust ↔ React
 - Test des fonctionnalités OS (filesystem, etc.)
@@ -499,6 +501,7 @@ npm run lint && npm run type-check && npm run test && npm run build
 ### Créer un script npm
 
 **package.json:**
+
 ```json
 {
   "scripts": {
@@ -511,6 +514,7 @@ npm run lint && npm run type-check && npm run test && npm run build
 ### Créer un script shell
 
 **scripts/custom.sh:**
+
 ```bash
 #!/bin/bash
 echo "Custom shell script"
@@ -530,14 +534,14 @@ chmod +x scripts/custom.sh
 
 ### VSCode
 
-| Raccourci | Action |
-|-----------|--------|
+| Raccourci              | Action          |
+| ---------------------- | --------------- |
 | `Cmd/Ctrl + Shift + P` | Command Palette |
-| `Cmd/Ctrl + P` | Quick Open File |
+| `Cmd/Ctrl + P`         | Quick Open File |
 | `Cmd/Ctrl + Shift + F` | Search in Files |
-| `F5` | Start Debugging |
-| `Cmd/Ctrl + Shift + B` | Run Build Task |
-| `Cmd/Ctrl + J` | Toggle Terminal |
+| `F5`                   | Start Debugging |
+| `Cmd/Ctrl + Shift + B` | Run Build Task  |
+| `Cmd/Ctrl + J`         | Toggle Terminal |
 
 ### Terminal
 
@@ -581,11 +585,13 @@ cd src-tauri && cargo clean && cd ..
 ## Ressources
 
 **Commandes complètes:**
+
 - npm: `npm help`
 - cargo: `cargo --help`
 - git: `git --help`
 
 **Documentation:**
+
 - Setup: `DEVELOPMENT_SETUP.md`
 - Architecture: `docs/guides/`
 - API: `docs/api/`

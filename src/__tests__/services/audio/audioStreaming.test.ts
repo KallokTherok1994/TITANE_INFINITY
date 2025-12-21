@@ -18,7 +18,8 @@ describe('AudioStreamingService', () => {
   });
 
   it('startStreaming() devrait démarrer, définir sessionId/isStreaming, et notifier les listeners sur changement d’état', async () => {
-    const { AudioStreamingService } = await import('../../../services/audio/audioStreaming');
+    const { AudioStreamingService } =
+      await import('../../../services/audio/audioStreaming');
 
     const service = new AudioStreamingService();
 
@@ -30,13 +31,13 @@ describe('AudioStreamingService', () => {
       if (command === 'get_streaming_state') {
         return Promise.resolve(
           // Séquence: Listening, Listening, Recording
-          (secureInvokeMock.mock.calls.filter(c => c[0] === 'get_streaming_state')
+          secureInvokeMock.mock.calls.filter(c => c[0] === 'get_streaming_state')
             .length === 1
             ? 'Listening'
             : secureInvokeMock.mock.calls.filter(c => c[0] === 'get_streaming_state')
-                .length === 2
+                  .length === 2
               ? 'Listening'
-              : 'Recording')
+              : 'Recording'
         );
       }
       if (command === 'force_stop_streaming') return Promise.resolve(undefined);
@@ -70,7 +71,8 @@ describe('AudioStreamingService', () => {
   });
 
   it('startStreaming() devrait échouer si déjà actif', async () => {
-    const { AudioStreamingService } = await import('../../../services/audio/audioStreaming');
+    const { AudioStreamingService } =
+      await import('../../../services/audio/audioStreaming');
 
     const service = new AudioStreamingService();
 
@@ -88,7 +90,8 @@ describe('AudioStreamingService', () => {
   });
 
   it('stopStreaming() devrait retourner un résultat vide si aucun stream actif', async () => {
-    const { AudioStreamingService } = await import('../../../services/audio/audioStreaming');
+    const { AudioStreamingService } =
+      await import('../../../services/audio/audioStreaming');
 
     const service = new AudioStreamingService();
 
@@ -103,7 +106,8 @@ describe('AudioStreamingService', () => {
   });
 
   it('stopStreaming() devrait arrêter, reset l’état, et stopper le polling', async () => {
-    const { AudioStreamingService } = await import('../../../services/audio/audioStreaming');
+    const { AudioStreamingService } =
+      await import('../../../services/audio/audioStreaming');
 
     const service = new AudioStreamingService();
 
@@ -128,8 +132,9 @@ describe('AudioStreamingService', () => {
     await vi.advanceTimersByTimeAsync(200);
     await Promise.resolve();
 
-    const callsBeforeStop = secureInvokeMock.mock.calls.filter(c => c[0] === 'get_streaming_state')
-      .length;
+    const callsBeforeStop = secureInvokeMock.mock.calls.filter(
+      c => c[0] === 'get_streaming_state'
+    ).length;
 
     const result = await service.stopStreaming();
 
@@ -141,14 +146,16 @@ describe('AudioStreamingService', () => {
     await vi.advanceTimersByTimeAsync(600);
     await Promise.resolve();
 
-    const callsAfterStop = secureInvokeMock.mock.calls.filter(c => c[0] === 'get_streaming_state')
-      .length;
+    const callsAfterStop = secureInvokeMock.mock.calls.filter(
+      c => c[0] === 'get_streaming_state'
+    ).length;
 
     expect(callsAfterStop).toBe(callsBeforeStop);
   });
 
   it('getState() devrait retourner Idle sur erreur', async () => {
-    const { AudioStreamingService } = await import('../../../services/audio/audioStreaming');
+    const { AudioStreamingService } =
+      await import('../../../services/audio/audioStreaming');
 
     const service = new AudioStreamingService();
 
@@ -168,7 +175,8 @@ describe('AudioStreamingService', () => {
   });
 
   it('getStats() devrait retourner des zéros sur erreur', async () => {
-    const { AudioStreamingService } = await import('../../../services/audio/audioStreaming');
+    const { AudioStreamingService } =
+      await import('../../../services/audio/audioStreaming');
 
     const service = new AudioStreamingService();
 
@@ -192,7 +200,8 @@ describe('AudioStreamingService', () => {
   });
 
   it('forceStop() ne devrait pas throw même si la commande échoue', async () => {
-    const { AudioStreamingService } = await import('../../../services/audio/audioStreaming');
+    const { AudioStreamingService } =
+      await import('../../../services/audio/audioStreaming');
 
     const service = new AudioStreamingService();
 

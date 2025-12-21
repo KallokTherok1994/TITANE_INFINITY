@@ -17,8 +17,8 @@ echo -e "${BLUE}║        TITANE∞ - Desktop Icon Auto-Update                 
 echo -e "${BLUE}╚═══════════════════════════════════════════════════════════════╝${NC}"
 echo ""
 
-# Détection du répertoire du projet
-PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# Détection du répertoire du projet (racine du repo)
+PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 ICON_DIR="$PROJECT_DIR/src-tauri/icons"
 DESKTOP_FILE="$PROJECT_DIR/titane-infinity.desktop"
 DESKTOP_INSTALL_DIR="$HOME/.local/share/applications"
