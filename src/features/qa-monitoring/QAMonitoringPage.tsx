@@ -242,7 +242,9 @@ const OverviewTab = ({
             label="Latence pipeline"
             value={formatMs(frontendMetrics?.pipelineLatency)}
             icon="⏱️"
-            variant={(frontendMetrics?.pipelineLatency ?? 0) > 200 ? 'warning' : 'success'}
+            variant={
+              (frontendMetrics?.pipelineLatency ?? 0) > 200 ? 'warning' : 'success'
+            }
           />
           <StatCard
             label="Erreurs pipeline"
@@ -812,9 +814,7 @@ function QAMonitoringPageContent(): JSX.Element {
   const [activeTab, setActiveTab] = useState<TabId>('overview');
   const [state, setState] = useState<QASystemState | null>(null);
   const [metrics, setMetrics] = useState<SystemMetrics | null>(null);
-  const [frontendMetrics, setFrontendMetrics] = useState<PerformanceMetrics | null>(
-    null
-  );
+  const [frontendMetrics, setFrontendMetrics] = useState<PerformanceMetrics | null>(null);
   const [suites, setSuites] = useState<TestSuite[]>([]);
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [monitors, setMonitors] = useState<Monitor[]>([]);

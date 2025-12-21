@@ -480,14 +480,16 @@ mod tests {
     #[test]
     fn test_mood_serialize() {
         let mood = Mood::Curious;
-        let json = serde_json::to_string(&mood).unwrap();
+        let json =
+            serde_json::to_string(&mood).expect("Mood doit pouvoir être sérialisé en JSON");
         assert!(json.contains("Curious"));
     }
 
     #[test]
     fn test_mood_deserialize() {
         let json = "\"Caring\"";
-        let mood: Mood = serde_json::from_str(json).unwrap();
+        let mood: Mood =
+            serde_json::from_str(json).expect("Mood doit pouvoir être désérialisé depuis JSON");
         assert_eq!(mood, Mood::Caring);
     }
 
@@ -538,7 +540,8 @@ mod tests {
             trigger: "goal".to_string(),
             duration_mins: 45,
         };
-        let json = serde_json::to_string(&entry).unwrap();
+        let json = serde_json::to_string(&entry)
+            .expect("MoodEntry doit pouvoir être sérialisé en JSON");
         assert!(json.contains("Determined"));
         assert!(json.contains("goal"));
     }
@@ -581,7 +584,8 @@ mod tests {
     #[test]
     fn test_personality_state_serialize() {
         let state = PersonalityState::default();
-        let json = serde_json::to_string(&state).unwrap();
+        let json = serde_json::to_string(&state)
+            .expect("PersonalityState doit pouvoir être sérialisé en JSON");
         assert!(json.contains("Mentor"));
         assert!(json.contains("Serene"));
     }
@@ -616,7 +620,8 @@ mod tests {
     #[test]
     fn test_personality_profile_serialize() {
         let profile = PersonalityProfile::default();
-        let json = serde_json::to_string(&profile).unwrap();
+        let json = serde_json::to_string(&profile)
+            .expect("PersonalityProfile doit pouvoir être sérialisé en JSON");
         assert!(json.contains("extraversion"));
         assert!(json.contains("openness"));
     }

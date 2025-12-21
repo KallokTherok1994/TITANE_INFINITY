@@ -27,10 +27,12 @@ Phase 2 vise à **simplifier et consolider le code** pour améliorer la maintena
 #### Problème
 
 Actuellement, la gestion de la mémoire est fragmentée entre:
+
 - `src-tauri/src/memory/` (logique métier)
 - `src-tauri/src/memory_os/` (interface OS)
 
 **Duplication identifiée:**
+
 - ~30% de code dupliqué
 - Logique de persistence fragmentée
 - Interfaces incohérentes
@@ -62,6 +64,7 @@ src-tauri/src/memory/
 **Migrations:**
 
 1. **Créer structure unifiée**
+
    ```rust
    // src-tauri/src/memory/core/manager.rs
    pub struct MemoryManager {
@@ -69,7 +72,7 @@ src-tauri/src/memory/
        persistence: PersistenceLayer,
        cache: CacheStrategy,
    }
-   
+
    impl MemoryManager {
        pub fn new() -> Result<Self> { ... }
        pub fn store(&self, data: MemoryData) -> Result<()> { ... }
@@ -78,6 +81,7 @@ src-tauri/src/memory/
    ```
 
 2. **Créer trait adapter**
+
    ```rust
    // src-tauri/src/memory/core/traits.rs
    pub trait MemoryAdapter: Send + Sync {
@@ -88,12 +92,13 @@ src-tauri/src/memory/
    ```
 
 3. **Migrer memory_os/ vers adapter**
+
    ```rust
    // src-tauri/src/memory/adapters/os_adapter.rs
    pub struct OSMemoryAdapter {
        root_path: PathBuf,
    }
-   
+
    impl MemoryAdapter for OSMemoryAdapter {
        // Implémentation existante de memory_os/
    }
@@ -123,10 +128,12 @@ src-tauri/src/memory/
 #### Problème
 
 Fragmentation entre:
+
 - `src-tauri/src/singularity/` (logique core)
 - `src-tauri/src/singularity_state/` (gestion état)
 
 **Issues:**
+
 - Séparation artificielle (état intimement lié au core)
 - ~25% duplication
 - Interfaces pas cohérentes
@@ -155,13 +162,14 @@ src-tauri/src/singularity/
 **Migrations:**
 
 1. **Créer SingularityEngine unifié**
+
    ```rust
    // src-tauri/src/singularity/engine.rs
    pub struct SingularityEngine {
        state: StateManager,
        config: SingularityConfig,
    }
-   
+
    impl SingularityEngine {
        pub fn new(config: SingularityConfig) -> Result<Self> { ... }
        pub fn analyze(&mut self, input: Input) -> Result<Analysis> { ... }
@@ -170,13 +178,14 @@ src-tauri/src/singularity/
    ```
 
 2. **Migrer state management**
+
    ```rust
    // src-tauri/src/singularity/state/manager.rs
    pub struct StateManager {
        current: SingularityState,
        history: Vec<StateTransition>,
    }
-   
+
    impl StateManager {
        // Logique de singularity_state/
    }
@@ -208,6 +217,7 @@ src-tauri/src/singularity/
 `src/hooks/useChat.ts` = **1539 lignes** 😱
 
 **Déjà fait (partiellement):**
+
 - ✅ `useChatCore.ts` — Logique core
 - ✅ `useChatUI.ts` — État UI
 - ✅ `useChatMemory.ts` — Intégration mémoire
@@ -243,6 +253,7 @@ src/hooks/chat/
 **Migrations:**
 
 1. **Analyser useChat.ts actuel**
+
    ```bash
    # Identifier toutes les responsabilités
    grep -n "function\|const.*=" src/hooks/useChat.ts | wc -l
@@ -250,49 +261,54 @@ src/hooks/chat/
    ```
 
 2. **Créer nouveaux hooks**
+
    ```typescript
    // src/hooks/chat/core/useChatMessages.ts
    export function useChatMessages(conversationId: string) {
-       const [messages, setMessages] = useState<Message[]>([]);
-       
-       const addMessage = useCallback((msg: Message) => {
-           setMessages(prev => [...prev, msg]);
-       }, []);
-       
-       const updateMessage = useCallback((id: string, update: Partial<Message>) => {
-           setMessages(prev => prev.map(m => m.id === id ? { ...m, ...update } : m));
-       }, []);
-       
-       return { messages, addMessage, updateMessage };
+     const [messages, setMessages] = useState<Message[]>([]);
+
+     const addMessage = useCallback((msg: Message) => {
+       setMessages(prev => [...prev, msg]);
+     }, []);
+
+     const updateMessage = useCallback((id: string, update: Partial<Message>) => {
+       setMessages(prev => prev.map(m => (m.id === id ? { ...m, ...update } : m)));
+     }, []);
+
+     return { messages, addMessage, updateMessage };
    }
    ```
 
 3. **Refactoriser useChat principal**
+
    ```typescript
    // src/hooks/chat/index.ts (NOUVEAU - orchestration uniquement)
    export function useChat(options: UseChatOptions) {
-       // Déléguer à hooks spécialisés
-       const core = useChatCore(options);
-       const ui = useChatUI();
-       const messages = useChatMessages(options.conversationId);
-       const memory = useChatMemory(options.conversationId);
-       const omega = useChatOmega();
-       const providers = useChatProviders();
-       
-       // Orchestration minimale
-       const sendMessage = useCallback(async (content: string) => {
-           const message = messages.addMessage({ content, role: 'user' });
-           const response = await omega.process(message);
-           messages.addMessage(response);
-           memory.store(response);
-       }, [messages, omega, memory]);
-       
-       return {
-           ...core,
-           ...ui,
-           ...messages,
-           sendMessage,
-       };
+     // Déléguer à hooks spécialisés
+     const core = useChatCore(options);
+     const ui = useChatUI();
+     const messages = useChatMessages(options.conversationId);
+     const memory = useChatMemory(options.conversationId);
+     const omega = useChatOmega();
+     const providers = useChatProviders();
+
+     // Orchestration minimale
+     const sendMessage = useCallback(
+       async (content: string) => {
+         const message = messages.addMessage({ content, role: 'user' });
+         const response = await omega.process(message);
+         messages.addMessage(response);
+         memory.store(response);
+       },
+       [messages, omega, memory]
+     );
+
+     return {
+       ...core,
+       ...ui,
+       ...messages,
+       sendMessage,
+     };
    }
    ```
 
@@ -343,6 +359,7 @@ src/stores/
 ```
 
 **Issues:**
+
 - Trop de re-renders
 - Sélecteurs redondants
 - État fragmenté logiquement lié
@@ -366,54 +383,60 @@ src/stores/
 **Stratégie de Consolidation:**
 
 1. **Grouper par domaine logique**
+
    ```typescript
    // src/stores/cognitiveStore.ts
    interface CognitiveState {
-       // Memory
-       memories: Memory[];
-       memoryConfig: MemoryConfig;
-       
-       // Emotion
-       currentEmotion: EmotionalState;
-       emotionHistory: EmotionalState[];
-       
-       // Behavior
-       behaviors: BehaviorPattern[];
-       behaviorConfig: BehaviorConfig;
+     // Memory
+     memories: Memory[];
+     memoryConfig: MemoryConfig;
+
+     // Emotion
+     currentEmotion: EmotionalState;
+     emotionHistory: EmotionalState[];
+
+     // Behavior
+     behaviors: BehaviorPattern[];
+     behaviorConfig: BehaviorConfig;
    }
-   
+
    export const useCognitiveStore = create<CognitiveState>((set, get) => ({
-       // Memory slice
-       memories: [],
-       addMemory: (memory) => set(state => ({ 
-           memories: [...state.memories, memory] 
+     // Memory slice
+     memories: [],
+     addMemory: memory =>
+       set(state => ({
+         memories: [...state.memories, memory],
        })),
-       
-       // Emotion slice
-       currentEmotion: DEFAULT_EMOTION,
-       setEmotion: (emotion) => set({ currentEmotion: emotion }),
-       
-       // Behavior slice
-       behaviors: [],
-       addBehavior: (behavior) => set(state => ({
-           behaviors: [...state.behaviors, behavior]
+
+     // Emotion slice
+     currentEmotion: DEFAULT_EMOTION,
+     setEmotion: emotion => set({ currentEmotion: emotion }),
+
+     // Behavior slice
+     behaviors: [],
+     addBehavior: behavior =>
+       set(state => ({
+         behaviors: [...state.behaviors, behavior],
        })),
    }));
    ```
 
 2. **Créer sélecteurs spécialisés**
+
    ```typescript
    // Éviter re-renders inutiles
    export const useMemories = () => useCognitiveStore(state => state.memories);
-   export const useCurrentEmotion = () => useCognitiveStore(state => state.currentEmotion);
+   export const useCurrentEmotion = () =>
+     useCognitiveStore(state => state.currentEmotion);
    ```
 
 3. **Migrer consumers progressivement**
+
    ```typescript
    // Avant
    import { useMemoryStore } from '@/stores/memoryStore';
    const { memories } = useMemoryStore();
-   
+
    // Après
    import { useMemories } from '@/stores/cognitiveStore';
    const memories = useMemories();
@@ -439,12 +462,14 @@ src/stores/
 ### Code Quality
 
 **Avant Phase 2:**
+
 - Duplication: ~30% (memory), ~25% (singularity)
 - Complexité useChat: 1539 lignes
 - Stores: 16 (fragmentation)
 - Maintenabilité: 75/100
 
 **Après Phase 2:**
+
 - Duplication: <5% (cible)
 - Complexité useChat: <200 lignes principal
 - Stores: 8 (consolidation)
@@ -469,11 +494,13 @@ src/stores/
 ### Semaine 1 (Jours 1-5)
 
 **Jours 1-2:** Task 2.3 Part 1 — Analyse useChat.ts
+
 - Identifier toutes les responsabilités
 - Créer structure hooks/chat/
 - Extraire 3-4 premiers hooks
 
 **Jours 3-5:** Task 2.1 Part 1 — Setup memory unification
+
 - Créer architecture memory/ unifiée
 - Créer traits et types communs
 - Créer OSMemoryAdapter
@@ -481,11 +508,13 @@ src/stores/
 ### Semaine 2 (Jours 6-10)
 
 **Jours 6-8:** Task 2.3 Part 2 — Compléter split useChat
+
 - Extraire hooks restants
 - Refactoriser useChat principal
 - Migrer consumers (20%)
 
 **Jours 9-10:** Task 2.2 — Fusionner Singularity
+
 - Créer SingularityEngine unifié
 - Migrer state management
 - Tests complets
@@ -493,22 +522,26 @@ src/stores/
 ### Semaine 3 (Jours 11-15)
 
 **Jours 11-13:** Task 2.1 Part 2 — Compléter memory merge
+
 - Migrer consumers memory/
 - Supprimer memory_os/
 - Tests intégration
 
 **Jours 14-15:** Task 2.4 Part 1 — Réduction stores
+
 - Créer 4 premiers stores consolidés
 - Migrer consumers (50%)
 
 ### Semaine 4 (Jours 16-18)
 
 **Jours 16-17:** Task 2.4 Part 2 — Compléter stores
+
 - Créer 4 stores restants
 - Migrer consumers (100%)
 - Supprimer stores obsolètes
 
 **Jour 18:** Validation finale
+
 - Tests complets (unit + integration + E2E)
 - Validation performance
 - Documentation mise à jour
@@ -523,6 +556,7 @@ src/stores/
 **Impact:** Élevé
 
 **Mitigation:**
+
 - Backward compatibility layers temporaires
 - Migration progressive (feature flags)
 - Tests exhaustifs avant suppression
@@ -533,6 +567,7 @@ src/stores/
 **Impact:** Élevé
 
 **Mitigation:**
+
 - Benchmarks avant/après
 - Profiling continu
 - Rollback plan si dégradation >5%
@@ -543,6 +578,7 @@ src/stores/
 **Impact:** Moyen
 
 **Mitigation:**
+
 - Migrations progressives (1 consumer à la fois)
 - Tests visuels (Playwright screenshots)
 - Pair programming pour parties critiques
@@ -560,16 +596,19 @@ src/stores/
 ### Bénéfices
 
 **Court-terme (1-2 mois):**
+
 - Vélocité développement: +25%
 - Bug rate: -20%
 - Onboarding nouveau dev: -30% temps
 
 **Moyen-terme (3-6 mois):**
+
 - Maintenabilité: +10 points (75→85/100)
 - Tech debt: -40%
 - Contribution externe: +50%
 
 **Long-terme (6-12 mois):**
+
 - Code quality: 85→90/100
 - Performance: Bundle -15%, Re-renders -30%
 - Scalabilité: Architecture prête pour 10x croissance
@@ -582,6 +621,7 @@ src/stores/
 ## ✅ Checklist Finale
 
 ### Pré-Exécution
+
 - [ ] Approval stakeholders
 - [ ] Ressources allouées
 - [ ] Branche feature/phase-2-simplification créée
@@ -589,12 +629,14 @@ src/stores/
 - [ ] Benchmarks baseline capturés
 
 ### Pendant Exécution
+
 - [ ] Daily standups (blockers identification)
 - [ ] Tests continus (CI green)
 - [ ] Code reviews (peer validation)
 - [ ] Documentation mise à jour (ongoing)
 
 ### Post-Exécution
+
 - [ ] Tests complets passing (100%)
 - [ ] Performance validation (no regression)
 - [ ] Documentation complète

@@ -287,6 +287,7 @@ Des **skills réutilisables** sont disponibles dans `.github/skills/` :
 - **Architecture Check** — Valide le respect du modèle 4-Ring
 
 Pour utiliser un skill avec Copilot :
+
 ```
 @copilot use skill architecture-check
 ```

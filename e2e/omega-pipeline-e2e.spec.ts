@@ -85,7 +85,9 @@ async function sendMessageWithTracking(
   const startTime = Date.now();
 
   // Send message (adapt to actual chat interface)
-  const chatInput = await page.locator('textarea[placeholder*="message" i], input[type="text"]').first();
+  const chatInput = await page
+    .locator('textarea[placeholder*="message" i], input[type="text"]')
+    .first();
   await chatInput.fill(message);
   await chatInput.press('Enter');
 
@@ -208,7 +210,7 @@ test.describe('OMEGA Pipeline v2 E2E Tests', () => {
 
     const result = await sendMessageWithTracking(
       page,
-      'Je suis très content! Peux-tu m\'aider avec un calcul?'
+      "Je suis très content! Peux-tu m'aider avec un calcul?"
     );
 
     expect(result.success).toBe(true);
@@ -232,7 +234,10 @@ test.describe('OMEGA Pipeline v2 E2E Tests', () => {
     await page.goto('http://localhost:1420');
     await waitForPipelineReady(page);
 
-    const result = await sendMessageWithTracking(page, 'Quelle est la capitale de la France?');
+    const result = await sendMessageWithTracking(
+      page,
+      'Quelle est la capitale de la France?'
+    );
 
     expect(result.success).toBe(true);
     expect(result.completedSteps).toContain('ai_generation');
@@ -251,13 +256,18 @@ test.describe('OMEGA Pipeline v2 E2E Tests', () => {
     await page.goto('http://localhost:1420');
     await waitForPipelineReady(page);
 
-    const result = await sendMessageWithTracking(page, 'Donne-moi un exemple de code HTML');
+    const result = await sendMessageWithTracking(
+      page,
+      'Donne-moi un exemple de code HTML'
+    );
 
     expect(result.success).toBe(true);
     expect(result.completedSteps).toContain('post_processing');
 
     // Response should be sanitized (no executable scripts in output)
-    const chatMessages = await page.locator('[data-testid="chat-message"], .message').count();
+    const chatMessages = await page
+      .locator('[data-testid="chat-message"], .message')
+      .count();
     expect(chatMessages).toBeGreaterThan(0);
   });
 
@@ -269,7 +279,7 @@ test.describe('OMEGA Pipeline v2 E2E Tests', () => {
     await page.goto('http://localhost:1420');
     await waitForPipelineReady(page);
 
-    const result = await sendMessageWithTracking(page, 'Souviens-toi que j\'aime le bleu');
+    const result = await sendMessageWithTracking(page, "Souviens-toi que j'aime le bleu");
 
     expect(result.success).toBe(true);
     expect(result.completedSteps).toContain('memory_save');
@@ -284,7 +294,10 @@ test.describe('OMEGA Pipeline v2 E2E Tests', () => {
     await waitForPipelineReady(page);
     await page.waitForTimeout(1000);
 
-    const followUp = await sendMessageWithTracking(page, 'Quelle couleur est-ce que j\'aime?');
+    const followUp = await sendMessageWithTracking(
+      page,
+      "Quelle couleur est-ce que j'aime?"
+    );
     expect(followUp.success).toBe(true);
   });
 
@@ -296,7 +309,7 @@ test.describe('OMEGA Pipeline v2 E2E Tests', () => {
     await page.goto('http://localhost:1420');
     await waitForPipelineReady(page);
 
-    const result = await sendMessageWithTracking(page, 'Je me sens inspiré aujourd\'hui!');
+    const result = await sendMessageWithTracking(page, "Je me sens inspiré aujourd'hui!");
 
     expect(result.success).toBe(true);
     expect(result.completedSteps).toContain('singularity_sync');
@@ -337,7 +350,7 @@ test.describe('OMEGA Pipeline v2 E2E Tests', () => {
     // Simulate provider failure (may need to mock network)
     await page.route('**/api/**', route => route.abort());
 
-    const result = await sendMessageWithTracking(page, 'Test de récupération d\'erreur');
+    const result = await sendMessageWithTracking(page, "Test de récupération d'erreur");
 
     // Pipeline should attempt recovery
     // Even if it fails, it should do so gracefully
@@ -384,7 +397,8 @@ test.describe('OMEGA Pipeline v2 E2E Tests', () => {
     }
 
     // Calculate average overhead
-    const avgOverhead = overheadLatencies.reduce((a, b) => a + b, 0) / overheadLatencies.length;
+    const avgOverhead =
+      overheadLatencies.reduce((a, b) => a + b, 0) / overheadLatencies.length;
     console.log(`Average pipeline overhead: ${avgOverhead}ms`);
 
     // Target: pipeline overhead <200ms (excluding AI generation)
@@ -403,10 +417,10 @@ test.describe('OMEGA Pipeline v2 E2E Tests', () => {
     await waitForPipelineReady(page);
 
     const conversation = [
-      'Bonjour, je m\'appelle Bob',
+      "Bonjour, je m'appelle Bob",
       'Quel est mon nom?',
       'Parle-moi de la météo',
-      'Merci pour l\'information',
+      "Merci pour l'information",
     ];
 
     for (const message of conversation) {
@@ -471,7 +485,7 @@ test.describe('OMEGA Pipeline Integration Tests', () => {
     await waitForPipelineReady(page);
 
     // Create a memory entry
-    await sendMessageWithTracking(page, 'Mon projet s\'appelle TITANE');
+    await sendMessageWithTracking(page, "Mon projet s'appelle TITANE");
     await page.waitForTimeout(1000);
 
     // Query should retrieve from memory
@@ -531,7 +545,7 @@ test.describe('OMEGA Pipeline Integration Tests', () => {
 
 /**
  * NOTES FOR FUTURE ENHANCEMENT:
- * 
+ *
  * 1. Add instrumentation to actual pipeline code to track steps
  * 2. Expose pipeline metrics via window.__pipelineStatus in production code
  * 3. Add performance monitoring dashboard for real-time latency tracking

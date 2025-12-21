@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const userAgent = process.env.npm_config_user_agent || "";
-const execPath = process.execPath || "";
+const userAgent = process.env.npm_config_user_agent || '';
+const execPath = process.execPath || '';
 
 const usingPnpm = /\bpnpm\b/i.test(userAgent);
 if (usingPnpm) {
@@ -16,18 +16,18 @@ if (usingNpm) {
   // eslint-disable-next-line no-console
   console.error(
     [
-      "Ce repo utilise pnpm (pnpm-lock.yaml).",
-      "",
-      "Utilise la toolchain du repo + pnpm :",
-      "  export PATH=\"$PWD/.tools/node/current/bin:$PATH\"",
-      "  corepack pnpm install",
-      "",
-      "Ou (recommandé) :",
-      "  ./titane.sh repair",
-      "",
+      'Ce repo utilise pnpm (pnpm-lock.yaml).',
+      '',
+      'Utilise la toolchain du repo + pnpm :',
+      '  export PATH="$PWD/.tools/node/current/bin:$PATH"',
+      '  corepack pnpm install',
+      '',
+      'Ou (recommandé) :',
+      '  ./titane.sh repair',
+      '',
       `Node actuel: ${execPath}`,
       `User-Agent: ${userAgent}`,
-    ].join("\n")
+    ].join('\n')
   );
   process.exit(1);
 }

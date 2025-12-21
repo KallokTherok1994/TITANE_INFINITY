@@ -37,7 +37,7 @@ describe('evolutionService', () => {
     );
   });
 
-  it('getSuggestions() devrait retourner [] en cas d\'erreur', async () => {
+  it("getSuggestions() devrait retourner [] en cas d'erreur", async () => {
     invokeWithRetryMock.mockRejectedValueOnce(new Error('validation failed'));
 
     const { evolutionService } = await import('../../../services/api/evolution');
@@ -45,12 +45,14 @@ describe('evolutionService', () => {
     await expect(evolutionService.getSuggestions()).resolves.toEqual([]);
   });
 
-  it('rejectSuggestion() ne devrait pas throw en cas d\'erreur', async () => {
+  it("rejectSuggestion() ne devrait pas throw en cas d'erreur", async () => {
     invokeWithRetryMock.mockRejectedValueOnce(new Error('validation failed'));
 
     const { evolutionService } = await import('../../../services/api/evolution');
 
-    await expect(evolutionService.rejectSuggestion('s-1', 'nope')).resolves.toBeUndefined();
+    await expect(
+      evolutionService.rejectSuggestion('s-1', 'nope')
+    ).resolves.toBeUndefined();
     expect(invokeWithRetryMock).toHaveBeenCalledWith(
       'evolution_reject_suggestion',
       { suggestionId: 's-1', reason: 'nope' },
@@ -58,7 +60,7 @@ describe('evolutionService', () => {
     );
   });
 
-  it('analyzePatterns() devrait retourner [] en cas d\'erreur (default timeWindow=7)', async () => {
+  it("analyzePatterns() devrait retourner [] en cas d'erreur (default timeWindow=7)", async () => {
     invokeWithRetryMock.mockRejectedValueOnce(new Error('validation failed'));
 
     const { evolutionService } = await import('../../../services/api/evolution');

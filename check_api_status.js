@@ -92,6 +92,8 @@ if (!geminiKey && !openaiKey && !anthropicKey) {
 console.log('📝 ÉTAPE CRITIQUE: Activer External AI (opt-in)');
 console.log('   Guardrails (recommandé):');
 console.log('      1) Build flag: VITE_ENABLE_EXTERNAL_AI=1');
-console.log("      2) Runtime (prod uniquement): localStorage.setItem('titane.enable_external_ai','1')\n");
+console.log(
+  "      2) Runtime (prod uniquement): localStorage.setItem('titane.enable_external_ai','1')\n"
+);
 
 console.log('═══════════════════════════════════════════════════════════\n');

@@ -398,7 +398,12 @@ mod tests {
 
         let metric = diagnostics.get_metric("test_metric").await;
         assert!(metric.is_some());
-        assert_eq!(metric.unwrap().current, 100.0);
+        assert_eq!(
+            metric
+                .expect("La métrique 'test_metric' doit exister après MetricRecorded")
+                .current,
+            100.0
+        );
     }
 
     #[tokio::test]
