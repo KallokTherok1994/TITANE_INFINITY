@@ -85,6 +85,16 @@
         font-size: 1.2rem;
         color: #00d4ff;
       }
+      @keyframes pulse {
+        0%, 100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.5;
+          transform: scale(1.1);
+        }
+      }
     </style>
     <!-- Theme color already defined above with media queries -->
     <!-- Skip link styles (inline for immediate availability) -->
@@ -112,7 +122,16 @@
   <body>
     <!-- Skip link for keyboard navigation (WCAG 2.1 compliance) -->
     <a href="#main-content" class="skip-link">Aller au contenu principal</a>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Loading fallback (replaced by React when it mounts) -->
+      <div class="loading-splash">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+          <div style="font-size: 2rem; animation: pulse 1.5s ease-in-out infinite;">⚡</div>
+          <div style="font-size: 1.25rem; font-weight: 600; color: #00d4ff;">TITANE∞</div>
+          <div style="font-size: 0.875rem; color: #64748b;">Chargement...</div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
