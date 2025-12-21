@@ -264,8 +264,14 @@ mod tests {
             .increment_counter("test.counter", HashMap::new())
             .await;
 
-        let series = collector.get_metric_series("test.counter").await.unwrap();
-        assert_eq!(series.last_value().unwrap(), 3.0);
+        let series = collector
+            .get_metric_series("test.counter")
+            .await
+            .expect("metric series test.counter should exist");
+        assert_eq!(
+            series.last_value().expect("test.counter should have a last value"),
+            3.0
+        );
         assert_eq!(series.metric_type, MetricType::Counter);
     }
 
@@ -276,8 +282,14 @@ mod tests {
         collector.set_gauge("test.cpu", 45.5, HashMap::new()).await;
         collector.set_gauge("test.cpu", 67.2, HashMap::new()).await;
 
-        let series = collector.get_metric_series("test.cpu").await.unwrap();
-        assert_eq!(series.last_value().unwrap(), 67.2);
+        let series = collector
+            .get_metric_series("test.cpu")
+            .await
+            .expect("metric series test.cpu should exist");
+        assert_eq!(
+            series.last_value().expect("test.cpu should have a last value"),
+            67.2
+        );
         assert_eq!(series.values.len(), 2);
     }
 
@@ -295,7 +307,10 @@ mod tests {
             .record_histogram("test.latency", 15.7, HashMap::new())
             .await;
 
-        let series = collector.get_metric_series("test.latency").await.unwrap();
+        let series = collector
+            .get_metric_series("test.latency")
+            .await
+            .expect("metric series test.latency should exist");
         assert_eq!(series.values.len(), 3);
 
         let avg = series.average();
@@ -311,9 +326,9 @@ mod tests {
         series.add_point(30.0, HashMap::new());
 
         assert_eq!(series.average(), 20.0);
-        assert_eq!(series.min().unwrap(), 10.0);
-        assert_eq!(series.max().unwrap(), 30.0);
-        assert_eq!(series.last_value().unwrap(), 30.0);
+        assert_eq!(series.min().expect("min should exist"), 10.0);
+        assert_eq!(series.max().expect("max should exist"), 30.0);
+        assert_eq!(series.last_value().expect("last_value should exist"), 30.0);
     }
 
     #[tokio::test]

@@ -325,7 +325,12 @@ mod tests {
 
         let memory_diag = engine.run_component_diagnostics("memory");
         assert!(memory_diag.is_some());
-        assert_eq!(memory_diag.unwrap().component_name, "memory");
+        assert_eq!(
+            memory_diag
+                .expect("memory component diagnostics should be present")
+                .component_name,
+            "memory"
+        );
 
         let cpu_diag = engine.run_component_diagnostics("cpu");
         assert!(cpu_diag.is_some());
@@ -567,7 +572,13 @@ mod tests {
         };
 
         assert_eq!(diagnostic.metrics.len(), 2);
-        assert_eq!(*diagnostic.metrics.get("cpu").unwrap(), 45.0);
+        assert_eq!(
+            *diagnostic
+                .metrics
+                .get("cpu")
+                .expect("cpu metric should be present"),
+            45.0
+        );
     }
 
     #[test]
@@ -687,8 +698,14 @@ mod tests {
         let checker = MemoryDiagnosticChecker;
         let diagnostic = checker.run_diagnostics();
 
-        let heap = diagnostic.metrics.get("heap_usage_percent").unwrap();
-        let gc = diagnostic.metrics.get("gc_pressure").unwrap();
+        let heap = diagnostic
+            .metrics
+            .get("heap_usage_percent")
+            .expect("heap_usage_percent metric should be present");
+        let gc = diagnostic
+            .metrics
+            .get("gc_pressure")
+            .expect("gc_pressure metric should be present");
 
         assert!(*heap >= 0.0 && *heap <= 100.0);
         assert!(*gc >= 0.0 && *gc <= 1.0);
@@ -699,8 +716,14 @@ mod tests {
         let checker = CpuDiagnosticChecker;
         let diagnostic = checker.run_diagnostics();
 
-        let cpu = diagnostic.metrics.get("cpu_usage_percent").unwrap();
-        let threads = diagnostic.metrics.get("thread_count").unwrap();
+        let cpu = diagnostic
+            .metrics
+            .get("cpu_usage_percent")
+            .expect("cpu_usage_percent metric should be present");
+        let threads = diagnostic
+            .metrics
+            .get("thread_count")
+            .expect("thread_count metric should be present");
 
         assert!(*cpu >= 0.0 && *cpu <= 100.0);
         assert!(*threads >= 1.0);
@@ -812,8 +835,20 @@ mod tests {
 
         assert!(finding.details.is_some());
         assert!(finding.suggestion.is_some());
-        assert!(finding.details.as_ref().unwrap().contains("Detailed"));
-        assert!(finding.suggestion.as_ref().unwrap().contains("restarting"));
+        assert!(
+            finding
+                .details
+                .as_ref()
+                .expect("details should be present")
+                .contains("Detailed")
+        );
+        assert!(
+            finding
+                .suggestion
+                .as_ref()
+                .expect("suggestion should be present")
+                .contains("restarting")
+        );
     }
 
     #[test]

@@ -149,7 +149,12 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev \
-            libappindicator3-dev \
+            build-essential \
+            curl \
+            wget \
+            file \
+            libssl-dev \
+            libayatana-appindicator3-dev \
             librsvg2-dev \
             patchelf
 
@@ -164,9 +169,10 @@ jobs:
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
+        if: success()
         with:
           name: titane-build-${{ matrix.os }}
-          path: src-tauri/target/debug/bundle/
+          path: src-tauri/target/release/bundle/
 
   security:
     name: 🔒 Security Audit

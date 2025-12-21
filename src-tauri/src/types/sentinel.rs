@@ -107,8 +107,8 @@ mod tests {
     #[test]
     fn test_severity_serialization() {
         let sev = Severity::Critical;
-        let json = serde_json::to_string(&sev).unwrap();
-        let restored: Severity = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&sev).expect("Severity should serialize to JSON");
+        let restored: Severity = serde_json::from_str(&json).expect("Severity should deserialize from JSON");
         assert_eq!(restored, Severity::Critical);
     }
 
@@ -144,8 +144,9 @@ mod tests {
     #[test]
     fn test_alert_category_serialization() {
         let cat = AlertCategory::Resource;
-        let json = serde_json::to_string(&cat).unwrap();
-        let restored: AlertCategory = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&cat).expect("AlertCategory should serialize to JSON");
+        let restored: AlertCategory =
+            serde_json::from_str(&json).expect("AlertCategory should deserialize from JSON");
         assert!(matches!(restored, AlertCategory::Resource));
     }
 
@@ -203,8 +204,8 @@ mod tests {
             message: "Low memory".to_string(),
             timestamp: 999999,
         };
-        let json = serde_json::to_string(&alert).unwrap();
-        let restored: Alert = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&alert).expect("Alert should serialize to JSON");
+        let restored: Alert = serde_json::from_str(&json).expect("Alert should deserialize from JSON");
         assert_eq!(restored.id, "alert-test");
         assert_eq!(restored.message, "Low memory");
     }
@@ -260,8 +261,9 @@ mod tests {
             scans_performed: 100,
             ..Default::default()
         };
-        let json = serde_json::to_string(&state).unwrap();
-        let restored: SentinelState = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&state).expect("SentinelState should serialize to JSON");
+        let restored: SentinelState =
+            serde_json::from_str(&json).expect("SentinelState should deserialize from JSON");
         assert_eq!(restored.integrity_score, 98.0);
         assert_eq!(restored.scans_performed, 100);
     }

@@ -108,22 +108,31 @@ mod tests {
 
     #[test]
     fn test_encryption_roundtrip() {
-        let enc = MemoryEncryption::new("test_password_123").unwrap();
+        let enc = MemoryEncryption::new("test_password_123")
+            .expect("MemoryEncryption::new should succeed for test password");
 
         let plaintext = "Hello, World!";
-        let encrypted = enc.encrypt_string(plaintext).unwrap();
-        let decrypted = enc.decrypt_string(&encrypted).unwrap();
+        let encrypted = enc
+            .encrypt_string(plaintext)
+            .expect("encrypt_string should succeed");
+        let decrypted = enc
+            .decrypt_string(&encrypted)
+            .expect("decrypt_string should succeed");
 
         assert_eq!(plaintext, decrypted);
     }
 
     #[test]
     fn test_encryption_different_passwords() {
-        let enc1 = MemoryEncryption::new("password1").unwrap();
-        let enc2 = MemoryEncryption::new("password2").unwrap();
+        let enc1 = MemoryEncryption::new("password1")
+            .expect("MemoryEncryption::new should succeed for password1");
+        let enc2 = MemoryEncryption::new("password2")
+            .expect("MemoryEncryption::new should succeed for password2");
 
         let plaintext = "Secret data";
-        let encrypted = enc1.encrypt_string(plaintext).unwrap();
+        let encrypted = enc1
+            .encrypt_string(plaintext)
+            .expect("encrypt_string should succeed");
 
         // Should fail with different password
         assert!(enc2.decrypt_string(&encrypted).is_err());

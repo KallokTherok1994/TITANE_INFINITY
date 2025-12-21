@@ -53,20 +53,26 @@ mod integration_tests {
     async fn test_recall_search() {
         let config = create_test_config();
         let mut memory = UnifiedMemoryV2::new(config);
-        memory.init().await.unwrap();
+        memory
+            .init()
+            .await
+            .expect("UnifiedMemoryV2::init should succeed in test setup");
 
         // Store multiple entries
         memory
             .store("Rust programming", 0.9, types::MemoryType::Factual)
             .await
-            .unwrap();
+            .expect("store should succeed for a valid entry");
         memory
             .store("Python scripting", 0.7, types::MemoryType::Factual)
             .await
-            .unwrap();
+            .expect("store should succeed for a valid entry");
 
         // Search
-        let results = memory.recall("programming", 10).await.unwrap();
+        let results = memory
+            .recall("programming", 10)
+            .await
+            .expect("recall should succeed");
         assert!(!results.is_empty(), "Should find matching entries");
     }
 
@@ -74,23 +80,29 @@ mod integration_tests {
     async fn test_clear_all() {
         let config = create_test_config();
         let mut memory = UnifiedMemoryV2::new(config);
-        memory.init().await.unwrap();
+        memory
+            .init()
+            .await
+            .expect("UnifiedMemoryV2::init should succeed in test setup");
 
         // Add entries
         memory
             .store("Entry 1", 0.5, types::MemoryType::Conversation)
             .await
-            .unwrap();
+            .expect("store should succeed for a valid entry");
         memory
             .store("Entry 2", 0.5, types::MemoryType::Conversation)
             .await
-            .unwrap();
+            .expect("store should succeed for a valid entry");
 
         // Clear
         memory.clear().await.expect("Clear failed");
 
         // Verify empty
-        let stats = memory.stats().await.unwrap();
+        let stats = memory
+            .stats()
+            .await
+            .expect("stats should succeed after clear");
         assert_eq!(stats.snapshot.total_count, 0, "Should be empty after clear");
     }
 }

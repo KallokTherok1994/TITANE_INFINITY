@@ -492,8 +492,9 @@ mod tests {
     #[test]
     fn test_conversation_mode_serialization() {
         let mode = ConversationMode::Cognitive;
-        let json = serde_json::to_string(&mode).unwrap();
-        let restored: ConversationMode = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&mode).expect("ConversationMode should serialize");
+        let restored: ConversationMode =
+            serde_json::from_str(&json).expect("ConversationMode should deserialize");
         assert_eq!(mode, restored);
     }
 
@@ -528,8 +529,9 @@ mod tests {
     #[test]
     fn test_intent_class_serialization() {
         let intent = IntentClass::Debug;
-        let json = serde_json::to_string(&intent).unwrap();
-        let restored: IntentClass = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&intent).expect("IntentClass should serialize");
+        let restored: IntentClass =
+            serde_json::from_str(&json).expect("IntentClass should deserialize");
         assert_eq!(intent, restored);
     }
 
@@ -826,8 +828,10 @@ mod tests {
     #[test]
     fn test_brain_state_serialization() {
         let state = ConversationBrainState::new();
-        let json = serde_json::to_string(&state).unwrap();
-        let restored: ConversationBrainState = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&state)
+            .expect("ConversationBrainState should serialize");
+        let restored: ConversationBrainState = serde_json::from_str(&json)
+            .expect("ConversationBrainState should deserialize");
         assert_eq!(state.mode, restored.mode);
         assert_eq!(state.evolution_level, restored.evolution_level);
     }

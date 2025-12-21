@@ -151,8 +151,9 @@ mod tests {
     #[test]
     fn test_memory_source_serialization() {
         let source = MemorySource::SystemEvent;
-        let json = serde_json::to_string(&source).unwrap();
-        let restored: MemorySource = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&source).expect("MemorySource should serialize");
+        let restored: MemorySource =
+            serde_json::from_str(&json).expect("MemorySource should deserialize");
         assert!(matches!(restored, MemorySource::SystemEvent));
     }
 
@@ -217,8 +218,9 @@ mod tests {
             importance: 0.9,
             summary: "A summary".to_string(),
         };
-        let json = serde_json::to_string(&block).unwrap();
-        let restored: MemoryBlock = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&block).expect("MemoryBlock should serialize");
+        let restored: MemoryBlock =
+            serde_json::from_str(&json).expect("MemoryBlock should deserialize");
         assert_eq!(restored.id, "mem-123");
         assert_eq!(restored.importance, 0.9);
     }
@@ -267,8 +269,10 @@ mod tests {
             concepts_extracted: 100,
             total_importance: 15.5,
         };
-        let json = serde_json::to_string(&report).unwrap();
-        let restored: MemoryBuildReport = serde_json::from_str(&json).unwrap();
+        let json =
+            serde_json::to_string(&report).expect("MemoryBuildReport should serialize");
+        let restored: MemoryBuildReport =
+            serde_json::from_str(&json).expect("MemoryBuildReport should deserialize");
         assert_eq!(restored.blocks_created, 20);
     }
 
@@ -386,7 +390,7 @@ mod tests {
     async fn test_tauri_cognitive_build_memory() {
         let result = cognitive_build_memory("Test message".to_string()).await;
         assert!(result.is_ok());
-        let block = result.unwrap();
+        let block = result.expect("cognitive_build_memory should succeed");
         assert_eq!(block.content, "Test message");
     }
 
@@ -394,7 +398,7 @@ mod tests {
     async fn test_tauri_cognitive_build_memory_empty() {
         let result = cognitive_build_memory("".to_string()).await;
         assert!(result.is_ok());
-        let block = result.unwrap();
+        let block = result.expect("cognitive_build_memory should succeed for empty input");
         assert!(block.content.is_empty());
     }
 }
