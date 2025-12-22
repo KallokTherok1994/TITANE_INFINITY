@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Husky pre-commit hook with auto-fix
+# Runs auto-heal before each commit to catch issues early
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
+
+echo "🔍 Pre-commit: Running auto-heal..."
+
+if ./scripts/maintenance/auto-heal.sh; then
+  echo "✅ Pre-commit: Auto-heal passed"
+  exit 0
+else
+  echo "⚠️  Pre-commit: Auto-heal detected issues"
+  echo
+  echo "Options:"
+  echo "  1. Review and fix manually, then: git add . && git commit"
+  echo "  2. Skip this hook with: git commit --no-verify"
+  echo
+  exit 1
+fi
