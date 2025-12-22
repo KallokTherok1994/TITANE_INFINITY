@@ -78,6 +78,12 @@ log_info() {
     echo -e "${CYAN}ℹ $1${NC}"
 }
 
+# Extract version from Cargo.toml
+extract_cargo_version() {
+    local cargo_file="$1"
+    grep '^version' "$cargo_file" | head -1 | cut -d'"' -f2 || echo "unknown"
+}
+
 check_file_exists() {
     local file="$1"
     local description="$2"
@@ -166,7 +172,7 @@ audit_build_config() {
     # Check Cargo.toml
     log_section "Cargo.toml validation"
     if check_file_exists "src-tauri/Cargo.toml" "Cargo.toml"; then
-        local cargo_version=$(grep '^version' src-tauri/Cargo.toml | head -1 | cut -d'"' -f2)
+        local cargo_version=$(extract_cargo_version "src-tauri/Cargo.toml")
         log_info "Cargo version: $cargo_version"
         
         # Check release profile
@@ -325,7 +331,7 @@ audit_runtime_configs() {
     log_section "Version consistency"
     local main_version=$(jq -r '.version' src-tauri/tauri.conf.json 2>/dev/null || echo "unknown")
     local pkg_version=$(jq -r '.version' package.json 2>/dev/null || echo "unknown")
-    local cargo_version=$(grep '^version' src-tauri/Cargo.toml | head -1 | cut -d'"' -f2 || echo "unknown")
+    local cargo_version=$(extract_cargo_version "src-tauri/Cargo.toml")
     
     log_info "Main tauri.conf.json: $main_version"
     log_info "package.json: $pkg_version"

@@ -14,6 +14,24 @@ import path from 'path';
 // Project root path
 const PROJECT_ROOT = process.cwd();
 
+// Helper constants
+const CARGO_VERSION_REGEX = /^version\s*=\s*"([^"]+)"/m;
+
+/**
+ * Extract version from Cargo.toml content
+ */
+function extractCargoVersion(content: string): string {
+  const match = content.match(CARGO_VERSION_REGEX);
+  return match ? match[1] : '';
+}
+
+/**
+ * Create regex pattern for command detection in case statements
+ */
+function createCommandPattern(cmd: string): RegExp {
+  return new RegExp(`^\\s*${cmd}\\)`, 'm');
+}
+
 describe('🚀 Deployment Configuration Verification', () => {
   describe('📦 Build Configuration', () => {
     let packageJson: Record<string, unknown>;
@@ -58,9 +76,8 @@ describe('🚀 Deployment Configuration Verification', () => {
       const pkgVersion = packageJson.version as string;
       const tauriVersion = tauriConfig.version as string;
 
-      // Extract version from Cargo.toml
-      const cargoVersionMatch = cargoToml.match(/^version\s*=\s*"([^"]+)"/m);
-      const cargoVersion = cargoVersionMatch ? cargoVersionMatch[1] : '';
+      // Extract version from Cargo.toml using helper
+      const cargoVersion = extractCargoVersion(cargoToml);
 
       expect(pkgVersion).toBe(tauriVersion);
       expect(pkgVersion).toBe(cargoVersion);
@@ -201,9 +218,8 @@ describe('🚀 Deployment Configuration Verification', () => {
       ];
 
       requiredCommands.forEach(cmd => {
-        // Check for command in case statement (e.g., "clean)" pattern)
-        const commandPattern = new RegExp(`^\\s*${cmd}\\)`, 'm');
-        expect(tauriScript).toMatch(commandPattern);
+        // Check for command in case statement using helper
+        expect(tauriScript).toMatch(createCommandPattern(cmd));
       });
     });
 
