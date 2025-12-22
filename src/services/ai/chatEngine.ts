@@ -53,7 +53,7 @@ import { cognitiveOmega } from '@/services/cognitive/cognitiveOmegaIntegration';
 import { createLogger } from '@/utils/logger';
 
 // Type-safe correction interface
-interface CorrectionInfo {
+interface _CorrectionInfo {
   correction_type?: string;
   confidence?: number;
   [key: string]: unknown;

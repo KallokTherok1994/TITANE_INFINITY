@@ -88,11 +88,11 @@ export function classifyError(error: unknown, context?: ErrorContext): Classifie
   if (error instanceof TimeoutError) {
     const provider = String(context?.metadata?.provider ?? '').toLowerCase();
     const isCloudAgent = ['openai', 'claude', 'gemini', 'anthropic'].includes(provider);
-    
+
     return {
       type: 'TimeoutError',
       severity: ErrorSeverity.WARNING,
-      message: isCloudAgent 
+      message: isCloudAgent
         ? `Délai d'attente dépassé pour l'agent cloud (${error.timeoutMs}ms)`
         : `Opération expirée (${error.timeoutMs}ms)`,
       details: error.command,

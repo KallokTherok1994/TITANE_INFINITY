@@ -24,10 +24,7 @@ if (typeof window !== 'undefined') {
 
     console.error = (...args) => {
       const message = args.join(' ');
-      if (
-        message.includes('Cannot read properties') &&
-        message.includes('invoke')
-      ) {
+      if (message.includes('Cannot read properties') && message.includes('invoke')) {
         console.warn('🛡️ [TauriProtector] Caught invoke error - using fallback');
         return;
       }

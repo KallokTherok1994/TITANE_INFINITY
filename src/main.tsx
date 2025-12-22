@@ -12,7 +12,7 @@ declare global {
     Sentry?: {
       captureException: (error: unknown, options?: Record<string, unknown>) => void;
     };
-    __TITANE_MONITORING__?: any;
+    __TITANE_MONITORING__?: unknown;
   }
 }
 
@@ -321,7 +321,7 @@ const showFatalErrorOverlay = (payload: FatalErrorOverlayPayload): void => {
     : '';
 
   const hint =
-    "Astuce: appuie sur F12 (ou Ctrl+Shift+I) pour ouvrir les DevTools si disponibles.";
+    'Astuce: appuie sur F12 (ou Ctrl+Shift+I) pour ouvrir les DevTools si disponibles.';
 
   document.body.innerHTML = `
     <div style="
@@ -365,7 +365,9 @@ if (typeof window !== 'undefined') {
         title: 'Erreur UI (non capturée)',
         message,
         stack,
-        source: ev.filename ? `${ev.filename}:${ev.lineno ?? 0}:${ev.colno ?? 0}` : undefined,
+        source: ev.filename
+          ? `${ev.filename}:${ev.lineno ?? 0}:${ev.colno ?? 0}`
+          : undefined,
       });
     } catch {
       // Ne jamais casser le boot sur un handler d'erreur
