@@ -31,6 +31,18 @@ AUTO_HEAL_KILL_DEV=${AUTO_HEAL_KILL_DEV:-1}
 STATE_DIR="$HOME/.titane/auto-heal"
 mkdir -p "$STATE_DIR" 2>/dev/null || true
 
+# Optional auto-restart after heal
+AUTO_HEAL_RESTART=${AUTO_HEAL_RESTART:-0}
+RELEASE_BIN_PATH="$REPO_ROOT/src-tauri/target/release/titane-infinity"
+
+# Small helper for safe in-place file edits
+safe_inplace_edit() {
+  # usage: safe_inplace_edit <file> <tmp_suffix>
+  local file="$1"; shift
+  local tmp="$file.$(date +%s).tmp"
+  cat > "$tmp" && mv "$tmp" "$file"
+}
+
 # Function: detect rapid reboot loop (based on recent logs)
 detect_reboot_loop() {
   echo
@@ -62,13 +74,42 @@ detect_reboot_loop() {
   return 0
 }
 
+# Function: active monitoring for rapid restart toggles
+monitor_restarts() {
+  echo
+  echo "📡 Mode monitor: détection de toggles de process pendant 15s..."
+  local toggles=0
+  local prev_state="unknown"
+  for i in $(seq 1 15); do
+    local running
+    if pgrep -x "titane-infinity" >/dev/null 2>&1; then
+      running="on"
+    else
+      running="off"
+    fi
+    if [[ "$prev_state" != "unknown" && "$running" != "$prev_state" ]]; then
+      toggles=$((toggles + 1))
+    fi
+    prev_state="$running"
+    sleep 1
+  done
+  echo "Toggles détectés: $toggles"
+  if [[ "$toggles" -ge 2 ]]; then
+    echo -e "${RED}❌ Boucle de reboot détectée via monitor (toggles=$toggles)${NC}"
+    ISSUES_FOUND=$((ISSUES_FOUND + 1))
+    return 1
+  fi
+  echo -e "${GREEN}✅ Aucun toggle anormal détecté (monitor)${NC}"
+  return 0
+}
+
 # Function: detect dev processes that can cause HMR reload loops and optionally kill them
 detect_and_handle_dev_processes() {
   echo
   echo "🔍 Détection des processus dev (vite/tauri)..."
 
   local dev_pids
-  dev_pids=$(ps aux | grep -E "(vite dev|tauri dev|pnpm run dev)" | grep -v grep | awk '{print $2}')
+  dev_pids=$(ps aux | grep -E "vite dev|tauri dev|pnpm run dev" | grep -v grep | awk '{print $2}')
 
   if [[ -n "$dev_pids" ]]; then
     echo -e "${YELLOW}⚠️  Processus dev actifs détectés (peuvent provoquer des reloads rapides):${NC}"
@@ -88,6 +129,82 @@ detect_and_handle_dev_processes() {
   else
     echo -e "${GREEN}✅ Aucun processus dev actif${NC}"
   fi
+}
+
+# Function: fix entrypoint (ensure main.tsx and remove debug boot.ts)
+fix_entrypoint() {
+  echo
+  echo "🔧 Vérification/Correction de l'entrypoint index.html..."
+  local idx="$REPO_ROOT/index.html"
+  if [[ -f "$idx" ]]; then
+    if grep -q "/src/boot.ts" "$idx"; then
+      echo -e "${YELLOW}⚠️  index.html charge boot.ts → correction vers main.tsx${NC}"
+      # Replace only the exact script line
+      sed -i 's|/src/boot.ts|/src/main.tsx|g' "$idx"
+      ISSUES_FIXED=$((ISSUES_FIXED + 1))
+      echo -e "${GREEN}✅ index.html corrigé (main.tsx)${NC}"
+    else
+      echo -e "${GREEN}✅ index.html OK (main.tsx)${NC}"
+    fi
+  else
+    echo -e "${YELLOW}ℹ️  index.html introuvable${NC}"
+  fi
+
+  # Remove debug boot.ts if present
+  local boot_ts="$REPO_ROOT/src/boot.ts"
+  if [[ -f "$boot_ts" ]]; then
+    echo -e "${YELLOW}⚠️  Suppression du fichier debug src/boot.ts${NC}"
+    rm -f "$boot_ts"
+    ISSUES_FIXED=$((ISSUES_FIXED + 1))
+    echo -e "${GREEN}✅ src/boot.ts supprimé${NC}"
+  fi
+}
+
+# Function: fix duplicate default_task_timeout_ms in Rust config
+fix_rust_duplicate_timeout() {
+  echo
+  echo "🔧 Vérification/Correction duplication default_task_timeout_ms (Rust)..."
+  local cfg="$REPO_ROOT/src-tauri/src/agent_system/config.rs"
+  if [[ -f "$cfg" ]]; then
+    local count
+    count=$(grep -n "default_task_timeout_ms:" "$cfg" | wc -l | tr -d ' ')
+    if [[ "$count" -gt 1 ]]; then
+      echo -e "${YELLOW}⚠️  ${count} occurrences détectées → suppression des duplications${NC}"
+      # Keep first occurrence, remove subsequent duplicates
+      awk 'BEGIN{seen=0} /default_task_timeout_ms:/{if(seen++){next}} {print}' "$cfg" > "$cfg.fixed" && mv "$cfg.fixed" "$cfg"
+      ISSUES_FIXED=$((ISSUES_FIXED + 1))
+      echo -e "${GREEN}✅ Duplication supprimée${NC}"
+    else
+      echo -e "${GREEN}✅ Aucun doublon détecté${NC}"
+    fi
+  else
+    echo -e "${YELLOW}ℹ️  Fichier config.rs introuvable${NC}"
+  fi
+}
+
+# Function: controlled restart with backoff
+controlled_restart() {
+  if [[ "$AUTO_HEAL_RESTART" != "1" ]]; then
+    echo -e "${YELLOW}ℹ️  AUTO_HEAL_RESTART=1 non défini → pas de relance automatique${NC}"
+    return 0
+  fi
+  echo
+  echo "🔄 Relance contrôlée avec backoff..."
+  # Stop dev processes and app
+  detect_and_handle_dev_processes
+  pkill -x titane-infinity 2>/dev/null || true
+  sleep 2
+  # Build binary if missing
+  if [[ ! -x "$RELEASE_BIN_PATH" ]]; then
+    echo -e "${YELLOW}⚠️  Binaire manquant → compilation release${NC}"
+    (cd "$REPO_ROOT/src-tauri" && cargo build --release) || {
+      echo -e "${RED}❌ Échec compilation release${NC}"; return 1;
+    }
+  fi
+  echo "⏳ Backoff 5s avant relance..."
+  sleep 5
+  nohup "$RELEASE_BIN_PATH" >/dev/null 2>&1 &
+  echo -e "${GREEN}✅ Processus relancé (release)${NC}"
 }
 
 # Function: write disable-autorestart marker to prevent crashguard restarts
@@ -258,12 +375,26 @@ check_rust
 check_git_state
 clean_if_corrupted
 
+# Heal known issues proactively
+fix_entrypoint
+fix_rust_duplicate_timeout
+
 # Detect reboot loop and dev processes
-detect_reboot_loop || {
+if ! detect_reboot_loop; then
   # If reboot loop detected, handle dev processes and create disable marker
   detect_and_handle_dev_processes
   write_disable_autorestart_marker
-}
+  controlled_restart
+fi
+
+# Optional: monitor mode via CLI flag
+if [[ "${1:-}" == "--monitor" ]]; then
+  if ! monitor_restarts; then
+    detect_and_handle_dev_processes
+    write_disable_autorestart_marker
+    controlled_restart
+  fi
+fi
 
 # Summary
 echo
