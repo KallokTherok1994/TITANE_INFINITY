@@ -57,6 +57,14 @@ npm run dev:tauri
 # Ou via task VSCode: "🟢 Launch Titan-Dev"
 ```
 
+### Corepack Quickstart (recommandé)
+
+```bash
+# Activer Corepack et pnpm@9 pour cohérence outillage
+corepack enable
+corepack prepare pnpm@9 --activate
+```
+
 ### Build Production (Titan-Stable)
 
 ```bash
