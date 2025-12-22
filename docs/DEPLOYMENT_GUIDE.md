@@ -350,8 +350,12 @@ git push origin v26.2.0
 ### From AppImage (Linux)
 
 ```bash
-# Download
-wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/latest/download/titane-infinity_26.2.0_amd64.AppImage
+# Download latest release
+# Note: Replace VERSION with actual version number from releases page
+wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/latest/download/titane-infinity_VERSION_amd64.AppImage
+
+# Or download any version
+wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/vVERSION/titane-infinity_VERSION_amd64.AppImage
 
 # Make executable
 chmod +x titane-infinity_*.AppImage
@@ -366,8 +370,8 @@ chmod +x titane-infinity_*.AppImage
 ### From DEB (Debian/Ubuntu)
 
 ```bash
-# Download
-wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/latest/download/titane-infinity_26.2.0_amd64.deb
+# Download latest release (replace VERSION with actual version)
+wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/latest/download/titane-infinity_VERSION_amd64.deb
 
 # Install
 sudo dpkg -i titane-infinity_*.deb
