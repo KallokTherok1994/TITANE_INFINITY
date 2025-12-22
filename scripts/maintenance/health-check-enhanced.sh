@@ -149,19 +149,26 @@ check_dependency_health() {
     if [[ -d "node_modules" ]]; then
         check_pass "node_modules directory exists"
         
-        # Check for broken symlinks (with timeout protection)
+        # Check for broken symlinks (with timeout and availability check)
         local broken_symlinks=0
+        local has_timeout=false
+        
         if command -v timeout &> /dev/null; then
+            has_timeout=true
+        fi
+        
+        if [[ "$has_timeout" == "true" ]]; then
+            # Use timeout to prevent hanging
             broken_symlinks=$(timeout 10 find node_modules -type l ! -exec test -e {} \; -print 2>/dev/null | wc -l || echo "0")
         else
-            # Skip if timeout not available to prevent hanging
+            # Skip symlink check if timeout not available to prevent hanging
             log "INFO" "Skipping broken symlinks check (timeout command not available)"
         fi
         
         if [[ $broken_symlinks -gt 0 ]]; then
             check_fail "Found $broken_symlinks broken symlinks in node_modules"
             apply_fix "Remove broken symlinks" "find node_modules -type l ! -exec test -e {} \; -delete 2>/dev/null || true"
-        elif [[ -n "$broken_symlinks" ]] && [[ "$broken_symlinks" != "0" ]]; then
+        elif [[ -n "$broken_symlinks" ]] && [[ "$broken_symlinks" != "0" ]] && [[ "$has_timeout" == "true" ]]; then
             check_pass "No broken symlinks in node_modules"
         fi
     else
