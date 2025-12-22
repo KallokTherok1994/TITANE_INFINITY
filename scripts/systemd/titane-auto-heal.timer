@@ -1,0 +1,12 @@
+[Unit]
+Description=TITANE∞ Auto-Heal Timer (user)
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=5min
+AccuracySec=30s
+Persistent=true
+Unit=titane-auto-heal.service
+
+[Install]
+WantedBy=timers.target

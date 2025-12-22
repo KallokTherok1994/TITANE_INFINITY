@@ -86,7 +86,8 @@
         color: #00d4ff;
       }
       @keyframes pulse {
-        0%, 100% {
+        0%,
+        100% {
           opacity: 1;
           transform: scale(1);
         }
@@ -118,7 +119,6 @@
         outline-offset: 2px;
       }
     </style>
-
   </head>
   <body>
     <!-- Skip link for keyboard navigation (WCAG 2.1 compliance) -->
@@ -126,10 +126,14 @@
     <div id="root">
       <!-- Loading fallback (replaced by React when it mounts) -->
       <div class="loading-splash">
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
-          <div style="font-size: 2rem; animation: pulse 1.5s ease-in-out infinite;">⚡</div>
-          <div style="font-size: 1.25rem; font-weight: 600; color: #00d4ff;">TITANE∞</div>
-          <div style="font-size: 0.875rem; color: #64748b;">Chargement...</div>
+        <div
+          style="display: flex; flex-direction: column; align-items: center; gap: 1rem"
+        >
+          <div style="font-size: 2rem; animation: pulse 1.5s ease-in-out infinite">
+            ⚡
+          </div>
+          <div style="font-size: 1.25rem; font-weight: 600; color: #00d4ff">TITANE∞</div>
+          <div style="font-size: 0.875rem; color: #64748b">Chargement...</div>
         </div>
       </div>
     </div>
