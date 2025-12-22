@@ -202,7 +202,9 @@ class MonitoringManager {
 
     // Track memory every 30 seconds
     setInterval(() => {
-      const memory = (performance as { memory?: { usedJSHeapSize: number; jsHeapSizeLimit: number } }).memory;
+      const memory = (
+        performance as { memory?: { usedJSHeapSize: number; jsHeapSizeLimit: number } }
+      ).memory;
       if (memory) {
         this.metrics.memoryUsage = memory.usedJSHeapSize;
 
