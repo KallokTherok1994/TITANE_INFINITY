@@ -514,6 +514,19 @@ const handleTauriInvoke = async (
         provider: 'mock',
         suggestions: ['Continuer'],
       };
+    case 'conversation_generate': {
+      const payload = (args ?? {}) as { conversation_id?: string; provider?: string };
+      return {
+        content: 'Réponse mock TITANE∞',
+        conversationId: payload.conversation_id ?? 'mock-conversation',
+        messageId: 'mock-message',
+        frenchMasteryApplied: true,
+        latencyMs: 5,
+        metadata: {
+          provider: payload.provider ?? 'mock',
+        },
+      };
+    }
     case 'get_gemini_key_status':
     case 'get_openai_key_status':
     case 'get_anthropic_key_status':
