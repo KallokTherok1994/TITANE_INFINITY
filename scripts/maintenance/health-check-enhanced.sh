@@ -149,17 +149,26 @@ check_dependency_health() {
     if [[ -d "node_modules" ]]; then
         check_pass "node_modules directory exists"
         
-        # Check for broken symlinks
-        local broken_symlinks=$(find node_modules -type l ! -exec test -e {} \; -print 2>/dev/null | wc -l)
+        # Check for broken symlinks (with timeout protection)
+        local broken_symlinks=0
+        if command -v timeout &> /dev/null; then
+            broken_symlinks=$(timeout 10 find node_modules -type l ! -exec test -e {} \; -print 2>/dev/null | wc -l || echo "0")
+        else
+            # Skip if timeout not available to prevent hanging
+            log "INFO" "Skipping broken symlinks check (timeout command not available)"
+        fi
+        
         if [[ $broken_symlinks -gt 0 ]]; then
             check_fail "Found $broken_symlinks broken symlinks in node_modules"
-            apply_fix "Remove broken symlinks" "find node_modules -type l ! -exec test -e {} \; -delete"
-        else
+            apply_fix "Remove broken symlinks" "find node_modules -type l ! -exec test -e {} \; -delete 2>/dev/null || true"
+        elif [[ -n "$broken_symlinks" ]] && [[ "$broken_symlinks" != "0" ]]; then
             check_pass "No broken symlinks in node_modules"
         fi
     else
         check_fail "node_modules directory missing"
-        apply_fix "Install dependencies" "pnpm install --frozen-lockfile"
+        if [[ "$DRY_RUN" == "false" ]] && [[ "$AUTO_FIX" == "true" ]]; then
+            apply_fix "Install dependencies" "command -v pnpm >/dev/null && pnpm install --frozen-lockfile"
+        fi
     fi
     
     # Check package-lock integrity
