@@ -84,14 +84,21 @@ export interface ClassifiedError {
 // ────────────────────────────────────────────────────────────────
 
 export function classifyError(error: unknown, context?: ErrorContext): ClassifiedError {
-  // TimeoutError
+  // TimeoutError - ✨ v26.2.1: Enhanced messaging for cloud agent timeouts
   if (error instanceof TimeoutError) {
+    const isCloudAgent = context?.metadata?.provider && 
+      ['openai', 'claude', 'gemini', 'anthropic'].includes(String(context.metadata.provider).toLowerCase());
+    
     return {
       type: 'TimeoutError',
       severity: ErrorSeverity.WARNING,
-      message: `Opération expirée (${error.timeoutMs}ms)`,
+      message: isCloudAgent 
+        ? `Délai d'attente dépassé pour l'agent cloud (${error.timeoutMs}ms)`
+        : `Opération expirée (${error.timeoutMs}ms)`,
       details: error.command,
-      recovery: 'Essayez de nouveau ou vérifiez la connexion',
+      recovery: isCloudAgent
+        ? "L'agent cloud peut encore traiter votre requête. Attendez quelques instants ou réessayez avec une requête plus simple."
+        : 'Essayez de nouveau ou vérifiez la connexion',
       context,
     };
   }
