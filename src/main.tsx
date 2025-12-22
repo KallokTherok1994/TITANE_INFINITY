@@ -12,7 +12,7 @@ declare global {
     Sentry?: {
       captureException: (error: unknown, options?: Record<string, unknown>) => void;
     };
-    __TITANE_MONITORING__?: any;
+    __TITANE_MONITORING__?: unknown;
   }
 }
 
