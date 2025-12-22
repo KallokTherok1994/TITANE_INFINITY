@@ -48,7 +48,7 @@ impl Default for AgentSystemConfig {
             max_agents: 100,
             max_concurrent_tasks: 50,
             max_collaborations: 10,
-            default_task_timeout_ms: 60000,
+            default_task_timeout_ms: 75000, // ✨ v26.2.1: Increased from 60s to 75s (cloud-aligned)
             collaboration_timeout_ms: 300000,
             supervision_config: SupervisionConfig::default(),
             sandbox_config: SandboxConfig::default(),
@@ -101,11 +101,11 @@ impl AgentSystemConfig {
             max_agents: 500,
             max_concurrent_tasks: 200,
             max_collaborations: 50,
-            default_task_timeout_ms: 120000,
+            default_task_timeout_ms: 90000, // ✨ v26.2.1: Increased from 120s to 90s (cloud-optimized)
             collaboration_timeout_ms: 600000,
             supervision_config: SupervisionConfig {
                 max_retries: 5,
-                timeout_ms: 120000,
+                timeout_ms: 90000, // ✨ v26.2.1: Match default_task_timeout_ms
                 health_check_interval_ms: 3000,
                 auto_restart: true,
                 ..Default::default()
