@@ -308,15 +308,26 @@ fix_broken_symlinks() {
     fi
     
     local broken_count=0
+    local max_broken_symlinks=100  # Safety limit
+    
     while IFS= read -r symlink; do
+        if [[ $broken_count -ge $max_broken_symlinks ]]; then
+            log WARN "Reached safety limit of $max_broken_symlinks broken symlinks - manual intervention required"
+            break
+        fi
         rm -f "$symlink"
         log FIX "Removed broken symlink: ${symlink#$PROJECT_ROOT/}"
         ((broken_count++))
     done < <(find node_modules -type l ! -exec test -e {} \; -print 2>/dev/null)
     
     if [[ $broken_count -gt 0 ]]; then
-        log OK "Removed $broken_count broken symlink(s)"
-        ((FIXES_APPLIED++))
+        if [[ $broken_count -ge $max_broken_symlinks ]]; then
+            log WARN "Removed $broken_count broken symlink(s) - More may exist, please investigate"
+            ((FIXES_SKIPPED++))
+        else
+            log OK "Removed $broken_count broken symlink(s)"
+            ((FIXES_APPLIED++))
+        fi
     else
         log OK "No broken symlinks found"
     fi

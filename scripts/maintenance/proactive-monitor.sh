@@ -93,7 +93,26 @@ detect_configuration_drift() {
         fi
         
         local hash_file="${STATE_DIR}/hash_${config_file//\//_}"
-        local current_hash=$(md5sum "$config_file" | awk '{print $1}')
+        local current_hash=""
+        
+        # Cross-platform hash command (prefer shasum for portability)
+        if command -v shasum &> /dev/null; then
+            current_hash=$(shasum -a 256 "$config_file" 2>/dev/null | awk '{print $1}')
+        elif command -v sha256sum &> /dev/null; then
+            current_hash=$(sha256sum "$config_file" 2>/dev/null | awk '{print $1}')
+        elif command -v md5sum &> /dev/null; then
+            current_hash=$(md5sum "$config_file" 2>/dev/null | awk '{print $1}')
+        elif command -v md5 &> /dev/null; then
+            current_hash=$(md5 -q "$config_file" 2>/dev/null)
+        else
+            warning "No hash command available, skipping drift detection for $config_file"
+            continue
+        fi
+        
+        if [[ -z "$current_hash" ]]; then
+            warning "Failed to calculate hash for $config_file"
+            continue
+        fi
         
         if [[ -f "$hash_file" ]]; then
             local stored_hash=$(cat "$hash_file")
@@ -152,10 +171,11 @@ detect_performance_degradation() {
                         degradation_detected=true
                     fi
                     
-                    # Compare with historical average
+                    # Compare with historical average (with safety checks)
                     if [[ -f "$perf_file" ]]; then
                         local avg_build_time=$(jq -r '.build_time_avg // 0' "$perf_file" 2>/dev/null || echo "0")
-                        if [[ $avg_build_time -gt 0 ]]; then
+                        # Ensure avg_build_time is a valid positive integer
+                        if [[ "$avg_build_time" =~ ^[0-9]+$ ]] && [[ $avg_build_time -gt 0 ]] && [[ $build_time -gt 0 ]]; then
                             local increase=$(( (build_time - avg_build_time) * 100 / avg_build_time ))
                             if [[ $increase -gt $BUILD_TIME_INCREASE_PERCENT ]]; then
                                 alert "HIGH" "Build time increased by ${increase}% (${avg_build_time}s -> ${build_time}s)"
