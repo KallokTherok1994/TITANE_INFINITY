@@ -3,28 +3,35 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const mocks = vi.hoisted(() => {
   return {
     hybridTTS: {
-      speak: vi.fn<
-        (text: string, options: Record<string, unknown>, useOnline: boolean) => Promise<void>
-      >(),
+      speak:
+        vi.fn<
+          (
+            text: string,
+            options: Record<string, unknown>,
+            useOnline: boolean
+          ) => Promise<void>
+        >(),
       stop: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
     },
     emotionalTTS: {
-      speak: vi.fn<
-        (
-          text: string,
-          intent: { emotion: string; intensity: number },
-          options: { useSSML: boolean; fallbackToRaw: boolean }
-        ) => Promise<void>
-      >(),
+      speak:
+        vi.fn<
+          (
+            text: string,
+            intent: { emotion: string; intensity: number },
+            options: { useSSML: boolean; fallbackToRaw: boolean }
+          ) => Promise<void>
+        >(),
       stop: vi.fn<() => void>(),
     },
     emotionalAnalyzer: {
-      analyze: vi.fn<
-        (
-          text: string,
-          context?: Record<string, unknown>
-        ) => { intent: { emotion: 'neutral' | 'joy'; intensity: number } }
-      >(),
+      analyze:
+        vi.fn<
+          (
+            text: string,
+            context?: Record<string, unknown>
+          ) => { intent: { emotion: 'neutral' | 'joy'; intensity: number } }
+        >(),
     },
     audioStateMachine: {
       transition: vi.fn<(evt: string) => boolean>().mockReturnValue(true),
@@ -49,10 +56,16 @@ const mocks = vi.hoisted(() => {
 });
 
 vi.mock('@/services/tts/hybridTTS', () => ({ hybridTTS: mocks.hybridTTS }));
-vi.mock('@/services/audio/audioStateMachine', () => ({ audioStateMachine: mocks.audioStateMachine }));
-vi.mock('@/services/voice/emotionalAnalyzer', () => ({ emotionalAnalyzer: mocks.emotionalAnalyzer }));
+vi.mock('@/services/audio/audioStateMachine', () => ({
+  audioStateMachine: mocks.audioStateMachine,
+}));
+vi.mock('@/services/voice/emotionalAnalyzer', () => ({
+  emotionalAnalyzer: mocks.emotionalAnalyzer,
+}));
 vi.mock('@/services/voice/emotionalTTS', () => ({ emotionalTTS: mocks.emotionalTTS }));
-vi.mock('@/services/voice/attentionEngine', () => ({ attentionEngine: mocks.attentionEngine }));
+vi.mock('@/services/voice/attentionEngine', () => ({
+  attentionEngine: mocks.attentionEngine,
+}));
 vi.mock('@/services/voice/interruptionController', () => ({
   interruptionController: mocks.interruptionController,
 }));
@@ -161,7 +174,10 @@ describe('services/voice/voiceRouter', () => {
 
     const onError = vi.fn();
 
-    const promise = voiceRouter.processVoiceTurn('salut', send, { aiTimeout: 50, onError });
+    const promise = voiceRouter.processVoiceTurn('salut', send, {
+      aiTimeout: 50,
+      onError,
+    });
 
     // Laisse le setTimeout du timeout IA se déclencher
     await vi.advanceTimersByTimeAsync(50);

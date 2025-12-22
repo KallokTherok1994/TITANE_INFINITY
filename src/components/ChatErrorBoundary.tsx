@@ -8,7 +8,7 @@
  * TITANE∞ v26.2.0 - Chat Error Boundary Component
  * Specialized error boundary for Chat IA with OMEGA Pipeline integration
  * Phase 4 - Week 6: Error boundaries for ChatIA
- * 
+ *
  * FUTURE IMPROVEMENT (Phase 5+):
  * - Replace string-based error detection with structured error codes
  * - Example: error.code = 'OMEGA_STEP_1_VALIDATION'
@@ -49,14 +49,14 @@ interface ChatErrorContext {
 
 /**
  * ChatErrorBoundary - Specialized error boundary for Chat IA
- * 
+ *
  * Features:
  * - OMEGA Pipeline error tracking
  * - Auto-healing integration
  * - Conversation context preservation
  * - Graceful degradation
  * - User-friendly error messages
- * 
+ *
  * Usage:
  * ```tsx
  * <ChatErrorBoundary conversationId={conversationId} mode="creative">
@@ -204,7 +204,11 @@ export class ChatErrorBoundary extends Component<
     if (message.includes('prompt') || message.includes('construction')) {
       return 'Step 4: Prompt Construction';
     }
-    if (message.includes('ai') || message.includes('generation') || message.includes('provider')) {
+    if (
+      message.includes('ai') ||
+      message.includes('generation') ||
+      message.includes('provider')
+    ) {
       return 'Step 5: AI Generation';
     }
     if (message.includes('post') || message.includes('process')) {
@@ -252,8 +256,9 @@ export class ChatErrorBoundary extends Component<
 
       // Trigger auto-heal engine
       await Promise.race([
-        autoHealEngine.handleChatError(error, 
-          { componentStack: errorInfo.componentStack ?? undefined }, 
+        autoHealEngine.handleChatError(
+          error,
+          { componentStack: errorInfo.componentStack ?? undefined },
           errorContext
         ),
         this.timeout(ChatErrorBoundary.AUTO_HEAL_TIMEOUT_MS),

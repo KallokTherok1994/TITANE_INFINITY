@@ -44,9 +44,7 @@ export const AISection: React.FC = () => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [externalAIRuntimeEnabled, setExternalAIRuntimeEnabled] = useState(false);
-  const [externalAIToggleError, setExternalAIToggleError] = useState<string | null>(
-    null
-  );
+  const [externalAIToggleError, setExternalAIToggleError] = useState<string | null>(null);
 
   const isDev = import.meta.env.DEV;
   const buildAllowsExternalAI = useMemo(() => envFlag('VITE_ENABLE_EXTERNAL_AI'), []);
@@ -103,9 +101,7 @@ export const AISection: React.FC = () => {
       );
       setExternalAIToggleError(null);
     } catch {
-      setExternalAIToggleError(
-        "Impossible d’accéder au stockage local (localStorage)."
-      );
+      setExternalAIToggleError('Impossible d’accéder au stockage local (localStorage).');
     }
   }, []);
 
@@ -133,7 +129,7 @@ export const AISection: React.FC = () => {
       setExternalAIToggleError(null);
     } catch {
       setExternalAIToggleError(
-        "Impossible de modifier le stockage local (localStorage)."
+        'Impossible de modifier le stockage local (localStorage).'
       );
     }
   }, [buildAllowsExternalAI, externalAIRuntimeEnabled]);
@@ -377,8 +373,8 @@ export const AISection: React.FC = () => {
             description={
               buildAllowsExternalAI
                 ? isDev
-                  ? "Ce build autorise External AI en dev (runtime implicitement autorisé)."
-                  : "Active/désactive le flag runtime. Un rechargement est nécessaire pour appliquer le changement."
+                  ? 'Ce build autorise External AI en dev (runtime implicitement autorisé).'
+                  : 'Active/désactive le flag runtime. Un rechargement est nécessaire pour appliquer le changement.'
                 : 'Désactivé par ce build (lancer avec VITE_ENABLE_EXTERNAL_AI=1).'
             }
             disabled={!buildAllowsExternalAI}

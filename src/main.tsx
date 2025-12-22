@@ -60,6 +60,364 @@ const escapeHtmlForError = (str: string): string => {
   };
   return str.replace(/[&<>"']/g, char => htmlEscapes[char] || char);
 };
+
+type FatalErrorOverlayPayload = {
+  title: string;
+  message: string;
+  stack?: string;
+  source?: string;
+};
+
+type TitaneBootDiagnostics = {
+  stage: string;
+  timestamp: number;
+};
+
+type MemoryCoreLogLevel = 'Info' | 'Warning' | 'Error';
+
+let lastBootStageLoggedToMemoryCore: string | null = null;
+
+const tryWriteMemoryCoreLog = (
+  level: MemoryCoreLogLevel,
+  module: string,
+  message: string
+): void => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  try {
+    const w = window as Window & {
+      __TAURI__?: unknown;
+      __TAURI_INTERNALS__?: unknown;
+    };
+    const isTauri = Boolean(w.__TAURI__ || w.__TAURI_INTERNALS__);
+    if (!isTauri) {
+      return;
+    }
+
+    const now = Date.now();
+    const id = `ui-${now}-${Math.random().toString(36).slice(2, 10)}`;
+
+    void safeInvokeTauri<void>(
+      TAURI_COMMANDS.MEMORY_WRITE_LOG,
+      {
+        log: {
+          id,
+          timestamp: now,
+          level,
+          module,
+          message,
+        },
+      },
+      2000
+    ).catch(() => {
+      // Do not break UI boot if logging fails
+    });
+  } catch {
+    // Do not break UI boot if logging fails
+  }
+};
+
+const setBootStage = (stage: string): void => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  const w = window as typeof window & { __TITANE_BOOT__?: TitaneBootDiagnostics };
+  w.__TITANE_BOOT__ = { stage, timestamp: Date.now() };
+
+  if (stage !== lastBootStageLoggedToMemoryCore) {
+    lastBootStageLoggedToMemoryCore = stage;
+    tryWriteMemoryCoreLog('Info', 'frontend.boot', stage);
+  }
+};
+
+const getUILogsSnapshot = (): unknown => {
+  if (typeof window === 'undefined') {
+    return undefined;
+  }
+
+  try {
+    const raw = window.localStorage.getItem('titane_ui_logs');
+    if (!raw) {
+      return [];
+    }
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) {
+      return parsed;
+    }
+    return parsed.slice(-200);
+  } catch (error) {
+    return { error: 'Failed to read titane_ui_logs', details: String(error) };
+  }
+};
+
+const showDebugOverlay = (title: string, payload: unknown): void => {
+  if (typeof document === 'undefined') {
+    return;
+  }
+
+  const existing = document.getElementById('titane-debug-overlay');
+  if (existing) {
+    return;
+  }
+
+  const overlay = document.createElement('div');
+  overlay.id = 'titane-debug-overlay';
+  overlay.setAttribute('role', 'dialog');
+  overlay.setAttribute('aria-modal', 'true');
+
+  let body: string;
+  try {
+    body = JSON.stringify(payload, null, 2);
+  } catch {
+    body = String(payload);
+  }
+
+  overlay.innerHTML = `
+    <div style="
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 2147483647;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    ">
+      <div style="
+        width: min(1100px, 100%);
+        max-height: 85vh;
+        overflow: auto;
+        background: #0a0a0a;
+        color: #e5e7eb;
+        border: 2px solid #3b3b3b;
+        border-radius: 12px;
+        box-shadow: 0 12px 40px rgba(0,0,0,0.55);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+      ">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 16px 12px 16px;border-bottom:1px solid rgba(255,255,255,0.08);">
+          <div>
+            <div style="font-size: 0.9rem; color: #9ca3af;">TITANE∞ Diagnostic</div>
+            <div style="font-size: 1.1rem; font-weight: 700;">${escapeHtmlForError(title)}</div>
+          </div>
+          <button id="titane-debug-overlay-close" style="
+            padding: 8px 12px;
+            background: #1f1f1f;
+            color: #e5e7eb;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+          ">Fermer</button>
+        </div>
+        <div style="padding: 16px;">
+          <div style="color:#9ca3af;margin-bottom:12px;">Raccourci: Ctrl+Alt+D (ré-ouvre si fermé)</div>
+          <pre style="white-space: pre-wrap; word-break: break-word; margin:0; padding: 12px; background:#000; border-radius: 10px; border:1px solid rgba(255,255,255,0.08);">${escapeHtmlForError(body)}</pre>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+  document.getElementById('titane-debug-overlay-close')?.addEventListener('click', () => {
+    overlay.remove();
+  });
+};
+
+const startBootBeacon = (): void => {
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
+    return;
+  }
+
+  // Avoid duplicates across reloads
+  if (document.getElementById('titane-boot-beacon')) {
+    return;
+  }
+
+  const beacon = document.createElement('div');
+  beacon.id = 'titane-boot-beacon';
+  beacon.style.position = 'fixed';
+  beacon.style.right = '12px';
+  beacon.style.bottom = '12px';
+  beacon.style.zIndex = '2147483647';
+  beacon.style.maxWidth = '420px';
+  beacon.style.background = 'rgba(0,0,0,0.85)';
+  beacon.style.color = '#e5e7eb';
+  beacon.style.border = '1px solid rgba(255,255,255,0.15)';
+  beacon.style.borderRadius = '10px';
+  beacon.style.padding = '10px 12px';
+  beacon.style.fontFamily =
+    "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace";
+  beacon.style.fontSize = '12px';
+  beacon.style.lineHeight = '1.35';
+
+  const closeBtn = document.createElement('button');
+  closeBtn.textContent = '×';
+  closeBtn.setAttribute('aria-label', 'Fermer diagnostic');
+  closeBtn.style.float = 'right';
+  closeBtn.style.marginLeft = '8px';
+  closeBtn.style.background = 'transparent';
+  closeBtn.style.color = '#9ca3af';
+  closeBtn.style.border = 'none';
+  closeBtn.style.cursor = 'pointer';
+  closeBtn.style.fontSize = '16px';
+  closeBtn.onclick = () => beacon.remove();
+
+  const content = document.createElement('div');
+  beacon.appendChild(closeBtn);
+  beacon.appendChild(content);
+  document.body.appendChild(beacon);
+
+  const render = (): void => {
+    const w = window as typeof window & {
+      __TAURI__?: unknown;
+      __TAURI_INTERNALS__?: unknown;
+      __TITANE_BOOT__?: TitaneBootDiagnostics;
+    };
+
+    const root = document.getElementById('root');
+    const childCount = root?.childElementCount ?? 0;
+
+    const stage = w.__TITANE_BOOT__?.stage ?? 'n/a';
+    const isTauri = Boolean(w.__TAURI__ || w.__TAURI_INTERNALS__);
+    const href = typeof location !== 'undefined' ? String(location.href) : 'n/a';
+
+    content.innerHTML = `${escapeHtmlForError('BOOT BEACON')}<br/>
+<span style="color:#9ca3af;">stage</span>: ${escapeHtmlForError(stage)}<br/>
+<span style="color:#9ca3af;">isTauri</span>: ${isTauri ? 'true' : 'false'}<br/>
+<span style="color:#9ca3af;">rootChildren</span>: ${childCount}<br/>
+<span style="color:#9ca3af;">href</span>: ${escapeHtmlForError(href)}<br/>
+<span style="color:#9ca3af;">keys</span>: F12/Ctrl+Shift+I, Ctrl+Alt+D`;
+  };
+
+  render();
+  window.setInterval(render, 1000);
+};
+
+const showFatalErrorOverlay = (payload: FatalErrorOverlayPayload): void => {
+  if (typeof document === 'undefined') {
+    return;
+  }
+
+  const docAny = document as Document & { __titaneFatalOverlayShown?: boolean };
+  if (docAny.__titaneFatalOverlayShown) {
+    return;
+  }
+  docAny.__titaneFatalOverlayShown = true;
+
+  const safeTitle = escapeHtmlForError(payload.title);
+  const safeMessage = escapeHtmlForError(payload.message);
+  const safeStack = escapeHtmlForError(payload.stack ?? '');
+  const safeSource = escapeHtmlForError(payload.source ?? '');
+
+  const stackBlock = safeStack
+    ? `<details style="margin-top: 1rem;"><summary style="cursor:pointer;color:#8899aa;">Détails techniques</summary><pre style="margin-top:0.75rem;white-space:pre-wrap;background:#000;padding:1rem;border-radius:8px;max-height:45vh;overflow:auto;">${safeStack}</pre></details>`
+    : '';
+
+  const sourceLine = safeSource
+    ? `<div style="margin-top:0.75rem;color:#9ca3af;font-size:0.85rem;">Source: ${safeSource}</div>`
+    : '';
+
+  const hint =
+    "Astuce: appuie sur F12 (ou Ctrl+Shift+I) pour ouvrir les DevTools si disponibles.";
+
+  document.body.innerHTML = `
+    <div style="
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:100vh;
+      background:#0a0a0a;
+      color:#ff4444;
+      font-family:monospace;
+      padding:2rem;
+      text-align:left;
+    ">
+      <div style="max-width: 980px; width: 100%;">
+        <h1 style="font-size:1.6rem;margin:0 0 0.75rem 0;">⚠️ ${safeTitle}</h1>
+        <div style="color:#9ca3af;margin-bottom:1rem;">${safeMessage}</div>
+        ${sourceLine}
+        <div style="margin-top:1rem;color:#9ca3af;font-size:0.9rem;">${escapeHtmlForError(hint)}</div>
+        ${stackBlock}
+      </div>
+    </div>
+  `;
+
+  tryWriteMemoryCoreLog(
+    'Error',
+    'frontend.fatal',
+    `${payload.title}: ${payload.message}${payload.source ? ` (${payload.source})` : ''}`
+  );
+};
+
+if (typeof window !== 'undefined') {
+  setBootStage('main.tsx: boot handlers registered');
+  startBootBeacon();
+
+  window.addEventListener('error', ev => {
+    try {
+      const err = ev.error instanceof Error ? ev.error : undefined;
+      const message = err?.message || ev.message || 'Erreur JavaScript non gérée';
+      const stack = err?.stack;
+      showFatalErrorOverlay({
+        title: 'Erreur UI (non capturée)',
+        message,
+        stack,
+        source: ev.filename ? `${ev.filename}:${ev.lineno ?? 0}:${ev.colno ?? 0}` : undefined,
+      });
+    } catch {
+      // Ne jamais casser le boot sur un handler d'erreur
+    }
+  });
+
+  window.addEventListener('unhandledrejection', ev => {
+    try {
+      const reason = ev.reason;
+      const err = reason instanceof Error ? reason : undefined;
+      const message =
+        err?.message ||
+        (typeof reason === 'string' ? reason : 'Promise rejection non gérée');
+      const stack = err?.stack;
+      showFatalErrorOverlay({
+        title: 'Erreur UI (Promise non gérée)',
+        message,
+        stack,
+      });
+    } catch {
+      // Ne jamais casser le boot sur un handler d'erreur
+    }
+  });
+
+  window.addEventListener('keydown', ev => {
+    // Diagnostic overlay: Ctrl+Alt+D
+    if (ev.ctrlKey && ev.altKey && (ev.key === 'd' || ev.key === 'D')) {
+      ev.preventDefault();
+
+      const w = window as typeof window & {
+        __TAURI__?: unknown;
+        __TAURI_INTERNALS__?: unknown;
+        __TITANE_BOOT__?: TitaneBootDiagnostics;
+      };
+
+      const diagnostics = {
+        now: new Date().toISOString(),
+        boot: w.__TITANE_BOOT__ ?? null,
+        location: typeof location !== 'undefined' ? String(location.href) : 'n/a',
+        userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'n/a',
+        isTauri: Boolean(w.__TAURI__ || w.__TAURI_INTERNALS__),
+        root: {
+          exists: Boolean(document.getElementById('root')),
+          childCount: document.getElementById('root')?.childElementCount ?? null,
+        },
+        uiLogs: getUILogsSnapshot(),
+      };
+
+      showDebugOverlay('UI Debug Snapshot', diagnostics);
+    }
+  });
+}
 import { ErrorBoundary } from './components/ErrorBoundary'; // ✨ v24.3.0 - Unified Error Boundary
 // import { PerformanceMonitor } from './lib/performanceBudget'; // DÉSACTIVÉ pour diagnostic progressif
 import { injectSROnlyStyles } from './lib/accessibility';
@@ -179,27 +537,131 @@ const getTauriWindowAPI = () => {
   ).__TAURI__?.window;
 };
 
+const isTauriRuntime = (): boolean => {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  const candidate = window as Window & {
+    __TAURI__?: unknown;
+    __TAURI_INTERNALS__?: unknown;
+  };
+
+  return Boolean(candidate.__TAURI__ || candidate.__TAURI_INTERNALS__);
+};
+
+const openDevtoolsSafe = async (): Promise<void> => {
+  // Preferred path for Tauri v2
+  try {
+    const { getCurrentWebviewWindow } = await import('@tauri-apps/api/webviewWindow');
+    const win = getCurrentWebviewWindow();
+    // @ts-expect-error: openDevtools exists in Tauri v2 but not typed yet
+    await win.openDevtools();
+    return;
+  } catch {
+    // Fallback to legacy/global bridge if available
+  }
+
+  const legacyWindowAPI = getTauriWindowAPI();
+  if (!legacyWindowAPI) {
+    throw new Error('Tauri window API unavailable');
+  }
+  await legacyWindowAPI.getCurrent().openDevtools();
+};
+
+const cleanupServiceWorkersForTauri = (): void => {
+  if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+    return;
+  }
+
+  if (!isTauriRuntime()) {
+    return;
+  }
+
+  if (!('serviceWorker' in navigator)) {
+    return;
+  }
+
+  // Best-effort cleanup (do not block boot)
+  void navigator.serviceWorker
+    .getRegistrations()
+    .then(async registrations => {
+      await Promise.all(registrations.map(r => r.unregister()));
+    })
+    .catch(() => {
+      // ignore
+    });
+
+  if (typeof caches !== 'undefined') {
+    void caches
+      .keys()
+      .then(keys => Promise.all(keys.map(key => caches.delete(key))))
+      .catch(() => {
+        // ignore
+      });
+  }
+};
+
+cleanupServiceWorkersForTauri();
+
+const scheduleBootWatchdog = (): void => {
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
+    return;
+  }
+
+  if (!isTauriRuntime()) {
+    return;
+  }
+
+  window.setTimeout(() => {
+    try {
+      const root = document.getElementById('root');
+      const childCount = root?.childElementCount ?? 0;
+
+      if (childCount > 0) {
+        return;
+      }
+
+      const w = window as typeof window & {
+        __TITANE_BOOT__?: { stage: string; timestamp: number };
+      };
+
+      showDebugOverlay('Boot Watchdog (React non monté)', {
+        now: new Date().toISOString(),
+        boot: w.__TITANE_BOOT__ ?? null,
+        isTauri: true,
+        location: typeof location !== 'undefined' ? String(location.href) : 'n/a',
+        userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'n/a',
+        root: {
+          exists: Boolean(root),
+          childCount,
+        },
+        uiLogs: getUILogsSnapshot(),
+        hint: 'Essaie F12 / Ctrl+Shift+I. Sinon Ctrl+Alt+D pour snapshot.',
+      });
+    } catch {
+      // never break boot
+    }
+  }, 4500);
+};
+
+scheduleBootWatchdog();
+
 // 🔧 DevTools keyboard shortcuts (F12 + Ctrl+Shift+I)
 if (typeof window !== 'undefined') {
-  const tauriWindowAPI = getTauriWindowAPI();
-
-  if (tauriWindowAPI) {
+  if (isTauriRuntime()) {
     window.addEventListener('keydown', (ev: KeyboardEvent) => {
       if (ev.key === 'F12' || (ev.ctrlKey && ev.shiftKey && ev.key === 'I')) {
         ev.preventDefault();
-        tauriWindowAPI
-          .getCurrent()
-          .openDevtools()
-          .catch((err: Error) => {
-            logger.error(
-              'Failed to open DevTools',
-              { component: 'DevTools' },
-              err as Error
-            );
-          });
+        void openDevtoolsSafe().catch((err: unknown) => {
+          logger.error(
+            'Failed to open DevTools',
+            { component: 'DevTools' },
+            err instanceof Error ? err : new Error(String(err))
+          );
+        });
       }
     });
-    console.log('🔧 DevTools shortcuts enabled: F12 or Ctrl+Shift+I');
   }
 }
 
@@ -224,7 +686,9 @@ if (import.meta.env.PROD) {
         if (typeof window !== 'undefined') {
           window.__TITANE_MONITORING__ = monitoring;
         }
-        console.log('      ✅ Monitoring: Ready (access via window.__TITANE_MONITORING__)');
+        console.log(
+          '      ✅ Monitoring: Ready (access via window.__TITANE_MONITORING__)'
+        );
       })
       .catch(err => {
         console.warn('      ⚠️ Monitoring initialization failed:', err);
@@ -493,7 +957,8 @@ try {
   console.log('╚════════════════════════════════════════════════════════════════╝\n');
 
   // ✨ P2-B: Register Service Worker for offline caching (-400ms repeat visit)
-  if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  // In Tauri, service workers can create persistent caching issues across builds.
+  if (!isTauriRuntime() && 'serviceWorker' in navigator && import.meta.env.PROD) {
     navigator.serviceWorker
       .register('/sw.js', { scope: '/' })
       .then(registration => {

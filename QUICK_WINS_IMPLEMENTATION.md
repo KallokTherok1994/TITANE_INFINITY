@@ -12,16 +12,18 @@
 
 **File Modified:** `src/main.tsx`
 **Changes:**
+
 - Integrated monitoring system initialization
 - DevTools console access configured (`window.__TITANE_MONITORING__`)
 - Dev mode: immediate init
 - Production mode: 2-second delay (non-blocking)
 
 **Usage:**
+
 ```javascript
 // In browser DevTools console
-window.__TITANE_MONITORING__.getMetrics()
-window.__TITANE_MONITORING__.exportMetrics()
+window.__TITANE_MONITORING__.getMetrics();
+window.__TITANE_MONITORING__.exportMetrics();
 ```
 
 **Status:** ✅ **READY FOR USE**
@@ -35,7 +37,9 @@ window.__TITANE_MONITORING__.exportMetrics()
 **Objective:** Enable error tracking in production
 
 **Steps:**
+
 1. **Get Sentry DSN** (15 min)
+
    ```bash
    # Visit https://sentry.io/
    # Create a new project (React)
@@ -43,6 +47,7 @@ window.__TITANE_MONITORING__.exportMetrics()
    ```
 
 2. **Configure Environment** (5 min)
+
    ```bash
    # Edit .env (NOT .env.example)
    echo "VITE_SENTRY_DSN=https://[YOUR_KEY]@[ORG_ID].ingest.sentry.io/[PROJECT_ID]" >> .env
@@ -50,29 +55,32 @@ window.__TITANE_MONITORING__.exportMetrics()
    ```
 
 3. **Test Integration** (10 min)
+
    ```bash
    # Build and verify Sentry is initialized
    npm run build
    npm run dev
-   
+
    # In DevTools console, test error capture:
    throw new Error("Test Sentry integration");
    # Check Sentry dashboard for the error
    ```
 
 4. **Verify Production** (30 min)
+
    ```bash
    # Build production bundle
    npm run build:production
-   
+
    # Launch Tauri app
    npm run dev:tauri
-   
+
    # Test error in production mode
    # Verify errors appear in Sentry dashboard
    ```
 
 **Expected Outcome:**
+
 - ✅ All JavaScript errors automatically sent to Sentry
 - ✅ Stack traces with source maps
 - ✅ User session data
@@ -87,17 +95,20 @@ window.__TITANE_MONITORING__.exportMetrics()
 **Objective:** Track Core Web Vitals metrics
 
 **Steps:**
+
 1. **Verify Installation** (5 min)
+
    ```bash
    # Check web-vitals is installed (DONE - v5.1.0)
    npm list web-vitals
    ```
 
 2. **Test Monitoring** (15 min)
+
    ```bash
    # Start dev server
    npm run dev
-   
+
    # Open browser DevTools console
    # You should see:
    # "[Monitoring] CLS: 0.002"
@@ -108,6 +119,7 @@ window.__TITANE_MONITORING__.exportMetrics()
    ```
 
 3. **Verify Metrics Collection** (30 min)
+
    ```javascript
    // In DevTools console
    const metrics = window.__TITANE_MONITORING__.getMetrics();
@@ -116,25 +128,26 @@ window.__TITANE_MONITORING__.exportMetrics()
      FID: metrics.FID,
      FCP: metrics.FCP,
      LCP: metrics.LCP,
-     TTFB: metrics.TTFB
+     TTFB: metrics.TTFB,
    });
    ```
 
 4. **Setup Dashboard** (1 hour)
+
    ```typescript
    // Create: src/pages/DevTools/MetricsDashboard.tsx
    import { monitoring } from '@/monitoring';
-   
+
    export function MetricsDashboard() {
      const [metrics, setMetrics] = useState(monitoring.getMetrics());
-     
+
      useEffect(() => {
        const interval = setInterval(() => {
          setMetrics(monitoring.getMetrics());
        }, 1000);
        return () => clearInterval(interval);
      }, []);
-     
+
      return (
        <div className="p-4">
          <h2>Performance Metrics</h2>
@@ -151,6 +164,7 @@ window.__TITANE_MONITORING__.exportMetrics()
    ```
 
 **Expected Outcome:**
+
 - ✅ Real-time Web Vitals tracking
 - ✅ Performance regression detection
 - ✅ Baseline metrics established
@@ -164,36 +178,39 @@ window.__TITANE_MONITORING__.exportMetrics()
 **Objective:** Track and alert on error rates >5%
 
 **Steps:**
+
 1. **Integrate Error Tracking** (1 hour)
+
    ```typescript
    // In src/components/ErrorBoundary.tsx (or similar)
    import { monitoring } from '@/monitoring';
-   
+
    componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
      // Track error
      monitoring.trackError(error);
-     
+
      // Existing error handling...
      this.setState({ hasError: true, error });
    }
    ```
 
 2. **Integrate with OMEGA Pipeline** (1 hour)
+
    ```typescript
    // In src/services/ai/omegaPipeline.ts (or equivalent)
    import { monitoring } from '@/monitoring';
-   
+
    export async function executeOMEGAPipeline(message: string) {
      const startTime = Date.now();
-     
+
      try {
        monitoring.trackRequest(); // Track request count
-       
+
        const result = await pipeline.execute(message);
-       
+
        const latency = Date.now() - startTime;
        monitoring.trackPipelineLatency(latency);
-       
+
        return result;
      } catch (error) {
        monitoring.trackError(error as Error);
@@ -204,14 +221,15 @@ window.__TITANE_MONITORING__.exportMetrics()
    ```
 
 3. **Setup Alerting** (30 min)
+
    ```typescript
    // Monitoring already has 5% error rate alerting built-in
    // Enhance with notification:
-   
+
    // In src/monitoring/index.ts, update alert() method:
    private alert(message: string, data: any): void {
      logger.error(`[ALERT] ${message}`, data);
-     
+
      // Send to external service (optional)
      if (window.Sentry) {
        window.Sentry.captureMessage(`[ALERT] ${message}`, {
@@ -219,17 +237,18 @@ window.__TITANE_MONITORING__.exportMetrics()
          extra: data,
        });
      }
-     
+
      // TODO: Add Slack/Discord webhook notification
      // TODO: Add browser notification
    }
    ```
 
 4. **Test Alerting** (30 min)
+
    ```bash
    # Start dev server
    npm run dev
-   
+
    # In DevTools console, simulate high error rate:
    for (let i = 0; i < 10; i++) {
      window.__TITANE_MONITORING__.trackRequest();
@@ -237,11 +256,12 @@ window.__TITANE_MONITORING__.exportMetrics()
        window.__TITANE_MONITORING__.trackError(new Error(`Test error ${i}`));
      }
    }
-   
+
    # Should see alert: "High error rate detected"
    ```
 
 **Expected Outcome:**
+
 - ✅ All errors tracked automatically
 - ✅ Error rate calculated in real-time
 - ✅ Alerts triggered at 5% threshold
@@ -258,6 +278,7 @@ window.__TITANE_MONITORING__.exportMetrics()
 **Monitoring Score:** 40 → 55 (+15 points)
 
 **Capabilities:**
+
 - ✅ Sentry active (error tracking + performance)
 - ✅ Web Vitals tracked (CLS, FID, FCP, LCP, TTFB)
 - ✅ Error rate monitored (>5% alerts)
@@ -265,6 +286,7 @@ window.__TITANE_MONITORING__.exportMetrics()
 - ✅ DevTools console access
 
 **Metrics Collected:**
+
 ```javascript
 {
   // Web Vitals
@@ -273,18 +295,18 @@ window.__TITANE_MONITORING__.exportMetrics()
   FCP: 543,
   LCP: 892,
   TTFB: 123,
-  
+
   // OMEGA Pipeline
   pipelineLatency: 147,
   pipelineErrors: 0,
-  
+
   // Errors
   errorCount: 2,
   errorRate: 0.002, // 0.2%
-  
+
   // Memory
   memoryUsage: 45678912, // bytes
-  
+
   timestamp: 1703027520000
 }
 ```
@@ -296,6 +318,7 @@ window.__TITANE_MONITORING__.exportMetrics()
 After Quick Wins, continue with:
 
 ### Day 2-3: Bundle Size Baseline
+
 ```bash
 # Measure current bundle size
 npm run build
@@ -309,12 +332,14 @@ npm run build -- --analyze
 ```
 
 ### Day 4-5: Performance Dashboard
+
 - Create MetricsDashboard component
 - Add route to DevTools section
 - Visualize metrics with charts
 - Add export functionality
 
 ### Day 6-7: CI/CD Bundle Size Reporting
+
 - Setup GitHub Action for bundle size
 - Add size-limit configuration
 - PR comments with size comparison
@@ -341,6 +366,7 @@ Before marking Quick Wins as complete:
 **Time Investment:** 6 hours  
 **Monitoring Improvement:** +15 points (40 → 55)  
 **Immediate Benefits:**
+
 - Error visibility: 0% → 100%
 - Performance tracking: 0% → 60%
 - Issue detection time: days → minutes

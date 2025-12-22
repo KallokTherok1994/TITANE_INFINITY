@@ -36,7 +36,9 @@ import { energyEngine } from './EnergyEngine';
 /**
  * Initialise tous les moteurs Time/Agenda en une seule fois
  */
-export async function initTimeAgendaSystem(storage?: AgendaStorageCallbacks): Promise<void> {
+export async function initTimeAgendaSystem(
+  storage?: AgendaStorageCallbacks
+): Promise<void> {
   console.log('[TimeAgendaSystem] 🚀 Initialisation du système...');
 
   // 1. TimeEngine (synchrone)

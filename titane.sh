@@ -58,6 +58,37 @@ log() {
     echo -e "$1" | tee -a "$LOG_FILE"
 }
 
+# Package-manager helpers (pnpm-first)
+pm_run() {
+    if [ -f "pnpm-lock.yaml" ]; then
+        if command -v pnpm &> /dev/null; then
+            pnpm run "$@"
+            return $?
+        fi
+        if command -v corepack &> /dev/null; then
+            corepack pnpm run "$@"
+            return $?
+        fi
+    fi
+
+    npm run "$@"
+}
+
+pm_exec() {
+    if [ -f "pnpm-lock.yaml" ]; then
+        if command -v pnpm &> /dev/null; then
+            pnpm exec "$@"
+            return $?
+        fi
+        if command -v corepack &> /dev/null; then
+            corepack pnpm exec "$@"
+            return $?
+        fi
+    fi
+
+    npx "$@"
+}
+
 # Print header
 print_header() {
     log "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
@@ -147,7 +178,7 @@ health_check() {
     
     # Check Git status
     print_section "Checking Git status..."
-    if [ -d ".git" ]; then
+    if command -v git &> /dev/null && git rev-parse --is-inside-work-tree &> /dev/null; then
         CURRENT_BRANCH=$(git branch --show-current)
         GIT_STATUS=$(git status --porcelain | wc -l)
         info "Current branch: $CURRENT_BRANCH"
@@ -240,7 +271,10 @@ repair() {
     
     print_section "Verifying Rust dependencies..."
     cd src-tauri
-    cargo check --quiet 2>/dev/null || cargo fetch
+    # NOTE: `cargo check` peut échouer ici car `clean` supprime `dist/` et Tauri
+    # vérifie `frontendDist` pendant `generate_context!()`. `cargo fetch` ne
+    # dépend pas du build frontend et suffit pour valider le cache deps.
+    cargo fetch
     cd "$PROJECT_ROOT"
     success "Rust dependencies verified"
     
@@ -257,15 +291,15 @@ fix() {
     cd "$PROJECT_ROOT"
     
     print_section "Running ESLint auto-fix..."
-    npm run lint:fix || warning "ESLint warnings found (non-critical)"
+    pm_run lint:fix || warning "ESLint warnings found (non-critical)"
     success "ESLint auto-fix completed"
     
     print_section "Running Prettier format..."
-    npm run format || warning "Prettier formatting issues"
+    pm_run format || warning "Prettier formatting issues"
     success "Prettier format completed"
     
     print_section "Running TypeScript type check..."
-    if npm run check; then
+    if pm_run check; then
         success "TypeScript check passed (0 errors)"
     else
         warning "TypeScript errors found - review logs"
@@ -293,7 +327,7 @@ build() {
     fi
     
     print_section "Running type check..."
-    if npm run check; then
+    if pm_run check; then
         success "Type check passed (0 errors)"
     else
         warning "TypeScript errors found (non-critical for Vite build)"
@@ -301,7 +335,7 @@ build() {
     fi
     
     print_section "Building frontend (Vite)..."
-    NODE_ENV=production npm run build
+    NODE_ENV=production pm_run build
     
     if [ ! -d "dist" ]; then
         error "Frontend build failed - dist/ not found"
@@ -311,10 +345,13 @@ build() {
     success "Frontend built successfully ($DIST_SIZE)"
     
     print_section "Building Tauri app ($mode)..."
+
+    # Workaround: ensure Cargo fingerprint dir exists after clean
+    mkdir -p src-tauri/target/release/.fingerprint
     
     if [ "$mode" = "stable" ]; then
         info "Using stable runtime configuration..."
-        npx tauri build --config runtime/stable/tauri.conf.json
+        pm_exec tauri build --config runtime/stable/tauri.conf.json
         
         # Copy to runtime/stable
         print_section "Copying build artifacts..."
@@ -327,9 +364,13 @@ build() {
             cp -r src-tauri/target/release/bundle/macos/*.app runtime/stable/ 2>/dev/null || true
             success "macOS app ready in runtime/stable/"
         fi
+
+        # postbuild (frontend) s'exécute avant le bundling Tauri; on met à jour
+        # le .desktop ici, une fois l'artefact stable disponible.
+        bash scripts/update-desktop-icon.sh || true
     else
         info "Using dev runtime configuration..."
-        npx tauri build --config runtime/dev/tauri.conf.json
+        pm_exec tauri build --config runtime/dev/tauri.conf.json
         success "Dev runtime built"
     fi
     
@@ -350,7 +391,7 @@ deploy() {
     
     # Type check
     info "Running type check..."
-    if npm run check; then
+    if pm_run check; then
         success "Type check passed"
     else
         warning "TypeScript errors found (non-critical - build will continue)"
@@ -358,11 +399,11 @@ deploy() {
     
     # Lint check
     info "Running lint check..."
-    npm run lint || warning "ESLint warnings (non-critical)"
+    pm_run lint || warning "ESLint warnings (non-critical)"
     
     # Tests
     info "Running tests..."
-    npm test -- --run --reporter=basic 2>/dev/null || warning "Some tests failed (non-critical)"
+    pm_run test -- --run --reporter=basic 2>/dev/null || warning "Some tests failed (non-critical)"
     
     success "Pre-deployment checks completed"
     
@@ -401,11 +442,15 @@ full() {
     log "  6. Deploy"
     log ""
     
-    read -p "Continue? (y/n): " -n 1 -r
-    echo ""
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        warning "Full deployment cancelled"
-        exit 0
+    if [[ "${TITANE_ASSUME_YES:-0}" == "1" || "${TITANE_BUILD_ASSUME_YES:-0}" == "1" ]]; then
+        info "TITANE_ASSUME_YES=1 → full non-interactif"
+    else
+        read -p "Continue? (y/n): " -n 1 -r
+        echo ""
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            warning "Full deployment cancelled"
+            exit 0
+        fi
     fi
     
     health_check

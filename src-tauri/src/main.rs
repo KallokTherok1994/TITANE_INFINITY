@@ -375,12 +375,71 @@ async fn send_message(
 }
 
 fn main() {
-    // Safe fallback for log directory if data_local_dir() fails
-    let log_dir = dirs::data_local_dir()
-        .unwrap_or_else(|| std::path::PathBuf::from("/tmp"))
-        .join("titane")
-        .join("logs");
-    std::fs::create_dir_all(&log_dir).ok();
+    fn resolve_log_dir() -> std::path::PathBuf {
+        if let Ok(custom) = std::env::var("TITANE_LOG_DIR") {
+            return std::path::PathBuf::from(custom);
+        }
+
+        if let Some(home) = dirs::home_dir() {
+            return home.join(".titane").join("logs");
+        }
+
+        dirs::data_local_dir()
+            .unwrap_or_else(|| std::path::PathBuf::from("/tmp"))
+            .join("titane")
+            .join("logs")
+    }
+
+    // Persistent logs (frontend debug without DevTools): ~/.titane/logs/titane.log
+    let log_dir = resolve_log_dir();
+    let _ = std::fs::create_dir_all(&log_dir);
+    let log_file_path = log_dir.join("titane.log");
+    let log_file = std::fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(&log_file_path);
+
+    // Best-effort logger init; never crash the app due to logging.
+    if let Ok(file) = log_file {
+        use std::io::Write;
+        use std::sync::Mutex;
+
+        struct TeeWriter {
+            file: Mutex<std::fs::File>,
+        }
+
+        impl Write for TeeWriter {
+            fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
+                if let Ok(mut f) = self.file.lock() {
+                    let _ = f.write_all(buf);
+                }
+                let _ = std::io::stderr().write_all(buf);
+                Ok(buf.len())
+            }
+
+            fn flush(&mut self) -> std::io::Result<()> {
+                if let Ok(mut f) = self.file.lock() {
+                    let _ = f.flush();
+                }
+                let _ = std::io::stderr().flush();
+                Ok(())
+            }
+        }
+
+        let _ = env_logger::Builder::from_env(
+            env_logger::Env::default().default_filter_or("info"),
+        )
+        .format_timestamp_millis()
+        .target(env_logger::Target::Pipe(Box::new(TeeWriter {
+            file: Mutex::new(file),
+        })))
+        .try_init();
+    } else {
+        eprintln!(
+            "[LOG] Failed to open log file at {}",
+            log_file_path.display()
+        );
+    }
 
     let security_manager = Arc::new(SecurityManager::new(log_dir.join("audit.log")));
 
@@ -590,6 +649,14 @@ fn main() {
             }
 
             Ok(())
+        })
+        .on_page_load(|window, payload| {
+            log::info!(
+                target: "ui",
+                "page_load label={} url={}",
+                window.label(),
+                payload.url()
+            );
         })
         .invoke_handler(tauri::generate_handler![
             // Frontend OS bridge compatibility

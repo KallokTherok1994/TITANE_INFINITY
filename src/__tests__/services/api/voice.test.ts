@@ -34,7 +34,9 @@ describe('voiceService', () => {
     const { voiceService } = await import('../../../services/api/voice');
 
     await expect(voiceService.startRecording()).resolves.toBe('rec-1');
-    await expect(voiceService.startRecording()).rejects.toThrow('Recording already in progress');
+    await expect(voiceService.startRecording()).rejects.toThrow(
+      'Recording already in progress'
+    );
     expect(invokeWithRetryMock).toHaveBeenCalledTimes(1);
   });
 
@@ -50,10 +52,11 @@ describe('voiceService', () => {
     expect(invokeWithRetryMock).not.toHaveBeenCalled();
   });
 
-  it('stopRecording() devrait reset l\'état même si stop_recording échoue', async () => {
+  it("stopRecording() devrait reset l'état même si stop_recording échoue", async () => {
     invokeWithRetryMock.mockImplementation((command: string) => {
       if (command === 'start_recording') return Promise.resolve('rec-1');
-      if (command === 'stop_recording') return Promise.reject(new Error('validation failed'));
+      if (command === 'stop_recording')
+        return Promise.reject(new Error('validation failed'));
       throw new Error(`unexpected command: ${command}`);
     });
 
@@ -81,7 +84,8 @@ describe('voiceService', () => {
   it('cancelRecording() devrait appeler cancel_recording si recording actif (et ne jamais throw)', async () => {
     invokeWithRetryMock.mockImplementation((command: string) => {
       if (command === 'start_recording') return Promise.resolve('rec-1');
-      if (command === 'cancel_recording') return Promise.reject(new Error('validation failed'));
+      if (command === 'cancel_recording')
+        return Promise.reject(new Error('validation failed'));
       throw new Error(`unexpected command: ${command}`);
     });
 
@@ -100,8 +104,10 @@ describe('voiceService', () => {
   it('getAudioState() devrait utiliser fallback si commandes indisponibles', async () => {
     invokeWithRetryMock.mockImplementation((command: string) => {
       if (command === 'start_recording') return Promise.resolve('rec-1');
-      if (command === 'is_speaking') return Promise.reject(new Error('validation failed'));
-      if (command === 'is_recording') return Promise.reject(new Error('validation failed'));
+      if (command === 'is_speaking')
+        return Promise.reject(new Error('validation failed'));
+      if (command === 'is_recording')
+        return Promise.reject(new Error('validation failed'));
       throw new Error(`unexpected command: ${command}`);
     });
 

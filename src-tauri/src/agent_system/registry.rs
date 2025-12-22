@@ -289,7 +289,12 @@ mod tests {
 
         let retrieved = registry.get(&agent.id).await;
         assert!(retrieved.is_some());
-        assert_eq!(retrieved.unwrap().name, "Test Agent");
+        assert_eq!(
+            retrieved
+                .expect("L'agent doit être récupérable après register")
+                .name,
+            "Test Agent"
+        );
     }
 
     #[tokio::test]

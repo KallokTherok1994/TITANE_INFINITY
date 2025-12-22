@@ -7,7 +7,7 @@
  * ═══════════════════════════════════════════════════════════════
  * TITANE∞ v26.2.0 - Monitoring Infrastructure with Sentry
  * Priority 1 (Week 1): Monitoring & Observability
- * 
+ *
  * Quick Win #1: Sentry integration for production error tracking
  * ═══════════════════════════════════════════════════════════════
  */
@@ -101,14 +101,16 @@ class MonitoringManager {
         dsn,
         environment: import.meta.env.VITE_SENTRY_ENVIRONMENT || 'production',
         release: `titane@${import.meta.env.VITE_APP_VERSION || 'unknown'}`,
-        
+
         // Performance Monitoring
-        tracesSampleRate: parseFloat(import.meta.env.VITE_SENTRY_TRACES_SAMPLE_RATE || '0.1'),
-        
+        tracesSampleRate: parseFloat(
+          import.meta.env.VITE_SENTRY_TRACES_SAMPLE_RATE || '0.1'
+        ),
+
         // Session Replay (optional) - Reduced error capture for privacy
         replaysSessionSampleRate: 0.1, // 10% of sessions
         replaysOnErrorSampleRate: 0.5, // 50% when errors occur (reduced from 100%)
-        
+
         integrations: [
           Sentry.browserTracingIntegration(),
           Sentry.replayIntegration({
@@ -143,35 +145,37 @@ class MonitoringManager {
     if (typeof window === 'undefined') return;
 
     // Lazy load web-vitals library
-    import('web-vitals').then(({ onCLS, onFCP, onINP, onLCP, onTTFB }) => {
-      onCLS((metric: Metric) => {
-        this.metrics.CLS = metric.value;
-        logger.debug('CLS:', metric.value);
-      });
+    import('web-vitals')
+      .then(({ onCLS, onFCP, onINP, onLCP, onTTFB }) => {
+        onCLS((metric: Metric) => {
+          this.metrics.CLS = metric.value;
+          logger.debug('CLS:', metric.value);
+        });
 
-      onINP((metric: Metric) => {
-        // INP remplace FID dans web-vitals v5+
-        (this.metrics as PerformanceMetrics & { INP?: number }).INP = metric.value;
-        logger.debug('INP:', metric.value);
-      });
+        onINP((metric: Metric) => {
+          // INP remplace FID dans web-vitals v5+
+          (this.metrics as PerformanceMetrics & { INP?: number }).INP = metric.value;
+          logger.debug('INP:', metric.value);
+        });
 
-      onFCP((metric: Metric) => {
-        this.metrics.FCP = metric.value;
-        logger.debug('FCP:', metric.value);
-      });
+        onFCP((metric: Metric) => {
+          this.metrics.FCP = metric.value;
+          logger.debug('FCP:', metric.value);
+        });
 
-      onLCP((metric: Metric) => {
-        this.metrics.LCP = metric.value;
-        logger.debug('LCP:', metric.value);
-      });
+        onLCP((metric: Metric) => {
+          this.metrics.LCP = metric.value;
+          logger.debug('LCP:', metric.value);
+        });
 
-      onTTFB((metric: Metric) => {
-        this.metrics.TTFB = metric.value;
-        logger.debug('TTFB:', metric.value);
+        onTTFB((metric: Metric) => {
+          this.metrics.TTFB = metric.value;
+          logger.debug('TTFB:', metric.value);
+        });
+      })
+      .catch(err => {
+        logger.warn('Failed to load web-vitals:', err);
       });
-    }).catch(err => {
-      logger.warn('Failed to load web-vitals:', err);
-    });
   }
 
   /**
@@ -180,11 +184,11 @@ class MonitoringManager {
   private initErrorTracking(): void {
     if (typeof window === 'undefined') return;
 
-    window.addEventListener('error', (event) => {
+    window.addEventListener('error', event => {
       this.trackError(event.error);
     });
 
-    window.addEventListener('unhandledrejection', (event) => {
+    window.addEventListener('unhandledrejection', event => {
       this.trackError(event.reason);
     });
   }
@@ -221,9 +225,16 @@ class MonitoringManager {
     this.metrics.errorCount = this.errorCount;
     this.metrics.errorRate = this.calculateErrorRate();
 
+    const errorMessage =
+      error && typeof error === 'object' && 'message' in error
+        ? String(error.message)
+        : String(error);
+    const errorStack =
+      error && typeof error === 'object' && 'stack' in error ? String(error.stack) : undefined;
+
     logger.error('Error tracked', {
-      message: error?.message || String(error),
-      stack: error?.stack,
+      message: errorMessage,
+      stack: errorStack,
       errorRate: `${(this.metrics.errorRate * 100).toFixed(2)}%`,
       context,
     });
@@ -367,7 +378,7 @@ export default monitoring;
  * ## Initialize in main.tsx
  * ```typescript
  * import { initMonitoring } from '@/monitoring';
- * 
+ *
  * // After React initialization
  * initMonitoring();
  * ```
@@ -375,7 +386,7 @@ export default monitoring;
  * ## Track errors manually
  * ```typescript
  * import { monitoring } from '@/monitoring';
- * 
+ *
  * try {
  *   riskyOperation();
  * } catch (error) {
@@ -395,7 +406,7 @@ export default monitoring;
  * ```typescript
  * const metrics = monitoring.getMetrics();
  * console.log('Performance Metrics:', metrics);
- * 
+ *
  * // Or export to file
  * const json = monitoring.exportMetrics();
  * download('metrics.json', json);
@@ -405,10 +416,10 @@ export default monitoring;
  * ```javascript
  * // In browser console
  * window.__TITANE_MONITORING__ = monitoring;
- * 
+ *
  * // View metrics
  * window.__TITANE_MONITORING__.getMetrics()
- * 
+ *
  * // Export metrics
  * window.__TITANE_MONITORING__.exportMetrics()
  * ```

@@ -1,6 +1,7 @@
 # GitHub Copilot Agent Skills
 
 **IP / Attribution**
+
 - Creator: Kevin Thibault (TITANE∞)
 - Generated/maintained with GitHub Copilot
 - Licensing: governed by repository LICENSE.md
@@ -15,6 +16,7 @@ This directory contains reusable Agent Skills for GitHub Copilot. Skills are por
 **Purpose:** Validate code changes against the TITANE∞ 4-Ring architecture model.
 
 **Usage:**
+
 ```bash
 @copilot use skill architecture-check
 ```
@@ -22,6 +24,7 @@ This directory contains reusable Agent Skills for GitHub Copilot. Skills are por
 ## Creating New Skills
 
 Each skill should be in its own directory with:
+
 - `instructions.md` - Skill instructions
 - `scripts/` - Optional automation scripts
 - `examples/` - Usage examples

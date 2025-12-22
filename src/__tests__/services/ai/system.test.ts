@@ -6,16 +6,22 @@ const mocks = vi.hoisted(() => {
 
     startMonitoring: vi.fn<() => void>(),
     getHealthReport: vi.fn<
-      () => Promise<{ overall: 'healthy' | 'degraded' | 'critical'; score: number; alerts: unknown[] }>
+      () => Promise<{
+        overall: 'healthy' | 'degraded' | 'critical';
+        score: number;
+        alerts: unknown[];
+      }>
     >(),
     clearAllAlerts: vi.fn<() => void>(),
 
-    getAggregatedMetrics: vi.fn<() => {
-      totalRequests: number;
-      successRate: number;
-      avgResponseTime: number;
-      providers: Array<unknown>;
-    }>(),
+    getAggregatedMetrics: vi.fn<
+      () => {
+        totalRequests: number;
+        successRate: number;
+        avgResponseTime: number;
+        providers: Array<unknown>;
+      }
+    >(),
   };
 });
 
@@ -116,7 +122,11 @@ describe('services/ai/system', () => {
   });
 
   it('quickHealthCheck: message healthy', async () => {
-    mocks.getHealthReport.mockResolvedValue({ overall: 'healthy', score: 92, alerts: [] });
+    mocks.getHealthReport.mockResolvedValue({
+      overall: 'healthy',
+      score: 92,
+      alerts: [],
+    });
 
     const { quickHealthCheck } = await import('../../../services/ai/system');
 
@@ -128,7 +138,11 @@ describe('services/ai/system', () => {
   });
 
   it('quickHealthCheck: message degraded', async () => {
-    mocks.getHealthReport.mockResolvedValue({ overall: 'degraded', score: 70, alerts: [1, 2] });
+    mocks.getHealthReport.mockResolvedValue({
+      overall: 'degraded',
+      score: 70,
+      alerts: [1, 2],
+    });
 
     const { quickHealthCheck } = await import('../../../services/ai/system');
 
@@ -140,7 +154,11 @@ describe('services/ai/system', () => {
   });
 
   it('quickHealthCheck: message critical', async () => {
-    mocks.getHealthReport.mockResolvedValue({ overall: 'critical', score: 12, alerts: [1] });
+    mocks.getHealthReport.mockResolvedValue({
+      overall: 'critical',
+      score: 12,
+      alerts: [1],
+    });
 
     const { quickHealthCheck } = await import('../../../services/ai/system');
 

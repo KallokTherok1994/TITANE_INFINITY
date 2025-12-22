@@ -48,12 +48,7 @@ if (hasPackageLock) {
 }
 
 if (hasPnpmLock) {
-  const pnpmResult = runOrFallback(
-    'pnpm',
-    ['audit'],
-    'corepack',
-    ['pnpm', 'audit']
-  );
+  const pnpmResult = runOrFallback('pnpm', ['audit'], 'corepack', ['pnpm', 'audit']);
 
   if (!pnpmResult.ok) {
     console.warn(

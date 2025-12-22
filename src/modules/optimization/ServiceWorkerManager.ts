@@ -341,16 +341,53 @@ export class ServiceWorkerManager {
 
 export const serviceWorkerManager = ServiceWorkerManager.getInstance();
 
+const isTauriRuntime = (): boolean => {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  const candidate = window as Window & {
+    __TAURI__?: unknown;
+    __TAURI_INTERNALS__?: unknown;
+  };
+
+  return Boolean(candidate.__TAURI__ || candidate.__TAURI_INTERNALS__);
+};
+
 // Auto-register if in browser
 if (
   typeof window !== 'undefined' &&
   typeof navigator !== 'undefined' &&
   'serviceWorker' in navigator
 ) {
-  // Register after page load
-  window.addEventListener('load', () => {
-    serviceWorkerManager.register().catch(error => {
-      console.error('[ServiceWorkerManager] Auto-registration failed:', error);
+  // In Tauri, service workers can create persistent caching issues across builds.
+  // We explicitly disable them and try to unregister if anything was registered.
+  if (isTauriRuntime()) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker
+        .getRegistrations()
+        .then(async registrations => {
+          await Promise.all(registrations.map(r => r.unregister()));
+        })
+        .catch(error => {
+          console.warn('[ServiceWorkerManager] Unregister in Tauri failed:', error);
+        });
+
+      if (typeof caches !== 'undefined') {
+        caches
+          .keys()
+          .then(keys => Promise.all(keys.map(key => caches.delete(key))))
+          .catch(error => {
+            console.warn('[ServiceWorkerManager] Cache cleanup in Tauri failed:', error);
+          });
+      }
     });
-  });
+  } else {
+    // Register after page load
+    window.addEventListener('load', () => {
+      serviceWorkerManager.register().catch(error => {
+        console.error('[ServiceWorkerManager] Auto-registration failed:', error);
+      });
+    });
+  }
 }

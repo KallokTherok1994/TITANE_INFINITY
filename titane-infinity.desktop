@@ -1,7 +1,7 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=TITANE∞ v24.3.0
+Name=TITANE∞ v26.2.0
 Comment=🏛️ Cognitive OS - Multi-Provider AI - Production Perfect
 Exec=/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity
 Icon=/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/icons/128x128.png
