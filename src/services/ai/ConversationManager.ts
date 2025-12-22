@@ -317,7 +317,9 @@ export class ConversationManager {
     }
 
     try {
-      const lastUserMessage = [...request.messages].reverse().find(m => m.role === 'user');
+      const lastUserMessage = [...request.messages]
+        .reverse()
+        .find(m => m.role === 'user');
       const prompt = lastUserMessage?.content ?? '';
       const systemPrompt = request.messages
         .filter(m => m.role === 'system')
@@ -330,7 +332,8 @@ export class ConversationManager {
           conversationId,
           mode: 'default',
           provider: config.backendProvider,
-          systemPrompt: systemPrompt.length > 0 ? systemPrompt : request.config.systemPrompt,
+          systemPrompt:
+            systemPrompt.length > 0 ? systemPrompt : request.config.systemPrompt,
         });
 
         return {
@@ -380,31 +383,43 @@ export class ConversationManager {
   }
 
   // Legacy aliases for backwards compatibility (redirect to unified invokeProvider)
-  private async invokeLocalLLM(request: {
-    messages: ConversationMessage[];
-    config: ConversationConfig;
-  }, conversationId: string): Promise<ConversationResponse> {
+  private async invokeLocalLLM(
+    request: {
+      messages: ConversationMessage[];
+      config: ConversationConfig;
+    },
+    conversationId: string
+  ): Promise<ConversationResponse> {
     return this.invokeProvider('local', request, conversationId);
   }
 
-  private async invokeOpenAI(request: {
-    messages: ConversationMessage[];
-    config: ConversationConfig;
-  }, conversationId: string): Promise<ConversationResponse> {
+  private async invokeOpenAI(
+    request: {
+      messages: ConversationMessage[];
+      config: ConversationConfig;
+    },
+    conversationId: string
+  ): Promise<ConversationResponse> {
     return this.invokeProvider('openai', request, conversationId);
   }
 
-  private async invokeGemini(request: {
-    messages: ConversationMessage[];
-    config: ConversationConfig;
-  }, conversationId: string): Promise<ConversationResponse> {
+  private async invokeGemini(
+    request: {
+      messages: ConversationMessage[];
+      config: ConversationConfig;
+    },
+    conversationId: string
+  ): Promise<ConversationResponse> {
     return this.invokeProvider('gemini', request, conversationId);
   }
 
-  private async invokeAnthropic(request: {
-    messages: ConversationMessage[];
-    config: ConversationConfig;
-  }, conversationId: string): Promise<ConversationResponse> {
+  private async invokeAnthropic(
+    request: {
+      messages: ConversationMessage[];
+      config: ConversationConfig;
+    },
+    conversationId: string
+  ): Promise<ConversationResponse> {
     return this.invokeProvider('anthropic', request, conversationId);
   }
 
