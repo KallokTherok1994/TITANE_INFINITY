@@ -131,7 +131,10 @@ check_tests_gate() {
     
     cd "$PROJECT_ROOT"
     
-    if timeout 120 pnpm vitest run --reporter=basic 2>&1 | tail -5 | grep -q "passed"; then
+    # Configurable timeout for test execution (default: 120 seconds)
+    local TEST_TIMEOUT=${TEST_TIMEOUT:-120}
+    
+    if timeout "$TEST_TIMEOUT" pnpm vitest run --reporter=basic 2>&1 | tail -5 | grep -q "passed"; then
         gate_pass "Unit Tests"
     else
         gate_fail "Unit Tests" "Some tests failed"

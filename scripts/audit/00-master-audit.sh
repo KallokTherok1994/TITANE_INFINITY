@@ -30,6 +30,10 @@ TOTAL_PASSED=0
 TOTAL_WARNINGS=0
 TOTAL_ERRORS=0
 
+# Score extraction regex pattern
+# Expected format: "Score: XX" where XX is a number
+SCORE_REGEX='Score:\s*\K[0-9]+'
+
 # Audit configuration
 AUDITS=(
     "01-security-audit.sh:Security:25"
@@ -74,8 +78,8 @@ run_audit() {
         local duration=$((end_time - start_time))
         echo -e "${GREEN}✓ ${name} completed in ${duration}s${NC}"
         
-        # Extract score from log if available
-        local score=$(grep -oP 'Score:\s*\K[0-9]+' "$audit_log" 2>/dev/null | tail -1 || echo "0")
+        # Extract score from log using defined pattern
+        local score=$(grep -oP "$SCORE_REGEX" "$audit_log" 2>/dev/null | tail -1 || echo "0")
         if [[ -z "$score" || "$score" == "0" ]]; then
             # Default to 100 if completed successfully without score
             score=100
