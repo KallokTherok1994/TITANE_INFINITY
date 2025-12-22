@@ -481,6 +481,76 @@ The stable runtime uses minimal permissions:
 
 ## Verification & Audit
 
+### Audit System Overview
+
+TITANE∞ includes a comprehensive audit system with specialized scripts for each quality domain:
+
+| Script | Purpose | Score Weight |
+|--------|---------|--------------|
+| `00-master-audit.sh` | Orchestrates all audits | N/A |
+| `01-security-audit.sh` | Security vulnerabilities | 25% |
+| `02-architecture-audit.sh` | Code architecture | 20% |
+| `03-performance-measure.sh` | Performance metrics | 15% |
+| `04-test-coverage.sh` | Test coverage | 20% |
+| `05-deployment-audit.sh` | Deployment configs | 20% |
+| `06-auto-fix.sh` | Automated corrections | N/A |
+| `07-quality-gates.sh` | Pre-deploy validation | N/A |
+
+### Run Master Audit
+
+```bash
+# Complete system audit with weighted scoring
+pnpm run audit:master
+
+# Or directly:
+./scripts/audit/00-master-audit.sh
+```
+
+**Output:** Generates comprehensive report in `reports/master-audit-YYYYMMDD-HHMMSS/`
+
+### Run Individual Audits
+
+```bash
+# Security audit
+pnpm run audit:security
+
+# Architecture audit
+pnpm run audit:architecture
+
+# Deployment audit
+pnpm run audit:deployment
+```
+
+### Run Auto-Fix
+
+```bash
+# Run all automatic fixes
+pnpm run audit:auto-fix
+
+# Selective fixes
+./scripts/audit/06-auto-fix.sh --lint      # ESLint only
+./scripts/audit/06-auto-fix.sh --format    # Prettier only
+./scripts/audit/06-auto-fix.sh --perms     # Permissions only
+```
+
+### Quality Gates Validation
+
+```bash
+# Validate all quality gates before deployment
+pnpm run audit:quality-gates
+
+# Quality gates check:
+# - Build configuration
+# - Tauri configuration
+# - Runtime configurations
+# - Deployment scripts
+# - CI/CD workflows
+# - Documentation
+# - TypeScript compilation
+# - Code linting
+# - Security
+```
+
 ### Run Deployment Audit
 
 ```bash
