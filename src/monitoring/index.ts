@@ -202,7 +202,9 @@ class MonitoringManager {
 
     // Track memory every 30 seconds
     setInterval(() => {
-      const memory = (performance as { memory?: { usedJSHeapSize: number; jsHeapSizeLimit: number } }).memory;
+      const memory = (
+        performance as { memory?: { usedJSHeapSize: number; jsHeapSizeLimit: number } }
+      ).memory;
       if (memory) {
         this.metrics.memoryUsage = memory.usedJSHeapSize;
 
@@ -230,7 +232,9 @@ class MonitoringManager {
         ? String(error.message)
         : String(error);
     const errorStack =
-      error && typeof error === 'object' && 'stack' in error ? String(error.stack) : undefined;
+      error && typeof error === 'object' && 'stack' in error
+        ? String(error.stack)
+        : undefined;
 
     logger.error('Error tracked', {
       message: errorMessage,

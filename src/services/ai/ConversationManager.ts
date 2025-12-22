@@ -22,6 +22,7 @@
 import { secureInvoke } from '@/lib/security';
 import { emit } from '@tauri-apps/api/event';
 import { logger } from '@/lib/logger';
+import chatEngineCommands from '@/services/tauri/chatEngine.commands';
 import type {
   ConversationMessage,
   ConversationResponse,
@@ -230,19 +231,19 @@ export class ConversationManager {
     try {
       if (preferredProvider === 'local' || preferredProvider === 'ollama') {
         // Use local LLM via Tauri backend
-        return await this.invokeLocalLLM(request);
+        return await this.invokeLocalLLM(request, context.conversationId);
       }
 
       if (preferredProvider === 'openai') {
-        return await this.invokeOpenAI(request);
+        return await this.invokeOpenAI(request, context.conversationId);
       }
 
       if (preferredProvider === 'gemini') {
-        return await this.invokeGemini(request);
+        return await this.invokeGemini(request, context.conversationId);
       }
 
       if (preferredProvider === 'anthropic') {
-        return await this.invokeAnthropic(request);
+        return await this.invokeAnthropic(request, context.conversationId);
       }
 
       // Auto mode: fallback chain (local → OpenAI → Gemini → Anthropic)
@@ -253,7 +254,7 @@ export class ConversationManager {
 
         for (const provider of cascadeProviders) {
           try {
-            return await this.invokeProvider(provider, request);
+            return await this.invokeProvider(provider, request, context.conversationId);
           } catch (error) {
             logger.warn(`Provider ${provider} failed, trying next`, {
               component: 'ConversationManager',
@@ -307,7 +308,8 @@ export class ConversationManager {
 
   private async invokeProvider(
     providerName: string,
-    request: { messages: ConversationMessage[]; config: ConversationConfig }
+    request: { messages: ConversationMessage[]; config: ConversationConfig },
+    conversationId: string
   ): Promise<ConversationResponse> {
     const config = ConversationManager.PROVIDER_CONFIG[providerName];
     if (!config) {
@@ -315,26 +317,61 @@ export class ConversationManager {
     }
 
     try {
-      const result = await secureInvoke<{
-        content: string;
-        model: string;
-        tokens_used: number;
-      }>('chat_send_message', {
-        prompt: request.messages[request.messages.length - 1]?.content ?? '',
-        provider: config.backendProvider,
-        streaming: request.config.enableStreaming || false,
-      });
+      const lastUserMessage = [...request.messages]
+        .reverse()
+        .find(m => m.role === 'user');
+      const prompt = lastUserMessage?.content ?? '';
+      const systemPrompt = request.messages
+        .filter(m => m.role === 'system')
+        .map(m => m.content)
+        .join('\n\n');
 
-      return {
-        content: result.content,
-        role: 'assistant',
-        timestamp: Date.now(),
-        metadata: {
-          model: result.model || config.defaultModel,
-          tokensUsed: result.tokens_used || 0,
+      try {
+        const omegaResponse = await chatEngineCommands.generate({
+          message: prompt,
+          conversationId,
+          mode: 'default',
+          provider: config.backendProvider,
+          systemPrompt:
+            systemPrompt.length > 0 ? systemPrompt : request.config.systemPrompt,
+        });
+
+        return {
+          content: omegaResponse.content,
+          role: 'assistant',
+          timestamp: Date.now(),
+          metadata: {
+            model: config.defaultModel,
+            provider: providerName,
+          },
+        };
+      } catch (omegaError) {
+        logger.warn('OMEGA v2 call failed, falling back to legacy chat_send_message', {
+          component: 'ConversationManager',
           provider: providerName,
-        },
-      };
+        });
+
+        const result = await secureInvoke<{
+          content: string;
+          model: string;
+          tokens_used: number;
+        }>('chat_send_message', {
+          prompt,
+          provider: config.backendProvider,
+          streaming: request.config.enableStreaming || false,
+        });
+
+        return {
+          content: result.content,
+          role: 'assistant',
+          timestamp: Date.now(),
+          metadata: {
+            model: result.model || config.defaultModel,
+            tokensUsed: result.tokens_used || 0,
+            provider: providerName,
+          },
+        };
+      }
     } catch (error) {
       logger.error(
         `Provider ${providerName} invocation failed`,
@@ -346,32 +383,44 @@ export class ConversationManager {
   }
 
   // Legacy aliases for backwards compatibility (redirect to unified invokeProvider)
-  private async invokeLocalLLM(request: {
-    messages: ConversationMessage[];
-    config: ConversationConfig;
-  }): Promise<ConversationResponse> {
-    return this.invokeProvider('local', request);
+  private async invokeLocalLLM(
+    request: {
+      messages: ConversationMessage[];
+      config: ConversationConfig;
+    },
+    conversationId: string
+  ): Promise<ConversationResponse> {
+    return this.invokeProvider('local', request, conversationId);
   }
 
-  private async invokeOpenAI(request: {
-    messages: ConversationMessage[];
-    config: ConversationConfig;
-  }): Promise<ConversationResponse> {
-    return this.invokeProvider('openai', request);
+  private async invokeOpenAI(
+    request: {
+      messages: ConversationMessage[];
+      config: ConversationConfig;
+    },
+    conversationId: string
+  ): Promise<ConversationResponse> {
+    return this.invokeProvider('openai', request, conversationId);
   }
 
-  private async invokeGemini(request: {
-    messages: ConversationMessage[];
-    config: ConversationConfig;
-  }): Promise<ConversationResponse> {
-    return this.invokeProvider('gemini', request);
+  private async invokeGemini(
+    request: {
+      messages: ConversationMessage[];
+      config: ConversationConfig;
+    },
+    conversationId: string
+  ): Promise<ConversationResponse> {
+    return this.invokeProvider('gemini', request, conversationId);
   }
 
-  private async invokeAnthropic(request: {
-    messages: ConversationMessage[];
-    config: ConversationConfig;
-  }): Promise<ConversationResponse> {
-    return this.invokeProvider('anthropic', request);
+  private async invokeAnthropic(
+    request: {
+      messages: ConversationMessage[];
+      config: ConversationConfig;
+    },
+    conversationId: string
+  ): Promise<ConversationResponse> {
+    return this.invokeProvider('anthropic', request, conversationId);
   }
 
   /**
@@ -387,13 +436,14 @@ export class ConversationManager {
 
       // Store each message as memory entry
       for (const message of context.messages) {
+        const content = typeof message.content === 'string' ? message.content : '';
         const importance = message.role === 'user' ? 0.7 : 0.6; // User messages slightly more important
 
         await unifiedMemory.createMemory({
           type: 'conversation',
           owner: conversationId,
-          summary: message.content.substring(0, 200), // First 200 chars
-          details: message.content,
+          summary: content.substring(0, 200), // First 200 chars
+          details: content,
           tags: ['conversation', conversationId, message.role],
           importance,
           tier: MemoryTier.MEDIUM_TERM, // Conversations go to Medium-Term Memory

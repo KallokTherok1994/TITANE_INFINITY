@@ -5,10 +5,10 @@
 
 echo "🔧 Pre-commit TITANE_INFINITY lancé..."
 
-npm exec lint-staged || {
+node ./node_modules/.bin/lint-staged || {
   echo "❌ Erreur lint-staged"
   exit 1
 }
 
 # COPILOT-XS gate
-npm run copilot-xs:precommit
+node ./.github/copilot-xs/scripts/precommit.js

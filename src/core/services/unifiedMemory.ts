@@ -130,9 +130,21 @@ class UnifiedMemorySystem {
   private chatEngineScopeId = 0;
   private chatEnginePreviousScopeId: number | null = null;
 
+  private autoCleanupStartAttempted = false; // Lazy init flag
+
   constructor() {
-    this.startAutoCleanup();
-    isDev && console.log('[UnifiedMemory] Initialized (STM/MTM/LTM)');
+    // Lazy auto-cleanup start
+    console.log('[UnifiedMemory] Initialized (STM/MTM/LTM)');
+  }
+
+  private ensureAutoCleanupStarted(): void {
+    if (this.cleanupTimer || this.autoCleanupStartAttempted) return;
+    this.autoCleanupStartAttempted = true;
+    try {
+      this.startAutoCleanup();
+    } catch (error) {
+      console.warn('[UnifiedMemory] Failed to start auto-cleanup:', error);
+    }
   }
 
   /**
