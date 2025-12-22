@@ -26,9 +26,15 @@ if [[ $CURRENT_BRANCH != "stable-runtime" ]]; then
     if [[ "${TITANE_BUILD_ASSUME_YES:-0}" == "1" ]]; then
         echo "✅ TITANE_BUILD_ASSUME_YES=1 → continue non-interactif"
     else
-        read -p "❓ Continue anyway? (y/n): " -n 1 -r
-        echo ""
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        REPLY=""
+        if [[ -t 0 ]]; then
+            read -r -p "❓ Continue anyway? (y/n) [y]: " REPLY
+        else
+            REPLY="y"
+        fi
+        if [[ -z "$REPLY" || $REPLY =~ ^[Yy]$ ]]; then
+            :
+        else
             echo "❌ Build cancelled"
             exit 1
         fi

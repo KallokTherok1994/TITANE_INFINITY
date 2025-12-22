@@ -554,7 +554,9 @@ const openDevtoolsSafe = async (): Promise<void> => {
   // Preferred path for Tauri v2
   try {
     const { getCurrentWebviewWindow } = await import('@tauri-apps/api/webviewWindow');
-    await getCurrentWebviewWindow().openDevtools();
+    const win = getCurrentWebviewWindow();
+    // @ts-expect-error: openDevtools exists in Tauri v2 but not typed yet
+    await win.openDevtools();
     return;
   } catch {
     // Fallback to legacy/global bridge if available

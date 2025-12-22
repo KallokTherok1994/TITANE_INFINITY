@@ -225,9 +225,16 @@ class MonitoringManager {
     this.metrics.errorCount = this.errorCount;
     this.metrics.errorRate = this.calculateErrorRate();
 
+    const errorMessage =
+      error && typeof error === 'object' && 'message' in error
+        ? String(error.message)
+        : String(error);
+    const errorStack =
+      error && typeof error === 'object' && 'stack' in error ? String(error.stack) : undefined;
+
     logger.error('Error tracked', {
-      message: error?.message || String(error),
-      stack: error?.stack,
+      message: errorMessage,
+      stack: errorStack,
       errorRate: `${(this.metrics.errorRate * 100).toFixed(2)}%`,
       context,
     });
