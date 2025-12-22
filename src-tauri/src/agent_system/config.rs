@@ -101,11 +101,8 @@ impl AgentSystemConfig {
             max_agents: 500,
             max_concurrent_tasks: 200,
             max_collaborations: 50,
-<<<<<<< HEAD
             default_task_timeout_ms: 90000, // ✨ v26.2.1: Reduced from 120s to 90s (cloud-optimized)
-=======
             default_task_timeout_ms: 90000, // ✨ v26.2.1: Increased from 120s to 90s (cloud-optimized)
->>>>>>> d98d6feb7752d2ea20acbe7a28a3b808dfa86847
             collaboration_timeout_ms: 600000,
             supervision_config: SupervisionConfig {
                 max_retries: 5,
