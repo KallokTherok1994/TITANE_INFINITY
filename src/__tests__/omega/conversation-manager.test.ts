@@ -22,13 +22,15 @@ vi.mock('@/lib/security', async importOriginal => {
     ...actual,
     secureInvoke: vi.fn((cmd: string, args?: any) => {
       if (cmd === 'vector_store_init') return Promise.resolve('test-store-omega');
-      if (cmd === 'vector_store_search') return Promise.resolve({ results: [], count: 0, total: 0 });
+      if (cmd === 'vector_store_search')
+        return Promise.resolve({ results: [], count: 0, total: 0 });
       if (cmd === 'vector_search') return Promise.resolve([]);
       if (cmd === 'vector_store_insert') {
         return Promise.resolve({ success: true, id: `vec-${Date.now()}` });
       }
       if (cmd === 'conversation_generate') {
-        const conversationId = args?.conversation_id ?? args?.conversationId ?? 'test-conversation';
+        const conversationId =
+          args?.conversation_id ?? args?.conversationId ?? 'test-conversation';
         return Promise.resolve({
           content: `Mock omega response: ${args?.message ?? 'test'}`,
           conversationId,

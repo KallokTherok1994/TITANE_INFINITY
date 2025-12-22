@@ -6,7 +6,9 @@
 import React, { useMemo, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { safeInvoke } from '@/utils/invoke';
-import chatEngineCommands, { type OmegaResponse } from '@/services/tauri/chatEngine.commands';
+import chatEngineCommands, {
+  type OmegaResponse,
+} from '@/services/tauri/chatEngine.commands';
 import { getGeminiKeyStatus, hasSecureData } from '@/utils/secureSecrets';
 import type { GeminiKeyStatus, SecureResponse } from '@/utils/secureSecrets';
 import { isTauriRuntimeAvailable, tauriProtector } from '@/utils/tauriProtector';
@@ -211,7 +213,10 @@ const diagnosticTests: DiagnosticTest[] = [
     description: 'Teste la réponse locale directe du moteur Chat (provider "local").',
     group: 'core',
     run: () =>
-      safeOmegaGenerate({ message: 'Diagnostic TITANE∞ — boucle locale', provider: 'local' }),
+      safeOmegaGenerate({
+        message: 'Diagnostic TITANE∞ — boucle locale',
+        provider: 'local',
+      }),
     successMessage: 'Réponse locale reçue.',
     fallbackMessage: 'Fallback local sans backend Tauri actif.',
     transformData: trimData,
@@ -223,7 +228,10 @@ const diagnosticTests: DiagnosticTest[] = [
       "Vérifie la capacité du moteur à sélectionner automatiquement l'orchestrateur optimal.",
     group: 'core',
     run: () =>
-      safeOmegaGenerate({ message: 'Diagnostic TITANE∞ — auto cascade', provider: 'auto' }),
+      safeOmegaGenerate({
+        message: 'Diagnostic TITANE∞ — auto cascade',
+        provider: 'auto',
+      }),
     successMessage: 'Cascade automatique opérationnelle.',
     fallbackMessage: 'Mode automatique indisponible — fallback activé.',
     transformData: trimData,
