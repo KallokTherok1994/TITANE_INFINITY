@@ -185,6 +185,8 @@ TITANE∞ n'est **PAS** une simple application de chat IA. C'est un **OS cogniti
 
 ### 📊 Statistiques Projet
 
+> **Note**: Ces statistiques sont approximatives et reflètent l'état du projet au 22 décembre 2025.
+
 ```yaml
 Version: v26.3.0
 Lignes de code: ~150,000+
