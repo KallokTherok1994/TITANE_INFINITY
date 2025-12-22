@@ -47,6 +47,14 @@ Double-cliquez sur le fichier téléchargé et suivez les instructions.
 
 ## 📚 Documentation
 
+### 🌟 Documentation Complète (NOUVEAU)
+
+- **[📚 DOCUMENTATION UTILISATEUR COMPLÈTE FINALE](./DOCUMENTATION_UTILISATEUR_COMPLETE_FINALE.md)** : Guide final illustré et exhaustif (50 sections, 1400+ lignes)
+  - 9 parties principales couvrant tous les aspects de TITANE∞
+  - 25+ diagrammes ASCII illustrés
+  - 100+ exemples pratiques
+  - FAQ et dépannage complets
+
 ### Pour les Utilisateurs
 
 - **[Installation](./installation.md)** : Guide d'installation détaillé
