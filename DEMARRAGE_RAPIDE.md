@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # 🚀 Guide de démarrage rapide — TITANE_INFINITY
 
 **Version :** 26.2.0  
@@ -73,7 +72,6 @@ Solution :
 
 ```bash
 pnpm install
-=======
 # 🚀 Guide de Démarrage Rapide TITANE_INFINITY
 
 **Version:** 26.2.0  
@@ -238,12 +236,10 @@ pnpm run build
 
 # 4. Tests
 pnpm run test:all
->>>>>>> d98d6feb7752d2ea20acbe7a28a3b808dfa86847
 ```
 
 ---
 
-<<<<<<< HEAD
 ## 🛠️ Script utilitaire
 
 Le repo fournit aussi :
@@ -253,7 +249,6 @@ Le repo fournit aussi :
 ```
 
 (utile si l’environnement Node/Rust ou les dépendances sont dans un état incohérent)
-=======
 ## 🔧 Prérequis Système
 
 ### Node.js
@@ -332,4 +327,3 @@ pnpm run test
 **Créé par:** GitHub Copilot Coding Agent  
 **Date:** 2025-12-21  
 **Version TITANE:** 26.2.0
->>>>>>> d98d6feb7752d2ea20acbe7a28a3b808dfa86847

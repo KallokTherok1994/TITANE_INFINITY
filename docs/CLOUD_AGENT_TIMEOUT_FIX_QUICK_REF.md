@@ -4,12 +4,9 @@
 
 **Status**: ✅ RESOLVED  
 **Version**: v26.2.1  
-<<<<<<< HEAD
 **Last Updated**: 2025-12-21
-=======
 **Date**: 2025-12-22  
 **Commits**: 2 (f296a90, 9edc847)
->>>>>>> d98d6feb7752d2ea20acbe7a28a3b808dfa86847
 
 ---
 
@@ -106,14 +103,11 @@ cargo check --manifest-path src-tauri/Cargo.toml
 If issues arise:
 
 ```bash
-<<<<<<< HEAD
 # Revert changes (select the relevant commit(s))
 git revert <commit-hash>
-=======
 # Revert changes
 git revert 9edc847  # Remove test
 git revert f296a90  # Remove timeout fix
->>>>>>> d98d6feb7752d2ea20acbe7a28a3b808dfa86847
 
 # Or restore specific values in code:
 # - OpenAI/Claude: 75s → 40s
@@ -145,17 +139,11 @@ git revert f296a90  # Remove timeout fix
 ## Support
 
 **Issue**: #33  
-<<<<<<< HEAD
-=======
 **PR**: copilot/fix-cloud-agent-timeout  
->>>>>>> d98d6feb7752d2ea20acbe7a28a3b808dfa86847
 **Version**: v26.2.1  
 **Contact**: TITANE∞ Team
 
 ---
 
-<<<<<<< HEAD
-=======
 Last Updated: 2025-12-22  
->>>>>>> d98d6feb7752d2ea20acbe7a28a3b808dfa86847
 Document Version: 1.0
