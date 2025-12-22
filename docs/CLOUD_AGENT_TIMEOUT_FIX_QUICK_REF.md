@@ -4,9 +4,7 @@
 
 **Status**: ✅ RESOLVED  
 **Version**: v26.2.1  
-**Last Updated**: 2025-12-21
-**Date**: 2025-12-22  
-**Commits**: 2 (f296a90, 9edc847)
+**Last Updated**: 2025-12-22
 
 ---
 
@@ -67,14 +65,15 @@ src/__tests__/cloud-agent-timeout-config.test.ts 🧪 Test suite
 ### Quick Validation
 
 ```bash
-# Install dependencies
-npm install
+# Install dependencies (pnpm via Corepack)
+corepack enable
+pnpm install
 
 # Run timeout config tests
-npm test -- cloud-agent-timeout-config.test.ts
+pnpm test -- cloud-agent-timeout-config.test.ts
 
-# Verify Rust compiles
-cargo check --manifest-path src-tauri/Cargo.toml
+# Verify Rust/Tauri side
+pnpm run test:tauri
 ```
 
 ### Manual Testing Checklist
@@ -105,9 +104,6 @@ If issues arise:
 ```bash
 # Revert changes (select the relevant commit(s))
 git revert <commit-hash>
-# Revert changes
-git revert 9edc847  # Remove test
-git revert f296a90  # Remove timeout fix
 
 # Or restore specific values in code:
 # - OpenAI/Claude: 75s → 40s
@@ -143,7 +139,7 @@ git revert f296a90  # Remove timeout fix
 **Version**: v26.2.1  
 **Contact**: TITANE∞ Team
 
+
 ---
 
-Last Updated: 2025-12-22  
 Document Version: 1.0
