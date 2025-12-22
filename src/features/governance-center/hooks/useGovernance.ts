@@ -441,6 +441,7 @@ export function useGovernance() {
 
     setLoading(false);
   }, [
+    loadSecretsStatus,
     loadGeminiStatus,
     loadOpenAIStatus,
     loadAnthropicStatus,

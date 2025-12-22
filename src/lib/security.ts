@@ -1432,7 +1432,7 @@ let callTrackingIntervalId: ReturnType<typeof setInterval> | null = null;
 /**
  * Démarrer le cleanup call tracking (appelé automatiquement)
  */
-function startCallTrackingCleanup() {
+function _startCallTrackingCleanup() {
   if (callTrackingIntervalId !== null) return; // Already running
 
   callTrackingIntervalId = setInterval(cleanupCallTracking, 5000);

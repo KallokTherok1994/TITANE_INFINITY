@@ -80,10 +80,11 @@ class RuntimeLogLevelManager {
    */
   private loadConfig(): LogLevelConfig {
     // Check runtime API first
-    if (typeof window !== 'undefined' && (window as any).__TITANE_LOG_LEVEL__) {
-      const runtimeLevel = (window as any).__TITANE_LOG_LEVEL__;
+    const w = window as unknown as Record<string, unknown>;
+    if (typeof window !== 'undefined' && w.__TITANE_LOG_LEVEL__) {
+      const runtimeLevel = String(w.__TITANE_LOG_LEVEL__);
       if (this.isValidLogLevel(runtimeLevel)) {
-        return this.createConfig(runtimeLevel);
+        return this.createConfig(runtimeLevel as RuntimeLogLevel);
       }
     }
 
@@ -318,7 +319,8 @@ class RuntimeLogLevelManager {
   private exposeGlobalAPI(): void {
     if (typeof window === 'undefined') return;
 
-    (window as any).__TITANE_LOG__ = {
+    const w = window as unknown as Record<string, unknown>;
+    w.__TITANE_LOG__ = {
       // Get current level
       get level() {
         return logLevelManager.getGlobalLevel();

@@ -198,11 +198,11 @@ class MonitoringManager {
    */
   private initMemoryMonitoring(): void {
     if (typeof window === 'undefined') return;
-    if (!(performance as any).memory) return;
+    if (!(performance as { memory?: unknown }).memory) return;
 
     // Track memory every 30 seconds
     setInterval(() => {
-      const memory = (performance as any).memory;
+      const memory = (performance as { memory?: { usedJSHeapSize: number; jsHeapSizeLimit: number } }).memory;
       if (memory) {
         this.metrics.memoryUsage = memory.usedJSHeapSize;
 
@@ -220,7 +220,7 @@ class MonitoringManager {
   /**
    * Track an error
    */
-  trackError(error: Error | any, context?: Record<string, any>): void {
+  trackError(error: Error | unknown, context?: Record<string, unknown>): void {
     this.errorCount++;
     this.metrics.errorCount = this.errorCount;
     this.metrics.errorRate = this.calculateErrorRate();
@@ -230,7 +230,9 @@ class MonitoringManager {
         ? String(error.message)
         : String(error);
     const errorStack =
-      error && typeof error === 'object' && 'stack' in error ? String(error.stack) : undefined;
+      error && typeof error === 'object' && 'stack' in error
+        ? String(error.stack)
+        : undefined;
 
     logger.error('Error tracked', {
       message: errorMessage,
@@ -273,7 +275,7 @@ class MonitoringManager {
   /**
    * Add breadcrumb for debugging context
    */
-  addBreadcrumb(message: string, category: string, data?: Record<string, any>): void {
+  addBreadcrumb(message: string, category: string, data?: Record<string, unknown>): void {
     if (Sentry) {
       Sentry.addBreadcrumb({
         message,
@@ -339,7 +341,7 @@ class MonitoringManager {
   /**
    * Alert (console for now, can be extended to external service)
    */
-  private alert(message: string, data: any): void {
+  private alert(message: string, data: unknown): void {
     logger.error(`[ALERT] ${message}`, data);
 
     // Future: Send to external alerting service (PagerDuty, Slack, etc.)
