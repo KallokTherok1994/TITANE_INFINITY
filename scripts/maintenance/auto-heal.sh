@@ -366,6 +366,32 @@ clean_if_corrupted() {
   fi
 }
 
+# Function: check AppImage runtime prerequisites and fallback
+check_appimage_runtime() {
+  echo
+  echo "🔍 Vérification AppImage (FUSE / fallback extraction)..."
+
+  # Locate AppImage artifact
+  local appimg
+  appimg=$(find "$REPO_ROOT/src-tauri" -maxdepth 6 -type f -name "*.AppImage" 2>/dev/null | head -n 1 || true)
+
+  if [[ -z "$appimg" ]]; then
+    echo -e "${YELLOW}ℹ️  Aucun AppImage trouvé (skip). Construisez avec: npm run build ou tauri build${NC}"
+  else
+    echo "AppImage: $appimg"
+    # Check FUSE availability
+    if command -v fusermount3 >/dev/null 2>&1 || command -v fusermount >/dev/null 2>&1; then
+      echo -e "${GREEN}✅ FUSE détecté (montage AppImage possible)${NC}"
+    else
+      echo -e "${YELLOW}⚠️  FUSE non détecté → AppImage peut échouer au montage${NC}"
+      echo -e "${YELLOW}   ➜ Ubuntu/Debian: sudo apt install -y fuse3${NC}"
+      echo -e "${YELLOW}   ➜ Anciennes AppImage: sudo apt install -y libfuse2${NC}"
+      echo -e "${YELLOW}   ➜ Fallback extraction: ${NC}"
+      echo "       cd $(dirname \"$appimg\") && \"$appimg\" --appimage-extract && ./squashfs-root/AppRun"
+    fi
+  fi
+}
+
 # Run all checks
 detect_merge_conflicts || true
 check_dependencies
@@ -374,6 +400,7 @@ check_typescript
 check_rust
 check_git_state
 clean_if_corrupted
+check_appimage_runtime
 
 # Heal known issues proactively
 fix_entrypoint
