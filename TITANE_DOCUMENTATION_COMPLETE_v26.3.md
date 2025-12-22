@@ -32,6 +32,7 @@
 ### 1.1 Mission
 
 **TITANE∞** est un **Assistant IA Cognitif Local-First** révolutionnaire:
+
 - 🔒 **Privacy-First**: Données locales, pas de cloud obligatoire
 - 🧠 **Cognitif**: 9 moteurs d'intelligence interconnectés
 - 🏠 **Local-First**: Fonctionne 100% hors-ligne (Ollama)
@@ -39,14 +40,14 @@
 
 ### 1.2 Caractéristiques Principales
 
-| Fonctionnalité | Description |
-|----------------|-------------|
-| **Multi-IA** | Ollama (local), Gemini, OpenAI, Claude |
-| **Mémoire Persistante** | Chiffrée AES-256-GCM |
-| **Avatar 3D** | Lip-sync, expressions, gestures |
-| **Voice Mode** | STT (Whisper), TTS, Wake Word |
-| **Self-Healing** | Auto-réparation, Auto-diagnostic |
-| **Time Intelligence** | Agenda, routines, anticipation |
+| Fonctionnalité          | Description                            |
+| ----------------------- | -------------------------------------- |
+| **Multi-IA**            | Ollama (local), Gemini, OpenAI, Claude |
+| **Mémoire Persistante** | Chiffrée AES-256-GCM                   |
+| **Avatar 3D**           | Lip-sync, expressions, gestures        |
+| **Voice Mode**          | STT (Whisper), TTS, Wake Word          |
+| **Self-Healing**        | Auto-réparation, Auto-diagnostic       |
+| **Time Intelligence**   | Agenda, routines, anticipation         |
 
 ---
 
@@ -92,35 +93,35 @@ Response ← Frontend ← IPC (Result) ← Backend Processing ←───┘
 
 ### 3.1 Frontend
 
-| Technologie | Version | Usage |
-|-------------|---------|-------|
-| **React** | 19.2.3 | UI Framework |
-| **Vite** | 6.4.1 | Build Tool |
-| **TypeScript** | 5.9.3 | Type Safety |
-| **Zustand** | 5.0.9 | State Management |
-| **TailwindCSS** | 3.4.0 | Styling |
-| **Framer Motion** | 12.23.26 | Animations |
-| **React Router** | 7.11.0 | Navigation |
-| **Three.js** | 0.181.0 | 3D Avatar |
+| Technologie       | Version  | Usage            |
+| ----------------- | -------- | ---------------- |
+| **React**         | 19.2.3   | UI Framework     |
+| **Vite**          | 6.4.1    | Build Tool       |
+| **TypeScript**    | 5.9.3    | Type Safety      |
+| **Zustand**       | 5.0.9    | State Management |
+| **TailwindCSS**   | 3.4.0    | Styling          |
+| **Framer Motion** | 12.23.26 | Animations       |
+| **React Router**  | 7.11.0   | Navigation       |
+| **Three.js**      | 0.181.0  | 3D Avatar        |
 
 ### 3.2 Backend
 
-| Technologie | Version | Usage |
-|-------------|---------|-------|
-| **Tauri** | 2.2.0 | Desktop Framework |
-| **Rust** | 1.83 | Backend Language |
-| **Tokio** | latest | Async Runtime |
-| **Serde** | latest | Serialization |
-| **SQLite** | latest | Local Storage |
-| **AES-256-GCM** | - | Encryption |
+| Technologie     | Version | Usage             |
+| --------------- | ------- | ----------------- |
+| **Tauri**       | 2.2.0   | Desktop Framework |
+| **Rust**        | 1.83    | Backend Language  |
+| **Tokio**       | latest  | Async Runtime     |
+| **Serde**       | latest  | Serialization     |
+| **SQLite**      | latest  | Local Storage     |
+| **AES-256-GCM** | -       | Encryption        |
 
 ### 3.3 Testing
 
-| Framework | Usage |
-|-----------|-------|
-| **Vitest** | Unit/Integration Tests |
-| **Playwright** | E2E Tests |
-| **cargo test** | Rust Tests |
+| Framework      | Usage                  |
+| -------------- | ---------------------- |
+| **Vitest**     | Unit/Integration Tests |
+| **Playwright** | E2E Tests              |
+| **cargo test** | Rust Tests             |
 
 ---
 
@@ -156,6 +157,7 @@ Response ← Frontend ← IPC (Result) ← Backend Processing ←───┘
 **Imports autorisés:** ZÉRO (auto-suffisant)
 
 **Fichiers principaux:**
+
 - `src/types/voice.ts` — EmotionalState, ThinkingState, MentalColor
 - `src/types/memoryEngine.ts` — MemoryMetadata, ConversationMode
 - `src/types/singularityState.ts` — SingularityState, PhysicalLayer
@@ -171,17 +173,17 @@ Response ← Frontend ← IPC (Result) ← Backend Processing ←───┘
 
 **9 Moteurs Cognitifs:**
 
-| # | Moteur | Description |
-|---|--------|-------------|
-| 1 | **Orchestrator** | Coordination globale |
-| 2 | **StyleEngine** | Thèmes et apparence |
-| 3 | **CoherenceEngine** | Cohérence contextuelle |
-| 4 | **ReflectionEngine** | Analyse réflexive |
-| 5 | **EmotionEngine** | États émotionnels |
-| 6 | **UnifiedMemory** | Mémoire persistante |
-| 7 | **BehaviorEngine** | Patterns comportementaux |
-| 8 | **AdaptationEngine** | Adaptation contextuelle |
-| 9 | **SystemHealth** | Monitoring santé système |
+| #   | Moteur               | Description              |
+| --- | -------------------- | ------------------------ |
+| 1   | **Orchestrator**     | Coordination globale     |
+| 2   | **StyleEngine**      | Thèmes et apparence      |
+| 3   | **CoherenceEngine**  | Cohérence contextuelle   |
+| 4   | **ReflectionEngine** | Analyse réflexive        |
+| 5   | **EmotionEngine**    | États émotionnels        |
+| 6   | **UnifiedMemory**    | Mémoire persistante      |
+| 7   | **BehaviorEngine**   | Patterns comportementaux |
+| 8   | **AdaptationEngine** | Adaptation contextuelle  |
+| 9   | **SystemHealth**     | Monitoring santé système |
 
 ### 4.4 Ring 3: Services
 
@@ -220,42 +222,42 @@ src-tauri/src/
 
 ### 5.2 Modules Principaux (lib.rs)
 
-| Module | Description | Status |
-|--------|-------------|--------|
-| `core` | SingularityEngine v16 | ✅ Actif |
-| `cognitive` | Cognitive Layer v16 | ✅ Actif |
-| `engine` | Auto-Evolution & Diagnostics | ✅ Actif |
-| `ai` | AI Router multi-provider | ✅ Actif |
-| `ai_chat` | AI Chat & Training | ✅ Actif |
-| `conversation_engine` | OMEGA Pipeline | ✅ Actif |
-| `unified_memory_v2` | Unified Memory API | ✅ Actif |
-| `singularity` | Singularity State v∞ | ✅ Actif |
-| `singularity_cortex` | Cortex OS v∞ | ✅ Actif |
-| `omega` | Omega Pipeline v20Ω | ✅ Actif |
-| `kernel` | Cognitive OS Kernel | ✅ Actif |
-| `persistence` | 100% SAVE System | ✅ Actif |
-| `security` | Security Layer | ✅ Actif |
-| `watchdog` | Watchdog Engine | ✅ Actif |
-| `healing` | Self-Healing System | ✅ Actif |
-| `resilience` | Circuit Breaker | ✅ Actif |
-| `cloud` | Cloud Sync (AES-256) | ✅ Actif |
-| `identity` | System Identity | ✅ Actif |
-| `meta_orchestrator` | Meta Orchestrator | ✅ Actif |
-| `reality_renderer` | Reality Renderer | ✅ Actif |
-| `hyper_intelligence` | Hyper-Intelligence | ✅ Actif |
-| `numeric_twin` | Numeric Twin | ✅ Actif |
-| `agenda` | Agenda Engine | ✅ Actif |
-| `cycle_engine` | Cycle Engine v2 | ✅ Actif |
-| `performance` | Performance Engine | ✅ Actif |
-| `harmonic_os` | Harmonic OS | ✅ Actif |
-| `cognitive_gravity` | Cognitive Gravity | ✅ Actif |
-| `conversation_os` | Conversation OS | ✅ Actif |
-| `constitution` | Constitution v∞ | ✅ Actif |
-| `api_hub` | API Hub (multi-provider) | ✅ Actif |
-| `temporal_engine` | Temporal Intelligence | ✅ Actif |
-| `agent_system` | Agent System | ✅ Actif |
-| `agents` | Multi-Agents Cognitifs | ✅ Actif |
-| `multi_agents` | Multi-Agents Permissions | ✅ Actif |
+| Module                | Description                  | Status   |
+| --------------------- | ---------------------------- | -------- |
+| `core`                | SingularityEngine v16        | ✅ Actif |
+| `cognitive`           | Cognitive Layer v16          | ✅ Actif |
+| `engine`              | Auto-Evolution & Diagnostics | ✅ Actif |
+| `ai`                  | AI Router multi-provider     | ✅ Actif |
+| `ai_chat`             | AI Chat & Training           | ✅ Actif |
+| `conversation_engine` | OMEGA Pipeline               | ✅ Actif |
+| `unified_memory_v2`   | Unified Memory API           | ✅ Actif |
+| `singularity`         | Singularity State v∞         | ✅ Actif |
+| `singularity_cortex`  | Cortex OS v∞                 | ✅ Actif |
+| `omega`               | Omega Pipeline v20Ω          | ✅ Actif |
+| `kernel`              | Cognitive OS Kernel          | ✅ Actif |
+| `persistence`         | 100% SAVE System             | ✅ Actif |
+| `security`            | Security Layer               | ✅ Actif |
+| `watchdog`            | Watchdog Engine              | ✅ Actif |
+| `healing`             | Self-Healing System          | ✅ Actif |
+| `resilience`          | Circuit Breaker              | ✅ Actif |
+| `cloud`               | Cloud Sync (AES-256)         | ✅ Actif |
+| `identity`            | System Identity              | ✅ Actif |
+| `meta_orchestrator`   | Meta Orchestrator            | ✅ Actif |
+| `reality_renderer`    | Reality Renderer             | ✅ Actif |
+| `hyper_intelligence`  | Hyper-Intelligence           | ✅ Actif |
+| `numeric_twin`        | Numeric Twin                 | ✅ Actif |
+| `agenda`              | Agenda Engine                | ✅ Actif |
+| `cycle_engine`        | Cycle Engine v2              | ✅ Actif |
+| `performance`         | Performance Engine           | ✅ Actif |
+| `harmonic_os`         | Harmonic OS                  | ✅ Actif |
+| `cognitive_gravity`   | Cognitive Gravity            | ✅ Actif |
+| `conversation_os`     | Conversation OS              | ✅ Actif |
+| `constitution`        | Constitution v∞              | ✅ Actif |
+| `api_hub`             | API Hub (multi-provider)     | ✅ Actif |
+| `temporal_engine`     | Temporal Intelligence        | ✅ Actif |
+| `agent_system`        | Agent System                 | ✅ Actif |
+| `agents`              | Multi-Agents Cognitifs       | ✅ Actif |
+| `multi_agents`        | Multi-Agents Permissions     | ✅ Actif |
 
 ---
 
@@ -263,30 +265,31 @@ src-tauri/src/
 
 ### 6.1 Catégories de Commandes
 
-| Catégorie | Fichier(s) | Nombre |
-|-----------|------------|--------|
-| **Système Core** | `mod.rs`, `core_system.rs` | ~50 |
-| **IA & Chat** | `ai_chat.rs`, `chat_generate_commands.rs` | ~90 |
-| **Conversation Engine** | `conversation_engine/commands.rs` | ~18 |
-| **Memory OS** | `memory_os.rs`, `memory_os_commands.rs` | ~70 |
-| **Monitoring** | `system_health.rs`, `qa_monitoring.rs` | ~60 |
-| **Sécurité** | `security.rs`, `secure_commands.rs` | ~40 |
-| **Audio & Whisper** | `audio/commands.rs`, `whisper_commands.rs` | ~50 |
-| **Évolution** | `evolution.rs`, `evolution_v14.rs` | ~35 |
-| **Cognitive** | `cognitive_commands.rs`, `cognitive_center.rs` | ~50 |
-| **DevTools** | `devtools.rs`, `devtools_commands.rs` | ~35 |
-| **Avatar** | `avatar/` (6 fichiers) | ~70 |
-| **Singularity Fusion** | `singularity_fusion/` (5 fichiers) | ~80 |
-| **Orchestration** | `orchestration_center.rs`, `one_core.rs` | ~50 |
-| **Persistence** | `persistence/commands.rs` | ~28 |
-| **Agenda** | `agenda/` | ~30 |
-| **Configuration** | `config/` | ~10 |
-| **Auth** | `auth/commands.rs` | ~9 |
-| **Autres** | Divers | ~200 |
+| Catégorie               | Fichier(s)                                     | Nombre |
+| ----------------------- | ---------------------------------------------- | ------ |
+| **Système Core**        | `mod.rs`, `core_system.rs`                     | ~50    |
+| **IA & Chat**           | `ai_chat.rs`, `chat_generate_commands.rs`      | ~90    |
+| **Conversation Engine** | `conversation_engine/commands.rs`              | ~18    |
+| **Memory OS**           | `memory_os.rs`, `memory_os_commands.rs`        | ~70    |
+| **Monitoring**          | `system_health.rs`, `qa_monitoring.rs`         | ~60    |
+| **Sécurité**            | `security.rs`, `secure_commands.rs`            | ~40    |
+| **Audio & Whisper**     | `audio/commands.rs`, `whisper_commands.rs`     | ~50    |
+| **Évolution**           | `evolution.rs`, `evolution_v14.rs`             | ~35    |
+| **Cognitive**           | `cognitive_commands.rs`, `cognitive_center.rs` | ~50    |
+| **DevTools**            | `devtools.rs`, `devtools_commands.rs`          | ~35    |
+| **Avatar**              | `avatar/` (6 fichiers)                         | ~70    |
+| **Singularity Fusion**  | `singularity_fusion/` (5 fichiers)             | ~80    |
+| **Orchestration**       | `orchestration_center.rs`, `one_core.rs`       | ~50    |
+| **Persistence**         | `persistence/commands.rs`                      | ~28    |
+| **Agenda**              | `agenda/`                                      | ~30    |
+| **Configuration**       | `config/`                                      | ~10    |
+| **Auth**                | `auth/commands.rs`                             | ~9     |
+| **Autres**              | Divers                                         | ~200   |
 
 ### 6.2 Commandes Core (main.rs invoke_handler)
 
 #### Frontend OS Bridge
+
 ```rust
 state_bridge_commands::ping
 state_bridge_commands::get_system_state
@@ -298,6 +301,7 @@ state_bridge_commands::delete_state
 ```
 
 #### OMEGA Conversation Engine
+
 ```rust
 conversation_engine::commands::create_new_conversation
 conversation_engine::commands::conversation_generate
@@ -307,6 +311,7 @@ conversation_engine::commands::conversation_memory_stats
 ```
 
 #### Chat Orchestrator
+
 ```rust
 overdrive::chat_orchestrator::chat_send_message
 overdrive::chat_orchestrator::chat_stream_message
@@ -320,6 +325,7 @@ overdrive::chat_orchestrator::chat_get_memory_stats
 ```
 
 #### Voice Engine (17 commandes)
+
 ```rust
 overdrive::voice_engine::voice_start_listening
 overdrive::voice_engine::voice_stop_listening
@@ -341,6 +347,7 @@ overdrive::voice_engine::voice_check_interruption
 ```
 
 #### Avatar Engine (~50 commandes)
+
 ```rust
 // Core Avatar
 avatar::avatar_commands::avatar_prepare_speech
@@ -403,6 +410,7 @@ avatar::fullbody_selftest::fullbody_run_selftest
 ```
 
 #### Singularity Fusion (~70 commandes)
+
 ```rust
 // AutoFix
 singularity_fusion::autofix_detect_rust_warnings
@@ -483,6 +491,7 @@ singularity_fusion::pipeline_validate
 ```
 
 #### Singularity State (18 commandes)
+
 ```rust
 singularity_state::commands::singularity_get_full_state
 singularity_state::commands::singularity_get_physical
@@ -504,6 +513,7 @@ singularity_state::commands::singularity_load_state
 ```
 
 #### System Center Diagnostics
+
 ```rust
 system_center::diagnostics::sc_run_quick_diagnostics
 system_center::diagnostics::sc_run_full_diagnostics
@@ -511,6 +521,7 @@ system_center::diagnostics::sc_get_diagnostic_status
 ```
 
 #### QA Monitoring Center
+
 ```rust
 qa_monitoring_commands::qa_get_state
 qa_monitoring_commands::qa_get_system_metrics
@@ -521,6 +532,7 @@ qa_monitoring_commands::qa_acknowledge_alert
 ```
 
 #### ONE CORE
+
 ```rust
 one_core_commands::one_core_get_state
 one_core_commands::one_core_get_metrics
@@ -533,6 +545,7 @@ one_core_commands::one_core_cleanup
 ```
 
 #### Audio System (13 commandes)
+
 ```rust
 // TTS
 audio::commands::tts_speak
@@ -559,6 +572,7 @@ audio::commands::vad_test
 ```
 
 #### Secure API Key Management
+
 ```rust
 secure_commands::chat_set_gemini_key
 secure_commands::get_gemini_key_status
@@ -570,6 +584,7 @@ secure_commands::check_system_integrity
 ```
 
 #### Provider-specific AI Generation
+
 ```rust
 commands::chat_generate_commands::chat_generate_gemini
 commands::chat_generate_commands::chat_generate_openai
@@ -579,6 +594,7 @@ titane_infinity::ai::ollama::ai_check_ollama_status
 ```
 
 #### Auth OS
+
 ```rust
 auth::commands::auth_get_status
 auth::commands::auth_generate_dev_token
@@ -592,6 +608,7 @@ auth::commands::auth_revoke_role
 ```
 
 #### Governance
+
 ```rust
 commands_v21::governance_commands::get_ia_policies
 commands_v21::governance_commands::save_ia_policies
@@ -607,6 +624,7 @@ commands_v21::governance_commands::clear_security_log
 ```
 
 #### System Center
+
 ```rust
 commands_v21::system_center_commands::sc_clear_logs
 commands_v21::system_center_commands::sc_add_log
@@ -618,6 +636,7 @@ commands_v21::system_center_commands::sc_hypervision_resolve_anomaly
 ```
 
 #### Memory Commands
+
 ```rust
 commands_v21::memory_os_commands::memory_clear
 commands_v21::memory_os_commands::memory_promote
@@ -627,6 +646,7 @@ commands_v21::memory_os_commands::memory_prune
 ```
 
 #### Coherence
+
 ```rust
 coherence_commands::coherence_get_state
 coherence_commands::coherence_check_system
@@ -636,6 +656,7 @@ coherence_commands::coherence_initialize
 ```
 
 #### Unified Memory
+
 ```rust
 unified_memory_commands::memory_get_state
 unified_memory_commands::memory_store
@@ -646,6 +667,7 @@ unified_memory_commands::memory_tick
 ```
 
 #### System Health
+
 ```rust
 system_health_commands::health_get_state
 system_health_commands::health_get_report
@@ -659,6 +681,7 @@ system_health_commands::system_optimize
 ```
 
 #### Titan Persistence (26 commandes)
+
 ```rust
 persistence::commands::titan_persistence_init
 persistence::commands::titan_persist_event
@@ -690,6 +713,7 @@ persistence::commands::titan_memory_doctor_export
 ```
 
 #### Configuration Hub
+
 ```rust
 config::get_all_configs
 config::update::update_runtime_config
@@ -703,6 +727,7 @@ config::presets::delete_config_preset
 ```
 
 #### EXP Fusion Engine
+
 ```rust
 commands::exp_fusion::exp_get_global_state
 commands::exp_fusion::exp_get_categories
@@ -715,6 +740,7 @@ commands::exp_fusion::exp_add_knowledge
 ```
 
 #### Onboarding
+
 ```rust
 onboarding::is_onboarding_complete
 onboarding::complete_onboarding
@@ -731,32 +757,32 @@ onboarding::get_onboarding_preferences
 
 ### 7.2 Liste des Engines
 
-| Dossier | Engine | Description |
-|---------|--------|-------------|
-| `aura` | Aura Engine | Aura visuelle |
-| `autopoiesis` | Autopoiesis | Auto-création |
-| `cognitive` | Cognitive | Traitement cognitif |
-| `conscious` | Conscious | État de conscience |
-| `continuum` | Continuum | Flux temporel |
-| `embodiment` | Embodiment | Incarnation |
-| `emotion` | Emotion | Gestion émotions |
-| `expression` | Expression | Expressions |
-| `flow` | Flow | État de flow |
-| `holopresence` | HoloPresence | Présence holographique |
-| `identity` | Identity | Identité |
-| `interoception` | Interoception | Conscience corporelle |
-| `metasingularity` | MetaSingularity | Meta-singularité |
-| `narrative` | Narrative | Narration |
-| `output` | Output | Sortie |
-| `phasespace` | PhaseSpace | Espace de phase |
-| `predictive` | Predictive | Prédiction |
-| `presence` | Presence | Présence |
-| `psyche` | Psyche | Psyche |
-| `selfHealing` | SelfHealing | Auto-guérison |
-| `spatial` | Spatial | Spatial |
-| `time` | Time | Temps |
-| `uiux` | UIUX | Interface |
-| `voice` | Voice | Voix |
+| Dossier           | Engine          | Description            |
+| ----------------- | --------------- | ---------------------- |
+| `aura`            | Aura Engine     | Aura visuelle          |
+| `autopoiesis`     | Autopoiesis     | Auto-création          |
+| `cognitive`       | Cognitive       | Traitement cognitif    |
+| `conscious`       | Conscious       | État de conscience     |
+| `continuum`       | Continuum       | Flux temporel          |
+| `embodiment`      | Embodiment      | Incarnation            |
+| `emotion`         | Emotion         | Gestion émotions       |
+| `expression`      | Expression      | Expressions            |
+| `flow`            | Flow            | État de flow           |
+| `holopresence`    | HoloPresence    | Présence holographique |
+| `identity`        | Identity        | Identité               |
+| `interoception`   | Interoception   | Conscience corporelle  |
+| `metasingularity` | MetaSingularity | Meta-singularité       |
+| `narrative`       | Narrative       | Narration              |
+| `output`          | Output          | Sortie                 |
+| `phasespace`      | PhaseSpace      | Espace de phase        |
+| `predictive`      | Predictive      | Prédiction             |
+| `presence`        | Presence        | Présence               |
+| `psyche`          | Psyche          | Psyche                 |
+| `selfHealing`     | SelfHealing     | Auto-guérison          |
+| `spatial`         | Spatial         | Spatial                |
+| `time`            | Time            | Temps                  |
+| `uiux`            | UIUX            | Interface              |
+| `voice`           | Voice           | Voix                   |
 
 ### 7.3 Exports (index.ts)
 
@@ -789,59 +815,59 @@ export * from './presence/_stubs';
 
 ### 8.2 Liste des Services
 
-| Service | Fichier | Description |
-|---------|---------|-------------|
-| **AI Chat Client** | `aiChatClient.ts` | Client IA |
-| **Adaptive Bridge** | `adaptiveBridgeV21.ts` | Pont adaptatif |
-| **Agenda** | `agendaService.ts` | Service agenda |
-| **Auto Audit** | `autoAuditEngine.ts` | Audit automatique |
-| **Chat Memory** | `chatMemory.ts` | Mémoire chat |
-| **Chat Validator** | `chatValidator.ts` | Validation chat |
-| **Conversation** | `conversationEngine.ts` | Moteur conversation |
-| **Experience** | `experienceService.ts` | Service XP |
-| **Persona Bridge** | `personaTauriBridge.ts` | Pont persona |
-| **RAG** | `ragService.ts` | Retrieval-Augmented |
-| **Singularity Bridge** | `singularityBridge.ts` | Pont singularité |
-| **Tauri Bridge** | `tauriBridge.ts` | Pont Tauri |
-| **Tauri Client** | `tauriClient.ts` | Client Tauri |
-| **Tauri Commands** | `tauriCommands.ts` | Commandes Tauri |
-| **Tauri Auto Repair** | `tauriAutoRepair.ts` | Auto-réparation |
-| **User Preferences** | `userPreferencesEngine.ts` | Préférences |
+| Service                | Fichier                    | Description         |
+| ---------------------- | -------------------------- | ------------------- |
+| **AI Chat Client**     | `aiChatClient.ts`          | Client IA           |
+| **Adaptive Bridge**    | `adaptiveBridgeV21.ts`     | Pont adaptatif      |
+| **Agenda**             | `agendaService.ts`         | Service agenda      |
+| **Auto Audit**         | `autoAuditEngine.ts`       | Audit automatique   |
+| **Chat Memory**        | `chatMemory.ts`            | Mémoire chat        |
+| **Chat Validator**     | `chatValidator.ts`         | Validation chat     |
+| **Conversation**       | `conversationEngine.ts`    | Moteur conversation |
+| **Experience**         | `experienceService.ts`     | Service XP          |
+| **Persona Bridge**     | `personaTauriBridge.ts`    | Pont persona        |
+| **RAG**                | `ragService.ts`            | Retrieval-Augmented |
+| **Singularity Bridge** | `singularityBridge.ts`     | Pont singularité    |
+| **Tauri Bridge**       | `tauriBridge.ts`           | Pont Tauri          |
+| **Tauri Client**       | `tauriClient.ts`           | Client Tauri        |
+| **Tauri Commands**     | `tauriCommands.ts`         | Commandes Tauri     |
+| **Tauri Auto Repair**  | `tauriAutoRepair.ts`       | Auto-réparation     |
+| **User Preferences**   | `userPreferencesEngine.ts` | Préférences         |
 
 ### 8.3 Sous-dossiers
 
-| Dossier | Description |
-|---------|-------------|
-| `adminEngine/` | Administration |
-| `agents/` | Agents |
-| `ai/` | Intelligence Artificielle |
-| `api/` | APIs |
-| `audio/` | Audio |
-| `automation/` | Automatisation |
-| `backup/` | Sauvegarde |
-| `cache/` | Cache |
-| `chat/` | Chat |
-| `cognitive/` | Cognitif |
-| `consistency/` | Cohérence |
-| `devices/` | Périphériques |
-| `evolution/` | Évolution |
-| `evolutionEngine/` | Moteur évolution |
-| `governance/` | Gouvernance |
-| `ia/` | IA |
-| `mcp/` | MCP |
-| `memory/` | Mémoire |
-| `monitoring/` | Monitoring |
-| `orchestration/` | Orchestration |
-| `performanceEngine/` | Performance |
-| `providers/` | Providers |
-| `selfHealing/` | Auto-guérison |
-| `sessions/` | Sessions |
-| `systemCenter/` | Centre système |
-| `tauri/` | Tauri |
-| `tts/` | Text-to-Speech |
-| `unified/` | Unifié |
-| `voice/` | Voix |
-| `xp/` | Expérience |
+| Dossier              | Description               |
+| -------------------- | ------------------------- |
+| `adminEngine/`       | Administration            |
+| `agents/`            | Agents                    |
+| `ai/`                | Intelligence Artificielle |
+| `api/`               | APIs                      |
+| `audio/`             | Audio                     |
+| `automation/`        | Automatisation            |
+| `backup/`            | Sauvegarde                |
+| `cache/`             | Cache                     |
+| `chat/`              | Chat                      |
+| `cognitive/`         | Cognitif                  |
+| `consistency/`       | Cohérence                 |
+| `devices/`           | Périphériques             |
+| `evolution/`         | Évolution                 |
+| `evolutionEngine/`   | Moteur évolution          |
+| `governance/`        | Gouvernance               |
+| `ia/`                | IA                        |
+| `mcp/`               | MCP                       |
+| `memory/`            | Mémoire                   |
+| `monitoring/`        | Monitoring                |
+| `orchestration/`     | Orchestration             |
+| `performanceEngine/` | Performance               |
+| `providers/`         | Providers                 |
+| `selfHealing/`       | Auto-guérison             |
+| `sessions/`          | Sessions                  |
+| `systemCenter/`      | Centre système            |
+| `tauri/`             | Tauri                     |
+| `tts/`               | Text-to-Speech            |
+| `unified/`           | Unifié                    |
+| `voice/`             | Voix                      |
+| `xp/`                | Expérience                |
 
 ---
 
@@ -852,6 +878,7 @@ export * from './presence/_stubs';
 **Total: 91 hooks**
 
 #### Core Hooks
+
 - `useChat.ts` - Hook principal chat
 - `useChatCore.ts` - Core chat
 - `useChatMemory.ts` - Mémoire chat
@@ -860,11 +887,13 @@ export * from './presence/_stubs';
 - `useConversationEngine.ts` - Moteur conversation
 
 #### Cognitive Hooks
+
 - `useCognitive.ts` - Cognitif
 - `useCognitiveLayout.ts` - Layout cognitif
 - `useDeepPsyche.ts` - Psyche profonde
 
 #### Audio/Voice Hooks
+
 - `useAudioChat.tsx` - Chat audio
 - `useAudioSettings.ts` - Settings audio
 - `useAudioStreaming.ts` - Streaming audio
@@ -878,6 +907,7 @@ export * from './presence/_stubs';
 - `useActiveListening.ts` - Écoute active
 
 #### Memory Hooks
+
 - `useMemory.ts` - Mémoire
 - `useMemoryCore.ts` - Core mémoire
 - `useMemoryEngine.ts` - Moteur mémoire
@@ -885,6 +915,7 @@ export * from './presence/_stubs';
 - `useUnifiedMemory.ts` - Mémoire unifiée
 
 #### Singularity Hooks
+
 - `useSingularity.ts` - Singularité
 - `useSingularityState.ts` - État singularité
 - `useSingularityStateSafe.ts` - État sécurisé
@@ -892,12 +923,14 @@ export * from './presence/_stubs';
 - `useSingularitySync.ts` - Sync singularité
 
 #### Performance Hooks
+
 - `usePerformanceMonitor.ts` - Monitoring
 - `usePerformanceProfiler.ts` - Profiler
 - `useAdvancedPerformance.ts` - Performance avancée
 - `useAdaptiveFPS.ts` - FPS adaptatif
 
 #### Visual Hooks
+
 - `useVisualEngine.ts` - Moteur visuel
 - `useVisualEngines.ts` - Moteurs visuels
 - `useVisualState.ts` - État visuel
@@ -905,6 +938,7 @@ export * from './presence/_stubs';
 - `useTitaneSphere.ts` - Sphère TITANE
 
 #### System Hooks
+
 - `useSystemHealth.ts` - Santé système
 - `useSystemMonitor.ts` - Monitoring système
 - `useSystemCenterAutoFix.ts` - Auto-fix
@@ -913,6 +947,7 @@ export * from './presence/_stubs';
 - `useDevicePermissions.ts` - Permissions
 
 #### Other Hooks
+
 - `useIdentity.ts` - Identité
 - `useIdentityMatrix.ts` - Matrix identité
 - `useFusionEngine.ts` - Moteur fusion
@@ -928,24 +963,24 @@ export * from './presence/_stubs';
 
 ### 9.2 Stores (src/stores/)
 
-| Store | Fichier | Description |
-|-------|---------|-------------|
-| **Effects** | `effectsStore.ts` | Effets visuels |
-| **Evolution** | `evolutionStore.ts` | Évolution |
-| **Memory** | `memoryStore.ts` | Mémoire |
-| **Panels** | `panelsStore.ts` | Panneaux UI |
-| **System** | `systemStore.ts` | Système |
-| **UI** | `uiStore.ts` | Interface |
-| **Visual State** | `visualStateStore.ts` | État visuel |
-| **Visual State v21** | `visualStateStoreV21.ts` | État visuel v21 |
-| **Visual** | `visualStore.ts` | Visuel |
-| **AutomationXP** | `useAutomationXPStore.ts` | Automation XP |
-| **ChatMode** | `useChatModeStore.ts` | Mode chat |
-| **MemoryEngine** | `useMemoryEngineStore.ts` | Moteur mémoire |
-| **Performance** | `usePerformanceStore.ts` | Performance |
-| **SelfHealing** | `useSelfHealingStore.ts` | Auto-guérison |
-| **TTSEngine** | `useTTSEngineStore.ts` | TTS |
-| **Vision** | `useVisionStore.ts` | Vision |
+| Store                | Fichier                   | Description     |
+| -------------------- | ------------------------- | --------------- |
+| **Effects**          | `effectsStore.ts`         | Effets visuels  |
+| **Evolution**        | `evolutionStore.ts`       | Évolution       |
+| **Memory**           | `memoryStore.ts`          | Mémoire         |
+| **Panels**           | `panelsStore.ts`          | Panneaux UI     |
+| **System**           | `systemStore.ts`          | Système         |
+| **UI**               | `uiStore.ts`              | Interface       |
+| **Visual State**     | `visualStateStore.ts`     | État visuel     |
+| **Visual State v21** | `visualStateStoreV21.ts`  | État visuel v21 |
+| **Visual**           | `visualStore.ts`          | Visuel          |
+| **AutomationXP**     | `useAutomationXPStore.ts` | Automation XP   |
+| **ChatMode**         | `useChatModeStore.ts`     | Mode chat       |
+| **MemoryEngine**     | `useMemoryEngineStore.ts` | Moteur mémoire  |
+| **Performance**      | `usePerformanceStore.ts`  | Performance     |
+| **SelfHealing**      | `useSelfHealingStore.ts`  | Auto-guérison   |
+| **TTSEngine**        | `useTTSEngineStore.ts`    | TTS             |
+| **Vision**           | `useVisionStore.ts`       | Vision          |
 
 ---
 
@@ -957,37 +992,37 @@ export * from './presence/_stubs';
 
 ### 10.2 Fichiers de Types
 
-| Fichier | Description |
-|---------|-------------|
-| `ai.d.ts` | Types IA |
-| `aiModel.ts` | Modèles IA |
-| `audio.d.ts` | Types Audio |
-| `automationXP.ts` | Automation XP |
-| `backend.d.ts` | Types Backend |
-| `chatModes.ts` | Modes Chat |
-| `cognitiveKernel.ts` | Kernel Cognitif |
-| `conversation.ts` | Conversation |
-| `conversationEvaluation.ts` | Évaluation |
-| `devops.ts` | DevOps |
-| `experience.ts` | Expérience |
-| `flow.ts` | Flow |
-| `humanRhythm.ts` | Rythme Humain |
-| `logger.ts` | Logger |
-| `memoryEngine.ts` | Moteur Mémoire |
-| `multimodalFusion.ts` | Fusion Multimodale |
-| `numericTwin.ts` | Twin Numérique |
-| `performanceEngine.ts` | Performance |
-| `predictiveState.ts` | État Prédictif |
-| `presence.d.ts` | Présence |
-| `selfHealing.ts` | Auto-guérison |
-| `singularityState.ts` | État Singularité |
-| `stressRegulation.ts` | Régulation Stress |
-| `system.d.ts` | Système |
-| `tauri.ts` | Tauri |
-| `trainingBaseline.ts` | Baseline Training |
-| `ttsEngine.ts` | TTS |
-| `visionAffect.ts` | Vision/Affect |
-| `voice.ts` | Voix |
+| Fichier                     | Description        |
+| --------------------------- | ------------------ |
+| `ai.d.ts`                   | Types IA           |
+| `aiModel.ts`                | Modèles IA         |
+| `audio.d.ts`                | Types Audio        |
+| `automationXP.ts`           | Automation XP      |
+| `backend.d.ts`              | Types Backend      |
+| `chatModes.ts`              | Modes Chat         |
+| `cognitiveKernel.ts`        | Kernel Cognitif    |
+| `conversation.ts`           | Conversation       |
+| `conversationEvaluation.ts` | Évaluation         |
+| `devops.ts`                 | DevOps             |
+| `experience.ts`             | Expérience         |
+| `flow.ts`                   | Flow               |
+| `humanRhythm.ts`            | Rythme Humain      |
+| `logger.ts`                 | Logger             |
+| `memoryEngine.ts`           | Moteur Mémoire     |
+| `multimodalFusion.ts`       | Fusion Multimodale |
+| `numericTwin.ts`            | Twin Numérique     |
+| `performanceEngine.ts`      | Performance        |
+| `predictiveState.ts`        | État Prédictif     |
+| `presence.d.ts`             | Présence           |
+| `selfHealing.ts`            | Auto-guérison      |
+| `singularityState.ts`       | État Singularité   |
+| `stressRegulation.ts`       | Régulation Stress  |
+| `system.d.ts`               | Système            |
+| `tauri.ts`                  | Tauri              |
+| `trainingBaseline.ts`       | Baseline Training  |
+| `ttsEngine.ts`              | TTS                |
+| `visionAffect.ts`           | Vision/Affect      |
+| `voice.ts`                  | Voix               |
 
 ---
 
@@ -1099,30 +1134,35 @@ System Restored
 
 ### 12.1 Routes Actives (v25.4.0)
 
-| Route | Description | Version |
-|-------|-------------|---------|
-| `/chat` | Chat IA (Multi-Provider) | - |
-| `/titane` | TITANE — Le Cœur du Système | v25.3.0 |
-| `/time` | TIME — Centre Temporel | v25.1 |
-| `/stats` | STATS — Statistiques Moteurs | v25.2 |
-| `/admin` | ADMIN — Centre Administration | v25.2.2 |
-| `/dev` | DEV — Centre Développement | v25.4.0 |
+| Route     | Description                   | Version |
+| --------- | ----------------------------- | ------- |
+| `/chat`   | Chat IA (Multi-Provider)      | -       |
+| `/titane` | TITANE — Le Cœur du Système   | v25.3.0 |
+| `/time`   | TIME — Centre Temporel        | v25.1   |
+| `/stats`  | STATS — Statistiques Moteurs  | v25.2   |
+| `/admin`  | ADMIN — Centre Administration | v25.2.2 |
+| `/dev`    | DEV — Centre Développement    | v25.4.0 |
 
 ### 12.2 Fusions Majeures
 
 #### Fusion EVO (v25.0)
+
 5 modules → 1 module `/evo` (redirigé vers `/titane` v25.3.0)
 
 #### Fusion TIME (v25.1)
+
 3 modules → 1 module `/time`
 
 #### Fusion Stats (v25.2)
+
 4 modules → 1 page `/stats`
 
 #### Fusion ADMIN (v25.2.2)
+
 7 modules → 1 module `/admin`
 
 #### Fusion DEV (v25.4.0)
+
 4 modules → 1 module `/dev`
 
 ---
@@ -1131,15 +1171,15 @@ System Restored
 
 ### 13.1 Couches de Sécurité
 
-| Couche | Description |
-|--------|-------------|
-| **AES-256-GCM** | Chiffrement mémoire |
-| **Secrets Engine** | Stockage clés API |
-| **Permission Guard** | Contrôle accès |
-| **Rate Limiting** | Anti-abus |
-| **Sandbox** | Isolation |
-| **Shell Guard** | Protection shell |
-| **Audit Logger** | Journalisation |
+| Couche               | Description         |
+| -------------------- | ------------------- |
+| **AES-256-GCM**      | Chiffrement mémoire |
+| **Secrets Engine**   | Stockage clés API   |
+| **Permission Guard** | Contrôle accès      |
+| **Rate Limiting**    | Anti-abus           |
+| **Sandbox**          | Isolation           |
+| **Shell Guard**      | Protection shell    |
+| **Audit Logger**     | Journalisation      |
 
 ### 13.2 Modules Sécurité (src-tauri/src/security/)
 
@@ -1170,11 +1210,11 @@ pub struct SecurityPolicy {
 
 ### 14.1 Frameworks
 
-| Framework | Usage |
-|-----------|-------|
-| **Vitest** | Unit/Integration Frontend |
-| **Playwright** | E2E Tests |
-| **cargo test** | Tests Rust |
+| Framework      | Usage                     |
+| -------------- | ------------------------- |
+| **Vitest**     | Unit/Integration Frontend |
+| **Playwright** | E2E Tests                 |
+| **cargo test** | Tests Rust                |
 
 ### 14.2 Scripts de Test
 
@@ -1193,6 +1233,7 @@ npm run test:all              # Full test suite
 ### 14.3 QA Monitoring
 
 Commandes QA:
+
 - `qa_get_state` - État QA
 - `qa_get_system_metrics` - Métriques
 - `qa_list_test_suites` - Suites tests
@@ -1239,6 +1280,7 @@ npm run auto-fix        # Auto-fix
 ### 15.2 titane.sh
 
 Script principal de maintenance:
+
 - `clean` - Nettoyage
 - `repair` - Réparation
 - `fix` - Corrections
@@ -1251,17 +1293,17 @@ Script principal de maintenance:
 
 ## 📊 STATISTIQUES FINALES
 
-| Métrique | Valeur |
-|----------|--------|
-| **Commandes Tauri** | 875+ |
-| **Modules Rust** | 75+ |
-| **Engines Frontend** | 24 |
-| **Services Frontend** | 50+ |
-| **Hooks React** | 91 |
-| **Stores Zustand** | 17 |
-| **Types/Interfaces** | 35 fichiers |
-| **Routes Actives** | 6 |
-| **Tests** | Vitest + Playwright + cargo |
+| Métrique              | Valeur                      |
+| --------------------- | --------------------------- |
+| **Commandes Tauri**   | 875+                        |
+| **Modules Rust**      | 75+                         |
+| **Engines Frontend**  | 24                          |
+| **Services Frontend** | 50+                         |
+| **Hooks React**       | 91                          |
+| **Stores Zustand**    | 17                          |
+| **Types/Interfaces**  | 35 fichiers                 |
+| **Routes Actives**    | 6                           |
+| **Tests**             | Vitest + Playwright + cargo |
 
 ---
 

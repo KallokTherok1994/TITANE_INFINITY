@@ -26,39 +26,29 @@ describe('🔍 Audit System Verification', () => {
       { name: '07-quality-gates.sh', description: 'Quality Gates' },
     ];
 
-    it.each(requiredScripts)(
-      'should have $description script ($name)',
-      ({ name }) => {
-        const scriptPath = path.join(AUDIT_SCRIPTS_DIR, name);
-        expect(fs.existsSync(scriptPath)).toBe(true);
-      }
-    );
+    it.each(requiredScripts)('should have $description script ($name)', ({ name }) => {
+      const scriptPath = path.join(AUDIT_SCRIPTS_DIR, name);
+      expect(fs.existsSync(scriptPath)).toBe(true);
+    });
 
-    it.each(requiredScripts)(
-      'should have executable $name',
-      ({ name }) => {
-        const scriptPath = path.join(AUDIT_SCRIPTS_DIR, name);
-        if (fs.existsSync(scriptPath)) {
-          const stats = fs.statSync(scriptPath);
-          // Check if executable bit is set (mode & 0o111)
-          expect(stats.mode & 0o111).toBeGreaterThan(0);
-        }
+    it.each(requiredScripts)('should have executable $name', ({ name }) => {
+      const scriptPath = path.join(AUDIT_SCRIPTS_DIR, name);
+      if (fs.existsSync(scriptPath)) {
+        const stats = fs.statSync(scriptPath);
+        // Check if executable bit is set (mode & 0o111)
+        expect(stats.mode & 0o111).toBeGreaterThan(0);
       }
-    );
+    });
 
-    it.each(requiredScripts)(
-      '$name should have valid bash shebang',
-      ({ name }) => {
-        const scriptPath = path.join(AUDIT_SCRIPTS_DIR, name);
-        if (fs.existsSync(scriptPath)) {
-          const content = fs.readFileSync(scriptPath, 'utf-8');
-          const hasValidShebang = 
-            content.startsWith('#!/bin/bash') || 
-            content.startsWith('#!/usr/bin/env bash');
-          expect(hasValidShebang).toBe(true);
-        }
+    it.each(requiredScripts)('$name should have valid bash shebang', ({ name }) => {
+      const scriptPath = path.join(AUDIT_SCRIPTS_DIR, name);
+      if (fs.existsSync(scriptPath)) {
+        const content = fs.readFileSync(scriptPath, 'utf-8');
+        const hasValidShebang =
+          content.startsWith('#!/bin/bash') || content.startsWith('#!/usr/bin/env bash');
+        expect(hasValidShebang).toBe(true);
       }
-    );
+    });
   });
 
   describe('🔧 Auto-Fix Script Features', () => {
@@ -176,7 +166,7 @@ describe('🔍 Audit System Verification', () => {
     it('perfection plan should have all phases', () => {
       const perfectionPlanPath = path.join(PROJECT_ROOT, 'docs', 'PERFECTION_PLAN.md');
       const content = fs.readFileSync(perfectionPlanPath, 'utf-8');
-      
+
       expect(content).toContain('Phase 1');
       expect(content).toContain('Phase 2');
       expect(content).toContain('Phase 3');
@@ -187,7 +177,7 @@ describe('🔍 Audit System Verification', () => {
     it('perfection plan should document all audit scripts', () => {
       const perfectionPlanPath = path.join(PROJECT_ROOT, 'docs', 'PERFECTION_PLAN.md');
       const content = fs.readFileSync(perfectionPlanPath, 'utf-8');
-      
+
       expect(content).toContain('00-master-audit.sh');
       expect(content).toContain('06-auto-fix.sh');
       expect(content).toContain('07-quality-gates.sh');
@@ -208,13 +198,13 @@ describe('🔍 Audit System Verification', () => {
     it('reports directory should be in .gitignore', () => {
       const gitignorePath = path.join(PROJECT_ROOT, '.gitignore');
       const content = fs.readFileSync(gitignorePath, 'utf-8');
-      
+
       // Check if reports/ is ignored (exact match or with variations)
-      const hasReportsIgnore = 
-        content.includes('reports/') || 
+      const hasReportsIgnore =
+        content.includes('reports/') ||
         content.includes('reports') ||
         content.includes('/reports');
-      
+
       expect(hasReportsIgnore).toBe(true);
     });
   });
@@ -226,33 +216,28 @@ describe('🔍 Audit System Verification', () => {
       '07-quality-gates.sh',
     ];
 
-    it.each(scriptsToValidate)(
-      '%s should have valid bash syntax',
-      (scriptName) => {
-        const scriptPath = path.join(AUDIT_SCRIPTS_DIR, scriptName);
-        
-        // execSync throws if syntax check fails, so reaching here means success
-        execSync(`bash -n "${scriptPath}"`, { encoding: 'utf-8' });
-      }
-    );
+    it.each(scriptsToValidate)('%s should have valid bash syntax', scriptName => {
+      const scriptPath = path.join(AUDIT_SCRIPTS_DIR, scriptName);
+
+      // execSync throws if syntax check fails, so reaching here means success
+      execSync(`bash -n "${scriptPath}"`, { encoding: 'utf-8' });
+    });
   });
 
   describe('🎯 Audit System Completeness', () => {
     it('should have complete audit coverage', () => {
       const auditCategories = [
         'security',
-        'architecture', 
+        'architecture',
         'performance',
-        'coverage',  // test-coverage script
+        'coverage', // test-coverage script
         'deployment',
       ];
 
       const scripts = fs.readdirSync(AUDIT_SCRIPTS_DIR);
-      
+
       auditCategories.forEach(category => {
-        const hasScript = scripts.some(s => 
-          s.toLowerCase().includes(category)
-        );
+        const hasScript = scripts.some(s => s.toLowerCase().includes(category));
         expect(hasScript).toBe(true);
       });
     });

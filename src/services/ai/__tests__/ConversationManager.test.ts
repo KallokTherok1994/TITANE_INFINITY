@@ -14,7 +14,8 @@ vi.mock('@/lib/security', () => ({
     if (cmd === 'vector_store_init') {
       return Promise.resolve('test-store-id-123');
     }
-    if (cmd === 'vector_store_search') return Promise.resolve({ results: [], count: 0, total: 0 });
+    if (cmd === 'vector_store_search')
+      return Promise.resolve({ results: [], count: 0, total: 0 });
     if (cmd === 'vector_search') return Promise.resolve([]);
     if (cmd === 'vector_store_insert') {
       return Promise.resolve({ success: true, id: `vector-${Date.now()}` });
