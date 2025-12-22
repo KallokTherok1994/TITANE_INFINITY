@@ -43,6 +43,8 @@
     "titane:deploy": "./titane.sh deploy",
     "titane:full": "./titane.sh full",
     "titane:health": "./titane.sh health",
+    "auto-heal": "./scripts/maintenance/auto-heal.sh",
+    "auto-fix": "npm run lint -- --fix && npm run format",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "docs": "typedoc",

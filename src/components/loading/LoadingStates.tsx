@@ -11,7 +11,13 @@
  */
 
 export type LoadingState = 'idle' | 'loading' | 'success' | 'error';
-export type LoadingVariant = 'spinner' | 'skeleton' | 'page' | 'inline' | 'overlay' | 'progress';
+export type LoadingVariant =
+  | 'spinner'
+  | 'skeleton'
+  | 'page'
+  | 'inline'
+  | 'overlay'
+  | 'progress';
 export type LoadingSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 // Placeholder - full implementation would go here

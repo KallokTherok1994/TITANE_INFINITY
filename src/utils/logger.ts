@@ -29,8 +29,9 @@ const getLogLevelManager = () => {
     logLevelManagerLoadStarted = true;
     import('@/config/logLevelConfig')
       .then(mod => {
-        logLevelManager = (mod as unknown as { logLevelManager?: RuntimeLogLevelManager })
-          .logLevelManager ?? null;
+        logLevelManager =
+          (mod as unknown as { logLevelManager?: RuntimeLogLevelManager })
+            .logLevelManager ?? null;
       })
       .catch(() => {
         logLevelManager = null;

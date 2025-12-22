@@ -150,6 +150,24 @@ impl MemoryCore {
     }
 
     pub async fn write_log(&self, entry: LogEntry) -> AppResult<()> {
+        let mut message_preview = entry.message.clone();
+        if message_preview.chars().count() > 240 {
+            message_preview = message_preview.chars().take(240).collect::<String>();
+            message_preview.push('…');
+        }
+
+        match entry.level {
+            crate::types::memory::LogLevel::Info => {
+                log::info!(target: "ui", "[UI] {} — {}", entry.module, message_preview);
+            }
+            crate::types::memory::LogLevel::Warning => {
+                log::warn!(target: "ui", "[UI] {} — {}", entry.module, message_preview);
+            }
+            crate::types::memory::LogLevel::Error => {
+                log::error!(target: "ui", "[UI] {} — {}", entry.module, message_preview);
+            }
+        }
+
         let mut data = self.data.write().await;
         push_front_bounded(&mut data.logs, entry, MAX_LOGS);
         data.metadata.mark_write();

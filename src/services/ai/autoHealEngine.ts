@@ -810,9 +810,7 @@ class AutoHealEngine {
   /**
    * Map OMEGA Pipeline step to error type
    */
-  private mapPipelineStepToErrorType(
-    pipelineStep?: string
-  ): AutoHealError['type'] {
+  private mapPipelineStepToErrorType(pipelineStep?: string): AutoHealError['type'] {
     if (!pipelineStep) return 'unknown';
 
     const step = pipelineStep.toLowerCase();

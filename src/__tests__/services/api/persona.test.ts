@@ -50,7 +50,7 @@ describe('personaService', () => {
     });
   });
 
-  it('adaptToContext() devrait fallback vers getMultipliers() si l\'appel échoue', async () => {
+  it("adaptToContext() devrait fallback vers getMultipliers() si l'appel échoue", async () => {
     invokeWithRetryMock.mockImplementation((command: string) => {
       if (command === 'persona_adapt_to_context') {
         return Promise.reject(new Error('validation failed'));
@@ -92,7 +92,7 @@ describe('personaService', () => {
     );
   });
 
-  it('listPersonas() devrait retourner [] en cas d\'erreur', async () => {
+  it("listPersonas() devrait retourner [] en cas d'erreur", async () => {
     invokeWithRetryMock.mockRejectedValueOnce(new Error('validation failed'));
 
     const { personaService } = await import('../../../services/api/persona');

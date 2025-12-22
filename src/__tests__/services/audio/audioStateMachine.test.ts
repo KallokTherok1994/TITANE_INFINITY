@@ -9,10 +9,14 @@ describe('services/audio/audioStateMachine', () => {
   it('AudioStateMachine: transitions valides + listener + history', async () => {
     const consoleLog = vi.spyOn(console, 'log').mockImplementation(() => undefined);
 
-    const { AudioStateMachine } = await import('../../../services/audio/audioStateMachine');
+    const { AudioStateMachine } =
+      await import('../../../services/audio/audioStateMachine');
 
     const onChange = vi.fn();
-    const machine = new AudioStateMachine({ enableLogging: true, onStateChange: onChange });
+    const machine = new AudioStateMachine({
+      enableLogging: true,
+      onStateChange: onChange,
+    });
 
     expect(machine.getState()).toBe('idle');
     expect(machine.canTransition('VAD_SPEECH_START')).toBe(true);
@@ -42,7 +46,8 @@ describe('services/audio/audioStateMachine', () => {
   it('AudioStateMachine: transition invalide retourne false (sans auto-recovery)', async () => {
     const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
-    const { AudioStateMachine } = await import('../../../services/audio/audioStateMachine');
+    const { AudioStateMachine } =
+      await import('../../../services/audio/audioStateMachine');
 
     const machine = new AudioStateMachine({ enableLogging: true });
 
@@ -57,10 +62,14 @@ describe('services/audio/audioStateMachine', () => {
   it('AudioStateMachine: auto-recovery force idle sur ERROR / RESET invalides', async () => {
     const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
-    const { AudioStateMachine } = await import('../../../services/audio/audioStateMachine');
+    const { AudioStateMachine } =
+      await import('../../../services/audio/audioStateMachine');
 
     const onChange = vi.fn();
-    const machine = new AudioStateMachine({ enableLogging: true, onStateChange: onChange });
+    const machine = new AudioStateMachine({
+      enableLogging: true,
+      onStateChange: onChange,
+    });
 
     // On provoque un event invalide mais critique depuis idle.
     expect(machine.transition('RESET')).toBe(true);
@@ -86,7 +95,8 @@ describe('services/audio/audioStateMachine', () => {
   it('AudioStateMachine: history est bornée à 50 entrées', async () => {
     const consoleLog = vi.spyOn(console, 'log').mockImplementation(() => undefined);
 
-    const { AudioStateMachine } = await import('../../../services/audio/audioStateMachine');
+    const { AudioStateMachine } =
+      await import('../../../services/audio/audioStateMachine');
 
     const machine = new AudioStateMachine({ enableLogging: true });
 
@@ -104,7 +114,8 @@ describe('services/audio/audioStateMachine', () => {
   });
 
   it('AudioStateMachine: helpers canUserSpeak/canAISpeak suivent l’état', async () => {
-    const { AudioStateMachine } = await import('../../../services/audio/audioStateMachine');
+    const { AudioStateMachine } =
+      await import('../../../services/audio/audioStateMachine');
 
     const machine = new AudioStateMachine({ enableLogging: false });
 

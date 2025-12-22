@@ -11,6 +11,7 @@
 TITANE_INFINITY est une application Tauri v2 (Rust + React + TypeScript) nécessitant un environnement de développement spécifique pour le frontend et le backend.
 
 **Stack Technique:**
+
 - **Frontend:** React 18.3.1 + Vite 6.0.5 + TypeScript 5.7.3
 - **Backend:** Tauri v2.2.0 + Rust 1.83
 - **Testing:** Vitest 4.0.13 + Playwright 1.56.1
@@ -31,15 +32,17 @@ npm --version   # Doit être >= 9.0.0
 ```
 
 **Installation:**
+
 - **Windows:** Télécharger depuis [nodejs.org](https://nodejs.org/)
 - **macOS:** `brew install node@20`
-- **Linux:** 
+- **Linux:**
   ```bash
   curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
   sudo apt-get install -y nodejs
   ```
 
 **Alternative: pnpm (recommandé pour vitesse)**
+
 ```bash
 npm install -g pnpm
 ```
@@ -58,6 +61,7 @@ cargo --version
 ```
 
 **Configuration:**
+
 ```bash
 # Configurer toolchain stable
 rustup default stable
@@ -67,6 +71,7 @@ rustup update
 ### 3. Build Tools Système
 
 #### Windows
+
 ```powershell
 # Microsoft C++ Build Tools
 # Télécharger: https://visualstudio.microsoft.com/downloads/
@@ -77,6 +82,7 @@ rustup update
 ```
 
 #### macOS
+
 ```bash
 # Xcode Command Line Tools
 xcode-select --install
@@ -86,6 +92,7 @@ xcode-select -p
 ```
 
 #### Linux (Debian/Ubuntu)
+
 ```bash
 sudo apt update
 sudo apt install -y \
@@ -101,6 +108,7 @@ sudo apt install -y \
 ```
 
 #### Linux (Fedora)
+
 ```bash
 sudo dnf install \
   webkit2gtk4.0-devel \
@@ -142,11 +150,13 @@ cd TITANE_INFINITY
 ### 2. Installer les Dépendances
 
 **Option A: npm**
+
 ```bash
 npm install
 ```
 
 **Option B: pnpm (plus rapide)**
+
 ```bash
 pnpm install
 ```
@@ -176,6 +186,7 @@ cp .env.example .env
 ```
 
 **Variables importantes:**
+
 ```bash
 # .env
 VITE_LOG_LEVEL=INFO                    # DEBUG en dev
@@ -426,6 +437,7 @@ export default defineConfig({
 ```
 
 **Installer:**
+
 1. Ouvrir VSCode
 2. Cmd/Ctrl + Shift + P
 3. "Extensions: Show Recommended Extensions"
@@ -436,17 +448,20 @@ export default defineConfig({
 ## Bonnes Pratiques
 
 ### Commits
+
 - Messages en anglais ou français (cohérent dans le projet)
 - Format: `type: description courte`
 - Types: feat, fix, docs, refactor, test, chore
 
 ### Code
+
 - TypeScript strict mode: 100% typé
 - 4-ring model: Respecter les frontières
 - Tests: Couvrir les nouvelles fonctionnalités
 - Logs: Utiliser le logger centralisé (`src/utils/logger.ts`)
 
 ### Performance
+
 - Lazy-load les engines lourds (`src/utils/lazyEngineLoader.tsx`)
 - Éviter les re-renders inutiles (React.memo, useMemo)
 - Profiler avec DevTools: `window.__TITANE_MONITORING__`
@@ -456,6 +471,7 @@ export default defineConfig({
 ## Ressources
 
 **Documentation:**
+
 - Tauri: https://tauri.app/v2/
 - React: https://react.dev/
 - Vite: https://vitejs.dev/
@@ -463,6 +479,7 @@ export default defineConfig({
 - Playwright: https://playwright.dev/
 
 **Projet:**
+
 - Issues: https://github.com/KallokTherok1994/TITANE_INFINITY/issues
 - Wiki: https://github.com/KallokTherok1994/TITANE_INFINITY/wiki
 - Discussions: https://github.com/KallokTherok1994/TITANE_INFINITY/discussions
@@ -472,11 +489,13 @@ export default defineConfig({
 ## Support
 
 **Problème avec le setup?**
+
 1. Vérifier les versions: Node, Rust, build tools
 2. Consulter le troubleshooting ci-dessus
 3. Créer une issue: https://github.com/KallokTherok1994/TITANE_INFINITY/issues
 
 **Questions?**
+
 - Discussions GitHub
 - Documentation `docs/`
 

@@ -320,11 +320,17 @@ mod tests {
     #[tokio::test]
     async fn test_proficiency_update() {
         let engine = SelfModelEngine::new();
-        let initial = engine.get_proficiency("reasoning").await.unwrap();
+        let initial = engine
+            .get_proficiency("reasoning")
+            .await
+            .expect("La capacité 'reasoning' doit exister dans le self-model");
 
         engine.update_capability("reasoning", 0.05).await;
 
-        let updated = engine.get_proficiency("reasoning").await.unwrap();
+        let updated = engine
+            .get_proficiency("reasoning")
+            .await
+            .expect("La capacité 'reasoning' doit exister après update_capability");
         assert!(updated > initial);
     }
 

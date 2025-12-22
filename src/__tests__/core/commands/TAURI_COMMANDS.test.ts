@@ -7,9 +7,8 @@ describe('TAURI_COMMANDS', () => {
   });
 
   it('isValidTauriCommand() devrait valider une commande connue', async () => {
-    const { TAURI_COMMANDS, isValidTauriCommand } = await import(
-      '../../../core/commands/TAURI_COMMANDS'
-    );
+    const { TAURI_COMMANDS, isValidTauriCommand } =
+      await import('../../../core/commands/TAURI_COMMANDS');
 
     expect(isValidTauriCommand(TAURI_COMMANDS.HELIOS_GET_STATE)).toBe(true);
     expect(isValidTauriCommand('not-a-command')).toBe(false);
@@ -20,9 +19,8 @@ describe('TAURI_COMMANDS', () => {
 
     vi.doMock('@tauri-apps/api/core', () => ({ invoke }));
 
-    const { TAURI_COMMANDS, invokeTauri } = await import(
-      '../../../core/commands/TAURI_COMMANDS'
-    );
+    const { TAURI_COMMANDS, invokeTauri } =
+      await import('../../../core/commands/TAURI_COMMANDS');
 
     const result = await invokeTauri<{ ok: boolean }>(TAURI_COMMANDS.HELIOS_GET_STATE, {
       foo: 'bar',
@@ -46,11 +44,12 @@ describe('TAURI_COMMANDS', () => {
 
     vi.doMock('@tauri-apps/api/core', () => ({ invoke }));
 
-    const { TAURI_COMMANDS, invokeTauri } = await import(
-      '../../../core/commands/TAURI_COMMANDS'
-    );
+    const { TAURI_COMMANDS, invokeTauri } =
+      await import('../../../core/commands/TAURI_COMMANDS');
 
-    const result = await invokeTauri<Record<string, unknown>>(TAURI_COMMANDS.CHAT_SEND_MESSAGE);
+    const result = await invokeTauri<Record<string, unknown>>(
+      TAURI_COMMANDS.CHAT_SEND_MESSAGE
+    );
 
     expect(result).toEqual(
       expect.objectContaining({
@@ -64,11 +63,12 @@ describe('TAURI_COMMANDS', () => {
   it('invokeTauri() devrait retourner un fallback status/health si invoke indisponible', async () => {
     vi.doMock('@tauri-apps/api/core', () => ({ invoke: undefined }));
 
-    const { TAURI_COMMANDS, invokeTauri } = await import(
-      '../../../core/commands/TAURI_COMMANDS'
-    );
+    const { TAURI_COMMANDS, invokeTauri } =
+      await import('../../../core/commands/TAURI_COMMANDS');
 
-    const result = await invokeTauri<Record<string, unknown>>(TAURI_COMMANDS.HELIOS_GET_HEALTH);
+    const result = await invokeTauri<Record<string, unknown>>(
+      TAURI_COMMANDS.HELIOS_GET_HEALTH
+    );
 
     expect(result).toEqual(
       expect.objectContaining({

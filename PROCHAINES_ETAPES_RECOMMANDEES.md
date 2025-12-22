@@ -25,6 +25,7 @@ Avec Phase 3 et Phase 4 **100% complètes**, nous sommes à **Phase 4 - Optimis�
 **Impact:** +40 points sur score global
 
 **Problème:**
+
 - Pas de métriques centralisées
 - Pas de dashboard opérationnel
 - Pas de monitoring temps réel
@@ -62,11 +63,11 @@ export class ErrorTracker {
   track(error: Error, context?: Record<string, any>) {
     const key = error.message;
     this.errors.set(key, (this.errors.get(key) || 0) + 1);
-    
+
     // Alerting si taux d'erreur > 5%
     const totalErrors = Array.from(this.errors.values()).reduce((a, b) => a + b, 0);
     const errorRate = (totalErrors / this.getRequestCount()) * 100;
-    
+
     if (errorRate > 5) {
       this.alert('High error rate detected', { errorRate, errors: this.errors });
     }
@@ -90,15 +91,15 @@ export interface PerformanceMetrics {
   pipelineLatency: number; // avg latency per step
   pipelineStepTimes: Record<string, number>; // latency par étape
   pipelineErrors: number;
-  
+
   // Memory
   memoryUsage: number;
   memoryLeaks: boolean;
-  
+
   // Bundles
   initialBundleSize: number;
   lazyLoadedBundles: number;
-  
+
   // User Experience
   firstPaint: number;
   timeToInteractive: number;
@@ -107,11 +108,11 @@ export interface PerformanceMetrics {
 
 export class PerformanceMonitor {
   private metrics: PerformanceMetrics = {...};
-  
+
   collect(): PerformanceMetrics {
     return this.metrics;
   }
-  
+
   export(): string {
     return JSON.stringify(this.metrics, null, 2);
   }
@@ -130,6 +131,7 @@ export class PerformanceMonitor {
 **Impact:** +25 points sur score global
 
 **Problème:**
+
 - CI existe mais peut-être pas actif sur toutes PRs
 - Pas de release automation
 - Pas de bundle size reporting
@@ -163,16 +165,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
-      
+
       - run: npm ci
       - run: npm run build
-      
+
       - name: Analyze Bundle Size
         uses: andresz1/size-limit-action@v1
         with:
@@ -198,16 +200,16 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0 # For changelog
-      
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
-      
+
       - run: npm ci
       - run: npm run build:production
-      
+
       - name: Semantic Release
         uses: cycjimmy/semantic-release-action@v4
         env:
@@ -227,6 +229,7 @@ jobs:
 **Impact:** +20 points performance
 
 **Problème:**
+
 - Infrastructure lazy-loading créée mais pas activée
 - Bundle size théorique: 550KB (pas optimisé)
 - Gains théoriques: -63% bundle (-348KB)
@@ -251,10 +254,10 @@ import { useLazyEngine } from '@/utils/lazyEngineLoader';
 
 function UIPolishComponent() {
   const { engine, isLoading } = useLazyEngine('loadUIUXEngine');
-  
+
   if (isLoading) return <LoadingIndicator />;
   if (!engine) return null;
-  
+
   // Utiliser engine.uiuxEngine
   return <StyledComponent />;
 }
@@ -287,7 +290,7 @@ npm run build -- --analyze
 function VoiceSettings() {
   const [ttsEnabled, setTTSEnabled] = useState(false);
   const { engine } = useConditionalEngine('loadVoiceEngine', ttsEnabled);
-  
+
   return (
     <>
       <Toggle value={ttsEnabled} onChange={setTTSEnabled} />
@@ -314,19 +317,31 @@ import { bench, describe } from 'vitest';
 import { omegaPipeline } from '@/services/ai/omegaPipeline';
 
 describe('OMEGA Pipeline Performance', () => {
-  bench('Step 1: Input Validation', async () => {
-    await omegaPipeline.validateInput('Test message');
-  }, { iterations: 1000 });
-  
-  bench('Step 2: Context Retrieval', async () => {
-    await omegaPipeline.retrieveContext('conv-123');
-  }, { iterations: 1000 });
-  
+  bench(
+    'Step 1: Input Validation',
+    async () => {
+      await omegaPipeline.validateInput('Test message');
+    },
+    { iterations: 1000 }
+  );
+
+  bench(
+    'Step 2: Context Retrieval',
+    async () => {
+      await omegaPipeline.retrieveContext('conv-123');
+    },
+    { iterations: 1000 }
+  );
+
   // ... all 10 steps
-  
-  bench('Complete Pipeline', async () => {
-    await omegaPipeline.execute('Test message', 'conv-123');
-  }, { iterations: 100 });
+
+  bench(
+    'Complete Pipeline',
+    async () => {
+      await omegaPipeline.execute('Test message', 'conv-123');
+    },
+    { iterations: 100 }
+  );
 });
 ```
 
@@ -375,10 +390,10 @@ src/modules/singularity/        # APRÈS (1 seul module)
 // AVANT: useChat.ts (1539 lignes)
 
 // APRÈS: 3 hooks modulaires
-src/hooks/chat/useChatCore.ts       // État et logique core (500 lignes)
-src/hooks/chat/useChatUI.ts         // UI et interactions (400 lignes)
-src/hooks/chat/useChatMemory.ts     // Mémoire et contexte (400 lignes)
-src/hooks/chat/useChat.ts           // Orchestrateur (200 lignes)
+src / hooks / chat / useChatCore.ts; // État et logique core (500 lignes)
+src / hooks / chat / useChatUI.ts; // UI et interactions (400 lignes)
+src / hooks / chat / useChatMemory.ts; // Mémoire et contexte (400 lignes)
+src / hooks / chat / useChat.ts; // Orchestrateur (200 lignes)
 ```
 
 #### Task 2.2.4: Réduire Stores Zustand (5 jours)
@@ -430,11 +445,9 @@ export class OMEGAError extends Error {
 }
 
 // Usage
-throw new OMEGAError(
-  OMEGAErrorCode.STEP_1_VALIDATION,
-  'Input validation failed',
-  { input: userInput }
-);
+throw new OMEGAError(OMEGAErrorCode.STEP_1_VALIDATION, 'Input validation failed', {
+  input: userInput,
+});
 ```
 
 **Effort:** 4 jours  
@@ -452,7 +465,7 @@ export function MonitoringDashboard() {
   const metrics = usePerformanceMetrics();
   const errors = useErrorTracking();
   const pipeline = usePipelineHealth();
-  
+
   return (
     <Dashboard>
       <MetricsPanel metrics={metrics} />
@@ -482,7 +495,7 @@ export let options = {
   stages: [
     { duration: '2m', target: 100 }, // Ramp to 100 users
     { duration: '5m', target: 100 }, // Stay at 100 users
-    { duration: '2m', target: 0 },   // Ramp down
+    { duration: '2m', target: 0 }, // Ramp down
   ],
 };
 
@@ -491,12 +504,12 @@ export default function () {
     message: 'Test message',
     conversationId: 'test-123',
   });
-  
+
   check(res, {
-    'status 200': (r) => r.status === 200,
-    'latency < 200ms': (r) => r.timings.duration < 200,
+    'status 200': r => r.status === 200,
+    'latency < 200ms': r => r.timings.duration < 200,
   });
-  
+
   sleep(1);
 }
 ```
@@ -522,17 +535,20 @@ Phase 4 (82/100) ═════════════════════
 ## 🎯 Objectifs Mesurables
 
 ### Week 2
+
 - ✅ Monitoring dashboard opérationnel
 - ✅ CI/CD avec bundle size reporting
 - ✅ Lazy-loading Phase 1 activé
 - ✅ Bundle size: 550KB → 380KB (-30%)
 
 ### Week 5
+
 - ✅ Performance benchmarking automatisé
 - ✅ Phase 2 tasks: 50% complete
 - ✅ Bundle size: 380KB → 250KB (-54%)
 
 ### Week 10
+
 - ✅ Structured error codes implémentés
 - ✅ UI control panels déployés
 - ✅ Load testing suite fonctionnelle
@@ -582,7 +598,7 @@ export function trackError(error: Error, context?: any) {
     context,
     timestamp: Date.now(),
   });
-  
+
   // Send to Sentry (déjà configuré)
   if (window.Sentry) {
     window.Sentry.captureException(error, { extra: context });
@@ -595,6 +611,7 @@ export function trackError(error: Error, context?: any) {
 ## 🔥 Actions Immédiates (Aujourd'hui)
 
 1. ✅ **Vérifier CI est actif**
+
    ```bash
    # Créer une PR de test
    git checkout -b test-ci
@@ -604,6 +621,7 @@ export function trackError(error: Error, context?: any) {
    ```
 
 2. ✅ **Activer Sentry** (si pas déjà fait)
+
    ```bash
    # Ajouter VITE_SENTRY_DSN dans .env
    ```
@@ -620,17 +638,20 @@ export function trackError(error: Error, context?: any) {
 ## 📈 KPIs à Tracker
 
 ### Performance
+
 - [ ] Bundle size: ? KB (baseline)
 - [ ] First Paint: ? ms (baseline)
 - [ ] Time to Interactive: ? ms (baseline)
 - [ ] OMEGA Pipeline latency: ? ms (baseline)
 
 ### Quality
+
 - [ ] Test coverage: ? % (baseline)
 - [ ] Error rate: ? % (baseline)
 - [ ] CI success rate: ? % (baseline)
 
 ### Velocity
+
 - [ ] Build time: ? min (baseline)
 - [ ] PR merge time: ? hours (baseline)
 
@@ -641,6 +662,7 @@ export function trackError(error: Error, context?: any) {
 **Prochaine Action Recommandée:** Commencer par **Monitoring & Observability** (Action 1.1)
 
 **Pourquoi?**
+
 - Impact maximal sur visibilité
 - Foundation pour toutes autres optimisations
 - Quick wins disponibles

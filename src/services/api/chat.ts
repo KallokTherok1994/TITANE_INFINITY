@@ -412,7 +412,7 @@ class ChatService {
         monitoring.addBreadcrumb('Chat stream completed', 'chat', {
           endpoint: 'LEGACY',
           source,
-          provider: response.provider ?? (config?.provider ?? 'auto'),
+          provider: response.provider ?? config?.provider ?? 'auto',
           mode: config?.mode,
           latencyMs: effectiveLatency,
           chunkCount: response.metadata?.chunkCount,
