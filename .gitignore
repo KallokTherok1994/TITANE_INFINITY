@@ -48,6 +48,8 @@ Thumbs.db
 
 # Tauri
 /src-tauri/target
+/src-tauri/target-test
+/src-tauri/target-release
 /src-tauri/WixTools
 
 # TITANE∞ Dual-Runtime Directories
