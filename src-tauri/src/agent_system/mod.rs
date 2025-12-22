@@ -352,7 +352,7 @@ impl AgentTask {
             input: serde_json::json!({}),
             required_capabilities: Vec::new(),
             priority: TaskPriority::Normal,
-            timeout_ms: 60000,
+            timeout_ms: 75000, // ✨ v26.2.1: Increased from 60s to 75s (cloud-aligned)
             metadata: HashMap::new(),
         }
     }
