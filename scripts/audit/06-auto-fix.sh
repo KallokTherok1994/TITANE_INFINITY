@@ -132,6 +132,9 @@ fix_clean_artifacts() {
     
     local cleaned=0
     
+    # Maximum number of files to clean per pattern (safety limit)
+    local MAX_FILES_TO_CLEAN=100
+    
     # Clean common temporary files
     local temp_patterns=(
         "*.log.tmp"
@@ -146,7 +149,7 @@ fix_clean_artifacts() {
         while IFS= read -r file; do
             rm -f "$file"
             ((cleaned++))
-        done < <(find "$PROJECT_ROOT" -name "$pattern" -type f 2>/dev/null | grep -v node_modules | grep -v target | head -100)
+        done < <(find "$PROJECT_ROOT" -name "$pattern" -type f 2>/dev/null | grep -v node_modules | grep -v target | head -"$MAX_FILES_TO_CLEAN")
     done
     
     if [[ $cleaned -gt 0 ]]; then

@@ -231,12 +231,8 @@ describe('🔍 Audit System Verification', () => {
       (scriptName) => {
         const scriptPath = path.join(AUDIT_SCRIPTS_DIR, scriptName);
         
-        try {
-          execSync(`bash -n "${scriptPath}"`, { encoding: 'utf-8' });
-          expect(true).toBe(true);
-        } catch {
-          expect.fail(`${scriptName} has invalid bash syntax`);
-        }
+        // execSync throws if syntax check fails, so reaching here means success
+        execSync(`bash -n "${scriptPath}"`, { encoding: 'utf-8' });
       }
     );
   });
