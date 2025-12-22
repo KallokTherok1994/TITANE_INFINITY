@@ -8,7 +8,7 @@
 
 import React, { useState } from 'react';
 import { Play, CheckCircle, XCircle, Clock, Zap, AlertCircle } from 'lucide-react';
-import { safeInvoke } from '../../../utils/invoke';
+import chatEngineCommands from '@/services/tauri/chatEngine.commands';
 
 interface ProviderTest {
   provider: 'gemini' | 'openai' | 'anthropic' | 'ollama';
@@ -44,23 +44,16 @@ export const AIProvidersTester: React.FC = () => {
     const startTime = performance.now();
 
     try {
-      const result = await safeInvoke('chat_send_message', {
-        request: {
-          message: TEST_PROMPT,
-          conversation_id: 'test-' + Date.now(),
-          provider,
-          model: undefined,
-          streaming: false,
-        },
+      const result = await chatEngineCommands.generate({
+        message: TEST_PROMPT,
+        conversationId: `test-${Date.now()}`,
+        mode: 'default',
+        provider,
       });
 
       const latency = Math.round(performance.now() - startTime);
 
-      if (result && typeof result === 'object' && 'success' in result && result.success) {
-        const data = result as {
-          message: { content: string; provider: string; model: string };
-          success: boolean;
-        };
+      if (result && typeof result === 'object' && typeof result.content === 'string') {
         setTests(prev => {
           const currentTest = prev[provider];
           if (!currentTest) return prev;
@@ -71,14 +64,13 @@ export const AIProvidersTester: React.FC = () => {
               ...currentTest,
               status: 'success',
               latency,
-              response: data.message.content,
+              response: result.content,
               timestamp: Date.now(),
             },
           };
         });
       } else {
-        const errorData = result as { error?: string } | null;
-        throw new Error(errorData?.error || 'Unknown error');
+        throw new Error('Unknown error');
       }
     } catch (err) {
       const latency = Math.round(performance.now() - startTime);
