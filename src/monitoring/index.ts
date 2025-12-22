@@ -230,7 +230,9 @@ class MonitoringManager {
         ? String(error.message)
         : String(error);
     const errorStack =
-      error && typeof error === 'object' && 'stack' in error ? String(error.stack) : undefined;
+      error && typeof error === 'object' && 'stack' in error
+        ? String(error.stack)
+        : undefined;
 
     logger.error('Error tracked', {
       message: errorMessage,

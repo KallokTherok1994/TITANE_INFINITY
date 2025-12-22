@@ -4,6 +4,7 @@
 **Date :** 2025-12-21
 
 ---
+
 # 🚀 Guide de démarrage rapide — TITANE_INFINITY
 
 **Version :** 26.2.0  
@@ -96,4 +97,3 @@ Le repo fournit `./titane.sh` (utile si l’environnement ou les dépendances so
 ```bash
 ./titane.sh repair
 ```
-
