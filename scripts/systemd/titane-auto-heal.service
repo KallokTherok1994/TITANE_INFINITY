@@ -1,0 +1,14 @@
+[Unit]
+Description=TITANE∞ Auto-Heal (user) — detect and heal reboot loops
+After=default.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/titane-os/Documents/GitHub/TITANE_INFINITY
+Environment=PATH=/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin:%h/.local/bin:/usr/local/bin:/usr/bin
+Environment=AUTO_HEAL_RESTART=1
+ExecStart=/usr/bin/env bash -lc 'bash scripts/maintenance/auto-heal.sh --monitor'
+TimeoutSec=180
+
+[Install]
+WantedBy=default.target
