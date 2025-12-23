@@ -244,7 +244,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
     refreshHealth,
   } = useConversationEngine({
     mode: 'default',
-    autoHealthCheck: true,
+    autoHealthCheck: false,
     maxMessages: 500, // Limite historique pour optimiser mémoire
   });
 

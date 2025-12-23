@@ -134,6 +134,21 @@ const CognitiveLayoutControl = lazy(() =>
 import './components/psyche/DeepPsychePanel.css';
 import { presenceOS } from './engines/presence/_stubs';
 
+type LazyModule<T> = { default: T };
+
+const lazyWithTimeout = <T,>(
+  loader: () => Promise<LazyModule<T>>,
+  options: { timeoutMs: number; label: string }
+) =>
+  lazy(() => {
+    const timeoutPromise = new Promise<LazyModule<T>>((_, reject) => {
+      setTimeout(() => {
+        reject(new Error(`Lazy load timeout: ${options.label}`));
+      }, options.timeoutMs);
+    });
+    return Promise.race([loader(), timeoutPromise]);
+  });
+
 // ✨ v24.3.0 - Lazy loaded pages
 const PerformanceTest = lazy(() =>
   import('./pages/PerformanceTest').then(m => ({ default: m.PerformanceTest }))
@@ -146,8 +161,9 @@ const EvolutionMonitor = lazy(() => import('./ui/pages/EvolutionMonitor'));
 const AdminPage = lazy(() =>
   import('./features/admin').then(m => ({ default: m.AdminPage }))
 );
-const TitanePage = lazy(() =>
-  import('./pages/TitanePage').then(m => ({ default: m.TitanePage }))
+const TitanePage = lazyWithTimeout(
+  () => import('./pages/TitanePage').then(m => ({ default: m.TitanePage })),
+  { timeoutMs: 20000, label: 'TitanePage' }
 );
 const OrchestrationMetaCenter = lazy(() =>
   import('./pages/OrchestrationMetaCenter').then(m => ({
