@@ -39,6 +39,94 @@ import {
 } from '@/services/voice/fullDuplexOrchestrator';
 import { haloEngine } from '@/services/voice/haloEngine'; // ✅ v∞.7 Halo sync
 
+type MicrophoneProbeState = {
+  lastAt: number;
+  lastValue: boolean | null;
+  inFlight: Promise<boolean> | null;
+};
+
+const MICROPHONE_PROBE_CACHE_MS = 6000;
+const MICROPHONE_PROBE_DURATION_MS = 1000;
+const microphoneProbeState: MicrophoneProbeState = {
+  lastAt: 0,
+  lastValue: null,
+  inFlight: null,
+};
+
+const probeMicrophoneAvailabilityTauri = async (): Promise<boolean> => {
+  const now = Date.now();
+  if (
+    microphoneProbeState.lastValue !== null &&
+    now - microphoneProbeState.lastAt < MICROPHONE_PROBE_CACHE_MS
+  ) {
+    return microphoneProbeState.lastValue;
+  }
+
+  if (microphoneProbeState.inFlight) {
+    return microphoneProbeState.inFlight;
+  }
+
+  microphoneProbeState.inFlight = (async () => {
+    try {
+      const timeoutMs = MICROPHONE_PROBE_DURATION_MS + 5000;
+      const result = await secureInvoke<{ success: boolean }>(
+        'test_microphone',
+        { durationMs: MICROPHONE_PROBE_DURATION_MS },
+        { timeout: timeoutMs }
+      );
+      const ok = result?.success === true;
+      microphoneProbeState.lastAt = Date.now();
+      microphoneProbeState.lastValue = ok;
+      return ok;
+    } catch {
+      microphoneProbeState.lastAt = Date.now();
+      microphoneProbeState.lastValue = false;
+      return false;
+    } finally {
+      microphoneProbeState.inFlight = null;
+    }
+  })();
+
+  return microphoneProbeState.inFlight;
+};
+
+const probeMicrophoneAvailabilityBrowser = async (): Promise<boolean> => {
+  const now = Date.now();
+  if (
+    microphoneProbeState.lastValue !== null &&
+    now - microphoneProbeState.lastAt < MICROPHONE_PROBE_CACHE_MS
+  ) {
+    return microphoneProbeState.lastValue;
+  }
+
+  if (microphoneProbeState.inFlight) {
+    return microphoneProbeState.inFlight;
+  }
+
+  microphoneProbeState.inFlight = (async () => {
+    try {
+      if (!navigator.mediaDevices?.getUserMedia) {
+        microphoneProbeState.lastAt = Date.now();
+        microphoneProbeState.lastValue = false;
+        return false;
+      }
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      stream.getTracks().forEach(track => track.stop());
+      microphoneProbeState.lastAt = Date.now();
+      microphoneProbeState.lastValue = true;
+      return true;
+    } catch {
+      microphoneProbeState.lastAt = Date.now();
+      microphoneProbeState.lastValue = false;
+      return false;
+    } finally {
+      microphoneProbeState.inFlight = null;
+    }
+  })();
+
+  return microphoneProbeState.inFlight;
+};
+
 // ═══ TYPES ═══
 
 export type VoiceEngineState = 'idle' | 'listening' | 'processing' | 'speaking' | 'error';
@@ -166,32 +254,10 @@ export function useVoiceEngine(
         const ttsStatus = await hybridTTS.getStatus();
 
         // Check mic - OPUS v∞.2: Tauri vs Browser
-        let micAvailable = false;
         const env = detectEnvironment();
-
-        if (env.isTauri) {
-          // En mode Tauri, utiliser test_microphone backend
-          try {
-            // durationMs: 1000ms minimum pour test rapide de disponibilité
-            const result = await secureInvoke<{ success: boolean }>('test_microphone', {
-              durationMs: 1000,
-            });
-            micAvailable = result?.success === true;
-          } catch {
-            console.warn('[useVoiceEngine] Tauri microphone test failed');
-          }
-        } else {
-          // En mode Browser, utiliser getUserMedia
-          try {
-            if (navigator.mediaDevices?.getUserMedia) {
-              const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-              stream.getTracks().forEach(track => track.stop());
-              micAvailable = true;
-            }
-          } catch {
-            console.warn('[useVoiceEngine] Browser microphone not available');
-          }
-        }
+        const micAvailable = env.isTauri
+          ? await probeMicrophoneAvailabilityTauri()
+          : await probeMicrophoneAvailabilityBrowser();
 
         if (mountedRef.current) {
           setStatus(prev => ({

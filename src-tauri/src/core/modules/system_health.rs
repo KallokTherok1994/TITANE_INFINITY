@@ -119,6 +119,21 @@ pub struct HealthIssue {
 
 impl SystemHealth {
     pub fn new() -> Self {
+        fn read_env_bool(name: &str) -> Option<bool> {
+            let raw = std::env::var(name).ok()?;
+            let value = raw.trim().to_ascii_lowercase();
+            match value.as_str() {
+                "1" | "true" | "yes" | "on" => Some(true),
+                "0" | "false" | "no" | "off" => Some(false),
+                _ => None,
+            }
+        }
+
+        // Par défaut: moins agressif en release (stable), permissif en debug (dev).
+        // Surchargable via env: TITANE_SYSTEM_AUTO_HEAL=0/1
+        let auto_heal_default = cfg!(debug_assertions);
+        let auto_heal_enabled = read_env_bool("TITANE_SYSTEM_AUTO_HEAL").unwrap_or(auto_heal_default);
+
         Self {
             health: EngineHealth::Offline,
             initialized: false,
@@ -135,7 +150,7 @@ impl SystemHealth {
             repairs_performed: 0,
             last_repair_ms: 0,
             success_rate: 1.0,
-            auto_heal_enabled: true,
+            auto_heal_enabled,
             global_health: 1.0,
         }
     }
