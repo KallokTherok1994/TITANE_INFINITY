@@ -475,7 +475,7 @@ mod tests {
         let result = engine.process_decision("test_decision").await;
 
         assert!(result.is_some());
-        let result = result.unwrap();
+        let result = result.expect("decision should be processed");
         assert_eq!(result.status, DecisionStatus::Approved);
     }
 

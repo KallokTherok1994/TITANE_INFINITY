@@ -172,12 +172,16 @@ mod tests {
     #[tokio::test]
     async fn test_performance_engine_initialization() {
         let config = PerformanceConfig::default();
-        let engine = PerformanceEngine::new(config).unwrap();
+        let engine = PerformanceEngine::new(config)
+            .expect("performance engine should build with default config");
         let result = engine.initialize().await;
         assert!(result.is_ok());
 
         // Cleanup
-        engine.shutdown().await.unwrap();
+        engine
+            .shutdown()
+            .await
+            .expect("shutdown should succeed in test");
     }
 
     #[tokio::test]
@@ -185,7 +189,8 @@ mod tests {
         let mut config = PerformanceConfig::default();
         config.enable_parallel_omega = true;
 
-        let engine = PerformanceEngine::new(config).unwrap();
+        let engine = PerformanceEngine::new(config)
+            .expect("performance engine should build when parallel omega enabled");
         assert!(engine.is_parallel_enabled());
     }
 }

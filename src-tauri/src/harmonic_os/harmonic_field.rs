@@ -214,11 +214,29 @@ mod tests {
         let field = HarmonicField::new();
 
         // Kernel has weight 2.0
-        assert_eq!(*field.weights.get(&SignalSource::Kernel).unwrap(), 2.0);
+        assert_eq!(
+            *field
+                .weights
+                .get(&SignalSource::Kernel)
+                .expect("kernel weight should be configured"),
+            2.0
+        );
         // Omega has weight 1.5
-        assert_eq!(*field.weights.get(&SignalSource::Omega).unwrap(), 1.5);
+        assert_eq!(
+            *field
+                .weights
+                .get(&SignalSource::Omega)
+                .expect("omega weight should be configured"),
+            1.5
+        );
         // Temporal has lower weight 0.9
-        assert_eq!(*field.weights.get(&SignalSource::Temporal).unwrap(), 0.9);
+        assert_eq!(
+            *field
+                .weights
+                .get(&SignalSource::Temporal)
+                .expect("temporal weight should be configured"),
+            0.9
+        );
     }
 
     #[test]

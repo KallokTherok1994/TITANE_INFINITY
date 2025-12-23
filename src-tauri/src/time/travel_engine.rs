@@ -345,7 +345,9 @@ mod tests {
     async fn test_travel_engine() {
         let master_key = MasterKey::generate();
         let keypair = SigningKeypair::generate();
-        let engine = TravelEngine::new(&master_key, keypair).await.unwrap();
+        let engine = TravelEngine::new(&master_key, keypair)
+            .await
+            .expect("travel engine should initialize");
 
         let context = SnapshotContext {
             xp_total: 1000,
@@ -360,13 +362,19 @@ mod tests {
         let id = engine
             .create_snapshot(data.clone(), context, "Test".to_string())
             .await
-            .unwrap();
+            .expect("snapshot creation should succeed");
 
         // Restaurer
-        let restored = engine.restore_snapshot(&id).await.unwrap();
+        let restored = engine
+            .restore_snapshot(&id)
+            .await
+            .expect("snapshot restore should succeed");
         assert_eq!(data, restored);
 
         // Supprimer
-        engine.delete_snapshot(&id).await.unwrap();
+        engine
+            .delete_snapshot(&id)
+            .await
+            .expect("snapshot deletion should succeed");
     }
 }

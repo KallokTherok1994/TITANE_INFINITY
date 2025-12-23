@@ -119,7 +119,10 @@ mod tests {
         
         assert!(!input.is_active());
         
-        input.start().await.unwrap();
+        input
+            .start()
+            .await
+            .expect("audio input should start without errors");
         assert!(input.is_active());
         
         tokio::time::sleep(tokio::time::Duration::from_millis(200)).await;

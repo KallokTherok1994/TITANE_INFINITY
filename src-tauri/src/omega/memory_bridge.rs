@@ -434,7 +434,7 @@ mod tests {
             .await;
 
         assert!(result.is_ok());
-        let memory_id = result.unwrap();
+        let memory_id = result.expect("memory bridge should return stored id");
         assert!(!memory_id.is_empty());
     }
 }

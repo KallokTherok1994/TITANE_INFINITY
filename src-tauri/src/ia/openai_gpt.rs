@@ -210,12 +210,16 @@ mod tests {
         assert!(client.sanitize_input("   ").is_err());
 
         // Valid message
-        let result = client.sanitize_input("Hello, world!").unwrap();
+        let result = client
+            .sanitize_input("Hello, world!")
+            .expect("valid message should pass sanitation");
         assert_eq!(result, "Hello, world!");
 
         // Long message truncation
         let long_msg = "a".repeat(MAX_CONTEXT_LENGTH + 1000);
-        let result = client.sanitize_input(&long_msg).unwrap();
+        let result = client
+            .sanitize_input(&long_msg)
+            .expect("long message should be truncated not rejected");
         assert_eq!(result.len(), MAX_CONTEXT_LENGTH);
     }
 

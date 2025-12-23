@@ -753,7 +753,10 @@ mod tests {
 
         let plan = ExecutionPlan::from_routing("test-456".to_string(), &routing, "Hello!");
 
-        let result = executor.execute(&plan).await.unwrap();
+        let result = executor
+            .execute(&plan)
+            .await
+            .expect("parallel executor should succeed for routing plan");
         assert!(result.success);
     }
 
@@ -834,7 +837,12 @@ mod tests {
 
         assert!(!result.success);
         assert!(result.error.is_some());
-        assert!(result.error.unwrap().contains("Timeout"));
+        assert!(
+            result
+                .error
+                .expect("failed task should have an error")
+                .contains("Timeout")
+        );
     }
 
     #[test]

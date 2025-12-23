@@ -585,14 +585,16 @@ mod tests {
     #[test]
     fn test_contract_violation_serialize() {
         let v = ContractViolation::ForbiddenAction("test".to_string());
-        let json = serde_json::to_string(&v).unwrap();
+        let json = serde_json::to_string(&v)
+            .expect("contract violation should serialize");
         assert!(json.contains("ForbiddenAction"));
     }
 
     #[test]
     fn test_contract_violation_deserialize() {
         let json = r#"{"InvariantViolation":"broken"}"#;
-        let v: ContractViolation = serde_json::from_str(json).unwrap();
+        let v: ContractViolation = serde_json::from_str(json)
+            .expect("contract violation should deserialize");
         assert!(matches!(v, ContractViolation::InvariantViolation(_)));
     }
 
@@ -762,7 +764,8 @@ mod tests {
     #[test]
     fn test_contract_serialize() {
         let contract = AgentContract::default_for_role(&AgentRole::Security);
-        let json = serde_json::to_string(&contract).unwrap();
+        let json = serde_json::to_string(&contract)
+            .expect("agent contract should serialize");
         assert!(json.contains("Security"));
         assert!(json.contains("max_execution_time_seconds"));
     }
@@ -770,8 +773,10 @@ mod tests {
     #[test]
     fn test_contract_deserialize() {
         let contract = AgentContract::default_for_role(&AgentRole::API);
-        let json = serde_json::to_string(&contract).unwrap();
-        let restored: AgentContract = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&contract)
+            .expect("agent contract should serialize");
+        let restored: AgentContract = serde_json::from_str(&json)
+            .expect("agent contract should deserialize");
         assert_eq!(restored.role, AgentRole::API);
     }
 }

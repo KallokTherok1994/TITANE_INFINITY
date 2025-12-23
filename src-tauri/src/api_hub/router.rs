@@ -562,8 +562,10 @@ mod tests {
     #[test]
     fn test_model_choice_strategy_serialization() {
         let strategy = ModelChoiceStrategy::LongContext;
-        let json = serde_json::to_string(&strategy).unwrap();
-        let restored: ModelChoiceStrategy = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&strategy)
+            .expect("should serialize model choice strategy");
+        let restored: ModelChoiceStrategy = serde_json::from_str(&json)
+            .expect("should deserialize model choice strategy");
         assert_eq!(restored, strategy);
     }
 
@@ -581,8 +583,10 @@ mod tests {
         ];
 
         for strategy in strategies {
-            let json = serde_json::to_string(&strategy).unwrap();
-            let restored: ModelChoiceStrategy = serde_json::from_str(&json).unwrap();
+            let json = serde_json::to_string(&strategy)
+                .expect("should serialize model choice strategy variant");
+            let restored: ModelChoiceStrategy = serde_json::from_str(&json)
+                .expect("should deserialize model choice strategy variant");
             assert_eq!(restored, strategy);
         }
     }

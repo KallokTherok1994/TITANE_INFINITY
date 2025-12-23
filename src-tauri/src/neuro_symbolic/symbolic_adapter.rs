@@ -220,7 +220,7 @@ mod tests {
         let result = neuro_translate_symbolic().await;
         assert!(result.is_ok());
 
-        let translation = result.unwrap();
+        let translation = result.expect("symbolic translation command should succeed");
         assert!(!translation.states.is_empty());
     }
 

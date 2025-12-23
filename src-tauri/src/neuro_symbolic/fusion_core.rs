@@ -201,7 +201,13 @@ mod tests {
         core.add_neuronal_data("test".to_string(), 0.9);
 
         assert!(core.neuronal_data.contains_key("test"));
-        assert_eq!(*core.neuronal_data.get("test").unwrap(), 0.9);
+        assert_eq!(
+            *core
+                .neuronal_data
+                .get("test")
+                .expect("neuronal data should contain test key"),
+            0.9
+        );
     }
 
     #[test]
@@ -210,7 +216,13 @@ mod tests {
         core.add_symbolic_data("logic".to_string(), 0.85);
 
         assert!(core.symbolic_data.contains_key("logic"));
-        assert_eq!(*core.symbolic_data.get("logic").unwrap(), 0.85);
+        assert_eq!(
+            *core
+                .symbolic_data
+                .get("logic")
+                .expect("symbolic data should contain logic key"),
+            0.85
+        );
     }
 
     #[test]
@@ -318,7 +330,13 @@ mod tests {
         core.add_neuronal_data("key".to_string(), 0.9);
 
         assert_eq!(core.neuronal_data.len(), 1);
-        assert_eq!(*core.neuronal_data.get("key").unwrap(), 0.9);
+        assert_eq!(
+            *core
+                .neuronal_data
+                .get("key")
+                .expect("neuronal data should overwrite existing key"),
+            0.9
+        );
     }
 
     #[tokio::test]
@@ -338,7 +356,7 @@ mod tests {
         let result = neuro_fuse().await;
         assert!(result.is_ok());
 
-        let report = result.unwrap();
+        let report = result.expect("neuro fuse command should produce report");
         assert!(report.state.active_connections > 0);
         assert!(report.state.fusion_level > 0.0);
     }

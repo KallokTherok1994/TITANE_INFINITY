@@ -535,7 +535,7 @@ mod tests {
             output.err()
         );
 
-        let output = output.unwrap();
+        let output = output.expect("expected pipeline output after successful process");
         assert!(!output.request_id.is_empty());
         assert!(output.total_latency_ms > 0);
     }
@@ -570,11 +570,17 @@ mod tests {
     #[tokio::test]
     async fn test_pipeline_stats() {
         let pipeline = OmegaPipeline::default();
-        pipeline.initialize().await.unwrap();
+        pipeline
+            .initialize()
+            .await
+            .expect("pipeline initialization should succeed");
 
         // Process a request
         let input = PipelineInput::new("Test");
-        let _ = pipeline.process(input).await;
+        let _ = pipeline
+            .process(input)
+            .await
+            .expect("pipeline should process request for stats collection");
 
         let stats = pipeline.get_stats().await;
         assert!(stats.total_requests >= 1);
@@ -594,10 +600,16 @@ mod tests {
     #[tokio::test]
     async fn test_pipeline_timings() {
         let pipeline = OmegaPipeline::default();
-        pipeline.initialize().await.unwrap();
+        pipeline
+            .initialize()
+            .await
+            .expect("pipeline initialization should succeed");
 
         let input = PipelineInput::new("Hello");
-        let output = pipeline.process(input).await.unwrap();
+        let output = pipeline
+            .process(input)
+            .await
+            .expect("pipeline should return output with timings");
 
         // Should have timings for each stage
         assert!(output.timings.contains_key("router"));

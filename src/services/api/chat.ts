@@ -289,69 +289,9 @@ class ChatService {
     messages: ChatMessage[],
     config?: StreamConfig
   ): Promise<ChatResponse> {
-    this.lastEndpoint = 'LEGACY';
-    const startedAt = Date.now();
-    monitoring.trackRequest();
-
-    const request = this.buildRequest(messages, config, false);
-
-    const lastMessage = messages[messages.length - 1]?.content ?? '';
-    monitoring.addBreadcrumb('Chat sendMessage (LEGACY)', 'chat', {
-      endpoint: 'LEGACY',
-      provider: config?.provider ?? 'auto',
-      mode: config?.mode,
-      messageCount: messages.length,
-      messageLength: lastMessage.length,
-    });
-
-    console.log('[ChatService] 📤 Envoi message:', {
-      provider: config?.provider ?? 'auto',
-      messageCount: messages.length,
-      lastMessage: messages[messages.length - 1]?.content?.substring(0, 50) + '...',
-    });
-
-    try {
-      const backendResponse = await invokeWithRetry<BackendChatResponse>(
-        'chat_send_message', // ANCIENNE commande
-        { request },
-        { ...LONG_COMMAND_OPTIONS, context: 'Chat' }
-      );
-
-      const backendLatency = this.resolveLatencyMs(backendResponse.latency_ms);
-      const measuredLatency = Date.now() - startedAt;
-      const effectiveLatency = backendLatency > 0 ? backendLatency : measuredLatency;
-      monitoring.trackPipelineLatency(effectiveLatency);
-
-      if (!backendResponse.success || !backendResponse.message) {
-        monitoring.trackPipelineError();
-        throw new Error(backendResponse.error ?? 'Réponse invalide du backend LEGACY');
-      }
-
-      console.log('[ChatService] 📥 Réponse reçue:', {
-        success: backendResponse.success,
-        provider: this.resolveProvider(
-          backendResponse.message?.provider,
-          config?.provider
-        ),
-        contentLength: backendResponse.message?.content?.length ?? 0,
-        latencyMs: this.resolveLatencyMs(backendResponse.latency_ms),
-      });
-
-      return this.normalizeResponse(backendResponse, config);
-    } catch (error) {
-      console.error('[ChatService] ❌ Erreur sendMessage:', error);
-
-      monitoring.trackError(error, {
-        endpoint: 'LEGACY',
-        provider: config?.provider ?? 'auto',
-        mode: config?.mode,
-        messageCount: messages.length,
-      });
-      monitoring.trackPipelineError();
-
-      const reason = error instanceof Error ? error.message : String(error);
-      throw new Error(`Chat envoi échoué: ${reason}`);
-    }
+    throw new Error(
+      'Legacy chat_send_message is disabled. Use OMEGA conversation_generate.'
+    );
   }
 
   /**

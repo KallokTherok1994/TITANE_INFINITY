@@ -429,12 +429,12 @@ mod tests {
         let img = create_test_image();
         let mut bytes = Vec::new();
         img.write_to(&mut std::io::Cursor::new(&mut bytes), image::ImageFormat::Png)
-            .unwrap();
+            .expect("should encode test image to PNG bytes");
 
         let result = engine.analyze_image_bytes(&bytes).await;
         assert!(result.is_ok());
 
-        let analysis = result.unwrap();
+        let analysis = result.expect("vision analysis should return metrics");
         assert_eq!(analysis.width, 100);
         assert_eq!(analysis.height, 100);
         assert!(!analysis.features.is_empty());
@@ -452,7 +452,9 @@ mod tests {
         let engine = VisionEngine::new(config);
 
         let img = create_test_image(); // 100x100
-        let resized = engine.preprocess_image(img).unwrap();
+        let resized = engine
+            .preprocess_image(img)
+            .expect("should resize image without errors");
 
         let (width, height) = resized.dimensions();
         assert!(width <= 50 && height <= 50);
@@ -464,7 +466,9 @@ mod tests {
         let engine = VisionEngine::new(config);
 
         let img = create_test_image();
-        let features = engine.extract_features(&img).unwrap();
+        let features = engine
+            .extract_features(&img)
+            .expect("feature extraction should succeed");
 
         // RGB histograms (96) + edge density (4) = 100 features
         assert_eq!(features.len(), 100);
@@ -481,7 +485,9 @@ mod tests {
         let engine = VisionEngine::new(config);
 
         let img = create_test_image();
-        let colors = engine.extract_dominant_colors_impl(&img).unwrap();
+        let colors = engine
+            .extract_dominant_colors_impl(&img)
+            .expect("dominant color extraction should succeed");
 
         assert_eq!(colors.len(), 5);
         // Colors should be valid RGB values

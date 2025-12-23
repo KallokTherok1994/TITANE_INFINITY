@@ -461,7 +461,10 @@ mod tests {
             metadata: std::collections::HashMap::new(),
         };
 
-        let response = provider.execute(&request).await.unwrap();
+        let response = provider
+            .execute(&request)
+            .await
+            .expect("gemini provider should return mock text");
         match response.content {
             ResponseContent::Text(text) => {
                 assert!(!text.is_empty());

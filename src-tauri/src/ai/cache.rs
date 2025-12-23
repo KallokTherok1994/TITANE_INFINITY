@@ -295,7 +295,12 @@ mod tests {
 
         let cached = cache.get_response("test prompt", 0.7, 100).await;
         assert!(cached.is_some());
-        assert_eq!(cached.unwrap().content, "Test response");
+        assert_eq!(
+            cached
+                .expect("cached response should be present")
+                .content,
+            "Test response"
+        );
     }
 
     #[tokio::test]

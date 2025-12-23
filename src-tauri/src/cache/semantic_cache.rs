@@ -706,7 +706,11 @@ mod tests {
         // Recherche exacte
         let hit = cache.lookup("Comment fonctionne Rust?", &embedding).await;
         assert!(hit.is_some());
-        assert!(!hit.unwrap().needs_adaptation);
+        assert!(
+            !hit
+                .expect("exact query should hit cache")
+                .needs_adaptation
+        );
 
         // Recherche différente (pas de hit car embedding différent)
         let different_embedding = vec![0.0, 1.0, 0.0, 0.0];

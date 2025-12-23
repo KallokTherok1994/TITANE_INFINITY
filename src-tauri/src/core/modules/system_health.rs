@@ -492,7 +492,9 @@ mod tests {
         let mut health = SystemHealth::new();
         assert!(!health.is_initialized());
 
-        health.init().unwrap();
+        health
+            .init()
+            .expect("system health should initialize before use");
         assert!(health.is_initialized());
         assert_eq!(health.health(), EngineHealth::Healthy);
     }
@@ -500,9 +502,13 @@ mod tests {
     #[test]
     fn test_collect_metrics() {
         let mut health = SystemHealth::new();
-        health.init().unwrap();
+        health
+            .init()
+            .expect("system health should initialize before metrics collection");
 
-        health.collect_metrics().unwrap();
+        health
+            .collect_metrics()
+            .expect("should collect metrics after initialization");
 
         assert!(health.cpu_usage >= 0.0);
         assert!(health.memory_usage >= 0.0);
@@ -537,7 +543,9 @@ mod tests {
     #[tokio::test]
     async fn test_auto_heal() {
         let mut health = SystemHealth::new();
-        health.init().unwrap();
+        health
+            .init()
+            .expect("system health should initialize before auto heal");
 
         let anomalies = vec![Anomaly {
             detected_at: 0,
@@ -555,7 +563,9 @@ mod tests {
     #[test]
     fn test_health_report() {
         let mut health = SystemHealth::new();
-        health.init().unwrap();
+        health
+            .init()
+            .expect("system health should initialize before report generation");
         health.cpu_usage = 45.0;
         health.memory_usage = 55.0;
 

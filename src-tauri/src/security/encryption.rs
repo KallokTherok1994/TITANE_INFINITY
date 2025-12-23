@@ -153,8 +153,12 @@ mod tests {
         let encryptor = Encryptor::new(&key);
 
         let data = b"Hello, TITANE!";
-        let encrypted = encryptor.encrypt(data).unwrap();
-        let decrypted = encryptor.decrypt(&encrypted).unwrap();
+        let encrypted = encryptor
+            .encrypt(data)
+            .expect("encryption should succeed in test");
+        let decrypted = encryptor
+            .decrypt(&encrypted)
+            .expect("decryption should recover plaintext");
 
         assert_eq!(data, &decrypted[..]);
     }

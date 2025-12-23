@@ -475,7 +475,10 @@ mod tests {
         )
         .await;
 
-        let envelope = receiver.recv().await.unwrap();
+        let envelope = receiver
+            .recv()
+            .await
+            .expect("signal receiver should yield envelope");
         matches!(envelope.signal, MemorySignal::SystemEvent { .. });
     }
 

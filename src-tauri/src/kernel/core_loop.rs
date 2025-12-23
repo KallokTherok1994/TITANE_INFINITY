@@ -490,7 +490,10 @@ mod tests {
         let mut event_rx = event_tx.subscribe();
 
         // Trigger overload
-        core_loop.handle_overload(9, 0.95, 80).await.unwrap();
+        core_loop
+            .handle_overload(9, 0.95, 80)
+            .await
+            .expect("overload handling should emit event");
 
         // Check state updated
         {
@@ -499,7 +502,10 @@ mod tests {
         }
 
         // Check event emitted
-        let event = event_rx.recv().await.unwrap();
+        let event = event_rx
+            .recv()
+            .await
+            .expect("should receive overload event");
         if let KernelEvent::OverloadDetected { level, .. } = event {
             assert_eq!(level, 9);
         } else {

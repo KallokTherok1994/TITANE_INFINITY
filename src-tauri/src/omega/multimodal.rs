@@ -299,14 +299,14 @@ mod tests {
                 &mut std::io::Cursor::new(&mut bytes),
                 image::ImageFormat::Png,
             )
-            .unwrap();
+            .expect("should serialize test image to PNG bytes");
 
         ctx.image = Some(bytes);
 
         let result = processor.process_multimodal(&input, &ctx).await;
         assert!(result.is_ok());
 
-        let processed_ctx = result.unwrap();
+        let processed_ctx = result.expect("multimodal processing should succeed");
         assert!(processed_ctx.vision_analysis.is_some());
         assert!(processed_ctx.fusion_result.is_some());
     }

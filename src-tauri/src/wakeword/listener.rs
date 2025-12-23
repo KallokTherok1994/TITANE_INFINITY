@@ -152,7 +152,10 @@ mod tests {
 
         assert!(!listener.is_listening());
 
-        listener.start().await.unwrap();
+        listener
+            .start()
+            .await
+            .expect("listener start should succeed");
         assert!(listener.is_listening());
 
         listener.stop();
@@ -203,7 +206,10 @@ mod tests {
         let listener = WakewordListener::new(tx);
 
         // First start
-        listener.start().await.unwrap();
+        listener
+            .start()
+            .await
+            .expect("listener start should succeed");
         assert!(listener.is_listening());
 
         // Second start should be OK (idempotent)
@@ -218,7 +224,10 @@ mod tests {
         let (tx, _rx) = mpsc::channel(10);
         let listener = WakewordListener::new(tx);
 
-        listener.start().await.unwrap();
+        listener
+            .start()
+            .await
+            .expect("listener start should succeed");
         listener.is_active.store(true, Ordering::Relaxed);
 
         listener.stop();

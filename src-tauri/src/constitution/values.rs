@@ -274,7 +274,9 @@ mod tests {
     #[test]
     fn test_value_compatibility() {
         let values = ValueSystem::default_titane();
-        let honesty = values.get("honesty").unwrap();
+        let honesty = values
+            .get("honesty")
+            .expect("honesty value should exist in default titane values");
 
         let good_action = ConstitutionalAction {
             action_type: "respond".to_string(),

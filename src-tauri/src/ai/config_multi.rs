@@ -306,7 +306,10 @@ mod tests {
         assert!(config.mode_mappings.contains_key("quality"));
         assert!(config.mode_mappings.contains_key("deep"));
 
-        let fast = config.mode_mappings.get("fast").unwrap();
+        let fast = config
+            .mode_mappings
+            .get("fast")
+            .expect("routing config should contain fast mapping");
         assert_eq!(fast.primary, "claude_haiku");
     }
 

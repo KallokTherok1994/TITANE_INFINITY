@@ -687,14 +687,16 @@ mod tests {
 
     #[tokio::test]
     async fn test_export_import_cycle() {
-        let temp_dir = tempdir().unwrap();
+        let temp_dir = tempdir().expect("should create temp dir for backup test");
         let _archive_path = temp_dir.path().join("test_backup.titane");
 
         let _engine = BackupEngine::new();
 
         // Créer des fichiers de test
         let test_data_dir = temp_dir.path().join("test_data");
-        tokio::fs::create_dir_all(&test_data_dir).await.unwrap();
+        tokio::fs::create_dir_all(&test_data_dir)
+            .await
+            .expect("should create test data dir for backup test");
 
         // Note: Ce test nécessiterait un setup plus complet
         // avec de vrais fichiers dans le répertoire de données

@@ -338,7 +338,10 @@ mod tests {
         ctx.record_request(record);
 
         assert_eq!(ctx.request_history.len(), 1);
-        let metrics = ctx.engine_metrics.get("openai").unwrap();
+        let metrics = ctx
+            .engine_metrics
+            .get("openai")
+            .expect("metrics should be recorded for openai");
         assert_eq!(metrics.total_requests, 1);
         assert_eq!(metrics.successful_requests, 1);
         assert_eq!(metrics.total_tokens, 500);

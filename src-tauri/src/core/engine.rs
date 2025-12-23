@@ -231,7 +231,10 @@ mod tests {
     #[tokio::test]
     async fn test_engine_tick() {
         let mut engine = SingularityEngine::new();
-        engine.init().await.unwrap();
+        engine
+            .init()
+            .await
+            .expect("engine init should succeed for tick test");
 
         let result = engine.tick().await;
         assert!(result.is_ok());
@@ -241,7 +244,10 @@ mod tests {
     #[tokio::test]
     async fn test_engine_sync() {
         let mut engine = SingularityEngine::new();
-        engine.init().await.unwrap();
+        engine
+            .init()
+            .await
+            .expect("engine init should succeed for sync test");
 
         let result = engine.sync().await;
         assert!(result.is_ok());

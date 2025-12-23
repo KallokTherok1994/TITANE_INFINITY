@@ -197,7 +197,10 @@ mod tests {
 
         monitor.report_module_error("ASR", "Test error").await;
 
-        let status = monitor.check_module_health("ASR").await.unwrap();
+        let status = monitor
+            .check_module_health("ASR")
+            .await
+            .expect("health status should be available for ASR after error");
         assert_eq!(status, HealthStatus::Degraded);
     }
 
@@ -209,7 +212,10 @@ mod tests {
         monitor.report_module_error("ASR", "Error").await;
         monitor.report_module_recovery("ASR").await;
 
-        let status = monitor.check_module_health("ASR").await.unwrap();
+        let status = monitor
+            .check_module_health("ASR")
+            .await
+            .expect("health status should be available for ASR after recovery");
         assert_eq!(status, HealthStatus::Healthy);
     }
 }

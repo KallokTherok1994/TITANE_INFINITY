@@ -389,7 +389,11 @@ mod tests {
     async fn test_backup_engine() {
         let master_key = MasterKey::generate();
         let keypair = SigningKeypair::generate();
-        let travel = Arc::new(TravelEngine::new(&master_key, keypair).await.unwrap());
+        let travel = Arc::new(
+            TravelEngine::new(&master_key, keypair)
+                .await
+                .expect("travel engine should initialize for backup tests"),
+        );
 
         let config = BackupConfig {
             quick_enabled: false,
@@ -414,7 +418,7 @@ mod tests {
         let id = engine
             .force_backup(data, context, "unit test")
             .await
-            .unwrap();
+            .expect("backup engine should return snapshot id");
         assert!(!id.is_empty());
     }
 }
