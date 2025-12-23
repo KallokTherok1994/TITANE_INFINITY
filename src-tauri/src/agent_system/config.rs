@@ -48,7 +48,8 @@ impl Default for AgentSystemConfig {
             max_agents: 100,
             max_concurrent_tasks: 50,
             max_collaborations: 10,
-            default_task_timeout_ms: 90_000,
+
+            default_task_timeout_ms: 60_000,
             collaboration_timeout_ms: 300000,
             supervision_config: SupervisionConfig::default(),
             sandbox_config: SandboxConfig::default(),
@@ -72,6 +73,7 @@ impl AgentSystemConfig {
             max_agents: 10,
             max_concurrent_tasks: 5,
             max_collaborations: 2,
+
             default_task_timeout_ms: 30_000,
             collaboration_timeout_ms: 60000,
             supervision_config: SupervisionConfig {
@@ -101,6 +103,7 @@ impl AgentSystemConfig {
             max_agents: 500,
             max_concurrent_tasks: 200,
             max_collaborations: 50,
+
             default_task_timeout_ms: 90_000,
             collaboration_timeout_ms: 600000,
             supervision_config: SupervisionConfig {
@@ -134,6 +137,7 @@ impl AgentSystemConfig {
             max_agents: 50,
             max_concurrent_tasks: 20,
             max_collaborations: 10,
+
             default_task_timeout_ms: 60_000,
             collaboration_timeout_ms: 180000,
             supervision_config: SupervisionConfig {
