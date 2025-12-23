@@ -1175,10 +1175,24 @@ const INJECTION_PATTERNS = [
   /\.\.\//g,
 ];
 
+function readViteEnvNumber(key: string, fallback: number): number {
+  try {
+    const raw = (import.meta as unknown as { env?: Record<string, string | undefined> })
+      .env?.[key];
+    if (!raw) return fallback;
+    const num = Number(raw);
+    return Number.isFinite(num) && num > 0 ? num : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
 /**
- * Taille maximale des payloads (10 MB)
+ * Taille maximale des payloads
+ * Par défaut 25 MB (aligné avec le backend sandbox MAX_FILE_SIZE)
  */
-const MAX_PAYLOAD_SIZE = 10 * 1024 * 1024;
+const MAX_PAYLOAD_SIZE =
+  readViteEnvNumber('VITE_TITANE_SECURITY_MAX_PAYLOAD_MB', 25) * 1024 * 1024;
 
 /**
  * Timeout maximal par défaut (30s)
@@ -1262,10 +1276,24 @@ export function getLocalNetworkConfig(): LocalNetworkSecurityConfig {
   return { ...localNetworkMode };
 }
 
+const BASE_MAX_CALLS_PER_SECOND = readViteEnvNumber(
+  'VITE_TITANE_SECURITY_MAX_CALLS_PER_SECOND',
+  30
+);
+const BASE_TRACKING_WINDOW_MS = readViteEnvNumber(
+  'VITE_TITANE_SECURITY_TRACKING_WINDOW_MS',
+  1000
+);
+
 const getMaxCallsPerSecond = () =>
-  localNetworkMode.enabled ? localNetworkMode.maxCallsPerSecond : 10;
-const MAX_CALLS_PER_SECOND = 10;
-const TRACKING_WINDOW_MS = 1000;
+  localNetworkMode.enabled
+    ? localNetworkMode.maxCallsPerSecond
+    : BASE_MAX_CALLS_PER_SECOND;
+const getTrackingWindowMs = () =>
+  localNetworkMode.enabled ? localNetworkMode.trackingWindowMs : BASE_TRACKING_WINDOW_MS;
+
+const MAX_CALLS_PER_SECOND = BASE_MAX_CALLS_PER_SECOND;
+const TRACKING_WINDOW_MS = BASE_TRACKING_WINDOW_MS;
 
 const TEST_ONLY_COMMANDS = new Set<string>(['test_command', 'get_projects']);
 const isTestEnvironment =
@@ -1381,6 +1409,7 @@ export function validatePayloadSize(
 export function detectInfiniteLoop(command: string): CommandValidationResult {
   const now = Date.now();
   const key = command;
+  const trackingWindowMs = getTrackingWindowMs();
 
   // Keep cache bounded without background polling.
   maybeCleanupCallTracking(now);
@@ -1406,7 +1435,7 @@ export function detectInfiniteLoop(command: string): CommandValidationResult {
   }
 
   // Reset si fenêtre expirée
-  if (now - tracker.firstCall > TRACKING_WINDOW_MS) {
+  if (now - tracker.firstCall > trackingWindowMs) {
     callTracking.set(key, {
       count: 1,
       firstCall: now,
@@ -1428,7 +1457,7 @@ export function detectInfiniteLoop(command: string): CommandValidationResult {
 
   if (tracker.count > effectiveMax) {
     const errors = [
-      `Infinite loop detected: "${command}" called ${tracker.count} times in ${TRACKING_WINDOW_MS}ms (max: ${effectiveMax})`,
+      `Infinite loop detected: "${command}" called ${tracker.count} times in ${trackingWindowMs}ms (max: ${effectiveMax})`,
     ];
     return { valid: false, errors };
   }
@@ -1441,8 +1470,9 @@ export function detectInfiniteLoop(command: string): CommandValidationResult {
  */
 export function cleanupCallTracking(): void {
   const now = Date.now();
+  const trackingWindowMs = getTrackingWindowMs();
   for (const [key, tracker] of callTracking.entries()) {
-    if (now - tracker.lastCall > TRACKING_WINDOW_MS * 5) {
+    if (now - tracker.lastCall > trackingWindowMs * 5) {
       callTracking.delete(key);
     }
   }
@@ -1647,6 +1677,12 @@ export async function secureInvoke<T>(
     treatFallbackAsError = false,
   } = options;
 
+  const shouldSkipInjectionCheck =
+    skipInjectionCheck ||
+    (localNetworkMode.enabled &&
+      localNetworkMode.skipInjectionCheckForLocalCmds &&
+      localNetworkMode.trustedCommands.has(command));
+
   const startedAt = Date.now();
   try {
     monitoring.trackRequest();
@@ -1680,7 +1716,7 @@ export async function secureInvoke<T>(
   }
 
   // [2] Détection injection
-  if (!skipInjectionCheck) {
+  if (!shouldSkipInjectionCheck) {
     const injectionCheck = detectInjection(payload);
     if (!injectionCheck.valid) {
       const errorMsg = `Security: ${injectionCheck.errors.join('; ')}`;
