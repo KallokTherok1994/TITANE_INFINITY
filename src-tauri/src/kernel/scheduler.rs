@@ -344,7 +344,10 @@ mod tests {
             }),
         );
 
-        scheduler.submit(job).await.unwrap();
+        scheduler
+            .submit(job)
+            .await
+            .expect("scheduler should accept job submission");
 
         let executed = scheduler.execute_next().await;
         assert!(executed);
@@ -384,11 +387,20 @@ mod tests {
             }),
         );
 
-        scheduler.submit(job_low).await.unwrap();
-        scheduler.submit(job_high).await.unwrap();
+        scheduler
+            .submit(job_low)
+            .await
+            .expect("scheduler should accept low priority job");
+        scheduler
+            .submit(job_high)
+            .await
+            .expect("scheduler should accept high priority job");
 
         // Pop next should return high priority first
-        let next = scheduler.pop_next().await.unwrap();
+        let next = scheduler
+            .pop_next()
+            .await
+            .expect("pop_next should return the highest priority job");
         assert_eq!(next.priority, CognitivePriority::Critical);
     }
 }

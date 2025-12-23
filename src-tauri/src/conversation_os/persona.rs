@@ -354,7 +354,10 @@ mod tests {
     #[tokio::test]
     async fn test_persona_activation() {
         let engine = PersonaEngine::new("titane_default");
-        engine.activate("titane_technical").await.unwrap();
+        engine
+            .activate("titane_technical")
+            .await
+            .expect("persona activation should succeed for known id");
         let profile = engine.get_active_profile().await;
         assert_eq!(profile.config.id, "titane_technical");
     }

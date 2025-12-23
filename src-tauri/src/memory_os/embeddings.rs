@@ -293,12 +293,18 @@ mod tests {
         let engine = EmbeddingEngine::new(config);
 
         let text = "Hello world";
-        let embedding = engine.embed(text).await.unwrap();
+        let embedding = engine
+            .embed(text)
+            .await
+            .expect("embedding engine should produce vector");
 
         assert_eq!(embedding.len(), 384);
 
         // Test determinism
-        let embedding2 = engine.embed(text).await.unwrap();
+        let embedding2 = engine
+            .embed(text)
+            .await
+            .expect("embedding engine should produce deterministic vector");
         assert_eq!(embedding, embedding2);
     }
 
@@ -314,14 +320,20 @@ mod tests {
         assert_eq!(cache_len_before, 0);
 
         // First call populates cache
-        let embedding_1 = engine.embed(text).await.unwrap();
+        let embedding_1 = engine
+            .embed(text)
+            .await
+            .expect("first embed should populate cache");
         let cache = engine.cache.read().await;
         assert!(cache.get(text).is_some());
         assert_eq!(cache.cache.len(), 1);
         drop(cache);
 
         // Second call should return the same embedding and not grow cache
-        let embedding_2 = engine.embed(text).await.unwrap();
+        let embedding_2 = engine
+            .embed(text)
+            .await
+            .expect("second embed should hit cache");
         assert_eq!(embedding_1, embedding_2);
         assert_eq!(engine.cache.read().await.cache.len(), 1);
     }

@@ -351,7 +351,9 @@ mod tests {
         };
 
         let clustering = KMeansClustering::new(config);
-        let result = clustering.cluster(&vectors).unwrap();
+        let result = clustering
+            .cluster(&vectors)
+            .expect("kmeans should cluster clear groups");
 
         assert_eq!(result.clusters.len(), 2);
         assert_eq!(result.total_items, 4);

@@ -252,18 +252,28 @@ export async function sendChatMessage(messages: ChatMessage[], config: ChatConfi
   };
 
   const raw = await invokeTauriCommand<unknown>(
-    'chat_send_message',
-    { request },
+    'conversation_generate',
+    {
+      message: request.message,
+      conversation_id: request.conversation_id,
+      mode: 'default',
+      provider: request.provider,
+      system_prompt: request.system_prompt,
+      streaming: request.streaming,
+    },
     { timeout: 30000, retries: 2, retryDelay: 1000 }
   );
 
-  if (!raw.success) {
+  // conversation_generate retourne directement le contenu généré
+  if ((raw as any)?.success === false) {
     return raw as CoreResponse<string>;
   }
 
+  const content = (raw as any)?.content ?? (raw as any)?.data ?? extractChatContent(raw);
+
   return {
     success: true,
-    data: extractChatContent(raw.data),
+    data: content,
     timestamp: Date.now(),
   };
 }

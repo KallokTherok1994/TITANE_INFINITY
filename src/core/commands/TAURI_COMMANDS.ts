@@ -119,6 +119,7 @@ export const TAURI_COMMANDS = {
   // ═══════════════════════════════════════════════════════════════
   // CHAT AI - Orchestrator Hybride (Gemini + Ollama + Local)
   // ═══════════════════════════════════════════════════════════════
+  /** @deprecated Disabled: use conversation_generate */
   CHAT_SEND_MESSAGE: 'chat_send_message',
   CHAT_STREAM_MESSAGE: 'chat_stream_message',
   CHAT_CREATE_CONVERSATION: 'chat_create_conversation',

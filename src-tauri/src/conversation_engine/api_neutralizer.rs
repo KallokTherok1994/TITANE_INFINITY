@@ -189,7 +189,13 @@ mod tests {
             raw_data: Some(raw.clone()),
         };
         assert!(response.raw_data.is_some());
-        assert_eq!(response.raw_data.unwrap()["key"], "value");
+        assert_eq!(
+            response
+                .raw_data
+                .expect("raw data should be present")
+                ["key"],
+            "value"
+        );
     }
 
     #[test]
@@ -271,7 +277,9 @@ mod tests {
             tokens_used: 0,
             raw_data: Some(raw),
         };
-        let data = response.raw_data.unwrap();
+        let data = response
+            .raw_data
+            .expect("raw data should remain available for complex payload");
         assert_eq!(data["nested"]["array"][0], 1);
         assert_eq!(data["number"], 42);
         assert_eq!(data["boolean"], true);

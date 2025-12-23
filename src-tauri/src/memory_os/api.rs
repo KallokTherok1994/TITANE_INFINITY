@@ -519,7 +519,9 @@ mod tests {
         let response = memory_version().await;
         assert!(response.success);
 
-        let info = response.data.unwrap();
+        let info = response
+            .data
+            .expect("memory_version should include version info");
         assert_eq!(info.version, super::super::MEMORY_OS_VERSION);
     }
 

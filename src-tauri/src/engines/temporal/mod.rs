@@ -380,12 +380,22 @@ mod tests {
         // Undo
         let undone: Option<TestState> = engine.undo().await;
         assert!(undone.is_some());
-        assert_eq!(undone.unwrap().value, 1);
+        assert_eq!(
+            undone
+                .expect("undo should restore previous state")
+                .value,
+            1
+        );
 
         // Redo
         let redone: Option<TestState> = engine.redo().await;
         assert!(redone.is_some());
-        assert_eq!(redone.unwrap().value, 2);
+        assert_eq!(
+            redone
+                .expect("redo should restore newer state")
+                .value,
+            2
+        );
     }
 
     #[tokio::test]

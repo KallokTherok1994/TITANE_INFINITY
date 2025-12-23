@@ -192,7 +192,7 @@ mod tests {
         let result = neuro_bridge_reasoning("Command test".to_string()).await;
         assert!(result.is_ok());
 
-        let context = result.unwrap();
+        let context = result.expect("neuro bridge reasoning should return context");
         assert_eq!(context.query, "Command test");
     }
 

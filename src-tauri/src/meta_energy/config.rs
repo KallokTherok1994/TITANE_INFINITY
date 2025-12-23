@@ -391,7 +391,7 @@ mod tests {
             .initial_energy(0.9)
             .auto_regulation(false)
             .build()
-            .unwrap();
+            .expect("meta energy builder should create valid config");
 
         assert_eq!(config.name, "test");
         assert!(!config.auto_regulation);

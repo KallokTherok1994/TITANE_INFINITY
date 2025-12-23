@@ -108,7 +108,9 @@ mod tests {
         let config = PerformanceConfig::default();
         let lb = LoadBalancer::new(config);
         assert!(lb.start_monitoring().await.is_ok());
-        lb.stop_monitoring().await.unwrap();
+        lb.stop_monitoring()
+            .await
+            .expect("load balancer stop should succeed");
     }
 
     #[tokio::test]

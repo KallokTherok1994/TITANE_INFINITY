@@ -119,8 +119,10 @@ mod tests {
     #[test]
     fn test_seasonal_params_serialization() {
         let params = SeasonalParameters::from_phase(SeasonalPhase::Autumn);
-        let json = serde_json::to_string(&params).unwrap();
-        let restored: SeasonalParameters = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&params)
+            .expect("seasonal params should serialize");
+        let restored: SeasonalParameters = serde_json::from_str(&json)
+            .expect("seasonal params should deserialize");
         assert_eq!(params.phase, restored.phase);
         assert_eq!(params.energy_multiplier, restored.energy_multiplier);
     }

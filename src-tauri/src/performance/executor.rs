@@ -73,14 +73,20 @@ mod tests {
     #[tokio::test]
     async fn test_executor_creation() {
         let config = PerformanceConfig::default();
-        let pools = Arc::new(CognitiveThreadPools::new(&config).unwrap());
+        let pools = Arc::new(
+            CognitiveThreadPools::new(&config)
+                .expect("thread pools should initialize with default config"),
+        );
         let _executor = CognitiveExecutor::new(pools);
     }
 
     #[tokio::test]
     async fn test_execute_simple_future() {
         let config = PerformanceConfig::default();
-        let pools = Arc::new(CognitiveThreadPools::new(&config).unwrap());
+        let pools = Arc::new(
+            CognitiveThreadPools::new(&config)
+                .expect("thread pools should initialize with default config"),
+        );
         let executor = CognitiveExecutor::new(pools);
 
         let result = executor
@@ -88,13 +94,19 @@ mod tests {
             .await;
 
         assert!(result.is_ok());
-        assert_eq!(result.unwrap(), 42);
+        assert_eq!(
+            result.expect("execution should return result"),
+            42
+        );
     }
 
     #[tokio::test]
     async fn test_execute_with_timeout_success() {
         let config = PerformanceConfig::default();
-        let pools = Arc::new(CognitiveThreadPools::new(&config).unwrap());
+        let pools = Arc::new(
+            CognitiveThreadPools::new(&config)
+                .expect("thread pools should initialize with default config"),
+        );
         let executor = CognitiveExecutor::new(pools);
 
         let result = executor
@@ -113,7 +125,10 @@ mod tests {
     #[tokio::test]
     async fn test_execute_with_timeout_failure() {
         let config = PerformanceConfig::default();
-        let pools = Arc::new(CognitiveThreadPools::new(&config).unwrap());
+        let pools = Arc::new(
+            CognitiveThreadPools::new(&config)
+                .expect("thread pools should initialize with default config"),
+        );
         let executor = CognitiveExecutor::new(pools);
 
         let result = executor

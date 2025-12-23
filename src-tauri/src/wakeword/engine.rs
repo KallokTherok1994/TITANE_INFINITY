@@ -416,7 +416,13 @@ mod tests {
 
         assert_eq!(engine.buffer.len(), engine.buffer_size);
         // Last element should be the newly pushed value
-        assert_eq!(*engine.buffer.back().unwrap(), 0.9);
+        assert_eq!(
+            *engine
+                .buffer
+                .back()
+                .expect("buffer should have an element after push"),
+            0.9
+        );
     }
 
     #[test]

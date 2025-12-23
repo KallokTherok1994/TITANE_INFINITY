@@ -125,8 +125,9 @@ mod tests {
             five: 1.5,
             fifteen: 1.3,
         };
-        let json = serde_json::to_string(&load).unwrap();
-        let restored: LoadAverage = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&load).expect("should serialize load average");
+        let restored: LoadAverage =
+            serde_json::from_str(&json).expect("should deserialize load average");
         assert_eq!(restored.one, 1.2);
         assert_eq!(restored.fifteen, 1.3);
     }
@@ -195,8 +196,9 @@ mod tests {
             ram_usage: 50.0,
             ..Default::default()
         };
-        let json = serde_json::to_string(&state).unwrap();
-        let restored: HeliosState = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&state).expect("should serialize helios state");
+        let restored: HeliosState =
+            serde_json::from_str(&json).expect("should deserialize helios state");
         assert_eq!(restored.cpu_usage, 25.0);
         assert_eq!(restored.ram_usage, 50.0);
     }

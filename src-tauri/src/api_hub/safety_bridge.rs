@@ -417,7 +417,7 @@ mod tests {
 
         let result = bridge.validate_request(&request).await;
         assert!(result.is_ok());
-        let validation = result.unwrap();
+        let validation = result.expect("safety bridge should approve safe request");
         assert!(validation.approved);
     }
 

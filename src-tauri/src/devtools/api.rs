@@ -393,7 +393,9 @@ mod tests {
         assert!(response.success);
         assert!(response.data.is_some());
 
-        let status = response.data.unwrap();
+        let status = response
+            .data
+            .expect("devtools_status should return data when enabled");
         assert!(status.analyzer_available);
     }
 
@@ -406,7 +408,10 @@ mod tests {
 
         // Check enabled
         let status = devtools_status().await;
-        assert!(status.data.unwrap().enabled);
+        assert!(status
+            .data
+            .expect("status should include data after enable")
+            .enabled);
 
         // Disable
         let response = devtools_disable().await;
@@ -443,7 +448,9 @@ mod tests {
         assert!(response.success);
         assert!(response.data.is_some());
 
-        let report = response.data.unwrap();
+        let report = response
+            .data
+            .expect("analyze should return a report when enabled");
         assert!(report.risk_score >= 0.0);
         assert!(report.stability_score >= 0.0);
     }

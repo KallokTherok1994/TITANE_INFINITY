@@ -333,7 +333,8 @@ mod tests {
         let old = r#"{"name": "test", "value": 1}"#;
         let new = r#"{"name": "test", "value": 2}"#;
 
-        let diff = TemporalDiff::compute(old, new).unwrap();
+        let diff = TemporalDiff::compute(old, new)
+            .expect("temporal diff should compute modifications");
 
         assert!(diff.has_changes());
         assert_eq!(diff.modifications, 1);
@@ -345,7 +346,8 @@ mod tests {
         let old = r#"{"name": "test"}"#;
         let new = r#"{"name": "test", "value": 42}"#;
 
-        let diff = TemporalDiff::compute(old, new).unwrap();
+        let diff = TemporalDiff::compute(old, new)
+            .expect("temporal diff should detect addition");
 
         assert_eq!(diff.additions, 1);
         assert_eq!(diff.changes[0].change_type, ChangeType::Added);
@@ -356,7 +358,8 @@ mod tests {
         let old = r#"{"name": "test", "value": 42}"#;
         let new = r#"{"name": "test"}"#;
 
-        let diff = TemporalDiff::compute(old, new).unwrap();
+        let diff = TemporalDiff::compute(old, new)
+            .expect("temporal diff should detect removal");
 
         assert_eq!(diff.removals, 1);
         assert_eq!(diff.changes[0].change_type, ChangeType::Removed);
@@ -367,7 +370,8 @@ mod tests {
         let old = r#"{"value": 1}"#;
         let new = r#"{"value": 2}"#;
 
-        let diff = TemporalDiff::compute(old, new).unwrap();
+        let diff = TemporalDiff::compute(old, new)
+            .expect("temporal diff should detect change for inverse test");
         let inverse = diff.inverse();
 
         assert_eq!(inverse.changes[0].old_value, diff.changes[0].new_value);
@@ -378,7 +382,8 @@ mod tests {
     fn test_no_changes() {
         let data = r#"{"name": "test", "value": 42}"#;
 
-        let diff = TemporalDiff::compute(data, data).unwrap();
+        let diff = TemporalDiff::compute(data, data)
+            .expect("temporal diff should succeed with identical data");
 
         assert!(!diff.has_changes());
         assert_eq!(diff.total_changes, 0);

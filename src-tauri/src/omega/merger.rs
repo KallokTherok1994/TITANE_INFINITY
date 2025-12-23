@@ -569,7 +569,9 @@ mod tests {
             mode: ExecutionMode::Balanced,
         };
 
-        let result = merger.merge(&execution).unwrap();
+        let result = merger
+            .merge(&execution)
+            .expect("merger should produce output for execution result");
         assert!(!result.response.is_empty());
         assert!(result.quality_score > 0.5);
     }

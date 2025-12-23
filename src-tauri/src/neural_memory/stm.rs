@@ -108,7 +108,8 @@ mod tests {
 
         for i in 0..5 {
             let entry = MemoryEntry::new(format!("Entry {}", i), 0.5, MemoryType::Conversation);
-            stm.push(entry).unwrap();
+            stm.push(entry)
+                .expect("stm push should succeed with capacity eviction");
         }
 
         assert_eq!(stm.count(), 3);
@@ -122,7 +123,8 @@ mod tests {
 
         for word in &["hello", "world", "test"] {
             let entry = MemoryEntry::new(word.to_string(), 0.5, MemoryType::Conversation);
-            stm.push(entry).unwrap();
+            stm.push(entry)
+                .expect("stm push should succeed for search setup");
         }
 
         let results = stm.search("world");
