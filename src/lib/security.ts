@@ -189,14 +189,39 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'get_files_by_category',
   'clear_memory',
   'store_file',
-
-  // Legacy Memory commands
+  // Memory OS (init/shutdown/management)
   'memory_init',
+  'memory_shutdown',
+  'memory_is_running',
+  'memory_version',
+  // Memory OS store/recall
+  'memory_os_store',
+  'memory_os_store_batch',
+  'memory_recall_by_id',
+  'memory_recall_keyword',
+  'memory_recall_semantic',
+  'memory_recall_recent',
+  'memory_recall_by_type',
+  'memory_recall_by_tag',
+  'memory_os_delete',
+  'memory_consolidate',
+  'memory_forget',
+  'memory_stats',
+  'memory_snapshot',
+  'memory_stm_snapshot',
+  'memory_mtm_snapshot',
+  'memory_ltm_snapshot',
+  'memory_signal_stats',
+  'memory_stm_entries',
+  'memory_mtm_entries',
+  'memory_all_tags',
+
+  // Legacy Memory commands (compatibilité < v17)
+  // NOTE: memory_save_entry → remplacé par memory_store
+  // NOTE: memory_get_entry → remplacé par memory_retrieve (quand implémenté)
   'memory_save_entry',
   'memory_get_entry',
   'memory_delete_entry',
-  'memory_list_entries',
-  'memory_update_entry',
   'memory_clear_all',
   'memory_search',
   'memory_export',
@@ -685,7 +710,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'get_system_health',
   'memory_repair',
   'system_optimize',
-  'memory_list_entries',
+  // Legacy commands kept for auto-heal compatibility
   'memory_save_entry',
   'memory_get_entry',
   'memory_delete_entry',

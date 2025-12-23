@@ -665,7 +665,6 @@
             { "command": "get_system_health" },
             { "command": "memory_repair" },
             { "command": "system_optimize" },
-            { "command": "memory_list_entries" },
             { "command": "memory_save_entry" },
             { "command": "memory_get_entry" },
             { "command": "memory_delete_entry" },
