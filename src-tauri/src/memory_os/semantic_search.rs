@@ -319,7 +319,7 @@ mod tests {
                 serde_json::json!({}),
             )
             .await
-            .unwrap();
+            .expect("semantic index should accept first entry");
 
         engine
             .add(
@@ -328,10 +328,13 @@ mod tests {
                 serde_json::json!({}),
             )
             .await
-            .unwrap();
+            .expect("semantic index should accept second entry");
 
         // Search
-        let results = engine.search("Hello", 10).await.unwrap();
+        let results = engine
+            .search("Hello", 10)
+            .await
+            .expect("semantic search should succeed");
 
         assert!(!results.is_empty());
     }

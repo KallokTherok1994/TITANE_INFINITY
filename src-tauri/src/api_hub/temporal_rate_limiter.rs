@@ -200,7 +200,10 @@ mod tests {
 
         // Acquérir 3 permits
         for _ in 0..3 {
-            limiter.acquire_permit().await.unwrap();
+            limiter
+                .acquire_permit()
+                .await
+                .expect("permit acquisition should succeed within limit");
         }
 
         // 4ème devrait échouer
@@ -217,7 +220,10 @@ mod tests {
 
         // Acquérir plusieurs permits
         for _ in 0..5 {
-            limiter.acquire_permit().await.unwrap();
+            limiter
+                .acquire_permit()
+                .await
+                .expect("permit acquisition should succeed within high limits");
         }
 
         let stats = limiter.get_stats().await;
@@ -245,7 +251,10 @@ mod tests {
             TemporalRateLimiter::new("provider_a".to_string(), 100, 1000, adapter.clone());
         let limiter2 = TemporalRateLimiter::new("provider_b".to_string(), 50, 500, adapter);
 
-        limiter1.acquire_permit().await.unwrap();
+        limiter1
+            .acquire_permit()
+            .await
+            .expect("provider_a should acquire permit");
 
         let stats1 = limiter1.get_stats().await;
         let stats2 = limiter2.get_stats().await;

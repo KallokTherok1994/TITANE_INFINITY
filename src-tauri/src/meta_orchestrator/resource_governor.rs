@@ -386,7 +386,7 @@ mod tests {
         let report = governor.optimize().await;
         assert!(report.is_ok());
 
-        let report = report.unwrap();
+        let report = report.expect("resource optimization should return a report");
         assert!(report.recommendations.is_empty() || !report.recommendations.is_empty());
     }
 

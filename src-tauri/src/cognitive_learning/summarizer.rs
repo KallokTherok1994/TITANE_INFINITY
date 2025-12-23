@@ -147,8 +147,10 @@ mod tests {
             content: "Test summary".to_string(),
             key_points: vec!["Key point one".to_string()],
         };
-        let json = serde_json::to_string(&summary).unwrap();
-        let restored: Summary = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&summary)
+            .expect("summary should serialize to JSON");
+        let restored: Summary = serde_json::from_str(&json)
+            .expect("summary should deserialize from JSON");
         assert_eq!(restored.id, "summary-123");
         assert_eq!(restored.compression_ratio, 0.75);
     }
@@ -292,7 +294,7 @@ mod tests {
     async fn test_tauri_cognitive_summarize() {
         let result = cognitive_summarize("Test content.".to_string()).await;
         assert!(result.is_ok());
-        let summary = result.unwrap();
+        let summary = result.expect("tauri summarize should return summary");
         assert!(summary.id.starts_with("summary_"));
     }
 
@@ -300,7 +302,7 @@ mod tests {
     async fn test_tauri_cognitive_summarize_empty() {
         let result = cognitive_summarize("".to_string()).await;
         assert!(result.is_ok());
-        let summary = result.unwrap();
+        let summary = result.expect("tauri summarize should handle empty content");
         assert_eq!(summary.original_length, 0);
     }
 }

@@ -242,7 +242,7 @@ mod tests {
         let response = engine.generate(&req).await;
         assert!(response.is_ok());
 
-        let res = response.unwrap();
+        let res = response.expect("titane engine provider should return response");
         assert_eq!(res.provider, "titane_engine");
         assert!(res.metadata.fallback_triggered);
         assert!(res.confidence > 0.0);

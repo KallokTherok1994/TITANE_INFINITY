@@ -135,7 +135,8 @@ mod tests {
                 i as f32 * 0.2,
                 MemoryType::Conversation,
             );
-            mtm.push(entry).unwrap();
+            mtm.push(entry)
+                .expect("mtm push should succeed during relevance test");
         }
 
         let all = mtm.get_all();
@@ -148,7 +149,8 @@ mod tests {
         let mut mtm = MidTermMemory::new(10);
 
         let entry = MemoryEntry::new("Test".to_string(), 1.0, MemoryType::Conversation);
-        mtm.push(entry).unwrap();
+        mtm.push(entry)
+            .expect("mtm push should succeed before decay");
 
         mtm.apply_decay(0.1); // 10% decay
 
@@ -167,7 +169,8 @@ mod tests {
                 i as f32 * 0.2,
                 MemoryType::Conversation,
             );
-            mtm.push(entry).unwrap();
+            mtm.push(entry)
+                .expect("mtm push should succeed before prune");
         }
 
         let pruned = mtm.prune(0.5);

@@ -337,7 +337,7 @@ mod tests {
         let result = neuro_adapt_intent("Test command".to_string()).await;
         assert!(result.is_ok());
 
-        let intent = result.unwrap();
+        let intent = result.expect("neuro adapt intent should return intent");
         assert_eq!(intent.raw_intent, "Test command");
     }
 
@@ -346,7 +346,7 @@ mod tests {
         let result = neuro_adapt_intent("Remember this fact".to_string()).await;
         assert!(result.is_ok());
 
-        let intent = result.unwrap();
+        let intent = result.expect("neuro adapt intent should target memory core");
         assert_eq!(intent.target_module, "MemoryCore");
     }
 

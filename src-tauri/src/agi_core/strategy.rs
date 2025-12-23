@@ -396,7 +396,10 @@ mod tests {
         optimizer.record_execution("analytical", true, 100, 0.9).await;
 
         let strategies = optimizer.get_all().await;
-        let analytical = strategies.iter().find(|s| s.id == "analytical").unwrap();
+        let analytical = strategies
+            .iter()
+            .find(|s| s.id == "analytical")
+            .expect("analytical strategy should exist after record");
         let score = optimizer.score(analytical).await;
 
         assert!(score.effectiveness > 0.0);

@@ -525,7 +525,9 @@ mod tests {
         let mut engine = CognitiveCompressionEngine::new();
         let messages = create_test_messages(10, 1); // Seulement 10 messages, 1 jour
 
-        let report = engine.compress_messages(&messages).unwrap();
+        let report = engine
+            .compress_messages(&messages)
+            .expect("compression should succeed even if not needed");
 
         assert!(report.success);
         assert_eq!(report.summaries_created, 0); // Pas assez de messages
@@ -541,7 +543,9 @@ mod tests {
 
         let messages = create_test_messages(100, 5); // 100 messages, 5 jours
 
-        let report = engine.compress_messages(&messages).unwrap();
+        let report = engine
+            .compress_messages(&messages)
+            .expect("compression should succeed for large aged set");
 
         assert!(report.success);
         assert!(report.summaries_created > 0);

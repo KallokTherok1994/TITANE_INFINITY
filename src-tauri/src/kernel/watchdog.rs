@@ -143,7 +143,7 @@ mod tests {
         let event = rx.try_recv();
         assert!(event.is_ok());
         assert!(matches!(
-            event.unwrap(),
+            event.expect("should emit heartbeat event"),
             KernelEvent::WatchdogHeartbeat { .. }
         ));
     }

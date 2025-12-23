@@ -357,7 +357,7 @@ mod tests {
         let keypair = Arc::new(SigningKeypair::generate());
         let engine = UpdateEngine::new(keypair, "v1.0.0".to_string())
             .await
-            .unwrap();
+            .expect("update engine should initialize");
         assert_eq!(engine.current_version().await, "v1.0.0");
         assert_eq!(engine.state().await, UpdateState::Idle);
     }
@@ -367,12 +367,14 @@ mod tests {
         let keypair = Arc::new(SigningKeypair::generate());
         let engine = UpdateEngine::new(keypair.clone(), "v1.0.0".to_string())
             .await
-            .unwrap();
+            .expect("update engine should initialize");
 
         let mut manifest = UpdateManifest::new("v1.1.0".to_string(), "Test update".to_string());
 
         // Signer manifest
-        let data = manifest.signable_data().unwrap();
+        let data = manifest
+            .signable_data()
+            .expect("manifest should produce signable data");
         manifest.signature = keypair.sign(&data);
 
         // Vérifier signature

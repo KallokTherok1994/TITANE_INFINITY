@@ -466,7 +466,10 @@ mod tests {
             metadata: std::collections::HashMap::new(),
         };
 
-        let response = provider.execute(&request).await.unwrap();
+        let response = provider
+            .execute(&request)
+            .await
+            .expect("openai provider should return mock embeddings");
         match response.content {
             ResponseContent::Embeddings(emb) => {
                 assert_eq!(emb.len(), 1);

@@ -92,7 +92,8 @@ mod tests {
     #[test]
     fn test_pool_sizes() {
         let config = PerformanceConfig::default();
-        let pools = CognitiveThreadPools::new(&config).unwrap();
+        let pools = CognitiveThreadPools::new(&config)
+            .expect("thread pools should init with default config");
 
         assert_eq!(
             pools.get_pool_size(PoolType::Engines),
@@ -107,7 +108,8 @@ mod tests {
     #[test]
     fn test_high_performance_config() {
         let config = PerformanceConfig::high_performance();
-        let pools = CognitiveThreadPools::new(&config).unwrap();
+        let pools = CognitiveThreadPools::new(&config)
+            .expect("thread pools should init with high performance config");
 
         assert_eq!(pools.get_pool_size(PoolType::Engines), 16);
         assert_eq!(pools.get_pool_size(PoolType::Agents), 8);

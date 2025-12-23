@@ -345,7 +345,7 @@ mod tests {
         let result = summarize(&entries, SummaryStrategy::Simple).await;
 
         assert!(result.is_ok());
-        let summary = result.unwrap();
+        let summary = result.expect("summarizer should handle empty input");
         assert_eq!(summary.entries_processed, 0);
         assert!(summary.summary.is_empty());
     }
@@ -365,7 +365,7 @@ mod tests {
         let result = summarize(&entries, SummaryStrategy::KeyMessages).await;
 
         assert!(result.is_ok());
-        let summary = result.unwrap();
+        let summary = result.expect("summarizer should return key messages");
         assert_eq!(summary.entries_processed, 10);
         assert!(!summary.summary.is_empty());
         assert!(summary.compression_ratio < 1.0);
@@ -385,7 +385,7 @@ mod tests {
         let result = summarize(&entries, SummaryStrategy::Simple).await;
 
         assert!(result.is_ok());
-        let summary = result.unwrap();
+        let summary = result.expect("summarize simple should succeed");
         assert!(summary.summary.contains("Content"));
         assert_eq!(summary.entries_processed, 5);
     }
@@ -416,7 +416,7 @@ mod tests {
         let result = summarize(&entries, SummaryStrategy::Clustering).await;
 
         assert!(result.is_ok());
-        let summary = result.unwrap();
+        let summary = result.expect("clustering summarization should succeed");
         assert!(summary.summary.contains("user") || summary.summary.contains("assistant"));
     }
 

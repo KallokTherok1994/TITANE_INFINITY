@@ -265,13 +265,19 @@ mod tests {
         let v1 = vec![1.0; 128];
         let v2 = vec![0.5; 128];
 
-        index.add_vector("v1".to_string(), v1.clone()).unwrap();
-        index.add_vector("v2".to_string(), v2.clone()).unwrap();
+        index
+            .add_vector("v1".to_string(), v1.clone())
+            .expect("v1 should insert");
+        index
+            .add_vector("v2".to_string(), v2.clone())
+            .expect("v2 should insert");
 
         assert_eq!(index.size(), 2);
 
         // Search
-        let results = index.search(&v1, 1).unwrap();
+        let results = index
+            .search(&v1, 1)
+            .expect("search should return nearest vector");
         assert_eq!(results.len(), 1);
         assert_eq!(results[0].id, "v1");
     }

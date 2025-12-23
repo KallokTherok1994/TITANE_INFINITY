@@ -287,7 +287,9 @@ mod tests {
     #[test]
     fn test_principle_allows() {
         let principles = PrincipleSet::default_titane();
-        let safety = principles.get("safety_first").unwrap();
+        let safety = principles
+            .get("safety_first")
+            .expect("safety_first principle should exist");
 
         let safe_action = ConstitutionalAction {
             action_type: "query".to_string(),

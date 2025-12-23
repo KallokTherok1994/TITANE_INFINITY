@@ -253,7 +253,8 @@ mod tests {
     #[tokio::test]
     async fn test_safe_operations() {
         let temp_dir = env::temp_dir().join("titane_test_storage");
-        std::fs::create_dir_all(&temp_dir).unwrap();
+        std::fs::create_dir_all(&temp_dir)
+            .expect("temp dir should be creatable for storage guard test");
 
         let guard = StorageGuard::new(temp_dir.clone());
 
@@ -264,7 +265,10 @@ mod tests {
         // Lecture
         let content = guard.safe_read_string("test.txt").await;
         assert!(content.is_ok());
-        assert_eq!(content.unwrap(), "Hello TITANE");
+        assert_eq!(
+            content.expect("should read back written file"),
+            "Hello TITANE"
+        );
 
         // Suppression
         let delete_result = guard.safe_delete("test.txt").await;

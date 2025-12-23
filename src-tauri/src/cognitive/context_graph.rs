@@ -827,8 +827,11 @@ mod tests {
         let cargo_id = graph.get_or_create_node("Cargo", EntityType::Technology);
         graph.add_edge(rust_id, cargo_id, RelationType::Uses, None);
 
-        let json = graph.to_json().unwrap();
-        let loaded = ContextGraph::from_json(&json, ContextGraphConfig::default()).unwrap();
+        let json = graph
+            .to_json()
+            .expect("context graph should serialize to JSON");
+        let loaded = ContextGraph::from_json(&json, ContextGraphConfig::default())
+            .expect("context graph should deserialize from JSON");
 
         let stats = loaded.stats();
         assert_eq!(stats.node_count, 2);

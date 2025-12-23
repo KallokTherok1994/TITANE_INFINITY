@@ -125,7 +125,7 @@ mod tests {
         let cog_diss = dissonances
             .iter()
             .find(|d| d.source == "cognitive")
-            .unwrap();
+            .expect("cognitive dissonance should be present");
         assert!((cog_diss.severity - 0.2).abs() < 0.01);
     }
 

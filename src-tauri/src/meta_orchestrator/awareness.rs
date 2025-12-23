@@ -403,7 +403,7 @@ mod tests {
         let report = awareness.analyze().await;
         assert!(report.is_ok());
 
-        let report = report.unwrap();
+        let report = report.expect("system awareness should return a report");
         // Le rapport devrait avoir des recommandations
         assert!(!report.recommendations.is_empty());
     }

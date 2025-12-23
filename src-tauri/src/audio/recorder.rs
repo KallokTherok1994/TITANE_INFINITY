@@ -160,9 +160,13 @@ mod tests {
     #[test]
     fn test_recorder_start_stop() {
         let recorder = AudioRecorder::new(AudioConfig::default());
-        recorder.start().unwrap();
+        recorder
+            .start()
+            .expect("recorder should start without errors");
         assert!(recorder.is_recording());
-        recorder.stop().unwrap();
+        recorder
+            .stop()
+            .expect("recorder should stop without errors");
         assert!(!recorder.is_recording());
     }
 

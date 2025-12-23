@@ -566,16 +566,20 @@ mod tests {
             alternatives: vec!["Alt".to_string()],
             timestamp: 99999,
         };
-        let json = serde_json::to_string(&chain).unwrap();
-        let restored: ReasoningChain = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&chain)
+            .expect("should serialize reasoning chain to json");
+        let restored: ReasoningChain = serde_json::from_str(&json)
+            .expect("should deserialize reasoning chain");
         assert_eq!(restored.id, "ser-test");
     }
 
     #[test]
     fn test_serialization_reasoning_type() {
         let rt = ReasoningType::Probabilistic;
-        let json = serde_json::to_string(&rt).unwrap();
-        let restored: ReasoningType = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&rt)
+            .expect("should serialize reasoning type to json");
+        let restored: ReasoningType = serde_json::from_str(&json)
+            .expect("should deserialize reasoning type");
         assert_eq!(restored, ReasoningType::Probabilistic);
     }
 }

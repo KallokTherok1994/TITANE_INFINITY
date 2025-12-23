@@ -153,7 +153,7 @@ impl PersonaEngine {
     fn current_timestamp() -> u64 {
         SystemTime::now()
             .duration_since(UNIX_EPOCH)
-            .unwrap()
+            .expect("system time should be after unix epoch")
             .as_millis() as u64
     }
 

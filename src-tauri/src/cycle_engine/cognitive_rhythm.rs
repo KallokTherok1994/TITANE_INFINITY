@@ -180,8 +180,10 @@ mod tests {
     fn test_cognitive_rhythm_serialization() {
         let state = CycleState::current();
         let params = CognitiveRhythmParams::from_cycle_state(&state);
-        let json = serde_json::to_string(&params).unwrap();
-        let restored: CognitiveRhythmParams = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&params)
+            .expect("cognitive rhythm params should serialize");
+        let restored: CognitiveRhythmParams = serde_json::from_str(&json)
+            .expect("cognitive rhythm params should deserialize");
         assert_eq!(params.mode, restored.mode);
         assert_eq!(params.omega_depth, restored.omega_depth);
     }

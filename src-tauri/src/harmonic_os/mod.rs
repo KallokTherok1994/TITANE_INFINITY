@@ -94,11 +94,17 @@ mod tests {
     #[tokio::test]
     async fn test_harmonic_os_lifecycle() {
         let harmonic_os = HarmonicOS::default();
-        harmonic_os.initialize().await.unwrap();
+        harmonic_os
+            .initialize()
+            .await
+            .expect("harmonic os should initialize");
 
         let state = harmonic_os.get_state().await;
         assert!(state.global_score >= 0.0 && state.global_score <= 1.0);
 
-        harmonic_os.shutdown().await.unwrap();
+        harmonic_os
+            .shutdown()
+            .await
+            .expect("harmonic os should shutdown cleanly");
     }
 }

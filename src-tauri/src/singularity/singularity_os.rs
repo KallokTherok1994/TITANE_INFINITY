@@ -545,7 +545,7 @@ mod tests {
         let result = os.process("Comment fonctionne le système?", None).await;
         assert!(result.is_ok());
 
-        let output = result.unwrap();
+        let output = result.expect("process should produce output");
         assert_eq!(output.intent, IntentClass::Query);
         assert!(output.duration_ms < 100);
     }
@@ -557,7 +557,7 @@ mod tests {
         let result = os.quick_process("Aide-moi").await;
         assert!(result.is_ok());
 
-        let output = result.unwrap();
+        let output = result.expect("quick process should produce output");
         assert_eq!(output.intent, IntentClass::Help);
         assert_eq!(output.mode, ConversationMode::Coach);
     }
@@ -584,7 +584,10 @@ mod tests {
 
         os.lock_mode(ConversationMode::Expert).await;
 
-        let result = os.quick_process("Je me sens triste").await.unwrap();
+        let result = os
+            .quick_process("Je me sens triste")
+            .await
+            .expect("quick process should honor locked mode");
         // Despite emotional content, should stay Expert
         assert_eq!(result.mode, ConversationMode::Expert);
 

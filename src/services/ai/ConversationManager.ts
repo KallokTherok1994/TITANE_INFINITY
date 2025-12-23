@@ -326,52 +326,24 @@ export class ConversationManager {
         .map(m => m.content)
         .join('\n\n');
 
-      try {
-        const omegaResponse = await chatEngineCommands.generate({
-          message: prompt,
-          conversationId,
-          mode: 'default',
-          provider: config.backendProvider,
-          systemPrompt:
-            systemPrompt.length > 0 ? systemPrompt : request.config.systemPrompt,
-        });
+      const omegaResponse = await chatEngineCommands.generate({
+        message: prompt,
+        conversationId,
+        mode: 'default',
+        provider: config.backendProvider,
+        systemPrompt:
+          systemPrompt.length > 0 ? systemPrompt : request.config.systemPrompt,
+      });
 
-        return {
-          content: omegaResponse.content,
-          role: 'assistant',
-          timestamp: Date.now(),
-          metadata: {
-            model: config.defaultModel,
-            provider: providerName,
-          },
-        };
-      } catch (omegaError) {
-        logger.warn('OMEGA v2 call failed, falling back to legacy chat_send_message', {
-          component: 'ConversationManager',
+      return {
+        content: omegaResponse.content,
+        role: 'assistant',
+        timestamp: Date.now(),
+        metadata: {
+          model: config.defaultModel,
           provider: providerName,
-        });
-
-        const result = await secureInvoke<{
-          content: string;
-          model: string;
-          tokens_used: number;
-        }>('chat_send_message', {
-          prompt,
-          provider: config.backendProvider,
-          streaming: request.config.enableStreaming || false,
-        });
-
-        return {
-          content: result.content,
-          role: 'assistant',
-          timestamp: Date.now(),
-          metadata: {
-            model: result.model || config.defaultModel,
-            tokensUsed: result.tokens_used || 0,
-            provider: providerName,
-          },
-        };
-      }
+        },
+      };
     } catch (error) {
       logger.error(
         `Provider ${providerName} invocation failed`,
