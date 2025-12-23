@@ -1192,7 +1192,7 @@ function readViteEnvNumber(key: string, fallback: number): number {
  * Par défaut 25 MB (aligné avec le backend sandbox MAX_FILE_SIZE)
  */
 const MAX_PAYLOAD_SIZE =
-  readViteEnvNumber('VITE_TITANE_SECURITY_MAX_PAYLOAD_MB', 25) * 1024 * 1024;
+  readViteEnvNumber('VITE_TITANE_SECURITY_MAX_PAYLOAD_MB', 50) * 1024 * 1024;
 
 /**
  * Timeout maximal par défaut (30s)
@@ -1278,7 +1278,7 @@ export function getLocalNetworkConfig(): LocalNetworkSecurityConfig {
 
 const BASE_MAX_CALLS_PER_SECOND = readViteEnvNumber(
   'VITE_TITANE_SECURITY_MAX_CALLS_PER_SECOND',
-  30
+  120
 );
 const BASE_TRACKING_WINDOW_MS = readViteEnvNumber(
   'VITE_TITANE_SECURITY_TRACKING_WINDOW_MS',
