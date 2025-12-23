@@ -54,7 +54,7 @@ echo ""
 # Clean previous builds
 echo "🧹 Cleaning previous builds..."
 rm -rf dist/ build/ runtime/stable/build/ runtime/stable/dist/
-rm -f runtime/stable/*.AppImage runtime/stable/*.exe runtime/stable/*.dmg
+rm -f runtime/stable/*.AppImage runtime/stable/*.deb runtime/stable/*.exe runtime/stable/*.dmg
 
 # Install dependencies (if needed)
 if [[ ! -d "node_modules" ]]; then
