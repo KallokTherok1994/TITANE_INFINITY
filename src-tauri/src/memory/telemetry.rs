@@ -13,10 +13,20 @@ pub fn resolve_memory_dir() -> PathBuf {
         }
     }
 
-    match env::current_dir() {
-        Ok(cwd) => cwd.join("memory"),
-        Err(_) => PathBuf::from("memory"),
+    // Default behavior historically used CWD, but packaged artifacts (e.g. AppImage)
+    // can run from a read-only mount. In that case, fall back to a writable per-user
+    // data directory.
+    let cwd_candidate = env::current_dir().ok().map(|cwd| cwd.join("memory"));
+    if let Some(candidate) = cwd_candidate {
+        if fs::create_dir_all(&candidate).is_ok() {
+            return candidate;
+        }
     }
+
+    // Writability-first fallback: ~/.local/share/titane-infinity/memory (Linux),
+    // %LOCALAPPDATA%\titane-infinity\memory (Windows), etc.
+    let base = dirs::data_local_dir().unwrap_or_else(env::temp_dir);
+    base.join("titane-infinity").join("memory")
 }
 
 /// Scan the memory directory and return lightweight telemetry for observability.
