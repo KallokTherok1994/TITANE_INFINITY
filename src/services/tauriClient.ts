@@ -292,12 +292,13 @@ class TauriClient {
    * Envoie un message chat (synchrone)
    */
   async chatSendMessage(
-    request: ChatRequest,
-    options?: InvokeOptions
+    _request: ChatRequest,
+    _options?: InvokeOptions
   ): Promise<ChatResponse> {
-    throw this.handleError(
-      new Error('Legacy chat_send_message is disabled. Use conversation_generate.'),
-      { command: 'chat_send_message' }
+    throw this.createError(
+      'SecurityError',
+      'Legacy chat_send_message is disabled. Use conversation_generate.',
+      'chat_send_message'
     );
   }
 

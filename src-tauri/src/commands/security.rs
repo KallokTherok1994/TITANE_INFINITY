@@ -55,6 +55,32 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("get_files_by_category");
     commands.insert("clear_memory");
     commands.insert("store_file");
+    // Memory OS init/shutdown
+    commands.insert("memory_init");
+    commands.insert("memory_shutdown");
+    commands.insert("memory_is_running");
+    commands.insert("memory_version");
+    // Memory OS store/recall
+    commands.insert("memory_os_store");
+    commands.insert("memory_os_store_batch");
+    commands.insert("memory_recall_by_id");
+    commands.insert("memory_recall_keyword");
+    commands.insert("memory_recall_semantic");
+    commands.insert("memory_recall_recent");
+    commands.insert("memory_recall_by_type");
+    commands.insert("memory_recall_by_tag");
+    commands.insert("memory_os_delete");
+    commands.insert("memory_consolidate");
+    commands.insert("memory_forget");
+    commands.insert("memory_stats");
+    commands.insert("memory_snapshot");
+    commands.insert("memory_stm_snapshot");
+    commands.insert("memory_mtm_snapshot");
+    commands.insert("memory_ltm_snapshot");
+    commands.insert("memory_signal_stats");
+    commands.insert("memory_stm_entries");
+    commands.insert("memory_mtm_entries");
+    commands.insert("memory_all_tags");
 
     // ═══════════════════════════════════════════════════════════════
     // MEMORY ENGINE (Overdrive)
