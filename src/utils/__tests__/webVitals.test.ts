@@ -261,7 +261,7 @@ describe('WebVitalsMonitor', () => {
   });
 
   describe('Analytics Reporting', () => {
-    it.skip('should send analytics report every 30 seconds', () => {
+    it('should send analytics report every 30 seconds', () => {
       const sendToAnalyticsSpy = vi.spyOn(monitor as any, 'sendToAnalytics');
 
       // Record some metrics
@@ -278,9 +278,10 @@ describe('WebVitalsMonitor', () => {
 
       monitor.recordMetrics(metrics);
 
-      // Fast-forward 30 seconds
+      // Fast-forward 30 seconds using fake timers
       vi.advanceTimersByTime(30000);
 
+      // Verify analytics were sent
       expect(sendToAnalyticsSpy).toHaveBeenCalled();
     });
 
@@ -360,13 +361,19 @@ describe('useWebVitals hook', () => {
     vi.useRealTimers();
   });
 
-  it.skip('should initialize monitor on mount', async () => {
+  it('should initialize monitor on mount', async () => {
+    // Use real timers for React hooks
+    vi.useRealTimers();
+    
     const { result } = renderHook(() => useWebVitals());
 
     // Wait for useEffect to complete
     await waitFor(() => {
       expect(result.current.isMonitoring).toBe(true);
-    });
+    }, { timeout: 1000 });
+    
+    // Restore fake timers for other tests
+    vi.useFakeTimers();
   });
 
   it('should provide current metrics', () => {
@@ -401,13 +408,16 @@ describe('useWebVitals hook', () => {
     expect(stopSpy).toHaveBeenCalled();
   });
 
-  it.skip('should update metrics over time', async () => {
+  it('should update metrics over time', async () => {
+    // Use real timers for React hooks and async operations
+    vi.useRealTimers();
+    
     const { result, rerender } = renderHook(() => useWebVitals());
 
     // Wait for initial mount
     await waitFor(() => {
       expect(result.current.isMonitoring).toBe(true);
-    });
+    }, { timeout: 1000 });
 
     // Simulate metrics update
     const monitor = (result.current as any).monitor;
@@ -431,7 +441,10 @@ describe('useWebVitals hook', () => {
     // Metrics should be available now
     await waitFor(() => {
       expect(result.current.currentMetrics).not.toBeNull();
-    });
+    }, { timeout: 1000 });
+    
+    // Restore fake timers for other tests
+    vi.useFakeTimers();
   });
 });
 
