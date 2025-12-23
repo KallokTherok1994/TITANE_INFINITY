@@ -309,6 +309,7 @@ export function useWebVitals(): UseWebVitalsReturn {
   const [currentMetrics, setCurrentMetrics] = useState<WebVitalsMetrics | null>(null);
   const [overallScore, setOverallScore] = useState<number>(100);
   const [recommendations, setRecommendations] = useState<string[]>([]);
+  const [isMonitoring, setIsMonitoring] = useState<boolean>(false);
   const monitorRef = useRef<WebVitalsMonitor | null>(null);
 
   useEffect(() => {
@@ -316,6 +317,7 @@ export function useWebVitals(): UseWebVitalsReturn {
     const monitor = new WebVitalsMonitor();
     monitorRef.current = monitor;
     monitor.start();
+    setIsMonitoring(true);
 
     // Update metrics every second
     const interval = setInterval(() => {
@@ -353,6 +355,7 @@ export function useWebVitals(): UseWebVitalsReturn {
     return () => {
       clearInterval(interval);
       monitor.stop();
+      setIsMonitoring(false);
     };
   }, []);
 
@@ -360,6 +363,6 @@ export function useWebVitals(): UseWebVitalsReturn {
     currentMetrics,
     overallScore,
     recommendations,
-    isMonitoring: monitorRef.current?.isMonitoring() ?? false,
+    isMonitoring,
   };
 }
