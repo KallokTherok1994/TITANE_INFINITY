@@ -278,11 +278,16 @@ describe('WebVitalsMonitor', () => {
 
       monitor.recordMetrics(metrics);
 
+      // Start reporting interval (disabled by default in tests)
+      monitor.start();
+
       // Fast-forward 30 seconds using fake timers
       vi.advanceTimersByTime(30000);
 
       // Verify analytics were sent
       expect(sendToAnalyticsSpy).toHaveBeenCalled();
+
+      monitor.stop();
     });
 
     it('should aggregate multiple metrics before sending', () => {
@@ -364,14 +369,17 @@ describe('useWebVitals hook', () => {
   it('should initialize monitor on mount', async () => {
     // Use real timers for React hooks
     vi.useRealTimers();
-    
+
     const { result } = renderHook(() => useWebVitals());
 
     // Wait for useEffect to complete
-    await waitFor(() => {
-      expect(result.current.isMonitoring).toBe(true);
-    }, { timeout: 1000 });
-    
+    await waitFor(
+      () => {
+        expect(result.current.isMonitoring).toBe(true);
+      },
+      { timeout: 1000 }
+    );
+
     // Restore fake timers for other tests
     vi.useFakeTimers();
   });
@@ -409,42 +417,31 @@ describe('useWebVitals hook', () => {
   });
 
   it('should update metrics over time', async () => {
-    // Use real timers for React hooks and async operations
-    vi.useRealTimers();
-    
-    const { result, rerender } = renderHook(() => useWebVitals());
+    const mockedMetrics = {
+      lcp: 2000,
+      cls: 0.05,
+      fcp: 1500,
+      ttfb: 600,
+      inp: 150,
+      timestamp: Date.now(),
+      url: 'http://localhost',
+      userAgent: 'test',
+    } satisfies WebVitalsMetrics;
 
-    // Wait for initial mount
-    await waitFor(() => {
-      expect(result.current.isMonitoring).toBe(true);
-    }, { timeout: 1000 });
+    const getLatestMetricsSpy = vi
+      .spyOn(WebVitalsMonitor.prototype, 'getLatestMetrics')
+      .mockReturnValue(mockedMetrics);
 
-    // Simulate metrics update
-    const monitor = (result.current as any).monitor;
-    if (monitor) {
-      act(() => {
-        monitor.recordMetrics({
-          lcp: 2000,
-          cls: 0.05,
-          fcp: 1500,
-          ttfb: 600,
-          inp: 150,
-          timestamp: Date.now(),
-          url: 'http://localhost',
-          userAgent: 'test',
-        });
-      });
-    }
+    const { result } = renderHook(() => useWebVitals());
 
-    rerender();
+    // Advance hook interval to pull mocked metrics
+    await act(async () => {
+      vi.advanceTimersByTime(1000);
+    });
 
-    // Metrics should be available now
-    await waitFor(() => {
-      expect(result.current.currentMetrics).not.toBeNull();
-    }, { timeout: 1000 });
-    
-    // Restore fake timers for other tests
-    vi.useFakeTimers();
+    expect(result.current.currentMetrics).toEqual(mockedMetrics);
+
+    getLatestMetricsSpy.mockRestore();
   });
 });
 
