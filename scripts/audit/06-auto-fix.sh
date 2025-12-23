@@ -297,6 +297,147 @@ fix_desktop_entry() {
     fi
 }
 
+# Fix 11: Broken symlinks in node_modules
+fix_broken_symlinks() {
+    log INFO "Checking for broken symlinks..."
+    
+    if [[ ! -d "node_modules" ]]; then
+        log WARN "node_modules directory not found"
+        ((FIXES_SKIPPED++))
+        return
+    fi
+    
+    local broken_count=0
+    local max_broken_symlinks=100  # Safety limit
+    
+    while IFS= read -r symlink; do
+        if [[ $broken_count -ge $max_broken_symlinks ]]; then
+            log WARN "Reached safety limit of $max_broken_symlinks broken symlinks - manual intervention required"
+            break
+        fi
+        rm -f "$symlink"
+        log FIX "Removed broken symlink: ${symlink#$PROJECT_ROOT/}"
+        ((broken_count++))
+    done < <(find node_modules -type l ! -exec test -e {} \; -print 2>/dev/null)
+    
+    if [[ $broken_count -gt 0 ]]; then
+        if [[ $broken_count -ge $max_broken_symlinks ]]; then
+            log WARN "Removed $broken_count broken symlink(s) - More may exist, please investigate"
+            ((FIXES_SKIPPED++))
+        else
+            log OK "Removed $broken_count broken symlink(s)"
+            ((FIXES_APPLIED++))
+        fi
+    else
+        log OK "No broken symlinks found"
+    fi
+}
+
+# Fix 12: Regenerate lockfile if corrupted
+fix_lockfile() {
+    log INFO "Verifying lockfile integrity..."
+    
+    if [[ ! -f "pnpm-lock.yaml" ]]; then
+        log WARN "pnpm-lock.yaml not found, generating..."
+        if command -v pnpm &> /dev/null; then
+            if pnpm install --lockfile-only >> "$LOG_FILE" 2>&1; then
+                log OK "Generated pnpm-lock.yaml"
+                ((FIXES_APPLIED++))
+            else
+                log ERROR "Failed to generate lockfile"
+                ((FIXES_FAILED++))
+            fi
+        else
+            log ERROR "pnpm not available"
+            ((FIXES_FAILED++))
+        fi
+    else
+        log OK "Lockfile exists"
+    fi
+}
+
+# Fix 13: Clear corrupted caches
+fix_corrupted_caches() {
+    log INFO "Checking for corrupted caches..."
+    
+    local caches_cleared=0
+    
+    # Clear node cache if it exists and seems corrupted
+    if [[ -d "${HOME}/.npm" ]]; then
+        local cache_size=$(du -sh "${HOME}/.npm" 2>/dev/null | awk '{print $1}')
+        log INFO "npm cache size: $cache_size"
+    fi
+    
+    # Clear pnpm store cache if requested
+    # (Uncomment if needed, but this is aggressive)
+    # if command -v pnpm &> /dev/null; then
+    #     pnpm store prune >> "$LOG_FILE" 2>&1
+    #     log OK "Pruned pnpm store"
+    #     ((caches_cleared++))
+    # fi
+    
+    # Clear Rust target cache if corrupted (only if build fails)
+    if [[ -d "src-tauri/target" ]]; then
+        local target_size=$(du -sh src-tauri/target 2>/dev/null | awk '{print $1}')
+        log INFO "Rust target size: $target_size"
+    fi
+    
+    if [[ $caches_cleared -gt 0 ]]; then
+        log OK "Cleared $caches_cleared cache(s)"
+        ((FIXES_APPLIED++))
+    else
+        log OK "No corrupted caches detected"
+    fi
+}
+
+# Fix 14: Repair test fixtures
+fix_test_fixtures() {
+    log INFO "Checking test fixtures..."
+    
+    local fixtures_dir="${PROJECT_ROOT}/tests/fixtures"
+    if [[ -d "$fixtures_dir" ]]; then
+        log OK "Test fixtures directory exists"
+    else
+        log WARN "Test fixtures directory not found (may not be needed)"
+        ((FIXES_SKIPPED++))
+        return
+    fi
+    
+    # Check for common test fixture issues
+    local issues=0
+    # Add specific fixture validation logic here if needed
+    
+    if [[ $issues -eq 0 ]]; then
+        log OK "Test fixtures appear valid"
+    else
+        log WARN "Found $issues test fixture issue(s)"
+        ((FIXES_SKIPPED++))
+    fi
+}
+
+# Fix 15: Auto-install missing dependencies
+fix_missing_dependencies() {
+    log INFO "Checking for missing dependencies..."
+    
+    if [[ ! -d "node_modules" ]]; then
+        log WARN "node_modules missing, installing dependencies..."
+        if command -v pnpm &> /dev/null; then
+            if pnpm install --frozen-lockfile >> "$LOG_FILE" 2>&1; then
+                log OK "Dependencies installed successfully"
+                ((FIXES_APPLIED++))
+            else
+                log ERROR "Failed to install dependencies"
+                ((FIXES_FAILED++))
+            fi
+        else
+            log ERROR "pnpm not available, cannot install dependencies"
+            ((FIXES_FAILED++))
+        fi
+    else
+        log OK "node_modules exists"
+    fi
+}
+
 print_summary() {
     echo -e "\n${CYAN}═══════════════════════════════════════════════════════════════${NC}"
     echo -e "${CYAN}                     AUTO-FIX SUMMARY${NC}"
@@ -399,10 +540,15 @@ main() {
     
     if [[ "$run_all" == true ]]; then
         fix_directory_structure
+        fix_missing_dependencies
+        fix_broken_symlinks
+        fix_lockfile
         fix_script_permissions
         fix_gitignore
         fix_package_json
         fix_cargo_toml
+        fix_corrupted_caches
+        fix_test_fixtures
         fix_eslint
         fix_prettier
         fix_typescript

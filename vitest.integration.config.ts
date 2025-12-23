@@ -2,7 +2,8 @@ import { mergeConfig } from 'vitest/config';
 import sharedTestConfig from './vitest.config';
 
 /**
- * TITANE∞ - Configuration des tests d'intégration
+ * TITANE∞ v26.2.0 - Configuration des tests d'intégration
+ * Phase 3 Perfection: Coverage Thresholds 70%
  *
  * IMPORTANT: Cette config inclut UNIQUEMENT les tests d'intégration
  * situés dans tests/integration et tests/chat.
@@ -22,5 +23,33 @@ export default mergeConfig(sharedTestConfig, {
     reporters: ['default'],
     dir: '.',
     testTimeout: 60000,
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html', 'json-summary'],
+      reportsDirectory: 'coverage/integration',
+      exclude: [
+        'node_modules/',
+        '**/*.css',
+        '**/*.svg',
+        'src/assets/**',
+        'src/styles/**',
+        'src/test/',
+        '**/*.test.ts',
+        '**/*.test.tsx',
+        '**/*.spec.ts',
+        '**/*.spec.tsx',
+        '**/__mocks__/**',
+        '**/mocks/**',
+      ],
+      // Phase 3 Perfection: Quality Gates (70% for integration)
+      thresholds: {
+        statements: 70,
+        branches: 70,
+        functions: 70,
+        lines: 70,
+        // Strict mode: ne pas auto-update (force quality)
+        autoUpdate: false,
+      },
+    },
   },
 });
