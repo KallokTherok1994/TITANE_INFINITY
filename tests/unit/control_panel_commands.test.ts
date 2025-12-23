@@ -1,8 +1,6 @@
 /**
  * TITANE∞ OS - Tests Unitaires Control Panel Commands
  * Tests des commandes Tauri du Control Panel
- *
- * @jest-environment jsdom
  */
 
 import { describe, test, beforeEach, expect, vi, type Mock } from 'vitest';

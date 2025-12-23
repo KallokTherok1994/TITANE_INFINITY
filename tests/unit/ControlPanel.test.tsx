@@ -1,8 +1,6 @@
 /**
  * TITANE∞ OS - Tests Unitaires ControlPanel React
  * Tests des composants React du Control Panel
- *
- * @jest-environment jsdom
  */
 
 import React from 'react';
