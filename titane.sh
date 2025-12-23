@@ -31,6 +31,32 @@ BOLD='\033[1m'
 NC='\033[0m' # No Color
 
 # ──────────────────────────────────────────────────────────────────────────────
+# OUTPUT SYMBOLS (UTF-8 safe)
+# ──────────────────────────────────────────────────────────────────────────────
+OUTPUT_LOCALE="${LC_ALL:-${LC_CTYPE:-${LANG:-}}}"
+if [[ "$OUTPUT_LOCALE" == *"UTF-8"* || "$OUTPUT_LOCALE" == *"utf8"* || "$OUTPUT_LOCALE" == *"utf-8"* ]]; then
+    APP_NAME='TITANE∞'
+    HR='═══════════════════════════════════════════════════════════════'
+    SECTION_L='━━━ '
+    SECTION_R=' ━━━'
+    ARROW='→'
+    SYM_OK='✓'
+    SYM_FAIL='✗'
+    SYM_WARN='⚠'
+    SYM_INFO='ℹ'
+else
+    APP_NAME='TITANE'
+    HR='==============================================================='
+    SECTION_L='--- '
+    SECTION_R=' ---'
+    ARROW='->'
+    SYM_OK='[OK]'
+    SYM_FAIL='[FAIL]'
+    SYM_WARN='[WARN]'
+    SYM_INFO='[INFO]'
+fi
+
+# ──────────────────────────────────────────────────────────────────────────────
 # CONFIGURATION
 # ──────────────────────────────────────────────────────────────────────────────
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -91,36 +117,36 @@ pm_exec() {
 
 # Print header
 print_header() {
-    log "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
-    log "${BOLD}${CYAN}   TITANE∞ — $1${NC}"
-    log "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
+    log "${BLUE}${HR}${NC}"
+    log "${BOLD}${CYAN}   ${APP_NAME} — $1${NC}"
+    log "${BLUE}${HR}${NC}"
     log ""
 }
 
 # Print section
 print_section() {
-    log "${YELLOW}━━━ $1 ━━━${NC}"
+    log "${YELLOW}${SECTION_L}$1${SECTION_R}${NC}"
 }
 
 # Success message
 success() {
-    log "${GREEN}✓ $1${NC}"
+    log "${GREEN}${SYM_OK} $1${NC}"
 }
 
 # Error message
 error() {
-    log "${RED}✗ $1${NC}"
+    log "${RED}${SYM_FAIL} $1${NC}"
     exit 1
 }
 
 # Warning message
 warning() {
-    log "${YELLOW}⚠ $1${NC}"
+    log "${YELLOW}${SYM_WARN} $1${NC}"
 }
 
 # Info message
 info() {
-    log "${CYAN}ℹ $1${NC}"
+    log "${CYAN}${SYM_INFO} $1${NC}"
 }
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -443,7 +469,7 @@ full() {
     log ""
     
     if [[ "${TITANE_ASSUME_YES:-0}" == "1" || "${TITANE_BUILD_ASSUME_YES:-0}" == "1" ]]; then
-        info "TITANE_ASSUME_YES=1 → full non-interactif"
+        info "TITANE_ASSUME_YES=1 ${ARROW} full non-interactif"
     else
         read -p "Continue? (y/n): " -n 1 -r
         echo ""
@@ -497,14 +523,14 @@ main() {
             log "Usage: ./titane.sh <command> [options]"
             log ""
             log "${BOLD}Commands:${NC}"
-            log "  ${GREEN}clean${NC}              → Clean build artifacts & cache"
-            log "  ${GREEN}repair${NC}             → Repair dependencies (reinstall)"
-            log "  ${GREEN}fix${NC}                → Fix TypeScript & ESLint errors"
-            log "  ${GREEN}build${NC} [dev|stable] → Build application (dev or stable)"
-            log "  ${GREEN}deploy${NC}             → Build & deploy production"
-            log "  ${GREEN}full${NC}               → Complete cycle (clean+repair+fix+build+deploy)"
-            log "  ${GREEN}health${NC}             → System health check"
-            log "  ${GREEN}help${NC}               → Show this help"
+            log "  ${GREEN}clean${NC}              ${ARROW} Clean build artifacts & cache"
+            log "  ${GREEN}repair${NC}             ${ARROW} Repair dependencies (reinstall)"
+            log "  ${GREEN}fix${NC}                ${ARROW} Fix TypeScript & ESLint errors"
+            log "  ${GREEN}build${NC} [dev|stable] ${ARROW} Build application (dev or stable)"
+            log "  ${GREEN}deploy${NC}             ${ARROW} Build & deploy production"
+            log "  ${GREEN}full${NC}               ${ARROW} Complete cycle (clean+repair+fix+build+deploy)"
+            log "  ${GREEN}health${NC}             ${ARROW} System health check"
+            log "  ${GREEN}help${NC}               ${ARROW} Show this help"
             log ""
             log "${BOLD}Examples:${NC}"
             log "  ./titane.sh clean          # Clean everything"
