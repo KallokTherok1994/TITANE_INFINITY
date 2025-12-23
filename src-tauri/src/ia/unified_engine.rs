@@ -380,7 +380,10 @@ mod tests {
 
     #[test]
     fn test_fallback_chain_default() {
-        let secrets = Arc::new(SecureSecretsEngine::new(None).unwrap());
+        let secrets = Arc::new(
+            SecureSecretsEngine::new(None)
+                .expect("secure secrets engine should initialize without config"),
+        );
         let engine = UnifiedIAEngine::new(secrets);
 
         let chain = engine.get_fallback_chain(None);
@@ -393,7 +396,10 @@ mod tests {
 
     #[test]
     fn test_fallback_chain_preferred() {
-        let secrets = Arc::new(SecureSecretsEngine::new(None).unwrap());
+        let secrets = Arc::new(
+            SecureSecretsEngine::new(None)
+                .expect("secure secrets engine should initialize without config"),
+        );
         let engine = UnifiedIAEngine::new(secrets);
 
         let chain = engine.get_fallback_chain(Some(IAEngine::OpenAI));

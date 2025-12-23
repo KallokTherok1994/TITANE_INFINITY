@@ -231,7 +231,10 @@ pub async fn embed_openai(text: &str, api_key: &str) -> Result<Vec<f32>, String>
     let embedding = data["data"][0]["embedding"].as_array()
         .ok_or("Invalid response format")?
         .iter()
-        .map(|v| v.as_f64().unwrap() as f32)
+        .map(|v| {
+            v.as_f64()
+                .expect("embedding value should be convertible to f64") as f32
+        })
         .collect();
 
     Ok(embedding)
@@ -248,7 +251,7 @@ mod tests {
         let result = embed_text(text).await;
 
         assert!(result.is_ok());
-        let vector = result.unwrap();
+        let vector = result.expect("embed_text should return vector");
         assert_eq!(vector.len(), 384);
 
         // Check normalization (L2 norm ≈ 1.0)
@@ -262,7 +265,7 @@ mod tests {
         let result = embed_text_full(text, EmbeddingProvider::Mock).await;
 
         assert!(result.is_ok());
-        let emb_result = result.unwrap();
+        let emb_result = result.expect("embed_text_full should return embedding");
         assert_eq!(emb_result.vector.len(), 384);
         assert!(emb_result.latency_ms < 100);
     }
@@ -278,7 +281,7 @@ mod tests {
         let result = embed_batch(&texts).await;
         assert!(result.is_ok());
 
-        let vectors = result.unwrap();
+        let vectors = result.expect("embed_batch should return vectors");
         assert_eq!(vectors.len(), 3);
 
         for vec in vectors {

@@ -50,25 +50,11 @@ impl ChatState {
     note = "Use conversation_generate from OMEGA Pipeline v2 instead"
 )]
 pub async fn chat_send_message(
-    message: String,
-    state: tauri::State<'_, ChatState>,
+    _message: String,
+    _state: tauri::State<'_, ChatState>,
 ) -> Result<String, String> {
-    log::warn!("[DEPRECATED] chat_send_message called - migrate to OMEGA v2 conversation_generate");
-
-    if message.trim().is_empty() {
-        return Err("Message vide".to_string());
-    }
-
-    // INTEGRATION: Gemini API implementation
-    // 1. Use google-generativeai crate: reqwest + serde_json for API calls
-    // 2. Endpoint: POST https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent
-    // 3. Headers: x-goog-api-key: $GEMINI_API_KEY, Content-Type: application/json
-    // 4. Request body: { "contents": [{ "parts": [{ "text": message }] }] }
-    // 5. Response parsing: response.candidates[0].content.parts[0].text
-    // 6. Error handling: Rate limit (429), invalid key (401), timeout (30s)
-    // 7. Caching: Optional caching layer for repeated queries (TTL: 1h)
-    // For now, return test response for development
-    Ok(format!("Réponse de test à: {}", message))
+    log::warn!("[BLOCKED] chat_send_message is disabled. Use conversation_generate.");
+    Err("chat_send_message is disabled; migrate to conversation_generate".to_string())
 }
 
 #[tauri::command]

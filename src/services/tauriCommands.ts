@@ -91,13 +91,6 @@ export const TAURI_COMMANDS: Record<string, TauriCommand> = {
     returnType: 'PersonaMultipliers',
     active: true,
   },
-  chat_send_message: {
-    name: 'chat_send_message',
-    description: 'Send message to AI chat',
-    params: { request: 'ChatRequest' },
-    returnType: 'ChatResponse',
-    active: true,
-  },
   start_recording: {
     name: 'start_recording',
     description: 'Start voice recording',
@@ -367,9 +360,12 @@ export const TauriAPI = {
   getPersonaMultipliers: () =>
     invokeTauriCommand<PersonaMultipliers>('persona_get_multipliers'),
 
-  // Chat
-  sendChatMessage: (messages: ChatMessage[], config: ChatConfig) =>
-    invokeTauriCommand<ChatResponse>('chat_send_message', { messages, config }),
+  // Chat (legacy disabled)
+  sendChatMessage: () => {
+    throw new Error(
+      'chat_send_message is disabled; use conversation_generate via ConversationManager'
+    );
+  },
 
   // Voice
   startVoiceRecording: () => invokeTauriCommand<string>('start_recording'),

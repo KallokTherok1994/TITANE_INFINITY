@@ -306,7 +306,10 @@ mod tests {
         // Above threshold
         let chunk = buffer.push("world test".to_string());
         assert!(chunk.is_some());
-        assert_eq!(chunk.unwrap(), "hiworld test");
+        assert_eq!(
+            chunk.expect("chunk should exist once threshold is exceeded"),
+            "hiworld test"
+        );
     }
 
     #[test]
@@ -316,7 +319,10 @@ mod tests {
 
         let chunk = buffer.flush();
         assert!(chunk.is_some());
-        assert_eq!(chunk.unwrap(), "hello");
+        assert_eq!(
+            chunk.expect("flush should return buffered content"),
+            "hello"
+        );
 
         // Empty after flush
         assert!(buffer.flush().is_none());
@@ -339,7 +345,13 @@ mod tests {
         assert!(chunks.len() >= 2);
 
         // Last chunk should be Complete
-        assert_eq!(chunks.last().unwrap().chunk_type, ChunkType::Complete);
+        assert_eq!(
+            chunks
+                .last()
+                .expect("stream should produce at least one chunk")
+                .chunk_type,
+            ChunkType::Complete
+        );
     }
 
     #[test]
@@ -351,7 +363,8 @@ mod tests {
             total_tokens: Some(10),
         };
 
-        let json = serde_json::to_string(&metadata).unwrap();
+        let json = serde_json::to_string(&metadata)
+            .expect("metadata serialization should succeed");
         assert!(json.contains("thinking"));
         assert!(json.contains("0.95"));
     }

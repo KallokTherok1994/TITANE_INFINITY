@@ -104,8 +104,12 @@ mod tests {
         let encryption = MemoryEncryption::new("test-password".to_string());
         let data = b"Hello, TITANE!";
 
-        let encrypted = encryption.encrypt(data).unwrap();
-        let decrypted = encryption.decrypt(&encrypted).unwrap();
+        let encrypted = encryption
+            .encrypt(data)
+            .expect("encryption should succeed in memory test");
+        let decrypted = encryption
+            .decrypt(&encrypted)
+            .expect("decryption should recover plaintext");
 
         assert_eq!(data, decrypted.as_slice());
     }
@@ -116,7 +120,9 @@ mod tests {
         let enc2 = MemoryEncryption::new("password2".to_string());
 
         let data = b"Secret data";
-        let encrypted = enc1.encrypt(data).unwrap();
+        let encrypted = enc1
+            .encrypt(data)
+            .expect("encryption should succeed for source password");
 
         // Should fail with wrong password
         assert!(enc2.decrypt(&encrypted).is_err());

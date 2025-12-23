@@ -525,16 +525,22 @@ mod tests {
             reviewer_notes: vec![],
         };
 
-        engine.propose_amendment(amendment).await.unwrap();
+        engine
+            .propose_amendment(amendment)
+            .await
+            .expect("amendment proposal should succeed");
 
         // Soumettre
-        engine.submit_for_review("workflow_test").await.unwrap();
+        engine
+            .submit_for_review("workflow_test")
+            .await
+            .expect("amendment should be submitted for review");
 
         // Voter
         engine
             .vote("workflow_test", true, AuthorityLevel::System)
             .await
-            .unwrap();
+            .expect("vote should succeed for workflow_test");
 
         // Vérifier approbation
         let pending = engine.pending_amendments().await;

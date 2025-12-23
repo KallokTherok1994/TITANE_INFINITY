@@ -295,18 +295,10 @@ class TauriClient {
     request: ChatRequest,
     options?: InvokeOptions
   ): Promise<ChatResponse> {
-    try {
-      return await this.safeInvoke<ChatResponse>(
-        'chat_send_message',
-        { request },
-        {
-          timeout: 60000, // 60s pour génération IA
-          ...options,
-        }
-      );
-    } catch (error) {
-      throw this.handleError(error);
-    }
+    throw this.handleError(
+      new Error('Legacy chat_send_message is disabled. Use conversation_generate.'),
+      { command: 'chat_send_message' }
+    );
   }
 
   /**

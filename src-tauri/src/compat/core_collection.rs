@@ -120,8 +120,14 @@ mod tests {
 
         // Initialize engine
         {
-            let mut engine = collection.engine().lock().unwrap();
-            engine.init().await.unwrap();
+            let mut engine = collection
+                .engine()
+                .lock()
+                .expect("core collection engine lock should succeed");
+            engine
+                .init()
+                .await
+                .expect("core collection engine init should succeed");
         }
 
         // Test sync

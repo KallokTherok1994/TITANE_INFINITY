@@ -629,7 +629,13 @@ mod tests {
         let cloned = result.clone();
         assert_eq!(cloned.check_id, "result_test");
         assert_eq!(cloned.duration_ms, 50);
-        assert_eq!(cloned.details.get("key").unwrap(), "value");
+        assert_eq!(
+            cloned
+                .details
+                .get("key")
+                .expect("detail key should exist after clone"),
+            "value"
+        );
     }
 
     #[test]
@@ -951,7 +957,13 @@ mod tests {
         };
 
         assert_eq!(result.details.len(), 3);
-        assert_eq!(result.details.get("code").unwrap(), "200");
+        assert_eq!(
+            result
+                .details
+                .get("code")
+                .expect("code detail should be present"),
+            "200"
+        );
     }
 
     #[test]

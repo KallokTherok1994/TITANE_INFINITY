@@ -1058,7 +1058,9 @@ mod tests {
             }
             titane_samples.push(sample);
         }
-        fingerprint.calibrate_titane(titane_samples).unwrap();
+        fingerprint
+            .calibrate_titane(titane_samples)
+            .expect("titane calibration should succeed in tests");
 
         // Test accuracy: 10 TITANE samples + 10 user samples
         let mut correct_detections = 0;

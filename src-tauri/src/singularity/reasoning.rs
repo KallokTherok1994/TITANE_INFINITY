@@ -327,7 +327,10 @@ mod tests {
 
         assert!(compressed.len() <= 4);
         assert!(compressed[0].contains("Step 0")); // First preserved
-        assert!(compressed.last().unwrap().contains("Step 9")); // Last preserved
+        assert!(compressed
+            .last()
+            .expect("compressed chain should keep last entry")
+            .contains("Step 9")); // Last preserved
     }
 
     #[test]

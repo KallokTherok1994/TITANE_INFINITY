@@ -74,8 +74,10 @@ mod tests {
     #[test]
     fn test_diagnostics_serialization() {
         let diag = CycleEngineDiagnostics::default();
-        let json = serde_json::to_string(&diag).unwrap();
-        let restored: CycleEngineDiagnostics = serde_json::from_str(&json).unwrap();
+        let json = serde_json::to_string(&diag)
+            .expect("diagnostics should serialize");
+        let restored: CycleEngineDiagnostics = serde_json::from_str(&json)
+            .expect("diagnostics should deserialize");
         assert_eq!(diag.enabled, restored.enabled);
         assert_eq!(diag.omega_intensity, restored.omega_intensity);
     }
@@ -128,7 +130,8 @@ mod tests {
     #[test]
     fn test_diagnostics_deserialize() {
         let json = r#"{"enabled":true,"clock_running":true,"current_cycle":{"daily_phase":"Morning","weekly_phase":"Monday","monthly_phase":"Week1","seasonal_phase":"Winter","cognitive_mode":"Analytical","timestamp":1234567890},"omega_intensity":0.8,"self_healing_frequency":0.6,"memory_consolidation_active":false,"alignment_score":0.75,"uptime_seconds":7200}"#;
-        let diag: CycleEngineDiagnostics = serde_json::from_str(json).unwrap();
+        let diag: CycleEngineDiagnostics = serde_json::from_str(json)
+            .expect("should deserialize cycle engine diagnostics");
         assert!(diag.enabled);
         assert!(diag.clock_running);
         assert_eq!(diag.omega_intensity, 0.8);

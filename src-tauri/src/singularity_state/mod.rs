@@ -498,7 +498,7 @@ mod tests {
 
         assert!(result.is_ok(), "Deep sync failed: {:?}", result.err());
 
-        let report = result.unwrap();
+        let report = result.expect("singularity deep sync should produce report");
         assert!(report.coherence_score >= 0.0 && report.coherence_score <= 1.0);
 
         // Vérifier que les champs META ont été mis à jour

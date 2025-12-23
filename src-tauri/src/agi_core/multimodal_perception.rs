@@ -536,7 +536,7 @@ mod tests {
         let enhanced = engine
             .enhance_reasoning(&context, "What do you see?")
             .await
-            .unwrap();
+            .expect("should enhance reasoning with multimodal context");
 
         assert!(enhanced.contains("VISUAL CONTEXT"));
         assert!(enhanced.contains("640x480"));

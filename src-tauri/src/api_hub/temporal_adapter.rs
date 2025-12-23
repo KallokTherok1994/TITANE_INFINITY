@@ -200,7 +200,7 @@ mod tests {
             now: Moment {
                 timestamp_ms: std::time::SystemTime::now()
                     .duration_since(std::time::UNIX_EPOCH)
-                    .unwrap()
+                    .expect("system time should be after unix epoch")
                     .as_millis() as u64,
                 hour,
                 minute: 0,

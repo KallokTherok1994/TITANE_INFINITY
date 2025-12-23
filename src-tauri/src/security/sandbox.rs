@@ -394,13 +394,16 @@ mod tests {
     #[tokio::test]
     async fn test_import_file() {
         let sandbox = FileImportSandbox::new();
-        sandbox.initialize().await.unwrap();
+        sandbox
+            .initialize()
+            .await
+            .expect("sandbox should initialize");
 
         let data = "TITANE INFINITY v∞".as_bytes().to_vec();
         let result = sandbox.import_file("test.txt", data).await;
 
         assert!(result.is_ok());
-        let imported = result.unwrap();
+        let imported = result.expect("import should return metadata");
         assert_eq!(imported.extension, "txt");
         // UTF-8 character '∞' = 3 bytes, total = 20 bytes
         assert_eq!(imported.size, 20);

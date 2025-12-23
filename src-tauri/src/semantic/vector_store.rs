@@ -340,15 +340,21 @@ mod tests {
                 vector: vec![i as f32, 0.0, 0.0],
                 metadata: HashMap::new(),
             };
-            store.add_point(point).unwrap();
+            store
+                .add_point(point)
+                .expect("vector store should accept point");
         }
 
         // Construit l'index
-        store.build_index().unwrap();
+        store
+            .build_index()
+            .expect("vector store index build should succeed");
 
         // Recherche
         let query = vec![5.0, 0.0, 0.0];
-        let results = store.search_knn(&query, 3).unwrap();
+        let results = store
+            .search_knn(&query, 3)
+            .expect("vector store search should return results");
 
         assert_eq!(results.len(), 3);
         assert_eq!(results[0].id, "doc5");

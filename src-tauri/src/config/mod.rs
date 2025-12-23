@@ -138,7 +138,7 @@ mod tests {
         let result = get_all_configs().await;
         assert!(result.is_ok());
 
-        let snapshot = result.unwrap();
+        let snapshot = result.expect("config snapshot retrieval should succeed");
         assert_eq!(snapshot.version, env!("CARGO_PKG_VERSION"));
         assert!(!snapshot.runtime.ollama_url.is_empty());
         assert!(!snapshot.runtime.ollama_model.is_empty());

@@ -325,7 +325,10 @@ mod tests {
         let valid = r#"{"prompt":"test1","response":"answer1"}
 {"prompt":"test2","response":"answer2"}"#;
 
-        assert_eq!(validate_jsonl(valid).unwrap(), 2);
+        assert_eq!(
+            validate_jsonl(valid).expect("valid jsonl should have two entries"),
+            2
+        );
 
         let invalid = r#"{"prompt":"test1"
 invalid json"#;

@@ -235,17 +235,26 @@ mod tests {
         // Dequeue doit respecter priorités (Realtime first)
         let next = queues.dequeue().await;
         assert!(next.is_some());
-        assert_eq!(next.unwrap().id, task_rt.id);
+        assert_eq!(
+            next.expect("realtime task should dequeue first").id,
+            task_rt.id
+        );
 
         // High ensuite
         let next = queues.dequeue().await;
         assert!(next.is_some());
-        assert_eq!(next.unwrap().id, task_high.id);
+        assert_eq!(
+            next.expect("high priority task should dequeue second").id,
+            task_high.id
+        );
 
         // Background dernière
         let next = queues.dequeue().await;
         assert!(next.is_some());
-        assert_eq!(next.unwrap().id, task_bg.id);
+        assert_eq!(
+            next.expect("background task should dequeue last").id,
+            task_bg.id
+        );
     }
 
     #[tokio::test]

@@ -15,7 +15,7 @@ describe('ChatService normalizeResponse', () => {
     vi.clearAllMocks();
   });
 
-  it('falls back provider/latency when backend omits them', async () => {
+  it('falls back provider/latency when backend omits them (OMEGA)', async () => {
     vi.mocked(invokeWithRetry).mockResolvedValueOnce({
       success: true,
       message: {
@@ -29,11 +29,7 @@ describe('ChatService normalizeResponse', () => {
       omega_metadata: {},
     } as any);
 
-    const history: ChatMessage[] = [
-      { role: 'user', content: 'hi', timestamp: new Date().toISOString() },
-    ];
-
-    const response = await chatService.sendMessageLegacy(history, { provider: 'auto' });
+    const response = await chatService.sendMessage('hi', 'conv-1', { provider: 'auto' });
 
     expect(response.provider).toBe('auto');
     expect(response.latencyMs).toBe(0);

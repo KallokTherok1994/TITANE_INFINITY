@@ -430,11 +430,16 @@ mod tests {
 
     #[test]
     fn test_encrypt_decrypt_roundtrip() {
-        let engine = CloudCryptoEngine::new("test_password_123").unwrap();
+        let engine = CloudCryptoEngine::new("test_password_123")
+            .expect("cloud crypto engine should initialize");
         let plaintext = b"Hello, TITANE Cloud!";
 
-        let encrypted = engine.encrypt(plaintext, false).unwrap();
-        let decrypted = engine.decrypt(&encrypted, false).unwrap();
+        let encrypted = engine
+            .encrypt(plaintext, false)
+            .expect("cloud crypto should encrypt");
+        let decrypted = engine
+            .decrypt(&encrypted, false)
+            .expect("cloud crypto should decrypt");
 
         assert_eq!(plaintext.to_vec(), decrypted);
     }
@@ -443,8 +448,9 @@ mod tests {
     fn test_compression_roundtrip() {
         let data = b"This is some test data that should be compressed and decompressed correctly.";
 
-        let compressed = compress_lz4(data).unwrap();
-        let decompressed = decompress_lz4(&compressed).unwrap();
+        let compressed = compress_lz4(data).expect("lz4 compression should succeed");
+        let decompressed = decompress_lz4(&compressed)
+            .expect("lz4 decompression should succeed");
 
         assert_eq!(data.to_vec(), decompressed);
     }

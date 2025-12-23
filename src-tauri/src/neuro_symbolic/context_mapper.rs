@@ -356,7 +356,7 @@ mod tests {
         let result = neuro_map_context("Test command".to_string()).await;
         assert!(result.is_ok());
 
-        let map = result.unwrap();
+        let map = result.expect("context mapping command should succeed");
         assert_eq!(map.query, "Test command");
     }
 

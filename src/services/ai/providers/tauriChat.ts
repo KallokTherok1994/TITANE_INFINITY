@@ -166,7 +166,14 @@ class TauriChatProvider implements AIProvider {
 
       // OMEGA: Protected invoke with timeout and retry
       const response = await Promise.race([
-        safeInvokeTauri<ChatResponse>(TAURI_COMMANDS.CHAT_SEND_MESSAGE, { request }),
+        safeInvokeTauri<ChatResponse>('conversation_generate', {
+          message: request.message,
+          conversation_id: request.conversation_id,
+          mode: null,
+          provider: request.provider,
+          system_prompt: request.system_prompt,
+          streaming: request.streaming,
+        }),
         new Promise<never>((_, reject) =>
           setTimeout(() => reject(new Error('Backend invoke timeout')), this.TIMEOUT_MS)
         ),

@@ -659,7 +659,7 @@ mod tests {
 
         let concept = manager.get_concept("TestConcept");
         assert!(concept.is_some());
-        let c = concept.unwrap();
+    let c = concept.expect("concept should exist after update");
         assert_eq!(c.name, "TestConcept");
         assert_eq!(c.definition, "A test concept");
         assert_eq!(c.usage_count, 1);
@@ -683,7 +683,9 @@ mod tests {
             "Example 2".to_string(),
         );
 
-        let concept = manager.get_concept("Concept").unwrap();
+        let concept = manager
+            .get_concept("Concept")
+            .expect("concept should exist after multiple updates");
         assert_eq!(concept.usage_count, 2);
         assert!(concept.examples.contains(&"Example 1".to_string()));
         assert!(concept.examples.contains(&"Example 2".to_string()));

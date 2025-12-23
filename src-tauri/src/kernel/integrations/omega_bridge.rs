@@ -308,7 +308,7 @@ mod tests {
         let result = bridge.submit_request(request).await;
         assert!(result.is_ok());
 
-        let (job_id, job) = result.unwrap();
+        let (job_id, job) = result.expect("omega bridge should return job");
         assert_eq!(job.engine, "OMEGA");
         assert_eq!(job.priority, CognitivePriority::Normal);
     }
@@ -328,7 +328,7 @@ mod tests {
         let result = bridge.execute_omega_request(request).await;
         assert!(result.is_ok());
 
-        let output = result.unwrap();
+        let output = result.expect("omega request should execute");
         assert_eq!(output.engine, "OMEGA");
         assert!(output.duration_ms > 0);
 

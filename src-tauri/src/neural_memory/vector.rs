@@ -149,7 +149,9 @@ mod tests {
         let entry = MemoryEntry::new("Test content".to_string(), 0.8, MemoryType::Conversation);
 
         let embedding = vec![0.5; EMBEDDING_DIM];
-        store.insert(&entry, embedding.clone()).unwrap();
+        store
+            .insert(&entry, embedding.clone())
+            .expect("vector store insertion should succeed");
 
         let results = store.search(&embedding, 1);
         assert_eq!(results.len(), 1);

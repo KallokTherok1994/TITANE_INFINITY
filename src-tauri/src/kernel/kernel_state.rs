@@ -319,7 +319,10 @@ mod tests {
         state.update_engine_status("TestEngine", 100, true);
         state.update_engine_status("TestEngine", 200, true);
 
-        let status = state.active_engines.get("TestEngine").unwrap();
+        let status = state
+            .active_engines
+            .get("TestEngine")
+            .expect("TestEngine status should exist after updates");
         assert_eq!(status.total_executions, 2);
         assert_eq!(status.last_duration_ms, Some(200));
         assert_eq!(status.avg_duration_ms, 150.0);
