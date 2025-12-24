@@ -123,7 +123,11 @@ phase_1() {
         warning "$DEV_BRANCH branch not found locally"
         info "Fetching from remote..."
         if [[ "$DRY_RUN" == "false" ]]; then
-            git fetch origin "$DEV_BRANCH:$DEV_BRANCH" || warning "Could not fetch $DEV_BRANCH"
+            if git fetch origin "$DEV_BRANCH"; then
+                git checkout -b "$DEV_BRANCH" "origin/$DEV_BRANCH" || warning "Could not create local $DEV_BRANCH"
+            else
+                warning "Could not fetch $DEV_BRANCH"
+            fi
         fi
     fi
     
@@ -153,7 +157,11 @@ phase_1() {
         warning "$STABLE_BRANCH branch not found locally"
         info "Fetching from remote..."
         if [[ "$DRY_RUN" == "false" ]]; then
-            git fetch origin "$STABLE_BRANCH:$STABLE_BRANCH" || warning "Could not fetch $STABLE_BRANCH"
+            if git fetch origin "$STABLE_BRANCH"; then
+                git checkout -b "$STABLE_BRANCH" "origin/$STABLE_BRANCH" || warning "Could not create local $STABLE_BRANCH"
+            else
+                warning "Could not fetch $STABLE_BRANCH"
+            fi
         fi
     fi
     
