@@ -297,6 +297,45 @@ validate_src_tauri || exit 1
 
 ---
 
+## 🔀 Branch Consolidation (v26.2.2)
+
+### Merge All Branches Script
+
+```bash
+./scripts/merge-all-branches.sh [--phase PHASE] [--dry-run] [--help]
+```
+
+**Ce qu'il fait**:
+
+- ✅ Phase 1: Fast-forward des branches dev et stable-runtime
+- ✅ Phase 2: Guide pour l'intégration des branches features
+- ✅ Phase 3: Archivage des branches complétées
+
+**Options**:
+
+- `--phase 1|2|3`: Exécute une phase spécifique
+- `--dry-run`: Mode simulation (aucune modification)
+- `--help`: Affiche l'aide détaillée
+
+**Exemple d'utilisation**:
+
+```bash
+# Tester ce qui va se passer
+./scripts/merge-all-branches.sh --dry-run
+
+# Exécuter Phase 1 uniquement (safe)
+./scripts/merge-all-branches.sh --phase 1
+
+# Exécuter toutes les phases
+./scripts/merge-all-branches.sh
+```
+
+**Documentation complète**:
+- `docs/BRANCH_CONSOLIDATION_REPORT_v26.2.2.md` - Analyse détaillée
+- `docs/BRANCH_CONSOLIDATION_IMPLEMENTATION.md` - Guide d'implémentation
+
+---
+
 ## 🐛 Dépannage
 
 ### Erreur: "Cargo non installé"
