@@ -173,16 +173,14 @@ mod memory_system_tests {
     #[test]
     fn test_memory_type_variants() {
         // Ensure all MemoryType variants are accessible
-        let types = vec![
-            MemoryType::Conversation,
+        let types = [MemoryType::Conversation,
             MemoryType::Decision,
             MemoryType::Knowledge,
             MemoryType::Project,
             MemoryType::Ritual,
             MemoryType::Event,
             MemoryType::System,
-            MemoryType::Custom,
-        ];
+            MemoryType::Custom];
 
         assert_eq!(types.len(), 8, "Should have 8 memory type variants");
     }
@@ -190,11 +188,9 @@ mod memory_system_tests {
     #[test]
     fn test_memory_tier_variants() {
         // Ensure all MemoryTier variants work
-        let tiers = vec![
-            MemoryTier::STM,
+        let tiers = [MemoryTier::STM,
             MemoryTier::MTM,
-            MemoryTier::LTM,
-        ];
+            MemoryTier::LTM];
 
         assert_eq!(tiers.len(), 3, "Should have 3 memory tiers");
     }

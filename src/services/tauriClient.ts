@@ -295,10 +295,10 @@ class TauriClient {
     request: ChatRequest,
     options?: InvokeOptions
   ): Promise<ChatResponse> {
-    throw this.handleError(
-      new Error('Legacy chat_send_message is disabled. Use conversation_generate.'),
-      { command: 'chat_send_message' }
+    const error = new Error(
+      'Legacy chat_send_message is disabled. Use conversation_generate.'
     );
+    throw this.handleError(error);
   }
 
   /**

@@ -473,7 +473,7 @@ mod tests {
     #[test]
     fn test_agent_state_clone() {
         let state = AgentState::Running;
-        let cloned = state.clone();
+        let cloned = state;
         assert_eq!(state, cloned);
     }
 

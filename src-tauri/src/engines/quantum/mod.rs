@@ -388,6 +388,6 @@ mod tests {
         engine.record_event(event).await;
 
         let accuracy = engine.get_accuracy().await;
-        assert!(accuracy >= 0.0 && accuracy <= 1.0);
+        assert!((0.0..=1.0).contains(&accuracy));
     }
 }

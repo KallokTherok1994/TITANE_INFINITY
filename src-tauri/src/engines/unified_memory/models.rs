@@ -211,7 +211,7 @@ mod tests {
     #[test]
     fn test_memory_entry_default() {
         let entry = MemoryEntry::default();
-        assert!(entry.id.len() > 0);
+        assert!(!entry.id.is_empty());
         assert_eq!(entry.role, "system");
         assert_eq!(entry.importance, 0.5);
     }

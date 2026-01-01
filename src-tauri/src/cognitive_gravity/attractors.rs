@@ -95,7 +95,7 @@ mod tests {
         let state = AttractorState::new();
         let weights = [1.5, 1.5, 1.3, 1.0, 1.2, 1.4];
         let influence = state.compute_total_influence(&weights);
-        assert!(influence >= 0.0 && influence <= 1.0);
+        assert!((0.0..=1.0).contains(&influence));
     }
 
     #[test]

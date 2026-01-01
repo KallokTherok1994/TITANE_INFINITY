@@ -203,7 +203,7 @@ mod tests {
 
     #[test]
     fn test_context_mapper_default() {
-        let mapper = ContextMapper::default();
+        let mapper = ContextMapper;
         let _ = mapper;
     }
 

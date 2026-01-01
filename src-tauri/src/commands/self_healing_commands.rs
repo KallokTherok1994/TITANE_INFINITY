@@ -185,8 +185,8 @@ pub async fn selfheal_load_profile(app: tauri::AppHandle) -> Result<serde_json::
 
     if let Ok(guard) = SELFHEAL_PROFILE.lock() {
         if let Some(profile) = guard.clone() {
-            return Ok(serde_json::to_value(profile)
-                .map_err(|e| TitaneError::InternalError(format!("Failed to serialize profile: {e}")))?);
+            return serde_json::to_value(profile)
+                .map_err(|e| TitaneError::InternalError(format!("Failed to serialize profile: {e}")));
         }
     }
 
@@ -199,8 +199,8 @@ pub async fn selfheal_load_profile(app: tauri::AppHandle) -> Result<serde_json::
         *guard = Some(disk.clone());
     }
 
-    Ok(serde_json::to_value(disk)
-        .map_err(|e| TitaneError::InternalError(format!("Failed to serialize profile: {e}")))?)
+    serde_json::to_value(disk)
+        .map_err(|e| TitaneError::InternalError(format!("Failed to serialize profile: {e}")))
 }
 
 #[tauri::command]

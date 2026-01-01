@@ -96,7 +96,7 @@ mod tests {
     #[test]
     fn test_emotion_trend_clone() {
         let trend = EmotionTrend::Improving;
-        let cloned = trend.clone();
+        let cloned = trend;
         assert_eq!(trend, cloned);
     }
 

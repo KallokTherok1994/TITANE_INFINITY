@@ -590,14 +590,12 @@ mod tests {
 
     #[test]
     fn test_drift_recommendation_all_variants() {
-        let variants = vec![
-            DriftRecommendation::NoAction,
+        let variants = [DriftRecommendation::NoAction,
             DriftRecommendation::MonitorClosely,
             DriftRecommendation::SoftRecalibrate,
             DriftRecommendation::HardRecalibrate,
             DriftRecommendation::RestartEngine,
-            DriftRecommendation::AlertOperator,
-        ];
+            DriftRecommendation::AlertOperator];
         assert_eq!(variants.len(), 6);
     }
 
@@ -623,14 +621,12 @@ mod tests {
 
     #[test]
     fn test_calibration_action_all_variants() {
-        let variants = vec![
-            CalibrationAction::None,
+        let variants = [CalibrationAction::None,
             CalibrationAction::ResetCaches,
             CalibrationAction::OptimizeBuffers,
             CalibrationAction::RebalanceLoad,
             CalibrationAction::RestartWorkers,
-            CalibrationAction::FullRecalibration,
-        ];
+            CalibrationAction::FullRecalibration];
         assert_eq!(variants.len(), 6);
     }
 

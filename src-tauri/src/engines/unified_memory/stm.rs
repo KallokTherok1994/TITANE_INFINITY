@@ -176,6 +176,13 @@ impl ShortTermMemory {
     }
 }
 
+// Implement Default trait properly
+impl Default for ShortTermMemory {
+    fn default() -> Self {
+        Self::new(100)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -292,12 +299,5 @@ mod tests {
 
         let not_found = stm.remove(&"missing".to_string());
         assert!(not_found.is_none());
-    }
-}
-
-// Implement Default trait properly
-impl Default for ShortTermMemory {
-    fn default() -> Self {
-        Self::new(100)
     }
 }

@@ -167,7 +167,7 @@ mod tests {
 
     #[test]
     fn test_summarizer_default() {
-        let summarizer = Summarizer::default();
+        let summarizer = Summarizer;
         let _ = summarizer;
     }
 
