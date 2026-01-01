@@ -21,15 +21,12 @@ NC='\033[0m' # No Color
 # Configuration
 DEV_BRANCH="dev"
 MAIN_BRANCH="MAIN"
-MERGE_MESSAGE="Merge dev branch: sync changes and v26.2.1 completion markers
+MERGE_MESSAGE="Merge dev branch into MAIN
 
-Merges 3 commits from dev branch created after PR #46:
-- c979a52: chore: sync local changes before branch sync
-- beaf7f0: MISSION COMPLETE: Fusion absolue v26.2.1
-- a7f1770: docs(analysis): Add deep analysis + reflection
-
-These commits contain documentation and synchronization updates
-from December 23, 2025 that complete the v26.2.1 milestone."
+This merge synchronizes changes from the dev branch into MAIN.
+For details on what was merged, see:
+- git log $MAIN_BRANCH..$DEV_BRANCH (commits from dev)
+- docs/DEV_TO_MAIN_MERGE_ANALYSIS.md (detailed analysis)"
 
 # Helper functions
 print_header() {

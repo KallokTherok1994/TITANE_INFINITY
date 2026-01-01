@@ -24,6 +24,8 @@ echo ""
 # Check we're in a git repo
 if [ ! -d ".git" ]; then
     echo -e "${RED}❌ Not in a git repository. Please run from repository root.${NC}"
+    echo -e "${BLUE}ℹ️  Expected: /path/to/TITANE_INFINITY/${NC}"
+    echo -e "${BLUE}ℹ️  Current: $(pwd)${NC}"
     exit 1
 fi
 
