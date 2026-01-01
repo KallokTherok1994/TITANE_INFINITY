@@ -487,12 +487,10 @@ mod tests {
 
     #[test]
     fn test_provider_variants() {
-        let providers = vec![
-            Provider::OpenAI,
+        let providers = [Provider::OpenAI,
             Provider::Anthropic,
             Provider::Gemini,
-            Provider::Local,
-        ];
+            Provider::Local];
         assert_eq!(providers.len(), 4);
     }
 

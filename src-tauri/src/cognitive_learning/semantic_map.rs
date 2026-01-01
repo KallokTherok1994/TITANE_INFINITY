@@ -174,15 +174,13 @@ mod tests {
 
     #[test]
     fn test_relation_type_variants() {
-        let types = vec![
-            RelationType::IsA,
+        let types = [RelationType::IsA,
             RelationType::PartOf,
             RelationType::RelatedTo,
             RelationType::Causes,
             RelationType::Requires,
             RelationType::Implements,
-            RelationType::Uses,
-        ];
+            RelationType::Uses];
         assert_eq!(types.len(), 7);
     }
 

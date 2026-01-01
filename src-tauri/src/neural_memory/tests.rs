@@ -81,7 +81,7 @@ mod mtm_tests {
         let mut mtm = MidTermMemory::default();
 
         // Add entries with different importance (unsorted)
-        let importances = vec![0.3, 0.9, 0.5, 0.7, 0.1];
+        let importances = [0.3, 0.9, 0.5, 0.7, 0.1];
         for (i, &imp) in importances.iter().enumerate() {
             let mut entry = MemoryEntry::new(format!("Content {}", i), imp, MemoryType::Factual);
             entry.id = format!("id_{}", i);

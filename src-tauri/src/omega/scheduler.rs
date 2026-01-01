@@ -737,14 +737,12 @@ mod tests {
 
     #[test]
     fn test_job_status_variants() {
-        let statuses = vec![
-            JobStatus::Queued,
+        let statuses = [JobStatus::Queued,
             JobStatus::Running,
             JobStatus::Completed,
             JobStatus::Failed,
             JobStatus::Cancelled,
-            JobStatus::Expired,
-        ];
+            JobStatus::Expired];
 
         assert_eq!(statuses.len(), 6);
         assert_ne!(JobStatus::Queued, JobStatus::Running);
@@ -888,7 +886,7 @@ mod tests {
         let scheduler = JobScheduler::default();
 
         for i in 0..5 {
-            let input = PipelineInput::new(&format!("Test {}", i));
+            let input = PipelineInput::new(format!("Test {}", i));
             scheduler
                 .schedule(input)
                 .await
@@ -1002,7 +1000,7 @@ mod tests {
 
         // Fill queue past threshold
         for i in 0..6 {
-            let input = PipelineInput::new(&format!("Test {}", i));
+            let input = PipelineInput::new(format!("Test {}", i));
             let _ = scheduler.schedule(input).await;
         }
 

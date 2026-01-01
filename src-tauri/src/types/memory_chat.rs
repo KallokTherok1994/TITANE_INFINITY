@@ -111,11 +111,9 @@ mod tests {
 
     #[test]
     fn test_project_status_variants() {
-        let statuses = vec![
-            ProjectStatus::Active,
+        let statuses = [ProjectStatus::Active,
             ProjectStatus::Paused,
-            ProjectStatus::Completed,
-        ];
+            ProjectStatus::Completed];
         assert_eq!(statuses.len(), 3);
     }
 
@@ -225,7 +223,7 @@ mod tests {
 
     #[test]
     fn test_impact_level_variants() {
-        let levels = vec![ImpactLevel::High, ImpactLevel::Medium, ImpactLevel::Low];
+        let levels = [ImpactLevel::High, ImpactLevel::Medium, ImpactLevel::Low];
         assert_eq!(levels.len(), 3);
     }
 
@@ -468,13 +466,11 @@ mod tests {
 
     #[test]
     fn test_timeline_entry_type_variants() {
-        let types = vec![
-            TimelineEntryType::Chat,
+        let types = [TimelineEntryType::Chat,
             TimelineEntryType::Decision,
             TimelineEntryType::Project,
             TimelineEntryType::Ritual,
-            TimelineEntryType::Emotion,
-        ];
+            TimelineEntryType::Emotion];
         assert_eq!(types.len(), 5);
     }
 

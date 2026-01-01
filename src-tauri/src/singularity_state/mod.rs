@@ -467,7 +467,7 @@ mod tests {
     fn test_state_coherence() {
         let state = SingularityState::default();
         let coherence = state.global_coherence();
-        assert!(coherence >= 0.0 && coherence <= 1.0);
+        assert!((0.0..=1.0).contains(&coherence));
     }
 
     #[tokio::test]
@@ -512,12 +512,12 @@ mod tests {
 
         // Sans META reports
         let base_coherence = state.meta_augmented_coherence();
-        assert!(base_coherence >= 0.0 && base_coherence <= 1.0);
+        assert!((0.0..=1.0).contains(&base_coherence));
 
         // Avec META reports (simulés)
         // Note: Ici on ne peut pas facilement créer des rapports valides sans async,
         // mais on teste que la méthode ne plante pas
         let coherence_with_meta = state.meta_augmented_coherence();
-        assert!(coherence_with_meta >= 0.0 && coherence_with_meta <= 1.0);
+        assert!((0.0..=1.0).contains(&coherence_with_meta));
     }
 }

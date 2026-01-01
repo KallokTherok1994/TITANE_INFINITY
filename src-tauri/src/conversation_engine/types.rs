@@ -474,14 +474,12 @@ mod tests {
 
     #[test]
     fn test_conversation_mode_variants() {
-        let modes = vec![
-            ConversationMode::Default,
+        let modes = [ConversationMode::Default,
             ConversationMode::Brainstorming,
             ConversationMode::Synthesis,
             ConversationMode::Planning,
             ConversationMode::Journal,
-            ConversationMode::DebugCognitive,
-        ];
+            ConversationMode::DebugCognitive];
         assert_eq!(modes.len(), 6);
     }
 
@@ -495,7 +493,7 @@ mod tests {
     #[test]
     fn test_conversation_mode_clone() {
         let mode = ConversationMode::Planning;
-        let cloned = mode.clone();
+        let cloned = mode;
         assert_eq!(mode, cloned);
     }
 
@@ -528,13 +526,11 @@ mod tests {
 
     #[test]
     fn test_intention_variants() {
-        let intentions = vec![
-            Intention::Question,
+        let intentions = [Intention::Question,
             Intention::Action,
             Intention::Emotion,
             Intention::Clarification,
-            Intention::Meta,
-        ];
+            Intention::Meta];
         assert_eq!(intentions.len(), 5);
     }
 
@@ -789,12 +785,10 @@ mod tests {
 
     #[test]
     fn test_memory_effect_variants() {
-        let effects = vec![
-            MemoryEffect::New,
+        let effects = [MemoryEffect::New,
             MemoryEffect::Recall,
             MemoryEffect::Connect,
-            MemoryEffect::Evolve,
-        ];
+            MemoryEffect::Evolve];
         assert_eq!(effects.len(), 4);
     }
 
@@ -851,12 +845,10 @@ mod tests {
 
     #[test]
     fn test_episode_type_variants() {
-        let types = vec![
-            EpisodeType::Milestone,
+        let types = [EpisodeType::Milestone,
             EpisodeType::Decision,
             EpisodeType::Pivot,
-            EpisodeType::ConversationKey,
-        ];
+            EpisodeType::ConversationKey];
         assert_eq!(types.len(), 4);
     }
 
@@ -873,12 +865,10 @@ mod tests {
 
     #[test]
     fn test_preference_category_variants() {
-        let categories = vec![
-            PreferenceCategory::Format,
+        let categories = [PreferenceCategory::Format,
             PreferenceCategory::Depth,
             PreferenceCategory::Style,
-            PreferenceCategory::Structure,
-        ];
+            PreferenceCategory::Structure];
         assert_eq!(categories.len(), 4);
     }
 
@@ -894,12 +884,10 @@ mod tests {
 
     #[test]
     fn test_evaluation_dimension_variants() {
-        let dimensions = vec![
-            EvaluationDimension::Clarity,
+        let dimensions = [EvaluationDimension::Clarity,
             EvaluationDimension::Utility,
             EvaluationDimension::Coherence,
-            EvaluationDimension::Depth,
-        ];
+            EvaluationDimension::Depth];
         assert_eq!(dimensions.len(), 4);
     }
 
@@ -948,14 +936,12 @@ mod tests {
 
     #[test]
     fn test_provider_preference_variants() {
-        let providers = vec![
-            ProviderPreference::Auto,
+        let providers = [ProviderPreference::Auto,
             ProviderPreference::Gemini,
             ProviderPreference::Ollama,
             ProviderPreference::OpenAI,
             ProviderPreference::Claude,
-            ProviderPreference::Local,
-        ];
+            ProviderPreference::Local];
         assert_eq!(providers.len(), 6);
     }
 
@@ -972,11 +958,9 @@ mod tests {
 
     #[test]
     fn test_health_status_variants() {
-        let statuses = vec![
-            HealthStatus::Healthy,
+        let statuses = [HealthStatus::Healthy,
             HealthStatus::Warning,
-            HealthStatus::Critical,
-        ];
+            HealthStatus::Critical];
         assert_eq!(statuses.len(), 3);
     }
 
@@ -993,12 +977,10 @@ mod tests {
 
     #[test]
     fn test_anomaly_type_variants() {
-        let types = vec![
-            AnomalyType::MessageLoss,
+        let types = [AnomalyType::MessageLoss,
             AnomalyType::StateDrift,
             AnomalyType::MemoryCorruption,
-            AnomalyType::SyncFailure,
-        ];
+            AnomalyType::SyncFailure];
         assert_eq!(types.len(), 4);
     }
 

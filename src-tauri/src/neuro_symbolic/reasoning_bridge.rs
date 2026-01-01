@@ -109,7 +109,7 @@ mod tests {
 
     #[test]
     fn test_reasoning_bridge_default() {
-        let bridge = ReasoningBridge::default();
+        let bridge = ReasoningBridge;
         let _ = bridge;
     }
 

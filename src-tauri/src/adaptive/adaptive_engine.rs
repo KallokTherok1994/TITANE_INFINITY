@@ -1206,7 +1206,7 @@ mod tests {
     #[test]
     fn test_learning_state_deserialize() {
         let json = r#"{"total_samples":50,"patterns_detected":[],"optimization_cycles":2,"last_learn_timestamp":"","learning_rate":0.2}"#;
-        let state: LearningState = serde_json::from_str(&json)
+        let state: LearningState = serde_json::from_str(json)
             .expect("LearningState should deserialize from JSON");
         assert_eq!(state.total_samples, 50);
         assert_eq!(state.learning_rate, 0.2);
