@@ -521,7 +521,7 @@ mod tests {
         let omega_input = bridge.convert_to_omega_input(&request);
 
         assert_eq!(omega_input.text, "Test message");
-        assert!(omega_input.request_id.len() > 0);
+        assert!(!omega_input.request_id.is_empty());
 
         // Verify preferences contains conversation_id
         assert!(omega_input.preferences.contains_key("conversation_id"));
@@ -573,7 +573,7 @@ mod tests {
 
         // Verify all 8 required fields
         assert!(
-            response.assistant_message.len() > 0,
+            !response.assistant_message.is_empty(),
             "assistant_message should not be empty"
         );
         assert_eq!(
@@ -581,7 +581,7 @@ mod tests {
             "conversation_id should match"
         );
         assert!(
-            response.message_id.len() > 0,
+            !response.message_id.is_empty(),
             "message_id should be generated"
         );
         assert_eq!(
@@ -594,7 +594,7 @@ mod tests {
             "emotion intensity should be positive"
         );
         assert!(
-            response.cognitive_tags.len() > 0,
+            !response.cognitive_tags.is_empty(),
             "cognitive_tags should contain OMEGA metadata"
         );
         assert!(

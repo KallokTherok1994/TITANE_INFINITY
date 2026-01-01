@@ -213,9 +213,9 @@ mod tests {
     #[test]
     fn test_filename_validation() {
         // Valid filenames
-        assert!(!validate_filename("config").is_err());
-        assert!(!validate_filename("my-config-2024").is_err());
-        assert!(!validate_filename("backup_v1.2.3").is_err());
+        assert!(validate_filename("config").is_ok());
+        assert!(validate_filename("my-config-2024").is_ok());
+        assert!(validate_filename("backup_v1.2.3").is_ok());
 
         // Invalid filenames
         assert!(validate_filename("").is_err());

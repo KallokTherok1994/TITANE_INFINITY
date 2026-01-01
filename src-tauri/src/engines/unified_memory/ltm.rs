@@ -468,6 +468,6 @@ mod tests {
         let query_emb = vec![0.5; 384];
         let results = ltm.search_hybrid("learning", Some(&query_emb), 2, 0.5);
 
-        assert!(results.len() > 0);
+        assert!(!results.is_empty());
     }
 }

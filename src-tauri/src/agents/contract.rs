@@ -663,7 +663,7 @@ mod tests {
     #[test]
     fn test_contract_synthesizer() {
         let contract = AgentContract::default_for_role(&AgentRole::Synthesizer);
-        assert!(contract.invariants.len() > 0);
+        assert!(!contract.invariants.is_empty());
     }
 
     #[test]
@@ -675,7 +675,7 @@ mod tests {
     #[test]
     fn test_contract_temporal() {
         let contract = AgentContract::default_for_role(&AgentRole::Temporal);
-        assert!(contract.invariants.len() > 0);
+        assert!(!contract.invariants.is_empty());
     }
 
     #[test]

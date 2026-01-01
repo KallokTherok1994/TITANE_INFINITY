@@ -73,7 +73,7 @@ mod tests {
 
     #[test]
     fn test_severity_variants() {
-        let severities = vec![Severity::Info, Severity::Warning, Severity::Critical];
+        let severities = [Severity::Info, Severity::Warning, Severity::Critical];
         assert_eq!(severities.len(), 3);
     }
 
@@ -118,12 +118,10 @@ mod tests {
 
     #[test]
     fn test_alert_category_variants() {
-        let categories = vec![
-            AlertCategory::Performance,
+        let categories = [AlertCategory::Performance,
             AlertCategory::Security,
             AlertCategory::Integrity,
-            AlertCategory::Resource,
-        ];
+            AlertCategory::Resource];
         assert_eq!(categories.len(), 4);
     }
 

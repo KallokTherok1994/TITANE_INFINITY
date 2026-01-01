@@ -130,12 +130,10 @@ mod tests {
 
     #[test]
     fn test_issue_severity_variants() {
-        let severities = vec![
-            IssueSeverity::Low,
+        let severities = [IssueSeverity::Low,
             IssueSeverity::Medium,
             IssueSeverity::High,
-            IssueSeverity::Critical,
-        ];
+            IssueSeverity::Critical];
         assert_eq!(severities.len(), 4);
     }
 
@@ -182,12 +180,10 @@ mod tests {
 
     #[test]
     fn test_issue_category_variants() {
-        let categories = vec![
-            IssueCategory::Performance,
+        let categories = [IssueCategory::Performance,
             IssueCategory::Stability,
             IssueCategory::Resource,
-            IssueCategory::Logic,
-        ];
+            IssueCategory::Logic];
         assert_eq!(categories.len(), 4);
     }
 
@@ -282,8 +278,7 @@ mod tests {
 
     #[test]
     fn test_repair_action_variants() {
-        let actions = vec![
-            RepairAction::RestartModule("test".to_string()),
+        let actions = [RepairAction::RestartModule("test".to_string()),
             RepairAction::AdjustThreshold {
                 module: "mod".to_string(),
                 parameter: "param".to_string(),
@@ -291,8 +286,7 @@ mod tests {
             },
             RepairAction::ClearCache("cache".to_string()),
             RepairAction::Rebalance,
-            RepairAction::Log("log".to_string()),
-        ];
+            RepairAction::Log("log".to_string())];
         assert_eq!(actions.len(), 5);
     }
 

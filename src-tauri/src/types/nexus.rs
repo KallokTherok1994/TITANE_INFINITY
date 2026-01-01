@@ -79,12 +79,10 @@ mod tests {
 
     #[test]
     fn test_module_health_variants() {
-        let healths = vec![
-            ModuleHealth::Healthy,
+        let healths = [ModuleHealth::Healthy,
             ModuleHealth::Degraded,
             ModuleHealth::Failing,
-            ModuleHealth::Offline,
-        ];
+            ModuleHealth::Offline];
         assert_eq!(healths.len(), 4);
     }
 

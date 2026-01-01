@@ -344,13 +344,11 @@ mod tests {
 
     #[test]
     fn test_event_origin_all_variants() {
-        let variants = vec![
-            EventOrigin::User,
+        let variants = [EventOrigin::User,
             EventOrigin::Engine,
             EventOrigin::SelfHeal,
             EventOrigin::System,
-            EventOrigin::Migration,
-        ];
+            EventOrigin::Migration];
         assert_eq!(variants.len(), 5);
     }
 

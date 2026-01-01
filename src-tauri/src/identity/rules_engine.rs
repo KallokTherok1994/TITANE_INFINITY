@@ -445,7 +445,7 @@ mod tests {
     #[test]
     fn test_rule_type_clone() {
         let rt = RuleType::Behavioral;
-        let cloned = rt.clone();
+        let cloned = rt;
         assert_eq!(rt, cloned);
     }
 
@@ -506,7 +506,7 @@ mod tests {
     #[test]
     fn test_violation_severity_clone() {
         let vs = ViolationSeverity::Warning;
-        let cloned = vs.clone();
+        let cloned = vs;
         assert_eq!(vs, cloned);
     }
 

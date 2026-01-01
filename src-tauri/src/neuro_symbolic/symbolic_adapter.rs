@@ -152,7 +152,7 @@ mod tests {
 
     #[test]
     fn test_symbolic_adapter_default() {
-        let adapter = SymbolicAdapter::default();
+        let adapter = SymbolicAdapter;
         let _ = adapter;
     }
 

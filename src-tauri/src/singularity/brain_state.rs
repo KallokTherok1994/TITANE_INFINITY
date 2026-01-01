@@ -430,16 +430,14 @@ mod tests {
 
     #[test]
     fn test_conversation_mode_all_variants() {
-        let modes = vec![
-            ConversationMode::Coach,
+        let modes = [ConversationMode::Coach,
             ConversationMode::Expert,
             ConversationMode::Meta,
             ConversationMode::Cognitive,
             ConversationMode::Creative,
             ConversationMode::Logic,
             ConversationMode::Harmonic,
-            ConversationMode::Neutral,
-        ];
+            ConversationMode::Neutral];
         assert_eq!(modes.len(), 8);
     }
 
@@ -462,7 +460,7 @@ mod tests {
             ConversationMode::Neutral,
         ] {
             let weight = mode.weight();
-            assert!(weight >= 0.0 && weight <= 1.0);
+            assert!((0.0..=1.0).contains(&weight));
         }
     }
 
@@ -478,7 +476,7 @@ mod tests {
     #[test]
     fn test_conversation_mode_clone() {
         let mode = ConversationMode::Meta;
-        let cloned = mode.clone();
+        let cloned = mode;
         assert_eq!(mode, cloned);
     }
 
@@ -602,7 +600,7 @@ mod tests {
     #[test]
     fn test_affective_state_clone() {
         let affect = AffectiveState::new(0.3, 0.6);
-        let cloned = affect.clone();
+        let cloned = affect;
         assert_eq!(affect.valence, cloned.valence);
         assert_eq!(affect.arousal, cloned.arousal);
     }

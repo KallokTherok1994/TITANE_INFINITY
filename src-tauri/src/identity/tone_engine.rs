@@ -503,7 +503,7 @@ mod tests {
     #[test]
     fn test_tone_clone() {
         let tone = Tone::Friendly;
-        let cloned = tone.clone();
+        let cloned = tone;
         assert_eq!(tone, cloned);
     }
 

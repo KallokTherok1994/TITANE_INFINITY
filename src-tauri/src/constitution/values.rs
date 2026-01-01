@@ -261,7 +261,7 @@ mod tests {
     #[test]
     fn test_value_system_creation() {
         let values = ValueSystem::default_titane();
-        assert!(values.len() > 0);
+        assert!(!values.is_empty());
     }
 
     #[test]

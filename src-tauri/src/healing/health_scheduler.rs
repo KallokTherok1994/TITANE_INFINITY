@@ -574,7 +574,7 @@ mod tests {
     #[test]
     fn test_health_check_priority_clone() {
         let priority = HealthCheckPriority::Critical;
-        let cloned = priority.clone();
+        let cloned = priority;
         assert_eq!(priority, cloned);
     }
 
