@@ -431,13 +431,11 @@ mod tests {
 
     #[test]
     fn test_event_status_all_variants() {
-        let statuses = vec![
-            EventStatus::Scheduled,
+        let statuses = [EventStatus::Scheduled,
             EventStatus::InProgress,
             EventStatus::Completed,
             EventStatus::Cancelled,
-            EventStatus::Postponed,
-        ];
+            EventStatus::Postponed];
         assert_eq!(statuses.len(), 5);
     }
 
@@ -475,13 +473,11 @@ mod tests {
 
     #[test]
     fn test_priority_level_all_variants() {
-        let priorities = vec![
-            PriorityLevel::Low,
+        let priorities = [PriorityLevel::Low,
             PriorityLevel::Medium,
             PriorityLevel::High,
             PriorityLevel::Urgent,
-            PriorityLevel::Critical,
-        ];
+            PriorityLevel::Critical];
         assert_eq!(priorities.len(), 5);
     }
 
@@ -505,13 +501,11 @@ mod tests {
 
     #[test]
     fn test_recurrence_type_all_variants() {
-        let types = vec![
-            RecurrenceType::Daily,
+        let types = [RecurrenceType::Daily,
             RecurrenceType::Weekly,
             RecurrenceType::Monthly,
             RecurrenceType::Yearly,
-            RecurrenceType::Custom,
-        ];
+            RecurrenceType::Custom];
         assert_eq!(types.len(), 5);
     }
 
@@ -535,11 +529,9 @@ mod tests {
 
     #[test]
     fn test_reminder_type_all_variants() {
-        let types = vec![
-            ReminderType::Notification,
+        let types = [ReminderType::Notification,
             ReminderType::Sound,
-            ReminderType::Email,
-        ];
+            ReminderType::Email];
         assert_eq!(types.len(), 3);
     }
 

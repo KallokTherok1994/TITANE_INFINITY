@@ -368,7 +368,7 @@ mod tests {
             .recall("hello", 10)
             .await
             .expect("recall should succeed");
-        assert!(bundle.stm.len() > 0);
+        assert!(!bundle.stm.is_empty());
     }
 
     #[tokio::test]

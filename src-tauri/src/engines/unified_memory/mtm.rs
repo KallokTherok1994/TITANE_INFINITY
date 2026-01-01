@@ -237,6 +237,12 @@ impl MidTermMemory {
     }
 }
 
+impl Default for MidTermMemory {
+    fn default() -> Self {
+        Self::new(300)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -358,11 +364,5 @@ mod tests {
         let old_entries = mtm.get_old_entries(5_000_000);
         assert_eq!(old_entries.len(), 1);
         assert_eq!(old_entries[0].id, "old");
-    }
-}
-
-impl Default for MidTermMemory {
-    fn default() -> Self {
-        Self::new(300)
     }
 }

@@ -497,16 +497,14 @@ mod tests {
 
     #[test]
     fn test_model_choice_strategy_variants() {
-        let strategies = vec![
-            ModelChoiceStrategy::Speed,
+        let strategies = [ModelChoiceStrategy::Speed,
             ModelChoiceStrategy::Quality,
             ModelChoiceStrategy::Balanced,
             ModelChoiceStrategy::VisionDominant,
             ModelChoiceStrategy::Secure,
             ModelChoiceStrategy::CostEfficient,
             ModelChoiceStrategy::DeepReasoning,
-            ModelChoiceStrategy::LongContext,
-        ];
+            ModelChoiceStrategy::LongContext];
         assert_eq!(strategies.len(), 8);
     }
 

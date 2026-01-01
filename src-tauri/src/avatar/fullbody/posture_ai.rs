@@ -339,13 +339,11 @@ mod tests {
 
     #[test]
     fn test_posture_type_all_variants() {
-        let postures = vec![
-            PostureType::Professional,
+        let postures = [PostureType::Professional,
             PostureType::Engaged,
             PostureType::Calm,
             PostureType::Creative,
-            PostureType::Welcoming,
-        ];
+            PostureType::Welcoming];
         assert_eq!(postures.len(), 5);
     }
 

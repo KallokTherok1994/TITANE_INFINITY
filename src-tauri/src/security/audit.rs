@@ -120,6 +120,20 @@ impl AuditLogger {
 }
 
 // ═══════════════════════════════════════════════════════════════
+// GLOBAL AUDIT LOGGER INSTANCE
+// ═══════════════════════════════════════════════════════════════
+
+use once_cell::sync::Lazy;
+use std::env;
+
+/// Global audit logger instance
+pub static GLOBAL_AUDIT_LOGGER: Lazy<AuditLogger> = Lazy::new(|| {
+    let log_dir = env::var("TITANE_LOG_DIR").unwrap_or_else(|_| "/tmp/titane_logs".to_string());
+    let log_file = PathBuf::from(log_dir).join("audit.log");
+    AuditLogger::new(log_file)
+});
+
+// ═══════════════════════════════════════════════════════════════
 // TESTS
 // ═══════════════════════════════════════════════════════════════
 
@@ -153,17 +167,3 @@ mod tests {
         assert!(matches!(event.event_type, AuditEventType::Custom(_)));
     }
 }
-
-// ═══════════════════════════════════════════════════════════════
-// GLOBAL AUDIT LOGGER INSTANCE
-// ═══════════════════════════════════════════════════════════════
-
-use once_cell::sync::Lazy;
-use std::env;
-
-/// Global audit logger instance
-pub static GLOBAL_AUDIT_LOGGER: Lazy<AuditLogger> = Lazy::new(|| {
-    let log_dir = env::var("TITANE_LOG_DIR").unwrap_or_else(|_| "/tmp/titane_logs".to_string());
-    let log_file = PathBuf::from(log_dir).join("audit.log");
-    AuditLogger::new(log_file)
-});

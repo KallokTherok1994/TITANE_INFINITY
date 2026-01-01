@@ -409,27 +409,23 @@ mod tests {
 
     #[test]
     fn test_season_variants() {
-        let seasons = vec![
-            Season::Spring,
+        let seasons = [Season::Spring,
             Season::Summer,
             Season::Autumn,
-            Season::Winter,
-        ];
+            Season::Winter];
         assert_eq!(seasons.len(), 4);
     }
 
     #[test]
     fn test_activity_type_variants() {
-        let activities = vec![
-            ActivityType::Focus,
+        let activities = [ActivityType::Focus,
             ActivityType::Creative,
             ActivityType::Administrative,
             ActivityType::Social,
             ActivityType::Learning,
             ActivityType::Review,
             ActivityType::Planning,
-            ActivityType::Rest,
-        ];
+            ActivityType::Rest];
         assert_eq!(activities.len(), 8);
     }
 
@@ -450,14 +446,12 @@ mod tests {
 
     #[test]
     fn test_time_scale_variants() {
-        let scales = vec![
-            TimeScale::Immediate,
+        let scales = [TimeScale::Immediate,
             TimeScale::ShortTerm,
             TimeScale::MediumTerm,
             TimeScale::LongTerm,
             TimeScale::Strategic,
-            TimeScale::Existential,
-        ];
+            TimeScale::Existential];
         assert_eq!(scales.len(), 6);
     }
 

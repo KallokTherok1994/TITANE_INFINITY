@@ -498,7 +498,7 @@ mod tests {
     #[test]
     fn test_diagnostic_severity_clone() {
         let severity = DiagnosticSeverity::Critical;
-        let cloned = severity.clone();
+        let cloned = severity;
         assert_eq!(severity, cloned);
     }
 
@@ -651,12 +651,10 @@ mod tests {
 
     #[test]
     fn test_diagnostic_finding_all_severities() {
-        let severities = vec![
-            DiagnosticSeverity::Info,
+        let severities = [DiagnosticSeverity::Info,
             DiagnosticSeverity::Warning,
             DiagnosticSeverity::Error,
-            DiagnosticSeverity::Critical,
-        ];
+            DiagnosticSeverity::Critical];
 
         for (i, severity) in severities.iter().enumerate() {
             let finding = DiagnosticFinding {

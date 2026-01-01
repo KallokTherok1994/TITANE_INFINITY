@@ -125,12 +125,10 @@ mod tests {
 
     #[test]
     fn test_disk_mode_variants() {
-        let modes = vec![
-            DiskMode::Disabled,
+        let modes = [DiskMode::Disabled,
             DiskMode::ReadOnly,
             DiskMode::WriteOnly,
-            DiskMode::ReadWrite,
-        ];
+            DiskMode::ReadWrite];
         assert_eq!(modes.len(), 4);
     }
 
@@ -198,7 +196,7 @@ mod tests {
 
     #[test]
     fn test_log_level_variants() {
-        let levels = vec![LogLevel::Info, LogLevel::Warning, LogLevel::Error];
+        let levels = [LogLevel::Info, LogLevel::Warning, LogLevel::Error];
         assert_eq!(levels.len(), 3);
     }
 
@@ -230,14 +228,12 @@ mod tests {
 
     #[test]
     fn test_event_type_variants() {
-        let types = vec![
-            EventType::SystemStart,
+        let types = [EventType::SystemStart,
             EventType::ModuleInit,
             EventType::HealthChange,
             EventType::Repair,
             EventType::Snapshot,
-            EventType::Alert,
-        ];
+            EventType::Alert];
         assert_eq!(types.len(), 6);
     }
 

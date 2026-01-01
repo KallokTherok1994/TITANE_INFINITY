@@ -62,11 +62,9 @@ mod tests {
 
     #[test]
     fn test_stabilization_level_variants() {
-        let levels = vec![
-            StabilizationLevel::Stable,
+        let levels = [StabilizationLevel::Stable,
             StabilizationLevel::Adjusting,
-            StabilizationLevel::Rebalancing,
-        ];
+            StabilizationLevel::Rebalancing];
         assert_eq!(levels.len(), 3);
     }
 
@@ -113,12 +111,10 @@ mod tests {
 
     #[test]
     fn test_action_type_variants() {
-        let types = vec![
-            ActionType::ReduceLoad,
+        let types = [ActionType::ReduceLoad,
             ActionType::IncreaseCapacity,
             ActionType::Redistribute,
-            ActionType::Pause,
-        ];
+            ActionType::Pause];
         assert_eq!(types.len(), 4);
     }
 

@@ -346,7 +346,7 @@ impl ExpFusionEngine {
         let total_projects = projects.len() as u32;
         let total_exp: u64 = projects.iter().map(|p| p.total_exp).sum();
         let avg_level = if total_projects > 0 {
-            projects.iter().map(|p| p.level as u32).sum::<u32>() as f32 / total_projects as f32
+            projects.iter().map(|p| p.level).sum::<u32>() as f32 / total_projects as f32
         } else {
             0.0
         };

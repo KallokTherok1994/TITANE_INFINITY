@@ -181,6 +181,6 @@ mod tests {
     fn test_stability_score() {
         let profile = BehaviorProfile::default();
         let score = profile.stability_score();
-        assert!(score >= 0.0 && score <= 1.0);
+        assert!((0.0..=1.0).contains(&score));
     }
 }

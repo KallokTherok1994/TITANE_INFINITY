@@ -354,7 +354,7 @@ mod tests {
     #[test]
     fn test_rights_charter_creation() {
         let charter = RightsCharter::default_titane();
-        assert!(charter.len() > 0);
+        assert!(!charter.is_empty());
     }
 
     #[test]

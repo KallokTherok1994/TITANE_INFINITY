@@ -161,7 +161,7 @@ mod tests {
         );
 
         let resonance = field.compute_unified_resonance();
-        assert!(resonance >= 0.0 && resonance <= 1.0);
+        assert!((0.0..=1.0).contains(&resonance));
     }
 
     #[test]
