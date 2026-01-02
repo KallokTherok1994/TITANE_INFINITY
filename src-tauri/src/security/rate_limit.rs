@@ -110,8 +110,8 @@ impl RateLimiter {
 // GLOBAL RATE LIMITER INSTANCE
 // ═══════════════════════════════════════════════════════════════
 
-/// Global rate limiter instance (100 req/min)
-pub static GLOBAL_RATE_LIMITER: Lazy<RateLimiter> = Lazy::new(|| RateLimiter::new(100, 60));
+/// Global rate limiter instance (DÉSACTIVÉ: 100→10000 req/min)
+pub static GLOBAL_RATE_LIMITER: Lazy<RateLimiter> = Lazy::new(|| RateLimiter::new(10000, 60));
 
 // ═══════════════════════════════════════════════════════════════
 // TYPES & CONFIG

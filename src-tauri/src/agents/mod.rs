@@ -70,18 +70,18 @@ pub mod targets {
     pub const MESSAGE_LATENCY_MS: u128 = 10;
     /// Maximum supervisor check interval (ms)
     pub const SUPERVISOR_CHECK_MS: u128 = 1000;
-    /// Maximum memory per agent (MB)
-    pub const MAX_AGENT_MEMORY_MB: usize = 50;
+    /// Maximum memory per agent (MB) - AUGMENTÉ: 50MB → 500MB
+    pub const MAX_AGENT_MEMORY_MB: usize = 500;
 }
 
 /// Agent system limits
 pub mod limits {
-    /// Maximum number of concurrent agents
-    pub const MAX_AGENTS: usize = 50;
-    /// Maximum message queue size per agent
-    pub const MAX_MESSAGE_QUEUE: usize = 1000;
-    /// Maximum collaboration depth
-    pub const MAX_COLLABORATION_DEPTH: usize = 5;
-    /// Maximum agent execution time (seconds)
-    pub const MAX_AGENT_EXECUTION_SECONDS: u64 = 300;
+    /// Maximum number of concurrent agents - AUGMENTÉ: 50 → 500
+    pub const MAX_AGENTS: usize = 500;
+    /// Maximum message queue size per agent - AUGMENTÉ: 1000 → 10000
+    pub const MAX_MESSAGE_QUEUE: usize = 10000;
+    /// Maximum collaboration depth - AUGMENTÉ: 5 → 20
+    pub const MAX_COLLABORATION_DEPTH: usize = 20;
+    /// Maximum agent execution time (seconds) - AUGMENTÉ: 300s → 3600s (1h)
+    pub const MAX_AGENT_EXECUTION_SECONDS: u64 = 3600;
 }
