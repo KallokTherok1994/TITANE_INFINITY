@@ -459,7 +459,7 @@ mod tests {
     #[test]
     fn test_mood_clone() {
         let mood = Mood::Serene;
-        let cloned = mood.clone();
+        let cloned = mood;
         assert_eq!(mood, cloned);
     }
 
@@ -898,7 +898,7 @@ mod tests {
     fn test_personality_engine_coherence_score_default() {
         let engine = PersonalityEngine::default();
         let score = engine.coherence_score();
-        assert!(score >= 0.0 && score <= 1.0);
+        assert!((0.0..=1.0).contains(&score));
     }
 
     #[test]

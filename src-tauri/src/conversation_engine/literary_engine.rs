@@ -703,7 +703,7 @@ mod tests {
     #[test]
     fn test_literary_intensity_clone() {
         let intensity = LiteraryIntensity::Balanced;
-        let cloned = intensity.clone();
+        let cloned = intensity;
         assert_eq!(intensity, cloned);
     }
 

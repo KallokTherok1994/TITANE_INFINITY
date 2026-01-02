@@ -227,7 +227,7 @@ mod tests {
     #[test]
     fn test_daily_phase_clone() {
         let phase = DailyPhase::Morning;
-        let cloned = phase.clone();
+        let cloned = phase;
         assert_eq!(phase, cloned);
     }
 
@@ -296,7 +296,7 @@ mod tests {
     #[test]
     fn test_cognitive_mode_clone() {
         let mode = CognitiveMode::Peak;
-        let cloned = mode.clone();
+        let cloned = mode;
         assert_eq!(mode, cloned);
     }
 
@@ -360,7 +360,7 @@ mod tests {
     #[test]
     fn test_weekly_phase_clone() {
         let phase = WeeklyPhase::Friday;
-        let cloned = phase.clone();
+        let cloned = phase;
         assert_eq!(phase, cloned);
     }
 
@@ -394,7 +394,7 @@ mod tests {
     #[test]
     fn test_monthly_phase_clone() {
         let phase = MonthlyPhase::Week1;
-        let cloned = phase.clone();
+        let cloned = phase;
         assert_eq!(phase, cloned);
     }
 
@@ -448,7 +448,7 @@ mod tests {
     #[test]
     fn test_seasonal_phase_clone() {
         let phase = SeasonalPhase::Spring;
-        let cloned = phase.clone();
+        let cloned = phase;
         assert_eq!(phase, cloned);
     }
 

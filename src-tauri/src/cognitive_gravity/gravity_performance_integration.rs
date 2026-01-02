@@ -216,7 +216,7 @@ mod tests {
 
         let overload = GravityPerformanceIntegration::calculate_overload_score(&diag);
 
-        assert!(overload >= 0.0 && overload <= 1.0);
+        assert!((0.0..=1.0).contains(&overload));
         // Expected: (100/100 * 0.6) + ((1 - 0.8) * 0.4) = 0.6 + 0.08 = 0.68
         assert!((overload - 0.68).abs() < 0.01);
     }

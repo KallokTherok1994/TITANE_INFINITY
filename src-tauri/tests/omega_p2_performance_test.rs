@@ -77,7 +77,7 @@ async fn test_omega_p2_latency_improvement() {
         "Message ID should be generated"
     );
     assert!(
-        response.cognitive_tags.len() > 0,
+        !response.cognitive_tags.is_empty(),
         "Cognitive tags should be populated from OMEGA"
     );
     assert_eq!(
@@ -131,7 +131,7 @@ async fn test_omega_p2_french_mastery_integration() {
         "Message ID should be generated"
     );
     assert!(
-        response.cognitive_tags.len() > 0,
+        !response.cognitive_tags.is_empty(),
         "Cognitive tags should exist"
     );
 

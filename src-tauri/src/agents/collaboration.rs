@@ -384,7 +384,7 @@ mod tests {
             .expect("serialize CollaborationResult should succeed");
         let restored: CollaborationResult = serde_json::from_str(&json)
             .expect("deserialize CollaborationResult should succeed");
-        assert_eq!(restored.success, true);
+        assert!(restored.success);
         assert_eq!(restored.output, Some("final".to_string()));
     }
 

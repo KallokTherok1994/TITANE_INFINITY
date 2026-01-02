@@ -407,7 +407,7 @@ mod tests {
     #[test]
     fn test_limit_system_creation() {
         let limits = LimitSystem::default_titane();
-        assert!(limits.len() > 0);
+        assert!(!limits.is_empty());
     }
 
     #[test]

@@ -125,12 +125,10 @@ mod tests {
 
     #[test]
     fn test_memory_source_variants() {
-        let sources = vec![
-            MemorySource::Conversation,
+        let sources = [MemorySource::Conversation,
             MemorySource::FileImport,
             MemorySource::SystemEvent,
-            MemorySource::UserFeedback,
-        ];
+            MemorySource::UserFeedback];
         assert_eq!(sources.len(), 4);
     }
 
@@ -289,7 +287,7 @@ mod tests {
 
     #[test]
     fn test_memory_builder_default() {
-        let builder = MemoryBuilder::default();
+        let builder = MemoryBuilder;
         let _ = builder;
     }
 

@@ -748,7 +748,7 @@ mod tests {
 
         let (is_titane, score) = fingerprint.is_titane_speaking(&samples);
 
-        assert_eq!(is_titane, false);
+        assert!(!is_titane);
         assert_eq!(score, 0.0);
     }
 
@@ -772,7 +772,7 @@ mod tests {
 
         // YIN should detect ~150 Hz (±10 Hz tolerance)
         assert!(
-            detected_pitch >= 140.0 && detected_pitch <= 160.0,
+            (140.0..=160.0).contains(&detected_pitch),
             "Expected pitch ~150 Hz, got {} Hz",
             detected_pitch
         );
@@ -794,7 +794,7 @@ mod tests {
         let detected_pitch = fingerprint.detect_pitch(&samples);
 
         assert!(
-            detected_pitch >= 100.0 && detected_pitch <= 120.0,
+            (100.0..=120.0).contains(&detected_pitch),
             "Expected pitch ~110 Hz, got {} Hz",
             detected_pitch
         );
@@ -851,7 +851,7 @@ mod tests {
 
         // Spectral centroid should be close to fundamental frequency
         assert!(
-            centroid >= 150.0 && centroid <= 400.0,
+            (150.0..=400.0).contains(&centroid),
             "Expected centroid ~200 Hz, got {} Hz",
             centroid
         );
@@ -873,7 +873,7 @@ mod tests {
         let centroid = fingerprint.calculate_spectral_centroid(&samples);
 
         assert!(
-            centroid >= 1500.0 && centroid <= 2500.0,
+            (1500.0..=2500.0).contains(&centroid),
             "Expected centroid ~2000 Hz, got {} Hz",
             centroid
         );
