@@ -67,6 +67,7 @@ impl Default for AgentSystemConfig {
 
 impl AgentSystemConfig {
     /// Configuration minimale
+    #[rustfmt::skip]
     pub fn minimal() -> Self {
         Self {
             name: "minimal".to_string(),
@@ -97,6 +98,7 @@ impl AgentSystemConfig {
     }
 
     /// Configuration production
+    #[rustfmt::skip]
     pub fn production() -> Self {
         Self {
             name: "production".to_string(),
@@ -131,6 +133,7 @@ impl AgentSystemConfig {
     }
 
     /// Configuration développement
+    #[rustfmt::skip]
     pub fn development() -> Self {
         Self {
             name: "development".to_string(),
