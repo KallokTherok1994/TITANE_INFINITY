@@ -9,7 +9,7 @@
 ### Je suis...
 
 **👤 Utilisateur Final**
-→ [Guide Utilisateur](docs/USER_GUIDE_v24.30.md) *(v24.30 - à mettre à jour)*
+→ [Guide Utilisateur](docs/USER_GUIDE_v24.30.md) _(v24.30 - à mettre à jour)_
 
 **💻 Développeur**
 → [Guide Développeur](docs/DEVELOPER_GUIDE.md)  
@@ -31,6 +31,7 @@
 **→ [INDEX_MASTER.md](docs/INDEX_MASTER.md)**
 
 Navigation exhaustive par catégorie:
+
 - Architecture & Conception
 - API & Référence Technique
 - Systèmes Auto-Heal
@@ -145,6 +146,7 @@ P2 Items:             5 (planifiés, non-bloquants)
 ## 🏥 AUTO-HEAL ACTIVÉ
 
 **4 Scripts Opérationnels:**
+
 - health-check-enhanced.sh (423 lignes)
 - proactive-monitor.sh (458 lignes)
 - pre-deployment-check.sh (535 lignes)
@@ -156,16 +158,16 @@ P2 Items:             5 (planifiés, non-bloquants)
 
 ## 🔗 LIENS RAPIDES
 
-| Catégorie | Lien |
-|-----------|------|
-| 📖 Index Master | [docs/INDEX_MASTER.md](docs/INDEX_MASTER.md) |
-| 🏗️ Architecture | [docs/ARCHITECTURE_RINGS.md](docs/ARCHITECTURE_RINGS.md) |
-| 🔧 API v26.2 | [docs/guides/MIGRATION_v24_to_v26.md](docs/guides/MIGRATION_v24_to_v26.md) |
-| 🏥 Auto-Heal | [docs/AUTO_HEAL_SYSTEMS.md](docs/AUTO_HEAL_SYSTEMS.md) |
-| 🔍 Audit Final | [AUDIT_DEPLOYMENT_AUTOHEAL_v26.2.0_FINAL.md](AUDIT_DEPLOYMENT_AUTOHEAL_v26.2.0_FINAL.md) |
-| ✅ P1 Complété | [P1_COMPLETE_FINAL_v26.2.0.md](P1_COMPLETE_FINAL_v26.2.0.md) |
-| 🚀 Tauri Commands | [docs/reference/TAURI_COMMANDS_v26.2.md](docs/reference/TAURI_COMMANDS_v26.2.md) |
-| 🧪 Stratégie E2E | [docs/STRATEGIE_TESTS_E2E.md](docs/STRATEGIE_TESTS_E2E.md) |
+| Catégorie         | Lien                                                                                     |
+| ----------------- | ---------------------------------------------------------------------------------------- |
+| 📖 Index Master   | [docs/INDEX_MASTER.md](docs/INDEX_MASTER.md)                                             |
+| 🏗️ Architecture   | [docs/ARCHITECTURE_RINGS.md](docs/ARCHITECTURE_RINGS.md)                                 |
+| 🔧 API v26.2      | [docs/guides/MIGRATION_v24_to_v26.md](docs/guides/MIGRATION_v24_to_v26.md)               |
+| 🏥 Auto-Heal      | [docs/AUTO_HEAL_SYSTEMS.md](docs/AUTO_HEAL_SYSTEMS.md)                                   |
+| 🔍 Audit Final    | [AUDIT_DEPLOYMENT_AUTOHEAL_v26.2.0_FINAL.md](AUDIT_DEPLOYMENT_AUTOHEAL_v26.2.0_FINAL.md) |
+| ✅ P1 Complété    | [P1_COMPLETE_FINAL_v26.2.0.md](P1_COMPLETE_FINAL_v26.2.0.md)                             |
+| 🚀 Tauri Commands | [docs/reference/TAURI_COMMANDS_v26.2.md](docs/reference/TAURI_COMMANDS_v26.2.md)         |
+| 🧪 Stratégie E2E  | [docs/STRATEGIE_TESTS_E2E.md](docs/STRATEGIE_TESTS_E2E.md)                               |
 
 ---
 

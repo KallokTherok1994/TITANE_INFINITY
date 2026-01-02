@@ -470,18 +470,21 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
           </button>
         </div>
 
-        {/* Bouton Expand/Collapse */}
+        {/* Bouton Expand/Collapse - FIX: stopPropagation et meilleure visibilité */}
         <button
           className="clc-collapse-btn"
           onClick={e => {
-            e.stopPropagation(); // Prevent bringToFront on collapse button
+            e.stopPropagation(); // Empêcher bringToFront et drag
             toggle(); // usePanelState toggle
           }}
+          onPointerDown={e => e.stopPropagation()} // Empêcher le drag
+          onPointerMove={e => e.stopPropagation()} // Empêcher le drag
+          onPointerUp={e => e.stopPropagation()} // Empêcher le drag
           aria-label={isCollapsed ? 'Agrandir le panneau' : 'Réduire le panneau'}
           title={isCollapsed ? 'Agrandir (Ctrl+K)' : 'Réduire (Ctrl+K)'}
         >
           <span className={`clc-collapse-arrow ${isCollapsed ? 'collapsed' : ''}`}>
-            ▼
+            {isCollapsed ? '▲' : '▼'}
           </span>
         </button>
 

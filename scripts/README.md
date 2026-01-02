@@ -161,6 +161,7 @@ deploy/
 **Purpose**: Analyzes dev ↔ MAIN branch relationship and recommends merge direction.
 
 **Features**:
+
 - ✅ Compares commits between branches
 - ✅ Shows unique commits in each branch
 - ✅ Provides data-driven recommendation
@@ -178,6 +179,7 @@ deploy/
 **Purpose**: Automated merge of dev branch into MAIN with validation.
 
 **Pipeline**:
+
 1. ✅ Verifies working directory is clean
 2. ✅ Fetches latest changes from remote
 3. ✅ Checks out and updates MAIN
@@ -190,6 +192,7 @@ deploy/
 **Use when**: verify-branch-sync.sh recommends merging dev → MAIN.
 
 **Documentation**:
+
 - Quick guide: `docs/MERGE_DEV_TO_MAIN_GUIDE.md`
 - Deep analysis: `docs/DEV_TO_MAIN_MERGE_ANALYSIS.md`
 - Decision framework: `docs/BRANCH_SYNC_RECONCILIATION.md`
@@ -378,6 +381,7 @@ validate_src_tauri || exit 1
 ```
 
 **Documentation complète**:
+
 - `docs/BRANCH_CONSOLIDATION_REPORT_v26.2.2.md` - Analyse détaillée
 - `docs/BRANCH_CONSOLIDATION_IMPLEMENTATION.md` - Guide d'implémentation
 

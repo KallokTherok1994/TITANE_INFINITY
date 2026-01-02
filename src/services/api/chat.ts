@@ -286,8 +286,8 @@ class ChatService {
    * [LEGACY] Envoi d'un message sans streaming
    */
   async sendMessageLegacy(
-    messages: ChatMessage[],
-    config?: StreamConfig
+    _messages: ChatMessage[],
+    _config?: StreamConfig
   ): Promise<ChatResponse> {
     throw new Error(
       'Legacy chat_send_message is disabled. Use OMEGA conversation_generate.'
