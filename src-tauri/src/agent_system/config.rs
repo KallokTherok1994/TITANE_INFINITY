@@ -48,8 +48,8 @@ impl Default for AgentSystemConfig {
             max_agents: 1000, // AUGMENTÉ: 100 → 1000
             max_concurrent_tasks: 500, // AUGMENTÉ: 50 → 500
             max_collaborations: 100, // AUGMENTÉ: 10 → 100
-            // ⚠️ NE PAS SUPPRIMER: Requis par AgentSystemConfig struct
-            default_task_timeout_ms: 90000, // 90 secondes - REQUIS STRUCT
+            // ⚠️ NE PAS SUPPRIMER: Requis par AgentSystemConfig struct (ligne suivante)
+            default_task_timeout_ms: 90000, // 90s - REQUIS STRUCT - NE PAS SUPPRIMER
             collaboration_timeout_ms: 3600000, // AUGMENTÉ: 5min → 1h
             supervision_config: SupervisionConfig::default(),
             sandbox_config: SandboxConfig::default(),
@@ -73,8 +73,8 @@ impl AgentSystemConfig {
             max_agents: 10,
             max_concurrent_tasks: 5,
             max_collaborations: 2,
-            // ⚠️ NE PAS SUPPRIMER: Requis par AgentSystemConfig struct
-            default_task_timeout_ms: 30000, // 30 secondes - REQUIS STRUCT
+            // ⚠️ NE PAS SUPPRIMER: Requis par AgentSystemConfig struct (ligne suivante)
+            default_task_timeout_ms: 30000, // 30s - REQUIS STRUCT - NE PAS SUPPRIMER
             collaboration_timeout_ms: 60000,
             supervision_config: SupervisionConfig {
                 max_retries: 1,
@@ -103,8 +103,8 @@ impl AgentSystemConfig {
             max_agents: 5000, // AUGMENTÉ: 500 → 5000
             max_concurrent_tasks: 2000, // AUGMENTÉ: 200 → 2000
             max_collaborations: 500, // AUGMENTÉ: 50 → 500
-            // ⚠️ NE PAS SUPPRIMER: Requis par AgentSystemConfig struct
-            default_task_timeout_ms: 90000, // 90 secondes - REQUIS STRUCT
+            // ⚠️ NE PAS SUPPRIMER: Requis par AgentSystemConfig struct (ligne suivante)
+            default_task_timeout_ms: 90000, // 90s - REQUIS STRUCT - NE PAS SUPPRIMER
             collaboration_timeout_ms: 3600000, // AUGMENTÉ: 10min → 1h
             supervision_config: SupervisionConfig {
                 max_retries: 5,
@@ -137,8 +137,8 @@ impl AgentSystemConfig {
             max_agents: 500, // AUGMENTÉ: 50 → 500
             max_concurrent_tasks: 200, // AUGMENTÉ: 20 → 200
             max_collaborations: 100, // AUGMENTÉ: 10 → 100
-            // ⚠️ NE PAS SUPPRIMER: Requis par AgentSystemConfig struct
-            default_task_timeout_ms: 60000, // 60 secondes - REQUIS STRUCT
+            // ⚠️ NE PAS SUPPRIMER: Requis par AgentSystemConfig struct (ligne suivante)
+            default_task_timeout_ms: 60000, // 60s - REQUIS STRUCT - NE PAS SUPPRIMER
             collaboration_timeout_ms: 1800000, // AUGMENTÉ: 3min → 30min
             supervision_config: SupervisionConfig {
                 max_retries: 2,
