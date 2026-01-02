@@ -4,6 +4,7 @@
   "description": "TITANE∞ v26.2.0 - Cognitive Operating System: Hooks Audit Complete (92/100 Type Safety), Performance Optimized, 0 CRITICAL Bugs, Production Ready",
   "type": "module",
   "license": "SEE LICENSE.md",
+  "packageManager": "pnpm@9.0.0",
   "scripts": {
     "preinstall": "node scripts/install/enforce-package-manager.cjs",
     "dev": "tauri dev",
