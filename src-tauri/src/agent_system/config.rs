@@ -40,6 +40,7 @@ pub struct AgentSystemConfig {
     pub cleanup_interval_ms: u64,
 }
 
+#[rustfmt::skip]
 impl Default for AgentSystemConfig {
     fn default() -> Self {
         Self {
