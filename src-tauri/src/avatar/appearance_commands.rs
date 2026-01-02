@@ -332,7 +332,7 @@ mod tests {
 
     #[test]
     fn test_style_command_parser_default() {
-        let parser = StyleCommandParser::default();
+        let parser = StyleCommandParser;
         let _ = parser;
     }
 

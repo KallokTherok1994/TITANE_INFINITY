@@ -75,7 +75,7 @@ mod tests {
     fn test_cognitive_adapter_creation() {
         let adapter = CognitiveAdapter::new();
         // Default impl exists
-        let _adapter2 = CognitiveAdapter::default();
+        let _adapter2 = CognitiveAdapter;
         assert!(true);
     }
 
@@ -217,7 +217,7 @@ mod tests {
 
     #[test]
     fn test_cognitive_adapter_default() {
-        let adapter = CognitiveAdapter::default();
+        let adapter = CognitiveAdapter;
         let _ = adapter;
     }
 

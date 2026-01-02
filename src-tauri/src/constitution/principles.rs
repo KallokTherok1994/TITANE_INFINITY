@@ -274,7 +274,7 @@ mod tests {
     #[test]
     fn test_principle_set_creation() {
         let principles = PrincipleSet::default_titane();
-        assert!(principles.len() > 0);
+        assert!(!principles.is_empty());
     }
 
     #[test]

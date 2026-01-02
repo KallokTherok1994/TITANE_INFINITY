@@ -87,7 +87,7 @@ mod cycle_engine_tests {
 
         assert_eq!(weights.len(), 10); // 10 OMEGA engines
         for weight in weights {
-            assert!(weight >= 0.0 && weight <= 1.5);
+            assert!((0.0..=1.5).contains(&weight));
         }
     }
 

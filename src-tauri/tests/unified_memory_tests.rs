@@ -30,7 +30,7 @@ mod unified_memory_tests {
 
         // Recall
         let bundle = engine.recall("message", 10).await.unwrap();
-        assert!(bundle.stm.len() > 0);
+        assert!(!bundle.stm.is_empty());
         assert!(bundle.total > 0);
     }
 

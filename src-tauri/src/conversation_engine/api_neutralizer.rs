@@ -378,8 +378,7 @@ mod tests {
     fn test_neutralizer_multiple_validations() {
         let neutralizer = ApiNeutralizer::new();
 
-        let responses = vec![
-            NeutralizedResponse {
+        let responses = [NeutralizedResponse {
                 content: "".to_string(),
                 provider: "A".to_string(),
                 tokens_used: 0,
@@ -396,8 +395,7 @@ mod tests {
                 provider: "C".to_string(),
                 tokens_used: 0,
                 raw_data: None,
-            },
-        ];
+            }];
 
         let results: Vec<_> = responses.iter().map(|r| neutralizer.validate(r)).collect();
 
