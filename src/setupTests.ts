@@ -26,16 +26,20 @@ import * as matchers from '@testing-library/jest-dom/matchers';
 
   if (typeof ArrayBuffer !== 'undefined' && ArrayBuffer.prototype) {
     defineGetter(ArrayBuffer.prototype, 'resizable', () => false);
-    defineGetter(ArrayBuffer.prototype, 'maxByteLength', function () {
-      return (this as ArrayBuffer).byteLength;
+    defineGetter(ArrayBuffer.prototype, 'maxByteLength', function (this: ArrayBuffer) {
+      return this.byteLength;
     });
   }
 
   if (typeof SharedArrayBuffer !== 'undefined' && SharedArrayBuffer.prototype) {
     defineGetter(SharedArrayBuffer.prototype, 'growable', () => false);
-    defineGetter(SharedArrayBuffer.prototype, 'maxByteLength', function () {
-      return (this as SharedArrayBuffer).byteLength;
-    });
+    defineGetter(
+      SharedArrayBuffer.prototype,
+      'maxByteLength',
+      function (this: SharedArrayBuffer) {
+        return this.byteLength;
+      }
+    );
   }
 })();
 

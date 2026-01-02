@@ -34,17 +34,20 @@ Adresser les 3 items P1 identifiés dans l'audit de déploiement pour améliorer
    - ✅ Ajouté timeouts explicites pour tests async
 
 **Fichiers Modifiés:**
+
 - `src/utils/__tests__/webVitals.test.ts` — 3 tests réactivés
 
 #### Résultats Attendus
 
 **Avant:**
+
 ```
 Tests: 2170 passed, 49 skipped (2219 total)
 Taux: 97.8%
 ```
 
 **Après:**
+
 ```
 Tests: 2173 passed, 46 skipped (2219 total)
 Taux: 97.93%
@@ -55,11 +58,13 @@ Taux: 97.93%
 #### Prochaines Étapes 📋
 
 **P1.1.2: Documentation E2E** (1-2 heures restantes)
+
 - [ ] Documenter raison `SKIP_E2E = true` dans code
 - [ ] Ajouter README tests E2E
 - [ ] Proposer job CI séparé pour E2E (optionnel)
 
 **P1.1.3: Validation Tests Conditionnels** (30 min)
+
 - [ ] Documenter tests conditionnels dans AUTO_HEAL_SYSTEMS.md
 - [ ] Clarifier quand SQLite/Three.js tests s'exécutent
 - [ ] Accepter ~2% tests conditionnels comme design feature
@@ -107,10 +112,10 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: rust:1.83-slim
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Install System Dependencies
         run: |
           apt-get update
@@ -120,7 +125,7 @@ jobs:
             libayatana-appindicator3-dev \
             librsvg2-dev \
             patchelf
-      
+
       - name: Cache Cargo
         uses: actions/cache@v4
         with:
@@ -129,13 +134,14 @@ jobs:
             ~/.cargo/git
             target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      
+
       - name: Run Rust Tests
         working-directory: src-tauri
         run: cargo test --verbose
 ```
 
 **Avantages:**
+
 - ✅ Tests backend validés en CI
 - ✅ Détection précoce erreurs Rust
 - ✅ Pas d'impact sur tests rapides (job séparé)
@@ -198,6 +204,7 @@ jobs:
 #### Actions Requises
 
 1. **Générer API Docs** via TypeDoc
+
    ```bash
    npm run docs
    ```
@@ -241,26 +248,29 @@ docs/
 
 ### Résumé
 
-| Item | Statut | Effort | Complété | Restant |
-|------|--------|--------|----------|---------|
-| P1.1 | 🟢 En cours | 4-8h | 3h | 1-5h |
-| P1.2 | ⏳ Non démarré | 2-4h | 0h | 2-4h |
-| P1.3 | ⏳ Non démarré | 4-8h | 0h | 4-8h |
-| **TOTAL** | **30%** | **10-20h** | **3h** | **7-17h** |
+| Item      | Statut         | Effort     | Complété | Restant   |
+| --------- | -------------- | ---------- | -------- | --------- |
+| P1.1      | 🟢 En cours    | 4-8h       | 3h       | 1-5h      |
+| P1.2      | ⏳ Non démarré | 2-4h       | 0h       | 2-4h      |
+| P1.3      | ⏳ Non démarré | 4-8h       | 0h       | 4-8h      |
+| **TOTAL** | **30%**        | **10-20h** | **3h**   | **7-17h** |
 
 ### Priorisation
 
 **Sprint Actuel (Semaine 1):**
+
 1. ✅ P1.1: Finaliser corrections tests (1-2h restantes)
 2. 🎯 P1.1: Documenter stratégie E2E (1h)
 
 **Sprint Suivant (Semaine 2):**
+
 1. 🎯 P1.2: Docker Rust CI (2-4h)
 2. 🎯 P1.3: API Reference update (4-8h)
 
 ### Impact Attendu
 
 **Après P1 Complet:**
+
 - ✅ Tests: 97.93%+ passing
 - ✅ Backend: Validé en CI
 - ✅ Docs: À jour v26.2
@@ -287,15 +297,18 @@ docs/
 ## 💡 RECOMMANDATIONS
 
 ### Court Terme
+
 - Finaliser P1.1 (documentation E2E)
 - Commit changements tests Web Vitals
 - Mettre à jour métriques audit
 
 ### Moyen Terme
+
 - Implémenter P1.2 (Docker Rust CI)
 - Démarrer P1.3 (API docs)
 
 ### Long Terme
+
 - Automatiser génération API docs en CI
 - Monitoring continu taux tests skipped
 - Version docs synchronisée avec code

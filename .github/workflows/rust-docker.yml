@@ -17,15 +17,15 @@ jobs:
   test-rust-docker:
     name: Tests Backend Rust (Docker)
     runs-on: ubuntu-latest
-    
+
     # Utiliser image Docker avec dépendances système Tauri
     container:
       image: rust:1.83-slim
-    
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-      
+
       - name: Install System Dependencies (Tauri/GTK)
         run: |
           apt-get update
@@ -38,7 +38,7 @@ jobs:
             libssl-dev \
             pkg-config \
             build-essential
-      
+
       - name: Cache Cargo Registry
         uses: actions/cache@v4
         with:
@@ -48,7 +48,7 @@ jobs:
           key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-registry-
-      
+
       - name: Cache Cargo Build
         uses: actions/cache@v4
         with:
@@ -56,22 +56,22 @@ jobs:
           key: ${{ runner.os }}-cargo-build-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-build-
-      
+
       - name: Run Cargo Check
         working-directory: src-tauri
         run: cargo check --verbose
-      
+
       - name: Run Rust Tests
         working-directory: src-tauri
         run: cargo test --verbose
         env:
           RUST_BACKTRACE: 1
-      
+
       - name: Run Clippy (Linter)
         working-directory: src-tauri
         run: cargo clippy --all-targets --all-features -- -D warnings
         continue-on-error: true
-      
+
       - name: Generate Test Report
         if: always()
         working-directory: src-tauri
@@ -80,7 +80,7 @@ jobs:
           echo "" >> test-summary.md
           echo "✅ Cargo check: $(cargo check 2>&1 | grep -c 'Finished' || echo 'Failed')" >> test-summary.md
           echo "✅ Tests executed in Docker environment with full Tauri dependencies" >> test-summary.md
-      
+
       - name: Upload Test Report
         if: always()
         uses: actions/upload-artifact@v4

@@ -10,6 +10,7 @@
 ## 🎯 OBJECTIF
 
 Garantir la qualité du code via seuils de couverture automatiques:
+
 - Empêcher les régressions qualité
 - Bloquer CI si coverage < seuils
 - Forcer l'ajout de tests pour nouveau code
@@ -40,6 +41,7 @@ coverage: {
 ```
 
 **Justification:**
+
 - 80% = standard industrie pour code qualité
 - Applicable car unit tests majoritairement isolés
 - Force tests sur logique critique
@@ -65,6 +67,7 @@ coverage: {
 ```
 
 **Justification:**
+
 - 70% = réaliste pour tests intégration complexes
 - Interactions systèmes multiples difficiles à mocker
 - Priorité sur chemins critiques
@@ -75,6 +78,7 @@ coverage: {
 **Cible: 65% (monitoring manuel)**
 
 **Note:** Playwright coverage via istanbul (manuel):
+
 ```bash
 # Setup istanbul
 npm install --save-dev nyc
@@ -83,6 +87,7 @@ SKIP_E2E=false npm run test:e2e -- --coverage
 ```
 
 **Justification:**
+
 - E2E coverage coûteux (temps exécution ~20 min)
 - 65% = workflows critiques couverts (5 scénarios)
 - Monitoring manuel (pas de blocage CI)
@@ -164,7 +169,7 @@ npm run test:coverage:report
 # .github/workflows/tests.yml
 - name: Run Tests with Coverage
   run: npm run test:coverage
-  
+
 - name: Verify Coverage Thresholds
   run: npm run test:coverage:check
 ```
@@ -186,6 +191,7 @@ npm run test:coverage:check || {
 ### Coverage État Actuel (estimé)
 
 **Unit Tests:**
+
 ```
 Statements: ~85% ✅ (> 80%)
 Branches:   ~82% ✅ (> 80%)
@@ -194,6 +200,7 @@ Lines:      ~84% ✅ (> 80%)
 ```
 
 **Integration Tests:**
+
 ```
 Statements: ~75% ✅ (> 70%)
 Branches:   ~72% ✅ (> 70%)
@@ -202,6 +209,7 @@ Lines:      ~74% ✅ (> 70%)
 ```
 
 **E2E Tests:**
+
 ```
 Coverage:   ~65% ✅ (= 65% cible)
 Scénarios:  5/8 critiques couverts
@@ -209,6 +217,7 @@ Durée:      ~20 minutes
 ```
 
 **Global:**
+
 ```
 Coverage:   ~82% ✅
 Tests:      2173/2219 passed (97.93%)
@@ -235,27 +244,27 @@ on:
 jobs:
   test-coverage:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'pnpm'
-      
+
       - name: Install Dependencies
         run: pnpm install
-      
+
       - name: Run Unit Tests with Coverage
         run: npm run test:coverage:unit
-      
+
       - name: Run Integration Tests with Coverage
         run: npm run test:coverage:integration
-      
+
       - name: Verify Coverage Thresholds
         run: npm run test:coverage:check
-      
+
       - name: Upload Coverage Reports
         uses: actions/upload-artifact@v4
         if: always()
@@ -263,7 +272,7 @@ jobs:
           name: coverage-reports
           path: coverage/
           retention-days: 30
-      
+
       - name: Comment PR (Coverage)
         uses: romeovs/lcov-reporter-action@v0.3.1
         if: github.event_name == 'pull_request'
@@ -319,6 +328,7 @@ npm run test:coverage || {
 **Solution:**
 
 1. **Identifier fichiers non couverts:**
+
    ```bash
    npm run test:coverage:report
    # Ouvrir coverage/index.html
@@ -326,6 +336,7 @@ npm run test:coverage || {
    ```
 
 2. **Ajouter tests ciblés:**
+
    ```typescript
    // Exemple: Augmenter branch coverage
    describe('edgeCase', () => {
@@ -351,12 +362,14 @@ npm run test:coverage || {
 **Solution:**
 
 1. **Vérifier fichiers coverage existent:**
+
    ```bash
    ls -la coverage/unit/coverage-summary.json
    ls -la coverage/integration/coverage-summary.json
    ```
 
 2. **Générer coverage si manquant:**
+
    ```bash
    npm run test:coverage:unit
    npm run test:coverage:integration
@@ -395,6 +408,7 @@ E2E:         65% → 70%
 ```
 
 **Actions:**
+
 - Identifier top 10 fichiers faible coverage
 - Ajouter tests ciblés
 - Augmenter seuils progressivement (+1% par semaine)
@@ -408,6 +422,7 @@ E2E:         70% → 75%
 ```
 
 **Actions:**
+
 - Tests propriétés (property-based testing)
 - Mutation testing (Stryker)
 - Coverage différentiel (branches only)
@@ -422,6 +437,7 @@ E2E:         75%+
 ```
 
 **Actions:**
+
 - Identifier chemins critiques (security, data integrity)
 - 100% coverage obligatoire sur critical
 - Dashboard temps réel coverage

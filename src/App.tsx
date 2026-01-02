@@ -136,11 +136,11 @@ import { presenceOS } from './engines/presence/_stubs';
 
 type LazyModule<T> = { default: T };
 
-const lazyWithTimeout = <T,>(
+const lazyWithTimeout = <T extends React.ComponentType>(
   loader: () => Promise<LazyModule<T>>,
   options: { timeoutMs: number; label: string }
 ) =>
-  lazy(() => {
+  lazy<T>(() => {
     const timeoutPromise = new Promise<LazyModule<T>>((_, reject) => {
       setTimeout(() => {
         reject(new Error(`Lazy load timeout: ${options.label}`));
