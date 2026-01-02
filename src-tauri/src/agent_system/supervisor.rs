@@ -41,9 +41,9 @@ impl Default for SupervisionConfig {
     fn default() -> Self {
         Self {
             strategy: SupervisionStrategy::Active,
-            max_retries: 3,
-            timeout_ms: 60000,
-            health_check_interval_ms: 5000,
+            max_retries: 100, // AUGMENTÉ: 3 → 100 (x33)
+            timeout_ms: 600000, // AUGMENTÉ: 60s → 600s (10 min)
+            health_check_interval_ms: 30000, // AUGMENTÉ: 5s → 30s
             auto_restart: true,
         }
     }

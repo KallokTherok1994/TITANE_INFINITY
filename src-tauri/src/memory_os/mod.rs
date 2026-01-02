@@ -90,7 +90,8 @@ pub mod targets {
     pub const VECTOR_QUERY_MS: u128 = 10;
     pub const MEMORY_RECALL_MS: u128 = 20;
     pub const MEMORY_STORE_MS: u128 = 5;
-    pub const MAX_RAM_MB: usize = 300;
+    /// AUGMENTÉ: 300MB → 4GB pour éviter les blocages mémoire
+    pub const MAX_RAM_MB: usize = 4096;
 }
 
 /// Capacity limits

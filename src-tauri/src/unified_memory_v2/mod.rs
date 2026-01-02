@@ -67,7 +67,7 @@ pub mod targets {
     pub const RECALL_MS: u128 = 20;
     pub const SEARCH_MS: u128 = 15;
     pub const CONSOLIDATION_MS: u128 = 50;
-    pub const MAX_RAM_MB: usize = 300;
+    pub const MAX_RAM_MB: usize = 4096; // AUGMENTÉ: 300MB → 4GB
 }
 
 /// Capacity limits

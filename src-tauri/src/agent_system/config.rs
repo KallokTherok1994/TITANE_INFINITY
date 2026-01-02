@@ -45,19 +45,20 @@ impl Default for AgentSystemConfig {
         Self {
             name: "default".to_string(),
             enabled: true,
-            max_agents: 100,
-            max_concurrent_tasks: 50,
-            max_collaborations: 10,
-            collaboration_timeout_ms: 300000,
+            max_agents: 1000, // AUGMENTÉ: 100 → 1000
+            max_concurrent_tasks: 500, // AUGMENTÉ: 50 → 500
+            max_collaborations: 100, // AUGMENTÉ: 10 → 100
+            default_task_timeout_ms: 90000, // Ajouté: 90s
+            collaboration_timeout_ms: 3600000, // AUGMENTÉ: 5min → 1h
             supervision_config: SupervisionConfig::default(),
             sandbox_config: SandboxConfig::default(),
-            message_bus_size: 100,
-            message_ttl_ms: 60000,
+            message_bus_size: 1000, // AUGMENTÉ: 100 → 1000
+            message_ttl_ms: 600000, // AUGMENTÉ: 1min → 10min
             auto_restart_agents: true,
             enable_collaboration: true,
             enable_learning: false,
-            health_check_interval_ms: 5000,
-            cleanup_interval_ms: 60000,
+            health_check_interval_ms: 30000, // AUGMENTÉ: 5s → 30s
+            cleanup_interval_ms: 300000, // AUGMENTÉ: 1min → 5min
         }
     }
 }
@@ -71,6 +72,7 @@ impl AgentSystemConfig {
             max_agents: 10,
             max_concurrent_tasks: 5,
             max_collaborations: 2,
+            default_task_timeout_ms: 30000, // Ajouté: 30s
             collaboration_timeout_ms: 60000,
             supervision_config: SupervisionConfig {
                 max_retries: 1,
@@ -96,10 +98,11 @@ impl AgentSystemConfig {
         Self {
             name: "production".to_string(),
             enabled: true,
-            max_agents: 500,
-            max_concurrent_tasks: 200,
-            max_collaborations: 50,
-            collaboration_timeout_ms: 600000,
+            max_agents: 5000, // AUGMENTÉ: 500 → 5000
+            max_concurrent_tasks: 2000, // AUGMENTÉ: 200 → 2000
+            max_collaborations: 500, // AUGMENTÉ: 50 → 500
+            default_task_timeout_ms: 90000, // Ajouté: 90s
+            collaboration_timeout_ms: 3600000, // AUGMENTÉ: 10min → 1h
             supervision_config: SupervisionConfig {
                 max_retries: 5,
                 timeout_ms: 90000, // ✨ v26.2.1: Match default_task_timeout_ms
@@ -128,10 +131,11 @@ impl AgentSystemConfig {
         Self {
             name: "development".to_string(),
             enabled: true,
-            max_agents: 50,
-            max_concurrent_tasks: 20,
-            max_collaborations: 10,
-            collaboration_timeout_ms: 180000,
+            max_agents: 500, // AUGMENTÉ: 50 → 500
+            max_concurrent_tasks: 200, // AUGMENTÉ: 20 → 200
+            max_collaborations: 100, // AUGMENTÉ: 10 → 100
+            default_task_timeout_ms: 60000, // Ajouté: 60s
+            collaboration_timeout_ms: 1800000, // AUGMENTÉ: 3min → 30min
             supervision_config: SupervisionConfig {
                 max_retries: 2,
                 ..Default::default()
