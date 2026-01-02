@@ -274,9 +274,11 @@ mod tests {
     fn test_validate_timeout_ms() {
         assert!(validate_timeout_ms(1000).is_ok());
         assert!(validate_timeout_ms(45000).is_ok());
+        assert!(validate_timeout_ms(400_000).is_ok()); // OK: < 3600000ms (1h)
+        assert!(validate_timeout_ms(3_600_000).is_ok()); // OK: exactement 1h
         assert!(validate_timeout_ms(0).is_err());
         assert!(validate_timeout_ms(500).is_err());
-        assert!(validate_timeout_ms(400_000).is_err());
+        assert!(validate_timeout_ms(3_600_001).is_err()); // Invalide: > 1h
     }
 
     #[test]
