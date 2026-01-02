@@ -1,8 +1,8 @@
 #!/bin/bash
 # ═══════════════════════════════════════════════════════════════════════════════
-# TITANE∞ — Unified Deployment Command v24.3.0
+# TITANE∞ — Unified Deployment Command v26.2.3
 # Commande unifiée pour clean, repair, fix, build & deploy
-# v22Ω AI Performance Optimizations Compatible
+# ✨ v26.2.3: Security parameters disabled/minimized for deployment
 # ═══════════════════════════════════════════════════════════════════════════════
 #
 # USAGE:
@@ -213,6 +213,20 @@ health_check() {
         warning "Not a Git repository"
     fi
     
+    # Check security parameters (v26.2.3)
+    print_section "Checking security parameters..."
+    if grep -q "GLOBAL_RATE_LIMITER.*10000" src-tauri/src/security/rate_limit.rs 2>/dev/null; then
+        info "Rate limiter: 10000 req/min (disabled)"
+    else
+        warning "Rate limiter might be restrictive"
+    fi
+    
+    if grep -q "enabled: false" src-tauri/src/agent_system/sandbox.rs 2>/dev/null; then
+        info "Sandbox: disabled"
+    else
+        warning "Sandbox is enabled (might block operations)"
+    fi
+    
     log ""
     if [ $errors -eq 0 ]; then
         success "System health check passed!"
@@ -300,7 +314,10 @@ repair() {
     # NOTE: `cargo check` peut échouer ici car `clean` supprime `dist/` et Tauri
     # vérifie `frontendDist` pendant `generate_context!()`. `cargo fetch` ne
     # dépend pas du build frontend et suffit pour valider le cache deps.
+    info "Fetching Rust dependencies..."
     cargo fetch
+    info "Running cargo check (may fail if dist/ missing - normal)..."
+    cargo check --quiet 2>&1 | grep -E "error:|warning:" | head -n 10 || true
     cd "$PROJECT_ROOT"
     success "Rust dependencies verified"
     
@@ -369,6 +386,17 @@ build() {
     
     DIST_SIZE=$(du -sh dist | cut -f1)
     success "Frontend built successfully ($DIST_SIZE)"
+    
+    # Check available memory (v26.2.3 - 4GB limits)
+    print_section "Checking available memory..."
+    if command -v free &> /dev/null; then
+        MEM_AVAILABLE_MB=$(free -m | awk 'NR==2 {print $7}')
+        info "Available memory: ${MEM_AVAILABLE_MB}MB"
+        if [ "$MEM_AVAILABLE_MB" -lt 2048 ]; then
+            warning "Low memory detected (<2GB available)"
+            warning "Build may be slow or fail. Consider closing other apps."
+        fi
+    fi
     
     print_section "Building Tauri app ($mode)..."
 
