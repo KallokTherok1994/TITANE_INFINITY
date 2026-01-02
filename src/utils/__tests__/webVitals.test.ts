@@ -264,6 +264,9 @@ describe('WebVitalsMonitor', () => {
     it('should send analytics report every 30 seconds', () => {
       const sendToAnalyticsSpy = vi.spyOn(monitor as any, 'sendToAnalytics');
 
+      // Start monitoring to set up the reporting interval
+      monitor.start();
+
       // Record some metrics
       const metrics: WebVitalsMetrics = {
         lcp: 2000,
@@ -287,6 +290,7 @@ describe('WebVitalsMonitor', () => {
       // Verify analytics were sent
       expect(sendToAnalyticsSpy).toHaveBeenCalled();
 
+      // Cleanup
       monitor.stop();
     });
 
@@ -359,7 +363,6 @@ describe('WebVitalsMonitor', () => {
 describe('useWebVitals hook', () => {
   beforeEach(() => {
     vi.clearAllTimers();
-    vi.useFakeTimers();
   });
 
   afterEach(() => {
@@ -417,6 +420,9 @@ describe('useWebVitals hook', () => {
   });
 
   it('should update metrics over time', async () => {
+    // Enable fake timers for this test
+    vi.useFakeTimers();
+
     const mockedMetrics = {
       lcp: 2000,
       cls: 0.05,
@@ -442,6 +448,7 @@ describe('useWebVitals hook', () => {
     expect(result.current.currentMetrics).toEqual(mockedMetrics);
 
     getLatestMetricsSpy.mockRestore();
+    vi.useRealTimers();
   });
 });
 
