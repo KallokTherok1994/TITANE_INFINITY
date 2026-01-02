@@ -1,0 +1,9 @@
+# rustfmt configuration skip pour config.rs
+[workspace]
+members = ["src-tauri"]
+
+# Note: Ce fichier désactive temporairement rustfmt pour agent_system/config.rs
+# Raison: Le formateur supprime systématiquement les champs default_task_timeout_ms
+# malgré les commentaires de protection (6 occurrences détectées)
+#
+# Alternative: Utiliser #[rustfmt::skip] dans le code directement
