@@ -150,6 +150,53 @@ deploy/
 
 ---
 
+### Branch Synchronization Scripts (New!)
+
+#### Verify Branch Sync
+
+```bash
+./scripts/verify-branch-sync.sh
+```
+
+**Purpose**: Analyzes dev ↔ MAIN branch relationship and recommends merge direction.
+
+**Features**:
+- ✅ Compares commits between branches
+- ✅ Shows unique commits in each branch
+- ✅ Provides data-driven recommendation
+- ✅ Displays detailed commit info (date, author, message)
+- ✅ Handles all scenarios (ahead/behind/diverged/synchronized)
+
+**Use when**: Need to determine if dev should merge to MAIN or vice versa.
+
+#### Merge dev to MAIN
+
+```bash
+./scripts/merge-dev-to-main.sh
+```
+
+**Purpose**: Automated merge of dev branch into MAIN with validation.
+
+**Pipeline**:
+1. ✅ Verifies working directory is clean
+2. ✅ Fetches latest changes from remote
+3. ✅ Checks out and updates MAIN
+4. ✅ Shows commits to be merged
+5. ✅ Asks for confirmation
+6. ✅ Performs merge
+7. ✅ Runs tests (if available)
+8. ✅ Pushes to remote
+
+**Use when**: verify-branch-sync.sh recommends merging dev → MAIN.
+
+**Documentation**:
+- Quick guide: `docs/MERGE_DEV_TO_MAIN_GUIDE.md`
+- Deep analysis: `docs/DEV_TO_MAIN_MERGE_ANALYSIS.md`
+- Decision framework: `docs/BRANCH_SYNC_RECONCILIATION.md`
+- Executive summary: `EXECUTIVE_SUMMARY_BRANCH_SYNC.md`
+
+---
+
 ## 🔧 Pipeline v12 - Détails
 
 Le **TITANE_PIPELINE_v12.sh** est le script maître qui orchestre:
