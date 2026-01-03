@@ -570,7 +570,7 @@ async fn test_singularity_fallback_on_error() {
 
 ```bash
 # Lancer Titan-Dev
-npm run tauri dev
+pnpm run tauri dev
 
 # Chat IA UI
 # Message: "Bonjour TITANE, comment vas-tu aujourd'hui ?"
@@ -635,7 +635,7 @@ npm run tauri dev
 ### Validation Staging
 
 - [ ] Build Titan-Dev (cargo build)
-- [ ] Run runtime (npm run tauri dev)
+- [ ] Run runtime (pnpm run tauri dev)
 - [ ] Execute Chat IA tests (S1/S2/R1)
 - [ ] Verify logs (grep SINGULARITY)
 - [ ] Measure latencies (<220ms)
@@ -685,7 +685,7 @@ npm run tauri dev
 
 ### Court Terme (Cette session - 60 min)
 
-5. **Lancer runtime** (npm run tauri dev)
+5. **Lancer runtime** (pnpm run tauri dev)
 6. **Tests manuels Chat IA** (S1/S2/R1 avec Singularity)
 7. **Capturer logs** (grep SINGULARITY)
 8. **Valider métriques** (<220ms, coherence >0.85)

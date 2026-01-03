@@ -53,7 +53,7 @@
 1. Lancer TITANE∞:
 
    ```bash
-   npm run dev:tauri
+   pnpm run dev:tauri
    ```
 
 2. Ouvrir l'application (http://localhost:5173/)
@@ -159,7 +159,7 @@ console.log(anthropicStatus);
 3. Redémarrer Vite:
 
    ```bash
-   npm run dev:tauri
+   pnpm run dev:tauri
    ```
 
 4. **Migration recommandée** vers SecureSecretsEngine:
@@ -343,7 +343,7 @@ Base URL: https://api.anthropic.com/v1
 1. Vérifier feature flags: `ENABLE_EXTERNAL_AI: true`
 2. Vérifier provider activé: `AI_PROVIDERS.gemini: true`
 3. Vérifier statut: `get_gemini_key_status()`
-4. Redémarrer Vite: `npm run dev:tauri`
+4. Redémarrer Vite: `pnpm run dev:tauri`
 
 ---
 
@@ -399,10 +399,10 @@ Base URL: https://api.anthropic.com/v1
 node check_api_status.js
 
 # Lancer dev
-npm run dev:tauri
+pnpm run dev:tauri
 
 # Build production
-npm run build
+pnpm run build
 ```
 
 ---

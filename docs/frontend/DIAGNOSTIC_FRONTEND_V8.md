@@ -279,7 +279,7 @@ TOTAL ESTIMÉ: ~2.1MB (gzipped: ~600KB)
 
 ### Phase 1: Installation Tailwind CSS (URGENT)
 ```bash
-npm install -D tailwindcss@3.4.0 autoprefixer@10.4.16 postcss@8.4.31
+pnpm install -D tailwindcss@3.4.0 autoprefixer@10.4.16 postcss@8.4.31
 npx tailwindcss init -p
 ```
 

@@ -309,9 +309,9 @@ const result = await chat_send_message({ message: "test" });
 
 ### Phase 3: Tests (2-4h)
 
-- [ ] Exécuter tests unitaires (`npm test`)
-- [ ] Exécuter tests architecture (`npm run test:architecture`)
-- [ ] Exécuter tests E2E (`npm run test:e2e` avec `SKIP_E2E=false`)
+- [ ] Exécuter tests unitaires (`pnpm test`)
+- [ ] Exécuter tests architecture (`pnpm run test:architecture`)
+- [ ] Exécuter tests E2E (`pnpm run test:e2e` avec `SKIP_E2E=false`)
 - [ ] Validation manuelle workflows critiques
 
 ### Phase 4: Documentation (1-2h)
@@ -444,11 +444,11 @@ await agendaService.deleteEvent(event.id);
 grep -r "chat_send_message" src/ --include="*.ts" --include="*.tsx"
 
 # Trouver imports Ring violations
-npm run test:architecture
+pnpm run test:architecture
 
 # Vérifier compatibilité
-npm run check
-npm run lint
+pnpm run check
+pnpm run lint
 ```
 
 ### Patterns Communs
@@ -534,7 +534,7 @@ const engine = new MyEngine(someService);
 R: Non urgent mais recommandé. API fonctionne encore jusqu'à v27.0. Migrer avant v27.0.
 
 **Q: Comment savoir si j'ai des Ring violations?**  
-R: Exécuter `npm run test:architecture`. Tests échoueront si violations.
+R: Exécuter `pnpm run test:architecture`. Tests échoueront si violations.
 
 **Q: Puis-je utiliser OMEGA v1 et v2 simultanément?**  
 R: Oui pendant transition. Migrer progressivement. v1 sera supprimée en v27.0.

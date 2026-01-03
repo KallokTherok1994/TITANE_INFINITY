@@ -141,16 +141,16 @@ if (maxExisting >= memoryCount) {
 
 ```bash
 # Type check
-npm run type-check
+pnpm run type-check
 
 # Tests unitaires
-npm run test
+pnpm run test
 
 # Cargo check
 cargo check --manifest-path src-tauri/Cargo.toml
 
 # Build Tauri (validation complète)
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ### Scénarios à tester manuellement

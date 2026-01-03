@@ -13,10 +13,10 @@ node >= 20, npm >= 10, rust >= 1.70, cargo, tauri-cli
 # 2. Clone & Install
 git clone <repo>
 cd TITANE_INFINITY
-npm install
+pnpm install
 
 # 3. Verify
-npm run verify:backend  # (quand créé - voir SUPER-PROMPT 3)
+pnpm run verify:backend  # (quand créé - voir SUPER-PROMPT 3)
 # Ou manuellement:
 cd src-tauri
 cargo build
@@ -29,10 +29,10 @@ cargo test
 
 \`\`\`bash
 # Dev avec hot-reload
-npm run tauri dev
+pnpm run tauri dev
 
 # Build production
-npm run tauri build
+pnpm run tauri build
 \`\`\`
 
 ---

@@ -24,7 +24,7 @@ Ce sprint établit la **baseline de qualité** TITANE∞ via COPILOT-XS validati
 ### 1. COPILOT-XS Validation ✅
 
 ```bash
-$ npm run copilot-xs:validate
+$ pnpm run copilot-xs:validate
 ✅ COPILOT-XS VALIDATION PASSED
 ```
 
@@ -44,7 +44,7 @@ Code actif respecte la discipline de qualité. Marqueurs legacy non bloquants po
 
 **Problème lockfile npm:**
 ```bash
-$ npm audit --audit-level=high
+$ pnpm audit --audit-level=high
 npm ERR! code ENOLOCK
 npm ERR! audit This command requires an existing lockfile.
 npm ERR! audit Try creating one first with: npm i --package-lock-only
@@ -59,7 +59,7 @@ npm ERR! audit Try creating one first with: npm i --package-lock-only
 Documenté comme limitation connue. Frontend utilise `pnpm` (pas `npm`).
 
 **Recommandation P2:**  
-- Installer `pnpm` dans runtime dev: `npm install -g pnpm`
+- Installer `pnpm` dans runtime dev: `pnpm install -g pnpm`
 - Ou générer `package-lock.json` pour audit npm: `npm i --package-lock-only`
 - Priorité: Sprint 17+ (non-bloquant pour Phase 3)
 
@@ -212,7 +212,7 @@ Toutes liées à l'écosystème GTK3 (abandonné au profit de GTK4):
 
 ### Sprint 17+: Audit Frontend pnpm
 
-5. Installer `pnpm` dans runtime dev: `npm install -g pnpm`
+5. Installer `pnpm` dans runtime dev: `pnpm install -g pnpm`
 6. Exécuter `pnpm audit --audit-level=high`
 7. Documenter vulnérabilités frontend (si présentes)
 8. Créer plan remédiation frontend

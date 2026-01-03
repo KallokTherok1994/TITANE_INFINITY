@@ -1245,7 +1245,7 @@ USER INPUT
   env:
     OPENAI_API_KEY_TEST: ${{ secrets.OPENAI_API_KEY_TEST }}
     ANTHROPIC_API_KEY_TEST: ${{ secrets.ANTHROPIC_API_KEY_TEST }}
-  run: npm run test:e2e:apis
+  run: pnpm run test:e2e:apis
 ```
 
 **Tests:**

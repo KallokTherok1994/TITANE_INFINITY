@@ -366,8 +366,8 @@ ollama pull llama3.1:8b
 ollama pull nomic-embed-text
 
 # 4. Build frontend
-npm install
-npm run build
+pnpm install
+pnpm run build
 
 # 5. Build backend
 cd src-tauri

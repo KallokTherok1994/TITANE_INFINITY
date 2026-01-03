@@ -489,7 +489,7 @@ it('should calculate percentages correctly', () => {
 ### 5.1. Installation des dépendances
 
 ```bash
-npm install --save-dev \
+pnpm install --save-dev \
   vitest \
   @testing-library/react \
   @testing-library/react-hooks \
@@ -526,31 +526,31 @@ export default defineConfig({
 #### Tous les tests v21:
 
 ```bash
-npm run test:unit -- --run src/hooks/__tests__/hooks.spec.ts src/stores/__tests__/stores.spec.ts src/components/panels/__tests__/panels.spec.tsx
+pnpm run test:unit -- --run src/hooks/__tests__/hooks.spec.ts src/stores/__tests__/stores.spec.ts src/components/panels/__tests__/panels.spec.tsx
 ```
 
 #### Tests hooks uniquement:
 
 ```bash
-npm run test:unit -- --run src/hooks/__tests__/hooks.spec.ts
+pnpm run test:unit -- --run src/hooks/__tests__/hooks.spec.ts
 ```
 
 #### Tests stores uniquement:
 
 ```bash
-npm run test:unit -- --run src/stores/__tests__/stores.spec.ts
+pnpm run test:unit -- --run src/stores/__tests__/stores.spec.ts
 ```
 
 #### Tests panels uniquement:
 
 ```bash
-npm run test:unit -- --run src/components/panels/__tests__/panels.spec.tsx
+pnpm run test:unit -- --run src/components/panels/__tests__/panels.spec.tsx
 ```
 
 #### Mode watch (développement):
 
 ```bash
-npm run test:unit -- src/hooks/__tests__/hooks.spec.ts
+pnpm run test:unit -- src/hooks/__tests__/hooks.spec.ts
 ```
 
 ### 5.4. Coverage
@@ -558,7 +558,7 @@ npm run test:unit -- src/hooks/__tests__/hooks.spec.ts
 Générer un rapport de coverage:
 
 ```bash
-npm run test:unit -- --coverage
+pnpm run test:unit -- --coverage
 ```
 
 ---

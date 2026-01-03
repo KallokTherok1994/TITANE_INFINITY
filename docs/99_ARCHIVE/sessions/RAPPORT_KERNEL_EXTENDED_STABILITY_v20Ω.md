@@ -257,7 +257,7 @@ aiOrchestrator.getDetailedMetrics() {
 
 ### Actions Effectuées
 
-1. ✅ **Linter exécuté** : `npm run lint -- --fix`
+1. ✅ **Linter exécuté** : `pnpm run lint -- --fix`
    - Résultat : 0 erreurs, 18 warnings (non-bloquants)
    
 2. ✅ **Non-null assertions corrigées** dans `metricsEngine.ts`

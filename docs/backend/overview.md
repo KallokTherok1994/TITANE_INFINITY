@@ -378,25 +378,25 @@ rust >= 1.70
 tauri-cli >= 2.0
 
 # Installer
-npm install
+pnpm install
 ```
 
 ### 2. Lancer en Dev
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 # ou
-npm run dev  # Lance aussi le frontend
+pnpm run dev  # Lance aussi le frontend
 ```
 
 ### 3. Vérifier la Santé
 ```bash
-npm run verify          # Global
-npm run verify:backend  # Backend seul (à créer)
+pnpm run verify          # Global
+pnpm run verify:backend  # Backend seul (à créer)
 ```
 
 ### 4. Build Production
 ```bash
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ---
@@ -428,7 +428,7 @@ cargo test --test security_tests
 
 ### Intégration
 ```bash
-npm run test:integration  # À créer
+pnpm run test:integration  # À créer
 ```
 
 ---

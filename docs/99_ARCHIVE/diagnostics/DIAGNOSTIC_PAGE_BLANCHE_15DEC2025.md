@@ -106,7 +106,7 @@ pkill -9 vite
 rm -rf dist/ node_modules/.vite
 
 # Relancer proprement
-npm run dev
+pnpm run dev
 ```
 
 ### **Solution 2: Activer Test Minimal**
@@ -198,7 +198,7 @@ Fichier: `src-tauri/tauri.conf.json`
 
 1. **URGENT:** Ouvrir DevTools (F12) dans fenêtre Tauri pour voir erreurs
 2. Nettoyer les processus multiples (`pkill -9 titane-infinity`)
-3. Relancer avec `npm run dev` proprement
+3. Relancer avec `pnpm run dev` proprement
 4. Si toujours blanc: activer `AppMinimalTest`
 5. Si minimal fonctionne: isoler providers un par un
 6. Consulter logs dans `runtime/dev/logs/`
@@ -252,10 +252,10 @@ tail -f runtime/dev/logs/tauri.log
 tail -f runtime/dev/logs/vite.log
 
 # Rebuild complet
-npm run build
+pnpm run build
 
 # Lancer dev avec logs
-npm run dev 2>&1 | tee dev-output.log
+pnpm run dev 2>&1 | tee dev-output.log
 ```
 
 ---

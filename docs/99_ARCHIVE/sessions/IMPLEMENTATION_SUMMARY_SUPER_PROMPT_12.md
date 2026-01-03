@@ -424,7 +424,7 @@ interface AIConfigState {
 - [ ] Streaming test ⏳ Manual test required
 
 ### Frontend Tests
-- [ ] TypeScript compilation: `npm run type-check` ✅ PASS (0 errors)
+- [ ] TypeScript compilation: `pnpm run type-check` ✅ PASS (0 errors)
 - [ ] AIModelSelector component rendering ⏳ Manual test required
 - [ ] AIPipeline routing logic ⏳ Manual test required
 - [ ] Fallback mechanism ⏳ Manual test required
@@ -629,10 +629,10 @@ Ctrl+Shift+P → "TypeScript: Restart TS Server"
 rm -rf node_modules/.cache
 
 # Reinstall dependencies
-npm install
+pnpm install
 
 # Type-check
-npm run type-check
+pnpm run type-check
 ```
 
 ---

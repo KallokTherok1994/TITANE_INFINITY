@@ -263,19 +263,19 @@ describe('chatStore', () => {
 
 ```bash
 # Tous les tests
-npm test
+pnpm test
 
 # Watch mode
-npm run test:watch
+pnpm run test:watch
 
 # Coverage
-npm run test:coverage
+pnpm run test:coverage
 
 # Tests spécifiques
-npm test -- ChatInput
+pnpm test -- ChatInput
 
 # UI mode (interactif)
-npm run test:ui
+pnpm run test:ui
 ```
 
 ---
@@ -454,7 +454,7 @@ export default defineConfig({
     }
   ],
   webServer: {
-    command: 'npm run dev:tauri',
+    command: 'pnpm run dev:tauri',
     url: 'http://localhost:1420',
     reuseExistingServer: !process.env.CI,
     timeout: 120000
@@ -524,16 +524,16 @@ test.describe('Chat IA', () => {
 
 ```bash
 # Installer Playwright
-npm run test:e2e:install
+pnpm run test:e2e:install
 
 # Lancer tests E2E
-npm run test:e2e
+pnpm run test:e2e
 
 # Mode UI (interactif)
-npm run test:e2e:ui
+pnpm run test:e2e:ui
 
 # Debug mode
-npm run test:e2e:debug
+pnpm run test:e2e:debug
 
 # Tests spécifiques
 npx playwright test chat.spec.ts
@@ -550,7 +550,7 @@ npx playwright show-report
 
 ```bash
 # Générer rapport coverage
-npm run test:coverage
+pnpm run test:coverage
 
 # Ouvrir rapport HTML
 open coverage/index.html
@@ -596,13 +596,13 @@ open tarpaulin-report.html
 
 ```bash
 # Linter
-npm run lint
+pnpm run lint
 
 # Auto-fix
-npm run lint:fix
+pnpm run lint:fix
 
 # Strictness level
-npm run lint -- --max-warnings 0
+pnpm run lint -- --max-warnings 0
 ```
 
 #### Clippy (Backend)
@@ -645,10 +645,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install
-      - run: npm run lint
-      - run: npm test
-      - run: npm run test:coverage
+      - run: pnpm install
+      - run: pnpm run lint
+      - run: pnpm test
+      - run: pnpm run test:coverage
       - uses: codecov/codecov-action@v3
         with:
           files: ./coverage/coverage-final.json
@@ -668,9 +668,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install
+      - run: pnpm install
       - run: npx playwright install --with-deps
-      - run: npm run test:e2e
+      - run: pnpm run test:e2e
       - uses: actions/upload-artifact@v3
         if: failure()
         with:
@@ -734,7 +734,7 @@ jobs:
 
 ```bash
 # Debug mode
-npm run test:debug
+pnpm run test:debug
 
 # Dans VSCode
 # 1. Placer breakpoint
@@ -756,7 +756,7 @@ RUST_LOG=debug cargo test -- --nocapture
 
 ```bash
 # UI mode (step-by-step)
-npm run test:e2e:ui
+pnpm run test:e2e:ui
 
 # Debug specific test
 npx playwright test chat.spec.ts --debug
@@ -787,8 +787,8 @@ npx playwright test --headed
 
 Avant de commit:
 
-- [ ] `npm run lint` passe
-- [ ] `npm test` passe (100% success rate)
+- [ ] `pnpm run lint` passe
+- [ ] `pnpm test` passe (100% success rate)
 - [ ] `cd src-tauri && cargo test` passe
 - [ ] `cd src-tauri && cargo clippy` sans warnings
 - [ ] Coverage reste > 70%

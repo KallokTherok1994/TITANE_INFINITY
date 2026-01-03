@@ -32,7 +32,7 @@ TITANE∞ est une application **Tauri v2** hybride haute performance intégrant 
 | **Fonctionnel** | TTS | ✅ PASS | Fallback `HybridTTS` (Tauri -> WebSpeech) validé. `ShellGuard` sécurise les appels locaux. |
 | **Sécurité** | Permissions | ✅ PASS | Système de rôles (Root/System/IA/User) et `PermissionGuard` actifs. |
 | **Sécurité** | Whitelist | ✅ PASS | `ALLOWED_COMMANDS` (Frontend) synchronisé avec `secure_commands.rs`. |
-| **Build** | Production | ✅ PASS | `npm run build` + `cargo build --release` réussis. |
+| **Build** | Production | ✅ PASS | `pnpm run build` + `cargo build --release` réussis. |
 
 ---
 
@@ -69,4 +69,4 @@ TITANE∞ est une application **Tauri v2** hybride haute performance intégrant 
 
 L'architecture est stable, sécurisée et performante. Les tests statiques et de compilation sont verts. Le système de mémoire et les pipelines IA sont opérationnels.
 
-**🚀 PRÊT POUR LANCEMENT : `npm run tauri:build`**
+**🚀 PRÊT POUR LANCEMENT : `pnpm run tauri:build`**

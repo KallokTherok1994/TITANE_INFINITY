@@ -8,7 +8,7 @@
 
 ```bash
 # Démarrer
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Vérifier
 # 1. Badge 🧠 visible en bas à droite
@@ -80,8 +80,8 @@ npm run tauri:dev
 ## ✅ Validation
 
 ```bash
-npm run type-check  # ✅ 0 errors
-npm run build       # ✅ Success
+pnpm run type-check  # ✅ 0 errors
+pnpm run build       # ✅ Success
 cargo check         # ✅ Compatible
 ```
 

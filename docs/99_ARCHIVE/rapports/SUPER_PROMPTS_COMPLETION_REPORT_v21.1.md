@@ -339,10 +339,10 @@ cargo bench
 
 ```bash
 # Dev mode with optimizations
-npm run dev
+pnpm run dev
 
 # Production build
-npm run build
+pnpm run build
 
 # Tauri dev
 cd src-tauri && cargo tauri dev

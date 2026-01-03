@@ -363,10 +363,10 @@ const memoryId = await secureInvoke<string>('memory_store', {
 
 ```bash
 # Run UnifiedMemory tests
-npm run test UnifiedMemory
+pnpm run test UnifiedMemory
 
 # Run with coverage
-npm run test:coverage UnifiedMemory
+pnpm run test:coverage UnifiedMemory
 ```
 
 **Key Test Cases:**

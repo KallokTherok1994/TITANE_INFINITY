@@ -108,7 +108,7 @@ connect-src 'self' tauri: asset: ipc:
 
 ```bash
 # Terminal 1: Titan-Dev
-npm run dev:tauri
+pnpm run dev:tauri
 
 # Terminal 2: Tunnel
 ./scripts/network/start-tunnel.sh

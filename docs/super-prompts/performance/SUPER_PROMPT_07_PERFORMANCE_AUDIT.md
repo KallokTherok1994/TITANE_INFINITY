@@ -75,7 +75,7 @@ function App() {
 
 ```bash
 # Installer imagemin
-npm install --save-dev imagemin-cli imagemin-webp
+pnpm install --save-dev imagemin-cli imagemin-webp
 
 # Optimiser toutes les images
 imagemin src/assets/*.{jpg,png} --out-dir=dist/assets --plugin=webp
@@ -250,7 +250,7 @@ criterion_main!(benches);
 ### 6.2. Lighthouse CI (frontend)
 
 ```bash
-npm install -g @lhci/cli
+pnpm install -g @lhci/cli
 
 # Audit
 lhci autorun --config=lighthouserc.json

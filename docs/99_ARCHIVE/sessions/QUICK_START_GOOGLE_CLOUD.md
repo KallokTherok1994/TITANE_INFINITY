@@ -10,7 +10,7 @@
 ### Étape 1: Démarrer l'application
 ```bash
 cd /home/titane/Documents/TITANE_INFINITY
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### Étape 2: Ouvrir le Centre Gouvernance
@@ -256,7 +256,7 @@ En cas de problème:
 
 ---
 
-**Prêt à tester ? Lancez `npm run tauri:dev` !** 🚀
+**Prêt à tester ? Lancez `pnpm run tauri:dev` !** 🚀
 
 ---
 

@@ -72,7 +72,7 @@ private createErrorResponse(_error: Error | unknown): CognitiveResponse
 ### 3. Build Dependencies Fixed ✅
 
 **Issue:** Missing `lightningcss` dependency  
-**Solution:** `npm install lightningcss --save-dev`
+**Solution:** `pnpm install lightningcss --save-dev`
 
 **Result:**
 

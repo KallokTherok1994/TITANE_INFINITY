@@ -355,7 +355,7 @@ const micIconClass = useMemo(
 2. **Bundle Analyzer** pour identifier bloat
 
 ```bash
-npm install --save-dev vite-plugin-bundle-visualizer
+pnpm install --save-dev vite-plugin-bundle-visualizer
 
 # vite.config.ts
 import { visualizer } from 'vite-plugin-bundle-visualizer';

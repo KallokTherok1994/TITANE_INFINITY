@@ -34,7 +34,7 @@
 
 **Après** :
 ```json
-"dev": "npm run build:watch",
+"dev": "pnpm run build:watch",
 "dev:tauri": "tauri dev"
 ```
 
@@ -54,7 +54,7 @@ Le script `dev` lance uniquement `build:watch` (Vite en mode watch). Tauri Dev e
 **Après** :
 ```json
 "build": {
-  "beforeDevCommand": "npm run build:watch",
+  "beforeDevCommand": "pnpm run build:watch",
   "devUrl": "tauri://localhost"
 }
 ```
@@ -72,8 +72,8 @@ Le script `dev` lance uniquement `build:watch` (Vite en mode watch). Tauri Dev e
 // ═══════════════════════════════════════════════════════════════════
 // No HTTP server in dev or prod - Tauri loads from tauri:// protocol only
 // All assets served via Tauri's asset protocol (tauri://localhost)
-// Dev workflow: npm run build:watch (Vite watch) + tauri dev (beforeDevCommand)
-// Build workflow: npm run build (Vite static) + tauri build
+// Dev workflow: pnpm run build:watch (Vite watch) + tauri dev (beforeDevCommand)
+// Build workflow: pnpm run build (Vite static) + tauri build
 
 // Server config REMOVED - pure asset-only mode
 ```
@@ -257,9 +257,9 @@ TypeScript et ESLint ne scannent plus les dossiers d'archives, réduction de la 
 
 ```bash
 # Frontend
-npm run lint              # ✅ PASSÉ (0 warnings)
-npm run type-check        # ✅ PASSÉ (0 erreurs)
-npm run build             # ✅ PASSÉ (4.00s)
+pnpm run lint              # ✅ PASSÉ (0 warnings)
+pnpm run type-check        # ✅ PASSÉ (0 erreurs)
+pnpm run build             # ✅ PASSÉ (4.00s)
 
 # Backend
 cargo check               # ✅ COMPILÉ
@@ -290,22 +290,22 @@ dist/assets/vendor-misc-DXPCOfWu.js          196.99 kB │ gzip: 60.02 kB
 
 ```bash
 # Option 1 : Build watch + Tauri dev manuel
-npm run dev              # Lance vite build --watch
+pnpm run dev              # Lance vite build --watch
 tauri dev                # Dans un autre terminal
 
 # Option 2 : Tout-en-un via Tauri
-npm run dev:tauri        # beforeDevCommand lance build:watch automatiquement
+pnpm run dev:tauri        # beforeDevCommand lance build:watch automatiquement
 ```
 
 **Flux** :
-1. `beforeDevCommand` lance `npm run build:watch`
+1. `beforeDevCommand` lance `pnpm run build:watch`
 2. Vite rebuild automatiquement à chaque changement → `dist/`
 3. Tauri reload l'app via `tauri://localhost`
 
 ### Mode Build Production
 
 ```bash
-npm run build            # Vite build statique
+pnpm run build            # Vite build statique
 tauri build              # Build binaire Tauri
 ```
 
@@ -380,7 +380,7 @@ Les fichiers suivants doivent être mis à jour pour refléter le nouveau pipeli
    ```bash
    #!/bin/bash
    # scripts/validate-all.sh
-   npm run lint && npm run type-check && npm run build && cargo clippy
+   pnpm run lint && pnpm run type-check && pnpm run build && cargo clippy
    ```
 3. **Documenter le workflow E2E alternatif** (1h)
 
@@ -411,14 +411,14 @@ Les fichiers suivants doivent être mis à jour pour refléter le nouveau pipeli
 ### Code
 
 - [x] TypeScript : 0 erreur (`tsc --noEmit`)
-- [x] ESLint : 0 warning (`npm run lint`)
+- [x] ESLint : 0 warning (`pnpm run lint`)
 - [x] Rust : Compilation OK (`cargo check`)
 - [x] Clippy : Warnings non bloquants uniquement
 
 ### Build & Dev
 
-- [x] `npm run build` : Réussi (< 5s)
-- [x] `npm run dev` : Lance Vite watch
+- [x] `pnpm run build` : Réussi (< 5s)
+- [x] `pnpm run dev` : Lance Vite watch
 - [x] `tauri dev` : Charge depuis `dist/` via `tauri://`
 - [x] Assets : Tous chargés correctement (CSS, JS, fonts)
 
@@ -467,7 +467,7 @@ Le projet TITANE∞ v16.2.3 est maintenant **100% conforme** à la vision Tauri-
 
 - **TypeScript strict** : Typage cohérent, hooks propres
 - **Rust idiomatique** : Patterns modernes, async/await sain
-- **Pipeline reproductible** : Tout nouveau dev peut `npm run dev` sans surprise
+- **Pipeline reproductible** : Tout nouveau dev peut `pnpm run dev` sans surprise
 - **Documentation claire** : Changelog, architecture, déploiement à jour
 
 ---
@@ -500,9 +500,9 @@ Le projet TITANE∞ v16.2.3 est maintenant **100% conforme** à la vision Tauri-
 
 ```bash
 # Frontend
-✅ npm run lint → 0 warnings
-✅ npm run type-check → 0 errors
-✅ npm run build → 2566 modules, 4.00s
+✅ pnpm run lint → 0 warnings
+✅ pnpm run type-check → 0 errors
+✅ pnpm run build → 2566 modules, 4.00s
 
 # Backend
 ✅ cargo check → compiled successfully

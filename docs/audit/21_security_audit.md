@@ -65,8 +65,8 @@ export GITHUB_TOKEN="..."
 
 ```bash
 # Frontend
-npm audit
-npm audit fix
+pnpm audit
+pnpm audit fix
 
 # Backend
 cd src-tauri
@@ -249,7 +249,7 @@ async fn sensitive_operation(
 #### NPM (Frontend)
 
 ```bash
-npm audit --audit-level=moderate
+pnpm audit --audit-level=moderate
 ```
 
 **Catégories:**
@@ -386,7 +386,7 @@ if data.len() > MAX_SIZE {
 ### P0 - CRITIQUE
 
 - [ ] Corriger 8 erreurs Rust Provider::Copilot
-- [ ] Exécuter `npm audit` et corriger critical/high
+- [ ] Exécuter `pnpm audit` et corriger critical/high
 - [ ] Exécuter `cargo audit` et corriger critical/high
 - [ ] Vérifier aucun secret hardcodé dans code
 
@@ -421,7 +421,7 @@ if data.len() > MAX_SIZE {
 
 1. **Exécuter audits dépendances**
    ```bash
-   npm audit
+   pnpm audit
    cargo audit
    ```
 
@@ -449,7 +449,7 @@ if data.len() > MAX_SIZE {
 ### Moyen terme (P2 - 1 mois)
 
 7. **Automatisation**
-   - CI: cargo audit + npm audit
+   - CI: cargo audit + pnpm audit
    - Pre-commit hooks validation
    - Automated secret scanning
 

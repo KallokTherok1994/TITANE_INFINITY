@@ -81,7 +81,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "3. Lancement de Tauri Dev"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
-echo "🚀 Lancement de npm run tauri dev..."
+echo "🚀 Lancement de pnpm run tauri dev..."
 echo ""
 
-exec npm run tauri dev
+exec pnpm run tauri dev

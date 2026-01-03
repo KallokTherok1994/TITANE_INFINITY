@@ -131,7 +131,7 @@ const clearChat = useCallback(() => {
 
 ### Compilation TypeScript
 ```bash
-npm run type-check
+pnpm run type-check
 ✅ PASS: 82 erreurs préexistantes (0 nouvelle)
 ```
 

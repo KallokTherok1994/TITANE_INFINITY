@@ -172,7 +172,7 @@ echo "1. 🖥️ Application disponible dans la fenêtre Tauri (TAURI-ONLY)"
 echo "2. 🔧 Backend Tauri: Compilation en cours"
 echo "3. 💻 Interface: Prête pour interaction"
 echo "4. 🧪 Tests: Prêts pour exécution"
-echo "5. 📦 Build production: Disponible avec 'npm run tauri:build'"
+echo "5. 📦 Build production: Disponible avec 'pnpm run tauri:build'"
 
 echo ""
 echo "🟢 ═══════════════════════════════════════════════════════════════════"

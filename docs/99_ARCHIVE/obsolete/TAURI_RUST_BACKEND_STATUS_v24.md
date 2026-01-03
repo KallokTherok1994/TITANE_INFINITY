@@ -194,7 +194,7 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 nvm install node
 
 # Installer pnpm
-npm install -g pnpm
+pnpm install -g pnpm
 
 # Tester
 pnpm run dev
@@ -202,8 +202,8 @@ pnpm run dev
 
 ### Solution 2 : Modifier tauri.conf.json (si npm préféré)
 ```json
-"beforeDevCommand": "npm run dev",
-"beforeBuildCommand": "npm run build",
+"beforeDevCommand": "pnpm run dev",
+"beforeBuildCommand": "pnpm run build",
 ```
 
 ### Solution 3 : Mode backend-only (tester Rust sans frontend)
@@ -289,7 +289,7 @@ nvm install 20
 nvm use 20
 
 # Installer pnpm
-npm install -g pnpm
+pnpm install -g pnpm
 
 # Vérifier
 node --version  # v20.x.x

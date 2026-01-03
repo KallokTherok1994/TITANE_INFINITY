@@ -84,7 +84,7 @@ cd src-tauri && cargo deny check
 
 #### 1. TypeScript Check
 ```bash
-npm run check
+pnpm run check
 # OR
 tsc --noEmit
 ```
@@ -93,7 +93,7 @@ tsc --noEmit
 
 #### 2. ESLint
 ```bash
-npm run lint
+pnpm run lint
 # OR
 eslint . --ext .ts,.tsx,.js,.jsx
 ```
@@ -102,12 +102,12 @@ eslint . --ext .ts,.tsx,.js,.jsx
 
 **Auto-fix:**
 ```bash
-npm run lint:fix
+pnpm run lint:fix
 ```
 
 #### 3. Prettier Format Check
 ```bash
-npm run format:check
+pnpm run format:check
 # OR
 prettier --check .
 ```
@@ -116,7 +116,7 @@ prettier --check .
 
 #### 4. Unit & Integration Tests (Vitest)
 ```bash
-npm run test
+pnpm run test
 # OR
 cross-env NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run
 ```
@@ -125,7 +125,7 @@ cross-env NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/r
 
 **Watch Mode:**
 ```bash
-npm run test:watch
+pnpm run test:watch
 ```
 
 **Test Suites:**
@@ -137,21 +137,21 @@ vitest run -c vitest.unit.config.ts
 vitest run -c vitest.integration.config.ts
 
 # Architecture tests
-npm run test:architecture
+pnpm run test:architecture
 
 # Compliance tests
-npm run test:compliance
+pnpm run test:compliance
 
 # OMEGA tests
-npm run test:omega
+pnpm run test:omega
 
 # Coverage
-npm run test:coverage
+pnpm run test:coverage
 ```
 
 #### 5. E2E Tests (Playwright)
 ```bash
-npm run test:e2e
+pnpm run test:e2e
 # OR
 playwright test
 ```
@@ -174,30 +174,30 @@ playwright test e2e/omega-v2-errors.spec.ts
 
 #### Full Verification Suite
 ```bash
-npm run verify
+pnpm run verify
 ```
 **Runs:**
-1. `npm run lint`
-2. `npm run format:check`
-3. `npm run check` (tsc)
-4. `npm run test:all` (vitest + cargo test + architecture + compliance)
-5. `npm run verify:tauri-only`
-6. `npm run verify:local-first`
-7. `npm run verify:tauri-configs`
+1. `pnpm run lint`
+2. `pnpm run format:check`
+3. `pnpm run check` (tsc)
+4. `pnpm run test:all` (vitest + cargo test + architecture + compliance)
+5. `pnpm run verify:tauri-only`
+6. `pnpm run verify:local-first`
+7. `pnpm run verify:tauri-configs`
 
 **Expected Duration:** ~10 minutes  
 **Current Status:** ⚠️ **PARTIAL PASS** (lint warnings, cargo fmt failures)
 
 #### Tauri-Specific Verification
 ```bash
-npm run verify:tauri-only  # Ensures no HTTP servers in code
-npm run verify:local-first # Ensures local-first architecture
-npm run verify:tauri-configs # Validates tauri.conf.json
+pnpm run verify:tauri-only  # Ensures no HTTP servers in code
+pnpm run verify:local-first # Ensures local-first architecture
+pnpm run verify:tauri-configs # Validates tauri.conf.json
 ```
 
 #### Quick Health Check
 ```bash
-npm run titane:health
+pnpm run titane:health
 # OR
 ./titane.sh health
 ```
@@ -268,7 +268,7 @@ npm run titane:health
 - **Engines:** Orchestrator, StyleEngine, CoherenceEngine (40+ tests)
 - **Utils:** Type guards, validators, formatters (20+ tests)
 
-#### Coverage Stats (npm run test:coverage)
+#### Coverage Stats (pnpm run test:coverage)
 **Overall:** 85% line coverage, 78% branch coverage  
 **Target:** 90% line coverage, 85% branch coverage
 
@@ -307,7 +307,7 @@ npm run titane:health
 ### Architecture Tests
 
 ```bash
-npm run test:architecture
+pnpm run test:architecture
 ```
 
 **Tests:** 4-Ring Model isolation enforcement
@@ -324,7 +324,7 @@ npm run test:architecture
 ### Compliance Tests
 
 ```bash
-npm run test:compliance
+pnpm run test:compliance
 ```
 
 **Tests:** TITANE∞ coding standards
@@ -530,10 +530,10 @@ jobs:
   test-frontend:
     runs-on: ubuntu-latest
     steps:
-      - npm run check
-      - npm run lint
-      - npm run test
-      - npm run test:e2e
+      - pnpm run check
+      - pnpm run lint
+      - pnpm run test
+      - pnpm run test:e2e
 ```
 
 **Recommended Enhancements:**
@@ -554,9 +554,9 @@ jobs:
 | `cargo clippy` | 30s | Every commit |
 | `cargo test` | 60s | Before push |
 | `tsc --noEmit` | 10s | Every save (watch) |
-| `npm run lint` | 5s | Every commit |
-| `npm run test` | 20s | Every commit |
-| `npm run test:e2e` | 45s | Before push |
+| `pnpm run lint` | 5s | Every commit |
+| `pnpm run test` | 20s | Every commit |
+| `pnpm run test:e2e` | 45s | Before push |
 | **Total (full)** | **~3min** | Before push |
 
 ### CI/CD (Automated)

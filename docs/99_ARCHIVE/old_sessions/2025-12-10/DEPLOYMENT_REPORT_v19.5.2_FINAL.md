@@ -425,7 +425,7 @@ dist/assets/page-chat-DkvN2C9y.js        360.13 kB (gzip:  95.46 kB)
 
 **Immédiat**:
 
-1. ✅ Lancer dev server (`npm run dev:tauri`) — **DONE**
+1. ✅ Lancer dev server (`pnpm run dev:tauri`) — **DONE**
 2. 🔜 Exécuter tests manuels (30-45 min)
 3. 🔜 Collecter métriques runtime
 4. 🔜 Valider checklist finale

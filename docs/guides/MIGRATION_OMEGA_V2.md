@@ -385,7 +385,7 @@ conversation-engine = []
 - [ ] Ajouter `conversationId` (généré ou persisté)
 - [ ] Ajouter `mode` explicite (`coach`, `synthesis`, etc.)
 - [ ] Adapter structure réponse (`response` → `response.content`)
-- [ ] Tester avec Vitest: `npm run test`
+- [ ] Tester avec Vitest: `pnpm run test`
 
 ### Backend
 - [ ] Ajouter `#[deprecated]` à `chat_send_message`
@@ -398,7 +398,7 @@ conversation-engine = []
 - [ ] Migrer tous scénarios Playwright vers `conversation_generate`
 - [ ] Ajouter `conversationId` unique par scénario
 - [ ] Vérifier structure réponse (`response.content`, `response.mode`)
-- [ ] Tester avec `npm run test:e2e`
+- [ ] Tester avec `pnpm run test:e2e`
 
 ### Documentation
 - [ ] Mettre à jour README.md avec exemples OMEGA v2

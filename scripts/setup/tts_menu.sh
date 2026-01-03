@@ -167,7 +167,7 @@ open_docs() {
 launch_frontend() {
     echo "🖥️  Lancement de TITANE∞..."
     cd /home/titane/Documents/TITANE_INFINITY
-    npm run tauri:dev
+    pnpm run tauri:dev
 }
 
 # Mode command-line

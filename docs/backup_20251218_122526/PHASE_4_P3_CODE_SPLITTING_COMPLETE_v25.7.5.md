@@ -532,10 +532,10 @@ manualChunks: (id) => {
 
 ```bash
 # 1. Validate build
-npm run build
+pnpm run build
 
 # 2. Test Service Worker locally
-npm run preview  # Test dist/ with SW enabled
+pnpm run preview  # Test dist/ with SW enabled
 
 # 3. Deploy to production
 ./runtime/stable/build.sh  # Build Titan-Stable

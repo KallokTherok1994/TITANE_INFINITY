@@ -11,7 +11,7 @@
 
 ```bash
 # 1. Lancer
-npm run tauri:dev
+pnpm run tauri:dev
 
 # 2. Configurer APIs
 # Centre Gouvernance → Secrets
@@ -91,7 +91,7 @@ Dashboard + Permissions + Secrets + Audit + Policies
 
 **Erreur API**: Vérifier clé dans Centre Gouvernance
 **Vocal Non Réactif**: `vocal.reset` ou `force_reset_voice()`
-**Compilation Erreur**: `npm run clean && npm install`
+**Compilation Erreur**: `pnpm run clean && pnpm install`
 
 ---
 

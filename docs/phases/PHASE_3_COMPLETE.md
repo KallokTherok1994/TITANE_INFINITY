@@ -270,7 +270,7 @@ Modules critiques (telemetry, rate_limit) avaient **excellent coverage** malgré
    - Planifier Tauri 2.x → 3.x migration
 
 2. **Installer pnpm dans runtime dev**
-   - `npm install -g pnpm`
+   - `pnpm install -g pnpm`
    - Exécuter `pnpm audit --audit-level=high`
    - Documenter vulnérabilités frontend
 

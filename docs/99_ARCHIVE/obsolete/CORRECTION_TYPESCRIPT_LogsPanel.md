@@ -220,7 +220,7 @@ SCORE QUALITÉ: 100/100 ⭐⭐⭐⭐⭐
 COMMANDE VÉRIFICATION:
 ```bash
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run type-check
+pnpm run type-check
 ```
 
 RÉSULTAT ATTENDU:
@@ -259,21 +259,21 @@ STATUS: ✅ PRODUCTION-READY
 ═══════════════════════════════════════════════════════════════════════════════
 
 ☑ Correction TypeScript appliquée
-☐ Exécuter npm run type-check (vérification)
-☐ Exécuter npm run build (build frontend)
+☐ Exécuter pnpm run type-check (vérification)
+☐ Exécuter pnpm run build (build frontend)
 ☐ Tester LogsPanel dans DevTools
 ☐ Implémenter logs actifs (si requis)
 
 COMMANDES:
 ```bash
 # Vérification TypeScript
-npm run type-check
+pnpm run type-check
 
 # Build frontend
-npm run build
+pnpm run build
 
 # Test développement
-npm run dev
+pnpm run dev
 ```
 
 ══════════════════════════════════════════════════════════════════════════════

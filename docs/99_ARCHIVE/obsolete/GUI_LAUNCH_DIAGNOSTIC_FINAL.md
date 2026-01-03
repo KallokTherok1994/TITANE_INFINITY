@@ -35,7 +35,7 @@ Le binaire `titane-infinity` (release) **s'initialise correctement** (tous les m
 
 2. **Frontend Build:**
    ```
-   ✅ npm run build → 1.09s (207 kB optimized)
+   ✅ pnpm run build → 1.09s (207 kB optimized)
    ✅ dist/index.html existe
    ✅ dist/assets/* présents
    ```
@@ -83,7 +83,7 @@ Le mode dev utilise Vite + hot-reload et contourne le problème du binaire relea
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
 
 # Lancer en mode développement
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 **Avantages:**
@@ -193,7 +193,7 @@ flatpak-spawn --host ./src-tauri/target/release/titane-infinity --version
 
 ## 🎯 RECOMMANDATION FINALE
 
-**Pour développement:** Utiliser `npm run tauri dev` (Solution 1)
+**Pour développement:** Utiliser `pnpm run tauri dev` (Solution 1)
 
 **Pour production:** Compiler depuis terminal natif (Solution 2)
 
@@ -232,7 +232,7 @@ Le dernier log affiché sera `✅ Invoke handlers registered` → bloque avant e
 
 ## 🚀 PROCHAINE ÉTAPE IMMÉDIATE
 
-**Choix 1 (Rapide):** Lancer `npm run tauri dev` maintenant
+**Choix 1 (Rapide):** Lancer `pnpm run tauri dev` maintenant
 
 **Choix 2 (Production):** Ouvrir terminal natif et suivre Solution 2
 
@@ -257,4 +257,4 @@ sudo apt install libwebkit2gtk-4.1-dev \
 
 ---
 
-**Conclusion:** Le code est correct, les corrections de crash sont en place, mais l'environnement Flatpak empêche le lancement du binaire release. Le mode dev (`npm run tauri dev`) fonctionnera sans problème.
+**Conclusion:** Le code est correct, les corrections de crash sont en place, mais l'environnement Flatpak empêche le lancement du binaire release. Le mode dev (`pnpm run tauri dev`) fonctionnera sans problème.

@@ -349,7 +349,7 @@ useEffect(() => {
 
 ### 2. Production Build
 
-**Command:** `npm run build`
+**Command:** `pnpm run build`
 
 **Result:**
 

@@ -12,7 +12,7 @@
 
 ```bash
 cd /home/titane/Documents/TITANE_INFINITY
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 **Attendu**:
@@ -24,7 +24,7 @@ npm run tauri:dev
 
 ```bash
 cd /home/titane/Documents/TITANE_INFINITY
-npm run dev
+pnpm run dev
 ```
 
 ---

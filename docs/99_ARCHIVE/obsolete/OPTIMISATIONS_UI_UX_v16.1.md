@@ -245,7 +245,7 @@ const [isMobile, setIsMobile] = useState(false);
 ## 📦 Dépendances Installées
 
 ```bash
-npm install remark-gfm  # Support markdown GFM
+pnpm install remark-gfm  # Support markdown GFM
 ```
 
 **Dépendances Existantes Utilisées**:

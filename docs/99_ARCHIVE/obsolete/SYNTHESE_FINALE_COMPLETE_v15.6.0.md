@@ -27,7 +27,7 @@
 ## 📊 BUILD FINAL
 
 ```bash
-npm run build
+pnpm run build
 ✓ 74 modules transformed
 ✓ built in 995ms (< 1s)
 
@@ -128,10 +128,10 @@ TOTAL: 208 KB
 
 ### Build System ✅
 ```bash
-✓ npm run type-check  # 0 errors
-✓ npm run build       # 995ms → 208K
-✓ npm run dev         # :5173 active
-✓ npm run preview     # :4173 active
+✓ pnpm run type-check  # 0 errors
+✓ pnpm run build       # 995ms → 208K
+✓ pnpm run dev         # :5173 active
+✓ pnpm run preview     # :4173 active
 ```
 
 ### Navigation ✅
@@ -227,15 +227,15 @@ import { AppLayout } from './ui/AppLayout';
 cd ~/Documents/TITANE_NEWGEN/TITANE_INFINITY
 
 # Development
-npm run dev
+pnpm run dev
 # → http://localhost:5173/
 
 # Production build
-npm run build
+pnpm run build
 # → dist/ (208K)
 
 # Preview production
-npm run preview
+pnpm run preview
 # → http://localhost:4173/
 ```
 
@@ -245,10 +245,10 @@ npm run preview
 bash install-webkit-popos.sh
 
 # 2. Dev app desktop
-npm run tauri dev
+pnpm run tauri dev
 
 # 3. Build production
-npm run tauri build
+pnpm run tauri build
 ```
 
 ---

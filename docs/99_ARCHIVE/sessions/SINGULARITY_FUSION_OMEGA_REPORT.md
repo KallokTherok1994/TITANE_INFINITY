@@ -252,7 +252,7 @@ $ cargo check --manifest-path src-tauri/Cargo.toml
 ### Compilation TypeScript
 
 ```bash
-$ npm run type-check
+$ pnpm run type-check
    Found 40 errors in 19 files.
 
 ✅ 0 erreurs critiques (types, undefined)
@@ -262,7 +262,7 @@ $ npm run type-check
 ### Tests Build
 
 ```bash
-$ npm run build
+$ pnpm run build
 ✓ 1247 modules transformed.
 dist/index.html                      0.74 kB │ gzip:  0.42 kB
 dist/assets/index-BwK3jK7f.css      89.31 kB │ gzip: 14.52 kB

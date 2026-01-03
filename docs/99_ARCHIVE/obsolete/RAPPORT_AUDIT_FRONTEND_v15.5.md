@@ -439,7 +439,7 @@ const Dashboard = lazy(() => import('./pages/Dashboard'));
 
 3. **Tester lancement complet**
    ```bash
-   npm run tauri:dev
+   pnpm run tauri:dev
    ```
 
 ---
@@ -534,7 +534,7 @@ bash install_system_deps.sh
 Puis compiler et tester :
 ```bash
 cargo clean && cargo build --release
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ---

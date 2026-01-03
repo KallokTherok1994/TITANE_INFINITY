@@ -19,7 +19,7 @@ Modules: 8/8 opérationnels
 ### **Frontend React** ✅
 ```bash
 Location: src/
-Build: npm run build SUCCESS (1.07s)
+Build: pnpm run build SUCCESS (1.07s)
 Output: dist/ (212 KB optimisé)
 Modules: 73 transformés
 Erreurs compilation: 0
@@ -195,7 +195,7 @@ declare module '*.css' {
 
 **Impact:** 
 - ❌ Warnings TypeScript en IDE (cosmétique)
-- ✅ Build fonctionne (npm run build SUCCESS)
+- ✅ Build fonctionne (pnpm run build SUCCESS)
 - ✅ Runtime fonctionne (CSS chargés correctement)
 
 **Action requise:** Redémarrer TS server VSCode (`Ctrl+Shift+P` → "Reload Window")
@@ -210,7 +210,7 @@ sudo apt-get install libwebkit2gtk-4.1-dev libjavascriptcoregtk-4.1-dev
 ```
 
 **Impact:**
-- ✅ Dev mode: fonctionne (npm run tauri dev)
+- ✅ Dev mode: fonctionne (pnpm run tauri dev)
 - ❌ Prod build: échouera sans WebKit
 - ❌ Binary test: crash silencieux
 
@@ -303,7 +303,7 @@ Pages: Refresh intervals commentés
 ### **Validation Technique** ✅
 - [x] cargo check: PASS (0 erreurs)
 - [x] cargo clippy: PASS (0 warnings)
-- [x] npm run build: SUCCESS (212KB)
+- [x] pnpm run build: SUCCESS (212KB)
 - [x] TypeScript compilation: 0 erreurs
 - [x] Code splitting: vendor/tauri chunks
 - [x] Responsive design: grids/flexbox
@@ -327,11 +327,11 @@ Pages: Refresh intervals commentés
 ### **Tests Recommandés** (Pré-Deploy)
 ```bash
 # 1. Dev mode
-npm run tauri dev
+pnpm run tauri dev
 → Vérifier UI, navigation 11 pages, backend integration
 
 # 2. Build check
-npm run build
+pnpm run build
 → Confirmer 0 erreurs, 212KB output
 
 # 3. Backend check
@@ -342,7 +342,7 @@ cd src-tauri && cargo check
 sudo apt-get install libwebkit2gtk-4.1-dev
 
 # 5. Production build
-npm run tauri build
+pnpm run tauri build
 → Générer AppImage/deb/rpm
 
 # 6. Test binary
@@ -357,7 +357,7 @@ npm run tauri build
 **7 Stages:**
 1. Environment check (cargo, node, webkit)
 2. Rust audit (fmt, clippy, check)
-3. Frontend build (npm ci, tsc, vite)
+3. Frontend build (pnpm install --frozen-lockfile, tsc, vite)
 4. Backend release (cargo build --release)
 5. Tauri packaging (AppImage/deb/rpm)
 6. Validation tests (permissions, ldd, config)
@@ -403,9 +403,9 @@ Pages: 4 → 11 (coverage 100% modules)
 
 ### **Prochaines Étapes**
 1. ✅ Code complet et testé
-2. 🔄 `npm run tauri dev` → validation UI/UX
+2. 🔄 `pnpm run tauri dev` → validation UI/UX
 3. 🔄 Install WebKit → `sudo apt-get install libwebkit2gtk-4.1-dev`
-4. 🔄 `npm run tauri build` → packaging production
+4. 🔄 `pnpm run tauri build` → packaging production
 5. 🔄 Deploy automated → `./TITANE_INFINITY_PREDEPLOY_v12.sh`
 
 ---

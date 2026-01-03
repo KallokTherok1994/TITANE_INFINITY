@@ -33,7 +33,7 @@ echo -e "${BLUE}📦 STEP 1: Building production bundle...${NC}"
 cd "$PROJECT_ROOT"
 
 # Build with profiling enabled
-npm run build -- --mode production
+pnpm run build -- --mode production
 
 if [ $? -ne 0 ]; then
   echo -e "${RED}❌ Build failed${NC}"

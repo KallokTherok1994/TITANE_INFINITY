@@ -333,7 +333,7 @@ npx tsc --noEmit
 ### Build Production
 
 ```bash
-npm run build
+pnpm run build
 # Result: ✓ built in 12.64s ✅
 # Bundles: 40+ chunks, largest 545.27 KB (gzip: 130.31 kB)
 # Post-build: Desktop icon auto-update ✓

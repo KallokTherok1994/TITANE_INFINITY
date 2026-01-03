@@ -115,7 +115,7 @@ check_environment() {
         log_success "Tauri CLI installé"
     else
         log_warning "Tauri CLI non trouvé, tentative d'installation..."
-        npm install -g @tauri-apps/cli || log_error "Installation Tauri CLI échouée"
+        pnpm install -g @tauri-apps/cli || log_error "Installation Tauri CLI échouée"
     fi
     
     # Espace disque
@@ -165,7 +165,7 @@ analyze_frontend() {
     
     # Vérifier TypeScript
     log_info "Vérification TypeScript..."
-    if npm run type-check >> "$LOG_FILE" 2>&1; then
+    if pnpm run type-check >> "$LOG_FILE" 2>&1; then
         log_success "TypeScript OK (0 erreurs)"
     else
         log_warning "TypeScript a des erreurs (voir log)"
@@ -269,18 +269,18 @@ reinstall_dependencies() {
     
     cd "$PROJECT_ROOT"
     
-    # npm install
+    # pnpm install
     log_info "Installation dépendances npm..."
-    if npm install >> "$LOG_FILE" 2>&1; then
-        log_success "npm install OK"
+    if pnpm install >> "$LOG_FILE" 2>&1; then
+        log_success "pnpm install OK"
     else
-        log_error "npm install échoué"
+        log_error "pnpm install échoué"
         return 1
     fi
     
-    # npm audit fix
+    # pnpm audit fix
     log_info "Correction vulnérabilités npm..."
-    npm audit fix >> "$LOG_FILE" 2>&1 || log_warning "npm audit fix a échoué (non-critique)"
+    pnpm audit fix >> "$LOG_FILE" 2>&1 || log_warning "pnpm audit fix a échoué (non-critique)"
     
     # cargo update
     log_info "Mise à jour Cargo..."
@@ -330,7 +330,7 @@ rebuild_project() {
     
     # Build frontend
     log_info "Build frontend (Vite)..."
-    if npm run build >> "$LOG_FILE" 2>&1; then
+    if pnpm run build >> "$LOG_FILE" 2>&1; then
         log_success "Vite build OK"
     else
         log_error "Vite build échoué"
@@ -375,7 +375,7 @@ final_verification() {
     
     # Type check final
     log_info "Type check final..."
-    if npm run type-check >> "$LOG_FILE" 2>&1; then
+    if pnpm run type-check >> "$LOG_FILE" 2>&1; then
         log_success "TypeScript OK"
     else
         log_warning "TypeScript a encore des erreurs"
@@ -400,7 +400,7 @@ run_test_mode() {
     
     # Tenter de build (devrait échouer)
     log_info "Tentative de build (devrait échouer)..."
-    if npm run build >> "$LOG_FILE" 2>&1; then
+    if pnpm run build >> "$LOG_FILE" 2>&1; then
         log_error "Build devrait échouer mais a réussi"
     else
         log_success "Build a échoué comme prévu"
@@ -412,7 +412,7 @@ run_test_mode() {
     
     # Rebuild
     log_info "Rebuild après restauration..."
-    if npm run build >> "$LOG_FILE" 2>&1; then
+    if pnpm run build >> "$LOG_FILE" 2>&1; then
         log_success "Build restauré avec succès"
     else
         log_error "Build échoué après restauration"
@@ -469,16 +469,16 @@ Build:
 └────────────────────────────────────────────────────────────────────────────┘
 
 1. Vérifier le log complet: $LOG_FILE
-2. Tester l'application: npm run dev
-3. Tester Tauri: npm run tauri dev
+2. Tester l'application: pnpm run dev
+3. Tester Tauri: pnpm run tauri dev
 4. En cas de problème, relancer: ./scripts/titane_autofix.sh
 
 ┌────────────────────────────────────────────────────────────────────────────┐
 │                          PROCHAINES ÉTAPES                                 │
 └────────────────────────────────────────────────────────────────────────────┘
 
-✓ Lancer en dev: npm run dev
-✓ Build Tauri: npm run tauri build
+✓ Lancer en dev: pnpm run dev
+✓ Build Tauri: pnpm run tauri build
 ✓ Vérifier Chat IA: naviguer vers /chat
 ✓ Tester auto-heal: bouton dans le menu
 

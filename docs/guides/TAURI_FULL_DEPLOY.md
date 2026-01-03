@@ -137,7 +137,7 @@ Script de déploiement complet pour TITANE∞ en mode Tauri local. Pipeline auto
 **Skip:** `--skip-tests`
 
 ### STEP 6: Security Audit (2 min)
-- ✓ npm audit (niveau high)
+- ✓ pnpm audit (niveau high)
 - ✓ cargo audit
 
 **Skip:** `--skip-audit`
@@ -301,7 +301,7 @@ rustup update stable
 ### "pnpm not found"
 ```bash
 # Installer pnpm
-npm install -g pnpm@9.0.0
+pnpm install -g pnpm@9.0.0
 # OU
 corepack enable
 ```

@@ -11,13 +11,13 @@
 
 #### Frontend uniquement (développement web)
 ```bash
-npm run dev
+pnpm run dev
 # → http://localhost:5173
 ```
 
 #### Application complète (Tauri + Frontend)
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 # Nécessite WebKitGTK (voir section Installation)
 ```
 
@@ -28,40 +28,40 @@ npm run tauri:dev
 ### Développement
 | Commande | Description |
 |----------|-------------|
-| `npm run dev` | Lance Vite dev server (port 5173) |
-| `npm run tauri:dev` | Lance l'application Tauri complète |
-| `npm run preview` | Preview du build production (port 4173) |
+| `pnpm run dev` | Lance Vite dev server (port 5173) |
+| `pnpm run tauri:dev` | Lance l'application Tauri complète |
+| `pnpm run preview` | Preview du build production (port 4173) |
 
 ### Build
 | Commande | Description |
 |----------|-------------|
-| `npm run build` | Build production (TypeScript + Vite) |
-| `npm run tauri:build` | Build application native (.deb, .AppImage, etc.) |
-| `npm run tauri:build:debug` | Build debug avec symboles |
-| `npm run test:build` | Type-check + build (CI/CD) |
+| `pnpm run build` | Build production (TypeScript + Vite) |
+| `pnpm run tauri:build` | Build application native (.deb, .AppImage, etc.) |
+| `pnpm run tauri:build:debug` | Build debug avec symboles |
+| `pnpm run test:build` | Type-check + build (CI/CD) |
 
 ### Qualité Code
 | Commande | Description |
 |----------|-------------|
-| `npm run type-check` | Vérification TypeScript (sans émission) |
-| `npm run lint` | ESLint avec rapport |
-| `npm run lint:fix` | Correction automatique ESLint |
+| `pnpm run type-check` | Vérification TypeScript (sans émission) |
+| `pnpm run lint` | ESLint avec rapport |
+| `pnpm run lint:fix` | Correction automatique ESLint |
 
 ### Maintenance
 | Commande | Description |
 |----------|-------------|
-| `npm run clean` | Supprime node_modules, dist, target |
-| `npm run clean:dist` | Supprime uniquement dist/ |
-| `npm run clean:cache` | Supprime .vite cache |
-| `npm run reinstall` | Clean + réinstallation complète |
+| `pnpm run clean` | Supprime node_modules, dist, target |
+| `pnpm run clean:dist` | Supprime uniquement dist/ |
+| `pnpm run clean:cache` | Supprime .vite cache |
+| `pnpm run reinstall` | Clean + réinstallation complète |
 
 ### Vérification Système
 | Commande | Description |
 |----------|-------------|
-| `npm run verify` | Vérification système globale |
-| `npm run verify:tauri` | Vérification API Tauri v2 |
-| `npm run verify:cognitive` | Tests modules cognitifs |
-| `npm run verify:stacks` | Tests stacks (neural, perception) |
+| `pnpm run verify` | Vérification système globale |
+| `pnpm run verify:tauri` | Vérification API Tauri v2 |
+| `pnpm run verify:cognitive` | Tests modules cognitifs |
+| `pnpm run verify:stacks` | Tests stacks (neural, perception) |
 
 ---
 
@@ -176,7 +176,7 @@ console.error('[TITANE] Erreur:', error);
 
 ## 🔥 Problèmes Courants
 
-### ❌ `npm run tauri:dev` échoue avec "webkit2gtk not found"
+### ❌ `pnpm run tauri:dev` échoue avec "webkit2gtk not found"
 **Solution** : Installez WebKitGTK
 ```bash
 sudo ./install_system_deps.sh
@@ -184,14 +184,14 @@ sudo ./install_system_deps.sh
 
 ### ❌ Écran noir au lancement
 **Causes possibles** :
-1. Frontend non compilé → `npm run build`
+1. Frontend non compilé → `pnpm run build`
 2. Port 5173 déjà utilisé → Fermez l'autre processus
 3. DevTools : Appuyez sur F12 pour voir les erreurs
 
-### ❌ `npm run build` erreurs TypeScript
+### ❌ `pnpm run build` erreurs TypeScript
 **Solution** : Vérifiez d'abord
 ```bash
-npm run type-check
+pnpm run type-check
 ```
 
 ### ❌ `error TS6133: variable declared but never read`
@@ -223,36 +223,36 @@ const handleClick = (_param: string) => {
 ### 1. Développement Frontend
 ```bash
 # Terminal 1 : Frontend dev server
-npm run dev
+pnpm run dev
 
 # Terminal 2 : Type checking en continu (optionnel)
-npm run type-check -- --watch
+pnpm run type-check -- --watch
 ```
 
 ### 2. Développement Full-Stack
 ```bash
 # Lance Tauri + Frontend avec hot-reload
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### 3. Avant Commit
 ```bash
 # Vérifications
-npm run type-check
-npm run lint
-npm run build
+pnpm run type-check
+pnpm run lint
+pnpm run build
 
 # Ou tout en un
-npm run test:build
+pnpm run test:build
 ```
 
 ### 4. Build Production
 ```bash
 # Frontend
-npm run build
+pnpm run build
 
 # Application native (.deb, .AppImage, etc.)
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ---
@@ -287,9 +287,9 @@ npm run tauri:build
 
 ### Scripts de Vérification
 ```bash
-npm run verify              # Système global
-npm run verify:tauri        # API Tauri v2
-npm run verify:cognitive    # Modules cognitifs
+pnpm run verify              # Système global
+pnpm run verify:tauri        # API Tauri v2
+pnpm run verify:cognitive    # Modules cognitifs
 ```
 
 ---

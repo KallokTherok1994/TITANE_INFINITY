@@ -159,7 +159,7 @@ Tu audites TITANE∞ sur les axes suivants :
 
 7. **Expérience développeur (DX)**
    - Husky v10, lint-staged, ESLint, Prettier, config stable.
-   - Simplicité des scripts : `npm run dev`, `npm run lint`, etc.
+   - Simplicité des scripts : `pnpm run dev`, `pnpm run lint`, etc.
    - Messages d'erreur compréhensibles.
    - Facilité d'onboarding d'un nouveau dev.
 
@@ -431,32 +431,32 @@ L'audit doit tenir compte de :
 
 ```bash
 # 1. Assurer environnement propre
-npm run build
+pnpm run build
 
 # 2. Scanner architecture
-npm run audit:structure
+pnpm run audit:structure
 
 # 3. Analyser performance
-npm run audit:perf
+pnpm run audit:perf
 
 # 4. Vérifier sécurité
-npm run audit:security
+pnpm run audit:security
 
 # 5. Générer rapport complet
-npm run audit:full
+pnpm run audit:full
 ```
 
 ### Intégration CI/CD
 
 ```bash
 # Pre-commit audit (quick)
-npm run audit:quick
+pnpm run audit:quick
 
 # Pre-merge audit (complet)
-npm run audit:complete
+pnpm run audit:complete
 
 # Production readiness
-npm run audit:production
+pnpm run audit:production
 ```
 
 ---

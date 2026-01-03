@@ -67,7 +67,7 @@ bash install_system_deps.sh
 cargo clean && cargo build --release
 
 # 4. Tester
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ---
@@ -108,7 +108,7 @@ npm run tauri:dev
 ### ❌ À FAIRE PAR VOUS
 - [ ] **Installer WebKitGTK** (CRITIQUE)
 - [ ] **Compiler Rust** (cargo build)
-- [ ] **Tester application** (npm run tauri:dev)
+- [ ] **Tester application** (pnpm run tauri:dev)
 - [ ] Appliquer optimisations (optionnel)
 - [ ] Ajouter tests unitaires (futur)
 
@@ -279,7 +279,7 @@ src/
 │                                                         │
 │   ÉTAPE 4 : cargo build --release                      │
 │                                                         │
-│   ÉTAPE 5 : npm run tauri:dev                          │
+│   ÉTAPE 5 : pnpm run tauri:dev                          │
 │                                                         │
 │   ✅ Application devrait démarrer !                     │
 │                                                         │
@@ -333,7 +333,7 @@ src/
 │   🎯 ACTION REQUISE :                                        │
 │      bash install_system_deps.sh                             │
 │      cargo build --release                                   │
-│      npm run tauri:dev                                       │
+│      pnpm run tauri:dev                                       │
 │                                                              │
 └──────────────────────────────────────────────────────────────┘
 ```

@@ -146,7 +146,7 @@ IPC Latency:    p95=140ms (acceptable)
 ```
 Objectif: 100% tests réussis
 ├── Fixer 34 tests en échec
-├── Valider npm run test:ci
+├── Valider pnpm run test:ci
 └── Documentation fixes
 ```
 

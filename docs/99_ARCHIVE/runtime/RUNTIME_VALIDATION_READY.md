@@ -64,7 +64,7 @@ TITANE_INFINITY v19.5.2 — Proprietary License
 
 ```bash
 # Au lieu de ./runtime/dev/run-dev.sh
-nohup npm run tauri dev -- --no-watch > runtime/dev/logs/launch.log 2>&1 &
+nohup pnpm run tauri dev -- --no-watch > runtime/dev/logs/launch.log 2>&1 &
 ```
 
 **Avantages**:
@@ -356,7 +356,7 @@ ps aux | grep titane-infinity
 
 # Si process actif mais pas de fenêtre, relancer:
 killall titane-infinity
-npm run tauri dev -- --no-watch
+pnpm run tauri dev -- --no-watch
 ```
 
 ---
@@ -453,7 +453,7 @@ grep -E "(OMEGA|Singularity).*latency" runtime/dev/logs/launch.log
 cat runtime/dev/logs/launch.log | grep -A 20 "panic\|SIGTERM"
 
 # Restart avec debug complet
-RUST_BACKTRACE=full npm run tauri dev -- --no-watch
+RUST_BACKTRACE=full pnpm run tauri dev -- --no-watch
 ```
 
 ---

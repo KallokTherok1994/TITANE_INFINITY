@@ -142,7 +142,7 @@ $ cargo check
 
 ### Build Frontend
 ```bash
-$ npm run build
+$ pnpm run build
 ✅ 533 modules transformed
 ✅ dist/assets/main-hsy5VW2t.js    265.56 kB
 ✅ built in 2.00s

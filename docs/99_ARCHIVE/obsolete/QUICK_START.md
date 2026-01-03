@@ -9,7 +9,7 @@ cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
 ./launch_dev.sh
 
 # Option 2: Commande directe
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 **Résultat attendu:**
@@ -26,7 +26,7 @@ npm run tauri dev
 ### Mode Développement (Recommandé)
 ```bash
 # Lancement avec hot-reload
-npm run tauri dev
+pnpm run tauri dev
 
 # Arrêt: Ctrl+C dans le terminal
 ```
@@ -34,7 +34,7 @@ npm run tauri dev
 ### Build Frontend Seul
 ```bash
 # Compiler le frontend (Vite + React)
-npm run build
+pnpm run build
 
 # Output: dist/ (207 kB optimisé)
 ```
@@ -79,7 +79,7 @@ sudo apt install libwebkit2gtk-4.1-dev \
 
 ### Problème: Binaire release ne lance pas GUI
 **Cause:** Environnement Flatpak (VS Code)  
-**Solution:** Utiliser `npm run tauri dev` au lieu du binaire release
+**Solution:** Utiliser `pnpm run tauri dev` au lieu du binaire release
 
 ### Problème: Port 5173 déjà utilisé
 ```bash
@@ -87,7 +87,7 @@ sudo apt install libwebkit2gtk-4.1-dev \
 pkill -9 vite
 
 # Relancer
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 ### Problème: Compilation Rust longue
@@ -105,7 +105,7 @@ npm run tauri dev
 | Frontend Build | ✅ OK | 207 kB optimisé |
 | Crash Fixes | ✅ Appliqués | setTimeout + ErrorBoundary |
 | CLI Support | ✅ OK | --version, --help |
-| Dev Mode | ✅ Fonctionnel | npm run tauri dev |
+| Dev Mode | ✅ Fonctionnel | pnpm run tauri dev |
 | Release Binary | ⚠️ Bloqué | Problème Flatpak |
 
 ---
@@ -146,7 +146,7 @@ TITANE_INFINITY/
 ## 🎯 Recommandation
 
 **Pour développement/test:**  
-→ `npm run tauri dev` (fonctionne dans Flatpak)
+→ `pnpm run tauri dev` (fonctionne dans Flatpak)
 
 **Pour production:**  
 → Rebuild depuis terminal natif + `./deploy_titane_prod.sh`

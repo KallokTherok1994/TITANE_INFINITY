@@ -230,7 +230,7 @@ sudo apt install libwebkit2gtk-4.1-dev libjavascriptcoregtk-4.1-dev
 **Solution** :
 1. DevTools → Network → Vérifier JS bundle chargé
 2. Vérifier chemins dans `dist/index.html` (doivent être `./assets/...`)
-3. Rebuild : `npm run build`
+3. Rebuild : `pnpm run build`
 
 ### Cas 3 : Écran noir + PAS de logs backend
 **Cause probable** : Backend crash avant setup
@@ -331,8 +331,8 @@ DevTools Console :
 rm -rf dist/ node_modules/.vite/ src-tauri/target/
 
 # Rebuild complet
-npm install
-npm run build
+pnpm install
+pnpm run build
 cargo clean
 cargo tauri dev
 ```

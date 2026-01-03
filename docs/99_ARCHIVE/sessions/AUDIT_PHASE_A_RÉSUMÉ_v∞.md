@@ -84,7 +84,7 @@
 
 ### ❌ ERREURS
 
-#### 4. Build Errors (compilation npm run build) ❌
+#### 4. Build Errors (compilation pnpm run build) ❌
 - **Fichiers**: `devSudoHandler.ts`, `FusionEngine.ts`
 - **Erreurs**: ~30 TypeScript (types manquants, propriétés inexistantes)
 - **Priorité**: P1 (bloque build production)
@@ -188,7 +188,7 @@ interface VocalExecutionResult {
 
 **3. Re-run Build**:
 ```bash
-npm run build
+pnpm run build
 ```
 - Doit passer sans erreurs avant continuer
 
@@ -288,8 +288,8 @@ npm run build
 
 3. **Re-test Build**:
    ```bash
-   npm run build
-   npm run type-check
+   pnpm run build
+   pnpm run type-check
    ```
 
 ### ENSUITE (Cette Semaine)

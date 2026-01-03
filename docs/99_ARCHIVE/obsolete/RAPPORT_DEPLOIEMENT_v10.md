@@ -13,8 +13,8 @@
   - Schema: Tauri v2.0
   - frontendDist: `../dist`
   - devUrl: `http://localhost:5173`
-  - beforeDevCommand: `npm run dev`
-  - beforeBuildCommand: `npm run build`
+  - beforeDevCommand: `pnpm run dev`
+  - beforeBuildCommand: `pnpm run build`
 
 ### 3. Imports TypeScript
 - ✅ Tous les imports utilisent `@tauri-apps/api/core` (Tauri v2)
@@ -95,7 +95,7 @@ TITANE_INFINITY/
 
 ### Tests Effectués
 - ✅ TypeScript: 0 erreurs (tsc --noEmit)
-- ✅ Build frontend: SUCCESS (npm run build)
+- ✅ Build frontend: SUCCESS (pnpm run build)
 - ✅ Rust: Compilable (cargo check)
 - ✅ Imports: 100% Tauri v2
 - ✅ Commands: Toutes présentes et enregistrées
@@ -113,7 +113,7 @@ TITANE_INFINITY/
 
 ### Développement
 ```bash
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 ### Production

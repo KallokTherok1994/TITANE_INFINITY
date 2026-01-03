@@ -302,7 +302,7 @@ TITANE_INFINITY/
 ## Build Validation
 
 ```bash
-npm run build
+pnpm run build
 
 ✓ 2984 modules transformed.
 ✓ built in 12.44s

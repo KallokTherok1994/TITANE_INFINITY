@@ -47,7 +47,7 @@ sudo apt install libwebkit2gtk-4.1-dev libjavascriptcoregtk-4.1-dev
 ```
 
 ### 2. Tauri Dev Mode
-**Issue**: `npm` non trouvé (tauri.conf.json utilise `npm run build`)
+**Issue**: `npm` non trouvé (tauri.conf.json utilise `pnpm run build`)
 
 **Solution**: Modifier `src-tauri/tauri.conf.json`:
 ```json
@@ -103,8 +103,8 @@ cargo build --release
 ### Priority 2: Fix Dev Mode
 ```bash
 # Modifier tauri.conf.json
-sed -i 's/"npm run dev"/"..\/pnpm-host.sh run dev"/' src-tauri/tauri.conf.json
-sed -i 's/"npm run build"/"..\/pnpm-host.sh run build"/' src-tauri/tauri.conf.json
+sed -i 's/"pnpm run dev"/"..\/pnpm-host.sh run dev"/' src-tauri/tauri.conf.json
+sed -i 's/"pnpm run build"/"..\/pnpm-host.sh run build"/' src-tauri/tauri.conf.json
 
 # Lancer dev
 cargo tauri dev

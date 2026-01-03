@@ -606,7 +606,7 @@ cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
 ### **Phase 2: Tests Unitaires** (30 min)
 
 ```bash
-npm test -- Stats.test.tsx
+pnpm test -- Stats.test.tsx
 ```
 
 - Créer fichier `src/pages/__tests__/Stats.test.tsx`

@@ -37,7 +37,7 @@ Cette documentation cartographie le backend TITANE∞ (Tauri v2 + Rust async) de
 → Lis [debug-and-self-heal.md](./debug-and-self-heal.md) § "Que faire si…"
 
 **Vérifier que tout est OK avant un commit**
-→ Lance `npm run verify:backend` (voir [verify-and-health.md](./verify-and-health.md))
+→ Lance `pnpm run verify:backend` (voir [verify-and-health.md](./verify-and-health.md))
 
 **Optimiser les performances async**
 → Lis [performance.md](./performance.md)

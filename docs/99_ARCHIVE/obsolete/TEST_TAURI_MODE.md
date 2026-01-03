@@ -12,7 +12,7 @@
 
 ```bash
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run build
+pnpm run build
 ```
 
 **Attendu :**
@@ -33,7 +33,7 @@ dist/assets/main-Dcb9geZo.js   253.05 kB
 
 **Attendu :**
 ```
-✅ npm run dev configuré correctement
+✅ pnpm run dev configuré correctement
 ✅ vite preview désactivé
 ✅ devUrl configuré correctement
 ✅ HMR désactivé (mode Tauri)
@@ -67,14 +67,14 @@ ollama pull llama2
 ### Commande
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 ### Comportement Attendu
 
 1. **Terminal affiche :**
    ```
-   Running beforeDevCommand: npm run build
+   Running beforeDevCommand: pnpm run build
    ✓ 360 modules transformed
    Compiling src-tauri/...
    Finished dev [unoptimized + debuginfo]
@@ -119,11 +119,11 @@ npm pkg set scripts.dev="tauri dev"
 ```bash
 # Vérifier tauri.conf.json
 cat src-tauri/tauri.conf.json | grep -A 2 'beforeDevCommand'
-# Doit afficher : "beforeDevCommand": "npm run build"
+# Doit afficher : "beforeDevCommand": "pnpm run build"
 
 # Test build séparément :
-npm run build
-# Si erreurs, corriger avant de relancer npm run dev
+pnpm run build
+# Si erreurs, corriger avant de relancer pnpm run dev
 ```
 
 ---
@@ -134,7 +134,7 @@ npm run build
 
 **Étapes :**
 
-1. Ouvrir l'app : `npm run dev`
+1. Ouvrir l'app : `pnpm run dev`
 2. Naviguer vers **Chat IA**
 3. Taper message : `"Bonjour TITANE, présente-toi en 2 phrases"`
 4. Observer console (F12)
@@ -223,7 +223,7 @@ Résultat :
 
 ### Étapes
 
-1. Ouvrir l'app : `npm run dev`
+1. Ouvrir l'app : `pnpm run dev`
 2. Activer **Voice Mode** (bouton micro 🎙️)
 3. Cliquer bouton **"Parler"** ou équivalent
 4. Observer console
@@ -343,7 +343,7 @@ Test :
    // Array de 6 messages (3 user + 3 assistant)
    ```
 3. Fermer app (Ctrl+C dans terminal)
-4. Relancer : `npm run dev`
+4. Relancer : `pnpm run dev`
 5. Vérifier historique toujours présent
 
 **Attendu :** Historique persiste entre sessions
@@ -391,7 +391,7 @@ Test :
 
 **1. Temps de démarrage**
 ```bash
-time npm run dev
+time pnpm run dev
 # Target : <5s (build + compilation Rust)
 ```
 
@@ -421,7 +421,7 @@ top -p $(pgrep -f titane-infinity)
 
 **Solution :**
 ```bash
-npm install --save-dev @tauri-apps/cli
+pnpm install --save-dev @tauri-apps/cli
 # OU
 cargo install tauri-cli
 ```
@@ -468,9 +468,9 @@ curl http://localhost:11434/api/tags
 
 Avant de considérer le mode Tauri validé :
 
-- [ ] `npm run build` : ✅ 0 erreurs
+- [ ] `pnpm run build` : ✅ 0 erreurs
 - [ ] `./scripts/validate-tauri-only.sh` : ✅ Validé
-- [ ] `npm run dev` : ✅ Fenêtre Tauri s'ouvre (pas navigateur)
+- [ ] `pnpm run dev` : ✅ Fenêtre Tauri s'ouvre (pas navigateur)
 - [ ] Chat IA : ✅ Fonctionne (Ollama ou Gemini avec confirmation)
 - [ ] Modal confirmation : ✅ S'affiche correctement
 - [ ] Voice Mode : ✅ TTS local fonctionne
@@ -552,4 +552,4 @@ Ce guide permet de valider complètement le mode **TAURI-ONLY + OFFLINE FIRST** 
 - Build : ✅ Fonctionnel (2.03s, 0 erreurs)
 - Tests : ⏳ À exécuter
 
-**Prochaine étape : Exécuter `npm run dev` et commencer TEST 1** 🚀
+**Prochaine étape : Exécuter `pnpm run dev` et commencer TEST 1** 🚀

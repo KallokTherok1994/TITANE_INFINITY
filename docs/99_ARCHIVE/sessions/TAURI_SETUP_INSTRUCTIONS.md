@@ -147,7 +147,7 @@ nvm install 20
 nvm use 20
 
 # pnpm
-npm install -g pnpm
+pnpm install -g pnpm
 ```
 
 ---

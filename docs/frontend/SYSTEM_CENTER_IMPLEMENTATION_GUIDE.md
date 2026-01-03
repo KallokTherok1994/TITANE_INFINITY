@@ -135,7 +135,7 @@ echo "✅ Hook remplacé"
 
 ```bash
 # Vérifier que les types sont compatibles
-npm run typecheck
+pnpm run typecheck
 
 # Si erreurs, corriger les types dans:
 # src/features/system-center/types/systemCenter.types.ts
@@ -145,7 +145,7 @@ npm run typecheck
 
 ```bash
 # Tester le build
-npm run build
+pnpm run build
 
 echo "✅ Build OK"
 ```
@@ -501,10 +501,10 @@ return (
 
 ```bash
 # Vérifier les types
-npm run typecheck
+pnpm run typecheck
 
 # Build complet
-npm run build
+pnpm run build
 
 # Si erreurs, corriger avant de continuer
 ```
@@ -513,7 +513,7 @@ npm run build
 
 ```bash
 # Démarrer le dev server
-npm run dev
+pnpm run dev
 
 # Ouvrir dans le navigateur
 # http://localhost:5173
@@ -589,11 +589,11 @@ Ouvrir DevTools Console et vérifier:
 
 ```bash
 # Build size
-npm run build
+pnpm run build
 # Vérifier que le bundle n'a pas beaucoup grossi
 
 # Lighthouse audit
-npm run dev
+pnpm run dev
 # Ouvrir DevTools > Lighthouse > Run audit
 # Vérifier Performance, Accessibility, Best Practices
 ```

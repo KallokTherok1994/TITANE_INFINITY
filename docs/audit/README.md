@@ -73,7 +73,7 @@
 **Sécurité:**
 
 - CVE Rust (cargo audit) → AUDIT_360 §Sécurité
-- CVE NPM (npm audit) → AUDIT_360 §Sécurité
+- CVE NPM (pnpm audit) → AUDIT_360 §Sécurité
 - Secrets management → AUDIT_360 §2
 
 **Code Quality:**
@@ -191,7 +191,7 @@ Total: 8 semaines (320h) = 2 mois full-time
 - `cargo audit` — Security scanning Rust
 - `cargo clippy` — Linter Rust
 - `cargo tarpaulin` — Coverage Rust
-- `npm audit` — Security scanning NPM
+- `pnpm audit` — Security scanning NPM
 - `npx tsc --noEmit` — TypeScript type checking
 - `npx eslint` — JavaScript/TypeScript linter
 
@@ -234,7 +234,7 @@ Total: 8 semaines (320h) = 2 mois full-time
 **Outils utilisés:**
 
 - cargo audit (security)
-- npm audit (security)
+- pnpm audit (security)
 - grep (pattern search)
 - find (file discovery)
 - du (disk usage)

@@ -594,7 +594,7 @@ Toujours **propre, nette, organisée**
 **Commandes benchmark exemple**:
 
 ```bash
-npm run profile
+pnpm run profile
 cargo flamegraph
 cargo instruments
 tauri devtools latency
@@ -636,7 +636,7 @@ Commandes claires:
 
 ```bash
 cargo flamegraph
-npm run build:analyze
+pnpm run build:analyze
 ./titane_phase1_audit.sh
 ```
 

@@ -16,8 +16,8 @@ echo "================================================"
 # 1. NPM Vulnerabilities
 echo ""
 echo "📦 [1/8] Scanning NPM vulnerabilities..."
-npm audit --json > "$REPORT_DIR/npm-audit.json" 2>&1 || true
-npm audit > "$REPORT_DIR/npm-audit.txt" 2>&1 || true
+pnpm audit --json > "$REPORT_DIR/npm-audit.json" 2>&1 || true
+pnpm audit > "$REPORT_DIR/npm-audit.txt" 2>&1 || true
 NPM_CRITICAL=$(jq -r '.metadata.vulnerabilities.critical // 0' "$REPORT_DIR/npm-audit.json" 2>/dev/null || echo "0")
 NPM_HIGH=$(jq -r '.metadata.vulnerabilities.high // 0' "$REPORT_DIR/npm-audit.json" 2>/dev/null || echo "0")
 echo "   ├─ Critical: $NPM_CRITICAL"
@@ -169,7 +169,7 @@ cat > "$REPORT_DIR/SECURITY_SUMMARY.md" << EOF
 ## 🎯 Priority Actions
 
 ### P0 (Critical - Fix Immediately)
-$([ "$NPM_CRITICAL" -gt 0 ] && echo "- ❌ **$NPM_CRITICAL critical NPM vulnerabilities** - Run \`npm audit fix\`" || echo "- ✅ No critical NPM vulnerabilities")
+$([ "$NPM_CRITICAL" -gt 0 ] && echo "- ❌ **$NPM_CRITICAL critical NPM vulnerabilities** - Run \`pnpm audit fix\`" || echo "- ✅ No critical NPM vulnerabilities")
 $([ "$UNWRAP_COUNT" -gt 10 ] && echo "- ❌ **$UNWRAP_COUNT unwrap() calls** - Replace with Result<T,E>" || echo "- ✅ unwrap() usage acceptable")
 
 ### P1 (High - Fix This Week)

@@ -541,7 +541,7 @@ code .
 # ───────────────────────────────────────
 
 # Run tests in terminal
-npm test
+pnpm test
 
 # Or use VS Code task (Ctrl+Shift+P)
 # "🧪 Run All Tests"
@@ -573,8 +573,8 @@ git merge feature/visual-engine-v22
 ./runtime/dev/run-dev.sh
 
 # Run full test suite
-npm test
-npm run test:e2e
+pnpm test
+pnpm run test:e2e
 
 # ───────────────────────────────────────
 # 6. DEPLOY TO STABLE (when validated)
@@ -603,12 +603,12 @@ npm run test:e2e
 
 Before merging `dev` → `stable-runtime`:
 
-- [ ] All tests passing (`npm test` + `npm run test:e2e`)
+- [ ] All tests passing (`pnpm test` + `pnpm run test:e2e`)
 - [ ] No console errors in Titan-Dev
 - [ ] Performance metrics acceptable
 - [ ] Memory leaks checked (Chrome DevTools → Memory)
-- [ ] No TypeScript errors (`npm run typecheck`)
-- [ ] No ESLint errors (`npm run lint`)
+- [ ] No TypeScript errors (`pnpm run typecheck`)
+- [ ] No ESLint errors (`pnpm run lint`)
 - [ ] README/docs updated (if needed)
 - [ ] Git commits follow conventional format
 - [ ] Feature tested in Titan-Dev thoroughly
@@ -713,7 +713,7 @@ git commit -m "fix: critical issue from last deployment"
 
 # 7. Test thoroughly in Titan-Dev
 ./runtime/dev/run-dev.sh
-npm test
+pnpm test
 
 # 8. Re-deploy when validated
 ./scripts/git/merge-dev-to-stable.sh
@@ -784,7 +784,7 @@ rm -rf runtime/dev/logs/
 rm -rf node_modules/.vite/
 
 # 4. Reinstall dependencies
-npm install
+pnpm install
 
 # 5. Try launching again
 ./runtime/dev/run-dev.sh
@@ -796,7 +796,7 @@ npm install
 
 ```bash
 # 1. Check for type errors
-npm run typecheck
+pnpm run typecheck
 
 # 2. If errors found, fix them in VS Code
 # (TypeScript errors shown inline)
@@ -906,7 +906,7 @@ VITE_CLAUDE_CODE_INTEGRATION=true
 VITE_TELEMETRY_ENDPOINT=http://localhost:3001/telemetry
 
 # Start monitoring server (separate terminal)
-npm run monitor:dev
+pnpm run monitor:dev
 
 # Open dashboard
 http://localhost:3001/monitor

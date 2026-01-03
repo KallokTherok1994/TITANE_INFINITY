@@ -345,7 +345,7 @@ Critical → Emergency shutdown
 cargo audit
 
 # Scan vulnérabilités npm
-npm audit
+pnpm audit
 
 # Analyse statique
 cargo clippy -- -D warnings

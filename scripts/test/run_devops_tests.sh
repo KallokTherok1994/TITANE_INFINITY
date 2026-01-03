@@ -80,7 +80,7 @@ check_prerequisites() {
         print_success "Dependencies installed"
     else
         print_warning "Dependencies not found, installing..."
-        npm install
+        pnpm install
     fi
 
     # Check Vitest

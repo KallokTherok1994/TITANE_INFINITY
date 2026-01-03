@@ -14,7 +14,7 @@
 
 Terminal:
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 Attendre que l'interface charge complètement.
@@ -175,7 +175,7 @@ TESTS AVANCÉS:
 □ Console propre (pas d'erreur critique)
 
 PROD (Si build):
-□ npm run tauri:build réussit
+□ pnpm run tauri:build réussit
 □ Binary lance depuis .desktop
 □ Chat IA fonctionne en mode offline
 □ Messages persistent après restart

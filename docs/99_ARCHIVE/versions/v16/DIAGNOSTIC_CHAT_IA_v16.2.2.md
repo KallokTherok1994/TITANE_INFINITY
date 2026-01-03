@@ -473,7 +473,7 @@ console.log('TTS Status:', status);
 3. ⏳ Tester Chat IA via icône:
    - Cliquer icône bureau → Lance app
    - Tester envoi message → Vérifier réponse
-   - Comparer avec npm run tauri:dev
+   - Comparer avec pnpm run tauri:dev
 
 4. ⏳ Activer DevTools en release:
    - tauri.conf.json: `devtools: true` même en !debug_assertions
@@ -514,7 +514,7 @@ console.log('TTS Status:', status);
 **Objectif**: Savoir quels providers sont disponibles
 
 **Méthode**:
-1. Ouvrir app TITANE (npm run tauri:dev)
+1. Ouvrir app TITANE (pnpm run tauri:dev)
 2. Ouvrir DevTools (F12 ou auto-ouvert)
 3. Console → Exécuter:
 ```javascript
@@ -567,7 +567,7 @@ console.log('Response:', response);
 **Objectif**: Vérifier logs Rust visibles dans terminal
 
 **Méthode**:
-1. Terminal où tourne `npm run tauri:dev`
+1. Terminal où tourne `pnpm run tauri:dev`
 2. Envoyer message dans Chat UI
 3. Observer logs format `[CHAT]`
 

@@ -163,7 +163,7 @@ Top fichiers:
 
 ### Sécurité: 85/100 ✅
 
-**npm audit:**
+**pnpm audit:**
 ```json
 {
   "vulnerabilities": {
@@ -262,7 +262,7 @@ Top fichiers:
 cargo clippy -- -D warnings
 npx tsc --noEmit
 cargo test
-npm test
+pnpm test
 ```
 
 ---
@@ -345,11 +345,11 @@ cargo test                                       # All pass
 
 # Audit TypeScript
 npx tsc --noEmit                                # 0 error
-npm run lint                                     # 0 warning
-npm test                                         # All pass
+pnpm run lint                                     # 0 warning
+pnpm test                                         # All pass
 
 # Bundle
-npm run build
+pnpm run build
 du -sh dist/                                     # <2.5MB cible
 ```
 

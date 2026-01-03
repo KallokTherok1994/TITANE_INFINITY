@@ -172,7 +172,7 @@ const _addTraceEntry = ... // ✅ Pas de warning
 
 ---
 
-### 5️⃣ Script Auto-Fix `npm run fix-pipeline`
+### 5️⃣ Script Auto-Fix `pnpm run fix-pipeline`
 
 #### Nouveau Script Créé
 
@@ -188,7 +188,7 @@ const _addTraceEntry = ... // ✅ Pas de warning
 
 **Usage**:
 ```bash
-npm run fix-pipeline
+pnpm run fix-pipeline
 ```
 
 **Actions**:
@@ -279,7 +279,7 @@ git commit -m "feat: nouvelle fonctionnalité"
 
 ```bash
 # 1. Si le commit échoue, exécuter le fix automatique
-npm run fix-pipeline
+pnpm run fix-pipeline
 
 # 2. Vérifier les changements
 git diff
@@ -297,16 +297,16 @@ git commit -m "fix: pipeline corrections"
 
 ```bash
 # Fix ESLint uniquement
-npm run lint:fix
+pnpm run lint:fix
 
 # Fix Prettier uniquement
-npm run format
+pnpm run format
 
 # Check TypeScript (sans fixer)
-npm run check
+pnpm run check
 
 # Tout en un (recommandé)
-npm run fix-pipeline
+pnpm run fix-pipeline
 ```
 
 ---
@@ -329,7 +329,7 @@ npm exec prettier -- --check .
 # ✅ PASS - Formatage correct
 
 # 4. Test TypeScript
-npm run check
+pnpm run check
 # ✅ PASS - Pas d'erreurs bloquantes
 ```
 
@@ -357,10 +357,10 @@ npm run check
 
 ## 🔮 RECOMMANDATIONS
 
-### 1️⃣ Utiliser `npm run fix-pipeline` Avant Chaque Commit Important
+### 1️⃣ Utiliser `pnpm run fix-pipeline` Avant Chaque Commit Important
 
 ```bash
-npm run fix-pipeline
+pnpm run fix-pipeline
 git add .
 git commit -m "feat: ..."
 ```
@@ -415,7 +415,7 @@ Ajouter dans [.vscode/settings.json](../.vscode/settings.json):
 }
 ```
 
-**Avantage**: Auto-fix au save (plus besoin de npm run fix-pipeline)
+**Avantage**: Auto-fix au save (plus besoin de pnpm run fix-pipeline)
 
 ---
 
@@ -468,7 +468,7 @@ Le **TITANE∞ Husky / ESLint / Prettier Pipeline Fix v21** a résolu **100% des
 ✅ **lint-staged fonctionne** (syntaxe npm v10+ correcte)
 ✅ **Erreur parsing `debugger` corrigée** (renommé en `debugPanel`)
 ✅ **Warnings TypeScript éliminés** (pattern `^_` configuré)
-✅ **Script auto-fix créé** (`npm run fix-pipeline`)
+✅ **Script auto-fix créé** (`pnpm run fix-pipeline`)
 ✅ **Pipeline stable sur Pop!_OS/Linux**
 
 **Status**: ✅ **READY FOR PRODUCTION**

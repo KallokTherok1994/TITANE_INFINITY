@@ -169,7 +169,7 @@ $ cd src-tauri && cargo check
 
 #### 2. Build Frontend
 ```bash
-$ npm run build
+$ pnpm run build
 ✅ vite v6.4.1 building for production...
 ✅ 533 modules transformed
 ✅ dist/assets/main-hsy5VW2t.js    265.56 kB │ gzip: 77.70 kB
@@ -179,7 +179,7 @@ $ npm run build
 
 #### 3. Type-Check TypeScript
 ```bash
-$ npm run type-check
+$ pnpm run type-check
 ✅ tsc --noEmit
 ✅ 0 errors
 ```
@@ -230,7 +230,7 @@ cargo tauri dev
 ### Mode Production
 ```bash
 # Build optimisé
-npm run build
+pnpm run build
 cargo tauri build
 ```
 
@@ -298,7 +298,7 @@ cargo tauri dev 2>&1 | grep -i error
 
 #### 3. Vérifier le build Vite
 ```bash
-npm run build
+pnpm run build
 ls -lh dist/
 # Doit contenir : index.html + assets/
 ```
@@ -306,7 +306,7 @@ ls -lh dist/
 #### 4. Réinitialiser cache
 ```bash
 rm -rf dist/ node_modules/.vite/
-npm run build
+pnpm run build
 cargo clean
 cargo tauri dev
 ```

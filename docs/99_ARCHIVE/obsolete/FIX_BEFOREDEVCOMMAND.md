@@ -12,9 +12,9 @@ Votre configuration dans `tauri.conf.json` est **PARFAITE** :
 ```json
 {
   "build": {
-    "beforeDevCommand": "npm run dev",
+    "beforeDevCommand": "pnpm run dev",
     "devUrl": "http://localhost:5173",
-    "beforeBuildCommand": "npm run build",
+    "beforeBuildCommand": "pnpm run build",
     "frontendDist": "../dist"
   }
 }
@@ -42,7 +42,7 @@ Tous les scripts essentiels sont présents et fonctionnels :
 
 ### 3. Frontend (Vite) ✅
 
-Test effectué : `npm run dev`
+Test effectué : `pnpm run dev`
 
 ```
 ✅ VITE v6.4.1 ready in 118ms
@@ -141,13 +141,13 @@ cd ~/Documents/TITANE_NEWGEN/TITANE_INFINITY
 rm -rf src-tauri/target
 
 # Relancer Tauri dev
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 **Résultat attendu :**
 
 ```
-✅ Running BeforeDevCommand (`npm run dev`)
+✅ Running BeforeDevCommand (`pnpm run dev`)
 ✅ VITE v6.4.1 ready in 118ms
 ✅ Compiling titane-infinity v15.5.0
 ✅ Finished `dev` profile [unoptimized + debuginfo] target(s) in 1m 23s
@@ -192,7 +192,7 @@ La vraie erreur était :
 **beforeDevCommand fonctionnait parfaitement** (Vite démarrait sans erreur).
 
 Le message d'erreur Tauri était imprécis car :
-1. BeforeDevCommand démarre (npm run dev) ✅
+1. BeforeDevCommand démarre (pnpm run dev) ✅
 2. Vite s'exécute sans erreur ✅
 3. Mais ensuite, Cargo compile le backend Rust
 4. Rust linker échoue à trouver WebKitGTK
@@ -212,7 +212,7 @@ sudo apt install -y libwebkit2gtk-4.1-dev libgtk-3-dev \
 ### Étape 2 : Relancer Tauri
 
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### Étape 3 : Profiter de TITANE∞
@@ -227,8 +227,8 @@ Si après installation de WebKitGTK, l'erreur persiste :
 
 ```bash
 # Nettoyer complètement
-npm run clean
-npm install
+pnpm run clean
+pnpm install
 
 # Nettoyer cache Cargo
 rm -rf src-tauri/target
@@ -239,7 +239,7 @@ cargo clean
 cd ..
 
 # Relancer
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ---
@@ -251,7 +251,7 @@ https://tauri.app/v1/guides/getting-started/prerequisites#linux
 
 Logs détaillés :
 ```bash
-npm run tauri:dev -- --verbose
+pnpm run tauri:dev -- --verbose
 ```
 
 ---

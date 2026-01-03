@@ -260,7 +260,7 @@
 ### Build Success
 
 ```bash
-npm run build
+pnpm run build
 # ✅ Exit Code: 0 (vérifié)
 ```
 

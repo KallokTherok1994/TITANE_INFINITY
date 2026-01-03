@@ -583,7 +583,7 @@ Test sur 100 sessions (5h total):
 
 ```bash
 # 1. Lancer le dashboard
-npm run dev
+pnpm run dev
 # Navigate to http://localhost:5173/performance
 
 # 2. Vérifier monitoring actif

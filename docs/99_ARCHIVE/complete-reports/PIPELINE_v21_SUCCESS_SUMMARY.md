@@ -25,7 +25,7 @@
 1. ✅ **npm exec --fix error** → Fixed with `npm exec eslint -- --fix`
 2. ✅ **Parsing error 'debugger'** → Renamed to `debugPanel` (39 occurrences)
 3. ✅ **Unused variables warnings** → Prefixed with `_`
-4. ✅ **No auto-fix script** → Created `npm run fix-pipeline`
+4. ✅ **No auto-fix script** → Created `pnpm run fix-pipeline`
 5. ✅ **17 Tauri commands missing** → Command mapping created
 6. ✅ **stability = 0, titaneAlignment = NaN** → Repair engine implemented
 
@@ -66,7 +66,7 @@ git commit -m "feat: new feature"
 ### Manual Fix (if needed)
 
 ```bash
-npm run fix-pipeline
+pnpm run fix-pipeline
 git add .
 git commit -m "fix: pipeline corrections"
 ```

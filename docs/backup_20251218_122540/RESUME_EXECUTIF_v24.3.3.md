@@ -216,7 +216,7 @@ $ cargo check --manifest-path=src-tauri/Cargo.toml
 ### Build
 
 ```bash
-$ npm run build
+$ pnpm run build
 ✅ built in 20.04s
 ✅ 3326 modules transformed
 ✅ Post-build desktop icon update completed

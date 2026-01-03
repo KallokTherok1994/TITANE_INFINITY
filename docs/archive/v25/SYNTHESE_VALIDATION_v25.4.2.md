@@ -107,10 +107,10 @@
 
 ## VALIDATION CHECKLIST
 
-- [x] npm run check → 0 erreur
-- [x] npm run lint → 0 erreur
-- [x] npm run build → success
-- [x] npm test → 1988/2066 pass
+- [x] pnpm run check → 0 erreur
+- [x] pnpm run lint → 0 erreur
+- [x] pnpm run build → success
+- [x] pnpm test → 1988/2066 pass
 - [x] cargo build --release → success
 
 ---

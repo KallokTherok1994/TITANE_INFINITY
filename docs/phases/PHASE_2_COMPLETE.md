@@ -85,8 +85,8 @@
 ## ✅ QUALITY GATES (ALL PASSED)
 
 **Code Quality:**
-- ✅ TypeScript strict mode: 0 errors (verified with `npm run check`)
-- ✅ ESLint validation: 0 warnings (verified with `npm run lint`)
+- ✅ TypeScript strict mode: 0 errors (verified with `pnpm run check`)
+- ✅ ESLint validation: 0 warnings (verified with `pnpm run lint`)
 - ✅ No console.log remaining (verified with grep)
 
 **Architecture Compliance:**

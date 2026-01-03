@@ -365,7 +365,7 @@ Après installation :
 - [ ] `source ~/.bashrc` exécuté
 - [ ] `ssh -T git@github.com` fonctionne
 - [ ] `cd ~/Projets/TITANE_INFINITY` possible
-- [ ] `npm run tauri dev` démarre sans erreur
+- [ ] `pnpm run tauri dev` démarre sans erreur
 
 ---
 

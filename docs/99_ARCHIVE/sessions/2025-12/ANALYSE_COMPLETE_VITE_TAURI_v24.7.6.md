@@ -123,8 +123,8 @@ terserOptions: {
 #### 1. **Build Settings**
 ```json
 "build": {
-  "beforeDevCommand": "npm run build",
-  "beforeBuildCommand": "npm run build",
+  "beforeDevCommand": "pnpm run build",
+  "beforeBuildCommand": "pnpm run build",
   "frontendDist": "../dist"
 }
 ```
@@ -381,7 +381,7 @@ main_window.show()?;
 ### 1. **Surveillance Continue:**
 ```bash
 # Vérifier bundle sizes régulièrement
-npm run build && ls -lh dist/assets/*.js | head -10
+pnpm run build && ls -lh dist/assets/*.js | head -10
 
 # Analyser avec visualizer
 open dist/stats.html
@@ -410,9 +410,9 @@ getTTFB(console.log);
 ### 4. **Tests Automatisés:**
 ```bash
 # Ajouter dans CI/CD
-npm test                    # Tests React
+pnpm test                    # Tests React
 cargo test                  # Tests Rust
-npm run build              # Validation build
+pnpm run build              # Validation build
 cargo build --release      # Validation release
 ```
 

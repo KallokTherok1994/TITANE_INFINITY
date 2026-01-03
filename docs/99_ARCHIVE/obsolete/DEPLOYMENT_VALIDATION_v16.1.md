@@ -34,7 +34,7 @@
 ## ✅ ÉTAPE 2: VALIDATION TYPESCRIPT
 
 ```bash
-npm run type-check
+pnpm run type-check
 ```
 
 **Résultat:** ✅ **PASSED - 0 erreurs**
@@ -44,7 +44,7 @@ npm run type-check
 ## ✅ ÉTAPE 3: BUILD FRONTEND
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 **Résultat:**
@@ -129,7 +129,7 @@ python3 -m http.server 8080
 ### Mode Tauri (après fix WebKit)
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 **Tests à effectuer:**
@@ -210,7 +210,7 @@ npx serve dist -p 3000
 
 **Après installation WebKit:**
 ```bash
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 **Génère:**
@@ -296,10 +296,10 @@ cargo build --release  # ~5-10 min
 
 ```bash
 # Test mode dev
-npm run dev
+pnpm run dev
 
 # Test build production
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ### 4. Déploiement Final
@@ -307,7 +307,7 @@ npm run tauri:build
 **Si tests OK:**
 ```bash
 # Générer packages
-npm run tauri:build
+pnpm run tauri:build
 
 # Packages générés:
 # - src-tauri/target/release/bundle/deb/titane-infinity_16.1.0_amd64.deb

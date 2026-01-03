@@ -235,7 +235,7 @@ interface EvolutionEvent {
 ### 📦 Dépendance
 
 - **react-chrono:** `2.6.1` (timeline library)
-- **Installation:** `npm install react-chrono@2.6.1 --legacy-peer-deps`
+- **Installation:** `pnpm install react-chrono@2.6.1 --legacy-peer-deps`
 - **Reason:** React 19 compatibility avec --legacy-peer-deps
 
 ---
@@ -377,7 +377,7 @@ import { TransformationRoadmap } from '@/features/transformation/TransformationR
 ### react-chrono@2.6.1
 
 - **Usage:** Timeline interactive dans EvolutionTimeline
-- **Installation:** `npm install react-chrono@2.6.1 --legacy-peer-deps`
+- **Installation:** `pnpm install react-chrono@2.6.1 --legacy-peer-deps`
 - **Raison:** React 19 compatibility nécessite --legacy-peer-deps
 - **Features:** Vertical mode, slideshow, custom theme
 - **Package size:** 21 packages ajoutés

@@ -216,11 +216,11 @@ Cette architecture "Living Systems" est le fruit de:
 ```bash
 # Mise à jour depuis v24.0.0
 git pull origin main
-npm install
-npm run build
+pnpm install
+pnpm run build
 
 # Lancement dev
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ---

@@ -47,7 +47,7 @@ Le script détecte automatiquement votre distribution et installe :
 ```bash
 cd ~/Documents/TITANE_NEWGEN/TITANE_INFINITY
 cd src-tauri && cargo clean && cd ..
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 **Durée :** 2-5 minutes
@@ -65,7 +65,7 @@ Après compilation :
 Ou en mode développement :
 
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ---
@@ -152,7 +152,7 @@ Le Flatpak sandbox de VSCode n'a pas accès aux bibliothèques système.
 - [ ] Terminal système natif ouvert (Ctrl+Alt+T)
 - [ ] `install_system_deps.sh` exécuté avec succès
 - [ ] `cargo clean` effectué
-- [ ] `npm run tauri:build` compilé sans erreur
+- [ ] `pnpm run tauri:build` compilé sans erreur
 - [ ] TITANE∞ se lance sans écran noir
 
 ---

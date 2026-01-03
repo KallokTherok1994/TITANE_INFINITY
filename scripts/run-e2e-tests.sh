@@ -20,7 +20,7 @@ echo ""
 echo "📦 Checking Playwright installation..."
 if ! npx playwright --version &>/dev/null; then
   echo "❌ Playwright not found. Installing..."
-  npm install -D @playwright/test
+  pnpm install -D @playwright/test
   npx playwright install
 else
   PLAYWRIGHT_VERSION=$(npx playwright --version)

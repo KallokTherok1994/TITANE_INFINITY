@@ -133,7 +133,7 @@ if [ $TEST_EXIT -ne 0 ]; then
     echo -e "Next steps:"
     echo -e "  1. Check ${YELLOW}src-tauri/test.log${NC}"
     echo -e "  2. Fix failing tests"
-    echo -e "  3. Run ${BLUE}npm run verify:backend${NC} again"
+    echo -e "  3. Run ${BLUE}pnpm run verify:backend${NC} again"
     exit $TEST_EXIT
 else
     echo -e "${GREEN}✅ Backend verification PASSED${NC}"

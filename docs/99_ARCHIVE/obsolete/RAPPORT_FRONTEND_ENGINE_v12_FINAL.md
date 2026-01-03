@@ -16,7 +16,7 @@
 4. ✅ **11 Pages Fonctionnelles** - Dashboard + 8 modules + Settings + DevTools
 5. ✅ **2 Hooks Tauri** - useTitaneCore, useMemoryCore (invoke API complète)
 6. ✅ **App + Router** - Routing client-side, navigation complète
-7. ✅ **Build Validé** - npm run build ✅ (0 erreurs TypeScript, 212KB dist/)
+7. ✅ **Build Validé** - pnpm run build ✅ (0 erreurs TypeScript, 212KB dist/)
 
 ### 📈 Métriques Finales
 
@@ -457,7 +457,7 @@ manualChunks: {
 ### **Build Production** ✅
 
 ```bash
-$ npm run build
+$ pnpm run build
 
 vite v6.4.1 building for production...
 ✓ 73 modules transformed.
@@ -548,8 +548,8 @@ Total: 212 KB (optimisé gzip)
 
 1. ✅ **Backend Rust**: déjà fonctionnel (0 erreurs cargo)
 2. ✅ **Frontend v12**: build réussi (ce rapport)
-3. 🔄 **Test E2E**: lancer `npm run tauri dev` → vérifier UI + backend integration
-4. 🔄 **Production Build**: `npm run tauri build` → générer AppImage/deb
+3. 🔄 **Test E2E**: lancer `pnpm run tauri dev` → vérifier UI + backend integration
+4. 🔄 **Production Build**: `pnpm run tauri build` → générer AppImage/deb
 5. 🔄 **Deploy**: utiliser `TITANE_INFINITY_PREDEPLOY_v12.sh` (7 stages automation)
 
 ### **Améliorations Futures** (Non-bloquant)
@@ -613,7 +613,7 @@ Total: 212 KB (optimisé gzip)
 - ✅ Tauri v2 configuré
 
 **Frontend React:**
-- ✅ npm run build: SUCCESS (1.02s)
+- ✅ pnpm run build: SUCCESS (1.02s)
 - ✅ TypeScript: 0 erreurs
 - ✅ 212 KB dist/ optimisé
 - ✅ Design system complet
@@ -637,16 +637,16 @@ Total: 212 KB (optimisé gzip)
 **Commandes Utiles:**
 ```bash
 # Dev mode (hot-reload)
-npm run tauri dev
+pnpm run tauri dev
 
 # Production build
-npm run build              # Frontend only
-npm run tauri build        # Frontend + Backend + Packaging
+pnpm run build              # Frontend only
+pnpm run tauri build        # Frontend + Backend + Packaging
 
 # Validation
 cargo check                # Backend Rust
 cargo clippy               # Linter Rust
-npm run build              # Frontend TypeScript
+pnpm run build              # Frontend TypeScript
 
 # Deployment automated
 ./TITANE_INFINITY_PREDEPLOY_v12.sh  # 7-stage pipeline

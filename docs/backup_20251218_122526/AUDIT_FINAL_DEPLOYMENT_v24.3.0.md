@@ -175,14 +175,14 @@ Type Safety: 100% (TypeScript strict)
 
 #### Audit NPM
 ```
-Status: ❌ IMPOSSIBLE (pnpm-lock manquant pour npm audit)
+Status: ❌ IMPOSSIBLE (pnpm-lock manquant pour pnpm audit)
 Workaround: Utiliser pnpm audit
 ```
 
 **Score**: 15/20 ⚠️
 
 **Problèmes Détectés**:
-1. ⚠️ `npm audit --production` échoue (pnpm project)
+1. ⚠️ `pnpm audit --production` échoue (pnpm project)
 2. ⚠️ Audit sécurité non exécuté automatiquement
 3. ✅ Pas de dépendances critiques connues
 
@@ -191,9 +191,9 @@ Workaround: Utiliser pnpm audit
 # Utiliser pnpm pour audit
 pnpm audit --prod
 
-# Ou convertir pour npm audit
+# Ou convertir pour pnpm audit
 npm i --package-lock-only
-npm audit --production
+pnpm audit --production
 ```
 
 #### Dépendances Obsolètes
@@ -477,7 +477,7 @@ Status: ⚠️ PLANIFIER UPDATE
 ```bash
 # Après v24.3.0 release
 pnpm update --latest
-npm test
+pnpm test
 git commit -m "chore(deps): Update dependencies to latest"
 ```
 
@@ -487,7 +487,7 @@ git commit -m "chore(deps): Update dependencies to latest"
 ```yaml
 Severity: 🟡 MINEUR
 Impact: Vulnérabilités potentielles non détectées
-Tools: npm audit, cargo audit
+Tools: pnpm audit, cargo audit
 Status: ⚠️ EXÉCUTER POST-RELEASE
 ```
 

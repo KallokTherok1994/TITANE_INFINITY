@@ -48,7 +48,7 @@ TITANE∞ v24.2.0 est **PRODUCTION-READY** avec une architecture robuste multi-c
 
 ### Frontend Vitest
 
-**Exécution**: `npm test -- --run`  
+**Exécution**: `pnpm test -- --run`  
 **Durée**: 43.00s  
 **Framework**: Vitest 4.0.15 + Happy DOM
 

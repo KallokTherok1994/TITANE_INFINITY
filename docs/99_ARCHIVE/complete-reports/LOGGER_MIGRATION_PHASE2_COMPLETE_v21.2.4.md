@@ -189,7 +189,7 @@ logger.debug('Backend available', { status: true });
 ### Build Validation
 
 ```bash
-npm run build
+pnpm run build
 # ✓ built in 13.77s
 # Bundle: 5.3M (unchanged)
 # Warnings: 2 (non-blocking)

@@ -71,7 +71,7 @@ echo "  🔍 TEST 2 : Vérification TypeScript"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
-npm run type-check > /tmp/ts-check.log 2>&1
+pnpm run type-check > /tmp/ts-check.log 2>&1
 TS_RESULT=$?
 
 if [ $TS_RESULT -eq 0 ]; then
@@ -308,7 +308,7 @@ if [ $TESTS_FAILED -eq 0 ]; then
     echo -e "${GREEN}║                                                                        ║${NC}"
     echo -e "${GREEN}║  Le moteur de présence unifiée est prêt pour utilisation.             ║${NC}"
     echo -e "${GREEN}║                                                                        ║${NC}"
-    echo -e "${GREEN}║  Prochaine étape : npm run tauri:dev                                  ║${NC}"
+    echo -e "${GREEN}║  Prochaine étape : pnpm run tauri:dev                                  ║${NC}"
     echo -e "${GREEN}║                                                                        ║${NC}"
     echo -e "${GREEN}╚════════════════════════════════════════════════════════════════════════╝${NC}"
     echo ""

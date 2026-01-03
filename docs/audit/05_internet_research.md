@@ -138,7 +138,7 @@
 - RustSec Advisory Database
 
 **Applicable à TITANE∞:** ✅ OUI
-- Script `npm run audit` existe
+- Script `pnpm run audit` existe
 - À vérifier: résultats actuels
 
 **Recommandations dérivées:**
@@ -240,20 +240,20 @@
 
 ---
 
-### Query: npm audit et vulnérabilités JavaScript
+### Query: pnpm audit et vulnérabilités JavaScript
 
 **Résumé:**
-- `npm audit` détecte les vulnérabilités connues
+- `pnpm audit` détecte les vulnérabilités connues
 - Niveaux: low, moderate, high, critical
-- `npm audit fix` pour corrections automatiques
+- `pnpm audit fix` pour corrections automatiques
 - Snyk / Socket pour monitoring continu
 
 **Applicable à TITANE∞:** ✅ OUI
-- À exécuter: `npm audit`
+- À exécuter: `pnpm audit`
 - 28 packages obsolètes identifiés
 
 **Recommandations dérivées:**
-1. Exécuter npm audit et documenter
+1. Exécuter pnpm audit et documenter
 2. Corriger les vulnérabilités critical/high
 3. Planifier mise à jour des 28 packages obsolètes
 
@@ -357,7 +357,7 @@
 | Recommandation | Source | Impact |
 |----------------|--------|--------|
 | Auditer capabilities Tauri | Tauri Docs | Sécurité |
-| Exécuter npm audit + cargo audit | OWASP | Vulnérabilités |
+| Exécuter pnpm audit + cargo audit | OWASP | Vulnérabilités |
 | Vérifier secrets handling | OWASP | Sécurité |
 
 ### Priorité Haute (P1)
@@ -374,7 +374,7 @@
 |----------------|--------|--------|
 | Analyser bundle size | Vite Docs | Performance |
 | Implémenter release pipeline | Tauri Action | Deployment |
-| Mise à jour 28 packages | npm audit | Maintenance |
+| Mise à jour 28 packages | pnpm audit | Maintenance |
 
 ---
 

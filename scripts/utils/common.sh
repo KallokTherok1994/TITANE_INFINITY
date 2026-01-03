@@ -207,7 +207,7 @@ clean_backend() {
 install_npm_deps() {
     log_step "Installation dépendances npm..."
     cd "$PROJECT_ROOT"
-    npm ci --prefer-offline --no-audit 2>&1 | grep -v "npm WARN" || true
+    pnpm install --frozen-lockfile --prefer-offline --no-audit 2>&1 | grep -v "npm WARN" || true
     log_success "Dépendances npm installées"
 }
 
@@ -215,7 +215,7 @@ install_npm_deps() {
 build_frontend() {
     log_step "Build frontend (React + Vite)..."
     cd "$PROJECT_ROOT"
-    npm run build
+    pnpm run build
     
     if [ ! -f "$DIST/index.html" ]; then
         log_error "dist/index.html non généré"

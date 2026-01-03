@@ -171,7 +171,7 @@ OLLAMA_BASE_URL=http://localhost:11434 ✅ (si démarré)
 
 ### Scénario 4: Build Prod ✅
 ```bash
-npm run tauri:build
+pnpm run tauri:build
 ./src-tauri/target/release/titane-infinity
 ```
 **Validation**: Scripts package.json OK, tauri.conf.json OK, .desktop créé ✅
@@ -211,7 +211,7 @@ Total Startup: ~10-18s ✅
 ### Test DEV
 ```bash
 # 1. Démarrer
-npm run tauri:dev
+pnpm run tauri:dev
 
 # 2. Vérifier logs startup
 # ✅ Gemini API key loaded
@@ -227,7 +227,7 @@ npm run tauri:dev
 ### Test PROD
 ```bash
 # 1. Build
-npm run tauri:build
+pnpm run tauri:build
 
 # 2. Lancer binaire
 ./src-tauri/target/release/titane-infinity
@@ -283,7 +283,7 @@ npm run tauri:build
 
 3. **Tests E2E Automatisés**
    ```bash
-   npm run test:e2e
+   pnpm run test:e2e
    ```
 
 ---

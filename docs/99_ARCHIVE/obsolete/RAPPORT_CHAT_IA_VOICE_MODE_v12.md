@@ -234,7 +234,7 @@ export default function App() {
 
 ### Build Production
 ```bash
-npm run tauri build
+pnpm run tauri build
 ```
 
 ---

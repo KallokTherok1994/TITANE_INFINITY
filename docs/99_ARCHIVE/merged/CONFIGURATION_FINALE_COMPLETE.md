@@ -49,10 +49,10 @@
 - ✅ GitLens: mode compact, performance optimale
 
 ### Phase 5: Build & Validation ✅
-- ✅ `npm install` → 929 packages, 0 vulnérabilités
-- ✅ `npm run build` → dist/ généré (4.09s)
+- ✅ `pnpm install` → 929 packages, 0 vulnérabilités
+- ✅ `pnpm run build` → dist/ généré (4.09s)
 - ✅ `cargo check` → compilation OK (44.56s)
-- ✅ `npm run type-check` → 0 erreurs TypeScript
+- ✅ `pnpm run type-check` → 0 erreurs TypeScript
 - ✅ Imports Tauri v2 corrigés automatiquement
 
 ---
@@ -127,7 +127,7 @@ EXTENSIONS_QUICK_REFERENCE.md          (9.5KB)  → Référence rapide
 ### Build Status
 | Opération | Temps | État | Notes |
 |-----------|-------|------|-------|
-| npm install | 10s | ✅ | 929 packages |
+| pnpm install | 10s | ✅ | 929 packages |
 | Frontend build | 4.09s | ✅ | dist/ généré |
 | Backend check | 44.56s | ✅ | 0 erreurs |
 | Type check | ~3s | ✅ | 0 erreurs TS |
@@ -139,7 +139,7 @@ EXTENSIONS_QUICK_REFERENCE.md          (9.5KB)  → Référence rapide
 ### Démarrer le projet
 ```bash
 # Option 1: Command Line
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Option 2: VS Code
 Ctrl+Shift+B  # Tauri Dev (tâche par défaut)
@@ -348,7 +348,7 @@ Ctrl+Shift+P → "Developer: Reload Window"
 - [ ] Ouvrir fichier `.rs` (activer Rust Analyzer)
 - [ ] Ouvrir fichier `.tsx` (activer TypeScript/Tailwind)
 - [ ] Vérifier icône 🦀 dans status bar (Rust Analyzer actif)
-- [ ] Lancer `npm run tauri:dev`
+- [ ] Lancer `pnpm run tauri:dev`
 - [ ] Tester hot-reload (modifier fichier, voir changements)
 
 ### Tests Fonctionnels
@@ -394,7 +394,7 @@ Ctrl+Shift+P → "Rust Analyzer: Restart Server"
 **Solution:**
 ```bash
 rm -rf node_modules/.cache
-npm run type-check
+pnpm run type-check
 ```
 
 ### Problème: Hot-reload ne marche pas
@@ -436,7 +436,7 @@ code --install-extension <publisher>.<extension-name>
 
 **Next Steps:**
 - Redémarrer VS Code
-- Lancer `npm run tauri:dev`
+- Lancer `pnpm run tauri:dev`
 - Coder ! 🎨🦀⚛️
 
 ---

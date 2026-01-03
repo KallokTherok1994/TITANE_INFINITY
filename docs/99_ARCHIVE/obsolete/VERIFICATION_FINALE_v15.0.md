@@ -13,7 +13,7 @@ cd src-tauri && cargo check
 
 ### **Frontend React** ✅
 ```bash
-npm run build
+pnpm run build
 ```
 **Résultat** : ✅ **built in 1.03s**
 ```
@@ -124,12 +124,12 @@ export { TimelineChart } from './TimelineChart';
 ### **Pour lancer en dev** :
 ```bash
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 ### **Pour builder production** :
 ```bash
-npm run tauri build
+pnpm run tauri build
 ```
 
 ## ✅ CHECKLIST FINALE
@@ -206,7 +206,7 @@ Le **EXP Fusion Engine v15.0** est **100% fonctionnel et opérationnel**. Tous l
 ✅ Documentation exhaustive
 ✅ Prêt pour production
 
-**Prochaine étape** : `npm run tauri dev` pour tester en environnement complet !
+**Prochaine étape** : `pnpm run tauri dev` pour tester en environnement complet !
 
 ---
 

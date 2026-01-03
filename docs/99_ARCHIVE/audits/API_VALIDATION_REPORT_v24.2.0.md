@@ -308,7 +308,7 @@ src/services/tauriAutoRepair.ts:
 #### ESLint
 
 ```bash
-Résultat: npm run lint
+Résultat: pnpm run lint
 ✅ 0 erreurs
 ✅ 0 warnings
 ✅ Clean pass
@@ -534,7 +534,7 @@ Résultat: npm run lint
 **Option A - Interface UI (Recommandée):**
 
 ```bash
-npm run dev:tauri
+pnpm run dev:tauri
 # Naviguer: Control Panel → Section IA & APIs
 # Coller clés → Sauvegarder
 ```

@@ -305,7 +305,7 @@ mv src/pages/Harmonia.tsx src/pages/.archive/
 
 ### Court Terme (v25.2.1)
 
-1. ✅ **Tester en développement** (npm run dev)
+1. ✅ **Tester en développement** (pnpm run dev)
 2. ⏳ **Tester navigation** vers `/stats` depuis menu
 3. ⏳ **Vérifier affichage** des 9-11 métriques
 4. ⏳ **Valider real-time updates** (3 moteurs)

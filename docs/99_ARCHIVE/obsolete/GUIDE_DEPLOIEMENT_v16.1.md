@@ -46,10 +46,10 @@
 #### Commandes:
 ```bash
 # Build production
-npm run build
+pnpm run build
 
 # Tester localement
-npm run preview
+pnpm run preview
 
 # Déployer sur Netlify/Vercel
 # - Upload du dossier dist/
@@ -92,13 +92,13 @@ sudo dnf install webkit2gtk4.1-devel
 #### Build Tauri:
 ```bash
 # Development
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Production Release
-npm run tauri:build
+pnpm run tauri:build
 
 # Debug Build (plus rapide)
-npm run tauri:build:debug
+pnpm run tauri:build:debug
 ```
 
 #### Artifacts:
@@ -151,16 +151,16 @@ export const mockOverdriveAPI = {
 ### Netlify (Recommandé pour démo rapide)
 ```bash
 # Install Netlify CLI
-npm install -g netlify-cli
+pnpm install -g netlify-cli
 
 # Deploy
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run build
+pnpm run build
 netlify deploy --prod --dir=dist
 
 # Ou via interface Netlify
 # 1. Connecter repo GitHub
-# 2. Build command: npm run build
+# 2. Build command: pnpm run build
 # 3. Publish directory: dist
 ```
 
@@ -169,7 +169,7 @@ netlify deploy --prod --dir=dist
 ### Vercel
 ```bash
 # Install Vercel CLI
-npm install -g vercel
+pnpm install -g vercel
 
 # Deploy
 vercel --prod
@@ -180,7 +180,7 @@ vercel --prod
 ### GitHub Pages
 ```bash
 # Build avec base path
-npm run build -- --base=/TITANE_NEWGEN/
+pnpm run build -- --base=/TITANE_NEWGEN/
 
 # Deploy via GitHub Actions
 # Créer .github/workflows/deploy.yml
@@ -192,9 +192,9 @@ npm run build -- --base=/TITANE_NEWGEN/
 FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci
+RUN pnpm install --frozen-lockfile
 COPY . .
-RUN npm run build
+RUN pnpm run build
 
 FROM nginx:alpine
 COPY --from=builder /app/dist /usr/share/nginx/html
@@ -216,13 +216,13 @@ docker run -p 8080:80 titane-infinity:16.1
 ### Frontend:
 ```bash
 # TypeScript validation
-npm run type-check         # ✅ PASSED
+pnpm run type-check         # ✅ PASSED
 
 # Build production
-npm run build              # ✅ PASSED (1.95s)
+pnpm run build              # ✅ PASSED (1.95s)
 
 # Preview local
-npm run preview
+pnpm run preview
 # Ouvrir http://localhost:4173
 ```
 
@@ -350,11 +350,11 @@ export const trackPageView = (path: string) => {
 ### Problème: Build échoue
 ```bash
 # Nettoyer cache
-npm run clean:cache
-npm install
+pnpm run clean:cache
+pnpm install
 
 # Retry build
-npm run build
+pnpm run build
 ```
 
 ### Problème: Runtime errors
@@ -375,7 +375,7 @@ npm run build
 ## 📋 Checklist Déploiement
 
 ### Pré-déploiement:
-- [x] Build frontend réussi (`npm run build`)
+- [x] Build frontend réussi (`pnpm run build`)
 - [x] TypeScript sans erreurs
 - [x] Toutes les dépendances à jour
 - [x] Variables.css importées partout

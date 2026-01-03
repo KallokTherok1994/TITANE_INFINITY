@@ -324,16 +324,16 @@ gh issue list
 ### Tests locaux
 ```bash
 # Tests accessibilité (axe-core)
-npm run test:a11y
+pnpm run test:a11y
 
 # Tests TypeScript
 npx tsc --noEmit
 
 # Tests unitaires
-npm test
+pnpm test
 
 # Build Tauri
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ---
@@ -355,13 +355,13 @@ git diff --stat v19.3.0-security-hardening..v19.4.0-accessibility-infrastructure
 ### npm
 ```bash
 # Installer les dépendances
-npm install
+pnpm install
 
 # Lancer le dev server
-npm run dev
+pnpm run dev
 
 # Build production
-npm run build
+pnpm run build
 ```
 
 ### Documentation

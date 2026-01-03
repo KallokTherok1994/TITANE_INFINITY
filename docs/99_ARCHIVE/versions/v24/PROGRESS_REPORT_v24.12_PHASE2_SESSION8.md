@@ -251,7 +251,7 @@ validateDisplayState() checks:
    - Graceful fallbacks for missing data
 
 2. **TypeScript Strict:**
-   - Validate `npm run type-check` passes
+   - Validate `pnpm run type-check` passes
    - Fix any remaining `any` types
    - Ensure strict null checks
 
@@ -298,13 +298,13 @@ validateDisplayState() checks:
 
 ### TypeScript Validation
 ```bash
-$ npm run type-check
+$ pnpm run type-check
 ✓ No errors found
 ```
 
 ### Test Execution Proof
 ```bash
-$ npm test -- floating.robustness.test.ts
+$ pnpm test -- floating.robustness.test.ts
 PASS src/modules/avatar/floating/floating.robustness.test.ts
 Test Suites: 1 passed, 1 total
 Tests:       17 passed, 17 total

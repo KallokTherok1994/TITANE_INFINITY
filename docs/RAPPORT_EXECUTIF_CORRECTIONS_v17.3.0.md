@@ -354,10 +354,10 @@ grep -r "color:\s*#000\|color:\s*black" src/components/chat/ src/styles/
 
 ```bash
 # 1. Rebuild
-npm run build
+pnpm run build
 
 # 2. Lancer serveur
-npm run dev
+pnpm run dev
 
 # 3. Ouvrir navigateur
 # http://localhost:5175
@@ -409,7 +409,7 @@ cd src-tauri
 cargo build
 
 # 2. Lancer app
-npm run dev
+pnpm run dev
 
 # 3. Observer console
 ```
@@ -428,7 +428,7 @@ npm run dev
 
 ```bash
 # 1. Rebuild
-npm run build
+pnpm run build
 
 # 2. Ouvrir Chat IA
 # 3. Envoyer 3-5 messages
@@ -496,7 +496,7 @@ npm run build
 
 1. **Test Chat IA Fallback** (15 min)
    ```bash
-   npm run build && npm run dev
+   pnpm run build && pnpm run dev
    # Tester http://localhost:5175
    # Valider réponse Fallback OK
    ```

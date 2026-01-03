@@ -464,8 +464,8 @@ step6_audit() {
     
     cd "$PROJECT_ROOT"
     
-    print_section "6.1: npm audit"
-    $PM audit --audit-level=high >> "$LOG_FILE" 2>&1 || warning "npm audit found issues"
+    print_section "6.1: pnpm audit"
+    $PM audit --audit-level=high >> "$LOG_FILE" 2>&1 || warning "pnpm audit found issues"
     
     print_section "6.2: cargo audit"
     cd src-tauri

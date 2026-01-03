@@ -324,15 +324,15 @@ npx tsc --noEmit
 ✅ 0 errors
 
 # ESLint
-npm run lint
+pnpm run lint
 ✅ 0 warnings
 
 # Tests complets
-npm run test -- --run
+pnpm run test -- --run
 ✅ 2066 passed, 56 skipped
 
 # Build production
-npm run build
+pnpm run build
 ✅ 17.69s, 0 warnings
 ```
 

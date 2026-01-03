@@ -100,7 +100,7 @@ jobs:
     - Install Node.js 20
     - Install webkit2gtk, libssl
     - TypeScript check (tsc --noEmit)
-    - Build frontend (npm run build)
+    - Build frontend (pnpm run build)
     - Verify dist/
     - Cargo check
     - Cargo test
@@ -319,8 +319,8 @@ error: The `frontendDist` configuration is set to `"../dist"`
        but this path doesn't exist
 
 # APRÈS
-$ npm install
-$ npm run build
+$ pnpm install
+$ pnpm run build
 ✓ Frontend buildé: dist/index.html (167 kB)
 ```
 
@@ -417,10 +417,10 @@ cargo tauri build --release
 ### Étape 5: Test Développement
 ```bash
 # Lancer l'application
-npm run tauri dev
+pnpm run tauri dev
 
 # Ou avec logs détaillés
-RUST_LOG=info npm run tauri dev
+RUST_LOG=info pnpm run tauri dev
 ```
 
 ---
@@ -450,7 +450,7 @@ Statistiques:
   Validation: 10 / 10
 
 🚀 LANCEMENT:
-   npm run tauri dev
+   pnpm run tauri dev
 ```
 
 ### Après cargo check
@@ -531,7 +531,7 @@ pub fn tick(
 ### Après Exécution
 - [ ] cargo check → 0-20 erreurs
 - [ ] cargo build → succès
-- [ ] npm run tauri dev → application lance
+- [ ] pnpm run tauri dev → application lance
 - [ ] Tests fonctionnels → OK
 
 ---
@@ -566,7 +566,7 @@ pub fn tick(
 cd src-tauri && cargo check
 
 # 3. Si OK, tester
-npm run tauri dev
+pnpm run tauri dev
 
 # 4. Si OK, build
 ./build_production.sh

@@ -468,8 +468,8 @@ export default defineConfig({
 - [ ] Commit "perf: optimize vite config"
 
 ### Phase 7 : Tests & Merge (30min)
-- [ ] `npm run build` → vérifier bundle size
-- [ ] `npm run tauri:dev` → tester fonctionnalités
+- [ ] `pnpm run build` → vérifier bundle size
+- [ ] `pnpm run tauri:dev` → tester fonctionnalités
 - [ ] Lighthouse audit (Performance > 90)
 - [ ] Merge dans `main`
 
@@ -535,7 +535,7 @@ cd ../..
 
 # 4. Build Production
 echo "🏗️  Step 4: Building production..."
-npm run build
+pnpm run build
 
 echo "✅ Optimization complete!"
 echo "📊 Check dist/ folder for results"

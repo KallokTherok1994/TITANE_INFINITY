@@ -662,7 +662,7 @@ const ROADMAP = [
 
 ```bash
 # Package.json
-npm install recharts react-d3-tree react-chrono framer-motion lucide-react
+pnpm install recharts react-d3-tree react-chrono framer-motion lucide-react
 ```
 
 ```json

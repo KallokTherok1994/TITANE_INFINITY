@@ -319,7 +319,7 @@ $ cargo build --manifest-path=src-tauri/Cargo.toml
 ⚠️  1 warning (non-blocking)
 
 # Frontend TypeScript
-$ npm run type-check
+$ pnpm run type-check
 ✅ No errors in SINGULARITY-FUSION files
 ⚠️  1 error in external file (SingularityAutonomyEngine)
 ```

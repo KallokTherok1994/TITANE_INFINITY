@@ -26,7 +26,7 @@ cargo fix --bin titane-infinity --allow-dirty
 
 ```bash
 # Toutes les 8 erreurs TS résolues
-npm run type-check  # ✅ SUCCÈS
+pnpm run type-check  # ✅ SUCCÈS
 ```
 
 ### ✅ WIN #3: Fix Rust Compilation (11x)
@@ -68,7 +68,7 @@ grep -n "\\\\-" src/modules/devSudo/devSudoHandler.ts
 #    Replace: /-/g (within character classes)
 
 # 3. Validate fixes
-npm run lint  # Should pass
+pnpm run lint  # Should pass
 ```
 
 #### Expected Result
@@ -121,8 +121,8 @@ const value = data?.property ?? defaultValue;
 
 #### Validation
 ```bash
-npm run type-check  # Should pass with no errors
-npm run test        # Regression testing
+pnpm run type-check  # Should pass with no errors
+pnpm run test        # Regression testing
 ```
 
 ---
@@ -201,13 +201,13 @@ cat > .husky/pre-commit << 'EOF'
 . "$(dirname "$0")/_/husky.sh"
 
 # Lint check
-npm run lint:fix || exit 1
+pnpm run lint:fix || exit 1
 
 # Type check
-npm run type-check || exit 1
+pnpm run type-check || exit 1
 
 # Quick tests
-npm run test -- --bail || exit 1
+pnpm run test -- --bail || exit 1
 EOF
 
 chmod +x .husky/pre-commit
@@ -236,8 +236,8 @@ If fail: Commit blocked, fix required
 #### Setup
 ```bash
 # Install coverage tools
-npm install --save-dev nyc
-npm install --save-dev c8
+pnpm install --save-dev nyc
+pnpm install --save-dev c8
 
 # Update package.json scripts
 {
@@ -268,7 +268,7 @@ npm install --save-dev c8
 #### Usage
 ```bash
 # Generate HTML report
-npm run test:coverage:html
+pnpm run test:coverage:html
 
 # View in browser
 open coverage/index.html
@@ -284,7 +284,7 @@ open coverage/index.html
 ```yaml
 # .github/workflows/test.yml
 - name: Test Coverage
-  run: npm run test:coverage
+  run: pnpm run test:coverage
   
 - name: Upload to Codecov
   uses: codecov/codecov-action@v3
@@ -302,8 +302,8 @@ open coverage/index.html
 #### Monthly Audits
 ```bash
 # NPM vulnerabilities
-npm audit
-npm audit fix  # Auto-fix low priority
+pnpm audit
+pnpm audit fix  # Auto-fix low priority
 
 # Cargo vulnerabilities  
 cargo audit
@@ -330,8 +330,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - name: npm audit
-        run: npm audit --audit-level=moderate
+      - name: pnpm audit
+        run: pnpm audit --audit-level=moderate
         
       - name: cargo audit
         uses: rustsec/audit-check-action@v1

@@ -245,9 +245,9 @@ cline "analyze TITANE∞ and propose improvements"
    - Step-by-step avec validations
 
 4. **Tests**
-   - `npm run check`
-   - `npm run lint`
-   - `npm test -- --run`
+   - `pnpm run check`
+   - `pnpm run lint`
+   - `pnpm test -- --run`
 
 ---
 

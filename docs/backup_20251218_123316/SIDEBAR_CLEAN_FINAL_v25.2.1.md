@@ -246,7 +246,7 @@ grep -n "path=\"/cognitive\|path=\"/helios\|path=\"/nexus\|path=\"/harmonia\"" s
 ### Tests TypeScript
 
 ```bash
-npm run type-check
+pnpm run type-check
 # Résultat: 0 erreurs
 ```
 

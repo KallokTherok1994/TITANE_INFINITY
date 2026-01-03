@@ -214,20 +214,20 @@ monitor_dependency_vulnerabilities() {
     
     local vuln_found=false
     
-    # npm audit (if available)
+    # pnpm audit (if available)
     if command -v npm &> /dev/null && [[ -f "package.json" ]]; then
-        local audit_output=$(npm audit --json 2>/dev/null || echo '{}')
+        local audit_output=$(pnpm audit --json 2>/dev/null || echo '{}')
         local critical=$(echo "$audit_output" | jq -r '.metadata.vulnerabilities.critical // 0' 2>/dev/null || echo "0")
         local high=$(echo "$audit_output" | jq -r '.metadata.vulnerabilities.high // 0' 2>/dev/null || echo "0")
         
         if [[ $critical -gt 0 ]] || [[ $high -gt 0 ]]; then
-            alert "CRITICAL" "npm audit found ${critical} critical and ${high} high vulnerabilities"
+            alert "CRITICAL" "pnpm audit found ${critical} critical and ${high} high vulnerabilities"
             vuln_found=true
             
             # Save detailed report
             echo "$audit_output" > "${STATE_DIR}/npm-audit-$(date +%Y%m%d-%H%M%S).json"
         else
-            success "npm audit: No critical/high vulnerabilities"
+            success "pnpm audit: No critical/high vulnerabilities"
         fi
     fi
     

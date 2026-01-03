@@ -313,7 +313,7 @@ localStorage.getItem('titane_menu_version');
 ### Redémarrage serveur
 
 ```bash
-pkill -9 -f vite && npm run dev
+pkill -9 -f vite && pnpm run dev
 ```
 
 ### Vérification menu propre

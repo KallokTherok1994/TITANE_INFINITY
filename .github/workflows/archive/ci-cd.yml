@@ -186,8 +186,8 @@ jobs:
         with:
           node-version: '20'
 
-      - name: npm audit
-        run: npm audit --audit-level=moderate
+      - name: pnpm audit
+        run: pnpm audit --audit-level=moderate
         continue-on-error: true
 
       - name: Cargo audit

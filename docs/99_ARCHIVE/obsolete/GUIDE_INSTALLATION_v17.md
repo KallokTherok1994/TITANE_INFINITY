@@ -62,14 +62,14 @@ nvm install 20
 nvm use 20
 
 # Installation de pnpm
-npm install -g pnpm
+pnpm install -g pnpm
 ```
 
 **OU** via gestionnaire de paquets :
 ```bash
 # Pop!_OS / Ubuntu
 sudo apt-get install -y nodejs npm
-sudo npm install -g pnpm
+sudo pnpm install -g pnpm
 ```
 
 ### 3️⃣ Vérification des installations

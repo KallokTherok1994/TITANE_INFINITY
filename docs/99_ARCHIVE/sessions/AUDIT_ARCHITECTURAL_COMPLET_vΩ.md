@@ -3685,7 +3685,7 @@ PATTERNS D'EXTENSION
 1. Lisez ce document en entier (30 min)
 2. Explorez `src/core/` (moteurs centraux)
 3. Regardez `src/services/api/` (API Tauri)
-4. Testez build : `npm run tauri:dev`
+4. Testez build : `pnpm run tauri:dev`
 
 **Si vous ajoutez une feature** :
 1. Vérifiez patterns extensibilité (Phase 6)

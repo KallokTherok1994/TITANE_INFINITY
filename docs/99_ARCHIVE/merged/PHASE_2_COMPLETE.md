@@ -229,7 +229,7 @@ src/
 
 ✅ **TypeScript/Vite Build:** PASSED
 ```bash
-npm run build
+pnpm run build
 ✓ built in 12.52s
 ```
 

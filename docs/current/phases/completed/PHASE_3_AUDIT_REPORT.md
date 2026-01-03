@@ -210,7 +210,7 @@ export default defineConfig({
 ### 3. Bundle Size Report (5 min)
 
 ```bash
-npm run build -- --mode production
+pnpm run build -- --mode production
 npx vite-bundle-visualizer
 ```
 

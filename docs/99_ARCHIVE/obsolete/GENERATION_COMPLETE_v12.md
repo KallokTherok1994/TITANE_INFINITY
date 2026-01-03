@@ -114,12 +114,12 @@ cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
 
 ### Test Frontend Rapide
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 ### Lancement Complet avec Tauri
 ```bash
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 ---
@@ -185,10 +185,10 @@ npm run tauri dev
 ### Workflow 1: Test Frontend Seul
 ```bash
 # 1. Installer dépendances
-npm install
+pnpm install
 
 # 2. Lancer dev
-npm run dev
+pnpm run dev
 
 # 3. Ouvrir navigateur
 http://localhost:5173
@@ -210,17 +210,17 @@ http://localhost:5173
 # Voir VOICE_MODE_LUXE_DUPLEX_GUIDE_v12.md
 
 # 4. Lancer avec Tauri
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 ### Workflow 3: Build Production
 ```bash
 # 1. Tests
-npm test
+pnpm test
 cd src-tauri && cargo test
 
 # 2. Build
-npm run tauri build
+pnpm run tauri build
 
 # 3. Binaire dans:
 # src-tauri/target/release/
@@ -323,7 +323,7 @@ npm run tauri build
 > 
 > **Prochaine action recommandée** :
 > 1. Lancer `./install_voice_mode_v12.sh`
-> 2. Tester avec `npm run dev`
+> 2. Tester avec `pnpm run dev`
 > 3. Consulter `QUICKSTART_VOICE_MODE_v12.md`
 > 
 > **Technologies** : React 18 • TypeScript • Framer Motion • Tauri v2 • Rust • Tokio
@@ -344,13 +344,13 @@ npm run tauri build
 
 ### Scripts Utiles
 - `install_voice_mode_v12.sh` — Installation automatique
-- `npm run dev` — Test frontend
-- `npm run tauri dev` — Application complète
+- `pnpm run dev` — Test frontend
+- `pnpm run tauri dev` — Application complète
 - `cargo test` — Tests backend
 
 ### En Cas de Problème
 1. Consulter `TROUBLESHOOTING_VOICE_MODE_v12.md`
-2. Vérifier logs : `RUST_LOG=debug npm run tauri dev`
+2. Vérifier logs : `RUST_LOG=debug pnpm run tauri dev`
 3. Tester composants individuellement
 4. Vérifier checklist installation
 

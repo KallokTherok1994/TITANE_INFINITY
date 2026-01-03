@@ -268,10 +268,10 @@ wakeWordEngine.configure({
 ### Build Status
 
 ```bash
-✅ npm run type-check
+✅ pnpm run type-check
    → 0 erreurs TypeScript
 
-✅ npm run build
+✅ pnpm run build
    → dist/ généré avec succès
    → Temps: 6.28s
    → Taille: 673 kB (ui-components) + 264 kB (services)
@@ -390,10 +390,10 @@ wakeWordEngine.configure({
 
 ```bash
 # 1. Build production
-npm run build
+pnpm run build
 
 # 2. Build Tauri app
-npm run tauri:build
+pnpm run tauri:build
 
 # 3. Vérifier binaire
 ls -lh src-tauri/target/release/titane-infinity

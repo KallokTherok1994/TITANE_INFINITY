@@ -175,7 +175,7 @@ of the body of a function component.
 2. **package.json**
 
    ```bash
-   npm install @tanstack/react-query
+   pnpm install @tanstack/react-query
    ```
 
    - Installed missing peer dependency
@@ -471,7 +471,7 @@ Total:        46.02s
    - Document as you go (not after completion)
 
 2. **For TITANE∞ Team:**
-   - Add pre-commit hook: `npm test -- --run` (catch failures early)
+   - Add pre-commit hook: `pnpm test -- --run` (catch failures early)
    - Add CI/CD: Run full test suite on every PR
    - Add coverage threshold: Fail build if coverage <80%
    - Add test writing guide: Document test-utils usage

@@ -49,21 +49,21 @@
 
 ### **Développement** (Hot-Reload)
 ```bash
-npm run tauri dev
+pnpm run tauri dev
 ```
 → Lance frontend (Vite) + backend (Rust) avec hot-reload
 
 ### **Build Production**
 ```bash
-npm run build              # Frontend uniquement (dist/)
-npm run tauri build        # Frontend + Backend + Packaging (AppImage/deb/rpm)
+pnpm run build              # Frontend uniquement (dist/)
+pnpm run tauri build        # Frontend + Backend + Packaging (AppImage/deb/rpm)
 ```
 
 ### **Validation**
 ```bash
 cargo check                # Backend: 0 erreurs ✅
 cargo clippy               # Backend: 0 warnings ✅
-npm run build              # Frontend: SUCCESS ✅
+pnpm run build              # Frontend: SUCCESS ✅
 ```
 
 ### **Déploiement Automatisé**
@@ -142,7 +142,7 @@ src/
 
 **Frontend React:**
 ```bash
-✅ npm run build: SUCCESS
+✅ pnpm run build: SUCCESS
 ✅ TypeScript: 0 erreurs
 ✅ 73 modules transformés
 ✅ Code splitting (vendor, tauri)
@@ -182,7 +182,7 @@ dist/assets/tauri-*.js            0.14 kB
 # Fix:
 sudo apt-get install libwebkit2gtk-4.1-dev libjavascriptcoregtk-4.1-dev
 ```
-→ Nécessaire pour `npm run tauri build` production
+→ Nécessaire pour `pnpm run tauri build` production
 
 **CSS Linter Warnings** (⚠️ Non-bloquant)
 - Quelques warnings "} attendue" dans CSS (cosmétiques)
@@ -194,11 +194,11 @@ sudo apt-get install libwebkit2gtk-4.1-dev libjavascriptcoregtk-4.1-dev
 ## 🎯 PROCHAINES ÉTAPES
 
 ### **Immédiat** (Ready to Test)
-1. **Test Dev Mode**: `npm run tauri dev`
+1. **Test Dev Mode**: `pnpm run tauri dev`
 2. **Vérifier UI**: 11 pages navigables, design system appliqué
 3. **Tester Backend**: hooks Tauri invoke API fonctionnels
 4. **Install WebKit**: si production build nécessaire
-5. **Production Build**: `npm run tauri build` → AppImage/deb
+5. **Production Build**: `pnpm run tauri build` → AppImage/deb
 
 ### **Améliorations Futures** (Optionnel)
 - Graphe Nexus visualization (D3.js)
@@ -233,13 +233,13 @@ sudo apt-get install libwebkit2gtk-4.1-dev libjavascriptcoregtk-4.1-dev
 
 ```bash
 # 1. Installer dépendances (si pas déjà fait)
-npm install
+pnpm install
 
 # 2. Mode développement (hot-reload)
-npm run tauri dev
+pnpm run tauri dev
 
 # 3. Build production
-npm run tauri build
+pnpm run tauri build
 
 # 4. Déploiement automatisé (7 stages)
 ./TITANE_INFINITY_PREDEPLOY_v12.sh

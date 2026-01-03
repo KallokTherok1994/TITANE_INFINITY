@@ -78,7 +78,7 @@
 **Actions:**
 ```typescript
 // Installer react-window
-npm install react-window react-window-infinite-loader
+pnpm install react-window react-window-infinite-loader
 
 // Implémenter MessageList virtualisée
 import { VariableSizeList as List } from 'react-window';
@@ -215,7 +215,7 @@ export const loadGeminiProvider = () => import('./providers/gemini');
 ```json
 {
   "scripts": {
-    "build": "vite build && npm run compress",
+    "build": "vite build && pnpm run compress",
     "compress": "node scripts/brotli-compress.mjs"
   }
 }
@@ -426,8 +426,8 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      - run: npm ci
-      - run: npm run build
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
 
       - name: Upload Bundle Stats
         uses: actions/upload-artifact@v4
@@ -486,10 +486,10 @@ server: {
 ### Commandes de Diagnostic
 ```bash
 # Analyse bundle
-npm run build && open dist/stats.html
+pnpm run build && open dist/stats.html
 
 # Profile React
-REACT_PROFILER=1 npm run dev
+REACT_PROFILER=1 pnpm run dev
 
 # Memory snapshot
 # Chrome DevTools > Memory > Heap snapshot
@@ -525,9 +525,9 @@ RUSTFLAGS="-C instrument-coverage" cargo build --release
 
 ### Commande de Validation
 ```bash
-npm run check && npm run lint && npm run test:unit && \
+pnpm run check && pnpm run lint && pnpm run test:unit && \
 cd src-tauri && cargo clippy && cargo test && \
-cd .. && npm run build && \
+cd .. && pnpm run build && \
 echo "✅ VALIDATION COMPLÈTE"
 ```
 

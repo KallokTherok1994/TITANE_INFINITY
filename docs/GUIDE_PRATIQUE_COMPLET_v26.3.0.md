@@ -60,7 +60,7 @@
 ```bash
 # Option A: Via terminal
 cd TITANE_INFINITY
-npm run dev:tauri
+pnpm run dev:tauri
 
 # Option B: Via desktop icon (si installé)
 # Double-clic sur titane-infinity.desktop
@@ -355,7 +355,7 @@ Voulez-vous que je génère le code complet pour une de ces solutions ?"
 **Shortcuts:**
 ```bash
 # Via terminal (optionnel)
-npm run titane:health
+pnpm run titane:health
 ```
 
 **Output:**

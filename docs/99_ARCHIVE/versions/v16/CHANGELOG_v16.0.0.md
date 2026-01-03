@@ -248,14 +248,14 @@ Un système qui **pense, apprend et évolue**. La fondation d'une IA véritablem
 **Install v16:**
 ```bash
 # Frontend
-npm install
-npm run build
+pnpm install
+pnpm run build
 
 # Backend
 cargo build --release --manifest-path src-tauri/Cargo.toml
 
 # Launch
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 **Test Cognitive:**

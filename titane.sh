@@ -97,7 +97,7 @@ pm_run() {
         fi
     fi
 
-    npm run "$@"
+    pnpm run "$@"
 }
 
 pm_exec() {
@@ -301,11 +301,11 @@ repair() {
         else
             warning "pnpm-lock.yaml detected but neither pnpm nor corepack is available; falling back to npm"
             info "Using npm..."
-            npm install
+            pnpm install
         fi
     else
         info "Using npm..."
-        npm install
+        pnpm install
     fi
     success "Dependencies installed"
     
@@ -346,7 +346,7 @@ fix() {
         success "TypeScript check passed (0 errors)"
     else
         warning "TypeScript errors found - review logs"
-        info "Run 'npm run check' to see details"
+        info "Run 'pnpm run check' to see details"
     fi
     
     log ""

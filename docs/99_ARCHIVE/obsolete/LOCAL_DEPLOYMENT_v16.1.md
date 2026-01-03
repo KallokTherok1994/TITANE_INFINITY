@@ -167,7 +167,7 @@ export async function sendMessage(message: string) {
 #### 3. Rebuild
 
 ```bash
-npm run build
+pnpm run build
 cd dist && python3 -m http.server 8080
 ```
 

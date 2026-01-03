@@ -224,7 +224,7 @@ UI FILTERING FIXES (1 échec)
 
 ### ✅ Ce qui a bien fonctionné
 
-1. **Diagnostic systématique** → 3 tools parallèles (npm test, grep TODO, get_errors)
+1. **Diagnostic systématique** → 3 tools parallèles (pnpm test, grep TODO, get_errors)
 2. **Priorisation** → Focus Menu.test.tsx (67% des échecs)
 3. **Adaptation tests** → Tests suivent implémentation, pas l'inverse
 4. **Composants contrôlés** → Tests avec `rerender` + nouvelles props
@@ -297,7 +297,7 @@ TITANE∞ v25.4.2 atteint **97% de tests success** après correction de Menu.tes
 
 ### Tâches Complétées ✅
 
-1. ✅ **Réflexion approfondie** → Analyse 3-tools (npm test, grep, get_errors)
+1. ✅ **Réflexion approfondie** → Analyse 3-tools (pnpm test, grep, get_errors)
 2. ✅ **Identification problèmes** → Menu.test.tsx (67% des échecs)
 3. ✅ **Résolution complète** → 14 tests fixés en 1 session
 4. ✅ **Validation globale** → 97% tests success (production ready)
@@ -317,13 +317,13 @@ TITANE∞ v25.4.2 atteint **97% de tests success** après correction de Menu.tes
 
 ```bash
 # Build production
-npm run build
+pnpm run build
 
 # Validation finale
-npm run check
+pnpm run check
 
 # Tests finaux
-npm test -- --run
+pnpm test -- --run
 
 # ✅ DÉPLOYER
 ```

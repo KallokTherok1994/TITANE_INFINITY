@@ -160,7 +160,7 @@ legacy/
 **Résultat**:
 
 ```bash
-$ npm run lint
+$ pnpm run lint
 ✅ 0 errors, 0 warnings
 ```
 
@@ -435,7 +435,7 @@ Warnings:     0 erreurs détectées
 ./build-fast.sh
 
 # Lancer développement
-npm run dev:tauri
+pnpm run dev:tauri
 
 # Build production complet
 npx tauri build --bundles deb,appimage
@@ -449,7 +449,7 @@ tsc --noEmit
 # ✅ No errors
 
 # ESLint
-npm run lint
+pnpm run lint
 # ✅ 0 errors, 0 warnings
 
 # Rust
@@ -457,14 +457,14 @@ cargo check --manifest-path src-tauri/Cargo.toml
 # ✅ Compiling (validation en cours)
 
 # Tests
-npm test && npm run test:tauri
+pnpm test && pnpm run test:tauri
 # ✅ All tests passing
 ```
 
 ### Vérification Commandes Persistence
 
 ```bash
-# Frontend console (après npm run dev:tauri)
+# Frontend console (après pnpm run dev:tauri)
 window.__TAURI_INVOKE__('titan_persistence_init')
 # ✅ Devrait retourner success au lieu de "Command not found"
 ```
@@ -666,7 +666,7 @@ META_KERNEL.initialize({
 
 ```bash
 # Playwright tests complets
-npm run test:e2e
+pnpm run test:e2e
 
 # Validation packages
 ./scripts/test-packages.sh

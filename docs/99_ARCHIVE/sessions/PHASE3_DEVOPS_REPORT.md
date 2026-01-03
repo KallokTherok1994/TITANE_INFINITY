@@ -48,10 +48,10 @@ pub async fn devops_run(cmd: String) -> Result<String, String>
 **Whitelist autorisée**:
 ```rust
 let allowed_commands = vec![
-    "npm run build",
-    "npm run type-check",
-    "npm run test",
-    "npm run clean",
+    "pnpm run build",
+    "pnpm run type-check",
+    "pnpm run test",
+    "pnpm run clean",
     "cargo check",
     "cargo clippy",
     "cargo build",
@@ -142,7 +142,7 @@ $ cargo check --manifest-path src-tauri/Cargo.toml
 
 ### **TypeScript**
 ```bash
-$ npm run type-check
+$ pnpm run type-check
 ⚠️ 34 errors (inchangé, normal - aucune modification TypeScript cette phase)
 ```
 
@@ -162,7 +162,7 @@ $ cargo clippy
 ```typescript
 // ✅ OPÉRATIONNEL - Exécution de commandes
 const result = await invoke<string>('devops_run', { 
-  cmd: 'npm run build' 
+  cmd: 'pnpm run build' 
 });
 
 // ✅ OPÉRATIONNEL - Récupération statistiques

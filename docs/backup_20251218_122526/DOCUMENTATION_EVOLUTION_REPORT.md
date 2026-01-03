@@ -830,7 +830,7 @@ docs/04_guides/
   - Component tests (@testing-library/react examples)
   - Hooks tests (renderHook, act)
   - Store tests (Zustand state management)
-  - Commands: `npm test`, `npm run test:coverage`, `npm run test:ui`
+  - Commands: `pnpm test`, `pnpm run test:coverage`, `pnpm run test:ui`
 - **Tests Backend**
   - Unit tests (Rust assert!, assert_eq!)
   - Integration tests (tokio::test, async)
@@ -839,7 +839,7 @@ docs/04_guides/
 - **Tests E2E**
   - Playwright configuration (chromium, trace, screenshots)
   - E2E test examples (chat workflow, provider switching)
-  - Commands: `npm run test:e2e`, `npm run test:e2e:ui`
+  - Commands: `pnpm run test:e2e`, `pnpm run test:e2e:ui`
 - **Coverage & Qualité**
   - Frontend: Vitest v8, thresholds
   - Backend: tarpaulin, llvm-cov

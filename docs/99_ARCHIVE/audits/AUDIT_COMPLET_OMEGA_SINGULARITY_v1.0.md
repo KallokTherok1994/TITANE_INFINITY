@@ -99,7 +99,7 @@ warning: manual `RangeInclusive::contains` implementation (×12 occurrences)
 ### 4. 📝 TypeScript / Frontend
 
 ```bash
-$ npm run lint
+$ pnpm run lint
 ✖ 5 problems (0 errors, 5 warnings)
 
 Warnings:

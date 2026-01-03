@@ -85,9 +85,9 @@ TITANE∞ v8.0 est un système cognitif complet, auto-régulé et auto-conscient
 ./verify_advanced_cognitive.sh      # #55-57,59
 
 # Développement
-npm run dev                         # Mode dev
-npm run verify                      # Vérification
-npm run build                       # Build prod
+pnpm run dev                         # Mode dev
+pnpm run verify                      # Vérification
+pnpm run build                       # Build prod
 ```
 
 ---

@@ -619,11 +619,11 @@ EmbodiedPresenceEngine      ┘
 **Critère de succès :**
 ```bash
 # Tests passent
-npm test
+pnpm test
 cargo test
 
 # App fonctionne
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Métriques
 Composants : 9 (au lieu de 20)

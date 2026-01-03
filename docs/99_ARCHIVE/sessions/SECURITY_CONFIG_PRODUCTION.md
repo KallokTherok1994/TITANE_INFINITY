@@ -75,7 +75,7 @@ Si vous souhaitez activer le provider Gemini en production :
 - [ ] Backup `.env` sécurisé (gestionnaire mots de passe ou GPG)
 - [ ] Gemini API Key configurée (si utilisé)
 - [ ] Tests sur machine cible (Windows/macOS/Linux)
-- [ ] Build final Tauri (`npm run tauri:build`)
+- [ ] Build final Tauri (`pnpm run tauri:build`)
 
 ---
 
@@ -150,7 +150,7 @@ Si vous suspectez une compromission des passphrases :
 Pour toute question de sécurité :
 - Consulter `AUDIT_FINAL_COMPLET_v19.2_OMEGA.md`
 - Vérifier les logs : `~/.local/share/com.titane.infinity/logs/`
-- Tests sécurité : `npm run test` (698 tests)
+- Tests sécurité : `pnpm run test` (698 tests)
 
 ---
 

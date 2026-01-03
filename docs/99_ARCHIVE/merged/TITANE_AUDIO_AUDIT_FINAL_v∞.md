@@ -243,7 +243,7 @@ Finished `dev` profile in 0.36s
 ### **Test 2 : Compilation TypeScript**
 
 ```bash
-npm run type-check
+pnpm run type-check
 ```
 
 **✅ RÉSULTAT :**
@@ -260,7 +260,7 @@ npm run type-check
 ### **Test 3 : Linter ESLint**
 
 ```bash
-npm run lint
+pnpm run lint
 ```
 
 **⚠️ RÉSULTAT :**
@@ -275,7 +275,7 @@ audioAutoTest.ts:171 - Empty block statement
 ### **Test 4 : Build Production**
 
 ```bash
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 **⏳ À EXÉCUTER PAR L'UTILISATEUR**
@@ -678,7 +678,7 @@ describe('useAudioStreaming', () => {
 
 3. **Test build production**
    ```bash
-   npm run tauri:build
+   pnpm run tauri:build
    ```
 
 ---

@@ -66,9 +66,9 @@ coverage: {
 **Option B: Condition NODE_ENV**
 ```bash
 if [ "$NODE_ENV" != "ci" ]; then
-  npm test -- --run
+  pnpm test -- --run
 else
-  npm run test:coverage || echo "Coverage skipped (Node v18)"
+  pnpm run test:coverage || echo "Coverage skipped (Node v18)"
 fi
 ```
 
@@ -108,9 +108,9 @@ cd src-tauri && cargo tarpaulin --out Html --output-dir ../coverage-rust
 
 ```bash
 npm login
-npm install --save-dev @vitest/coverage-istanbul
+pnpm install --save-dev @vitest/coverage-istanbul
 # Modify vitest.config.ts: provider: 'istanbul'
-npm run test:coverage
+pnpm run test:coverage
 ```
 
 ---

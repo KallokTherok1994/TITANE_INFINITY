@@ -124,7 +124,7 @@ Exec=xdg-open ~/.titane/
 **Workflow automatique**:
 
 ```
-npm run build
+pnpm run build
   ↓
 vite build
   ↓
@@ -178,11 +178,11 @@ $ ls -la ~/.local/share/applications/titane-infinity.desktop
 
 ```bash
 # Lors d'un build normal
-npm run build
+pnpm run build
 # → L'icône se met à jour automatiquement
 
 # Lors d'un build production
-npm run build:production
+pnpm run build:production
 # → Build complet + mise à jour icône
 ```
 
@@ -193,7 +193,7 @@ npm run build:production
 bash scripts/update-desktop-icon.sh
 
 # Ou via npm
-npm run postbuild
+pnpm run postbuild
 ```
 
 ### Première Installation
@@ -202,7 +202,7 @@ npm run postbuild
 # 1. Compiler le projet
 cargo build --manifest-path src-tauri/Cargo.toml --release
 
-# 2. L'icône est automatiquement installée après npm run build
+# 2. L'icône est automatiquement installée après pnpm run build
 # Ou lancer manuellement:
 bash scripts/update-desktop-icon.sh
 ```
@@ -293,7 +293,7 @@ git add .
 git commit -m "feat: nouvelle fonctionnalité"
 
 # 2. Build (met à jour l'icône automatiquement)
-npm run build
+pnpm run build
 
 # 3. L'icône est déjà à jour!
 # Cherchez "TITANE" dans le menu des applications
@@ -303,7 +303,7 @@ npm run build
 
 ```bash
 # Build production complet
-npm run build:production
+pnpm run build:production
 # → Lint + Format + Build + Tauri Build + Icône Update
 
 # Les packages générés auront l'icône correcte

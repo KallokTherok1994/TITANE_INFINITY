@@ -22,7 +22,7 @@ Ce guide fournit des procédures de test manuelles détaillées pour valider tou
 
 ```bash
 cd /home/titane/Documents/TITANE_INFINITY
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### 2. Ouvrir DevTools

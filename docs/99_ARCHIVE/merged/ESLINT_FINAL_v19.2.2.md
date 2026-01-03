@@ -206,20 +206,20 @@ return breaker;
 
 ### ESLint
 ```bash
-$ npm run lint
+$ pnpm run lint
 ✓ 0 problèmes détectés
 ✓ --max-warnings 0 respecté
 ```
 
 ### Compilation TypeScript
 ```bash
-$ npm run type-check
+$ pnpm run type-check
 ✓ Aucune erreur de compilation
 ```
 
 ### Tests
 ```bash
-$ npm test
+$ pnpm test
 ✓ 102/108 tests passent
 ✓ Aucune régression détectée
 ```

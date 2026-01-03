@@ -75,9 +75,9 @@ START
   │    └─ Tester entre chaque
   │
   ├─→ [6] BUILD & LINT
-  │    ├─ npm run build ✅
-  │    ├─ npm run lint ✅
-  │    └─ npm run dev (test visuel)
+  │    ├─ pnpm run build ✅
+  │    ├─ pnpm run lint ✅
+  │    └─ pnpm run dev (test visuel)
   │
   └─→ [7] COMMIT
        ├─ git add .

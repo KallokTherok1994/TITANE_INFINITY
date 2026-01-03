@@ -343,7 +343,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
 ### Production Build
 ```bash
-npm run build
+pnpm run build
 # ✅ built in 13.05s
 # ✅ All UI components compiled successfully
 # ✅ 0 TypeScript errors
@@ -360,7 +360,7 @@ npm run build
 
 ### TypeScript Check
 ```bash
-npm run check
+pnpm run check
 # ✅ No errors in migrated UI components
 # ✅ Type-safe imports/exports
 # ✅ forwardRef patterns preserved

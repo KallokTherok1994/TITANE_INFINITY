@@ -20,7 +20,7 @@
 ### Corrections Appliquées (v19.3)
 ```
 ✅ Chat IA Fix:         devUrl → http://localhost:5173
-✅ Vite Dev Server:     npm run vite:dev (serveur HTTP)
+✅ Vite Dev Server:     pnpm run vite:dev (serveur HTTP)
 ✅ Backend Rust:        758 lignes (Gemini + Ollama + Local echo)
 ✅ Cognitive Layer:     v16 (4 engines actifs)
 ✅ Singularity State:   20 engines unifiés
@@ -54,7 +54,7 @@ Tag:    v24.0.0 (historique)
    - Analyse + réparation configuration
    - Durée: ~2-5 min
 
-3. **⬆️ Build & Test Dev** → Lance `npm run tauri:dev`
+3. **⬆️ Build & Test Dev** → Lance `pnpm run tauri:dev`
    - Serveur Vite HTTP + App Tauri
    - Durée: ~2 min (compilation incrémentale)
    - Parfait pour tester rapidement

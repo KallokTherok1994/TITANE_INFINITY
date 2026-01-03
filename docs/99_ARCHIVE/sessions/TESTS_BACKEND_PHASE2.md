@@ -1,7 +1,7 @@
 # 🧪 TESTS BACKEND CHAT IA — PHASE 2 (DIRECT)
 
 **Date**: 27 novembre 2025
-**Status**: ✅ App lancée (npm run tauri:dev)
+**Status**: ✅ App lancée (pnpm run tauri:dev)
 **DevTools**: ✅ Auto-ouverts
 
 ---
@@ -143,7 +143,7 @@ console.log('🎯 Provider utilisé:', response2?.message?.provider);
 **Objectif**: Vérifier que les logs backend sont visibles dans terminal
 
 **Où regarder**:
-- Terminal où tourne `npm run tauri:dev`
+- Terminal où tourne `pnpm run tauri:dev`
 - Chercher lignes format: `[CHAT]`
 
 **Logs Attendus**:

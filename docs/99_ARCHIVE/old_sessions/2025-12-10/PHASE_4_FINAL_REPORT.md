@@ -476,8 +476,8 @@ useEffect(() => {
 #### **1. Mesure Lighthouse réelle**
 
 ```bash
-npm run build
-npm run preview &
+pnpm run build
+pnpm run preview &
 sleep 5
 npx lighthouse http://localhost:4173 --output json --output html --view
 ```

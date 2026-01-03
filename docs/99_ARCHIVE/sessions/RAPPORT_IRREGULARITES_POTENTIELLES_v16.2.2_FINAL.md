@@ -65,7 +65,7 @@ rust-version = "1.70"
 - ❌ `test_frontend_validation.sh` utilise `pnpm` (lignes 70, 77, 85)
 - ❌ `dev_on_host.sh` utilise `pnpm tauri dev` (lignes 24, 31)
 - ✅ `package.json` scripts utilisent `npm` (cohérent)
-- ✅ `build_production.sh` utilise `npm install` (ligne 28)
+- ✅ `build_production.sh` utilise `pnpm install` (ligne 28)
 
 **Impact**:
 - Comportement différent selon script utilisé
@@ -182,7 +182,7 @@ chmod +x ./scripts/archive/fix_overdrive_conflicts.sh
 Name=TITANE∞
 Version=16.2.2
 Comment=TITANE∞ - Cognitive Layer + Real APIs
-Exec=npm run tauri:dev
+Exec=pnpm run tauri:dev
 Icon=titane-infinity
 Terminal=false
 Type=Application
@@ -211,16 +211,16 @@ rm -rf src-tauri/target/release/bundle/ 2>/dev/null || true
 "clean": "rm -rf node_modules dist .vite src-tauri/target",
 "clean:dist": "rm -rf dist",
 "clean:cache": "rm -rf .vite node_modules/.vite",
-"reinstall": "npm run clean && npm install"
+"reinstall": "pnpm run clean && pnpm install"
 ```
-- ✅ `npm run clean` complet
+- ✅ `pnpm run clean` complet
 - ✅ `clean:cache` pour Vite
 - ✅ `reinstall` full reset
 
 ### ⚠️ IRRÉGULARITÉ: Pas de Script `build_clean` Unifié
 
 **Problème**:
-- 3 scripts différents pour nettoyer (`build_production.sh`, `npm run clean`, `npm run clean:cache`)
+- 3 scripts différents pour nettoyer (`build_production.sh`, `pnpm run clean`, `pnpm run clean:cache`)
 - Aucun ne garantit un build from scratch total
 - Risque: caches mixtes entre builds
 
@@ -236,11 +236,11 @@ rm -rf dist/ .vite/ node_modules/.vite/
 rm -rf src-tauri/target/
 
 # 3. Reinstaller dépendances
-npm install
+pnpm install
 
 # 4. Build complet
-npm run build
-npm run tauri:build
+pnpm run build
+pnpm run tauri:build
 
 echo "✅ Build clean terminé - binaire: src-tauri/target/release/titane-infinity"
 ```
@@ -766,7 +766,7 @@ echo "🔥 TITANE∞ Stress Tests"
 # Test 1: 10 builds successifs
 for i in {1..10}; do
   echo "Build $i/10..."
-  npm run build || exit 1
+  pnpm run build || exit 1
 done
 
 # Test 2: 50 messages Chat IA
@@ -774,7 +774,7 @@ node tests/stress_chat.js || exit 1
 
 # Test 3: Config manquante
 mv .env .env.backup
-npm run tauri:dev &
+pnpm run tauri:dev &
 PID=$!
 sleep 10
 kill $PID
@@ -1134,32 +1134,32 @@ Résultat Attendu:
 **1. Build Clean Total**:
 ```bash
 # Nettoyer TOUT avant release
-npm run clean              # Frontend + backend
+pnpm run clean              # Frontend + backend
 rm -rf .vite/              # Cache Vite
-npm install                # Réinstaller deps
-npm run build              # Build frontend
-npm run tauri:build        # Build Tauri app
+pnpm install                # Réinstaller deps
+pnpm run build              # Build frontend
+pnpm run tauri:build        # Build Tauri app
 ```
 
 **2. Développement**:
 ```bash
 # Lancer en mode dev (TOUJOURS utiliser npm, pas pnpm)
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Avec logs Rust
-RUST_LOG=debug npm run tauri:dev
+RUST_LOG=debug pnpm run tauri:dev
 ```
 
 **3. Tests**:
 ```bash
 # Tests unitaires
-npm run test
+pnpm run test
 
 # Tests E2E
-npm run test:e2e
+pnpm run test:e2e
 
 # Type check
-npm run type-check
+pnpm run type-check
 ```
 
 **4. Vérification Santé**:
@@ -1187,32 +1187,32 @@ source .env
 test -n "$GEMINI_API_KEY" || echo "⚠️ GEMINI_API_KEY manquante"
 
 # 3. Type check
-npm run type-check
+pnpm run type-check
 # → 0 erreurs (72 warnings acceptables)
 ```
 
 **Phase 2: Tests** (10 min)
 ```bash
 # 4. Tests unitaires
-npm run test
+pnpm run test
 # → 100% pass
 
 # 5. Tests E2E
-npm run test:e2e
+pnpm run test:e2e
 # → 12/12 tests OK
 
 # 6. Test build frontend
-npm run build
+pnpm run build
 test -f dist/index.html || echo "❌ Build frontend failed"
 ```
 
 **Phase 3: Build Final** (15 min)
 ```bash
 # 7. Build clean total
-npm run clean
-npm install
-npm run build
-npm run tauri:build
+pnpm run clean
+pnpm install
+pnpm run build
+pnpm run tauri:build
 
 # 8. Valider binaire
 ls -lh src-tauri/target/release/titane-infinity
@@ -1245,7 +1245,7 @@ sleep 5
 2. **Mémoire**:
    - ✅ RAM app < 500 MB en idle
    - ⚠️ Si >1 GB: vérifier intervals non stoppés, caches non nettoyés
-   - 🔧 Si fuite: run `npm run test:e2e` chercher tests failing
+   - 🔧 Si fuite: run `pnpm run test:e2e` chercher tests failing
 
 3. **Versions**:
    - ✅ Toujours synchroniser package.json / Cargo.toml / tauri.conf.json
@@ -1253,7 +1253,7 @@ sleep 5
    - 🔧 Script: `./verify_version_coherence.sh`
 
 4. **Build**:
-   - ✅ Si erreur build: toujours tester `npm run clean` avant debug
+   - ✅ Si erreur build: toujours tester `pnpm run clean` avant debug
    - ⚠️ Si divergence build dev vs prod: vérifier cache `.vite`
    - 🔧 Build from scratch: supprimer `node_modules`, `dist`, `target`, réinstaller
 
