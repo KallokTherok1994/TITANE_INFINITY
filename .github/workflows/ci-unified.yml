@@ -31,14 +31,14 @@ jobs:
       - name: 📥 Checkout code
         uses: actions/checkout@v4.2.2
 
+      - name: 🔧 Enable Corepack (pnpm)
+        run: corepack enable
+
       - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v4.1.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-
-      - name: 🔧 Enable Corepack (pnpm)
-        run: corepack enable
 
       - name: 📦 Install dependencies
         run: pnpm install --frozen-lockfile
@@ -70,14 +70,14 @@ jobs:
       - name: 📥 Checkout code
         uses: actions/checkout@v4.2.2
 
+      - name: 🔧 Enable Corepack (pnpm)
+        run: corepack enable
+
       - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v4.1.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-
-      - name: 🔧 Enable Corepack (pnpm)
-        run: corepack enable
 
       - name: 📦 Install dependencies
         run: pnpm install --frozen-lockfile
@@ -192,14 +192,14 @@ jobs:
       - name: 📥 Checkout code
         uses: actions/checkout@v4.2.2
 
+      - name: 🔧 Enable Corepack (pnpm)
+        run: corepack enable
+
       - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v4.1.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-
-      - name: 🔧 Enable Corepack (pnpm)
-        run: corepack enable
 
       - name: 📦 Install dependencies
         run: pnpm install --frozen-lockfile
@@ -244,14 +244,14 @@ jobs:
       - name: 📥 Checkout code
         uses: actions/checkout@v4.2.2
 
+      - name: 🔧 Enable Corepack (pnpm)
+        run: corepack enable
+
       - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v4.1.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-
-      - name: 🔧 Enable Corepack (pnpm)
-        run: corepack enable
 
       - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
         uses: dtolnay/rust-toolchain@1.83
