@@ -1,6 +1,7 @@
 /**
- * TITANE∞ v20.0 — Input Component
- * Super Prompt #2: Frontend Polish & UX Mastering
+ * TITANE∞ v26.2.0 — Input Component (Titanium Dark)
+ * Text input with Titanium Dark design system
+ * WCAG 2.2 AA compliant with proper label association
  * @license MIT
  */
 
@@ -10,44 +11,54 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
   label?: string;
   helper?: string;
   error?: string;
+  success?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
 }
 
 /**
- * Input - Text input générique avec label, helper, erreur
+ * Input - Accessible text input with label, helper text, and error states
  *
  * @example
  * ```tsx
  * <Input
+ *   id="email"
  *   label="Email"
- *   helper="Votre adresse email"
+ *   helper="Your email address"
  *   error={errors.email}
  *   type="email"
- *   placeholder="vous@exemple.com"
+ *   placeholder="you@example.com"
  * />
  * ```
  */
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   (
-    { label, helper, error, leftIcon, rightIcon, className = '', disabled, ...props },
+    { 
+      label, 
+      helper, 
+      error, 
+      success,
+      leftIcon, 
+      rightIcon, 
+      className = '', 
+      disabled,
+      id,
+      ...props 
+    },
     ref
   ) => {
     const hasError = !!error;
+    const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
 
     return (
-      <div className="w-full">
+      <div className="w-full flex flex-col gap-2">
         {label && (
           <label
-            htmlFor={props.id}
-            className="block text-sm font-medium mb-1.5"
-            style={{
-              color: hasError
-                ? 'var(--text-danger, #8b5f5f)'
-                : disabled
-                  ? 'var(--text-disabled, rgba(255,255,255,0.38))'
-                  : 'var(--text-primary, #e0e0e0)',
-            }}
+            htmlFor={inputId}
+            className={`
+              text-sm font-medium
+              ${hasError ? 'text-error-500' : disabled ? 'text-titanium-text-disabled' : 'text-titanium-text-primary'}
+            `}
           >
             {label}
           </label>
@@ -56,8 +67,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         <div className="relative">
           {leftIcon && (
             <div
-              className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
-              style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+              className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-titanium-text-tertiary"
+              aria-hidden="true"
             >
               {leftIcon}
             </div>
@@ -65,45 +76,34 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
           <input
             ref={ref}
+            id={inputId}
             disabled={disabled}
             aria-invalid={hasError}
             aria-describedby={
-              error ? `${props.id}-error` : helper ? `${props.id}-helper` : undefined
+              error ? `${inputId}-error` : helper ? `${inputId}-helper` : undefined
             }
             className={`
-              w-full h-10 px-3 rounded-md
-              text-sm font-normal
-              transition-all duration-150
-              focus:outline-none focus:ring-[3px] focus:ring-[rgba(114,123,129,0.6)] focus:ring-offset-0
-              disabled:cursor-not-allowed disabled:opacity-50
+              w-full h-10 px-4 rounded
+              text-base font-normal
+              bg-titanium-bg-interactive
+              border
+              ${hasError ? 'border-error-500' : success ? 'border-success-500' : 'border-titanium-border-default'}
+              text-titanium-text-primary
+              placeholder:text-titanium-text-tertiary
+              transition-colors duration-200
+              focus:outline-none focus:shadow-focus focus:border-titanium-accent-bright
+              disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-titanium-bg-elevated
               ${leftIcon ? 'pl-10' : ''}
               ${rightIcon ? 'pr-10' : ''}
               ${className}
             `}
-            style={{
-              background: hasError
-                ? 'var(--bg-danger-subtle, rgba(139,95,95,0.10))'
-                : disabled
-                  ? 'var(--bg-surface, #181c21)'
-                  : 'var(--bg-panel, #101216)',
-              border: `1px solid ${
-                hasError
-                  ? 'var(--border-danger, #8b5f5f)'
-                  : disabled
-                    ? 'var(--border, rgba(196,196,196,0.12))'
-                    : 'var(--border, rgba(196,196,196,0.12))'
-              }`,
-              color: disabled
-                ? 'var(--text-disabled, rgba(255,255,255,0.38))'
-                : 'var(--text-primary, #e0e0e0)',
-            }}
             {...props}
           />
 
           {rightIcon && (
             <div
-              className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
-              style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+              className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-titanium-text-tertiary"
+              aria-hidden="true"
             >
               {rightIcon}
             </div>
@@ -112,13 +112,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
         {(helper || error) && (
           <p
-            id={error ? `${props.id}-error` : `${props.id}-helper`}
-            className="mt-1.5 text-xs"
-            style={{
-              color: hasError
-                ? 'var(--text-danger, #8b5f5f)'
-                : 'var(--text-muted, rgba(255,255,255,0.60))',
-            }}
+            id={error ? `${inputId}-error` : `${inputId}-helper`}
+            className={`
+              text-xs
+              ${hasError ? 'text-error-500' : 'text-titanium-text-tertiary'}
+            `}
+            role={hasError ? 'alert' : undefined}
           >
             {error || helper}
           </p>
