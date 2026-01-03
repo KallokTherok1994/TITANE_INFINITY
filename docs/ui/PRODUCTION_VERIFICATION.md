@@ -157,7 +157,7 @@ This document provides comprehensive verification procedures for the TITANE∞ "
 #### 1. UI Showcase Page Test
 ```bash
 # Start dev server
-npm run dev
+pnpm run dev
 
 # Navigate to:
 http://localhost:1420/design-system
@@ -269,7 +269,7 @@ http://localhost:1420/design-system
 
 #### Unit Tests
 ```bash
-npm run test
+pnpm run test
 ```
 
 **Expected Results:**
@@ -279,8 +279,8 @@ npm run test
 
 #### Integration Tests
 ```bash
-npm run test:architecture
-npm run test:compliance
+pnpm run test:architecture
+pnpm run test:compliance
 ```
 
 **Expected Results:**
@@ -289,7 +289,7 @@ npm run test:compliance
 
 #### Rust Tests
 ```bash
-npm run test:rust
+pnpm run test:rust
 ```
 
 **Expected Results:**
@@ -298,7 +298,7 @@ npm run test:rust
 
 #### E2E Tests
 ```bash
-npm run test:e2e
+pnpm run test:e2e
 ```
 
 **Expected Results:**
@@ -310,7 +310,7 @@ npm run test:e2e
 
 #### Development Build
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 **Expected Results:**
@@ -321,7 +321,7 @@ npm run dev
 
 #### Production Build
 ```bash
-npm run build
+pnpm run build
 ```
 
 **Expected Results:**
@@ -332,7 +332,7 @@ npm run build
 
 #### Production Bundle (Full)
 ```bash
-npm run build:production
+pnpm run build:production
 ```
 
 **Expected Results:**
@@ -349,19 +349,19 @@ npm run build:production
 ### Automated Quality Gates
 
 **Critical (Must Pass):**
-- ✅ TypeScript type check: `npm run check`
-- ✅ ESLint: `npm run lint`
-- ✅ Unit tests: `npm run test`
-- ✅ Architecture tests: `npm run test:architecture`
-- ✅ Rust tests: `npm run test:rust`
+- ✅ TypeScript type check: `pnpm run check`
+- ✅ ESLint: `pnpm run lint`
+- ✅ Unit tests: `pnpm run test`
+- ✅ Architecture tests: `pnpm run test:architecture`
+- ✅ Rust tests: `pnpm run test:rust`
 
 **Important (Should Pass):**
-- ✅ Prettier: `npm run format:check`
-- ✅ Compliance tests: `npm run test:compliance`
-- ✅ E2E tests: `npm run test:e2e`
+- ✅ Prettier: `pnpm run format:check`
+- ✅ Compliance tests: `pnpm run test:compliance`
+- ✅ E2E tests: `pnpm run test:e2e`
 
 **Nice-to-Have (May Have Warnings):**
-- 🟡 Security audit: `npm audit` (allow moderate vulnerabilities in dev deps)
+- 🟡 Security audit: `pnpm audit` (allow moderate vulnerabilities in dev deps)
 - 🟡 Cargo audit: `cd src-tauri && cargo audit`
 
 ### Manual Quality Gates
@@ -413,8 +413,8 @@ git checkout -b rollback/pre-titanium-dark
 git revert --no-commit <commit-hash>..HEAD
 
 # 4. Test rollback
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 
 # 5. If successful, push rollback
 git commit -m "Rollback: Revert Titanium Dark changes"
@@ -435,7 +435,7 @@ git checkout -b hotfix/titanium-dark-issue-<issue-number>
 # (use git commit --no-verify to bypass hooks if needed)
 
 # 3. Test fix
-npm run check && npm run test
+pnpm run check && pnpm run test
 
 # 4. Push hotfix
 git push origin hotfix/titanium-dark-issue-<issue-number>
@@ -537,12 +537,12 @@ After:  A  (91.4/100)
 ## Final Checklist for Deployment
 
 **Before Merging PR:**
-- [ ] Run `npm install` (if not already done)
-- [ ] Run `npm run check` (TypeScript)
-- [ ] Run `npm run lint` (ESLint)
-- [ ] Run `npm run test` (Vitest)
-- [ ] Run `npm run test:rust` (Cargo)
-- [ ] Run `npm run build` (Vite)
+- [ ] Run `pnpm install` (if not already done)
+- [ ] Run `pnpm run check` (TypeScript)
+- [ ] Run `pnpm run lint` (ESLint)
+- [ ] Run `pnpm run test` (Vitest)
+- [ ] Run `pnpm run test:rust` (Cargo)
+- [ ] Run `pnpm run build` (Vite)
 - [ ] Test UI Showcase page manually
 - [ ] Test keyboard navigation manually
 - [ ] Review all documentation files

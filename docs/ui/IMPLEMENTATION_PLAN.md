@@ -536,11 +536,11 @@ Create `/design-system` route with all components + states.
 ### Day 24: Build & Test
 
 ```bash
-npm run lint          # Should pass
-npm run format:check  # Should pass
-npm run check         # TypeScript check
-npm run test:all      # All tests pass
-npm run build         # Production build succeeds
+pnpm run lint          # Should pass
+pnpm run format:check  # Should pass
+pnpm run check         # TypeScript check
+pnpm run test:all      # All tests pass
+pnpm run build         # Production build succeeds
 ```
 
 **Deliverable:** All checks pass

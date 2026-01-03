@@ -20,7 +20,7 @@ TITANE∞ doit fonctionner 100% offline, sans dépendance réseau. Le frontend R
 **Validation**:
 
 ```bash
-npm run verify  # Exécute enforce-tauri-only.sh
+pnpm run verify  # Exécute enforce-tauri-only.sh
 ```
 
 ---
@@ -36,7 +36,7 @@ npm run verify  # Exécute enforce-tauri-only.sh
 **Validation**:
 
 ```bash
-npm run verify  # Exécute enforce-local-first.sh
+pnpm run verify  # Exécute enforce-local-first.sh
 ```
 
 ---
@@ -96,7 +96,7 @@ TITANE∞ respecte un modèle en **4 anneaux concentriques** (du plus critique a
 **Tests d'isolation**:
 
 ```bash
-npm run test:architecture  # Vérifie les dépendances entre rings
+pnpm run test:architecture  # Vérifie les dépendances entre rings
 ```
 
 ---
@@ -108,19 +108,19 @@ npm run test:architecture  # Vérifie les dépendances entre rings
 1. **Tests unitaires** (Ring 0-1-2):
 
    ```bash
-   npm run test
+   pnpm run test
    ```
 
 2. **Tests d'architecture**:
 
    ```bash
-   npm run test:architecture
+   pnpm run test:architecture
    ```
 
 3. **Tests de conformité**:
 
    ```bash
-   npm run test:compliance
+   pnpm run test:compliance
    ```
 
 4. **Tests Rust (Tauri backend)**:
@@ -131,8 +131,8 @@ npm run test:architecture  # Vérifie les dépendances entre rings
 
 5. **Linting + Formatting**:
    ```bash
-   npm run lint
-   npm run format:check
+   pnpm run lint
+   pnpm run format:check
    ```
 
 ### Coverage minimal:
@@ -218,13 +218,13 @@ git checkout -b feature/my-feature
 ### 2. Développer avec hot-reload
 
 ```bash
-npm run dev  # Lance Tauri dev (Vite + Rust)
+pnpm run dev  # Lance Tauri dev (Vite + Rust)
 ```
 
 ### 3. Tester rigoureusement
 
 ```bash
-npm run verify  # Lint + format + tests + compliance
+pnpm run verify  # Lint + format + tests + compliance
 ```
 
 ### 4. Commit avec message descriptif
@@ -247,7 +247,7 @@ git commit -m "feat(engines): Add neural prosody blending to voiceEngine"
 - Décrire le problème résolu
 - Lister les changements majeurs
 - Ajouter screenshots si UI
-- S'assurer que `npm run verify` passe ✅
+- S'assurer que `pnpm run verify` passe ✅
 
 ---
 
@@ -266,9 +266,9 @@ Ce projet est configuré avec des **instructions personnalisées pour GitHub Cop
 Avant chaque commit, validez votre code avec les outils Copilot XS :
 
 ```bash
-npm run copilot-xs:validate   # Valider le code (markers, secrets)
-npm run copilot-xs:status     # Vérifier la configuration Copilot
-npm run copilot-xs:precommit  # Validation + tests (pre-commit)
+pnpm run copilot-xs:validate   # Valider le code (markers, secrets)
+pnpm run copilot-xs:status     # Vérifier la configuration Copilot
+pnpm run copilot-xs:precommit  # Validation + tests (pre-commit)
 ```
 
 ### Agents Spécialisés
@@ -297,7 +297,7 @@ Pour utiliser un skill avec Copilot :
 1. **Context Gathering** — Analysez les patterns existants avant de générer du code
 2. **Plan Generation** — Décrivez votre approche et les risques potentiels
 3. **Implementation** — Générez le code en respectant les instructions
-4. **Validation** — Exécutez `npm run copilot-xs:validate` et les tests
+4. **Validation** — Exécutez `pnpm run copilot-xs:validate` et les tests
 
 Pour plus de détails : [COPILOT-XS README](.github/copilot-xs/README.md)
 
