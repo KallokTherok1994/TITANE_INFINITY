@@ -47,7 +47,7 @@
 ### 1. Build Frontend (Vite)
 
 ```bash
-✅ Command: npm run build
+✅ Command: pnpm run build
 ✅ Duration: 17.84s
 ✅ Modules: 3,322 transformed
 ✅ Chunks: 72 JS + 19 CSS

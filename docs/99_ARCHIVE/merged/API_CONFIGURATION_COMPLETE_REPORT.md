@@ -295,7 +295,7 @@ private async collectIALatencies(): Promise<{ ollama: number; gemini: number }> 
 ### Test 1: Vérification TypeScript
 
 ```bash
-npm run type-check
+pnpm run type-check
 ```
 
 **Résultat**: ✅ **0 errors**
@@ -462,7 +462,7 @@ private async cognitiveLoopTick(): void {
 ### ✅ TypeScript Compilation (100%)
 
 ```bash
-npm run type-check
+pnpm run type-check
 # Result: 0 errors ✅
 ```
 

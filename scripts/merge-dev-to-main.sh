@@ -140,7 +140,7 @@ print_info "Step 8: Running validation tests..."
 if [ -f "package.json" ]; then
     if command -v npm &> /dev/null; then
         print_info "Running npm tests..."
-        if npm test; then
+        if pnpm test; then
             print_success "All tests passed"
         else
             print_warning "Some tests failed. Review before pushing."

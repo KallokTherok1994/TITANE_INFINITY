@@ -734,7 +734,7 @@ url = "2.4"
 
 # Ou manuel
 cd TITANE_INFINITY
-npm install
+pnpm install
 cd src-tauri
 cargo build --release
 ```

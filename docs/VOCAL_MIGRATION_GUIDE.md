@@ -289,7 +289,7 @@ if (isTitane) {
 - [ ] Tester synthèse online (Google TTS)
 - [ ] Vérifier fallback sur erreur
 - [ ] Supprimer imports `voice_synthesize_speech`
-- [ ] Run tests : `npm test -- voice`
+- [ ] Run tests : `pnpm test -- voice`
 - [ ] Valider en production
 
 ---

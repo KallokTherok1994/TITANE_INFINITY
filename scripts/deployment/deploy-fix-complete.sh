@@ -190,10 +190,10 @@ phase1_deblocage() {
                 run_cmd "corepack pnpm install --frozen-lockfile" "pnpm install (corepack)"
             else
                 warning "pnpm-lock.yaml found but pnpm not available. Falling back to npm."
-                run_cmd "npm install" "npm install"
+                run_cmd "pnpm install" "pnpm install"
             fi
         else
-            run_cmd "npm install" "npm install"
+            run_cmd "pnpm install" "pnpm install"
         fi
     else
         success "node_modules/ already exists"
@@ -321,7 +321,7 @@ EOF
     if [ -f "pnpm-lock.yaml" ] && command -v pnpm &> /dev/null; then
         run_cmd "NODE_ENV=production NODE_OPTIONS='--max-old-space-size=8192' pnpm run build" "Vite build (pnpm)"
     else
-        run_cmd "NODE_ENV=production NODE_OPTIONS='--max-old-space-size=8192' npm run build" "Vite build (npm)"
+        run_cmd "NODE_ENV=production NODE_OPTIONS='--max-old-space-size=8192' pnpm run build" "Vite build (npm)"
     fi
     
     # ─── 2.4: Vérifier dist/ ───
@@ -497,7 +497,7 @@ phase4_validation() {
     # ─── 4.5: Test démarrage (optionnel) ───
     print_section "4.5: Test démarrage (optionnel)"
     
-    info "To test application startup, run: npm run dev"
+    info "To test application startup, run: pnpm run dev"
     info "Application should start in < 10 seconds"
     
     print_phase "4" "TERMINÉE ✓"
@@ -558,8 +558,8 @@ phase5_securisation() {
         PM="npm"
     fi
     
-    info "Running npm audit..."
-    $PM audit --audit-level=high >> "$LOG_FILE" 2>&1 || warning "npm audit found issues (review logs)"
+    info "Running pnpm audit..."
+    $PM audit --audit-level=high >> "$LOG_FILE" 2>&1 || warning "pnpm audit found issues (review logs)"
     
     info "Running cargo audit..."
     cd src-tauri
@@ -576,7 +576,7 @@ phase5_securisation() {
     info "═══════════════════════════════════════════════════════════"
     info ""
     info "Prochaines étapes:"
-    info "  1. Démarrer l'application: npm run dev"
+    info "  1. Démarrer l'application: pnpm run dev"
     info "  2. Vérifier le démarrage (< 10 secondes)"
     info "  3. Tester les fonctionnalités principales"
     info "  4. Pour production: ./titane.sh deploy"
@@ -682,7 +682,7 @@ main() {
     log ""
     log "${GREEN}${BOLD}SYSTÈME OPÉRATIONNEL ✓${NC}"
     log ""
-    log "Démarrer l'application: ${CYAN}npm run dev${NC}"
+    log "Démarrer l'application: ${CYAN}pnpm run dev${NC}"
     log ""
 }
 

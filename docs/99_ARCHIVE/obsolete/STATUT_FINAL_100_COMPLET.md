@@ -23,7 +23,7 @@
 
 **Commande de lancement:**
 ```bash
-npm run dev
+pnpm run dev
 ```
 → Lance Tauri WebView avec le frontend complet  
 → Mode offline-first 100%  
@@ -62,7 +62,7 @@ npm run dev
 4. **Lancer TITANE∞ complet:**
    ```bash
    cd ..
-   npm run dev
+   pnpm run dev
    ```
 
 ---
@@ -94,8 +94,8 @@ npm run dev
 ```json
 // tauri.conf.json
 "build": {
-  "beforeDevCommand": "npm run build",
-  "beforeBuildCommand": "npm run build",
+  "beforeDevCommand": "pnpm run build",
+  "beforeBuildCommand": "pnpm run build",
   "frontendDist": "../dist"
   // ❌ Pas de devUrl HTTP
 }
@@ -180,7 +180,7 @@ server: {
 
 ```bash
 cd ~/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run dev
+pnpm run dev
 ```
 
 **Résultat:**
@@ -207,7 +207,7 @@ cargo build --release
 **Étape 3 - Lancement final:**
 ```bash
 cd ..
-npm run dev
+pnpm run dev
 ```
 
 **Résultat:**
@@ -248,7 +248,7 @@ npm run dev
   - Dépend: Installation WebKit
 
 - [ ] **Application complète testée** (2 min)
-  - Commande: `npm run dev`
+  - Commande: `pnpm run dev`
   - Vérification: IPC backend actif
 
 ---
@@ -259,9 +259,9 @@ npm run dev
 
 **RÈGLE #1:** TITANE∞ = 100% Tauri uniquement
 - ❌ JAMAIS de `python3 -m http.server`
-- ❌ JAMAIS de `npm run preview`
+- ❌ JAMAIS de `pnpm run preview`
 - ❌ JAMAIS de `vite dev` direct
-- ✅ TOUJOURS `npm run dev` → `tauri dev`
+- ✅ TOUJOURS `pnpm run dev` → `tauri dev`
 
 **RÈGLE #2:** Offline-first permanent
 - API externes sur demande explicite uniquement
@@ -309,7 +309,7 @@ npm run dev
 **TITANE∞ v16.1 est 100% conforme et fonctionnel.**
 
 ### État Actuel
-- ✅ **Frontend:** Prêt à lancer (`npm run dev`)
+- ✅ **Frontend:** Prêt à lancer (`pnpm run dev`)
 - ✅ **Configuration:** Tauri-only verrouillé
 - ✅ **Documentation:** Complète (2272+ lignes)
 - ⏳ **Backend:** Nécessite installation système (5-10 min)
@@ -318,7 +318,7 @@ npm run dev
 
 **Option 1 - Lancement Frontend Immédiat:**
 ```bash
-npm run dev
+pnpm run dev
 ```
 *(Backend compilation échouera mais frontend s'affichera)*
 
@@ -334,7 +334,7 @@ cargo build --release
 
 # Lancement final
 cd ..
-npm run dev
+pnpm run dev
 ```
 
 ---
@@ -355,13 +355,13 @@ npm run dev
 ./enforce-tauri-only.sh
 
 # Build frontend
-npm run build
+pnpm run build
 
 # Check TypeScript
-npm run type-check
+pnpm run type-check
 
 # Lancement dev
-npm run dev
+pnpm run dev
 ```
 
 ---

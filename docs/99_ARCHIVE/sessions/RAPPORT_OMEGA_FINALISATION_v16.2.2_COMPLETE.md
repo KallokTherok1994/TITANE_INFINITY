@@ -344,7 +344,7 @@ Categories=Development;Utility;
 **Installation**:
 ```bash
 # 1. Build production
-npm run tauri:build
+pnpm run tauri:build
 
 # 2. Installer .desktop
 cp titane-infinity.desktop ~/.local/share/applications/
@@ -439,7 +439,7 @@ User envoie message → Backend tente Gemini → ❌ Erreur
 
 **Commandes**:
 ```bash
-npm run tauri:build
+pnpm run tauri:build
 ./src-tauri/target/release/titane-infinity
 ```
 
@@ -489,13 +489,13 @@ npm run tauri:build
 **Recommandations P2 (Post-déploiement)**:
 ```bash
 # Analyser imports inutiles
-npm run lint
+pnpm run lint
 
 # Format code
-npm run format
+pnpm run format
 
 # Type-check strict
-npm run type-check
+pnpm run type-check
 ```
 
 ---
@@ -575,7 +575,7 @@ Total Startup: ~7.3s ✅
 
 ```bash
 # 1. Démarrer Tauri Dev
-npm run tauri:dev
+pnpm run tauri:dev
 
 # 2. Tester Chat IA
 # → Ouvrir UI ChatWindow
@@ -595,8 +595,8 @@ npm run tauri:dev
 
 ```bash
 # 1. Build Release
-npm run clean
-npm run tauri:build
+pnpm run clean
+pnpm run tauri:build
 
 # 2. Binaire généré
 ls -lh src-tauri/target/release/titane-infinity
@@ -656,7 +656,7 @@ xdg-icon-resource list | grep titane
 
 2. **Tests E2E Automatisés** (Playwright)
    ```bash
-   npm run test:e2e
+   pnpm run test:e2e
    # Scénarios: Chat IA, Diagnostics, Auto-Heal
    ```
 

@@ -507,18 +507,18 @@ Les 34 tests failing **NE BLOQUENT PAS** le déploiement production:
 
 ```bash
 # Run tests complets
-npm test
+pnpm test
 
 # Run tests spécifiques
-npm test -- MCPStrategy.test.ts
-npm test -- CognitiveStrategy.test.ts
-npm test -- presenceOS.test.ts
+pnpm test -- MCPStrategy.test.ts
+pnpm test -- CognitiveStrategy.test.ts
+pnpm test -- presenceOS.test.ts
 
 # Coverage détaillé
-npm test -- --coverage
+pnpm test -- --coverage
 
 # Verbose mode
-npm test -- --reporter=verbose
+pnpm test -- --reporter=verbose
 ```
 
 ### B. Fichiers Tests Affectés

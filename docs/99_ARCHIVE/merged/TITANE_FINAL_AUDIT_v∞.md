@@ -101,12 +101,12 @@ Vérifier que la base du code est saine AVANT de tester l'app en runtime.
 
 Lancer (ou simuler):
 ```bash
-npm run lint
-npm run type-check
-npm run build
-npm run verify
-npm run verify:cognitive
-npm run verify:stacks
+pnpm run lint
+pnpm run type-check
+pnpm run build
+pnpm run verify
+pnpm run verify:cognitive
+pnpm run verify:stacks
 ```
 
 Analyser les résultats:

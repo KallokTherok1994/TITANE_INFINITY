@@ -65,7 +65,7 @@ git clone https://github.com/KallokTherok1994/TITANE_INFINITY.git
 cd TITANE_INFINITY
 
 # 2. Installer dépendances
-npm install
+pnpm install
 
 # 3. Configurer environnement Python (optionnel pour TTS)
 ./scripts/setup_environment.sh
@@ -84,7 +84,7 @@ cd ~/Projets/TITANE_INFINITY  # ou chemin custom
 ./runtime/dev/run-dev.sh
 
 # Méthode 2: npm
-npm run dev:tauri
+pnpm run dev:tauri
 
 # Méthode 3: VSCode Task
 # Ouvrir VSCode → Terminal → Run Task → "🟢 Launch Titan-Dev"
@@ -111,7 +111,7 @@ L'application s'ouvre automatiquement dans une fenêtre native.
 ./runtime/stable/build.sh
 
 # Ou via npm
-npm run build
+pnpm run build
 
 # Ou via VSCode Task
 # "🔵 Build Titan-Stable"
@@ -386,7 +386,7 @@ let analysis = vision_engine.analyze_image_path("./image.jpg").await?;
 
 ## 🛠️ Dépannage
 
-### Problème: `npm install` échoue
+### Problème: `pnpm install` échoue
 
 **Solution:**
 
@@ -398,7 +398,7 @@ npm cache clean --force
 rm -rf node_modules package-lock.json
 
 # Réinstaller
-npm install --legacy-peer-deps
+pnpm install --legacy-peer-deps
 ```
 
 ---
@@ -422,7 +422,7 @@ sudo apt install -y \
 
 # Rebuild
 cargo clean
-npm run tauri build
+pnpm run tauri build
 ```
 
 ---
@@ -495,14 +495,14 @@ kill -9 <PID>
 1. **Vider cache Vite:**
    ```bash
    rm -rf node_modules/.vite
-   npm run dev:tauri
+   pnpm run dev:tauri
    ```
 
 2. **Rebuild complet:**
    ```bash
-   npm run clean
-   npm install
-   npm run dev:tauri
+   pnpm run clean
+   pnpm install
+   pnpm run dev:tauri
    ```
 
 3. **Vérifier logs:**

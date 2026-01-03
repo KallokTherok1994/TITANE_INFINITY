@@ -97,7 +97,7 @@ Sauvegarde dans : PROJECT_STRUCTURE_ANALYZED.md
 
 4. **Bundle Size**
    ```bash
-   npm run build
+   pnpm run build
    npx vite-bundle-visualizer
    ```
    Identifie les gros modules
@@ -280,7 +280,7 @@ Pour chaque module :
 - Tests d'intégration (interactions entre modules)
 - Tests de performance (benchmarks)
 
-Exécute cargo tarpaulin et npm test --coverage
+Exécute cargo tarpaulin et pnpm test --coverage
 
 Sauvegarde dans : TEST_COVERAGE_REPORT.md
 ```

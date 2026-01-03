@@ -220,7 +220,7 @@ set -e # Exit on error
 
 # Build Tauri application
 echo "🔨 Building Tauri app..."
-npm run build || exit 1
+pnpm run build || exit 1
 cargo tauri build || exit 1
 echo "✅ Build complete"
 ```
@@ -282,12 +282,12 @@ console.log('Recommandations:', analysis.recommendations);
   },
   "build_config": {
     "build_tool": "tauri",
-    "build_command": "npm run tauri:build",
+    "build_command": "pnpm run tauri:build",
     "output_directory": "src-tauri/target/release"
   },
   "test_config": {
     "test_framework": "vitest",
-    "test_command": "npm test",
+    "test_command": "pnpm test",
     "coverage_enabled": true
   },
   "health_score": 95,
@@ -317,14 +317,14 @@ console.log('Commandes:', buildAction.commands);
 
 // Commandes générées :
 // 1. rm -rf src-tauri/target/release
-// 2. npm run tauri:build
+// 2. pnpm run tauri:build
 ```
 
 **Exécution manuelle** :
 ```bash
 # L'utilisateur copie/colle les commandes
 rm -rf src-tauri/target/release
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 #### Test
@@ -337,8 +337,8 @@ console.log('Framework:', testAction.description); // "Run vitest tests"
 console.log('Commandes:', testAction.commands);
 
 // Commandes :
-// 1. npm test
-// 2. npm run test:coverage (si coverage activé)
+// 1. pnpm test
+// 2. pnpm run test:coverage (si coverage activé)
 ```
 
 #### Deploy
@@ -656,10 +656,10 @@ const workflow = await LocalAgent.createWorkflow(
 // Workflow steps générés :
 // Step 1: Build
 //   - rm -rf dist/
-//   - npm run build
+//   - pnpm run build
 //   - Validation: Non (safe)
 // Step 2: Test
-//   - npm test
+//   - pnpm test
 //   - Validation: Non (safe)
 
 console.log('Workflow créé avec', workflow.steps.length, 'steps');

@@ -57,8 +57,8 @@ Le processus de déploiement Tauri complet a été **vérifié, corrigé et unif
 **Usage:**
 
 ```bash
-npm run titane:health    # = ./titane health
-npm run titane:deploy    # = ./titane deploy
+pnpm run titane:health    # = ./titane health
+pnpm run titane:deploy    # = ./titane deploy
 ```
 
 ---
@@ -91,7 +91,7 @@ npm run titane:deploy    # = ./titane deploy
 ### ✅ **npm Script Integration**
 
 ```bash
-npm run titane:health
+pnpm run titane:health
 ```
 
 **Résultat:** Fonctionne parfaitement via npm
@@ -161,15 +161,15 @@ npm run titane:health
 git pull                # Updates
 ./titane repair         # Si package.json modifié
 ./titane fix            # Corrections auto
-npm run dev             # Lancer dev runtime
+pnpm run dev             # Lancer dev runtime
 ```
 
 ### **Avant Commit**
 
 ```bash
 ./titane fix            # Auto-fix
-npm run check           # Vérifier types
-npm test                # Tests
+pnpm run check           # Vérifier types
+pnpm test                # Tests
 git add . && git commit
 ```
 
@@ -246,7 +246,7 @@ cat logs/titane_*.log | tail -100  # 100 dernières lignes
 
 ```bash
 ./titane health              # Vérification complète
-npm run check                # Erreurs TypeScript
+pnpm run check                # Erreurs TypeScript
 cd src-tauri && cargo check  # Erreurs Rust
 ```
 

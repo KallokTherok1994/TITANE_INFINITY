@@ -84,7 +84,7 @@ src/cognitive/
 1. **Scripts bloqués correctement** (`package.json`):
    ```json
    "preview": "echo '🔒 TAURI-ONLY MODE' && exit 1",
-   "start": "echo '🔒 TAURI-ONLY MODE: Use npm run dev instead' && exit 1"
+   "start": "echo '🔒 TAURI-ONLY MODE: Use pnpm run dev instead' && exit 1"
    ```
 
 2. **Scripts de validation présents**:
@@ -108,7 +108,7 @@ Exit Code: 143
 **Impact**: Possible utilisation en mode dev standalone (hors Tauri).
 
 **Recommandation**: 
-- Vérifier que `npm run dev` → `tauri dev` (OK dans package.json)
+- Vérifier que `pnpm run dev` → `tauri dev` (OK dans package.json)
 - Documenter pourquoi le terminal Vite était actif
 
 #### B. **Documentation obsolète**
@@ -230,15 +230,15 @@ validate_all.sh
 
 **Impact**: Confusion sur le runner de test, taille des node_modules augmentée
 
-#### B. **Pas de script `npm run verify` unifié**
+#### B. **Pas de script `pnpm run verify` unifié**
 
-**Instruction**: _"regroupez lint, type-check et tests dans un seul `npm run verify`"_
+**Instruction**: _"regroupez lint, type-check et tests dans un seul `pnpm run verify`"_
 
 **Actuel**:
-- `npm run lint`
-- `npm run check` (type-check)
-- `npm run test`
-- `npm run test:e2e`
+- `pnpm run lint`
+- `pnpm run check` (type-check)
+- `pnpm run test`
+- `pnpm run test:e2e`
 
 Ces commandes sont séparées, pas de commande unifiée.
 
@@ -248,13 +248,13 @@ Ces commandes sont séparées, pas de commande unifiée.
 |----------|--------|
 | **P0** | Supprimer Jest des dépendances | `package.json` |
 | **P0** | Migrer tests Jest vers Vitest | Fichiers `*.test.ts` utilisant Jest |
-| **P0** | Créer `npm run verify` | Ajouter script dans package.json |
+| **P0** | Créer `pnpm run verify` | Ajouter script dans package.json |
 | **P1** | Supprimer `jest.config.json` | Racine projet |
 | **P1** | Remplacer `@testing-library/jest-dom` → `/vitest` | 5 fichiers test |
 
 **Script `verify` proposé**:
 ```json
-"verify": "npm run lint && npm run check && npm run test && npm run test:e2e && npm run test:rust"
+"verify": "pnpm run lint && pnpm run check && pnpm run test && pnpm run test:e2e && pnpm run test:rust"
 ```
 
 ---
@@ -414,7 +414,7 @@ src/hooks/archived/useChat_OMNIS_v1.ts
 
 | # | Action | Fichiers | Temps estimé |
 |---|--------|----------|--------------|
-| 1 | Supprimer Jest, ajouter `npm run verify` | package.json | 1h |
+| 1 | Supprimer Jest, ajouter `pnpm run verify` | package.json | 1h |
 | 2 | Ajouter `.vite-cache/` dans .gitignore | .gitignore | 5min |
 | 3 | Migrer tests e2e vers OMEGA v2 | src/tests/e2e/titane_e2e.test.ts | 4h |
 | 4 | Éliminer `unwrap()` dans `/omega/` | src-tauri/src/omega/*.rs | 3h |
@@ -512,17 +512,17 @@ src-tauri/src/commands/chat_commands.rs
 #### Lancer un audit complet
 ```bash
 # Architecture
-npm run verify  # (à créer)
+pnpm run verify  # (à créer)
 
 # Qualité Rust
 cd src-tauri && cargo clippy --all-targets --all-features
 
 # Qualité TypeScript
-npm run lint
-npm run check
+pnpm run lint
+pnpm run check
 
 # Tests
-npm run test:all
+pnpm run test:all
 ```
 
 #### Rechercher violations

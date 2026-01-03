@@ -100,20 +100,20 @@ test result: ok. 21 passed; 0 failed; 0 ignored
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
 
 # Installer les dépendances (React, TypeScript, Vite, etc.)
-npm install
+pnpm install
 
 # Installer react-router-dom (pour la navigation)
-npm install react-router-dom @types/react-router-dom
+pnpm install react-router-dom @types/react-router-dom
 
 # Vérifier qu'il n'y a pas d'erreurs
-npm run type-check
+pnpm run type-check
 ```
 
 ### Étape 3 : Lancer le Frontend
 
 ```bash
 # Mode développement (avec hot-reload)
-npm run dev
+pnpm run dev
 
 # Ouvrir dans le navigateur
 # → http://localhost:5173
@@ -129,10 +129,10 @@ npm run dev
 
 ```bash
 # Build frontend pour production
-npm run build
+pnpm run build
 
 # Preview du build
-npm run preview
+pnpm run preview
 ```
 
 Le build sera généré dans `/dist`.
@@ -184,15 +184,15 @@ cargo test --test p300_ascension_protocol
 
 ```bash
 # Vérifier TypeScript
-npm run type-check
+pnpm run type-check
 # Attendu : 0 erreurs bloquantes, 2 warnings optionnels
 
 # Linter
-npm run lint
+pnpm run lint
 # Attendu : 0 erreurs
 
 # Lancer dev
-npm run dev
+pnpm run dev
 # Attendu : Server running on http://localhost:5173
 ```
 
@@ -211,7 +211,7 @@ npm run dev
 **Solution** :
 ```bash
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run dev
+pnpm run dev
 ```
 
 ### Problème 3 : Erreur TypeScript dans `MemoryPanel.tsx`
@@ -224,7 +224,7 @@ npm run dev
 **Cause** : Dépendance non installée  
 **Solution** :
 ```bash
-npm install react-router-dom @types/react-router-dom
+pnpm install react-router-dom @types/react-router-dom
 ```
 
 ### Problème 5 : Port 5173 déjà utilisé
@@ -232,7 +232,7 @@ npm install react-router-dom @types/react-router-dom
 **Solution** :
 ```bash
 # Utiliser un autre port
-npm run dev -- --port 5174
+pnpm run dev -- --port 5174
 ```
 
 ---
@@ -248,10 +248,10 @@ Si vous souhaitez compiler TITANE∞ en application desktop :
 cargo install tauri-cli
 
 # Lancer en mode dev
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Build application
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ### Variables d'Environnement
@@ -284,12 +284,12 @@ Extensions à installer :
 cargo test --all
 
 # Frontend (après installation Node.js)
-npm run type-check
-npm run lint
+pnpm run type-check
+pnpm run lint
 
 # Build production
 cargo build --release
-npm run build
+pnpm run build
 ```
 
 **Résultat attendu** :
@@ -330,14 +330,14 @@ cargo build --release         # Build production
 cargo run                     # Lancer CLI
 
 # Frontend (nécessite Node.js)
-npm install                   # Installer dépendances
-npm run dev                   # Mode développement
-npm run build                 # Build production
-npm run preview               # Preview build
+pnpm install                   # Installer dépendances
+pnpm run dev                   # Mode développement
+pnpm run build                 # Build production
+pnpm run preview               # Preview build
 
 # Vérifications
-npm run type-check            # TypeScript
-npm run lint                  # ESLint
+pnpm run type-check            # TypeScript
+pnpm run lint                  # ESLint
 cargo fmt                     # Format Rust
 cargo clippy                  # Lint Rust
 ```
@@ -365,7 +365,7 @@ cargo clippy                  # Lint Rust
 Une fois Node.js installé, exécutez simplement :
 ```bash
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm install && npm run dev
+pnpm install && pnpm run dev
 ```
 
 🚀 **L'interface TITANE∞ s'ouvrira sur http://localhost:5173**

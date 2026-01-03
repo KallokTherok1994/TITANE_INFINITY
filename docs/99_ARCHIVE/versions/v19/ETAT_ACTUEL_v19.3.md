@@ -134,7 +134,7 @@
 
 ### 1. Démarrer TITANE∞
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### 2. Configurer APIs (Premier lancement)
@@ -175,7 +175,7 @@ Clé: sk-ant-api03-...
 
 ### Build Production
 ```bash
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ### Tests
@@ -184,10 +184,10 @@ npm run tauri:build
 cargo test --manifest-path src-tauri/Cargo.toml
 
 # TypeScript
-npm run type-check
+pnpm run type-check
 
 # Integration
-npm run test
+pnpm run test
 ```
 
 ### Logs
@@ -285,10 +285,10 @@ Console → Application logs
 #### Erreur de Compilation
 ```bash
 # Clean rebuild
-npm run clean
+pnpm run clean
 cargo clean --manifest-path src-tauri/Cargo.toml
-npm install
-npm run tauri:dev
+pnpm install
+pnpm run tauri:dev
 ```
 
 #### API Non Fonctionnelle

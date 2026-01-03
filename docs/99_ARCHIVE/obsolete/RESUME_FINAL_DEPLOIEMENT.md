@@ -156,7 +156,7 @@ cargo build --release
 **4. Lancer application:**
 ```bash
 cd ..
-npm run dev
+pnpm run dev
 ```
 
 ✅ **Application native complète**
@@ -232,7 +232,7 @@ npm run dev
 cd ~/Documents/TITANE_NEWGEN/TITANE_INFINITY
 ./install-webkit-host.sh
 cd src-tauri && cargo build --release
-cd .. && npm run dev
+cd .. && pnpm run dev
 ```
 
 **Temps total: 5-10 minutes → TITANE∞ 100% opérationnel!** ✨

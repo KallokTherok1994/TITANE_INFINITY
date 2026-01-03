@@ -164,12 +164,12 @@ cargo build --release
 ### Build Complet
 ```bash
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run tauri build
+pnpm run tauri build
 ```
 
 ### Lancer l'Application
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ---
@@ -206,7 +206,7 @@ sudo apt-get update && sudo apt-get install -y \
 # Puis compiler
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
 cargo build --release -p titane-infinity
-npm run tauri build
+pnpm run tauri build
 ```
 
 ---

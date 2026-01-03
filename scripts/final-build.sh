@@ -17,7 +17,7 @@ echo ""
 
 # Phase 1: Frontend Build
 echo "🎨 Phase 1: Building Frontend..."
-npm run build
+pnpm run build
 echo "✅ Frontend built successfully!"
 echo ""
 

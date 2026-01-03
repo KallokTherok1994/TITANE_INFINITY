@@ -31,7 +31,7 @@ Script Bash automatisé complet pour la correction et validation du projet TITAN
 
 ### 5️⃣ Validation & Build
 - ✅ Exécution `tsc --noEmit` (type-check)
-- ✅ Exécution `npm run build` (production)
+- ✅ Exécution `pnpm run build` (production)
 - ✅ Affichage des statistiques de build
 - ✅ Détection des erreurs
 
@@ -116,7 +116,7 @@ bash ./auto_fix_complete.sh
 ### Phase 3: Validation
 8. Vérifie les commandes Rust Tauri
 9. Exécute `tsc --noEmit` (type-check)
-10. Exécute `npm run build` (production)
+10. Exécute `pnpm run build` (production)
 11. Vérifie la structure du backend
 
 ### Phase 4: Rapport

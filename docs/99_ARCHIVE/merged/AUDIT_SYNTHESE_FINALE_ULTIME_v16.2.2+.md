@@ -363,7 +363,7 @@ useEffect(() => {
 **Validation** (devops.rs) :
 ```rust
 let allowed_commands = vec![
-    "npm run build", "npm run test", "cargo check",
+    "pnpm run build", "pnpm run test", "cargo check",
     "cargo build", "git status", "./autobuild_full.sh",
     // ... 12 commandes whitelistées
 ];

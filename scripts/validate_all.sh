@@ -55,32 +55,32 @@ print_header "VALIDATION FRONTEND"
 
 # ESLint
 print_info "Exécution ESLint..."
-if npm run lint > /dev/null 2>&1; then
+if pnpm run lint > /dev/null 2>&1; then
     print_success "ESLint: 0 warnings/errors"
 else
     print_error "ESLint: ÉCHEC"
-    npm run lint
+    pnpm run lint
     exit 1
 fi
 
 # TypeScript
 print_info "Vérification TypeScript..."
-if npm run type-check > /dev/null 2>&1; then
+if pnpm run type-check > /dev/null 2>&1; then
     print_success "TypeScript: 0 erreurs"
 else
     print_error "TypeScript: ÉCHEC"
-    npm run type-check
+    pnpm run type-check
     exit 1
 fi
 
 # Build (mode full uniquement)
 if [ "$MODE" = "full" ]; then
     print_info "Build Vite..."
-    if npm run build > /dev/null 2>&1; then
+    if pnpm run build > /dev/null 2>&1; then
         print_success "Build Vite: RÉUSSI"
     else
         print_error "Build Vite: ÉCHEC"
-        npm run build
+        pnpm run build
         exit 1
     fi
 fi

@@ -43,5 +43,5 @@ function Modal({ isOpen }) {
 Run accessibility checks:
 
 ```bash
-npm run test:a11y
+pnpm run test:a11y
 ```

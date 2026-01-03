@@ -98,7 +98,7 @@ test('should list all conversations');
 test('should include conversation metadata');
 ```
 
-**Execution Ready**: Tests prêts pour `npm test`
+**Execution Ready**: Tests prêts pour `pnpm test`
 
 ---
 
@@ -214,8 +214,8 @@ config.temperature = 999; // ✅ No effect on internal state
 - ✅ Tests créés (ConversationManager.test.ts)
 - ✅ Méthodes implémentées (loadConversation, getConfig, listConversations enriched)
 - ✅ TypeScript compilation: OK
-- ⏳ Jest execution: Pending (`npm test`)
-- ⏳ Coverage report: À générer (`npm test -- --coverage`)
+- ⏳ Jest execution: Pending (`pnpm test`)
+- ⏳ Coverage report: À générer (`pnpm test -- --coverage`)
 
 ---
 
@@ -225,10 +225,10 @@ config.temperature = 999; // ✅ No effect on internal state
 
 ```bash
 # 1. Run tests
-npm test -- src/services/ai/__tests__/ConversationManager.test.ts
+pnpm test -- src/services/ai/__tests__/ConversationManager.test.ts
 
 # 2. Generate coverage report
-npm test -- --coverage
+pnpm test -- --coverage
 
 # 3. Validate P0 coverage target (30%+)
 # Target: ConversationManager + UnifiedMemory critical paths
@@ -313,4 +313,4 @@ Refs: URGENT_ACTION_PLAN_POST_AUDIT.md Phase 0"
 
 ---
 
-**Next**: Execute tests (`npm test`), validate 30%+ coverage, commit & tag v24.3.0-phase3 🚀
+**Next**: Execute tests (`pnpm test`), validate 30%+ coverage, commit & tag v24.3.0-phase3 🚀

@@ -286,22 +286,22 @@ test: {
 ### TypeScript Language Server (VS Code)
 
 **Erreurs affichées**: 40+ (false positives)
-**Erreurs réelles**: **0** (confirmé par `npm run check`)
+**Erreurs réelles**: **0** (confirmé par `pnpm run check`)
 
 **Explication**:
 
 - VS Code TypeScript Language Server ne charge pas dynamiquement `setupTests.ts`
 - Les matchers `@testing-library/jest-dom` sont disponibles au runtime
-- `npm run check` compile sans erreur
-- `npm test` exécute 1988 tests avec succès
+- `pnpm run check` compile sans erreur
+- `pnpm test` exécute 1988 tests avec succès
 
 **Preuve**:
 
 ```bash
-$ npm run check
+$ pnpm run check
 # ✅ Exit Code: 0 (NO ERRORS)
 
-$ npm test -- --run
+$ pnpm test -- --run
 # ✅ 1988/2066 tests passent (96.2%)
 ```
 
@@ -604,15 +604,15 @@ $ npm test -- --run
 
 ### Build & Compilation
 
-- [x] `npm run check` → 0 erreur TypeScript
-- [x] `npm run lint` → 0 erreur ESLint
-- [x] `npm run format:check` → 100% Prettier
-- [x] `npm run build` → Vite build success
+- [x] `pnpm run check` → 0 erreur TypeScript
+- [x] `pnpm run lint` → 0 erreur ESLint
+- [x] `pnpm run format:check` → 100% Prettier
+- [x] `pnpm run build` → Vite build success
 - [x] `cargo build --release` → Rust compilation success
 
 ### Tests
 
-- [x] `npm test` → 1988/2066 tests pass (96.2%)
+- [x] `pnpm test` → 1988/2066 tests pass (96.2%)
 - [x] webVitals.test.ts → 31/34 tests pass (91%)
 - [x] keyboardShortcuts.test.ts → 25/25 tests pass (100%)
 - [x] Menu.test.tsx → 18/32 tests pass (56%)

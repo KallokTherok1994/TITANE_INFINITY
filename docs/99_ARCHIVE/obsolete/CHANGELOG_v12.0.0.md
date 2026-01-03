@@ -152,14 +152,14 @@ cargo test --all      ⚠️ WebKit (post-install: ✅)
 
 ### Frontend Validation
 ```bash
-npm run type-check    ✅ 0 errors TypeScript
-npm run build         ✅ 1.02s, 190KB bundle
-npm audit             ✅ 0 high vulnerabilities
+pnpm run type-check    ✅ 0 errors TypeScript
+pnpm run build         ✅ 1.02s, 190KB bundle
+pnpm audit             ✅ 0 high vulnerabilities
 ```
 
 ### Dev Mode
 ```bash
-npm run tauri dev     ✅ Vite 108ms startup
+pnpm run tauri dev     ✅ Vite 108ms startup
 ```
 
 ---

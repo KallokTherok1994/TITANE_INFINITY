@@ -190,7 +190,7 @@ TypeScript Errors:   0
 
 ### Ce Qui a Marché
 
-✅ Analyse méthodique des bundles (npm run build output)  
+✅ Analyse méthodique des bundles (pnpm run build output)  
 ✅ Recherche grep pour trouver usages (import chains)  
 ✅ Lazy loader pattern avec fallbacks gracieux  
 ✅ Multi_replace_string_in_file pour éditions multiples  

@@ -165,7 +165,7 @@ titane-infinity
 ### Option 2: Package Système (Recommandé)
 ```bash
 # Générer les packages
-npm run tauri build
+pnpm run tauri build
 
 # Debian/Ubuntu
 sudo dpkg -i src-tauri/target/release/bundle/deb/*.deb
@@ -382,7 +382,7 @@ titane-infinity --diagnostic > diagnostic.txt
 **Packages Disponibles** :
 - ✅ Binary standalone (13 MB)
 - ✅ Frontend build (1.1 MB)
-- ⏳ Debian .deb (à générer avec `npm run tauri build`)
+- ⏳ Debian .deb (à générer avec `pnpm run tauri build`)
 - ⏳ AppImage (à générer)
 - ⏳ RPM (à générer)
 

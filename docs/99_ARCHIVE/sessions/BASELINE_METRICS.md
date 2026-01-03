@@ -47,7 +47,7 @@ Profil:        Release avec LTO
 
 ### Build Frontend (Production)
 ```bash
-Commande: npm run build (Vite 6.4.1)
+Commande: pnpm run build (Vite 6.4.1)
 Durée:    0.445s (445ms)
 ```
 
@@ -343,7 +343,7 @@ NPM:          >= 10.0.0
 
 ### Outils Utilisés
 - **Rust:** `cargo check`, `cargo build --release`
-- **Frontend:** Vite 6.4.1, `npm run build`
+- **Frontend:** Vite 6.4.1, `pnpm run build`
 - **Profiling:** IPC Profiler custom, `time` command
 - **Analyse:** `du`, `ls -lh`
 

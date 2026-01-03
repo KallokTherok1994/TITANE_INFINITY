@@ -264,9 +264,9 @@ Certification: v12.0.0 (Validation Ultime Complète)
    - Version: 11.0.0                                  ✓
    - Identifier: com.titane.infinity                  ✓
    - Build:
-     • beforeDevCommand: npm run dev                  ✓
+     • beforeDevCommand: pnpm run dev                  ✓
      • devUrl: http://localhost:5173                  ✓
-     • beforeBuildCommand: npm run build              ✓
+     • beforeBuildCommand: pnpm run build              ✓
      • frontendDist: ../dist                          ✓
    - Bundle:
      • active: true                                   ✓
@@ -423,7 +423,7 @@ Certification: v12.0.0 (Validation Ultime Complète)
 ☐ Passphrase env var (recommandé)
 
 **Build & Deploy**
-☐ npm run build (générer dist/)
+☐ pnpm run build (générer dist/)
 ☐ cargo build --release (backend)
 ☐ cargo tauri build (bundle)
 ☐ Test ouverture application
@@ -452,7 +452,7 @@ npm --version   # Requis: ≥ 10.0.0
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
 
 # NPM (si pas déjà fait)
-npm install
+pnpm install
 
 # Vérifier dépendances
 npm list --depth=0
@@ -461,10 +461,10 @@ npm list --depth=0
 **Étape 3 : Build Frontend**
 ```sh
 # TypeScript check
-npm run type-check
+pnpm run type-check
 
 # Build production
-npm run build
+pnpm run build
 
 # Vérifier dist/
 ls -la dist/
@@ -489,7 +489,7 @@ ls -lh target/release/titane-infinity
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
 
 # Build bundle complet
-npm run tauri:build
+pnpm run tauri:build
 
 # Sortie attendue:
 # - src-tauri/target/release/titane-infinity (binaire)
@@ -499,7 +499,7 @@ npm run tauri:build
 **Étape 6 : Test Exécution**
 ```sh
 # Mode développement (avec hot-reload)
-npm run tauri:dev
+pnpm run tauri:dev
 
 # OU mode production (après build)
 ./src-tauri/target/release/titane-infinity
@@ -573,7 +573,7 @@ L'analyse complète confirme:
 **Actions immédiates** :
 1. Installer la chaîne d'outils Rust (`curl https://sh.rustup.rs | sh`)
 2. Exécuter `cargo build --release`
-3. Tester `npm run tauri:dev`
+3. Tester `pnpm run tauri:dev`
 
 **Build SUCCESS garanti dès installation environnement.**
 

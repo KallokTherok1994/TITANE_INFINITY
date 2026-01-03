@@ -106,7 +106,7 @@
 ## 🧪 VALIDATION BUILD
 
 ```bash
-$ npm run build
+$ pnpm run build
 
 ✓ Type-check TypeScript : 0 errors
 ✓ Vite build : 1.43s
@@ -254,8 +254,8 @@ import XPBar from './components/XPBar';
 
 🚀 **Déploiement possible** :
 ```bash
-npm run tauri dev    # Test interface
-npm run tauri build  # Production
+pnpm run tauri dev    # Test interface
+pnpm run tauri build  # Production
 ```
 
 ---

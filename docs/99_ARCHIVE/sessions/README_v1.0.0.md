@@ -92,7 +92,7 @@ git clone https://github.com/KallokTherok1994/TITANE_INFINITY.git
 cd TITANE_INFINITY
 
 # Installer dépendances
-npm install
+pnpm install
 
 # Build Rust
 cd src-tauri && cargo build --release
@@ -105,12 +105,12 @@ cd ..
 
 ### Mode Développement
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### Build Production
 ```bash
-npm run tauri:build
+pnpm run tauri:build
 # Binaire: src-tauri/target/release/titane-infinity (20MB)
 ```
 

@@ -14,8 +14,8 @@
 
 ### Lancer le projet
 ```bash
-npm run tauri:dev                 # Mode développement (recommandé)
-npm run tauri:build               # Build production
+pnpm run tauri:dev                 # Mode développement (recommandé)
+pnpm run tauri:build               # Build production
 ```
 
 ### Raccourcis clavier VS Code
@@ -90,10 +90,10 @@ import clsx from 'clsx';
 
 **Commandes tests:**
 ```bash
-npm run test              # Tous tests
-npm run test:watch        # Watch mode
-npm run test:coverage     # Coverage
-npm run test:e2e          # Playwright
+pnpm run test              # Tous tests
+pnpm run test:watch        # Watch mode
+pnpm run test:coverage     # Coverage
+pnpm run test:e2e          # Playwright
 ```
 
 ### 🔍 Code Quality (4)
@@ -190,12 +190,12 @@ F5 → "🚀 Debug Full Stack (Tauri + React)"
 
 ### Tâches disponibles
 ```
-🚀 Tauri Dev           # npm run tauri:dev
-🔨 Tauri Build         # npm run tauri:build
-⚡ Vite Build          # npm run build
-🧹 Clean All          # npm run clean
-🔍 Type Check         # npm run type-check
-🧪 Run Tests          # npm run test
+🚀 Tauri Dev           # pnpm run tauri:dev
+🔨 Tauri Build         # pnpm run tauri:build
+⚡ Vite Build          # pnpm run build
+🧹 Clean All          # pnpm run clean
+🔍 Type Check         # pnpm run type-check
+🧪 Run Tests          # pnpm run test
 🦀 Cargo Check        # cargo check
 🦀 Cargo Clippy       # cargo clippy
 ```
@@ -272,7 +272,7 @@ Ctrl+Shift+P → "Rust Analyzer: Restart Server"
 ```bash
 # Vérifier cache
 rm -rf node_modules/.cache
-npm run type-check
+pnpm run type-check
 ```
 
 ### Hot-reload ne fonctionne pas
@@ -286,7 +286,7 @@ sudo sysctl -p
 ```bash
 # Nettoyer cache
 rm -f .eslintcache
-npm run lint:fix
+pnpm run lint:fix
 ```
 
 ### Tailwind IntelliSense inactif
@@ -336,7 +336,7 @@ sudo apt install lldb
 ### 1. Démarrer session
 ```bash
 # Terminal 1
-npm run tauri:dev
+pnpm run tauri:dev
 
 # VS Code
 # Ouvrir fichiers nécessaires
@@ -352,13 +352,13 @@ npm run tauri:dev
 ### 3. Tester
 ```bash
 # Tests unitaires
-npm run test:watch
+pnpm run test:watch
 
 # E2E
-npm run test:e2e
+pnpm run test:e2e
 
 # Coverage
-npm run test:coverage
+pnpm run test:coverage
 ```
 
 ### 4. Déboguer
@@ -395,9 +395,9 @@ npm run test:coverage
 Avant de commencer à coder:
 - [ ] `git pull` (dernières modifications)
 - [ ] Vérifier Rust Analyzer actif (🦀 dans status bar)
-- [ ] Lancer `npm run tauri:dev`
+- [ ] Lancer `pnpm run tauri:dev`
 - [ ] Vérifier aucune erreur TypeScript/Rust
-- [ ] Tests passent: `npm run test`
+- [ ] Tests passent: `pnpm run test`
 
 Pendant le développement:
 - [ ] ESLint auto-fix actif
@@ -406,10 +406,10 @@ Pendant le développement:
 - [ ] Breakpoints fonctionnels si debug
 
 Avant commit:
-- [ ] `npm run type-check` (0 erreurs)
+- [ ] `pnpm run type-check` (0 erreurs)
 - [ ] `cargo clippy` (warnings acceptables)
 - [ ] Tests passent
-- [ ] Build production OK: `npm run tauri:build`
+- [ ] Build production OK: `pnpm run tauri:build`
 
 ---
 

@@ -355,7 +355,7 @@ cargo build --manifest-path src-tauri/Cargo.toml --release
 
 **Commande**:
 ```bash
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 **Tests manuels**:
@@ -782,7 +782,7 @@ cargo build --manifest-path src-tauri/Cargo.toml --release
 # Attendu: Build successful
 
 # Test 3: Dev runtime
-npm run tauri dev
+pnpm run tauri dev
 # Attendu: App launches without crashes
 ```
 

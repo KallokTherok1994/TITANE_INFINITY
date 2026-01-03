@@ -18,8 +18,8 @@ Le projet TITANE_INFINITY a été stabilisé avec succès. Tous les builds passe
 | --------------- | ---------------------------- |
 | `cargo check`   | ✅ OK                        |
 | `cargo build`   | ✅ OK (implied by check)     |
-| `npm run lint`  | ✅ 0 erreurs, 0 warnings     |
-| `npm run build` | ✅ OK (12.37s, 3016 modules) |
+| `pnpm run lint`  | ✅ 0 erreurs, 0 warnings     |
+| `pnpm run build` | ✅ OK (12.37s, 3016 modules) |
 
 ---
 
@@ -28,8 +28,8 @@ Le projet TITANE_INFINITY a été stabilisé avec succès. Tous les builds passe
 ### État Initial
 
 - **cargo check:** OK (0.21s)
-- **npm run lint:** OK (0 warnings)
-- **npm run build:** OK
+- **pnpm run lint:** OK (0 warnings)
+- **pnpm run build:** OK
 
 ### Zones Critiques Identifiées
 
@@ -109,10 +109,10 @@ Les corrections du backend AUTOGEN précédent ont résolu les problèmes de mod
 $ cargo check
     Finished `dev` profile target(s) in 10.29s
 
-$ npm run lint
+$ pnpm run lint
 ✓ ESLint passed (0 errors, 0 warnings)
 
-$ npm run build
+$ pnpm run build
 ✓ 3016 modules transformed
 ✓ built in 12.37s
 ```

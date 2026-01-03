@@ -134,10 +134,10 @@
 ### Sprint 15: COPILOT-XS Gate (1h)
 
 **Objectives:**
-1. ✅ Run `npm run copilot-xs:validate` (staged scope)
+1. ✅ Run `pnpm run copilot-xs:validate` (staged scope)
 2. 📊 Baseline prohibited markers
-3. 🔐 Run security scan (`npm audit`, `cargo audit`)
-4. 🧪 Run full test gate (`npm run copilot-xs:test`)
+3. 🔐 Run security scan (`pnpm audit`, `cargo audit`)
+4. 🧪 Run full test gate (`pnpm run copilot-xs:test`)
 5. 📄 Documenter baseline
 
 **Deliverables:**
@@ -187,7 +187,7 @@
 
 **Quality Gates:**
 - ✅ COPILOT-XS validation passing
-- ✅ npm audit: 0 high/critical
+- ✅ pnpm audit: 0 high/critical
 - ✅ cargo audit: 0 high/critical
 - ✅ All tests passing
 

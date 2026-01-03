@@ -338,7 +338,7 @@ git reset --hard MAIN
    ```bash
    # Tuer + relancer avec --show
    killall -9 titane-infinity vite node
-   npm run tauri dev -- --show
+   pnpm run tauri dev -- --show
    ```
 
 3. **Alternative xdotool**:
@@ -384,7 +384,7 @@ git reset --hard MAIN
 3. **Rebuild si nécessaire**:
    ```bash
    cargo clean
-   npm run tauri dev
+   pnpm run tauri dev
    ```
 
 ### Latences >200ms
@@ -409,7 +409,7 @@ git reset --hard MAIN
 
 3. **Logs détaillés**:
    ```bash
-   RUST_LOG=debug npm run tauri dev
+   RUST_LOG=debug pnpm run tauri dev
    # Identifier bottleneck
    ```
 

@@ -142,7 +142,7 @@ These warnings do NOT prevent compilation or runtime:
 ### Frontend Build
 
 ```bash
-$ npm run build
+$ pnpm run build
 
 > titane-infinity@19.3.0 lint
 > eslint . --ext .ts,.tsx,.js,.jsx
@@ -383,7 +383,7 @@ cd release/titane-infinity-v*
 3. **Add Pre-commit Hooks**
    ```bash
    # Auto-lint on commit
-   npm run lint
+   pnpm run lint
    cargo clippy
    ```
 

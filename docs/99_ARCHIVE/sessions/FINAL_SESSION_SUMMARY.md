@@ -323,8 +323,8 @@ touch tests/dashmap_performance_test.rs
 **4. Roadmap update:**
 ```bash
 cd orchestration
-npm run update P2-1 in_progress
-npm run status
+pnpm run update P2-1 in_progress
+pnpm run status
 ```
 
 ---

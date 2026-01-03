@@ -190,8 +190,8 @@ pkg-config --exists webkit2gtk-4.1 && echo "✅ OK"
 
 **2. Build** :
 ```bash
-npm install
-npm run tauri build
+pnpm install
+pnpm run tauri build
 ```
 
 **3. Exécuter** :
@@ -204,7 +204,7 @@ npm run tauri build
 ```bash
 docker build -f Dockerfile.tauri-full -t titane-builder .
 docker run --rm -v $(pwd):/workspace titane-builder \
-  bash -c "cd /workspace && npm install && npm run tauri build"
+  bash -c "cd /workspace && pnpm install && pnpm run tauri build"
 ```
 
 ---

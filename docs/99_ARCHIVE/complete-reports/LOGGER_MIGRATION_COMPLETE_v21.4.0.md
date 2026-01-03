@@ -392,7 +392,7 @@ logger.groupEnd();
 ### Build Performance
 
 ```bash
-$ npm run build
+$ pnpm run build
 ✓ built in 14.55s
 ```
 

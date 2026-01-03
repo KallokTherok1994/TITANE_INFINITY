@@ -116,7 +116,7 @@ echo ""
 echo -e "${BLUE}6. Vérification dépendances...${NC}"
 if [ ! -d "node_modules" ]; then
     echo -e "  ${YELLOW}⚠${NC}  node_modules absent, installation..."
-    npm install
+    pnpm install
 else
     echo -e "  ${GREEN}✓${NC} node_modules présent"
 fi
@@ -144,7 +144,7 @@ echo "  ✓ Route /fusion ajoutée"
 echo "  ✓ Item sidebar 'Fusion Backend/Frontend' ajouté"
 echo ""
 echo "🚀 PROCHAINES ÉTAPES:"
-echo "  1. Démarrer le serveur dev: npm run dev"
+echo "  1. Démarrer le serveur dev: pnpm run dev"
 echo "  2. Ouvrir: http://localhost:5173/fusion"
 echo "  3. Vérifier dashboard + métriques temps réel"
 echo ""

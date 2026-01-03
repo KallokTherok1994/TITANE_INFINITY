@@ -42,13 +42,13 @@
 
 ```bash
 # Tous les tests
-npm test
+pnpm test
 
 # Tests en mode watch
-npm run test:watch
+pnpm run test:watch
 
 # Coverage
-npm run test:coverage
+pnpm run test:coverage
 
 # Tests unitaires uniquement
 vitest run --config vitest.unit.config.ts
@@ -57,14 +57,14 @@ vitest run --config vitest.unit.config.ts
 vitest run --config vitest.integration.config.ts
 
 # Tests E2E
-npm run test:e2e
+pnpm run test:e2e
 ```
 
 ### Backend (Rust)
 
 ```bash
 # Tous les tests Rust
-npm run test:rust
+pnpm run test:rust
 # OU
 cd src-tauri && cargo test
 
@@ -82,16 +82,16 @@ cargo test --package titane-infinity --lib security::validation
 
 ```bash
 # Tous les tests (Frontend + Backend + E2E + Architecture)
-npm run test:all
+pnpm run test:all
 
 # Tests architecture
-npm run test:architecture
+pnpm run test:architecture
 
 # Tests compliance
-npm run test:compliance
+pnpm run test:compliance
 
 # Tests OMEGA
-npm run test:omega
+pnpm run test:omega
 ```
 
 ## 🔧 Build & Development
@@ -100,48 +100,48 @@ npm run test:omega
 
 ```bash
 # Démarrer le mode dev (Tauri + Vite)
-npm run dev
+pnpm run dev
 
 # Build frontend uniquement
-npm run build
+pnpm run build
 
 # Build production complète (lint + format + build + Tauri)
-npm run build:production
+pnpm run build:production
 ```
 
 ### Vérifications
 
 ```bash
 # TypeScript check (sans build)
-npm run check
+pnpm run check
 
 # ESLint
-npm run lint
+pnpm run lint
 
 # ESLint avec fix auto
-npm run lint:fix
+pnpm run lint:fix
 
 # Prettier check
-npm run format:check
+pnpm run format:check
 
 # Prettier format
-npm run format
+pnpm run format
 
 # Vérification complète (lint + format + check + tests + verify)
-npm run verify
+pnpm run verify
 ```
 
 ### Tauri-Only & Local-First
 
 ```bash
 # Vérifier conformité Tauri-only
-npm run verify:tauri-only
+pnpm run verify:tauri-only
 
 # Vérifier conformité local-first
-npm run verify:local-first
+pnpm run verify:local-first
 
 # Vérifier configs Tauri
-npm run verify:tauri-configs
+pnpm run verify:tauri-configs
 ```
 
 ## 🔒 Sécurité
@@ -150,13 +150,13 @@ npm run verify:tauri-configs
 
 ```bash
 # Audit npm
-npm audit
+pnpm audit
 
 # Audit Rust (cargo audit requis: cargo install cargo-audit)
 cd src-tauri && cargo audit
 
 # Audit complet
-npm run audit
+pnpm run audit
 ```
 
 ### Validation
@@ -207,7 +207,7 @@ grep -r "unsafe\|unwrap()\|panic!" src-tauri/src/ --include="*.rs"
 
 ```bash
 # Nettoyage complet
-npm run clean
+pnpm run clean
 
 # Supprimer node_modules
 rm -rf node_modules
@@ -219,7 +219,7 @@ rm -rf src-tauri/target
 rm -rf dist
 
 # Nettoyage profond + réinstall
-npm run clean && npm install && cd src-tauri && cargo clean && cargo build
+pnpm run clean && pnpm install && cd src-tauri && cargo clean && cargo build
 ```
 
 ## 🔍 Debugging
@@ -234,14 +234,14 @@ tail -f runtime/dev/logs/vite.log
 tail -f runtime/dev/logs/tauri.log
 
 # Logs build
-npm run build 2>&1 | tee build.log
+pnpm run build 2>&1 | tee build.log
 ```
 
 ### Tests Debugging
 
 ```bash
 # Tests avec debug output
-DEBUG=* npm test
+DEBUG=* pnpm test
 
 # Tests Rust verbose
 cargo test -- --nocapture --test-threads=1
@@ -288,7 +288,7 @@ git commit --no-verify -m "message"
 
 ```bash
 # Build production complète
-npm run build:production
+pnpm run build:production
 
 # OU avec titane.sh
 ./titane build prod
@@ -299,16 +299,16 @@ npm run build:production
 
 ```bash
 # 1. Vérifications
-npm run verify
+pnpm run verify
 
 # 2. Tests complets
-npm run test:all
+pnpm run test:all
 
 # 3. Audit sécurité
-npm run audit
+pnpm run audit
 
 # 4. Build production
-npm run build:production
+pnpm run build:production
 ```
 
 ## 📚 Documentation
@@ -317,13 +317,13 @@ npm run build:production
 
 ```bash
 # TypeDoc (documentation API TypeScript)
-npm run docs
+pnpm run docs
 
 # Storybook (composants UI)
-npm run storybook
+pnpm run storybook
 
 # Build Storybook
-npm run build-storybook
+pnpm run build-storybook
 ```
 
 ### Consulter Docs
@@ -358,7 +358,7 @@ npx npm-check-updates -i
 cd src-tauri && cargo update
 
 # Update Tauri CLI
-npm install -D @tauri-apps/cli@latest
+pnpm install -D @tauri-apps/cli@latest
 ```
 
 ### Health Checks
@@ -375,7 +375,7 @@ npm list
 cd src-tauri && cargo tree
 
 # Vérifier intégrité
-npm run verify
+pnpm run verify
 ```
 
 ## 🎯 Raccourcis Utiles
@@ -387,9 +387,9 @@ alias th='./titane health'
 alias tf='./titane full dev'
 alias tb='./titane build dev'
 alias td='./titane deploy dev'
-alias tt='npm test'
-alias tc='npm run check'
-alias tl='npm run lint:fix'
+alias tt='pnpm test'
+alias tc='pnpm run check'
+alias tl='pnpm run lint:fix'
 ```
 
 ## 📞 Support
@@ -406,16 +406,16 @@ alias tl='npm run lint:fix'
 
 ```bash
 # Reset complet
-npm run clean
+pnpm run clean
 rm -rf node_modules package-lock.json pnpm-lock.yaml
-npm install
+pnpm install
 cd src-tauri && cargo clean && cargo build
 
 # Fix permissions script Titane
 chmod +x titane.sh
 
 # Fix TypeScript errors
-npm run check 2>&1 | less
+pnpm run check 2>&1 | less
 
 # Fix Rust errors
 cd src-tauri && cargo check

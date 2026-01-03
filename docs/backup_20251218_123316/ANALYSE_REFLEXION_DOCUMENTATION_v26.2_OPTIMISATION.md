@@ -462,7 +462,7 @@ echo "Total documentation:"
 find docs -name "*.md" | wc -l
 
 # 4.3 Test build
-npm run build
+pnpm run build
 
 # 4.4 Commit
 git add .
@@ -792,7 +792,7 @@ echo "✅ Migration terminée!"
 echo ""
 echo "Next steps:"
 echo "  1. Review: git status"
-echo "  2. Test: npm run build"
+echo "  2. Test: pnpm run build"
 echo "  3. Commit: git commit -m 'refactor(docs): restructuration v26.2'"
 ```
 
@@ -833,7 +833,7 @@ Fichiers racine conservés:
 Migration:
 - Script: scripts/docs/migrate-v26.2.sh
 - Backup: docs/backup_20251218/
-- Validation: npm run build ✅
+- Validation: pnpm run build ✅
 
 Refs: #DOC-REFACTOR
 See: ANALYSE_REFLEXION_DOCUMENTATION_v26.2_OPTIMISATION.md
@@ -851,7 +851,7 @@ BREAKING CHANGE: Chemins documentation modifiés
 - [ ] Fichiers racine <= 10
 - [ ] INDEX.md créés dans archives
 - [ ] Liens internes vérifiés (`check-links.sh`)
-- [ ] Build test réussi (`npm run build`)
+- [ ] Build test réussi (`pnpm run build`)
 - [ ] CI/CD validation passée
 - [ ] Commit message conventionnel
 - [ ] PR créée avec template

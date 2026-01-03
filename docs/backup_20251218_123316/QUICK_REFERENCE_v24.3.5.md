@@ -168,18 +168,18 @@ it('should handle null data', () => {
 
 ```bash
 # Dev
-npm run dev:tauri
+pnpm run dev:tauri
 
 # Type check
-npm run type-check
+pnpm run type-check
 
 # Build
-npm run build
+pnpm run build
 npx tauri build
 
 # Tests
-npm test
-npm run test:tauri
+pnpm test
+pnpm run test:tauri
 ```
 
 ---

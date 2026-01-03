@@ -53,7 +53,7 @@ if command -v pnpm &> /dev/null; then
     echo -e "${GREEN}✓${NC} $PNPM_VERSION"
 else
     echo -e "${RED}✗ NOT FOUND${NC}"
-    echo "  Install: npm install -g pnpm"
+    echo "  Install: pnpm install -g pnpm"
     exit 1
 fi
 

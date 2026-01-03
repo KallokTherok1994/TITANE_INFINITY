@@ -72,7 +72,7 @@
 
 ```bash
 # Frontend
-npm install framer-motion
+pnpm install framer-motion
 
 # Backend (Cargo.toml)
 [dependencies]
@@ -255,9 +255,9 @@ cargo test --package titane_infinity --lib duplex::tests
 ### Test Frontend
 
 ```bash
-npm test -- WakewordIndicator
-npm test -- FullDuplexWave
-npm test -- VoiceDuplexUI
+pnpm test -- WakewordIndicator
+pnpm test -- FullDuplexWave
+pnpm test -- VoiceDuplexUI
 ```
 
 ---
@@ -345,7 +345,7 @@ backface-visibility: hidden;
 > 
 > **Technologies** : React 18 • TypeScript • Framer Motion • Tauri v2 • Rust • Tokio
 > 
-> **Prochaine étape** : Intégrer dans `main.rs` et `App.tsx`, puis lancer `npm run tauri dev` ! 🚀
+> **Prochaine étape** : Intégrer dans `main.rs` et `App.tsx`, puis lancer `pnpm run tauri dev` ! 🚀
 
 ---
 

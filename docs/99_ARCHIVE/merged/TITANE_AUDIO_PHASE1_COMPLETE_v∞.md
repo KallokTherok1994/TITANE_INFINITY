@@ -215,7 +215,7 @@ warning: method `force_reset` is never used (bénin)
 ### **Test 2 : Compilation TypeScript**
 
 ```bash
-npm run type-check
+pnpm run type-check
 ```
 
 **✅ RÉSULTAT :** Pas d'erreurs
@@ -471,7 +471,7 @@ await audioStreamingService.startStreaming({
 
 - [x] Créer `audioStreaming.ts` service
 - [x] Créer `useAudioStreaming.ts` hook
-- [x] Tester compilation `npm run type-check`
+- [x] Tester compilation `pnpm run type-check`
 
 ### **Tests**
 

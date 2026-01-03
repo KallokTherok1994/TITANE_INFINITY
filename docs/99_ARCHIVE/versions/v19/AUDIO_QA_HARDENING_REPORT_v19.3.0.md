@@ -206,8 +206,8 @@ hybridTTS.clearQueue();
 ## ✅ BUILD VALIDATION
 
 ```bash
-✓ npm run type-check   # Pas d'erreurs TypeScript
-✓ npm run build        # Build Vite réussi (4.63s)
+✓ pnpm run type-check   # Pas d'erreurs TypeScript
+✓ pnpm run build        # Build Vite réussi (4.63s)
 ✓ cargo check          # Rust compilé sans warnings
 ```
 

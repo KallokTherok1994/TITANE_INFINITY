@@ -231,7 +231,7 @@ TITANE∞ Menu v25.2.1
 ```bash
 # 1. Redémarrer serveur dev (appliquer changements)
 pkill -9 -f vite
-npm run dev
+pnpm run dev
 ```
 
 ### Vérification

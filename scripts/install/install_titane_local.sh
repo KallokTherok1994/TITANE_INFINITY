@@ -267,7 +267,7 @@ ollama list
 echo ""
 echo -e "${CYAN}🚀 PROCHAINES ÉTAPES :${NC}"
 echo ""
-echo "  1. ${YELLOW}Redémarrer TITANE∞${NC} (npm run tauri:dev)"
+echo "  1. ${YELLOW}Redémarrer TITANE∞${NC} (pnpm run tauri:dev)"
 echo "  2. ${YELLOW}Ouvrir Chat IA${NC} dans l'interface"
 echo "  3. ${YELLOW}Sélectionner 'TITANE Local (LLama 3.1)'${NC}"
 echo "  4. ${YELLOW}Tester avec un message${NC}"

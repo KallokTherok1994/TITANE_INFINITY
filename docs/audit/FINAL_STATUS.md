@@ -143,7 +143,7 @@ cargo test --lib error_handling
 npx tsc --noEmit
 
 # Test intégration
-npm run build
+pnpm run build
 cargo build --release
 ```
 
@@ -211,7 +211,7 @@ scripts/
 4. Remplacer 63 unwrap() critiques (Pareto 20%)
 5. Tests error_handling module
 6. cargo audit --fix
-7. npm audit fix
+7. pnpm audit fix
 
 ### Moyen Terme (Semaines 2-3)
 

@@ -166,9 +166,9 @@ scripts/             # Scripts utilitaires
 ## COMMANDES VALIDEES
 
 ```bash
-npm run check      # TypeScript - 0 erreurs
-npm run lint       # ESLint - 0 warnings
-npm run build      # Vite build - SUCCESS
+pnpm run check      # TypeScript - 0 erreurs
+pnpm run lint       # ESLint - 0 warnings
+pnpm run build      # Vite build - SUCCESS
 cargo check        # Rust check - SUCCESS
 cargo clippy       # Rust lint - 0 warnings
 cargo build --release  # Binary - SUCCESS

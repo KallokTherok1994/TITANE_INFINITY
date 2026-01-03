@@ -32,7 +32,7 @@ check_coverage() {
   
   if [ ! -f "$file" ]; then
     echo -e "${YELLOW}⚠️  Warning: Coverage file not found: $file${NC}"
-    echo "   Run 'npm run test:coverage:${category}' first"
+    echo "   Run 'pnpm run test:coverage:${category}' first"
     return 0
   fi
   
@@ -123,7 +123,7 @@ else
   echo -e "${RED}❌ Coverage verification failed: ${FAILURES} categor(y|ies) below threshold${NC}"
   echo ""
   echo "💡 To fix:"
-  echo "   1. Run 'npm run test:coverage' to see detailed report"
+  echo "   1. Run 'pnpm run test:coverage' to see detailed report"
   echo "   2. Add tests to increase coverage"
   echo "   3. Verify test quality (not just quantity)"
   echo ""

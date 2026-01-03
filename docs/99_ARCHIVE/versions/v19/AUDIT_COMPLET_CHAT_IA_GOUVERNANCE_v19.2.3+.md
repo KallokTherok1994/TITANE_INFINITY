@@ -357,7 +357,7 @@ warning: `titane-infinity` (bin "titane-infinity") generated 1 warning
 
 **Tauri Dev**:
 ```bash
-$ npm run tauri:dev
+$ pnpm run tauri:dev
 [2025-12-05T06:45:35Z INFO  titane_infinity] 🧠 Starting TITANE∞ v16 Cognitive System...
 [2025-12-05T06:45:35Z INFO  titane_infinity] ✅ Pre-boot validation passed
 [2025-12-05T06:45:36Z INFO  titane_infinity] ✅ SecureSecretsEngine v∞ ready
@@ -582,7 +582,7 @@ $ # (aucune sortie = 0 erreurs)
 
 **Vite Dev Server**:
 ```bash
-$ npm run vite:dev
+$ pnpm run vite:dev
   VITE v6.4.1  ready in 165 ms
 
   ➜  Local:   http://localhost:5173/
@@ -1122,7 +1122,7 @@ impl OAuth2Manager {
      run: cargo test --manifest-path src-tauri/Cargo.toml
 
    - name: Run TypeScript tests
-     run: npm run test
+     run: pnpm run test
    ```
 
 #### 2.2 OAuth2 Implementation

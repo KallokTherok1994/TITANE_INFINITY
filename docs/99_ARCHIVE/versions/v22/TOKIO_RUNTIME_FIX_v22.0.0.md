@@ -18,7 +18,7 @@
 │ │
 │ Location: src-tauri/src/main.rs:277 │
 │ Severity: 🔴 CRITICAL (Application cannot start) │
-│ Impact: Blocks development environment (npm run tauri dev) │
+│ Impact: Blocks development environment (pnpm run tauri dev) │
 │ │
 └───────────────────────────────────────────────────────────────────────────────────┘
 
@@ -233,7 +233,7 @@
 │ [✅] Maintained async initialization behavior │
 │ [✅] TypeScript compilation: 0 errors │
 │ [✅] Rust compilation: No errors detected │
-│ [⏳] Runtime test: Ready for `npm run tauri dev` │
+│ [⏳] Runtime test: Ready for `pnpm run tauri dev` │
 │ │
 └───────────────────────────────────────────────────────────────────────────────────┘
 
@@ -254,7 +254,7 @@
 │ │
 │ 3. Start Development Environment: │
 │ `bash                                                                       │
-│     npm run tauri dev                                                             │
+│     pnpm run tauri dev                                                             │
 │     ` │
 │ │
 │ 4. Expected Output: │
@@ -341,7 +341,7 @@
 ║ ║
 ║ 🔧 Critical Bug Resolved — Ready to Test ║
 ║ ║
-║ Next: Run `npm run tauri dev` to verify fix ║
+║ Next: Run `pnpm run tauri dev` to verify fix ║
 ║ ║
 ╚═══════════════════════════════════════════════════════════════════════════════════╝
 

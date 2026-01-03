@@ -98,7 +98,7 @@ if [ "$ALL_GENERATED" = true ]; then
     echo "🧪 Test de validation des icônes..."
     if command -v npm >/dev/null 2>&1; then
         echo "   📝 Validation de la configuration Tauri..."
-        if npm run tauri:check 2>/dev/null || echo "Configuration OK"; then
+        if pnpm run tauri:check 2>/dev/null || echo "Configuration OK"; then
             echo "   ✅ Configuration Tauri validée"
         fi
     fi
@@ -115,8 +115,8 @@ if [ "$ALL_GENERATED" = true ]; then
     echo "✅ TITANE∞ prêt pour le déploiement avec nouvelles icônes !"
     echo ""
     echo "🚀 Prochaines étapes:"
-    echo "   • npm run tauri:build - Construire l'application"
-    echo "   • npm run tauri:dev - Tester les nouvelles icônes"
+    echo "   • pnpm run tauri:build - Construire l'application"
+    echo "   • pnpm run tauri:dev - Tester les nouvelles icônes"
     echo "   • Vérifier l'affichage dans la barre des tâches"
 
 else

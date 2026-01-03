@@ -416,7 +416,7 @@
 
 ```bash
 export TITANE_SECRETS_PASSPHRASE="my-secure-passphrase-min-16-chars"
-npm run dev:tauri
+pnpm run dev:tauri
 ```
 
 **Méthode 2: Config File (Recommandé Production)**
@@ -444,7 +444,7 @@ cp .env .env.backup
 
 # 2. Lancer TITANE en mode migration
 export TITANE_MIGRATE_SECRETS=1
-npm run dev:tauri
+pnpm run dev:tauri
 
 # 3. Les clés sont importées et chiffrées automatiquement
 

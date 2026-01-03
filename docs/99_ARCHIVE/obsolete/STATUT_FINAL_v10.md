@@ -133,7 +133,7 @@ cargo run --release --no-default-features
 
 ```bash
 # Dans le dossier principal
-npm run dev  # Vite standalone sur port 5173
+pnpm run dev  # Vite standalone sur port 5173
 ```
 
 **Backend séparé**:
@@ -285,7 +285,7 @@ cargo test --workspace
 
 ### Lancer Frontend Seul
 ```bash
-npm run dev  # Port 5173
+pnpm run dev  # Port 5173
 ```
 
 ### Logs Détaillés

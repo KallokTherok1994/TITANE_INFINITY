@@ -134,7 +134,7 @@ Corriger **7 points critiques P0** identifiés dans Phase 1 (Cartographie) :
 
 **Problème** :
 
-- ❌ `npm run build` FAILED : Rollup cannot resolve `@tauri-apps/api/tauri`
+- ❌ `pnpm run build` FAILED : Rollup cannot resolve `@tauri-apps/api/tauri`
 - Cause : voiceFingerprintTauri.ts importe Tauri API (indisponible en mode web-only)
 
 **Solution** :
@@ -193,8 +193,8 @@ Corriger **7 points critiques P0** identifiés dans Phase 1 (Cartographie) :
 ### **Build**
 
 - ✅ Rust : `cargo check` SUCCESS (0 errors, 4 warnings placeholders OK)
-- ✅ TypeScript : `npm run build` SUCCESS (13.94s)
-- ✅ Tests : `npm test` 137/137 passed (100%, 145ms)
+- ✅ TypeScript : `pnpm run build` SUCCESS (13.94s)
+- ✅ Tests : `pnpm test` 137/137 passed (100%, 145ms)
 
 ### **Git**
 

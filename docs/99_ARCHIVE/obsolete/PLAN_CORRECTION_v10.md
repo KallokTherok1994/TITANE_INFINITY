@@ -50,7 +50,7 @@
 
 5. **Erreur Tauri - frontendDist** (1 erreur)
    - `frontendDist` configuré sur `"../dist"` mais chemin inexistant
-   - **SOLUTION**: Exécuter `npm run build` pour générer dist/
+   - **SOLUTION**: Exécuter `pnpm run build` pour générer dist/
 
 6. **E0412 - Type non trouvé** (1+ erreurs)
    - `HeliosState` dans module `helios`
@@ -78,8 +78,8 @@ sed -i '/^sha2 = /a once_cell = "1.19"' src-tauri/Cargo.toml
 ### **PHASE 2: Build Frontend**
 
 ```bash
-npm install
-npm run build
+pnpm install
+pnpm run build
 # Doit créer dist/index.html
 ```
 
@@ -399,7 +399,7 @@ pub fn tick(
 sed -i '/^sha2 = /a once_cell = "1.19"' src-tauri/Cargo.toml
 
 # Phase 2
-npm install && npm run build
+pnpm install && pnpm run build
 
 # Phase 3
 # Éditer manuellement memory_v2/mod.rs

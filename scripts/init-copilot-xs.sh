@@ -70,8 +70,8 @@ The validation script checks for:
 - Prohibited markers in source folders (default: `TODO`, `FIXME`).
 - Basic hygiene (no obvious secrets patterns).
 
-By default, `npm run copilot-xs:validate` scans **git staged files** (pre-commit scope) to avoid forcing a full legacy cleanup.
-For a full scan, run: `COPILOT_XS_SCOPE=all npm run copilot-xs:validate`.
+By default, `pnpm run copilot-xs:validate` scans **git staged files** (pre-commit scope) to avoid forcing a full legacy cleanup.
+For a full scan, run: `COPILOT_XS_SCOPE=all pnpm run copilot-xs:validate`.
 
 Configure via environment variables:
 - `COPILOT_XS_ROOTS` (comma-separated roots, default: `src,src-tauri/src,tests`)
@@ -138,8 +138,8 @@ write_if_missing ".github/copilot-agents/orchestrator.agent.md" <<'EOF'
 
 Role: Coordinates validation and test gates.
 
-- Pre-flight: run `npm run copilot-xs:validate`
-- Gate: run `npm run test:all` (or repo verify) before merge
+- Pre-flight: run `pnpm run copilot-xs:validate`
+- Gate: run `pnpm run test:all` (or repo verify) before merge
 EOF
 
 write_if_missing ".github/copilot-agents/architect.agent.md" <<'EOF'
@@ -407,7 +407,7 @@ function run(cmd, args) {
   }
 }
 
-// npm audit (uses package-lock.json)
+// pnpm audit (uses package-lock.json)
 run('npm', ['audit']);
 EOF
 
@@ -421,12 +421,12 @@ if [[ -f package.json ]]; then
   npm pkg set scripts.copilot-xs:precommit="node .github/copilot-xs/scripts/precommit.js" >/dev/null
   npm pkg set scripts.copilot-xs:status="node .github/copilot-xs/scripts/agent-status.js" >/dev/null
   npm pkg set scripts.copilot-xs:security-scan="node .github/copilot-xs/scripts/security-scan.js" >/dev/null
-  npm pkg set scripts.copilot-xs:test="npm run copilot-xs:validate && npm run test:all" >/dev/null
+  npm pkg set scripts.copilot-xs:test="pnpm run copilot-xs:validate && pnpm run test:all" >/dev/null
   echo "✅ npm scripts updated"
 
   if [[ "${COPILOT_XS_INSTALL_MCP:-0}" == "1" ]]; then
     echo "📦 Installing optional MCP servers (devDependencies)..."
-    npm install --save-dev @modelcontextprotocol/server-filesystem@latest \
+    pnpm install --save-dev @modelcontextprotocol/server-filesystem@latest \
       @modelcontextprotocol/server-npm@latest \
       @modelcontextprotocol/server-github@latest
     echo "✅ MCP servers installed"
@@ -454,15 +454,15 @@ write_if_missing ".vscode/copilot-xs-entry.json" <<'EOF'
   "name": "copilot-xs",
   "notes": "This file is documentation/stub. VS Code does not auto-load custom Copilot agent entrypoints from here.",
   "commands": {
-    "status": "npm run copilot-xs:status",
-    "validate": "npm run copilot-xs:validate",
-    "test": "npm run copilot-xs:test"
+    "status": "pnpm run copilot-xs:status",
+    "validate": "pnpm run copilot-xs:validate",
+    "test": "pnpm run copilot-xs:test"
   }
 }
 EOF
 
 echo ""
 echo "✅ COPILOT-XS setup complete."
-echo "- Status: npm run copilot-xs:status"
-echo "- Validate: npm run copilot-xs:validate"
+echo "- Status: pnpm run copilot-xs:status"
+echo "- Validate: pnpm run copilot-xs:validate"
 echo "- Pre-commit: enforced via Husky (.husky/pre-commit)"

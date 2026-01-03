@@ -306,7 +306,7 @@ Files Changed:
 - [x] Husky pre-commit hooks passés (ESLint + Prettier)
 
 ### Build
-- [x] TypeScript compilation vérifiée (`npm run check`)
+- [x] TypeScript compilation vérifiée (`pnpm run check`)
 - [x] Erreurs TS existantes documentées (non-bloquantes)
 - [x] Pas de nouvelles erreurs introduites
 - [x] Package.json description cohérente avec Cargo.toml

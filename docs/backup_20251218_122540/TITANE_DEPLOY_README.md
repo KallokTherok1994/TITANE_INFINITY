@@ -52,9 +52,9 @@ Corrige automatiquement les erreurs TypeScript et ESLint
 
 **Exécute:**
 
-- `npm run lint:fix` - Auto-fix ESLint
-- `npm run format` - Prettier formatting
-- `npm run check` - TypeScript type checking
+- `pnpm run lint:fix` - Auto-fix ESLint
+- `pnpm run format` - Prettier formatting
+- `pnpm run check` - TypeScript type checking
 
 ### 🏗️ Build
 
@@ -171,7 +171,7 @@ tail -f logs/titane_*.log | tail -1
 
 ```bash
 ./titane fix          # Auto-fix
-npm run check         # Voir détails
+pnpm run check         # Voir détails
 ```
 
 ### Erreur: "Dependencies not installed"
@@ -228,8 +228,8 @@ git pull              # Récupérer updates
 
 ```bash
 ./titane fix          # Auto-fix erreurs
-npm run check         # Vérifier types
-npm test              # Lancer tests
+pnpm run check         # Vérifier types
+pnpm test              # Lancer tests
 ```
 
 ### 3. Release production

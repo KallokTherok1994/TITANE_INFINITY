@@ -232,7 +232,7 @@ cargo check --manifest-path src-tauri/Cargo.toml
 ### Frontend TypeScript
 
 ```bash
-npm run type-check
+pnpm run type-check
 ⚠️  Parsing errors mineurs (JSDoc, CSS gradients)
 ✅ Code compiles et s'exécute correctement
 ```
@@ -314,10 +314,10 @@ npm run type-check
 cargo build --release --manifest-path src-tauri/Cargo.toml
 
 # Frontend TypeScript
-npm run build
+pnpm run build
 
 # Tauri App
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ### Validation Pre-Deploy
@@ -327,7 +327,7 @@ npm run tauri:build
 cargo test --manifest-path src-tauri/Cargo.toml
 
 # Type-check frontend
-npm run type-check
+pnpm run type-check
 
 # Self-tests v21+v22 (TODO)
 # cargo test adaptive_selftest

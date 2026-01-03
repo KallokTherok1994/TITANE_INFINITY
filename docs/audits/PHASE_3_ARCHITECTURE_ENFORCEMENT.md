@@ -251,7 +251,7 @@ Architecture:  98/100 ⬆️ (+3)
    - Wrapper localStorage (CognitiveLayoutService existe déjà)
 
 3. **CI/CD enforcement** (P2)
-   - Pre-commit hook: `npm run test:architecture`
+   - Pre-commit hook: `pnpm run test:architecture`
    - GitHub Actions: bloquer merge si violations
 
 ---

@@ -60,7 +60,7 @@
 1. **Rust tests**: add unit tests for `MemoryCore` (load/save, truncation, compaction triggers) plus integration tests under `src-tauri/tests/memory_core.rs` verifying Tauri commands touch disk files in a temp dir.
 2. **TypeScript tests**: mock the `invoke` bridge to ensure `memoryService` cache invalidation, structured context assembly, and error propagation are deterministic (Vitest suite alongside existing diagnostics).
 3. **Docs & Playbooks**: create `docs/MEMORY_CORE_vOmega6.md` summarizing file layout, validator checklist, CLI usage, and operator runbooks (detect → compact → revalidate).
-4. **Release gating**: add a CI step (`npm run memory:doctor` + `cargo test memory_core`) so builds fail if the validator or tests regress; require a passing memory health report before enabling `GO ALL AUTO!` autonomous loops.
+4. **Release gating**: add a CI step (`pnpm run memory:doctor` + `cargo test memory_core`) so builds fail if the validator or tests regress; require a passing memory health report before enabling `GO ALL AUTO!` autonomous loops.
 
 ## Expected Outcomes
 - Real disk-backed persistence with bounded size, deduplication, and recovery hooks.

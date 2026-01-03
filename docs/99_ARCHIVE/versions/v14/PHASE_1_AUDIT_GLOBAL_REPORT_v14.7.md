@@ -171,7 +171,7 @@ warning: unused import: `HashMap`
 
 ### Type-Check Status
 ```bash
-$ npm run type-check
+$ pnpm run type-check
 > tsc --noEmit
 ✅ 0 ERREURS TypeScript
 ✅ Compilation frontend PROPRE

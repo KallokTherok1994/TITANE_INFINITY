@@ -432,7 +432,7 @@ interface AIMessage {
 
 4. [ ] Corriger les 200 TS2322 restants
 5. [ ] Corriger les 100 TS7006 (any implicite)
-6. [ ] Tests: `npm run build`
+6. [ ] Tests: `pnpm run build`
 
 ### Validation Finale
 

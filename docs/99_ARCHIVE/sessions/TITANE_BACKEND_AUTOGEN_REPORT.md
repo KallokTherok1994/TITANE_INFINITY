@@ -17,7 +17,7 @@ Le backend Rust a été analysé, optimisé et connecté au frontend TypeScript 
 | Métrique        | Avant                           | Après                 |
 | --------------- | ------------------------------- | --------------------- |
 | `cargo check`   | ✅ Passait                      | ✅ Passe (0.21s)      |
-| `npm run build` | ❌ Échouait (SQLiteVectorStore) | ✅ Passe (12.34s)     |
+| `pnpm run build` | ❌ Échouait (SQLiteVectorStore) | ✅ Passe (12.34s)     |
 | Modules Rust    | 535 fichiers                    | 535 fichiers (stable) |
 | Bridge TS       | Partiel                         | ✅ Complet            |
 | Bundle size     | N/A                             | 4.8MB (optimisé)      |
@@ -138,7 +138,7 @@ $ cargo check
 ### NPM Build ✅
 
 ```bash
-$ npm run build
+$ pnpm run build
 ✓ 3016 modules transformed
 ✓ built in 12.34s
 ```

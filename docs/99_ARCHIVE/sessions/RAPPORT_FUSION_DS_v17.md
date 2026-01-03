@@ -253,9 +253,9 @@ MEMORY_GET_ACTIVE_RITUALS: 'memory_get_active_rituals',
 ### Tests Exécutés
 
 ```bash
-✅ npm run lint              → 0 warnings/errors
-✅ npm run type-check        → 0 errors
-✅ npm run build             → 4.18s, 2567 modules
+✅ pnpm run lint              → 0 warnings/errors
+✅ pnpm run type-check        → 0 errors
+✅ pnpm run build             → 4.18s, 2567 modules
 ✅ cargo check               → Compiled successfully
 ✅ cargo clippy              → 20 warnings (non-blocking)
 ✅ ./scripts/validate_all.sh → PASSÉ
@@ -372,8 +372,8 @@ MEMORY_GET_ACTIVE_RITUALS: 'memory_get_active_rituals',
 
 ### Court Terme
 
-1. **Tester l'app en dev** : `npm run dev` + vérifier UI
-2. **Build Tauri complet** : `npm run tauri:build`
+1. **Tester l'app en dev** : `pnpm run dev` + vérifier UI
+2. **Build Tauri complet** : `pnpm run tauri:build`
 3. **Validation manuelle** : Ouvrir l'app, tester chat, memory, etc.
 
 ### Moyen Terme

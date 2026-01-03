@@ -675,8 +675,8 @@ describe('useVisualEngine', () => {
 
 git checkout -b fix/hooks-critical-visual-engine
 # Apply fix (multi_replace_string_in_file)
-npm run lint -- src/hooks/useVisualEngine.ts
-npm test -- src/hooks/useVisualEngine.test.ts # (À créer)
+pnpm run lint -- src/hooks/useVisualEngine.ts
+pnpm test -- src/hooks/useVisualEngine.test.ts # (À créer)
 git commit -m "fix(hooks): useVisualEngine config changes trigger re-init"
 ```
 
@@ -688,8 +688,8 @@ git commit -m "fix(hooks): useVisualEngine config changes trigger re-init"
 
 git checkout -b fix/hooks-critical-time-agenda
 # Apply fix
-npm run lint -- src/hooks/useTimeAgenda.ts
-npm test -- src/hooks/useTimeAgenda.test.ts # (À créer)
+pnpm run lint -- src/hooks/useTimeAgenda.ts
+pnpm test -- src/hooks/useTimeAgenda.test.ts # (À créer)
 git commit -m "fix(hooks): useTimeAgenda autoInit triggers reload"
 ```
 
@@ -748,8 +748,8 @@ git checkout -b refactor/hooks-audio-settings-deps
 # 3. Supprimer 5 eslint-disable comments
 # 4. Tests unitaires (loadInitialData, refreshDevices, etc.)
 
-npm run lint -- src/hooks/useAudioSettings.ts
-npm test -- src/hooks/useAudioSettings.test.ts
+pnpm run lint -- src/hooks/useAudioSettings.ts
+pnpm test -- src/hooks/useAudioSettings.test.ts
 git commit -m "refactor(hooks): useAudioSettings deps correctes (5 eslint-disable removed)"
 ```
 
@@ -769,8 +769,8 @@ git checkout -b fix/hooks-high-priority-batch1
 # useVitals.ts:187 - Use ref pattern for polling
 # useVitals.ts:147 - Convert to useMemo
 
-npm run lint -- src/hooks/use{ActiveListening,Vitals}.ts
-npm test -- src/hooks/
+pnpm run lint -- src/hooks/use{ActiveListening,Vitals}.ts
+pnpm test -- src/hooks/
 git commit -m "fix(hooks): audio/vitals HIGH priority deps"
 ```
 
@@ -780,8 +780,8 @@ git checkout -b fix/hooks-high-priority-batch2
 
 # useChat.ts:404 - Audit checkProvidersAvailability (avoid infinite loop)
 
-npm run lint -- src/hooks/useChat.ts
-npm test -- src/hooks/useChat.test.ts
+pnpm run lint -- src/hooks/useChat.ts
+pnpm test -- src/hooks/useChat.test.ts
 git commit -m "fix(hooks): useChat infinite loop prevention"
 ```
 
@@ -804,9 +804,9 @@ git checkout -b refactor/hooks-remove-any-types
 #    - Create EngineDataMap type
 #    - Remove `as any` cast
 
-npm run lint -- src/hooks/use{SingularityStateSafe,EngineSubscription}.ts
+pnpm run lint -- src/hooks/use{SingularityStateSafe,EngineSubscription}.ts
 npx tsc --noEmit # Verify type inference
-npm test -- src/hooks/
+pnpm test -- src/hooks/
 git commit -m "refactor(hooks): remove 2 any types (type safety +2%)"
 ```
 
@@ -825,9 +825,9 @@ git checkout -b refactor/hooks-add-return-types
 # 2. Typer return value: `: UseXxxReturn`
 # 3. Valider exports/imports
 
-npm run lint -- src/hooks/
+pnpm run lint -- src/hooks/
 npx tsc --noEmit
-npm test -- src/hooks/
+pnpm test -- src/hooks/
 git commit -m "refactor(hooks): add 18 return type interfaces (type safety +15%)"
 ```
 
@@ -858,7 +858,7 @@ git checkout -b test/hooks-phase5-critical
 # - useMemoryCore.test.ts
 # - useChatCore.test.ts
 
-npm test -- src/hooks/ --coverage
+pnpm test -- src/hooks/ --coverage
 # Target: >50% coverage pour ces 10 hooks
 
 git commit -m "test(hooks): coverage 10 critical hooks (50%+)"
@@ -876,7 +876,7 @@ git checkout -b test/hooks-phase5-priority
 # - Système hooks (useDevicePermissions, useConnection, useVoiceMode)
 # - Performance hooks (useAdvancedPerformance, usePerformanceProfiler)
 
-npm test -- src/hooks/ --coverage
+pnpm test -- src/hooks/ --coverage
 # Target: >70% coverage global
 
 git commit -m "test(hooks): coverage 30 priority hooks (70%+)"
@@ -892,7 +892,7 @@ git checkout -b test/hooks-phase5-complete
 # - Tous hooks responsive
 # - Tous hooks fusion
 
-npm test -- src/hooks/ --coverage
+pnpm test -- src/hooks/ --coverage
 # Target: >80% coverage global
 
 git commit -m "test(hooks): full coverage 93 hooks (80%+)"

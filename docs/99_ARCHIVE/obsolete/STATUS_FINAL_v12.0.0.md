@@ -125,7 +125,7 @@ Plan:      Cleanup v12.1
 
 ### Développement
 ```
-✅ npm run tauri dev       (Vite 108ms hot reload)
+✅ pnpm run tauri dev       (Vite 108ms hot reload)
 ✅ DevTools fonctionnels   (Rust + TypeScript debugging)
 ✅ Hot reload optimisé     (modifications instantanées)
 ```
@@ -139,8 +139,8 @@ Plan:      Cleanup v12.1
 
 ### Tests
 ```
-✅ npm run type-check      (0 erreurs TypeScript)
-✅ npm audit               (0 HIGH vulnerabilities)
+✅ pnpm run type-check      (0 erreurs TypeScript)
+✅ pnpm audit               (0 HIGH vulnerabilities)
 ⏳ cargo test              (requires WebKit)
 ```
 
@@ -188,7 +188,7 @@ Test coverage:   Core modules validés ✅
 ### Pour Développement
 ```bash
 # Tout est prêt, lancer dev mode:
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 ### Pour Production Build
@@ -198,7 +198,7 @@ sudo apt-get update
 sudo apt-get install libwebkit2gtk-4.1-dev libjavascriptcoregtk-4.1-dev
 
 # 2. Build production
-npm run tauri build
+pnpm run tauri build
 
 # 3. Binaires générés dans:
 # src-tauri/target/release/
@@ -262,7 +262,7 @@ npm run tauri build
 
 **Sécurité:**
 - [x] Audit unwrap()/expect()/panic!
-- [x] npm audit 0 HIGH vulns
+- [x] pnpm audit 0 HIGH vulns
 - [x] eval()/Function() 0 occurrences
 - [x] Type safety 100%
 - [x] Error handling Result<>
@@ -278,7 +278,7 @@ npm run tauri build
 **TITANE∞ v12.0.0 est 100% opérationnel:**
 
 ```
-🟢 Développement:  PRÊT (npm run tauri dev)
+🟢 Développement:  PRÊT (pnpm run tauri dev)
 🟢 Build:          PRÊT (0.81s + 1.02s)
 🟢 Tests:          PRÊT (type-check, audit)
 🟢 Sécurité:       PRÊT (90/100 score)

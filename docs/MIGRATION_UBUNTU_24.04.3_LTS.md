@@ -60,7 +60,7 @@ curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt install -y nodejs
 
 # pnpm (gestionnaire de paquets)
-npm install -g pnpm
+pnpm install -g pnpm
 
 # Tauri CLI
 cargo install tauri-cli

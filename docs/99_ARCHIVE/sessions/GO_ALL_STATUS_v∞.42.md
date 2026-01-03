@@ -394,10 +394,10 @@ code TITANE_STRATEGIC_DEEP_ANALYSIS_v∞.md
 code TITANE_ULTIMATE_COPILOT_PLAN_v∞.md
 
 # Exécuter les tests E2E (optionnel)
-npm run test tests/cognitive-engines-e2e.test.ts
+pnpm run test tests/cognitive-engines-e2e.test.ts
 
 # Lancer l'app (optionnel)
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ---
@@ -422,7 +422,7 @@ Commits : 7 (tous pushés)
 ### Tests
 ```
 • E2E Tests : tests/cognitive-engines-e2e.test.ts
-• Run : npm run test tests/cognitive-engines-e2e.test.ts
+• Run : pnpm run test tests/cognitive-engines-e2e.test.ts
 ```
 
 ---

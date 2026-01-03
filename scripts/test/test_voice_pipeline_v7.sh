@@ -64,7 +64,7 @@ echo ""
 ###############################################################################
 
 run_test "TypeScript Compilation"
-if npm run type-check 2>&1 | grep -q "error"; then
+if pnpm run type-check 2>&1 | grep -q "error"; then
     print_fail "TypeScript compilation failed"
 else
     print_pass "TypeScript compilation successful (0 errors)"
@@ -89,7 +89,7 @@ fi
 ###############################################################################
 
 run_test "Production Build"
-if npm run build 2>&1 | grep -q "built in"; then
+if pnpm run build 2>&1 | grep -q "built in"; then
     print_pass "Production build successful"
 else
     print_fail "Production build failed"

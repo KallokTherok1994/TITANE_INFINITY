@@ -112,7 +112,7 @@ import { renderHook, render } from '@/test-utils';
 ### 4. Installed Missing Dependency
 
 ```bash
-npm install @tanstack/react-query
+pnpm install @tanstack/react-query
 ```
 
 ---

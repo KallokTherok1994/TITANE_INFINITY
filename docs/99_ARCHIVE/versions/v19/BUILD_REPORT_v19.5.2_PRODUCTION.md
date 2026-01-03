@@ -23,7 +23,7 @@
 
 ### Frontend Production
 
-**Build Command**: `npm run build`  
+**Build Command**: `pnpm run build`  
 **Build Tool**: Vite 6.4.1  
 **Duration**: 9.64s ⚡
 
@@ -124,7 +124,7 @@ panic = 'abort'        # Pas de unwinding (plus léger)
 
 ### Packaging Summary
 
-**Packaging Command**: `npm run tauri build`  
+**Packaging Command**: `pnpm run tauri build`  
 **Bundler**: Tauri v2  
 **Duration**: ~4min (build frontend + backend + packaging)
 
@@ -529,11 +529,11 @@ sudo dnf install titane-infinity
 
 ### Erreur: "Target appimage does not exist"
 
-**Problème**: `npm run tauri build -- --target appimage` échoue
+**Problème**: `pnpm run tauri build -- --target appimage` échoue
 
 **Cause**: `--target` attend target Rust (x86_64-unknown-linux-gnu), pas format bundle
 
-**Solution**: Utiliser `npm run tauri build` (bundles par défaut inclut AppImage)
+**Solution**: Utiliser `pnpm run tauri build` (bundles par défaut inclut AppImage)
 
 ---
 
@@ -667,17 +667,17 @@ sudo apt-get install -y libfuse2
 **Rebuild Complet**:
 ```bash
 # Nettoyer tout
-npm run clean
+pnpm run clean
 cargo clean --manifest-path src-tauri/Cargo.toml
 
 # Build frontend
-npm run build
+pnpm run build
 
 # Build backend
 cargo build --release --manifest-path src-tauri/Cargo.toml
 
 # Packaging complet
-npm run tauri build
+pnpm run tauri build
 ```
 
 **Vérification Packages**:

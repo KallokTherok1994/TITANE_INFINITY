@@ -40,7 +40,7 @@ cat src-tauri/Cargo.toml | grep '^version'
 **2. Dependencies:**
 ```bash
 # Frontend
-npm install
+pnpm install
 npm outdated  # Check for updates
 
 # Backend
@@ -52,10 +52,10 @@ cargo check
 **3. Clean Build:**
 ```bash
 # Full clean rebuild
-npm run clean
+pnpm run clean
 rm -rf node_modules dist
-npm install
-npm run build
+pnpm install
+pnpm run build
 
 cd src-tauri
 cargo clean
@@ -685,10 +685,10 @@ JavaScript heap out of memory
 ```bash
 # 1. Augmenter heap size Node.js
 export NODE_OPTIONS="--max-old-space-size=8192"
-npm run build
+pnpm run build
 
 # 2. Build en mode production (optimisé)
-npm run build --mode production
+pnpm run build --mode production
 
 # 3. Disable source maps (si pas besoin debug)
 # vite.config.ts
@@ -699,8 +699,8 @@ export default defineConfig({
 });
 
 # 4. Build progressif
-npm run build:frontend
-npm run build:backend
+pnpm run build:frontend
+pnpm run build:backend
 ```
 
 ---
@@ -821,7 +821,7 @@ F12 → Performance tab
 **3. Bundle Analysis:**
 ```bash
 # Visualize bundle size
-npm run build
+pnpm run build
 npx vite-bundle-analyzer dist
 
 # Check dependencies size

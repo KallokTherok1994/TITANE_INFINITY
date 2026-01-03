@@ -215,7 +215,7 @@ haloEngine.startBreathing(); // ✅ v∞.7 PHASE 8: Start breathing animation
 
 #### TypeScript Compilation
 ```bash
-npm run type-check
+pnpm run type-check
 # ✅ 0 errors
 ```
 
@@ -227,7 +227,7 @@ cargo check
 
 #### Build Test
 ```bash
-npm run build
+pnpm run build
 # ✅ Success (pending verification)
 ```
 
@@ -437,7 +437,7 @@ npm run build
 ### Compilation & Tests
 - [x] TypeScript compilation: 0 errors
 - [x] Rust compilation: 0 errors (2 warnings unused, normal)
-- [ ] Build test: npm run build (in progress)
+- [ ] Build test: pnpm run build (in progress)
 - [ ] Manual test: Active Listening
 - [ ] Manual test: Halo Sync visual
 - [ ] Manual test: VAD Control

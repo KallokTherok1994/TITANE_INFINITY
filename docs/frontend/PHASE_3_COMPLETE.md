@@ -199,7 +199,7 @@ className={cn(
 
 ### Production Build
 ```bash
-npm run build
+pnpm run build
 # ✅ built in 14.55s
 # ✅ All layout components compiled successfully
 # ✅ 0 TypeScript errors in layout components
@@ -216,7 +216,7 @@ npm run build
 
 ### TypeScript Check
 ```bash
-npm run check
+pnpm run check
 # ✅ No errors in migrated components
 # ✅ Type-safe imports/exports
 # ✅ cn() utility fully typed

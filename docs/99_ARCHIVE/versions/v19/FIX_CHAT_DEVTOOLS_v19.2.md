@@ -29,7 +29,7 @@
 ```
 
 **Test**:
-1. Lancer l'app: `npm run tauri:dev`
+1. Lancer l'app: `pnpm run tauri:dev`
 2. Appuyer sur **F12** (ou Ctrl+Shift+I)
 3. DevTools doit s'ouvrir ✅
 
@@ -119,7 +119,7 @@ async generate(message: string, history: AIMessage[] = []): Promise<AIResponse> 
 
 ```bash
 # 1. Lancer en mode dev
-npm run tauri:dev
+pnpm run tauri:dev
 
 # 2. Une fois l'app ouverte:
 #    - Appuyer F12 (ou Ctrl+Shift+I / Cmd+Option+I)
@@ -228,23 +228,23 @@ await window.__TAURI__.core.invoke('chat_send_message', {
 
 3. **Réinstaller node_modules** (si corruption):
    ```bash
-   npm run clean
-   npm install
+   pnpm run clean
+   pnpm install
    ```
 
 4. **Vérifier permissions** (Linux):
    ```bash
    # Si fenêtre blanche ou crash
    export WEBKIT_DISABLE_COMPOSITING_MODE=1
-   npm run tauri:dev
+   pnpm run tauri:dev
    ```
 
 5. **Forcer rebuild**:
    ```bash
-   npm run clean:dist
-   npm run build
+   pnpm run clean:dist
+   pnpm run build
    cd src-tauri && cargo clean && cd ..
-   npm run tauri:dev
+   pnpm run tauri:dev
    ```
 
 ---
@@ -263,7 +263,7 @@ await window.__TAURI__.core.invoke('chat_send_message', {
 
 2. **Vérifier logs Rust** (terminal):
    ```bash
-   # Chercher dans terminal où npm run tauri:dev tourne:
+   # Chercher dans terminal où pnpm run tauri:dev tourne:
    [CHAT_SEND_MESSAGE] Request received
    [CHAT_SEND_MESSAGE] Provider mode: local
    [CHAT_SEND_MESSAGE] ✅ Success
@@ -274,7 +274,7 @@ await window.__TAURI__.core.invoke('chat_send_message', {
    cd src-tauri
    cargo build
    cd ..
-   npm run tauri:dev
+   pnpm run tauri:dev
    ```
 
 4. **Si "Local echo only"**: Providers externes down (normal)
@@ -328,8 +328,8 @@ Avant de signaler un bug, vérifier:
 - [ ] ✅ Chat Orchestrator existe (`chat_orchestrator.rs`)
 - [ ] ✅ Frontend provider existe (`tauriChat.ts`)
 - [ ] ✅ Compilation Rust OK: `cd src-tauri && cargo check`
-- [ ] ✅ Compilation TS OK: `npm run type-check`
-- [ ] ✅ App lance en dev: `npm run tauri:dev`
+- [ ] ✅ Compilation TS OK: `pnpm run type-check`
+- [ ] ✅ App lance en dev: `pnpm run tauri:dev`
 - [ ] ✅ F12 ouvre DevTools
 - [ ] ✅ Console affiche logs TITANE
 - [ ] ✅ Test commande direct (voir Test 2 ci-dessus)
@@ -344,10 +344,10 @@ Avant de signaler un bug, vérifier:
 
 ```bash
 # Terminal 1: Build watch (optionnel, pour hot reload)
-npm run build:watch
+pnpm run build:watch
 
 # Terminal 2: Lancer app en mode dev
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Une fois ouvert:
 # 1. F12 → DevTools s'ouvre ✅

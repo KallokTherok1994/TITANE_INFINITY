@@ -326,7 +326,7 @@ window.addEventListener('beforeunload', handleBeforeUnload);
 ### ✅ Compilation TypeScript
 
 ```bash
-$ npm run type-check
+$ pnpm run type-check
 ✅ Pas d'erreurs trouvées
 ```
 

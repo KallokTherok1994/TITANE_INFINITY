@@ -187,7 +187,7 @@ if [ $TESTS_FAILED -eq 0 ]; then
     echo "Les APIs OpenAI et Anthropic sont correctement configurées."
     echo ""
     echo "Prochaines étapes:"
-    echo "  1. Lancer TITANE∞: npm run tauri:dev"
+    echo "  1. Lancer TITANE∞: pnpm run tauri:dev"
     echo "  2. Ouvrir Centre Gouvernance → Secrets"
     echo "  3. Configurer clés API OpenAI et Anthropic"
     echo "  4. Tester Chat OMEGA avec providers 'openai' et 'anthropic'"

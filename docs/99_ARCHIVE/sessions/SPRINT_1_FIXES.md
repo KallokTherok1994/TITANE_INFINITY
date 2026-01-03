@@ -25,7 +25,7 @@ Actions:
 5. Valide que le test capture l'erreur correctement
 
 Corrige et lance:
-  npm run test:watch -- CognitiveStrategy.test.ts
+  pnpm run test:watch -- CognitiveStrategy.test.ts
 ```
 
 ---
@@ -64,7 +64,7 @@ Actions:
    console.log('List jobs:', strategy.listJobs());
 
 Corrige et valide:
-  npm run test:watch -- MCPStrategy.test.ts
+  pnpm run test:watch -- MCPStrategy.test.ts
 ```
 
 ---
@@ -99,7 +99,7 @@ Actions:
 4. Si la validation est trop stricte, considère des message fixtures
 
 Corrige et valide:
-  npm run test:watch -- chatEngine.test.ts
+  pnpm run test:watch -- chatEngine.test.ts
 ```
 
 ---
@@ -110,7 +110,7 @@ Corrige et valide:
 **Prompt Copilot:**
 ```
 Lance le test et capture l'erreur exacte:
-  npm run test:watch -- ConversationEvaluationEngine.test.ts
+  pnpm run test:watch -- ConversationEvaluationEngine.test.ts
 
 Puis envoie-moi l'output pour que je crée un prompt spécifique.
 ```
@@ -123,7 +123,7 @@ Puis envoie-moi l'output pour que je crée un prompt spécifique.
 **Prompt Copilot:**
 ```
 Lance le test et capture l'erreur exacte:
-  npm run test:watch -- MCPOrchestrator.test.ts
+  pnpm run test:watch -- MCPOrchestrator.test.ts
 
 Puis envoie-moi l'output pour que je crée un prompt spécifique.
 ```
@@ -158,7 +158,7 @@ Actions:
 4. Applique le même pattern à tous les state.expressive.* accesses
 
 Corrige et valide:
-  npm run test:watch -- presenceOS.test.ts
+  pnpm run test:watch -- presenceOS.test.ts
 ```
 
 ---
@@ -167,7 +167,7 @@ Corrige et valide:
 **À identifier** - Lance les tests individuellement:
 
 ```bash
-npm run test:watch -- [FILENAME].test.ts
+pnpm run test:watch -- [FILENAME].test.ts
 ```
 
 Et envoie les erreurs exactes.
@@ -179,10 +179,10 @@ Et envoie les erreurs exactes.
 ### Étape 1: Analyser (30 min)
 ```bash
 # Lancer tous les tests et noter les erreurs
-npm run test:unit 2>&1 | grep "FAIL" -A 10 > /tmp/test-failures.txt
+pnpm run test:unit 2>&1 | grep "FAIL" -A 10 > /tmp/test-failures.txt
 
 # Vérifier chaque fichier individuellement
-npm run test:watch -- src/services/orchestration/__tests__/strategies/MCPStrategy.test.ts
+pnpm run test:watch -- src/services/orchestration/__tests__/strategies/MCPStrategy.test.ts
 ```
 
 ### Étape 2: Corriger (6-8 heures)
@@ -192,10 +192,10 @@ npm run test:watch -- src/services/orchestration/__tests__/strategies/MCPStrateg
 ### Étape 3: Valider (1 heure)
 ```bash
 # Valider tous les tests passent
-npm run test:unit
+pnpm run test:unit
 
 # Vérifier le CI/CD complet
-npm run test:ci
+pnpm run test:ci
 
 # Devrait afficher: ✓ Test Files  71 passed (71)
 ```
@@ -253,8 +253,8 @@ Success Rate: 100% ✅
 ## ✅ ACCEPTANCE CRITERIA
 
 - [ ] All 34 tests fixed (1,888/1,888 passing)
-- [ ] `npm run test:unit` shows 0 failures
-- [ ] `npm run test:ci` passes all stages
+- [ ] `pnpm run test:unit` shows 0 failures
+- [ ] `pnpm run test:ci` passes all stages
 - [ ] No regressions (all existing passing tests still pass)
 - [ ] SPRINT_1_FIXES_APPLIED.md documented
 
@@ -272,9 +272,9 @@ Success Rate: 100% ✅
 ## 🔗 RESSOURCES
 
 - **Test Config:** `vitest.unit.config.ts`
-- **Test Runner:** `npm run test:unit` ou `npm run test:watch`
-- **Coverage:** `npm run test:coverage`
-- **CI/CD:** `npm run test:ci` (lint + type-check + test)
+- **Test Runner:** `pnpm run test:unit` ou `pnpm run test:watch`
+- **Coverage:** `pnpm run test:coverage`
+- **CI/CD:** `pnpm run test:ci` (lint + type-check + test)
 
 ---
 

@@ -95,7 +95,7 @@ Sinon, configuration manuelle guidée.
 
 ### Phase 8 : Installation dépendances TITANE
 
-- `npm install`
+- `pnpm install`
 - Vérification Tauri CLI
 - `cargo check` + `cargo build`
 
@@ -146,13 +146,13 @@ cd ~/Projets/TITANE_INFINITY
 ### 3. Lancer en développement
 
 ```bash
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 ### 4. Build de production
 
 ```bash
-npm run tauri build
+pnpm run tauri build
 ```
 
 ## Logs et debugging
@@ -259,7 +259,7 @@ git --version
 ssh -T git@github.com
 
 # TITANE
-cd ~/Projets/TITANE_INFINITY && npm run tauri --version
+cd ~/Projets/TITANE_INFINITY && pnpm run tauri --version
 ```
 
 ## Support

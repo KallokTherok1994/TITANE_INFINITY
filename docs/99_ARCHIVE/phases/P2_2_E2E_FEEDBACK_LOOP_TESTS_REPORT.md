@@ -152,7 +152,7 @@ Simule lecture TTS :
 ### **Installation Playwright**
 
 ```bash
-npm install -D @playwright/test
+pnpm install -D @playwright/test
 npx playwright install
 ```
 
@@ -179,13 +179,13 @@ export default defineConfig({
 
 ```bash
 # Mode normal
-npm run test:e2e
+pnpm run test:e2e
 
 # Mode UI interactif
-npm run test:e2e:ui
+pnpm run test:e2e:ui
 
 # Mode debug
-npm run test:e2e:debug
+pnpm run test:e2e:debug
 
 # Test spécifique feedback loop
 npx playwright test e2e/feedback-loop.spec.ts

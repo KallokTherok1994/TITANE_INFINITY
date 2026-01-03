@@ -36,7 +36,7 @@
 
 ### PARTIE 2: Système "run titane" (Session Actuelle)
 
-**Problème:** npm run dev:tauri ne fonctionnait pas + besoin système unifié
+**Problème:** pnpm run dev:tauri ne fonctionnait pas + besoin système unifié
 
 **Solution:** Commande unique "titane" avec 6 phases automatiques
 
@@ -115,9 +115,9 @@
 cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
 pkill -f "tauri dev"
 rm -rf dist/
-npm run build
+pnpm run build
 cd src-tauri && cargo build && cd ..
-npm run dev:tauri
+pnpm run dev:tauri
 # → 7-10 commandes manuelles, 5-10 minutes
 ```
 
@@ -183,18 +183,18 @@ PHASE 3: 🔍 VERIFICATION (10-15s)
 
 PHASE 4: 🔧 AUTO-FIX (2-5s)
   └─ Detect errors
-  └─ npm run lint:fix
+  └─ pnpm run lint:fix
   └─ Continue si erreurs
 
 PHASE 5: 🏗️ BUILD (0-300s)
-  └─ Frontend: npm run build (si nécessaire)
+  └─ Frontend: pnpm run build (si nécessaire)
   └─ Backend: cargo build (si nécessaire)
   └─ Verification binaries
 
 PHASE 6: 🚀 LAUNCH (5s)
   └─ Detect display (Wayland/X11)
   └─ Load environment
-  └─ npm run tauri -- dev --no-watch
+  └─ pnpm run tauri -- dev --no-watch
 ```
 
 ---

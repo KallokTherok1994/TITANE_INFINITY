@@ -288,8 +288,8 @@ console.log(emptyData);
 1. **Intégrer AppLayout** dans App.tsx
 2. **Migrer Dashboard.tsx** avec `mapSystemData()`
 3. **Tester toutes les pages** en mode dev
-4. **Vérifier le build** (`npm run build`)
-5. **Valider l'interface** (`npm run tauri dev`)
+4. **Vérifier le build** (`pnpm run build`)
+5. **Valider l'interface** (`pnpm run tauri dev`)
 
 ---
 

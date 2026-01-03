@@ -301,10 +301,10 @@ find src -name "*webVitals*" -type f
 ./scripts/validate-fusion-complete.sh
 
 # 2. Tests complets
-npm test -- --run
+pnpm test -- --run
 
 # 3. Build production
-npm run build
+pnpm run build
 
 # 4. Vérification build
 ls -lh dist/

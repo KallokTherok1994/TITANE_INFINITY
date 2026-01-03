@@ -274,7 +274,7 @@ rhythm/ selfHealing/ spatial/ stress/ time/ training/ vision/ voice/
 3. Remplacer par `Promise.all([ ... ])`
 4. Ajouter error handling pour chaque promesse
 5. Tests: benchmarks avant/après
-6. Validation: `npm run lint` + `npm run check`
+6. Validation: `pnpm run lint` + `pnpm run check`
 
 **Livrable:**
 

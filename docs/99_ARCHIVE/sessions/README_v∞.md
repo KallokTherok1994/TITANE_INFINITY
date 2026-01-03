@@ -98,16 +98,16 @@ git clone https://github.com/KallokTherok1994/TITANE_INFINITY.git
 cd TITANE_INFINITY
 
 # Installer dépendances
-npm install
+pnpm install
 
 # Builder frontend
-npm run build
+pnpm run build
 
 # Lancer en mode dev
-npm run dev
+pnpm run dev
 
 # Builder production
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ---
@@ -265,14 +265,14 @@ Le Design System TITANE∞ suit les principes :
 
 | Commande | Description |
 |----------|-------------|
-| `npm run dev` | Lancer en mode développement |
-| `npm run build` | Builder frontend |
-| `npm run tauri:dev` | Lancer Tauri dev |
-| `npm run tauri:build` | Builder production |
-| `npm run lint` | Linter TypeScript |
-| `npm run lint:fix` | Fix lint automatique |
-| `npm run type-check` | Vérifier types TS |
-| `npm run clean` | Nettoyer caches |
+| `pnpm run dev` | Lancer en mode développement |
+| `pnpm run build` | Builder frontend |
+| `pnpm run tauri:dev` | Lancer Tauri dev |
+| `pnpm run tauri:build` | Builder production |
+| `pnpm run lint` | Linter TypeScript |
+| `pnpm run lint:fix` | Fix lint automatique |
+| `pnpm run type-check` | Vérifier types TS |
+| `pnpm run clean` | Nettoyer caches |
 
 ---
 
@@ -280,13 +280,13 @@ Le Design System TITANE∞ suit les principes :
 
 ```bash
 # Tests unitaires
-npm test
+pnpm test
 
 # Tests d'intégration
-npm run test:integration
+pnpm run test:integration
 
 # Tests performance
-npm run test:performance
+pnpm run test:performance
 ```
 
 ---

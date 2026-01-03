@@ -286,7 +286,7 @@ npx tsc --noEmit
 
 #### Build Production :
 ```bash
-npm run build
+pnpm run build
 # ✅ Built in 953ms
 # ✅ 77 modules transformed
 # ✅ 210 KB bundle (60 KB gzipped)

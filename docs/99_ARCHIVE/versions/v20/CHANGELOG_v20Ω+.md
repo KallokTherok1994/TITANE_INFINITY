@@ -109,7 +109,7 @@ const health = await quickHealthCheck(); // { status, score, message }
 
 **Exécution :**
 ```bash
-npm test -- src/__tests__/ai-subsystem-validation-v20omega.test.ts
+pnpm test -- src/__tests__/ai-subsystem-validation-v20omega.test.ts
 # Résultat: ✅ 17/17 tests passés
 ```
 

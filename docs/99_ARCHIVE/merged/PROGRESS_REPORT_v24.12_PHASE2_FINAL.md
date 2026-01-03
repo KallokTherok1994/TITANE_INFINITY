@@ -309,13 +309,13 @@ TOTAL v24.12:             5,098 lignes  ✅ 93.5%
 
 ### TypeScript Compilation
 ```bash
-$ npm run type-check
+$ pnpm run type-check
 ✅ 0 errors across all modules
 ```
 
 ### Unit Tests
 ```bash
-$ npm test
+$ pnpm test
 ✅ 85+ tests total
 ├─ floatingWindowChatHandler: 50+ tests (patterns, commands)
 ├─ appearanceFloatingIntegration: 21 tests (materials, palettes)

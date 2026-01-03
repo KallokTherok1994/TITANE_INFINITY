@@ -187,7 +187,7 @@ cargo test --lib
 
 **Plan d'action**:
 
-1. Lancer dev server: `npm run dev:tauri`
+1. Lancer dev server: `pnpm run dev:tauri`
 2. Tester Chat IA avec Ollama (provider local)
 3. Créer 3+ conversations avec modes différents
 4. Vérifier persistance mémoire (reload app)
@@ -250,7 +250,7 @@ cargo test --lib
 ```
 Compilation:
   - Rust (cargo build --release): ?s
-  - TypeScript (npm run build): ?s
+  - TypeScript (pnpm run build): ?s
   - Bundle size (dist/): ? MB
 
 Runtime:
@@ -271,7 +271,7 @@ AI Providers:
 
 ```bash
 # Build production
-npm run build
+pnpm run build
 cargo build --release
 
 # Measure
@@ -279,7 +279,7 @@ du -sh dist/
 du -sh src-tauri/target/release/titane-infinity
 
 # Runtime monitoring
-npm run dev:tauri
+pnpm run dev:tauri
 # Observer task manager
 ```
 
@@ -522,7 +522,7 @@ User: [🎤 Hold to speak]
 
 ```bash
 # Setup mobile dev
-npm install -D @tauri-apps/cli@next
+pnpm install -D @tauri-apps/cli@next
 cargo install tauri-cli --version "^2.0.0-beta"
 
 # Android

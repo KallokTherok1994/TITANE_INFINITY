@@ -427,9 +427,9 @@ Après avoir appliqué ce super prompt avec Copilot :
 - [ ] Le Design System est créé dans `src/design-system/`
 - [ ] `tailwind.config.ts` est mis à jour avec les tokens
 - [ ] Les composants de layout de base existent et compilent
-- [ ] Un `npm run build` ou `pnpm build` passe sans erreur
-- [ ] Un `npm run lint` ou `pnpm lint` ne révèle pas de problèmes critiques
-- [ ] L'interface charge en mode dev (`npm run dev`)
+- [ ] Un `pnpm run build` ou `pnpm build` passe sans erreur
+- [ ] Un `pnpm run lint` ou `pnpm lint` ne révèle pas de problèmes critiques
+- [ ] L'interface charge en mode dev (`pnpm run dev`)
 - [ ] Le dark mode (base Titane) s'affiche correctement
 - [ ] La palette Titane Métallique + Violet est visible
 

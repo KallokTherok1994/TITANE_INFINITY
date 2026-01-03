@@ -300,7 +300,7 @@ export async function tts_selftest(): Promise<TtsSelfTestResult> {
 
 ### Warnings Détectés
 ```bash
-npm run lint | grep "unused\|defined but never"
+pnpm run lint | grep "unused\|defined but never"
 ```
 
 **Résultats:**

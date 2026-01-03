@@ -5,13 +5,13 @@
 ### Development Build
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 ### Production Build
 
 ```bash
-npm run build:prod
+pnpm run build:prod
 ```
 
 This runs:
@@ -26,20 +26,20 @@ This runs:
 ### Linux
 
 ```bash
-npm run tauri build -- --target x86_64-unknown-linux-gnu
+pnpm run tauri build -- --target x86_64-unknown-linux-gnu
 ```
 
 ### macOS
 
 ```bash
-npm run tauri build -- --target x86_64-apple-darwin
-npm run tauri build -- --target aarch64-apple-darwin  # Apple Silicon
+pnpm run tauri build -- --target x86_64-apple-darwin
+pnpm run tauri build -- --target aarch64-apple-darwin  # Apple Silicon
 ```
 
 ### Windows
 
 ```bash
-npm run tauri build -- --target x86_64-pc-windows-msvc
+pnpm run tauri build -- --target x86_64-pc-windows-msvc
 ```
 
 ## Release Process
@@ -99,21 +99,21 @@ Available in DevTools (Ctrl+Shift+I in dev mode):
 
 ```bash
 # Clean and rebuild
-npm run clean
-npm install
+pnpm run clean
+pnpm install
 cargo clean
-npm run build
+pnpm run build
 ```
 
 ### Tests Fail
 
 ```bash
 # Run specific test
-npm test -- Component.test.tsx
+pnpm test -- Component.test.tsx
 cargo test test_name -- --exact
 
 # Debug mode
-npm test -- --verbose
+pnpm test -- --verbose
 cargo test -- --nocapture
 ```
 
@@ -121,6 +121,6 @@ cargo test -- --nocapture
 
 ```bash
 # Run benchmarks
-npm run benchmark
+pnpm run benchmark
 cargo bench
 ```

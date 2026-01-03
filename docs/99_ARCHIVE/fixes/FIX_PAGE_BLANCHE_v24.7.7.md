@@ -54,8 +54,8 @@ drwxrwxr-x  2 titane-os  4096 assets/
 ```json
 {
   "build": {
-    "beforeDevCommand": "npm run build", // ❌ Build static
-    "beforeBuildCommand": "npm run build",
+    "beforeDevCommand": "pnpm run build", // ❌ Build static
+    "beforeBuildCommand": "pnpm run build",
     "frontendDist": "../dist"
   }
 }
@@ -80,9 +80,9 @@ drwxrwxr-x  2 titane-os  4096 assets/
 ```diff
   "build": {
 +   "devUrl": "http://localhost:5173",
-+   "beforeDevCommand": "npm run vite -- --port 5173 --host 0.0.0.0",
--   "beforeDevCommand": "npm run build",
-    "beforeBuildCommand": "npm run build",
++   "beforeDevCommand": "pnpm run vite -- --port 5173 --host 0.0.0.0",
+-   "beforeDevCommand": "pnpm run build",
+    "beforeBuildCommand": "pnpm run build",
     "frontendDist": "../dist"
   }
 ```
@@ -93,7 +93,7 @@ drwxrwxr-x  2 titane-os  4096 assets/
 - `beforeDevCommand`: Lance Vite dev server avant Tauri
 - `beforeBuildCommand`: Build production (inchangé)
 
-### Fix #2: Activer npm run vite
+### Fix #2: Activer pnpm run vite
 
 **Fichier:** `package.json`
 
@@ -107,7 +107,7 @@ drwxrwxr-x  2 titane-os  4096 assets/
 
 **Résultat:**
 
-- `npm run vite` disponible pour beforeDevCommand
+- `pnpm run vite` disponible pour beforeDevCommand
 - Port 5173 fixe (pas de conflits)
 - Host 0.0.0.0 (accessible depuis Tauri)
 
@@ -127,7 +127,7 @@ $ titane quick
 🟢 Launching TITANE∞ DEV (Titan-Dev)...
 
 > tauri dev --no-watch
-     Running BeforeDevCommand (`npm run vite -- --port 5173 --host 0.0.0.0`)
+     Running BeforeDevCommand (`pnpm run vite -- --port 5173 --host 0.0.0.0`)
 
 > vite --port 5173 --host 0.0.0.0
 
@@ -188,11 +188,11 @@ User: titane
   ↓
 run-titane.sh (Phase 5: Build)
   ↓
-npm run build → dist/ créé
+pnpm run build → dist/ créé
   ↓
-npm run tauri -- dev --no-watch
+pnpm run tauri -- dev --no-watch
   ↓
-beforeDevCommand: npm run build → dist/ re-buildé
+beforeDevCommand: pnpm run build → dist/ re-buildé
   ↓
 Tauri démarre
   ↓
@@ -217,9 +217,9 @@ User: titane
   ↓
 run-titane.sh (Phase 5: Skip build si dist/ existe)
   ↓
-npm run tauri -- dev --no-watch
+pnpm run tauri -- dev --no-watch
   ↓
-beforeDevCommand: npm run vite -- --port 5173 --host 0.0.0.0
+beforeDevCommand: pnpm run vite -- --port 5173 --host 0.0.0.0
   ↓
 Vite démarre en 383ms
   ↓
@@ -257,7 +257,7 @@ Tauri charge localhost:5173
 
 **Avant:**
 
-- ❌ Modifier fichier → npm run build → 16s → Relancer
+- ❌ Modifier fichier → pnpm run build → 16s → Relancer
 - ❌ Pas de hot reload
 - ❌ Impossible de débugger (sources manquantes)
 - ❌ Chaque changement = cycle complet
@@ -337,8 +337,8 @@ build: {
 {
   "build": {
     "devUrl": "http://localhost:5173", // ← NOUVEAU
-    "beforeDevCommand": "npm run vite -- --port 5173 --host 0.0.0.0", // ← MODIFIÉ
-    "beforeBuildCommand": "npm run build",
+    "beforeDevCommand": "pnpm run vite -- --port 5173 --host 0.0.0.0", // ← MODIFIÉ
+    "beforeBuildCommand": "pnpm run build",
     "frontendDist": "../dist"
   }
 }
@@ -394,7 +394,7 @@ build: {
 
 1. Ajouter `devUrl: "http://localhost:5173"` dans tauri.conf.json
 2. Configurer `beforeDevCommand` pour lancer Vite
-3. Activer `npm run vite` dans package.json
+3. Activer `pnpm run vite` dans package.json
 
 ### Résultat
 

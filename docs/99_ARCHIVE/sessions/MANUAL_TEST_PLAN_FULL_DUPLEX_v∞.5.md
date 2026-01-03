@@ -23,7 +23,7 @@ Valider manuellement le fonctionnement du système Full Duplex avec hardware aud
 ### Software
 - ✅ Chrome/Edge ≥ 90 (Web Audio API support)
 - ✅ Permissions microphone autorisées
-- ✅ TITANE_INFINITY running (npm run tauri:dev)
+- ✅ TITANE_INFINITY running (pnpm run tauri:dev)
 - ✅ Console DevTools ouverte (F12)
 
 ### Configuration

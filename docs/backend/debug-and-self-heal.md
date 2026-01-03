@@ -16,7 +16,7 @@
 tail -f ~/.local/share/titane-infinity/logs/backend.log
 
 # 2. Lancer en mode debug
-npm run tauri dev
+pnpm run tauri dev
 
 # 3. Vérifier santé backend
 # (Si l'app démarre partiellement)
@@ -24,13 +24,13 @@ npm run tauri dev
 
 # 4. Si corruption mémoire suspectée
 rm -rf ~/.local/share/titane-infinity/memory/*
-npm run tauri dev  # Redémarre clean
+pnpm run tauri dev  # Redémarre clean
 \`\`\`
 
 **Causes fréquentes**:
 - Snapshot corrompu → Supprimer memory/
 - Port déjà occupé → Tuer processus existant
-- Dépendance manquante → npm install + cargo build
+- Dépendance manquante → pnpm install + cargo build
 
 ---
 
@@ -41,7 +41,7 @@ npm run tauri dev  # Redémarre clean
 **Actions**:
 \`\`\`bash
 # 1. Vérifier intégrité (quand implémenté)
-npm run verify:backend
+pnpm run verify:backend
 
 # 2. Lancer SelfHeal
 # DevTools console:
@@ -77,7 +77,7 @@ grep "Evolution" ~/.local/share/titane-infinity/logs/backend.log
 # 3. Forcer GC / restart
 # Option nucléaire: fermer app + tuer process
 pkill -f titane
-npm run tauri dev
+pnpm run tauri dev
 \`\`\`
 
 **Roadmap**: SUPER-PROMPT 2 créera observabilité runtime (get_runtime_metrics).
@@ -116,9 +116,9 @@ grep "[Engine]" backend.log
 ### Commandes Verify (à implémenter - SUPER-PROMPT 3)
 
 \`\`\`bash
-npm run verify:backend        # Check build + tests + health
-npm run verify:backend:quick  # Build seulement (30s)
-npm run verify:backend:deep   # + health report détaillé (2-3 min)
+pnpm run verify:backend        # Check build + tests + health
+pnpm run verify:backend:quick  # Build seulement (30s)
+pnpm run verify:backend:deep   # + health report détaillé (2-3 min)
 \`\`\`
 
 ---
@@ -176,7 +176,7 @@ cp -r ~/.local/share/titane-infinity/memory ~/backup_$(date +%Y%m%d_%H%M%S)
 rm -rf ~/.local/share/titane-infinity/memory
 
 # Restart
-npm run tauri dev
+pnpm run tauri dev
 \`\`\`
 
 **Impact**: Perte données session courante, mais app redémarre clean.
@@ -190,7 +190,7 @@ cd src-tauri
 cargo clean
 cargo build
 cd ..
-npm run tauri dev
+pnpm run tauri dev
 \`\`\`
 
 **Durée**: ~2-5 minutes selon machine.
@@ -209,9 +209,9 @@ rm -rf src-tauri/target
 rm -rf ~/.local/share/titane-infinity
 
 # Reinstall
-npm install
+pnpm install
 cd src-tauri && cargo build && cd ..
-npm run tauri dev
+pnpm run tauri dev
 \`\`\`
 
 **Impact**: Reset total, durée ~10 minutes.

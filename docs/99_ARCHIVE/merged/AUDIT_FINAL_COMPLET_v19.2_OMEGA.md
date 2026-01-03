@@ -82,7 +82,7 @@ Tous les tests critiques sont au vert, la compilation est propre, et le binaire 
 
 **Compilation TypeScript :**
 ```bash
-npm run type-check
+pnpm run type-check
 ```
 - ✅ **Résultat : 0 erreur**
 - ✅ Mode strict activé
@@ -93,7 +93,7 @@ npm run type-check
 
 **Linting ESLint :**
 ```bash
-npm run lint
+pnpm run lint
 ```
 - ✅ **Résultat : 0 erreur, 0 warning**
 - ✅ `--max-warnings 0` respecté
@@ -359,8 +359,8 @@ Duration    59.30s
 
 **Caches :**
 ```bash
-npm run clean:cache
-npm run clean:dist
+pnpm run clean:cache
+pnpm run clean:dist
 ```
 - ✅ `.vite/`, `node_modules/.vite/` supprimés
 - ✅ `dist/` supprimé
@@ -373,7 +373,7 @@ npm run clean:dist
 
 **Vite Build :**
 ```bash
-npm run build
+pnpm run build
 ```
 - ✅ **Résultat : Success en 8.61s**
 - ✅ 2669 modules transformés
@@ -395,7 +395,7 @@ cargo build --release
 
 **Tauri Build :**
 ```bash
-npm run tauri:build
+pnpm run tauri:build
 ```
 - ✅ **Résultat : Success (testé précédemment)**
 - ✅ Binaire final stable

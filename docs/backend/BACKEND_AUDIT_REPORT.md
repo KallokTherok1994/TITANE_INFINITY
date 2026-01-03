@@ -14,13 +14,13 @@
 ### Critical Findings (P0)
 1. **50+ files need Rust formatting** (`cargo fmt`)
 2. **TypeScript/React types environment issue** (Cannot find module 'react')
-3. **Missing node_modules** (npm install required)
+3. **Missing node_modules** (pnpm install required)
 4. **OMEGA v1 deprecated but still in use** (migration incomplete)
 5. **Dead code warnings globally suppressed** (technical debt)
 
 ### Quick Wins (P1)
 1. Run `cargo fmt --all` (non-destructive, 2 seconds)
-2. Run `npm install` (restore dependencies)
+2. Run `pnpm install` (restore dependencies)
 3. Document OMEGA v2 migration path for remaining components
 4. Remove global `#![allow(dead_code)]` and fix specific issues
 5. Add contract tests (backend ↔ frontend payload validation)
@@ -148,7 +148,7 @@ cd src-tauri && cargo test --all-features
 
 **Execution:**
 ```bash
-npm run check
+pnpm run check
 # OR
 tsc --noEmit
 ```
@@ -158,11 +158,11 @@ tsc --noEmit
 - **Cascading Issues:** JSX elements have implicit 'any' type
 - **Files Affected:** 50+ files (App.tsx, AppMinimal.tsx, all components)
 
-**Root Cause:** Missing `node_modules` (npm install not run)
+**Root Cause:** Missing `node_modules` (pnpm install not run)
 
 **Fix:**
 ```bash
-npm install
+pnpm install
 # OR (preferred, per package.json)
 pnpm install
 ```
@@ -171,13 +171,13 @@ pnpm install
 
 ---
 
-### 5. ESLint (`npm run lint`)
+### 5. ESLint (`pnpm run lint`)
 
 **Status:** ❌ **NOT EXECUTED** (`eslint` not found - missing node_modules)
 
 **Command:**
 ```bash
-npm run lint
+pnpm run lint
 # OR
 eslint . --ext .ts,.tsx,.js,.jsx
 ```
@@ -189,24 +189,24 @@ eslint . --ext .ts,.tsx,.js,.jsx
 
 **Auto-Fix Available:**
 ```bash
-npm run lint:fix
+pnpm run lint:fix
 ```
 
 **Recommendation:**
-1. Run `npm install` first
+1. Run `pnpm install` first
 2. Run `lint` and review warnings
 3. Use `lint:fix` for auto-fixable issues
 4. Manually fix remaining issues (unused vars, console.log)
 
 ---
 
-### 6. Vitest Tests (`npm run test`)
+### 6. Vitest Tests (`pnpm run test`)
 
 **Status:** ⚠️ **NOT EXECUTED** (missing node_modules)
 
 **Command:**
 ```bash
-npm run test
+pnpm run test
 # OR
 cross-env NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run
 ```
@@ -225,19 +225,19 @@ cross-env NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/r
 
 **Recommendation:**
 1. Install dependencies
-2. Run `npm run test` to verify all tests pass
-3. Run `npm run test:coverage` to verify 85%+ coverage maintained
-4. Run `npm run test:architecture` to verify 4-Ring Model isolation
+2. Run `pnpm run test` to verify all tests pass
+3. Run `pnpm run test:coverage` to verify 85%+ coverage maintained
+4. Run `pnpm run test:architecture` to verify 4-Ring Model isolation
 
 ---
 
-### 7. Playwright E2E Tests (`npm run test:e2e`)
+### 7. Playwright E2E Tests (`pnpm run test:e2e`)
 
 **Status:** ⚠️ **NOT EXECUTED** (missing node_modules)
 
 **Command:**
 ```bash
-npm run test:e2e
+pnpm run test:e2e
 # OR
 playwright test
 ```
@@ -268,8 +268,8 @@ playwright test
 | Issue | Severity | Count | Fix Command |
 |-------|----------|-------|-------------|
 | Rust formatting | ✅ Fixed | 0 | `cargo fmt --all` (already done) |
-| TypeScript React imports | ❌ Critical | 50+ files | `npm install` |
-| ESLint warnings | ⚠️ Unknown | TBD | `npm run lint:fix` |
+| TypeScript React imports | ❌ Critical | 50+ files | `pnpm install` |
+| ESLint warnings | ⚠️ Unknown | TBD | `pnpm run lint:fix` |
 
 ### 2. Code Quality
 
@@ -429,14 +429,14 @@ if (!validate(payload)) {
 **Risk:** CI/development builds fail due to missing dependencies  
 **Impact:** Development blocked, CI red  
 **Mitigation:**
-- Document exact setup steps (npm install vs pnpm install)
+- Document exact setup steps (pnpm install vs pnpm install)
 - Add `package-lock.json` OR `pnpm-lock.yaml` to repo (currently pnpm-lock.yaml present)
 - Add CI step to verify dependencies installed
 - Add pre-commit hook to check `node_modules` exists
 
 **Immediate Fix:**
 ```bash
-npm install
+pnpm install
 # OR (preferred per package.json)
 pnpm install
 ```
@@ -507,7 +507,7 @@ pnpm install
 
 ---
 
-### 2. Run `npm install` / `pnpm install`
+### 2. Run `pnpm install` / `pnpm install`
 **Time:** 2 minutes  
 **Impact:** Fix all TypeScript errors, enable frontend tests  
 **Command:**
@@ -516,9 +516,9 @@ pnpm install
 ```
 **Verification:**
 ```bash
-npm run check  # Should pass
-npm run lint   # Should run
-npm run test   # Should pass (300+ tests)
+pnpm run check  # Should pass
+pnpm run lint   # Should run
+pnpm run test   # Should pass (300+ tests)
 ```
 
 ---
@@ -660,11 +660,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: TypeScript check
-        run: npm run check
+        run: pnpm run check
       - name: Lint
-        run: npm run lint
+        run: pnpm run lint
       - name: Tests
-        run: npm run test
+        run: pnpm run test
 ```
 
 ---
@@ -941,7 +941,7 @@ For full command registry (350+ commands), see:
 ### v26.2.0 (2026-01-03)
 - Initial backend audit report
 - Identified P0 risks (OMEGA v1 migration, contract tests, TypeScript environment)
-- Identified P1 quick wins (formatting ✅, npm install, dead code triage)
+- Identified P1 quick wins (formatting ✅, pnpm install, dead code triage)
 - Documented async/concurrency risks (infinite loops, deadlocks, race conditions)
 - Created comprehensive recommendations (immediate, short-term, long-term)
 

@@ -259,13 +259,13 @@ console.log(logs) // Array of AuditEvent objects
    - Prevent XSS attacks
 
 ### Week 3-4 (Accessibility)
-4. Axe-core integration (`npm install axe-core`)
+4. Axe-core integration (`pnpm install axe-core`)
 5. Keyboard shortcuts implementation
 6. Screen reader testing (NVDA/VoiceOver)
 7. Target: 60% → 85% Accessibility
 
 ### Week 5-6 (i18n)
-8. i18next setup (`npm install i18next react-i18next`)
+8. i18next setup (`pnpm install i18next react-i18next`)
 9. Create `fr.json`, `en.json` (500+ strings each)
 10. Language switcher UI
 11. Target: 0% → 80% i18n

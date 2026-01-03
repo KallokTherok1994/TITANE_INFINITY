@@ -63,19 +63,19 @@ onClick={() => {
 
 ### 1. ESLint (Linter JavaScript/TypeScript)
 ```bash
-npm run lint
+pnpm run lint
 ```
 **Résultat**: ✅ **0 erreur, 0 warning**
 
 ### 2. TypeScript Compilation
 ```bash
-npm run type-check
+pnpm run type-check
 ```
 **Résultat**: ✅ **0 erreur TypeScript**
 
 ### 3. Build Production
 ```bash
-npm run build
+pnpm run build
 ```
 **Résultat**: ✅ **Build réussi en 4.84s**
 
@@ -125,7 +125,7 @@ git commit -m "fix(eslint): Correction 2 warnings ESLint - SystemErrorPage + use
 
 2. **Test de l'application**:
 ```bash
-npm run dev:tauri
+pnpm run dev:tauri
 ```
 
 3. **Vérification Chat IA**:

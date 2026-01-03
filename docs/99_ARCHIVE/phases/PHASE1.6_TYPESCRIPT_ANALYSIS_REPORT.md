@@ -398,7 +398,7 @@ npx tsc --noEmit 2>&1 | grep "error TS" | cut -d: -f1 | sort | uniq -c | sort -r
 
 4. **Validation continue**
    ```bash
-   npm run type-check  # Si script existe
+   pnpm run type-check  # Si script existe
    # ou
    npx tsc --noEmit --watch
    ```

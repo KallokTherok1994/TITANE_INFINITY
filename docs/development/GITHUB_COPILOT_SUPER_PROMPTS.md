@@ -36,7 +36,7 @@
 3. **Attendre** génération (10-60 secondes)
 4. **Review** code généré
 5. **Accepter/Ajuster** si nécessaire
-6. **Tester** : `cargo test` ou `npm test`
+6. **Tester** : `cargo test` ou `pnpm test`
 7. **Commit** si tests passent
 
 ### Best Practices
@@ -1388,7 +1388,7 @@ pub use orchestrator::MasterOrchestrator;
 1. Copier prompt → Copilot Chat
 2. Attendre génération (10-60s)
 3. Review code généré
-4. Tests: cargo test / npm test
+4. Tests: cargo test / pnpm test
 5. Si ✅ → Commit
 6. Si ❌ → Ajuster prompt / Fix manual
 7. Répéter pour prompt suivant
@@ -1426,7 +1426,7 @@ pub use orchestrator::MasterOrchestrator;
 \`\`\`bash
 # Quick validation après génération
 cargo fmt && cargo clippy && cargo test  # Rust
-npm run lint && npm run type-check && npm test  # TypeScript
+pnpm run lint && pnpm run type-check && pnpm test  # TypeScript
 \`\`\`
 
 ---

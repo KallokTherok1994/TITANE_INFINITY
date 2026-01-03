@@ -9,16 +9,16 @@ Configuration optimisée de Cline MCP pour le projet TITANE∞, avec safeguards 
 **INTERDICTION ABSOLUE** de déployer sans autorisation explicite de Kevin Thibault.
 
 ### Commandes bloquées
-- `npm run build` / `npm run build:production`
+- `pnpm run build` / `pnpm run build:production`
 - `tauri build`
 - `./runtime/stable/build.sh`
 - `dpkg -i` / installations système
 - Tout build AppImage/DEB
 
 ### Commandes autorisées
-- `npm run dev` - Développement
-- `npm test` - Tests
-- `npm run lint` / `npm run format` - Quality checks
+- `pnpm run dev` - Développement
+- `pnpm test` - Tests
+- `pnpm run lint` / `pnpm run format` - Quality checks
 - `cargo test` - Tests Rust
 - `./runtime/dev/run-dev.sh` - Runtime dev
 
@@ -79,16 +79,16 @@ cat .cline/deployment-safeguards.json
 
 ```bash
 # 1. Lancer l'environnement dev
-npm run dev
+pnpm run dev
 
 # 2. Utiliser Cline en mode plan
 cline "analyze and suggest improvements for X"
 
 # 3. Tests avant commit
-npm run copilot-xs:test
+pnpm run copilot-xs:test
 
 # 4. Validation finale
-npm run verify
+pnpm run verify
 ```
 
 ### Demande de modification
@@ -105,13 +105,13 @@ cline --mode plan "implement feature X"
 
 ```bash
 # Tests complets
-npm run test:all
+pnpm run test:all
 
 # Validation COPILOT-XS
-npm run copilot-xs:validate
+pnpm run copilot-xs:validate
 
 # Audit sécurité
-npm run audit:security
+pnpm run audit:security
 ```
 
 ## ⚠️ Actions nécessitant approbation

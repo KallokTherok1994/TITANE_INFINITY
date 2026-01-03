@@ -31,7 +31,7 @@ Le processus de déploiement complet TITANE∞ a été **validé et testé avec 
 ### 1. Build Frontend (Vite) ✅
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 **Résultat**: ✅ **SUCCÈS**
@@ -92,7 +92,7 @@ cargo build --manifest-path=src-tauri/Cargo.toml --release
 #### Avant (Bloquant):
 
 ```bash
-npm run check || {
+pnpm run check || {
     error "TypeScript errors found - fix them first!"
 }
 success "Type check passed"
@@ -101,7 +101,7 @@ success "Type check passed"
 #### Après (Non-bloquant):
 
 ```bash
-if npm run check; then
+if pnpm run check; then
     success "Type check passed (0 errors)"
 else
     warning "TypeScript errors found (non-critical for Vite build)"
@@ -219,10 +219,10 @@ Erreurs: 0
 ### Équivalents npm
 
 ```bash
-npm run titane:health    # ✅ Validé
-npm run titane:build     # ✅ Validé
-npm run titane:deploy    # ⚠️ Non testé
-npm run titane:full      # ⚠️ Non testé
+pnpm run titane:health    # ✅ Validé
+pnpm run titane:build     # ✅ Validé
+pnpm run titane:deploy    # ⚠️ Non testé
+pnpm run titane:full      # ⚠️ Non testé
 ```
 
 ---
@@ -252,8 +252,8 @@ npm run titane:full      # ⚠️ Non testé
 
 4. **Tests automatisés**
    ```bash
-   npm run test          # Tests React
-   npm run test:tauri    # Tests Rust
+   pnpm run test          # Tests React
+   pnpm run test:tauri    # Tests Rust
    ```
 
 ### Priorité BASSE

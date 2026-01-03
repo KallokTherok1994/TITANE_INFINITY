@@ -245,13 +245,13 @@ const SingularityMonitor = lazy(() => import('./components/SingularityMonitor').
 ### Bundle Analysis
 ```bash
 # Analyser bundle size
-npm run build -- --analyze
+pnpm run build -- --analyze
 
 # Check bundle composition
 npx vite-bundle-visualizer
 
 # Profile build time
-VITE_PROFILE=true npm run build
+VITE_PROFILE=true pnpm run build
 ```
 
 ### Performance Testing
@@ -261,9 +261,9 @@ npx lighthouse http://localhost:5173 --view
 
 # React Profiler
 # 1. Build production
-npm run build
+pnpm run build
 # 2. Serve
-npm run preview
+pnpm run preview
 # 3. Open React DevTools Profiler
 ```
 

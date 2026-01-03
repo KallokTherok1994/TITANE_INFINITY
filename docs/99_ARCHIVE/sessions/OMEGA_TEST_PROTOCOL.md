@@ -79,7 +79,7 @@ Finished `dev` profile [unoptimized + debuginfo] target(s) in 1m 16s
 ### Test T1 — Endpoint OMEGA actif
 
 **Procédure :**
-1. Lancer l'application : `npm run tauri:dev`
+1. Lancer l'application : `pnpm run tauri:dev`
 2. Ouvrir ChatPage
 3. Envoyer un premier message : "Bonjour TITANE"
 4. Observer la bannière pipeline
@@ -239,14 +239,14 @@ Finished `dev` profile [unoptimized + debuginfo] target(s) in 1m 16s
 
 ### Option A — Build & Test manuel
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 Puis exécuter les tests T1-T8 manuellement dans l'interface.
 
 ### Option B — Build production
 ```bash
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 Créer un binaire pour tests en conditions réelles.

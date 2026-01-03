@@ -50,7 +50,7 @@ grep -r "React.Component" src/
 
 # Find optimization opportunities
 du -sh node_modules/@*/* | sort -h | tail -20
-npm run build --report  # Bundle analysis
+pnpm run build --report  # Bundle analysis
 ```
 
 ### Step 2: Type Safety Scan (30 min)

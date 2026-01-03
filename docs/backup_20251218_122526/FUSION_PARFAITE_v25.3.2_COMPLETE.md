@@ -325,13 +325,13 @@ describe('useSystemHealth', () => {
 
 ```bash
 # Lancer tous les tests
-npm test
+pnpm test
 
 # Tests Tauri
-npm run test:tauri
+pnpm run test:tauri
 
 # Coverage
-npm run test:coverage
+pnpm run test:coverage
 ```
 
 ---

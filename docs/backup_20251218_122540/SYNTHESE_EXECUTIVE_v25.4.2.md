@@ -29,7 +29,7 @@ _Date: 2025-12-17T04:50 UTC_
 
 ### 1. Analyse Approfondie ✅
 
-- ✅ Audit complet 3-tools (npm test + grep + get_errors)
+- ✅ Audit complet 3-tools (pnpm test + grep + get_errors)
 - ✅ Identification bottleneck: Menu.test.tsx (67% des échecs)
 - ✅ Root cause: Tests écrits pour API incorrecte
 

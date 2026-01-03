@@ -80,7 +80,7 @@
 - **Action** : À créer si nécessaire ultérieurement
 
 ⚠️ **Sidebar.tsx** : Import react-router-dom manquant
-- **Impact** : Nécessite `npm install react-router-dom`
+- **Impact** : Nécessite `pnpm install react-router-dom`
 - **Action** : Inclus dans package.ui.json
 
 ---
@@ -145,9 +145,9 @@ cargo build --release  # Build production
 
 # Frontend (nécessite installation)
 cd core/frontend
-npm install  # Installer dépendances (dont react-router-dom)
-npm run dev  # Mode développement
-npm run build  # Build production
+pnpm install  # Installer dépendances (dont react-router-dom)
+pnpm run dev  # Mode développement
+pnpm run build  # Build production
 ```
 
 ### Dépendances Frontend à Installer
@@ -280,13 +280,13 @@ npm run build  # Build production
 1. **Installer dépendances frontend** :
    ```bash
    cd core/frontend
-   npm install
+   pnpm install
    ```
    → Résout les 2 warnings restants
 
 2. **Tester interface UI** :
    ```bash
-   npm run dev
+   pnpm run dev
    ```
    → Ouvre http://localhost:5173
 
@@ -295,7 +295,7 @@ npm run build  # Build production
 1. **Build production** :
    ```bash
    cargo build --release
-   npm run build
+   pnpm run build
    ```
 
 2. **Déployer** selon infrastructure
@@ -334,7 +334,7 @@ Le système a réussi l'ascension complète :
 - Documentation exhaustive
 - Prêt pour production
 
-**Action suivante recommandée** : Installer dépendances frontend (`npm install`) puis déploiement production.
+**Action suivante recommandée** : Installer dépendances frontend (`pnpm install`) puis déploiement production.
 
 ---
 

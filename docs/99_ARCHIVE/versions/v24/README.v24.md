@@ -290,7 +290,7 @@ curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 sudo apt install -y nodejs
 
 # pnpm
-npm install -g pnpm
+pnpm install -g pnpm
 
 # WebKitGTK (voir WEBKITGTK_INSTALLATION_GUIDE.md)
 sudo apt install -y libwebkit2gtk-4.1-dev

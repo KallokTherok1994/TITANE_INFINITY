@@ -153,7 +153,7 @@ pub fn get_memory_state() -> Result<MemoryState, String> { ... }
 ### 1. Type-Check TypeScript
 
 ```bash
-npm run type-check
+pnpm run type-check
 ```
 
 **Résultat**:
@@ -172,7 +172,7 @@ npm run type-check
 ### 2. Build Production
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 **Résultat**:
@@ -237,7 +237,7 @@ Le dossier `core/frontend/examples/` peut être supprimé sans impact sur le pro
 ### Nouvelle Dépendance
 
 ```bash
-npm install --save-dev terser
+pnpm install --save-dev terser
 ```
 
 **Raison**: Requis par Vite v3+ pour la minification en production.  

@@ -94,7 +94,7 @@ ls -lh AUDIT_*.md VALIDATION_*.md SESSION_*.md ANALYSE_*.md
 rm -rf dist/ target/ .vite-cache/
 
 # Build production complet
-npm run build:production
+pnpm run build:production
 
 # Attendu:
 ✅ TypeScript compilation successful
@@ -131,7 +131,7 @@ cat dist/stats.html | grep -o '"size"' | wc -l
 
 ```bash
 # Tests unitaires + intégration
-npm run test:all
+pnpm run test:all
 
 # Attendu:
 ✅ 2066/2122 tests passed (97.4%)
@@ -142,7 +142,7 @@ npm run test:all
 
 ```bash
 # Playwright E2E
-npm run test:e2e
+pnpm run test:e2e
 
 # Attendu:
 ✅ 65 E2E tests passed
@@ -153,7 +153,7 @@ npm run test:e2e
 #### 3.3 Tests Manuels (Checklist)
 
 ```
-[ ] Lancer app: npm run dev
+[ ] Lancer app: pnpm run dev
 [ ] Tester Predictive Dashboard (🔮 bouton)
 [ ] Vérifier health score updates (5s interval)
 [ ] Tester console monitoring (générer erreurs)
@@ -422,7 +422,7 @@ We're excited to announce TITANE∞ v26.2.0, our most intelligent release yet!
 git checkout v26.1.0  # ou version stable précédente
 
 # Rebuild
-npm run build:production
+pnpm run build:production
 
 # Redeploy
 # (utiliser même méthode que déploiement)

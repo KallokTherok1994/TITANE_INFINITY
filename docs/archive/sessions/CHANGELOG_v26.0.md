@@ -176,7 +176,7 @@ Documentation/
 
 **Pour activer:**
 
-1. Rebuild l'application: `npm run build`
+1. Rebuild l'application: `pnpm run build`
 2. Naviguer vers page TITANE
 3. Explorer les nouveaux onglets améliorés
 

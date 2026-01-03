@@ -273,7 +273,7 @@ if [ "$TESTS_FAILED" -eq 0 ]; then
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   echo ""
   echo "1. Lancer le serveur de développement:"
-  echo "   ${BLUE}npm run dev${NC}"
+  echo "   ${BLUE}pnpm run dev${NC}"
   echo ""
   echo "2. Tester Menu Editor:"
   echo "   - Ouvrir l'application"

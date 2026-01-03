@@ -22,7 +22,7 @@ cd /home/titane/Documents/TITANE_INFINITY/tts-service
 **Terminal 2 - TITANE∞:**
 ```bash
 cd /home/titane/Documents/TITANE_INFINITY
-npm run dev:tauri
+pnpm run dev:tauri
 ```
 
 ### Option 2: Systemd (service auto)
@@ -37,7 +37,7 @@ sudo systemctl start titane-tts.service
 ```bash
 # Service démarre automatiquement au boot
 # Juste lancer TITANE:
-npm run dev:tauri
+pnpm run dev:tauri
 ```
 
 ---
@@ -113,7 +113,7 @@ sudo journalctl -u titane-tts.service -f
 
 ### Logs TITANE frontend
 ```bash
-# Console navigateur (F12) ou terminal npm run dev:tauri
+# Console navigateur (F12) ou terminal pnpm run dev:tauri
 ```
 
 ---

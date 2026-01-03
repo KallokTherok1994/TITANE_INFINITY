@@ -55,7 +55,7 @@ git status
 git diff --stat
 
 # Tester le build
-npm run build
+pnpm run build
 
 # Commit avec template
 git add .
@@ -273,11 +273,11 @@ git checkout HEAD~1 -- FICHIER.md
 
 ```bash
 # Vérifier erreurs
-npm run build 2>&1 | tee build.log
+pnpm run build 2>&1 | tee build.log
 
 # Si liens cassés, restaurer temporairement
 git stash
-npm run build
+pnpm run build
 git stash pop
 ```
 
@@ -288,7 +288,7 @@ git stash pop
 - [ ] Script exécuté sans erreur
 - [ ] Validation structure passée (`validate-structure.sh`)
 - [ ] Fichiers racine ≤ 10
-- [ ] Build réussi (`npm run build`)
+- [ ] Build réussi (`pnpm run build`)
 - [ ] Git status propre
 - [ ] Backup vérifié
 - [ ] INDEX.md présents dans archives

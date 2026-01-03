@@ -158,14 +158,14 @@ OLLAMA_DEFAULT_MODEL=llama2:latest    # ✅ Modèle installé
 ### Tests Production
 ```bash
 # 1. Build release
-npm run build
+pnpm run build
 cargo build --release --manifest-path src-tauri/Cargo.toml
 
 # 2. Test IA
 ./test_ia_v16.sh
 
 # 3. Launch Tauri
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### Validation Chat IA

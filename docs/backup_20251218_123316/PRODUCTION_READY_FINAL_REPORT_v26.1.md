@@ -537,7 +537,7 @@ v26.0  → v26.1:  3 commits (Phase 6 + Deployment)
 
 ### Build & Code
 
-- [x] Build production exécuté: `npm run build` ✅
+- [x] Build production exécuté: `pnpm run build` ✅
 - [x] 0 erreurs build, 0 warnings TypeScript ✅
 - [x] Commit final: b5927db3 ✅
 - [x] Branch MAIN synchronized with origin ✅

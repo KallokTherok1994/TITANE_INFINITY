@@ -151,7 +151,7 @@ export const geminiProvider: AIProvider = {
 ### ✅ Build Success
 
 ```bash
-npm run build
+pnpm run build
 # ✓ built in 18.21s
 ```
 
@@ -237,7 +237,7 @@ Pour réactiver Gemini dans le futur:
 2. Décommenter les lignes dans `src-tauri/tauri.conf.json`
 3. Restaurer le code dans `src/ui/pages/ChatIA/ChatIA.tsx`
 4. Restaurer le code dans `src/services/ai/providers/gemini.ts`
-5. Rebuild: `npm run build`
+5. Rebuild: `pnpm run build`
 
 ---
 

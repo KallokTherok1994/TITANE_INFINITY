@@ -170,7 +170,7 @@ export { autoHealEngine } from './autoHealEngine';
 **After Fix**:
 
 ```bash
-$ npm run build 2>&1 | grep "plugin vite:reporter"
+$ pnpm run build 2>&1 | grep "plugin vite:reporter"
 # (no output - warnings resolved!)
 
 ✓ built in 14.43s
@@ -179,7 +179,7 @@ $ npm run build 2>&1 | grep "plugin vite:reporter"
 ### TypeScript Validation
 
 ```bash
-$ npm run check
+$ pnpm run check
 > tsc --noEmit
 # (no output - 0 errors)
 ```

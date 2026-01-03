@@ -216,7 +216,7 @@ cargo clippy --manifest-path src-tauri/Cargo.toml -- -W clippy::all
 
 #### Test 1: Voice TTS
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 # 1. Ouvrir chat IA
 # 2. Envoyer message
 # 3. Cliquer "🔊 Lire"
@@ -243,7 +243,7 @@ npm run tauri:dev
 
 ```bash
 # Type-check TypeScript
-npm run type-check
+pnpm run type-check
 # Expected: ✅ 0 errors
 
 # Clippy Rust
@@ -251,11 +251,11 @@ cargo clippy --manifest-path src-tauri/Cargo.toml -- -W clippy::all
 # Expected: ✅ 0 warnings
 
 # Tests E2E
-npm run test:e2e
+pnpm run test:e2e
 # Expected: ✅ All tests passing
 
 # Build production
-npm run tauri:build
+pnpm run tauri:build
 # Expected: ✅ Build successful
 ```
 
@@ -301,11 +301,11 @@ npm run tauri:build
 
 ```bash
 # Clean build
-npm run clean
+pnpm run clean
 cargo clean --manifest-path src-tauri/Cargo.toml
 
 # Production build
-npm run tauri:build
+pnpm run tauri:build
 
 # Expected output:
 # ✅ Frontend: dist/ built

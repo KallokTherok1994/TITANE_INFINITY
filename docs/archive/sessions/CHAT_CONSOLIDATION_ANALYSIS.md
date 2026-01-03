@@ -113,7 +113,7 @@ async function handleSubmit() {
 
 ### Phase 4: Validation (30min)
 
-1. `npm test` - expect 100% pass
+1. `pnpm test` - expect 100% pass
 2. `cargo test` - expect 99.9%+ pass
 3. Manual UI test - Chat functionality intact
 4. A11Y audit - Screen reader compatibility

@@ -49,14 +49,14 @@ ls node_modules/eventemitter3/
 
 ### 3. TypeScript Check
 ```bash
-npm run check  # tsc --noEmit
+pnpm run check  # tsc --noEmit
 ```
 
 **Result:** ✅ **0 errors** (down from 28,891)
 
 ### 4. Test Suite
 ```bash
-npm run test
+pnpm run test
 ```
 
 **Result:** ✅ **2276/2322 tests passed** (98% success rate)

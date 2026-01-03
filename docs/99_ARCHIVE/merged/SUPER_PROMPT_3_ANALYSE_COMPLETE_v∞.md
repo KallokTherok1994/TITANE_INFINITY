@@ -81,7 +81,7 @@ Le fichier de définition de type est introuvable pour 'react-window'.
 
 **Status**: ✅ **CORRIGÉ** immédiatement
 ```bash
-npm install --save-dev @types/react-window
+pnpm install --save-dev @types/react-window
 ```
 
 **Résultat**: Package déjà à jour, 0 vulnérabilités.
@@ -463,7 +463,7 @@ describe('OPUS Modules', () => {
 code src-tauri/tauri.conf.json
 # Ajouter les 3 commandes SC
 # Rebuild
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### Action 2: Patch fallback history

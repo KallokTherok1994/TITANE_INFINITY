@@ -324,7 +324,7 @@ rm -rf src/services/ai/providers/omnis
 rm src/services/ai/providers/fallback.ts
 
 # Vérifier build
-npm run build
+pnpm run build
 cargo check --manifest-path src-tauri/Cargo.toml
 ```
 

@@ -27,7 +27,7 @@ Cette phase finalise TITANE∞ v16.1 avec **100% de conformité sur le frontend*
 
 **Commande de lancement:**
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 ### 2. Mode Tauri-Only Verrouillé ✅
@@ -37,7 +37,7 @@ npm run dev
 **package.json:**
 ```json
 "preview": "echo '🔒 TAURI-ONLY MODE: HTTP preview disabled' && exit 1",
-"start": "echo '🔒 TAURI-ONLY MODE: Use npm run dev instead' && exit 1",
+"start": "echo '🔒 TAURI-ONLY MODE: Use pnpm run dev instead' && exit 1",
 "vite:dev": "echo '🔒 TAURI-ONLY: Direct Vite disabled' && exit 1",
 "dev": "tauri dev" // ← SEULE commande autorisée
 ```
@@ -45,8 +45,8 @@ npm run dev
 **tauri.conf.json:**
 ```json
 "build": {
-  "beforeDevCommand": "npm run build",
-  "beforeBuildCommand": "npm run build",
+  "beforeDevCommand": "pnpm run build",
+  "beforeBuildCommand": "pnpm run build",
   "frontendDist": "../dist"
   // devUrl HTTP SUPPRIMÉ
 }
@@ -129,7 +129,7 @@ cargo build --release
 
 # Lancement final
 cd ..
-npm run dev
+pnpm run dev
 ```
 
 **Dépendances requises:**
@@ -147,9 +147,9 @@ npm run dev
 **Ajouts:**
 ```json
 "scripts": {
-  "preview": "echo '🔒 TAURI-ONLY MODE: HTTP preview disabled. Use: npm run dev' && exit 1",
-  "start": "echo '🔒 TAURI-ONLY MODE: Use npm run dev instead' && exit 1",
-  "vite:dev": "echo '🔒 TAURI-ONLY: Direct Vite disabled. Use: npm run dev' && exit 1"
+  "preview": "echo '🔒 TAURI-ONLY MODE: HTTP preview disabled. Use: pnpm run dev' && exit 1",
+  "start": "echo '🔒 TAURI-ONLY MODE: Use pnpm run dev instead' && exit 1",
+  "vite:dev": "echo '🔒 TAURI-ONLY: Direct Vite disabled. Use: pnpm run dev' && exit 1"
 }
 ```
 
@@ -165,8 +165,8 @@ npm run dev
 **Conservation:**
 ```json
 "build": {
-  "beforeDevCommand": "npm run build",
-  "beforeBuildCommand": "npm run build",
+  "beforeDevCommand": "pnpm run build",
+  "beforeBuildCommand": "pnpm run build",
   "frontendDist": "../dist"
 }
 ```
@@ -237,12 +237,12 @@ server: {
 
 **Interdictions absolues:**
 - ❌ JAMAIS `python3 -m http.server`
-- ❌ JAMAIS `npm run preview`
+- ❌ JAMAIS `pnpm run preview`
 - ❌ JAMAIS `npm start`
 - ❌ JAMAIS `vite dev` direct
 
 **Commande autorisée:**
-- ✅ TOUJOURS `npm run dev` → `tauri dev`
+- ✅ TOUJOURS `pnpm run dev` → `tauri dev`
 
 ### RÈGLE #2: Offline-first permanent
 
@@ -273,7 +273,7 @@ server: {
 
 ```bash
 cd ~/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run dev
+pnpm run dev
 ```
 
 **Résultat:**
@@ -301,7 +301,7 @@ cargo build --release
 **Étape 3 - Lancement final:**
 ```bash
 cd ..
-npm run dev
+pnpm run dev
 ```
 
 **Résultat:**
@@ -358,7 +358,7 @@ Erreurs: 0, Avertissements: 0
 ### 1. Build Frontend
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 **Résultat:**
@@ -375,7 +375,7 @@ Total gzipped: ~131 KB ✅
 ### 2. TypeScript Check
 
 ```bash
-npm run type-check
+pnpm run type-check
 ```
 
 **Résultat:**
@@ -392,8 +392,8 @@ npm run type-check
 
 **Résultat:**
 ```
-✅ npm run dev → tauri dev
-✅ npm run preview → bloqué
+✅ pnpm run dev → tauri dev
+✅ pnpm run preview → bloqué
 ✅ vite:dev → bloqué
 ✅ Pas de devUrl HTTP
 ✅ frontendDist → ../dist
@@ -408,12 +408,12 @@ Erreurs: 0, Avertissements: 0 ✅
 ### 4. Tentative HTTP Server (Doit Échouer)
 
 ```bash
-npm run preview
+pnpm run preview
 ```
 
 **Résultat attendu:**
 ```
-🔒 TAURI-ONLY MODE: HTTP preview disabled. Use: npm run dev
+🔒 TAURI-ONLY MODE: HTTP preview disabled. Use: pnpm run dev
 (Exit code: 1) ✅
 ```
 
@@ -470,7 +470,7 @@ npm run preview
 - ✅ Règles permanentes: Mémorisées
 - ⏳ Backend: 95% (installation disponible)
 
-**Prochaine action:** `npm run dev` pour lancement immédiat, ou `bash INSTALLATION_BACKEND_FINALE.sh` pour complétion 100%.
+**Prochaine action:** `pnpm run dev` pour lancement immédiat, ou `bash INSTALLATION_BACKEND_FINALE.sh` pour complétion 100%.
 
 ---
 

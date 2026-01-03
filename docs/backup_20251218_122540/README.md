@@ -38,13 +38,13 @@ git clone https://github.com/KallokTherok1994/TITANE_INFINITY.git
 cd TITANE_INFINITY
 
 # 2. Installer dépendances
-npm install
+pnpm install
 
 # 3. Configurer Python environment (optionnel pour TTS/Voice)
 ./scripts/setup_environment.sh
 
 # 4. Lancer Titan-Dev (développement)
-npm run dev:tauri
+pnpm run dev:tauri
 # Ou via task VSCode: "🟢 Launch Titan-Dev"
 ```
 
@@ -157,13 +157,13 @@ src-tauri/src/
 ### Scripts Principaux
 
 ```bash
-npm run dev              # Vite dev server
-npm run dev:tauri        # Launch Titan-Dev
-npm run build            # Build frontend
-npm run tauri:build      # Build Titan-Stable
-npm run lint             # ESLint + Prettier
-npm run test             # Run tests
-npm run test:rust        # Cargo tests
+pnpm run dev              # Vite dev server
+pnpm run dev:tauri        # Launch Titan-Dev
+pnpm run build            # Build frontend
+pnpm run tauri:build      # Build Titan-Stable
+pnpm run lint             # ESLint + Prettier
+pnpm run test             # Run tests
+pnpm run test:rust        # Cargo tests
 ```
 
 ### Git Workflow
@@ -259,15 +259,15 @@ Ready-to-execute validation campaign (PAUSE before Phase 8+):
 
 ```bash
 # Tests frontend
-npm run test:unit
-npm run test:integration
-npm run test:e2e
+pnpm run test:unit
+pnpm run test:integration
+pnpm run test:e2e
 
 # Tests backend
-npm run test:rust
+pnpm run test:rust
 
 # Tous les tests
-npm run test:all
+pnpm run test:all
 ```
 
 ---
@@ -306,13 +306,13 @@ cd TITANE_INFINITY
 git checkout -b feature/my-awesome-feature
 
 # 3. Setup Environment
-npm install
+pnpm install
 ./scripts/setup_environment.sh
 
 # 4. Code & Test
-npm run dev:tauri          # Test in Titan-Dev
-npm run test               # Run all tests
-npm run lint               # Check code quality
+pnpm run dev:tauri          # Test in Titan-Dev
+pnpm run test               # Run all tests
+pnpm run lint               # Check code quality
 
 # 5. Commit (follow conventions below)
 git commit -m "feat(chat): add message reactions 🎉"
@@ -355,8 +355,8 @@ git push origin feature/my-awesome-feature
 
 **Before Submitting PR:**
 ✅ Code follows [CONTRIBUTING.md](CONTRIBUTING.md) standards  
-✅ All tests pass (`npm run test`)  
-✅ ESLint/Prettier clean (`npm run lint`)  
+✅ All tests pass (`pnpm run test`)  
+✅ ESLint/Prettier clean (`pnpm run lint`)  
 ✅ Documentation updated (if needed)  
 ✅ Commits follow conventions
 

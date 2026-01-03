@@ -1091,16 +1091,16 @@ button:focus-visible {
 
 ```bash
 # Responsive testing
-npm install -D @storybook/addon-viewport
+pnpm install -D @storybook/addon-viewport
 
 # Performance testing
-npm install -D lighthouse-ci
+pnpm install -D lighthouse-ci
 
 # Accessibility testing
-npm install -D @axe-core/react
+pnpm install -D @axe-core/react
 
 # Visual regression
-npm install -D @percy/cli
+pnpm install -D @percy/cli
 ```
 
 ### Chrome DevTools

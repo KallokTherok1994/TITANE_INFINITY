@@ -94,7 +94,7 @@ console.log('[7/7] 🎯 Mounting root component...');
 
 ### **4. VÉRIFICATION BUILD VITE** ✅
 
-**Commande**: `npm run build`
+**Commande**: `pnpm run build`
 **Résultat**: ✅ **SUCCESS**
 
 ```
@@ -246,7 +246,7 @@ pkill -9 titane-infinity
 
 # 3. Lancer TITANE
 cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
-npm run dev
+pnpm run dev
 
 # 4. Ouvrir DevTools (F12) pour voir les logs
 # - Console: pour erreurs JavaScript
@@ -380,7 +380,7 @@ M src/services/voice/voiceRouter.ts
 TITANE∞ est maintenant dans un état propre et peut être lancé en toute sécurité avec:
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 **Prochaine Étape**: Ouvrir DevTools (F12) au lancement pour confirmer que tout s'affiche correctement.

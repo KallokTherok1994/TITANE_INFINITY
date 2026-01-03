@@ -13,7 +13,7 @@
 cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
 
 # Option A: Dev runtime
-npm run dev
+pnpm run dev
 
 # Option B: Titan-Dev runtime
 ./runtime/dev/run-dev.sh
@@ -209,7 +209,7 @@ curl -s -X POST http://127.0.0.1:11434/api/generate \
 
 ```bash
 # Dev mode
-npm run dev 2>&1 | grep -E "\[OLLAMA\]|Selected:"
+pnpm run dev 2>&1 | grep -E "\[OLLAMA\]|Selected:"
 
 # Titan-Dev
 tail -f runtime/dev/logs/vite.log | grep OLLAMA

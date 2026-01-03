@@ -9,7 +9,7 @@ echo "🔧 SINGULARITY-FUSION vΩ — Correction Automatique des Warnings"
 echo "════════════════════════════════════════════════════════════════"
 
 # Capturer tous les warnings
-npm run type-check 2>&1 | tee /tmp/ts_warnings.txt || true
+pnpm run type-check 2>&1 | tee /tmp/ts_warnings.txt || true
 
 # Compter warnings initiaux
 INITIAL_COUNT=$(grep -c "error TS" /tmp/ts_warnings.txt || echo "0")
@@ -118,7 +118,7 @@ echo ""
 echo "📌 Phase 4/4 : Vérification finale..."
 
 # Recompiler
-npm run type-check 2>&1 | tee /tmp/ts_warnings_after.txt || true
+pnpm run type-check 2>&1 | tee /tmp/ts_warnings_after.txt || true
 
 FINAL_COUNT=$(grep -c "error TS" /tmp/ts_warnings_after.txt || echo "0")
 FIXED=$((INITIAL_COUNT - FINAL_COUNT))

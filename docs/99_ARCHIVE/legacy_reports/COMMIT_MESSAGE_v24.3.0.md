@@ -22,7 +22,7 @@ Major architectural refactoring implementing 4-ring model (Core → Engines → 
 
 - **Removed:** Jest 29.7.0 (4 packages)
 - **Unified:** Vitest 4.0.13 as sole test runner
-- **Added:** `npm run verify` script (lint + check + test + e2e + rust)
+- **Added:** `pnpm run verify` script (lint + check + test + e2e + rust)
 - **Coverage:** Migrated test:coverage to Vitest
 
 **Files:**

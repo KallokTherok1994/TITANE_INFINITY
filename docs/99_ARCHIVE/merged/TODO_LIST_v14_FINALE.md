@@ -170,7 +170,7 @@ cd src-tauri && cargo check
 
 ### TypeScript
 ```bash
-npm run type-check
+pnpm run type-check
 # ✅ 0 errors (hooks validés)
 ```
 
@@ -310,12 +310,12 @@ cd src-tauri && cargo check
 
 ### Compilation TypeScript
 ```bash
-npm run type-check
+pnpm run type-check
 ```
 
 ### Lancer Tauri Dev
 ```bash
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 ---

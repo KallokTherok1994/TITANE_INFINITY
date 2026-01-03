@@ -105,8 +105,8 @@ This PR provides a **comprehensive branch consolidation strategy** for TITANE_IN
 4. Validate results:
    ```bash
    git branch -a  # Check branch status
-   npm test       # Run tests
-   npm run build  # Verify build works
+   pnpm test       # Run tests
+   pnpm run build  # Verify build works
    ```
 
 ### Option B: GitHub UI (SIMPLE)

@@ -595,7 +595,7 @@ echo "⚠️  Review changes and remove backups when satisfied"
 echo "📦 Analyzing bundle size..."
 
 # Build with analysis
-npm run build -- --mode=analyze
+pnpm run build -- --mode=analyze
 
 # Show largest chunks
 du -sh dist/assets/* | sort -rh | head -20

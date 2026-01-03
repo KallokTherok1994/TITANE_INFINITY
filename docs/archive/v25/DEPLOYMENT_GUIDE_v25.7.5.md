@@ -73,7 +73,7 @@
 
 ```bash
 cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
-npm run build
+pnpm run build
 ```
 
 **Output attendu:**
@@ -459,7 +459,7 @@ npx lighthouse https://votre-domaine.com --view
 ```bash
 # 1. Modifier code
 # 2. Build
-npm run build
+pnpm run build
 
 # 3. Upload dist/ (sw.js change → new revision)
 # 4. Reload page
@@ -638,7 +638,7 @@ git revert HEAD
 git push origin MAIN
 
 # Re-deploy dist/ version précédente
-npm run build
+pnpm run build
 # Upload dist/
 ```
 
@@ -655,7 +655,7 @@ if ('serviceWorker' in navigator && import.meta.env.PROD) {
 */
 
 # Build + Deploy
-npm run build
+pnpm run build
 ```
 
 **Option 3: Unregister SW côté client**
@@ -681,7 +681,7 @@ navigator.serviceWorker.getRegistrations().then(registrations => {
 
 ### Pré-Déploiement
 
-- [x] Build production: `npm run build` ✅
+- [x] Build production: `pnpm run build` ✅
 - [x] Git pushed: origin/MAIN à jour ✅
 - [x] sw.js généré: `ls dist/sw.js` ✅
 - [x] Brotli files: 52 .br files ✅
@@ -721,7 +721,7 @@ navigator.serviceWorker.getRegistrations().then(registrations => {
 
 ```bash
 # 1. Build
-npm run build
+pnpm run build
 
 # 2. Vérifier dist/
 ls -lh dist/sw.js              # 10 KB
@@ -782,7 +782,7 @@ F12 > Application > Cache Storage
 
 ```bash
 git revert HEAD && git push origin MAIN
-npm run build
+pnpm run build
 # Upload dist/
 ```
 

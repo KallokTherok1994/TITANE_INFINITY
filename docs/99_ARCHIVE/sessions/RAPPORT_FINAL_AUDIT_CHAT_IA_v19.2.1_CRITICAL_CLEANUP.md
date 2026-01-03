@@ -33,7 +33,7 @@
 3. Tests de non-régression
 
 ### Phase 3 : Validation finale
-1. `npm run type-check` sans erreurs
+1. `pnpm run type-check` sans erreurs
 2. Tests Chat IA maintenus à 15/15
 3. Compilation réussie
 

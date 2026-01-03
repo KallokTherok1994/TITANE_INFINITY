@@ -62,7 +62,7 @@ rollupOptions: {
 
 ### Build Frontend
 ```bash
-$ npm run build
+$ pnpm run build
 ✓ 535 modules transformed  # ← +2 modules (Tauri inclus)
 ✓ dist/assets/main-CdwikFkd.js    265.80 kB
 ✓ built in 1.99s

@@ -57,7 +57,7 @@ TITANE∞ est **100% conforme, stable, fonctionnel, cohérent et optimisé** ave
 
 **TypeScript Check:**
 ```bash
-npm run type-check  # ✅ PASSED - 0 erreurs
+pnpm run type-check  # ✅ PASSED - 0 erreurs
 ```
 
 **Note:** 948 "erreurs" détectées sont uniquement du linting Markdown (MD022, MD026, MD031, MD040) dans la documentation. Aucune erreur de code.
@@ -140,8 +140,8 @@ The file `javascriptcoregtk-4.1.pc` needs to be installed.
 ```json
 {
   "devUrl": "http://localhost:1420",
-  "beforeDevCommand": "npm run build",
-  "beforeBuildCommand": "npm run build",
+  "beforeDevCommand": "pnpm run build",
+  "beforeBuildCommand": "pnpm run build",
   "frontendDist": "../dist"
 }
 ```
@@ -196,8 +196,8 @@ The file `javascriptcoregtk-4.1.pc` needs to be installed.
   "verify": "sh ./verify_global_system.sh",
   "verify:cognitive": "sh ./verify_cognitive_synthesis.sh && ...",
   "verify:stacks": "sh ./verify_cognitive_stack.sh && ...",
-  "test:build": "npm run type-check && npm run build",
-  "prebuild": "npm run type-check"    // ✅ Validation avant build
+  "test:build": "pnpm run type-check && pnpm run build",
+  "prebuild": "pnpm run type-check"    // ✅ Validation avant build
 }
 ```
 
@@ -246,7 +246,7 @@ The file `javascriptcoregtk-4.1.pc` needs to be installed.
    - ✅ Complet et fonctionnel
 
 2. **`build_production.sh`** (80 lignes)
-   - Build frontend (npm run build)
+   - Build frontend (pnpm run build)
    - Build Tauri release (cargo tauri build)
    - Génère binaires + bundles (.AppImage, .deb, .rpm)
    - ✅ Process complet

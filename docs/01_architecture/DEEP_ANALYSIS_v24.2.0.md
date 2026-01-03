@@ -518,7 +518,7 @@ export async function secureInvoke<T>(
 
 ```bash
 # Générer TypeDoc
-npm run docs  # → docs/api/
+pnpm run docs  # → docs/api/
 
 # Diagrammes Mermaid
 docs/diagrams/

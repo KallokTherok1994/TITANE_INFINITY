@@ -186,7 +186,7 @@ Pour chaque étape:
 
 ```bash
 # Modifier fichier pour Étape 1
-# npm run dev:tauri
+# pnpm run dev:tauri
 # Tester
 # Si OK → Étape 2
 # Si FAIL → Analyser

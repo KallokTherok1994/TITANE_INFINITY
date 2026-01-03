@@ -82,7 +82,7 @@ phase1_clean() {
     echo "Checking dependencies..."
     if [ ! -d "node_modules" ]; then
         echo "Installing npm dependencies..."
-        npm install
+        pnpm install
         print_success "npm dependencies installed"
     else
         print_success "npm dependencies OK"
@@ -100,7 +100,7 @@ phase2_build() {
     
     # Lint first
     echo "Running ESLint..."
-    npm run lint || {
+    pnpm run lint || {
         print_warning "ESLint warnings found (non-blocking)"
     }
     
@@ -114,7 +114,7 @@ phase2_build() {
     
     # Build frontend
     echo "Building frontend (Vite)..."
-    npm run build || {
+    pnpm run build || {
         print_error "Frontend build failed"
         return 1
     }
@@ -143,7 +143,7 @@ phase3_test() {
     
     # Run unit tests
     echo "Running unit tests..."
-    npm test -- --run || {
+    pnpm test -- --run || {
         print_warning "Some tests failed (non-blocking)"
     }
     

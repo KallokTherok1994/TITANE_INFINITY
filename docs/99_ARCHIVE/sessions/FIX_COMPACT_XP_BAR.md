@@ -250,7 +250,7 @@ cargo build --manifest-path src-tauri/Cargo.toml
 
 ### Étape 3: Validation Runtime
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 # Vérifier logs:
 # [Experience] État chargé depuis Tauri: { totalXp: 0, level: 1, ... }
 # ✅ Pas d'erreur JavaScript

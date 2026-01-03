@@ -36,7 +36,7 @@ cargo check
 
 # Installer dépendances npm (si manquantes)
 cd ..
-npm install react-markdown
+pnpm install react-markdown
 
 # Vérifier react-markdown
 npm list react-markdown
@@ -270,7 +270,7 @@ cargo check --verbose
 
 # Test frontend
 cd ..
-npm run build
+pnpm run build
 ```
 
 ---
@@ -279,7 +279,7 @@ npm run build
 
 ```bash
 # Lancer en mode développement
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 **Attendu :**
@@ -320,7 +320,7 @@ npm run tauri dev
 
 ```bash
 # Build complet
-npm run tauri build
+pnpm run tauri build
 
 # Binaire dans :
 # src-tauri/target/release/titane-infinity
@@ -332,7 +332,7 @@ npm run tauri build
 
 ### Erreur "Cannot find module 'react-markdown'"
 ```bash
-npm install react-markdown
+pnpm install react-markdown
 ```
 
 ### Erreur "GEMINI_API_KEY not found"

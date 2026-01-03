@@ -277,7 +277,7 @@ $ cargo check
 ### Build Production
 
 ```bash
-$ npm run build
+$ pnpm run build
 ✅ built in 20.04s
 ✅ 3326 modules transformed
 ✅ Post-build completed successfully
@@ -428,7 +428,7 @@ logger.error(
 - [ ] Remplacer par `logger.error/warn/info` avec contexte structuré
 - [ ] Ajouter IDs/types dans contexte quand pertinent
 - [ ] Valider TypeScript : `npx tsc --noEmit --skipLibCheck`
-- [ ] Tester build : `npm run build` (optionnel)
+- [ ] Tester build : `pnpm run build` (optionnel)
 
 ### Contexte Minimum Requis :
 

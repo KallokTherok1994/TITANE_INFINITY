@@ -365,10 +365,10 @@ Sprint 2: P1 (ONNX + cache + refactor devSudo)
 ```bash
 # 1. Patches sécurité
 npm update --save
-npm audit fix
+pnpm audit fix
 
 # 2. Mesure coverage
-npm run test -- --coverage
+pnpm run test -- --coverage
 # (cargo tarpaulin si installé)
 
 # 3. Review trimestrielle

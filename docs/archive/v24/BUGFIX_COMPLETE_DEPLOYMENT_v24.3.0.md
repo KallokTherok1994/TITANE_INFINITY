@@ -483,11 +483,11 @@ npx tsc --noEmit 2>&1 | grep -E "src/(lib|modules/avatar|pages|apps/meta-dashboa
 # Résultat: 0 erreurs ✅
 
 # Build Vite
-npm run build
+pnpm run build
 # Résultat: ✓ built in 15.71s ✅
 
 # Tests
-npm test -- src/__tests__/serviceMetrics.test.ts
+pnpm test -- src/__tests__/serviceMetrics.test.ts
 # Résultat: PASS ✅
 ```
 

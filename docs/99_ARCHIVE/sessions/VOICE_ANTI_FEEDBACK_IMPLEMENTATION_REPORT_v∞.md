@@ -202,7 +202,7 @@ async fn check_titane_voice(samples: Vec<f32>) -> Result<(bool, f32), String> {
 
 ### Build TypeScript
 ```bash
-npm run build
+pnpm run build
 ```
 **Résultat**: ✅ **SUCCESS** (10.64s)
 ```

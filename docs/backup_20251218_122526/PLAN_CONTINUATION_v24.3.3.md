@@ -102,7 +102,7 @@ Identifier et optimiser les composants avec re-renders excessifs.
 
 2. **Why Did You Render** (optionnel)
    ```bash
-   npm install --save-dev @welldone-software/why-did-you-render
+   pnpm install --save-dev @welldone-software/why-did-you-render
    ```
 
 ### 📝 Plan d'Action
@@ -163,7 +163,7 @@ Augmenter la couverture de tests pour garantir la stabilité des modifications f
 **Étape 1** : Mesurer Coverage Actuelle
 
 ```bash
-npm run test -- --coverage
+pnpm run test -- --coverage
 ```
 
 **Étape 2** : Identifier Gaps Critiques
@@ -313,7 +313,7 @@ Identifier autres opportunités d'amélioration (code dupliqué, complexité cyc
 
 ```bash
 # Analyser complexité, duplication, code smells
-npm install -g sonarqube-scanner
+pnpm install -g sonarqube-scanner
 sonar-scanner
 ```
 
@@ -321,7 +321,7 @@ sonar-scanner
 
 ```bash
 # Détecter patterns problématiques
-npm install --save-dev eslint-plugin-sonarjs
+pnpm install --save-dev eslint-plugin-sonarjs
 ```
 
 **3. Duplicated Code Detector**
@@ -527,15 +527,15 @@ npx imagemin src/assets/* --out-dir=src/assets-optimized
 | **First Contentful Paint**   | < 1.5s        | Lighthouse      |
 | **Largest Contentful Paint** | < 2.5s        | Lighthouse      |
 | **Cumulative Layout Shift**  | < 0.1         | Lighthouse      |
-| **Bundle Size (gzip)**       | < 500KB       | `npm run build` |
+| **Bundle Size (gzip)**       | < 500KB       | `pnpm run build` |
 
 ### Qualité
 
 | Métrique               | Cible v24.4.0 | Comment Mesurer              |
 | ---------------------- | ------------- | ---------------------------- |
-| **Test Coverage**      | > 70%         | `npm run test -- --coverage` |
+| **Test Coverage**      | > 70%         | `pnpm run test -- --coverage` |
 | **TypeScript Errors**  | 0             | `npx tsc --noEmit`           |
-| **ESLint Errors**      | 0             | `npm run lint`               |
+| **ESLint Errors**      | 0             | `pnpm run lint`               |
 | **Code Duplication**   | < 2%          | `npx jscpd`                  |
 | **Complexité Moyenne** | < 10          | SonarQube                    |
 

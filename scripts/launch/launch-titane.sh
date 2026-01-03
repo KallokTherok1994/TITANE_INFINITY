@@ -62,4 +62,4 @@ echo "   PWD=$PWD"
 
 echo ""
 echo "🚀 Lancement de TITANE∞..."
-npm run tauri:dev
+pnpm run tauri:dev

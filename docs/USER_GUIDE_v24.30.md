@@ -43,13 +43,13 @@ git clone https://github.com/KallokTherok1994/TITANE_INFINITY.git
 cd TITANE_INFINITY
 
 # 2. Installer dépendances
-npm install
+pnpm install
 
 # 3. Build production
-npm run build
+pnpm run build
 
 # 4. Lancer TITANE∞
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ---

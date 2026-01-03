@@ -80,7 +80,7 @@
 ### ✅ TypeScript Compilation
 
 ```bash
-npm run type-check
+pnpm run type-check
 # ✅ 0 erreurs de compilation
 # ⚠️  43 warnings types manquants (packages externes, non-bloquant)
 ```

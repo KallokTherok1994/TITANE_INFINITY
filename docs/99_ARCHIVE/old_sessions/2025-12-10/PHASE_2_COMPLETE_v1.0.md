@@ -359,7 +359,7 @@ Based on calculated importance:
 ### Test Execution
 
 ```bash
-$ npm test -- unifiedMemory.test.ts
+$ pnpm test -- unifiedMemory.test.ts
 
  Test Files  1 passed (1)
       Tests  32 passed (32)
@@ -373,7 +373,7 @@ $ npm test -- unifiedMemory.test.ts
 ### Build Results
 
 ```bash
-$ npm run build
+$ pnpm run build
 
 vite v6.4.1 building for production...
 ✓ 1547 modules transformed.
@@ -397,7 +397,7 @@ dist/assets/ai-onnx-C3uLchzW.js                          546.55 kB │ gzip: 124
 ### Lint Status
 
 ```bash
-$ npm run lint
+$ pnpm run lint
 # (Not executed in this session - recommend running separately)
 ```
 

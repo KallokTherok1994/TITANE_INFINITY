@@ -242,15 +242,15 @@ BACKEND (Rust/Tauri)
 
 ```bash
 # Tests unitaires
-npm test src/hooks/useSingularitySync.test.ts
-npm test src/hooks/useMemoryEngine.test.ts
-npm test src/hooks/useSystemHealth.test.ts
+pnpm test src/hooks/useSingularitySync.test.ts
+pnpm test src/hooks/useMemoryEngine.test.ts
+pnpm test src/hooks/useSystemHealth.test.ts
 
 # Tests intégration
-npm test src/components/PerfectFusionDashboard.test.tsx
+pnpm test src/components/PerfectFusionDashboard.test.tsx
 
 # Coverage
-npm run test:coverage
+pnpm run test:coverage
 ```
 
 ### Checklist de validation

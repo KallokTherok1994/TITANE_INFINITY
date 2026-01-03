@@ -374,7 +374,7 @@ partialize: (state) => ({
 - **Total**: **~1713 lignes production-ready**
 
 ### Test Coverage
-- ✅ Build validation (npm run build)
+- ✅ Build validation (pnpm run build)
 - ✅ Type safety (TypeScript strict mode)
 - ⏳ Runtime tests (TODO Session 5)
 - ⏳ E2E tests (TODO Session 5)

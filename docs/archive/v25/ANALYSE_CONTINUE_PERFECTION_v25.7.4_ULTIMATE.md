@@ -291,7 +291,7 @@ const AudioSettings = lazy(() => import('@/components/AudioSettings'));
 **Quick Audit Tools:**
 ```bash
 # Install axe-core CLI
-npm install -g @axe-core/cli
+pnpm install -g @axe-core/cli
 
 # Run accessibility audit
 axe http://localhost:5173 --save audit-report.json
@@ -419,7 +419,7 @@ axe http://localhost:5173 --save audit-report.json
 **Automated Screenshot Testing:**
 ```bash
 # Install playwright
-npm install -D @playwright/test
+pnpm install -D @playwright/test
 
 # Create test
 cat > tests/responsive.spec.ts << 'EOF'
@@ -449,7 +449,7 @@ npx playwright test
 **Percy.io Visual Regression:**
 ```bash
 # Install Percy
-npm install -D @percy/cli @percy/playwright
+pnpm install -D @percy/cli @percy/playwright
 
 # Run visual tests
 PERCY_TOKEN=xxx npx percy exec -- npx playwright test
@@ -576,7 +576,7 @@ EOF
 **Install:**
 ```bash
 # Install Lighthouse CI
-npm install -g @lhci/cli
+pnpm install -g @lhci/cli
 
 # Create config
 cat > lighthouserc.json << 'EOF'
@@ -615,10 +615,10 @@ EOF
 **Run:**
 ```bash
 # Build production
-npm run build
+pnpm run build
 
 # Start preview server
-npm run preview &
+pnpm run preview &
 sleep 5
 
 # Run Lighthouse CI
@@ -636,9 +636,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
-      - run: npm ci
-      - run: npm run build
-      - run: npm install -g @lhci/cli
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
+      - run: pnpm install -g @lhci/cli
       - run: lhci autorun
 ```
 
@@ -809,9 +809,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
-      - run: npm ci
-      - run: npm run build
-      - run: npm test
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
+      - run: pnpm test
       
   # 2. Lighthouse Performance
   lighthouse:
@@ -820,9 +820,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
-      - run: npm ci
-      - run: npm run build
-      - run: npm run preview &
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
+      - run: pnpm run preview &
       - run: npx lhci autorun
       
   # 3. Accessibility Audit
@@ -832,9 +832,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
-      - run: npm ci
-      - run: npm run build
-      - run: npm run preview &
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
+      - run: pnpm run preview &
       - run: npx @axe-core/cli http://localhost:4173
       
   # 4. Visual Regression (Percy)
@@ -844,8 +844,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
-      - run: npm ci
-      - run: npm run build
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
       - run: npx percy exec -- npx playwright test
       
   # 5. Bundle Size Check
@@ -855,8 +855,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
-      - run: npm ci
-      - run: npm run build
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
       - uses: andresz1/size-limit-action@v1
 ```
 
@@ -918,7 +918,7 @@ Day 3: Security Hardening (1h)
 ├─ [ ] CSP headers (Content Security Policy)
 ├─ [ ] HTTPS enforced
 ├─ [ ] XSS protection
-└─ [ ] Dependency audit (npm audit)
+└─ [ ] Dependency audit (pnpm audit)
 
 Day 4: Build Optimization (0.5h)
 ├─ [ ] Vite minification settings
@@ -1080,7 +1080,7 @@ const { isMobile: _isMobile } = useResponsive();
 **2. Bundle Analysis Real Data** (30min)
 ```bash
 # Build with analyzer
-npm run build -- --analyze
+pnpm run build -- --analyze
 
 # Open report
 open dist/stats.html
@@ -1094,10 +1094,10 @@ open dist/stats.html
 **3. Lighthouse Baseline** (30min)
 ```bash
 # Build production
-npm run build
+pnpm run build
 
 # Start preview
-npm run preview &
+pnpm run preview &
 
 # Run Lighthouse
 npx lighthouse http://localhost:4173 \

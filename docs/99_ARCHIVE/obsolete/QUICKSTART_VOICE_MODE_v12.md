@@ -176,10 +176,10 @@ export default App;
 
 ```bash
 # Mode dev sans Tauri (test rapide frontend)
-npm run dev
+pnpm run dev
 
 # Mode dev avec Tauri (application complète)
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 Ouvrir `http://localhost:5173` (Vite) ou attendre l'application Tauri
@@ -209,7 +209,7 @@ document.documentElement.setAttribute('data-theme', 'dark-intense');
 
 **Solution rapide** : Ignorer pour l'instant, tester frontend seul
 ```bash
-npm run dev  # Lance uniquement le frontend
+pnpm run dev  # Lance uniquement le frontend
 ```
 
 ### Problème: Composant ne s'affiche pas
@@ -221,7 +221,7 @@ npm run dev  # Lance uniquement le frontend
 
 ```bash
 # Vérifier imports
-npm run build 2>&1 | grep -i "error"
+pnpm run build 2>&1 | grep -i "error"
 ```
 
 ### Problème: Animations lentes
@@ -254,7 +254,7 @@ test -f src/styles/design-system.css && echo "✅ OK" || echo "❌ Manquant"
 npm list framer-motion && echo "✅ OK" || echo "❌ Manquant"
 
 # 4. Build OK?
-npm run build && echo "✅ OK" || echo "❌ Erreur"
+pnpm run build && echo "✅ OK" || echo "❌ Erreur"
 ```
 
 ---
@@ -266,22 +266,22 @@ npm run build && echo "✅ OK" || echo "❌ Erreur"
 ./install_voice_mode_v12.sh
 
 # Test frontend seul
-npm run dev
+pnpm run dev
 
 # Test avec Tauri
-npm run tauri dev
+pnpm run tauri dev
 
 # Build production
-npm run tauri build
+pnpm run tauri build
 
 # Tests
-npm test
+pnpm test
 
 # Linter
-npm run lint
+pnpm run lint
 
 # Formater code
-npm run format
+pnpm run format
 ```
 
 ---
@@ -299,7 +299,7 @@ npm run format
 
 ## 🎯 NEXT STEPS
 
-1. **Tester frontend** : `npm run dev`
+1. **Tester frontend** : `pnpm run dev`
 2. **Tester composants** : Créer `TestVoiceMode.tsx`
 3. **Intégrer backend** : Ajouter modules dans `main.rs`
 4. **Consulter guide** : Ouvrir `VOICE_MODE_LUXE_DUPLEX_GUIDE_v12.md`

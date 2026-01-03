@@ -171,13 +171,13 @@ TITANE∞ v25.4.1
 
 ```bash
 # Lint
-npm run lint  # 0 errors, 0 warnings
+pnpm run lint  # 0 errors, 0 warnings
 
 # Build
-npm run build  # 13.81s, 3294 modules
+pnpm run build  # 13.81s, 3294 modules
 
 # Tests (if available)
-npm run test:unit
+pnpm run test:unit
 ```
 
 ---

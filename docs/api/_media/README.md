@@ -187,19 +187,19 @@ TITANE_INFINITY/
 ### Commandes Utiles
 ```bash
 # Type check TypeScript
-npm run type-check
+pnpm run type-check
 
 # Lint
-npm run lint
+pnpm run lint
 
 # Build frontend uniquement
-npm run build
+pnpm run build
 
 # Dev Tauri
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Build Tauri
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ## 🤝 Contribution

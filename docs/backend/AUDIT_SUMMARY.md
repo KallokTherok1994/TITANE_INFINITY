@@ -172,7 +172,7 @@ This comprehensive backend audit has produced **5 production-grade documentation
 | Metric | Score | Status |
 |--------|-------|--------|
 | Rust Formatting | 100% | ✅ Compliant |
-| TypeScript Formatting | N/A | ⚠️ Needs npm install |
+| TypeScript Formatting | N/A | ⚠️ Needs pnpm install |
 | Type Safety | 92/100 | ⚠️ Good, can improve |
 | Test Coverage | 85% | ⚠️ Good, can improve |
 

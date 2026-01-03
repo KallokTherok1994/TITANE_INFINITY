@@ -139,7 +139,7 @@ Aucune modification nécessaire si les fichiers sont bien générés.
 ### Étape 4: Tester en mode dev
 
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 Vérifications:
@@ -154,7 +154,7 @@ Vérifications:
 
 ```bash
 # Build production (génère .app / .exe / AppImage / .deb)
-npm run tauri:build
+pnpm run tauri:build
 
 # Vérifier l'icône de l'application finale
 # macOS: src-tauri/target/release/bundle/macos/TITANE∞*.app
@@ -203,8 +203,8 @@ npm run tauri:build
 - [x] Imports TypeScript vérifiés
 - [ ] **À FAIRE**: Générer `titane-app-icon.png` 1024×1024
 - [ ] **À FAIRE**: Exécuter `cargo tauri icon ./titane-app-icon.png`
-- [ ] **À FAIRE**: Tester en mode dev (`npm run tauri:dev`)
-- [ ] **À FAIRE**: Build final (`npm run tauri:build`)
+- [ ] **À FAIRE**: Tester en mode dev (`pnpm run tauri:dev`)
+- [ ] **À FAIRE**: Build final (`pnpm run tauri:build`)
 - [ ] **À FAIRE**: Vérifier l'icône sur l'application compilée
 
 ---
@@ -219,10 +219,10 @@ inkscape --export-filename=titane-app-icon.png --export-width=1024 --export-heig
 cargo tauri icon ./titane-app-icon.png
 
 # 3. Tester
-npm run tauri:dev
+pnpm run tauri:dev
 
 # 4. Build production
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ---
@@ -267,7 +267,7 @@ declare module '*.svg' {
 cd src-tauri
 cargo clean
 cd ..
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ### Logo ne s'affiche pas (404)

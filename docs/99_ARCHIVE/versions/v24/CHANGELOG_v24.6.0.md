@@ -736,7 +736,7 @@ async performAssetLoad(assetDef: AssetDefinition): Promise<LoadedAsset> {
 
 ```bash
 # TypeScript (frontend)
-$ npm run type-check
+$ pnpm run type-check
 ✅ 0 errors (appearanceMapper.ts, appearanceRenderer.ts)
 
 # Rust (backend, inchangé v24.5)

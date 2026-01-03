@@ -352,10 +352,10 @@ await this.cognitiveOrchestrator.storeConversation({
 
 ```bash
 # Run ChatEngine tests
-npm run test chatEngine
+pnpm run test chatEngine
 
 # Run with coverage
-npm run test:coverage chatEngine
+pnpm run test:coverage chatEngine
 ```
 
 **Key Test Cases:**

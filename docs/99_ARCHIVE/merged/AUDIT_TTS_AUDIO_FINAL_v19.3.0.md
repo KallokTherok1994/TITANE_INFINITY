@@ -151,7 +151,7 @@ Tests obsolètes référençant des modules supprimés:
 
 ```bash
 # TypeScript
-npm run build
+pnpm run build
 # ✅ SUCCESS - 2451 modules, 7.27s
 
 # Rust
@@ -165,7 +165,7 @@ cargo check --manifest-path src-tauri/Cargo.toml
 
 ### 1. Lancer l'application
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### 2. Tester TTS dans Paramètres

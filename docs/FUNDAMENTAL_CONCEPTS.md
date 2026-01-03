@@ -684,7 +684,7 @@ Outil qui vérifie la cohérence et détecte les mauvaises pratiques.
 
 **ESLint (TypeScript/JavaScript)** :
 ```bash
-npm run lint
+pnpm run lint
 ```
 
 Détecte :
@@ -729,7 +729,7 @@ Outil qui aligne automatiquement la mise en forme du code.
 
 **Prettier (TypeScript/JavaScript)** :
 ```bash
-npm run format
+pnpm run format
 ```
 
 Formate :
@@ -761,7 +761,7 @@ Transformation du code source en code exécutable.
 
 **Frontend (Vite)** :
 ```bash
-npm run build
+pnpm run build
 ```
 
 Étapes :
@@ -855,7 +855,7 @@ if (import.meta.hot) {
 
 **Usage** :
 ```bash
-npm run dev
+pnpm run dev
 # Modifie src/components/Button.tsx
 # → Page se met à jour instantanément sans refresh
 ```
@@ -866,7 +866,7 @@ npm run dev
 - Productivité x10
 
 **Dans TITANE∞** :
-- Dev mode avec `npm run dev`
+- Dev mode avec `pnpm run dev`
 - Hot reload pour React components
 - Fast refresh preserve l'état Redux/Zustand
 

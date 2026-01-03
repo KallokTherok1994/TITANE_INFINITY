@@ -360,7 +360,7 @@ async fn emit_delta_throttled(app: &AppHandle, delta: Value) -> Result<()> {
 
 ### TypeScript
 ```bash
-npm run type-check
+pnpm run type-check
 ✅ 82 erreurs préexistantes (0 nouvelle de Phase 5)
 ```
 

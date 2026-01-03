@@ -6,7 +6,7 @@
 ```
 1. diagnostic          → Doit afficher status système
 2. status full         → Doit lister tous les modules
-3. fix deps            → Doit proposer npm install @types/...
+3. fix deps            → Doit proposer pnpm install @types/...
 4. introspect          → Doit afficher état interne
 5. self-heal           → Doit lancer réparation de base
 ```
@@ -72,7 +72,7 @@ User: deep heal
 → Expected: "🔄 DEEP-HEAL — 2/3 corrigées"
 
 User: fix deps
-→ Expected: "📦 FIX DEPS — npm install @types/framer-motion..."
+→ Expected: "📦 FIX DEPS — pnpm install @types/framer-motion..."
 
 User: health check
 → Expected: "💚 HEALTH CHECK — ✅ Système sain"

@@ -14,7 +14,7 @@ OLLAMA_MODEL=llama3
 EOF
 
 # Installer dépendances
-npm install
+pnpm install
 ```
 
 ### 2. Installation Ollama (Optionnel - Mode Offline)
@@ -29,7 +29,7 @@ ollama pull llama3
 ### 3. Lancer l'application
 
 ```bash
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 ---
@@ -96,16 +96,16 @@ const all = await loadConversations();
 
 ```bash
 # Dev mode
-npm run tauri dev
+pnpm run tauri dev
 
 # Build production
-npm run tauri build
+pnpm run tauri build
 
 # Tests Rust
 cd src-tauri && cargo test
 
 # Lint frontend
-npm run lint
+pnpm run lint
 ```
 
 ---

@@ -242,14 +242,14 @@ src/core/
 
 ### **PHASE 8 : Rebuild & Validation**
 
-#### **npm install** :
+#### **pnpm install** :
 ```bash
 ✅ 331 packages installés
 ✅ 0 vulnérabilités
 ✅ node_modules/ propre (176 MB)
 ```
 
-#### **npm run build** :
+#### **pnpm run build** :
 ```bash
 ✅ Build réussi en 2.06s
 ✅ 568 modules transformés
@@ -334,7 +334,7 @@ scripts/
 
 2. **Tester le build Tauri complet** :
    ```bash
-   npm run build
+   pnpm run build
    cargo tauri build
    ```
 
