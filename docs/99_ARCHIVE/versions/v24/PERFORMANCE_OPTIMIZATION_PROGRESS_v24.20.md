@@ -105,7 +105,7 @@ ChatWindow.displayName = 'ChatWindow';
 ### 🧪 Validation Requise
 
 **Tests Manuels**:
-1. ✅ TypeScript compile sans erreur (npm run type-check)
+1. ✅ TypeScript compile sans erreur (pnpm run type-check)
 2. ⏳ **À FAIRE**: Ouvrir DevTools React Profiler
 3. ⏳ **À FAIRE**: Envoyer 10 messages rapides
 4. ⏳ **À FAIRE**: Mesurer nombre de re-renders avant/après
@@ -114,10 +114,10 @@ ChatWindow.displayName = 'ChatWindow';
 **Tests Automatisés**:
 ```bash
 # Exécuter tests composants
-npm test -- ChatInput.test.tsx
-npm test -- MessageList.test.tsx
-npm test -- MessageBubble.test.tsx
-npm test -- ChatWindow.test.tsx
+pnpm test -- ChatInput.test.tsx
+pnpm test -- MessageList.test.tsx
+pnpm test -- MessageBubble.test.tsx
+pnpm test -- ChatWindow.test.tsx
 ```
 
 ---
@@ -408,7 +408,7 @@ cargo check --manifest-path src-tauri/Cargo.toml
 ### React DevTools Profiler
 ```bash
 # Installation
-npm install --save-dev react-devtools
+pnpm install --save-dev react-devtools
 
 # Lancement
 npx react-devtools
@@ -564,18 +564,18 @@ Refs: PERFORMANCE_OPTIMIZATION_ROADMAP_v24.20.md"
 
 ```bash
 # Validation TypeScript
-npm run type-check
+pnpm run type-check
 
 # Validation Rust
 cargo check --manifest-path src-tauri/Cargo.toml
 
 # Profiler React (Phase 7)
-npm run dev
+pnpm run dev
 # → React DevTools → Profiler tab
 
 # Stress test (Phase 10)
-npm run test
+pnpm run test
 
 # Build production
-npm run tauri:build
+pnpm run tauri:build
 ```

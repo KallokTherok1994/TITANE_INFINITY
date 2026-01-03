@@ -64,7 +64,7 @@ full() {
 if is_cache_valid "$TYPECHECK_CACHE" "*.{ts,tsx}"; then
     info "TypeScript cache valid, skipping..."
 else
-    npm run check
+    pnpm run check
     update_cache "$TYPECHECK_CACHE" "*.{ts,tsx}"
 fi
 ```
@@ -75,7 +75,7 @@ fi
 
 ### 2. **Robustesse** ✅
 
-**Problème:** Aucun retry en cas d'échec réseau (npm install, cargo fetch)
+**Problème:** Aucun retry en cas d'échec réseau (pnpm install, cargo fetch)
 
 **Solution:** Retry logic avec exponential backoff
 

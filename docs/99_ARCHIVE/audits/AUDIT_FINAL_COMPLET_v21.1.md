@@ -85,7 +85,7 @@ $ cargo build --manifest-path src-tauri/Cargo.toml
 #### Frontend TypeScript
 
 ```bash
-$ npm run build
+$ pnpm run build
 ✓ 3047 modules transformed.
 ✓ built in 13.71s
 
@@ -460,7 +460,7 @@ rien à valider, la copie de travail est propre
 **Objectif** : Valider force Ollama en mode local
 
 **Steps** :
-1. Lancer app dev (`npm run tauri dev`)
+1. Lancer app dev (`pnpm run tauri dev`)
 2. Aller ChatPage
 3. Sélectionner provider "Local"
 4. Envoyer message "Test local mode"
@@ -788,7 +788,7 @@ Le système est **prêt pour déploiement** avec les recommandations mineures ci
 cargo build --manifest-path src-tauri/Cargo.toml
 
 # Build Frontend
-npm run build
+pnpm run build
 
 # Tests Rust
 cargo test --lib omega::events::tests

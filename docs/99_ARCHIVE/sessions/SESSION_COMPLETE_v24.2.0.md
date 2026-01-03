@@ -78,7 +78,7 @@ git push origin main
 
 ### 2. Tests Runtime
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 Vérifier:
 - ✓ Application démarre
@@ -123,7 +123,7 @@ Vérifier:
 
 ### Build Production
 ```bash
-npm run build
+pnpm run build
 ```
 **Résultat**:
 - ✅ 0 errors TypeScript

@@ -181,7 +181,7 @@ $ cargo build --manifest-path src-tauri/Cargo.toml
 ### 3. Frontend Build (Vite)
 
 ```bash
-$ npm run build
+$ pnpm run build
 ✓ built in 13.77s
 
 Statistiques:
@@ -199,7 +199,7 @@ Statistiques:
 ### 4. ESLint Validation
 
 ```bash
-$ npm run lint
+$ pnpm run lint
 ✓ No errors, no warnings
 ```
 
@@ -368,7 +368,7 @@ pub mod memory_doctor;
 
 ```bash
 # Build rapide et optimisé
-$ time npm run build
+$ time pnpm run build
 ✓ built in 13.77s
 
 real    0m13.771s
@@ -485,11 +485,11 @@ npx tsc --noEmit
 # ✅ No errors
 
 # 2. Vérification ESLint
-npm run lint
+pnpm run lint
 # ✅ No errors, no warnings
 
 # 3. Build Frontend
-npm run build
+pnpm run build
 # ✅ built in 13.77s
 
 # 4. Vérification Rust
@@ -524,8 +524,8 @@ npx tauri build --bundles deb,appimage
 
 - ✅ **Cargo check**: 0 erreurs (18.66s)
 - ✅ **Cargo build dev**: SUCCESS (28.39s)
-- ✅ **npm run build**: SUCCESS (13.77s)
-- ✅ **npm run lint**: 0 errors, 0 warnings
+- ✅ **pnpm run build**: SUCCESS (13.77s)
+- ✅ **pnpm run lint**: 0 errors, 0 warnings
 - ✅ **npx tsc --noEmit**: 0 errors
 - ✅ **26 commandes persistence**: 100% fonctionnelles
 

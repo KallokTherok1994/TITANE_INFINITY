@@ -296,7 +296,7 @@ Optimisations:   LTO thin, opt-level 3 (optimal ✅)
    - Impact: Stabilité améliorée
 
 2. **Audit dependencies mensuels**
-   - Command: `npm audit && cargo audit`
+   - Command: `pnpm audit && cargo audit`
    - Automatiser avec CI/CD
    - Impact: Détection précoce CVE
 

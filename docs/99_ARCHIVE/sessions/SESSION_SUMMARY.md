@@ -185,13 +185,13 @@
 cd orchestration
 
 # Voir progression
-npm run status
+pnpm run status
 
 # Prochaine tâche
-npm run next
+pnpm run next
 
 # Marquer complète
-npm run update <task-id> completed
+pnpm run update <task-id> completed
 ```
 
 ### Validation Système
@@ -200,11 +200,11 @@ npm run update <task-id> completed
 ./verify-system.sh
 
 # Tests
-npm run test        # Frontend
+pnpm run test        # Frontend
 cargo test          # Backend
 
 # Build
-npm run build       # Frontend
+pnpm run build       # Frontend
 cargo check         # Backend
 ```
 

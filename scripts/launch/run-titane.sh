@@ -188,7 +188,7 @@ if [ "$SKIP_CHECKS" = false ] && [ "$QUICK_MODE" = false ]; then
     # Dependencies check
     if [ ! -d "node_modules" ] || [ "$REBUILD_MODE" = true ]; then
         echo -e "${YELLOW}📥 Installing dependencies...${NC}"
-        npm ci --prefer-offline --no-audit 2>&1 | grep -v "^npm WARN" || true
+        pnpm install --frozen-lockfile --prefer-offline --no-audit 2>&1 | grep -v "^npm WARN" || true
         echo -e "${GREEN}✅ Dependencies installed${NC}"
     else
         echo -e "${GREEN}✅ Dependencies already installed${NC}"
@@ -210,7 +210,7 @@ if [ "$SKIP_CHECKS" = false ] && [ "$QUICK_MODE" = false ]; then
     
     # ESLint check (silent)
     echo -e "${CYAN}📝 Linting (ESLint)...${NC}"
-    if npm run lint -- --quiet 2>&1 | grep -E "error|warning" | head -5; then
+    if pnpm run lint -- --quiet 2>&1 | grep -E "error|warning" | head -5; then
         echo -e "${YELLOW}⚠️  Lint warnings found (auto-fixing on build)${NC}"
     else
         echo -e "${GREEN}✅ 0 lint errors${NC}"
@@ -232,7 +232,7 @@ if [ "$SKIP_CHECKS" = false ] && [ "$QUICK_MODE" = false ]; then
     # Check if auto-fix is needed
     if [ -f "/tmp/titane-tsc.log" ] && grep -q "error TS" /tmp/titane-tsc.log; then
         echo -e "${YELLOW}🔧 Auto-fixing TypeScript issues...${NC}"
-        npm run lint:fix 2>&1 | tail -3 || true
+        pnpm run lint:fix 2>&1 | tail -3 || true
         echo -e "${GREEN}✅ Auto-fix attempted${NC}"
     else
         echo -e "${GREEN}✅ No corrections needed${NC}"
@@ -253,7 +253,7 @@ echo ""
 # Build frontend (Vite)
 if [ ! -d "dist" ] || [ "$REBUILD_MODE" = true ]; then
     echo -e "${CYAN}⚛️  Building frontend (Vite + React)...${NC}"
-    NODE_ENV=production npm run build 2>&1 | tee /tmp/titane-vite-build.log | tail -10
+    NODE_ENV=production pnpm run build 2>&1 | tee /tmp/titane-vite-build.log | tail -10
     
     if [ -d "dist" ]; then
         DIST_SIZE=$(du -sh dist/ | awk '{print $1}')
@@ -387,7 +387,7 @@ echo ""
 if [ "$MODE" = "dev" ]; then
     echo -e "${GREEN}🟢 Launching TITANE∞ DEV (Titan-Dev)...${NC}"
     echo ""
-    npm run tauri -- dev --no-watch 2>&1 | tee runtime/dev/logs/tauri.log
+    pnpm run tauri -- dev --no-watch 2>&1 | tee runtime/dev/logs/tauri.log
 else
     echo -e "${BLUE}🔵 Launching TITANE∞ PRODUCTION (Titan-Stable)...${NC}"
     echo ""

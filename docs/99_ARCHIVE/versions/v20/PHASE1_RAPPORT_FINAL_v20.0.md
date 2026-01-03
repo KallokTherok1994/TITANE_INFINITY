@@ -272,8 +272,8 @@ cargo test errors::app_error --lib  # ✅ 5/5 passent
 cargo test --all                    # ⏳ Après OpenSSL
 
 # Frontend
-npm test                            # ⏳ Phase 1.4+
-npm run lint                        # ⏳ Phase 1.4+
+pnpm test                            # ⏳ Phase 1.4+
+pnpm run lint                        # ⏳ Phase 1.4+
 npx tsc --noEmit                    # ⏳ Phase 1.4+
 
 # Scan unwrap/expect restants
@@ -356,7 +356,7 @@ Phase 1.5: Tests Backend 0→50%                   ⏳ TODO
 Phase 1.6: TypeScript 34→0                       ⏳ TODO
 ├─ Scan avec npx tsc --noEmit
 ├─ Correction par priorité (P0 Chat/Voice)
-└─ Validation avec npm run lint
+└─ Validation avec pnpm run lint
 
 Phase 1.7: Audio Feedback                        ⏳ TODO
 ├─ Echo cancellation
@@ -410,7 +410,7 @@ cargo test --all
 
 # TypeScript
 npx tsc --noEmit
-npm run lint
+pnpm run lint
 ```
 
 ---

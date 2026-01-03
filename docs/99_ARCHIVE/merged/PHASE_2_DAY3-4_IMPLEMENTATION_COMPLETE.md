@@ -171,7 +171,7 @@ This phase adds editing capabilities to the Configuration Hub, allowing users to
 
 ✅ **TypeScript/Vite Build:** PASSED
 ```bash
-npm run build
+pnpm run build
 ✓ built in 13.57s
 ```
 

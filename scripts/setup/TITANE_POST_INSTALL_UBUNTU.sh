@@ -490,8 +490,8 @@ source "$HOME/.cargo/env"
 
 # Installation des dépendances npm
 log_step "Installation des dépendances npm..."
-npm install 2>&1 | tee -a "$LOG_FILE"
-log_success "Dépendances npm installées"
+pnpm install 2>&1 | tee -a "$LOG_FILE"
+log_success "Dépendances pnpm installées"
 
 # Vérification Tauri CLI
 log_step "Vérification de Tauri CLI..."
@@ -667,10 +667,10 @@ echo -e "${CYAN}2. Naviguer vers TITANE:${NC}"
 echo "   $ cd $PROJECTS_DIR/TITANE_INFINITY"
 echo ""
 echo -e "${CYAN}3. Lancer en mode développement:${NC}"
-echo "   $ npm run tauri dev"
+echo "   $ pnpm run tauri dev"
 echo ""
 echo -e "${CYAN}4. Build de production:${NC}"
-echo "   $ npm run tauri build"
+echo "   $ pnpm run tauri build"
 echo ""
 
 if [ "$WARN_COUNT" -gt 0 ] || [ "$FAIL_COUNT" -gt 0 ]; then

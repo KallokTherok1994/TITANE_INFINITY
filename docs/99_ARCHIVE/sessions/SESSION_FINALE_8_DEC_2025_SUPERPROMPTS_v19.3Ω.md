@@ -426,10 +426,10 @@ Git:             ✅ Commit 7ed1c01 + Push origin/MAIN
 ### 🎯 PROCHAINE ÉTAPE
 ```bash
 # Valider compilation complète
-npm run build
+pnpm run build
 
 # Lancer application Tauri
-npm run tauri dev
+pnpm run tauri dev
 
 # Tester UI SecurityPage
 # → Ouvrir SecurityPage

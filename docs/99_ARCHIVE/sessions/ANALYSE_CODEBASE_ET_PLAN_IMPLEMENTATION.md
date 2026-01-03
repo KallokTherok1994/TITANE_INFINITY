@@ -193,7 +193,7 @@ Voici la comparaison entre ce qui **existe déjà** dans le codebase et ce qui e
 #### Jour 1 : Compléter Error Handling (10% restant)
 ```bash
 # Tâche 1.1 : Intégrer Sentry pour remote error tracking
-npm install @sentry/react @sentry/tauri
+pnpm install @sentry/react @sentry/tauri
 
 # Créer src/services/monitoring/sentry.ts
 # Configurer dans src/main.tsx
@@ -226,11 +226,11 @@ npm install @sentry/react @sentry/tauri
 #### Jour 3 : Améliorer CI/CD (25% restant)
 ```bash
 # Tâche 3.1 : Ajouter code coverage reporting
-npm install --save-dev @vitest/coverage-v8
+pnpm install --save-dev @vitest/coverage-v8
 
 # Tâche 3.2 : Ajouter security audit
 # Ajouter dans .github/workflows/ci.yml :
-#   - npm audit --audit-level=moderate
+#   - pnpm audit --audit-level=moderate
 #   - cargo install cargo-audit && cargo audit
 
 # Tâche 3.3 : Ajouter performance benchmarking
@@ -517,10 +517,10 @@ Semaine 4 : Advanced Features
 ### Installation des nouvelles dépendances
 ```bash
 # Sentry (error tracking)
-npm install @sentry/react @sentry/tauri
+pnpm install @sentry/react @sentry/tauri
 
 # Code coverage
-npm install --save-dev @vitest/coverage-v8
+pnpm install --save-dev @vitest/coverage-v8
 
 # Performance (Rust)
 # Ajouter dans Cargo.toml :
@@ -532,10 +532,10 @@ npm install --save-dev @vitest/coverage-v8
 ### Lancer les tests
 ```bash
 # Tests unitaires avec coverage
-npm run test:unit -- --coverage
+pnpm run test:unit -- --coverage
 
 # Tests E2E
-npm run test:e2e
+pnpm run test:e2e
 
 # Benchmarks Rust
 cd src-tauri && cargo bench
@@ -544,8 +544,8 @@ cd src-tauri && cargo bench
 ### Build production
 ```bash
 # Build complet avec optimisations
-npm run build
-npm run tauri:build
+pnpm run build
+pnpm run tauri:build
 
 # Vérifier la taille du bundle
 ls -lh dist/

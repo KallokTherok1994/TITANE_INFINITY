@@ -117,7 +117,7 @@ cd /home/titane/Documents/TITANE_INFINITY/tts-service
 
 # Terminal 2: TITANE∞
 cd /home/titane/Documents/TITANE_INFINITY
-npm run dev:tauri
+pnpm run dev:tauri
 ```
 
 ### Accéder panel test
@@ -231,7 +231,7 @@ cd /home/titane/Documents/TITANE_INFINITY/tts-service
 
 # 2. Dans un autre terminal, lancer TITANE
 cd /home/titane/Documents/TITANE_INFINITY
-npm run dev:tauri
+pnpm run dev:tauri
 
 # 3. Tester dans le navigateur
 # Ouvrir: http://localhost:5173/test/tts

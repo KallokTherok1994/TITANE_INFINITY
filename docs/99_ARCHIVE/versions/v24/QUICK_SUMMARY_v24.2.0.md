@@ -79,7 +79,7 @@ dist/assets/ui-components-DK-NYNQ-.js        656.35 kB │ gzip: 173.32 kB
 
 ```bash
 # 1. Tests runtime
-npm run tauri:dev
+pnpm run tauri:dev
 
 # 2. Commit
 git add .

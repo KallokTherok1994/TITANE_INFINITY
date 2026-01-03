@@ -285,7 +285,7 @@ export default defineConfig({
 ```json
 {
   "build": {
-    "beforeDevCommand": "npm run build",
+    "beforeDevCommand": "pnpm run build",
     "devUrl": "http://localhost:1420",
     "frontendDist": "../dist"
   }
@@ -426,14 +426,14 @@ chmod +x scripts/validate-tauri-only.sh
 
 **Test 1 : Lancement Tauri**
 ```bash
-npm run dev
+pnpm run dev
 # Doit ouvrir fenêtre Tauri native
 # NE DOIT PAS ouvrir navigateur web
 ```
 
 **Test 2 : Chat IA Local**
 ```
-1. Ouvrir l'app (npm run dev)
+1. Ouvrir l'app (pnpm run dev)
 2. Aller dans Chat IA
 3. Taper message : "Bonjour"
 4. Vérifier console : "🤖 [LOCAL FIRST] Tentative Ollama..."
@@ -465,7 +465,7 @@ npm run dev
 ### Build Web (Distribution)
 
 ```bash
-npm run build
+pnpm run build
 # Output: dist/ (464 KB uncompressed, 131 KB gzipped)
 ```
 
@@ -482,7 +482,7 @@ sudo apt install -y \
 
 **Build :**
 ```bash
-npm run tauri build
+pnpm run tauri build
 # Output: src-tauri/target/release/bundle/
 ```
 
@@ -525,7 +525,7 @@ export default defineConfig({
 });
 ```
 
-### Problème : "npm run dev" ouvre navigateur au lieu de Tauri
+### Problème : "pnpm run dev" ouvre navigateur au lieu de Tauri
 
 **Solution :** Vérifier `package.json`
 ```json

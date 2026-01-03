@@ -346,7 +346,7 @@ cargo clean --manifest-path src-tauri/Cargo.toml
 
 ### Étape 2: Recompilation propre
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 **Durée estimée**: ~2-3 minutes (compilation complète de 556 crates)
 

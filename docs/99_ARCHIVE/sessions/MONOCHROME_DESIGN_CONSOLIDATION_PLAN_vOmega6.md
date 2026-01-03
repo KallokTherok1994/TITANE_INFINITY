@@ -50,7 +50,7 @@
 4. Add a vitest snapshot/unit test that ensures `buildCssVariables(monochromeDark)` + `buildCssVariables(monochromeLight)` expose the same semantic keys; this guards against regressions when tokens evolve.
 
 ## Phase F — Rollout & Verification
-1. Run `npm run lint` + `npm run build` to ensure the CSS imports still tree-shake with Vite/Tauri and no unused variable warnings remain.
+1. Run `pnpm run lint` + `pnpm run build` to ensure the CSS imports still tree-shake with Vite/Tauri and no unused variable warnings remain.
 2. Manually test the theme switcher across:
    - Chat surface (message gradients, composer focus ring).
    - Monitoring dashboard (badges/glows now monochrome).

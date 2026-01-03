@@ -87,7 +87,7 @@
 
 ### ✅ Frontend Build
 ```bash
-npm run build
+pnpm run build
 ✓ 77 modules transformed
 ✓ built in 1.01s
 
@@ -176,12 +176,12 @@ sudo apt-get install -y \
 ### 2. Build Complet
 ```bash
 cargo build --release
-npm run tauri build
+pnpm run tauri build
 ```
 
 ### 3. Lancement Application
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ---

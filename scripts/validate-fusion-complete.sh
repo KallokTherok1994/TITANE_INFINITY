@@ -135,7 +135,7 @@ check_tests() {
     log_step "Exécution tests unitaires..."
     
     if command -v npm &> /dev/null; then
-        if npm test -- src/hooks/__tests__/fusion-hooks.test.ts 2>&1 | tee /tmp/test-results.log; then
+        if pnpm test -- src/hooks/__tests__/fusion-hooks.test.ts 2>&1 | tee /tmp/test-results.log; then
             log_success "Tests unitaires: PASS"
         else
             log_error "Tests unitaires: ÉCHEC"

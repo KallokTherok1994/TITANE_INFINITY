@@ -96,7 +96,7 @@ TITANE∞ includes comprehensive automated systems for detecting and resolving i
    - .env file tracking status
    - Hardcoded secret patterns
    - CSP configuration
-   - npm audit results
+   - pnpm audit results
 
 #### Exit Codes
 
@@ -142,7 +142,7 @@ CHECK_INTERVAL=600 ./scripts/maintenance/proactive-monitor.sh
    - Threshold-based alerts
 
 3. **Dependency Vulnerabilities**
-   - npm audit integration
+   - pnpm audit integration
    - cargo audit integration
    - Severity-based alerting
 
@@ -253,7 +253,7 @@ CHECK_INTERVAL=600 ./scripts/maintenance/proactive-monitor.sh
 |--------|----------|--------|-------------------|
 | 1 | Code Quality | ESLint, TypeScript, Prettier | Yes (ESLint, TS) |
 | 2 | Tests | Frontend, Architecture, E2E | Yes (if < 97%) |
-| 3 | Security | npm audit, secrets, CSP | Yes (critical vulns) |
+| 3 | Security | pnpm audit, secrets, CSP | Yes (critical vulns) |
 | 4 | Architecture | 4-Ring, Tauri-only, Local-first | Partial |
 | 5 | Build | Version, deps, build test | Yes (version, build) |
 | 6 | Documentation | README, CHANGELOG, API docs | No |
@@ -315,7 +315,7 @@ Add to `.husky/pre-commit`:
 ./scripts/maintenance/health-check-enhanced.sh --no-auto-fix --quick
 
 if [ $? -ne 0 ]; then
-  echo "❌ Health check failed. Run: npm run auto-fix"
+  echo "❌ Health check failed. Run: pnpm run auto-fix"
   exit 1
 fi
 ```

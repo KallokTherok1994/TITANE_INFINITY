@@ -138,7 +138,7 @@ npx tsc --noEmit
 
 ### Vite Build
 ```bash
-npm run build
+pnpm run build
 # Résultat: Build échoue à cause des 9 TypeScript warnings
 # Status: 🟡 CORRECTIONS MINEURES REQUISES
 ```

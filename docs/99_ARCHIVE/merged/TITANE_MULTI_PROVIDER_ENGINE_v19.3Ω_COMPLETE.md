@@ -481,7 +481,7 @@ console.log(test.message); // "OpenAI opérationnel (gpt-4o-mini)"
 
 ---
 
-**Prochaine étape:** Lancer `npm test` pour valider les 47 tests, puis implémenter les commandes Tauri Rust si nécessaire.
+**Prochaine étape:** Lancer `pnpm test` pour valider les 47 tests, puis implémenter les commandes Tauri Rust si nécessaire.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 TITANE∞ v19.3Ω — MULTI-PROVIDER ENGINE COMPLETE ✨

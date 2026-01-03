@@ -90,7 +90,7 @@ Status: ✅ EXCELLENT (60% under target)
 #### 2. Build Production Frontend
 
 ```bash
-$ npm run build
+$ pnpm run build
 vite v6.0.3 building for production...
 ✓ 1071 modules transformed.
 dist/index.html                   0.58 kB │ gzip:  0.36 kB
@@ -485,7 +485,7 @@ git tag -a v19.5.2 -m "Release v19.5.2: Phase A+B complete, production-ready"
 git push origin v19.5.2
 
 # 2. Build production
-npm run build
+pnpm run build
 cargo build --release --manifest-path src-tauri/Cargo.toml
 
 # 3. Package (selon OS)

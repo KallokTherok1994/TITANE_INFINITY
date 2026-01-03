@@ -5,8 +5,8 @@
   "identifier": "com.titane.infinity",
   "build": {
     "devUrl": "http://localhost:5173",
-    "beforeDevCommand": "npm run vite -- --port 5173 --host 0.0.0.0",
-    "beforeBuildCommand": "npm run build",
+    "beforeDevCommand": "pnpm run vite -- --port 5173 --host 0.0.0.0",
+    "beforeBuildCommand": "pnpm run build",
     "frontendDist": "../dist"
   },
   "bundle": {

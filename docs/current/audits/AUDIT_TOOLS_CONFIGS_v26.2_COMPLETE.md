@@ -171,7 +171,7 @@ module.exports = {
 
 #### Test Exécuté
 ```bash
-timeout 30 npm run lint
+timeout 30 pnpm run lint
 # Résultat: Timeout ❌ (ESLint trop lent)
 ```
 
@@ -554,7 +554,7 @@ export const sharedTestConfig = defineConfig({
 
 #### Test Exécuté
 ```bash
-npm run test -- --run --reporter=verbose
+pnpm run test -- --run --reporter=verbose
 # Résultat: 2066/2122 PASSED ✅
 # Duration: 45.40s
 # Coverage: 87.3%
@@ -680,7 +680,7 @@ export default defineConfig({
 +
 + // Web server for testing
 + webServer: {
-+   command: 'npm run dev',
++   command: 'pnpm run dev',
 +   port: 1420,
 +   timeout: 120000,
 +   reuseExistingServer: !process.env.CI
@@ -853,9 +853,9 @@ jobs:
         with:
           node-version: '18'  # ⚠️ Devrait être '20'
           cache: 'npm'  # ⚠️ Devrait être 'pnpm'
-      - run: npm ci  # ⚠️ Devrait être 'pnpm install --frozen-lockfile'
-      - run: npm run lint
-      - run: npm test -- --coverage
+      - run: pnpm install --frozen-lockfile  # ⚠️ Devrait être 'pnpm install --frozen-lockfile'
+      - run: pnpm run lint
+      - run: pnpm test -- --coverage
 ```
 
 #### 🔧 CORRECTIONS REQUISES
@@ -879,13 +879,13 @@ jobs:
 +       with:
 +         version: 10
       
--     - run: npm ci
+-     - run: pnpm install --frozen-lockfile
 +     - run: pnpm install --frozen-lockfile
       
--     - run: npm run lint
+-     - run: pnpm run lint
 +     - run: pnpm run lint
       
--     - run: npm test -- --coverage
+-     - run: pnpm test -- --coverage
 +     - run: pnpm test -- --coverage
 ```
 
@@ -976,7 +976,7 @@ strict = true
 2. Ajouter no-restricted-imports rule (sécurité)
 3. Optimiser ignorePatterns
 4. Supprimer .eslintrc.json
-5. Tester: npm run lint
+5. Tester: pnpm run lint
 
 # Gain: -conflicts, +sécurité, +performance
 ```
@@ -1025,9 +1025,9 @@ poetry add --dev black ruff mypy pytest
 pyproject.toml
 
 # Scripts:
-npm run py:format
-npm run py:lint
-npm run py:test
+pnpm run py:format
+pnpm run py:lint
+pnpm run py:test
 
 # Gain: +qualité scripts Python
 ```
@@ -1061,7 +1061,7 @@ npm run py:test
 - [ ] Ajouter no-restricted-imports (sécurité Tauri)
 - [ ] Optimiser ignorePatterns (backups, docs, archived)
 - [ ] Supprimer .eslintrc.json
-- [ ] Tester: `npm run lint` (doit finir <30s)
+- [ ] Tester: `pnpm run lint` (doit finir <30s)
 - [ ] Vérifier 0 errors
 
 ### Rust
@@ -1080,7 +1080,7 @@ npm run py:test
 - [ ] Ajouter screenshots/videos config
 - [ ] Configurer webServer
 - [ ] Ajouter tests E2E (au moins 5 flows)
-- [ ] Exécuter: `npm run test:e2e`
+- [ ] Exécuter: `pnpm run test:e2e`
 
 ### Python
 - [ ] Créer pyproject.toml

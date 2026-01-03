@@ -443,7 +443,7 @@ npx tsc --noEmit
 ### Build Production
 
 ```bash
-npm run build
+pnpm run build
 # ✅ SUCCESS - All modules bundled correctly
 ```
 

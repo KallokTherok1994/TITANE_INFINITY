@@ -24,12 +24,12 @@
 
 ```bash
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 **Alternative production:**
 ```bash
-npm run build
+pnpm run build
 cd src-tauri && cargo build --release
 ./target/release/titane-infinity
 ```
@@ -85,16 +85,16 @@ cd src-tauri && cargo build --release
 
 ```bash
 # Build frontend
-npm run build
+pnpm run build
 
 # Check backend
 cd src-tauri && cargo check --release
 
 # Run dev
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Tests
-npm test
+pnpm test
 cargo test
 
 # Logs
@@ -108,7 +108,7 @@ tail -f ~/.config/titane-infinity/logs/app.log
 ### En cas de problème:
 1. Consulter `CHECKLIST_DEPLOIEMENT_v15.5.md` (Troubleshooting)
 2. Vérifier logs: `~/.config/titane-infinity/logs/`
-3. Relancer: `npm run tauri:dev`
+3. Relancer: `pnpm run tauri:dev`
 4. Check: `cargo clean && cargo build --release`
 
 ### Tests API:
@@ -124,7 +124,7 @@ await window.__TAURI__.invoke('meta_get_state');
 ## 🎯 NEXT STEPS
 
 **Immédiat:**
-1. Lancer application: `npm run tauri:dev`
+1. Lancer application: `pnpm run tauri:dev`
 2. Tester GlobalExpBar + ExpPanel
 3. Valider 15 commandes Evolution
 4. Vérifier persistence Memory

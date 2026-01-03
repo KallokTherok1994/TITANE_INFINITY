@@ -179,7 +179,7 @@ Before executing merges, verify:
                  ▼
 ┌─────────────────────────────────────────────────────────┐
 │ 6. Validate: Tests + Build + Version Update             │
-│    Commands: npm test && npm run build                  │
+│    Commands: pnpm test && pnpm run build                  │
 └─────────────────────────────────────────────────────────┘
 ```
 

@@ -283,7 +283,7 @@ await stressTest();
 
 ### Vérifier logs backend
 ```bash
-# Terminal où tourne `npm run tauri:dev`
+# Terminal où tourne `pnpm run tauri:dev`
 # Chercher ces logs:
 
 [UnifiedIA] ✅ OpenAI initialisé

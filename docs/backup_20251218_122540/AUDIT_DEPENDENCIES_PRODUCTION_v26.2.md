@@ -565,7 +565,7 @@ pnpm install
 #### 2. Tester Build Production
 ```bash
 # Build complet
-npm run build:production
+pnpm run build:production
 
 # Vérifications:
 ✅ TypeScript 0 errors
@@ -607,7 +607,7 @@ pnpm update --latest \
   jsdom
 
 # Tester après update:
-npm run verify
+pnpm run verify
 ```
 
 **Packages Safe:**
@@ -624,7 +624,7 @@ npm run verify
 #### 5. Monitoring Bundle Size
 ```bash
 # CI/CD hook recommandé
-npm run build
+pnpm run build
 du -sh dist/ | awk '{if ($1 > "12M") exit 1}'
 
 # Si > 12M: alerte size regression
@@ -641,16 +641,16 @@ git checkout -b test/major-updates
 # 1. ESLint v8 → v9 (flat config)
 pnpm add -D eslint@9 @typescript-eslint/parser@8 @typescript-eslint/eslint-plugin@8
 # Migrer .eslintrc.js → eslint.config.js
-npm run lint:fix
+pnpm run lint:fix
 
 # 2. Vite v6 → v7
 pnpm add -D vite@7 @vitejs/plugin-react@5
-npm run build  # Tester
+pnpm run build  # Tester
 
 # 3. Tailwind v3 → v4
 pnpm add -D tailwindcss@4
 # Migrer config selon docs Tailwind v4
-npm run build
+pnpm run build
 
 # 4. i18next v23 → v25
 pnpm add i18next@25 react-i18next@16 i18next-browser-languagedetector@8
@@ -665,9 +665,9 @@ pnpm add better-sqlite3@12
 # Tester DB operations
 
 # Tests complets après chaque update:
-npm run verify
-npm run test:all
-npm run test:e2e
+pnpm run verify
+pnpm run test:all
+pnpm run test:e2e
 ```
 
 **Timeline Suggéré:**
@@ -698,12 +698,12 @@ if (id.includes('date-fns')) return 'vendor-dates';
 
 ### Pré-Déploiement
 - [ ] **Lockfile créé** (`pnpm-lock.yaml` existe)
-- [ ] **Build production réussi** (`npm run build:production`)
-- [ ] **0 erreurs TypeScript** (`npm run check`)
-- [ ] **0 erreurs ESLint** (`npm run lint`)
-- [ ] **Prettier passed** (`npm run format:check`)
-- [ ] **Tests passés** (`npm run test:all`)
-- [ ] **E2E tests passés** (`npm run test:e2e`)
+- [ ] **Build production réussi** (`pnpm run build:production`)
+- [ ] **0 erreurs TypeScript** (`pnpm run check`)
+- [ ] **0 erreurs ESLint** (`pnpm run lint`)
+- [ ] **Prettier passed** (`pnpm run format:check`)
+- [ ] **Tests passés** (`pnpm run test:all`)
+- [ ] **E2E tests passés** (`pnpm run test:e2e`)
 - [ ] **Audit npm/pnpm 0 vulns** (`pnpm audit`)
 - [ ] **Audit cargo 0 vulns** (`cd src-tauri && cargo audit`)
 - [ ] **Bundle size < 12M** (`du -sh dist/`)
@@ -748,13 +748,13 @@ cd src-tauri && cargo audit
 
 # 4. Build production test
 cd ..
-npm run build:production
+pnpm run build:production
 
 # 5. Vérifier bundle size
 du -sh dist/  # Attendu: < 12M
 
 # 6. Run full test suite
-npm run test:all
+pnpm run test:all
 
 # 7. Commit lockfile
 git add pnpm-lock.yaml

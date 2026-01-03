@@ -107,20 +107,20 @@ dictation-settings:
 ### 🔒 Commandes Bloquées (Respect de la Règle Critique)
 
 ❌ **INTERDITES sans autorisation explicite:**
-- `npm run build`
-- `npm run build:production`
+- `pnpm run build`
+- `pnpm run build:production`
 - `tauri build`
 - `./runtime/stable/build.sh`
 - `dpkg -i` / installations système
 - Tout build AppImage/DEB
 
 ✅ **AUTORISÉES:**
-- `npm run dev`
-- `npm test` / `npm run test:all`
-- `npm run lint` / `npm run format`
+- `pnpm run dev`
+- `pnpm test` / `pnpm run test:all`
+- `pnpm run lint` / `pnpm run format`
 - `cargo test`
 - `./runtime/dev/run-dev.sh`
-- `npm run copilot-xs:validate`
+- `pnpm run copilot-xs:validate`
 
 ### 🔑 Keyword Requis pour Production
 
@@ -236,7 +236,7 @@ cline "explain complex algorithm X with detailed reasoning"
 
 3. ✅ **Vérifier workflow development**
    ```bash
-   npm run dev
+   pnpm run dev
    # Tester hot-reload React
    ```
 

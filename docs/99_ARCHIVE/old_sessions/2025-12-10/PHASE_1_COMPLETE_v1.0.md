@@ -131,7 +131,7 @@ class UnifiedMemorySystem {
 ### PHASE 2 — SEMAINE 1 (Suite)
 
 - [ ] Mettre à jour tous les imports (scripts automatiques)
-- [ ] Tester compilation `npm run build`
+- [ ] Tester compilation `pnpm run build`
 - [ ] Corriger erreurs TypeScript
 - [ ] Valider 0 lint errors
 

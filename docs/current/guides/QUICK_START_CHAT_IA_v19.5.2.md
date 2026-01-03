@@ -22,7 +22,7 @@
 
 ```bash
 cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
-npm run dev:tauri
+pnpm run dev:tauri
 ```
 
 **Résultat attendu**:
@@ -336,7 +336,7 @@ Success Rate:  69%+
 
 **Checklist**:
 
-- [ ] 1. Lancer `npm run dev:tauri`
+- [ ] 1. Lancer `pnpm run dev:tauri`
 - [ ] 2. Ouvrir Chat IA
 - [ ] 3. Sélectionner Ollama
 - [ ] 4. Envoyer 3+ messages
@@ -413,7 +413,7 @@ grep version package.json
 
 ```bash
 git pull origin MAIN
-npm install
+pnpm install
 cargo build
 ```
 
@@ -450,7 +450,7 @@ lsof -i :5173
 kill -9 <PID>
 
 # Relancer
-npm run dev:tauri
+pnpm run dev:tauri
 ```
 
 **2. Cargo lock**:
@@ -463,14 +463,14 @@ killall -9 node vite tauri cargo
 sleep 2
 
 # Relancer
-npm run dev:tauri
+pnpm run dev:tauri
 ```
 
 **3. Dépendances manquantes**:
 
 ```bash
 # Frontend
-npm install
+pnpm install
 
 # Backend
 cd src-tauri && cargo build
@@ -521,7 +521,7 @@ cd src-tauri && cargo build
 
 ### Utilisation Immédiate
 
-1. Lancer dev server: `npm run dev:tauri`
+1. Lancer dev server: `pnpm run dev:tauri`
 2. Tester avec Ollama (local, gratuit)
 3. Créer conversations, tester modes
 4. Vérifier persistance mémoire
@@ -575,7 +575,7 @@ git log --oneline -10
 ./test_memory_persistence.sh
 
 # Build production
-npm run build
+pnpm run build
 ```
 
 ---

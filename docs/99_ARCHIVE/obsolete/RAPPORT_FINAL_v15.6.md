@@ -129,14 +129,14 @@ import { AppLayout } from './ui/AppLayout';
 
 ### Build System ✅
 ```bash
-npm run type-check   # 0 errors
-npm run build        # 1.03s → 208K
+pnpm run type-check   # 0 errors
+pnpm run build        # 1.03s → 208K
 ```
 
 ### Development ✅
 ```bash
-npm run dev          # :5173 ACTIF
-npm run preview      # :4173 ACTIF
+pnpm run dev          # :5173 ACTIF
+pnpm run preview      # :4173 ACTIF
 ```
 
 ### Routing ✅
@@ -220,8 +220,8 @@ npm run preview      # :4173 ACTIF
 
 2. **Mode Frontend-Only (ACTUEL)** ✅
    ```bash
-   npm run dev      # Dev :5173
-   npm run preview  # Preview :4173
+   pnpm run dev      # Dev :5173
+   pnpm run preview  # Preview :4173
    ```
    - ✅ 100% fonctionnel
    - ❌ Pas d'app desktop native
@@ -236,7 +236,7 @@ npm run preview      # :4173 ACTIF
 
 ### Immédiat (Optionnel)
 1. [ ] Installer WebKitGTK (script fourni)
-2. [ ] Tester `npm run tauri dev`
+2. [ ] Tester `pnpm run tauri dev`
 3. [ ] Valider app desktop complète
 
 ### Court Terme
@@ -291,7 +291,7 @@ npm run preview      # :4173 ACTIF
 - Tauri : v2 (CLI 2.9.4) ⚠️ (WebKitGTK requis)
 
 ### Sécurité
-- Aucune vulnérabilité npm audit ✅
+- Aucune vulnérabilité pnpm audit ✅
 - TypeScript strict mode ✅
 - Props validation complète ✅
 

@@ -207,9 +207,9 @@ File: src/components/ChatWindow.tsx (possibly)
 
 ### Priority 3: Validation (1 hour)
 ```
-✓ Run full test suite: npm run test:unit
+✓ Run full test suite: pnpm run test:unit
 ✓ Verify 0 failures: 1,899/1,899 tests passing
-✓ Run CI/CD: npm run test:ci
+✓ Run CI/CD: pnpm run test:ci
 ✓ Git commit with message:
   "🎯 Sprint 1 Complete: All 1,899 tests passing (100%)"
 ```

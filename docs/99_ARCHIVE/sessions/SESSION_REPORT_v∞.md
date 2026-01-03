@@ -192,10 +192,10 @@ scripts/
 ./scripts/build_optimized.sh release
 
 # Type check
-npm run type-check
+pnpm run type-check
 
 # Dev mode
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ---

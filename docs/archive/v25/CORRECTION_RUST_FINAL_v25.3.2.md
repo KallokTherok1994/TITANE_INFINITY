@@ -97,7 +97,7 @@ $ cd src-tauri && cargo check
 ### 2. Build Production Complet
 
 ```bash
-$ npm run build
+$ pnpm run build
 ✓ built in 16.02s
 ✅ Post-Build terminé
 ✅ SUCCESS
@@ -159,7 +159,7 @@ Status: ✅ SUCCESS
 
 - [x] Correction erreur Rust ai_prompt_generator.rs
 - [x] Test compilation cargo check
-- [x] Test build production npm run build
+- [x] Test build production pnpm run build
 - [x] Validation complète réussie
 - [x] Rapport final créé
 
@@ -201,7 +201,7 @@ Rust Backend:
   ✓ Erreurs: 0
 
 Frontend Build:
-  ✓ npm run build: SUCCESS (16.02s)
+  ✓ pnpm run build: SUCCESS (16.02s)
   ✓ Bundle size: Optimisé
   ✓ Post-build: Desktop icon updated
 
@@ -224,14 +224,14 @@ Statut Global: PRODUCTION READY ✅
 1. **Test Manuel Dashboard** 🟡
 
    ```bash
-   npm run dev
+   pnpm run dev
    # Tester http://localhost:5173/fusion
    ```
 
 2. **Tests End-to-End** 🟢
 
    ```bash
-   npm test -- --run
+   pnpm test -- --run
    # Vérifier 16/16 PASS
    ```
 

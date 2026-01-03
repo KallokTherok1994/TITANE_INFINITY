@@ -67,7 +67,7 @@
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 source ~/.bashrc
 nvm install --lts
-npm install -g pnpm
+pnpm install -g pnpm
 
 # 2. Installer deps
 cd /home/titane/Documents/TITANE_INFINITY

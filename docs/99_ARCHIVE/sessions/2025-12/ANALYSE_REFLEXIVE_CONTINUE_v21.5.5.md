@@ -391,7 +391,7 @@ interface LocalPersonaState {
 }
 
 // 2. Verify fix reduces errors (1 min)
-npm run check 2>&1 | grep "Found.*error" 
+pnpm run check 2>&1 | grep "Found.*error" 
 // Expected: 171 → ~167 errors
 
 // 3. Locate AffectiveState definition (2 min)

@@ -120,7 +120,7 @@ Gemini API ou Ollama.
 - Vérifier imports dans ChatWindow.tsx
 - Vérifier chatEngine exporté correctement
 - Vérifier orchestrator.ts sans erreurs TypeScript
-- Relancer build : `npm run build`
+- Relancer build : `pnpm run build`
 
 ---
 
@@ -526,7 +526,7 @@ grep -r "generate" src/services/ai/orchestrator.ts
 # Chercher erreurs TypeScript rouges
 
 # Rebuild
-npm run build
+pnpm run build
 ```
 
 **TTS ne fonctionne pas:**
@@ -559,7 +559,7 @@ git diff src/hooks/useChat.ts
 grep -r "titane-design-system" src/main.tsx
 
 # Vérifier CSS compile
-npm run build
+pnpm run build
 # Observer warnings CSS
 ```
 

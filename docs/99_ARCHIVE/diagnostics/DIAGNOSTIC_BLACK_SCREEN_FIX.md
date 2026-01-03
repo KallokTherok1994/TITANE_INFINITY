@@ -86,7 +86,7 @@ this.titanePrinciples.robustnessNatural =
 
 ## 📊 ÉTAT COMPILATION
 
-### TypeScript (`npm run check`)
+### TypeScript (`pnpm run check`)
 
 ```bash
 Exit Code: 0
@@ -255,7 +255,7 @@ import App from './AppMinimalTest';
 ### Action 1: Lancer dev et observer console complète
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 **Observer**:
@@ -317,25 +317,25 @@ const App: React.FC = () => {
 ### Compilation TypeScript
 
 ```bash
-npm run check
+pnpm run check
 ```
 
 ### Lancer dev avec logs
 
 ```bash
-npm run dev 2>&1 | tee dev.log
+pnpm run dev 2>&1 | tee dev.log
 ```
 
 ### Build production
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 ### Tests Tauri
 
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ---

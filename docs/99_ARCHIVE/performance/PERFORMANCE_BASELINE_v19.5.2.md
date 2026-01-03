@@ -34,7 +34,7 @@ strip = true
 ### Frontend TypeScript (Production)
 
 ```bash
-$ npm run build
+$ pnpm run build
 ```
 
 **Résultat**:
@@ -80,7 +80,7 @@ dist/assets/ai-onnx-DvSQ2jTr.js          546.55 kB (gzip: 124.32 kB)
 ### Dev Server Startup
 
 ```bash
-$ npm run dev:tauri
+$ pnpm run dev:tauri
 ```
 
 **Résultat**:
@@ -116,7 +116,7 @@ $ time ./src-tauri/target/release/titane-infinity
 ### Test Suite Execution
 
 ```bash
-$ npm test
+$ pnpm test
 $ cargo test
 ```
 
@@ -268,7 +268,7 @@ Scroll list → Render: <16ms (smooth)
 
 **Immédiat** (Tests Manuels):
 
-1. ✅ Dev server lancé (npm run dev:tauri)
+1. ✅ Dev server lancé (pnpm run dev:tauri)
 2. 🔜 Mesurer startup time (stopwatch)
 3. 🔜 Tester latence Ollama (via Chat IA)
 4. 🔜 Vérifier memory usage (task manager)

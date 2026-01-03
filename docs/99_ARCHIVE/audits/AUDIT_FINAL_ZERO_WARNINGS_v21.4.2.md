@@ -77,7 +77,7 @@ grep -l "createLogger" src/services/ai/*.ts src/services/ai/providers/*.ts | wc 
 
 ### TEST 4: Build Warnings (isDev) ✅
 ```bash
-npm run build 2>&1 | grep "isDev"
+pnpm run build 2>&1 | grep "isDev"
 ```
 **Résultat:** `0 warnings`  
 **Status:** ✅ ZERO WARNINGS
@@ -98,7 +98,7 @@ npx tsc --noEmit
 
 ### TEST 6: Production Build ✅
 ```bash
-time npm run build
+time pnpm run build
 ```
 **Résultat:**
 - Vite build: `14.96s`
@@ -140,7 +140,7 @@ logger.debug('Debug', { data }); // Debug level (dev-only)
 
 ### TEST 9: Final Warning Scan ✅
 ```bash
-npm run build 2>&1 | grep "warning" | wc -l
+pnpm run build 2>&1 | grep "warning" | wc -l
 ```
 **Résultat:** `0 warnings`  
 **Status:** ✅ **ZERO WARNINGS ACHIEVED**
@@ -453,7 +453,7 @@ chore(ai): Final Cleanup - Zero Warnings v21.4.2
 **Final Verification:**
 ```bash
 # Zero warnings confirmed
-npm run build 2>&1 | grep "warning" | wc -l
+pnpm run build 2>&1 | grep "warning" | wc -l
 # Output: 0 ✅
 
 # Logger coverage confirmed

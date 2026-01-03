@@ -185,7 +185,7 @@ fi
 # TYPESCRIPT CHECK
 # ─────────────────────────────────────────────────────────────────────────────
 echo -e "\n${CYAN}[TYPESCRIPT] Running type check...${NC}"
-if npm run type-check > /dev/null 2>&1; then
+if pnpm run type-check > /dev/null 2>&1; then
     echo -e "${GREEN}✓${NC} TypeScript: No errors"
 else
     echo -e "${RED}✗${NC} TypeScript: Compilation errors"

@@ -9,7 +9,7 @@
 ## 🎯 OBJECTIF
 
 Résoudre **98 erreurs TypeScript bloquantes** pour débloquer:
-- ✅ Build production (`npm run build`)
+- ✅ Build production (`pnpm run build`)
 - ✅ Migration v25.0
 - ✅ Développement continu
 
@@ -438,13 +438,13 @@ Total: 1,199.61 kB │ gzip: 340.45 kB
 ### Validation
 
 **Tests passés**:
-- ✅ `npm run build` — Success
+- ✅ `pnpm run build` — Success
 - ✅ TypeScript compilation — 0 errors, 0 warnings
 - ✅ Vite bundling — 5 chunks generated
 - ✅ Output verification — dist/ folder created
 
 **Tests requis avant déploiement**:
-- [ ] `npm run tauri:dev` — Application runtime
+- [ ] `pnpm run tauri:dev` — Application runtime
 - [ ] UI validation sans Design System
 - [ ] Vérification messages "module désactivé"
 - [ ] Tests e2e production build
@@ -537,7 +537,7 @@ Total: 1,199.61 kB │ gzip: 340.45 kB
 
 5. Build validation:
    ```bash
-   npm run build
+   pnpm run build
    ```
 
 ### Réactivation talkToTitane
@@ -582,7 +582,7 @@ Total: 1,199.61 kB │ gzip: 340.45 kB
 6. Tests complets:
    ```bash
    # Tests unitaires
-   npm run test
+   pnpm run test
 
    # Tests sudo commands
    sudo talk.on

@@ -407,7 +407,7 @@ cat docs/05_modules/frontend/CHAT_ENGINE.md | head -50
 grep -A 10 "interface ChatEngineConfig" docs/05_modules/frontend/CHAT_ENGINE.md
 
 # 3. Voir tests
-npm run test chatEngine
+pnpm run test chatEngine
 
 # 4. Check integration backend
 grep "Tauri" docs/05_modules/frontend/CHAT_ENGINE.md

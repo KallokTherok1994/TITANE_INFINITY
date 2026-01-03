@@ -748,7 +748,7 @@ Le système Aura v25.3.1 représente une **transformation complète** de l'inter
 
 Recommandations pour continuer AUTO ALL:
 
-1. **Browser Testing**: Lancer `npm run dev` et valider visuellement
+1. **Browser Testing**: Lancer `pnpm run dev` et valider visuellement
 2. **Performance Testing**: Mesurer FPS réel sur différents devices
 3. **User Testing**: A/B test avec feedback utilisateurs
 4. **Phase 2 Start**: Commencer Aura Sonore (audio-reactive)

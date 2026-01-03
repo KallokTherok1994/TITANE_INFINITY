@@ -98,8 +98,8 @@ cat logs/debug-*.log | grep -i error
 #### 2. Rebuild complet
 ```bash
 rm -rf dist/ node_modules/.vite/ src-tauri/target/
-npm install
-npm run build
+pnpm install
+pnpm run build
 cargo clean
 cargo tauri dev
 ```

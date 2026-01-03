@@ -200,7 +200,7 @@ TITANE∞
 ```bash
 ./titane fix  # Auto-correction ESLint/Prettier
 # Puis correction manuelle des erreurs TypeScript critiques
-npm run check  # Vérification finale
+pnpm run check  # Vérification finale
 ```
 
 ---
@@ -237,15 +237,15 @@ src-tauri/target/release/bundle/msi/
 ```bash
 ./titane health         # Vérifier système
 ./titane fix            # Auto-fix erreurs
-npm run dev             # Lancer dev runtime
+pnpm run dev             # Lancer dev runtime
 ```
 
 ### **Avant commit:**
 
 ```bash
 ./titane fix            # Corrections auto
-npm run check           # Vérifier types
-npm test                # Tests
+pnpm run check           # Vérifier types
+pnpm test                # Tests
 git add . && git commit
 ```
 
@@ -379,7 +379,7 @@ ls -lh logs/                       # Tous les logs
 
 ```bash
 ./titane health                    # Vérification système
-npm run check                      # Erreurs TypeScript
+pnpm run check                      # Erreurs TypeScript
 cargo check --manifest-path src-tauri/Cargo.toml  # Erreurs Rust
 ```
 

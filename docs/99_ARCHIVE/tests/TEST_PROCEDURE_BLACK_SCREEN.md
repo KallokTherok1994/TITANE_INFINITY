@@ -217,19 +217,19 @@ Modifier `src/main.tsx` ligne ~41 :
 ### Lancer en mode verbose
 
 ```bash
-npm run dev -- --debug
+pnpm run dev -- --debug
 ```
 
 ### Voir logs Tauri
 
 ```bash
-npm run tauri:dev 2>&1 | tee tauri.log
+pnpm run tauri:dev 2>&1 | tee tauri.log
 ```
 
 ### Build test
 
 ```bash
-npm run build 2>&1 | tee build.log
+pnpm run build 2>&1 | tee build.log
 ```
 
 ---
@@ -258,7 +258,7 @@ npm run build 2>&1 | tee build.log
 
 ```bash
 rm -rf node_modules package-lock.json
-npm install
+pnpm install
 ```
 
 ---
@@ -267,7 +267,7 @@ npm install
 
 Avant de rapporter un bug, vérifier:
 
-- [ ] `npm run check` → Exit code 0
+- [ ] `pnpm run check` → Exit code 0
 - [ ] DevTools console ouverte (F12)
 - [ ] Network tab - scripts chargés ?
 - [ ] Errors tab - erreurs JS ?

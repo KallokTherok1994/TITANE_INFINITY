@@ -64,7 +64,7 @@ pkill -9 titane-infinity  # ✅ Tous processus nettoyés
 
 ```bash
 cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
-npm run dev
+pnpm run dev
 # Ouvrir DevTools (F12) pour voir les logs
 ```
 
@@ -94,6 +94,6 @@ Système nettoyé et prêt pour production.
 
 ---
 
-**Prochaine Étape**: Lancer avec `npm run dev` et ouvrir DevTools (F12).
+**Prochaine Étape**: Lancer avec `pnpm run dev` et ouvrir DevTools (F12).
 
 _Session complétée avec succès — Aucun problème de code détecté_

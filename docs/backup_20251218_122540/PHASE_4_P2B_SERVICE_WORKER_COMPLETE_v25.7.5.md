@@ -160,7 +160,7 @@ export default defineConfig({
 **Résultat build:**
 
 ```bash
-npm run build
+pnpm run build
 ✅ Workbox: 78 files precached (4127.85 KB)
 ```
 
@@ -621,7 +621,7 @@ Update:       Automatic background (no interruption)
 ### Build Output
 
 ```bash
-npm run build
+pnpm run build
 ✅ Workbox: 78 files precached (4127.85 KB)
 dist/sw.js: 10 KB (injected manifest)
 ```
@@ -685,7 +685,7 @@ Refs: #P2-B PHASE_4_P2B_SERVICE_WORKER_COMPLETE_v25.7.5.md"
 
 ```bash
 # 1. Build production
-npm run build
+pnpm run build
 
 # 2. Serve dist/ locally
 npx http-server dist -p 8080

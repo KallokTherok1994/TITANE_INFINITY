@@ -259,7 +259,7 @@ useEffect(() => {
 ### 🔹 **TypeScript Compilation**
 
 ```bash
-npm run type-check
+pnpm run type-check
 ```
 
 **Résultat** : ✅ **0 erreurs**
@@ -388,7 +388,7 @@ MULTIMODAL_PRESENCE_QUICK_START_v28.md              (800 lignes)
 
 ### **IMMÉDIAT (Aujourd'hui)**
 
-1. ✅ Lancer `npm run tauri:dev`
+1. ✅ Lancer `pnpm run tauri:dev`
 2. ✅ Vérifier console (logs startup)
 3. ✅ Ouvrir panel "◉ Présence"
 4. ✅ Exécuter 3 tests console rapides

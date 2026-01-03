@@ -42,8 +42,8 @@ TITANE_INFINITY/
 - ✅ Analyse frontend (TypeScript, fichiers .tsx/.ts/.css)
 - ✅ Analyse backend (Cargo check, Clippy)
 - ✅ Nettoyage complet (node_modules, dist, target)
-- ✅ Réinstallation dépendances (npm install, cargo update)
-- ✅ Corrections automatiques (cargo fix, npm audit fix)
+- ✅ Réinstallation dépendances (pnpm install, cargo update)
+- ✅ Corrections automatiques (cargo fix, pnpm audit fix)
 - ✅ Rebuild complet (Vite + Cargo)
 - ✅ Vérification finale
 - ✅ Mode test robustesse (--test-mode)
@@ -357,8 +357,8 @@ Pas de reload (mode background)
 
 1. **Build et validation :**
    ```bash
-   npm run type-check
-   npm run build
+   pnpm run type-check
+   pnpm run build
    cd src-tauri && cargo build
    ```
 
@@ -373,7 +373,7 @@ Pas de reload (mode background)
    ```
 
 4. **Test ErrorBoundary :**
-   - Lancer l'app : `npm run dev`
+   - Lancer l'app : `pnpm run dev`
    - Provoquer erreur React manuellement
    - Vérifier UI de récupération + auto-heal
 

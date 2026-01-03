@@ -570,7 +570,7 @@ function ChatInput() {
 
 Run automated checks:
 ```bash
-npm run a11y:check
+pnpm run a11y:check
 ```
 
 Test with screen readers:
@@ -608,7 +608,7 @@ Test with screen readers:
 **Installation :**
 
 ```bash
-npm install i18next react-i18next i18next-browser-languagedetector
+pnpm install i18next react-i18next i18next-browser-languagedetector
 ```
 
 **Fichier à créer :**
@@ -984,27 +984,27 @@ jobs:
           toolchain: stable
           
       - name: Install dependencies
-        run: npm install
+        run: pnpm install
         
       - name: Lint
-        run: npm run lint
+        run: pnpm run lint
         
       - name: Type check
-        run: npm run type-check
+        run: pnpm run type-check
         
       - name: Test frontend
-        run: npm run test
+        run: pnpm run test
         
       - name: Test backend
         run: cargo test --manifest-path=src-tauri/Cargo.toml
         
       - name: Security audit
         run: |
-          npm audit --audit-level=moderate
+          pnpm audit --audit-level=moderate
           cargo audit
           
       - name: Accessibility tests
-        run: npm run a11y:check
+        run: pnpm run a11y:check
         
   build:
     needs: test
@@ -1027,10 +1027,10 @@ jobs:
           toolchain: stable
           
       - name: Install dependencies
-        run: npm install
+        run: pnpm install
         
       - name: Build
-        run: npm run tauri build
+        run: pnpm run tauri build
         
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
@@ -1044,7 +1044,7 @@ jobs:
 **Installation :**
 
 ```bash
-npm install -D @playwright/test
+pnpm install -D @playwright/test
 npx playwright install
 ```
 

@@ -272,7 +272,7 @@ const sidebarWidth = useMemo(() => {
 ## BUILD VALIDATION
 
 ```bash
-$ npm run build
+$ pnpm run build
 
 vite v6.4.1 building for production...
 ✓ 3308 modules transformed.
@@ -526,7 +526,7 @@ const SIDEBAR_WIDTHS = {
 ## BUILD FINAL v26.0
 
 ```
-npm run build
+pnpm run build
 ✓ 3308 modules transformed
 ✓ Brotli compression applied
 ✓ Service Worker: 98 files precached

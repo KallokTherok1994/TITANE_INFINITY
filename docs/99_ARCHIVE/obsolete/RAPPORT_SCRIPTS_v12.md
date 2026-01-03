@@ -152,7 +152,7 @@ PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 **Optimisations**:
 - `RUSTFLAGS="-C target-cpu=native -C opt-level=3"`
-- Cache npm offline (`npm ci --prefer-offline`)
+- Cache npm offline (`pnpm install --frozen-lockfile --prefer-offline`)
 - Build sans dépendances externes
 
 **Usage**:

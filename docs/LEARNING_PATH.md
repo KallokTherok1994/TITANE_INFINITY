@@ -95,7 +95,7 @@ By following this path, you will:
 
 **Day 17-18: Code Quality**
 - [ ] Read: `docs/FUNDAMENTAL_CONCEPTS.md` section 5
-- [ ] Run: `npm run lint && cargo clippy`
+- [ ] Run: `pnpm run lint && cargo clippy`
 - [ ] Study: ESLint & Clippy rules
 - [ ] Exercise: Fix 10 warnings
 

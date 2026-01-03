@@ -32,16 +32,16 @@
 ### 2. Déploiement INTERDIT
 
 **❌ COMMANDES BLOQUÉES (sans "GO FOR PRODUCTION DEPLOY"):**
-- `npm run build`
+- `pnpm run build`
 - `tauri build`
 - `./runtime/stable/build.sh`
 - Toute génération AppImage/DEB
 - Installation système (`dpkg`, `sudo`)
 
 **✅ MODE DEV UNIQUEMENT:**
-- `npm run dev`
-- Tests (`npm test`, `npm run test:all`)
-- Validation (`npm run copilot-xs:validate`)
+- `pnpm run dev`
+- Tests (`pnpm test`, `pnpm run test:all`)
+- Validation (`pnpm run copilot-xs:validate`)
 - Linting/formatting
 
 ### 3. Pas de ANY TypeScript
@@ -65,14 +65,14 @@ const data: ApiResponse = await fetch();
 
 **Avant toute modification importante:**
 ```bash
-npm run check     # TypeScript
-npm run lint      # ESLint
-npm test -- --run # Tests unitaires
+pnpm run check     # TypeScript
+pnpm run lint      # ESLint
+pnpm test -- --run # Tests unitaires
 ```
 
 **Si modification backend Rust:**
 ```bash
-npm run test:rust
+pnpm run test:rust
 ```
 
 ---
@@ -118,9 +118,9 @@ npm run test:rust
 
 ### Étape 4: Validation
 ```bash
-npm run check
-npm run lint
-npm test -- --run
+pnpm run check
+pnpm run lint
+pnpm test -- --run
 ```
 
 ---
@@ -294,19 +294,19 @@ describe('myFunction', () => {
 
 ```bash
 # Frontend
-npm test                 # Run tests
-npm run test:watch       # Watch mode
-npm run test:coverage    # Coverage
+pnpm test                 # Run tests
+pnpm run test:watch       # Watch mode
+pnpm run test:coverage    # Coverage
 
 # Backend Rust
-npm run test:rust        # Cargo test
+pnpm run test:rust        # Cargo test
 cd src-tauri && cargo test
 
 # E2E
-npm run test:e2e         # Playwright
+pnpm run test:e2e         # Playwright
 
 # All
-npm run test:all         # Complete suite
+pnpm run test:all         # Complete suite
 ```
 
 ---
@@ -468,19 +468,19 @@ const HeavyComponent = lazy(
 
 ```bash
 # Dev rapide
-npm run dev
+pnpm run dev
 
 # Check rapide
-npm run check && npm run lint
+pnpm run check && pnpm run lint
 
 # Test rapide
-npm test -- --run
+pnpm test -- --run
 
 # Validation complète
-npm run copilot-xs:validate
+pnpm run copilot-xs:validate
 
 # Tout vérifier
-npm run verify
+pnpm run verify
 ```
 
 ### Fichiers Référence

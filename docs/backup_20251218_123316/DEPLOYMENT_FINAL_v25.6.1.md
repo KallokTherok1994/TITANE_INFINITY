@@ -232,7 +232,7 @@ $ npx tsc --noEmit | grep "error TS" | wc -l
 ### Production Build ✅
 
 ```bash
-$ npm run build
+$ pnpm run build
 [4/4] Vérification de l'installation...
 ✓ Installation réussie!
 ✅ Post-Build terminé

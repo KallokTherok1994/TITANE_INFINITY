@@ -134,7 +134,7 @@
 
 ### Test 1 : Bouton Envoyer Se Débloque
 
-1. Lancer `npm run dev:tauri`
+1. Lancer `pnpm run dev:tauri`
 2. Envoyer 3 messages différents
 3. **Vérifier** : Bouton se débloque après chaque réponse
 4. **Attendu** : ✓ Aucun blocage permanent

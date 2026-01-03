@@ -28,4 +28,4 @@ sed -i "s/const suggestions =/const _suggestions =/g" src/services/ai/chatEngine
 sed -i "s/'ChatEngineConfig'/import type { ChatEngineConfig as _ChatEngineConfig }/g" src/services/ai/chatEngine.test.ts
 
 echo "✅ Corrections de base effectuées"
-echo "📝 Vérifiez maintenant avec: npm run lint"
+echo "📝 Vérifiez maintenant avec: pnpm run lint"

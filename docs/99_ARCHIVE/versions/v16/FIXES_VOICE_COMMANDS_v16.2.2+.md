@@ -129,7 +129,7 @@ Frontend: hybridTTS.ts
 
 #### Test 1: TTS Online
 ```bash
-# 1. Lancer app: npm run tauri:dev
+# 1. Lancer app: pnpm run tauri:dev
 # 2. Ouvrir chat IA
 # 3. Envoyer message: "Bonjour TITANE"
 # 4. Cliquer bouton "🔊 Lire"
@@ -165,13 +165,13 @@ Frontend: hybridTTS.ts
 
 ```bash
 # E2E tests
-npm run test:e2e -- voice.test.ts
+pnpm run test:e2e -- voice.test.ts
 
 # Rust unit tests
 cargo test --manifest-path src-tauri/Cargo.toml audio::
 
 # Type-check
-npm run type-check
+pnpm run type-check
 ```
 
 ---
@@ -207,10 +207,10 @@ APRÈS: 100/100 (Implementation complete, commands working)
 
 ```bash
 # Build production
-npm run tauri:build
+pnpm run tauri:build
 
 # Ou mode dev
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### Phase 2: Testing (30 min)
@@ -302,7 +302,7 @@ Le système voice est maintenant **100% fonctionnel**. Les commandes sont enregi
 
 **Prochaine action immédiate**:
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 # → Tester TTS + ASR + Recording en conditions réelles
 ```
 

@@ -96,20 +96,20 @@ cd ~/Projets/TITANE_INFINITY
 ### Mode développement (avec hot-reload)
 
 ```bash
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 ### Build de production
 
 ```bash
-npm run tauri build
+pnpm run tauri build
 ```
 
 ### Tests
 
 ```bash
 # Tests frontend
-npm test
+pnpm test
 
 # Tests backend Rust
 cd src-tauri && cargo test
@@ -119,8 +119,8 @@ cd src-tauri && cargo test
 
 ```bash
 # Frontend
-npm run lint
-npm run format
+pnpm run lint
+pnpm run format
 
 # Backend
 cd src-tauri
@@ -240,7 +240,7 @@ cargo clean
 cargo build
 ```
 
-### npm install échoue
+### pnpm install échoue
 
 Nettoyer le cache et réinstaller :
 
@@ -248,7 +248,7 @@ Nettoyer le cache et réinstaller :
 cd ~/Projets/TITANE_INFINITY
 rm -rf node_modules package-lock.json
 npm cache clean --force
-npm install
+pnpm install
 ```
 
 ---
@@ -328,7 +328,7 @@ https://github.com/KallokTherok1994/TITANE_INFINITY/issues
 - [ ] Script d'installation exécuté sans erreurs
 - [ ] `validate_environment.sh` affiche tous les ✅
 - [ ] SSH GitHub configuré et fonctionnel
-- [ ] `npm run tauri dev` démarre sans erreurs
+- [ ] `pnpm run tauri dev` démarre sans erreurs
 - [ ] Hot-reload fonctionne (modifier un fichier .tsx)
 - [ ] Backend Rust compile sans warnings
 - [ ] VSCode ouvre le projet sans erreurs
@@ -344,7 +344,7 @@ Pour démarrer :
 
 ```bash
 cd ~/Projets/TITANE_INFINITY
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 **Bon développement! 🚀**

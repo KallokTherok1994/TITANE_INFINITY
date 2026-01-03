@@ -181,14 +181,14 @@ const health = await quickHealthCheck();                  // 3. Monitor
 ### Tests Automatisés ✅
 
 ```bash
-npm test -- src/__tests__/ai-subsystem-validation-v20omega.test.ts
+pnpm test -- src/__tests__/ai-subsystem-validation-v20omega.test.ts
 # Résultat: ✅ 17/17 tests passés
 ```
 
 ### Lint Clean ✅
 
 ```bash
-npm run lint -- --fix src/services/ai/*.ts src/services/ia/*.ts
+pnpm run lint -- --fix src/services/ai/*.ts src/services/ia/*.ts
 # Résultat: ✅ 0 erreurs
 ```
 

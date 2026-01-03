@@ -501,7 +501,7 @@ Total:                 556,000 LOC (100%)
 ### Phase 1: Urgent (Jours 1-3)
 
 1. ✅ **Audit complet terminé** (ce document)
-2. ⏳ **Dépendances:** `cargo audit` + `npm audit`
+2. ⏳ **Dépendances:** `cargo audit` + `pnpm audit`
 3. ⏳ **Security scan:** CVEs critiques
 4. ⏳ **Tests baseline:** Lancer suite de tests existante
 

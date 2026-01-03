@@ -26,26 +26,26 @@ warn() {
 
 # 1. Tests
 echo "🧪 Running all tests..."
-npm test -- --coverage --silent && check "Frontend tests" || check "Frontend tests"
+pnpm test -- --coverage --silent && check "Frontend tests" || check "Frontend tests"
 cd src-tauri && cargo test --quiet && cd .. && check "Backend tests" || check "Backend tests"
 
 # 2. Security
 echo "🔐 Security checks..."
-npm audit --production --audit-level=high && check "NPM audit" || check "NPM audit"
+pnpm audit --production --audit-level=high && check "NPM audit" || check "NPM audit"
 cd src-tauri && cargo audit && cd .. && check "Cargo audit" || check "Cargo audit"
 
 # 3. Linting
 echo "📝 Code quality..."
-npm run lint && check "ESLint" || check "ESLint"
+pnpm run lint && check "ESLint" || check "ESLint"
 cd src-tauri && cargo clippy -- -D warnings && cd .. && check "Clippy" || check "Clippy"
 
 # 4. Type checking
 echo "📘 Type checking..."
-npm run check && check "TypeScript" || check "TypeScript"
+pnpm run check && check "TypeScript" || check "TypeScript"
 
 # 5. Build
 echo "🔨 Production build..."
-npm run build && check "Build" || check "Build"
+pnpm run build && check "Build" || check "Build"
 
 # 6. Coverage
 echo "📊 Checking coverage..."

@@ -382,7 +382,7 @@ import { DeepPsychePanel } from '@/components/psyche/DeepPsychePanel';
 ### 🔹 **TypeScript Compilation**
 
 ```bash
-npm run type-check
+pnpm run type-check
 ```
 
 **Résultat** : ✅ **0 erreurs**
@@ -390,7 +390,7 @@ npm run type-check
 ### 🔹 **Build Production**
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 **Résultat** : ✅ **Succès en 7.29s**
@@ -426,7 +426,7 @@ src/hooks/index.ts                                  (+50 lignes)
 ### 🔹 **Lancer TITANE∞**
 
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### 🔹 **Console Logs à Observer**

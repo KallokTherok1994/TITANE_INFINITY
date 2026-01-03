@@ -7,7 +7,7 @@
 ✅ FRONTEND (100%)
    • Build: 6.04s | Bundle: 131 KB gzip | TypeScript: 0 erreurs
    • React 18.3.1: 31 composants | Router: 17 pages
-   • Commande: npm run dev
+   • Commande: pnpm run dev
 
 ✅ TAURI-ONLY (100%)
    • HTTP bloqué | Configuration verrouillée
@@ -21,14 +21,14 @@
 ═══════════════════════════════════════════════════════════════════════
 
 IMMÉDIAT (Frontend seul):
-$ npm run dev
+$ pnpm run dev
 
 COMPLET (Avec backend, 5-10 min):
 1. Ctrl+Alt+T (terminal système)
 2. cd ~/Documents/TITANE_NEWGEN/TITANE_INFINITY
 3. bash INSTALLATION_BACKEND_FINALE.sh
 4. Retour VS Code: cd src-tauri && cargo build --release
-5. cd .. && npm run dev
+5. cd .. && pnpm run dev
 
 ═══════════════════════════════════════════════════════════════════════
    📚 FICHIERS CLÉS
@@ -45,8 +45,8 @@ status_v16.1.json → État JSON
    🎓 RÈGLES PERMANENTES
 ═══════════════════════════════════════════════════════════════════════
 
-❌ JAMAIS: python3 -m http.server, npm run preview, vite dev
-✅ TOUJOURS: npm run dev → tauri dev
+❌ JAMAIS: python3 -m http.server, pnpm run preview, vite dev
+✅ TOUJOURS: pnpm run dev → tauri dev
 
 ═══════════════════════════════════════════════════════════════════════
    📈 MÉTRIQUES
@@ -57,5 +57,5 @@ Conformité: Tauri-only 100% ✅ | Offline 100% ✅ | Audit 97.5% ✅
 Documentation: 3000+ lignes ✅
 
 ═══════════════════════════════════════════════════════════════════════
-   ✨ PRÊT AU LANCEMENT! npm run dev
+   ✨ PRÊT AU LANCEMENT! pnpm run dev
 ═══════════════════════════════════════════════════════════════════════

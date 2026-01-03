@@ -150,7 +150,7 @@
 
 ```bash
 # E2E test feedback loop
-npm run test:e2e -- feedback-loop.test.ts
+pnpm run test:e2e -- feedback-loop.test.ts
 ```
 
 **Critères succès** :
@@ -842,14 +842,14 @@ const startListening = async () => {
 
 **Actions** :
 
-1. Run coverage actuel : `npm run test:coverage`
+1. Run coverage actuel : `pnpm run test:coverage`
 2. Identifier modules <70%
 3. Ajouter tests manquants
 
 **Commande** :
 
 ```bash
-npm run test:coverage -- --testPathPattern="(useVAD|useTTSWithMicControl|audioStateMachine|voice\.ts)"
+pnpm run test:coverage -- --testPathPattern="(useVAD|useTTSWithMicControl|audioStateMachine|voice\.ts)"
 ```
 
 **Critères succès** :
@@ -904,11 +904,11 @@ npm run test:coverage -- --testPathPattern="(useVAD|useTTSWithMicControl|audioSt
 
 ### Tests à Lancer
 
-- [ ] `npm run test:unit -- audioStateMachine` (Coverage >70%)
-- [ ] `npm run test:unit -- useTTSWithMicControl` (Coverage >80%)
-- [ ] `npm run test:unit -- useVAD` (Coverage >70%)
-- [ ] `npm run test:e2e -- feedback-loop.test.ts` (10 cycles sans feedback)
-- [ ] `npm run build` (0 errors TypeScript)
+- [ ] `pnpm run test:unit -- audioStateMachine` (Coverage >70%)
+- [ ] `pnpm run test:unit -- useTTSWithMicControl` (Coverage >80%)
+- [ ] `pnpm run test:unit -- useVAD` (Coverage >70%)
+- [ ] `pnpm run test:e2e -- feedback-loop.test.ts` (10 cycles sans feedback)
+- [ ] `pnpm run build` (0 errors TypeScript)
 - [ ] `cargo test` (0 errors Rust)
 
 ### Scénarios Manuels

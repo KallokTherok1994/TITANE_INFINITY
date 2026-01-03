@@ -30,7 +30,7 @@
 ### 1. TypeScript Compilation ✅ PASS
 
 ```bash
-$ npm run type-check
+$ pnpm run type-check
 ✅ Compilation réussie (0 erreurs critiques)
 ```
 
@@ -49,7 +49,7 @@ $ npm run type-check
 ### 2. Build Production ✅ PASS
 
 ```bash
-$ npm run build
+$ pnpm run build
 ✓ 2729 modules transformed
 ✓ built in 9.37s
 0 warnings ✅
@@ -92,7 +92,7 @@ Total: 4.7 MB raw, ~700 KB gzipped ✅
 ### 3. ESLint Validation ⚠️ WARNING
 
 ```bash
-$ npm run lint
+$ pnpm run lint
 ✖ 521 problems (95 errors, 426 warnings)
 3 errors and 6 warnings fixable with --fix
 ```

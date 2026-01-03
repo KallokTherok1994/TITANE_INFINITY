@@ -94,7 +94,7 @@ Toutes les permissions sont centralisées dans **tauri.base.json** → `app.secu
 ### Script de validation automatique
 
 ```bash
-npm run verify:tauri-configs
+pnpm run verify:tauri-configs
 # OU
 ./scripts/verify/validate-tauri-configs.sh
 ```
@@ -120,7 +120,7 @@ npm run verify:tauri-configs
    ```
 3. Valider:
    ```bash
-   npm run verify:tauri-configs
+   pnpm run verify:tauri-configs
    ```
 
 ### Modifier une config spécifique Dev/Stable
@@ -129,7 +129,7 @@ npm run verify:tauri-configs
 2. Ajouter override (ne PAS dupliquer ce qui est dans base)
 3. Valider:
    ```bash
-   npm run verify:tauri-configs
+   pnpm run verify:tauri-configs
    ```
 
 ### Ajouter une nouvelle window
@@ -165,14 +165,14 @@ Si spécifique:
 ### Build Dev
 
 ```bash
-npm run dev
+pnpm run dev
 # Utilise runtime/dev/tauri.conf.json + tauri.base.json
 ```
 
 ### Build Stable
 
 ```bash
-npm run build:production
+pnpm run build:production
 # Utilise runtime/stable/tauri.conf.json + tauri.base.json
 ```
 

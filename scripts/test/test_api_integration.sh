@@ -236,13 +236,13 @@ echo "Vérification de l'état du serveur de développement..."
 if pgrep -f "vite.*5173" > /dev/null; then
     test_pass "Vite dev server is running (port 5173)"
 else
-    test_skip "Vite dev server" "Not running (start with 'npm run dev:tauri')"
+    test_skip "Vite dev server" "Not running (start with 'pnpm run dev:tauri')"
 fi
 
 if pgrep -f "titane-infinity" > /dev/null; then
     test_pass "Tauri app is running"
 else
-    test_skip "Tauri app" "Not running (start with 'npm run dev:tauri')"
+    test_skip "Tauri app" "Not running (start with 'pnpm run dev:tauri')"
 fi
 
 # Check browser port

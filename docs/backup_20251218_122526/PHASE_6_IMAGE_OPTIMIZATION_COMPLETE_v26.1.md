@@ -248,7 +248,7 @@ TOTAL:     $480.54/year bandwidth savings ✅
 ### Build Test
 
 ```bash
-npm run build
+pnpm run build
 # Expected: SUCCESS (no errors)
 # Actual: ✅ Build successful 13.8s
 # WebP files: Included in dist/ (if imported)
@@ -258,7 +258,7 @@ npm run build
 ### Storybook Test
 
 ```bash
-npm run storybook
+pnpm run storybook
 # Navigate to UI/LazyImage
 # Expected: 7 stories render correctly ✅
 # GridLazyLoad: Check DevTools Network, images lazy-load on scroll ✅

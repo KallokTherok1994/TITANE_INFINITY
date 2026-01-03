@@ -98,9 +98,9 @@ once_cell = "1.19"
   "version": "11.0.0",
   "identifier": "com.titane.infinity",
   "build": {
-    "beforeDevCommand": "npm run dev",
+    "beforeDevCommand": "pnpm run dev",
     "devUrl": "http://localhost:5173",
-    "beforeBuildCommand": "npm run build",
+    "beforeBuildCommand": "pnpm run build",
     "frontendDist": "../dist"              ✅ CHEMIN CORRECT
   }
 }

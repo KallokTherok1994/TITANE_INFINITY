@@ -8,7 +8,7 @@
 
 ## 📊 BUNDLE ANALYSIS BASELINE (Build réel)
 
-### Current State (npm run build)
+### Current State (pnpm run build)
 
 **Build Time:** 14.00s ✅ (acceptable)
 
@@ -150,7 +150,7 @@ const CodeBlock = lazy(() => import('@/components/chat/CodeBlock'));
 
    ```bash
    # Install cwebp
-   npm install -D sharp
+   pnpm install -D sharp
 
    # Convert script
    node scripts/convert-to-webp.js
@@ -390,7 +390,7 @@ brotli_types text/css application/javascript;
 
 ```bash
 # Install
-npm install -g @lhci/cli
+pnpm install -g @lhci/cli
 
 # Config: lighthouserc.json
 {
@@ -410,7 +410,7 @@ npm install -g @lhci/cli
 }
 
 # Run
-npm run build && npm run preview &
+pnpm run build && pnpm run preview &
 lhci autorun
 ```
 
@@ -418,7 +418,7 @@ lhci autorun
 
 ```bash
 # Install size-limit
-npm install -D @size-limit/preset-app
+pnpm install -D @size-limit/preset-app
 
 # package.json
 "size-limit": [
@@ -436,7 +436,7 @@ npx size-limit
 
 ```bash
 # Install
-npm install -D @percy/cli @percy/playwright
+pnpm install -D @percy/cli @percy/playwright
 
 # Test script
 import { test } from '@playwright/test';

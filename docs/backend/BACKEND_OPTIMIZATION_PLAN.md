@@ -197,7 +197,7 @@ describe('Contract: conversation_generate', () => {
 - name: Generate schemas
   run: cd src-tauri && cargo test export_schemas
 - name: Run contract tests
-  run: npm run test:contract
+  run: pnpm run test:contract
 ```
 
 **Benefits:**

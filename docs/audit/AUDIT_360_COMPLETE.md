@@ -571,7 +571,7 @@ cargo update -p glib --precise 0.20.0
 cargo audit
 ```
 
-### CVE NPM (npm audit)
+### CVE NPM (pnpm audit)
 
 ```json
 {
@@ -668,7 +668,7 @@ let nonce = secrets.generate_nonce()?;
 - [ ] cargo clean + rebuild release
 - [ ] Fix 30 erreurs TypeScript (TS4111/TS4114)
 - [ ] Fix 5 ESLint warnings
-- [ ] npm audit fix (si vulns futures)
+- [ ] pnpm audit fix (si vulns futures)
 
 **Livrable S1:**
 
@@ -929,7 +929,7 @@ find tests -name "*.test.ts" -o -name "*.spec.ts" | wc -l  # 22
 
 # Security
 cargo audit  # 0 CVE, 20 unmaintained, 1 unsound
-npm audit    # 0 vulnerabilities
+pnpm audit    # 0 vulnerabilities
 
 # Build size
 du -sh dist/                      # 4.8MB

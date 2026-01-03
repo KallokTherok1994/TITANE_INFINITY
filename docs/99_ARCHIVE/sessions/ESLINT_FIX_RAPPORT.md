@@ -201,7 +201,7 @@ chmod +x fix_eslint_complete.sh
 ./fix_eslint_complete.sh
 
 # Vérifier le résultat
-npm run lint
+pnpm run lint
 
 # Si 0 erreurs
 git add .

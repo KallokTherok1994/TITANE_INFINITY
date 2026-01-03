@@ -35,7 +35,7 @@
 #### 5.1.1 Install Bundle Analyzer
 
 ```bash
-npm install --save-dev rollup-plugin-visualizer
+pnpm install --save-dev rollup-plugin-visualizer
 ```
 
 #### 5.1.2 Configuration Vite
@@ -61,7 +61,7 @@ export default defineConfig({
 #### 5.1.3 Generate Analysis
 
 ```bash
-npm run build
+pnpm run build
 # Opens dist/stats.html automatically
 ```
 
@@ -257,7 +257,7 @@ VitePWA({
 #### 5.5.1 Lighthouse A11y Test
 
 ```bash
-npm install -g @lhci/cli
+pnpm install -g @lhci/cli
 lhci autorun --collect.url=http://localhost:5173
 ```
 
@@ -338,13 +338,13 @@ lhci autorun --collect.url=http://localhost:5173
 ```bash
 # Clean build
 rm -rf dist/
-npm run build
+pnpm run build
 
 # Verify output
 ls -lh dist/assets/
 
 # Test production bundle
-npm run preview
+pnpm run preview
 # Open http://localhost:4173
 ```
 
@@ -396,7 +396,7 @@ npm run preview
 
 ```bash
 # Bundle analyzer
-npm run build && open dist/stats.html
+pnpm run build && open dist/stats.html
 
 # Lighthouse CI
 npx @lhci/cli autorun
@@ -409,13 +409,13 @@ npx bundlesize
 
 ```bash
 # Dev mode (with logging)
-npm run dev
+pnpm run dev
 
 # Production build
-npm run build && npm run preview
+pnpm run build && pnpm run preview
 
 # Test suite
-npm test
+pnpm test
 ```
 
 ### Profiling

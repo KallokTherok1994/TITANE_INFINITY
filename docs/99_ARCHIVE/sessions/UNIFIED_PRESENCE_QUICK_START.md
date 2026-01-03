@@ -5,7 +5,7 @@
 ### Étape 1 : Lancer l'Application
 
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 Le moteur de présence se lance automatiquement au démarrage de l'application.
@@ -313,7 +313,7 @@ Pendant l'exécution (tous les 5-60s selon le connecteur) :
 1. Vérifier que `App.tsx` contient bien `<UnifiedPresenceControl />`
 2. Ouvrir DevTools → Console
 3. Chercher erreurs de type "Cannot find module"
-4. Vérifier `npm run type-check` → 0 erreurs
+4. Vérifier `pnpm run type-check` → 0 erreurs
 
 ### Problème : Panel vide ou erreurs
 
@@ -321,7 +321,7 @@ Pendant l'exécution (tous les 5-60s selon le connecteur) :
 1. Console DevTools → Vérifier erreurs React
 2. Vérifier que tous les hooks sont exportés dans `hooks/index.ts`
 3. Tester dans console : `unifiedPresenceEngine.getState()`
-4. Si erreur : redémarrer `npm run tauri:dev`
+4. Si erreur : redémarrer `pnpm run tauri:dev`
 
 ### Problème : Pas de logs d'harmonisation
 

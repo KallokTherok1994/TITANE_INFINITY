@@ -55,7 +55,7 @@ cd src-tauri/src/
 CURRENT_UNWRAP=$(grep -r "\.unwrap()" --include="*.rs" | grep -v "#\[cfg(test)\]" | grep -v "mod tests" | wc -l)
 cd ../..
 
-# Test coverage (simulated - would need actual npm test run)
+# Test coverage (simulated - would need actual pnpm test run)
 if [ -f "coverage/coverage-summary.json" ]; then
     CURRENT_COVERAGE=$(jq -r '.total.lines.pct' coverage/coverage-summary.json 2>/dev/null || echo "0")
 else

@@ -218,13 +218,13 @@ pkill -9 titane-infinity  # ✅ Nettoyage complet
 
 ```bash
 cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
-npm run dev
+pnpm run dev
 ```
 
 ### **Vérifier Build**
 
 ```bash
-npm run build
+pnpm run build
 # ✓ built in ~15-20s
 ```
 
@@ -238,7 +238,7 @@ ps aux | grep titane-infinity
 ### **Vérifier Erreurs**
 
 ```bash
-npm run lint
+pnpm run lint
 # Résultat: 0 warnings
 ```
 
@@ -276,7 +276,7 @@ Le problème de page blanche était **environnemental**, pas de code:
 
 ### **Immédiat**
 
-1. ✅ Lancer TITANE: `npm run dev`
+1. ✅ Lancer TITANE: `pnpm run dev`
 2. ✅ Vérifier DevTools (F12)
 3. ✅ Tester fonctionnalités principales
 

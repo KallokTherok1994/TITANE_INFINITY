@@ -243,7 +243,7 @@ Corriger les 3 fichiers (probablement juste ajouter accolades manquantes)
 # 1. Corriger UnifiedCognitivePipeline.ts ligne 40
 # 2. Corriger AutoFixEngine.ts ligne 40
 # 3. Corriger StateIntegrityEngine.ts ligne 39
-# 4. Vérifier compilation: npm run type-check
+# 4. Vérifier compilation: pnpm run type-check
 ```
 
 **Priorité: CRITIQUE** - Bloque tous les tests
@@ -461,7 +461,7 @@ code src/core/healing/AutoFixEngine.ts:40
 code src/core/state/StateIntegrityEngine.ts:39
 
 # Ajouter accolades manquantes
-# Vérifier: npm run type-check
+# Vérifier: pnpm run type-check
 ```
 
 ### 2️⃣ Créer structure backend (1h) 🦀

@@ -187,7 +187,7 @@ content.innerHTML = `
 
 ```bash
 # Build production
-npm run build
+pnpm run build
 
 # Analyse output
 # Total: 20.24s build time
@@ -831,7 +831,7 @@ grep -r "<img" src/ --include="*.tsx" | \
 
 ```bash
 # Lighthouse CI
-npm install -g @lhci/cli
+pnpm install -g @lhci/cli
 
 # Run audit
 lhci autorun --config=lighthouserc.json

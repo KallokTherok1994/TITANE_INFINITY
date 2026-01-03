@@ -329,7 +329,7 @@ resolve: {
 ---
 
 ### Phase 9: Tests & Validation — 7/10 ⚠️
-**Tentative npm run type-check**: Terminal timeout (30s)
+**Tentative pnpm run type-check**: Terminal timeout (30s)
 - ⚠️ Compilation TypeScript non validée complètement
 - ⚠️ Build production non simulé
 
@@ -445,8 +445,8 @@ fn helios_get_metrics(state: State<Arc<Mutex<TitaneCore>>>) -> Result<String, St
    - Effort: 10 min
    - Impact: BLOQUANT
 
-2. **Valider npm run build**
-   - Commande: `cd TITANE_INFINITY && npm run build`
+2. **Valider pnpm run build**
+   - Commande: `cd TITANE_INFINITY && pnpm run build`
    - Vérifier: Aucune erreur TypeScript
    - Effort: 5 min
    - Impact: BLOQUANT
@@ -459,7 +459,7 @@ fn helios_get_metrics(state: State<Arc<Mutex<TitaneCore>>>) -> Result<String, St
    - Impact: Performance +15%
 
 4. **Tester Tauri dev mode**
-   - Commande: `npm run tauri:dev`
+   - Commande: `pnpm run tauri:dev`
    - Vérifier: Invoke() fonctionnels
    - Effort: 15 min
    - Impact: Validation fonctionnelle

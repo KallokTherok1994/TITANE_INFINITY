@@ -15,4 +15,4 @@ grep -q "3000" src-tauri/src/overdrive/chat_orchestrator.rs && echo "✅ Timeout
 grep -q "RÉACTIVÉ" src-tauri/src/overdrive/chat_orchestrator.rs && echo "✅ Fallback OK" || echo "❌ Fallback FAIL"
 
 echo ""
-echo "🎯 Lancer: npm run dev:tauri"
+echo "🎯 Lancer: pnpm run dev:tauri"

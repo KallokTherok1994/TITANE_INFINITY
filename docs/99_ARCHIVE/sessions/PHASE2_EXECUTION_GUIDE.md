@@ -2,7 +2,7 @@
 
 **Date**: 27 novembre 2025 12:24
 **Version**: TITANE∞ v16.2.2
-**Statut Application**: ✅ LANCÉE (npm run tauri:dev actif)
+**Statut Application**: ✅ LANCÉE (pnpm run tauri:dev actif)
 **DevTools**: ✅ Auto-ouvert
 **Diagnostic**: ✅ Composant ChatDiagnostic ajouté (overlay)
 
@@ -159,7 +159,7 @@ xdg-open http://localhost:5173/
 
 ### 3. Analyser Logs Backend
 
-**Terminal `npm run tauri:dev`** devrait afficher:
+**Terminal `pnpm run tauri:dev`** devrait afficher:
 ```
 [CHAT] 💬 chat_send_message invoked
 [CHAT] 📝 Message: "Hello TITANE"
@@ -199,7 +199,7 @@ GEMINI_API_KEY=YOUR_GEMINI_API_KEY
    ```bash
    echo "GEMINI_API_KEY=YOUR_KEY_HERE" >> .env
    ```
-3. Redémarrer app: `Ctrl+C` puis `npm run tauri:dev`
+3. Redémarrer app: `Ctrl+C` puis `pnpm run tauri:dev`
 
 #### B. Vérifier Ollama Local
 
@@ -322,7 +322,7 @@ grep "secureInvoke('speak'" src/services/tts/hybridTTS.ts
 
 **Test actuel**:
 ```bash
-# Terminal npm run tauri:dev devrait afficher logs [CHAT]
+# Terminal pnpm run tauri:dev devrait afficher logs [CHAT]
 # Si absent: Problème println!() ou log level
 ```
 
@@ -354,7 +354,7 @@ grep "diagnostics" src/App.tsx
 ## ✅ CHECKLIST PROGRESSION PHASES 2-7
 
 ### Phase 2: Audit Pont Tauri ✅ EN COURS
-- [x] App lancée (npm run tauri:dev)
+- [x] App lancée (pnpm run tauri:dev)
 - [x] ChatDiagnostic component créé
 - [x] Overlay UI ajouté App.tsx
 - [ ] Tests exécutés (awaiting user action)
@@ -424,7 +424,7 @@ grep "diagnostics" src/App.tsx
 
 ### ACTION 2: Vérifier Logs Backend Terminal
 
-**Chercher dans terminal `npm run tauri:dev`**:
+**Chercher dans terminal `pnpm run tauri:dev`**:
 ```
 [CHAT] 💬 chat_send_message invoked
 [CHAT] 🔄 Tentative avec provider: local

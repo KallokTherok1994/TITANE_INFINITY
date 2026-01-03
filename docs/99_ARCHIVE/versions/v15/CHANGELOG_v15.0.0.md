@@ -287,11 +287,11 @@ This release marks the foundation for future growth, with a clean architecture t
 cargo build --release --manifest-path src-tauri/Cargo.toml
 
 # Frontend
-npm install
-npm run build
+pnpm install
+pnpm run build
 
 # Tauri App
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 **Test:**
@@ -300,10 +300,10 @@ npm run tauri:build
 cargo check --manifest-path src-tauri/Cargo.toml
 
 # Frontend
-npm run type-check
+pnpm run type-check
 
 # Full build
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ---

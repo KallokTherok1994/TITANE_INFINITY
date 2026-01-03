@@ -62,7 +62,7 @@ fi
 
 # 5️⃣ Lancer les tests d'architecture
 echo "📍 Running architecture tests..."
-if npm run test -- src/__tests__/architecture/ --run 2>&1 | grep -q "PASS"; then
+if pnpm run test -- src/__tests__/architecture/ --run 2>&1 | grep -q "PASS"; then
     echo "✅ Architecture tests passed"
 else
     echo "⚠️  WARNING: Architecture tests failed or missing"

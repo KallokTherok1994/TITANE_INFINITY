@@ -34,4 +34,4 @@ echo ""
 echo "🚀 LANCEMENT SERVEUR DEV..."
 echo ""
 
-npm run dev
+pnpm run dev

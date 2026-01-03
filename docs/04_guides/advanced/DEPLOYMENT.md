@@ -33,13 +33,13 @@ cargo test --all
 cargo bench
 
 # Frontend TypeScript
-npm run lint
-npm run type-check
-npm run test
-npm run test:e2e
+pnpm run lint
+pnpm run type-check
+pnpm run test
+pnpm run test:e2e
 
 # Security audit
-npm audit --production
+pnpm audit --production
 cargo audit
 ```
 
@@ -47,15 +47,15 @@ cargo audit
 
 ```bash
 # Update outdated
-npm outdated
+pnpm outdated
 cargo update --dry-run
 
 # Remove unused
-npm prune --production
+pnpm store prune
 cargo clean
 
 # Lock versions
-npm ci  # Uses package-lock.json exactly
+pnpm install --frozen-lockfile  # Uses pnpm-lock.yaml exactly
 cargo build --locked
 ```
 
@@ -153,7 +153,7 @@ HEALTHCHECK_INTERVAL=30
 
 ```bash
 # Production build avec optimizations
-NODE_ENV=production npm run build
+NODE_ENV=production pnpm run build
 
 # Vite config (vite.config.ts)
 export default defineConfig({
@@ -212,7 +212,7 @@ strip target/release/titane-infinity
 
 ```bash
 # Generate production bundles
-npm run tauri build
+pnpm run tauri build
 
 # tauri.conf.json
 {
@@ -614,7 +614,7 @@ if (import.meta.env.PROD) {
 **1. Linux (.deb, .AppImage, .rpm):**
 ```bash
 # Build bundles
-npm run tauri build
+pnpm run tauri build
 
 # Output:
 # src-tauri/target/release/bundle/deb/titane-infinity_24.2.0_amd64.deb
@@ -635,7 +635,7 @@ sudo rpm -i titane-infinity-24.2.0-1.x86_64.rpm
 **2. Windows (.msi, .exe):**
 ```bash
 # Build on Windows machine
-npm run tauri build
+pnpm run tauri build
 
 # Output:
 # src-tauri/target/release/bundle/msi/TITANE_INFINITY_24.2.0_x64_en-US.msi
@@ -651,7 +651,7 @@ TITANE_INFINITY_24.2.0_x64-setup.exe /S  # Silent install
 **3. macOS (.dmg, .app):**
 ```bash
 # Build on macOS machine
-npm run tauri build
+pnpm run tauri build
 
 # Output:
 # src-tauri/target/release/bundle/dmg/TITANE_INFINITY_24.2.0_x64.dmg

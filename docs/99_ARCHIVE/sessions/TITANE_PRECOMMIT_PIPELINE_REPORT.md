@@ -430,7 +430,7 @@ Gain : 50% temps sur re-commits.
 
 ```bash
 # .husky/pre-push
-npm run test:unit
+pnpm run test:unit
 cargo test
 ```
 

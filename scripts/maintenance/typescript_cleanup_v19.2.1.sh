@@ -69,7 +69,7 @@ echo "🔍 Phase 2: Vérification de la syntaxe..."
 
 # Test de compilation TypeScript
 echo "   📝 Vérification TypeScript..."
-if npm run type-check > /tmp/typecheck_result.log 2>&1; then
+if pnpm run type-check > /tmp/typecheck_result.log 2>&1; then
     echo "   ✅ Compilation TypeScript réussie !"
     TYPECHECK_SUCCESS=true
 else
@@ -84,7 +84,7 @@ echo "🧪 Phase 3: Validation des tests..."
 
 # Tests Chat IA
 echo "   🧪 Tests Chat IA..."
-if npm test -- chat-ia-diagnostic.test.ts > /tmp/test_result.log 2>&1; then
+if pnpm test -- chat-ia-diagnostic.test.ts > /tmp/test_result.log 2>&1; then
     echo "   ✅ Tests Chat IA: OK"
     TEST_SUCCESS=true
 else

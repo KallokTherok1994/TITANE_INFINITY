@@ -166,7 +166,7 @@ npx tsc --noEmit 2>&1 | grep "ChatIA.tsx"
 ### ✅ Test 3: Build Production
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 **Résultat**: ✅ **Built in 17.83s**

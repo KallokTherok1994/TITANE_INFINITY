@@ -193,7 +193,7 @@ function onRenderCallback(
 **3. Bundle Size Analysis:**
 ```bash
 # Build production bundle
-npm run build
+pnpm run build
 
 # Analyze bundle composition
 npx vite-bundle-analyzer dist
@@ -211,7 +211,7 @@ npx vite-bundle-analyzer dist
 
 # Check individual package sizes
 npx depcheck
-npm ls react
+pnpm ls react
 ```
 
 ---

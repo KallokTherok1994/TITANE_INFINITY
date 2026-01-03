@@ -69,7 +69,7 @@ chmod +x scripts/titane_overdrive_v16.sh
 
 1. **Setup OS** — Mise à jour système + installation dépendances Tauri/Audio/IA
 2. **System Check** — Vérification environnement + auto-fix erreurs
-3. **Frontend Build** — `npm install` + `npm run build`
+3. **Frontend Build** — `pnpm install` + `pnpm run build`
 4. **Backend Build** — `cargo check` + `cargo tauri build`
 5. **Voice Engine** — Installation Whisper.cpp + Piper TTS
 6. **Chat IA** — Démarrage Ollama + pull modèles (llama3.1, qwen2.5, etc.)
@@ -103,7 +103,7 @@ cat logs/deploy/overdrive_report_*.txt
 titane
 
 # Option 2: Dev mode
-npm run tauri dev
+pnpm run tauri dev
 
 # Option 3: Binaire direct
 ./src-tauri/target/release/titane-infinity
@@ -203,13 +203,13 @@ cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
 rm -rf node_modules dist .vite
 
 # Installer
-npm install
+pnpm install
 
 # Type check
-npm run type-check
+pnpm run type-check
 
 # Build
-npm run build
+pnpm run build
 
 # Vérifier
 ls -lh dist/
@@ -350,7 +350,7 @@ journalctl --user -u pipewire.service
 
 ### **Test fonctionnel :**
 
-1. Lancer `titane` ou `npm run tauri dev`
+1. Lancer `titane` ou `pnpm run tauri dev`
 2. Vérifier UI s'affiche
 3. Tester navigation (Dashboard, Chat, Settings, etc.)
 4. Tester Chat IA (doit appeler Ollama ou Gemini)
@@ -367,7 +367,7 @@ journalctl --user -u pipewire.service
 titane
 
 # Dev
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 ### **Activer Voice Engine :**
@@ -427,8 +427,8 @@ Dans l'UI TITANE :
 ### **Frontend uniquement :**
 
 ```bash
-npm install
-npm run build
+pnpm install
+pnpm run build
 cargo tauri dev  # Test
 ```
 

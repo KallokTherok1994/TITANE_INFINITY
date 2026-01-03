@@ -894,9 +894,9 @@ commands::ai_chat::transcribe_audio,
 
 **Task 1.3**: Rebuild + Test
 ```bash
-npm run tauri:build
+pnpm run tauri:build
 # Ou mode dev:
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Test TTS:
 # - Ouvrir chat
@@ -1098,7 +1098,7 @@ await voiceService.speak(response.text, {}, false);
 **Temps estimé**: ⏱️ **30 minutes**
 1. Ajouter 6 lignes dans `main.rs` generate_handler! (5 min)
 2. Ajouter 6 lignes dans `security.ts` ALLOWED_COMMANDS (5 min)
-3. Rebuild: `npm run tauri:build` (15 min)
+3. Rebuild: `pnpm run tauri:build` (15 min)
 4. Test rapide: TTS + ASR (5 min)
 
 **Complexité**: 🟢 **TRIVIALE**
@@ -1159,12 +1159,12 @@ git checkout -b fix/voice-commands-registration
 git commit -m "fix(voice): Register and whitelist voice commands"
 
 # 2️⃣ Build & Test
-npm run tauri:build
+pnpm run tauri:build
 # Test TTS: Open chat → Send message → Click "🔊"
 # Test ASR: Click "🎤" → Speak → Check transcript
 
 # 3️⃣ Validation
-npm run type-check # Should pass
+pnpm run type-check # Should pass
 cargo clippy --manifest-path src-tauri/Cargo.toml # Should pass
 
 # 4️⃣ Commit & Push

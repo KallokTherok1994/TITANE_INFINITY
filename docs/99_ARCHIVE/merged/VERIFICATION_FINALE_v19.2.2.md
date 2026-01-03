@@ -75,7 +75,7 @@ Succès: 102/108 (94%)
 
 **Type Check**:
 ```bash
-$ npm run type-check
+$ pnpm run type-check
 tsc --noEmit
 Errors: 0 ✅
 ```
@@ -221,7 +221,7 @@ cluster/
 | `cargo check --lib` | 4.75s | 0 | 30 | ✅ |
 | `cargo build --release` | 1m 28s | 0 | 30 | ✅ |
 | `cargo test --lib` | 0.39s | 0 | 25 | ✅ |
-| `npm run type-check` | ~3s | 0 | 0 | ✅ |
+| `pnpm run type-check` | ~3s | 0 | 0 | ✅ |
 
 ### Binary
 

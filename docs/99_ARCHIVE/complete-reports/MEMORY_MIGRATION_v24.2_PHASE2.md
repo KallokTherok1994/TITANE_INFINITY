@@ -155,7 +155,7 @@ use crate::unified_memory_v2::{UnifiedMemoryV2, MemoryTier, MemoryType};
 - [ ] Tests encryption/decryption
 - [ ] Tests persistence load/save
 - [ ] Validation `cargo test --lib`
-- [ ] Validation `npm run build`
+- [ ] Validation `pnpm run build`
 
 ---
 

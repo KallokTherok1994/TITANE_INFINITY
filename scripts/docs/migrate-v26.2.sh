@@ -313,7 +313,7 @@ fi
 # 12. VALIDATION BUILD
 echo ""
 echo -e "${BLUE}🔧  Test build...${NC}"
-if npm run build > /dev/null 2>&1; then
+if pnpm run build > /dev/null 2>&1; then
     echo -e "${GREEN}   ✅ Build réussi${NC}"
 else
     echo -e "${YELLOW}   ⚠️  Build failed (normal si deps manquantes)${NC}"
@@ -336,7 +336,7 @@ echo ""
 echo -e "${YELLOW}Next Steps:${NC}"
 echo "   1. Review: git status"
 echo "   2. Verify: git diff --stat"
-echo "   3. Test: npm run build"
+echo "   3. Test: pnpm run build"
 echo "   4. Commit: git add . && git commit -F .git/COMMIT_EDITMSG_TEMPLATE"
 echo "   5. Push: git push origin feature/docs-restructure-v26.2"
 echo ""

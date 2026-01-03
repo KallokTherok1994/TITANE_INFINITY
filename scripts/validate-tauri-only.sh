@@ -25,10 +25,10 @@ WARNINGS=0
 echo "1️⃣  Vérification package.json..."
 
 if grep -q '"dev".*"vite"' package.json && ! grep -q '"dev".*"tauri dev"' package.json; then
-    echo "   ❌ ERREUR: npm run dev pointe vers vite au lieu de tauri dev"
+    echo "   ❌ ERREUR: pnpm run dev pointe vers vite au lieu de tauri dev"
     ERRORS=$((ERRORS + 1))
 else
-    echo "   ✅ npm run dev configure correctement"
+    echo "   ✅ pnpm run dev configure correctement"
 fi
 
 if grep -q '"preview".*"vite preview"' package.json; then
@@ -129,7 +129,7 @@ if [ -d "dist" ] && [ -f "dist/index.html" ]; then
     DIST_SIZE=$(du -sh dist/ | cut -f1)
     echo "      Taille: $DIST_SIZE"
 else
-    echo "   ⚠️  WARNING: Build dist/ manquant (exécutez npm run build)"
+    echo "   ⚠️  WARNING: Build dist/ manquant (exécutez pnpm run build)"
     WARNINGS=$((WARNINGS + 1))
 fi
 

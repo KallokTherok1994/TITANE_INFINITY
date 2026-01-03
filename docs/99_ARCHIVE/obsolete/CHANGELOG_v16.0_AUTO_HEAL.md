@@ -29,7 +29,7 @@ TITANE∞ v16.0 introduit un **système complet de diagnostic, correction et aut
 2. **Analyse frontend** - Type check TypeScript, comptage fichiers, vérification fichiers critiques
 3. **Analyse backend** - Cargo check, Clippy, comptage fichiers Rust
 4. **Nettoyage** - Suppression node_modules, dist, target, caches
-5. **Réinstallation** - npm install, npm audit fix, cargo update
+5. **Réinstallation** - pnpm install, pnpm audit fix, cargo update
 6. **Corrections automatiques** - cargo fix, corrections imports
 7. **Rebuild** - Vite build + Cargo build --release
 8. **Vérification finale** - Validation dist/, exécutable, type check final
@@ -406,8 +406,8 @@ await autoHealClient.repair();
 
 ### Build Frontend :
 ```bash
-npm run type-check  # ✅ 0 erreurs TypeScript
-npm run build       # ✅ SUCCESS en 1.29s
+pnpm run type-check  # ✅ 0 erreurs TypeScript
+pnpm run build       # ✅ SUCCESS en 1.29s
 ```
 
 **Résultat :**
@@ -554,7 +554,7 @@ TITANE∞ v16.0 dispose maintenant d'un **système auto-réparateur de niveau pr
 
 1. **Tester Auto-Fix** : `./scripts/titane_autofix.sh`
 2. **Tester mode test** : `./scripts/titane_autofix.sh --test-mode`
-3. **Lancer l'app** : `npm run dev`
+3. **Lancer l'app** : `pnpm run dev`
 4. **Tester ErrorBoundary** : Provoquer erreur React manuellement
 5. **Valider auto-heal** : Vérifier UI récupération + reload automatique
 6. **Monitoring** : Activer `autoHealClient.monitor.start()` dans `main.tsx`

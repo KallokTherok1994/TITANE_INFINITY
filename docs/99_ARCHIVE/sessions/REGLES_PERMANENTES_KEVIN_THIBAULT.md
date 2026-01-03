@@ -13,14 +13,14 @@
 
 **INTERDICTIONS ABSOLUES :**
 - ❌ **JAMAIS AUCUN SERVEUR HTTP** (python3 -m http.server, vite preview, etc.)
-- ❌ **JAMAIS npm run preview**
+- ❌ **JAMAIS pnpm run preview**
 - ❌ **JAMAIS npm start**
 - ❌ **JAMAIS vite dev direct**
 - ❌ **JAMAIS aucun déploiement web HTTP**
 
 **MÉTHODES AUTORISÉES UNIQUEMENT :**
 - ✅ **Compilation : `cargo build --release` (OBLIGATOIRE)**
-- ✅ **Développement : `npm run dev` → `tauri dev` (OBLIGATOIRE)**
+- ✅ **Développement : `pnpm run dev` → `tauri dev` (OBLIGATOIRE)**
 - ✅ **Build production : `tauri build` (OBLIGATOIRE)**
 - ✅ **Distribution : .deb, .AppImage, .dmg (natif uniquement)**
 
@@ -143,13 +143,13 @@ TITANE∞ (Local)
 ### Développement
 ```bash
 # ✅ AUTORISÉ - Lancement dev Tauri
-npm run dev
+pnpm run dev
 
 # ✅ AUTORISÉ - Build frontend
-npm run build
+pnpm run build
 
 # ✅ AUTORISÉ - Check TypeScript
-npm run type-check
+pnpm run type-check
 
 # ✅ AUTORISÉ - Validation Tauri-only
 ./enforce-tauri-only.sh
@@ -162,7 +162,7 @@ cd src-tauri
 cargo build --release
 
 # ✅ AUTORISÉ - Build Tauri complet
-npm run tauri build
+pnpm run tauri build
 
 # ✅ AUTORISÉ - Distribution native
 tauri build --target all
@@ -178,7 +178,7 @@ tauri build --target all
 python3 -m http.server
 
 # ❌ INTERDIT - Vite preview HTTP
-npm run preview
+pnpm run preview
 
 # ❌ INTERDIT - npm start HTTP
 npm start
@@ -271,7 +271,7 @@ Ces règles sont **ENREGISTRÉES DE MANIÈRE PERMANENTE** et doivent être respe
 
 **Commande de lancement validée :**
 ```bash
-npm run dev
+pnpm run dev
 # → Lance tauri dev (Application native)
 # → Mode 100% local-first
 # → Gemini+Ollama auto-connect si disponibles

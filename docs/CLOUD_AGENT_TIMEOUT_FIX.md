@@ -165,11 +165,11 @@ UI Short (65s) > Gemini Backend (60s) > Agent Default (75s allows override)
 
 ```bash
 # Run AI subsystem tests
-npm run test -- ai-subsystem-validation-v20omega.test.ts
+pnpm run test -- ai-subsystem-validation-v20omega.test.ts
 
 # Run provider-specific tests
-npm run test -- src/services/ai/providers/__tests__/openai.test.ts
-npm run test -- src/services/ai/providers/__tests__/claude.test.ts
+pnpm run test -- src/services/ai/providers/__tests__/openai.test.ts
+pnpm run test -- src/services/ai/providers/__tests__/claude.test.ts
 ```
 
 ## Migration Notes

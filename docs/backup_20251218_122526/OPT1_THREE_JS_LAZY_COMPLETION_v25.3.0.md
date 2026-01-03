@@ -321,7 +321,7 @@ Ces fichiers ont leurs **headers mis à jour** mais **constructors pas encore mi
 ### Commande
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 ### Résultats

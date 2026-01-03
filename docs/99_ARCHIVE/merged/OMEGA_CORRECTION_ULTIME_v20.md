@@ -258,7 +258,7 @@ grep -r "chatService" src/ --include="*.tsx" --include="*.ts" | grep -v "LEGACY"
 ### **Test 2 : FrenchMastery Actif**
 
 **Test manuel** :
-1. Lancer l'application : `npm run tauri:dev`
+1. Lancer l'application : `pnpm run tauri:dev`
 2. Envoyer message : `"What is artificial intelligence?"`
 3. Observer réponse
 
@@ -459,7 +459,7 @@ done
 cd src-tauri && cargo build --release
 
 # 2. Lancer application
-npm run tauri:dev
+pnpm run tauri:dev
 
 # 3. Exécuter tests certification (section ci-dessus)
 
@@ -477,7 +477,7 @@ tail -f /tmp/tauri_dev.log | grep -E "\[Ω:|FRENCH|OMEGA\]"
 
 ### Phase 10 : Production Deployment
 
-- [ ] Build release : `npm run tauri:build`
+- [ ] Build release : `pnpm run tauri:build`
 - [ ] Signature binaire (code signing)
 - [ ] Distribution (AppImage, .deb, .exe)
 - [ ] Documentation utilisateur finale
@@ -501,7 +501,7 @@ echo "// LEGACY FILE - DO NOT USE" > src/services/api/chat.ts
 Activer logs détaillés :
 
 ```bash
-RUST_LOG=info,titane_infinity=debug npm run tauri:dev
+RUST_LOG=info,titane_infinity=debug pnpm run tauri:dev
 ```
 
 ### Vérification Pipeline

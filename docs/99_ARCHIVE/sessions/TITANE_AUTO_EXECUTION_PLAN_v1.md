@@ -300,7 +300,7 @@ Chaque phase génère :
 1. **Code** : Implémentation + tests
 2. **Benchmarks** : Avant/après métriques
 3. **Docs** : Markdown rapport + commit message
-4. **Validation** : `cargo check` + `npm run lint` + `npm test`
+4. **Validation** : `cargo check` + `pnpm run lint` + `pnpm test`
 
 ---
 

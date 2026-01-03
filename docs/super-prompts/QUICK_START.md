@@ -60,12 +60,12 @@ git diff src/design-system/css-vars.css
 git diff tailwind.config.ts
 
 # Tester la compilation
-npm run build
+pnpm run build
 # OU
 pnpm build
 
 # Tester le lint
-npm run lint
+pnpm run lint
 
 # Si tout OK : commit
 git add .
@@ -146,7 +146,7 @@ Ctrl+Shift+P → "Developer: Reload Window"
 
 1. Vérifier les imports manquants
 2. Vérifier les chemins relatifs
-3. Relancer `npm install` si nouvelles dépendances
+3. Relancer `pnpm install` si nouvelles dépendances
 4. Demander à Copilot de corriger (copier l'erreur dans le chat)
 
 ### La palette Titane n'apparaît pas
@@ -175,9 +175,9 @@ Après application du Super Prompt #1 :
 - [ ] Le dossier `src/design-system/` existe avec `css-vars.css` et `tokens.ts`
 - [ ] `tailwind.config.ts` contient la palette Titane
 - [ ] Les composants layout compilent sans erreur TypeScript
-- [ ] `npm run build` passe
-- [ ] `npm run lint` ne révèle pas d'erreurs critiques
-- [ ] L'app se lance en mode dev (`npm run dev`)
+- [ ] `pnpm run build` passe
+- [ ] `pnpm run lint` ne révèle pas d'erreurs critiques
+- [ ] L'app se lance en mode dev (`pnpm run dev`)
 - [ ] Le dark mode s'affiche correctement
 - [ ] Les couleurs Titane Métallique + Violet sont visibles
 - [ ] Le responsive mobile fonctionne (tester en dev tools)

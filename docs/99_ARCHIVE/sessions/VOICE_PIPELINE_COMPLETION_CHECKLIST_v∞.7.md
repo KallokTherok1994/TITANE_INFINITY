@@ -149,7 +149,7 @@
 ### Compilation
 - [x] TypeScript: 0 errors ✅
 - [x] Rust: 0 errors, 2 warnings (unused functions, normal) ✅
-- [x] Build: npm run build successful ✅
+- [x] Build: pnpm run build successful ✅
 
 ### Code Quality
 - [x] Halo system: 608 lines (haloEngine: 293, HaloVisualizer: 139, CSS: 176) ✅

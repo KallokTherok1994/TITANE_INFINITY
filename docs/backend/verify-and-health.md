@@ -8,7 +8,7 @@
 
 **Problème**: Développeur fatigué à 23h → Veut savoir si tout fonctionne → Pas envie de lancer 10 commandes.
 
-**Solution**: `npm run verify:backend` → 1 commande → Réponse claire (✅ OK, ⚠️ Warning, ❌ Failed)
+**Solution**: `pnpm run verify:backend` → 1 commande → Réponse claire (✅ OK, ⚠️ Warning, ❌ Failed)
 
 ---
 
@@ -18,7 +18,7 @@
 
 ```bash
 # Vérifier environnement système
-npm run verify
+pnpm run verify
 
 # Ou manuellement
 cd scripts
@@ -39,7 +39,7 @@ cd scripts
 
 ## 🚀 Verify Backend (À IMPLÉMENTER)
 
-### Vision: `npm run verify:backend`
+### Vision: `pnpm run verify:backend`
 
 **Durée**: ~30s-2min selon machine
 
@@ -177,13 +177,13 @@ cargo build --bin titane_health_check
 
 ```bash
 # 1. Verify backend
-npm run verify:backend
+pnpm run verify:backend
 
 # 2. Si warning/error → Lancer SelfHeal
 if [ $? -ne 0 ]; then
     echo "⚠️ Issues detected. Running SelfHeal..."
     # Nécessite app en cours
-    # Ou: npm run repair:backend (à créer)
+    # Ou: pnpm run repair:backend (à créer)
 fi
 ```
 
@@ -214,14 +214,14 @@ echo "3/4 Running SelfHeal..."
 
 # 4. Verify again
 echo "4/4 Verifying..."
-npm run verify:backend
+pnpm run verify:backend
 
 exit $?
 ```
 
 **Usage**:
 ```bash
-npm run repair:backend  # Reset + rebuild + verify
+pnpm run repair:backend  # Reset + rebuild + verify
 ```
 
 ---
@@ -231,7 +231,7 @@ npm run repair:backend  # Reset + rebuild + verify
 ### Mode 1: Quick Check (30s)
 
 ```bash
-npm run verify:backend:quick
+pnpm run verify:backend:quick
 
 # Vérifie:
 - Environnement OK (rustc, cargo)
@@ -246,7 +246,7 @@ npm run verify:backend:quick
 ### Mode 2: Standard Check (2 min)
 
 ```bash
-npm run verify:backend
+pnpm run verify:backend
 
 # Vérifie:
 - Environnement
@@ -263,7 +263,7 @@ npm run verify:backend
 ### Mode 3: Deep Check (5-10 min)
 
 ```bash
-npm run verify:backend:deep
+pnpm run verify:backend:deep
 
 # Vérifie:
 - Environnement
@@ -289,7 +289,7 @@ npm run verify:backend:deep
 "verify:backend:quick": "sh ./scripts/verify_backend.sh --quick"
 
 # 3. Tester
-npm run verify:backend
+pnpm run verify:backend
 ```
 
 ---
@@ -357,21 +357,21 @@ export async function runHealthCheck(): Promise<HealthCheckResult> {
 ## 📋 Checklist DevOps Local
 
 ### Avant Commit
-- [ ] `npm run verify:backend:quick` → ✅ OK
+- [ ] `pnpm run verify:backend:quick` → ✅ OK
 
 ### Avant Push
-- [ ] `npm run verify:backend` → ✅ OK
+- [ ] `pnpm run verify:backend` → ✅ OK
 - [ ] `git status` → Clean ou intentionnel
 
 ### Avant Release
-- [ ] `npm run verify:backend:deep` → ✅ OK
-- [ ] `npm run tauri build` → ✅ OK
+- [ ] `pnpm run verify:backend:deep` → ✅ OK
+- [ ] `pnpm run tauri build` → ✅ OK
 - [ ] Tester binaire sur machine propre
 
 ### Si Problème
 - [ ] Lire logs (`src-tauri/build.log`, `src-tauri/test.log`)
 - [ ] Consulter `docs/backend/debug-and-self-heal.md`
-- [ ] Si > 5 min debug → `npm run repair:backend`
+- [ ] Si > 5 min debug → `pnpm run repair:backend`
 
 ---
 
@@ -384,7 +384,7 @@ export async function runHealthCheck(): Promise<HealthCheckResult> {
 - Temps perdu: 20-30 min/problème
 
 ### Après (Clarté)
-- 1 commande: `npm run verify:backend`
+- 1 commande: `pnpm run verify:backend`
 - Exit codes clairs (0/1/2/3)
 - Scripts reproductibles
 - Temps gagné: 18-27 min/problème (90% réduction)
@@ -395,12 +395,12 @@ export async function runHealthCheck(): Promise<HealthCheckResult> {
 
 ### Phase 1: Basique (FAIT)
 - ✅ `scripts/check_system.sh` existe
-- ✅ `npm run verify` disponible
+- ✅ `pnpm run verify` disponible
 
 ### Phase 2: Backend Focus (À FAIRE - 5h)
 - 🔲 `scripts/verify_backend.sh`
 - 🔲 `scripts/repair_backend.sh`
-- 🔲 `npm run verify:backend` / `verify:backend:quick` / `verify:backend:deep`
+- 🔲 `pnpm run verify:backend` / `verify:backend:quick` / `verify:backend:deep`
 - 🔲 Exit codes standardisés
 
 ### Phase 3: Health Check (À FAIRE - 3h)
@@ -431,7 +431,7 @@ export async function runHealthCheck(): Promise<HealthCheckResult> {
 
 **Transformation**:
 - Avant: "Est-ce que ça marche ?" → 10 commandes → 20 min → Frustration
-- Après: `npm run verify:backend` → 2 min → ✅/⚠️/❌ → Clarté
+- Après: `pnpm run verify:backend` → 2 min → ✅/⚠️/❌ → Clarté
 
 ---
 

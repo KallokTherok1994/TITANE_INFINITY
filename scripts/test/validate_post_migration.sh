@@ -126,13 +126,13 @@ echo ""
 if [ -d "node_modules" ]; then
     echo "✅ node_modules présent ($(du -sh node_modules | cut -f1))"
 else
-    echo "⚠️  node_modules manquant - Exécutez: npm install"
+    echo "⚠️  node_modules manquant - Exécutez: pnpm install"
 fi
 
 if [ -d "dist" ]; then
     echo "✅ dist/ présent (build frontend OK)"
 else
-    echo "⚠️  dist/ manquant - Exécutez: npm run build"
+    echo "⚠️  dist/ manquant - Exécutez: pnpm run build"
 fi
 
 if [ -d "src-tauri/target" ]; then
@@ -149,7 +149,7 @@ echo "📋 [7/8] Tests de configuration..."
 echo ""
 
 echo "Type-check TypeScript:"
-if npm run type-check 2>&1 | grep -q "error"; then
+if pnpm run type-check 2>&1 | grep -q "error"; then
     echo "❌ Erreurs TypeScript détectées"
 else
     echo "✅ Type-check OK"
@@ -197,8 +197,8 @@ echo "Prochaines étapes recommandées:"
 echo ""
 echo "1. Redémarrer VS Code pour appliquer toutes les configurations"
 echo "2. Installer les extensions recommandées (.vscode/extensions.json)"
-echo "3. Tester: npm run tauri:dev"
-echo "4. Tester: npm run tauri:build"
+echo "3. Tester: pnpm run tauri:dev"
+echo "4. Tester: pnpm run tauri:build"
 echo ""
 echo "Documentation:"
 echo "- TAURI_SETUP_INSTRUCTIONS.md"

@@ -139,7 +139,7 @@ rm -rf node_modules/.vite
 rm -rf node_modules/.cache
 
 # Relancer application
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### **Vérifier TypeScript uniquement**
@@ -228,7 +228,7 @@ Les méthodes suivantes sont maintenant disponibles :
 
 **Lancer l'application** :
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 **Tester** :

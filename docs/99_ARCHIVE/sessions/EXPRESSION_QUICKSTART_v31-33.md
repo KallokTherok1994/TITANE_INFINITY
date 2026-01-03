@@ -7,7 +7,7 @@
 
 ### **1. Lancer l'application**
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### **2. Ouvrir DevTools Console**
@@ -314,13 +314,13 @@ Observer:
 // Si `synestheticEmotionEngine is not defined`:
 // 1. Vérifier dans src/App.tsx que les moteurs sont importés
 // 2. Vérifier dans DevTools → Sources → src/engines/ que les fichiers existent
-// 3. Rebuild: npm run build
+// 3. Rebuild: pnpm run build
 ```
 
 ### **Problème: TypeScript errors**
 ```bash
 # Re-valider TypeScript
-npm run type-check
+pnpm run type-check
 
 # Si erreurs, vérifier:
 # - Imports corrects dans App.tsx
@@ -331,12 +331,12 @@ npm run type-check
 ### **Problème: Build échoue**
 ```bash
 # Nettoyer cache
-npm run clean
+pnpm run clean
 rm -rf dist node_modules/.vite
 
 # Rebuild
-npm install
-npm run build
+pnpm install
+pnpm run build
 ```
 
 ### **Problème: Les émotions ne changent pas**

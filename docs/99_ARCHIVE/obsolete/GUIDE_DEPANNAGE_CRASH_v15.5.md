@@ -83,7 +83,7 @@ cd ~/Documents/TITANE_NEWGEN/TITANE_INFINITY
 cd src-tauri && cargo clean && cd ..
 
 # Compiler en production
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 **Temps de compilation :** 2-5 minutes
@@ -101,7 +101,7 @@ npm run tauri:build
 ### Option B : Mode développement (avec hot-reload)
 
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ---
@@ -208,7 +208,7 @@ cargo build --release 2>&1 | grep -i "error\|webkit"
 
 ```bash
 cd ~/Documents/TITANE_NEWGEN/TITANE_INFINITY
-RUST_LOG=debug npm run tauri:dev
+RUST_LOG=debug pnpm run tauri:dev
 ```
 
 **Attendu :**
@@ -269,7 +269,7 @@ sudo bash install_system_deps.sh
 
 ```bash
 cd ~/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run tauri:build 2>&1 | tee build.log
+pnpm run tauri:build 2>&1 | tee build.log
 ```
 
 Cherchez dans `build.log` :
@@ -322,7 +322,7 @@ Avant de considérer le problème résolu :
 - [ ] ✅ Script `install_system_deps.sh` exécuté avec succès
 - [ ] ✅ `pkg-config --modversion webkit2gtk-4.1` retourne une version
 - [ ] ✅ `cargo clean` effectué dans `src-tauri/`
-- [ ] ✅ `npm run tauri:build` compile sans erreur
+- [ ] ✅ `pnpm run tauri:build` compile sans erreur
 - [ ] ✅ Binaire `/usr/bin/titane-infinity` existe
 - [ ] ✅ Lancement de TITANE∞ affiche la fenêtre immédiatement
 - [ ] ✅ Interface React chargée

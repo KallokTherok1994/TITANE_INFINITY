@@ -630,7 +630,7 @@ function App() {
 
 ```bash
 ✓ npx tsc --noEmit --skipLibCheck (0 errors)
-✓ npm run build (14.62s — SUCCESS)
+✓ pnpm run build (14.62s — SUCCESS)
 ✓ Bundle size: 25MB (optimized)
 ✓ Chunks: 40+ lazy-loaded
 ```

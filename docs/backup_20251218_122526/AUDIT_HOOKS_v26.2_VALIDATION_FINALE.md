@@ -182,7 +182,7 @@ await secureInvoke('send_audio_chunk', {...})
 ## ✅ VALIDATION COPILOT-XS
 
 ```bash
-npm run copilot-xs:validate
+pnpm run copilot-xs:validate
 ```
 
 **Résultat:**

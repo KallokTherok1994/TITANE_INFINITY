@@ -441,7 +441,7 @@ if (typeof window !== 'undefined') {
 ## ✅ Type-Check Validation
 
 ```bash
-$ npm run type-check
+$ pnpm run type-check
 ```
 
 **Result**: ✅ **82 errors (all preexisting, 0 new)**

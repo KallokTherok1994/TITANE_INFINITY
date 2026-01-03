@@ -42,7 +42,7 @@ ollama pull llama3.1
 
 ```bash
 cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
-npm run dev:tauri
+pnpm run dev:tauri
 ```
 
 **Attendu:**
@@ -160,7 +160,7 @@ npm run dev:tauri
 
 ```bash
 git checkout backup/chat-pre-cleanup
-npm run dev:tauri
+pnpm run dev:tauri
 ```
 
 ---
@@ -231,9 +231,9 @@ document.querySelector('.chat-send-btn').disabled = false;
 
 ```bash
 # Nettoyer et rebuild
-npm run clean
-npm install
-npm run build
+pnpm run clean
+pnpm install
+pnpm run build
 ```
 
 ---

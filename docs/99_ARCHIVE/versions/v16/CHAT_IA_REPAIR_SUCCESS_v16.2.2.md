@@ -54,7 +54,7 @@
 **Actions à effectuer**:
 
 1. **Ouvrir l'app**: http://localhost:5173/
-   - ✅ App **DÉJÀ lancée** (npm run tauri:dev actif)
+   - ✅ App **DÉJÀ lancée** (pnpm run tauri:dev actif)
    - ✅ DevTools auto-ouverts (F12)
 
 2. **Lancer diagnostic automatique**:
@@ -304,14 +304,14 @@ export async function chatSendMessage(request: ChatRequest) {
 
 ### 4️⃣ Tests e2e Automatiques (15 min)
 ```
-npm run test
+pnpm run test
 ```
 - Valider tests e2e passent (e2e-automated-validation.test.ts)
 - Corriger 3 erreurs mineures typing si bloquantes
 
 ### 5️⃣ Build Production (20 min)
 ```
-npm run tauri:build
+pnpm run tauri:build
 ```
 - Compiler release .deb
 - Installer: `sudo dpkg -i installer_build/*.deb`
@@ -482,10 +482,10 @@ npm run tauri:build
 ## 📞 SUPPORT
 
 ### Logs & Debugging
-- **Backend Rust**: Terminal `npm run tauri:dev` (stdout)
+- **Backend Rust**: Terminal `pnpm run tauri:dev` (stdout)
 - **Frontend**: DevTools F12 Console
 - **Diagnostic UI**: Overlay haut droite (bouton ▶️)
-- **Tests e2e**: `npm run test` (verbose output)
+- **Tests e2e**: `pnpm run test` (verbose output)
 
 ### Documentation Référence
 - **DIAGNOSTIC_CHAT_IA_v16.2.2.md**: Architecture complète

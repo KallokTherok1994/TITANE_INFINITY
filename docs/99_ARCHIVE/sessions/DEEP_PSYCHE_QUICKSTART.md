@@ -10,7 +10,7 @@ Les **4 Deep Psyche Engines** sont **100% opérationnels**.
 
 ```bash
 # 1. Lancer TITANE∞
-npm run tauri:dev
+pnpm run tauri:dev
 
 # 2. Vérifier console logs
 # Vous devriez voir :
@@ -102,16 +102,16 @@ neuralVoiceBlendingEngine.getCurrentProfile('empathic')
 
 ```bash
 # Compilation TypeScript
-npm run type-check
+pnpm run type-check
 
 # Build production
-npm run build
+pnpm run build
 
 # Lancer dev
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Nettoyer
-npm run clean
+pnpm run clean
 ```
 
 ---

@@ -203,7 +203,7 @@ Recommandations: [...]
 - Relancer runtime avec visibilité forcée:
   ```bash
   killall titane-infinity
-  npm run tauri dev -- --no-watch
+  pnpm run tauri dev -- --no-watch
   # Observer nouvelle fenêtre s'ouvrir
   ```
 

@@ -8,7 +8,7 @@
 ### 1️⃣ **Lancer l'Application**
 
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### 2️⃣ **Vérifier Démarrage**

@@ -358,7 +358,7 @@ const data = await withRetry(() => fetch('/api/data').then(r => r.json()), {
 
 ```bash
 # Lancer en dev avec profiler
-npm run dev:tauri
+pnpm run dev:tauri
 
 # Dans React DevTools:
 # 1. Onglet Profiler

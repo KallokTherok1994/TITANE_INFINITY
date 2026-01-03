@@ -188,8 +188,8 @@ Le système TITANE∞ v24.2.0 est **opérationnel** avec un processus de déploi
 
 3. **Tests Frontend**
    ```bash
-   npm test
-   npm run test:coverage
+   pnpm test
+   pnpm run test:coverage
    ```
    **Durée**: 30 min  
    **Impact**: Validation qualité frontend

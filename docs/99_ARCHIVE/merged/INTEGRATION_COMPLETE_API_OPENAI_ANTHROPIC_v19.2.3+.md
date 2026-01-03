@@ -514,7 +514,7 @@ pub async fn chat_set_openai_key(
 
 ```bash
 # Lancer TITANE∞
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Naviguer vers Centre Gouvernance → Secrets & APIs
 

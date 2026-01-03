@@ -7,34 +7,34 @@
 ### 📦 Installation
 ```bash
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm install
+pnpm install
 ```
 
 ### 🔧 Développement
 ```bash
 # Vite dev server seul (frontend uniquement)
-npm run dev
+pnpm run dev
 
 # Tauri dev (frontend + backend Rust)
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### 🏗️ Build Production
 ```bash
 # Build Vite (frontend)
-npm run build
+pnpm run build
 
 # Build Tauri complet (binaire natif)
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ### 🧪 Tests & Validation
 ```bash
 # TypeScript type checking
-npm run type-check
+pnpm run type-check
 
 # Lint
-npm run lint
+pnpm run lint
 
 # Auto-fix frontend complet
 ./scripts/titane_autofix_frontend.sh
@@ -43,13 +43,13 @@ npm run lint
 ### 🧹 Nettoyage
 ```bash
 # Nettoyer dist + cache Vite
-npm run clean:dist
+pnpm run clean:dist
 
 # Nettoyer tout (node_modules, dist, cache, target)
-npm run clean
+pnpm run clean
 
 # Réinstaller proprement
-npm run reinstall
+pnpm run reinstall
 ```
 
 ---
@@ -185,7 +185,7 @@ cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
 1. ✅ Vérification structure (6 fichiers critiques)
 2. ✅ Analyse frontend (AppLayout, Router, Pages)
 3. ✅ Nettoyage (cache Vite, dist)
-4. ✅ Réinstallation (npm install si besoin)
+4. ✅ Réinstallation (pnpm install si besoin)
 5. ✅ Build Vite (production test)
 6. ✅ Test Tauri dev (timeout 6s)
 7. ✅ Validation UI (14 composants)
@@ -209,20 +209,20 @@ cat logs/frontend_autofix/autofix_*.log
 ./scripts/titane_autofix_frontend.sh
 
 # 3. Clean build
-npm run clean:dist
-npm run build
+pnpm run clean:dist
+pnpm run build
 ```
 
 ### Problème : Erreur de build
 ```bash
 # 1. Type check
-npm run type-check
+pnpm run type-check
 
 # 2. Nettoyer cache
-npm run clean:cache
+pnpm run clean:cache
 
 # 3. Réinstaller
-npm run reinstall
+pnpm run reinstall
 ```
 
 ### Problème : Port 5173 occupé
@@ -234,7 +234,7 @@ lsof -ti:5173 | xargs kill -9
 pkill -9 -f "vite|node.*5173"
 
 # Puis relancer
-npm run dev
+pnpm run dev
 ```
 
 ### Problème : Navigation ne fonctionne pas
@@ -243,7 +243,7 @@ npm run dev
 npm list react-router-dom
 
 # Réinstaller si nécessaire
-npm install react-router-dom
+pnpm install react-router-dom
 ```
 
 ---
@@ -273,9 +273,9 @@ npm install react-router-dom
 ## ═══════════════════════════════════════════════════════════════
 
 ### Avant déploiement
-- [ ] `npm run type-check` — OK
-- [ ] `npm run build` — OK (< 2s)
-- [ ] `npm run tauri:build` — OK
+- [ ] `pnpm run type-check` — OK
+- [ ] `pnpm run build` — OK (< 2s)
+- [ ] `pnpm run tauri:build` — OK
 - [ ] Navigation entre pages — OK
 - [ ] Menu collapse/expand — OK
 - [ ] GlobalExpBar visible — OK

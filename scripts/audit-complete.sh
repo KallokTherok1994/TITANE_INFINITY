@@ -55,7 +55,7 @@ echo "🧪 2/8 Exécution des tests..."
     
     echo "### Frontend Tests"
     echo "\`\`\`bash"
-    npm test -- --coverage --silent 2>&1 || echo "⚠️ Some tests failed"
+    pnpm test -- --coverage --silent 2>&1 || echo "⚠️ Some tests failed"
     echo "\`\`\`"
     echo ""
     
@@ -79,7 +79,7 @@ echo "🔐 3/8 Audit de sécurité..."
     
     echo "### NPM Audit"
     echo "\`\`\`"
-    npm audit --production 2>&1 || echo "⚠️ Vulnerabilities found"
+    pnpm audit --production 2>&1 || echo "⚠️ Vulnerabilities found"
     echo "\`\`\`"
     echo ""
     
@@ -120,7 +120,7 @@ echo "⚡ 4/8 Tests de performance..."
         du -sh dist/*
         echo "\`\`\`"
     else
-        echo "⚠️ No build found. Run \`npm run build\` first"
+        echo "⚠️ No build found. Run \`pnpm run build\` first"
     fi
     echo ""
     
@@ -142,7 +142,7 @@ echo "♿ 5/8 Tests d'accessibilité..."
     
     echo "### A11y Linting"
     echo "\`\`\`"
-    npm run lint:a11y 2>&1 || echo "⚠️ A11y issues found"
+    pnpm run lint:a11y 2>&1 || echo "⚠️ A11y issues found"
     echo "\`\`\`"
     echo ""
     
@@ -164,13 +164,13 @@ echo "📈 6/8 Analyse de la qualité du code..."
     
     echo "### ESLint Report"
     echo "\`\`\`"
-    npm run lint 2>&1 || echo "⚠️ Linting issues found"
+    pnpm run lint 2>&1 || echo "⚠️ Linting issues found"
     echo "\`\`\`"
     echo ""
     
     echo "### TypeScript Check"
     echo "\`\`\`"
-    npm run check 2>&1 || echo "⚠️ Type errors found"
+    pnpm run check 2>&1 || echo "⚠️ Type errors found"
     echo "\`\`\`"
     echo ""
     

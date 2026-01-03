@@ -204,7 +204,7 @@ $ npx tsc --noEmit
 ### Build Production
 
 ```bash
-$ npm run build
+$ pnpm run build
 vite v6.4.1 building for production...
 ✓ 3326 modules transformed.
 ✓ dist/index.html                   5.96 kB │ gzip:   2.09 kB
@@ -726,16 +726,16 @@ Visibilité perf       ❌         ✅ Temps réel   +∞ ⭐
 
 ```bash
 # Build production
-npm run build
+pnpm run build
 
 # Tests unitaires
-npm test -- performance-optimizations
+pnpm test -- performance-optimizations
 
 # TypeScript check
 npx tsc --noEmit
 
 # Dev mode
-npm run dev
+pnpm run dev
 
 # Clear cache (console F12)
 responseCache.clear()

@@ -268,7 +268,7 @@
 ✅ Status: PRODUCTION READY
 ```
 
-### npm install
+### pnpm install
 
 ```
 ✅ Packages: 331
@@ -337,14 +337,14 @@
 
 ### Recommandations
 
-1. **Test en production** : Lancer `npm run tauri build` pour générer le binaire natif
+1. **Test en production** : Lancer `pnpm run tauri build` pour générer le binaire natif
 2. **Monitoring** : Activer DevTools pour vérifier consciousness/coherence en temps réel
 3. **Performance** : Tester avec PerformanceTest page pour valider les 20 engines
 4. **Documentation** : Compléter README_v∞.md avec exemples UI spécifiques si besoin
 
 ### Maintenance
 
-- **Build réguliers** : `npm run build` pour valider intégrité
+- **Build réguliers** : `pnpm run build` pour valider intégrité
 - **Git tags** : Créer tag `v∞` : `git tag v∞ && git push origin v∞`
 - **Backup** : Archive actuelle dans `backups/v∞/` si modifications futures
 

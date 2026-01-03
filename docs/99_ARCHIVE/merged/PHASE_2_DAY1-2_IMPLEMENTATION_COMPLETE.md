@@ -121,7 +121,7 @@ The Configuration Hub displays:
 
 ✅ **TypeScript/Vite Build:** PASSED
 ```bash
-npm run build
+pnpm run build
 ✓ built in 22.29s
 ```
 
@@ -137,7 +137,7 @@ To test the Configuration Hub:
 
 1. **Start dev server:**
    ```bash
-   npm run tauri dev
+   pnpm run tauri dev
    ```
 
 2. **Navigate to Configuration Hub:**

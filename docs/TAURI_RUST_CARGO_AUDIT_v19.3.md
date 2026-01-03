@@ -386,7 +386,7 @@ pub enum PersistenceError {
 {
   "dev": "vite --host 0.0.0.0 --port 5173",
   "dev:tauri": "tauri dev",
-  "build": "npm run type-check && vite build",
+  "build": "pnpm run type-check && vite build",
   "tauri:dev": "tauri dev",
   "tauri:build": "tauri build",
   "tauri:build:debug": "tauri build --debug",
@@ -401,15 +401,15 @@ pub enum PersistenceError {
 
 ```bash
 # Développement
-npm run tauri:dev
+pnpm run tauri:dev
 # → vite dev + cargo build + run
 
 # Production
-npm run tauri:build
+pnpm run tauri:build
 # → tsc --noEmit + vite build + cargo build --release + bundle
 
 # Tests Rust
-npm run test:rust
+pnpm run test:rust
 # → cargo test
 ```
 
@@ -417,12 +417,12 @@ npm run test:rust
 
 ```json
 {
-  "🚀 Tauri Dev": "npm run tauri:dev",
-  "🔨 Tauri Build": "npm run tauri:build",
-  "⚡ Vite Build": "npm run build",
-  "🧹 Clean All": "npm run clean",
-  "🔍 Type Check": "npm run type-check",
-  "🧪 Run Tests": "npm run test",
+  "🚀 Tauri Dev": "pnpm run tauri:dev",
+  "🔨 Tauri Build": "pnpm run tauri:build",
+  "⚡ Vite Build": "pnpm run build",
+  "🧹 Clean All": "pnpm run clean",
+  "🔍 Type Check": "pnpm run type-check",
+  "🧪 Run Tests": "pnpm run test",
   "🦀 Cargo Check": "cargo check",
   "🦀 Cargo Clippy": "cargo clippy"
 }

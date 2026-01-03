@@ -24,7 +24,7 @@
 
 ```bash
 # Lancer le serveur de dev frontend
-npm run dev
+pnpm run dev
 # Ou avec pnpm
 pnpm dev
 
@@ -42,10 +42,10 @@ pnpm dev
 
 ```bash
 # Lancer l'app Tauri complète
-npm run tauri dev
+pnpm run tauri dev
 
 # Variante avec logs détaillés
-npm run tauri dev -- --verbose
+pnpm run tauri dev -- --verbose
 ```
 
 **Utilisation:**
@@ -58,17 +58,17 @@ npm run tauri dev -- --verbose
 
 ```bash
 # Dev avec port personnalisé
-VITE_PORT=3000 npm run dev
+VITE_PORT=3000 pnpm run dev
 
 # Dev avec logs niveau DEBUG
-VITE_LOG_LEVEL=DEBUG npm run dev
+VITE_LOG_LEVEL=DEBUG pnpm run dev
 
 # Dev avec hot reload Rust (cargo-watch)
 # Installer: cargo install cargo-watch
 cd src-tauri && cargo watch -x run
 
 # Dev avec profiling React
-npm run dev -- --profile
+pnpm run dev -- --profile
 ```
 
 ---
@@ -79,13 +79,13 @@ npm run dev -- --profile
 
 ```bash
 # Build optimisé pour production
-npm run build
+pnpm run build
 
 # Build avec source maps (debugging)
-npm run build -- --sourcemap
+pnpm run build -- --sourcemap
 
 # Build pour preview local
-npm run build && npm run preview
+pnpm run build && pnpm run preview
 ```
 
 **Sortie:** `dist/`
@@ -94,16 +94,16 @@ npm run build && npm run preview
 
 ```bash
 # Build complet (frontend + backend)
-npm run tauri build
+pnpm run tauri build
 
 # Build pour plateforme spécifique
-npm run tauri build -- --target x86_64-pc-windows-msvc  # Windows
-npm run tauri build -- --target x86_64-apple-darwin     # macOS Intel
-npm run tauri build -- --target aarch64-apple-darwin    # macOS Apple Silicon
-npm run tauri build -- --target x86_64-unknown-linux-gnu # Linux
+pnpm run tauri build -- --target x86_64-pc-windows-msvc  # Windows
+pnpm run tauri build -- --target x86_64-apple-darwin     # macOS Intel
+pnpm run tauri build -- --target aarch64-apple-darwin    # macOS Apple Silicon
+pnpm run tauri build -- --target x86_64-unknown-linux-gnu # Linux
 
 # Build debug (plus rapide, non optimisé)
-npm run tauri build -- --debug
+pnpm run tauri build -- --debug
 ```
 
 **Sortie:** `src-tauri/target/release/`
@@ -133,43 +133,43 @@ cd ..
 
 ```bash
 # Lancer tous les tests
-npm run test
+pnpm run test
 
 # Tests en mode watch (auto re-run)
-npm run test -- --watch
+pnpm run test -- --watch
 
 # Tests avec UI interactive
-npm run test:ui
+pnpm run test:ui
 
 # Tests avec coverage
-npm run test -- --coverage
+pnpm run test -- --coverage
 
 # Tester un fichier spécifique
-npm run test -- src/engines/orchestrator.test.ts
+pnpm run test -- src/engines/orchestrator.test.ts
 
 # Tester un pattern
-npm run test -- --grep "OMEGA Pipeline"
+pnpm run test -- --grep "OMEGA Pipeline"
 ```
 
 ### Tests E2E (Playwright)
 
 ```bash
 # Lancer les tests E2E
-npm run test:e2e
+pnpm run test:e2e
 
 # Tests E2E avec UI
-npm run test:e2e -- --ui
+pnpm run test:e2e -- --ui
 
 # Tests E2E en mode debug
-npm run test:e2e -- --debug
+pnpm run test:e2e -- --debug
 
 # Tests E2E sur navigateur spécifique
-npm run test:e2e -- --project=chromium
-npm run test:e2e -- --project=firefox
-npm run test:e2e -- --project=webkit
+pnpm run test:e2e -- --project=chromium
+pnpm run test:e2e -- --project=firefox
+pnpm run test:e2e -- --project=webkit
 
 # Générer rapport E2E
-npm run test:e2e -- --reporter=html
+pnpm run test:e2e -- --reporter=html
 ```
 
 ### Tests Rust
@@ -196,14 +196,14 @@ cd ..
 
 ```bash
 # Benchmark Vitest
-npm run test -- --benchmark
+pnpm run test -- --benchmark
 
 # Profiling React
-npm run dev -- --profile
+pnpm run dev -- --profile
 # Ouvrir DevTools > Profiler
 
 # Analyse bundle size
-npm run build -- --analyze
+pnpm run build -- --analyze
 ```
 
 ---
@@ -214,26 +214,26 @@ npm run build -- --analyze
 
 ```bash
 # ESLint
-npm run lint
+pnpm run lint
 
 # Fix automatique
-npm run lint:fix
+pnpm run lint:fix
 
 # Lint fichiers spécifiques
-npm run lint -- src/components/**/*.tsx
+pnpm run lint -- src/components/**/*.tsx
 
 # Lint avec règles strictes
-npm run lint -- --max-warnings 0
+pnpm run lint -- --max-warnings 0
 ```
 
 ### TypeScript
 
 ```bash
 # Type checking
-npm run type-check
+pnpm run type-check
 
 # Type checking en watch mode
-npm run type-check -- --watch
+pnpm run type-check -- --watch
 
 # Générer déclarations .d.ts
 npx tsc --declaration --emitDeclarationOnly
@@ -243,10 +243,10 @@ npx tsc --declaration --emitDeclarationOnly
 
 ```bash
 # Prettier (si configuré)
-npm run format
+pnpm run format
 
 # Check format sans modifier
-npm run format:check
+pnpm run format:check
 
 # Format fichiers spécifiques
 npx prettier --write "src/**/*.{ts,tsx}"
@@ -280,7 +280,7 @@ cd ..
 
 ```bash
 # Lancer avec DevTools Chrome
-npm run dev
+pnpm run dev
 # Puis ouvrir: chrome://inspect
 
 # Logs navigateur
@@ -295,13 +295,13 @@ npm run dev
 
 ```bash
 # Logs Rust détaillés
-RUST_LOG=debug npm run tauri dev
+RUST_LOG=debug pnpm run tauri dev
 
 # Logs niveau TRACE (très verbeux)
-RUST_LOG=trace npm run tauri dev
+RUST_LOG=trace pnpm run tauri dev
 
 # Logs module spécifique
-RUST_LOG=titane_infinity::omega=debug npm run tauri dev
+RUST_LOG=titane_infinity::omega=debug pnpm run tauri dev
 
 # Debugger Rust (VSCode)
 # 1. Installer extension "rust-analyzer"
@@ -313,7 +313,7 @@ RUST_LOG=titane_infinity::omega=debug npm run tauri dev
 
 ```bash
 # Activer monitoring en dev
-VITE_SENTRY_DSN=your-dsn npm run dev
+VITE_SENTRY_DSN=your-dsn pnpm run dev
 
 # DevTools console
 window.__TITANE_MONITORING__.getMetrics()
@@ -331,7 +331,7 @@ window.__TITANE_MONITORING__.trackError(new Error('test'))
 
 # Mock API responses
 # Utiliser MSW: src/mocks/handlers.ts
-npm run dev -- --mock
+pnpm run dev -- --mock
 ```
 
 ---
@@ -380,7 +380,7 @@ git push origin v1.0.0
 ```bash
 # Clean node_modules
 rm -rf node_modules
-npm install
+pnpm install
 
 # Clean Rust build
 cd src-tauri
@@ -388,7 +388,7 @@ cargo clean
 cd ..
 
 # Clean tout
-npm run clean  # Si script configuré
+pnpm run clean  # Si script configuré
 ```
 
 ---
@@ -399,7 +399,7 @@ npm run clean  # Si script configuré
 
 ```bash
 # Activer en dev
-npm run dev
+pnpm run dev
 
 # Console DevTools
 window.__TITANE_MONITORING__.getMetrics()
@@ -415,7 +415,7 @@ window.__TITANE_MONITORING__.exportMetrics()
 npx lighthouse http://localhost:5173 --view
 
 # Bundle analysis
-npm run build -- --analyze
+pnpm run build -- --analyze
 npx vite-bundle-visualizer
 
 # Memory profiling
@@ -426,7 +426,7 @@ npx vite-bundle-visualizer
 
 ```bash
 # Test Sentry integration
-VITE_SENTRY_DSN=your-dsn npm run dev
+VITE_SENTRY_DSN=your-dsn pnpm run dev
 
 # Trigger test error
 window.__TITANE_MONITORING__.trackError(new Error('Test error'))
@@ -452,12 +452,12 @@ npm outdated
 npm update
 
 # Audit sécurité
-npm audit
-npm audit fix
+pnpm audit
+pnpm audit fix
 
 # Installer nouvelle dépendance
-npm install package-name
-npm install -D package-name  # Dev dependency
+pnpm install package-name
+pnpm install -D package-name  # Dev dependency
 ```
 
 ### Génération
@@ -477,21 +477,21 @@ npx typedoc --out docs src
 
 ```bash
 # Migrations
-npm run migrate
-npm run migrate:rollback
+pnpm run migrate
+pnpm run migrate:rollback
 
 # Seed data
-npm run seed
+pnpm run seed
 ```
 
 ### CI/CD Local
 
 ```bash
 # Simuler CI en local
-npm run ci
+pnpm run ci
 
 # Équivalent de CI workflow
-npm run lint && npm run type-check && npm run test && npm run build
+pnpm run lint && pnpm run type-check && pnpm run test && pnpm run build
 ```
 
 ---
@@ -506,7 +506,7 @@ npm run lint && npm run type-check && npm run test && npm run build
 {
   "scripts": {
     "custom": "echo 'Custom script'",
-    "dev:inspect": "VITE_LOG_LEVEL=DEBUG npm run dev"
+    "dev:inspect": "VITE_LOG_LEVEL=DEBUG pnpm run dev"
   }
 }
 ```
@@ -553,9 +553,9 @@ history | grep "npm run"
 !!
 
 # Alias utiles (ajouter à ~/.bashrc ou ~/.zshrc)
-alias dev="npm run dev"
-alias test="npm run test"
-alias build="npm run build"
+alias dev="pnpm run dev"
+alias test="pnpm run test"
+alias build="pnpm run build"
 ```
 
 ---
@@ -571,7 +571,7 @@ rm -rf node_modules/.vite
 
 # Lock file désynchronisé
 rm -rf node_modules package-lock.json
-npm install
+pnpm install
 
 # TypeScript errors persistantes
 npx tsc --noEmit --skipLibCheck

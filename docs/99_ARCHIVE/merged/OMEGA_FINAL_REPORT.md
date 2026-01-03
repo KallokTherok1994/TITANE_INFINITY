@@ -365,7 +365,7 @@ Finished `dev` profile [unoptimized + debuginfo] target(s) in 1m 16s
 
 ### Phase 2A — Tests manuels (Nécessite build)
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 **Tests à effectuer :**
@@ -527,7 +527,7 @@ Le frontend est maintenant 100% prêt, mais le backend OMEGA doit implémenter :
 
 **Prochaine action immédiate :**
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 Tester manuellement les 6 tests fonctionnels (T1-T6) pour valider l'activation complète.

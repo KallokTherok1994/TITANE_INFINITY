@@ -43,7 +43,7 @@
 
 ## 📈 ANALYSE DES TESTS
 
-### Résultats Test Suite (npm test)
+### Résultats Test Suite (pnpm test)
 
 ```
 ✅ Test Files:  82 passed | 2 skipped (84)
@@ -465,7 +465,7 @@ b392bc61 🗑️ Phase 7: Remove orphan services
 **Validation**:
 - `cargo build --release` (Rust verification)
 - `npx tsc --noEmit` (TypeScript check)
-- `npm test` (test suite validation)
+- `pnpm test` (test suite validation)
 - Git pre-commit hooks (lint-staged)
 
 ---

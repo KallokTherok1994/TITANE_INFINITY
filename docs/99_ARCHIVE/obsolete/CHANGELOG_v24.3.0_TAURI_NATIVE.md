@@ -283,7 +283,7 @@ pnpm run start    # ❌ Bloqué - message "🔒 TAURI-ONLY MODE"
 
 ### Build Process
 
-**Problème** : `prebuild: npm run type-check` bloquait build à cause des warnings
+**Problème** : `prebuild: pnpm run type-check` bloquait build à cause des warnings
 **Solution** : Suppression de `prebuild` script
 **Résultat** : Build production OK malgré warnings TypeScript
 
@@ -379,7 +379,7 @@ pnpm run start    # ❌ Bloqué - message "🔒 TAURI-ONLY MODE"
 ### Applications affectées
 
 **Mode HTTP/devServer supprimé** :
-- ❌ `npm run dev` ne lance plus devServer HTTP
+- ❌ `pnpm run dev` ne lance plus devServer HTTP
 - ❌ `http://localhost:5173` n'existe plus
 - ❌ Hot Module Replacement (HMR) désactivé
 - ✅ Tauri native uniquement (file://)

@@ -88,7 +88,7 @@ Dependencies:    15 libs système (webkit2gtk, gtk3, ssl, crypto)
 
 ⚠️ .AppImage:
   Statut:        Non généré (build interrompu)
-  Note:          Peut être régénéré avec: npm run tauri:build
+  Note:          Peut être régénéré avec: pnpm run tauri:build
 
 📁 Binaire standalone:
   Nom:           titane-infinity
@@ -127,7 +127,7 @@ Toutes présentes sur Ubuntu 22.04+ / Pop!_OS 22.04+ ✅
 ### **TypeScript (Production Code)**
 
 ```bash
-$ npm run type-check
+$ pnpm run type-check
 
 ✅ 0 errors
 ✅ 0 warnings
@@ -276,7 +276,7 @@ titane-infinity
 ### **Build**
 
 - [x] ✅ Clean workspace (dist, target, cache supprimés)
-- [x] ✅ npm install (938 packages, 0 vulnérabilités)
+- [x] ✅ pnpm install (938 packages, 0 vulnérabilités)
 - [x] ✅ TypeScript: 0 errors
 - [x] ✅ Cargo check: 0 warnings
 - [x] ✅ Frontend build: 5.75s, 920 KB → 250 KB gzip
@@ -435,7 +435,7 @@ Solution: Tests à corriger (mocks Three.js + Tauri) en v19.3
 ```yaml
 Cause:   Build interrompu manuellement (Ctrl+C)
 Impact:  .deb et .rpm générés avec succès
-Solution: Relancer `npm run tauri:build` pour générer .AppImage
+Solution: Relancer `pnpm run tauri:build` pour générer .AppImage
 Durée:   ~30s supplémentaires
 
 Note: .deb recommandé pour Ubuntu/Debian (meilleure intégration)

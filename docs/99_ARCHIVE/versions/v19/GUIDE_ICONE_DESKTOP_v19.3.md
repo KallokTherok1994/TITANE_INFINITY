@@ -58,7 +58,7 @@
 ### 1. Installation Complète (Recommandé - Première fois)
 **Pipeline complet** :
 - ✅ Vérification prérequis système (Node, npm, Rust, Cargo)
-- ✅ Installation dépendances (npm install --legacy-peer-deps)
+- ✅ Installation dépendances (pnpm install --legacy-peer-deps)
 - ✅ Build Frontend (React + TypeScript + Vite → dist/)
 - ✅ Build Backend (Rust release → 13 MB optimisé)
 - ✅ Build Tauri (packaging .deb, .rpm, .AppImage)
@@ -191,7 +191,7 @@ bash installer_gui/titane_installer.sh
 cat src-tauri/tauri.conf.json | grep -A3 "build"
 
 # Doit contenir:
-# "beforeDevCommand": "npm run vite:dev"  ✅
+# "beforeDevCommand": "pnpm run vite:dev"  ✅
 # "devUrl": "http://localhost:5173"      ✅
 
 # Si incorrect, corriger:

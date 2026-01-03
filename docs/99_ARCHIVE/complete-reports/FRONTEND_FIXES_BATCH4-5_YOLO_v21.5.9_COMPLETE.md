@@ -367,7 +367,7 @@ import { useState, useEffect, useCallback } from 'react';
 **Commande**:
 
 ```bash
-npm run check
+pnpm run check
 ```
 
 **Résultat**:

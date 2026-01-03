@@ -65,7 +65,7 @@ cargo clean --manifest-path src-tauri/Cargo.toml --release
 
 # 2. Build frontend (production)
 echo "📦 Building frontend..."
-npm run build
+pnpm run build
 
 # 3. Build Tauri (release)
 echo "⚙️ Building Tauri release..."
@@ -274,7 +274,7 @@ jobs:
           toolchain: stable
           
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
         
       - name: Build release
         run: ./scripts/build/build-release.sh

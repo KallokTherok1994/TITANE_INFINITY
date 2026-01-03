@@ -151,7 +151,7 @@ docs/
 
 ### 3. Tests Coverage
 **Mentionné** : 40% → 80% dans roadmaps  
-**Statut réel** : Non vérifié (pas de `npm run coverage`)  
+**Statut réel** : Non vérifié (pas de `pnpm run coverage`)  
 **Manque** : Rapport coverage actuel
 
 ### 4. Dual Runtime (Titan-Dev / Titan-Stable)
@@ -238,7 +238,7 @@ docs/
 
 ## 🔬 INFORMATIONS MANQUANTES (Recherche Phase 2)
 
-1. **Tests Coverage** : Exécuter `npm run test` + vérifier rapport
+1. **Tests Coverage** : Exécuter `pnpm run test` + vérifier rapport
 2. **Module Evolution** : Analyser `src-tauri/src/evolution/` implémentation réelle
 3. **Digital Twin v14.1** : Vérifier existence dans code actuel
 4. **Super-Prompts statut** : 17 fichiers → lesquels implémentés vs specs?

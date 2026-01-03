@@ -27,7 +27,7 @@
 ### Vite Build (Frontend)
 
 ```
-Command: npm run build
+Command: pnpm run build
 Time: 14.91s ✅
 Modules: 3322 transformés
 Warnings: 1 (sentry.ts import mixte - acceptable)
@@ -219,7 +219,7 @@ Backend:
 ### Développement
 
 ```bash
-npm run dev
+pnpm run dev
 # Lance Tauri dev avec hot-reload
 ```
 
@@ -237,7 +237,7 @@ npm run dev
 rm -rf dist/ src-tauri/target/release/
 
 # Build
-npm run build && cd src-tauri && cargo build --release
+pnpm run build && cd src-tauri && cargo build --release
 ```
 
 ---

@@ -23,13 +23,13 @@ git status
 
 ```bash
 # Tester la compilation
-npm run build
+pnpm run build
 
 # Tester le linting
-npm run lint
+pnpm run lint
 
 # Lancer en mode dev
-npm run dev
+pnpm run dev
 
 # Vérifier les types TypeScript
 npx tsc --noEmit
@@ -98,9 +98,9 @@ git reset --hard <commit-hash>
 
 ### Après
 
-- [ ] `npm run build` ✅
-- [ ] `npm run lint` ✅
-- [ ] `npm run dev` fonctionne
+- [ ] `pnpm run build` ✅
+- [ ] `pnpm run lint` ✅
+- [ ] `pnpm run dev` fonctionne
 - [ ] Palette Titane visible
 - [ ] Responsive fonctionne
 - [ ] Commit créé
@@ -162,7 +162,7 @@ src/
 | Problème | Commande / Solution |
 |----------|---------------------|
 | Copilot ne répond pas | `Ctrl+Shift+P` → "Reload Window" |
-| Build cassé | `npm install && npm run build` |
+| Build cassé | `pnpm install && pnpm run build` |
 | Types incorrects | `npx tsc --noEmit` pour voir les erreurs |
 | Palette invisible | Vérifier import de `css-vars.css` dans `main.tsx` |
 | Conflits Git | `git reset --hard HEAD && git stash pop` |
@@ -248,7 +248,7 @@ Co-authored-by: GitHub Copilot <noreply@github.com>
 
 ```bash
 # Build + Lint + Dev test en une commande
-npm run build && npm run lint && npm run dev
+pnpm run build && pnpm run lint && pnpm run dev
 
 # Voir la taille du bundle
 du -sh dist/
@@ -260,7 +260,7 @@ find src/ -name "*.tsx" -o -name "*.ts" | xargs wc -l
 grep -r "TODO" src/
 
 # Vérifier les imports non utilisés (avec ESLint)
-npm run lint -- --fix
+pnpm run lint -- --fix
 ```
 
 ---

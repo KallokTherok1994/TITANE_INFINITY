@@ -656,16 +656,16 @@ E2E Tests (Playwright):
 **Test Commands:**
 ```bash
 # Rust tests
-npm run test:rust
+pnpm run test:rust
 
 # TypeScript tests
-npm run test:omega
+pnpm run test:omega
 
 # E2E tests
-npm run test:e2e
+pnpm run test:e2e
 
 # Full validation
-npm run test:all
+pnpm run test:all
 ```
 
 ---

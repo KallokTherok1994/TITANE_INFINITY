@@ -131,7 +131,7 @@
 #### Validation des corrections
 ```bash
 # 1. Rebuild Tauri
-npm run tauri:dev
+pnpm run tauri:dev
 
 # 2. Test Centre Système
 # → Naviguer vers /system-center
@@ -404,7 +404,7 @@ describe('OPUS Modules Stability', () => {
 
 **Immédiatement** (5 minutes):
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 # Puis tester /system-center et /developer-mode
 ```
 

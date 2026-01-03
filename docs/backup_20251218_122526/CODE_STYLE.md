@@ -442,20 +442,20 @@ pub fn logged_command(data: String) -> Result<String, String> {
 
 ```bash
 # TypeScript/JavaScript
-npm run format
+pnpm run format
 
 # Rust
 cd src-tauri && cargo fmt
 
 # Vérifier sans modifier
-npm run format:check
+pnpm run format:check
 ```
 
 ### Linting
 
 ```bash
 # TypeScript
-npm run lint
+pnpm run lint
 
 # Rust
 cd src-tauri && cargo clippy
@@ -465,9 +465,9 @@ cd src-tauri && cargo clippy
 
 ## ✅ Checklist avant commit
 
-- [ ] Code formaté (`npm run format`)
-- [ ] Linting passé (`npm run lint`)
-- [ ] Tests passés (`npm test`)
+- [ ] Code formaté (`pnpm run format`)
+- [ ] Linting passé (`pnpm run lint`)
+- [ ] Tests passés (`pnpm test`)
 - [ ] Types stricts (pas de `any`)
 - [ ] Documentation ajoutée (JSDoc/Rustdoc)
 - [ ] Logs ajoutés pour fonctions critiques

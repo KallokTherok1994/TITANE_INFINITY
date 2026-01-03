@@ -35,7 +35,7 @@
 - ✅ Configuration lint-staged corrigée (npm v10+ compatible)
 - ✅ Variable `debugger` renommée (39 occurrences)
 - ✅ Variables inutilisées préfixées
-- ✅ Script auto-fix créé (`npm run fix-pipeline`)
+- ✅ Script auto-fix créé (`pnpm run fix-pipeline`)
 - ✅ Pipeline 100% opérationnel
 
 ### 2. Tauri Command Mapper
@@ -207,7 +207,7 @@ git commit -m "feat: nouvelle fonctionnalité"
 ### Fix Manuel (si besoin)
 
 ```bash
-npm run fix-pipeline
+pnpm run fix-pipeline
 git add .
 git commit -m "fix: corrections"
 ```
@@ -215,10 +215,10 @@ git commit -m "fix: corrections"
 ### Commandes Disponibles
 
 ```bash
-npm run fix-pipeline  # Fix complet (recommandé)
-npm run lint:fix      # ESLint seulement
-npm run format        # Prettier seulement
-npm run check         # TypeScript check
+pnpm run fix-pipeline  # Fix complet (recommandé)
+pnpm run lint:fix      # ESLint seulement
+pnpm run format        # Prettier seulement
+pnpm run check         # TypeScript check
 ```
 
 ---

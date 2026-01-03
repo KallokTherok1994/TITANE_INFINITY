@@ -208,9 +208,9 @@ localStorage.getItem('titane_experience')
 
 Lancer l'application :
 ```bash
-npm run dev
+pnpm run dev
 # ou
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 **Scénario 1 : Chat XP**

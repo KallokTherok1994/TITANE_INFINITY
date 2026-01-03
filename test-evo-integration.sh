@@ -118,8 +118,8 @@ if [ $FAIL -eq 0 ]; then
     echo "🚀 Le module EVO est correctement intégré et prêt à l'emploi!"
     echo ""
     echo "Pour tester l'application:"
-    echo "  npm run dev        # Lancer en mode développement"
-    echo "  npm run build      # Build production"
+    echo "  pnpm run dev        # Lancer en mode développement"
+    echo "  pnpm run build      # Build production"
     echo ""
     exit 0
 else

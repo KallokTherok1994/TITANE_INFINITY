@@ -22,7 +22,7 @@ Apprenez à utiliser TITANE∞ en 5 minutes.
 
 ```bash
 cd TITANE_INFINITY
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 **Résultat attendu**:

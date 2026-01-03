@@ -31,7 +31,7 @@ Valider que l'architecture anti-feedback à 3 couches empêche effectivement la 
 
 ```bash
 cd /home/titane/Documents/TITANE_INFINITY
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 **Vérifications initiales** :

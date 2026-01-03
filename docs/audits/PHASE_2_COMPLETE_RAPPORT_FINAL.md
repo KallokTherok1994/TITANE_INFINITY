@@ -74,7 +74,7 @@ MOYENNE:       96.6/100 ⬆️ (+26.2 pts)
 
 ### Configuration (2 modifications)
 - `.eslintrc.json` — Ajout rules no-restricted-imports (engines)
-- `package.json` — Jest removal, npm run verify unified
+- `package.json` — Jest removal, pnpm run verify unified
 
 ### Code (11 modifications)
 - `src/tests/e2e/titane_e2e.test.ts` — 3 scénarios OMEGA v2
@@ -150,7 +150,7 @@ import type { EmotionalState } from '@/services/emotions';
 - [x] Vitest unit/integration (remplacement Jest)
 - [x] Playwright E2E (OMEGA v2 scenarios)
 - [x] Architecture tests (engine isolation)
-- [x] npm run verify unified script
+- [x] pnpm run verify unified script
 
 ### Documentation
 - [x] ARCHITECTURE_RINGS.md (référence complète)

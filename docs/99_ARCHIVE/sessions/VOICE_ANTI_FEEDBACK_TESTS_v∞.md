@@ -426,9 +426,9 @@ fn test_fingerprinting_latency() {
 
 ### Run Frontend Tests
 ```bash
-npm run test -- useVoiceInput.test.ts
-npm run test -- useTTSWithMicControl.test.ts
-npm run test:coverage
+pnpm run test -- useVoiceInput.test.ts
+pnpm run test -- useTTSWithMicControl.test.ts
+pnpm run test:coverage
 ```
 
 ### Run Backend Tests
@@ -440,8 +440,8 @@ cargo test --all-features
 
 ### Run Integration Tests
 ```bash
-npm run test:e2e -- feedback-loop.test.ts
-npm run test:e2e -- voice-fingerprinting.test.ts
+pnpm run test:e2e -- feedback-loop.test.ts
+pnpm run test:e2e -- voice-fingerprinting.test.ts
 ```
 
 ---

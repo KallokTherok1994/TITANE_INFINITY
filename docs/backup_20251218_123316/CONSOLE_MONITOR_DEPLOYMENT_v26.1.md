@@ -350,15 +350,15 @@ export interface ConsoleStats {
 
 ```bash
 # Build production
-npm run build
+pnpm run build
 ✅ 0 warnings, 17.69s
 
 # Tests complets
-npm run test -- --run
+pnpm run test -- --run
 ✅ 2066 passed, 56 skipped
 
 # Lint
-npm run lint
+pnpm run lint
 ✅ 0 warnings
 
 # TypeScript

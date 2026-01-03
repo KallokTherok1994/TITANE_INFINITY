@@ -410,7 +410,7 @@ Arc<Mutex<Option<Child>>>  // process handle (thread-safe)
 1. **Test Manuel Basique**
    ```bash
    # Démarrer TITANE∞
-   npm run tauri:dev
+   pnpm run tauri:dev
 
    # Dans VoiceConversation ou VocalDevConsole :
    # 1. Cliquer "Start Recording"
@@ -444,7 +444,7 @@ Arc<Mutex<Option<Child>>>  // process handle (thread-safe)
 
 1. **Build Production**
    ```bash
-   npm run tauri:build
+   pnpm run tauri:build
    ```
 
 2. **Vérifier Dépendances Linux**

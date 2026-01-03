@@ -17,7 +17,7 @@ Ou si vous utilisez nvm via Flatpak:
 
 ```bash
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-flatpak run --command=bash io.github.nvm_sh.nvm -c "cd $(pwd) && npm run tauri dev"
+flatpak run --command=bash io.github.nvm_sh.nvm -c "cd $(pwd) && pnpm run tauri dev"
 ```
 
 ### Option 2: Ouvrir Juste le Frontend Web
@@ -25,7 +25,7 @@ Si vous voulez juste voir l'interface sans Tauri:
 
 ```bash
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run dev
+pnpm run dev
 # Puis ouvrez http://localhost:5173 dans votre navigateur
 ```
 
@@ -33,14 +33,14 @@ npm run dev
 
 ## 📋 Différences Importantes
 
-### `npm run dev` (Vite seul)
+### `pnpm run dev` (Vite seul)
 - ✅ Démarre seulement le serveur Vite
 - ✅ Interface visible dans le navigateur sur http://localhost:5173
 - ❌ Les fonctionnalités Tauri (backend Rust) ne fonctionnent PAS
 - ❌ Pas d'accès aux commandes Rust invoke()
 - 🎯 Utile pour: Développement frontend uniquement
 
-### `npm run tauri dev` (Application complète)
+### `pnpm run tauri dev` (Application complète)
 - ✅ Démarre Vite + Compile Rust + Ouvre fenêtre Tauri
 - ✅ Toutes les fonctionnalités backend Rust actives
 - ✅ Accès complet aux 121 modules cognitifs
@@ -105,10 +105,10 @@ sudo dnf install webkit2gtk4.1-devel  # Fedora
 
 | Script | Commande | Description |
 |--------|----------|-------------|
-| Dev Frontend | `npm run dev` | Vite seul (port 5173) |
-| Dev Tauri | `npm run tauri dev` | App complète + hot reload |
-| Build Frontend | `npm run build` | Production frontend → dist/ |
-| Build Tauri | `npm run tauri build` | Binaire exécutable |
+| Dev Frontend | `pnpm run dev` | Vite seul (port 5173) |
+| Dev Tauri | `pnpm run tauri dev` | App complète + hot reload |
+| Build Frontend | `pnpm run build` | Production frontend → dist/ |
+| Build Tauri | `pnpm run tauri build` | Binaire exécutable |
 | Lancement | `./launch_tauri.sh` | Script automatique ⭐ |
 | Auto-fix | `./auto_fix_complete.sh` | Correction automatique |
 | Déploiement | `./deploy_complete.sh` | Pipeline complet |

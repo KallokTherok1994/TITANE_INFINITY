@@ -243,7 +243,7 @@ Toute action doit être **réversible**, **traçable** et **justifiée**.
 ### Après l'action
 
 7. ✅ **Validation liens** : Scanner liens morts
-8. ✅ **Test compilation** : `npm run build` + `cargo check`
+8. ✅ **Test compilation** : `pnpm run build` + `cargo check`
 9. ✅ **Review finale** : `git diff MAIN...chore/docs-evolution-phase0`
 
 ---
@@ -259,7 +259,7 @@ Phase 3 — Réorganisation SAFE
 - [ ] Liens internes mis à jour (si déplacements)
 - [ ] Commits atomiques (<20 fichiers)
 - [ ] Messages commits explicites
-- [ ] `npm run build` ✅
+- [ ] `pnpm run build` ✅
 - [ ] `cargo check` ✅
 - [ ] Aucune modification code applicatif
 - [ ] Aucune modification versions (package.json, Cargo.toml)

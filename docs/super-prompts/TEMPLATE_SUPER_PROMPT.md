@@ -75,8 +75,8 @@ Après avoir appliqué ce super prompt avec Copilot :
 - [ ] [Critère de validation 1]
 - [ ] [Critère de validation 2]
 - [ ] [Critère de validation 3]
-- [ ] Un `npm run build` ou `pnpm build` passe sans erreur
-- [ ] Un `npm run lint` ne révèle pas de problèmes critiques
+- [ ] Un `pnpm run build` ou `pnpm build` passe sans erreur
+- [ ] Un `pnpm run lint` ne révèle pas de problèmes critiques
 - [ ] [Tests spécifiques au domaine]
 
 ---

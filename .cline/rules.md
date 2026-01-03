@@ -19,15 +19,15 @@ Voir `.cline/custom-instructions.md` pour les instructions détaillées.
 
 ```bash
 # ❌ COMMANDES BLOQUÉES (sans "GO FOR PRODUCTION DEPLOY")
-npm run build
-npm run build:production
+pnpm run build
+pnpm run build:production
 tauri build
 ./runtime/stable/build.sh
 cargo build --release
 dpkg -i *.deb
 ```
 
-**Seul autorisé:** Mode développement (`npm run dev`, tests, linting)
+**Seul autorisé:** Mode développement (`pnpm run dev`, tests, linting)
 
 ### 🧠 MODE PLAN OBLIGATOIRE
 
@@ -51,9 +51,9 @@ const data: Data = fetch();
 ### ✅ TESTS OBLIGATOIRES
 
 ```bash
-npm run check      # TypeScript
-npm run lint       # ESLint  
-npm test -- --run  # Tests unitaires
+pnpm run check      # TypeScript
+pnpm run lint       # ESLint  
+pnpm test -- --run  # Tests unitaires
 ```
 
 ---
@@ -94,9 +94,9 @@ npm test -- --run  # Tests unitaires
    → Reporter problèmes
 
 4. VALIDATION
-   → npm run check
-   → npm run lint
-   → npm test -- --run
+   → pnpm run check
+   → pnpm run lint
+   → pnpm test -- --run
 ```
 
 ---

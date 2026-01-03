@@ -254,7 +254,7 @@ grep -r "\.unwrap()" --include="*.rs" | cut -d: -f1 | sort | uniq -c | sort -rn 
 
 # Test après fix
 cargo test <module>
-npm test -- --coverage
+pnpm test -- --coverage
 
 # Commit
 git commit -m "fix: eliminate unwrap() in <file> (X→0)"

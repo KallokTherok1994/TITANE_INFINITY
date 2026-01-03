@@ -8,7 +8,7 @@
 
 ## 🎯 PRÉ-REQUIS
 
-- [ ] Dev server lancé (`npm run dev:tauri`)
+- [ ] Dev server lancé (`pnpm run dev:tauri`)
 - [ ] Vite ready sur port 5173
 - [ ] Tauri app compilée et ouverte
 - [ ] Ollama service running (`ollama serve`)
@@ -92,7 +92,7 @@
 
 3. [ ] Reload application:
    - Fermer Tauri app (Cmd/Ctrl+Q)
-   - Relancer: `npm run dev:tauri`
+   - Relancer: `pnpm run dev:tauri`
    - Ouvrir Chat IA
    - Vérifier: Conversation précédente listée
    - Ouvrir conversation

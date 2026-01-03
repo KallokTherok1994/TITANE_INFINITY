@@ -346,10 +346,10 @@ core/frontend/
 
 ```bash
 # Dépendances
-npm install react react-dom react-router-dom
+pnpm install react react-dom react-router-dom
 
 # Dev dependencies
-npm install -D @types/react @types/react-dom vite @vitejs/plugin-react typescript
+pnpm install -D @types/react @types/react-dom vite @vitejs/plugin-react typescript
 ```
 
 ### Structure d'import

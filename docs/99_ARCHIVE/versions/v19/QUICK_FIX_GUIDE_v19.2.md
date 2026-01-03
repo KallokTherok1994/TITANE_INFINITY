@@ -39,7 +39,7 @@ cd /home/titane/Documents/TITANE_INFINITY
 pkill -f tauri
 
 # Lancer en mode dev
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 **Attendez 30-60 secondes** que l'application démarre:
@@ -65,7 +65,7 @@ Une fois l'application ouverte:
 **Si DevTools ne s'ouvre pas**:
 - Essayer **Ctrl+Shift+I** ou **Cmd+Option+I**
 - Vérifier menu: `View → Developer → Developer Tools`
-- Redémarrer l'app: Fermer + relancer `npm run tauri:dev`
+- Redémarrer l'app: Fermer + relancer `pnpm run tauri:dev`
 
 ### **Étape 3: Tester Chat IA**
 
@@ -207,7 +207,7 @@ async generate(message: string, history: AIMessage[]): Promise<AIResponse> {
 2. **Redémarrer l'app proprement**:
    ```bash
    pkill -f tauri
-   npm run tauri:dev
+   pnpm run tauri:dev
    ```
 
 3. **Vérifier configuration** (déjà fait ✅):
@@ -224,7 +224,7 @@ async generate(message: string, history: AIMessage[]): Promise<AIResponse> {
    - ✅ Si marche: Problème UI frontend
    - ❌ Si échoue: Problème backend Rust
 
-2. **Vérifier logs backend** (terminal où `npm run tauri:dev` tourne):
+2. **Vérifier logs backend** (terminal où `pnpm run tauri:dev` tourne):
    ```
    [CHAT_SEND_MESSAGE] Request received
    [CHAT_SEND_MESSAGE] ✅ Success
@@ -235,7 +235,7 @@ async generate(message: string, history: AIMessage[]): Promise<AIResponse> {
    cd src-tauri
    cargo build
    cd ..
-   npm run tauri:dev
+   pnpm run tauri:dev
    ```
 
 ### **Si "Provider unavailable"**
@@ -275,7 +275,7 @@ Vérifier que TOUT est ✅ avant de signaler un problème:
 
 - [ ] ✅ `devUrl: "http://localhost:5173"` dans `tauri.conf.json`
 - [ ] ✅ `devtools: true` sur les 2 fenêtres (lignes 42, 59)
-- [ ] ✅ `npm run tauri:dev` démarre sans erreur
+- [ ] ✅ `pnpm run tauri:dev` démarre sans erreur
 - [ ] ✅ Application s'ouvre (fenêtre principale)
 - [ ] ✅ F12 ouvre DevTools (panneau en bas/côté)
 - [ ] ✅ Console affiche logs (`[Vite] connected`, `TITANE∞`)
@@ -316,19 +316,19 @@ Vérifier que TOUT est ✅ avant de signaler un problème:
 
 ```bash
 # Lancer app dev
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Build production
-npm run tauri:build
+pnpm run tauri:build
 
 # Nettoyer + rebuild
-npm run clean && npm install && npm run tauri:dev
+pnpm run clean && pnpm install && pnpm run tauri:dev
 
 # Tester backend Rust seul
 cd src-tauri && cargo test && cd ..
 
 # Vérifier TypeScript
-npm run type-check
+pnpm run type-check
 
 # Logs en temps réel
 tail -f ~/.local/share/com.titane.infinity/logs/titane.log
