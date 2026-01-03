@@ -492,6 +492,114 @@ export const SecretsTab: React.FC<SecretsTabProps> = ({
         </Card>
       )}
 
+      {/* Carte GitHub Copilot API Key */}
+      {onSetCopilotKey && (
+        <Card>
+          <header style={{ marginBottom: '16px' }}>
+            <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 600 }}>
+              🤖 GitHub Copilot API Key
+            </h3>
+            <p
+              style={{
+                margin: '4px 0 0',
+                color: 'var(--color-text-muted, #8193a7)',
+                fontSize: '0.9rem',
+              }}
+            >
+              GitHub Models / Copilot API — Chiffrement AES-256-GCM
+            </p>
+          </header>
+
+          {/* Statut actuel */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              padding: '12px 16px',
+              borderRadius: '8px',
+              background: 'var(--color-surface, #1a1a2e)',
+              marginBottom: '16px',
+            }}
+          >
+            <span
+              style={{
+                width: '12px',
+                height: '12px',
+                borderRadius: '50%',
+                background: copilotStatus?.configured ? '#4caf50' : '#f44336',
+                flexShrink: 0,
+              }}
+            />
+            <div style={{ flex: 1 }}>
+              <strong style={{ fontSize: '0.95rem' }}>
+                {copilotStatus?.configured
+                  ? 'GitHub Copilot opérationnel'
+                  : 'GitHub Copilot non configuré'}
+              </strong>
+              {copilotStatus?.masked_key && (
+                <code
+                  style={{
+                    display: 'block',
+                    fontSize: '0.75rem',
+                    opacity: 0.6,
+                    marginTop: '4px',
+                  }}
+                >
+                  {copilotStatus.masked_key}
+                </code>
+              )}
+            </div>
+          </div>
+
+          {/* Formulaire */}
+          <form
+            onSubmit={handleCopilotSubmit}
+            style={{ display: 'flex', gap: '12px', alignItems: 'flex-end' }}
+          >
+            <div style={{ flex: 1 }}>
+              <Input
+                type="password"
+                placeholder="Entrer token GitHub Copilot (ghp_xxx ou gho_xxx)"
+                value={copilotKey}
+                onChange={e => setCopilotKey(e.target.value)}
+                disabled={loading || saving}
+                autoComplete="off"
+              />
+            </div>
+            <Button type="submit" disabled={!copilotKey.trim() || loading || saving}>
+              Sauvegarder
+            </Button>
+          </form>
+
+          {/* Aide */}
+          <div
+            style={{
+              marginTop: '12px',
+              padding: '12px',
+              background: 'rgba(33, 150, 243, 0.1)',
+              borderRadius: '8px',
+              fontSize: '0.85rem',
+              color: 'var(--color-text-muted, #8193a7)',
+            }}
+          >
+            💡 <strong>Obtenir un token:</strong>{' '}
+            <a
+              href="https://github.com/settings/tokens"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: '#2196f3', textDecoration: 'underline' }}
+            >
+              GitHub Settings → Developer settings → Personal access tokens
+            </a>
+            <br />
+            <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>
+              Scopes recommandés: <code>read:user</code>, <code>copilot</code> (si disponible)
+            </span>
+          </div>
+        </Card>
+      )}
+
       {/* Autres secrets */}
       <Card>
         <header style={{ marginBottom: '16px' }}>
