@@ -117,6 +117,25 @@ async function setAnthropicKey(apiKey: string): Promise<SecureResponse<GeminiKey
 }
 
 /**
+ * Obtenir le statut de la clé GitHub Copilot
+ */
+async function getCopilotStatus(): Promise<SecureResponse<GeminiKeyStatus>> {
+  const raw = await safeInvoke<unknown>('get_copilot_key_status');
+  return normalizeResponse<GeminiKeyStatus>(
+    raw,
+    'Impossible de récupérer le statut Copilot'
+  );
+}
+
+/**
+ * Définir la clé GitHub Copilot
+ */
+async function setCopilotKey(apiKey: string): Promise<SecureResponse<GeminiKeyStatus>> {
+  const raw = await safeInvoke<unknown>('chat_set_copilot_key', { apiKey });
+  return normalizeResponse<GeminiKeyStatus>(raw, 'Impossible de définir la clé Copilot');
+}
+
+/**
  * Stocker un secret arbitraire
  */
 async function storeSecret(
@@ -323,6 +342,8 @@ export const governanceService = {
   setOpenAIKey,
   getAnthropicStatus,
   setAnthropicKey,
+  getCopilotStatus,
+  setCopilotKey,
   storeSecret,
   getSecretsStatus,
   hasSecret,
