@@ -197,7 +197,8 @@ mod tests {
             focus: 0.85,
         };
         let json = serde_json::to_string(&state).expect("KevinState should serialize");
-        let restored: KevinState = serde_json::from_str(&json).expect("KevinState should deserialize");
+        let restored: KevinState =
+            serde_json::from_str(&json).expect("KevinState should deserialize");
         assert_eq!(restored.energy, 0.95);
         assert_eq!(restored.focus, 0.85);
     }

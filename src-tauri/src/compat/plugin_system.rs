@@ -281,8 +281,8 @@ mod tests {
     fn test_core_registry_serialization() {
         let registry = CoreRegistry::new();
         let json = serde_json::to_string(&registry).expect("CoreRegistry should serialize to JSON");
-        let _restored: CoreRegistry = serde_json::from_str(&json)
-            .expect("CoreRegistry should deserialize from JSON");
+        let _restored: CoreRegistry =
+            serde_json::from_str(&json).expect("CoreRegistry should deserialize from JSON");
     }
 
     // ─────────────────────────────────────────────────────────────

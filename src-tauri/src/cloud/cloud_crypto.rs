@@ -449,8 +449,7 @@ mod tests {
         let data = b"This is some test data that should be compressed and decompressed correctly.";
 
         let compressed = compress_lz4(data).expect("lz4 compression should succeed");
-        let decompressed = decompress_lz4(&compressed)
-            .expect("lz4 decompression should succeed");
+        let decompressed = decompress_lz4(&compressed).expect("lz4 decompression should succeed");
 
         assert_eq!(data.to_vec(), decompressed);
     }

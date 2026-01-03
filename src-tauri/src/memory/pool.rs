@@ -849,8 +849,8 @@ mod tests {
             hit_rate: 0.833,
         };
 
-        let json = serde_json::to_string(&snapshot)
-            .expect("pool metrics snapshot should serialize");
+        let json =
+            serde_json::to_string(&snapshot).expect("pool metrics snapshot should serialize");
         assert!(json.contains("allocations"));
         assert!(json.contains("hit_rate"));
     }
@@ -1326,8 +1326,7 @@ mod tests {
         let manager = MemoryPoolManager::new();
         let metrics = manager.metrics();
 
-        let json = serde_json::to_string(&metrics)
-            .expect("memory pool metrics should serialize");
+        let json = serde_json::to_string(&metrics).expect("memory pool metrics should serialize");
         assert!(json.contains("strings"));
         assert!(json.contains("buffers"));
         assert!(json.contains("embeddings"));

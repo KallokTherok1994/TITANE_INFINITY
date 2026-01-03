@@ -125,10 +125,12 @@ mod tests {
 
     #[test]
     fn test_memory_source_variants() {
-        let sources = [MemorySource::Conversation,
+        let sources = [
+            MemorySource::Conversation,
             MemorySource::FileImport,
             MemorySource::SystemEvent,
-            MemorySource::UserFeedback];
+            MemorySource::UserFeedback,
+        ];
         assert_eq!(sources.len(), 4);
     }
 
@@ -267,8 +269,7 @@ mod tests {
             concepts_extracted: 100,
             total_importance: 15.5,
         };
-        let json =
-            serde_json::to_string(&report).expect("MemoryBuildReport should serialize");
+        let json = serde_json::to_string(&report).expect("MemoryBuildReport should serialize");
         let restored: MemoryBuildReport =
             serde_json::from_str(&json).expect("MemoryBuildReport should deserialize");
         assert_eq!(restored.blocks_created, 20);

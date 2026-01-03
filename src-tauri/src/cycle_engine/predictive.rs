@@ -142,10 +142,9 @@ mod tests {
             confidence: 0.9,
             suggested_action: "Serialize".to_string(),
         };
-        let json = serde_json::to_string(&event)
-            .expect("predictive event should serialize");
-        let restored: PredictiveEvent = serde_json::from_str(&json)
-            .expect("predictive event should deserialize");
+        let json = serde_json::to_string(&event).expect("predictive event should serialize");
+        let restored: PredictiveEvent =
+            serde_json::from_str(&json).expect("predictive event should deserialize");
         assert_eq!(event.event_type, restored.event_type);
         assert_eq!(event.confidence, restored.confidence);
     }

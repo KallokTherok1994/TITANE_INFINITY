@@ -47,7 +47,6 @@ lazy_static! {
         last_action_time: 0,
         actions_count: 0,
     });
-
     static ref SELFHEAL_PROFILE: Mutex<Option<StoredProfile>> = Mutex::new(None);
 }
 
@@ -79,11 +78,15 @@ fn load_profile_from_disk(app: &tauri::AppHandle) -> Result<Option<StoredProfile
     Ok(Some(parsed))
 }
 
-fn save_profile_to_disk(app: &tauri::AppHandle, profile: &StoredProfile) -> Result<(), TitaneError> {
+fn save_profile_to_disk(
+    app: &tauri::AppHandle,
+    profile: &StoredProfile,
+) -> Result<(), TitaneError> {
     let path = profile_path(app)?;
     if let Some(parent) = path.parent() {
-        std::fs::create_dir_all(parent)
-            .map_err(|e| TitaneError::InternalError(format!("Failed to create profile dir: {e}")))?;
+        std::fs::create_dir_all(parent).map_err(|e| {
+            TitaneError::InternalError(format!("Failed to create profile dir: {e}"))
+        })?;
     }
     let text = serde_json::to_string_pretty(profile)
         .map_err(|e| TitaneError::InternalError(format!("Failed to serialize profile: {e}")))?;
@@ -180,13 +183,16 @@ pub async fn selfheal_get_vitals() -> Result<VitalsSnapshot, TitaneError> {
 }
 
 #[tauri::command]
-pub async fn selfheal_load_profile(app: tauri::AppHandle) -> Result<serde_json::Value, TitaneError> {
+pub async fn selfheal_load_profile(
+    app: tauri::AppHandle,
+) -> Result<serde_json::Value, TitaneError> {
     record_action("selfheal_load_profile");
 
     if let Ok(guard) = SELFHEAL_PROFILE.lock() {
         if let Some(profile) = guard.clone() {
-            return serde_json::to_value(profile)
-                .map_err(|e| TitaneError::InternalError(format!("Failed to serialize profile: {e}")));
+            return serde_json::to_value(profile).map_err(|e| {
+                TitaneError::InternalError(format!("Failed to serialize profile: {e}"))
+            });
         }
     }
 
@@ -225,7 +231,9 @@ pub async fn selfheal_save_profile(
 }
 
 #[tauri::command]
-pub async fn selfheal_sync_with_singularity(payload: serde_json::Value) -> Result<serde_json::Value, TitaneError> {
+pub async fn selfheal_sync_with_singularity(
+    payload: serde_json::Value,
+) -> Result<serde_json::Value, TitaneError> {
     record_action("selfheal_sync_with_singularity");
     Ok(json!({
         "status": "ok",
@@ -241,25 +249,37 @@ pub async fn selfheal_sync_with_singularity(payload: serde_json::Value) -> Resul
 // ═══════════════════════════════════════════════════════════════════
 
 #[tauri::command]
-pub async fn selfheal_restart_module(module: String, force: bool) -> Result<serde_json::Value, TitaneError> {
+pub async fn selfheal_restart_module(
+    module: String,
+    force: bool,
+) -> Result<serde_json::Value, TitaneError> {
     record_action("selfheal_restart_module");
     Ok(json!({"status":"noop","module":module,"force":force}))
 }
 
 #[tauri::command]
-pub async fn selfheal_clear_cache(module: String, cache_type: String) -> Result<serde_json::Value, TitaneError> {
+pub async fn selfheal_clear_cache(
+    module: String,
+    cache_type: String,
+) -> Result<serde_json::Value, TitaneError> {
     record_action("selfheal_clear_cache");
     Ok(json!({"status":"noop","module":module,"cacheType":cache_type}))
 }
 
 #[tauri::command]
-pub async fn selfheal_regenerate_config(module: String, template: String) -> Result<serde_json::Value, TitaneError> {
+pub async fn selfheal_regenerate_config(
+    module: String,
+    template: String,
+) -> Result<serde_json::Value, TitaneError> {
     record_action("selfheal_regenerate_config");
     Ok(json!({"status":"noop","module":module,"template":template}))
 }
 
 #[tauri::command]
-pub async fn selfheal_repair_json(file: String, backup: bool) -> Result<serde_json::Value, TitaneError> {
+pub async fn selfheal_repair_json(
+    file: String,
+    backup: bool,
+) -> Result<serde_json::Value, TitaneError> {
     record_action("selfheal_repair_json");
 
     let path = std::path::PathBuf::from(&file);
@@ -276,49 +296,74 @@ pub async fn selfheal_repair_json(file: String, backup: bool) -> Result<serde_js
 }
 
 #[tauri::command]
-pub async fn selfheal_rebuild_memory(scope: String, preserve_recent: bool) -> Result<serde_json::Value, TitaneError> {
+pub async fn selfheal_rebuild_memory(
+    scope: String,
+    preserve_recent: bool,
+) -> Result<serde_json::Value, TitaneError> {
     record_action("selfheal_rebuild_memory");
     Ok(json!({"status":"noop","scope":scope,"preserveRecent":preserve_recent}))
 }
 
 #[tauri::command]
-pub async fn selfheal_switch_provider(module: String, providers: Vec<String>) -> Result<serde_json::Value, TitaneError> {
+pub async fn selfheal_switch_provider(
+    module: String,
+    providers: Vec<String>,
+) -> Result<serde_json::Value, TitaneError> {
     record_action("selfheal_switch_provider");
     Ok(json!({"status":"noop","module":module,"providers":providers}))
 }
 
 #[tauri::command]
-pub async fn selfheal_reset_state(module: String, scope: String, source: Option<String>) -> Result<serde_json::Value, TitaneError> {
+pub async fn selfheal_reset_state(
+    module: String,
+    scope: String,
+    source: Option<String>,
+) -> Result<serde_json::Value, TitaneError> {
     record_action("selfheal_reset_state");
     Ok(json!({"status":"noop","module":module,"scope":scope,"source":source}))
 }
 
 #[tauri::command]
-pub async fn selfheal_restart_worker(module: String, graceful: bool) -> Result<serde_json::Value, TitaneError> {
+pub async fn selfheal_restart_worker(
+    module: String,
+    graceful: bool,
+) -> Result<serde_json::Value, TitaneError> {
     record_action("selfheal_restart_worker");
     Ok(json!({"status":"noop","module":module,"graceful":graceful}))
 }
 
 #[tauri::command]
-pub async fn selfheal_restart_process(module: String, emergency: bool) -> Result<serde_json::Value, TitaneError> {
+pub async fn selfheal_restart_process(
+    module: String,
+    emergency: bool,
+) -> Result<serde_json::Value, TitaneError> {
     record_action("selfheal_restart_process");
     Ok(json!({"status":"not_supported","module":module,"emergency":emergency}))
 }
 
 #[tauri::command]
-pub async fn selfheal_sync_state(module: String, force: bool) -> Result<serde_json::Value, TitaneError> {
+pub async fn selfheal_sync_state(
+    module: String,
+    force: bool,
+) -> Result<serde_json::Value, TitaneError> {
     record_action("selfheal_sync_state");
     Ok(json!({"status":"noop","module":module,"force":force}))
 }
 
 #[tauri::command]
-pub async fn selfheal_mini_audit(module: String, depth: String) -> Result<serde_json::Value, TitaneError> {
+pub async fn selfheal_mini_audit(
+    module: String,
+    depth: String,
+) -> Result<serde_json::Value, TitaneError> {
     record_action("selfheal_mini_audit");
     Ok(json!({"status":"ok","module":module,"depth":depth,"timestamp_ms":unix_time_ms()}))
 }
 
 #[tauri::command]
-pub async fn selfheal_isolate_module(module: String, reason: String) -> Result<serde_json::Value, TitaneError> {
+pub async fn selfheal_isolate_module(
+    module: String,
+    reason: String,
+) -> Result<serde_json::Value, TitaneError> {
     record_action("selfheal_isolate_module");
     Ok(json!({"status":"noop","module":module,"reason":reason}))
 }

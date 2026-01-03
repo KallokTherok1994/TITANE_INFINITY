@@ -681,7 +681,8 @@ mod tests {
         let dim = matrix.get_dimension("Rationalité-Émotivité");
         assert!(dim.is_some());
         assert_eq!(
-            dim.expect("dimension Rationalité-Émotivité should exist").name,
+            dim.expect("dimension Rationalité-Émotivité should exist")
+                .name,
             "Rationalité-Émotivité"
         );
     }
@@ -860,10 +861,9 @@ mod tests {
             volatility: 0.5,
         };
 
-        let json = serde_json::to_string(&dim)
-            .expect("IdentityDimension should serialize to JSON");
-        let restored: IdentityDimension = serde_json::from_str(&json)
-            .expect("IdentityDimension should deserialize from JSON");
+        let json = serde_json::to_string(&dim).expect("IdentityDimension should serialize to JSON");
+        let restored: IdentityDimension =
+            serde_json::from_str(&json).expect("IdentityDimension should deserialize from JSON");
 
         assert_eq!(restored.name, dim.name);
         assert!((restored.value - dim.value).abs() < 0.0001);

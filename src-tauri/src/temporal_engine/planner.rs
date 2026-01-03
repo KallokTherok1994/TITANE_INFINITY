@@ -582,12 +582,14 @@ mod tests {
 
     #[test]
     fn test_task_status_variants() {
-        let statuses = [TaskStatus::Pending,
+        let statuses = [
+            TaskStatus::Pending,
             TaskStatus::InProgress,
             TaskStatus::Blocked,
             TaskStatus::Completed,
             TaskStatus::Cancelled,
-            TaskStatus::Deferred];
+            TaskStatus::Deferred,
+        ];
         assert_eq!(statuses.len(), 6);
     }
 
@@ -615,12 +617,14 @@ mod tests {
 
     #[test]
     fn test_planning_horizon_variants() {
-        let horizons = [PlanningHorizon::Today,
+        let horizons = [
+            PlanningHorizon::Today,
             PlanningHorizon::ThisWeek,
             PlanningHorizon::ThisMonth,
             PlanningHorizon::ThisQuarter,
             PlanningHorizon::ThisYear,
-            PlanningHorizon::LongTerm];
+            PlanningHorizon::LongTerm,
+        ];
         assert_eq!(horizons.len(), 6);
     }
 }

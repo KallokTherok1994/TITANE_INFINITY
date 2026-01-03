@@ -147,10 +147,9 @@ mod tests {
             content: "Test summary".to_string(),
             key_points: vec!["Key point one".to_string()],
         };
-        let json = serde_json::to_string(&summary)
-            .expect("summary should serialize to JSON");
-        let restored: Summary = serde_json::from_str(&json)
-            .expect("summary should deserialize from JSON");
+        let json = serde_json::to_string(&summary).expect("summary should serialize to JSON");
+        let restored: Summary =
+            serde_json::from_str(&json).expect("summary should deserialize from JSON");
         assert_eq!(restored.id, "summary-123");
         assert_eq!(restored.compression_ratio, 0.75);
     }

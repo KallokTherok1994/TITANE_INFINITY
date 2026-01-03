@@ -307,12 +307,10 @@ mod tests {
                 assert!(evicted.is_none());
             } else {
                 assert!(evicted.is_some());
-                assert!(
-                    evicted
-                        .expect("oldest entry should be evicted at capacity")
-                        .content
-                        .contains("Entry 0")
-                );
+                assert!(evicted
+                    .expect("oldest entry should be evicted at capacity")
+                    .content
+                    .contains("Entry 0"));
             }
         }
 
@@ -359,12 +357,7 @@ mod tests {
 
         let found = stm.get(&id).await;
         assert!(found.is_some());
-        assert_eq!(
-            found
-                .expect("should retrieve entry by id")
-                .id,
-            id
-        );
+        assert_eq!(found.expect("should retrieve entry by id").id, id);
     }
 
     #[tokio::test]

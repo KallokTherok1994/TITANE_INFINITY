@@ -717,8 +717,8 @@ mod tests {
     #[test]
     fn test_literary_intensity_serialize() {
         let intensity = LiteraryIntensity::Sober;
-        let json = serde_json::to_string(&intensity)
-            .expect("should serialize literary intensity to json");
+        let json =
+            serde_json::to_string(&intensity).expect("should serialize literary intensity to json");
         assert!(json.contains("Sober"));
     }
 
@@ -841,8 +841,8 @@ mod tests {
             rhythm_musicality: 0.8,
             message_alignment: 0.95,
         };
-        let json = serde_json::to_string(&scores)
-            .expect("should serialize optimization scores to json");
+        let json =
+            serde_json::to_string(&scores).expect("should serialize optimization scores to json");
         assert!(json.contains("narrative_structure"));
     }
 
@@ -902,8 +902,8 @@ mod tests {
     #[test]
     fn test_kevin_style_profile_serialize() {
         let profile = KevinStyleProfile::default();
-        let json = serde_json::to_string(&profile)
-            .expect("should serialize kevin style profile to json");
+        let json =
+            serde_json::to_string(&profile).expect("should serialize kevin style profile to json");
         assert!(json.contains("version"));
         assert!(json.contains("metaphor_types"));
     }

@@ -737,12 +737,14 @@ mod tests {
 
     #[test]
     fn test_job_status_variants() {
-        let statuses = [JobStatus::Queued,
+        let statuses = [
+            JobStatus::Queued,
             JobStatus::Running,
             JobStatus::Completed,
             JobStatus::Failed,
             JobStatus::Cancelled,
-            JobStatus::Expired];
+            JobStatus::Expired,
+        ];
 
         assert_eq!(statuses.len(), 6);
         assert_ne!(JobStatus::Queued, JobStatus::Running);

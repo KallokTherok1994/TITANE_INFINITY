@@ -232,10 +232,7 @@ mod tests {
             .await;
 
         assert!(result.is_ok());
-        assert_eq!(
-            result.expect("runtime should return submitted result"),
-            42
-        );
+        assert_eq!(result.expect("runtime should return submitted result"), 42);
     }
 
     #[tokio::test]

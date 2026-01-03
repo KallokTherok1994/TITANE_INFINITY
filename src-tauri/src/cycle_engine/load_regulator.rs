@@ -145,10 +145,9 @@ mod tests {
     #[test]
     fn test_load_regulation_params_serialization() {
         let params = LoadRegulationParams::default();
-        let json = serde_json::to_string(&params)
-            .expect("load regulation params should serialize");
-        let restored: LoadRegulationParams = serde_json::from_str(&json)
-            .expect("load regulation params should deserialize");
+        let json = serde_json::to_string(&params).expect("load regulation params should serialize");
+        let restored: LoadRegulationParams =
+            serde_json::from_str(&json).expect("load regulation params should deserialize");
         assert_eq!(params.omega_intensity, restored.omega_intensity);
         assert_eq!(params.vector_search_k, restored.vector_search_k);
     }

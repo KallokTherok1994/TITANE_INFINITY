@@ -612,8 +612,7 @@ mod tests {
     #[test]
     fn test_clarity_level_serialize() {
         let level = ClarityLevel::Clear;
-        let json =
-            serde_json::to_string(&level).expect("ClarityLevel should serialize to JSON");
+        let json = serde_json::to_string(&level).expect("ClarityLevel should serialize to JSON");
         assert!(json.contains("Clear"));
     }
 
@@ -705,8 +704,7 @@ mod tests {
     #[test]
     fn test_emotional_state_serialize() {
         let state = EmotionalState::Confusion;
-        let json =
-            serde_json::to_string(&state).expect("EmotionalState should serialize to JSON");
+        let json = serde_json::to_string(&state).expect("EmotionalState should serialize to JSON");
         assert!(json.contains("Confusion"));
     }
 
@@ -923,8 +921,8 @@ mod tests {
             support_level: 0.5,
             cognitive_protection: 0.5,
         };
-        let json = serde_json::to_string(&quality)
-            .expect("AdaptationQuality should serialize to JSON");
+        let json =
+            serde_json::to_string(&quality).expect("AdaptationQuality should serialize to JSON");
         assert!(json.contains("emotional_accuracy"));
         assert!(json.contains("subtlety"));
     }

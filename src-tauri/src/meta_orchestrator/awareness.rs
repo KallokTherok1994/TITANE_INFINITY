@@ -343,12 +343,14 @@ mod tests {
 
     #[tokio::test]
     async fn test_awareness_level_variants() {
-        let levels = [AwarenessLevel::Dormant,
+        let levels = [
+            AwarenessLevel::Dormant,
             AwarenessLevel::Minimal,
             AwarenessLevel::Standard,
             AwarenessLevel::Elevated,
             AwarenessLevel::HyperAware,
-            AwarenessLevel::Transcendent];
+            AwarenessLevel::Transcendent,
+        ];
 
         assert_eq!(levels.len(), 6);
         assert_eq!(levels[0], AwarenessLevel::Dormant);
@@ -357,20 +359,24 @@ mod tests {
 
     #[tokio::test]
     async fn test_alert_severity_variants() {
-        let severities = [AlertSeverity::Info,
+        let severities = [
+            AlertSeverity::Info,
             AlertSeverity::Warning,
             AlertSeverity::Critical,
-            AlertSeverity::Emergency];
+            AlertSeverity::Emergency,
+        ];
 
         assert_eq!(severities.len(), 4);
     }
 
     #[tokio::test]
     async fn test_trend_direction_variants() {
-        let trends = [TrendDirection::Improving,
+        let trends = [
+            TrendDirection::Improving,
             TrendDirection::Stable,
             TrendDirection::Degrading,
-            TrendDirection::Critical];
+            TrendDirection::Critical,
+        ];
 
         assert_eq!(trends.len(), 4);
         assert_eq!(trends[0], TrendDirection::Improving);
@@ -378,13 +384,15 @@ mod tests {
 
     #[tokio::test]
     async fn test_alert_category_variants() {
-        let categories = [AlertCategory::CPU,
+        let categories = [
+            AlertCategory::CPU,
             AlertCategory::Memory,
             AlertCategory::GPU,
             AlertCategory::DiskIO,
             AlertCategory::Network,
             AlertCategory::ErrorRate,
-            AlertCategory::EngineHealth];
+            AlertCategory::EngineHealth,
+        ];
 
         assert_eq!(categories.len(), 7);
     }

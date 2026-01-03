@@ -408,10 +408,12 @@ mod tests {
 
         // Check enabled
         let status = devtools_status().await;
-        assert!(status
-            .data
-            .expect("status should include data after enable")
-            .enabled);
+        assert!(
+            status
+                .data
+                .expect("status should include data after enable")
+                .enabled
+        );
 
         // Disable
         let response = devtools_disable().await;

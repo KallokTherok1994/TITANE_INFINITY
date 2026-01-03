@@ -392,12 +392,14 @@ mod tests {
 
     #[tokio::test]
     async fn test_resource_type_variants() {
-        let types = [ResourceType::CPU,
+        let types = [
+            ResourceType::CPU,
             ResourceType::Memory,
             ResourceType::GPU,
             ResourceType::IO,
             ResourceType::Network,
-            ResourceType::ThreadPool];
+            ResourceType::ThreadPool,
+        ];
 
         assert_eq!(types.len(), 6);
         assert_eq!(types[0], ResourceType::CPU);

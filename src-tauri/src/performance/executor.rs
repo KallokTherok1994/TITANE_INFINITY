@@ -94,10 +94,7 @@ mod tests {
             .await;
 
         assert!(result.is_ok());
-        assert_eq!(
-            result.expect("execution should return result"),
-            42
-        );
+        assert_eq!(result.expect("execution should return result"), 42);
     }
 
     #[tokio::test]

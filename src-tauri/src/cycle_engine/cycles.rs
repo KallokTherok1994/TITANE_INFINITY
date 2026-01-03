@@ -247,10 +247,9 @@ mod tests {
     #[test]
     fn test_daily_phase_serialization() {
         let phase = DailyPhase::Noon;
-        let json = serde_json::to_string(&phase)
-            .expect("serialize DailyPhase should succeed");
-        let restored: DailyPhase = serde_json::from_str(&json)
-            .expect("deserialize DailyPhase should succeed");
+        let json = serde_json::to_string(&phase).expect("serialize DailyPhase should succeed");
+        let restored: DailyPhase =
+            serde_json::from_str(&json).expect("deserialize DailyPhase should succeed");
         assert_eq!(phase, restored);
     }
 
@@ -316,10 +315,9 @@ mod tests {
     #[test]
     fn test_cognitive_mode_serialization() {
         let mode = CognitiveMode::Synthesis;
-        let json = serde_json::to_string(&mode)
-            .expect("serialize CognitiveMode should succeed");
-        let restored: CognitiveMode = serde_json::from_str(&json)
-            .expect("deserialize CognitiveMode should succeed");
+        let json = serde_json::to_string(&mode).expect("serialize CognitiveMode should succeed");
+        let restored: CognitiveMode =
+            serde_json::from_str(&json).expect("deserialize CognitiveMode should succeed");
         assert_eq!(mode, restored);
     }
 
@@ -380,10 +378,9 @@ mod tests {
     #[test]
     fn test_weekly_phase_serialization() {
         let phase = WeeklyPhase::Thursday;
-        let json = serde_json::to_string(&phase)
-            .expect("serialize WeeklyPhase should succeed");
-        let restored: WeeklyPhase = serde_json::from_str(&json)
-            .expect("deserialize WeeklyPhase should succeed");
+        let json = serde_json::to_string(&phase).expect("serialize WeeklyPhase should succeed");
+        let restored: WeeklyPhase =
+            serde_json::from_str(&json).expect("deserialize WeeklyPhase should succeed");
         assert_eq!(phase, restored);
     }
 
@@ -414,10 +411,9 @@ mod tests {
     #[test]
     fn test_monthly_phase_serialization() {
         let phase = MonthlyPhase::Week4;
-        let json = serde_json::to_string(&phase)
-            .expect("serialize MonthlyPhase should succeed");
-        let restored: MonthlyPhase = serde_json::from_str(&json)
-            .expect("deserialize MonthlyPhase should succeed");
+        let json = serde_json::to_string(&phase).expect("serialize MonthlyPhase should succeed");
+        let restored: MonthlyPhase =
+            serde_json::from_str(&json).expect("deserialize MonthlyPhase should succeed");
         assert_eq!(phase, restored);
     }
 
@@ -468,10 +464,9 @@ mod tests {
     #[test]
     fn test_seasonal_phase_serialization() {
         let phase = SeasonalPhase::Winter;
-        let json = serde_json::to_string(&phase)
-            .expect("serialize SeasonalPhase should succeed");
-        let restored: SeasonalPhase = serde_json::from_str(&json)
-            .expect("deserialize SeasonalPhase should succeed");
+        let json = serde_json::to_string(&phase).expect("serialize SeasonalPhase should succeed");
+        let restored: SeasonalPhase =
+            serde_json::from_str(&json).expect("deserialize SeasonalPhase should succeed");
         assert_eq!(phase, restored);
     }
 
@@ -502,10 +497,9 @@ mod tests {
     #[test]
     fn test_cycle_state_serialization() {
         let state = CycleState::current();
-        let json = serde_json::to_string(&state)
-            .expect("serialize CycleState should succeed");
-        let restored: CycleState = serde_json::from_str(&json)
-            .expect("deserialize CycleState should succeed");
+        let json = serde_json::to_string(&state).expect("serialize CycleState should succeed");
+        let restored: CycleState =
+            serde_json::from_str(&json).expect("deserialize CycleState should succeed");
         assert_eq!(state.timestamp, restored.timestamp);
     }
 

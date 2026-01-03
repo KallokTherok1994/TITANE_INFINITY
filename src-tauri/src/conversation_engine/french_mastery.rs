@@ -600,8 +600,7 @@ mod tests {
     #[test]
     fn test_processing_mode_serialize() {
         let mode = ProcessingMode::Double;
-        let json = serde_json::to_string(&mode)
-            .expect("ProcessingMode should serialize to JSON");
+        let json = serde_json::to_string(&mode).expect("ProcessingMode should serialize to JSON");
         assert!(json.contains("double"));
     }
 
@@ -749,8 +748,7 @@ mod tests {
     #[test]
     fn test_technical_level_serialize() {
         let level = TechnicalLevel::Beginner;
-        let json =
-            serde_json::to_string(&level).expect("TechnicalLevel should serialize to JSON");
+        let json = serde_json::to_string(&level).expect("TechnicalLevel should serialize to JSON");
         assert!(json.contains("beginner"));
     }
 
@@ -841,8 +839,8 @@ mod tests {
             mode: ProcessingMode::Double,
             constraints: PostProcessingConstraints::default(),
         };
-        let json = serde_json::to_string(&request)
-            .expect("FrenchMasteryRequest should serialize to JSON");
+        let json =
+            serde_json::to_string(&request).expect("FrenchMasteryRequest should serialize to JSON");
         assert!(json.contains("context"));
         assert!(json.contains("draft_response"));
     }
@@ -886,7 +884,9 @@ mod tests {
         };
         assert!(response.variant.is_some());
         assert_eq!(
-            response.variant.expect("variant should be set in this test"),
+            response
+                .variant
+                .expect("variant should be set in this test"),
             "Short version"
         );
     }
@@ -963,8 +963,7 @@ mod tests {
     #[test]
     fn test_quality_scores_serialize() {
         let scores = QualityScores::default();
-        let json = serde_json::to_string(&scores)
-            .expect("QualityScores should serialize to JSON");
+        let json = serde_json::to_string(&scores).expect("QualityScores should serialize to JSON");
         assert!(json.contains("linguistic_correctness"));
         assert!(json.contains("clarity"));
         assert!(json.contains("titane_style_match"));
