@@ -168,7 +168,7 @@ pub async fn selfheal_get_vitals() -> Result<VitalsSnapshot, TitaneError> {
     let mut system = System::new_all();
     system.refresh_all();
 
-    let cpu_usage = system.global_cpu_info().cpu_usage();
+    let cpu_usage = system.global_cpu_usage();
     let total_mem = system.total_memory().saturating_mul(1024);
     let used_mem = system.used_memory().saturating_mul(1024);
     let uptime_ms = System::uptime().saturating_mul(1000);
