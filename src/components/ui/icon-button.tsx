@@ -1,65 +1,50 @@
 /**
- * TITANE∞ v20.0 — IconButton Component
- * Super Prompt #2: Frontend Polish & UX Mastering
+ * TITANE∞ v26.2.0 — IconButton Component (Titanium Dark)
+ * Icon-only button with Titanium Dark design system
+ * WCAG 2.2 AA compliant - requires aria-label
  * @license MIT
  */
 
 import React from 'react';
 
 export interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost';
+  variant?: 'default' | 'primary' | 'destructive' | 'outline' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
   icon: React.ReactNode;
-  'aria-label': string; // Required pour a11y
+  'aria-label': string; // Required for accessibility
 }
 
 const variantStyles = {
-  default: {
-    bg: 'var(--bg-primary, #727b81)',
-    bgHover: 'var(--bg-primary-hover, #60676d)',
-    color: 'var(--text-inverse, #ffffff)',
-    border: undefined,
-  },
-  destructive: {
-    bg: 'var(--bg-danger, #8b5f5f)',
-    bgHover: 'var(--bg-danger-hover, #744e4e)',
-    color: 'var(--text-inverse, #ffffff)',
-    border: undefined,
-  },
-  outline: {
-    bg: 'transparent',
-    bgHover: 'var(--bg-hover, rgba(255,255,255,0.04))',
-    color: 'var(--text-primary, #e0e0e0)',
-    border: 'var(--border, rgba(196,196,196,0.12))',
-  },
-  secondary: {
-    bg: 'var(--bg-secondary, #505050)',
-    bgHover: 'var(--bg-secondary-hover, #707070)',
-    color: 'var(--text-inverse, #ffffff)',
-    border: undefined,
-  },
-  ghost: {
-    bg: 'transparent',
-    bgHover: 'var(--bg-hover, rgba(255,255,255,0.04))',
-    color: 'var(--text-primary, #e0e0e0)',
-    border: undefined,
-  },
+  // Default (ghost) - transparent with hover
+  default: 'bg-transparent text-titanium-text-secondary hover:bg-titanium-bg-interactive hover:text-titanium-text-primary',
+  
+  // Primary CTA - cool gray accent
+  primary: 'bg-titanium-accent-cool text-titanium-bg-base hover:bg-titanium-accent-bright',
+  
+  // Destructive - error color
+  destructive: 'bg-error-500 text-white hover:bg-error-700',
+  
+  // Outline - border with transparent background
+  outline: 'border border-titanium-border-default bg-transparent text-titanium-text-primary hover:bg-titanium-bg-interactive hover:border-titanium-border-strong',
+  
+  // Ghost - minimal styling
+  ghost: 'bg-transparent text-titanium-text-secondary hover:bg-titanium-bg-interactive hover:text-titanium-text-primary',
 };
 
 const sizeStyles = {
-  sm: { size: 32, icon: 16 },
-  md: { size: 40, icon: 20 },
-  lg: { size: 48, icon: 24 },
+  sm: 'h-8 w-8 p-1.5',
+  md: 'h-10 w-10 p-2',
+  lg: 'h-12 w-12 p-3',
 };
 
 /**
- * IconButton - Bouton circulaire/carré avec icône uniquement
+ * IconButton - Square/circular button with icon only
  *
  * @example
  * ```tsx
  * <IconButton
  *   icon={<SearchIcon size={20} />}
- *   aria-label="Rechercher"
+ *   aria-label="Search"
  *   variant="ghost"
  *   size="md"
  *   onClick={handleSearch}
@@ -75,9 +60,6 @@ export function IconButton({
   'aria-label': ariaLabel,
   ...props
 }: IconButtonProps) {
-  const variantStyle = variantStyles[variant];
-  const sizeStyle = sizeStyles[size];
-
   return (
     <button
       aria-label={ariaLabel}
@@ -85,32 +67,16 @@ export function IconButton({
       className={`
         inline-flex items-center justify-center
         rounded-full
-        transition-all duration-150
-        focus:outline-none focus:ring-[3px] focus:ring-offset-0
-        focus:ring-[rgba(114,123,129,0.6)]
+        transition-colors duration-200
+        focus-visible:outline-none focus-visible:shadow-focus
         disabled:cursor-not-allowed disabled:opacity-50
+        ${variantStyles[variant]}
+        ${sizeStyles[size]}
         ${className}
       `}
-      style={{
-        width: `${sizeStyle.size}px`,
-        height: `${sizeStyle.size}px`,
-        background: variantStyle.bg,
-        border: variantStyle.border ? `1px solid ${variantStyle.border}` : 'none',
-        color: variantStyle.color,
-      }}
-      onMouseEnter={e => {
-        if (!disabled) {
-          e.currentTarget.style.background = variantStyle.bgHover;
-        }
-      }}
-      onMouseLeave={e => {
-        e.currentTarget.style.background = variantStyle.bg;
-      }}
       {...props}
     >
-      <div style={{ width: `${sizeStyle.icon}px`, height: `${sizeStyle.icon}px` }}>
-        {icon}
-      </div>
+      <span aria-hidden="true">{icon}</span>
     </button>
   );
 }
