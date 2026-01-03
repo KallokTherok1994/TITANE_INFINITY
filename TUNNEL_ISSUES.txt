@@ -1,0 +1,149 @@
+╔══════════════════════════════════════════════════════════════════╗
+║   TITANE∞ - Problème Tunnel VS Code Dev Tunnels                ║
+║              Date: 2 janvier 2026 - 23:32                       ║
+╚══════════════════════════════════════════════════════════════════╝
+
+═════════════════════════════════════════════════════════════════
+DIAGNOSTIC
+═════════════════════════════════════════════════════════════════
+
+❌ PROBLÈME IDENTIFIÉ: VS Code Dev Tunnels + Vite
+
+Le tunnel VS Code (lf5m3zxr-5173.use.devtunnels.ms) retourne 
+"Content-Type: text/html" pour TOUS les fichiers, y compris les 
+modules JavaScript TypeScript.
+
+ERREURS:
+─────────────────────────────────────────────────────────────────
+  Loading failed for the module with source 
+  "https://lf5m3zxr-5173.use.devtunnels.ms/@vite/client"
+  
+  Loading failed for the module with source 
+  "https://lf5m3zxr-5173.use.devtunnels.ms/src/utils/browserModeAdapter.ts"
+
+CAUSE:
+─────────────────────────────────────────────────────────────────
+  VS Code Dev Tunnels ne transmet PAS correctement les headers 
+  Content-Type de Vite. Tous les fichiers sont servis comme HTML.
+
+TESTS:
+─────────────────────────────────────────────────────────────────
+  ✅ LOCAL:  http://localhost:5173/src/main.tsx
+             → Content-Type: text/javascript
+  
+  ❌ TUNNEL: https://lf5m3zxr-5173.use.devtunnels.ms/src/main.tsx
+             → Content-Type: text/html (INCORRECT)
+
+═════════════════════════════════════════════════════════════════
+SOLUTIONS
+═════════════════════════════════════════════════════════════════
+
+SOLUTION 1: Utiliser l'accès LOCAL (RECOMMANDÉ)
+─────────────────────────────────────────────────────────────────
+  ✅ http://localhost:5173
+  ✅ http://192.168.2.16:5173 (réseau local)
+  
+  Tous les MIME types fonctionnent correctement.
+
+SOLUTION 2: Cloudflare Tunnel (Alternative au tunnel VS Code)
+─────────────────────────────────────────────────────────────────
+  Cloudflare Tunnel gère correctement les MIME types Vite.
+  
+  Installation:
+  $ sudo apt install cloudflared
+  
+  Lancement:
+  $ cloudflared tunnel --url http://localhost:5173
+  
+  Avantages:
+  • Gère correctement Content-Type
+  • URL publique stable
+  • Pas de problèmes avec les modules ES
+
+SOLUTION 3: ngrok (Alternative)
+─────────────────────────────────────────────────────────────────
+  $ ngrok http 5173
+  
+  Avantages similaires à Cloudflare Tunnel.
+
+SOLUTION 4: Redémarrer le tunnel VS Code
+─────────────────────────────────────────────────────────────────
+  1. Fermer le tunnel:
+     Ctrl+Shift+P → "Close Remote Tunnel"
+  
+  2. Rouvrir le tunnel:
+     Ctrl+Shift+P → "Open New Remote Tunnel"
+  
+  3. Vider le cache navigateur:
+     Ctrl + Shift + R
+  
+  ⚠️  Pas garanti de fonctionner - VS Code Tunnels + Vite
+     ont des problèmes connus avec les MIME types.
+
+═════════════════════════════════════════════════════════════════
+POURQUOI ÇA NE FONCTIONNE PAS ?
+═════════════════════════════════════════════════════════════════
+
+VS Code Dev Tunnels agit comme un proxy HTTP qui:
+  1. Intercepte les requêtes
+  2. Ajoute l'authentification VS Code
+  3. Transmet au serveur local
+
+MAIS le proxy ne préserve PAS les headers Content-Type de Vite
+et retourne systématiquement "text/html" pour tout.
+
+C'est un problème connu avec:
+  • Vite HMR
+  • Modules ES (import/export)
+  • TypeScript transpilé
+
+═════════════════════════════════════════════════════════════════
+RECOMMANDATION FINALE
+═════════════════════════════════════════════════════════════════
+
+✅ POUR DÉVELOPPEMENT LOCAL:
+   → http://localhost:5173
+   → http://192.168.2.16:5173
+
+✅ POUR ACCÈS INTERNET:
+   → Cloudflare Tunnel (cloudflared)
+   → ngrok
+   
+❌ ÉVITER:
+   → VS Code Dev Tunnels avec Vite
+   → Cause des erreurs de chargement de modules
+
+═════════════════════════════════════════════════════════════════
+SCRIPT D'INSTALLATION CLOUDFLARE TUNNEL
+═════════════════════════════════════════════════════════════════
+
+#!/bin/bash
+
+# Installation
+sudo apt update
+sudo apt install cloudflared -y
+
+# Lancement
+cloudflared tunnel --url http://localhost:5173
+
+# Le tunnel vous donnera une URL publique comme:
+# https://random-name.trycloudflare.com
+
+═════════════════════════════════════════════════════════════════
+ÉTAT ACTUEL
+═════════════════════════════════════════════════════════════════
+
+✅ Serveur Vite: OPÉRATIONNEL sur http://localhost:5173
+✅ MIME types: CORRECTS en local
+✅ Application: FONCTIONNE en local
+❌ Tunnel VS Code: Problème MIME type (text/html pour tout)
+
+CONCLUSION:
+  L'application TITANE∞ fonctionne parfaitement en local.
+  Le problème vient uniquement du tunnel VS Code devtunnels.ms.
+  
+  Utilisez localhost ou installez Cloudflare Tunnel.
+
+═════════════════════════════════════════════════════════════════
+FIN DU DIAGNOSTIC
+═════════════════════════════════════════════════════════════════

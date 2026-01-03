@@ -92,12 +92,12 @@
   margin: 0;
   font-size: 22px;
   font-weight: 700;
-  /* Metallic gradient text */
+  /* Metallic gradient text - contraste amélioré WCAG AA */
   background: linear-gradient(
     135deg,
-    rgba(241, 245, 249, 1) 0%,
-    rgba(203, 213, 225, 0.95) 40%,
-    rgba(241, 245, 249, 1) 60%,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(230, 235, 245, 0.95) 40%,
+    rgba(255, 255, 255, 0.98) 60%,
     rgba(192, 192, 200, 0.95) 100%
   );
   background-size: 200% 200%;

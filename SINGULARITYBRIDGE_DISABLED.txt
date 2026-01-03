@@ -1,0 +1,126 @@
+╔══════════════════════════════════════════════════════════════════╗
+║   TITANE∞ - SingularityBridge DÉSACTIVÉ PERMANENT              ║
+║              Date: 2 janvier 2026 - 18:36                       ║
+╚══════════════════════════════════════════════════════════════════╝
+
+═════════════════════════════════════════════════════════════════
+MODIFICATION APPLIQUÉE
+═════════════════════════════════════════════════════════════════
+
+✅ SingularityBridge a été complètement désactivé dans main.tsx
+
+FICHIER MODIFIÉ:
+  src/main.tsx (lignes 745-849)
+
+CHANGEMENT:
+─────────────────────────────────────────────────────────────────
+  AVANT:
+    SingularityBridge.initialize()
+      .then(() => { ... })
+      .catch(err => { ... });
+
+  APRÈS:
+    // 🔴 DÉSACTIVÉ PERMANENT - Mode navigateur uniquement
+    /*
+    SingularityBridge.initialize()
+      .then(() => { ... })
+      .catch(err => { ... });
+    */
+    console.log('🔴 SingularityBridge: DÉSACTIVÉ PERMANENT 
+                 (mode navigateur uniquement)');
+
+═════════════════════════════════════════════════════════════════
+RAISON DE LA DÉSACTIVATION
+═════════════════════════════════════════════════════════════════
+
+SingularityBridge nécessite le backend Tauri (Rust) pour:
+  • Synchroniser l'état entre Rust et React
+  • Écouter les événements Tauri
+  • Invoquer les commandes backend
+
+En mode navigateur HTTP pur (sans Tauri), SingularityBridge:
+  ❌ Ne peut pas se connecter au backend
+  ❌ Génère des erreurs d'initialisation
+  ❌ Essaie d'accéder à window.__TAURI_INTERNALS__ (undefined)
+
+ERREUR AVANT DÉSACTIVATION:
+  [SingularityBridge] ❌ Initialization failed: 
+  TypeError: can't access property "transformCallback", 
+  window.__TAURI_INTERNALS__ is undefined
+
+═════════════════════════════════════════════════════════════════
+IMPACT
+═════════════════════════════════════════════════════════════════
+
+✅ POSITIF:
+  • Pas d'erreurs d'initialisation SingularityBridge
+  • Console plus propre en mode navigateur
+  • Application charge plus rapidement
+  • Moins de tentatives de connexion backend
+
+❌ FONCTIONNALITÉS DÉSACTIVÉES:
+  • Sync état Rust ↔ React
+  • SingularityConnections (Helios, Memory, Persona, AutoHeal)
+  • Événements temps réel du backend
+  • Polling de l'état Singularity
+
+⚠️  EN MODE NAVIGATEUR UNIQUEMENT:
+  Ces fonctionnalités ne sont de toute façon pas disponibles
+  sans le backend Tauri Rust.
+
+═════════════════════════════════════════════════════════════════
+FONCTIONNALITÉS QUI RESTENT ACTIVES
+═════════════════════════════════════════════════════════════════
+
+✅ Interface React complète
+✅ Routing et navigation
+✅ Composants UI
+✅ État local React (useState, useEffect)
+✅ LocalStorage et IndexedDB
+✅ XP Engine (système d'expérience)
+✅ UILogger
+✅ Monitoring frontend
+✅ Tauri Protection (fallbacks)
+✅ Browser Mode Adapter
+
+═════════════════════════════════════════════════════════════════
+POUR RÉACTIVER SINGULARITYBRIDGE
+═════════════════════════════════════════════════════════════════
+
+Si vous lancez l'application avec Tauri (mode desktop):
+
+1. Ouvrir src/main.tsx
+2. Décommenter le bloc SingularityBridge.initialize()
+3. Supprimer la ligne console.log('🔴 SingularityBridge...')
+4. Rebuild avec:
+   $ pnpm tauri dev
+
+CONDITION POUR RÉACTIVATION:
+  ✅ Backend Rust Tauri actif
+  ✅ Commandes Tauri disponibles
+  ✅ window.__TAURI_INTERNALS__ défini
+
+═════════════════════════════════════════════════════════════════
+CONSOLE MAINTENANT
+═════════════════════════════════════════════════════════════════
+
+Au lieu de:
+  ❌ [SingularityBridge] ❌ Initialization failed...
+
+Vous verrez:
+  🔴 SingularityBridge: DÉSACTIVÉ PERMANENT 
+     (mode navigateur uniquement)
+
+═════════════════════════════════════════════════════════════════
+ÉTAT ACTUEL
+═════════════════════════════════════════════════════════════════
+
+✅ SingularityBridge: DÉSACTIVÉ
+✅ Application: FONCTIONNE en mode navigateur
+✅ Serveur HTTP: OPÉRATIONNEL (localhost:5173)
+✅ Erreurs Tauri: ÉLIMINÉES
+✅ Console: PROPRE
+
+═════════════════════════════════════════════════════════════════
+FIN DE LA DÉSACTIVATION
+═════════════════════════════════════════════════════════════════

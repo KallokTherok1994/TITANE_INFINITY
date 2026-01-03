@@ -1,0 +1,122 @@
+╔══════════════════════════════════════════════════════════════════╗
+║   TITANE∞ - Vérification Chat Bulle & Gouvernance              ║
+║              Date: 2 janvier 2026 - 18:45                       ║
+╚══════════════════════════════════════════════════════════════════╝
+
+═════════════════════════════════════════════════════════════════
+PROBLÈME 1: CHAT BULLE
+═════════════════════════════════════════════════════════════════
+
+SYMPTÔMES RAPPORTÉS:
+  ❌ Bouton X pour fermer manquant
+  ❌ Après rechargement, seul du code s'affiche
+
+VÉRIFICATION CODE:
+─────────────────────────────────────────────────────────────────
+Fichier: src/components/chat/ChatBubble.tsx
+
+Ligne 541-547: Bouton X PRÉSENT
+  <button
+    className="chat-bubble-action"
+    onClick={handleClose}
+    title="Fermer"
+  >
+    <X size={16} />
+  </button>
+
+✅ Le bouton X existe dans le code
+✅ Le composant est bien structuré
+
+CAUSES POSSIBLES:
+─────────────────────────────────────────────────────────────────
+1. CSS mal chargé → bouton existe mais invisible
+2. Cache navigateur → ancien code affiché
+3. Erreur React → composant ne render pas correctement
+4. Z-index problème → bouton derrière autre élément
+
+SOLUTION RECOMMANDÉE:
+─────────────────────────────────────────────────────────────────
+1. Vider le cache navigateur: Ctrl + Shift + R
+2. Vérifier la console pour erreurs JavaScript
+3. Inspecter l'élément pour voir si le bouton est présent dans le DOM
+4. Vérifier le CSS .chat-bubble-action
+
+═════════════════════════════════════════════════════════════════
+PROBLÈME 2: GOUVERNANCE - CLÉS API
+═════════════════════════════════════════════════════════════════
+
+SYMPTÔMES RAPPORTÉS:
+  ❌ Cases clés API ne fonctionnent pas dans l'onglet Gouvernance
+
+VÉRIFICATION CODE:
+─────────────────────────────────────────────────────────────────
+Fichier: src/features/governance-center/components/APIProviderCard.tsx
+
+✅ Input présent (ligne 213):
+  <input
+    type={showKey ? 'text' : 'password'}
+    value={inputValue}
+    onChange={e => setInputValue(e.target.value)}
+    ...
+  />
+
+✅ Bouton submit présent (ligne 240):
+  <button type="submit" ...>
+    Configurer la clé API
+  </button>
+
+✅ handleSubmit fonction présente (ligne 68):
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!inputValue.trim() || isSubmitting) return;
+    await onSetKey(inputValue.trim());
+  }
+
+CAUSES POSSIBLES:
+─────────────────────────────────────────────────────────────────
+1. Tauri backend non disponible → secureInvoke échoue silencieusement
+2. Permissions manquantes
+3. Erreur dans useGovernance hook
+4. Input disabled par erreur
+
+TESTS À EFFECTUER:
+─────────────────────────────────────────────────────────────────
+1. Ouvrir console navigateur
+2. Aller dans ADMIN > Gouvernance
+3. Essayer d'entrer une clé API
+4. Noter les erreurs dans la console
+
+═════════════════════════════════════════════════════════════════
+DIAGNOSTIC EN COURS
+═════════════════════════════════════════════════════════════════
+
+Pour vérifier en direct, ouvrir:
+  http://localhost:5173
+
+1. Chat Bulle:
+   → Cliquer sur bulle en bas à droite
+   → Vérifier que header avec boutons apparaît
+   → Tester bouton X (devrait être en haut à droite)
+
+2. Gouvernance:
+   → Menu → ADMIN
+   → Onglet Gouvernance (🛡️)
+   → Tenter d'entrer une clé API Gemini/OpenAI
+
+═════════════════════════════════════════════════════════════════
+ACTIONS CORRECTIVES
+═════════════════════════════════════════════════════════════════
+
+SI BOUTON X INVISIBLE:
+  → Vérifier .chat-bubble-action dans CSS
+  → Ajouter display: flex important
+  → Vérifier z-index
+
+SI CLÉS API NE FONCTIONNENT PAS:
+  → Vérifier que useGovernance retourne bien les handlers
+  → Vérifier console pour erreurs secureInvoke
+  → Mode navigateur peut limiter certaines fonctions
+
+═════════════════════════════════════════════════════════════════
+FIN DU DIAGNOSTIC
+═════════════════════════════════════════════════════════════════

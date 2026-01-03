@@ -63,12 +63,36 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-2xl, 16px);
   padding: var(--space-md, 16px) var(--space-lg, 24px);
+  /* Transition optimisée avec easing naturel */
   transition: all 280ms cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   /* Tech depth shadows */
   box-shadow:
     0 4px 16px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+  /* GPU acceleration pour performances */
+  transform: translateZ(0);
+  will-change: box-shadow, border-color;
+}
+
+/* Hover state avec feedback subtil */
+.chat-input-wrapper:hover {
+  border-color: rgba(147, 179, 153, 0.25);
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.35),
+    0 0 20px rgba(147, 179, 153, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* Focus-within pour meilleur feedback accessibilité */
+.chat-input-wrapper:focus-within {
+  border-color: rgba(147, 179, 153, 0.4);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(147, 179, 153, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
     inset 0 -1px 0 rgba(0, 0, 0, 0.2);
 }
 

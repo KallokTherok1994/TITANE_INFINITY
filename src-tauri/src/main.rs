@@ -64,6 +64,9 @@ mod commands_v21 {
     pub mod singularity_commands {
         include!("commands/singularity_commands.rs");
     }
+    pub mod window_controls_commands {
+        include!("commands/window_controls_commands.rs");
+    }
 }
 
 // Orchestration Center commands (OPUS #5/6/7)
@@ -1034,6 +1037,17 @@ fn main() {
             commands_v21::self_healing_commands::self_healing_disable,
             // Singularity Extra Commands (1 command)
             commands_v21::singularity_commands::singularity_self_check,
+            // ═══════════════════════════════════════════════════════════════
+            // WINDOW CONTROLS COMMANDS (v26.2.0) - Zoom + Fullscreen
+            // ═══════════════════════════════════════════════════════════════
+            commands_v21::window_controls_commands::window_get_zoom,
+            commands_v21::window_controls_commands::window_set_zoom,
+            commands_v21::window_controls_commands::window_zoom_in,
+            commands_v21::window_controls_commands::window_zoom_out,
+            commands_v21::window_controls_commands::window_zoom_reset,
+            commands_v21::window_controls_commands::window_toggle_fullscreen,
+            commands_v21::window_controls_commands::window_set_fullscreen,
+            commands_v21::window_controls_commands::window_is_fullscreen,
             // ═══════════════════════════════════════════════════════════════
             // CONFIGURATION HUB COMMANDS (v24.3.3 FIX) - 10 commands
             // ═══════════════════════════════════════════════════════════════

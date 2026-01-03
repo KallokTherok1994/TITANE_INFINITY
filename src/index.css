@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v24.3.0 — MAIN STYLESHEET
+ * TITANE∞ v26.2.3 — MAIN STYLESHEET (UI/UX OPTIMIZED)
  *
  * Import order:
  * 1. CSS imports (must be first)
@@ -9,6 +9,7 @@
  * 5. Custom component classes
  *
  * v22Ω AI Performance Optimizations Compatible
+ * UX Enhancements: Smooth scroll, optimized rendering, WCAG AA
  */
 
 /* ═══════════════════════════════════════════════════════════════ */
@@ -19,6 +20,32 @@
 @import './styles/tech-effects.css'; /* v25.4.2 - Metallic & tech UI effects */
 @import './styles/animations.css';
 @import './styles/a11y.css';
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* UI/UX POLISH v26.2.3 — Smooth Scroll & Better Rendering          */
+/* ═══════════════════════════════════════════════════════════════ */
+
+* {
+  scroll-behavior: smooth;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+}
+
+/* Amélioration contrastes pour WCAG AA (4.5:1) */
+:root {
+  --text-enhanced: #f0f0f0;
+  --text-primary-bright: #e8e8e8;
+  --text-secondary-bright: #b8b8b8;
+}
 
 /* ═══════════════════════════════════════════════════════════════ */
 /* TAILWIND BASE LAYER                                              */

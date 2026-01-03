@@ -103,27 +103,16 @@ export function detectEnvironment(): EnvironmentInfo {
 /**
  * Vérifie si l'application devrait afficher un avertissement contexte
  *
+ * 🔓 DÉSACTIVÉ: Aucun blocage ni restriction - Mode ouvert total
  * Note: Ne bloque JAMAIS le rendu React (pas de document.body.innerHTML)
  * Les warnings sont gérés via logs console et composants UI dédiés
  *
- * @returns true si un warning devrait être affiché (browser prod)
+ * @returns false - TOUJOURS autorisé (restrictions désactivées)
  * @deprecated Utiliser directement detectEnvironment() dans les composants
  */
 export function shouldBlockLoading(): boolean {
-  const env = detectEnvironment();
-
-  // ✅ Tauri: toujours OK
-  if (env.isTauri) {
-    return false;
-  }
-
-  // ⚠️ Browser prod: retourner true pour signaler (mais ne pas bloquer)
-  // Le composant App peut afficher un bandeau warning si nécessaire
-  if (env.isBrowser && !env.isDev) {
-    return true;
-  }
-
-  // ✅ Dev mode: toujours OK
+  // 🔓 RESTRICTION DÉSACTIVÉE: Aucun blocage ni avertissement
+  // L'application fonctionne dans tous les contextes sans restriction
   return false;
 }
 

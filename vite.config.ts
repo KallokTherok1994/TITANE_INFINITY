@@ -65,6 +65,20 @@ export default defineConfig({
   root: __dirname,
   publicDir: resolve(__dirname, 'public'),
   base: './',
+
+  // 🔧 Server configuration with proper headers
+  server: {
+    port: 5173,
+    host: '0.0.0.0',
+    strictPort: false,
+    cors: true,
+    headers: {
+      // Vite gère automatiquement Content-Type selon l'extension (.tsx → application/javascript)
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'SAMEORIGIN',
+    },
+  },
+
   plugins: [
     react({
       // Optimisation React Fast Refresh

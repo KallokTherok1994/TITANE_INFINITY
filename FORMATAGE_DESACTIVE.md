@@ -16,14 +16,17 @@ Le formateur automatique (rust-analyzer/rustfmt) a supprimé les champs `default
 ## Solution Appliquée (NUCLÉAIRE)
 
 ### 1. Formatage Désactivé
+
 `.vscode/settings.json`
+
 ```json
 {
-  "editor.formatOnSave": false  // DÉSACTIVÉ
+  "editor.formatOnSave": false // DÉSACTIVÉ
 }
 ```
 
 ### 2. Fichier Verrouillé (Lecture Seule)
+
 ```bash
 chmod 444 src-tauri/src/agent_system/config.rs
 ls -l src-tauri/src/agent_system/config.rs
@@ -31,6 +34,7 @@ ls -l src-tauri/src/agent_system/config.rs
 ```
 
 ### Fichiers Protégés
+
 - `src-tauri/src/agent_system/config.rs`
 - **NE PAS** activer format-on-save pour ce fichier
 - Utiliser `git checkout` si champs disparaissent
@@ -48,11 +52,13 @@ git checkout src-tauri/src/agent_system/config.rs
 ## Instructions Développeurs
 
 ⚠️ **NE PAS:**
+
 - Activer format-on-save global
 - Formater manuellement config.rs
 - Supprimer les directives `#[rustfmt::skip]`
 
 ✅ **FAIRE:**
+
 - Laisser formatOnSave désactivé
 - Vérifier compilation après modifications
 - Restaurer depuis git si champs disparus
