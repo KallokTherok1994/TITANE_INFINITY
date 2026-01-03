@@ -33,7 +33,7 @@
 ### Full Test Run Results
 
 ```bash
-npm test -- --run
+pnpm test -- --run
 
  Test Files  23 failed | 73 passed | 1 skipped (97)
       Tests  308 failed | 1998 passed | 13 skipped (2319)
@@ -271,7 +271,7 @@ head -20 file.test.ts | wc -l  # Should be 20, not 1-2
 ### VectorStoreClient Tests
 
 ```bash
-npm test -- src/services/unified/__tests__/VectorStoreClient.test.ts --run
+pnpm test -- src/services/unified/__tests__/VectorStoreClient.test.ts --run
 ```
 
 **Result**: ✅ **5/5 tests passing** (100%)
@@ -279,7 +279,7 @@ npm test -- src/services/unified/__tests__/VectorStoreClient.test.ts --run
 ### ConversationManager Tests
 
 ```bash
-npm test -- src/services/ai/__tests__/ConversationManager.test.ts --run
+pnpm test -- src/services/ai/__tests__/ConversationManager.test.ts --run
 ```
 
 **Result**: ✅ **15/15 tests passing** (100%)
@@ -287,7 +287,7 @@ npm test -- src/services/ai/__tests__/ConversationManager.test.ts --run
 ### Full Test Suite
 
 ```bash
-npm test -- --run
+pnpm test -- --run
 ```
 
 **Result**: ✅ **1998/2319 tests passing** (86.2%)

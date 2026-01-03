@@ -315,8 +315,8 @@ Documentation, cleanup, et optimisations finales.
 
 ```bash
 npm update --save  # Patches auto
-npm audit fix      # Fixes auto
-npm test && npm run build  # Validation
+pnpm audit fix      # Fixes auto
+pnpm test && pnpm run build  # Validation
 ```
 
 **Majeures (optionnel, risqué):**
@@ -336,7 +336,7 @@ npm test && npm run build  # Validation
 **Mesure:**
 
 ```bash
-npm run test -- --coverage  # Frontend
+pnpm run test -- --coverage  # Frontend
 cargo tarpaulin --out Html  # Backend
 ```
 
@@ -516,7 +516,7 @@ Dependencies:    -10 outdated (✅ à jour)
 
 ```
 ☐ Codebase: 0 fichiers legacy
-☐ Dependencies: npm audit 0 vulns
+☐ Dependencies: pnpm audit 0 vulns
 ☐ Documentation: API docs published
 ☐ Performance: Lighthouse >90/100
 ```
@@ -528,16 +528,16 @@ Dependencies:    -10 outdated (✅ à jour)
 ### Daily
 
 ```bash
-npm run lint
+pnpm run lint
 cargo clippy
-npm run test
+pnpm run test
 ```
 
 ### Weekly
 
 ```bash
 cargo audit        # Sécurité Rust
-npm audit          # Sécurité npm
+pnpm audit          # Sécurité npm
 git log --graph    # Review commits
 ```
 
@@ -545,7 +545,7 @@ git log --graph    # Review commits
 
 ```bash
 cargo tarpaulin    # Coverage backend
-npm test -- --coverage  # Coverage frontend
+pnpm test -- --coverage  # Coverage frontend
 lighthouse CI      # Performance web
 npm outdated       # Dependencies check
 ```

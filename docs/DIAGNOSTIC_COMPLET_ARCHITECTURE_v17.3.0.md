@@ -712,7 +712,7 @@ if (options.voiceEnabled && response.content) {
 1. Observer Console (avant corrections : erreurs toutes les 5s)
 2. Appliquer corrections 2.1 + 2.2 (stubs + enregistrement)
 3. Rebuild Tauri : cargo build
-4. npm run dev
+4. pnpm run dev
 5. ✅ Vérifier PLUS d'erreurs "Command ... not found"
 6. ✅ Vérifier logs "✅ Helios synced" toutes les 5s
 ```
@@ -720,7 +720,7 @@ if (options.voiceEnabled && response.content) {
 #### Test 3: Lisibilité Chat
 ```
 1. Appliquer corrections 3.2 + 3.3
-2. Rebuild frontend : npm run build
+2. Rebuild frontend : pnpm run build
 3. Ouvrir Chat IA
 4. Envoyer 3-5 messages
 5. ✅ Vérifier TOUS textes lisibles (contraste suffisant)

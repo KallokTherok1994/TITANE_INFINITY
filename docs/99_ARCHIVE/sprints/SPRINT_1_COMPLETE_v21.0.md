@@ -236,7 +236,7 @@ ollama:        270 (priorité absolue) ✅✅✅
 ### Test 1 - Build Production
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 **Résultat**: ✅ **SUCCESS** (13.66s, 0 erreurs ESLint, 1 warning Vite acceptable)

@@ -105,7 +105,7 @@ echo "🔨 Vérification compilation..."
 
 # React build
 echo "  → Vérification build React..."
-if npm run build > /tmp/titane-build.log 2>&1; then
+if pnpm run build > /tmp/titane-build.log 2>&1; then
     check_pass "Build React: Succès"
 else
     check_fail "Build React: Échec (voir /tmp/titane-build.log)"
@@ -162,7 +162,7 @@ if [ $FAIL -eq 0 ]; then
     echo -e "${GREEN}║  ✅ TOUS LES PRE-CHECKS SONT VALIDES      ║${NC}"
     echo -e "${GREEN}║                                            ║${NC}"
     echo -e "${GREEN}║  Prêt pour tests manuels PHASE 3          ║${NC}"
-    echo -e "${GREEN}║  Lancer: npm run dev:tauri                ║${NC}"
+    echo -e "${GREEN}║  Lancer: pnpm run dev:tauri                ║${NC}"
     echo -e "${GREEN}╚════════════════════════════════════════════╝${NC}"
     echo ""
     echo "📋 Guide complet: TEST_PHASE3_VALIDATION.md"

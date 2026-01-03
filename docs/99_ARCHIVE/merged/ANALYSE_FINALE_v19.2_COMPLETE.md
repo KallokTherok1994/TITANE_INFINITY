@@ -84,8 +84,8 @@ Build Type           Time      Output         Status
 ───────────────────────────────────────────────────────
 cargo build          4.44s     dev profile    ✅ 0 warnings
 cargo clippy         8.20s     analysis       ✅ 0 warnings
-npm run type-check   ~3s       validation     ✅ 0 errors
-npm run build        4.86s     1.1 MB gz      ✅ Success
+pnpm run type-check   ~3s       validation     ✅ 0 errors
+pnpm run build        4.86s     1.1 MB gz      ✅ Success
 ```
 
 ### Code Quality Metrics :

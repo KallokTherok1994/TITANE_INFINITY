@@ -363,7 +363,7 @@ console.log(logs)
 
 ### Week 3-4 (Accessibility)
 4. **Axe-core integration**
-   - `npm install axe-core @axe-core/react`
+   - `pnpm install axe-core @axe-core/react`
    - Create `src/a11y/A11yChecker.tsx`
    - Run automated tests on all pages
 
@@ -377,7 +377,7 @@ console.log(logs)
 
 ### Week 5-6 (i18n)
 7. **i18next Setup**
-   - `npm install i18next react-i18next i18next-browser-languagedetector`
+   - `pnpm install i18next react-i18next i18next-browser-languagedetector`
    - Create `src/i18n/locales/fr.json` (500+ strings)
    - Create `src/i18n/locales/en.json` (500+ strings)
 
@@ -389,10 +389,10 @@ console.log(logs)
 9. **GitHub Actions Workflow**
    - Create `.github/workflows/ci.yml`
    - Multi-platform builds (Windows, macOS, Linux)
-   - Run cargo test + npm test
+   - Run cargo test + pnpm test
 
 10. **E2E Tests with Playwright**
-    - `npm install @playwright/test`
+    - `pnpm install @playwright/test`
     - Create `tests/e2e/chat.spec.ts`, `memory.spec.ts`, etc.
 
 ### Week 9 (Beta)

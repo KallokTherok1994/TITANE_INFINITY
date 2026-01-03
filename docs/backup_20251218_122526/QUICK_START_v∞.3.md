@@ -24,7 +24,7 @@ cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
 ./runtime/dev/run-dev.sh
 
 # Méthode 2: npm
-npm run dev
+pnpm run dev
 
 # L'application s'ouvre sur http://localhost:1420
 ```
@@ -36,7 +36,7 @@ npm run dev
 ./runtime/stable/build.sh
 
 # Ou via npm
-npm run build
+pnpm run build
 ```
 
 ═══════════════════════════════════════════════════════════════════════════════
@@ -426,7 +426,7 @@ interface DashboardWidget {
 
 ### Première Utilisation
 
-- [ ] Lancer l'application (npm run dev)
+- [ ] Lancer l'application (pnpm run dev)
 - [ ] Configurer au moins 1 provider IA (GovernanceCenter)
 - [ ] Tester ChatInput avec provider sélectionné
 - [ ] Ouvrir ChatBubble Arc Reactor

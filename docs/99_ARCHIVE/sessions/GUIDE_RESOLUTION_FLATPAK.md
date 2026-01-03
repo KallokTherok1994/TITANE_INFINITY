@@ -126,7 +126,7 @@ pkg-config --exists webkit2gtk-4.1 && echo "✅ OK" || echo "❌ ÉCHEC"
 
 ```bash
 cd ~/Documents/TITANE_INFINITY
-npm run tauri build
+pnpm run tauri build
 ```
 
 **Résultat attendu :**
@@ -189,7 +189,7 @@ chmod +x build_with_deps.sh
 - [ ] `cat /etc/os-release` affiche "Pop!_OS" ou "Ubuntu"
 - [ ] `pkg-config --exists webkit2gtk-4.1` retourne 0
 - [ ] `./detect_and_fix_flatpak.sh` exécuté avec succès
-- [ ] `npm run tauri build` compile sans erreur
+- [ ] `pnpm run tauri build` compile sans erreur
 - [ ] `./src-tauri/target/release/titane-infinity` lance l'application
 
 ---
@@ -199,7 +199,7 @@ Compilez TITANE∞ v19.1.0 en **environnement natif** pour accéder aux biblioth
 
 **📞 SUPPORT :**
 Si le problème persiste après toutes ces étapes, vérifiez :
-1. Logs complets : `npm run tauri build 2>&1 | tee build.log`
+1. Logs complets : `pnpm run tauri build 2>&1 | tee build.log`
 2. Variables d'environnement : `echo $PKG_CONFIG_PATH`
 3. Version Rust : `rustc --version` (doit être ≥ 1.70)
 

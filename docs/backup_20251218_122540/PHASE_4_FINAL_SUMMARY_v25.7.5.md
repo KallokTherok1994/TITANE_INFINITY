@@ -147,7 +147,7 @@ const DevToolsTabs = lazy(() => import('./DevToolsTabs'));
 
 ```bash
 # vite-plugin-compression 0.5.1
-npm install --save-dev vite-plugin-compression
+pnpm install --save-dev vite-plugin-compression
 
 # vite.config.ts - Dual compression
 plugins: [
@@ -218,8 +218,8 @@ http {
 **1. Dependencies:**
 
 ```bash
-npm install --save-dev workbox-build@7.4.0
-npm install workbox-window@7.4.0
+pnpm install --save-dev workbox-build@7.4.0
+pnpm install workbox-window@7.4.0
 ```
 
 **2. Service Worker Source (public/sw-source.js - 119 lignes):**
@@ -381,7 +381,7 @@ Assuming 33% cache hit (realistic): 344.88 GB/year
 # Sections:
 
 1. Pre-deployment checklist (18 items)
-2. Build validation (npm run build)
+2. Build validation (pnpm run build)
 3. Server configuration (Nginx/Apache)
 4. Brotli setup (br_static on)
 5. Service Worker deployment (cache headers)
@@ -630,7 +630,7 @@ PHASE_4_FINAL_SUMMARY_v25.7.5.md                     (THIS FILE)
 ### Build Validation ✅
 
 ```bash
-npm run build
+pnpm run build
 
 # Output:
 vite v6.0.7 building for production...
@@ -656,7 +656,7 @@ npx tsc --noEmit
 ### ESLint Validation ✅
 
 ```bash
-npm run lint
+pnpm run lint
 # No warnings, no errors
 ```
 
@@ -728,14 +728,14 @@ First Contentful Paint:
 
 ```bash
 # 1. Build production bundle
-npm run build
+pnpm run build
 
 # 2. Validate dist/
 ls -lh dist/assets/*.{br,gz} | head -20
 ls -lh dist/sw.js
 
 # 3. Test Service Worker locally
-npm run preview  # Vite preview server with SW
+pnpm run preview  # Vite preview server with SW
 
 # 4. Deploy to production (example)
 rsync -avz --delete dist/ user@prod-server:/var/www/titane-infinity/

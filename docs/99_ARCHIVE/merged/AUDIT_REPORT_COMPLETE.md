@@ -310,7 +310,7 @@ src-tauri/tests/
 
 ### Frontend Dependencies
 **Total:** 30 major packages
-**Status:** ✅ No known vulnerabilities (npm audit clean)
+**Status:** ✅ No known vulnerabilities (pnpm audit clean)
 
 **Key Dependencies:**
 - React 18.3.1 (stable)
@@ -398,7 +398,7 @@ None identified
 
 ### Immediate Actions (Priority 1)
 1. ✅ **Fix React Hooks dependency arrays**
-   - Run ESLint auto-fix: `npm run lint:fix`
+   - Run ESLint auto-fix: `pnpm run lint:fix`
    - Manually review 40 hook violations
    - Estimated time: 2 hours
 

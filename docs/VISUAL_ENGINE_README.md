@@ -299,13 +299,13 @@ Pre-built CSS animations for common effects:
 ### Unit Tests
 
 ```bash
-npm run test:unit
+pnpm run test:unit
 ```
 
 ### Integration Tests
 
 ```bash
-npm run test:integration
+pnpm run test:integration
 ```
 
 ### Demo Component

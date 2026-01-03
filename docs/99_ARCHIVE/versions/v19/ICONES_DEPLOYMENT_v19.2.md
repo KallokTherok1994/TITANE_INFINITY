@@ -92,17 +92,17 @@ python3 create_icons.py
 
 ### 2. Validation
 ```bash
-npm run tauri:check
+pnpm run tauri:check
 ```
 
 ### 3. Build
 ```bash
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ### 4. Test
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ## 💾 Backup et Récupération

@@ -90,7 +90,7 @@ cd /home/titane/Documents/TITANE_INFINITY
 ./build_with_deps.sh
 
 # Option 2: Build direct
-npm run tauri build
+pnpm run tauri build
 
 # Option 3: Rust uniquement
 cd src-tauri && cargo build --release
@@ -107,7 +107,7 @@ Avant de lancer le build, vérifier :
 - [ ] ✅ Rust + Cargo fonctionnels (`cargo --version`)
 - [ ] ✅ Node.js accessible (`node --version`)
 
-Si toutes les cases sont cochées → `npm run tauri build` devrait réussir.
+Si toutes les cases sont cochées → `pnpm run tauri build` devrait réussir.
 
 ---
 
@@ -128,7 +128,7 @@ docker run --rm -v $(pwd):/workspace \
       libgtk-3-dev \
       pkg-config \
       nodejs npm && \
-    npm install && \
+    pnpm install && \
     cargo build --release
   "
 ```

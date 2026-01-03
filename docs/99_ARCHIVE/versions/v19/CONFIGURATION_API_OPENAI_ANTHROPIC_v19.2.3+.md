@@ -810,7 +810,7 @@ $ cargo check --manifest-path src-tauri/Cargo.toml
 ### 💻 4.1 Configuration depuis l'UI
 
 **Étapes**:
-1. Lancer TITANE∞ : `npm run tauri:dev`
+1. Lancer TITANE∞ : `pnpm run tauri:dev`
 2. Ouvrir **Centre Gouvernance** → **Secrets & APIs**
 3. Configurer les clés:
    - **OpenAI**: Entrer clé `sk-...` → Sauvegarder

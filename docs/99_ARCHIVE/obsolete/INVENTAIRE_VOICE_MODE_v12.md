@@ -258,7 +258,7 @@ tokio-test = "0.4"
 ## ✅ CHECKLIST INTÉGRATION
 
 ### Phase 1 : Préparation
-- [ ] Installer `framer-motion` : `npm install framer-motion`
+- [ ] Installer `framer-motion` : `pnpm install framer-motion`
 - [ ] Vérifier dépendances Rust dans Cargo.toml
 - [ ] Compiler backend : `cd src-tauri && cargo build`
 
@@ -285,7 +285,7 @@ tokio-test = "0.4"
 - [ ] Tester 3 thèmes (TITANE LUX, Clair, Sombre)
 - [ ] Valider 60fps animations
 - [ ] Tests audio-réactivité
-- [ ] Build production : `npm run tauri build`
+- [ ] Build production : `pnpm run tauri build`
 
 ---
 
@@ -317,7 +317,7 @@ tokio-test = "0.4"
 
 4. **Tester en dev**
    ```bash
-   npm run tauri dev
+   pnpm run tauri dev
    ```
 
 ### Court terme (Semaine 2-3)
@@ -389,7 +389,7 @@ Le système **TITANE∞ Voice Mode Luxe + Full Duplex** est **100% fonctionnel**
 
 **Technologies** : React 18 • TypeScript • Framer Motion • Tauri v2 • Rust • Tokio
 
-**Prochaine action** : Intégrer dans `main.rs` et `App.tsx`, puis lancer `npm run tauri dev` ! 🚀
+**Prochaine action** : Intégrer dans `main.rs` et `App.tsx`, puis lancer `pnpm run tauri dev` ! 🚀
 
 ---
 

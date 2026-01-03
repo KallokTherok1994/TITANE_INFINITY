@@ -50,7 +50,7 @@
 
 ## 🚨 4. CAUSE RACINE IDENTIFIÉE : DÉPENDANCES SYSTÈME MANQUANTES
 
-### Erreur détectée lors de `npm run tauri:dev` :
+### Erreur détectée lors de `pnpm run tauri:dev` :
 
 ```
 error: failed to run custom build command for `webkit2gtk-sys v2.0.1`
@@ -120,13 +120,13 @@ Une fois les dépendances installées :
 
 ```bash
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 Ou pour tester en dev :
 
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ---
@@ -185,7 +185,7 @@ npm run tauri:dev
 3. **Revenir dans le projet et rebuild :**
    ```bash
    cd ~/Documents/TITANE_NEWGEN/TITANE_INFINITY
-   npm run tauri:build
+   pnpm run tauri:build
    ```
 
 ---
@@ -222,7 +222,7 @@ Si le problème persiste après installation des dépendances :
 
 ```bash
 # Logs Tauri dev
-npm run tauri:dev 2>&1 | tee tauri-dev.log
+pnpm run tauri:dev 2>&1 | tee tauri-dev.log
 
 # Logs binaire production
 RUST_LOG=debug /usr/bin/titane-infinity 2>&1 | tee titane-prod.log

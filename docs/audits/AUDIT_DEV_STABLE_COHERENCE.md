@@ -25,7 +25,7 @@
 ### ⚠️ Différence CRITIQUE détectée
 
 #### `beforeDevCommand`
-- **Dev:** `"npm run build"` ✅ (requis pour watch mode)
+- **Dev:** `"pnpm run build"` ✅ (requis pour watch mode)
 - **Stable:** `""` ❌ (vide)
 
 **Impact:** Stable ne peut pas lancer `cargo tauri dev` correctement.

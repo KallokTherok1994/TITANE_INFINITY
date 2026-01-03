@@ -285,7 +285,7 @@ async fn send_message(message: String) -> Result<String, String> {
 **A2. Coverage Tests** (1 jour)
 ```bash
 # TypeScript
-npm test -- --coverage --run > coverage_report.txt
+pnpm test -- --coverage --run > coverage_report.txt
 
 # Rust
 cd src-tauri
@@ -303,7 +303,7 @@ ps aux | grep titane
 pmap -x <PID>
 
 # Build production
-npm run tauri build
+pnpm run tauri build
 # Mesure mémoire production build
 ```
 
@@ -407,7 +407,7 @@ npm run tauri build
 ### ✅ Bonnes Pratiques Validées
 
 1. **Audit réel AVANT correction** : Économie de 6 semaines de travail inutile
-2. **Mesures objectives** : ps, free, npm test, cargo test
+2. **Mesures objectives** : ps, free, pnpm test, cargo test
 3. **Architecture modulaire** : 73 modules pub = Bonne pratique (pas sur-complexité)
 4. **Documentation exhaustive** : 5000+ lignes = Standard professionnel
 
@@ -449,7 +449,7 @@ npm run tauri build
 
 **Audit réalisé le :** 6 Décembre 2025, 18h02  
 **Durée audit :** 1h30  
-**Méthodes :** ps, free, grep, find, npm test, file analysis  
+**Méthodes :** ps, free, grep, find, pnpm test, file analysis  
 **Outils :** GitHub Copilot + Claude Sonnet 4.5  
 **Statut :** ✅ COMPLET
 
@@ -470,7 +470,7 @@ ps aux | grep -i titane
 free -h
 
 # Tests
-npm test -- --coverage --run
+pnpm test -- --coverage --run
 
 # Résultats
 73 modules pub

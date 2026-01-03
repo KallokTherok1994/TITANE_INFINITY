@@ -590,7 +590,7 @@ USER REQUEST (Check status)
 2. **Configurer via UI** (2 min/clé)
 
    ```bash
-   npm run dev:tauri
+   pnpm run dev:tauri
    # Control Panel → Section IA & APIs
    ```
 

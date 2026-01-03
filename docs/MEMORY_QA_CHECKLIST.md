@@ -11,8 +11,8 @@
 ### 1. Tests de Base
 
 - [ ] `cargo check --manifest-path src-tauri/Cargo.toml` → 0 erreurs
-- [ ] `npm run type-check` → 0 erreurs TypeScript
-- [ ] `npm run test` → Tous tests passent
+- [ ] `pnpm run type-check` → 0 erreurs TypeScript
+- [ ] `pnpm run test` → Tous tests passent
 - [ ] `cargo test --manifest-path src-tauri/Cargo.toml` → Tous tests passent
 
 ### 2. Persistence Engine
@@ -152,13 +152,13 @@
 1. **Pré-check**
    ```bash
    cargo check --manifest-path src-tauri/Cargo.toml
-   npm run type-check
+   pnpm run type-check
    ```
 
 2. **Tests unitaires**
    ```bash
    cargo test --manifest-path src-tauri/Cargo.toml -- persistence::
-   npm run test
+   pnpm run test
    ```
 
 3. **Diagnostic Doctor**

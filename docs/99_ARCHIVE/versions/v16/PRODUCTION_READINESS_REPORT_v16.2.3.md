@@ -5,8 +5,8 @@ Branch: main
 Commit: (post-hardening invoke + metrics stabilization)
 
 ## 1. Build & Compilation
-- Frontend: Vite build OK (no TS errors) – `npm run build`
-- Desktop: Tauri build OK – `npm run tauri:build`
+- Frontend: Vite build OK (no TS errors) – `pnpm run build`
+- Desktop: Tauri build OK – `pnpm run tauri:build`
 - TypeScript: `tsc --noEmit` clean
 - Rust: `cargo check` OK, `cargo clippy -W clippy::all` only 3 informational warnings (loop style, function arg count, needless return) – non-blocking
 

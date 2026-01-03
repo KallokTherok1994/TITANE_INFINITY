@@ -260,13 +260,13 @@ check_lint() {
   echo
   echo "🔍 Vérification ESLint..."
   
-  if npm run lint -- --max-warnings=0 >/dev/null 2>&1; then
+  if pnpm run lint -- --max-warnings=0 >/dev/null 2>&1; then
     echo -e "${GREEN}✅ Lint OK (0 warnings)${NC}"
   else
     ISSUES_FOUND=$((ISSUES_FOUND + 1))
     echo -e "${YELLOW}⚠️  Warnings lint détectés, application des fixes automatiques...${NC}"
     
-    if npm run lint -- --fix; then
+    if pnpm run lint -- --fix; then
       ISSUES_FIXED=$((ISSUES_FIXED + 1))
       echo -e "${GREEN}✅ Lint fixes appliqués${NC}"
     else
@@ -280,12 +280,12 @@ check_typescript() {
   echo
   echo "🔍 Vérification TypeScript..."
   
-  if npm run check >/dev/null 2>&1; then
+  if pnpm run check >/dev/null 2>&1; then
     echo -e "${GREEN}✅ TypeScript OK (0 errors)${NC}"
   else
     ISSUES_FOUND=$((ISSUES_FOUND + 1))
     echo -e "${RED}❌ Erreurs TypeScript détectées${NC}"
-    npm run check 2>&1 | tail -n 20
+    pnpm run check 2>&1 | tail -n 20
     echo
     echo -e "${YELLOW}💡 Suggestion: Vérifiez les types et corrigez manuellement${NC}"
   fi
@@ -359,7 +359,7 @@ clean_if_corrupted() {
       have_gzip=$(ls dist/*.gz dist/*/*.gz 2>/dev/null | wc -l | tr -d ' ')
       if [[ "$have_brotli" == "0" && "$have_gzip" == "0" ]]; then
         echo -e "${YELLOW}ℹ️  Fichiers compressés (.br/.gz) absents — re-génération via build recommandée${NC}"
-        echo -e "${YELLOW}   ➜ Exécutez: npm run build${NC}"
+        echo -e "${YELLOW}   ➜ Exécutez: pnpm run build${NC}"
       fi
     fi
     echo -e "${GREEN}✅ Build artifacts OK${NC}"
@@ -376,7 +376,7 @@ check_appimage_runtime() {
   appimg=$(find "$REPO_ROOT/src-tauri" -maxdepth 6 -type f -name "*.AppImage" 2>/dev/null | head -n 1 || true)
 
   if [[ -z "$appimg" ]]; then
-    echo -e "${YELLOW}ℹ️  Aucun AppImage trouvé (skip). Construisez avec: npm run build ou tauri build${NC}"
+    echo -e "${YELLOW}ℹ️  Aucun AppImage trouvé (skip). Construisez avec: pnpm run build ou tauri build${NC}"
   else
     echo "AppImage: $appimg"
     # Check FUSE availability

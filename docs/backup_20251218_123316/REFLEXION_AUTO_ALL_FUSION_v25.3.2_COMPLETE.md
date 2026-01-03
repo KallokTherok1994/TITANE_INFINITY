@@ -215,7 +215,7 @@ Total: 16 tests - 100% PASS
 **Exécution**:
 
 ```bash
-npm test -- src/hooks/__tests__/fusion-hooks.test.ts
+pnpm test -- src/hooks/__tests__/fusion-hooks.test.ts
 # Output: 16 passed (16/16)
 # Duration: ~2.3s
 ```
@@ -450,7 +450,7 @@ Statistiques:
 
 ```bash
 # Lancer dev server
-npm run dev
+pnpm run dev
 
 # Ouvrir navigateur
 # URL: http://localhost:5173/fusion
@@ -513,13 +513,13 @@ function AdvancedDashboard() {
 
 ```bash
 # Tests unitaires hooks
-npm test -- src/hooks/__tests__/fusion-hooks.test.ts
+pnpm test -- src/hooks/__tests__/fusion-hooks.test.ts
 
 # Coverage report
-npm test -- --coverage
+pnpm test -- --coverage
 
 # Watch mode
-npm test -- --watch
+pnpm test -- --watch
 ```
 
 #### 4️⃣ **Validation Complète**
@@ -531,8 +531,8 @@ npm test -- --watch
 # Validation manuelle
 npx tsc --noEmit                    # TypeScript
 npx eslint src/hooks/*.ts           # ESLint
-npm test                             # Tests
-npm run build                        # Build production
+pnpm test                             # Tests
+pnpm run build                        # Build production
 ```
 
 ---
@@ -686,7 +686,7 @@ grep -n "'/fusion'" src/App.tsx
 grep -r "useSingularitySync" src/
 
 # Tester isolation
-npm test -- src/hooks/__tests__/fusion-hooks.test.ts
+pnpm test -- src/hooks/__tests__/fusion-hooks.test.ts
 
 # Vérifier Tauri backend
 # → Vérifier commandes Tauri enregistrées
@@ -703,7 +703,7 @@ pnpm install
 grep -A5 "vi.mock" src/hooks/__tests__/fusion-hooks.test.ts
 
 # Exécuter tests verbose
-npm test -- --reporter=verbose
+pnpm test -- --reporter=verbose
 ```
 
 #### ❌ Erreurs TypeScript
@@ -781,7 +781,7 @@ Runtime Memory: ~12MB
 ⚠️ Valider TOUTES les entrées utilisateur  
 ⚠️ Utiliser HTTPS en production  
 ⚠️ Activer CSP headers  
-⚠️ Auditer dépendances régulièrement (`npm audit`)
+⚠️ Auditer dépendances régulièrement (`pnpm audit`)
 
 ---
 
@@ -884,7 +884,7 @@ git checkout -b feature/fusion-amélioration
 ```bash
 # Modifier code
 # Ajouter tests
-npm test
+pnpm test
 
 # Valider
 ./scripts/validate-fusion-complete.sh
@@ -918,7 +918,7 @@ git push origin feature/fusion-amélioration
 ### FAQ
 
 **Q: Comment tester localement?**  
-R: `npm run dev` puis `http://localhost:5173/fusion`
+R: `pnpm run dev` puis `http://localhost:5173/fusion`
 
 **Q: Hooks compatibles Next.js?**  
 R: Oui, mais remplacer `@tauri-apps/api` par API REST

@@ -170,7 +170,7 @@ src/core/visual/         # Couleurs visuelles (moteurs)
 ### Court terme
 1. Tester l'auto-healing en conditions réelles (forcer erreur backend)
 2. Valider SystemErrorPage avec backend offline
-3. Vérifier compilation TypeScript : `npm run build`
+3. Vérifier compilation TypeScript : `pnpm run build`
 
 ### Moyen terme
 1. Ajouter tests unitaires pour ErrorBoundary

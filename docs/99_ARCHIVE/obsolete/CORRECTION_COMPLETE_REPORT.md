@@ -229,7 +229,7 @@ src-tauri/src/
 ### 1. Type-Check TypeScript
 
 ```bash
-$ npm run type-check
+$ pnpm run type-check
 > titane-infinity@9.0.0 type-check
 > tsc --noEmit
 
@@ -243,7 +243,7 @@ $ npm run type-check
 ### 2. Build Vite Production
 
 ```bash
-$ npm run build
+$ pnpm run build
 > titane-infinity@9.0.0 build
 > tsc && vite build
 
@@ -339,8 +339,8 @@ sudo apt install libwebkit2gtk-4.1-dev \
 
 Au lieu de `cargo build` direct:
 ```bash
-npm install --save-dev @tauri-apps/cli
-npm run tauri build
+pnpm install --save-dev @tauri-apps/cli
+pnpm run tauri build
 ```
 
 Cette méthode utilise les binaires pré-compilés de Tauri.
@@ -399,7 +399,7 @@ RUN apt-get update && apt-get install -y \
 
 ### ✅ Build & Validation
 - [x] `tsc --noEmit` — PASS (0 erreur)
-- [x] `npm run build` — SUCCESS (1.05s)
+- [x] `pnpm run build` — SUCCESS (1.05s)
 - [x] `get_errors` — ZÉRO erreur IDE
 - [x] Backend Rust structuré correctement
 - [x] Frontend compilé et optimisé
@@ -425,7 +425,7 @@ RUN apt-get update && apt-get install -y \
 sudo apt install libwebkit2gtk-4.1-dev libjavascriptcoregtk-4.1-dev
 
 # Ou utiliser npm
-npm run tauri build
+pnpm run tauri build
 ```
 
 ---

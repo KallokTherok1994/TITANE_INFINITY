@@ -119,7 +119,7 @@ src-tauri/src/
 ```bash
 # Audit initial
 cargo check --all-features        # 39 warnings détectés
-npm run type-check                 # 0 erreurs TypeScript
+pnpm run type-check                 # 0 erreurs TypeScript
 
 # Corrections automatiques tentées
 cargo fix --lib --allow-dirty      # Limité (17 suggestions)
@@ -132,7 +132,7 @@ multi_replace_string_in_file       # 39 imports supprimés
 
 # Validation finale
 cargo check                        # ✅ 0 warnings, 0 errors
-npm run type-check                 # ✅ 0 errors
+pnpm run type-check                 # ✅ 0 errors
 ```
 
 ---

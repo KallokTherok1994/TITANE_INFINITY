@@ -186,7 +186,7 @@ const handleImport = async () => {
 
 ✅ **TypeScript/Vite Build:** PASSED
 ```bash
-npm run build
+pnpm run build
 ✓ built in 14.15s
 ```
 

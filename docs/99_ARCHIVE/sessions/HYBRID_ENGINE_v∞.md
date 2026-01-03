@@ -50,7 +50,7 @@ Le moteur détecte automatiquement l'intention de l'utilisateur avec **5 types**
 | Intent | Mots-clés | Exemples | Confiance |
 |--------|-----------|----------|-----------|
 | **chat** | none (default) | "Explique-moi React", "Comment ça marche ?" | 0.5 |
-| **dev** | fix, patch, compile, build, rust, cargo, npm, install, run, test, debug | "fix le module X", "cargo check", "npm install" | 0.75-0.95 |
+| **dev** | fix, patch, compile, build, rust, cargo, npm, install, run, test, debug | "fix le module X", "cargo check", "pnpm install" | 0.75-0.95 |
 | **heal** | repair, heal, correct, bug, error, crash, broken | "repair le composant", "auto-heal" | 0.8 |
 | **introspection** | analyze, inspect, diagnostic, status, health, check, scan | "inspect system", "analyze module" | 0.7 |
 | **diagnostic** | logs, errors, warnings, issues, problems | "show logs", "check errors" | 0.7 |
@@ -444,7 +444,7 @@ function MyComponent() {
 User: sudo hybrid.open
 User: sudo hybrid.inspect path=src/main.rs
 User: sudo hybrid.heal target=all
-User: sudo hybrid.run command="npm test"
+User: sudo hybrid.run command="pnpm test"
 User: sudo hybrid.logs filter=error
 ```
 

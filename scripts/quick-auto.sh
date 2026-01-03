@@ -24,7 +24,7 @@ echo -e "${NC}"
 
 # Build frontend (skip TypeScript check)
 echo -e "${CYAN}▶ Building frontend...${NC}"
-npm run build || {
+pnpm run build || {
     echo -e "${YELLOW}⚠️  Build warnings (non-blocking)${NC}"
 }
 echo -e "${GREEN}✅ Frontend built${NC}"

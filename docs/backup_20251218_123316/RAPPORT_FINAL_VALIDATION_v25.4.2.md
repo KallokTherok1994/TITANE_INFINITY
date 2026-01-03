@@ -201,12 +201,12 @@ import '@testing-library/jest-dom';
 ### TypeScript Language Server (VS Code)
 
 **Affichées**: 40+ erreurs (false positives)
-**Réelles**: **0 erreurs** (confirmé `npm run check`)
+**Réelles**: **0 erreurs** (confirmé `pnpm run check`)
 
 **Explication**:
 
 - VS Code TS Server ne charge pas `setupTests.ts` dynamiquement
-- Matchers disponibles au runtime (`npm test` fonctionne)
+- Matchers disponibles au runtime (`pnpm test` fonctionne)
 - **Solution**: Redémarrer TypeScript Server (Cmd+Shift+P)
 
 ### Tests Échoués (25/2066 = 1.2%)
@@ -304,14 +304,14 @@ import '@testing-library/jest-dom';
 
 ### Build & Compilation
 
-- [x] `npm run check` → 0 erreur TypeScript
-- [x] `npm run lint` → 0 erreur ESLint
-- [x] `npm run build` → Vite success
+- [x] `pnpm run check` → 0 erreur TypeScript
+- [x] `pnpm run lint` → 0 erreur ESLint
+- [x] `pnpm run build` → Vite success
 - [x] `cargo build --release` → Rust success
 
 ### Tests
 
-- [x] `npm test` → 1988/2066 pass (96.2%)
+- [x] `pnpm test` → 1988/2066 pass (96.2%)
 - [x] webVitals.test.ts → 31/34 (91%)
 - [x] Menu.test.tsx → 18/32 (56%)
 

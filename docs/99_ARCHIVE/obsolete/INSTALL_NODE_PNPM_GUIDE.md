@@ -56,7 +56,7 @@ npm --version
 
 ```bash
 # Via npm (fourni avec Node.js)
-npm install -g pnpm
+pnpm install -g pnpm
 
 # Vérifier installation
 pnpm --version
@@ -170,13 +170,13 @@ pnpm install
 
 **Solution 2 : Utiliser npm** :
 ```bash
-npm install
+pnpm install
 ```
 
 Puis modifier `src-tauri/tauri.conf.json` :
 ```json
-"beforeDevCommand": "npm run dev",
-"beforeBuildCommand": "npm run build",
+"beforeDevCommand": "pnpm run dev",
+"beforeBuildCommand": "pnpm run build",
 ```
 
 ### Problème : `cargo tauri dev` erreur `pnpm: commande introuvable`
@@ -185,7 +185,7 @@ Puis modifier `src-tauri/tauri.conf.json` :
 
 OU modifier tauri.conf.json pour utiliser npm :
 ```json
-"beforeDevCommand": "npm run dev",
+"beforeDevCommand": "pnpm run dev",
 ```
 
 ### Problème : Port 1420 déjà utilisé
@@ -297,7 +297,7 @@ chmod +x src-tauri/target/release/bundle/appimage/titane-infinity_*.AppImage
 | 1. Installer nvm | `curl ... \| bash` | 1 min | ⚠️ A faire |
 | 2. Charger nvm | `source ~/.bashrc` | 1 sec | ⚠️ A faire |
 | 3. Installer Node.js | `nvm install --lts` | 3 min | ⚠️ A faire |
-| 4. Installer pnpm | `npm install -g pnpm` | 30 sec | ⚠️ A faire |
+| 4. Installer pnpm | `pnpm install -g pnpm` | 30 sec | ⚠️ A faire |
 | 5. Install deps | `pnpm install` | 2 min | ⚠️ A faire |
 | 6. Test dev | `cargo tauri dev` | 30 sec | ⚠️ A faire |
 | 7. Validation IPC | Console tests | 2 min | ⚠️ A faire |
@@ -312,7 +312,7 @@ chmod +x src-tauri/target/release/bundle/appimage/titane-infinity_*.AppImage
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash && \
 source ~/.bashrc && \
 nvm install --lts && \
-npm install -g pnpm && \
+pnpm install -g pnpm && \
 cd /home/titane/Documents/TITANE_INFINITY && \
 pnpm install && \
 cargo tauri dev

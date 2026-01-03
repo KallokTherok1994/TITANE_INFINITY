@@ -435,7 +435,7 @@ Utiliser le script existant `build_on_host.sh` depuis l'environnement hôte avec
 
 ### Immédiat (Après résolution environnement)
 1. ✅ Installer dépendances WebKit sur système hôte
-2. ✅ Relancer `npm run dev` pour validation complète
+2. ✅ Relancer `pnpm run dev` pour validation complète
 3. ⏱️ Tester navigation TimeNavigator + SystemGovernance
 4. ⏱️ Vérifier logs AutoAudit dans console (30s intervals)
 

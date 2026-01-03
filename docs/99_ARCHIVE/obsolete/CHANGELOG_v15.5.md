@@ -224,7 +224,7 @@
 
 #### Testé
 - ✅ **TypeScript**: `npx tsc --noEmit` → Nouvelles pages compilent OK
-- ✅ **Vite Build**: `npm run build` → Built in 953ms, 77 modules, 210 KB
+- ✅ **Vite Build**: `pnpm run build` → Built in 953ms, 77 modules, 210 KB
 - ✅ **Rust Backend**: `cargo check` → 0 errors, 78 warnings (non-critiques)
 
 ---
@@ -365,13 +365,13 @@ Documentation:
 git pull origin main
 
 # 2. Installer dépendances (si nouvelles)
-npm install
+pnpm install
 
 # 3. Build production
-npm run build
+pnpm run build
 
 # 4. Tester navigation
-npm run dev
+pnpm run dev
 # Vérifier: GlobalExpBar, Menu 7 sections, Pages Chat/Projects/System
 
 # 5. (Optionnel) Intégrer nouvelles routes dans App.tsx

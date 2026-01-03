@@ -286,7 +286,7 @@ scripts/titane_autofix_frontend.sh
 1. **Vérification structure** (6 fichiers critiques)
 2. **Analyse frontend** (AppLayout, Router, Pages)
 3. **Nettoyage** (cache Vite, dist)
-4. **Réinstallation** (npm install si besoin)
+4. **Réinstallation** (pnpm install si besoin)
 5. **Build Vite** (production test)
 6. **Test Tauri dev** (timeout 6s)
 7. **Validation UI** (14 composants)
@@ -374,14 +374,14 @@ chmod +x scripts/titane_autofix_frontend.sh
 
 ### Lancement dev
 ```bash
-npm run dev          # Vite dev server
-npm run tauri:dev    # Tauri dev (avec backend)
+pnpm run dev          # Vite dev server
+pnpm run tauri:dev    # Tauri dev (avec backend)
 ```
 
 ### Build production
 ```bash
-npm run build        # Vite build
-npm run tauri:build  # Tauri build complet
+pnpm run build        # Vite build
+pnpm run tauri:build  # Tauri build complet
 ```
 
 ### Vérification

@@ -55,9 +55,9 @@ Polling fallback requires an explicit opt-in:
 Completed:
 
 - `cargo check` (Tauri backend): PASS
-- `npm run copilot-xs:validate`: PASS
-- `npm run copilot-xs:security-scan`: PASS (no known vulnerabilities)
-- `npm test -- --run && npm run test:tauri`: PASS
+- `pnpm run copilot-xs:validate`: PASS
+- `pnpm run copilot-xs:security-scan`: PASS (no known vulnerabilities)
+- `pnpm test -- --run && pnpm run test:tauri`: PASS
 - Stable build task (`./runtime/stable/build.sh`): completed successfully in this session
 
 ## Notes / Operational Guardrails

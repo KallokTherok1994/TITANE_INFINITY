@@ -528,14 +528,14 @@ it('should support Arrow Down navigation', () => {
 
 ```bash
 # Frontend
-npm run build
+pnpm run build
 
 # Backend Rust
 cd src-tauri
 cargo build --release
 
 # Tests
-npm test
+pnpm test
 cargo test
 ```
 

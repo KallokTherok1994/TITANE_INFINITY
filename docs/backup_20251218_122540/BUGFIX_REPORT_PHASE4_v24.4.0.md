@@ -12,7 +12,7 @@
 Suite à Phase 3 (création tests ConversationManager), execution des tests a révélé **bugs critiques bloquants**:
 
 ```bash
-npm test -- ConversationManager.test.ts
+pnpm test -- ConversationManager.test.ts
 
 ❌ ReferenceError: config is not defined (x4 méthodes)
 ❌ response.conversationId undefined
@@ -306,7 +306,7 @@ if (response.memoryContext) {
 
 ```bash
 # Coverage report complet
-npm test -- --coverage
+pnpm test -- --coverage
 
 # Vérifier seuils (target: 40%+ services/ai)
 # Expected: ConversationManager ~85%, overall ~40%

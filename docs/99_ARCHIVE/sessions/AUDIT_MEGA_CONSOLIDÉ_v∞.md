@@ -479,26 +479,26 @@ pub mod numeric_twin;       // Numeric Twin vΩ∞ (NOUVEAU!)
 | Item | Statut | Commande |
 |------|--------|----------|
 | Compilation Rust | ✅ | `cargo check --features mock` |
-| Type-check TS | ⏳ | `npm run type-check` |
-| Build Vite | ⏳ | `npm run build` |
-| Build Tauri | ⏳ | `npm run tauri:build` |
-| Tests unitaires | ⏳ | `npm run test` |
-| Lint | ⏳ | `npm run lint` |
+| Type-check TS | ⏳ | `pnpm run type-check` |
+| Build Vite | ⏳ | `pnpm run build` |
+| Build Tauri | ⏳ | `pnpm run tauri:build` |
+| Tests unitaires | ⏳ | `pnpm run test` |
+| Lint | ⏳ | `pnpm run lint` |
 
 ## B. COMMANDES VALIDATION FINALE
 
 ```bash
 # 1. Type-check complet
-npm run type-check
+pnpm run type-check
 
 # 2. Build frontend
-npm run build
+pnpm run build
 
 # 3. Tests
-npm run test
+pnpm run test
 
 # 4. Build Tauri release
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ## C. RECOMMANDATION
@@ -543,7 +543,7 @@ npm run tauri:build
 ║   Statut: ✅ PRODUCTION READY                                         ║
 ║   Risque Déploiement: MINIMAL                                         ║
 ║                                                                       ║
-║   Prochaine Étape: npm run tauri:build                               ║
+║   Prochaine Étape: pnpm run tauri:build                               ║
 ║                                                                       ║
 ╚═══════════════════════════════════════════════════════════════════════╝
 ```

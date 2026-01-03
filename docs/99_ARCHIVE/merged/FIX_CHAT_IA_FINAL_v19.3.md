@@ -43,7 +43,7 @@ Please make sure that is the URL to your dev server.
 // ❌ CONFIGURATION INCORRECTE (AVANT):
 {
   "build": {
-    "beforeDevCommand": "npm run build:watch",  // ← ERREUR ICI
+    "beforeDevCommand": "pnpm run build:watch",  // ← ERREUR ICI
     "devUrl": "http://localhost:5173"
   }
 }
@@ -142,8 +142,8 @@ async generate(message: string, history: AIMessage[]): Promise<AIResponse> {
 // ✅ CONFIGURATION CORRECTE (APRÈS):
 {
   "build": {
-    "beforeDevCommand": "npm run vite:dev",  // ← CORRIGÉ: Lance SERVEUR HTTP
-    "beforeBuildCommand": "npm run build",
+    "beforeDevCommand": "pnpm run vite:dev",  // ← CORRIGÉ: Lance SERVEUR HTTP
+    "beforeBuildCommand": "pnpm run build",
     "frontendDist": "../dist",
     "devUrl": "http://localhost:5173"
   }
@@ -177,7 +177,7 @@ async generate(message: string, history: AIMessage[]): Promise<AIResponse> {
 ```bash
 pkill -9 -f "vite|tauri|node.*tauri|npm run"
 sleep 2
-npm run tauri:dev  # Relance propre
+pnpm run tauri:dev  # Relance propre
 ```
 
 **Résultat**: Processus bloqués (build watch infini) terminés avant relance.
@@ -189,11 +189,11 @@ npm run tauri:dev  # Relance propre
 ### 1. Serveur Vite Démarre Correctement
 
 ```bash
-$ npm run tauri:dev
+$ pnpm run tauri:dev
 
 > tauri dev
 
-     Running BeforeDevCommand (`npm run vite:dev`)
+     Running BeforeDevCommand (`pnpm run vite:dev`)
 
 > vite --host 0.0.0.0 --port 5173 --strictPort
 
@@ -308,7 +308,7 @@ Puis tester Chat IA → Provider badge "Ollama"
 
 ## 🎯 CAUSE RACINE FINALE
 
-**Problème**: Configuration `beforeDevCommand: "npm run build:watch"` lançait Vite en mode **build watch** au lieu de **serveur dev HTTP**.
+**Problème**: Configuration `beforeDevCommand: "pnpm run build:watch"` lançait Vite en mode **build watch** au lieu de **serveur dev HTTP**.
 
 **Pourquoi ça semblait fonctionner initialement**:
 1. Vite build watch compile fichiers vers `dist/` sans erreur
@@ -357,7 +357,7 @@ Puis tester Chat IA → Provider badge "Ollama"
 ## 📝 CHECKLIST VALIDATION
 
 ### Configuration:
-- [x] `tauri.conf.json` → `beforeDevCommand: "npm run vite:dev"`
+- [x] `tauri.conf.json` → `beforeDevCommand: "pnpm run vite:dev"`
 - [x] `package.json` → Script `vite:dev` ajouté
 - [x] Processus zombie nettoyés (`pkill -9`)
 
@@ -382,7 +382,7 @@ Puis tester Chat IA → Provider badge "Ollama"
 ## 🔗 FICHIERS MODIFIÉS
 
 1. **src-tauri/tauri.conf.json** (ligne 7):
-   - `beforeDevCommand: "npm run build:watch"` → `"npm run vite:dev"`
+   - `beforeDevCommand: "pnpm run build:watch"` → `"pnpm run vite:dev"`
 
 2. **package.json** (ligne 17):
    - `"vite:dev": "echo '🔒 TAURI-ONLY...' && exit 1"` → `"vite --host 0.0.0.0 --port 5173 --strictPort"`

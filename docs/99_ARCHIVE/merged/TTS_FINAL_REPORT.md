@@ -126,7 +126,7 @@ curl -X POST http://localhost:8765/api/v1/tts/synthesize \
 ```bash
 # Lancer TITANE∞
 cd /home/titane/Documents/TITANE_INFINITY
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Accéder au panel de test
 # URL: http://localhost:5173/test/tts
@@ -280,7 +280,7 @@ DeprecationWarning: on_event is deprecated...
 ---
 
 **Prochaine action suggérée:**
-Lancer `npm run tauri:dev` et tester l'intégration frontend avec le panel de test.
+Lancer `pnpm run tauri:dev` et tester l'intégration frontend avec le panel de test.
 
 ---
 

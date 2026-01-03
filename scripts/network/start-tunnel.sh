@@ -22,13 +22,13 @@ echo ""
 # Check if Vite dev server is running
 if ! curl -s http://localhost:$DEV_PORT > /dev/null 2>&1; then
     echo "⚠️  Vite dev server not detected on port $DEV_PORT"
-    echo "💡 Start Titan-Dev first: npm run dev:tauri"
+    echo "💡 Start Titan-Dev first: pnpm run dev:tauri"
     echo ""
     read -p "Start Titan-Dev now? (y/n) " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo "🚀 Launching Titan-Dev..."
-        npm run dev:tauri &
+        pnpm run dev:tauri &
         DEV_PID=$!
         echo "⏳ Waiting for Vite server..."
         sleep 10

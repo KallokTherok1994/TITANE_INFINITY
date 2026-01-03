@@ -318,7 +318,7 @@ try {
 **Commande** :
 
 ```bash
-npm test -- audio
+pnpm test -- audio
 ```
 
 ### **Tests DSP (Backend Rust)**
@@ -352,20 +352,20 @@ cargo test voice_fingerprint
 **Commande** :
 
 ```bash
-npm run test:e2e
+pnpm run test:e2e
 ```
 
 ### **Build & Deploy**
 
 ```bash
 # Frontend build
-npm run build
+pnpm run build
 
 # Backend build (release)
 cd src-tauri && cargo build --release
 
 # Run app
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 ---

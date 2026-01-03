@@ -227,7 +227,7 @@ touch src/core/memory/__tests__/ConversationManager.test.ts
 touch src-tauri/src/commands/tests.rs
 
 # 3. Exécuter
-npm test -- --coverage
+pnpm test -- --coverage
 cd src-tauri && cargo test
 ```
 

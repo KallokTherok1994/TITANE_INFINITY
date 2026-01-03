@@ -160,10 +160,10 @@ ls src/services/systemCenter/
 ls src/hooks/useSystemCenterAutoFix.ts
 
 # Compiler
-npm run build
+pnpm run build
 
 # Lancer
-npm run dev
+pnpm run dev
 ```
 
 ### Usage Basic (Composant React)
@@ -244,14 +244,14 @@ if (health.autoFixed) {
 ### Tests Unitaires
 
 ```bash
-npm run test -- SystemCenterAutoFix
+pnpm run test -- SystemCenterAutoFix
 # ✅ 15 tests pass
 ```
 
 ### Tests d'Intégration
 
 ```bash
-npm run test -- SystemAPI
+pnpm run test -- SystemAPI
 # ✅ 12 tests pass
 ```
 

@@ -1041,12 +1041,12 @@ localStorage.setItem('titane_chat_mode_default', JSON.stringify(harmonized));
 
 ```bash
 # Dev mode
-npm run dev
+pnpm run dev
 # ou
 ./runtime/dev/run-dev.sh
 
 # Production build
-npm run build
+pnpm run build
 ./runtime/stable/build.sh
 ```
 

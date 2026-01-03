@@ -1075,7 +1075,7 @@ bash install-webkit-host-v17.sh
 
 # Retour VS Code pour compilation backend
 cd src-tauri && cargo build --release
-cd .. && npm run dev
+cd .. && pnpm run dev
 ```
 
 📚 **Documentation complète** : `RAPPORT_CLEAN-UP_v17.md`, `RAPPORT_FINAL_v17.0.0.md`
@@ -1095,14 +1095,14 @@ cd .. && npm run dev
 
 ```bash
 # TAURI-ONLY MODE (100% Local, 0% HTTP)
-npm run dev          # → Tauri app (après WebKit install)
+pnpm run dev          # → Tauri app (après WebKit install)
 
-# ⚠️ BLOQUÉ: npm run preview (HTTP server interdit)
+# ⚠️ BLOQUÉ: pnpm run preview (HTTP server interdit)
 # ⚠️ BLOQUÉ: vite:dev (HTTP server interdit)
 
 # Build production
-npm run build        # Frontend → dist/ (1,93s, 131KB gzip)
-npm run tauri:build  # Application native (.deb, .AppImage)
+pnpm run build        # Frontend → dist/ (1,93s, 131KB gzip)
+pnpm run tauri:build  # Application native (.deb, .AppImage)
 ```
 
 ### Installation WebKitGTK 4.1 (Requis)
@@ -1279,8 +1279,8 @@ cargo test --all
 # Interface UI/UX
 
 cd core/frontend
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 
 ## 📚 Documentation
 
@@ -1320,10 +1320,10 @@ cargo build --release
 
 # 3. Installer les dépendances UI (optionnel)
 cd ..
-npm install
+pnpm install
 
 # 4. Lancer l'application
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 ### Build Production

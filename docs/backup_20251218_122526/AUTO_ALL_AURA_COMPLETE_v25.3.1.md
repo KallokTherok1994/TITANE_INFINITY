@@ -582,7 +582,7 @@ setTimeout(() => {
 
 ### Immédiat (Aujourd'hui)
 
-1. ✅ **Lancer `npm run dev`**
+1. ✅ **Lancer `pnpm run dev`**
 2. ✅ **Ouvrir panneau contrôle** (bouton ✨ bottom-right)
 3. ✅ **Tester chaque preset** (minimal → maximum)
 4. ✅ **Valider FPS metrics** (should show 60 FPS)
@@ -734,7 +734,7 @@ _"Deep Analysis, Autonomous Development, Complete Validation"_
 
 1. Ouvrir terminal
 2. `cd /home/titane-os/Documents/GitHub/TITANE_INFINITY`
-3. `npm run dev`
+3. `pnpm run dev`
 4. Naviguer vers `http://localhost:5173`
 5. Cliquer bouton ✨ bottom-right
 6. **ENJOY ! 🎨**

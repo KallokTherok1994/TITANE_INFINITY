@@ -200,23 +200,23 @@
 
 ### Développement
 ```bash
-npm run dev              # Démarrer en mode développement
-npm run tauri:dev        # Démarrer avec Tauri
-npm run build            # Build production
-npm run preview          # Preview build
+pnpm run dev              # Démarrer en mode développement
+pnpm run tauri:dev        # Démarrer avec Tauri
+pnpm run build            # Build production
+pnpm run preview          # Preview build
 ```
 
 ### Vérification
 ```bash
-npm run verify           # Vérification globale
-npm run verify:cognitive # Vérification couches cognitives
-npm run verify:stacks    # Vérification stacks principaux
+pnpm run verify           # Vérification globale
+pnpm run verify:cognitive # Vérification couches cognitives
+pnpm run verify:stacks    # Vérification stacks principaux
 ```
 
 ### Qualité Code
 ```bash
-npm run lint            # Linter ESLint
-npm run type-check      # Vérification TypeScript
+pnpm run lint            # Linter ESLint
+pnpm run type-check      # Vérification TypeScript
 ```
 
 ---

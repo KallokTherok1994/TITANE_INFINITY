@@ -90,7 +90,7 @@ GEMINI_API_KEY=votre_cle_google_gemini_ici
 
 1. Lancer Titan-Dev:
    ```bash
-   npm run dev
+   pnpm run dev
    ```
 
 2. Naviguer: `Governance Center` → Onglet `Secrets`
@@ -152,7 +152,7 @@ ls -la ~/.local/share/titane-infinity/secrets.enc
 
 ```bash
 # Lancer Titan-Dev
-npm run dev
+pnpm run dev
 
 # Dans Governance Center → Secrets:
 # Status: "Gemini opérationnel ✅"
@@ -356,7 +356,7 @@ grep "allow-internal-toggle-devtools" src-tauri/tauri.conf.json
 ./scripts/setup-gemini.sh
 
 # Vérification
-npm run dev
+pnpm run dev
 # → Governance Center → Secrets → Status Gemini
 ```
 

@@ -27,9 +27,9 @@
 ### ✅ 4. Validations Effectuées (3)
 
 ```bash
-npm run type-check  → ✅ 0 erreur TypeScript
-npm run build       → ✅ 1.04s, 214 KB (61 KB gzipped)
-npm run dev         → ✅ 118ms startup
+pnpm run type-check  → ✅ 0 erreur TypeScript
+pnpm run build       → ✅ 1.04s, 214 KB (61 KB gzipped)
+pnpm run dev         → ✅ 118ms startup
 ```
 
 ### ✅ 5. Documentation Complète (26 fichiers)
@@ -82,7 +82,7 @@ sudo do-release-upgrade
 ```bash
 # Terminal système (Ctrl+Alt+T)
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ⚠️ Peut échouer sur Pop!_OS 22.04

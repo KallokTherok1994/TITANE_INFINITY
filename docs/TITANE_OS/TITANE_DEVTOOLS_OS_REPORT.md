@@ -348,7 +348,7 @@ Each module includes comprehensive tests:
 ### 7.2 Build Status
 
 - **Rust:** `cargo check` PASSED
-- **TypeScript:** `npm run build` PASSED
+- **TypeScript:** `pnpm run build` PASSED
 - **All tests:** 458 tests passing
 
 ---

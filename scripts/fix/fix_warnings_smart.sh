@@ -102,7 +102,7 @@ echo "════════════════════════�
 echo ""
 echo "🔍 Vérification TypeScript..."
 
-npm run type-check 2>&1 | tee /tmp/ts_final_check.txt || true
+pnpm run type-check 2>&1 | tee /tmp/ts_final_check.txt || true
 
 FINAL=$(grep -c "error TS" /tmp/ts_final_check.txt || echo "0")
 echo ""

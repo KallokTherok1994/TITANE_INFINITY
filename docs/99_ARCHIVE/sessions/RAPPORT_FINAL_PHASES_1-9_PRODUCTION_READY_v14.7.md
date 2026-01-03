@@ -26,8 +26,8 @@ Statut : 🟢 **SYSTÈME 100% PRODUCTION-READY**
 - 0 duplication inutile
 
 ### Phase 4 : Frontend TypeScript ✅
-- `npm run type-check` : 0 erreurs
-- `npm run build` : OK
+- `pnpm run type-check` : 0 erreurs
+- `pnpm run build` : OK
 - Frontend 100% propre
 
 ### Phase 5 : Services v12 Audit ✅
@@ -184,17 +184,17 @@ cargo test --manifest-path src-tauri/Cargo.toml ollama
 ### ✅ Frontend
 ```bash
 # Type check
-npm run type-check
+pnpm run type-check
 # ✅ No errors
 
 # Build production
-npm run build
+pnpm run build
 # ✅ Build successful
 ```
 
 ### ✅ Exécution
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 # ✅ Backend: 2.40s startup, 0 warnings
 # ✅ Frontend: HMR active, 0 errors
 # ✅ IPC: All 49 handlers responsive

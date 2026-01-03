@@ -469,7 +469,7 @@ async fn detect_emotion(...) -> Result<EmotionalState, String>
 ### Installation
 ```bash
 ./install_titane_v13.sh
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 ---

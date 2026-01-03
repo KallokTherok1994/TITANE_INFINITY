@@ -233,7 +233,7 @@ cargo build
 cd ..
 
 # 2. Lancer en dev
-npm run dev
+pnpm run dev
 
 # 3. Au premier lancement, l'onboarding devrait s'afficher
 
@@ -243,7 +243,7 @@ await invoke('reset_onboarding');
 window.location.reload();
 
 # 5. Lancer les tests E2E
-npm run test:e2e
+pnpm run test:e2e
 ```
 
 ---
@@ -371,10 +371,10 @@ Vérifier que le module est bien ajouté dans `main.rs`.
 
 ```bash
 # Lancer l'app en dev d'abord
-npm run dev
+pnpm run dev
 
 # Dans un autre terminal
-npm run test:e2e
+pnpm run test:e2e
 ```
 
 Vérifier que l'app est accessible sur `http://localhost:5173`.
@@ -413,12 +413,12 @@ Vérifier que l'app est accessible sur `http://localhost:5173`.
 - [ ] Ajouter le state et useEffect pour first-run detection
 - [ ] Ajouter le rendu conditionnel (onboarding vs app)
 - [ ] Build Rust : `cd src-tauri && cargo build`
-- [ ] Tester : `npm run dev`
+- [ ] Tester : `pnpm run dev`
 - [ ] Vérifier que l'onboarding s'affiche au premier lancement
 - [ ] Tester la navigation avant/arrière
 - [ ] Tester la sélection de thème
 - [ ] Tester la sauvegarde des préférences
-- [ ] Lancer tests E2E : `npm run test:e2e`
+- [ ] Lancer tests E2E : `pnpm run test:e2e`
 - [ ] Commit les changements
 - [ ] 🎉 **C'EST FAIT !**
 
@@ -444,7 +444,7 @@ Après intégration, TITANE∞ aura :
 Si problème lors de l'intégration :
 
 1. Vérifier le guide : `src/components/Onboarding/INTEGRATION_GUIDE.md`
-2. Lancer les tests pour identifier le problème : `npm run test:e2e`
+2. Lancer les tests pour identifier le problème : `pnpm run test:e2e`
 3. Vérifier les logs Rust : Console DevTools → onglet "Console"
 4. Essayer le reset : `await invoke('reset_onboarding')`
 

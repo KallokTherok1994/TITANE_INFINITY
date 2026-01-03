@@ -476,7 +476,7 @@ cargo test omega::test_memory_integration
 
 1. **Read module doc** (ChatEngine, UnifiedMemory)
 2. **Check API Reference** (TypeScript interfaces, methods)
-3. **Run unit tests** (`npm run test module_name`)
+3. **Run unit tests** (`pnpm run test module_name`)
 4. **Check backend integration** (Tauri commands)
 5. **Test UI integration** (React hooks, stores)
 6. **Update docs** (if API changes)
@@ -484,11 +484,11 @@ cargo test omega::test_memory_integration
 **Example:**
 ```bash
 # Develop ChatEngine
-npm run test chatEngine
-npm run test:coverage chatEngine
+pnpm run test chatEngine
+pnpm run test:coverage chatEngine
 
 # Test backend integration
-npm run dev:tauri  # Launch Titan-Dev
+pnpm run dev:tauri  # Launch Titan-Dev
 ```
 
 ---

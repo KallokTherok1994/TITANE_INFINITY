@@ -32,7 +32,7 @@ echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━�
 echo -e "${YELLOW}Phase 1: ESLint${NC}"
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}\n"
 
-if npm run lint >> "$VALIDATION_LOG" 2>&1; then
+if pnpm run lint >> "$VALIDATION_LOG" 2>&1; then
   echo -e "${GREEN}✓ ESLint: PASSED${NC}"
 else
   echo -e "${RED}✗ ESLint: FAILED${NC}"
@@ -59,7 +59,7 @@ echo -e "${YELLOW}Phase 3: Frontend Build${NC}"
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}\n"
 
 BUILD_START=$(date +%s)
-if npm run build >> "$VALIDATION_LOG" 2>&1; then
+if pnpm run build >> "$VALIDATION_LOG" 2>&1; then
   BUILD_END=$(date +%s)
   BUILD_TIME=$((BUILD_END - BUILD_START))
   echo -e "${GREEN}✓ Frontend Build: PASSED (${BUILD_TIME}s)${NC}"

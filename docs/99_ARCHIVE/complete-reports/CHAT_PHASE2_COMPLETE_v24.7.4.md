@@ -203,7 +203,7 @@ import { VoiceConversation } from '../../components/VoiceConversation';
 ### **Build Validation** ✅
 
 ```bash
-npm run build
+pnpm run build
 ✓ built in 19.34s
 ✓ 0 errors
 ✓ 0 warnings
@@ -212,7 +212,7 @@ npm run build
 ### **ESLint Validation** ✅
 
 ```bash
-npm run lint
+pnpm run lint
 ✓ No problems found
 ```
 

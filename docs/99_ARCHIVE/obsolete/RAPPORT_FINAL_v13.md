@@ -467,7 +467,7 @@ cd TITANE_INFINITY
 ./install_titane_v13.sh
 
 # Or manual install
-npm install
+pnpm install
 cd src-tauri && cargo build --release
 ```
 
@@ -475,11 +475,11 @@ cd src-tauri && cargo build --release
 
 ```bash
 # Development
-npm run dev                # Frontend dev server
+pnpm run dev                # Frontend dev server
 cargo run                  # Backend + frontend
 
 # Build
-npm run build              # Frontend production build
+pnpm run build              # Frontend production build
 cargo build --release      # Backend optimized binary
 
 # Tests

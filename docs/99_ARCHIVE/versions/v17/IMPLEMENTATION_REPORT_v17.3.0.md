@@ -56,7 +56,7 @@
 
 **Test réussi**:
 ```bash
-npm run verify:backend:quick
+pnpm run verify:backend:quick
 # ✓ Rust 1.91.1, Cargo 1.91.1
 # ✓ Build successful
 # ✓ Quick verification PASSED
@@ -198,10 +198,10 @@ console.log(report.recommendations); // ["Consider closing unused applications"]
 ✅ **Pérenne**: Pour Kevin dans 6 mois, nouveaux devs, IA copilotes  
 
 ### DevOps
-✅ **1 commande**: `npm run verify:backend` → Savoir si tout va bien  
+✅ **1 commande**: `pnpm run verify:backend` → Savoir si tout va bien  
 ✅ **3 modes**: quick (30s), standard (2min), deep (5-10min)  
 ✅ **Exit codes clairs**: 0 (OK), 1 (build), 2 (tests), 3 (health)  
-✅ **Repair automatique**: `npm run repair:backend` → Clean + rebuild + verify  
+✅ **Repair automatique**: `pnpm run repair:backend` → Clean + rebuild + verify  
 
 ### Performance
 ✅ **Pas de hang**: Timeout 30s sur evolution cycle  
@@ -215,7 +215,7 @@ console.log(report.recommendations); // ["Consider closing unused applications"]
 
 ### Court Terme (1-2h)
 1. **Tester get_detailed_health_report**
-   - Lancer app: `npm run tauri dev`
+   - Lancer app: `pnpm run tauri dev`
    - DevTools console: `await invoke('get_detailed_health_report')`
    - Valider metrics + issues + recommendations
 
@@ -259,7 +259,7 @@ console.log(report.recommendations); // ["Consider closing unused applications"]
 
 ### Après
 - ✅ Corpus structuré docs/backend/ (3096 lignes)
-- ✅ 1 commande: `npm run verify:backend` (exit codes clairs)
+- ✅ 1 commande: `pnpm run verify:backend` (exit codes clairs)
 - ✅ Timeout 30s sur evolution cycle
 - ✅ Logs performance + health report détaillé
 - ✅ Scripts repair automatique + playbook debug 80/20
@@ -274,10 +274,10 @@ console.log(report.recommendations); // ["Consider closing unused applications"]
 cd docs/backend && cat README.md
 
 # DevOps
-npm run verify:backend:quick     # 30s
-npm run verify:backend            # 2 min
-npm run verify:backend:deep       # 5-10 min
-npm run repair:backend            # Si problème
+pnpm run verify:backend:quick     # 30s
+pnpm run verify:backend            # 2 min
+pnpm run verify:backend:deep       # 5-10 min
+pnpm run repair:backend            # Si problème
 
 # Health Check (si app lancée)
 await invoke('get_detailed_health_report')

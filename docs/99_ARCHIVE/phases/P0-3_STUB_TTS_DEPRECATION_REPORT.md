@@ -149,7 +149,7 @@ cargo build
 # ⚠️ warning: use of deprecated function `voice_synthesize_speech`
 
 # Frontend build réussi
-npm run build
+pnpm run build
 # ✅ No usage found
 ```
 

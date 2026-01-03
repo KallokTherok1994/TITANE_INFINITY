@@ -15,9 +15,9 @@ if ! command -v cargo &> /dev/null; then
     exit 1
 fi
 
-# Install npm dependencies
-echo "📦 Installing npm dependencies..."
-npm install
+# Install pnpm dependencies
+echo "📦 Installing pnpm dependencies..."
+pnpm install
 
 # Install Playwright browsers
 echo "🎭 Installing Playwright browsers..."
@@ -27,8 +27,8 @@ npx playwright install
 echo "🔧 Setting up pre-commit hooks..."
 cat > .git/hooks/pre-commit << 'EOF'
 #!/bin/bash
-npm run lint
-npm test
+pnpm run lint
+pnpm test
 EOF
 chmod +x .git/hooks/pre-commit
 
@@ -43,4 +43,4 @@ fi
 echo "🦀 Building Rust backend..."
 cd src-tauri && cargo build && cd ..
 
-echo "✅ Setup complete! Run 'npm run dev' to start."
+echo "✅ Setup complete! Run 'pnpm run dev' to start."

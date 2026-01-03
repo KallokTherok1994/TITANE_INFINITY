@@ -64,7 +64,7 @@ Status: ✅ Compiled successfully
 1. **scripts/auto-all.sh** - Full automation pipeline
    - Phase 1: Clean & Prepare
    - Phase 2: Build (lint, TypeScript, Vite, Cargo)
-   - Phase 3: Test (npm test, cargo test)
+   - Phase 3: Test (pnpm test, cargo test)
    - Phase 4: Deploy (release package)
 
 2. **scripts/quick-auto.sh** - Fast build (skip TypeScript)
@@ -82,7 +82,7 @@ Status: ✅ Compiled successfully
 ./scripts/quick-auto.sh
 
 # Manual steps
-npm run build              # Frontend only
+pnpm run build              # Frontend only
 cd src-tauri && cargo build --release  # Backend only
 ```
 
@@ -119,7 +119,7 @@ cd src-tauri && cargo build --release  # Backend only
 
 ```bash
 # Start dev server
-npm run dev
+pnpm run dev
 
 # Or use task
 Run task: 🟢 Launch Titan-Dev
@@ -331,7 +331,7 @@ After Automation:
 #!/bin/bash
 # Phase 1: Clean & Prepare
 # Phase 2: Build (lint, TypeScript, Vite, Cargo)
-# Phase 3: Test (npm test, cargo test)
+# Phase 3: Test (pnpm test, cargo test)
 # Phase 4: Deploy (release package)
 
 Usage: ./scripts/auto-all.sh

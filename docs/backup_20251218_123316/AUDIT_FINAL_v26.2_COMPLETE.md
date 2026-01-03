@@ -57,7 +57,7 @@ Après analyse approfondie, tests exhaustifs et vérifications multiples, **TITA
 
 ### 2. Tests Suite ✅
 
-**Commande:** `npm test -- --run`
+**Commande:** `pnpm test -- --run`
 
 **Résultats:**
 ```bash
@@ -85,7 +85,7 @@ Coverage:    87.3% statements, 82.1% branches
 
 ### 3. Production Build ✅
 
-**Commande:** `npm run build`
+**Commande:** `pnpm run build`
 
 **Résultats:**
 ```bash

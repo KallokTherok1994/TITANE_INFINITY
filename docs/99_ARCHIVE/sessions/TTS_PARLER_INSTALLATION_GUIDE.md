@@ -237,7 +237,7 @@ INFO:     Uvicorn running on http://0.0.0.0:8765
 ./tts-service/start_tts_service.sh
 
 # Terminal 2: Lancer TITANE
-npm run dev:tauri
+pnpm run dev:tauri
 ```
 
 **Option 2: Systemd service (démarrage système)**
@@ -752,5 +752,5 @@ Pour toute question ou problème non couvert, vérifier les logs:
 journalctl -u titane-tts.service -f
 
 # Logs TITANE frontend
-npm run dev:tauri
+pnpm run dev:tauri
 ```

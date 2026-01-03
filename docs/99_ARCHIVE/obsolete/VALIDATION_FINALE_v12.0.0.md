@@ -186,7 +186,7 @@ $ ls -lh src-tauri/target/release/titane-infinity
 ### Optionnel - Build Tauri Bundles
 ```bash
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-flatpak-spawn --host bash -c "cd '$PWD' && npm run tauri build"
+flatpak-spawn --host bash -c "cd '$PWD' && pnpm run tauri build"
 ```
 **Génère:**
 - AppImage (Linux portable)

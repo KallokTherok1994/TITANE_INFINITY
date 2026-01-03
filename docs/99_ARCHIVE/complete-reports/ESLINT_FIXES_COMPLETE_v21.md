@@ -169,7 +169,7 @@ const { join } = require('fs'); // Unused
 
 ```bash
 # 1. Linting
-npm run lint
+pnpm run lint
 # Résultat : 5 warnings (3 dans scripts, 0 dans src/)
 
 # 2. TypeScript Check
@@ -177,7 +177,7 @@ npx tsc --noEmit
 # Résultat : 0 errors
 
 # 3. Build Production
-npm run build
+pnpm run build
 # Résultat : ✅ Success in 13.84s
 
 # 4. Bundle Sizes

@@ -271,7 +271,7 @@ animationFrameRef.current = requestAnimationFrame(animate);
 
 ### TypeScript
 ```bash
-npm run type-check
+pnpm run type-check
 ✅ 82 erreurs préexistantes (0 nouvelle de Phase 6)
 ✅ TitaneAvatar.tsx: No errors
 ```

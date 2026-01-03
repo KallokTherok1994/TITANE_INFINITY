@@ -17,8 +17,8 @@
 ```json
 // Build scripts (4)
 "build": "vite build"
-"build:compressed": "vite build && npm run compress"
-"build:prod": "npm run prebuild && npm run tauri build"
+"build:compressed": "vite build && pnpm run compress"
+"build:prod": "pnpm run prebuild && pnpm run tauri build"
 "build:watch": "vite build --watch"
 
 // Test scripts (11)
@@ -31,12 +31,12 @@
 "test:e2e:ui": "playwright test --ui"
 "test:e2e:debug": "playwright test --debug"
 "test:rust": "cd src-tauri && cargo test"
-"test:tauri": "npm run test:rust"
-"test:all": "npm run test && npm run test:e2e && cargo test"
-"test:ci": "npm run lint && npm run type-check && npm run test && npm run test:e2e && npm run test:rust"
+"test:tauri": "pnpm run test:rust"
+"test:all": "pnpm run test && pnpm run test:e2e && cargo test"
+"test:ci": "pnpm run lint && pnpm run type-check && pnpm run test && pnpm run test:e2e && pnpm run test:rust"
 
 // Dev scripts (3)
-"dev": "npm run dev:tauri"
+"dev": "pnpm run dev:tauri"
 "dev:tauri": "tauri dev"
 "vite:dev": "vite --port 5173 --host 0.0.0.0"
 ```
@@ -45,7 +45,7 @@
 
 ```json
 "preview": "echo '🔒 TAURI-ONLY MODE' && exit 1"  ✅
-"start": "echo '🔒 TAURI-ONLY MODE: Use npm run dev instead' && exit 1"  ✅
+"start": "echo '🔒 TAURI-ONLY MODE: Use pnpm run dev instead' && exit 1"  ✅
 "docs:serve": "echo '🔒 TAURI-ONLY MODE' && exit 1"  ✅
 ```
 
@@ -178,7 +178,7 @@ test-results/
   "scripts": {
     // ✅ APRÈS: 2 scripts build clairs
     "build": "vite build",
-    "build:production": "npm run lint && vite build && tauri build",
+    "build:production": "pnpm run lint && vite build && tauri build",
 
     // ❌ SUPPRIMER
     "build:compressed": "...",
@@ -200,7 +200,7 @@ test-results/
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "test:rust": "cd src-tauri && cargo test",
-    "test:all": "npm run test && npm run test:e2e && npm run test:rust",
+    "test:all": "pnpm run test && pnpm run test:e2e && pnpm run test:rust",
 
     // ❌ SUPPRIMER (redondants)
     "test:ui": "...",
@@ -217,7 +217,7 @@ test-results/
 ```json
 {
   "scripts": {
-    "verify": "npm run lint && npm run format:check && npm run check && npm run test:all"
+    "verify": "pnpm run lint && pnpm run format:check && pnpm run check && pnpm run test:all"
   }
 }
 ```
@@ -611,15 +611,15 @@ pub async fn chat_send_message() -> Result<String, String> {
 
 ## Testing
 
-- Unit: `npm run test`
-- E2E: `npm run test:e2e`
-- Rust: `npm run test:rust`
-- All: `npm run test:all`
+- Unit: `pnpm run test`
+- E2E: `pnpm run test:e2e`
+- Rust: `pnpm run test:rust`
+- All: `pnpm run test:all`
 
 ## Verification
 
 ```bash
-npm run verify  # Lint + Type-check + Tests
+pnpm run verify  # Lint + Type-check + Tests
 ```
 ````
 
@@ -738,7 +738,7 @@ logger.info('Processing started', { userId });
 
 ```bash
 # Full validation
-npm run verify
+pnpm run verify
 
 # Tauri-only enforcement
 ./scripts/verify/enforce-tauri-only.sh
@@ -747,7 +747,7 @@ npm run verify
 ./scripts/verify/enforce-local-first.sh
 
 # Architecture validation
-npm run test:architecture
+pnpm run test:architecture
 ````
 
 ````

@@ -101,13 +101,13 @@ OLLAMA_MODEL=llama3
 
 ```bash
 cd TITANE_INFINITY
-npm install
+pnpm install
 ```
 
 3. **Build & Run** :
 
 ```bash
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 ---
@@ -315,14 +315,14 @@ Le système fonctionne **toujours**, même sans internet :
 ### Tester Gemini
 ```bash
 export GEMINI_API_KEY="your-key"
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 ### Tester Ollama
 ```bash
 ollama serve
 ollama pull llama3
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 ### Tester Fallback
@@ -353,7 +353,7 @@ Modifier `local_tts.rs` pour utiliser Piper/Coqui.
 
 ### Logs Rust
 ```bash
-RUST_LOG=debug npm run tauri dev
+RUST_LOG=debug pnpm run tauri dev
 ```
 
 ### Logs Frontend

@@ -223,11 +223,11 @@ $ cargo clippy --manifest-path src-tauri/Cargo.toml
 ✅ Finished `dev` profile in 8.20s (0 warnings)
 
 # TypeScript Type-Check
-$ npm run type-check
+$ pnpm run type-check
 ✅ 0 errors
 
 # Production Build
-$ npm run build
+$ pnpm run build
 ✅ Built in 4.86s (~1.1 MB gzipped)
 ```
 

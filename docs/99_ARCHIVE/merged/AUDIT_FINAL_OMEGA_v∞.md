@@ -205,7 +205,7 @@ import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';  // �
 
 **Solution**:
 ```bash
-npm install --save-dev @types/three
+pnpm install --save-dev @types/three
 # OU désactiver ce fichier s'il n'est pas utilisé
 ```
 
@@ -380,10 +380,10 @@ if ('memory' in performance) {
 **Fonctions**:
 - Init & checks (node, npm, cargo, rustc)
 - Cleanup (node_modules, dist, target)
-- Verify (npm run verify*)
+- Verify (pnpm run verify*)
 - Build frontend (tsc + vite)
 - Build backend (cargo check/clippy/build --release)
-- Build Tauri (npm run tauri:build)
+- Build Tauri (pnpm run tauri:build)
 - Export (cp bundle → builds/)
 - Auto-heal (reset + rebuild si échec)
 - Logging (logs/autobuild_TIMESTAMP.log)
@@ -401,7 +401,7 @@ chmod +x scripts/autobuild_full.sh
 - Dependency check (git, node, cargo, zenity)
 - Auto-install missing deps (sudo apt)
 - Project directory selection (file picker)
-- npm install --legacy-peer-deps
+- pnpm install --legacy-peer-deps
 - Build frontend (progress bar)
 - Build backend (progress bar)
 - Build Tauri (progress bar)
@@ -481,7 +481,7 @@ tauri::Builder::default()
 
 **1.1 PostProcessingPipeline (30 min)**
 ```bash
-npm install --save-dev @types/three
+pnpm install --save-dev @types/three
 # OU désactiver le fichier si non utilisé
 ```
 
@@ -516,7 +516,7 @@ npm install --save-dev @types/three
 
 **Vérification**:
 ```bash
-npm run type-check  # 0 erreurs attendu
+pnpm run type-check  # 0 erreurs attendu
 ```
 
 ### PHASE 2: Sécurisation Rust (🔴 1 jour)
@@ -579,7 +579,7 @@ cargo clippy  # clean
 
 **Vérification**:
 ```bash
-npm run type-check  # 0 any warnings
+pnpm run type-check  # 0 any warnings
 ```
 
 ### PHASE 4: Omega-Check Validation (🟢 1 jour)
@@ -592,18 +592,18 @@ cargo build --release  # 0 errors, 0 warnings
 cargo test  # all passing
 
 # Frontend
-npm run type-check  # 0 errors
-npm run build  # success
+pnpm run type-check  # 0 errors
+pnpm run build  # success
 
 # Tauri
-npm run tauri:build  # success
+pnpm run tauri:build  # success
 ```
 
 **4.2 Tests E2E**
 ```bash
-npm run tauri:dev &  # lancer app
-npm run test:integration  # 31/31 passing
-npm run test  # all passing
+pnpm run tauri:dev &  # lancer app
+pnpm run test:integration  # 31/31 passing
+pnpm run test  # all passing
 ```
 
 **4.3 Tests Stress**
@@ -665,12 +665,12 @@ npm run test  # all passing
 ### Compilation ✅
 - [ ] `cargo build --release` → 0 errors, 0 warnings
 - [ ] `cargo clippy` → clean
-- [ ] `npm run type-check` → 0 errors
-- [ ] `npm run build` → success
+- [ ] `pnpm run type-check` → 0 errors
+- [ ] `pnpm run build` → success
 
 ### Tests ✅
 - [ ] `cargo test` → all passing
-- [ ] `npm test` → all passing
+- [ ] `pnpm test` → all passing
 - [ ] Tests E2E → 31/31 passing
 - [ ] Tests stress → stable
 
@@ -772,7 +772,7 @@ tauri::Builder::default()
 
 **3. Tester DevOps Dashboard**:
 - Importer dans App.tsx ou créer route `/devops`
-- Lancer app: `npm run tauri:dev`
+- Lancer app: `pnpm run tauri:dev`
 - Naviguer vers dashboard
 - Tester boutons
 

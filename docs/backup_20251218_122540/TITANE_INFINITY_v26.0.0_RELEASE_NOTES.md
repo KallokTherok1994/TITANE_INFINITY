@@ -357,10 +357,10 @@ git clone https://github.com/KallokTherok1994/TITANE_INFINITY.git
 cd TITANE_INFINITY
 
 # Install dependencies
-npm install
+pnpm install
 
 # Build production bundle
-npm run build
+pnpm run build
 
 # Output:
 # dist/index.html - 7.14 kB (gzip: 2.38 kB)
@@ -524,8 +524,8 @@ npx lighthouse https://titane-infinity.app --view
 
 ### Connus
 
-1. **Preview mode disabled:** `npm run preview` retourne "TAURI-ONLY MODE"
-   - **Workaround:** Tester avec `npm run dev` ou build Tauri
+1. **Preview mode disabled:** `pnpm run preview` retourne "TAURI-ONLY MODE"
+   - **Workaround:** Tester avec `pnpm run dev` ou build Tauri
    - **Impact:** Développement seulement
    - **Fix:** Planned v26.1
 

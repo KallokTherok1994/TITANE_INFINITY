@@ -434,7 +434,7 @@ DevTools:             z-index: 9999
    - État collapsed pour toutes les classes
 
 3. ✅ `runtime/dev/run-dev.sh` (1 ligne corrigée)
-   - Correction `npm run tauri` → `npm run dev:tauri`
+   - Correction `pnpm run tauri` → `pnpm run dev:tauri`
 
 ### Compatibilité
 
@@ -519,7 +519,7 @@ IMPLEMENTED:
 MODIFIED:
 - CognitiveLayoutControl.tsx: Added useState, collapse button, content wrapper
 - CognitiveLayoutControl.css: Added floating positioning, button styles, animations
-- run-dev.sh: Fixed npm run tauri → npm run dev:tauri
+- run-dev.sh: Fixed pnpm run tauri → pnpm run dev:tauri
 
 TESTING:
 - TypeScript: 0 errors
@@ -631,7 +631,7 @@ _(À implémenter si besoin)_
 
 ### Défis rencontrés ⚠️
 
-1. **Script run-dev.sh** → Erreur `npm run tauri` corrigée
+1. **Script run-dev.sh** → Erreur `pnpm run tauri` corrigée
 2. **Positionnement floating** → Nécessité de définir z-index et position exacte
 3. **Animation content** → Balance entre height:0 et overflow:hidden
 

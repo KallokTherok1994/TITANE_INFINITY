@@ -39,7 +39,7 @@ npx tsc --noEmit --project tsconfig.json
 ### 2. ✅ LINTING ESLINT (20/20)
 
 ```bash
-npm run lint
+pnpm run lint
 ```
 
 **Résultat:** ✅ **0 ERREURS, 0 WARNINGS**
@@ -418,7 +418,7 @@ Le code est de qualité production et peut être déployé.
 ### 📋 Actions Suggérées (Post-Déploiement)
 
 1. **Tests Fonctionnels** (Priorité: HAUTE)
-   - Lancer backend: `npm run dev`
+   - Lancer backend: `pnpm run dev`
    - Tester tous les providers
    - Valider sauvegarde mémoire
    - Tester audio sur différents navigateurs

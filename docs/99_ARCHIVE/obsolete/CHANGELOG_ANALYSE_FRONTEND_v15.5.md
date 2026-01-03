@@ -156,7 +156,7 @@ Analyse complète du frontend TITANE∞ v15.5 pour :
 
 3. **Tester application**
    ```bash
-   npm run tauri:dev
+   pnpm run tauri:dev
    ```
    **Impact** : Vérifier fonctionnement complet  
    **Durée** : 1 min
@@ -305,7 +305,7 @@ bash install_system_deps.sh
 cargo clean && cargo build --release
 
 # 4. Tester application
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 **Durée totale** : 10-15 minutes  

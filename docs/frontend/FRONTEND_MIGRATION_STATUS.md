@@ -380,16 +380,16 @@ z-modal-backdrop: 1300 /* Overlay */
 ### Build & Test
 ```bash
 # Build production
-npm run build
+pnpm run build
 
 # Type checking
-npm run check
+pnpm run check
 
 # Linting
-npm run lint
+pnpm run lint
 
 # Dev server
-npm run dev
+pnpm run dev
 ```
 
 ### Useful Commands
@@ -398,7 +398,7 @@ npm run dev
 npx vite-bundle-visualizer
 
 # Check bundle size
-npm run build -- --mode analyze
+pnpm run build -- --mode analyze
 
 # Lighthouse audit
 npx lighthouse http://localhost:5173 --view

@@ -51,7 +51,7 @@ strip = false         # TAURI FIX: Keep symbols for bundler metadata (__TAURI_BU
 **Analyse Effectuée**:
 
 ```bash
-npm run build 2>&1 | grep -i "warning"
+pnpm run build 2>&1 | grep -i "warning"
 ```
 
 **Résultat**:
@@ -156,7 +156,7 @@ c1b96ff6d144db837878236459ea690a5c0d119c810f182bbca442b41b58a557  appimage/...
 
 ```bash
 # Frontend
-✅ npm run build
+✅ pnpm run build
    ├─ 3,322 modules transformed
    ├─ 72 JS chunks
    ├─ 19 CSS chunks

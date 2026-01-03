@@ -273,7 +273,7 @@ export type {
 
 ## ✅ **VALIDATION TYPESCRIPT**
 
-**Commande**: `npm run type-check`
+**Commande**: `pnpm run type-check`
 
 **Résultat**: ✅ **0 ERREURS**
 
@@ -288,7 +288,7 @@ export type {
 
 ## 🏗️ **BUILD PRODUCTION**
 
-**Commande**: `npm run build`
+**Commande**: `pnpm run build`
 
 **Résultat**: ✅ **SUCCESS in 6.47s**
 

@@ -170,7 +170,7 @@ Taux Réussite:    97.93% (2173/2219)
 - OWASP Top 10: 10/10 ✅
 - CSP Policies: Validées ✅
 - Secrets: Aucun détecté ✅
-- npm audit: 0 vulnérabilités critiques
+- pnpm audit: 0 vulnérabilités critiques
 
 **Outils:**
 - [proactive-monitor.sh](scripts/maintenance/proactive-monitor.sh) — Scan npm/cargo vulns
@@ -268,7 +268,7 @@ docs/archive/
 
 1. Respecter [4-Ring imports](docs/ARCHITECTURE_RINGS.md)
 2. Tests: [STRATEGIE_TESTS_E2E.md](docs/STRATEGIE_TESTS_E2E.md)
-3. Lint: `npm run lint` + `npm run format`
+3. Lint: `pnpm run lint` + `pnpm run format`
 4. Pre-commit: `./scripts/maintenance/health-check-enhanced.sh --dry-run`
 
 ### Déploiement Production

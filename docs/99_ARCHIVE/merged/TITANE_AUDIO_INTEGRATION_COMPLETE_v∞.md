@@ -4,7 +4,7 @@
 
 ```bash
 ✅ Rust Backend : cargo check → OK (1 warning bénin)
-✅ TypeScript Frontend : npm run type-check → OK
+✅ TypeScript Frontend : pnpm run type-check → OK
 ```
 
 ---
@@ -85,7 +85,7 @@ warning: method `force_reset` is never used (bénin)
 ### **2. Test Compilation TypeScript**
 
 ```bash
-npm run type-check
+pnpm run type-check
 ```
 
 **✅ RÉSULTAT :** Pas d'erreurs
@@ -93,7 +93,7 @@ npm run type-check
 ### **3. Test Fonctionnel (À FAIRE)**
 
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 **Actions à tester :**
@@ -157,7 +157,7 @@ main.rs → mod audio {
 
 ```bash
 # Terminal 1
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Dans l'app TITANE∞
 1. Ouvrir Vocal Dev Console
@@ -191,7 +191,7 @@ console.log(audioSelfHeal.getStatus());
 ### **4. Build Production (Si tests OK)**
 
 ```bash
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ---

@@ -146,7 +146,7 @@ cd "$PROJECT_ROOT"
 rm -rf dist/
 
 # Build avec nouveau config
-if npm run build; then
+if pnpm run build; then
   echo "   ✅ Build réussi"
   
   # Afficher tailles
@@ -179,7 +179,7 @@ echo "   • Build production : ✅"
 echo ""
 echo "🎯 Prochaines étapes :"
 echo "   1. Comparer tailles avant/après dans dist/"
-echo "   2. Tester application : npm run tauri:dev"
+echo "   2. Tester application : pnpm run tauri:dev"
 echo "   3. Appliquer lazy loading (voir PLAN_OPTIMISATION_FRONTEND_v15.5.md)"
 echo ""
 echo "📚 Documentation complète :"

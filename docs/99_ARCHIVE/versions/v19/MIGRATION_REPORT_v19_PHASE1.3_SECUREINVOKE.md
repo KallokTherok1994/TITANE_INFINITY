@@ -158,8 +158,8 @@ echo "48 fichiers critiques migrés"
 ### Phase 1.3.6: Tests & Validation (EN COURS)
 
 - [ ] Corriger 53 erreurs TypeScript résiduelles (non-bloquantes)
-- [ ] Lancer `npm run lint` pour valider ESLint rule
-- [ ] Tester UI en mode dev (`npm run tauri:dev`)
+- [ ] Lancer `pnpm run lint` pour valider ESLint rule
+- [ ] Tester UI en mode dev (`pnpm run tauri:dev`)
 - [ ] Vérifier aucun appel invoke() non sécurisé dans runtime
 
 ### Phase 2: IA Services Hardening

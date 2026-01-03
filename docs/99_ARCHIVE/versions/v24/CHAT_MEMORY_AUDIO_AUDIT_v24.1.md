@@ -447,7 +447,7 @@ impl VoiceActivityDetector {
 
 ```bash
 # Lancer l'application
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Accéder à la page chat
 # URL: http://localhost:5173/chat
@@ -554,7 +554,7 @@ curl http://localhost:8765/api/v1/tts/health | grep "device"
 ```bash
 # Test manuel
 cd /home/titane/Documents/TITANE_INFINITY
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Dans UI: activer mode vocal
 # Parler dans le micro
@@ -682,7 +682,7 @@ curl -X POST http://localhost:8765/api/v1/tts/synthesize \
 aplay /tmp/test.wav
 
 # 2. Test STT via UI
-npm run tauri:dev
+pnpm run tauri:dev
 # Activer mode vocal
 # Parler dans le micro
 # Vérifier transcription
@@ -726,7 +726,7 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 
 ```
 Test Scenario:
-1. Lancer app: npm run tauri:dev
+1. Lancer app: pnpm run tauri:dev
 2. Activer mode vocal
 3. Conversation 5 tours:
    User: "Bonjour TITANE"

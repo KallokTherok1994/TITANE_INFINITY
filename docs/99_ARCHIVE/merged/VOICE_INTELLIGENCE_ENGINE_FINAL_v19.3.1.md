@@ -255,7 +255,7 @@ Le TTS hybride avec 3-tier fallback est déjà optimal :
 
 ### TypeScript ✅
 ```bash
-npm run type-check
+pnpm run type-check
 # ✅ 0 errors
 ```
 

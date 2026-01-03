@@ -3,7 +3,7 @@
 ## 📋 Checklist Pré-Commit
 
 - [x] TypeScript compilation: **0 errors** ✅
-- [x] Build successful: **npm run build** ✅
+- [x] Build successful: **pnpm run build** ✅
 - [x] Code quality: **All features tested** ✅
 - [x] Documentation: **3 guides created** ✅
 - [x] Coverage: **+15% (65% → 80%)** ✅
@@ -197,10 +197,10 @@ git diff --cached
 git log --oneline -5
 
 # 4. Run tests (si disponibles)
-npm test
+pnpm test
 
 # 5. Build final
-npm run build
+pnpm run build
 
 # 6. Type check
 npx tsc --noEmit
@@ -334,7 +334,7 @@ git revert <commit-hash>
 
 ```bash
 # 1. Check everything works
-npm run build && npx tsc --noEmit
+pnpm run build && npx tsc --noEmit
 
 # 2. Stage all Phase 1 changes
 git add src/features/progression/ \

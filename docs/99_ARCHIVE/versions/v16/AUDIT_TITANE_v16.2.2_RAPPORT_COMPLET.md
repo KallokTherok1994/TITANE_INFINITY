@@ -406,14 +406,14 @@ if let Ok(api_key) = std::env::var("GEMINI_API_KEY") {
 ### Option A: Refactor TypeScript Complet (3h)
 ```bash
 # Corriger 72 erreurs TypeScript strict mode
-npm run type-check  # Voir toutes erreurs
+pnpm run type-check  # Voir toutes erreurs
 # Refactor fichier par fichier
 ```
 
 ### Option B: Build Production Rapide (30min)
 ```bash
 # Ignorer warnings TypeScript temporairement
-npm run tauri:build  # Générer .deb
+pnpm run tauri:build  # Générer .deb
 # Tester installation + ChatIA
 ```
 

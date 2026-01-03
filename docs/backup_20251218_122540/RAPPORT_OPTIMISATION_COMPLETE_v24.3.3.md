@@ -448,7 +448,7 @@ $ cargo check --manifest-path=src-tauri/Cargo.toml --no-default-features --featu
 ### Vite Build (si nécessaire)
 
 ```bash
-$ npm run build
+$ pnpm run build
 ✅ 3326 modules transformed in 14.54s
 ✅ Build completed successfully
 ```

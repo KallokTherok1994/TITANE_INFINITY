@@ -85,8 +85,8 @@ Error: The "beforeDevCommand" terminated with a non-zero status code
 
 1. `./runtime/dev/run-dev.sh` → Port 5173 conflict
 2. `killall + fuser -k 5173 + ./run-dev.sh` → Même erreur
-3. `npm run vite:dev & + npm run tauri dev` → Double Vite launch
-4. `npm run tauri dev --no-watch` → Compilation 716/717, interrompue
+3. `pnpm run vite:dev & + pnpm run tauri dev` → Double Vite launch
+4. `pnpm run tauri dev --no-watch` → Compilation 716/717, interrompue
 
 **Root Cause Identifiée**:
 
@@ -98,7 +98,7 @@ Error: The "beforeDevCommand" terminated with a non-zero status code
 
 1. Modifier `run-dev.sh` pour retirer lancement Vite
 2. Modifier `tauri.conf.json` pour retirer `beforeDevCommand`
-3. Utiliser directement `npm run tauri dev` (sans wrapper script)
+3. Utiliser directement `pnpm run tauri dev` (sans wrapper script)
 
 **Décision**: Procéder à validation théorique (runtime tests future session)
 
@@ -256,7 +256,7 @@ Error: The "beforeDevCommand" terminated with a non-zero status code
 ```bash
 # Option A: Modifier run-dev.sh (retirer Vite launch)
 # Option B: Modifier tauri.conf.json (retirer beforeDevCommand)
-# Option C: Direct npm run tauri dev (sans wrapper)
+# Option C: Direct pnpm run tauri dev (sans wrapper)
 ```
 
 **2. Exécuter Tests Terrain** (20-30 min):

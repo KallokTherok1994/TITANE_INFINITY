@@ -225,25 +225,25 @@
 
 ```bash
 # Install dependencies
-npm install
+pnpm install
 
 # Run development
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Build production
-npm run tauri:build
+pnpm run tauri:build
 
 # Run tests
-npm test
+pnpm test
 
 # Run all autonomous tests
 bash tests/run_all_autonomous_tests.sh
 
 # Type check
-npm run type-check
+pnpm run type-check
 
 # Lint
-npm run lint
+pnpm run lint
 ```
 
 ---

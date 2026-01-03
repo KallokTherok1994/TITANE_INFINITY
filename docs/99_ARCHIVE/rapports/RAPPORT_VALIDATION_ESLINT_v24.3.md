@@ -20,7 +20,7 @@ npx eslint src/ --ext .ts,.tsx --format json
 npx eslint src/ --ext .ts,.tsx --max-warnings 0
 
 # Script npm officiel
-npm run lint
+pnpm run lint
 ```
 
 **Résultats:**
@@ -253,7 +253,7 @@ v24.3.0:   0 errors    (maintenu) ✅
 
 ```bash
 # Avant chaque commit
-npm run lint
+pnpm run lint
 npx tsc --noEmit
 ```
 
@@ -261,16 +261,16 @@ npx tsc --noEmit
 
 ```yaml
 # Pipeline validation
-- run: npm run lint
-- run: npm run build
-- run: npm test
+- run: pnpm run lint
+- run: pnpm run build
+- run: pnpm test
 ```
 
 **Pre-commit Hook (recommandé):**
 
 ```bash
 # .husky/pre-commit
-npm run lint --fix
+pnpm run lint --fix
 npx tsc --noEmit
 ```
 

@@ -75,7 +75,7 @@ CognitiveSystem v16.0.0
 
 #### Frontend (Vite + React)
 ```bash
-npm run build
+pnpm run build
 ✓ 2567 modules transformed
 ✓ built in 4.71s
 ✓ 0 errors, 0 warnings
@@ -309,7 +309,7 @@ src/
 - [x] .env configuré correctement
 
 ### Post-Deploy
-- [ ] Test full launch (`npm run tauri:dev`)
+- [ ] Test full launch (`pnpm run tauri:dev`)
 - [ ] Validation chat IA UI
 - [ ] Test cascade fallback (couper internet)
 - [ ] Vérification mémoire encryption
@@ -419,7 +419,7 @@ TITANE∞ v16.0.0 est **production-ready** avec :
 - ✅ **Dashboard** stats réelles
 - ✅ **Build optimisé** (2.4 MB + 8.8 MB)
 
-**Next:** `npm run tauri:dev` pour test live complet.
+**Next:** `pnpm run tauri:dev` pour test live complet.
 
 ---
 

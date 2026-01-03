@@ -134,7 +134,7 @@ if (cameraResult.handled) {
 
 #### 1. Test Chat Bubble
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Dans l'app:
 1. Vérifier bulle bottom-right visible
@@ -290,7 +290,7 @@ Check permissions → visionStore.requestCameraPermission()
 
 **Immédiatement** (10 minutes):
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 # Tester Chat Bubble + Camera Chat
 ```
 

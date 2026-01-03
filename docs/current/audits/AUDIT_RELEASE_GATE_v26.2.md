@@ -12,7 +12,7 @@ Release gate is **GREEN**:
 
 - Validation gate: PASS
 - Test gate (frontend + Tauri/Rust + architecture + compliance): PASS
-- Security scan (npm audit lockfile): PASS (no known vulnerabilities)
+- Security scan (pnpm audit lockfile): PASS (no known vulnerabilities)
 - Stable build (Tauri bundles): PASS (AppImage + deb produced)
 
 ---
@@ -21,9 +21,9 @@ Release gate is **GREEN**:
 
 These workspace tasks were executed successfully during this session:
 
-- `npm run copilot-xs:validate`
-- `npm run copilot-xs:test` (validate + full test suite)
-- `npm run copilot-xs:security-scan`
+- `pnpm run copilot-xs:validate`
+- `pnpm run copilot-xs:test` (validate + full test suite)
+- `pnpm run copilot-xs:security-scan`
 - Stable build task: `./runtime/stable/build.sh`
 
 ---

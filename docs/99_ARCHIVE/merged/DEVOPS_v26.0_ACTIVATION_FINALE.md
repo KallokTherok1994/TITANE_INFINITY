@@ -590,7 +590,7 @@ console.log(`Santé globale: ${health.overall_health}/100`);
 - Tests: `./run_devops_tests.sh`
 
 ### Bugs?
-- Vérifier parse errors: `npm run type-check`
+- Vérifier parse errors: `pnpm run type-check`
 - Exécuter tests: `./run_devops_tests.sh`
 - Consulter logs: `devops-test-report.txt`
 

@@ -124,7 +124,7 @@ const MAX_ENDPOINT_ERRORS = 5;
 **Action**: Lancer l'app en dev
 
 ```bash
-npm run dev
+pnpm run dev
 # ou
 ./runtime/dev/run-dev.sh
 ```
@@ -253,7 +253,7 @@ npm run dev
 - [ ] Sauvegarde interactions DB
 - [ ] Streaming avec mémoire
 
-**Prochaine action**: Lancer `npm run dev` et exécuter Tests A-E
+**Prochaine action**: Lancer `pnpm run dev` et exécuter Tests A-E
 
 ---
 

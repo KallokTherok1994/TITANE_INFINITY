@@ -233,7 +233,7 @@ check_build_configuration() {
     if [[ -d "dist" ]]; then
         check_pass "dist directory exists"
     else
-        check_warn "dist directory missing - run 'npm run build'"
+        check_warn "dist directory missing - run 'pnpm run build'"
     fi
     
     # Check tsconfig.json
@@ -343,13 +343,13 @@ check_security_posture() {
         check_warn "CSP not found in tauri.conf.json"
     fi
     
-    # Run npm audit (if not in dry-run mode)
+    # Run pnpm audit (if not in dry-run mode)
     if [[ "$DRY_RUN" == "false" ]] && command -v npm &> /dev/null; then
-        echo -e "${CYAN}Running npm audit...${NC}"
-        if npm audit --production --audit-level=high &> /dev/null; then
-            check_pass "npm audit: No high/critical vulnerabilities"
+        echo -e "${CYAN}Running pnpm audit...${NC}"
+        if pnpm audit --production --audit-level=high &> /dev/null; then
+            check_pass "pnpm audit: No high/critical vulnerabilities"
         else
-            check_warn "npm audit found vulnerabilities - run 'npm audit' for details"
+            check_warn "pnpm audit found vulnerabilities - run 'pnpm audit' for details"
         fi
     fi
 }

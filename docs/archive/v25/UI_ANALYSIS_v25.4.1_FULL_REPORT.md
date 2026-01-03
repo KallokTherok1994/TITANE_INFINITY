@@ -346,7 +346,7 @@ src/stories/
 Implement with Chromatic or Percy:
 
 ```bash
-npm install --save-dev @chromatic-com/storybook
+pnpm install --save-dev @chromatic-com/storybook
 ```
 
 **Coverage:**

@@ -7,7 +7,7 @@ Le système de mise à jour automatique de l'icône permet à l'application TITA
 ## ✨ Fonctionnalités
 
 - ✅ **Détection automatique** du binaire (release ou debug)
-- ✅ **Mise à jour automatique** après `npm run build`
+- ✅ **Mise à jour automatique** après `pnpm run build`
 - ✅ **Mise à jour manuelle** possible à tout moment
 - ✅ **Actions du menu contextuel** (Dev Mode, Logs, Config)
 - ✅ **Cache des icônes** automatiquement rafraîchi
@@ -21,10 +21,10 @@ L'icône se met automatiquement à jour après chaque build:
 
 ```bash
 # Build frontend (déclenche automatiquement la mise à jour)
-npm run build
+pnpm run build
 
 # Build production complet (met à jour l'icône à la fin)
-npm run build:production
+pnpm run build:production
 ```
 
 ### Mise à Jour Manuelle
@@ -36,7 +36,7 @@ Pour mettre à jour l'icône manuellement à tout moment:
 bash scripts/update-desktop-icon.sh
 
 # Ou via npm
-npm run postbuild
+pnpm run postbuild
 ```
 
 ### Première Installation
@@ -45,7 +45,7 @@ Après avoir cloné le projet ou compilé pour la première fois:
 
 ```bash
 # 1. Build le projet
-npm run build
+pnpm run build
 cargo build --manifest-path src-tauri/Cargo.toml --release
 
 # 2. L'icône est automatiquement installée
@@ -167,7 +167,7 @@ kquitapp5 plasmashell && kstart5 plasmashell  # Pour KDE
 
 ```mermaid
 graph TD
-    A[npm run build] --> B[Vite Build]
+    A[pnpm run build] --> B[Vite Build]
     B --> C[postbuild hook]
     C --> D[update-desktop-icon.sh]
     D --> E[Détecte binaire]

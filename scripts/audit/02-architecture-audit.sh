@@ -91,7 +91,7 @@ if command -v madge &> /dev/null; then
     CIRCULAR_COUNT=$(grep -c "✖" "$REPORT_DIR/circular-deps.txt" 2>/dev/null || echo "0")
     echo "   └─ Circular dependencies: $CIRCULAR_COUNT"
 else
-    echo "   └─ ⚠️ madge not installed (run: npm install -g madge)"
+    echo "   └─ ⚠️ madge not installed (run: pnpm install -g madge)"
     echo "⚠️ madge not installed" > "$REPORT_DIR/circular-deps.txt"
 fi
 
@@ -138,7 +138,7 @@ echo "💀 [8/9] Detecting potentially dead code..."
     if command -v ts-prune &> /dev/null; then
         ts-prune | head -50 || echo "ts-prune failed"
     else
-        echo "⚠️ ts-prune not installed (run: npm install -g ts-prune)"
+        echo "⚠️ ts-prune not installed (run: pnpm install -g ts-prune)"
     fi
     echo ""
     echo "=== TODO/FIXME Comments ==="

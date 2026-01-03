@@ -22,7 +22,7 @@
 ### 1. Lancer l'Application
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 ### 2. Ouvrir le Panneau de Contrôle

@@ -53,7 +53,7 @@
 
 **Frontend** :
 ```bash
-✅ npm run dev → Vite server starts (220ms)
+✅ pnpm run dev → Vite server starts (220ms)
 ✅ http://localhost:5173 → Responds
 ✅ TypeScript strict mode → 0 critical errors
 ✅ ESLint → Pass (with warnings)
@@ -426,7 +426,7 @@ App.tsx
 
 1. **Manual testing** :
    ```bash
-   npm run dev
+   pnpm run dev
    # Open http://localhost:5173
    # Check console for "✨ [UI-POLISH] Micro-interactions initialized"
    ```

@@ -118,7 +118,7 @@
 ### 🔬 Pour valider & tester (30 min)
 ```
 1. GUIDE_TEST_v24.md              (10 min) - Instructions
-2. npm run dev                    (2 min)  - Lancer app
+2. pnpm run dev                    (2 min)  - Lancer app
 3. Naviguer /devtools             (3 min)  - Tester UI
 4. Vérifier console               (5 min)  - Logs debug
 5. Profiler performance           (10 min) - DevTools browser
@@ -161,7 +161,7 @@
 ### Tester maintenant
 ```bash
 cd /home/titane/Documents/TITANE_INFINITY
-npm run dev
+pnpm run dev
 # Ouvrir http://localhost:5173/devtools
 ```
 
@@ -172,7 +172,7 @@ cat VISUAL_RECAP_v24.txt
 
 ### Vérifier erreurs
 ```bash
-npm run type-check
+pnpm run type-check
 ```
 
 ### Voir todos

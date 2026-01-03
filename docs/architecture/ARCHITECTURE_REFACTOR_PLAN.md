@@ -646,8 +646,8 @@ export { coherenceEngine as eventBus } from '@/engines/coherence';
 ### Avant Chaque Commit
 
 ```
-□ TypeScript compile sans erreur (npm run build)
-□ ESLint passe (npm run lint)
+□ TypeScript compile sans erreur (pnpm run build)
+□ ESLint passe (pnpm run lint)
 □ Tests unitaires passent
 □ Aucune régression fonctionnelle
 □ Documentation mise à jour

@@ -187,7 +187,7 @@ import { FullDuplexExample } from '@/examples/FullDuplexExample';
 
 ```bash
 # Run development server
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Navigate to example component
 # Click "Speak Long Message"

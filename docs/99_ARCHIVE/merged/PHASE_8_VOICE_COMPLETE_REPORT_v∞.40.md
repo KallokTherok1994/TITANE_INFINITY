@@ -348,26 +348,26 @@ for await (const frame of audioStream) {
 
 ```bash
 # Tous les tests voice
-npm run test -- src/tests/voice
+pnpm run test -- src/tests/voice
 
 # Tests E2E seulement
-npm run test -- src/tests/voice/voiceE2ETests.ts
+pnpm run test -- src/tests/voice/voiceE2ETests.ts
 
 # Tests Architecture seulement
-npm run test -- src/tests/voice/voiceArchitectureTests.ts
+pnpm run test -- src/tests/voice/voiceArchitectureTests.ts
 
 # Watch mode
-npm run test -- --watch src/tests/voice
+pnpm run test -- --watch src/tests/voice
 ```
 
 ### Debug Tests
 
 ```bash
 # Verbose mode
-npm run test -- --reporter=verbose src/tests/voice
+pnpm run test -- --reporter=verbose src/tests/voice
 
 # Coverage report
-npm run test -- --coverage src/tests/voice
+pnpm run test -- --coverage src/tests/voice
 ```
 
 ---

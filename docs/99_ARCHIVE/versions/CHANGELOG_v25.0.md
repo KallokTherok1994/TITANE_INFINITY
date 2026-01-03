@@ -541,7 +541,7 @@ function animate() {
 **Documentation** : `/docs/avatar-v25.md`
 **Architecture** : `AVATAR_PREMIUM_ARCHITECTURE_v25.md`
 **Examples** : `/examples/avatar-v25/`
-**Tests** : `npm test -- avatar`
+**Tests** : `pnpm test -- avatar`
 
 ---
 

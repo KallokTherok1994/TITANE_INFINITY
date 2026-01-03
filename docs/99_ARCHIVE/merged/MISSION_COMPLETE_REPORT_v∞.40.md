@@ -256,7 +256,7 @@ git push -f origin main
 ### Validation
 
 - ✅ **TypeScript**: 0 erreurs
-- ✅ **Build**: npm run build (simulé, type-check OK)
+- ✅ **Build**: pnpm run build (simulé, type-check OK)
 - ⏳ **Runtime**: Tests manuels à faire
 - ⏳ **E2E**: À implémenter (Phase 9)
 
@@ -300,12 +300,12 @@ git push -f origin main
 
 2. **Tests Consistency Engine** (valider runtime)
    ```bash
-   npm run test:consistency  # À créer
+   pnpm run test:consistency  # À créer
    ```
 
 3. **Tests Semantic Memory** (valider runtime)
    ```bash
-   npm run test:semantic  # À créer
+   pnpm run test:semantic  # À créer
    ```
 
 ### Priorité 2 (Important)

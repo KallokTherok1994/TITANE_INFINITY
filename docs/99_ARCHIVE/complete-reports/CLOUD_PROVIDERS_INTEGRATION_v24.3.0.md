@@ -248,7 +248,7 @@ return {
 ### TypeScript Compilation
 
 ```bash
-✅ npm run check
+✅ pnpm run check
    0 errors
    Types: ProviderPreference correctement étendu
 ```
@@ -256,7 +256,7 @@ return {
 ### Frontend Build
 
 ```bash
-✅ npm run build
+✅ pnpm run build
    ✓ built in 14.98s
    page-chat: 362.97 kB (gzip: 96.47 kB)
    Aucune régression de taille

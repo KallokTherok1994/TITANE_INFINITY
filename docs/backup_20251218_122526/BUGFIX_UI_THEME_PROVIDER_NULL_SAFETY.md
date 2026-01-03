@@ -272,7 +272,7 @@ pub async fn load_ui_theme() -> Result<Option<UITheme>, TitaneError> {
 
 ### Prochaines Étapes
 
-1. [ ] Tester en production avec `npm run dev:tauri`
+1. [ ] Tester en production avec `pnpm run dev:tauri`
 2. [ ] Vérifier les logs pour warnings éventuels
 3. [ ] Documenter le pattern pour les futurs providers
 4. [ ] Envisager l'initialisation explicite du backend au démarrage

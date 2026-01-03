@@ -96,13 +96,13 @@ echo "✔ Nettoyage terminé." | tee -a "$LOG_FILE"
 echo -e "\n📦 Vérification dépendances npm..." | tee -a "$LOG_FILE"
 if [[ ! -d "node_modules" ]]; then
     echo "Installation des dépendances..." | tee -a "$LOG_FILE"
-    npm install 2>&1 | tee -a "$LOG_FILE"
+    pnpm install 2>&1 | tee -a "$LOG_FILE"
 else
     echo "✔ node_modules présent" | tee -a "$LOG_FILE"
 fi
 
 echo -e "\n⚙ Test build Vite..." | tee -a "$LOG_FILE"
-if npm run build 2>&1 | tee -a "$LOG_FILE"; then
+if pnpm run build 2>&1 | tee -a "$LOG_FILE"; then
     echo "✔ Build Vite OK." | tee -a "$LOG_FILE"
 else
     echo "❌ Erreur build frontend — besoin intervention." | tee -a "$LOG_FILE"
@@ -115,7 +115,7 @@ fi
 
 echo -e "\n🚀 Test lancement Tauri (dev)..." | tee -a "$LOG_FILE"
 
-if timeout 6 npm run tauri:dev > "$LOG_DIR/dev_output.log" 2>&1; then
+if timeout 6 pnpm run tauri:dev > "$LOG_DIR/dev_output.log" 2>&1; then
     echo "⚠ Test dev terminé (timeout normal)." | tee -a "$LOG_FILE"
 fi
 

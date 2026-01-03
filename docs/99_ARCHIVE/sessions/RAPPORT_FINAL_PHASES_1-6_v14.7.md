@@ -34,8 +34,8 @@ Phases complétées : 6/13 (Audit, Nettoyage, Stabilisation, Tests)
 
 ### Phase 4 : Frontend TypeScript ✅
 **Objectif** : Nettoyer warnings TypeScript
-**Résultat** : `npm run type-check` → 0 erreurs
-**Build** : `npm run build` → OK, pas de warnings
+**Résultat** : `pnpm run type-check` → 0 erreurs
+**Build** : `pnpm run build` → OK, pas de warnings
 **Statut** : ✅ Frontend 100% propre
 
 ### Phase 5 : Services v12 Audit ✅
@@ -171,17 +171,17 @@ cargo test --manifest-path src-tauri/Cargo.toml --lib
 ### Frontend (TypeScript/Vite)
 ```bash
 # Type check
-npm run type-check
+pnpm run type-check
 # ✅ No errors
 
 # Build production
-npm run build
+pnpm run build
 # ✅ Build successful
 ```
 
 ### Exécution complète
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 # ✅ Backend: 0 warnings, starts in ~2s
 # ✅ Frontend: HMR active, 0 errors
 ```

@@ -270,8 +270,8 @@ transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
 ### Tests effectués
 ```bash
-✅ npm run type-check  → 0 erreurs TypeScript
-✅ npm run build       → 90 modules, 1.21s
+✅ pnpm run type-check  → 0 erreurs TypeScript
+✅ pnpm run build       → 90 modules, 1.21s
 ✅ Helios page         → Affichage correct
 ✅ SelfHeal page       → Affichage correct
 ✅ Nexus page          → Affichage correct
@@ -319,20 +319,20 @@ transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
 ### Dev
 ```bash
-npm run dev
-npm run tauri:dev
+pnpm run dev
+pnpm run tauri:dev
 ```
 
 ### Build
 ```bash
-npm run build
-npm run tauri:build
+pnpm run build
+pnpm run tauri:build
 ```
 
 ### Tests
 ```bash
-npm run type-check
-npm run lint
+pnpm run type-check
+pnpm run lint
 ```
 
 ---

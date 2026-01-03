@@ -36,7 +36,7 @@ All modifications have been applied to enable DevTools in Tauri v2.
 
 ### Method 1: Automatic (Debug Build)
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 **→ DevTools open automatically** ✅
 
@@ -57,7 +57,7 @@ If the UI is black and nothing works:
 ### Test 1: Launch in Dev Mode
 ```bash
 cd ~/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 **Expected:**
@@ -121,7 +121,7 @@ Verify:
 | Issue | Solution |
 |-------|----------|
 | **CSP too restrictive** | ✅ Already relaxed in tauri.conf.json |
-| **Missing dist files** | Run `npm run build` |
+| **Missing dist files** | Run `pnpm run build` |
 | **Wrong distDir path** | Already set to `../dist` |
 | **React error on mount** | Check ErrorBoundary in console |
 | **Missing CSS** | Check Network tab for 404s |
@@ -149,7 +149,7 @@ Verify:
 
 2. **Launch in dev mode**:
    ```bash
-   npm run tauri:dev
+   pnpm run tauri:dev
    ```
 
 3. **Check DevTools console** for errors

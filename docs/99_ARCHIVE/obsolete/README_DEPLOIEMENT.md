@@ -101,7 +101,7 @@ bash ./DEPLOY_AUTO_COMPLET.sh
 2. ✅ Vérification projet (structure + fichiers)
 3. ✅ Validation code Rust (fmt + check + clippy)
 4. ✅ Tests unitaires (47 tests)
-5. ✅ Build frontend (npm run build si nécessaire)
+5. ✅ Build frontend (pnpm run build si nécessaire)
 6. ✅ Build backend release (cargo build --release)
 7. ✅ Packaging complet (archive + checksums + scripts)
 
@@ -283,7 +283,7 @@ bash ./DEPLOY_AUTO_COMPLET.sh
 
 ```bash
 # Option 1 : Depuis sandbox (si disponible)
-npm run build
+pnpm run build
 
 # Option 2 : Installer npm sur hôte
 flatpak-spawn --host sudo apt install -y nodejs npm

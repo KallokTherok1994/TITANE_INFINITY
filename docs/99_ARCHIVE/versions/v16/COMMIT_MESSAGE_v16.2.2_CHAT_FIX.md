@@ -192,7 +192,7 @@ Correction critique du système Chat IA avec intégration complète de 3 provide
 ```bash
 ✅ cargo check : 0 errors, 1 warning (unused_mut fixed)
 ✅ cargo build : Success
-✅ npm run tauri:dev : App lancée
+✅ pnpm run tauri:dev : App lancée
 ✅ Backend logs : ChatOrchestrator v16 managed
 ✅ Frontend : HMR actif, 0 erreurs
 ```
@@ -256,7 +256,7 @@ Aucun. Modifications 100% backward compatible :
 
 ### Production Build
 ```bash
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ### Installation

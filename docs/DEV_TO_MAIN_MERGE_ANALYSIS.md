@@ -144,8 +144,8 @@ Most likely conflicts would be in:
 
 After merge, validate:
 
-- [ ] All tests pass (`npm test`)
-- [ ] Build succeeds (`npm run build`)
+- [ ] All tests pass (`pnpm test`)
+- [ ] Build succeeds (`pnpm run build`)
 - [ ] Backend compiles (`cd src-tauri && cargo build`)
 - [ ] No merge conflict markers remain in code
 - [ ] Documentation is coherent

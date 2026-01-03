@@ -314,7 +314,7 @@ src/
 
 ### Build Production ✅
 ```bash
-npm run build
+pnpm run build
 ✓ built in 13.30s
 ✅ 0 TypeScript errors
 ✅ 12 warnings (pré-existants)

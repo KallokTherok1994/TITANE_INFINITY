@@ -250,7 +250,7 @@ Ajout d'interfaces TypeScript pour typage strict des return values:
   - Test mocks: secureInvoke, singularityEngine
 
 - **Production Build:** ✅ Validated successfully
-  - Build command: `npm run build`
+  - Build command: `pnpm run build`
   - Post-build installation: ✅ réussie
   - Application desktop installée et fonctionnelle
 
@@ -1006,7 +1006,7 @@ Performance TITANE∞ v25.4.2:
 #### Added - Phase 0: Critical Fixes
 
 - **Vitest 4.0.13** comme test runner unifié (remplace Jest 29.7.0)
-- `npm run verify` script de validation unifié (lint + check + test + e2e + rust)
+- `pnpm run verify` script de validation unifié (lint + check + test + e2e + rust)
 - `.vite-cache/` ajouté à .gitignore
 - OMEGA Pipeline v2 E2E tests (3 scénarios migrés)
 - conversationId obligatoire (sessions explicites uniquement)
@@ -3204,7 +3204,7 @@ cargo check
 
 #### Tauri-Only Enforcement 100%
 
-- **HTTP servers bloqués** : npm run preview → exit 1, vite:dev → exit 1
+- **HTTP servers bloqués** : pnpm run preview → exit 1, vite:dev → exit 1
 - **Validation stricte** : enforce-tauri-only.sh (0 erreurs, 0 warnings)
 - **Configuration verrouillée** : tauri.conf.json sans devUrl HTTP
 - **package.json** : Scripts HTTP désactivés avec messages explicites
@@ -3257,15 +3257,15 @@ cargo check
 
 #### Build & Type-Check
 
-- ✅ **npm run build** : 1,93s, 0 erreurs, 360 modules
-- ✅ **npm run type-check** : 0 erreurs TypeScript
+- ✅ **pnpm run build** : 1,93s, 0 erreurs, 360 modules
+- ✅ **pnpm run type-check** : 0 erreurs TypeScript
 - ✅ **Assets** : main.css (64KB), vendor.js (139KB), main.js (253KB)
 
 #### Tauri-Only Mode
 
 - ✅ **enforce-tauri-only.sh** : 0 erreurs, 0 warnings
-- ✅ **npm run dev** → tauri dev (correct)
-- ✅ **npm run preview** → bloqué (correct)
+- ✅ **pnpm run dev** → tauri dev (correct)
+- ✅ **pnpm run preview** → bloqué (correct)
 - ✅ **vite:dev** → bloqué (correct)
 - ✅ **Pas de devUrl HTTP** (tauri.conf.json)
 - ✅ **frontendDist** → ../dist (correct)
@@ -3383,8 +3383,8 @@ cargo check
 
 #### Tauri Configuration
 
-- **beforeDevCommand** : Changé de `"npm run dev"` → `"bash dev-server.sh"`
-- **beforeBuildCommand** : Changé de `"vite build"` → `"npm run build"`
+- **beforeDevCommand** : Changé de `"pnpm run dev"` → `"bash dev-server.sh"`
+- **beforeBuildCommand** : Changé de `"vite build"` → `"pnpm run build"`
 - **devUrl** : Maintenu `"http://localhost:5173"` avec fallback automatique
 
 #### Vite Configuration

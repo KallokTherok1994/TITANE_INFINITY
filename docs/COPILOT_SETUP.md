@@ -99,7 +99,7 @@ Automated validation scripts:
   "copilot-xs:precommit": "node .github/copilot-xs/scripts/precommit.js",
   "copilot-xs:status": "node .github/copilot-xs/scripts/agent-status.js",
   "copilot-xs:security-scan": "node .github/copilot-xs/scripts/security-scan.js",
-  "copilot-xs:test": "npm run copilot-xs:validate && npm run test:all"
+  "copilot-xs:test": "pnpm run copilot-xs:validate && pnpm run test:all"
 }
 ```
 
@@ -188,7 +188,7 @@ Automated validation scripts:
 
 4. **Validate Before Commit:**
    ```bash
-   npm run copilot-xs:validate
+   pnpm run copilot-xs:validate
    ```
 
 ### For Copilot Coding Agent
@@ -222,36 +222,36 @@ Automated validation scripts:
 
 ```bash
 # Validate only staged files (default)
-npm run copilot-xs:validate
+pnpm run copilot-xs:validate
 
 # Validate all files
-COPILOT_XS_SCOPE=all npm run copilot-xs:validate
+COPILOT_XS_SCOPE=all pnpm run copilot-xs:validate
 ```
 
 ### Secret Scanning
 
 ```bash
 # Disable secret scanning
-COPILOT_XS_SECRET_SCAN=0 npm run copilot-xs:validate
+COPILOT_XS_SECRET_SCAN=0 pnpm run copilot-xs:validate
 
 # Scan secrets in tests too
-COPILOT_XS_SECRET_SCAN_IN_TESTS=1 npm run copilot-xs:validate
+COPILOT_XS_SECRET_SCAN_IN_TESTS=1 pnpm run copilot-xs:validate
 
 # Adjust minimum characters for secret detection
-COPILOT_XS_SECRET_MIN_CHARS=64 npm run copilot-xs:validate
+COPILOT_XS_SECRET_MIN_CHARS=64 pnpm run copilot-xs:validate
 
 # Allowlist specific patterns
-COPILOT_XS_SECRET_ALLOW_REGEX='example|dummy' npm run copilot-xs:validate
+COPILOT_XS_SECRET_ALLOW_REGEX='example|dummy' pnpm run copilot-xs:validate
 ```
 
 ### Prohibited Markers
 
 ```bash
 # Custom prohibited terms
-COPILOT_XS_PROHIBITED='TODO,FIXME,HACK' npm run copilot-xs:validate
+COPILOT_XS_PROHIBITED='TODO,FIXME,HACK' pnpm run copilot-xs:validate
 
 # Allow prohibited markers in tests
-COPILOT_XS_ALLOW_PROHIBITED_IN_TESTS=1 npm run copilot-xs:validate
+COPILOT_XS_ALLOW_PROHIBITED_IN_TESTS=1 pnpm run copilot-xs:validate
 ```
 
 ---
@@ -261,7 +261,7 @@ COPILOT_XS_ALLOW_PROHIBITED_IN_TESTS=1 npm run copilot-xs:validate
 ### Status Check
 
 ```bash
-npm run copilot-xs:status
+pnpm run copilot-xs:status
 ```
 
 **Expected Output:**
@@ -281,7 +281,7 @@ npm run copilot-xs:status
 ### Validation Check
 
 ```bash
-npm run copilot-xs:validate
+pnpm run copilot-xs:validate
 ```
 
 **Expected Output:**
@@ -333,7 +333,7 @@ The Copilot instructions are fully aligned with TITANE∞'s **4-Ring Architectur
 
 1. ✅ Read [CONTRIBUTING.md](../CONTRIBUTING.md)
 2. ✅ Review [.github/copilot-instructions.md](../.github/copilot-instructions.md)
-3. ✅ Run `npm run copilot-xs:status` to verify setup
+3. ✅ Run `pnpm run copilot-xs:status` to verify setup
 4. ✅ Start coding with Copilot assistance
 
 ### For Maintainers

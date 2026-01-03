@@ -15,7 +15,7 @@ L'application est **déjà en cours d'exécution** :
 
 **Si vous devez redémarrer** :
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ---
@@ -264,8 +264,8 @@ Vérifier que les commandes textuelles activent/désactivent la caméra.
 Si vous rencontrez des problèmes :
 
 1. **Vérifiez les logs console** (F12 → Console)
-2. **Vérifiez TypeScript** : `npm run type-check`
-3. **Redémarrez le serveur** : `npm run tauri:dev`
+2. **Vérifiez TypeScript** : `pnpm run type-check`
+3. **Redémarrez le serveur** : `pnpm run tauri:dev`
 4. **Consultez les rapports** :
    - `SUPER_PROMPT_3_IMPLEMENTATION_COMPLETE.md`
    - `SUPER_PROMPT_3_RAPPORT_EXECUTION_v∞.md`

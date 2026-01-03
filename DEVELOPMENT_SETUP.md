@@ -44,7 +44,7 @@ npm --version   # Doit être >= 9.0.0
 **Alternative: pnpm (recommandé pour vitesse)**
 
 ```bash
-npm install -g pnpm
+pnpm install -g pnpm
 ```
 
 ### 2. Rust & Cargo
@@ -152,7 +152,7 @@ cd TITANE_INFINITY
 **Option A: npm**
 
 ```bash
-npm install
+pnpm install
 ```
 
 **Option B: pnpm (plus rapide)**
@@ -203,7 +203,7 @@ VITE_APP_VERSION=26.2.0
 
 ```bash
 # Lancer le serveur de dev frontend seul
-npm run dev
+pnpm run dev
 # Ou avec pnpm
 pnpm dev
 
@@ -214,7 +214,7 @@ pnpm dev
 
 ```bash
 # Lancer l'app Tauri complète (Rust + React)
-npm run tauri dev
+pnpm run tauri dev
 # Ou
 pnpm tauri dev
 
@@ -228,10 +228,10 @@ pnpm tauri dev
 
 ```bash
 # Build frontend seul
-npm run build
+pnpm run build
 
 # Build app Tauri complète
-npm run tauri build
+pnpm run tauri build
 
 # Résultat dans: src-tauri/target/release/
 ```
@@ -240,13 +240,13 @@ npm run tauri build
 
 ```bash
 # Tests unitaires/intégration (Vitest)
-npm run test
+pnpm run test
 
 # Tests avec UI
-npm run test:ui
+pnpm run test:ui
 
 # Tests E2E (Playwright)
-npm run test:e2e
+pnpm run test:e2e
 
 # Tests Rust
 cd src-tauri
@@ -258,14 +258,14 @@ cd ..
 
 ```bash
 # ESLint
-npm run lint
-npm run lint:fix
+pnpm run lint
+pnpm run lint:fix
 
 # TypeScript check
-npm run type-check
+pnpm run type-check
 
 # Prettier (si configuré)
-npm run format
+pnpm run format
 ```
 
 ---
@@ -333,26 +333,26 @@ git checkout -b fix/nom-bug
 
 ```bash
 # Terminal 1: Frontend
-npm run dev
+pnpm run dev
 
 # Terminal 2: Tests auto
-npm run test -- --watch
+pnpm run test -- --watch
 
 # Terminal 3: Type checking
-npm run type-check -- --watch
+pnpm run type-check -- --watch
 ```
 
 ### 3. Valider avant commit
 
 ```bash
 # Lint
-npm run lint
+pnpm run lint
 
 # Tests
-npm run test
+pnpm run test
 
 # Build (vérification)
-npm run build
+pnpm run build
 ```
 
 ### 4. Commit
@@ -378,8 +378,8 @@ git push origin feature/nom-feature
 
 ```bash
 # Réinstaller les types
-npm install --save-dev @types/node
-npm install
+pnpm install --save-dev @types/node
+pnpm install
 ```
 
 ### Erreur Rust: "linking with 'cc' failed"
@@ -400,7 +400,7 @@ xcode-select --install
 # Nettoyer et rebuilder
 rm -rf src-tauri/target
 cargo clean
-npm run tauri build
+pnpm run tauri build
 ```
 
 ### Port 5173 déjà utilisé

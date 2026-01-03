@@ -183,7 +183,7 @@ export const Component = () => {
 ## ✅ **VALIDATION COMPILATION**
 
 ```bash
-npm run build
+pnpm run build
 
 vite v6.4.1 building for production...
 transforming...

@@ -57,7 +57,7 @@
 #### MÉTHODE 1: Interface TITANE∞ (RECOMMANDÉE)
 
 ```
-1. npm run dev:tauri
+1. pnpm run dev:tauri
 2. Ouvrir http://localhost:5173/
 3. Control Panel → Section IA & APIs
 4. Coller les clés → Sauvegarder
@@ -79,7 +79,7 @@
 ```bash
 cp .env.example .env
 # Éditer .env avec vos clés
-npm run dev:tauri
+pnpm run dev:tauri
 ```
 
 ### 3. Vérifier la configuration

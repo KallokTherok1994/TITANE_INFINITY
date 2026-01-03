@@ -64,7 +64,7 @@ bash ./DEPLOY_AUTO_COMPLET.sh
 - ✅ Vérification complète environnement (7 étapes)
 - ✅ Validation code Rust (fmt, check, clippy)
 - ✅ Tests unitaires (47 tests)
-- ✅ Build frontend (npm run build)
+- ✅ Build frontend (pnpm run build)
 - ✅ Build backend release (cargo build --release)
 - ✅ Packaging complet (binaire + assets + scripts)
 - ✅ Archive tar.gz avec checksums SHA256
@@ -180,7 +180,7 @@ Exécute :
 
 Vérifie ou build :
 1. Si `dist/` existe → vérification `index.html`
-2. Sinon → `npm run build` (sandbox ou hôte)
+2. Sinon → `pnpm run build` (sandbox ou hôte)
 
 **Sortie exemple** :
 ```
@@ -322,7 +322,7 @@ flatpak-spawn --host bash -c 'curl --proto "=https" --tlsv1.2 -sSf https://sh.ru
 ```bash
 # Depuis sandbox Flatpak (si npm disponible)
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run build
+pnpm run build
 
 # Ou installer npm sur hôte
 flatpak-spawn --host sudo apt install -y nodejs npm

@@ -773,8 +773,8 @@ Définis la stratégie de rollback pour chaque phase :
 1. **Restaurer ancien code** (30 minutes)
    ```bash
    git revert <commit_hash>
-   npm install
-   npm run build
+   pnpm install
+   pnpm run build
    ```
 
 2. **Restaurer données** (30 minutes)

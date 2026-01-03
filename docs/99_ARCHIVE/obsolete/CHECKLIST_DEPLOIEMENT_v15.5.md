@@ -9,7 +9,7 @@
 ## 🎯 PRÉ-LANCEMENT (Complété ✅)
 
 ### Validation Système
-- [x] Build frontend réussi (npm run build)
+- [x] Build frontend réussi (pnpm run build)
 - [x] Build backend réussi (cargo build --release)
 - [x] TypeScript 0 erreur
 - [x] Rust 7 warnings (non-critiques)
@@ -34,7 +34,7 @@
 ### Option 1: Mode Développement (Recommandé pour test)
 ```bash
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 **Résultat attendu:**
@@ -54,7 +54,7 @@ npm run tauri:dev
 ### Option 2: Build Production
 ```bash
 # 1. Build frontend
-npm run build
+pnpm run build
 
 # 2. Build backend (terminal natif)
 cd src-tauri
@@ -116,7 +116,7 @@ await window.__TAURI__.invoke('meta_get_state');
 **Actions si erreur:**
 - Vérifier console Rust (terminal)
 - Vérifier logs: `~/.config/titane-infinity/logs/`
-- Relancer: `npm run tauri:dev`
+- Relancer: `pnpm run tauri:dev`
 
 ---
 
@@ -155,7 +155,7 @@ await window.__TAURI__.invoke('meta_get_state');
 **Solution 1:** Vérifier dépendances
 ```bash
 # Frontend
-npm install
+pnpm install
 
 # Backend (si erreur Rust)
 cd src-tauri
@@ -169,7 +169,7 @@ cargo build --release
 tail -f ~/.config/titane-infinity/logs/app.log
 
 # Terminal output
-npm run tauri:dev 2>&1 | tee launch.log
+pnpm run tauri:dev 2>&1 | tee launch.log
 ```
 
 ---
@@ -284,7 +284,7 @@ cargo fix --release --allow-dirty
 
 ```bash
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 **Enjoy TITANE∞ v15.5.0!** 🎉

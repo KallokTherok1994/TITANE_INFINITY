@@ -78,7 +78,7 @@ export default defineConfig({
 ### 3. Build + Validation (5min)
 
 ```bash
-npm run build
+pnpm run build
 
 # Résultats:
 # - 44 fichiers .js.br créés ✅

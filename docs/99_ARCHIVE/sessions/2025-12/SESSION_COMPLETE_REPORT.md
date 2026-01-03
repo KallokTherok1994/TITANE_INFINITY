@@ -266,7 +266,7 @@ git reset --hard BACKUP_TITANE_CHAT_PRE_PURGE
 3. **Build production finale**
 
    ```bash
-   npm run build
+   pnpm run build
    cd src-tauri && cargo build --release
    ```
 

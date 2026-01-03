@@ -140,7 +140,7 @@ if [ $error_count -eq 0 ] && [ $warn_count -eq 0 ]; then
     echo "   🎉 Tous les tests passés! Le Chat IA devrait fonctionner."
     echo ""
     echo "   💡 Pour tester:"
-    echo "      1. npm run tauri:dev"
+    echo "      1. pnpm run tauri:dev"
     echo "      2. Ouvrir Chat IA dans l'app"
     echo "      3. F12 pour DevTools"
     echo "      4. Envoyer un message test"

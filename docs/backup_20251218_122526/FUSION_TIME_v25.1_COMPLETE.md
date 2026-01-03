@@ -333,8 +333,8 @@ Description: "Centre Temporel - Agenda, Navigation, Snapshots, Intelligence, Flo
 ### Commandes
 
 ```bash
-npm run dev        # Lancer serveur développement
-npm run build      # Build frontend
+pnpm run dev        # Lancer serveur développement
+pnpm run build      # Build frontend
 ```
 
 ### Accès

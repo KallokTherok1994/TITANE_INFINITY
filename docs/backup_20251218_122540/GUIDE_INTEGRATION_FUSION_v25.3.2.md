@@ -229,7 +229,7 @@ import type {
 1. **Démarrer dev server:**
 
    ```bash
-   npm run dev
+   pnpm run dev
    ```
 
 2. **Accéder au dashboard:**

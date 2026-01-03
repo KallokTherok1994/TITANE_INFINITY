@@ -759,7 +759,7 @@ npx tsc --noEmit --skipLibCheck
 cargo check --manifest-path=src-tauri/Cargo.toml
 
 # Build complète (optionnel)
-npm run build
+pnpm run build
 ```
 
 **Attendu** : 0 erreurs, 0 warnings

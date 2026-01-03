@@ -107,9 +107,9 @@ console.log('🔒 Tauri-Only 100% | Local-First | APIs On-Demand (Gemini+Ollama)
 ```
 
 **Scripts HTTP bloqués**:
-- `npm run preview`: Exit 1 avec message Tauri-only
-- `npm run start`: Exit 1 avec message Tauri-only
-- `npm run vite:dev`: Exit 1 avec message Tauri-only
+- `pnpm run preview`: Exit 1 avec message Tauri-only
+- `pnpm run start`: Exit 1 avec message Tauri-only
+- `pnpm run vite:dev`: Exit 1 avec message Tauri-only
 
 **Impact**: Version v17.0.0, description complète, HTTP bloqués
 
@@ -197,13 +197,13 @@ s/TITANE∞ v16/TITANE∞ v17.0/g
 
 ### 1. TypeScript (100%)
 ```bash
-npm run type-check
+pnpm run type-check
 ```
 **Résultat**: ✅ **0 erreurs**
 
 ### 2. Build Frontend (100%)
 ```bash
-npm run build
+pnpm run build
 ```
 **Résultat**:
 - ✅ Build: **1,93s**
@@ -219,8 +219,8 @@ npm run build
 ./enforce-tauri-only.sh
 ```
 **Résultat**:
-- ✅ `npm run dev` → tauri dev (correct)
-- ✅ `npm run preview` → bloqué (correct)
+- ✅ `pnpm run dev` → tauri dev (correct)
+- ✅ `pnpm run preview` → bloqué (correct)
 - ✅ `vite:dev` → bloqué (correct)
 - ✅ Pas de devUrl HTTP
 - ✅ frontendDist → ../dist
@@ -348,7 +348,7 @@ bash install-webkit-host-v17.sh
 cd src-tauri && cargo build --release
 
 # 5. Lancer TITANE∞ complet
-cd .. && npm run dev
+cd .. && pnpm run dev
 ```
 
 **Après installation**:

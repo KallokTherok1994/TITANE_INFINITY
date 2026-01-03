@@ -11,7 +11,7 @@ npx tsc --noEmit
 
 ### Frontend Build Production
 ```bash
-npm run build
+pnpm run build
 ```
 **Résultat attendu**: 
 - ✅ Built in ~900ms
@@ -29,7 +29,7 @@ cargo check
 
 ### Frontend Dev Server
 ```bash
-npm run dev
+pnpm run dev
 ```
 **Résultat attendu**:
 - ✅ Vite dev server running on http://localhost:5173
@@ -84,7 +84,7 @@ find src -type f -name "*.tsx" -exec sed -i "s/@tauri-apps\/api\/tauri/@tauri-ap
 ### Build Frontend + Backend
 ```bash
 # Depuis la racine du projet
-npm run tauri build
+pnpm run tauri build
 ```
 
 **Ce qui se passe**:
@@ -105,7 +105,7 @@ src-tauri/target/release/
 
 ### Build Frontend uniquement
 ```bash
-npm run build
+pnpm run build
 ```
 
 **Fichiers générés**:
@@ -130,17 +130,17 @@ cargo build --release
 
 ### Lancer tests frontend (si configurés)
 ```bash
-npm run test
+pnpm run test
 ```
 
 ### Lancer tests E2E (si configurés)
 ```bash
-npm run test:e2e
+pnpm run test:e2e
 ```
 
 ### Vérifier accessibilité (avec Lighthouse)
 ```bash
-npm run build
+pnpm run build
 npx lighthouse http://localhost:5173 --view
 ```
 
@@ -150,7 +150,7 @@ npx lighthouse http://localhost:5173 --view
 
 ### Logs Tauri en dev
 ```bash
-npm run tauri dev
+pnpm run tauri dev
 # Les logs apparaissent dans le terminal
 ```
 
@@ -173,14 +173,14 @@ F12 ou Ctrl+Shift+I
 ### Mode développement optimal
 ```bash
 # Terminal 1: Frontend dev server
-npm run dev
+pnpm run dev
 
 # Terminal 2: Backend Rust watch
 cd src-tauri
 cargo watch -x check
 
 # Terminal 3: Tauri dev
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 **Avantages**:
@@ -194,7 +194,7 @@ npm run tauri dev
 
 ### Analyser taille du bundle
 ```bash
-npm run build
+pnpm run build
 npx vite-bundle-visualizer
 ```
 
@@ -205,7 +205,7 @@ npx vite-bundle-visualizer
 
 ### Analyser performances
 ```bash
-npm run build -- --profile
+pnpm run build -- --profile
 ```
 
 ---
@@ -214,7 +214,7 @@ npm run build -- --profile
 
 ### 1. Build production complet
 ```bash
-npm run tauri build
+pnpm run tauri build
 ```
 
 ### 2. Localiser binaries
@@ -241,7 +241,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build
-        run: npm run tauri build
+        run: pnpm run tauri build
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
@@ -256,7 +256,7 @@ jobs:
 
 #### ✅ Compilation
 - [ ] `npx tsc --noEmit` → 0 erreurs TypeScript
-- [ ] `npm run build` → Build réussi
+- [ ] `pnpm run build` → Build réussi
 - [ ] `cargo check` → 0 erreurs Rust
 
 #### ✅ Fonctionnalités
@@ -327,7 +327,7 @@ cargo build
 ### Problème: Vite HMR ne fonctionne pas
 ```bash
 # Solution: Redémarrer le dev server
-npm run dev
+pnpm run dev
 ```
 
 ---
@@ -344,13 +344,13 @@ npm run dev
 ```bash
 # Nettoyer tout
 rm -rf node_modules dist src-tauri/target
-npm install
+pnpm install
 
 # Rebuild complet
-npm run build && cd src-tauri && cargo build --release
+pnpm run build && cd src-tauri && cargo build --release
 
 # Logs détaillés Tauri
-RUST_LOG=debug npm run tauri dev
+RUST_LOG=debug pnpm run tauri dev
 
 # Profiling Rust
 cd src-tauri

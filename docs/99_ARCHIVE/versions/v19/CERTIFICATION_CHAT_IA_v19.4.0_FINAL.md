@@ -130,7 +130,7 @@ Priorité de fallback:
 ### Build & Compilation
 
 ```bash
-npm run build:
+pnpm run build:
   ✅ Success
   ✅ Durée: 16.85s
   ✅ Bundle: 2.1 MB (gzipped: ~600 KB)
@@ -942,7 +942,7 @@ Image Upload (Multimodal):
 ### Checklist Pré-Déploiement
 
 ```yaml
-✅ Build production validé (npm run build)
+✅ Build production validé (pnpm run build)
 ✅ Compilation backend validée (cargo build --release)
 ✅ 0 erreurs TypeScript
 ✅ 0 erreurs Rust
@@ -959,7 +959,7 @@ Image Upload (Multimodal):
 
 ```bash
 # 1. Build production
-npm run build
+pnpm run build
 
 # 2. Build Tauri release
 cd src-tauri

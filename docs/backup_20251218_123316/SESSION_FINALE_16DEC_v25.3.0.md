@@ -105,7 +105,7 @@
 ### Tests Automatisés
 
 ```bash
-npm test -- --run src/__tests__/constitution-integration.test.ts
+pnpm test -- --run src/__tests__/constitution-integration.test.ts
 
 Résultat: 30/30 PASS ✅ (100%)
 ```

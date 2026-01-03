@@ -557,9 +557,9 @@ const indicators = useMemo(() => [
 - Silent errors check
 
 ### Phase 9 — Tests & Simulation (à venir)
-- npm run build
-- npm run type-check
-- npm run dev
+- pnpm run build
+- pnpm run type-check
+- pnpm run dev
 - Détection erreurs TS
 
 ### Phase 10 — Rapport Final (à venir)

@@ -231,7 +231,7 @@ import { Chat } from './pages';             // ⚠️ Potentielle collision
 
 **Vérifications effectuées :**
 ```bash
-npm run type-check
+pnpm run type-check
 # ✅ 0 erreurs
 ```
 
@@ -249,7 +249,7 @@ npm run type-check
 **Status :** ✅ **BUILD RÉUSSI**
 
 ```bash
-npm run build
+pnpm run build
 # ✅ SUCCESS en 1.29s
 # ✅ dist/index.html         1.56 kB
 # ✅ dist/assets/index.css  60.91 kB

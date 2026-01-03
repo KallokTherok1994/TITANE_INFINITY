@@ -211,7 +211,7 @@ logger.info("User's action"); // JavaScript string, OK
 . "$(dirname "$0")/_/husky.sh"
 
 # 1. Auto-fix apostrophes
-npm run lint:jsx-fix
+pnpm run lint:jsx-fix
 
 # 2. Valider aucun warning restant
 WARNINGS=$(npx eslint 'src/**/*.{tsx,jsx}' --quiet --format compact 2>&1 \
@@ -219,13 +219,13 @@ WARNINGS=$(npx eslint 'src/**/*.{tsx,jsx}' --quiet --format compact 2>&1 \
 
 if [ "$WARNINGS" -gt 0 ]; then
   echo "❌ $WARNINGS JSX apostrophe warnings remaining"
-  echo "Run: npm run lint:jsx-fix"
+  echo "Run: pnpm run lint:jsx-fix"
   exit 1
 fi
 
 # 3. Run autres checks
-npm run type-check
-npm run test:changed
+pnpm run type-check
+pnpm run test:changed
 ```
 
 ### Package.json Scripts
@@ -236,7 +236,7 @@ npm run test:changed
     "lint": "eslint src --ext .ts,.tsx,.js,.jsx",
     "lint:fix": "eslint src --ext .ts,.tsx,.js,.jsx --fix",
     "lint:jsx-fix": "bash scripts/lint/fix-jsx-apostrophes.sh",
-    "lint:all": "npm run lint:jsx-fix && npm run lint:fix"
+    "lint:all": "pnpm run lint:jsx-fix && pnpm run lint:fix"
   }
 }
 ```
@@ -261,10 +261,10 @@ jobs:
           node-version: '20'
           
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
         
       - name: Auto-fix JSX apostrophes
-        run: npm run lint:jsx-fix
+        run: pnpm run lint:jsx-fix
         
       - name: Validate no warnings
         run: |

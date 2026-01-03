@@ -91,7 +91,7 @@
 
 ### 7. Build Production Validation ✅ AUTO
 
-- **Action:** `npm run build`
+- **Action:** `pnpm run build`
 - **Résultat:**
   ```
   ✓ 4239 modules transformed
@@ -103,7 +103,7 @@
 
 ### 8. Tests Suite Validation ✅ AUTO
 
-- **Action:** `npm test -- --run`
+- **Action:** `pnpm test -- --run`
 - **Résultat:**
   ```
   ✓ 2066/2122 tests passed (97.4%)
@@ -223,7 +223,7 @@ rm .eslintrc.json
 # ✅ Conflicts resolved
 
 # 5. Valider
-npm run lint
+pnpm run lint
 # ✅ 227 violations détectées (enforcement works!)
 ```
 
@@ -301,15 +301,15 @@ npx tsc --noEmit
 # ✅ 0 errors
 
 # 2. ESLint check
-npm run lint
+pnpm run lint
 # ✅ 227 violations (security enforcement active)
 
 # 3. Build production
-npm run build
+pnpm run build
 # ✅ 22.13s, 9.8M, 0 errors
 
 # 4. Tests suite
-npm test -- --run
+pnpm test -- --run
 # ✅ 2066/2122 passed (97.4%)
 ```
 
@@ -513,10 +513,10 @@ if (metric) {
 **Application:**
 
 ```bash
-npm run lint    # ✅ 227 violations (enforcement works!)
+pnpm run lint    # ✅ 227 violations (enforcement works!)
 npx tsc         # ⚠️ 78 warnings (safety works!)
-npm run build   # ✅ 0 errors (production ready!)
-npm test        # ✅ 97.4% pass (quality maintained!)
+pnpm run build   # ✅ 0 errors (production ready!)
+pnpm test        # ✅ 97.4% pass (quality maintained!)
 ```
 
 **Adoption:** CI gates + pre-commit hooks
@@ -538,7 +538,7 @@ npx prettier --write "src/**/*.{ts,tsx}"
 
 # 2. Lint
 echo "🔍 Linting..."
-npm run lint --quiet
+pnpm run lint --quiet
 
 # 3. Type check
 echo "📘 Type checking..."
@@ -546,7 +546,7 @@ npx tsc --noEmit
 
 # 4. Tests (staged files only)
 echo "🧪 Testing..."
-npm test -- --run --changed
+pnpm test -- --run --changed
 
 # ✅ All checks passed!
 ```

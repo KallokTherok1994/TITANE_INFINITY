@@ -356,8 +356,8 @@ async fn test_memory_storage_v15() {
 cargo check --manifest-path src-tauri/Cargo.toml
 cargo clippy --manifest-path src-tauri/Cargo.toml -- -W clippy::all
 cargo test --manifest-path src-tauri/Cargo.toml
-npm run type-check
-npm run lint
+pnpm run type-check
+pnpm run lint
 ```
 
 ---
@@ -370,7 +370,7 @@ npm run lint
 [ ] 2. Générer CHANGELOG_v15.md complet
 [ ] 3. Commit final: "feat: TITANE∞ v15.0.0 - Complete migration"
 [ ] 4. Tag Git: v15.0.0
-[ ] 5. Build Tauri release: npm run tauri:build
+[ ] 5. Build Tauri release: pnpm run tauri:build
 [ ] 6. Tester exécutable: ./src-tauri/target/release/titane-infinity
 [ ] 7. Valider 0 warnings, 0 errors
 [ ] 8. Documenter breaking changes

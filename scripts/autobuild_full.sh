@@ -171,17 +171,17 @@ verify_project() {
         log INFO "Tentative de vérification $((retry_count + 1))/$MAX_RETRIES..."
 
         # Run verification scripts
-        if npm run verify 2>&1 | tee -a "$LOG_FILE"; then
-            log SUCCESS "npm run verify OK"
+        if pnpm run verify 2>&1 | tee -a "$LOG_FILE"; then
+            log SUCCESS "pnpm run verify OK"
         else
-            log WARNING "npm run verify a échoué"
+            log WARNING "pnpm run verify a échoué"
         fi
 
-        if npm run verify:cognitive 2>&1 | tee -a "$LOG_FILE"; then
-            log SUCCESS "npm run verify:cognitive OK"
+        if pnpm run verify:cognitive 2>&1 | tee -a "$LOG_FILE"; then
+            log SUCCESS "pnpm run verify:cognitive OK"
             verify_success=true
         else
-            log WARNING "npm run verify:cognitive a échoué, tentative auto-fix..."
+            log WARNING "pnpm run verify:cognitive a échoué, tentative auto-fix..."
 
             # Auto-fix attempt
             if [ -f "scripts/auto-fix.sh" ]; then
@@ -210,15 +210,15 @@ build_frontend() {
     cd "$PROJECT_DIR"
 
     log INFO "Installation dépendances npm..."
-    npm install --legacy-peer-deps 2>&1 | tee -a "$LOG_FILE"
+    pnpm install --legacy-peer-deps 2>&1 | tee -a "$LOG_FILE"
 
     log INFO "TypeScript type check..."
-    if ! npm run type-check 2>&1 | tee -a "$LOG_FILE"; then
+    if ! pnpm run type-check 2>&1 | tee -a "$LOG_FILE"; then
         log WARNING "Type check a trouvé des erreurs (non bloquant)"
     fi
 
     log INFO "Build Vite..."
-    npm run build 2>&1 | tee -a "$LOG_FILE"
+    pnpm run build 2>&1 | tee -a "$LOG_FILE"
 
     # Vérification du build
     if [ ! -d "dist" ]; then
@@ -266,9 +266,9 @@ build_tauri() {
 
     cd "$PROJECT_DIR"
 
-    log INFO "npm run tauri:build..."
+    log INFO "pnpm run tauri:build..."
     local start_time=$(date +%s)
-    npm run tauri:build 2>&1 | tee -a "$LOG_FILE"
+    pnpm run tauri:build 2>&1 | tee -a "$LOG_FILE"
     local end_time=$(date +%s)
     local duration=$((end_time - start_time))
 
@@ -333,10 +333,10 @@ auto_heal() {
 
     log INFO "Reset dépendances..."
     rm -rf node_modules package-lock.json
-    npm install --legacy-peer-deps
+    pnpm install --legacy-peer-deps
 
     log INFO "Rebuild incrémental..."
-    npm run build || true
+    pnpm run build || true
 
     log INFO "Reset Cargo..."
     cargo clean --manifest-path src-tauri/Cargo.toml

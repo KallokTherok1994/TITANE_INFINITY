@@ -360,7 +360,7 @@ Les packages sont prêts pour:
 rm -rf dist/ src-tauri/target/release/
 
 # Build frontend
-npm run build
+pnpm run build
 
 # Build Tauri + bundles
 npx tauri build
@@ -372,7 +372,7 @@ ls -lh src-tauri/target/release/bundle/*/
 ### Build Rapide (Dev)
 
 ```bash
-npm run dev
+pnpm run dev
 # Ou
 ./runtime/dev/run-dev.sh
 ```

@@ -183,7 +183,7 @@ export interface ChatEngineResponse {
 **Commande:**
 
 ```bash
-npm test -- --run src/__tests__/constitution-integration.test.ts
+pnpm test -- --run src/__tests__/constitution-integration.test.ts
 # Résultat: Test Files 1 passed (1) | Tests 30 passed (30) ✅
 ```
 

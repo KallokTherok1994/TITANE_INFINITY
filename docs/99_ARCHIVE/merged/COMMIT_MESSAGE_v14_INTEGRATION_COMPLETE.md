@@ -196,7 +196,7 @@ Components
 ✅ **Memory:** Encryption operational (AES-256-GCM)
 ✅ **Engines:** Nexus/Harmonia/Sentinel operational
 ✅ **UI:** Real-time health indicators working
-✅ **Build:** Ready for npm run build + cargo build --release
+✅ **Build:** Ready for pnpm run build + cargo build --release
 
 ## 📝 Notes
 

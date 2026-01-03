@@ -355,7 +355,7 @@ cargo test --manifest-path src-tauri/Cargo.toml ia::
 
 ### 3. Lancer l'app
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### 4. Tester commandes Tauri (Dev Console)

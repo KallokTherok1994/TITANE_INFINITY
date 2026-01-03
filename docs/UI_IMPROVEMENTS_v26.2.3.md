@@ -219,7 +219,7 @@ onPointerUp={e => e.stopPropagation()}
 ### Vérification
 ```bash
 # Lancer le dev server
-npm run dev:tauri
+pnpm run dev:tauri
 
 # Vérifier Console Monitor (coin bas-droit)
 # - Ouvrir avec click sur header

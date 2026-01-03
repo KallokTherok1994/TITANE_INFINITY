@@ -305,7 +305,7 @@ fn main() {
 
 - **cargo fmt --all** : Code formaté selon style Rust standard
 - **cargo clippy --fix** : Auto-corrections linting appliquées
-- **npm ci --prefer-offline** : Installation dépendances optimisée (cache)
+- **pnpm install --frozen-lockfile --prefer-offline** : Installation dépendances optimisée (cache)
 - **vite build** : Build production minifié (terser, tree-shaking)
 
 ---
@@ -328,9 +328,9 @@ fn main() {
 #### Frontend React/TS
 
 ```bash
-✅ npm ci --prefer-offline   # Dépendances installées
-✅ npm run type-check        # tsc --noEmit OK
-✅ npm run build             # Vite build OK (1.16s)
+✅ pnpm install --frozen-lockfile --prefer-offline   # Dépendances installées
+✅ pnpm run type-check        # tsc --noEmit OK
+✅ pnpm run build             # Vite build OK (1.16s)
    dist/index.html           1.08 kB
    dist/assets/index.css    11.18 kB
    dist/assets/index.js     16.98 kB
@@ -343,7 +343,7 @@ fn main() {
 #### Packaging Tauri
 
 ```bash
-✅ npm run tauri:build       # Génération bundles
+✅ pnpm run tauri:build       # Génération bundles
    AppImage : titane-infinity_*.AppImage
    DEB      : titane-infinity_*.deb
    RPM      : titane-infinity_*.rpm
@@ -383,9 +383,9 @@ fn main() {
 
 1. **Vérification environnement** : cargo, node, npm, webkit, structure projet
 2. **Audit & auto-fix Rust** : cargo fmt, clippy --fix, check, clippy final
-3. **Audit & build frontend** : npm ci, tsc check, vite build
+3. **Audit & build frontend** : pnpm install --frozen-lockfile, tsc check, vite build
 4. **Build backend release** : cargo clean, cargo build --release
-5. **Packaging Tauri** : npm run tauri:build, copie bundles vers `deploy/`
+5. **Packaging Tauri** : pnpm run tauri:build, copie bundles vers `deploy/`
 6. **Tests validation** : permissions, ldd, Cargo.toml, dist/
 7. **Génération rapport** : `RAPPORT_PREDEPLOY_v12_*.md` avec tous résultats
 

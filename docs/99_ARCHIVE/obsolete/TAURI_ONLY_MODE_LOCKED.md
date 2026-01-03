@@ -13,9 +13,9 @@
 ```json
 {
   "dev": "tauri dev",                    // ✅ UNIQUEMENT Tauri
-  "preview": "echo '🔒 TAURI-ONLY MODE: HTTP preview disabled. Use: npm run dev' && exit 1",
-  "start": "echo '🔒 TAURI-ONLY MODE: Use npm run dev instead' && exit 1",
-  "vite:dev": "echo '🔒 TAURI-ONLY: Direct Vite disabled. Use: npm run dev' && exit 1"
+  "preview": "echo '🔒 TAURI-ONLY MODE: HTTP preview disabled. Use: pnpm run dev' && exit 1",
+  "start": "echo '🔒 TAURI-ONLY MODE: Use pnpm run dev instead' && exit 1",
+  "vite:dev": "echo '🔒 TAURI-ONLY: Direct Vite disabled. Use: pnpm run dev' && exit 1"
 }
 ```
 
@@ -29,8 +29,8 @@
 ```json
 {
   "build": {
-    "beforeDevCommand": "npm run build",
-    "beforeBuildCommand": "npm run build",
+    "beforeDevCommand": "pnpm run build",
+    "beforeBuildCommand": "pnpm run build",
     "frontendDist": "../dist"
   }
 }
@@ -75,15 +75,15 @@ server: {
 
 **Lancement uniquement via:**
 ```bash
-npm run dev     # → tauri dev
-npm run build   # → vite build + tauri build
+pnpm run dev     # → tauri dev
+pnpm run build   # → vite build + tauri build
 ```
 
 **Bloqués définitivement:**
 ```bash
-npm run preview      # ❌ Exit 1
+pnpm run preview      # ❌ Exit 1
 npm start            # ❌ Exit 1
-npm run vite:dev     # ❌ Exit 1
+pnpm run vite:dev     # ❌ Exit 1
 python3 -m http.server  # ❌ N/A
 vite preview         # ❌ N/A
 ```
@@ -155,10 +155,10 @@ Avertissements: 0
 
 | Action | Résultat |
 |--------|----------|
-| `npm run dev` | ✅ Lance Tauri |
-| `npm run preview` | ❌ Bloqué (exit 1) |
+| `pnpm run dev` | ✅ Lance Tauri |
+| `pnpm run preview` | ❌ Bloqué (exit 1) |
 | `npm start` | ❌ Bloqué (exit 1) |
-| `npm run vite:dev` | ❌ Bloqué (exit 1) |
+| `pnpm run vite:dev` | ❌ Bloqué (exit 1) |
 | HTTP server | ❌ Impossible |
 
 ### ✅ Sécurité
@@ -210,23 +210,23 @@ Cette règle s'applique à **toutes futures générations**.
 
 ### ✅ Développement
 ```bash
-npm run dev          # Lance Tauri dev
-npm run build        # Build frontend
-npm run tauri:build  # Build production
+pnpm run dev          # Lance Tauri dev
+pnpm run build        # Build frontend
+pnpm run tauri:build  # Build production
 ```
 
 ### ✅ Validation
 ```bash
 ./enforce-tauri-only.sh  # Vérifie mode Tauri
 ./validate-final.sh      # Validation complète
-npm run type-check       # TypeScript check
+pnpm run type-check       # TypeScript check
 ```
 
 ### ❌ Interdites
 ```bash
-npm run preview     # Bloqué
+pnpm run preview     # Bloqué
 npm start           # Bloqué
-npm run vite:dev    # Bloqué
+pnpm run vite:dev    # Bloqué
 python3 -m http.server  # N/A
 ```
 

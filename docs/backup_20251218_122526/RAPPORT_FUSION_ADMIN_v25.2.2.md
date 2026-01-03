@@ -349,17 +349,17 @@ const AdminPage = lazy(() => import('./features/admin'));
 
 ```bash
 # Développement
-npm run dev              # Vite dev server
-npm run dev:tauri        # Tauri + Vite
+pnpm run dev              # Vite dev server
+pnpm run dev:tauri        # Tauri + Vite
 
 # Production
-npm run build            # Build frontend
+pnpm run build            # Build frontend
 npx tauri build          # Build complet
 ./build-fast.sh          # Build optimisé
 
 # Tests
-npm test                 # Tests React
-npm run test:tauri       # Tests Tauri
+pnpm test                 # Tests React
+pnpm run test:tauri       # Tests Tauri
 ```
 
 ### URLs d'Accès

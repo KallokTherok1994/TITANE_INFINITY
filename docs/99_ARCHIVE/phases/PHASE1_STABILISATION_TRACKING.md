@@ -245,8 +245,8 @@ cargo tarpaulin --out Html          # Coverage
 cargo clippy -- -D warnings         # Linting strict
 
 # Frontend
-npm test                            # Tests unitaires
-npm run lint                        # ESLint
+pnpm test                            # Tests unitaires
+pnpm run lint                        # ESLint
 npx tsc --noEmit                    # Vérif TS
 
 # Scan unwrap/expect
@@ -286,7 +286,7 @@ rg 'unwrap\(\)|expect\(' src-tauri/src --type rust
 1. **Intégrer `AppError` dans `lib.rs`** ← NEXT
 2. **Remplacer unwrap critiques** (commands/orchestration_center.rs)
 3. **Créer tests core/engine.rs**
-4. **Scanner erreurs TypeScript** (npm run lint)
+4. **Scanner erreurs TypeScript** (pnpm run lint)
 5. **Générer rapport intermédiaire**
 
 ---

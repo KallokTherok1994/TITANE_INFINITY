@@ -262,7 +262,7 @@ voiceEngine.completeTurnWithText(wakeEvent.cleanedText);
 
 ### TypeScript
 ```bash
-npm run type-check
+pnpm run type-check
 ```
 **Résultat:** ✅ **0 erreurs**
 

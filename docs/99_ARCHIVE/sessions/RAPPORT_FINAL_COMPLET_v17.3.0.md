@@ -282,7 +282,7 @@ hybridTTS.speak(response.content)
 **Commandes :**
 ```bash
 cd /home/titane/Documents/TITANE_INFINITY
-npm run dev
+pnpm run dev
 ```
 
 **Étapes :**
@@ -439,7 +439,7 @@ nano .env
 VITE_GEMINI_API_KEY=YOUR_GEMINI_API_KEY
 
 # 3. Redémarrer
-npm run dev
+pnpm run dev
 ```
 
 **Test :**
@@ -546,7 +546,7 @@ https://ai.google.dev
 VITE_GEMINI_API_KEY=YOUR_GEMINI_API_KEY
 
 # 3. Redémarrer
-npm run dev
+pnpm run dev
 ```
 
 **Avantages :**
@@ -698,7 +698,7 @@ ollama serve
 
 **Action Immédiate : TESTER**
 ```bash
-npm run dev
+pnpm run dev
 
 # 1. Ouvrir http://localhost:5173
 # 2. Ouvrir DevTools Console (F12)
@@ -723,7 +723,7 @@ npm run dev
 # 2. Éditer .env
 nano .env
 # Remplacer : VITE_GEMINI_API_KEY=YOUR_GEMINI_API_KEY
-# 3. Redémarrer : npm run dev
+# 3. Redémarrer : pnpm run dev
 ```
 
 **Option 2 : Ollama (Local)**
@@ -806,7 +806,7 @@ import { VoiceControlPanel } from './VoiceControlPanel';
 ║                                                                ║
 ╚═══════════════════════════════════════════════════════════════╝
 
-📝 PROCHAINE ÉTAPE : npm run dev → Tester Chat + Voice
+📝 PROCHAINE ÉTAPE : pnpm run dev → Tester Chat + Voice
 
 📚 DOCUMENTATION COMPLÈTE DISPONIBLE :
    • CARTOGRAPHIE_COMPLETE_CHAT_IA_VOIX_v17.3.0.md

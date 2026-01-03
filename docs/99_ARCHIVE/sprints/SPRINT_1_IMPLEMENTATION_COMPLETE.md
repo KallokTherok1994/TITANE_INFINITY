@@ -454,10 +454,10 @@ Cache Stats:
 
 ```bash
 # 1. Vérifier compilation TypeScript
-npm run check
+pnpm run check
 
 # 2. Build production test
-npm run build
+pnpm run build
 
 # 3. Analyser bundle size
 ls -lh dist/assets/*.js

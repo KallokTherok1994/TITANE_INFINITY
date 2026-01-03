@@ -565,7 +565,7 @@ catch (err: unknown) {
 
 **Recommandations**:
 
-1. **Lancer**: `npm run dev` pour vérifier compilation
+1. **Lancer**: `pnpm run dev` pour vérifier compilation
 2. **Tester**: Ouvrir Governance Center et vérifier UI
 3. **Configurer**: Ajouter une clé API (Gemini recommandé pour test)
 4. **Vérifier**: Ollama detection (doit afficher "Actif" si serveur lancé)
@@ -579,10 +579,10 @@ ollama list
 curl http://localhost:11434/api/tags
 
 # Lancer dev
-npm run dev
+pnpm run dev
 
 # Vérifier compilation
-npm run build
+pnpm run build
 ```
 
 ═══════════════════════════════════════════════════════════════════════════════

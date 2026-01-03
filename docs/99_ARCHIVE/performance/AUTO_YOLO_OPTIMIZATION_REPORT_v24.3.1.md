@@ -132,7 +132,7 @@ useEffect(() => {
 #### TypeScript Compilation
 
 ```bash
-✅ npm run check
+✅ pnpm run check
    0 errors
    Types: Tous valides
    Durée: <5s
@@ -141,7 +141,7 @@ useEffect(() => {
 #### Production Build
 
 ```bash
-✅ npm run build
+✅ pnpm run build
    Durée: 15.61s (+0.63s vs avant, acceptable)
    page-chat: 363.99 KB (était 362.97 KB)
    Impact: +1.02 KB (+0.3%, négligeable)
@@ -238,8 +238,8 @@ Bénéfices:
 ### Test 1 : Vérifier logs désactivés en production
 
 ```bash
-1. npm run build
-2. npm run preview
+1. pnpm run build
+2. pnpm run preview
 3. Ouvrir DevTools → Console
 4. Envoyer un message dans Chat IA
 
@@ -263,7 +263,7 @@ Bénéfices:
 ### Test 3 : Mode dev (logs visibles)
 
 ```bash
-1. npm run dev
+1. pnpm run dev
 2. Naviguer vers Chat IA
 3. Envoyer message
 
@@ -396,11 +396,11 @@ if (typeof window !== 'undefined') {
 ### Production Behavior
 
 ```typescript
-// DEV mode (npm run dev)
+// DEV mode (pnpm run dev)
 chatLogger.debug('Message', { data })
 → console.debug('[chatLogger] Message', { data })
 
-// PROD mode (npm run build + preview)
+// PROD mode (pnpm run build + preview)
 chatLogger.debug('Message', { data })
 → NOOP (early return, zero overhead)
 
@@ -442,4 +442,4 @@ chatLogger.debug('Message', { data })
 
 **Mode AUTO YOLO** : Toutes les optimisations appliquées automatiquement sans demander permission, conformément au mode "continue jusqu'à la perfection" activé.
 
-**Prochaine étape recommandée** : Tester en production avec `npm run preview` + vérifier console vide.
+**Prochaine étape recommandée** : Tester en production avec `pnpm run preview` + vérifier console vide.

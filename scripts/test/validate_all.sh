@@ -84,7 +84,7 @@ if pgrep -f 'titane-infinity' > /dev/null; then
     ((TESTS_PASSED++))
 else
     echo -e "🔍 App Tauri lancée... ${YELLOW}⚠️  WARN (non lancée)${NC}"
-    echo "   → Lancer: npm run tauri:dev"
+    echo "   → Lancer: pnpm run tauri:dev"
 fi
 
 # TAURI-ONLY: pas de serveur HTTP frontend

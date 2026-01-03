@@ -126,7 +126,7 @@ echo ""
 
 # 6. TypeScript compilation
 echo "📝 Vérification TypeScript..."
-npm run type-check > /tmp/typecheck.log 2>&1
+pnpm run type-check > /tmp/typecheck.log 2>&1
 if [ $? -eq 0 ]; then
     check_pass "TypeScript compilation: 0 erreurs"
 else
@@ -137,7 +137,7 @@ echo ""
 
 # 7. Build test
 echo "🏗️  Test build production..."
-npm run build > /tmp/build.log 2>&1
+pnpm run build > /tmp/build.log 2>&1
 if [ $? -eq 0 ]; then
     BUILD_TIME=$(grep "built in" /tmp/build.log | tail -1 | grep -oP '\d+\.\d+s')
     check_pass "Build production réussi (temps: $BUILD_TIME)"
@@ -179,7 +179,7 @@ echo "  ✅ Build: Production ready"
 echo ""
 echo "Prochaines étapes recommandées:"
 echo "  1. Tests E2E: Recording flow + force reset"
-echo "  2. Déploiement: npm run tauri:build"
+echo "  2. Déploiement: pnpm run tauri:build"
 echo "  3. Surveillance: tail -f logs/app.log | grep force_reset"
 echo "  4. Wake Word: Activer pattern 'TITANE' (FUTUR)"
 echo ""

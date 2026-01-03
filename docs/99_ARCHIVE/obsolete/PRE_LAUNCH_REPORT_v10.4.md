@@ -332,7 +332,7 @@ cargo clippy --no-deps
    ```bash
    cd src-tauri
    cargo build --release
-   npm run tauri:build
+   pnpm run tauri:build
    ```
 
 2. **Tests finaux**

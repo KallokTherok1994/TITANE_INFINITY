@@ -141,13 +141,13 @@ Installation WebKit uniquement (script fourni).
 
 **TypeScript Check :**
 ```bash
-npm run type-check
+pnpm run type-check
 # Résultat: ✅ 0 erreurs
 ```
 
 **Vite Build :**
 ```bash
-npm run build
+pnpm run build
 # Résultat: ✅ Success en 1.74s
 # Modules: 360 transformés
 # Bundle: 131 KB gzipped
@@ -206,8 +206,8 @@ npm run build
 
 **Résultat :**
 ```
-✅ npm run dev → tauri dev
-✅ npm run preview → bloqué
+✅ pnpm run dev → tauri dev
+✅ pnpm run preview → bloqué
 ✅ vite:dev → bloqué
 ✅ Pas de devUrl HTTP
 ✅ frontendDist → ../dist
@@ -256,8 +256,8 @@ cargo build --release
    ```json
    {
      "build": {
-       "beforeDevCommand": "npm run build",
-       "beforeBuildCommand": "npm run build",
+       "beforeDevCommand": "pnpm run build",
+       "beforeBuildCommand": "pnpm run build",
        "frontendDist": "../dist"
      }
    }
@@ -415,7 +415,7 @@ cargo build --release
 
 ```bash
 cd ~/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run dev
+pnpm run dev
 ```
 
 **Résultat attendu :**
@@ -444,7 +444,7 @@ cargo build --release
 **Étape 3 - Lancement final :**
 ```bash
 cd ..
-npm run dev
+pnpm run dev
 ```
 
 **Résultat attendu :**
@@ -466,11 +466,11 @@ npm run dev
 # → Doit retourner: Erreurs: 0, Avertissements: 0 ✅
 
 # 2. TypeScript
-npm run type-check
+pnpm run type-check
 # → Doit retourner: aucune sortie (0 erreurs) ✅
 
 # 3. Build
-npm run build
+pnpm run build
 # → Doit créer dist/ en <2s ✅
 
 # 4. Version

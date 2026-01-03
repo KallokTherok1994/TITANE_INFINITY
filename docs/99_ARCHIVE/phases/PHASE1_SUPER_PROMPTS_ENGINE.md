@@ -145,7 +145,7 @@ cargo tarpaulin --out Html
 # Frontend TS
 cd ..
 npx tsc --noEmit
-npm run lint
+pnpm run lint
 ```
 
 #### Bloc 4 — Checkpoint & Validation
