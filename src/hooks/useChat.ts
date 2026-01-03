@@ -55,13 +55,15 @@ import { claudeProvider } from '@/services/ai/providers/claude';
 type MaybeAIMessage = Partial<AIMessage> | null | undefined;
 
 // ✨ v24.3.0 - Cloud Providers Integration (OpenAI/Gemini/Anthropic)
+// ✨ v26.3.0 - Added GitHub Copilot provider
 export type ProviderPreference =
   | 'auto'
   | 'local'
   | 'ollama'
   | 'openai'
   | 'gemini'
-  | 'anthropic';
+  | 'anthropic'
+  | 'copilot';
 
 export interface ChatDebugAttempt {
   provider: string;
@@ -97,7 +99,8 @@ const isProviderPreference = (value: unknown): value is ProviderPreference =>
   value === 'ollama' ||
   value === 'openai' ||
   value === 'gemini' ||
-  value === 'anthropic';
+  value === 'anthropic' ||
+  value === 'copilot';
 
 const readStoredPreferredProvider = (): ProviderPreference => {
   if (typeof window === 'undefined') {
