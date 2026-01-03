@@ -53,7 +53,7 @@ source ~/.bashrc
 - ✅ Dépendances Tauri v2 (WebKit2GTK 4.1, GTK3, ALSA)
 - ✅ VSCode + extensions (rust-analyzer, Tauri, ESLint)
 - ✅ Repository TITANE∞ cloné dans `~/Projets/TITANE_INFINITY`
-- ✅ Dépendances npm installées
+- ✅ Dépendances pnpm installées
 
 **Durée:** 10-15 minutes (selon connexion)
 
@@ -392,10 +392,10 @@ let analysis = vision_engine.analyze_image_path("./image.jpg").await?;
 
 ```bash
 # Nettoyer cache
-npm cache clean --force
+pnpm store prune
 
 # Supprimer node_modules
-rm -rf node_modules package-lock.json
+rm -rf node_modules pnpm-lock.yaml
 
 # Réinstaller
 pnpm install --legacy-peer-deps

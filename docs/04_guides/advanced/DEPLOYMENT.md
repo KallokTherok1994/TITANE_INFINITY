@@ -47,15 +47,15 @@ cargo audit
 
 ```bash
 # Update outdated
-npm outdated
+pnpm outdated
 cargo update --dry-run
 
 # Remove unused
-npm prune --production
+pnpm store prune
 cargo clean
 
 # Lock versions
-pnpm install --frozen-lockfile  # Uses package-lock.json exactly
+pnpm install --frozen-lockfile  # Uses pnpm-lock.yaml exactly
 cargo build --locked
 ```
 
