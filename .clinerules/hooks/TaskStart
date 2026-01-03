@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# TaskStart hook for TITANE∞
+# Détecte le type de projet et injecte les règles appropriées
+
+input=$(cat)
+
+# Détection du projet Tauri + React + TypeScript
+context=""
+
+if [[ -f "src-tauri/Cargo.toml" ]] && [[ -f "package.json" ]]; then
+  context="PROJECT_TYPE: TITANE∞ - Tauri + React + TypeScript project detected.\n"
+  context+="CRITICAL RULES:\n"
+  context+="- NEVER deploy via AppImage or DEB without explicit authorization from Kevin Thibault\n"
+  context+="- NEVER run 'npm run build' or '🔵 Build Titan-Stable' task without explicit request\n"
+  context+="- Development mode MANDATORY until 100% test validation\n"
+  context+="- Only use '🟢 Launch Titan-Dev' task for development\n"
+  context+="- NO production package/bundle before formal approval\n"
+  context+="WORKSPACE_RULES:\n"
+  context+="- Follow .github/copilot-instructions.md guidelines\n"
+  context+="- Follow .github/instructions/titane.instructions.md for TITANE specifics\n"
+  context+="- Tauri-only (no HTTP servers); keep project local-first\n"
+  context+="- No secrets committed\n"
+  context+="- Keep changes minimal and testable\n"
+  context+="CODING_STANDARDS:\n"
+  context+="- Use TypeScript with strict typing; avoid 'any' types\n"
+  context+="- Follow React functional component patterns\n"
+  context+="- Match existing code style and patterns before generating new code\n"
+  context+="- Include proper error handling for all operations\n"
+  context+="- Add unit tests for new functions"
+fi
+
+if [[ -n "$context" ]]; then
+  jq -n --arg ctx "$context" '{"cancel": false, "contextModification": $ctx}'
+else
+  echo '{"cancel": false}'
+fi

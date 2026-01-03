@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# PreToolUse hook for TITANE∞
+# Empêche les opérations interdites et valide les paramètres
+
+input=$(cat)
+
+tool_name=$(echo "$input" | jq -r '.preToolUse.toolName')
+
+# Bloquer les déploiements non autorisés
+if [[ "$tool_name" == "execute_command" ]]; then
+  command=$(echo "$input" | jq -r '.preToolUse.parameters.command // ""')
+  
+  # Détecter les tentatives de build production
+  if echo "$command" | grep -qiE 'npm run build|tauri build|build\.sh|Build Titan-Stable'; then
+    error_msg="⚠️ VIOLATION CRITIQUE: Tentative de déploiement production non autorisée.\n"
+    error_msg+="Le déploiement production nécessite:\n"
+    error_msg+="1. Tests CLI: 100/100 passés\n"
+    error_msg+="2. Approbation explicite écrite de Kevin Thibault\n"
+    error_msg+="3. Confirmation 'GO FOR PRODUCTION DEPLOY'\n"
+    error_msg+="Mode de travail autorisé: '🟢 Launch Titan-Dev' uniquement"
+    
+    jq -n --arg msg "$error_msg" '{"cancel": true, "errorMessage": $msg}'
+    exit 0
+  fi
+  
+  # Détecter sudo/dpkg (installation système)
+  if echo "$command" | grep -qiE 'sudo.*dpkg|dpkg.*-i.*\.deb|apt install'; then
+    error_msg="⚠️ VIOLATION: Installation système non autorisée sans approbation explicite.\n"
+    error_msg+="L'installation système nécessite l'autorisation de Kevin Thibault."
+    
+    jq -n --arg msg "$error_msg" '{"cancel": true, "errorMessage": $msg}'
+    exit 0
+  fi
+fi
+
+# Bloquer la création de fichiers .js dans un projet TypeScript
+if [[ "$tool_name" == "write_to_file" ]]; then
+  file_path=$(echo "$input" | jq -r '.preToolUse.parameters.path // ""')
+  
+  if [[ "$file_path" == *.js ]] && [[ -f "tsconfig.json" ]]; then
+    jq -n '{"cancel": true, "errorMessage": "JavaScript files not allowed in TypeScript project. Use .ts or .tsx extension."}'
+    exit 0
+  fi
+  
+  # Empêcher l'écriture de secrets
+  content=$(echo "$input" | jq -r '.preToolUse.parameters.content // ""')
+  if echo "$content" | grep -qiE 'API[_-]?KEY|SECRET|PASSWORD|TOKEN.*=.*[a-zA-Z0-9]{20,}'; then
+    context="SECURITY WARNING: Possible secret detected in file write. Use environment variables instead."
+    jq -n --arg ctx "$context" '{"cancel": false, "contextModification": $ctx}'
+    exit 0
+  fi
+fi
+
+echo '{"cancel": false}'

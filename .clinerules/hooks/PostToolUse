@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+# PostToolUse hook for TITANE∞
+# Surveille les performances et apprend des opérations
+
+input=$(cat)
+
+execution_time=$(echo "$input" | jq -r '.postToolUse.executionTimeMs // 0')
+tool_name=$(echo "$input" | jq -r '.postToolUse.toolName')
+success=$(echo "$input" | jq -r '.postToolUse.success')
+
+context=""
+
+# Surveiller les opérations lentes
+if (( execution_time > 5000 )); then
+  context="PERFORMANCE: Slow operation detected - $tool_name took ${execution_time}ms. "
+  context+="Consider optimizing or showing progress to user."
+fi
+
+# Apprendre des échecs de compilation
+if [[ "$tool_name" == "execute_command" ]] && [[ "$success" == "false" ]]; then
+  result=$(echo "$input" | jq -r '.postToolUse.result // ""')
+  
+  if echo "$result" | grep -qiE 'error.*TS[0-9]+|TypeScript error'; then
+    if [[ -n "$context" ]]; then context+="\n"; fi
+    context+="TYPESCRIPT_ERROR: TypeScript compilation failed. "
+    context+="Verify types match existing patterns in the codebase."
+  fi
+  
+  if echo "$result" | grep -qiE 'test.*failed|FAIL'; then
+    if [[ -n "$context" ]]; then context+="\n"; fi
+    context+="TEST_FAILURE: Tests failed. "
+    context+="Review test expectations and ensure changes don't break existing functionality."
+  fi
+fi
+
+# Logger les opérations critiques
+if [[ "$tool_name" =~ ^(write_to_file|execute_command)$ ]]; then
+  log_dir=".clinerules/logs"
+  mkdir -p "$log_dir"
+  timestamp=$(echo "$input" | jq -r '.timestamp')
+  echo "$timestamp: $tool_name (${execution_time}ms) - success=$success" >> "$log_dir/operations.log"
+fi
+
+if [[ -n "$context" ]]; then
+  jq -n --arg ctx "$context" '{"cancel": false, "contextModification": $ctx}'
+else
+  echo '{"cancel": false}'
+fi

@@ -1,0 +1,15 @@
+{
+  "clineVersion": "3.39.2",
+  "hookName": "TaskStart",
+  "timestamp": "2026-01-02T23:00:00Z",
+  "taskId": "test-task-001",
+  "workspaceRoots": ["/home/titane-os/Documents/GitHub/TITANE_INFINITY"],
+  "userId": "kevin-thibault",
+  "taskStart": {
+    "taskMetadata": {
+      "taskId": "test-task-001",
+      "ulid": "01HQABCDEFGHIJKLMNOPQRSTUV",
+      "initialTask": "Test hook integration for TITANE∞ project"
+    }
+  }
+}

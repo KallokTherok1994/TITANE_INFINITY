@@ -67,7 +67,11 @@
     "copilot-xs:precommit": "node .github/copilot-xs/scripts/precommit.js",
     "copilot-xs:status": "node .github/copilot-xs/scripts/agent-status.js",
     "copilot-xs:security-scan": "node .github/copilot-xs/scripts/security-scan.js",
-    "copilot-xs:test": "npm run copilot-xs:validate && npm run test:all"
+    "copilot-xs:test": "npm run copilot-xs:validate && npm run test:all",
+    "cline:install": "bash .clinerules/install-hooks.sh",
+    "cline:test-hooks": "bash -c 'echo Testing hooks... && .clinerules/hooks/TaskStart < tests/fixtures/hook-test-input.json'",
+    "cline:logs": "tail -f .clinerules/logs/operations.log",
+    "cline:verify": "bash -c 'for hook in TaskStart PreToolUse PostToolUse UserPromptSubmit; do echo \"Testing $hook...\"; test -x .clinerules/hooks/$hook && echo \"✅ $hook\" || echo \"❌ $hook\"; done'"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.90.12",
