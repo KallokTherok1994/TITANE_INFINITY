@@ -70,7 +70,7 @@ impl CpuMonitor {
             return;
         }
 
-        self.system.refresh_cpu();
+        self.system.refresh_cpu_all();
         self.last_update = Instant::now();
     }
 
