@@ -8,7 +8,14 @@ Cline CLI est installé et configuré avec les hooks d'intégration pour TITANE�
 - **Cline CLI Version:** 1.0.8
 - **Cline Core Version:** 3.39.2
 - **OS/Arch:** linux/amd64
+- **Node.js Version:** 20.19.6
 - **Date d'installation:** 2 janvier 2026
+
+### 🔑 Authentification
+- **Provider:** OpenRouter
+- **Mode Plan:** openrouter
+- **Mode Act:** openrouter
+- **Statut:** ✅ Authentifié et opérationnel
 
 ### 🎣 Hooks Actifs
 
