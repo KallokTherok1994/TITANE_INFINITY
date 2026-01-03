@@ -4,13 +4,14 @@
  */
 
 /**
- * ThinkingPanel - Panneau de réflexion OMEGA en temps réel
+ * ThinkingPanel - Panneau de réflexion OMEGA en temps réel (v2 - Discret)
  * Affiche les étapes de réflexion pendant la génération
+ * Mode compact par défaut, expansible sur demande (style ChatGPT/Claude)
  */
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Brain, Sparkles, Loader2, Check } from 'lucide-react';
+import { Brain, Sparkles, Loader2, Check, ChevronDown, ChevronUp } from 'lucide-react';
 import './ThinkingPanel.css';
 
 interface ThinkingStep {
@@ -25,14 +26,23 @@ interface ThinkingPanelProps {
   isThinking: boolean;
   steps?: ThinkingStep[];
   onClose?: () => void;
+  compact?: boolean; // Mode compact par défaut (v2)
+  inline?: boolean; // Mode inline dans le message (v2)
+  provider?: string; // Provider utilisé (ex: "GPT-4o", "Claude", "Gemini", "Local") (v2.1)
+  elapsedTime?: number; // Temps écoulé en secondes (v2.1)
 }
 
 export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
   isThinking,
   steps = [],
   onClose,
+  compact = true, // Mode compact par défaut (v2)
+  inline = false,
+  provider,
+  elapsedTime,
 }) => {
   const [expandedSteps, setExpandedSteps] = useState<Set<string>>(new Set());
+  const [isExpanded, setIsExpanded] = useState(false); // Toggle pour afficher/masquer les détails (v2)
 
   // v26.2 - Auto-expand active steps for visibility
   useEffect(() => {
@@ -41,6 +51,17 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
       setExpandedSteps(prev => new Set([...prev, activeStep.id]));
     }
   }, [steps]);
+
+  // Helper: Get provider icon (v2.1)
+  const getProviderIcon = (providerName: string): string => {
+    const name = providerName.toLowerCase();
+    if (name.includes('gpt') || name.includes('openai')) return '✨';
+    if (name.includes('claude') || name.includes('anthropic')) return '🧠';
+    if (name.includes('gemini') || name.includes('google')) return '🤖';
+    if (name.includes('ollama')) return '🦉';
+    if (name.includes('local')) return '🏠';
+    return '⚡';
+  };
 
   const toggleStep = (id: string) => {
     setExpandedSteps(prev => {
@@ -95,10 +116,56 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
     return null;
   }
 
+  // Mode compact: Afficher seulement un indicateur discret
+  if (compact && !isExpanded) {
+    return (
+      <AnimatePresence>
+        <motion.div
+          className={`thinking-panel-compact ${inline ? 'thinking-panel-inline' : ''}`}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          transition={{ duration: 0.2 }}
+          onClick={() => setIsExpanded(true)}
+          role="button"
+          tabIndex={0}
+          aria-label="Afficher les détails de réflexion OMEGA"
+          onKeyDown={(e) => e.key === 'Enter' && setIsExpanded(true)}
+        >
+          <div className="thinking-compact-content">
+            {isThinking ? (
+              <>
+                <Loader2 className="thinking-compact-icon spin" size={14} />
+                <span className="thinking-compact-text">
+                  Thinking<span className="thinking-dots"></span>
+                  {elapsedTime !== undefined && ` (${elapsedTime.toFixed(1)}s)`}
+                </span>
+              </>
+            ) : (
+              <>
+                <Brain className="thinking-compact-icon" size={14} />
+                <span className="thinking-compact-text">
+                  {steps.filter(s => s.status === 'complete').length} étapes
+                </span>
+              </>
+            )}
+            {provider && (
+              <span className="thinking-provider-badge" title={`Provider: ${provider}`}>
+                {getProviderIcon(provider)} {provider}
+              </span>
+            )}
+            <ChevronDown className="thinking-compact-chevron" size={14} />
+          </div>
+        </motion.div>
+      </AnimatePresence>
+    );
+  }
+
+  // Mode étendu: Afficher tous les détails
   return (
     <AnimatePresence>
       <motion.div
-        className="thinking-panel"
+        className={`thinking-panel ${inline ? 'thinking-panel-inline' : ''}`}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
@@ -118,11 +185,23 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
               )}
             </h3>
           </div>
-          {onClose && (
-            <button className="thinking-close" onClick={onClose} aria-label="Fermer">
-              ×
-            </button>
-          )}
+          <div className="thinking-header-actions">
+            {compact && (
+              <button
+                className="thinking-collapse"
+                onClick={() => setIsExpanded(false)}
+                aria-label="Réduire"
+                title="Réduire la réflexion"
+              >
+                <ChevronUp size={18} />
+              </button>
+            )}
+            {onClose && (
+              <button className="thinking-close" onClick={onClose} aria-label="Fermer">
+                ×
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Steps */}
@@ -191,11 +270,12 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
 };
 
 /**
- * Hook to manage thinking steps
+ * Hook to manage thinking steps with compact mode support
  */
 export function useThinkingSteps() {
   const [steps, setSteps] = useState<ThinkingStep[]>([]);
   const [isThinking, setIsThinking] = useState(false);
+  const [compact, setCompact] = useState(true); // Compact par défaut (v2)
 
   const addStep = (type: ThinkingStep['type'], content: string) => {
     const step: ThinkingStep = {
@@ -218,6 +298,7 @@ export function useThinkingSteps() {
   const startThinking = () => {
     setIsThinking(true);
     setSteps([]);
+    setCompact(true); // Reset au mode compact
   };
 
   const stopThinking = () => {
@@ -228,15 +309,22 @@ export function useThinkingSteps() {
   const reset = () => {
     setSteps([]);
     setIsThinking(false);
+    setCompact(true);
+  };
+
+  const toggleCompact = () => {
+    setCompact(prev => !prev);
   };
 
   return {
     steps,
     isThinking,
+    compact,
     addStep,
     completeCurrentStep,
     startThinking,
     stopThinking,
     reset,
+    toggleCompact,
   };
 }
