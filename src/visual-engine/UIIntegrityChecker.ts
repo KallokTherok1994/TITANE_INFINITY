@@ -124,25 +124,15 @@ export class UIIntegrityChecker {
   private checkTimer: NodeJS.Timeout | null = null;
   private running = false;
 
-  // Required file structure (unused - kept for reference)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private readonly REQUIRED_FILES = [
-    'src/visual-engine/TitaneVisualEngine.ts',
-    'src/visual-engine/StateManager.ts',
-    'src/visual-engine/EffectsOrchestrator.ts',
-    'src/visual-engine/OSIntegrationBridge.ts',
-    'src/visual-engine/index.ts',
-    'src/particles/ParticleSystem.ts',
-    'src/particles/Particle.ts',
-    'src/effects/EnergyArcs.tsx',
-    'src/effects/HealingWaves.tsx',
-    'src/effects/AudioWaveform.tsx',
-    'src/effects/GlitchEffect.tsx',
-    'src/effects/SpiralPattern.tsx',
-    'src/utils/cn.ts',
-    'src/styles/css-vars.css',
-    'src/styles/tokens.ts',
-  ];
+  /* Required file structure (kept for reference):
+   * - src/visual-engine/TitaneVisualEngine.ts
+   * - src/visual-engine/StateManager.ts
+   * - src/visual-engine/EffectsOrchestrator.ts
+   * - src/visual-engine/OSIntegrationBridge.ts
+   * - src/particles/ParticleSystem.ts
+   * - src/effects/*.tsx
+   * - src/styles/tokens.ts
+   */
 
   // Required exports validation
   private readonly REQUIRED_EXPORTS = {
