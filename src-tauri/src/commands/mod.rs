@@ -7,6 +7,7 @@ pub mod ai_chat; // ✅ v∞: AI Chat commands (NOT re-exported - uses State<AIC
 pub mod ai_prompt_generator; // ✅ v25.4.2: AI Prompt Generator for Mode Builder
 pub mod automations; // ✅ v19.2Ω: Automation System
 pub mod chat_generate_commands; // ✅ v21 Phase 1: Provider-specific AI generation (Gemini/OpenAI/Claude)
+pub mod copilot_commands; // ✨ v26.3: GitHub Copilot provider commands
 
 // Tests — Phase 1 Stabilisation v20.0
 pub mod chat_modes; // ✅ v19.2Ω: Chat Modes System

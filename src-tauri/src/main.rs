@@ -465,6 +465,19 @@ fn main() {
     // Initialize Chat Orchestrator with provider management
     let chat_orchestrator = overdrive::chat_orchestrator::init();
 
+    // ✨ v26.3: Initialize Copilot State
+    let copilot_api_key = secrets_engine
+        .get_secret(security::secrets_engine::KEY_COPILOT)
+        .ok()
+        .flatten();
+    
+    let copilot_state = commands::copilot_commands::CopilotState {
+        api_key: Arc::new(tokio::sync::RwLock::new(copilot_api_key)),
+        secrets_engine: Arc::new(secrets_engine.clone()),
+    };
+    
+    log::info!("✅ Copilot state initialized (key configured: {})", copilot_state.api_key.blocking_read().is_some());
+
     // ═══════════════════════════════════════════════════════════════
     // HELIOS & MEMORY CORES (v21.5 AUTO-FIX) - System Monitoring & Storage
     // ═══════════════════════════════════════════════════════════════
@@ -491,6 +504,7 @@ fn main() {
         .manage(singularity_cortex)
         .manage(multi_ai_orchestrator)
         .manage(secrets_engine)
+        .manage(copilot_state) // ✨ v26.3: Copilot State
         .manage(chat_orchestrator.clone())
         .manage(helios_core)
         .manage(memory_core)
@@ -908,6 +922,11 @@ fn main() {
             commands::chat_generate_commands::chat_generate_gemini,
             commands::chat_generate_commands::chat_generate_openai,
             commands::chat_generate_commands::chat_generate_claude,
+            // ✨ v26.3: GitHub Copilot provider
+            commands::copilot_commands::chat_generate_copilot,
+            commands::copilot_commands::chat_set_copilot_key,
+            commands::copilot_commands::get_copilot_key_status,
+            commands::copilot_commands::test_copilot_connection,
             // AI Prompt Generator v25.4.2 (Mode Builder)
             ai_prompt_generator::generate_mode_prompt,
             // Ollama AI Provider Status Check

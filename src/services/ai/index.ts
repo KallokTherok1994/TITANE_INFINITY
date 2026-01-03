@@ -72,6 +72,7 @@ export {
 
 // Providers
 export { geminiProvider } from './providers/gemini';
+export { copilotProvider } from './providers/copilot';
 export { ollamaProvider } from './providers/ollama';
 export { fallbackProvider } from './providers/fallback';
 

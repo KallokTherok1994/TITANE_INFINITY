@@ -24,6 +24,7 @@ const NONCE_LEN: usize = 12;
 pub const KEY_OPENAI: &str = "openai_api_key";
 pub const KEY_CLAUDE: &str = "claude_api_key";
 pub const KEY_GEMINI: &str = "gemini_api_key";
+pub const KEY_COPILOT: &str = "copilot_api_key"; // ✨ v26.3 - GitHub Copilot
 
 #[derive(Debug, thiserror::Error)]
 pub enum SecretsError {

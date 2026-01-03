@@ -29,6 +29,7 @@ import { tauriChatProvider } from './providers/tauriChat';
 import { geminiProvider } from './providers/gemini';
 import { openaiProvider } from './providers/openai'; // ← NOUVEAU: OpenAI GPT
 import { claudeProvider } from './providers/claude'; // ← NOUVEAU: Anthropic Claude
+import { copilotProvider } from './providers/copilot'; // ← NOUVEAU: GitHub Copilot
 import { ollamaProvider } from './providers/ollama';
 import { autoHealEngine } from './autoHealEngine';
 import { metricsEngine } from './metricsEngine';
@@ -113,6 +114,7 @@ class AIOrchestrator {
   private providers = [
     claudeProvider, // 🥇 #1 Anthropic Claude (meilleur raisonnement)
     openaiProvider, // 🥈 #2 OpenAI GPT (polyvalent, rapide)
+    copilotProvider, // 🆕 #2.5 GitHub Copilot (OpenAI-compatible, GitHub ecosystem)
     geminiProvider, // 🥉 #3 Google Gemini (multimodal)
     tauriChatProvider, // #4 Backend Rust (cascade interne)
     ollamaProvider, // #5 Ollama (mémoire locale + analyse permanente)
@@ -583,6 +585,14 @@ class AIOrchestrator {
           score += 45; // CLOUD PRIORITY BOOST
           score += isComplexQuery ? 30 : 20; // Excellent sur complexité
           score += messageLength > 1000 ? 15 : 5; // Bon sur longs messages
+          score -= !IS_VITEST && stats.status === 'offline' ? 30 : 0; // Malus réduit
+          break;
+
+        case 'copilot':
+          // 🆕 PRIORITÉ #2.5: GitHub Copilot = OpenAI-compatible, écosystème GitHub
+          score += 42; // CLOUD PRIORITY BOOST (between OpenAI and Gemini)
+          score += isComplexQuery ? 28 : 18; // Très bon sur complexité (GPT-4)
+          score += messageLength > 1000 ? 12 : 5; // Bon sur longs messages
           score -= !IS_VITEST && stats.status === 'offline' ? 30 : 0; // Malus réduit
           break;
 
@@ -1176,6 +1186,8 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
         return 'ollama';
       case 'gemini':
         return 'gemini';
+      case 'copilot':
+        return 'openai'; // Copilot uses OpenAI-compatible format
       default:
         if (providerName.includes('claude')) {
           return 'claude';
@@ -1185,6 +1197,9 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
         }
         if (providerName.includes('tauri')) {
           return 'tauri';
+        }
+        if (providerName.includes('copilot')) {
+          return 'openai'; // Copilot uses OpenAI-compatible format
         }
         return 'openai';
     }

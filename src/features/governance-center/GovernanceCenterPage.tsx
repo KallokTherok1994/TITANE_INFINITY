@@ -66,11 +66,13 @@ function GovernanceCenterPageContent(): JSX.Element {
             geminiStatus={governance.geminiStatus}
             openaiStatus={governance.openaiStatus}
             anthropicStatus={governance.anthropicStatus}
+            copilotStatus={governance.copilotStatus}
             secretsStatus={governance.secretsStatus}
             loading={governance.loading}
             onSetGeminiKey={governance.setGeminiKey}
             onSetOpenAIKey={governance.setOpenAIKey}
             onSetAnthropicKey={governance.setAnthropicKey}
+            onSetCopilotKey={governance.setCopilotKey}
             onStoreSecret={governance.storeSecret}
             onDeleteSecret={governance.deleteSecret}
             onRefresh={governance.refreshAll}
