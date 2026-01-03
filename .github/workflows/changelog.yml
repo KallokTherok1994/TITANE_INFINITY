@@ -28,7 +28,7 @@ jobs:
           fetch-depth: 0  # Need full history for changelog
 
       - name: 📝 Generate changelog with git-cliff
-        uses: orhun/git-cliff-action@v3
+        uses: orhun/git-cliff-action@v4
         with:
           config: cliff.toml
           args: --latest --output CHANGELOG.md
