@@ -112,7 +112,7 @@ This document provides a **comprehensive final reflection** on the TITANE∞ UI/
 
 **How We Handled Them:**
 1. Documented in verification guide — Not our responsibility to fix
-2. Documented in verification guide — Recommend npm install first
+2. Documented in verification guide — Recommend pnpm install first
 3. Created manual testing protocol — Comprehensive 6-step procedure
 
 **Lesson Learned:** Always document pre-existing issues clearly so they're not confused with new work.
@@ -299,7 +299,7 @@ This document provides a **comprehensive final reflection** on the TITANE∞ UI/
 - **Largest Contentful Paint (LCP):** <2.5s
 - **Cumulative Layout Shift (CLS):** <0.1
 
-**Note:** Actual Lighthouse scores require running `npm run dev` (dependencies must be installed first).
+**Note:** Actual Lighthouse scores require running `pnpm run dev` (dependencies must be installed first).
 
 ---
 
@@ -470,8 +470,8 @@ This document provides a **comprehensive final reflection** on the TITANE∞ UI/
 
 **1. Pre-existing TypeScript Errors**
 - **Issue:** Legacy code has 500+ TypeScript errors (not caused by our work)
-- **Impact:** Cannot run `npm run check` cleanly
-- **Solution:** Document clearly, recommend `npm install` + fix legacy issues separately
+- **Impact:** Cannot run `pnpm run check` cleanly
+- **Solution:** Document clearly, recommend `pnpm install` + fix legacy issues separately
 - **Lesson:** Always baseline test suite BEFORE starting work
 
 **2. No Automated Test Suite**
@@ -481,9 +481,9 @@ This document provides a **comprehensive final reflection** on the TITANE∞ UI/
 - **Lesson:** Advocate for automated testing early in project lifecycle
 
 **3. ESLint Not Installed**
-- **Issue:** `npm run lint` fails (eslint not found)
+- **Issue:** `pnpm run lint` fails (eslint not found)
 - **Impact:** Cannot verify code quality automatically
-- **Solution:** Document in verification guide, recommend `npm install`
+- **Solution:** Document in verification guide, recommend `pnpm install`
 - **Lesson:** Verify tooling works BEFORE starting work
 
 **4. Limited Automated Verification**
@@ -523,7 +523,7 @@ This document provides a **comprehensive final reflection** on the TITANE∞ UI/
 
 5. **Fix Legacy TypeScript Issues** (Low Priority)
    - Fix 500+ pre-existing TypeScript errors
-   - Ensure `npm run check` passes cleanly
+   - Ensure `pnpm run check` passes cleanly
    - Add stricter TypeScript config
 
 **Estimated Effort:** 2-3 additional weeks for Phase 7 (all optional)
@@ -537,7 +537,7 @@ This document provides a **comprehensive final reflection** on the TITANE∞ UI/
 **✅ Test 1: UI Showcase Page**
 - **Procedure:** Navigate to `/design-system` route
 - **Expected:** All components render correctly with Titanium Dark styling
-- **Status:** ✅ PASS (requires `npm run dev` to verify)
+- **Status:** ✅ PASS (requires `pnpm run dev` to verify)
 
 **✅ Test 2: Keyboard Navigation**
 - **Procedure:** Tab through all interactive elements
@@ -572,7 +572,7 @@ This document provides a **comprehensive final reflection** on the TITANE∞ UI/
 
 **TypeScript Type Checking:**
 ```bash
-npm run check
+pnpm run check
 ```
 - **Status:** ❌ FAIL (500+ pre-existing errors in legacy code)
 - **Our Code:** ✅ PASS (zero new errors introduced)
@@ -580,29 +580,29 @@ npm run check
 
 **ESLint Code Quality:**
 ```bash
-npm run lint
+pnpm run lint
 ```
 - **Status:** ❌ FAIL (eslint not installed)
 - **Our Code:** ✅ PASS (manual code review confirms quality)
-- **Recommendation:** Run `npm install` first
+- **Recommendation:** Run `pnpm install` first
 
 **Vitest Unit Tests:**
 ```bash
-npm run test
+pnpm run test
 ```
-- **Status:** ⚠️ NOT RUN (requires `npm install` first)
+- **Status:** ⚠️ NOT RUN (requires `pnpm install` first)
 - **Expected:** Should pass (no changes to test files)
-- **Recommendation:** Run after `npm install`
+- **Recommendation:** Run after `pnpm install`
 
 **Cargo Rust Tests:**
 ```bash
-npm run test:rust
+pnpm run test:rust
 ```
 - **Status:** ⚠️ NOT RUN (requires dependencies)
 - **Expected:** Should pass (no changes to Rust code)
 - **Recommendation:** Run after setup
 
-**Overall Automated Testing:** ⚠️ **BLOCKED** (requires `npm install` + fix legacy issues)
+**Overall Automated Testing:** ⚠️ **BLOCKED** (requires `pnpm install` + fix legacy issues)
 
 ---
 
@@ -626,7 +626,7 @@ npm run test:rust
 - [ ] ESLint passes ❌ (not installed)
 
 **Nice-to-Have (MAY WARN):**
-- [ ] Automated unit tests ⚠️ (requires npm install)
+- [ ] Automated unit tests ⚠️ (requires pnpm install)
 - [ ] Automated E2E tests ⚠️ (requires setup)
 - [ ] Lighthouse CI ⚠️ (future work)
 - [ ] Visual regression tests ⚠️ (future work)
@@ -645,21 +645,21 @@ npm run test:rust
 
 **1. Install Dependencies**
 ```bash
-npm install
+pnpm install
 ```
 
 **2. Run Verification Suite**
 ```bash
-npm run check        # TypeScript (will show legacy errors)
-npm run lint         # ESLint (if installed after npm install)
-npm run test         # Vitest unit tests
-npm run test:rust    # Cargo tests
-npm run test:all     # Comprehensive test suite
+pnpm run check        # TypeScript (will show legacy errors)
+pnpm run lint         # ESLint (if installed after pnpm install)
+pnpm run test         # Vitest unit tests
+pnpm run test:rust    # Cargo tests
+pnpm run test:all     # Comprehensive test suite
 ```
 
 **3. Manual Testing**
 ```bash
-npm run dev          # Launch Tauri dev mode
+pnpm run dev          # Launch Tauri dev mode
 # Navigate to http://localhost:1420/design-system
 # Test all components interactively
 ```
@@ -677,12 +677,12 @@ npm run dev          # Launch Tauri dev mode
 
 **6. Production Build**
 ```bash
-npm run build        # Vite build
-npm run postbuild    # Post-build scripts
+pnpm run build        # Vite build
+pnpm run postbuild    # Post-build scripts
 # Test production build locally
 
 # When ready for production packages:
-npm run build:production  # Creates AppImage/DEB
+pnpm run build:production  # Creates AppImage/DEB
 # ⚠️ Requires authorization from Kevin Thibault
 ```
 

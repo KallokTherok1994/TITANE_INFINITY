@@ -251,7 +251,7 @@ After completing the foundation (Phases 0-2) and initial component migration (Ph
 
 **Action Items:**
 - Run Lighthouse audit on `/design-system` page (baseline)
-- Measure bundle size: `npm run build && du -sh dist/`
+- Measure bundle size: `pnpm run build && du -sh dist/`
 - Document metrics in `CLEANUP_REPORT.md` (Phase 5)
 
 **Performance Risks:**
