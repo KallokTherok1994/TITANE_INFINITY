@@ -31,8 +31,8 @@ let hasThreeJSRenderer = false;
 
 try {
   if (canRunWebGLTests) {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires -- Dynamic require for optional native module
-    const module = require('./ThreeJSAvatarRenderer');
+    // Use dynamic import for ESM compatibility (browser mode)
+    const module = await import('./ThreeJSAvatarRenderer');
     ThreeJSAvatarRendererCtor = module.ThreeJSAvatarRenderer;
     hasThreeJSRenderer = true;
   }
@@ -296,8 +296,9 @@ async function detectMemoryLeaks(cycles: number): Promise<MemoryLeakReport> {
     samples.push(currentMemory.usedJSHeapSize);
 
     // Force GC if available (Chrome with --expose-gc flag)
-    if (global.gc) {
-      global.gc();
+    const globalScope = typeof global !== 'undefined' ? global : (window as any);
+    if (globalScope.gc) {
+      globalScope.gc();
     }
   }
 

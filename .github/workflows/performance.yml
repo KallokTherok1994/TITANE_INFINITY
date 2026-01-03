@@ -84,6 +84,13 @@ jobs:
           path: dist/
           retention-days: 7
         continue-on-error: true
+
+      - name: 📊 Performance Summary
+        if: always()
+        run: |
+          echo "## 🎯 Performance Metrics" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Build size analysis completed" >> $GITHUB_STEP_SUMMARY
           echo "- E2E test duration trends" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "💡 **Tip:** For Tauri apps, focus on:" >> $GITHUB_STEP_SUMMARY
