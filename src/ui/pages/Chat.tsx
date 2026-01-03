@@ -57,6 +57,7 @@ const PROVIDER_PREFERENCE_LABELS: Record<ProviderPreference, string> = {
   openai: 'OpenAI GPT-4o',
   gemini: 'Google Gemini 2.0',
   anthropic: 'Anthropic Claude',
+  copilot: 'GitHub Copilot',
 };
 
 const PROVIDER_DISPLAY_NAMES: Record<string, string> = {
