@@ -1,0 +1,312 @@
+/**
+ * TITANE∞ v26.2.0 — TITANIUM DARK DESIGN TOKENS
+ * 
+ * Monochrome premium design system with subtle metallic accents
+ * Based on web research: Dark UI trends 2025/2026 + WCAG 2.2 compliance
+ * 
+ * Philosophy:
+ * - Off-black backgrounds (not pure #000) for comfort
+ * - High contrast whites/grays for text (WCAG AAA 7:1)
+ * - Layered depth through opacity and elevation
+ * - Minimal cool gray accent for critical CTAs
+ * - Subtle metallic effects (rare, semantic usage)
+ * 
+ * @see docs/ui/DESIGN_SYSTEM.md
+ * @see docs/ui/RESEARCH_NOTES.md
+ */
+
+:root {
+  /* ═══════════════════════════════════════════════════════════════ */
+  /* BACKGROUNDS — Layered Depth Through Opacity                     */
+  /* ═══════════════════════════════════════════════════════════════ */
+  
+  /* Base layer - Deep background (off-black for comfort) */
+  --titanium-bg-base: #0f0f0f;
+  
+  /* Elevated surfaces - Cards, panels, containers */
+  --titanium-bg-elevated: #1a1a1a;
+  
+  /* Interactive surfaces - Hover states, active elements */
+  --titanium-bg-interactive: #242424;
+  
+  /* Overlay surfaces - Modals, dropdowns, tooltips */
+  --titanium-bg-overlay: #2e2e2e;
+  
+  /* Glass morphism variants (for modals/overlays) */
+  --titanium-surface-glass: rgba(26, 26, 26, 0.8);
+  --titanium-surface-frosted: rgba(36, 36, 36, 0.9);
+  
+  /* ═══════════════════════════════════════════════════════════════ */
+  /* TEXT COLORS — High Contrast for Readability (WCAG 2.2 Compliant) */
+  /* ═══════════════════════════════════════════════════════════════ */
+  
+  /* Primary text - Main content (WCAG AAA: 7:1 contrast on bg-base) */
+  --titanium-text-primary: #f5f5f5;
+  
+  /* Secondary text - Supporting content (WCAG AA: 4.5:1) */
+  --titanium-text-secondary: #b8b8b8;
+  
+  /* Tertiary text - Muted content, placeholders */
+  --titanium-text-tertiary: #8a8a8a;
+  
+  /* Disabled text - Non-interactive states */
+  --titanium-text-disabled: #5a5a5a;
+  
+  /* Inverse text - Text on light backgrounds (rare usage) */
+  --titanium-text-inverse: #0f0f0f;
+  
+  /* ═══════════════════════════════════════════════════════════════ */
+  /* BORDERS & DIVIDERS — Subtle Separation                           */
+  /* ═══════════════════════════════════════════════════════════════ */
+  
+  /* Subtle borders - Light dividers, card edges */
+  --titanium-border-subtle: rgba(255, 255, 255, 0.06);
+  
+  /* Default borders - Standard UI elements */
+  --titanium-border-default: rgba(255, 255, 255, 0.12);
+  
+  /* Strong borders - Emphasized separation, focus states */
+  --titanium-border-strong: rgba(255, 255, 255, 0.18);
+  
+  /* ═══════════════════════════════════════════════════════════════ */
+  /* ACCENT COLORS — Minimal Cool Gray for CTAs                       */
+  /* ═══════════════════════════════════════════════════════════════ */
+  
+  /* Cool accent - Primary CTAs, links, active states */
+  --titanium-accent-cool: #9ca3af;
+  
+  /* Bright accent - Focus rings, hover states (WCAG 3:1 contrast) */
+  --titanium-accent-bright: #d1d5db;
+  
+  /* Accent variants for backgrounds */
+  --titanium-accent-bg-subtle: rgba(156, 163, 175, 0.1);
+  --titanium-accent-bg-default: rgba(156, 163, 175, 0.2);
+  --titanium-accent-bg-strong: rgba(156, 163, 175, 0.3);
+  
+  /* ═══════════════════════════════════════════════════════════════ */
+  /* METALLIC EFFECTS — Premium Subtle Sheens (Rare Usage)            */
+  /* ═══════════════════════════════════════════════════════════════ */
+  
+  /* Metallic gradient - For hero sections, active states */
+  --titanium-metal-sheen: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.02) 50%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  
+  /* Metallic glow - Subtle highlight effect */
+  --titanium-metal-glow: 0 0 20px rgba(255, 255, 255, 0.1);
+  
+  /* Metallic reflection - Light reflection on surfaces */
+  --titanium-metal-reflection: rgba(255, 255, 255, 0.06);
+  
+  /* ═══════════════════════════════════════════════════════════════ */
+  /* SEMANTIC COLORS — Preserved for Status/Feedback                  */
+  /* ═══════════════════════════════════════════════════════════════ */
+  
+  /* Success - Green for confirmations, success states */
+  --titanium-success: #10b981;
+  --titanium-success-bg: rgba(16, 185, 129, 0.1);
+  --titanium-success-border: rgba(16, 185, 129, 0.3);
+  
+  /* Error - Red for errors, destructive actions */
+  --titanium-error: #ef4444;
+  --titanium-error-bg: rgba(239, 68, 68, 0.1);
+  --titanium-error-border: rgba(239, 68, 68, 0.3);
+  
+  /* Warning - Orange for warnings, cautions */
+  --titanium-warning: #f59e0b;
+  --titanium-warning-bg: rgba(245, 158, 11, 0.1);
+  --titanium-warning-border: rgba(245, 158, 11, 0.3);
+  
+  /* Info - Blue for information, tips */
+  --titanium-info: #3b82f6;
+  --titanium-info-bg: rgba(59, 130, 246, 0.1);
+  --titanium-info-border: rgba(59, 130, 246, 0.3);
+  
+  /* ═══════════════════════════════════════════════════════════════ */
+  /* TYPOGRAPHY — Type Scale & Font Properties                         */
+  /* ═══════════════════════════════════════════════════════════════ */
+  
+  /* Font families */
+  --titanium-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --titanium-font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  
+  /* Type scale (1.250 - Major Third ratio) */
+  --titanium-text-xs: 0.75rem;      /* 12px - Captions, labels */
+  --titanium-text-sm: 0.875rem;     /* 14px - Small body text */
+  --titanium-text-base: 1rem;       /* 16px - Body text */
+  --titanium-text-lg: 1.125rem;     /* 18px - Subheadings */
+  --titanium-text-xl: 1.25rem;      /* 20px - Headings */
+  --titanium-text-2xl: 1.563rem;    /* 25px - Page titles */
+  --titanium-text-3xl: 1.953rem;    /* 31px - Hero text */
+  
+  /* Line heights */
+  --titanium-leading-tight: 1.25;
+  --titanium-leading-normal: 1.5;
+  --titanium-leading-relaxed: 1.75;
+  
+  /* Font weights */
+  --titanium-font-normal: 400;
+  --titanium-font-medium: 500;
+  --titanium-font-semibold: 600;
+  --titanium-font-bold: 700;
+  
+  /* ═══════════════════════════════════════════════════════════════ */
+  /* SPACING — 4px Base Rhythm                                         */
+  /* ═══════════════════════════════════════════════════════════════ */
+  
+  --titanium-space-0: 0;
+  --titanium-space-1: 0.25rem;   /* 4px */
+  --titanium-space-2: 0.5rem;    /* 8px */
+  --titanium-space-3: 0.75rem;   /* 12px */
+  --titanium-space-4: 1rem;      /* 16px - Base unit */
+  --titanium-space-5: 1.25rem;   /* 20px */
+  --titanium-space-6: 1.5rem;    /* 24px */
+  --titanium-space-8: 2rem;      /* 32px */
+  --titanium-space-10: 2.5rem;   /* 40px */
+  --titanium-space-12: 3rem;     /* 48px */
+  --titanium-space-16: 4rem;     /* 64px */
+  --titanium-space-20: 5rem;     /* 80px */
+  --titanium-space-24: 6rem;     /* 96px */
+  
+  /* ═══════════════════════════════════════════════════════════════ */
+  /* ELEVATION — Subtle Shadows for Depth                              */
+  /* ═══════════════════════════════════════════════════════════════ */
+  
+  --titanium-shadow-none: none;
+  --titanium-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --titanium-shadow-base: 0 2px 4px rgba(0, 0, 0, 0.4);
+  --titanium-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5);
+  --titanium-shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.6);
+  --titanium-shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.7);
+  --titanium-shadow-2xl: 0 16px 32px rgba(0, 0, 0, 0.8);
+  
+  /* Focus shadow - WCAG 2.2: 3px solid, 3:1 contrast */
+  --titanium-shadow-focus: 0 0 0 3px rgba(209, 213, 219, 0.5);
+  
+  /* Metallic glow shadow */
+  --titanium-shadow-metal: 0 0 20px rgba(255, 255, 255, 0.1);
+  
+  /* ═══════════════════════════════════════════════════════════════ */
+  /* BORDER RADIUS — 16px Base for Premium Feel                        */
+  /* ═══════════════════════════════════════════════════════════════ */
+  
+  --titanium-radius-none: 0;
+  --titanium-radius-sm: 8px;
+  --titanium-radius-base: 16px;
+  --titanium-radius-lg: 24px;
+  --titanium-radius-xl: 32px;
+  --titanium-radius-full: 9999px;
+  
+  /* ═══════════════════════════════════════════════════════════════ */
+  /* TRANSITIONS — Smooth, Performant Animations                       */
+  /* ═══════════════════════════════════════════════════════════════ */
+  
+  --titanium-transition-fast: 120ms cubic-bezier(0.4, 0, 0.2, 1);
+  --titanium-transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --titanium-transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Easing functions */
+  --titanium-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --titanium-ease-decelerate: cubic-bezier(0, 0, 0.2, 1);
+  --titanium-ease-accelerate: cubic-bezier(0.4, 0, 1, 1);
+  
+  /* ═══════════════════════════════════════════════════════════════ */
+  /* Z-INDEX — Layering Hierarchy                                      */
+  /* ═══════════════════════════════════════════════════════════════ */
+  
+  --titanium-z-base: 0;
+  --titanium-z-dropdown: 1000;
+  --titanium-z-sticky: 1100;
+  --titanium-z-fixed: 1200;
+  --titanium-z-modal-backdrop: 1300;
+  --titanium-z-modal: 1400;
+  --titanium-z-popover: 1500;
+  --titanium-z-tooltip: 1600;
+  --titanium-z-toast: 1700;
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* DARK MODE OVERRIDES (If light mode is ever added)                 */
+/* ═══════════════════════════════════════════════════════════════ */
+
+/* Currently not needed - TITANE∞ is dark-first */
+/* Prepared for future theme switching */
+
+.light-mode {
+  /* Future: Light mode color overrides */
+  /* Not implemented in Titanium Dark v1.0 */
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* ACCESSIBILITY — Reduced Motion                                     */
+/* ═══════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --titanium-transition-fast: 0ms;
+    --titanium-transition-base: 0ms;
+    --titanium-transition-slow: 0ms;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* UTILITIES — Common Patterns                                        */
+/* ═══════════════════════════════════════════════════════════════ */
+
+/* Glass morphism utility */
+.titanium-glass {
+  background: var(--titanium-surface-glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.titanium-glass-strong {
+  background: var(--titanium-surface-frosted);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Metallic sheen utility (use sparingly) */
+.titanium-metal-sheen {
+  background: var(--titanium-metal-sheen);
+}
+
+.titanium-metal-glow {
+  box-shadow: var(--titanium-metal-glow);
+}
+
+/* Focus ring utility (WCAG 2.2 compliant) */
+.titanium-focus-ring:focus-visible {
+  outline: none;
+  box-shadow: var(--titanium-shadow-focus);
+}
+
+/* Scrollbar styling */
+.titanium-scrollbar::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.titanium-scrollbar::-webkit-scrollbar-track {
+  background: var(--titanium-bg-base);
+}
+
+.titanium-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--titanium-bg-interactive);
+  border-radius: var(--titanium-radius-sm);
+}
+
+.titanium-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--titanium-bg-overlay);
+}
