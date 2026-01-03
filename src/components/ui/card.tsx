@@ -1,19 +1,35 @@
 /**
- * TITANE∞ v19.4 — Card Component
- * Container component for grouping content
+ * TITANE∞ v26.2.0 — Card Component (Titanium Dark)
+ * Container component with Titanium Dark design system
+ * Elevated surface with subtle shadows and borders
  * @license MIT
  */
 
 import React from 'react';
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  hoverable?: boolean;
+  elevated?: boolean;
   children: React.ReactNode;
 }
 
-export function Card({ className = '', children, ...props }: CardProps) {
+export function Card({ 
+  className = '', 
+  hoverable = false,
+  elevated = false,
+  children, 
+  ...props 
+}: CardProps) {
   return (
     <div
-      className={`rounded-lg border bg-white text-gray-900 shadow-sm ${className}`}
+      className={`
+        rounded-lg 
+        bg-titanium-bg-elevated 
+        border border-titanium-border-default 
+        ${elevated ? 'shadow-md' : 'shadow'}
+        ${hoverable ? 'hover:shadow-md hover:bg-titanium-bg-interactive transition-all duration-200 cursor-pointer' : ''}
+        ${className}
+      `}
       {...props}
     >
       {children}
@@ -40,7 +56,7 @@ export function CardTitle({
 }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h3
-      className={`text-2xl font-semibold leading-none tracking-tight ${className}`}
+      className={`text-xl font-semibold leading-tight text-titanium-text-primary ${className}`}
       {...props}
     >
       {children}
@@ -54,7 +70,7 @@ export function CardDescription({
   ...props
 }: React.HTMLAttributes<HTMLParagraphElement>) {
   return (
-    <p className={`text-sm text-gray-500 ${className}`} {...props}>
+    <p className={`text-base text-titanium-text-secondary ${className}`} {...props}>
       {children}
     </p>
   );
