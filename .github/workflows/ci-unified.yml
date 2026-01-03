@@ -35,7 +35,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v6.0.1
 
       - name: 🔧 Enable Corepack (pnpm)
         run: corepack enable
@@ -80,7 +80,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v6.0.1
 
       - name: 🔧 Enable Corepack (pnpm)
         run: corepack enable
@@ -181,7 +181,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v6.0.1
 
       - name: 📁 Ensure dist directory exists
         run: mkdir -p dist
@@ -246,7 +246,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v6.0.1
 
       - name: 🔧 Enable Corepack (pnpm)
         run: corepack enable
@@ -297,7 +297,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v6.0.1
 
       - name: 🔧 Enable Corepack (pnpm)
         run: corepack enable
@@ -373,7 +373,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v6.0.1
 
       - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v4.1.0
