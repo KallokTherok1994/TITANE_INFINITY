@@ -219,7 +219,7 @@ Result: 0 errors ✅ PARFAIT
 ### Build Vite
 
 ```bash
-npm run build
+pnpm run build
 Result: 3326+ modules built in ~14.54s ✅ STABLE
 ```
 

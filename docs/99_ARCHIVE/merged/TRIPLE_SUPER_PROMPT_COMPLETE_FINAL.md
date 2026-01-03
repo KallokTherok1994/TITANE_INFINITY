@@ -139,7 +139,7 @@ TOTAL: ~3400 lignes, 108 KB, 9 fichiers
 
 | # | Objectif | Résultat |
 |---|----------|----------|
-| 1 | Inventaire scripts existants | ✅ scripts/check_system.sh, npm run verify |
+| 1 | Inventaire scripts existants | ✅ scripts/check_system.sh, pnpm run verify |
 | 2 | Design verify:backend | ✅ 3 modes (quick/standard/deep), exit codes 0/1/2/3 |
 | 3 | Commandes health check | ✅ Existantes: quick_health_check, get_full_system_state |
 | 4 | Intégration SelfHeal | ✅ Workflow verify → repair, script repair_backend.sh |
@@ -150,7 +150,7 @@ TOTAL: ~3400 lignes, 108 KB, 9 fichiers
 
 **Scripts Existants**:
 - check_system.sh (143 lignes): Rust/Cargo/Node/pnpm/Tauri/dépendances
-- npm run verify: wrapper existant
+- pnpm run verify: wrapper existant
 
 **Vision verify:backend (3 Modes)**:
 - **Quick** (30s): Environnement + cargo build
@@ -169,7 +169,7 @@ TOTAL: ~3400 lignes, 108 KB, 9 fichiers
 
 **Workflow verify → repair**:
 ```bash
-npm run verify:backend || npm run repair:backend
+pnpm run verify:backend || pnpm run repair:backend
 ```
 
 **Checklist DevOps**:
@@ -179,7 +179,7 @@ npm run verify:backend || npm run repair:backend
 - Si problème: logs → debug-and-self-heal.md → repair:backend
 
 **Roadmap 4 Phases**:
-1. Basique (FAIT): check_system.sh + npm run verify
+1. Basique (FAIT): check_system.sh + pnpm run verify
 2. Backend Focus (5h): verify_backend.sh + repair_backend.sh + 3 modes
 3. Health Check (3h): get_detailed_health_report + frontend integration
 4. CI/CD Local (1sem): Pre-commit hooks + GitHub Actions + rapport HTML
@@ -278,7 +278,7 @@ npm run verify:backend || npm run repair:backend
 - ✅ 3 modes adaptatifs
 
 **DevOps** ✅:
-- ✅ 1 commande: npm run verify:backend
+- ✅ 1 commande: pnpm run verify:backend
 - ✅ Exit codes clairs (0/1/2/3)
 - ✅ Checklists commit/push/release
 - ✅ Workflow verify → repair → SelfHeal
@@ -306,7 +306,7 @@ log::info!("[Perf] {} took {}ms", job_name, start.elapsed().as_millis());
 
 3. **DevOps Check**:
 ```bash
-npm run verify  # Check système existant
+pnpm run verify  # Check système existant
 ```
 
 4. **Health Check** (si app lancée):

@@ -106,7 +106,7 @@ chmod +x TITANE_POST_INSTALL_UBUNTU.sh
 
 # 4. Démarrer
 cd ~/Projets/TITANE_INFINITY
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 ### Scénario 2 : Restauration depuis backup
@@ -187,7 +187,7 @@ patchelf
 
 ### Phase 8 : Dépendances projet
 
-- `npm install`
+- `pnpm install`
 - `cargo build`
 
 ### Phase 9 : Validation
@@ -330,12 +330,12 @@ Après installation réussie :
 4. **Lancer en développement**
 
    ```bash
-   npm run tauri dev
+   pnpm run tauri dev
    ```
 
 5. **Build de production**
    ```bash
-   npm run tauri build
+   pnpm run tauri build
    ```
 
 ---

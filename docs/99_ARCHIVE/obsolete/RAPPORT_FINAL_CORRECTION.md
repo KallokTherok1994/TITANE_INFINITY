@@ -89,9 +89,9 @@ Building [======>                  ] 146/476
 - Libère automatiquement port 5173
 - Configure Rust/Cargo (PATH)
 - Configure Node.js (nvm)
-- Vérifie dépendances (npm install si besoin)
+- Vérifie dépendances (pnpm install si besoin)
 - Build frontend si absent (dist/)
-- Lance `npm run tauri dev` avec logs
+- Lance `pnpm run tauri dev` avec logs
 
 **Statut**: ✅ FONCTIONNEL - Compilation en cours
 

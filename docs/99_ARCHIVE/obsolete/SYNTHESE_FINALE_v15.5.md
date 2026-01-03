@@ -243,7 +243,7 @@ Contient :
 #### Compilation :
 ```bash
 ✅ TypeScript : Nouvelles pages compilent (erreurs mineures anciennes fichiers)
-✅ Vite Build : npm run build réussi (953ms, 77 modules)
+✅ Vite Build : pnpm run build réussi (953ms, 77 modules)
 ✅ Rust Backend : cargo check OK (0 errors, 78 warnings non-critiques)
 ```
 

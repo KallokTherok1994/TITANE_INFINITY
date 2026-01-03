@@ -77,7 +77,7 @@
 rm -rf dist/
 
 # Build production optimisé
-npm run build
+pnpm run build
 
 # Vérifier output
 ls -lh dist/
@@ -152,7 +152,7 @@ cat MEMORY_PROFILING_REPORT_v19.5.1.md
 sudo apt-get install -y libfuse2
 
 # Build AppImage
-npm run tauri build -- --target appimage
+pnpm run tauri build -- --target appimage
 
 # Localisation output
 ls -lh src-tauri/target/release/bundle/appimage/
@@ -167,7 +167,7 @@ chmod +x src-tauri/target/release/bundle/appimage/titane-infinity_*.AppImage
 
 ```bash
 # Build .deb
-npm run tauri build -- --target deb
+pnpm run tauri build -- --target deb
 
 # Localisation output
 ls -lh src-tauri/target/release/bundle/deb/
@@ -184,7 +184,7 @@ titane-infinity --version
 
 ```bash
 # Build .dmg (sur macOS uniquement)
-npm run tauri build -- --target dmg
+pnpm run tauri build -- --target dmg
 
 # Localisation output
 ls -lh src-tauri/target/release/bundle/dmg/
@@ -199,7 +199,7 @@ codesign --deep --force --verify --verbose --sign "Developer ID Application: You
 
 ```bash
 # Build .msi (sur Windows uniquement, ou cross-compilation)
-npm run tauri build -- --target msi
+pnpm run tauri build -- --target msi
 
 # Localisation output
 dir src-tauri\target\release\bundle\msi\
@@ -218,7 +218,7 @@ signtool sign /f certificate.pfx /p password /tr http://timestamp.digicert.com \
 
 ```bash
 # Lancer application en mode production
-npm run tauri build -- --debug
+pnpm run tauri build -- --debug
 ./src-tauri/target/debug/titane-infinity
 
 # Tests manuels critiques:
@@ -233,7 +233,7 @@ npm run tauri build -- --debug
 
 ```bash
 # Suite complète tests (avant packaging)
-npm test
+pnpm test
 
 # Vérifier pass rate
 # Attendu: 1854/1888 passing (98.2%)
@@ -298,11 +298,11 @@ cargo outdated
 
 ```bash
 # 1. Clean builds précédents
-npm run clean
+pnpm run clean
 cargo clean --manifest-path src-tauri/Cargo.toml --release
 
 # 2. Build frontend
-npm run build
+pnpm run build
 # Attendu: ✓ 1071 modules transformed, dist/ created (4.7MB)
 
 # 3. Build backend
@@ -318,10 +318,10 @@ cargo build --release --manifest-path src-tauri/Cargo.toml
 
 ```bash
 # Linux AppImage (recommandé pour portabilité)
-npm run tauri build -- --target appimage
+pnpm run tauri build -- --target appimage
 
 # Ou .deb (pour distributions Debian/Ubuntu)
-npm run tauri build -- --target deb
+pnpm run tauri build -- --target deb
 
 # Vérifier checksums
 sha256sum src-tauri/target/release/bundle/appimage/titane-infinity_*.AppImage
@@ -450,11 +450,11 @@ git tag -l "v*" | tail -5
 git checkout v19.5.1
 
 # 3. Rebuild production
-npm run build
+pnpm run build
 cargo build --release --manifest-path src-tauri/Cargo.toml
 
 # 4. Re-package
-npm run tauri build -- --target appimage
+pnpm run tauri build -- --target appimage
 
 # 5. Deploy hotfix
 # (Même procédure Phase 5: Distribution)
@@ -644,7 +644,7 @@ Voir [docs/user/installation.md](docs/user/installation.md)
 - [ ] Documentation: 1800+ lignes ✅
 
 ### Build Production
-- [ ] `npm run build` (frontend)
+- [ ] `pnpm run build` (frontend)
 - [ ] `cargo build --release` (backend)
 - [ ] Profiling script exécuté
 - [ ] Checksums générés (SHA256)
@@ -773,12 +773,12 @@ echo "🚀 Starting TITANE∞ v19.5.2 deployment..."
 
 # 1. Clean builds
 echo "📦 Cleaning previous builds..."
-npm run clean
+pnpm run clean
 cargo clean --manifest-path src-tauri/Cargo.toml --release
 
 # 2. Build frontend
 echo "🎨 Building frontend..."
-npm run build
+pnpm run build
 
 # 3. Build backend
 echo "🦀 Building backend..."
@@ -790,7 +790,7 @@ echo "📊 Running memory profiling..."
 
 # 5. Package
 echo "📦 Packaging AppImage..."
-npm run tauri build -- --target appimage
+pnpm run tauri build -- --target appimage
 
 # 6. Checksums
 echo "🔐 Generating checksums..."
@@ -834,13 +834,13 @@ jobs:
           sudo apt-get install -y libwebkit2gtk-4.0-dev build-essential curl wget libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
       
       - name: Build Frontend
-        run: npm ci && npm run build
+        run: pnpm install --frozen-lockfile && pnpm run build
       
       - name: Build Backend
         run: cargo build --release --manifest-path src-tauri/Cargo.toml
       
       - name: Package AppImage
-        run: npm run tauri build -- --target appimage
+        run: pnpm run tauri build -- --target appimage
       
       - name: Generate Checksums
         run: |

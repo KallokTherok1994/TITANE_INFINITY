@@ -84,10 +84,10 @@ lto = true
   - Conforme à Tauri v2.9.0 API
 
 ### 6. **Build et Validation**
-- ✅ `npm install` — 929 packages, 0 vulnérabilités
-- ✅ `npm run build` — Frontend compilé (4.09s)
+- ✅ `pnpm install` — 929 packages, 0 vulnérabilités
+- ✅ `pnpm run build` — Frontend compilé (4.09s)
 - ✅ `cargo check` — Backend Rust compilé (44.56s)
-- ✅ `npm run type-check` — TypeScript OK (0 erreurs)
+- ✅ `pnpm run type-check` — TypeScript OK (0 erreurs)
 
 ---
 
@@ -151,18 +151,18 @@ sudo sysctl -p
 
 ### **Lancer le mode développement**
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### **Builder en production**
 ```bash
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ### **Vérifier le code**
 ```bash
-npm run type-check        # TypeScript
-npm run lint              # ESLint
+pnpm run type-check        # TypeScript
+pnpm run lint              # ESLint
 cargo clippy              # Rust linting
 ```
 
@@ -206,11 +206,11 @@ TITANE_INFINITY/
 3. **Augmenter watchers inotify** (optionnel mais recommandé)
 4. **Tester en mode dev:**
    ```bash
-   npm run tauri:dev
+   pnpm run tauri:dev
    ```
 5. **Tester le build complet:**
    ```bash
-   npm run tauri:build
+   pnpm run tauri:build
    ```
 
 ---

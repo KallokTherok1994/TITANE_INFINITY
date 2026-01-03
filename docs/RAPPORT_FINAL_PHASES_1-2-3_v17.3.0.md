@@ -453,7 +453,7 @@ La fusion Design System v12+v20 effectuée lors d'une session précédente a ré
 
 #### Test 1 : Chat IA Fallback
 ```bash
-npm run build && npm run dev
+pnpm run build && pnpm run dev
 # http://localhost:5173
 # F12 Console
 # Chat IA → "test"
@@ -480,7 +480,7 @@ npm run build && npm run dev
 #### Test 2 : Commandes Tauri (après rebuild Rust)
 ```bash
 cd src-tauri && cargo build
-npm run dev
+pnpm run dev
 # Observer console
 ```
 
@@ -491,7 +491,7 @@ npm run dev
 
 #### Test 3 : Lisibilité Chat
 ```bash
-npm run dev
+pnpm run dev
 # http://localhost:5173
 # Envoyer 3-5 messages chat
 ```
@@ -554,7 +554,7 @@ npm run dev
    ```bash
    # https://ai.google.dev
   VITE_GEMINI_API_KEY=YOUR_GEMINI_API_KEY
-   npm run dev
+   pnpm run dev
    ```
 
 2. **Ollama Local** (privé, offline)
@@ -615,4 +615,4 @@ npm run dev
 **Bundle size** : ✅ 391 kB (gzip 112 kB)
 **Tests requis** : ✅ Chat < 3s, 0 erreur console, lisible
 
-**Prêt pour npm run dev → Tests utilisateurs finaux** 🚀
+**Prêt pour pnpm run dev → Tests utilisateurs finaux** 🚀

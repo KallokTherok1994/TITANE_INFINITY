@@ -275,7 +275,7 @@ export const createLogger = (prefix: string) => ({
 ### Build Validation
 
 ```bash
-npm run build
+pnpm run build
 # ✓ built in 13.98s
 # Bundle: 5.3M (unchanged)
 # Warnings: 2 (pre-existing: metricsEngine/autoHealEngine references)

@@ -678,7 +678,7 @@ pub async fn devops_run(command: String) -> Result<String, String> {
 **Solution**: Whitelist commandes autorisées
 
 ```rust
-const ALLOWED_COMMANDS: &[&str] = &["cargo check", "npm run build"];
+const ALLOWED_COMMANDS: &[&str] = &["cargo check", "pnpm run build"];
 
 if !ALLOWED_COMMANDS.contains(&command.as_str()) {
     return Err("Command not allowed".to_string());

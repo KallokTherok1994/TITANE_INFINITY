@@ -164,7 +164,7 @@ L'**Engine ultime** qui unifie **tous les 20 moteurs** en un seul état global c
 - ✅ **554 KB dist/** — bundle optimisé
 - ✅ **0 erreurs** — build production OK
 
-**npm install** :
+**pnpm install** :
 - ✅ **331 packages** installés
 - ✅ **0 vulnérabilités** — dépendances sécurisées
 - ✅ **0 warnings** critiques

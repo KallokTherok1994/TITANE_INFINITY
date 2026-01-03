@@ -181,7 +181,7 @@ Réduction totale: -100% (98 → 0)
 
 ### Commande
 ```bash
-npm run build
+pnpm run build
 ```
 
 ### Résultat
@@ -253,7 +253,7 @@ selfheal.scan, selfheal.heal, selfheal.rebuild
 ### Tests Runtime (Immédiat)
 ```bash
 # 1. Test application Tauri
-npm run tauri:dev
+pnpm run tauri:dev
 
 # 2. Vérifier UI sans Design System
 # 3. Tester commandes sudo désactivées
@@ -354,7 +354,7 @@ npm run tauri:dev
 
 ```bash
 # Test runtime immédiat
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ---

@@ -61,11 +61,11 @@ export class TitaneVisualEngine extends EventEmitter {
     config: Partial<VisualEngineConfig> = {}
   ): TitaneVisualEngine {
     const viteEnv = (import.meta as unknown as { env?: Record<string, unknown> }).env;
-    const viteMode = typeof viteEnv?.MODE === 'string' ? viteEnv.MODE : undefined;
+    const viteMode = typeof viteEnv?.['MODE'] === 'string' ? viteEnv['MODE'] : undefined;
 
     const isVitest =
-      typeof process !== 'undefined' && typeof process.env?.VITEST === 'string';
-    const isNodeTest = typeof process !== 'undefined' && process.env?.NODE_ENV === 'test';
+      typeof process !== 'undefined' && typeof process.env?.['VITEST'] === 'string';
+    const isNodeTest = typeof process !== 'undefined' && process.env?.['NODE_ENV'] === 'test';
     const isTestEnv = viteMode === 'test' || isVitest || isNodeTest;
 
     // En tests, on évite les fuites d'état d'un singleton entre suites.

@@ -44,9 +44,9 @@ fuser -k 5173/tcp
 **Essai #3** - Lancement manuel Vite puis Tauri:
 
 ```bash
-npm run vite:dev &  # Background
+pnpm run vite:dev &  # Background
 sleep 3
-npm run tauri dev --no-watch
+pnpm run tauri dev --no-watch
 ```
 
 - **Résultat**: Vite OK, Tauri re-lance Vite → conflit
@@ -55,7 +55,7 @@ npm run tauri dev --no-watch
 **Essai #4** - Direct npm tauri:
 
 ```bash
-npm run tauri dev -- --no-watch
+pnpm run tauri dev -- --no-watch
 ```
 
 - **Status**: Compilation Cargo en cours (716/717 packages)
@@ -69,7 +69,7 @@ npm run tauri dev -- --no-watch
 ```json
 {
   "build": {
-    "beforeDevCommand": "npm run vite:dev", // Lance Vite
+    "beforeDevCommand": "pnpm run vite:dev", // Lance Vite
     "devUrl": "http://localhost:5173"
   }
 }
@@ -78,16 +78,16 @@ npm run tauri dev -- --no-watch
 **Conflit**: Script `run-dev.sh` lance AUSSI Vite avant Tauri:
 
 ```bash
-npm run vite:dev > runtime/dev/logs/vite.log 2>&1 &
+pnpm run vite:dev > runtime/dev/logs/vite.log 2>&1 &
 sleep 3
-npm run tauri dev -- --no-watch  # Re-lance Vite via beforeDevCommand
+pnpm run tauri dev -- --no-watch  # Re-lance Vite via beforeDevCommand
 ```
 
 **Solutions Possibles** (non testées):
 
 1. Modifier `run-dev.sh` pour ne PAS lancer Vite
 2. Modifier `tauri.conf.json` pour retirer `beforeDevCommand`
-3. Utiliser directement `npm run tauri dev` (sans script wrapper)
+3. Utiliser directement `pnpm run tauri dev` (sans script wrapper)
 
 **Décision**: Procéder à validation théorique basée sur:
 

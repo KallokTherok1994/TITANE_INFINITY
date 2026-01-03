@@ -31,7 +31,7 @@
 
 ### 1. Démarrer
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### 2. Configurer

@@ -225,8 +225,8 @@ logger.info('Action complete', { module: 'Module' });
 ### Checks Passed ✅
 
 ```bash
-npm run check       # ✅ 0 TypeScript errors
-npm run lint        # ✅ 0 ESLint warnings
+pnpm run check       # ✅ 0 TypeScript errors
+pnpm run lint        # ✅ 0 ESLint warnings
 git status          # ✅ Clean working tree
 git log -1          # ✅ Commit b6b78e17
 ```

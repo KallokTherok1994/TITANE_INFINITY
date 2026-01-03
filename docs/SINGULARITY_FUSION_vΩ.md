@@ -686,11 +686,11 @@ Avatar Sync: < 16ms (1 frame @ 60fps)
 
 **1. Tests unitaires (100+ interactions)**
 ```bash
-npm run test -- SingularityFusionEngine
-npm run test -- UnifiedCognitivePipeline
-npm run test -- AutoFixEngine
-npm run test -- AutoHealEngine
-npm run test -- StateIntegrityEngine
+pnpm run test -- SingularityFusionEngine
+pnpm run test -- UnifiedCognitivePipeline
+pnpm run test -- AutoFixEngine
+pnpm run test -- AutoHealEngine
+pnpm run test -- StateIntegrityEngine
 ```
 
 **2. Tests d'intégration**
@@ -828,9 +828,9 @@ Créer fichiers dans `src-tauri/src/`:
 ### 3. Tests unitaires 🧪
 
 ```bash
-npm run test -- src/core/singularity/
-npm run test -- src/core/pipelines/
-npm run test -- src/core/healing/
+pnpm run test -- src/core/singularity/
+pnpm run test -- src/core/pipelines/
+pnpm run test -- src/core/healing/
 ```
 
 ### 4. Intégration complète 🔗

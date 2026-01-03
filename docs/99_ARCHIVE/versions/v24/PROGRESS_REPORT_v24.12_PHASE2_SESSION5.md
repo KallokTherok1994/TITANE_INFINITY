@@ -260,7 +260,7 @@ AppearanceMaterialMap {
 
 ### TypeScript Compilation
 ```bash
-$ npm run type-check
+$ pnpm run type-check
 # Modules avatar/floating: ✅ 0 errors
 ```
 
@@ -272,7 +272,7 @@ $ npm run type-check
 
 ### Unit Tests (21 tests)
 ```bash
-$ npm test appearanceFloatingIntegration.test.ts
+$ pnpm test appearanceFloatingIntegration.test.ts
 # ✅ 21/21 tests passed
 ```
 

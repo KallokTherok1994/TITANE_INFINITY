@@ -152,7 +152,7 @@ src-tauri/src/
 
 ### Frontend Build
 ```bash
-npm run build
+pnpm run build
 ├── TypeScript Compilation: ✅ (37 warnings, 0 errors)
 ├── Vite Bundling: ✅
 ├── Output: dist/ (1.89 MB)

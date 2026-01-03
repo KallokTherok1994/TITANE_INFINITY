@@ -195,7 +195,7 @@ media-src 'self' asset: blob: mediastream:
 1. **Tester en mode dev:**
 
    ```bash
-   npm run dev
+   pnpm run dev
    # Puis ouvrir DevTools et tester:
    await window.__TAURI__.invoke('get_audio_output_devices')
    ```

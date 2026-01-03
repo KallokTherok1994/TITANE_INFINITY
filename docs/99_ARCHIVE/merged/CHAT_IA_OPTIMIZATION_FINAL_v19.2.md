@@ -203,7 +203,7 @@
 
 ### Démarrer l'application
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### Tester le Chat IA

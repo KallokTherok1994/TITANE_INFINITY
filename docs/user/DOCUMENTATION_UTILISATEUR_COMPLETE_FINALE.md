@@ -305,7 +305,7 @@ corepack pnpm install
 
 ```bash
 # Mode Développement (Titan-Dev)
-npm run dev:tauri
+pnpm run dev:tauri
 
 # Mode Production (Titan-Stable)
 ./runtime/stable/build.sh
@@ -1311,7 +1311,7 @@ tail -f ~/.titane/logs/app.log
 
 ```bash
 # Vérifier santé système
-npm run titane:health
+pnpm run titane:health
 
 # Voir les logs
 tail -f ~/.titane/logs/app.log

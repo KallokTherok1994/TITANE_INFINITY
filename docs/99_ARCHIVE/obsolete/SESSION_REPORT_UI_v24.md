@@ -277,7 +277,7 @@ useEffect(() => {
 
 ### Court terme (1-3 jours)
 1. **Tester dans navigateur**
-   - Lancer `npm run dev`
+   - Lancer `pnpm run dev`
    - Naviguer vers `/devtools`
    - Valider comportement temps réel
    - Profiler performance

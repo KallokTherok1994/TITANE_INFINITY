@@ -235,7 +235,7 @@ grep -r "test.skip\|describe.skip\|it.skip" src/ --include="*.test.ts*"
 ### Bundle Analysis (à effectuer)
 
 ```bash
-npm run build
+pnpm run build
 npx vite-bundle-visualizer
 ```
 

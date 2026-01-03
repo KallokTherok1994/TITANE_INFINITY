@@ -230,7 +230,7 @@ Bundle:               Optimized (-42KB)
 1. **Tester en Dev**
 
    ```bash
-   npm run dev
+   pnpm run dev
    # Chercher le bouton "🔮 Predictive AI"
    # Observer les prédictions temps réel
    ```
@@ -238,7 +238,7 @@ Bundle:               Optimized (-42KB)
 2. **Valider le Build**
 
    ```bash
-   npm run build
+   pnpm run build
    # ✅ Should complete in ~22s
    # ✅ Check dist/ size (11M)
    ```

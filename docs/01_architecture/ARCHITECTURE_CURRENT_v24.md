@@ -485,7 +485,7 @@ global_coherence = (
 ```bash
 ./runtime/dev/run-dev.sh
 # ou
-npm run dev
+pnpm run dev
 ```
 
 ### Titan-Stable (Production)
@@ -504,7 +504,7 @@ npm run dev
 ```bash
 ./runtime/stable/build.sh
 # ou
-npm run build:prod
+pnpm run build:prod
 ```
 
 ---
@@ -584,11 +584,11 @@ tests/
 
 | Commande | Description |
 |----------|-------------|
-| `npm run test` | Vitest (unit + integration) |
-| `npm run test:e2e` | Playwright E2E |
-| `npm run test:rust` | Cargo test (backend) |
-| `npm run test:all` | TOUS les tests |
-| `npm run test:coverage` | Coverage report |
+| `pnpm run test` | Vitest (unit + integration) |
+| `pnpm run test:e2e` | Playwright E2E |
+| `pnpm run test:rust` | Cargo test (backend) |
+| `pnpm run test:all` | TOUS les tests |
+| `pnpm run test:coverage` | Coverage report |
 
 ---
 

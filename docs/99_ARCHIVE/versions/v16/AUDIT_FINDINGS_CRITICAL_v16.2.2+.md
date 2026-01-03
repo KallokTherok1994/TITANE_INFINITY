@@ -42,10 +42,10 @@
 pub async fn devops_run(cmd: String) -> Result<String, String> {
     // ✅ WHITELIST STRICTE (12 commandes autorisées)
     let allowed_commands = vec![
-        "npm run build",
-        "npm run type-check",
-        "npm run test",
-        "npm run clean",
+        "pnpm run build",
+        "pnpm run type-check",
+        "pnpm run test",
+        "pnpm run clean",
         "cargo check",
         "cargo clippy",
         "cargo build",

@@ -34,13 +34,13 @@ titane → titane.sh   # Pour utiliser simplement: ./titane [commande]
 8 nouveaux scripts npm ajoutés:
 
 ```bash
-npm run titane:health
-npm run titane:clean
-npm run titane:repair
-npm run titane:fix
-npm run titane:build
-npm run titane:deploy
-npm run titane:full
+pnpm run titane:health
+pnpm run titane:clean
+pnpm run titane:repair
+pnpm run titane:fix
+pnpm run titane:build
+pnpm run titane:deploy
+pnpm run titane:full
 ```
 
 ### **4. Documentation complète**
@@ -142,7 +142,7 @@ $ ./titane help
 ### ✅ **npm Integration validée**
 
 ```bash
-$ npm run titane:health
+$ pnpm run titane:health
 [Fonctionne parfaitement]
 ```
 
@@ -205,7 +205,7 @@ runtime/stable/
 1. ✅ Script Titane créé et testé
 2. 🔄 **Corriger les erreurs TypeScript** (~45 erreurs)
    ```bash
-   npm run check  # Voir la liste complète
+   pnpm run check  # Voir la liste complète
    ```
 3. 🔄 **Tester le build complet**
    ```bash

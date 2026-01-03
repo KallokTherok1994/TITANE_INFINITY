@@ -78,12 +78,12 @@ Il doit être exécuté dans un **terminal natif Pop!_OS**.
 ### Test compilation Tauri
 ```bash
 cd ~/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run tauri build
+pnpm run tauri build
 ```
 
 ### Lancement développement
 ```bash
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 ### Si erreur WebKitGTK
@@ -101,9 +101,9 @@ cat src-tauri/Cargo.toml | grep webkit2gtk
 
 ### 1. Mode Frontend-Only (ACTUEL) ✅
 ```bash
-npm run dev         # Dev :5173
-npm run build       # Production
-npm run preview     # Preview :4173
+pnpm run dev         # Dev :5173
+pnpm run build       # Production
+pnpm run preview     # Preview :4173
 ```
 
 **Avantages** :
@@ -193,7 +193,7 @@ export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig
 - [ ] Exécuté `bash install-webkit-popos.sh`
 - [ ] Installation réussie (WebKitGTK 4.0 ou 4.1)
 - [ ] Test `pkg-config --modversion webkit2gtk-4.0` OK
-- [ ] Test `npm run tauri dev` OK
+- [ ] Test `pnpm run tauri dev` OK
 - [ ] Application desktop lancée ✅
 
 ---

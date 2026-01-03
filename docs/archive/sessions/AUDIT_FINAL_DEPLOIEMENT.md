@@ -25,7 +25,7 @@
 |----------|--------|------|
 | `./titane health` | ✅ PASS | Diagnostic système complet |
 | `./titane help` | ✅ PASS | Documentation affichée |
-| `npm run titane:health` | ✅ PASS | Intégration npm |
+| `pnpm run titane:health` | ✅ PASS | Intégration npm |
 | Syntaxe Bash | ✅ PASS | Aucune erreur |
 
 ---
@@ -45,7 +45,7 @@
 ```
 
 ### **Test d'Exécution**
-- ✅ `npm run titane:health` → Fonctionne parfaitement
+- ✅ `pnpm run titane:health` → Fonctionne parfaitement
 - ✅ Logging dans `logs/titane_TIMESTAMP.log`
 - ✅ Codes de sortie appropriés
 

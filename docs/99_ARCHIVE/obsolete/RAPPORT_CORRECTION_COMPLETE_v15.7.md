@@ -104,7 +104,7 @@ src/pages/DevTools.tsx          # Reconstruction v15.7 (5.2 KB)
 ## 🧪 VALIDATION BUILD
 
 ```bash
-$ npm run build
+$ pnpm run build
 
 ✓ Type-check TypeScript : 0 errors
 ✓ Vite build : 1.35s
@@ -224,7 +224,7 @@ export const ModuleName = () => {
 ### **Phase 1 : Test Visuel**
 ```bash
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run tauri dev
+pnpm run tauri dev
 ```
 - [ ] Vérifier le rendu glass morphism sur chaque page
 - [ ] Confirmer absence de "Unknown" et "0%" (remplacés par vraies valeurs backend)

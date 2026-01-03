@@ -114,7 +114,7 @@ M src/services/cognitive/LocalEmbeddingGenerator.ts (minor)
 
 ```bash
 cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
-npm run dev
+pnpm run dev
 # Puis ouvrir DevTools (F12) dans la fenêtre Tauri
 ```
 
@@ -161,7 +161,7 @@ Nettoyage complet des processus + vérification approfondie
 
 ## 🎯 PROCHAINES ÉTAPES
 
-1. ✅ Lancer TITANE avec `npm run dev`
+1. ✅ Lancer TITANE avec `pnpm run dev`
 2. ✅ Vérifier DevTools (F12) - pas d'erreurs attendues
 3. ✅ Tester fonctionnalités principales
 4. ✅ Continuer développement selon roadmap

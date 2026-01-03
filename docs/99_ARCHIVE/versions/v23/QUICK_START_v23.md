@@ -312,7 +312,7 @@ htop
 2. Disable expression colors (modify CSS)
 3. Check CPU usage with `htop` or Activity Monitor
 4. Close other resource-intensive applications
-5. Use production build: `npm run build` + `npm run tauri:build`
+5. Use production build: `pnpm run build` + `pnpm run tauri:build`
 
 ---
 

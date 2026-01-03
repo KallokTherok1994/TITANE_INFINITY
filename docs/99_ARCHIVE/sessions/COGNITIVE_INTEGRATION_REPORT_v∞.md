@@ -233,7 +233,7 @@ localStorage.setItem('titane-cognitive-layout-history', ...)
 
 ### ✅ Tests de Compilation
 ```bash
-npm run type-check
+pnpm run type-check
 # ✅ 0 errors - Compilation TypeScript réussie
 ```
 

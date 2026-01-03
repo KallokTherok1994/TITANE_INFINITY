@@ -301,8 +301,8 @@ describe('useAudioSettings', () => {
 
 ## ✅ VALIDATION CHECKLIST
 
-- [x] Type-check passes (`npm run type-check`)
-- [x] Application runs (`npm run tauri:dev`)
+- [x] Type-check passes (`pnpm run type-check`)
+- [x] Application runs (`pnpm run tauri:dev`)
 - [x] All voice components use unified hooks
 - [x] Legacy hooks deprecated
 - [x] Guard-fous in voiceService

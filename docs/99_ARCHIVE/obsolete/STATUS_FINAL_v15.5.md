@@ -51,7 +51,7 @@ npx tsc --noEmit
 ### Vite Build
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 **Statut**: 🟡 TypeScript strict bloque build  
@@ -134,7 +134,7 @@ npm run build
 
 3. **Build production**:
    ```bash
-   npm run tauri:build
+   pnpm run tauri:build
    ```
 
 ---
@@ -166,18 +166,18 @@ npm run build
 
 ### Développement
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### Production
 ```bash
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ### Tests
 ```bash
-npm run type-check
-npm run build
+pnpm run type-check
+pnpm run build
 ```
 
 ---

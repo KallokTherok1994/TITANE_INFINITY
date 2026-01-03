@@ -298,7 +298,7 @@ private async cognitiveLoopTick(): void {
 ### Test 1: TypeScript Compilation
 
 ```bash
-npm run type-check
+pnpm run type-check
 ```
 **Résultat**: ✅ **0 errors**
 

@@ -318,7 +318,7 @@ Performance = (100 - Memory%) × 0.25
 **Mitigation:**
 - Incremental builds: `tsc --incremental`
 - Type isolation: avoid `any`, use strict types
-- Build validation: run `npm run build` after each major change
+- Build validation: run `pnpm run build` after each major change
 - Rollback plan: Git branch per week, revert if build breaks >1 hour
 
 **Timeline:** Weeks 2, 5-6 (high refactor risk)
@@ -457,7 +457,7 @@ Performance = (100 - Memory%) × 0.25
 
 **Rollback Process:**
 1. `git checkout week-X-backup` (backup branch created each week)
-2. `npm run build && npm run test` (validate old code still works)
+2. `pnpm run build && pnpm run test` (validate old code still works)
 3. Deploy old version to production
 4. Fix issue offline in `week-X-fix` branch
 5. Merge fix, re-deploy
@@ -675,10 +675,10 @@ Performance = (100 - Memory%) × 0.25
 - Create `src/core/registry/OrchestratorRegistry.ts` (singleton)
 - Break Cycle #1: MCPOrchestrator ↔ CognitiveOmegaOrchestrator
   - Replace direct import with registry lookup
-  - Test: `npm run test` → all pass
+  - Test: `pnpm run test` → all pass
 - Break Cycle #2: CognitiveOmegaOrchestrator ↔ SingularityFusionEngine
   - Replace direct import with registry lookup
-  - Test: `npm run test` → all pass
+  - Test: `pnpm run test` → all pass
 
 **Day 3: Validation**
 - Break Cycle #3: SemanticMemoryEngine ↔ MemoryEngine (if still exists after Week 1)
@@ -850,8 +850,8 @@ Performance = (100 - Memory%) × 0.25
 - [ ] **Interactions:** 190 → ~80 (-58%)
 - [ ] **Test Coverage:** >80% (all code)
 - [ ] **Circular Dependencies:** 3 → 0 (-100%)
-- [ ] **Build Passes:** `npm run build` succeeds
-- [ ] **Linting Passes:** `npm run lint` succeeds
+- [ ] **Build Passes:** `pnpm run build` succeeds
+- [ ] **Linting Passes:** `pnpm run lint` succeeds
 - [ ] **Type Checking Passes:** `tsc --noEmit` succeeds
 
 ### Performance Quality ✅

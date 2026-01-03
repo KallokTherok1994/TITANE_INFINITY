@@ -133,7 +133,7 @@ Total Latency: ~220ms
 1. **Lancer Titan-Dev**
 
    ```bash
-   npm run tauri dev
+   pnpm run tauri dev
    ```
 
 2. **Ouvrir Chat IA** (localiser fenêtre Tauri)
@@ -201,7 +201,7 @@ git tag v19.6.0-omega-singularity
 
 ### Validation (Pending)
 
-- [ ] Runtime launch (npm run tauri dev)
+- [ ] Runtime launch (pnpm run tauri dev)
 - [ ] Test S1 (Baseline)
 - [ ] Test S2 (LTM Trigger)
 - [ ] Test R1 (OMEGA P2 Performance)

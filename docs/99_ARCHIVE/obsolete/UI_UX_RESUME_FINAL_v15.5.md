@@ -285,23 +285,23 @@ ProjectCard.css:74
 
 ### Development
 ```bash
-npm run dev          # Start dev server
-npm run build        # Build production
-npm run preview      # Preview build
+pnpm run dev          # Start dev server
+pnpm run build        # Build production
+pnpm run preview      # Preview build
 ```
 
 ### Testing
 ```bash
-npm run test         # Run tests
-npm run lint         # Run ESLint
-npm run type-check   # TypeScript check
+pnpm run test         # Run tests
+pnpm run lint         # Run ESLint
+pnpm run type-check   # TypeScript check
 ```
 
 ### Backend (nécessite WebKitGTK)
 ```bash
 sudo ./install_system_deps.sh  # Install dependencies
 cd src-tauri && cargo build    # Build backend
-npm run tauri dev              # Full app dev mode
+pnpm run tauri dev              # Full app dev mode
 ```
 
 ---
@@ -354,15 +354,15 @@ L'optimisation UI/UX de **TITANE∞ v15.5** est un **succès complet**.
 ### Next Steps
 ```bash
 # Option 1: Continuer Phase 2 (Accessibilité)
-npm run dev
+pnpm run dev
 # Ajouter ARIA labels, keyboard nav, screen reader
 
 # Option 2: Déployer en production
-npm run build
-npm run tauri build  # (nécessite WebKitGTK)
+pnpm run build
+pnpm run tauri build  # (nécessite WebKitGTK)
 
 # Option 3: Tests utilisateurs
-npm run dev
+pnpm run dev
 # Collecter feedback sur les nouvelles animations
 ```
 

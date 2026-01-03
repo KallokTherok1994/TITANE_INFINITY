@@ -20,7 +20,7 @@ cargo check
 ### **2. COMPILATION FRONTEND**
 
 ```bash
-npm run type-check
+pnpm run type-check
 ```
 
 **✅ ATTENDU :** Pas d'erreurs TypeScript
@@ -30,7 +30,7 @@ npm run type-check
 ### **3. TEST DÉMARRAGE APPLICATION**
 
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 **✅ ATTENDU :** Application démarre sans crash
@@ -268,7 +268,7 @@ Lorsque tous les tests ci-dessus passent :
 
 ```bash
 # Build production
-npm run tauri:build
+pnpm run tauri:build
 
 # Test binaire
 ./src-tauri/target/release/titane-infinity

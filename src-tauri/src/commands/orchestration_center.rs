@@ -657,7 +657,7 @@ fn calculate_harmony_score(flows: &[FlowMetrics], cpu: f32, ram: f32) -> (u8, St
 pub async fn orchestration_get_harmonia() -> CommandResult<HarmoniaState> {
     // Get real CPU/RAM from system
     let mut sys = sysinfo::System::new();
-    sys.refresh_cpu();
+    sys.refresh_cpu_all();
     sys.refresh_memory();
 
     let cpu_usage = sys.cpus().first().map(|c| c.cpu_usage()).unwrap_or(0.0);

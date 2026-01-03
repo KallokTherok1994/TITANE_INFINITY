@@ -12,7 +12,7 @@
 | Composant | Status | Vérification |
 |-----------|--------|--------------|
 | **Versions** | ✅ | v16.1.0 harmonisé (package.json + tauri.conf.json) |
-| **TypeScript** | ✅ | 0 erreurs (npm run type-check) |
+| **TypeScript** | ✅ | 0 erreurs (pnpm run type-check) |
 | **Build** | ✅ | 1.83s, 360 modules, 131 KB gzipped |
 | **Structure** | ✅ | index.html + assets/main.js + assets/main.css |
 | **Fichiers critiques** | ✅ | aiService.ts, offline-first.ts, cloudAPIConfirmation.ts |
@@ -44,7 +44,7 @@
 
 **Commande:**
 ```bash
-npm run build
+pnpm run build
 ```
 
 **Résultat:**
@@ -89,7 +89,7 @@ dist/assets/main-Dcb9geZo.js: 253.05 kB (gzip: 73.37 kB)
 
 **Commande:**
 ```bash
-npm run type-check
+pnpm run type-check
 ```
 
 **Résultat:**
@@ -209,7 +209,7 @@ cp -r dist/* /var/www/html/titane/
 **Après installation WebKit:**
 
 ```bash
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 **Fonctionnalités supplémentaires:**
@@ -413,7 +413,7 @@ cargo build --release  # ~5-10 min
 
 **Étape 3: Générer packages**
 ```bash
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 **Status:** ⏳ **5 MINUTES APRÈS INSTALLATION WEBKIT**

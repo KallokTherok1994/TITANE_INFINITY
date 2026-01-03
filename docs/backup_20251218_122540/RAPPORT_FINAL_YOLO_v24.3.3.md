@@ -251,7 +251,7 @@ await invoke('load_config_preset', { name });
 ### Frontend Build
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 **Résultat**:

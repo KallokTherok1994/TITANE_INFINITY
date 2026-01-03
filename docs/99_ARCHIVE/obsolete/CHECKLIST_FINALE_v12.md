@@ -124,9 +124,9 @@ OPTION 2: Manuel Étape par Étape
 ```bash
 # 1. Frontend
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm install
-npm run type-check
-npm run build
+pnpm install
+pnpm run type-check
+pnpm run build
 
 # 2. Backend
 cd src-tauri
@@ -135,7 +135,7 @@ cargo clippy --fix --allow-dirty
 cargo build --release
 
 # 3. Tauri Bundle
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 Avantages:
@@ -259,7 +259,7 @@ PHASE 1: DÉPENDANCES SYSTÈME
   ☐ Autres dépendances Tauri installées
 
 PHASE 2: BUILD
-  ☐ Frontend compilé (npm run build)
+  ☐ Frontend compilé (pnpm run build)
   ☐ Backend compilé (cargo build --release)
   ☐ Tauri bundle généré
 
@@ -298,7 +298,7 @@ ERREUR: Compilation Rust échoue
 
 ERREUR: Frontend ne build pas
   → Vérifier: node --version (≥ 20.0)
-  → Nettoyer: rm -rf node_modules && npm install
+  → Nettoyer: rm -rf node_modules && pnpm install
 
 WARNINGS Rust persistants
   → Acceptable si dans modules désactivés

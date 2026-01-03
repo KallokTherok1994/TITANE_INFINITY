@@ -55,12 +55,12 @@ echo ""
 # Test 1.1: Lancement TITANE∞
 if ask_confirmation "Voulez-vous lancer TITANE∞ maintenant ?"; then
     show_info "Lancement de TITANE∞ en mode dev..."
-    npm run tauri:dev &
+    pnpm run tauri:dev &
     TITANE_PID=$!
     show_success "TITANE∞ lancé (PID: $TITANE_PID)"
     echo ""
 else
-    show_warning "Lancez manuellement: npm run tauri:dev"
+    show_warning "Lancez manuellement: pnpm run tauri:dev"
     echo ""
 fi
 

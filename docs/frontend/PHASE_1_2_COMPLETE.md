@@ -213,7 +213,7 @@ screens: {
 
 ### Production Build
 ```bash
-npm run build
+pnpm run build
 # ✅ built in 12.81s
 ```
 
@@ -231,7 +231,7 @@ TOTAL GZIPPED: ~650KB (Target: <500KB - optimisations à venir)
 
 ### TypeScript Check
 ```bash
-npm run check
+pnpm run check
 # ⚠️ 81 erreurs TypeScript pré-existantes (non bloquantes)
 # ✅ Aucune erreur liée au Design System
 # ✅ Tokens TypeScript type-safe validés

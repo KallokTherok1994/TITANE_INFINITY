@@ -184,7 +184,7 @@ Backend (Rust + Tauri v2):
 ### Tester Pipeline Chat
 ```bash
 # 1. Build frontend
-npm run build  # 4.64s
+pnpm run build  # 4.64s
 
 # 2. Build backend
 cd src-tauri && cargo build --release  # 1m34s
@@ -218,7 +218,7 @@ grep -n "#\[tauri::command\]" src-tauri/src/overdrive/chat_orchestrator.rs
 ### Compiler
 ```bash
 # Frontend watch mode
-npm run build:watch  # ✅ NOUVEAU v16.1
+pnpm run build:watch  # ✅ NOUVEAU v16.1
 
 # Backend dev mode
 cargo run --features mock  # Mock backend

@@ -29,7 +29,7 @@
 ### ✅ Après (0 warnings)
 
 ```bash
-npm run build
+pnpm run build
 # ✓ 2729 modules transformed
 # ✓ built in 9.17s
 # 0 warnings ✅
@@ -179,11 +179,11 @@ vendor-icons          5.90 kB (gzip: 2.40 kB)    ✅
 
 ```bash
 # Test 1: Build production
-npm run build
+pnpm run build
 # ✅ SUCCESS - 0 warnings
 
 # Test 2: Type check
-npm run type-check
+pnpm run type-check
 # ✅ SUCCESS - 0 errors
 
 # Test 3: Vérification externals

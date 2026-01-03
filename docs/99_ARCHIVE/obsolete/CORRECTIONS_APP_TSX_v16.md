@@ -177,13 +177,13 @@ const Chat = lazy(() => import('./ui/pages/Chat').then(m => ({ default: m.Chat }
 
 ### TypeScript Check ✅
 ```bash
-npm run type-check
+pnpm run type-check
 # ✅ 0 erreurs
 ```
 
 ### Vite Build ✅
 ```bash
-npm run build
+pnpm run build
 # ✅ SUCCESS en 1.22s
 # ✅ dist/index.html         1.56 kB  (gzip:  0.86 kB)
 # ✅ dist/assets/index.css  53.92 kB  (gzip: 10.40 kB)
@@ -295,7 +295,7 @@ Maintenant que `App.tsx` est 100% optimisé, vous pouvez :
 
 1. ✅ **Lancer l'application**
    ```bash
-   npm run dev
+   pnpm run dev
    ```
 
 2. ✅ **Tester la navigation**

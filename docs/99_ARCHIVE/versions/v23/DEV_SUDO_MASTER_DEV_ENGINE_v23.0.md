@@ -224,7 +224,7 @@ User: explain code ChatBubble
 User: auto-import
 → 📦 AUTO-IMPORT — MASTER DEV ENGINE
    🔍 3 imports manquants détectés
-   Solution: npm install @types/framer-motion ...
+   Solution: pnpm install @types/framer-motion ...
 
 User: generate module NotificationEngine
 → 🏗️ GENERATE MODULE — FULL STACK
@@ -233,7 +233,7 @@ User: generate module NotificationEngine
 
 User: run tests
 → 🧪 RUN TESTS — VALIDATION SUITE
-   Frontend (npm run test), Backend (cargo test)
+   Frontend (pnpm run test), Backend (cargo test)
 ```
 
 ### 6. Master Dev Engine — Analyses Avancées

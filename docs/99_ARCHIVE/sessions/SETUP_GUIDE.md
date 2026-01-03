@@ -30,13 +30,13 @@ npm list --depth=0
 ### 2. Test Scripts
 ```bash
 # View current progress
-npm run status
+pnpm run status
 
 # Get next task (copies to clipboard)
-npm run next
+pnpm run next
 
 # Mark task as completed
-npm run update P0-1 completed
+pnpm run update P0-1 completed
 ```
 
 ## Using GitHub Copilot Agents
@@ -52,7 +52,7 @@ Open GitHub Copilot Chat in VSCode and type `@` - you should see:
 ```bash
 # Generate first task prompt
 cd orchestration
-npm run next
+pnpm run next
 
 # This will copy to clipboard:
 # 🎯 TÂCHE P0-1 — Analyse structure complète
@@ -74,10 +74,10 @@ The conductor will:
 ### 5. Update Progress
 ```bash
 # After task completion
-npm run update P0-1 completed
+pnpm run update P0-1 completed
 
 # Get next task
-npm run next
+pnpm run next
 ```
 
 ## Workflow Example
@@ -85,14 +85,14 @@ npm run next
 ```bash
 # Terminal 1: Monitor progress
 cd orchestration
-watch -n 5 npm run status
+watch -n 5 pnpm run status
 
 # Terminal 2: Execute tasks
-npm run next
+pnpm run next
 # Copy prompt, execute with @titane-conductor in Copilot
 # After completion:
-npm run update P0-1 completed
-npm run next
+pnpm run update P0-1 completed
+pnpm run next
 # Repeat...
 ```
 
@@ -107,8 +107,8 @@ npm run next
 ### Scripts not working
 ```bash
 cd orchestration
-npm install  # Reinstall dependencies
-npm run status  # Should work without errors
+pnpm install  # Reinstall dependencies
+pnpm run status  # Should work without errors
 ```
 
 ### TypeScript errors
@@ -132,15 +132,15 @@ npx tsc --noEmit  # Check for type errors
 
 ```bash
 # Orchestration
-npm run status          # View progress
-npm run next            # Get next task
-npm run update <id> <status>  # Update task
+pnpm run status          # View progress
+pnpm run next            # Get next task
+pnpm run update <id> <status>  # Update task
 
 # Development
-npm run dev             # Start Vite dev server
-npm run dev:tauri       # Start Tauri app
-npm run build           # Build production
-npm run test            # Run tests
+pnpm run dev             # Start Vite dev server
+pnpm run dev:tauri       # Start Tauri app
+pnpm run build           # Build production
+pnpm run test            # Run tests
 
 # Backend
 cd src-tauri
@@ -151,8 +151,8 @@ cargo build --release   # Build optimized
 
 ## Next Steps
 
-1. ✅ Run `npm run status` to see current progress (0/18)
-2. ✅ Run `npm run next` to get first task P0-1
+1. ✅ Run `pnpm run status` to see current progress (0/18)
+2. ✅ Run `pnpm run next` to get first task P0-1
 3. ✅ Execute with `@titane-conductor` in Copilot Chat
 4. ⏳ Complete Phase 0 audit (3 tasks)
 5. ⏳ Proceed to Phase 1 simplification

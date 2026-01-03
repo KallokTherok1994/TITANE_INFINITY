@@ -49,7 +49,7 @@ echo "════════════════════════�
 
 # Check 1: ESLint
 echo -n "Checking ESLint... "
-ESLINT_WARNINGS=$(npm run lint 2>&1 | grep -c "warning" || true)
+ESLINT_WARNINGS=$(pnpm run lint 2>&1 | grep -c "warning" || true)
 if [ "$ESLINT_WARNINGS" -eq 0 ]; then
     print_status "PASS" "No ESLint warnings"
 else
@@ -67,7 +67,7 @@ fi
 
 # Check 3: Frontend Build
 echo -n "Building frontend... "
-if npm run build > /tmp/titane-build.log 2>&1; then
+if pnpm run build > /tmp/titane-build.log 2>&1; then
     BUILD_TIME=$(grep "built in" /tmp/titane-build.log | tail -1 | grep -oP '\d+\.\d+s')
     print_status "PASS" "Frontend built successfully in $BUILD_TIME"
 else
@@ -138,7 +138,7 @@ echo "════════════════════════�
 
 # Check 9: Frontend Tests
 echo -n "Running frontend tests... "
-TEST_RESULT=$(npm test -- --run 2>&1 | tail -5)
+TEST_RESULT=$(pnpm test -- --run 2>&1 | tail -5)
 FAILED_TESTS=$(echo "$TEST_RESULT" | grep -oP '\d+ failed' | grep -oP '\d+' || echo "0")
 PASSED_TESTS=$(echo "$TEST_RESULT" | grep -oP '\d+ passed' | grep -oP '\d+' || echo "0")
 
@@ -187,9 +187,9 @@ echo "════════════════════════�
 echo "🔒 Security Checks"
 echo "═══════════════════════════════════════════════════════════"
 
-# Check 13: npm audit
+# Check 13: pnpm audit
 echo -n "Checking npm vulnerabilities... "
-VULNERABILITIES=$(npm audit --json 2>/dev/null | grep -oP '"high":\d+' | grep -oP '\d+' || echo "0")
+VULNERABILITIES=$(pnpm audit --json 2>/dev/null | grep -oP '"high":\d+' | grep -oP '\d+' || echo "0")
 if [ "$VULNERABILITIES" -eq 0 ]; then
     print_status "PASS" "No high severity vulnerabilities"
 else

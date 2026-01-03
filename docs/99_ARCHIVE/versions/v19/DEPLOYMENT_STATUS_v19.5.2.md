@@ -43,11 +43,11 @@ $ cargo check
 $ tsc --noEmit
 ✅ PASS (No errors)
 
-$ npm run lint
+$ pnpm run lint
 ⚠️ 92 erreurs ESLint (regex escaping - non-critiques)
 ⚠️ 435 warnings (dead code - à fixer Sprint 3)
 
-$ npm run test:unit
+$ pnpm run test:unit
 Tests: 1,854/1,888 réussis (98.2%)
 ⚠️ 34 tests en échec (à fixer Sprint 1)
 ```
@@ -199,7 +199,7 @@ TypeScript:
 
 **Tâches Clés:**
 1. Fixer 34 tests en échec
-2. `npm run test:ci` → 100% pass
+2. `pnpm run test:ci` → 100% pass
 3. CI/CD vert
 
 **Durée:** 10h

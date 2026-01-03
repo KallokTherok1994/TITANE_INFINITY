@@ -271,7 +271,7 @@ Total prévu: 9/16 tests passés (56% → 81%)
 
 ### Étape 4: Validation
 ```bash
-npm test -- --run src/features/transformation/__tests__/TransformationRoadmap.test.tsx
+pnpm test -- --run src/features/transformation/__tests__/TransformationRoadmap.test.tsx
 ```
 
 **Objectif**: 12+/16 tests passés (75%+)

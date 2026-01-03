@@ -262,13 +262,13 @@ npm 10+
 
 ### Build Development
 ```bash
-npm install
-npm run tauri:dev
+pnpm install
+pnpm run tauri:dev
 ```
 
 ### Build Production
 ```bash
-npm run tauri:build
+pnpm run tauri:build
 # Binaire: src-tauri/target/release/titane-infinity (20MB)
 ```
 

@@ -97,7 +97,7 @@ pm_run() {
         fi
     fi
 
-    npm run "$@"
+    pnpm run "$@"
 }
 
 pm_exec() {
@@ -167,13 +167,13 @@ health_check() {
         ((errors++))
     fi
     
-    # Check npm
-    print_section "Checking npm..."
-    if command -v npm &> /dev/null; then
-        NPM_VERSION=$(npm --version)
-        success "npm: $NPM_VERSION"
+    # Check pnpm
+    print_section "Checking pnpm..."
+    if command -v pnpm &> /dev/null; then
+        PNPM_VERSION=$(pnpm --version)
+        success "pnpm: $PNPM_VERSION"
     else
-        error "npm not found!"
+        error "pnpm not found!"
         ((errors++))
     fi
     
@@ -301,11 +301,11 @@ repair() {
         else
             warning "pnpm-lock.yaml detected but neither pnpm nor corepack is available; falling back to npm"
             info "Using npm..."
-            npm install
+            pnpm install
         fi
     else
         info "Using npm..."
-        npm install
+        pnpm install
     fi
     success "Dependencies installed"
     
@@ -346,7 +346,7 @@ fix() {
         success "TypeScript check passed (0 errors)"
     else
         warning "TypeScript errors found - review logs"
-        info "Run 'npm run check' to see details"
+        info "Run 'pnpm run check' to see details"
     fi
     
     log ""

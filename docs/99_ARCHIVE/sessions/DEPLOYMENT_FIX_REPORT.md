@@ -145,7 +145,7 @@ cargo test --lib
 
 7. **Restructurer architecture security** (séparer lib/bin)
 8. **Build release complet** : `cargo build --release`
-9. **Déploiement** : `npm run tauri build`
+9. **Déploiement** : `pnpm run tauri build`
 
 ---
 

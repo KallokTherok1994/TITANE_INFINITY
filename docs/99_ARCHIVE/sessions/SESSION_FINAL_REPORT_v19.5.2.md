@@ -26,7 +26,7 @@ Valider plan correction théorique 50+ pages → Audit réel → Exécution plan
 **Objectif**: Valider pertinence plan correction théorique
 
 **Actions**:
-1. Audit complet codebase (grep, find, npm test, ps aux)
+1. Audit complet codebase (grep, find, pnpm test, ps aux)
 2. Analyse 73% hypothèses plan original invalides
 3. Création plan alternatif 2 semaines (vs 8 semaines original)
 

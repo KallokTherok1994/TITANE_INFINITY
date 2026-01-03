@@ -13,8 +13,8 @@
 ✅ **Tâche 2:** Valider intégration composants Aura/Fusion → **100% INTÉGRÉ**  
 ✅ **Tâche 3:** Commit Git de tous les changements → **COMMIT 8528d092**  
 ✅ **Tâche 4:** Mettre à jour VERSION.txt et CHANGELOG.md → **v25.4.2 UPDATED**  
-✅ **Tâche 5:** Lancer tests finaux (npm test) → **80 PASS / 3 FAILED (tests Menu mineurs)**  
-✅ **Tâche 6:** Build production (npm run build) → **BUILD SUCCESS 12.59s**
+✅ **Tâche 5:** Lancer tests finaux (pnpm test) → **80 PASS / 3 FAILED (tests Menu mineurs)**  
+✅ **Tâche 6:** Build production (pnpm run build) → **BUILD SUCCESS 12.59s**
 
 ---
 

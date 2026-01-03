@@ -735,10 +735,10 @@ touch src/modules/devtools/DevToolsPanel.tsx
 # from 'src/DevTools/...' → from 'src/modules/devtools/...'
 
 # 6. TEST
-npm test
+pnpm test
 
 # 7. VERIFY BUILD
-npm run build
+pnpm run build
 
 # 8. DELETE OLD CODE (after verification)
 rm -rf src/devtools/
@@ -1053,9 +1053,9 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '18'
-      - run: npm ci
-      - run: npm test -- --coverage
-      - run: npm run lint
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test -- --coverage
+      - run: pnpm run lint
 
   test-rust:
     runs-on: ubuntu-latest
@@ -1285,7 +1285,7 @@ Track these metrics weekly in dashboard:
 **If tests fail in CI**:
 
 1. Fix locally first
-2. Verify: `npm test && npm run build`
+2. Verify: `pnpm test && pnpm run build`
 3. Push fix
 4. Wait for CI green
 

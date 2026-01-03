@@ -347,7 +347,7 @@ export class IdentityPulse {
   /**
    * Calculate deformation (wave distortion)
    */
-  private calculateDeformation(phase: number, elapsed: number): number {
+  private calculateDeformation(_phase: number, elapsed: number): number {
     const { deformationAmount, deformationFrequency, deformationPhase } = this.parameters;
 
     if (deformationAmount === 0) return 0;

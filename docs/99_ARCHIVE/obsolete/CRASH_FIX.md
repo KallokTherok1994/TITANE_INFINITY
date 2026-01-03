@@ -152,7 +152,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 ### Test 1 : Build Frontend
 ```bash
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run build
+pnpm run build
 ```
 
 **Résultat :**
@@ -266,7 +266,7 @@ console.error('[TITANE] Error details:', error, errorInfo);
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
 
 # Frontend
-npm run build
+pnpm run build
 
 # Backend (si modifs Rust)
 cd src-tauri

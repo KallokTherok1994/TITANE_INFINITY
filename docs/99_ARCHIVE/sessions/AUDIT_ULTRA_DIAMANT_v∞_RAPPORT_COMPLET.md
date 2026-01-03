@@ -564,7 +564,7 @@ panic = "abort"           # Abort on panic
 
 **Tests locaux**:
 ```bash
-$ npm run tauri:build
+$ pnpm run tauri:build
 # ✅ Build successful
 # ✅ AppImage created: 45 MB
 # ✅ .deb created: 23 MB
@@ -578,7 +578,7 @@ $ npm run tauri:build
 
 **Vitest**:
 ```bash
-$ npm run test
+$ pnpm run test
 Test Files  13 passed (13)
 Tests  229 passed (229)
 Start at  08:15:42
@@ -601,7 +601,7 @@ Le fichier de définition de type est introuvable pour 'react-window'
 
 **Solution**:
 ```bash
-npm install --save-dev @types/react-window
+pnpm install --save-dev @types/react-window
 ```
 
 **Impact**: IDE warnings uniquement, compilation OK
@@ -635,7 +635,7 @@ npm install --save-dev @types/react-window
 
 1. **Installer @types/react-window**
 ```bash
-npm install --save-dev @types/react-window
+pnpm install --save-dev @types/react-window
 ```
 
 2. **Corriger couleurs CSS legacy**
@@ -766,18 +766,18 @@ sudo apt-get install libasound2-dev
 
 ```bash
 # Tests
-npm run test
-npm run type-check
+pnpm run test
+pnpm run type-check
 cargo check
 
 # Build
-npm run tauri:build
+pnpm run tauri:build
 
 # Dev
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Cleanup
-npm run clean
+pnpm run clean
 cargo clean
 ```
 

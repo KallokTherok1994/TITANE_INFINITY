@@ -14,7 +14,7 @@
 **Status**: ✅ **CORRIGÉ**
 
 ```bash
-npm install --save-dev @types/react-window
+pnpm install --save-dev @types/react-window
 # → Already up to date (0 vulnerabilities)
 ```
 
@@ -42,7 +42,7 @@ npm install --save-dev @types/react-window
 
 **Validation requise**:
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 # Tester dans DevTools Console:
 # await secureInvoke('sc_run_full_diagnostics')
 ```
@@ -139,7 +139,7 @@ npm run tauri:dev
 
 ```bash
 # 1. Rebuild Tauri avec nouvelles commandes
-npm run tauri:dev
+pnpm run tauri:dev
 
 # 2. Tester Centre Système
 # Dans DevTools Console:
@@ -381,7 +381,7 @@ pub async fn auto_repair_opus_module(module: &str) -> Result<(), String> {
 
 ```bash
 # 1. Rebuild Tauri
-npm run tauri:dev
+pnpm run tauri:dev
 
 # 2. Tester corrections
 # → Centre Système (/system-center)

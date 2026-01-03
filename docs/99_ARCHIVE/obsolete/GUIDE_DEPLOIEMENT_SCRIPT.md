@@ -30,7 +30,7 @@
    - Évite les problèmes de cache corrompu
 
 ✅ **Fallback Tauri CLI** :
-   - Essaie npm run tauri:build en premier
+   - Essaie pnpm run tauri:build en premier
    - Si échec, utilise cargo tauri build directement
    - Compatible si Tauri CLI non installé globalement
 
@@ -96,9 +96,9 @@ cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
 ```
 [0] Vérification environnement (node, npm, cargo, rustc)
 [1] Vérification WebKit2GTK-4.1 (bloquant si absent)
-[2] Frontend : npm install → type-check → build (dist/)
+[2] Frontend : pnpm install → type-check → build (dist/)
 [3] Backend  : cargo fmt → clean → fix → clippy → check → build --release
-[4] Tauri    : npm run tauri:build (génère bundle)
+[4] Tauri    : pnpm run tauri:build (génère bundle)
 [5] Validation : vérification binaire + test exécution
 ```
 
@@ -182,8 +182,8 @@ node --version  # Doit être ≥ 20.0.0
 
 # Nettoyer et réinstaller
 rm -rf node_modules package-lock.json
-npm install
-npm run build
+pnpm install
+pnpm run build
 ```
 
 **Warnings Rust (72 warnings)** :

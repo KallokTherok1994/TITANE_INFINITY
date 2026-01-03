@@ -493,7 +493,7 @@ AudioCaptureState
 ### Validation Build:
 - ✅ `cargo check --features mock` : SUCCESS
 - ✅ `cargo check --features full` : SUCCESS
-- ✅ `npm run type-check` : SUCCESS
+- ✅ `pnpm run type-check` : SUCCESS
 
 ### Prérequis pour activer audio-capture:
 ```bash
@@ -567,7 +567,7 @@ audio::commands::vad_test,
 ### Validation Build:
 - ✅ `cargo check --features mock` : SUCCESS
 - ✅ `cargo check --features full` : SUCCESS
-- ✅ `npm run type-check` : SUCCESS
+- ✅ `pnpm run type-check` : SUCCESS
 
 ### Score Audio FINAL: **78%** (+6%)
 
@@ -650,7 +650,7 @@ export type { VADState, VADConfig, VADTestResult, UseVADReturn } from './useVAD'
 ### Validation:
 - ✅ `cargo check --features mock` : SUCCESS
 - ✅ `cargo check --features full` : SUCCESS
-- ✅ `npm run type-check` : SUCCESS
+- ✅ `pnpm run type-check` : SUCCESS
 - ✅ Tauri Dev lancé avec succès
 
 ### Score Audio FINAL: **85%** (+7%)

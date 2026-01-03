@@ -42,7 +42,7 @@ echo -e "${YELLOW}[0/7] Pre-flight checks...${NC}"
 
 # Check required tools
 command -v node >/dev/null 2>&1 || { echo -e "${RED}Node.js required${NC}"; exit 1; }
-command -v npm >/dev/null 2>&1 || { echo -e "${RED}NPM required${NC}"; exit 1; }
+command -v npm >/dev/null 2>&1 || { echo -e "${RED}PNPM required${NC}"; exit 1; }
 command -v cargo >/dev/null 2>&1 || { echo -e "${RED}Cargo required${NC}"; exit 1; }
 
 # Check Tauri CLI
@@ -72,9 +72,9 @@ echo -e "\n${YELLOW}[2/7] Installing dependencies...${NC}"
 if [ -f "pnpm-lock.yaml" ] && command -v pnpm >/dev/null 2>&1; then
     pnpm install --frozen-lockfile
 elif [ -f "package-lock.json" ]; then
-    npm ci
+    pnpm install --frozen-lockfile
 else
-    npm install
+    pnpm install
 fi
 
 echo -e "${GREEN}✓${NC} Dependencies installed"
@@ -84,7 +84,7 @@ echo -e "${GREEN}✓${NC} Dependencies installed"
 # ─────────────────────────────────────────────────────────────────────────────
 echo -e "\n${YELLOW}[3/7] TypeScript validation...${NC}"
 
-npm run type-check || {
+pnpm run type-check || {
     echo -e "${RED}✗ TypeScript errors found${NC}"
     exit 1
 }
@@ -99,7 +99,7 @@ echo -e "\n${YELLOW}[4/7] Building frontend (Vite)...${NC}"
 FRONTEND_START=$(date +%s)
 
 # Build with optimizations
-NODE_ENV=production npm run build
+NODE_ENV=production pnpm run build
 
 FRONTEND_END=$(date +%s)
 FRONTEND_TIME=$((FRONTEND_END - FRONTEND_START))

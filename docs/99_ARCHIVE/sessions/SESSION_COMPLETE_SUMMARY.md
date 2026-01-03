@@ -398,8 +398,8 @@ cargo check
 **3. Update roadmap:**
 ```bash
 cd orchestration
-npm run update P2-1 completed
-npm run status
+pnpm run update P2-1 completed
+pnpm run status
 ```
 
 ---

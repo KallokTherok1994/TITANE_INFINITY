@@ -216,7 +216,7 @@ grep "test result:" test_output.txt
 
 # ESLint frontend
 cd ..
-npm run lint 2>&1 | tee eslint_output.txt
+pnpm run lint 2>&1 | tee eslint_output.txt
 ```
 
 **Validation**: Métriques claires sur tests, coverage, ESLint

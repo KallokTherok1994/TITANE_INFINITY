@@ -11,7 +11,7 @@ echo ""
 
 # 1. Build React/Vite
 echo "📦 Étape 1/3: Build frontend (Vite)..."
-npm run build
+pnpm run build
 echo "✓ Frontend compilé"
 echo ""
 

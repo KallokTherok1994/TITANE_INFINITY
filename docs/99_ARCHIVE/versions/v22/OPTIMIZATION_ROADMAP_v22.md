@@ -592,11 +592,11 @@ Target:
 ./scripts/final-build.sh
 
 # Fix tests (after mocks created)
-npm test -- --run
+pnpm test -- --run
 cargo test
 
 # Performance profiling
-npm run build -- --profile
+pnpm run build -- --profile
 cargo build --release --timings
 ```
 

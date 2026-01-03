@@ -11,7 +11,7 @@ cd ~/Documents/TITANE_INFINITY/tts-service
 ### 2️⃣ Lancer TITANE∞ (Terminal 2)
 ```bash
 cd ~/Documents/TITANE_INFINITY
-npm run dev:tauri
+pnpm run dev:tauri
 ```
 
 ### 3️⃣ Tester

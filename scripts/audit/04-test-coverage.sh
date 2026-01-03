@@ -42,7 +42,7 @@ echo "   └─ Rust tests: $RUST_TESTS"
 echo ""
 echo "🏃 [2/7] Running test suite..."
 if [ -f "package.json" ]; then
-    npm test -- --coverage --json --outputFile="$REPORT_DIR/test-results.json" > "$REPORT_DIR/test-output.txt" 2>&1 || {
+    pnpm test -- --coverage --json --outputFile="$REPORT_DIR/test-results.json" > "$REPORT_DIR/test-output.txt" 2>&1 || {
         echo "   ⚠️ Tests failed or no test command configured"
     }
     
@@ -298,8 +298,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '18'
-      - run: npm ci
-      - run: npm test -- --coverage
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test -- --coverage
       - uses: codecov/codecov-action@v3
         with:
           files: ./coverage/coverage-final.json

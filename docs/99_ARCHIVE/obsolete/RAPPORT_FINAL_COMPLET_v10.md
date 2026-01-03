@@ -443,7 +443,7 @@ error: no VCS found for this package and `cargo fix` can potentially perform des
 **Ce script**:
 1. Configure PATH Cargo
 2. Libère port 5173
-3. Lance `npm run tauri dev`
+3. Lance `pnpm run tauri dev`
 
 ### Build Production
 

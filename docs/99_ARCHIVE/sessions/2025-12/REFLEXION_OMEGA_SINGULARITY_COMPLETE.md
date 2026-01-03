@@ -295,7 +295,7 @@ ConversationResponse (ENRICHED)
 
 ```bash
 # 1. Lancer runtime
-npm run tauri dev
+pnpm run tauri dev
 
 # 2. Monitor logs (terminal séparé)
 tail -f runtime/dev/logs/*.log | grep -E "(SINGULARITY|OMEGA|coherence|ltm)"
@@ -341,7 +341,7 @@ python3 scripts/test/test_singularity_logs.py
 
 ### Validation (Pending)
 
-- [ ] Runtime launch (npm run tauri dev)
+- [ ] Runtime launch (pnpm run tauri dev)
 - [ ] Test S1 (Baseline Singularity)
 - [ ] Test S2 (LTM Trigger)
 - [ ] Test R1 (OMEGA P2 Performance)

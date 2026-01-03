@@ -38,7 +38,7 @@ Le **SUPER PROMPT v∞ — TITANE∞ ULTRA AUDIT & REBUILD (DIAMOND EDITION)** a
 
 1. **TypeScript: Types manquants**
    ```bash
-   npm install --save-dev @types/react-window
+   pnpm install --save-dev @types/react-window
    ```
    ✅ FAIT
 
@@ -267,13 +267,13 @@ Le **Super Prompt Diamond Edition v∞** a été exécuté selon le protocole su
 ### Tests Exécutés
 
 ```bash
-$ npm run test
+$ pnpm run test
 Test Files  13 passed (13)
 Tests  229 passed (229)
 Duration  1.59s
 ✅ 100% PASSED
 
-$ npm run type-check
+$ pnpm run type-check
 tsc --noEmit
 ✅ 0 erreurs
 

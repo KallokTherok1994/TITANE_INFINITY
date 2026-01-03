@@ -11,7 +11,7 @@
 ### Lancer l'application
 ```bash
 cd /home/titane/Documents/TITANE_INFINITY
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### Vérifications au démarrage

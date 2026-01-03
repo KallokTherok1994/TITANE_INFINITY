@@ -296,7 +296,7 @@ A  COMMIT_MESSAGE_v24.6.0_FINAL.md (ce fichier)
 
 ```bash
 # TypeScript
-$ npm run type-check
+$ pnpm run type-check
 ✅ 0 errors (outfits.json, appearanceMapper.ts, appearanceRenderer.ts, index.ts)
 
 # Rust (backend inchangé v24.5)

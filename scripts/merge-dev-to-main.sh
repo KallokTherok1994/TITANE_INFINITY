@@ -138,9 +138,9 @@ fi
 # Step 8: Run tests (if available)
 print_info "Step 8: Running validation tests..."
 if [ -f "package.json" ]; then
-    if command -v npm &> /dev/null; then
-        print_info "Running npm tests..."
-        if npm test; then
+    if command -v pnpm &> /dev/null; then
+        print_info "Running pnpm tests..."
+        if pnpm test; then
             print_success "All tests passed"
         else
             print_warning "Some tests failed. Review before pushing."
@@ -153,7 +153,7 @@ if [ -f "package.json" ]; then
             fi
         fi
     else
-        print_warning "npm not found, skipping tests"
+        print_warning "ppnpm not found, skipping tests"
     fi
 else
     print_warning "package.json not found, skipping tests"

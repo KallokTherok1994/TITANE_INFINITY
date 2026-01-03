@@ -210,7 +210,7 @@
 │ │
 │ ⚠️ E2E Tests: SKIPPED (requires running dev server) │
 │ • 43 existing E2E tests available │
-│ • Tests require `npm run dev` + Playwright server │
+│ • Tests require `pnpm run dev` + Playwright server │
 │ • Manual testing recommended after backend implementation │
 │ │
 │ 📊 Compilation Status: ✅ NO ERRORS │

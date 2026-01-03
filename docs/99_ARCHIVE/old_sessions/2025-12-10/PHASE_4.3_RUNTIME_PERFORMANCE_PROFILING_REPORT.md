@@ -328,7 +328,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: npm ci && npm run build
+      - run: pnpm install --frozen-lockfile && pnpm run build
       - uses: treosh/lighthouse-ci-action@v9
         with:
           urls: http://localhost:4173
@@ -337,7 +337,7 @@ jobs:
 
 ### **React DevTools Profiler (manual)**
 
-1. Build production : `npm run build && npm run preview`
+1. Build production : `pnpm run build && pnpm run preview`
 2. Ouvrir Chrome DevTools → Profiler tab
 3. Record interaction (navigate Dashboard → Chat)
 4. Analyser flamegraph pour composants >50ms
@@ -357,7 +357,7 @@ jobs:
 
 ### **Immédiat (PHASE 4.3 complet)**
 
-1. ✅ **Démarrer preview server** : `npm run build && npm run preview`
+1. ✅ **Démarrer preview server** : `pnpm run build && pnpm run preview`
 2. ⏳ **Run Lighthouse audit** : `npx lighthouse http://localhost:4173 --output json --output-path ./lighthouse-report.json`
 3. ⏳ **Analyser résultats** : Comparer avec projections ci-dessus
 4. ⏳ **Implémenter P0 fixes** : Lazy load Dashboard + preload critical
@@ -436,8 +436,8 @@ jobs:
 **Recommandation** : Exécuter Lighthouse manuellement après build complet :
 
 ```bash
-npm run build  # Attendre fin (peut prendre 1-2 minutes)
-npm run preview &  # Background
+pnpm run build  # Attendre fin (peut prendre 1-2 minutes)
+pnpm run preview &  # Background
 sleep 5  # Attendre démarrage
 npx lighthouse http://localhost:4173 --view  # Ouvre rapport dans browser
 ```

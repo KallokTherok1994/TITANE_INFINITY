@@ -194,13 +194,13 @@ git push origin main
 
 ```bash
 # 1. Vérifier build
-npm run build
+pnpm run build
 
 # 2. Vérifier types
-npm run type-check
+pnpm run type-check
 
 # 3. Vérifier tests (si applicable)
-npm run test
+pnpm run test
 
 # 4. Vérifier git status
 git status

@@ -79,7 +79,7 @@
 
 ### Phase 3: Testing (PENDING)
 
-- Run npm test (expect 100% pass)
+- Run pnpm test (expect 100% pass)
 - Run cargo test (expect 99.9%+ pass)
 - Manual UI validation
 

@@ -277,14 +277,14 @@ git push origin MAIN
 2. **Production Build Validation**:
 
    ```bash
-   npm run build
+   pnpm run build
    cargo tauri build --release
    ```
 
 3. **End-to-End Testing**:
    ```bash
    ./scripts/launch/run-titane.sh
-   npm run test:e2e
+   pnpm run test:e2e
    ```
 
 ### Optional (Phase 4)

@@ -6,6 +6,7 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "typeRoots": ["./node_modules/@types"],
+    "types": [],
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -35,10 +36,11 @@
     /* Linting - Enhanced Strict (Progressive) */
     "strict": true,
     "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": false, // TODO: Enable after refactoring optional props
-    "noPropertyAccessFromIndexSignature": false, // TODO: Enable after CSS modules refactoring
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
+    // TEMPORAIREMENT DÉSACTIVÉS - Migration progressive requise (1217 erreurs)
+    // "exactOptionalPropertyTypes": true, // P1-2: Disabled 2026-01-03 (migration needed)
+    // "noPropertyAccessFromIndexSignature": true, // P1-2: Disabled 2026-01-03 (migration needed)
+    "noUnusedLocals": false, // P1-2: Disabled 2026-01-03 (non-blocking warnings)
+    "noUnusedParameters": false, // P1-2: Disabled 2026-01-03 (non-blocking warnings)
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true

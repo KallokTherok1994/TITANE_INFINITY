@@ -60,10 +60,10 @@ Le script effectue automatiquement:
 
 ```bash
 # 1. Installation dépendances
-npm install --legacy-peer-deps
+pnpm install --legacy-peer-deps
 
 # 2. Build frontend
-npm run build
+pnpm run build
 
 # 3. Build Tauri (production)
 cargo tauri build
@@ -94,11 +94,11 @@ cargo tauri dev
 
 ### Frontend
 ```bash
-npm run dev          # Dev server (Vite)
-npm run build        # Build production
-npm run preview      # Preview build
-npm run type-check   # Vérification TypeScript
-npm run lint         # Linting ESLint
+pnpm run dev          # Dev server (Vite)
+pnpm run build        # Build production
+pnpm run preview      # Preview build
+pnpm run type-check   # Vérification TypeScript
+pnpm run lint         # Linting ESLint
 ```
 
 ### Tauri
@@ -112,14 +112,14 @@ cargo tauri info     # Infos système
 ### Tests
 ```bash
 # Frontend
-npm test
+pnpm test
 
 # Backend Rust
 cd src-tauri
 cargo test --all
 
 # Vérification globale
-npm run verify
+pnpm run verify
 ```
 
 ---
@@ -198,7 +198,7 @@ chmod +x deploy_titane.sh
 ```bash
 cargo clean
 rm -rf node_modules
-npm install --legacy-peer-deps
+pnpm install --legacy-peer-deps
 ```
 
 ---

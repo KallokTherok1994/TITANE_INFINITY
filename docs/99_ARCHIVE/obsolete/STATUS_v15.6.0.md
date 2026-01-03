@@ -91,7 +91,7 @@ TITANE∞ v15.6.0
 
 ### Performance Build
 ```bash
-npm run build
+pnpm run build
 ✓ 74 modules transformed
 ✓ built in 1.14s
 → dist/index.html         1.62 kB (gzip: 0.88 kB)
@@ -121,10 +121,10 @@ TOTAL: 208 KB
 
 ### Tests Build ✅
 ```bash
-✓ npm run type-check  # 0 errors
-✓ npm run build       # 1.14s success
-✓ npm run dev         # :5173 running
-✓ npm run preview     # :4173 running
+✓ pnpm run type-check  # 0 errors
+✓ pnpm run build       # 1.14s success
+✓ pnpm run dev         # :5173 running
+✓ pnpm run preview     # :4173 running
 ```
 
 ### Tests Navigation ✅
@@ -161,11 +161,11 @@ TOTAL: 208 KB
 cd ~/Documents/TITANE_NEWGEN/TITANE_INFINITY
 
 # Dev server
-npm run dev
+pnpm run dev
 # → http://localhost:5173/
 
 # Production preview
-npm run build && npm run preview
+pnpm run build && pnpm run preview
 # → http://localhost:4173/
 ```
 
@@ -175,10 +175,10 @@ npm run build && npm run preview
 bash install-webkit-popos.sh
 
 # 2. Lancer app desktop
-npm run tauri dev
+pnpm run tauri dev
 
 # 3. Build production
-npm run tauri build
+pnpm run tauri build
 ```
 
 ---
@@ -238,7 +238,7 @@ npm run tauri build
 ### Immédiat (Si Tauri requis)
 - [ ] Exécuter `install-webkit-popos.sh` (terminal natif)
 - [ ] Valider installation WebKitGTK
-- [ ] Tester `npm run tauri dev`
+- [ ] Tester `pnpm run tauri dev`
 
 ### Court Terme
 - [ ] Tests E2E complets
@@ -288,15 +288,15 @@ npm run tauri build
 
 **Build échoue** :
 ```bash
-npm run type-check  # Vérifier erreurs TS
-rm -rf node_modules dist && npm install
-npm run build
+pnpm run type-check  # Vérifier erreurs TS
+rm -rf node_modules dist && pnpm install
+pnpm run build
 ```
 
 **Dev server ne démarre pas** :
 ```bash
 pkill -9 -f "vite|node.*5173"
-npm run dev
+pnpm run dev
 ```
 
 **Tauri échoue** :

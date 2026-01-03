@@ -182,13 +182,13 @@ describe('AudioStateMachine', () => {
 
 ```bash
 # Tests unitaires frontend
-npm run test
+pnpm run test
 
 # Tests spécifiques Chat
-npm run test -- --grep "Chat IA"
+pnpm run test -- --grep "Chat IA"
 
 # Tests avec coverage
-npm run test -- --coverage
+pnpm run test -- --coverage
 
 # Tests Rust (backend)
 cd src-tauri && cargo test

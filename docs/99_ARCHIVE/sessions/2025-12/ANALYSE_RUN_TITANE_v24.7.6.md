@@ -9,11 +9,11 @@
 
 ### Symptômes
 ```bash
-npm run dev:tauri  # ❌ Ne fonctionnait pas correctement
+pnpm run dev:tauri  # ❌ Ne fonctionnait pas correctement
 ```
 
 **Problèmes détectés:**
-1. ❌ `npm run dev:tauri` = simple alias vers `tauri dev`
+1. ❌ `pnpm run dev:tauri` = simple alias vers `tauri dev`
 2. ❌ Pas de vérification réseau/APIs avant lancement
 3. ❌ Pas de phase de nettoyage automatique
 4. ❌ Pas de correction automatique des erreurs
@@ -122,7 +122,7 @@ fi
 
 **Actions:**
 - ✅ Check Node.js version
-- ✅ Install dependencies (npm ci) si nécessaire
+- ✅ Install dependencies (pnpm install --frozen-lockfile) si nécessaire
 - ✅ TypeScript type checking (tsc --noEmit)
 - ✅ ESLint linting (silent mode)
 - ✅ Rapport erreurs détecté
@@ -144,7 +144,7 @@ fi
 
 **Actions:**
 - ✅ Détection erreurs TypeScript/ESLint
-- ✅ Auto-fix via `npm run lint:fix`
+- ✅ Auto-fix via `pnpm run lint:fix`
 - ✅ Corrections appliquées automatiquement
 - ✅ Continue même si échec (mode permissif)
 
@@ -152,7 +152,7 @@ fi
 ```bash
 if grep -q "error TS" /tmp/titane-tsc.log; then
     echo "🔧 Auto-fixing TypeScript issues..."
-    npm run lint:fix 2>&1 | tail -3
+    pnpm run lint:fix 2>&1 | tail -3
 fi
 ```
 
@@ -177,7 +177,7 @@ fi
 **Code clé:**
 ```bash
 # Frontend
-NODE_ENV=production npm run build
+NODE_ENV=production pnpm run build
 
 # Backend
 if [ "$MODE" = "prod" ]; then
@@ -211,7 +211,7 @@ elif [ -e "/tmp/.X11-unix/X0" ]; then
 fi
 
 # Launch
-npm run tauri -- dev --no-watch 2>&1 | tee runtime/dev/logs/tauri.log
+pnpm run tauri -- dev --no-watch 2>&1 | tee runtime/dev/logs/tauri.log
 ```
 
 **Résultat:** TITANE lancé avec accès complet internet + APIs
@@ -385,9 +385,9 @@ Fallback:
 1. cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
 2. pkill -f "tauri dev"  # Si processus bloqué
 3. rm -rf dist/  # Si rebuild nécessaire
-4. npm run build  # Build frontend
+4. pnpm run build  # Build frontend
 5. cd src-tauri && cargo build  # Build backend
-6. cd .. && npm run dev:tauri  # Lancer
+6. cd .. && pnpm run dev:tauri  # Lancer
 7. ❌ Pas de vérification réseau
 8. ❌ Pas de vérification APIs
 9. ❌ Pas de correction auto erreurs
@@ -581,7 +581,7 @@ titane rebuild
 
 # Si problème persiste
 rm -rf node_modules
-npm install
+pnpm install
 titane rebuild
 ```
 
@@ -678,7 +678,7 @@ sudo ln -sf /chemin/vers/TITANE_INFINITY/run /usr/local/bin/titane
 
 ### Problème résolu ✅
 
-**Avant:** `npm run dev:tauri` ne fonctionnait pas, processus manuel complexe
+**Avant:** `pnpm run dev:tauri` ne fonctionnait pas, processus manuel complexe
 
 **Après:** Commande unique `titane` avec:
 - ✅ Full deploy automatique (Frontend + Backend 100%)

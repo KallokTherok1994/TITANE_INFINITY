@@ -29,11 +29,11 @@
 
 | Pattern NPM | Pattern PNPM | Occurrences |
 |-------------|--------------|-------------|
-| `npm run <script>` | `pnpm run <script>` | 45 |
-| `npm install` | `pnpm install` | 32 |
-| `npm test` | `pnpm test` | 12 |
-| `npm audit` | `pnpm audit` | 5 |
-| `npm ci` | `pnpm install --frozen-lockfile` | 3 |
+| `pnpm run <script>` | `pnpm run <script>` | 45 |
+| `pnpm install` | `pnpm install` | 32 |
+| `pnpm test` | `pnpm test` | 12 |
+| `pnpm audit` | `pnpm audit` | 5 |
+| `pnpm install --frozen-lockfile` | `pnpm install --frozen-lockfile` | 3 |
 | `npm update` | `pnpm update` | 1 |
 
 **Total:** 98 remplacements

@@ -105,7 +105,7 @@ Duration: < 1s
    - Tests Frontend + Coverage
    - Tests Backend + Clippy
    - Tests E2E (Playwright)
-   - Security Scan (npm audit, cargo audit)
+   - Security Scan (pnpm audit, cargo audit)
    - Accessibility Tests
 
 3. **release.yml** - Deployment
@@ -178,19 +178,19 @@ dist/           6.0 MB total
 
 ```bash
 # Build Performance
-time npm run build
+time pnpm run build
 
 # Test Performance
 time npx vitest run
 
 # Bundle Analysis
-npm run build && cat dist/stats.html
+pnpm run build && cat dist/stats.html
 
 # Rust Performance
 time cargo build --release --manifest-path src-tauri/Cargo.toml
 
 # Full Validation
-npm run check && npm run lint && npm run build && npx vitest run
+pnpm run check && pnpm run lint && pnpm run build && npx vitest run
 ```
 
 ---

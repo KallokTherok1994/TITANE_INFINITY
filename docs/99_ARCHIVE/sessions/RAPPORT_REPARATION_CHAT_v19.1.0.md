@@ -46,7 +46,7 @@ Command "singularity_get_symbolic" not found
 **Cause Racine** : **Frontend en mode browser + SingularityConnections polling**
 - SingularityConnections démarre toutes les 5s (ligne 109 singularityConnections.ts)
 - Appelle commands Tauri (`get_helios_state`, `get_memory_state`, etc.)
-- **Si app lancée en browser (`npm run dev`)** → Tauri API unavailable → Erreurs
+- **Si app lancée en browser (`pnpm run dev`)** → Tauri API unavailable → Erreurs
 
 **Preuves** :
 ```typescript
@@ -171,7 +171,7 @@ if (options.voiceEnabled && response.content) {
 
 ### Test 1 : Build TypeScript
 ```bash
-npm run build
+pnpm run build
 ```
 
 **Résultat** : ✅ **SUCCESS**
@@ -193,7 +193,7 @@ Finished `dev` profile [optimized] target(s) in 1.37s
 
 ### Test 3 : Lancer en Mode Tauri (CRITIQUE)
 ```bash
-npm run dev:tauri
+pnpm run dev:tauri
 ```
 
 **Attendu** :
@@ -202,7 +202,7 @@ npm run dev:tauri
 - ✅ Texte lisible : Blanc sur fond sombre
 - ✅ Mode voix (🎤) : TTS parle réponse AI si activé
 
-**⚠️ IMPORTANT** : Ne PAS utiliser `npm run dev` (mode browser), utiliser `npm run dev:tauri`
+**⚠️ IMPORTANT** : Ne PAS utiliser `pnpm run dev` (mode browser), utiliser `pnpm run dev:tauri`
 
 ---
 
@@ -230,7 +230,7 @@ npm run dev:tauri
 
 ## 🎯 PROCHAINES ÉTAPES
 
-1. **Lancer app en mode Tauri** : `npm run dev:tauri`
+1. **Lancer app en mode Tauri** : `pnpm run dev:tauri`
 2. **Tester Chat IA** :
    - Envoyer message : "Bonjour TITANE∞"
    - Vérifier réponse apparaît < 5s
@@ -251,9 +251,9 @@ npm run dev:tauri
 "build": "vite build",                          // ← Build frontend only
 ```
 
-**Problème** : `npm run dev` lance Vite ET Tauri en parallèle (`&`), mais si Vite pas terminé, Tauri charge ancien build.
+**Problème** : `pnpm run dev` lance Vite ET Tauri en parallèle (`&`), mais si Vite pas terminé, Tauri charge ancien build.
 
-**Solution** : Utiliser `npm run dev:tauri` qui attend (`&&`) la fin du build Vite.
+**Solution** : Utiliser `pnpm run dev:tauri` qui attend (`&&`) la fin du build Vite.
 
 ### SingularityConnections Polling
 ```typescript
@@ -277,7 +277,7 @@ static async start(intervalMs: number = 5000): Promise<void> {
 
 ## ✨ SUCCÈS ATTENDUS
 
-Après `npm run dev:tauri` :
+Après `pnpm run dev:tauri` :
 
 1. **Chat IA fonctionnel** :
    - ✅ Message utilisateur → Réponse AI < 5s

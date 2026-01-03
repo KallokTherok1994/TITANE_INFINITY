@@ -118,10 +118,10 @@ Property 'radius' does not exist on type 'Spacing'         // ~15 occurrences
   - `src/modules/TemporalFlowCenter.tsx`
 
 #### Phase 4: Validation
-- [ ] Build TypeScript: `npm run type-check`
-- [ ] Build production: `npm run build`
+- [ ] Build TypeScript: `pnpm run type-check`
+- [ ] Build production: `pnpm run build`
 - [ ] Tests visuels Storybook (si disponible)
-- [ ] Tests runtime: `npm run tauri:dev`
+- [ ] Tests runtime: `pnpm run tauri:dev`
 - [ ] Vérification UI dans 3 centers
 
 #### Phase 5: Commit
@@ -253,9 +253,9 @@ import { join, appDataDir, resolve } from '@tauri-apps/api/path';
 - [ ] Tester chaque commande individuellement
 
 #### Phase 6: Validation
-- [ ] Build TypeScript: `npm run type-check`
-- [ ] Build production: `npm run build`
-- [ ] Tests runtime: `npm run tauri:dev`
+- [ ] Build TypeScript: `pnpm run type-check`
+- [ ] Build production: `pnpm run build`
+- [ ] Tests runtime: `pnpm run tauri:dev`
 - [ ] Tests manuels 17 commandes:
   ```
   sudo talk.on

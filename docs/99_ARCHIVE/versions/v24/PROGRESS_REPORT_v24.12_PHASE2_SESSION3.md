@@ -336,7 +336,7 @@ Window control
 ### ✅ TypeScript Compilation
 
 ```bash
-npm run type-check 2>&1 | grep -E "(floatingWindow|chatFloating)"
+pnpm run type-check 2>&1 | grep -E "(floatingWindow|chatFloating)"
 ```
 
 **Résultat:** ✅ 0 erreurs (validé)
@@ -364,7 +364,7 @@ npm run type-check 2>&1 | grep -E "(floatingWindow|chatFloating)"
 
 **Commande de test:**
 ```bash
-npm test floatingWindowChatHandler.test.ts
+pnpm test floatingWindowChatHandler.test.ts
 ```
 
 ---

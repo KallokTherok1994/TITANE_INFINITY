@@ -135,7 +135,7 @@ testSentry(); // Envoie erreur de test
 
 ```bash
 # 1. Installer dépendances
-npm install @sentry/react web-vitals
+pnpm install @sentry/react web-vitals
 
 # 2. Configurer .env
 VITE_SENTRY_DSN=https://[KEY]@[ORG].ingest.sentry.io/[PROJECT]
@@ -255,14 +255,14 @@ TITANE_INFINITY/
 - [ ] **TODO** : Modifier `src-tauri/src/main.rs`
 - [ ] **TODO** : Modifier `src/App.tsx`
 - [ ] **TODO** : Tester le flow complet
-- [ ] **TODO** : Lancer tests E2E (`npm run test:e2e`)
+- [ ] **TODO** : Lancer tests E2E (`pnpm run test:e2e`)
 
 ### Sentry Monitoring
 - [x] Module Sentry créé (400+ lignes)
 - [x] Intégration avec ErrorHandler
 - [x] Variables .env configurées
 - [x] Guide d'installation complet
-- [ ] **TODO** : Installer `npm install @sentry/react web-vitals`
+- [ ] **TODO** : Installer `pnpm install @sentry/react web-vitals`
 - [ ] **TODO** : Créer compte Sentry (https://sentry.io/)
 - [ ] **TODO** : Obtenir DSN et configurer .env
 - [ ] **TODO** : Initialiser dans `src/main.tsx`
@@ -301,7 +301,7 @@ TITANE_INFINITY/
 
 ### Priorité IMMÉDIATE
 1. **Intégrer User Onboarding** (2 modifications dans main.rs + App.tsx)
-2. **Installer Sentry** (npm install + configurer DSN)
+2. **Installer Sentry** (pnpm install + configurer DSN)
 3. **Tester les deux systèmes**
 
 ### Priorité HAUTE (Cette semaine)

@@ -166,7 +166,7 @@ $ cargo check --manifest-path src-tauri/Cargo.toml
 ### TypeScript Frontend
 
 ```bash
-$ npm run type-check
+$ pnpm run type-check
    Found 40 errors in 19 files.
 
 ✅ 0 erreurs critiques
@@ -176,7 +176,7 @@ $ npm run type-check
 ### Build Production
 
 ```bash
-$ npm run build
+$ pnpm run build
 ✓ 1247 modules transformed.
 dist/index.html                      0.74 kB
 dist/assets/index-BwK3jK7f.css      89.31 kB

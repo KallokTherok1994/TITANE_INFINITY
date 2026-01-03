@@ -94,14 +94,14 @@ if [ -d dist ]; then
   DIST_SIZE=$(du -sh dist 2>/dev/null | awk '{print $1}')
   echo -e "  ✅ Frontend Build:    ${GREEN}READY${NC} (dist/ $DIST_SIZE)"
 else
-  echo -e "  ⚠️  Frontend Build:    ${YELLOW}MISSING${NC} (run: npm run build)"
+  echo -e "  ⚠️  Frontend Build:    ${YELLOW}MISSING${NC} (run: pnpm run build)"
 fi
 
 if [ -f src-tauri/target/release/titane-infinity ]; then
   BINARY_SIZE=$(du -h src-tauri/target/release/titane-infinity 2>/dev/null | awk '{print $1}')
   echo -e "  ✅ Backend Build:     ${GREEN}READY${NC} ($BINARY_SIZE)"
 else
-  echo -e "  ⚠️  Backend Build:     ${YELLOW}MISSING${NC} (run: npm run tauri:build)"
+  echo -e "  ⚠️  Backend Build:     ${YELLOW}MISSING${NC} (run: pnpm run tauri:build)"
 fi
 
 # Test Scripts
@@ -112,7 +112,7 @@ TEST_COUNT=0
 echo -e "  📊 Test Scripts:      ${TEST_COUNT}/3 available"
 
 # TypeScript Errors
-TS_ERRORS=$(npm run type-check 2>&1 | grep -c "error TS" 2>/dev/null || echo "0")
+TS_ERRORS=$(pnpm run type-check 2>&1 | grep -c "error TS" 2>/dev/null || echo "0")
 if [ "$TS_ERRORS" -eq "0" ]; then
   echo -e "  ✅ TypeScript:        ${GREEN}0 ERRORS${NC}"
 else

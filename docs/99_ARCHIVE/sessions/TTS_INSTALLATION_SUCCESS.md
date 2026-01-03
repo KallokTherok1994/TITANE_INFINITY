@@ -172,7 +172,7 @@ audioElement.play();
 # Terminal 1: Service TTS déjà lancé
 # Terminal 2: Lancer TITANE∞
 cd /home/titane/Documents/TITANE_INFINITY
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Accéder au panel de test
 # URL: http://localhost:5173/test/tts

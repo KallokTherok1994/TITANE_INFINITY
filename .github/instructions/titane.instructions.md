@@ -20,7 +20,7 @@
 
 ❌ **NE JAMAIS déployer AppImage/DEB** sans autorisation écrite explicite  
 ❌ **NE JAMAIS lancer builds de production** (Titan-Stable, bundles, packages)  
-❌ **NE JAMAIS exécuter** `npm run build`, `tauri build`, tâche "🔵 Build Titan-Stable"
+❌ **NE JAMAIS exécuter** `pnpm run build`, `tauri build`, tâche "🔵 Build Titan-Stable"
 
 ✅ **Mode de travail OBLIGATOIRE:**
 
@@ -210,11 +210,11 @@ scripts/
 
 ### Commandes
 
-- npm run test # Vitest unit tests
-- npm run test:e2e # Playwright E2E
-- npm run test:architecture # Architecture validation
-- npm run test:rust # Cargo tests
-- npm run verify # ALL tests + lint + check
+- pnpm test # Vitest unit tests
+- pnpm test:e2e # Playwright E2E
+- pnpm test:architecture # Architecture validation
+- pnpm test:rust # Cargo tests
+- pnpm verify # ALL tests + lint + check
 
 ### Couverture Minimale
 

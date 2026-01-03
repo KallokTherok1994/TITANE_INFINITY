@@ -247,10 +247,10 @@ cargo test
 
 # Build frontend
 cd ..
-npm run build
+pnpm run build
 
 # Verify no Node.js warnings
-npm run lint
+pnpm run lint
 ```
 
 ---
@@ -379,15 +379,15 @@ cargo test
 ### Build Frontend
 
 ```bash
-npm run build
-npm run lint
-npm run type-check
+pnpm run build
+pnpm run lint
+pnpm run type-check
 ```
 
 ### Run Full Stack
 
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### Benchmarks

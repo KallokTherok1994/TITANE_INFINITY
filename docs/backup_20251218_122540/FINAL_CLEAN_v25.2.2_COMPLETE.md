@@ -333,14 +333,14 @@ Découvrabilité:           +100%
 ### Développement
 
 ```bash
-npm run dev                # Serveur dev Vite
-npm run dev:tauri          # Tauri dev complet
+pnpm run dev                # Serveur dev Vite
+pnpm run dev:tauri          # Tauri dev complet
 ```
 
 ### Build
 
 ```bash
-npm run build              # Build frontend
+pnpm run build              # Build frontend
 npx tauri build            # Build production
 ./build-fast.sh            # Build optimisé
 ```
@@ -348,10 +348,10 @@ npx tauri build            # Build production
 ### Tests & Qualité
 
 ```bash
-npm run lint               # ESLint
-npm run type-check         # TypeScript check
-npm test                   # Tests React
-npm run test:tauri         # Tests Tauri
+pnpm run lint               # ESLint
+pnpm run type-check         # TypeScript check
+pnpm test                   # Tests React
+pnpm run test:tauri         # Tests Tauri
 ```
 
 ### Accès

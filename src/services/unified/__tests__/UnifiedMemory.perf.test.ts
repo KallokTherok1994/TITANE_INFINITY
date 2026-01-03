@@ -24,15 +24,14 @@ let LocalEmbeddingGeneratorCtor: typeof import('../index').LocalEmbeddingGenerat
 let SQLiteVectorStoreCtor: typeof import('../SQLiteVectorStore').SQLiteVectorStore;
 
 try {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires -- Dynamic require for optional native module
-  require('better-sqlite3');
+  // Use dynamic import for ESM compatibility
+  await import('better-sqlite3');
   hasSQLiteBindings = true;
-  // eslint-disable-next-line @typescript-eslint/no-var-requires -- Conditional import based on runtime check
-  const indexModule = require('../index');
+  const indexModule = await import('../index');
   UnifiedMemoryCtor = indexModule.UnifiedMemory;
   LocalEmbeddingGeneratorCtor = indexModule.LocalEmbeddingGenerator;
-  // eslint-disable-next-line @typescript-eslint/no-var-requires -- Conditional import based on runtime check
-  SQLiteVectorStoreCtor = require('../SQLiteVectorStore').SQLiteVectorStore;
+  const vectorModule = await import('../SQLiteVectorStore');
+  SQLiteVectorStoreCtor = vectorModule.SQLiteVectorStore;
 } catch {
   hasSQLiteBindings = false;
 }

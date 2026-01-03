@@ -34,7 +34,7 @@ This continuation session successfully transitioned from documentation (Phase 0-
 ---
 
 ### 2. TypeScript Validation ✅
-**Command:** `npm run check` (tsc --noEmit)  
+**Command:** `pnpm run check` (tsc --noEmit)  
 **Result:** ✅ **PASSING** - 0 errors
 
 **Impact:**
@@ -45,7 +45,7 @@ This continuation session successfully transitioned from documentation (Phase 0-
 ---
 
 ### 3. Frontend Tests ✅
-**Command:** `npm run test`  
+**Command:** `pnpm run test`  
 **Result:** ✅ **PASSING** - 2276/2322 tests (98%)
 
 **Breakdown:**

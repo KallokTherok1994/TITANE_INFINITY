@@ -222,7 +222,7 @@ Phase 4: Security & Performance (📝 PLANIFIÉ)
 ### ❌ À Éviter
 
 1. **Ne pas tout accepter en aveugle** : Copilot peut parfois se tromper
-2. **Ne pas skip les tests** : Toujours vérifier que `npm run build` passe
+2. **Ne pas skip les tests** : Toujours vérifier que `pnpm run build` passe
 3. **Ne pas mélanger les prompts** : Un super prompt à la fois
 4. **Ne pas oublier le backup** : On ne sait jamais !
 5. **Ne pas commit sans review** : Au moins lire les diffs principaux

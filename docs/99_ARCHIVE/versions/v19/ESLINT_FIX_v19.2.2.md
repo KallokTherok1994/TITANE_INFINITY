@@ -75,7 +75,7 @@ try {
 ### 3. Auto-Fix ESLint ✅
 
 ```bash
-npm run lint:fix
+pnpm run lint:fix
 ```
 
 - Auto-formatting appliqué
@@ -149,7 +149,7 @@ npm run lint:fix
 ### Tests ESLint
 
 ```bash
-$ npm run lint
+$ pnpm run lint
 ✖ 9 problems (0 errors, 9 warnings)  ✅
 
 # Avant: 21 problems (1 error, 20 warnings)
@@ -159,14 +159,14 @@ $ npm run lint
 ### Compilation TypeScript
 
 ```bash
-$ npm run type-check
+$ pnpm run type-check
 # 0 errors  ✅
 ```
 
 ### Tests Unitaires
 
 ```bash
-$ npm test
+$ pnpm test
 # All tests pass  ✅
 ```
 
@@ -225,7 +225,7 @@ Tests           : All pass ✅
 ### Auto-Fix Appliqués
 
 ```bash
-npm run lint:fix
+pnpm run lint:fix
 
 # Corrections automatiques:
 - Spacing standardisé

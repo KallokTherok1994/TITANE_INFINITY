@@ -41,7 +41,7 @@ cd TITANE_INFINITY
 
 ```bash
 # Avec npm
-npm install
+pnpm install
 
 # Ou avec pnpm (plus rapide)
 pnpm install
@@ -79,10 +79,10 @@ VITE_STORAGE_PATH=./user_data
 
 ```bash
 # Build du frontend + backend
-npm run build
+pnpm run build
 
 # Lancer l'application
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 **Temps estimé**: 30-60 secondes au premier lancement
@@ -247,13 +247,13 @@ VITE_LOG_LEVEL=info
 
 ```bash
 # Exécuter les tests
-npm test
+pnpm test
 
 # Vérifier la compilation Rust
 cd src-tauri && cargo check
 
 # Vérifier le build frontend
-npm run build
+pnpm run build
 ```
 
 ### Checklist post-installation
@@ -272,7 +272,7 @@ npm run build
 
 ```bash
 # Installer Tauri CLI globalement
-npm install -g @tauri-apps/cli
+pnpm install -g @tauri-apps/cli
 
 # Ou utiliser via npx
 npx tauri dev
@@ -287,7 +287,7 @@ chmod 644 ./data/titane.db
 
 # Recréer la base
 rm ./data/titane.db
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 ### Erreur: "WebView2 not found" (Windows)
@@ -305,9 +305,9 @@ rm -rf node_modules/.vite
 rm -rf src-tauri/target/debug
 
 # Rebuild propre
-npm run clean
-npm install
-npm run build
+pnpm run clean
+pnpm install
+pnpm run build
 ```
 
 ---

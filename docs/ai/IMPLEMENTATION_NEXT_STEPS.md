@@ -205,10 +205,10 @@ EOF
 **Validation:**
 ```bash
 # Vérifier imports
-npm run lint src/services/ai/providers/copilot.ts
+pnpm run lint src/services/ai/providers/copilot.ts
 
 # Tests unitaires
-npm run test src/services/ai/providers/copilot.test.ts
+pnpm run test src/services/ai/providers/copilot.test.ts
 ```
 
 **Créer test:** `src/services/ai/providers/copilot.test.ts`
@@ -351,7 +351,7 @@ describe('Copilot Adapter', () => {
 
 **Exécuter:**
 ```bash
-npm run test copilot
+pnpm run test copilot
 ```
 
 #### C. Tests E2E Playwright (1h)
@@ -461,8 +461,8 @@ TITANE∞ supporte GitHub Copilot comme provider IA.
 
 ### Frontend
 - [ ] `copilot.ts` créé (250 lignes)
-- [ ] Tests: `npm run test copilot` ✅
-- [ ] Lint: `npm run lint` ✅
+- [ ] Tests: `pnpm run test copilot` ✅
+- [ ] Lint: `pnpm run lint` ✅
 
 ### UI
 - [x] Carte Copilot dans SecretsTab ✅ (déjà fait)

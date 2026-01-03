@@ -412,7 +412,7 @@ components:
 
 ```bash
 # Installer redoc-cli
-npm install -g redoc-cli
+pnpm install -g redoc-cli
 
 # Générer la doc
 redoc-cli bundle docs/api/openapi.yaml -o docs/api/index.html

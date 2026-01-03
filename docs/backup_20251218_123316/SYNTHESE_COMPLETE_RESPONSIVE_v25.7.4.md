@@ -552,7 +552,7 @@ Semaine 4: Phase 4 📋 PLANNED
 
 ```bash
 # Lancer dev server
-npm run dev
+pnpm run dev
 
 # Ouvrir DevTools
 # Tester resize 375px → 768px → 1920px

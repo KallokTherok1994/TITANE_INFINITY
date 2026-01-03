@@ -218,7 +218,7 @@ let chunks = split_into_chunks("Long text...", 70);
 ### Compilation Tests
 ```bash
 # Phase 1 - React
-npm run type-check
+pnpm run type-check
 # ✅ 82 errors (préexistantes, non liées)
 
 # Phase 2 - Rust RwLock
@@ -312,19 +312,19 @@ cargo check --manifest-path src-tauri/Cargo.toml
 ### Build Production
 ```bash
 # Frontend
-npm run build
+pnpm run build
 
 # Backend
 cargo build --release --manifest-path src-tauri/Cargo.toml
 
 # Full build
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ### Tests
 ```bash
 # Type checking
-npm run type-check
+pnpm run type-check
 
 # Rust check
 cargo check --manifest-path src-tauri/Cargo.toml

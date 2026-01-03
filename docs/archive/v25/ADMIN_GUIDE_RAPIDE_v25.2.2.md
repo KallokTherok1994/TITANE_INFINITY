@@ -188,15 +188,15 @@ Toutes ces URLs redirigent vers `/admin`:
 ### Développement
 
 ```bash
-npm run dev
+pnpm run dev
 # ou
-npm run dev:tauri
+pnpm run dev:tauri
 ```
 
 ### Production
 
 ```bash
-npm run build
+pnpm run build
 npx tauri build
 ```
 

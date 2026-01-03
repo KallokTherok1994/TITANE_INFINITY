@@ -16,10 +16,10 @@ cat overview.md            # Backend 101 (10 min)
 
 ### DevOps
 ```bash
-npm run verify:backend:quick    # 30s — Avant commit
-npm run verify:backend          # 2 min — Avant push
-npm run verify:backend:deep     # 5-10 min — Avant release
-npm run repair:backend          # Si problème
+pnpm run verify:backend:quick    # 30s — Avant commit
+pnpm run verify:backend          # 2 min — Avant push
+pnpm run verify:backend:deep     # 5-10 min — Avant release
+pnpm run repair:backend          # Si problème
 ```
 
 ### Health Check (si app lancée)

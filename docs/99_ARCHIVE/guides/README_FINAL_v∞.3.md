@@ -35,7 +35,7 @@ Réussies:               18
 
 ```bash
 # Mode développement (recommandé pour tester)
-npm run dev
+pnpm run dev
 # ou
 ./runtime/dev/run-dev.sh
 
@@ -59,7 +59,7 @@ npx tsc --noEmit 2>&1 | grep -E "(useAudioChat|DashboardEditor|ChatProviderSelec
 
 ```bash
 # Build complet
-npm run build
+pnpm run build
 # ou
 ./runtime/stable/build.sh
 ```
@@ -202,7 +202,7 @@ Taux de réussite:         100% (18/18)
 ### Test 1: Sélection de Provider
 
 ```
-1. Lancer: npm run dev
+1. Lancer: pnpm run dev
 2. Aller sur http://localhost:1420/chat
 3. Observer le dropdown "Provider IA" au-dessus de l'input
 4. Sélectionner un provider (ex: Gemini)
@@ -425,7 +425,7 @@ scripts/quick-test-v3.sh                         - Test rapide
 ### Avant de Tester
 
 - [ ] Configurer au moins 1 provider IA
-- [ ] Lancer npm run dev
+- [ ] Lancer pnpm run dev
 - [ ] Tester ChatInput avec provider
 - [ ] Tester ChatBubble avec audio
 - [ ] Personnaliser dashboard

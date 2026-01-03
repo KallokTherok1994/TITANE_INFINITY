@@ -105,7 +105,7 @@ if (DEBUG) console.log('[Module] Debug message');
 
 **Validation:**
 ```bash
-npm run type-check
+pnpm run type-check
 # Module floating: 0 errors
 ```
 
@@ -343,7 +343,7 @@ public dispose(): void {
 
 ### Build Validation ✅
 - [x] TypeScript 0 errors (module floating)
-- [x] npm run build success
+- [x] pnpm run build success
 - [x] Tauri config valid
 - [x] Dependencies up-to-date
 
@@ -417,13 +417,13 @@ public dispose(): void {
 
 ### Build Test
 ```bash
-$ npm run type-check
+$ pnpm run type-check
 ✅ Module floating: 0 errors
 
-$ npm run build
+$ pnpm run build
 ✅ Vite build successful
 
-$ npm test -- floating.robustness.test.ts
+$ pnpm test -- floating.robustness.test.ts
 ✅ 17/17 tests passing (0.585s)
 
 $ cargo check --manifest-path src-tauri/Cargo.toml

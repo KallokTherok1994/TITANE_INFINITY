@@ -236,7 +236,7 @@ pgrep -f "vite|tauri"  # doit retourner vide
 
 # Manuel (si script fail)
 cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
-npm run vite:dev &  # Vite en background
+pnpm run vite:dev &  # Vite en background
 cargo tauri dev --no-watch  # Tauri frontend
 ```
 

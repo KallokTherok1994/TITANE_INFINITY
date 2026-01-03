@@ -11,12 +11,12 @@ bash quick_start_validation.sh
 
 ### Mode Développement
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### Build Production
 ```bash
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ## 🧪 Tests Manuels Essentiels (15 minutes)
@@ -62,13 +62,13 @@ npm run tauri:build
 
 ```bash
 # Compilation TypeScript
-npm run type-check
+pnpm run type-check
 
 # Compilation Rust
 cd src-tauri && cargo check
 
 # Build production
-npm run build
+pnpm run build
 
 # Lancer tests
 bash test_voice_pipeline_v7.sh
@@ -118,7 +118,7 @@ grep -r "HaloVisualizer.css" src/
 
 ### Erreur TypeScript
 ```bash
-npm run type-check
+pnpm run type-check
 ```
 
 ### Erreur Rust

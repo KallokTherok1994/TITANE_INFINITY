@@ -31,7 +31,7 @@ TAILLE: ~650 lignes, 20 KB
 
 | Étape | Objectif | Status | Résultat |
 |-------|----------|--------|----------|
-| 1 | Inventaire scripts existants | ✅ | `scripts/check_system.sh` existe, `npm run verify` OK |
+| 1 | Inventaire scripts existants | ✅ | `scripts/check_system.sh` existe, `pnpm run verify` OK |
 | 2 | Design verify:backend | ✅ | 3 modes (quick/standard/deep), exit codes 0/1/2/3 |
 | 3 | Commandes health check | ✅ | Existantes: quick_health_check, get_full_system_state |
 | 4 | Intégration SelfHeal | ✅ | Workflow verify → repair, script repair_backend.sh |
@@ -48,7 +48,7 @@ TAILLE: ~650 lignes, 20 KB
 - Vérifie Rust/Cargo/Node.js/pnpm/Tauri
 - Dépendances système (webkit, libssl)
 - Exit 0 (OK) ou 1 (Erreur)
-- Usage: `npm run verify` ou `./scripts/check_system.sh`
+- Usage: `pnpm run verify` ou `./scripts/check_system.sh`
 
 ---
 
@@ -56,7 +56,7 @@ TAILLE: ~650 lignes, 20 KB
 
 **Mode Quick (30s)**:
 ```bash
-npm run verify:backend:quick
+pnpm run verify:backend:quick
 
 # Vérifie:
 - Environnement (rustc, cargo)
@@ -66,7 +66,7 @@ npm run verify:backend:quick
 
 **Mode Standard (2 min)**:
 ```bash
-npm run verify:backend
+pnpm run verify:backend
 
 # Vérifie:
 - Environnement
@@ -78,7 +78,7 @@ npm run verify:backend
 
 **Mode Deep (5-10 min)**:
 ```bash
-npm run verify:backend:deep
+pnpm run verify:backend:deep
 
 # Vérifie:
 - cargo build + clippy
@@ -135,11 +135,11 @@ cargo build --bin titane_health_check
 **Workflow**:
 ```bash
 # 1. Verify
-npm run verify:backend
+pnpm run verify:backend
 
 # 2. Si erreur → Repair
 if [ $? -ne 0 ]; then
-    npm run repair:backend
+    pnpm run repair:backend
 fi
 ```
 
@@ -157,21 +157,21 @@ fi
 ### 5. Checklist DevOps
 
 **Avant Commit**:
-- [ ] `npm run verify:backend:quick` → ✅ OK
+- [ ] `pnpm run verify:backend:quick` → ✅ OK
 
 **Avant Push**:
-- [ ] `npm run verify:backend` → ✅ OK
+- [ ] `pnpm run verify:backend` → ✅ OK
 - [ ] `git status` → Clean ou intentionnel
 
 **Avant Release**:
-- [ ] `npm run verify:backend:deep` → ✅ OK
-- [ ] `npm run tauri build` → ✅ OK
+- [ ] `pnpm run verify:backend:deep` → ✅ OK
+- [ ] `pnpm run tauri build` → ✅ OK
 - [ ] Tester binaire
 
 **Si Problème**:
 - [ ] Lire logs (build.log, test.log)
 - [ ] Consulter debug-and-self-heal.md
-- [ ] Si > 5 min → `npm run repair:backend`
+- [ ] Si > 5 min → `pnpm run repair:backend`
 
 ---
 
@@ -179,12 +179,12 @@ fi
 
 **Phase 1: Basique** (FAIT ✅)
 - ✅ scripts/check_system.sh
-- ✅ npm run verify
+- ✅ pnpm run verify
 
 **Phase 2: Backend Focus** (À FAIRE - 5h)
 - 🔲 scripts/verify_backend.sh
 - 🔲 scripts/repair_backend.sh
-- 🔲 npm run verify:backend (3 modes)
+- 🔲 pnpm run verify:backend (3 modes)
 - 🔲 Exit codes standardisés
 
 **Phase 3: Health Check** (À FAIRE - 3h)
@@ -224,7 +224,7 @@ fi
 - Pas de checklist
 
 ### Après (Clarté)
-- 1 commande: `npm run verify:backend`
+- 1 commande: `pnpm run verify:backend`
 - Exit codes clairs (0/1/2/3)
 - Scripts reproductibles
 - Temps gagné: 18-27 min/problème (90% réduction)
@@ -238,7 +238,7 @@ fi
 
 1. **Check système existant**:
 ```bash
-npm run verify  # Vérifie Rust/Node/Tauri
+pnpm run verify  # Vérifie Rust/Node/Tauri
 ```
 
 2. **Health check Tauri** (si app lancée):
@@ -265,7 +265,7 @@ tail -f ~/.local/share/titane-infinity/logs/backend.log
 "verify:backend:quick": "sh ./scripts/verify_backend.sh --quick"
 
 # Tester
-npm run verify:backend
+pnpm run verify:backend
 ```
 
 ### Étape 2: Health Check Integration (2h)
@@ -322,7 +322,7 @@ Ou attendre et prioriser:
 
 **Transformation accomplie**:
 - Avant: "Est-ce que ça marche ?" → 10 commandes → 20 min → Frustration
-- Après: `npm run verify:backend` → 2 min → ✅/⚠️/❌ → Clarté
+- Après: `pnpm run verify:backend` → 2 min → ✅/⚠️/❌ → Clarté
 
 ---
 

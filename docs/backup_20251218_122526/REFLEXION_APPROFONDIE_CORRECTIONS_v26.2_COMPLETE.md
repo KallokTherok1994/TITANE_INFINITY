@@ -160,7 +160,7 @@ module.exports = {
 **Résultats:**
 
 ```bash
-$ npm run lint
+$ pnpm run lint
 
 # AVANT:
 # ❌ Timeout >30s (trop de fichiers scannés)
@@ -243,7 +243,7 @@ $ cargo clippy --quiet -- -D warnings
 
 - CI utilise Node 18 (local = Node 20)
 - CI utilise npm (local = pnpm)
-- Risque drift dépendances (npm ci ≠ pnpm install)
+- Risque drift dépendances (pnpm install --frozen-lockfile ≠ pnpm install)
 - Build times plus lents (npm vs pnpm)
 
 **Solution:**
@@ -266,28 +266,28 @@ jobs:
           version: 10
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile  # ← npm ci → pnpm
+        run: pnpm install --frozen-lockfile  # ← pnpm install --frozen-lockfile → pnpm
 
       - name: Run linter
-        run: pnpm run lint          # ← npm run → pnpm run
+        run: pnpm run lint          # ← pnpm run → pnpm run
 
       - name: Run tests
-        run: pnpm test -- --coverage  # ← npm test → pnpm test
+        run: pnpm test -- --coverage  # ← pnpm test → pnpm test
 
   test-e2e:
     steps:
       # ... mêmes changements (Node 20 + pnpm)
-      - run: pnpm run test:e2e      # ← npm run → pnpm run
+      - run: pnpm run test:e2e      # ← pnpm run → pnpm run
 
   security-scan:
     steps:
       # ... mêmes changements
-      - run: pnpm audit --prod      # ← npm audit → pnpm audit
+      - run: pnpm audit --prod      # ← pnpm audit → pnpm audit
 
   accessibility:
     steps:
       # ... mêmes changements
-      - run: pnpm run test:a11y     # ← npm run → pnpm run
+      - run: pnpm run test:a11y     # ← pnpm run → pnpm run
 
 # BONUS: Codecov v3 → v4 (avec token)
 - uses: codecov/codecov-action@v4
@@ -304,7 +304,7 @@ jobs:
 | Package manager | npm               | pnpm           | +Performance, lockfile sync |
 | Lockfile        | package-lock.json | pnpm-lock.yaml | Consistency garantie        |
 | Cache           | npm cache         | pnpm cache     | +Rapidité CI                |
-| Sécurité        | npm audit         | pnpm audit     | Mêmes checks                |
+| Sécurité        | pnpm audit         | pnpm audit     | Mêmes checks                |
 | Codecov         | v3 (deprecated)   | v4 (latest)    | Token security              |
 
 **Validation:**
@@ -326,7 +326,7 @@ act -j test-frontend --platform ubuntu-latest=catthehacker/ubuntu:act-latest
 ### Tests Suite
 
 ```bash
-$ npm test -- --run
+$ pnpm test -- --run
 
 Test Files  89 passed | 5 skipped (94)
      Tests  2066 passed | 56 skipped (2122)
@@ -341,7 +341,7 @@ Test Files  89 passed | 5 skipped (94)
 ### Build Production
 
 ```bash
-$ npm run build
+$ pnpm run build
 
 vite v6.4.1 building for production...
 ✓ 4239 modules transformed.
@@ -534,7 +534,7 @@ await secureInvoke('some_command', { args });
     { name: 'mobile-safari', ... }  // ← AJOUT
   ],
   webServer: {
-    command: 'npm run dev',
+    command: 'pnpm run dev',
     port: 1420,
     timeout: 120000
   }
@@ -578,7 +578,7 @@ REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md  ← CE FICHIER
 
 ```bash
 # ESLint (avec security rules actives)
-npm run lint
+pnpm run lint
 # ✅ 18.4s, 45 problèmes détectés (security enforcement works!)
 
 # TypeScript
@@ -591,11 +591,11 @@ cargo fmt --check    # ✅ 0 diff
 cargo clippy --quiet -- -D warnings  # ✅ 0 warnings
 
 # Tests
-npm test -- --run
+pnpm test -- --run
 # ✅ 2066/2122 passed (97.4%)
 
 # Build
-npm run build
+pnpm run build
 # ✅ 22.13s, 9.8M, 0 errors
 ```
 

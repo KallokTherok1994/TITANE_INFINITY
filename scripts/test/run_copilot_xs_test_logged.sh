@@ -16,7 +16,7 @@ fi
 {
   echo "Timestamp: $TS"
   echo "Root: $ROOT_DIR"
-  echo "Command: npm run copilot-xs:test"
+  echo "Command: pnpm run copilot-xs:test"
   echo "Mode: $([[ $DETACH -eq 1 ]] && echo 'detach' || echo 'foreground')"
   echo "----------------------------------------"
 } | tee "$LOG_FILE"
@@ -24,7 +24,7 @@ fi
 if [[ $DETACH -eq 1 ]]; then
   # Detached mode: continue even if terminal closes / receives SIGINT.
   # We avoid tee here to keep the process independent.
-  nohup bash -lc "cd '$ROOT_DIR' && npm run copilot-xs:test" >>"$LOG_FILE" 2>&1 &
+  nohup bash -lc "cd '$ROOT_DIR' && pnpm run copilot-xs:test" >>"$LOG_FILE" 2>&1 &
   PID=$!
   {
     echo "✅ Started detached. PID: $PID"
@@ -35,9 +35,9 @@ fi
 
 # Foreground mode: live output + persistent log.
 if command -v stdbuf >/dev/null 2>&1; then
-  stdbuf -oL -eL npm run copilot-xs:test 2>&1 | tee -a "$LOG_FILE"
+  stdbuf -oL -eL pnpm run copilot-xs:test 2>&1 | tee -a "$LOG_FILE"
 else
-  npm run copilot-xs:test 2>&1 | tee -a "$LOG_FILE"
+  pnpm run copilot-xs:test 2>&1 | tee -a "$LOG_FILE"
 fi
 
 echo "✅ Done. Log: $LOG_FILE" | tee -a "$LOG_FILE"

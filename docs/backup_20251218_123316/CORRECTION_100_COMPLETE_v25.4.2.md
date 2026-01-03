@@ -118,7 +118,7 @@ it.skip('should update metrics over time', async () => {
 ### TypeScript Compilation
 
 ```bash
-$ npm run check
+$ pnpm run check
 > tsc --noEmit
 # ✅ Exit Code: 0 (NO ERRORS)
 ```
@@ -126,7 +126,7 @@ $ npm run check
 ### Tests
 
 ```bash
-$ npm test -- --run
+$ pnpm test -- --run
 # ✅ 1989/2066 tests passed (96.3%)
 # ✅ 21 failed (tests UI selectors non-critiques)
 # ✅ 56 skipped (3 async timing + 53 intentionnels)
@@ -135,7 +135,7 @@ $ npm test -- --run
 ### Build
 
 ```bash
-$ npm run build
+$ pnpm run build
 # ✅ Vite build SUCCESS
 $ cargo build --release
 # ✅ Rust build SUCCESS

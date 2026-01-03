@@ -118,7 +118,7 @@ throw this.handleError(error);  // ✅ Correct
 
 **Result:**
 ```bash
-npm run check
+pnpm run check
 ✅ tsc --noEmit (0 errors)
 ```
 

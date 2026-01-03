@@ -363,7 +363,7 @@ Duration: XX ms
 
 ### Frontend Integration
 ```bash
-npm test -- TitaneAvatar.test.tsx
+pnpm test -- TitaneAvatar.test.tsx
 ```
 
 ---
@@ -376,10 +376,10 @@ npm test -- TitaneAvatar.test.tsx
 cargo build --manifest-path src-tauri/Cargo.toml --release
 
 # Frontend
-npm run build
+pnpm run build
 
 # Full Tauri build
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 **Compilation Status**: ✅ PASS (3 warnings mineurs non-bloquants)

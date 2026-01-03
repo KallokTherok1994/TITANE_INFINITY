@@ -398,7 +398,7 @@ if (provider === fallbackProvider) {
 
 3. **Démarrer app avec logs**
    ```bash
-   npm run dev
+   pnpm run dev
    # Ouvrir http://localhost:5173
    # Ouvrir DevTools Console
    # Envoyer message "test" dans Chat IA

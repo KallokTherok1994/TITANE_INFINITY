@@ -246,7 +246,7 @@ grep -r "localStorage\|sessionStorage" src/engines --include="*.ts"
 
 **Sprint 15: COPILOT-XS Validation Gate**
 - Run copilot-xs:validate (prohibited markers)
-- Security scan (npm audit, cargo audit)
+- Security scan (pnpm audit, cargo audit)
 - Test gate (full suite)
 - Baseline documentation
 - **Estimated:** 1-2 hours

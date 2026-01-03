@@ -185,7 +185,7 @@ await invoke('check_sqlite_available'); // Backend Tauri
 ## Phase 4: Validation Build
 
 ```
-$ npm run build
+$ pnpm run build
 
 > vite build
 vite v6.4.1 building for production...

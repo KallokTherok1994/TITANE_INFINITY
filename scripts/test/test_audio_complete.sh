@@ -105,7 +105,7 @@ echo "Test 2.1: Vérifier application Tauri..."
 if pgrep -f "titane_infinity" > /dev/null; then
     test_result "Application Tauri" "PASS"
 else
-    test_result "Application Tauri" "SKIP" "App not running (lancer: npm run tauri:dev)"
+    test_result "Application Tauri" "SKIP" "App not running (lancer: pnpm run tauri:dev)"
 fi
 
 # Test 2.2: Test microphone (nécessite Tauri)
@@ -300,7 +300,7 @@ if [ $TESTS_FAILED -gt 0 ]; then
         echo "  1. Démarrer service TTS: ./tts-service/start_tts_background.sh"
     fi
     if ! pgrep -f "titane_infinity" > /dev/null; then
-        echo "  2. Démarrer application: npm run tauri:dev"
+        echo "  2. Démarrer application: pnpm run tauri:dev"
     fi
     echo ""
     exit 1

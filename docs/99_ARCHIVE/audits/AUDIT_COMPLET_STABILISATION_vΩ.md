@@ -775,9 +775,9 @@ rm -rf src/omnisEngine/
 
 **Tests après suppression:**
 ```bash
-npm run lint
-npm run build
-npm run test
+pnpm run lint
+pnpm run build
+pnpm run test
 ```
 
 **GAIN:** **-150,000 lignes** (~40% code)
@@ -1206,17 +1206,17 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run test
-      - run: npm run build
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run lint
+      - run: pnpm run test
+      - run: pnpm run build
 ```
 
 **Release v1.0:**
 ```bash
 git tag v1.0.0
 git push origin v1.0.0
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ---

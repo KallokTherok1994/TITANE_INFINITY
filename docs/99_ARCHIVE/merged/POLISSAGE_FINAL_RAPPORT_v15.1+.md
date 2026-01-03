@@ -193,7 +193,7 @@ Aucune confusion process.env ✓
 BUILD PROD
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-✅ npm run tauri:build: Fonctionnel
+✅ pnpm run tauri:build: Fonctionnel
 ✅ Bundle complet: Frontend + Backend
 ✅ Aucune dépendance localhost
 ✅ Chat IA fonctionne en mode offline

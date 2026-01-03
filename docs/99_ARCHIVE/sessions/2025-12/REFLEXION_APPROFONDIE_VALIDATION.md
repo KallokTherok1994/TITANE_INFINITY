@@ -244,7 +244,7 @@ Patterns trouvés:
 killall titane-infinity vite node
 
 # Relancer avec logs verbeux
-RUST_LOG=debug npm run tauri dev -- --no-watch 2>&1 | tee runtime/dev/logs/full.log
+RUST_LOG=debug pnpm run tauri dev -- --no-watch 2>&1 | tee runtime/dev/logs/full.log
 
 # Observer fenêtre s'ouvrir
 # Si invisible: vérifier displays
@@ -446,7 +446,7 @@ sleep 2
 
 # 2. Lancer avec logs verbeux
 cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
-RUST_LOG=debug npm run tauri dev -- --no-watch 2>&1 | tee runtime/dev/logs/full.log &
+RUST_LOG=debug pnpm run tauri dev -- --no-watch 2>&1 | tee runtime/dev/logs/full.log &
 
 # 3. Observer fenêtre (devrait apparaître)
 # Si visible → Exécuter Test S1 "Bonjour TITANE"

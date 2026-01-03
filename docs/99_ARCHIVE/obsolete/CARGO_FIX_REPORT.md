@@ -76,8 +76,8 @@ sudo apt install libwebkit2gtk-4.1-dev \
 
 Au lieu de compiler directement avec cargo, utiliser:
 ```bash
-npm install --save-dev @tauri-apps/cli
-npm run tauri build
+pnpm install --save-dev @tauri-apps/cli
+pnpm run tauri build
 ```
 
 Cette méthode utilise les binaires pré-compilés de Tauri.
@@ -109,7 +109,7 @@ RUN apt-get update && apt-get install -y \
 ## 🚀 Prochaines Actions
 
 1. **Installer webkit2gtk-4.1** sur le système
-2. **OU** utiliser `npm run tauri` au lieu de `cargo` direct
+2. **OU** utiliser `pnpm run tauri` au lieu de `cargo` direct
 3. **OU** compiler dans un environnement Docker
 
 ## 📚 Références

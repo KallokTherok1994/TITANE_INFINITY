@@ -209,7 +209,7 @@ const MemorySection: React.FC<MemorySectionProps> = ({ stats }) => {
 ### Ajoutée: react-d3-tree@3.6.2
 
 ```bash
-npm install react-d3-tree@3.6.2 --legacy-peer-deps
+pnpm install react-d3-tree@3.6.2 --legacy-peer-deps
 ```
 
 **Raison**: React 19 compatibility (react-d3-tree supporte React 16/17/18)
@@ -296,14 +296,14 @@ npm install react-d3-tree@3.6.2 --legacy-peer-deps
 
 ```bash
 # Build
-npm run build
+pnpm run build
 
 # Dev (si runtime dev)
 ./runtime/dev/run-dev.sh
 
 # Tests (future)
-npm test
-npm run test:tauri
+pnpm test
+pnpm run test:tauri
 ```
 
 ---

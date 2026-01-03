@@ -375,8 +375,8 @@ cargo test --test ipc_cache_test
 cargo test ipc_cache -- --nocapture
 
 # Lint
-npm run lint
-npm run check
+pnpm run lint
+pnpm run check
 cargo clippy
 
 # Benchmarks

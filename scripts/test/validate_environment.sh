@@ -163,7 +163,7 @@ if [ -d "$PROJECTS_DIR/TITANE_INFINITY" ]; then
         echo -e "  ${GREEN}✅ Dependencies npm${NC}: Installées"
         VALIDATION_RESULTS+=("OK")
     else
-        echo -e "  ${YELLOW}⚠️  Dependencies npm${NC}: Manquantes (npm install)"
+        echo -e "  ${YELLOW}⚠️  Dependencies npm${NC}: Manquantes (pnpm install)"
         VALIDATION_RESULTS+=("WARN")
     fi
     
@@ -280,7 +280,7 @@ if [ "$FAIL_COUNT" -gt 0 ] || [ "$WARN_COUNT" -gt 0 ]; then
     
     if [ -d "$PROJECTS_DIR/TITANE_INFINITY" ] && ! [ -d "$PROJECTS_DIR/TITANE_INFINITY/node_modules" ]; then
         echo "  • Installer les dépendances du projet:"
-        echo "    cd ~/Projets/TITANE_INFINITY && npm install"
+        echo "    cd ~/Projets/TITANE_INFINITY && pnpm install"
         echo ""
     fi
 fi
@@ -288,7 +288,7 @@ fi
 if [ "$FAIL_COUNT" -eq 0 ]; then
     echo -e "${GREEN}Pour démarrer TITANE∞:${NC}"
     echo "  cd ~/Projets/TITANE_INFINITY"
-    echo "  npm run tauri dev"
+    echo "  pnpm run tauri dev"
     echo ""
 fi
 

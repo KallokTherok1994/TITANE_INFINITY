@@ -923,7 +923,7 @@ npx tsc --noEmit
 ollama list
 
 # Lancer dev
-npm run dev
+pnpm run dev
 
 # Tester menu editor
 # 1. Cliquer bouton bleu ✏️ dans menu

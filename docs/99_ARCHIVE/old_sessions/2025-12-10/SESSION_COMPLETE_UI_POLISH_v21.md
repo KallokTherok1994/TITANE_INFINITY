@@ -288,7 +288,7 @@ User Action / Backend Event
 ### Build Validation
 
 ```bash
-✅ npm run dev → Vite starts (220ms)
+✅ pnpm run dev → Vite starts (220ms)
 ✅ npx tsc --noEmit → 0 critical errors
 ✅ cargo check → Compilation success
 ✅ http://localhost:5173 → Server responds
@@ -313,7 +313,7 @@ User Action / Backend Event
 1. **Immediate Testing** :
 
    ```bash
-   npm run dev
+   pnpm run dev
    # Open http://localhost:5173
    # Verify console logs:
    #   "✨ [UI-POLISH] Micro-interactions initialized"

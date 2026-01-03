@@ -406,7 +406,7 @@ get_errors() → 0 erreurs ✅
 **Commande:**
 
 ```bash
-npm test src/hooks/__tests__/fusion-hooks.test.ts
+pnpm test src/hooks/__tests__/fusion-hooks.test.ts
 ```
 
 ---
@@ -448,8 +448,8 @@ npm test src/hooks/__tests__/fusion-hooks.test.ts
 
 ### Court terme (Cette semaine)
 
-- [ ] Exécuter tests: `npm test`
-- [ ] Build test: `npm run build`
+- [ ] Exécuter tests: `pnpm test`
+- [ ] Build test: `pnpm run build`
 - [ ] Screenshots du dashboard
 - [ ] Video demo 30s
 - [ ] Code review
@@ -516,8 +516,8 @@ npm test src/hooks/__tests__/fusion-hooks.test.ts
 - [x] TypeScript compilation OK
 - [x] Imports/Exports OK
 - [x] Types corrects
-- [ ] Tests exécutés (à faire: `npm test`)
-- [ ] Build production (à faire: `npm run build`)
+- [ ] Tests exécutés (à faire: `pnpm test`)
+- [ ] Build production (à faire: `pnpm run build`)
 
 ---
 

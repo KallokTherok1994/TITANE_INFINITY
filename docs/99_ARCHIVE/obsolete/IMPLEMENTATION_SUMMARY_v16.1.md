@@ -31,7 +31,7 @@
 - **COMPLETED**
 
 ### ✅ Tâche 6 : Tester mode Tauri dev
-- npm run dev doit lancer Tauri WebView, pas serveur HTTP
+- pnpm run dev doit lancer Tauri WebView, pas serveur HTTP
 - **COMPLETED** (Configuration validée, guide de test fourni)
 
 ---
@@ -90,7 +90,7 @@
 ./quick-start.sh
 
 # Ou directement
-npm run dev
+pnpm run dev
 ```
 
 **Version suivante :** v16.2 (Décembre 2025)

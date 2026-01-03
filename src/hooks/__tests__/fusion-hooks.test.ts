@@ -11,7 +11,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook, waitFor, act } from '@testing-library/react';
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 import { useSingularitySync } from '../useSingularitySync';
 import { useMemoryEngine } from '../useMemoryEngine';
@@ -158,15 +158,24 @@ describe('useSingularitySync', () => {
   test('should handle sync errors gracefully', async () => {
     const mockError = new Error('Backend unavailable');
     vi.mocked(secureInvoke).mockRejectedValue(mockError);
+    vi.mocked(singularityEngine.getState).mockReturnValue({
+      consciousness: 1,
+      autoCoherence: 0.5,
+      unity: {},
+      quantum: { coherence: 0.5 },
+      convergence: { convergenceLevel: 0.5 },
+      timestamp: Date.now(),
+    } as any);
 
-    const { result } = renderHook(() => useSingularitySync());
+    const { result } = renderHook(() => useSingularitySync({ autoSync: false }));
 
-    await result.current.sync();
-
-    await waitFor(() => {
-      expect(result.current.lastError).not.toBeNull();
+    // Déclencher le sync et attendre qu'il se termine
+    await act(async () => {
+      await result.current.sync();
     });
 
+    // Vérifier que l'erreur a été capturée immédiatement après le sync
+    expect(result.current.lastError).not.toBeNull();
     expect(result.current.lastError?.message).toBe('Backend unavailable');
     expect(result.current.metrics.errorCount).toBeGreaterThan(0);
   });

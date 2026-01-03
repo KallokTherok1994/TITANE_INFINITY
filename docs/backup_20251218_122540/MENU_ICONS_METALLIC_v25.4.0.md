@@ -306,7 +306,7 @@ filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.8)); /* Glow max */
 
 ```bash
 # Lancer dev mode
-npm run dev
+pnpm run dev
 
 # Naviguer vers différentes pages
 # Observer les effets :

@@ -40,7 +40,7 @@ Status: CERTIFIÉ
 ### 2. ✅ Build Production (PASS)
 
 ```bash
-Commande: npm run build
+Commande: pnpm run build
 Résultat: ✅ Build réussi
 Output: dist/ (6.0 MB)
 Desktop: Installation réussie
@@ -207,7 +207,7 @@ Dépendances obsolètes: N/A (à vérifier)
 
 **Recommandations:**
 
-- ⚠️ Exécuter `npm audit` pour scan complet
+- ⚠️ Exécuter `pnpm audit` pour scan complet
 - ⚠️ Mettre à jour dépendances régulièrement
 - ✅ Utiliser npm lockfile
 
@@ -362,8 +362,8 @@ Dépendances obsolètes: N/A (à vérifier)
 1. **Audit Sécurité npm:**
 
    ```bash
-   npm audit
-   npm audit fix
+   pnpm audit
+   pnpm audit fix
    ```
 
 2. **Correction ESLint (optionnel):**
@@ -458,7 +458,7 @@ Dépendances obsolètes: N/A (à vérifier)
 
 ### Sécurité ⚠️
 
-- [ ] npm audit exécuté (à faire)
+- [ ] pnpm audit exécuté (à faire)
 - [x] Code security: Bonnes pratiques
 - [x] Secrets: Pas d'exposition
 - [x] Input validation: Implémentée
@@ -506,7 +506,7 @@ Dépendances obsolètes: N/A (à vérifier)
 ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
 ║                                                                   ║
 ║  RECOMMANDATIONS:                                                 ║
-║    ⚠️  Exécuter npm audit (sécurité préventive)                 ║
+║    ⚠️  Exécuter pnpm audit (sécurité préventive)                 ║
 ║    💡 Ajouter tests E2E Playwright (recommandé)                  ║
 ║    💡 Augmenter test coverage à 80%+ (optionnel)                 ║
 ║                                                                   ║
@@ -556,7 +556,7 @@ Dépendances obsolètes: N/A (à vérifier)
 
 ### Axes d'Amélioration (Non-bloquants)
 
-⚠️ **Sécurité:** Exécuter npm audit (préventif)  
+⚠️ **Sécurité:** Exécuter pnpm audit (préventif)  
 💡 **Tests E2E:** Ajouter tests end-to-end (recommandé)  
 💡 **Coverage:** Augmenter coverage à 80%+ (optionnel)
 

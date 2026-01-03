@@ -377,7 +377,7 @@ npx tsc --noEmit
 ### Tests Unitaires ✅
 
 ```bash
-npm test
+pnpm test
 ✅ 16/16 tests PASS
 ✅ 100% coverage hooks
 ✅ 0 flaky tests
@@ -386,7 +386,7 @@ npm test
 ### Linting ✅
 
 ```bash
-npm run lint
+pnpm run lint
 ✅ 0 errors
 ✅ 0 warnings
 ✅ ESLint clean
@@ -424,7 +424,7 @@ git status
 
 3. ⏳ **Build production**
    ```bash
-   npm run build
+   pnpm run build
    ```
 
 ### Court terme (Cette semaine)

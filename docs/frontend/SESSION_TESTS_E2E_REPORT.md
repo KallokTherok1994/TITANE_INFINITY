@@ -446,22 +446,22 @@ Cette session a permis de créer **une suite complète de 92+ tests E2E** pour t
 
 ```bash
 # Tous les tests v21
-npm run test:unit -- --run src/hooks/__tests__/hooks.spec.ts src/stores/__tests__/stores.spec.ts src/components/panels/__tests__/panels.spec.tsx
+pnpm run test:unit -- --run src/hooks/__tests__/hooks.spec.ts src/stores/__tests__/stores.spec.ts src/components/panels/__tests__/panels.spec.tsx
 
 # Hooks uniquement
-npm run test:unit -- --run src/hooks/__tests__/hooks.spec.ts
+pnpm run test:unit -- --run src/hooks/__tests__/hooks.spec.ts
 
 # Stores uniquement
-npm run test:unit -- --run src/stores/__tests__/stores.spec.ts
+pnpm run test:unit -- --run src/stores/__tests__/stores.spec.ts
 
 # Panels uniquement
-npm run test:unit -- --run src/components/panels/__tests__/panels.spec.tsx
+pnpm run test:unit -- --run src/components/panels/__tests__/panels.spec.tsx
 
 # Avec coverage
-npm run test:unit -- --coverage src/hooks/__tests__/hooks.spec.ts src/stores/__tests__/stores.spec.ts src/components/panels/__tests__/panels.spec.tsx
+pnpm run test:unit -- --coverage src/hooks/__tests__/hooks.spec.ts src/stores/__tests__/stores.spec.ts src/components/panels/__tests__/panels.spec.tsx
 
 # Mode watch (développement)
-npm run test:unit -- src/hooks/__tests__/hooks.spec.ts
+pnpm run test:unit -- src/hooks/__tests__/hooks.spec.ts
 ```
 
 ---

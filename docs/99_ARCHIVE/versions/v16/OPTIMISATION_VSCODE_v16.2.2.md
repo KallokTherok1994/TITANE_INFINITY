@@ -454,7 +454,7 @@ radeontop
 **Phase 2: Tests Chat IA** (EN COURS)
 ```bash
 # 1. Relancer app avec VS Code optimisé
-npm run tauri:dev
+pnpm run tauri:dev
 
 # 2. Ouvrir DevTools (déjà auto-ouvert)
 # 3. Tester Chat IA:

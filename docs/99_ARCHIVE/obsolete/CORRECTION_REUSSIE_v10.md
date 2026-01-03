@@ -155,7 +155,7 @@ cargo build --release
 
 ```bash
 # Frontend seul (Vite)
-npm run dev  # Port 5173
+pnpm run dev  # Port 5173
 ```
 
 ---

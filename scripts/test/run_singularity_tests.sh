@@ -27,7 +27,7 @@ echo ""
 if ! pgrep -f "titane-infinity" > /dev/null; then
     echo -e "${RED}❌ ERROR: Runtime not running${NC}"
     echo "Please start runtime first:"
-    echo "  npm run tauri dev -- --no-watch"
+    echo "  pnpm run tauri dev -- --no-watch"
     exit 1
 fi
 

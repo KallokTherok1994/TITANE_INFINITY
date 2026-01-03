@@ -377,7 +377,7 @@ npx eslint src --ext .ts,.tsx       ✅ PASS (0 warnings)
 python3 /tmp/check_commands.py      ✅ PASS (0 blocked)
 
 # Build (si disponible)
-npm run build                       ✅ PASS (à vérifier)
+pnpm run build                       ✅ PASS (à vérifier)
 ```
 
 ---

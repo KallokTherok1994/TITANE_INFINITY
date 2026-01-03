@@ -282,16 +282,16 @@ TITANE∞ v9.0.0 — ORGANISME UNIFIÉ
 ./audit_v9.sh
 
 # Développement frontend
-npm run dev
+pnpm run dev
 
 # Build production frontend
-npm run build
+pnpm run build
 
 # Type checking
-npm run type-check
+pnpm run type-check
 
 # Vérification globale
-npm run verify
+pnpm run verify
 ```
 
 ---

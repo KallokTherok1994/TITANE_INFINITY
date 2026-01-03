@@ -16,9 +16,9 @@ import type {
   RecentMemory,
   NexusStatus,
   PersonaMultipliers,
-  ChatMessage,
-  ChatConfig,
-  ChatResponse,
+  ChatMessage as _ChatMessage,
+  ChatConfig as _ChatConfig,
+  ChatResponse as _ChatResponse,
   VoiceRecordingResult,
 } from '../types/tauri';
 

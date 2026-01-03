@@ -370,7 +370,7 @@ Certaines commandes nécessitent Tauri actif:
 - `introspect` (appel `titan_state_get`)
 - `status full` (appel `sc_diagnostics_run_quick`)
 
-**Workaround**: Vérifier que `npm run tauri:dev` est actif
+**Workaround**: Vérifier que `pnpm run tauri:dev` est actif
 
 ### Limitation #2: Lecture Fichiers
 `show code [fichier]` pas encore implémenté (v∞.21.1)

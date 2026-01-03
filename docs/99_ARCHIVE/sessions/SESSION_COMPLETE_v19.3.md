@@ -312,7 +312,7 @@ cargo test --lib security::
 
 **Tasks:**
 1. **Axe-core Integration** (2-3h)
-   - `npm install axe-core @axe-core/react`
+   - `pnpm install axe-core @axe-core/react`
    - Create `src/a11y/A11yChecker.tsx`
    - Run automated tests sur toutes les pages
 
@@ -338,7 +338,7 @@ cargo test --lib security::
 
 **Tasks:**
 1. **i18next Setup** (1-2h)
-   - `npm install i18next react-i18next i18next-browser-languagedetector`
+   - `pnpm install i18next react-i18next i18next-browser-languagedetector`
    - Configure i18n provider
 
 2. **French Translation** (4-6h)
@@ -366,7 +366,7 @@ cargo test --lib security::
    - Multi-platform builds (Windows/macOS/Linux)
 
 2. **E2E Tests** (4-6h)
-   - `npm install @playwright/test`
+   - `pnpm install @playwright/test`
    - Create `tests/e2e/*.spec.ts`
    - Run in CI
 

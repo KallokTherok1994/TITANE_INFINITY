@@ -82,21 +82,21 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 1: New User Onboarding', () => {
 export SKIP_E2E=false
 
 # Exécuter tests
-npm run test:e2e
+pnpm run test:e2e
 
 # Ou directement
-npm test -- src/tests/e2e/titane_e2e.test.ts
+pnpm test -- src/tests/e2e/titane_e2e.test.ts
 ```
 
 **Exécuter Scénario Spécifique:**
 ```bash
 # Scénario 1 uniquement
-npm test -- src/tests/e2e/titane_e2e.test.ts -t "New User Onboarding"
+pnpm test -- src/tests/e2e/titane_e2e.test.ts -t "New User Onboarding"
 ```
 
 **Mode Watch (Développement):**
 ```bash
-npm run test:watch -- src/tests/e2e/titane_e2e.test.ts
+pnpm run test:watch -- src/tests/e2e/titane_e2e.test.ts
 ```
 
 ### Prérequis Locaux
@@ -109,7 +109,7 @@ npm run test:watch -- src/tests/e2e/titane_e2e.test.ts
    cd ..
    
    # Build frontend
-   npm run build
+   pnpm run build
    ```
 
 2. **Dependencies:**
@@ -153,7 +153,7 @@ jobs:
       
       # E2E skipped automatiquement (CI=true)
       - name: Run Unit Tests
-        run: npm test
+        run: pnpm test
         
       # Durée: ~5 minutes
 ```
@@ -202,7 +202,7 @@ jobs:
         run: npx playwright install --with-deps
       
       - name: Build Frontend
-        run: npm run build
+        run: pnpm run build
       
       - name: Build Backend
         working-directory: src-tauri
@@ -212,7 +212,7 @@ jobs:
       - name: Run E2E Tests
         env:
           SKIP_E2E: false
-        run: npm run test:e2e
+        run: pnpm run test:e2e
         
       # Durée: ~25 minutes (build + tests)
 ```
@@ -255,13 +255,13 @@ jobs:
 **Logs Playwright:**
 ```bash
 # Mode debug Playwright
-DEBUG=pw:api npm run test:e2e
+DEBUG=pw:api pnpm run test:e2e
 ```
 
 **Screenshots:**
 ```bash
 # Tests avec screenshots auto
-npm run test:e2e -- --reporter=html
+pnpm run test:e2e -- --reporter=html
 
 # Ouvrir rapport
 npx playwright show-report
@@ -288,7 +288,7 @@ lsof -ti:5173 | xargs kill -9
 **3. Build Manquant**
 ```bash
 # Rebuild complet
-npm run build
+pnpm run build
 cd src-tauri && cargo build --release && cd ..
 ```
 

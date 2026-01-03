@@ -64,7 +64,7 @@ Cannot find module 'framer-motion'
 
 **Solution** :
 ```bash
-npm install framer-motion
+pnpm install framer-motion
 ```
 
 Vérifier installation :
@@ -321,12 +321,12 @@ cargo test
 
 ### Test 3: Build frontend
 ```bash
-npm run build
+pnpm run build
 ```
 
 ### Test 4: Lancer en dev
 ```bash
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 ### Test 5: Tests unitaires
@@ -337,7 +337,7 @@ cargo test wakeword::tests
 cargo test duplex::tests
 
 # Frontend
-npm test
+pnpm test
 ```
 
 ---
@@ -348,13 +348,13 @@ npm test
 
 ```bash
 # Logs Rust
-RUST_LOG=debug npm run tauri dev
+RUST_LOG=debug pnpm run tauri dev
 
 # Logs frontend
-npm run dev -- --debug
+pnpm run dev -- --debug
 
 # Logs Tauri
-npm run tauri dev -- --verbose
+pnpm run tauri dev -- --verbose
 ```
 
 ### Vérifier versions
@@ -376,8 +376,8 @@ rustc --version   # >= 1.70
 - [ ] `design-system.css` importé
 - [ ] Commandes Tauri enregistrées
 - [ ] Tests backend passent (`cargo test`)
-- [ ] Build frontend sans erreurs (`npm run build`)
-- [ ] Environnement dev fonctionnel (`npm run tauri dev`)
+- [ ] Build frontend sans erreurs (`pnpm run build`)
+- [ ] Environnement dev fonctionnel (`pnpm run tauri dev`)
 
 ---
 

@@ -62,7 +62,7 @@
 ### ✅ TypeScript (PARFAIT)
 
 ```bash
-$ npm run type-check
+$ pnpm run type-check
 ✓ tsc --noEmit
 ✓ 0 erreur
 ✓ 0 warning
@@ -73,7 +73,7 @@ $ npm run type-check
 ### ✅ Build Frontend (OPTIMAL)
 
 ```bash
-$ npm run build
+$ pnpm run build
 ✓ 77 modules transformed
 ✓ dist/index.html         1.62 kB (0.88 kB gzipped)
 ✓ dist/assets/index.css  34.09 kB (6.82 kB gzipped)
@@ -87,7 +87,7 @@ $ npm run build
 ### ✅ Dev Server (STABLE)
 
 ```bash
-$ npm run dev
+$ pnpm run dev
 ✓ Vite dev server started
 ✓ Startup: 118-144ms
 ✓ Port: 5173 (fallback 5174 si occupé)
@@ -134,18 +134,18 @@ $ npm run dev
 | Métrique | Valeur | Cible | Status | Validation |
 |----------|--------|-------|--------|------------|
 | Vite Startup | 118-144ms | < 200ms | ✅ EXCELLENT | Test manuel |
-| Frontend Build | 1.04s | < 2s | ✅ EXCELLENT | `npm run build` |
+| Frontend Build | 1.04s | < 2s | ✅ EXCELLENT | `pnpm run build` |
 | Bundle Size | 214 KB | < 500 KB | ✅ EXCELLENT | Vite output |
 | Gzipped | 61 KB | < 150 KB | ✅ EXCELLENT | Vite output |
 | Hot Reload | < 100ms | < 200ms | ✅ EXCELLENT | Test manuel |
-| TypeScript Check | ~2s | < 5s | ✅ EXCELLENT | `npm run type-check` |
+| TypeScript Check | ~2s | < 5s | ✅ EXCELLENT | `pnpm run type-check` |
 
 ### Qualité Code
 
 | Métrique | Valeur | Cible | Status | Validation |
 |----------|--------|-------|--------|------------|
-| TS Errors | 0 | 0 | ✅ PARFAIT | `npm run type-check` |
-| TS Warnings | 0 | 0 | ✅ PARFAIT | `npm run type-check` |
+| TS Errors | 0 | 0 | ✅ PARFAIT | `pnpm run type-check` |
+| TS Warnings | 0 | 0 | ✅ PARFAIT | `pnpm run type-check` |
 | ESLint Warnings | 0 | 0 | ✅ PARFAIT | Build output |
 | Type Safety | 100% | 100% | ✅ PARFAIT | tsconfig strict mode |
 | Strict Mode | Enabled | Enabled | ✅ PARFAIT | tsconfig.json |
@@ -323,8 +323,8 @@ $ npm run dev
 4. ✅ **Création STATUS_FINAL.md** — État détaillé (600+ lignes)
 5. ✅ **Vérification src/** — App.tsx, main.tsx validés
 6. ✅ **Vérification src-tauri/** — main.rs, Cargo.toml validés
-7. ✅ **Validation TypeScript** — 0 erreur (`npm run type-check`)
-8. ✅ **Validation Build** — 1.04s success (`npm run build`)
+7. ✅ **Validation TypeScript** — 0 erreur (`pnpm run type-check`)
+8. ✅ **Validation Build** — 1.04s success (`pnpm run build`)
 9. ✅ **Validation CSS** — 15 fichiers modernisés (34.09 KB)
 10. ✅ **Documentation complète** — 26 fichiers, 3,939+ lignes
 11. ✅ **Scripts automatisés** — 11 scripts opérationnels
@@ -357,9 +357,9 @@ $ npm run dev
 - [ ] **README.md** contient status table et notes migration
 - [ ] **CHANGELOG.md** existe et documente v15.5.0 complètement
 - [ ] **STATUS_FINAL.md** existe et décrit état système détaillé
-- [ ] `npm run type-check` → 0 erreur TypeScript
-- [ ] `npm run build` → Build success 1.04s
-- [ ] `npm run dev` → Server démarre port 5173
+- [ ] `pnpm run type-check` → 0 erreur TypeScript
+- [ ] `pnpm run build` → Build success 1.04s
+- [ ] `pnpm run dev` → Server démarre port 5173
 - [ ] 15 fichiers CSS contiennent glass morphism + animations
 - [ ] Scripts migration (4) existent et sont exécutables
 - [ ] build-docker.sh existe et est exécutable
@@ -383,11 +383,11 @@ $ npm run dev
 1. **Choisir solution build backend** :
    - 🐳 **Docker** (recommandé) : `./build-docker.sh`
    - 📦 **Migration 24.04** : Suivre `GUIDE_MIGRATION_POPOS_24.04.md`
-   - 💻 **Build natif** : `Ctrl+Alt+T` puis `npm run tauri:build`
+   - 💻 **Build natif** : `Ctrl+Alt+T` puis `pnpm run tauri:build`
 
 2. **Générer bundles production** :
    ```bash
-   npm run tauri:build
+   pnpm run tauri:build
    # Génère : .deb, .AppImage, binaire
    ```
 

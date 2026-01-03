@@ -568,7 +568,7 @@ Test modules:
 
 #### Frontend Tests (Jest)
 ```bash
-npm test
+pnpm test
 PASS tests/e2e/control_panel.spec.ts
 FAIL src/services/ai/inputValidator.test.ts (import error)
 

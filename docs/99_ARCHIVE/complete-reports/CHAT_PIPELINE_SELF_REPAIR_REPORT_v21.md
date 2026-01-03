@@ -349,7 +349,7 @@ VALIDATION SUMMARY
 
 ### Test 3: Test DevTools (Manuel - À Effectuer)
 
-Après `npm run dev`, ouvrir DevTools Console (F12) :
+Après `pnpm run dev`, ouvrir DevTools Console (F12) :
 
 ```javascript
 // Test 1: Provider local (toujours disponible)
@@ -782,9 +782,9 @@ de `main.rs`, rendant impossible l'appel depuis le frontend.
 cd src-tauri && cargo check
 
 # Lancer dev
-npm run dev
+pnpm run dev
 
-# Test dans DevTools Console (après npm run dev)
+# Test dans DevTools Console (après pnpm run dev)
 await invoke('chat_send_message', { message: 'test', provider: 'local' })
 await invoke('chat_get_providers_status')
 ```

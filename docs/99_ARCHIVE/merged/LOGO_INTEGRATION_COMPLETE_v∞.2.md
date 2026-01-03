@@ -52,8 +52,8 @@
 ### ⏳ Actions Manuelles Requises (PENDING)
 - [ ] **Générer PNG 1024×1024** (voir instructions ci-dessous)
 - [ ] **Exécuter `cargo tauri icon`** (génère icônes multi-résolutions)
-- [ ] **Tester en mode dev** (`npm run tauri:dev`)
-- [ ] **Build production** (`npm run tauri:build`)
+- [ ] **Tester en mode dev** (`pnpm run tauri:dev`)
+- [ ] **Build production** (`pnpm run tauri:build`)
 - [ ] **Valider icône sur l'app compilée**
 
 ---
@@ -123,7 +123,7 @@ Résultat attendu dans `src-tauri/icons/` :
 #### Étape 3: Tester
 
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 Vérifier :
@@ -134,7 +134,7 @@ Vérifier :
 #### Étape 4: Build Production
 
 ```bash
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 Vérifier l'icône sur l'exécutable final :
@@ -190,7 +190,7 @@ import { TitaneLogo } from '@components/branding/TitaneLogo';
 ```bash
 # Redémarrer le serveur dev
 pkill -9 -f "vite|tauri"
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### Import SVG échoue (TypeScript)
@@ -203,7 +203,7 @@ cd src-tauri
 cargo clean
 cd ..
 cargo tauri icon ./titane-app-icon.png
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ---
@@ -218,7 +218,7 @@ npm run tauri:build
 
 ## 🎯 Validation Visuelle Attendue
 
-Après `npm run tauri:dev`, vous devriez voir :
+Après `pnpm run tauri:dev`, vous devriez voir :
 
 **Sidebar** :
 ```
@@ -258,7 +258,7 @@ Le **logo TITANE∞ Reactor** est maintenant le **cœur visuel** de l'applicatio
 ./generate-app-icon.sh
 ```
 
-Puis lancez `npm run tauri:dev` pour admirer le résultat ! 🚀
+Puis lancez `pnpm run tauri:dev` pour admirer le résultat ! 🚀
 
 ---
 

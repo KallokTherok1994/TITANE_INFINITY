@@ -269,7 +269,7 @@ grep -r "#\[tauri::command\]" src-tauri/src --include="*.rs" | wc -l
 - [ ] Corriger toutes commandes ERROR/NOT_REGISTERED
 
 ### Phase 5: Build & Validation ✅ FINAL
-- [ ] npm run build (frontend)
+- [ ] pnpm run build (frontend)
 - [ ] cargo build --release (backend)
 - [ ] Test manuel Configuration Hub
 - [ ] Test manuel Audio (TTS + Micro + VAD)

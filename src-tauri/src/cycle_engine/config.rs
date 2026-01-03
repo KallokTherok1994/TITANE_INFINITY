@@ -167,7 +167,9 @@ mod tests {
     fn test_cycle_result_ok() {
         let result: CycleResult<i32> = Ok(42);
         assert!(result.is_ok());
-        assert_eq!(result.expect("cycle result ok should contain value"), 42);
+        if let Ok(value) = result {
+            assert_eq!(value, 42);
+        }
     }
 
     #[test]
@@ -179,7 +181,9 @@ mod tests {
     #[test]
     fn test_cycle_result_unwrap_err() {
         let result: CycleResult<i32> = Err(CycleError("Unwrap test".to_string()));
-        let error = result.unwrap_err();
-        assert_eq!(error.0, "Unwrap test");
+        assert!(result.is_err());
+        if let Err(error) = result {
+            assert_eq!(error.0, "Unwrap test");
+        }
     }
 }

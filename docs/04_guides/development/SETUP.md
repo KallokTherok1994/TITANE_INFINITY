@@ -99,7 +99,7 @@ nvm use --lts
 
 # Vérifier
 node --version  # v20.11+ attendu
-npm --version   # v10.2+ attendu
+pnpm --version  # v9.0+ attendu
 ```
 
 #### c) Installer Dépendances Tauri
@@ -158,10 +158,10 @@ cd TITANE_INFINITY
 
 ```bash
 # Installer dépendances npm
-npm install
+pnpm install
 
 # Ou avec legacy peer deps (si conflits)
-npm install --legacy-peer-deps
+pnpm install --legacy-peer-deps
 
 # Compiler backend Rust (première fois)
 cd src-tauri
@@ -262,7 +262,7 @@ TITANE∞ utilise une **architecture dual-runtime**:
 ./runtime/dev/run-dev.sh
 
 # Méthode 2: npm
-npm run dev:tauri
+pnpm run dev:tauri
 
 # Méthode 3: VSCode Task
 # Terminal → Run Task → "🟢 Launch Titan-Dev"
@@ -291,7 +291,7 @@ npm run dev:tauri
 ./runtime/stable/build.sh
 
 # Méthode 2: npm
-npm run build
+pnpm run build
 
 # Méthode 3: VSCode Task
 # Terminal → Run Task → "🔵 Build Titan-Stable"
@@ -312,10 +312,10 @@ npm run build
 
 ```bash
 # Linter frontend
-npm run lint
+pnpm run lint
 
 # Auto-fix
-npm run lint:fix
+pnpm run lint:fix
 ```
 
 **Configuration:** `.eslintrc.json`
@@ -335,10 +335,10 @@ cargo clippy -- -D warnings
 
 ```bash
 # Formater frontend
-npm run format
+pnpm run format
 
 # Vérifier formatage
-npm run format:check
+pnpm run format:check
 ```
 
 **Configuration:** `.prettierrc`
@@ -351,13 +351,13 @@ npm run format:check
 
 ```bash
 # Tous les tests
-npm test
+pnpm test
 
 # Watch mode
-npm run test:watch
+pnpm run test:watch
 
 # Coverage
-npm run test:coverage
+pnpm run test:coverage
 ```
 
 **Fichiers:** `src/**/*.test.ts`, `src/**/*.test.tsx`
@@ -384,13 +384,13 @@ cargo test -- --nocapture
 
 ```bash
 # Installer Playwright
-npm run test:e2e:install
+pnpm run test:e2e:install
 
 # Lancer tests E2E
-npm run test:e2e
+pnpm run test:e2e
 
 # Mode UI
-npm run test:e2e:ui
+pnpm run test:e2e:ui
 ```
 
 ---
@@ -401,10 +401,10 @@ npm run test:e2e:ui
 
 ```bash
 # Build avec profiling
-npm run build -- --mode profiling
+pnpm run build -- --mode profiling
 
 # Analyser bundle
-npm run analyze
+pnpm run analyze
 ```
 
 #### Backend (Rust)
@@ -509,15 +509,15 @@ git commit -m "test(voice): add VAD integration tests"
 
 ```bash
 # Démarrer dev
-npm run dev:tauri
+pnpm run dev:tauri
 
 # Linter + tests avant commit
-npm run lint && npm test
+pnpm run lint && pnpm test
 
 # Rebuild complet si problèmes
-npm run clean
-npm install
-npm run dev:tauri
+pnpm run clean
+pnpm install
+pnpm run dev:tauri
 ```
 
 ### Debug
@@ -530,7 +530,7 @@ tail -f runtime/dev/logs/vite.log
 tail -f runtime/dev/logs/tauri.log
 
 # Logs Rust (activer dans code)
-RUST_LOG=debug npm run dev:tauri
+RUST_LOG=debug pnpm run dev:tauri
 ```
 
 ### Build Production
@@ -556,7 +556,7 @@ RUST_LOG=debug npm run dev:tauri
 rm -rf node_modules/.vite
 
 # 2. Restart dev server
-npm run dev:tauri
+pnpm run dev:tauri
 ```
 
 ---
@@ -589,10 +589,10 @@ node --version  # doit être v20+
 
 # 2. Réinstaller dépendances
 rm -rf node_modules
-npm install
+pnpm install
 
 # 3. Re-lancer tests
-npm test
+pnpm test
 ```
 
 ---

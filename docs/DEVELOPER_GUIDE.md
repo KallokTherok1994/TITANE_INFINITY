@@ -423,10 +423,10 @@ console.table(metrics);
 
 ```bash
 # Lancer avec logs verbeux
-RUST_LOG=debug npm run tauri:dev
+RUST_LOG=debug pnpm run tauri:dev
 
 # Logs spécifique module
-RUST_LOG=mon_module=trace npm run tauri:dev
+RUST_LOG=mon_module=trace pnpm run tauri:dev
 ```
 
 ---

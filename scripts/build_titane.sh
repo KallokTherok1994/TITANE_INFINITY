@@ -62,11 +62,11 @@ echo ""
 # ─────────────────────────────────────────────────────────────────────────────
 echo -e "${YELLOW}[2/5] Installing dependencies...${NC}"
 if [ -f "pnpm-lock.yaml" ]; then
-    pnpm install --frozen-lockfile 2>/dev/null || npm ci
+    pnpm install --frozen-lockfile 2>/dev/null || pnpm install --frozen-lockfile
 elif [ -f "package-lock.json" ]; then
-    npm ci
+    pnpm install --frozen-lockfile
 else
-    npm install
+    pnpm install
 fi
 echo -e "${GREEN}✓ Dependencies installed${NC}"
 echo ""
@@ -75,7 +75,7 @@ echo ""
 # 3. TYPE CHECK
 # ─────────────────────────────────────────────────────────────────────────────
 echo -e "${YELLOW}[3/5] Running TypeScript type check...${NC}"
-npm run type-check || {
+pnpm run type-check || {
     echo -e "${RED}✗ TypeScript errors found${NC}"
     exit 1
 }
@@ -89,7 +89,7 @@ if [ "$SKIP_FRONTEND" != "true" ]; then
     echo -e "${YELLOW}[4/5] Building frontend (Vite)...${NC}"
 
     # Build avec optimisations
-    NODE_ENV=production npm run build
+    NODE_ENV=production pnpm run build
 
     # Vérifier la taille du build
     if [ -d "dist" ]; then

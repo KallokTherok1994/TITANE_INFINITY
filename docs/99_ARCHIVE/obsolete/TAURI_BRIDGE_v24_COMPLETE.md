@@ -217,7 +217,7 @@ if (personaTauriBridge.isTauriEnvironment()) {
 
 ## 🚀 Workflow Complet
 
-### Développement (npm run dev)
+### Développement (pnpm run dev)
 ```
 Frontend TypeScript
     ↓

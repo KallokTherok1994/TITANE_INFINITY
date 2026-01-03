@@ -132,7 +132,7 @@ engines/unified_memory/ltm.rs:         14 unwraps (3 prod, 11 test) ✅ FIXED
 
 - [ ] Create test infrastructure (30% coverage target)
 - [ ] Backend: `cargo test --lib`
-- [ ] Frontend: `npm run test:unit`
+- [ ] Frontend: `pnpm run test:unit`
 - [ ] Document passing tests
 
 ### Week 1 Milestone Target

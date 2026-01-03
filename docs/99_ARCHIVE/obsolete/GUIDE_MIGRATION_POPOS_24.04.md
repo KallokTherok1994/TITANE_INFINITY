@@ -297,7 +297,7 @@ Le script :
 #### 5.1 Test frontend
 ```bash
 cd ~/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run dev
+pnpm run dev
 ```
 
 Vérifier :
@@ -307,7 +307,7 @@ Vérifier :
 
 #### 5.2 Test Tauri dev
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 Vérifier :
@@ -319,7 +319,7 @@ Vérifier :
 
 #### 5.3 Test build production
 ```bash
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 Vérifier :
@@ -380,7 +380,7 @@ ldd --version | head -1
 bash -x install-popos-24.04.sh
 ```
 
-### Problème : npm install échoue
+### Problème : pnpm install échoue
 
 **Solution** :
 ```bash
@@ -389,7 +389,7 @@ npm cache clean --force
 rm -rf node_modules package-lock.json
 
 # Réinstaller
-npm install
+pnpm install
 ```
 
 ### Problème : Build Tauri échoue encore
@@ -422,11 +422,11 @@ sudo apt install libwebkit2gtk-4.1-dev libjavascriptcoregtk-4.1-dev
 
 - [ ] Projet restauré : `ls ~/Documents/TITANE_NEWGEN/TITANE_INFINITY`
 - [ ] node_modules installés : `ls node_modules | wc -l` (> 100)
-- [ ] Frontend build : `npm run build` → `dist/`
-- [ ] Type-check : `npm run type-check` → 0 erreur
-- [ ] Vite dev : `npm run dev` → http://localhost:5173
-- [ ] Tauri dev : `npm run tauri:dev` → fenêtre s'ouvre
-- [ ] Tauri build : `npm run tauri:build` → binaire généré
+- [ ] Frontend build : `pnpm run build` → `dist/`
+- [ ] Type-check : `pnpm run type-check` → 0 erreur
+- [ ] Vite dev : `pnpm run dev` → http://localhost:5173
+- [ ] Tauri dev : `pnpm run tauri:dev` → fenêtre s'ouvre
+- [ ] Tauri build : `pnpm run tauri:build` → binaire généré
 
 ### Performances attendues
 
@@ -487,9 +487,9 @@ sudo apt install libwebkit2gtk-4.1-dev libjavascriptcoregtk-4.1-dev
 
 ### Tests
 ```bash
-npm run dev
-npm run tauri:dev
-npm run tauri:build
+pnpm run dev
+pnpm run tauri:dev
+pnpm run tauri:build
 ./src-tauri/target/release/titane-infinity
 ```
 

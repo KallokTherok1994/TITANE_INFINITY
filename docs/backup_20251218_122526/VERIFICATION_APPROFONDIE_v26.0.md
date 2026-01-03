@@ -251,7 +251,7 @@ src/
 - `@testing-library/dom` - Testing utilities ✅
 - `@testing-library/user-event` - User interaction tests ✅
 
-**Security:** 0 vulnerabilities (npm audit) ✅
+**Security:** 0 vulnerabilities (pnpm audit) ✅
 
 ---
 

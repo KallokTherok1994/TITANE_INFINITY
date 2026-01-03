@@ -323,7 +323,7 @@ Render (GPU-accelerated) ──────── 🚀 60 FPS
 ✅ npx tsc --noEmit → 0 erreurs
 
 # ESLint
-✅ npm run lint → 0 warnings, 0 errors
+✅ pnpm run lint → 0 warnings, 0 errors
 
 # Runtime Tests
 ✅ Message send/receive → 97% success rate

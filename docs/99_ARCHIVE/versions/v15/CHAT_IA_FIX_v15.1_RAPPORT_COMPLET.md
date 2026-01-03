@@ -252,7 +252,7 @@ IMPACT:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ```bash
-npm run test src/__tests__/chat-ia-stability.test.ts
+pnpm run test src/__tests__/chat-ia-stability.test.ts
 ```
 
 ═══════════════════════════════════════════════════════════════════════════════
@@ -378,7 +378,7 @@ pub async fn chat_send_message(
 ⚙️ MODE DEV
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Commande: npm run tauri:dev
+Commande: pnpm run tauri:dev
 
 ✅ Vite dev server + Tauri
 ✅ Hot reload actif
@@ -390,7 +390,7 @@ Commande: npm run tauri:dev
 Validation:
 ```bash
 # Terminal 1
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Interface:
 # 1. Ouvrir Chat IA
@@ -403,7 +403,7 @@ npm run tauri:dev
 📦 MODE PROD
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Build: npm run tauri:build
+Build: pnpm run tauri:build
 
 ✅ Bundle complet (frontend + backend)
 ✅ Pas de dev server
@@ -414,7 +414,7 @@ Build: npm run tauri:build
 Validation post-build:
 ```bash
 # Build
-npm run tauri:build
+pnpm run tauri:build
 
 # Lance depuis .desktop ou binaire
 ./src-tauri/target/release/titane-infinity
@@ -498,7 +498,7 @@ VALIDATION: Suite e2e complète
 ═══════════════════════════════════════════════════════════════════════════════
 
 MODE DEV:
-□ npm run tauri:dev lance sans erreur
+□ pnpm run tauri:dev lance sans erreur
 □ Chat IA s'ouvre
 □ Envoyer message → réponse IA apparaît
 □ Réponse IA RESTE visible
@@ -507,7 +507,7 @@ MODE DEV:
 □ Revenir mode précédent → historique restauré
 
 MODE PROD:
-□ npm run tauri:build réussit
+□ pnpm run tauri:build réussit
 □ Lancer depuis .desktop
 □ Chat IA fonctionne offline
 □ Messages persistent

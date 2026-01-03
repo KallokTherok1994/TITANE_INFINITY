@@ -83,8 +83,8 @@ Tauri v2:
 | cargo check | ✅ PASS | 0.81s, 0 erreurs |
 | cargo clippy strict | ✅ PASS | 0 warnings |
 | cargo build | ✅ SUCCESS | ~3.5s compilation |
-| npm run type-check | ✅ PASS | 0 TypeScript errors |
-| npm run build | ✅ SUCCESS | 1.02s, 190KB bundle |
+| pnpm run type-check | ✅ PASS | 0 TypeScript errors |
+| pnpm run build | ✅ SUCCESS | 1.02s, 190KB bundle |
 | Dev mode start | ✅ STARTED | Vite 108ms, localhost:5173 |
 
 ---

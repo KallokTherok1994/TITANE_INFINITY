@@ -305,14 +305,40 @@ class ChatService {
 
   /**
    * [LEGACY] Envoi d'un message sans streaming
+   * Réimplémenté avec OMEGA conversation_generate pour compatibilité useChat
    */
   async sendMessageLegacy(
-    _messages: ChatMessage[],
-    _config?: StreamConfig
+    messages: ChatMessage[],
+    config?: StreamConfig
   ): Promise<ChatResponse> {
-    throw new Error(
-      'Legacy chat_send_message is disabled. Use OMEGA conversation_generate.'
-    );
+    // Si aucun message ou messages vides, retourner une erreur
+    if (!messages || messages.length === 0) {
+      throw new Error('No messages provided to sendMessageLegacy');
+    }
+
+    // Récupérer le dernier message utilisateur
+    const lastMessage = messages[messages.length - 1];
+    if (!lastMessage || !lastMessage.content) {
+      throw new Error('Last message has no content');
+    }
+
+    // Utiliser l'API OMEGA conversation_generate via sendMessage
+    // On va créer une conversation si nécessaire
+    let conversationId = config?.conversationId;
+    
+    // Si pas d'ID de conversation, en créer une nouvelle
+    if (!conversationId) {
+      try {
+        const convResponse = await this.startNewConversation();
+        conversationId = convResponse;
+      } catch (err) {
+        console.warn('[ChatService] Failed to create conversation, using fallback ID:', err);
+        conversationId = `legacy-${Date.now()}-${Math.random().toString(36).substring(7)}`;
+      }
+    }
+
+    // Appeler sendMessage (OMEGA) avec le dernier message
+    return this.sendMessage(lastMessage.content, conversationId, config);
   }
 
   /**
