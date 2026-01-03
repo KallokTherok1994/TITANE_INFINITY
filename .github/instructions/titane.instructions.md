@@ -15,9 +15,36 @@ appliesTo:
 
 # TITANE_INFINITY — Instructions Globales
 
-**Version:** 24.3.0  
+**Version:** 26.2.0  
 **Conformité:** 98/100 🎯  
-**Dernière mise à jour:** 2025-12-15
+**Dernière mise à jour:** 2026-01-02
+
+---
+
+## ⚠️ RÈGLE CRITIQUE #1 — MODE DÉVELOPPEMENT PERMANENT (2026-01-02)
+
+**AUTORITÉ:** Kevin Thibault (Créateur TITANE∞)
+
+**INTERDICTION ABSOLUE jusqu'à nouvelle ordre:**
+
+❌ **NE JAMAIS déployer AppImage/DEB** sans autorisation écrite explicite  
+❌ **NE JAMAIS lancer builds de production** (Titan-Stable, bundles, packages)  
+❌ **NE JAMAIS exécuter** `npm run build`, `tauri build`, tâche "🔵 Build Titan-Stable"
+
+✅ **Mode de travail OBLIGATOIRE:**
+- **Titan-Dev uniquement** (tâche "🟢 Launch Titan-Dev")
+- Console / Scripts / Terminal pour tous les tests
+- Paramètres de sécurité MINIMAUX (dev-friendly)
+- Pas de restrictions qui bloquent le développement
+
+**Conditions pour autoriser un déploiement production:**
+1. ✅ Tests CLI: **100/100 passés**
+2. ✅ Tests Rust (cargo test): **100% success**
+3. ✅ Tests E2E Playwright: **3/3 scénarios OK**
+4. ✅ Message explicite: **"GO FOR PRODUCTION DEPLOY - Kevin Thibault"**
+
+**Philosophie:** Privilégier la **fluidité du développement** sur la rigidité de production.  
+**Rationale:** Éviter les bugs bloquants en production tant que tous les systèmes ne sont pas validés.
 
 ---
 
