@@ -27,7 +27,7 @@
 ```bash
 # Vérifier versions
 node --version  # Requis: v20+
-npm --version   # Requis: v10+
+pnpm --version  # Requis: v9+
 rustc --version # Requis: 1.70+
 
 # Check package.json & Cargo.toml versions
@@ -41,7 +41,7 @@ cat src-tauri/Cargo.toml | grep '^version'
 ```bash
 # Frontend
 pnpm install
-npm outdated  # Check for updates
+pnpm outdated  # Check for updates
 
 # Backend
 cd src-tauri
@@ -826,7 +826,7 @@ npx vite-bundle-analyzer dist
 
 # Check dependencies size
 npx depcheck
-npm ls --depth=0
+pnpm ls --depth=0
 ```
 
 ---

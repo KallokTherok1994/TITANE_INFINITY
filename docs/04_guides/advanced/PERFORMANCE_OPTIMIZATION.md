@@ -211,7 +211,7 @@ npx vite-bundle-analyzer dist
 
 # Check individual package sizes
 npx depcheck
-npm ls react
+pnpm ls react
 ```
 
 ---

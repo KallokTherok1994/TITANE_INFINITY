@@ -99,7 +99,7 @@ nvm use --lts
 
 # Vérifier
 node --version  # v20.11+ attendu
-npm --version   # v10.2+ attendu
+pnpm --version  # v9.0+ attendu
 ```
 
 #### c) Installer Dépendances Tauri
