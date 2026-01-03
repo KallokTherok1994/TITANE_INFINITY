@@ -42,22 +42,48 @@ jobs:
       - name: 🏗️ Build production
         run: pnpm run build
 
-      - name: 🚀 Start Vite preview (Tauri build)
+      - name: 📊 Analyze build size
         run: |
-          # Build Tauri app for preview
-          mkdir -p dist
-          echo "<!DOCTYPE html><html><head><title>TITANE∞</title></head><body><h1>TITANE∞ - Tauri App</h1><p>Performance test placeholder</p></body></html>" > dist/index.html
+          # Analyze actual build output from pnpm build
+          if [ -d "dist" ]; then
+            echo "## 🚦 Build Size Analysis" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            # Total size
+            TOTAL_SIZE=$(du -sh dist | cut -f1)
+            echo "**Total Build Size:** \`${TOTAL_SIZE}\`" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            # Largest files (top 10)
+            echo "### 📦 Largest Assets (Top 10):" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            find dist -type f -exec du -h {} + | sort -rh | head -10 >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            # File count
+            FILE_COUNT=$(find dist -type f | wc -l)
+            echo "**Total Files:** ${FILE_COUNT}" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            echo "### 🎯 Tauri-Specific Metrics (Recommended):" >> $GITHUB_STEP_SUMMARY
+            echo "- Binary size analysis (\`src-tauri/target/release/\`)" >> $GITHUB_STEP_SUMMARY
+            echo "- Startup time profiling (\`cargo flamegraph\`)" >> $GITHUB_STEP_SUMMARY
+            echo "- Memory usage profiling (\`cargo instruments\` on macOS)" >> $GITHUB_STEP_SUMMARY
+            echo "- Rust benchmark suite (\`cargo bench\`)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ dist directory not found, build may have failed" >> $GITHUB_STEP_SUMMARY
+          fi
         continue-on-error: true
 
-      - name: 📊 Performance Summary
-        run: |
-          echo "## 🚦 Performance Analysis" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Note:** Lighthouse CI skipped for Tauri-only app" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Alternative Performance Metrics:" >> $GITHUB_STEP_SUMMARY
-          echo "- Build size analysis (see artifacts)" >> $GITHUB_STEP_SUMMARY
-          echo "- Rust performance tests (cargo bench)" >> $GITHUB_STEP_SUMMARY
+      - name: 📤 Upload build size report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-size-analysis
+          path: dist/
+          retention-days: 7
+        continue-on-error: true
           echo "- E2E test duration trends" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "💡 **Tip:** For Tauri apps, focus on:" >> $GITHUB_STEP_SUMMARY

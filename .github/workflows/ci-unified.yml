@@ -108,31 +108,47 @@ jobs:
       - name: 🎯 Check coverage threshold
         if: github.event_name == 'push' && github.ref == 'refs/heads/MAIN'
         run: |
-          # Extract coverage percentage from Vitest output
-          if [ -f coverage/coverage-summary.json ]; then
-            LINES_PCT=$(cat coverage/coverage-summary.json | grep -o '"lines":{"total":[0-9]*,"covered":[0-9]*,"skipped":[0-9]*,"pct":[0-9.]*' | grep -o 'pct":[0-9.]*' | cut -d':' -f2)
-            BRANCHES_PCT=$(cat coverage/coverage-summary.json | grep -o '"branches":{"total":[0-9]*,"covered":[0-9]*,"skipped":[0-9]*,"pct":[0-9.]*' | grep -o 'pct":[0-9.]*' | cut -d':' -f2)
-            
-            echo "📊 Coverage Results:"
-            echo "  Lines: ${LINES_PCT}%"
-            echo "  Branches: ${BRANCHES_PCT}%"
-            
-            # Check thresholds (70% lines, 60% branches)
-            if (( $(echo "$LINES_PCT < 70" | bc -l) )); then
-              echo "❌ Line coverage ${LINES_PCT}% is below threshold 70%"
-              echo "::warning::Line coverage is below 70% threshold"
-            else
-              echo "✅ Line coverage ${LINES_PCT}% meets threshold 70%"
-            fi
-            
-            if (( $(echo "$BRANCHES_PCT < 60" | bc -l) )); then
-              echo "⚠️ Branch coverage ${BRANCHES_PCT}% is below threshold 60%"
-              echo "::warning::Branch coverage is below 60% threshold"
-            else
-              echo "✅ Branch coverage ${BRANCHES_PCT}% meets threshold 60%"
-            fi
-          else
+          # Extract coverage percentage from Vitest output using jq for robust JSON parsing
+          if [ ! -f coverage/coverage-summary.json ]; then
             echo "⚠️ No coverage summary found, skipping threshold check"
+            exit 0
+          fi
+          
+          # Check if jq is available (it's standard on GitHub Actions runners)
+          if ! command -v jq >/dev/null 2>&1; then
+            echo "⚠️ jq is not installed, falling back to grep parsing"
+            # Fallback to safer grep parsing
+            LINES_PCT=$(grep -o '"lines"[^}]*"pct":[0-9.]*' coverage/coverage-summary.json | grep -o '[0-9.]*$' | head -1)
+            BRANCHES_PCT=$(grep -o '"branches"[^}]*"pct":[0-9.]*' coverage/coverage-summary.json | grep -o '[0-9.]*$' | head -1)
+          else
+            # Use jq for robust JSON parsing
+            LINES_PCT=$(jq -r '.total.lines.pct // empty' coverage/coverage-summary.json)
+            BRANCHES_PCT=$(jq -r '.total.branches.pct // empty' coverage/coverage-summary.json)
+          fi
+          
+          if [ -z "$LINES_PCT" ] || [ -z "$BRANCHES_PCT" ]; then
+            echo "⚠️ Could not read coverage percentages from coverage-summary.json, skipping threshold check"
+            exit 0
+          fi
+          
+          echo "📊 Coverage Results:"
+          echo "  Lines: ${LINES_PCT}%"
+          echo "  Branches: ${BRANCHES_PCT}%"
+          
+          # Check thresholds (70% lines, 60% branches) using awk for portability
+          # awk is more universally available than bc
+          if awk "BEGIN {exit !($LINES_PCT < 70)}"; then
+            echo "❌ Line coverage ${LINES_PCT}% is below threshold 70%"
+            echo "::warning::Line coverage is below 70% threshold"
+          else
+            echo "✅ Line coverage ${LINES_PCT}% meets threshold 70%"
+          fi
+          
+          if awk "BEGIN {exit !($BRANCHES_PCT < 60)}"; then
+            echo "⚠️ Branch coverage ${BRANCHES_PCT}% is below threshold 60%"
+            echo "::warning::Branch coverage is below 60% threshold"
+          else
+            echo "✅ Branch coverage ${BRANCHES_PCT}% meets threshold 60%"
           fi
         continue-on-error: true
 
