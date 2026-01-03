@@ -597,8 +597,8 @@ mod tests {
     #[test]
     fn test_narrative_perspective_serialize() {
         let p = NarrativePerspective::Collective;
-        let json = serde_json::to_string(&p)
-            .expect("serialize NarrativePerspective should succeed");
+        let json =
+            serde_json::to_string(&p).expect("serialize NarrativePerspective should succeed");
         assert!(json.contains("Collective"));
     }
 
@@ -664,8 +664,7 @@ mod tests {
     #[test]
     fn test_tone_modulation_serialize() {
         let t = ToneModulation::Dynamic;
-        let json = serde_json::to_string(&t)
-            .expect("serialize ToneModulation should succeed");
+        let json = serde_json::to_string(&t).expect("serialize ToneModulation should succeed");
         assert!(json.contains("Dynamic"));
     }
 
@@ -707,8 +706,7 @@ mod tests {
     #[test]
     fn test_style_profile_serialize() {
         let s = StyleProfile::Structured;
-        let json = serde_json::to_string(&s)
-            .expect("serialize StyleProfile should succeed");
+        let json = serde_json::to_string(&s).expect("serialize StyleProfile should succeed");
         assert!(json.contains("Structured"));
     }
 
@@ -813,8 +811,8 @@ mod tests {
     #[test]
     fn test_identity_profile_serialize() {
         let profile = IdentityProfile::default();
-        let json = serde_json::to_string(&profile)
-            .expect("serialize IdentityProfile should succeed");
+        let json =
+            serde_json::to_string(&profile).expect("serialize IdentityProfile should succeed");
         assert!(json.contains("TITANE"));
     }
 
@@ -853,8 +851,8 @@ mod tests {
             qualities: vec!["Q".to_string()],
             tone_modulation: ToneModulation::Dynamic,
         };
-        let json = serde_json::to_string(&archetype)
-            .expect("serialize NarrativeArchetype should succeed");
+        let json =
+            serde_json::to_string(&archetype).expect("serialize NarrativeArchetype should succeed");
         assert!(json.contains("Serialize"));
     }
 
@@ -974,8 +972,8 @@ mod tests {
             symbols: vec![],
             modulation: None,
         };
-        let json = serde_json::to_string(&output)
-            .expect("serialize NarrativeOutput should succeed");
+        let json =
+            serde_json::to_string(&output).expect("serialize NarrativeOutput should succeed");
         assert!(json.contains("Serialize"));
     }
 

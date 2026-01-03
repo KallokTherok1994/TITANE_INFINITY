@@ -315,8 +315,8 @@ mod tests {
 
         let json =
             serde_json::to_string(&meta).expect("ConversationMetadata should serialize to JSON");
-        let restored: ConversationMetadata = serde_json::from_str(&json)
-            .expect("ConversationMetadata should deserialize from JSON");
+        let restored: ConversationMetadata =
+            serde_json::from_str(&json).expect("ConversationMetadata should deserialize from JSON");
 
         assert_eq!(restored.total_tokens, 200);
         assert!(restored.is_archived);
@@ -480,10 +480,10 @@ mod tests {
             is_archived: false,
         };
 
-        let json = serde_json::to_string(&summary)
-            .expect("ConversationSummary should serialize to JSON");
-        let restored: ConversationSummary = serde_json::from_str(&json)
-            .expect("ConversationSummary should deserialize from JSON");
+        let json =
+            serde_json::to_string(&summary).expect("ConversationSummary should serialize to JSON");
+        let restored: ConversationSummary =
+            serde_json::from_str(&json).expect("ConversationSummary should deserialize from JSON");
 
         assert_eq!(restored.id, "summary-id");
         assert_eq!(restored.message_count, 25);

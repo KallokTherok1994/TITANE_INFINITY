@@ -59,11 +59,8 @@ impl KMeansClustering {
             )));
         }
 
-        let dimension = vectors
-            .values()
-            .next()
-            .map(|v| v.len())
-            .ok_or_else(|| {
+        let dimension =
+            vectors.values().next().map(|v| v.len()).ok_or_else(|| {
                 MemoryOSError::ClusteringError("No vectors to cluster".to_string())
             })?;
 

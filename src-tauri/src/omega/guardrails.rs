@@ -748,14 +748,16 @@ mod tests {
 
     #[test]
     fn test_guardrail_type_variants() {
-        let types = [GuardrailType::ContentSafety,
+        let types = [
+            GuardrailType::ContentSafety,
             GuardrailType::PrivacyProtection,
             GuardrailType::FactualAccuracy,
             GuardrailType::EthicalCompliance,
             GuardrailType::IdentityConsistency,
             GuardrailType::LengthLimits,
             GuardrailType::LanguageCheck,
-            GuardrailType::BiasDetection];
+            GuardrailType::BiasDetection,
+        ];
 
         assert_eq!(types.len(), 8);
         assert_ne!(

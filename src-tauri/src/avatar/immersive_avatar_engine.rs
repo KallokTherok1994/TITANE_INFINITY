@@ -731,10 +731,10 @@ mod tests {
     #[test]
     fn test_prosody_control_serialization() {
         let prosody = ProsodyControl::default();
-        let json = serde_json::to_string(&prosody)
-            .expect("ProsodyControl should serialize to JSON");
-        let restored: ProsodyControl = serde_json::from_str(&json)
-            .expect("ProsodyControl should deserialize from JSON");
+        let json =
+            serde_json::to_string(&prosody).expect("ProsodyControl should serialize to JSON");
+        let restored: ProsodyControl =
+            serde_json::from_str(&json).expect("ProsodyControl should deserialize from JSON");
         assert_eq!(restored.pause_after_comma, 120);
     }
 
@@ -799,10 +799,9 @@ mod tests {
     #[test]
     fn test_french_phoneme_serialization() {
         let phoneme = FrenchPhoneme::O;
-        let json = serde_json::to_string(&phoneme)
-            .expect("FrenchPhoneme should serialize to JSON");
-        let restored: FrenchPhoneme = serde_json::from_str(&json)
-            .expect("FrenchPhoneme should deserialize from JSON");
+        let json = serde_json::to_string(&phoneme).expect("FrenchPhoneme should serialize to JSON");
+        let restored: FrenchPhoneme =
+            serde_json::from_str(&json).expect("FrenchPhoneme should deserialize from JSON");
         assert!(matches!(restored, FrenchPhoneme::O));
     }
 
@@ -889,10 +888,9 @@ mod tests {
     #[test]
     fn test_morph_target_serialization() {
         let morph = MorphTarget::from_phoneme(FrenchPhoneme::E, 80);
-        let json = serde_json::to_string(&morph)
-            .expect("MorphTarget should serialize to JSON");
-        let restored: MorphTarget = serde_json::from_str(&json)
-            .expect("MorphTarget should deserialize from JSON");
+        let json = serde_json::to_string(&morph).expect("MorphTarget should serialize to JSON");
+        let restored: MorphTarget =
+            serde_json::from_str(&json).expect("MorphTarget should deserialize from JSON");
         assert_eq!(restored.duration_ms, 80);
     }
 
@@ -944,10 +942,9 @@ mod tests {
     #[test]
     fn test_lip_sync_model_serialization() {
         let model = LipSyncModel::default();
-        let json = serde_json::to_string(&model)
-            .expect("LipSyncModel should serialize to JSON");
-        let restored: LipSyncModel = serde_json::from_str(&json)
-            .expect("LipSyncModel should deserialize from JSON");
+        let json = serde_json::to_string(&model).expect("LipSyncModel should serialize to JSON");
+        let restored: LipSyncModel =
+            serde_json::from_str(&json).expect("LipSyncModel should deserialize from JSON");
         assert_eq!(restored.quality, "high");
     }
 
@@ -971,10 +968,9 @@ mod tests {
     #[test]
     fn test_facial_expression_serialization() {
         let expr = FacialExpression::Attentive;
-        let json = serde_json::to_string(&expr)
-            .expect("FacialExpression should serialize to JSON");
-        let restored: FacialExpression = serde_json::from_str(&json)
-            .expect("FacialExpression should deserialize from JSON");
+        let json = serde_json::to_string(&expr).expect("FacialExpression should serialize to JSON");
+        let restored: FacialExpression =
+            serde_json::from_str(&json).expect("FacialExpression should deserialize from JSON");
         assert_eq!(restored, FacialExpression::Attentive);
     }
 
@@ -1045,10 +1041,9 @@ mod tests {
     #[test]
     fn test_expression_model_serialization() {
         let model = ExpressionModel::default();
-        let json = serde_json::to_string(&model)
-            .expect("ExpressionModel should serialize to JSON");
-        let restored: ExpressionModel = serde_json::from_str(&json)
-            .expect("ExpressionModel should deserialize from JSON");
+        let json = serde_json::to_string(&model).expect("ExpressionModel should serialize to JSON");
+        let restored: ExpressionModel =
+            serde_json::from_str(&json).expect("ExpressionModel should deserialize from JSON");
         assert_eq!(restored.intensity, 0.7);
     }
 
@@ -1120,8 +1115,8 @@ mod tests {
     #[test]
     fn test_immersive_avatar_engine_serialization() {
         let engine = ImmersiveAvatarEngine::new();
-        let json = serde_json::to_string(&engine)
-            .expect("ImmersiveAvatarEngine should serialize to JSON");
+        let json =
+            serde_json::to_string(&engine).expect("ImmersiveAvatarEngine should serialize to JSON");
         let restored: ImmersiveAvatarEngine = serde_json::from_str(&json)
             .expect("ImmersiveAvatarEngine should deserialize from JSON");
         assert!(!restored.immersion_mode);
@@ -1134,14 +1129,20 @@ mod tests {
     #[test]
     fn test_avatar_engine_global_new() {
         let global = AvatarEngineGlobal::new();
-        let guard = global.0.lock().expect("AvatarEngineGlobal mutex should not be poisoned");
+        let guard = global
+            .0
+            .lock()
+            .expect("AvatarEngineGlobal mutex should not be poisoned");
         assert!(!guard.is_speaking);
     }
 
     #[test]
     fn test_avatar_engine_global_default() {
         let global = AvatarEngineGlobal::default();
-        let guard = global.0.lock().expect("AvatarEngineGlobal mutex should not be poisoned");
+        let guard = global
+            .0
+            .lock()
+            .expect("AvatarEngineGlobal mutex should not be poisoned");
         assert!(!guard.immersion_mode);
     }
 }

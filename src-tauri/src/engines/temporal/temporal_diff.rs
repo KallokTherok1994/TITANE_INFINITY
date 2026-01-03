@@ -333,8 +333,8 @@ mod tests {
         let old = r#"{"name": "test", "value": 1}"#;
         let new = r#"{"name": "test", "value": 2}"#;
 
-        let diff = TemporalDiff::compute(old, new)
-            .expect("temporal diff should compute modifications");
+        let diff =
+            TemporalDiff::compute(old, new).expect("temporal diff should compute modifications");
 
         assert!(diff.has_changes());
         assert_eq!(diff.modifications, 1);
@@ -346,8 +346,7 @@ mod tests {
         let old = r#"{"name": "test"}"#;
         let new = r#"{"name": "test", "value": 42}"#;
 
-        let diff = TemporalDiff::compute(old, new)
-            .expect("temporal diff should detect addition");
+        let diff = TemporalDiff::compute(old, new).expect("temporal diff should detect addition");
 
         assert_eq!(diff.additions, 1);
         assert_eq!(diff.changes[0].change_type, ChangeType::Added);
@@ -358,8 +357,7 @@ mod tests {
         let old = r#"{"name": "test", "value": 42}"#;
         let new = r#"{"name": "test"}"#;
 
-        let diff = TemporalDiff::compute(old, new)
-            .expect("temporal diff should detect removal");
+        let diff = TemporalDiff::compute(old, new).expect("temporal diff should detect removal");
 
         assert_eq!(diff.removals, 1);
         assert_eq!(diff.changes[0].change_type, ChangeType::Removed);

@@ -434,14 +434,12 @@ fn main() {
             }
         }
 
-        let _ = env_logger::Builder::from_env(
-            env_logger::Env::default().default_filter_or("info"),
-        )
-        .format_timestamp_millis()
-        .target(env_logger::Target::Pipe(Box::new(TeeWriter {
-            file: Mutex::new(file),
-        })))
-        .try_init();
+        let _ = env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info"))
+            .format_timestamp_millis()
+            .target(env_logger::Target::Pipe(Box::new(TeeWriter {
+                file: Mutex::new(file),
+            })))
+            .try_init();
     } else {
         eprintln!(
             "[LOG] Failed to open log file at {}",
@@ -475,13 +473,16 @@ fn main() {
         .get_secret(security::secrets_engine::KEY_COPILOT)
         .ok()
         .flatten();
-    
+
     let copilot_state = commands::copilot_commands::CopilotState {
         api_key: Arc::new(tokio::sync::RwLock::new(copilot_api_key)),
         secrets_engine: Arc::new(secrets_engine.clone()),
     };
-    
-    log::info!("✅ Copilot state initialized (key configured: {})", copilot_state.api_key.blocking_read().is_some());
+
+    log::info!(
+        "✅ Copilot state initialized (key configured: {})",
+        copilot_state.api_key.blocking_read().is_some()
+    );
 
     // ═══════════════════════════════════════════════════════════════
     // HELIOS & MEMORY CORES (v21.5 AUTO-FIX) - System Monitoring & Storage

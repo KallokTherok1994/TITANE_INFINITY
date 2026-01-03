@@ -153,8 +153,8 @@ mod tests {
     #[test]
     fn test_supervisor_stats_deserialize() {
         let json = r#"{"total_monitored":10,"healthy_agents":8,"unhealthy_agents":2,"restarts_performed":3}"#;
-        let stats: SupervisorStats = serde_json::from_str(json)
-            .expect("SupervisorStats should deserialize from JSON");
+        let stats: SupervisorStats =
+            serde_json::from_str(json).expect("SupervisorStats should deserialize from JSON");
         assert_eq!(stats.total_monitored, 10);
         assert_eq!(stats.healthy_agents, 8);
         assert_eq!(stats.unhealthy_agents, 2);
@@ -170,8 +170,8 @@ mod tests {
             restarts_performed: 7,
         };
         let json = serde_json::to_string(&stats).expect("SupervisorStats should serialize to JSON");
-        let restored: SupervisorStats = serde_json::from_str(&json)
-            .expect("SupervisorStats should deserialize from JSON");
+        let restored: SupervisorStats =
+            serde_json::from_str(&json).expect("SupervisorStats should deserialize from JSON");
         assert_eq!(restored.total_monitored, 15);
         assert_eq!(restored.restarts_performed, 7);
     }
@@ -247,8 +247,8 @@ mod tests {
     fn test_agent_health_deserialize() {
         let json =
             r#"{"agent_id":"test_agent","is_healthy":false,"last_check":999,"success_rate":0.4}"#;
-        let health: AgentHealth = serde_json::from_str(json)
-            .expect("AgentHealth should deserialize from JSON");
+        let health: AgentHealth =
+            serde_json::from_str(json).expect("AgentHealth should deserialize from JSON");
         assert_eq!(health.agent_id.as_str(), "test_agent");
         assert!(!health.is_healthy);
         assert_eq!(health.success_rate, 0.4);

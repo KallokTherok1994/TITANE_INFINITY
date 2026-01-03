@@ -522,10 +522,9 @@ mod tests {
     #[test]
     fn test_target_type_serialization() {
         let target = TargetType::RustModule;
-        let json = serde_json::to_string(&target)
-            .expect("TargetType should serialize to JSON");
-        let restored: TargetType = serde_json::from_str(&json)
-            .expect("TargetType should deserialize from JSON");
+        let json = serde_json::to_string(&target).expect("TargetType should serialize to JSON");
+        let restored: TargetType =
+            serde_json::from_str(&json).expect("TargetType should deserialize from JSON");
         assert_eq!(restored, target);
     }
 
@@ -541,10 +540,9 @@ mod tests {
         ];
 
         for t in types {
-            let json = serde_json::to_string(&t)
-                .expect("TargetType should serialize to JSON");
-            let restored: TargetType = serde_json::from_str(&json)
-                .expect("TargetType should deserialize from JSON");
+            let json = serde_json::to_string(&t).expect("TargetType should serialize to JSON");
+            let restored: TargetType =
+                serde_json::from_str(&json).expect("TargetType should deserialize from JSON");
             assert_eq!(restored, t);
         }
     }
@@ -679,10 +677,10 @@ mod tests {
             parameters: params,
         };
 
-        let json = serde_json::to_string(&request)
-            .expect("CreationRequest should serialize to JSON");
-        let restored: CreationRequest = serde_json::from_str(&json)
-            .expect("CreationRequest should deserialize from JSON");
+        let json =
+            serde_json::to_string(&request).expect("CreationRequest should serialize to JSON");
+        let restored: CreationRequest =
+            serde_json::from_str(&json).expect("CreationRequest should deserialize from JSON");
 
         assert_eq!(restored.id, request.id);
         assert_eq!(restored.intent, request.intent);
@@ -700,10 +698,10 @@ mod tests {
             documentation: "Page component".to_string(),
         };
 
-        let json = serde_json::to_string(&artifact)
-            .expect("GeneratedArtifact should serialize to JSON");
-        let restored: GeneratedArtifact = serde_json::from_str(&json)
-            .expect("GeneratedArtifact should deserialize from JSON");
+        let json =
+            serde_json::to_string(&artifact).expect("GeneratedArtifact should serialize to JSON");
+        let restored: GeneratedArtifact =
+            serde_json::from_str(&json).expect("GeneratedArtifact should deserialize from JSON");
 
         assert_eq!(restored.id, artifact.id);
         assert_eq!(restored.dependencies.len(), 2);

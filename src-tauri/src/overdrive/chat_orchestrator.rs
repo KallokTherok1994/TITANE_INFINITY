@@ -522,7 +522,8 @@ pub async fn chat_send_message(
 
         // Vérifier disponibilité via heartbeat (avec cache)
         let allow_ollama_probe = provider == "ollama"
-            && (requested_provider == "ollama" || (requested_provider == "auto" && ollama_auto_enabled));
+            && (requested_provider == "ollama"
+                || (requested_provider == "auto" && ollama_auto_enabled));
         let is_available = is_provider_available(&provider, &state, allow_ollama_probe).await;
         println!(
             "[CHAT ROUTER] ⚡ Provider {} availability = {}",

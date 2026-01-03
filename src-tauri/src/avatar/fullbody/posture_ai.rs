@@ -330,20 +330,21 @@ mod tests {
     #[test]
     fn test_posture_type_serialization() {
         let posture = PostureType::Calm;
-        let json = serde_json::to_string(&posture)
-            .expect("should serialize posture type to json");
-        let restored: PostureType = serde_json::from_str(&json)
-            .expect("should deserialize posture type from json");
+        let json = serde_json::to_string(&posture).expect("should serialize posture type to json");
+        let restored: PostureType =
+            serde_json::from_str(&json).expect("should deserialize posture type from json");
         assert_eq!(restored, PostureType::Calm);
     }
 
     #[test]
     fn test_posture_type_all_variants() {
-        let postures = [PostureType::Professional,
+        let postures = [
+            PostureType::Professional,
             PostureType::Engaged,
             PostureType::Calm,
             PostureType::Creative,
-            PostureType::Welcoming];
+            PostureType::Welcoming,
+        ];
         assert_eq!(postures.len(), 5);
     }
 
@@ -509,10 +510,9 @@ mod tests {
     #[test]
     fn test_conversational_context_serialization() {
         let ctx = ConversationalContext::default();
-        let json = serde_json::to_string(&ctx)
-            .expect("should serialize conversational context");
-        let restored: ConversationalContext = serde_json::from_str(&json)
-            .expect("should deserialize conversational context");
+        let json = serde_json::to_string(&ctx).expect("should serialize conversational context");
+        let restored: ConversationalContext =
+            serde_json::from_str(&json).expect("should deserialize conversational context");
         assert_eq!(restored.user_engagement, 0.5);
     }
 

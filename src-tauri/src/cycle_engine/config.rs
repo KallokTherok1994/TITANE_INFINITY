@@ -85,10 +85,9 @@ mod tests {
     #[test]
     fn test_cycle_engine_config_serialization() {
         let config = CycleEngineConfig::default();
-        let json = serde_json::to_string(&config)
-            .expect("cycle engine config should serialize");
-        let restored: CycleEngineConfig = serde_json::from_str(&json)
-            .expect("cycle engine config should deserialize");
+        let json = serde_json::to_string(&config).expect("cycle engine config should serialize");
+        let restored: CycleEngineConfig =
+            serde_json::from_str(&json).expect("cycle engine config should deserialize");
         assert!(restored.enabled);
         assert_eq!(restored.tick_interval_seconds, 60);
     }
@@ -114,8 +113,8 @@ mod tests {
     #[test]
     fn test_cycle_engine_config_deserialize() {
         let json = r#"{"enabled": true, "tick_interval_seconds": 120, "daily_cycle_enabled": false, "weekly_cycle_enabled": true, "monthly_cycle_enabled": true, "seasonal_cycle_enabled": false, "adaptive_load_enabled": true, "predictive_enabled": false}"#;
-        let config: CycleEngineConfig = serde_json::from_str(json)
-            .expect("cycle engine config should deserialize from JSON");
+        let config: CycleEngineConfig =
+            serde_json::from_str(json).expect("cycle engine config should deserialize from JSON");
         assert!(config.enabled);
         assert_eq!(config.tick_interval_seconds, 120);
         assert!(!config.daily_cycle_enabled);
@@ -168,10 +167,7 @@ mod tests {
     fn test_cycle_result_ok() {
         let result: CycleResult<i32> = Ok(42);
         assert!(result.is_ok());
-        assert_eq!(
-            result.expect("cycle result ok should contain value"),
-            42
-        );
+        assert_eq!(result.expect("cycle result ok should contain value"), 42);
     }
 
     #[test]

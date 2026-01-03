@@ -312,11 +312,7 @@ mod tests {
         let millis = system_time_to_millis(now);
 
         assert!(millis.is_some());
-        assert!(
-            millis
-                .expect("conversion should return millis for now")
-                > 0
-        );
+        assert!(millis.expect("conversion should return millis for now") > 0);
     }
 
     #[test]
@@ -325,10 +321,7 @@ mod tests {
         let millis = system_time_to_millis(epoch);
 
         assert!(millis.is_some());
-        assert_eq!(
-            millis.expect("epoch conversion should be zero millis"),
-            0
-        );
+        assert_eq!(millis.expect("epoch conversion should be zero millis"), 0);
     }
 
     #[test]

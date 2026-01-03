@@ -837,12 +837,10 @@ mod tests {
 
         assert!(!result.success);
         assert!(result.error.is_some());
-        assert!(
-            result
-                .error
-                .expect("failed task should have an error")
-                .contains("Timeout")
-        );
+        assert!(result
+            .error
+            .expect("failed task should have an error")
+            .contains("Timeout"));
     }
 
     #[test]

@@ -451,8 +451,7 @@ mod tests {
     #[test]
     fn test_mode_features_serialize() {
         let features = ModeFeatures::default();
-        let json = serde_json::to_string(&features)
-            .expect("ModeFeatures should serialize to JSON");
+        let json = serde_json::to_string(&features).expect("ModeFeatures should serialize to JSON");
         assert!(json.contains("suggestions_enabled"));
     }
 
@@ -501,8 +500,8 @@ mod tests {
     #[test]
     fn test_mode_constraints_serialize() {
         let constraints = ModeConstraints::default();
-        let json = serde_json::to_string(&constraints)
-            .expect("ModeConstraints should serialize to JSON");
+        let json =
+            serde_json::to_string(&constraints).expect("ModeConstraints should serialize to JSON");
         assert!(json.contains("require_citations"));
     }
 
@@ -572,8 +571,8 @@ mod tests {
             reason: "Alert".to_string(),
             automatic: true,
         };
-        let json = serde_json::to_string(&transition)
-            .expect("ModeTransition should serialize to JSON");
+        let json =
+            serde_json::to_string(&transition).expect("ModeTransition should serialize to JSON");
         assert!(json.contains("Emergency"));
     }
 

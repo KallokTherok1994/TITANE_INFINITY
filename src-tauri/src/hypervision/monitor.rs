@@ -346,8 +346,7 @@ mod tests {
             coherence: 88.8,
             stability: 91.1,
         };
-        let json = serde_json::to_string(&metrics)
-            .expect("SystemMetrics should serialize to JSON");
+        let json = serde_json::to_string(&metrics).expect("SystemMetrics should serialize to JSON");
         assert!(json.contains("cpu_usage"));
         assert!(json.contains("coherence"));
     }
@@ -374,8 +373,7 @@ mod tests {
             coherence: 99.9,
             stability: 99.5,
         };
-        let json = serde_json::to_string(&original)
-            .expect("SystemMetrics should serialize");
+        let json = serde_json::to_string(&original).expect("SystemMetrics should serialize");
         let restored: SystemMetrics =
             serde_json::from_str(&json).expect("SystemMetrics should deserialize");
         assert_eq!(restored.timestamp, 55555);
@@ -466,8 +464,7 @@ mod tests {
             errors: 3,
             warnings: 7,
         };
-        let json = serde_json::to_string(&layer)
-            .expect("LayerMetrics should serialize to JSON");
+        let json = serde_json::to_string(&layer).expect("LayerMetrics should serialize to JSON");
         assert!(json.contains("layer_id"));
         assert!(json.contains("Logic"));
     }
@@ -492,8 +489,7 @@ mod tests {
             errors: 1,
             warnings: 3,
         };
-        let json = serde_json::to_string(&original)
-            .expect("LayerMetrics should serialize");
+        let json = serde_json::to_string(&original).expect("LayerMetrics should serialize");
         let restored: LayerMetrics =
             serde_json::from_str(&json).expect("LayerMetrics should deserialize");
         assert_eq!(restored.layer_id, 3);
@@ -583,8 +579,7 @@ mod tests {
             timestamp: 55555,
             auto_resolved: true,
         };
-        let json = serde_json::to_string(&anomaly)
-            .expect("Anomaly should serialize to JSON");
+        let json = serde_json::to_string(&anomaly).expect("Anomaly should serialize to JSON");
         assert!(json.contains("ser-anom"));
         assert!(json.contains("medium"));
     }
@@ -607,8 +602,7 @@ mod tests {
             timestamp: 77777,
             auto_resolved: false,
         };
-        let json = serde_json::to_string(&original)
-            .expect("Anomaly should serialize");
+        let json = serde_json::to_string(&original).expect("Anomaly should serialize");
         let restored: Anomaly = serde_json::from_str(&json).expect("Anomaly should deserialize");
         assert_eq!(restored.id, "roundtrip-anom");
     }

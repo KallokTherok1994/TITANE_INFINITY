@@ -235,7 +235,10 @@ pub async fn autofix_reset(state: State<'_, AutoFixState>) -> Result<(), String>
 
 /// Frontend-compat: push a Rust warning into the AutoFix issue queue.
 #[tauri::command]
-pub async fn autofix_rust_warning(state: State<'_, AutoFixState>, warning: String) -> Result<(), String> {
+pub async fn autofix_rust_warning(
+    state: State<'_, AutoFixState>,
+    warning: String,
+) -> Result<(), String> {
     let now = current_timestamp();
 
     let issue = DetectedIssue {
@@ -262,7 +265,10 @@ pub async fn autofix_rust_warning(state: State<'_, AutoFixState>, warning: Strin
 
 /// Frontend-compat: push a TypeScript error into the AutoFix issue queue.
 #[tauri::command]
-pub async fn autofix_typescript_error(state: State<'_, AutoFixState>, error: String) -> Result<(), String> {
+pub async fn autofix_typescript_error(
+    state: State<'_, AutoFixState>,
+    error: String,
+) -> Result<(), String> {
     let now = current_timestamp();
 
     let issue = DetectedIssue {
@@ -355,11 +361,7 @@ pub async fn autofix_add_mutex(
     state: State<'_, AutoFixState>,
     args: AutoFixAddMutexArgs,
 ) -> Result<(), String> {
-    let target = args
-        .file
-        .as_deref()
-        .unwrap_or("unknown")
-        .to_string();
+    let target = args.file.as_deref().unwrap_or("unknown").to_string();
     let symbol = args.symbol.unwrap_or_else(|| "(unspecified)".to_string());
     let reason = args.reason.unwrap_or_default();
 

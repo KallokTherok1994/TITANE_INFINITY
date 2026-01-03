@@ -582,7 +582,9 @@ mod tests {
         let active = manager.get_active();
         assert!(active.is_some());
         assert_eq!(
-            active.expect("VoiceProfileManager should have an active profile").name,
+            active
+                .expect("VoiceProfileManager should have an active profile")
+                .name,
             "TITANE Default"
         );
     }

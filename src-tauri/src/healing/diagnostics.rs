@@ -651,10 +651,12 @@ mod tests {
 
     #[test]
     fn test_diagnostic_finding_all_severities() {
-        let severities = [DiagnosticSeverity::Info,
+        let severities = [
+            DiagnosticSeverity::Info,
             DiagnosticSeverity::Warning,
             DiagnosticSeverity::Error,
-            DiagnosticSeverity::Critical];
+            DiagnosticSeverity::Critical,
+        ];
 
         for (i, severity) in severities.iter().enumerate() {
             let finding = DiagnosticFinding {
@@ -833,20 +835,16 @@ mod tests {
 
         assert!(finding.details.is_some());
         assert!(finding.suggestion.is_some());
-        assert!(
-            finding
-                .details
-                .as_ref()
-                .expect("details should be present")
-                .contains("Detailed")
-        );
-        assert!(
-            finding
-                .suggestion
-                .as_ref()
-                .expect("suggestion should be present")
-                .contains("restarting")
-        );
+        assert!(finding
+            .details
+            .as_ref()
+            .expect("details should be present")
+            .contains("Detailed"));
+        assert!(finding
+            .suggestion
+            .as_ref()
+            .expect("suggestion should be present")
+            .contains("restarting"));
     }
 
     #[test]

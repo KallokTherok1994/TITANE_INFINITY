@@ -269,7 +269,9 @@ mod tests {
             .await
             .expect("metric series test.counter should exist");
         assert_eq!(
-            series.last_value().expect("test.counter should have a last value"),
+            series
+                .last_value()
+                .expect("test.counter should have a last value"),
             3.0
         );
         assert_eq!(series.metric_type, MetricType::Counter);
@@ -287,7 +289,9 @@ mod tests {
             .await
             .expect("metric series test.cpu should exist");
         assert_eq!(
-            series.last_value().expect("test.cpu should have a last value"),
+            series
+                .last_value()
+                .expect("test.cpu should have a last value"),
             67.2
         );
         assert_eq!(series.values.len(), 2);

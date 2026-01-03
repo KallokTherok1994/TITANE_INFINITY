@@ -434,14 +434,10 @@ mod tests {
         let vault = VaultBridge::new();
         let original = "sk-test-secret-key-12345";
 
-        let encrypted = vault
-            .encrypt(original)
-            .expect("encrypt should succeed");
+        let encrypted = vault.encrypt(original).expect("encrypt should succeed");
         assert_ne!(encrypted, original);
 
-        let decrypted = vault
-            .decrypt(&encrypted)
-            .expect("decrypt should succeed");
+        let decrypted = vault.decrypt(&encrypted).expect("decrypt should succeed");
         assert_eq!(decrypted, original);
     }
 }

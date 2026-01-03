@@ -204,10 +204,9 @@ mod tests {
             confidence_score: 0.85,
             timestamp: 1234567890,
         };
-        let json = serde_json::to_string(&result)
-            .expect("analysis result should serialize");
-        let restored: AnalysisResult = serde_json::from_str(&json)
-            .expect("analysis result should deserialize");
+        let json = serde_json::to_string(&result).expect("analysis result should serialize");
+        let restored: AnalysisResult =
+            serde_json::from_str(&json).expect("analysis result should deserialize");
         assert_eq!(restored.anomalies_detected, 3);
         assert_eq!(restored.confidence_score, 0.85);
     }
