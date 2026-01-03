@@ -131,11 +131,12 @@ export const copilotProvider: AIProvider = {
             },
             {
               ...getRetryConfig('copilot'),
-              shouldRetry: (error: Error) => {
+              shouldRetry: (error: unknown) => {
                 // Retry sur rate limits uniquement
-                return error.message.includes('Limite de taux') ||
-                       error.message.includes('429') ||
-                       error.message.includes('rate limit');
+                const message = error instanceof Error ? error.message : String(error);
+                return message.includes('Limite de taux') ||
+                       message.includes('429') ||
+                       message.includes('rate limit');
               },
             }
           );
@@ -160,11 +161,14 @@ export const copilotProvider: AIProvider = {
 
           return {
             content: response.data.content,
+            provider: 'copilot',
+            timestamp: Date.now(),
+            model: response.data.model || finalConfig.model,
+            tokens: response.data.tokens,
             metadata: {
-              provider: 'copilot',
               model: response.data.model || finalConfig.model,
-              tokens: response.data.tokens,
-              latency,
+              tokensUsed: response.data.tokens,
+              latencyMs: latency,
               cached: false,
               finishReason: response.data.finish_reason || 'stop',
             },
@@ -179,19 +183,22 @@ export const copilotProvider: AIProvider = {
             latency,
           });
 
-          // Auto-healing: basculer sur fallback si disponible
+          // Auto-healing: detect error for monitoring
           if (autoHealEngine) {
             try {
-              await autoHealEngine.recordError('copilot', error as Error);
-              const suggestion = await autoHealEngine.getSuggestion('copilot');
+              const healError = autoHealEngine.detectError(
+                'copilot',
+                error instanceof Error ? error : new Error(String(error))
+              );
               
-              if (suggestion?.fallback && suggestion.fallback !== 'copilot') {
-                logger.info('Auto-healing: falling back from Copilot', {
-                  fallback: suggestion.fallback,
+              if (healError) {
+                logger.info('Auto-healing: error detected', {
+                  errorId: healError.id,
+                  type: healError.type,
                 });
               }
             } catch (healError) {
-              logger.warn('Auto-heal failed for Copilot', { healError });
+              logger.warn('Auto-heal detection failed for Copilot', { healError });
             }
           }
 
@@ -203,7 +210,7 @@ export const copilotProvider: AIProvider = {
           );
         }
       },
-      CACHE_TTL.SHORT // 5 minutes cache for Copilot
+      CACHE_TTL.TECHNICAL // 5 minutes cache for Copilot (technical queries)
     );
   },
 
@@ -251,43 +258,44 @@ export const copilotProvider: AIProvider = {
       };
     }
   },
-
-  /**
-   * Configurer le token GitHub Copilot
-   */
-  async setApiKey(apiKey: string): Promise<{
-    success: boolean;
-    message?: string;
-  }> {
-    try {
-      const result = await secureInvoke<{
-        configured: boolean;
-        status: string;
-        message?: string;
-      }>('chat_set_copilot_key', { apiKey });
-
-      if (result.configured) {
-        logger.info('Copilot key configured successfully');
-      } else {
-        logger.warn('Copilot key configuration failed', {
-          status: result.status,
-          message: result.message,
-        });
-      }
-
-      return {
-        success: result.configured,
-        message: result.message,
-      };
-    } catch (error) {
-      logger.error('Copilot set API key error', { error });
-      return {
-        success: false,
-        message: error instanceof Error ? error.message : 'Erreur de configuration',
-      };
-    }
-  },
 };
+
+/**
+ * Helper function to configure Copilot API key
+ * (Not part of AIProvider interface, separate utility)
+ */
+export async function setCopilotApiKey(apiKey: string): Promise<{
+  success: boolean;
+  message?: string;
+}> {
+  try {
+    const result = await secureInvoke<{
+      configured: boolean;
+      status: string;
+      message?: string;
+    }>('chat_set_copilot_key', { apiKey });
+
+    if (result.configured) {
+      logger.info('Copilot key configured successfully');
+    } else {
+      logger.warn('Copilot key configuration failed', {
+        status: result.status,
+        message: result.message,
+      });
+    }
+
+    return {
+      success: result.configured,
+      message: result.message,
+    };
+  } catch (error) {
+    logger.error('Copilot set API key error', { error });
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : 'Erreur de configuration',
+    };
+  }
+}
 
 /**
  * Export default pour compatibilité
