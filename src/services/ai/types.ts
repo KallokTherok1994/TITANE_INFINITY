@@ -34,6 +34,7 @@ export type AIProviderName =
   | 'tauri-chat'
   | 'openai'
   | 'claude'
+  | 'copilot' // ✨ v26.3 - GitHub Copilot provider
   | 'fallback'
   | 'emergency-fallback'
   | 'ultimate-fallback'
@@ -42,7 +43,8 @@ export type AIProviderName =
   | 'titane-constitutional';
 
 // ✨ v21 - Provider choice for UI selection
-export type ProviderChoice = 'auto' | 'openai' | 'claude' | 'gemini' | 'ollama' | 'local';
+// ✨ v26.3 - Added GitHub Copilot provider
+export type ProviderChoice = 'auto' | 'openai' | 'claude' | 'gemini' | 'ollama' | 'copilot' | 'local';
 
 /** Response metadata interface with known fields */
 export interface AIResponseMetadata {
@@ -106,3 +108,102 @@ export const DEFAULT_AI_CONFIG: AIConfig = {
   topK: 40,
   timeout: 30000,
 };
+
+// ✨ v26.3 - Unified Provider Types for consistent integration
+/**
+ * Identifiant normalisé des providers IA
+ * Utilisé pour router les requêtes, gérer les clés, et afficher l'UI
+ */
+export type AIProviderId = 'openai' | 'anthropic' | 'gemini' | 'ollama' | 'copilot' | 'local';
+
+/**
+ * Informations sur un modèle IA
+ */
+export interface ModelInfo {
+  id: string;
+  name: string;
+  contextWindow: number;
+  supportsVision?: boolean;
+  supportsStreaming?: boolean;
+  supportsFunctionCalling?: boolean;
+  isDefault?: boolean;
+  costPer1kInput?: number;
+  costPer1kOutput?: number;
+}
+
+/**
+ * Résultat d'un test de connexion
+ */
+export interface ProviderTestResult {
+  success: boolean;
+  message: string;
+  latencyMs?: number;
+  error?: string;
+  availableModels?: string[];
+}
+
+/**
+ * Statut d'un provider
+ */
+export interface ProviderStatus {
+  configured: boolean; // Clé API configurée
+  available: boolean; // Provider accessible (test connexion OK)
+  enabled: boolean; // Provider activé par l'utilisateur
+  lastCheck?: number; // Timestamp dernière vérification
+  error?: string; // Erreur si indisponible
+  latencyMs?: number; // Latence dernière requête
+}
+
+/**
+ * Capacités d'un provider
+ */
+export interface ProviderCapabilities {
+  textGeneration: boolean;
+  streaming: boolean;
+  vision: boolean;
+  functionCalling: boolean;
+  codeGeneration: boolean;
+  embeddings: boolean;
+  longContext: boolean;
+}
+
+/**
+ * Interface unifiée pour tous les providers IA
+ * Garantit une intégration homogène (OpenAI, Anthropic, Gemini, Ollama, Copilot)
+ */
+export interface AIProviderAdapter {
+  // Identité
+  readonly id: AIProviderId;
+  readonly name: string;
+  readonly description?: string;
+
+  // Capacités
+  readonly capabilities: ProviderCapabilities;
+
+  // Lifecycle & Health
+  isAvailable(): Promise<boolean>;
+  testConnection(): Promise<ProviderTestResult>;
+  getStatus(): Promise<ProviderStatus>;
+
+  // Modèles
+  listModels(): Promise<ModelInfo[]>;
+  getDefaultModel(): string;
+
+  // Core Generation
+  generate(
+    message: string,
+    history?: AIMessage[],
+    config?: AIConfig
+  ): Promise<AIResponse>;
+
+  // Streaming (optionnel)
+  stream?(
+    message: string,
+    history?: AIMessage[],
+    config?: AIConfig
+  ): AsyncGenerator<string>;
+
+  // Stats & Debug
+  getStats?(): Record<string, unknown>;
+  resetErrors?(): void;
+}

@@ -31,6 +31,7 @@ export { tauriChatProvider } from './providers/tauriChat';
 export { geminiProvider } from './providers/gemini';
 export { openaiProvider } from './providers/openai';
 export { claudeProvider } from './providers/claude';
+export { copilotProvider } from './providers/copilot';
 export { ollamaProvider } from './providers/ollama';
 
 // ─────────────────────────────────────────────────────────────────

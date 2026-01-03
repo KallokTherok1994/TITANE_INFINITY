@@ -27,6 +27,7 @@ const initialState: GovernanceState = {
   geminiStatus: null,
   openaiStatus: null,
   anthropicStatus: null,
+  copilotStatus: null,
   ollamaStatus: null,
   policies: [],
   permissionMatrix: {},
@@ -194,6 +195,33 @@ export function useGovernance() {
         setState(prev => ({ ...prev, anthropicStatus: response.data }));
       } else {
         setError(response.error || 'Erreur lors de la configuration de la clé Anthropic');
+      }
+
+      setLoading(false);
+      return response;
+    },
+    [setLoading, setError]
+  );
+
+  const loadCopilotStatus = useCallback(async () => {
+    const response = await governanceService.getCopilotStatus();
+    if (response.ok && response.data) {
+      setState(prev => ({ ...prev, copilotStatus: response.data }));
+    }
+    return response;
+  }, []);
+
+  const setCopilotKey = useCallback(
+    async (apiKey: string) => {
+      setLoading(true);
+      setError(null);
+
+      const response = await governanceService.setCopilotKey(apiKey);
+
+      if (response.ok && response.data) {
+        setState(prev => ({ ...prev, copilotStatus: response.data }));
+      } else {
+        setError(response.error || 'Erreur lors de la configuration de la clé Copilot');
       }
 
       setLoading(false);
@@ -432,6 +460,7 @@ export function useGovernance() {
       loadGeminiStatus(),
       loadOpenAIStatus(),
       loadAnthropicStatus(),
+      loadCopilotStatus(),
       loadOllamaStatus(),
       loadPolicies(),
       loadPermissionMatrix(),
@@ -445,6 +474,7 @@ export function useGovernance() {
     loadGeminiStatus,
     loadOpenAIStatus,
     loadAnthropicStatus,
+    loadCopilotStatus,
     loadOllamaStatus,
     loadPolicies,
     loadPermissionMatrix,
@@ -475,6 +505,8 @@ export function useGovernance() {
     setOpenAIKey,
     loadAnthropicStatus,
     setAnthropicKey,
+    loadCopilotStatus,
+    setCopilotKey,
     loadOllamaStatus,
     storeSecret,
     deleteSecret,

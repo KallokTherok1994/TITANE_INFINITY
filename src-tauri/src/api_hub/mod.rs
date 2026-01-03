@@ -14,6 +14,7 @@
 
 pub mod anthropic;
 pub mod config;
+pub mod copilot; // ✨ v26.3 - GitHub Copilot provider
 pub mod diagnostics;
 pub mod gemini;
 pub mod harmonizer;
@@ -33,6 +34,7 @@ mod temporal_integration_tests;
 
 pub use anthropic::AnthropicProvider;
 pub use config::APIHubConfig;
+pub use copilot::CopilotClient; // ✨ v26.3
 pub use diagnostics::{APIHubDiagnostics, APIHubEvent};
 pub use gemini::GeminiProvider;
 pub use harmonizer::{HarmonizedResponse, ResponseHarmonizer};
@@ -73,6 +75,7 @@ pub enum Provider {
     OpenAI,
     Gemini,
     Anthropic,
+    Copilot, // ✨ v26.3 - GitHub Copilot
     Local,
 }
 
@@ -82,6 +85,7 @@ impl std::fmt::Display for Provider {
             Provider::OpenAI => write!(f, "OpenAI"),
             Provider::Gemini => write!(f, "Gemini"),
             Provider::Anthropic => write!(f, "Anthropic"),
+            Provider::Copilot => write!(f, "Copilot"), // ✨ v26.3
             Provider::Local => write!(f, "Local"),
         }
     }
