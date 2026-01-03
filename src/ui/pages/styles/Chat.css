@@ -592,10 +592,10 @@
   }
 
   /* Ensure all interactive elements meet minimum touch target */
-  button, 
-  a[href], 
-  input[type="button"], 
-  input[type="submit"], 
+  button,
+  a[href],
+  input[type='button'],
+  input[type='submit'],
   select {
     min-height: 44px;
     min-width: 44px;

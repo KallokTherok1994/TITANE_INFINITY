@@ -15,7 +15,13 @@ interface ToastData {
 }
 
 interface ToastContainerProps {
-  position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' | 'top-center' | 'bottom-center';
+  position?:
+    | 'top-right'
+    | 'top-left'
+    | 'bottom-right'
+    | 'bottom-left'
+    | 'top-center'
+    | 'bottom-center';
   maxToasts?: number;
 }
 
@@ -53,15 +59,18 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({
     if (typeof window !== 'undefined') {
       (window as any).__titaneToast = {
         info: (message: string, duration?: number) => addToast('info', message, duration),
-        success: (message: string, duration?: number) => addToast('success', message, duration),
-        warning: (message: string, duration?: number) => addToast('warning', message, duration),
-        error: (message: string, duration?: number) => addToast('error', message, duration),
+        success: (message: string, duration?: number) =>
+          addToast('success', message, duration),
+        warning: (message: string, duration?: number) =>
+          addToast('warning', message, duration),
+        error: (message: string, duration?: number) =>
+          addToast('error', message, duration),
       };
     }
   }, [addToast]);
 
   return (
-    <div 
+    <div
       className={`toast-container toast-container--${position}`}
       aria-live="polite"
       aria-atomic="false"

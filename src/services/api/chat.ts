@@ -218,7 +218,9 @@ class ChatService {
 
     // 🛡️ BROWSER MODE PROTECTION - Fallback immédiat
     if (!isTauriRuntimeAvailable()) {
-      console.warn('[ChatService-OMEGA] Tauri unavailable - using browser fallback response');
+      console.warn(
+        '[ChatService-OMEGA] Tauri unavailable - using browser fallback response'
+      );
       return {
         content: `Mode navigateur: Le backend TITANE∞ n'est pas disponible. Pour utiliser le chat avec IA, veuillez lancer l'application native.\n\nVotre message: "${message.substring(0, 100)}${message.length > 100 ? '..."' : '"'}`,
         finishReason: 'browser_fallback',
@@ -327,7 +329,8 @@ class ChatService {
     if (!isTauriRuntimeAvailable()) {
       console.warn('[ChatService] Tauri unavailable - using browser fallback');
       const fallbackResponse: ChatResponse = {
-        content: "Je suis désolé, le backend Tauri n'est pas disponible en mode navigateur. Pour utiliser le chat complet, veuillez lancer l'application TITANE∞ native.\n\nEn mode web, certaines fonctionnalités sont limitées. Vous pouvez toujours explorer l'interface et tester les autres modules.",
+        content:
+          "Je suis désolé, le backend Tauri n'est pas disponible en mode navigateur. Pour utiliser le chat complet, veuillez lancer l'application TITANE∞ native.\n\nEn mode web, certaines fonctionnalités sont limitées. Vous pouvez toujours explorer l'interface et tester les autres modules.",
         finishReason: 'browser_fallback',
         model: 'titane-web-fallback',
         provider: 'browser-mode',
@@ -338,7 +341,7 @@ class ChatService {
           timestamp: Date.now(),
         },
       };
-      
+
       // Simulate typing effect
       const words = fallbackResponse.content.split(' ');
       let currentText = '';
@@ -347,7 +350,7 @@ class ChatService {
         onChunk(word + ' ');
         await new Promise(resolve => setTimeout(resolve, 50)); // 50ms delay per word
       }
-      
+
       onComplete(fallbackResponse);
       return;
     }

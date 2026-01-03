@@ -15,18 +15,18 @@
   background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
   border: 1px solid rgba(196, 196, 196, 0.2);
   border-radius: 8px;
-  box-shadow: 
+  box-shadow:
     0 4px 16px rgba(0, 0, 0, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
-  
+
   /* Animation states */
   opacity: 0;
   transform: translateY(20px);
-  transition: 
+  transition:
     opacity 0.3s ease,
     transform 0.3s ease;
-  
+
   /* Accessibility */
   position: relative;
 }
@@ -39,7 +39,7 @@
 .toast--exiting {
   opacity: 0;
   transform: translateX(100%);
-  transition: 
+  transition:
     opacity 0.3s ease,
     transform 0.3s ease;
 }
@@ -95,7 +95,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 4px;
-  transition: 
+  transition:
     background-color 0.2s ease,
     color 0.2s ease;
   flex-shrink: 0;

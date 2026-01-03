@@ -26,17 +26,20 @@ Notes:
 ### ⚠️ RÈGLE CRITIQUE — DÉPLOIEMENT (Ajouté: 2026-01-02)
 
 **INTERDICTION ABSOLUE:**
+
 - **NE JAMAIS** déployer via AppImage ou DEB sans autorisation explicite de Kevin Thibault
 - **NE JAMAIS** lancer `npm run build` ou tâche "🔵 Build Titan-Stable" sans demande explicite
 - Mode développement OBLIGATOIRE jusqu'à validation 100% des tests
 
 **Mode de travail autorisé:**
+
 - Console / Scripts uniquement (Titan-Dev)
 - Tâche "🟢 Launch Titan-Dev" pour développement
 - Paramètres de restriction MINIMAUX pour faciliter le dev
 - Aucun package/bundle avant approbation formelle
 
 **Déploiement production nécessite:**
+
 1. Tests CLI: 100/100 passés
 2. Approbation explicite écrite de Kevin Thibault
 3. Confirmation "GO FOR PRODUCTION DEPLOY"

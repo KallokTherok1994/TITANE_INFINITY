@@ -7,6 +7,12 @@ vi.mock('@/lib/serviceInvoker', () => {
   };
 });
 
+vi.mock('@/utils/tauriProtector', () => {
+  return {
+    isTauriRuntimeAvailable: vi.fn(() => true),
+  };
+});
+
 import { invokeWithRetry } from '@/lib/serviceInvoker';
 import { chatService, type ChatMessage } from '@/services/api/chat';
 

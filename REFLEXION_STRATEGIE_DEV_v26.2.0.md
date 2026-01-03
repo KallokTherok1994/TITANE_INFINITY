@@ -15,6 +15,7 @@
 **Attente réelle:** Nettoyage + fermeture processus uniquement
 
 **Conséquence:**
+
 - Build production de 4+ minutes lancé sans nécessité
 - Binaires générés (82MB AppImage) non demandés
 - Interruption du workflow de développement
@@ -27,6 +28,7 @@
 ### 1. Ambiguïté linguistique
 
 **Expression "full deploy tauri"** peut signifier :
+
 - ✅ "Relancer complètement Tauri en mode dev"
 - ❌ "Builder un package de production complet"
 
@@ -35,11 +37,13 @@
 ### 2. Absence de garde-fous
 
 **Avant cette règle:**
+
 - Aucun mécanisme de validation pré-build
 - Pas de rappel des conditions de déploiement
 - Agent pouvait lancer build prod sans confirmation
 
 **Après cette règle:**
+
 - Validation explicite obligatoire
 - Tests 100/100 requis
 - Autorisation écrite du créateur
@@ -48,6 +52,7 @@
 
 **Problème fondamental:**  
 Pas de séparation claire entre :
+
 - Actions de développement (itératives, rapides, légères)
 - Actions de production (lentes, lourdes, critiques)
 
@@ -60,6 +65,7 @@ Pas de séparation claire entre :
 **Objectif:** Maximiser la vélocité et la créativité
 
 **Caractéristiques mode dev:**
+
 - 🚀 Démarrage ultra-rapide (<10s)
 - 🔥 Hot-reload instantané
 - 🪶 Aucune restriction inutile
@@ -68,6 +74,7 @@ Pas de séparation claire entre :
 - ⚡ Cycle test-fix-test rapide
 
 **Anti-pattern à éviter:**
+
 - ❌ Builds longs qui cassent le flow
 - ❌ Validations strictes qui bloquent
 - ❌ Processus bureaucratiques en dev
@@ -78,6 +85,7 @@ Pas de séparation claire entre :
 **Objectif:** Zéro défaut en production
 
 **Caractéristiques mode prod:**
+
 - ✅ Tests exhaustifs (100/100)
 - 🔒 Sécurité maximale
 - 📦 Optimisations complètes
@@ -86,6 +94,7 @@ Pas de séparation claire entre :
 - 🛡️ Resilience garantie
 
 **Processus de release:**
+
 1. Développement fluide (mode dev)
 2. Feature freeze
 3. Tests complets
@@ -102,6 +111,7 @@ Pas de séparation claire entre :
 ### Mode Développement (99% du temps)
 
 **Environnement:**
+
 ```bash
 # Terminal 1: Frontend dev server
 npm run dev
@@ -113,6 +123,7 @@ cargo run
 ```
 
 **Workflow quotidien:**
+
 1. Coder une feature
 2. Tester en live (hot-reload)
 3. Fixer les bugs immédiatement
@@ -126,7 +137,9 @@ cargo run
 **Déclenchement:** UNIQUEMENT sur demande explicite post-validation
 
 **Processus:**
+
 1. **Validation tests** (30 min)
+
    ```bash
    npm test -- --run           # React/TS
    npm run test:tauri          # Rust
@@ -140,12 +153,14 @@ cargo run
    - Validation UX/UI
 
 3. **Build production** (5-10 min)
+
    ```bash
    ./runtime/stable/build.sh
    # → AppImage + DEB générés
    ```
 
 4. **Smoke tests** (5 min)
+
    ```bash
    # Test AppImage 90s keepalive
    # Vérification fonctionnalités critiques
@@ -184,6 +199,7 @@ cargo run
 ```
 
 **Justification:**
+
 - Les CSP strictes cassent le hot-reload
 - Les permissions limitées bloquent les tests
 - Le freeze prototype empêche le debug dynamique
@@ -191,6 +207,7 @@ cargo run
 ### Logs Verbeux
 
 **Configuration:**
+
 ```bash
 # .env.development
 VITE_LOG_LEVEL=debug
@@ -199,6 +216,7 @@ RUST_BACKTRACE=full
 ```
 
 **Bénéfices:**
+
 - Comprendre le flow d'exécution
 - Identifier rapidement les bugs
 - Tracer les événements asynchrones
@@ -206,6 +224,7 @@ RUST_BACKTRACE=full
 ### Hot-Reload Optimal
 
 **Vite config:**
+
 ```typescript
 // vite.config.ts
 export default defineConfig({
@@ -213,13 +232,14 @@ export default defineConfig({
     hmr: {
       protocol: 'ws',
       host: 'localhost',
-      overlay: true  // Afficher erreurs en overlay
-    }
-  }
-})
+      overlay: true, // Afficher erreurs en overlay
+    },
+  },
+});
 ```
 
 **Effet:**
+
 - Modifications CSS → instantanées
 - Modifications TS → 100-300ms
 - Modifications Rust → 2-5s (cargo check)
@@ -239,6 +259,7 @@ npm run test:tauri -- --watch
 ```
 
 **Avantages:**
+
 - Détection bugs immédiate
 - Pas besoin de relancer manuellement
 - Cycle feedback <5s
@@ -253,6 +274,7 @@ npm run copilot-xs:test
 ```
 
 **Couverture:**
+
 - 100% des tests unitaires
 - 100% des tests d'intégration
 - 100% des tests E2E
@@ -266,6 +288,7 @@ npm run copilot-xs:test
 ### Développement
 
 **Indicateurs clés:**
+
 - ⚡ Temps démarrage dev < 10s
 - 🔥 Hot-reload < 500ms
 - 🐛 Temps fix bug moyen < 5 min
@@ -274,6 +297,7 @@ npm run copilot-xs:test
 ### Production
 
 **Indicateurs clés:**
+
 - ✅ Tests passés: 100/100
 - 🐞 Bugs critiques: 0
 - ⏱️ Temps build: < 10 min
@@ -287,6 +311,7 @@ npm run copilot-xs:test
 ### Phase 1 : Feature Freeze
 
 **Actions:**
+
 - ✅ Merger toutes les branches feature
 - ✅ Résoudre tous les conflits
 - ✅ Stabiliser la branche main
@@ -296,6 +321,7 @@ npm run copilot-xs:test
 ### Phase 2 : Validation Tests
 
 **Actions:**
+
 ```bash
 # 1. Tests React/TS
 npm test -- --run
@@ -319,6 +345,7 @@ npm run copilot-xs:test
 ### Phase 3 : Revue Humaine
 
 **Checklist créateur:**
+
 - [ ] Code review des changements majeurs
 - [ ] Test manuel UX/UI
 - [ ] Vérification cohérence architecture
@@ -330,11 +357,13 @@ npm run copilot-xs:test
 ### Phase 4 : Build Production
 
 **Commande:**
+
 ```bash
 ./runtime/stable/build.sh
 ```
 
 **Outputs:**
+
 - `Titan-Stable_[VERSION]_amd64.AppImage`
 - `Titan-Stable_[VERSION]_amd64.deb`
 
@@ -343,6 +372,7 @@ npm run copilot-xs:test
 ### Phase 5 : Smoke Tests
 
 **Tests critiques:**
+
 ```bash
 # 1. Keepalive 90s
 ./runtime/stable/Titan-Stable_*.AppImage
@@ -360,6 +390,7 @@ npm run copilot-xs:test
 ### Phase 6 : Autorisation Finale
 
 **Message requis:**
+
 ```
 GO FOR PRODUCTION DEPLOY v[VERSION]
 
@@ -470,14 +501,17 @@ npm run copilot-xs:test            # Validation complète
 
 ## ✅ CONCLUSION
 
-**Principe directeur:**  
+**Principe directeur:**
+
 > "En cas de doute, rester en mode développement"
 
 **Philosophie:**
+
 - Développement = Fluidité, Rapidité, Créativité
 - Production = Perfection, Validation, Contrôle
 
 **Séparation stricte des environnements garantit:**
+
 - 🚀 Vélocité maximale en dev
 - 🛡️ Qualité maximale en prod
 - 🎯 Vision cohérente du créateur

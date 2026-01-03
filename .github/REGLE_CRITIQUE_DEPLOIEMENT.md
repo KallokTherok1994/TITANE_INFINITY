@@ -11,12 +11,14 @@
 Jusqu'à nouvelle autorisation écrite explicite de Kevin Thibault :
 
 ### ❌ NE JAMAIS déployer en production
+
 - **AppImage** (.AppImage)
 - **DEB packages** (.deb)
 - **RPM packages** (.rpm)
 - Tout format de distribution binaire
 
 ### ❌ NE JAMAIS exécuter ces commandes
+
 ```bash
 # INTERDITS:
 npm run build
@@ -26,6 +28,7 @@ cargo build --release
 ```
 
 ### ❌ NE JAMAIS lancer ces tâches VS Code
+
 - 🔵 Build Titan-Stable
 - 📦 Package Production
 - 🚀 Deploy AppImage
@@ -39,6 +42,7 @@ cargo build --release
 ### Mode Développement UNIQUEMENT
 
 **Environnement autorisé:**
+
 ```bash
 # ✅ AUTORISÉ:
 npm run dev              # Titan-Dev (Vite)
@@ -47,6 +51,7 @@ cargo run                # Rust debug mode
 ```
 
 **Tâches VS Code autorisées:**
+
 - ✅ 🟢 Launch Titan-Dev
 - ✅ 🧪 Run All Tests
 - ✅ 📊 Dev Logs (Vite/Tauri)
@@ -57,6 +62,7 @@ cargo run                # Rust debug mode
 **Philosophie:** Minimiser les restrictions pour fluidité maximale
 
 **Configuration dev-friendly:**
+
 - Sécurité minimale (pas de blocages inutiles)
 - Logs verbeux (RUST_LOG=debug)
 - Hot-reload actif
@@ -70,24 +76,28 @@ cargo run                # Rust debug mode
 Le déploiement production nécessite **TOUTES** ces conditions :
 
 ### 1️⃣ Tests Unitaires/Intégration
+
 ```bash
 npm test -- --run          # React/TS tests
 ✅ Résultat: 100/100 passés
 ```
 
 ### 2️⃣ Tests Rust
+
 ```bash
 cd src-tauri && cargo test
 ✅ Résultat: 100% success, 0 failed
 ```
 
 ### 3️⃣ Tests E2E Playwright
+
 ```bash
 npm run test:e2e
 ✅ Résultat: 3/3 scénarios OMEGA v2 passés
 ```
 
 ### 4️⃣ Validation COPILOT-XS
+
 ```bash
 npm run copilot-xs:test
 ✅ Résultat: EXIT:0 (pas d'erreurs)
@@ -96,6 +106,7 @@ npm run copilot-xs:test
 ### 5️⃣ Autorisation Formelle
 
 **Message explicite requis de Kevin Thibault:**
+
 ```
 GO FOR PRODUCTION DEPLOY
 J'autorise le build de:
@@ -140,6 +151,7 @@ Date: [DATE]
 
 **❌ NE PAS ASSUMER** qu'il veut un build production  
 **✅ TOUJOURS DEMANDER:**
+
 ```
 Clarification nécessaire:
 - Build DEV (Titan-Dev) ? ✅ Autorisé
@@ -152,6 +164,7 @@ Quelle version souhaitez-vous ?
 
 **❌ NE PAS LANCER** de build automatiquement  
 **✅ RAPPELER LA RÈGLE:**
+
 ```
 ⚠️ RÈGLE CRITIQUE: Déploiement production interdit
 Mode actuel: DÉVELOPPEMENT UNIQUEMENT
@@ -168,9 +181,10 @@ Voulez-vous lancer Titan-Dev à la place ?
 ## 📝 HISTORIQUE
 
 ### 2026-01-02 — Création de la règle
+
 **Contexte:** Build production lancé par erreur suite à demande ambiguë  
 **Action:** Création de cette règle permanente  
-**Objectif:** Clarifier mode dev vs mode prod  
+**Objectif:** Clarifier mode dev vs mode prod
 
 ---
 
