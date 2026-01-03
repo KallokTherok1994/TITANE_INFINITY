@@ -1,0 +1,87 @@
+name: Deploy Documentation
+
+on:
+  push:
+    branches: [MAIN]
+    paths:
+      - 'src/**'
+      - 'docs/**'
+      - 'package.json'
+      - 'tsconfig.json'
+      - '.github/workflows/docs-deploy.yml'
+  workflow_dispatch:
+
+# Prevent concurrent deployments
+concurrency:
+  group: docs-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-docs:
+    name: 📚 Build Documentation
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4.2.2
+
+      - name: 🔧 Enable Corepack (pnpm)
+        run: corepack enable
+
+      - name: 📦 Setup Node.js 20
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 📖 Generate TypeDoc
+        run: pnpm run docs
+
+      - name: 📤 Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+      - name: 📊 Summary
+        run: |
+          echo "## 📚 Documentation Build Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- TypeDoc generated successfully" >> $GITHUB_STEP_SUMMARY
+          echo "- Output directory: \`docs/\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Ready for deployment" >> $GITHUB_STEP_SUMMARY
+
+  deploy-docs:
+    name: 🚀 Deploy to GitHub Pages
+    needs: build-docs
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+
+    steps:
+      - name: 🚀 Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: 📊 Summary
+        run: |
+          echo "## 🚀 Documentation Deployed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**URL:** ${{ steps.deployment.outputs.page_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** ✅ Live" >> $GITHUB_STEP_SUMMARY
+          echo "**Build:** #${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
