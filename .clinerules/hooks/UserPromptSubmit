@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# UserPromptSubmit hook for TITANE∞
+# Injecte le contexte approprié basé sur les mots-clés
+
+input=$(cat)
+
+prompt=$(echo "$input" | jq -r '.userPromptSubmit.prompt')
+context=""
+
+# Détection de demandes de déploiement
+if echo "$prompt" | grep -qiE 'deploy|build.*production|create.*appimage|create.*deb|install.*system'; then
+  context="DEPLOYMENT_WARNING: Production deployment requires explicit authorization.\n"
+  context+="Required:\n"
+  context+="1. 100/100 CLI tests passed\n"
+  context+="2. Written approval from Kevin Thibault\n"
+  context+="3. 'GO FOR PRODUCTION DEPLOY' confirmation\n"
+  context+="Use '🟢 Launch Titan-Dev' for development only."
+fi
+
+# Standards de codage React/Component
+if echo "$prompt" | grep -qiE 'component|react|tsx'; then
+  if [[ -n "$context" ]]; then context+="\n"; fi
+  context+="CODING_STANDARDS: Follow React functional component patterns with proper TypeScript types. "
+  context+="Match existing component structure in src/ directory."
+fi
+
+# Standards API/Backend
+if echo "$prompt" | grep -qiE 'api|endpoint|backend|tauri.*command'; then
+  if [[ -n "$context" ]]; then context+="\n"; fi
+  context+="CODING_STANDARDS: Use consistent Tauri command patterns. "
+  context+="All commands in src-tauri/src/ should have proper error handling and type safety."
+fi
+
+# Tests
+if echo "$prompt" | grep -qiE 'test|spec|unit.*test'; then
+  if [[ -n "$context" ]]; then context+="\n"; fi
+  context+="TESTING: Follow existing test patterns in __tests__/ directories. "
+  context+="Use Vitest for React components and cargo test for Rust code."
+fi
+
+# Rappel des dépendances
+if echo "$prompt" | grep -qiE 'install|add.*package|npm.*install|cargo.*add'; then
+  if [[ -n "$context" ]]; then context+="\n"; fi
+  context+="DEPENDENCY_MANAGEMENT: Before adding dependencies, verify:\n"
+  context+="1. It doesn't already exist in package.json/Cargo.toml\n"
+  context+="2. It doesn't conflict with existing versions\n"
+  context+="3. It's from a trusted source\n"
+  context+="Prefer existing dependencies over new ones."
+fi
+
+if [[ -n "$context" ]]; then
+  jq -n --arg ctx "$context" '{"cancel": false, "contextModification": $ctx}'
+else
+  echo '{"cancel": false}'
+fi
