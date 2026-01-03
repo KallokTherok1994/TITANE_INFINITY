@@ -128,6 +128,12 @@ export const KNOWN_SECRETS: {
     description: 'Anthropic Claude API (https://console.anthropic.com)',
   },
   {
+    key: 'copilot_api_key',
+    label: 'GitHub Copilot API Key',
+    category: 'api_key',
+    description: 'GitHub Copilot / GitHub Models API (https://github.com/marketplace/models)',
+  },
+  {
     key: 'ollama_url',
     label: 'Ollama URL',
     category: 'api_key',
@@ -236,6 +242,8 @@ export const DEFAULT_POLICIES: IAPolicy[] = [
         'generativelanguage.googleapis.com',
         'api.openai.com',
         'api.anthropic.com',
+        'api.github.com',
+        'models.github.com',
       ],
     },
     createdAt: Date.now(),
@@ -312,6 +320,7 @@ export interface GovernanceState {
   geminiStatus: GeminiKeyStatus | null;
   openaiStatus: GeminiKeyStatus | null;
   anthropicStatus: GeminiKeyStatus | null;
+  copilotStatus: GeminiKeyStatus | null; // ✨ v26.3 - GitHub Copilot
   ollamaStatus: OllamaStatus | null;
 
   // Politiques
