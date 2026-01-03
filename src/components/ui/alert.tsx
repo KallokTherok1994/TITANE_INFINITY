@@ -1,22 +1,26 @@
 /**
- * TITANE∞ v19.4 — Alert Component
- * Simple alert/callout component for displaying important messages
+ * TITANE∞ v26.2.0 — Alert Component (Titanium Dark)
+ * Alert/callout component with Titanium Dark design system
+ * Monochrome default + semantic color variants
  * @license MIT
  */
 
 import React from 'react';
 
 export interface AlertProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: 'default' | 'destructive' | 'success' | 'warning' | 'info';
+  variant?: 'default' | 'error' | 'success' | 'warning' | 'info';
   children: React.ReactNode;
 }
 
 const variantStyles = {
-  default: 'bg-gray-100 text-gray-900 border-gray-300',
-  destructive: 'bg-red-50 text-red-900 border-red-300',
-  success: 'bg-green-50 text-green-900 border-green-300',
-  warning: 'bg-yellow-50 text-yellow-900 border-yellow-300',
-  info: 'bg-blue-50 text-blue-900 border-blue-300',
+  // Default - monochrome
+  default: 'bg-titanium-bg-interactive border-titanium-border-default text-titanium-text-primary',
+  
+  // Semantic variants
+  error: 'bg-error-100 border-error-500/30 text-error-700',
+  success: 'bg-success-100 border-success-500/30 text-success-700',
+  warning: 'bg-warning-100 border-warning-500/30 text-warning-700',
+  info: 'bg-info-100 border-info-500/30 text-info-700',
 };
 
 export function Alert({
@@ -43,7 +47,7 @@ export function AlertTitle({
 }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h5
-      className={`mb-1 font-medium leading-none tracking-tight ${className}`}
+      className={`mb-2 font-semibold leading-tight text-base ${className}`}
       {...props}
     >
       {children}
@@ -57,7 +61,7 @@ export function AlertDescription({
   ...props
 }: React.HTMLAttributes<HTMLParagraphElement>) {
   return (
-    <div className={`text-sm opacity-90 ${className}`} {...props}>
+    <div className={`text-sm leading-relaxed ${className}`} {...props}>
       {children}
     </div>
   );

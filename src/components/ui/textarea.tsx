@@ -1,6 +1,7 @@
 /**
- * TITANE∞ v20.0 — Textarea Component
- * Super Prompt #2: Frontend Polish & UX Mastering
+ * TITANE∞ v26.2.0 — Textarea Component (Titanium Dark)
+ * Multi-line text input with Titanium Dark design system
+ * WCAG 2.2 AA compliant with auto-resize support
  * @license MIT
  */
 
@@ -10,21 +11,23 @@ export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextArea
   label?: string;
   helper?: string;
   error?: string;
+  success?: boolean;
   autoResize?: boolean;
   maxHeight?: number;
 }
 
 /**
- * Textarea - Multi-line text input avec auto-resize optionnel
+ * Textarea - Multi-line text input with auto-resize
  *
  * @example
  * ```tsx
  * <Textarea
+ *   id="prompt"
  *   label="Prompt"
- *   helper="Posez votre question à TITANE∞"
+ *   helper="Ask your question to TITANE∞"
  *   autoResize
  *   maxHeight={300}
- *   placeholder="Écrivez ici..."
+ *   placeholder="Type here..."
  * />
  * ```
  */
@@ -34,10 +37,12 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       label,
       helper,
       error,
+      success,
       autoResize = false,
       maxHeight,
       className = '',
       disabled,
+      id,
       ...props
     },
     ref
@@ -45,6 +50,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     const hasError = !!error;
     const internalRef = useRef<HTMLTextAreaElement>(null);
     const textareaRef = (ref as React.RefObject<HTMLTextAreaElement>) || internalRef;
+    const textareaId = id || `textarea-${Math.random().toString(36).substr(2, 9)}`;
 
     // Auto-resize logic
     useEffect(() => {
@@ -66,18 +72,14 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     }, [autoResize, maxHeight, textareaRef, props.value]);
 
     return (
-      <div className="w-full">
+      <div className="w-full flex flex-col gap-2">
         {label && (
           <label
-            htmlFor={props.id}
-            className="block text-sm font-medium mb-1.5"
-            style={{
-              color: hasError
-                ? 'var(--text-danger, #8b5f5f)'
-                : disabled
-                  ? 'var(--text-disabled, rgba(255,255,255,0.38))'
-                  : 'var(--text-primary, #e0e0e0)',
-            }}
+            htmlFor={textareaId}
+            className={`
+              text-sm font-medium
+              ${hasError ? 'text-error-500' : disabled ? 'text-titanium-text-disabled' : 'text-titanium-text-primary'}
+            `}
           >
             {label}
           </label>
@@ -85,37 +87,28 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
         <textarea
           ref={textareaRef}
+          id={textareaId}
           disabled={disabled}
           aria-invalid={hasError}
           aria-describedby={
-            error ? `${props.id}-error` : helper ? `${props.id}-helper` : undefined
+            error ? `${textareaId}-error` : helper ? `${textareaId}-helper` : undefined
           }
           className={`
-            w-full px-3 py-2.5 rounded-md
-            text-sm font-normal leading-relaxed
-            transition-all duration-150
-            focus:outline-none focus:ring-[3px] focus:ring-[rgba(114,123,129,0.6)] focus:ring-offset-0
-            disabled:cursor-not-allowed disabled:opacity-50
+            w-full px-4 py-3 rounded
+            text-base font-normal leading-relaxed
+            bg-titanium-bg-interactive
+            border
+            ${hasError ? 'border-error-500' : success ? 'border-success-500' : 'border-titanium-border-default'}
+            text-titanium-text-primary
+            placeholder:text-titanium-text-tertiary
+            transition-colors duration-200
+            focus:outline-none focus:shadow-focus focus:border-titanium-accent-bright
+            disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-titanium-bg-elevated
             resize-${autoResize ? 'none' : 'vertical'}
             ${className}
           `}
           style={{
-            background: hasError
-              ? 'var(--bg-danger-subtle, rgba(139,95,95,0.10))'
-              : disabled
-                ? 'var(--bg-surface, #181c21)'
-                : 'var(--bg-panel, #101216)',
-            border: `1px solid ${
-              hasError
-                ? 'var(--border-danger, #8b5f5f)'
-                : disabled
-                  ? 'var(--border, rgba(196,196,196,0.12))'
-                  : 'var(--border, rgba(196,196,196,0.12))'
-            }`,
-            color: disabled
-              ? 'var(--text-disabled, rgba(255,255,255,0.38))'
-              : 'var(--text-primary, #e0e0e0)',
-            minHeight: autoResize ? '60px' : undefined,
+            minHeight: autoResize ? '80px' : undefined,
             maxHeight: maxHeight ? `${maxHeight}px` : undefined,
           }}
           {...props}
@@ -123,13 +116,12 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
         {(helper || error) && (
           <p
-            id={error ? `${props.id}-error` : `${props.id}-helper`}
-            className="mt-1.5 text-xs"
-            style={{
-              color: hasError
-                ? 'var(--text-danger, #8b5f5f)'
-                : 'var(--text-muted, rgba(255,255,255,0.60))',
-            }}
+            id={error ? `${textareaId}-error` : `${textareaId}-helper`}
+            className={`
+              text-xs
+              ${hasError ? 'text-error-500' : 'text-titanium-text-tertiary'}
+            `}
+            role={hasError ? 'alert' : undefined}
           >
             {error || helper}
           </p>
