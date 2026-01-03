@@ -100,7 +100,7 @@ jobs:
           cat SHA256SUMS.txt || echo "No checksums generated"
 
       - name: 📤 Upload Linux artifacts
-        uses: actions/upload-artifact@v4.6.0
+        uses: actions/upload-artifact@v6
         with:
           name: linux-x86_64-${{ github.ref_name }}
           path: |
@@ -172,7 +172,7 @@ jobs:
         continue-on-error: true
 
       - name: 📤 Upload Windows artifacts
-        uses: actions/upload-artifact@v4.6.0
+        uses: actions/upload-artifact@v6
         with:
           name: windows-x86_64-${{ github.ref_name }}
           path: |
@@ -254,7 +254,7 @@ jobs:
           cat SHA256SUMS.txt || echo "No checksums generated"
 
       - name: 📤 Upload macOS artifacts
-        uses: actions/upload-artifact@v4.6.0
+        uses: actions/upload-artifact@v6
         with:
           name: macos-${{ matrix.target }}-${{ github.ref_name }}
           path: |
