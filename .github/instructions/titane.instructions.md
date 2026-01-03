@@ -2,15 +2,6 @@
 # GitHub Copilot Instructions for TITANE_INFINITY
 # This file provides detailed coding guidelines for the entire codebase
 # Applies to: src/, src-tauri/, tests/, scripts/
-appliesTo:
-  - 'src/**/*'
-  - 'src-tauri/**/*'
-  - 'tests/**/*'
-  - 'scripts/**/*'
-  - '*.ts'
-  - '*.tsx'
-  - '*.rs'
-  - '*.js'
 ---
 
 # TITANE_INFINITY — Instructions Globales
@@ -32,12 +23,14 @@ appliesTo:
 ❌ **NE JAMAIS exécuter** `npm run build`, `tauri build`, tâche "🔵 Build Titan-Stable"
 
 ✅ **Mode de travail OBLIGATOIRE:**
+
 - **Titan-Dev uniquement** (tâche "🟢 Launch Titan-Dev")
 - Console / Scripts / Terminal pour tous les tests
 - Paramètres de sécurité MINIMAUX (dev-friendly)
 - Pas de restrictions qui bloquent le développement
 
 **Conditions pour autoriser un déploiement production:**
+
 1. ✅ Tests CLI: **100/100 passés**
 2. ✅ Tests Rust (cargo test): **100% success**
 3. ✅ Tests E2E Playwright: **3/3 scénarios OK**

@@ -47,7 +47,11 @@ export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
  */
 export const MessageSkeleton: React.FC<{ lines?: number }> = ({ lines = 3 }) => {
   return (
-    <div className="message-skeleton" role="status" aria-label="Message en cours de chargement">
+    <div
+      className="message-skeleton"
+      role="status"
+      aria-label="Message en cours de chargement"
+    >
       <div className="message-skeleton__avatar">
         <SkeletonLoader variant="circular" width={40} height={40} />
       </div>
