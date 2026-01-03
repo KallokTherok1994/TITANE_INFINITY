@@ -79,10 +79,12 @@ mod tests {
 
     #[test]
     fn test_module_health_variants() {
-        let healths = [ModuleHealth::Healthy,
+        let healths = [
+            ModuleHealth::Healthy,
             ModuleHealth::Degraded,
             ModuleHealth::Failing,
-            ModuleHealth::Offline];
+            ModuleHealth::Offline,
+        ];
         assert_eq!(healths.len(), 4);
     }
 
@@ -238,7 +240,8 @@ mod tests {
             ..Default::default()
         };
         let json = serde_json::to_string(&state).expect("NexusState should serialize");
-        let restored: NexusState = serde_json::from_str(&json).expect("NexusState should deserialize");
+        let restored: NexusState =
+            serde_json::from_str(&json).expect("NexusState should deserialize");
         assert_eq!(restored.coherence_score, 95.5);
         assert_eq!(restored.active_connections, 5);
     }

@@ -344,11 +344,13 @@ mod tests {
 
     #[test]
     fn test_event_origin_all_variants() {
-        let variants = [EventOrigin::User,
+        let variants = [
+            EventOrigin::User,
             EventOrigin::Engine,
             EventOrigin::SelfHeal,
             EventOrigin::System,
-            EventOrigin::Migration];
+            EventOrigin::Migration,
+        ];
         assert_eq!(variants.len(), 5);
     }
 
@@ -436,7 +438,9 @@ mod tests {
             TitanEvent::new("test", "action", serde_json::json!({})).with_metadata(metadata);
 
         assert!(event.metadata.is_some());
-        let meta = event.metadata.expect("metadata should be set by with_metadata()");
+        let meta = event
+            .metadata
+            .expect("metadata should be set by with_metadata()");
         assert!(meta.contains_key("key"));
     }
 
@@ -682,7 +686,8 @@ mod tests {
     fn test_integrity_report_serialization() {
         let report = IntegrityReport::default();
 
-        let json = serde_json::to_string(&report).expect("IntegrityReport should serialize to JSON");
+        let json =
+            serde_json::to_string(&report).expect("IntegrityReport should serialize to JSON");
         let restored: IntegrityReport =
             serde_json::from_str(&json).expect("IntegrityReport should deserialize from JSON");
 
@@ -758,7 +763,8 @@ mod tests {
             success: true,
         };
 
-        let json = serde_json::to_string(&report).expect("CompactionReport should serialize to JSON");
+        let json =
+            serde_json::to_string(&report).expect("CompactionReport should serialize to JSON");
         let restored: CompactionReport =
             serde_json::from_str(&json).expect("CompactionReport should deserialize from JSON");
 
@@ -842,7 +848,8 @@ mod tests {
     fn test_persistence_error_serialization() {
         let error = PersistenceError::DatabaseError("test".to_string());
 
-        let json = serde_json::to_string(&error).expect("PersistenceError should serialize to JSON");
+        let json =
+            serde_json::to_string(&error).expect("PersistenceError should serialize to JSON");
         let restored: PersistenceError =
             serde_json::from_str(&json).expect("PersistenceError should deserialize from JSON");
 

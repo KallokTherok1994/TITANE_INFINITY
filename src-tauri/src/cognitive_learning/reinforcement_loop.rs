@@ -234,8 +234,8 @@ mod tests {
             patterns_weakened: 5,
             top_patterns: vec![],
         };
-        let json = serde_json::to_string(&report)
-            .expect("ReinforcementReport should serialize to JSON");
+        let json =
+            serde_json::to_string(&report).expect("ReinforcementReport should serialize to JSON");
         let restored: ReinforcementReport =
             serde_json::from_str(&json).expect("ReinforcementReport should deserialize");
         assert_eq!(restored.timestamp, 999999);

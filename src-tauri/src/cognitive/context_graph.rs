@@ -365,9 +365,7 @@ impl ContextGraph {
                 if let Some(min_idx) = node_edges
                     .iter()
                     .enumerate()
-                    .min_by(|(_, a), (_, b)| {
-                        a.effective_weight().total_cmp(&b.effective_weight())
-                    })
+                    .min_by(|(_, a), (_, b)| a.effective_weight().total_cmp(&b.effective_weight()))
                     .map(|(i, _)| i)
                 {
                     node_edges.remove(min_idx);

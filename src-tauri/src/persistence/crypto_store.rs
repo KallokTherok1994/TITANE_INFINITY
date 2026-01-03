@@ -524,9 +524,9 @@ mod tests {
         store
             .set_master_password("password")
             .expect("set_master_password should succeed for a valid password");
-        let encrypted = store
-            .encrypt_if_enabled(data)
-            .expect("encrypt_if_enabled should succeed when encryption is enabled and key is unlocked");
+        let encrypted = store.encrypt_if_enabled(data).expect(
+            "encrypt_if_enabled should succeed when encryption is enabled and key is unlocked",
+        );
         assert_ne!(encrypted, data.to_vec());
     }
 

@@ -709,17 +709,12 @@ mod tests {
 
         let result = memory_os.store(entry).await;
         assert!(result.is_ok());
-        assert_eq!(
-            result.expect("store should return entry id"),
-            id
-        );
+        assert_eq!(result.expect("store should return entry id"), id);
 
         let recalled = memory_os.recall_by_id(&id).await;
         assert!(recalled.is_some());
         assert_eq!(
-            recalled
-                .expect("should recall stored memory by id")
-                .content,
+            recalled.expect("should recall stored memory by id").content,
             "Test memory content"
         );
     }

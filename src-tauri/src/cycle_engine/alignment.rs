@@ -128,10 +128,9 @@ mod tests {
     #[test]
     fn test_system_alignment_serialization() {
         let alignment = SystemAlignment::default();
-        let json = serde_json::to_string(&alignment)
-            .expect("system alignment should serialize");
-        let restored: SystemAlignment = serde_json::from_str(&json)
-            .expect("system alignment should deserialize");
+        let json = serde_json::to_string(&alignment).expect("system alignment should serialize");
+        let restored: SystemAlignment =
+            serde_json::from_str(&json).expect("system alignment should deserialize");
         assert_eq!(alignment.alignment_score, restored.alignment_score);
     }
 

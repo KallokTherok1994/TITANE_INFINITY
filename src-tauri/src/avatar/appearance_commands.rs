@@ -534,10 +534,7 @@ mod tests {
         assert!(result.is_ok());
         let update = result.expect("parse should succeed for lunettes");
         let accessories = update.accessories.expect("accessories should be Some");
-        assert_eq!(
-            accessories.glasses,
-            Some("lunettes".to_string())
-        );
+        assert_eq!(accessories.glasses, Some("lunettes".to_string()));
     }
 
     #[test]

@@ -358,8 +358,7 @@ mod tests {
         let detail = validator.validate_entry("specific");
         assert!(detail.is_some());
 
-        let d = detail
-            .expect("validate_entry should return detail for tracked id");
+        let d = detail.expect("validate_entry should return detail for tracked id");
         assert_eq!(d.entry_id, "specific");
         assert_eq!(d.status, ValidationStatus::Valid);
 

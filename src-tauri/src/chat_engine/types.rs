@@ -128,12 +128,12 @@ mod tests {
     #[test]
     fn test_provider_preference_serialization() {
         let pref = ProviderPreference::Ollama;
-        let json = serde_json::to_string(&pref)
-            .expect("serialize ProviderPreference should succeed");
+        let json =
+            serde_json::to_string(&pref).expect("serialize ProviderPreference should succeed");
         assert_eq!(json, "\"ollama\"");
 
-        let restored: ProviderPreference = serde_json::from_str(&json)
-            .expect("deserialize ProviderPreference should succeed");
+        let restored: ProviderPreference =
+            serde_json::from_str(&json).expect("deserialize ProviderPreference should succeed");
         assert_eq!(restored, ProviderPreference::Ollama);
     }
 
@@ -149,8 +149,8 @@ mod tests {
         for variant in variants {
             let json = serde_json::to_string(&variant)
                 .expect("serialize ProviderPreference variant should succeed");
-            let restored: ProviderPreference = serde_json::from_str(&json)
-                .expect("deserialize ProviderPreference should succeed");
+            let restored: ProviderPreference =
+                serde_json::from_str(&json).expect("deserialize ProviderPreference should succeed");
             assert_eq!(variant, restored);
         }
     }
@@ -374,10 +374,10 @@ mod tests {
             enable_streaming: true,
         };
 
-        let json = serde_json::to_string(&payload)
-            .expect("serialize ChatRequestPayload should succeed");
-        let restored: ChatRequestPayload = serde_json::from_str(&json)
-            .expect("deserialize ChatRequestPayload should succeed");
+        let json =
+            serde_json::to_string(&payload).expect("serialize ChatRequestPayload should succeed");
+        let restored: ChatRequestPayload =
+            serde_json::from_str(&json).expect("deserialize ChatRequestPayload should succeed");
         assert_eq!(restored.user_message, "Hello");
         assert_eq!(restored.provider, ProviderPreference::Ollama);
     }
@@ -448,8 +448,8 @@ mod tests {
 
         let json = serde_json::to_string(&payload)
             .expect("serialize ChatCompletionPayload should succeed");
-        let restored: ChatCompletionPayload = serde_json::from_str(&json)
-            .expect("deserialize ChatCompletionPayload should succeed");
+        let restored: ChatCompletionPayload =
+            serde_json::from_str(&json).expect("deserialize ChatCompletionPayload should succeed");
         assert_eq!(restored.content, "The answer is 42.");
         assert_eq!(restored.timestamp, 1700000000);
     }
@@ -523,10 +523,9 @@ mod tests {
             done: true,
         };
 
-        let json = serde_json::to_string(&chunk)
-            .expect("serialize StreamChunk should succeed");
-        let restored: StreamChunk = serde_json::from_str(&json)
-            .expect("deserialize StreamChunk should succeed");
+        let json = serde_json::to_string(&chunk).expect("serialize StreamChunk should succeed");
+        let restored: StreamChunk =
+            serde_json::from_str(&json).expect("deserialize StreamChunk should succeed");
         assert_eq!(restored.ordinal, 42);
         assert!(restored.done);
     }
@@ -612,10 +611,10 @@ mod tests {
             timestamp: 1700000000,
         };
 
-        let json = serde_json::to_string(&report)
-            .expect("serialize EngineHealthReport should succeed");
-        let restored: EngineHealthReport = serde_json::from_str(&json)
-            .expect("deserialize EngineHealthReport should succeed");
+        let json =
+            serde_json::to_string(&report).expect("serialize EngineHealthReport should succeed");
+        let restored: EngineHealthReport =
+            serde_json::from_str(&json).expect("deserialize EngineHealthReport should succeed");
         assert_eq!(restored.memory_entries, 75);
         assert!(restored.auto_tts_enabled);
     }

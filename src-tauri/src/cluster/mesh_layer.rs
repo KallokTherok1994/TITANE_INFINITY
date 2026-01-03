@@ -387,7 +387,8 @@ mod tests {
     #[test]
     fn test_node_role_deserialize() {
         let json = r#""Worker""#;
-        let role: NodeRole = serde_json::from_str(json).expect("NodeRole should deserialize from JSON");
+        let role: NodeRole =
+            serde_json::from_str(json).expect("NodeRole should deserialize from JSON");
         assert!(matches!(role, NodeRole::Worker));
     }
 
@@ -397,9 +398,7 @@ mod tests {
 
     #[test]
     fn test_node_info_creation() {
-        let addr: SocketAddr = "127.0.0.1:8080"
-            .parse()
-            .expect("socket addr should parse");
+        let addr: SocketAddr = "127.0.0.1:8080".parse().expect("socket addr should parse");
         let node = NodeInfo {
             id: "node-1".to_string(),
             addr,
@@ -415,9 +414,7 @@ mod tests {
 
     #[test]
     fn test_node_info_healthy() {
-        let addr: SocketAddr = "127.0.0.1:8080"
-            .parse()
-            .expect("socket addr should parse");
+        let addr: SocketAddr = "127.0.0.1:8080".parse().expect("socket addr should parse");
         let node = NodeInfo {
             id: "healthy".to_string(),
             addr,
@@ -432,9 +429,7 @@ mod tests {
 
     #[test]
     fn test_node_info_unhealthy() {
-        let addr: SocketAddr = "127.0.0.1:8080"
-            .parse()
-            .expect("socket addr should parse");
+        let addr: SocketAddr = "127.0.0.1:8080".parse().expect("socket addr should parse");
         let node = NodeInfo {
             id: "unhealthy".to_string(),
             addr,
@@ -449,9 +444,7 @@ mod tests {
 
     #[test]
     fn test_node_info_debug() {
-        let addr: SocketAddr = "127.0.0.1:8080"
-            .parse()
-            .expect("socket addr should parse");
+        let addr: SocketAddr = "127.0.0.1:8080".parse().expect("socket addr should parse");
         let node = NodeInfo {
             id: "debug-node".to_string(),
             addr,
@@ -467,9 +460,7 @@ mod tests {
 
     #[test]
     fn test_node_info_clone() {
-        let addr: SocketAddr = "127.0.0.1:8080"
-            .parse()
-            .expect("socket addr should parse");
+        let addr: SocketAddr = "127.0.0.1:8080".parse().expect("socket addr should parse");
         let node = NodeInfo {
             id: "clone-test".to_string(),
             addr,
@@ -486,9 +477,7 @@ mod tests {
 
     #[test]
     fn test_node_info_serialize() {
-        let addr: SocketAddr = "127.0.0.1:8080"
-            .parse()
-            .expect("socket addr should parse");
+        let addr: SocketAddr = "127.0.0.1:8080".parse().expect("socket addr should parse");
         let node = NodeInfo {
             id: "ser-node".to_string(),
             addr,
@@ -506,7 +495,8 @@ mod tests {
     #[test]
     fn test_node_info_deserialize() {
         let json = r#"{"id":"deser-node","addr":"192.168.1.1:9000","role":"Root","health":90,"load":10,"last_seen":0,"capabilities":[]}"#;
-        let node: NodeInfo = serde_json::from_str(json).expect("NodeInfo should deserialize from JSON");
+        let node: NodeInfo =
+            serde_json::from_str(json).expect("NodeInfo should deserialize from JSON");
         assert_eq!(node.id, "deser-node");
         assert_eq!(node.health, 90);
     }
@@ -532,9 +522,7 @@ mod tests {
 
     #[test]
     fn test_node_info_with_many_capabilities() {
-        let addr: SocketAddr = "127.0.0.1:8080"
-            .parse()
-            .expect("socket addr should parse");
+        let addr: SocketAddr = "127.0.0.1:8080".parse().expect("socket addr should parse");
         let node = NodeInfo {
             id: "multi-cap".to_string(),
             addr,
@@ -567,9 +555,7 @@ mod tests {
 
     #[test]
     fn test_mesh_message_discover_reply() {
-        let addr: SocketAddr = "127.0.0.1:8080"
-            .parse()
-            .expect("socket addr should parse");
+        let addr: SocketAddr = "127.0.0.1:8080".parse().expect("socket addr should parse");
         let node_info = NodeInfo {
             id: "reply-node".to_string(),
             addr,
@@ -784,7 +770,8 @@ mod tests {
     fn test_mesh_stats_deserialize() {
         let json =
             r#"{"node_id":"deser-stats","total_peers":20,"active_peers":18,"avg_health":92}"#;
-        let stats: MeshStats = serde_json::from_str(json).expect("MeshStats should deserialize from JSON");
+        let stats: MeshStats =
+            serde_json::from_str(json).expect("MeshStats should deserialize from JSON");
         assert_eq!(stats.node_id, "deser-stats");
         assert_eq!(stats.total_peers, 20);
         assert_eq!(stats.avg_health, 92);

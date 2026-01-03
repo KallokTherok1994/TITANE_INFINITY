@@ -480,8 +480,7 @@ mod tests {
     #[test]
     fn test_mood_serialize() {
         let mood = Mood::Curious;
-        let json =
-            serde_json::to_string(&mood).expect("Mood doit pouvoir être sérialisé en JSON");
+        let json = serde_json::to_string(&mood).expect("Mood doit pouvoir être sérialisé en JSON");
         assert!(json.contains("Curious"));
     }
 
@@ -540,8 +539,8 @@ mod tests {
             trigger: "goal".to_string(),
             duration_mins: 45,
         };
-        let json = serde_json::to_string(&entry)
-            .expect("MoodEntry doit pouvoir être sérialisé en JSON");
+        let json =
+            serde_json::to_string(&entry).expect("MoodEntry doit pouvoir être sérialisé en JSON");
         assert!(json.contains("Determined"));
         assert!(json.contains("goal"));
     }

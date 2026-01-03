@@ -190,10 +190,7 @@ mod tests {
         };
         assert!(response.raw_data.is_some());
         assert_eq!(
-            response
-                .raw_data
-                .expect("raw data should be present")
-                ["key"],
+            response.raw_data.expect("raw data should be present")["key"],
             "value"
         );
     }
@@ -378,7 +375,8 @@ mod tests {
     fn test_neutralizer_multiple_validations() {
         let neutralizer = ApiNeutralizer::new();
 
-        let responses = [NeutralizedResponse {
+        let responses = [
+            NeutralizedResponse {
                 content: "".to_string(),
                 provider: "A".to_string(),
                 tokens_used: 0,
@@ -395,7 +393,8 @@ mod tests {
                 provider: "C".to_string(),
                 tokens_used: 0,
                 raw_data: None,
-            }];
+            },
+        ];
 
         let results: Vec<_> = responses.iter().map(|r| neutralizer.validate(r)).collect();
 

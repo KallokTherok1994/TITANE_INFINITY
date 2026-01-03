@@ -125,10 +125,12 @@ mod tests {
 
     #[test]
     fn test_disk_mode_variants() {
-        let modes = [DiskMode::Disabled,
+        let modes = [
+            DiskMode::Disabled,
             DiskMode::ReadOnly,
             DiskMode::WriteOnly,
-            DiskMode::ReadWrite];
+            DiskMode::ReadWrite,
+        ];
         assert_eq!(modes.len(), 4);
     }
 
@@ -165,7 +167,8 @@ mod tests {
         let json = serde_json::to_string(&mode).expect("DiskMode should serialize to JSON");
         assert_eq!(json, "\"read_write\"");
 
-        let restored: DiskMode = serde_json::from_str(&json).expect("DiskMode should deserialize from JSON");
+        let restored: DiskMode =
+            serde_json::from_str(&json).expect("DiskMode should deserialize from JSON");
         assert_eq!(restored, DiskMode::ReadWrite);
     }
 
@@ -173,19 +176,23 @@ mod tests {
     fn test_disk_mode_rename_all() {
         // Test snake_case serialization for all variants
         assert_eq!(
-            serde_json::to_string(&DiskMode::Disabled).expect("DiskMode::Disabled should serialize"),
+            serde_json::to_string(&DiskMode::Disabled)
+                .expect("DiskMode::Disabled should serialize"),
             "\"disabled\""
         );
         assert_eq!(
-            serde_json::to_string(&DiskMode::ReadOnly).expect("DiskMode::ReadOnly should serialize"),
+            serde_json::to_string(&DiskMode::ReadOnly)
+                .expect("DiskMode::ReadOnly should serialize"),
             "\"read_only\""
         );
         assert_eq!(
-            serde_json::to_string(&DiskMode::WriteOnly).expect("DiskMode::WriteOnly should serialize"),
+            serde_json::to_string(&DiskMode::WriteOnly)
+                .expect("DiskMode::WriteOnly should serialize"),
             "\"write_only\""
         );
         assert_eq!(
-            serde_json::to_string(&DiskMode::ReadWrite).expect("DiskMode::ReadWrite should serialize"),
+            serde_json::to_string(&DiskMode::ReadWrite)
+                .expect("DiskMode::ReadWrite should serialize"),
             "\"read_write\""
         );
     }
@@ -218,7 +225,8 @@ mod tests {
     fn test_log_level_serialization() {
         let level = LogLevel::Info;
         let json = serde_json::to_string(&level).expect("LogLevel should serialize to JSON");
-        let restored: LogLevel = serde_json::from_str(&json).expect("LogLevel should deserialize from JSON");
+        let restored: LogLevel =
+            serde_json::from_str(&json).expect("LogLevel should deserialize from JSON");
         assert!(matches!(restored, LogLevel::Info));
     }
 
@@ -228,12 +236,14 @@ mod tests {
 
     #[test]
     fn test_event_type_variants() {
-        let types = [EventType::SystemStart,
+        let types = [
+            EventType::SystemStart,
             EventType::ModuleInit,
             EventType::HealthChange,
             EventType::Repair,
             EventType::Snapshot,
-            EventType::Alert];
+            EventType::Alert,
+        ];
         assert_eq!(types.len(), 6);
     }
 
@@ -255,7 +265,8 @@ mod tests {
     fn test_event_type_serialization() {
         let event_type = EventType::Alert;
         let json = serde_json::to_string(&event_type).expect("EventType should serialize to JSON");
-        let restored: EventType = serde_json::from_str(&json).expect("EventType should deserialize from JSON");
+        let restored: EventType =
+            serde_json::from_str(&json).expect("EventType should deserialize from JSON");
         assert!(matches!(restored, EventType::Alert));
     }
 
@@ -322,7 +333,8 @@ mod tests {
             ..Default::default()
         };
         let json = serde_json::to_string(&state).expect("MemoryState should serialize to JSON");
-        let restored: MemoryState = serde_json::from_str(&json).expect("MemoryState should deserialize from JSON");
+        let restored: MemoryState =
+            serde_json::from_str(&json).expect("MemoryState should deserialize from JSON");
         assert_eq!(restored.snapshots_count, 5);
         assert_eq!(restored.storage_size_mb, 10.5);
     }
@@ -376,8 +388,10 @@ mod tests {
             modified_ts: 999999,
             version: Some("v2.0".to_string()),
         };
-        let json = serde_json::to_string(&report).expect("MemoryFileReport should serialize to JSON");
-        let restored: MemoryFileReport = serde_json::from_str(&json).expect("MemoryFileReport should deserialize from JSON");
+        let json =
+            serde_json::to_string(&report).expect("MemoryFileReport should serialize to JSON");
+        let restored: MemoryFileReport =
+            serde_json::from_str(&json).expect("MemoryFileReport should deserialize from JSON");
         assert_eq!(restored.name, "data.json");
         assert_eq!(restored.version, Some("v2.0".to_string()));
     }
@@ -450,8 +464,10 @@ mod tests {
             total_size_bytes: 5000,
             files: vec![],
         };
-        let json = serde_json::to_string(&report).expect("MemoryDirectoryReport should serialize to JSON");
-        let restored: MemoryDirectoryReport = serde_json::from_str(&json).expect("MemoryDirectoryReport should deserialize from JSON");
+        let json =
+            serde_json::to_string(&report).expect("MemoryDirectoryReport should serialize to JSON");
+        let restored: MemoryDirectoryReport = serde_json::from_str(&json)
+            .expect("MemoryDirectoryReport should deserialize from JSON");
         assert_eq!(restored.base_path, "/memory");
     }
 
@@ -509,7 +525,8 @@ mod tests {
             message: "Health check failed".to_string(),
         };
         let json = serde_json::to_string(&entry).expect("LogEntry should serialize to JSON");
-        let restored: LogEntry = serde_json::from_str(&json).expect("LogEntry should deserialize from JSON");
+        let restored: LogEntry =
+            serde_json::from_str(&json).expect("LogEntry should deserialize from JSON");
         assert_eq!(restored.id, "entry-123");
         assert!(matches!(restored.level, LogLevel::Error));
     }
@@ -585,7 +602,8 @@ mod tests {
             data: HashMap::new(),
         };
         let json = serde_json::to_string(&event).expect("TimelineEvent should serialize to JSON");
-        let restored: TimelineEvent = serde_json::from_str(&json).expect("TimelineEvent should deserialize from JSON");
+        let restored: TimelineEvent =
+            serde_json::from_str(&json).expect("TimelineEvent should deserialize from JSON");
         assert_eq!(restored.id, "tl-event");
         assert!(matches!(restored.event_type, EventType::Snapshot));
     }
@@ -672,7 +690,8 @@ mod tests {
             metadata: HashMap::new(),
         };
         let json = serde_json::to_string(&snapshot).expect("Snapshot should serialize to JSON");
-        let restored: Snapshot = serde_json::from_str(&json).expect("Snapshot should deserialize from JSON");
+        let restored: Snapshot =
+            serde_json::from_str(&json).expect("Snapshot should deserialize from JSON");
         assert_eq!(restored.id, "snapshot-test");
     }
 }

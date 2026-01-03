@@ -338,8 +338,8 @@ mod tests {
         };
         let json =
             serde_json::to_string(&report).expect("AssociationReport should serialize to JSON");
-        let restored: AssociationReport = serde_json::from_str(&json)
-            .expect("AssociationReport should deserialize from JSON");
+        let restored: AssociationReport =
+            serde_json::from_str(&json).expect("AssociationReport should deserialize from JSON");
         assert_eq!(restored.total_associations, 15);
         assert_eq!(restored.strongest_links.len(), 1);
     }

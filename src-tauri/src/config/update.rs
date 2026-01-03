@@ -89,7 +89,8 @@ pub fn validate_timeout_ms(timeout_ms: u64) -> Result<(), String> {
         return Err("Timeout doit être au moins 1000ms (1 seconde)".to_string());
     }
 
-    if timeout_ms > 3_600_000 { // RELAXÉ: 5min → 1h
+    if timeout_ms > 3_600_000 {
+        // RELAXÉ: 5min → 1h
         return Err("Timeout ne peut pas dépasser 3600000ms (1 heure)".to_string());
     }
 

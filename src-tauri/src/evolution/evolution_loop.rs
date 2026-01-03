@@ -470,7 +470,8 @@ mod tests {
             performance: 91.2,
             cognitive_depth: 88.8,
         };
-        let json = serde_json::to_string(&metrics).expect("EvolutionMetrics should serialize to JSON");
+        let json =
+            serde_json::to_string(&metrics).expect("EvolutionMetrics should serialize to JSON");
         assert!(json.contains("stability"));
         assert!(json.contains("cognitive_depth"));
     }
@@ -722,7 +723,8 @@ mod tests {
             mutations_applied: 5,
             improvements: HashMap::new(),
         };
-        let json = serde_json::to_string(&report).expect("EvolutionReport should serialize to JSON");
+        let json =
+            serde_json::to_string(&report).expect("EvolutionReport should serialize to JSON");
         assert!(json.contains("cycle"));
         assert!(json.contains("mutations_applied"));
     }

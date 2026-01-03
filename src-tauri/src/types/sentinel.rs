@@ -108,7 +108,8 @@ mod tests {
     fn test_severity_serialization() {
         let sev = Severity::Critical;
         let json = serde_json::to_string(&sev).expect("Severity should serialize to JSON");
-        let restored: Severity = serde_json::from_str(&json).expect("Severity should deserialize from JSON");
+        let restored: Severity =
+            serde_json::from_str(&json).expect("Severity should deserialize from JSON");
         assert_eq!(restored, Severity::Critical);
     }
 
@@ -118,10 +119,12 @@ mod tests {
 
     #[test]
     fn test_alert_category_variants() {
-        let categories = [AlertCategory::Performance,
+        let categories = [
+            AlertCategory::Performance,
             AlertCategory::Security,
             AlertCategory::Integrity,
-            AlertCategory::Resource];
+            AlertCategory::Resource,
+        ];
         assert_eq!(categories.len(), 4);
     }
 
@@ -203,7 +206,8 @@ mod tests {
             timestamp: 999999,
         };
         let json = serde_json::to_string(&alert).expect("Alert should serialize to JSON");
-        let restored: Alert = serde_json::from_str(&json).expect("Alert should deserialize from JSON");
+        let restored: Alert =
+            serde_json::from_str(&json).expect("Alert should deserialize from JSON");
         assert_eq!(restored.id, "alert-test");
         assert_eq!(restored.message, "Low memory");
     }

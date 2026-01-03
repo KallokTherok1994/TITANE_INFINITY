@@ -6,8 +6,8 @@
 #[cfg(test)]
 mod memory_system_tests {
     use super::super::memory_state::{MemoryEntry, MemoryTier, MemoryType};
-    use super::super::stm::{ShortTermMemory, STM_MAX_SIZE};
     use super::super::mtm::MidTermMemory;
+    use super::super::stm::{ShortTermMemory, STM_MAX_SIZE};
 
     // ═══════════════════════════════════════════════════════════════
     //   STM (Short-Term Memory) Tests
@@ -45,11 +45,7 @@ mod memory_system_tests {
 
         // Fill STM to capacity (20 items)
         for i in 0..STM_MAX_SIZE {
-            let entry = MemoryEntry::new(
-                format!("Entry {}", i),
-                0.5,
-                MemoryType::Conversation,
-            );
+            let entry = MemoryEntry::new(format!("Entry {}", i), 0.5, MemoryType::Conversation);
             let _ = stm.push(entry).await;
         }
 
@@ -57,16 +53,20 @@ mod memory_system_tests {
         assert_eq!(entries_before.len(), STM_MAX_SIZE);
 
         // Push one more - should evict oldest (Entry 0)
-        let new_entry = MemoryEntry::new(
-            "Entry 20 - New".to_string(),
-            0.9,
-            MemoryType::Conversation,
-        );
+        let new_entry =
+            MemoryEntry::new("Entry 20 - New".to_string(), 0.9, MemoryType::Conversation);
         let evicted = stm.push(new_entry).await;
-        assert!(evicted.is_some(), "Push over capacity should evict one entry");
+        assert!(
+            evicted.is_some(),
+            "Push over capacity should evict one entry"
+        );
 
         let entries_after = stm.get_all().await;
-        assert_eq!(entries_after.len(), STM_MAX_SIZE, "STM should maintain max size");
+        assert_eq!(
+            entries_after.len(),
+            STM_MAX_SIZE,
+            "STM should maintain max size"
+        );
 
         // First entry should now be "Entry 1" (Entry 0 evicted)
         assert_eq!(entries_after[0].content, "Entry 1");
@@ -81,11 +81,7 @@ mod memory_system_tests {
 
         // Add multiple entries
         for i in 0..5 {
-            let entry = MemoryEntry::new(
-                format!("Entry {}", i),
-                0.5,
-                MemoryType::Conversation,
-            );
+            let entry = MemoryEntry::new(format!("Entry {}", i), 0.5, MemoryType::Conversation);
             let _ = stm.push(entry).await;
         }
 
@@ -158,11 +154,7 @@ mod memory_system_tests {
 
     #[test]
     fn test_memory_entry_creation() {
-        let entry = MemoryEntry::new(
-            "Test content".to_string(),
-            0.7,
-            MemoryType::Project,
-        );
+        let entry = MemoryEntry::new("Test content".to_string(), 0.7, MemoryType::Project);
 
         assert_eq!(entry.content, "Test content");
         assert_eq!(entry.importance, 0.7);
@@ -173,14 +165,16 @@ mod memory_system_tests {
     #[test]
     fn test_memory_type_variants() {
         // Ensure all MemoryType variants are accessible
-        let types = [MemoryType::Conversation,
+        let types = [
+            MemoryType::Conversation,
             MemoryType::Decision,
             MemoryType::Knowledge,
             MemoryType::Project,
             MemoryType::Ritual,
             MemoryType::Event,
             MemoryType::System,
-            MemoryType::Custom];
+            MemoryType::Custom,
+        ];
 
         assert_eq!(types.len(), 8, "Should have 8 memory type variants");
     }
@@ -188,9 +182,7 @@ mod memory_system_tests {
     #[test]
     fn test_memory_tier_variants() {
         // Ensure all MemoryTier variants work
-        let tiers = [MemoryTier::STM,
-            MemoryTier::MTM,
-            MemoryTier::LTM];
+        let tiers = [MemoryTier::STM, MemoryTier::MTM, MemoryTier::LTM];
 
         assert_eq!(tiers.len(), 3, "Should have 3 memory tiers");
     }

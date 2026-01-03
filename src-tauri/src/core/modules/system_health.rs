@@ -132,7 +132,8 @@ impl SystemHealth {
         // Par défaut: moins agressif en release (stable), permissif en debug (dev).
         // Surchargable via env: TITANE_SYSTEM_AUTO_HEAL=0/1
         let auto_heal_default = cfg!(debug_assertions);
-        let auto_heal_enabled = read_env_bool("TITANE_SYSTEM_AUTO_HEAL").unwrap_or(auto_heal_default);
+        let auto_heal_enabled =
+            read_env_bool("TITANE_SYSTEM_AUTO_HEAL").unwrap_or(auto_heal_default);
 
         Self {
             health: EngineHealth::Offline,

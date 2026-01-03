@@ -501,7 +501,8 @@ mod tests {
     #[test]
     fn test_agent_state_deserialize() {
         let json = r#""Killed""#;
-        let state: AgentState = serde_json::from_str(json).expect("deserialize AgentState should succeed");
+        let state: AgentState =
+            serde_json::from_str(json).expect("deserialize AgentState should succeed");
         assert_eq!(state, AgentState::Killed);
     }
 
@@ -599,7 +600,8 @@ mod tests {
     #[test]
     fn test_agent_error_deserialize() {
         let json = r#"{"Timeout":"expired"}"#;
-        let err: AgentError = serde_json::from_str(json).expect("deserialize AgentError should succeed");
+        let err: AgentError =
+            serde_json::from_str(json).expect("deserialize AgentError should succeed");
         assert!(matches!(err, AgentError::Timeout(_)));
     }
 
@@ -658,8 +660,8 @@ mod tests {
     #[test]
     fn test_agent_metrics_deserialize() {
         let json = r#"{"tasks_executed":5,"tasks_succeeded":4,"tasks_failed":1,"total_execution_time_ms":100,"messages_sent":2,"messages_received":3,"memory_usage_bytes":512,"last_activity_timestamp":0}"#;
-        let metrics: AgentMetrics = serde_json::from_str(json)
-            .expect("deserialize AgentMetrics should succeed");
+        let metrics: AgentMetrics =
+            serde_json::from_str(json).expect("deserialize AgentMetrics should succeed");
         assert_eq!(metrics.tasks_executed, 5);
         assert_eq!(metrics.tasks_succeeded, 4);
     }

@@ -497,14 +497,16 @@ mod tests {
 
     #[test]
     fn test_model_choice_strategy_variants() {
-        let strategies = [ModelChoiceStrategy::Speed,
+        let strategies = [
+            ModelChoiceStrategy::Speed,
             ModelChoiceStrategy::Quality,
             ModelChoiceStrategy::Balanced,
             ModelChoiceStrategy::VisionDominant,
             ModelChoiceStrategy::Secure,
             ModelChoiceStrategy::CostEfficient,
             ModelChoiceStrategy::DeepReasoning,
-            ModelChoiceStrategy::LongContext];
+            ModelChoiceStrategy::LongContext,
+        ];
         assert_eq!(strategies.len(), 8);
     }
 
@@ -560,10 +562,10 @@ mod tests {
     #[test]
     fn test_model_choice_strategy_serialization() {
         let strategy = ModelChoiceStrategy::LongContext;
-        let json = serde_json::to_string(&strategy)
-            .expect("should serialize model choice strategy");
-        let restored: ModelChoiceStrategy = serde_json::from_str(&json)
-            .expect("should deserialize model choice strategy");
+        let json =
+            serde_json::to_string(&strategy).expect("should serialize model choice strategy");
+        let restored: ModelChoiceStrategy =
+            serde_json::from_str(&json).expect("should deserialize model choice strategy");
         assert_eq!(restored, strategy);
     }
 
