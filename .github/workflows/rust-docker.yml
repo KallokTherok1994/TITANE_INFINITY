@@ -1,32 +1,45 @@
 name: Rust Tests (Docker)
 
 on:
-  # Déclenché manuellement ou sur push vers branches principales
   workflow_dispatch:
   push:
-    branches: [MAIN, dev, stable-runtime]
+    branches: [MAIN, main, dev, stable-runtime]
     paths:
       - 'src-tauri/**'
       - '.github/workflows/rust-docker.yml'
   pull_request:
-    branches: [MAIN]
+    branches: [MAIN, main]
     paths:
       - 'src-tauri/**'
 
+# Prevent concurrent runs on the same branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Default permissions (least privilege)
+permissions:
+  contents: read
+
+env:
+  RUST_VERSION: '1.83'
+
 jobs:
   test-rust-docker:
-    name: Tests Backend Rust (Docker)
+    name: 🦀 Rust Backend Tests (Docker)
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
 
-    # Utiliser image Docker avec dépendances système Tauri
     container:
       image: rust:1.83-slim
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4.2.2
 
-      - name: Install System Dependencies (Tauri/GTK)
+      - name: 🔧 Install System Dependencies (Tauri/GTK)
         run: |
           apt-get update
           apt-get install -y \
@@ -39,8 +52,8 @@ jobs:
             pkg-config \
             build-essential
 
-      - name: Cache Cargo Registry
-        uses: actions/cache@v4
+      - name: 💾 Cache Cargo Registry
+        uses: actions/cache@v4.2.0
         with:
           path: |
             ~/.cargo/registry
@@ -49,42 +62,43 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cargo-registry-
 
-      - name: Cache Cargo Build
-        uses: actions/cache@v4
+      - name: 💾 Cache Cargo Build
+        uses: actions/cache@v4.2.0
         with:
           path: src-tauri/target
-          key: ${{ runner.os }}-cargo-build-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-build-docker-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
-            ${{ runner.os }}-cargo-build-
+            ${{ runner.os }}-cargo-build-docker-
 
-      - name: Run Cargo Check
+      - name: ✔️ Run Cargo Check
         working-directory: src-tauri
         run: cargo check --verbose
 
-      - name: Run Rust Tests
+      - name: 🧪 Run Rust Tests
         working-directory: src-tauri
         run: cargo test --verbose
         env:
           RUST_BACKTRACE: 1
 
-      - name: Run Clippy (Linter)
+      - name: 🔍 Run Clippy (Linter)
         working-directory: src-tauri
         run: cargo clippy --all-targets --all-features -- -D warnings
-        continue-on-error: true
 
-      - name: Generate Test Report
+      - name: 📊 Generate Test Report
         if: always()
         working-directory: src-tauri
         run: |
-          echo "## Rust Tests Summary" > test-summary.md
+          echo "## 🦀 Rust Tests Summary (Docker)" > test-summary.md
           echo "" >> test-summary.md
-          echo "✅ Cargo check: $(cargo check 2>&1 | grep -c 'Finished' || echo 'Failed')" >> test-summary.md
-          echo "✅ Tests executed in Docker environment with full Tauri dependencies" >> test-summary.md
+          echo "- ✅ Tests executed in isolated Docker environment" >> test-summary.md
+          echo "- ✅ Full Tauri dependencies installed" >> test-summary.md
+          echo "- Rust: ${{ env.RUST_VERSION }}" >> test-summary.md
+          echo "- Container: rust:1.83-slim" >> test-summary.md
 
-      - name: Upload Test Report
+      - name: 📤 Upload Test Report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.0
         with:
-          name: rust-test-report
+          name: rust-test-report-docker-${{ github.run_id }}
           path: src-tauri/test-summary.md
           retention-days: 30
