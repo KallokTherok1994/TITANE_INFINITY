@@ -1,0 +1,52 @@
+name: Generate Changelog
+
+on:
+  release:
+    types: [created, edited]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to generate changelog for (leave empty for latest)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  changelog:
+    name: 📝 Generate Changelog
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0  # Need full history for changelog
+
+      - name: 📝 Generate changelog with git-cliff
+        uses: orhun/git-cliff-action@v3
+        with:
+          config: cliff.toml
+          args: --latest --output CHANGELOG.md
+        env:
+          OUTPUT: CHANGELOG.md
+
+      - name: 💾 Commit changelog
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "docs: update CHANGELOG.md for ${{ github.event.release.tag_name || inputs.tag || 'latest' }}"
+          file_pattern: CHANGELOG.md
+          commit_user_name: github-actions[bot]
+          commit_user_email: github-actions[bot]@users.noreply.github.com
+
+      - name: 📊 Summary
+        run: |
+          echo "## 📝 Changelog Updated" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Release:** ${{ github.event.release.tag_name || inputs.tag || 'latest' }}" >> $GITHUB_STEP_SUMMARY
+          echo "**File:** CHANGELOG.md" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** ✅ Committed" >> $GITHUB_STEP_SUMMARY
