@@ -1,0 +1,103 @@
+name: Performance Benchmarks
+
+on:
+  pull_request:
+    branches: [MAIN, main]
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'vite.config.ts'
+      - 'package.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  lighthouse:
+    name: 🚦 Lighthouse CI
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4.2.2
+
+      - name: 🔧 Enable Corepack (pnpm)
+        run: corepack enable
+
+      - name: 📦 Setup Node.js 20
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🏗️ Build production
+        run: pnpm run build
+
+      - name: 📊 Analyze build size
+        run: |
+          # Analyze actual build output from pnpm build
+          if [ -d "dist" ]; then
+            echo "## 🚦 Build Size Analysis" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Total size
+            TOTAL_SIZE=$(du -sh dist | cut -f1)
+            echo "**Total Build Size:** \`${TOTAL_SIZE}\`" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Largest files (top 10)
+            echo "### 📦 Largest Assets (Top 10):" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            find dist -type f -exec du -h {} + | sort -rh | head -10 >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # File count
+            FILE_COUNT=$(find dist -type f | wc -l)
+            echo "**Total Files:** ${FILE_COUNT}" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            echo "### 🎯 Tauri-Specific Metrics (Recommended):" >> $GITHUB_STEP_SUMMARY
+            echo "- Binary size analysis (\`src-tauri/target/release/\`)" >> $GITHUB_STEP_SUMMARY
+            echo "- Startup time profiling (\`cargo flamegraph\`)" >> $GITHUB_STEP_SUMMARY
+            echo "- Memory usage profiling (\`cargo instruments\` on macOS)" >> $GITHUB_STEP_SUMMARY
+            echo "- Rust benchmark suite (\`cargo bench\`)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ dist directory not found, build may have failed" >> $GITHUB_STEP_SUMMARY
+          fi
+        continue-on-error: true
+
+      - name: 📤 Upload build size report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-size-analysis
+          path: dist/
+          retention-days: 7
+        continue-on-error: true
+          echo "- E2E test duration trends" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "💡 **Tip:** For Tauri apps, focus on:" >> $GITHUB_STEP_SUMMARY
+          echo "  - Binary size optimization" >> $GITHUB_STEP_SUMMARY
+          echo "  - Startup time measurement" >> $GITHUB_STEP_SUMMARY
+          echo "  - Memory usage profiling" >> $GITHUB_STEP_SUMMARY
+
+      - name: 📦 Build Size Analysis
+        run: |
+          if [ -d "dist" ]; then
+            echo "### 📦 Build Size Analysis" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            du -sh dist/ >> $GITHUB_STEP_SUMMARY || true
+            du -sh dist/* 2>/dev/null | head -10 >> $GITHUB_STEP_SUMMARY || true
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          fi

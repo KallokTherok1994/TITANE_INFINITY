@@ -1,4 +1,4 @@
-name: TITANE∞ Release Pipeline v26.2.0
+name: TITANE∞ Release Pipeline v26.3.0
 
 on:
   push:
@@ -10,6 +10,15 @@ on:
         description: 'Tag to release (e.g., v26.2.0)'
         required: true
         type: string
+
+# Prevent concurrent releases
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+# Default permissions (least privilege)
+permissions:
+  contents: read
 
 env:
   CARGO_TERM_COLOR: always
@@ -25,6 +34,8 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 60
     if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: read
 
     steps:
       - name: 📥 Checkout repository
@@ -116,6 +127,8 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 60
     if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: read
 
     steps:
       - name: 📥 Checkout repository
@@ -185,6 +198,8 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 60
     if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: read
 
     strategy:
       fail-fast: false
@@ -265,7 +280,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
-
     permissions:
       contents: write
 
@@ -328,3 +342,6 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Artifacts included:**" >> $GITHUB_STEP_SUMMARY
           find artifacts/ -type f \( -name "*.deb" -o -name "*.AppImage" -o -name "*.msi" -o -name "*.dmg" \) 2>/dev/null | wc -l | xargs echo "- Total files:" >> $GITHUB_STEP_SUMMARY || echo "- Files: 0" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "🚀 Built with TITANE∞ v26.3.0 - Modernized Release Pipeline" >> $GITHUB_STEP_SUMMARY
