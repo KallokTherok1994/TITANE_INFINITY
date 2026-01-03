@@ -3,7 +3,7 @@
 // Tauri commands for GitHub Copilot provider integration
 // ═══════════════════════════════════════════════════════════════════════════
 
-use crate::api_hub::copilot::{CopilotClient, CopilotRequest, Message, TestResult};
+use titane_infinity::api_hub::copilot::{CopilotClient, CopilotRequest, Message, TestResult};
 use crate::security::permission_guard::PERMISSION_GUARD;
 use crate::security::permissions::Role;
 use crate::security::secrets_engine::{SecureSecretsEngine, KEY_COPILOT};
@@ -236,7 +236,7 @@ pub async fn chat_set_copilot_key(
     drop(key_lock);
 
     // Persist to encrypted storage
-    if let Err(e) = state.secrets_engine.set_secret(KEY_COPILOT, &api_key) {
+    if let Err(e) = state.secrets_engine.set_secret(KEY_COPILOT, api_key.clone()) {
         error!("Failed to persist Copilot key: {:?}", e);
         return Ok(CopilotKeyStatus {
             configured: false,

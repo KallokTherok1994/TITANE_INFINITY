@@ -129,6 +129,11 @@ mod commands {
     pub mod exp_fusion {
         include!("commands/exp_fusion.rs");
     }
+
+    // ✨ v26.3: GitHub Copilot provider commands
+    pub mod copilot_commands {
+        include!("commands/copilot_commands.rs");
+    }
 }
 
 // Auth OS v∞ - Unified Authentication System
