@@ -15,8 +15,8 @@ if ! command -v cargo &> /dev/null; then
     exit 1
 fi
 
-# Install npm dependencies
-echo "📦 Installing npm dependencies..."
+# Install pnpm dependencies
+echo "📦 Installing pnpm dependencies..."
 pnpm install
 
 # Install Playwright browsers

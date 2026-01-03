@@ -414,15 +414,15 @@ EOF
 # 4) Ensure scripts are executable
 chmod +x .github/copilot-xs/scripts/*.js scripts/init-copilot-xs.sh
 
-# 5) Wire npm scripts (non-destructive)
+# 5) Wire pnpm scripts (non-destructive)
 if [[ -f package.json ]]; then
-  echo "📦 Wiring npm scripts..."
-  npm pkg set scripts.copilot-xs:validate="node .github/copilot-xs/scripts/validate.js" >/dev/null
-  npm pkg set scripts.copilot-xs:precommit="node .github/copilot-xs/scripts/precommit.js" >/dev/null
-  npm pkg set scripts.copilot-xs:status="node .github/copilot-xs/scripts/agent-status.js" >/dev/null
-  npm pkg set scripts.copilot-xs:security-scan="node .github/copilot-xs/scripts/security-scan.js" >/dev/null
-  npm pkg set scripts.copilot-xs:test="pnpm run copilot-xs:validate && pnpm run test:all" >/dev/null
-  echo "✅ npm scripts updated"
+  echo "📦 Wiring pnpm scripts..."
+  pnpm pkg set scripts.copilot-xs:validate="node .github/copilot-xs/scripts/validate.js" >/dev/null
+  pnpm pkg set scripts.copilot-xs:precommit="node .github/copilot-xs/scripts/precommit.js" >/dev/null
+  pnpm pkg set scripts.copilot-xs:status="node .github/copilot-xs/scripts/agent-status.js" >/dev/null
+  pnpm pkg set scripts.copilot-xs:security-scan="node .github/copilot-xs/scripts/security-scan.js" >/dev/null
+  pnpm pkg set scripts.copilot-xs:test="pnpm run copilot-xs:validate && pnpm run test:all" >/dev/null
+  echo "✅ pnpm scripts updated"
 
   if [[ "${COPILOT_XS_INSTALL_MCP:-0}" == "1" ]]; then
     echo "📦 Installing optional MCP servers (devDependencies)..."
@@ -432,7 +432,7 @@ if [[ -f package.json ]]; then
     echo "✅ MCP servers installed"
   fi
 else
-  echo "⚠️  No package.json found; skipping npm wiring."
+  echo "⚠️  No package.json found; skipping pnpm wiring."
 fi
 
 # 6) Wire Husky pre-commit (append if missing)
@@ -441,7 +441,7 @@ if [[ -f .husky/pre-commit ]]; then
     echo "ℹ️  Husky already wired"
   else
     echo "🔗 Wiring Husky pre-commit..."
-    printf '\n# COPILOT-XS gate\nnpm run copilot-xs:precommit\n' >> .husky/pre-commit
+    printf '\n# COPILOT-XS gate\npnpm run copilot-xs:precommit\n' >> .husky/pre-commit
     echo "✅ Husky pre-commit updated"
   fi
 else
