@@ -1,6 +1,7 @@
 /**
- * TITANE∞ v20.0 — Tabs Component
- * Super Prompt #2: Frontend Polish & UX Mastering
+ * TITANE∞ v26.2.0 — Tabs Component (Titanium Dark)
+ * Tab navigation with Titanium Dark design system
+ * WCAG 2.2 AA compliant with full keyboard support
  * @license MIT
  */
 
@@ -21,14 +22,14 @@ export interface TabsProps {
 }
 
 /**
- * Tabs - Système d'onglets avec support clavier
+ * Tabs - Tab navigation system with keyboard support
  *
  * @example
  * ```tsx
  * const tabs = [
  *   { id: 'logs', label: 'Logs', icon: <FileText /> },
- *   { id: 'metrics', label: 'Métriques', icon: <BarChart /> },
- *   { id: 'memory', label: 'Mémoire', icon: <Database /> },
+ *   { id: 'metrics', label: 'Metrics', icon: <BarChart /> },
+ *   { id: 'memory', label: 'Memory', icon: <Database /> },
  * ];
  *
  * <Tabs tabs={tabs} defaultTab="logs">
@@ -81,10 +82,7 @@ export function Tabs({ tabs, defaultTab, onTabChange, children }: TabsProps) {
       {/* Tabs Header */}
       <div
         role="tablist"
-        className="flex border-b"
-        style={{
-          borderColor: 'var(--border, rgba(196,196,196,0.12))',
-        }}
+        className="flex border-b border-titanium-border-default"
       >
         {tabs.map((tab, index) => {
           const isActive = activeTab === tab.id;
@@ -101,27 +99,20 @@ export function Tabs({ tabs, defaultTab, onTabChange, children }: TabsProps) {
               onClick={() => handleTabClick(tab.id, tab.disabled)}
               onKeyDown={e => handleKeyDown(e, index)}
               className={`
-                relative px-4 py-2.5 text-sm font-medium
-                transition-all duration-150
-                focus:outline-none focus:ring-[3px] focus:ring-inset
-                focus:ring-[rgba(114,123,129,0.6)]
+                relative px-4 py-3 text-sm font-medium
+                transition-colors duration-200
+                focus-visible:outline-none focus-visible:shadow-focus
                 disabled:cursor-not-allowed disabled:opacity-50
-                ${isActive ? 'border-b-2' : ''}
+                ${isActive 
+                  ? 'text-titanium-text-primary border-b-2 border-titanium-accent-cool bg-titanium-bg-interactive' 
+                  : tab.disabled 
+                    ? 'text-titanium-text-disabled' 
+                    : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-interactive'
+                }
               `}
-              style={{
-                color: isActive
-                  ? 'var(--text-primary, #e0e0e0)'
-                  : tab.disabled
-                    ? 'var(--text-disabled, rgba(255,255,255,0.38))'
-                    : 'var(--text-muted, rgba(255,255,255,0.60))',
-                borderColor: isActive ? 'var(--border-active, #727b81)' : 'transparent',
-                background: isActive
-                  ? 'var(--bg-hover, rgba(255,255,255,0.04))'
-                  : 'transparent',
-              }}
             >
               <div className="flex items-center gap-2">
-                {tab.icon && <span className="w-4 h-4">{tab.icon}</span>}
+                {tab.icon && <span className="w-4 h-4" aria-hidden="true">{tab.icon}</span>}
                 <span>{tab.label}</span>
               </div>
             </button>

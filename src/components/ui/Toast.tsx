@@ -1,12 +1,13 @@
 /**
- * TITANE∞ v26.2.3 — Toast Notification Component
- * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+ * TITANE∞ v26.2.0 — Toast Notification Component (Titanium Dark)
+ * Toast notifications with Titanium Dark design system
+ * WCAG 2.2 AA compliant with auto-dismiss
+ * @license MIT
  */
 
 import React, { useEffect, useState } from 'react';
-import './Toast.css';
 
-export type ToastType = 'info' | 'success' | 'warning' | 'error';
+export type ToastType = 'info' | 'success' | 'warning' | 'error' | 'default';
 
 export interface ToastProps {
   id: string;
@@ -17,10 +18,19 @@ export interface ToastProps {
 }
 
 const ICONS: Record<ToastType, string> = {
+  default: 'ℹ️',
   info: 'ℹ️',
   success: '✅',
   warning: '⚠️',
   error: '❌',
+};
+
+const TYPE_STYLES: Record<ToastType, string> = {
+  default: 'bg-titanium-bg-overlay border-titanium-border-default text-titanium-text-primary',
+  info: 'bg-info-100 border-info-500/30 text-info-700',
+  success: 'bg-success-100 border-success-500/30 text-success-700',
+  warning: 'bg-warning-100 border-warning-500/30 text-warning-700',
+  error: 'bg-error-100 border-error-500/30 text-error-700',
 };
 
 export const Toast: React.FC<ToastProps> = ({
@@ -56,20 +66,31 @@ export const Toast: React.FC<ToastProps> = ({
 
   return (
     <div
-      className={`toast toast--${type} ${isVisible && !isExiting ? 'toast--visible' : ''} ${isExiting ? 'toast--exiting' : ''}`}
+      className={`
+        flex items-center gap-3 px-4 py-3 rounded-lg border shadow-lg
+        transition-all duration-300
+        ${TYPE_STYLES[type]}
+        ${isVisible && !isExiting ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}
+        ${isExiting ? 'translate-x-full opacity-0' : ''}
+      `}
       role="alert"
       aria-live="polite"
       aria-atomic="true"
     >
-      <span className="toast__icon" aria-hidden="true">
+      <span className="text-lg flex-shrink-0" aria-hidden="true">
         {ICONS[type]}
       </span>
-      <p className="toast__message">{message}</p>
+      <p className="text-sm font-medium flex-1">{message}</p>
       <button
-        className="toast__close"
         onClick={handleClose}
-        aria-label="Fermer la notification"
+        aria-label="Close notification"
         type="button"
+        className="
+          flex-shrink-0 text-lg leading-none
+          hover:opacity-70 transition-opacity
+          focus-visible:outline-none focus-visible:shadow-focus rounded
+          p-1
+        "
       >
         ×
       </button>
