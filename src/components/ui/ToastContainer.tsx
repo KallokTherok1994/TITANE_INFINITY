@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v26.2.3 — Toast Container & Manager
- * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+ * TITANE∞ v26.2.0 — Toast Container & Manager (Titanium Dark)
+ * Toast notification system with Titanium Dark design system
+ * @license MIT
  */
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { Toast, type ToastType, type ToastProps } from './Toast';
-import './ToastContainer.css';
 
 interface ToastData {
   id: string;
@@ -24,6 +24,15 @@ interface ToastContainerProps {
     | 'bottom-center';
   maxToasts?: number;
 }
+
+const POSITION_CLASSES = {
+  'top-right': 'top-4 right-4',
+  'top-left': 'top-4 left-4',
+  'bottom-right': 'bottom-4 right-4',
+  'bottom-left': 'bottom-4 left-4',
+  'top-center': 'top-4 left-1/2 -translate-x-1/2',
+  'bottom-center': 'bottom-4 left-1/2 -translate-x-1/2',
+};
 
 export const ToastContainer: React.FC<ToastContainerProps> = ({
   position = 'top-right',
@@ -58,6 +67,8 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({
   useMemo(() => {
     if (typeof window !== 'undefined') {
       (window as any).__titaneToast = {
+        default: (message: string, duration?: number) =>
+          addToast('default', message, duration),
         info: (message: string, duration?: number) => addToast('info', message, duration),
         success: (message: string, duration?: number) =>
           addToast('success', message, duration),
@@ -71,20 +82,26 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({
 
   return (
     <div
-      className={`toast-container toast-container--${position}`}
+      className={`
+        fixed z-toast flex flex-col gap-2 
+        pointer-events-none
+        ${POSITION_CLASSES[position]}
+      `}
       aria-live="polite"
       aria-atomic="false"
     >
-      {toasts.map(toast => (
-        <Toast
-          key={toast.id}
-          id={toast.id}
-          type={toast.type}
-          message={toast.message}
-          duration={toast.duration}
-          onClose={removeToast}
-        />
-      ))}
+      <div className="pointer-events-auto flex flex-col gap-2 min-w-[300px] max-w-md">
+        {toasts.map(toast => (
+          <Toast
+            key={toast.id}
+            id={toast.id}
+            type={toast.type}
+            message={toast.message}
+            duration={toast.duration}
+            onClose={removeToast}
+          />
+        ))}
+      </div>
     </div>
   );
 };
@@ -97,6 +114,7 @@ export const useToast = () => {
     }
     // Fallback if container not mounted
     return {
+      default: (message: string) => console.info('[Toast]', message),
       info: (message: string) => console.info('[Toast]', message),
       success: (message: string) => console.info('[Toast]', message),
       warning: (message: string) => console.warn('[Toast]', message),

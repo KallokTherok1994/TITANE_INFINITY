@@ -1,5 +1,11 @@
+/**
+ * TITANE∞ v26.2.0 — LazyImage Component (Titanium Dark)
+ * Lazy-loaded image with Titanium Dark design system
+ * Optimizes performance with Intersection Observer
+ * @license MIT
+ */
+
 import React, { useState, useEffect, useRef, ImgHTMLAttributes } from 'react';
-import './LazyImage.css';
 
 export interface LazyImageProps extends Omit<
   ImgHTMLAttributes<HTMLImageElement>,
@@ -15,14 +21,14 @@ export interface LazyImageProps extends Omit<
 }
 
 /**
- * LazyImage Component - Phase 6 Image Optimization
+ * LazyImage Component - Image Optimization
  *
  * Features:
  * - Intersection Observer lazy-loading
  * - Native loading="lazy" fallback
  * - Blur-up placeholder transition
  * - Async decoding (non-blocking)
- * - TypeScript types
+ * - Titanium Dark placeholder
  *
  * Usage:
  * ```tsx
@@ -34,19 +40,11 @@ export interface LazyImageProps extends Omit<
  *   className="rounded-lg"
  * />
  * ```
- *
- * With WebP + srcset:
- * ```tsx
- * <picture>
- *   <source type="image/webp" srcSet="/assets/img.webp" />
- *   <LazyImage src="/assets/img.png" alt="Fallback" />
- * </picture>
- * ```
  */
 export const LazyImage: React.FC<LazyImageProps> = ({
   src,
   alt,
-  placeholder = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect width='1' height='1' fill='%23333'/%3E%3C/svg%3E",
+  placeholder = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect width='1' height='1' fill='%231a1a1a'/%3E%3C/svg%3E",
   className = '',
   width,
   height,
@@ -63,7 +61,7 @@ export const LazyImage: React.FC<LazyImageProps> = ({
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
-    // Intersection Observer pour lazy-loading
+    // Intersection Observer for lazy-loading
     if (!imgRef.current) return;
 
     // Check if IntersectionObserver is supported
@@ -77,10 +75,10 @@ export const LazyImage: React.FC<LazyImageProps> = ({
       entries => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            // Image visible dans viewport → charger
+            // Image visible in viewport → load
             setImageSrc(src);
 
-            // Disconnect observer après chargement
+            // Disconnect observer after loading
             if (observerRef.current) {
               observerRef.current.disconnect();
             }
@@ -88,8 +86,8 @@ export const LazyImage: React.FC<LazyImageProps> = ({
         });
       },
       {
-        rootMargin, // Charger 50px avant scroll (anticipation UX)
-        threshold, // Trigger dès que 1% visible
+        rootMargin, // Load 50px before scroll (UX anticipation)
+        threshold, // Trigger when 1% visible
       }
     );
 
@@ -118,7 +116,12 @@ export const LazyImage: React.FC<LazyImageProps> = ({
       ref={imgRef}
       src={imageSrc}
       alt={alt}
-      className={`lazy-image ${isLoaded ? 'loaded' : 'loading'} ${hasError ? 'error' : ''} ${className}`}
+      className={`
+        transition-opacity duration-300
+        ${isLoaded ? 'opacity-100' : 'opacity-50'}
+        ${hasError ? 'border-2 border-error-500' : ''}
+        ${className}
+      `}
       width={width}
       height={height}
       onLoad={handleLoad}
@@ -130,5 +133,4 @@ export const LazyImage: React.FC<LazyImageProps> = ({
   );
 };
 
-// Export default for easier import
 export default LazyImage;
