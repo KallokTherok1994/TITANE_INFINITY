@@ -101,12 +101,12 @@ check_prerequisites() {
         all_good=false
     fi
     
-    # npm
-    if command_exists npm; then
-        local npm_version=$(npm --version)
-        print_success "npm installé (version $npm_version)"
+    # pnpm
+    if command_exists pnpm; then
+        local pnpm_version=$(pnpm --version)
+        print_success "pnpm installé (version $pnpm_version)"
     else
-        print_error "npm n'est pas installé"
+        print_error "pnpm n'est pas installé"
         all_good=false
     fi
     

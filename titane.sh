@@ -167,13 +167,13 @@ health_check() {
         ((errors++))
     fi
     
-    # Check npm
-    print_section "Checking npm..."
-    if command -v npm &> /dev/null; then
-        NPM_VERSION=$(npm --version)
-        success "npm: $NPM_VERSION"
+    # Check pnpm
+    print_section "Checking pnpm..."
+    if command -v pnpm &> /dev/null; then
+        PNPM_VERSION=$(pnpm --version)
+        success "pnpm: $PNPM_VERSION"
     else
-        error "npm not found!"
+        error "pnpm not found!"
         ((errors++))
     fi
     

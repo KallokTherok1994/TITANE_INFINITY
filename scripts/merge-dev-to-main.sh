@@ -138,7 +138,7 @@ fi
 # Step 8: Run tests (if available)
 print_info "Step 8: Running validation tests..."
 if [ -f "package.json" ]; then
-    if command -v npm &> /dev/null; then
+    if command -v pnpm &> /dev/null; then
         print_info "Running pnpm tests..."
         if pnpm test; then
             print_success "All tests passed"
