@@ -1,0 +1,330 @@
+name: TITANE∞ Release Pipeline v26.2.0
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to release (e.g., v26.2.0)'
+        required: true
+        type: string
+
+env:
+  CARGO_TERM_COLOR: always
+  NODE_VERSION: '20'
+  RUST_VERSION: '1.83'
+
+jobs:
+  # ============================================================================
+  # Build Linux (Ubuntu 22.04)
+  # ============================================================================
+  build-linux:
+    name: 🐧 Build Linux
+    runs-on: ubuntu-22.04
+    timeout-minutes: 60
+    if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4.2.2
+
+      - name: 🔧 Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libjavascriptcoregtk-4.1-dev \
+            build-essential \
+            curl \
+            wget \
+            file \
+            libssl-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            patchelf
+
+      - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 🔧 Enable Corepack (pnpm)
+        run: corepack enable
+
+      - name: 📦 Install dependencies (pnpm)
+        run: pnpm install --frozen-lockfile
+
+      - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
+        uses: dtolnay/rust-toolchain@1.83
+        with:
+          components: rustfmt, clippy
+
+      - name: 💾 Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2.7.3
+        with:
+          workspaces: src-tauri
+          cache-on-failure: true
+
+      - name: 🔍 Lint & Type check
+        run: |
+          pnpm run lint
+          pnpm run check
+
+      - name: 🏗️ Build frontend
+        run: pnpm run build
+
+      - name: 🔨 Build Tauri app
+        run: pnpm exec tauri build
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+
+      - name: 🔐 Generate checksums
+        run: |
+          cd src-tauri/target/release/bundle
+          sha256sum deb/*.deb appimage/*.AppImage > SHA256SUMS.txt || true
+          cat SHA256SUMS.txt || echo "No checksums generated"
+
+      - name: 📤 Upload Linux artifacts
+        uses: actions/upload-artifact@v4.6.0
+        with:
+          name: linux-x86_64-${{ github.ref_name }}
+          path: |
+            src-tauri/target/release/bundle/deb/*.deb
+            src-tauri/target/release/bundle/appimage/*.AppImage
+            src-tauri/target/release/bundle/SHA256SUMS.txt
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: 📊 Build summary
+        if: always()
+        run: |
+          echo "### 🐧 Linux Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Artifacts generated:**" >> $GITHUB_STEP_SUMMARY
+          ls -lh src-tauri/target/release/bundle/deb/*.deb 2>/dev/null | awk '{print "- " $9 ": " $5}' >> $GITHUB_STEP_SUMMARY || echo "- No .deb files" >> $GITHUB_STEP_SUMMARY
+          ls -lh src-tauri/target/release/bundle/appimage/*.AppImage 2>/dev/null | awk '{print "- " $9 ": " $5}' >> $GITHUB_STEP_SUMMARY || echo "- No .AppImage files" >> $GITHUB_STEP_SUMMARY
+
+  # ============================================================================
+  # Build Windows (Windows Server 2022)
+  # ============================================================================
+  build-windows:
+    name: 🪟 Build Windows
+    runs-on: windows-latest
+    timeout-minutes: 60
+    if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4.2.2
+
+      - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 🔧 Enable Corepack (pnpm)
+        run: corepack enable
+
+      - name: 📦 Install dependencies (pnpm)
+        run: pnpm install --frozen-lockfile
+
+      - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
+        uses: dtolnay/rust-toolchain@1.83
+
+      - name: 💾 Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2.7.3
+        with:
+          workspaces: src-tauri
+
+      - name: 🏗️ Build frontend
+        run: pnpm run build
+
+      - name: 🔨 Build Tauri app
+        run: pnpm exec tauri build
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+
+      - name: 🔐 Generate checksums
+        run: |
+          cd src-tauri/target/release/bundle/msi
+          Get-FileHash *.msi -Algorithm SHA256 | Format-List | Out-File SHA256SUMS.txt
+          cat SHA256SUMS.txt
+        shell: pwsh
+        continue-on-error: true
+
+      - name: 📤 Upload Windows artifacts
+        uses: actions/upload-artifact@v4.6.0
+        with:
+          name: windows-x86_64-${{ github.ref_name }}
+          path: |
+            src-tauri/target/release/bundle/msi/*.msi
+            src-tauri/target/release/bundle/msi/SHA256SUMS.txt
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: 📊 Build summary
+        if: always()
+        run: |
+          echo "### 🪟 Windows Build Summary" >> $env:GITHUB_STEP_SUMMARY
+          echo "" >> $env:GITHUB_STEP_SUMMARY
+          echo "**Artifacts generated:**" >> $env:GITHUB_STEP_SUMMARY
+          echo "- .msi files: $(Get-ChildItem src-tauri/target/release/bundle/msi/*.msi -ErrorAction SilentlyContinue | Measure-Object).Count" >> $env:GITHUB_STEP_SUMMARY
+        shell: pwsh
+
+  # ============================================================================
+  # Build macOS (Intel + Apple Silicon)
+  # ============================================================================
+  build-macos:
+    name: 🍎 Build macOS (${{ matrix.target }})
+    runs-on: macos-latest
+    timeout-minutes: 60
+    if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - x86_64-apple-darwin # Intel
+          - aarch64-apple-darwin # Apple Silicon M1/M2
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4.2.2
+
+      - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 🔧 Enable Corepack (pnpm)
+        run: corepack enable
+
+      - name: 📦 Install dependencies (pnpm)
+        run: pnpm install --frozen-lockfile
+
+      - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
+        uses: dtolnay/rust-toolchain@1.83
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: 💾 Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2.7.3
+        with:
+          workspaces: src-tauri
+          key: ${{ matrix.target }}
+
+      - name: 🏗️ Build frontend
+        run: pnpm run build
+
+      - name: 🔨 Build Tauri app
+        run: pnpm exec tauri build --target ${{ matrix.target }}
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+
+      - name: 🔐 Generate checksums
+        run: |
+          cd src-tauri/target/${{ matrix.target }}/release/bundle/dmg
+          shasum -a 256 *.dmg > SHA256SUMS.txt || true
+          cat SHA256SUMS.txt || echo "No checksums generated"
+
+      - name: 📤 Upload macOS artifacts
+        uses: actions/upload-artifact@v4.6.0
+        with:
+          name: macos-${{ matrix.target }}-${{ github.ref_name }}
+          path: |
+            src-tauri/target/${{ matrix.target }}/release/bundle/dmg/*.dmg
+            src-tauri/target/${{ matrix.target }}/release/bundle/dmg/SHA256SUMS.txt
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: 📊 Build summary
+        if: always()
+        run: |
+          echo "### 🍎 macOS Build Summary (${{ matrix.target }})" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Artifacts generated:**" >> $GITHUB_STEP_SUMMARY
+          ls -lh src-tauri/target/${{ matrix.target }}/release/bundle/dmg/*.dmg 2>/dev/null | awk '{print "- " $9 ": " $5}' >> $GITHUB_STEP_SUMMARY || echo "- No .dmg files" >> $GITHUB_STEP_SUMMARY
+
+  # ============================================================================
+  # Create GitHub Release
+  # ============================================================================
+  create-release:
+    name: 📦 Create GitHub Release
+    needs: [build-linux, build-windows, build-macos]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4.2.2
+
+      - name: 📥 Download artifacts
+        uses: actions/download-artifact@v4.1.8
+        with:
+          path: artifacts
+
+      - name: 📋 List artifacts
+        run: |
+          echo "=== Artifacts Downloaded ==="
+          find artifacts/ -type f | head -30
+
+      - name: 📝 Generate release notes
+        id: release_notes
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/}"
+          FILE="RELEASE_NOTES_${VERSION}.md"
+          if [ -f "$FILE" ]; then
+            cp "$FILE" release_notes.md
+          else
+            echo "# TITANE∞ $VERSION" > release_notes.md
+            echo "" >> release_notes.md
+            echo "## What's Changed" >> release_notes.md
+            echo "" >> release_notes.md
+            echo "Release auto-generated from tag $VERSION" >> release_notes.md
+            echo "" >> release_notes.md
+            echo "See documentation for details." >> release_notes.md
+          fi
+          cat release_notes.md
+
+      - name: 🚀 Create GitHub Release
+        uses: softprops/action-gh-release@v2.2.0
+        with:
+          name: TITANE∞ ${{ github.ref_name }}
+          body_path: release_notes.md
+          draft: false
+          prerelease: false
+          files: |
+            artifacts/**/*.deb
+            artifacts/**/*.AppImage
+            artifacts/**/*.msi
+            artifacts/**/*.dmg
+            artifacts/**/SHA256SUMS.txt
+          fail_on_unmatched_files: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 📊 Release summary
+        if: always()
+        run: |
+          echo "### 🎉 Release Created Successfully!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**URL:** https://github.com/${{ github.repository }}/releases/tag/${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Artifacts included:**" >> $GITHUB_STEP_SUMMARY
+          find artifacts/ -type f \( -name "*.deb" -o -name "*.AppImage" -o -name "*.msi" -o -name "*.dmg" \) 2>/dev/null | wc -l | xargs echo "- Total files:" >> $GITHUB_STEP_SUMMARY || echo "- Files: 0" >> $GITHUB_STEP_SUMMARY
