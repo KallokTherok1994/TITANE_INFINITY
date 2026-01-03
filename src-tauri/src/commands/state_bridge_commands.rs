@@ -180,9 +180,7 @@ pub async fn system_get_status(
 
     let ai_ok = !providers.is_empty();
 
-    let health = if !memory_ok {
-        "degraded"
-    } else if !ai_ok {
+    let health = if !memory_ok || !ai_ok {
         "degraded"
     } else {
         "healthy"

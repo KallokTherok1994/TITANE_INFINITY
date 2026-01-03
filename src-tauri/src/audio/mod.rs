@@ -10,7 +10,7 @@ pub mod capture;
 pub mod commands;
 pub mod recorder;
 pub mod recording_engine;
-pub mod streaming_engine; // NEW: Real-time streaming with CPAL
+pub mod streaming_engine; // NEW: Real-time streaming with CPAL (struct available always, methods gated)
 pub mod vad;
 pub mod voice_fingerprint; // NEW v∞: Voice fingerprinting (SP-VOICE-001 Layer 3)
 pub mod whisper_streaming; // NEW v19.3.1: Real-time Whisper streaming

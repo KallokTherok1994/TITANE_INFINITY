@@ -36,10 +36,10 @@
     /* Linting - Enhanced Strict (Progressive) */
     "strict": true,
     "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": false, // TODO: Enable after refactoring optional props
-    "noPropertyAccessFromIndexSignature": false, // TODO: Enable after CSS modules refactoring
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
+    "exactOptionalPropertyTypes": true, // P1-2: Enabled 2026-01-03
+    "noPropertyAccessFromIndexSignature": true, // P1-2: Enabled 2026-01-03
+    "noUnusedLocals": true, // P1-2: Enabled 2026-01-03
+    "noUnusedParameters": true, // P1-2: Enabled 2026-01-03
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true
