@@ -46,6 +46,8 @@ import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
 // ✨ v25.7.4: Responsive Chat Layout wrapper
 import { ResponsiveChatLayout } from '../../layouts/ResponsiveChatLayout';
+// ✨ v26.2: OMEGA Reflection Panel v2 - Compact mode
+import { ThinkingPanel, useThinkingSteps } from '../../features/chat/ThinkingPanel';
 import './styles/Chat.css';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -617,6 +619,54 @@ export const Chat: React.FC = () => {
   useVADWithTTS(vad); // Auto-suspend VAD during TTS playback (anti-echo)
   useBargeInHandler(); // Auto-stop TTS when user interrupts
 
+  // ✨ v26.2: OMEGA Reflection Panel v2 - Thinking steps management
+  const thinking = useThinkingSteps();
+  const [thinkingStartTime, setThinkingStartTime] = useState<number>(0);
+  const [elapsedTime, setElapsedTime] = useState<number>(0);
+
+  // Timer for elapsed time (v2.1)
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (thinking.isThinking && thinkingStartTime > 0) {
+      interval = setInterval(() => {
+        setElapsedTime((Date.now() - thinkingStartTime) / 1000);
+      }, 100);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [thinking.isThinking, thinkingStartTime]);
+
+  // Sync thinking state with isLoading state from chat
+  useEffect(() => {
+    if (isLoading && !thinking.isThinking) {
+      thinking.startThinking();
+      setThinkingStartTime(Date.now());
+      setElapsedTime(0);
+      // Simulate OMEGA pipeline steps (can be replaced with real steps from backend)
+      setTimeout(() => {
+        if (thinking.isThinking) {
+          thinking.addStep('analysis', 'Analyse du contexte et de la demande...');
+        }
+      }, 300);
+      setTimeout(() => {
+        if (thinking.isThinking) {
+          thinking.addStep('reasoning', 'Recherche dans la mémoire et raisonnement...');
+        }
+      }, 800);
+    } else if (!isLoading && thinking.isThinking) {
+      setTimeout(() => {
+        if (thinking.isThinking) {
+          thinking.addStep('synthesis', 'Synthèse de la réponse...');
+        }
+      }, 100);
+      setTimeout(() => {
+        thinking.stopThinking();
+        setThinkingStartTime(0);
+      }, 500);
+    }
+  }, [isLoading, thinking]);
+
   // Start/stop VAD when voice mode is toggled
   useEffect(() => {
     if (voiceModeActive) {
@@ -1114,12 +1164,26 @@ export const Chat: React.FC = () => {
                 </div>
               </div>
             ) : (
-              // P1-A: Use VirtualizedMessageList for performance (50+ messages → virtualization)
-              <VirtualizedMessageList
-                messages={messages || []}
-                isLoading={isLoading}
-                error={error}
-              />
+              <>
+                {/* P1-A: Use VirtualizedMessageList for performance (50+ messages → virtualization) */}
+                <VirtualizedMessageList
+                  messages={messages || []}
+                  isLoading={isLoading}
+                  error={error}
+                />
+                
+                {/* ✨ v26.2: OMEGA Reflection Panel v2 - Compact mode by default */}
+                {(thinking.isThinking || thinking.steps.length > 0) && (
+                  <ThinkingPanel
+                    isThinking={thinking.isThinking}
+                    steps={thinking.steps}
+                    compact={thinking.compact}
+                    inline={false}
+                    provider={lastProvider || undefined}
+                    elapsedTime={thinking.isThinking ? elapsedTime : undefined}
+                  />
+                )}
+              </>
             )}
           </div>
 
