@@ -17,11 +17,13 @@ interface SecretsTabProps {
   geminiStatus: GeminiKeyStatus | null;
   openaiStatus?: GeminiKeyStatus | null;
   anthropicStatus?: GeminiKeyStatus | null;
+  copilotStatus?: GeminiKeyStatus | null;
   secretsStatus: SecretStatus[];
   loading: boolean;
   onSetGeminiKey: (apiKey: string) => Promise<unknown>;
   onSetOpenAIKey?: (apiKey: string) => Promise<unknown>;
   onSetAnthropicKey?: (apiKey: string) => Promise<unknown>;
+  onSetCopilotKey?: (apiKey: string) => Promise<unknown>;
   onStoreSecret: (key: string, value: string, purgeEnv?: boolean) => Promise<unknown>;
   onDeleteSecret: (key: string) => Promise<unknown>;
   onRefresh: () => void;
@@ -31,11 +33,13 @@ export const SecretsTab: React.FC<SecretsTabProps> = ({
   geminiStatus,
   openaiStatus,
   anthropicStatus,
+  copilotStatus,
   secretsStatus,
   loading,
   onSetGeminiKey,
   onSetOpenAIKey,
   onSetAnthropicKey,
+  onSetCopilotKey,
   onStoreSecret,
   onDeleteSecret: _onDeleteSecret,
   onRefresh,
@@ -43,6 +47,7 @@ export const SecretsTab: React.FC<SecretsTabProps> = ({
   const [geminiKey, setGeminiKey] = useState('');
   const [openaiKey, setOpenaiKey] = useState('');
   const [anthropicKey, setAnthropicKey] = useState('');
+  const [copilotKey, setCopilotKey] = useState('');
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{
     type: 'success' | 'error' | 'info';
@@ -145,6 +150,39 @@ export const SecretsTab: React.FC<SecretsTabProps> = ({
       }, 500);
     } catch {
       setMessage({ type: 'error', text: 'Erreur lors de la sauvegarde Anthropic' });
+    }
+
+    setSaving(false);
+  };
+
+  const handleCopilotSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!onSetCopilotKey) return;
+
+    const trimmed = copilotKey.trim();
+
+    if (trimmed.length < 16) {
+      setMessage({
+        type: 'error',
+        text: 'La clé semble trop courte (min 16 caractères)',
+      });
+      return;
+    }
+
+    setSaving(true);
+    setMessage(null);
+
+    try {
+      await onSetCopilotKey(trimmed);
+      setCopilotKey(''); // 🔒 Vider le champ immédiatement
+      setMessage({ type: 'success', text: 'Clé Copilot sécurisée avec succès ✅' });
+
+      // ✅ Refresh automatique
+      setTimeout(() => {
+        onRefresh();
+      }, 500);
+    } catch {
+      setMessage({ type: 'error', text: 'Erreur lors de la sauvegarde Copilot' });
     }
 
     setSaving(false);
