@@ -491,7 +491,7 @@ source "$HOME/.cargo/env"
 # Installation des dépendances npm
 log_step "Installation des dépendances npm..."
 pnpm install 2>&1 | tee -a "$LOG_FILE"
-log_success "Dépendances npm installées"
+log_success "Dépendances pnpm installées"
 
 # Vérification Tauri CLI
 log_step "Vérification de Tauri CLI..."

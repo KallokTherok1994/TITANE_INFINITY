@@ -203,12 +203,12 @@ clean_backend() {
     cd "$PROJECT_ROOT"
 }
 
-# Install npm dependencies
+# Install pnpm dependencies
 install_npm_deps() {
     log_step "Installation dépendances npm..."
     cd "$PROJECT_ROOT"
     pnpm install --frozen-lockfile --prefer-offline --no-audit 2>&1 | grep -v "npm WARN" || true
-    log_success "Dépendances npm installées"
+    log_success "Dépendances pnpm installées"
 }
 
 # Build frontend
