@@ -1,25 +1,29 @@
 /**
- * TITANE∞ v26.2.3 — MAIN STYLESHEET (UI/UX OPTIMIZED)
+ * TITANE∞ v26.2.0 — MAIN STYLESHEET (TITANIUM DARK)
  *
  * Import order:
- * 1. CSS imports (must be first)
- * 2. Tailwind base layer
- * 3. Tailwind components
- * 4. Tailwind utilities
- * 5. Custom component classes
+ * 1. Design tokens (Titanium Dark system)
+ * 2. CSS imports (legacy support)
+ * 3. Tailwind layers
+ * 4. Custom component classes
  *
- * v22Ω AI Performance Optimizations Compatible
- * UX Enhancements: Smooth scroll, optimized rendering, WCAG AA
+ * v26.2.0: Titanium Dark Design System
+ * UX Enhancements: Smooth scroll, optimized rendering, WCAG 2.2 AA
  */
 
 /* ═══════════════════════════════════════════════════════════════ */
-/* CSS IMPORTS (must precede all other statements)                  */
+/* DESIGN TOKENS (Primary Source of Truth)                          */
 /* ═══════════════════════════════════════════════════════════════ */
-@import './styles/css-vars.css';
-@import './styles/unified-tokens.css'; /* v24.3.0 - Unified design tokens */
-@import './styles/tech-effects.css'; /* v25.4.2 - Metallic & tech UI effects */
-@import './styles/animations.css';
-@import './styles/a11y.css';
+@import './titanium-dark-tokens.css';
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* LEGACY CSS IMPORTS (Compatibility Layer - Will be deprecated)    */
+/* ═══════════════════════════════════════════════════════════════ */
+@import './css-vars.css';
+@import './unified-tokens.css';
+@import './tech-effects.css';
+@import './animations.css';
+@import './a11y.css';
 
 /* ═══════════════════════════════════════════════════════════════ */
 /* UI/UX POLISH v26.2.3 — Smooth Scroll & Better Rendering          */

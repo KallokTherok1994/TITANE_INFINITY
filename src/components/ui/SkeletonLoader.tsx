@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v26.2.3 — Skeleton Loader Component
- * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
- * Composant de chargement pour améliorer la performance perçue
+ * TITANE∞ v26.2.0 — Skeleton Loader Component (Titanium Dark)
+ * Loading skeleton with Titanium Dark design system
+ * Improves perceived performance during content loading
+ * @license MIT
  */
 
 import React from 'react';
-import './SkeletonLoader.css';
 
 export interface SkeletonLoaderProps {
   variant?: 'text' | 'circular' | 'rectangular' | 'message';
@@ -16,13 +16,26 @@ export interface SkeletonLoaderProps {
   'aria-label'?: string;
 }
 
+const variantStyles = {
+  text: 'rounded h-4',
+  circular: 'rounded-full',
+  rectangular: 'rounded',
+  message: 'rounded-lg h-16',
+};
+
+const animationStyles = {
+  pulse: 'animate-pulse',
+  wave: 'animate-shimmer',
+  none: '',
+};
+
 export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
   variant = 'text',
   width,
   height,
-  animation = 'wave',
+  animation = 'pulse',
   className = '',
-  'aria-label': ariaLabel = 'Chargement en cours',
+  'aria-label': ariaLabel = 'Loading',
 }) => {
   const style: React.CSSProperties = {
     width: typeof width === 'number' ? `${width}px` : width,
@@ -31,31 +44,36 @@ export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
 
   return (
     <div
-      className={`skeleton skeleton--${variant} skeleton--${animation} ${className}`}
+      className={`
+        bg-titanium-bg-interactive
+        ${variantStyles[variant]}
+        ${animationStyles[animation]}
+        ${className}
+      `}
       style={style}
       role="status"
       aria-label={ariaLabel}
       aria-busy="true"
     >
-      <span className="skeleton__sr-only">Chargement...</span>
+      <span className="sr-only">Loading...</span>
     </div>
   );
 };
 
 /**
- * Skeleton pour message de chat en cours de réponse
+ * Skeleton for chat message being typed
  */
 export const MessageSkeleton: React.FC<{ lines?: number }> = ({ lines = 3 }) => {
   return (
     <div
-      className="message-skeleton"
+      className="flex gap-3 p-4"
       role="status"
-      aria-label="Message en cours de chargement"
+      aria-label="Message loading"
     >
-      <div className="message-skeleton__avatar">
+      <div className="flex-shrink-0">
         <SkeletonLoader variant="circular" width={40} height={40} />
       </div>
-      <div className="message-skeleton__content">
+      <div className="flex-1 space-y-2">
         {Array.from({ length: lines }).map((_, i) => (
           <SkeletonLoader
             key={i}
@@ -70,13 +88,13 @@ export const MessageSkeleton: React.FC<{ lines?: number }> = ({ lines = 3 }) => 
 };
 
 /**
- * Skeleton pour liste de conversations
+ * Skeleton for conversation list
  */
 export const ConversationListSkeleton: React.FC<{ count?: number }> = ({ count = 5 }) => {
   return (
-    <div className="conversation-list-skeleton">
+    <div className="space-y-2 p-2">
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="conversation-item-skeleton">
+        <div key={i} className="p-2">
           <SkeletonLoader variant="rectangular" height={60} />
         </div>
       ))}

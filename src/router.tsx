@@ -37,6 +37,7 @@ const CloudCenter = lazy(() =>
   import('./pages/CloudCenter').then(m => ({ default: m.CloudCenter }))
 );
 const Agenda = lazy(() => import('./pages').then(m => ({ default: m.AgendaPage })));
+const DesignSystemShowcase = lazy(() => import('./pages/DesignSystemShowcase'));
 
 // ═══════════════════════════════════════════════════════════════
 // LOADING FALLBACK COMPONENT
@@ -222,6 +223,15 @@ const router = createBrowserRouter([
       <LayoutWrapper>
         <Agenda />
       </LayoutWrapper>
+    ),
+    errorElement: <ErrorFallback />,
+  },
+  {
+    path: '/design-system',
+    element: (
+      <Suspense fallback={<LoadingFallback />}>
+        <DesignSystemShowcase />
+      </Suspense>
     ),
     errorElement: <ErrorFallback />,
   },

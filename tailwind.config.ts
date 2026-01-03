@@ -1,10 +1,11 @@
 /**
- * TITANE∞ v24.3.0 — TAILWIND CSS CONFIGURATION
+ * TITANE∞ v26.2.0 — TAILWIND CSS CONFIGURATION
  *
- * Design System: Titane Métallique + Violet Énergie + Sage Subtil
- * Mobile-first, responsive, type-safe
+ * Design System: Titanium Dark (Monochrome Premium)
+ * Mobile-first, responsive, type-safe, WCAG 2.2 compliant
  *
- * v22Ω AI Performance Optimizations Compatible
+ * @see src/styles/titanium-dark-tokens.css
+ * @see docs/ui/DESIGN_SYSTEM.md
  */
 
 import type { Config } from 'tailwindcss';
@@ -37,52 +38,55 @@ const config: Config = {
 
     extend: {
       /* ═══════════════════════════════════════════════════════════════ */
-      /* COLORS — TITANE∞ SIGNATURE PALETTE                              */
+      /* COLORS — TITANIUM DARK MONOCHROME SYSTEM                        */
       /* ═══════════════════════════════════════════════════════════════ */
       colors: {
-        // Titane Métallique (base gris/charbon/argent)
+        // Titanium Dark - Monochrome premium palette
+        titanium: {
+          // Backgrounds (layered depth)
+          'bg-base': '#0f0f0f',
+          'bg-elevated': '#1a1a1a',
+          'bg-interactive': '#242424',
+          'bg-overlay': '#2e2e2e',
+          
+          // Text (high contrast)
+          'text-primary': '#f5f5f5',
+          'text-secondary': '#b8b8b8',
+          'text-tertiary': '#8a8a8a',
+          'text-disabled': '#5a5a5a',
+          'text-inverse': '#0f0f0f',
+          
+          // Borders
+          'border-subtle': 'rgba(255, 255, 255, 0.06)',
+          'border-default': 'rgba(255, 255, 255, 0.12)',
+          'border-strong': 'rgba(255, 255, 255, 0.18)',
+          
+          // Accent (minimal cool gray)
+          'accent-cool': '#9ca3af',
+          'accent-bright': '#d1d5db',
+          'accent-bg-subtle': 'rgba(156, 163, 175, 0.1)',
+          'accent-bg-default': 'rgba(156, 163, 175, 0.2)',
+          'accent-bg-strong': 'rgba(156, 163, 175, 0.3)',
+        },
+
+        // Legacy color support (will be deprecated)
+        // Keep for gradual migration, remove in v27.0.0
         titane: {
-          50: '#f8f9fa',
-          100: '#e9ecef',
-          200: '#dee2e6',
-          300: '#ced4da',
-          400: '#adb5bd',
-          500: '#727b81', // BASE
+          500: '#727b81',
           600: '#5a6267',
           700: '#495057',
           800: '#343a40',
           900: '#212529',
         },
-
-        // Violet Énergie (accents, CTA, interactions)
+        
         violet: {
-          50: '#faf5ff',
-          100: '#f3e8ff',
-          200: '#e9d5ff',
           300: '#d8b4fe',
           400: '#c084fc',
           500: '#a855f7',
-          600: '#7c3aed', // BASE
-          700: '#6d28d9',
-          800: '#5b21b6',
-          900: '#4c1d95',
+          600: '#7c3aed',
         },
 
-        // Sage Subtil (respirations visuelles, accents doux)
-        sage: {
-          50: '#f7fee7',
-          100: '#ecfccb',
-          200: '#d9f99d',
-          300: '#bef264',
-          400: '#a3e635',
-          500: '#84cc16', // BASE
-          600: '#65a30d',
-          700: '#4d7c0f',
-          800: '#3f6212',
-          900: '#365314',
-        },
-
-        // Sémantiques (override Tailwind defaults)
+        // Semantic colors (preserved for status/feedback)
         success: {
           50: '#f0fdf4',
           100: '#dcfce7',
@@ -112,30 +116,23 @@ const config: Config = {
           900: '#1e3a8a',
         },
 
-        // Backgrounds (dark mode defaults)
+        // Legacy aliases (deprecated - use titanium.* instead)
         bg: {
-          primary: '#0f172a',
-          secondary: '#1e293b',
-          tertiary: '#334155',
-          elevated: '#475569',
-          overlay: '#64748b',
+          primary: '#0f0f0f',
+          secondary: '#1a1a1a',
+          tertiary: '#242424',
+          elevated: '#2e2e2e',
         },
-
-        // Text colors
         text: {
-          primary: '#f1f5f9',
-          secondary: '#cbd5e1',
-          muted: '#94a3b8',
-          disabled: '#64748b',
-          inverse: '#0f172a',
+          primary: '#f5f5f5',
+          secondary: '#b8b8b8',
+          muted: '#8a8a8a',
+          disabled: '#5a5a5a',
         },
-
-        // Borders
         border: {
-          default: '#334155',
-          subtle: '#1e293b',
-          strong: '#475569',
-          accent: '#7c3aed',
+          default: 'rgba(255, 255, 255, 0.12)',
+          subtle: 'rgba(255, 255, 255, 0.06)',
+          strong: 'rgba(255, 255, 255, 0.18)',
         },
       },
 
@@ -172,21 +169,43 @@ const config: Config = {
       },
 
       /* ═══════════════════════════════════════════════════════════════ */
-      /* BORDER RADIUS                                                     */
+      /* BORDER RADIUS — 16px Base (Premium Feel)                         */
       /* ═══════════════════════════════════════════════════════════════ */
       borderRadius: {
-        '4xl': '2rem', // 32px
+        none: '0',
+        sm: '8px',
+        DEFAULT: '16px',   // Base radius for premium feel
+        md: '16px',        // Alias for DEFAULT
+        lg: '24px',
+        xl: '32px',
+        '2xl': '32px',     // Alias for xl
+        '4xl': '2rem',     // Legacy support
+        full: '9999px',    // Circles
       },
 
       /* ═══════════════════════════════════════════════════════════════ */
-      /* BOX SHADOWS (avec glow effects)                                  */
+      /* BOX SHADOWS — Subtle Elevation (Titanium Dark)                   */
       /* ═══════════════════════════════════════════════════════════════ */
       boxShadow: {
+        none: 'none',
+        sm: '0 1px 2px rgba(0, 0, 0, 0.3)',
+        DEFAULT: '0 2px 4px rgba(0, 0, 0, 0.4)',
+        md: '0 4px 8px rgba(0, 0, 0, 0.5)',
+        lg: '0 8px 16px rgba(0, 0, 0, 0.6)',
+        xl: '0 12px 24px rgba(0, 0, 0, 0.7)',
+        '2xl': '0 16px 32px rgba(0, 0, 0, 0.8)',
+        
+        // Focus shadow (WCAG 2.2: 3px solid, 3:1 contrast)
+        focus: '0 0 0 3px rgba(209, 213, 219, 0.5)',
+        
+        // Metallic effects (rare usage)
+        metal: '0 0 20px rgba(255, 255, 255, 0.1)',
+        'metal-strong': '0 0 40px rgba(255, 255, 255, 0.15)',
+        
+        // Legacy glow effects (deprecated - use metal instead)
         'glow-violet': '0 0 20px rgba(124, 58, 237, 0.4)',
         'glow-sage': '0 0 20px rgba(132, 204, 22, 0.4)',
         'glow-titane': '0 0 20px rgba(114, 123, 129, 0.4)',
-        'glow-violet-lg': '0 0 40px rgba(124, 58, 237, 0.5)',
-        'glow-sage-lg': '0 0 40px rgba(132, 204, 22, 0.5)',
       },
 
       /* ═══════════════════════════════════════════════════════════════ */
