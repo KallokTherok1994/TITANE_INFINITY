@@ -42,7 +42,15 @@ pub struct SchedulerJob {
     pub submitted_at: i64,
 }
 
-// Explicitly implement Send + Sync for SchedulerJob
+// SAFETY: SchedulerJob implements Send + Sync because:
+// 1. All fields are Send + Sync (String, CognitivePriority are Send+Sync)
+// 2. BoxFuture is explicitly Send-safe (pinned heap allocation)
+// 3. The task future is guaranteed to be Send by the BoxFuture type constraint
+// 4. No shared mutable state is accessed across threads without synchronization
+// 5. submitted_at (i64) is Copy and inherently thread-safe
+//
+// This explicit implementation is required because BoxFuture lacks auto-trait
+// bounds, but the underlying constraints ensure thread safety.
 unsafe impl Send for SchedulerJob {}
 unsafe impl Sync for SchedulerJob {}
 

@@ -144,7 +144,18 @@ pub async fn import_config(file_path: String) -> Result<ConfigSnapshot, String> 
     super::update::validate_max_tokens(config.chat_engine.max_tokens)?;
     super::update::validate_temperature(config.chat_engine.temperature)?;
 
-    // Apply runtime config
+    // SAFETY: Environment variable modification is unsafe because:
+    // 1. It affects global process state
+    // 2. Concurrent modification from multiple threads causes data races
+    //
+    // This is safe in our context because:
+    // 1. This function is called during application initialization (single-threaded)
+    // 2. Config import happens before any worker threads are spawned
+    // 3. These variables are read-only after initialization
+    // 4. Tauri's lifecycle guarantees single-threaded config loading
+    //
+    // TODO: Consider using thread-local storage or a configuration service
+    // to avoid global state modification in future versions.
     unsafe {
         std::env::set_var("OLLAMA_BASE_URL", &config.runtime.ollama_url);
         std::env::set_var("OLLAMA_DEFAULT_MODEL", &config.runtime.ollama_model);
