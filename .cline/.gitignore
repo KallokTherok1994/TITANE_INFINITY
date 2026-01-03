@@ -1,0 +1,16 @@
+# Cline MCP - Logs et données runtime
+*.log
+*.pid
+.cline-runtime/
+cache/
+temp/
+
+# Données utilisateur sensibles
+*-secrets.json
+*-tokens.json
+*-credentials.*
+
+# Backups automatiques
+*.bak
+*.backup
+*~
