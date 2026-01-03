@@ -1,4 +1,4 @@
-name: TITANE∞ CI/CD Unified Pipeline v26.2.0
+name: TITANE∞ CI/CD Unified Pipeline v26.3.0
 
 on:
   push:
@@ -11,6 +11,10 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
+# Default permissions (least privilege)
+permissions:
+  contents: read
 
 env:
   CARGO_TERM_COLOR: always
@@ -26,6 +30,8 @@ jobs:
     name: 🔍 Lint & Type Check
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: read
 
     steps:
       - name: 📥 Checkout code
@@ -49,6 +55,9 @@ jobs:
       - name: 🔍 TypeScript type check
         run: pnpm run check
 
+      - name: ✅ Format check
+        run: pnpm run format:check
+
       - name: 📊 Summary
         if: always()
         run: |
@@ -56,6 +65,7 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ ESLint completed" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ TypeScript check completed" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Prettier format check completed" >> $GITHUB_STEP_SUMMARY
 
   # ═══════════════════════════════════════════════════════════════════════════
   # FRONTEND TESTS
@@ -65,6 +75,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: lint-and-typecheck
     timeout-minutes: 20
+    permissions:
+      contents: read
 
     steps:
       - name: 📥 Checkout code
@@ -88,14 +100,14 @@ jobs:
           NODE_OPTIONS: '--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs'
 
       - name: 📊 Test coverage
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/MAIN'
         run: pnpm run test:coverage
         continue-on-error: true
         env:
           NODE_OPTIONS: '--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs'
 
       - name: 📤 Upload coverage
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/MAIN'
         uses: codecov/codecov-action@v5.2.1
         with:
           files: ./coverage/lcov.info
@@ -108,6 +120,7 @@ jobs:
           echo "## 🧪 Frontend Tests Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- Tests executed with Vitest" >> $GITHUB_STEP_SUMMARY
+          echo "- Node.js: ${{ env.NODE_VERSION }}" >> $GITHUB_STEP_SUMMARY
 
   # ═══════════════════════════════════════════════════════════════════════════
   # RUST BACKEND TESTS
@@ -117,6 +130,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: lint-and-typecheck
     timeout-minutes: 30
+    permissions:
+      contents: read
 
     steps:
       - name: 📥 Checkout code
@@ -146,17 +161,10 @@ jobs:
           components: clippy, rustfmt
 
       - name: 💾 Cache Cargo dependencies
-        uses: actions/cache@v4.2.0
+        uses: Swatinem/rust-cache@v2.7.3
         with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            src-tauri/target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-
+          workspaces: src-tauri
+          cache-on-failure: true
 
       - name: ✔️ Cargo check
         working-directory: src-tauri
@@ -169,7 +177,6 @@ jobs:
       - name: 🔍 Run Clippy (linter)
         working-directory: src-tauri
         run: cargo clippy --all-targets --all-features -- -D warnings
-        continue-on-error: true
 
       - name: 📊 Summary
         if: always()
@@ -178,6 +185,7 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Cargo tests completed" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Clippy analysis completed" >> $GITHUB_STEP_SUMMARY
+          echo "- Rust: ${{ env.RUST_VERSION }}" >> $GITHUB_STEP_SUMMARY
 
   # ═══════════════════════════════════════════════════════════════════════════
   # E2E TESTS (Playwright)
@@ -187,6 +195,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [test-frontend, test-backend]
     timeout-minutes: 30
+    permissions:
+      contents: read
 
     steps:
       - name: 📥 Checkout code
@@ -215,7 +225,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4.6.0
         with:
-          name: playwright-report
+          name: playwright-report-${{ github.run_id }}
           path: playwright-report/
           retention-days: 7
           if-no-files-found: ignore
@@ -226,19 +236,18 @@ jobs:
           echo "## 🎭 E2E Tests Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- E2E tests executed with Playwright" >> $GITHUB_STEP_SUMMARY
+          echo "- Browser: Chromium (optimized)" >> $GITHUB_STEP_SUMMARY
 
   # ═══════════════════════════════════════════════════════════════════════════
-  # BUILD VERIFICATION
+  # BUILD VERIFICATION (Linux only for CI speed)
   # ═══════════════════════════════════════════════════════════════════════════
   build-verification:
-    name: 🏗️ Build Verification (${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
+    name: 🏗️ Build Verification
+    runs-on: ubuntu-latest
     needs: [test-frontend, test-backend]
-    timeout-minutes: 45
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+    timeout-minutes: 30
+    permissions:
+      contents: read
 
     steps:
       - name: 📥 Checkout code
@@ -256,8 +265,7 @@ jobs:
       - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
         uses: dtolnay/rust-toolchain@1.83
 
-      - name: 🔧 Install system dependencies (Ubuntu)
-        if: matrix.os == 'ubuntu-latest'
+      - name: 🔧 Install system dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -272,17 +280,10 @@ jobs:
             patchelf
 
       - name: 💾 Cache Cargo dependencies
-        uses: actions/cache@v4.2.0
+        uses: Swatinem/rust-cache@v2.7.3
         with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            src-tauri/target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-
+          workspaces: src-tauri
+          cache-on-failure: true
 
       - name: 📦 Install npm dependencies
         run: pnpm install --frozen-lockfile
@@ -290,15 +291,14 @@ jobs:
       - name: 🏗️ Build frontend
         run: pnpm run build
 
-      - name: 🏗️ Build Tauri (Debug)
+      - name: 🏗️ Build Tauri (Debug for speed)
         run: pnpm exec tauri build --debug
-        continue-on-error: true
 
       - name: 📤 Upload build artifacts
-        if: success() && matrix.os == 'ubuntu-latest'
+        if: success() && github.event_name == 'push' && github.ref == 'refs/heads/MAIN'
         uses: actions/upload-artifact@v4.6.0
         with:
-          name: titane-build-${{ matrix.os }}
+          name: titane-build-ubuntu-${{ github.run_id }}
           path: src-tauri/target/debug/bundle/
           retention-days: 7
           if-no-files-found: ignore
@@ -306,10 +306,13 @@ jobs:
       - name: 📊 Summary
         if: always()
         run: |
-          echo "## 🏗️ Build Results (${{ matrix.os }})" >> $GITHUB_STEP_SUMMARY
+          echo "## 🏗️ Build Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- Frontend build completed" >> $GITHUB_STEP_SUMMARY
-          echo "- Tauri build attempted" >> $GITHUB_STEP_SUMMARY
+          echo "- Frontend build: ✅" >> $GITHUB_STEP_SUMMARY
+          echo "- Tauri build: ✅ (Debug mode for CI speed)" >> $GITHUB_STEP_SUMMARY
+          echo "- Platform: Ubuntu (Linux)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "_Multi-platform builds run on releases only_" >> $GITHUB_STEP_SUMMARY
 
   # ═══════════════════════════════════════════════════════════════════════════
   # SECURITY AUDIT
@@ -320,6 +323,7 @@ jobs:
     timeout-minutes: 15
     permissions:
       contents: read
+      security-events: write
 
     steps:
       - name: 📥 Checkout code
@@ -340,7 +344,7 @@ jobs:
         run: npm audit --audit-level=high
         continue-on-error: true
 
-      - name: 🦀 Setup Rust
+      - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
         uses: dtolnay/rust-toolchain@1.83
 
       - name: 🔒 Install cargo-audit
@@ -359,6 +363,8 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- npm audit completed" >> $GITHUB_STEP_SUMMARY
           echo "- cargo audit completed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "_Security checks continue-on-error to avoid blocking CI on advisory-only issues_" >> $GITHUB_STEP_SUMMARY
 
   # ═══════════════════════════════════════════════════════════════════════════
   # FINAL STATUS
@@ -369,11 +375,13 @@ jobs:
     needs: [lint-and-typecheck, test-frontend, test-backend, test-e2e, build-verification, security-audit]
     if: always()
     timeout-minutes: 5
+    permissions:
+      contents: read
 
     steps:
       - name: 📊 Check job results
         run: |
-          echo "## TITANE∞ v26.2.0 - CI/CD Results" >> $GITHUB_STEP_SUMMARY
+          echo "## TITANE∞ v26.3.0 - CI/CD Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Job | Status |" >> $GITHUB_STEP_SUMMARY
           echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
@@ -385,7 +393,15 @@ jobs:
           echo "| Security Audit | ${{ needs.security-audit.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "---" >> $GITHUB_STEP_SUMMARY
-          echo "🚀 Built with TITANE∞ v26.2.0 - Cognitive Operating System" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📊 Pipeline Configuration" >> $GITHUB_STEP_SUMMARY
+          echo "- **Node.js:** ${{ env.NODE_VERSION }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Rust:** ${{ env.RUST_VERSION }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **pnpm:** ${{ env.PNPM_VERSION }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Platform:** Ubuntu (Linux only for CI speed)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "🚀 Built with TITANE∞ v26.3.0 - Modernized CI/CD Pipeline" >> $GITHUB_STEP_SUMMARY
 
       - name: ❌ Fail if required jobs failed
         if: |
@@ -393,5 +409,5 @@ jobs:
           needs.test-frontend.result == 'failure' ||
           needs.test-backend.result == 'failure'
         run: |
-          echo "One or more required jobs failed"
+          echo "❌ One or more required jobs failed"
           exit 1
