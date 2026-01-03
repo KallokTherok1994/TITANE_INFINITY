@@ -161,7 +161,10 @@ mod tests {
 
         let task = CognitiveTask::new(TaskType::Engine, TaskPriority::High, serde_json::json!({}));
 
-        scheduler.enqueue(task).await.expect("enqueue should succeed");
+        scheduler
+            .enqueue(task)
+            .await
+            .expect("enqueue should succeed");
         scheduler
             .dequeue()
             .await

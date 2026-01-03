@@ -527,8 +527,7 @@ mod tests {
     #[test]
     fn test_violation_severity_serialize() {
         let vs = ViolationSeverity::Warning;
-        let json = serde_json::to_string(&vs)
-            .expect("ViolationSeverity should serialize to JSON");
+        let json = serde_json::to_string(&vs).expect("ViolationSeverity should serialize to JSON");
         assert!(json.contains("Warning"));
     }
 
@@ -590,8 +589,8 @@ mod tests {
             timestamp: "2024-01-01T00:00:00Z".to_string(),
             auto_corrected: false,
         };
-        let json = serde_json::to_string(&violation)
-            .expect("RuleViolation should serialize to JSON");
+        let json =
+            serde_json::to_string(&violation).expect("RuleViolation should serialize to JSON");
         assert!(json.contains("TEST-004"));
     }
 
@@ -649,8 +648,7 @@ mod tests {
             violation: None,
             duration_ms: 1,
         };
-        let json = serde_json::to_string(&eval)
-            .expect("RuleEvaluation should serialize to JSON");
+        let json = serde_json::to_string(&eval).expect("RuleEvaluation should serialize to JSON");
         assert!(json.contains("EVAL-004"));
     }
 

@@ -1101,8 +1101,8 @@ mod tests {
     #[test]
     fn test_avatar_state_snapshot_serialization() {
         let snapshot = AvatarStateSnapshot::default();
-        let json = serde_json::to_string(&snapshot)
-            .expect("AvatarStateSnapshot should serialize to JSON");
+        let json =
+            serde_json::to_string(&snapshot).expect("AvatarStateSnapshot should serialize to JSON");
         let restored: AvatarStateSnapshot =
             serde_json::from_str(&json).expect("AvatarStateSnapshot should deserialize from JSON");
         assert_eq!(restored.cognitive_load, 0.3);

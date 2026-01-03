@@ -62,9 +62,11 @@ mod tests {
 
     #[test]
     fn test_stabilization_level_variants() {
-        let levels = [StabilizationLevel::Stable,
+        let levels = [
+            StabilizationLevel::Stable,
             StabilizationLevel::Adjusting,
-            StabilizationLevel::Rebalancing];
+            StabilizationLevel::Rebalancing,
+        ];
         assert_eq!(levels.len(), 3);
     }
 
@@ -98,10 +100,10 @@ mod tests {
     #[test]
     fn test_stabilization_level_serialization() {
         let level = StabilizationLevel::Rebalancing;
-        let json = serde_json::to_string(&level)
-            .expect("StabilizationLevel should serialize to JSON");
-        let restored: StabilizationLevel = serde_json::from_str(&json)
-            .expect("StabilizationLevel should deserialize from JSON");
+        let json =
+            serde_json::to_string(&level).expect("StabilizationLevel should serialize to JSON");
+        let restored: StabilizationLevel =
+            serde_json::from_str(&json).expect("StabilizationLevel should deserialize from JSON");
         assert_eq!(restored, StabilizationLevel::Rebalancing);
     }
 
@@ -111,10 +113,12 @@ mod tests {
 
     #[test]
     fn test_action_type_variants() {
-        let types = [ActionType::ReduceLoad,
+        let types = [
+            ActionType::ReduceLoad,
             ActionType::IncreaseCapacity,
             ActionType::Redistribute,
-            ActionType::Pause];
+            ActionType::Pause,
+        ];
         assert_eq!(types.len(), 4);
     }
 
@@ -135,8 +139,7 @@ mod tests {
     #[test]
     fn test_action_type_serialization() {
         let action = ActionType::Redistribute;
-        let json =
-            serde_json::to_string(&action).expect("ActionType should serialize to JSON");
+        let json = serde_json::to_string(&action).expect("ActionType should serialize to JSON");
         let restored: ActionType =
             serde_json::from_str(&json).expect("ActionType should deserialize from JSON");
         assert!(matches!(restored, ActionType::Redistribute));
@@ -187,10 +190,9 @@ mod tests {
             action_type: ActionType::Redistribute,
             priority: 7,
         };
-        let json =
-            serde_json::to_string(&action).expect("BalanceAction should serialize to JSON");
-        let restored: BalanceAction = serde_json::from_str(&json)
-            .expect("BalanceAction should deserialize from JSON");
+        let json = serde_json::to_string(&action).expect("BalanceAction should serialize to JSON");
+        let restored: BalanceAction =
+            serde_json::from_str(&json).expect("BalanceAction should deserialize from JSON");
         assert_eq!(restored.target, "disk");
         assert_eq!(restored.priority, 7);
     }
@@ -247,8 +249,8 @@ mod tests {
             ..Default::default()
         };
         let json = serde_json::to_string(&state).expect("HarmoniaState should serialize to JSON");
-        let restored: HarmoniaState = serde_json::from_str(&json)
-            .expect("HarmoniaState should deserialize from JSON");
+        let restored: HarmoniaState =
+            serde_json::from_str(&json).expect("HarmoniaState should deserialize from JSON");
         assert_eq!(restored.balance_score, 90.0);
         assert_eq!(restored.active_flows, 5);
     }
@@ -264,10 +266,10 @@ mod tests {
                 stabilization_level: *level,
                 ..Default::default()
             };
-            let json = serde_json::to_string(&state)
-                .expect("HarmoniaState should serialize to JSON");
-            let restored: HarmoniaState = serde_json::from_str(&json)
-                .expect("HarmoniaState should deserialize from JSON");
+            let json =
+                serde_json::to_string(&state).expect("HarmoniaState should serialize to JSON");
+            let restored: HarmoniaState =
+                serde_json::from_str(&json).expect("HarmoniaState should deserialize from JSON");
             assert_eq!(restored.stabilization_level, *level);
         }
     }

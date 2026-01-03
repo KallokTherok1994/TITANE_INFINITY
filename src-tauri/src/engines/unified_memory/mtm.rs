@@ -313,9 +313,7 @@ mod tests {
         let cached = mtm.get_embedding(&"test_id".to_string());
         assert!(cached.is_some());
         assert_eq!(
-            cached
-                .expect("embedding cache should return vector")
-                .len(),
+            cached.expect("embedding cache should return vector").len(),
             3
         );
     }

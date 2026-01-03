@@ -560,10 +560,12 @@ mod tests {
 
     #[test]
     fn test_health_status_variants() {
-        let statuses = [HealthStatus::Healthy,
+        let statuses = [
+            HealthStatus::Healthy,
             HealthStatus::Degraded,
             HealthStatus::Unhealthy,
-            HealthStatus::Unknown];
+            HealthStatus::Unknown,
+        ];
 
         assert_eq!(statuses.len(), 4);
         assert_ne!(HealthStatus::Healthy, HealthStatus::Degraded);

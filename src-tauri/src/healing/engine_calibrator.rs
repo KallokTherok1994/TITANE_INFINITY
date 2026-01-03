@@ -409,10 +409,10 @@ mod tests {
     #[test]
     fn test_calibrator_config_serialization() {
         let config = CalibratorConfig::default();
-        let json = serde_json::to_string(&config)
-            .expect("CalibratorConfig should serialize to JSON");
-        let restored: CalibratorConfig = serde_json::from_str(&json)
-            .expect("CalibratorConfig should deserialize from JSON");
+        let json =
+            serde_json::to_string(&config).expect("CalibratorConfig should serialize to JSON");
+        let restored: CalibratorConfig =
+            serde_json::from_str(&json).expect("CalibratorConfig should deserialize from JSON");
         assert_eq!(config.sample_window_size, restored.sample_window_size);
     }
 
@@ -482,10 +482,10 @@ mod tests {
             error_rate: 0.05,
             memory_usage_mb: 512.0,
         };
-        let json = serde_json::to_string(&sample)
-            .expect("PerformanceSample should serialize to JSON");
-        let restored: PerformanceSample = serde_json::from_str(&json)
-            .expect("PerformanceSample should deserialize from JSON");
+        let json =
+            serde_json::to_string(&sample).expect("PerformanceSample should serialize to JSON");
+        let restored: PerformanceSample =
+            serde_json::from_str(&json).expect("PerformanceSample should deserialize from JSON");
         assert_eq!(sample.timestamp, restored.timestamp);
         assert_eq!(sample.latency_ms, restored.latency_ms);
     }
@@ -538,10 +538,10 @@ mod tests {
             established_at: 5000,
             sample_count: 15,
         };
-        let json = serde_json::to_string(&baseline)
-            .expect("EngineBaseline should serialize to JSON");
-        let restored: EngineBaseline = serde_json::from_str(&json)
-            .expect("EngineBaseline should deserialize from JSON");
+        let json =
+            serde_json::to_string(&baseline).expect("EngineBaseline should serialize to JSON");
+        let restored: EngineBaseline =
+            serde_json::from_str(&json).expect("EngineBaseline should deserialize from JSON");
         assert_eq!(baseline.engine_id, restored.engine_id);
     }
 
@@ -590,22 +590,24 @@ mod tests {
 
     #[test]
     fn test_drift_recommendation_all_variants() {
-        let variants = [DriftRecommendation::NoAction,
+        let variants = [
+            DriftRecommendation::NoAction,
             DriftRecommendation::MonitorClosely,
             DriftRecommendation::SoftRecalibrate,
             DriftRecommendation::HardRecalibrate,
             DriftRecommendation::RestartEngine,
-            DriftRecommendation::AlertOperator];
+            DriftRecommendation::AlertOperator,
+        ];
         assert_eq!(variants.len(), 6);
     }
 
     #[test]
     fn test_drift_recommendation_serialization() {
         let rec = DriftRecommendation::SoftRecalibrate;
-        let json = serde_json::to_string(&rec)
-            .expect("DriftRecommendation should serialize to JSON");
-        let restored: DriftRecommendation = serde_json::from_str(&json)
-            .expect("DriftRecommendation should deserialize from JSON");
+        let json =
+            serde_json::to_string(&rec).expect("DriftRecommendation should serialize to JSON");
+        let restored: DriftRecommendation =
+            serde_json::from_str(&json).expect("DriftRecommendation should deserialize from JSON");
         assert_eq!(rec, restored);
     }
 
@@ -621,22 +623,24 @@ mod tests {
 
     #[test]
     fn test_calibration_action_all_variants() {
-        let variants = [CalibrationAction::None,
+        let variants = [
+            CalibrationAction::None,
             CalibrationAction::ResetCaches,
             CalibrationAction::OptimizeBuffers,
             CalibrationAction::RebalanceLoad,
             CalibrationAction::RestartWorkers,
-            CalibrationAction::FullRecalibration];
+            CalibrationAction::FullRecalibration,
+        ];
         assert_eq!(variants.len(), 6);
     }
 
     #[test]
     fn test_calibration_action_serialization() {
         let action = CalibrationAction::FullRecalibration;
-        let json = serde_json::to_string(&action)
-            .expect("CalibrationAction should serialize to JSON");
-        let restored: CalibrationAction = serde_json::from_str(&json)
-            .expect("CalibrationAction should deserialize from JSON");
+        let json =
+            serde_json::to_string(&action).expect("CalibrationAction should serialize to JSON");
+        let restored: CalibrationAction =
+            serde_json::from_str(&json).expect("CalibrationAction should deserialize from JSON");
         assert_eq!(action, restored);
     }
 
@@ -875,10 +879,10 @@ mod tests {
             duration_ms: 50,
             timestamp: 12345,
         };
-        let json = serde_json::to_string(&result)
-            .expect("CalibrationResult should serialize to JSON");
-        let restored: CalibrationResult = serde_json::from_str(&json)
-            .expect("CalibrationResult should deserialize from JSON");
+        let json =
+            serde_json::to_string(&result).expect("CalibrationResult should serialize to JSON");
+        let restored: CalibrationResult =
+            serde_json::from_str(&json).expect("CalibrationResult should deserialize from JSON");
         assert_eq!(result.engine_id, restored.engine_id);
     }
 
@@ -897,10 +901,9 @@ mod tests {
             recommendation: DriftRecommendation::SoftRecalibrate,
             timestamp: 99999,
         };
-        let json = serde_json::to_string(&report)
-            .expect("DriftReport should serialize to JSON");
-        let restored: DriftReport = serde_json::from_str(&json)
-            .expect("DriftReport should deserialize from JSON");
+        let json = serde_json::to_string(&report).expect("DriftReport should serialize to JSON");
+        let restored: DriftReport =
+            serde_json::from_str(&json).expect("DriftReport should deserialize from JSON");
         assert_eq!(report.engine_id, restored.engine_id);
         assert_eq!(report.is_drifting, restored.is_drifting);
     }

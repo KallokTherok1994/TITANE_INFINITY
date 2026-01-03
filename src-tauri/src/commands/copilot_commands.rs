@@ -7,11 +7,11 @@ use titane_infinity::api_hub::copilot::{CopilotClient, CopilotRequest, Message, 
 use crate::security::permission_guard::PERMISSION_GUARD;
 use crate::security::permissions::Role;
 use crate::security::secrets_engine::{SecureSecretsEngine, KEY_COPILOT};
+use log::{debug, error, info};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tauri::State;
 use tokio::sync::RwLock;
-use log::{debug, error, info};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TYPES
@@ -222,11 +222,17 @@ pub async fn chat_set_copilot_key(
     }
 
     // Validate GitHub token format (basic check)
-    if !api_key.starts_with("ghp_") && !api_key.starts_with("github_pat_") && !api_key.starts_with("gho_") {
+    if !api_key.starts_with("ghp_")
+        && !api_key.starts_with("github_pat_")
+        && !api_key.starts_with("gho_")
+    {
         return Ok(CopilotKeyStatus {
             configured: false,
             status: "warning".to_string(),
-            message: Some("Format de token GitHub inhabituel (attendu: ghp_xxx ou github_pat_xxx)".to_string()),
+            message: Some(
+                "Format de token GitHub inhabituel (attendu: ghp_xxx ou github_pat_xxx)"
+                    .to_string(),
+            ),
         });
     }
 
@@ -271,7 +277,11 @@ pub async fn get_copilot_key_status(
 
     Ok(CopilotKeyStatus {
         configured,
-        status: if configured { "ok".to_string() } else { "not_configured".to_string() },
+        status: if configured {
+            "ok".to_string()
+        } else {
+            "not_configured".to_string()
+        },
         message: if configured {
             Some("Copilot configuré".to_string())
         } else {
@@ -282,9 +292,7 @@ pub async fn get_copilot_key_status(
 
 /// Tester la connexion Copilot
 #[tauri::command]
-pub async fn test_copilot_connection(
-    state: State<'_, CopilotState>,
-) -> Result<TestResult, String> {
+pub async fn test_copilot_connection(state: State<'_, CopilotState>) -> Result<TestResult, String> {
     // Permission check
     PERMISSION_GUARD
         .require("ai_test", Role::User, "test_copilot_connection")

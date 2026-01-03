@@ -363,8 +363,7 @@ mod tests {
             total_tokens: Some(10),
         };
 
-        let json = serde_json::to_string(&metadata)
-            .expect("metadata serialization should succeed");
+        let json = serde_json::to_string(&metadata).expect("metadata serialization should succeed");
         assert!(json.contains("thinking"));
         assert!(json.contains("0.95"));
     }

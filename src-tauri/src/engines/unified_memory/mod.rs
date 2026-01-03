@@ -400,10 +400,7 @@ mod tests {
                 .expect("store should succeed for summarization test");
         }
 
-        let summary = engine
-            .summarize()
-            .await
-            .expect("summarize should succeed");
+        let summary = engine.summarize().await.expect("summarize should succeed");
         assert!(!summary.is_empty());
     }
 

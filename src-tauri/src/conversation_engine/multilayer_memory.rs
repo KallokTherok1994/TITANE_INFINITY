@@ -659,7 +659,7 @@ mod tests {
 
         let concept = manager.get_concept("TestConcept");
         assert!(concept.is_some());
-    let c = concept.expect("concept should exist after update");
+        let c = concept.expect("concept should exist after update");
         assert_eq!(c.name, "TestConcept");
         assert_eq!(c.definition, "A test concept");
         assert_eq!(c.usage_count, 1);

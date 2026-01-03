@@ -500,10 +500,9 @@ mod tests {
             duration_secs: 600,
             reason: "Need rest".to_string(),
         };
-        let json = serde_json::to_string(&rec)
-            .expect("SystemRecommendation should serialize");
-        let restored: SystemRecommendation = serde_json::from_str(&json)
-            .expect("SystemRecommendation should deserialize");
+        let json = serde_json::to_string(&rec).expect("SystemRecommendation should serialize");
+        let restored: SystemRecommendation =
+            serde_json::from_str(&json).expect("SystemRecommendation should deserialize");
         if let SystemRecommendation::PhysicalBreak { duration_secs, .. } = restored {
             assert_eq!(duration_secs, 600);
         }

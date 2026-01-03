@@ -110,8 +110,8 @@ export const ThinkingPanelDemo: React.FC = () => {
                 </div>
                 <p className="comparison-note">
                   ❌ Toujours visible et encombrant<br/>
-                  ❌ Prend beaucoup d'espace<br/>
-                  ❌ Distrait l'utilisateur
+                  ❌ Prend beaucoup d&apos;espace<br/>
+                  ❌ Distrait l&apos;utilisateur
                 </p>
               </div>
             </div>

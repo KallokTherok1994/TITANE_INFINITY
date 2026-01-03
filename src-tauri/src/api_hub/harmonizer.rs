@@ -460,10 +460,12 @@ mod tests {
 
     #[test]
     fn test_output_format_variants() {
-        let formats = [OutputFormat::Natural,
+        let formats = [
+            OutputFormat::Natural,
             OutputFormat::Structured,
             OutputFormat::Concise,
-            OutputFormat::Technical];
+            OutputFormat::Technical,
+        ];
 
         assert_eq!(formats.len(), 4);
         assert_ne!(OutputFormat::Natural, OutputFormat::Structured);

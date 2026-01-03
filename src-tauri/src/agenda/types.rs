@@ -367,16 +367,16 @@ mod tests {
     #[test]
     fn test_event_category_serialization() {
         let category = EventCategory::Meeting;
-        let json = serde_json::to_string(&category)
-            .expect("EventCategory should serialize to JSON");
+        let json =
+            serde_json::to_string(&category).expect("EventCategory should serialize to JSON");
         assert_eq!(json, "\"meeting\"");
     }
 
     #[test]
     fn test_event_category_deserialization() {
         let json = "\"focus\"";
-        let category: EventCategory = serde_json::from_str(json)
-            .expect("EventCategory should deserialize from JSON");
+        let category: EventCategory =
+            serde_json::from_str(json).expect("EventCategory should deserialize from JSON");
         assert_eq!(category, EventCategory::Focus);
     }
 
@@ -416,26 +416,27 @@ mod tests {
     #[test]
     fn test_event_status_serialization() {
         let status = EventStatus::InProgress;
-        let json = serde_json::to_string(&status)
-            .expect("EventStatus should serialize to JSON");
+        let json = serde_json::to_string(&status).expect("EventStatus should serialize to JSON");
         assert_eq!(json, "\"in_progress\"");
     }
 
     #[test]
     fn test_event_status_deserialization() {
         let json = "\"postponed\"";
-        let status: EventStatus = serde_json::from_str(json)
-            .expect("EventStatus should deserialize from JSON");
+        let status: EventStatus =
+            serde_json::from_str(json).expect("EventStatus should deserialize from JSON");
         assert_eq!(status, EventStatus::Postponed);
     }
 
     #[test]
     fn test_event_status_all_variants() {
-        let statuses = [EventStatus::Scheduled,
+        let statuses = [
+            EventStatus::Scheduled,
             EventStatus::InProgress,
             EventStatus::Completed,
             EventStatus::Cancelled,
-            EventStatus::Postponed];
+            EventStatus::Postponed,
+        ];
         assert_eq!(statuses.len(), 5);
     }
 
@@ -458,26 +459,28 @@ mod tests {
     #[test]
     fn test_priority_level_serialization() {
         let priority = PriorityLevel::Critical;
-        let json = serde_json::to_string(&priority)
-            .expect("PriorityLevel should serialize to JSON");
+        let json =
+            serde_json::to_string(&priority).expect("PriorityLevel should serialize to JSON");
         assert_eq!(json, "\"critical\"");
     }
 
     #[test]
     fn test_priority_level_deserialization() {
         let json = "\"urgent\"";
-        let priority: PriorityLevel = serde_json::from_str(json)
-            .expect("PriorityLevel should deserialize from JSON");
+        let priority: PriorityLevel =
+            serde_json::from_str(json).expect("PriorityLevel should deserialize from JSON");
         assert_eq!(priority, PriorityLevel::Urgent);
     }
 
     #[test]
     fn test_priority_level_all_variants() {
-        let priorities = [PriorityLevel::Low,
+        let priorities = [
+            PriorityLevel::Low,
             PriorityLevel::Medium,
             PriorityLevel::High,
             PriorityLevel::Urgent,
-            PriorityLevel::Critical];
+            PriorityLevel::Critical,
+        ];
         assert_eq!(priorities.len(), 5);
     }
 
@@ -494,18 +497,20 @@ mod tests {
     #[test]
     fn test_recurrence_type_serialization() {
         let recurrence = RecurrenceType::Weekly;
-        let json = serde_json::to_string(&recurrence)
-            .expect("RecurrenceType should serialize to JSON");
+        let json =
+            serde_json::to_string(&recurrence).expect("RecurrenceType should serialize to JSON");
         assert_eq!(json, "\"weekly\"");
     }
 
     #[test]
     fn test_recurrence_type_all_variants() {
-        let types = [RecurrenceType::Daily,
+        let types = [
+            RecurrenceType::Daily,
             RecurrenceType::Weekly,
             RecurrenceType::Monthly,
             RecurrenceType::Yearly,
-            RecurrenceType::Custom];
+            RecurrenceType::Custom,
+        ];
         assert_eq!(types.len(), 5);
     }
 
@@ -522,16 +527,17 @@ mod tests {
     #[test]
     fn test_reminder_type_serialization() {
         let reminder = ReminderType::Email;
-        let json = serde_json::to_string(&reminder)
-            .expect("ReminderType should serialize to JSON");
+        let json = serde_json::to_string(&reminder).expect("ReminderType should serialize to JSON");
         assert_eq!(json, "\"email\"");
     }
 
     #[test]
     fn test_reminder_type_all_variants() {
-        let types = [ReminderType::Notification,
+        let types = [
+            ReminderType::Notification,
             ReminderType::Sound,
-            ReminderType::Email];
+            ReminderType::Email,
+        ];
         assert_eq!(types.len(), 3);
     }
 
@@ -574,8 +580,8 @@ mod tests {
             end_date: None,
             occurrences: None,
         };
-        let json = serde_json::to_string(&recurrence)
-            .expect("EventRecurrence should serialize to JSON");
+        let json =
+            serde_json::to_string(&recurrence).expect("EventRecurrence should serialize to JSON");
         assert!(json.contains("\"type\":\"monthly\""));
     }
 
@@ -613,8 +619,8 @@ mod tests {
             reminder_type: ReminderType::Email,
             enabled: true,
         };
-        let json = serde_json::to_string(&reminder)
-            .expect("EventReminder should serialize to JSON");
+        let json =
+            serde_json::to_string(&reminder).expect("EventReminder should serialize to JSON");
         assert!(json.contains("\"type\":\"email\""));
         assert!(json.contains("\"minutes_before\":60"));
     }
@@ -687,8 +693,7 @@ mod tests {
             "2025-12-10T10:00:00Z".to_string(),
             "2025-12-10T11:00:00Z".to_string(),
         );
-        let json = serde_json::to_string(&event)
-            .expect("AgendaEvent should serialize to JSON");
+        let json = serde_json::to_string(&event).expect("AgendaEvent should serialize to JSON");
         assert!(json.contains("\"id\":\"event-5\""));
         assert!(json.contains("\"title\":\"Serialize Test\""));
     }
@@ -715,10 +720,9 @@ mod tests {
     #[test]
     fn test_agenda_storage_serialization() {
         let storage = AgendaStorage::default();
-        let json = serde_json::to_string(&storage)
-            .expect("AgendaStorage should serialize to JSON");
-        let restored: AgendaStorage = serde_json::from_str(&json)
-            .expect("AgendaStorage should deserialize from JSON");
+        let json = serde_json::to_string(&storage).expect("AgendaStorage should serialize to JSON");
+        let restored: AgendaStorage =
+            serde_json::from_str(&json).expect("AgendaStorage should deserialize from JSON");
         assert_eq!(restored.version, "1.0.0");
     }
 
@@ -733,8 +737,8 @@ mod tests {
             "startDateTime": "2025-12-10T10:00:00Z",
             "endDateTime": "2025-12-10T11:00:00Z"
         }"#;
-        let input: CreateEventInput = serde_json::from_str(json)
-            .expect("CreateEventInput should deserialize from JSON");
+        let input: CreateEventInput =
+            serde_json::from_str(json).expect("CreateEventInput should deserialize from JSON");
         assert_eq!(input.title, "Test Event");
         assert!(input.description.is_none());
     }
@@ -742,8 +746,8 @@ mod tests {
     #[test]
     fn test_create_event_input_with_optionals() {
         let json = r##"{"title": "Full Event","description": "A test event","startDateTime": "2025-12-10T10:00:00Z","endDateTime": "2025-12-10T11:00:00Z","allDay": true,"category": "meeting","priority": "high","color": "#ff0000"}"##;
-        let input: CreateEventInput = serde_json::from_str(json)
-            .expect("CreateEventInput should deserialize from JSON");
+        let input: CreateEventInput =
+            serde_json::from_str(json).expect("CreateEventInput should deserialize from JSON");
         assert_eq!(input.title, "Full Event");
         assert_eq!(input.description, Some("A test event".to_string()));
         assert_eq!(input.all_day, Some(true));
@@ -761,8 +765,8 @@ mod tests {
             "eventId": "event-1",
             "title": "Updated Title"
         }"#;
-        let input: UpdateEventInput = serde_json::from_str(json)
-            .expect("UpdateEventInput should deserialize from JSON");
+        let input: UpdateEventInput =
+            serde_json::from_str(json).expect("UpdateEventInput should deserialize from JSON");
         assert_eq!(input.event_id, "event-1");
         assert_eq!(input.title, Some("Updated Title".to_string()));
         assert!(input.description.is_none());
@@ -779,8 +783,8 @@ mod tests {
             "newStartDateTime": "2025-12-11T10:00:00Z",
             "newEndDateTime": "2025-12-11T11:00:00Z"
         }"#;
-        let input: MoveEventInput = serde_json::from_str(json)
-            .expect("MoveEventInput should deserialize from JSON");
+        let input: MoveEventInput =
+            serde_json::from_str(json).expect("MoveEventInput should deserialize from JSON");
         assert_eq!(input.event_id, "event-1");
         assert_eq!(input.new_start_date_time, "2025-12-11T10:00:00Z");
     }
@@ -792,8 +796,8 @@ mod tests {
     #[test]
     fn test_delete_event_input_deserialization() {
         let json = r#"{"eventId": "event-to-delete"}"#;
-        let input: DeleteEventInput = serde_json::from_str(json)
-            .expect("DeleteEventInput should deserialize from JSON");
+        let input: DeleteEventInput =
+            serde_json::from_str(json).expect("DeleteEventInput should deserialize from JSON");
         assert_eq!(input.event_id, "event-to-delete");
     }
 }

@@ -304,16 +304,17 @@ impl ExpFusionEngine {
 
         let project_name = project.unwrap_or("General");
         let now = Utc::now().to_rfc3339();
-        let proj = self.projects.entry(project_name.to_string()).or_insert_with(|| {
-            ProjectStateInternal {
+        let proj = self
+            .projects
+            .entry(project_name.to_string())
+            .or_insert_with(|| ProjectStateInternal {
                 icon: "📌".to_string(),
                 total_exp: 0,
                 categories: HashMap::new(),
                 knowledge_count: 0,
                 created_at: now.clone(),
                 last_updated: now.clone(),
-            }
-        });
+            });
         proj.total_exp = proj.total_exp.saturating_add(amount);
         *proj.categories.entry(category.to_string()).or_insert(0) += amount;
         if source == "Knowledge" {
@@ -375,28 +376,36 @@ impl ExpFusionState {
 
 /// Obtenir état global XP
 #[tauri::command]
-pub async fn exp_get_global_state(state: State<'_, ExpFusionState>) -> Result<GlobalExpState, String> {
+pub async fn exp_get_global_state(
+    state: State<'_, ExpFusionState>,
+) -> Result<GlobalExpState, String> {
     let engine = state.engine.read().await;
     Ok(engine.get_global_state())
 }
 
 /// Obtenir toutes les catégories
 #[tauri::command]
-pub async fn exp_get_categories(state: State<'_, ExpFusionState>) -> Result<Vec<CategoryState>, String> {
+pub async fn exp_get_categories(
+    state: State<'_, ExpFusionState>,
+) -> Result<Vec<CategoryState>, String> {
     let engine = state.engine.read().await;
     Ok(engine.get_categories())
 }
 
 /// Obtenir tous les projets
 #[tauri::command]
-pub async fn exp_get_projects(state: State<'_, ExpFusionState>) -> Result<Vec<ProjectState>, String> {
+pub async fn exp_get_projects(
+    state: State<'_, ExpFusionState>,
+) -> Result<Vec<ProjectState>, String> {
     let engine = state.engine.read().await;
     Ok(engine.get_projects())
 }
 
 /// Obtenir statistiques projets
 #[tauri::command]
-pub async fn exp_get_project_stats(state: State<'_, ExpFusionState>) -> Result<ProjectStats, String> {
+pub async fn exp_get_project_stats(
+    state: State<'_, ExpFusionState>,
+) -> Result<ProjectStats, String> {
     let engine = state.engine.read().await;
     Ok(engine.project_stats())
 }
@@ -410,14 +419,20 @@ pub async fn exp_get_talents(state: State<'_, ExpFusionState>) -> Result<TalentT
 
 /// Obtenir timeline (N derniers jours)
 #[tauri::command]
-pub async fn exp_get_timeline(state: State<'_, ExpFusionState>, days: u32) -> Result<Vec<TimelineEntry>, String> {
+pub async fn exp_get_timeline(
+    state: State<'_, ExpFusionState>,
+    days: u32,
+) -> Result<Vec<TimelineEntry>, String> {
     let engine = state.engine.read().await;
     Ok(engine.get_timeline(days))
 }
 
 /// Obtenir statistiques timeline
 #[tauri::command]
-pub async fn exp_get_timeline_stats(state: State<'_, ExpFusionState>, days: u32) -> Result<TimelineStats, String> {
+pub async fn exp_get_timeline_stats(
+    state: State<'_, ExpFusionState>,
+    days: u32,
+) -> Result<TimelineStats, String> {
     let engine = state.engine.read().await;
     let timeline = engine.get_timeline(days);
 

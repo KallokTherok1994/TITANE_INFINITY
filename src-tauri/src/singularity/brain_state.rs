@@ -430,14 +430,16 @@ mod tests {
 
     #[test]
     fn test_conversation_mode_all_variants() {
-        let modes = [ConversationMode::Coach,
+        let modes = [
+            ConversationMode::Coach,
             ConversationMode::Expert,
             ConversationMode::Meta,
             ConversationMode::Cognitive,
             ConversationMode::Creative,
             ConversationMode::Logic,
             ConversationMode::Harmonic,
-            ConversationMode::Neutral];
+            ConversationMode::Neutral,
+        ];
         assert_eq!(modes.len(), 8);
     }
 
@@ -826,10 +828,9 @@ mod tests {
     #[test]
     fn test_brain_state_serialization() {
         let state = ConversationBrainState::new();
-        let json = serde_json::to_string(&state)
-            .expect("ConversationBrainState should serialize");
-        let restored: ConversationBrainState = serde_json::from_str(&json)
-            .expect("ConversationBrainState should deserialize");
+        let json = serde_json::to_string(&state).expect("ConversationBrainState should serialize");
+        let restored: ConversationBrainState =
+            serde_json::from_str(&json).expect("ConversationBrainState should deserialize");
         assert_eq!(state.mode, restored.mode);
         assert_eq!(state.evolution_level, restored.evolution_level);
     }

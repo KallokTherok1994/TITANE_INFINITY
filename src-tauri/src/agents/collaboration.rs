@@ -260,8 +260,8 @@ mod tests {
     #[test]
     fn test_collaboration_protocol_deserialize() {
         let json = r#"{"pattern":{"Pipeline":{"agents":["a1"]}},"timeout_seconds":500}"#;
-        let protocol: CollaborationProtocol = serde_json::from_str(json)
-            .expect("deserialize CollaborationProtocol should succeed");
+        let protocol: CollaborationProtocol =
+            serde_json::from_str(json).expect("deserialize CollaborationProtocol should succeed");
         assert!(matches!(
             protocol.pattern,
             CollaborationPattern::Pipeline { .. }
@@ -277,8 +277,8 @@ mod tests {
         ]);
         let json = serde_json::to_string(&original)
             .expect("serialize CollaborationProtocol should succeed");
-        let restored: CollaborationProtocol = serde_json::from_str(&json)
-            .expect("deserialize CollaborationProtocol should succeed");
+        let restored: CollaborationProtocol =
+            serde_json::from_str(&json).expect("deserialize CollaborationProtocol should succeed");
         assert_eq!(restored.timeout_seconds, 60);
     }
 
@@ -352,8 +352,8 @@ mod tests {
             duration_ms: 1000,
             output: Some("completed".to_string()),
         };
-        let json = serde_json::to_string(&result)
-            .expect("serialize CollaborationResult should succeed");
+        let json =
+            serde_json::to_string(&result).expect("serialize CollaborationResult should succeed");
         assert!(json.contains("\"success\":true"));
         assert!(json.contains("worker"));
         assert!(json.contains("completed"));
@@ -362,8 +362,8 @@ mod tests {
     #[test]
     fn test_collaboration_result_deserialize() {
         let json = r#"{"success":false,"participating_agents":["a1","a2"],"duration_ms":2000,"output":null}"#;
-        let result: CollaborationResult = serde_json::from_str(json)
-            .expect("deserialize CollaborationResult should succeed");
+        let result: CollaborationResult =
+            serde_json::from_str(json).expect("deserialize CollaborationResult should succeed");
         assert!(!result.success);
         assert_eq!(result.participating_agents.len(), 2);
         assert!(result.output.is_none());
@@ -380,10 +380,10 @@ mod tests {
             duration_ms: 5000,
             output: Some("final".to_string()),
         };
-        let json = serde_json::to_string(&original)
-            .expect("serialize CollaborationResult should succeed");
-        let restored: CollaborationResult = serde_json::from_str(&json)
-            .expect("deserialize CollaborationResult should succeed");
+        let json =
+            serde_json::to_string(&original).expect("serialize CollaborationResult should succeed");
+        let restored: CollaborationResult =
+            serde_json::from_str(&json).expect("deserialize CollaborationResult should succeed");
         assert!(restored.success);
         assert_eq!(restored.output, Some("final".to_string()));
     }

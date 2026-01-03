@@ -3,10 +3,10 @@
 //! HTTP client pour GitHub Copilot / GitHub Models API
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use reqwest::{Client, header};
+use log::{debug, error, info};
+use reqwest::{header, Client};
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
-use log::{debug, error, info};
 
 // ✅ Confirmed from API research (STEP 1)
 const COPILOT_API_BASE: &str = "https://api.github.com/models";
@@ -66,10 +66,7 @@ impl CopilotClient {
     }
 
     /// Envoyer une requête chat non-streaming
-    pub async fn send_chat(
-        &self,
-        request: CopilotRequest,
-    ) -> Result<CopilotResponse, String> {
+    pub async fn send_chat(&self, request: CopilotRequest) -> Result<CopilotResponse, String> {
         let url = format!("{}/chat/completions", COPILOT_API_BASE);
 
         debug!("Sending Copilot request: model={}", request.model);
@@ -91,13 +88,18 @@ impl CopilotClient {
         let status = response.status();
 
         if !status.is_success() {
-            let error_body = response.text().await.unwrap_or_else(|_| "Unknown error".to_string());
+            let error_body = response
+                .text()
+                .await
+                .unwrap_or_else(|_| "Unknown error".to_string());
             error!("Copilot API error {}: {}", status, error_body);
 
             return Err(match status.as_u16() {
                 401 => "Clé API Copilot invalide. Vérifiez votre token GitHub.".to_string(),
                 403 => "Accès refusé. Vérifiez les permissions de votre token GitHub.".to_string(),
-                429 => "Limite de taux Copilot atteinte. Réessayez dans quelques secondes.".to_string(),
+                429 => {
+                    "Limite de taux Copilot atteinte. Réessayez dans quelques secondes.".to_string()
+                }
                 _ => format!("Erreur Copilot ({}): {}", status, error_body),
             });
         }
