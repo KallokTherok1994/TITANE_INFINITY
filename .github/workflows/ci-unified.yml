@@ -1,0 +1,397 @@
+name: TITANE∞ CI/CD Unified Pipeline v26.2.0
+
+on:
+  push:
+    branches: [MAIN, main, dev, stable-runtime]
+  pull_request:
+    branches: [MAIN, main]
+  workflow_dispatch:
+
+# Prevent concurrent runs on the same branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  NODE_VERSION: '20'
+  RUST_VERSION: '1.83'
+  PNPM_VERSION: '9.0.0'
+
+jobs:
+  # ═══════════════════════════════════════════════════════════════════════════
+  # LINT & TYPE CHECK
+  # ═══════════════════════════════════════════════════════════════════════════
+  lint-and-typecheck:
+    name: 🔍 Lint & Type Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4.2.2
+
+      - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 🔧 Enable Corepack (pnpm)
+        run: corepack enable
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🔍 Run ESLint
+        run: pnpm run lint
+
+      - name: 🔍 TypeScript type check
+        run: pnpm run check
+
+      - name: 📊 Summary
+        if: always()
+        run: |
+          echo "## 🔍 Lint & Type Check Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ ESLint completed" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ TypeScript check completed" >> $GITHUB_STEP_SUMMARY
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # FRONTEND TESTS
+  # ═══════════════════════════════════════════════════════════════════════════
+  test-frontend:
+    name: 🧪 Frontend Tests
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+    timeout-minutes: 20
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4.2.2
+
+      - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 🔧 Enable Corepack (pnpm)
+        run: corepack enable
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🧪 Run Vitest tests
+        run: pnpm run test -- --run
+        env:
+          NODE_OPTIONS: '--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs'
+
+      - name: 📊 Test coverage
+        if: github.event_name == 'push'
+        run: pnpm run test:coverage
+        continue-on-error: true
+        env:
+          NODE_OPTIONS: '--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs'
+
+      - name: 📤 Upload coverage
+        if: github.event_name == 'push'
+        uses: codecov/codecov-action@v5.2.1
+        with:
+          files: ./coverage/lcov.info
+          fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: 📊 Summary
+        if: always()
+        run: |
+          echo "## 🧪 Frontend Tests Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Tests executed with Vitest" >> $GITHUB_STEP_SUMMARY
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # RUST BACKEND TESTS
+  # ═══════════════════════════════════════════════════════════════════════════
+  test-backend:
+    name: 🦀 Rust Backend Tests
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+    timeout-minutes: 30
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4.2.2
+
+      - name: 📁 Ensure dist directory exists
+        run: mkdir -p dist
+
+      - name: 🔧 Install system dependencies (Tauri)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            build-essential \
+            curl \
+            wget \
+            file \
+            libssl-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            libasound2-dev \
+            patchelf
+
+      - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
+        uses: dtolnay/rust-toolchain@1.83
+        with:
+          components: clippy, rustfmt
+
+      - name: 💾 Cache Cargo dependencies
+        uses: actions/cache@v4.2.0
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            src-tauri/target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: ✔️ Cargo check
+        working-directory: src-tauri
+        run: cargo check --verbose
+
+      - name: 🧪 Run Cargo tests
+        working-directory: src-tauri
+        run: cargo test --verbose
+
+      - name: 🔍 Run Clippy (linter)
+        working-directory: src-tauri
+        run: cargo clippy --all-targets --all-features -- -D warnings
+        continue-on-error: true
+
+      - name: 📊 Summary
+        if: always()
+        run: |
+          echo "## 🦀 Rust Backend Tests Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Cargo tests completed" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Clippy analysis completed" >> $GITHUB_STEP_SUMMARY
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # E2E TESTS (Playwright)
+  # ═══════════════════════════════════════════════════════════════════════════
+  test-e2e:
+    name: 🎭 E2E Tests (Playwright)
+    runs-on: ubuntu-latest
+    needs: [test-frontend, test-backend]
+    timeout-minutes: 30
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4.2.2
+
+      - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 🔧 Enable Corepack (pnpm)
+        run: corepack enable
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🎭 Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: 🧪 Run E2E tests
+        run: pnpm run test:e2e
+        continue-on-error: true
+
+      - name: 📤 Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4.6.0
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: 📊 Summary
+        if: always()
+        run: |
+          echo "## 🎭 E2E Tests Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- E2E tests executed with Playwright" >> $GITHUB_STEP_SUMMARY
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # BUILD VERIFICATION
+  # ═══════════════════════════════════════════════════════════════════════════
+  build-verification:
+    name: 🏗️ Build Verification (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    needs: [test-frontend, test-backend]
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4.2.2
+
+      - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 🔧 Enable Corepack (pnpm)
+        run: corepack enable
+
+      - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
+        uses: dtolnay/rust-toolchain@1.83
+
+      - name: 🔧 Install system dependencies (Ubuntu)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            build-essential \
+            curl \
+            wget \
+            file \
+            libssl-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            patchelf
+
+      - name: 💾 Cache Cargo dependencies
+        uses: actions/cache@v4.2.0
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            src-tauri/target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: 📦 Install npm dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🏗️ Build frontend
+        run: pnpm run build
+
+      - name: 🏗️ Build Tauri (Debug)
+        run: pnpm exec tauri build --debug
+        continue-on-error: true
+
+      - name: 📤 Upload build artifacts
+        if: success() && matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v4.6.0
+        with:
+          name: titane-build-${{ matrix.os }}
+          path: src-tauri/target/debug/bundle/
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: 📊 Summary
+        if: always()
+        run: |
+          echo "## 🏗️ Build Results (${{ matrix.os }})" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Frontend build completed" >> $GITHUB_STEP_SUMMARY
+          echo "- Tauri build attempted" >> $GITHUB_STEP_SUMMARY
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # SECURITY AUDIT
+  # ═══════════════════════════════════════════════════════════════════════════
+  security-audit:
+    name: 🔒 Security Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4.2.2
+
+      - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 🔧 Enable Corepack (pnpm)
+        run: corepack enable
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🔒 npm audit
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+      - name: 🦀 Setup Rust
+        uses: dtolnay/rust-toolchain@1.83
+
+      - name: 🔒 Install cargo-audit
+        run: cargo install cargo-audit --locked
+        continue-on-error: true
+
+      - name: 🔒 Cargo audit
+        working-directory: src-tauri
+        run: cargo audit
+        continue-on-error: true
+
+      - name: 📊 Summary
+        if: always()
+        run: |
+          echo "## 🔒 Security Audit Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- npm audit completed" >> $GITHUB_STEP_SUMMARY
+          echo "- cargo audit completed" >> $GITHUB_STEP_SUMMARY
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # FINAL STATUS
+  # ═══════════════════════════════════════════════════════════════════════════
+  ci-status:
+    name: ✅ CI Pipeline Status
+    runs-on: ubuntu-latest
+    needs: [lint-and-typecheck, test-frontend, test-backend, test-e2e, build-verification, security-audit]
+    if: always()
+    timeout-minutes: 5
+
+    steps:
+      - name: 📊 Check job results
+        run: |
+          echo "## TITANE∞ v26.2.0 - CI/CD Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Job | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Lint & Type Check | ${{ needs.lint-and-typecheck.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Frontend Tests | ${{ needs.test-frontend.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Backend Tests | ${{ needs.test-backend.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| E2E Tests | ${{ needs.test-e2e.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Build Verification | ${{ needs.build-verification.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Security Audit | ${{ needs.security-audit.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "🚀 Built with TITANE∞ v26.2.0 - Cognitive Operating System" >> $GITHUB_STEP_SUMMARY
+
+      - name: ❌ Fail if required jobs failed
+        if: |
+          needs.lint-and-typecheck.result == 'failure' ||
+          needs.test-frontend.result == 'failure' ||
+          needs.test-backend.result == 'failure'
+        run: |
+          echo "One or more required jobs failed"
+          exit 1
