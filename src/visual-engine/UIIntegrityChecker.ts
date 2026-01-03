@@ -124,7 +124,8 @@ export class UIIntegrityChecker {
   private checkTimer: NodeJS.Timeout | null = null;
   private running = false;
 
-  // Required file structure
+  // Required file structure (unused - kept for reference)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private readonly REQUIRED_FILES = [
     'src/visual-engine/TitaneVisualEngine.ts',
     'src/visual-engine/StateManager.ts',
@@ -509,11 +510,11 @@ export class UIIntegrityChecker {
       type: params.type,
       severity: params.severity,
       message: params.message,
-      location: params.location,
+      ...(params.location && { location: params.location }),
       detected: Date.now(),
       resolved: false,
       autoFixable: params.autoFixable,
-      fix: params.fix,
+      ...(params.fix && { fix: params.fix }),
     };
 
     this.anomalies.set(id, anomaly);

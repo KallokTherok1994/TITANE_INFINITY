@@ -89,7 +89,7 @@ export class ParticleSignature {
 
   // Constants
   private static readonly GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5)); // ≈ 137.5°
-  private static readonly PHI = (1 + Math.sqrt(5)) / 2; // Golden ratio
+  // private static readonly PHI = (1 + Math.sqrt(5)) / 2; // Golden ratio (unused)
 
   constructor(centerX: number = 0, centerY: number = 0) {
     this.centerX = centerX;
