@@ -25,12 +25,11 @@ let SQLiteVectorStoreCtor: typeof import('../SQLiteVectorStore').SQLiteVectorSto
 let hasSQLiteBindings = false;
 
 try {
-  // Attempt to load native module
-  // eslint-disable-next-line @typescript-eslint/no-var-requires -- Dynamic require for optional native module
-  require('better-sqlite3');
+  // Attempt to load native module using dynamic import for ESM compatibility
+  await import('better-sqlite3');
   hasSQLiteBindings = true;
-  // eslint-disable-next-line @typescript-eslint/no-var-requires -- Conditional import based on runtime check
-  SQLiteVectorStoreCtor = require('../SQLiteVectorStore').SQLiteVectorStore;
+  const module = await import('../SQLiteVectorStore');
+  SQLiteVectorStoreCtor = module.SQLiteVectorStore;
 } catch {
   // Native bindings not available - tests will be skipped
   hasSQLiteBindings = false;
