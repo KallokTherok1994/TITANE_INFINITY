@@ -49,20 +49,20 @@ export const Toast: React.FC<ToastProps> = ({
       setIsVisible(true);
     });
 
+    const handleClose = () => {
+      setIsExiting(true);
+      setTimeout(() => {
+        onClose(id);
+      }, 300); // Match exit animation duration
+    };
+
     // Auto-dismiss after duration
     const timer = setTimeout(() => {
       handleClose();
     }, duration);
 
     return () => clearTimeout(timer);
-  }, [duration]);
-
-  const handleClose = () => {
-    setIsExiting(true);
-    setTimeout(() => {
-      onClose(id);
-    }, 300); // Match exit animation duration
-  };
+  }, [duration, id, onClose]);
 
   return (
     <div

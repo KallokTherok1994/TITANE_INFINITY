@@ -5,7 +5,7 @@
  */
 
 import React, { useState, useCallback, useMemo } from 'react';
-import { Toast, type ToastType, type ToastProps } from './Toast';
+import { Toast, type ToastType, type ToastProps as _ToastProps } from './Toast';
 
 interface ToastData {
   id: string;
@@ -66,7 +66,7 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({
   // Expose addToast globally for easy access
   useMemo(() => {
     if (typeof window !== 'undefined') {
-      (window as any).__titaneToast = {
+      (window as Window & { __titaneToast?: Record<string, (msg: string, dur?: number) => void> }).__titaneToast = {
         default: (message: string, duration?: number) =>
           addToast('default', message, duration),
         info: (message: string, duration?: number) => addToast('info', message, duration),
@@ -109,8 +109,9 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({
 // Helper hook for easy toast usage
 export const useToast = () => {
   return useMemo(() => {
-    if (typeof window !== 'undefined' && (window as any).__titaneToast) {
-      return (window as any).__titaneToast;
+    const w = window as Window & { __titaneToast?: Record<string, (msg: string, dur?: number) => void> };
+    if (typeof window !== 'undefined' && w.__titaneToast) {
+      return w.__titaneToast;
     }
     // Fallback if container not mounted
     return {

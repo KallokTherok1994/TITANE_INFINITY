@@ -24,7 +24,7 @@ export default function AppMinimal() {
       }
 
       // Vérifier Tauri
-      const w = window as any;
+      const w = window as Window & { __TAURI__?: unknown; __TAURI_INTERNALS__?: unknown };
       const hasTauri = !!(w.__TAURI__ || w.__TAURI_INTERNALS__);
       logs.push(`🦀 Tauri: ${hasTauri ? 'YES' : 'NO'}`);
 
