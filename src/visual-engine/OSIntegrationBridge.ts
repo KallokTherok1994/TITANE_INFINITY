@@ -228,8 +228,8 @@ export class OSIntegrationBridge {
     if (import.meta.env.DEV) return true;
 
     const envEnabled =
-      import.meta.env.VITE_TITANE_OS_POLLING_ENABLED === '1' ||
-      import.meta.env.VITE_OS_POLLING_ENABLED === '1';
+      import.meta.env['VITE_TITANE_OS_POLLING_ENABLED'] === '1' ||
+      import.meta.env['VITE_OS_POLLING_ENABLED'] === '1';
 
     let userEnabled = false;
     try {
@@ -629,5 +629,5 @@ export class OSIntegrationBridge {
 export const osIntegrationBridge = new OSIntegrationBridge({
   debug: import.meta.env.DEV,
   websocketUrl:
-    import.meta.env.VITE_TITANE_OS_WS_URL ?? import.meta.env.VITE_OS_WS_URL ?? '',
+    import.meta.env['VITE_TITANE_OS_WS_URL'] ?? import.meta.env['VITE_OS_WS_URL'] ?? '',
 });
