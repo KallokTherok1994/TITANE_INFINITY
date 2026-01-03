@@ -331,7 +331,7 @@ jobs:
           workspaces: src-tauri
           cache-on-failure: true
 
-      - name: 📦 Install npm dependencies
+      - name: 📦 Install pnpm dependencies
         run: pnpm install --frozen-lockfile
 
       - name: 🏗️ Build frontend
