@@ -8,9 +8,21 @@
   gap: var(--space-2);
   max-width: 80%;
   padding: var(--space-4);
+  margin-bottom: var(--space-3, 12px); /* Better vertical spacing between messages */
   border-radius: 8px;
   animation: fade-in 0.3s ease;
   position: relative;
+  /* Improved focus state for accessibility */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.message-bubble:hover {
+  transform: translateY(-1px);
+}
+
+.message-bubble:focus-within {
+  outline: 2px solid var(--accent, #93b399);
+  outline-offset: 2px;
 }
 
 .message-bubble.user {
@@ -28,11 +40,12 @@
   background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(196, 196, 196, 0.15);
-  color: #c4c4c4;
+  color: #e8e8e8; /* Improved contrast from #c4c4c4 to #e8e8e8 (WCAG AA) */
   border-radius: 12px 12px 12px 4px;
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(196, 196, 196, 0.05);
+    inset 0 1px 0 rgba(196, 196, 196, 0.05),
+    0 0 0 1px rgba(147, 179, 153, 0.08); /* Subtle accent border for separation */
 }
 
 .message-bubble.system {

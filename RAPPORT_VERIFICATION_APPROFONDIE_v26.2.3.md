@@ -31,17 +31,20 @@
 ## 🔒 PROTECTIONS APPLIQUÉES (Niveau Maximum)
 
 ### Protection Système (IMMUTABLE)
+
 ```bash
 sudo chattr +i src-tauri/src/agent_system/config.rs
 # Result: ----i---------e------- (IMMUTABLE)
 ```
 
 ### Protection Git
+
 ```bash
 git update-unchanged src-tauri/src/agent_system/config.rs
 ```
 
 ### Protection Rust-Analyzer
+
 ```json
 {
   "rust-analyzer.checkOnSave.enable": false,
@@ -54,7 +57,9 @@ git update-unchanged src-tauri/src/agent_system/config.rs
 ## ✅ VALIDATION TESTS
 
 ### Tests React: 2276/2322 passed (97.9%)
+
 ### Tests Rust: 4294/4294 passed (100%)
+
 ### Build Release: 22MB SUCCESS
 
 ---

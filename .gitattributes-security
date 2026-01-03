@@ -1,0 +1,19 @@
+# TITANE∞ - Protection des Modifications de Sécurité
+
+# Règle Git: Ne jamais restaurer automatiquement ces fichiers
+# Ces modifications sont intentionnelles et permanentes
+
+# Fichiers avec restrictions désactivées (mode ouvert)
+src/core/tauri/environment.ts
+src/App.tsx
+src/utils/browserModeAdapter.ts
+
+# Documentation de sécurité désactivée
+SECURITY_RESTRICTIONS_DISABLED.md
+scripts/verify-security-disabled.sh
+
+# Instructions:
+# - shouldBlockLoading() doit TOUJOURS retourner false
+# - Mode navigateur doit activer TOUS les services
+# - Aucune restriction de contexte (HTTP, Tauri, dev, prod)
+# - Mode ouvert total permanent

@@ -87,6 +87,20 @@ impl MemoryCore {
     }
 
     fn persist_locked(&self, state: &MemoryDisk) -> AppResult<()> {
+        // En mode dev (feature mock), ne persister que toutes les 30 secondes
+        // pour éviter les rebuild loops causés par tauri watch
+        #[cfg(feature = "mock")]
+        {
+            use std::sync::atomic::{AtomicI64, Ordering};
+            static LAST_PERSIST: AtomicI64 = AtomicI64::new(0);
+            let now = current_millis();
+            let last = LAST_PERSIST.load(Ordering::Relaxed);
+            if now - last < 30_000 {
+                // Skip persist si moins de 30s depuis la dernière
+                return Ok(());
+            }
+            LAST_PERSIST.store(now, Ordering::Relaxed);
+        }
         state.persist(&self.paths.storage_file)
     }
 

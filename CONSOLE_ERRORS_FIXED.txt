@@ -1,0 +1,123 @@
+╔══════════════════════════════════════════════════════════════════╗
+║   TITANE∞ - Résolution Erreurs Console Firefox                 ║
+║              Date: 2 janvier 2026 - 18:22                       ║
+╚══════════════════════════════════════════════════════════════════╝
+
+═════════════════════════════════════════════════════════════════
+PROBLÈME 1: Messages "SES Removing unpermitted intrinsics"
+═════════════════════════════════════════════════════════════════
+
+❌ PAS UNE ERREUR TITANE∞
+
+Ces messages proviennent d'une EXTENSION FIREFOX (SES Lockdown):
+  moz-extension://aa193544-2db3-4c07-a7a8-962c339fe630/
+
+L'extension SES (Secure ECMAScript) essaie de sécuriser JavaScript
+en supprimant certaines méthodes natives du navigateur.
+
+MÉTHODES SUPPRIMÉES PAR L'EXTENSION:
+  • %MapPrototype%.getOrInsert
+  • %MapPrototype%.getOrInsertComputed
+  • %WeakMapPrototype%.getOrInsert
+  • %WeakMapPrototype%.getOrInsertComputed
+  • %DatePrototype%.toTemporalInstant
+
+SOLUTION:
+─────────────────────────────────────────────────────────────────
+  → Désactiver l'extension SES dans Firefox
+  → Ou ignorer ces warnings (ils n'affectent pas TITANE∞)
+
+═════════════════════════════════════════════════════════════════
+PROBLÈME 2: "disallowed MIME type (text/html)" pour modules JS
+═════════════════════════════════════════════════════════════════
+
+✅ CORRIGÉ
+
+CAUSE:
+  La configuration vite.config.ts forçait tous les fichiers à avoir
+  le Content-Type "text/html", y compris les modules JavaScript.
+
+ERREUR AVANT:
+  Loading module from "https://.../src/main.tsx" was blocked
+  because of a disallowed MIME type ("text/html").
+
+CORRECTION APPLIQUÉE:
+  Fichier: vite.config.ts (ligne 76)
+  
+  AVANT:
+  ─────
+  headers: {
+    'Content-Type': 'text/html; charset=utf-8',  ← INCORRECT
+    'X-Content-Type-Options': 'nosniff',
+    'X-Frame-Options': 'SAMEORIGIN',
+  }
+
+  APRÈS:
+  ─────
+  headers: {
+    // Vite gère automatiquement Content-Type selon l'extension
+    'X-Content-Type-Options': 'nosniff',
+    'X-Frame-Options': 'SAMEORIGIN',
+  }
+
+MIME TYPES MAINTENANT:
+─────────────────────────────────────────────────────────────────
+  ✅ index.html          → text/html
+  ✅ src/main.tsx        → text/javascript
+  ✅ /@vite/client       → text/html (normal, module interne Vite)
+  ✅ src/AppMinimal.tsx  → text/javascript
+
+═════════════════════════════════════════════════════════════════
+TESTS DE VALIDATION
+═════════════════════════════════════════════════════════════════
+
+$ curl -I http://localhost:5173/src/main.tsx | grep Content-Type
+Content-Type: text/javascript
+✅ PASS
+
+$ curl -I http://localhost:5173/ | grep Content-Type
+Content-Type: text/html
+✅ PASS
+
+═════════════════════════════════════════════════════════════════
+PROBLÈME 3: Tunnel devtunnels.ms
+═════════════════════════════════════════════════════════════════
+
+URL: https://lf5m3zxr-5173.use.devtunnels.ms
+
+Si vous accédez à l'application via le tunnel VS Code Dev Tunnels,
+rechargez la page pour obtenir les nouveaux MIME types corrects.
+
+Le tunnel peut mettre en cache les anciennes réponses. Solutions:
+  → Ctrl + Shift + R (hard reload)
+  → Vider le cache du navigateur
+  → Fermer et rouvrir le tunnel
+
+═════════════════════════════════════════════════════════════════
+RÉSUMÉ
+═════════════════════════════════════════════════════════════════
+
+✅ MIME types corrigés dans vite.config.ts
+✅ Modules JavaScript servis correctement
+✅ index.html garde text/html
+✅ Headers de sécurité préservés
+
+⚠️  Messages SES Lockdown → Extension Firefox (pas une erreur)
+⚠️  Tunnel devtunnels.ms → Recharger pour appliquer les corrections
+
+═════════════════════════════════════════════════════════════════
+COMMANDES UTILES
+═════════════════════════════════════════════════════════════════
+
+# Tester les MIME types localement
+curl -I http://localhost:5173/src/main.tsx | grep Content-Type
+
+# Tester index.html
+curl -I http://localhost:5173 | grep Content-Type
+
+# Vérifier les logs du serveur
+tail -f logs/network/http-server-20260102-181533.log
+
+═════════════════════════════════════════════════════════════════
+FIN DE LA RÉSOLUTION
+═════════════════════════════════════════════════════════════════

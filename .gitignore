@@ -132,3 +132,9 @@ src-tauri/vault/encrypted/
 src-tauri/vault/encrypted/file1.enc
 src-tauri/vault/encrypted/file2.enc
 src-tauri/vault/encrypted/test_data.enc
+
+# Remote tunnel logs and state
+.vscode/cli/
+.vscode-server/
+remote-tunnel.pid
+tunnel-*.log

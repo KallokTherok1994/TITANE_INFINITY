@@ -69,39 +69,33 @@ const AuraControlPanel = lazy(() =>
   }))
 );
 import { useAura } from './hooks/useAuraOrchestrator';
+import { useWindowControls } from './hooks/useWindowControls'; // ✨ v26.2.1 - Window zoom & fullscreen controls
 
 /**
- * 🔒 POLITIQUE DE SÉCURITÉ ENVIRONNEMENT
+ * 🔐 POLITIQUE DE SÉCURITÉ ENVIRONNEMENT - RESTRICTIONS DÉSACTIVÉES
  *
- * Mode DEV (import.meta.env.DEV === true):
- *   - ✅ Tauri dev: Autorisé (http://127.0.0.1:xxxx avec __TAURI__)
- *   - ✅ Browser dev: Autorisé (http://localhost:5173 pour Vite HMR)
- *   - Logs: Warning console si pas Tauri, mais n'empêche PAS le rendu
- *
- * Mode PROD (import.meta.env.DEV === false):
- *   - ✅ Tauri prod: Autorisé (tauri://localhost)
- *   - ⚠️ Browser prod: Affiche warning UI non-bloquant
- *   - Note: Pas de throw ni document.body.innerHTML qui cassent React
+ * Mode OUVERT TOTAL:
+ *   - ✅ Tauri dev: Autorisé
+ *   - ✅ Browser dev: Autorisé
+ *   - ✅ Tauri prod: Autorisé
+ *   - ✅ Browser prod: Autorisé
+ *   - ✅ HTTP: Autorisé
+ *   - ✅ Tous contextes: Autorisés sans restriction
+ *   - Note: Aucun blocage, aucun warning - Fonctionnement total
  */
 if (typeof window !== 'undefined') {
   const env = detectEnvironment();
 
-  // Log environnement (toujours utile, pas bloquant)
+  // Log environnement (informatif uniquement, aucune restriction)
   logEnvironmentWarnings();
 
-  // En dev: JAMAIS bloquer (autoriser Vite HMR + Tauri dev)
-  // En prod browser: Afficher warning dans l'UI via composant, pas via document.body
-  if (shouldBlockLoading()) {
-    logger.warn('Contexte browser production détecté', {
-      component: 'Environment',
-      origin: env.origin,
-    });
-    logger.warn('Recommandation: Utiliser build Tauri natif', {
-      component: 'Environment',
-    });
-    // Note: Le warning sera affiché dans l'UI via un composant dédié si nécessaire,
-    // mais on ne bloque plus le rendu React pour permettre l'affichage
-  }
+  // 🔓 RESTRICTIONS DÉSACTIVÉES: Aucun blocage dans aucun contexte
+  // L'application fonctionne librement en Tauri, HTTP, dev ou prod
+  logger.info('TITANE∞ démarré - Mode ouvert (restrictions désactivées)', {
+    component: 'Environment',
+    origin: env.origin,
+    mode: env.isDev ? 'Development' : 'Production',
+  });
 }
 
 // ✨ v24.3.0 - Lazy loaded pages (code splitting)
@@ -261,6 +255,9 @@ const AppRouter: React.FC = () => {
   // ✨ v19.5.2 - Toast system
   const { toasts, removeToast } = useUIStore();
 
+  // ✨ v26.2.1 - Window zoom & fullscreen controls (CTRL+scroll, F11)
+  useWindowControls({ enableZoom: true, enableFullscreen: true });
+
   // ✨ v19.5.2 - User Onboarding State
   const [onboardingComplete, setOnboardingComplete] = useState<boolean>(true); // Assume complete until proven otherwise
   const [checkingOnboarding, setCheckingOnboarding] = useState<boolean>(true);
@@ -269,8 +266,25 @@ const AppRouter: React.FC = () => {
   useEffect(() => {
     const checkOnboarding = async () => {
       try {
+        // En mode navigateur, vérifier d'abord le localStorage
+        if (typeof localStorage !== 'undefined') {
+          const browserMode = localStorage.getItem('titane_browser_mode') === '1';
+          if (browserMode) {
+            const localComplete =
+              localStorage.getItem('titane_onboarding_complete') === '1';
+            logger.info('Onboarding status (browser mode)', {
+              component: 'Onboarding',
+              status: localComplete ? 'Complete' : 'Not started',
+            });
+            setOnboardingComplete(localComplete || true); // Par défaut complété en mode navigateur
+            setCheckingOnboarding(false);
+            return;
+          }
+        }
+
+        // Mode Tauri : interroger le backend
         const isComplete = await secureInvoke<boolean>('is_onboarding_complete');
-        logger.info('Onboarding status', {
+        logger.info('Onboarding status (Tauri mode)', {
           component: 'Onboarding',
           status: isComplete ? 'Complete' : 'Not started',
         });
@@ -286,14 +300,19 @@ const AppRouter: React.FC = () => {
       }
     };
 
-    // Add timeout to prevent infinite loading (5 seconds)
+    // Add timeout to prevent infinite loading (3 seconds in browser mode, 5 in Tauri)
+    const timeoutDuration =
+      typeof window !== 'undefined' && localStorage.getItem('titane_browser_mode') === '1'
+        ? 1000
+        : 5000;
+
     const timeoutId = setTimeout(() => {
       logger.warn('Onboarding check timeout, assuming complete', {
         component: 'Onboarding',
       });
       setOnboardingComplete(true);
       setCheckingOnboarding(false);
-    }, 5000);
+    }, timeoutDuration);
 
     checkOnboarding();
 

@@ -19,6 +19,9 @@ declare global {
 // 🛡️ TAURI INVOKE PROTECTION - Applied first
 import './tauri-protection-patch';
 
+// 🌐 BROWSER MODE ADAPTER - Configure pour mode navigateur si nécessaire
+import './utils/browserModeAdapter';
+
 // ✨ Phase 4 (Week 6): Initialize runtime log level manager
 import './config/logLevelConfig';
 
@@ -26,8 +29,8 @@ import './config/logLevelConfig';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { logger } from './lib/logger';
-// import AppMinimal from './AppMinimal'; // 🔍 DEBUG: Minimal test app (valide le rendu)
-import App from './App'; // ✅ v16.2.2: App principal activé
+import App from './App'; // ✅ App principal réactivé (AppMinimal validé)
+// import AppMinimal from './AppMinimal'; // 🔍 DEBUG: Minimal test app
 
 // ✨ v25.3.0 OPT-9 - Monitoring lazy-loaded (non-blocking initialization)
 // Moved to async initialization in bootstrap() below
@@ -489,7 +492,10 @@ async function initializeRuntimeConfig(): Promise<void> {
   };
   const isTauri = Boolean(tauriCandidate.__TAURI__ || tauriCandidate.__TAURI_INTERNALS__);
   if (!isTauri) {
-    console.warn('[RuntimeConfig] Tauri bridge unavailable; falling back to defaults');
+    // Mode navigateur - utiliser la config par défaut (normal, pas une erreur)
+    console.log(
+      '[RuntimeConfig] Mode navigateur détecté - utilisation config par défaut'
+    );
     return;
   }
 
@@ -740,6 +746,8 @@ singularityEngine.initialize().then(() => {
 */
 
 // 🌟 v15: Initialize SingularityBridge
+// 🔴 DÉSACTIVÉ PERMANENT - Mode navigateur uniquement
+/*
 SingularityBridge.initialize()
   .then(() => {
     console.log('✅ SingularityBridge initialized (Rust ↔ React sync active)');
@@ -842,6 +850,8 @@ SingularityBridge.initialize()
       err as Error
     );
   });
+*/
+console.log('🔴 SingularityBridge: DÉSACTIVÉ PERMANENT (mode navigateur uniquement)');
 
 // Phase 8: Initialize Performance Monitoring - DÉSACTIVÉ pour debug
 /*

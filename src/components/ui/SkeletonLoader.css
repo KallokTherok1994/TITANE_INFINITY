@@ -1,0 +1,144 @@
+/**
+ * ═══════════════════════════════════════════════════════════════════
+ *   TITANE∞ v26.2.3 — Skeleton Loader Styles
+ *   Amélioration de la performance perçue avec placeholders animés
+ * ═══════════════════════════════════════════════════════════════════
+ */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(42, 42, 42, 0.6) 0%,
+    rgba(58, 58, 58, 0.6) 50%,
+    rgba(42, 42, 42, 0.6) 100%
+  );
+  background-size: 200% 100%;
+  border-radius: 4px;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Screen reader only text */
+.skeleton__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Variants */
+.skeleton--text {
+  height: 1em;
+  margin-bottom: 0.5em;
+  border-radius: 4px;
+}
+
+.skeleton--circular {
+  border-radius: 50%;
+}
+
+.skeleton--rectangular {
+  border-radius: 8px;
+}
+
+.skeleton--message {
+  height: 80px;
+  border-radius: 12px;
+}
+
+/* Animations */
+.skeleton--pulse {
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton--wave {
+  animation: skeleton-wave 1.5s ease-in-out infinite;
+}
+
+.skeleton--none {
+  animation: none;
+}
+
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes skeleton-wave {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Message Skeleton Layout */
+.message-skeleton {
+  display: flex;
+  gap: var(--space-3, 12px);
+  padding: var(--space-4, 16px);
+  margin-bottom: var(--space-3, 12px);
+  background: rgba(26, 26, 26, 0.3);
+  border-radius: 12px;
+  border: 1px solid rgba(196, 196, 196, 0.1);
+}
+
+.message-skeleton__avatar {
+  flex-shrink: 0;
+}
+
+.message-skeleton__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 8px);
+  justify-content: center;
+}
+
+/* Conversation List Skeleton */
+.conversation-list-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 8px);
+}
+
+.conversation-item-skeleton {
+  padding: var(--space-2, 8px);
+}
+
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton--pulse,
+  .skeleton--wave {
+    animation: none;
+  }
+  
+  .skeleton {
+    background: rgba(42, 42, 42, 0.6);
+  }
+}
+
+/* Dark theme optimization */
+@media (prefers-color-scheme: dark) {
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      rgba(30, 30, 30, 0.8) 0%,
+      rgba(50, 50, 50, 0.8) 50%,
+      rgba(30, 30, 30, 0.8) 100%
+    );
+    background-size: 200% 100%;
+  }
+}
