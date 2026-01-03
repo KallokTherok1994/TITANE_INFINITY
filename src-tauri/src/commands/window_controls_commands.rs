@@ -21,7 +21,7 @@ pub async fn window_get_zoom(window: Window) -> Result<f64, String> {
 /// Set zoom level (emits event to frontend for CSS application)
 #[command]
 pub async fn window_set_zoom(window: Window, level: f64) -> Result<(), String> {
-    let clamped_level = level.max(0.5).min(5.0); // Clamp between 50% and 500%
+    let clamped_level = level.clamp(0.5, 5.0); // Clamp between 50% and 500%
     
     // Store zoom level
     let label = window.label().to_string();

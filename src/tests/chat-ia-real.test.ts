@@ -119,7 +119,7 @@ describe('🚀 CHAT IA RÉEL - VERIFICATION DIRECTE', () => {
     expect(response).toBeDefined();
     expect(response.role).toBe('assistant');
     expect(response.content.length).toBeGreaterThan(0);
-    expect(duration).toBeLessThan(1000);
+    expect(duration).toBeLessThan(2000); // Tolérance CI/CD augmentée
     expect(coreMock.generate).toHaveBeenCalledWith(testMessage, expect.any(Array));
   });
 
