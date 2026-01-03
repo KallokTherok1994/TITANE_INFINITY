@@ -41,7 +41,7 @@ import { AutoHealErrorBoundary } from './components/AutoHealErrorBoundary';
 import { ErrorBoundary } from './components/ErrorBoundary'; // ✨ v19 - Security Hardening
 import {
   detectEnvironment,
-  shouldBlockLoading,
+  shouldBlockLoading as _shouldBlockLoading,
   logEnvironmentWarnings,
 } from './core/tauri/environment';
 // ✨ OPT-10: autoAuditEngine lazy-loaded below (removed static import)

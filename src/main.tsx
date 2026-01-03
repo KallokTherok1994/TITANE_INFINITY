@@ -436,8 +436,8 @@ import { logInfo } from './lib/UILogger';
 // import { singularityEngine } from './core/engines/SINGULARITY_ENGINE'; // DÉSACTIVÉ pour debug
 
 // 🌟 v15: Initialize SingularityBridge (Backend Rust ↔ Frontend React)
-import { SingularityBridge } from './services/singularityBridge';
-import { SingularityConnections } from './services/singularityConnections';
+import { SingularityBridge as _SingularityBridge } from './services/singularityBridge';
+import { SingularityConnections as _SingularityConnections } from './services/singularityConnections';
 
 // ✨ v∞.D: Initialize XP Engine
 import { XP } from './core/experience/XP_ENGINE';
