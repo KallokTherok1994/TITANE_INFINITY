@@ -226,7 +226,7 @@ impl VaultBridge {
         let mut providers: Vec<Provider> = state.entries.keys().copied().collect();
 
         // Ajouter ceux de l'environnement
-        for provider in [Provider::OpenAI, Provider::Gemini, Provider::Anthropic] {
+        for provider in [Provider::OpenAI, Provider::Gemini, Provider::Anthropic, Provider::Copilot] { // ✅ P0 FIX
             if !providers.contains(&provider) && self.get_env_key(provider).is_some() {
                 providers.push(provider);
             }
@@ -253,6 +253,7 @@ impl VaultBridge {
             Provider::OpenAI => "OPENAI_API_KEY",
             Provider::Gemini => "GOOGLE_API_KEY",
             Provider::Anthropic => "ANTHROPIC_API_KEY",
+            Provider::Copilot => "GITHUB_TOKEN", // ✅ P0 FIX
             Provider::Local => return None,
         };
 

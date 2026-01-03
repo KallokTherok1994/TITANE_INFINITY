@@ -143,6 +143,9 @@ impl ResponseHarmonizer {
             Provider::Gemini => {
                 // Gemini est généralement direct
             }
+            Provider::Copilot => {
+                // GitHub Copilot est direct et technique
+            }
             Provider::Local => {}
         }
 

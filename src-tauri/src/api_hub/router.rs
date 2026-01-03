@@ -377,6 +377,7 @@ impl APIRouter {
                     Provider::OpenAI => Some("gpt-4o-mini".to_string()),
                     Provider::Gemini => Some("gemini-2.0-flash".to_string()),
                     Provider::Anthropic => Some("claude-3-5-haiku-20241022".to_string()),
+                    Provider::Copilot => Some("gpt-3.5-turbo".to_string()), // ✅ P0 FIX
                     Provider::Local => None,
                 }
             }
@@ -386,6 +387,7 @@ impl APIRouter {
                     Provider::OpenAI => Some("o1".to_string()),
                     Provider::Gemini => Some("gemini-1.5-pro".to_string()),
                     Provider::Anthropic => Some("claude-opus-4-20250514".to_string()),
+                    Provider::Copilot => Some("gpt-4o".to_string()), // ✅ P0 FIX
                     Provider::Local => None,
                 }
             }
@@ -393,6 +395,7 @@ impl APIRouter {
                 Provider::OpenAI => Some("gpt-4o-mini".to_string()),
                 Provider::Gemini => Some("gemini-2.0-flash".to_string()),
                 Provider::Anthropic => Some("claude-3-5-haiku-20241022".to_string()),
+                Provider::Copilot => Some("gpt-3.5-turbo".to_string()), // ✅ P0 FIX
                 Provider::Local => None,
             },
             ModelChoiceStrategy::LongContext => {
@@ -400,6 +403,7 @@ impl APIRouter {
                     Provider::OpenAI => Some("gpt-4o".to_string()),
                     Provider::Gemini => Some("gemini-1.5-pro".to_string()), // 2M tokens
                     Provider::Anthropic => Some("claude-sonnet-4-20250514".to_string()),
+                    Provider::Copilot => Some("gpt-4o".to_string()), // ✅ P0 FIX
                     Provider::Local => None,
                 }
             }
