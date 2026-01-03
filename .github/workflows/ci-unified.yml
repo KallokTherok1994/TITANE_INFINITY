@@ -102,9 +102,39 @@ jobs:
       - name: 📊 Test coverage
         if: github.event_name == 'push' && github.ref == 'refs/heads/MAIN'
         run: pnpm run test:coverage
-        continue-on-error: true
         env:
           NODE_OPTIONS: '--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs'
+
+      - name: 🎯 Check coverage threshold
+        if: github.event_name == 'push' && github.ref == 'refs/heads/MAIN'
+        run: |
+          # Extract coverage percentage from Vitest output
+          if [ -f coverage/coverage-summary.json ]; then
+            LINES_PCT=$(cat coverage/coverage-summary.json | grep -o '"lines":{"total":[0-9]*,"covered":[0-9]*,"skipped":[0-9]*,"pct":[0-9.]*' | grep -o 'pct":[0-9.]*' | cut -d':' -f2)
+            BRANCHES_PCT=$(cat coverage/coverage-summary.json | grep -o '"branches":{"total":[0-9]*,"covered":[0-9]*,"skipped":[0-9]*,"pct":[0-9.]*' | grep -o 'pct":[0-9.]*' | cut -d':' -f2)
+            
+            echo "📊 Coverage Results:"
+            echo "  Lines: ${LINES_PCT}%"
+            echo "  Branches: ${BRANCHES_PCT}%"
+            
+            # Check thresholds (70% lines, 60% branches)
+            if (( $(echo "$LINES_PCT < 70" | bc -l) )); then
+              echo "❌ Line coverage ${LINES_PCT}% is below threshold 70%"
+              echo "::warning::Line coverage is below 70% threshold"
+            else
+              echo "✅ Line coverage ${LINES_PCT}% meets threshold 70%"
+            fi
+            
+            if (( $(echo "$BRANCHES_PCT < 60" | bc -l) )); then
+              echo "⚠️ Branch coverage ${BRANCHES_PCT}% is below threshold 60%"
+              echo "::warning::Branch coverage is below 60% threshold"
+            else
+              echo "✅ Branch coverage ${BRANCHES_PCT}% meets threshold 60%"
+            fi
+          else
+            echo "⚠️ No coverage summary found, skipping threshold check"
+          fi
+        continue-on-error: true
 
       - name: 📤 Upload coverage
         if: github.event_name == 'push' && github.ref == 'refs/heads/MAIN'
