@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TITANE∞ Cline MCP - Deployment Safeguards",
+  "description": "Configuration de sécurité pour empêcher les déploiements non autorisés",
+  "version": "1.0.0",
+  "created": "2026-01-03",
+  "author": "Kevin Thibault (TITANE∞)",
+  
+  "critical_rules": {
+    "deployment_lock": {
+      "enabled": true,
+      "description": "INTERDICTION ABSOLUE de déployer sans autorisation explicite",
+      "blocked_commands": [
+        "npm run build",
+        "npm run build:production",
+        "tauri build",
+        "./runtime/stable/build.sh",
+        "cargo build --release",
+        "dpkg -i",
+        "sudo dpkg -i",
+        "appimage",
+        "deb package"
+      ],
+      "blocked_tasks": [
+        "🔵 Build Titan-Stable",
+        "📦 Merge Dev to Stable",
+        "📦 Reinstall Titan-Stable"
+      ],
+      "allowed_commands": [
+        "npm run dev",
+        "npm test",
+        "npm run lint",
+        "npm run format",
+        "cargo test",
+        "./runtime/dev/run-dev.sh"
+      ],
+      "allowed_tasks": [
+        "🟢 Launch Titan-Dev",
+        "🧪 Run All Tests",
+        "🧩 COPILOT-XS: Validate",
+        "🧩 COPILOT-XS: Test Gate"
+      ]
+    },
+    
+    "approval_required": {
+      "enabled": true,
+      "description": "Validation humaine obligatoire pour actions critiques",
+      "actions_requiring_approval": [
+        "edit-files-externally",
+        "execute-all-commands",
+        "deploy-production",
+        "merge-branches",
+        "install-system-packages"
+      ],
+      "approval_keywords": [
+        "GO FOR PRODUCTION DEPLOY",
+        "AUTHORIZED BY KEVIN THIBAULT",
+        "EXPLICIT APPROVAL"
+      ]
+    },
+    
+    "development_mode": {
+      "enabled": true,
+      "description": "Mode développement OBLIGATOIRE jusqu'à validation 100% des tests",
+      "enforced_settings": {
+        "mode": "plan",
+        "strict-plan-mode-enabled": true,
+        "yolo-mode-toggled": false,
+        "auto-approval-settings.enabled": false,
+        "auto-approval-settings.actions.execute-all-commands": false
+      }
+    }
+  },
+  
+  "recommended_settings": {
+    "security": {
+      "auto-approval-max-requests": 5,
+      "enable-notifications": true,
+      "telemetry": "disabled"
+    },
+    
+    "performance": {
+      "thinking-budget-tokens": 2048,
+      "terminal-output-line-limit": 1000,
+      "auto-condense-threshold": 0.65,
+      "shell-integration-timeout": 6000
+    },
+    
+    "development": {
+      "enable-checkpoints": true,
+      "use-auto-condense": true,
+      "mcp-marketplace-enabled": true,
+      "focus-chain-enabled": true,
+      "focus-chain-remind-interval": 8
+    },
+    
+    "localization": {
+      "preferred-language": "French",
+      "dictation-language": "fr"
+    },
+    
+    "reasoning": {
+      "openai-reasoning-effort": "high",
+      "plan-act-separate-models": false
+    }
+  },
+  
+  "validation_gates": {
+    "pre_deploy": {
+      "required_checks": [
+        "tests_passing_100_percent",
+        "explicit_approval_present",
+        "no_critical_bugs",
+        "security_audit_passed"
+      ],
+      "check_commands": [
+        "npm run copilot-xs:test",
+        "npm run audit:security",
+        "npm run verify"
+      ]
+    }
+  },
+  
+  "monitoring": {
+    "log_critical_actions": true,
+    "alert_on_blocked_commands": true,
+    "track_approval_requests": true
+  }
+}

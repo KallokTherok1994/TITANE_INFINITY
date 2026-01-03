@@ -336,6 +336,7 @@ impl SafetyBridge {
             Provider::OpenAI => 0.01,     // GPT-4o average
             Provider::Gemini => 0.0002,   // Gemini Flash
             Provider::Anthropic => 0.009, // Claude Sonnet average
+            Provider::Copilot => 0.01,    // ✅ P0 FIX - GitHub Copilot pricing similar to OpenAI
             Provider::Local => 0.0,
         };
 
