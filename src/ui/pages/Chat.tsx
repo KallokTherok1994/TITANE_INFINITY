@@ -621,11 +621,28 @@ export const Chat: React.FC = () => {
 
   // ✨ v26.2: OMEGA Reflection Panel v2 - Thinking steps management
   const thinking = useThinkingSteps();
+  const [thinkingStartTime, setThinkingStartTime] = useState<number>(0);
+  const [elapsedTime, setElapsedTime] = useState<number>(0);
+
+  // Timer for elapsed time (v2.1)
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (thinking.isThinking && thinkingStartTime > 0) {
+      interval = setInterval(() => {
+        setElapsedTime((Date.now() - thinkingStartTime) / 1000);
+      }, 100);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [thinking.isThinking, thinkingStartTime]);
 
   // Sync thinking state with isLoading state from chat
   useEffect(() => {
     if (isLoading && !thinking.isThinking) {
       thinking.startThinking();
+      setThinkingStartTime(Date.now());
+      setElapsedTime(0);
       // Simulate OMEGA pipeline steps (can be replaced with real steps from backend)
       setTimeout(() => {
         if (thinking.isThinking) {
@@ -645,6 +662,7 @@ export const Chat: React.FC = () => {
       }, 100);
       setTimeout(() => {
         thinking.stopThinking();
+        setThinkingStartTime(0);
       }, 500);
     }
   }, [isLoading, thinking]);
@@ -1161,6 +1179,8 @@ export const Chat: React.FC = () => {
                     steps={thinking.steps}
                     compact={thinking.compact}
                     inline={false}
+                    provider={lastProvider || undefined}
+                    elapsedTime={thinking.isThinking ? elapsedTime : undefined}
                   />
                 )}
               </>

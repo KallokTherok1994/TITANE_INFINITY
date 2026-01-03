@@ -28,6 +28,8 @@ interface ThinkingPanelProps {
   onClose?: () => void;
   compact?: boolean; // Mode compact par défaut (v2)
   inline?: boolean; // Mode inline dans le message (v2)
+  provider?: string; // Provider utilisé (ex: "GPT-4o", "Claude", "Gemini", "Local") (v2.1)
+  elapsedTime?: number; // Temps écoulé en secondes (v2.1)
 }
 
 export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
@@ -36,6 +38,8 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
   onClose,
   compact = true, // Mode compact par défaut (v2)
   inline = false,
+  provider,
+  elapsedTime,
 }) => {
   const [expandedSteps, setExpandedSteps] = useState<Set<string>>(new Set());
   const [isExpanded, setIsExpanded] = useState(false); // Toggle pour afficher/masquer les détails (v2)
@@ -47,6 +51,17 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
       setExpandedSteps(prev => new Set([...prev, activeStep.id]));
     }
   }, [steps]);
+
+  // Helper: Get provider icon (v2.1)
+  const getProviderIcon = (providerName: string): string => {
+    const name = providerName.toLowerCase();
+    if (name.includes('gpt') || name.includes('openai')) return '✨';
+    if (name.includes('claude') || name.includes('anthropic')) return '🧠';
+    if (name.includes('gemini') || name.includes('google')) return '🤖';
+    if (name.includes('ollama')) return '🦉';
+    if (name.includes('local')) return '🏠';
+    return '⚡';
+  };
 
   const toggleStep = (id: string) => {
     setExpandedSteps(prev => {
@@ -121,7 +136,10 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
             {isThinking ? (
               <>
                 <Loader2 className="thinking-compact-icon spin" size={14} />
-                <span className="thinking-compact-text">Thinking<span className="thinking-dots"></span></span>
+                <span className="thinking-compact-text">
+                  Thinking<span className="thinking-dots"></span>
+                  {elapsedTime !== undefined && ` (${elapsedTime.toFixed(1)}s)`}
+                </span>
               </>
             ) : (
               <>
@@ -130,6 +148,11 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                   {steps.filter(s => s.status === 'complete').length} étapes
                 </span>
               </>
+            )}
+            {provider && (
+              <span className="thinking-provider-badge" title={`Provider: ${provider}`}>
+                {getProviderIcon(provider)} {provider}
+              </span>
             )}
             <ChevronDown className="thinking-compact-chevron" size={14} />
           </div>
