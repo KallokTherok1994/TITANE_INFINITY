@@ -14,16 +14,16 @@
 /* ═══════════════════════════════════════════════════════════════ */
 /* DESIGN TOKENS (Primary Source of Truth)                          */
 /* ═══════════════════════════════════════════════════════════════ */
-@import './titanium-dark-tokens.css';
+@import './styles/titanium-dark-tokens.css';
 
 /* ═══════════════════════════════════════════════════════════════ */
 /* LEGACY CSS IMPORTS (Compatibility Layer - Will be deprecated)    */
 /* ═══════════════════════════════════════════════════════════════ */
-@import './css-vars.css';
-@import './unified-tokens.css';
-@import './tech-effects.css';
-@import './animations.css';
-@import './a11y.css';
+@import './styles/css-vars.css';
+@import './styles/unified-tokens.css';
+@import './styles/tech-effects.css';
+@import './styles/animations.css';
+@import './styles/a11y.css';
 
 /* ═══════════════════════════════════════════════════════════════ */
 /* UI/UX POLISH v26.2.3 — Smooth Scroll & Better Rendering          */
