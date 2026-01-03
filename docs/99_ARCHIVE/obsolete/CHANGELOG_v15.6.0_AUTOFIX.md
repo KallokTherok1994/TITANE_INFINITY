@@ -196,9 +196,9 @@ export const TitaneRouter: React.FC = () => (
 
 ### Tests Automatiques
 ```bash
-✅ npm run type-check      → OK (0 erreurs)
-✅ npm run build           → OK (1.34s, 256KB)
-✅ npm run lint            → OK (0 warnings)
+✅ pnpm run type-check      → OK (0 erreurs)
+✅ pnpm run build           → OK (1.34s, 256KB)
+✅ pnpm run lint            → OK (0 warnings)
 ✅ Script auto-fix         → OK (14/14 composants)
 ```
 
@@ -218,17 +218,17 @@ export const TitaneRouter: React.FC = () => (
 ### Étapes
 1. **Build production**
    ```bash
-   npm run build
+   pnpm run build
    ```
 
 2. **Test local**
    ```bash
-   npm run preview
+   pnpm run preview
    ```
 
 3. **Build Tauri**
    ```bash
-   npm run tauri:build
+   pnpm run tauri:build
    ```
 
 4. **Validation**

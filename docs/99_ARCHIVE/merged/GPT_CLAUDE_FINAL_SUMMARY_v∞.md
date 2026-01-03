@@ -384,7 +384,7 @@ pub struct IAContext {
 ### 1. Lancer l'application
 ```bash
 cd /home/titane/Documents/TITANE_INFINITY
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### 2. Tester commandes Tauri (DevTools Console)

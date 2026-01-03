@@ -84,11 +84,11 @@ Ouvrir `/home/titane/Documents/TITANE_INFINITY/src/pages/ChatPage.tsx` et :
 
 ```bash
 # 1. Nettoyer et rebuild
-npm run clean
-npm install
+pnpm run clean
+pnpm install
 
 # 2. Lancer en mode dev
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 **Si erreurs TypeScript au build :**
@@ -206,7 +206,7 @@ async sendMessage(
 
 Une fois les corrections mineures effectuées, tester :
 
-1. **Build réussit** : `npm run tauri:dev` lance sans erreur
+1. **Build réussit** : `pnpm run tauri:dev` lance sans erreur
 2. **Endpoint OMEGA** : Bannière affiche "🔌 OMEGA"
 3. **Conversation ID stable** : Rechargement conserve l'ID
 4. **Mode transmission** : Backend logs montrent le mode transmis

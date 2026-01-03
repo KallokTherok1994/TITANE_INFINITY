@@ -11,7 +11,7 @@
 ### ✅ Build Status
 
 ```
-✓ npm run build    : 1.98s, 570 modules, 568KB dist/
+✓ pnpm run build    : 1.98s, 570 modules, 568KB dist/
 ✓ Type errors      : 15 warnings (non-bloquantes, variables non utilisées)
 ✓ Production ready : OUI
 ✓ Bundle size      : 345KB JS + 137KB vendor + 67KB CSS = 549KB total
@@ -200,7 +200,7 @@ LAYER 1 : VISUAL ENGINE
 ### Build Production
 
 ```bash
-$ npm run build
+$ pnpm run build
 ✓ 570 modules transformed
 ✓ built in 1.98s
 ✓ No blocking errors
@@ -209,7 +209,7 @@ $ npm run build
 ### Type Check
 
 ```bash
-$ npm run type-check
+$ pnpm run type-check
 ✓ 15 warnings (non-bloquantes)
 ✓ 0 errors bloquantes
 ```
@@ -263,12 +263,12 @@ $ git status
 
 ### Recommandations Immédiates
 
-1. **Tester en dev mode** : `npm run tauri dev`
+1. **Tester en dev mode** : `pnpm run tauri dev`
    - Vérifier DevTools fonctionnel
    - Valider consciousness/coherence affichés
    - Tester navigation entre pages
 
-2. **Build natif** : `npm run tauri build`
+2. **Build natif** : `pnpm run tauri build`
    - Générer binaire production Linux/Windows/macOS
    - Tester performance native
 

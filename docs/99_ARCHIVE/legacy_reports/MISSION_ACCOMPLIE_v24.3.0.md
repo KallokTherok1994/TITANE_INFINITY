@@ -198,14 +198,14 @@ Improvement:     +20 points in 50 hours 🚀
 2. **Validate Production Build:**
 
    ```bash
-   npm run build
+   pnpm run build
    cargo tauri build --release
    ```
 
 3. **Test Deployment:**
    ```bash
    ./scripts/launch/run-titane.sh
-   npm run test:e2e
+   pnpm run test:e2e
    ```
 
 ### Future (Phase 4 — Optional)

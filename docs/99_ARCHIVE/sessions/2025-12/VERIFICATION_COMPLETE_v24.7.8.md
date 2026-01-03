@@ -27,7 +27,7 @@ $ cargo check
 
 ### 2. Build Performance ✅
 
-**Command:** `npm run build`
+**Command:** `pnpm run build`
 **Result:** **11.01s** Vite build time
 **Real Time:** 24.68s (includes npm/cargo overhead)
 **Status:** ✅ OPTIMAL (-25% vs baseline 14.64s)
@@ -243,7 +243,7 @@ Security vulns:        0  ✅
 
 1. ✅ **COMPLETE** - Verification finished
 2. ⏳ Commit optimizations to git
-3. ⏳ Run full test suite (`npm test`)
+3. ⏳ Run full test suite (`pnpm test`)
 4. ⏳ Test runtime performance (Chrome DevTools)
 
 ### Short-term (Priority 2)

@@ -75,7 +75,7 @@ const clearChat = useCallback(() => {
 
 ### Validation
 ```bash
-✅ npm run type-check: 82 erreurs préexistantes (0 nouvelle)
+✅ pnpm run type-check: 82 erreurs préexistantes (0 nouvelle)
 ✅ cargo check: 2.67s (vs 3.69s Phase 3 = -28% !)
 ✅ Tests manuels: Cache HIT <50ms, debounce works
 ```

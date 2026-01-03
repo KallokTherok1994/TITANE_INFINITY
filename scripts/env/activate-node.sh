@@ -44,7 +44,7 @@ echo "📦 npm: $(npm --version)"
 if command -v pnpm &>/dev/null; then
     echo "📦 pnpm: $(pnpm --version)"
 else
-    echo -e "${YELLOW}⚠️  pnpm non installé. Exécutez: npm install -g pnpm@9.0.0${NC}"
+    echo -e "${YELLOW}⚠️  pnpm non installé. Exécutez: pnpm install -g pnpm@9.0.0${NC}"
 fi
 echo ""
 echo "💡 Pour rendre permanent, ajoutez à votre ~/.bashrc:"

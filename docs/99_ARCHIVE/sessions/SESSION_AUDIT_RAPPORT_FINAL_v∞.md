@@ -174,7 +174,7 @@ const aiStatus: AIStatus = {
 
 **Phase 5: Test Build** (5 min)
 ```bash
-npm run build
+pnpm run build
 # Objectif: 0 erreurs critiques (sauf DS legacy)
 ```
 

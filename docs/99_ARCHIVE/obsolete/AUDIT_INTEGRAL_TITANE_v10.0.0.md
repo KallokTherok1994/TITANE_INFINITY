@@ -220,9 +220,9 @@ pub fn smooth(old: f32, new: f32) -> f32 { old * 0.85 + new * 0.15 }
   "version": "9.0.0",
   "identifier": "com.titane.infinity",
   "build": {
-    "beforeDevCommand": "npm run dev",
+    "beforeDevCommand": "pnpm run dev",
     "devUrl": "http://localhost:5173",
-    "beforeBuildCommand": "npm run build",
+    "beforeBuildCommand": "pnpm run build",
     "frontendDist": "../dist"
   }
 }

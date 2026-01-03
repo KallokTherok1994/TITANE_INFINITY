@@ -74,7 +74,7 @@ archived_builds/
 
 ### 1. Build Frontend
 ```bash
-npm run build
+pnpm run build
 ```
 **Résultat**:
 - ✅ Build réussi en **1,93s**
@@ -87,7 +87,7 @@ npm run build
 
 ### 2. Validation TypeScript
 ```bash
-npm run type-check
+pnpm run type-check
 ```
 **Résultat**:
 - ✅ **0 erreurs** de compilation
@@ -98,8 +98,8 @@ npm run type-check
 ./enforce-tauri-only.sh
 ```
 **Résultat**:
-- ✅ `npm run dev` → `tauri dev` (correct)
-- ✅ `npm run preview` → **bloqué** (correct)
+- ✅ `pnpm run dev` → `tauri dev` (correct)
+- ✅ `pnpm run preview` → **bloqué** (correct)
 - ✅ `vite:dev` → **bloqué** (correct)
 - ✅ Pas de `devUrl` HTTP
 - ✅ `frontendDist` → `../dist` (correct)
@@ -168,7 +168,7 @@ TITANE_INFINITY/ (3,8 G)
 2. Naviguer: `cd ~/Documents/TITANE_NEWGEN/TITANE_INFINITY`
 3. Exécuter: `bash install-webkit-host-v17.sh`
 4. Retour VS Code: `cd src-tauri && cargo build --release`
-5. Lancer: `cd .. && npm run dev`
+5. Lancer: `cd .. && pnpm run dev`
 
 **Après installation**:
 - Backend: 95% → **100%** ✅
@@ -244,7 +244,7 @@ TITANE_INFINITY/ (3,8 G)
 ### Immédiat
 1. **User action**: Installer WebKit via `install-webkit-host-v17.sh`
 2. Compiler backend: `cd src-tauri && cargo build --release`
-3. Lancer TITANE∞: `npm run dev`
+3. Lancer TITANE∞: `pnpm run dev`
 
 ### Court terme
 - Tester toutes fonctionnalités post-WebKit
@@ -279,8 +279,8 @@ mkdir -p archived_logs
 mv correction_automatique_logs deploy_logs reconciliation_logs archived_logs/
 
 # Validation
-npm run build
-npm run type-check
+pnpm run build
+pnpm run type-check
 ./enforce-tauri-only.sh
 ```
 

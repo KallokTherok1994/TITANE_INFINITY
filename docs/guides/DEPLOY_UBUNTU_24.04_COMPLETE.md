@@ -70,7 +70,7 @@ node --version   # Devrait afficher v20.x.x
 npm --version
 
 # Installer pnpm (recommandé)
-sudo npm install -g pnpm@9.0.0
+sudo pnpm install -g pnpm@9.0.0
 pnpm --version
 ```
 
@@ -118,7 +118,7 @@ cd ~/Projects/TITANE_INFINITY
 # - Valide la configuration
 ```
 
-**Résultat:** Système 100% opérationnel, prêt pour `npm run dev`
+**Résultat:** Système 100% opérationnel, prêt pour `pnpm run dev`
 
 ### Option B: Déploiement Complet (AppImage Production)
 
@@ -185,7 +185,7 @@ cd ~/Projects/TITANE_INFINITY
 - ✓ Tests Rust (cargo test)
 
 #### 6. Security Audit (2 min)
-- ✓ npm audit (niveau high)
+- ✓ pnpm audit (niveau high)
 - ✓ cargo audit
 
 #### 7. Build Frontend (3 min)
@@ -333,7 +333,7 @@ update-desktop-database ~/.local/share/applications/
 
 ```bash
 cd ~/Projects/TITANE_INFINITY
-npm run dev
+pnpm run dev
 
 # L'application démarre en ~10 secondes
 # Hot-reload activé pour le développement
@@ -438,7 +438,7 @@ node --version  # Devrait afficher v20.x.x
 
 ```bash
 # Option 1: Via npm
-sudo npm install -g pnpm@9.0.0
+sudo pnpm install -g pnpm@9.0.0
 
 # Option 2: Via corepack
 corepack enable
@@ -537,7 +537,7 @@ rustup update stable
 - [ ] AppImage exécutable (chmod +x)
 
 ### Vérification
-- [ ] `npm run dev` démarre l'app en < 10s
+- [ ] `pnpm run dev` démarre l'app en < 10s
 - [ ] AppImage se lance sans erreur
 - [ ] Intégration bureau fonctionnelle
 - [ ] Aucun warning critique dans les logs
@@ -565,7 +565,7 @@ rustup update stable
 ### Développement
 - Utiliser un IDE avec support Rust/TypeScript (VS Code recommandé)
 - Installer extensions: Rust Analyzer, ESLint, Prettier
-- Configurer hot-reload: `npm run dev` pour itérations rapides
+- Configurer hot-reload: `pnpm run dev` pour itérations rapides
 
 ### Production
 - Tester l'AppImage sur machine propre avant distribution
@@ -586,7 +586,7 @@ sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget libssl-dev libg
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt-get install -y nodejs
-sudo npm install -g pnpm@9.0.0
+sudo pnpm install -g pnpm@9.0.0
 
 # 3. Cloner + Déployer
 git clone https://github.com/KallokTherok1994/TITANE_INFINITY.git

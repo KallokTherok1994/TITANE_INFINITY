@@ -89,7 +89,7 @@ cargo clean && cargo build --release
 
 **Puis tester** :
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ---
@@ -99,7 +99,7 @@ npm run tauri:dev
 ### IMMÉDIAT (Critique)
 1. **Installer WebKitGTK** via `install_system_deps.sh`
 2. **Compiler backend** avec `cargo build --release`
-3. **Tester lancement** avec `npm run tauri:dev`
+3. **Tester lancement** avec `pnpm run tauri:dev`
 
 ### COURT TERME (Optimisation)
 4. Appliquer lazy loading routes (1h)
@@ -153,7 +153,7 @@ Le frontend TITANE∞ v15.5 est :
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
 bash install_system_deps.sh
 cargo build --release
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ---

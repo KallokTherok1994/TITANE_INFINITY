@@ -333,7 +333,7 @@ Memory updated 🔄
 
 ```bash
 # Démarrer app
-npm run dev
+pnpm run dev
 
 # Console attendue:
 🤖 [OLLAMA] Initializing local AI provider...
@@ -505,7 +505,7 @@ User: "Écris un long texte sur TITANE∞"
 2. **Lancer App Dev**:
 
    ```bash
-   npm run dev
+   pnpm run dev
    # ou
    ./runtime/dev/run-dev.sh
    ```

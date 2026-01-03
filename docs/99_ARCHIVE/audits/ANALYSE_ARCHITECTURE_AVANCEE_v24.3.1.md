@@ -161,7 +161,7 @@ $ find src -name "*.test.ts*" -o -name "*.spec.ts*"
 **Actions recommandées:**
 ```bash
 # Mesurer coverage actuelle
-npm run test -- --coverage
+pnpm run test -- --coverage
 
 # Identifier gaps
 # Cibles: kernels, engines, hooks critiques

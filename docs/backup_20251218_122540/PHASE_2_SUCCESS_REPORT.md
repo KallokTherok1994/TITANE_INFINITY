@@ -278,7 +278,7 @@ git log --oneline --graph HEAD~3..HEAD
 
    ```bash
    # Add to .github/workflows/test.yml
-   npm test -- --run
+   pnpm test -- --run
    cargo test --all
    ```
 
@@ -290,7 +290,7 @@ git log --oneline --graph HEAD~3..HEAD
    ```json
    "husky": {
      "hooks": {
-       "pre-commit": "npm test -- --run --changed"
+       "pre-commit": "pnpm test -- --run --changed"
      }
    }
    ```

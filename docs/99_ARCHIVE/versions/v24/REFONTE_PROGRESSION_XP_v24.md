@@ -378,7 +378,7 @@ box-shadow: 0 0 8px rgba(147, 179, 153, 0.5);
 
 1. **Tester le système XP** :
    ```bash
-   npm run dev
+   pnpm run dev
    ```
    - Vérifier barre XP sous logo TITANE∞
    - Importer un fichier via Chat

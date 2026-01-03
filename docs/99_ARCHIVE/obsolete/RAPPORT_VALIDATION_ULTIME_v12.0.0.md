@@ -236,13 +236,13 @@ Autorité: TOTALE (correction, réécriture, restructuration, optimisation)
 🔵  PHASE 2 — FRONTEND REACT/VITE/TS – CORRECTION INTÉGRALE
 ══════════════════════════════════════════════════════════════════════════════
 
-✅ **npm install (simulé)**
+✅ **pnpm install (simulé)**
    - package.json valide
    - Dependencies: React, @tauri-apps/api, react-router-dom
    - DevDependencies: Vite, TypeScript, ESLint
    - Pas de vulnérabilités critiques
 
-✅ **npm run type-check (simulé via lecture)**
+✅ **pnpm run type-check (simulé via lecture)**
    - tsconfig.json configuré correctement
    - Paths aliases: @/, @core/, @hooks/, @devtools/
    - Strict mode activé
@@ -321,7 +321,7 @@ Autorité: TOTALE (correction, réécriture, restructuration, optimisation)
    - Identifier: com.titane.infinity
    - DevUrl: http://localhost:5173
    - FrontendDist: ../dist
-   - BeforeBuildCommand: npm run build
+   - BeforeBuildCommand: pnpm run build
 
 ✅ **Registration commandes**
    ```rust
@@ -541,7 +541,7 @@ Autorité: TOTALE (correction, réécriture, restructuration, optimisation)
 🔵  PHASE 7 — BUILD FINAL SIMULÉ + CERTIFICATION
 ══════════════════════════════════════════════════════════════════════════════
 
-✅ **1. npm run build (simulé)**
+✅ **1. pnpm run build (simulé)**
    - vite.config.ts: OK
    - Build outDir: ./dist
    - ManualChunks: vendor, tauri
@@ -675,7 +675,7 @@ Autorité: TOTALE (correction, réécriture, restructuration, optimisation)
 
 ### Pipeline Build
    ```
-   npm install → tsc → vite build → cargo build → tauri build → bundle
+   pnpm install → tsc → vite build → cargo build → tauri build → bundle
    ```
    ✅ Toutes les étapes validées (simulé)
 
@@ -730,7 +730,7 @@ Autorité: TOTALE (correction, réécriture, restructuration, optimisation)
 
 ## 10. BUILD OFFICIEL : ✅ READY
 
-- ✅ npm run build → SUCCESS (simulé)
+- ✅ pnpm run build → SUCCESS (simulé)
 - ✅ cargo build --release → SUCCESS (simulé)
 - ✅ cargo tauri build → SUCCESS (simulé)
 - ✅ Bundle création → SUCCESS (simulé)
@@ -777,8 +777,8 @@ source $HOME/.cargo/env
 ### Étape 2 : Build Frontend
 ```sh
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm install
-npm run build
+pnpm install
+pnpm run build
 ```
 
 ### Étape 3 : Build Backend
@@ -790,13 +790,13 @@ cargo build --release
 ### Étape 4 : Build Tauri
 ```sh
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ### Étape 5 : Exécution
 ```sh
 # Mode développement
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Mode production (après build)
 ./src-tauri/target/release/titane-infinity

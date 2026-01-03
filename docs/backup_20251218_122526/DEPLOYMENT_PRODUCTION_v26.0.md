@@ -136,8 +136,8 @@ git pull origin MAIN
 git checkout b5927db3  # commit exact v26.1 (deployment infrastructure)
 
 # 2. Install + Build
-npm install --production
-npm run build
+pnpm install --production
+pnpm run build
 
 # 3. Déplacer fichiers buildés
 sudo cp -r dist/* /var/www/html/titane-infinity/
@@ -373,13 +373,13 @@ sudo systemctl reload apache2
 1. https://app.netlify.com/start
 2. "Import from Git" → Sélectionner repo GitHub
 3. Build settings:
-   - Build command: npm run build
+   - Build command: pnpm run build
    - Publish directory: dist
    - Branch: MAIN
 4. Deploy site
 
 # Méthode 2: Netlify CLI
-npm install -g netlify-cli
+pnpm install -g netlify-cli
 netlify login
 netlify init
 netlify deploy --prod
@@ -391,7 +391,7 @@ Créer dans le repo root:
 
 ```toml
 [build]
-  command = "npm run build"
+  command = "pnpm run build"
   publish = "dist"
 
 [build.environment]
@@ -456,13 +456,13 @@ Créer dans le repo root:
 3. Sélectionner repo GitHub KallokTherok1994/TITANE_INFINITY
 4. Build settings:
    - Framework preset: Vite
-   - Build command: npm run build
+   - Build command: pnpm run build
    - Build output directory: dist
    - Root directory: /
 5. Save and Deploy
 
 # CLI (Alternative)
-npm install -g wrangler
+pnpm install -g wrangler
 wrangler login
 wrangler pages project create titane-infinity
 wrangler pages deploy dist
@@ -563,7 +563,7 @@ curl https://votre-domaine.com/manifest.json | jq .
 
 ```bash
 # CLI (recommandé pour CI/CD)
-npm install -g lighthouse
+pnpm install -g lighthouse
 lighthouse https://votre-domaine.com \
   --view \
   --output json \
@@ -797,7 +797,7 @@ Cocher avant mise en production:
 
 ### Build & Code
 
-- [x] Build production exécuté: `npm run build`
+- [x] Build production exécuté: `pnpm run build`
 - [x] 0 erreurs build, 0 warnings TypeScript
 - [x] Commit final: fcd1be14
 - [x] Branch: MAIN synchronized with origin

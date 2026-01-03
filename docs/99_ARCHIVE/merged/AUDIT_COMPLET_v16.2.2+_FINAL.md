@@ -269,11 +269,11 @@ cargo clippy --manifest-path src-tauri/Cargo.toml
 ✅ Finished: 0 warnings
 
 # 3. TypeScript E2E Tests
-npm run type-check (e2e tests uniquement)
+pnpm run type-check (e2e tests uniquement)
 ✅ 0 errors in e2e-automated-validation.test.ts
 
 # 4. Runtime Validation
-npm run tauri:dev
+pnpm run tauri:dev
 ✅ Application started successfully
 ✅ experience_get_state executed successfully
 ✅ 0 security whitelist errors
@@ -339,7 +339,7 @@ Score: 95/100 (98/100 si vars nettoyées)
    - Corriger tous les warnings restants
 
 4. **Tests automatisés**
-   - Exécuter `npm run test` (vitest)
+   - Exécuter `pnpm run test` (vitest)
    - Valider tous les e2e tests passent
    - Coverage > 80%
 

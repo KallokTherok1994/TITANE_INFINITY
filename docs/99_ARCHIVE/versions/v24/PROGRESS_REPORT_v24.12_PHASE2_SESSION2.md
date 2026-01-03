@@ -214,7 +214,7 @@
 ### ✅ TypeScript Compilation
 
 ```bash
-npm run type-check 2>&1 | grep -A2 "AvatarFloating\|SingularityState"
+pnpm run type-check 2>&1 | grep -A2 "AvatarFloating\|SingularityState"
 ```
 
 **Résultat:** ✅ 0 erreurs (validé)

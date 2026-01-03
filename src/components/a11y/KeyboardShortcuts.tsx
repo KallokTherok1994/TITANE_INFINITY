@@ -180,7 +180,7 @@ export function ShortcutsHelp({
                   <Card key={idx}>
                     <CardContent className="p-3 flex items-center justify-between">
                       <span className="text-sm">{shortcut.description}</span>
-                      <Badge variant="outline" className="font-mono">
+                      <Badge variant="default" className="font-mono">
                         {formatShortcut(shortcut)}
                       </Badge>
                     </CardContent>

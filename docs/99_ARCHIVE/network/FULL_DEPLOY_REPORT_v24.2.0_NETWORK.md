@@ -227,7 +227,7 @@ logs/network/
 
 ```bash
 # Terminal 1: Lancer Titan-Dev
-npm run dev:tauri
+pnpm run dev:tauri
 
 # Terminal 2: Démarrer tunnel réseau
 ./scripts/network/start-tunnel.sh

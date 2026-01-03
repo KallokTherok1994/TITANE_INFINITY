@@ -32,9 +32,9 @@ tests/e2e/voice-feedback-loop.test.ts
 
 **Commandes**:
 ```bash
-npm run test -- useVoiceInput.test.ts
-npm run test -- useTTSWithMicControl.test.ts
-npm run test:coverage
+pnpm run test -- useVoiceInput.test.ts
+pnpm run test -- useTTSWithMicControl.test.ts
+pnpm run test:coverage
 cargo test voice_fingerprint --all-features
 ```
 
@@ -310,11 +310,11 @@ pub fn is_titane_speaking(&self, language: &str, samples: &[f32]) -> (bool, f32)
 
 ### Development
 ```bash
-npm run dev                    # Dev mode
-npm run build                  # Production build
-npm run test                   # Run tests
-npm run test:coverage          # Coverage report
-npm run lint                   # ESLint check
+pnpm run dev                    # Dev mode
+pnpm run build                  # Production build
+pnpm run test                   # Run tests
+pnpm run test:coverage          # Coverage report
+pnpm run lint                   # ESLint check
 ```
 
 ### Backend

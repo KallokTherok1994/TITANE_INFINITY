@@ -64,7 +64,7 @@ ls -lh src-tauri/target/release/titane-infinity
 ### AppImage/DEB/RPM
 ```bash
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-flatpak-spawn --host bash -c "cd '$PWD' && npm run tauri build"
+flatpak-spawn --host bash -c "cd '$PWD' && pnpm run tauri build"
 ```
 
 ### Bundles Générés
@@ -93,7 +93,7 @@ ls -lh src-tauri/target/release/titane-infinity
 
 ### 2. Lancer Build Tauri Complet
 ```bash
-npm run tauri build
+pnpm run tauri build
 ```
 
 ### 3. Vérifier Bundles

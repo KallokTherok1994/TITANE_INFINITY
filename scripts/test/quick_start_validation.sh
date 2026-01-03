@@ -83,7 +83,7 @@ fi
 echo ""
 echo -e "${YELLOW}[3/5]${NC} TypeScript Compilation..."
 
-if npm run type-check 2>&1 | grep -q "error"; then
+if pnpm run type-check 2>&1 | grep -q "error"; then
   echo -e "  ${RED}✗${NC} TypeScript errors found"
   exit 1
 else
@@ -132,7 +132,7 @@ echo "  1. Manual Testing (see VOICE_PIPELINE_MANUAL_TEST_GUIDE_v∞.7.md)"
 echo "  2. Production Deployment"
 echo ""
 echo "Quick start:"
-echo "  npm run tauri:dev    # Start development server"
-echo "  npm run tauri:build  # Build for production"
+echo "  pnpm run tauri:dev    # Start development server"
+echo "  pnpm run tauri:build  # Build for production"
 echo ""
 echo -e "${BLUE}════════════════════════════════════════════════════════${NC}"

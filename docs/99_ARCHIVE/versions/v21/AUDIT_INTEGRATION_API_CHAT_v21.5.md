@@ -1270,7 +1270,7 @@ private calculateProviderScore(stats?: ProviderStats): number {
 **Action recommandée**:
 ```bash
 cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
-npm run test -- src/services/ai/providers/__tests__/
+pnpm run test -- src/services/ai/providers/__tests__/
 ```
 
 ---
@@ -1304,7 +1304,7 @@ async generate(): Promise<AIResponse> {
 
 2. **Exécuter tests providers**
    - Vérifier config Jest
-   - Run `npm test` et analyser résultats
+   - Run `pnpm test` et analyser résultats
 
 3. **Clarifier statut Gemini**
    - Documenter si actif ou désactivé

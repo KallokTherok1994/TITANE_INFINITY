@@ -21,6 +21,6 @@ echo ""
 
 cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
 
-echo "🚀 Lancement de npm run tauri dev..."
+echo "🚀 Lancement de pnpm run tauri dev..."
 echo ""
-exec npm run tauri dev
+exec pnpm run tauri dev

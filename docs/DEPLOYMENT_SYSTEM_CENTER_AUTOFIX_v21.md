@@ -9,13 +9,13 @@ ls -la src/hooks/
 ls -la src/features/system-center/
 
 # 2. Compiler
-npm run build
+pnpm run build
 
 # 3. Tester
-npm run test
+pnpm run test
 
 # 4. Lancer dev
-npm run dev
+pnpm run dev
 ```
 
 ---
@@ -335,13 +335,13 @@ describe('SystemAPI', () => {
 
 ```bash
 # Tests unitaires uniquement
-npm run test -- SystemCenterAutoFix
+pnpm run test -- SystemCenterAutoFix
 
 # Tests avec coverage
-npm run test:coverage
+pnpm run test:coverage
 
 # Watch mode
-npm run test:watch
+pnpm run test:watch
 ```
 
 ---
@@ -352,7 +352,7 @@ npm run test:watch
 
 #### ✅ Compilation
 
-- [ ] `npm run build` réussit sans erreur
+- [ ] `pnpm run build` réussit sans erreur
 - [ ] Aucun warning TypeScript
 - [ ] Aucun import manquant
 
@@ -434,7 +434,7 @@ done
 # 2. Compilation TypeScript
 echo ""
 echo "2️⃣ Compilation TypeScript..."
-npm run type-check
+pnpm run type-check
 if [ $? -eq 0 ]; then
   echo "  ✅ Compilation OK"
 else
@@ -445,7 +445,7 @@ fi
 # 3. Tests
 echo ""
 echo "3️⃣ Tests unitaires..."
-npm run test -- SystemCenterAutoFix --run
+pnpm run test -- SystemCenterAutoFix --run
 if [ $? -eq 0 ]; then
   echo "  ✅ Tests OK"
 else
@@ -473,7 +473,7 @@ done
 # 5. Build test
 echo ""
 echo "5️⃣ Build production..."
-npm run build
+pnpm run build
 if [ $? -eq 0 ]; then
   echo "  ✅ Build OK"
 else
@@ -486,7 +486,7 @@ echo "=============================================="
 echo "✅ Validation complète réussie!"
 echo ""
 echo "Prochaines étapes:"
-echo "  1. npm run dev"
+echo "  1. pnpm run dev"
 echo "  2. Naviguer vers /system-center"
 echo "  3. Tester diagnostic"
 echo "  4. Simuler erreur (commande invalide)"

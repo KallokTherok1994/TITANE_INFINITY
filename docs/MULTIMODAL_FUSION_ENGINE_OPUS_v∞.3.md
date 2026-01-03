@@ -322,10 +322,10 @@ Ce n'est qu'une estimation. Est-ce que ça te paraît juste ?"
 
 ```bash
 # Lancer les tests multimodaux
-npm run test -- src/__tests__/multimodal-fusion.test.ts
+pnpm run test -- src/__tests__/multimodal-fusion.test.ts
 
 # Avec couverture
-npm run test:coverage -- src/__tests__/multimodal-fusion.test.ts
+pnpm run test:coverage -- src/__tests__/multimodal-fusion.test.ts
 ```
 
 ### Scénarios Couverts

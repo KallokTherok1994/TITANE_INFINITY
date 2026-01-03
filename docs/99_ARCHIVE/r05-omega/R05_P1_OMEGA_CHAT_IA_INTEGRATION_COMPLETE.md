@@ -282,7 +282,7 @@ cargo test conversation_engine::omega_integration
 
 ```bash
 # À exécuter en runtime
-npm run dev
+pnpm run dev
 ```
 
 **Scénarios**:

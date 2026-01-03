@@ -421,19 +421,19 @@ export class VisualConductor extends EventEmitter {
 
         case 'orbital_shift':
           this.visualEngine.emit('orbital_shift', {
-            phaseMode: (effect.parameters?.pattern as string) || 'fibonacci',
+            phaseMode: (effect.parameters?.['pattern'] as string) || 'fibonacci',
             duration,
           });
           break;
 
         case 'color_shift':
           if (
-            effect.parameters?.colors &&
-            Array.isArray(effect.parameters.colors) &&
-            effect.parameters.colors.length > 0
+            effect.parameters?.['colors'] &&
+            Array.isArray(effect.parameters['colors']) &&
+            effect.parameters['colors'].length > 0
           ) {
             this.visualEngine.emit('color_shift', {
-              colors: effect.parameters.colors as string[],
+              colors: effect.parameters['colors'] as string[],
               duration,
             });
           }

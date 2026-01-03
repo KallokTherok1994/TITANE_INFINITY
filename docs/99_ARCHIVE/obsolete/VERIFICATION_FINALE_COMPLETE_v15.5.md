@@ -49,7 +49,7 @@
 
 #### Frontend (React + Vite)
 ```bash
-npm run build
+pnpm run build
 ✓ 77 modules transformed
 ✓ built in 996ms
 
@@ -207,7 +207,7 @@ tsc --noEmit
 
 #### ESLint
 ```bash
-npm run lint
+pnpm run lint
 ✅ Pas d'erreur critique
 ⚠️ Markdown linting (2051 warnings non-bloquants)
 ```
@@ -432,7 +432,7 @@ warning: associated items are never used
 ### Commande de Lancement
 ```bash
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### Vérification Post-Lancement
@@ -476,7 +476,7 @@ await window.__TAURI__.invoke('exp_get_state');
 - 🏆 **100/100** validation complète
 
 ### Prochaine Étape
-🚀 **LANCER L'APPLICATION** → `npm run tauri:dev`
+🚀 **LANCER L'APPLICATION** → `pnpm run tauri:dev`
 
 ---
 

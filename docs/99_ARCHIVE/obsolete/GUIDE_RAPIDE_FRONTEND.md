@@ -39,7 +39,7 @@ bash install_system_deps.sh
 cargo clean && cargo build --release
 
 # 5. Tester application
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 **Si ça marche** : 🎉 Application fonctionnelle !  
@@ -109,7 +109,7 @@ Voir `PLAN_OPTIMISATION_FRONTEND_v15.5.md` pour :
 ### ❌ À FAIRE (par vous)
 - [ ] **Installer WebKitGTK** (CRITIQUE — bloque tout)
 - [ ] **Compiler Rust backend** (cargo build)
-- [ ] **Tester lancement** (npm run tauri:dev)
+- [ ] **Tester lancement** (pnpm run tauri:dev)
 - [ ] Appliquer optimisations (optionnel)
 - [ ] Ajouter tests unitaires (futur)
 
@@ -243,7 +243,7 @@ TITANE_INFINITY/
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
 bash install_system_deps.sh
 cargo build --release
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### Après Déblocage

@@ -592,22 +592,22 @@ Les commandes suivantes doivent être exécutées **après installation de Node.
 
 ```bash
 # 1. Installer les dépendances
-npm install
+pnpm install
 
 # 2. Vérifier la syntaxe TypeScript
-npm run type-check
+pnpm run type-check
 # Attendu: 0 erreurs
 
 # 3. Linter le code
-npm run lint
+pnpm run lint
 # Attendu: 0 erreurs
 
 # 4. Build le frontend
-npm run build
+pnpm run build
 # Attendu: dist/ généré avec succès
 
 # 5. Lancer Tauri en dev
-npm run tauri:dev
+pnpm run tauri:dev
 # Attendu: Application Tauri démarre avec 10 handlers
 ```
 
@@ -657,22 +657,22 @@ npm run tauri:dev
 ### 🚀 **Phase 7 : Build et Déploiement**
 
 1. **Installer Node.js 20+** dans l'environnement
-2. **Exécuter `npm install`** pour récupérer les dépendances
-3. **Valider avec `npm run type-check`** (attendu: 0 erreurs)
-4. **Build avec `npm run build`** (génération `dist/`)
-5. **Tester avec `npm run tauri:dev`** (lancer l'application)
-6. **Build production avec `npm run tauri:build`** (générer binaire)
+2. **Exécuter `pnpm install`** pour récupérer les dépendances
+3. **Valider avec `pnpm run type-check`** (attendu: 0 erreurs)
+4. **Build avec `pnpm run build`** (génération `dist/`)
+5. **Tester avec `pnpm run tauri:dev`** (lancer l'application)
+6. **Build production avec `pnpm run tauri:build`** (générer binaire)
 
 ### 🔮 **Améliorations Futures**
 
 1. **Tests Unitaires** : Ajouter Jest + React Testing Library
    ```bash
-   npm install -D jest @testing-library/react @testing-library/jest-dom
+   pnpm install -D jest @testing-library/react @testing-library/jest-dom
    ```
 
 2. **E2E Tests** : Ajouter Playwright pour tests Tauri
    ```bash
-   npm install -D @playwright/test
+   pnpm install -D @playwright/test
    ```
 
 3. **Performance Monitoring** : Ajouter React DevTools Profiler
@@ -682,12 +682,12 @@ npm run tauri:dev
 
 4. **i18n** : Internationalisation (français, anglais)
    ```bash
-   npm install i18next react-i18next
+   pnpm install i18next react-i18next
    ```
 
 5. **State Management** : Migrer vers Zustand (si nécessaire)
    ```bash
-   npm install zustand
+   pnpm install zustand
    ```
 
 ---
@@ -765,9 +765,9 @@ Le frontend TITANE∞ v12.0.0 est maintenant :
 
 Le frontend est **100% validé** et attend uniquement :
 1. Installation Node.js 20+
-2. `npm install`
-3. `npm run build`
-4. `npm run tauri:build`
+2. `pnpm install`
+3. `pnpm run build`
+4. `pnpm run tauri:build`
 
 **État** : ✅ **PRODUCTION READY**
 

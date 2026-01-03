@@ -178,7 +178,7 @@ const data = await tauri<SystemStatus>('get_system_status'); // ✅ typed
 | **Linting** | `cargo clippy --all` | ✅ 0 warnings |
 | **Strict** | `cargo clippy -D warnings` | ✅ PASS |
 | **Format** | `cargo fmt --check` | ✅ Formatted |
-| **Frontend** | `npm run build` | ✅ 1.03s, 212KB |
+| **Frontend** | `pnpm run build` | ✅ 1.03s, 212KB |
 
 ### PASS 2 - Double Vérification ✅
 
@@ -192,7 +192,7 @@ cargo fmt --check        # ✅ All formatted
 
 # Frontend TypeScript  
 cd ..
-npm run build            # ✅ 1.03s, 212KB dist/
+pnpm run build            # ✅ 1.03s, 212KB dist/
 # - 74 modules transformed
 # - index.html: 1.06 KB
 # - index.css: 21.27 KB
@@ -386,7 +386,7 @@ npm run build            # ✅ 1.03s, 212KB dist/
 
 ### Frontend TypeScript ✅
 
-- [x] npm run build SUCCESS (1.03s, 212KB)
+- [x] pnpm run build SUCCESS (1.03s, 212KB)
 - [x] tauriClient.ts créé
 - [x] system.d.ts créé (15 interfaces)
 - [x] useTitaneCore réécrit
@@ -435,7 +435,7 @@ npm run build            # ✅ 1.03s, 212KB dist/
 
 ✅ Développement v13 features  
 ✅ Déploiement production (après WebKit install)  
-✅ Tests end-to-end (npm run tauri dev)  
+✅ Tests end-to-end (pnpm run tauri dev)  
 ✅ CI/CD pipeline integration  
 ✅ Documentation utilisateur  
 

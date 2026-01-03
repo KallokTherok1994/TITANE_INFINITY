@@ -554,7 +554,7 @@ cargo test vad_integration
 ### **Test 4 : Full-Duplex**
 
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 # Tester interruption AI pendant parole
 ```
 

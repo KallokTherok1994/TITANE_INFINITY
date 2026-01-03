@@ -180,9 +180,9 @@ tauri = { version = "2.0", features = ["tray-icon", "protocol-asset"] }
   "$schema": "https://schema.tauri.app/config/2.0",
   "version": "10.4.0",
   "build": {
-    "beforeDevCommand": "npm run dev",
+    "beforeDevCommand": "pnpm run dev",
     "devUrl": "http://localhost:5173",
-    "beforeBuildCommand": "npm run build",
+    "beforeBuildCommand": "pnpm run build",
     "frontendDist": "../dist"
   }
 }
@@ -557,7 +557,7 @@ cargo build --release
 
 # Phase 5: Build Tauri
 cd ..
-npm install
+pnpm install
 cargo tauri build --verbose
 ```
 

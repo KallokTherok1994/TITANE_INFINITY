@@ -19,7 +19,7 @@ echo "🏗️ [1/8] Measuring build time..."
 echo "   └─ Running production build..."
 
 BUILD_START=$(date +%s)
-npm run build > "$REPORT_DIR/build-output.txt" 2>&1 || {
+pnpm run build > "$REPORT_DIR/build-output.txt" 2>&1 || {
     echo "   ⚠️ Build failed - check build-output.txt"
 }
 BUILD_END=$(date +%s)
@@ -252,7 +252,7 @@ $([ "$DEEP_IMPORTS" -gt 10 ] && echo "- ⚠️ **Fix deep imports** - $DEEP_IMPO
 
 ## 🚀 Next Steps
 
-1. Run \`npm run build -- --analyze\` for visual bundle analysis
+1. Run \`pnpm run build -- --analyze\` for visual bundle analysis
 2. Implement code splitting for routes
 3. Replace wildcard imports
 4. Add performance tests

@@ -310,9 +310,9 @@ Précision:        f64 pour stratégique
 
 ### NPM
 ```bash
-npm run verify                         # Vérification globale
-npm run verify:cognitive               # Couches cognitives
-npm run verify:stacks                  # Stacks principaux
+pnpm run verify                         # Vérification globale
+pnpm run verify:cognitive               # Couches cognitives
+pnpm run verify:stacks                  # Stacks principaux
 ```
 
 ---

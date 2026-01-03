@@ -193,14 +193,14 @@ Aucun (migration sans nouvelles dépendances)
 
 ### Validation Build ✅
 ```bash
-npm run type-check  # 0 errors
-npm run build       # 1.04s → 208K
+pnpm run type-check  # 0 errors
+pnpm run build       # 1.04s → 208K
 ```
 
 ### Validation Dev ✅
 ```bash
-npm run dev         # :5173 OK
-npm run preview     # :4173 OK
+pnpm run dev         # :5173 OK
+pnpm run preview     # :4173 OK
 ```
 
 ### Validation Navigation ✅
@@ -267,9 +267,9 @@ Aucun pour les pages existantes (props children inchangé)
 
 ### Mode Frontend-Only (ACTUEL) ✅
 ```bash
-npm run dev      # Dev :5173
-npm run build    # Production
-npm run preview  # Preview :4173
+pnpm run dev      # Dev :5173
+pnpm run build    # Production
+pnpm run preview  # Preview :4173
 ```
 
 **Status** : ✅ Production-Ready
@@ -278,8 +278,8 @@ npm run preview  # Preview :4173
 ```bash
 # Requis : WebKitGTK installé
 bash install-webkit-popos.sh  # Terminal natif
-npm run tauri dev              # App desktop
-npm run tauri build            # Build natif
+pnpm run tauri dev              # App desktop
+pnpm run tauri build            # Build natif
 ```
 
 **Status** : ⏳ WebKitGTK requis (script fourni)

@@ -644,11 +644,11 @@ const Modal = ({ isOpen, onClose, title, children }) => {
 ### Tests automatiques (axe-core)
 ```bash
 # Lancer A11yChecker en dev
-npm run dev
+pnpm run dev
 # Ouvrir console → vérifier violations = 0
 
 # Tests unitaires
-npm test -- --grep "accessibility"
+pnpm test -- --grep "accessibility"
 ```
 
 ### Tests manuels (clavier)

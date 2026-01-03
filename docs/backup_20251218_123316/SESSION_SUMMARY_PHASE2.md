@@ -157,7 +157,7 @@ $ npx tsc --noEmit --skipLibCheck
 ✅ SUCCESS - 0 erreurs
 
 # Build
-$ npm run build
+$ pnpm run build
 ✅ built in 20.04s
 ✅ 3326 modules transformed
 ```

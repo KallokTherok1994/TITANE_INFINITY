@@ -114,7 +114,7 @@ bash scripts/docs/migrate-v26.2.sh
 ### Phase 2: Validation (3 min)
 ```bash
 bash scripts/docs/validate-structure.sh
-npm run build
+pnpm run build
 ```
 ✅ Vérification intégrité
 

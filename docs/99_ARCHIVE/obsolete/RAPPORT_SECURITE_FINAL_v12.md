@@ -109,7 +109,7 @@ Documentation:             90/100 ✅
 ### B. Frontend TypeScript Sécurité
 
 **✅ VALIDATIONS PASSED:**
-- npm audit: 0 vulnérabilités HIGH/CRITICAL
+- pnpm audit: 0 vulnérabilités HIGH/CRITICAL
 - eval()/Function(): 0 code dangereux
 - Type safety: Minimal any types (<10 usage)
 - TypeScript strict mode: 0 erreurs
@@ -133,9 +133,9 @@ Documentation:             90/100 ✅
 - ✅ Checks prérequis système
 - ✅ Clean global automatisé
 - ✅ Audit sécurité backend (unwrap/expect/panic scan)
-- ✅ Audit sécurité frontend (npm audit + eval scan)
+- ✅ Audit sécurité frontend (pnpm audit + eval scan)
 - ✅ Build & test backend (cargo fmt/fix/clippy/check/test)
-- ✅ Build & test frontend (npm ci/type-check/build)
+- ✅ Build & test frontend (pnpm install --frozen-lockfile/type-check/build)
 - ✅ Vérification fichiers critiques (9 files)
 - ✅ Génération SHA256 integrity checksums
 - ✅ Rapport automatique (markdown)
@@ -163,16 +163,16 @@ sudo apt-get install libwebkit2gtk-4.1-dev libjavascriptcoregtk-4.1-dev
 ### Frontend TypeScript
 
 ```bash
-✅ npm ci --prefer-offline    # Dependencies installed
-✅ npm run type-check         # 0 TypeScript errors
-✅ npm run build              # 1.02s, 190KB bundle
-✅ npm audit                  # 0 HIGH vulnerabilities
+✅ pnpm install --frozen-lockfile --prefer-offline    # Dependencies installed
+✅ pnpm run type-check         # 0 TypeScript errors
+✅ pnpm run build              # 1.02s, 190KB bundle
+✅ pnpm audit                  # 0 HIGH vulnerabilities
 ```
 
 ### Dev Mode
 
 ```bash
-✅ npm run tauri dev          # Vite 108ms startup (validé précédemment)
+✅ pnpm run tauri dev          # Vite 108ms startup (validé précédemment)
 ```
 
 ---
@@ -321,9 +321,9 @@ export const HEALTH_STATUS_COLORS: Record<HealthStatus, string> = {
 1. ✅ Vérification prérequis (cargo, node, npm, git, jq, sha256sum, WebKit)
 2. ✅ Clean global (cargo clean, dist/, tmp files)
 3. ✅ Audit sécurité backend (unwrap/expect/panic scan, cargo-audit)
-4. ✅ Audit sécurité frontend (npm audit, eval() scan, any types)
+4. ✅ Audit sécurité frontend (pnpm audit, eval() scan, any types)
 5. ✅ Build backend (fmt/fix/clippy/check/test)
-6. ✅ Build frontend (npm ci/type-check/build)
+6. ✅ Build frontend (pnpm install --frozen-lockfile/type-check/build)
 7. ✅ Vérification fichiers critiques (9 files)
 8. ✅ Génération SHA256 checksums
 9. ✅ Rapport final automatique
@@ -448,7 +448,7 @@ let result = compute().map_err(|e| format!("Compute error: {}", e))?;
 2. **CI/CD GitHub Actions:**
    - Pipeline automatique sur push
    - Cargo check/clippy/test
-   - npm audit/build
+   - pnpm audit/build
    - Artifacts AppImage/DEB/RPM
 
 3. **Cargo Audit Integration:**
@@ -499,7 +499,7 @@ let result = compute().map_err(|e| format!("Compute error: {}", e))?;
 ### Capacités Opérationnelles
 
 ✅ **Développement:**
-- Dev mode fonctionnel (npm run tauri dev)
+- Dev mode fonctionnel (pnpm run tauri dev)
 - Hot reload Vite 108ms
 - DevTools opérationnels
 - Debugging Rust + TypeScript
@@ -512,7 +512,7 @@ let result = compute().map_err(|e| format!("Compute error: {}", e))?;
 ✅ **Tests:**
 - Cargo test (post-WebKit)
 - npm type-check (0 erreurs)
-- npm audit (0 HIGH vulns)
+- pnpm audit (0 HIGH vulns)
 
 ✅ **Sécurité:**
 - Audit automatisé (pipeline)

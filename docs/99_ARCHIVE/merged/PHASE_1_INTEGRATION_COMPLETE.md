@@ -131,7 +131,7 @@ return <AppShell ...>
 
 **Commande exécutée** :
 ```bash
-npm install @sentry/react web-vitals
+pnpm install @sentry/react web-vitals
 ```
 
 **Résultat** :
@@ -212,7 +212,7 @@ if (
 
 **Commande** :
 ```bash
-npm run build
+pnpm run build
 ```
 
 **Résultat** :
@@ -316,11 +316,11 @@ Some chunks are larger than 1000 kB after minification
    VITE_SENTRY_ENVIRONMENT=production
    VITE_APP_VERSION=19.5.2
    ```
-5. Relancer le build : `npm run build`
+5. Relancer le build : `pnpm run build`
 
 **Pour Tester Onboarding** :
 1. Supprimer le fichier `~/.config/TITANE/onboarding.json` (si existe)
-2. Lancer l'app : `npm run tauri dev`
+2. Lancer l'app : `pnpm run tauri dev`
 3. Le flow onboarding devrait s'afficher automatiquement
 4. Compléter les 5 étapes
 5. Vérifier que l'app principale charge après completion

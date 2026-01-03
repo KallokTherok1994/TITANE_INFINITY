@@ -64,7 +64,7 @@ cargo build --release
 ### Frontend
 Les dépendances TypeScript nécessaires :
 ```bash
-npm install @tauri-apps/api
+pnpm install @tauri-apps/api
 ```
 
 ---

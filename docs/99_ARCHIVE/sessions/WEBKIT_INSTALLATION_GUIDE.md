@@ -144,7 +144,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs
 
 # Installation pnpm
-RUN npm install -g pnpm
+RUN pnpm install -g pnpm
 
 # Installation Tauri CLI
 RUN cargo install tauri-cli --version "^2.0"
@@ -247,7 +247,7 @@ fi
 echo ""
 echo "🚀 Lancement de la compilation Tauri..."
 cd "$(dirname "$0")"
-npm run tauri build
+pnpm run tauri build
 ```
 
 Rendre exécutable :
@@ -292,7 +292,7 @@ rustc test_webkit.rs -L /usr/lib/x86_64-linux-gnu -l webkit2gtk-4.1
 
 ```bash
 cd /home/titane/Documents/TITANE_INFINITY
-npm run tauri build 2>&1 | tee build.log
+pnpm run tauri build 2>&1 | tee build.log
 grep -i "error" build.log || echo "✅ Build réussi"
 ```
 
@@ -344,7 +344,7 @@ sudo apt install -y \
     build-essential
 
 # Build
-npm run tauri build
+pnpm run tauri build
 ```
 
 ### GitHub Actions / CI
@@ -380,10 +380,10 @@ jobs:
           node-version: '20'
 
       - name: Install Dependencies
-        run: npm install
+        run: pnpm install
 
       - name: Build Tauri
-        run: npm run tauri build
+        run: pnpm run tauri build
 ```
 
 ---
@@ -394,7 +394,7 @@ jobs:
 - [ ] Exécuter commande d'installation appropriée
 - [ ] Vérifier avec `pkg-config --exists webkit2gtk-4.1`
 - [ ] Tester compilation : `cd src-tauri && cargo build`
-- [ ] Si succès, build complet : `npm run tauri build`
+- [ ] Si succès, build complet : `pnpm run tauri build`
 - [ ] Vérifier binaire : `./src-tauri/target/release/titane-infinity --version`
 
 ---
@@ -452,10 +452,10 @@ cd /home/titane/Documents/TITANE_INFINITY
 rm -rf src-tauri/target node_modules
 
 # Installation fresh
-npm install
+pnpm install
 
 # Build
-npm run tauri build
+pnpm run tauri build
 
 # Si succès :
 echo "🎉 TITANE∞ v19.1.0 build réussi !"

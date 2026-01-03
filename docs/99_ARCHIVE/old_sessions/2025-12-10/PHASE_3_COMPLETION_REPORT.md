@@ -416,7 +416,7 @@ Guide développeur complet (350+ lignes):
 
 ### Process Improvements 🔧
 
-1. Run `npm run lint` après chaque batch de fixes (catch regressions)
+1. Run `pnpm run lint` après chaque batch de fixes (catch regressions)
 2. Verify stub API existence avant écrire tests
 3. Use `toBeCloseTo()` pour float comparisons
 4. Document legitimate warnings (stubs, safe patterns)

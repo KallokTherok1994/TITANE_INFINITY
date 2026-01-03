@@ -291,6 +291,6 @@ cargo audit
 
 ---
 
-**Prochaine commande:** `cargo build --release && npm run build`  
+**Prochaine commande:** `cargo build --release && pnpm run build`  
 **ETA Production:** 6 semaines (was 8 weeks)  
 **Qualité code:** Production-ready avec TODO documentés

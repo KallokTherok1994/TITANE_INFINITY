@@ -235,8 +235,8 @@
 
    ```bash
    npm i --package-lock-only
-   npm audit
-   npm audit fix
+   pnpm audit
+   pnpm audit fix
    ```
 
 2. **ESLint Cleanup (optionnel):**

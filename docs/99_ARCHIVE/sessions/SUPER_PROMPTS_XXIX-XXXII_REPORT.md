@@ -169,7 +169,7 @@ neuralVoiceBlendingEngine.speakWithIdentity(text, context)
 ### ✅ **TypeScript Compilation**
 
 ```bash
-npm run type-check
+pnpm run type-check
 ```
 
 **Résultat** : **0 erreurs**
@@ -182,7 +182,7 @@ npm run type-check
 ### ✅ **Build Production**
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 **Résultat** : **Succès en 7.29s**
@@ -434,7 +434,7 @@ Archétypes s'ajustent selon besoin utilisateur.
 
 ### **IMMÉDIAT (Aujourd'hui)**
 
-1. ✅ Lancer `npm run tauri:dev`
+1. ✅ Lancer `pnpm run tauri:dev`
 2. ✅ Vérifier console logs (4 moteurs démarrés)
 3. ✅ Ouvrir panel "🧠 Deep Psyche"
 4. ✅ Tester 4 onglets

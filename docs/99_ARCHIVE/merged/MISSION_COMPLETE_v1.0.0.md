@@ -232,10 +232,10 @@ RELEASE_NOTES_v1.0.0.md
 ### Build & Run
 ```bash
 # Dev
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Production
-npm run tauri:build
+pnpm run tauri:build
 
 # Release binary
 ./src-tauri/target/release/titane-infinity

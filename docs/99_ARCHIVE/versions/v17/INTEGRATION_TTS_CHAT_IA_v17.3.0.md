@@ -301,7 +301,7 @@ const { messages, isLoading, error, sendMessage } = useChat({
 **Étapes :**
 ```bash
 cd /home/titane/Documents/TITANE_INFINITY
-npm run dev
+pnpm run dev
 ```
 
 1. Ouvrir http://localhost:5173
@@ -389,7 +389,7 @@ fn main() {
 ```
 
 **Test après modification :**
-1. Redémarrer app : `npm run dev`
+1. Redémarrer app : `pnpm run dev`
 2. Cliquer Toggle Voice Mode
 3. **Logs attendus :**
    ```
@@ -472,9 +472,9 @@ use overdrive::voice_engine::{
 
 **Étape 2 : Redémarrer backend**
 ```bash
-npm run tauri dev
+pnpm run tauri dev
 # ou
-npm run tauri build
+pnpm run tauri build
 ```
 
 **Étape 3 : Vérifier logs**
@@ -562,7 +562,7 @@ npm run tauri build
 
 ```bash
 # TESTER MAINTENANT
-npm run dev
+pnpm run dev
 
 # 1. Ouvrir http://localhost:5173
 # 2. Ouvrir DevTools Console (F12)

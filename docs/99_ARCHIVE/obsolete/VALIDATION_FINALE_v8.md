@@ -250,18 +250,18 @@ Identity (#51)     → Continuité fonctionnelle
 ./verify_advanced_cognitive.sh
 
 # Via npm
-npm run verify              # Global
-npm run verify:cognitive    # Cognitif
-npm run verify:stacks       # Stacks
+pnpm run verify              # Global
+pnpm run verify:cognitive    # Cognitif
+pnpm run verify:stacks       # Stacks
 ```
 
 ### Développement
 ```bash
-npm run dev              # Mode développement
-npm run tauri:dev        # Avec Tauri
-npm run build            # Build production
-npm run lint             # Linter
-npm run type-check       # TypeScript
+pnpm run dev              # Mode développement
+pnpm run tauri:dev        # Avec Tauri
+pnpm run build            # Build production
+pnpm run lint             # Linter
+pnpm run type-check       # TypeScript
 ```
 
 ---

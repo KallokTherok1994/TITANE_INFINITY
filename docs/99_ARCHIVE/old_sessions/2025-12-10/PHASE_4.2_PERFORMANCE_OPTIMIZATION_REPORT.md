@@ -250,8 +250,8 @@ const getAuraEngine = () => import('./engines/aura/auraEngine').then(m => m.aura
 Installer `rollup-plugin-visualizer` pour identifier exactement ce qui gonfle les bundles :
 
 ```bash
-npm install --save-dev rollup-plugin-visualizer
-npm run build
+pnpm install --save-dev rollup-plugin-visualizer
+pnpm run build
 # Ouvrir dist/stats.html
 ```
 

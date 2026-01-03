@@ -137,7 +137,7 @@ VITE_OLLAMA_MODEL=llama2
 **Commandes :**
 ```bash
 cd /home/titane/Documents/TITANE_INFINITY
-npm run dev
+pnpm run dev
 ```
 
 **Résultat attendu :**
@@ -234,8 +234,8 @@ npm run dev
 
 3. **Redémarrer app**
    ```bash
-   # Ctrl+C pour stopper npm run dev
-   npm run dev
+   # Ctrl+C pour stopper pnpm run dev
+   pnpm run dev
    ```
 
 4. **Tester Chat**
@@ -392,7 +392,7 @@ nano .env
 VITE_GEMINI_API_KEY=YOUR_GEMINI_API_KEY
 
 # 3. Redémarrer
-npm run dev
+pnpm run dev
 
 # 4. Tester Chat IA
 # → Logs montreront "gemini available: true"
@@ -619,7 +619,7 @@ if (response.content) {
 
 ### Reste à Faire (Par Utilisateur)
 
-1. ⏳ **Tester app avec logs** : `npm run dev` → Envoyer message → Observer console
+1. ⏳ **Tester app avec logs** : `pnpm run dev` → Envoyer message → Observer console
 2. ⏳ **Configurer provider** : Gemini (rapide) OU Ollama (local) OU rester Fallback
 3. ⏳ **Valider cascade** : Vérifier logs montrent correctement [1/3], [2/3], [3/3]
 4. ⏳ **Intégrer TTS** : Choisir Option A, B ou C pour synthèse vocale
@@ -659,7 +659,7 @@ if (response.content) {
 Status actuel : Mode Fallback (dégradé mais fonctionnel)
 
 Prochaine action :
-1. Tester l'app : npm run dev
+1. Tester l'app : pnpm run dev
 2. Ouvrir DevTools Console (F12)
 3. Envoyer message "test" dans Chat IA
 4. Observer logs cascade AI providers

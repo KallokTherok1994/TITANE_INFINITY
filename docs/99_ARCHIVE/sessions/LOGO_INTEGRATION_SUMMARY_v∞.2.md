@@ -131,7 +131,7 @@ This generates:
 ### Step 3: Test in Dev Mode
 
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 Verify:
@@ -143,7 +143,7 @@ Verify:
 ### Step 4: Production Build
 
 ```bash
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 Check icon on compiled app:
@@ -265,7 +265,7 @@ import { TitaneLogo } from '@components/branding/TitaneLogo';
 **Solution**: Restart dev server
 ```bash
 pkill -9 -f "vite|tauri"
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### Issue: TypeScript error "Cannot find module '*.svg'"
@@ -282,7 +282,7 @@ cd src-tauri
 cargo clean
 cd ..
 cargo tauri icon ./titane-app-icon.png
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ---

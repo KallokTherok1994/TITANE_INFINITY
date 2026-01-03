@@ -3,7 +3,7 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
 
 #[cfg(test)]
-mod tests {
+mod integration_tests {
     use crate::temporal_engine::integrations::agi_integration::AlignmentPriority;
     use crate::temporal_engine::integrations::memory_integration::ConsolidationPriority;
     use crate::temporal_engine::integrations::*;

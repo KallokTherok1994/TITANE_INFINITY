@@ -23,7 +23,7 @@
 
 ---
 
-## 🔍 1. TYPE-CHECK (npm run type-check)
+## 🔍 1. TYPE-CHECK (pnpm run type-check)
 
 ### 1.1 Nouveau Système Types (src/core/types/) ✅
 
@@ -361,8 +361,8 @@ Aucun issue P3 détecté en Phase A.
 ### 8.1 Actions Immédiates (Cette Session)
 
 1. ✅ **Type-check nouveau système**: Fait, 0 erreurs
-2. ⏳ **ESLint check**: `npm run lint` (10 min)
-3. ⏳ **Build test**: `npm run build` (5 min) - Peut échouer sur DS legacy, OK
+2. ⏳ **ESLint check**: `pnpm run lint` (10 min)
+3. ⏳ **Build test**: `pnpm run build` (5 min) - Peut échouer sur DS legacy, OK
 4. ⏳ **Continuer Audit Phase B**: Routing & Navigation (30 min)
 
 ### 8.2 Actions Court Terme (v25.0 - 2 semaines)
@@ -431,12 +431,12 @@ Aucun issue P3 détecté en Phase A.
 
 1. **ESLint Check** (10 min):
    ```bash
-   npm run lint
+   pnpm run lint
    ```
 
 2. **Build Test** (5 min):
    ```bash
-   npm run build
+   pnpm run build
    ```
    - Si échec sur Design System: OK, documenté P2-001
    - Si échec ailleurs: Investigate

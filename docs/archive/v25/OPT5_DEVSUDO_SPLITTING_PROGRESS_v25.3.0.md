@@ -314,7 +314,7 @@ console.log('[DEV-SUDO] Cache stats:', getLoaderStats());
    - Export unique, import partout
 
 3. **Valider build** (5 minutes)
-   - npm run build
+   - pnpm run build
    - Vérifier 0 erreurs
 
 4. **Mesurer impact réel** (15 minutes)

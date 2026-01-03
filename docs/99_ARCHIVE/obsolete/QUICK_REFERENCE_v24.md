@@ -104,7 +104,7 @@ source ~/.bashrc
 nvm install --lts
 
 # Install pnpm
-npm install -g pnpm
+pnpm install -g pnpm
 
 # Install project deps
 cd /home/titane/Documents/TITANE_INFINITY

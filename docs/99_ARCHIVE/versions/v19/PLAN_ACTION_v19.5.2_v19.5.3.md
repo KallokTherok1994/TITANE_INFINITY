@@ -66,12 +66,12 @@ Actions:
    ```
 4. Corrige la logique et assure que le test passe
 
-Ensuite, lance `npm run test:watch -- MCPStrategy.test.ts` pour valider.
+Ensuite, lance `pnpm run test:watch -- MCPStrategy.test.ts` pour valider.
 ```
 
 **Acceptance Criteria:**
 - ✅ `MCPStrategy.test.ts` passe tous les tests (2/2)
-- ✅ `npm run test:watch -- MCPStrategy` sans erreur
+- ✅ `pnpm run test:watch -- MCPStrategy` sans erreur
 
 ---
 
@@ -119,7 +119,7 @@ Actions:
    ```
 3. Applique le même pattern pour tous les accès à `state.expressive.*`
 
-Lance `npm run test:watch -- presenceOS` pour valider.
+Lance `pnpm run test:watch -- presenceOS` pour valider.
 ```
 
 **Acceptance Criteria:**
@@ -131,7 +131,7 @@ Lance `npm run test:watch -- presenceOS` pour valider.
 #### 1.3 Fixer 7 Autres Fichiers avec Tests en Échec (5h)
 
 **Stratégie:**
-1. Identifier les fichiers: `npm run test:unit 2>&1 | grep "FAIL" | cut -d' ' -f4 | sort -u`
+1. Identifier les fichiers: `pnpm run test:unit 2>&1 | grep "FAIL" | cut -d' ' -f4 | sort -u`
 2. Pour chaque fichier:
    - Analyser l'erreur
    - Créer un prompt Copilot spécifique
@@ -149,12 +149,12 @@ Actions:
 2. Propose une correction minimale
 3. Assure que le fix ne casse pas d'autres tests
 
-Lance `npm run test:watch -- [FILENAME]` pour valider.
+Lance `pnpm run test:watch -- [FILENAME]` pour valider.
 ```
 
 **Acceptance Criteria:**
 - ✅ Tous les fichiers de test passent (1,888/1,888)
-- ✅ `npm run test:unit` sans erreur
+- ✅ `pnpm run test:unit` sans erreur
 
 ---
 
@@ -163,7 +163,7 @@ Lance `npm run test:watch -- [FILENAME]` pour valider.
 **Commandes:**
 ```bash
 # Test complet comme en CI
-npm run test:ci
+pnpm run test:ci
 
 # Devrait afficher:
 # ✓ lint pass
@@ -175,23 +175,23 @@ npm run test:ci
 
 **Prompt Copilot:**
 ```
-Lance `npm run test:ci` et analyse les résultats.
+Lance `pnpm run test:ci` et analyse les résultats.
 
 Si échec:
 1. Identifie quelle étape échoue (lint, type-check, test, e2e, rust)
 2. Lance cette étape individuellement pour debug:
-   - `npm run lint`
-   - `npm run type-check`
-   - `npm run test`
-   - `npm run test:e2e`
-   - `npm run test:rust`
+   - `pnpm run lint`
+   - `pnpm run type-check`
+   - `pnpm run test`
+   - `pnpm run test:e2e`
+   - `pnpm run test:rust`
 3. Corrige et re-test
 
-Objectif: `npm run test:ci` doit passer 100% des étapes.
+Objectif: `pnpm run test:ci` doit passer 100% des étapes.
 ```
 
 **Acceptance Criteria:**
-- ✅ `npm run test:ci` passe toutes les étapes
+- ✅ `pnpm run test:ci` passe toutes les étapes
 - ✅ Exit code 0
 
 ---
@@ -199,7 +199,7 @@ Objectif: `npm run test:ci` doit passer 100% des étapes.
 ### Livrables Sprint 1
 
 1. ✅ 34 tests fixés → 1,888/1,888 réussis (100%)
-2. ✅ CI/CD vert (`npm run test:ci` pass)
+2. ✅ CI/CD vert (`pnpm run test:ci` pass)
 3. ✅ Documentation des fixes dans CHANGELOG.md
 
 **Success Metrics:**
@@ -223,7 +223,7 @@ Configure `rollup-plugin-visualizer` dans `vite.config.ts`.
 
 1. Installe le package:
    ```bash
-   npm install --save-dev rollup-plugin-visualizer
+   pnpm install --save-dev rollup-plugin-visualizer
    ```
 
 2. Ajoute dans `vite.config.ts`:
@@ -248,7 +248,7 @@ Configure `rollup-plugin-visualizer` dans `vite.config.ts`.
 
 3. Lance build et ouvre stats:
    ```bash
-   npm run build
+   pnpm run build
    # Ouvre automatiquement dist/stats.html dans le navigateur
    ```
 
@@ -328,10 +328,10 @@ export default defineConfig({
 ```
 
 Ensuite:
-1. Rebuilde: `npm run build`
+1. Rebuilde: `pnpm run build`
 2. Vérifie les nouvelles tailles dans dist/
 3. Assure que chaque chunk est <400KB
-4. Test l'app en dev: `npm run dev`
+4. Test l'app en dev: `pnpm run dev`
 ```
 
 **Acceptance Criteria:**
@@ -404,10 +404,10 @@ Expected: Initial bundle réduit de ~500KB (pages lazy non chargées au boot)
 **Commandes:**
 ```bash
 # Build production
-npm run build
+pnpm run build
 
 # Serve localement
-npm run preview
+pnpm run preview
 
 # Lighthouse audit
 lighthouse http://localhost:4173 --output=html --output-path=./lighthouse-report.html
@@ -501,16 +501,16 @@ const pattern3 = /-/g;              // ✅ (hors classe de caractères)
 Actions:
 1. Liste tous les fichiers avec erreurs regex:
    ```bash
-   npm run lint 2>&1 | grep "no-useless-escape" | cut -d: -f1 | sort -u
+   pnpm run lint 2>&1 | grep "no-useless-escape" | cut -d: -f1 | sort -u
    ```
 2. Pour chaque fichier, applique les corrections
-3. Valide avec `npm run lint`
+3. Valide avec `pnpm run lint`
 4. Objectif: 0 erreur `no-useless-escape`
 ```
 
 **Acceptance Criteria:**
 - ✅ 92 erreurs ESLint → 0 erreur
-- ✅ `npm run lint` sans "no-useless-escape"
+- ✅ `pnpm run lint` sans "no-useless-escape"
 
 ---
 
@@ -524,7 +524,7 @@ Stratégie par type de warning:
 
 1. **Imports inutilisés** (auto-fixable):
    ```bash
-   npm run lint:fix
+   pnpm run lint:fix
    ```
 
 2. **Variables non-utilisées** (manuel):
@@ -548,15 +548,15 @@ Stratégie par type de warning:
    - Production: supprimer ou conditionner sur `if (import.meta.env.DEV)`
 
 Process:
-1. Auto-fix: `npm run lint:fix`
-2. Liste warnings restants: `npm run lint > warnings.txt`
+1. Auto-fix: `pnpm run lint:fix`
+2. Liste warnings restants: `pnpm run lint > warnings.txt`
 3. Groupe par type: `cat warnings.txt | grep "warning" | cut -d: -f3 | sort | uniq -c | sort -rn`
 4. Traite type par type (priorité: plus fréquent d'abord)
 5. Objectif: <50 warnings
 
 Fichiers à prioriser (top 10 avec plus de warnings):
 ```bash
-npm run lint 2>&1 | grep "warning" | cut -d: -f1 | sort | uniq -c | sort -rn | head -10
+pnpm run lint 2>&1 | grep "warning" | cut -d: -f1 | sort | uniq -c | sort -rn | head -10
 ```
 ```
 
@@ -575,7 +575,7 @@ Configure Husky + lint-staged pour valider le code avant commit.
 
 1. Installe les packages:
    ```bash
-   npm install --save-dev husky lint-staged
+   pnpm install --save-dev husky lint-staged
    npx husky install
    ```
 
@@ -604,7 +604,7 @@ Configure Husky + lint-staged pour valider le code avant commit.
 
 4. Crée pre-push hook (optionnel):
    ```bash
-   npx husky add .husky/pre-push "npm run type-check && npm run test:unit"
+   npx husky add .husky/pre-push "pnpm run type-check && pnpm run test:unit"
    ```
 
 5. Test:
@@ -663,7 +663,7 @@ Modifications recommandées:
 
 4. Test:
    ```bash
-   npm run lint
+   pnpm run lint
    # Devrait avoir <50 warnings, 0 erreur
    ```
 
@@ -673,7 +673,7 @@ Documente les changements dans CHANGELOG.md
 **Acceptance Criteria:**
 - ✅ `.eslintrc.json` mis à jour
 - ✅ Règles strictes activées
-- ✅ `npm run lint` <50 warnings
+- ✅ `pnpm run lint` <50 warnings
 
 ---
 
@@ -918,7 +918,7 @@ tauri::Builder::default()
 - [x] Ajouter `use tauri::Manager` dans fichiers modifiés
 - [x] Installer plugins: `tauri-plugin-dialog`, `tauri-plugin-clipboard-manager`
 - [x] Tester compilation: `cargo check`
-- [x] Tester runtime: `npm run tauri:dev`
+- [x] Tester runtime: `pnpm run tauri:dev`
 ```
 
 Référence: Corrections appliquées dans Sprint 1 de l'audit
@@ -1055,7 +1055,7 @@ Référence: `AUDIT_CODE_COMPLET_v19.5.2.md` pour détails
 
 ### Sprint 1: Stabilité ✅
 - [ ] Fixer 34 tests en échec
-- [ ] CI/CD vert (`npm run test:ci`)
+- [ ] CI/CD vert (`pnpm run test:ci`)
 - [ ] CHANGELOG mis à jour
 
 ### Sprint 2: Performance ✅
@@ -1078,8 +1078,8 @@ Référence: `AUDIT_CODE_COMPLET_v19.5.2.md` pour détails
 
 ### Release v19.5.3 ✅
 - [ ] Tag git: `git tag -a v19.5.3 -m "Release v19.5.3"`
-- [ ] Build production: `npm run build && npm run tauri:build`
-- [ ] Tests E2E: `npm run test:e2e`
+- [ ] Build production: `pnpm run build && pnpm run tauri:build`
+- [ ] Tests E2E: `pnpm run test:e2e`
 - [ ] Deploy staging
 - [ ] Deploy production
 - [ ] Annonce release (Discord, email, changelog public)

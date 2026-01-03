@@ -323,9 +323,9 @@ cargo build --release  # Compilation optimisée
 **Frontend** :
 ```bash
 cd core/frontend
-npm install  # Dépendances
-npm run build  # Build production
-npm run preview  # Test build
+pnpm install  # Dépendances
+pnpm run build  # Build production
+pnpm run preview  # Test build
 ```
 
 **Validation Complète** :
@@ -337,7 +337,7 @@ cargo test --all --verbose
 cargo check --all-features
 
 # Vérifier frontend
-cd core/frontend && npm run lint
+cd core/frontend && pnpm run lint
 ```
 
 ### Checklist Déploiement
@@ -424,7 +424,7 @@ Le système a **réussi l'ascension** :
 
 1. **Déploiement Production** :
    - ✅ Tous les prérequis validés
-   - Action : `cargo build --release && npm run build`
+   - Action : `cargo build --release && pnpm run build`
    - Timeline : Immédiat
 
 2. **Monitoring v9** :

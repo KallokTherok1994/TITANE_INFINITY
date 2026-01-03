@@ -167,7 +167,7 @@ npx tsc --noEmit --skipLibCheck
 ### Build Production
 
 ```bash
-npm run build
+pnpm run build
 # ✅ 3326 modules transformés
 # ✅ ~14.5s (stable)
 ```

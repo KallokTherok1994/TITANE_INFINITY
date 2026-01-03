@@ -106,12 +106,12 @@ Savings mobile: -80% bandwidth
 
 **Option A: vite-plugin-webp (Recommandé, simple)**
 ```bash
-npm install --save-dev vite-plugin-webp
+pnpm install --save-dev vite-plugin-webp
 ```
 
 **Option B: vite-imagetools (Plus flexible)**
 ```bash
-npm install --save-dev vite-imagetools
+pnpm install --save-dev vite-imagetools
 ```
 
 **Choix:** vite-plugin-webp pour Phase 6 (simplicité)
@@ -401,7 +401,7 @@ srcset          99%+ (modern)   Default src
 
 ```bash
 # Après build
-npm run build
+pnpm run build
 
 # Vérifier fichiers .webp générés
 ls -lh dist/assets/*.webp
@@ -482,9 +482,9 @@ lighthouse https://domain.com --view
 ### Jour 1: WebP + LazyImage (2h)
 
 **10:00-10:30 - Setup WebP**
-1. `npm install --save-dev vite-plugin-webp`
+1. `pnpm install --save-dev vite-plugin-webp`
 2. Configurer vite.config.ts
-3. Test build: `npm run build`
+3. Test build: `pnpm run build`
 4. Vérifier dist/assets/*.webp générés
 
 **10:30-11:30 - LazyImage Component**

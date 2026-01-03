@@ -471,9 +471,9 @@ pub mod resonance;
 ### **18. Frontend: dist/index.html**
 
 ```bash
-# Généré par npm run build
-npm install
-npm run build
+# Généré par pnpm run build
+pnpm install
+pnpm run build
 ```
 
 **Résultat**: Crée `dist/index.html` + `dist/assets/` requis par Tauri.
@@ -514,7 +514,7 @@ cargo check
 cargo tauri build
 
 # 4. Test développement
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 ### Résultat Attendu

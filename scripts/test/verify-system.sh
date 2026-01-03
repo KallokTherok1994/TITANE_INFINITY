@@ -63,26 +63,26 @@ if [ -d "node_modules" ] && [ -f "package-lock.json" ]; then
     echo -e "${GREEN}✅ Dependencies installed ($PACKAGE_COUNT packages)${NC}"
 else
     echo -e "${RED}❌ Dependencies not installed${NC}"
-    echo -e "${YELLOW}💡 Run: cd orchestration && npm install${NC}"
+    echo -e "${YELLOW}💡 Run: cd orchestration && pnpm install${NC}"
     exit 1
 fi
 
 # Check 6: NPM scripts
 echo ""
 echo "🛠️  Testing NPM scripts..."
-npm run status > /dev/null 2>&1
+pnpm run status > /dev/null 2>&1
 if [ $? -eq 0 ]; then
-    echo -e "${GREEN}✅ npm run status — working${NC}"
+    echo -e "${GREEN}✅ pnpm run status — working${NC}"
 else
-    echo -e "${RED}❌ npm run status — failed${NC}"
+    echo -e "${RED}❌ pnpm run status — failed${NC}"
     exit 1
 fi
 
-npm run next > /dev/null 2>&1
+pnpm run next > /dev/null 2>&1
 if [ $? -eq 0 ]; then
-    echo -e "${GREEN}✅ npm run next — working${NC}"
+    echo -e "${GREEN}✅ pnpm run next — working${NC}"
 else
-    echo -e "${RED}❌ npm run next — failed${NC}"
+    echo -e "${RED}❌ pnpm run next — failed${NC}"
     exit 1
 fi
 
@@ -122,8 +122,8 @@ echo -e "${GREEN}✅ System Verification Complete${NC}"
 echo ""
 echo "Next steps:"
 echo "  1. cd orchestration"
-echo "  2. npm run status"
-echo "  3. npm run next"
+echo "  2. pnpm run status"
+echo "  3. pnpm run next"
 echo "  4. Start with @titane-conductor in GitHub Copilot"
 echo ""
 echo "First task: P0-1 (Analyse structure complète)"

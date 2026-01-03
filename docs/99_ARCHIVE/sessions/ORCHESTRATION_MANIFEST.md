@@ -97,33 +97,33 @@ plans/                ✅ Workspace for generated plans
 cd orchestration
 
 # View overall progress
-npm run status
+pnpm run status
 
 # Generate next task prompt (copies to clipboard)
-npm run next
+pnpm run next
 
 # Mark task as completed/failed
-npm run update <task-id> <status>
+pnpm run update <task-id> <status>
 ```
 
 ### Example Workflow
 
 ```bash
 # 1. Check current status
-npm run status
+pnpm run status
 # Output: Global : 0/18 (0%)
 
 # 2. Get next task
-npm run next
+pnpm run next
 # Output: Prompt for P0-1 copied to clipboard
 
 # 3. Complete task in GitHub Copilot
 
 # 4. Mark as complete
-npm run update P0-1 completed
+pnpm run update P0-1 completed
 
 # 5. Repeat
-npm run next
+pnpm run next
 ```
 
 ---
@@ -132,8 +132,8 @@ npm run next
 
 ### Script Tests
 ```bash
-✅ npm run status   — Progress tracker working
-✅ npm run next     — Prompt generator working
+✅ pnpm run status   — Progress tracker working
+✅ pnpm run next     — Prompt generator working
 ✅ YAML validation  — roadmap.yaml syntax valid
 ✅ TypeScript build — All scripts compile
 ✅ Dependencies     — 0 vulnerabilities
@@ -189,7 +189,7 @@ All agents enforce these constraints via .github/instructions/titane.instruction
 ### Immediate (Now)
 1. Open GitHub Copilot in VSCode
 2. Verify custom agents are visible (@titane-conductor)
-3. Run `npm run next` to get first task (P0-1)
+3. Run `pnpm run next` to get first task (P0-1)
 4. Start workflow with Conductor agent
 
 ### Short-term (Phase 0)
@@ -255,8 +255,8 @@ All agents enforce these constraints via .github/instructions/titane.instruction
 - [x] Fix TypeScript compilation issues
 - [x] Add "type": "module" to package.json
 - [x] Install @types/clipboardy
-- [x] Test npm run status ✅
-- [x] Test npm run next ✅
+- [x] Test pnpm run status ✅
+- [x] Test pnpm run next ✅
 - [x] Validate YAML syntax ✅
 - [x] Generate setup report ✅
 
@@ -267,7 +267,7 @@ All agents enforce these constraints via .github/instructions/titane.instruction
 The orchestration infrastructure is **100% operational**.
 
 **First Task:** P0-1 (Analyse structure complète)
-**Next Command:** `npm run next`
+**Next Command:** `pnpm run next`
 
 All systems nominal. Ready to proceed with Phase 0 audit.
 

@@ -264,7 +264,7 @@ export default defineConfig({
 ### ConversationManager Baseline
 
 ```bash
-npm test -- src/services/ai/__tests__/ConversationManager.test.ts --run
+pnpm test -- src/services/ai/__tests__/ConversationManager.test.ts --run
 ```
 
 **Result**: ✅ 15/15 tests passing (100% pass rate maintained)
@@ -272,7 +272,7 @@ npm test -- src/services/ai/__tests__/ConversationManager.test.ts --run
 ### VectorStoreClient Test Status
 
 ```bash
-npm test -- src/services/unified/__tests__/VectorStoreClient.test.ts --run
+pnpm test -- src/services/unified/__tests__/VectorStoreClient.test.ts --run
 ```
 
 **Result**: ⚠️ "No test suite found" (mock configuration issue)

@@ -96,17 +96,17 @@ sudo pacman -S --needed \
 cd /path/to/TITANE_INFINITY
 
 # Nettoyage complet
-npm run clean
+pnpm run clean
 
 # Réinstallation dépendances
-npm install
+pnpm install
 ```
 
 ### **2. Vérifications Pré-Build**
 
 ```bash
 # TypeScript (production code uniquement)
-npm run type-check
+pnpm run type-check
 # ✅ Attendu: 0 errors
 
 # Rust backend
@@ -117,7 +117,7 @@ cargo check --manifest-path src-tauri/Cargo.toml
 ### **3. Build Frontend**
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 **Output attendu**:
@@ -132,7 +132,7 @@ dist/assets/vendor-misc-*.js     247.59 kB │ gzip: 72.97 kB
 ### **4. Build Tauri Production**
 
 ```bash
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 **Durée estimée**: 5-10 minutes (première compilation)

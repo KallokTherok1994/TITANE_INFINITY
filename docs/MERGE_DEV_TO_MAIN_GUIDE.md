@@ -85,7 +85,7 @@ git add .
 git commit
 
 # 6. Test (optional but recommended)
-npm test
+pnpm test
 
 # 7. Push
 git push origin MAIN
@@ -194,7 +194,7 @@ git fetch origin --verbose  # See detailed error
 ### Problem: "Tests failing after merge"
 **Solution:** Investigate test failures
 ```bash
-npm test -- --verbose
+pnpm test -- --verbose
 # Fix issues, commit fixes
 git commit -am "fix: resolve post-merge test failures"
 git push origin MAIN
@@ -210,8 +210,8 @@ git push origin MAIN
 After merge, verify:
 
 - [ ] MAIN branch includes the 3 dev commits (check GitHub)
-- [ ] `npm test` passes ✅
-- [ ] `npm run build` succeeds ✅
+- [ ] `pnpm test` passes ✅
+- [ ] `pnpm run build` succeeds ✅
 - [ ] `cargo build` (backend) succeeds ✅
 - [ ] No merge conflict markers remain in files
 - [ ] Documentation is coherent and consistent

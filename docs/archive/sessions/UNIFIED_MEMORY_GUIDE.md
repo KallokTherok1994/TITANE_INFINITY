@@ -355,7 +355,7 @@ Voir JSDoc complet dans `src/core/services/unifiedMemory.ts`:
 Tests disponibles dans `src/__tests__/unifiedMemory.test.ts` (100% coverage)
 
 ```bash
-npm test unifiedMemory
+pnpm test unifiedMemory
 ```
 
 ## Roadmap

@@ -11,8 +11,8 @@
       "enabled": true,
       "description": "INTERDICTION ABSOLUE de déployer sans autorisation explicite",
       "blocked_commands": [
-        "npm run build",
-        "npm run build:production",
+        "pnpm run build",
+        "pnpm run build:production",
         "tauri build",
         "./runtime/stable/build.sh",
         "cargo build --release",
@@ -27,10 +27,10 @@
         "📦 Reinstall Titan-Stable"
       ],
       "allowed_commands": [
-        "npm run dev",
-        "npm test",
-        "npm run lint",
-        "npm run format",
+        "pnpm run dev",
+        "pnpm test",
+        "pnpm run lint",
+        "pnpm run format",
         "cargo test",
         "./runtime/dev/run-dev.sh"
       ],
@@ -114,9 +114,9 @@
         "security_audit_passed"
       ],
       "check_commands": [
-        "npm run copilot-xs:test",
-        "npm run audit:security",
-        "npm run verify"
+        "pnpm run copilot-xs:test",
+        "pnpm run audit:security",
+        "pnpm run verify"
       ]
     }
   },

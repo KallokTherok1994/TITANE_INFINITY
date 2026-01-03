@@ -253,8 +253,8 @@ Build time: 13.30s → 15.12s (+1.82s config overhead)
 
 ### Tests Effectués
 
-1. ✅ Build production: `npm run build` → 0 erreurs
-2. ✅ TypeScript: `npm run check` → 0 erreurs
+1. ✅ Build production: `pnpm run build` → 0 erreurs
+2. ✅ TypeScript: `pnpm run check` → 0 erreurs
 3. ✅ Runtime DevTools: Lazy tabs fonctionnels (Suspense visible)
 4. ✅ Runtime Chat: Virtualization active >50 messages
 5. ✅ Bundle analysis: stats.html généré

@@ -500,8 +500,8 @@ const singularityEngine = { getState: vi.fn(), sync: vi.fn() };
 **Actions:**
 
 1. Valider TypeScript: `npx tsc --noEmit`
-2. Exécuter tests: `npm test`
-3. Valider build: `npm run build`
+2. Exécuter tests: `pnpm test`
+3. Valider build: `pnpm run build`
 4. Linter: `npx eslint --fix src/`
 5. Git commit: "🚀 v25.6.1 - Phase 12 Integration Complete"
 6. Git push: `git push origin MAIN`

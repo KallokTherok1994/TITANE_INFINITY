@@ -60,7 +60,7 @@ AUTORISÉ :
 tauri dev
 tauri build
 cargo build --release
-npm run dev (via tauri)
+pnpm run dev (via tauri)
 ```
 
 ### 🔒 LOCAL-FIRST

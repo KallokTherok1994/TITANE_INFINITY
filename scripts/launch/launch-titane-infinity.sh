@@ -18,7 +18,7 @@ BINARY_PATH="$SCRIPT_DIR/src-tauri/target/release/titane-infinity"
 # Check if binary exists
 if [ ! -f "$BINARY_PATH" ]; then
     echo "❌ Binary not found at: $BINARY_PATH"
-    echo "   Please run: npm run tauri:build"
+    echo "   Please run: pnpm run tauri:build"
     exit 1
 fi
 

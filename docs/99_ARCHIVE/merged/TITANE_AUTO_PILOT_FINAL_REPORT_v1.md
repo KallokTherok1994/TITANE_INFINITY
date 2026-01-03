@@ -197,8 +197,8 @@ const [relevantMemories, goalsFactsContext] = await Promise.all([
 4. **Valider:**
 
    ```bash
-   npm run lint  # Doit être clean
-   npm run check  # Vérifier types
+   pnpm run lint  # Doit être clean
+   pnpm run check  # Vérifier types
    ```
 
 5. **Benchmarker:**
@@ -376,7 +376,7 @@ TITANE_STABILISATION_GLOBAL_V1_REPORT.md            # +addendum
 
 1. Ouvrir `cognitiveOmegaIntegration.ts`
 2. Appliquer modification lignes 221-240 (voir instructions ci-dessus)
-3. `npm run lint` + `npm run check`
+3. `pnpm run lint` + `pnpm run check`
 4. Benchmarker gain latence
 
 ### Court-terme (1-2h)

@@ -22,8 +22,8 @@ show_command() {
 
 echo "🔍 ÉTAPE 1: VALIDATION CODE"
 echo "─────────────────────────────────────────────────────────"
-show_command "Vérifier compilation TypeScript" "npm run type-check"
-show_command "Build production (test)" "npm run build"
+show_command "Vérifier compilation TypeScript" "pnpm run type-check"
+show_command "Build production (test)" "pnpm run build"
 show_command "Vérifier Rust backend" "cargo check --manifest-path src-tauri/Cargo.toml"
 echo ""
 
@@ -33,8 +33,8 @@ echo ""
 
 echo "🚀 ÉTAPE 2: DÉMARRAGE"
 echo "─────────────────────────────────────────────────────────"
-show_command "Lancer en mode développement" "npm run tauri:dev"
-show_command "Build Tauri production" "npm run tauri:build"
+show_command "Lancer en mode développement" "pnpm run tauri:dev"
+show_command "Build Tauri production" "pnpm run tauri:build"
 echo ""
 
 # ═══════════════════════════════════════════════════════════
@@ -177,6 +177,6 @@ echo "  TITANE∞ v19.3Ω → v27.0"
 echo "  Cognitive Layout & Adaptive Experience Engine"
 echo "═══════════════════════════════════════════════════════════"
 echo ""
-echo "Pour démarrer: npm run tauri:dev"
+echo "Pour démarrer: pnpm run tauri:dev"
 echo "Pour tester:   Voir COGNITIVE_ENGINE_TEST_GUIDE.md"
 echo ""

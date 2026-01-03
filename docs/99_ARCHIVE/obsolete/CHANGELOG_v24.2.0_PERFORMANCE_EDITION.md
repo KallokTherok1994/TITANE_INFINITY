@@ -92,7 +92,7 @@
 #### Commandes
 ```bash
 nvm install 24
-npm install -g pnpm@10.23.0
+pnpm install -g pnpm@10.23.0
 pnpm install
 ```
 

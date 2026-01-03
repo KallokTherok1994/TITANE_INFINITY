@@ -9,7 +9,7 @@
 ## ⚠️ RÈGLE CRITIQUE — NPM EST ABANDONNÉ
 
 **INTERDICTION ABSOLUE:**
-- ❌ **NE JAMAIS** utiliser `npm install`, `npm run`, `npm test`
+- ❌ **NE JAMAIS** utiliser `pnpm install`, `npm run`, `pnpm test`
 - ❌ **NE JAMAIS** documenter des commandes `npm` dans les docs
 - ❌ **NE JAMAIS** créer/modifier un `package-lock.json`
 
@@ -50,16 +50,16 @@
 
 | Commande NPM | Commande PNPM | Usage |
 |--------------|---------------|-------|
-| `npm install` | `pnpm install` | Installation des dépendances |
-| `npm install <pkg>` | `pnpm add <pkg>` | Ajouter une dépendance |
-| `npm install -D <pkg>` | `pnpm add -D <pkg>` | Ajouter une dev dependency |
+| `pnpm install` | `pnpm install` | Installation des dépendances |
+| `pnpm install <pkg>` | `pnpm add <pkg>` | Ajouter une dépendance |
+| `pnpm install -D <pkg>` | `pnpm add -D <pkg>` | Ajouter une dev dependency |
 | `npm uninstall <pkg>` | `pnpm remove <pkg>` | Retirer une dépendance |
 | `npm update` | `pnpm update` | Mettre à jour les dépendances |
-| `npm run <script>` | `pnpm run <script>` | Exécuter un script |
-| `npm test` | `pnpm test` | Exécuter les tests |
-| `npm run build` | `pnpm run build` | Build du projet |
-| `npm ci` | `pnpm install --frozen-lockfile` | Installation CI/CD |
-| `npm audit` | `pnpm audit` | Audit de sécurité |
+| `pnpm run <script>` | `pnpm run <script>` | Exécuter un script |
+| `pnpm test` | `pnpm test` | Exécuter les tests |
+| `pnpm run build` | `pnpm run build` | Build du projet |
+| `pnpm install --frozen-lockfile` | `pnpm install --frozen-lockfile` | Installation CI/CD |
+| `pnpm audit` | `pnpm audit` | Audit de sécurité |
 | `npm outdated` | `pnpm outdated` | Vérifier les packages obsolètes |
 
 ---
@@ -206,7 +206,7 @@ PNPM utilise un **content-addressable store**:
 
 **Benchmark (installation complète):**
 ```
-npm install:   45s
+pnpm install:   45s
 pnpm install:  15s (3x plus rapide)
 ```
 
@@ -288,7 +288,7 @@ grep -r "npm " docs/ | wc -l
 
 **Scripts à corriger:**
 ```bash
-grep -r "npm run\|npm install\|npm test" scripts/ | wc -l
+grep -r "npm run\|pnpm install\|pnpm test" scripts/ | wc -l
 # Résultat: 150+ occurrences dans scripts/
 ```
 
@@ -312,9 +312,9 @@ grep -r "npm run\|npm install\|npm test" scripts/ | wc -l
 find docs/ -type f -name "*.md" -exec grep -l "npm " {} \;
 
 # Remplacement automatique (PRUDENT)
-# find docs/ -type f -name "*.md" -exec sed -i 's/npm run /pnpm run /g' {} \;
-# find docs/ -type f -name "*.md" -exec sed -i 's/npm install/pnpm install/g' {} \;
-# find docs/ -type f -name "*.md" -exec sed -i 's/npm test/pnpm test/g' {} \;
+# find docs/ -type f -name "*.md" -exec sed -i 's/pnpm run /pnpm run /g' {} \;
+# find docs/ -type f -name "*.md" -exec sed -i 's/pnpm install/pnpm install/g' {} \;
+# find docs/ -type f -name "*.md" -exec sed -i 's/pnpm test/pnpm test/g' {} \;
 ```
 
 ### Phase 2: Scripts (P0)
@@ -339,7 +339,7 @@ scripts/
 **Action:**
 ```bash
 # Recherche dans scripts
-grep -rn "npm run\|npm install\|npm test" scripts/ > /tmp/npm_references.txt
+grep -rn "npm run\|pnpm install\|pnpm test" scripts/ > /tmp/npm_references.txt
 
 # Review manuel recommandé (sécurité)
 ```
@@ -447,10 +447,10 @@ git checkout HEAD~1 -- package-lock.json
 # Éditer package.json: supprimer "packageManager" field
 
 # 4. Installer avec npm
-npm install
+pnpm install
 
 # 5. Tester
-npm run test:all
+pnpm run test:all
 ```
 
 **IMPORTANT:** Cette procédure est **temporaire**. Migration pnpm est **obligatoire** à long terme.
@@ -522,7 +522,7 @@ error: failed to compile `better-sqlite3`
 
 **Symptôme:**
 ```bash
-$ npm run dev
+$ pnpm run dev
 bash: npm: command not found
 ```
 

@@ -152,7 +152,7 @@ Toutes ces commandes requièrent:
 
 ### 1. Lancer TITANE∞
 ```bash
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### 2. Configurer les Clés API

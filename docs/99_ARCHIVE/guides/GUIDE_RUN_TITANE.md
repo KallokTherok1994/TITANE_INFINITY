@@ -356,9 +356,9 @@ sudo ln -sf $PWD/run /usr/local/bin/titane
 
 ---
 
-## 🏆 Avantages vs npm run dev:tauri
+## 🏆 Avantages vs pnpm run dev:tauri
 
-| Critère           | `npm run dev:tauri` | `titane`                     |
+| Critère           | `pnpm run dev:tauri` | `titane`                     |
 | ----------------- | ------------------- | ---------------------------- |
 | **Commande**      | Longue et technique | Simple et mémorable          |
 | **Vérifications** | ❌ Aucune           | ✅ Auto (réseau, type, lint) |

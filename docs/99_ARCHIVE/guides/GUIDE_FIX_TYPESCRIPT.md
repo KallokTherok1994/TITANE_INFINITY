@@ -174,8 +174,8 @@ grep "error TS" typescript_errors.log | cut -d'(' -f1 | sort | uniq -c | sort -r
 
 ```bash
 npx tsc --noEmit
-npm run lint
-npm test
+pnpm run lint
+pnpm test
 ```
 
 ### Objectif
@@ -246,13 +246,13 @@ if (typeof input === 'string') {
 ### ESLint
 
 ```bash
-npm run lint -- --fix
+pnpm run lint -- --fix
 ```
 
 ### Prettier
 
 ```bash
-npm run format
+pnpm run format
 ```
 
 ### VSCode Settings

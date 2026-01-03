@@ -408,7 +408,7 @@ Session B: "Quel est mon prénom?"
 ### Test 1 - Build Production
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 **Résultat**: ✅ **SUCCESS** (13.72s, 0 erreurs)

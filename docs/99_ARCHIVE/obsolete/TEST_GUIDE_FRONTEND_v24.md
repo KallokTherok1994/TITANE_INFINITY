@@ -325,7 +325,7 @@ Version : [XX.X]
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 source ~/.bashrc
 nvm install --lts
-npm install -g pnpm
+pnpm install -g pnpm
 
 # Dépendances Tauri
 sudo apt install libwebkit2gtk-4.1-dev (si système natif)

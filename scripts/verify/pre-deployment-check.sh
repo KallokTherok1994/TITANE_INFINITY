@@ -130,21 +130,21 @@ check_code_quality() {
     echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}\n"
     
     # ESLint check
-    if run_command "ESLint" "npm run lint"; then
+    if run_command "ESLint" "pnpm run lint"; then
         gate_check "ESLint: 0 errors" "pass"
     else
         gate_check "ESLint: Errors found" "fail" "true"
     fi
     
     # TypeScript compilation
-    if run_command "TypeScript" "npm run check"; then
+    if run_command "TypeScript" "pnpm run check"; then
         gate_check "TypeScript: 0 compilation errors" "pass"
     else
         gate_check "TypeScript: Compilation errors" "fail" "true"
     fi
     
     # Prettier format check
-    if run_command "Prettier" "npm run format:check"; then
+    if run_command "Prettier" "pnpm run format:check"; then
         gate_check "Prettier: Code formatted correctly" "pass"
     else
         gate_check "Prettier: Formatting issues" "fail" "false"
@@ -166,7 +166,7 @@ check_tests() {
     fi
     
     # Frontend unit tests
-    if run_command "Frontend-Tests" "npm run test"; then
+    if run_command "Frontend-Tests" "pnpm run test"; then
         local test_output=$(cat "${REPORT_DIR}/Frontend-Tests.log")
         local passed=$(echo "$test_output" | grep -oP '\d+ passed' | grep -oP '\d+' || echo "0")
         local total=$(echo "$test_output" | grep -oP 'Tests.*\d+ passed.*\((\d+)\)' | grep -oP '\d+' | tail -1 || echo "1")
@@ -186,7 +186,7 @@ check_tests() {
     fi
     
     # Architecture tests
-    if run_command "Architecture-Tests" "npm run test:architecture"; then
+    if run_command "Architecture-Tests" "pnpm run test:architecture"; then
         gate_check "Architecture Tests: 4-Ring compliance validated" "pass"
     else
         gate_check "Architecture Tests: Compliance violations detected" "fail" "false"
@@ -194,7 +194,7 @@ check_tests() {
     
     # E2E tests (if not quick mode)
     if command -v playwright &> /dev/null; then
-        if run_command "E2E-Tests" "npm run test:e2e"; then
+        if run_command "E2E-Tests" "pnpm run test:e2e"; then
             gate_check "E2E Tests: All scenarios passed" "pass"
         else
             gate_check "E2E Tests: Some scenarios failed" "fail" "false"
@@ -212,17 +212,17 @@ check_security() {
     echo -e "${CYAN}   Gate 3: Security Audit${NC}"
     echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}\n"
     
-    # npm audit
-    local npm_audit_output=$(npm audit --json 2>/dev/null || echo '{}')
+    # pnpm audit
+    local npm_audit_output=$(pnpm audit --json 2>/dev/null || echo '{}')
     local critical=$(echo "$npm_audit_output" | jq -r '.metadata.vulnerabilities.critical // 0' 2>/dev/null || echo "0")
     local high=$(echo "$npm_audit_output" | jq -r '.metadata.vulnerabilities.high // 0' 2>/dev/null || echo "0")
     
     echo "$npm_audit_output" > "${REPORT_DIR}/npm-audit.json"
     
     if [[ $critical -le $MAX_CRITICAL_VULNERABILITIES ]] && [[ $high -le $MAX_HIGH_VULNERABILITIES ]]; then
-        gate_check "npm audit: ${critical} critical, ${high} high vulnerabilities" "pass"
+        gate_check "pnpm audit: ${critical} critical, ${high} high vulnerabilities" "pass"
     else
-        gate_check "npm audit: ${critical} critical, ${high} high vulnerabilities (above threshold)" "fail" "true"
+        gate_check "pnpm audit: ${critical} critical, ${high} high vulnerabilities (above threshold)" "fail" "true"
     fi
     
     # Check for secrets in code
@@ -315,7 +315,7 @@ check_build_readiness() {
     
     # Build test (if not quick mode)
     if [[ "$QUICK_MODE" == "false" ]]; then
-        if run_command "Build-Test" "npm run build"; then
+        if run_command "Build-Test" "pnpm run build"; then
             if [[ -d "dist" ]] && [[ -n "$(ls -A dist)" ]]; then
                 gate_check "Build Test: Successful with artifacts" "pass"
             else

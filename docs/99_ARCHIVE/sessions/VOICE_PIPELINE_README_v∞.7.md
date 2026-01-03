@@ -34,13 +34,13 @@ Le **Voice Pipeline TITANE∞ v∞.7** est un système vocal complet offrant :
 # Clone & Install
 git clone [repo]
 cd TITANE_INFINITY
-npm install
+pnpm install
 
 # Development
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Production Build
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ---
@@ -323,13 +323,13 @@ src/
 
 ```bash
 # TypeScript compilation
-npm run type-check
+pnpm run type-check
 
 # Rust compilation
 cd src-tauri && cargo check
 
 # Production build
-npm run build
+pnpm run build
 
 # Test suite
 bash test_voice_pipeline_v7.sh
@@ -479,9 +479,9 @@ Voir **[VOICE_PIPELINE_USAGE_GUIDE_v∞.7.md](VOICE_PIPELINE_USAGE_GUIDE_v∞.7.
 
 4. **Test**
    ```bash
-   npm run type-check
+   pnpm run type-check
    cd src-tauri && cargo check
-   npm run build
+   pnpm run build
    ```
 
 5. **Submit PR**

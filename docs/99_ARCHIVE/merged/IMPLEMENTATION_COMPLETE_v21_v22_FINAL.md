@@ -205,7 +205,7 @@ cargo test --lib narrative_selftest
 ### Frontend TypeScript
 
 ```bash
-npm run type-check
+pnpm run type-check
 ✅ Code compiles correctement
 ⚠️  Parsing errors mineurs (non-blocking)
 ```

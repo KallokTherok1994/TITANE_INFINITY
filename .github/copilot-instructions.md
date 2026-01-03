@@ -28,7 +28,7 @@ Notes:
 **INTERDICTION ABSOLUE:**
 
 - **NE JAMAIS** déployer via AppImage ou DEB sans autorisation explicite de Kevin Thibault
-- **NE JAMAIS** lancer `npm run build` ou tâche "🔵 Build Titan-Stable" sans demande explicite
+- **NE JAMAIS** lancer `pnpm run build` ou tâche "🔵 Build Titan-Stable" sans demande explicite
 - Mode développement OBLIGATOIRE jusqu'à validation 100% des tests
 
 **Mode de travail autorisé:**
@@ -53,8 +53,8 @@ The validation script checks for:
 - Prohibited markers in source folders (default: `TODO`, `FIXME`).
 - Basic hygiene (no obvious secrets patterns).
 
-By default, `npm run copilot-xs:validate` scans **git staged files** (pre-commit scope) to avoid forcing a full legacy cleanup.
-For a full scan, run: `COPILOT_XS_SCOPE=all npm run copilot-xs:validate`.
+By default, `pnpm run copilot-xs:validate` scans **git staged files** (pre-commit scope) to avoid forcing a full legacy cleanup.
+For a full scan, run: `COPILOT_XS_SCOPE=all pnpm run copilot-xs:validate`.
 
 Configure via environment variables:
 
@@ -92,8 +92,8 @@ The following section is a **repository-local rulebook** to improve coherence an
 
 - Before adding ANY dependency, verify: (1) it doesn't already exist in package.json, (2) it doesn't conflict with existing versions, (3) it's from a trusted source
 - For dependency updates: check semantic versioning impact, review changelog, ensure compatibility with Node/Python/etc. version specified in project
-- Always update lock files (package-lock.json, yarn.lock) when modifying dependencies
-- Prefer existing dependencies over new ones; use `npm list <package>` to check availability
+- Always update lock files (pnpm-lock.yaml) when modifying dependencies
+- Prefer existing dependencies over new ones; use `pnpm list <package>` to check availability
 
 ### Code Quality & Safety
 

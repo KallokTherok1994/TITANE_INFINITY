@@ -145,7 +145,7 @@ else
 fi
 
 # 4. Rebuild TITANE
-npm run build
+pnpm run build
 cargo build --release --manifest-path=src-tauri/Cargo.toml
 
 # 5. Relancer
@@ -325,7 +325,7 @@ Si problèmes persistent :
    rm -rf ~/.titane/logs/*
    pkill -f titane
    cargo clean --manifest-path=src-tauri/Cargo.toml
-   npm run build
+   pnpm run build
    cargo build --release --manifest-path=src-tauri/Cargo.toml
    ```
 

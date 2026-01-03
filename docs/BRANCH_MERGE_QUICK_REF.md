@@ -101,8 +101,8 @@ git merge copilot/audit-appimage-deployment
 
 **After Phase 2:**
 - [ ] Feature branches reviewed
-- [ ] Tests passing (`npm test`)
-- [ ] Build working (`npm run build`)
+- [ ] Tests passing (`pnpm test`)
+- [ ] Build working (`pnpm run build`)
 - [ ] No regressions
 
 **After Phase 3:**

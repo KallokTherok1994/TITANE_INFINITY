@@ -158,7 +158,7 @@ scripts/cleanup_ds_legacy.sh         → Design system cleanup
 **Actions recommandées:**
 ```bash
 # Frontend
-npm run test -- --coverage
+pnpm run test -- --coverage
 
 # Backend
 cargo tarpaulin --out Html
@@ -266,7 +266,7 @@ npx typedoc --out docs/api src/
 
 #### 2.3 Mesurer Couverture Tests
 ```bash
-☐ npm run test -- --coverage (frontend)
+☐ pnpm run test -- --coverage (frontend)
 ☐ cargo tarpaulin (backend)
 ☐ Atteindre 70%+ frontend, 80%+ backend
 ```
@@ -335,7 +335,7 @@ Performance score:        >95/100
 
 ### Audit NPM
 ```bash
-$ npm audit --production
+$ pnpm audit --production
 ✅ found 0 vulnerabilities
 ```
 
@@ -378,7 +378,7 @@ i18next:                23.16.8 → 25.7.2  (breaking)
 npm update --save
 
 # Tester avant commit
-npm run build && npm run test
+pnpm run build && pnpm run test
 ```
 
 **Priorité:** 🟡 MOYENNE (patches sécurité recommandés)
@@ -440,13 +440,13 @@ Créer `systemLogger.ts` centralisé pour services (cohérence++)
 ### Outils Automatisés
 ```bash
 # Daily checks
-npm run lint        # ESLint
+pnpm run lint        # ESLint
 cargo clippy --lib  # Clippy
-npm run test        # Tests
+pnpm run test        # Tests
 
 # Weekly analysis
 cargo audit         # Security vulns
-npm audit           # Npm vulns
+pnpm audit           # Npm vulns
 cargo outdated      # Deps outdated
 
 # Monthly deep dive

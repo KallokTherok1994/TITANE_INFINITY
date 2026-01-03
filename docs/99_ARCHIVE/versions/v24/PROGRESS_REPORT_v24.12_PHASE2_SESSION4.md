@@ -117,7 +117,7 @@ export type { ThreeJSAvatarRendererOptions, AvatarMeshes } from './ThreeJSAvatar
 ---
 
 ### 4. **Dependencies NPM**
-**Installation:** `npm install three @types/three`
+**Installation:** `pnpm install three @types/three`
 
 Packages ajoutés:
 - ✅ `three` (Three.js r168+)
@@ -200,7 +200,7 @@ AvatarFloatingWindow.tsx
 
 ### TypeScript Compilation
 ```bash
-$ npm run type-check
+$ pnpm run type-check
 # Modules avatar/floating: ✅ 0 errors
 ```
 

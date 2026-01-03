@@ -115,7 +115,7 @@ sudo sysctl -p /etc/sysctl.d/60-inotify.conf
 ### Avant (65536 watchers)
 
 ```
-❌ npm run dev
+❌ pnpm run dev
 → Error: ENOSPC: System limit reached
 → Vite ne démarre pas
 ```
@@ -123,7 +123,7 @@ sudo sysctl -p /etc/sysctl.d/60-inotify.conf
 ### Après (524288 watchers + exclusions)
 
 ```
-✅ npm run dev
+✅ pnpm run dev
 → Vite démarre correctement
 → Hot-reload fonctionne
 → Performance optimale
@@ -156,7 +156,7 @@ done
 ### 4. Tester le dev mode
 
 ```bash
-npm run dev
+pnpm run dev
 # Devrait démarrer sans erreur ENOSPC
 ```
 
@@ -188,10 +188,10 @@ watch: {
 rm -rf node_modules/.vite
 rm -rf dist
 rm -rf target
-npm run clean
+pnpm run clean
 
 # Réinstaller
-npm install
+pnpm install
 ```
 
 ---
@@ -242,7 +242,7 @@ grep -i inotify /proc/slabinfo
 ### Pour la Production
 
 - Pas d'impact (le build ne surveille pas les fichiers)
-- Le problème concerne uniquement `npm run dev`
+- Le problème concerne uniquement `pnpm run dev`
 
 ### Pour les Autres Développeurs
 

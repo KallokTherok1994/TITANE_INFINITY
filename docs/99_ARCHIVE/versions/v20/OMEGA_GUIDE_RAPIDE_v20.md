@@ -31,7 +31,7 @@
 
 ```bash
 cd /home/titane/Documents/TITANE_INFINITY
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ---
@@ -78,7 +78,7 @@ npm run tauri:dev
 
 ### **Test 5 : Logs Backend**
 
-Dans terminal où tourne `npm run tauri:dev`, chercher :
+Dans terminal où tourne `pnpm run tauri:dev`, chercher :
 
 ```
 [Ω:IN] mode=Default | msg_len=15 | conv_id=Some("...")
@@ -117,7 +117,7 @@ cargo build
 
 # Relancer
 cd ..
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ---

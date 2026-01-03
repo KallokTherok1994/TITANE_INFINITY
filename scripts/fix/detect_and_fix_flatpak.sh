@@ -210,11 +210,11 @@ if [ ! -f "package.json" ]; then
 fi
 
 echo -e "${GREEN}▶ Installation des dépendances npm...${NC}"
-npm install
+pnpm install
 
 echo ""
 echo -e "${GREEN}▶ Compilation Tauri (cela peut prendre 5-10 minutes)...${NC}"
-npm run tauri build
+pnpm run tauri build
 
 echo ""
 echo "╔══════════════════════════════════════════════════════════════╗"
@@ -227,5 +227,5 @@ echo "Pour lancer l'application :"
 echo -e "  ${GREEN}./src-tauri/target/release/titane-infinity${NC}"
 echo ""
 echo "Pour tester en mode développement :"
-echo -e "  ${GREEN}npm run tauri dev${NC}"
+echo -e "  ${GREEN}pnpm run tauri dev${NC}"
 echo ""

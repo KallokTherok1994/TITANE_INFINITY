@@ -129,14 +129,14 @@
 
 ### 🚀 MODE DEV vs PROD
 
-#### Dev (`npm run tauri:dev`)
+#### Dev (`pnpm run tauri:dev`)
 - ✅ Vite dev server + Tauri
 - ✅ Hot reload actif
 - ✅ DevTools auto-open (debug)
 - ✅ Chat IA via commandes Tauri
 - ✅ Variables .env chargées
 
-#### Prod (`npm run tauri:build`)
+#### Prod (`pnpm run tauri:build`)
 - ✅ Bundle complet (frontend + backend)
 - ✅ Pas de dev server
 - ✅ Ressources embarquées

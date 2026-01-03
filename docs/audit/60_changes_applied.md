@@ -336,8 +336,8 @@ pub use copilot_commands::*; // ✨ v26.3: Export Copilot commands
 - ✅ `./pnpm-local.sh <command>` (wrapper si pnpm pas dans PATH)
 
 ### Commandes INTERDITES
-- ❌ `npm install`
-- ❌ `npm run ...`
+- ❌ `pnpm install`
+- ❌ `pnpm run ...`
 - ❌ `yarn ...`
 
 ### Raison

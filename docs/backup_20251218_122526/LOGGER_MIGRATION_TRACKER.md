@@ -129,7 +129,7 @@ grep -r "console\.error\|console\.warn" src/components/chat/ --include="*.tsx" -
 npx tsc --noEmit --skipLibCheck
 
 # Build test
-npm run build
+pnpm run build
 ```
 
 ---

@@ -171,7 +171,7 @@ npx tsc --noEmit | grep -v Stats.tsx
 ### Build Vite
 
 ```bash
-npm run build
+pnpm run build
 # Result: 3326 modules, ~14.5s ✅
 ```
 

@@ -266,15 +266,15 @@ Toutes les anciennes routes sont préservées avec redirections automatiques:
 ### Lancer le mode développement
 
 ```bash
-npm run dev
+pnpm run dev
 # ou
-npm run dev:tauri
+pnpm run dev:tauri
 ```
 
 ### Build production
 
 ```bash
-npm run build
+pnpm run build
 # ou
 npx tauri build
 ```

@@ -31,7 +31,7 @@
 
 **Command:**
 ```bash
-npm run build
+pnpm run build
 ```
 
 **Output:**
@@ -307,7 +307,7 @@ Brotli:     99 KB (81.3% compression, -22% vs gzip)
 
 **Command:**
 ```bash
-npm run build 2>&1 | grep -i "warning\|error" | grep -v "deprecated"
+pnpm run build 2>&1 | grep -i "warning\|error" | grep -v "deprecated"
 ```
 
 **Output:**

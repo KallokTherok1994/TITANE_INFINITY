@@ -170,13 +170,13 @@ ollama pull llama2
 
 ### ✅ Build Test
 ```bash
-npm run build
+pnpm run build
 # ✅ SUCCESS en 1.47s
 ```
 
 ### ✅ Type Check
 ```bash
-npm run type-check
+pnpm run type-check
 # ✅ PASS (0 erreurs)
 ```
 
@@ -247,7 +247,7 @@ import { askTitan } from '@/services/ai';
 
 ### 1. Lancer l'app
 ```bash
-npm run dev
+pnpm run dev
 # → http://localhost:5173
 ```
 

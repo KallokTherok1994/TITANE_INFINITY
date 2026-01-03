@@ -79,14 +79,13 @@ export const Sidebar = ({
     return SIDEBAR_WIDTHS.desktop;
   }, [isMobile, isTablet, width]);
 
-  const handleClick = (item: SidebarItem): void => {
-    if (onItemClick) {
-      onItemClick(item);
-    }
-  };
-
   // v26.2.0: Memoized render function for performance
   const renderItem = useCallback((item: SidebarItem): JSX.Element => {
+    const handleClick = (item: SidebarItem): void => {
+      if (onItemClick) {
+        onItemClick(item);
+      }
+    };
     const isActive = item.active ?? false;
 
     return (
@@ -149,7 +148,7 @@ export const Sidebar = ({
         )}
       </motion.button>
     );
-  }, [collapsed, shouldReduceMotion, animationConfig.duration, handleClick]);
+  }, [collapsed, shouldReduceMotion, animationConfig.duration, onItemClick]);
 
   return (
     <div className={cn('flex flex-col h-full overflow-hidden bg-titanium-bg-elevated', className)}>

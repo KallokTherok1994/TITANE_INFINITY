@@ -363,10 +363,10 @@ Aucun ! Tous les problèmes critiques ont été corrigés.
 **Action Requise:**
 ```bash
 # Identifier tous les tests en échec
-npm run test:unit 2>&1 | grep "FAIL" > failed_tests.txt
+pnpm run test:unit 2>&1 | grep "FAIL" > failed_tests.txt
 
 # Fixer un par un
-npm run test:watch -- MCPStrategy.test.ts
+pnpm run test:watch -- MCPStrategy.test.ts
 ```
 
 **Copilot Prompt:**
@@ -409,7 +409,7 @@ const pattern = /[-\s]+/g;  // ✅ - non échappé en début/fin de classe
 **Action Requise:**
 ```bash
 # Auto-fix avec eslint (ne marche pas pour regex)
-npm run lint:fix
+pnpm run lint:fix
 
 # Fix manuel ou créer un script regex-fixer
 ```
@@ -428,10 +428,10 @@ npm run lint:fix
 **Action Requise:**
 ```bash
 # Identifier les fichiers avec le plus de warnings
-npm run lint 2>&1 | grep "warning" | cut -d: -f1 | sort | uniq -c | sort -rn | head -20
+pnpm run lint 2>&1 | grep "warning" | cut -d: -f1 | sort | uniq -c | sort -rn | head -20
 
 # Nettoyer imports automatiquement
-npm run lint:fix
+pnpm run lint:fix
 ```
 
 ---
@@ -445,7 +445,7 @@ npm run lint:fix
 | Tâche | Priorité | Durée | Owner |
 |-------|----------|-------|-------|
 | Fixer 34 tests en échec | 🔴 P0 | 8h | Dev |
-| Valider avec `npm run test:ci` | 🔴 P0 | 1h | Dev |
+| Valider avec `pnpm run test:ci` | 🔴 P0 | 1h | Dev |
 | Documenter fixes dans CHANGELOG | 🟢 P2 | 1h | Dev |
 
 **Prompts Copilot:**
@@ -511,7 +511,7 @@ export default defineConfig({
 });
 ```
 
-Lance `npm run build` et analyse `dist/stats.html` pour identifier les plus gros modules dans `ui-components-7I34X-7R.js`.
+Lance `pnpm run build` et analyse `dist/stats.html` pour identifier les plus gros modules dans `ui-components-7I34X-7R.js`.
 ```
 
 2. **Code-splitting strategy:**
@@ -577,11 +577,11 @@ Scanne tous les fichiers TypeScript et applique ces corrections.
 Utilise ESLint auto-fix pour nettoyer les imports et variables non-utilisés:
 
 ```bash
-npm run lint:fix
+pnpm run lint:fix
 ```
 
 Puis pour les warnings restants:
-1. Scanne avec `npm run lint 2>&1 | grep "warning" > warnings.txt`
+1. Scanne avec `pnpm run lint 2>&1 | grep "warning" > warnings.txt`
 2. Identifie les fichiers avec >10 warnings
 3. Pour chaque fichier:
    - Supprime les imports inutilisés

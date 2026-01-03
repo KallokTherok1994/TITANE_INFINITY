@@ -69,7 +69,7 @@ cargo check
    }
    ```
 
-**Validation**: `npm run check | grep "App.tsx(377"` → **0 erreurs** ✅
+**Validation**: `pnpm run check | grep "App.tsx(377"` → **0 erreurs** ✅
 
 ---
 
@@ -164,7 +164,7 @@ const diagnosticsResult: SystemDiagnostics = {
 ### Frontend Vite
 
 ```bash
-npm run vite:dev
+pnpm run vite:dev
 ✅ VITE v6.4.1 ready in 296 ms
 ✅ Local: http://localhost:5173/
 ✅ Network: http://192.168.2.16:5173/
@@ -177,7 +177,7 @@ npm run vite:dev
 ### Backend Tauri
 
 ```bash
-npm run tauri dev
+pnpm run tauri dev
 ⏳ Running BeforeDevCommand...
 ✅ Vite ready
 ⏳ Compiling titane-infinity v19.5.2...
@@ -275,7 +275,7 @@ npm run tauri dev
 cargo check --manifest-path src-tauri/Cargo.toml
 
 # Compter erreurs TypeScript
-npm run check 2>&1 | grep "error TS" | wc -l
+pnpm run check 2>&1 | grep "error TS" | wc -l
 
 # Voir logs Tauri live
 tail -f /tmp/tauri-dev.log

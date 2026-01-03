@@ -192,9 +192,9 @@ ls -lh src-tauri/target/ 2>/dev/null || echo "✅ target supprimé"
 ls -lh node_modules/ 2>/dev/null || echo "✅ node_modules supprimé"
 
 # 3. Test build
-npm install  # Recrée node_modules LOCALEMENT
-npm run type-check
-npm run build
+pnpm install  # Recrée node_modules LOCALEMENT
+pnpm run type-check
+pnpm run build
 
 # 4. Vérifier taille totale
 du -sh . --exclude='.git'
@@ -280,7 +280,7 @@ tar -xzf TITANE_INFINITY_BACKUP_<timestamp>.tar.gz
 
 ```bash
 # NPM packages
-npm install
+pnpm install
 
 # Rust dependencies (auto lors du build Tauri)
 cd src-tauri
@@ -364,7 +364,7 @@ Avant de considérer le nettoyage terminé:
 - [ ] Historique Git nettoyé (Option A ou B)
 - [ ] `git gc --aggressive` exécuté
 - [ ] Taille `.git/` < 100 Mo validée
-- [ ] `npm install` + `npm run build` réussi
+- [ ] `pnpm install` + `pnpm run build` réussi
 - [ ] Test commit + push réussi
 - [ ] Documentation mise à jour
 - [ ] Équipe notifiée (si travail en équipe)

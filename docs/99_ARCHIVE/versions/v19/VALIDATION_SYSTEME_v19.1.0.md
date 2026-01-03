@@ -8,7 +8,7 @@
 ## 📋 FICHIERS MIS À JOUR
 
 ### 1. Documentation Principale
-- ✅ **README.md** : Quick Start avec `npm run dev:tauri`, section Chat IA fallback, status v19.1.0
+- ✅ **README.md** : Quick Start avec `pnpm run dev:tauri`, section Chat IA fallback, status v19.1.0
 - ✅ **CHANGELOG.md** : Nouvelle entrée v19.1.0 avec détails Chat IA + UI
 - ✅ **RAPPORT_REPARATION_CHAT_v19.1.0.md** : Rapport diagnostic complet
 
@@ -29,13 +29,13 @@
 
 ### ✅ TypeScript (type-check)
 ```bash
-npm run type-check
+pnpm run type-check
 ```
 **Résultat** : ✅ **0 erreur**
 
 ### ✅ Build Frontend (Vite)
 ```bash
-npm run build
+pnpm run build
 ```
 **Résultat** :
 - ✅ **569.68 kB** main bundle (166.97 kB gzip)
@@ -81,13 +81,13 @@ cargo check --manifest-path=src-tauri/Cargo.toml
 
 ### Développement
 ```bash
-npm run dev:tauri    # Recommandé : Build PUIS Tauri
+pnpm run dev:tauri    # Recommandé : Build PUIS Tauri
 # OU
-npm run dev          # Plus rapide : Build + Tauri parallèle
+pnpm run dev          # Plus rapide : Build + Tauri parallèle
 ```
 
 ### Test Chat IA
-1. Lancer app : `npm run dev:tauri`
+1. Lancer app : `pnpm run dev:tauri`
 2. Naviguer : Page Chat (💬 dans sidebar)
 3. Envoyer message : "Bonjour TITANE∞"
 4. **Attendu** : Réponse fallback < 500ms
@@ -95,8 +95,8 @@ npm run dev          # Plus rapide : Build + Tauri parallèle
 
 ### Production
 ```bash
-npm run build        # Build frontend
-npm run tauri:build  # Package Tauri natif
+pnpm run build        # Build frontend
+pnpm run tauri:build  # Package Tauri natif
 ```
 
 ---
@@ -122,7 +122,7 @@ npm run tauri:build  # Package Tauri natif
 - [x] index.html meta tags mis à jour
 
 ### Tests Runtime (Manuel)
-- [ ] **À TESTER** : `npm run dev:tauri`
+- [ ] **À TESTER** : `pnpm run dev:tauri`
 - [ ] Chat message → Réponse fallback
 - [ ] Texte blanc lisible (dark mode)
 - [ ] TTS bouton 🎤 fonctionne
@@ -133,8 +133,8 @@ npm run tauri:build  # Package Tauri natif
 ## 📝 NOTES IMPORTANTES
 
 ### Mode Browser vs Tauri
-- **Browser (npm run dev en HTTP)** : SingularityConnections spam erreurs Tauri → Normal
-- **Tauri (npm run dev:tauri)** : Toutes commandes disponibles → 0 erreur console
+- **Browser (pnpm run dev en HTTP)** : SingularityConnections spam erreurs Tauri → Normal
+- **Tauri (pnpm run dev:tauri)** : Toutes commandes disponibles → 0 erreur console
 
 ### Configuration Gemini (Optionnel)
 Pour activer Gemini au lieu de fallback :
@@ -153,7 +153,7 @@ Cascade devient : Fallback → **Gemini** → Ollama
 
 ## 🎯 PROCHAINES ÉTAPES
 
-1. **Test runtime complet** : Lancer `npm run dev:tauri` et valider checklist
+1. **Test runtime complet** : Lancer `pnpm run dev:tauri` et valider checklist
 2. **Capturer screenshots** : Chat fonctionnel, réponse fallback, TTS activé
 3. **Commit Git** :
    ```bash

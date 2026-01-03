@@ -137,7 +137,7 @@ cd /home/titane/Documents/TITANE_INFINITY/tts-service
 
 ```bash
 cd /home/titane/Documents/TITANE_INFINITY
-npm run dev:tauri
+pnpm run dev:tauri
 ```
 
 **Accéder au panel de test:**

@@ -334,7 +334,7 @@ pub async fn cp_get_system_info() -> Result<SystemInfo, String> {
     };
 
     // Calculate CPU usage
-    let cpu_usage = sys.global_cpu_info().cpu_usage() as f64;
+    let cpu_usage = sys.global_cpu_usage() as f64;
 
     // Calculate memory usage
     let memory_usage = (sys.used_memory() as f64 / sys.total_memory() as f64) * 100.0;
@@ -362,7 +362,7 @@ pub async fn cp_run_system_diagnostic() -> Result<String, String> {
     let mut report = Vec::new();
 
     // Check CPU
-    let cpu_usage = sys.global_cpu_info().cpu_usage();
+    let cpu_usage = sys.global_cpu_usage();
     if cpu_usage < 90.0 {
         report.push(format!("✅ CPU: {:.1}% utilisé", cpu_usage));
     } else {

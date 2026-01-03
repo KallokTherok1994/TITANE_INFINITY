@@ -23,13 +23,13 @@ Le système de monitoring Sentry a été **entièrement implémenté** et intég
 
 ```bash
 # Installer Sentry pour React
-npm install @sentry/react
+pnpm install @sentry/react
 
 # Installer dépendances optionnelles pour les Web Vitals
-npm install --save-dev web-vitals
+pnpm install --save-dev web-vitals
 
 # Installer types (si nécessaire)
-npm install --save-dev @types/web-vitals
+pnpm install --save-dev @types/web-vitals
 ```
 
 ---
@@ -138,7 +138,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 Lancer l'app en dev :
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 Ouvrir la console DevTools (F12) et taper :
@@ -462,7 +462,7 @@ Vérifier que :
 - [ ] Copier `.env.example` → `.env`
 - [ ] Remplir `VITE_SENTRY_DSN` dans `.env`
 - [ ] Modifier `src/main.tsx` pour initialiser Sentry
-- [ ] Lancer `npm run dev`
+- [ ] Lancer `pnpm run dev`
 - [ ] Tester avec `testSentry()` dans console
 - [ ] Vérifier erreur dans dashboard Sentry
 - [ ] Configurer alertes (optionnel)

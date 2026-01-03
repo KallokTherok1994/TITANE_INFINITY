@@ -56,7 +56,7 @@ Node: 20.19.6 | Rust: 1.91.1 | Tauri: 2.9.6
 1. ✅ **Architecture solide:** React 19 + Tauri 2.9 + Rust 1.91, stack moderne et performant
 2. 🔴 **15 erreurs critiques:** 7 TypeScript + 8 Rust (Provider::Copilot non géré) - **BLOQUANT BUILD**
 3. ✅ **Tests excellents:** 97.9% frontend (2276/2322), 100% backend (4294/4294)
-4. ⚠️ **CVE à vérifier:** npm audit + cargo audit non exécutés - **SÉCURITÉ**
+4. ⚠️ **CVE à vérifier:** pnpm audit + cargo audit non exécutés - **SÉCURITÉ**
 5. ✅ **Sécurité de base:** Tauri capabilities, validation Zod, vault chiffré
 6. ⚠️ **46 tests skipped:** À investiguer pour améliorer couverture
 7. ✅ **Documentation riche:** Multiples rapports existants, bien structurés
@@ -110,7 +110,7 @@ Node: 20.19.6 | Rust: 1.91.1 | Tauri: 2.9.6
 **Risque correction:** VARIABLE selon CVE  
 
 ```bash
-npm audit
+pnpm audit
 cargo audit
 ```
 
@@ -236,7 +236,7 @@ cargo audit
 
 ---
 
-### 3. ✅ Exécuter npm audit + cargo audit (15min)
+### 3. ✅ Exécuter pnpm audit + cargo audit (15min)
 
 **Impact:** Visibilité CVE  
 **Effort:** 15min  
@@ -263,7 +263,7 @@ cargo audit
 ### 6. ✅ Ajouter pre-commit hooks (15min)
 
 ```bash
-npm install --save-dev husky lint-staged
+pnpm install --save-dev husky lint-staged
 ```
 
 **Impact:** Qualité automatique  
@@ -283,7 +283,7 @@ npm install --save-dev husky lint-staged
 ### 8. ✅ Bundle analyzer Vite (10min)
 
 ```bash
-npm run build
+pnpm run build
 npx vite-bundle-visualizer
 ```
 
@@ -396,7 +396,7 @@ Toutes liées à `Provider::Copilot` non couvert:
 ### Checklist P0 Sécurité
 
 - [ ] Corriger erreurs compilation (bloquant)
-- [ ] npm audit + cargo audit
+- [ ] pnpm audit + cargo audit
 - [ ] Aucun secret hardcodé
 - [ ] Vault sécurisé pour API keys
 
@@ -459,7 +459,7 @@ Toutes liées à `Provider::Copilot` non couvert:
 |----|-------|--------|--------|-----|
 | P0.1 | Corriger 7 erreurs TypeScript | 1h | FAIBLE | 🔴🔴🔴 |
 | P0.2 | Corriger 8 erreurs Rust | 30min | FAIBLE | 🔴🔴🔴 |
-| P0.3 | npm audit + fixes critical | 30min | VARIABLE | 🔴🔴 |
+| P0.3 | pnpm audit + fixes critical | 30min | VARIABLE | 🔴🔴 |
 | P0.4 | cargo audit + fixes critical | 30min | VARIABLE | 🔴🔴 |
 | P0.5 | Vérifier secrets hardcodés | 30min | FAIBLE | 🔴🔴 |
 
@@ -523,7 +523,7 @@ Toutes liées à `Provider::Copilot` non couvert:
 - [ ] Corrections P0 (3h30)
   - [ ] 7 erreurs TypeScript
   - [ ] 8 erreurs Rust
-  - [ ] npm audit + cargo audit
+  - [ ] pnpm audit + cargo audit
   - [ ] Vérification secrets
 - [ ] Vérification finale
 - [ ] Tests passent 100%
@@ -591,7 +591,7 @@ const providerNames: Record<ProviderPreference, string> = {
 ### Étape 4: Audit sécurité (30min) ✅
 
 ```bash
-npm audit
+pnpm audit
 cargo audit
 grep -r "API_KEY.*=.*['\"]" src/
 ```
@@ -601,8 +601,8 @@ grep -r "API_KEY.*=.*['\"]" src/
 ```bash
 cargo build
 cargo test
-npm run build
-npm test
+pnpm run build
+pnpm test
 ```
 
 ### Étape 6: Commit & Push ✅
@@ -621,10 +621,10 @@ git push
 
 ```bash
 # Frontend
-npm run dev          # Dev server
-npm run build        # Production build
-npm test             # Tests Vitest
-npm run lint         # ESLint
+pnpm run dev          # Dev server
+pnpm run build        # Production build
+pnpm test             # Tests Vitest
+pnpm run lint         # ESLint
 npx tsc --noEmit     # TypeScript check
 
 # Backend
@@ -683,7 +683,7 @@ docs/audit/
 - [ ] 0 erreur Rust
 - [ ] Build production réussit
 - [ ] Tests passent 100%
-- [ ] npm audit: 0 critical/high
+- [ ] pnpm audit: 0 critical/high
 - [ ] cargo audit: 0 critical/high
 
 ### Phase Vérification Finale

@@ -191,13 +191,6 @@ export default defineConfig({
         propertyReadSideEffects: false,
         tryCatchDeoptimization: false,
       },
-      onwarn(warning, warn) {
-        // Ignorer le warning d'eval pour onnxruntime-web (nécessaire pour WASM)
-        if (warning.code === 'EVAL' && warning.id?.includes('onnxruntime-web')) {
-          return;
-        }
-        warn(warning);
-      },
       output: {
         manualChunks: id => {
           // Vendors
@@ -232,9 +225,6 @@ export default defineConfig({
             }
             if (id.includes('@xenova/transformers')) {
               return 'ai-transformers';
-            }
-            if (id.includes('onnxruntime-web')) {
-              return 'ai-onnx';
             }
             // Web vitals
             if (id.includes('web-vitals')) {

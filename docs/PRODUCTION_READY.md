@@ -19,7 +19,7 @@
 ```bash
 # Run security tests
 cargo test --package titane --lib security::tests
-npm run test:security
+pnpm run test:security
 ```
 
 ### Configuration
@@ -46,7 +46,7 @@ See `config/security.toml` for customization.
 
 ```bash
 # Run a11y tests
-npm run test:a11y
+pnpm run test:a11y
 
 # Manual testing with screen readers
 # - NVDA (Windows)
@@ -131,14 +131,14 @@ i18n.changeLanguage('en');
 
 ```bash
 # Development
-npm run dev
+pnpm run dev
 
 # Production
-npm run build
+pnpm run build
 cargo build --release
 
 # Create installer
-npm run tauri build
+pnpm run tauri build
 ```
 
 ### Environment
@@ -161,26 +161,26 @@ npm run tauri build
 
 ```bash
 cargo test
-npm test
+pnpm test
 ```
 
 ### Integration Tests
 
 ```bash
-npm run test:integration
+pnpm run test:integration
 ```
 
 ### E2E Tests
 
 ```bash
-npm run test:e2e
+pnpm run test:e2e
 ```
 
 ### Coverage
 
 ```bash
 cargo tarpaulin --out Html
-npm run test:coverage
+pnpm run test:coverage
 ```
 
 Target: >80% coverage ✅

@@ -661,9 +661,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
-      - run: npm ci
-      - run: npm test -- --coverage
-      - run: npm run test:e2e
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test -- --coverage
+      - run: pnpm run test:e2e
       - uses: codecov/codecov-action@v3
 
   rust-tests:
@@ -706,8 +706,8 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
       - uses: actions-rs/toolchain@v1
-      - run: npm ci
-      - run: npm run build:production
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build:production
       - uses: actions/upload-artifact@v3
 ```
 

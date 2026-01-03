@@ -184,7 +184,7 @@ Transformer TITANE∞ en forteresse impénétrable :
 - [ ] Créer `sandbox_selftest()` Rust
 - [ ] Créer `bridge_selftest()` Rust
 - [ ] Tests E2E sécurité (Playwright)
-- [ ] Audit final avec cargo-audit + npm audit
+- [ ] Audit final avec cargo-audit + pnpm audit
 
 ### **Phase 6: Documentation & Release**
 
@@ -203,16 +203,16 @@ Transformer TITANE∞ en forteresse impénétrable :
 
 ```bash
 # Type check TypeScript
-npm run type-check
+pnpm run type-check
 
 # Lint + auto-fix
-npm run lint
+pnpm run lint
 
 # Build production
-npm run build
+pnpm run build
 
 # Audit sécurité npm
-npm audit --production
+pnpm audit --production
 
 # Audit sécurité Rust
 cd src-tauri && cargo audit
@@ -221,7 +221,7 @@ cd src-tauri && cargo audit
 cd src-tauri && cargo test --lib
 
 # Tests UI (TODO)
-npm run test:ui
+pnpm run test:ui
 ```
 
 ### **Self-Tests**

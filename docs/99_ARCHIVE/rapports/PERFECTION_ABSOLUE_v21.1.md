@@ -179,7 +179,7 @@ $ cargo build --manifest-path src-tauri/Cargo.toml
 ### Build Frontend
 
 ```bash
-$ npm run build
+$ pnpm run build
 ✓ built in 14.02s
 
 ✅ 0 errors

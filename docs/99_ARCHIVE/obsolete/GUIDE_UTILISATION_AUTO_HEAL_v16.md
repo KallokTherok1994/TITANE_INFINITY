@@ -28,8 +28,8 @@ cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
 2. ✅ Analyse le frontend (TypeScript, fichiers)
 3. ✅ Analyse le backend (Cargo, Rust)
 4. ✅ Nettoie les anciens builds (node_modules, dist, target)
-5. ✅ Réinstalle les dépendances (npm install, cargo update)
-6. ✅ Corrige automatiquement les erreurs (cargo fix, npm audit fix)
+5. ✅ Réinstalle les dépendances (pnpm install, cargo update)
+6. ✅ Corrige automatiquement les erreurs (cargo fix, pnpm audit fix)
 7. ✅ Rebuild complet (Vite + Cargo)
 8. ✅ Vérifie que tout fonctionne
 9. ✅ Génère un rapport détaillé
@@ -322,7 +322,7 @@ cat logs/autofix_report_*.txt
 
 ```bash
 # Lancer l'app
-npm run dev
+pnpm run dev
 ```
 
 Puis dans l'application :
@@ -379,8 +379,8 @@ chmod +x scripts/titane_autofix.sh
 ./scripts/titane_autofix.sh
 
 # Ou manuellement
-npm run type-check
-npm run build
+pnpm run type-check
+pnpm run build
 ```
 
 ### Cargo build échoue (WebKitGTK manquant)

@@ -291,7 +291,7 @@ export class VisualSemanticGrammar {
           priority: 6,
           semanticMeaning: 'Modulation couleur selon comportement',
           config: {
-            auraColor: (metadata?.emotionalColor as string) || '#4FB5FF',
+            auraColor: (metadata?.['emotionalColor'] as string) || '#4FB5FF',
             easingFunction: 'ease-in-out',
           },
         });

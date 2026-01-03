@@ -359,7 +359,7 @@ await voice.forceVoiceReset();
 ```
 
 ### Test Manuel
-1. Démarrer l'app : `npm run tauri:dev`
+1. Démarrer l'app : `pnpm run tauri:dev`
 2. Ouvrir la console DevTools
 3. Tester séquence vocale normale
 4. Déclencher erreur (kill arecord manuellement)
@@ -379,8 +379,8 @@ cargo clippy                   # ✅ 0 warnings
 
 ### Frontend
 ```bash
-npm run type-check            # ✅ 0 errors
-npm run build                 # ✅ Success
+pnpm run type-check            # ✅ 0 errors
+pnpm run build                 # ✅ Success
 ```
 
 ---

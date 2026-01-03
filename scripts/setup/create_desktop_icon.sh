@@ -35,7 +35,7 @@ Exec=bash /home/titane/Documents/TITANE_INFINITY/installer_gui/titane_installer.
 
 [Desktop Action UpdateMode]
 Name=⬆️ Build & Test Dev (Fast)
-Exec=bash -c "cd /home/titane/Documents/TITANE_INFINITY && npm run tauri:dev"
+Exec=bash -c "cd /home/titane/Documents/TITANE_INFINITY && pnpm run tauri:dev"
 EOF
 
 chmod +x "$DESKTOP_FILE"

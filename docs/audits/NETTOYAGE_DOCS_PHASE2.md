@@ -18,7 +18,7 @@
 |---------|-------|---------|---------------------|
 | `docs/RAPPORT_EXECUTIF_CORRECTIONS_v17.3.0.md` | 363 | `# http://localhost:5175` | ⚠️ Commentaire historique → Ajouter warning "Tauri v2 only" |
 | `docs/DUAL_RUNTIME_WORKFLOW.md` | 369 | `"devUrl": "http://localhost:5173"` | ✅ OK (config Tauri dev legit) |
-| `docs/DIAGNOSTIC_COMPLET_ARCHITECTURE_v17.3.0.md` | 702 | `1. Ouvrir http://localhost:5175` | ⚠️ Instruction obsolète → Remplacer par "npm run dev:tauri" |
+| `docs/DIAGNOSTIC_COMPLET_ARCHITECTURE_v17.3.0.md` | 702 | `1. Ouvrir http://localhost:5175` | ⚠️ Instruction obsolète → Remplacer par "pnpm run dev:tauri" |
 
 ### Backup à nettoyer
 - `backup_legacy_20251123_142032/` — Backup complet legacy (22 nov 2024)

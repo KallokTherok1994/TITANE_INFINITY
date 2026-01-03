@@ -297,16 +297,16 @@ Refs: FIX_CHAT_IA_v16.1.0.md, SUPER_PROMPT_CHAT_IA.md
 cd src-tauri && cargo build --release
 
 # Frontend
-npm run build
+pnpm run build
 
 # Dev mode (watch)
-npm run dev  # Vite build --watch + tauri dev
+pnpm run dev  # Vite build --watch + tauri dev
 ```
 
 ### Tester pipeline chat
 ```bash
 # 1. Lancer app
-cargo run --release  # ou npm run tauri:dev
+cargo run --release  # ou pnpm run tauri:dev
 
 # 2. Ouvrir DevTools → Console
 # 3. Taper message dans chat → observer:

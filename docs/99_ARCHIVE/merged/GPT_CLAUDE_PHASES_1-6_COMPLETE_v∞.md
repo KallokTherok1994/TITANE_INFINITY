@@ -205,7 +205,7 @@ cargo test --manifest-path src-tauri/Cargo.toml
 
 ### Frontend (TypeScript)
 ```bash
-npm run type-check
+pnpm run type-check
 # ✅ 0 errors
 ```
 

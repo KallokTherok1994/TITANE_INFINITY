@@ -244,7 +244,7 @@ src-tauri/src/mock_commands.rs         (+80 lignes, 9 fonctions)
 ## 🚀 PROCHAINES ÉTAPES RECOMMANDÉES
 
 ### Court Terme (Immédiat)
-1. ✅ **Tester `npm run tauri:dev`** → Vérifier aucune erreur console
+1. ✅ **Tester `pnpm run tauri:dev`** → Vérifier aucune erreur console
 2. ✅ **Tester Auto-Audit Engine** → Doit scanner sans crasher
 3. ✅ **Tester Singularity updates** → UI doit persister les states
 

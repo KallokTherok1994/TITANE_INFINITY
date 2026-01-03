@@ -97,7 +97,7 @@ if command -v pnpm &> /dev/null; then
     print_ok "pnpm installé: $PNPM_VERSION"
 else
     print_error "pnpm non installé"
-    print_info "Installation: npm install -g pnpm"
+    print_info "Installation: pnpm install -g pnpm"
 fi
 
 # ============================================

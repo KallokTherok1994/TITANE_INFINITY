@@ -378,7 +378,7 @@ Net Change:         +62
 ### Manual Verification
 
 - [x] Build passes (`vite build`)
-- [x] Dev server starts (`npm run dev`)
+- [x] Dev server starts (`pnpm run dev`)
 - [x] No console errors on load
 - [x] Core functionality tested
 

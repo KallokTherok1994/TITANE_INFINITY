@@ -28,7 +28,7 @@
 ### 1. TypeScript ✅ PARFAIT
 
 ```bash
-$ npm run type-check
+$ pnpm run type-check
 > tsc --noEmit
 
 ✅ 0 errors TypeScript
@@ -58,7 +58,7 @@ warning: `titane-infinity` (lib) generated 7 warnings
 ### 3. Tests Suite ✅ 98.2% PASSING
 
 ```bash
-$ npm test
+$ pnpm test
 Test Files  9 failed | 62 passed (71)
 Tests       34 failed | 1854 passed (1888)
 Pass Rate:  98.2%

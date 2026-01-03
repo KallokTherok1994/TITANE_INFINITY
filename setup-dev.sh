@@ -101,12 +101,12 @@ check_prerequisites() {
         all_good=false
     fi
     
-    # npm
-    if command_exists npm; then
-        local npm_version=$(npm --version)
-        print_success "npm installé (version $npm_version)"
+    # pnpm
+    if command_exists pnpm; then
+        local pnpm_version=$(pnpm --version)
+        print_success "pnpm installé (version $pnpm_version)"
     else
-        print_error "npm n'est pas installé"
+        print_error "pnpm n'est pas installé"
         all_good=false
     fi
     
@@ -252,7 +252,7 @@ install_dependencies() {
     if [ "$pkg_manager" = "pnpm" ]; then
         pnpm install
     else
-        npm install
+        pnpm install
     fi
     print_success "Dépendances Node.js installées"
     
@@ -327,7 +327,7 @@ verify_installation() {
     
     # TypeScript check
     print_info "Vérification TypeScript..."
-    if npm run type-check 2>&1 | grep -q "error"; then
+    if pnpm run type-check 2>&1 | grep -q "error"; then
         print_warning "Erreurs TypeScript détectées (normal si projet modifié)"
     else
         print_success "TypeScript: OK"
@@ -335,7 +335,7 @@ verify_installation() {
     
     # Lint check
     print_info "Vérification ESLint..."
-    if npm run lint 2>&1 | grep -q "error"; then
+    if pnpm run lint 2>&1 | grep -q "error"; then
         print_warning "Erreurs ESLint détectées"
     else
         print_success "ESLint: OK"
@@ -343,7 +343,7 @@ verify_installation() {
     
     # Build test
     print_info "Test de build frontend..."
-    if npm run build >/dev/null 2>&1; then
+    if pnpm run build >/dev/null 2>&1; then
         print_success "Build frontend: OK"
     else
         print_warning "Build frontend a échoué (vérifier les logs)"
@@ -365,16 +365,16 @@ show_next_steps() {
     print_info "Prochaines étapes:"
     echo ""
     echo "1. Lancer le serveur de développement:"
-    echo "   ${GREEN}npm run dev${NC}              # Frontend seul (port 5173)"
-    echo "   ${GREEN}npm run tauri dev${NC}        # Application complète (Tauri)"
+    echo "   ${GREEN}pnpm run dev${NC}              # Frontend seul (port 5173)"
+    echo "   ${GREEN}pnpm run tauri dev${NC}        # Application complète (Tauri)"
     echo ""
     echo "2. Lancer les tests:"
-    echo "   ${GREEN}npm run test${NC}             # Tests unitaires"
-    echo "   ${GREEN}npm run test:e2e${NC}         # Tests E2E"
+    echo "   ${GREEN}pnpm run test${NC}             # Tests unitaires"
+    echo "   ${GREEN}pnpm run test:e2e${NC}         # Tests E2E"
     echo ""
     echo "3. Build production:"
-    echo "   ${GREEN}npm run build${NC}            # Build frontend"
-    echo "   ${GREEN}npm run tauri build${NC}      # Build app complète"
+    echo "   ${GREEN}pnpm run build${NC}            # Build frontend"
+    echo "   ${GREEN}pnpm run tauri build${NC}      # Build app complète"
     echo ""
     echo "4. Ouvrir dans VSCode:"
     echo "   ${GREEN}code .${NC}"

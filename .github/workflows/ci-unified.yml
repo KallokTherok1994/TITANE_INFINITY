@@ -331,7 +331,7 @@ jobs:
           workspaces: src-tauri
           cache-on-failure: true
 
-      - name: 📦 Install npm dependencies
+      - name: 📦 Install pnpm dependencies
         run: pnpm install --frozen-lockfile
 
       - name: 🏗️ Build frontend
@@ -386,8 +386,8 @@ jobs:
       - name: 📦 Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: 🔒 npm audit
-        run: npm audit --audit-level=high
+      - name: 🔒 pnpm audit
+        run: pnpm audit --audit-level=high
         continue-on-error: true
 
       - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
@@ -407,7 +407,7 @@ jobs:
         run: |
           echo "## 🔒 Security Audit Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- npm audit completed" >> $GITHUB_STEP_SUMMARY
+          echo "- pnpm audit completed" >> $GITHUB_STEP_SUMMARY
           echo "- cargo audit completed" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "_Security checks continue-on-error to avoid blocking CI on advisory-only issues_" >> $GITHUB_STEP_SUMMARY

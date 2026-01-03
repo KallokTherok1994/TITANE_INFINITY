@@ -261,7 +261,7 @@ cd src-tauri && cargo check
 - Types définis (PersonaState, Mood, Temperament, etc.)
 - Imports corrects
 
-**Validation finale** : Nécessite `npm run build` (pending Node.js install)
+**Validation finale** : Nécessite `pnpm run build` (pending Node.js install)
 
 ---
 
@@ -336,7 +336,7 @@ cd src-tauri && cargo check
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 source ~/.bashrc
 nvm install --lts
-npm install -g pnpm
+pnpm install -g pnpm
 cd /home/titane/Documents/TITANE_INFINITY
 pnpm install
 cargo tauri dev
@@ -352,7 +352,7 @@ cargo tauri dev
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 source ~/.bashrc
 nvm install --lts
-npm install -g pnpm
+pnpm install -g pnpm
 ```
 
 ### Étape 2 : Installer dépendances

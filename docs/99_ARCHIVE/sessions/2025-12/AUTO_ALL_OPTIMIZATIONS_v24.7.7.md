@@ -12,7 +12,7 @@
 ### Build Time Progression
 
 ```
-Baseline:            14.64s (npm run build)
+Baseline:            14.64s (pnpm run build)
 After Vite opts:     16.50s (+13% - quality trade-off)
 After advanced opts: 10.78s (-36% from 16.50s)
 Final optimized:     10.86s (-26% from baseline)
@@ -248,7 +248,7 @@ Tauri didn't know to load Vite dev server (localhost:5173), resulting in empty H
   "build": {
     "devUrl": "http://localhost:5173", // ← CRITICAL FIX
     "beforeDevCommand": "vite", // Launch Vite server
-    "beforeBuildCommand": "npm run build"
+    "beforeBuildCommand": "pnpm run build"
   }
 }
 ```
@@ -301,7 +301,7 @@ curl http://localhost:5173 | grep -o "<script.*module.*>"
 - ✅ ESLint: **0 warnings**
 - ✅ Build time: **10.86s** (-26% vs baseline)
 - ✅ Bundle size: **0.92 MB** gzipped (-23% vs baseline)
-- ✅ Security: **0 vulnerabilities** (npm audit)
+- ✅ Security: **0 vulnerabilities** (pnpm audit)
 - ✅ Vite cache: **21 MB** (optimal)
 
 ### React Components
@@ -334,7 +334,7 @@ curl http://localhost:5173 | grep -o "<script.*module.*>"
 ### Build Performance
 
 ```bash
-# Command: time npm run build
+# Command: time pnpm run build
 Vite build: 10.86s
 Real time:  23.90s (includes npm/cargo overhead)
 User time:  41.61s (CPU time)

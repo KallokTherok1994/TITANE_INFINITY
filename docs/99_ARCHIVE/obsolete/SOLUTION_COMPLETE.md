@@ -12,7 +12,7 @@ Après analyse approfondie, voici la situation réelle :
 |----------------|---------|
 | ❌ "Scripts npm manquants" | ✅ **22 scripts présents et fonctionnels** |
 | ❌ "package.json corrompu" | ✅ **Configuration optimale** |
-| ❌ "npm run dev échoue" | ✅ **Fonctionne (port 5173 déjà utilisé)** |
+| ❌ "pnpm run dev échoue" | ✅ **Fonctionne (port 5173 déjà utilisé)** |
 | ❌ "START.sh exit code 1" | ✅ **Fixé avec arguments CLI** |
 
 ---
@@ -76,37 +76,37 @@ Affiche le menu pour choisir 1-5.
 #### Développement
 ```bash
 # Frontend seul (Vite dev server)
-npm run dev
+pnpm run dev
 
 # Application complète (Tauri + Frontend)
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 #### Production
 ```bash
 # Build frontend uniquement
-npm run build
+pnpm run build
 
 # Build application complète
-npm run tauri:build
+pnpm run tauri:build
 
 # Build en mode debug (plus rapide)
-npm run tauri:build:debug
+pnpm run tauri:build:debug
 ```
 
 #### Maintenance
 ```bash
 # Validation TypeScript
-npm run type-check
+pnpm run type-check
 
 # Correction automatique ESLint
-npm run lint:fix
+pnpm run lint:fix
 
 # Nettoyage total
-npm run clean
+pnpm run clean
 
 # Réinstallation complète
-npm run reinstall
+pnpm run reinstall
 ```
 
 ---
@@ -124,7 +124,7 @@ npm run reinstall
 sudo lsof -t -i:5173 | xargs kill -9
 
 # Solution B : Utiliser un autre port
-npm run dev -- --port 5174
+pnpm run dev -- --port 5174
 
 # Solution C : Redémarrer
 pkill node
@@ -153,7 +153,7 @@ sudo apt install libwebkit2gtk-4.1-dev \
                  librsvg2-dev
 
 # Puis relancer
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### 4. "START.sh: Permission denied"
@@ -206,27 +206,27 @@ package.json
 ### Workflow Recommandé
 ```
 1. Développement
-   npm run dev
+   pnpm run dev
    → Éditer src/
    → Hot reload automatique
 
 2. Validation
-   npm run type-check
+   pnpm run type-check
    → Vérifier les types
    → Corriger erreurs TypeScript
 
 3. Build
-   npm run build
+   pnpm run build
    → Génère dist/
    → Optimise bundles
 
 4. Test Build
-   npm run preview
+   pnpm run preview
    → Teste le build localement
    → Valide fonctionnalités
 
 5. Application Desktop
-   npm run tauri:build
+   pnpm run tauri:build
    → Génère l'exécutable natif
    → src-tauri/target/release/
 ```
@@ -244,33 +244,33 @@ package.json
 ./START.sh 3
 
 # Validation complète
-npm run type-check && npm run build
+pnpm run type-check && pnpm run build
 ```
 
 ### Dépannage
 ```bash
 # Nettoyage complet
-npm run clean
-npm install
+pnpm run clean
+pnpm install
 
 # Réparation automatique
 ./fix-scripts.sh
 
 # Vérification système
-npm run type-check
-npm run build
+pnpm run type-check
+pnpm run build
 ```
 
 ### Scripts Avancés
 ```bash
 # Build avec analyse
-npm run build -- --mode production
+pnpm run build -- --mode production
 
 # Dev avec port custom
-npm run dev -- --port 5174
+pnpm run dev -- --port 5174
 
 # Tauri en mode debug (rapide)
-npm run tauri:build:debug
+pnpm run tauri:build:debug
 ```
 
 ---
@@ -286,7 +286,7 @@ npm run tauri:build:debug
 ### Première Installation
 ```bash
 cd TITANE_INFINITY
-npm install
+pnpm install
 chmod +x START.sh fix-scripts.sh
 ```
 
@@ -307,7 +307,7 @@ Doit afficher :
 ```bash
 ./START.sh 1    # Frontend dev
 # OU
-npm run dev
+pnpm run dev
 ```
 
 ---
@@ -342,7 +342,7 @@ npm run dev
 
 ### 🚀 PROCHAINES ÉTAPES
 1. Tuer processus port 5173 si besoin : `sudo lsof -t -i:5173 | xargs kill -9`
-2. Lancer dev : `./START.sh 1` ou `npm run dev`
+2. Lancer dev : `./START.sh 1` ou `pnpm run dev`
 3. Développer normalement !
 
 ---
@@ -350,8 +350,8 @@ npm run dev
 ## 💡 NOTES IMPORTANTES
 
 - ⚠️ **Port 5173** : Assurez-vous qu'aucun autre serveur Vite ne tourne
-- 🐧 **Linux** : WebKitGTK requis pour `npm run tauri:dev`
-- 📦 **Node Modules** : Si problème, `npm run reinstall`
+- 🐧 **Linux** : WebKitGTK requis pour `pnpm run tauri:dev`
+- 📦 **Node Modules** : Si problème, `pnpm run reinstall`
 - 🔄 **Hot Reload** : Fonctionne automatiquement en mode dev
 
 ---

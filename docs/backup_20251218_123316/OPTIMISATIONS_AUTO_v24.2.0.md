@@ -178,7 +178,7 @@ export const agendaService = {
 
 ```bash
 # Frontend Build
-$ npm run build
+$ pnpm run build
 ✓ built in 10.99s  ✅
 
 # Rust Compilation
@@ -186,7 +186,7 @@ $ cd src-tauri && cargo check
 Finished (0 errors, 0 warnings)  ✅
 
 # TypeScript Check
-$ npm run check
+$ pnpm run check
 23 errors (non-bloquantes, déjà existantes)  🟡
 ```
 

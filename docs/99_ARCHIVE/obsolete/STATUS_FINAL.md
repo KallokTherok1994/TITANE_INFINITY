@@ -29,10 +29,10 @@
 
 **Dev Experience** :
 ```bash
-npm run dev          # ✅ 118ms startup → http://localhost:5173
-npm run build        # ✅ 1.08s → dist/ (214 KB optimized)
-npm run type-check   # ✅ 0 erreur
-npm run lint         # ✅ 0 warning
+pnpm run dev          # ✅ 118ms startup → http://localhost:5173
+pnpm run build        # ✅ 1.08s → dist/ (214 KB optimized)
+pnpm run type-check   # ✅ 0 erreur
+pnpm run lint         # ✅ 0 warning
 ```
 
 ---
@@ -125,7 +125,7 @@ sudo do-release-upgrade
 ```bash
 # Ouvrir terminal système : Ctrl+Alt+T (PAS VSCode Flatpak)
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 **Limitations** :
@@ -332,11 +332,11 @@ npm run tauri:build
 1. **Choisir solution build** :
    - 🐳 Docker : Universel, pas de modif système → `./build-docker.sh`
    - 📦 Migration 24.04 : Solution permanente → Voir `GUIDE_MIGRATION_POPOS_24.04.md`
-   - 💻 Build natif : Test rapide → `Ctrl+Alt+T` puis `npm run tauri:build`
+   - 💻 Build natif : Test rapide → `Ctrl+Alt+T` puis `pnpm run tauri:build`
 
 2. **Générer bundles production** :
    ```bash
-   npm run tauri:build
+   pnpm run tauri:build
    # Génère : .deb, .AppImage, binaire
    ```
 

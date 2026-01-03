@@ -136,7 +136,7 @@ patchelf
 
 ### Phase 8 : Dépendances
 
-- `npm install`
+- `pnpm install`
 - `cargo build`
 
 ### Phase 9 : Validation

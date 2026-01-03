@@ -493,7 +493,7 @@ const sendMessage = useCallback(
 ### Tests Unitaires (chat-ia-diagnostic.test.ts)
 
 ```bash
-$ npm run test -- src/__tests__/chat-ia-diagnostic.test.ts
+$ pnpm run test -- src/__tests__/chat-ia-diagnostic.test.ts
 
 ✓ RACE CONDITION FIXES (5 tests)
   ✓ sendMessage utilise bon historique avec message user inclus
@@ -519,7 +519,7 @@ Result: 9 tests | 5 PASS | 4 PASS (warnings non-bloquants)
 ### Tests Stabilité (chat-ia-stability.test.ts)
 
 ```bash
-$ npm run test -- src/__tests__/chat-ia-stability.test.ts
+$ pnpm run test -- src/__tests__/chat-ia-stability.test.ts
 
 ✓ SCÉNARIO A: Messages user + IA persistent (46ms)
 ✓ SCÉNARIO B: Changement mode préserve messages (7ms)
@@ -538,7 +538,7 @@ Result: 6 tests | 4 PASS | 1 FAIL | 1 SKIP = 80% success
 ### Tests E2E Automatisés (e2e-automated-validation.test.tsx)
 
 ```bash
-$ npm run test -- src/__tests__/e2e-automated-validation.test.tsx
+$ pnpm run test -- src/__tests__/e2e-automated-validation.test.tsx
 
 🟣 OMEGA Phase 7Ω - E2E: Full System Integration
 ✓ complete full message flow (2820ms)
@@ -586,7 +586,7 @@ Result: 65 tests | 61 PASS | 4 FAIL = 93.8% success
 ### Build Production
 
 ```bash
-$ npm run build
+$ pnpm run build
 ✓ built in 13.29s
 dist/assets/page-chat-mzXBLg12.js  364.29 kB │ gzip: 96.94 kB
 ```
@@ -594,7 +594,7 @@ dist/assets/page-chat-mzXBLg12.js  364.29 kB │ gzip: 96.94 kB
 ### TypeScript Validation
 
 ```bash
-$ npm run check
+$ pnpm run check
 > tsc --noEmit
 (no errors = success)
 ```
@@ -602,7 +602,7 @@ $ npm run check
 ### Dev Server
 
 ```bash
-$ npm run dev
+$ pnpm run dev
 VITE v6.4.1  ready in 246 ms
 ➜  Local:   http://localhost:5173/
 ➜  Network: http://192.168.2.16:5173/

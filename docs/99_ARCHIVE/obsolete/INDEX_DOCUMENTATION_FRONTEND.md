@@ -15,7 +15,7 @@
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
 bash install_system_deps.sh
 cargo build --release
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### 📊 Vous voulez comprendre l'analyse ?
@@ -415,7 +415,7 @@ TOTAL                                  : ~6350 lignes
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
 bash install_system_deps.sh
 cargo build --release
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ---

@@ -16,13 +16,13 @@ SINGULARITY-FUSION vΩ est le système unifié final de TITANE∞ qui fusionne 1
 
 ```bash
 # 1. Installer dépendances
-npm install
+pnpm install
 
 # 2. Compiler backend
 cargo build --manifest-path=src-tauri/Cargo.toml
 
 # 3. Lancer en dev
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ## 📚 Architecture
@@ -325,13 +325,13 @@ setInterval(async () => {
 
 ```bash
 # Lancer tous les tests
-npm test
+pnpm test
 
 # Tests d'intégration SINGULARITY-FUSION
-npm test -- singularity-fusion-integration
+pnpm test -- singularity-fusion-integration
 
 # Tests avec coverage
-npm test -- --coverage
+pnpm test -- --coverage
 ```
 
 ## 📊 Monitoring
@@ -483,7 +483,7 @@ if (threats.some(t => t.severity === 'critical')) {
 
 ```bash
 # Build production
-npm run tauri:build
+pnpm run tauri:build
 
 # L'exécutable sera dans src-tauri/target/release/
 ```

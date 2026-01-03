@@ -174,7 +174,7 @@ src/visual-engine/
 
 ### Build Production ✅
 ```bash
-npm run build
+pnpm run build
 ✓ built in 14.02s
 ✅ 0 TypeScript errors
 ✅ 17 warnings (1 nouveau dans UIIntegrityChecker - var unused)

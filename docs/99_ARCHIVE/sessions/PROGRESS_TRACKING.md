@@ -529,13 +529,13 @@ Timestamp: $(date '+%Y-%m-%d %H:%M:%S')
 - ✅ Build production : OK (10.35s)
 
 **2. Build & Configuration :**
-- ✅ `npm run build` : succès (2729 modules, dist/ généré)
+- ✅ `pnpm run build` : succès (2729 modules, dist/ généré)
 - ✅ vite.config.ts : `base: './'` correct
 - ✅ index.html : structure correcte
 - ✅ Chunks générés : main, vendor, services OK
 
 **3. Serveurs de test :**
-- ⚠️ `npm run dev` : démarre (Vite 6.4.1) mais connexion instable
+- ⚠️ `pnpm run dev` : démarre (Vite 6.4.1) mais connexion instable
 - ⚠️ Port 5173 : écoute mais pas de réponse HTTP
 - ⚠️ Serveurs statiques (python, serve, http-server) : arrêt prématuré
 
@@ -553,14 +553,14 @@ lock_or_recover dans:
 ### Actions requises (prochaine session) :
 
 **Priorité 1 - Diagnostic console navigateur :**
-1. Lancer `npm run dev` manuellement
+1. Lancer `pnpm run dev` manuellement
 2. Ouvrir http://localhost:5173 dans navigateur
 3. Inspecter console JavaScript (F12) pour erreurs runtime
 4. Vérifier Network tab : chargement assets
 
 **Priorité 2 - Test environnement Tauri :**
 ```bash
-npm run tauri dev
+pnpm run tauri dev
 ```
 (teste rendu desktop natif vs browser)
 

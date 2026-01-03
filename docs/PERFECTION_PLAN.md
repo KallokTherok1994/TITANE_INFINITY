@@ -95,7 +95,7 @@ Ring 4 (OS/UI)    : src-tauri/src/, React components
 #### 2.3 Élimination des Dépendances Circulaires
 ```bash
 # Installer et exécuter madge
-npm install -g madge
+pnpm install -g madge
 madge --circular src/
 ```
 

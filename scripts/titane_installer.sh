@@ -193,7 +193,7 @@ install_npm_dependencies() {
 
         echo "30"
         echo "# Installation dépendances npm..."
-        npm install --legacy-peer-deps 2>&1 | tee -a "$INSTALL_LOG"
+        pnpm install --legacy-peer-deps 2>&1 | tee -a "$INSTALL_LOG"
 
         echo "100"
         echo "# Installation terminée"
@@ -219,12 +219,12 @@ build_frontend() {
     (
         echo "20"
         echo "# Type check TypeScript..."
-        npm run type-check 2>&1 | tee -a "$INSTALL_LOG" || true
+        pnpm run type-check 2>&1 | tee -a "$INSTALL_LOG" || true
         sleep 0.5
 
         echo "60"
         echo "# Build Vite..."
-        npm run build 2>&1 | tee -a "$INSTALL_LOG"
+        pnpm run build 2>&1 | tee -a "$INSTALL_LOG"
 
         echo "100"
         echo "# Frontend build terminé"
@@ -283,7 +283,7 @@ build_tauri_complete() {
     (
         echo "30"
         echo "# Packaging Tauri..."
-        npm run tauri:build 2>&1 | tee -a "$INSTALL_LOG"
+        pnpm run tauri:build 2>&1 | tee -a "$INSTALL_LOG"
 
         echo "100"
         echo "# Tauri build terminé"
@@ -359,7 +359,7 @@ $INSTALL_LOG
 
 <b>Pour lancer TITANE∞:</b>
 Cherchez l'exécutable dans le dossier releases ou lancez:
-  npm run tauri:dev
+  pnpm run tauri:dev
 
 <i>TITANE∞ vΩ est maintenant installé et prêt à l'emploi!</i>" \
         --width=500 \

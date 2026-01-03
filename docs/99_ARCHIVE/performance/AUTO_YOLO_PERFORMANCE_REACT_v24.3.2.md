@@ -362,7 +362,7 @@ HyperVisionDashboard.displayName = 'HyperVisionDashboard';
 **Setup** :
 
 1. Installer React DevTools Profiler
-2. Démarrer `npm run dev`
+2. Démarrer `pnpm run dev`
 3. Ouvrir DevTools → Profiler → Start recording
 
 **Actions** :
@@ -406,7 +406,7 @@ HyperVisionDashboard.displayName = 'HyperVisionDashboard';
 **Test** :
 
 ```bash
-npm run build
+pnpm run build
 
 # Mesurer temps
 # Avant v24.3.1: 15.61s

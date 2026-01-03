@@ -41,4 +41,4 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo ""
 
 # Lancer l'application
-exec npm run dev:tauri
+exec pnpm run dev:tauri

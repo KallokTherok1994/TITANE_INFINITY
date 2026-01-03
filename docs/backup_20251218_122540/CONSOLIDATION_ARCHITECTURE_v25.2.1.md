@@ -274,12 +274,12 @@ TITANE∞ v25.2.1
    - Tester navigation /stats (4 sections)
 
 2. **Tests automatisés**
-   - TypeScript: `npm run type-check`
-   - ESLint: `npm run lint`
-   - Tests: `npm test`
+   - TypeScript: `pnpm run type-check`
+   - ESLint: `pnpm run lint`
+   - Tests: `pnpm test`
 
 3. **Build production**
-   - `npm run build`
+   - `pnpm run build`
    - `npx tauri build`
 
 ### Maintenance Future

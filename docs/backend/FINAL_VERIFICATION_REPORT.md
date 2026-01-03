@@ -277,7 +277,7 @@ export class VisualConductor extends EventEmitter {
    - **Estimated time:** 5 minutes
 
 3. **Re-run Frontend Tests (P0)**
-   - After TypeScript fix, run `npm run test`
+   - After TypeScript fix, run `pnpm run test`
    - Confirm 2276+ tests passing
    - **Estimated time:** 3 minutes
 

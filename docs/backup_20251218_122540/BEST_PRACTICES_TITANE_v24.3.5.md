@@ -685,7 +685,7 @@ describe('MyComponent', () => {
 
 ### Type Safety ✅
 
-- [ ] `npm run type-check` → 0 erreurs
+- [ ] `pnpm run type-check` → 0 erreurs
 - [ ] Pas de `any` sans justification
 - [ ] Interfaces documentées pour types complexes
 - [ ] Enums utilisés pour valeurs fixes

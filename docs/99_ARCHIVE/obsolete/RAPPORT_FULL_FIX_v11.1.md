@@ -321,12 +321,12 @@ cargo build --release
 
 ### Priorité 3 - Génération bundles
 ```bash
-npm run tauri build
+pnpm run tauri build
 ```
 
 ### Priorité 4 - Tests E2E
 ```bash
-npm run tauri dev
+pnpm run tauri dev
 # Tester chaque module via DevTools
 ```
 

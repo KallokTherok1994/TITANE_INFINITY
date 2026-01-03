@@ -225,7 +225,7 @@ src/particles/
 
 ### Build Production ✅
 ```bash
-npm run build
+pnpm run build
 ✓ built in 13.08s
 ✅ 0 TypeScript errors
 ✅ 18 warnings (pré-existants + 1 EffectsMetrics unused import)

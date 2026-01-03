@@ -77,7 +77,7 @@ Une fois les dépendances installées :
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
 
 # Build complet (frontend + backend Rust + packaging)
-npm run tauri build
+pnpm run tauri build
 
 # Ou directement avec Tauri CLI
 cargo tauri build
@@ -86,7 +86,7 @@ cargo tauri build
 ### 2. Build Debug (Plus rapide pour tests)
 
 ```bash
-npm run tauri:build:debug
+pnpm run tauri:build:debug
 
 # Ou
 cargo tauri build --debug
@@ -140,7 +140,7 @@ Si les dépendances système ne peuvent pas être installées, utilisez le dépl
 
 ```bash
 # Build frontend (déjà fait)
-npm run build
+pnpm run build
 
 # Déploiement web
 cd deploy_v16.1_prod
@@ -209,11 +209,11 @@ sudo apt-get install libgtk-3-dev
 
 ```bash
 # Mode debug (plus rapide)
-npm run tauri:build:debug
+pnpm run tauri:build:debug
 
 # Paralléliser la compilation Rust
 export CARGO_BUILD_JOBS=$(nproc)
-npm run tauri build
+pnpm run tauri build
 ```
 
 ---
@@ -237,7 +237,7 @@ npm run tauri build
 
 ### Pour le Développement
 - ✅ **Mode Web** : Idéal pour itérations rapides
-- ✅ **Tauri Dev** : `npm run tauri:dev` (hot-reload)
+- ✅ **Tauri Dev** : `pnpm run tauri:dev` (hot-reload)
 
 ### Pour la Production
 
@@ -300,12 +300,12 @@ echo ""
 
 # Build frontend
 echo "📦 Build frontend..."
-npm run build
+pnpm run build
 echo ""
 
 # Build Tauri
 echo "🦀 Build Tauri (cela peut prendre 10-30 minutes)..."
-npm run tauri build
+pnpm run tauri build
 echo ""
 
 # Affichage des résultats
@@ -372,7 +372,7 @@ sudo apt-get install -y libwebkit2gtk-4.1-dev libjavascriptcoregtk-4.1-dev
 
 # 2. Build Tauri
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run tauri build
+pnpm run tauri build
 
 # 3. Exécuter
 ./src-tauri/target/release/titane-infinity
@@ -418,7 +418,7 @@ cd deploy_v16.1_prod && python3 -m http.server 8080
 ### 📈 Prochaines Étapes
 
 1. Obtenir accès `sudo` pour installer WebKit
-2. Relancer `npm run tauri build`
+2. Relancer `pnpm run tauri build`
 3. Tester le binaire généré
 4. Créer les packages (.deb, .AppImage, .rpm)
 5. Distribuer selon les besoins

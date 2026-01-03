@@ -25,7 +25,7 @@
 
 #### Build
 ```bash
-npm run build
+pnpm run build
 ✓ 77 modules transformed
 ✓ built in 1.08s
 dist/assets/index-CRcUptYL.css    28.91 kB │ gzip:  5.97 kB
@@ -222,7 +222,7 @@ warning: associated items `new`, `calculate_level_with_calibration`, etc. are ne
 - [x] `RAPPORT_PRE_LANCEMENT_v15.5.md` - Ce document
 
 ### Tests Pré-Lancement ✅
-- [x] `npm run build` - Succès (1.08s)
+- [x] `pnpm run build` - Succès (1.08s)
 - [x] `cargo check --release` - Succès (7 warnings)
 - [x] `cargo build --release` - Succès (8.0 MB binary)
 - [x] TypeScript strict mode - 0 erreur
@@ -247,13 +247,13 @@ warning: associated items `new`, `calculate_level_with_calibration`, etc. are ne
 #### Développement
 ```bash
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 #### Production Build
 ```bash
 # Frontend
-npm run build
+pnpm run build
 
 # Backend (depuis terminal natif Pop!_OS)
 cd src-tauri
@@ -266,13 +266,13 @@ src-tauri/target/release/titane-infinity
 #### Vérification Rapide
 ```bash
 # Frontend
-npm run build
+pnpm run build
 
 # Backend check
 cd src-tauri && cargo check --release
 
 # Run
-npm run tauri:dev
+pnpm run tauri:dev
 ```
 
 ### Environnement Requis
@@ -322,7 +322,7 @@ npm run tauri:dev
 - Architecture modulaire complète (52 commandes Tauri)
 
 🚀 **Prochaines Étapes:**
-1. Lancer application: `npm run tauri:dev`
+1. Lancer application: `pnpm run tauri:dev`
 2. Tester 15 commandes evolution depuis frontend
 3. Intégrer Evolution Panel UI (dashboard visuel)
 4. Valider persistence Memory + Timeline

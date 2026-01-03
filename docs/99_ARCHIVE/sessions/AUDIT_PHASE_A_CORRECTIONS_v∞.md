@@ -249,7 +249,7 @@ export { transitions as designTransitions } from './tokens';
 
 **6. Test Build** (5 min):
 ```bash
-npm run build
+pnpm run build
 ```
 
 **APRÈS CES FIXES**: Build devrait passer (sauf Design System legacy ~130 warnings acceptables)
@@ -361,13 +361,13 @@ npm run build
 
 ```bash
 # Compter erreurs TypeScript
-npm run build 2>&1 | grep -c "error TS"
+pnpm run build 2>&1 | grep -c "error TS"
 
 # Erreurs hors Design System
-npm run build 2>&1 | grep "error TS" | grep -v "TBadge\|TMetric" | head -20
+pnpm run build 2>&1 | grep "error TS" | grep -v "TBadge\|TMetric" | head -20
 
 # Erreurs par fichier
-npm run build 2>&1 | grep "error TS" | cut -d'(' -f1 | sort | uniq -c | sort -rn
+pnpm run build 2>&1 | grep "error TS" | cut -d'(' -f1 | sort | uniq -c | sort -rn
 ```
 
 ---

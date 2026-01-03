@@ -291,8 +291,8 @@ Build:            95/100  ✅ Backend + Frontend (+22)
 
 ### **Phase 1.9.4: Validation Finale** ⏳
 
-- [ ] `npm run build` → Succès
-- [ ] `npm run dev` → Démarrage sans erreurs
+- [ ] `pnpm run build` → Succès
+- [ ] `pnpm run dev` → Démarrage sans erreurs
 - [ ] Test manuel Chat → Fonctionnel
 - [ ] Test manuel Voice → Duplex sans écho
 - [ ] Score final: **90-95/100** ✅

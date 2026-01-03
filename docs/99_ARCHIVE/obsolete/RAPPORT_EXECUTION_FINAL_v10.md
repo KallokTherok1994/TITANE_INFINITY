@@ -169,7 +169,7 @@ WORKDIR /app
 COPY . .
 
 RUN cd src-tauri && cargo build --release
-RUN npm install && npm run build
+RUN pnpm install && pnpm run build
 
 CMD ["./launch_dev.sh"]
 ```

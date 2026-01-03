@@ -221,7 +221,7 @@ Tests + Documentation
 
 ### ACTION SECONDAIRE: Logs Backend Terminal
 
-**Vérifier terminal `npm run tauri:dev`**:
+**Vérifier terminal `pnpm run tauri:dev`**:
 ```
 [CHAT] 💬 chat_send_message invoked
 [CHAT] 🔄 Tentative avec provider: local

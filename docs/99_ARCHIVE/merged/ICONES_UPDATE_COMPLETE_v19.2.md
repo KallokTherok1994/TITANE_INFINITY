@@ -77,12 +77,12 @@ L'application TITANE∞ aura maintenant :
 
 1. **Test visuel** :
    ```bash
-   npm run tauri:dev
+   pnpm run tauri:dev
    ```
 
 2. **Build production** :
    ```bash
-   npm run tauri:build
+   pnpm run tauri:build
    ```
 
 3. **Validation multi-plateforme** :

@@ -128,11 +128,11 @@ export async function processMessage(
   }
 ): Promise<ConversationResponse> {
   const raw = (await secureInvoke<unknown>('conversation_process_message', {
-    user_message: userMessage,
-    conversation_id: options?.conversationId,
+    userMessage: userMessage,
+    conversationId: options?.conversationId,
     mode: options?.mode || 'default',
-    ai_config: null,
-    emotion_context: options?.emotionContext || null,
+    aiConfig: null,
+    emotionContext: options?.emotionContext || null,
   })) as ConversationResponse;
 
   return {

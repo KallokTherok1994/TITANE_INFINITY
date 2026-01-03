@@ -278,7 +278,7 @@ Si tous tests passent:
 
 ### 1️⃣ Build Production (20 min)
 ```bash
-npm run tauri:build
+pnpm run tauri:build
 ```
 
 ### 2️⃣ Installer .deb
@@ -324,7 +324,7 @@ Closes #CHATIA-REPAIR
 **Version**: v16.2.2
 **Date**: 27 novembre 2025
 **Temps estimé**: 15 minutes
-**Prérequis**: App lancée (npm run tauri:dev actif)
+**Prérequis**: App lancée (pnpm run tauri:dev actif)
 
 ---
 

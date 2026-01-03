@@ -382,7 +382,7 @@ cargo check --manifest-path src-tauri/Cargo.toml
 npx tsc --noEmit
 
 # Lancer dev
-npm run dev
+pnpm run dev
 ```
 
 ---

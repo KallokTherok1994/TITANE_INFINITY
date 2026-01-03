@@ -27,7 +27,7 @@
 
 ```bash
 # Lancer app
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Ouvrir navigateur
 http://localhost:5173/chat
@@ -52,7 +52,7 @@ http://localhost:5173/chat
 ```bash
 # Dans le chat, envoyer 5 messages
 # Fermer l'application (Ctrl+C)
-# Relancer: npm run tauri:dev
+# Relancer: pnpm run tauri:dev
 # Rouvrir http://localhost:5173/chat
 ```
 
@@ -71,7 +71,7 @@ localStorage.getItem('titane_chat_history')
 ### 4. Mode Vocal (5 min) ⚠️ À VALIDER
 
 ```bash
-# App lancée: npm run tauri:dev
+# App lancée: pnpm run tauri:dev
 # Ouvrir: http://localhost:5173
 
 # Test micro:
@@ -223,7 +223,7 @@ python3 tts_api_server.py
 ```bash
 # Test backend direct
 cd /home/titane/Documents/TITANE_INFINITY
-npm run tauri:dev
+pnpm run tauri:dev
 
 # Console navigateur (F12):
 # Observer erreurs lors activation mode vocal

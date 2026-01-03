@@ -345,8 +345,8 @@ import type { SystemStatus } from 'monitoring/SystemStatusCard';
 
 ### Tests effectués
 
-1. ✅ Build production: `npm run build` → 13.59s, 0 erreurs
-2. ✅ TypeScript: `npm run check` → 0 erreurs
+1. ✅ Build production: `pnpm run build` → 13.59s, 0 erreurs
+2. ✅ TypeScript: `pnpm run check` → 0 erreurs
 3. ✅ Chat virtualization: Integrated in [Chat.tsx](src/ui/pages/Chat.tsx)
 4. ✅ DevTools tabs: Infrastructure complete (5 files, 305 lines)
 5. ✅ Bundle analysis: monitoring-CUMYiUXN.js 131.74 KB (unchanged)

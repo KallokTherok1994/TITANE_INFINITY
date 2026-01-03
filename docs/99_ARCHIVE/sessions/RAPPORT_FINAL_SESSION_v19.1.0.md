@@ -554,16 +554,16 @@ docs/
 
 ```bash
 # TypeScript
-npm run type-check
+pnpm run type-check
 
 # ESLint
-npm run lint
+pnpm run lint
 
 # Rust
 cd src-tauri && cargo check
 
 # Vite build
-npm run build
+pnpm run build
 
 # Tests manuels
 node test_diagnostics_manual.js

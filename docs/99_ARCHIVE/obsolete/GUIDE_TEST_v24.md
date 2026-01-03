@@ -5,12 +5,12 @@
 ### 1. Installer les dépendances (si nécessaire)
 ```bash
 cd /home/titane/Documents/TITANE_INFINITY
-npm install
+pnpm install
 ```
 
 ### 2. Lancer l'application
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 ### 3. Ouvrir dans navigateur
@@ -83,12 +83,12 @@ Cliquer sur **"🔧 DevTools"** dans la sidebar
 **Solution** : 
 - Vérifier console pour erreurs
 - Vérifier que `/src/core/` existe
-- Lancer `npm run dev` à nouveau
+- Lancer `pnpm run dev` à nouveau
 
 ### Problème : Erreurs TypeScript dans console
 **Solution** :
 ```bash
-npm run type-check
+pnpm run type-check
 ```
 Si erreurs, vérifier les imports dans `/src/hooks/useLivingEngines.ts`
 

@@ -19,7 +19,7 @@ Les modules cognitifs sont déjà intégrés ! Pas de dépendances externes.
 
 ```bash
 # Vérifier compilation TypeScript
-npm run type-check
+pnpm run type-check
 ```
 
 ---

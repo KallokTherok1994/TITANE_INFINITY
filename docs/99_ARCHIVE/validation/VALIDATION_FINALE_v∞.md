@@ -527,7 +527,7 @@ curl http://localhost:11434/api/tags
 **Lancer le dev server**:
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 **Tester manuellement**:

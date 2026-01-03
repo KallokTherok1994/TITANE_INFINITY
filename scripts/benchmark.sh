@@ -12,5 +12,5 @@ cargo bench
 
 # Frontend performance
 cd ..
-npm run build
+pnpm run build
 echo "📊 Build OK (TAURI-only)"

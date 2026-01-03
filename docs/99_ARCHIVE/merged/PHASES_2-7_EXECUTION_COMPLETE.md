@@ -2,7 +2,7 @@
 
 **Date**: 27 novembre 2025 11:55
 **Status**: ✅ Phase 1 + VS Code Optimisé
-**App**: ✅ Lancée (npm run tauri:dev)
+**App**: ✅ Lancée (pnpm run tauri:dev)
 **DevTools**: ✅ Auto-ouverts
 
 ---
@@ -206,7 +206,7 @@ fn log_to_file(message: &str) {
 ### 5.4 Toasts UI (react-hot-toast)
 
 ```bash
-npm install react-hot-toast
+pnpm install react-hot-toast
 ```
 
 ```tsx

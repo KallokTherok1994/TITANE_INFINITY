@@ -89,7 +89,7 @@ Le **Pipeline Fix v21** a été **complété, validé et déployé avec succès*
 
 **Usage**:
 ```bash
-npm run fix-pipeline
+pnpm run fix-pipeline
 ```
 
 **Impact**: Correction automatique en une commande
@@ -177,7 +177,7 @@ npm exec prettier -- --check .
 ### Test 4: TypeScript Compilation
 
 ```bash
-npm run check
+pnpm run check
 ```
 
 **Résultat**: ⚠️ **WARNINGS ONLY**
@@ -216,7 +216,7 @@ git commit -m "fix: pipeline corrections"
 ### Test 6: Auto-Fix Script
 
 ```bash
-npm run fix-pipeline
+pnpm run fix-pipeline
 ```
 
 **Résultat**: ✅ **PASS**
@@ -293,7 +293,7 @@ git commit -m "..."
 # ❌ Erreur lint-staged
 
 # 2. Exécuter le fix automatique
-npm run fix-pipeline
+pnpm run fix-pipeline
 
 # 3. Vérifier les changements
 git diff
@@ -311,16 +311,16 @@ git commit -m "fix: corrections pipeline"
 
 ```bash
 # Fix complet (recommandé)
-npm run fix-pipeline
+pnpm run fix-pipeline
 
 # Fix ESLint uniquement
-npm run lint:fix
+pnpm run lint:fix
 
 # Fix Prettier uniquement
-npm run format
+pnpm run format
 
 # Check TypeScript (sans fixer)
-npm run check
+pnpm run check
 
 # Test lint-staged manuellement
 npm exec lint-staged
@@ -417,9 +417,9 @@ npm exec lint-staged
 
 ### Pour les Développeurs
 
-1. **Utiliser `npm run fix-pipeline` avant chaque commit important**
+1. **Utiliser `pnpm run fix-pipeline` avant chaque commit important**
    ```bash
-   npm run fix-pipeline
+   pnpm run fix-pipeline
    git add .
    git commit -m "feat: nouvelle feature"
    ```
@@ -451,15 +451,15 @@ npm exec lint-staged
    # .github/workflows/ci.yml
    - name: Lint and Format Check
      run: |
-       npm run lint
+       pnpm run lint
        npm exec prettier -- --check .
    ```
 
 2. **Pre-push Hook** (optionnel)
    ```bash
    # .husky/pre-push
-   npm run check
-   npm run test
+   pnpm run check
+   pnpm run test
    ```
 
 3. **Documentation**

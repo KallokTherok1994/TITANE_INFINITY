@@ -294,7 +294,7 @@ RECOMMENDATION:
 ⚠️  E2E tests: exists but may need updates for v19.5
 
 RECOMMENDATION:
-- Run: npm run test:coverage
+- Run: pnpm run test:coverage
 - Target: 95%+ coverage for critical paths
 - Add integration tests for IPC commands
 ```
@@ -364,14 +364,14 @@ Configuration:
 
 #### 1. **Dependency Vulnerabilities**
 ```
-npm audit:
+pnpm audit:
   0 vulnerabilities (as of build)
   
 Cargo audit:
   No vulnerable crates detected
   
 Recommendation: Keep deps updated
-  npm audit fix (monthly)
+  pnpm audit fix (monthly)
   cargo update (monthly)
 ```
 
@@ -538,7 +538,7 @@ TypeScript tests:
   - *.test.ts files: 20+ test suites
   - Coverage: 98.2% (reported)
   
-Command: npm run test:rust && npm run test:unit
+Command: pnpm run test:rust && pnpm run test:unit
 ```
 
 ### Integration Tests
@@ -551,7 +551,7 @@ Coverage:
   - AI engine fallback chains ✅
   - Memory persistence ✅
   
-Command: npm run test:integration
+Command: pnpm run test:integration
 ```
 
 ### E2E Tests
@@ -564,13 +564,13 @@ Coverage:
   - Chat interactions
   - System commands
   
-Command: npm run test:e2e
+Command: pnpm run test:e2e
 ```
 
 ### Test Recommendations
 ```
 1. Add per-module coverage reports
-   Command: npm run test:coverage
+   Command: pnpm run test:coverage
    Target: 95%+ for critical modules
 
 2. Add property-based testing
@@ -580,7 +580,7 @@ Command: npm run test:e2e
    For: IPC, memory, concurrent requests
 
 4. Add security testing
-   Tools: OWASP ZAP, npm audit
+   Tools: OWASP ZAP, pnpm audit
 ```
 
 ---
@@ -598,7 +598,7 @@ Automation: Partial (regex fixes need manual review)
 Action:
   1. Identify all [\-\s] patterns in devSudoHandler.ts
   2. Remove unnecessary escapes
-  3. Run: npm run lint
+  3. Run: pnpm run lint
 ```
 
 #### 2. Add TypeScript Strict Null Checks
@@ -634,7 +634,7 @@ Effort: 2 hours (setup)
 Tool: nyc (coverage.js) for TS, tarpaulin for Rust
 
 Commands:
-  npm run test:coverage
+  pnpm run test:coverage
   cargo tarpaulin --out Html
 ```
 
@@ -646,7 +646,7 @@ Tool: husky + lint-staged
 
 Setup:
   npx husky install
-  npm run lint && npm run type-check before commit
+  pnpm run lint && pnpm run type-check before commit
 ```
 
 #### 6. Optimize Build Performance
@@ -690,7 +690,7 @@ Areas:
   - Request signing
 
 Tools:
-  - npm audit (monthly)
+  - pnpm audit (monthly)
   - OWASP scanning
 ```
 

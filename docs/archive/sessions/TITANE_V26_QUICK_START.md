@@ -369,7 +369,7 @@ npm list recharts
 # Output attendu: recharts@3.6.0
 
 # Réinstaller si nécessaire
-npm install recharts@3.6.0
+pnpm install recharts@3.6.0
 ```
 
 ### Achievements manquants

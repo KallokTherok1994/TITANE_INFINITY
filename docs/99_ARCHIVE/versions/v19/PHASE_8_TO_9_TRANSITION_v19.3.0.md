@@ -684,13 +684,13 @@ cargo tarpaulin --manifest-path src-tauri/Cargo.toml --out Html
 ### Lancer Tests TypeScript
 ```bash
 # Tous les tests React
-npm run test
+pnpm run test
 
 # Mode watch
-npm run test:watch
+pnpm run test:watch
 
 # Avec coverage
-npm run test:coverage
+pnpm run test:coverage
 ```
 
 ### Build & Validation Complète
@@ -702,13 +702,13 @@ cargo build --manifest-path src-tauri/Cargo.toml --release
 cargo test --manifest-path src-tauri/Cargo.toml
 
 # 3. Build TypeScript
-npm run build
+pnpm run build
 
 # 4. Tests TypeScript
-npm run test
+pnpm run test
 
 # 5. Type check
-npm run type-check
+pnpm run type-check
 
 # 6. Lint
 cargo clippy --manifest-path src-tauri/Cargo.toml -- -W clippy::all

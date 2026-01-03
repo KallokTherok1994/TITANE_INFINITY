@@ -400,7 +400,7 @@ import {
 
 ### Build Production ✅
 ```bash
-npm run build
+pnpm run build
 ✓ built in 13.30s
 ✅ 0 TypeScript errors
 ✅ 19 warnings (18 pré-existants + 1 nouveau prefer-const)

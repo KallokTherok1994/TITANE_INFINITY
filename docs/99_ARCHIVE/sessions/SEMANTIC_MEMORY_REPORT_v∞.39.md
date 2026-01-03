@@ -474,13 +474,13 @@ console.log(`Importance moyenne: ${(stats.averageImportance * 100).toFixed(0)}%`
 
 ### TypeScript
 ```bash
-npm run type-check
+pnpm run type-check
 # ✅ 0 errors
 ```
 
 ### Build
 ```bash
-npm run build
+pnpm run build
 # ✅ Success
 ```
 

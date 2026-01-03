@@ -44,7 +44,7 @@
 ### Option A : Installation Node.js (Recommandée)
 
 **Permet** :
-- Lancer `npm run dev` pour développement
+- Lancer `pnpm run dev` pour développement
 - Tester live-reload
 - Utiliser DevTools frontend
 - Rebuild avec nouvelles fonctionnalités
@@ -55,7 +55,7 @@
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 source ~/.bashrc
 nvm install --lts
-npm install -g pnpm
+pnpm install -g pnpm
 
 # Installer dépendances projet
 cd /home/titane/Documents/TITANE_INFINITY
@@ -278,7 +278,7 @@ pnpm install && pnpm run dev
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 source ~/.bashrc
 nvm install --lts
-npm install -g pnpm
+pnpm install -g pnpm
 
 # Dépendances Tauri (si système natif)
 sudo apt install -y libwebkit2gtk-4.1-dev libjavascriptcoregtk-4.1-dev
