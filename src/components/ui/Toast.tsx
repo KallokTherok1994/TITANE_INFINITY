@@ -5,7 +5,7 @@
  * @license MIT
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 
 export type ToastType = 'info' | 'success' | 'warning' | 'error' | 'default';
 
@@ -43,18 +43,18 @@ export const Toast: React.FC<ToastProps> = ({
   const [isVisible, setIsVisible] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
 
+  const handleClose = useCallback(() => {
+    setIsExiting(true);
+    setTimeout(() => {
+      onClose(id);
+    }, 300); // Match exit animation duration
+  }, [id, onClose]);
+
   useEffect(() => {
     // Trigger entrance animation
     requestAnimationFrame(() => {
       setIsVisible(true);
     });
-
-    const handleClose = () => {
-      setIsExiting(true);
-      setTimeout(() => {
-        onClose(id);
-      }, 300); // Match exit animation duration
-    };
 
     // Auto-dismiss after duration
     const timer = setTimeout(() => {
@@ -62,7 +62,7 @@ export const Toast: React.FC<ToastProps> = ({
     }, duration);
 
     return () => clearTimeout(timer);
-  }, [duration, id, onClose]);
+  }, [duration, handleClose]);
 
   return (
     <div
