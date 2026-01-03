@@ -48,24 +48,24 @@ jobs:
           if [ -d "dist" ]; then
             echo "## 🚦 Build Size Analysis" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            
+
             # Total size
             TOTAL_SIZE=$(du -sh dist | cut -f1)
             echo "**Total Build Size:** \`${TOTAL_SIZE}\`" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            
+
             # Largest files (top 10)
             echo "### 📦 Largest Assets (Top 10):" >> $GITHUB_STEP_SUMMARY
             echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
             find dist -type f -exec du -h {} + | sort -rh | head -10 >> $GITHUB_STEP_SUMMARY
             echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            
+
             # File count
             FILE_COUNT=$(find dist -type f | wc -l)
             echo "**Total Files:** ${FILE_COUNT}" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            
+
             echo "### 🎯 Tauri-Specific Metrics (Recommended):" >> $GITHUB_STEP_SUMMARY
             echo "- Binary size analysis (\`src-tauri/target/release/\`)" >> $GITHUB_STEP_SUMMARY
             echo "- Startup time profiling (\`cargo flamegraph\`)" >> $GITHUB_STEP_SUMMARY

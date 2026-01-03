@@ -113,7 +113,7 @@ jobs:
             echo "⚠️ No coverage summary found, skipping threshold check"
             exit 0
           fi
-          
+
           # Check if jq is available (it's standard on GitHub Actions runners)
           if ! command -v jq >/dev/null 2>&1; then
             echo "⚠️ jq is not installed, falling back to grep parsing"
@@ -125,16 +125,16 @@ jobs:
             LINES_PCT=$(jq -r '.total.lines.pct // empty' coverage/coverage-summary.json)
             BRANCHES_PCT=$(jq -r '.total.branches.pct // empty' coverage/coverage-summary.json)
           fi
-          
+
           if [ -z "$LINES_PCT" ] || [ -z "$BRANCHES_PCT" ]; then
             echo "⚠️ Could not read coverage percentages from coverage-summary.json, skipping threshold check"
             exit 0
           fi
-          
+
           echo "📊 Coverage Results:"
           echo "  Lines: ${LINES_PCT}%"
           echo "  Branches: ${BRANCHES_PCT}%"
-          
+
           # Check thresholds (70% lines, 60% branches) using awk for portability
           # awk is more universally available than bc
           if awk "BEGIN {exit !($LINES_PCT < 70)}"; then
@@ -143,7 +143,7 @@ jobs:
           else
             echo "✅ Line coverage ${LINES_PCT}% meets threshold 70%"
           fi
-          
+
           if awk "BEGIN {exit !($BRANCHES_PCT < 60)}"; then
             echo "⚠️ Branch coverage ${BRANCHES_PCT}% is below threshold 60%"
             echo "::warning::Branch coverage is below 60% threshold"
