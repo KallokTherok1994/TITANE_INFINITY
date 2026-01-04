@@ -3,6 +3,9 @@
 //! HTTP client pour GitHub Copilot / GitHub Models API
 //! ═══════════════════════════════════════════════════════════════════════════════
 
+// Allow .unwrap() in tests only (this is a common pattern in Rust testing)
+#![cfg_attr(test, allow(clippy::unwrap_used))]
+
 use log::{debug, error, info};
 use reqwest::{header, Client};
 use serde::{Deserialize, Serialize};
