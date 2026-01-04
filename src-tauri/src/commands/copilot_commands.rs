@@ -3,6 +3,9 @@
 // Tauri commands for GitHub Copilot provider integration
 // ═══════════════════════════════════════════════════════════════════════════
 
+// Allow .unwrap() in tests only (this is a common pattern in Rust testing)
+#![cfg_attr(test, allow(clippy::unwrap_used))]
+
 use titane_infinity::api_hub::copilot::{CopilotClient, CopilotRequest, Message, TestResult};
 use crate::security::permission_guard::PERMISSION_GUARD;
 use crate::security::permissions::Role;

@@ -1158,6 +1158,19 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // EVOLUTION SYNC (v24.4+)
   // ═══════════════════════════════════════════════════════════════
   'sync_evolution_state',
+
+  // ═══════════════════════════════════════════════════════════════
+  // WINDOW CONTROLS (v26.2.0+)
+  // Zoom + Fullscreen (CTRL+Scroll, F11, F12)
+  // ═══════════════════════════════════════════════════════════════
+  'window_get_zoom',
+  'window_set_zoom',
+  'window_zoom_in',
+  'window_zoom_out',
+  'window_zoom_reset',
+  'window_toggle_fullscreen',
+  'window_set_fullscreen',
+  'window_is_fullscreen',
 ]);
 
 /**
