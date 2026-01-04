@@ -105,7 +105,10 @@ pub async fn chat_generate_copilot(
         });
     }
 
-    let key = api_key.clone().unwrap();
+    // Safe: we checked is_none() above, but using ok_or is more explicit and maintainable
+    let key = api_key.clone()
+        .ok_or_else(|| "Clé API Copilot non configurée".to_string())
+        .map_err(|e| format!("{}", e))?;
     drop(api_key);
 
     // Create Copilot client
@@ -312,7 +315,16 @@ pub async fn test_copilot_connection(state: State<'_, CopilotState>) -> Result<T
         });
     }
 
-    let key = api_key.clone().unwrap();
+    // Safe: we checked is_none() above, but using match is more explicit
+    let key = match api_key.clone() {
+        Some(k) => k,
+        None => return Ok(TestResult {
+            success: false,
+            message: "❌ Clé API Copilot non configurée".to_string(),
+            latency_ms: None,
+            available_models: None,
+        }),
+    };
     drop(api_key);
 
     // Create client and test
