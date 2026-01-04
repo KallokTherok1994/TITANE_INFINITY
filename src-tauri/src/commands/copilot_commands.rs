@@ -3,8 +3,7 @@
 // Tauri commands for GitHub Copilot provider integration
 // ═══════════════════════════════════════════════════════════════════════════
 
-// Allow .unwrap() in tests only (this is a common pattern in Rust testing)
-#![cfg_attr(test, allow(clippy::unwrap_used))]
+// Note: évite les attributs crate-level ici (fichier module), et évite unwrap().
 
 use titane_infinity::api_hub::copilot::{CopilotClient, CopilotRequest, Message, TestResult};
 use crate::security::permission_guard::PERMISSION_GUARD;
@@ -108,7 +107,17 @@ pub async fn chat_generate_copilot(
         });
     }
 
-    let key = api_key.clone().unwrap();
+    let key = match api_key.clone() {
+        Some(key) => key,
+        None => {
+            drop(api_key);
+            return Ok(CopilotGenerateResponse {
+                ok: false,
+                data: None,
+                error: Some("Clé API Copilot non configurée. Allez dans Gouvernance → Secrets pour configurer votre token GitHub.".to_string()),
+            });
+        }
+    };
     drop(api_key);
 
     // Create Copilot client
@@ -315,7 +324,18 @@ pub async fn test_copilot_connection(state: State<'_, CopilotState>) -> Result<T
         });
     }
 
-    let key = api_key.clone().unwrap();
+    let key = match api_key.clone() {
+        Some(key) => key,
+        None => {
+            drop(api_key);
+            return Ok(TestResult {
+                success: false,
+                message: "❌ Clé API Copilot non configurée".to_string(),
+                latency_ms: None,
+                available_models: None,
+            });
+        }
+    };
     drop(api_key);
 
     // Create client and test
@@ -365,7 +385,10 @@ mod tests {
             }),
         };
 
-        let json = serde_json::to_string(&req).unwrap();
+        let json = match serde_json::to_string(&req) {
+            Ok(json) => json,
+            Err(e) => panic!("Failed to serialize CopilotGenerateRequest: {e}"),
+        };
         assert!(json.contains("test"));
     }
 
