@@ -96,12 +96,22 @@ if [ "$ALL_GENERATED" = true ]; then
     # Test de build rapide pour validation
     echo ""
     echo "🧪 Test de validation des icônes..."
-    if command -v npm >/dev/null 2>&1; then
-        echo "   📝 Validation de la configuration Tauri..."
-        if pnpm run tauri:check 2>/dev/null || echo "Configuration OK"; then
-            echo "   ✅ Configuration Tauri validée"
+        if command -v corepack >/dev/null 2>&1; then
+            PNPM=(corepack pnpm)
+        elif command -v pnpm >/dev/null 2>&1; then
+            PNPM=(pnpm)
+        else
+            PNPM=()
         fi
-    fi
+
+        if [ ${#PNPM[@]} -gt 0 ]; then
+            echo "   📝 Validation de la configuration Tauri..."
+            if "${PNPM[@]}" run tauri:check 2>/dev/null || echo "Configuration OK"; then
+                echo "   ✅ Configuration Tauri validée"
+            fi
+        else
+            echo "   ⚠️ Validation ignorée: pnpm/corepack introuvable"
+        fi
 
     echo ""
     echo "📊 RÉSUMÉ DE LA MISE À JOUR"

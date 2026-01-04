@@ -51,15 +51,22 @@ if rustup target list --installed | grep -q "wasm32"; then
 fi
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 2. NODE.JS & NPM
+# 2. NODE.JS & PNPM
 # ─────────────────────────────────────────────────────────────────────────────
 echo -e "\n${YELLOW}[2/6] Node.js Environment${NC}"
 check_command "node" "Node.js"
-check_command "npm" "NPM"
 
-# Check pnpm (optionnel)
+if command -v corepack &> /dev/null; then
+    echo -e "${GREEN}✓${NC} corepack: $(corepack --version 2>&1 | head -1)"
+fi
+
 if command -v pnpm &> /dev/null; then
     echo -e "${GREEN}✓${NC} pnpm: $(pnpm --version)"
+elif command -v corepack &> /dev/null; then
+    echo -e "${GREEN}✓${NC} pnpm (via corepack): $(corepack pnpm --version)"
+else
+    echo -e "${RED}✗${NC} pnpm/corepack: NOT FOUND"
+    ERRORS=$((ERRORS + 1))
 fi
 
 # ─────────────────────────────────────────────────────────────────────────────
