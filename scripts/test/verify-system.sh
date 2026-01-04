@@ -90,7 +90,14 @@ fi
 echo ""
 echo "✅ Validating YAML syntax..."
 cd ..
-npx js-yaml orchestration/roadmap.yaml > /dev/null 2>&1
+if command -v corepack >/dev/null 2>&1; then
+    corepack pnpm dlx js-yaml orchestration/roadmap.yaml > /dev/null 2>&1
+elif command -v pnpm >/dev/null 2>&1; then
+    pnpm dlx js-yaml orchestration/roadmap.yaml > /dev/null 2>&1
+else
+    echo "❌ pnpm requis (corepack/pnpm introuvable)." >&2
+    exit 1
+fi
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}✅ YAML syntax valid${NC}"
 else

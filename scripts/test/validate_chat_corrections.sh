@@ -40,9 +40,18 @@ check_warning() {
 echo -e "${BLUE}🔍 Phase 1: Vérification TypeScript${NC}"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-if npx tsc --noEmit 2>&1 | grep -q "error TS"; then
+if command -v corepack >/dev/null 2>&1; then
+    TSC_CMD=(corepack pnpm exec tsc)
+elif command -v pnpm >/dev/null 2>&1; then
+    TSC_CMD=(pnpm exec tsc)
+else
+    check_failed "pnpm requis (corepack/pnpm introuvable)"
+    exit 1
+fi
+
+if "${TSC_CMD[@]}" --noEmit 2>&1 | grep -q "error TS"; then
     check_failed "TypeScript compilation (erreurs détectées)"
-    npx tsc --noEmit 2>&1 | grep "error TS" | head -5
+    "${TSC_CMD[@]}" --noEmit 2>&1 | grep "error TS" | head -5
 else
     check_passed "TypeScript compilation (0 errors)"
 fi

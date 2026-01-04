@@ -177,8 +177,12 @@ if [ -d "$PROJECTS_DIR/TITANE_INFINITY" ]; then
     fi
     
     # Vérifier Tauri CLI
-    if npx tauri --version &> /dev/null; then
-        TAURI_VER=$(npx tauri --version 2>/dev/null)
+    if command -v corepack >/dev/null 2>&1 && corepack pnpm exec tauri --version &> /dev/null; then
+        TAURI_VER=$(corepack pnpm exec tauri --version 2>/dev/null)
+        echo -e "  ${GREEN}✅ Tauri CLI${NC}: $TAURI_VER"
+        VALIDATION_RESULTS+=("OK")
+    elif command -v pnpm >/dev/null 2>&1 && pnpm exec tauri --version &> /dev/null; then
+        TAURI_VER=$(pnpm exec tauri --version 2>/dev/null)
         echo -e "  ${GREEN}✅ Tauri CLI${NC}: $TAURI_VER"
         VALIDATION_RESULTS+=("OK")
     else
