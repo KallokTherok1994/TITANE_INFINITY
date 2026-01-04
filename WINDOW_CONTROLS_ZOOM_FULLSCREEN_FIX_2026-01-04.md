@@ -122,7 +122,7 @@ useWindowControls({ enableZoom: true, enableFullscreen: true });
 ### Tests Automatiques
 
 ```bash
-✅ Whitelist: 9/8 commandes (dépassement pour extra sécurité)
+✅ Whitelist: 8/8 commandes
 ✅ Backend Rust: 8/8 fonctions
 ✅ Enregistrement Tauri: 8/8
 ✅ Hook Frontend: Opérationnel
@@ -185,11 +185,6 @@ Le système de zoom utilise une **approche hybride**:
 - ✅ Compatibilité: Fonctionne avec tous les éléments DOM
 - ❌ Limitation: Peut affecter les calculs de layout (rare)
 
-### Alternatives considérées
-- ❌ **WebContents.setZoomFactor():** Non disponible dans Tauri v1
-- ❌ **Transform scale():** Affecte le layout et crée des glitches
-- ✅ **CSS zoom:** Solution la plus stable et performante
-
 ---
 
 ## 🚀 DÉPLOIEMENT
@@ -208,36 +203,6 @@ pnpm run dev
 
 2. Les raccourcis sont **automatiquement actifs** dans l'AppImage/DEB
 
-3. F12 DevTools nécessite configuration dans `tauri.conf.json`:
-   ```json
-   {
-     "tauri": {
-       "allowlist": {
-         "window": {
-           "all": true
-         }
-       }
-     }
-   }
-   ```
-
----
-
-## 🔧 MAINTENANCE
-
-### Ajouter une nouvelle commande de fenêtre
-1. **Backend Rust:** Ajouter fonction dans `window_controls_commands.rs`
-2. **Main.rs:** Enregistrer dans `.invoke_handler()`
-3. **Security.ts:** Ajouter à `ALLOWED_COMMANDS`
-4. **Hook:** Implémenter dans `useWindowControls.ts`
-
-### Debug
-```typescript
-// Activer logs détaillés
-console.log('[WindowControls] Applied zoom:', level);
-console.log('[WindowControls] Fullscreen:', isFullscreen);
-```
-
 ---
 
 ## ✅ STATUT FINAL
@@ -252,23 +217,6 @@ console.log('[WindowControls] Fullscreen:', isFullscreen);
 - ✅ Aucune régression détectée
 
 **Prêt pour production.**
-
----
-
-## 📚 RÉFÉRENCES
-
-- **Fichiers modifiés:**
-  - `src/lib/security.ts` (lignes 1162+)
-
-- **Fichiers existants (non modifiés):**
-  - `src-tauri/src/commands/window_controls_commands.rs`
-  - `src-tauri/src/main.rs`
-  - `src/hooks/useWindowControls.ts`
-  - `src/App.tsx`
-
-- **Tests:**
-  - Script validation: `/tmp/zoom-test-report.sh`
-  - Rapport complet: Ce document
 
 ---
 
