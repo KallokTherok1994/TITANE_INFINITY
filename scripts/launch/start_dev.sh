@@ -32,7 +32,7 @@ echo "   CHOKIDAR_INTERVAL=300ms"
 echo ""
 echo "🖥️ Mode TAURI-ONLY: aucun serveur HTTP"
 echo ""
-echo "⚡ Commandes Tauri disponibles (npm run):"
+echo "⚡ Commandes Tauri disponibles (pnpm run):"
 echo "   • dev:tauri    → Lance Tauri + Vite (recommandé)"
 echo "   • tauri:dev    → Alias de dev:tauri"
 echo "   • dev          → Lance Titan-Dev (TAURI-ONLY)"
@@ -41,4 +41,8 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo ""
 
 # Lancer l'application
-exec pnpm run dev:tauri
+if command -v corepack >/dev/null 2>&1; then
+    exec corepack pnpm run dev:tauri
+else
+    exec pnpm run dev:tauri
+fi

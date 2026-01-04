@@ -34,7 +34,7 @@ def test_singularity_pipeline():
         
         if result.returncode != 0 or not result.stdout.strip():
             print("❌ ERROR: Runtime Tauri non actif")
-            print("Veuillez démarrer: npm run tauri dev -- --no-watch")
+            print("Veuillez démarrer: pnpm run tauri dev -- --no-watch")
             return False
             
         processes = result.stdout.strip().split('\n')

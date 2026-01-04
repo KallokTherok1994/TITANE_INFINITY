@@ -77,7 +77,7 @@ echo "🔐 3/8 Audit de sécurité..."
     echo "## 3. Sécurité {#securite}"
     echo ""
     
-    echo "### NPM Audit"
+    echo "### Dependency Audit"
     echo "\`\`\`"
     pnpm audit --production 2>&1 || echo "⚠️ Vulnerabilities found"
     echo "\`\`\`"

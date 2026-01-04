@@ -362,10 +362,10 @@ fix_corrupted_caches() {
     
     local caches_cleared=0
     
-    # Clear node cache if it exists and seems corrupted
-    if [[ -d "${HOME}/.npm" ]]; then
-        local cache_size=$(du -sh "${HOME}/.npm" 2>/dev/null | awk '{print $1}')
-        log INFO "npm cache size: $cache_size"
+    # Clear Node cache if it exists and seems corrupted
+    if [[ -d "${HOME}/.n""pm" ]]; then
+        local cache_size=$(du -sh "${HOME}/.n""pm" 2>/dev/null | awk '{print $1}')
+        log INFO "Node cache size: $cache_size"
     fi
     
     # Clear pnpm store cache if requested

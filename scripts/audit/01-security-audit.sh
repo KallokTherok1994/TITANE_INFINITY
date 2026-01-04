@@ -13,15 +13,30 @@ mkdir -p "$REPORT_DIR"
 echo "🔒 TITANE∞ Security Audit - $TIMESTAMP"
 echo "================================================"
 
-# 1. NPM Vulnerabilities
+# 1. Node dependency vulnerabilities
 echo ""
-echo "📦 [1/8] Scanning NPM vulnerabilities..."
-pnpm audit --json > "$REPORT_DIR/npm-audit.json" 2>&1 || true
-pnpm audit > "$REPORT_DIR/npm-audit.txt" 2>&1 || true
-NPM_CRITICAL=$(jq -r '.metadata.vulnerabilities.critical // 0' "$REPORT_DIR/npm-audit.json" 2>/dev/null || echo "0")
-NPM_HIGH=$(jq -r '.metadata.vulnerabilities.high // 0' "$REPORT_DIR/npm-audit.json" 2>/dev/null || echo "0")
-echo "   ├─ Critical: $NPM_CRITICAL"
-echo "   └─ High: $NPM_HIGH"
+echo "📦 [1/8] Scanning Node dependency vulnerabilities..."
+if command -v corepack >/dev/null 2>&1; then
+    PNPM=(corepack pnpm)
+elif command -v pnpm >/dev/null 2>&1; then
+    PNPM=(pnpm)
+else
+    PNPM=()
+fi
+
+if [ ${#PNPM[@]} -gt 0 ]; then
+    "${PNPM[@]}" audit --json > "$REPORT_DIR/dependency-audit.json" 2>&1 || true
+    "${PNPM[@]}" audit > "$REPORT_DIR/dependency-audit.txt" 2>&1 || true
+else
+    echo "   └─ ⚠️ pnpm/corepack introuvable - audit ignoré"
+    echo '{}' > "$REPORT_DIR/dependency-audit.json"
+    echo "pnpm/corepack introuvable" > "$REPORT_DIR/dependency-audit.txt"
+fi
+
+NODE_CRITICAL=$(jq -r '.metadata.vulnerabilities.critical // 0' "$REPORT_DIR/dependency-audit.json" 2>/dev/null || echo "0")
+NODE_HIGH=$(jq -r '.metadata.vulnerabilities.high // 0' "$REPORT_DIR/dependency-audit.json" 2>/dev/null || echo "0")
+echo "   ├─ Critical: $NODE_CRITICAL"
+echo "   └─ High: $NODE_HIGH"
 
 # 2. Rust/Cargo Vulnerabilities
 echo ""
@@ -106,7 +121,7 @@ echo "   └─ Checked"
 echo ""
 echo "📜 [7/8] Scanning dependency licenses..."
 {
-    echo "=== NPM Licenses ==="
+    echo "=== Node Licenses ==="
     if command -v corepack >/dev/null 2>&1; then
         corepack pnpm dlx license-checker --summary 2>/dev/null || echo "⚠️ license-checker not available"
     elif command -v pnpm >/dev/null 2>&1; then
@@ -163,7 +178,7 @@ cat > "$REPORT_DIR/SECURITY_SUMMARY.md" << EOF
 
 | Category | Critical | High | Medium | Status |
 |----------|----------|------|--------|--------|
-| NPM Vulnerabilities | $NPM_CRITICAL | $NPM_HIGH | - | $([ "$NPM_CRITICAL" -eq 0 ] && echo "✅" || echo "❌") |
+| Node Dependencies | $NODE_CRITICAL | $NODE_HIGH | - | $([ "$NODE_CRITICAL" -eq 0 ] && echo "✅" || echo "❌") |
 | Cargo Vulnerabilities | - | - | $CARGO_VULNS | $([ "$CARGO_VULNS" -eq 0 ] && echo "✅" || echo "⚠️") |
 | Secrets Detected | - | $SECRETS_COUNT | - | $([ "$SECRETS_COUNT" -eq 0 ] && echo "✅" || echo "⚠️") |
 | Tauri Commands | - | $COMMANDS_COUNT | - | ✅ |
@@ -175,11 +190,11 @@ cat > "$REPORT_DIR/SECURITY_SUMMARY.md" << EOF
 ## 🎯 Priority Actions
 
 ### P0 (Critical - Fix Immediately)
-$([ "$NPM_CRITICAL" -gt 0 ] && echo "- ❌ **$NPM_CRITICAL critical NPM vulnerabilities** - Run \`pnpm audit fix\`" || echo "- ✅ No critical NPM vulnerabilities")
+$([ "$NODE_CRITICAL" -gt 0 ] && echo "- ❌ **$NODE_CRITICAL critical Node dependency vulnerabilities** - Run \`pnpm audit fix\`" || echo "- ✅ No critical Node dependency vulnerabilities")
 $([ "$UNWRAP_COUNT" -gt 10 ] && echo "- ❌ **$UNWRAP_COUNT unwrap() calls** - Replace with Result<T,E>" || echo "- ✅ unwrap() usage acceptable")
 
 ### P1 (High - Fix This Week)
-$([ "$NPM_HIGH" -gt 0 ] && echo "- ⚠️ **$NPM_HIGH high NPM vulnerabilities** - Review and update" || echo "- ✅ No high NPM vulnerabilities")
+$([ "$NODE_HIGH" -gt 0 ] && echo "- ⚠️ **$NODE_HIGH high Node dependency vulnerabilities** - Review and update" || echo "- ✅ No high Node dependency vulnerabilities")
 $([ "$SECRETS_COUNT" -gt 5 ] && echo "- ⚠️ **$SECRETS_COUNT potential secrets** - Move to env vars" || echo "- ✅ Secrets properly managed")
 
 ### P2 (Medium - Fix This Sprint)
@@ -191,7 +206,7 @@ $([ "$SECRETS_COUNT" -gt 5 ] && echo "- ⚠️ **$SECRETS_COUNT potential secret
 
 ## 📁 Detailed Reports
 
-- \`npm-audit.txt\` - NPM vulnerability details
+- \`dependency-audit.txt\` - Node dependency audit
 - \`cargo-audit.txt\` - Rust dependency audit
 - \`secrets-scan.txt\` - Potential hardcoded secrets
 - \`tauri-commands.txt\` - All Tauri commands inventory
@@ -204,7 +219,7 @@ $([ "$SECRETS_COUNT" -gt 5 ] && echo "- ⚠️ **$SECRETS_COUNT potential secret
 
 ## 🔐 Recommendations
 
-1. **Immediate**: Fix all critical NPM vulnerabilities
+1. **Immediate**: Fix all critical Node dependency vulnerabilities
 2. **This week**: Replace unwrap() with proper Result handling
 3. **This sprint**: Move all secrets to environment variables
 4. **Continuous**: Run security audit before each release
@@ -219,8 +234,8 @@ echo "================================================"
 echo "✅ Security Audit Complete!"
 echo ""
 echo "📊 Summary:"
-echo "   ├─ NPM Critical: $NPM_CRITICAL"
-echo "   ├─ NPM High: $NPM_HIGH"
+echo "   ├─ Node Critical: $NODE_CRITICAL"
+echo "   ├─ Node High: $NODE_HIGH"
 echo "   ├─ Cargo Vulnerabilities: $CARGO_VULNS"
 echo "   ├─ Potential Secrets: $SECRETS_COUNT"
 echo "   ├─ Tauri Commands: $COMMANDS_COUNT"
