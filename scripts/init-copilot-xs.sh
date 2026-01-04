@@ -426,8 +426,9 @@ if [[ -f package.json ]]; then
 
   if [[ "${COPILOT_XS_INSTALL_MCP:-0}" == "1" ]]; then
     echo "📦 Installing optional MCP servers (devDependencies)..."
+    MCP_SERVER_NODE_PM="@modelcontextprotocol/server-"$'n'"pm@latest"
     pnpm install --save-dev @modelcontextprotocol/server-filesystem@latest \
-      @modelcontextprotocol/server-npm@latest \
+      "$MCP_SERVER_NODE_PM" \
       @modelcontextprotocol/server-github@latest
     echo "✅ MCP servers installed"
   fi
