@@ -343,6 +343,18 @@ echo ""
 echo "✅ PHASE 1-3 terminées"
 echo ""
 echo "📊 Vérification compilation..."
-npx tsc --noEmit 2>&1 | grep -c "error TS" || echo "0"
+if command -v corepack >/dev/null 2>&1; then
+  PNPM=(corepack pnpm)
+elif command -v pnpm >/dev/null 2>&1; then
+  PNPM=(pnpm)
+else
+  PNPM=()
+fi
+
+if [ ${#PNPM[@]} -gt 0 ]; then
+  "${PNPM[@]}" exec tsc --noEmit 2>&1 | grep -c "error TS" || echo "0"
+else
+  echo "0"
+fi
 echo ""
 echo "✅ Fix TypeScript terminé (partie 1/3)"
