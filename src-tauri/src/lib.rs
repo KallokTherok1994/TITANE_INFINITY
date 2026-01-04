@@ -3,6 +3,19 @@
 //!   Unified backend architecture - Singularity + OMEGA Pipeline
 //! ═══════════════════════════════════════════════════════════════
 
+// ═══════════════════════════════════════════════════════════════
+// SECURITY & CODE QUALITY LINTS (v26.2.0+)
+// ═══════════════════════════════════════════════════════════════
+
+// Enforce safe error handling - no unwrap() in production code
+// Tests are exempt via #[cfg(test)] or #[allow(clippy::unwrap_used)]
+#![warn(clippy::unwrap_used)]
+#![warn(clippy::expect_used)]
+
+// ═══════════════════════════════════════════════════════════════
+// CLIPPY CONFIGURATION (Non-Critical Warnings)
+// ═══════════════════════════════════════════════════════════════
+
 // Suppress non-critical Clippy warnings globally
 #![allow(clippy::empty_line_after_doc_comments)]
 #![allow(clippy::empty_line_after_outer_attr)]

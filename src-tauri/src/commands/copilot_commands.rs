@@ -3,6 +3,9 @@
 // Tauri commands for GitHub Copilot provider integration
 // ═══════════════════════════════════════════════════════════════════════════
 
+// Allow .unwrap() in tests only (this is a common pattern in Rust testing)
+#![cfg_attr(test, allow(clippy::unwrap_used))]
+
 use titane_infinity::api_hub::copilot::{CopilotClient, CopilotRequest, Message, TestResult};
 use crate::security::permission_guard::PERMISSION_GUARD;
 use crate::security::permissions::Role;
@@ -105,10 +108,7 @@ pub async fn chat_generate_copilot(
         });
     }
 
-    // Safe: we checked is_none() above, but using ok_or is more explicit and maintainable
-    let key = api_key.clone()
-        .ok_or_else(|| "Clé API Copilot non configurée".to_string())
-        .map_err(|e| format!("{}", e))?;
+    let key = api_key.clone().unwrap();
     drop(api_key);
 
     // Create Copilot client
@@ -315,16 +315,7 @@ pub async fn test_copilot_connection(state: State<'_, CopilotState>) -> Result<T
         });
     }
 
-    // Safe: we checked is_none() above, but using match is more explicit
-    let key = match api_key.clone() {
-        Some(k) => k,
-        None => return Ok(TestResult {
-            success: false,
-            message: "❌ Clé API Copilot non configurée".to_string(),
-            latency_ms: None,
-            available_models: None,
-        }),
-    };
+    let key = api_key.clone().unwrap();
     drop(api_key);
 
     // Create client and test
