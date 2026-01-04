@@ -148,11 +148,18 @@ import puppeteer from 'puppeteer';
 EOF
 
 # Check if puppeteer is installed
-if ! npm list puppeteer &> /dev/null; then
-  echo -e "${YELLOW}⚠️  Puppeteer not found, skipping Web Vitals collection${NC}"
-else
+HAS_PUPPETEER=false
+if command -v corepack >/dev/null 2>&1 && corepack pnpm --version >/dev/null 2>&1; then
+  corepack pnpm list puppeteer >/dev/null 2>&1 && HAS_PUPPETEER=true
+elif command -v pnpm >/dev/null 2>&1; then
+  pnpm list puppeteer >/dev/null 2>&1 && HAS_PUPPETEER=true
+fi
+
+if [ "$HAS_PUPPETEER" = true ]; then
   node "$REPORTS_DIR/collect-vitals.mjs" > "$REPORTS_DIR/web-vitals.json" 2>/dev/null || \
     echo -e "${YELLOW}⚠️  Web Vitals collection failed${NC}"
+else
+  echo -e "${YELLOW}⚠️  Puppeteer not found, skipping Web Vitals collection${NC}"
 fi
 
 # ────────────────────────────────────────────────────────────────

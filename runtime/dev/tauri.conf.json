@@ -4,8 +4,8 @@
   "version": "26.2.0-dev",
   "identifier": "com.titane.infinity.dev",
   "build": {
-    "beforeDevCommand": "npm run build",
-    "beforeBuildCommand": "npm run build",
+  "beforeDevCommand": "corepack pnpm exec vite build",
+  "beforeBuildCommand": "corepack pnpm exec vite build",
     "frontendDist": "../dist"
   },
   "bundle": {

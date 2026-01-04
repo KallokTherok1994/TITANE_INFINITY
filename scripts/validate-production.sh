@@ -31,7 +31,7 @@ cd src-tauri && cargo test --quiet && cd .. && check "Backend tests" || check "B
 
 # 2. Security
 echo "🔐 Security checks..."
-pnpm audit --production --audit-level=high && check "NPM audit" || check "NPM audit"
+pnpm audit --production --audit-level=high && check "Dependency audit" || check "Dependency audit"
 cd src-tauri && cargo audit && cd .. && check "Cargo audit" || check "Cargo audit"
 
 # 3. Linting

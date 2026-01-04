@@ -40,11 +40,12 @@ fi
 # Afficher les versions
 echo ""
 echo "📦 Node.js: $(node --version)"
-echo "📦 npm: $(npm --version)"
-if command -v pnpm &>/dev/null; then
+if command -v corepack &>/dev/null && corepack pnpm --version &>/dev/null; then
+    echo "📦 pnpm: $(corepack pnpm --version)"
+elif command -v pnpm &>/dev/null; then
     echo "📦 pnpm: $(pnpm --version)"
 else
-    echo -e "${YELLOW}⚠️  pnpm non installé. Exécutez: pnpm install -g pnpm@9.0.0${NC}"
+    echo -e "${YELLOW}⚠️  pnpm non détecté. Recommandé: corepack enable && corepack prepare pnpm@latest --activate${NC}"
 fi
 echo ""
 echo "💡 Pour rendre permanent, ajoutez à votre ~/.bashrc:"
