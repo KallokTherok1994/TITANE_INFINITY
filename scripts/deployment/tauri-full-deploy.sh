@@ -533,9 +533,7 @@ step8_build_tauri() {
                 error "Tauri build failed. Check logs: $LOG_FILE"
             }
         elif [[ "$PM" == "npm" ]]; then
-            npx tauri build --config "$TAURI_CONFIG" >> "$LOG_FILE" 2>&1 || {
-                error "Tauri build failed. Check logs: $LOG_FILE"
-            }
+            error "npm/npx interdits (pnpm-only). Utilisez: pnpm exec tauri build ..."
         else
             $PM exec tauri build --config "$TAURI_CONFIG" >> "$LOG_FILE" 2>&1 || {
                 error "Tauri build failed. Check logs: $LOG_FILE"

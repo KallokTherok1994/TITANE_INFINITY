@@ -414,14 +414,16 @@ phase3_build_backend() {
         # Ensure fingerprint directory exists (workaround)
         mkdir -p src-tauri/target/release/.fingerprint
         
-        if [ -f "pnpm-lock.yaml" ] && command -v pnpm &> /dev/null; then
+        if command -v corepack >/dev/null 2>&1; then
+            corepack pnpm exec tauri build --config runtime/dev/tauri.conf.json >> "$LOG_FILE" 2>&1 || {
+                error "Tauri build failed. Check logs: $LOG_FILE"
+            }
+        elif command -v pnpm &> /dev/null; then
             pnpm exec tauri build --config runtime/dev/tauri.conf.json >> "$LOG_FILE" 2>&1 || {
                 error "Tauri build failed. Check logs: $LOG_FILE"
             }
         else
-            npx tauri build --config runtime/dev/tauri.conf.json >> "$LOG_FILE" 2>&1 || {
-                error "Tauri build failed. Check logs: $LOG_FILE"
-            }
+            error "pnpm requis (corepack/pnpm introuvable)"
         fi
         
         success "Tauri dev build completed"
