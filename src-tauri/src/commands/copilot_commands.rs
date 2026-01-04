@@ -3,6 +3,9 @@
 // Tauri commands for GitHub Copilot provider integration
 // ═══════════════════════════════════════════════════════════════════════════
 
+// Allow .unwrap() in tests only (this is a common pattern in Rust testing)
+// Note: Using module-level allow for test configuration
+#[cfg_attr(test, allow(clippy::unwrap_used))]
 use titane_infinity::api_hub::copilot::{CopilotClient, CopilotRequest, Message, TestResult};
 use crate::security::permission_guard::PERMISSION_GUARD;
 use crate::security::permissions::Role;
@@ -97,15 +100,16 @@ pub async fn chat_generate_copilot(
 
     // Check if Copilot key is configured
     let api_key = state.api_key.read().await;
-    if api_key.is_none() {
-        return Ok(CopilotGenerateResponse {
-            ok: false,
-            data: None,
-            error: Some("Clé API Copilot non configurée. Allez dans Gouvernance → Secrets pour configurer votre token GitHub.".to_string()),
-        });
-    }
-
-    let key = api_key.clone().unwrap();
+    let key = match api_key.as_ref() {
+        Some(k) => k.clone(),
+        None => {
+            return Ok(CopilotGenerateResponse {
+                ok: false,
+                data: None,
+                error: Some("Clé API Copilot non configurée. Allez dans Gouvernance → Secrets pour configurer votre token GitHub.".to_string()),
+            });
+        }
+    };
     drop(api_key);
 
     // Create Copilot client
@@ -303,16 +307,17 @@ pub async fn test_copilot_connection(state: State<'_, CopilotState>) -> Result<T
 
     // Check if key is configured
     let api_key = state.api_key.read().await;
-    if api_key.is_none() {
-        return Ok(TestResult {
-            success: false,
-            message: "❌ Clé API Copilot non configurée".to_string(),
-            latency_ms: None,
-            available_models: None,
-        });
-    }
-
-    let key = api_key.clone().unwrap();
+    let key = match api_key.as_ref() {
+        Some(k) => k.clone(),
+        None => {
+            return Ok(TestResult {
+                success: false,
+                message: "❌ Clé API Copilot non configurée".to_string(),
+                latency_ms: None,
+                available_models: None,
+            });
+        }
+    };
     drop(api_key);
 
     // Create client and test

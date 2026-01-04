@@ -175,7 +175,19 @@
       "Bash(npm outdated:*)",
       "Bash(while read dir)",
       "Bash(if [ -d \"/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/$dir\" ])",
-      "Bash(npx eslint:*)"
+      "Bash(npx eslint:*)",
+      "Bash(pnpm test:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(pnpm typecheck:*)",
+      "Bash(source ~/.nvm/nvm.sh)",
+      "Bash(nvm use)",
+      "Bash(nvm use:*)",
+      "Bash(export PATH=\"$HOME/.local/share/pnpm:$HOME/.nvm/versions/node/v24.11.1/bin:$PATH\")",
+      "Bash(export PATH=\"$HOME/.local/share/pnpm:$HOME/.nvm/versions/node/v24.11.1/bin:/usr/bin:$PATH\")",
+      "Bash(pnpm check:*)",
+      "Bash(pnpm test:rust:*)",
+      "Bash($HOME/.local/share/pnpm/pnpm test)",
+      "Bash($HOME/.local/share/pnpm/pnpm check)"
     ],
     "deny": [],
     "ask": []
