@@ -344,11 +344,11 @@ function run(cmd, args) {
 }
 
 // 1) Validate (fast)
-run('npm', ['run', 'copilot-xs:validate']);
+run('pnpm', ['run', 'copilot-xs:validate']);
 
 // 2) Full test gate (can be slow; set COPILOT_XS_SKIP_TESTS=1 to bypass locally)
 if (process.env.COPILOT_XS_SKIP_TESTS !== '1') {
-  run('npm', ['run', 'test:all']);
+  run('pnpm', ['run', 'test:all']);
 }
 EOF
 
@@ -407,8 +407,8 @@ function run(cmd, args) {
   }
 }
 
-// pnpm audit (uses package-lock.json)
-run('npm', ['audit']);
+// pnpm audit (repo is pnpm-first; uses pnpm-lock.yaml)
+run('pnpm', ['audit']);
 EOF
 
 # 4) Ensure scripts are executable

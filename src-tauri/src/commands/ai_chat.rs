@@ -79,7 +79,9 @@ impl AIChatState {
             .ok()
             .flatten()
             .or_else(|| std::env::var("GEMINI_API_KEY").ok());
-        let ollama_model = std::env::var("OLLAMA_MODEL").ok();
+        let ollama_model = std::env::var("OLLAMA_DEFAULT_MODEL")
+            .or_else(|_| std::env::var("OLLAMA_MODEL"))
+            .ok();
 
         // v19.5.2 P2-1: DashMap for lock-free concurrent access
         let ai_router = Arc::new(DashMap::new());

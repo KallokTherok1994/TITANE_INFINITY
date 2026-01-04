@@ -18,9 +18,15 @@ pub struct LocalProvider {
 }
 
 impl LocalProvider {
+    fn default_ollama_url() -> String {
+        std::env::var("OLLAMA_BASE_URL")
+            .or_else(|_| std::env::var("OLLAMA_URL"))
+            .unwrap_or_else(|_| "http://127.0.0.1:11434".to_string())
+    }
+
     pub fn new(ollama_url: Option<String>) -> Self {
         Self {
-            ollama_url: ollama_url.unwrap_or_else(|| "http://localhost:11434".to_string()),
+            ollama_url: ollama_url.unwrap_or_else(Self::default_ollama_url),
             client: Client::new(),
             model_fast: "llama3".to_string(),
             model_quality: "mistral".to_string(),
