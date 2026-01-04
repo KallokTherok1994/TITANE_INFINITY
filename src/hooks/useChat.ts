@@ -254,6 +254,16 @@ interface UseChatReturn {
 
 export function useChat(options: UseChatOptions = {}): UseChatReturn {
   // ═══ OMNIS STATE ═══
+  // ✅ FIX AUDIT: Générer conversationId UNE SEULE FOIS au mount
+  const [conversationId] = useState<string>(() => {
+    // Réutiliser ID existant ou créer nouveau
+    const stored = localStorage.getItem('titane_current_conversation_id');
+    if (stored) return stored;
+    const newId = `conv-${Date.now()}-${Math.random().toString(36).substring(7)}`;
+    localStorage.setItem('titane_current_conversation_id', newId);
+    return newId;
+  });
+
   // OMEGA FIX: Charger les messages depuis localStorage au démarrage pour éviter le flash
   const [messages, setMessages] = useState<AIMessage[]>(() => {
     if (typeof window === 'undefined') return [];
@@ -988,7 +998,25 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           });
 
           // ✅ FIX P0-3: FALLBACK - Ajouter le message au lieu de updater
-          chatLogger.warn('⚠️ updateAssistant: Attempting fallback - add new message');
+          chatLogger.warn('⚠️ updateAssistant: FALLBACK TRIGGERED - investigate root cause', {
+            targetUiId,
+            context,
+            timestamp: Date.now(),
+          });
+
+          // ✅ FIX AUDIT: Monitorer fréquence fallback
+          try {
+            if (typeof window !== 'undefined' && (window as any).monitoring) {
+              (window as any).monitoring.trackEvent('chat_fallback_triggered', {
+                targetUiId,
+                context,
+                messagesCount: messagesRef.current.length,
+              });
+            }
+          } catch (monitoringError) {
+            // Silent monitoring failure
+          }
+
           const fallbackMessage: AIMessage = mutate({
             role: 'assistant',
             content: '',
@@ -1188,13 +1216,18 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
         if (backendHistory.length > 0) {
           const firstCandidate = providerCandidates[0];
-          const requestConfig: StreamConfig = { provider: firstCandidate ?? 'auto' };
+          // ✅ FIX AUDIT: Utiliser conversationId persistant depuis state
+          const requestConfig: StreamConfig = { 
+            provider: firstCandidate ?? 'auto',
+            conversationId: conversationId, // Utiliser conversationId du state
+          };
           for (const candidate of providerCandidates) {
             try {
               requestConfig.provider = candidate;
               attemptedProviders.push(candidate);
               const response = await chatService.sendMessageLegacy(backendHistory, {
                 provider: candidate,
+                conversationId: conversationId, // ✅ Passer conversationId
               });
               chatServiceResponse = response;
               chatAttempts.push({ provider: candidate, success: true, response });
