@@ -84,6 +84,19 @@ pub async fn conversation_generate(
         .map_err(|e| e.to_string())?;
     let latency_ms = start_time.elapsed().as_millis() as u64;
 
+    // ✅ FIX AUDIT: Validation content non-vide AVANT serialization
+    if response.assistant_message.trim().is_empty() {
+        log::error!("[Ω:CMD] ❌ AI generated empty response");
+        return Err("AI response content is empty".to_string());
+    }
+
+    log::info!(
+        "[Ω:CMD] ✅ Success | msg_id={} | content_len={} | latency={}ms",
+        response.message_id,
+        response.assistant_message.len(),
+        latency_ms
+    );
+
     // Construire la réponse JSON compatible avec le frontend
     Ok(serde_json::json!({
         "content": response.assistant_message,
