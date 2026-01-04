@@ -259,34 +259,77 @@ class ChatService {
     });
 
     try {
-      const backendResponse = await invokeWithRetry<BackendChatResponse>(
+      // ✅ FIX P0-1: Type any pour gérer format OMEGA direct
+      const backendResponse = await invokeWithRetry<any>(
         'conversation_generate', // 🎯 NOUVELLE commande Tauri OMEGA
         { request },
         { ...LONG_COMMAND_OPTIONS, context: 'ChatOmega' }
       );
 
-      const backendLatency = this.resolveLatencyMs(backendResponse.latency_ms);
-      const measuredLatency = Date.now() - startedAt;
-      const effectiveLatency = backendLatency > 0 ? backendLatency : measuredLatency;
-
-      monitoring.trackPipelineLatency(effectiveLatency);
-
-      console.log('[ChatService-OMEGA] 📥 Réponse reçue:', {
-        success: backendResponse.success,
-        provider: this.resolveProvider(
-          backendResponse.message?.provider,
-          config?.provider
-        ),
-        contentLength: backendResponse.message?.content?.length ?? 0,
-        latencyMs: backendLatency,
+      console.log('[ChatService-OMEGA] 📥 Réponse brute reçue:', {
+        hasContent: !!backendResponse.content,
+        hasSuccess: !!backendResponse.success,
+        hasMessage: !!backendResponse.message,
+        keys: Object.keys(backendResponse),
       });
 
-      if (!backendResponse.success || !backendResponse.message) {
-        monitoring.trackPipelineError();
-        throw new Error(backendResponse.error ?? 'Réponse invalide du backend OMEGA');
-      }
+      // ✅ FIX P0-1: Détection du format de réponse (OMEGA direct vs Legacy)
+      if (backendResponse.content !== undefined) {
+        // Format OMEGA direct: { content, conversationId, messageId, latencyMs, metadata }
+        const latencyMs = backendResponse.latencyMs || (Date.now() - startedAt);
+        monitoring.trackPipelineLatency(latencyMs);
 
-      return this.normalizeResponse(backendResponse, config);
+        console.log('[ChatService-OMEGA] ✅ Format OMEGA direct détecté:', {
+          contentLength: backendResponse.content?.length ?? 0,
+          conversationId: backendResponse.conversationId,
+          messageId: backendResponse.messageId,
+          latencyMs,
+        });
+
+        return {
+          content: backendResponse.content,
+          finishReason: 'stop',
+          model: config?.model || 'omega-pipeline',
+          provider: backendResponse.metadata?.provider || 'tauri-backend',
+          latencyMs,
+          frenchMasteryApplied: backendResponse.frenchMasteryApplied ?? true,
+          metadata: {
+            messageId: backendResponse.messageId,
+            conversationId: backendResponse.conversationId,
+            timestamp: Date.now(),
+            success: true,
+            ...(backendResponse.metadata || {}),
+          },
+          omegaMetadata: backendResponse.metadata,
+        };
+      } else if (backendResponse.success && backendResponse.message) {
+        // Format Legacy: { success, message: { content, ... }, error, latency_ms }
+        const backendLatency = this.resolveLatencyMs(backendResponse.latency_ms);
+        const measuredLatency = Date.now() - startedAt;
+        const effectiveLatency = backendLatency > 0 ? backendLatency : measuredLatency;
+
+        monitoring.trackPipelineLatency(effectiveLatency);
+
+        console.log('[ChatService-OMEGA] ℹ️ Format Legacy détecté:', {
+          success: backendResponse.success,
+          provider: this.resolveProvider(
+            backendResponse.message?.provider,
+            config?.provider
+          ),
+          contentLength: backendResponse.message?.content?.length ?? 0,
+          latencyMs: backendLatency,
+        });
+
+        return this.normalizeResponse(backendResponse, config);
+      } else {
+        // Format invalide
+        monitoring.trackPipelineError();
+        console.error('[ChatService-OMEGA] ❌ Format de réponse invalide:', backendResponse);
+        throw new Error(
+          backendResponse.error ||
+            'Réponse invalide du backend OMEGA (format non reconnu)'
+        );
+      }
     } catch (error) {
       console.error('[ChatService-OMEGA] ❌ Erreur sendMessage:', error);
 
