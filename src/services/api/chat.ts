@@ -266,15 +266,37 @@ class ChatService {
         { ...LONG_COMMAND_OPTIONS, context: 'ChatOmega' }
       );
 
+      // ✅ FIX AUDIT: Validation format AVANT détection
+      if (!backendResponse || typeof backendResponse !== 'object') {
+        monitoring.trackPipelineError();
+        console.error('[ChatService-OMEGA] ❌ Réponse null ou invalide:', backendResponse);
+        throw new Error('Backend response is null or not an object');
+      }
+
       console.log('[ChatService-OMEGA] 📥 Réponse brute reçue:', {
         hasContent: !!backendResponse.content,
         hasSuccess: !!backendResponse.success,
         hasMessage: !!backendResponse.message,
+        hasError: !!backendResponse.error,
         keys: Object.keys(backendResponse),
       });
 
+      // ✅ FIX AUDIT: Gérer cas error explicite AVANT détection format
+      if (backendResponse.error && !backendResponse.content && !backendResponse.success) {
+        monitoring.trackPipelineError();
+        console.error('[ChatService-OMEGA] ❌ Backend retourné erreur:', backendResponse.error);
+        throw new Error(`Backend error: ${backendResponse.error}`);
+      }
+
       // ✅ FIX P0-1: Détection du format de réponse (OMEGA direct vs Legacy)
       if (backendResponse.content !== undefined) {
+        // ✅ FIX AUDIT: Valider content non-null ET non-vide
+        if (!backendResponse.content || backendResponse.content.trim() === '') {
+          monitoring.trackPipelineError();
+          console.error('[ChatService-OMEGA] ❌ Backend retourné content vide');
+          throw new Error('Backend returned empty content');
+        }
+
         // Format OMEGA direct: { content, conversationId, messageId, latencyMs, metadata }
         const latencyMs = backendResponse.latencyMs || (Date.now() - startedAt);
         monitoring.trackPipelineLatency(latencyMs);
@@ -284,6 +306,7 @@ class ChatService {
           conversationId: backendResponse.conversationId,
           messageId: backendResponse.messageId,
           latencyMs,
+          provider: backendResponse.metadata?.provider,
         });
 
         return {
@@ -295,7 +318,7 @@ class ChatService {
           frenchMasteryApplied: backendResponse.frenchMasteryApplied ?? true,
           metadata: {
             messageId: backendResponse.messageId,
-            conversationId: backendResponse.conversationId,
+            conversationId: backendResponse.conversationId || conversationId, // Fallback
             timestamp: Date.now(),
             success: true,
             ...(backendResponse.metadata || {}),
