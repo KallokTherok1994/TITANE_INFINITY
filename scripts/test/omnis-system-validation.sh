@@ -111,7 +111,7 @@ fi
 echo ""
 echo "🚀 VALIDATION DÉPLOIEMENT:"
 
-# Scripts NPM
+# Scripts pnpm
 if grep -q "build" package.json; then
     echo "✅ Script build: CONFIGURÉ"
 else

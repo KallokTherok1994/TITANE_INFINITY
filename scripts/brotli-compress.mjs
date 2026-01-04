@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * Compresses build output with Brotli for 10-15% better compression than gzip
- * Run after build: npm run compress
+ * Run after build: pnpm run compress
  */
 
 import { createBrotliCompress, constants } from 'zlib';
