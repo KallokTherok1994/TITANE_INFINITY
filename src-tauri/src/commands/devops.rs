@@ -13,10 +13,10 @@ const WORKSPACE_DIR: &str = "/home/titane/Documents/TITANE_INFINITY";
 
 #[derive(Debug, Clone, Copy)]
 enum AllowedCommand {
-    NpmRunBuild,
-    NpmTypeCheck,
-    NpmTest,
-    NpmClean,
+    PnpmRunBuild,
+    PnpmTypeCheck,
+    PnpmTest,
+    PnpmClean,
     CargoCheck,
     CargoClippy,
     CargoBuild,
@@ -30,10 +30,14 @@ enum AllowedCommand {
 impl AllowedCommand {
     fn from_input(input: &str) -> Option<Self> {
         match input.trim() {
-            "npm run build" => Some(Self::NpmRunBuild),
-            "npm run type-check" => Some(Self::NpmTypeCheck),
-            "npm run test" => Some(Self::NpmTest),
-            "npm run clean" => Some(Self::NpmClean),
+            "corepack pnpm run build" => Some(Self::PnpmRunBuild),
+            "corepack pnpm run type-check" => Some(Self::PnpmTypeCheck),
+            "corepack pnpm run test" => Some(Self::PnpmTest),
+            "corepack pnpm run clean" => Some(Self::PnpmClean),
+            "pnpm run build" => Some(Self::PnpmRunBuild),
+            "pnpm run type-check" => Some(Self::PnpmTypeCheck),
+            "pnpm run test" => Some(Self::PnpmTest),
+            "pnpm run clean" => Some(Self::PnpmClean),
             "cargo check" => Some(Self::CargoCheck),
             "cargo clippy" => Some(Self::CargoClippy),
             "cargo build" => Some(Self::CargoBuild),
@@ -48,23 +52,23 @@ impl AllowedCommand {
 
     fn build_command(&self) -> Command {
         match self {
-            Self::NpmRunBuild => {
-                let mut cmd = Command::new("npm");
+            Self::PnpmRunBuild => {
+                let mut cmd = Command::new("pnpm");
                 cmd.args(["run", "build"]);
                 cmd
             }
-            Self::NpmTypeCheck => {
-                let mut cmd = Command::new("npm");
+            Self::PnpmTypeCheck => {
+                let mut cmd = Command::new("pnpm");
                 cmd.args(["run", "type-check"]);
                 cmd
             }
-            Self::NpmTest => {
-                let mut cmd = Command::new("npm");
+            Self::PnpmTest => {
+                let mut cmd = Command::new("pnpm");
                 cmd.args(["run", "test"]);
                 cmd
             }
-            Self::NpmClean => {
-                let mut cmd = Command::new("npm");
+            Self::PnpmClean => {
+                let mut cmd = Command::new("pnpm");
                 cmd.args(["run", "clean"]);
                 cmd
             }
@@ -219,13 +223,14 @@ pub async fn devops_stats() -> Result<DevOpsStats, String> {
         "❌ ERRORS".to_string()
     };
 
-    // NPM Status (vérifie si TypeScript compile sans erreurs)
-    let npm_check = Command::new("npm")
+    // PNPM Status (vérifie si TypeScript compile sans erreurs)
+    // NOTE: on conserve le champ `npm_status` pour compat UI.
+    let npm_check = Command::new("pnpm")
         .arg("run")
         .arg("type-check")
         .current_dir(WORKSPACE_DIR)
         .output()
-        .map_err(|e| format!("NPM check error: {}", e))?;
+        .map_err(|e| format!("PNPM check error: {}", e))?;
     let npm_status = if npm_check.status.success() {
         "✅ OK".to_string()
     } else {

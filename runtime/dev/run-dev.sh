@@ -64,4 +64,8 @@ echo ""
 # Note: TAURI-ONLY: build.beforeDevCommand génère dist (aucun serveur HTTP).
 # You can pass extra flags to tauri dev via this script, e.g.:
 #   ./runtime/dev/run-dev.sh --features full ollama
-npm run dev:tauri -- --no-watch "$@" 2>&1 | tee runtime/dev/logs/tauri.log
+if command -v corepack &> /dev/null; then
+    corepack pnpm run dev:tauri -- --no-watch "$@" 2>&1 | tee runtime/dev/logs/tauri.log
+else
+    pnpm run dev:tauri -- --no-watch "$@" 2>&1 | tee runtime/dev/logs/tauri.log
+fi

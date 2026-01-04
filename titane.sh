@@ -87,32 +87,50 @@ log() {
 # Package-manager helpers (pnpm-first)
 pm_run() {
     if [ -f "pnpm-lock.yaml" ]; then
-        if command -v pnpm &> /dev/null; then
-            pnpm run "$@"
-            return $?
-        fi
         if command -v corepack &> /dev/null; then
             corepack pnpm run "$@"
             return $?
         fi
+        if command -v pnpm &> /dev/null; then
+            pnpm run "$@"
+            return $?
+        fi
     fi
 
-    pnpm run "$@"
+    if command -v corepack &> /dev/null; then
+        corepack pnpm run "$@"
+        return $?
+    fi
+    if command -v pnpm &> /dev/null; then
+        pnpm run "$@"
+        return $?
+    fi
+
+    error "pnpm/corepack introuvable (pnpm-only)"
 }
 
 pm_exec() {
     if [ -f "pnpm-lock.yaml" ]; then
-        if command -v pnpm &> /dev/null; then
-            pnpm exec "$@"
-            return $?
-        fi
         if command -v corepack &> /dev/null; then
             corepack pnpm exec "$@"
             return $?
         fi
+        if command -v pnpm &> /dev/null; then
+            pnpm exec "$@"
+            return $?
+        fi
     fi
 
-    npx "$@"
+    if command -v corepack &> /dev/null; then
+        corepack pnpm exec "$@"
+        return $?
+    fi
+    if command -v pnpm &> /dev/null; then
+        pnpm exec "$@"
+        return $?
+    fi
+
+    error "pnpm/corepack introuvable (pnpm-only)"
 }
 
 # Print header

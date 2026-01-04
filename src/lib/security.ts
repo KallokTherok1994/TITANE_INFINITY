@@ -433,6 +433,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'get_gemini_key_status',
   'get_openai_key_status',
   'get_anthropic_key_status',
+  'get_copilot_key_status',
   'chat_set_openai_key',
   'chat_set_anthropic_key',
   'get_ia_policies',

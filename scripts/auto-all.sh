@@ -106,10 +106,20 @@ phase2_build() {
     
     # TypeScript check
     echo "Running TypeScript check..."
-    npx tsc --noEmit || {
-        print_error "TypeScript errors found"
+    if command -v corepack >/dev/null 2>&1; then
+        corepack pnpm exec tsc --noEmit || {
+            print_error "TypeScript errors found"
+            return 1
+        }
+    elif command -v pnpm >/dev/null 2>&1; then
+        pnpm exec tsc --noEmit || {
+            print_error "TypeScript errors found"
+            return 1
+        }
+    else
+        print_error "pnpm requis (corepack/pnpm introuvable)"
         return 1
-    }
+    fi
     print_success "TypeScript check passed"
     
     # Build frontend

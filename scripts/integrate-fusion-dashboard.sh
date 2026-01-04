@@ -49,10 +49,12 @@ echo ""
 
 # 2. Vérifier TypeScript
 echo -e "${BLUE}2. Vérification TypeScript...${NC}"
-if command -v npx &> /dev/null; then
-    npx tsc --noEmit --skipLibCheck 2>&1 | grep -E "error TS|Found [0-9]+ error" || echo -e "  ${GREEN}✓${NC} 0 erreur TypeScript"
+if command -v corepack >/dev/null 2>&1; then
+    corepack pnpm exec tsc --noEmit --skipLibCheck 2>&1 | grep -E "error TS|Found [0-9]+ error" || echo -e "  ${GREEN}✓${NC} 0 erreur TypeScript"
+elif command -v pnpm >/dev/null 2>&1; then
+    pnpm exec tsc --noEmit --skipLibCheck 2>&1 | grep -E "error TS|Found [0-9]+ error" || echo -e "  ${GREEN}✓${NC} 0 erreur TypeScript"
 else
-    echo -e "  ${YELLOW}⚠${NC}  npx non disponible, vérification ignorée"
+    echo -e "  ${YELLOW}⚠${NC}  pnpm/corepack indisponible, vérification ignorée"
 fi
 echo ""
 
@@ -124,10 +126,12 @@ echo ""
 
 # 7. Linter check (optionnel)
 echo -e "${BLUE}7. Lint check (optionnel)...${NC}"
-if command -v npx &> /dev/null; then
-    npx eslint src/components/PerfectFusionDashboard.tsx --max-warnings 0 2>&1 | grep -E "error|warning" || echo -e "  ${GREEN}✓${NC} 0 error/warning ESLint"
+if command -v corepack >/dev/null 2>&1; then
+    corepack pnpm exec eslint src/components/PerfectFusionDashboard.tsx --max-warnings 0 2>&1 | grep -E "error|warning" || echo -e "  ${GREEN}✓${NC} 0 error/warning ESLint"
+elif command -v pnpm >/dev/null 2>&1; then
+    pnpm exec eslint src/components/PerfectFusionDashboard.tsx --max-warnings 0 2>&1 | grep -E "error|warning" || echo -e "  ${GREEN}✓${NC} 0 error/warning ESLint"
 else
-    echo -e "  ${YELLOW}⚠${NC}  ESLint non disponible"
+    echo -e "  ${YELLOW}⚠${NC}  pnpm/corepack indisponible, ESLint ignoré"
 fi
 echo ""
 

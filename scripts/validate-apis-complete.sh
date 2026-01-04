@@ -105,7 +105,14 @@ fi
 
 # Test 8: Compilation TypeScript
 echo "[TEST 8] Compilation TypeScript..."
-if npx tsc --noEmit --skipLibCheck 2>/dev/null; then
+if command -v corepack >/dev/null 2>&1; then
+  corepack pnpm exec tsc --noEmit --skipLibCheck 2>/dev/null
+elif command -v pnpm >/dev/null 2>&1; then
+  pnpm exec tsc --noEmit --skipLibCheck 2>/dev/null
+else
+  false
+fi
+if [ $? -eq 0 ]; then
   echo "  ✓ PASS: Pas d'erreurs TypeScript"
 else
   echo "  ⚠ WARNING: Vérification TypeScript (peut nécessiter node_modules)"
