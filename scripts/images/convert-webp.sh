@@ -2,7 +2,7 @@
 # convert-images-webp.sh - Phase 6 WebP Conversion Script
 # 
 # Convertit toutes images PNG/JPG en WebP pour réduction -70% size
-# Utilise ffmpeg (disponible par défaut) au lieu de sharp (npm issue)
+# Utilise ffmpeg (disponible par défaut) au lieu de sharp (issue dépendances Node)
 # 
 # Usage: ./scripts/convert-images-webp.sh
 
