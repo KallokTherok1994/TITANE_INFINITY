@@ -55,12 +55,12 @@ fi
 # 3. Dependency Size
 echo ""
 echo "📚 [3/8] Analyzing dependency sizes..."
-if command -v npm &> /dev/null; then
-    npm ls --depth=0 --json > "$REPORT_DIR/dependencies.json" 2>/dev/null || true
+if command -v pnpm &> /dev/null; then
+    pnpm list --depth=0 --json > "$REPORT_DIR/dependencies.json" 2>/dev/null || true
     
     {
         echo "=== Direct Dependencies ==="
-        jq -r '.dependencies | to_entries | .[] | "\(.key): \(.value.version)"' "$REPORT_DIR/dependencies.json" 2>/dev/null || npm ls --depth=0
+        jq -r '.dependencies | to_entries | .[] | "\(.key): \(.value.version)"' "$REPORT_DIR/dependencies.json" 2>/dev/null || pnpm list --depth=0
         echo ""
         echo "=== Heavy Dependencies (>1MB) ==="
         du -sh node_modules/* 2>/dev/null | grep -E "[0-9]+M" | sort -hr | head -20 || echo "None found"
@@ -69,7 +69,7 @@ if command -v npm &> /dev/null; then
     NODE_MODULES_SIZE=$(du -sm node_modules/ 2>/dev/null | cut -f1 || echo "0")
     echo "   └─ node_modules size: ${NODE_MODULES_SIZE}MB"
 else
-    echo "   ⚠️ npm not found"
+    echo "   ⚠️ pnpm not found"
 fi
 
 # 4. Memory Usage Estimate

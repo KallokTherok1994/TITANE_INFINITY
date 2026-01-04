@@ -42,11 +42,6 @@ const hasPackageLock = existsSync('package-lock.json');
 const hasPnpmLock = existsSync('pnpm-lock.yaml');
 const hasYarnLock = existsSync('yarn.lock');
 
-if (hasPackageLock) {
-  run('npm', ['audit']);
-  process.exit(0);
-}
-
 if (hasPnpmLock) {
   const pnpmResult = runOrFallback('pnpm', ['audit'], 'corepack', ['pnpm', 'audit']);
 
@@ -55,6 +50,11 @@ if (hasPnpmLock) {
       '[COPILOT-XS] ⚠️ Security scan skipped: pnpm-lock.yaml detected but neither pnpm nor corepack is available.'
     );
   }
+  process.exit(0);
+}
+
+if (hasPackageLock) {
+  run('npm', ['audit']);
   process.exit(0);
 }
 

@@ -191,15 +191,15 @@ echo "📦 7/8 Audit des dépendances..."
     echo "## 7. Dépendances {#dependencies}"
     echo ""
     
-    echo "### NPM Dependencies"
+    echo "### PNPM Dependencies"
     echo "\`\`\`json"
-    npm list --depth=0 2>&1 | head -50
+    pnpm list --depth=0 --json 2>&1 | head -50
     echo "\`\`\`"
     echo ""
     
     echo "### Outdated Packages"
     echo "\`\`\`"
-    npm outdated 2>&1 || true
+    pnpm outdated 2>&1 || true
     echo "\`\`\`"
     echo ""
     

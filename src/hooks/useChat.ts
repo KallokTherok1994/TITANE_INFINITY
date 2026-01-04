@@ -1006,12 +1006,21 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
           // ✅ FIX AUDIT: Monitorer fréquence fallback
           try {
-            if (typeof window !== 'undefined' && (window as any).monitoring) {
-              (window as any).monitoring.trackEvent('chat_fallback_triggered', {
-                targetUiId,
-                context,
-                messagesCount: messagesRef.current.length,
-              });
+            if (typeof window !== 'undefined') {
+              const monitoring = (window as unknown as { monitoring?: unknown }).monitoring;
+              const trackEvent =
+                (monitoring as { trackEvent?: unknown } | null | undefined)?.trackEvent;
+
+              if (typeof trackEvent === 'function') {
+                (trackEvent as (name: string, data: Record<string, unknown>) => void)(
+                  'chat_fallback_triggered',
+                  {
+                    targetUiId,
+                    context,
+                    messagesCount: messagesRef.current.length,
+                  }
+                );
+              }
             }
           } catch (monitoringError) {
             // Silent monitoring failure
@@ -1509,6 +1518,7 @@ Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation 
       currentModeState,
       debugEntriesRef,
       generate,
+      conversationId,
       preferredProviderState,
       saveMessage,
       stream,

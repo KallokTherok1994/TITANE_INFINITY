@@ -122,10 +122,13 @@ async fn call_ollama_api(prompt: &str, max_tokens: u32) -> Result<String, String
         .build()
         .map_err(|e| format!("HTTP client error: {}", e))?;
 
-    let ollama_url =
-        std::env::var("OLLAMA_URL").unwrap_or_else(|_| "http://127.0.0.1:11434".to_string());
+    let ollama_url = std::env::var("OLLAMA_BASE_URL")
+        .or_else(|_| std::env::var("OLLAMA_URL"))
+        .unwrap_or_else(|_| "http://127.0.0.1:11434".to_string());
 
-    let model = std::env::var("OLLAMA_MODEL").unwrap_or_else(|_| "llama3.1".to_string());
+    let model = std::env::var("OLLAMA_DEFAULT_MODEL")
+        .or_else(|_| std::env::var("OLLAMA_MODEL"))
+        .unwrap_or_else(|_| "llama3.1".to_string());
 
     let request_body = json!({
         "model": model,

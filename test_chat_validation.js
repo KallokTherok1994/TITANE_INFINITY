@@ -133,8 +133,6 @@ const docsToCheck = [
   'CHAT_FIX_FINAL_REPORT.md',
   'AUDIT_FINAL_110_PERCENT.md',
 ];
-
-let allDocsExist = true;
 docsToCheck.forEach(doc => {
   const fullPath = path.join(__dirname, doc);
   if (fs.existsSync(fullPath)) {

@@ -210,8 +210,13 @@ async fn ping_gemini_internal(secrets: Option<&SecureSecretsEngine>) -> Provider
 async fn ping_ollama_internal() -> ProviderStatus {
     let start = std::time::Instant::now();
     let now = now_ms();
-    let ollama_url =
-        std::env::var("OLLAMA_BASE_URL").unwrap_or_else(|_| "http://localhost:11434".into());
+    let ollama_url = std::env::var("OLLAMA_BASE_URL")
+        .or_else(|_| std::env::var("OLLAMA_URL"))
+        .unwrap_or_else(|_| "http://127.0.0.1:11434".into());
+
+    let ollama_model = std::env::var("OLLAMA_DEFAULT_MODEL")
+        .or_else(|_| std::env::var("OLLAMA_MODEL"))
+        .unwrap_or_else(|_| "llama3.1".into());
 
     let client = reqwest::Client::builder()
         .timeout(std::time::Duration::from_secs(3))
@@ -239,7 +244,7 @@ async fn ping_ollama_internal() -> ProviderStatus {
                     } else {
                         Some(format!("HTTP {}", resp.status()))
                     },
-                    model: Some("titane-local".into()),
+                    model: Some(ollama_model.clone()),
                     capabilities: vec!["text".into(), "local".into(), "offline".into()],
                 }
             }
@@ -250,7 +255,7 @@ async fn ping_ollama_internal() -> ProviderStatus {
                 score: 0,
                 last_checked: now,
                 error: Some(format!("Not running: {}", e)),
-                model: Some("titane-local".into()),
+                model: Some(ollama_model.clone()),
                 capabilities: vec!["text".into(), "local".into(), "offline".into()],
             },
         },

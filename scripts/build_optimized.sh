@@ -42,7 +42,7 @@ echo -e "${YELLOW}[0/7] Pre-flight checks...${NC}"
 
 # Check required tools
 command -v node >/dev/null 2>&1 || { echo -e "${RED}Node.js required${NC}"; exit 1; }
-command -v npm >/dev/null 2>&1 || { echo -e "${RED}PNPM required${NC}"; exit 1; }
+command -v pnpm >/dev/null 2>&1 || { echo -e "${RED}PNPM required${NC}"; exit 1; }
 command -v cargo >/dev/null 2>&1 || { echo -e "${RED}Cargo required${NC}"; exit 1; }
 
 # Check Tauri CLI
