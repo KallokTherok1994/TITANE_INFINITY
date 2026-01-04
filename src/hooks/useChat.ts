@@ -254,6 +254,16 @@ interface UseChatReturn {
 
 export function useChat(options: UseChatOptions = {}): UseChatReturn {
   // ═══ OMNIS STATE ═══
+  // ✅ FIX AUDIT: Générer conversationId UNE SEULE FOIS au mount
+  const [conversationId] = useState<string>(() => {
+    // Réutiliser ID existant ou créer nouveau
+    const stored = localStorage.getItem('titane_current_conversation_id');
+    if (stored) return stored;
+    const newId = `conv-${Date.now()}-${Math.random().toString(36).substring(7)}`;
+    localStorage.setItem('titane_current_conversation_id', newId);
+    return newId;
+  });
+
   // OMEGA FIX: Charger les messages depuis localStorage au démarrage pour éviter le flash
   const [messages, setMessages] = useState<AIMessage[]>(() => {
     if (typeof window === 'undefined') return [];
@@ -287,6 +297,9 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
   // FIX v19.3Ω: Guard flag pour verrouiller l'état pendant les opérations
   const operationLockRef = useRef(false);
+  
+  // ✅ FIX P0-2: Timestamp de la dernière opération pour cooldown
+  const lastOperationTimestampRef = useRef<number>(0);
 
   // OMEGA FIX: Initialiser messagesRef avec les messages initiaux
   const messagesRef = useRef<AIMessage[]>(messages);
@@ -629,11 +642,20 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       return;
     }
 
-    // 🛡️ PROTECTION CRITIQUE: JAMAIS sync pendant une opération en cours ou lock
-    if (isLoadingRef.current || operationLockRef.current) {
-      chatLogger.debug('🛡️ CRITICAL PROTECTED: Skipping sync during operation', {
+    // ✅ FIX P0-2: PROTECTION CRITIQUE avec cooldown après opération
+    const timeSinceLastOp = Date.now() - lastOperationTimestampRef.current;
+    const COOLDOWN_MS = 3000; // 3s cooldown après chaque opération
+
+    if (
+      isLoadingRef.current ||
+      operationLockRef.current ||
+      timeSinceLastOp < COOLDOWN_MS
+    ) {
+      chatLogger.debug('🛡️ CRITICAL PROTECTED: Skipping sync during/after operation', {
         loading: isLoadingRef.current,
         lock: operationLockRef.current,
+        timeSinceOp: timeSinceLastOp,
+        cooldown: COOLDOWN_MS,
       });
       return;
     }
@@ -647,6 +669,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     if (currentCount > 0 && memoryCount === 0) {
       chatLogger.debug('🛡️ PROTECTED: Skipping empty memory sync', {
         preservingMessages: currentCount,
+        vaultCount,
       });
       return;
     }
@@ -663,14 +686,20 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     }
 
     if (memoryCount === 0) {
-      // Seulement reset si TOUT est vide (vault + ref + memoryForMode) ET pas en loading
-      if (vaultCount === 0 && currentCount === 0 && !isLoadingRef.current) {
+      // ✅ FIX P0-2: Reset uniquement si TOUT est vide ET cooldown passé
+      if (
+        vaultCount === 0 &&
+        currentCount === 0 &&
+        !isLoadingRef.current &&
+        timeSinceLastOp >= COOLDOWN_MS
+      ) {
+        chatLogger.info('📭 All sources empty and cooldown passed, safe to reset');
         applyMessagesSafely([], 'memory-sync-empty', { allowEmpty: true });
       }
       return;
     }
 
-    // Sync uniquement si mémoire a plus de contenu ET pas en loading
+    // Sync uniquement si mémoire a plus de contenu ET pas en loading ET cooldown passé
     chatLogger.info('📥 Syncing from memory:', memoryCount, 'messages');
     applyMessagesSafely(messagesForMode, 'memory-sync');
   }, [messagesForMode, applyMessagesSafely]);
@@ -795,7 +824,11 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
       // FIX v19.3Ω: Activer le verrou d'opération AVANT tout changement d'état
       operationLockRef.current = true;
-      chatLogger.debug('🔒 Operation lock ACTIVATED');
+      // ✅ FIX P0-2: Enregistrer le timestamp pour cooldown
+      lastOperationTimestampRef.current = Date.now();
+      chatLogger.debug('🔒 Operation lock ACTIVATED', {
+        timestamp: lastOperationTimestampRef.current,
+      });
       chatLogger.info('✅ Message valide, traitement...');
       const cleanMessage = content.trim();
       setIsLoading(true);
@@ -897,19 +930,35 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         metadataPatch?: Record<string, unknown>
       ) => {
         if (!targetUiId) {
-          chatLogger.error('❌ updateAssistant: targetUiId missing');
+          chatLogger.error('❌ updateAssistant: targetUiId missing', {
+            context,
+            messagesCount: messagesRef.current.length,
+          });
           return;
         }
 
         chatLogger.debug('🔄 updateAssistant called', {
           context,
           targetUiId,
+          messagesCount: messagesRef.current.length,
         });
+
+        let found = false;
+        let placeholderContent = '';
 
         const nextMessages = messagesRef.current.map(msg => {
           if (!msg?.metadata || msg.metadata.uiId !== targetUiId) {
             return msg;
           }
+
+          found = true;
+          placeholderContent = msg.content?.substring(0, 50) || '<empty>';
+
+          chatLogger.debug('✅ updateAssistant: Target found', {
+            uiId: targetUiId,
+            currentContent: placeholderContent,
+            context,
+          });
 
           const updated = mutate({ ...msg });
           const existingMetadata =
@@ -926,17 +975,70 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
             mergedMetadata.uiId = targetUiId;
           }
 
+          chatLogger.debug('🔄 updateAssistant: Message updated', {
+            uiId: targetUiId,
+            newContentLength: updated.content?.length || 0,
+            newContentPreview: updated.content?.substring(0, 50) || '<empty>',
+          });
+
           return {
             ...updated,
             metadata: mergedMetadata,
           };
         });
 
-        chatLogger.debug('📤 updateAssistant: Messages updated', {
+        if (!found) {
+          chatLogger.error('❌ updateAssistant: Target NOT FOUND', {
+            targetUiId,
+            context,
+            messagesCount: messagesRef.current.length,
+            availableUiIds: messagesRef.current
+              .map(m => m?.metadata?.uiId)
+              .filter(Boolean),
+          });
+
+          // ✅ FIX P0-3: FALLBACK - Ajouter le message au lieu de updater
+          chatLogger.warn('⚠️ updateAssistant: FALLBACK TRIGGERED - investigate root cause', {
+            targetUiId,
+            context,
+            timestamp: Date.now(),
+          });
+
+          // ✅ FIX AUDIT: Monitorer fréquence fallback
+          try {
+            if (typeof window !== 'undefined' && (window as any).monitoring) {
+              (window as any).monitoring.trackEvent('chat_fallback_triggered', {
+                targetUiId,
+                context,
+                messagesCount: messagesRef.current.length,
+              });
+            }
+          } catch (monitoringError) {
+            // Silent monitoring failure
+          }
+
+          const fallbackMessage: AIMessage = mutate({
+            role: 'assistant',
+            content: '',
+            timestamp: Date.now(),
+            metadata: withUiId({ ...metadataPatch, uiId: targetUiId }),
+          } as AIMessage);
+          nextMessages.push(fallbackMessage);
+        }
+
+        chatLogger.debug('📤 updateAssistant: Applying messages', {
           count: nextMessages.length,
+          context,
         });
 
         applyMessagesSafely(nextMessages, context);
+
+        chatLogger.info('✅ updateAssistant: Complete', {
+          found,
+          placeholderContent,
+          finalCount: nextMessages.length,
+          context,
+        });
       };
 
       let aggregatedContent = '';
@@ -1114,13 +1216,18 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
         if (backendHistory.length > 0) {
           const firstCandidate = providerCandidates[0];
-          const requestConfig: StreamConfig = { provider: firstCandidate ?? 'auto' };
+          // ✅ FIX AUDIT: Utiliser conversationId persistant depuis state
+          const requestConfig: StreamConfig = { 
+            provider: firstCandidate ?? 'auto',
+            conversationId: conversationId, // Utiliser conversationId du state
+          };
           for (const candidate of providerCandidates) {
             try {
               requestConfig.provider = candidate;
               attemptedProviders.push(candidate);
               const response = await chatService.sendMessageLegacy(backendHistory, {
                 provider: candidate,
+                conversationId: conversationId, // ✅ Passer conversationId
               });
               chatServiceResponse = response;
               chatAttempts.push({ provider: candidate, success: true, response });
