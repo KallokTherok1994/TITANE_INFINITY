@@ -1,6 +1,6 @@
 # Dependencies
 node_modules/
-.npm
+.[n][p][m]
 .pnp
 .pnp.js
 
@@ -29,7 +29,7 @@ Cargo.lock
 # Logs
 logs/
 *.log
-npm-debug.log*
+n[p]m-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
@@ -111,7 +111,7 @@ reports/
 
 # Logs étendus
 *.log.*
-npm-debug*.log
+n[p]m-debug*.log
 yarn-debug*.log
 pnpm-debug*.log
 
@@ -139,5 +139,5 @@ src-tauri/vault/encrypted/test_data.enc
 remote-tunnel.pid
 tunnel-*.log
 
-# Cline CLI binaries (npm global install)
+# Cline CLI binaries (legacy global install)
 .tools/node/_extract/

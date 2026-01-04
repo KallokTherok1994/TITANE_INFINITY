@@ -52,7 +52,7 @@ cat package.json | grep -A2 '@types/react'
 cat tsconfig.json | grep -A10 'compilerOptions'
 
 # 4. Tester configuration TypeScript
-npx tsc --showConfig > tsconfig-effective.json
+corepack pnpm exec tsc --showConfig > tsconfig-effective.json
 ```
 
 #### Étape 1.2: Solutions Potentielles
@@ -69,7 +69,7 @@ pnpm install
 pnpm list @types/react @types/react-dom
 
 # Re-tester
-npx tsc --noEmit | head -100
+corepack pnpm exec tsc --noEmit | head -100
 ```
 
 **Solution B: Downgrade React 19 → 18**
@@ -108,9 +108,9 @@ npx tsc --noEmit | head -100
 
 **Tests de validation:**
 ```bash
-npx tsc --noEmit        # Doit retourner 0 erreurs
-npm run check           # Alias tsc --noEmit
-npm run lint            # ESLint doit passer
+corepack pnpm exec tsc --noEmit        # Doit retourner 0 erreurs
+corepack pnpm run check                # Alias tsc --noEmit
+corepack pnpm run lint                 # ESLint doit passer
 ```
 
 **Effort:** 2-4 jours  
@@ -139,7 +139,7 @@ npm run lint            # ESLint doit passer
 
 ❌ Serveurs HTTP standalone (vite preview, serve dist, python -m http.server)
 ❌ Exposer l'application via HTTP accessible depuis l'extérieur
-❌ npm run preview (serveur Vite standalone)
+❌ pnpm run preview (serveur Vite standalone)
 ❌ Tout serveur HTTP/HTTPS accessible hors Tauri wrapper
 
 **MÉTHODES AUTORISÉES UNIQUEMENT :**
@@ -147,7 +147,7 @@ npm run lint            # ESLint doit passer
 ✅ tauri dev (utilise Vite avec HMR, wrappé par Tauri WebView)
 ✅ tauri build (production native pure)
 ✅ cargo build --release (backend Rust)
-✅ npm run dev (si = tauri dev dans package.json)
+✅ pnpm run dev (si = tauri dev dans package.json)
 
 **⚠️ CLARIFICATION IMPORTANTE - Mode Développement:**
 
@@ -191,8 +191,8 @@ Ajouter commentaire au début:
 {
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
   "build": {
-    "beforeDevCommand": "npx vite --port 5173 --host 0.0.0.0",
-    "beforeBuildCommand": "npm run build",
+    "beforeDevCommand": "corepack pnpm exec vite --port 5173 --host 0.0.0.0",
+    "beforeBuildCommand": "pnpm run build",
     "devUrl": "http://localhost:5173",  // ⚠️ Tauri-wrapped only, not standalone
     "frontendDist": "../dist"
   }
@@ -221,13 +221,13 @@ Ajouter commentaire au début:
 
 ```bash
 # Tests frontend
-npm test 2>&1 | tee test-results-frontend.log
+corepack pnpm test 2>&1 | tee test-results-frontend.log
 
 # Tests architecture
-npm run test:architecture 2>&1 | tee test-results-architecture.log
+pnpm run test:architecture 2>&1 | tee test-results-architecture.log
 
 # Tests compliance
-npm run test:compliance 2>&1 | tee test-results-compliance.log
+pnpm run test:compliance 2>&1 | tee test-results-compliance.log
 
 # Tests Rust
 cd src-tauri
@@ -235,17 +235,17 @@ cargo test --all 2>&1 | tee ../test-results-rust.log
 cd ..
 
 # Tests E2E
-npm run test:e2e 2>&1 | tee test-results-e2e.log
+pnpm run test:e2e 2>&1 | tee test-results-e2e.log
 ```
 
 #### Étape 3.2: Mesure Couverture
 
 ```bash
 # Couverture frontend
-npm run test:coverage 2>&1 | tee coverage-report.log
+corepack pnpm run test:coverage 2>&1 | tee coverage-report.log
 
 # Vérification seuils
-npm run test:coverage:check
+corepack pnpm run test:coverage:check
 
 # Ouvrir rapport HTML
 # coverage/index.html
@@ -305,8 +305,8 @@ Contenu:
 **Plan de correction:**
 
 ```bash
-# Audit npm (via pnpm)
-pnpm audit --audit-level=moderate > audit-npm.log
+# Audit dépendances (via pnpm)
+pnpm audit --audit-level=moderate > audit-deps.log
 
 # Si vulnérabilités
 pnpm audit fix
@@ -521,7 +521,7 @@ module.exports = {
 
 - [ ] **P0-1.1:** Diagnostiquer erreurs TypeScript
 - [ ] **P0-1.2:** Appliquer solution (A, B, ou C)
-- [ ] **P0-1.3:** Valider: `npx tsc --noEmit` → 0 erreurs
+- [ ] **P0-1.3:** Valider: `corepack pnpm exec tsc --noEmit` → 0 erreurs
 - [ ] **P0-2.1:** Mettre à jour `.copilot-rules-permanent.md`
 - [ ] **P0-2.2:** Ajouter note `tauri.conf.json`
 - [ ] **P0-3.1:** Exécuter suite tests complète
@@ -562,7 +562,7 @@ module.exports = {
 - ✅ Couverture: >75% (cible: 80%)
 
 **Sécurité:**
-- ✅ Audit npm: 0 critique/high
+- ✅ Audit dépendances: 0 critique/high
 - ✅ Audit cargo: 0 critique/high
 - ✅ Architecture: 100% compliance
 
