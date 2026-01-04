@@ -107,7 +107,13 @@ echo ""
 echo "📜 [7/8] Scanning dependency licenses..."
 {
     echo "=== NPM Licenses ==="
-    npx license-checker --summary 2>/dev/null || echo "⚠️ license-checker not available"
+    if command -v corepack >/dev/null 2>&1; then
+        corepack pnpm dlx license-checker --summary 2>/dev/null || echo "⚠️ license-checker not available"
+    elif command -v pnpm >/dev/null 2>&1; then
+        pnpm dlx license-checker --summary 2>/dev/null || echo "⚠️ license-checker not available"
+    else
+        echo "⚠️ pnpm/corepack introuvable - license-checker ignoré"
+    fi
     echo ""
     echo "=== Cargo Licenses ==="
     cd src-tauri

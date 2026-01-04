@@ -16,14 +16,31 @@ echo "║                                                                    ║
 echo "╚════════════════════════════════════════════════════════════════════╝"
 echo ""
 
+# pnpm helpers (pnpm-only)
+pm() {
+  if command -v corepack >/dev/null 2>&1; then
+    corepack pnpm "$@"
+    return $?
+  fi
+  pnpm "$@"
+}
+
+pm_exec() {
+  if command -v corepack >/dev/null 2>&1; then
+    corepack pnpm exec "$@"
+    return $?
+  fi
+  pnpm exec "$@"
+}
+
 # Check Playwright installation
 echo "📦 Checking Playwright installation..."
-if ! npx playwright --version &>/dev/null; then
+if ! pm_exec playwright --version &>/dev/null; then
   echo "❌ Playwright not found. Installing..."
-  pnpm install -D @playwright/test
-  npx playwright install
+  pm install -D @playwright/test
+  pm_exec playwright install
 else
-  PLAYWRIGHT_VERSION=$(npx playwright --version)
+  PLAYWRIGHT_VERSION=$(pm_exec playwright --version)
   echo "✅ $PLAYWRIGHT_VERSION"
 fi
 
@@ -42,35 +59,35 @@ TEST_SUITE="${1:-all}"
 case "$TEST_SUITE" in
   critical|all)
     echo "🚀 Running Critical Path Tests..."
-    npx playwright test e2e/critical --reporter=list
+    pm_exec playwright test e2e/critical --reporter=list
     ;;
   smoke)
     echo "💨 Running Smoke Tests..."
-    npx playwright test e2e/smoke.test.ts --reporter=list
+    pm_exec playwright test e2e/smoke.test.ts --reporter=list
     ;;
   launch)
     echo "🚀 Running App Launch Tests..."
-    npx playwright test e2e/critical/app-launch.spec.ts --reporter=list
+    pm_exec playwright test e2e/critical/app-launch.spec.ts --reporter=list
     ;;
   chat)
     echo "💬 Running Chat Interaction Tests..."
-    npx playwright test e2e/critical/chat-interaction.spec.ts --reporter=list
+    pm_exec playwright test e2e/critical/chat-interaction.spec.ts --reporter=list
     ;;
   visual)
     echo "🎨 Running Visual Engine Tests..."
-    npx playwright test e2e/critical/visual-engine.spec.ts --reporter=list
+    pm_exec playwright test e2e/critical/visual-engine.spec.ts --reporter=list
     ;;
   resilience)
     echo "🛡️ Running Resilience Tests..."
-    npx playwright test e2e/critical/system-resilience.spec.ts --reporter=list
+    pm_exec playwright test e2e/critical/system-resilience.spec.ts --reporter=list
     ;;
   ui)
     echo "🎭 Running Tests with UI Mode..."
-    npx playwright test --ui
+    pm_exec playwright test --ui
     ;;
   debug)
     echo "🐛 Running Tests in Debug Mode..."
-    npx playwright test --debug
+    pm_exec playwright test --debug
     ;;
   *)
     echo "❌ Unknown test suite: $TEST_SUITE"

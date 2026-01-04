@@ -45,10 +45,24 @@ echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━�
 echo -e "${YELLOW}Phase 2: TypeScript Type Check${NC}"
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}\n"
 
-if npx tsc --noEmit >> "$VALIDATION_LOG" 2>&1; then
+if command -v corepack >/dev/null 2>&1; then
+  corepack pnpm exec tsc --noEmit >> "$VALIDATION_LOG" 2>&1
+elif command -v pnpm >/dev/null 2>&1; then
+  pnpm exec tsc --noEmit >> "$VALIDATION_LOG" 2>&1
+else
+  echo "pnpm requis (corepack/pnpm introuvable)" >> "$VALIDATION_LOG"
+  false
+fi
+if [ $? -eq 0 ]; then
   echo -e "${GREEN}✓ TypeScript: PASSED (0 errors)${NC}"
 else
-  TS_ERRORS=$(npx tsc --noEmit 2>&1 | grep -c "error TS" || echo 0)
+  if command -v corepack >/dev/null 2>&1; then
+    TS_ERRORS=$(corepack pnpm exec tsc --noEmit 2>&1 | grep -c "error TS" || echo 0)
+  elif command -v pnpm >/dev/null 2>&1; then
+    TS_ERRORS=$(pnpm exec tsc --noEmit 2>&1 | grep -c "error TS" || echo 0)
+  else
+    TS_ERRORS=0
+  fi
   echo -e "${YELLOW}⚠ TypeScript: $TS_ERRORS errors (non-blocking in Vite)${NC}"
 fi
 

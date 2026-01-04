@@ -3,9 +3,9 @@
  *
  * @module core/devops/LocalAgentEngine
  * @description Agent DevOps local ultra-puissant pour orchestration build/test/deploy
- * @version 26.0.0
- * @license MIT
- *
+        // INTEGRATION: pnpm CLI for package health analysis
+        // 1. pnpm outdated --json (parse for semver violations)
+        // 2. pnpm audit --json (parse for CVE counts by severity)
  * CAPACITÉS :
  * - Analyse projet (Rust, Tauri, React, Node)
  * - Orchestration build/test/deploy
@@ -150,8 +150,8 @@ class LocalAgentEngine {
         security_vulnerabilities: [],
       },
       build_config: {
-        build_tool: 'npm',
-        build_command: 'npm run build',
+        build_tool: 'pnpm',
+        build_command: 'corepack pnpm run build',
         output_directory: 'dist',
       },
       issues: [],
@@ -323,15 +323,15 @@ class LocalAgentEngine {
     projectType: ProjectType
   ): Promise<BuildConfig> {
     const config: BuildConfig = {
-      build_tool: 'npm',
-      build_command: 'npm run build',
+      build_tool: 'pnpm',
+      build_command: 'corepack pnpm run build',
       output_directory: 'dist',
     };
 
     try {
       if (projectType === 'tauri_app') {
         config.build_tool = 'tauri';
-        config.build_command = 'npm run tauri:build';
+        config.build_command = 'corepack pnpm run tauri:build';
         config.output_directory = 'src-tauri/target/release';
       } else if (projectType === 'rust_project') {
         config.build_tool = 'cargo';
@@ -986,7 +986,7 @@ class LocalAgentEngine {
   private getDefaultTestConfig(): TestConfig {
     return {
       test_framework: 'vitest',
-      test_command: 'npm run test',
+      test_command: 'corepack pnpm run test',
       coverage_enabled: false,
       test_files: ['tests/**/*'],
     };

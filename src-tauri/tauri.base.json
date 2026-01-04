@@ -4,9 +4,9 @@
   "version": "26.2.0",
   "identifier": "com.titane.infinity",
   "build": {
-    "devUrl": "http://localhost:5173",
-    "beforeDevCommand": "pnpm run vite -- --port 5173 --host 0.0.0.0",
-    "beforeBuildCommand": "pnpm run build",
+    "devUrl": "tauri://localhost",
+    "beforeDevCommand": "corepack pnpm exec vite build",
+    "beforeBuildCommand": "corepack pnpm exec vite build",
     "frontendDist": "../dist"
   },
   "bundle": {

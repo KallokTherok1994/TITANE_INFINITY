@@ -20,7 +20,14 @@ echo "   ✅ Cache Vite supprimé"
 
 echo ""
 echo "3️⃣ Vérification TypeScript..."
-npx tsc --noEmit --skipLibCheck 2>&1 | head -5
+if command -v corepack >/dev/null 2>&1; then
+	corepack pnpm exec tsc --noEmit --skipLibCheck 2>&1 | head -5
+elif command -v pnpm >/dev/null 2>&1; then
+	pnpm exec tsc --noEmit --skipLibCheck 2>&1 | head -5
+else
+	echo "❌ pnpm requis (corepack/pnpm introuvable)." >&2
+	exit 1
+fi
 echo "   ✅ TypeScript vérifié"
 
 echo ""

@@ -6,6 +6,19 @@ echo "🔍 VÉRIFICATION DE LA CORRECTION: get_copilot_key_status"
 echo "=========================================================="
 echo ""
 
+pm_exec() {
+    if command -v corepack >/dev/null 2>&1; then
+        corepack pnpm exec "$@"
+        return $?
+    fi
+    if command -v pnpm >/dev/null 2>&1; then
+        pnpm exec "$@"
+        return $?
+    fi
+    echo "❌ pnpm/corepack introuvable (pnpm-only)" >&2
+    return 127
+}
+
 # Test 1: Vérifier que la commande est dans la whitelist
 echo "✓ Test 1: Whitelist security.ts"
 if grep -q "get_copilot_key_status" src/lib/security.ts; then
@@ -19,9 +32,9 @@ echo ""
 
 # Test 2: Vérifier qu'il n'y a pas d'erreurs TypeScript
 echo "✓ Test 2: Erreurs TypeScript"
-if npx tsc --noEmit --project tsconfig.json 2>&1 | grep -q "error TS"; then
+if pm_exec tsc --noEmit --project tsconfig.json 2>&1 | grep -q "error TS"; then
     echo "  ⚠️  WARN - Erreurs TypeScript détectées (peut-être existantes)"
-    npx tsc --noEmit --project tsconfig.json 2>&1 | grep "error TS" | head -5
+    pm_exec tsc --noEmit --project tsconfig.json 2>&1 | grep "error TS" | head -5
 else
     echo "  ✅ PASS - Pas d'erreurs TypeScript"
 fi

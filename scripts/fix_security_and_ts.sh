@@ -69,7 +69,14 @@ echo "  ✅ tsconfig.json modifié (noUncheckedIndexedAccess: false)"
 # 3. Vérifier TypeScript
 echo ""
 echo "3️⃣ Vérification TypeScript..."
-npx tsc --noEmit 2>&1 | head -20 || echo "  ⚠️  Erreurs TypeScript restantes (voir ci-dessus)"
+if command -v corepack >/dev/null 2>&1; then
+  corepack pnpm exec tsc --noEmit 2>&1 | head -20 || echo "  ⚠️  Erreurs TypeScript restantes (voir ci-dessus)"
+elif command -v pnpm >/dev/null 2>&1; then
+  pnpm exec tsc --noEmit 2>&1 | head -20 || echo "  ⚠️  Erreurs TypeScript restantes (voir ci-dessus)"
+else
+  echo "  ❌ pnpm requis (corepack/pnpm introuvable)." >&2
+  exit 1
+fi
 
 echo ""
 echo "✅ Fix Security + TypeScript terminé"
