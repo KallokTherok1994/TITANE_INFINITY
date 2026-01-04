@@ -270,21 +270,19 @@ step1_env_check() {
     
     # ─── Check pnpm ───
     print_section "1.3: Package Manager"
-    
-    if [ -f "pnpm-lock.yaml" ]; then
-        if command -v pnpm &> /dev/null; then
-            PM="pnpm"
-            success "pnpm $(pnpm --version)"
-        elif command -v corepack &> /dev/null; then
-            PM="corepack pnpm"
-            success "pnpm (via corepack)"
-        else
-            PM="npm"
-            warning "pnpm not found, using npm"
-        fi
+
+    PM_CMD=""
+    PM_LABEL=""
+    if command -v corepack &> /dev/null && corepack pnpm --version &> /dev/null; then
+        PM_CMD="corepack pnpm"
+        PM_LABEL="pnpm (corepack)"
+        success "pnpm $(corepack pnpm --version)"
+    elif command -v pnpm &> /dev/null; then
+        PM_CMD="pnpm"
+        PM_LABEL="pnpm"
+        success "pnpm $(pnpm --version)"
     else
-        PM="npm"
-        success "npm $(npm --version)"
+        error "pnpm requis (corepack/pnpm introuvable)"
     fi
     
     # ─── Check Tauri CLI ───
@@ -292,7 +290,7 @@ step1_env_check() {
     
     if ! command -v cargo-tauri &> /dev/null; then
         warning "Tauri CLI not installed globally"
-        info "Will use: $PM exec tauri"
+        info "Will use: ${PM_LABEL} exec tauri"
     else
         success "Tauri CLI $(cargo-tauri --version)"
     fi
@@ -309,7 +307,7 @@ step1_env_check() {
     info "Current OS: $CURRENT_OS"
     info "Target: $TARGET_PLATFORM"
     info "Build mode: $BUILD_MODE"
-    info "Package manager: $PM"
+    info "Package manager: $PM_LABEL"
     [ "$SKIP_CLEAN" = true ] && info "Skip clean: YES"
     [ "$SKIP_TESTS" = true ] && info "Skip tests: YES"
     [ "$SKIP_AUDIT" = true ] && info "Skip audit: YES"
@@ -367,7 +365,7 @@ step3_install() {
     print_section "3.1: Node.js dependencies"
     
     if [ ! -d "node_modules" ] || [ "$SKIP_CLEAN" = false ]; then
-        run_cmd "$PM install --frozen-lockfile" "Install Node dependencies"
+        run_cmd "$PM_CMD install --frozen-lockfile" "Install Node dependencies"
     else
         success "node_modules/ already present"
     fi
@@ -411,13 +409,13 @@ step4_lint() {
     cd "$PROJECT_ROOT"
     
     print_section "4.1: ESLint"
-    run_cmd "$PM run lint" "ESLint check" || warning "ESLint warnings found"
+    run_cmd "$PM_CMD run lint" "ESLint check" || warning "ESLint warnings found"
     
     print_section "4.2: TypeScript"
-    run_cmd "$PM run check" "TypeScript check" || warning "TypeScript errors found"
+    run_cmd "$PM_CMD run check" "TypeScript check" || warning "TypeScript errors found"
     
     print_section "4.3: Prettier"
-    run_cmd "$PM run format:check" "Prettier check" || warning "Format issues found"
+    run_cmd "$PM_CMD run format:check" "Prettier check" || warning "Format issues found"
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -435,13 +433,13 @@ step5_tests() {
     cd "$PROJECT_ROOT"
     
     print_section "5.1: Frontend tests (Vitest)"
-    run_cmd "$PM run test -- --run --reporter=basic" "Frontend tests" || warning "Some tests failed"
+    run_cmd "$PM_CMD run test -- --run --reporter=basic" "Frontend tests" || warning "Some tests failed"
     
     print_section "5.2: Architecture tests"
-    run_cmd "$PM run test:architecture" "Architecture tests" || warning "Architecture tests failed"
+    run_cmd "$PM_CMD run test:architecture" "Architecture tests" || warning "Architecture tests failed"
     
     print_section "5.3: Compliance tests"
-    run_cmd "$PM run test:compliance" "Compliance tests" || warning "Compliance tests failed"
+    run_cmd "$PM_CMD run test:compliance" "Compliance tests" || warning "Compliance tests failed"
     
     print_section "5.4: Rust tests"
     mkdir -p dist  # Required for Rust tests
@@ -465,7 +463,7 @@ step6_audit() {
     cd "$PROJECT_ROOT"
     
     print_section "6.1: pnpm audit"
-    $PM audit --audit-level=high >> "$LOG_FILE" 2>&1 || warning "pnpm audit found issues"
+    run_cmd "$PM_CMD audit --audit-level=high" "pnpm audit" || warning "pnpm audit found issues"
     
     print_section "6.2: cargo audit"
     cd src-tauri
@@ -486,7 +484,7 @@ step7_build_frontend() {
     
     print_section "7.1: Vite build"
     
-    run_cmd "NODE_ENV=production NODE_OPTIONS='--max-old-space-size=8192' $PM run build" "Build frontend"
+    run_cmd "NODE_ENV=production NODE_OPTIONS='--max-old-space-size=8192' $PM_CMD run build" "Build frontend"
     
     print_section "7.2: Verify dist/"
     
@@ -525,21 +523,9 @@ step8_build_tauri() {
     # ─── Build command ───
     if [ "$DRY_RUN" = false ]; then
         mkdir -p "$OUTPUT_DIR"
-        
+
         info "Building Tauri app (this may take 10-15 minutes)..."
-        
-        if [[ "$PM" == "pnpm" ]]; then
-            pnpm exec tauri build --config "$TAURI_CONFIG" >> "$LOG_FILE" 2>&1 || {
-                error "Tauri build failed. Check logs: $LOG_FILE"
-            }
-        elif [[ "$PM" == "npm" ]]; then
-            error "npm/npx interdits (pnpm-only). Utilisez: pnpm exec tauri build ..."
-        else
-            $PM exec tauri build --config "$TAURI_CONFIG" >> "$LOG_FILE" 2>&1 || {
-                error "Tauri build failed. Check logs: $LOG_FILE"
-            }
-        fi
-        
+        run_cmd "$PM_CMD exec tauri build --config \"$TAURI_CONFIG\"" "Tauri build"
         success "Tauri build complete"
     else
         info "[DRY-RUN] Would build Tauri app"

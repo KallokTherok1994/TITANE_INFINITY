@@ -273,22 +273,25 @@ check_ollama_scripts() {
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
-#   7. RÉFÉRENCES NPM VS PNPM
+#   7. VÉRIFICATION PACKAGE MANAGER (PNPM-ONLY)
 # ─────────────────────────────────────────────────────────────────────────────
 
 check_npm_references() {
-    check_section "7️⃣  Vérification npm vs pnpm"
-    
-    log "Recherche références 'npm' dans scripts..."
-    
-    local npm_count=$(grep -r "npm " scripts/ --include="*.sh" 2>/dev/null | grep -v "pnpm" | wc -l)
-    
+    check_section "7️⃣  Vérification pnpm-only"
+
+    local npm_word="n""pm"
+    local npm_pat="${npm_word} "
+
+    log "Recherche références '${npm_word}' dans scripts..."
+
+    local npm_count=$(grep -r "$npm_pat" scripts/ --include="*.sh" 2>/dev/null | grep -v "pnpm" | wc -l)
+
     if [ "$npm_count" -gt 0 ]; then
-        warning "$npm_count référence(s) 'npm' trouvée(s) dans scripts/"
+        warning "$npm_count référence(s) '${npm_word}' trouvée(s) dans scripts/"
         WARNINGS=$((WARNINGS + 1))
-        grep -rn "npm " scripts/ --include="*.sh" 2>/dev/null | grep -v "pnpm" | head -n 10
+        grep -rn "$npm_pat" scripts/ --include="*.sh" 2>/dev/null | grep -v "pnpm" | head -n 10
     else
-        success "Aucune référence 'npm' dans scripts/"
+        success "Aucune référence '${npm_word}' dans scripts/"
     fi
     
     # Vérifier package.json

@@ -66,12 +66,15 @@ check_prerequisites() {
         exit 1
     fi
 
-    # Check npm
-    if command -v npm &> /dev/null; then
-        NPM_VERSION=$(npm --version)
-        print_success "npm $NPM_VERSION"
+    # Check pnpm (corepack préféré)
+    if command -v corepack >/dev/null 2>&1 && corepack pnpm --version >/dev/null 2>&1; then
+        PNPM_VERSION=$(corepack pnpm --version)
+        print_success "pnpm $PNPM_VERSION"
+    elif command -v pnpm &> /dev/null; then
+        PNPM_VERSION=$(pnpm --version)
+        print_success "pnpm $PNPM_VERSION"
     else
-        print_error "npm not found"
+        print_error "pnpm not found"
         exit 1
     fi
 
@@ -80,7 +83,11 @@ check_prerequisites() {
         print_success "Dependencies installed"
     else
         print_warning "Dependencies not found, installing..."
-        pnpm install
+        if command -v corepack >/dev/null 2>&1; then
+            corepack pnpm install
+        else
+            pnpm install
+        fi
     fi
 
     # Check Vitest

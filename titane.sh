@@ -310,20 +310,25 @@ repair() {
     
     print_section "Reinstalling dependencies..."
     if [ -f "pnpm-lock.yaml" ]; then
-        if command -v pnpm &> /dev/null; then
-            info "Using pnpm..."
-            pnpm install --frozen-lockfile || pnpm install
-        elif command -v corepack &> /dev/null; then
+        if command -v corepack &> /dev/null; then
             info "Using pnpm via corepack..."
             corepack pnpm install --frozen-lockfile || corepack pnpm install
+        elif command -v pnpm &> /dev/null; then
+            info "Using pnpm..."
+            pnpm install --frozen-lockfile || pnpm install
         else
-            warning "pnpm-lock.yaml detected but neither pnpm nor corepack is available; falling back to npm"
-            info "Using npm..."
-            pnpm install
+            error "pnpm/corepack introuvable (pnpm-only)"
         fi
     else
-        info "Using npm..."
-        pnpm install
+        if command -v corepack &> /dev/null; then
+            info "Using pnpm via corepack..."
+            corepack pnpm install
+        elif command -v pnpm &> /dev/null; then
+            info "Using pnpm..."
+            pnpm install
+        else
+            error "pnpm/corepack introuvable (pnpm-only)"
+        fi
     fi
     success "Dependencies installed"
     

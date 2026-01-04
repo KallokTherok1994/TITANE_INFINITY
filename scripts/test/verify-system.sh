@@ -10,6 +10,20 @@ RED='\033[0;31m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
+# Gestionnaire de paquets: pnpm-only (corepack préféré)
+PNPM=()
+resolve_pnpm_cmd() {
+    if command -v corepack >/dev/null 2>&1 && corepack pnpm --version >/dev/null 2>&1; then
+        PNPM=(corepack pnpm)
+        return 0
+    fi
+    if command -v pnpm >/dev/null 2>&1; then
+        PNPM=(pnpm)
+        return 0
+    fi
+    return 1
+}
+
 # Check 1: Directory structure
 echo "📁 Checking directory structure..."
 if [ -d ".github/agents" ] && [ -d "orchestration/scripts" ] && [ -d "plans" ]; then
@@ -56,21 +70,27 @@ fi
 
 # Check 5: Dependencies
 echo ""
-echo "📦 Checking npm dependencies..."
 cd orchestration
-if [ -d "node_modules" ] && [ -f "package-lock.json" ]; then
-    PACKAGE_COUNT=$(npm list --depth=0 2>/dev/null | grep -c "├──\|└──")
-    echo -e "${GREEN}✅ Dependencies installed ($PACKAGE_COUNT packages)${NC}"
+echo "📦 Checking Node dependencies..."
+if [ -d "node_modules" ] && [ -f "package.json" ]; then
+    if resolve_pnpm_cmd; then
+        "${PNPM[@]}" list --depth=0 >/dev/null 2>&1 || true
+    fi
+    echo -e "${GREEN}✅ Dependencies installed${NC}"
 else
     echo -e "${RED}❌ Dependencies not installed${NC}"
-    echo -e "${YELLOW}💡 Run: cd orchestration && pnpm install${NC}"
+    echo -e "${YELLOW}💡 Run: cd orchestration && corepack pnpm install${NC}"
     exit 1
 fi
 
-# Check 6: NPM scripts
+# Check 6: Project scripts
 echo ""
-echo "🛠️  Testing NPM scripts..."
-pnpm run status > /dev/null 2>&1
+echo "🛠️  Testing project scripts..."
+if ! resolve_pnpm_cmd; then
+    echo -e "${RED}❌ pnpm requis (corepack/pnpm introuvable)${NC}"
+    exit 1
+fi
+"${PNPM[@]}" run status > /dev/null 2>&1
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}✅ pnpm run status — working${NC}"
 else
@@ -78,7 +98,7 @@ else
     exit 1
 fi
 
-pnpm run next > /dev/null 2>&1
+"${PNPM[@]}" run next > /dev/null 2>&1
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}✅ pnpm run next — working${NC}"
 else

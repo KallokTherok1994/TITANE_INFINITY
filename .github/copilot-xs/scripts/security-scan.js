@@ -38,12 +38,11 @@ function runOrFallback(primaryCmd, primaryArgs, fallbackCmd, fallbackArgs) {
   return run(fallbackCmd, fallbackArgs);
 }
 
-const hasPackageLock = existsSync('package-lock.json');
 const hasPnpmLock = existsSync('pnpm-lock.yaml');
-const hasYarnLock = existsSync('yarn.lock');
 
 if (hasPnpmLock) {
-  const pnpmResult = runOrFallback('pnpm', ['audit'], 'corepack', ['pnpm', 'audit']);
+  // Prefer corepack when available; fallback to pnpm.
+  const pnpmResult = runOrFallback('corepack', ['pnpm', 'audit'], 'pnpm', ['audit']);
 
   if (!pnpmResult.ok) {
     console.warn(
@@ -53,21 +52,4 @@ if (hasPnpmLock) {
   process.exit(0);
 }
 
-if (hasPackageLock) {
-  run('npm', ['audit']);
-  process.exit(0);
-}
-
-if (hasYarnLock) {
-  const yarnResult = run('yarn', ['npm', 'audit']);
-  if (!yarnResult.ok) {
-    console.warn(
-      '[COPILOT-XS] ⚠️ Security scan skipped: yarn.lock detected but yarn is not installed.'
-    );
-  }
-  process.exit(0);
-}
-
-console.warn(
-  '[COPILOT-XS] ⚠️ Security scan skipped: no lockfile found (package-lock.json / pnpm-lock.yaml / yarn.lock).'
-);
+console.warn('[COPILOT-XS] ⚠️ Security scan skipped: pnpm-lock.yaml not found.');

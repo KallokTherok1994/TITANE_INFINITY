@@ -102,21 +102,29 @@ check_cargo() {
     return 0
 }
 
-# Vérifie que Node.js et npm sont installés
+# Vérifie que Node.js et pnpm/corepack sont installés
 check_node() {
     if ! check_command node; then
         log_error "Node.js n'est pas installé"
         return 1
     fi
-    
-    if ! check_command npm; then
-        log_error "npm n'est pas installé"
+
+    if ! command -v corepack &> /dev/null && ! command -v pnpm &> /dev/null; then
+        log_error "pnpm/corepack introuvable (pnpm-only)"
         return 1
     fi
-    
+
     local node_version=$(node --version 2>/dev/null)
-    local npm_version=$(npm --version 2>/dev/null)
-    log_success "Node: $node_version | npm: $npm_version"
+
+    local pnpm_version=""
+    if command -v corepack &> /dev/null; then
+        pnpm_version=$(corepack pnpm --version 2>/dev/null || echo "")
+    fi
+    if [ -z "$pnpm_version" ] && command -v pnpm &> /dev/null; then
+        pnpm_version=$(pnpm --version 2>/dev/null || echo "")
+    fi
+
+    log_success "Node: $node_version | pnpm: ${pnpm_version:-unknown}"
     return 0
 }
 
@@ -205,9 +213,16 @@ clean_backend() {
 
 # Install pnpm dependencies
 install_npm_deps() {
-    log_step "Installation dépendances npm..."
+    log_step "Installation dépendances pnpm..."
     cd "$PROJECT_ROOT"
-    pnpm install --frozen-lockfile --prefer-offline --no-audit 2>&1 | grep -v "npm WARN" || true
+
+    if command -v corepack &> /dev/null; then
+        corepack pnpm install --frozen-lockfile --prefer-offline --no-audit
+    else
+        check_command pnpm
+        pnpm install --frozen-lockfile --prefer-offline --no-audit
+    fi
+
     log_success "Dépendances pnpm installées"
 }
 

@@ -152,7 +152,7 @@ detect_performance_degradation() {
     local degradation_detected=false
     
     # Measure current build time (dry run to avoid actual build)
-    if command -v npm &> /dev/null; then
+    if (command -v corepack >/dev/null 2>&1 && corepack pnpm --version >/dev/null 2>&1) || command -v pnpm >/dev/null 2>&1; then
         info "Measuring build time baseline..."
         
         # Check if dist exists and is recent
@@ -215,7 +215,7 @@ monitor_dependency_vulnerabilities() {
     local vuln_found=false
     
     # pnpm audit (if available)
-    if command -v npm &> /dev/null && [[ -f "package.json" ]]; then
+    if ((command -v corepack >/dev/null 2>&1 && corepack pnpm --version >/dev/null 2>&1) || command -v pnpm >/dev/null 2>&1) && [[ -f "package.json" ]]; then
         local audit_output=$(pnpm audit --json 2>/dev/null || echo '{}')
         local critical=$(echo "$audit_output" | jq -r '.metadata.vulnerabilities.critical // 0' 2>/dev/null || echo "0")
         local high=$(echo "$audit_output" | jq -r '.metadata.vulnerabilities.high // 0' 2>/dev/null || echo "0")
@@ -225,7 +225,7 @@ monitor_dependency_vulnerabilities() {
             vuln_found=true
             
             # Save detailed report
-            echo "$audit_output" > "${STATE_DIR}/npm-audit-$(date +%Y%m%d-%H%M%S).json"
+            echo "$audit_output" > "${STATE_DIR}/dependency-audit-$(date +%Y%m%d-%H%M%S).json"
         else
             success "pnpm audit: No critical/high vulnerabilities"
         fi

@@ -173,11 +173,11 @@ echo "📦 Package Checks"
 echo "═══════════════════════════════════════════════════════════"
 
 # Check 11: Dependencies
-echo -n "Checking npm dependencies... "
+echo -n "Checking Node dependencies... "
 if [ -d "node_modules" ]; then
-    print_status "PASS" "npm dependencies installed"
+    print_status "PASS" "Node dependencies installed"
 else
-    print_status "FAIL" "npm dependencies missing"
+    print_status "FAIL" "Node dependencies missing"
 fi
 
 # Check 12: Cargo Dependencies
@@ -194,7 +194,7 @@ echo "🔒 Security Checks"
 echo "═══════════════════════════════════════════════════════════"
 
 # Check 13: pnpm audit
-echo -n "Checking npm vulnerabilities... "
+echo -n "Checking dependency vulnerabilities... "
 VULNERABILITIES=$(pnpm audit --json 2>/dev/null | grep -oP '"high":\d+' | grep -oP '\d+' || echo "0")
 if [ "$VULNERABILITIES" -eq 0 ]; then
     print_status "PASS" "No high severity vulnerabilities"

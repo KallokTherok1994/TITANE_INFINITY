@@ -28,6 +28,37 @@ log() {
     echo "[$(date +'%Y-%m-%d %H:%M:%S')] $@" | tee -a "$INSTALL_LOG"
 }
 
+# Gestionnaire de paquets: pnpm-only (corepack préféré)
+PNPM=()
+resolve_pnpm_cmd() {
+    if command -v corepack >/dev/null 2>&1 && corepack pnpm --version >/dev/null 2>&1; then
+        PNPM=(corepack pnpm)
+        return 0
+    fi
+    if command -v pnpm >/dev/null 2>&1; then
+        PNPM=(pnpm)
+        return 0
+    fi
+    return 1
+}
+
+ensure_pnpm_ready() {
+    if resolve_pnpm_cmd; then
+        return 0
+    fi
+
+    if command -v corepack >/dev/null 2>&1; then
+        corepack enable >/dev/null 2>&1 || true
+        corepack prepare pnpm@latest --activate >/dev/null 2>&1 || true
+    fi
+
+    if resolve_pnpm_cmd; then
+        return 0
+    fi
+
+    error_exit "pnpm requis (corepack recommandé) mais introuvable"
+}
+
 error_exit() {
     zenity --error --title="TITANE∞ Erreur" --text="$1\n\nConsultez les logs: $INSTALL_LOG" --width=400
     log "ERREUR: $1"
@@ -83,6 +114,7 @@ check_dependencies() {
 
     local missing_deps=""
     local installed_deps=""
+    local pnpm_note=""
 
     # Check git
     if ! command -v git &> /dev/null; then
@@ -93,10 +125,14 @@ check_dependencies() {
 
     # Check node
     if ! command -v node &> /dev/null; then
-        missing_deps="$missing_deps nodejs npm"
+        missing_deps="$missing_deps nodejs"
     else
         installed_deps="$installed_deps\n  ✓ Node.js: $(node --version)"
-        installed_deps="$installed_deps\n  ✓ npm: $(npm --version)"
+        if resolve_pnpm_cmd; then
+            installed_deps="$installed_deps\n  ✓ pnpm: $(${PNPM[@]} --version)"
+        else
+            pnpm_note="\n  ⚠ pnpm non détecté (corepack recommandé)"
+        fi
     fi
 
     # Check cargo
@@ -111,7 +147,7 @@ check_dependencies() {
     if [ -z "$missing_deps" ]; then
         zenity --info \
             --title="Dépendances — OK" \
-            --text="<b>✅ Toutes les dépendances sont installées</b>\n$installed_deps" \
+            --text="<b>✅ Toutes les dépendances sont installées</b>\n$installed_deps$pnpm_note" \
             --width=400
         log "Toutes les dépendances sont présentes"
     else
@@ -177,13 +213,14 @@ select_project_directory() {
 }
 
 # ══════════════════════════════════════════════════════════════════
-# NPM INSTALL
+# INSTALL DEPENDANCES (PNPM)
 # ══════════════════════════════════════════════════════════════════
 
-install_npm_dependencies() {
-    log "Installation dépendances npm..."
+install_pnpm_dependencies() {
+    log "Installation dépendances pnpm..."
 
     cd "$PROJECT_DIR"
+    ensure_pnpm_ready
 
     (
         echo "10"
@@ -192,19 +229,19 @@ install_npm_dependencies() {
         sleep 0.5
 
         echo "30"
-        echo "# Installation dépendances npm..."
-        pnpm install --legacy-peer-deps 2>&1 | tee -a "$INSTALL_LOG"
+        echo "# Installation dépendances pnpm..."
+        "${PNPM[@]}" install --legacy-peer-deps 2>&1 | tee -a "$INSTALL_LOG"
 
         echo "100"
         echo "# Installation terminée"
     ) | zenity --progress \
-        --title="Installation npm" \
+        --title="Installation pnpm" \
         --text="Installation des dépendances Node.js..." \
         --percentage=0 \
         --auto-close \
         --width=400
 
-    log "Dépendances npm installées"
+    log "Dépendances pnpm installées"
 }
 
 # ══════════════════════════════════════════════════════════════════
@@ -307,6 +344,9 @@ export_release() {
 
     cd "$PROJECT_DIR"
 
+    # Best effort: on veut une info pnpm, sans rendre l'export fragile
+    resolve_pnpm_cmd || true
+
     local release_name="titane_infinity_$(date +%Y%m%d_%H%M%S)"
     local release_dir="$TITANE_RELEASES/$release_name"
 
@@ -328,7 +368,7 @@ Build Date: $(date)
 Release Name: $release_name
 OS: $(uname -a)
 Node: $(node --version)
-npm: $(npm --version)
+pnpm: $(${PNPM[@]} --version 2>/dev/null || echo "non disponible")
 Rust: $(rustc --version)
 
 Logs: $INSTALL_LOG
@@ -381,7 +421,7 @@ main() {
     welcome_screen
     check_dependencies
     select_project_directory
-    install_npm_dependencies
+    install_pnpm_dependencies
     build_frontend
     build_backend
     build_tauri_complete

@@ -31,8 +31,8 @@ if grep -q "vite preview" package.json 2>/dev/null && ! grep -q "exit 1" package
     ((ERRORS++))
 fi
 
-# 3. Vérifier scripts npm interdits
-echo "📜 Check: Scripts npm conformes..."
+# 3. Vérifier scripts de lancement web interdits
+echo "📜 Check: Scripts de lancement conformes..."
 FORBIDDEN_SCRIPTS=("start" "serve" "preview" "docs:serve")
 for script in "${FORBIDDEN_SCRIPTS[@]}"; do
     SCRIPT_VALUE=$(jq -r ".scripts[\"$script\"] // empty" package.json)

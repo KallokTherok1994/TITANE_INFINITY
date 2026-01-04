@@ -22,7 +22,7 @@ count_processes() {
 }
 
 # Pre-cleanup audit
-BEFORE_COUNT=$(count_processes "tauri dev|npm run dev:tauri|npm run tauri|vite")
+BEFORE_COUNT=$(count_processes "tauri dev|pnpm run dev:tauri|corepack pnpm run dev:tauri|pnpm run tauri|corepack pnpm run tauri|vite")
 echo "📊 Processus détectés (Tauri/Vite): $BEFORE_COUNT"
 
 # Kill Vite processes (should not run in TAURI-only, but clean leftovers)
@@ -30,11 +30,13 @@ echo "🔄 Arrêt des processus Vite (interdit en TAURI-only)..."
 pkill -f "vite" 2>/dev/null || true
 sleep 1
 
-# Kill Tauri dev / npm tauri processes
+# Kill Tauri dev / pnpm tauri processes
 echo "🔄 Arrêt des processus Tauri dev..."
 pkill -f "tauri dev" 2>/dev/null || true
-pkill -f "npm run dev:tauri" 2>/dev/null || true
-pkill -f "npm run tauri" 2>/dev/null || true
+pkill -f "pnpm run dev:tauri" 2>/dev/null || true
+pkill -f "corepack pnpm run dev:tauri" 2>/dev/null || true
+pkill -f "pnpm run tauri" 2>/dev/null || true
+pkill -f "corepack pnpm run tauri" 2>/dev/null || true
 sleep 1
 
 # Free common dev ports (legacy Vite)
@@ -44,7 +46,7 @@ lsof -ti:4173 2>/dev/null | xargs kill -9 2>/dev/null || true
 sleep 1
 
 # Verify cleanup
-AFTER_COUNT=$(count_processes "tauri dev|npm run dev:tauri|npm run tauri|vite")
+AFTER_COUNT=$(count_processes "tauri dev|pnpm run dev:tauri|corepack pnpm run dev:tauri|pnpm run tauri|corepack pnpm run tauri|vite")
 CLEANED=$((BEFORE_COUNT - AFTER_COUNT))
 
 echo ""
@@ -60,7 +62,7 @@ echo ""
 # Warning if processes remain
 if [ $AFTER_COUNT -gt 0 ]; then
     echo "⚠️  AVERTISSEMENT: $AFTER_COUNT processus persistent (probablement normaux)"
-    echo "   Vérifier avec: ps aux | grep -E 'tauri dev|npm run dev:tauri|npm run tauri|vite'"
+    echo "   Vérifier avec: ps aux | grep -E 'tauri dev|pnpm run dev:tauri|pnpm run tauri|vite'"
     echo ""
 fi
 

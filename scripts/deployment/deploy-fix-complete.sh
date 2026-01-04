@@ -177,23 +177,28 @@ phase1_deblocage() {
     fi
     success "Rust $(rustc --version) (≥1.70 required)"
     
-    # ─── 1.2: Installer dépendances npm/pnpm ───
+    # ─── 1.2: Installer dépendances (pnpm-only) ───
     print_section "1.2: Installation dépendances"
     
     if [ ! -d "node_modules" ] || [ "$DRY_RUN" = false ]; then
         if [ -f "pnpm-lock.yaml" ]; then
-            if command -v pnpm &> /dev/null; then
-                info "Using pnpm..."
-                run_cmd "pnpm install --frozen-lockfile" "pnpm install"
-            elif command -v corepack &> /dev/null; then
+            if command -v corepack &> /dev/null && corepack pnpm --version &> /dev/null; then
                 info "Using pnpm via corepack..."
                 run_cmd "corepack pnpm install --frozen-lockfile" "pnpm install (corepack)"
+            elif command -v pnpm &> /dev/null; then
+                info "Using pnpm..."
+                run_cmd "pnpm install --frozen-lockfile" "pnpm install"
             else
-                warning "pnpm-lock.yaml found but pnpm not available. Falling back to npm."
-                run_cmd "pnpm install" "pnpm install"
+                error "pnpm requis (corepack/pnpm introuvable)"
             fi
         else
-            run_cmd "pnpm install" "pnpm install"
+            if command -v corepack &> /dev/null && corepack pnpm --version &> /dev/null; then
+                run_cmd "corepack pnpm install" "pnpm install (corepack)"
+            elif command -v pnpm &> /dev/null; then
+                run_cmd "pnpm install" "pnpm install"
+            else
+                error "pnpm requis (corepack/pnpm introuvable)"
+            fi
         fi
     else
         success "node_modules/ already exists"
@@ -318,10 +323,12 @@ EOF
     # ─── 2.3: Build Vite ───
     print_section "2.3: Compilation Vite"
     
-    if [ -f "pnpm-lock.yaml" ] && command -v pnpm &> /dev/null; then
-        run_cmd "NODE_ENV=production NODE_OPTIONS='--max-old-space-size=8192' pnpm run build" "Vite build (pnpm)"
+    if command -v corepack &> /dev/null && corepack pnpm --version &> /dev/null; then
+        run_cmd "NODE_ENV=production NODE_OPTIONS='--max-old-space-size=8192' corepack pnpm run build" "Vite build"
+    elif command -v pnpm &> /dev/null; then
+        run_cmd "NODE_ENV=production NODE_OPTIONS='--max-old-space-size=8192' pnpm run build" "Vite build"
     else
-        run_cmd "NODE_ENV=production NODE_OPTIONS='--max-old-space-size=8192' pnpm run build" "Vite build (npm)"
+        error "pnpm requis (corepack/pnpm introuvable)"
     fi
     
     # ─── 2.4: Vérifier dist/ ───
@@ -468,32 +475,35 @@ phase4_validation() {
     
     # ─── 4.2: Vérifier compliance ───
     print_section "4.2: Vérification compliance"
-    
-    if [ -f "pnpm-lock.yaml" ] && command -v pnpm &> /dev/null; then
-        PM="pnpm"
+
+    PM=()
+    if command -v corepack &> /dev/null && corepack pnpm --version &> /dev/null; then
+        PM=(corepack pnpm)
+    elif command -v pnpm &> /dev/null; then
+        PM=(pnpm)
     else
-        PM="npm"
+        error "pnpm requis (corepack/pnpm introuvable)"
     fi
-    
-    $PM run verify:tauri-only >> "$LOG_FILE" 2>&1 || warning "Tauri-only verification had warnings"
+
+    "${PM[@]}" run verify:tauri-only >> "$LOG_FILE" 2>&1 || warning "Tauri-only verification had warnings"
     success "Tauri-only check"
-    
-    $PM run verify:local-first >> "$LOG_FILE" 2>&1 || warning "Local-first verification had warnings"
+
+    "${PM[@]}" run verify:local-first >> "$LOG_FILE" 2>&1 || warning "Local-first verification had warnings"
     success "Local-first check"
-    
-    $PM run verify:tauri-configs >> "$LOG_FILE" 2>&1 || warning "Tauri configs verification had warnings"
+
+    "${PM[@]}" run verify:tauri-configs >> "$LOG_FILE" 2>&1 || warning "Tauri configs verification had warnings"
     success "Tauri configs check"
     
     # ─── 4.3: Test TypeScript ───
     print_section "4.3: Vérification TypeScript"
-    
-    $PM run check >> "$LOG_FILE" 2>&1 || warning "TypeScript check found errors (may be non-critical)"
+
+    "${PM[@]}" run check >> "$LOG_FILE" 2>&1 || warning "TypeScript check found errors (may be non-critical)"
     success "TypeScript check completed"
     
     # ─── 4.4: Lint check ───
     print_section "4.4: Vérification ESLint"
-    
-    $PM run lint >> "$LOG_FILE" 2>&1 || warning "ESLint found issues (may be non-critical)"
+
+    "${PM[@]}" run lint >> "$LOG_FILE" 2>&1 || warning "ESLint found issues (may be non-critical)"
     success "ESLint check completed"
     
     # ─── 4.5: Test démarrage (optionnel) ───
@@ -553,15 +563,18 @@ phase5_securisation() {
     
     # ─── 5.3: Audit sécurité ───
     print_section "5.3: Audit sécurité"
-    
-    if [ -f "pnpm-lock.yaml" ] && command -v pnpm &> /dev/null; then
-        PM="pnpm"
+
+    PM=()
+    if command -v corepack &> /dev/null && corepack pnpm --version &> /dev/null; then
+        PM=(corepack pnpm)
+    elif command -v pnpm &> /dev/null; then
+        PM=(pnpm)
     else
-        PM="npm"
+        error "pnpm requis (corepack/pnpm introuvable)"
     fi
-    
+
     info "Running pnpm audit..."
-    $PM audit --audit-level=high >> "$LOG_FILE" 2>&1 || warning "pnpm audit found issues (review logs)"
+    "${PM[@]}" audit --audit-level=high >> "$LOG_FILE" 2>&1 || warning "pnpm audit found issues (review logs)"
     
     info "Running cargo audit..."
     cd src-tauri

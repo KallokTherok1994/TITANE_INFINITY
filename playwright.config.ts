@@ -63,7 +63,7 @@ export default defineConfig({
 
   // Dev server configuration
   webServer: {
-    command: 'npm run dev',
+    command: 'corepack pnpm run dev',
     url: 'http://localhost:5173',
     reuseExistingServer: !process.env.CI,
     timeout: 120000, // 2min to start

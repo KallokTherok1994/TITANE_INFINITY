@@ -120,7 +120,7 @@ log_header "4/7 - BUILD FRONTEND"
 clean_frontend
 
 # Installation
-install_npm_deps
+install_pnpm_deps
 
 # Build
 build_frontend

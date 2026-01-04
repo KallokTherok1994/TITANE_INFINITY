@@ -22,6 +22,20 @@ TESTS_RUN=0
 TESTS_PASSED=0
 TESTS_FAILED=0
 
+# Gestionnaire de paquets: pnpm-only (corepack préféré)
+PNPM=()
+resolve_pnpm_cmd() {
+  if command -v corepack >/dev/null 2>&1 && corepack pnpm --version >/dev/null 2>&1; then
+    PNPM=(corepack pnpm)
+    return 0
+  fi
+  if command -v pnpm >/dev/null 2>&1; then
+    PNPM=(pnpm)
+    return 0
+  fi
+  return 1
+}
+
 # Helper functions
 pass_test() {
   echo -e "${GREEN}✅ PASS${NC}: $1"
@@ -119,9 +133,11 @@ echo "  TEST 3: Compilation TypeScript"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 info "Compilation en cours..."
-if npx tsc --noEmit 2>&1 | grep -q "error TS"; then
+if ! resolve_pnpm_cmd; then
+  warn "pnpm non détecté - check TypeScript ignoré"
+elif "${PNPM[@]}" exec tsc --noEmit 2>&1 | grep -q "error TS"; then
   # Count errors related to our new files
-  NEW_FILES_ERRORS=$(npx tsc --noEmit 2>&1 | grep -E "(MenuEditor|AIProvidersTester|ChatProviderSelector)" | wc -l)
+  NEW_FILES_ERRORS=$("${PNPM[@]}" exec tsc --noEmit 2>&1 | grep -E "(MenuEditor|AIProvidersTester|ChatProviderSelector)" | wc -l)
   
   if [ "$NEW_FILES_ERRORS" -eq 0 ]; then
     pass_test "Aucune erreur TypeScript dans les nouveaux fichiers"
