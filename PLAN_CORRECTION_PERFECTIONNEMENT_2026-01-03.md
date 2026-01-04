@@ -139,7 +139,7 @@ npm run lint            # ESLint doit passer
 
 ❌ Serveurs HTTP standalone (vite preview, serve dist, python -m http.server)
 ❌ Exposer l'application via HTTP accessible depuis l'extérieur
-❌ npm run preview (serveur Vite standalone)
+❌ pnpm run preview (serveur Vite standalone)
 ❌ Tout serveur HTTP/HTTPS accessible hors Tauri wrapper
 
 **MÉTHODES AUTORISÉES UNIQUEMENT :**
@@ -147,7 +147,7 @@ npm run lint            # ESLint doit passer
 ✅ tauri dev (utilise Vite avec HMR, wrappé par Tauri WebView)
 ✅ tauri build (production native pure)
 ✅ cargo build --release (backend Rust)
-✅ npm run dev (si = tauri dev dans package.json)
+✅ pnpm run dev (si = tauri dev dans package.json)
 
 **⚠️ CLARIFICATION IMPORTANTE - Mode Développement:**
 
@@ -192,7 +192,7 @@ Ajouter commentaire au début:
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
   "build": {
     "beforeDevCommand": "npx vite --port 5173 --host 0.0.0.0",
-    "beforeBuildCommand": "npm run build",
+    "beforeBuildCommand": "pnpm run build",
     "devUrl": "http://localhost:5173",  // ⚠️ Tauri-wrapped only, not standalone
     "frontendDist": "../dist"
   }
@@ -224,10 +224,10 @@ Ajouter commentaire au début:
 npm test 2>&1 | tee test-results-frontend.log
 
 # Tests architecture
-npm run test:architecture 2>&1 | tee test-results-architecture.log
+pnpm run test:architecture 2>&1 | tee test-results-architecture.log
 
 # Tests compliance
-npm run test:compliance 2>&1 | tee test-results-compliance.log
+pnpm run test:compliance 2>&1 | tee test-results-compliance.log
 
 # Tests Rust
 cd src-tauri
@@ -235,7 +235,7 @@ cargo test --all 2>&1 | tee ../test-results-rust.log
 cd ..
 
 # Tests E2E
-npm run test:e2e 2>&1 | tee test-results-e2e.log
+pnpm run test:e2e 2>&1 | tee test-results-e2e.log
 ```
 
 #### Étape 3.2: Mesure Couverture
