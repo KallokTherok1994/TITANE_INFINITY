@@ -274,11 +274,15 @@ log_step "Sauvegarde configuration Node.js/NVM..."
     echo "=== Node.js Info ==="
     node --version 2>/dev/null || echo "Node non installé"
     echo ""
-    echo "=== NPM Info ==="
-    npm --version 2>/dev/null || echo "PNPM non installé"
+    echo "=== Corepack Info ==="
+    corepack --version 2>/dev/null || echo "Corepack non disponible"
     echo ""
-    echo "=== PNPM Info ==="
-    pnpm --version 2>/dev/null || echo "PPNPM non installé"
+    echo "=== pnpm Info ==="
+    if command -v corepack >/dev/null 2>&1; then
+        corepack pnpm --version 2>/dev/null || echo "pnpm non disponible via corepack"
+    else
+        pnpm --version 2>/dev/null || echo "pnpm non installé"
+    fi
     echo ""
     echo "=== NVM Info ==="
     if check_dir_exists "$HOME/.nvm"; then
@@ -288,8 +292,12 @@ log_step "Sauvegarde configuration Node.js/NVM..."
         echo "NVM non installé"
     fi
     echo ""
-    echo "=== NPM Global Packages ==="
-    npm list -g --depth=0 2>/dev/null || echo "Non disponible"
+    echo "=== Global Packages ==="
+    if command -v corepack >/dev/null 2>&1; then
+        corepack pnpm list -g --depth=0 2>/dev/null || echo "Non disponible"
+    else
+        pnpm list -g --depth=0 2>/dev/null || echo "Non disponible"
+    fi
 } > "$BACKUP_DIR/dev_env/node_info.txt"
 
 # Sauvegarder .npmrc si présent
