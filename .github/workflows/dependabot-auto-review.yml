@@ -1,0 +1,60 @@
+name: "Dependabot: auto-request review"
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+      - ready_for_review
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  request-review:
+    if: github.actor == 'dependabot[bot]' && github.event.pull_request.user.login == 'dependabot[bot]' && github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Request reviewers
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            const reviewersFile = path.join(process.env.GITHUB_WORKSPACE || '.', '.github', 'dependabot-reviewers.txt');
+            const raw = fs.existsSync(reviewersFile) ? fs.readFileSync(reviewersFile, 'utf8') : '';
+
+            const reviewers = raw
+              .split(/\r?\n/)
+              .flatMap(line => line.split(','))
+              .map(s => s.trim())
+              .filter(Boolean)
+              .filter(v => !v.startsWith('#'));
+
+            if (reviewers.length === 0) {
+              core.info('No reviewers configured; skipping.');
+              return;
+            }
+
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const pull_number = context.payload.pull_request.number;
+
+            core.info(`Requesting reviewers: ${reviewers.join(', ')} on PR #${pull_number}`);
+
+            try {
+              await github.rest.pulls.requestReviewers({
+                owner,
+                repo,
+                pull_number,
+                reviewers,
+              });
+            } catch (err) {
+              // Avoid failing the workflow if reviewers are already requested or cannot be requested.
+              core.warning(`Could not request reviewers: ${err.message || String(err)}`);
+            }

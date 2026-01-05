@@ -9,12 +9,15 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
+import { fileURLToPath } from 'node:url';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { visualizer } from 'rollup-plugin-visualizer';
 import viteCompression from 'vite-plugin-compression';
 import { injectManifest } from 'workbox-build';
 import type { Plugin, ResolvedConfig } from 'vite';
 import type { RollupLog } from 'rollup';
+
+const ROOT_DIR = fileURLToPath(new URL('.', import.meta.url));
 
 // P2-B: Workbox Service Worker plugin
 function workboxPlugin(): Plugin {
@@ -63,8 +66,8 @@ function workboxPlugin(): Plugin {
 // P2-A: Brotli compression for -15% bundle size
 // https://vitejs.dev/config/
 export default defineConfig({
-  root: __dirname,
-  publicDir: resolve(__dirname, 'public'),
+  root: ROOT_DIR,
+  publicDir: resolve(ROOT_DIR, 'public'),
   base: './',
 
   // 🔧 Server configuration with proper headers
@@ -83,20 +86,20 @@ export default defineConfig({
   plugins: [
     react({
       // Optimisation React Fast Refresh
-      babel: {
-        compact: true,
-        plugins: [],
-      },
-    }),
-    tsconfigPaths(), // Auto-sync avec tsconfig.json paths
-    visualizer({
-      open: false,
-      filename: 'dist/stats.html',
-      gzipSize: true,
-      brotliSize: true,
-    }),
-    // P2-A: Brotli compression (-15% vs gzip)
-    viteCompression({
+        '@': resolve(ROOT_DIR, './src'),
+        '@app': resolve(ROOT_DIR, './src/app'),
+        '@pages': resolve(ROOT_DIR, './src/pages'),
+        '@features': resolve(ROOT_DIR, './src/features'),
+        '@components': resolve(ROOT_DIR, './src/components'),
+        '@ui': resolve(ROOT_DIR, './src/ui'),
+        '@hooks': resolve(ROOT_DIR, './src/hooks'),
+        '@services': resolve(ROOT_DIR, './src/services'),
+        '@stores': resolve(ROOT_DIR, './src/stores'),
+        '@themes': resolve(ROOT_DIR, './src/themes'),
+        '@utils': resolve(ROOT_DIR, './src/utils'),
+        '@types': resolve(ROOT_DIR, './src/types'),
+        '@assets': resolve(ROOT_DIR, './src/assets'),
+        '@styles': resolve(ROOT_DIR, './src/styles'),
       verbose: true,
       disable: false,
       threshold: 10240, // 10 KB minimum
