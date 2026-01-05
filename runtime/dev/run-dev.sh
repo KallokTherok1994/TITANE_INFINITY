@@ -65,7 +65,7 @@ echo ""
 # You can pass extra flags to tauri dev via this script, e.g.:
 #   ./runtime/dev/run-dev.sh --features full ollama
 if command -v corepack &> /dev/null; then
-    corepack pnpm run dev:tauri -- --no-watch "$@" 2>&1 | tee runtime/dev/logs/tauri.log
+    corepack pnpm run dev:tauri -- "$@" 2>&1 | tee runtime/dev/logs/tauri.log
 else
-    pnpm run dev:tauri -- --no-watch "$@" 2>&1 | tee runtime/dev/logs/tauri.log
+    pnpm run dev:tauri -- "$@" 2>&1 | tee runtime/dev/logs/tauri.log
 fi
