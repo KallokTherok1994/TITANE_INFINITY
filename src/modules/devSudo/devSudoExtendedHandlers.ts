@@ -69,7 +69,7 @@ export async function handleAutoFix(): Promise<DevSudoResult> {
   ⚠️ 2 corrections manuelles requises
 
 💡 **Prochaines actions**:
-  - Relancer: \`npm run type-check\`
+  - Relancer: \`corepack pnpm run type-check\`
   - Vérifier: \`diagnostic\``,
   };
 }
@@ -245,7 +245,7 @@ ${health.healthy ? '✅' : '❌'} Système ${health.healthy ? 'sain' : 'dégrad�
 📋 **Vérifications manuelles**:
   1. Tauri dev server actif ? → \`restart tauri\`
   2. Port 5173 occupé ? → \`ps aux | grep vite\`
-  3. Erreurs compilation ? → \`npm run type-check\`
+  3. Erreurs compilation ? → \`corepack pnpm run type-check\`
 
 💡 **Action recommandée**: \`restart tauri\``,
     };
@@ -379,8 +379,8 @@ export async function handleOptimizeBuild(): Promise<DevSudoResult> {
 
 💡 **Commandes**:
   \`\`\`bash
-  npm run build        # Vite optimized
-  npm run tauri:build  # Full release
+  corepack pnpm run build        # Vite optimized
+  corepack pnpm run tauri:build  # Full release
   \`\`\``,
   };
 }

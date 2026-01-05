@@ -167,11 +167,14 @@ fix_rust_duplicate_timeout() {
   local cfg="$REPO_ROOT/src-tauri/src/agent_system/config.rs"
   if [[ -f "$cfg" ]]; then
     local count
-    count=$(grep -n "default_task_timeout_ms:" "$cfg" | wc -l | tr -d ' ')
+    # IMPORTANT: ne jamais toucher aux initializers `default_task_timeout_ms: ...`.
+    # Cette routine ne doit viser que d'éventuelles duplications de définition du champ
+    # dans la struct (ex: `pub default_task_timeout_ms: u64,` répété).
+    count=$(grep -nE "^[[:space:]]*pub[[:space:]]+default_task_timeout_ms:[[:space:]]" "$cfg" | wc -l | tr -d ' ')
     if [[ "$count" -gt 1 ]]; then
       echo -e "${YELLOW}⚠️  ${count} occurrences détectées → suppression des duplications${NC}"
-      # Keep first occurrence, remove subsequent duplicates
-      awk 'BEGIN{seen=0} /default_task_timeout_ms:/{if(seen++){next}} {print}' "$cfg" > "$cfg.fixed" && mv "$cfg.fixed" "$cfg"
+      # Keep first occurrence, remove subsequent duplicates (struct field only)
+      awk 'BEGIN{seen=0} /^[[:space:]]*pub[[:space:]]+default_task_timeout_ms:[[:space:]]/{if(seen++){next}} {print}' "$cfg" > "$cfg.fixed" && mv "$cfg.fixed" "$cfg"
       ISSUES_FIXED=$((ISSUES_FIXED + 1))
       echo -e "${GREEN}✅ Duplication supprimée${NC}"
     else

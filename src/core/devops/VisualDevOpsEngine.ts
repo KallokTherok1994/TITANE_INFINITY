@@ -710,8 +710,8 @@ echo "✅ Operation complete"
 
       case 'install_deps':
         commands.push({
-          command: 'npm',
-          args: ['install'],
+          command: 'corepack',
+          args: ['pnpm', 'install'],
           description: 'Install dependencies',
           estimated_duration: '1-2 minutes',
           requires_sudo: false,

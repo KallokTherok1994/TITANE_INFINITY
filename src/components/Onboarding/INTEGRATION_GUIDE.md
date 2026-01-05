@@ -138,7 +138,7 @@ cargo build
 cd ..
 
 # 3. Lancer en mode dev
-npm run dev
+corepack pnpm run dev
 
 # 4. Tester l'onboarding
 # Au premier lancement, l'onboarding devrait s'afficher automatiquement
@@ -231,7 +231,7 @@ test.describe('Onboarding Flow', () => {
 Lancer les tests :
 
 ```bash
-npm run test:e2e
+corepack pnpm run test:e2e
 ```
 
 ---
@@ -285,7 +285,7 @@ await invoke('reset_onboarding');
 2. Vérifier les logs Tauri :
 
    ```bash
-   npm run dev
+  corepack pnpm run dev
    # Ouvrir DevTools → Console
    ```
 
@@ -326,13 +326,13 @@ cargo build
 - [ ] Ajouter les 4 commandes dans `.invoke_handler()`
 - [ ] Modifier `src/App.tsx` pour détecter first-run
 - [ ] Rebuild Rust : `cd src-tauri && cargo build`
-- [ ] Tester : `npm run dev`
+- [ ] Tester : `corepack pnpm run dev`
 - [ ] Vérifier que l'onboarding s'affiche au premier lancement
 - [ ] Vérifier que les préférences sont sauvegardées
 - [ ] Tester le bouton "Précédent"
 - [ ] Tester le bouton "Commencer"
 - [ ] Créer les tests E2E
-- [ ] Lancer les tests : `npm run test:e2e`
+- [ ] Lancer les tests : `corepack pnpm run test:e2e`
 
 ---
 
