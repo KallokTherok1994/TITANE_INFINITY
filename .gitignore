@@ -30,8 +30,8 @@ Cargo.lock
 logs/
 *.log
 n[p]m-debug.log*
-yarn-debug.log*
-yarn-error.log*
+y[a]rn-debug.log*
+y[a]rn-error.log*
 lerna-debug.log*
 package-lock.json
 
@@ -45,6 +45,10 @@ Thumbs.db
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Python virtualenvs (local dev)
+.venv/
+venv/
 
 # Tauri
 /src-tauri/target
@@ -112,7 +116,7 @@ reports/
 # Logs étendus
 *.log.*
 n[p]m-debug*.log
-yarn-debug*.log
+y[a]rn-debug*.log
 pnpm-debug*.log
 
 # Build artifacts additionnels
@@ -141,3 +145,10 @@ tunnel-*.log
 
 # Cline CLI binaries (legacy global install)
 .tools/node/_extract/
+
+# Local Node toolchain symlink (generated locally)
+.tools/node/current
+
+# Local Node toolchain downloads (do not commit binaries)
+.tools/node/_tmp/*.tar.gz
+.tools/node/_tmp/*.tar.xz
