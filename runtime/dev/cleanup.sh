@@ -39,10 +39,20 @@ pkill -f "pnpm run tauri" 2>/dev/null || true
 pkill -f "corepack pnpm run tauri" 2>/dev/null || true
 sleep 1
 
+# Kill orphaned TITANE∞ dev binaries (can linger if parent process exits)
+echo "🔄 Arrêt des binaires TITANE∞ dev orphelins..."
+pkill -f "target/debug/titane-infinity" 2>/dev/null || true
+sleep 1
+
 # Free common dev ports (legacy Vite)
 echo "🔓 Libération des ports legacy (5173/4173)..."
 lsof -ti:5173 2>/dev/null | xargs kill -9 2>/dev/null || true
 lsof -ti:4173 2>/dev/null | xargs kill -9 2>/dev/null || true
+sleep 1
+
+# Free Titan-Dev port (if a previous run left a server bound)
+echo "🔓 Libération du port Titan-Dev (1430)..."
+lsof -ti:1430 2>/dev/null | xargs kill -9 2>/dev/null || true
 sleep 1
 
 # Verify cleanup
