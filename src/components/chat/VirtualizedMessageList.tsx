@@ -11,7 +11,8 @@
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * INSTALLATION REQUIRED:
- *   npm install react-window @types/react-window
+ *   corepack pnpm add react-window
+ *   corepack pnpm add -D @types/react-window
  *
  * USAGE:
  *   Replace MessageList with VirtualizedMessageList in Chat.tsx

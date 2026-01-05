@@ -132,9 +132,9 @@
  *
  * Configuration correcte (MODE TAURI-ONLY v16.2.3+) :
  *   "build": {
- *     "beforeDevCommand": "npm run build:watch",
- *     "beforeBuildCommand": "npm run build",
- *     "devUrl": "tauri://localhost",
+ *     "beforeDevCommand": "corepack pnpm exec vite dev --host 127.0.0.1 --port 5173 --strictPort",
+ *     "beforeBuildCommand": "corepack pnpm run build",
+ *     "devUrl": "http://localhost:5173",
  *     "frontendDist": "../dist"
  *   }
  *
@@ -236,8 +236,8 @@
  *      → Doit contenir le HTML avec #root
  *
  *   3. ✅ Vérifier tauri.conf.json
- *      → "beforeDevCommand": "npm run build:watch" ✅
- *      → "devUrl": "tauri://localhost" ✅ (asset-only mode)
+ *      → "beforeDevCommand": "corepack pnpm exec vite dev --host 127.0.0.1 --port 5173 --strictPort" ✅
+ *      → "devUrl": "http://localhost:5173" ✅ (dev server encapsulé par Tauri)
  *
  *   4. ✅ Vérifier index.html
  *      → <div id="root"></div> présent ✅

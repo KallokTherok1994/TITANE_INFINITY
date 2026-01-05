@@ -326,7 +326,7 @@ export interface SecurityVulnerability {
 }
 
 export interface BuildConfig {
-  build_tool: 'cargo' | 'npm' | 'pnpm' | 'vite' | 'webpack' | 'tauri' | 'mixed';
+  build_tool: 'cargo' | 'pnpm' | 'vite' | 'webpack' | 'tauri' | 'mixed';
   build_command: string;
   output_directory: string;
   optimization_level?: 'dev' | 'production';
