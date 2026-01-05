@@ -1,8 +1,13 @@
 #![allow(dead_code)]
+use std::env;
 use std::time::Duration;
 
 use reqwest::{Client, StatusCode};
 use serde::{Deserialize, Serialize};
+
+const OLLAMA_BASE_URL: &str = "http://127.0.0.1:11434";
+const DEFAULT_OLLAMA_MODEL: &str = "titane-local";
+const OLLAMA_MODEL_ENV: &str = "TITANE_OLLAMA_MODEL";
 
 #[derive(Serialize)]
 struct OllamaRequest<'a> {
@@ -14,6 +19,16 @@ struct OllamaRequest<'a> {
 #[derive(Deserialize)]
 struct OllamaResponse {
     response: String,
+}
+
+#[derive(Deserialize)]
+struct OllamaTagsResponse {
+    models: Vec<OllamaTagModel>,
+}
+
+#[derive(Deserialize)]
+struct OllamaTagModel {
+    name: String,
 }
 
 #[derive(Deserialize)]
@@ -33,36 +48,111 @@ pub async fn query_ollama(prompt: String) -> Result<String, String> {
         .build()
         .map_err(|e| format!("Erreur création client Ollama: {e}"))?;
 
+    let preferred_model = env::var(OLLAMA_MODEL_ENV)
+        .ok()
+        .map(|v| v.trim().to_string())
+        .filter(|v| !v.is_empty())
+        .unwrap_or_else(|| DEFAULT_OLLAMA_MODEL.to_string());
+
+    let response = send_generate(&client, &preferred_model, trimmed_prompt).await;
+    if let Ok(text) = response {
+        return Ok(text);
+    }
+
+    let (status, payload) = response.err().unwrap_or_else(|| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            "Erreur Ollama inconnue".to_string(),
+        )
+    });
+
+    // Fallback automatique si le modèle par défaut n'existe pas.
+    if status == StatusCode::NOT_FOUND && payload.contains("model") && payload.contains("not found") {
+        if let Ok(fallback_model) = pick_fallback_model(&client).await {
+            if fallback_model != preferred_model {
+                if let Ok(text) = send_generate(&client, &fallback_model, trimmed_prompt).await {
+                    return Ok(text);
+                }
+            }
+        }
+    }
+
+    Err(format_ollama_error(status, payload))
+}
+
+async fn send_generate(client: &Client, model: &str, prompt: &str) -> Result<String, (StatusCode, String)> {
     let request_body = OllamaRequest {
-        model: "titane-local",
-        prompt: trimmed_prompt,
+        model,
+        prompt,
         stream: false,
     };
 
     let response = client
-        .post("http://localhost:11434/api/generate")
+        .post(format!("{OLLAMA_BASE_URL}/api/generate"))
         .json(&request_body)
         .send()
         .await
-        .map_err(|e| format!("Erreur requête Ollama: {e}"))?;
+        .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, format!("Erreur requête Ollama: {e}")))?;
 
     let status = response.status();
     if !status.is_success() {
         let error_payload = response.text().await.unwrap_or_else(|_| "".to_string());
-
-        return Err(format_ollama_error(status, error_payload));
+        return Err((status, error_payload));
     }
 
     let parsed: OllamaResponse = response
         .json()
         .await
-        .map_err(|e| format!("Erreur parsing réponse Ollama: {e}"))?;
+        .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, format!("Erreur parsing réponse Ollama: {e}")))?;
 
     if parsed.response.trim().is_empty() {
-        return Err("Réponse Ollama vide".to_string());
+        return Err((StatusCode::INTERNAL_SERVER_ERROR, "Réponse Ollama vide".to_string()));
     }
 
     Ok(parsed.response)
+}
+
+async fn pick_fallback_model(client: &Client) -> Result<String, String> {
+    let response = client
+        .get(format!("{OLLAMA_BASE_URL}/api/tags"))
+        .send()
+        .await
+        .map_err(|e| format!("Erreur requête Ollama tags: {e}"))?;
+
+    let status = response.status();
+    if !status.is_success() {
+        let payload = response.text().await.unwrap_or_else(|_| "".to_string());
+        return Err(format_ollama_error(status, payload));
+    }
+
+    let tags: OllamaTagsResponse = response
+        .json()
+        .await
+        .map_err(|e| format!("Erreur parsing Ollama tags: {e}"))?;
+
+    let available: Vec<String> = tags.models.into_iter().map(|m| m.name).collect();
+    if available.is_empty() {
+        return Err("Aucun modèle Ollama disponible".to_string());
+    }
+
+    // Ordre de préférence: modèles généralistes rapides puis fallback sur le premier dispo.
+    let preferred = [
+        "qwen2.5:latest",
+        "llama3.2:latest",
+        "llama3.1:latest",
+        "mistral:latest",
+        "phi3.5:latest",
+        "gemma2:latest",
+        "gemma2:2b",
+    ];
+
+    for name in preferred {
+        if available.iter().any(|m| m == name) {
+            return Ok(name.to_string());
+        }
+    }
+
+    Ok(available[0].clone())
 }
 
 fn format_ollama_error(status: StatusCode, payload: String) -> String {

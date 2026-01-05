@@ -277,7 +277,7 @@ pub async fn engines_build_start(config: Option<serde_json::Value>) -> Result<St
     // Implementation: Spawn async build process
     // - Parse config: mode (dev/release), target (app/library), optimizations
     // - Create BuildState: {id, status: "building", start_time, logs: Vec}
-    // - Spawn tokio task: cargo build --release or npm run build
+    // - Spawn tokio task: cargo build --release or corepack pnpm run build
     // - Capture stdout/stderr: use tokio::process::Command with .stdout(Stdio::piped())
     // - Update BuildState.logs in real-time with progress events
     // - On completion: set status to "success"/"failed", emit event
