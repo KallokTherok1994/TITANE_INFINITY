@@ -86,20 +86,20 @@ export default defineConfig({
   plugins: [
     react({
       // Optimisation React Fast Refresh
-        '@': resolve(ROOT_DIR, './src'),
-        '@app': resolve(ROOT_DIR, './src/app'),
-        '@pages': resolve(ROOT_DIR, './src/pages'),
-        '@features': resolve(ROOT_DIR, './src/features'),
-        '@components': resolve(ROOT_DIR, './src/components'),
-        '@ui': resolve(ROOT_DIR, './src/ui'),
-        '@hooks': resolve(ROOT_DIR, './src/hooks'),
-        '@services': resolve(ROOT_DIR, './src/services'),
-        '@stores': resolve(ROOT_DIR, './src/stores'),
-        '@themes': resolve(ROOT_DIR, './src/themes'),
-        '@utils': resolve(ROOT_DIR, './src/utils'),
-        '@types': resolve(ROOT_DIR, './src/types'),
-        '@assets': resolve(ROOT_DIR, './src/assets'),
-        '@styles': resolve(ROOT_DIR, './src/styles'),
+      babel: {
+        compact: true,
+        plugins: [],
+      },
+    }),
+    tsconfigPaths(), // Auto-sync avec tsconfig.json paths
+    visualizer({
+      open: false,
+      filename: 'dist/stats.html',
+      gzipSize: true,
+      brotliSize: true,
+    }),
+    // P2-A: Brotli compression (-15% vs gzip)
+    viteCompression({
       verbose: true,
       disable: false,
       threshold: 10240, // 10 KB minimum
@@ -144,20 +144,20 @@ export default defineConfig({
 
   resolve: {
     alias: {
-      '@': resolve(__dirname, './src'),
-      '@app': resolve(__dirname, './src/app'),
-      '@pages': resolve(__dirname, './src/pages'),
-      '@features': resolve(__dirname, './src/features'),
-      '@components': resolve(__dirname, './src/components'),
-      '@ui': resolve(__dirname, './src/ui'),
-      '@hooks': resolve(__dirname, './src/hooks'),
-      '@services': resolve(__dirname, './src/services'),
-      '@stores': resolve(__dirname, './src/stores'),
-      '@themes': resolve(__dirname, './src/themes'),
-      '@utils': resolve(__dirname, './src/utils'),
-      '@types': resolve(__dirname, './src/types'),
-      '@assets': resolve(__dirname, './src/assets'),
-      '@styles': resolve(__dirname, './src/styles'),
+      '@': resolve(ROOT_DIR, './src'),
+      '@app': resolve(ROOT_DIR, './src/app'),
+      '@pages': resolve(ROOT_DIR, './src/pages'),
+      '@features': resolve(ROOT_DIR, './src/features'),
+      '@components': resolve(ROOT_DIR, './src/components'),
+      '@ui': resolve(ROOT_DIR, './src/ui'),
+      '@hooks': resolve(ROOT_DIR, './src/hooks'),
+      '@services': resolve(ROOT_DIR, './src/services'),
+      '@stores': resolve(ROOT_DIR, './src/stores'),
+      '@themes': resolve(ROOT_DIR, './src/themes'),
+      '@utils': resolve(ROOT_DIR, './src/utils'),
+      '@types': resolve(ROOT_DIR, './src/types'),
+      '@assets': resolve(ROOT_DIR, './src/assets'),
+      '@styles': resolve(ROOT_DIR, './src/styles'),
       // ✅ FIX: Removed Tauri API aliases - Let Vite resolve them naturally
       // Tauri v2 provides these modules correctly without manual aliasing
       // Polyfills for Node.js modules in browser
