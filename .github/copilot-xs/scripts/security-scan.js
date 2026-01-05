@@ -11,7 +11,16 @@ import { spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 
 function run(cmd, args) {
-  const result = spawnSync(cmd, args, { stdio: 'inherit' });
+  const result = spawnSync(cmd, args, {
+    stdio: 'inherit',
+    env: {
+      ...process.env,
+      // Avoid noisy Node deprecation warnings from tooling (e.g. corepack/pnpm internals)
+      NODE_OPTIONS: process.env.NODE_OPTIONS
+        ? `${process.env.NODE_OPTIONS} --no-deprecation`
+        : '--no-deprecation',
+    },
+  });
 
   // Command not found
   if (result.error && result.error.code === 'ENOENT') {
