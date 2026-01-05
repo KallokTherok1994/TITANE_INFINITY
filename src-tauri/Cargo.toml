@@ -74,7 +74,7 @@ dashmap = "6.0" # Concurrent HashMap (replaces RwLock<HashMap>)
 parking_lot = "0.12" # Fast synchronization primitives (Mutex, RwLock)
 
 # SUPER PROMPT #3: Performance & Latence v20.1
-lru = "0.12" # LRU cache for AI responses (AIRouterCache)
+lru = "0.16" # LRU cache for AI responses (AIRouterCache)
 
 # SUPER PROMPT #8: Multi-IA Orchestrator vΩ.5
 async-trait = "0.1" # Async trait support for providers
