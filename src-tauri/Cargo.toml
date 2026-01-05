@@ -77,7 +77,7 @@ async-trait = "0.1" # Async trait support for providers
 
 # Audio Engine v∞: Real-time audio capture and playback (optional)
 # Requires: libasound2-dev on Linux (sudo apt install libasound2-dev)
-cpal  = { version = "0.15", optional = true }
+cpal  = { version = "0.17", optional = true }
 hound = "3.5"                                 # WAV file reading/writing
 rusqlite = { version = "0.37.0", features = ["bundled"] }
 ndarray = "0.17.1"
