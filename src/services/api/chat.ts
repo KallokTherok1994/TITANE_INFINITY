@@ -654,10 +654,25 @@ class ChatService {
         completed = true;
 
         const effectiveChunkCount = chunkCount || normalized.chunkCount || 0;
-        const finalContent =
-          normalized.content && normalized.content.length > 0
+        // Ne jamais écraser du contenu déjà streamé avec un "complete" vide/whitespace.
+        const completeContent =
+          typeof normalized.content === 'string' && normalized.content.trim().length > 0
             ? normalized.content
-            : accumulated;
+            : '';
+        const finalContent = completeContent || accumulated;
+
+        if (finalContent.trim().length === 0) {
+          completed = true;
+          cleanup();
+          const err = new Error('Réponse vide du backend (stream completion)');
+          reportStreamError(err, 'complete');
+          try {
+            onError(err);
+          } catch (callbackError) {
+            console.warn('[ChatService] onError callback error:', callbackError);
+          }
+          return;
+        }
 
         const response = this.normalizeStreamCompletion(
           finalContent,
@@ -763,12 +778,19 @@ class ChatService {
           messageId: streamResult.messageId,
         };
 
-        const finalContent =
-          fallbackCompletion.content && fallbackCompletion.content.length > 0
+        // Même logique en fallback : si content est vide/whitespace, on retombe sur accumulated,
+        // puis sur le résultat brut si besoin.
+        const fallbackContent =
+          typeof fallbackCompletion.content === 'string' &&
+          fallbackCompletion.content.trim().length > 0
             ? fallbackCompletion.content
-            : accumulated.length > 0
-              ? accumulated
-              : streamResult.content;
+            : '';
+        const finalContent =
+          fallbackContent || (accumulated.length > 0 ? accumulated : streamResult.content);
+
+        if (finalContent.trim().length === 0) {
+          throw new Error('Réponse vide du backend (stream fallback)');
+        }
 
         const effectiveChunkCount = chunkCount || fallbackCompletion.chunkCount || 0;
 
@@ -993,6 +1015,25 @@ class ChatService {
       throw new Error(backend.error || 'Chat backend returned an error');
     }
 
+    const extractNonEmptyContent = (message: BackendChatMessage): string => {
+      const rawCandidates: Array<unknown> = [
+        message?.content,
+        // Defensive fallbacks for backend shape drift
+        (message as unknown as Record<string, unknown>)?.['text'],
+        (message as unknown as Record<string, unknown>)?.['message'],
+        (message as unknown as Record<string, unknown>)?.['response'],
+      ];
+
+      for (const candidate of rawCandidates) {
+        if (typeof candidate === 'string' && candidate.trim().length > 0) {
+          return candidate;
+        }
+      }
+
+      throw new Error('Backend returned empty content');
+    };
+
+    const content = extractNonEmptyContent(backend.message);
     const tokens = backend.message.tokens;
     const usage =
       typeof tokens === 'number'
@@ -1007,7 +1048,7 @@ class ChatService {
     const latencyMs = this.resolveLatencyMs(backend.latency_ms);
 
     return {
-      content: backend.message.content,
+      content,
       usage,
       finishReason: backend.error ? 'error' : 'stop',
       model: backend.message.model || config?.model || 'auto',

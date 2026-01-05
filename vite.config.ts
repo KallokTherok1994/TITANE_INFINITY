@@ -14,6 +14,7 @@ import { visualizer } from 'rollup-plugin-visualizer';
 import viteCompression from 'vite-plugin-compression';
 import { injectManifest } from 'workbox-build';
 import type { Plugin, ResolvedConfig } from 'vite';
+import type { RollupLog } from 'rollup';
 
 // P2-B: Workbox Service Worker plugin
 function workboxPlugin(): Plugin {
@@ -191,6 +192,25 @@ export default defineConfig({
         propertyReadSideEffects: false,
         tryCatchDeoptimization: false,
       },
+
+      // Avoid noisy warnings from known-safe/3rd-party bundles.
+      // - EMPTY_BUNDLE "monitoring": typically caused by forced chunk naming + tree-shaking.
+      // - EVAL from onnxruntime-web: upstream bundle uses eval; we don't patch vendored code here.
+      onwarn: (warning: RollupLog, warn: (warning: RollupLog) => void) => {
+        if (warning.code === 'EMPTY_BUNDLE' && warning.message.includes('"monitoring"')) {
+          return;
+        }
+
+        const locFile = warning.loc?.file;
+        const isOnnxRuntime =
+          (typeof locFile === 'string' && locFile.includes('onnxruntime-web')) ||
+          warning.message.includes('onnxruntime-web');
+        if (warning.code === 'EVAL' && isOnnxRuntime) {
+          return;
+        }
+
+        warn(warning);
+      },
       output: {
         manualChunks: id => {
           // Vendors
@@ -204,6 +224,18 @@ export default defineConfig({
             }
             if (id.includes('@tauri-apps')) {
               return 'tauri-vendor';
+            }
+            // 🚀 Split: ONNX Runtime (very large)
+            if (id.includes('onnxruntime-web')) {
+              return 'onnxruntime';
+            }
+            // 🚀 Split: Three.js (large)
+            if (id.includes('/three/') || id.includes('three')) {
+              return 'three-vendor';
+            }
+            // 🚀 Split: TanStack Query (moderately large)
+            if (id.includes('@tanstack/react-query')) {
+              return 'react-query';
             }
             if (id.includes('framer-motion')) {
               return 'motion';
@@ -220,6 +252,13 @@ export default defineConfig({
             if (id.includes('recharts')) {
               return 'charts';
             }
+            // Optional / heavy UI libs
+            if (id.includes('react-chrono')) {
+              return 'chrono';
+            }
+            if (id.includes('react-d3-tree')) {
+              return 'd3-tree';
+            }
             if (id.includes('markdown') || id.includes('remark')) {
               return 'markdown';
             }
@@ -229,10 +268,6 @@ export default defineConfig({
             // Web vitals
             if (id.includes('web-vitals')) {
               return 'web-vitals';
-            }
-            // 🚀 OPTIMIZATION: Sentry séparé (lazy-loadable en production)
-            if (id.includes('@sentry')) {
-              return 'monitoring';
             }
             // Chart.js séparé (gros et optionnel)
             if (id.includes('chart.js') || id.includes('chartjs')) {
@@ -324,8 +359,8 @@ export default defineConfig({
     // 🚀 OPTIMIZATION v24.7.7: Faster minification with esbuild (removed terser)
     // minify: 'esbuild' configured above - terser options removed for speed
 
-    // Réduit à 800KB pour forcer plus de découpage
-    chunkSizeWarningLimit: 800,
+    // Réduit à 1600KB pour limiter le bruit de warning tout en gardant la pression sur le découpage
+    chunkSizeWarningLimit: 1600,
     // Optimisations supplémentaires
     target: 'esnext',
     cssCodeSplit: true,

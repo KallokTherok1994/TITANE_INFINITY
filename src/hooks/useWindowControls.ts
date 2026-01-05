@@ -3,7 +3,7 @@
 
 import { useEffect, useCallback } from 'react';
 import { secureInvoke } from '@/lib/security';
-import { listen } from '@tauri-apps/api/event';
+import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 
 export interface WindowControlsOptions {
   enableZoom?: boolean;
@@ -85,8 +85,12 @@ export function useWindowControls(options: WindowControlsOptions = {}) {
     }
 
     // Listen to zoom-change events from Tauri backend
-    const unlisten = listen<number>('zoom-change', event => {
+    const unlisten: Promise<UnlistenFn> = listen<number>('zoom-change', event => {
       applyZoom(event.payload);
+    }).catch(() => {
+      // Certaines fenêtres (ex: dev-monitor) n'ont pas les permissions `event.listen`.
+      // On évite une Promise rejection non gérée qui déclenche un fatal overlay.
+      return () => {};
     });
 
     // Zoom with CTRL + Scroll
