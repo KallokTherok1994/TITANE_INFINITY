@@ -1,13 +1,14 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE∞ v26.4.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v15 - Switch Component - Design System
-import { useState } from 'react';
+// TITANE∞ v26.4.0 - Switch Component with Performance Optimizations
+import { useState, useCallback, useMemo, useId, memo } from 'react';
+import { clsx } from 'clsx';
 import './Switch.css';
 
 interface SwitchProps {
@@ -20,24 +21,27 @@ interface SwitchProps {
   className?: string;
 }
 
-export const Switch = ({
+/**
+ * Switch component for boolean toggles.
+ * Memoized for optimal re-render performance.
+ */
+export const Switch = memo(function Switch({
   checked: controlledChecked,
   defaultChecked = false,
   onChange,
   disabled = false,
   size = 'md',
   label,
-  className = '',
-}: SwitchProps) => {
+  className,
+}: SwitchProps) {
   const [internalChecked, setInternalChecked] = useState(defaultChecked);
+  const switchId = useId();
 
   const isControlled = controlledChecked !== undefined;
   const checked = isControlled ? controlledChecked : internalChecked;
 
-  const handleToggle = () => {
-    if (disabled) {
-      return;
-    }
+  const handleToggle = useCallback(() => {
+    if (disabled) return;
 
     const newChecked = !checked;
 
@@ -46,28 +50,34 @@ export const Switch = ({
     }
 
     onChange?.(newChecked);
-  };
+  }, [disabled, checked, isControlled, onChange]);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === ' ' || e.key === 'Enter') {
-      e.preventDefault();
-      handleToggle();
-    }
-  };
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        handleToggle();
+      }
+    },
+    [handleToggle]
+  );
 
-  const classes = [
-    'switch',
-    `switch--${size}`,
-    checked && 'switch--checked',
-    disabled && 'switch--disabled',
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  const classes = useMemo(
+    () =>
+      clsx(
+        'switch',
+        `switch--${size}`,
+        checked && 'switch--checked',
+        disabled && 'switch--disabled',
+        className
+      ),
+    [size, checked, disabled, className]
+  );
 
   return (
-    <label className={classes}>
+    <label className={classes} htmlFor={switchId}>
       <input
+        id={switchId}
         type="checkbox"
         className="switch__input"
         checked={checked}
@@ -89,4 +99,4 @@ export const Switch = ({
       {label && <span className="switch__label">{label}</span>}
     </label>
   );
-};
+});
