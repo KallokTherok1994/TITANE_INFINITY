@@ -13,6 +13,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { renderHook, waitFor, act } from '@testing-library/react';
 import { useChat } from '../useChat';
+import { chatService } from '../../services/api/chat';
 
 // Types locaux pour les tests (basés sur useChat.ts)
 interface AIMessage {
@@ -64,7 +65,7 @@ vi.mock('@/services/ai/cognitiveKernel', () => ({
   },
 }));
 
-vi.mock('@/services/api', () => ({
+vi.mock('@/services/api/chat', () => ({
   chatService: {
     sendMessageLegacy: vi.fn(async () => ({
       content: 'Backend response',
@@ -401,7 +402,6 @@ describe('useChat - KERNEL OMNIS Tests', () => {
 
   describe('Error Handling', () => {
     it('should handle backend errors gracefully', async () => {
-      const { chatService } = await import('@/services/api');
       vi.mocked(chatService.sendMessageLegacy).mockRejectedValueOnce(
         new Error('Backend error')
       );

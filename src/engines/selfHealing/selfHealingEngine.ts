@@ -151,7 +151,7 @@ export async function runSelfHealing(symptoms: string): Promise<SelfHealingRunRe
     ...baseContext,
     logs,
     state,
-    lastMessage: baseContext.lastMessage ?? logs.at(-1)?.message,
+    lastMessage: baseContext.lastMessage ?? (logs.length > 0 ? logs[logs.length - 1]?.message : undefined),
   };
 
   const playbook = await selectPlaybook(symptoms);

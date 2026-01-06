@@ -1,24 +1,19 @@
 /**
  * TITANE∞ v26.2.0 — MAIN STYLESHEET (TITANIUM DARK)
  *
- * Import order:
- * 1. Design tokens (Titanium Dark system)
- * 2. CSS imports (legacy support)
- * 3. Tailwind layers
- * 4. Custom component classes
+ * Import order (Tailwind CSS v4):
+ * 1. CSS imports (must come first per CSS spec)
+ * 2. Tailwind CSS v4 import
+ * 3. Custom layers (base, components, utilities)
  *
  * v26.2.0: Titanium Dark Design System
  * UX Enhancements: Smooth scroll, optimized rendering, WCAG 2.2 AA
  */
 
 /* ═══════════════════════════════════════════════════════════════ */
-/* DESIGN TOKENS (Primary Source of Truth)                          */
+/* CSS IMPORTS (Must precede all other statements)                  */
 /* ═══════════════════════════════════════════════════════════════ */
 @import './styles/titanium-dark-tokens.css';
-
-/* ═══════════════════════════════════════════════════════════════ */
-/* LEGACY CSS IMPORTS (Compatibility Layer - Will be deprecated)    */
-/* ═══════════════════════════════════════════════════════════════ */
 @import './styles/css-vars.css';
 @import './styles/unified-tokens.css';
 @import './styles/tech-effects.css';
@@ -26,43 +21,40 @@
 @import './styles/a11y.css';
 
 /* ═══════════════════════════════════════════════════════════════ */
+/* TAILWIND CSS v4 — With Configuration                             */
+/* ═══════════════════════════════════════════════════════════════ */
+@import "tailwindcss";
+@config "../tailwind.config.ts";
+
+/* ═══════════════════════════════════════════════════════════════ */
 /* UI/UX POLISH v26.2.3 — Smooth Scroll & Better Rendering          */
 /* ═══════════════════════════════════════════════════════════════ */
 
-* {
-  scroll-behavior: smooth;
+@layer base {
+  * {
+    scroll-behavior: smooth;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings:
+      'kern' 1,
+      'liga' 1;
+  }
+
+  /* Amélioration contrastes pour WCAG AA (4.5:1) */
+  :root {
+    --text-enhanced: #f0f0f0;
+    --text-primary-bright: #e8e8e8;
+    --text-secondary-bright: #b8b8b8;
+  }
 }
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  font-feature-settings:
-    'kern' 1,
-    'liga' 1;
-}
-
-/* Amélioration contrastes pour WCAG AA (4.5:1) */
-:root {
-  --text-enhanced: #f0f0f0;
-  --text-primary-bright: #e8e8e8;
-  --text-secondary-bright: #b8b8b8;
-}
-
-/* ═══════════════════════════════════════════════════════════════ */
-/* TAILWIND BASE LAYER                                              */
-/* ═══════════════════════════════════════════════════════════════ */
-@tailwind base;
-
-/* ═══════════════════════════════════════════════════════════════ */
-/* TAILWIND COMPONENTS & UTILITIES                                   */
-/* ═══════════════════════════════════════════════════════════════ */
-@tailwind components;
-@tailwind utilities;
 
 /* ═══════════════════════════════════════════════════════════════ */
 /* CUSTOM COMPONENT CLASSES (Tailwind @layer components)            */
@@ -153,7 +145,7 @@ body {
   }
 
   .text-gradient-sage {
-    @apply bg-gradient-to-r from-sage-400 to-sage-600 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-lime-400 to-lime-600 bg-clip-text text-transparent;
   }
 
   /* Glow effects */
