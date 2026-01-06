@@ -7,6 +7,14 @@ set -e
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
 
+# Non-interactive console controls
+# - NON_INTERACTIVE=1 : no prompts
+# - AUTO_START_WEB=1  : start web dev server automatically if not running
+# - AUTO_INSTALL_CLOUDFLARED=1 : attempt install (requires sudo)
+NON_INTERACTIVE="${NON_INTERACTIVE:-0}"
+AUTO_START_WEB="${AUTO_START_WEB:-1}"
+AUTO_INSTALL_CLOUDFLARED="${AUTO_INSTALL_CLOUDFLARED:-0}"
+
 echo "🌐 TITANE∞ NETWORK DEV TUNNEL - START"
 echo "======================================"
 echo ""
@@ -22,19 +30,35 @@ echo ""
 # Check if Vite dev server is running
 if ! curl -s http://localhost:$DEV_PORT > /dev/null 2>&1; then
     echo "⚠️  Vite dev server not detected on port $DEV_PORT"
-    echo "💡 Start Titan-Dev first: pnpm run dev:tauri"
+    echo "💡 Suggested: start web dev server (no Tauri)"
+    echo "   bash ./deploy-http-server-pure.sh"
     echo ""
-    read -p "Start Titan-Dev now? (y/n) " -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        echo "🚀 Launching Titan-Dev..."
-        pnpm run dev:tauri &
-        DEV_PID=$!
+
+    if [[ "$AUTO_START_WEB" == "1" ]]; then
+        echo "🚀 Starting web dev server (Vite standalone)..."
+        NON_INTERACTIVE=1 AUTO_KILL_PORT=1 ENABLE_TUNNEL=0 bash ./deploy-http-server-pure.sh >/dev/null 2>&1 || true
         echo "⏳ Waiting for Vite server..."
-        sleep 10
-    else
-        echo "❌ Tunnel requires running dev server. Exiting."
-        exit 1
+        sleep 4
+    fi
+
+    if ! curl -s http://localhost:$DEV_PORT > /dev/null 2>&1; then
+        if [[ "$NON_INTERACTIVE" == "1" ]]; then
+            echo "❌ Dev server still not running. Start it first:" 
+            echo "   bash ./deploy-http-server-pure.sh"
+            exit 1
+        fi
+
+        read -p "Start web dev server now? (y/n) " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            echo "🚀 Starting web dev server..."
+            bash ./deploy-http-server-pure.sh
+            echo "⏳ Waiting for Vite server..."
+            sleep 4
+        else
+            echo "❌ Tunnel requires running dev server. Exiting."
+            exit 1
+        fi
     fi
 fi
 
@@ -52,8 +76,18 @@ if ! command -v cloudflared &> /dev/null; then
     echo "⚠️  cloudflared not installed"
     echo "💡 Install: wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb && sudo dpkg -i cloudflared-linux-amd64.deb"
     echo ""
-    read -p "Install cloudflared now? (y/n) " -n 1 -r
-    echo
+    if [[ "$NON_INTERACTIVE" == "1" && "$AUTO_INSTALL_CLOUDFLARED" != "1" ]]; then
+        echo "❌ NON_INTERACTIVE: cloudflared manquant. Installez-le puis relancez."
+        exit 1
+    fi
+
+    if [[ "$AUTO_INSTALL_CLOUDFLARED" == "1" ]]; then
+        REPLY="y"
+    else
+        read -p "Install cloudflared now? (y/n) " -n 1 -r
+        echo
+    fi
+
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo "📥 Installing cloudflared..."
         wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb -O /tmp/cloudflared.deb

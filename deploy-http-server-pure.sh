@@ -18,6 +18,14 @@ NC='\033[0m'
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT_DIR"
 
+# Non-interactive console controls
+# - NON_INTERACTIVE=1 : no prompts
+# - AUTO_KILL_PORT=1  : kill process on port if needed (when NON_INTERACTIVE=1)
+# - ENABLE_TUNNEL=1   : start Cloudflare tunnel automatically (when NON_INTERACTIVE=1)
+NON_INTERACTIVE="${NON_INTERACTIVE:-0}"
+AUTO_KILL_PORT="${AUTO_KILL_PORT:-0}"
+ENABLE_TUNNEL="${ENABLE_TUNNEL:-0}"
+
 # Obtenir l'IP locale
 LOCAL_IP=$(hostname -I | awk '{print $1}')
 SERVER_PORT=${PORT:-5173}
@@ -75,15 +83,22 @@ echo ""
 # Vérifier si le port est disponible
 if lsof -Pi :$SERVER_PORT -sTCP:LISTEN -t >/dev/null 2>&1; then
     echo -e "${YELLOW}⚠️  Port $SERVER_PORT déjà utilisé${NC}"
-    read -p "Arrêter le processus existant? (y/n) " -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
+    if [[ "$NON_INTERACTIVE" == "1" || "$AUTO_KILL_PORT" == "1" ]]; then
+        echo -e "${YELLOW}💡 NON_INTERACTIVE/AUTO_KILL_PORT actif → arrêt forcé du processus${NC}"
         lsof -ti:$SERVER_PORT | xargs kill -9 2>/dev/null || true
         sleep 2
         echo -e "${GREEN}✓ Port libéré${NC}"
     else
-        echo -e "${RED}❌ Déploiement annulé${NC}"
-        exit 1
+        read -p "Arrêter le processus existant? (y/n) " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            lsof -ti:$SERVER_PORT | xargs kill -9 2>/dev/null || true
+            sleep 2
+            echo -e "${GREEN}✓ Port libéré${NC}"
+        else
+            echo -e "${RED}❌ Déploiement annulé${NC}"
+            exit 1
+        fi
     fi
 fi
 echo -e "${GREEN}✓ Port $SERVER_PORT disponible${NC}"
@@ -207,9 +222,17 @@ TUNNEL_URL=""
 if [ "$TUNNEL_AVAILABLE" = true ]; then
     echo -e "${GREEN}✓ cloudflared détecté${NC}"
     echo ""
-    read -p "Activer le tunnel Internet Cloudflare? (y/n) " -n 1 -r
-    echo
-    
+    if [[ "$NON_INTERACTIVE" == "1" ]]; then
+        if [[ "$ENABLE_TUNNEL" == "1" ]]; then
+            REPLY="y"
+        else
+            REPLY="n"
+        fi
+    else
+        read -p "Activer le tunnel Internet Cloudflare? (y/n) " -n 1 -r
+        echo
+    fi
+
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo ""
         echo -e "${YELLOW}🌐 Démarrage du tunnel Cloudflare...${NC}"

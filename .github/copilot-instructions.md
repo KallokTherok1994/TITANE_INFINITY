@@ -23,6 +23,16 @@ Notes:
 - No secrets committed.
 - Keep changes minimal and testable.
 
+### ⚠️ RÈGLE CRITIQUE — FERMETURE DES PORTS ET TERMINAUX DÉPRÉCIÉS (Ajouté: 2026-01-05)
+
+**OBLIGATION PERMANENTE :**
+
+- **FERMER IMMÉDIATEMENT** tout port ou terminal marqué comme déprécié ou non autorisé dès qu'il n'est plus explicitement requis ou autorisé par la politique du projet ou par Kevin Thibault.
+- **NE PAS LAISSER OUVERT** de port réseau, tunnel, ou terminal de développement qui a été signalé comme obsolète, non sécurisé ou interdit.
+- **VÉRIFIER** régulièrement l'état des terminaux et ports ouverts, et documenter toute fermeture dans les logs de développement si applicable.
+
+Tout manquement à cette règle est une **violation critique** de la politique de sécurité et de gouvernance TITANE∞.
+
 ### ⚠️ RÈGLE CRITIQUE — DÉPLOIEMENT (Ajouté: 2026-01-02)
 
 **INTERDICTION ABSOLUE:**

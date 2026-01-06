@@ -1439,13 +1439,34 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           messagesRef.current.length
         );
 
-        const assistantMessage = getAssistantFromState() ?? {
-          role: 'assistant',
-          content: finalContent,
-          provider,
-          timestamp: Date.now(),
-          metadata: withUiId(metadataPatch),
-        };
+        const assistantFromState = getAssistantFromState();
+        const assistantMessage: AIMessage =
+          assistantFromState && assistantFromState.content.trim().length > 0
+            ? assistantFromState
+            : (() => {
+                // ✅ Repair: si le placeholder existe mais reste vide (bug de sync / dédup),
+                // forcer le contenu final dans l'entrée assistant ciblée.
+                if (targetUiId) {
+                  updateAssistant(
+                    message => ({
+                      ...message,
+                      content: finalContent,
+                      provider,
+                      timestamp: Date.now(),
+                    }),
+                    'assistant-stream-repair',
+                    { ...metadataPatch, uiId: targetUiId }
+                  );
+                }
+
+                return {
+                  role: 'assistant' as const,
+                  content: finalContent,
+                  provider,
+                  timestamp: Date.now(),
+                  metadata: withUiId(metadataPatch),
+                };
+              })();
 
         try {
           // ✅ v∞.FIX P1-6: Await saveMessage pour garantir persistence

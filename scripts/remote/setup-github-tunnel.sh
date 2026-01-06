@@ -17,6 +17,23 @@ if ! command -v code &> /dev/null; then
     exit 1
 fi
 
+# Vérifier que la sous-commande `tunnel` est réellement supportée.
+# Certaines variantes de `code` (ex: VSCodium/CLI minimal) n'incluent pas Remote Tunnels.
+tunnel_help="$(code tunnel --help 2>&1 || true)"
+if ! echo "$tunnel_help" | grep -qiE 'Usage:.*code +tunnel|code +tunnel +(status|service|restart|kill)|Remote +Tunnels'; then
+    echo "❌ La CLI 'code' détectée ne supporte pas 'code tunnel' (Remote Tunnels)."
+    echo ""
+    echo "➡️ Solutions possibles:"
+    echo "   1) Installer Visual Studio Code (build Microsoft) et activer la commande 'code'"
+    echo "      - https://code.visualstudio.com/docs/setup/linux"
+    echo "   2) Relancer ce script une fois 'code tunnel' disponible"
+    echo ""
+    echo "ℹ️ Fallback (sans Remote Tunnels): utiliser un tunnel SSH/port-forwarding vers 127.0.0.1:5173"
+    echo "   (garde Vite en localhost et n'expose pas un nouveau serveur)"
+    echo ""
+    exit 2
+fi
+
 echo "✅ VS Code CLI détecté"
 echo ""
 
