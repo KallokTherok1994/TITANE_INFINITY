@@ -73,7 +73,8 @@ export const VirtualizedMessageList = React.memo(function VirtualizedMessageList
           typeof msg.role === 'string' &&
           typeof msg.content === 'string' &&
           typeof msg.timestamp === 'number' &&
-          msg.content.length > 0 &&
+          // Allow empty content for assistant streaming placeholders (OMEGA)
+          (msg.content.length > 0 || msg.role === 'assistant') &&
           msg.content.length < 100000
       ),
     [messages]
