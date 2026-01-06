@@ -86,7 +86,8 @@ function useOmegaErrorBoundary() {
                 typeof msg.role === 'string' &&
                 typeof msg.content === 'string' &&
                 typeof msg.timestamp === 'number' &&
-                msg.content.length > 0 &&
+                // OMEGA: allow empty content for assistant streaming placeholders
+                (msg.content.length > 0 || msg.role === 'assistant') &&
                 msg.content.length < 100000 // Max 100k chars per message
               );
             } catch (filterError) {
