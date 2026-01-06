@@ -14,6 +14,9 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { audioService } from '@/features/audio-center/services/audioService';
 import { detectEnvironment } from '@/core/tauri/environment';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('useAudioSettings');
 import type {
   AudioDevice,
   MicrophoneTestResult,
@@ -197,7 +200,7 @@ export function useAudioSettings(): UseAudioSettingsReturn {
           }
         }
       } catch (error) {
-        console.error('[useAudioSettings] Init error:', error);
+        logger.error('Init error:', error);
         setLastError("Échec de l'initialisation audio");
       } finally {
         if (mountedRef.current) {
@@ -238,7 +241,7 @@ export function useAudioSettings(): UseAudioSettingsReturn {
         }
       } catch (error) {
         // Erreur Tauri (ACL ou autre)
-        console.error('[useAudioSettings] Tauri test_microphone error:', error);
+        logger.error('Tauri test_microphone error:', error);
         if (mountedRef.current) {
           const errorMsg = error instanceof Error ? error.message : String(error);
 
@@ -301,7 +304,7 @@ export function useAudioSettings(): UseAudioSettingsReturn {
           return false;
         }
       } catch (error) {
-        console.error('[useAudioSettings] Tauri permission request failed:', error);
+        logger.error('Tauri permission request failed:', error);
         if (mountedRef.current) {
           setPermissions({ microphone: 'unavailable', speaker: 'granted' });
           setLastError(

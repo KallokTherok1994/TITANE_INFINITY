@@ -14,6 +14,9 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { chatEngine, type ChatMode, type ChatEngineResponse } from '../services/ai';
 import type { AIMessage } from '../services/ai/types';
 import { chatValidator } from '../services/chatValidator';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('useChatCore');
 
 export interface UseChatCoreOptions {
   mode?: ChatMode;

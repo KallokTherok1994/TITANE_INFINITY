@@ -13,6 +13,9 @@
 import { useState, useCallback, useRef } from 'react';
 import { chatEngine, type ChatMode, type ChatEngineResponse } from '../services/ai';
 import type { AIMessage } from '../services/ai/types';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('ChatStreaming');
 
 export interface UseChatStreamingOptions {
   mode?: ChatMode;
@@ -53,9 +56,7 @@ export function useChatStreaming(
 
   const startStream = useCallback(
     async (message: string, _history: AIMessage[] = []) => {
-      console.log('\n╔════════════════════════════════════════════════════════════╗');
-      console.log('║  USE CHAT STREAMING v15: Tauri Real Stream                ║');
-      console.log('╚════════════════════════════════════════════════════════════╝');
+      logger.debug('Tauri Real Stream v15 starting');
 
       setIsStreaming(true);
       setStreamedContent('');
@@ -75,7 +76,7 @@ export function useChatStreaming(
           throw new Error('Message vide');
         }
 
-        console.log(`🎯 Provider: ${provider} (chatEngine stream)`);
+        logger.debug('Provider:', provider);
 
         const stream = chatEngine.stream(trimmedMessage, _history, {
           mode: options.mode || 'default',
@@ -101,9 +102,7 @@ export function useChatStreaming(
             setStreamedContent(fullContent);
 
             options.onChunk?.(value);
-            console.log(
-              `📦 Chunk ${chunkCount}: +${value.length} chars (total: ${fullContent.length})`
-            );
+            logger.trace(`Chunk ${chunkCount}: +${value.length} chars (total: ${fullContent.length})`);
           }
 
           nextResult = await stream.next();
@@ -120,10 +119,7 @@ export function useChatStreaming(
               ? finalResponse.metadata.latencyMs
               : (finalResponse.omegaMetadata?.processingTime ?? 0);
 
-          console.log(
-            `✅ Stream complete: ${chunkCount} chunks, ${fullContent.length} chars`
-          );
-          console.log(`   Provider: ${finalResponse.provider}, Latency: ${latencyMs}ms`);
+          logger.debug(`Stream complete: ${chunkCount} chunks, ${fullContent.length} chars, Provider: ${finalResponse.provider}, Latency: ${latencyMs}ms`);
 
           options.onComplete?.({
             content: finalResponse.content,
@@ -133,9 +129,9 @@ export function useChatStreaming(
         }
       } catch (error) {
         if (stopRequestedRef.current) {
-          console.log('🔕 Stream cancelled by user');
+          logger.debug('Stream cancelled by user');
         } else {
-          console.error('❌ Stream error:', error);
+          logger.error('Stream error:', error);
           const err = error instanceof Error ? error : new Error(String(error));
           options.onError?.(err);
         }
@@ -158,7 +154,7 @@ export function useChatStreaming(
   );
 
   const stopStream = useCallback(() => {
-    console.log('🛑 Stopping stream...');
+    logger.debug('Stopping stream...');
     stopRequestedRef.current = true;
 
     if (abortControllerRef.current) {
@@ -175,7 +171,7 @@ export function useChatStreaming(
     }
 
     setIsStreaming(false);
-    console.log('✅ Stream stopped');
+    logger.debug('Stream stopped');
   }, []);
 
   return {

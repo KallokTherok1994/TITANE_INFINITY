@@ -122,12 +122,10 @@ export function useConversationEngine(
 
           // Auto-repair si critique
           if (report.status === 'Critical') {
-            console.warn(
-              '[ConversationEngine] État critique détecté, auto-réparation en cours...'
-            );
+            logger.warn('État critique détecté, auto-réparation en cours...');
           }
         } catch (err) {
-          console.error('[ConversationEngine] Health check failed:', err);
+          logger.error('Health check failed:', err);
         }
       }, 30000);
     }
@@ -145,7 +143,7 @@ export function useConversationEngine(
       const report = await healthCheck();
       setHealthReport(report);
     } catch (err) {
-      console.error('[ConversationEngine] Health check error:', err);
+      logger.error('Health check error:', err);
     }
   }, []);
 
@@ -214,7 +212,7 @@ export function useConversationEngine(
         // Callback
         options.onResponse?.(response);
 
-        console.log('[ConversationEngine] Message traité:', {
+        logger.debug('Message traité', {
           intention: response.detected_intention,
           emotion: response.detected_emotion,
           tags: response.cognitive_tags,
@@ -229,9 +227,7 @@ export function useConversationEngine(
         // Retry logic avec backoff exponentiel
         if (retryCount < MAX_RETRIES && errorMessage.includes('network')) {
           const delay = RETRY_DELAY * Math.pow(2, retryCount);
-          console.warn(
-            `[ConversationEngine] Tentative ${retryCount + 1}/${MAX_RETRIES} échouée, retry dans ${delay}ms`
-          );
+          logger.warn(`Tentative ${retryCount + 1}/${MAX_RETRIES} échouée, retry dans ${delay}ms`);
 
           await new Promise(resolve => setTimeout(resolve, delay));
           isProcessingRef.current = false;
@@ -242,7 +238,7 @@ export function useConversationEngine(
         setError(errorMessage);
         options.onError?.(err as Error);
 
-        console.error('[ConversationEngine] Erreur finale:', err);
+        logger.error('Erreur finale:', err);
         return null;
       } finally {
         setIsLoading(false);
@@ -268,7 +264,7 @@ export function useConversationEngine(
   // ═══ SET MODE ═══
   const setModeCallback = useCallback((mode: ConversationMode) => {
     setCurrentMode(mode);
-    console.log('[ConversationEngine] Mode changé:', mode);
+    logger.debug('Mode changé:', mode);
   }, []);
 
   // ═══ RETOUR ═══
