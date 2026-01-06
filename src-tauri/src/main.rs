@@ -119,6 +119,11 @@ mod secure_commands {
     include!("secure_commands.rs");
 }
 
+// Runtime Config Bridge v∞ (Frontend configuration without secrets)
+mod runtime_config {
+    include!("runtime_config.rs");
+}
+
 // Chat Generate Commands v21 Phase 1 - Provider-specific AI generation
 mod commands {
     pub mod chat_generate_commands {
@@ -923,7 +928,10 @@ fn main() {
             secure_commands::get_openai_key_status,
             secure_commands::chat_set_anthropic_key,
             secure_commands::get_anthropic_key_status,
+            secure_commands::get_permission_audit, // ✅ v26.2.3: Permission audit log
             secure_commands::check_system_integrity, // ✅ v21.5: System integrity check
+            // Runtime Configuration Bridge v∞ (Frontend config without secrets)
+            runtime_config::get_runtime_config,
             // ✅ v21 Phase 1: Provider-specific AI generation
             commands::chat_generate_commands::chat_generate_gemini,
             commands::chat_generate_commands::chat_generate_openai,

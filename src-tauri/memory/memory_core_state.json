@@ -2,6 +2,62 @@
   "snapshots": [],
   "logs": [
     {
+      "id": "ui-1767670145773-be1tzymj",
+      "timestamp": 1767670145773,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1767669990010-kf45oqfb",
+      "timestamp": 1767669990010,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Importing a module script failed. (http://127.0.0.1:5173/.vite-cache/deps/chunk-GX3VV2FZ.js?v=d2eee3a9:903:34)"
+    },
+    {
+      "id": "ui-1767669680118-dkcjvyf3",
+      "timestamp": 1767669680118,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1767669679576-vkobwhnn",
+      "timestamp": 1767669679576,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1767669198835-xw5af4gh",
+      "timestamp": 1767669198835,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1767668206363-lcz04hmc",
+      "timestamp": 1767668206363,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1767667428607-svzxpgby",
+      "timestamp": 1767667428607,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1767667330774-asbdpeh3",
+      "timestamp": 1767667330774,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
       "id": "ui-1767664795499-3sxezgh3",
       "timestamp": 1767664795499,
       "level": "Error",
@@ -2467,7 +2523,7 @@
   "knowledge": [],
   "rituals": [],
   "metadata": {
-    "last_validation_ts": 1767664795504,
+    "last_validation_ts": 1767670145970,
     "last_compaction_ts": null
   }
 }
