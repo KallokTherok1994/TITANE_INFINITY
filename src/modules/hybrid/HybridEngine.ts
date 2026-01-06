@@ -119,7 +119,7 @@ export class HybridEngine {
       'build',
       'rust',
       'cargo',
-      'npm',
+      'pnpm',
       'install',
       'run',
       'test',

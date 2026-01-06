@@ -12,9 +12,21 @@ use std::collections::HashMap;
 use std::time::Duration;
 use tauri::{command, Emitter, Window};
 
-const OLLAMA_BASE_URL: &str = "http://localhost:11434";
-const DEFAULT_MODEL: &str = "titane-local";
+const DEFAULT_OLLAMA_BASE_URL: &str = "http://127.0.0.1:11434";
+const DEFAULT_OLLAMA_MODEL: &str = "llama3.1";
 const TIMEOUT_SECONDS: u64 = 60;
+
+fn ollama_base_url() -> String {
+    std::env::var("OLLAMA_BASE_URL")
+        .or_else(|_| std::env::var("OLLAMA_URL"))
+        .unwrap_or_else(|_| DEFAULT_OLLAMA_BASE_URL.to_string())
+}
+
+fn ollama_default_model() -> String {
+    std::env::var("OLLAMA_DEFAULT_MODEL")
+        .or_else(|_| std::env::var("OLLAMA_MODEL"))
+        .unwrap_or_else(|_| DEFAULT_OLLAMA_MODEL.to_string())
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 //   TYPES & STRUCTURES
@@ -113,7 +125,7 @@ pub async fn ai_generate_local(request: LocalAIRequest) -> Result<LocalAIRespons
         .build()
         .map_err(|e| format!("Client error: {}", e))?;
 
-    let model = request.model.unwrap_or_else(|| DEFAULT_MODEL.to_string());
+    let model = request.model.unwrap_or_else(ollama_default_model);
 
     // Construire les options
     let mut options = HashMap::new();
@@ -138,7 +150,7 @@ pub async fn ai_generate_local(request: LocalAIRequest) -> Result<LocalAIRespons
 
     // Appel HTTP
     let response = client
-        .post(format!("{}/api/generate", OLLAMA_BASE_URL))
+        .post(format!("{}/api/generate", ollama_base_url()))
         .json(&ollama_request)
         .send()
         .await
@@ -178,7 +190,7 @@ pub async fn ai_generate_local_stream(
         .build()
         .map_err(|e| format!("Client error: {}", e))?;
 
-    let model = request.model.unwrap_or_else(|| DEFAULT_MODEL.to_string());
+    let model = request.model.unwrap_or_else(ollama_default_model);
 
     // Construire les options
     let mut options = HashMap::new();
@@ -203,7 +215,7 @@ pub async fn ai_generate_local_stream(
 
     // Appel HTTP avec streaming
     let response = client
-        .post(format!("{}/api/generate", OLLAMA_BASE_URL))
+        .post(format!("{}/api/generate", ollama_base_url()))
         .json(&ollama_request)
         .send()
         .await
@@ -266,7 +278,7 @@ pub async fn ai_scan_local_models() -> Result<Vec<String>, String> {
         .map_err(|e| format!("Client error: {}", e))?;
 
     let response = client
-        .get(format!("{}/api/tags", OLLAMA_BASE_URL))
+        .get(format!("{}/api/tags", ollama_base_url()))
         .send()
         .await
         .map_err(|e| format!("Ollama HTTP error: {}", e))?;
@@ -337,7 +349,7 @@ pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
 
     // Test de disponibilité
     let response = client
-        .get(format!("{}/api/tags", OLLAMA_BASE_URL))
+        .get(format!("{}/api/tags", ollama_base_url()))
         .send()
         .await;
 
@@ -413,7 +425,7 @@ impl OllamaClient {
             .unwrap_or_else(|_| reqwest::Client::new());
 
         Self {
-            model: model.unwrap_or_else(|| DEFAULT_MODEL.to_string()),
+            model: model.unwrap_or_else(ollama_default_model),
             client,
             shell_guard: ShellGuard::new(),
         }
@@ -433,7 +445,7 @@ impl OllamaClient {
 
         // Check if Ollama daemon is running
         self.client
-            .get("http://localhost:11434/api/tags")
+            .get(format!("{}/api/tags", ollama_base_url()))
             .timeout(Duration::from_secs(2))
             .send()
             .await
@@ -459,7 +471,7 @@ impl OllamaClient {
 
         let response = self
             .client
-            .post(format!("{}/api/generate", OLLAMA_BASE_URL))
+            .post(format!("{}/api/generate", ollama_base_url()))
             .json(&ollama_request)
             .send()
             .await

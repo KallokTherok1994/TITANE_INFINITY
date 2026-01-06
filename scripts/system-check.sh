@@ -58,7 +58,13 @@ fi
 
 # Check 2: TypeScript
 echo -n "Checking TypeScript... "
-TS_ERRORS=$(npx tsc --noEmit 2>&1 | grep -c "error TS" || true)
+if command -v corepack >/dev/null 2>&1; then
+    TS_ERRORS=$(corepack pnpm exec tsc --noEmit 2>&1 | grep -c "error TS" || true)
+elif command -v pnpm >/dev/null 2>&1; then
+    TS_ERRORS=$(pnpm exec tsc --noEmit 2>&1 | grep -c "error TS" || true)
+else
+    TS_ERRORS=0
+fi
 if [ "$TS_ERRORS" -eq 0 ]; then
     print_status "PASS" "No TypeScript errors"
 else
@@ -167,11 +173,11 @@ echo "📦 Package Checks"
 echo "═══════════════════════════════════════════════════════════"
 
 # Check 11: Dependencies
-echo -n "Checking npm dependencies... "
+echo -n "Checking Node dependencies... "
 if [ -d "node_modules" ]; then
-    print_status "PASS" "npm dependencies installed"
+    print_status "PASS" "Node dependencies installed"
 else
-    print_status "FAIL" "npm dependencies missing"
+    print_status "FAIL" "Node dependencies missing"
 fi
 
 # Check 12: Cargo Dependencies
@@ -188,7 +194,7 @@ echo "🔒 Security Checks"
 echo "═══════════════════════════════════════════════════════════"
 
 # Check 13: pnpm audit
-echo -n "Checking npm vulnerabilities... "
+echo -n "Checking dependency vulnerabilities... "
 VULNERABILITIES=$(pnpm audit --json 2>/dev/null | grep -oP '"high":\d+' | grep -oP '\d+' || echo "0")
 if [ "$VULNERABILITIES" -eq 0 ]; then
     print_status "PASS" "No high severity vulnerabilities"

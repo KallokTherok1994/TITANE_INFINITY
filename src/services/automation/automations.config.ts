@@ -748,7 +748,7 @@ export const AUTOMATION_REGISTRY: Record<AutomationId, AutomationConfig> = {
     cancellable: true,
     timeout: 120000,
     cooldown: 300000,
-    tags: ['dependencies', 'npm', 'security', 'update', 'vulnerability'],
+    tags: ['dependencies', 'pnpm', 'security', 'update', 'vulnerability'],
     version: '1.0.0',
   },
 };

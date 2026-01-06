@@ -66,12 +66,15 @@ check_prerequisites() {
         exit 1
     fi
 
-    # Check npm
-    if command -v npm &> /dev/null; then
-        NPM_VERSION=$(npm --version)
-        print_success "npm $NPM_VERSION"
+    # Check pnpm (corepack préféré)
+    if command -v corepack >/dev/null 2>&1 && corepack pnpm --version >/dev/null 2>&1; then
+        PNPM_VERSION=$(corepack pnpm --version)
+        print_success "pnpm $PNPM_VERSION"
+    elif command -v pnpm &> /dev/null; then
+        PNPM_VERSION=$(pnpm --version)
+        print_success "pnpm $PNPM_VERSION"
     else
-        print_error "npm not found"
+        print_error "pnpm not found"
         exit 1
     fi
 
@@ -80,14 +83,26 @@ check_prerequisites() {
         print_success "Dependencies installed"
     else
         print_warning "Dependencies not found, installing..."
-        pnpm install
+        if command -v corepack >/dev/null 2>&1; then
+            corepack pnpm install
+        else
+            pnpm install
+        fi
     fi
 
     # Check Vitest
-    if npm list vitest &> /dev/null; then
-        print_success "Vitest installed"
+    if command -v corepack >/dev/null 2>&1; then
+        corepack pnpm exec vitest --version >/dev/null 2>&1 && print_success "Vitest installed" || {
+            print_error "Vitest not found"
+            exit 1
+        }
+    elif command -v pnpm >/dev/null 2>&1; then
+        pnpm exec vitest --version >/dev/null 2>&1 && print_success "Vitest installed" || {
+            print_error "Vitest not found"
+            exit 1
+        }
     else
-        print_error "Vitest not found"
+        print_error "pnpm requis (corepack/pnpm introuvable)"
         exit 1
     fi
 }
@@ -97,7 +112,14 @@ run_unit_tests() {
     print_section "2️⃣  Running Unit Tests"
 
     print_info "Testing VisualDevOpsEngine..."
-    if npx vitest run "$UNIT_DIR/VisualDevOpsEngine.test.ts" --reporter=verbose; then
+    if command -v corepack >/dev/null 2>&1; then
+        corepack pnpm exec vitest run "$UNIT_DIR/VisualDevOpsEngine.test.ts" --reporter=verbose
+    elif command -v pnpm >/dev/null 2>&1; then
+        pnpm exec vitest run "$UNIT_DIR/VisualDevOpsEngine.test.ts" --reporter=verbose
+    else
+        false
+    fi
+    if [ $? -eq 0 ]; then
         print_success "VisualDevOpsEngine tests passed"
     else
         print_error "VisualDevOpsEngine tests failed"
@@ -105,7 +127,14 @@ run_unit_tests() {
     fi
 
     print_info "Testing LocalAgentEngine..."
-    if npx vitest run "$UNIT_DIR/LocalAgentEngine.test.ts" --reporter=verbose 2>/dev/null; then
+    if command -v corepack >/dev/null 2>&1; then
+        corepack pnpm exec vitest run "$UNIT_DIR/LocalAgentEngine.test.ts" --reporter=verbose 2>/dev/null
+    elif command -v pnpm >/dev/null 2>&1; then
+        pnpm exec vitest run "$UNIT_DIR/LocalAgentEngine.test.ts" --reporter=verbose 2>/dev/null
+    else
+        false
+    fi
+    if [ $? -eq 0 ]; then
         print_success "LocalAgentEngine tests passed"
     else
         print_warning "LocalAgentEngine tests skipped (incomplete)"
@@ -117,7 +146,14 @@ run_integration_tests() {
     print_section "3️⃣  Running Integration Tests"
 
     print_info "Testing DevOps Pipeline..."
-    if npx vitest run "$INTEGRATION_DIR/devops-pipeline.test.ts" --reporter=verbose 2>/dev/null; then
+    if command -v corepack >/dev/null 2>&1; then
+        corepack pnpm exec vitest run "$INTEGRATION_DIR/devops-pipeline.test.ts" --reporter=verbose 2>/dev/null
+    elif command -v pnpm >/dev/null 2>&1; then
+        pnpm exec vitest run "$INTEGRATION_DIR/devops-pipeline.test.ts" --reporter=verbose 2>/dev/null
+    else
+        false
+    fi
+    if [ $? -eq 0 ]; then
         print_success "Pipeline integration tests passed"
     else
         print_warning "Pipeline integration tests skipped (incomplete)"
@@ -129,7 +165,14 @@ generate_coverage() {
     print_section "4️⃣  Generating Coverage Report"
 
     print_info "Running tests with coverage..."
-    if npx vitest run "$UNIT_DIR" --coverage --coverage.reporter=text --coverage.reporter=html 2>/dev/null; then
+    if command -v corepack >/dev/null 2>&1; then
+        corepack pnpm exec vitest run "$UNIT_DIR" --coverage --coverage.reporter=text --coverage.reporter=html 2>/dev/null
+    elif command -v pnpm >/dev/null 2>&1; then
+        pnpm exec vitest run "$UNIT_DIR" --coverage --coverage.reporter=text --coverage.reporter=html 2>/dev/null
+    else
+        false
+    fi
+    if [ $? -eq 0 ]; then
         print_success "Coverage report generated"
 
         if [ -d "coverage" ]; then

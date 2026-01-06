@@ -553,7 +553,7 @@ export async function handleAutoImport(): Promise<DevSudoResult> {
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, X, Send } from 'lucide-react';
 \`\`\`
-→ Solution: \`npm install @types/framer-motion @types/lucide-react\`
+→ Solution: \`corepack pnpm add -D @types/framer-motion @types/lucide-react\`
 
 **2. CameraOverlay.tsx**:
 \`\`\`typescript
@@ -632,7 +632,7 @@ ${target ? `🎯 **Cible**: \`${target}\`` : '🎯 **Suite complète**'}
 
 📊 **Frontend Tests** (React):
   \`\`\`bash
-  npm run test ${target || ''}
+  corepack pnpm test ${target || ''}
   \`\`\`
   ⏳ Running...
 
@@ -652,7 +652,7 @@ ${target ? `🎯 **Cible**: \`${target}\`` : '🎯 **Suite complète**'}
   - Integration: PASS
   - E2E: PASS
 
-💡 **Coverage**: \`npm run test:coverage\``,
+💡 **Coverage**: \`corepack pnpm run test:coverage\``,
   };
 }
 

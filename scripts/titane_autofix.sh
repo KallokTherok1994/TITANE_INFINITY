@@ -83,12 +83,18 @@ check_environment() {
         errors=$((errors + 1))
     fi
     
-    # npm
-    if command -v npm &> /dev/null; then
-        local npm_version=$(npm --version)
-        log_success "npm installé: v$npm_version"
+    # pnpm/corepack (pnpm-only)
+    if command -v corepack &> /dev/null || command -v pnpm &> /dev/null; then
+        local pnpm_version=""
+        if command -v corepack &> /dev/null; then
+            pnpm_version=$(corepack pnpm --version 2>/dev/null || echo "")
+        fi
+        if [ -z "$pnpm_version" ] && command -v pnpm &> /dev/null; then
+            pnpm_version=$(pnpm --version 2>/dev/null || echo "")
+        fi
+        log_success "pnpm disponible: v${pnpm_version:-unknown}"
     else
-        log_error "npm non installé"
+        log_error "pnpm/corepack non installé (pnpm-only)"
         errors=$((errors + 1))
     fi
     
@@ -111,7 +117,7 @@ check_environment() {
     fi
     
     # Tauri CLI
-    if command -v cargo-tauri &> /dev/null || npm list -g @tauri-apps/cli &> /dev/null; then
+    if command -v cargo-tauri &> /dev/null || pnpm list -g @tauri-apps/cli &> /dev/null; then
         log_success "Tauri CLI installé"
     else
         log_warning "Tauri CLI non trouvé, tentative d'installation..."
@@ -270,7 +276,7 @@ reinstall_dependencies() {
     cd "$PROJECT_ROOT"
     
     # pnpm install
-    log_info "Installation dépendances npm..."
+    log_info "Installation dépendances pnpm..."
     if pnpm install >> "$LOG_FILE" 2>&1; then
         log_success "pnpm install OK"
     else
@@ -279,7 +285,7 @@ reinstall_dependencies() {
     fi
     
     # pnpm audit fix
-    log_info "Correction vulnérabilités npm..."
+    log_info "Correction vulnérabilités (pnpm audit)..."
     pnpm audit fix >> "$LOG_FILE" 2>&1 || log_warning "pnpm audit fix a échoué (non-critique)"
     
     # cargo update

@@ -10,12 +10,30 @@ echo ""
 
 cd "$(dirname "$0")/.."
 
+# Gestionnaire de paquets: pnpm-only (corepack préféré)
+PNPM=()
+resolve_pnpm_cmd() {
+  if command -v corepack >/dev/null 2>&1 && corepack pnpm --version >/dev/null 2>&1; then
+    PNPM=(corepack pnpm)
+    return 0
+  fi
+  if command -v pnpm >/dev/null 2>&1; then
+    PNPM=(pnpm)
+    return 0
+  fi
+  return 1
+}
+
 # Test 1: TypeScript Compilation
 echo "📝 Test 1: TypeScript Compilation"
 echo "   Checking signature systems compile..."
-npx tsc --noEmit src/visual-engine/signature/IdentityPulse.ts 2>&1 | grep -E "error" && echo "   ❌ FAILED" || echo "   ✅ PASSED"
-npx tsc --noEmit src/visual-engine/signature/OrbitalSignature.ts 2>&1 | grep -E "error" && echo "   ❌ FAILED" || echo "   ✅ PASSED"
-npx tsc --noEmit src/visual-engine/signature/ParticleSignature.ts 2>&1 | grep -E "error" && echo "   ❌ FAILED" || echo "   ✅ PASSED"
+if resolve_pnpm_cmd; then
+  "${PNPM[@]}" exec tsc --noEmit src/visual-engine/signature/IdentityPulse.ts 2>&1 | grep -E "error" && echo "   ❌ FAILED" || echo "   ✅ PASSED"
+  "${PNPM[@]}" exec tsc --noEmit src/visual-engine/signature/OrbitalSignature.ts 2>&1 | grep -E "error" && echo "   ❌ FAILED" || echo "   ✅ PASSED"
+  "${PNPM[@]}" exec tsc --noEmit src/visual-engine/signature/ParticleSignature.ts 2>&1 | grep -E "error" && echo "   ❌ FAILED" || echo "   ✅ PASSED"
+else
+  echo "   ⚠️  pnpm non détecté — compilation TypeScript ignorée"
+fi
 echo ""
 
 # Test 2: Visual Engine Integration

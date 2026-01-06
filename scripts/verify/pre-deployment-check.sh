@@ -213,11 +213,11 @@ check_security() {
     echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}\n"
     
     # pnpm audit
-    local npm_audit_output=$(pnpm audit --json 2>/dev/null || echo '{}')
-    local critical=$(echo "$npm_audit_output" | jq -r '.metadata.vulnerabilities.critical // 0' 2>/dev/null || echo "0")
-    local high=$(echo "$npm_audit_output" | jq -r '.metadata.vulnerabilities.high // 0' 2>/dev/null || echo "0")
+    local audit_output=$(pnpm audit --json 2>/dev/null || echo '{}')
+    local critical=$(echo "$audit_output" | jq -r '.metadata.vulnerabilities.critical // 0' 2>/dev/null || echo "0")
+    local high=$(echo "$audit_output" | jq -r '.metadata.vulnerabilities.high // 0' 2>/dev/null || echo "0")
     
-    echo "$npm_audit_output" > "${REPORT_DIR}/npm-audit.json"
+    echo "$audit_output" > "${REPORT_DIR}/dependency-audit.json"
     
     if [[ $critical -le $MAX_CRITICAL_VULNERABILITIES ]] && [[ $high -le $MAX_HIGH_VULNERABILITIES ]]; then
         gate_check "pnpm audit: ${critical} critical, ${high} high vulnerabilities" "pass"

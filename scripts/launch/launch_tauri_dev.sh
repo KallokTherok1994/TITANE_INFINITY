@@ -51,12 +51,12 @@ else
     exit 1
 fi
 
-# Vérifier npm
-if command -v npm &> /dev/null; then
-    NPM_VERSION=$(npm --version)
-    echo "✅ npm: v$NPM_VERSION"
+ # Vérifier pnpm
+if command -v pnpm &> /dev/null; then
+    PNPM_VERSION=$(pnpm --version)
+    echo "✅ pnpm: v$PNPM_VERSION"
 else
-    echo "❌ npm non installé"
+    echo "❌ pnpm non installé"
     exit 1
 fi
 
@@ -70,7 +70,7 @@ else
 fi
 
 # Vérifier Tauri CLI
-if npm list -g @tauri-apps/cli &> /dev/null || [ -f "node_modules/.bin/tauri" ]; then
+if pnpm list -g @tauri-apps/cli &> /dev/null || [ -f "node_modules/.bin/tauri" ]; then
     echo "✅ Tauri CLI installé"
 else
     echo "⚠️  Tauri CLI non trouvé (sera utilisé depuis node_modules)"
@@ -81,7 +81,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "3. Lancement de Tauri Dev"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
-echo "🚀 Lancement de pnpm run tauri dev..."
+echo "🚀 Lancement de pnpm run dev..."
 echo ""
 
-exec pnpm run tauri dev
+exec pnpm run dev

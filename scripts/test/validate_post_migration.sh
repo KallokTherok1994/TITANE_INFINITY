@@ -22,8 +22,14 @@ echo "Node.js:"
 which node && node --version || echo "❌ Node.js non trouvé"
 echo ""
 
-echo "npm:"
-which npm && npm --version || echo "❌ npm non trouvé"
+echo "pnpm:"
+if command -v corepack >/dev/null 2>&1 && corepack pnpm --version >/dev/null 2>&1; then
+    echo "✅ pnpm (corepack): $(corepack pnpm --version)"
+elif command -v pnpm >/dev/null 2>&1; then
+    echo "✅ pnpm: $(pnpm --version)"
+else
+    echo "❌ pnpm non trouvé"
+fi
 echo ""
 
 echo "Cargo:"

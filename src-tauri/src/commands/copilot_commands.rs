@@ -3,8 +3,8 @@
 // Tauri commands for GitHub Copilot provider integration
 // ═══════════════════════════════════════════════════════════════════════════
 
-// Allow .unwrap() in tests only (this is a common pattern in Rust testing)
-// Note: Using module-level allow for test configuration
+// Note: évite les attributs crate-level ici (fichier module).
+// Allow .unwrap() in tests only (common pattern in Rust testing).
 #[cfg_attr(test, allow(clippy::unwrap_used))]
 use titane_infinity::api_hub::copilot::{CopilotClient, CopilotRequest, Message, TestResult};
 use crate::security::permission_guard::PERMISSION_GUARD;
@@ -367,7 +367,10 @@ mod tests {
             }),
         };
 
-        let json = serde_json::to_string(&req).unwrap();
+        let json = match serde_json::to_string(&req) {
+            Ok(json) => json,
+            Err(e) => panic!("Failed to serialize CopilotGenerateRequest: {e}"),
+        };
         assert!(json.contains("test"));
     }
 

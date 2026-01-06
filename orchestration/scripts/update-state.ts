@@ -36,7 +36,7 @@ function updateTaskStatus(taskId: string, status: 'completed' | 'failed') {
 const [taskId, status] = process.argv.slice(2);
 
 if (!taskId || !status) {
-  console.log(chalk.yellow('Usage: npm run update <task-id> <completed|failed>'));
+  console.log(chalk.yellow('Usage: pnpm run update <task-id> <completed|failed>'));
   process.exit(1);
 }
 

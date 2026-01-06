@@ -61,7 +61,7 @@ check_environment || {
     log_error "Environnement incomplet"
     log_info "Installer les dépendances manquantes:"
     log_info "  - Rust: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"
-    log_info "  - Node.js: sudo apt install nodejs npm"
+    log_info "  - Node.js: sudo apt install nodejs (pnpm via corepack recommandé)"
     log_info "  - WebKit: bash scripts/fix/fix_webkit_dependencies.sh"
     exit 1
 }
@@ -120,7 +120,7 @@ log_header "4/7 - BUILD FRONTEND"
 clean_frontend
 
 # Installation
-install_npm_deps
+install_pnpm_deps
 
 # Build
 build_frontend

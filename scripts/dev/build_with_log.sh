@@ -9,7 +9,7 @@ mkdir -p runtime/dev/logs
 
 echo "[BUILD] Starting vite build at $(date -Is)" | tee -a runtime/dev/logs/vite.log
 
-# Run vite build via npm script and capture output
+# Run vite build via pnpm script and capture output
 pnpm run build 2>&1 | tee -a runtime/dev/logs/vite.log
 
 echo "[BUILD] Completed vite build at $(date -Is)" | tee -a runtime/dev/logs/vite.log

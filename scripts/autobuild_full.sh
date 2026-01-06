@@ -31,6 +31,20 @@ LOG_FILE="$LOGS_DIR/autobuild_$TIMESTAMP.log"
 MAX_RETRIES=3
 CLEANUP_ON_ERROR=true
 
+# Gestionnaire de paquets: pnpm-only (corepack préféré)
+PNPM=()
+resolve_pnpm_cmd() {
+    if command -v corepack >/dev/null 2>&1 && corepack pnpm --version >/dev/null 2>&1; then
+        PNPM=(corepack pnpm)
+        return 0
+    fi
+    if command -v pnpm >/dev/null 2>&1; then
+        PNPM=(pnpm)
+        return 0
+    fi
+    return 1
+}
+
 # ══════════════════════════════════════════════════════════════════
 # LOGGING & UTILITIES
 # ══════════════════════════════════════════════════════════════════
@@ -97,13 +111,16 @@ init_build() {
     # Check required commands
     log INFO "Vérification dépendances système..."
     check_command node
-    check_command npm
+    if ! resolve_pnpm_cmd; then
+        log ERROR "pnpm requis (corepack recommandé) mais introuvable"
+        exit 1
+    fi
     check_command cargo
     check_command rustc
 
     # Display versions
     log INFO "Node: $(node --version)"
-    log INFO "npm: $(npm --version)"
+    log INFO "pnpm: $(${PNPM[@]} --version)"
     log INFO "Rust: $(rustc --version)"
     log INFO "Cargo: $(cargo --version)"
 
@@ -140,8 +157,8 @@ cleanup_all() {
     log INFO "Suppression target Rust..."
     rm -rf src-tauri/target
 
-    log INFO "Nettoyage caches npm..."
-    npm cache verify || true
+    log INFO "Nettoyage store pnpm..."
+    "${PNPM[@]}" store prune >/dev/null 2>&1 || true
 
     log INFO "Nettoyage caches Cargo..."
     cargo clean --manifest-path src-tauri/Cargo.toml || true
@@ -171,13 +188,13 @@ verify_project() {
         log INFO "Tentative de vérification $((retry_count + 1))/$MAX_RETRIES..."
 
         # Run verification scripts
-        if pnpm run verify 2>&1 | tee -a "$LOG_FILE"; then
+        if "${PNPM[@]}" run verify 2>&1 | tee -a "$LOG_FILE"; then
             log SUCCESS "pnpm run verify OK"
         else
             log WARNING "pnpm run verify a échoué"
         fi
 
-        if pnpm run verify:cognitive 2>&1 | tee -a "$LOG_FILE"; then
+        if "${PNPM[@]}" run verify:cognitive 2>&1 | tee -a "$LOG_FILE"; then
             log SUCCESS "pnpm run verify:cognitive OK"
             verify_success=true
         else
@@ -209,16 +226,16 @@ build_frontend() {
 
     cd "$PROJECT_DIR"
 
-    log INFO "Installation dépendances npm..."
-    pnpm install --legacy-peer-deps 2>&1 | tee -a "$LOG_FILE"
+    log INFO "Installation dépendances pnpm..."
+    "${PNPM[@]}" install --legacy-peer-deps 2>&1 | tee -a "$LOG_FILE"
 
     log INFO "TypeScript type check..."
-    if ! pnpm run type-check 2>&1 | tee -a "$LOG_FILE"; then
+    if ! "${PNPM[@]}" run type-check 2>&1 | tee -a "$LOG_FILE"; then
         log WARNING "Type check a trouvé des erreurs (non bloquant)"
     fi
 
     log INFO "Build Vite..."
-    pnpm run build 2>&1 | tee -a "$LOG_FILE"
+    "${PNPM[@]}" run build 2>&1 | tee -a "$LOG_FILE"
 
     # Vérification du build
     if [ ! -d "dist" ]; then
@@ -268,7 +285,7 @@ build_tauri() {
 
     log INFO "pnpm run tauri:build..."
     local start_time=$(date +%s)
-    pnpm run tauri:build 2>&1 | tee -a "$LOG_FILE"
+    "${PNPM[@]}" run tauri:build 2>&1 | tee -a "$LOG_FILE"
     local end_time=$(date +%s)
     local duration=$((end_time - start_time))
 
@@ -305,7 +322,7 @@ Build Date: $(date)
 Build ID: $build_name
 OS: $OS_TYPE
 Node: $(node --version)
-npm: $(npm --version)
+pnpm: $(${PNPM[@]} --version 2>/dev/null || echo "non disponible")
 Rust: $(rustc --version)
 
 Logs: $LOG_FILE
@@ -333,10 +350,10 @@ auto_heal() {
 
     log INFO "Reset dépendances..."
     rm -rf node_modules package-lock.json
-    pnpm install --legacy-peer-deps
+    "${PNPM[@]}" install --legacy-peer-deps
 
     log INFO "Rebuild incrémental..."
-    pnpm run build || true
+    "${PNPM[@]}" run build || true
 
     log INFO "Reset Cargo..."
     cargo clean --manifest-path src-tauri/Cargo.toml

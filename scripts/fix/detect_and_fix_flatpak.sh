@@ -155,8 +155,8 @@ if ! command -v node &> /dev/null; then
     MISSING_TOOLS+=("node")
 fi
 
-if ! command -v npm &> /dev/null; then
-    MISSING_TOOLS+=("npm")
+if ! command -v corepack &> /dev/null && ! command -v pnpm &> /dev/null; then
+    MISSING_TOOLS+=("pnpm")
 fi
 
 if [ ${#MISSING_TOOLS[@]} -gt 0 ]; then
@@ -168,8 +168,9 @@ if [ ${#MISSING_TOOLS[@]} -gt 0 ]; then
         echo "  Rust : curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"
     fi
 
-    if [[ " ${MISSING_TOOLS[*]} " =~ " node " ]] || [[ " ${MISSING_TOOLS[*]} " =~ " npm " ]]; then
-        echo "  Node.js : sudo apt-get install nodejs npm"
+    if [[ " ${MISSING_TOOLS[*]} " =~ " node " ]] || [[ " ${MISSING_TOOLS[*]} " =~ " pnpm " ]]; then
+        echo "  Node.js (avec corepack) : utiliser l'outil repo (activate-node24.sh) ou installer Node.js récent"
+        echo "  pnpm : corepack enable && corepack prepare pnpm@latest --activate"
     fi
 
     echo ""
@@ -182,9 +183,9 @@ if [ ${#MISSING_TOOLS[@]} -gt 0 ]; then
             source "$HOME/.cargo/env"
         fi
 
-        if [[ " ${MISSING_TOOLS[*]} " =~ " node " ]] || [[ " ${MISSING_TOOLS[*]} " =~ " npm " ]]; then
+        if [[ " ${MISSING_TOOLS[*]} " =~ " node " ]] || [[ " ${MISSING_TOOLS[*]} " =~ " pnpm " ]]; then
             echo "Installation de Node.js..."
-            sudo apt-get install -y nodejs npm
+            echo "Veuillez installer Node.js récent, puis activer pnpm via corepack."
         fi
     else
         echo -e "${RED}❌ Outils manquants, abandon.${NC}"
@@ -195,7 +196,11 @@ else
     rustc --version
     cargo --version
     node --version
-    npm --version
+    if command -v corepack &> /dev/null; then
+        corepack pnpm --version
+    else
+        pnpm --version
+    fi
 fi
 echo ""
 
@@ -209,7 +214,7 @@ if [ ! -f "package.json" ]; then
     exit 1
 fi
 
-echo -e "${GREEN}▶ Installation des dépendances npm...${NC}"
+echo -e "${GREEN}▶ Installation des dépendances pnpm...${NC}"
 pnpm install
 
 echo ""

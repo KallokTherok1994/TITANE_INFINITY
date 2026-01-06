@@ -125,8 +125,12 @@ echo ""
 echo -e "${GREEN}🚀 Démarrage du serveur...${NC}"
 echo ""
 
-# Lancer Vite directement avec npx
-HOST=$SERVER_HOST PORT=$SERVER_PORT npx vite --port $SERVER_PORT --host $SERVER_HOST > "$LOG_FILE" 2>&1 &
+# Lancer Vite via pnpm (pnpm-only)
+if command -v corepack >/dev/null 2>&1; then
+HOST=$SERVER_HOST PORT=$SERVER_PORT corepack pnpm exec vite --port $SERVER_PORT --host $SERVER_HOST > "$LOG_FILE" 2>&1 &
+else
+HOST=$SERVER_HOST PORT=$SERVER_PORT pnpm exec vite --port $SERVER_PORT --host $SERVER_HOST > "$LOG_FILE" 2>&1 &
+fi
 SERVER_PID=$!
 
 echo -e "${YELLOW}⏳ Attente du démarrage du serveur (PID: $SERVER_PID)...${NC}"

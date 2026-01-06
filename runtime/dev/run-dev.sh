@@ -2,10 +2,13 @@
 # TITANE∞ — Run DEV RUNTIME (Development)
 # Usage: ./runtime/dev/run-dev.sh
 
-set -e
+set -euo pipefail
 
 # Navigate to project root
 cd "$(dirname "$0")/../.."
+
+# Ensure repo-bundled Node/PNPM tools are available
+export PATH="$PWD/.tools/node/current/bin:$PATH"
 
 # Run cleanup script first
 echo "🧹 Pre-launch cleanup..."
@@ -16,11 +19,11 @@ echo "🟢 TITANE∞ — Starting DEV RUNTIME"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
-# Check we're on dev or feature/* branch
+# Safety: block running dev runtime on stable-runtime branch
 CURRENT_BRANCH=$(git branch --show-current)
 if [[ $CURRENT_BRANCH == "stable-runtime" ]]; then
     echo "❌ ERROR: You are on stable-runtime branch"
-    echo "Development must be done on 'dev' or 'feature/*' branches"
+    echo "Dev runtime must NOT be launched from 'stable-runtime'"
     echo ""
     echo "Run: ./scripts/git/switch-dev.sh"
     exit 1
@@ -64,4 +67,26 @@ echo ""
 # Note: TAURI-ONLY: build.beforeDevCommand génère dist (aucun serveur HTTP).
 # You can pass extra flags to tauri dev via this script, e.g.:
 #   ./runtime/dev/run-dev.sh --features full ollama
-npm run dev:tauri -- --no-watch "$@" 2>&1 | tee runtime/dev/logs/tauri.log
+if command -v corepack &> /dev/null; then
+    set +e
+    corepack pnpm run dev:tauri -- "$@" 2>&1 | tee runtime/dev/logs/tauri.log
+    cmd_ec=${PIPESTATUS[0]}
+    set -e
+elif command -v pnpm &> /dev/null; then
+    set +e
+    pnpm run dev:tauri -- "$@" 2>&1 | tee runtime/dev/logs/tauri.log
+    cmd_ec=${PIPESTATUS[0]}
+    set -e
+elif [ -x "$PWD/.tools/node/current/bin/pnpm" ]; then
+    "$PWD/.tools/node/current/bin/pnpm" run dev:tauri -- "$@" 2>&1 | tee runtime/dev/logs/tauri.log
+else
+    echo "❌ ERROR: pnpm introuvable (corepack/pnpm/.tools/node/current/bin/pnpm)"
+    exit 1
+fi
+
+# 130: SIGINT (Ctrl+C) / 143: SIGTERM — consider normal shutdown for dev runtime.
+if [ "${cmd_ec:-0}" -eq 0 ] || [ "${cmd_ec:-0}" -eq 130 ] || [ "${cmd_ec:-0}" -eq 143 ]; then
+    exit 0
+fi
+
+exit "$cmd_ec"

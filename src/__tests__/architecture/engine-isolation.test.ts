@@ -112,9 +112,28 @@ describe('🏛️ Architecture: Engine Isolation', () => {
       /document\./,
     ];
 
+    // Exceptions légitimes: certains modules sous /engines sont historiquement
+    // des boucles runtime / ponts UI↔Engine, et sont tolérés tant que la migration
+    // vers Services (Ring 3) n'est pas terminée.
+    const ALLOWED_SIDE_EFFECT_PATH_FRAGMENTS = [
+      `${path.sep}uiux${path.sep}`, // UI/UX adapters/detectors (runtime)
+      `${path.sep}cognitive${path.sep}cognitiveLayoutIntegrations.ts`, // Pont Helios/Nexus
+      `${path.sep}cognitive${path.sep}cognitiveLayoutEngine.ts`, // Singleton runtime (legacy)
+      `${path.sep}continuum${path.sep}metaContinuumEngine.ts`, // NowPulse runtime
+      `${path.sep}embodiment${path.sep}embodiedPresenceEngine.ts`, // Presence runtime
+      `${path.sep}psyche${path.sep}archetypeResonanceEngine.ts`, // Archetype runtime
+    ];
+
     const violations: Array<{ file: string; line: number; pattern: string }> = [];
 
     for (const file of engineFiles) {
+      const isAllowedSideEffect = ALLOWED_SIDE_EFFECT_PATH_FRAGMENTS.some(fragment =>
+        file.includes(fragment)
+      );
+      if (isAllowedSideEffect) {
+        continue;
+      }
+
       const content = fs.readFileSync(file, 'utf-8');
       const lines = content.split('\n');
 

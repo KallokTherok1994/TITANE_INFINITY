@@ -24,6 +24,16 @@ const prohibited = (process.env.COPILOT_XS_PROHIBITED ?? DEFAULT_PROHIBITED.join
   .map(s => s.trim())
   .filter(Boolean);
 
+const prohibitedAllowRegexRaw = process.env.COPILOT_XS_PROHIBITED_ALLOW_REGEX ?? '';
+const prohibitedAllowRegex = prohibitedAllowRegexRaw
+  ? new RegExp(prohibitedAllowRegexRaw)
+  : null;
+
+const prohibitedAllowPathRegexRaw = process.env.COPILOT_XS_PROHIBITED_ALLOW_PATH_REGEX ?? '';
+const prohibitedAllowPathRegex = prohibitedAllowPathRegexRaw
+  ? new RegExp(prohibitedAllowPathRegexRaw)
+  : null;
+
 // Validation scope:
 // - staged (default): validate only git staged files (best for established repos)
 // - all: walk roots and validate everything
@@ -159,9 +169,22 @@ async function validateFile(filePath) {
 
   const testLike = isTestLikePath(filePath);
 
-  if (!(allowProhibitedInTests && testLike)) {
+  const normalizedPath = filePath.split(path.sep).join('/');
+  const skipProhibitedScanForPath = prohibitedAllowPathRegex
+    ? prohibitedAllowPathRegex.test(normalizedPath)
+    : false;
+
+  if (!(allowProhibitedInTests && testLike) && !skipProhibitedScanForPath) {
+    const lines = content.split(/\r?\n/);
     for (const term of prohibited) {
-      if (content.includes(term)) {
+      let found = false;
+      for (const line of lines) {
+        if (!line.includes(term)) continue;
+        if (prohibitedAllowRegex && prohibitedAllowRegex.test(line)) continue;
+        found = true;
+        break;
+      }
+      if (found) {
         violations.push({ type: 'prohibited', term, filePath });
       }
     }

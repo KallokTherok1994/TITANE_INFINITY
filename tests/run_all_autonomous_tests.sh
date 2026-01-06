@@ -23,7 +23,7 @@ run_test_suite() {
 
     echo -e "${YELLOW}Running: ${suite_name}${NC}"
 
-    if npm test -- "$test_path" 2>&1 | tee /tmp/test_output.log; then
+    if corepack pnpm test -- "$test_path" 2>&1 | tee /tmp/test_output.log; then
         PASSED=$(grep -c "PASS" /tmp/test_output.log || echo "0")
         FAILED=$(grep -c "FAIL" /tmp/test_output.log || echo "0")
 

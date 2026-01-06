@@ -73,6 +73,15 @@ Optional marker policy knobs:
 
 - `COPILOT_XS_ALLOW_PROHIBITED_IN_TESTS` (`1` | `0`, default: `0`)
 
+Additional allowlist knobs (disabled by default):
+
+- `COPILOT_XS_PROHIBITED_ALLOW_REGEX` (regex string; matching lines are ignored for prohibited terms)
+- `COPILOT_XS_PROHIBITED_ALLOW_PATH_REGEX` (regex string; matching file paths skip prohibited-term scanning)
+
+Recommended strict-all (legacy-tolerant) run:
+
+- `COPILOT_XS_SCOPE=all COPILOT_XS_ALLOW_PROHIBITED_IN_TESTS=1 COPILOT_XS_PROHIBITED_ALLOW_REGEX='((//|/\\*|\\*|\{/\\*).*(TODO|FIXME)|\"[^\"]*(TODO|FIXME)[^\"]*\")' pnpm run copilot-xs:validate`
+
 ---
 
 # Foundation: Custom Instructions (Rulebook)

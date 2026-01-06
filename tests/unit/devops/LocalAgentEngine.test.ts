@@ -192,7 +192,7 @@ describe('LocalAgentEngine', () => {
       const action = await LocalAgent.generateBuildAction();
 
       const buildCommand = action.commands?.find(
-        cmd => cmd.command === 'npm' || cmd.command === 'cargo'
+        cmd => cmd.command === 'corepack' || cmd.command === 'cargo'
       );
       expect(buildCommand).toBeDefined();
     });
@@ -233,7 +233,10 @@ describe('LocalAgentEngine', () => {
       const action = await LocalAgent.generateTestAction();
 
       const testCommand = action.commands?.find(
-        cmd => cmd.command === 'npm' && cmd.args?.includes('test')
+        cmd =>
+          cmd.command === 'corepack' &&
+          cmd.args?.includes('pnpm') &&
+          cmd.args?.includes('test')
       );
       expect(testCommand).toBeDefined();
     });

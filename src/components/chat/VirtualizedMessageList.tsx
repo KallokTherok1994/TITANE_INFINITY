@@ -11,7 +11,8 @@
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * INSTALLATION REQUIRED:
- *   npm install react-window @types/react-window
+ *   corepack pnpm add react-window
+ *   corepack pnpm add -D @types/react-window
  *
  * USAGE:
  *   Replace MessageList with VirtualizedMessageList in Chat.tsx
@@ -72,7 +73,8 @@ export const VirtualizedMessageList = React.memo(function VirtualizedMessageList
           typeof msg.role === 'string' &&
           typeof msg.content === 'string' &&
           typeof msg.timestamp === 'number' &&
-          msg.content.length > 0 &&
+          // Allow empty content for assistant streaming placeholders (OMEGA)
+          (msg.content.length > 0 || msg.role === 'assistant') &&
           msg.content.length < 100000
       ),
     [messages]

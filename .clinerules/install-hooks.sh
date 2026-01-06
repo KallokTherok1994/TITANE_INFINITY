@@ -13,7 +13,14 @@ echo "📦 Vérification de Cline CLI..."
 if ! command -v cline &> /dev/null; then
     echo "❌ Cline CLI n'est pas installé"
     echo "Installation..."
-    npm install -g cline
+    if command -v corepack >/dev/null 2>&1; then
+        corepack pnpm add -g cline
+    elif command -v pnpm >/dev/null 2>&1; then
+        pnpm add -g cline
+    else
+        echo "❌ pnpm requis (corepack/pnpm introuvable)." >&2
+        exit 1
+    fi
     echo "✅ Cline CLI installé"
 else
     echo "✅ Cline CLI déjà installé"
