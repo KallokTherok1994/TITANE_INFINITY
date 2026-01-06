@@ -1,12 +1,12 @@
 /**
  * TITANE∞ v8.0 — POSTCSS CONFIGURATION
  *
- * Tailwind CSS + Autoprefixer
+ * Tailwind CSS v4 + Autoprefixer (ES Module syntax)
  */
 
 export default {
   plugins: {
-    tailwindcss: {},
+    '@tailwindcss/postcss': {},
     autoprefixer: {},
   },
 };

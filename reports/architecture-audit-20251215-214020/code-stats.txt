@@ -1,5 +1,0 @@
-Lines of code:
-  447733 total
-
-Files:
-1363

@@ -1,8 +1,0 @@
-     41 ./avatar/appearance_commands.rs
-      3 ./commands/diagnostic.rs
-      2 ./commands/hybrid.rs
-      1 ./singularity_state/commands.rs
-      1 ./multimodal/commands.rs
-      1 ./devtools/docs_engine.rs
-      1 ./commands/devtools.rs
-      1 ./commands/core_system.rs

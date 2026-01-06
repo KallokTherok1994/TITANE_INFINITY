@@ -10,7 +10,9 @@ import React from 'react';
 
 // Cleanup after each test automatically
 afterEach(() => {
-  cleanup();
+  if (typeof cleanup === 'function') {
+    cleanup();
+  }
 });
 
 // ═══════════════════════════════════════════════════════════════════

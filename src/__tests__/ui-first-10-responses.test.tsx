@@ -10,7 +10,10 @@ import { MessageList } from '@/components/chat/MessageList';
 
 function TestHost(props: { onReady: (api: any) => void }) {
   const api = useChat();
-  React.useEffect(() => props.onReady(api), [api]);
+  React.useEffect(() => {
+    props.onReady(api);
+    // Return undefined explicitly to avoid cleanup function issues
+  }, [api, props]);
   return null;
 }
 
