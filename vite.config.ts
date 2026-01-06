@@ -9,11 +9,15 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
+import { fileURLToPath } from 'node:url';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { visualizer } from 'rollup-plugin-visualizer';
 import viteCompression from 'vite-plugin-compression';
 import { injectManifest } from 'workbox-build';
 import type { Plugin, ResolvedConfig } from 'vite';
+import type { RollupLog } from 'rollup';
+
+const ROOT_DIR = fileURLToPath(new URL('.', import.meta.url));
 
 // P2-B: Workbox Service Worker plugin
 function workboxPlugin(): Plugin {
@@ -62,8 +66,8 @@ function workboxPlugin(): Plugin {
 // P2-A: Brotli compression for -15% bundle size
 // https://vitejs.dev/config/
 export default defineConfig({
-  root: __dirname,
-  publicDir: resolve(__dirname, 'public'),
+  root: ROOT_DIR,
+  publicDir: resolve(ROOT_DIR, 'public'),
   base: './',
 
   // 🔧 Server configuration with proper headers
@@ -140,20 +144,20 @@ export default defineConfig({
 
   resolve: {
     alias: {
-      '@': resolve(__dirname, './src'),
-      '@app': resolve(__dirname, './src/app'),
-      '@pages': resolve(__dirname, './src/pages'),
-      '@features': resolve(__dirname, './src/features'),
-      '@components': resolve(__dirname, './src/components'),
-      '@ui': resolve(__dirname, './src/ui'),
-      '@hooks': resolve(__dirname, './src/hooks'),
-      '@services': resolve(__dirname, './src/services'),
-      '@stores': resolve(__dirname, './src/stores'),
-      '@themes': resolve(__dirname, './src/themes'),
-      '@utils': resolve(__dirname, './src/utils'),
-      '@types': resolve(__dirname, './src/types'),
-      '@assets': resolve(__dirname, './src/assets'),
-      '@styles': resolve(__dirname, './src/styles'),
+      '@': resolve(ROOT_DIR, './src'),
+      '@app': resolve(ROOT_DIR, './src/app'),
+      '@pages': resolve(ROOT_DIR, './src/pages'),
+      '@features': resolve(ROOT_DIR, './src/features'),
+      '@components': resolve(ROOT_DIR, './src/components'),
+      '@ui': resolve(ROOT_DIR, './src/ui'),
+      '@hooks': resolve(ROOT_DIR, './src/hooks'),
+      '@services': resolve(ROOT_DIR, './src/services'),
+      '@stores': resolve(ROOT_DIR, './src/stores'),
+      '@themes': resolve(ROOT_DIR, './src/themes'),
+      '@utils': resolve(ROOT_DIR, './src/utils'),
+      '@types': resolve(ROOT_DIR, './src/types'),
+      '@assets': resolve(ROOT_DIR, './src/assets'),
+      '@styles': resolve(ROOT_DIR, './src/styles'),
       // ✅ FIX: Removed Tauri API aliases - Let Vite resolve them naturally
       // Tauri v2 provides these modules correctly without manual aliasing
       // Polyfills for Node.js modules in browser
@@ -191,6 +195,25 @@ export default defineConfig({
         propertyReadSideEffects: false,
         tryCatchDeoptimization: false,
       },
+
+      // Avoid noisy warnings from known-safe/3rd-party bundles.
+      // - EMPTY_BUNDLE "monitoring": typically caused by forced chunk naming + tree-shaking.
+      // - EVAL from onnxruntime-web: upstream bundle uses eval; we don't patch vendored code here.
+      onwarn: (warning: RollupLog, warn: (warning: RollupLog) => void) => {
+        if (warning.code === 'EMPTY_BUNDLE' && warning.message.includes('"monitoring"')) {
+          return;
+        }
+
+        const locFile = warning.loc?.file;
+        const isOnnxRuntime =
+          (typeof locFile === 'string' && locFile.includes('onnxruntime-web')) ||
+          warning.message.includes('onnxruntime-web');
+        if (warning.code === 'EVAL' && isOnnxRuntime) {
+          return;
+        }
+
+        warn(warning);
+      },
       output: {
         manualChunks: id => {
           // Vendors
@@ -204,6 +227,18 @@ export default defineConfig({
             }
             if (id.includes('@tauri-apps')) {
               return 'tauri-vendor';
+            }
+            // 🚀 Split: ONNX Runtime (very large)
+            if (id.includes('onnxruntime-web')) {
+              return 'onnxruntime';
+            }
+            // 🚀 Split: Three.js (large)
+            if (id.includes('/three/') || id.includes('three')) {
+              return 'three-vendor';
+            }
+            // 🚀 Split: TanStack Query (moderately large)
+            if (id.includes('@tanstack/react-query')) {
+              return 'react-query';
             }
             if (id.includes('framer-motion')) {
               return 'motion';
@@ -220,6 +255,13 @@ export default defineConfig({
             if (id.includes('recharts')) {
               return 'charts';
             }
+            // Optional / heavy UI libs
+            if (id.includes('react-chrono')) {
+              return 'chrono';
+            }
+            if (id.includes('react-d3-tree')) {
+              return 'd3-tree';
+            }
             if (id.includes('markdown') || id.includes('remark')) {
               return 'markdown';
             }
@@ -229,10 +271,6 @@ export default defineConfig({
             // Web vitals
             if (id.includes('web-vitals')) {
               return 'web-vitals';
-            }
-            // 🚀 OPTIMIZATION: Sentry séparé (lazy-loadable en production)
-            if (id.includes('@sentry')) {
-              return 'monitoring';
             }
             // Chart.js séparé (gros et optionnel)
             if (id.includes('chart.js') || id.includes('chartjs')) {
@@ -324,8 +362,8 @@ export default defineConfig({
     // 🚀 OPTIMIZATION v24.7.7: Faster minification with esbuild (removed terser)
     // minify: 'esbuild' configured above - terser options removed for speed
 
-    // Réduit à 800KB pour forcer plus de découpage
-    chunkSizeWarningLimit: 800,
+    // Réduit à 1600KB pour limiter le bruit de warning tout en gardant la pression sur le découpage
+    chunkSizeWarningLimit: 1600,
     // Optimisations supplémentaires
     target: 'esnext',
     cssCodeSplit: true,
