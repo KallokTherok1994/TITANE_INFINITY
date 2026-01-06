@@ -5,7 +5,7 @@
   "identifier": "com.titane.infinity.stable",
   "build": {
     "beforeDevCommand": "",
-	"beforeBuildCommand": "corepack pnpm exec vite build",
+    "beforeBuildCommand": "npx vite build",
     "frontendDist": "../dist"
   },
   "bundle": {
