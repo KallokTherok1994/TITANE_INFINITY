@@ -108,6 +108,8 @@ const readStoredPreferredProvider = (): ProviderPreference => {
   }
 
   const stored = window.localStorage.getItem(PREFERRED_PROVIDER_STORAGE_KEY);
+  // ✅ v26.2.3: Mode cascade (auto) par défaut - permet au backend de choisir
+  // le meilleur provider disponible (Gemini → Ollama → Local fallback)
   return isProviderPreference(stored) ? stored : 'auto';
 };
 
@@ -311,7 +313,15 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
   const PREFERRED_PROVIDER_STORAGE_KEY = 'omega-chat-preferred-provider';
   const [preferredProviderState, setPreferredProviderState] =
-    useState<ProviderPreference>(() => readStoredPreferredProvider());
+    useState<ProviderPreference>(() => {
+      // ✅ v26.2.3: Force 'auto' (cascade mode) par défaut
+      const stored = readStoredPreferredProvider();
+      // Si aucune préférence stockée, forcer 'auto' dans localStorage
+      if (typeof window !== 'undefined' && !window.localStorage.getItem(PREFERRED_PROVIDER_STORAGE_KEY)) {
+        window.localStorage.setItem(PREFERRED_PROVIDER_STORAGE_KEY, 'auto');
+      }
+      return stored;
+    });
   const [lastProviderUsed, setLastProviderUsed] = useState<AIProviderName | null>(null);
   const debugEntriesRef = useRef<ChatDebugEntry[]>([]);
 
@@ -1355,22 +1365,31 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
             } satisfies ChatEngineResponse['omegaMetadata'];
           })();
 
-          finalResponse = {
-            content: chatServiceResponse.content,
-            provider: mappedProvider,
-            timestamp: Date.now(),
-            mode: currentModeState,
-            contextUsed: [],
-            suggestions: [],
-            metadata: chatServiceResponse.metadata,
-            omegaMetadata: resolvedOmegaMetadata,
-          } satisfies ChatEngineResponse;
-
           const legacyContent =
             typeof chatServiceResponse.content === 'string'
               ? chatServiceResponse.content
               : '';
-          aggregatedContent = legacyContent.trim().length > 0 ? legacyContent : '';
+          
+          // ✅ v26.2.3 CRITICAL FIX: Détecter réponse vide du backend
+          if (legacyContent.trim().length === 0) {
+            chatLogger.warn('⚠️ Backend returned empty content - triggering fallback');
+            // Ne pas créer finalResponse, laisser le fallback s'activer
+            finalResponse = null;
+            aggregatedContent = '';
+          } else {
+            finalResponse = {
+              content: chatServiceResponse.content,
+              provider: mappedProvider,
+              timestamp: Date.now(),
+              mode: currentModeState,
+              contextUsed: [],
+              suggestions: [],
+              metadata: chatServiceResponse.metadata,
+              omegaMetadata: resolvedOmegaMetadata,
+            } satisfies ChatEngineResponse;
+            
+            aggregatedContent = legacyContent;
+          }
         }
 
         if (!finalResponse) {
@@ -1394,8 +1413,82 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
             generatedContent.trim().length > 0 ? generatedContent : aggregatedContent;
         }
 
+        // ✅ v26.2.3 - CRITICAL FIX: Fallback robuste si aucun provider disponible
         if (!finalResponse) {
-          throw new Error('Pipeline returned no response');
+          chatLogger.warn('⚠️ No finalResponse - creating fallback response');
+          
+          // Déterminer le message approprié selon la cause
+          const fallbackContent = (() => {
+            if (chatAttempts.length > 0) {
+              const allFailed = chatAttempts.every(attempt => !attempt.success);
+              if (allFailed) {
+                const ollamaAttempt = chatAttempts.find(a => a.provider === 'ollama');
+                const hasOllamaTimeout = ollamaAttempt?.error?.includes('timed out') || 
+                                       ollamaAttempt?.error?.includes('ECONNREFUSED');
+                
+                if (hasOllamaTimeout) {
+                  return `🤖 **TITANE∞ — Configuration IA Requise**
+
+Aucun provider IA n'est actuellement disponible pour traiter ta demande.
+
+**Providers testés :**
+${chatAttempts.map(a => `- ${a.provider}: ${a.success ? '✅' : '❌ ' + (a.error || 'échec')}`).join('\n')}
+
+**Solutions recommandées :**
+
+1. **Installer Ollama (local, gratuit, privé)** :
+   \`\`\`bash
+   curl -fsSL https://ollama.com/install.sh | sh
+   ollama pull llama3.1:latest
+   \`\`\`
+
+2. **Ou configurer une clé API cloud** :
+   - OpenAI, Gemini, ou Anthropic
+   - Via Settings → AI Providers → API Keys
+
+**Note** : Le blocage de sécurité Ollama a été résolu. Il faut maintenant installer un provider IA pour utiliser le chat.
+
+📚 **Documentation complète** : \`docs/OLLAMA_GUIDE.md\``;
+                }
+              }
+            }
+            
+            return `🤖 **TITANE∞ — Initialisation IA**
+
+Le système IA est en cours de configuration. Aucune réponse n'a pu être générée pour le moment.
+
+**Pour activer le chat IA** :
+- Installer Ollama (local) : \`docs/OLLAMA_GUIDE.md\`
+- Ou configurer une clé API cloud dans Settings
+
+Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
+          })();
+          
+          finalResponse = {
+            content: fallbackContent,
+            provider: 'titane-local',
+            timestamp: Date.now(),
+            mode: currentModeState,
+            contextUsed: [],
+            suggestions: [
+              'Comment installer Ollama ?',
+              'Quels sont les providers IA disponibles ?',
+              'Comment configurer une clé API cloud ?'
+            ],
+            metadata: {
+              fallbackReason: 'no_provider_available',
+              attemptedProviders: attemptedProviders,
+              chatAttempts: chatAttempts,
+            }
+          } satisfies ChatEngineResponse;
+          
+          aggregatedContent = fallbackContent;
+          chatLogger.info('✅ Fallback response created for no provider scenario');
+        }
+
+        // ✅ CRITICAL: À ce stade, finalResponse est garanti non-null
+        if (!finalResponse) {
+          throw new Error('CRITICAL: finalResponse should never be null at this point');
         }
 
         const provider = finalResponse.provider || 'tauri-backend';

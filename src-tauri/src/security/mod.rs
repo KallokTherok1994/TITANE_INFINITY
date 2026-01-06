@@ -117,6 +117,9 @@ impl Default for SecurityPolicy {
                 "ffplay".into(), // v19.1.0: FFmpeg player (universal)
                 // Audio players - macOS
                 "afplay".into(), // v19.1.0: macOS native audio player
+                // AI/ML engines
+                "ollama".into(), // v26.2.3: Ollama AI local inference
+                "curl".into(),   // v26.2.3: HTTP requests for AI APIs
                 // Utilities
                 "which".into(), // Command detection
             ],
