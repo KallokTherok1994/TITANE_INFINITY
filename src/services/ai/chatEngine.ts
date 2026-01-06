@@ -39,7 +39,6 @@ import type {
 import { inputValidator } from './inputValidator';
 import { chatModes, type ChatModeConfig } from './chatModes';
 import { chatValidator } from '../chatValidator';
-import { chatEngineCommands } from '@/services/tauri';
 import type { ChatMode } from './chatTypes';
 // Re-export for convenience
 export type { ChatMode } from './chatTypes';
@@ -931,6 +930,8 @@ Que souhaites-tu explorer ?`;
     try {
       pipelineSteps.push('backend-dispatch');
 
+      const { chatEngineCommands } = await import('@/services/tauri/chatEngine.commands');
+
       const payload: ChatEngineRequestArgs = {
         conversationId: this.getConversationId(finalConfig.mode),
         userMessage: validatedMessage,
@@ -1131,6 +1132,8 @@ Que souhaites-tu explorer ?`;
     };
 
     try {
+      const { chatEngineCommands } = await import('@/services/tauri/chatEngine.commands');
+
       chunkUnlisten = await chatEngineCommands.onStreamChunk(chunk => {
         if (!conversationId || !messageId) {
           return;

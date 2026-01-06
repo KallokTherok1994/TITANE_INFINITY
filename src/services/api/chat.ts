@@ -10,6 +10,7 @@ import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 import { invokeWithRetry, LONG_COMMAND_OPTIONS } from '@/lib/serviceInvoker';
 import { monitoring } from '@/monitoring';
 import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
+import { chatEngine } from '@/services/ai/chatEngine';
 
 /**
  * Type pour l'ID de conversation OMEGA
@@ -216,24 +217,51 @@ class ChatService {
       throw new Error('conversationId est requis pour utiliser le pipeline OMEGA.');
     }
 
-    // 🛡️ BROWSER MODE PROTECTION - Fallback immédiat
+    // 🛡️ BROWSER MODE PROTECTION - Backend web (chatEngine) si Tauri indisponible
     if (!isTauriRuntimeAvailable()) {
-      console.warn(
-        '[ChatService-OMEGA] Tauri unavailable - using browser fallback response'
-      );
-      return {
-        content: `Mode navigateur: Le backend TITANE∞ n'est pas disponible. Pour utiliser le chat avec IA, veuillez lancer l'application native.\n\nVotre message: "${message.substring(0, 100)}${message.length > 100 ? '..."' : '"'}`,
-        finishReason: 'browser_fallback',
-        model: 'titane-web-fallback',
-        provider: 'browser-mode',
-        latencyMs: 0,
-        metadata: {
-          source: 'browser-fallback',
-          messageId: `fallback-${Date.now()}`,
-          timestamp: Date.now(),
-          conversationId,
-        },
-      };
+      const startedAt = Date.now();
+      console.warn('[ChatService-OMEGA] Tauri unavailable - using chatEngine (web backend)');
+
+      try {
+        const engineResponse = await chatEngine.generate(message, [], { mode: 'default' });
+        return {
+          content: engineResponse.content,
+          finishReason:
+            typeof engineResponse.metadata?.finishReason === 'string'
+              ? engineResponse.metadata.finishReason
+              : 'stop',
+          model: engineResponse.model ?? 'titane-local-v19.2Ω',
+          provider: engineResponse.provider,
+          latencyMs: Date.now() - startedAt,
+          metadata: {
+            source: 'browser-chatEngine',
+            messageId: `web-${Date.now()}`,
+            timestamp: Date.now(),
+            conversationId,
+            selectedProvider: config?.provider ?? 'auto',
+          },
+          omegaMetadata:
+            typeof engineResponse.omegaMetadata === 'object' && engineResponse.omegaMetadata
+              ? (engineResponse.omegaMetadata as Record<string, unknown>)
+              : undefined,
+        };
+      } catch (error) {
+        console.error('[ChatService-OMEGA] Browser chatEngine failure - fallback response', error);
+        return {
+          content: `Mode navigateur: backend web indisponible (erreur interne).\n\nVotre message: "${message.substring(0, 100)}${message.length > 100 ? '..."' : '"'}`,
+          finishReason: 'browser_fallback',
+          model: 'titane-web-fallback',
+          provider: 'browser-mode',
+          latencyMs: Date.now() - startedAt,
+          metadata: {
+            source: 'browser-fallback',
+            messageId: `fallback-${Date.now()}`,
+            timestamp: Date.now(),
+            conversationId,
+            selectedProvider: config?.provider ?? 'auto',
+          },
+        };
+      }
     }
 
     const startedAt = Date.now();

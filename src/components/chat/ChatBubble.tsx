@@ -682,13 +682,23 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
               ) : (
                 messages.map((msg, idx) => (
                   <motion.div
-                    key={idx}
+                    key={msg.metadata?.uiId ? String(msg.metadata.uiId) : idx}
                     className={`chat-bubble-message ${msg.role}`}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.05 }}
                   >
-                    <div className="message-content">{msg.content}</div>
+                      {msg.role === 'assistant' &&
+                      (msg.content ?? '').trim().length === 0 &&
+                      msg.metadata?.status === 'streaming' ? (
+                        <div className="message-content typing" aria-label="Réponse en cours">
+                          <span />
+                          <span />
+                          <span />
+                        </div>
+                      ) : (
+                        <div className="message-content">{msg.content}</div>
+                      )}
                   </motion.div>
                 ))
               )}

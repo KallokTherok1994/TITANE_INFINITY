@@ -2,6 +2,41 @@
   "snapshots": [],
   "logs": [
     {
+      "id": "ui-1767664795499-3sxezgh3",
+      "timestamp": 1767664795499,
+      "level": "Error",
+      "module": "frontend.fatal",
+      "message": "Erreur UI (non capturée): Importing a module script failed. (http://127.0.0.1:5173/.vite-cache/deps/chunk-GX3VV2FZ.js?v=9ed7acde:903:34)"
+    },
+    {
+      "id": "ui-1767664636023-fcvwpah1",
+      "timestamp": 1767664636023,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1767664634447-1fovq81r",
+      "timestamp": 1767664634447,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1767658128797-02dpaejj",
+      "timestamp": 1767658128797,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1767654558719-gajlp7ov",
+      "timestamp": 1767654558719,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
       "id": "ui-1767422530282-m8s8xdqo",
       "timestamp": 1767422530282,
       "level": "Info",
@@ -2432,7 +2467,7 @@
   "knowledge": [],
   "rituals": [],
   "metadata": {
-    "last_validation_ts": 1767422530450,
+    "last_validation_ts": 1767664795504,
     "last_compaction_ts": null
   }
 }
