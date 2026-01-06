@@ -22,6 +22,9 @@ import { attentionEngine, type AttentionState } from '@/services/voice/attention
 import { interruptionController } from '@/services/voice/interruptionController';
 import { adaptiveThresholdEngine } from '@/services/voice/adaptiveThresholdEngine';
 import type { StreamingResult } from '@/services/audio/audioStreaming';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('useActiveListening');
 
 /**
  * Configuration de l'écoute active

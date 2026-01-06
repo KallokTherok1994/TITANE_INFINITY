@@ -38,6 +38,9 @@ import {
   type FullDuplexState,
 } from '@/services/voice/fullDuplexOrchestrator';
 import { haloEngine } from '@/services/voice/haloEngine'; // ✅ v∞.7 Halo sync
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('useVoiceEngine');
 
 type MicrophoneProbeState = {
   lastAt: number;
@@ -267,7 +270,7 @@ export function useVoiceEngine(
           }));
         }
       } catch (err) {
-        console.error('[useVoiceEngine] Init error:', err);
+        logger.error('Init error:', err);
       }
     };
 
@@ -318,7 +321,7 @@ export function useVoiceEngine(
   const handleError = useCallback(
     (error: Error | string, context: string) => {
       const message = error instanceof Error ? error.message : error;
-      console.error(`[useVoiceEngine] ${context}:`, message);
+      logger.error(`${context}:`, message);
 
       if (mountedRef.current) {
         setStatus(prev => ({
@@ -341,7 +344,7 @@ export function useVoiceEngine(
     try {
       // ✅ ANTI-DEBOUNCE: Prevent multiple calls
       if (status.isRecording) {
-        console.warn('[useVoiceEngine] Already recording, ignoring duplicate call');
+        logger.warn('Already recording, ignoring duplicate call');
         return;
       }
 
@@ -357,7 +360,7 @@ export function useVoiceEngine(
       }));
 
       await voiceService.startRecording({ language });
-      console.log('[useVoiceEngine] ✅ Recording started');
+      logger.debug('Recording started');
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : String(err);
 
@@ -366,7 +369,7 @@ export function useVoiceEngine(
         errorMsg.includes('Recording already in progress') ||
         errorMsg.includes('AlreadyRecording')
       ) {
-        console.error('[useVoiceEngine] 🔥 Backend stuck, applying force reset...');
+        logger.error('Backend stuck, applying force reset...');
 
         try {
           // Force reset backend + frontend state
@@ -382,11 +385,9 @@ export function useVoiceEngine(
             lastError: 'Voice engine was reset due to stuck state',
           }));
 
-          console.log(
-            '[useVoiceEngine] ✅ Force reset complete, ready to retry manually'
-          );
+          logger.debug('Force reset complete, ready to retry manually');
         } catch (resetErr) {
-          console.error('[useVoiceEngine] ❌ Force reset failed:', resetErr);
+          logger.error('Force reset failed:', resetErr);
           handleError(
             resetErr instanceof Error ? resetErr : new Error(String(resetErr)),
             'forceReset'
@@ -423,7 +424,7 @@ export function useVoiceEngine(
     try {
       // ✅ SAFE GUARD: Only stop if recording
       if (!status.isRecording) {
-        console.warn('[useVoiceEngine] Not recording, returning empty transcript');
+        logger.warn('Not recording, returning empty transcript');
         return '';
       }
 
@@ -436,7 +437,7 @@ export function useVoiceEngine(
       const result = await voiceService.stopRecording();
       const transcript = result.transcript || '';
 
-      console.log('[useVoiceEngine] ✅ Recording stopped, transcript:', transcript);
+      logger.debug('Recording stopped, transcript:', transcript);
 
       if (mountedRef.current) {
         setStatus(prev => ({
@@ -472,7 +473,7 @@ export function useVoiceEngine(
   const processTurnWithAI = useCallback(
     async (transcript: string) => {
       try {
-        console.log('[useVoiceEngine] 🎙️ Processing turn with VoiceRouter...');
+        logger.debug('Processing turn with VoiceRouter...');
 
         // Déléguer au VoiceRouter pour orchestration complète
         const result = await voiceRouter.processVoiceTurn(transcript, chat.sendMessage, {
@@ -492,19 +493,16 @@ export function useVoiceEngine(
             }
           },
           onAIResponse: aiResponse => {
-            console.log(
-              '[useVoiceEngine] ✅ AI response:',
-              aiResponse.content.substring(0, 50)
-            );
+            logger.debug('AI response:', aiResponse.content.substring(0, 50));
           },
           onTTSStart: () => {
-            console.log('[useVoiceEngine] 🔊 TTS started');
+            logger.debug('TTS started');
           },
           onTTSEnd: () => {
-            console.log('[useVoiceEngine] ✅ TTS completed');
+            logger.debug('TTS completed');
           },
           onError: error => {
-            console.error('[useVoiceEngine] ❌ VoiceRouter error:', error);
+            logger.error('VoiceRouter error:', error);
             handleError(
               new Error(`${error.stage} error: ${error.message}`),
               'processTurnWithAI'
@@ -513,12 +511,12 @@ export function useVoiceEngine(
         });
 
         if (result.success) {
-          console.log(`[useVoiceEngine] 🎉 Voice turn completed in ${result.duration}ms`);
+          logger.debug(`Voice turn completed in ${result.duration}ms`);
         } else {
-          console.error('[useVoiceEngine] ❌ Voice turn failed:', result.error);
+          logger.error('Voice turn failed:', result.error);
         }
       } catch (error) {
-        console.error('[useVoiceEngine] ❌ processTurnWithAI error:', error);
+        logger.error('processTurnWithAI error:', error);
         handleError(
           error instanceof Error ? error : new Error(String(error)),
           'processTurnWithAI'
@@ -535,12 +533,12 @@ export function useVoiceEngine(
   const startTurn = useCallback(async () => {
     // ✅ SAFE GUARD: Prevent restart if not idle
     if (status.state !== 'idle') {
-      console.warn('[useVoiceEngine] Cannot start turn: state =', status.state);
+      logger.warn('Cannot start turn: state =', status.state);
       return;
     }
 
     // ✅ v∞.7 PHASE 9: Only start if explicitly called (no VAD auto)
-    console.log('[useVoiceEngine] Manual start (Chat mode) - no VAD auto');
+    logger.debug('Manual start (Chat mode) - no VAD auto');
 
     try {
       audioStateMachine.transition('VAD_SPEECH_START');
@@ -558,13 +556,13 @@ export function useVoiceEngine(
    */
   const completeTurn = useCallback(async () => {
     try {
-      console.log('[useVoiceEngine] 📝 Completing turn...');
+      logger.debug('Completing turn...');
 
       // Stop recording et obtenir transcription
       const transcript = await stopRecordingInternal();
 
       if (!transcript || !transcript.trim()) {
-        console.warn('[useVoiceEngine] Empty transcript, cancelling turn');
+        logger.warn('Empty transcript, cancelling turn');
         if (mountedRef.current) {
           setStatus(prev => ({ ...prev, state: 'idle' }));
         }
@@ -575,7 +573,7 @@ export function useVoiceEngine(
       // Traiter avec IA + TTS
       await processTurnWithAI(transcript);
     } catch (error) {
-      console.error('[useVoiceEngine] ❌ completeTurn error:', error);
+      logger.error('completeTurn error:', error);
       handleError(
         error instanceof Error ? error : new Error(String(error)),
         'completeTurn'
@@ -590,10 +588,10 @@ export function useVoiceEngine(
   const completeTurnWithText = useCallback(
     async (text: string) => {
       try {
-        console.log('[useVoiceEngine] 📝 Completing turn with text:', text);
+        logger.debug('Completing turn with text:', text);
 
         if (!text || !text.trim()) {
-          console.warn('[useVoiceEngine] Empty text, cancelling turn');
+          logger.warn('Empty text, cancelling turn');
           if (mountedRef.current) {
             setStatus(prev => ({ ...prev, state: 'idle' }));
           }
@@ -613,7 +611,7 @@ export function useVoiceEngine(
         // Traiter avec IA + TTS
         await processTurnWithAI(text);
       } catch (error) {
-        console.error('[useVoiceEngine] ❌ completeTurnWithText error:', error);
+        logger.error('completeTurnWithText error:', error);
         handleError(
           error instanceof Error ? error : new Error(String(error)),
           'completeTurnWithText'
@@ -628,7 +626,7 @@ export function useVoiceEngine(
    */
   const cancelTurn = useCallback(async () => {
     try {
-      console.log('[useVoiceEngine] 🛑 Cancelling turn, state:', status.state);
+      logger.debug('Cancelling turn, state:', status.state);
 
       // Abort VoiceRouter si tour en cours
       await voiceRouter.abort();
@@ -657,9 +655,9 @@ export function useVoiceEngine(
         }));
       }
 
-      console.log('[useVoiceEngine] ✅ Turn cancelled successfully');
+      logger.debug('Turn cancelled successfully');
     } catch (err) {
-      console.error('[useVoiceEngine] ❌ Cancel error:', err);
+      logger.error('Cancel error:', err);
       // Force reset anyway
       if (mountedRef.current) {
         setStatus(prev => ({
@@ -676,7 +674,7 @@ export function useVoiceEngine(
 
   const startDictation = useCallback(async () => {
     if (status.state !== 'idle') {
-      console.warn('[useVoiceEngine] Cannot start dictation: not idle');
+      logger.warn('Cannot start dictation: not idle');
       return;
     }
 
@@ -684,7 +682,7 @@ export function useVoiceEngine(
       // Note: On n'utilise PAS la state machine pour la dictée
       // car c'est un mode "micro → texte" sans conversation
       await startRecordingInternal();
-      console.log('[useVoiceEngine] Dictation started');
+      logger.debug('Dictation started');
     } catch (err) {
       // Error already handled
     }
@@ -692,7 +690,7 @@ export function useVoiceEngine(
 
   const stopDictation = useCallback(async (): Promise<string> => {
     if (!status.isRecording) {
-      console.warn('[useVoiceEngine] No dictation in progress');
+      logger.warn('No dictation in progress');
       return '';
     }
 
@@ -707,7 +705,7 @@ export function useVoiceEngine(
         }));
       }
 
-      console.log('[useVoiceEngine] Dictation stopped, result:', transcript);
+      logger.debug('Dictation stopped, result:', transcript);
       return transcript;
     } catch (err) {
       return '';
@@ -719,7 +717,7 @@ export function useVoiceEngine(
   const speak = useCallback(
     async (text: string) => {
       if (!text.trim()) {
-        console.warn('[useVoiceEngine] Empty text, skipping TTS');
+        logger.warn('Empty text, skipping TTS');
         return;
       }
 
@@ -755,7 +753,7 @@ export function useVoiceEngine(
         }));
       }
     } catch (err) {
-      console.error('[useVoiceEngine] Stop speaking error:', err);
+      logger.error('Stop speaking error:', err);
     }
   }, []);
 
@@ -784,7 +782,7 @@ export function useVoiceEngine(
   // ═══ WAKE WORD & ATTENTION (v19.4) ═══
 
   const activateWakeWord = useCallback(() => {
-    console.log('[useVoiceEngine] 🎙️ Activating wake word mode');
+    logger.debug('Activating wake word mode');
     attentionEngine.activate();
     setStatus(prev => ({
       ...prev,
@@ -794,7 +792,7 @@ export function useVoiceEngine(
   }, []);
 
   const deactivateWakeWord = useCallback(() => {
-    console.log('[useVoiceEngine] 🔇 Deactivating wake word mode');
+    logger.debug('Deactivating wake word mode');
     attentionEngine.deactivate();
     setStatus(prev => ({
       ...prev,
@@ -804,7 +802,7 @@ export function useVoiceEngine(
   }, []);
 
   const setPushToTalk = useCallback(() => {
-    console.log('[useVoiceEngine] 🎤 Switching to push-to-talk');
+    logger.debug('Switching to push-to-talk');
     attentionEngine.setPushToTalk();
     setStatus(prev => ({
       ...prev,
@@ -824,7 +822,7 @@ export function useVoiceEngine(
   // ═══ FULL DUPLEX (v∞.5) ═══
 
   const enableFullDuplex = useCallback(async () => {
-    console.log('[useVoiceEngine] 🔄 Enabling full duplex mode');
+    logger.debug('Enabling full duplex mode');
     await fullDuplexOrchestrator.enable();
     setStatus(prev => ({
       ...prev,
@@ -834,7 +832,7 @@ export function useVoiceEngine(
   }, []);
 
   const disableFullDuplex = useCallback(async () => {
-    console.log('[useVoiceEngine] 🔇 Disabling full duplex mode');
+    logger.debug('Disabling full duplex mode');
     await fullDuplexOrchestrator.disable();
     setStatus(prev => ({
       ...prev,
@@ -844,13 +842,13 @@ export function useVoiceEngine(
   }, []);
 
   const interrupt = useCallback(async () => {
-    console.log('[useVoiceEngine] 🚨 User interruption');
+    logger.debug('User interruption');
     await fullDuplexOrchestrator.interrupt();
   }, []);
 
   const injectInterruption = useCallback(
     async (text: string) => {
-      console.log('[useVoiceEngine] 💬 Inject interruption:', text);
+      logger.debug('Inject interruption:', text);
       await fullDuplexOrchestrator.injectInterruption(text);
 
       // Process interruption text via chat engine
@@ -870,7 +868,7 @@ export function useVoiceEngine(
    */
   const forceVoiceReset = useCallback(async () => {
     try {
-      console.warn('[useVoiceEngine] 🔥 FORCE RESET VOICE ENGINE');
+      logger.warn('FORCE RESET VOICE ENGINE');
 
       // Cancel any ongoing operations
       await cancelTurn();
@@ -899,9 +897,9 @@ export function useVoiceEngine(
       // Reset audio state machine
       audioStateMachine.reset();
 
-      console.log('[useVoiceEngine] ✅ Voice reset complete');
+      logger.debug('Voice reset complete');
     } catch (error) {
-      console.error('[useVoiceEngine] ❌ Force reset error:', error);
+      logger.error('Force reset error:', error);
       // Force local state reset anyway
       if (mountedRef.current) {
         setStatus(prev => ({

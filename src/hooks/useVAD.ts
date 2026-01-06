@@ -17,6 +17,9 @@ import { detectEnvironment } from '@/core/tauri/environment';
 import { secureInvoke } from '@/lib/security';
 import { hybridTTS } from '@/services/tts/hybridTTS';
 import { voiceFingerprintTauri } from '@/services/voice/voiceFingerprintTauri';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('useVAD');
 
 export type VADState = 'silence' | 'speech' | 'unknown';
 

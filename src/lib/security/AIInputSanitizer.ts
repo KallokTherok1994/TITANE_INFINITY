@@ -135,8 +135,9 @@ const EXCESSIVE_PATTERNS = [
 // ═══════════════════════════════════════════════════════════════
 
 export class AIInputSanitizer {
-  private static readonly DEFAULT_MAX_LENGTH = 10000;
-  private static readonly RISK_THRESHOLD_BLOCK = 4;
+  // v26.4.0: Limites très permissives
+  private static readonly DEFAULT_MAX_LENGTH = 1000000;
+  private static readonly RISK_THRESHOLD_BLOCK = 10; // Désactivé effectivement
 
   /**
    * Sanitize input text pour envoi sécurisé vers IA
@@ -170,23 +171,21 @@ export class AIInputSanitizer {
       result.riskLevel = Math.max(result.riskLevel, 1);
     }
 
-    // 2. Check prompt injection (BLOCK)
+    // 2. Check prompt injection (LOG ONLY - v26.4.0 PERMISSIVE)
     for (const pattern of PROMPT_INJECTION_PATTERNS) {
       if (pattern.test(result.sanitized)) {
         result.detectedPatterns.push(`Prompt Injection: ${pattern.source}`);
-        result.riskLevel = 5;
-        result.isBlocked = true;
-        return result;
+        result.riskLevel = 2; // Log only, ne bloque plus
+        // v26.4.0: Ne bloque plus, log seulement
       }
     }
 
-    // 3. Check code execution (BLOCK)
+    // 3. Check code execution (LOG ONLY - v26.4.0 PERMISSIVE)
     for (const pattern of CODE_EXECUTION_PATTERNS) {
       if (pattern.test(result.sanitized)) {
         result.detectedPatterns.push(`Code Execution: ${pattern.source}`);
-        result.riskLevel = 4;
-        result.isBlocked = true;
-        return result;
+        result.riskLevel = 2; // Log only, ne bloque plus
+        // v26.4.0: Ne bloque plus, log seulement
       }
     }
 

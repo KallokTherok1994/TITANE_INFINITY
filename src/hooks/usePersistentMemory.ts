@@ -20,6 +20,9 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { secureInvoke } from '@/lib/security';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('usePersistentMemory');
 import type {
   MemoryEntry,
   MemoryLevel,
@@ -314,7 +317,7 @@ export function usePersistentMemory(
         lastUpdate: Date.now(),
       });
     } catch (err) {
-      console.error('[usePersistentMemory] Erreur de chargement:', err);
+      logger.error('Erreur de chargement:', err);
       setState(prev => ({
         ...prev,
         isLoading: false,
@@ -360,7 +363,7 @@ export function usePersistentMemory(
           .slice(0, limit)
           .map(r => r.entry);
       } catch (err) {
-        console.error('[usePersistentMemory] Erreur de recherche:', err);
+        logger.error('Erreur de recherche:', err);
 
         // Fallback: recherche locale dans le cache
         if (enableCache) {
@@ -471,7 +474,7 @@ export function usePersistentMemory(
 
         return entryId;
       } catch (err) {
-        console.error('[usePersistentMemory] Erreur de sauvegarde:', err);
+        logger.error('Erreur de sauvegarde:', err);
         throw err;
       }
     },
@@ -485,7 +488,7 @@ export function usePersistentMemory(
         await refresh();
         return true;
       } catch (err) {
-        console.error('[usePersistentMemory] Erreur de promotion:', err);
+        logger.error('Erreur de promotion:', err);
         return false;
       }
     },
@@ -499,7 +502,7 @@ export function usePersistentMemory(
         await refresh();
         return true;
       } catch (err) {
-        console.error("[usePersistentMemory] Erreur d'archivage:", err);
+        logger.error("Erreur d'archivage:", err);
         return false;
       }
     },
@@ -517,7 +520,7 @@ export function usePersistentMemory(
         await refresh();
         return true;
       } catch (err) {
-        console.error('[usePersistentMemory] Erreur de suppression:', err);
+        logger.error('Erreur de suppression:', err);
         return false;
       }
     },
@@ -536,7 +539,7 @@ export function usePersistentMemory(
         await refresh();
         return summaryId;
       } catch (err) {
-        console.error('[usePersistentMemory] Erreur de création résumé:', err);
+        logger.error('Erreur de création résumé:', err);
         throw err;
       }
     },
@@ -559,7 +562,7 @@ export function usePersistentMemory(
         await refresh();
         return bundleId;
       } catch (err) {
-        console.error('[usePersistentMemory] Erreur de création bundle:', err);
+        logger.error('Erreur de création bundle:', err);
         throw err;
       }
     },
@@ -573,7 +576,7 @@ export function usePersistentMemory(
         await refresh();
         return true;
       } catch (err) {
-        console.error("[usePersistentMemory] Erreur d'ajout au bundle:", err);
+        logger.error("Erreur d'ajout au bundle:", err);
         return false;
       }
     },
@@ -603,7 +606,7 @@ export function usePersistentMemory(
     try {
       return await secureInvoke<string>('persistent_memory_export');
     } catch (err) {
-      console.error("[usePersistentMemory] Erreur d'export:", err);
+      logger.error("Erreur d'export:", err);
       throw err;
     }
   }, []);
@@ -719,7 +722,7 @@ export function usePersistentMemoryContext(
         setContext(response.context);
         setUsedEntries(response.usedEntries);
       } catch (err) {
-        console.error('[usePersistentMemoryContext] Erreur:', err);
+        logger.error('usePersistentMemoryContext Erreur:', err);
         setContext('');
         setUsedEntries([]);
       } finally {

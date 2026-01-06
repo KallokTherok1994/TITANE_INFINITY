@@ -4,6 +4,9 @@
 import { useEffect, useCallback } from 'react';
 import { secureInvoke } from '@/lib/security';
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('WindowControls');
 
 export interface WindowControlsOptions {
   enableZoom?: boolean;
@@ -27,7 +30,7 @@ const DEFAULT_OPTIONS: WindowControlsOptions = {
 function applyZoom(level: number): void {
   const root = document.documentElement;
   root.style.zoom = `${level}`;
-  console.log(`[WindowControls] Applied zoom: ${Math.round(level * 100)}%`);
+  logger.debug(`Applied zoom: ${Math.round(level * 100)}%`);
 }
 
 /**
@@ -45,7 +48,7 @@ export function useWindowControls(options: WindowControlsOptions = {}) {
       applyZoom(newLevel);
       return newLevel;
     } catch (error) {
-      console.error('[WindowControls] Failed to zoom in:', error);
+      logger.error('Failed to zoom in:', error);
     }
   }, []);
 
@@ -55,7 +58,7 @@ export function useWindowControls(options: WindowControlsOptions = {}) {
       applyZoom(newLevel);
       return newLevel;
     } catch (error) {
-      console.error('[WindowControls] Failed to zoom out:', error);
+      logger.error('Failed to zoom out:', error);
     }
   }, []);
 
@@ -63,19 +66,19 @@ export function useWindowControls(options: WindowControlsOptions = {}) {
     try {
       await secureInvoke('window_zoom_reset');
       applyZoom(1.0);
-      console.log('[WindowControls] Zoom reset: 100%');
+      logger.debug('Zoom reset: 100%');
     } catch (error) {
-      console.error('[WindowControls] Failed to reset zoom:', error);
+      logger.error('Failed to reset zoom:', error);
     }
   }, []);
 
   const handleToggleFullscreen = useCallback(async () => {
     try {
       const isFullscreen = await secureInvoke<boolean>('window_toggle_fullscreen');
-      console.log(`[WindowControls] Fullscreen: ${isFullscreen ? 'ON' : 'OFF'}`);
+      logger.debug(`Fullscreen: ${isFullscreen ? 'ON' : 'OFF'}`);
       return isFullscreen;
     } catch (error) {
-      console.error('[WindowControls] Failed to toggle fullscreen:', error);
+      logger.error('Failed to toggle fullscreen:', error);
     }
   }, []);
 
@@ -117,7 +120,7 @@ export function useWindowControls(options: WindowControlsOptions = {}) {
         e.preventDefault();
         // DevTools handled by Tauri automatically in dev mode
         // In production, requires explicit permission in tauri.conf.json
-        console.log('[WindowControls] F12 pressed - DevTools should toggle');
+        logger.debug('F12 pressed - DevTools should toggle');
         return;
       }
 
