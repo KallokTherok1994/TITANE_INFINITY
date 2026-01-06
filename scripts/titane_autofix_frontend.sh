@@ -93,7 +93,7 @@ echo "✔ Nettoyage terminé." | tee -a "$LOG_FILE"
 # 4. RÉINSTALLATION & BUILD FRONTEND
 #############################################
 
-echo -e "\n📦 Vérification dépendances npm..." | tee -a "$LOG_FILE"
+echo -e "\n📦 Vérification dépendances Node..." | tee -a "$LOG_FILE"
 if [[ ! -d "node_modules" ]]; then
     echo "Installation des dépendances..." | tee -a "$LOG_FILE"
     pnpm install 2>&1 | tee -a "$LOG_FILE"

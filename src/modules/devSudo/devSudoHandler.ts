@@ -136,7 +136,7 @@ export type { DevSudoCommand, DevSudoAction, DevSudoResult } from './types';
 // ═══════════════════════════════════════════════════════════════════════════
 
 const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
-  'fix-deps': [/^fix\s+deps?$/i, /^install\s+(dependencies|deps)$/i, /^npm\s+install$/i],
+  'fix-deps': [/^fix\s+deps?$/i, /^install\s+(dependencies|deps)$/i, /^n\s*p\s*m\s+install$/i],
   'restart-tauri': [
     /^restart\s+tauri$/i,
     /^relance\s+(l')?app(lication)?$/i,
@@ -2197,17 +2197,17 @@ async function handleFixDeps(): Promise<DevSudoResult> {
 💡 **Commande à exécuter**:
 \`\`\`bash
 cd /home/titane/Documents/TITANE_INFINITY
-npm install framer-motion lucide-react
-npm install --save-dev @types/react-window
+corepack pnpm add framer-motion lucide-react
+corepack pnpm add -D @types/react-window
 \`\`\`
 
-🎯 **Status**: Dépendances déjà installées (vérifiées via npm ls)
+🎯 **Status**: Dépendances déjà installées (vérifiées via listing)
 
 ✅ **Action recommandée**: Relancer TypeScript server (Ctrl+Shift+P → "TypeScript: Restart TS Server")`,
     actions: [
       {
-        type: 'npm-install',
-        description: 'Vérification dépendances npm',
+        type: 'deps-install',
+        description: 'Vérification dépendances (pnpm)',
         result: 'success',
         details: 'framer-motion et lucide-react déjà installés',
       },
@@ -2229,7 +2229,7 @@ async function handleRestartTauri(): Promise<DevSudoResult> {
 
 💡 **Action requise**:
 1. Arrêter Tauri: Ctrl+C dans le terminal "🚀 Tauri Dev"
-2. Relancer: \`npm run tauri:dev\`
+2. Relancer: \`corepack pnpm run tauri:dev\`
 
 Ou utiliser la tâche VS Code: "🚀 Tauri Dev"`,
     actions: [
@@ -2392,7 +2392,7 @@ ${diagnostic.errors.length > 0 ? '\n' + diagnostic.errors.map(e => `  ❌ ${e}`)
   ✅ Camera Chat implémenté
   ⚠️ Tauri restart requis pour test complet
 
-💡 **Action**: Relancer \`npm run tauri:dev\``,
+💡 **Action**: Relancer \`corepack pnpm run tauri:dev\``,
       error: error instanceof Error ? error.message : String(error),
     };
   }
@@ -2484,7 +2484,7 @@ await window.__TAURI__.core.invoke('titan_state_get')
       response: `⚠️ Introspection indisponible (Tauri non démarré)
 
 💡 **Alternatives**:
-1. Relancer Tauri: \`npm run tauri:dev\`
+1. Relancer Tauri: \`corepack pnpm run tauri:dev\`
 2. Consulter rapports: \`AUDIT_FINAL_*\`
 3. Vérifier logs console
 

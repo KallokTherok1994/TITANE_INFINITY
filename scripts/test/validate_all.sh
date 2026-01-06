@@ -41,7 +41,7 @@ echo "📦 VÉRIFICATION DÉPENDANCES"
 echo "─────────────────────────────────────────────────────────────────────────"
 
 test_check "Node.js installé" "which node"
-test_check "npm installé" "which npm"
+test_check "pnpm installé" "command -v pnpm >/dev/null 2>&1 || (command -v corepack >/dev/null 2>&1 && corepack pnpm --version >/dev/null 2>&1)"
 test_check "Rust/Cargo installé" "which cargo"
 test_check "Ollama installé" "which ollama"
 test_check "espeak-ng installé" "which espeak-ng"

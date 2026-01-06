@@ -369,14 +369,14 @@ test.describe('Provider Flow v21.0', () => {
  *
  * Prerequisites:
  * - Ollama service running (localhost:11434)
- * - App dev server running (npm run tauri dev)
+ * - App dev server running (corepack pnpm run tauri:dev)
  * - Test selectors ([data-testid]) ajoutés aux composants UI
  *
  * Exécution:
  * ```bash
- * npm run test:e2e
+ * corepack pnpm run test:e2e
  * # ou
- * npx playwright test tests/e2e/provider-flow.test.ts
+ * corepack pnpm exec playwright test tests/e2e/provider-flow.test.ts
  * ```
  *
  * Instrumentation Backend (optionnel):

@@ -526,18 +526,18 @@ class VisualDevOpsEngine {
     if (isTauri) {
       content += '# Build Tauri application\n';
       content += 'echo "🔨 Building Tauri app..."\n';
-      content += 'npm run build || exit 1\n';
+      content += 'corepack pnpm run build || exit 1\n';
       content += 'cargo tauri build || exit 1\n';
       content += 'echo "✅ Build complete"\n';
     } else if (isReact) {
       content += '# Build React application\n';
       content += 'echo "⚡ Building React app..."\n';
-      content += 'npm run build || exit 1\n';
+      content += 'corepack pnpm run build || exit 1\n';
       content += 'echo "✅ Build complete"\n';
     } else {
       content += '# Generic build\n';
       content += 'echo "🔧 Building project..."\n';
-      content += 'npm run build || cargo build || exit 1\n';
+      content += 'corepack pnpm run build || cargo build || exit 1\n';
       content += 'echo "✅ Build complete"\n';
     }
 
@@ -575,8 +575,8 @@ class VisualDevOpsEngine {
       }
     };
 
-    const defaultNpmCommand: Command = {
-      command: 'npm',
+    const defaultPnpmCommand: Command = {
+      command: 'pnpm',
       args: ['test'],
       description: 'Run default test suite',
       estimated_duration: '30 seconds',
@@ -586,11 +586,11 @@ class VisualDevOpsEngine {
 
     if (languages.includes('typescript') || frameworks.includes('react')) {
       addCommand({
-        ...defaultNpmCommand,
+        ...defaultPnpmCommand,
         description: 'Run TypeScript/React tests',
       });
     } else {
-      addCommand(defaultNpmCommand);
+      addCommand(defaultPnpmCommand);
     }
 
     if (languages.includes('rust') || frameworks.includes('tauri')) {
@@ -621,10 +621,10 @@ class VisualDevOpsEngine {
     content += 'cargo clean --manifest-path src-tauri/Cargo.toml 2>/dev/null || true\n\n';
     content += '# Optimize dependencies\n';
     content += 'echo "📦 Optimizing dependencies..."\n';
-    content += 'npm dedupe || true\n\n';
+    content += 'corepack pnpm dedupe || true\n\n';
     content += '# Production build\n';
     content += 'echo "⚡ Building optimized version..."\n';
-    content += 'NODE_ENV=production npm run build\n\n';
+    content += 'NODE_ENV=production corepack pnpm run build\n\n';
     content += 'echo "✅ Optimization complete"\n';
 
     return {
@@ -688,7 +688,7 @@ echo "✅ Operation complete"
     switch (actionType) {
       case 'deploy':
         commands.push({
-          command: 'npm',
+          command: 'pnpm',
           args: ['run', 'build'],
           description: 'Build for deployment',
           estimated_duration: '2 minutes',
@@ -710,8 +710,8 @@ echo "✅ Operation complete"
 
       case 'install_deps':
         commands.push({
-          command: 'npm',
-          args: ['install'],
+          command: 'corepack',
+          args: ['pnpm', 'install'],
           description: 'Install dependencies',
           estimated_duration: '1-2 minutes',
           requires_sudo: false,

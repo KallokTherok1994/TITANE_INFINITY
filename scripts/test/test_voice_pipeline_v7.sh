@@ -56,7 +56,13 @@ print_header "TITANE∞ v∞.7 VOICE PIPELINE TEST SUITE"
 echo ""
 echo "Testing environment: $(uname -s)"
 echo "Node version: $(node --version)"
-echo "npm version: $(npm --version)"
+if command -v corepack >/dev/null 2>&1 && corepack pnpm --version >/dev/null 2>&1; then
+    echo "pnpm version: $(corepack pnpm --version)"
+elif command -v pnpm >/dev/null 2>&1; then
+    echo "pnpm version: $(pnpm --version)"
+else
+    echo "pnpm version: (non détecté)"
+fi
 echo ""
 
 ###############################################################################

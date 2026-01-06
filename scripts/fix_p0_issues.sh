@@ -373,7 +373,7 @@ grep -rn "\.unwrap()" src-tauri/src --include="*.rs" | wc -l
 
 ### Immédiat (Aujourd'hui)
 1. [ ] Vérifier compilation: `cargo build`
-2. [ ] Vérifier TS: `npx tsc --noEmit`
+2. [ ] Vérifier TS: `pnpm exec tsc --noEmit`
 3. [ ] Fix manuel secrets (30 min)
 4. [ ] Fix 26 TS errors restants (1h)
 
@@ -414,5 +414,5 @@ echo "   3. Replace unwrap() critiques (40h)"
 echo ""
 echo "🔍 Prochaine étape:"
 echo "   cargo build --release"
-echo "   npx tsc --noEmit"
+echo "   pnpm exec tsc --noEmit"
 echo ""

@@ -4,8 +4,9 @@
   "version": "26.2.0-dev",
   "identifier": "com.titane.infinity.dev",
   "build": {
-    "beforeDevCommand": "npm run build",
-    "beforeBuildCommand": "npm run build",
+    "devUrl": null,
+    "beforeDevCommand": "bash -lc 'set -euo pipefail; ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd); cd \"$ROOT\"; mkdir -p runtime/dev/logs; if command -v corepack >/dev/null 2>&1; then corepack pnpm exec vite build 2>&1 | tee runtime/dev/logs/vite.log; elif [ -x \"$ROOT/.tools/node/current/bin/pnpm\" ]; then \"$ROOT/.tools/node/current/bin/pnpm\" exec vite build 2>&1 | tee runtime/dev/logs/vite.log; else pnpm exec vite build 2>&1 | tee runtime/dev/logs/vite.log; fi'",
+    "beforeBuildCommand": "bash -lc 'ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd); cd \"$ROOT\"; if command -v corepack >/dev/null 2>&1; then corepack pnpm exec vite build; elif [ -x \"$ROOT/.tools/node/current/bin/pnpm\" ]; then \"$ROOT/.tools/node/current/bin/pnpm\" exec vite build; else pnpm exec vite build; fi'",
     "frontendDist": "../dist"
   },
   "bundle": {

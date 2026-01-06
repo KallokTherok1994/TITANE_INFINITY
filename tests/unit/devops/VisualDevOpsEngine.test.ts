@@ -194,7 +194,7 @@ describe('VisualDevOpsEngine', () => {
       expect(action.action_type).toBe('build');
       expect(action.script_generated).toBeDefined();
       expect(action.script_generated?.script_type).toBe('bash');
-      expect(action.script_generated?.content).toContain('npm run build');
+      expect(action.script_generated?.content).toContain('corepack pnpm run build');
     });
 
     it('should propose test action', async () => {
@@ -203,7 +203,7 @@ describe('VisualDevOpsEngine', () => {
       expect(action.action_type).toBe('test');
       expect(action.commands).toBeDefined();
       expect(action.commands!.length).toBeGreaterThan(0);
-      expect(action.commands![0].command).toBe('npm');
+      expect(action.commands![0].command).toBe('pnpm');
     });
 
     it('should propose optimize action', async () => {

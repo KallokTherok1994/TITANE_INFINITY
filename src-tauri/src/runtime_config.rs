@@ -45,12 +45,14 @@ fn sanitize_model(model: &str) -> String {
 }
 
 fn collect_runtime_config(secrets: &SecureSecretsEngine) -> RuntimeConfig {
-    let ollama_url = std::env::var("OLLAMA_URL")
-        .or_else(|_| std::env::var("OLLAMA_BASE_URL"))
+    // Prefer canonical names (OLLAMA_BASE_URL / OLLAMA_DEFAULT_MODEL), but keep
+    // backward compatibility with legacy (OLLAMA_URL / OLLAMA_MODEL).
+    let ollama_url = std::env::var("OLLAMA_BASE_URL")
+        .or_else(|_| std::env::var("OLLAMA_URL"))
         .unwrap_or_else(|_| "http://127.0.0.1:11434".to_string());
 
-    let ollama_model = std::env::var("OLLAMA_MODEL")
-        .or_else(|_| std::env::var("OLLAMA_DEFAULT_MODEL"))
+    let ollama_model = std::env::var("OLLAMA_DEFAULT_MODEL")
+        .or_else(|_| std::env::var("OLLAMA_MODEL"))
         .unwrap_or_else(|_| "llama3.1".to_string());
 
     let secrets_mode = match secrets.mode() {

@@ -25,7 +25,14 @@ done
 
 echo ""
 echo "🔧 TypeScript (nouveaux fichiers):"
-ERRORS=$(npx tsc --noEmit 2>&1 | grep -E "(useAudioChat|DashboardEditor|ChatProviderSelector|ListeningIndicator)" | wc -l)
+if command -v corepack >/dev/null 2>&1; then
+    ERRORS=$(corepack pnpm exec tsc --noEmit 2>&1 | grep -E "(useAudioChat|DashboardEditor|ChatProviderSelector|ListeningIndicator)" | wc -l)
+elif command -v pnpm >/dev/null 2>&1; then
+    ERRORS=$(pnpm exec tsc --noEmit 2>&1 | grep -E "(useAudioChat|DashboardEditor|ChatProviderSelector|ListeningIndicator)" | wc -l)
+else
+    echo "❌ pnpm requis (corepack/pnpm introuvable)." >&2
+    exit 1
+fi
 if [ "$ERRORS" -eq 0 ]; then
     echo "  ✅ 0 erreur TypeScript"
 else

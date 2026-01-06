@@ -344,7 +344,7 @@ check_security_posture() {
     fi
     
     # Run pnpm audit (if not in dry-run mode)
-    if [[ "$DRY_RUN" == "false" ]] && command -v npm &> /dev/null; then
+    if [[ "$DRY_RUN" == "false" ]] && ((command -v corepack >/dev/null 2>&1 && corepack pnpm --version >/dev/null 2>&1) || command -v pnpm >/dev/null 2>&1); then
         echo -e "${CYAN}Running pnpm audit...${NC}"
         if pnpm audit --production --audit-level=high &> /dev/null; then
             check_pass "pnpm audit: No high/critical vulnerabilities"

@@ -255,7 +255,7 @@ interface UseChatReturn {
 export function useChat(options: UseChatOptions = {}): UseChatReturn {
   // ═══ OMNIS STATE ═══
   // ✅ FIX AUDIT: Générer conversationId UNE SEULE FOIS au mount
-  const [conversationId] = useState<string>(() => {
+  const [_conversationId] = useState<string>(() => {
     // Réutiliser ID existant ou créer nouveau
     const stored = localStorage.getItem('titane_current_conversation_id');
     if (stored) return stored;
@@ -1006,12 +1006,21 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
           // ✅ FIX AUDIT: Monitorer fréquence fallback
           try {
-            if (typeof window !== 'undefined' && (window as any).monitoring) {
-              (window as any).monitoring.trackEvent('chat_fallback_triggered', {
-                targetUiId,
-                context,
-                messagesCount: messagesRef.current.length,
-              });
+            if (typeof window !== 'undefined') {
+              const monitoring = (window as unknown as { monitoring?: unknown }).monitoring;
+              const trackEvent =
+                (monitoring as { trackEvent?: unknown } | null | undefined)?.trackEvent;
+
+              if (typeof trackEvent === 'function') {
+                (trackEvent as (name: string, data: Record<string, unknown>) => void)(
+                  'chat_fallback_triggered',
+                  {
+                    targetUiId,
+                    context,
+                    messagesCount: messagesRef.current.length,
+                  }
+                );
+              }
             }
           } catch (monitoringError) {
             // Silent monitoring failure
@@ -1099,8 +1108,23 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           if (!response) {
             throw new Error('Streaming sans réponse finale');
           }
-          aggregatedContent = response.content ?? aggregatedContent;
-          return response;
+
+          const responseContent =
+            typeof response.content === 'string' ? response.content : '';
+          if (responseContent.trim().length > 0) {
+            aggregatedContent = responseContent;
+          }
+
+          const finalContent =
+            responseContent.trim().length > 0 ? responseContent : aggregatedContent;
+          if (finalContent.trim().length === 0) {
+            throw new Error('Réponse vide du backend (stream completion)');
+          }
+
+          return {
+            ...response,
+            content: finalContent,
+          };
         })();
 
         const timeoutPromise = new Promise<never>((_, reject) => {
@@ -1214,21 +1238,44 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         let chatServiceResponse: ChatResponse | null = null;
         let chatServiceError: string | null = null;
 
+        const withTimeout = async <T,>(promise: Promise<T>, label: string): Promise<T> => {
+          let timeoutHandle: ReturnType<typeof setTimeout> | null = null;
+
+          const timeoutPromise = new Promise<never>((_, reject) => {
+            timeoutHandle = setTimeout(() => {
+              reject(new Error(`TIMEOUT:${label}`));
+            }, timeoutMs);
+          });
+
+          try {
+            return await Promise.race([promise, timeoutPromise]);
+          } finally {
+            if (timeoutHandle) {
+              clearTimeout(timeoutHandle);
+              timeoutHandle = null;
+            }
+          }
+        };
+
         if (backendHistory.length > 0) {
           const firstCandidate = providerCandidates[0];
           // ✅ FIX AUDIT: Utiliser conversationId persistant depuis state
-          const requestConfig: StreamConfig = { 
+          // NOTE: Ne pas passer conversationId au chemin legacy : le backend peut se bloquer
+          // avec "Duplicate conversation detected" et ne jamais répondre (2e message vide).
+          const requestConfig: StreamConfig = {
             provider: firstCandidate ?? 'auto',
-            conversationId: conversationId, // Utiliser conversationId du state
           };
           for (const candidate of providerCandidates) {
             try {
               requestConfig.provider = candidate;
               attemptedProviders.push(candidate);
-              const response = await chatService.sendMessageLegacy(backendHistory, {
-                provider: candidate,
-                conversationId: conversationId, // ✅ Passer conversationId
-              });
+
+              const response = await withTimeout(
+                chatService.sendMessageLegacy(backendHistory, {
+                  provider: candidate,
+                }),
+                `legacy:${candidate}`
+              );
               chatServiceResponse = response;
               chatAttempts.push({ provider: candidate, success: true, response });
               break;
@@ -1318,7 +1365,12 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
             metadata: chatServiceResponse.metadata,
             omegaMetadata: resolvedOmegaMetadata,
           } satisfies ChatEngineResponse;
-          aggregatedContent = chatServiceResponse.content ?? '';
+
+          const legacyContent =
+            typeof chatServiceResponse.content === 'string'
+              ? chatServiceResponse.content
+              : '';
+          aggregatedContent = legacyContent.trim().length > 0 ? legacyContent : '';
         }
 
         if (!finalResponse) {
@@ -1335,7 +1387,11 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         if (!finalResponse) {
           const response = await generate(cleanMessage, historyBuffer);
           finalResponse = response;
-          aggregatedContent = response.content;
+
+          const generatedContent =
+            typeof response.content === 'string' ? response.content : '';
+          aggregatedContent =
+            generatedContent.trim().length > 0 ? generatedContent : aggregatedContent;
         }
 
         if (!finalResponse) {
@@ -1353,7 +1409,13 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           provider,
         };
 
-        const finalContent = finalResponse.content ?? aggregatedContent;
+        const responseContent =
+          typeof finalResponse.content === 'string' ? finalResponse.content : '';
+        const finalContent =
+          responseContent.trim().length > 0 ? responseContent : aggregatedContent;
+        if (finalContent.trim().length === 0) {
+          throw new Error('Réponse vide du backend (final content)');
+        }
         chatLogger.debug(
           '🎯 finalContent:',
           finalContent?.substring(0, 100),

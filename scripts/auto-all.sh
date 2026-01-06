@@ -21,6 +21,26 @@ PURPLE='\033[0;35m'
 CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
+resolve_pnpm_cmd() {
+    if command -v corepack >/dev/null 2>&1; then
+        PNPM=(corepack pnpm)
+        return 0
+    fi
+    if command -v pnpm >/dev/null 2>&1; then
+        PNPM=(pnpm)
+        return 0
+    fi
+    PNPM=()
+    return 1
+}
+
+ensure_pnpm() {
+    if ! resolve_pnpm_cmd; then
+        print_error "pnpm requis (corepack/pnpm introuvable)"
+        return 1
+    fi
+}
+
 ###############################################################################
 # FUNCTIONS
 ###############################################################################
@@ -81,11 +101,12 @@ phase1_clean() {
     # Install/update dependencies
     echo "Checking dependencies..."
     if [ ! -d "node_modules" ]; then
-        echo "Installing npm dependencies..."
-        pnpm install
-        print_success "npm dependencies installed"
+        ensure_pnpm || return 1
+        echo "Installing Node dependencies..."
+        "${PNPM[@]}" install
+        print_success "Node dependencies installed"
     else
-        print_success "npm dependencies OK"
+        print_success "Node dependencies OK"
     fi
     
     print_success "Phase 1 Complete"
@@ -100,13 +121,14 @@ phase2_build() {
     
     # Lint first
     echo "Running ESLint..."
-    pnpm run lint || {
+    ensure_pnpm || return 1
+    "${PNPM[@]}" run lint || {
         print_warning "ESLint warnings found (non-blocking)"
     }
     
     # TypeScript check
     echo "Running TypeScript check..."
-    npx tsc --noEmit || {
+    "${PNPM[@]}" exec tsc --noEmit || {
         print_error "TypeScript errors found"
         return 1
     }
@@ -114,7 +136,7 @@ phase2_build() {
     
     # Build frontend
     echo "Building frontend (Vite)..."
-    pnpm run build || {
+    "${PNPM[@]}" run build || {
         print_error "Frontend build failed"
         return 1
     }

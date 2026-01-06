@@ -22,6 +22,20 @@ TESTS_TOTAL=0
 TESTS_PASSED=0
 TESTS_FAILED=0
 
+# Gestionnaire de paquets: pnpm-only (corepack préféré)
+PNPM=()
+resolve_pnpm_cmd() {
+    if command -v corepack >/dev/null 2>&1 && corepack pnpm --version >/dev/null 2>&1; then
+        PNPM=(corepack pnpm)
+        return 0
+    fi
+    if command -v pnpm >/dev/null 2>&1; then
+        PNPM=(pnpm)
+        return 0
+    fi
+    return 1
+}
+
 # Fonction de test
 test_step() {
     TESTS_TOTAL=$((TESTS_TOTAL + 1))
@@ -161,7 +175,9 @@ echo ""
 
 # Test 14: Vérification TypeScript
 echo -e "${BLUE}[TEST]${NC} Vérification TypeScript (tsc --noEmit)..."
-if npx tsc --noEmit --skipLibCheck 2>&1 | grep -q "error TS"; then
+if ! resolve_pnpm_cmd; then
+    echo -e "  ${YELLOW}⚠ SKIP${NC} (pnpm non détecté)"
+elif "${PNPM[@]}" exec tsc --noEmit --skipLibCheck 2>&1 | grep -q "error TS"; then
     echo -e "  ${RED}✗ FAIL${NC} (erreurs TypeScript détectées)"
     TESTS_TOTAL=$((TESTS_TOTAL + 1))
     TESTS_FAILED=$((TESTS_FAILED + 1))

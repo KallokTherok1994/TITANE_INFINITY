@@ -31,6 +31,20 @@ WARNINGS_FOUND=0
 SUCCESS_COUNT=0
 TOTAL_CHECKS=0
 
+# Gestionnaire de paquets: pnpm-only (corepack préféré)
+PNPM=()
+resolve_pnpm_cmd() {
+    if command -v corepack >/dev/null 2>&1 && corepack pnpm --version >/dev/null 2>&1; then
+        PNPM=(corepack pnpm)
+        return 0
+    fi
+    if command -v pnpm >/dev/null 2>&1; then
+        PNPM=(pnpm)
+        return 0
+    fi
+    return 1
+}
+
 # ═══════════════════════════════════════════════════════════════
 # LOGGING FUNCTIONS
 # ═══════════════════════════════════════════════════════════════
@@ -93,16 +107,17 @@ check_critical_files() {
 # 2️⃣ Vérifier la syntaxe TypeScript
 check_typescript() {
     log_step "Vérification syntaxe TypeScript..."
-    
-    if command -v npx &> /dev/null; then
-        if npx tsc --noEmit 2>&1 | tee /tmp/tsc-errors.log; then
-            log_success "TypeScript: Aucune erreur de syntaxe"
-        else
-            log_error "TypeScript: Erreurs détectées"
-            log_warning "Voir détails: /tmp/tsc-errors.log"
-        fi
+
+    if ! resolve_pnpm_cmd; then
+        log_error "Gestionnaire de paquets requis introuvable (pnpm/corepack)"
+        return 0
+    fi
+
+    if "${PNPM[@]}" exec tsc --noEmit 2>&1 | tee /tmp/tsc-errors.log; then
+        log_success "TypeScript: Aucune erreur de syntaxe"
     else
-        log_warning "npx non disponible - TypeScript check ignoré"
+        log_error "TypeScript: Erreurs détectées"
+        log_warning "Voir détails: /tmp/tsc-errors.log"
     fi
 }
 
@@ -117,32 +132,35 @@ check_eslint() {
         "src/components/PerfectFusionDashboard.tsx"
     )
     
-    if command -v npx &> /dev/null; then
-        for file in "${files_to_lint[@]}"; do
-            if npx eslint "$WORKSPACE_ROOT/$file" 2>&1 | tee /tmp/eslint-$TOTAL_CHECKS.log; then
-                log_success "ESLint OK: $file"
-            else
-                log_warning "ESLint warnings: $file"
-            fi
-        done
-    else
-        log_warning "npx non disponible - ESLint check ignoré"
+
+    if ! resolve_pnpm_cmd; then
+        log_error "Gestionnaire de paquets requis introuvable (pnpm/corepack)"
+        return 0
     fi
+
+    for file in "${files_to_lint[@]}"; do
+        if "${PNPM[@]}" exec eslint "$WORKSPACE_ROOT/$file" 2>&1 | tee "/tmp/eslint-${TOTAL_CHECKS}.log"; then
+            log_success "ESLint OK: $file"
+        else
+            log_warning "ESLint warnings: $file"
+        fi
+    done
 }
 
 # 4️⃣ Vérifier les tests unitaires
 check_tests() {
     log_step "Exécution tests unitaires..."
-    
-    if command -v npm &> /dev/null; then
-        if pnpm test -- src/hooks/__tests__/fusion-hooks.test.ts 2>&1 | tee /tmp/test-results.log; then
-            log_success "Tests unitaires: PASS"
-        else
-            log_error "Tests unitaires: ÉCHEC"
-            log_warning "Voir détails: /tmp/test-results.log"
-        fi
+
+    if ! resolve_pnpm_cmd; then
+        log_error "Gestionnaire de paquets requis introuvable (pnpm/corepack)"
+        return 0
+    fi
+
+    if "${PNPM[@]}" test -- src/hooks/__tests__/fusion-hooks.test.ts 2>&1 | tee /tmp/test-results.log; then
+        log_success "Tests unitaires: PASS"
     else
-        log_warning "npm non disponible - Tests ignorés"
+        log_error "Tests unitaires: ÉCHEC"
+        log_warning "Voir détails: /tmp/test-results.log"
     fi
 }
 

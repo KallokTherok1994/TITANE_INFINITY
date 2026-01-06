@@ -303,7 +303,17 @@ export NVM_DIR="$HOME/.nvm"
 # Vérification finale Node.js
 log_step "Vérification de l'installation Node.js..."
 echo -e "${CYAN}  node: $(node --version)${NC}"
-echo -e "${CYAN}  npm: $(npm --version)${NC}"
+if check_command corepack; then
+    echo -e "${CYAN}  corepack: $(corepack --version 2>/dev/null | head -1)${NC}"
+fi
+
+if check_command pnpm; then
+    echo -e "${CYAN}  pnpm: $(pnpm --version)${NC}"
+elif check_command corepack; then
+    echo -e "${CYAN}  pnpm (corepack): $(corepack pnpm --version 2>/dev/null)${NC}"
+else
+    echo -e "${CYAN}  pnpm: NON TROUVÉ${NC}"
+fi
 log_success "Node.js configuré correctement"
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -488,18 +498,30 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 source "$HOME/.cargo/env"
 
-# Installation des dépendances npm
-log_step "Installation des dépendances npm..."
-pnpm install 2>&1 | tee -a "$LOG_FILE"
+# Installation des dépendances Node
+log_step "Installation des dépendances Node..."
+if check_command corepack; then
+    corepack enable 2>&1 | tee -a "$LOG_FILE" || true
+    corepack prepare pnpm@latest --activate 2>&1 | tee -a "$LOG_FILE" || true
+fi
+
+if check_command corepack; then
+    corepack pnpm install 2>&1 | tee -a "$LOG_FILE"
+elif check_command pnpm; then
+    pnpm install 2>&1 | tee -a "$LOG_FILE"
+else
+    log_error "pnpm requis (corepack/pnpm introuvable)"
+    exit 1
+fi
 log_success "Dépendances pnpm installées"
 
 # Vérification Tauri CLI
 log_step "Vérification de Tauri CLI..."
-TAURI_VERSION=$(npx tauri --version 2>/dev/null || echo "NON TROUVÉ")
+TAURI_VERSION=$( (corepack pnpm exec tauri --version 2>/dev/null || pnpm exec tauri --version 2>/dev/null) || echo "NON TROUVÉ" )
 if [ "$TAURI_VERSION" != "NON TROUVÉ" ]; then
     log_success "Tauri CLI: $TAURI_VERSION"
 else
-    log_warning "Tauri CLI non trouvé via npx"
+    log_warning "Tauri CLI introuvable via pnpm"
 fi
 
 # Build du backend Rust
@@ -568,13 +590,17 @@ else
     VALIDATION_RESULTS+=("FAIL")
 fi
 
-# npm
-if check_command npm; then
-    NPM_VER=$(npm --version)
-    echo -e "  ${GREEN}✅ npm${NC}         : $NPM_VER"
+# pnpm
+if check_command pnpm; then
+    PNPM_VER=$(pnpm --version)
+    echo -e "  ${GREEN}✅ pnpm${NC}        : $PNPM_VER"
+    VALIDATION_RESULTS+=("OK")
+elif check_command corepack; then
+    PNPM_VER=$(corepack pnpm --version 2>/dev/null || echo "Non disponible")
+    echo -e "  ${GREEN}✅ pnpm${NC}        : $PNPM_VER"
     VALIDATION_RESULTS+=("OK")
 else
-    echo -e "  ${RED}❌ npm${NC}         : Non installé"
+    echo -e "  ${RED}❌ pnpm${NC}        : Non installé"
     VALIDATION_RESULTS+=("FAIL")
 fi
 

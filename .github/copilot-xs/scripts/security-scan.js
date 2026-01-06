@@ -11,7 +11,16 @@ import { spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 
 function run(cmd, args) {
-  const result = spawnSync(cmd, args, { stdio: 'inherit' });
+  const result = spawnSync(cmd, args, {
+    stdio: 'inherit',
+    env: {
+      ...process.env,
+      // Avoid noisy Node deprecation warnings from tooling (e.g. corepack/pnpm internals)
+      NODE_OPTIONS: process.env.NODE_OPTIONS
+        ? `${process.env.NODE_OPTIONS} --no-deprecation`
+        : '--no-deprecation',
+    },
+  });
 
   // Command not found
   if (result.error && result.error.code === 'ENOENT') {
@@ -38,17 +47,11 @@ function runOrFallback(primaryCmd, primaryArgs, fallbackCmd, fallbackArgs) {
   return run(fallbackCmd, fallbackArgs);
 }
 
-const hasPackageLock = existsSync('package-lock.json');
 const hasPnpmLock = existsSync('pnpm-lock.yaml');
-const hasYarnLock = existsSync('yarn.lock');
-
-if (hasPackageLock) {
-  run('npm', ['audit']);
-  process.exit(0);
-}
 
 if (hasPnpmLock) {
-  const pnpmResult = runOrFallback('pnpm', ['audit'], 'corepack', ['pnpm', 'audit']);
+  // Prefer corepack when available; fallback to pnpm.
+  const pnpmResult = runOrFallback('corepack', ['pnpm', 'audit'], 'pnpm', ['audit']);
 
   if (!pnpmResult.ok) {
     console.warn(
@@ -58,16 +61,4 @@ if (hasPnpmLock) {
   process.exit(0);
 }
 
-if (hasYarnLock) {
-  const yarnResult = run('yarn', ['npm', 'audit']);
-  if (!yarnResult.ok) {
-    console.warn(
-      '[COPILOT-XS] ⚠️ Security scan skipped: yarn.lock detected but yarn is not installed.'
-    );
-  }
-  process.exit(0);
-}
-
-console.warn(
-  '[COPILOT-XS] ⚠️ Security scan skipped: no lockfile found (package-lock.json / pnpm-lock.yaml / yarn.lock).'
-);
+console.warn('[COPILOT-XS] ⚠️ Security scan skipped: pnpm-lock.yaml not found.');

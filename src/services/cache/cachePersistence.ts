@@ -18,11 +18,21 @@ export class CachePersistence {
   private db: IDBDatabase | null = null;
   private initPromise: Promise<void> | null = null;
 
+  private isSupported(): boolean {
+    return typeof indexedDB !== 'undefined';
+  }
+
   /**
    * Initialise la base de données IndexedDB
    */
   async init(): Promise<void> {
     if (this.initPromise) return this.initPromise;
+
+    // En environnement Node/test (ou navigateurs sans IndexedDB), la persistence est désactivée.
+    if (!this.isSupported()) {
+      this.initPromise = Promise.resolve();
+      return this.initPromise;
+    }
 
     this.initPromise = new Promise((resolve, reject) => {
       const request = indexedDB.open(DB_NAME, DB_VERSION);
@@ -64,7 +74,7 @@ export class CachePersistence {
    */
   async save(key: CacheKey, entry: CacheEntry): Promise<void> {
     if (!this.db) await this.init();
-    if (!this.db) throw new Error('IndexedDB not initialized');
+    if (!this.db) return;
 
     const persistenceKey = this.generatePersistenceKey(key);
     const db = this.db;

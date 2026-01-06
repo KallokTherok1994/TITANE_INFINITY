@@ -248,7 +248,7 @@ echo "   curl -u admin:PASSWORD https://$DOMAIN/admin"
 echo ""
 
 echo -e "5. ${BLUE}Lighthouse Audit:${NC}"
-echo "   npx lighthouse https://$DOMAIN --view"
+echo "   corepack pnpm dlx lighthouse https://$DOMAIN --view"
 echo "   Targets: Performance 95+, PWA 100, A11y 100"
 echo ""
 

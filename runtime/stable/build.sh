@@ -59,33 +59,50 @@ rm -f runtime/stable/*.AppImage runtime/stable/*.deb runtime/stable/*.exe runtim
 # Install dependencies (if needed)
 if [[ ! -d "node_modules" ]]; then
     echo "📦 Installing dependencies..."
-    # Le repo force pnpm (preinstall). On installe donc via pnpm quand possible.
-    if [[ -f "pnpm-lock.yaml" ]]; then
-        if command -v corepack >/dev/null 2>&1; then
-            corepack pnpm install
-        elif command -v pnpm >/dev/null 2>&1; then
-            pnpm install
-        else
-            echo "❌ pnpm requis mais introuvable (corepack/pnpm)."
-            exit 1
-        fi
+    # Repo pnpm-only: aucun fallback npm.
+    if command -v corepack >/dev/null 2>&1; then
+        corepack pnpm install
+    elif command -v pnpm >/dev/null 2>&1; then
+        pnpm install
     else
-        npm install
+        echo "❌ pnpm requis mais introuvable (corepack/pnpm)."
+        exit 1
     fi
 fi
 
 # Build frontend (production mode)
 echo ""
 echo "⚛️  Building React frontend (production)..."
-NODE_ENV=production npm run build
+if command -v corepack >/dev/null 2>&1; then
+    NODE_ENV=production corepack pnpm run build
+elif command -v pnpm >/dev/null 2>&1; then
+    NODE_ENV=production pnpm run build
+else
+    echo "❌ pnpm requis mais introuvable (corepack/pnpm)."
+    exit 1
+fi
 
 # Build Tauri app (production)
 echo ""
 echo "🦀 Building Tauri app (production)..."
 if node -e "const p=require('./package.json'); process.exit(p.scripts && p.scripts.tauri ? 0 : 1)"; then
-    npm run tauri build -- --config runtime/stable/tauri.conf.json
+    if command -v corepack >/dev/null 2>&1; then
+        corepack pnpm run tauri -- build --config runtime/stable/tauri.conf.json
+    elif command -v pnpm >/dev/null 2>&1; then
+        pnpm run tauri -- build --config runtime/stable/tauri.conf.json
+    else
+        echo "❌ pnpm requis mais introuvable (corepack/pnpm)."
+        exit 1
+    fi
 else
-    npx tauri build --config runtime/stable/tauri.conf.json
+    if command -v corepack >/dev/null 2>&1; then
+        corepack pnpm exec tauri build --config runtime/stable/tauri.conf.json
+    elif command -v pnpm >/dev/null 2>&1; then
+        pnpm exec tauri build --config runtime/stable/tauri.conf.json
+    else
+        echo "❌ pnpm requis mais introuvable (corepack/pnpm)."
+        exit 1
+    fi
 fi
 
 # Copy build to runtime/stable/

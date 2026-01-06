@@ -108,7 +108,7 @@ git commit -m "feat: improve chat response animations"
 git merge feature/chat-improvements
 
 # 5. Test in Titan-Dev
-npm run tauri dev
+pnpm run tauri dev
 
 # 6. Deploy to stable (when validated)
 ./scripts/git/merge-dev-to-stable.sh
@@ -306,7 +306,7 @@ git commit
 
 # 4. Test stable build
 cd runtime/stable
-npm run build:stable
+pnpm run build:stable
 ```
 
 ### Problem: "I need to switch branches but have uncommitted changes"

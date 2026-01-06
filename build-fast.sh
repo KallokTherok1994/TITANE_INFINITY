@@ -25,7 +25,14 @@ echo ""
 # 3. Création des packages
 echo "📦 Étape 3/3: Génération des packages..."
 cd ..
-npx tauri build --bundles deb
+if command -v corepack >/dev/null 2>&1; then
+	corepack pnpm exec tauri build --bundles deb
+elif command -v pnpm >/dev/null 2>&1; then
+	pnpm exec tauri build --bundles deb
+else
+	echo "❌ pnpm requis (corepack/pnpm introuvable)."
+	exit 1
+fi
 
 echo ""
 echo "╔═══════════════════════════════════════════════════════════╗"

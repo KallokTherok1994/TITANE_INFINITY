@@ -77,9 +77,15 @@ else
     VALIDATION_RESULTS+=("FAIL")
 fi
 
-if check_tool "npm" "npm" "npm --version"; then
+# pnpm (corepack préféré)
+if command -v corepack >/dev/null 2>&1 && corepack pnpm --version >/dev/null 2>&1; then
+    echo -e "  ${GREEN}✅ pnpm${NC}: $(corepack pnpm --version)"
+    VALIDATION_RESULTS+=("OK")
+elif command -v pnpm >/dev/null 2>&1; then
+    echo -e "  ${GREEN}✅ pnpm${NC}: $(pnpm --version)"
     VALIDATION_RESULTS+=("OK")
 else
+    echo -e "  ${RED}❌ pnpm${NC}: Non installé"
     VALIDATION_RESULTS+=("FAIL")
 fi
 
@@ -160,10 +166,10 @@ if [ -d "$PROJECTS_DIR/TITANE_INFINITY" ]; then
     
     # Vérifier node_modules
     if [ -d "node_modules" ]; then
-        echo -e "  ${GREEN}✅ Dependencies npm${NC}: Installées"
+        echo -e "  ${GREEN}✅ Dependencies Node${NC}: Installées"
         VALIDATION_RESULTS+=("OK")
     else
-        echo -e "  ${YELLOW}⚠️  Dependencies npm${NC}: Manquantes (pnpm install)"
+        echo -e "  ${YELLOW}⚠️  Dependencies Node${NC}: Manquantes (corepack pnpm install)"
         VALIDATION_RESULTS+=("WARN")
     fi
     
@@ -177,8 +183,12 @@ if [ -d "$PROJECTS_DIR/TITANE_INFINITY" ]; then
     fi
     
     # Vérifier Tauri CLI
-    if npx tauri --version &> /dev/null; then
-        TAURI_VER=$(npx tauri --version 2>/dev/null)
+    if command -v corepack >/dev/null 2>&1 && corepack pnpm exec tauri --version &> /dev/null; then
+        TAURI_VER=$(corepack pnpm exec tauri --version 2>/dev/null)
+        echo -e "  ${GREEN}✅ Tauri CLI${NC}: $TAURI_VER"
+        VALIDATION_RESULTS+=("OK")
+    elif command -v pnpm >/dev/null 2>&1 && pnpm exec tauri --version &> /dev/null; then
+        TAURI_VER=$(pnpm exec tauri --version 2>/dev/null)
         echo -e "  ${GREEN}✅ Tauri CLI${NC}: $TAURI_VER"
         VALIDATION_RESULTS+=("OK")
     else

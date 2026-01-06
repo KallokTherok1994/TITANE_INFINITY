@@ -4,15 +4,21 @@
  * Système d'auto-réparation conversationnelle
  * ═══════════════════════════════════════════════════════════════════
  */
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 
 use super::types::*;
 use super::ConversationEngineError;
 
 /// Système d'auto-réparation
 pub struct SelfHealingConversation {
-    /// IDs de messages traités (anti-duplication)
-    processed_messages: HashSet<String>,
+    /// Conversations déjà vues (anti-double-submit immédiat)
+    ///
+    /// NOTE: une conversation_id est censée être réutilisée sur plusieurs tours.
+    /// On ne doit donc pas la considérer comme "déjà traitée" de façon permanente.
+    ///
+    /// On stocke plutôt le dernier timestamp (en secondes) pour détecter uniquement
+    /// les doublons rapprochés (ex: double click / double event).
+    seen_conversations: HashMap<String, u64>,
 
     /// Compteur d'anomalies par type
     anomaly_counts: HashMap<AnomalyType, usize>,
@@ -24,7 +30,7 @@ pub struct SelfHealingConversation {
 impl SelfHealingConversation {
     pub fn new() -> Self {
         Self {
-            processed_messages: HashSet::new(),
+            seen_conversations: HashMap::new(),
             last_scan: current_timestamp(),
             anomaly_counts: HashMap::new(),
         }
@@ -35,7 +41,7 @@ impl SelfHealingConversation {
         &mut self,
         conversation_id: &str,
     ) -> Result<(), ConversationEngineError> {
-        // Vérifier double-render
+        // Vérifier double-render immédiat (double submit)
         if self.is_duplicate_conversation(conversation_id) {
             log::warn!(
                 "[SelfHealing] Duplicate conversation detected: {}",
@@ -46,7 +52,8 @@ impl SelfHealingConversation {
             ));
         }
 
-        self.processed_messages.insert(conversation_id.to_string());
+        self.seen_conversations
+            .insert(conversation_id.to_string(), current_timestamp());
         Ok(())
     }
 
@@ -58,7 +65,7 @@ impl SelfHealingConversation {
         let mut repairs = Vec::new();
 
         // Vérifier taille du cache
-        if self.processed_messages.len() > 1000 {
+        if self.seen_conversations.len() > 1000 {
             anomalies.push(Anomaly {
                 anomaly_type: AnomalyType::MessageLoss,
                 severity: 0.3,
@@ -66,7 +73,7 @@ impl SelfHealingConversation {
             });
 
             // Nettoyer
-            self.processed_messages.clear();
+            self.seen_conversations.clear();
             repairs.push(Repair {
                 repair_type: "cache_cleanup".to_string(),
                 success: true,
@@ -95,7 +102,14 @@ impl SelfHealingConversation {
 
     /// Vérifier si conversation est dupliquée
     fn is_duplicate_conversation(&self, conversation_id: &str) -> bool {
-        self.processed_messages.contains(conversation_id)
+        const DUPLICATE_WINDOW_SECS: u64 = 2;
+        match self.seen_conversations.get(conversation_id) {
+            None => false,
+            Some(last_seen) => {
+                let now = current_timestamp();
+                now.saturating_sub(*last_seen) <= DUPLICATE_WINDOW_SECS
+            }
+        }
     }
 
     /// Enregistrer une anomalie
@@ -107,7 +121,7 @@ impl SelfHealingConversation {
     /// Obtenir statistiques
     pub fn stats(&self) -> SelfHealingStats {
         SelfHealingStats {
-            total_processed: self.processed_messages.len(),
+            total_processed: self.seen_conversations.len(),
             total_anomalies: self.anomaly_counts.values().sum(),
             last_scan: self.last_scan,
         }
@@ -225,6 +239,32 @@ mod tests {
         assert_eq!(stats.total_processed, usize::MAX);
         assert_eq!(stats.total_anomalies, usize::MAX);
         assert_eq!(stats.last_scan, u64::MAX);
+    }
+
+    #[tokio::test]
+    async fn test_verify_state_blocks_immediate_duplicate() {
+        let mut healing = SelfHealingConversation::new();
+
+        let conv_id = "conv-dup";
+        healing
+            .seen_conversations
+            .insert(conv_id.to_string(), current_timestamp());
+
+        let result = healing.verify_state(conv_id).await;
+        assert!(result.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_verify_state_allows_reuse_after_window() {
+        let mut healing = SelfHealingConversation::new();
+
+        let conv_id = "conv-ok";
+        healing
+            .seen_conversations
+            .insert(conv_id.to_string(), current_timestamp().saturating_sub(10));
+
+        let result = healing.verify_state(conv_id).await;
+        assert!(result.is_ok());
     }
 
     // ─────────────────────────────────────────────────────────────────────

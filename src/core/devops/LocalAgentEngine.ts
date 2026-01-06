@@ -3,9 +3,9 @@
  *
  * @module core/devops/LocalAgentEngine
  * @description Agent DevOps local ultra-puissant pour orchestration build/test/deploy
- * @version 26.0.0
- * @license MIT
- *
+        // INTEGRATION: pnpm CLI for package health analysis
+        // 1. pnpm outdated --json (parse for semver violations)
+        // 2. pnpm audit --json (parse for CVE counts by severity)
  * CAPACITÉS :
  * - Analyse projet (Rust, Tauri, React, Node)
  * - Orchestration build/test/deploy
@@ -150,8 +150,8 @@ class LocalAgentEngine {
         security_vulnerabilities: [],
       },
       build_config: {
-        build_tool: 'npm',
-        build_command: 'npm run build',
+        build_tool: 'pnpm',
+        build_command: 'corepack pnpm run build',
         output_directory: 'dist',
       },
       issues: [],
@@ -291,15 +291,15 @@ class LocalAgentEngine {
     };
 
     try {
-      // Check npm dependencies
+      // Check JS dependencies
       const pkgPath = `${projectRoot}/package.json`;
       if (await this.fileExists(pkgPath)) {
         const pkg = await this.readJsonFile(pkgPath);
         info.npm_dependencies = pkg.dependencies || {};
 
-        // INTEGRATION: npm CLI for package health analysis
-        // 1. npm outdated --json (parse for semver violations)
-        // 2. npm audit --json (parse for CVE counts by severity)
+        // INTEGRATION: package manager CLI for dependency health analysis
+        // 1. corepack pnpm outdated --json (parse for semver violations)
+        // 2. corepack pnpm audit --json (parse for CVE counts by severity)
         // 3. Scoring: -10 per major outdated, -5 per high/critical CVE
       }
 
@@ -323,15 +323,15 @@ class LocalAgentEngine {
     projectType: ProjectType
   ): Promise<BuildConfig> {
     const config: BuildConfig = {
-      build_tool: 'npm',
-      build_command: 'npm run build',
+      build_tool: 'pnpm',
+      build_command: 'corepack pnpm run build',
       output_directory: 'dist',
     };
 
     try {
       if (projectType === 'tauri_app') {
         config.build_tool = 'tauri';
-        config.build_command = 'npm run tauri:build';
+        config.build_command = 'corepack pnpm run tauri:build';
         config.output_directory = 'src-tauri/target/release';
       } else if (projectType === 'rust_project') {
         config.build_tool = 'cargo';
@@ -363,7 +363,7 @@ class LocalAgentEngine {
         if (pkg.devDependencies?.vitest) {
           return {
             test_framework: 'vitest',
-            test_command: 'npm test',
+            test_command: 'corepack pnpm test',
             coverage_enabled: !!pkg.devDependencies?.['@vitest/coverage-v8'],
             test_files: [],
           };
@@ -372,7 +372,7 @@ class LocalAgentEngine {
         if (pkg.devDependencies?.jest) {
           return {
             test_framework: 'jest',
-            test_command: 'npm test',
+            test_command: 'corepack pnpm test',
             coverage_enabled: true,
             test_files: [],
           };
@@ -492,7 +492,7 @@ class LocalAgentEngine {
         title: 'Fix security vulnerabilities',
         description: 'Update vulnerable packages immediately',
         implementation_steps: [
-          'Run npm audit fix',
+          'Run corepack pnpm audit',
           'Review breaking changes',
           'Test thoroughly after updates',
         ],
@@ -508,7 +508,7 @@ class LocalAgentEngine {
         title: 'Add test framework',
         description: 'Implement unit testing for better code quality',
         implementation_steps: [
-          'Install vitest: npm install -D vitest',
+          'Install vitest: corepack pnpm add -D vitest',
           'Add test scripts to package.json',
           'Create first test files',
           'Setup CI/CD for automated testing',
@@ -567,8 +567,8 @@ class LocalAgentEngine {
     // Build
     if (project.build_config.build_tool === 'tauri') {
       commands.push({
-        command: 'npm',
-        args: ['run', 'tauri:build'],
+        command: 'corepack',
+        args: ['pnpm', 'run', 'tauri:build'],
         description: 'Build Tauri application',
         estimated_duration: '3-5 minutes',
         requires_sudo: false,
@@ -586,8 +586,8 @@ class LocalAgentEngine {
       });
     } else {
       commands.push({
-        command: 'npm',
-        args: ['run', 'build'],
+        command: 'corepack',
+        args: ['pnpm', 'run', 'build'],
         description: 'Build project',
         estimated_duration: '1-2 minutes',
         requires_sudo: false,
@@ -637,8 +637,8 @@ class LocalAgentEngine {
     const commands: Command[] = [];
 
     commands.push({
-      command: 'npm',
-      args: ['test'],
+      command: 'corepack',
+      args: ['pnpm', 'test'],
       description: `Run tests with ${project.test_config.test_framework}`,
       estimated_duration: '30 seconds - 2 minutes',
       requires_sudo: false,
@@ -647,8 +647,8 @@ class LocalAgentEngine {
 
     if (project.test_config.coverage_enabled) {
       commands.push({
-        command: 'npm',
-        args: ['run', 'test:coverage'],
+        command: 'corepack',
+        args: ['pnpm', 'run', 'test:coverage'],
         description: 'Generate test coverage report',
         estimated_duration: '1-2 minutes',
         requires_sudo: false,
@@ -693,8 +693,8 @@ class LocalAgentEngine {
 
     // Build first
     commands.push({
-      command: 'npm',
-      args: ['run', 'build'],
+      command: 'corepack',
+      args: ['pnpm', 'run', 'build'],
       description: 'Build project for deployment',
       estimated_duration: '2-5 minutes',
       requires_sudo: false,
@@ -986,7 +986,7 @@ class LocalAgentEngine {
   private getDefaultTestConfig(): TestConfig {
     return {
       test_framework: 'vitest',
-      test_command: 'npm run test',
+      test_command: 'corepack pnpm run test',
       coverage_enabled: false,
       test_files: ['tests/**/*'],
     };

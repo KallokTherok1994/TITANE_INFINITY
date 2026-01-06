@@ -147,14 +147,14 @@ check_security_gate() {
     
     cd "$PROJECT_ROOT"
     
-    # Check NPM audit
-    local npm_critical=$(pnpm audit 2>/dev/null | grep -c "critical" || echo "0")
-    local npm_high=$(pnpm audit 2>/dev/null | grep -c "high" || echo "0")
+    # Check dependency audit
+    local dep_critical=$(pnpm audit 2>/dev/null | grep -c "critical" || echo "0")
+    local dep_high=$(pnpm audit 2>/dev/null | grep -c "high" || echo "0")
     
-    if [[ "$npm_critical" -gt 0 ]]; then
-        gate_fail "Security" "$npm_critical critical vulnerabilities"
-    elif [[ "$npm_high" -gt 0 ]]; then
-        gate_warn "Security" "$npm_high high vulnerabilities"
+    if [[ "$dep_critical" -gt 0 ]]; then
+        gate_fail "Security" "$dep_critical critical vulnerabilities"
+    elif [[ "$dep_high" -gt 0 ]]; then
+        gate_warn "Security" "$dep_high high vulnerabilities"
     else
         gate_pass "Security"
     fi

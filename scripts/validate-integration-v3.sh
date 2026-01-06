@@ -75,7 +75,14 @@ echo "🔧 Vérification TypeScript..."
 echo "─────────────────────────────────────────────────────────────"
 
 # Vérifier les erreurs TypeScript dans nos fichiers
-ERRORS=$(npx tsc --noEmit 2>&1 | grep -E "(useAudioChat|DashboardEditor|ChatProviderSelector|ListeningIndicator)" | wc -l)
+if command -v corepack >/dev/null 2>&1; then
+    ERRORS=$(corepack pnpm exec tsc --noEmit 2>&1 | grep -E "(useAudioChat|DashboardEditor|ChatProviderSelector|ListeningIndicator)" | wc -l)
+elif command -v pnpm >/dev/null 2>&1; then
+    ERRORS=$(pnpm exec tsc --noEmit 2>&1 | grep -E "(useAudioChat|DashboardEditor|ChatProviderSelector|ListeningIndicator)" | wc -l)
+else
+    echo "❌ pnpm requis (corepack/pnpm introuvable)." >&2
+    exit 1
+fi
 [ "$ERRORS" -eq 0 ] && RES=0 || RES=1
 check $RES "Aucune erreur TypeScript dans les nouveaux fichiers ($ERRORS erreurs)"
 

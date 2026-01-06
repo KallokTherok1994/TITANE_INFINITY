@@ -30,6 +30,12 @@ NC='\033[0m' # No Color
 PROJECT_ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$PROJECT_ROOT"
 
+# pnpm-only helpers
+PNPM_CMD="pnpm"
+if command -v corepack >/dev/null 2>&1; then
+    PNPM_CMD="corepack pnpm"
+fi
+
 # ═══════════════════════════════════════════════════════════════════════════
 # PARSE ARGUMENTS
 # ═══════════════════════════════════════════════════════════════════════════
@@ -188,7 +194,7 @@ if [ "$SKIP_CHECKS" = false ] && [ "$QUICK_MODE" = false ]; then
     # Dependencies check
     if [ ! -d "node_modules" ] || [ "$REBUILD_MODE" = true ]; then
         echo -e "${YELLOW}📥 Installing dependencies...${NC}"
-        pnpm install --frozen-lockfile --prefer-offline --no-audit 2>&1 | grep -v "^npm WARN" || true
+        $PNPM_CMD install --frozen-lockfile --prefer-offline --no-audit
         echo -e "${GREEN}✅ Dependencies installed${NC}"
     else
         echo -e "${GREEN}✅ Dependencies already installed${NC}"
@@ -196,7 +202,7 @@ if [ "$SKIP_CHECKS" = false ] && [ "$QUICK_MODE" = false ]; then
     
     # TypeScript type checking
     echo -e "${CYAN}🔍 Type checking (TypeScript)...${NC}"
-    if npx tsc --noEmit --skipLibCheck 2>&1 | tee /tmp/titane-tsc.log | tail -5; then
+    if $PNPM_CMD exec tsc --noEmit --skipLibCheck 2>&1 | tee /tmp/titane-tsc.log | tail -5; then
         TS_ERRORS=$(grep -c "error TS" /tmp/titane-tsc.log 2>/dev/null || echo "0")
         if [ "$TS_ERRORS" = "0" ]; then
             echo -e "${GREEN}✅ 0 TypeScript errors${NC}"
