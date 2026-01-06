@@ -1,5 +1,5 @@
 #!/bin/bash
-# TITANE∞ v26.3.2 - Test Wrapper
+# TITANE∞ v26.4.0 - Test Wrapper
 # Handles Vitest heap overflow crashes that occur AFTER all tests pass
 # This is a known issue with Vitest v4.x and large test suites (2300+ tests)
 
@@ -10,7 +10,7 @@ YELLOW='\033[1;33m'
 CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
-echo -e "${YELLOW}🧪 TITANE∞ Test Suite v26.3.2${NC}"
+echo -e "${YELLOW}🧪 TITANE∞ Test Suite v26.4.0${NC}"
 echo "Running tests with heap overflow protection..."
 echo ""
 
@@ -18,8 +18,9 @@ echo ""
 TEMP_OUTPUT=$(mktemp)
 trap "rm -f $TEMP_OUTPUT" EXIT
 
-# Run tests and capture output to file
-cross-env NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run 2>&1 | tee "$TEMP_OUTPUT"
+# Run tests using npx to ensure cross-env is available
+# This fixes "cross-env: command not found" error
+npx cross-env NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run 2>&1 | tee "$TEMP_OUTPUT"
 
 echo ""
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
@@ -33,15 +34,27 @@ CLEAN_OUTPUT=$(cat "$TEMP_OUTPUT" | sed 's/\x1b\[[0-9;]*m//g')
 # Each passing test in Vitest output shows a ✓
 PASSING_TESTS=$(echo "$CLEAN_OUTPUT" | grep -c "✓" || echo "0")
 
-# Check for actual test failures (red X marks or explicit "failed" in test results)
-# But exclude "Worker exited" errors which happen after tests complete
-FAILED_TEST_LINES=$(echo "$CLEAN_OUTPUT" | grep -E "✗|×|[0-9]+ failed" | grep -v "Worker" | wc -l || echo "0")
+# Check for actual test failures in Vitest summary line ONLY
+# Format: "Test Files  X failed" or "Tests  X failed" (with leading spaces)
+# We look specifically for Vitest summary format, not random log lines
+FAILED_FILES=$(echo "$CLEAN_OUTPUT" | grep -E "^\s*Test Files\s+[0-9]+ failed" | wc -l || echo "0")
+FAILED_TESTS=$(echo "$CLEAN_OUTPUT" | grep -E "^\s*Tests\s+[0-9]+ failed" | wc -l || echo "0")
 
-# Check for heap overflow
-HAS_HEAP_OVERFLOW=$(echo "$CLEAN_OUTPUT" | grep -c "heap out of memory" || echo "0")
+# Check for Vitest test failure lines: " × test name" or " ✗ test name" (with leading spaces followed by test description)
+# These are actual test failures, not log messages like "[Security] ✗"
+FAILED_MARKERS=$(echo "$CLEAN_OUTPUT" | grep -E "^\s+[×✗]\s+should" | wc -l || echo "0")
+
+# Check for test file lines with failures: "❯  core  file.ts (X tests | Y failed)"
+FAILED_FILE_LINES=$(echo "$CLEAN_OUTPUT" | grep -E "core.*\([0-9]+ tests? \| [0-9]+ failed\)" | wc -l || echo "0")
+
+FAILED_TEST_LINES=$((FAILED_FILES + FAILED_TESTS + FAILED_MARKERS + FAILED_FILE_LINES))
+
+# Check for heap overflow - use tr to ensure clean number
+HAS_HEAP_OVERFLOW=$(echo "$CLEAN_OUTPUT" | grep -c "heap out of memory" | tr -d '\n' || echo "0")
 
 echo "Passing test markers (✓): $PASSING_TESTS"
-echo "Failed test lines: $FAILED_TEST_LINES"
+echo "Failed summary: files=$FAILED_FILES tests=$FAILED_TESTS markers=$FAILED_MARKERS file_lines=$FAILED_FILE_LINES"
+echo "Total failures detected: $FAILED_TEST_LINES"
 echo "Heap overflow: $HAS_HEAP_OVERFLOW"
 echo ""
 

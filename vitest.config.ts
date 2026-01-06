@@ -69,8 +69,8 @@ export const sharedTestConfig = defineConfig({
   ],
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // 🧪 VITEST CONFIGURATION
-  // ✅ v26.3.1: Memory optimizations to prevent heap overflow
+  // 🧪 VITEST CONFIGURATION v26.4.0
+  // ✅ Updated for Vitest 4.x - poolOptions moved to top-level
   // ═══════════════════════════════════════════════════════════════════════════
   test: {
     name: 'core',
@@ -81,31 +81,19 @@ export const sharedTestConfig = defineConfig({
       './src/test/setup.ts',
       './src/test-utils/setup.ts',
     ],
-    // ✅ v26.3.1: Reduced timeouts to prevent memory accumulation
+    // ✅ v26.4.0: Timeouts optimized for stability
     testTimeout: 30000,
     hookTimeout: 15000,
     teardownTimeout: 5000,
-    // ✅ v26.3.1: Reduce parallelism to prevent memory pressure
-    minThreads: 1,
-    maxThreads: Math.min(2, maxThreadBudget),
-    // ✅ v26.3.1: Isolate tests to prevent memory leaks between files
+    // ✅ v26.4.0: Vitest 4.x - pool options are now top-level
+    pool: 'vmThreads',
+    // Single thread for stability - prevents heap accumulation
+    singleThread: true,
+    // Memory isolation between test files
     isolate: true,
-    // ✅ v26.3.1: Clear mocks automatically
+    // ✅ v26.4.0: Clear mocks automatically
     clearMocks: true,
     restoreMocks: true,
-    // ✅ v26.3.2: Use vmThreads pool to prevent ELIFECYCLE heap crashes
-    // vmThreads reuses V8 isolates more efficiently than forks
-    pool: 'vmThreads',
-    poolOptions: {
-      vmThreads: {
-        // ✅ v26.3.2: Single thread mode for stability - prevents heap accumulation
-        singleThread: true,
-        // Memory isolation between test files
-        isolate: true,
-        // Explicit GC between test files
-        memoryLimit: 1 / 2, // Use half available memory
-      },
-    },
     include: [
       'src/**/*.{test,spec}.{ts,tsx}',
       'tests/unit/**/*.{test,spec}.{ts,tsx}',

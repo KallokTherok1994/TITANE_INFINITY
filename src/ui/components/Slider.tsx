@@ -1,13 +1,14 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE∞ v26.4.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v15 - Slider Component - Design System
-import React, { useState, useRef, useEffect } from 'react';
+// TITANE∞ v26.4.0 - Slider Component with Performance Optimizations
+import React, { useState, useRef, useEffect, useMemo, useId, memo } from 'react';
+import { clsx } from 'clsx';
 import './Slider.css';
 
 export interface SliderMark {
@@ -32,7 +33,11 @@ interface SliderProps {
   className?: string;
 }
 
-export const Slider = ({
+/**
+ * Slider component for numeric range selection.
+ * Memoized for optimal re-render performance.
+ */
+export const Slider = memo(function Slider({
   value: controlledValue,
   defaultValue = 0,
   min = 0,
@@ -46,22 +51,24 @@ export const Slider = ({
   showMarks = false,
   marks = [],
   size = 'md',
-  className = '',
-}: SliderProps) => {
+  className,
+}: SliderProps) {
   const [internalValue, setInternalValue] = useState(defaultValue);
   const [isDragging, setIsDragging] = useState(false);
   const sliderRef = useRef<HTMLDivElement>(null);
+  const sliderId = useId();
 
   const isControlled = controlledValue !== undefined;
   const value = isControlled ? controlledValue : internalValue;
 
-  const percentage = ((value - min) / (max - min)) * 100;
+  const percentage = useMemo(
+    () => ((value - min) / (max - min)) * 100,
+    [value, min, max]
+  );
 
   const updateValue = React.useCallback(
     (clientX: number) => {
-      if (!sliderRef.current || disabled) {
-        return;
-      }
+      if (!sliderRef.current || disabled) return;
 
       const rect = sliderRef.current.getBoundingClientRect();
       const percent = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
@@ -78,13 +85,14 @@ export const Slider = ({
     [disabled, min, max, step, isControlled, onChange]
   );
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (disabled) {
-      return;
-    }
-    setIsDragging(true);
-    updateValue(e.clientX);
-  };
+  const handleMouseDown = React.useCallback(
+    (e: React.MouseEvent) => {
+      if (disabled) return;
+      setIsDragging(true);
+      updateValue(e.clientX);
+    },
+    [disabled, updateValue]
+  );
 
   const handleMouseMove = React.useCallback(
     (e: MouseEvent) => {
@@ -102,40 +110,41 @@ export const Slider = ({
     }
   }, [isDragging, value, onChangeCommitted]);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (disabled) {
-      return;
-    }
+  const handleKeyDown = React.useCallback(
+    (e: React.KeyboardEvent) => {
+      if (disabled) return;
 
-    let newValue = value;
-    switch (e.key) {
-      case 'ArrowRight':
-      case 'ArrowUp':
-        e.preventDefault();
-        newValue = Math.min(max, value + step);
-        break;
-      case 'ArrowLeft':
-      case 'ArrowDown':
-        e.preventDefault();
-        newValue = Math.max(min, value - step);
-        break;
-      case 'Home':
-        e.preventDefault();
-        newValue = min;
-        break;
-      case 'End':
-        e.preventDefault();
-        newValue = max;
-        break;
-      default:
-        return;
-    }
+      let newValue = value;
+      switch (e.key) {
+        case 'ArrowRight':
+        case 'ArrowUp':
+          e.preventDefault();
+          newValue = Math.min(max, value + step);
+          break;
+        case 'ArrowLeft':
+        case 'ArrowDown':
+          e.preventDefault();
+          newValue = Math.max(min, value - step);
+          break;
+        case 'Home':
+          e.preventDefault();
+          newValue = min;
+          break;
+        case 'End':
+          e.preventDefault();
+          newValue = max;
+          break;
+        default:
+          return;
+      }
 
-    if (!isControlled) {
-      setInternalValue(newValue);
-    }
-    onChange?.(newValue);
-  };
+      if (!isControlled) {
+        setInternalValue(newValue);
+      }
+      onChange?.(newValue);
+    },
+    [disabled, value, min, max, step, isControlled, onChange]
+  );
 
   // Event listeners for mouse drag
   useEffect(() => {
@@ -150,27 +159,35 @@ export const Slider = ({
     return undefined;
   }, [isDragging, handleMouseMove, handleMouseUp]);
 
-  const classes = [
-    'slider',
-    `slider--${size}`,
-    isDragging && 'slider--dragging',
-    disabled && 'slider--disabled',
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  const classes = useMemo(
+    () =>
+      clsx(
+        'slider',
+        `slider--${size}`,
+        isDragging && 'slider--dragging',
+        disabled && 'slider--disabled',
+        className
+      ),
+    [size, isDragging, disabled, className]
+  );
 
-  const displayMarks: SliderMark[] = showMarks
-    ? marks.length > 0
-      ? marks
-      : generateAutoMarks(min, max, step)
-    : [];
+  const displayMarks: SliderMark[] = useMemo(
+    () =>
+      showMarks
+        ? marks.length > 0
+          ? marks
+          : generateAutoMarks(min, max, step)
+        : [],
+    [showMarks, marks, min, max, step]
+  );
 
   return (
     <div className={classes}>
       {label && (
         <div className="slider__header">
-          <label className="slider__label">{label}</label>
+          <label className="slider__label" htmlFor={sliderId}>
+            {label}
+          </label>
           {showValue && <span className="slider__value">{value}</span>}
         </div>
       )}
@@ -185,6 +202,7 @@ export const Slider = ({
         </div>
 
         <div
+          id={sliderId}
           className="slider__thumb"
           style={{ left: `${percentage}%` }}
           role="slider"
@@ -193,6 +211,7 @@ export const Slider = ({
           aria-valuemax={max}
           aria-valuenow={value}
           aria-disabled={disabled}
+          aria-label={label}
           onKeyDown={handleKeyDown}
         />
 
@@ -216,7 +235,7 @@ export const Slider = ({
       </div>
     </div>
   );
-};
+});
 
 function generateAutoMarks(min: number, max: number, step: number): SliderMark[] {
   const marks: SliderMark[] = [];

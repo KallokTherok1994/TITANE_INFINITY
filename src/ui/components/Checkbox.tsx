@@ -1,13 +1,14 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE∞ v26.4.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v15 - Checkbox Component - Design System
-import { useState } from 'react';
+// TITANE∞ v26.4.0 - Checkbox Component with Performance Optimizations
+import { useState, useCallback, useMemo, useId, memo } from 'react';
+import { clsx } from 'clsx';
 import './Checkbox.css';
 
 interface CheckboxProps {
@@ -22,7 +23,11 @@ interface CheckboxProps {
   className?: string;
 }
 
-export const Checkbox = ({
+/**
+ * Checkbox component with controlled/uncontrolled modes.
+ * Memoized for optimal re-render performance.
+ */
+export const Checkbox = memo(function Checkbox({
   checked: controlledChecked,
   defaultChecked = false,
   onChange,
@@ -31,38 +36,42 @@ export const Checkbox = ({
   size = 'md',
   label,
   error,
-  className = '',
-}: CheckboxProps) => {
+  className,
+}: CheckboxProps) {
   const [internalChecked, setInternalChecked] = useState(defaultChecked);
+  const errorId = useId();
 
   const isControlled = controlledChecked !== undefined;
   const checked = isControlled ? controlledChecked : internalChecked;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (disabled) {
-      return;
-    }
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (disabled) return;
 
-    const newChecked = e.target.checked;
+      const newChecked = e.target.checked;
 
-    if (!isControlled) {
-      setInternalChecked(newChecked);
-    }
+      if (!isControlled) {
+        setInternalChecked(newChecked);
+      }
 
-    onChange?.(newChecked);
-  };
+      onChange?.(newChecked);
+    },
+    [disabled, isControlled, onChange]
+  );
 
-  const classes = [
-    'checkbox',
-    `checkbox--${size}`,
-    checked && 'checkbox--checked',
-    indeterminate && 'checkbox--indeterminate',
-    disabled && 'checkbox--disabled',
-    error && 'checkbox--error',
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  const classes = useMemo(
+    () =>
+      clsx(
+        'checkbox',
+        `checkbox--${size}`,
+        checked && 'checkbox--checked',
+        indeterminate && 'checkbox--indeterminate',
+        disabled && 'checkbox--disabled',
+        error && 'checkbox--error',
+        className
+      ),
+    [size, checked, indeterminate, disabled, error, className]
+  );
 
   return (
     <div className={classes}>
@@ -74,7 +83,7 @@ export const Checkbox = ({
           onChange={handleChange}
           disabled={disabled}
           aria-invalid={!!error}
-          aria-describedby={error ? 'checkbox-error' : undefined}
+          aria-describedby={error ? errorId : undefined}
         />
         <span className="checkbox__box">
           {indeterminate ? (
@@ -104,10 +113,10 @@ export const Checkbox = ({
         {label && <span className="checkbox__label">{label}</span>}
       </label>
       {error && (
-        <span className="checkbox__error" id="checkbox-error">
+        <span className="checkbox__error" id={errorId} role="alert">
           {error}
         </span>
       )}
     </div>
   );
-};
+});

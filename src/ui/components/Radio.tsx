@@ -1,13 +1,14 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE∞ v26.4.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v15 - Radio Component - Design System
-import React, { useState } from 'react';
+// TITANE∞ v26.4.0 - Radio Component with Performance Optimizations
+import React, { useState, useCallback, useMemo, useId, memo } from 'react';
+import { clsx } from 'clsx';
 import './Radio.css';
 
 interface RadioProps {
@@ -22,7 +23,11 @@ interface RadioProps {
   className?: string;
 }
 
-export const Radio = ({
+/**
+ * Radio component for single selection.
+ * Memoized for optimal re-render performance.
+ */
+export const Radio = memo(function Radio({
   value,
   checked: controlledChecked,
   defaultChecked = false,
@@ -31,38 +36,40 @@ export const Radio = ({
   size = 'md',
   label,
   name,
-  className = '',
-}: RadioProps) => {
+  className,
+}: RadioProps) {
   const [internalChecked, setInternalChecked] = useState(defaultChecked);
+  const radioId = useId();
 
   const isControlled = controlledChecked !== undefined;
   const checked = isControlled ? controlledChecked : internalChecked;
 
-  const handleChange = () => {
-    if (disabled) {
-      return;
-    }
+  const handleChange = useCallback(() => {
+    if (disabled) return;
 
     if (!isControlled) {
       setInternalChecked(true);
     }
 
     onChange?.(value);
-  };
+  }, [disabled, isControlled, onChange, value]);
 
-  const classes = [
-    'radio',
-    `radio--${size}`,
-    checked && 'radio--checked',
-    disabled && 'radio--disabled',
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  const classes = useMemo(
+    () =>
+      clsx(
+        'radio',
+        `radio--${size}`,
+        checked && 'radio--checked',
+        disabled && 'radio--disabled',
+        className
+      ),
+    [size, checked, disabled, className]
+  );
 
   return (
-    <label className={classes}>
+    <label className={classes} htmlFor={radioId}>
       <input
+        id={radioId}
         type="radio"
         className="radio__input"
         value={value}
@@ -77,7 +84,7 @@ export const Radio = ({
       {label && <span className="radio__label">{label}</span>}
     </label>
   );
-};
+});
 
 // RadioGroup pour gérer plusieurs radios
 interface RadioGroupProps {
@@ -91,7 +98,11 @@ interface RadioGroupProps {
   className?: string;
 }
 
-export const RadioGroup = ({
+/**
+ * RadioGroup component for managing multiple radio buttons.
+ * Memoized for optimal re-render performance.
+ */
+export const RadioGroup = memo(function RadioGroup({
   value: controlledValue,
   defaultValue = '',
   onChange,
@@ -99,22 +110,27 @@ export const RadioGroup = ({
   disabled = false,
   size = 'md',
   children,
-  className = '',
-}: RadioGroupProps) => {
+  className,
+}: RadioGroupProps) {
   const [internalValue, setInternalValue] = useState(defaultValue);
 
   const isControlled = controlledValue !== undefined;
   const currentValue = isControlled ? controlledValue : internalValue;
 
-  const handleChange = (newValue: string) => {
-    if (!isControlled) {
-      setInternalValue(newValue);
-    }
-    onChange?.(newValue);
-  };
+  const handleChange = useCallback(
+    (newValue: string) => {
+      if (!isControlled) {
+        setInternalValue(newValue);
+      }
+      onChange?.(newValue);
+    },
+    [isControlled, onChange]
+  );
+
+  const classes = useMemo(() => clsx('radio-group', className), [className]);
 
   return (
-    <div className={`radio-group ${className}`} role="radiogroup">
+    <div className={classes} role="radiogroup">
       {React.Children.map(children, child => {
         if (React.isValidElement<RadioProps>(child) && child.type === Radio) {
           return React.cloneElement(child, {
@@ -129,4 +145,4 @@ export const RadioGroup = ({
       })}
     </div>
   );
-};
+});
