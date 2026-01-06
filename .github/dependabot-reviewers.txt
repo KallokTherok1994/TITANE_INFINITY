@@ -1,0 +1,3 @@
+# TITANE∞ Dependabot reviewers
+# - One GitHub username per line OR comma-separated
+# - Leave empty to disable auto-review requests

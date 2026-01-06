@@ -19,11 +19,11 @@ echo "🟢 TITANE∞ — Starting DEV RUNTIME"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
-# Check we're on dev or feature/* branch
+# Safety: block running dev runtime on stable-runtime branch
 CURRENT_BRANCH=$(git branch --show-current)
 if [[ $CURRENT_BRANCH == "stable-runtime" ]]; then
     echo "❌ ERROR: You are on stable-runtime branch"
-    echo "Development must be done on 'dev' or 'feature/*' branches"
+    echo "Dev runtime must NOT be launched from 'stable-runtime'"
     echo ""
     echo "Run: ./scripts/git/switch-dev.sh"
     exit 1
