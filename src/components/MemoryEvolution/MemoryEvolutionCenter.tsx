@@ -156,6 +156,10 @@ const HierarchyHealthPanel: React.FC<{ health: HierarchyHealth | null }> = ({
     { name: 'Core', value: health.core_health },
   ];
 
+  const recommendations = Array.isArray(health.recommendations)
+    ? health.recommendations
+    : [];
+
   return (
     <div className="hierarchy-health-panel">
       <h3>Santé Hiérarchique</h3>
@@ -169,7 +173,6 @@ const HierarchyHealthPanel: React.FC<{ health: HierarchyHealth | null }> = ({
         >
           <span>{Math.round(health.overall_health * 100)}%</span>
         </div>
-        <span className="health-label">Global</span>
       </div>
 
       <div className="health-metrics">
@@ -205,11 +208,11 @@ const HierarchyHealthPanel: React.FC<{ health: HierarchyHealth | null }> = ({
         </div>
       </div>
 
-      {health.recommendations.length > 0 && (
+      {recommendations.length > 0 && (
         <div className="recommendations">
           <h4>💡 Recommandations</h4>
           <ul>
-            {health.recommendations.map((rec, i) => (
+            {recommendations.map((rec, i) => (
               <li key={i}>{rec}</li>
             ))}
           </ul>
