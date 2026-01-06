@@ -2,6 +2,55 @@
   "snapshots": [],
   "logs": [
     {
+      "id": "ui-1767719112338-grtnp9b3",
+      "timestamp": 1767719112338,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1767718890239-70begij9",
+      "timestamp": 1767718890239,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1767718804568-g2xxsmqh",
+      "timestamp": 1767718804568,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1767718635509-ieeb1adu",
+      "timestamp": 1767718635509,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1767718549977-pf53qjm2",
+      "timestamp": 1767718549977,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1767718220488-8lbi497z",
+      "timestamp": 1767718220488,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1767718066312-7ftkj0yd",
+      "timestamp": 1767718066312,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
       "id": "ui-1767717753784-yg6yt7uy",
       "timestamp": 1767717753784,
       "level": "Info",
@@ -2537,7 +2586,7 @@
   "knowledge": [],
   "rituals": [],
   "metadata": {
-    "last_validation_ts": 1767717753950,
+    "last_validation_ts": 1767719112505,
     "last_compaction_ts": null
   }
 }
