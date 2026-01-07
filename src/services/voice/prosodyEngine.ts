@@ -39,7 +39,7 @@ export class ProsodyEngine {
    * Mapper une intention émotionnelle vers un profil prosodique
    */
   mapProsody(intent: EmotionalIntent): ProsodyProfile {
-    console.log(`[ProsodyEngine] 🎵 Mapping emotion: ${intent.emotion}`);
+    logger.debug(`[ProsodyEngine] 🎵 Mapping emotion: ${intent.emotion}`);
 
     // Calcul des valeurs de base
     const rate = this.calculateRate(intent);
@@ -191,7 +191,7 @@ export class ProsodyEngine {
    * Générer SSML complet à partir d'un texte et d'un profil prosodique
    */
   generateSSML(text: string, prosody: ProsodyProfile): string {
-    console.log('[ProsodyEngine] 📝 Generating SSML...');
+    logger.debug('📝 Generating SSML...');
 
     // Échapper le texte pour SSML
     const escapedText = this.escapeSSML(text);
@@ -219,7 +219,7 @@ export class ProsodyEngine {
 </speak>
     `.trim();
 
-    console.log('[ProsodyEngine] ✅ SSML generated');
+    logger.debug('✅ SSML generated');
     return ssml;
   }
 

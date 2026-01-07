@@ -139,7 +139,7 @@ export class IndexedDBOptimizer {
       const request = indexedDB.open(this.config.dbName, this.config.version);
 
       request.onerror = () => {
-        console.error('[IndexedDBOptimizer] Open failed:', request.error);
+        logger.error('Open failed:', request.error);
         reject(request.error);
       };
 
@@ -155,7 +155,7 @@ export class IndexedDBOptimizer {
           0
         );
 
-        console.log('[IndexedDBOptimizer] Initialized:', this.config.dbName);
+        logger.debug('Initialized:', this.config.dbName);
         resolve(true);
       };
 
@@ -191,7 +191,7 @@ export class IndexedDBOptimizer {
           }
         }
 
-        console.log('[IndexedDBOptimizer] Schema upgraded to v' + this.config.version);
+        logger.debug('Schema upgraded to v' + this.config.version);
       };
     });
   }
@@ -246,7 +246,7 @@ export class IndexedDBOptimizer {
 
       return result;
     } catch (error) {
-      console.error('[IndexedDBOptimizer] Put failed:', error);
+      logger.error('Put failed:', error);
       throw error;
     }
   }
@@ -308,7 +308,7 @@ export class IndexedDBOptimizer {
 
       return processedResult;
     } catch (error) {
-      console.error('[IndexedDBOptimizer] Get failed:', error);
+      logger.error('Get failed:', error);
       throw error;
     }
   }
@@ -378,7 +378,7 @@ export class IndexedDBOptimizer {
 
       return processedResults;
     } catch (error) {
-      console.error('[IndexedDBOptimizer] Query failed:', error);
+      logger.error('Query failed:', error);
       throw error;
     }
   }
@@ -410,7 +410,7 @@ export class IndexedDBOptimizer {
         await this.maybeCompact(storeName);
       }
     } catch (error) {
-      console.error('[IndexedDBOptimizer] Delete failed:', error);
+      logger.error('Delete failed:', error);
       throw error;
     }
   }
@@ -567,7 +567,7 @@ export class IndexedDBOptimizer {
   }
 
   private async compact(storeName: string): Promise<void> {
-    console.log('[IndexedDBOptimizer] Compacting store:', storeName);
+    logger.debug('Compacting store:', storeName);
 
     // Read all records
     const records = await this.query(storeName);
@@ -580,7 +580,7 @@ export class IndexedDBOptimizer {
       await this.put(storeName, record);
     }
 
-    console.log('[IndexedDBOptimizer] Compaction complete');
+    logger.debug('Compaction complete');
   }
 
   private async calculateFragmentation(storeName: string): Promise<number> {

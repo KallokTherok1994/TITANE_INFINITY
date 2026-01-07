@@ -176,7 +176,7 @@ export function getDebouncedStorage(): ReturnType<typeof createDebouncedStorage>
       maxPendingWrites: 100,
       onFlush: count => {
         if (process.env.NODE_ENV === 'development') {
-          console.log(`[DebouncedStorage] Flushed ${count} writes`);
+          logger.debug(`[DebouncedStorage] Flushed ${count} writes`);
         }
       },
     });

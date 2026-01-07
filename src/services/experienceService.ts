@@ -55,10 +55,10 @@ export const initExperienceService = async (): Promise<void> => {
 
     if (savedState && typeof savedState === 'object' && savedState.domains) {
       experienceState = savedState;
-      console.log('[Experience] État chargé depuis Tauri:', experienceState);
+      logger.debug('État chargé depuis Tauri:', experienceState);
     } else {
       // État invalide ou vide : créer état par défaut
-      console.log('[Experience] État backend invalide, création état par défaut');
+      logger.debug('État backend invalide, création état par défaut');
       experienceState = createDefaultExperienceState();
       await saveState();
     }
@@ -67,7 +67,7 @@ export const initExperienceService = async (): Promise<void> => {
     notifyListeners();
   } catch (err) {
     // Si commande Tauri pas disponible (mode browser), utiliser localStorage
-    console.warn('[Experience] Tauri non disponible, fallback localStorage:', err);
+    logger.warn('Tauri non disponible, fallback localStorage:', err);
     loadFromLocalStorage();
     isInitialized = true;
   }
@@ -92,7 +92,7 @@ export const awardExperience = async (
   const domain = experienceState.domains[domainId];
 
   if (!domain) {
-    console.error(`[Experience] Domaine introuvable: ${domainId}`);
+    logger.error(`[Experience] Domaine introuvable: ${domainId}`);
     return null;
   }
 
@@ -140,10 +140,10 @@ export const awardExperience = async (
 
   // Log level-up si applicable
   if (newLevel > oldLevel) {
-    console.log(`🎉 [Experience] ${domain.label} level up! ${oldLevel} → ${newLevel}`);
+    logger.debug(`🎉 [Experience] ${domain.label} level up! ${oldLevel} → ${newLevel}`);
   }
 
-  console.log(
+  logger.debug(
     `[Experience] +${amount} XP → ${domain.label} (${newXp} XP, Niveau ${newLevel})`
   );
 
@@ -202,7 +202,7 @@ const saveState = async (): Promise<void> => {
     await safeInvoke('experience_update_state', { state: experienceState });
   } catch (err) {
     // Fallback localStorage si Tauri non disponible
-    console.warn('[Experience] Tauri save failed, using localStorage:', err);
+    logger.warn('Tauri save failed, using localStorage:', err);
     localStorage.setItem('titane_experience', JSON.stringify(experienceState));
   }
 };
@@ -215,14 +215,14 @@ const loadFromLocalStorage = (): void => {
     const saved = localStorage.getItem('titane_experience');
     if (saved) {
       experienceState = JSON.parse(saved);
-      console.log('[Experience] État chargé depuis localStorage');
+      logger.debug('État chargé depuis localStorage');
     } else {
       experienceState = createDefaultExperienceState();
       localStorage.setItem('titane_experience', JSON.stringify(experienceState));
-      console.log('[Experience] État initial créé (localStorage)');
+      logger.debug('État initial créé (localStorage)');
     }
   } catch (err) {
-    console.error('[Experience] Erreur chargement localStorage:', err);
+    logger.error('Erreur chargement localStorage:', err);
     experienceState = createDefaultExperienceState();
   }
 };
@@ -235,7 +235,7 @@ const notifyListeners = (): void => {
     try {
       listener({ ...experienceState });
     } catch (err) {
-      console.error('[Experience] Erreur listener:', err);
+      logger.error('Erreur listener:', err);
     }
   });
 };
@@ -251,7 +251,7 @@ export const resetExperienceState = async (): Promise<void> => {
   experienceState = createDefaultExperienceState();
   await saveState();
   notifyListeners();
-  console.log('[Experience] État réinitialisé');
+  logger.debug('État réinitialisé');
 };
 
 /**

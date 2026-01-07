@@ -53,7 +53,7 @@ export class TTSDuckingEngine {
       autoReleaseDelay: config.autoReleaseDelay ?? 1000,
     };
 
-    console.log('[TTSDuckingEngine] 🎛️ Initialized:', this.config);
+    logger.debug('🎛️ Initialized:', this.config);
   }
 
   /**
@@ -66,9 +66,9 @@ export class TTSDuckingEngine {
       this.gainNode.gain.value = 1.0;
       this.gainNode.connect(this.audioContext.destination);
 
-      console.log('[TTSDuckingEngine] ✅ Audio context ready');
+      logger.debug('✅ Audio context ready');
     } catch (error) {
-      console.error('[TTSDuckingEngine] Initialization failed:', error);
+      logger.error('Initialization failed:', error);
       throw error;
     }
   }
@@ -88,11 +88,11 @@ export class TTSDuckingEngine {
         audio.dataset.connected = 'true';
       } catch (error) {
         // Element might already be connected
-        console.warn('[TTSDuckingEngine] Could not connect audio element:', error);
+        logger.warn('Could not connect audio element:', error);
       }
     }
 
-    console.log('[TTSDuckingEngine] 🔊 Audio element registered');
+    logger.debug('🔊 Audio element registered');
   }
 
   /**
@@ -111,14 +111,14 @@ export class TTSDuckingEngine {
     const targetLevel = level ?? this.config.duckLevel;
 
     if (this.state === 'stopped') {
-      console.warn('[TTSDuckingEngine] Cannot duck: TTS already stopped');
+      logger.warn('Cannot duck: TTS already stopped');
       return;
     }
 
     this.state = 'ducked';
     this.currentVolume = targetLevel;
 
-    console.log(`[TTSDuckingEngine] 🔉 Ducking to ${(targetLevel * 100).toFixed(0)}%`);
+    logger.debug(`[TTSDuckingEngine] 🔉 Ducking to ${(targetLevel * 100).toFixed(0)}%`);
 
     // Clear any pending release
     if (this.releaseTimeoutHandle) {
@@ -158,7 +158,7 @@ export class TTSDuckingEngine {
     this.state = 'normal';
     this.currentVolume = this.originalVolume;
 
-    console.log('[TTSDuckingEngine] 🔊 Releasing ducking');
+    logger.debug('🔊 Releasing ducking');
 
     // Clear release timeout
     if (this.releaseTimeoutHandle) {
@@ -192,7 +192,7 @@ export class TTSDuckingEngine {
     }
 
     this.state = 'stopped';
-    console.log('[TTSDuckingEngine] ⏹️ Stopping TTS immediately');
+    logger.debug('⏹️ Stopping TTS immediately');
 
     // Clear any pending release
     if (this.releaseTimeoutHandle) {
@@ -232,7 +232,7 @@ export class TTSDuckingEngine {
       this.gainNode.gain.value = 1.0;
     }
 
-    console.log('[TTSDuckingEngine] 🔄 Reset to normal');
+    logger.debug('🔄 Reset to normal');
   }
 
   /**
@@ -279,7 +279,7 @@ export class TTSDuckingEngine {
     this.gainNode = null;
     this.audioElements.clear();
 
-    console.log('[TTSDuckingEngine] 🔌 Destroyed');
+    logger.debug('🔌 Destroyed');
   }
 }
 

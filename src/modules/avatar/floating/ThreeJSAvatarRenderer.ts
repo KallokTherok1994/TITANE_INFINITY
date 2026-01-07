@@ -174,12 +174,12 @@ export class ThreeJSAvatarRenderer {
    */
   public initializeAvatar(): void {
     if (this.avatarMeshes) {
-      console.warn('[ThreeJSAvatarRenderer] Avatar already initialized');
+      logger.warn('Avatar already initialized');
       return;
     }
 
     this.avatarMeshes = this.createPlaceholderAvatar();
-    if (DEBUG) console.log('[ThreeJSAvatarRenderer] Placeholder avatar created');
+    if (DEBUG) logger.debug('Placeholder avatar created');
   }
 
   // ═════════════════════════════════════════════════════════════════════════
@@ -192,7 +192,7 @@ export class ThreeJSAvatarRenderer {
    */
   public updateSkeleton(snapshot: SkeletonSnapshot): void {
     if (!this.avatarMeshes) {
-      if (DEBUG) console.warn('[ThreeJSAvatarRenderer] Avatar not initialized');
+      if (DEBUG) logger.warn('Avatar not initialized');
       return;
     }
 
@@ -238,7 +238,7 @@ export class ThreeJSAvatarRenderer {
    */
   public startRenderLoop(): void {
     if (this.animationFrameId !== null) {
-      console.warn('[ThreeJSAvatarRenderer] Render loop already running');
+      logger.warn('Render loop already running');
       return;
     }
 
@@ -250,7 +250,7 @@ export class ThreeJSAvatarRenderer {
     };
 
     this.animationFrameId = requestAnimationFrame(animate);
-    if (DEBUG) console.log('[ThreeJSAvatarRenderer] Render loop started');
+    if (DEBUG) logger.debug('Render loop started');
   }
 
   /**
@@ -260,7 +260,7 @@ export class ThreeJSAvatarRenderer {
     if (this.animationFrameId !== null) {
       cancelAnimationFrame(this.animationFrameId);
       this.animationFrameId = null;
-      if (DEBUG) console.log('[ThreeJSAvatarRenderer] Render loop stopped');
+      if (DEBUG) logger.debug('Render loop stopped');
     }
   }
 
@@ -372,7 +372,7 @@ export class ThreeJSAvatarRenderer {
     this.renderer.dispose();
 
     this.isDisposed = true;
-    if (DEBUG) console.log('[ThreeJSAvatarRenderer] Disposed');
+    if (DEBUG) logger.debug('Disposed');
   }
 
   // ═════════════════════════════════════════════════════════════════════════

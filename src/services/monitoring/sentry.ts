@@ -65,11 +65,11 @@ export function initSentry(): void {
   const config = getSentryConfig();
 
   if (!config.enabled) {
-    console.log('🔍 [SENTRY] Monitoring désactivé (pas de DSN ou mode dev)');
+    logger.debug('🔍 [SENTRY] Monitoring désactivé (pas de DSN ou mode dev)');
     return;
   }
 
-  console.log(
+  logger.debug(
     `🔍 [SENTRY] Initialisation - Environment: ${config.environment}, Release: ${config.release}`
   );
 
@@ -111,7 +111,7 @@ export function initSentry(): void {
     beforeSend(event, hint) {
       // Filtrer les erreurs de développement
       if (config.environment === 'development') {
-        console.log('🔍 [SENTRY] Event filtré (dev mode):', event);
+        logger.debug('🔍 [SENTRY] Event filtré (dev mode):', event);
         return null;
       }
 
@@ -171,7 +171,7 @@ export function initSentry(): void {
   Sentry.setTag('app', 'titane-infinity');
   Sentry.setTag('version', config.release);
 
-  console.log('✅ [SENTRY] Monitoring initialisé avec succès');
+  logger.debug('✅ [SENTRY] Monitoring initialisé avec succès');
 }
 
 /**
@@ -432,7 +432,7 @@ export function captureWebVitals(): void {
  * Test de l'envoi d'erreur à Sentry (pour debug)
  */
 export function testSentry(): void {
-  console.log("🧪 [SENTRY] Test d'envoi d'erreur...");
+  logger.debug("🧪 [SENTRY] Test d'envoi d'erreur...");
 
   try {
     throw new Error(
@@ -455,8 +455,8 @@ export function testSentry(): void {
       error as Error
     );
 
-    console.log('✅ [SENTRY] Erreur de test envoyée avec succès');
-    console.log('   Vérifiez votre dashboard Sentry dans quelques secondes');
+    logger.debug('✅ [SENTRY] Erreur de test envoyée avec succès');
+    logger.debug('   Vérifiez votre dashboard Sentry dans quelques secondes');
   }
 }
 

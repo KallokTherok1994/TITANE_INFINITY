@@ -144,7 +144,7 @@ class Logger {
    */
   trace(...args: LogArgs) {
     if (!this.shouldLog(LogLevel.TRACE)) return;
-    console.log(...this.format('TRACE', ...args));
+    logger.debug(...this.format('TRACE', ...args));
   }
 
   /**
@@ -152,7 +152,7 @@ class Logger {
    */
   debug(...args: LogArgs) {
     if (!this.shouldLog(LogLevel.DEBUG)) return;
-    console.log(...this.format('DEBUG', ...args));
+    logger.debug(...this.format('DEBUG', ...args));
   }
 
   /**
@@ -160,7 +160,7 @@ class Logger {
    */
   info(...args: LogArgs) {
     if (!this.shouldLog(LogLevel.INFO)) return;
-    console.info(...this.format('INFO', ...args));
+    logger.info(...this.format('INFO', ...args));
   }
 
   /**
@@ -168,7 +168,7 @@ class Logger {
    */
   warn(...args: LogArgs) {
     if (!this.shouldLog(LogLevel.WARN)) return;
-    console.warn(...this.format('WARN', ...args));
+    logger.warn(...this.format('WARN', ...args));
   }
 
   /**
@@ -176,14 +176,14 @@ class Logger {
    */
   error(...args: LogArgs) {
     if (!this.shouldLog(LogLevel.ERROR)) return;
-    console.error(...this.format('ERROR', ...args));
+    logger.error(...this.format('ERROR', ...args));
   }
 
   /**
    * FATAL - Erreurs critiques (toujours loggé)
    */
   fatal(...args: LogArgs) {
-    console.error(...this.format('FATAL', ...args));
+    logger.error(...this.format('FATAL', ...args));
   }
 
   /**
@@ -260,7 +260,7 @@ export function createLogger(prefix: string, config?: Partial<LoggerConfig>) {
  * // Profiling
  * logger.time('API Call');
  * await fetchData();
- * logger.timeEnd('API Call'); // "[TITANE] API Call: 234ms"
+ * logger.timeEnd('API Call'); // "API Call: 234ms"
  *
  * // Grouping (dev only)
  * logger.group('Provider Flow');
@@ -273,8 +273,8 @@ export function createLogger(prefix: string, config?: Partial<LoggerConfig>) {
  * ═══════════════════════════════════════════════════════════════════════════════
  *
  * Avant:
- *   console.log('[AI Provider]', 'Selected:', provider);
- *   console.warn('[Memory]', 'Cache miss');
+ *   logger.debug('[AI Provider]', 'Selected:', provider);
+ *   logger.warn('[Memory]', 'Cache miss');
  *
  * Après:
  *   const logger = createLogger('AI Provider');

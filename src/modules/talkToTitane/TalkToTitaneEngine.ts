@@ -127,7 +127,7 @@ class TalkToTitaneEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   async activate(mode: TalkToTitaneMode = 'continuous'): Promise<void> {
-    console.log('[TalkToTitane] Activating Talk-To-TITANE Engine v∞...');
+    logger.debug('Activating Talk-To-TITANE Engine v∞...');
 
     this.state.isActive = true;
     this.state.currentMode = mode;
@@ -139,12 +139,12 @@ class TalkToTitaneEngine {
     // Start listening for wake phrases
     await this.startWakePhraseDetection();
 
-    console.log(`[TalkToTitane] Activated in ${mode} mode`);
+    logger.debug(`[TalkToTitane] Activated in ${mode} mode`);
     this.notifyListeners();
   }
 
   async deactivate(): Promise<void> {
-    console.log('[TalkToTitane] Deactivating Talk-To-TITANE Engine...');
+    logger.debug('Deactivating Talk-To-TITANE Engine...');
 
     this.stopListening();
 
@@ -164,7 +164,7 @@ class TalkToTitaneEngine {
     this.state.isListening = false;
     this.state.currentIntent = null;
 
-    console.log('[TalkToTitane] Deactivated');
+    logger.debug('Deactivated');
     this.notifyListeners();
   }
 
@@ -173,7 +173,7 @@ class TalkToTitaneEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   private async startWakePhraseDetection(): Promise<void> {
-    console.log('[TalkToTitane] Wake phrase detection active...');
+    logger.debug('Wake phrase detection active...');
 
     // Dynamic import pour éviter bundling
     const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
@@ -205,7 +205,7 @@ class TalkToTitaneEngine {
         };
 
         this.state.lastWakePhrase = wakePhrase;
-        console.log(`[TalkToTitane] Wake phrase detected: "${phrase}"`);
+        logger.debug(`[TalkToTitane] Wake phrase detected: "${phrase}"`);
 
         // Start listening
         if (!this.state.isListening) {
@@ -232,14 +232,14 @@ class TalkToTitaneEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   private startListening(): void {
-    console.log('[TalkToTitane] Listening activated...');
+    logger.debug('Listening activated...');
     this.state.isListening = true;
     this.lastProcessedLength = 0;
     this.notifyListeners();
   }
 
   stopListening(): void {
-    console.log('[TalkToTitane] Listening stopped');
+    logger.debug('Listening stopped');
     this.state.isListening = false;
     this.notifyListeners();
   }
@@ -498,7 +498,7 @@ class TalkToTitaneEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   async processUserInput(text: string): Promise<TalkResponse> {
-    console.log('[TalkToTitane] Processing input:', text);
+    logger.debug('Processing input:', text);
 
     // Detect intent
     const intent = await this.detectIntent(text);
@@ -707,7 +707,7 @@ class TalkToTitaneEngine {
     // Features:
     //   - Emotion mapping: joy -> higher pitch, sadness -> slower speed
     //   - Interruption: tts_stop() for dynamic conversations
-    console.log(`[TalkToTitane] TTS: "${text}" (volume: ${this.config.ttsVolume})`);
+    logger.debug(`[TalkToTitane] TTS: "${text}" (volume: ${this.config.ttsVolume})`);
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -738,13 +738,13 @@ class TalkToTitaneEngine {
 
   configure(config: Partial<TalkToTitaneConfig>): void {
     this.config = { ...this.config, ...config };
-    console.log('[TalkToTitane] Configuration updated:', config);
+    logger.debug('Configuration updated:', config);
     this.notifyListeners();
   }
 
   setMode(mode: TalkToTitaneMode): void {
     this.state.currentMode = mode;
-    console.log(`[TalkToTitane] Mode changed to: ${mode}`);
+    logger.debug(`[TalkToTitane] Mode changed to: ${mode}`);
     this.notifyListeners();
   }
 
@@ -752,7 +752,7 @@ class TalkToTitaneEngine {
     tone: 'analytical' | 'calm' | 'energizing' | 'motivating' | 'neutral'
   ): void {
     this.state.emotionalCalibration = tone;
-    console.log(`[TalkToTitane] Emotional calibration: ${tone}`);
+    logger.debug(`[TalkToTitane] Emotional calibration: ${tone}`);
     this.notifyListeners();
   }
 

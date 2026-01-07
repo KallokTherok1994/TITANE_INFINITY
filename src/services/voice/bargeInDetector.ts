@@ -91,7 +91,7 @@ export class BargeInDetector {
       confidenceThreshold: config.confidenceThreshold ?? 0.6,
     };
 
-    console.log('[BargeInDetector] 🎤 Initialized:', this.config);
+    logger.debug('🎤 Initialized:', this.config);
   }
 
   /**
@@ -107,9 +107,9 @@ export class BargeInDetector {
       const source = this.audioContext.createMediaStreamSource(mediaStream);
       source.connect(this.analyser);
 
-      console.log('[BargeInDetector] ✅ Audio analysis ready');
+      logger.debug('✅ Audio analysis ready');
     } catch (error) {
-      console.error('[BargeInDetector] Initialization failed:', error);
+      logger.error('Initialization failed:', error);
       throw error;
     }
   }
@@ -119,12 +119,12 @@ export class BargeInDetector {
    */
   registerTTSFingerprint(audioData: Float32Array): void {
     if (!this.audioContext) {
-      console.warn('[BargeInDetector] AudioContext not initialized');
+      logger.warn('AudioContext not initialized');
       return;
     }
 
     this.ttsFingerprint = this.extractSpectrum(audioData);
-    console.log('[BargeInDetector] 📊 TTS fingerprint registered');
+    logger.debug('📊 TTS fingerprint registered');
   }
 
   /**
@@ -133,7 +133,7 @@ export class BargeInDetector {
    */
   detectInterrupt(audioChunk: Float32Array): BargeInEvent | null {
     if (!this.analyser) {
-      console.warn('[BargeInDetector] Analyser not initialized');
+      logger.warn('Analyser not initialized');
       return null;
     }
 
@@ -249,7 +249,7 @@ export class BargeInDetector {
       return;
     }
 
-    console.log(
+    logger.debug(
       `[BargeInDetector] 🚨 ${event.type} detected (confidence: ${event.confidence.toFixed(2)})`
     );
 
@@ -257,7 +257,7 @@ export class BargeInDetector {
       try {
         listener(event);
       } catch (error) {
-        console.error('[BargeInDetector] Listener error:', error);
+        logger.error('Listener error:', error);
       }
     });
   }
@@ -385,7 +385,7 @@ export class BargeInDetector {
     }
     this.analyser = null;
     this.listeners.clear();
-    console.log('[BargeInDetector] 🔌 Destroyed');
+    logger.debug('🔌 Destroyed');
   }
 }
 

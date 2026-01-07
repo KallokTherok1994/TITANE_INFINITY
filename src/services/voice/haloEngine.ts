@@ -84,7 +84,7 @@ class HaloEngine {
       return; // Already in this state
     }
 
-    console.log(`[HaloEngine] Transition: ${this.state} → ${newState}`);
+    logger.debug(`[HaloEngine] Transition: ${this.state} → ${newState}`);
 
     this.state = newState;
     this.startTime = newState !== 'idle' ? Date.now() : null;
@@ -109,7 +109,7 @@ class HaloEngine {
       try {
         callback(status);
       } catch (error) {
-        console.error('[HaloEngine] Callback error:', error);
+        logger.error('Callback error:', error);
       }
     });
   }

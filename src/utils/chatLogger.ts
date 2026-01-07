@@ -22,7 +22,7 @@ export const chatLogger = {
    */
   info: (...args: unknown[]) => {
     if (isDebugEnabled()) {
-      console.log('[CHAT]', ...args);
+      logger.debug('[CHAT]', ...args);
     }
   },
 
@@ -31,7 +31,7 @@ export const chatLogger = {
    */
   debug: (...args: unknown[]) => {
     if (isDev) {
-      console.log('[CHAT DEBUG]', ...args);
+      logger.debug('[CHAT DEBUG]', ...args);
     }
   },
 
@@ -39,14 +39,14 @@ export const chatLogger = {
    * Log warning (toujours actif)
    */
   warn: (...args: unknown[]) => {
-    console.warn('[CHAT]', ...args);
+    logger.warn('[CHAT]', ...args);
   },
 
   /**
    * Log error (toujours actif)
    */
   error: (...args: unknown[]) => {
-    console.error('[CHAT]', ...args);
+    logger.error('[CHAT]', ...args);
   },
 
   /**
@@ -54,7 +54,7 @@ export const chatLogger = {
    */
   success: (...args: unknown[]) => {
     if (isDebugEnabled()) {
-      console.log('[CHAT] ✅', ...args);
+      logger.debug('✅', ...args);
     }
   },
 
@@ -63,7 +63,7 @@ export const chatLogger = {
    */
   perf: (label: string, duration: number) => {
     if (isDebugEnabled()) {
-      console.log(`[CHAT PERF] ${label}: ${duration}ms`);
+      logger.debug(`[CHAT PERF] ${label}: ${duration}ms`);
     }
   },
 
@@ -73,7 +73,7 @@ export const chatLogger = {
   enableDebug: () => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('titane_debug_chat', 'true');
-      console.log('[CHAT] 🔍 Debug mode enabled (localStorage)');
+      logger.debug('🔍 Debug mode enabled (localStorage)');
     }
   },
 
@@ -83,7 +83,7 @@ export const chatLogger = {
   disableDebug: () => {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('titane_debug_chat');
-      console.log('[CHAT] 🔇 Debug mode disabled');
+      logger.debug('🔇 Debug mode disabled');
     }
   },
 };

@@ -477,9 +477,9 @@ export class FusionEngine {
         });
       }
 
-      console.log(`[FusionEngine] Collected ${entries.length} logs from LogEngine`);
+      logger.debug(`[FusionEngine] Collected ${entries.length} logs from LogEngine`);
     } catch (error) {
-      console.warn('[FusionEngine] Log collection failed:', error);
+      logger.warn('Log collection failed:', error);
     }
 
     return entries;
@@ -550,12 +550,12 @@ ${introspection.futureVision.priorityImprovements
           });
         }
 
-        console.log(
+        logger.debug(
           `[FusionEngine] Collected Singularity data: 1 introspection + ${introspection.diagnostic.criticalIssues.length} issues`
         );
       }
     } catch (error) {
-      console.warn('[FusionEngine] Singularity collection failed:', error);
+      logger.warn('Singularity collection failed:', error);
     }
 
     return entries;
@@ -1070,7 +1070,7 @@ ${introspection.futureVision.priorityImprovements
       };
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
     } catch (error) {
-      console.warn('[FusionEngine] Save failed:', error);
+      logger.warn('Save failed:', error);
     }
   }
 
@@ -1084,7 +1084,7 @@ ${introspection.futureVision.priorityImprovements
         this.lastFusionTime = data.lastFusion || 0;
       }
     } catch (error) {
-      console.warn('[FusionEngine] Load failed:', error);
+      logger.warn('Load failed:', error);
     }
   }
 

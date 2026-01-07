@@ -135,7 +135,7 @@ export class PerformanceProfiler {
 
       // Auto-log slow operations
       if (duration > this.config.autoLogThreshold) {
-        console.warn(`⚠️ [Perf] Slow operation: ${name} took ${duration.toFixed(2)}ms`);
+        logger.warn(`⚠️ [Perf] Slow operation: ${name} took ${duration.toFixed(2)}ms`);
       }
 
       return duration;
@@ -499,7 +499,7 @@ export function time(label: string): () => void {
   const start = performance.now();
   return () => {
     const duration = performance.now() - start;
-    console.log(`⏱️ ${label}: ${duration.toFixed(2)}ms`);
+    logger.debug(`⏱️ ${label}: ${duration.toFixed(2)}ms`);
   };
 }
 

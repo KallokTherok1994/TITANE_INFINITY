@@ -236,7 +236,7 @@ export class PerformanceMonitor {
    * Log metrics to console
    */
   private logMetrics(): void {
-    console.log('[PerformanceMonitor] Metrics:', {
+    logger.debug('Metrics:', {
       fps: `${this.currentMetrics.fps.toFixed(1)} (avg: ${this.currentMetrics.averageFps.toFixed(1)}, min: ${this.currentMetrics.minFps.toFixed(1)}, max: ${this.currentMetrics.maxFps.toFixed(1)})`,
       frameTime: `${this.currentMetrics.frameTime.toFixed(2)}ms`,
       cpu: `${this.currentMetrics.cpuUsage.toFixed(1)}%`,

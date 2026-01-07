@@ -124,8 +124,8 @@ class UserPreferencesEngine {
 
   constructor() {
     this.preferences = this.loadPreferences();
-    console.log(
-      '[UserPreferencesEngine] Initialized with',
+    logger.debug(
+      'Initialized with',
       this.preferences.metrics.totalInteractions,
       'interactions'
     );
@@ -142,7 +142,7 @@ class UserPreferencesEngine {
         return { ...DEFAULT_PREFERENCES, ...JSON.parse(stored) };
       }
     } catch (error) {
-      console.warn('[UserPreferencesEngine] Failed to load preferences:', error);
+      logger.warn('Failed to load preferences:', error);
     }
     return { ...DEFAULT_PREFERENCES };
   }
@@ -152,7 +152,7 @@ class UserPreferencesEngine {
       this.preferences.metrics.updatedAt = Date.now();
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.preferences));
     } catch (error) {
-      console.error('[UserPreferencesEngine] Failed to save preferences:', error);
+      logger.error('Failed to save preferences:', error);
     }
   }
 
@@ -199,7 +199,7 @@ class UserPreferencesEngine {
   setName(name: string): void {
     this.preferences.name = name;
     this.savePreferences();
-    console.log('[UserPreferencesEngine] Name set to:', name);
+    logger.debug('Name set to:', name);
   }
 
   updateCommunicationStyle(style: Partial<UserPreferences['communicationStyle']>): void {
@@ -529,7 +529,7 @@ class UserPreferencesEngine {
     this.preferences = { ...DEFAULT_PREFERENCES };
     this.interactionBuffer = [];
     this.savePreferences();
-    console.log('[UserPreferencesEngine] Preferences reset');
+    logger.debug('Preferences reset');
   }
 
   getDebugInfo(): object {

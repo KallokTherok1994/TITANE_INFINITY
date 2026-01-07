@@ -174,7 +174,7 @@ class TauriClient {
       }
       // Passage en half-open après timeout
       breaker.state = 'half-open';
-      console.log(`🔄 Circuit breaker HALF-OPEN for ${command}`);
+      logger.debug(`🔄 Circuit breaker HALF-OPEN for ${command}`);
     }
 
     let lastError: TAPIError | null = null;
@@ -207,7 +207,7 @@ class TauriClient {
         // Échec → Incrémenter circuit breaker
         this.recordFailure(command);
 
-        console.warn(
+        logger.warn(
           `⚠️ Invoke ${command} failed (attempt ${attempt + 1}/${retries + 1}):`,
           lastError.message
         );
@@ -266,7 +266,7 @@ class TauriClient {
 
     if (breaker.failures >= this.CIRCUIT_BREAKER_THRESHOLD) {
       breaker.state = 'open';
-      console.error(
+      logger.error(
         `🚨 Circuit breaker OPEN for ${command} (${breaker.failures} failures)`
       );
     }
@@ -278,7 +278,7 @@ class TauriClient {
   private resetCircuitBreaker(command: string): void {
     const breaker = this.getCircuitBreaker(command);
     if (breaker.state !== 'closed') {
-      console.log(`✅ Circuit breaker CLOSED for ${command}`);
+      logger.debug(`✅ Circuit breaker CLOSED for ${command}`);
     }
     breaker.failures = 0;
     breaker.state = 'closed';
@@ -344,7 +344,7 @@ class TauriClient {
       try {
         meta = payload.content ? JSON.parse(payload.content) : {};
       } catch (parseError) {
-        console.warn('[TauriClient] Failed to parse stream metadata:', parseError);
+        logger.warn('Failed to parse stream metadata:', parseError);
       }
 
       const errorMessage = typeof meta.error === 'string' ? meta.error : undefined;
