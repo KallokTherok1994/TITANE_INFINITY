@@ -371,7 +371,7 @@ export function useSystemHealth(): UseSystemHealthReturn {
     } catch (err) {
       const error = err instanceof Error ? err : new Error('Failed to refresh health');
       setError(error);
-      console.error('[useSystemHealth] Refresh error:', error);
+      logger.error('Refresh error:', error);
     }
   }, []);
 
@@ -439,7 +439,7 @@ export function useSystemHealth(): UseSystemHealthReturn {
         const error =
           err instanceof Error ? err : new Error('Failed to trigger recovery');
         setError(error);
-        console.error('[useSystemHealth] Recovery error:', error);
+        logger.error('Recovery error:', error);
         throw error;
       }
     },

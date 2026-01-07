@@ -416,7 +416,7 @@ export class UIUXEngine {
       try {
         handler(event);
       } catch (error) {
-        console.error('[UIUXEngine] Event handler error:', error);
+        logger.error('Event handler error:', error);
       }
     }
   }

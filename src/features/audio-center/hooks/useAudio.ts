@@ -75,7 +75,7 @@ export function useAudio(): UseAudioReturn {
         const voices = await audioService.getAvailableVoices();
         setAvailableVoices(voices);
       } catch (error) {
-        console.error('Failed to load audio devices:', error);
+        logger.error('Failed to load audio devices:', error);
       } finally {
         setIsLoading(false);
       }
@@ -134,16 +134,16 @@ export function useAudio(): UseAudioReturn {
   }, []);
 
   const testMicrophone = useCallback(async (): Promise<MicrophoneTestResult> => {
-    console.log('[useAudio] testMicrophone starting...');
+    logger.debug('testMicrophone starting...');
     setIsTesting(true);
     setTestResult(null);
     try {
       const result = await audioService.testMicrophone();
-      console.log('[useAudio] testMicrophone result:', result);
+      logger.debug('testMicrophone result:', result);
       setTestResult(result);
       return result;
     } catch (error) {
-      console.error('[useAudio] testMicrophone error:', error);
+      logger.error('testMicrophone error:', error);
       const errorResult: MicrophoneTestResult = {
         success: false,
         peakLevel: 0,

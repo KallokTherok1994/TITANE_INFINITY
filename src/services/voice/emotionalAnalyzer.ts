@@ -131,7 +131,7 @@ export class EmotionalIntentAnalyzer {
    * Analyser l'intention émotionnelle d'un texte
    */
   analyze(text: string, context?: EmotionalContext): EmotionalAnalysisResult {
-    console.log('[EmotionalAnalyzer] 🎭 Analyzing:', text.substring(0, 60));
+    logger.debug('🎭 Analyzing:', text.substring(0, 60));
 
     // Analyse multi-facettes
     const lexicalScore = this.analyzeLexical(text);
@@ -153,7 +153,7 @@ export class EmotionalIntentAnalyzer {
     // Historique
     this.updateHistory(dominantEmotion);
 
-    console.log(
+    logger.debug(
       `[EmotionalAnalyzer] ✅ Detected: ${dominantEmotion} (intensity: ${intent.intensity.toFixed(2)})`
     );
 

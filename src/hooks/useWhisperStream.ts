@@ -125,7 +125,7 @@ export function useWhisperStream(
    */
   const start = useCallback(async () => {
     try {
-      console.log('[useWhisperStream] 🎙️ Starting...');
+      logger.debug('🎙️ Starting...');
 
       // Start backend streaming
       await secureInvoke('start_whisper_streaming', {
@@ -139,7 +139,7 @@ export function useWhisperStream(
         event => {
           const { text, confidence } = event.payload;
 
-          console.log('[useWhisperStream] 📝 Partial:', text);
+          logger.debug('📝 Partial:', text);
 
           if (mountedRef.current) {
             setState(prev => ({
@@ -159,7 +159,7 @@ export function useWhisperStream(
       const unlistenFinal = await listen<TranscriptionEvent>('whisper:final', event => {
         const { text, confidence } = event.payload;
 
-        console.log('[useWhisperStream] ✅ Final:', text);
+        logger.debug('✅ Final:', text);
 
         if (mountedRef.current) {
           setState(prev => {
@@ -189,9 +189,9 @@ export function useWhisperStream(
         }));
       }
 
-      console.log('[useWhisperStream] ✅ Started');
+      logger.debug('✅ Started');
     } catch (error) {
-      console.error('[useWhisperStream] ❌ Start error:', error);
+      logger.error('❌ Start error:', error);
 
       const errorMsg = error instanceof Error ? error.message : String(error);
 
@@ -212,7 +212,7 @@ export function useWhisperStream(
    */
   const stop = useCallback(async () => {
     try {
-      console.log('[useWhisperStream] 🛑 Stopping...');
+      logger.debug('🛑 Stopping...');
 
       // Stop backend streaming
       await secureInvoke('stop_whisper_streaming');
@@ -237,9 +237,9 @@ export function useWhisperStream(
         }));
       }
 
-      console.log('[useWhisperStream] ✅ Stopped');
+      logger.debug('✅ Stopped');
     } catch (error) {
-      console.error('[useWhisperStream] ❌ Stop error:', error);
+      logger.error('❌ Stop error:', error);
 
       const errorMsg = error instanceof Error ? error.message : String(error);
 
@@ -285,7 +285,7 @@ export function useWhisperStream(
           vadConfidence,
         });
       } catch (error) {
-        console.error('[useWhisperStream] ❌ Send chunk error:', error);
+        logger.error('❌ Send chunk error:', error);
       }
     },
     []

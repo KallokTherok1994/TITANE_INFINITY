@@ -84,7 +84,7 @@ export function useFusionEngine(): UseFusionEngineReturn {
       refresh();
       return report;
     } catch (error) {
-      console.error('[useFusionEngine] Fusion failed:', error);
+      logger.error('Fusion failed:', error);
       throw error;
     } finally {
       setIsFusing(false);

@@ -109,7 +109,7 @@ export class InternalNarrativeEngine {
 
   constructor() {
     this.state = this.getDefaultState();
-    console.log('💭 [NARRATIVE] Initializing Internal Narrative Engine...');
+    logger.debug('💭 [NARRATIVE] Initializing Internal Narrative Engine...');
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -119,7 +119,7 @@ export class InternalNarrativeEngine {
   start(): void {
     if (this.updateInterval) return;
 
-    console.log('💭 [NARRATIVE] Starting internal narrative at 10Hz...');
+    logger.debug('💭 [NARRATIVE] Starting internal narrative at 10Hz...');
     this.updateInterval = setInterval(() => this.tick(), 100); // 10 Hz
   }
 
@@ -127,7 +127,7 @@ export class InternalNarrativeEngine {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
       this.updateInterval = null;
-      console.log('💭 [NARRATIVE] Internal narrative stopped.');
+      logger.debug('💭 [NARRATIVE] Internal narrative stopped.');
     }
   }
 
@@ -350,7 +350,7 @@ export class InternalNarrativeEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   setNarrativeAnchor(anchor: string): void {
-    console.log(`💭 [NARRATIVE] Setting narrative anchor: "${anchor}"`);
+    logger.debug(`💭 [NARRATIVE] Setting narrative anchor: "${anchor}"`);
     this.state.narrativeAnchor = anchor;
 
     // Générer pensée narrative

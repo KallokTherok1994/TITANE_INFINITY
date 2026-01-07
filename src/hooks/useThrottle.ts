@@ -170,7 +170,7 @@ export function useThrottledAsyncCallback<TArgs extends unknown[], TReturn>(
         callbackRef
           .current(...args)
           .catch(error => {
-            console.error('Throttled async callback error:', error);
+            logger.error('Throttled async callback error:', error);
           })
           .finally(() => {
             executingRef.current = false;
@@ -184,7 +184,7 @@ export function useThrottledAsyncCallback<TArgs extends unknown[], TReturn>(
             callbackRef
               .current(...lastArgsRef.current)
               .catch(error => {
-                console.error('Throttled async callback error:', error);
+                logger.error('Throttled async callback error:', error);
               })
               .finally(() => {
                 executingRef.current = false;

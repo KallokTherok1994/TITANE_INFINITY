@@ -103,14 +103,14 @@ export function useTitaneCore(autoRefresh: boolean = true) {
     // ⚠️ FIX CRASH: Attendre que Tauri soit prêt avant d'appeler les commandes
     const initTimeout = setTimeout(() => {
       getSystemStatus().catch(err => {
-        console.warn('[TITANE] Failed to fetch initial system status:', err);
+        logger.warn('Failed to fetch initial system status:', err);
         setError('Connexion au backend en cours...');
       });
     }, 100); // Délai de 100ms pour laisser Tauri s'initialiser
 
     const interval = setInterval(() => {
       getSystemStatus().catch(err => {
-        console.warn('[TITANE] Failed to refresh system status:', err);
+        logger.warn('Failed to refresh system status:', err);
       });
     }, 5000);
 

@@ -98,12 +98,12 @@ export function importConversation(fileContent: string): ExportedConversation | 
 
     // Version check
     if (data.version !== '26.0') {
-      console.warn(`Version ${data.version} importée, conversion possible`);
+      logger.warn(`Version ${data.version} importée, conversion possible`);
     }
 
     return data;
   } catch (error) {
-    console.error('Erreur import conversation:', error);
+    logger.error('Erreur import conversation:', error);
     return null;
   }
 }
@@ -163,7 +163,7 @@ export async function copyToClipboard(
     await navigator.clipboard.writeText(content);
     return true;
   } catch (error) {
-    console.error('Erreur copie presse-papier:', error);
+    logger.error('Erreur copie presse-papier:', error);
     return false;
   }
 }

@@ -29,7 +29,7 @@ export function useTTS(): UseTTSReturn {
     try {
       await audioService.speak(text);
     } catch (error) {
-      console.error('TTS error:', error);
+      logger.error('TTS error:', error);
     } finally {
       setIsSpeaking(false);
     }

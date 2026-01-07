@@ -441,10 +441,10 @@ export class MCPStrategy
   }
 
   private log(message: string, ...args: unknown[]): void {
-    console.log(`[MCPStrategy] ${message}`, ...args);
+    logger.debug(`[MCPStrategy] ${message}`, ...args);
   }
 
   private logError(message: string, error?: unknown): void {
-    console.error(`[MCPStrategy ERROR] ${message}`, error);
+    logger.error(`[MCPStrategy ERROR] ${message}`, error);
   }
 }

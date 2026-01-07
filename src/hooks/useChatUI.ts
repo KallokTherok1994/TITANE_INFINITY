@@ -61,7 +61,7 @@ export function useChatUI(options: UseChatUIOptions = {}): UseChatUIReturn {
       );
 
       if (isDuplicate) {
-        console.warn('⚠️ Duplicate message detected, skipping');
+        logger.warn('⚠️ Duplicate message detected, skipping');
         return prev;
       }
 

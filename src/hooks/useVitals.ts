@@ -99,7 +99,7 @@ export function useVitals(options: UseVitalsOptions = {}): UseVitalsReturn {
       return vitals;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch vitals';
-      console.error('❌ Vitals fetch error:', err);
+      logger.error('❌ Vitals fetch error:', err);
 
       setState(prev => ({
         ...prev,
@@ -181,7 +181,7 @@ export function useVitals(options: UseVitalsOptions = {}): UseVitalsReturn {
           onIntervalChange: newInterval => {
             setCurrentInterval(newInterval);
             if (process.env.NODE_ENV === 'development') {
-              console.log(`[useVitals] Adaptive interval: ${newInterval}ms`);
+              logger.debug(`[useVitals] Adaptive interval: ${newInterval}ms`);
             }
           },
         }

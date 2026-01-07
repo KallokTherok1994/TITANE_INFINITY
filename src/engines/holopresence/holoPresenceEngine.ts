@@ -140,7 +140,7 @@ export class HoloPresenceEngine {
 
   constructor() {
     this.state = this.getDefaultState();
-    console.log('🌀 [HOLOPRESENCE] Initializing HoloPresence Engine...');
+    logger.debug('🌀 [HOLOPRESENCE] Initializing HoloPresence Engine...');
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -150,7 +150,7 @@ export class HoloPresenceEngine {
   start(): void {
     if (this.updateInterval) return;
 
-    console.log('🌀 [HOLOPRESENCE] Starting holopresence at 30Hz...');
+    logger.debug('🌀 [HOLOPRESENCE] Starting holopresence at 30Hz...');
 
     // Subscribe to Expression Engine
     this.subscribeToExpressionEngine();
@@ -166,7 +166,7 @@ export class HoloPresenceEngine {
       clearInterval(this.updateInterval);
       this.updateInterval = null;
       this.state.isVisible = false;
-      console.log('🌀 [HOLOPRESENCE] HoloPresence stopped.');
+      logger.debug('🌀 [HOLOPRESENCE] HoloPresence stopped.');
     }
   }
 
@@ -392,7 +392,7 @@ export class HoloPresenceEngine {
    */
   triggerEvent(event: HoloEvent): void {
     this.eventQueue.push(event);
-    console.log(`🌀 [HOLOPRESENCE] Event triggered: ${event.type} (${event.intensity})`);
+    logger.debug(`🌀 [HOLOPRESENCE] Event triggered: ${event.type} (${event.intensity})`);
   }
 
   // ───────────────────────────────────────────────────────────────────────────

@@ -247,7 +247,7 @@ class UnifiedMultimodalOutputEngine {
 
     this.callbacks = new Set();
 
-    console.log('🎭 [UNIFIED OUTPUT] Unified Multimodal Output Engine initialized');
+    logger.debug('🎭 [UNIFIED OUTPUT] Unified Multimodal Output Engine initialized');
   }
 
   /**
@@ -309,7 +309,7 @@ class UnifiedMultimodalOutputEngine {
     // 7. Notifier callbacks
     this.notifyCallbacks(output);
 
-    console.log(
+    logger.debug(
       `🎭 [UNIFIED OUTPUT] Generated output #${this.state.outputCount} (coherence: ${coherenceScore.toFixed(2)})`
     );
 
@@ -542,14 +542,14 @@ class UnifiedMultimodalOutputEngine {
    * Démarrer le moteur
    */
   start(): void {
-    console.log('🎼 [OUTPUT] Unified Multimodal Output Engine started');
+    logger.debug('🎼 [OUTPUT] Unified Multimodal Output Engine started');
   }
 
   /**
    * Arrêter le moteur
    */
   stop(): void {
-    console.log('🎼 [OUTPUT] Unified Multimodal Output Engine stopped');
+    logger.debug('🎼 [OUTPUT] Unified Multimodal Output Engine stopped');
   }
 }
 

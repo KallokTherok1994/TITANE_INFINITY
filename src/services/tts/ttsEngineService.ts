@@ -96,12 +96,12 @@ class TTSEngineService {
   ): Promise<void> {
     // Validation
     if (!text.trim()) {
-      console.warn('⚠️ TTS: Empty text, skipping');
+      logger.warn('⚠️ TTS: Empty text, skipping');
       return;
     }
 
     if (text.length > TTS_LIMITS.maxTextLength) {
-      console.warn(`⚠️ TTS: Text too long (${text.length}), truncating`);
+      logger.warn(`⚠️ TTS: Text too long (${text.length}), truncating`);
       text = text.substring(0, TTS_LIMITS.maxTextLength);
     }
 
@@ -110,7 +110,7 @@ class TTSEngineService {
       options.emotion ??
       (this.preferences.emotionalAdaptation ? detectEmotion(text) : 'neutral');
 
-    console.log(`🎤 TTS: Queuing speech with emotion "${emotion}"`);
+    logger.debug(`🎤 TTS: Queuing speech with emotion "${emotion}"`);
 
     // Créer requête
     const request: TTSRequest = {
@@ -142,7 +142,7 @@ class TTSEngineService {
    * Arrête la synthèse en cours
    */
   async stop(): Promise<void> {
-    console.log('⏹️ TTS: Stopping...');
+    logger.debug('⏹️ TTS: Stopping...');
 
     // Stop audio HTML5
     if (this.currentAudio) {
@@ -157,7 +157,7 @@ class TTSEngineService {
       try {
         await secureInvoke('tts_stop');
       } catch (error) {
-        console.warn('⚠️ TTS: Backend stop failed:', error);
+        logger.warn('⚠️ TTS: Backend stop failed:', error);
       }
     }
 
@@ -178,7 +178,7 @@ class TTSEngineService {
       queueSize: 0,
     });
 
-    console.log('✅ TTS: Stopped');
+    logger.debug('✅ TTS: Stopped');
   }
 
   /**
@@ -322,7 +322,7 @@ class TTSEngineService {
   private addToQueue(item: TTSQueueItem): void {
     // Check limit
     if (this.queue.length >= TTS_LIMITS.maxQueueSize) {
-      console.warn('⚠️ TTS: Queue full, dropping oldest request');
+      logger.warn('⚠️ TTS: Queue full, dropping oldest request');
       this.queue.shift();
     }
 
@@ -366,7 +366,7 @@ class TTSEngineService {
       item.attempts++;
 
       if (item.attempts < item.maxAttempts) {
-        console.warn(`⚠️ TTS: Attempt ${item.attempts} failed, retrying...`);
+        logger.warn(`⚠️ TTS: Attempt ${item.attempts} failed, retrying...`);
         item.status = 'pending';
         // Don't remove from queue, will retry
         this.isProcessing = false;
@@ -424,7 +424,7 @@ class TTSEngineService {
       }
 
       try {
-        console.log(`🎤 TTS: Trying ${currentProvider}...`);
+        logger.debug(`🎤 TTS: Trying ${currentProvider}...`);
 
         if (currentProvider === 'webspeech') {
           await this.playWithWebSpeech(request);
@@ -439,7 +439,7 @@ class TTSEngineService {
         success = true;
         break;
       } catch (error) {
-        console.warn(`⚠️ TTS: ${currentProvider} failed:`, error);
+        logger.warn(`⚠️ TTS: ${currentProvider} failed:`, error);
         continue;
       }
     }
@@ -449,7 +449,7 @@ class TTSEngineService {
     }
 
     const latencyMs = Date.now() - startTime;
-    console.log(`✅ TTS: Synthesis complete via ${provider} (${latencyMs}ms)`);
+    logger.debug(`✅ TTS: Synthesis complete via ${provider} (${latencyMs}ms)`);
 
     return {
       requestId: request.id,
@@ -618,7 +618,7 @@ class TTSEngineService {
       try {
         this.audioContext = new AudioContext();
       } catch (error) {
-        console.warn('⚠️ TTS: Could not create AudioContext:', error);
+        logger.warn('⚠️ TTS: Could not create AudioContext:', error);
       }
     }
   }
@@ -644,7 +644,7 @@ class TTSEngineService {
         return { ...DEFAULT_TTS_PREFERENCES, ...JSON.parse(stored) };
       }
     } catch (error) {
-      console.warn('⚠️ TTS: Could not load preferences:', error);
+      logger.warn('⚠️ TTS: Could not load preferences:', error);
     }
 
     return DEFAULT_TTS_PREFERENCES;
@@ -658,7 +658,7 @@ class TTSEngineService {
     try {
       localStorage.setItem('titane_tts_preferences', JSON.stringify(this.preferences));
     } catch (error) {
-      console.warn('⚠️ TTS: Could not save preferences:', error);
+      logger.warn('⚠️ TTS: Could not save preferences:', error);
     }
   }
 }

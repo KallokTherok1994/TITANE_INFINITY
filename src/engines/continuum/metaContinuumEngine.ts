@@ -261,14 +261,14 @@ class MetaContinuumEngine {
   start(): void {
     if (this.nowPulseInterval) return;
 
-    console.log('⏱️ [META-CONTINUUM] Starting Meta-Continuum Engine...');
+    logger.debug('⏱️ [META-CONTINUUM] Starting Meta-Continuum Engine...');
 
     const intervalMs = 1000 / this.config.nowPulseFrequency;
     this.nowPulseInterval = window.setInterval(() => {
       this.updateNowPulse();
     }, intervalMs);
 
-    console.log(
+    logger.debug(
       `✅ [META-CONTINUUM] Engine active (${this.config.nowPulseFrequency}Hz NowPulse)`
     );
   }
@@ -280,7 +280,7 @@ class MetaContinuumEngine {
     if (this.nowPulseInterval) {
       clearInterval(this.nowPulseInterval);
       this.nowPulseInterval = null;
-      console.log('🛑 [META-CONTINUUM] Engine stopped');
+      logger.debug('🛑 [META-CONTINUUM] Engine stopped');
     }
   }
 
@@ -360,7 +360,7 @@ class MetaContinuumEngine {
    * Auto-stabilisation (correction dérive)
    */
   private selfStabilize(): void {
-    console.log('🔧 [META-CONTINUUM] Self-stabilizing (drift detected)...');
+    logger.debug('🔧 [META-CONTINUUM] Self-stabilizing (drift detected)...');
 
     // Pause interne (5-20ms) — simulée via promise
     const pauseDuration = 5 + Math.random() * 15;
@@ -374,7 +374,7 @@ class MetaContinuumEngine {
       this.state.memory.driftLevel = 0;
       this.state.memory.adjustmentNeed = 0;
 
-      console.log('✅ [META-CONTINUUM] Stabilization complete');
+      logger.debug('✅ [META-CONTINUUM] Stabilization complete');
 
       // Créer ancrage de stabilisation
       this.createAnchor({
@@ -477,12 +477,12 @@ class MetaContinuumEngine {
     // Major identity impact → increment version
     if (params.identityImpact > 0.5) {
       this.state.identityVersion++;
-      console.log(
+      logger.debug(
         `🌟 [META-CONTINUUM] Identity evolved to v${this.state.identityVersion}`
       );
     }
 
-    console.log(
+    logger.debug(
       `⚓ [META-CONTINUUM] Anchor created: ${params.type} — ${params.description}`
     );
   }
@@ -503,7 +503,7 @@ class MetaContinuumEngine {
     // Ensure synchronization
     const coherence = this.state.globalCoherence;
 
-    console.log(
+    logger.debug(
       `🔄 [META-CONTINUUM] Output synchronized (coherence: ${Math.round(coherence * 100)}%)`
     );
 
@@ -557,7 +557,7 @@ class MetaContinuumEngine {
       confidence: Math.min(1, current.confidence + 0.01),
     };
 
-    console.log(
+    logger.debug(
       `📈 [META-CONTINUUM] Evolution updated (magnitude: ${Math.round(newMagnitude * 100)}%)`
     );
   }
@@ -585,7 +585,7 @@ class MetaContinuumEngine {
       try {
         cb(this.state);
       } catch (error) {
-        console.error('[META-CONTINUUM] Callback error:', error);
+        logger.error('Callback error:', error);
       }
     });
   }

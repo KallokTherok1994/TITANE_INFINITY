@@ -51,7 +51,7 @@ export function useControlPanelSection<T>({
       setConfig(result);
       setOriginalConfig(result);
     } catch (err) {
-      console.error(`[useControlPanelSection] Load error:`, err);
+      logger.error(`[useControlPanelSection] Load error:`, err);
       setError(err instanceof Error ? err.message : String(err));
       // Use defaults on error
       setConfig(defaultConfig);
@@ -78,7 +78,7 @@ export function useControlPanelSection<T>({
       }
       savedTimeoutRef.current = setTimeout(() => setSaved(false), 3000);
     } catch (err) {
-      console.error(`[useControlPanelSection] Save error:`, err);
+      logger.error(`[useControlPanelSection] Save error:`, err);
       setError(err instanceof Error ? err.message : String(err));
     } finally {
       setIsSaving(false);

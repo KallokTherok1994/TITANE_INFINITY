@@ -139,7 +139,7 @@ export class PerformanceAnalyzer {
     this.state = this.createInitialState();
     this.eventListeners = new Map();
 
-    console.log('[PerformanceAnalyzer] Initialisé avec config:', this.config);
+    logger.debug('Initialisé avec config:', this.config);
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -151,13 +151,13 @@ export class PerformanceAnalyzer {
    */
   start(): void {
     if (this.isRunning) {
-      console.warn("[PerformanceAnalyzer] Déjà en cours d'exécution");
+      logger.warn("Déjà en cours d'exécution");
       return;
     }
 
     this.isRunning = true;
     this.emit('engine_started', { component: 'analyzer', timestamp: Date.now() });
-    console.log('[PerformanceAnalyzer] Démarré');
+    logger.debug('Démarré');
   }
 
   /**
@@ -165,13 +165,13 @@ export class PerformanceAnalyzer {
    */
   stop(): void {
     if (!this.isRunning) {
-      console.warn("[PerformanceAnalyzer] Pas en cours d'exécution");
+      logger.warn("Pas en cours d'exécution");
       return;
     }
 
     this.isRunning = false;
     this.emit('engine_stopped', { component: 'analyzer', timestamp: Date.now() });
-    console.log('[PerformanceAnalyzer] Arrêté');
+    logger.debug('Arrêté');
   }
 
   /**
@@ -263,7 +263,7 @@ export class PerformanceAnalyzer {
    */
   updateThresholds(thresholds: Partial<ThresholdConfig>): void {
     this.config.thresholds = { ...this.config.thresholds, ...thresholds };
-    console.log('[PerformanceAnalyzer] Thresholds mis à jour:', thresholds);
+    logger.debug('Thresholds mis à jour:', thresholds);
   }
 
   /**
@@ -271,7 +271,7 @@ export class PerformanceAnalyzer {
    */
   reset(): void {
     this.state = this.createInitialState();
-    console.log('[PerformanceAnalyzer] État réinitialisé');
+    logger.debug('État réinitialisé');
   }
 
   /**
@@ -885,7 +885,7 @@ export class PerformanceAnalyzer {
         try {
           listener(event);
         } catch (error) {
-          console.error(
+          logger.error(
             `[PerformanceAnalyzer] Erreur dans listener pour ${eventType}:`,
             error
           );

@@ -36,7 +36,7 @@ export function useTwinIdentity(): UseTwinIdentityReturn {
       setError(
         err instanceof Error ? err.message : "Erreur lors du chargement de l'identité"
       );
-      console.error('[useTwinIdentity] Error:', err);
+      logger.error('Error:', err);
     } finally {
       setIsLoading(false);
     }

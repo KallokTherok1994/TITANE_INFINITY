@@ -228,7 +228,7 @@ export class PerformanceReporter {
     this.state = this.createInitialState();
     this.eventListeners = new Map();
 
-    this.log('info', '[PerformanceReporter] Initialisé');
+    this.log('info', 'Initialisé');
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -240,7 +240,7 @@ export class PerformanceReporter {
    */
   start(): void {
     if (this.isRunning) {
-      this.log('warn', "[PerformanceReporter] Déjà en cours d'exécution");
+      this.log('warn', "Déjà en cours d'exécution");
       return;
     }
 
@@ -254,7 +254,7 @@ export class PerformanceReporter {
     }
 
     this.emit('engine_started', { component: 'reporter', timestamp: Date.now() });
-    this.log('info', '[PerformanceReporter] Démarré');
+    this.log('info', 'Démarré');
   }
 
   /**
@@ -262,7 +262,7 @@ export class PerformanceReporter {
    */
   stop(): void {
     if (!this.isRunning) {
-      this.log('warn', "[PerformanceReporter] Pas en cours d'exécution");
+      this.log('warn', "Pas en cours d'exécution");
       return;
     }
 
@@ -274,7 +274,7 @@ export class PerformanceReporter {
     }
 
     this.emit('engine_stopped', { component: 'reporter', timestamp: Date.now() });
-    this.log('info', '[PerformanceReporter] Arrêté');
+    this.log('info', 'Arrêté');
   }
 
   /**
@@ -282,7 +282,7 @@ export class PerformanceReporter {
    */
   setSelfHealingIntegration(integration: SelfHealingIntegration): void {
     this.selfHealing = integration;
-    this.log('info', '[PerformanceReporter] Self-Healing intégré');
+    this.log('info', 'Self-Healing intégré');
   }
 
   /**
@@ -514,7 +514,7 @@ export class PerformanceReporter {
   reset(): void {
     this.state = this.createInitialState();
     this.logs = [];
-    this.log('info', '[PerformanceReporter] État réinitialisé');
+    this.log('info', 'État réinitialisé');
   }
 
   /**
@@ -972,13 +972,13 @@ export class PerformanceReporter {
       // Output console
       switch (level) {
         case 'error':
-          console.error(message, context ?? '');
+          logger.error(message, context ?? '');
           break;
         case 'warn':
-          console.warn(message, context ?? '');
+          logger.warn(message, context ?? '');
           break;
         case 'info':
-          console.log(message, context ?? '');
+          logger.debug(message, context ?? '');
           break;
         case 'debug':
           console.debug(message, context ?? '');

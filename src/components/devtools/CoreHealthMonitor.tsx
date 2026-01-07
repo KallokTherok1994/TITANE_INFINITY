@@ -95,7 +95,7 @@ export const CoreHealthMonitor: React.FC<CoreHealthMonitorProps> = ({
         setCoresHealth(new Map(results));
         setIsLoading(false);
       } catch (error) {
-        console.error('Failed to fetch cores health:', error);
+        logger.error('Failed to fetch cores health:', error);
         setIsLoading(false);
       }
     };
@@ -272,7 +272,7 @@ export const CoreHealthMonitor: React.FC<CoreHealthMonitorProps> = ({
           🔄 Refresh Status
         </button>
         <button
-          onClick={() => console.log('Restart failing cores')}
+          onClick={() => logger.debug('Restart failing cores')}
           className="px-4 py-2 text-sm bg-orange-600 hover:bg-orange-700 rounded text-white transition"
           disabled={healthPercentage === 100}
         >

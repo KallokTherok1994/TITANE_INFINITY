@@ -258,7 +258,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       setLastUpdate(Date.now());
       setIsLoading(false);
     } catch (error) {
-      console.error('[AdminDashboard] Erreur collecte snapshot:', error);
+      logger.error('Erreur collecte snapshot:', error);
     }
   }, [adminEngine]);
 

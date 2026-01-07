@@ -219,7 +219,7 @@ export class PerformanceEngine {
       cycleCount: this.state.cycleCount,
     });
 
-    console.log('[PerformanceEngine] Arrêté');
+    logger.debug('Arrêté');
   }
 
   /**
@@ -257,7 +257,7 @@ export class PerformanceEngine {
       timestamp: Date.now(),
     });
 
-    console.log('[PerformanceEngine] Profil changé:', profile);
+    logger.debug('Profil changé:', profile);
   }
 
   /**
@@ -277,7 +277,7 @@ export class PerformanceEngine {
       this.analyzer.updateThresholds(config.thresholds);
     }
 
-    console.log('[PerformanceEngine] Configuration mise à jour');
+    logger.debug('Configuration mise à jour');
   }
 
   /**
@@ -285,7 +285,7 @@ export class PerformanceEngine {
    */
   setSelfHealingIntegration(integration: SelfHealingIntegration): void {
     this.reporter.setSelfHealingIntegration(integration);
-    console.log('[PerformanceEngine] Self-Healing intégré');
+    logger.debug('Self-Healing intégré');
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -438,7 +438,7 @@ export class PerformanceEngine {
     this.reporter.reset();
     this.state = this.createInitialState();
 
-    console.log('[PerformanceEngine] Réinitialisé');
+    logger.debug('Réinitialisé');
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -493,14 +493,14 @@ export class PerformanceEngine {
 
     // Exécuter immédiatement le premier cycle
     this.runCycle().catch(error => {
-      console.error('[PerformanceEngine] Erreur cycle initial:', error);
+      logger.error('Erreur cycle initial:', error);
     });
 
     // Configurer le timer pour les cycles suivants
     this.collectionTimer = setInterval(() => {
       if (this.state.running) {
         this.runCycle().catch(error => {
-          console.error('[PerformanceEngine] Erreur cycle:', error);
+          logger.error('Erreur cycle:', error);
         });
       }
     }, this.config.collector.intervalMs);

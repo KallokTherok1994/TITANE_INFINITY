@@ -98,7 +98,7 @@ export function useUnifiedMemory(
       const stats = await memory.getStats();
       setState(prev => ({ ...prev, stats }));
     } catch (error) {
-      console.error('[useUnifiedMemory] Failed to refresh stats:', error);
+      logger.error('Failed to refresh stats:', error);
     }
   }, [memory]);
 

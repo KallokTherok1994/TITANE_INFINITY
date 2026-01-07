@@ -14,6 +14,10 @@
  * - Garde-fous et contrôle humain
  */
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('CognitiveLayoutEngine');
+
 // ═══════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES
 // ═══════════════════════════════════════════════════════════════════

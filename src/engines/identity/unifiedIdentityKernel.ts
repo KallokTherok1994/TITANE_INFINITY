@@ -232,7 +232,7 @@ export class UnifiedIdentityKernel {
 
   constructor() {
     this.state = this.getDefaultState();
-    console.log('🌌 [IDENTITY KERNEL] Initializing Unified Identity Kernel...');
+    logger.debug('🌌 [IDENTITY KERNEL] Initializing Unified Identity Kernel...');
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -242,7 +242,7 @@ export class UnifiedIdentityKernel {
   start(): void {
     if (this.updateInterval) return;
 
-    console.log('🌌 [IDENTITY KERNEL] Starting identity kernel at 10Hz...');
+    logger.debug('🌌 [IDENTITY KERNEL] Starting identity kernel at 10Hz...');
 
     // Subscribe aux moteurs existants
     this.subscribeToEngines();
@@ -255,7 +255,7 @@ export class UnifiedIdentityKernel {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
       this.updateInterval = null;
-      console.log('🌌 [IDENTITY KERNEL] Identity kernel stopped.');
+      logger.debug('🌌 [IDENTITY KERNEL] Identity kernel stopped.');
     }
   }
 
@@ -468,7 +468,7 @@ export class UnifiedIdentityKernel {
     );
 
     if (drift > this.IDENTITY_DRIFT_LIMIT) {
-      console.warn(
+      logger.warn(
         `⚠️ [IDENTITY KERNEL] Identity drift detected: ${(drift * 100).toFixed(1)}%`
       );
       this.correctIdentityDrift(lastSnapshot.signature);
@@ -508,7 +508,7 @@ export class UnifiedIdentityKernel {
   // ───────────────────────────────────────────────────────────────────────────
 
   updateFromContext(context: ContextFrame): void {
-    console.log('🌌 [IDENTITY KERNEL] Updating from context...');
+    logger.debug('🌌 [IDENTITY KERNEL] Updating from context...');
 
     // Adapter énergie à l'utilisateur
     if (context.userEnergy !== undefined) {
@@ -552,11 +552,11 @@ export class UnifiedIdentityKernel {
   // ───────────────────────────────────────────────────────────────────────────
 
   alignBeforeResponse(): void {
-    console.log('🌌 [IDENTITY KERNEL] Aligning before response...');
+    logger.debug('🌌 [IDENTITY KERNEL] Aligning before response...');
 
     // Vérifier cohérence
     if (this.state.globalCoherence < this.COHERENCE_THRESHOLD) {
-      console.warn(
+      logger.warn(
         `⚠️ [IDENTITY KERNEL] Low coherence: ${(this.state.globalCoherence * 100).toFixed(1)}%`
       );
       this.reinforceCoherence();

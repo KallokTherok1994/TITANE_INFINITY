@@ -292,7 +292,7 @@ class MetaSingularityKernel {
   start(): void {
     if (this.state.isRunning) return;
 
-    console.log('[MetaSingularityKernel] Starting ultimate orchestration...');
+    logger.debug('Starting ultimate orchestration...');
 
     this.state.isRunning = true;
     this.intervalId = setInterval(() => this.tick(), 200); // 5 Hz
@@ -303,7 +303,7 @@ class MetaSingularityKernel {
   stop(): void {
     if (!this.state.isRunning) return;
 
-    console.log('[MetaSingularityKernel] Stopping...');
+    logger.debug('Stopping...');
 
     if (this.intervalId) {
       clearInterval(this.intervalId);
@@ -342,7 +342,7 @@ class MetaSingularityKernel {
 
   private tick(): void {
     if (!this.engines) {
-      console.warn('[MetaSingularityKernel] Engines not injected yet');
+      logger.warn('Engines not injected yet');
       return;
     }
 
@@ -679,7 +679,7 @@ class MetaSingularityKernel {
     this.state.emergentPhenomena.push(phenomenon);
     this.state.metrics.totalEmergences++;
 
-    console.log(`[MetaSingularityKernel] Emergence detected: ${name}`);
+    logger.debug(`[MetaSingularityKernel] Emergence detected: ${name}`);
 
     // Limiter à 50 émergences
     if (this.state.emergentPhenomena.length > 50) {
@@ -827,7 +827,7 @@ class MetaSingularityKernel {
     conflict.resolved = true;
     conflict.resolutionTime = Date.now() - conflict.timestamp;
 
-    console.log(`[MetaSingularityKernel] Conflict resolved: ${conflict.description}`);
+    logger.debug(`[MetaSingularityKernel] Conflict resolved: ${conflict.description}`);
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -921,7 +921,7 @@ class MetaSingularityKernel {
     this.state.insights.push(insight);
     this.state.metrics.totalInsights++;
 
-    console.log(`[MetaSingularityKernel] Insight: ${title}`);
+    logger.debug(`[MetaSingularityKernel] Insight: ${title}`);
 
     // Limiter à 100 insights
     if (this.state.insights.length > 100) {
@@ -948,7 +948,7 @@ class MetaSingularityKernel {
         this.state.transitionHistory.push(transition);
         this.state.currentTransition = null;
 
-        console.log(`[MetaSingularityKernel] Transition completed: ${transition.id}`);
+        logger.debug(`[MetaSingularityKernel] Transition completed: ${transition.id}`);
       }
     }
   }
@@ -1005,7 +1005,7 @@ class MetaSingularityKernel {
     transition.status = 'in-progress';
     this.state.metrics.totalTransitions++;
 
-    console.log(
+    logger.debug(
       `[MetaSingularityKernel] Transition initiated: ${strategy} over ${duration}ms`
     );
   }

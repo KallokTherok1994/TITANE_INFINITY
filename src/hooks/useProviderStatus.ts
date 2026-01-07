@@ -71,11 +71,11 @@ export function useProviderStatus(
         setActiveProvider(null);
       }
 
-      console.log(`✅ Provider status refreshed (${statuses.length} providers)`);
+      logger.debug(`✅ Provider status refreshed (${statuses.length} providers)`);
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Provider status error';
       setError(errorMsg);
-      console.error('❌ Provider status refresh failed:', err);
+      logger.error('❌ Provider status refresh failed:', err);
     } finally {
       setIsLoading(false);
     }
@@ -106,13 +106,13 @@ export function useProviderStatus(
         setActiveProvider(null);
       }
 
-      console.log(
+      logger.debug(
         `✅ Provider check complete (${available.length}/${statuses.length} available)`
       );
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Provider check error';
       setError(errorMsg);
-      console.error('❌ Provider check failed:', err);
+      logger.error('❌ Provider check failed:', err);
     } finally {
       setIsLoading(false);
     }
@@ -121,7 +121,7 @@ export function useProviderStatus(
   // Auto-refresh optionnel
   useEffect(() => {
     if (autoRefresh) {
-      console.log(`🔄 Auto-refresh providers enabled (${refreshInterval}ms)`);
+      logger.debug(`🔄 Auto-refresh providers enabled (${refreshInterval}ms)`);
 
       // Initial check
       refresh();
@@ -131,7 +131,7 @@ export function useProviderStatus(
 
       return () => {
         clearInterval(interval);
-        console.log('🛑 Auto-refresh providers stopped');
+        logger.debug('🛑 Auto-refresh providers stopped');
       };
     }
   }, [autoRefresh, refreshInterval, refresh]);

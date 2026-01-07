@@ -71,7 +71,7 @@ export function useAudioChat(config: AudioChatConfig = { enabled: true }) {
 
     recognition.onstart = () => {
       setState(prev => ({ ...prev, isListening: true, error: null }));
-      console.log('🎤 Écoute activée');
+      logger.debug('🎤 Écoute activée');
     };
 
     recognition.onresult = (event: SpeechRecognitionEvent) => {
@@ -105,7 +105,7 @@ export function useAudioChat(config: AudioChatConfig = { enabled: true }) {
     };
 
     recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
-      console.error('❌ Erreur reconnaissance vocale:', event.error);
+      logger.error('❌ Erreur reconnaissance vocale:', event.error);
       setState(prev => ({
         ...prev,
         isListening: false,
@@ -115,7 +115,7 @@ export function useAudioChat(config: AudioChatConfig = { enabled: true }) {
 
     recognition.onend = () => {
       setState(prev => ({ ...prev, isListening: false }));
-      console.log('🎤 Écoute terminée');
+      logger.debug('🎤 Écoute terminée');
     };
 
     recognitionRef.current = recognition;
@@ -169,7 +169,7 @@ export function useAudioChat(config: AudioChatConfig = { enabled: true }) {
     try {
       recognitionRef.current.start();
     } catch (error) {
-      console.error('❌ Erreur démarrage écoute:', error);
+      logger.error('❌ Erreur démarrage écoute:', error);
       setState(prev => ({
         ...prev,
         error: "Impossible de démarrer l'écoute",
@@ -204,12 +204,12 @@ export function useAudioChat(config: AudioChatConfig = { enabled: true }) {
         });
 
         if (result?.success) {
-          console.log('✅ TTS Tauri réussi');
+          logger.debug('✅ TTS Tauri réussi');
           setState(prev => ({ ...prev, isSpeaking: false }));
           return;
         }
       } catch (error) {
-        console.warn('⚠️ TTS Tauri échoué, fallback Web Speech API');
+        logger.warn('⚠️ TTS Tauri échoué, fallback Web Speech API');
       }
 
       // Fallback to Web Speech API
@@ -224,7 +224,7 @@ export function useAudioChat(config: AudioChatConfig = { enabled: true }) {
         };
 
         utterance.onerror = event => {
-          console.error('❌ Erreur TTS:', event);
+          logger.error('❌ Erreur TTS:', event);
           setState(prev => ({
             ...prev,
             isSpeaking: false,

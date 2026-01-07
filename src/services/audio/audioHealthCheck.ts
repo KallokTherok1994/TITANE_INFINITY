@@ -69,7 +69,7 @@ export function logDeviceIssue(
   const timestamp = new Date().toISOString();
   const env = detectEnvironment();
 
-  console.warn(`[DeviceHealth][${scope.toUpperCase()}] ${message}`, {
+  logger.warn(`[DeviceHealth][${scope.toUpperCase()}] ${message}`, {
     timestamp,
     environment: env.isTauri ? 'tauri' : 'browser',
     ...details,
@@ -473,14 +473,14 @@ class AudioHealthService {
 
         // Log interval change if significant
         if (Math.abs(newInterval - this.currentIntervalMs) > 5000) {
-          console.log(
+          logger.debug(
             `[AudioHealth] ⏱️ Interval adjusted: ${this.currentIntervalMs}ms → ${newInterval}ms (status: ${report.overallStatus})`
           );
         }
 
         this.currentIntervalMs = newInterval;
       } catch (error) {
-        console.error('[AudioHealth] Check failed:', error);
+        logger.error('Check failed:', error);
         this.healthyStreak = 0;
         this.currentIntervalMs = HEALTH_CHECK_CONFIG.minIntervalMs;
       }
@@ -505,11 +505,11 @@ class AudioHealthService {
         this.scheduleNextCheck();
       })
       .catch(error => {
-        console.error('[AudioHealth] Initial check failed:', error);
+        logger.error('Initial check failed:', error);
         this.scheduleNextCheck();
       });
 
-    console.log(`[AudioHealth] 🔄 Adaptive monitoring started (base: ${intervalMs}ms)`);
+    logger.debug(`[AudioHealth] 🔄 Adaptive monitoring started (base: ${intervalMs}ms)`);
   }
 
   /**
@@ -520,7 +520,7 @@ class AudioHealthService {
       clearTimeout(this.checkInterval);
       this.checkInterval = null;
       this.healthyStreak = 0;
-      console.log('[AudioHealth] ⏹️ Monitoring stopped');
+      logger.debug('⏹️ Monitoring stopped');
     }
   }
 
@@ -540,7 +540,7 @@ class AudioHealthService {
    * @returns Résultat détaillé des réparations
    */
   async selfHeal(): Promise<SelfHealResult> {
-    console.log('[AudioHealth] 🩺 Self-healing démarré...');
+    logger.debug('🩺 Self-healing démarré...');
     const report = await this.getAudioHealth();
     const repairs: RepairAction[] = [];
 
@@ -582,7 +582,7 @@ class AudioHealthService {
       fullRecovery: postRepairReport.overallStatus === 'healthy',
     };
 
-    console.log(
+    logger.debug(
       `[AudioHealth] 🩺 Self-healing terminé: ${successCount}/${repairs.length} réparations réussies`
     );
     return result;
@@ -622,7 +622,7 @@ class AudioHealthService {
       action.message = `Erreur: ${err instanceof Error ? err.message : 'inconnu'}`;
     }
 
-    console.log(
+    logger.debug(
       `[AudioHealth] ${action.success ? '✅' : '❌'} ${action.name}: ${action.message}`
     );
     return action;
@@ -652,7 +652,7 @@ class AudioHealthService {
       action.message = `Erreur: ${err instanceof Error ? err.message : 'inconnu'}`;
     }
 
-    console.log(
+    logger.debug(
       `[AudioHealth] ${action.success ? '✅' : '❌'} ${action.name}: ${action.message}`
     );
     return action;
@@ -690,7 +690,7 @@ class AudioHealthService {
       action.message = `Erreur: ${err instanceof Error ? err.message : 'inconnu'}`;
     }
 
-    console.log(
+    logger.debug(
       `[AudioHealth] ${action.success ? '✅' : '❌'} ${action.name}: ${action.message}`
     );
     return action;
@@ -718,7 +718,7 @@ class AudioHealthService {
       action.message = `Erreur: ${err instanceof Error ? err.message : 'inconnu'}`;
     }
 
-    console.log(
+    logger.debug(
       `[AudioHealth] ${action.success ? '✅' : '❌'} ${action.name}: ${action.message}`
     );
     return action;
@@ -764,7 +764,7 @@ class AudioHealthService {
       action.message = `Erreur: ${err instanceof Error ? err.message : 'inconnu'}`;
     }
 
-    console.log(
+    logger.debug(
       `[AudioHealth] ${action.success ? '✅' : '❌'} ${action.name}: ${action.message}`
     );
     return action;
@@ -774,7 +774,7 @@ class AudioHealthService {
    * Exécute un diagnostic complet avec tentative de réparation automatique
    */
   async diagnoseAndRepair(): Promise<DiagnoseAndRepairResult> {
-    console.log('[AudioHealth] 🔬 Diagnostic complet avec auto-repair...');
+    logger.debug('🔬 Diagnostic complet avec auto-repair...');
 
     // Phase 1: Diagnostic initial
     const initialReport = await this.getAudioHealth();

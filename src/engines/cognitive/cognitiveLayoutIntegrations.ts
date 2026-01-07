@@ -7,6 +7,9 @@
  */
 
 import { cognitiveLayoutEngine } from '@/engines/cognitive/cognitiveLayoutEngine';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('CognitiveLayoutIntegrations');
 
 // ═══════════════════════════════════════════════════════════════════
 // HELIOS INTEGRATION (Énergie & Régulation)

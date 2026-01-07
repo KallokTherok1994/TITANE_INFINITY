@@ -97,7 +97,7 @@ export function useAdvancedPerformance(
     advancedPerformanceMonitor.startMonitoring(interval);
     setIsMonitoring(true);
 
-    console.log('[useAdvancedPerformance] Monitoring started');
+    logger.debug('Monitoring started');
   }, [isMonitoring, interval]);
 
   /**
@@ -109,7 +109,7 @@ export function useAdvancedPerformance(
     advancedPerformanceMonitor.stopMonitoring();
     setIsMonitoring(false);
 
-    console.log('[useAdvancedPerformance] Monitoring stopped');
+    logger.debug('Monitoring stopped');
   }, [isMonitoring]);
 
   /**
@@ -165,11 +165,11 @@ export function useAdvancedPerformance(
       const suggestion = allSuggestions.find(s => s.id === suggestionId);
 
       if (!suggestion) {
-        console.warn(`[useAdvancedPerformance] Suggestion not found: ${suggestionId}`);
+        logger.warn(`[useAdvancedPerformance] Suggestion not found: ${suggestionId}`);
         return;
       }
 
-      console.log(`[useAdvancedPerformance] Applying optimization: ${suggestion.title}`);
+      logger.debug(`[useAdvancedPerformance] Applying optimization: ${suggestion.title}`);
 
       // Optimization logic placeholder - implementation pending
       // For now, just log
@@ -265,8 +265,8 @@ export function useAdvancedPerformance(
   useEffect(() => {
     if (autoOptimization) {
       // Auto-optimization monitor config update pending
-      console.log(
-        '[useAdvancedPerformance] Auto-optimization configured:',
+      logger.debug(
+        'Auto-optimization configured:',
         autoOptimization
       );
     }

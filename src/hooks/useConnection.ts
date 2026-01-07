@@ -71,7 +71,7 @@ export function useConnection(): UseConnectionReturn {
         latency,
       });
 
-      console.log(
+      logger.debug(
         `🔗 Connection check: ${providers.length} providers, best: ${availableProvider?.provider ?? 'none'}`
       );
 

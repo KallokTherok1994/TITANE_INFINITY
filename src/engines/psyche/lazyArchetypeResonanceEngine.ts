@@ -35,7 +35,7 @@ export async function getArchetypeResonanceEngine() {
 export async function startArchetypeEngine() {
   const engine = await getArchetypeResonanceEngine();
   engine.start();
-  console.log('  ✅ Archetype Resonance Engine active (10Hz)');
+  logger.debug('  ✅ Archetype Resonance Engine active (10Hz)');
 }
 
 /**

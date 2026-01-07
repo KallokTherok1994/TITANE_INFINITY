@@ -146,7 +146,7 @@ class InteroceptionEngine {
   public start(): void {
     if (this.isRunning) return;
 
-    console.log('🌬️ [INTEROCEPTION] Starting internal state engine...');
+    logger.debug('🌬️ [INTEROCEPTION] Starting internal state engine...');
     this.isRunning = true;
     this.lastUpdateTime = Date.now();
 
@@ -159,7 +159,7 @@ class InteroceptionEngine {
   public stop(): void {
     if (!this.isRunning) return;
 
-    console.log('🌬️ [INTEROCEPTION] Stopping internal state engine...');
+    logger.debug('🌬️ [INTEROCEPTION] Stopping internal state engine...');
     this.isRunning = false;
 
     if (this.updateInterval) {
@@ -410,7 +410,7 @@ class InteroceptionEngine {
       try {
         callback(this.state);
       } catch (error) {
-        console.error('🌬️ [INTEROCEPTION] Error in subscriber:', error);
+        logger.error('🌬️ [INTEROCEPTION] Error in subscriber:', error);
       }
     });
   }

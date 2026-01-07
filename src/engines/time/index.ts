@@ -39,7 +39,7 @@ import { energyEngine } from './EnergyEngine';
 export async function initTimeAgendaSystem(
   storage?: AgendaStorageCallbacks
 ): Promise<void> {
-  console.log('[TimeAgendaSystem] 🚀 Initialisation du système...');
+  logger.debug('🚀 Initialisation du système...');
 
   // 1. TimeEngine (synchrone)
   timeEngine.init();
@@ -53,14 +53,14 @@ export async function initTimeAgendaSystem(
   }
   await agendaEngine.init();
 
-  console.log('[TimeAgendaSystem] ✅ Système initialisé avec succès');
+  logger.debug('✅ Système initialisé avec succès');
 }
 
 /**
  * Arrête tous les moteurs Time/Agenda
  */
 export function destroyTimeAgendaSystem(): void {
-  console.log('[TimeAgendaSystem] 🛑 Arrêt du système...');
+  logger.debug('🛑 Arrêt du système...');
   timeEngine.destroy();
   energyEngine.destroy();
 }

@@ -169,7 +169,7 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
             await voiceFingerprintTauri.checkIsTitaneSpeaking(audioData);
 
           if (fingerprintResult.isTitane) {
-            console.log(
+            logger.debug(
               `[useVAD] 🎯 TITANE voice detected (Layer 3 anti-feedback), skipping VAD (similarity: ${fingerprintResult.similarity.toFixed(2)})`
             );
             return; // Skip VAD processing - this is TITANE's voice, not user
@@ -190,7 +190,7 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
           audioStateMachine.isAISpeaking() &&
           bargeInEnabledRef.current
         ) {
-          console.log('[useVAD] 🎤⚡ BARGE-IN detected! User interrupting AI');
+          logger.debug('🎤⚡ BARGE-IN detected! User interrupting AI');
           audioStateMachine.transition('BARGE_IN');
           // Le TTS sera arrêté par le listener de la state machine
           return;
@@ -299,12 +299,12 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
       // Start frame processing loop
       animationFrameRef.current = requestAnimationFrame(processFrame);
 
-      console.log('[useVAD] Started listening');
+      logger.debug('Started listening');
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : 'Failed to start listening';
       setError(errorMessage);
-      console.error('[useVAD] Start error:', err);
+      logger.error('Start error:', err);
     }
   }, [processFrame]);
 
@@ -343,7 +343,7 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
       configRef.current = { ...configRef.current, ...newConfig };
       await audioService.configureVAD(configRef.current);
       setError(null);
-      console.log('[useVAD] Configured:', configRef.current);
+      logger.debug('Configured:', configRef.current);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Configuration error';
       setError(errorMessage);
@@ -359,7 +359,7 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
       setVadState('silence');
       setIsSpeaking(false);
       setError(null);
-      console.log('[useVAD] Reset');
+      logger.debug('Reset');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Reset error';
       setError(errorMessage);
@@ -373,7 +373,7 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
     try {
       const result = await audioService.testVAD();
       setError(null);
-      console.log('[useVAD] Test result:', result);
+      logger.debug('Test result:', result);
       return result;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Test error';
@@ -396,7 +396,7 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
    * Call this before TTS playback starts to prevent echo/feedback loop
    */
   const suspendForTTS = useCallback(() => {
-    console.log('[useVAD] 🔇 Suspending VAD for TTS playback (anti-echo)');
+    logger.debug('🔇 Suspending VAD for TTS playback (anti-echo)');
     suspendedRef.current = true;
     setIsSuspended(true);
     setVadState('silence');
@@ -409,7 +409,7 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
    * Includes a small delay to avoid detecting TTS tail as user speech
    */
   const resumeAfterTTS = useCallback((delayMs: number = 200) => {
-    console.log(`[useVAD] 🔊 Resuming VAD after TTS (delay: ${delayMs}ms)`);
+    logger.debug(`[useVAD] 🔊 Resuming VAD after TTS (delay: ${delayMs}ms)`);
     // ✨ v24.2.1: Clear any pending timeout before setting a new one
     if (resumeTimeoutRef.current) {
       clearTimeout(resumeTimeoutRef.current);
@@ -418,7 +418,7 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
       suspendedRef.current = false;
       setIsSuspended(false);
       resumeTimeoutRef.current = null;
-      console.log('[useVAD] ✅ VAD resumed, ready for user speech');
+      logger.debug('✅ VAD resumed, ready for user speech');
     }, delayMs);
   }, []);
 
@@ -430,7 +430,7 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
   const enableBargeIn = useCallback(() => {
     // ✅ v∞.FIX - Debug log only (was spamming console)
     if (import.meta.env.DEV) {
-      console.log('[useVAD] ⚡ Barge-in mode ENABLED');
+      logger.debug('⚡ Barge-in mode ENABLED');
     }
     bargeInEnabledRef.current = true;
     setIsBargeInEnabled(true);
@@ -443,7 +443,7 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
   const disableBargeIn = useCallback(() => {
     // ✅ v∞.FIX - Debug log only (was spamming console)
     if (import.meta.env.DEV) {
-      console.log('[useVAD] 🔇 Barge-in mode DISABLED');
+      logger.debug('🔇 Barge-in mode DISABLED');
     }
     bargeInEnabledRef.current = false;
     setIsBargeInEnabled(false);
@@ -457,12 +457,12 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
    * @param samplesList Multiple audio samples (16kHz mono Float32Array)
    */
   const calibrateTITANEVoice = useCallback(async (samplesList: Float32Array[]) => {
-    console.log('[useVAD] 🎯 Calibrating TITANE voice (Layer 3 anti-feedback)');
+    logger.debug('🎯 Calibrating TITANE voice (Layer 3 anti-feedback)');
     try {
       await voiceFingerprintTauri.calibrateTitaneVoice(samplesList);
-      console.log('[useVAD] ✅ TITANE voice calibrated - Layer 3 anti-feedback active');
+      logger.debug('✅ TITANE voice calibrated - Layer 3 anti-feedback active');
     } catch (err) {
-      console.error('[useVAD] ❌ TITANE calibration failed:', err);
+      logger.error('❌ TITANE calibration failed:', err);
       setError(err instanceof Error ? err.message : 'TITANE calibration failed');
     }
   }, []);
@@ -510,10 +510,10 @@ export function useVADWithTTS(vad: UseVADReturn): void {
   useEffect(() => {
     const unsubscribe = hybridTTS.onTTSEvent(event => {
       if (event === 'start') {
-        console.log('[useVADWithTTS] 🔇 TTS started, suspending VAD');
+        logger.debug('🔇 TTS started, suspending VAD');
         vad.suspendForTTS();
       } else if (event === 'end' || event === 'error') {
-        console.log('[useVADWithTTS] 🔊 TTS ended, resuming VAD');
+        logger.debug('🔊 TTS ended, resuming VAD');
         vad.resumeAfterTTS(TTS_ECHO_DELAY_MS);
       }
     });
@@ -539,9 +539,9 @@ export function useBargeInHandler(): void {
   useEffect(() => {
     const unsubscribe = audioStateMachine.onStateChange((newState, _prevState, event) => {
       if (event === 'BARGE_IN') {
-        console.log('[useBargeInHandler] ⚡ BARGE-IN! Stopping TTS...');
+        logger.debug('⚡ BARGE-IN! Stopping TTS...');
         hybridTTS.stop().catch(err => {
-          console.error('[useBargeInHandler] Error stopping TTS:', err);
+          logger.error('Error stopping TTS:', err);
         });
       }
     });

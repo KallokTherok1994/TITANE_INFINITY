@@ -279,10 +279,10 @@ export class QuantumStrategy implements IOrchestrationStrategy, QuantumOperation
   }
 
   private log(message: string, ...args: unknown[]): void {
-    console.log(`[QuantumStrategy] ${message}`, ...args);
+    logger.debug(`[QuantumStrategy] ${message}`, ...args);
   }
 
   private logError(message: string, error?: unknown): void {
-    console.error(`[QuantumStrategy ERROR] ${message}`, error);
+    logger.error(`[QuantumStrategy ERROR] ${message}`, error);
   }
 }
