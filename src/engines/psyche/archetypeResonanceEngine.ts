@@ -381,14 +381,14 @@ class ArchetypeResonanceEngine {
   start(): void {
     if (this.updateInterval) return;
 
-    console.log('🧠 [ARCHETYPE] Starting Archetype Resonance Engine...');
+    logger.debug('🧠 [ARCHETYPE] Starting Archetype Resonance Engine...');
 
     const intervalMs = 1000 / this.config.updateFrequency;
     this.updateInterval = window.setInterval(() => {
       this.updateResonance();
     }, intervalMs);
 
-    console.log(`✅ [ARCHETYPE] Engine active (${this.config.updateFrequency}Hz)`);
+    logger.debug(`✅ [ARCHETYPE] Engine active (${this.config.updateFrequency}Hz)`);
   }
 
   /**
@@ -398,7 +398,7 @@ class ArchetypeResonanceEngine {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
       this.updateInterval = null;
-      console.log('🛑 [ARCHETYPE] Engine stopped');
+      logger.debug('🛑 [ARCHETYPE] Engine stopped');
     }
   }
 
@@ -573,7 +573,7 @@ class ArchetypeResonanceEngine {
       currentPref + this.config.learningRate * (0.3 - currentPref)
     );
 
-    console.log(
+    logger.debug(
       `🧠 [ARCHETYPE] Activated: ${dominant} (${Math.round(this.state.intensity * 100)}%)`,
       this.state.scores
     );
@@ -588,7 +588,7 @@ class ArchetypeResonanceEngine {
    * Activer mode focus explicite
    */
   activateFocusMode(type: ArchetypeType, duration: number = 30000): void {
-    console.log(`🎯 [ARCHETYPE] Focus Mode: ${type} (${duration}ms)`);
+    logger.debug(`🎯 [ARCHETYPE] Focus Mode: ${type} (${duration}ms)`);
 
     this.state.focusMode = type;
     this.notifyCallbacks();
@@ -597,7 +597,7 @@ class ArchetypeResonanceEngine {
     setTimeout(() => {
       if (this.state.focusMode === type) {
         this.state.focusMode = null;
-        console.log(`🎯 [ARCHETYPE] Focus Mode ended`);
+        logger.debug(`🎯 [ARCHETYPE] Focus Mode ended`);
         this.notifyCallbacks();
       }
     }, duration);
@@ -609,7 +609,7 @@ class ArchetypeResonanceEngine {
   activateSafetyGuard(): void {
     if (!this.config.enableSafetyGuard) return;
 
-    console.log('🛡️ [ARCHETYPE] Safety Guard activated → Gardien dominant');
+    logger.debug('🛡️ [ARCHETYPE] Safety Guard activated → Gardien dominant');
 
     this.state.scores = {
       sage: 0.1,
@@ -714,7 +714,7 @@ class ArchetypeResonanceEngine {
       try {
         cb(this.state);
       } catch (error) {
-        console.error('[ARCHETYPE] Callback error:', error);
+        logger.error('Callback error:', error);
       }
     });
   }

@@ -424,11 +424,11 @@ export class UnifiedOrchestrator {
   }
 
   private log(message: string, ...args: unknown[]): void {
-    console.log(`[UnifiedOrchestrator] ${message}`, ...args);
+    logger.debug(`[UnifiedOrchestrator] ${message}`, ...args);
   }
 
   private logError(message: string, error?: unknown): void {
-    console.error(`[UnifiedOrchestrator ERROR] ${message}`, error);
+    logger.error(`[UnifiedOrchestrator ERROR] ${message}`, error);
   }
 }
 

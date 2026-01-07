@@ -85,7 +85,7 @@ export class AgentsAPIService {
         throw new Error(result.error || 'Failed to create agent');
       }
 
-      console.log(
+      logger.debug(
         `✅ [AgentsAPI] Agent created: ${result.data?.name} (${result.data?.id})`
       );
       return result.data;
@@ -118,7 +118,7 @@ export class AgentsAPIService {
         throw new Error(result.error || 'Failed to update permission');
       }
 
-      console.log(`✅ [AgentsAPI] Permission updated: ${result.data}`);
+      logger.debug(`✅ [AgentsAPI] Permission updated: ${result.data}`);
       return result.data;
     } catch (error) {
       const err = error instanceof Error ? error : new Error(String(error));

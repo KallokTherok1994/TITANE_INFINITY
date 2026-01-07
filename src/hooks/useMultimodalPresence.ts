@@ -288,7 +288,7 @@ export function useUserMirroring(): {
     // 4. State update: Set isActive = true, emit 'mirroring:activated' event
     // 5. UI feedback: Show mirroring indicator, update presence status
     // 6. Error handling: Prompt user if camera denied, fallback to audio-only mode
-    console.log('[useUserMirroring] Activation requested (not yet implemented)');
+    logger.debug('Activation requested (not yet implemented)');
   }, []);
 
   const deactivate = useCallback(() => {
@@ -299,7 +299,7 @@ export function useUserMirroring(): {
     // 4. State update: Set isActive = false, emit 'mirroring:deactivated' event
     // 5. UI feedback: Hide mirroring indicator, restore normal presence status
     // 6. Cleanup: Release camera/microphone resources, garbage collect buffers
-    console.log('[useUserMirroring] Deactivation requested (not yet implemented)');
+    logger.debug('Deactivation requested (not yet implemented)');
   }, []);
 
   return {

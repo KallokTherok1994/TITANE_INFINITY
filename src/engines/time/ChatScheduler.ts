@@ -133,7 +133,7 @@ export class ChatScheduler {
 
       // Validation minimale
       if (!obj.type || !this.isValidCommandType(obj.type)) {
-        console.warn('[ChatScheduler] Type de commande invalide:', obj.type);
+        logger.warn('Type de commande invalide:', obj.type);
         return null;
       }
 
@@ -156,10 +156,10 @@ export class ChatScheduler {
           : undefined,
       };
 
-      console.log('[ChatScheduler] ✅ Commande parsée:', command.type, command.title);
+      logger.debug('✅ Commande parsée:', command.type, command.title);
       return command;
     } catch (error) {
-      console.error('[ChatScheduler] Erreur parsing JSON:', error);
+      logger.error('Erreur parsing JSON:', error);
       return null;
     }
   }
@@ -179,7 +179,7 @@ export class ChatScheduler {
    * Exécute une commande agenda
    */
   async executeAgendaCommand(command: AgendaCommand): Promise<CommandExecutionResult> {
-    console.log('[ChatScheduler] 🚀 Exécution commande:', command.type);
+    logger.debug('🚀 Exécution commande:', command.type);
 
     try {
       let result: CommandExecutionResult;
@@ -441,9 +441,9 @@ export class ChatScheduler {
   private async syncAgendaAfterAction(): Promise<void> {
     try {
       await agendaEngine.loadEvents();
-      console.log('[ChatScheduler] 🔄 Agenda synchronisé');
+      logger.debug('🔄 Agenda synchronisé');
     } catch (error) {
-      console.warn('[ChatScheduler] Erreur sync:', error);
+      logger.warn('Erreur sync:', error);
     }
   }
 
@@ -489,7 +489,7 @@ export class ChatScheduler {
    */
   setEnabled(enabled: boolean): void {
     this.enabled = enabled;
-    console.log('[ChatScheduler]', enabled ? '✅ Activé' : '❌ Désactivé');
+    logger.debug('[ChatScheduler]', enabled ? '✅ Activé' : '❌ Désactivé');
   }
 
   /**
@@ -571,7 +571,7 @@ export class ChatScheduler {
       try {
         listener(result);
       } catch (error) {
-        console.error('[ChatScheduler] Erreur listener:', error);
+        logger.error('Erreur listener:', error);
       }
     });
   }

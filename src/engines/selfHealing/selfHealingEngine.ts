@@ -208,7 +208,7 @@ export async function collectLogs(): Promise<SelfHealingLogEntry[]> {
 
     return normalized;
   } catch (error) {
-    console.error('[SelfHealing] collectLogs failed:', error);
+    logger.error('collectLogs failed:', error);
     return [];
   }
 }
@@ -221,7 +221,7 @@ export async function collectState(): Promise<EngineSingularityState | null> {
       return remoteState;
     }
   } catch (error) {
-    console.warn('[SelfHealing] collectState invoke fallback:', error);
+    logger.warn('collectState invoke fallback:', error);
   }
 
   try {
@@ -229,7 +229,7 @@ export async function collectState(): Promise<EngineSingularityState | null> {
       return singularityEngine.getState();
     }
   } catch (error) {
-    console.error('[SelfHealing] collectState engine fallback failed:', error);
+    logger.error('collectState engine fallback failed:', error);
   }
 
   return null;
@@ -351,7 +351,7 @@ export async function callTitaneLocal(prompt: string): Promise<string> {
     const response = await queryOllama(prompt);
     return response.trim();
   } catch (error) {
-    console.error('[SelfHealing] callTitaneLocal failed:', error);
+    logger.error('callTitaneLocal failed:', error);
     throw error;
   }
 }
@@ -379,7 +379,7 @@ export async function parseLocalResponse(
     try {
       parsed = JSON.parse(normalized);
     } catch (secondaryError) {
-      console.error('[SelfHealing] parseLocalResponse failed:', secondaryError);
+      logger.error('parseLocalResponse failed:', secondaryError);
 
       return {
         diagnostic: sanitized,
@@ -506,7 +506,7 @@ export async function escalateIfNeeded(
       ? 'codex'
       : result.escalade;
 
-  console.warn('[SelfHealing] Escalation triggered:', {
+  logger.warn('Escalation triggered:', {
     channel,
     confidence,
     diagnostic: result.diagnostic,
@@ -686,7 +686,7 @@ async function fetchRecentInvocations(): Promise<string[]> {
       })
       .filter((message): message is string => Boolean(message));
   } catch (error) {
-    console.warn('[SelfHealing] fetchRecentInvocations failed:', error);
+    logger.warn('fetchRecentInvocations failed:', error);
     return [];
   }
 }
@@ -753,7 +753,7 @@ async function syncSingularityLearning(result: SelfHealingRunResult): Promise<vo
       },
     } as EngineSingularityPartial);
   } catch (error) {
-    console.warn('[SelfHealing] syncSingularityLearning failed:', error);
+    logger.warn('syncSingularityLearning failed:', error);
   }
 }
 

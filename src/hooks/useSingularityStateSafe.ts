@@ -53,7 +53,7 @@ export function useSingularityStateSafe<T = SingularityFrontendState>(
             const selected = selector(state);
             return selected !== undefined && selected !== null ? selected : state;
           } catch (err) {
-            console.error('[useSingularityStateSafe] Selector error:', err);
+            logger.error('Selector error:', err);
             return state;
           }
         }) as (state: SingularityFrontendState) => T)

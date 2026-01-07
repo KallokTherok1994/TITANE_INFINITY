@@ -95,7 +95,7 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
     if (this.isInitialized) return;
 
     try {
-      console.log('[LocalEmbedding] Loading model:', this.config.modelName);
+      logger.debug('Loading model:', this.config.modelName);
 
       // Dynamic import of Transformers.js
       const { pipeline } = await import('@xenova/transformers');
@@ -118,9 +118,9 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
       )) as unknown as Pipeline;
 
       this.isInitialized = true;
-      console.log('[LocalEmbedding] Model loaded successfully');
+      logger.debug('Model loaded successfully');
     } catch (error) {
-      console.error('[LocalEmbedding] Initialization failed:', error);
+      logger.error('Initialization failed:', error);
       // Fallback to deterministic generator
       this.useFallbackGenerator();
     }
@@ -172,7 +172,7 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
 
       return embedding;
     } catch (error) {
-      console.error('[LocalEmbedding] Generation failed:', error);
+      logger.error('Generation failed:', error);
       // Fallback to deterministic embedding
       return this.generateFallbackEmbedding(text);
     }
@@ -211,7 +211,7 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
         return Promise.all(texts.map(t => this.generate(t)));
       }
     } catch (error) {
-      console.error('[LocalEmbedding] Batch generation failed:', error);
+      logger.error('Batch generation failed:', error);
       // Fallback to individual generation
       return Promise.all(texts.map(t => this.generate(t)));
     }
@@ -267,7 +267,7 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
    * Use fallback generator (deterministic)
    */
   private useFallbackGenerator(): void {
-    console.warn('[LocalEmbedding] Using fallback deterministic generator');
+    logger.warn('Using fallback deterministic generator');
     this.isInitialized = true;
     this.pipeline = undefined;
   }

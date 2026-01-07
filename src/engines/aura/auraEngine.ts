@@ -28,6 +28,9 @@ import {
 import { embodiedPresenceEngine } from '../embodiment/embodiedPresenceEngine';
 // REMOVED: engines/presence supprimé en PHASE 1 (OPTION B) - utilise stub temporaire
 import { multimodalPresenceEngine, type PresenceMode } from '../presence/_stubs';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('AuraEngine');
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES

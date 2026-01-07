@@ -259,7 +259,7 @@ class PhaseSpaceEngine {
   start(): void {
     if (this.state.isRunning) return;
 
-    console.log('[PhaseSpaceEngine] Starting phase-space navigation...');
+    logger.debug('Starting phase-space navigation...');
 
     this.state.isRunning = true;
     this.intervalId = setInterval(() => this.tick(), 500); // 2 Hz
@@ -270,7 +270,7 @@ class PhaseSpaceEngine {
   stop(): void {
     if (!this.state.isRunning) return;
 
-    console.log('[PhaseSpaceEngine] Stopping...');
+    logger.debug('Stopping...');
 
     if (this.intervalId) {
       clearInterval(this.intervalId);
@@ -294,7 +294,7 @@ class PhaseSpaceEngine {
 
   private tick(): void {
     if (!this.metaKernel) {
-      console.warn('[PhaseSpaceEngine] Meta-Singularity Kernel not injected');
+      logger.warn('Meta-Singularity Kernel not injected');
       return;
     }
 
@@ -534,7 +534,7 @@ class PhaseSpaceEngine {
 
         this.state.attractors.push(attractor);
 
-        console.log(`[PhaseSpaceEngine] New attractor detected: ${attractor.name}`);
+        logger.debug(`[PhaseSpaceEngine] New attractor detected: ${attractor.name}`);
       }
     });
 
@@ -743,7 +743,7 @@ class PhaseSpaceEngine {
 
       this.state.bifurcations.push(bifurcation);
 
-      console.log(
+      logger.debug(
         `[PhaseSpaceEngine] Bifurcation detected at coherence=${bifurcation.criticalValue.toFixed(2)}`
       );
 
@@ -972,11 +972,11 @@ class PhaseSpaceEngine {
   navigateToAttractor(attractorId: string): void {
     const attractor = this.state.attractors.find(a => a.id === attractorId);
     if (!attractor) {
-      console.warn(`[PhaseSpaceEngine] Attractor ${attractorId} not found`);
+      logger.warn(`[PhaseSpaceEngine] Attractor ${attractorId} not found`);
       return;
     }
 
-    console.log(`[PhaseSpaceEngine] Navigating to attractor: ${attractor.name}`);
+    logger.debug(`[PhaseSpaceEngine] Navigating to attractor: ${attractor.name}`);
 
     // IMPLEMENTATION: Navigate to attractor by adjusting engine parameters
     // 1. Get target parameters: const target = attractor.parameters (e.g., creativity: 0.8)

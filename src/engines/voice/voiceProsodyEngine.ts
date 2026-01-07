@@ -109,13 +109,13 @@ class VoiceProsodyEngine {
 
   activate(): void {
     this.state.isActive = true;
-    console.log('[VoiceProsodyEngine] Activated');
+    logger.debug('Activated');
     this.notifySubscribers();
   }
 
   deactivate(): void {
     this.state.isActive = false;
-    console.log('[VoiceProsodyEngine] Deactivated');
+    logger.debug('Deactivated');
     this.notifySubscribers();
   }
 

@@ -57,7 +57,7 @@ export const LogViewer: React.FC<LogViewerProps> = ({
         containerRef.current.scrollTop = containerRef.current.scrollHeight;
       }
     } catch (error) {
-      console.error('Failed to fetch logs:', error);
+      logger.error('Failed to fetch logs:', error);
     }
   }, [isPaused, maxLines, filter, autoScroll]);
 
@@ -96,7 +96,7 @@ export const LogViewer: React.FC<LogViewerProps> = ({
         await secureInvoke('clear_system_logs');
         setLogs([]);
       } catch {
-        console.error('Failed to clear logs:', error);
+        logger.error('Failed to clear logs:', error);
       }
     }
   };

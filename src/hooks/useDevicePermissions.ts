@@ -473,7 +473,7 @@ export function useDevicePermissions(): DevicePermissionsResult {
    * Utilisé par le Self-Healing Engine pour récupérer d'un état incohérent
    */
   const resetAndRecheck = useCallback(async () => {
-    console.log('[DevicePermissions] 🔄 Reset cache et re-vérification...');
+    logger.debug('🔄 Reset cache et re-vérification...');
 
     // 1. Reset état local
     setPermissions(initialState);
@@ -491,7 +491,7 @@ export function useDevicePermissions(): DevicePermissionsResult {
     // 4. Re-vérifier toutes les permissions
     await checkAll();
 
-    console.log('[DevicePermissions] ✅ Reset et re-vérification terminés');
+    logger.debug('✅ Reset et re-vérification terminés');
   }, [checkAll]);
 
   /**
@@ -509,7 +509,7 @@ export function useDevicePermissions(): DevicePermissionsResult {
         details,
       };
 
-      console.warn(`[DeviceIssue][${device.toUpperCase()}] ${code}`, entry);
+      logger.warn(`[DeviceIssue][${device.toUpperCase()}] ${code}`, entry);
 
       // Stocker dans localStorage pour debugging (max 50 entrées)
       try {

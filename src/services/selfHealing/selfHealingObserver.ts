@@ -224,11 +224,11 @@ export class SelfHealingObserver {
 
   public async start(): Promise<void> {
     if (this.state.isActive) {
-      console.warn('[SelfHealingObserver] Already active');
+      logger.warn('Already active');
       return;
     }
 
-    console.log('[SelfHealingObserver] 🔍 Starting observation...');
+    logger.debug('🔍 Starting observation...');
 
     if (this.config.captureGlobalErrors) {
       this.installGlobalErrorHandler();
@@ -254,7 +254,7 @@ export class SelfHealingObserver {
     this.state.isActive = true;
     this.state.startTime = Date.now();
 
-    console.log('[SelfHealingObserver] ✅ Observation active');
+    logger.debug('✅ Observation active');
   }
 
   public async stop(): Promise<void> {
@@ -262,7 +262,7 @@ export class SelfHealingObserver {
       return;
     }
 
-    console.log('[SelfHealingObserver] 🛑 Stopping observation...');
+    logger.debug('🛑 Stopping observation...');
 
     // Restaurer handlers originaux
     if (this.originalOnerror !== null) {
@@ -287,7 +287,7 @@ export class SelfHealingObserver {
 
     this.state.isActive = false;
 
-    console.log('[SelfHealingObserver] Observer stopped');
+    logger.debug('Observer stopped');
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -308,7 +308,7 @@ export class SelfHealingObserver {
       try {
         callback(event);
       } catch (err) {
-        console.error('[SelfHealingObserver] Callback error:', err);
+        logger.error('Callback error:', err);
       }
     }
   }
@@ -420,7 +420,7 @@ export class SelfHealingObserver {
       );
       this.unlisteners.push(unlisten3);
     } catch (err) {
-      console.warn('[SelfHealingObserver] Could not install Tauri listeners:', err);
+      logger.warn('Could not install Tauri listeners:', err);
     }
   }
 
@@ -557,7 +557,7 @@ export class SelfHealingObserver {
 
     // Vérifier le rate limiting
     if (!this.checkRateLimit()) {
-      console.warn('[SelfHealingObserver] Rate limit exceeded, dropping error');
+      logger.warn('Rate limit exceeded, dropping error');
       return;
     }
 
@@ -601,7 +601,7 @@ export class SelfHealingObserver {
     const healingEvent = this.toHealingEvent(observedError);
     this.emit(healingEvent);
 
-    console.log(
+    logger.debug(
       `[SelfHealingObserver] 🚨 Captured: [${params.severity}] ${params.type} - ${params.message.slice(0, 100)}`
     );
   }

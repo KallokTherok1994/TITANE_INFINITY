@@ -51,7 +51,7 @@ export function useEngineState(
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : 'Failed to fetch engine state';
-      console.error('❌ [useEngineState] Fetch error:', err);
+      logger.error('❌ [useEngineState] Fetch error:', err);
 
       setError(errorMessage);
       setIsLoading(false);

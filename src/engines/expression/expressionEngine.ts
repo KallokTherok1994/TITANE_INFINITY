@@ -154,7 +154,7 @@ export class ExpressionEngine {
 
   constructor() {
     this.state = this.getDefaultState();
-    console.log('🎭 [EXPRESSION ENGINE] Initializing Expression Engine...');
+    logger.debug('🎭 [EXPRESSION ENGINE] Initializing Expression Engine...');
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -164,7 +164,7 @@ export class ExpressionEngine {
   start(): void {
     if (this.updateInterval) return;
 
-    console.log('🎭 [EXPRESSION ENGINE] Starting expression engine at 15Hz...');
+    logger.debug('🎭 [EXPRESSION ENGINE] Starting expression engine at 15Hz...');
 
     // Subscribe to Identity Kernel
     this.subscribeToIdentityKernel();
@@ -177,7 +177,7 @@ export class ExpressionEngine {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
       this.updateInterval = null;
-      console.log('🎭 [EXPRESSION ENGINE] Expression engine stopped.');
+      logger.debug('🎭 [EXPRESSION ENGINE] Expression engine stopped.');
     }
   }
 
@@ -548,7 +548,7 @@ export class ExpressionEngine {
 
   private verifyCoherence(): void {
     if (this.state.globalSync < this.SYNC_THRESHOLD) {
-      console.warn(
+      logger.warn(
         `⚠️ [EXPRESSION ENGINE] Low synchronization: ${(this.state.globalSync * 100).toFixed(1)}%`
       );
       this.boostSynchronization();

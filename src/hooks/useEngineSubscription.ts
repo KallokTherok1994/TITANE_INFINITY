@@ -70,7 +70,7 @@ export function useEngineSubscription(engine: EngineType): UseEngineSubscription
 
     const config = commandMap[engine as keyof typeof commandMap];
     if (!config) {
-      console.error(`[useEngineSubscription] Unknown engine: ${engine}`);
+      logger.error(`[useEngineSubscription] Unknown engine: ${engine}`);
       return;
     }
 
@@ -86,7 +86,7 @@ export function useEngineSubscription(engine: EngineType): UseEngineSubscription
           setEngineData(engine as EngineName, data as EngineDataMap[typeof engine]);
         }
       } catch (error) {
-        console.error(`[useEngineSubscription] Error fetching ${engine}:`, error);
+        logger.error(`[useEngineSubscription] Error fetching ${engine}:`, error);
       } finally {
         if (mounted) {
           setEngineLoading(engine, false);

@@ -77,7 +77,7 @@ function readPersistedLegacyState(): SingularityLegacyState {
       enginesData: rawState.enginesData ?? {},
     };
   } catch (error) {
-    console.warn('[useSingularityStore] Failed to parse persisted state:', error);
+    logger.warn('Failed to parse persisted state:', error);
     return { ...DEFAULT_LEGACY_STATE };
   }
 }
@@ -100,7 +100,7 @@ const notifyLegacySubscribers = () => {
     try {
       listener(legacyState);
     } catch (error) {
-      console.error('[useSingularityStore] Legacy subscriber error:', error);
+      logger.error('Legacy subscriber error:', error);
     }
   });
 };
@@ -122,7 +122,7 @@ function persistLegacyState(nextState: SingularityLegacyState): void {
         })
       );
     } catch (error) {
-      console.warn('[useSingularityStore] Failed to persist Singularity state:', error);
+      logger.warn('Failed to persist Singularity state:', error);
     }
   }
 
@@ -363,7 +363,7 @@ function useSingularitySelector<T>(
           forceUpdate({}); // Trigger re-render
         }
       } catch (error) {
-        console.error('[useSingularityStore] Selector error:', error);
+        logger.error('Selector error:', error);
       }
     },
     [equalityFn]

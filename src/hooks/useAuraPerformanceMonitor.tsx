@@ -51,7 +51,7 @@ export const useAuraPerformanceMonitor = (
         if (autoAdjust && currentFPS < targetFPS - 10) {
           const recommended = aura.getRecommendedQuality();
           if (recommended !== aura.config.quality) {
-            console.warn(
+            logger.warn(
               `🎨 Aura: Performance issue detected (${currentFPS} FPS). Auto-adjusting to ${recommended}.`
             );
             aura.setQuality(recommended);

@@ -36,6 +36,9 @@ import {
 import type { ThinkingState as _ThinkingState } from '@/types/voice';
 import type { EmotionalState as _EmotionalState } from './emotionalStateEstimator';
 import type { EmotionalState as EmotionalStateString } from '@/types/voice';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('UnifiedVocalEngine');
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES

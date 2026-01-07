@@ -397,7 +397,7 @@ export class SelfHealingAnalyzer {
     // Appliquer les règles de diagnostic
     const diagnosis = this.applyRules(event, context);
 
-    console.log(
+    logger.debug(
       `[SelfHealingAnalyzer] 🔬 Diagnosis: [${diagnosis.severity}] ${diagnosis.nature} - confidence: ${(diagnosis.confidence * 100).toFixed(0)}%`
     );
 
@@ -558,7 +558,7 @@ export class SelfHealingAnalyzer {
           }
         }
       } catch (err) {
-        console.warn(`[SelfHealingAnalyzer] Rule ${rule.id} failed:`, err);
+        logger.warn(`[SelfHealingAnalyzer] Rule ${rule.id} failed:`, err);
       }
     }
 

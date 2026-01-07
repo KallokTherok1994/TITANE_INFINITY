@@ -172,11 +172,11 @@ export class EnergyEngine {
    * Initialise l'EnergyEngine
    */
   init(): void {
-    console.log('[EnergyEngine] 🔋 Initialisation...');
+    logger.debug('🔋 Initialisation...');
     this.updateCurrentEnergyLevel();
     this.generateForecast();
     this.startTick();
-    console.log('[EnergyEngine] ✅ Initialisé:', {
+    logger.debug('✅ Initialisé:', {
       chronotype: this.state.chronotype,
       currentLevel: this.state.currentEnergyLevel.toFixed(2),
     });
@@ -186,7 +186,7 @@ export class EnergyEngine {
    * Arrête l'EnergyEngine
    */
   destroy(): void {
-    console.log('[EnergyEngine] 🛑 Arrêt...');
+    logger.debug('🛑 Arrêt...');
     this.stopTick();
     this.listeners.clear();
   }
@@ -201,7 +201,7 @@ export class EnergyEngine {
       this.updateCurrentEnergyLevel();
     }, 60000); // Toutes les minutes
 
-    console.log('[EnergyEngine] ⚙️ Tick démarré (60s)');
+    logger.debug('⚙️ Tick démarré (60s)');
   }
 
   /**
@@ -233,7 +233,7 @@ export class EnergyEngine {
     this.updateCurrentEnergyLevel();
     this.generateForecast();
     this.notifyListeners();
-    console.log('[EnergyEngine] 👤 Profil initialisé:', chronotype);
+    logger.debug('👤 Profil initialisé:', chronotype);
   }
 
   /**
@@ -387,7 +387,7 @@ export class EnergyEngine {
     this.state.currentEnergyLevel = level;
     this.notifyListeners();
 
-    console.log('[EnergyEngine] 📝 Énergie manuelle enregistrée:', level);
+    logger.debug('📝 Énergie manuelle enregistrée:', level);
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -491,7 +491,7 @@ export class EnergyEngine {
       try {
         listener(state);
       } catch (error) {
-        console.error('[EnergyEngine] Erreur listener:', error);
+        logger.error('Erreur listener:', error);
       }
     });
   }

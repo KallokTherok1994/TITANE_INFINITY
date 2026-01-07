@@ -335,7 +335,7 @@ export function useAudioSettings(): UseAudioSettingsReturn {
       await refreshDevices();
       return true;
     } catch (error) {
-      console.error('[useAudioSettings] Browser permission request failed:', error);
+      logger.error('Browser permission request failed:', error);
 
       if (mountedRef.current) {
         const err = error as DOMException;
@@ -399,7 +399,7 @@ export function useAudioSettings(): UseAudioSettingsReturn {
         }
       }
     } catch (error) {
-      console.error('[useAudioSettings] Failed to refresh devices:', error);
+      logger.error('Failed to refresh devices:', error);
       setLastError('Échec de la détection des périphériques audio');
     }
   }, [selectedInputDevice, selectedOutputDevice]);
@@ -410,7 +410,7 @@ export function useAudioSettings(): UseAudioSettingsReturn {
       setSelectedInputDevice(deviceId);
       localStorage.setItem(STORAGE_KEYS.selectedInput, deviceId);
     } catch (error) {
-      console.error('[useAudioSettings] Failed to select input device:', error);
+      logger.error('Failed to select input device:', error);
       setLastError('Échec de la sélection du microphone');
     }
   }, []);
@@ -424,7 +424,7 @@ export function useAudioSettings(): UseAudioSettingsReturn {
       setSelectedOutputDevice(deviceId);
       localStorage.setItem(STORAGE_KEYS.selectedOutput, deviceId);
     } catch (error) {
-      console.error('[useAudioSettings] Failed to select output device:', error);
+      logger.error('Failed to select output device:', error);
       setLastError('Échec de la sélection du haut-parleur');
     }
   }, []);
@@ -657,7 +657,7 @@ export function useAudioSettings(): UseAudioSettingsReturn {
       setHealthSummary(newHealth);
       localStorage.setItem(STORAGE_KEYS.healthSummary, JSON.stringify(newHealth));
     } catch (error) {
-      console.error('[useAudioSettings] Diagnostic error:', error);
+      logger.error('Diagnostic error:', error);
       setLastError('Erreur lors du diagnostic');
     } finally {
       if (mountedRef.current) {
@@ -731,9 +731,9 @@ export function useAudioSettings(): UseAudioSettingsReturn {
         await refreshDevicesRef.current();
       }
 
-      console.log('[useAudioSettings] Audio system reset');
+      logger.debug('Audio system reset');
     } catch (error) {
-      console.error('[useAudioSettings] Reset error:', error);
+      logger.error('Reset error:', error);
       setLastError('Échec de la réinitialisation audio');
     }
   }, []); // Safe: uses stable refs

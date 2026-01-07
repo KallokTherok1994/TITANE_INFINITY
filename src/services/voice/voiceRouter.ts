@@ -39,6 +39,9 @@ import { wakeWordEngine as _wakeWordEngine, type WakeWordEvent } from './wakeWor
 import { attentionEngine } from './attentionEngine';
 import { interruptionController } from './interruptionController';
 import { haloEngine } from './haloEngine'; // ✅ v∞.7 Halo sync
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('VoiceRouter');
 
 /**
  * Configuration du tour vocal

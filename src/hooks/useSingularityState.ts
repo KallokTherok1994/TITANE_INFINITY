@@ -149,7 +149,7 @@ export function useSingularityState(
       setCognitionState(cognition);
       setEvolutionState(evolution);
     } catch (err) {
-      console.error('[useSingularityState] Refresh failed:', err);
+      logger.error('Refresh failed:', err);
       setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
@@ -165,12 +165,12 @@ export function useSingularityState(
       setError(null);
 
       const result = await secureInvoke<string>('engine_init_singularity');
-      console.log('[useSingularityState] Init:', result);
+      logger.debug('Init:', result);
 
       // Refresh state after init
       await refreshState();
     } catch (err) {
-      console.error('[useSingularityState] Init failed:', err);
+      logger.error('Init failed:', err);
       setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
@@ -183,12 +183,12 @@ export function useSingularityState(
   const tickEngine = useCallback(async () => {
     try {
       const result = await secureInvoke<string>('engine_tick');
-      console.log('[useSingularityState] Tick:', result);
+      logger.debug('Tick:', result);
 
       // Refresh state after tick
       await refreshState();
     } catch (err) {
-      console.error('[useSingularityState] Tick failed:', err);
+      logger.error('Tick failed:', err);
       setError(err instanceof Error ? err.message : String(err));
     }
   }, [refreshState]);

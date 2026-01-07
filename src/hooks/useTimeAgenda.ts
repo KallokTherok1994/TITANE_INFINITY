@@ -128,7 +128,7 @@ export function useTimeAgenda(autoInit: boolean = true): UseTimeAgendaReturn {
         await initTimeAgendaSystem(agendaStorage);
         setInitialized(true);
       } catch (error) {
-        console.error('[useTimeAgenda] Erreur init:', error);
+        logger.error('Erreur init:', error);
       } finally {
         setLoading(false);
       }

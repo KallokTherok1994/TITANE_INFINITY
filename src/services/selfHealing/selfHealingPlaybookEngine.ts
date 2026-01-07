@@ -576,13 +576,13 @@ export class SelfHealingPlaybookEngine {
     matches.sort((a, b) => b.score - a.score);
 
     if (matches.length === 0) {
-      console.log('[PlaybookEngine] No matching playbook found for diagnosis');
+      logger.debug('No matching playbook found for diagnosis');
       return null;
     }
 
     const best = matches[0];
     if (!best) return null;
-    console.log(
+    logger.debug(
       `[PlaybookEngine] 📋 Selected playbook: ${best.playbook.name} (score: ${best.score})`
     );
 
@@ -639,7 +639,7 @@ export class SelfHealingPlaybookEngine {
       },
     };
 
-    console.log(
+    logger.debug(
       `[PlaybookEngine] 📝 Generated plan: ${plan.id} (${plannedActions.length} actions, ~${Math.round(estimatedDuration / 1000)}s)`
     );
 

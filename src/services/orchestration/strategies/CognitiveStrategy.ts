@@ -402,10 +402,10 @@ export class CognitiveStrategy
   }
 
   private log(message: string, ...args: unknown[]): void {
-    console.log(`[CognitiveStrategy] ${message}`, ...args);
+    logger.debug(`[CognitiveStrategy] ${message}`, ...args);
   }
 
   private logError(message: string, error?: unknown): void {
-    console.error(`[CognitiveStrategy ERROR] ${message}`, error);
+    logger.error(`[CognitiveStrategy ERROR] ${message}`, error);
   }
 }

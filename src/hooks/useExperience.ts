@@ -70,7 +70,7 @@ export const useExperience = (): UseExperienceReturn => {
           setIsLoading(false);
         }
       } catch (err) {
-        console.error('[useExperience] Erreur initialisation:', err);
+        logger.error('Erreur initialisation:', err);
         if (mounted) {
           setIsLoading(false);
         }

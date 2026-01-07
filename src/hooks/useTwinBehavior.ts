@@ -92,7 +92,7 @@ export function useTwinBehavior(): UseTwinBehaviorReturn {
         return id;
       } catch (err) {
         setError(err instanceof Error ? err.message : "Erreur lors de l'observation");
-        console.error('[useTwinBehavior] observeValue error:', err);
+        logger.error('observeValue error:', err);
         return null;
       } finally {
         setIsSubmitting(false);
@@ -119,7 +119,7 @@ export function useTwinBehavior(): UseTwinBehaviorReturn {
         return id;
       } catch (err) {
         setError(err instanceof Error ? err.message : "Erreur lors de l'observation");
-        console.error('[useTwinBehavior] observeCognitive error:', err);
+        logger.error('observeCognitive error:', err);
         return null;
       } finally {
         setIsSubmitting(false);
@@ -142,7 +142,7 @@ export function useTwinBehavior(): UseTwinBehaviorReturn {
         return id;
       } catch (err) {
         setError(err instanceof Error ? err.message : "Erreur lors de l'observation");
-        console.error('[useTwinBehavior] observeStyle error:', err);
+        logger.error('observeStyle error:', err);
         return null;
       } finally {
         setIsSubmitting(false);
@@ -161,7 +161,7 @@ export function useTwinBehavior(): UseTwinBehaviorReturn {
         return id;
       } catch (err) {
         setError(err instanceof Error ? err.message : "Erreur lors de l'observation");
-        console.error('[useTwinBehavior] observeEmotional error:', err);
+        logger.error('observeEmotional error:', err);
         return null;
       } finally {
         setIsSubmitting(false);

@@ -65,18 +65,18 @@ export function useIdentityMatrix(): UseIdentityMatrixResult {
         setIsFallback(result.isFallback);
 
         if (result.isFallback) {
-          console.warn('[useIdentityMatrix] Using fallback identity matrix');
+          logger.warn('Using fallback identity matrix');
         }
       } else {
         // Validation échoué - utiliser default
-        console.error('[useIdentityMatrix] Loaded matrix invalid, using default');
+        logger.error('Loaded matrix invalid, using default');
         setMatrix(DEFAULT_IDENTITY_MATRIX);
         setIsLoaded(false);
         setIsFallback(true);
         setError('Loaded identity matrix failed validation');
       }
     } catch (err) {
-      console.error('[useIdentityMatrix] Load failed:', err);
+      logger.error('Load failed:', err);
       setMatrix(DEFAULT_IDENTITY_MATRIX);
       setIsLoaded(false);
       setIsFallback(true);

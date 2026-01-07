@@ -152,7 +152,7 @@ export function useDebouncedAsyncCallback<TArgs extends unknown[], TReturn>(
         callbackRef.current(...args).catch(error => {
           // Ignore abort errors
           if (error.name !== 'AbortError') {
-            console.error('Debounced async callback error:', error);
+            logger.error('Debounced async callback error:', error);
           }
         });
       }, delay);

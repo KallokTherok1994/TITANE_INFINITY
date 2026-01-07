@@ -393,7 +393,7 @@ class SynestheticEmotionEngine {
 
     this.callbacks = new Set();
 
-    console.log('🎨 [SYNESTHETIC] Synesthetic Emotion Engine initialized');
+    logger.debug('🎨 [SYNESTHETIC] Synesthetic Emotion Engine initialized');
   }
 
   /**
@@ -522,7 +522,7 @@ class SynestheticEmotionEngine {
       this.state.history.shift();
     }
 
-    console.log(
+    logger.debug(
       `🎨 [SYNESTHETIC] Transitioning to ${emotion} (intensity: ${intensity}, duration: ${duration}ms)`
     );
 
@@ -651,21 +651,21 @@ class SynestheticEmotionEngine {
   learnUserPreference(emotion: EmotionalState, score: number): void {
     if (!this.config.enableUserLearning) return;
     this.state.userPreferences[emotion] = score;
-    console.log(`🎨 [SYNESTHETIC] Learned preference: ${emotion} = ${score}`);
+    logger.debug(`🎨 [SYNESTHETIC] Learned preference: ${emotion} = ${score}`);
   }
 
   /**
    * Démarrer le moteur
    */
   start(): void {
-    console.log('🎨 [SYNESTHETIC] Synesthetic Emotion Engine started');
+    logger.debug('🎨 [SYNESTHETIC] Synesthetic Emotion Engine started');
   }
 
   /**
    * Arrêter le moteur
    */
   stop(): void {
-    console.log('🎨 [SYNESTHETIC] Synesthetic Emotion Engine stopped');
+    logger.debug('🎨 [SYNESTHETIC] Synesthetic Emotion Engine stopped');
   }
 }
 

@@ -164,14 +164,14 @@ class AudioStateMachine {
 
     if (!nextState) {
       if (this.enableLogging) {
-        console.warn(
+        logger.warn(
           `[AudioStateMachine] ⚠️ Invalid transition: ${this.state} + ${event}`
         );
       }
 
       // ✅ AUTO-RECOVERY: Reset to idle on invalid transitions for critical events
       if (event === 'RESET' || event === 'ERROR') {
-        console.warn('[AudioStateMachine] 🛡️ Forcing state to idle due to', event);
+        logger.warn('🛡️ Forcing state to idle due to', event);
         this.state = 'idle';
         this.notifyListeners('idle', previousState, event);
         return true;
@@ -195,7 +195,7 @@ class AudioStateMachine {
 
     if (this.enableLogging) {
       const emoji = this.getStateEmoji(nextState);
-      console.log(
+      logger.debug(
         `[AudioStateMachine] ${emoji} ${previousState} → ${nextState} (${event})`
       );
     }
@@ -218,7 +218,7 @@ class AudioStateMachine {
       try {
         listener(newState, previousState, event);
       } catch (e) {
-        console.error('[AudioStateMachine] Listener error:', e);
+        logger.error('Listener error:', e);
       }
     });
   }
@@ -255,7 +255,7 @@ class AudioStateMachine {
     this.state = 'idle';
 
     if (this.enableLogging) {
-      console.log(`[AudioStateMachine] 🔄 RESET: ${previousState} → idle`);
+      logger.debug(`[AudioStateMachine] 🔄 RESET: ${previousState} → idle`);
     }
 
     // Add to history
@@ -277,7 +277,7 @@ class AudioStateMachine {
    * Use for critical errors or stuck states
    */
   forceReset(): void {
-    console.warn('[AudioStateMachine] 🚨 FORCE RESET - Emergency state cleanup');
+    logger.warn('🚨 FORCE RESET - Emergency state cleanup');
     const previousState = this.state;
     this.state = 'idle';
     this.history.push({

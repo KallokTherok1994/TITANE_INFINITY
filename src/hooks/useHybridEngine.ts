@@ -105,7 +105,7 @@ export function useHybridEngine(): UseHybridEngineReturn {
         const result = await hybridEngine.executeCommand(command);
         return result;
       } catch (error) {
-        console.error('[useHybridEngine] Execute failed:', error);
+        logger.error('Execute failed:', error);
         throw error;
       }
     },
@@ -163,7 +163,7 @@ export function useHybridEngine(): UseHybridEngineReturn {
       );
       return patches;
     } catch (error) {
-      console.error('[useHybridEngine] Detect issues failed:', error);
+      logger.error('Detect issues failed:', error);
       return [];
     }
   }, []);
@@ -173,7 +173,7 @@ export function useHybridEngine(): UseHybridEngineReturn {
       const success = await hybridEngine.applyAutoPatch(patch);
       return success;
     } catch (error) {
-      console.error('[useHybridEngine] Apply auto-patch failed:', error);
+      logger.error('Apply auto-patch failed:', error);
       return false;
     }
   }, []);
@@ -185,7 +185,7 @@ export function useHybridEngine(): UseHybridEngineReturn {
       const diagnostics = await hybridEngine.runFullDiagnostic();
       return diagnostics;
     } catch (error) {
-      console.error('[useHybridEngine] Full diagnostic failed:', error);
+      logger.error('Full diagnostic failed:', error);
       return [];
     }
   }, []);

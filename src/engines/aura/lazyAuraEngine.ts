@@ -35,7 +35,7 @@ export async function getAuraEngine() {
 export async function startAuraEngine() {
   const engine = await getAuraEngine();
   engine.start();
-  console.log('  ✅ Aura Engine active (60Hz, 8 visual modes)');
+  logger.debug('  ✅ Aura Engine active (60Hz, 8 visual modes)');
 }
 
 /**

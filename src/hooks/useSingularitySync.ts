@@ -185,7 +185,7 @@ export function useSingularitySync(
       }));
 
       onSyncError?.(err);
-      console.error('[useSingularitySync] Sync error:', err);
+      logger.error('Sync error:', err);
     } finally {
       setIsSyncing(false);
     }

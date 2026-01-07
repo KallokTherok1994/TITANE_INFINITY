@@ -70,8 +70,8 @@ export function useSystemMonitor(
 
   const refreshAll = async () => {
     await Promise.all([
-      fetchVitals().catch(e => console.error('System refresh error:', e)),
-      refreshEnginesBase().catch(e => console.error('Engine refresh error:', e)),
+      fetchVitals().catch(e => logger.error('System refresh error:', e)),
+      refreshEnginesBase().catch(e => logger.error('Engine refresh error:', e)),
     ]);
   };
 
