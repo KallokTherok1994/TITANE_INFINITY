@@ -44,6 +44,8 @@ import {
   STREAM_CONFIG,
   AVAILABILITY_CACHE,
 } from '@/config/aiTimeouts.config'; // ← v22Ω: Centralized timeouts
+import { contextWindowManager } from './contextManager'; // ← v26.2.0 P0: Context management
+import { performanceMonitor, MetricCategory } from './performanceMonitor'; // ← v26.2.0 P1: Performance monitoring
 
 const logger = createLogger('Orchestrator');
 
@@ -748,6 +750,38 @@ class AIOrchestrator {
       );
       logger.groupEnd();
 
+      // ═══ PHASE 3.4.1.5: CONTEXT WINDOW MANAGEMENT v26.2.0 P0 ===
+      // Determine target model for context calculation
+      const targetModel = config?.model || 'gpt-4o';
+
+      // Check if truncation needed
+      const contextStats = contextWindowManager.getStats(history, targetModel);
+      let managedHistory = history;
+
+      if (contextStats.needsTruncation) {
+        logger.warn(
+          `Context overflow detected: ${contextStats.currentTokens}/${contextStats.targetLimit} tokens`,
+          { model: targetModel, messages: history.length }
+        );
+
+        // Truncate history to prevent API failures
+        managedHistory = contextWindowManager.truncate(history, targetModel);
+
+        logger.info(
+          `Context truncated: ${history.length} → ${managedHistory.length} messages`,
+          {
+            originalTokens: contextStats.currentTokens,
+            newTokens: contextWindowManager.getStats(managedHistory, targetModel).currentTokens,
+            strategy: 'RECENT'
+          }
+        );
+      } else {
+        logger.debug(
+          `Context within limits: ${contextStats.currentTokens}/${contextStats.targetLimit} tokens`,
+          { utilizationPercent: contextStats.utilizationPercent.toFixed(1) + '%' }
+        );
+      }
+
       // ═══ PHASE 3.4.2: NEURAL PROVIDER SELECTION + COGNITIVE KERNEL v22Ω ═══
 
       // v22Ω: Check degraded mode - if active, force titane-local only
@@ -759,7 +793,7 @@ class AIOrchestrator {
             const response = await this.executeProviderIsolated(
               localProvider,
               sanitized,
-              history,
+              managedHistory,
               5000,
               requestId
             );
@@ -921,7 +955,7 @@ class AIOrchestrator {
           // v22Ω: Using centralized timeout config
           const executionTimeout = getProviderTimeout(providerName);
           const historyForProvider = this.buildHistoryForProvider(
-            history,
+            managedHistory, // v26.2.0 P0: Use truncated history to prevent context overflow
             providerName,
             config?.promptProfileId,
             config?.promptContext
@@ -951,6 +985,21 @@ class AIOrchestrator {
 
           // ═══ v24.5: Record success in Circuit Breaker + Rate Limiter ═══
           circuitBreaker.recordSuccess(providerName);
+
+          // ═══ v26.2.0 P1: Record performance metrics ═══
+          performanceMonitor.record(MetricCategory.AI_GENERATION, totalResponseTime, {
+            provider: providerName,
+            model: config?.model || 'default',
+            success: true,
+            historyLength: history.length,
+            managedHistoryLength: managedHistory.length,
+            requestId
+          });
+
+          performanceMonitor.record(`${MetricCategory.AI_PROVIDER}.${providerName}`, providerLatency, {
+            success: true,
+            model: config?.model || 'default'
+          });
           rateLimiter.recordRequest(providerName, response.tokens || estimatedTokens);
 
           // 📊 METRICS: Enregistrer succès
