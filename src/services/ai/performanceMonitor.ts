@@ -431,6 +431,137 @@ export class PerformanceMonitor {
     this.metrics.clear();
     this.timers.clear();
   }
+
+  /**
+   * Export all metrics to JSON format
+   * Useful for analysis, debugging, and reporting
+   */
+  exportToJSON(): string {
+    const report = this.getDetailedReport();
+    const dashboard = this.getDashboardSummary();
+
+    const exportData = {
+      timestamp: new Date().toISOString(),
+      version: '26.2.0',
+      dashboard,
+      metrics: Object.entries(report).map(([name, stats]) => ({
+        name,
+        ...stats
+      })),
+      meta: {
+        totalMetrics: this.metrics.size,
+        activeTimers: this.timers.size
+      }
+    };
+
+    return JSON.stringify(exportData, null, 2);
+  }
+
+  /**
+   * Export metrics to CSV format
+   * Useful for spreadsheet analysis
+   */
+  exportToCSV(): string {
+    const report = this.getDetailedReport();
+    const lines: string[] = [
+      'Metric Name,Count,Average,Min,Max,P50,P90,P95,P99,Std Dev'
+    ];
+
+    for (const [name, stats] of Object.entries(report)) {
+      lines.push(
+        `"${name}",${stats.count},${stats.avg.toFixed(2)},${stats.min.toFixed(2)},` +
+        `${stats.max.toFixed(2)},${stats.p50.toFixed(2)},${stats.p90.toFixed(2)},` +
+        `${stats.p95.toFixed(2)},${stats.p99.toFixed(2)},${stats.stdDev.toFixed(2)}`
+      );
+    }
+
+    return lines.join('\n');
+  }
+
+  /**
+   * Download metrics as a file
+   * Browser-safe download function
+   */
+  downloadMetrics(format: 'json' | 'csv' = 'json'): void {
+    const content = format === 'json' ? this.exportToJSON() : this.exportToCSV();
+    const blob = new Blob([content], { type: format === 'json' ? 'application/json' : 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `performance-metrics-${new Date().toISOString().split('T')[0]}.${format}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  /**
+   * Get metrics summary for a specific category
+   */
+  getCategorySummary(category: MetricCategory): Record<string, MetricStats> {
+    const pattern = new RegExp(`^${category}\\.`);
+    return this.getMetricsByPattern(pattern);
+  }
+
+  /**
+   * Get top N slowest operations
+   */
+  getTopSlowest(n: number = 10): Array<{ name: string; avgLatency: number; p95: number }> {
+    const report = this.getDetailedReport();
+    return Object.entries(report)
+      .map(([name, stats]) => ({
+        name,
+        avgLatency: stats.avg,
+        p95: stats.p95
+      }))
+      .sort((a, b) => b.avgLatency - a.avgLatency)
+      .slice(0, n);
+  }
+
+  /**
+   * Get metrics health status
+   * Returns: healthy | warning | critical
+   */
+  getHealthStatus(): {
+    status: 'healthy' | 'warning' | 'critical';
+    reasons: string[];
+    score: number;
+  } {
+    const report = this.getDetailedReport();
+    const reasons: string[] = [];
+    let criticalCount = 0;
+    let warningCount = 0;
+
+    for (const [name, stats] of Object.entries(report)) {
+      // Check for very slow operations (>2s p95)
+      if (stats.p95 > 2000) {
+        criticalCount++;
+        reasons.push(`${name}: P95 latency ${stats.p95.toFixed(0)}ms is critical (>2s)`);
+      } else if (stats.p95 > 1000) {
+        warningCount++;
+        reasons.push(`${name}: P95 latency ${stats.p95.toFixed(0)}ms is high (>1s)`);
+      }
+
+      // Check for high variance (stdDev > 50% of avg)
+      if (stats.stdDev > stats.avg * 0.5 && stats.avg > 100) {
+        warningCount++;
+        reasons.push(`${name}: High variance (stdDev: ${stats.stdDev.toFixed(0)}ms)`);
+      }
+    }
+
+    const totalMetrics = Object.keys(report).length;
+    const healthyCount = totalMetrics - criticalCount - warningCount;
+    const score = totalMetrics > 0 ? (healthyCount / totalMetrics) * 100 : 100;
+
+    let status: 'healthy' | 'warning' | 'critical' = 'healthy';
+    if (criticalCount > 0) {
+      status = 'critical';
+    } else if (warningCount > 0) {
+      status = 'warning';
+    }
+
+    return { status, reasons, score };
+  }
 }
 
 /**
