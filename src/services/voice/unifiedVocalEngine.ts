@@ -216,12 +216,12 @@ class UnifiedVocalEngine {
    */
   async initialize(): Promise<void> {
     if (this.isInitialized) {
-      console.warn('[UnifiedVocalEngine] Already initialized');
+      logger.warn('Already initialized');
       return;
     }
 
-    console.log(
-      '[UnifiedVocalEngine] 🚀 Initializing Unified Vocal Intelligence Engine v∞...'
+    logger.debug(
+      '🚀 Initializing Unified Vocal Intelligence Engine v∞...'
     );
 
     // Initialiser les sous-systèmes
@@ -231,7 +231,7 @@ class UnifiedVocalEngine {
     this.startCognitiveLoop();
 
     this.isInitialized = true;
-    console.log('[UnifiedVocalEngine] ✅ Unified Vocal Engine initialized');
+    logger.debug('✅ Unified Vocal Engine initialized');
   }
 
   /**
@@ -262,7 +262,7 @@ class UnifiedVocalEngine {
     // Note: wakeWordEngine and fullDuplexOrchestrator event handlers
     // will be connected when those features are fully integrated
 
-    console.log('[UnifiedVocalEngine] ✅ Subsystems connected');
+    logger.debug('✅ Subsystems connected');
   }
 
   /**
@@ -276,7 +276,7 @@ class UnifiedVocalEngine {
       this.cognitiveLoopTick();
     }, intervalMs);
 
-    console.log(
+    logger.debug(
       `[UnifiedVocalEngine] 🔄 Cognitive loop started (${this.config.loopFrequency} Hz)`
     );
   }
@@ -390,13 +390,13 @@ class UnifiedVocalEngine {
 
     // Vérifier backend non bloqué
     if (this.state.isRecording && this.state.cognitiveState === 'idle') {
-      console.warn('[UnifiedVocalEngine] 🔥 Detected stuck recording state, healing...');
+      logger.warn('🔥 Detected stuck recording state, healing...');
       this.heal();
     }
 
     // Vérifier TTS non coincé
     if (this.state.isSpeaking && this.state.audioState === 'idle') {
-      console.warn('[UnifiedVocalEngine] 🔥 Detected stuck TTS state, healing...');
+      logger.warn('🔥 Detected stuck TTS state, healing...');
       this.heal();
     }
   }
@@ -458,7 +458,7 @@ class UnifiedVocalEngine {
    * Gestion WakeWord "TITANE" détecté
    */
   private handleWakeWord(event: WakeWordEvent): void {
-    console.log('[UnifiedVocalEngine] 🎯 WakeWord detected:', event);
+    logger.debug('🎯 WakeWord detected:', event);
 
     this.state.lastWakeWord = event;
 
@@ -482,7 +482,7 @@ class UnifiedVocalEngine {
    * Gestion Barge-In (interruption humaine)
    */
   private handleBargeIn(): void {
-    console.log('[UnifiedVocalEngine] 🛑 Barge-in detected, stopping TTS');
+    logger.debug('🛑 Barge-in detected, stopping TTS');
 
     // Stop TTS immédiatement
     if (this.state.isSpeaking) {
@@ -509,7 +509,7 @@ class UnifiedVocalEngine {
     this.state.isHealing = true;
     this.transitionToCognitiveState('healing');
 
-    console.log('[UnifiedVocalEngine] 🔧 Starting self-healing...');
+    logger.debug('🔧 Starting self-healing...');
 
     try {
       // Force reset recording
@@ -525,9 +525,9 @@ class UnifiedVocalEngine {
       this.state.isRecording = false;
       this.state.isSpeaking = false;
 
-      console.log('[UnifiedVocalEngine] ✅ Self-healing complete');
+      logger.debug('✅ Self-healing complete');
     } catch (error) {
-      console.error('[UnifiedVocalEngine] ❌ Self-healing failed:', error);
+      logger.error('❌ Self-healing failed:', error);
     } finally {
       this.state.isHealing = false;
       this.transitionToCognitiveState('idle');
@@ -541,7 +541,7 @@ class UnifiedVocalEngine {
     const prevState = this.state.cognitiveState;
     if (prevState === newState) return;
 
-    console.log(`[UnifiedVocalEngine] 🔄 Cognitive state: ${prevState} → ${newState}`);
+    logger.debug(`[UnifiedVocalEngine] 🔄 Cognitive state: ${prevState} → ${newState}`);
     this.state.cognitiveState = newState;
 
     this.updateCognitiveState();
@@ -624,9 +624,9 @@ class UnifiedVocalEngine {
         this.state.titaneSignature = memory.titaneSignature;
       }
 
-      console.log('[UnifiedVocalEngine] ✅ Memory loaded from localStorage');
+      logger.debug('✅ Memory loaded from localStorage');
     } catch (error) {
-      console.warn('[UnifiedVocalEngine] Failed to load memory:', error);
+      logger.warn('Failed to load memory:', error);
     }
   }
 
@@ -643,7 +643,7 @@ class UnifiedVocalEngine {
 
       localStorage.setItem('titane_vocal_memory', JSON.stringify(memory));
     } catch (error) {
-      console.warn('[UnifiedVocalEngine] Failed to save memory:', error);
+      logger.warn('Failed to save memory:', error);
     }
   }
 
@@ -706,7 +706,7 @@ class UnifiedVocalEngine {
     this.listeners.clear();
     this.isInitialized = false;
 
-    console.log('[UnifiedVocalEngine] 🛑 Shutdown complete');
+    logger.debug('🛑 Shutdown complete');
   }
 }
 

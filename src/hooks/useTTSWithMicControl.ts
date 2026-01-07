@@ -8,6 +8,9 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { voiceService } from '@/services/api/voice';
 import { useVAD, UseVADReturn } from './useVAD';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('TTSWithMicControl');
 
 interface TTSConfig {
   language?: string;
@@ -72,13 +75,13 @@ export function useTTSWithMicControl(
         setText(textToSpeak);
 
         // ✅ CRITICAL: Suspend VAD (mute microphone) BEFORE starting TTS
-        console.log('[useTTSWithMicControl] 🔇 Suspending VAD (muting mic)');
+        logger.debug('Suspending VAD (muting mic)');
         vad.suspendForTTS();
 
         // Configure duplex mode
         if (enableDuplex) {
           vad.enableBargeIn();
-          console.log('[useTTSWithMicControl] 🔊 Duplex mode enabled (barge-in)');
+          logger.debug('Duplex mode enabled (barge-in)');
         } else {
           vad.disableBargeIn();
         }
@@ -88,20 +91,18 @@ export function useTTSWithMicControl(
         // Start TTS playback
         await voiceService.speak(textToSpeak, undefined, config?.useOnline ?? false);
 
-        console.log('[useTTSWithMicControl] ✅ TTS started');
+        logger.debug('TTS started');
 
         // ✅ CRITICAL: Resume VAD (unmute mic) after delay
         resumeTimeoutRef.current = setTimeout(() => {
-          console.log(
-            `[useTTSWithMicControl] 🔉 Resuming VAD after ${resumeDelay}ms delay`
-          );
+          logger.debug(`Resuming VAD after ${resumeDelay}ms delay`);
           vad.resumeAfterTTS(resumeDelay);
           setIsSpeaking(false);
           audioIdRef.current = null;
         }, resumeDelay);
       } catch (err: unknown) {
         const error = err as Error;
-        console.error('[useTTSWithMicControl] TTS failed:', error);
+        logger.error('TTS failed', { error });
         setError(`TTS error: ${error.message}`);
         setIsSpeaking(false);
 
@@ -130,14 +131,14 @@ export function useTTSWithMicControl(
       }
 
       // ✅ CRITICAL: Immediately resume VAD (unmute mic)
-      console.log('[useTTSWithMicControl] ⏹️ TTS stopped, resuming VAD immediately');
+      logger.debug('TTS stopped, resuming VAD immediately');
       vad.resumeAfterTTS(0); // No delay
 
       setIsSpeaking(false);
       setText('');
     } catch (err: unknown) {
       const error = err as Error;
-      console.error('[useTTSWithMicControl] Failed to stop TTS:', error);
+      logger.error('Failed to stop TTS', { error });
       setError(`Stop error: ${error.message}`);
 
       // ✅ CRITICAL: Always resume VAD even on error
@@ -155,7 +156,7 @@ export function useTTSWithMicControl(
         clearTimeout(resumeTimeoutRef.current);
       }
       if (audioIdRef.current) {
-        voiceService.stopSpeaking().catch(console.error);
+        voiceService.stopSpeaking().catch(err => logger.error('Cleanup error', { error: err }));
       }
       // Ensure VAD is resumed
       vad.resumeAfterTTS(0);

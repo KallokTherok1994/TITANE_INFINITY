@@ -16,6 +16,9 @@ import { useChat } from './useChat';
 import { useSingularityState } from '../core/state/SingularityState';
 import type { AIMessage } from '../services/ai/types';
 import type { AIStatus } from '@/core/ARCHITECTURE_TYPES_v∞';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('GlobalAIChat');
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -111,7 +114,7 @@ export function useGlobalAIChat(): UseGlobalAIChatReturn {
         if (state.currentProvider) setCurrentProvider(state.currentProvider);
       }
     } catch (error) {
-      console.warn('[GlobalAIChat] Failed to load state from localStorage', error);
+      logger.warn('Failed to load state from localStorage', { error });
     }
 
     mountedRef.current = true;
@@ -131,7 +134,7 @@ export function useGlobalAIChat(): UseGlobalAIChatReturn {
       };
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch (error) {
-      console.warn('[GlobalAIChat] Failed to save state to localStorage', error);
+      logger.warn('Failed to save state to localStorage', { error });
     }
   }, [isOpen, isMinimized, position, currentModel, currentProvider]);
 
@@ -168,7 +171,7 @@ export function useGlobalAIChat(): UseGlobalAIChatReturn {
         await chatSendMessage(content);
       } catch (error) {
         setAIError(error instanceof Error ? error.message : 'Unknown error');
-        console.error('[GlobalAIChat] sendMessage error:', error);
+        logger.error('sendMessage error', { error });
       }
     },
     [chatSendMessage, setAIError]
@@ -177,17 +180,17 @@ export function useGlobalAIChat(): UseGlobalAIChatReturn {
   const clear = useCallback(() => {
     // Clear handled by chat hook internally
     // Could add explicit clear method to useChat if needed
-    console.info('[GlobalAIChat] Clear requested');
+    logger.info('Clear requested');
   }, []);
 
   const setModel = useCallback((model: string) => {
     setCurrentModel(model);
-    console.info('[GlobalAIChat] Model changed:', model);
+    logger.info('Model changed', { model });
   }, []);
 
   const setProvider = useCallback((provider: string) => {
     setCurrentProvider(provider);
-    console.info('[GlobalAIChat] Provider changed:', provider);
+    logger.info('Provider changed', { provider });
   }, []);
 
   const toggleFullscreen = useCallback(() => {
@@ -195,7 +198,7 @@ export function useGlobalAIChat(): UseGlobalAIChatReturn {
   }, []);
 
   const enableDevMode = useCallback(() => {
-    console.info('[GlobalAIChat] Dev mode enabled');
+    logger.info('Dev mode enabled');
     // Could trigger devSudo mode or specific dev features
   }, []);
 

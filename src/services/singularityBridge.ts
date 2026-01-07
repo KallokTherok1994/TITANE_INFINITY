@@ -63,11 +63,11 @@ export class SingularityBridge {
    */
   static async initialize(): Promise<void> {
     if (this.initialized) {
-      console.warn('[SingularityBridge] Already initialized');
+      logger.warn('Already initialized');
       return;
     }
 
-    console.log('[SingularityBridge] Initializing...');
+    logger.debug('Initializing...');
 
     try {
       // 1. Sync initial state (Rust → React)
@@ -76,18 +76,18 @@ export class SingularityBridge {
       // ✨ v∞.D6 - Injecter l'état XP dans SingularityState
       this.syncXPToState();
 
-      console.log('[SingularityBridge] Initial state synced:', this.state);
+      logger.debug('Initial state synced:', this.state);
 
       // 2. Listen for layer updates (événements Tauri)
       await this.setupEventListeners();
 
       // v24.20: Event-driven sync (no more setInterval polling)
-      console.log('[SingularityBridge] v24.20: Event-driven delta sync enabled');
+      logger.debug('v24.20: Event-driven delta sync enabled');
 
       this.initialized = true;
-      console.log('[SingularityBridge] ✅ Initialized successfully');
+      logger.debug('✅ Initialized successfully');
     } catch (error) {
-      console.error('[SingularityBridge] ❌ Initialization failed:', error);
+      logger.error('❌ Initialization failed:', error);
       throw error;
     }
   }
@@ -131,7 +131,7 @@ export class SingularityBridge {
 
     // Log périodique pour monitoring
     if (this.updateCount % 100 === 0) {
-      console.log(`[SingularityBridge v∞.Ω] ${this.updateCount} state updates processed`);
+      logger.debug(`[SingularityBridge v∞.Ω] ${this.updateCount} state updates processed`);
     }
 
     this.subscribers.forEach(callback => {
@@ -140,7 +140,7 @@ export class SingularityBridge {
           callback(this.state);
         }
       } catch (error) {
-        console.error('[SingularityBridge] Subscriber error:', error);
+        logger.error('Subscriber error:', error);
       }
     });
   }
@@ -245,7 +245,7 @@ export class SingularityBridge {
     const unlisten6 = await listen<SingularityState>(
       'singularity:full:updated',
       event => {
-        console.log('[SingularityBridge] v24.20: Full state update (rare)');
+        logger.debug('v24.20: Full state update (rare)');
         this.state = event.payload;
         this.notifySubscribers();
       }
@@ -258,8 +258,8 @@ export class SingularityBridge {
         if (this.state) {
           // Merge delta into current state (only changed fields)
           this.state = { ...this.state, ...event.payload };
-          console.log(
-            '[SingularityBridge] v24.20: Delta update applied',
+          logger.debug(
+            'v24.20: Delta update applied',
             Object.keys(event.payload)
           );
           this.notifySubscribers();
@@ -276,7 +276,7 @@ export class SingularityBridge {
       unlisten6,
       unlisten7,
     ];
-    console.log('[SingularityBridge] Event listeners configured ✅');
+    logger.debug('Event listeners configured ✅');
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -304,8 +304,8 @@ export class SingularityBridge {
       return result;
     }
 
-    console.warn(
-      '[SingularityBridge] singularity_get_symbolic unavailable, using fallback state'
+    logger.warn(
+      'singularity_get_symbolic unavailable, using fallback state'
     );
     return createFallbackSymbolic();
   }
@@ -316,8 +316,8 @@ export class SingularityBridge {
       return result;
     }
 
-    console.warn(
-      '[SingularityBridge] singularity_get_adaptive unavailable, using fallback state'
+    logger.warn(
+      'singularity_get_adaptive unavailable, using fallback state'
     );
     return createFallbackAdaptive();
   }
@@ -328,8 +328,8 @@ export class SingularityBridge {
       return result;
     }
 
-    console.warn(
-      '[SingularityBridge] singularity_get_meta unavailable, using fallback state'
+    logger.warn(
+      'singularity_get_meta unavailable, using fallback state'
     );
     return createFallbackMeta();
   }
@@ -396,7 +396,7 @@ export class SingularityBridge {
     this.listeners = [];
     this.subscribers.clear();
     this.initialized = false;
-    console.log('[SingularityBridge] Destroyed ✅');
+    logger.debug('Destroyed ✅');
   }
 }
 
@@ -427,7 +427,7 @@ export function mergeFileKnowledge(
     timestamp: Date.now(),
   };
 
-  console.log('[mergeFileKnowledge] ✅ Integrated:', { category, path });
+  logger.debug('✅ Integrated:', { category, path });
 
   // Notifier le backend pour persistence
   safeInvoke('store_file', {
@@ -435,7 +435,7 @@ export function mergeFileKnowledge(
     category,
     content: summary,
   }).catch(err => {
-    console.error('[mergeFileKnowledge] Storage failed:', err);
+    logger.error('Storage failed:', err);
   });
 }
 

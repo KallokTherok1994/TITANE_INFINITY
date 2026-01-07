@@ -144,8 +144,8 @@ class VoiceRouterService {
   ): Promise<VoiceTurnResult> {
     const startTime = Date.now();
 
-    console.log('\n🎙️ [VoiceRouter] ═══ Starting voice turn ═══');
-    console.log(
+    logger.debug('\n🎙️ [VoiceRouter] ═══ Starting voice turn ═══');
+    logger.debug(
       `📝 Transcript: "${transcript.substring(0, 60)}${transcript.length > 60 ? '...' : ''}"`
     );
 
@@ -154,7 +154,7 @@ class VoiceRouterService {
 
     // Validation
     if (!transcript.trim()) {
-      console.warn('[VoiceRouter] ⚠️ Empty transcript, aborting turn');
+      logger.warn('⚠️ Empty transcript, aborting turn');
       return {
         success: false,
         transcript,
@@ -175,7 +175,7 @@ class VoiceRouterService {
       audioStateMachine.transition('STT_COMPLETE');
       haloEngine.startPulsing(); // ✅ v∞.7 Halo pulsing during AI
 
-      console.log('[VoiceRouter] 🤖 Phase 1: Calling AI...');
+      logger.debug('🤖 Phase 1: Calling AI...');
 
       const aiResponse = await this.callAIWithTimeout(
         chatSendMessage,
@@ -183,8 +183,8 @@ class VoiceRouterService {
         config.aiTimeout || 30000
       );
 
-      console.log(
-        '[VoiceRouter] ✅ AI response received:',
+      logger.debug(
+        '✅ AI response received:',
         aiResponse.content.substring(0, 60)
       );
       config.onAIResponse?.(aiResponse);
@@ -193,14 +193,14 @@ class VoiceRouterService {
       const useEmotional = config.useEmotionalEngine !== false; // Activé par défaut
 
       if (useEmotional) {
-        console.log('[VoiceRouter] 🎭 Phase 2: Analyzing emotion...');
+        logger.debug('🎭 Phase 2: Analyzing emotion...');
 
         const analysisResult = emotionalAnalyzer.analyze(
           aiResponse.content,
           config.emotionalContext
         );
 
-        console.log(
+        logger.debug(
           `[VoiceRouter] ✅ Emotion detected: ${analysisResult.intent.emotion} (intensity: ${analysisResult.intent.intensity.toFixed(2)})`
         );
         config.onEmotionDetected?.(
@@ -213,7 +213,7 @@ class VoiceRouterService {
         haloEngine.startShimmer(); // ✅ v∞.7 Halo shimmer during TTS
         audioStateMachine.transition('TTS_START');
 
-        console.log('[VoiceRouter] 🔊 Phase 3: Starting Emotional TTS...');
+        logger.debug('🔊 Phase 3: Starting Emotional TTS...');
 
         // Notifier attention + interruption engines
         attentionEngine.startResponding();
@@ -228,7 +228,7 @@ class VoiceRouterService {
           config.ttsTimeout || 60000
         );
 
-        console.log('[VoiceRouter] ✅ Emotional TTS completed');
+        logger.debug('✅ Emotional TTS completed');
 
         // Arrêter monitoring
         interruptionController.stopMonitoring();
@@ -237,7 +237,7 @@ class VoiceRouterService {
         this.setState('speaking', config.onStateChange);
         audioStateMachine.transition('TTS_START');
 
-        console.log('[VoiceRouter] 🔊 Phase 2: Starting TTS (no emotion)...');
+        logger.debug('🔊 Phase 2: Starting TTS (no emotion)...');
 
         attentionEngine.startResponding();
         interruptionController.startMonitoring();
@@ -250,7 +250,7 @@ class VoiceRouterService {
           config.ttsTimeout || 60000
         );
 
-        console.log('[VoiceRouter] ✅ TTS completed');
+        logger.debug('✅ TTS completed');
 
         // Arrêter monitoring
         interruptionController.stopMonitoring();
@@ -263,7 +263,7 @@ class VoiceRouterService {
       haloEngine.reset(); // ✅ v∞.7 Reset halo to idle
 
       const duration = Date.now() - startTime;
-      console.log(`[VoiceRouter] 🎉 Voice turn completed in ${duration}ms`);
+      logger.debug(`[VoiceRouter] 🎉 Voice turn completed in ${duration}ms`);
 
       // Notifier attention engine
       attentionEngine.endResponse();
@@ -282,7 +282,7 @@ class VoiceRouterService {
         duration,
       };
     } catch (error) {
-      console.error('[VoiceRouter] ❌ Voice turn failed:', error);
+      logger.error('❌ Voice turn failed:', error);
       haloEngine.setError(); // ✅ v∞.7 Show error state in halo
 
       const routerError: VoiceRouterError = {
@@ -378,7 +378,7 @@ class VoiceRouterService {
     this.currentState = state;
 
     if (prevState !== state) {
-      console.log(`[VoiceRouter] 🔄 State: ${prevState} → ${state}`);
+      logger.debug(`[VoiceRouter] 🔄 State: ${prevState} → ${state}`);
       callback?.(state);
     }
   }
@@ -387,7 +387,7 @@ class VoiceRouterService {
    * Annuler le tour vocal en cours
    */
   async abort(): Promise<void> {
-    console.log('[VoiceRouter] 🛑 Aborting current voice turn');
+    logger.debug('🛑 Aborting current voice turn');
 
     if (this.abortController) {
       this.abortController.abort();
@@ -407,7 +407,7 @@ class VoiceRouterService {
    * Reset complet du router
    */
   reset(): void {
-    console.log('[VoiceRouter] 🔄 Resetting router');
+    logger.debug('🔄 Resetting router');
     this.currentState = 'idle';
     this.abortController = null;
   }
