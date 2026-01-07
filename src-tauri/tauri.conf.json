@@ -61,7 +61,7 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self' tauri: asset: *; script-src 'self' 'unsafe-eval' 'unsafe-inline' asset: tauri: *; style-src 'self' 'unsafe-inline' asset: tauri: *; img-src 'self' asset: data: blob: * https:; font-src 'self' asset: data: *; connect-src 'self' tauri: asset: ipc: http: https: ws: wss: *; media-src 'self' asset: blob: mediastream: *; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';",
+      "csp": "default-src 'self' tauri: asset:; script-src 'self' asset: tauri:; style-src 'self' 'unsafe-inline' asset: tauri:; img-src 'self' asset: data: blob: https:; font-src 'self' asset: data:; connect-src 'self' tauri: asset: ipc: http: https: ws: wss:; media-src 'self' asset: blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';",
       "dangerousDisableAssetCspModification": true,
       "assetProtocol": {
         "enable": true,
