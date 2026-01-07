@@ -16,9 +16,51 @@ use std::collections::HashMap;
 use std::fs;
 use std::path::PathBuf;
 use titane_infinity::error::TitaneError;
+use zeroize::{Zeroize, Zeroizing}; // v26.2.0 P1: Memory security
 
 const SECURITY_FILE: &str = "security_vault.enc";
 const NONCE_SIZE: usize = 12;
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SECURE SECRET WRAPPER (v26.2.0 P1)
+// Automatically zeroizes memory when dropped
+// ═══════════════════════════════════════════════════════════════════════════
+
+/// Secure wrapper for sensitive strings that automatically zeroizes on drop
+#[derive(Clone, Zeroize)]
+#[zeroize(drop)]
+pub struct SecureSecret {
+    value: String,
+}
+
+impl SecureSecret {
+    /// Create a new secure secret
+    pub fn new(value: String) -> Self {
+        Self { value }
+    }
+
+    /// Get reference to the secret value (use carefully!)
+    pub fn expose(&self) -> &str {
+        &self.value
+    }
+
+    /// Get owned copy (use with Zeroizing wrapper for temporary access)
+    pub fn expose_owned(&self) -> Zeroizing<String> {
+        Zeroizing::new(self.value.clone())
+    }
+}
+
+impl From<String> for SecureSecret {
+    fn from(value: String) -> Self {
+        Self::new(value)
+    }
+}
+
+impl From<&str> for SecureSecret {
+    fn from(value: &str) -> Self {
+        Self::new(value.to_string())
+    }
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // SECURITY ENGINE
@@ -27,7 +69,7 @@ const NONCE_SIZE: usize = 12;
 pub struct SecurityEngine {
     vault_path: PathBuf,
     encryption_key: Vec<u8>,
-    secrets: HashMap<String, String>,
+    secrets: HashMap<String, String>, // TODO: Migrate to HashMap<String, SecureSecret>
 }
 
 impl SecurityEngine {
