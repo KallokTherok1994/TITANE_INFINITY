@@ -1366,7 +1366,7 @@ async function callLazyHandler(
   try {
     // Get domain and load handler module
     const domain = getActionDomain(action);
-    console.log(`[DEV-SUDO LAZY] Action "${action}" → Domain "${domain}"`);
+    logger.debug(`[DEV-SUDO LAZY] Action "${action}" → Domain "${domain}"`);
 
     const handlerModule = await getHandlerForAction(action);
 
@@ -1374,7 +1374,7 @@ async function callLazyHandler(
     if (typeof handlerModule[handlerName] === 'function') {
       return await handlerModule[handlerName](...args);
     } else {
-      console.error(`[DEV-SUDO LAZY] Handler "${handlerName}" not found in module`);
+      logger.error(`[DEV-SUDO LAZY] Handler "${handlerName}" not found in module`);
       return {
         handled: true,
         success: false,
@@ -1383,7 +1383,7 @@ async function callLazyHandler(
       };
     }
   } catch (error) {
-    console.error(`[DEV-SUDO LAZY] Error calling lazy handler "${handlerName}":`, error);
+    logger.error(`[DEV-SUDO LAZY] Error calling lazy handler "${handlerName}":`, error);
     return {
       handled: true,
       success: false,
@@ -1403,7 +1403,7 @@ async function callLazyHandler(
 export async function executeDevSudoCommand(
   command: DevSudoCommand
 ): Promise<DevSudoResult> {
-  console.log('[DEV-SUDO] Exécution commande:', command);
+  logger.debug('Exécution commande:', command);
 
   try {
     switch (command.action) {
@@ -2169,7 +2169,7 @@ export async function executeDevSudoCommand(
         };
     }
   } catch (error) {
-    console.error('[DEV-SUDO] Erreur exécution:', error);
+    logger.error('Erreur exécution:', error);
     return {
       handled: true,
       response: `❌ Erreur lors de l'exécution:\n\n${error instanceof Error ? error.message : String(error)}`,

@@ -52,7 +52,7 @@ export class WebVitalsMonitor {
 
   private initializeObservers(): void {
     if (typeof window === 'undefined' || !('PerformanceObserver' in window)) {
-      console.warn('[WebVitals] PerformanceObserver not supported');
+      logger.warn('PerformanceObserver not supported');
       return;
     }
 
@@ -117,7 +117,7 @@ export class WebVitalsMonitor {
       inpObserver.observe({ entryTypes: ['event'] });
       this.observers.push(inpObserver);
     } catch (error) {
-      console.error('[WebVitals] Observer initialization failed:', error);
+      logger.error('Observer initialization failed:', error);
     }
   }
 
@@ -286,7 +286,7 @@ export class WebVitalsMonitor {
     if (!latest) return;
 
     // Send to analytics service (placeholder)
-    console.log('[WebVitals] Analytics report:', latest);
+    logger.debug('Analytics report:', latest);
 
     // In production, send to actual analytics:
     // fetch('/api/analytics/web-vitals', {

@@ -233,7 +233,7 @@ export class TauriInvokeProtector {
 
       return false;
     } catch (error) {
-      console.warn('[TauriProtector] Error checking Tauri availability:', error);
+      logger.warn('Error checking Tauri availability:', error);
       this.isTauriAvailable = false;
       return false;
     }
@@ -254,7 +254,7 @@ export class TauriInvokeProtector {
     if (command === 'start_recording' || command === 'stop_recording') {
       const pending = this.pendingInvokes.get(command);
       if (pending) {
-        console.warn(
+        logger.warn(
           `[TauriProtector] ${command} already in progress, returning existing promise`
         );
         return pending as Promise<T>;
@@ -292,7 +292,7 @@ export class TauriInvokeProtector {
         this.pendingInvokes.delete(command);
       }
 
-      console.warn(`[TauriProtector] Command ${command} failed:`, error);
+      logger.warn(`[TauriProtector] Command ${command} failed:`, error);
       if (this.isTestEnv) {
         // En mode test, propager l'erreur pour permettre les assertions
         throw error;
@@ -370,7 +370,7 @@ export class TauriInvokeProtector {
       }
       return null;
     } catch (error) {
-      console.warn('[TauriProtector] Failed to import Tauri core:', error);
+      logger.warn('Failed to import Tauri core:', error);
       this.isTauriAvailable = false;
       return null;
     }
@@ -390,7 +390,7 @@ export class TauriInvokeProtector {
    */
   private createFallbackResponse<T>(command: string | undefined, error: unknown): T {
     const safeCommand = command || 'unknown_command';
-    console.log(`[TauriProtector] Using fallback for ${safeCommand}`);
+    logger.debug(`[TauriProtector] Using fallback for ${safeCommand}`);
 
     const errorMessage = error instanceof Error ? error.message : String(error);
 
@@ -485,7 +485,7 @@ export class TauriInvokeProtector {
   reset(): void {
     this.isTauriAvailable = null;
     this.checkCache = {};
-    console.log('[TauriProtector] Cache reset');
+    logger.debug('Cache reset');
   }
 }
 

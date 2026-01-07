@@ -49,9 +49,9 @@ export async function initMonitoringAsync(): Promise<void> {
     // Capture Web Vitals for performance tracking
     monitoring.captureWebVitals();
 
-    console.log('✅ [MONITORING] Lazy initialization complete');
+    logger.debug('✅ [MONITORING] Lazy initialization complete');
   } catch (error) {
-    console.warn('⚠️ [MONITORING] Lazy initialization failed:', error);
+    logger.warn('⚠️ [MONITORING] Lazy initialization failed:', error);
   }
 }
 
@@ -82,7 +82,7 @@ export async function captureClassifiedError(
     monitoring?.captureClassifiedError(classification, error);
   } else {
     // Fallback to console if monitoring not loaded
-    console.error('[MONITORING-LAZY] Error (monitoring not loaded):', error);
+    logger.error('Error (monitoring not loaded):', error);
 
     // Load monitoring in background for future errors
     getMonitoring()
@@ -90,7 +90,7 @@ export async function captureClassifiedError(
         m.captureClassifiedError(classification, error);
       })
       .catch(err => {
-        console.warn('[MONITORING-LAZY] Failed to load monitoring:', err);
+        logger.warn('Failed to load monitoring:', err);
       });
   }
 }

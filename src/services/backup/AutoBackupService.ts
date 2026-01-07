@@ -70,12 +70,12 @@ class AutoBackupService {
   private listeners: Set<(state: BackupState) => void> = new Set();
 
   async initialize(): Promise<void> {
-    console.log('[AutoBackup] Initializing Auto-Backup Service v26.2...');
+    logger.debug('Initializing Auto-Backup Service v26.2...');
     this.loadState();
     this.startBackupTimer();
     this.checkImmediateBackup();
-    console.log(
-      '[AutoBackup] Initialized - Next backup:',
+    logger.debug(
+      'Initialized - Next backup:',
       new Date(this.state.nextBackupTime).toLocaleString()
     );
   }
@@ -89,7 +89,7 @@ class AutoBackupService {
         this.state.totalBackups = parsed.totalBackups || 0;
       }
     } catch (e) {
-      console.warn('[AutoBackup] Failed to load state:', e);
+      logger.warn('Failed to load state:', e);
     }
   }
 
@@ -103,7 +103,7 @@ class AutoBackupService {
         })
       );
     } catch (e) {
-      console.warn('[AutoBackup] Failed to save state:', e);
+      logger.warn('Failed to save state:', e);
     }
   }
 

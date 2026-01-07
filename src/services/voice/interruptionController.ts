@@ -71,7 +71,7 @@ export class InterruptionController {
       debounceDelay: config.debounceDelay ?? 500,
     };
 
-    console.log('[InterruptionController] 🛑 Initialized:', this.config);
+    logger.debug('🛑 Initialized:', this.config);
   }
 
   /**
@@ -80,7 +80,7 @@ export class InterruptionController {
   startMonitoring(): void {
     if (!this.config.enabled) return;
 
-    console.log('[InterruptionController] 👁️ Started monitoring for interruptions');
+    logger.debug('👁️ Started monitoring for interruptions');
     this.isSpeaking = true;
     this.currentTranscript = '';
   }
@@ -89,7 +89,7 @@ export class InterruptionController {
    * Arrêter la surveillance
    */
   stopMonitoring(): void {
-    console.log('[InterruptionController] 🛑 Stopped monitoring');
+    logger.debug('🛑 Stopped monitoring');
     this.isSpeaking = false;
     this.currentTranscript = '';
   }
@@ -107,7 +107,7 @@ export class InterruptionController {
     const wakeEvent = wakeWordEngine.detectStreaming(partial);
 
     if (wakeEvent?.detected) {
-      console.log('[InterruptionController] 🎯 Wake word detected during TTS!');
+      logger.debug('🎯 Wake word detected during TTS!');
       this.interrupt('wake_word', wakeEvent);
     }
   }
@@ -118,13 +118,13 @@ export class InterruptionController {
   processFinalTranscript(final: string): void {
     if (!this.isSpeaking || !this.config.enabled) return;
 
-    console.log('[InterruptionController] 📝 Final transcript:', final);
+    logger.debug('📝 Final transcript:', final);
 
     // Détection wake word
     const wakeEvent = wakeWordEngine.detect(final);
 
     if (wakeEvent.detected) {
-      console.log('[InterruptionController] 🎯 Wake word confirmed in final transcript!');
+      logger.debug('🎯 Wake word confirmed in final transcript!');
       this.interrupt('wake_word', wakeEvent);
     }
   }
@@ -133,7 +133,7 @@ export class InterruptionController {
    * Interruption manuelle
    */
   interruptManual(reason?: string): void {
-    console.log('[InterruptionController] ✋ Manual interruption:', reason);
+    logger.debug('✋ Manual interruption:', reason);
     this.interrupt('manual', undefined, reason);
   }
 
@@ -160,7 +160,7 @@ export class InterruptionController {
    */
   setEnabled(enabled: boolean): void {
     this.config.enabled = enabled;
-    console.log(
+    logger.debug(
       `[InterruptionController] ${enabled ? '🔊' : '🔇'} Interruption detection ${enabled ? 'enabled' : 'disabled'}`
     );
   }
@@ -173,7 +173,7 @@ export class InterruptionController {
       ...this.config,
       ...updates,
     };
-    console.log('[InterruptionController] 🔧 Config updated:', this.config);
+    logger.debug('🔧 Config updated:', this.config);
   }
 
   /**
@@ -187,20 +187,20 @@ export class InterruptionController {
     // Debounce
     const now = Date.now();
     if (now - this.lastInterruption < this.config.debounceDelay) {
-      console.log('[InterruptionController] ⏱️ Debounced');
+      logger.debug('⏱️ Debounced');
       return;
     }
     this.lastInterruption = now;
 
-    console.log('[InterruptionController] 🛑 Interrupting TTS...');
+    logger.debug('🛑 Interrupting TTS...');
 
     try {
       // Arrêter tous les TTS
       await Promise.all([hybridTTS.stop(), emotionalTTS.stop()]);
 
-      console.log('[InterruptionController] ✅ TTS stopped');
+      logger.debug('✅ TTS stopped');
     } catch (err) {
-      console.error('[InterruptionController] ❌ Error stopping TTS:', err);
+      logger.error('❌ Error stopping TTS:', err);
     }
 
     // Réinitialiser état
@@ -219,7 +219,7 @@ export class InterruptionController {
       try {
         cb(event);
       } catch (err) {
-        console.error('[InterruptionController] Callback error:', err);
+        logger.error('Callback error:', err);
       }
     });
 

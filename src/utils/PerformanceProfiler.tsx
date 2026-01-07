@@ -142,30 +142,30 @@ export function logPerformanceSummary() {
   const stats = getAllStats();
 
   if (stats.length === 0) {
-    console.log('📊 No performance data collected yet.');
+    logger.debug('📊 No performance data collected yet.');
     return;
   }
 
-  console.log('📊 Performance Summary');
-  console.log('═══════════════════════════════════════════════════════');
+  logger.debug('📊 Performance Summary');
+  logger.debug('═══════════════════════════════════════════════════════');
 
   // Sort by avg render time (slowest first)
   const sortedStats = [...stats].sort((a, b) => b.avgRenderTime - a.avgRenderTime);
 
   sortedStats.forEach(stat => {
-    console.log(`\n🔍 ${stat.componentId}`);
-    console.log(`  • Renders: ${stat.renderCount}`);
-    console.log(`  • Avg: ${stat.avgRenderTime.toFixed(2)}ms`);
-    console.log(`  • Min: ${stat.minRenderTime.toFixed(2)}ms`);
-    console.log(`  • Max: ${stat.maxRenderTime.toFixed(2)}ms`);
-    console.log(`  • Mount: ${stat.mountTime.toFixed(2)}ms`);
+    logger.debug(`\n🔍 ${stat.componentId}`);
+    logger.debug(`  • Renders: ${stat.renderCount}`);
+    logger.debug(`  • Avg: ${stat.avgRenderTime.toFixed(2)}ms`);
+    logger.debug(`  • Min: ${stat.minRenderTime.toFixed(2)}ms`);
+    logger.debug(`  • Max: ${stat.maxRenderTime.toFixed(2)}ms`);
+    logger.debug(`  • Mount: ${stat.mountTime.toFixed(2)}ms`);
 
     if (stat.avgRenderTime > 16) {
-      console.warn(`  ⚠️  Slow component (>16ms)`);
+      logger.warn(`  ⚠️  Slow component (>16ms)`);
     }
   });
 
-  console.log('\n═══════════════════════════════════════════════════════');
+  logger.debug('\n═══════════════════════════════════════════════════════');
 }
 
 /**
@@ -188,7 +188,7 @@ export const PerformanceProfiler: React.FC<PerformanceProfilerProps> = ({
 
   useEffect(() => {
     if (logRenders) {
-      console.log(`🔄 ${id} mounted`);
+      logger.debug(`🔄 ${id} mounted`);
     }
   }, [id, logRenders]);
 
@@ -216,14 +216,14 @@ export const PerformanceProfiler: React.FC<PerformanceProfilerProps> = ({
     setRenderCount(prev => prev + 1);
 
     if (logRenders) {
-      console.log(
+      logger.debug(
         `🔄 ${profilerId} (${phase}) - ${actualDuration.toFixed(2)}ms [render #${renderCount + 1}]`
       );
     }
 
     // Warn if render is slow
     if (actualDuration > 16) {
-      console.warn(
+      logger.warn(
         `⚠️  Slow render: ${profilerId} took ${actualDuration.toFixed(2)}ms (target: <16ms)`
       );
     }

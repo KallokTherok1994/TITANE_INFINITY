@@ -21,11 +21,11 @@ export async function safeInvoke<T = unknown>(
     const result = await secureInvoke<T>(cmd, payload);
     return result;
   } catch (err) {
-    console.error(`❌ Tauri Command Error [${cmd}]:`, err);
+    logger.error(`❌ Tauri Command Error [${cmd}]:`, err);
 
     // Log payload si non vide pour debug
     if (Object.keys(payload).length > 0) {
-      console.error(`   Payload:`, payload);
+      logger.error(`   Payload:`, payload);
     }
 
     return null;
@@ -54,7 +54,7 @@ export async function safeInvokeWithRetry<T = unknown>(
 
       // Succès dès la première tentative
       if (attempt > 1) {
-        console.log(`✅ Commande ${cmd} réussie après ${attempt} tentatives`);
+        logger.debug(`✅ Commande ${cmd} réussie après ${attempt} tentatives`);
       }
 
       return result;
@@ -62,7 +62,7 @@ export async function safeInvokeWithRetry<T = unknown>(
       lastError = err;
 
       if (attempt < maxRetries) {
-        console.warn(
+        logger.warn(
           `⚠️ Tentative ${attempt}/${maxRetries} échouée pour ${cmd}, retry dans ${retryDelay}ms...`
         );
         await new Promise(resolve => setTimeout(resolve, retryDelay));
@@ -70,7 +70,7 @@ export async function safeInvokeWithRetry<T = unknown>(
     }
   }
 
-  console.error(`❌ Commande ${cmd} échouée après ${maxRetries} tentatives:`, lastError);
+  logger.error(`❌ Commande ${cmd} échouée après ${maxRetries} tentatives:`, lastError);
   return null;
 }
 
@@ -90,7 +90,7 @@ export async function safeInvokeWithTimeout<T = unknown>(
     const result = await secureInvoke<T>(cmd, payload, { timeout: timeoutMs });
     return result;
   } catch (err) {
-    console.error(`❌ Tauri Command Timeout [${cmd}]:`, err);
+    logger.error(`❌ Tauri Command Timeout [${cmd}]:`, err);
     return null;
   }
 }

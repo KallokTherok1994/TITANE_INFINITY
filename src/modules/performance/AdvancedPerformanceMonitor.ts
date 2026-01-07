@@ -196,7 +196,7 @@ export class AdvancedPerformanceMonitor {
       this.updateHeatmap();
     }, intervalMs);
 
-    console.log('[AdvancedPerformanceMonitor] Monitoring started');
+    logger.debug('Monitoring started');
   }
 
   /**
@@ -211,7 +211,7 @@ export class AdvancedPerformanceMonitor {
       this.interval = null;
     }
 
-    console.log('[AdvancedPerformanceMonitor] Monitoring stopped');
+    logger.debug('Monitoring stopped');
   }
 
   /**
@@ -611,7 +611,7 @@ export class AdvancedPerformanceMonitor {
    * Applique une suggestion d'optimisation
    */
   private async applySuggestion(suggestion: OptimizationSuggestion): Promise<void> {
-    console.log(`[Auto-Optimization] Applying: ${suggestion.title}`);
+    logger.debug(`[Auto-Optimization] Applying: ${suggestion.title}`);
 
     switch (suggestion.id) {
       case 'cpu-throttle':
@@ -632,7 +632,7 @@ export class AdvancedPerformanceMonitor {
         // Animation quality reduction pending
         break;
       default:
-        console.warn(`[Auto-Optimization] Unknown suggestion: ${suggestion.id}`);
+        logger.warn(`[Auto-Optimization] Unknown suggestion: ${suggestion.id}`);
     }
   }
 

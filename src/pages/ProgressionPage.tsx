@@ -167,7 +167,7 @@ export const ProgressionPage = (): JSX.Element => {
         <KnowledgeDomains
           domains={domains}
           onDomainClick={domain => {
-            console.log('Domain clicked:', domain);
+            logger.debug('Domain clicked:', domain);
             // IMPLEMENTATION: Open domain details modal
             // 1. Component: <DomainDetailsModal domain={domain} open={modalOpen} onClose={() => setModalOpen(false)} />
             // 2. Display: Knowledge items in domain, mastery level (0-100%), last updated

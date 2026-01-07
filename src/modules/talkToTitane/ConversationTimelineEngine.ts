@@ -116,14 +116,14 @@ class ConversationTimelineEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   async initialize(): Promise<void> {
-    console.log('[Timeline] Initializing Conversation Timeline Engine v∞...');
+    logger.debug('Initializing Conversation Timeline Engine v∞...');
 
     if (this.config.enabled) {
       await this.build();
       this.startRebuildTimer();
     }
 
-    console.log('[Timeline] Initialized');
+    logger.debug('Initialized');
   }
 
   private startRebuildTimer(): void {
@@ -140,14 +140,14 @@ class ConversationTimelineEngine {
 
   async build(): Promise<TimelineEntry[]> {
     if (this.state.isBuilding) {
-      console.log('[Timeline] Build already in progress');
+      logger.debug('Build already in progress');
       return this.state.currentTimeline;
     }
 
     this.state.isBuilding = true;
 
     try {
-      console.log('[Timeline] Building timeline...');
+      logger.debug('Building timeline...');
 
       const allEntries: TimelineEntry[] = [];
 
@@ -181,7 +181,7 @@ class ConversationTimelineEngine {
       this.state.lastBuildTime = Date.now();
       this.state.totalBuilds++;
 
-      console.log(`[Timeline] Timeline built: ${enhanced.length} entries`);
+      logger.debug(`[Timeline] Timeline built: ${enhanced.length} entries`);
 
       return enhanced;
     } finally {
@@ -520,21 +520,21 @@ class ConversationTimelineEngine {
 
     const recent = timeline.slice(-limit);
 
-    console.log('\n═══════════════════════════════════════════════════');
-    console.log('  TITANE∞ CONVERSATION TIMELINE (RECENT)');
-    console.log('═══════════════════════════════════════════════════\n');
+    logger.debug('\n═══════════════════════════════════════════════════');
+    logger.debug('  TITANE∞ CONVERSATION TIMELINE (RECENT)');
+    logger.debug('═══════════════════════════════════════════════════\n');
 
     for (const entry of recent) {
       const timestamp = new Date(entry.timestamp).toLocaleString();
       const majorFlag = entry.isMajorEvent ? ' [MAJOR]' : '';
 
-      console.log(`[${timestamp}] ${entry.engineName} - ${entry.intentType}${majorFlag}`);
-      console.log(`  Input:  ${entry.input.substring(0, 80)}...`);
-      console.log(`  Output: ${entry.output.substring(0, 80)}...`);
-      console.log('');
+      logger.debug(`[${timestamp}] ${entry.engineName} - ${entry.intentType}${majorFlag}`);
+      logger.debug(`  Input:  ${entry.input.substring(0, 80)}...`);
+      logger.debug(`  Output: ${entry.output.substring(0, 80)}...`);
+      logger.debug('');
     }
 
-    console.log('═══════════════════════════════════════════════════\n');
+    logger.debug('═══════════════════════════════════════════════════\n');
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -571,7 +571,7 @@ class ConversationTimelineEngine {
 
   configure(config: Partial<TimelineConfig>): void {
     this.config = { ...this.config, ...config };
-    console.log('[Timeline] Configuration updated:', config);
+    logger.debug('Configuration updated:', config);
   }
 
   getState(): TimelineState {
@@ -591,13 +591,13 @@ class ConversationTimelineEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   async shutdown(): Promise<void> {
-    console.log('[Timeline] Shutting down...');
+    logger.debug('Shutting down...');
 
     if (this.rebuildTimer) {
       clearInterval(this.rebuildTimer);
     }
 
-    console.log('[Timeline] Shutdown complete');
+    logger.debug('Shutdown complete');
   }
 }
 

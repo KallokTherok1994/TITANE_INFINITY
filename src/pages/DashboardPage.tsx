@@ -51,7 +51,7 @@ export const DashboardPage = (): JSX.Element => {
       try {
         setWidgets(JSON.parse(stored));
       } catch (e) {
-        console.error('Erreur chargement widgets:', e);
+        logger.error('Erreur chargement widgets:', e);
       }
     }
   }, []);
@@ -59,7 +59,7 @@ export const DashboardPage = (): JSX.Element => {
   const handleSaveWidgets = (newWidgets: DashboardWidget[]) => {
     setWidgets(newWidgets);
     localStorage.setItem('titane_dashboard_widgets', JSON.stringify(newWidgets));
-    console.log('✅ Dashboard sauvegardé:', newWidgets.length, 'widgets');
+    logger.debug('✅ Dashboard sauvegardé:', newWidgets.length, 'widgets');
   };
 
   return (

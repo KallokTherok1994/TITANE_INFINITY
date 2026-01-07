@@ -81,7 +81,7 @@ export const AvatarFloatingWindow: React.FC<AvatarFloatingWindowProps> = ({
   useEffect(() => {
     if (!canvasRef.current) return;
 
-    console.log('[AvatarFloatingWindow] Initializing Three.js renderer');
+    logger.debug('Initializing Three.js renderer');
 
     // Create renderer
     const renderer = new ThreeJSAvatarRenderer(canvasRef.current, {
@@ -105,10 +105,10 @@ export const AvatarFloatingWindow: React.FC<AvatarFloatingWindowProps> = ({
       .fetchAppearance()
       .then(state => {
         appearance.applyAppearance(state);
-        console.log('[AvatarFloatingWindow] Initial appearance applied');
+        logger.debug('Initial appearance applied');
       })
       .catch(error => {
-        console.error('[AvatarFloatingWindow] Failed to load appearance:', error);
+        logger.error('Failed to load appearance:', error);
       });
 
     // Start appearance sync (every 2 seconds)
@@ -119,10 +119,10 @@ export const AvatarFloatingWindow: React.FC<AvatarFloatingWindowProps> = ({
       };
     });
 
-    console.log('[AvatarFloatingWindow] Three.js renderer initialized');
+    logger.debug('Three.js renderer initialized');
 
     return () => {
-      console.log('[AvatarFloatingWindow] Disposing Three.js renderer');
+      logger.debug('Disposing Three.js renderer');
       if (appearanceRef.current) {
         appearanceRef.current.dispose();
         appearanceRef.current = null;

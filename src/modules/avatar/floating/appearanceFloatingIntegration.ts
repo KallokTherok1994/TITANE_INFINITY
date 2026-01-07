@@ -147,7 +147,7 @@ export class AppearanceFloatingIntegration {
       this.currentAppearance = JSON.parse(appearance) as AvatarAppearanceState;
       return this.currentAppearance;
     } catch (error) {
-      console.error('[AppearanceFloatingIntegration] Fetch failed:', error);
+      logger.error('Fetch failed:', error);
       throw error;
     }
   }
@@ -157,7 +157,7 @@ export class AppearanceFloatingIntegration {
    */
   public applyAppearance(appearance: AvatarAppearanceState): void {
     if (!this.materials) {
-      console.warn('[AppearanceFloatingIntegration] Materials not initialized');
+      logger.warn('Materials not initialized');
       return;
     }
 
@@ -189,8 +189,8 @@ export class AppearanceFloatingIntegration {
     this.applyOutfitState(resolvedOutfit);
 
     if (DEBUG)
-      console.log(
-        '[AppearanceFloatingIntegration] Appearance applied:',
+      logger.debug(
+        'Appearance applied:',
         appearance.mode_preset
       );
   }
@@ -269,8 +269,8 @@ export class AppearanceFloatingIntegration {
     // For now, keep default palette colors
 
     if (DEBUG)
-      console.log(
-        '[AppearanceFloatingIntegration] Outfit applied:',
+      logger.debug(
+        'Outfit applied:',
         outfit.top,
         outfit.bottom
       );
@@ -288,7 +288,7 @@ export class AppearanceFloatingIntegration {
           const appearance = await this.fetchAppearance();
           this.applyAppearance(appearance);
         } catch (error) {
-          console.error('[AppearanceFloatingIntegration] Sync error:', error);
+          logger.error('Sync error:', error);
         }
 
         await new Promise(resolve => setTimeout(resolve, intervalMs));

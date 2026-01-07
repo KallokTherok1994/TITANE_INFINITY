@@ -53,10 +53,10 @@ export function loadPermanentApprovals(): void {
     if (stored) {
       const approvals = JSON.parse(stored) as string[];
       confirmationState.permanentApproved = new Set(approvals);
-      console.log('✅ Approbations permanentes chargées:', approvals);
+      logger.debug('✅ Approbations permanentes chargées:', approvals);
     }
   } catch (error) {
-    console.warn('⚠️ Impossible de charger les approbations permanentes:', error);
+    logger.warn('⚠️ Impossible de charger les approbations permanentes:', error);
   }
 }
 
@@ -67,9 +67,9 @@ function savePermanentApprovals(): void {
   try {
     const approvals = Array.from(confirmationState.permanentApproved);
     localStorage.setItem('titane_permanent_cloud_approvals', JSON.stringify(approvals));
-    console.log('💾 Approbations permanentes sauvegardées');
+    logger.debug('💾 Approbations permanentes sauvegardées');
   } catch (error) {
-    console.warn('⚠️ Impossible de sauvegarder les approbations:', error);
+    logger.warn('⚠️ Impossible de sauvegarder les approbations:', error);
   }
 }
 
@@ -88,19 +88,19 @@ export async function confirmCloudAPIUsage(
 
   // Si le mode ne requiert pas de confirmation
   if (!config.requireOnlineConfirmation) {
-    console.log('🌐 Confirmation désactivée - Accès cloud autorisé');
+    logger.debug('🌐 Confirmation désactivée - Accès cloud autorisé');
     return true;
   }
 
   // Si déjà approuvé de manière permanente
   if (confirmationState.permanentApproved.has(provider)) {
-    console.log(`✅ ${provider} approuvé définitivement`);
+    logger.debug(`✅ ${provider} approuvé définitivement`);
     return true;
   }
 
   // Si déjà approuvé pour cette session
   if (confirmationState.sessionApproved.has(provider)) {
-    console.log(`✅ ${provider} approuvé pour cette session`);
+    logger.debug(`✅ ${provider} approuvé pour cette session`);
     return true;
   }
 
@@ -219,7 +219,7 @@ async function showConfirmationDialog(
 
     btnDeny.onclick = () => {
       cleanup();
-      console.log(`❌ Accès cloud ${provider} refusé`);
+      logger.debug(`❌ Accès cloud ${provider} refusé`);
       resolve(false);
     };
 
@@ -227,7 +227,7 @@ async function showConfirmationDialog(
       confirmationState.sessionApproved.add(provider);
       confirmationState.lastAsked = new Date();
       cleanup();
-      console.log(`✅ ${provider} approuvé pour cette session`);
+      logger.debug(`✅ ${provider} approuvé pour cette session`);
       resolve(true);
     };
 
@@ -237,7 +237,7 @@ async function showConfirmationDialog(
       confirmationState.lastAsked = new Date();
       savePermanentApprovals();
       cleanup();
-      console.log(`⭐ ${provider} approuvé définitivement`);
+      logger.debug(`⭐ ${provider} approuvé définitivement`);
       resolve(true);
     };
 
@@ -260,7 +260,7 @@ async function showConfirmationDialog(
  */
 export function resetSessionApprovals(): void {
   confirmationState.sessionApproved.clear();
-  console.log('🔄 Approbations de session réinitialisées');
+  logger.debug('🔄 Approbations de session réinitialisées');
 }
 
 /**
@@ -271,9 +271,9 @@ export function resetAllApprovals(): void {
   confirmationState.permanentApproved.clear();
   try {
     localStorage.removeItem('titane_permanent_cloud_approvals');
-    console.log('🔄 Toutes les approbations réinitialisées');
+    logger.debug('🔄 Toutes les approbations réinitialisées');
   } catch (error) {
-    console.warn('⚠️ Impossible de réinitialiser localStorage:', error);
+    logger.warn('⚠️ Impossible de réinitialiser localStorage:', error);
   }
 }
 

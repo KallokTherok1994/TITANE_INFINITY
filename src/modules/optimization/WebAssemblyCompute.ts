@@ -125,7 +125,7 @@ export class WebAssemblyCompute {
 
   async initialize(): Promise<boolean> {
     if (!this.config.enableWASM || !this.capabilities.hasWASM) {
-      console.warn('[WebAssemblyCompute] WASM not available, using JS fallback');
+      logger.warn('WASM not available, using JS fallback');
       return false;
     }
 
@@ -147,20 +147,20 @@ export class WebAssemblyCompute {
       this.wasmInstance = await WebAssembly.instantiate(this.wasmModule, {
         env: {
           memory: this.wasmMemory,
-          abort: () => console.error('[WASM] Abort called'),
+          abort: () => logger.error('Abort called'),
         },
         js: {
-          log: (value: number) => console.log('[WASM]', value),
+          log: (value: number) => logger.debug('[WASM]', value),
         },
       });
 
       this.metrics.isWASMActive = true;
       this.metrics.memoryUsage = this.wasmMemory.buffer.byteLength;
 
-      console.log('[WebAssemblyCompute] Initialized successfully');
+      logger.debug('Initialized successfully');
       return true;
     } catch (error) {
-      console.error('[WebAssemblyCompute] Initialization failed:', error);
+      logger.error('Initialization failed:', error);
       this.metrics.isWASMActive = false;
       return false;
     }
@@ -299,8 +299,8 @@ export class WebAssemblyCompute {
         result = await this.executeWASM(task);
         this.metrics.tasksExecutedWASM++;
       } catch (error) {
-        console.warn(
-          '[WebAssemblyCompute] WASM execution failed, falling back to JS:',
+        logger.warn(
+          'WASM execution failed, falling back to JS:',
           error
         );
         result = this.executeJS(task);

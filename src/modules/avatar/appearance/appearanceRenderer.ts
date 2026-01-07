@@ -187,7 +187,7 @@ export class AppearanceRenderer {
     accessories?: boolean;
   }): Promise<void> {
     if (!this.currentAssets) {
-      console.warn('No current assets loaded, cannot update parts');
+      logger.warn('No current assets loaded, cannot update parts');
       return;
     }
 
@@ -335,10 +335,10 @@ export class AppearanceRenderer {
     // - Caching: Store loaded assets in THREE.Cache to avoid re-loading
     // - Error handling: Fallback to default cube geometry on load failure
     // For now, return mock asset
-    console.log(`[AppearanceRenderer] Loading asset: ${cacheKey}`);
-    console.log(`  - Mesh: ${assetDef.mesh}`);
-    console.log(`  - Texture: ${assetDef.texture}`);
-    console.log(`  - Material: ${assetDef.material}`);
+    logger.debug(`[AppearanceRenderer] Loading asset: ${cacheKey}`);
+    logger.debug(`  - Mesh: ${assetDef.mesh}`);
+    logger.debug(`  - Texture: ${assetDef.texture}`);
+    logger.debug(`  - Material: ${assetDef.material}`);
 
     // Simulate async loading
     await new Promise(resolve => setTimeout(resolve, 10));
@@ -359,14 +359,14 @@ export class AppearanceRenderer {
    * (Integration point with FullBodyAvatarEngine v24)
    */
   private applyAssetsToAvatar(assets: AppearanceAssets): void {
-    console.log('[AppearanceRenderer] Applying assets to avatar');
-    console.log('  - Outfit:', {
+    logger.debug('Applying assets to avatar');
+    logger.debug('  - Outfit:', {
       top: assets.outfit.top.mesh,
       bottom: assets.outfit.bottom.mesh,
       shoes: assets.outfit.shoes.mesh,
     });
-    console.log('  - Hair:', assets.hair.mesh);
-    console.log('  - Accessories:', {
+    logger.debug('  - Hair:', assets.hair.mesh);
+    logger.debug('  - Accessories:', {
       glasses: assets.accessories.glasses?.mesh,
       jewelry: assets.accessories.jewelry?.length || 0,
       bag: assets.accessories.bag?.mesh,
@@ -414,7 +414,7 @@ export class AppearanceRenderer {
    * Preload commonly used assets
    */
   private async preloadCommonAssets(): Promise<void> {
-    console.log('[AppearanceRenderer] Preloading common assets...');
+    logger.debug('Preloading common assets...');
 
     // Preload fallback assets
     const fallbacks = [
@@ -426,7 +426,7 @@ export class AppearanceRenderer {
 
     await Promise.all(fallbacks.map(asset => this.loadAsset(asset)));
 
-    console.log('[AppearanceRenderer] Common assets preloaded');
+    logger.debug('Common assets preloaded');
   }
 }
 

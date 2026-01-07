@@ -617,7 +617,7 @@ export const AgendaPage: React.FC = () => {
 
   const handleEventClick = useCallback((event: AgendaEvent) => {
     setSelectedEvent(event);
-    console.log('[AgendaPage] Événement sélectionné:', event.title);
+    logger.debug('Événement sélectionné:', event.title);
   }, []);
 
   const handleDayClick = useCallback(

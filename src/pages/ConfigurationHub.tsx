@@ -64,9 +64,9 @@ export const ConfigurationHub: React.FC = () => {
     setError(null);
 
     try {
-      console.log('🎯 [ConfigHub] Loading configuration snapshot...');
+      logger.debug('🎯 [ConfigHub] Loading configuration snapshot...');
       const snapshot = await secureInvoke<ConfigSnapshot>('get_all_configs');
-      console.log('✅ [ConfigHub] Configuration loaded:', snapshot);
+      logger.debug('✅ [ConfigHub] Configuration loaded:', snapshot);
       setConfig(snapshot);
       setLastRefresh(new Date());
       // Reset edit state when reloading
@@ -74,7 +74,7 @@ export const ConfigurationHub: React.FC = () => {
       setEditedChatEngine({});
       setValidationErrors({});
     } catch (err) {
-      console.error('❌ [ConfigHub] Failed to load configuration:', err);
+      logger.error('❌ [ConfigHub] Failed to load configuration:', err);
       setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
@@ -134,35 +134,35 @@ export const ConfigurationHub: React.FC = () => {
     setValidationErrors({});
 
     try {
-      console.log('💾 [ConfigHub] Saving configuration...');
+      logger.debug('💾 [ConfigHub] Saving configuration...');
 
       // Save runtime config if changed
       if (Object.keys(editedRuntime).length > 0) {
-        console.log('📤 [ConfigHub] Updating runtime config:', editedRuntime);
+        logger.debug('📤 [ConfigHub] Updating runtime config:', editedRuntime);
         await secureInvoke('update_runtime_config', {
           update: {
             ollama_url: editedRuntime.ollama_url,
             ollama_model: editedRuntime.ollama_model,
           },
         });
-        console.log('✅ [ConfigHub] Runtime config updated');
+        logger.debug('✅ [ConfigHub] Runtime config updated');
       }
 
       // Save chat engine config if changed
       if (Object.keys(editedChatEngine).length > 0) {
-        console.log('📤 [ConfigHub] Updating chat engine config:', editedChatEngine);
+        logger.debug('📤 [ConfigHub] Updating chat engine config:', editedChatEngine);
         await secureInvoke('update_chat_engine_config', {
           update: editedChatEngine,
         });
-        console.log('✅ [ConfigHub] Chat engine config updated');
+        logger.debug('✅ [ConfigHub] Chat engine config updated');
       }
 
       // Reload config after successful save
       await loadConfig();
       setEditMode(false);
-      console.log('✅ [ConfigHub] Configuration saved successfully');
+      logger.debug('✅ [ConfigHub] Configuration saved successfully');
     } catch (err) {
-      console.error('❌ [ConfigHub] Failed to save configuration:', err);
+      logger.error('❌ [ConfigHub] Failed to save configuration:', err);
       const errorMsg = err instanceof Error ? err.message : String(err);
 
       // Try to parse validation errors from backend
@@ -190,14 +190,14 @@ export const ConfigurationHub: React.FC = () => {
   const handleExport = async () => {
     try {
       const filename = `config-${new Date().toISOString().replace(/[:.]/g, '-')}`;
-      console.log('📤 [ConfigHub] Exporting configuration to:', filename);
+      logger.debug('📤 [ConfigHub] Exporting configuration to:', filename);
 
       const filePath = await secureInvoke<string>('export_config', { filename });
-      console.log('✅ [ConfigHub] Configuration exported to:', filePath);
+      logger.debug('✅ [ConfigHub] Configuration exported to:', filePath);
 
       alert(`✅ Configuration exportée vers:\n${filePath}`);
     } catch (err) {
-      console.error('❌ [ConfigHub] Failed to export configuration:', err);
+      logger.error('❌ [ConfigHub] Failed to export configuration:', err);
       alert(`❌ Échec de l'export: ${err}`);
     }
   };
@@ -212,19 +212,19 @@ export const ConfigurationHub: React.FC = () => {
     }
 
     try {
-      console.log('📥 [ConfigHub] Importing configuration from:', filePath);
+      logger.debug('📥 [ConfigHub] Importing configuration from:', filePath);
 
       const importedConfig = await secureInvoke<ConfigSnapshot>('import_config', {
         filePath,
       });
-      console.log('✅ [ConfigHub] Configuration imported:', importedConfig);
+      logger.debug('✅ [ConfigHub] Configuration imported:', importedConfig);
 
       // Reload config to show imported values
       await loadConfig();
 
       alert('✅ Configuration importée avec succès!');
     } catch (err) {
-      console.error('❌ [ConfigHub] Failed to import configuration:', err);
+      logger.error('❌ [ConfigHub] Failed to import configuration:', err);
       alert(`❌ Échec de l'import: ${err}`);
     }
   };
@@ -242,7 +242,7 @@ export const ConfigurationHub: React.FC = () => {
         );
       setPresets(presetsList);
     } catch (err) {
-      console.error('❌ [ConfigHub] Failed to load presets:', err);
+      logger.error('❌ [ConfigHub] Failed to load presets:', err);
     }
   };
 
@@ -257,7 +257,7 @@ export const ConfigurationHub: React.FC = () => {
       alert(`✅ Preset "${name}" sauvegardé!`);
       await loadPresets();
     } catch (err) {
-      console.error('❌ [ConfigHub] Failed to save preset:', err);
+      logger.error('❌ [ConfigHub] Failed to save preset:', err);
       alert(`❌ Échec de sauvegarde: ${err}`);
     }
   };
@@ -274,7 +274,7 @@ export const ConfigurationHub: React.FC = () => {
       await loadConfig();
       alert(`✅ Preset "${name}" chargé!`);
     } catch (err) {
-      console.error('❌ [ConfigHub] Failed to load preset:', err);
+      logger.error('❌ [ConfigHub] Failed to load preset:', err);
       alert(`❌ Échec de chargement: ${err}`);
     }
   };
@@ -289,7 +289,7 @@ export const ConfigurationHub: React.FC = () => {
       alert(`✅ Preset "${name}" supprimé!`);
       await loadPresets();
     } catch (err) {
-      console.error('❌ [ConfigHub] Failed to delete preset:', err);
+      logger.error('❌ [ConfigHub] Failed to delete preset:', err);
       alert(`❌ Échec de suppression: ${err}`);
     }
   };
