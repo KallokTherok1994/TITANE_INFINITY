@@ -76,7 +76,7 @@ export class AdaptiveThresholdEngine {
       adjustmentInterval: config.adjustmentInterval ?? 5000,
     };
 
-    console.log('[AdaptiveThresholdEngine] 🎚️ Initialized:', this.config);
+    logger.debug('🎚️ Initialized:', this.config);
 
     if (this.config.enabled) {
       this.startAdjustmentLoop();
@@ -118,7 +118,7 @@ export class AdaptiveThresholdEngine {
       this.detectionHistory.shift();
     }
 
-    console.log(
+    logger.debug(
       `[AdaptiveThresholdEngine] 📊 Detection recorded: ${wasCorrect ? '✅' : '❌'} (confidence: ${confidence.toFixed(2)})`
     );
   }
@@ -190,10 +190,10 @@ export class AdaptiveThresholdEngine {
     const tpRate = this.getTruePositiveRate();
     const avgMetrics = this.getAverageMetrics();
 
-    console.log('[AdaptiveThresholdEngine] 🔧 Adjusting thresholds...');
-    console.log(`  False Positive Rate: ${(fpRate * 100).toFixed(1)}%`);
-    console.log(`  True Positive Rate: ${(tpRate * 100).toFixed(1)}%`);
-    console.log(
+    logger.debug('🔧 Adjusting thresholds...');
+    logger.debug(`  False Positive Rate: ${(fpRate * 100).toFixed(1)}%`);
+    logger.debug(`  True Positive Rate: ${(tpRate * 100).toFixed(1)}%`);
+    logger.debug(
       `  Avg Noise Level: ${avgMetrics ? (avgMetrics.noiseLevel * 100).toFixed(1) : 'N/A'}%`
     );
 
@@ -204,26 +204,26 @@ export class AdaptiveThresholdEngine {
     if (fpRate > 0.3) {
       newConfidence += 0.1;
       newLevenshtein = Math.max(1, newLevenshtein - 1);
-      console.log('  → Too many false positives, increasing strictness');
+      logger.debug('  → Too many false positives, increasing strictness');
     }
 
     // Pas assez de détections → diminuer seuils (plus permissif)
     if (tpRate > 0 && tpRate < 0.5) {
       newConfidence -= 0.05;
       newLevenshtein = Math.min(3, newLevenshtein + 1);
-      console.log('  → Low detection rate, increasing sensitivity');
+      logger.debug('  → Low detection rate, increasing sensitivity');
     }
 
     // Environnement bruyant → augmenter confidence
     if (avgMetrics && avgMetrics.noiseLevel > 0.5) {
       newConfidence += 0.1;
-      console.log('  → Noisy environment, increasing confidence threshold');
+      logger.debug('  → Noisy environment, increasing confidence threshold');
     }
 
     // Environnement calme → diminuer confidence
     if (avgMetrics && avgMetrics.isClean) {
       newConfidence -= 0.05;
-      console.log('  → Clean environment, decreasing confidence threshold');
+      logger.debug('  → Clean environment, decreasing confidence threshold');
     }
 
     // Appliquer sensibilité utilisateur
@@ -242,9 +242,9 @@ export class AdaptiveThresholdEngine {
       this.currentConfidenceThreshold = newConfidence;
       this.currentLevenshteinThreshold = newLevenshtein;
 
-      console.log(`[AdaptiveThresholdEngine] ✅ Updated thresholds:`);
-      console.log(`  Confidence: ${this.currentConfidenceThreshold.toFixed(2)}`);
-      console.log(`  Levenshtein: ${this.currentLevenshteinThreshold}`);
+      logger.debug(`[AdaptiveThresholdEngine] ✅ Updated thresholds:`);
+      logger.debug(`  Confidence: ${this.currentConfidenceThreshold.toFixed(2)}`);
+      logger.debug(`  Levenshtein: ${this.currentLevenshteinThreshold}`);
 
       // Appliquer au WakeWordEngine
       wakeWordEngine.updateConfig({
@@ -281,7 +281,7 @@ export class AdaptiveThresholdEngine {
    * Réinitialiser aux valeurs par défaut
    */
   reset(): void {
-    console.log('[AdaptiveThresholdEngine] 🔄 Resetting to defaults');
+    logger.debug('🔄 Resetting to defaults');
 
     this.currentConfidenceThreshold = this.baseConfidenceThreshold;
     this.currentLevenshteinThreshold = this.baseLevenshteinThreshold;
@@ -308,10 +308,10 @@ export class AdaptiveThresholdEngine {
 
     if (enabled) {
       this.startAdjustmentLoop();
-      console.log('[AdaptiveThresholdEngine] 🔊 Enabled');
+      logger.debug('🔊 Enabled');
     } else {
       this.stopAdjustmentLoop();
-      console.log('[AdaptiveThresholdEngine] 🔇 Disabled');
+      logger.debug('🔇 Disabled');
     }
   }
 
@@ -320,7 +320,7 @@ export class AdaptiveThresholdEngine {
    */
   setSensitivity(sensitivity: number): void {
     this.config.sensitivity = Math.max(0, Math.min(1, sensitivity));
-    console.log(
+    logger.debug(
       `[AdaptiveThresholdEngine] 🎚️ Sensitivity set to ${this.config.sensitivity.toFixed(2)}`
     );
 
@@ -333,7 +333,7 @@ export class AdaptiveThresholdEngine {
    */
   destroy(): void {
     this.stopAdjustmentLoop();
-    console.log('[AdaptiveThresholdEngine] 🗑️ Destroyed');
+    logger.debug('🗑️ Destroyed');
   }
 }
 

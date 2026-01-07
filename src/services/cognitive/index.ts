@@ -55,7 +55,7 @@ async function loadVectorStore(config: {
     const { createVectorStore } = await import('./TauriVectorStore');
     return await createVectorStore(config);
   } catch (error) {
-    console.warn('[Cognitive] TauriVectorStore not available', error);
+    logger.warn('TauriVectorStore not available', error);
     throw new Error(
       'VectorStore not available. This feature requires Tauri backend with SQLite support.'
     );
@@ -200,7 +200,7 @@ export async function checkCognitiveAvailability(): Promise<{
     await import('@xenova/transformers');
     results.transformers = true;
   } catch (error) {
-    console.warn('[Cognitive] Transformers.js not available');
+    logger.warn('Transformers.js not available');
   }
 
   // Check si on est dans Tauri (SQLite via backend Rust, pas better-sqlite3)
@@ -212,8 +212,8 @@ export async function checkCognitiveAvailability(): Promise<{
     results.sqlite = true;
   } catch (error) {
     // Mode navigateur pur ou Tauri sans SQLite
-    console.warn(
-      '[Cognitive] SQLite not available (browser mode or Tauri backend not ready)'
+    logger.warn(
+      'SQLite not available (browser mode or Tauri backend not ready)'
     );
     results.sqlite = false;
   }
@@ -227,27 +227,27 @@ export async function checkCognitiveAvailability(): Promise<{
  * Log cognitive system status
  */
 export function logCognitiveStatus(config: TitaneCognitiveConfig): void {
-  console.log('\n═══════════════════════════════════════════════════════════');
-  console.log('   🧠 TITANE∞ COGNITIVE SYSTEM STATUS');
-  console.log('═══════════════════════════════════════════════════════════');
-  console.log(
+  logger.debug('\n═══════════════════════════════════════════════════════════');
+  logger.debug('   🧠 TITANE∞ COGNITIVE SYSTEM STATUS');
+  logger.debug('═══════════════════════════════════════════════════════════');
+  logger.debug(
     `Semantic Memory:    ${config.semanticMemory.enabled ? '✅ ENABLED' : '❌ DISABLED'}`
   );
-  console.log(`  Model: ${config.semanticMemory.modelName}`);
-  console.log(`  DB: ${config.semanticMemory.dbPath}`);
-  console.log(
+  logger.debug(`  Model: ${config.semanticMemory.modelName}`);
+  logger.debug(`  DB: ${config.semanticMemory.dbPath}`);
+  logger.debug(
     `Goal & Consistency: ${config.goalConsistency.enabled ? '✅ ENABLED' : '❌ DISABLED'}`
   );
-  console.log(`  Auto-check: ${config.goalConsistency.autoCheck ? 'ON' : 'OFF'}`);
-  console.log(`  Auto-correct: ${config.goalConsistency.autoCorrect ? 'ON' : 'OFF'}`);
-  console.log(
+  logger.debug(`  Auto-check: ${config.goalConsistency.autoCheck ? 'ON' : 'OFF'}`);
+  logger.debug(`  Auto-correct: ${config.goalConsistency.autoCorrect ? 'ON' : 'OFF'}`);
+  logger.debug(
     `Evaluation:         ${config.evaluation.enabled ? '✅ ENABLED' : '❌ DISABLED'}`
   );
-  console.log(`  Live eval: ${config.evaluation.liveEvaluation ? 'ON' : 'OFF'}`);
-  console.log(
+  logger.debug(`  Live eval: ${config.evaluation.liveEvaluation ? 'ON' : 'OFF'}`);
+  logger.debug(
     `Observability:      ${config.observability.enabled ? '✅ ENABLED' : '❌ DISABLED'}`
   );
-  console.log(`  Mode: ${config.observability.mode.toUpperCase()}`);
-  console.log(`  Tracing: ${config.observability.tracing ? 'ON' : 'OFF'}`);
-  console.log('═══════════════════════════════════════════════════════════\n');
+  logger.debug(`  Mode: ${config.observability.mode.toUpperCase()}`);
+  logger.debug(`  Tracing: ${config.observability.tracing ? 'ON' : 'OFF'}`);
+  logger.debug('═══════════════════════════════════════════════════════════\n');
 }

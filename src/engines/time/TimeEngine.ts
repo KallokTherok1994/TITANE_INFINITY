@@ -202,10 +202,10 @@ export class TimeEngine {
    * Initialise le TimeEngine et démarre le tick interne
    */
   init(): void {
-    console.log('[TimeEngine] ⏰ Initialisation...');
+    logger.debug('⏰ Initialisation...');
     this.updateCurrentDateTime();
     this.startTick();
-    console.log('[TimeEngine] ✅ Initialisé:', {
+    logger.debug('✅ Initialisé:', {
       timeZone: this.state.timeZone,
       currentSegment: this.state.currentSegment?.label,
       isWorkDay: this.state.isWorkDay,
@@ -217,7 +217,7 @@ export class TimeEngine {
    * Arrête le TimeEngine
    */
   destroy(): void {
-    console.log('[TimeEngine] 🛑 Arrêt...');
+    logger.debug('🛑 Arrêt...');
     this.stopTick();
     this.listeners.clear();
   }
@@ -236,7 +236,7 @@ export class TimeEngine {
       this.syncTick();
     }, this.tickRate);
 
-    console.log(`[TimeEngine] ⚙️ Tick démarré (${this.tickRate}ms)`);
+    logger.debug(`[TimeEngine] ⚙️ Tick démarré (${this.tickRate}ms)`);
   }
 
   /**
@@ -246,7 +246,7 @@ export class TimeEngine {
     if (this.tickInterval) {
       clearInterval(this.tickInterval);
       this.tickInterval = null;
-      console.log('[TimeEngine] ⏹️ Tick arrêté');
+      logger.debug('⏹️ Tick arrêté');
     }
   }
 
@@ -261,8 +261,8 @@ export class TimeEngine {
 
     // Notifier si changement de segment
     if (previousSegment?.id !== this.state.currentSegment?.id) {
-      console.log(
-        '[TimeEngine] 🔄 Changement de segment:',
+      logger.debug(
+        '🔄 Changement de segment:',
         previousSegment?.label,
         '→',
         this.state.currentSegment?.label
@@ -271,8 +271,8 @@ export class TimeEngine {
 
     // Notifier si changement heures de travail
     if (previousIsWorkHours !== this.state.isWorkHours) {
-      console.log(
-        '[TimeEngine] 💼 Heures de travail:',
+      logger.debug(
+        '💼 Heures de travail:',
         this.state.isWorkHours ? 'DÉBUT' : 'FIN'
       );
     }
@@ -480,7 +480,7 @@ export class TimeEngine {
       try {
         listener(state);
       } catch (error) {
-        console.error('[TimeEngine] Erreur listener:', error);
+        logger.error('Erreur listener:', error);
       }
     });
   }

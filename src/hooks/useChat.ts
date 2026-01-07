@@ -1416,7 +1416,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
               finalResponse = await executeStreaming();
             } catch (error) {
               streamingError = error instanceof Error ? error : new Error(String(error));
-              console.warn('[Chat] Streaming fallback triggered:', streamingError);
+              chatLogger.warn('Streaming fallback triggered', { error: streamingError });
             }
           }
         }
@@ -1545,10 +1545,7 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
           metadataPatch
         );
 
-        console.log(
-          '[useChat OMNIS DEBUG] ✅ updateAssistant terminé, messages actuels:',
-          messagesRef.current.length
-        );
+        chatLogger.debug('updateAssistant terminé', { messagesCount: messagesRef.current.length });
 
         const assistantFromState = getAssistantFromState();
         const assistantMessage: AIMessage =
@@ -1621,7 +1618,7 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
             chatLogger.warn('XP award warning', { error: xpError });
           }
         } catch (memoryError) {
-          console.warn('[Chat] Memory integration warning:', memoryError);
+          chatLogger.warn('Memory integration warning', { error: memoryError });
         }
 
         // ✨ v24.2.1: Use ref for stable dependency
@@ -1629,7 +1626,7 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
           try {
             hybridTTS.speak(assistantMessage.content);
           } catch (voiceError) {
-            console.warn('[Chat] Voice warning:', voiceError);
+            chatLogger.warn('Voice warning', { error: voiceError });
           }
         }
 
@@ -1719,7 +1716,7 @@ Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation 
     try {
       clearMode();
     } catch (error) {
-      console.warn('[OMNIS] Clear mode warning:', error);
+      chatLogger.warn('Clear mode warning', { error });
     }
   }, [applyMessagesSafely, clearMode]);
 
@@ -1729,7 +1726,7 @@ Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation 
       try {
         setCoreMode(mode);
       } catch (error) {
-        console.warn('[OMNIS] Set mode warning:', error);
+        chatLogger.warn('Set mode warning', { error });
       }
     },
     [setCoreMode]

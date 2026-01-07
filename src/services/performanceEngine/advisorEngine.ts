@@ -132,7 +132,7 @@ export class PerformanceAdvisor {
     this.eventListeners = new Map();
     this.pendingActions = new Map();
 
-    console.log('[PerformanceAdvisor] Initialisé avec config:', this.config);
+    logger.debug('Initialisé avec config:', this.config);
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -144,13 +144,13 @@ export class PerformanceAdvisor {
    */
   start(): void {
     if (this.isRunning) {
-      console.warn("[PerformanceAdvisor] Déjà en cours d'exécution");
+      logger.warn("Déjà en cours d'exécution");
       return;
     }
 
     this.isRunning = true;
     this.emit('engine_started', { component: 'advisor', timestamp: Date.now() });
-    console.log('[PerformanceAdvisor] Démarré');
+    logger.debug('Démarré');
   }
 
   /**
@@ -158,13 +158,13 @@ export class PerformanceAdvisor {
    */
   stop(): void {
     if (!this.isRunning) {
-      console.warn("[PerformanceAdvisor] Pas en cours d'exécution");
+      logger.warn("Pas en cours d'exécution");
       return;
     }
 
     this.isRunning = false;
     this.emit('engine_stopped', { component: 'advisor', timestamp: Date.now() });
-    console.log('[PerformanceAdvisor] Arrêté');
+    logger.debug('Arrêté');
   }
 
   /**
@@ -231,14 +231,14 @@ export class PerformanceAdvisor {
   async applyRecommendation(recommendationId: string): Promise<boolean> {
     const rec = this.state.recommendations.find(r => r.id === recommendationId);
     if (!rec) {
-      console.warn(
+      logger.warn(
         `[PerformanceAdvisor] Recommandation non trouvée: ${recommendationId}`
       );
       return false;
     }
 
     if (!rec.autoApplicable) {
-      console.warn(
+      logger.warn(
         `[PerformanceAdvisor] Recommandation non auto-applicable: ${recommendationId}`
       );
       return false;
@@ -246,7 +246,7 @@ export class PerformanceAdvisor {
 
     const action = this.pendingActions.get(recommendationId);
     if (!action) {
-      console.warn(`[PerformanceAdvisor] Action non trouvée pour: ${recommendationId}`);
+      logger.warn(`[PerformanceAdvisor] Action non trouvée pour: ${recommendationId}`);
       return false;
     }
 
@@ -268,7 +268,7 @@ export class PerformanceAdvisor {
 
       return success;
     } catch (error) {
-      console.error(`[PerformanceAdvisor] Erreur lors de l'application:`, error);
+      logger.error(`[PerformanceAdvisor] Erreur lors de l'application:`, error);
 
       this.state.appliedRecommendations.set(recommendationId, {
         appliedAt: Date.now(),
@@ -285,7 +285,7 @@ export class PerformanceAdvisor {
   async rollbackRecommendation(recommendationId: string): Promise<boolean> {
     const action = this.pendingActions.get(recommendationId);
     if (!action?.rollback) {
-      console.warn(`[PerformanceAdvisor] Pas de rollback pour: ${recommendationId}`);
+      logger.warn(`[PerformanceAdvisor] Pas de rollback pour: ${recommendationId}`);
       return false;
     }
 
@@ -302,7 +302,7 @@ export class PerformanceAdvisor {
 
       return success;
     } catch (error) {
-      console.error(`[PerformanceAdvisor] Erreur lors du rollback:`, error);
+      logger.error(`[PerformanceAdvisor] Erreur lors du rollback:`, error);
       return false;
     }
   }
@@ -364,7 +364,7 @@ export class PerformanceAdvisor {
     if (severities) {
       this.config.autoApplySeverity = severities;
     }
-    console.log('[PerformanceAdvisor] Auto-apply:', enabled, severities);
+    logger.debug('Auto-apply:', enabled, severities);
   }
 
   /**
@@ -373,7 +373,7 @@ export class PerformanceAdvisor {
   reset(): void {
     this.state = this.createInitialState();
     this.pendingActions.clear();
-    console.log('[PerformanceAdvisor] État réinitialisé');
+    logger.debug('État réinitialisé');
   }
 
   /**
@@ -426,7 +426,7 @@ export class PerformanceAdvisor {
     const template = RECOMMENDATION_TEMPLATES[issue.type];
 
     if (!template) {
-      console.warn(`[PerformanceAdvisor] Pas de template pour: ${issue.type}`);
+      logger.warn(`[PerformanceAdvisor] Pas de template pour: ${issue.type}`);
       return recommendations;
     }
 
@@ -838,7 +838,7 @@ export class PerformanceAdvisor {
       try {
         await this.applyRecommendation(rec.id);
       } catch (error) {
-        console.error(`[PerformanceAdvisor] Erreur auto-apply ${rec.id}:`, error);
+        logger.error(`[PerformanceAdvisor] Erreur auto-apply ${rec.id}:`, error);
       }
     }
   }
@@ -871,7 +871,7 @@ export class PerformanceAdvisor {
         try {
           listener(event);
         } catch (error) {
-          console.error(
+          logger.error(
             `[PerformanceAdvisor] Erreur dans listener pour ${eventType}:`,
             error
           );

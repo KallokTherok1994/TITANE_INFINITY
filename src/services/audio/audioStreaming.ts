@@ -60,11 +60,11 @@ class AudioStreamingService {
    */
   async startStreaming(config?: StreamingConfig): Promise<string> {
     if (this.isStreaming) {
-      console.warn('[AudioStreaming] Already streaming');
+      logger.warn('Already streaming');
       throw new Error('Streaming already active');
     }
 
-    console.log('[AudioStreaming] Starting stream with config:', config);
+    logger.debug('Starting stream with config:', config);
 
     try {
       this.sessionId = await invokeWithRetry<string>(
@@ -74,14 +74,14 @@ class AudioStreamingService {
       );
 
       this.isStreaming = true;
-      console.log('[AudioStreaming] ✅ Stream started:', this.sessionId);
+      logger.debug('✅ Stream started:', this.sessionId);
 
       // Start monitoring state
       this.startStateMonitoring();
 
       return this.sessionId;
     } catch (error) {
-      console.error('[AudioStreaming] ❌ Failed to start stream:', error);
+      logger.error('❌ Failed to start stream:', error);
       this.sessionId = null;
       this.isStreaming = false;
       throw new Error(`Streaming failed: ${error}`);
@@ -94,7 +94,7 @@ class AudioStreamingService {
    */
   async stopStreaming(): Promise<StreamingResult> {
     if (!this.isStreaming) {
-      console.warn('[AudioStreaming] No active stream');
+      logger.warn('No active stream');
       return {
         audioData: [],
         durationMs: 0,
@@ -104,7 +104,7 @@ class AudioStreamingService {
       };
     }
 
-    console.log('[AudioStreaming] Stopping stream...');
+    logger.debug('Stopping stream...');
 
     try {
       const result = await invokeWithRetry<StreamingResult>(
@@ -116,7 +116,7 @@ class AudioStreamingService {
       this.isStreaming = false;
       this.sessionId = null;
 
-      console.log('[AudioStreaming] ✅ Stream stopped -', {
+      logger.debug('✅ Stream stopped -', {
         samples: result.audioData.length,
         duration: (result.durationMs / 1000).toFixed(2) + 's',
         hasSpeech: result.hasSpeech,
@@ -127,7 +127,7 @@ class AudioStreamingService {
 
       return result;
     } catch (error) {
-      console.error('[AudioStreaming] ❌ Failed to stop stream:', error);
+      logger.error('❌ Failed to stop stream:', error);
       this.isStreaming = false;
       this.sessionId = null;
       throw new Error(`Stop streaming failed: ${error}`);
@@ -146,7 +146,7 @@ class AudioStreamingService {
       );
       return state as StreamingState;
     } catch (error) {
-      console.error('[AudioStreaming] Failed to get state:', error);
+      logger.error('Failed to get state:', error);
       return 'Idle';
     }
   }
@@ -162,7 +162,7 @@ class AudioStreamingService {
         { ...FAST_COMMAND_OPTIONS, context: 'AudioStreaming' }
       );
     } catch (error) {
-      console.error('[AudioStreaming] Failed to get stats:', error);
+      logger.error('Failed to get stats:', error);
       return {
         availableSamples: 0,
         totalWritten: 0,
@@ -175,7 +175,7 @@ class AudioStreamingService {
    * Force stop streaming (emergency)
    */
   async forceStop(): Promise<void> {
-    console.warn('[AudioStreaming] Force stopping...');
+    logger.warn('Force stopping...');
 
     try {
       await invokeWithRetry<void>(
@@ -188,9 +188,9 @@ class AudioStreamingService {
       this.sessionId = null;
       this.stopStateMonitoring();
 
-      console.log('[AudioStreaming] ✅ Force stopped');
+      logger.debug('✅ Force stopped');
     } catch (error) {
-      console.error('[AudioStreaming] Force stop failed:', error);
+      logger.error('Force stop failed:', error);
     }
   }
 
@@ -251,7 +251,7 @@ class AudioStreamingService {
       try {
         const currentState = await this.getState();
         if (currentState !== lastState) {
-          console.log(`[AudioStreaming] State: ${lastState} → ${currentState}`);
+          logger.debug(`[AudioStreaming] State: ${lastState} → ${currentState}`);
           lastState = currentState;
 
           // Notify listeners
@@ -259,12 +259,12 @@ class AudioStreamingService {
             try {
               callback(currentState);
             } catch (error) {
-              console.error('[AudioStreaming] State listener error:', error);
+              logger.error('State listener error:', error);
             }
           });
         }
       } catch (error) {
-        console.error('[AudioStreaming] State monitoring error:', error);
+        logger.error('State monitoring error:', error);
       }
     }, 200); // Poll every 200ms
   }
