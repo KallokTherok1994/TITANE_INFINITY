@@ -141,7 +141,14 @@ pub mod secure_commands; // ✅ Secure commands
 pub mod secure_engine; // ✅ Secure engine helpers
 pub mod security; // ✅ Security layer
 pub mod system_state; // ✅ System state
-pub mod time; // ✅ Time-travel engine
+
+// Phase 1 v26.3: Deprecated - functionality moved to temporal_engine (aligns with frontend TIME fusion v25.1)
+#[deprecated(
+    since = "26.3.0",
+    note = "Use temporal_engine instead. Frontend consolidated time/ in v25.1, backend alignment."
+)]
+pub mod time; // ⚠️ Phase 1 v26.3: → temporal_engine (0 imports, safe deprecation)
+
 pub mod time_commands; // ✅ Time commands
 pub mod updates; // ✅ Update engine
 
