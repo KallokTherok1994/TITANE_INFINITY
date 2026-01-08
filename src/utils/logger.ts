@@ -40,6 +40,23 @@ const getLogLevelManager = () => {
 
   return logLevelManager;
 };
+const rawConsole = {
+  debug: (console.debug ?? console.log).bind(console),
+  info: (console.info ?? console.log).bind(console),
+  warn: (console.warn ?? console.log).bind(console),
+  error: (console.error ?? console.log).bind(console),
+  log: console.log.bind(console),
+
+  group: (console.group ?? console.log).bind(console),
+  groupCollapsed: (console.groupCollapsed ?? console.log).bind(console),
+  groupEnd: (console.groupEnd ?? (() => {})).bind(console),
+
+  table: (console.table ?? console.log).bind(console),
+
+  time: (console.time ?? (() => {})).bind(console),
+  timeEnd: (console.timeEnd ?? (() => {})).bind(console),
+};
+
 
 /**
  * Log levels (par ordre de priorité)
@@ -144,7 +161,7 @@ class Logger {
    */
   trace(...args: LogArgs) {
     if (!this.shouldLog(LogLevel.TRACE)) return;
-    logger.debug(...this.format('TRACE', ...args));
+    rawConsole.debug(...this.format('TRACE', ...args));
   }
 
   /**
@@ -152,7 +169,7 @@ class Logger {
    */
   debug(...args: LogArgs) {
     if (!this.shouldLog(LogLevel.DEBUG)) return;
-    logger.debug(...this.format('DEBUG', ...args));
+    rawConsole.debug(...this.format('DEBUG', ...args));
   }
 
   /**
@@ -160,7 +177,7 @@ class Logger {
    */
   info(...args: LogArgs) {
     if (!this.shouldLog(LogLevel.INFO)) return;
-    logger.info(...this.format('INFO', ...args));
+    rawConsole.info(...this.format('INFO', ...args));
   }
 
   /**
@@ -168,7 +185,7 @@ class Logger {
    */
   warn(...args: LogArgs) {
     if (!this.shouldLog(LogLevel.WARN)) return;
-    logger.warn(...this.format('WARN', ...args));
+    rawConsole.warn(...this.format('WARN', ...args));
   }
 
   /**
@@ -176,14 +193,14 @@ class Logger {
    */
   error(...args: LogArgs) {
     if (!this.shouldLog(LogLevel.ERROR)) return;
-    logger.error(...this.format('ERROR', ...args));
+    rawConsole.error(...this.format('ERROR', ...args));
   }
 
   /**
    * FATAL - Erreurs critiques (toujours loggé)
    */
   fatal(...args: LogArgs) {
-    logger.error(...this.format('FATAL', ...args));
+    rawConsole.error(...this.format('FATAL', ...args));
   }
 
   /**
@@ -192,15 +209,15 @@ class Logger {
   group(label: string, collapsed = false) {
     if (this.config.isProduction) return;
     if (collapsed) {
-      console.groupCollapsed(...this.format('GROUP', label));
+      rawConsole.groupCollapsed(...this.format('GROUP', label));
     } else {
-      console.group(...this.format('GROUP', label));
+      rawConsole.group(...this.format('GROUP', label));
     }
   }
 
   groupEnd() {
     if (this.config.isProduction) return;
-    console.groupEnd();
+    rawConsole.groupEnd();
   }
 
   /**
@@ -208,7 +225,7 @@ class Logger {
    */
   table(data: TableData) {
     if (this.config.isProduction) return;
-    console.table(data);
+    rawConsole.table(data);
   }
 
   /**
@@ -216,12 +233,12 @@ class Logger {
    */
   time(label: string) {
     if (!this.shouldLog(LogLevel.DEBUG)) return;
-    console.time(`[${this.config.prefix}] ${label}`);
+    rawConsole.time(`[${this.config.prefix}] ${label}`);
   }
 
   timeEnd(label: string) {
     if (!this.shouldLog(LogLevel.DEBUG)) return;
-    console.timeEnd(`[${this.config.prefix}] ${label}`);
+    rawConsole.timeEnd(`[${this.config.prefix}] ${label}`);
   }
 }
 
