@@ -75,10 +75,17 @@ pub mod kernel; // ✅ Cognitive OS Kernel v20Ω.0 (NEW)
 pub mod omega; // ✅ Omega Pipeline v20Ω (NEW)
 
 // ═══════════════════════════════════════════════════════════════
-// PROFILING & MONITORING v19.5 (NEW)
+// PROFILING & MONITORING v27.0 (Phase 1 Consolidation)
 // ═══════════════════════════════════════════════════════════════
 
-pub mod profiling; // ✅ IPC Performance Profiler v19.5.0 (NEW)
+pub mod monitoring; // ✅ v27.0: Unified Monitoring Engine (metrics, performance, health, telemetry)
+
+// Phase 1 v27.0: Deprecated - functionality moved to monitoring/metrics
+#[deprecated(
+    since = "27.0.0",
+    note = "Use crate::monitoring::metrics instead. Part of monitoring consolidation (7→1 modules)."
+)]
+pub mod profiling; // ⚠️ Phase 1 v27.0: → monitoring/metrics/ipc_profiler
 
 // ═══════════════════════════════════════════════════════════════
 pub mod ipc; // ✅ IPC Cache Layer v19.5.2 P2-1 Phase 4 (NEW)

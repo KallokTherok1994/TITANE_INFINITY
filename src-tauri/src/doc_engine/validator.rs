@@ -292,3 +292,313 @@ impl Default for DocumentValidator {
         Self::new()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn create_test_content(title: &str, sections_count: usize) -> DocumentContent {
+        DocumentContent {
+            title: title.to_string(),
+            executive_summary: "Test summary".to_string(),
+            objectives: vec!["Objective 1".to_string()],
+            sections: (0..sections_count)
+                .map(|i| Section {
+                    title: format!("Section {}", i + 1),
+                    content: "Section content with enough text to pass validation.".to_string(),
+                    level: 1,
+                    subsections: vec![],
+                    metadata: None,
+                })
+                .collect(),
+            mandatory_clauses: None,
+            annexes: vec![],
+            references: vec![],
+        }
+    }
+
+    fn create_test_config(doc_type: DocumentType) -> GenerationConfig {
+        GenerationConfig {
+            doc_type,
+            style: DocumentStyle::Technical,
+            detail_level: DetailLevel::Detailed,
+            tone: "Formal".to_string(),
+            language: "fr".to_string(),
+            custom_params: std::collections::HashMap::new(),
+        }
+    }
+
+    #[test]
+    fn test_document_validator_new() {
+        let validator = DocumentValidator::new();
+        assert_eq!(validator.rules.len(), 2);
+    }
+
+    #[test]
+    fn test_document_validator_default() {
+        let validator = DocumentValidator::default();
+        assert_eq!(validator.rules.len(), 2);
+    }
+
+    #[test]
+    fn test_validate_valid_document() {
+        let validator = DocumentValidator::new();
+        let content = create_test_content("Valid Document", 3);
+        let config = create_test_config(DocumentType::Report);
+
+        let result = validator.validate(&content, &config).unwrap();
+        assert!(result.is_valid);
+        assert!(result.errors.is_empty());
+    }
+
+    #[test]
+    fn test_validate_structure_missing_title() {
+        let validator = DocumentValidator::new();
+        let mut content = create_test_content("", 2);
+        content.title = "   ".to_string(); // Empty title
+        let config = create_test_config(DocumentType::Report);
+
+        let result = validator.validate(&content, &config).unwrap();
+        assert!(!result.is_valid);
+        assert!(result.errors.iter().any(|e| e.code == "MISSING_TITLE"));
+    }
+
+    #[test]
+    fn test_validate_structure_no_sections() {
+        let validator = DocumentValidator::new();
+        let content = create_test_content("Title", 0);
+        let config = create_test_config(DocumentType::Report);
+
+        let result = validator.validate(&content, &config).unwrap();
+        assert!(!result.is_valid);
+        assert!(result.errors.iter().any(|e| e.code == "NO_SECTIONS"));
+    }
+
+    #[test]
+    fn test_validate_structure_empty_summary_warning() {
+        let validator = DocumentValidator::new();
+        let mut content = create_test_content("Title", 2);
+        content.executive_summary = "  ".to_string();
+        let config = create_test_config(DocumentType::Report);
+
+        let result = validator.validate(&content, &config).unwrap();
+        assert!(result.is_valid); // Warnings don't invalidate
+        assert!(!result.warnings.is_empty());
+    }
+
+    #[test]
+    fn test_validate_legal_document_missing_clauses() {
+        let validator = DocumentValidator::new();
+        let content = create_test_content("Contract", 3);
+        let config = create_test_config(DocumentType::Contract);
+
+        let result = validator.validate(&content, &config).unwrap();
+        assert!(!result.is_valid);
+        assert!(result.errors.iter().any(|e| e.code == "MISSING_CLAUSES"));
+    }
+
+    #[test]
+    fn test_validate_legal_document_empty_clauses() {
+        let validator = DocumentValidator::new();
+        let mut content = create_test_content("Contract", 3);
+        content.mandatory_clauses = Some(vec![]);
+        let config = create_test_config(DocumentType::Contract);
+
+        let result = validator.validate(&content, &config).unwrap();
+        assert!(result.is_valid); // Empty clauses = warning, not error
+        assert!(!result.warnings.is_empty());
+    }
+
+    #[test]
+    fn test_validate_legal_document_with_confidentiality() {
+        let validator = DocumentValidator::new();
+        let mut content = create_test_content("NDA", 3);
+        content.mandatory_clauses = Some(vec![
+            MandatoryClause {
+                title: "Confidentiality".to_string(),
+                content: "Confidential information must be protected.".to_string(),
+                category: ClauseCategory::Confidentiality,
+                required: true,
+            },
+        ]);
+        let config = create_test_config(DocumentType::NDA);
+
+        let result = validator.validate(&content, &config).unwrap();
+        assert!(result.is_valid);
+        // Should suggest liability clause
+        assert!(result.suggestions.iter().any(|s| s.message.contains("responsabilité")));
+    }
+
+    #[test]
+    fn test_validate_legal_document_section_suggestions() {
+        let validator = DocumentValidator::new();
+        let mut content = create_test_content("Contract", 3);
+        content.mandatory_clauses = Some(vec![
+            MandatoryClause {
+                title: "General".to_string(),
+                content: "General terms".to_string(),
+                category: ClauseCategory::General,
+                required: false,
+            },
+        ]);
+        let config = create_test_config(DocumentType::Contract);
+
+        let result = validator.validate(&content, &config).unwrap();
+        // Should suggest responsibility and termination sections
+        let has_responsibility_suggestion = result.suggestions.iter()
+            .any(|s| s.message.contains("responsabilit"));
+        let has_termination_suggestion = result.suggestions.iter()
+            .any(|s| s.message.contains("durée") || s.message.contains("résiliation"));
+
+        assert!(has_responsibility_suggestion || has_termination_suggestion);
+    }
+
+    #[test]
+    fn test_validate_editorial_document_no_objectives() {
+        let validator = DocumentValidator::new();
+        let mut content = create_test_content("Article", 3);
+        content.objectives = vec![];
+        let config = create_test_config(DocumentType::Article);
+
+        let result = validator.validate(&content, &config).unwrap();
+        assert!(result.is_valid);
+        assert!(result.warnings.iter().any(|w| w.message.contains("objectif")));
+    }
+
+    #[test]
+    fn test_validate_editorial_document_few_sections() {
+        let validator = DocumentValidator::new();
+        let content = create_test_content("Book Chapter", 2);
+        let config = create_test_config(DocumentType::BookChapter);
+
+        let result = validator.validate(&content, &config).unwrap();
+        assert!(result.suggestions.iter().any(|s| s.message.contains("sections supplémentaires")));
+    }
+
+    #[test]
+    fn test_validate_editorial_document_missing_examples() {
+        let validator = DocumentValidator::new();
+        let content = create_test_content("Article", 3);
+        let config = create_test_config(DocumentType::Article);
+
+        let result = validator.validate(&content, &config).unwrap();
+        assert!(result.suggestions.iter().any(|s| s.message.contains("exemple")));
+    }
+
+    #[test]
+    fn test_validate_editorial_document_missing_conclusion() {
+        let validator = DocumentValidator::new();
+        let content = create_test_content("Article", 3);
+        let config = create_test_config(DocumentType::Article);
+
+        let result = validator.validate(&content, &config).unwrap();
+        assert!(result.suggestions.iter().any(|s| s.message.contains("conclusion")));
+    }
+
+    #[test]
+    fn test_validate_editorial_document_with_examples_and_conclusion() {
+        let validator = DocumentValidator::new();
+        let mut content = create_test_content("Article", 3);
+        content.sections.push(Section {
+            title: "Exemples pratiques".to_string(),
+            content: "Examples content".to_string(),
+            level: 1,
+            subsections: vec![],
+            metadata: None,
+        });
+        content.sections.push(Section {
+            title: "Conclusion".to_string(),
+            content: "Conclusion content".to_string(),
+            level: 1,
+            subsections: vec![],
+            metadata: None,
+        });
+        let config = create_test_config(DocumentType::Article);
+
+        let result = validator.validate(&content, &config).unwrap();
+        // Should not suggest examples or conclusion
+        assert!(!result.suggestions.iter().any(|s| s.message.contains("exemple")));
+        assert!(!result.suggestions.iter().any(|s| s.message.contains("conclusion")));
+    }
+
+    #[test]
+    fn test_validate_technical_document_no_diagrams() {
+        let validator = DocumentValidator::new();
+        let content = create_test_content("Architecture Doc", 3);
+        let config = create_test_config(DocumentType::Architecture);
+
+        let result = validator.validate(&content, &config).unwrap();
+        assert!(result.suggestions.iter().any(|s| s.message.contains("diagramme")));
+    }
+
+    #[test]
+    fn test_validate_technical_document_no_code() {
+        let validator = DocumentValidator::new();
+        let content = create_test_content("API Doc", 3);
+        let config = create_test_config(DocumentType::APIDoc);
+
+        let result = validator.validate(&content, &config).unwrap();
+        assert!(result.warnings.iter().any(|w| w.message.contains("code")));
+    }
+
+    #[test]
+    fn test_validate_technical_document_with_code() {
+        let validator = DocumentValidator::new();
+        let mut content = create_test_content("API Doc", 3);
+        content.sections[0].content = "Here is some code:\n```rust\nfn main() {}\n```".to_string();
+        let config = create_test_config(DocumentType::APIDoc);
+
+        let result = validator.validate(&content, &config).unwrap();
+        // Should not warn about missing code
+        assert!(!result.warnings.iter().any(|w| w.message.contains("code détecté")));
+    }
+
+    #[test]
+    fn test_validate_content_quality_short_sections() {
+        let validator = DocumentValidator::new();
+        let mut content = create_test_content("Document", 3);
+        content.sections[0].content = "Short".to_string();
+        let config = create_test_config(DocumentType::Report);
+
+        let result = validator.validate(&content, &config).unwrap();
+        assert!(result.warnings.iter().any(|w| w.message.contains("très courte")));
+    }
+
+    #[test]
+    fn test_validate_content_quality_no_references() {
+        let validator = DocumentValidator::new();
+        let content = create_test_content("Document", 3);
+        let config = create_test_config(DocumentType::Report);
+
+        let result = validator.validate(&content, &config).unwrap();
+        assert!(result.suggestions.iter().any(|s| s.message.contains("référence")));
+    }
+
+    #[test]
+    fn test_validate_content_quality_with_references() {
+        let validator = DocumentValidator::new();
+        let mut content = create_test_content("Document", 3);
+        content.references = vec![
+            Reference {
+                title: "Reference 1".to_string(),
+                source: "Source".to_string(),
+                url: None,
+            },
+        ];
+        let config = create_test_config(DocumentType::Report);
+
+        let result = validator.validate(&content, &config).unwrap();
+        // Should not suggest adding references
+        assert!(!result.suggestions.iter().any(|s| s.message.contains("référence")));
+    }
+
+    #[test]
+    fn test_validation_rule_initialization() {
+        let rules = DocumentValidator::initialize_rules();
+        assert_eq!(rules.len(), 2);
+        assert_eq!(rules[0].id, "title_required");
+        assert!(matches!(rules[0].severity, ErrorSeverity::Critical));
+        assert_eq!(rules[1].id, "sections_required");
+        assert!(matches!(rules[1].severity, ErrorSeverity::High));
+    }
+}

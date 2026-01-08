@@ -278,3 +278,338 @@ impl Default for ExportEngine {
         Self::new("./exports".to_string())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::collections::HashMap;
+    use std::fs;
+    use tempfile::TempDir;
+
+    fn create_test_document() -> Document {
+        let metadata = DocumentMetadata {
+            id: "test-123".to_string(),
+            title: "Test Document".to_string(),
+            version: "1.0.0".to_string(),
+            created_at: chrono::Utc::now(),
+            updated_at: chrono::Utc::now(),
+            author: "TITANE∞".to_string(),
+            tags: vec!["test".to_string()],
+            category: "test".to_string(),
+        };
+
+        let content = DocumentContent {
+            title: "Test Document".to_string(),
+            executive_summary: "This is a test summary.".to_string(),
+            objectives: vec![
+                "Objective 1".to_string(),
+                "Objective 2".to_string(),
+            ],
+            sections: vec![
+                Section {
+                    title: "Section 1".to_string(),
+                    content: "Content of section 1".to_string(),
+                    level: 1,
+                    subsections: vec![],
+                    metadata: None,
+                },
+                Section {
+                    title: "Section 2".to_string(),
+                    content: "Content of section 2 with ```code```".to_string(),
+                    level: 1,
+                    subsections: vec![],
+                    metadata: None,
+                },
+            ],
+            mandatory_clauses: Some(vec![
+                MandatoryClause {
+                    title: "Confidentiality".to_string(),
+                    content: "Confidential information.".to_string(),
+                    category: ClauseCategory::Confidentiality,
+                    required: true,
+                },
+            ]),
+            annexes: vec![
+                Annex {
+                    title: "Annex A".to_string(),
+                    content: "Annex content".to_string(),
+                },
+            ],
+            references: vec![
+                Reference {
+                    title: "Reference 1".to_string(),
+                    source: "Source 1".to_string(),
+                    url: Some("https://example.com".to_string()),
+                },
+            ],
+        };
+
+        let config = GenerationConfig {
+            doc_type: DocumentType::Contract,
+            style: DocumentStyle::Technical,
+            detail_level: DetailLevel::Detailed,
+            tone: "Formal".to_string(),
+            language: "fr".to_string(),
+            custom_params: HashMap::new(),
+        };
+
+        let validation_status = ValidationStatus {
+            is_valid: true,
+            errors: vec![],
+            warnings: vec![],
+            suggestions: vec![],
+        };
+
+        Document {
+            metadata,
+            config,
+            content,
+            validation_status,
+        }
+    }
+
+    #[test]
+    fn test_export_engine_new() {
+        let engine = ExportEngine::new("/tmp/exports".to_string());
+        assert_eq!(engine.output_dir, "/tmp/exports");
+    }
+
+    #[test]
+    fn test_export_engine_default() {
+        let engine = ExportEngine::default();
+        assert_eq!(engine.output_dir, "./exports");
+    }
+
+    #[test]
+    fn test_sanitize_filename() {
+        let engine = ExportEngine::default();
+        assert_eq!(engine.sanitize_filename("My Document!"), "my_document_");
+        assert_eq!(engine.sanitize_filename("Test 123"), "test_123");
+        assert_eq!(engine.sanitize_filename("Contract@2024"), "contract_2024");
+        assert_eq!(engine.sanitize_filename("A/B\\C:D"), "a_b_c_d");
+    }
+
+    #[tokio::test]
+    async fn test_export_markdown() {
+        let temp_dir = TempDir::new().unwrap();
+        let engine = ExportEngine::new(temp_dir.path().to_string_lossy().to_string());
+        let document = create_test_document();
+
+        let result = engine.export(&document, ExportFormat::Markdown).await;
+        assert!(result.is_ok());
+
+        let export_result = result.unwrap();
+        assert!(matches!(export_result.format, ExportFormat::Markdown));
+        assert!(export_result.success);
+        assert!(export_result.size > 0);
+
+        // Verify file was created
+        let path = std::path::Path::new(&export_result.path);
+        assert!(path.exists());
+        assert!(path.to_str().unwrap().ends_with(".md"));
+    }
+
+    #[tokio::test]
+    async fn test_export_html() {
+        let temp_dir = TempDir::new().unwrap();
+        let engine = ExportEngine::new(temp_dir.path().to_string_lossy().to_string());
+        let document = create_test_document();
+
+        let result = engine.export(&document, ExportFormat::Html).await;
+        assert!(result.is_ok());
+
+        let export_result = result.unwrap();
+        assert!(matches!(export_result.format, ExportFormat::Html));
+        assert!(export_result.success);
+
+        // Verify file content
+        let path = std::path::Path::new(&export_result.path);
+        let content = fs::read_to_string(path).unwrap();
+        assert!(content.contains("<!DOCTYPE html>"));
+        assert!(content.contains("Test Document"));
+    }
+
+    #[tokio::test]
+    async fn test_export_text() {
+        let temp_dir = TempDir::new().unwrap();
+        let engine = ExportEngine::new(temp_dir.path().to_string_lossy().to_string());
+        let document = create_test_document();
+
+        let result = engine.export(&document, ExportFormat::Text).await;
+        assert!(result.is_ok());
+
+        let export_result = result.unwrap();
+        assert!(matches!(export_result.format, ExportFormat::Text));
+        assert!(export_result.path.ends_with(".txt"));
+    }
+
+    #[tokio::test]
+    async fn test_export_json() {
+        let temp_dir = TempDir::new().unwrap();
+        let engine = ExportEngine::new(temp_dir.path().to_string_lossy().to_string());
+        let document = create_test_document();
+
+        let result = engine.export(&document, ExportFormat::Json).await;
+        assert!(result.is_ok());
+
+        let export_result = result.unwrap();
+        assert!(matches!(export_result.format, ExportFormat::Json));
+
+        // Verify valid JSON
+        let path = std::path::Path::new(&export_result.path);
+        let content = fs::read_to_string(path).unwrap();
+        let parsed: serde_json::Value = serde_json::from_str(&content).unwrap();
+        assert!(parsed.is_object());
+    }
+
+    #[tokio::test]
+    async fn test_export_pdf_not_implemented() {
+        let temp_dir = TempDir::new().unwrap();
+        let engine = ExportEngine::new(temp_dir.path().to_string_lossy().to_string());
+        let document = create_test_document();
+
+        let result = engine.export(&document, ExportFormat::Pdf).await;
+        assert!(result.is_err());
+        assert!(result.unwrap_err().to_string().contains("not yet implemented"));
+    }
+
+    #[test]
+    fn test_generate_markdown_content() {
+        let engine = ExportEngine::default();
+        let document = create_test_document();
+
+        let result = engine.generate_markdown(&document);
+        assert!(result.is_ok());
+
+        let md = result.unwrap();
+        assert!(md.contains("# Test Document"));
+        assert!(md.contains("## Résumé Exécutif"));
+        assert!(md.contains("This is a test summary"));
+        assert!(md.contains("## Objectifs"));
+        assert!(md.contains("- Objective 1"));
+        assert!(md.contains("## Section 1"));
+        assert!(md.contains("## Clauses Obligatoires"));
+        assert!(md.contains("## Annexes"));
+        assert!(md.contains("## Références"));
+    }
+
+    #[test]
+    fn test_generate_html_content() {
+        let engine = ExportEngine::default();
+        let document = create_test_document();
+
+        let result = engine.generate_html(&document);
+        assert!(result.is_ok());
+
+        let html = result.unwrap();
+        assert!(html.contains("<!DOCTYPE html>"));
+        assert!(html.contains("<html lang=\"fr\">"));
+        assert!(html.contains("<h1>Test Document</h1>"));
+        assert!(html.contains("Résumé Exécutif"));
+        assert!(html.contains("</html>"));
+    }
+
+    #[test]
+    fn test_generate_text_content() {
+        let engine = ExportEngine::default();
+        let document = create_test_document();
+
+        let result = engine.generate_text(&document);
+        assert!(result.is_ok());
+
+        let text = result.unwrap();
+        assert!(text.contains("Test Document"));
+        assert!(text.contains("RÉSUMÉ EXÉCUTIF"));
+        assert!(text.contains("Section 1"));
+        assert!(text.contains("---")); // Section underline
+    }
+
+    #[test]
+    fn test_format_section_markdown() {
+        let engine = ExportEngine::default();
+        let section = Section {
+            title: "Test Section".to_string(),
+            content: "Section content".to_string(),
+            level: 1,
+            subsections: vec![
+                Section {
+                    title: "Subsection".to_string(),
+                    content: "Subsection content".to_string(),
+                    level: 2,
+                    subsections: vec![],
+                    metadata: None,
+                },
+            ],
+            metadata: None,
+        };
+
+        let md = engine.format_section_markdown(&section, 2);
+        assert!(md.contains("## Test Section"));
+        assert!(md.contains("Section content"));
+        assert!(md.contains("### Subsection"));
+    }
+
+    #[test]
+    fn test_format_section_html() {
+        let engine = ExportEngine::default();
+        let section = Section {
+            title: "Test Section".to_string(),
+            content: "Section content".to_string(),
+            level: 2,
+            subsections: vec![],
+            metadata: None,
+        };
+
+        let html = engine.format_section_html(&section);
+        assert!(html.contains("<h3>Test Section</h3>"));
+        assert!(html.contains("<p>Section content</p>"));
+    }
+
+    #[test]
+    fn test_format_section_text() {
+        let engine = ExportEngine::default();
+        let section = Section {
+            title: "Test Section".to_string(),
+            content: "Section content".to_string(),
+            level: 1,
+            subsections: vec![],
+            metadata: None,
+        };
+
+        let text = engine.format_section_text(&section);
+        assert!(text.contains("Test Section"));
+        assert!(text.contains("------------")); // Title underline
+        assert!(text.contains("Section content"));
+    }
+
+    #[tokio::test]
+    async fn test_export_invalid_directory() {
+        let engine = ExportEngine::new("/nonexistent/invalid/path".to_string());
+        let document = create_test_document();
+
+        let result = engine.export(&document, ExportFormat::Markdown).await;
+        assert!(result.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_markdown_with_empty_optional_fields() {
+        let temp_dir = TempDir::new().unwrap();
+        let engine = ExportEngine::new(temp_dir.path().to_string_lossy().to_string());
+
+        let mut document = create_test_document();
+        document.content.objectives = vec![];
+        document.content.mandatory_clauses = None;
+        document.content.annexes = vec![];
+        document.content.references = vec![];
+
+        let result = engine.export(&document, ExportFormat::Markdown).await;
+        assert!(result.is_ok());
+
+        let path = std::path::Path::new(&result.unwrap().path);
+        let content = fs::read_to_string(path).unwrap();
+        assert!(!content.contains("## Objectifs"));
+        assert!(!content.contains("## Clauses Obligatoires"));
+        assert!(!content.contains("## Annexes"));
+        assert!(!content.contains("## Références"));
+    }
+}

@@ -385,40 +385,407 @@ mod tests {
     use super::*;
     use crate::security::encryption::{MasterKey, MasterKeyGenerator, SigningKeypair};
 
-    #[tokio::test]
-    async fn test_backup_engine() {
+    fn create_test_travel_engine() -> Arc<TravelEngine> {
         let master_key = MasterKey::generate();
         let keypair = SigningKeypair::generate();
-        let travel = Arc::new(
-            TravelEngine::new(&master_key, keypair)
-                .await
-                .expect("travel engine should initialize for backup tests"),
-        );
+        Arc::new(
+            futures::executor::block_on(TravelEngine::new(&master_key, keypair))
+                .expect("travel engine should initialize"),
+        )
+    }
 
-        let config = BackupConfig {
-            quick_enabled: false,
-            stable_enabled: false,
-            deep_enabled: false,
-            ..Default::default()
-        };
-
-        let engine = BackupEngine::new(travel, config);
-
-        // Test forced backup
-        let context = SnapshotContext {
+    fn create_test_context() -> SnapshotContext {
+        SnapshotContext {
             xp_total: 1000,
             level: 3,
             memory_files: 10,
             active_engines: vec!["Test".to_string()],
             design_system: "v∞".to_string(),
             persona_mood: "test".to_string(),
+        }
+    }
+
+    #[test]
+    fn test_backup_type_variants() {
+        assert_eq!(BackupType::Quick, BackupType::Quick);
+        assert_ne!(BackupType::Quick, BackupType::Stable);
+        assert_ne!(BackupType::Stable, BackupType::Deep);
+        assert_ne!(BackupType::Deep, BackupType::Forced);
+    }
+
+    #[test]
+    fn test_backup_config_default() {
+        let config = BackupConfig::default();
+        assert!(config.quick_enabled);
+        assert!(config.stable_enabled);
+        assert!(config.deep_enabled);
+        assert_eq!(config.max_quick_backups, 12);
+        assert_eq!(config.max_stable_backups, 24);
+        assert_eq!(config.max_deep_backups, 30);
+    }
+
+    #[test]
+    fn test_backup_config_custom() {
+        let config = BackupConfig {
+            quick_enabled: false,
+            stable_enabled: true,
+            deep_enabled: false,
+            max_quick_backups: 5,
+            max_stable_backups: 10,
+            max_deep_backups: 15,
         };
 
-        let data = b"Test backup".to_vec();
-        let id = engine
-            .force_backup(data, context, "unit test")
-            .await
-            .expect("backup engine should return snapshot id");
+        assert!(!config.quick_enabled);
+        assert!(config.stable_enabled);
+        assert!(!config.deep_enabled);
+    }
+
+    #[test]
+    fn test_backup_error_display() {
+        let err1 = BackupError::TravelEngineError("test error".to_string());
+        assert!(err1.to_string().contains("TravelEngine error"));
+
+        let err2 = BackupError::DataCollectionFailed("collection failed".to_string());
+        assert!(err2.to_string().contains("Data collection failed"));
+
+        let err3 = BackupError::IoError("io error".to_string());
+        assert!(err3.to_string().contains("IO error"));
+    }
+
+    #[tokio::test]
+    async fn test_backup_engine_new() {
+        let travel = create_test_travel_engine();
+        let config = BackupConfig::default();
+        let engine = BackupEngine::new(travel, config);
+
+        let stats = engine.stats().await;
+        assert_eq!(stats.last_quick, 0);
+        assert_eq!(stats.last_stable, 0);
+        assert_eq!(stats.last_deep, 0);
+        assert!(!stats.running);
+    }
+
+    #[tokio::test]
+    async fn test_backup_engine_start_stop() {
+        let travel = create_test_travel_engine();
+        let config = BackupConfig {
+            quick_enabled: false,
+            stable_enabled: false,
+            deep_enabled: false,
+            ..Default::default()
+        };
+        let engine = BackupEngine::new(travel, config);
+
+        // Initially not running
+        assert!(!engine.stats().await.running);
+
+        // Start engine
+        engine.start().await;
+        assert!(engine.stats().await.running);
+
+        // Stop engine
+        engine.stop().await;
+        assert!(!engine.stats().await.running);
+    }
+
+    #[tokio::test]
+    async fn test_backup_engine_start_idempotent() {
+        let travel = create_test_travel_engine();
+        let config = BackupConfig {
+            quick_enabled: false,
+            stable_enabled: false,
+            deep_enabled: false,
+            ..Default::default()
+        };
+        let engine = BackupEngine::new(travel, config);
+
+        // Start twice
+        engine.start().await;
+        engine.start().await; // Should not panic
+
+        assert!(engine.stats().await.running);
+    }
+
+    #[tokio::test]
+    async fn test_force_backup() {
+        let travel = create_test_travel_engine();
+        let config = BackupConfig {
+            quick_enabled: false,
+            stable_enabled: false,
+            deep_enabled: false,
+            ..Default::default()
+        };
+        let engine = BackupEngine::new(travel, config);
+
+        let context = create_test_context();
+        let data = b"Test backup data".to_vec();
+
+        let result = engine.force_backup(data, context, "unit test").await;
+        assert!(result.is_ok());
+
+        let id = result.unwrap();
         assert!(!id.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_force_backup_with_reason() {
+        let travel = create_test_travel_engine();
+        let config = BackupConfig::default();
+        let engine = BackupEngine::new(travel, config);
+
+        let context = create_test_context();
+        let data = b"Migration backup".to_vec();
+
+        let result = engine
+            .force_backup(data, context, "pre-migration backup")
+            .await;
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_collect_system_data() {
+        let travel = create_test_travel_engine();
+        let config = BackupConfig::default();
+        let engine = BackupEngine::new(travel, config);
+
+        let result = engine.collect_system_data().await;
+        assert!(result.is_ok());
+
+        let data = result.unwrap();
+        assert!(!data.is_empty());
+
+        // Verify it's valid JSON
+        let parsed: serde_json::Value = serde_json::from_slice(&data).unwrap();
+        assert!(parsed.is_object());
+    }
+
+    #[tokio::test]
+    async fn test_collect_context() {
+        let travel = create_test_travel_engine();
+        let config = BackupConfig::default();
+        let engine = BackupEngine::new(travel, config);
+
+        let result = engine.collect_context().await;
+        assert!(result.is_ok());
+
+        let context = result.unwrap();
+        assert_eq!(context.design_system, "v∞");
+        assert_eq!(context.level, 1);
+    }
+
+    #[tokio::test]
+    async fn test_backup_stats_serialization() {
+        let stats = BackupStats {
+            last_quick: 1000,
+            last_stable: 2000,
+            last_deep: 3000,
+            running: true,
+        };
+
+        let json = serde_json::to_string(&stats).unwrap();
+        assert!(json.contains("1000"));
+        assert!(json.contains("2000"));
+        assert!(json.contains("3000"));
+        assert!(json.contains("true"));
+
+        let deserialized: BackupStats = serde_json::from_str(&json).unwrap();
+        assert_eq!(deserialized.last_quick, 1000);
+        assert_eq!(deserialized.last_stable, 2000);
+        assert_eq!(deserialized.last_deep, 3000);
+        assert!(deserialized.running);
+    }
+
+    #[tokio::test]
+    async fn test_perform_backup_when_stopped() {
+        let travel = create_test_travel_engine();
+        let config = BackupConfig::default();
+        let engine = BackupEngine::new(travel, config);
+
+        // Don't start engine
+        let result = engine.perform_backup(BackupType::Quick).await;
+        assert!(result.is_err());
+        assert!(result.unwrap_err().to_string().contains("Engine stopped"));
+    }
+
+    #[tokio::test]
+    async fn test_perform_backup_quick() {
+        let travel = create_test_travel_engine();
+        let config = BackupConfig::default();
+        let engine = BackupEngine::new(travel, config);
+
+        engine.start().await;
+
+        let result = engine.perform_backup(BackupType::Quick).await;
+        assert!(result.is_ok());
+
+        let stats = engine.stats().await;
+        assert!(stats.last_quick > 0);
+    }
+
+    #[tokio::test]
+    async fn test_perform_backup_stable() {
+        let travel = create_test_travel_engine();
+        let config = BackupConfig::default();
+        let engine = BackupEngine::new(travel, config);
+
+        engine.start().await;
+
+        let result = engine.perform_backup(BackupType::Stable).await;
+        assert!(result.is_ok());
+
+        let stats = engine.stats().await;
+        assert!(stats.last_stable > 0);
+    }
+
+    #[tokio::test]
+    async fn test_perform_backup_deep() {
+        let travel = create_test_travel_engine();
+        let config = BackupConfig::default();
+        let engine = BackupEngine::new(travel, config);
+
+        engine.start().await;
+
+        let result = engine.perform_backup(BackupType::Deep).await;
+        assert!(result.is_ok());
+
+        let stats = engine.stats().await;
+        assert!(stats.last_deep > 0);
+    }
+
+    #[tokio::test]
+    async fn test_cleanup_old_backups_quick() {
+        let travel = create_test_travel_engine();
+        let config = BackupConfig {
+            max_quick_backups: 2,
+            ..Default::default()
+        };
+        let engine = BackupEngine::new(travel, config);
+
+        engine.start().await;
+
+        // Create multiple quick backups
+        for _ in 0..4 {
+            let _ = engine.perform_backup(BackupType::Quick).await;
+            tokio::time::sleep(tokio::time::Duration::from_millis(10)).await;
+        }
+
+        // Cleanup is called automatically
+        let snapshots = engine.travel_engine.list_snapshots().await;
+        let quick_snapshots: Vec<_> = snapshots
+            .iter()
+            .filter(|s| s.description.contains("Quick"))
+            .collect();
+
+        assert!(quick_snapshots.len() <= 2);
+    }
+
+    #[tokio::test]
+    async fn test_cleanup_old_backups_forced_not_cleaned() {
+        let travel = create_test_travel_engine();
+        let config = BackupConfig {
+            max_quick_backups: 1,
+            ..Default::default()
+        };
+        let engine = BackupEngine::new(travel.clone(), config);
+
+        // Create forced backup
+        let context = create_test_context();
+        let _ = engine
+            .force_backup(b"forced".to_vec(), context, "test")
+            .await;
+
+        engine.start().await;
+
+        // Create quick backups to trigger cleanup
+        for _ in 0..3 {
+            let _ = engine.perform_backup(BackupType::Quick).await;
+        }
+
+        // Forced backup should still exist
+        let snapshots = travel.list_snapshots().await;
+        let forced_exists = snapshots.iter().any(|s| s.description.contains("Forced"));
+        assert!(forced_exists);
+    }
+
+    #[test]
+    fn test_now_returns_valid_timestamp() {
+        let now = BackupEngine::now();
+        assert!(now > 0);
+        assert!(now < u64::MAX);
+
+        // Should be reasonably recent (after 2020)
+        assert!(now > 1577836800); // 2020-01-01
+    }
+
+    #[tokio::test]
+    async fn test_backup_type_in_description() {
+        let travel = create_test_travel_engine();
+        let config = BackupConfig::default();
+        let engine = BackupEngine::new(travel.clone(), config);
+
+        engine.start().await;
+
+        let _ = engine.perform_backup(BackupType::Quick).await;
+        let _ = engine.perform_backup(BackupType::Stable).await;
+        let _ = engine.perform_backup(BackupType::Deep).await;
+
+        let snapshots = travel.list_snapshots().await;
+
+        let has_quick = snapshots.iter().any(|s| s.description.contains("Quick"));
+        let has_stable = snapshots.iter().any(|s| s.description.contains("Stable"));
+        let has_deep = snapshots.iter().any(|s| s.description.contains("Deep"));
+
+        assert!(has_quick);
+        assert!(has_stable);
+        assert!(has_deep);
+    }
+
+    #[tokio::test]
+    async fn test_backup_intervals_constants() {
+        assert_eq!(QUICK_BACKUP_INTERVAL, Duration::from_secs(5 * 60));
+        assert_eq!(STABLE_BACKUP_INTERVAL, Duration::from_secs(60 * 60));
+        assert_eq!(DEEP_BACKUP_INTERVAL, Duration::from_secs(24 * 60 * 60));
+    }
+
+    #[test]
+    fn test_backup_error_is_error_trait() {
+        let err = BackupError::IoError("test".to_string());
+        let _: &dyn std::error::Error = &err;
+    }
+
+    #[tokio::test]
+    async fn test_stats_initial_state() {
+        let travel = create_test_travel_engine();
+        let config = BackupConfig::default();
+        let engine = BackupEngine::new(travel, config);
+
+        let stats = engine.stats().await;
+        assert_eq!(stats.last_quick, 0);
+        assert_eq!(stats.last_stable, 0);
+        assert_eq!(stats.last_deep, 0);
+        assert!(!stats.running);
+    }
+
+    #[tokio::test]
+    async fn test_multiple_force_backups() {
+        let travel = create_test_travel_engine();
+        let config = BackupConfig::default();
+        let engine = BackupEngine::new(travel.clone(), config);
+
+        let context = create_test_context();
+
+        for i in 0..3 {
+            let data = format!("backup {}", i).into_bytes();
+            let result = engine.force_backup(data, context.clone(), &format!("reason {}", i)).await;
+            assert!(result.is_ok());
+        }
+
+        let snapshots = travel.list_snapshots().await;
+        let forced_count = snapshots
+            .iter()
+            .filter(|s| s.description.contains("Forced"))
+            .count();
+
+        assert_eq!(forced_count, 3);
     }
 }
