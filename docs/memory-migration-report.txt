@@ -1,0 +1,11 @@
+TITANE∞ Memory Module Migration Report
+Generated: mer. 07 janv. 2026 18:01:18 EST
+
+Summary:
+  Total imports: 37
+  Unified memory v2: 14
+  Deprecated: 23
+
+Migration needed: YES
+
+Estimated effort: 5-11 hours

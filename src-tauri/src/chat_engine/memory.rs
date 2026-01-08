@@ -88,7 +88,12 @@ impl ChatMemoryManager {
             let mut cache = self.cached.write().await;
             cache
                 .get_mut(conversation_id)
-                .expect("conversation cached after load")
+                .ok_or_else(|| {
+                    ChatEngineError::MemoryFailure(format!(
+                        "Conversation {} not in cache after successful load",
+                        conversation_id
+                    ))
+                })?
         };
 
         let tokens = estimate_tokens(content.as_str());

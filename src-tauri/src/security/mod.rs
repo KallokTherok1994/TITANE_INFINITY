@@ -119,7 +119,7 @@ impl Default for SecurityPolicy {
                 "afplay".into(), // v19.1.0: macOS native audio player
                 // AI/ML engines
                 "ollama".into(), // v26.2.3: Ollama AI local inference
-                "curl".into(),   // v26.2.3: HTTP requests for AI APIs
+                // NOTE: curl removed for security (not used in production, potential attack vector)
                 // Utilities
                 "which".into(), // Command detection
             ],
