@@ -281,3 +281,274 @@ pub async fn sc_get_diagnostic_status() -> Result<OverallStatus, String> {
     // For now, return always Healthy placeholder
     Ok(OverallStatus::Healthy)
 }
+
+// ══════════════════════════════════════════════════════════════════
+// TESTS
+// ══════════════════════════════════════════════════════════════════
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_diagnostic_status_variants() {
+        let statuses = vec![
+            DiagnosticStatus::Success,
+            DiagnosticStatus::Warning,
+            DiagnosticStatus::Error,
+            DiagnosticStatus::Pending,
+            DiagnosticStatus::Skipped,
+        ];
+        assert_eq!(statuses.len(), 5);
+    }
+
+    #[test]
+    fn test_overall_status_variants() {
+        let statuses = vec![
+            OverallStatus::Healthy,
+            OverallStatus::Degraded,
+            OverallStatus::Critical,
+        ];
+        assert_eq!(statuses.len(), 3);
+    }
+
+    #[test]
+    fn test_diagnostic_result_serialization() {
+        let result = DiagnosticResult {
+            id: "test_id".to_string(),
+            title: "Test Diagnostic".to_string(),
+            status: DiagnosticStatus::Success,
+            message: "All good".to_string(),
+            duration_ms: Some(100),
+            data: Some(serde_json::json!({"key": "value"})),
+        };
+
+        let json = serde_json::to_string(&result).unwrap();
+        assert!(json.contains("test_id"));
+        assert!(json.contains("Test Diagnostic"));
+
+        let deserialized: DiagnosticResult = serde_json::from_str(&json).unwrap();
+        assert_eq!(deserialized.id, "test_id");
+        assert_eq!(deserialized.duration_ms, Some(100));
+    }
+
+    #[test]
+    fn test_system_diagnostics_structure() {
+        let results = vec![
+            DiagnosticResult {
+                id: "test1".to_string(),
+                title: "Test 1".to_string(),
+                status: DiagnosticStatus::Success,
+                message: "OK".to_string(),
+                duration_ms: Some(10),
+                data: None,
+            },
+            DiagnosticResult {
+                id: "test2".to_string(),
+                title: "Test 2".to_string(),
+                status: DiagnosticStatus::Warning,
+                message: "Warning".to_string(),
+                duration_ms: Some(20),
+                data: None,
+            },
+        ];
+
+        let diagnostics = SystemDiagnostics {
+            timestamp: 1000,
+            results: results.clone(),
+            overall_status: OverallStatus::Degraded,
+            total_duration_ms: 30,
+        };
+
+        assert_eq!(diagnostics.results.len(), 2);
+        assert_eq!(diagnostics.total_duration_ms, 30);
+    }
+
+    #[test]
+    fn test_calculate_overall_status_healthy() {
+        let results = vec![
+            DiagnosticResult {
+                id: "test1".to_string(),
+                title: "Test 1".to_string(),
+                status: DiagnosticStatus::Success,
+                message: "OK".to_string(),
+                duration_ms: Some(10),
+                data: None,
+            },
+            DiagnosticResult {
+                id: "test2".to_string(),
+                title: "Test 2".to_string(),
+                status: DiagnosticStatus::Success,
+                message: "OK".to_string(),
+                duration_ms: Some(10),
+                data: None,
+            },
+        ];
+
+        let status = calculate_overall_status(&results);
+        assert!(matches!(status, OverallStatus::Healthy));
+    }
+
+    #[test]
+    fn test_calculate_overall_status_degraded() {
+        let results = vec![
+            DiagnosticResult {
+                id: "test1".to_string(),
+                title: "Test 1".to_string(),
+                status: DiagnosticStatus::Success,
+                message: "OK".to_string(),
+                duration_ms: Some(10),
+                data: None,
+            },
+            DiagnosticResult {
+                id: "test2".to_string(),
+                title: "Test 2".to_string(),
+                status: DiagnosticStatus::Warning,
+                message: "Warning".to_string(),
+                duration_ms: Some(10),
+                data: None,
+            },
+        ];
+
+        let status = calculate_overall_status(&results);
+        assert!(matches!(status, OverallStatus::Degraded));
+    }
+
+    #[test]
+    fn test_calculate_overall_status_critical() {
+        let results = vec![
+            DiagnosticResult {
+                id: "test1".to_string(),
+                title: "Test 1".to_string(),
+                status: DiagnosticStatus::Success,
+                message: "OK".to_string(),
+                duration_ms: Some(10),
+                data: None,
+            },
+            DiagnosticResult {
+                id: "test2".to_string(),
+                title: "Test 2".to_string(),
+                status: DiagnosticStatus::Error,
+                message: "Error".to_string(),
+                duration_ms: Some(10),
+                data: None,
+            },
+        ];
+
+        let status = calculate_overall_status(&results);
+        assert!(matches!(status, OverallStatus::Critical));
+    }
+
+    #[test]
+    fn test_calculate_overall_status_error_overrides_warning() {
+        let results = vec![
+            DiagnosticResult {
+                id: "test1".to_string(),
+                title: "Test 1".to_string(),
+                status: DiagnosticStatus::Warning,
+                message: "Warning".to_string(),
+                duration_ms: Some(10),
+                data: None,
+            },
+            DiagnosticResult {
+                id: "test2".to_string(),
+                title: "Test 2".to_string(),
+                status: DiagnosticStatus::Error,
+                message: "Error".to_string(),
+                duration_ms: Some(10),
+                data: None,
+            },
+        ];
+
+        let status = calculate_overall_status(&results);
+        assert!(matches!(status, OverallStatus::Critical));
+    }
+
+    #[test]
+    fn test_calculate_overall_status_empty_results() {
+        let results: Vec<DiagnosticResult> = vec![];
+        let status = calculate_overall_status(&results);
+        assert!(matches!(status, OverallStatus::Healthy));
+    }
+
+    #[test]
+    fn test_test_tauri_runtime() {
+        let result = test_tauri_runtime();
+        assert_eq!(result.id, "tauri_runtime");
+        assert!(matches!(result.status, DiagnosticStatus::Success));
+        assert!(result.duration_ms.is_some());
+        assert!(result.data.is_some());
+    }
+
+    #[test]
+    fn test_test_memory() {
+        let result = test_memory();
+        assert_eq!(result.id, "memory");
+        assert!(matches!(result.status, DiagnosticStatus::Success));
+        assert!(result.duration_ms.is_some());
+        assert!(result.data.is_some());
+    }
+
+    #[test]
+    fn test_test_serialization() {
+        let result = test_serialization();
+        assert_eq!(result.id, "serialization");
+        assert!(matches!(result.status, DiagnosticStatus::Success));
+        assert!(result.duration_ms.is_some());
+    }
+
+    #[tokio::test]
+    async fn test_test_filesystem() {
+        let result = test_filesystem().await;
+        assert_eq!(result.id, "filesystem");
+        // Should succeed accessing current directory
+        assert!(matches!(result.status, DiagnosticStatus::Success));
+        assert!(result.duration_ms.is_some());
+    }
+
+    #[tokio::test]
+    async fn test_test_async_runtime() {
+        let result = test_async_runtime().await;
+        assert_eq!(result.id, "async_runtime");
+        assert!(matches!(result.status, DiagnosticStatus::Success));
+        assert!(result.duration_ms.is_some());
+    }
+
+    #[tokio::test]
+    async fn test_sc_run_quick_diagnostics() {
+        let result = sc_run_quick_diagnostics().await;
+        assert!(result.is_ok());
+
+        let diagnostics = result.unwrap();
+        assert_eq!(diagnostics.results.len(), 3); // Quick = 3 tests
+        assert!(diagnostics.timestamp > 0);
+        assert!(diagnostics.total_duration_ms > 0);
+    }
+
+    #[tokio::test]
+    async fn test_sc_run_full_diagnostics() {
+        let result = sc_run_full_diagnostics().await;
+        assert!(result.is_ok());
+
+        let diagnostics = result.unwrap();
+        assert_eq!(diagnostics.results.len(), 5); // Full = 5 tests
+        assert!(diagnostics.timestamp > 0);
+        assert!(diagnostics.total_duration_ms > 0);
+
+        // Verify all test IDs are present
+        let ids: Vec<&str> = diagnostics.results.iter().map(|r| r.id.as_str()).collect();
+        assert!(ids.contains(&"tauri_runtime"));
+        assert!(ids.contains(&"memory"));
+        assert!(ids.contains(&"serialization"));
+        assert!(ids.contains(&"filesystem"));
+        assert!(ids.contains(&"async_runtime"));
+    }
+
+    #[tokio::test]
+    async fn test_sc_get_diagnostic_status() {
+        let result = sc_get_diagnostic_status().await;
+        assert!(result.is_ok());
+        // Currently returns placeholder Healthy status
+        assert!(matches!(result.unwrap(), OverallStatus::Healthy));
+    }
+}

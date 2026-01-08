@@ -341,40 +341,384 @@ mod tests {
     use super::*;
     use crate::security::encryption::{MasterKey, MasterKeyGenerator};
 
-    #[tokio::test]
-    async fn test_travel_engine() {
+    async fn create_test_engine() -> TravelEngine {
         let master_key = MasterKey::generate();
         let keypair = SigningKeypair::generate();
-        let engine = TravelEngine::new(&master_key, keypair)
+        TravelEngine::new(&master_key, keypair)
             .await
-            .expect("travel engine should initialize");
+            .expect("travel engine should initialize")
+    }
 
-        let context = SnapshotContext {
+    fn create_test_context() -> SnapshotContext {
+        SnapshotContext {
             xp_total: 1000,
             level: 3,
             memory_files: 10,
             active_engines: vec!["Helios".to_string()],
             design_system: "v∞".to_string(),
             persona_mood: "focused".to_string(),
-        };
+        }
+    }
 
-        let data = "TITANE INFINITY v∞".as_bytes().to_vec();
+    #[test]
+    fn test_travel_error_display() {
+        let err1 = TravelError::SnapshotNotFound("snap123".to_string());
+        assert!(err1.to_string().contains("Snapshot not found"));
+
+        let err2 = TravelError::CorruptedSnapshot("data corrupt".to_string());
+        assert!(err2.to_string().contains("Corrupted snapshot"));
+
+        let err3 = TravelError::InvalidSignature("sig fail".to_string());
+        assert!(err3.to_string().contains("Invalid signature"));
+
+        let err4 = TravelError::DecryptionFailed("decrypt fail".to_string());
+        assert!(err4.to_string().contains("Decryption failed"));
+
+        let err5 = TravelError::IoError("io fail".to_string());
+        assert!(err5.to_string().contains("IO error"));
+
+        let err6 = TravelError::SerializationError("ser fail".to_string());
+        assert!(err6.to_string().contains("Serialization error"));
+    }
+
+    #[test]
+    fn test_travel_error_is_error_trait() {
+        let err = TravelError::IoError("test".to_string());
+        let _: &dyn std::error::Error = &err;
+    }
+
+    #[tokio::test]
+    async fn test_travel_engine_new() {
+        let engine = create_test_engine().await;
+        let stats = engine.stats().await;
+
+        assert_eq!(stats.total_snapshots, 0);
+        assert_eq!(stats.cached_in_ram, 0);
+    }
+
+    #[tokio::test]
+    async fn test_create_snapshot() {
+        let engine = create_test_engine().await;
+        let context = create_test_context();
+        let data = b"Test snapshot data".to_vec();
+
+        let result = engine.create_snapshot(data, context, "Test snapshot".to_string()).await;
+        assert!(result.is_ok());
+
+        let id = result.unwrap();
+        assert!(!id.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_create_and_restore_snapshot() {
+        let engine = create_test_engine().await;
+        let context = create_test_context();
+        let original_data = "TITANE INFINITY v∞ Time Travel Test".as_bytes().to_vec();
+
+        // Create
         let id = engine
-            .create_snapshot(data.clone(), context, "Test".to_string())
+            .create_snapshot(original_data.clone(), context, "Round-trip test".to_string())
             .await
             .expect("snapshot creation should succeed");
 
-        // Restaurer
-        let restored = engine
+        // Restore
+        let restored_data = engine
             .restore_snapshot(&id)
             .await
             .expect("snapshot restore should succeed");
+
+        assert_eq!(original_data, restored_data);
+    }
+
+    #[tokio::test]
+    async fn test_restore_from_ram_cache() {
+        let engine = create_test_engine().await;
+        let context = create_test_context();
+        let data = b"Cached snapshot".to_vec();
+
+        let id = engine
+            .create_snapshot(data.clone(), context, "Cache test".to_string())
+            .await
+            .unwrap();
+
+        // First restore should be from RAM cache
+        let restored = engine.restore_snapshot(&id).await.unwrap();
         assert_eq!(data, restored);
 
-        // Supprimer
-        engine
-            .delete_snapshot(&id)
+        // Second restore should also be from RAM cache (fast)
+        let restored2 = engine.restore_snapshot(&id).await.unwrap();
+        assert_eq!(data, restored2);
+    }
+
+    #[tokio::test]
+    async fn test_restore_nonexistent_snapshot() {
+        let engine = create_test_engine().await;
+
+        let result = engine.restore_snapshot("nonexistent-id").await;
+        assert!(result.is_err());
+
+        match result.unwrap_err() {
+            TravelError::SnapshotNotFound(id) => assert_eq!(id, "nonexistent-id"),
+            _ => panic!("Expected SnapshotNotFound error"),
+        }
+    }
+
+    #[tokio::test]
+    async fn test_delete_snapshot() {
+        let engine = create_test_engine().await;
+        let context = create_test_context();
+        let data = b"Delete test".to_vec();
+
+        let id = engine
+            .create_snapshot(data, context, "To be deleted".to_string())
             .await
-            .expect("snapshot deletion should succeed");
+            .unwrap();
+
+        // Delete
+        let result = engine.delete_snapshot(&id).await;
+        assert!(result.is_ok());
+
+        // Should not be able to restore
+        let restore_result = engine.restore_snapshot(&id).await;
+        assert!(restore_result.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_list_snapshots() {
+        let engine = create_test_engine().await;
+        let context = create_test_context();
+
+        // Initially empty
+        assert_eq!(engine.list_snapshots().await.len(), 0);
+
+        // Create multiple snapshots
+        for i in 0..3 {
+            let data = format!("Snapshot {}", i).into_bytes();
+            engine
+                .create_snapshot(data, context.clone(), format!("Snapshot {}", i))
+                .await
+                .unwrap();
+        }
+
+        // Should list all
+        let snapshots = engine.list_snapshots().await;
+        assert_eq!(snapshots.len(), 3);
+    }
+
+    #[tokio::test]
+    async fn test_recent_snapshots() {
+        let engine = create_test_engine().await;
+        let context = create_test_context();
+
+        // Create 5 snapshots
+        for i in 0..5 {
+            let data = format!("Snapshot {}", i).into_bytes();
+            engine
+                .create_snapshot(data, context.clone(), format!("Snapshot {}", i))
+                .await
+                .unwrap();
+            tokio::time::sleep(tokio::time::Duration::from_millis(10)).await;
+        }
+
+        // Get 3 most recent
+        let recent = engine.recent_snapshots(3).await;
+        assert_eq!(recent.len(), 3);
+
+        // Should be sorted by timestamp descending (most recent first)
+        assert!(recent[0].timestamp >= recent[1].timestamp);
+        assert!(recent[1].timestamp >= recent[2].timestamp);
+    }
+
+    #[tokio::test]
+    async fn test_ram_cache_limit() {
+        let engine = create_test_engine().await;
+        let context = create_test_context();
+
+        // Create more snapshots than MAX_RAM_CACHE
+        let mut ids = Vec::new();
+        for i in 0..5 {
+            let data = format!("Snapshot {}", i).into_bytes();
+            let id = engine
+                .create_snapshot(data, context.clone(), format!("Snapshot {}", i))
+                .await
+                .unwrap();
+            ids.push(id);
+        }
+
+        // Cache should have at most MAX_RAM_CACHE entries
+        let stats = engine.stats().await;
+        assert!(stats.cached_in_ram <= MAX_RAM_CACHE);
+    }
+
+    #[tokio::test]
+    async fn test_compress_decompress() {
+        let engine = create_test_engine().await;
+        let original = b"Test data for compression. This should be compressed and decompressed successfully.".to_vec();
+
+        let compressed = engine.compress(&original).await.unwrap();
+        assert!(compressed.len() < original.len()); // Should be compressed
+
+        let decompressed = engine.decompress(&compressed).await.unwrap();
+        assert_eq!(original, decompressed);
+    }
+
+    #[tokio::test]
+    async fn test_compress_empty_data() {
+        let engine = create_test_engine().await;
+        let empty = Vec::new();
+
+        let result = engine.compress(&empty).await;
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_stats_initial() {
+        let engine = create_test_engine().await;
+        let stats = engine.stats().await;
+
+        assert_eq!(stats.total_snapshots, 0);
+        assert_eq!(stats.cached_in_ram, 0);
+        assert_eq!(stats.total_size_bytes, 0);
+        assert!(stats.oldest_timestamp.is_none());
+        assert!(stats.newest_timestamp.is_none());
+    }
+
+    #[tokio::test]
+    async fn test_stats_after_snapshots() {
+        let engine = create_test_engine().await;
+        let context = create_test_context();
+
+        // Create snapshots
+        for i in 0..3 {
+            let data = format!("Data {}", i).into_bytes();
+            engine
+                .create_snapshot(data, context.clone(), format!("Snap {}", i))
+                .await
+                .unwrap();
+        }
+
+        let stats = engine.stats().await;
+        assert_eq!(stats.total_snapshots, 3);
+        assert!(stats.cached_in_ram <= MAX_RAM_CACHE);
+        assert!(stats.total_size_bytes > 0);
+        assert!(stats.oldest_timestamp.is_some());
+        assert!(stats.newest_timestamp.is_some());
+    }
+
+    #[tokio::test]
+    async fn test_travel_stats_serialization() {
+        let stats = TravelStats {
+            total_snapshots: 10,
+            cached_in_ram: 3,
+            total_size_bytes: 1024000,
+            oldest_timestamp: Some(1000),
+            newest_timestamp: Some(2000),
+        };
+
+        let json = serde_json::to_string(&stats).unwrap();
+        assert!(json.contains("10"));
+        assert!(json.contains("1024000"));
+
+        let deserialized: TravelStats = serde_json::from_str(&json).unwrap();
+        assert_eq!(deserialized.total_snapshots, 10);
+        assert_eq!(deserialized.cached_in_ram, 3);
+        assert_eq!(deserialized.total_size_bytes, 1024000);
+    }
+
+    #[tokio::test]
+    async fn test_multiple_create_restore_cycle() {
+        let engine = create_test_engine().await;
+        let context = create_test_context();
+
+        for i in 0..5 {
+            let data = format!("Cycle {}", i).into_bytes();
+            let id = engine
+                .create_snapshot(data.clone(), context.clone(), format!("Cycle {}", i))
+                .await
+                .unwrap();
+
+            let restored = engine.restore_snapshot(&id).await.unwrap();
+            assert_eq!(data, restored);
+        }
+    }
+
+    #[tokio::test]
+    async fn test_snapshot_metadata_in_list() {
+        let engine = create_test_engine().await;
+        let context = create_test_context();
+
+        let id = engine
+            .create_snapshot(
+                b"Test".to_vec(),
+                context,
+                "Test description".to_string(),
+            )
+            .await
+            .unwrap();
+
+        let snapshots = engine.list_snapshots().await;
+        let found = snapshots.iter().find(|s| s.id == id);
+
+        assert!(found.is_some());
+        let metadata = found.unwrap();
+        assert_eq!(metadata.description, "Test description");
+        assert_eq!(metadata.version, env!("CARGO_PKG_VERSION"));
+    }
+
+    #[tokio::test]
+    async fn test_delete_nonexistent_snapshot() {
+        let engine = create_test_engine().await;
+
+        // Should not error when deleting nonexistent
+        let result = engine.delete_snapshot("nonexistent").await;
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_ram_cache_after_restore() {
+        let engine = create_test_engine().await;
+        let context = create_test_context();
+
+        // Create snapshot
+        let id = engine
+            .create_snapshot(b"Cache test".to_vec(), context, "Test".to_string())
+            .await
+            .unwrap();
+
+        // Clear cache by creating many more snapshots
+        for i in 0..10 {
+            let data = format!("Filler {}", i).into_bytes();
+            engine
+                .create_snapshot(data, context.clone(), format!("Filler {}", i))
+                .await
+                .unwrap();
+        }
+
+        // Restore should load from disk and add to cache
+        let _ = engine.restore_snapshot(&id).await.unwrap();
+
+        let stats = engine.stats().await;
+        assert!(stats.cached_in_ram > 0);
+    }
+
+    #[tokio::test]
+    async fn test_snapshot_size_tracking() {
+        let engine = create_test_engine().await;
+        let context = create_test_context();
+
+        let large_data = vec![0u8; 10000]; // 10KB
+        engine
+            .create_snapshot(large_data, context, "Large snapshot".to_string())
+            .await
+            .unwrap();
+
+        let stats = engine.stats().await;
+        assert!(stats.total_size_bytes > 0);
+    }
+
+    #[tokio::test]
+    async fn test_constants() {
+        assert_eq!(MAX_RAM_CACHE, 3);
+        assert_eq!(SNAPSHOT_DIR, "vault/snapshots");
     }
 }

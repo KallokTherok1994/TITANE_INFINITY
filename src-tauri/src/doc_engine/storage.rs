@@ -256,3 +256,347 @@ impl Default for StorageEngine {
         Self::new(PathBuf::from("./data/titane/memory/documents"))
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use tempfile::TempDir;
+
+    fn create_test_document(id: &str) -> Document {
+        Document {
+            metadata: DocumentMetadata {
+                id: id.to_string(),
+                title: "Test Document".to_string(),
+                doc_type: DocumentType::Report,
+                created_at: 1000,
+                updated_at: 1000,
+                version: "1.0".to_string(),
+                author: "Test Author".to_string(),
+                tags: vec!["test".to_string()],
+            },
+            content: DocumentContent {
+                title: "Test Document".to_string(),
+                executive_summary: "Test summary".to_string(),
+                objectives: vec!["Objective 1".to_string()],
+                sections: vec![
+                    Section {
+                        title: "Section 1".to_string(),
+                        content: "Section content".to_string(),
+                        level: 1,
+                        subsections: vec![],
+                        metadata: None,
+                    },
+                ],
+                mandatory_clauses: None,
+                annexes: vec![],
+                references: vec![],
+            },
+            style: DocumentStyle::Professional,
+        }
+    }
+
+    #[test]
+    fn test_storage_engine_new() {
+        let temp_dir = TempDir::new().unwrap();
+        let engine = StorageEngine::new(temp_dir.path().to_path_buf());
+
+        assert_eq!(engine.storage_path, temp_dir.path());
+        assert!(engine.encryption_enabled);
+    }
+
+    #[test]
+    fn test_storage_engine_default() {
+        let engine = StorageEngine::default();
+        assert_eq!(engine.storage_path, PathBuf::from("./data/titane/memory/documents"));
+    }
+
+    #[tokio::test]
+    async fn test_save_document_with_encryption() {
+        let temp_dir = TempDir::new().unwrap();
+        let engine = StorageEngine::new(temp_dir.path().to_path_buf());
+        let document = create_test_document("doc1");
+
+        let result = engine.save(&document).await;
+        assert!(result.is_ok());
+
+        let saved_path = result.unwrap();
+        assert!(saved_path.contains("doc1.enc"));
+        assert!(PathBuf::from(&saved_path).exists());
+    }
+
+    #[tokio::test]
+    async fn test_save_document_without_encryption() {
+        let temp_dir = TempDir::new().unwrap();
+        let mut engine = StorageEngine::new(temp_dir.path().to_path_buf());
+        engine.encryption_enabled = false;
+        let document = create_test_document("doc2");
+
+        let result = engine.save(&document).await;
+        assert!(result.is_ok());
+
+        let saved_path = result.unwrap();
+        assert!(saved_path.contains("doc2.json"));
+        assert!(PathBuf::from(&saved_path).exists());
+    }
+
+    #[tokio::test]
+    async fn test_save_creates_directory() {
+        let temp_dir = TempDir::new().unwrap();
+        let storage_path = temp_dir.path().join("subdir");
+        let engine = StorageEngine::new(storage_path.clone());
+        let document = create_test_document("doc3");
+
+        let result = engine.save(&document).await;
+        assert!(result.is_ok());
+        assert!(storage_path.exists());
+    }
+
+    #[tokio::test]
+    async fn test_load_document_with_encryption() {
+        let temp_dir = TempDir::new().unwrap();
+        let engine = StorageEngine::new(temp_dir.path().to_path_buf());
+        let document = create_test_document("doc4");
+
+        // Save first
+        engine.save(&document).await.unwrap();
+
+        // Load
+        let result = engine.load("doc4").await;
+        assert!(result.is_ok());
+
+        let loaded = result.unwrap();
+        assert_eq!(loaded.metadata.id, "doc4");
+        assert_eq!(loaded.metadata.title, "Test Document");
+        assert_eq!(loaded.content.sections.len(), 1);
+    }
+
+    #[tokio::test]
+    async fn test_load_document_without_encryption() {
+        let temp_dir = TempDir::new().unwrap();
+        let mut engine = StorageEngine::new(temp_dir.path().to_path_buf());
+        engine.encryption_enabled = false;
+        let document = create_test_document("doc5");
+
+        // Save first
+        engine.save(&document).await.unwrap();
+
+        // Load
+        let result = engine.load("doc5").await;
+        assert!(result.is_ok());
+
+        let loaded = result.unwrap();
+        assert_eq!(loaded.metadata.id, "doc5");
+    }
+
+    #[tokio::test]
+    async fn test_load_nonexistent_document() {
+        let temp_dir = TempDir::new().unwrap();
+        let engine = StorageEngine::new(temp_dir.path().to_path_buf());
+
+        let result = engine.load("nonexistent").await;
+        assert!(result.is_err());
+
+        let error = result.unwrap_err().to_string();
+        assert!(error.contains("introuvable"));
+    }
+
+    #[tokio::test]
+    async fn test_list_documents_empty() {
+        let temp_dir = TempDir::new().unwrap();
+        let engine = StorageEngine::new(temp_dir.path().to_path_buf());
+
+        let result = engine.list_documents().await;
+        assert!(result.is_ok());
+
+        let list = result.unwrap();
+        assert_eq!(list.len(), 0);
+    }
+
+    #[tokio::test]
+    async fn test_list_documents_multiple() {
+        let temp_dir = TempDir::new().unwrap();
+        let engine = StorageEngine::new(temp_dir.path().to_path_buf());
+
+        // Save multiple documents
+        engine.save(&create_test_document("doc6")).await.unwrap();
+        engine.save(&create_test_document("doc7")).await.unwrap();
+        engine.save(&create_test_document("doc8")).await.unwrap();
+
+        let result = engine.list_documents().await;
+        assert!(result.is_ok());
+
+        let list = result.unwrap();
+        assert_eq!(list.len(), 3);
+
+        let ids: Vec<String> = list.iter().map(|m| m.id.clone()).collect();
+        assert!(ids.contains(&"doc6".to_string()));
+        assert!(ids.contains(&"doc7".to_string()));
+        assert!(ids.contains(&"doc8".to_string()));
+    }
+
+    #[tokio::test]
+    async fn test_delete_document() {
+        let temp_dir = TempDir::new().unwrap();
+        let engine = StorageEngine::new(temp_dir.path().to_path_buf());
+        let document = create_test_document("doc9");
+
+        // Save first
+        let saved_path = engine.save(&document).await.unwrap();
+        assert!(PathBuf::from(&saved_path).exists());
+
+        // Delete
+        let result = engine.delete("doc9").await;
+        assert!(result.is_ok());
+        assert!(!PathBuf::from(&saved_path).exists());
+    }
+
+    #[tokio::test]
+    async fn test_delete_nonexistent_document() {
+        let temp_dir = TempDir::new().unwrap();
+        let engine = StorageEngine::new(temp_dir.path().to_path_buf());
+
+        // Should not error even if document doesn't exist
+        let result = engine.delete("nonexistent").await;
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_metadata_persistence() {
+        let temp_dir = TempDir::new().unwrap();
+        let engine = StorageEngine::new(temp_dir.path().to_path_buf());
+
+        // Save document
+        engine.save(&create_test_document("doc10")).await.unwrap();
+
+        // Check metadata file exists
+        let metadata_path = temp_dir.path().join("metadata.json");
+        assert!(metadata_path.exists());
+
+        // List documents should return the metadata
+        let list = engine.list_documents().await.unwrap();
+        assert_eq!(list.len(), 1);
+        assert_eq!(list[0].id, "doc10");
+    }
+
+    #[tokio::test]
+    async fn test_metadata_update_on_save() {
+        let temp_dir = TempDir::new().unwrap();
+        let engine = StorageEngine::new(temp_dir.path().to_path_buf());
+
+        // Save document
+        let doc1 = create_test_document("doc11");
+        engine.save(&doc1).await.unwrap();
+
+        // Update and save again
+        let mut doc2 = create_test_document("doc11");
+        doc2.metadata.title = "Updated Title".to_string();
+        doc2.metadata.version = "2.0".to_string();
+        engine.save(&doc2).await.unwrap();
+
+        // List should still have only one entry with updated data
+        let list = engine.list_documents().await.unwrap();
+        assert_eq!(list.len(), 1);
+        assert_eq!(list[0].title, "Updated Title");
+        assert_eq!(list[0].version, "2.0");
+    }
+
+    #[tokio::test]
+    async fn test_metadata_removal_on_delete() {
+        let temp_dir = TempDir::new().unwrap();
+        let engine = StorageEngine::new(temp_dir.path().to_path_buf());
+
+        // Save multiple documents
+        engine.save(&create_test_document("doc12")).await.unwrap();
+        engine.save(&create_test_document("doc13")).await.unwrap();
+
+        // Delete one
+        engine.delete("doc12").await.unwrap();
+
+        // List should only have doc13
+        let list = engine.list_documents().await.unwrap();
+        assert_eq!(list.len(), 1);
+        assert_eq!(list[0].id, "doc13");
+    }
+
+    #[tokio::test]
+    async fn test_round_trip_encryption() {
+        let temp_dir = TempDir::new().unwrap();
+        let engine = StorageEngine::new(temp_dir.path().to_path_buf());
+        let original = create_test_document("doc14");
+
+        // Save and load
+        engine.save(&original).await.unwrap();
+        let loaded = engine.load("doc14").await.unwrap();
+
+        // Verify data integrity
+        assert_eq!(loaded.metadata.id, original.metadata.id);
+        assert_eq!(loaded.metadata.title, original.metadata.title);
+        assert_eq!(loaded.content.title, original.content.title);
+        assert_eq!(loaded.content.sections[0].title, original.content.sections[0].title);
+        assert_eq!(loaded.content.sections[0].content, original.content.sections[0].content);
+    }
+
+    #[test]
+    fn test_encrypt_decrypt_data() {
+        let temp_dir = TempDir::new().unwrap();
+        let engine = StorageEngine::new(temp_dir.path().to_path_buf());
+
+        let original_data = b"Test data for encryption";
+
+        // Encrypt
+        let encrypted = engine.encrypt_data(original_data);
+        assert!(encrypted.is_ok());
+
+        let encrypted_data = encrypted.unwrap();
+        assert_ne!(encrypted_data, original_data.to_vec());
+
+        // Decrypt
+        let decrypted = engine.decrypt_data(&encrypted_data);
+        assert!(decrypted.is_ok());
+
+        let decrypted_data = decrypted.unwrap();
+        assert_eq!(decrypted_data, original_data.to_vec());
+    }
+
+    #[test]
+    fn test_encrypt_empty_data() {
+        let temp_dir = TempDir::new().unwrap();
+        let engine = StorageEngine::new(temp_dir.path().to_path_buf());
+
+        let result = engine.encrypt_data(b"");
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_save_multiple_documents() {
+        let temp_dir = TempDir::new().unwrap();
+        let engine = StorageEngine::new(temp_dir.path().to_path_buf());
+
+        for i in 0..5 {
+            let doc = create_test_document(&format!("doc{}", i));
+            let result = engine.save(&doc).await;
+            assert!(result.is_ok());
+        }
+
+        let list = engine.list_documents().await.unwrap();
+        assert_eq!(list.len(), 5);
+    }
+
+    #[tokio::test]
+    async fn test_file_extension_based_on_encryption() {
+        let temp_dir = TempDir::new().unwrap();
+
+        // With encryption
+        let engine_enc = StorageEngine::new(temp_dir.path().join("enc").to_path_buf());
+        let doc1 = create_test_document("doc_enc");
+        let path1 = engine_enc.save(&doc1).await.unwrap();
+        assert!(path1.ends_with(".enc"));
+
+        // Without encryption
+        let mut engine_plain = StorageEngine::new(temp_dir.path().join("plain").to_path_buf());
+        engine_plain.encryption_enabled = false;
+        let doc2 = create_test_document("doc_plain");
+        let path2 = engine_plain.save(&doc2).await.unwrap();
+        assert!(path2.ends_with(".json"));
+    }
+}
