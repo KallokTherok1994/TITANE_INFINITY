@@ -6,6 +6,7 @@
  */
 
 import React, { Profiler, ProfilerOnRenderCallback, useEffect, useState } from 'react';
+import { logger } from '@/utils/logger';
 
 /**
  * Performance metrics collected by the profiler

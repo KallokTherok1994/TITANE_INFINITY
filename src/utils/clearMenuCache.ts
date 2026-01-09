@@ -3,6 +3,8 @@
  * Force suppression du cache localStorage du menu
  */
 
+import { logger } from '@/utils/logger';
+
 export function clearMenuCache(): void {
   try {
     // Supprimer config menu

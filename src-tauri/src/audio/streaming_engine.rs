@@ -4,12 +4,12 @@
 //   Replaces arecord batch recording with continuous streaming
 // ═══════════════════════════════════════════════════════════════
 
-use super::vad::{VADResult, VoiceActivityDetector};
-use super::{AudioConfig, AudioError, AudioResult};
+use super::vad::VoiceActivityDetector;
+use super::{AudioError, AudioResult};
 use serde::{Deserialize, Serialize};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
-use std::time::{Duration, Instant};
+use std::time::Instant;
 
 #[cfg(feature = "audio-capture")]
 use cpal::{
@@ -43,6 +43,7 @@ pub struct RingBuffer {
     capacity: usize,
     write_pos: usize,
     read_pos: usize,
+    len: usize,
     samples_written: usize,
 }
 
@@ -53,6 +54,7 @@ impl RingBuffer {
             capacity,
             write_pos: 0,
             read_pos: 0,
+            len: 0,
             samples_written: 0,
         }
     }
@@ -62,6 +64,13 @@ impl RingBuffer {
             self.data[self.write_pos] = sample;
             self.write_pos = (self.write_pos + 1) % self.capacity;
             self.samples_written += 1;
+
+            if self.len < self.capacity {
+                self.len += 1;
+            } else {
+                // Buffer plein: on écrase le plus ancien, donc on avance read_pos.
+                self.read_pos = (self.read_pos + 1) % self.capacity;
+            }
         }
     }
 
@@ -77,20 +86,19 @@ impl RingBuffer {
             self.read_pos = (self.read_pos + 1) % self.capacity;
         }
 
+        self.len = 0;
+
         result
     }
 
     pub fn available_samples(&self) -> usize {
-        if self.write_pos >= self.read_pos {
-            self.write_pos - self.read_pos
-        } else {
-            self.capacity - self.read_pos + self.write_pos
-        }
+        self.len
     }
 
     pub fn clear(&mut self) {
         self.write_pos = 0;
         self.read_pos = 0;
+        self.len = 0;
         self.samples_written = 0;
         self.data.fill(0.0);
     }
@@ -241,7 +249,7 @@ impl StreamingAudioEngine {
         } else {
             log::error!("[StreamingEngine] ⚠️ State mutex poisoned, recovering");
             // Mutex poisoned but stream is still active - recover
-            let recovered = self.state.lock().unwrap_or_else(|e| e.into_inner());
+            let mut recovered = self.state.lock().unwrap_or_else(|e| e.into_inner());
             *recovered = StreamingState::Listening;
         }
 
@@ -278,8 +286,8 @@ impl StreamingAudioEngine {
             return;
         }
 
-        let vad_result = if let Ok(vad_detector) = vad.lock() {
-            vad_detector.detect(data)
+        let has_speech = if let Ok(mut vad_detector) = vad.lock() {
+            matches!(vad_detector.process_frame(data), super::vad::VADState::Speech)
         } else {
             return;
         };
@@ -289,7 +297,7 @@ impl StreamingAudioEngine {
 
         match current_state {
             StreamingState::Listening => {
-                if vad_result.has_speech && vad_result.confidence > 0.7 {
+                if has_speech {
                     log::info!("[StreamingEngine] 🎤 Speech detected, start recording");
                     *lock_or_recover!(state) = StreamingState::Recording;
                     *lock_or_recover!(speech_start) = Some(Instant::now());
@@ -297,7 +305,7 @@ impl StreamingAudioEngine {
                 }
             }
             StreamingState::Recording => {
-                if vad_result.has_speech {
+                if has_speech {
                     // Update last speech time
                     *lock_or_recover!(last_speech) = Some(Instant::now());
                 } else {
@@ -347,9 +355,10 @@ impl StreamingAudioEngine {
         };
 
         // Get final VAD result
-        let (has_speech, confidence) = if let Ok(vad) = self.vad.lock() {
-            let result = vad.detect(&audio_data);
-            (result.has_speech, result.confidence)
+        let (has_speech, confidence) = if let Ok(mut vad) = self.vad.lock() {
+            let state = vad.process_frame(&audio_data);
+            let has_speech = matches!(state, super::vad::VADState::Speech);
+            (has_speech, if has_speech { 1.0 } else { 0.0 })
         } else {
             (false, 0.0)
         };

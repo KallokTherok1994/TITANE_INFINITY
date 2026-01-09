@@ -31,6 +31,7 @@ import type { MemoryEntry, MemoryType as _MemoryType } from '@/cognitive/types';
 import { getLogEngine } from '@/services/adminEngine/logEngine';
 import { SingularityIntrospectionEngine } from '@/modules/singularity/SingularityIntrospectionEngine';
 import type { LogEntry as _LogEntry } from '@/lib/UILogger';
+import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES — FUSION STRUCTURE

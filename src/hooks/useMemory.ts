@@ -110,7 +110,7 @@ export function useMemory() {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       setError(errorMessage);
-      logger.error('Load conversation error:', err);
+      logger.error('Load conversation error:', { module: 'useMemory' }, err instanceof Error ? err : new Error(String(err)));
       return null;
     } finally {
       setIsLoading(false);
@@ -135,7 +135,7 @@ export function useMemory() {
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : String(err);
         setError(errorMessage);
-        logger.error('Delete conversation error:', err);
+        logger.error('Delete conversation error:', { module: 'useMemory' }, err instanceof Error ? err : new Error(String(err)));
       } finally {
         setIsLoading(false);
       }
@@ -156,7 +156,7 @@ export function useMemory() {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       setError(errorMessage);
-      logger.error('Clear memory error:', err);
+      logger.error('Clear memory error:', { module: 'useMemory' }, err instanceof Error ? err : new Error(String(err)));
     } finally {
       setIsLoading(false);
     }

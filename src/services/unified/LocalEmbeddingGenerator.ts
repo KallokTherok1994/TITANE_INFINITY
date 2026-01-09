@@ -11,6 +11,7 @@
  */
 
 import type { IEmbeddingGenerator } from './UnifiedMemory';
+import { logger } from '@/utils/logger';
 
 /**
  * Configuration

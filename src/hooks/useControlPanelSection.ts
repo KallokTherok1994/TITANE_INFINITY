@@ -5,6 +5,7 @@
 
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { secureInvoke } from '@/lib/security';
+import { logger } from '@/utils/logger';
 
 export interface UseControlPanelSectionOptions<T> {
   loadCommand: string;

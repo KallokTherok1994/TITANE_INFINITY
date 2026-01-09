@@ -23,6 +23,7 @@
  */
 
 import type { MetaSingularityState as _MetaSingularityState } from '../metasingularity/metaSingularityKernel';
+import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 //   TYPES

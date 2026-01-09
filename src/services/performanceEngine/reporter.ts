@@ -12,6 +12,7 @@ import {
   calculateGrade,
   DEFAULT_PERFORMANCE_CONFIG,
 } from './performanceEngine.config';
+import { logger } from '@/utils/logger';
 import type {
   MetricsSnapshot,
   PerformanceIssue,

@@ -20,6 +20,7 @@ import type {
   PriorityLevel,
   AgendaView,
 } from './types';
+import { logger } from '@/utils/logger';
 // ARCHITECTURE RINGS COMPLIANT: Engines (Ring 2) don't import from Services (Ring 3)
 // I/O operations injected via storage callbacks at initialization
 // See docs/ARCHITECTURE_RINGS.md for details

@@ -3,6 +3,7 @@
  */
 
 import { LazyLogsCard, LazyErrorsCard } from '../../DevToolsLazy';
+import { logger } from '@/utils/logger';
 
 interface LogsTabProps {
   logs: string[];

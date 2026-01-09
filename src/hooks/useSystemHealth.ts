@@ -13,6 +13,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { secureInvoke } from '@/lib/security';
+import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES

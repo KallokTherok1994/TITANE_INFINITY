@@ -9,6 +9,7 @@
  */
 
 import { useEffect, useState, useCallback, useRef } from 'react';
+import { logger } from '@/utils/logger';
 
 /**
  * Debounce a value - updates only after delay without changes

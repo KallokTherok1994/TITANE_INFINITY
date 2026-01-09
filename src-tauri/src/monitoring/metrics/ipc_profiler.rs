@@ -123,14 +123,19 @@ impl IPCProfiler {
             return vec![];
         }
 
-        let records = match self.records.lock().ok() {
-            Some(r) => r,
-            None => return vec![],
+        // Avoid deadlock: `get_command_metrics()` also locks `self.records`.
+        // We must not hold the mutex while calling it.
+        let command_names: Vec<String> = {
+            let records = match self.records.lock().ok() {
+                Some(r) => r,
+                None => return vec![],
+            };
+            records.keys().cloned().collect()
         };
-        let mut metrics = vec![];
 
-        for command_name in records.keys() {
-            if let Some(m) = self.get_command_metrics(command_name) {
+        let mut metrics = vec![];
+        for command_name in command_names {
+            if let Some(m) = self.get_command_metrics(&command_name) {
                 metrics.push(m);
             }
         }
@@ -434,5 +439,309 @@ mod tests {
         assert!(metrics.p95_duration_ms >= 90);
         // P99 should be around 99
         assert!(metrics.p99_duration_ms >= 95);
+    }
+
+    #[test]
+    fn test_profiler_default() {
+        let profiler = IPCProfiler::default();
+        let summary = profiler.get_summary();
+
+        // In debug mode, should be enabled
+        #[cfg(debug_assertions)]
+        assert!(summary.enabled);
+
+        // In release mode, should be disabled
+        #[cfg(not(debug_assertions))]
+        assert!(!summary.enabled);
+    }
+
+    #[test]
+    fn test_get_command_metrics_nonexistent() {
+        let profiler = IPCProfiler::new(true);
+        let metrics = profiler.get_command_metrics("nonexistent_command");
+        assert!(metrics.is_none());
+    }
+
+    #[test]
+    fn test_get_command_metrics_when_disabled() {
+        let profiler = IPCProfiler::new(false);
+
+        // Even if we manually add records, metrics should return None when disabled
+        {
+            let mut records = profiler.records.lock().unwrap();
+            records.insert("test".to_string(), vec![ExecutionRecord {
+                duration_ms: 50,
+                timestamp: 0,
+            }]);
+        }
+
+        let metrics = profiler.get_command_metrics("test");
+        assert!(metrics.is_none());
+    }
+
+    #[test]
+    fn test_get_all_metrics_when_disabled() {
+        let profiler = IPCProfiler::new(false);
+        let metrics = profiler.get_all_metrics();
+        assert_eq!(metrics.len(), 0);
+    }
+
+    #[test]
+    fn test_multiple_executions_same_command() {
+        let profiler = IPCProfiler::new(true);
+
+        for _ in 0..5 {
+            let _guard = profiler.start("repeated_command");
+            std::thread::sleep(std::time::Duration::from_millis(1));
+        }
+
+        std::thread::sleep(std::time::Duration::from_millis(20));
+
+        let metrics = profiler.get_command_metrics("repeated_command");
+        assert!(metrics.is_some());
+
+        if let Some(m) = metrics {
+            assert_eq!(m.count, 5);
+            assert!(m.min_duration_ms > 0);
+            assert!(m.max_duration_ms >= m.min_duration_ms);
+        }
+    }
+
+    #[test]
+    fn test_command_metrics_serialization() {
+        let metrics = CommandMetrics {
+            command_name: "test_cmd".to_string(),
+            count: 100,
+            total_duration_ms: 5000,
+            min_duration_ms: 10,
+            max_duration_ms: 200,
+            avg_duration_ms: 50.0,
+            p50_duration_ms: 45,
+            p95_duration_ms: 150,
+            p99_duration_ms: 180,
+            last_execution_ms: 50,
+        };
+
+        let json = serde_json::to_string(&metrics).unwrap();
+        assert!(json.contains("test_cmd"));
+        assert!(json.contains("100"));
+
+        let deserialized: CommandMetrics = serde_json::from_str(&json).unwrap();
+        assert_eq!(deserialized.command_name, "test_cmd");
+        assert_eq!(deserialized.count, 100);
+        assert_eq!(deserialized.avg_duration_ms, 50.0);
+    }
+
+    #[test]
+    fn test_profiler_summary_serialization() {
+        let summary = ProfilerSummary {
+            enabled: true,
+            total_commands: 10,
+            total_executions: 1000,
+            total_time_ms: 50000,
+            avg_latency_ms: 50.0,
+            slowest_commands: vec![
+                ("slow_cmd".to_string(), 200),
+                ("medium_cmd".to_string(), 100),
+            ],
+        };
+
+        let json = serde_json::to_string(&summary).unwrap();
+        assert!(json.contains("true"));
+        assert!(json.contains("1000"));
+
+        let deserialized: ProfilerSummary = serde_json::from_str(&json).unwrap();
+        assert_eq!(deserialized.total_commands, 10);
+        assert_eq!(deserialized.slowest_commands.len(), 2);
+    }
+
+    #[test]
+    fn test_profiler_summary_empty() {
+        let profiler = IPCProfiler::new(true);
+        let summary = profiler.get_summary();
+
+        assert_eq!(summary.total_commands, 0);
+        assert_eq!(summary.total_executions, 0);
+        assert_eq!(summary.total_time_ms, 0);
+        assert_eq!(summary.avg_latency_ms, 0.0);
+        assert_eq!(summary.slowest_commands.len(), 0);
+    }
+
+    #[test]
+    fn test_profiler_summary_slowest_commands() {
+        let profiler = IPCProfiler::new(true);
+
+        {
+            let mut records = profiler.records.lock().unwrap();
+            for i in 1..=15 {
+                let duration = i * 10;
+                records.insert(
+                    format!("cmd_{}", i),
+                    vec![ExecutionRecord {
+                        duration_ms: duration,
+                        timestamp: 0,
+                    }],
+                );
+            }
+        }
+
+        let summary = profiler.get_summary();
+        assert_eq!(summary.total_commands, 15);
+
+        // Should only return top 10 slowest
+        assert_eq!(summary.slowest_commands.len(), 10);
+
+        // First should be the slowest (cmd_15 with 150ms)
+        assert_eq!(summary.slowest_commands[0].0, "cmd_15");
+        assert_eq!(summary.slowest_commands[0].1, 150);
+    }
+
+    #[test]
+    fn test_command_metrics_single_execution() {
+        let profiler = IPCProfiler::new(true);
+
+        {
+            let mut records = profiler.records.lock().unwrap();
+            records.insert("single_cmd".to_string(), vec![ExecutionRecord {
+                duration_ms: 42,
+                timestamp: 1000,
+            }]);
+        }
+
+        let metrics = profiler.get_command_metrics("single_cmd").unwrap();
+        assert_eq!(metrics.count, 1);
+        assert_eq!(metrics.min_duration_ms, 42);
+        assert_eq!(metrics.max_duration_ms, 42);
+        assert_eq!(metrics.avg_duration_ms, 42.0);
+        assert_eq!(metrics.p50_duration_ms, 42);
+        assert_eq!(metrics.p95_duration_ms, 42);
+        assert_eq!(metrics.p99_duration_ms, 42);
+        assert_eq!(metrics.last_execution_ms, 42);
+    }
+
+    #[test]
+    fn test_command_metrics_empty_records() {
+        let profiler = IPCProfiler::new(true);
+
+        {
+            let mut records = profiler.records.lock().unwrap();
+            records.insert("empty_cmd".to_string(), vec![]);
+        }
+
+        let metrics = profiler.get_command_metrics("empty_cmd");
+        assert!(metrics.is_none());
+    }
+
+    #[test]
+    fn test_profile_guard_disabled_profiler() {
+        let profiler = IPCProfiler::new(false);
+
+        {
+            let _guard = profiler.start("disabled_test");
+            std::thread::sleep(std::time::Duration::from_millis(10));
+        }
+
+        std::thread::sleep(std::time::Duration::from_millis(20));
+
+        // Should not record anything when disabled
+        let records = profiler.records.lock().unwrap();
+        assert_eq!(records.len(), 0);
+    }
+
+    #[test]
+    fn test_multiple_commands_parallel() {
+        let profiler = IPCProfiler::new(true);
+
+        {
+            let _guard1 = profiler.start("cmd_a");
+            let _guard2 = profiler.start("cmd_b");
+            let _guard3 = profiler.start("cmd_c");
+            std::thread::sleep(std::time::Duration::from_millis(5));
+        }
+
+        std::thread::sleep(std::time::Duration::from_millis(20));
+
+        let metrics = profiler.get_all_metrics();
+        assert_eq!(metrics.len(), 3);
+
+        let command_names: Vec<String> = metrics.iter().map(|m| m.command_name.clone()).collect();
+        assert!(command_names.contains(&"cmd_a".to_string()));
+        assert!(command_names.contains(&"cmd_b".to_string()));
+        assert!(command_names.contains(&"cmd_c".to_string()));
+    }
+
+    #[test]
+    fn test_reset_clears_all_data() {
+        let profiler = IPCProfiler::new(true);
+
+        {
+            let mut records = profiler.records.lock().unwrap();
+            records.insert("cmd1".to_string(), vec![ExecutionRecord {
+                duration_ms: 50,
+                timestamp: 0,
+            }]);
+            records.insert("cmd2".to_string(), vec![ExecutionRecord {
+                duration_ms: 100,
+                timestamp: 0,
+            }]);
+        }
+
+        assert_eq!(profiler.get_all_metrics().len(), 2);
+
+        profiler.reset();
+
+        let metrics = profiler.get_all_metrics();
+        assert_eq!(metrics.len(), 0);
+
+        let summary = profiler.get_summary();
+        assert_eq!(summary.total_commands, 0);
+    }
+
+    #[test]
+    fn test_command_metrics_average_calculation() {
+        let profiler = IPCProfiler::new(true);
+
+        {
+            let mut records = profiler.records.lock().unwrap();
+            records.insert("avg_test".to_string(), vec![
+                ExecutionRecord { duration_ms: 10, timestamp: 0 },
+                ExecutionRecord { duration_ms: 20, timestamp: 0 },
+                ExecutionRecord { duration_ms: 30, timestamp: 0 },
+            ]);
+        }
+
+        let metrics = profiler.get_command_metrics("avg_test").unwrap();
+        assert_eq!(metrics.count, 3);
+        assert_eq!(metrics.total_duration_ms, 60);
+        assert_eq!(metrics.avg_duration_ms, 20.0);
+    }
+
+    #[test]
+    fn test_profiler_summary_avg_latency_zero_executions() {
+        let profiler = IPCProfiler::new(true);
+        let summary = profiler.get_summary();
+
+        // With no executions, avg should be 0.0
+        assert_eq!(summary.avg_latency_ms, 0.0);
+    }
+
+    #[test]
+    fn test_percentile_calculation_edge_cases() {
+        let profiler = IPCProfiler::new(true);
+
+        {
+            let mut records = profiler.records.lock().unwrap();
+            // Test with just 2 values
+            records.insert("two_values".to_string(), vec![
+                ExecutionRecord { duration_ms: 10, timestamp: 0 },
+                ExecutionRecord { duration_ms: 20, timestamp: 0 },
+            ]);
+        }
+
+        let metrics = profiler.get_command_metrics("two_values").unwrap();
+        assert_eq!(metrics.count, 2);
+        assert!(metrics.p50_duration_ms >= 10);
+        assert!(metrics.p95_duration_ms >= 10);
+        assert!(metrics.p99_duration_ms >= 10);
     }
 }

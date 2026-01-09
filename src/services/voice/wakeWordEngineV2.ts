@@ -22,6 +22,7 @@ import {
 } from './voiceFingerprint';
 import { antiEchoShield, type EchoAnalysis } from './antiEchoShield';
 import { contextualAttentionV2 } from './contextualAttentionV2';
+import { logger } from '@/utils/logger';
 
 export type WakeWordMode = 'wake_only' | 'one_shot';
 

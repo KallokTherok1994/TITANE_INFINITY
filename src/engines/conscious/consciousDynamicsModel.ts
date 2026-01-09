@@ -23,6 +23,8 @@
 // TYPES & INTERFACES
 // ═══════════════════════════════════════════════════════════════════════════
 
+import { logger } from '@/utils/logger';
+
 /**
  * Modes de conscience procédurale
  */

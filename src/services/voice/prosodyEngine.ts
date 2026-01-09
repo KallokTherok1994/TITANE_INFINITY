@@ -13,6 +13,7 @@
  */
 
 import type { EmotionalIntent } from './emotionalIntent';
+import { logger } from '@/utils/logger';
 
 /**
  * Profil prosodique

@@ -32,6 +32,7 @@ import {
 } from '@features/dashboard/DashboardEditor';
 import { useState, useEffect } from 'react';
 import { Settings } from 'lucide-react';
+import { logger } from '@/utils/logger';
 
 export const DashboardPage = (): JSX.Element => {
   // 🌟 Activer visual engines pour cette page

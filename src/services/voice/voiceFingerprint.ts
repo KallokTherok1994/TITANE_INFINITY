@@ -16,6 +16,8 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
+import { logger } from '@/utils/logger';
+
 /**
  * Empreinte vocale d'un utilisateur
  */

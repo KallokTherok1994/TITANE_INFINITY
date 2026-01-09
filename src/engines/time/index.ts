@@ -32,6 +32,7 @@ export type { CommandExecutionResult } from './ChatScheduler';
 import { timeEngine } from './TimeEngine';
 import { agendaEngine, type AgendaStorageCallbacks } from './AgendaEngine';
 import { energyEngine } from './EnergyEngine';
+import { logger } from '@/utils/logger';
 
 /**
  * Initialise tous les moteurs Time/Agenda en une seule fois

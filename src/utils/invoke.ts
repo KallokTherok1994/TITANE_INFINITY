@@ -6,6 +6,7 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import { logger } from '@/utils/logger';
 
 /**
  * Wrapper universel pour invoke() avec gestion d'erreur automatique

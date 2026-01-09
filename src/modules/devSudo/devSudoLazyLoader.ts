@@ -7,6 +7,7 @@
  */
 
 import type { DevSudoAction } from './types';
+import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES

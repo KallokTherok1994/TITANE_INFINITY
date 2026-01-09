@@ -15,6 +15,7 @@ import {
   STANDARD_COMMAND_OPTIONS,
   FAST_COMMAND_OPTIONS,
 } from '../../lib/serviceInvoker';
+import { logger } from '@/utils/logger';
 
 export type StreamingState = 'Idle' | 'Listening' | 'Recording' | 'Processing';
 

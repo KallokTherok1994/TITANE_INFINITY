@@ -7,6 +7,12 @@
  */
 
 import { secureInvoke, type SecureInvokeOptions } from './security';
+import { logger } from '@/utils/logger';
+
+const isTestEnv: boolean =
+  (typeof process !== 'undefined' && Boolean(process.env?.VITEST_WORKER_ID)) ||
+  (typeof globalThis !== 'undefined' &&
+    Boolean((globalThis as { __vitest_worker__?: unknown }).__vitest_worker__));
 
 // ────────────────────────────────────────────────────────────────
 // Types
@@ -68,10 +74,24 @@ export class ValidationError extends Error {
 /**
  * Promise avec timeout
  */
-function timeoutPromise<T>(ms: number, command: string): Promise<T> {
-  return new Promise((_, reject) =>
-    setTimeout(() => reject(new TimeoutError(command, ms)), ms)
-  );
+function createTimeout<T>(ms: number, command: string): {
+  promise: Promise<T>;
+  cancel: () => void;
+} {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
+  const promise = new Promise<T>((_, reject) => {
+    timeoutId = setTimeout(() => reject(new TimeoutError(command, ms)), ms);
+  });
+
+  return {
+    promise,
+    cancel: () => {
+      if (timeoutId !== undefined) {
+        clearTimeout(timeoutId);
+      }
+    },
+  };
 }
 
 /**
@@ -165,6 +185,8 @@ export async function invokeWithRetry<T>(
 
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     try {
+      const timeoutCtrl = createTimeout<T>(timeout, command);
+
       // Race entre secureInvoke et timeout
       const result = await Promise.race<T>([
         secureInvoke<T>(
@@ -179,14 +201,19 @@ export async function invokeWithRetry<T>(
           },
           options.validator
         ),
-        timeoutPromise<T>(timeout, command),
-      ]);
+        timeoutCtrl.promise,
+      ]).finally(() => {
+        // Important: cancel the timeout when the race settles to avoid lingering timers.
+        timeoutCtrl.cancel();
+      });
 
       // Succès - log si retry
       if (attempt > 0) {
-        console.log(
-          `[${context}] ✓ "${command}" succeeded on attempt ${attempt + 1}/${maxAttempts}`
-        );
+        if (!isTestEnv) {
+          logger.debug(
+            `[${context}] ✓ "${command}" succeeded on attempt ${attempt + 1}/${maxAttempts}`
+          );
+        }
       }
 
       return result;
@@ -195,10 +222,12 @@ export async function invokeWithRetry<T>(
 
       // Dernière tentative ou erreur non-retriable
       if (attempt === maxAttempts - 1 || !isRetriableError(error)) {
-        console.error(
-          `[${context}] ✗ "${command}" failed (attempt ${attempt + 1}/${maxAttempts}):`,
-          lastError.message
-        );
+        if (!isTestEnv) {
+          logger.error(
+            `[${context}] ✗ "${command}" failed (attempt ${attempt + 1}/${maxAttempts}):`,
+            lastError.message
+          );
+        }
 
         // Si toutes tentatives échouées
         if (attempt === maxAttempts - 1 && maxAttempts > 1) {
@@ -210,9 +239,11 @@ export async function invokeWithRetry<T>(
 
       // Log retry
       const nextDelay = calculateBackoff(attempt, retryDelay, backoffFactor);
-      console.warn(
-        `[${context}] ⟳ "${command}" attempt ${attempt + 1}/${maxAttempts} failed. Retry in ${Math.round(nextDelay)}ms...`
-      );
+      if (!isTestEnv) {
+        logger.warn(
+          `[${context}] ⟳ "${command}" attempt ${attempt + 1}/${maxAttempts} failed. Retry in ${Math.round(nextDelay)}ms...`
+        );
+      }
 
       // Attendre avant retry
       await waitWithBackoff(attempt, retryDelay, backoffFactor);

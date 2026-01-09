@@ -46,6 +46,7 @@ import {
   JobPriority,
   MemoryTier,
 } from './mcp.types';
+import { logger } from '@/utils/logger';
 
 type CompletedJob = Job & { execution: Job['execution'] & { completedAt: number } };
 

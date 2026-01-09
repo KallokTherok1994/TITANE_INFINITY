@@ -11,6 +11,7 @@ import {
   RECOMMENDATION_TEMPLATES,
   DEFAULT_PERFORMANCE_CONFIG,
 } from './performanceEngine.config';
+import { logger } from '@/utils/logger';
 import type {
   PerformanceIssue,
   Recommendation,

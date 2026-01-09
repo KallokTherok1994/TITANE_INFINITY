@@ -15,6 +15,7 @@ import {
   FullBodyStats,
   LipSyncMorphWeights,
 } from './fullbody_engine';
+import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // HOOK OPTIONS

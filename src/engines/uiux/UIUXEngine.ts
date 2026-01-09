@@ -16,6 +16,7 @@ import type {
   UIUXEventHandler,
   AdaptationHistoryEntry,
 } from './types';
+import { logger } from '@/utils/logger';
 
 import { ContextDetector } from './detectors/ContextDetector';
 import { OverloadDetector } from './detectors/OverloadDetector';

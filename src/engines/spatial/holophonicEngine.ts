@@ -14,6 +14,8 @@
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
 
+import { logger } from '@/utils/logger';
+
 export type TitanSpatialState = {
   // Position 3D
   x: number; // -1 (gauche) → 1 (droite)

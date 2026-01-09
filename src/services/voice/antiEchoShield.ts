@@ -16,6 +16,8 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
+import { logger } from '@/utils/logger';
+
 /**
  * Fingerprint audio d'une phrase TTS
  */

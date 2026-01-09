@@ -26,6 +26,7 @@ import {
   synestheticEmotionEngine,
   type SynestheticProfile,
 } from '../emotion/synestheticEmotionEngine';
+import { logger } from '@/utils/logger';
 import {
   embodiedPresenceEngine,
   type EmbodiedPresenceState,

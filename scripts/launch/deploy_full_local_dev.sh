@@ -64,16 +64,41 @@ if [[ -n "${SMOKE_SECONDS:-}" ]]; then
   echo "🧪 Smoke mode: run ${SMOKE_SECONDS}s puis arrêt propre"
 
   set +e
-  ./scripts/dev/full_local_tauri_ollama.sh "${PASSTHRU[@]}" &
-  PID=$!
+  # Lance dans une nouvelle session si possible afin que SIGINT se propage
+  # à tous les sous-processus (pnpm/tauri/vite).
+  if command -v setsid >/dev/null 2>&1; then
+    setsid ./scripts/dev/full_local_tauri_ollama.sh "${PASSTHRU[@]}" &
+    PID=$!
+    PGID="$PID"
+  else
+    ./scripts/dev/full_local_tauri_ollama.sh "${PASSTHRU[@]}" &
+    PID=$!
+    PGID=""
+  fi
   set -e
 
   sleep "$SMOKE_SECONDS"
 
-  # Arrêt propre (Ctrl+C) du launcher, ce qui propage jusqu'à pnpm/tauri.
-  kill -INT "$PID" >/dev/null 2>&1 || true
-  wait "$PID" >/dev/null 2>&1 || true
-  exit 0
+  # Arrêt propre (Ctrl+C). Si setsid est dispo, on vise le groupe complet.
+  if [[ -n "${PGID:-}" ]]; then
+    kill -INT "-$PGID" >/dev/null 2>&1 || true
+  else
+    kill -INT "$PID" >/dev/null 2>&1 || true
+  fi
+
+  set +e
+  wait "$PID"
+  EC=$?
+  set -e
+
+  # 130: SIGINT / 143: SIGTERM — arrêt normal en smoke.
+  if [[ "$EC" -eq 130 || "$EC" -eq 143 ]]; then
+    EC=0
+  fi
+
+  # Sécurité: s'assurer qu'aucun process/port de dev ne reste actif.
+  ./runtime/dev/cleanup.sh >/dev/null 2>&1 || true
+  exit "$EC"
 fi
 
 exec ./scripts/dev/full_local_tauri_ollama.sh "${PASSTHRU[@]}"

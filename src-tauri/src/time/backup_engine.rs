@@ -385,11 +385,17 @@ mod tests {
     use super::*;
     use crate::security::encryption::{MasterKey, MasterKeyGenerator, SigningKeypair};
 
-    fn create_test_travel_engine() -> Arc<TravelEngine> {
+    async fn create_test_travel_engine() -> Arc<TravelEngine> {
         let master_key = MasterKey::generate();
         let keypair = SigningKeypair::generate();
+        let base_path = tempfile::Builder::new()
+            .prefix("titane_backup_engine_test_")
+            .tempdir()
+            .expect("tempdir should create")
+            .into_path();
         Arc::new(
-            futures::executor::block_on(TravelEngine::new(&master_key, keypair))
+            TravelEngine::new_in_dir(base_path, &master_key, keypair)
+                .await
                 .expect("travel engine should initialize"),
         )
     }
@@ -454,7 +460,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_backup_engine_new() {
-        let travel = create_test_travel_engine();
+        let travel = create_test_travel_engine().await;
         let config = BackupConfig::default();
         let engine = BackupEngine::new(travel, config);
 
@@ -467,7 +473,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_backup_engine_start_stop() {
-        let travel = create_test_travel_engine();
+        let travel = create_test_travel_engine().await;
         let config = BackupConfig {
             quick_enabled: false,
             stable_enabled: false,
@@ -490,7 +496,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_backup_engine_start_idempotent() {
-        let travel = create_test_travel_engine();
+        let travel = create_test_travel_engine().await;
         let config = BackupConfig {
             quick_enabled: false,
             stable_enabled: false,
@@ -508,7 +514,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_force_backup() {
-        let travel = create_test_travel_engine();
+        let travel = create_test_travel_engine().await;
         let config = BackupConfig {
             quick_enabled: false,
             stable_enabled: false,
@@ -529,7 +535,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_force_backup_with_reason() {
-        let travel = create_test_travel_engine();
+        let travel = create_test_travel_engine().await;
         let config = BackupConfig::default();
         let engine = BackupEngine::new(travel, config);
 
@@ -544,7 +550,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_collect_system_data() {
-        let travel = create_test_travel_engine();
+        let travel = create_test_travel_engine().await;
         let config = BackupConfig::default();
         let engine = BackupEngine::new(travel, config);
 
@@ -561,7 +567,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_collect_context() {
-        let travel = create_test_travel_engine();
+        let travel = create_test_travel_engine().await;
         let config = BackupConfig::default();
         let engine = BackupEngine::new(travel, config);
 
@@ -597,7 +603,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_perform_backup_when_stopped() {
-        let travel = create_test_travel_engine();
+        let travel = create_test_travel_engine().await;
         let config = BackupConfig::default();
         let engine = BackupEngine::new(travel, config);
 
@@ -609,7 +615,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_perform_backup_quick() {
-        let travel = create_test_travel_engine();
+        let travel = create_test_travel_engine().await;
         let config = BackupConfig::default();
         let engine = BackupEngine::new(travel, config);
 
@@ -624,7 +630,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_perform_backup_stable() {
-        let travel = create_test_travel_engine();
+        let travel = create_test_travel_engine().await;
         let config = BackupConfig::default();
         let engine = BackupEngine::new(travel, config);
 
@@ -639,7 +645,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_perform_backup_deep() {
-        let travel = create_test_travel_engine();
+        let travel = create_test_travel_engine().await;
         let config = BackupConfig::default();
         let engine = BackupEngine::new(travel, config);
 
@@ -654,7 +660,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_cleanup_old_backups_quick() {
-        let travel = create_test_travel_engine();
+        let travel = create_test_travel_engine().await;
         let config = BackupConfig {
             max_quick_backups: 2,
             ..Default::default()
@@ -681,7 +687,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_cleanup_old_backups_forced_not_cleaned() {
-        let travel = create_test_travel_engine();
+        let travel = create_test_travel_engine().await;
         let config = BackupConfig {
             max_quick_backups: 1,
             ..Default::default()
@@ -719,7 +725,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_backup_type_in_description() {
-        let travel = create_test_travel_engine();
+        let travel = create_test_travel_engine().await;
         let config = BackupConfig::default();
         let engine = BackupEngine::new(travel.clone(), config);
 
@@ -755,7 +761,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_stats_initial_state() {
-        let travel = create_test_travel_engine();
+        let travel = create_test_travel_engine().await;
         let config = BackupConfig::default();
         let engine = BackupEngine::new(travel, config);
 
@@ -768,7 +774,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_multiple_force_backups() {
-        let travel = create_test_travel_engine();
+        let travel = create_test_travel_engine().await;
         let config = BackupConfig::default();
         let engine = BackupEngine::new(travel.clone(), config);
 

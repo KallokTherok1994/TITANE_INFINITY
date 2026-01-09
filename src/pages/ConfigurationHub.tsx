@@ -12,6 +12,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { secureInvoke } from '@/lib/security';
+import { logger } from '@/utils/logger';
 import { ConfigSection, ConfigFieldEditable } from '../components/config';
 import './ModulePages.css';
 

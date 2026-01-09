@@ -13,6 +13,7 @@ import {
   useSingularityState as useZustandStore,
   type SingularityFrontendState,
 } from '@/core/state/SingularityState';
+import { logger } from '@/utils/logger';
 
 /**
  * Type-safe selector function

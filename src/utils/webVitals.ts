@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
+import { logger } from '@/utils/logger';
 
 // ═══ TYPES ═══
 

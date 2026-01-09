@@ -12,6 +12,8 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
+import { logger } from '@/utils/logger';
+
 export interface ParlerTTSConfig {
   /** URL de l'API TTS locale (défaut: http://localhost:8765) */
   apiUrl?: string;

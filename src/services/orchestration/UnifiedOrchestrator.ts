@@ -25,6 +25,7 @@ import type {
   Metric,
   OrchestrationResult,
 } from './types';
+import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // DEFAULT CONFIGURATION

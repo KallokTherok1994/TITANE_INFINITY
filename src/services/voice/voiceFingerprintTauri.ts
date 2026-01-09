@@ -13,6 +13,7 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import { logger } from '@/utils/logger';
 
 /**
  * Voice fingerprinting result from Rust backend

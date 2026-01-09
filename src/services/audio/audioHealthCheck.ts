@@ -20,6 +20,7 @@ import { detectEnvironment } from '@/core/tauri/environment';
 import { secureInvoke } from '@/lib/security';
 import { audioService } from '@/features/audio-center/services/audioService';
 import { hybridTTS } from '@/services/tts/hybridTTS';
+import { logger } from '@/utils/logger';
 
 // ✨ v24.2.1: Adaptive backoff configuration for health checks
 const HEALTH_CHECK_CONFIG = {

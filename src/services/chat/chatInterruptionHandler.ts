@@ -11,6 +11,8 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
+import { logger } from '@/utils/logger';
+
 /**
  * Type d'interruption conversationnelle
  */

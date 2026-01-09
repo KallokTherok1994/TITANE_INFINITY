@@ -14,6 +14,7 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { tauriClient } from '../services/tauriClient';
 import { createAdaptivePolling } from '@/utils/adaptivePolling';
+import { logger } from '@/utils/logger';
 
 export interface SystemVitals {
   cpu: number; // 0-100

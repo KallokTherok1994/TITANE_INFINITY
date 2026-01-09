@@ -15,6 +15,7 @@
  */
 
 import { expressionEngine, type UnifiedExpression } from '../expression/expressionEngine';
+import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES

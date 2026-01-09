@@ -59,7 +59,17 @@ pub struct TravelEngine {
 impl TravelEngine {
     /// Créer nouveau moteur
     pub async fn new(master_key: &MasterKey, keypair: SigningKeypair) -> Result<Self, TravelError> {
-        let base_path = Self::get_base_path();
+        Self::new_in_dir(Self::get_base_path(), master_key, keypair).await
+    }
+
+    /// Créer nouveau moteur dans un répertoire spécifique.
+    ///
+    /// Utile pour les tests afin d'éviter d'écrire dans le stockage utilisateur.
+    pub async fn new_in_dir(
+        base_path: PathBuf,
+        master_key: &MasterKey,
+        keypair: SigningKeypair,
+    ) -> Result<Self, TravelError> {
         let crypto = Arc::new(CryptoEngine::new(master_key));
 
         // Créer dossiers
@@ -344,7 +354,13 @@ mod tests {
     async fn create_test_engine() -> TravelEngine {
         let master_key = MasterKey::generate();
         let keypair = SigningKeypair::generate();
-        TravelEngine::new(&master_key, keypair)
+        let base_path = tempfile::Builder::new()
+            .prefix("titane_travel_engine_test_")
+            .tempdir()
+            .expect("tempdir should create")
+            .into_path();
+
+        TravelEngine::new_in_dir(base_path, &master_key, keypair)
             .await
             .expect("travel engine should initialize")
     }
@@ -553,7 +569,8 @@ mod tests {
     #[tokio::test]
     async fn test_compress_decompress() {
         let engine = create_test_engine().await;
-        let original = b"Test data for compression. This should be compressed and decompressed successfully.".to_vec();
+        // Use highly-compressible input; small/entropy-rich strings can become larger with gzip headers.
+        let original = vec![b'a'; 4096];
 
         let compressed = engine.compress(&original).await.unwrap();
         assert!(compressed.len() < original.len()); // Should be compressed
@@ -681,7 +698,7 @@ mod tests {
 
         // Create snapshot
         let id = engine
-            .create_snapshot(b"Cache test".to_vec(), context, "Test".to_string())
+            .create_snapshot(b"Cache test".to_vec(), context.clone(), "Test".to_string())
             .await
             .unwrap();
 

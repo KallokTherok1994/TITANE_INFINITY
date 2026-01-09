@@ -25,6 +25,7 @@ import {
   type HealingSeverity,
   type ModuleCategory,
 } from './selfHealing.config';
+import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES LOCAUX OBSERVER

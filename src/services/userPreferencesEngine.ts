@@ -13,6 +13,8 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
+import { logger } from '@/utils/logger';
+
 const STORAGE_KEY = 'titane_user_preferences';
 const MAX_TOPICS_HISTORY = 50;
 const MAX_INTERACTIONS = 100;

@@ -4,6 +4,9 @@
 
 set -euo pipefail
 
+INTERRUPTED=0
+trap 'INTERRUPTED=1' INT TERM
+
 # Navigate to project root
 cd "$(dirname "$0")/../.."
 
@@ -85,6 +88,10 @@ else
 fi
 
 # 130: SIGINT (Ctrl+C) / 143: SIGTERM — consider normal shutdown for dev runtime.
+if [ "${INTERRUPTED:-0}" -eq 1 ]; then
+    exit 0
+fi
+
 if [ "${cmd_ec:-0}" -eq 0 ] || [ "${cmd_ec:-0}" -eq 130 ] || [ "${cmd_ec:-0}" -eq 143 ]; then
     exit 0
 fi

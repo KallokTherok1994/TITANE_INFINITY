@@ -14,6 +14,7 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import { logger } from '@/utils/logger';
 import { autoHealEngine } from '@/services/ai/system';
 import { autoSaveConversationEngine } from '@/modules/talkToTitane/AutoSaveConversationEngine';
 import { talkToTitaneEngine } from '@/modules/talkToTitane/TalkToTitaneEngine';

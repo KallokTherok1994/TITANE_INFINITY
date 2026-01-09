@@ -6,6 +6,8 @@
  * Permet lazy loading du moteur aura pour réduire bundle initial
  */
 
+import { logger } from '@/utils/logger';
+
 // Type for the aura engine instance
 type AuraEngineModule = typeof import('./auraEngine');
 type AuraEngineInstance = AuraEngineModule['auraEngine'];

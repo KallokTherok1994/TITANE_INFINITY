@@ -147,7 +147,8 @@ mod tests {
 
         // Should have valid data structures
         // (Actual validation depends on submodule implementations)
-        assert!(ui_data.helios_data.samples.len() >= 0);
+        // Fresh engine has no CPU samples until periodic monitoring runs.
+        assert_eq!(ui_data.helios_data.samples.len(), 0);
     }
 
     #[test]

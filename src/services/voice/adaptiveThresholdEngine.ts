@@ -14,6 +14,7 @@
  */
 
 import { wakeWordEngine } from './wakeWordEngine';
+import { logger } from '@/utils/logger';
 
 /**
  * Métriques d'environnement audio

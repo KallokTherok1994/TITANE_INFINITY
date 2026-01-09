@@ -13,6 +13,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { tauri } from '../api/tauriClient';
+import { logger } from '../utils/logger';
 import type {
   SystemStatus,
   ModuleHealth,

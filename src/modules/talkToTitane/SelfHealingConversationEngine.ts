@@ -23,6 +23,7 @@ import { readFile, writeFile, readdir } from '../../utils/tauriFsAdapter';
 import { existsSync } from '../../utils/tauriFsAdapter';
 import { join } from '../../utils/tauriFsAdapter';
 import type { ConversationEntry } from './AutoSaveConversationEngine';
+import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES

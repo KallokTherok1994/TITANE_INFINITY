@@ -12,6 +12,7 @@
 
 import { detectEnvironment } from '@/core/tauri/environment';
 import { secureInvoke } from '@/lib/security';
+import { logger } from '@/utils/logger';
 import {
   type TTSSettings,
   type VoiceProfile,

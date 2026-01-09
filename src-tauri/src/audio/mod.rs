@@ -16,16 +16,23 @@ pub mod voice_fingerprint; // NEW v∞: Voice fingerprinting (SP-VOICE-001 Layer
 pub mod whisper_streaming; // NEW v19.3.1: Real-time Whisper streaming
 
 #[cfg(feature = "audio-capture")]
+#[allow(unused_imports)]
 pub use capture::{list_input_devices, list_output_devices, AudioCaptureState};
+#[allow(unused_imports)]
 pub use commands::*;
+#[allow(unused_imports)]
 pub use recording_engine::{
     RecordingConfig, RecordingEngine, RecordingResult, RecordingState, RECORDING_ENGINE,
 };
+#[allow(unused_imports)]
 pub use streaming_engine::{
     StreamingAudioEngine, StreamingConfig, StreamingResult, StreamingState,
 };
+#[allow(unused_imports)]
 pub use vad::{VADState, VoiceActivityDetector};
+#[allow(unused_imports)]
 pub use voice_fingerprint::{VoiceFeatures, VoiceFingerprint, VoiceProfile};
+#[allow(unused_imports)]
 pub use whisper_streaming::{
     AudioChunk, TranscriptionEvent, TranscriptionType, WhisperStreamConfig, WhisperStreamingEngine,
 };

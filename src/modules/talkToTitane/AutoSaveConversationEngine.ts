@@ -21,6 +21,7 @@
 import { writeFile, appendFile, mkdir } from '../../utils/tauriFsAdapter';
 import { existsSync } from '../../utils/tauriFsAdapter';
 import { join } from '../../utils/tauriFsAdapter';
+import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES

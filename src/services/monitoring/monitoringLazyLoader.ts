@@ -6,6 +6,8 @@
  * Impact: -81 KB gzip from initial bundle
  */
 
+import { logger } from '@/utils/logger';
+
 type MonitoringModule = typeof import('./sentry');
 
 let monitoringInstance: MonitoringModule | null = null;

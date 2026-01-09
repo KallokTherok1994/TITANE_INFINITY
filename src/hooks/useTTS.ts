@@ -12,6 +12,7 @@
 
 import { useState, useCallback } from 'react';
 import { audioService } from '@/features/audio-center/services/audioService';
+import { logger } from '@/utils/logger';
 
 interface UseTTSReturn {
   speak: (text: string) => Promise<void>;

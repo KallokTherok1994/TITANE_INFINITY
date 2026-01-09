@@ -9,6 +9,7 @@
  */
 
 import { useEffect, useState, useCallback, useRef } from 'react';
+import { logger } from '../utils/logger';
 
 /**
  * Throttle a value - updates at most once per interval

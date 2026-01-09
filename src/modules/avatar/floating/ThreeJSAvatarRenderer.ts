@@ -9,6 +9,7 @@ import type { SkeletonSnapshot } from '../fullbody/fullbody_engine';
 import { PBRMaterialSystem } from '../rendering/PBRMaterialSystem';
 import { StudioLightingRig, type AppearanceStyle } from '../rendering/StudioLightingRig';
 import { PostProcessingPipeline } from '../rendering/PostProcessingPipeline';
+import { logger } from '@/utils/logger';
 
 // Debug flag (disable in production)
 const DEBUG = import.meta.env.DEV;

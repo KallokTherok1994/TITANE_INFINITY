@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { secureInvoke } from '@/lib/security';
+import { logger } from '@/utils/logger';
 
 interface CoreHealth {
   name: string;

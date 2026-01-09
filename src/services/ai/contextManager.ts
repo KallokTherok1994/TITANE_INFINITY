@@ -139,19 +139,20 @@ export function countHistoryTokens(messages: AIMessage[]): number {
 export function getModelLimit(model: string): number {
   // Exact match
   if (model in MODEL_TOKEN_LIMITS) {
-    return MODEL_TOKEN_LIMITS[model];
+    const limit = MODEL_TOKEN_LIMITS[model];
+    return limit ?? MODEL_TOKEN_LIMITS.default;
   }
 
   // Fuzzy match (e.g., "gpt-4o-2024-05-13" → "gpt-4o")
   for (const [key, limit] of Object.entries(MODEL_TOKEN_LIMITS)) {
     if (model.startsWith(key)) {
-      return limit;
+      return limit ?? MODEL_TOKEN_LIMITS.default;
     }
   }
 
   // Default fallback
   logger.warn(`Unknown model: ${model}, using default limit of 8192 tokens`);
-  return MODEL_TOKEN_LIMITS.default;
+  return MODEL_TOKEN_LIMITS.default ?? 8192;
 }
 
 /**
@@ -175,7 +176,8 @@ function summarizeMessages(messages: AIMessage[]): AIMessage {
 
   return {
     role: 'system',
-    content: `[Summary of ${messages.length} messages]\n${contentParts.join('\n')}`
+    content: `[Summary of ${messages.length} messages]\n${contentParts.join('\n')}`,
+    timestamp: Date.now()
   };
 }
 
@@ -211,9 +213,11 @@ function truncateRecent(
   let currentTokens = systemTokens;
 
   for (let i = recentMessages.length - 1; i >= 0; i--) {
-    const msgTokens = countMessageTokens(recentMessages[i]);
+    const msg = recentMessages[i];
+    if (!msg) continue;
+    const msgTokens = countMessageTokens(msg);
     if (currentTokens + msgTokens <= targetTokens) {
-      result.splice(1, 0, recentMessages[i]); // Insert after system message
+      result.splice(1, 0, msg); // Insert after system message
       currentTokens += msgTokens;
     } else {
       break;
@@ -283,9 +287,11 @@ function truncateSliding(messages: AIMessage[], targetTokens: number): AIMessage
 
   // Add messages from most recent until limit
   for (let i = chatMessages.length - 1; i >= 0; i--) {
-    const msgTokens = countMessageTokens(chatMessages[i]);
+    const msg = chatMessages[i];
+    if (!msg) continue;
+    const msgTokens = countMessageTokens(msg);
     if (currentTokens + msgTokens <= targetTokens) {
-      result.splice(systemMessage ? 1 : 0, 0, chatMessages[i]);
+      result.splice(systemMessage ? 1 : 0, 0, msg);
       currentTokens += msgTokens;
     } else {
       break;
@@ -319,9 +325,11 @@ function truncateImportance(
 
   // Add important messages until limit (recent first)
   for (let i = importantMessages.length - 1; i >= 0; i--) {
-    const msgTokens = countMessageTokens(importantMessages[i]);
+    const msg = importantMessages[i];
+    if (!msg) continue;
+    const msgTokens = countMessageTokens(msg);
     if (currentTokens + msgTokens <= targetTokens) {
-      result.splice(systemMessage ? 1 : 0, importantMessages[i]);
+      result.splice(systemMessage ? 1 : 0, 0, msg);
       currentTokens += msgTokens;
     } else {
       break;

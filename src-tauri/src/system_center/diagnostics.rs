@@ -10,6 +10,11 @@
 use serde::{Deserialize, Serialize};
 use std::time::{SystemTime, UNIX_EPOCH};
 
+fn elapsed_ms_nonzero(start: std::time::Instant) -> u64 {
+    let ms = start.elapsed().as_millis() as u64;
+    if ms == 0 { 1 } else { ms }
+}
+
 // ══════════════════════════════════════════════════════════════════
 // TYPES
 // ══════════════════════════════════════════════════════════════════
@@ -61,7 +66,7 @@ fn test_tauri_runtime() -> DiagnosticResult {
         title: "Tauri Runtime".to_string(),
         status: DiagnosticStatus::Success,
         message: "Tauri backend actif et fonctionnel".to_string(),
-        duration_ms: Some(start.elapsed().as_millis() as u64),
+        duration_ms: Some(elapsed_ms_nonzero(start)),
         data: Some(serde_json::json!({
             "version": env!("CARGO_PKG_VERSION"),
             "tauri_version": "2.x"
@@ -82,7 +87,7 @@ fn test_memory() -> DiagnosticResult {
         title: "Mémoire Système".to_string(),
         status: DiagnosticStatus::Success,
         message: "Allocation mémoire fonctionnelle".to_string(),
-        duration_ms: Some(start.elapsed().as_millis() as u64),
+        duration_ms: Some(elapsed_ms_nonzero(start)),
         data: Some(serde_json::json!({
             "test_allocation_mb": 1
         })),
@@ -99,7 +104,7 @@ async fn test_filesystem() -> DiagnosticResult {
             title: "Système de fichiers".to_string(),
             status: DiagnosticStatus::Success,
             message: "Accès fichiers opérationnel".to_string(),
-            duration_ms: Some(start.elapsed().as_millis() as u64),
+            duration_ms: Some(elapsed_ms_nonzero(start)),
             data: Some(serde_json::json!({
                 "is_dir": metadata.is_dir(),
                 "permissions": format!("{:?}", metadata.permissions())
@@ -110,7 +115,7 @@ async fn test_filesystem() -> DiagnosticResult {
             title: "Système de fichiers".to_string(),
             status: DiagnosticStatus::Error,
             message: format!("Erreur accès fichiers: {}", e),
-            duration_ms: Some(start.elapsed().as_millis() as u64),
+            duration_ms: Some(elapsed_ms_nonzero(start)),
             data: None,
         },
     }
@@ -132,7 +137,7 @@ async fn test_async_runtime() -> DiagnosticResult {
             title: "Runtime Async".to_string(),
             status: DiagnosticStatus::Success,
             message: "Tokio runtime fonctionnel".to_string(),
-            duration_ms: Some(start.elapsed().as_millis() as u64),
+            duration_ms: Some(elapsed_ms_nonzero(start)),
             data: None,
         },
         Err(_) => DiagnosticResult {
@@ -140,7 +145,7 @@ async fn test_async_runtime() -> DiagnosticResult {
             title: "Runtime Async".to_string(),
             status: DiagnosticStatus::Warning,
             message: "Timeout runtime async".to_string(),
-            duration_ms: Some(start.elapsed().as_millis() as u64),
+            duration_ms: Some(elapsed_ms_nonzero(start)),
             data: None,
         },
     }
@@ -168,7 +173,7 @@ fn test_serialization() -> DiagnosticResult {
                 title: "Sérialisation JSON".to_string(),
                 status: DiagnosticStatus::Success,
                 message: "Serde JSON fonctionnel".to_string(),
-                duration_ms: Some(start.elapsed().as_millis() as u64),
+                duration_ms: Some(elapsed_ms_nonzero(start)),
                 data: None,
             },
             Err(e) => DiagnosticResult {
@@ -176,7 +181,7 @@ fn test_serialization() -> DiagnosticResult {
                 title: "Sérialisation JSON".to_string(),
                 status: DiagnosticStatus::Error,
                 message: format!("Erreur désérialisation: {}", e),
-                duration_ms: Some(start.elapsed().as_millis() as u64),
+                duration_ms: Some(elapsed_ms_nonzero(start)),
                 data: None,
             },
         },
@@ -185,7 +190,7 @@ fn test_serialization() -> DiagnosticResult {
             title: "Sérialisation JSON".to_string(),
             status: DiagnosticStatus::Error,
             message: format!("Erreur sérialisation: {}", e),
-            duration_ms: Some(start.elapsed().as_millis() as u64),
+            duration_ms: Some(elapsed_ms_nonzero(start)),
             data: None,
         },
     }
@@ -231,7 +236,7 @@ pub async fn sc_run_quick_diagnostics() -> Result<SystemDiagnostics, String> {
         timestamp,
         results,
         overall_status,
-        total_duration_ms: start.elapsed().as_millis() as u64,
+        total_duration_ms: elapsed_ms_nonzero(start),
     })
 }
 
@@ -264,7 +269,7 @@ pub async fn sc_run_full_diagnostics() -> Result<SystemDiagnostics, String> {
         timestamp,
         results,
         overall_status,
-        total_duration_ms: start.elapsed().as_millis() as u64,
+        total_duration_ms: elapsed_ms_nonzero(start),
     })
 }
 

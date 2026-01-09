@@ -1637,7 +1637,7 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
 
         return assistantMessage;
       } catch (error) {
-        logger.error('Engine pipeline error:', error);
+        chatLogger.error('Engine pipeline error:', error);
 
         // 🧠 NOUVEAU v22Ω: Harmoniser l'erreur avec Cognitive Kernel
         const harmonizedError = cognitiveKernel.harmonizeError(error);

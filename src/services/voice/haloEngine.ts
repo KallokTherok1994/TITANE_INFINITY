@@ -11,6 +11,8 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
+import { logger } from '@/utils/logger';
+
 export type HaloState =
   | 'idle' // Halo statique
   | 'breathing' // Breathing lent (VAD speech detection)

@@ -13,6 +13,7 @@
  */
 
 import type { TimeState, DaySegment, DayProfile } from './types';
+import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════
 // CONSTANTES — Segments par défaut (monochrome TITANE)

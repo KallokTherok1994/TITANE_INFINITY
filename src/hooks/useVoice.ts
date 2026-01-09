@@ -21,6 +21,7 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { hybridTTS, type TTSConfig, type TTSStatus } from '../services/tts/hybridTTS';
+import { logger } from '@/utils/logger';
 
 // Log deprecation warning on first import
 logger.warn('useVoice hook is deprecated. Use useVoiceEngine instead.');

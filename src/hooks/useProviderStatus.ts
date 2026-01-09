@@ -13,6 +13,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { tauriClient } from '../services/tauriClient';
 import type { ProviderStatus } from '../services/tauriClient';
+import { logger } from '../utils/logger';
 
 export interface UseProviderStatusOptions {
   autoRefresh?: boolean;

@@ -19,6 +19,7 @@ import { wakeWordEngineV2 } from './wakeWordEngineV2';
 import { voiceFingerprintEngine } from './voiceFingerprint';
 import { antiEchoShield } from './antiEchoShield';
 import { contextualAttentionV2 } from './contextualAttentionV2';
+import { logger } from '@/utils/logger';
 
 /**
  * Mode de détection du wake word

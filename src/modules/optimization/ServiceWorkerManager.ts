@@ -17,6 +17,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 // Note: Service Worker API requires non-null assertions for registration.waiting/active states
 
+import { logger } from '@/utils/logger';
+
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════

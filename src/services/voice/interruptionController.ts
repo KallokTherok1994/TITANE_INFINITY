@@ -17,6 +17,7 @@ import { hybridTTS } from '@/services/tts/hybridTTS';
 import { emotionalTTS } from './emotionalTTS';
 import { attentionEngine } from './attentionEngine';
 import { wakeWordEngine, type WakeWordEvent } from './wakeWordEngine';
+import { logger } from '@/utils/logger';
 
 /**
  * Type d'interruption

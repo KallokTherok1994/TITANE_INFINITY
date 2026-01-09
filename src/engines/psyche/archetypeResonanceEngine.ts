@@ -28,6 +28,7 @@ import {
   type PresenceMode as _PresenceMode,
   type ExpressiveIntention,
 } from '../presence/_stubs';
+import { logger } from '@/utils/logger';
 
 /*
 import {

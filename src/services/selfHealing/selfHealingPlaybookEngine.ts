@@ -27,6 +27,7 @@ import {
   type ModuleCategory,
   type PlaybookCondition,
 } from './selfHealing.config';
+import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES

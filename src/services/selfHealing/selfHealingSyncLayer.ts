@@ -20,6 +20,7 @@
 import { secureInvoke } from '@/lib/security';
 import { detectEnvironment } from '@/core/tauri/environment';
 import { emit, listen, type UnlistenFn } from '@tauri-apps/api/event';
+import { logger } from '@/utils/logger';
 import {
   type HealingEvent,
   type HealingDiagnosis,
