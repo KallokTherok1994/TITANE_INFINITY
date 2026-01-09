@@ -14,6 +14,7 @@
  */
 
 import { useEffect, useRef } from 'react';
+import { logger } from '@/utils/logger';
 
 export interface KeyboardShortcut {
   key: string;

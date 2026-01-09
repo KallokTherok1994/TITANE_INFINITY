@@ -19,6 +19,52 @@ import type { RollupLog } from 'rollup';
 
 const ROOT_DIR = fileURLToPath(new URL('.', import.meta.url));
 
+function getNodeModulesPackageName(id: string): string | null {
+  const marker = '/node_modules/';
+  const index = id.lastIndexOf(marker);
+  if (index === -1) return null;
+
+  const rest = id.slice(index + marker.length);
+  if (!rest) return null;
+
+  if (rest.startsWith('@')) {
+    const scope = rest.split('/')[0];
+    const name = rest.split('/')[1];
+    if (!scope || !name) return null;
+    return `${scope}/${name}`;
+  }
+
+  return rest.split('/')[0] ?? null;
+}
+
+function isChartsVendor(pkg: string): boolean {
+  if (pkg === 'recharts') return true;
+  if (pkg === 'chart.js') return true;
+  if (pkg === 'react-chartjs-2') return true;
+  if (pkg.startsWith('chartjs-')) return true;
+  if (pkg === 'echarts') return true;
+  if (pkg === 'd3' || pkg.startsWith('d3-')) return true;
+  if (pkg === '@visx/visx' || pkg.startsWith('@visx/')) return true;
+  if (pkg.startsWith('victory')) return true;
+  if (pkg === 'apexcharts' || pkg === 'react-apexcharts') return true;
+  if (pkg.startsWith('plotly.js')) return true;
+  return false;
+}
+
+function isReactCoreVendor(pkg: string): boolean {
+  // Keep React + immediate dependencies together to avoid circular chunks.
+  if (pkg === 'react') return true;
+  if (pkg === 'react-dom') return true;
+  if (pkg === 'scheduler') return true;
+  if (pkg === 'react-is') return true;
+  if (pkg === 'use-sync-external-store') return true;
+  if (pkg === 'react-router') return true;
+  if (pkg === 'react-router-dom') return true;
+  if (pkg === '@remix-run/router') return true;
+  if (pkg === 'history') return true;
+  return false;
+}
+
 // P2-B: Workbox Service Worker plugin
 function workboxPlugin(): Plugin {
   let resolvedConfig: ResolvedConfig | undefined;
@@ -76,6 +122,10 @@ export default defineConfig({
     host: '0.0.0.0',
     strictPort: false,
     cors: true,
+    watch: {
+      // Ignore runtime-generated artifacts that would otherwise trigger full reload loops.
+      ignored: ['**/src-tauri/memory/**', '**/runtime/**/logs/**'],
+    },
     headers: {
       // Vite gère automatiquement Content-Type selon l'extension (.tsx → application/javascript)
       'X-Content-Type-Options': 'nosniff',
@@ -218,64 +268,70 @@ export default defineConfig({
         manualChunks: id => {
           // Vendors
           if (id.includes('node_modules')) {
-            if (
-              id.includes('react') ||
-              id.includes('react-dom') ||
-              id.includes('react-router')
-            ) {
+            const pkg = getNodeModulesPackageName(id);
+
+            // Priorité haute: charts (évite les collisions avec 'react' dans 'recharts')
+            if (pkg && isChartsVendor(pkg)) {
+              return 'charts';
+            }
+
+            // React core + dépendances immédiates groupées (évite vendor-utils <-> react-vendor)
+            if (pkg && isReactCoreVendor(pkg)) {
               return 'react-vendor';
             }
-            if (id.includes('@tauri-apps')) {
+
+            // Tauri
+            if (pkg?.startsWith('@tauri-apps/')) {
               return 'tauri-vendor';
             }
-            // 🚀 Split: ONNX Runtime (very large)
-            if (id.includes('onnxruntime-web')) {
-              return 'onnxruntime';
+
+            // ⚠️ IMPORTANT: Keep onnxruntime-web in the main vendor chunk.
+            // Isolating it can create circular chunk dependencies:
+            // onnxruntime -> vendor-utils -> onnxruntime
+            if (pkg === 'onnxruntime-web') {
+              return 'vendor-utils';
             }
+
             // 🚀 Split: Three.js (large)
-            if (id.includes('/three/') || id.includes('three')) {
+            if (pkg === 'three') {
               return 'three-vendor';
             }
+
             // 🚀 Split: TanStack Query (moderately large)
-            if (id.includes('@tanstack/react-query')) {
+            if (pkg === '@tanstack/react-query') {
               return 'react-query';
             }
-            if (id.includes('framer-motion')) {
+
+            if (pkg === 'framer-motion') {
               return 'motion';
             }
-            if (id.includes('i18n')) {
+            if (pkg === 'i18next' || pkg === 'react-i18next') {
               return 'i18n';
             }
-            if (id.includes('zod')) {
+            if (pkg === 'zod') {
               return 'validation';
             }
-            if (id.includes('zustand')) {
+            if (pkg === 'zustand') {
               return 'state';
             }
-            if (id.includes('recharts')) {
-              return 'charts';
-            }
+
             // Optional / heavy UI libs
-            if (id.includes('react-chrono')) {
+            if (pkg === 'react-chrono') {
               return 'chrono';
             }
-            if (id.includes('react-d3-tree')) {
+            if (pkg === 'react-d3-tree') {
               return 'd3-tree';
             }
-            if (id.includes('markdown') || id.includes('remark')) {
-              return 'markdown';
-            }
-            if (id.includes('@xenova/transformers')) {
+            if (pkg === '@xenova/transformers') {
               return 'ai-transformers';
             }
-            // Web vitals
-            if (id.includes('web-vitals')) {
+            if (pkg === 'web-vitals') {
               return 'web-vitals';
             }
-            // Chart.js séparé (gros et optionnel)
-            if (id.includes('chart.js') || id.includes('chartjs')) {
-              return 'charts';
+            if (pkg && (pkg.startsWith('remark') || pkg.startsWith('rehype') || pkg === 'markdown-it')) {
+              return 'markdown';
             }
+
             // Autres vendors groupés
             return 'vendor-utils';
           }
@@ -316,15 +372,21 @@ export default defineConfig({
             // Services (engines)
             // ✨ P3: Split services more granularly
             if (id.includes('/services/')) {
-              if (id.includes('cognitive')) return 'service-cognitive';
-              if (id.includes('audio') || id.includes('voice')) return 'service-audio';
-              if (id.includes('memory')) return 'service-memory';
+              // ⚠️ IMPORTANT: These services are mutually dependent in practice.
+              // Forcing them into distinct chunks can create circular chunk dependencies:
+              // service-memory -> service-ai -> service-memory
+              // service-ai -> service-cognitive -> service-ai
+              // service-ai -> services-common -> service-ai
+              // services-common -> service-audio -> services-common
+              // service-ai -> services-common -> service-audio -> service-ai
               if (id.includes('fusion')) return 'service-fusion';
               if (id.includes('performanceEngine')) return 'service-performance';
               if (id.includes('orchestration')) return 'service-orchestration';
-              if (id.includes('ai/')) return 'service-ai';
               if (id.includes('analytics')) return 'service-analytics';
-              return 'services-common';
+
+              // Default: keep core/interdependent services together.
+              // Includes: ai/, memory, cognitive, audio/voice and services-common.
+              return 'services-core';
             }
 
             // Components UI - Split by domain for better code splitting

@@ -23,6 +23,7 @@ import {
   type CommandExecutionResult,
 } from '@/engines/time';
 import { agendaService } from '@/services/agendaService';
+import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════
 // HOOK RETURN TYPE

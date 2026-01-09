@@ -5,6 +5,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import { logger } from '@/utils/logger';
 import { numericTwinService } from '../services/api/numericTwin';
 import type {
   TwinEvolutionProfile,

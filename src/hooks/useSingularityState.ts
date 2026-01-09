@@ -5,6 +5,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { secureInvoke } from '@/lib/security';
+import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════
 //   TYPES — Mirror Rust backend types
