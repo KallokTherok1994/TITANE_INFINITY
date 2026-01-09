@@ -15,6 +15,7 @@ import type {
   SymbolicLayer,
 } from '@/types/singularityState';
 import type { TauriCore, TauriCommandArgs, TauriCacheEntry } from '@/types/tauri';
+import { logger } from '@/utils/logger';
 
 type TauriCoreBridge = {
   core?: TauriCore;

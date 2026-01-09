@@ -28,6 +28,7 @@ import {
   type PatternRecord,
 } from './selfHealing.config';
 import { type ObservedError, type AnomalyType } from './selfHealingObserver';
+import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES

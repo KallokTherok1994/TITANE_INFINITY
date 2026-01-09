@@ -33,6 +33,7 @@ import type {
   FlowMaintenanceResult,
   FlowExitResult,
 } from '@/types/flow';
+import { logger } from '@/utils/logger';
 
 import {
   getDefaultFlowState,

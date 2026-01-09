@@ -8,6 +8,7 @@
 import { secureInvoke } from '@/lib/security';
 import { detectEnvironment } from '@/core/tauri/environment';
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
+import { logger } from '@/utils/logger';
 import type { SingularityState } from '../types/singularityState';
 
 // ─────────────────────────────────────────────────────────────────

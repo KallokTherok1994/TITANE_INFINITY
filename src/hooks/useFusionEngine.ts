@@ -14,6 +14,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import { logger } from '@/utils/logger';
 import { fusionEngine } from '@/modules/fusion/FusionEngine';
 import { datasetBuilder } from '@/modules/fusion/DatasetBuilder';
 import type {

@@ -12,6 +12,7 @@
  */
 
 import { getAIConfig } from '../config/offline-first';
+import { logger } from '@/utils/logger';
 
 /**
  * Échapper les caractères HTML pour prévenir XSS

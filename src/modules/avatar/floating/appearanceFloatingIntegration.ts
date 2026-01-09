@@ -8,6 +8,7 @@ import type { AvatarAppearanceState } from '../appearance/appearanceState';
 import { DEFAULT_APPEARANCE_STATE } from '../appearance/appearanceState';
 import type { ThreeJSAvatarRenderer } from './ThreeJSAvatarRenderer';
 import { secureInvoke } from '@/lib/security';
+import { logger } from '@/utils/logger';
 import { loadThreeJS } from '../core/ThreeJSLazyLoader';
 
 // Debug flag (disable in production)

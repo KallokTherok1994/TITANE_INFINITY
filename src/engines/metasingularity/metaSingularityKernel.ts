@@ -23,6 +23,7 @@
 
 // Types importés pour référence de documentation (utilisés dans design, pas runtime)
 import type { AutopoiesisState as _AutopoiesisState } from '../autopoiesis/autopoiesisEngine';
+import { logger } from '@/utils/logger';
 import type { IdentityExpressionPackage as _IdentityExpressionPackage } from '../identity/unifiedIdentityKernel';
 import type { UnifiedExpression as _UnifiedExpression } from '../expression/expressionEngine';
 import type { HoloPresenceState as _HoloPresenceState } from '../holopresence/holoPresenceEngine';

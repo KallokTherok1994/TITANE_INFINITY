@@ -14,6 +14,7 @@
  */
 
 import { safeInvoke } from '../utils/invoke';
+import { logger } from '../utils/logger';
 import type {
   ExperienceState,
   ExperienceDomain,

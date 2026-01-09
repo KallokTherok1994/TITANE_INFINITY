@@ -19,6 +19,7 @@ import type {
   EventCategory,
   PriorityLevel,
 } from './types';
+import { logger } from '@/utils/logger';
 import { agendaEngine } from './AgendaEngine';
 // ARCHITECTURE RINGS COMPLIANT: Engines (Ring 2) don't import from Services (Ring 3)
 // ChatScheduler uses agendaEngine API which handles I/O via injected callbacks

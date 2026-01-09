@@ -17,6 +17,7 @@
  */
 
 import { type AttentionState as _AttentionState } from './attentionTypes';
+import { logger } from '@/utils/logger';
 
 /**
  * Contexte environnemental

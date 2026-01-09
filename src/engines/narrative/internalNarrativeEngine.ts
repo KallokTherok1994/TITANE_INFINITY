@@ -22,6 +22,8 @@
 // TYPES & INTERFACES
 // ═══════════════════════════════════════════════════════════════════════════
 
+import { logger } from '@/utils/logger';
+
 /**
  * Direction intentionnelle du monologue
  */

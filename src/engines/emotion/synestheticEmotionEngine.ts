@@ -24,6 +24,7 @@
  */
 
 import type { ArchetypeType } from '../psyche/archetypeResonanceEngine';
+import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES

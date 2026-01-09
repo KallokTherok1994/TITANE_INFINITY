@@ -11,6 +11,7 @@ import ThreeJSAvatarRenderer from './ThreeJSAvatarRenderer';
 import { useFullBodyAvatar } from '../fullbody/useFullBodyAvatar';
 import type { SkeletonSnapshot } from '../fullbody/fullbody_engine';
 import { AppearanceFloatingIntegration } from './appearanceFloatingIntegration';
+import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES

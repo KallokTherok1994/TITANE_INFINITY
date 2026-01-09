@@ -7,6 +7,7 @@
 
 import { useEffect, useRef } from 'react';
 import { useAura } from './useAuraOrchestrator';
+import { logger } from '@/utils/logger';
 
 /**
  * Hook qui monitore les performances et met à jour l'orchestrateur Aura

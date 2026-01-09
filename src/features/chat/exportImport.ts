@@ -7,6 +7,8 @@
  * Chat Export/Import - Export et import de conversations
  */
 
+import { logger } from '@/utils/logger';
+
 interface ChatMessage {
   id: string;
   role: 'user' | 'assistant';

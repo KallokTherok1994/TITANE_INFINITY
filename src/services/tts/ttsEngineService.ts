@@ -12,6 +12,7 @@
 
 import { secureInvoke } from '@/lib/security';
 import { detectEnvironment } from '@/core/tauri/environment';
+import { logger } from '@/utils/logger';
 import {
   TTSEmotion,
   TTSRequest,

@@ -20,6 +20,7 @@
 
 import { secureInvoke } from '@/lib/security';
 import { TAURI_COMMANDS } from '@/core/commands/TAURI_COMMANDS';
+import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES TYPESCRIPT — SYNCHRONISÉS AVEC RUST

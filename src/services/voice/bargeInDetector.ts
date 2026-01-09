@@ -12,6 +12,7 @@
  */
 
 import { antiEchoShield } from './antiEchoShield';
+import { logger } from '@/utils/logger';
 
 /**
  * Types d'événements d'interruption

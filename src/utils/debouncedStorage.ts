@@ -4,6 +4,8 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team
  */
 
+import { logger } from '@/utils/logger';
+
 type PendingWrite = {
   key: string;
   value: string;

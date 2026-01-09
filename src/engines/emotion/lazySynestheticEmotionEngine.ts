@@ -6,6 +6,8 @@
  * Permet lazy loading du moteur émotionnel pour réduire bundle initial
  */
 
+import { logger } from '@/utils/logger';
+
 // Type for the engine instance
 type EngineModule = typeof import('./synestheticEmotionEngine');
 type EngineInstance = EngineModule['synestheticEmotionEngine'];

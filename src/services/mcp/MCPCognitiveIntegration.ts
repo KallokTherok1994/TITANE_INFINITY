@@ -19,6 +19,7 @@ import { chatEngine } from '@/services/ai/chatEngine';
 import type { Job as _Job } from './mcp.types';
 import { JobType, MemoryTier } from './mcp.types';
 import type { AIMessage } from '@/services/ai/types';
+import { logger } from '@/utils/logger';
 
 // Stub Message interface
 interface Message {

@@ -27,6 +27,7 @@ import {
   archetypeResonanceEngine,
   type ArchetypeType,
 } from '../psyche/archetypeResonanceEngine';
+import { logger } from '@/utils/logger';
 // REMOVED: engines/presence supprimé en PHASE 1 (OPTION B) - utilise stub temporaire
 import { multimodalPresenceEngine } from '../presence/_stubs';
 

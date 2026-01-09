@@ -23,6 +23,7 @@ import type {
   AttentionCallback,
 } from './attentionTypes';
 import { contextualAttentionV2 } from './contextualAttentionV2';
+import { logger } from '@/utils/logger';
 
 // Re-export types for external consumers
 export type {

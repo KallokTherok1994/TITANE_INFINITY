@@ -8,6 +8,7 @@
 
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { safeInvoke } from '@/utils/invoke';
+import { logger } from '@/utils/logger';
 import type {
   SpeechRecognition,
   SpeechRecognitionEvent,

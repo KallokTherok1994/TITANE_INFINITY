@@ -14,6 +14,8 @@
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
 
+import { logger } from '@/utils/logger';
+
 export type InteroceptionState = {
   // Énergie interne (0 = épuisé, 1 = charge max)
   energy: number;

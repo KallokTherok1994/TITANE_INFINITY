@@ -8,6 +8,7 @@ use std::path::Path;
 use std::process::Command;
 
 /// Garde centralisé pour l'exécution de commandes shell
+#[derive(Clone)]
 pub struct ShellGuard {
     policy: SecurityPolicy,
 }

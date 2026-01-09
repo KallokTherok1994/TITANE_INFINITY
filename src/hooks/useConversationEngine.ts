@@ -125,7 +125,7 @@ export function useConversationEngine(
             logger.warn('État critique détecté, auto-réparation en cours...');
           }
         } catch (err) {
-          logger.error('Health check failed:', err);
+          logger.error('Health check failed:', { module: 'useConversationEngine' }, err instanceof Error ? err : new Error(String(err)));
         }
       }, 30000);
     }
@@ -143,7 +143,7 @@ export function useConversationEngine(
       const report = await healthCheck();
       setHealthReport(report);
     } catch (err) {
-      logger.error('Health check error:', err);
+      logger.error('Health check error:', { module: 'useConversationEngine' }, err instanceof Error ? err : new Error(String(err)));
     }
   }, []);
 
@@ -238,7 +238,7 @@ export function useConversationEngine(
         setError(errorMessage);
         options.onError?.(err as Error);
 
-        logger.error('Erreur finale:', err);
+        logger.error('Erreur finale:', { module: 'useConversationEngine' }, err instanceof Error ? err : new Error(String(err)));
         return null;
       } finally {
         setIsLoading(false);
@@ -264,7 +264,7 @@ export function useConversationEngine(
   // ═══ SET MODE ═══
   const setModeCallback = useCallback((mode: ConversationMode) => {
     setCurrentMode(mode);
-    logger.debug('Mode changé:', mode);
+    logger.debug('Mode changé: ' + mode, { module: 'useConversationEngine' });
   }, []);
 
   // ═══ RETOUR ═══

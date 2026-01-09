@@ -14,6 +14,7 @@ import { useVitals } from './useVitals';
 import { useEngineVitals } from './useEngineVitals';
 import type { SystemVitals } from './useVitals';
 import type { EngineVitals } from './useEngineVitals';
+import { logger } from '../utils/logger';
 
 export interface UseSystemMonitorOptions {
   vitalsInterval?: number;

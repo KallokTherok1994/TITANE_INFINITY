@@ -110,7 +110,7 @@ mod tests {
         let cortex = state.cortex.read().await;
         let result = cortex.get_state().await;
         // State should have valid fields
-        assert!(result.total_interactions >= 0);
+        assert_eq!(result.total_interactions, 0);
         assert!(result.coherence_level >= 0.0);
     }
 
@@ -120,7 +120,7 @@ mod tests {
         let cortex = state.cortex.read().await;
         let stats = cortex.get_stats().await;
         // Stats should be initialized
-        assert!(stats.total_interactions >= 0);
+        assert_eq!(stats.total_interactions, 0);
     }
 
     #[tokio::test]

@@ -9,6 +9,7 @@
  */
 
 import { queryOllama } from '@/utils/ollama';
+import { logger } from '@/utils/logger';
 import { safeInvoke } from '@/utils/invoke';
 import { singularityEngine } from '@/core/engines/SINGULARITY_ENGINE';
 

@@ -18,6 +18,7 @@ import { XPProgressBar } from '@features/progression';
 import { KnowledgeDomains } from '../components/progression/KnowledgeDomains';
 import { useExperience } from '../hooks/useExperience';
 import { colors, spacing, fontSizes, fontWeights } from '@themes/tokens';
+import { logger } from '@/utils/logger';
 
 export const ProgressionPage = (): JSX.Element => {
   const { totalXp, level, xpForNextLevel, domains, isLoading } = useExperience();

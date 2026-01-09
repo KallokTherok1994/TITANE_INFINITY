@@ -3,6 +3,8 @@
 # Handles Vitest heap overflow crashes that occur AFTER all tests pass
 # This is a known issue with Vitest v4.x and large test suites (2300+ tests)
 
+set -o pipefail
+
 # Colors
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -20,48 +22,97 @@ trap "rm -f $TEMP_OUTPUT" EXIT
 
 # Run tests using npx to ensure cross-env is available
 # This fixes "cross-env: command not found" error
-npx cross-env NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run 2>&1 | tee "$TEMP_OUTPUT"
+VITEST_ARGS=("$@")
+if [[ "${VITEST_ARGS[0]:-}" == "--" ]]; then
+    VITEST_ARGS=("${VITEST_ARGS[@]:1}")
+fi
+
+# Some tasks call: `pnpm test -- --run`.
+# But we already invoke `vitest run`, so the extra `--run` flag can be treated as invalid
+# by newer Vitest versions and cause a non-zero exit code despite successful execution.
+FILTERED_ARGS=()
+for arg in "${VITEST_ARGS[@]}"; do
+    if [[ "$arg" == "--run" ]]; then
+        continue
+    fi
+    FILTERED_ARGS+=("$arg")
+done
+VITEST_ARGS=("${FILTERED_ARGS[@]}")
+
+npx cross-env NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run "${VITEST_ARGS[@]}" 2>&1 | tee "$TEMP_OUTPUT"
+VITEST_EXIT=${PIPESTATUS[0]}
 
 echo ""
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo -e "${CYAN}📊 Test Results Analysis${NC}"
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 
-# Strip ANSI codes for reliable pattern matching
-CLEAN_OUTPUT=$(cat "$TEMP_OUTPUT" | sed 's/\x1b\[[0-9;]*m//g')
+# Strip ANSI codes for reliable pattern matching (and remove CR from TTY-style output)
+CLEAN_OUTPUT=$(cat "$TEMP_OUTPUT" | sed 's/\x1b\[[0-9;]*m//g' | tr -d '\r')
 
 # Count green checkmarks (✓) - these are the passing tests
 # Each passing test in Vitest output shows a ✓
-PASSING_TESTS=$(echo "$CLEAN_OUTPUT" | grep -c "✓" || echo "0")
+# NOTE: With Vitest v4.x, some reporters no longer print per-test "✓" markers.
+# Also: `grep -c` prints "0" even when exit status is 1 (no matches), so do NOT add a fallback echo.
+PASSING_TESTS=$(echo "$CLEAN_OUTPUT" | grep -c "✓" || true)
 
-# Check for actual test failures in Vitest summary line ONLY
-# Format: "Test Files  X failed" or "Tests  X failed" (with leading spaces)
-# We look specifically for Vitest summary format, not random log lines
-FAILED_FILES=$(echo "$CLEAN_OUTPUT" | grep -E "^\s*Test Files\s+[0-9]+ failed" | wc -l || echo "0")
-FAILED_TESTS=$(echo "$CLEAN_OUTPUT" | grep -E "^\s*Tests\s+[0-9]+ failed" | wc -l || echo "0")
+# Ensure numeric-only values (avoid stray newlines breaking bash arithmetic/comparisons)
+PASSING_TESTS=$(echo "$PASSING_TESTS" | tr -dc '0-9')
+PASSING_TESTS=${PASSING_TESTS:-0}
 
-# Check for Vitest test failure lines: " × test name" or " ✗ test name" (with leading spaces followed by test description)
-# These are actual test failures, not log messages like "[Security] ✗"
-FAILED_MARKERS=$(echo "$CLEAN_OUTPUT" | grep -E "^\s+[×✗]\s+should" | wc -l || echo "0")
+# Prefer Vitest summary counts when present (more robust than per-test markers)
+PASSED_FILES_SUMMARY=$(echo "$CLEAN_OUTPUT" | grep -E "^\s*Test Files\s+[0-9]+ passed" | head -1 || true)
+PASSED_TESTS_SUMMARY=$(echo "$CLEAN_OUTPUT" | grep -E "^\s*Tests\s+[0-9]+ passed" | head -1 || true)
 
-# Check for test file lines with failures: "❯  core  file.ts (X tests | Y failed)"
-FAILED_FILE_LINES=$(echo "$CLEAN_OUTPUT" | grep -E "core.*\([0-9]+ tests? \| [0-9]+ failed\)" | wc -l || echo "0")
+PASSED_FILES_COUNT=$(echo "$PASSED_FILES_SUMMARY" | grep -oE "[0-9]+" | head -1 || true)
+PASSED_TESTS_COUNT=$(echo "$PASSED_TESTS_SUMMARY" | grep -oE "[0-9]+" | head -1 || true)
 
-FAILED_TEST_LINES=$((FAILED_FILES + FAILED_TESTS + FAILED_MARKERS + FAILED_FILE_LINES))
+PASSED_FILES_COUNT=${PASSED_FILES_COUNT:-0}
+PASSED_TESTS_COUNT=${PASSED_TESTS_COUNT:-0}
+
+PASSED_FILES_COUNT=$(echo "$PASSED_FILES_COUNT" | tr -dc '0-9')
+PASSED_TESTS_COUNT=$(echo "$PASSED_TESTS_COUNT" | tr -dc '0-9')
+PASSED_FILES_COUNT=${PASSED_FILES_COUNT:-0}
+PASSED_TESTS_COUNT=${PASSED_TESTS_COUNT:-0}
+
+# Check for actual test failures via Vitest SUMMARY counts (robust, avoids false positives)
+FAILED_FILES_SUMMARY=$(echo "$CLEAN_OUTPUT" | grep -E "^\s*Test Files\s+[0-9]+ failed" | head -1 || true)
+FAILED_TESTS_SUMMARY=$(echo "$CLEAN_OUTPUT" | grep -E "^\s*Tests\s+[0-9]+ failed" | head -1 || true)
+
+FAILED_FILES_COUNT=$(echo "$FAILED_FILES_SUMMARY" | grep -oE "[0-9]+" | head -1 || true)
+FAILED_TESTS_COUNT=$(echo "$FAILED_TESTS_SUMMARY" | grep -oE "[0-9]+" | head -1 || true)
+
+FAILED_FILES_COUNT=${FAILED_FILES_COUNT:-0}
+FAILED_TESTS_COUNT=${FAILED_TESTS_COUNT:-0}
+
+FAILED_FILES_COUNT=$(echo "$FAILED_FILES_COUNT" | tr -dc '0-9')
+FAILED_TESTS_COUNT=$(echo "$FAILED_TESTS_COUNT" | tr -dc '0-9')
+FAILED_FILES_COUNT=${FAILED_FILES_COUNT:-0}
+FAILED_TESTS_COUNT=${FAILED_TESTS_COUNT:-0}
+
+FAILED_TEST_LINES=$((FAILED_FILES_COUNT + FAILED_TESTS_COUNT))
 
 # Check for heap overflow - use tr to ensure clean number
-HAS_HEAP_OVERFLOW=$(echo "$CLEAN_OUTPUT" | grep -c "heap out of memory" | tr -d '\n' || echo "0")
+HAS_HEAP_OVERFLOW=$(echo "$CLEAN_OUTPUT" | grep -ci "heap out of memory" || true)
+HAS_HEAP_OVERFLOW=$(echo "$HAS_HEAP_OVERFLOW" | tr -dc '0-9')
+HAS_HEAP_OVERFLOW=${HAS_HEAP_OVERFLOW:-0}
+
+VITEST_EXIT=$(echo "$VITEST_EXIT" | tr -dc '0-9')
+VITEST_EXIT=${VITEST_EXIT:-1}
 
 echo "Passing test markers (✓): $PASSING_TESTS"
-echo "Failed summary: files=$FAILED_FILES tests=$FAILED_TESTS markers=$FAILED_MARKERS file_lines=$FAILED_FILE_LINES"
+echo "Passed summary: files=$PASSED_FILES_COUNT tests=$PASSED_TESTS_COUNT"
+echo "Failed summary: files=$FAILED_FILES_COUNT tests=$FAILED_TESTS_COUNT"
 echo "Total failures detected: $FAILED_TEST_LINES"
 echo "Heap overflow: $HAS_HEAP_OVERFLOW"
+echo "Vitest exit code: $VITEST_EXIT"
 echo ""
 
 # Success if:
-# - We have 100+ passing tests (our suite has 2300+)
-# - AND no actual test failures
-if [[ $PASSING_TESTS -gt 100 ]] && [[ $FAILED_TEST_LINES -eq 0 ]]; then
+# - Vitest exited 0 AND summary has 0 failed
+# OR
+# - Heap overflow detected AFTER tests finished, summary has 0 failed, and we have a passed summary.
+if [[ $FAILED_TEST_LINES -eq 0 ]] && ( [[ $VITEST_EXIT -eq 0 ]] || ( [[ $HAS_HEAP_OVERFLOW -gt 0 ]] && [[ $PASSED_TESTS_COUNT -gt 0 ]] ) ); then
     echo -e "${GREEN}✅ All tests passed! ($PASSING_TESTS individual tests)${NC}"
 
     # Show summary if available

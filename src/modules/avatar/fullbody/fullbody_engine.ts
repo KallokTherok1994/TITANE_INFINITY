@@ -3,6 +3,7 @@
 // Module: TypeScript Bridge for FullBodyAvatarEngine
 
 import { secureInvoke } from '@/lib/security';
+import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES

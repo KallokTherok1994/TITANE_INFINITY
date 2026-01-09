@@ -17,6 +17,7 @@ import type {
   QuantumOperation,
   QuantumSignal,
 } from '../types';
+import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // QUANTUM STRATEGY

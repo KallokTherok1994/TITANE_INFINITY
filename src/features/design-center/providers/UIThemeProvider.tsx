@@ -170,7 +170,7 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
 
       dispatch({ type: 'SET_DIRTY', isDirty: false });
     } catch (err) {
-      logger.error('Erreur chargement tokens:', err);
+      logger.error('Erreur chargement tokens:', { module: 'UIThemeProvider' }, err instanceof Error ? err : new Error(String(err)));
       dispatch({ type: 'SET_ERROR', error: String(err) });
       // Utiliser les valeurs par défaut
       dispatch({ type: 'SET_TOKENS', tokens: DEFAULT_UI_THEME_TOKENS });
@@ -360,7 +360,7 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
       dispatch({ type: 'SET_PREVIOUS', previousTokens: null });
       logger.debug('Tokens réinitialisés');
     } catch (err) {
-      logger.error('Erreur reset:', err);
+      logger.error('Erreur reset:', { module: 'UIThemeProvider' }, err instanceof Error ? err : new Error(String(err)));
       dispatch({ type: 'SET_ERROR', error: String(err) });
       // En cas d'erreur, utiliser les valeurs par défaut
       dispatch({ type: 'SET_TOKENS', tokens: DEFAULT_UI_THEME_TOKENS });

@@ -10,9 +10,11 @@
 // SECURITY MODE - PERMISSIF (No blocking, only logging)
 // ═══════════════════════════════════════════════════════════════
 
+type SecurityModeType = 'strict' | 'permissive' | 'disabled';
+
 export const SECURITY_MODE = {
   /** Mode global: 'strict' | 'permissive' | 'disabled' */
-  mode: 'permissive' as const,
+  mode: 'permissive' as SecurityModeType,
 
   /** Désactive les blocages de sécurité (log only) */
   disableBlocking: true,

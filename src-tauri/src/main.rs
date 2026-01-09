@@ -105,14 +105,7 @@ mod devops_commands {
 }
 
 // Audio commands v19.2
-mod audio {
-    pub mod recording_engine {
-        include!("audio/recording_engine.rs");
-    }
-    pub mod commands {
-        include!("audio/commands.rs");
-    }
-}
+mod audio;
 
 // Secure Commands v∞ (Super-Prompts H, I, J, K) - API Key Management
 mod secure_commands {

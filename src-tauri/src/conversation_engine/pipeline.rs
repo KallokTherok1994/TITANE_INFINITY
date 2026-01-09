@@ -220,7 +220,7 @@ impl ConversationPipeline {
         };
 
         // Appliquer résultat Singularity ou fallback sur réponse originale
-        let (final_message, final_tags, singularity_latency) = match singularity_result {
+        let (final_message, final_tags, _singularity_latency) = match singularity_result {
             Ok(meta_output) => {
                 log::info!(
                     "[Ω:SINGULARITY] ✅ Meta-processing success | coherence={:.2} | corrections={}",
@@ -461,4 +461,448 @@ pub struct CognitiveSummary {
     pub memory_layers: MemoryLayers,
     pub links: Vec<String>,
     pub coherence_score: f32,
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TESTS
+// ═══════════════════════════════════════════════════════════════
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_cognitive_summary_creation() {
+        let summary = CognitiveSummary {
+            summary: "Test summary".to_string(),
+            tags: vec!["tag1".to_string(), "tag2".to_string()],
+            memory_effect: MemoryEffect::New,
+            memory_layers: MemoryLayers::default(),
+            links: vec!["link1".to_string()],
+            coherence_score: 0.85,
+        };
+
+        assert_eq!(summary.summary, "Test summary");
+        assert_eq!(summary.tags.len(), 2);
+        assert_eq!(summary.coherence_score, 0.85);
+    }
+
+    #[test]
+    fn test_cognitive_summary_clone() {
+        let original = CognitiveSummary {
+            summary: "Original".to_string(),
+            tags: vec!["test".to_string()],
+            memory_effect: MemoryEffect::New,
+            memory_layers: MemoryLayers::default(),
+            links: vec![],
+            coherence_score: 0.9,
+        };
+
+        let cloned = original.clone();
+        assert_eq!(cloned.summary, original.summary);
+        assert_eq!(cloned.coherence_score, original.coherence_score);
+    }
+
+    #[test]
+    fn test_cognitive_summary_debug() {
+        let summary = CognitiveSummary {
+            summary: "Debug test".to_string(),
+            tags: vec![],
+            memory_effect: MemoryEffect::New,
+            memory_layers: MemoryLayers::default(),
+            links: vec![],
+            coherence_score: 0.75,
+        };
+
+        let debug_str = format!("{:?}", summary);
+        assert!(debug_str.contains("CognitiveSummary"));
+        assert!(debug_str.contains("Debug test"));
+    }
+
+    #[test]
+    fn test_preprocess_valid_message() {
+        // Create minimal mock dependencies (we're only testing preprocess which doesn't use them)
+        let memory = Arc::new(ConversationMemoryEngine::new(
+            Arc::new(crate::memory::storage::MemoryStorage::new(
+                std::env::temp_dir().join("test_pipeline_preprocess"),
+                "test".to_string()
+            ).unwrap())
+        ));
+        let ai_router = Arc::new(RwLock::new(AIRouter::new(None, None)));
+        let self_healing = Arc::new(RwLock::new(SelfHealingConversation::new()));
+        let singularity = Arc::new(RwLock::new(crate::singularity::singularity_state::SingularityState::new()));
+        let french_mastery = Arc::new(FrenchMasteryProcessor::new());
+
+        let pipeline = ConversationPipeline::new(
+            memory,
+            ai_router,
+            self_healing,
+            singularity,
+            french_mastery,
+        );
+
+        let result = pipeline.preprocess("  Hello, this is a test  ");
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap(), "Hello, this is a test");
+    }
+
+    #[test]
+    fn test_preprocess_empty_message() {
+        let memory = Arc::new(ConversationMemoryEngine::new(
+            Arc::new(crate::memory::storage::MemoryStorage::new(
+                std::env::temp_dir().join("test_pipeline_empty"),
+                "test".to_string()
+            ).unwrap())
+        ));
+        let ai_router = Arc::new(RwLock::new(AIRouter::new(None, None)));
+        let self_healing = Arc::new(RwLock::new(SelfHealingConversation::new()));
+        let singularity = Arc::new(RwLock::new(crate::singularity::singularity_state::SingularityState::new()));
+        let french_mastery = Arc::new(FrenchMasteryProcessor::new());
+
+        let pipeline = ConversationPipeline::new(
+            memory,
+            ai_router,
+            self_healing,
+            singularity,
+            french_mastery,
+        );
+
+        let result = pipeline.preprocess("   ");
+        assert!(result.is_err());
+        assert!(result.unwrap_err().to_string().contains("Message vide"));
+    }
+
+    #[test]
+    fn test_preprocess_message_too_long() {
+        let memory = Arc::new(ConversationMemoryEngine::new(
+            Arc::new(crate::memory::storage::MemoryStorage::new(
+                std::env::temp_dir().join("test_pipeline_long"),
+                "test".to_string()
+            ).unwrap())
+        ));
+        let ai_router = Arc::new(RwLock::new(AIRouter::new(None, None)));
+        let self_healing = Arc::new(RwLock::new(SelfHealingConversation::new()));
+        let singularity = Arc::new(RwLock::new(crate::singularity::singularity_state::SingularityState::new()));
+        let french_mastery = Arc::new(FrenchMasteryProcessor::new());
+
+        let pipeline = ConversationPipeline::new(
+            memory,
+            ai_router,
+            self_healing,
+            singularity,
+            french_mastery,
+        );
+
+        let long_message = "a".repeat(10001);
+        let result = pipeline.preprocess(&long_message);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().to_string().contains("trop long"));
+    }
+
+    #[test]
+    fn test_preprocess_boundary_length() {
+        let memory = Arc::new(ConversationMemoryEngine::new(
+            Arc::new(crate::memory::storage::MemoryStorage::new(
+                std::env::temp_dir().join("test_pipeline_boundary"),
+                "test".to_string()
+            ).unwrap())
+        ));
+        let ai_router = Arc::new(RwLock::new(AIRouter::new(None, None)));
+        let self_healing = Arc::new(RwLock::new(SelfHealingConversation::new()));
+        let singularity = Arc::new(RwLock::new(crate::singularity::singularity_state::SingularityState::new()));
+        let french_mastery = Arc::new(FrenchMasteryProcessor::new());
+
+        let pipeline = ConversationPipeline::new(
+            memory,
+            ai_router,
+            self_healing,
+            singularity,
+            french_mastery,
+        );
+
+        // Exactly 10000 characters should be OK
+        let boundary_message = "a".repeat(10000);
+        let result = pipeline.preprocess(&boundary_message);
+        assert!(result.is_ok());
+    }
+
+    #[test]
+    fn test_build_prompt_default_mode() {
+        let memory = Arc::new(ConversationMemoryEngine::new(
+            Arc::new(crate::memory::storage::MemoryStorage::new(
+                std::env::temp_dir().join("test_pipeline_prompt_default"),
+                "test".to_string()
+            ).unwrap())
+        ));
+        let ai_router = Arc::new(RwLock::new(AIRouter::new(None, None)));
+        let self_healing = Arc::new(RwLock::new(SelfHealingConversation::new()));
+        let singularity = Arc::new(RwLock::new(crate::singularity::singularity_state::SingularityState::new()));
+        let french_mastery = Arc::new(FrenchMasteryProcessor::new());
+
+        let pipeline = ConversationPipeline::new(
+            memory,
+            ai_router,
+            self_healing,
+            singularity,
+            french_mastery,
+        );
+
+        let request = ConversationRequest {
+            user_message: "Test message".to_string(),
+            conversation_id: None,
+            mode: ConversationMode::Default,
+            emotion_context: None,
+            ai_config: None,
+            custom_system_prompt: None,
+        };
+
+        let intention = Intention::Question;
+        let emotion = EmotionState::default();
+        let memory_context = "Previous context";
+
+        let prompt = pipeline.build_prompt("Test message", &request, &intention, &emotion, memory_context);
+
+        assert!(prompt.contains("TITANE∞"));
+        assert!(prompt.contains("Default"));
+        assert!(prompt.contains("Test message"));
+        assert!(prompt.contains("Previous context"));
+    }
+
+    #[test]
+    fn test_build_prompt_brainstorming_mode() {
+        let memory = Arc::new(ConversationMemoryEngine::new(
+            Arc::new(crate::memory::storage::MemoryStorage::new(
+                std::env::temp_dir().join("test_pipeline_brainstorm"),
+                "test".to_string()
+            ).unwrap())
+        ));
+        let ai_router = Arc::new(RwLock::new(AIRouter::new(None, None)));
+        let self_healing = Arc::new(RwLock::new(SelfHealingConversation::new()));
+        let singularity = Arc::new(RwLock::new(crate::singularity::singularity_state::SingularityState::new()));
+        let french_mastery = Arc::new(FrenchMasteryProcessor::new());
+
+        let pipeline = ConversationPipeline::new(
+            memory,
+            ai_router,
+            self_healing,
+            singularity,
+            french_mastery,
+        );
+
+        let request = ConversationRequest {
+            user_message: "Generate ideas".to_string(),
+            conversation_id: None,
+            mode: ConversationMode::Brainstorming,
+            emotion_context: None,
+            ai_config: None,
+            custom_system_prompt: None,
+        };
+
+        let prompt = pipeline.build_prompt("Generate ideas", &request, &Intention::Action, &EmotionState::default(), "");
+
+        assert!(prompt.contains("DIVERGENCE CRÉATIVE"));
+        assert!(prompt.contains("audacieuses"));
+    }
+
+    #[test]
+    fn test_build_prompt_custom_system() {
+        let memory = Arc::new(ConversationMemoryEngine::new(
+            Arc::new(crate::memory::storage::MemoryStorage::new(
+                std::env::temp_dir().join("test_pipeline_custom"),
+                "test".to_string()
+            ).unwrap())
+        ));
+        let ai_router = Arc::new(RwLock::new(AIRouter::new(None, None)));
+        let self_healing = Arc::new(RwLock::new(SelfHealingConversation::new()));
+        let singularity = Arc::new(RwLock::new(crate::singularity::singularity_state::SingularityState::new()));
+        let french_mastery = Arc::new(FrenchMasteryProcessor::new());
+
+        let pipeline = ConversationPipeline::new(
+            memory,
+            ai_router,
+            self_healing,
+            singularity,
+            french_mastery,
+        );
+
+        let request = ConversationRequest {
+            user_message: "Custom test".to_string(),
+            conversation_id: None,
+            mode: ConversationMode::Default,
+            emotion_context: None,
+            ai_config: None,
+            custom_system_prompt: Some("You are a custom assistant".to_string()),
+        };
+
+        let prompt = pipeline.build_prompt("Custom test", &request, &Intention::Question, &EmotionState::default(), "");
+
+        assert!(prompt.contains("custom assistant"));
+        assert!(!prompt.contains("MODE DIVERGENCE")); // Should use custom, not mode-specific
+    }
+
+    #[test]
+    fn test_build_prompt_empty_memory_context() {
+        let memory = Arc::new(ConversationMemoryEngine::new(
+            Arc::new(crate::memory::storage::MemoryStorage::new(
+                std::env::temp_dir().join("test_pipeline_no_memory"),
+                "test".to_string()
+            ).unwrap())
+        ));
+        let ai_router = Arc::new(RwLock::new(AIRouter::new(None, None)));
+        let self_healing = Arc::new(RwLock::new(SelfHealingConversation::new()));
+        let singularity = Arc::new(RwLock::new(crate::singularity::singularity_state::SingularityState::new()));
+        let french_mastery = Arc::new(FrenchMasteryProcessor::new());
+
+        let pipeline = ConversationPipeline::new(
+            memory,
+            ai_router,
+            self_healing,
+            singularity,
+            french_mastery,
+        );
+
+        let request = ConversationRequest {
+            user_message: "First message".to_string(),
+            conversation_id: None,
+            mode: ConversationMode::Default,
+            emotion_context: None,
+            ai_config: None,
+            custom_system_prompt: None,
+        };
+
+        let prompt = pipeline.build_prompt("First message", &request, &Intention::Question, &EmotionState::default(), "");
+
+        assert!(prompt.contains("Nouvelle conversation"));
+    }
+
+    #[test]
+    fn test_build_prompt_all_modes() {
+        let memory = Arc::new(ConversationMemoryEngine::new(
+            Arc::new(crate::memory::storage::MemoryStorage::new(
+                std::env::temp_dir().join("test_pipeline_all_modes"),
+                "test".to_string()
+            ).unwrap())
+        ));
+        let ai_router = Arc::new(RwLock::new(AIRouter::new(None, None)));
+        let self_healing = Arc::new(RwLock::new(SelfHealingConversation::new()));
+        let singularity = Arc::new(RwLock::new(crate::singularity::singularity_state::SingularityState::new()));
+        let french_mastery = Arc::new(FrenchMasteryProcessor::new());
+
+        let pipeline = ConversationPipeline::new(
+            memory,
+            ai_router,
+            self_healing,
+            singularity,
+            french_mastery,
+        );
+
+        let modes = vec![
+            (ConversationMode::Default, "claire"),
+            (ConversationMode::Brainstorming, "DIVERGENCE"),
+            (ConversationMode::Synthesis, "SYNTHÈSE"),
+            (ConversationMode::Planning, "STRATÉGIE"),
+            (ConversationMode::Journal, "RÉFLEXION"),
+            (ConversationMode::DebugCognitive, "DEBUG"),
+        ];
+
+        for (mode, expected_text) in modes {
+            let request = ConversationRequest {
+                user_message: "Test".to_string(),
+                conversation_id: None,
+                mode: mode.clone(),
+                emotion_context: None,
+                ai_config: None,
+                custom_system_prompt: None,
+            };
+
+            let prompt = pipeline.build_prompt("Test", &request, &Intention::Question, &EmotionState::default(), "");
+            assert!(prompt.contains(expected_text), "Mode {:?} should contain '{}'", mode, expected_text);
+        }
+    }
+
+    #[test]
+    fn test_build_prompt_intention_context() {
+        let memory = Arc::new(ConversationMemoryEngine::new(
+            Arc::new(crate::memory::storage::MemoryStorage::new(
+                std::env::temp_dir().join("test_pipeline_intentions"),
+                "test".to_string()
+            ).unwrap())
+        ));
+        let ai_router = Arc::new(RwLock::new(AIRouter::new(None, None)));
+        let self_healing = Arc::new(RwLock::new(SelfHealingConversation::new()));
+        let singularity = Arc::new(RwLock::new(crate::singularity::singularity_state::SingularityState::new()));
+        let french_mastery = Arc::new(FrenchMasteryProcessor::new());
+
+        let pipeline = ConversationPipeline::new(
+            memory,
+            ai_router,
+            self_healing,
+            singularity,
+            french_mastery,
+        );
+
+        let request = ConversationRequest {
+            user_message: "Test".to_string(),
+            conversation_id: None,
+            mode: ConversationMode::Default,
+            emotion_context: None,
+            ai_config: None,
+            custom_system_prompt: None,
+        };
+
+        let intentions = vec![
+            (Intention::Question, "question"),
+            (Intention::Action, "action"),
+            (Intention::Emotion, "émotion"),
+            (Intention::Clarification, "clarifier"),
+            (Intention::Meta, "méta"),
+        ];
+
+        for (intention, expected_word) in intentions {
+            let prompt = pipeline.build_prompt("Test", &request, &intention, &EmotionState::default(), "");
+            assert!(prompt.to_lowercase().contains(expected_word));
+        }
+    }
+
+    #[test]
+    fn test_build_prompt_emotion_values() {
+        let memory = Arc::new(ConversationMemoryEngine::new(
+            Arc::new(crate::memory::storage::MemoryStorage::new(
+                std::env::temp_dir().join("test_pipeline_emotion"),
+                "test".to_string()
+            ).unwrap())
+        ));
+        let ai_router = Arc::new(RwLock::new(AIRouter::new(None, None)));
+        let self_healing = Arc::new(RwLock::new(SelfHealingConversation::new()));
+        let singularity = Arc::new(RwLock::new(crate::singularity::singularity_state::SingularityState::new()));
+        let french_mastery = Arc::new(FrenchMasteryProcessor::new());
+
+        let pipeline = ConversationPipeline::new(
+            memory,
+            ai_router,
+            self_healing,
+            singularity,
+            french_mastery,
+        );
+
+        let request = ConversationRequest {
+            user_message: "Test".to_string(),
+            conversation_id: None,
+            mode: ConversationMode::Default,
+            emotion_context: None,
+            ai_config: None,
+            custom_system_prompt: None,
+        };
+
+        let mut emotion = EmotionState::default();
+        emotion.valence = 0.8;
+        emotion.intensity = 0.6;
+        emotion.energy = 0.9;
+
+        let prompt = pipeline.build_prompt("Test", &request, &Intention::Question, &emotion, "");
+
+        assert!(prompt.contains("valence=0.80"));
+        assert!(prompt.contains("intensité=0.60"));
+        assert!(prompt.contains("énergie=0.90"));
+    }
 }

@@ -132,8 +132,8 @@ class PerformanceMetric {
       count,
       sum,
       avg,
-      min: values[0],
-      max: values[count - 1],
+      min: values[0] ?? 0,
+      max: values[count - 1] ?? 0,
       p50: this.percentile(values, 0.50),
       p90: this.percentile(values, 0.90),
       p95: this.percentile(values, 0.95),
@@ -148,7 +148,7 @@ class PerformanceMetric {
   private percentile(sortedValues: number[], percentile: number): number {
     if (sortedValues.length === 0) return 0;
     const index = Math.ceil(sortedValues.length * percentile) - 1;
-    return sortedValues[Math.max(0, index)];
+    return sortedValues[Math.max(0, index)] ?? 0;
   }
 
   /**

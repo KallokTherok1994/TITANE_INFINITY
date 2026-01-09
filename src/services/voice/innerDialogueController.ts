@@ -25,6 +25,7 @@ import {
 } from './attentionEngine';
 import { haloEngine as _haloEngine, type HaloState } from './haloEngine';
 import type { ThinkingState } from '@/types/voice';
+import { logger } from '@/utils/logger';
 // MentalColor is declared locally below
 
 // ═══════════════════════════════════════════════════════════════════

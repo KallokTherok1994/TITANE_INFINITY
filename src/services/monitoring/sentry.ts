@@ -16,6 +16,7 @@ import type {
   ClassifiedError,
   ErrorSeverity,
 } from '@/lib/errorHandler';
+import { logger } from '@/utils/logger';
 
 /**
  * Configuration Sentry par environnement

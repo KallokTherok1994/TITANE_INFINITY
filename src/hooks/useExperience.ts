@@ -14,6 +14,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { logger } from '@/utils/logger';
 import type { ExperienceState, ExperienceDomain, XPSource } from '../types/experience';
 import {
   initExperienceService,

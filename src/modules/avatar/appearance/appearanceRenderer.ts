@@ -20,6 +20,7 @@ import type { AvatarAppearanceState } from './appearanceState';
 import type { AppearanceAssets, AssetDefinition } from './appearanceMapper';
 import { AppearanceMapper } from './appearanceMapper';
 import { getAppearance } from './appearanceEngine';
+import { logger } from '@/utils/logger';
 
 // ============================================================================
 // TYPES

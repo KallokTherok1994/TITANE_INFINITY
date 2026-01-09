@@ -105,19 +105,20 @@ impl CoherenceSupervisor {
     ) -> f32 {
         let mut score: f32 = 1.0;
 
+        let response_lc = response.to_lowercase();
         let contradiction_markers = ["mais", "cependant", "toutefois", "néanmoins"];
-        let contradiction_count = contradiction_markers
+        let contradiction_total: usize = contradiction_markers
             .iter()
-            .filter(|&marker| response.to_lowercase().matches(marker).count() > 2)
-            .count();
+            .map(|marker| response_lc.matches(marker).count())
+            .sum();
 
-        if contradiction_count > 0 {
+        if contradiction_total >= 3 {
             issues.push(CoherenceIssue {
                 issue_type: IssueType::LogicalContradiction,
                 severity: 0.4,
                 description: format!(
                     "Multiples marqueurs de contradiction: {}",
-                    contradiction_count
+                    contradiction_total
                 ),
                 position: None,
             });
@@ -125,16 +126,42 @@ impl CoherenceSupervisor {
         }
 
         if !context.is_empty() {
-            let context_words: Vec<&str> = context.split_whitespace().collect();
-            let response_words: Vec<&str> = response.split_whitespace().collect();
+            let stopwords = [
+                "a", "au", "aux", "avec", "ce", "ces", "cette", "d", "dans", "de", "des", "du",
+                "en", "et", "la", "le", "les", "mais", "ou", "par", "pour", "que", "qui", "sur",
+                "un", "une",
+            ];
+
+            let normalize = |token: &str| -> Option<String> {
+                let cleaned: String = token.chars().filter(|c| c.is_alphanumeric()).collect();
+                let cleaned = cleaned.to_lowercase();
+                if cleaned.len() < 3 {
+                    return None;
+                }
+                if stopwords.iter().any(|w| *w == cleaned) {
+                    return None;
+                }
+                Some(cleaned)
+            };
+
+            let context_words: Vec<String> = context
+                .split_whitespace()
+                .filter_map(&normalize)
+                .take(50)
+                .collect();
+            let response_words: std::collections::HashSet<String> = response
+                .split_whitespace()
+                .filter_map(&normalize)
+                .collect();
+
             let overlap = context_words
                 .iter()
-                .filter(|w| response_words.contains(w))
+                .filter(|w| response_words.contains(*w))
                 .count();
             let overlap_ratio = if context_words.is_empty() {
                 1.0
             } else {
-                overlap as f32 / context_words.len().min(50) as f32
+                overlap as f32 / context_words.len() as f32
             };
 
             if overlap_ratio < 0.1 {

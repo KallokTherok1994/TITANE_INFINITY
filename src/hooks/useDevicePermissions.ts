@@ -12,6 +12,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { detectEnvironment, type EnvironmentInfo } from '@/core/tauri/environment';
 import { secureInvoke } from '@/lib/security';
+import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES

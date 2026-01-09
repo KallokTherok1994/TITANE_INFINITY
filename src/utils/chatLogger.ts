@@ -10,6 +10,8 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
+import { logger } from '@/utils/logger';
+
 const isDev = import.meta.env.DEV || import.meta.env.MODE === 'development';
 const isDebugEnabled = () => {
   if (typeof window === 'undefined') return false;

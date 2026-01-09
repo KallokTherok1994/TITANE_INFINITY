@@ -21,6 +21,7 @@
  */
 
 import type { IdentityExpressionPackage } from '../identity/unifiedIdentityKernel';
+import { logger } from '@/utils/logger';
 
 import type { UnifiedExpression } from '../expression/expressionEngine';
 

@@ -12,6 +12,7 @@
  */
 
 import type { OrchestratedVoice } from './types';
+import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 //   TYPES

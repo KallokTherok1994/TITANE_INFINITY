@@ -13,6 +13,7 @@
  */
 
 import type { EnergyState, EnergyPoint, EnergyHistoryEntry, Chronotype } from './types';
+import { logger } from '@/utils/logger';
 import { TimeEngineUtils } from './TimeEngine';
 
 // ═══════════════════════════════════════════════════════════════════

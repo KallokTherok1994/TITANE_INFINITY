@@ -10,6 +10,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { logger } from '@/utils/logger';
 import {
   advancedPerformanceMonitor,
   type PerformanceSnapshot,

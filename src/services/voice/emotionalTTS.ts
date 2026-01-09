@@ -15,6 +15,7 @@
 import type { EmotionalIntent } from './emotionalIntent';
 import { prosodyEngine, type ProsodyProfile as _ProsodyProfile } from './prosodyEngine';
 import { hybridTTS } from '../tts/hybridTTS';
+import { logger } from '@/utils/logger';
 
 /**
  * Options de rendu émotionnel

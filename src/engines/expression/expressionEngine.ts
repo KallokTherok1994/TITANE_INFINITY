@@ -22,6 +22,7 @@ import {
   unifiedIdentityKernel,
   type IdentityExpressionPackage,
 } from '../identity/unifiedIdentityKernel';
+import { logger } from '@/utils/logger';
 // ✨ PHASE 4.2 - Lazy load auraEngine to reduce bundle size
 import { getAuraEngine, type AuraAnimationPattern } from '../aura/lazyAuraEngine';
 import { internalNarrativeEngine } from '../narrative/internalNarrativeEngine';

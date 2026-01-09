@@ -8,10 +8,9 @@ use super::{AudioError, AudioResult};
 use crate::security::shell_guard::ShellGuard;
 use serde::{Deserialize, Serialize};
 use std::collections::VecDeque;
-use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
-use tauri::{AppHandle, Manager};
+use tauri::{AppHandle, Emitter};
 use tokio::sync::mpsc;
 
 /// Macro for safe mutex locking with auto-recovery from poisoned state
@@ -88,7 +87,7 @@ pub struct TranscriptionEvent {
 
 /// Whisper streaming state
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-enum StreamState {
+pub(crate) enum StreamState {
     Idle,
     Buffering,
     Processing,
@@ -208,7 +207,7 @@ impl WhisperStreamingEngine {
                                 };
 
                                 // Emit to frontend
-                                let _ = app_handle.emit_all("whisper:partial", &event);
+                                let _ = app_handle.emit("whisper:partial", &event);
                                 println!("[WhisperStreaming] 📝 Partial: {}", event.text);
                             }
                         }
@@ -255,7 +254,7 @@ impl WhisperStreamingEngine {
                                 };
 
                                 // Emit to frontend
-                                let _ = app_handle.emit_all("whisper:final", &event);
+                                let _ = app_handle.emit("whisper:final", &event);
                                 println!("[WhisperStreaming] ✅ Final: {}", event.text);
                             }
                         }
@@ -311,7 +310,7 @@ impl WhisperStreamingEngine {
                                 timestamp: chunk.timestamp.elapsed().as_millis() as u64,
                             };
 
-                            let _ = app_handle.emit_all("whisper:final", &event);
+                            let _ = app_handle.emit("whisper:final", &event);
                         }
                     }
 
@@ -332,9 +331,9 @@ impl WhisperStreamingEngine {
     async fn transcribe_segment(
         segment: &Arc<Mutex<Vec<f32>>>,
         sample_rate: u32,
-        config: &WhisperStreamConfig,
+        _config: &WhisperStreamConfig,
         shell_guard: &ShellGuard,
-        is_final: bool,
+        _is_final: bool,
     ) -> AudioResult<String> {
         let audio_data = lock_or_recover!(segment).clone();
 
@@ -358,8 +357,12 @@ impl WhisperStreamingEngine {
             .map_err(|e| AudioError::ProcessingError(e.to_string()))?;
 
         // Call Whisper via ShellGuard
-        let result =
-            tokio::task::spawn_blocking(move || shell_guard.execute_asr_whisper(&temp_path))
+        let temp_path_for_whisper = temp_path.clone();
+        let shell_guard = shell_guard.clone();
+
+        let result = tokio::task::spawn_blocking(move || {
+            shell_guard.execute_asr_whisper(&temp_path_for_whisper)
+        })
                 .await
                 .map_err(|e| AudioError::ProcessingError(e.to_string()))?
                 .map_err(|e| AudioError::ProcessingError(e))?;

@@ -16,6 +16,7 @@
  */
 
 import { autoSaveConversationEngine } from './AutoSaveConversationEngine';
+import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES

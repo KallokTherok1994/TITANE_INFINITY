@@ -11,6 +11,7 @@ import { invokeWithRetry, LONG_COMMAND_OPTIONS } from '@/lib/serviceInvoker';
 import { monitoring } from '@/monitoring';
 import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
 import { chatEngine } from '@/services/ai/chatEngine';
+import { logger } from '@/utils/logger';
 
 /**
  * Type pour l'ID de conversation OMEGA

@@ -12,6 +12,7 @@ import {
   FAST_COMMAND_OPTIONS,
   LONG_COMMAND_OPTIONS,
 } from '../../lib/serviceInvoker';
+import { logger } from '@/utils/logger';
 
 /**
  * Configuration synthèse vocale

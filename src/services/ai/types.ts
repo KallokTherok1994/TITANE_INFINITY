@@ -15,12 +15,45 @@ import type { PromptContext } from '@/core/prompts';
  * ═══════════════════════════════════════════════════════════════════
  */
 
+// Multimodal content types for future vision API support
+export type AIMessageContentPart =
+  | { type: 'text'; text: string }
+  | { type: 'image_url'; image_url: { url: string } };
+
 export interface AIMessage {
   role: 'user' | 'assistant' | 'system';
-  content: string;
+  content: string | AIMessageContentPart[];
   timestamp: number;
+  name?: string; // Optional name field for function/tool messages
   provider?: string;
   metadata?: Record<string, unknown>;
+}
+
+/**
+ * Extract text content from AIMessage (handles both string and multimodal content)
+ */
+export function getMessageText(message: AIMessage): string {
+  if (typeof message.content === 'string') {
+    return message.content;
+  }
+  // For multimodal content, concatenate all text parts
+  return message.content
+    .map(part => (typeof part === 'string' ? part : part.type === 'text' ? part.text : ''))
+    .join(' ');
+}
+
+/**
+ * Create a simple text-only AIMessage
+ */
+export function createTextMessage(
+  role: 'user' | 'assistant' | 'system',
+  content: string
+): AIMessage {
+  return {
+    role,
+    content,
+    timestamp: Date.now()
+  };
 }
 
 export type AIProviderName =
@@ -96,6 +129,7 @@ export interface AIConfig {
   topP?: number;
   topK?: number;
   timeout?: number;
+  model?: string; // Model identifier (e.g., 'gpt-4', 'claude-3-opus')
   promptProfileId?: string;
   promptContext?: PromptContext;
   preferredProvider?: ProviderChoice; // ✨ v21 - Force specific provider

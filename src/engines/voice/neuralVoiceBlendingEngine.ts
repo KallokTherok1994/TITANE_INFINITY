@@ -28,6 +28,7 @@ import {
   archetypeResonanceEngine,
   type ArchetypeType,
 } from '../psyche/archetypeResonanceEngine';
+import { logger } from '@/utils/logger';
 import type { EmotionalState } from '@/types/voice';
 
 // ═══════════════════════════════════════════════════════════════════════════

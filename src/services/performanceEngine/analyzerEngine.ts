@@ -15,6 +15,7 @@ import {
   DEFAULT_PERFORMANCE_CONFIG,
   RECOMMENDATION_TEMPLATES,
 } from './performanceEngine.config';
+import { logger } from '@/utils/logger';
 import type {
   MetricsSnapshot,
   PerformanceIssue,

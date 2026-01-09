@@ -2,6 +2,7 @@
 // Client TypeScript pour interagir avec le système Auto-Heal
 
 import { secureInvoke } from '@/lib/security';
+import { logger } from '@/utils/logger';
 
 // ============================================================================
 // TYPES

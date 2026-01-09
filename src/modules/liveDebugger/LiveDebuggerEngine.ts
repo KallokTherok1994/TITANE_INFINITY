@@ -12,6 +12,7 @@
  */
 
 import type { VocalDevState as _VocalDevState } from '@/modules/vocalDev/VocalDevConsoleEngine';
+import { logger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES

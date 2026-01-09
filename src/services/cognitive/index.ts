@@ -41,6 +41,7 @@ export {
 import { SemanticMemoryEngine } from './SemanticMemoryEngine';
 import { LocalEmbeddingGenerator } from './LocalEmbeddingGenerator';
 import type { SemanticMemoryConfig, VectorStore } from './semanticMemory.types';
+import { logger } from '@/utils/logger';
 
 /**
  * Charger dynamiquement le VectorStore approprié

@@ -5,7 +5,6 @@
 
 use super::{AudioError, AudioResult};
 use crate::security::shell_guard::ShellGuard;
-use std::path::Path;
 use std::time::Duration;
 
 #[derive(Debug, Clone, Copy)]
@@ -56,12 +55,12 @@ impl ASREngine {
         }
     }
 
-    async fn transcribe_google(&self, audio_data: &[u8]) -> AudioResult<String> {
+    async fn transcribe_google(&self, _audio_data: &[u8]) -> AudioResult<String> {
         // Google Speech-to-Text API
         // This is a simplified implementation
         // In production, use proper Google Cloud Speech API
 
-        let client = reqwest::Client::builder()
+        let _client = reqwest::Client::builder()
             .timeout(Duration::from_secs(10))
             .build()
             .map_err(|e| AudioError::ProcessingError(e.to_string()))?;

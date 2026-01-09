@@ -11,6 +11,7 @@
 import React, { useState, useCallback } from 'react';
 import { useTimeAgenda } from '@/hooks/useTimeAgenda';
 import type { AgendaEvent, EventCategory, AgendaView } from '@/engines/time';
+import { logger } from '@/utils/logger';
 import './AgendaPage.css';
 
 // ═══════════════════════════════════════════════════════════════════

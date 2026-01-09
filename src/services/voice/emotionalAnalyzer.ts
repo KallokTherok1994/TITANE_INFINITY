@@ -19,6 +19,7 @@ import type {
   EmotionalAnalysisResult,
 } from './emotionalIntent';
 import { EMOTION_PRESETS, getEmotionPreset } from './emotionalProfiles';
+import { logger } from '@/utils/logger';
 
 /**
  * Mots-clés émotionnels par catégorie

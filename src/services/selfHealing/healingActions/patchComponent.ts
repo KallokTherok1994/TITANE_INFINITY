@@ -3,6 +3,8 @@
  * Action pour patcher un composant React côté frontend.
  */
 
+import { logger } from '@/utils/logger';
+
 /**
  * Patch un composant React
  * @param targetModule - Nom du module/composant à patcher

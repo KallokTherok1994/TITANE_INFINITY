@@ -17,6 +17,7 @@ import type {
   CognitiveMemoryOperation,
   CognitiveGoalOperation,
 } from '../types';
+import { logger } from '@/utils/logger';
 
 // Import existing Cognitive Omega Orchestrator
 import { cognitiveOmega } from '@/services/cognitive/cognitiveOmegaIntegration';
