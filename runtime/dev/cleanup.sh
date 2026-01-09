@@ -46,6 +46,7 @@ pkill -f "vite dev --host 127\.0\.0\.1 --port 5173" 2>/dev/null || true
 sleep 1
 
 # Backward-compatible cleanup: remove legacy FIFO/filter artifacts if present
+echo "🧹 Nettoyage des artefacts Vite (legacy)..."
 rm -f runtime/dev/logs/vite.filter.pid runtime/dev/logs/vite.pipe 2>/dev/null || true
 
 # Kill Tauri dev / pnpm tauri processes
