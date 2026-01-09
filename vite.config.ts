@@ -116,6 +116,7 @@ export default defineConfig({
   publicDir: resolve(ROOT_DIR, 'public'),
   base: './',
 
+
   // 🔧 Server configuration with proper headers
   server: {
     port: 5173,
@@ -438,9 +439,9 @@ export default defineConfig({
     legalComments: 'none', // Remove comments in production
   },
 
-  // 🚀 OPTIMIZATION v24.7.7: CSS source maps for debugging
+  // 🚀 OPTIMIZATION v24.7.7: Disable CSS sourcemaps to keep dev logs clean
   css: {
-    devSourcemap: true,
+    devSourcemap: false,
   },
 
   // ═══════════════════════════════════════════════════════════════════════════

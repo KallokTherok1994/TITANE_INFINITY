@@ -30,6 +30,20 @@ echo "🔄 Arrêt des processus Vite (interdit en TAURI-only)..."
 pkill -f "vite" 2>/dev/null || true
 sleep 1
 
+# Clean Vite log filter artifacts (FIFO + filter process)
+echo "🧹 Nettoyage des artefacts Vite (FIFO/log filter)..."
+FILTER_PIDFILE="runtime/dev/logs/vite.filter.pid"
+FIFO_PATH="runtime/dev/logs/vite.pipe"
+if [ -f "$FILTER_PIDFILE" ]; then
+    FILTER_PID=$(cat "$FILTER_PIDFILE" 2>/dev/null || true)
+    if [ -n "${FILTER_PID:-}" ]; then
+        kill "$FILTER_PID" 2>/dev/null || true
+    fi
+    rm -f "$FILTER_PIDFILE" 2>/dev/null || true
+fi
+rm -f "$FIFO_PATH" 2>/dev/null || true
+sleep 0.1
+
 # Kill Tauri dev / pnpm tauri processes
 echo "🔄 Arrêt des processus Tauri dev..."
 pkill -f "tauri dev" 2>/dev/null || true

@@ -683,6 +683,10 @@ pub async fn test_microphone(duration_ms: u64) -> CommandResult<MicrophoneTestRe
                         error_message: None,
                     })
                 } else {
+                    #[cfg(feature = "mock")]
+                    log::info!("[Audio] File too small, no signal detected");
+
+                    #[cfg(not(feature = "mock"))]
                     log::warn!("[Audio] File too small, no signal detected");
                     Ok(MicrophoneTestResult {
                         success: false,

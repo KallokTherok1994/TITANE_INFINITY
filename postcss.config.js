@@ -7,9 +7,6 @@
 export default {
   plugins: {
     '@tailwindcss/postcss': {},
-    autoprefixer: {
-      // Ensure `from` option is passed to PostCSS plugins
-      from: undefined, // This tells PostCSS to use the file path from the build process
-    },
+    autoprefixer: {},
   },
 };
