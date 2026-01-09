@@ -25,9 +25,24 @@ count_processes() {
 BEFORE_COUNT=$(count_processes "tauri dev|pnpm run dev:tauri|corepack pnpm run dev:tauri|pnpm run tauri|corepack pnpm run tauri|vite")
 echo "📊 Processus détectés (Tauri/Vite): $BEFORE_COUNT"
 
-# Kill Vite processes (should not run in TAURI-only, but clean leftovers)
+# Kill Vite process (prefer pidfile to avoid killing unrelated Vite sessions)
 echo "🔄 Arrêt des processus Vite (interdit en TAURI-only)..."
-pkill -f "vite" 2>/dev/null || true
+VITE_PIDFILE="runtime/dev/logs/vite.pid"
+if [ -f "$VITE_PIDFILE" ]; then
+    VITE_PID=$(cat "$VITE_PIDFILE" 2>/dev/null || true)
+    if [ -n "${VITE_PID:-}" ] && ps -p "$VITE_PID" >/dev/null 2>&1; then
+        echo "   • Vite pidfile détecté: $VITE_PID"
+        kill "$VITE_PID" 2>/dev/null || true
+        sleep 1
+        if ps -p "$VITE_PID" >/dev/null 2>&1; then
+            kill -9 "$VITE_PID" 2>/dev/null || true
+        fi
+    fi
+    rm -f "$VITE_PIDFILE" 2>/dev/null || true
+fi
+
+# Fallback: narrower match on the dev port to avoid collateral kills
+pkill -f "vite dev --host 127\.0\.0\.1 --port 5173" 2>/dev/null || true
 sleep 1
 
 # Clean Vite log filter artifacts (FIFO + filter process)

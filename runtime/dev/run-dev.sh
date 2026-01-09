@@ -5,7 +5,14 @@
 set -euo pipefail
 
 INTERRUPTED=0
+cleanup_on_exit() {
+    echo ""
+    echo "🧹 Post-run cleanup..."
+    ./runtime/dev/cleanup.sh || true
+}
+
 trap 'INTERRUPTED=1' INT TERM
+trap cleanup_on_exit EXIT
 
 # Navigate to project root
 cd "$(dirname "$0")/../.."
