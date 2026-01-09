@@ -19,6 +19,7 @@ import type {
   ProviderChoice,
   AIProvider,
 } from './types';
+import { getMessageText } from './types';
 import type { AutoHealStats } from './autoHealEngine';
 import type { AggregatedMetrics } from './metricsEngine';
 import type { MetricsData } from '@/types/cognitiveKernel';
@@ -937,7 +938,10 @@ class AIOrchestrator {
         }
 
         // ═══ v24.5: RATE LIMITER CHECK ═══
-        const estimatedTokens = rateLimiter.estimateTokens(sanitized, history);
+        const estimatedTokens = rateLimiter.estimateTokens(
+          sanitized,
+          history.map(msg => ({ content: getMessageText(msg) }))
+        );
         const rateLimitStatus = rateLimiter.checkLimit(providerName, estimatedTokens);
         if (!rateLimitStatus.allowed && providerName !== 'titane-local') {
           logger.debug(

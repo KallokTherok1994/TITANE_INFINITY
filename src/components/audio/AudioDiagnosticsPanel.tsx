@@ -476,11 +476,15 @@ export const AudioDiagnosticsPanel = ({
                     const { audioHealthService } =
                       await import('@/services/audio/audioHealthCheck');
                     const result = await audioHealthService.diagnoseAndRepair();
-                    logger.debug('Auto-repair result:', result);
+                    logger.debug('Auto-repair result:', { module: 'AudioDiagnostics', result });
                     // Rafraîchir l'UI après réparation
                     await runDiagnostics();
                   } catch (error) {
-                    logger.error('Auto-repair failed:', error);
+                    logger.error(
+                      'Auto-repair failed:',
+                      { module: 'AudioDiagnostics' },
+                      error instanceof Error ? error : new Error(String(error))
+                    );
                   }
                 }}
                 disabled={isDiagnosing}

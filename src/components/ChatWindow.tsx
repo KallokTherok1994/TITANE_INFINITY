@@ -21,6 +21,7 @@ import { useSingularityState } from '../core/state/SingularityState';
 import type { Message as _Message } from '../core/ARCHITECTURE_TYPES_v∞';
 import { listPromptPresets } from '@/core/prompts';
 import type { ChatMode } from '@/services/ai';
+import { getMessageText } from '@/services/ai/types';
 import './ChatWindow.css';
 
 export interface ChatWindowProps {
@@ -75,7 +76,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(
           message.role &&
           ['user', 'assistant'].includes(message.role) &&
           message.content &&
-          message.content.trim().length > 0
+          getMessageText(message).trim().length > 0
       );
     }, [messages]);
 
@@ -260,7 +261,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(
                 `msg-${message.timestamp}`
               }
               role={message.role}
-              content={message.content}
+              content={getMessageText(message)}
               timestamp={message.timestamp}
             />
           ))}

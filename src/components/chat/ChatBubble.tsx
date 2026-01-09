@@ -36,6 +36,7 @@ import { ChatProviderSelector } from '@/features/chat/ChatProviderSelector';
 import { useGovernance } from '@/features/governance-center/hooks/useGovernance';
 import { useAudioChat } from '@/hooks/useAudioChat';
 import { ListeningIndicator } from '@/components/audio/ListeningIndicator';
+import { getMessageText } from '@/services/ai/types';
 import './ChatBubble-ArcReactor.css';
 
 // ═══ TYPES ═══
@@ -183,7 +184,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
         setUnreadCount(prev => prev + 1);
         // ✨ TITANE parle sa réponse si autoSpeak activé
         if (lastMessage.content && autoSpeak) {
-          speak(lastMessage.content);
+          speak(getMessageText(lastMessage));
         }
       }
     }
@@ -689,7 +690,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
                     transition={{ delay: idx * 0.05 }}
                   >
                       {msg.role === 'assistant' &&
-                      (msg.content ?? '').trim().length === 0 &&
+                      getMessageText(msg).trim().length === 0 &&
                       msg.metadata?.status === 'streaming' ? (
                         <div className="message-content typing" aria-label="Réponse en cours">
                           <span />
@@ -697,7 +698,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
                           <span />
                         </div>
                       ) : (
-                        <div className="message-content">{msg.content}</div>
+                        <div className="message-content">{getMessageText(msg)}</div>
                       )}
                   </motion.div>
                 ))

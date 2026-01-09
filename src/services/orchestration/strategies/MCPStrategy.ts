@@ -6,7 +6,7 @@
  * Extracted from MCPOrchestrator (1,156 lines)
  */
 
-import { logger as _logger } from '@/lib/logger';
+import { logger } from '@/lib/logger';
 import type {
   IOrchestrationStrategy,
   OrchestrationStrategyType,
@@ -441,10 +441,14 @@ export class MCPStrategy
   }
 
   private log(message: string, ...args: unknown[]): void {
-    logger.debug(`[MCPStrategy] ${message}`, ...args);
+    logger.debug(`[MCPStrategy] ${message}`, { module: 'MCPStrategy', args });
   }
 
   private logError(message: string, error?: unknown): void {
-    logger.error(`[MCPStrategy ERROR] ${message}`, error);
+    logger.error(
+      `[MCPStrategy ERROR] ${message}`,
+      { module: 'MCPStrategy' },
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }

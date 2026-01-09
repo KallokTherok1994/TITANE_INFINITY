@@ -23,6 +23,7 @@ import React, { useRef, useEffect, useMemo } from 'react';
 import { FixedSizeList as List } from 'react-window';
 import { MessageBubble } from './MessageBubble';
 import type { AIMessage } from '../../services/ai/types';
+import { getMessageText } from '../../services/ai/types';
 import './MessageList.css';
 
 interface VirtualizedMessageListProps {
@@ -102,7 +103,7 @@ export const VirtualizedMessageList = React.memo(function VirtualizedMessageList
         <MessageBubble
           key={`${msg.timestamp}-${index}`}
           role={msg.role}
-          content={msg.content}
+          content={getMessageText(msg)}
           timestamp={msg.timestamp}
           isLatest={isLatest}
         />

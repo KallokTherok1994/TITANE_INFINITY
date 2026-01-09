@@ -11,6 +11,7 @@
  */
 
 import type { AIMessage } from './ai/types';
+import { getMessageText } from './ai/types';
 import type { ChatMode } from './ai/chatEngine';
 import { createLogger } from '@/utils/logger';
 
@@ -336,7 +337,7 @@ class ChatMemoryCompactor {
     const topics = new Set<string>();
 
     messages.forEach(msg => {
-      const content = msg.content.toLowerCase();
+      const content = getMessageText(msg).toLowerCase();
 
       // Mots-clés techniques
       if (content.includes('rust') || content.includes('tauri')) topics.add('Rust/Tauri');

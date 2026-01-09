@@ -18,6 +18,7 @@
  */
 
 import type { AIMessage } from '@/services/ai/types';
+import { getMessageText } from '@/services/ai/types';
 import type { ChatMode } from '@/services/ai/chatEngine';
 
 // ═══════════════════════════════════════════════════════════════════
@@ -453,7 +454,7 @@ export class ConsistencyEngine {
    */
   extractGoalsFromMessage(message: AIMessage): ConversationGoal[] {
     const extracted: ConversationGoal[] = [];
-    const content = message.content.toLowerCase();
+    const content = getMessageText(message).toLowerCase();
 
     // Patterns typiques d'expression de goal
     const goalPatterns = [
@@ -487,7 +488,7 @@ export class ConsistencyEngine {
     const extracted: ConversationFact[] = [];
 
     for (const message of messages) {
-      const content = message.content;
+      const content = getMessageText(message);
 
       // Patterns de déclarations factuelles
       const factPatterns = [

@@ -17,6 +17,7 @@ import { useChatCore, type UseChatCoreReturn } from '@hooks/useChatCore';
 import { useChatMemory } from '@hooks/useChatMemory';
 import { type ChatMode, type ChatEngineResponse } from '../services/ai';
 import type { AIMessage, AIProviderName } from '../services/ai/types';
+import { getMessageText } from '../services/ai/types';
 import type { HarmonizedMessage } from '@/types/cognitiveKernel';
 import { hybridTTS } from '@/services/tts/hybridTTS';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
@@ -980,7 +981,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           }
 
           found = true;
-          placeholderContent = msg.content?.substring(0, 50) || '<empty>';
+          placeholderContent = getMessageText(msg).substring(0, 50) || '<empty>';
 
           chatLogger.debug('✅ updateAssistant: Target found', {
             uiId: targetUiId,
@@ -1005,8 +1006,8 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
           chatLogger.debug('🔄 updateAssistant: Message updated', {
             uiId: targetUiId,
-            newContentLength: updated.content?.length || 0,
-            newContentPreview: updated.content?.substring(0, 50) || '<empty>',
+            newContentLength: getMessageText(updated).length || 0,
+            newContentPreview: getMessageText(updated).substring(0, 50) || '<empty>',
           });
 
           return {
@@ -1244,7 +1245,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
         const backendHistory: BackendChatMessage[] = historyBuffer.map(message => ({
           role: message.role,
-          content: message.content,
+          content: getMessageText(message),
           timestamp: new Date(message.timestamp).toISOString(),
         }));
 
@@ -1549,7 +1550,7 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
 
         const assistantFromState = getAssistantFromState();
         const assistantMessage: AIMessage =
-          assistantFromState && assistantFromState.content.trim().length > 0
+          assistantFromState && getMessageText(assistantFromState).trim().length > 0
             ? assistantFromState
             : (() => {
                 // ✅ Repair: si le placeholder existe mais reste vide (bug de sync / dédup),
@@ -1624,7 +1625,7 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
         // ✨ v24.2.1: Use ref for stable dependency
         if (voiceEnabledRef.current && assistantMessage.content) {
           try {
-            hybridTTS.speak(assistantMessage.content);
+            hybridTTS.speak(getMessageText(assistantMessage));
           } catch (voiceError) {
             chatLogger.warn('Voice warning', { error: voiceError });
           }

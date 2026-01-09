@@ -14,6 +14,7 @@
 import React, { useRef, useEffect, useCallback, useMemo, memo } from 'react';
 import { logger } from '@/lib/logger';
 import type { AIMessage } from '../../services/ai/types';
+import { getMessageText } from '../../services/ai/types';
 import { hybridTTS } from '../../services/tts/hybridTTS';
 import './MessageList.css';
 
@@ -62,10 +63,11 @@ const MessageBubble = memo<MessageBubbleProps>(
     const handleCopy = useCallback(async () => {
       if (!message.content) return;
 
+      const textContent = getMessageText(message);
       try {
-        await navigator.clipboard.writeText(message.content);
+        await navigator.clipboard.writeText(textContent);
         setIsCopied(true);
-        onCopy?.(message.content);
+        onCopy?.(textContent);
         setTimeout(() => setIsCopied(false), 2000);
       } catch (err) {
         logger.error(
@@ -74,15 +76,16 @@ const MessageBubble = memo<MessageBubbleProps>(
           err as Error
         );
       }
-    }, [message.content, onCopy]);
+    }, [message, onCopy]);
 
     // TTS handler
     const handleSpeak = useCallback(async () => {
       if (!message.content || isSpeaking) return;
 
+      const textContent = getMessageText(message);
       try {
         setIsSpeaking(true);
-        await hybridTTS.speak(message.content);
+        await hybridTTS.speak(textContent);
       } catch (err) {
         logger.error(
           'TTS speak failed',
@@ -129,7 +132,7 @@ const MessageBubble = memo<MessageBubbleProps>(
         {/* Content */}
         <div className="message-content">
           {message.content ? (
-            <div className="message-text">{message.content}</div>
+            <div className="message-text">{getMessageText(message)}</div>
           ) : isStreaming ? (
             <div className="message-typing">
               <span className="typing-dot">●</span>
