@@ -12,6 +12,9 @@
  */
 
 import type { LogArgs, LogParts, TableData } from '@/types/logger';
+import { LogLevel } from '@/types/logLevel';
+
+export { LogLevel };
 
 // Lazy import to avoid circular dependency
 type RuntimeLogLevelManager = {
@@ -56,19 +59,6 @@ const rawConsole = {
   time: (console.time ?? (() => {})).bind(console),
   timeEnd: (console.timeEnd ?? (() => {})).bind(console),
 };
-
-
-/**
- * Log levels (par ordre de priorité)
- */
-export enum LogLevel {
-  TRACE = 0,
-  DEBUG = 1,
-  INFO = 2,
-  WARN = 3,
-  ERROR = 4,
-  FATAL = 5,
-}
 
 /**
  * Configuration logger

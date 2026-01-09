@@ -16,6 +16,7 @@ import {
   loadIdentityMatrix,
   validateIdentityMatrix,
 } from '@/core/identity/defaultIdentityMatrix';
+import { logger } from '@/utils/logger';
 
 export interface UseIdentityMatrixResult {
   /** Matrice identité (toujours définie) */

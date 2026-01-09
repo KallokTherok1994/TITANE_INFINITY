@@ -24,14 +24,15 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-// Log deprecation warning on first import
-logger.warn('useVoiceMode hook is deprecated. Use useVoiceEngine instead.');
-
 import { useState, useCallback, useRef } from 'react';
+import { logger } from '@/utils/logger';
 import { secureInvoke } from '@/lib/security';
 import { voiceService } from '../services/api';
 import { getAIConfig } from '../config/offline-first';
 import { confirmCloudAPIUsage } from '../utils/cloudAPIConfirmation';
+
+// Log deprecation warning on first import
+logger.warn('useVoiceMode hook is deprecated. Use useVoiceEngine instead.');
 
 export interface VoiceState {
   isRecording: boolean;

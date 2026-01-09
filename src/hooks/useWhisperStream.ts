@@ -26,6 +26,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 import { secureInvoke } from '@/lib/security';
+import { logger } from '@/utils/logger';
 
 /**
  * Transcription event from backend

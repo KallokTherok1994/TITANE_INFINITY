@@ -33,6 +33,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { SingularityBridge } from '@/services/singularityBridge';
 import type { SingularityState } from '@/types/singularityState';
+import { logger } from '@/utils/logger';
 
 const SINGULARITY_STORAGE_KEY = 'singularity-storage';
 

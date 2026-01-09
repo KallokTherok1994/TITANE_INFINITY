@@ -5,6 +5,7 @@
  */
 
 import { useState, useCallback } from 'react';
+import { logger } from '@/utils/logger';
 import { numericTwinService } from '../services/api/numericTwin';
 import type { ObservationType } from '../types/numericTwin';
 
