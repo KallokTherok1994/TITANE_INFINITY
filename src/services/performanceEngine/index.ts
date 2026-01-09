@@ -257,7 +257,7 @@ export class PerformanceEngine {
       timestamp: Date.now(),
     });
 
-    logger.debug('Profil changé:', profile);
+    logger.debug('Profil changé:', { module: 'PerformanceEngine', profile });
   }
 
   /**

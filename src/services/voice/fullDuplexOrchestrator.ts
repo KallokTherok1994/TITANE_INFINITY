@@ -166,7 +166,11 @@ export class FullDuplexOrchestrator {
     try {
       await hybridTTS.speak(text);
     } catch (error) {
-      logger.error('TTS error:', error);
+      logger.error(
+        'TTS error:',
+        { module: 'FullDuplexOrchestrator' },
+        error instanceof Error ? error : new Error(String(error))
+      );
       this.emitEvent({
         type: 'error',
         state: this.state,
@@ -253,7 +257,11 @@ export class FullDuplexOrchestrator {
 
       logger.debug('✅ Listening active');
     } catch (error) {
-      logger.error('Listening error:', error);
+      logger.error(
+        'Listening error:',
+        { module: 'FullDuplexOrchestrator' },
+        error instanceof Error ? error : new Error(String(error))
+      );
       this.isListening = false;
       this.emitEvent({
         type: 'error',
@@ -320,7 +328,7 @@ export class FullDuplexOrchestrator {
    * Injecte une interruption avec texte
    */
   async injectInterruption(text: string): Promise<void> {
-    logger.debug('💬 Inject interruption:', text);
+    logger.debug('💬 Inject interruption:', { module: 'FullDuplexOrchestrator', text });
 
     // Stop TTS
     await this.interrupt();

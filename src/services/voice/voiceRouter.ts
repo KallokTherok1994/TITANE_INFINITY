@@ -32,6 +32,7 @@
 import { hybridTTS } from '@/services/tts/hybridTTS';
 import { audioStateMachine } from '@/services/audio/audioStateMachine';
 import type { AIMessage } from '@/services/ai/types';
+import { getMessageText } from '@/services/ai/types';
 import { emotionalAnalyzer } from './emotionalAnalyzer';
 import { emotionalTTS } from './emotionalTTS';
 import type { EmotionalIntent, EmotionalContext, EmotionType } from './emotionalIntent';
@@ -186,9 +187,10 @@ class VoiceRouterService {
         config.aiTimeout || 30000
       );
 
+      const responseText = getMessageText(aiResponse);
       logger.debug(
         '✅ AI response received:',
-        aiResponse.content.substring(0, 60)
+        responseText.substring(0, 60)
       );
       config.onAIResponse?.(aiResponse);
 
@@ -199,7 +201,7 @@ class VoiceRouterService {
         logger.debug('🎭 Phase 2: Analyzing emotion...');
 
         const analysisResult = emotionalAnalyzer.analyze(
-          aiResponse.content,
+          responseText,
           config.emotionalContext
         );
 
@@ -225,7 +227,7 @@ class VoiceRouterService {
         config.onTTSStart?.();
 
         await this.speakEmotionalWithTimeout(
-          aiResponse.content,
+          responseText,
           analysisResult.intent,
           config.useOnlineTTS || false,
           config.ttsTimeout || 60000
@@ -248,7 +250,7 @@ class VoiceRouterService {
         config.onTTSStart?.();
 
         await this.speakWithTimeout(
-          aiResponse.content,
+          responseText,
           config.useOnlineTTS || false,
           config.ttsTimeout || 60000
         );

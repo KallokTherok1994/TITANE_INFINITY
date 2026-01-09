@@ -17,6 +17,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useGlobalAIChat } from '../hooks/useGlobalAIChat';
 import { MessageBubble } from './chat/MessageBubble';
 import type { Message as _Message } from '../core/ARCHITECTURE_TYPES_v∞';
+import { getMessageText } from '@/services/ai/types';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -366,7 +367,7 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
             <MessageBubble
               key={message.timestamp ? `${message.timestamp}-${index}` : `msg-${index}`}
               role={message.role}
-              content={message.content}
+              content={getMessageText(message)}
               timestamp={message.timestamp}
             />
           ))}

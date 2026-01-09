@@ -171,7 +171,7 @@ class AudioStateMachine {
 
       // ✅ AUTO-RECOVERY: Reset to idle on invalid transitions for critical events
       if (event === 'RESET' || event === 'ERROR') {
-        logger.warn('🛡️ Forcing state to idle due to', event);
+        logger.warn(`🛡️ Forcing state to idle due to ${event}`, { module: 'AudioStateMachine' });
         this.state = 'idle';
         this.notifyListeners('idle', previousState, event);
         return true;
@@ -218,7 +218,11 @@ class AudioStateMachine {
       try {
         listener(newState, previousState, event);
       } catch (e) {
-        logger.error('Listener error:', e);
+        logger.error(
+          'Listener error:',
+          { module: 'AudioStateMachine' },
+          e instanceof Error ? e : new Error(String(e))
+        );
       }
     });
   }

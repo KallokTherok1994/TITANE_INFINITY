@@ -27,6 +27,7 @@ import { detectEnvironment } from '@/core/tauri/environment';
 import { secureInvoke } from '@/lib/security';
 import { useChat } from '@/hooks/useChat';
 import { voiceRouter } from '@/services/voice/voiceRouter';
+import { getMessageText } from '@/services/ai/types';
 import {
   attentionEngine,
   type AttentionState,
@@ -493,7 +494,7 @@ export function useVoiceEngine(
             }
           },
           onAIResponse: aiResponse => {
-            logger.debug('AI response:', aiResponse.content.substring(0, 50));
+            logger.debug('AI response:', getMessageText(aiResponse).substring(0, 50));
           },
           onTTSStart: () => {
             logger.debug('TTS started');

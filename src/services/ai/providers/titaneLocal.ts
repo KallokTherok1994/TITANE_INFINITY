@@ -12,6 +12,7 @@
  */
 
 import type { AIProvider, AIMessage, AIResponse } from '../types';
+import { getMessageText } from '../types';
 import { createLogger } from '@/utils/logger';
 
 const logger = createLogger('TitaneLocal');
@@ -226,10 +227,10 @@ function extractMemoryInsight(history: AIMessage[]): string | null {
     /(favorite|préfér|couleur|color|name|appel(?:e|é)|souviens|remember)/i;
   const recentPreference = [...history]
     .reverse()
-    .find(msg => msg.role === 'user' && preferencePattern.test(msg.content));
+    .find(msg => msg.role === 'user' && preferencePattern.test(getMessageText(msg)));
 
   if (recentPreference) {
-    return recentPreference.content;
+    return getMessageText(recentPreference);
   }
 
   return null;
@@ -311,7 +312,7 @@ Que souhaites-tu explorer ?`;
     const recentUserMessages = history
       .filter(m => m.role === 'user')
       .slice(-3)
-      .map(m => m.content.substring(0, 40))
+      .map(m => getMessageText(m).substring(0, 40))
       .join(' → ');
 
     if (conversationLength > 15) {
