@@ -1008,6 +1008,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // ═══════════════════════════════════════════════════════════════
   // CONVERSATIONS (v24.4+)
   // ═══════════════════════════════════════════════════════════════
+  'create_new_conversation',
   'delete_conversation',
   'complete_onboarding',
   'is_onboarding_complete',

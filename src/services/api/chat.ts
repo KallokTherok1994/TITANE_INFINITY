@@ -18,12 +18,19 @@ import { logger } from '@/utils/logger';
  */
 export type ConversationId = string;
 
-/**
- * Réponse de création de conversation
- */
-interface StartConversationResponse {
-  conversation_id: string;
-}
+const extractConversationId = (value: unknown): ConversationId => {
+  if (typeof value === 'string' && value.length > 0) return value;
+
+  if (typeof value === 'object' && value !== null) {
+    const record = value as Record<string, unknown>;
+    const conversationId = record['conversation_id'];
+    if (typeof conversationId === 'string' && conversationId.length > 0) {
+      return conversationId;
+    }
+  }
+
+  throw new Error('Réponse invalide: conversation_id manquant');
+};
 
 /**
  * Message de conversation
@@ -185,13 +192,14 @@ class ChatService {
   async startNewConversation(): Promise<ConversationId> {
     logger.debug('🚀 Démarrage d’une nouvelle conversation...');
     try {
-      const response = await invokeWithRetry<StartConversationResponse>(
+      const response = await invokeWithRetry<unknown>(
         'create_new_conversation',
         {},
         { ...LONG_COMMAND_OPTIONS, context: 'StartConversation' }
       );
-      logger.debug('✅ Conversation créée avec ID:', response.conversation_id);
-      return response.conversation_id;
+      const conversationId = extractConversationId(response);
+      logger.debug('✅ Conversation créée avec ID:', conversationId);
+      return conversationId;
     } catch (error) {
       logger.error('❌ Erreur lors de la création de la conversation:', error);
       throw new Error('Impossible de démarrer une nouvelle conversation.');

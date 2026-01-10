@@ -47,8 +47,36 @@ if command -v cargo-audit &> /dev/null; then
     cargo audit > "../$REPORT_DIR/cargo-audit.txt" 2>&1 || true
     CARGO_VULNS=$(jq -r '.vulnerabilities.count // 0' "../$REPORT_DIR/cargo-audit.json" 2>/dev/null || echo "0")
     echo "   └─ Vulnerabilities: $CARGO_VULNS"
+
+    # Strict gate (deny warnings) with baseline ignores for known transitive advisories.
+    # Source of truth: .github/copilot-xs/cargo-audit-ignores.txt
+    STRICT_AUDIT_EXIT=0
+    IGNORE_FILE="../.github/copilot-xs/cargo-audit-ignores.txt"
+    IGNORE_ARGS=()
+    if [ -f "$IGNORE_FILE" ]; then
+        while IFS= read -r line; do
+            line="${line%%#*}"
+            line="$(echo "$line" | xargs)"
+            if [ -n "$line" ]; then
+                IGNORE_ARGS+=("--ignore" "$line")
+            fi
+        done < "$IGNORE_FILE"
+    fi
+
+    set +e
+    cargo audit --deny warnings "${IGNORE_ARGS[@]}" > "../$REPORT_DIR/cargo-audit-strict.txt" 2>&1
+    STRICT_AUDIT_EXIT=$?
+    set -e
+
+    if [ "$STRICT_AUDIT_EXIT" -eq 0 ]; then
+        CARGO_AUDIT_STRICT_STATUS="✅"
+    else
+        CARGO_AUDIT_STRICT_STATUS="❌"
+    fi
+    echo "   └─ Cargo strict gate: $CARGO_AUDIT_STRICT_STATUS (exit=$STRICT_AUDIT_EXIT)"
 else
     echo "   └─ ⚠️ cargo-audit not installed (run: cargo install cargo-audit)"
+    CARGO_AUDIT_STRICT_STATUS="⚠️"
 fi
 cd ..
 
@@ -74,10 +102,10 @@ echo ""
 echo "⚙️ [4/8] Auditing Tauri commands..."
 {
     echo "=== All Tauri Commands ==="
-    grep -r "#\[tauri::command\]" src-tauri/src/ | wc -l
+    grep -r "#\[tauri::command\]" src-tauri/src/ --include="*.rs" | wc -l
     echo ""
     echo "=== Commands List ==="
-    grep -A1 "#\[tauri::command\]" src-tauri/src/ | grep "pub fn" | sed 's/pub fn //' | sed 's/(.*$//' | sort
+    grep -r -A1 "#\[tauri::command\]" src-tauri/src/ --include="*.rs" | grep "pub fn" | sed 's/pub fn //' | sed 's/(.*$//' | sort
     echo ""
     echo "=== Allowlist Check ==="
     if [ -f "tauri.base.json" ]; then
@@ -180,6 +208,7 @@ cat > "$REPORT_DIR/SECURITY_SUMMARY.md" << EOF
 |----------|----------|------|--------|--------|
 | Node Dependencies | $NODE_CRITICAL | $NODE_HIGH | - | $([ "$NODE_CRITICAL" -eq 0 ] && echo "✅" || echo "❌") |
 | Cargo Vulnerabilities | - | - | $CARGO_VULNS | $([ "$CARGO_VULNS" -eq 0 ] && echo "✅" || echo "⚠️") |
+| Cargo Audit Strict (deny warnings) | - | - | - | $CARGO_AUDIT_STRICT_STATUS |
 | Secrets Detected | - | $SECRETS_COUNT | - | $([ "$SECRETS_COUNT" -eq 0 ] && echo "✅" || echo "⚠️") |
 | Tauri Commands | - | $COMMANDS_COUNT | - | ✅ |
 | Rust unwrap() | - | $UNWRAP_COUNT | - | $([ "$UNWRAP_COUNT" -eq 0 ] && echo "✅" || echo "❌") |

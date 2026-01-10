@@ -1241,9 +1241,39 @@ pub async fn clear_memory() -> Result<bool, String> {
 #[tauri::command]
 pub async fn store_file(path: String, category: String, content: String) -> Result<bool, String> {
     log::info!("[MEMORY] store_file: {} ({})", path, category);
-    match crate::memory_persistence::store_file(&path, &category, &content) {
+    match store_file_impl(crate::memory_persistence::store_file, &path, &category, &content) {
         Ok(_) => Ok(true),
         Err(e) => Err(e),
+    }
+}
+
+fn store_file_impl<F>(store_fn: F, path: &str, category: &str, content: &str) -> Result<(), String>
+where
+    F: FnOnce(&str, &str, &str) -> Result<(), String>,
+{
+    // memory_persistence::store_file signature is (path, content, category)
+    store_fn(path, content, category)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::store_file_impl;
+
+    #[test]
+    fn store_file_impl_passes_content_and_category_in_correct_order() {
+        let mut captured: Option<(String, String, String)> = None;
+
+        let fake_store = |path: &str, content: &str, category: &str| {
+            captured = Some((path.to_string(), content.to_string(), category.to_string()));
+            Ok(())
+        };
+
+        store_file_impl(fake_store, "p.txt", "legal", "HELLO").expect("store_file_impl should succeed");
+
+        let (path, content, category) = captured.expect("fake_store should be called");
+        assert_eq!(path, "p.txt");
+        assert_eq!(content, "HELLO");
+        assert_eq!(category, "legal");
     }
 }
 

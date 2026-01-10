@@ -7,6 +7,9 @@
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { invoke } from '@tauri-apps/api/core';
+import { writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 // Skip E2E tests in unit test runs (require running Tauri app)
 const SKIP_E2E = !process.env.RUN_E2E_TESTS;
@@ -77,6 +80,13 @@ function extractChatContent(response: unknown): string {
     }
   }
   return '';
+}
+
+async function writeTempFile(prefix: string, content: string): Promise<string> {
+  const filename = `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}.txt`;
+  const filePath = join(tmpdir(), filename);
+  await writeFile(filePath, content, 'utf8');
+  return filePath;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -225,10 +235,11 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 2: Legal Designer Workflow', () => {
 
     // Step 2: Parser un template légal (mock)
     const step2 = await measureStep('Parse legal template', async () => {
-      const parsed = await invoke('parse_document', {
-        content: 'CONTRAT DE PRESTATION\n\nArticle 1: Objet',
-        format: 'text',
-      });
+      const filePath = await writeTempFile(
+        'titane-legal-template',
+        'CONTRAT DE PRESTATION\n\nArticle 1: Objet'
+      );
+      const parsed = await invoke('parse_document', { file_path: filePath });
       expect(parsed).toBeDefined();
       return parsed;
     });
@@ -255,11 +266,9 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 2: Legal Designer Workflow', () => {
     // Step 4: Sauvegarder document édité
     const step4 = await measureStep('Save edited document', async () => {
       const result = await invoke('store_file', {
-        file: {
-          name: 'contrat_edit_v1.txt',
-          content: 'CONTRAT DE PRESTATION MODIFIÉ\n\nArticle 1: Objet étendu',
-          category: 'legal',
-        },
+        path: 'contrat_edit_v1.txt',
+        category: 'legal',
+        content: 'CONTRAT DE PRESTATION MODIFIÉ\n\nArticle 1: Objet étendu',
       });
       return result;
     });

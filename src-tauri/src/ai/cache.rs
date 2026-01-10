@@ -10,6 +10,8 @@ use std::sync::Arc;
 use std::time::{Duration, Instant};
 use tokio::sync::RwLock;
 
+use crate::bounded::BoundedHashMap;
+
 /// Configuration du cache AI
 #[derive(Debug, Clone)]
 pub struct AICacheConfig {
@@ -76,7 +78,7 @@ pub struct CachedProviderStatus {
 pub struct AIRouterCache {
     config: AICacheConfig,
     /// Cache des réponses (clé = hash du prompt)
-    responses: Arc<RwLock<lru::LruCache<u64, CacheEntry<CachedAIResponse>>>>,
+    responses: Arc<RwLock<BoundedHashMap<u64, CacheEntry<CachedAIResponse>>>>,
     /// Cache des statuts provider
     provider_status:
         Arc<RwLock<std::collections::HashMap<String, CacheEntry<CachedProviderStatus>>>>,
@@ -107,12 +109,18 @@ impl CacheStats {
 impl AIRouterCache {
     /// Créer un nouveau cache
     pub fn new(config: AICacheConfig) -> Self {
-        let capacity = std::num::NonZeroUsize::new(config.response_cache_capacity)
-            .unwrap_or_else(|| std::num::NonZeroUsize::new(500).expect("500 is non-zero"));
+        let mut config = config;
+        if config.response_cache_capacity == 0 {
+            config.response_cache_capacity = 500;
+        }
+
+        let response_cache_capacity = config.response_cache_capacity;
 
         Self {
             config,
-            responses: Arc::new(RwLock::new(lru::LruCache::new(capacity))),
+            responses: Arc::new(RwLock::new(BoundedHashMap::new(
+                response_cache_capacity,
+            ))),
             provider_status: Arc::new(RwLock::new(std::collections::HashMap::new())),
             stats: Arc::new(RwLock::new(CacheStats::default())),
         }
@@ -147,7 +155,14 @@ impl AIRouterCache {
         let mut cache = self.responses.write().await;
 
         if let Some(entry) = cache.get(&key) {
-            if !entry.is_expired() {
+            if entry.is_expired() {
+                // Entrée expirée, supprimer
+                cache.remove(&key);
+            } else {
+                // Cloner avant d'attendre d'autres verrous (réduit contention)
+                let value = entry.value.clone();
+                drop(cache);
+
                 // Cache hit
                 let mut stats = self.stats.write().await;
                 stats.hits += 1;
@@ -160,12 +175,11 @@ impl AIRouterCache {
                     stats.hit_rate() * 100.0
                 );
 
-                return Some(entry.value.clone());
-            } else {
-                // Entrée expirée, supprimer
-                cache.pop(&key);
+                return Some(value);
             }
         }
+
+        drop(cache);
 
         // Cache miss
         let mut stats = self.stats.write().await;
@@ -192,13 +206,14 @@ impl AIRouterCache {
 
         let mut cache = self.responses.write().await;
 
-        // Vérifier si on a atteint la capacité (LRU éviction automatique)
-        if cache.len() >= self.config.response_cache_capacity {
+        // Détecter une éviction potentielle (insert sur cache plein, clé nouvelle)
+        let will_evict = cache.len() >= self.config.response_cache_capacity && !cache.contains_key(&key);
+        if will_evict {
             let mut stats = self.stats.write().await;
             stats.evictions += 1;
         }
 
-        cache.put(key, entry);
+        cache.insert(key, entry);
 
         log::debug!("[AI Cache] SET: key={} | cache_size={}", key, cache.len());
     }
@@ -265,7 +280,7 @@ impl AIRouterCache {
             .collect();
 
         for key in keys_to_remove {
-            cache.pop(&key);
+            cache.remove(&key);
         }
 
         // Nettoyer les statuts expirés
