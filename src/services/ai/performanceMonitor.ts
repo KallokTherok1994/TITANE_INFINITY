@@ -500,7 +500,8 @@ export class PerformanceMonitor {
    */
   getCategorySummary(category: MetricCategory): Record<string, MetricStats> {
     const pattern = new RegExp(`^${category}\\.`);
-    return this.getMetricsByPattern(pattern);
+    const metricsMap = this.getMetricsByPattern(pattern);
+    return Object.fromEntries(metricsMap.entries());
   }
 
   /**
