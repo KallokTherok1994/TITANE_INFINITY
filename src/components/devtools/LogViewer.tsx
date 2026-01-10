@@ -194,19 +194,19 @@ export const LogViewer: React.FC<LogViewerProps> = ({
               className="flex gap-3 hover:bg-gray-800 px-2 py-1 rounded transition"
             >
               {/* Timestamp */}
-              <span className="text-gray-500 flex-shrink-0">
+              <span className="text-gray-500 shrink-0">
                 {new Date(log.timestamp).toLocaleTimeString()}
               </span>
 
               {/* Level */}
               <span
-                className={`${getLevelColor(log.level)} font-semibold flex-shrink-0 w-12`}
+                className={`${getLevelColor(log.level)} font-semibold shrink-0 w-12`}
               >
                 {log.level.toUpperCase()}
               </span>
 
               {/* Source */}
-              <span className="text-blue-400 flex-shrink-0 max-w-[150px] truncate">
+              <span className="text-blue-400 shrink-0 max-w-37.5 truncate">
                 [{log.source}]
               </span>
 

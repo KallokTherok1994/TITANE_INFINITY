@@ -25,8 +25,7 @@
 /* ═══════════════════════════════════════════════════════════════ */
 @config "../tailwind.config.ts";
 
-@tailwind base;
-@tailwind components;
+@import "tailwindcss/preflight";
 @tailwind utilities;
 
 /* ═══════════════════════════════════════════════════════════════ */
@@ -144,11 +143,11 @@
 
   /* Text utilities */
   .text-gradient-violet {
-    @apply bg-gradient-to-r from-violet-400 to-violet-600 bg-clip-text text-transparent;
+    @apply bg-linear-to-r from-violet-400 to-violet-600 bg-clip-text text-transparent;
   }
 
   .text-gradient-sage {
-    @apply bg-gradient-to-r from-lime-400 to-lime-600 bg-clip-text text-transparent;
+    @apply bg-linear-to-r from-lime-400 to-lime-600 bg-clip-text text-transparent;
   }
 
   /* Glow effects */
