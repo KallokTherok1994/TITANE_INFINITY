@@ -6,7 +6,7 @@
 
 use aes_gcm::aead::{Aead, KeyInit};
 use aes_gcm::{Aes256Gcm, Nonce};
-use argon2::password_hash::rand_core::RngCore;
+use rand::RngCore;
 use argon2::Argon2;
 use base64::Engine as _;
 use log::{debug, error, info, warn};
@@ -373,7 +373,7 @@ impl SecureSecretsEngine {
     fn encrypt_buffer(passphrase: &str, plaintext: &[u8]) -> Result<Vec<u8>, SecretsError> {
         let mut salt = [0u8; SALT_LEN];
         let mut nonce = [0u8; NONCE_LEN];
-        let mut rng = rand::rngs::OsRng;
+        let mut rng = rand::thread_rng();
         rng.fill_bytes(&mut salt);
         rng.fill_bytes(&mut nonce);
 
