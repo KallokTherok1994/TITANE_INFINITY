@@ -23,10 +23,9 @@
 /* ═══════════════════════════════════════════════════════════════ */
 /* TAILWIND CSS v4 — With Configuration                             */
 /* ═══════════════════════════════════════════════════════════════ */
-@config "../tailwind.config.ts";
+@import "tailwindcss";
 
-@import "tailwindcss/preflight";
-@tailwind utilities;
+@config "../tailwind.config.ts";
 
 /* ═══════════════════════════════════════════════════════════════ */
 /* UI/UX POLISH v26.2.3 — Smooth Scroll & Better Rendering          */
