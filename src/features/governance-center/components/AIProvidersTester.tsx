@@ -148,7 +148,7 @@ export const AIProvidersTester: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 p-3 shadow-lg">
+          <div className="rounded-xl bg-linear-to-br from-purple-500 to-pink-600 p-3 shadow-lg">
             <Zap className="h-6 w-6 text-white" />
           </div>
           <div>

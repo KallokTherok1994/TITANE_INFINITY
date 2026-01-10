@@ -116,11 +116,11 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
   }, [fetchStats]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-green-900 to-gray-900 p-6">
+    <div className="min-h-screen bg-linear-to-br from-gray-900 via-green-900 to-gray-900 p-6">
       {/* Header */}
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600">
+          <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-linear-to-r from-green-400 to-emerald-600">
             Moniteur d&apos;Évolution
           </h1>
           <p className="text-gray-400 mt-2">
@@ -131,7 +131,7 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
         <button
           onClick={runEvolutionCycle}
           disabled={isEvolving}
-          className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold px-6 py-3 rounded-lg transition-all"
+          className="bg-linear-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold px-6 py-3 rounded-lg transition-all"
         >
           {isEvolving ? '⏳ Évolution...' : '🧬 Lancer un Cycle d’Évolution'}
         </button>
@@ -141,7 +141,7 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
         <>
           {/* Heuristics Dashboard */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
+            <div className="bg-linear-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
               <div className="text-gray-400 text-sm mb-2">Stabilité</div>
               <div
                 className={`text-3xl font-bold ${getMetricColor(stats.current_metrics.stability, 90)}`}
@@ -156,7 +156,7 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
+            <div className="bg-linear-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
               <div className="text-gray-400 text-sm mb-2">Cohérence</div>
               <div
                 className={`text-3xl font-bold ${getMetricColor(stats.current_metrics.coherence, 95)}`}
@@ -171,7 +171,7 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-yellow-500/20 to-orange-500/20 backdrop-blur-xl rounded-2xl p-6 border border-yellow-500/30">
+            <div className="bg-linear-to-br from-yellow-500/20 to-orange-500/20 backdrop-blur-xl rounded-2xl p-6 border border-yellow-500/30">
               <div className="text-gray-400 text-sm mb-2">Performance</div>
               <div
                 className={`text-3xl font-bold ${getMetricColor(stats.current_metrics.performance, 85)}`}
@@ -186,7 +186,7 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
+            <div className="bg-linear-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
               <div className="text-gray-400 text-sm mb-2">Profondeur Cognitive</div>
               <div
                 className={`text-3xl font-bold ${getMetricColor(stats.current_metrics.cognitive_depth, 80)}`}

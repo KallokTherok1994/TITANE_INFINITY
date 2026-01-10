@@ -85,7 +85,7 @@ const TemporalFlowCenter: React.FC = () => {
     <div className="temporal-flow-center p-6 space-y-6 bg-gray-900 min-h-screen text-gray-100">
       {/* Header */}
       <div className="header mb-8">
-        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-cyan-600 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold mb-2 bg-linear-to-r from-blue-400 to-cyan-600 bg-clip-text text-transparent">
           ⏳ Centre Temps & Navigation Temporelle
         </h1>
         <p className="text-gray-400">
@@ -210,7 +210,7 @@ const NowSection: React.FC<NowSectionProps> = ({
 
       {/* Bloc actuel */}
       {currentBlock && (
-        <div className="bg-gradient-to-r from-blue-900 to-cyan-900 rounded-lg p-6 border border-blue-700">
+        <div className="bg-linear-to-r from-blue-900 to-cyan-900 rounded-lg p-6 border border-blue-700">
           <h3 className="text-xl font-semibold mb-2 text-blue-300">🎯 En ce moment</h3>
           <div className="flex items-center justify-between">
             <div>
@@ -280,7 +280,7 @@ const NowSection: React.FC<NowSectionProps> = ({
       </div>
 
       {/* Suggestion TITANE */}
-      <div className="bg-gradient-to-r from-purple-900 to-pink-900 rounded-lg p-6 border border-purple-700">
+      <div className="bg-linear-to-r from-purple-900 to-pink-900 rounded-lg p-6 border border-purple-700">
         <h3 className="text-xl font-semibold mb-2 text-purple-300">
           ✨ Suggestion TITANE
         </h3>
@@ -481,7 +481,7 @@ const TimelineSection: React.FC = () => {
       <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
         <div className="relative">
           {/* Ligne centrale */}
-          <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500 via-cyan-500 to-purple-500" />
+          <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-linear-to-b from-blue-500 via-cyan-500 to-purple-500" />
 
           {/* Événements */}
           <div className="space-y-6">
@@ -558,7 +558,7 @@ const TimelineSection: React.FC = () => {
       </div>
 
       {/* Projection Future */}
-      <div className="bg-gradient-to-r from-purple-900 to-indigo-900 rounded-lg p-6 border border-purple-700">
+      <div className="bg-linear-to-r from-purple-900 to-indigo-900 rounded-lg p-6 border border-purple-700">
         <h3 className="text-xl font-semibold mb-4 text-purple-300">
           🔮 Projection Future
         </h3>
@@ -626,7 +626,7 @@ const IntelligenceSection: React.FC = () => {
       </div>
 
       {/* Recommandations Pédagogiques */}
-      <div className="bg-gradient-to-r from-cyan-900 to-blue-900 rounded-lg p-6 border border-cyan-700">
+      <div className="bg-linear-to-r from-cyan-900 to-blue-900 rounded-lg p-6 border border-cyan-700">
         <h3 className="text-xl font-semibold mb-4 text-cyan-300">
           💡 Recommandations TITANE
         </h3>

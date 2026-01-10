@@ -80,7 +80,7 @@ export const ConsoleMonitorDashboard: React.FC = () => {
       {isExpanded && (
         <div className="border-t-2 border-gray-700">
           {/* Stats Grid */}
-          <div className="grid grid-cols-3 gap-4 p-4 bg-gradient-to-br from-gray-800/60 to-gray-900/60">
+          <div className="grid grid-cols-3 gap-4 p-4 bg-linear-to-br from-gray-800/60 to-gray-900/60">
             <StatCard label="Logs" value={stats.totalLogs} icon="📝" />
             <StatCard
               label="Warnings"
