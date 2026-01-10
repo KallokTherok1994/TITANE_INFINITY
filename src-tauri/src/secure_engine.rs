@@ -6,9 +6,9 @@
 
 use aes_gcm::aead::{Aead, KeyInit};
 use aes_gcm::{Aes256Gcm, Nonce};
-use argon2::{password_hash::rand_core::RngCore, Argon2};
+use argon2::Argon2;
 use base64::{engine::general_purpose, Engine as _};
-use rand::rngs::OsRng;
+use rand::RngCore;
 use std::path::Path;
 use tokio::fs;
 use zeroize::{Zeroize, Zeroizing};
@@ -51,8 +51,9 @@ pub fn derive_key_from_passphrase(
 pub fn encrypt_secret(passphrase: &str, plaintext: &[u8]) -> SecureEngineResult<Vec<u8>> {
     let mut salt = [0u8; SALT_LEN];
     let mut nonce_bytes = [0u8; NONCE_LEN];
-    OsRng.fill_bytes(&mut salt);
-    OsRng.fill_bytes(&mut nonce_bytes);
+    let mut rng = rand::thread_rng();
+    rng.fill_bytes(&mut salt);
+    rng.fill_bytes(&mut nonce_bytes);
 
     let key = derive_key_from_passphrase(passphrase, &salt)?;
     let cipher = Aes256Gcm::new_from_slice(key.as_ref())
