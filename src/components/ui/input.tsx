@@ -33,17 +33,17 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
  */
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   (
-    { 
-      label, 
-      helper, 
-      error, 
+    {
+      label,
+      helper,
+      error,
       success,
-      leftIcon, 
-      rightIcon, 
-      className = '', 
+      leftIcon,
+      rightIcon,
+      className = '',
       disabled,
       id,
-      ...props 
+      ...props
     },
     ref
   ) => {

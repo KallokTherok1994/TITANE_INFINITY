@@ -128,6 +128,7 @@ cline "Analyser cette maquette et créer le composant" -i design/mockup.png -s h
 ### Mode Plan (Analyse d'abord)
 
 Recommandé pour :
+
 - Refactoring important
 - Nouvelles fonctionnalités
 - Modifications architecturales
@@ -137,6 +138,7 @@ cline "Refactorer système de mémoire" -s hooks_enabled=true -m plan
 ```
 
 **Workflow :**
+
 1. Cline analyse et propose un plan
 2. Vous validez le plan
 3. Tapez `/act` pour exécuter
@@ -144,6 +146,7 @@ cline "Refactorer système de mémoire" -s hooks_enabled=true -m plan
 ### Mode Act (Exécution directe)
 
 Recommandé pour :
+
 - Corrections rapides
 - Ajout de tests
 - Formatage de code
@@ -153,6 +156,7 @@ cline "Fix linting errors" -s hooks_enabled=true -m act
 ```
 
 **Workflow :**
+
 1. Cline exécute immédiatement
 2. Vous voyez les résultats en temps réel
 
@@ -165,6 +169,7 @@ cline "Format all TypeScript files" -s hooks_enabled=true --yolo
 ```
 
 **Utilisez pour :**
+
 - Tâches répétitives sûres
 - Scripts d'automatisation
 - CI/CD
@@ -254,6 +259,7 @@ chf() { cline "$1" -f "$2" -s hooks_enabled=true; }
 ```
 
 Usage :
+
 ```bash
 ch "Votre question"
 chp "Analyser architecture"

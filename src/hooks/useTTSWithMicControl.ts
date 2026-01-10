@@ -156,7 +156,9 @@ export function useTTSWithMicControl(
         clearTimeout(resumeTimeoutRef.current);
       }
       if (audioIdRef.current) {
-        voiceService.stopSpeaking().catch(err => logger.error('Cleanup error', { error: err }));
+        voiceService
+          .stopSpeaking()
+          .catch(err => logger.error('Cleanup error', { error: err }));
       }
       // Ensure VAD is resumed
       vad.resumeAfterTTS(0);

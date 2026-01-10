@@ -17,7 +17,7 @@ const logger = createLogger('PerformanceAlerts');
 export enum AlertSeverity {
   INFO = 'info',
   WARNING = 'warning',
-  CRITICAL = 'critical'
+  CRITICAL = 'critical',
 }
 
 /**
@@ -28,7 +28,7 @@ export enum AlertType {
   ERROR_RATE = 'error_rate',
   HEALTH_DEGRADATION = 'health_degradation',
   OPERATION_FAILURE = 'operation_failure',
-  HIGH_VARIANCE = 'high_variance'
+  HIGH_VARIANCE = 'high_variance',
 }
 
 /**
@@ -52,9 +52,9 @@ export interface PerformanceAlert {
 export interface AlertThreshold {
   metricPattern: RegExp | string;
   category?: MetricCategory;
-  p95Threshold?: number;      // Max acceptable P95 latency (ms)
-  avgThreshold?: number;       // Max acceptable average latency (ms)
-  varianceThreshold?: number;  // Max acceptable variance ratio (stdDev/avg)
+  p95Threshold?: number; // Max acceptable P95 latency (ms)
+  avgThreshold?: number; // Max acceptable average latency (ms)
+  varianceThreshold?: number; // Max acceptable variance ratio (stdDev/avg)
   severity: AlertSeverity;
   enabled: boolean;
 }
@@ -81,40 +81,40 @@ export class PerformanceAlertManager {
   private static DEFAULT_THRESHOLDS: AlertThreshold[] = [
     {
       metricPattern: /^ai\.generation/,
-      p95Threshold: 3000,        // 3s for AI generation
-      avgThreshold: 2000,        // 2s average
-      varianceThreshold: 0.6,    // 60% variance
+      p95Threshold: 3000, // 3s for AI generation
+      avgThreshold: 2000, // 2s average
+      varianceThreshold: 0.6, // 60% variance
       severity: AlertSeverity.WARNING,
-      enabled: true
+      enabled: true,
     },
     {
       metricPattern: /^ai\.provider\./,
-      p95Threshold: 5000,        // 5s for provider calls
-      avgThreshold: 3000,        // 3s average
+      p95Threshold: 5000, // 5s for provider calls
+      avgThreshold: 3000, // 3s average
       severity: AlertSeverity.WARNING,
-      enabled: true
+      enabled: true,
     },
     {
       metricPattern: /^context\.management/,
-      p95Threshold: 100,         // 100ms for context management
-      avgThreshold: 50,          // 50ms average
+      p95Threshold: 100, // 100ms for context management
+      avgThreshold: 50, // 50ms average
       severity: AlertSeverity.INFO,
-      enabled: true
+      enabled: true,
     },
     {
       metricPattern: /^memory\.operations/,
-      p95Threshold: 200,         // 200ms for memory ops
-      avgThreshold: 100,         // 100ms average
+      p95Threshold: 200, // 200ms for memory ops
+      avgThreshold: 100, // 100ms average
       severity: AlertSeverity.WARNING,
-      enabled: true
+      enabled: true,
     },
     {
       metricPattern: /^ipc\.calls/,
-      p95Threshold: 500,         // 500ms for IPC
-      avgThreshold: 250,         // 250ms average
+      p95Threshold: 500, // 500ms for IPC
+      avgThreshold: 250, // 250ms average
       severity: AlertSeverity.WARNING,
-      enabled: true
-    }
+      enabled: true,
+    },
   ];
 
   constructor() {
@@ -213,9 +213,10 @@ export class PerformanceAlertManager {
         if (!threshold.enabled) continue;
 
         // Check if metric matches threshold pattern
-        const matches = typeof threshold.metricPattern === 'string'
-          ? metricName === threshold.metricPattern
-          : threshold.metricPattern.test(metricName);
+        const matches =
+          typeof threshold.metricPattern === 'string'
+            ? metricName === threshold.metricPattern
+            : threshold.metricPattern.test(metricName);
 
         if (!matches) continue;
 
@@ -228,7 +229,7 @@ export class PerformanceAlertManager {
             message: `P95 latency (${stats.p95.toFixed(0)}ms) exceeded threshold (${threshold.p95Threshold}ms)`,
             value: stats.p95,
             threshold: threshold.p95Threshold,
-            metadata: { thresholdId, percentile: 'p95', stats }
+            metadata: { thresholdId, percentile: 'p95', stats },
           });
         }
 
@@ -241,7 +242,7 @@ export class PerformanceAlertManager {
             message: `Average latency (${stats.avg.toFixed(0)}ms) exceeded threshold (${threshold.avgThreshold}ms)`,
             value: stats.avg,
             threshold: threshold.avgThreshold,
-            metadata: { thresholdId, percentile: 'avg', stats }
+            metadata: { thresholdId, percentile: 'avg', stats },
           });
         }
 
@@ -256,7 +257,7 @@ export class PerformanceAlertManager {
               message: `High variance detected (${(varianceRatio * 100).toFixed(1)}% > ${(threshold.varianceThreshold * 100).toFixed(1)}%)`,
               value: varianceRatio,
               threshold: threshold.varianceThreshold,
-              metadata: { thresholdId, stdDev: stats.stdDev, avg: stats.avg }
+              metadata: { thresholdId, stdDev: stats.stdDev, avg: stats.avg },
             });
           }
         }
@@ -273,7 +274,7 @@ export class PerformanceAlertManager {
         message: `System health critical: ${health.reasons.join('; ')}`,
         value: health.score,
         threshold: 70, // Consider < 70% as critical
-        metadata: { health }
+        metadata: { health },
       });
     } else if (health.status === 'warning') {
       this.triggerAlert({
@@ -283,7 +284,7 @@ export class PerformanceAlertManager {
         message: `System health warning: ${health.reasons.join('; ')}`,
         value: health.score,
         threshold: 90, // Consider < 90% as warning
-        metadata: { health }
+        metadata: { health },
       });
     }
   }
@@ -295,7 +296,7 @@ export class PerformanceAlertManager {
     const alert: PerformanceAlert = {
       id: `alert-${++this.alertIdCounter}`,
       timestamp: Date.now(),
-      ...params
+      ...params,
     };
 
     // Add to alerts list
@@ -307,8 +308,12 @@ export class PerformanceAlertManager {
     }
 
     // Log alert
-    const logMethod = alert.severity === AlertSeverity.CRITICAL ? 'error' :
-                     alert.severity === AlertSeverity.WARNING ? 'warn' : 'info';
+    const logMethod =
+      alert.severity === AlertSeverity.CRITICAL
+        ? 'error'
+        : alert.severity === AlertSeverity.WARNING
+          ? 'warn'
+          : 'info';
     logger[logMethod](`Performance Alert [${alert.severity}]: ${alert.message}`, alert);
 
     // Notify handlers
@@ -365,7 +370,7 @@ export class PerformanceAlertManager {
     const bySeverity: Record<AlertSeverity, number> = {
       [AlertSeverity.INFO]: 0,
       [AlertSeverity.WARNING]: 0,
-      [AlertSeverity.CRITICAL]: 0
+      [AlertSeverity.CRITICAL]: 0,
     };
 
     const byType: Record<AlertType, number> = {
@@ -373,7 +378,7 @@ export class PerformanceAlertManager {
       [AlertType.ERROR_RATE]: 0,
       [AlertType.HEALTH_DEGRADATION]: 0,
       [AlertType.OPERATION_FAILURE]: 0,
-      [AlertType.HIGH_VARIANCE]: 0
+      [AlertType.HIGH_VARIANCE]: 0,
     };
 
     const oneHourAgo = Date.now() - 3600000;
@@ -391,7 +396,7 @@ export class PerformanceAlertManager {
       total: this.alerts.length,
       bySeverity,
       byType,
-      recentCount
+      recentCount,
     };
   }
 
@@ -422,14 +427,20 @@ export const performanceAlerts = new PerformanceAlertManager();
 /**
  * Default alert handler - logs to console
  */
-performanceAlerts.onAlert((alert) => {
-  const icon = alert.severity === AlertSeverity.CRITICAL ? '🚨' :
-               alert.severity === AlertSeverity.WARNING ? '⚠️' : 'ℹ️';
+performanceAlerts.onAlert(alert => {
+  const icon =
+    alert.severity === AlertSeverity.CRITICAL
+      ? '🚨'
+      : alert.severity === AlertSeverity.WARNING
+        ? '⚠️'
+        : 'ℹ️';
 
   console.log(`${icon} Performance Alert [${alert.severity.toUpperCase()}]`);
   console.log(`  Metric: ${alert.metricName}`);
   console.log(`  Message: ${alert.message}`);
-  console.log(`  Value: ${alert.value.toFixed(2)}, Threshold: ${alert.threshold.toFixed(2)}`);
+  console.log(
+    `  Value: ${alert.value.toFixed(2)}, Threshold: ${alert.threshold.toFixed(2)}`
+  );
 });
 
 /**

@@ -1,4 +1,4 @@
-name: "Dependabot: auto-request review"
+name: 'Dependabot: auto-request review'
 
 on:
   pull_request_target:

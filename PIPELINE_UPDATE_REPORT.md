@@ -1,4 +1,5 @@
 # CI/CD Pipeline Update Report
+
 **TITANE∞ Repository - Complete Modernization**  
 **Date:** 2026-01-03  
 **Engineer:** Principal CI/CD Engineer  
@@ -13,15 +14,15 @@
 
 ### Key Metrics
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| **Workflow Files** | 7 (redundant) | 3 (optimized) | -57% |
-| **CI Duration** | ~45 min | ~20 min | +56% faster |
-| **Rust Versions** | Mixed (stable, 1.83, different actions) | 1.83 (pinned) | 100% deterministic |
-| **Explicit Permissions** | 2 jobs | All jobs | 100% security |
-| **Concurrency Control** | 1 workflow | All workflows | 100% efficiency |
-| **Timeout Protection** | 5 workflows | All workflows | 100% reliability |
-| **Action Versions** | Mixed (floating) | All pinned | 100% deterministic |
+| Metric                   | Before                                  | After         | Improvement        |
+| ------------------------ | --------------------------------------- | ------------- | ------------------ |
+| **Workflow Files**       | 7 (redundant)                           | 3 (optimized) | -57%               |
+| **CI Duration**          | ~45 min                                 | ~20 min       | +56% faster        |
+| **Rust Versions**        | Mixed (stable, 1.83, different actions) | 1.83 (pinned) | 100% deterministic |
+| **Explicit Permissions** | 2 jobs                                  | All jobs      | 100% security      |
+| **Concurrency Control**  | 1 workflow                              | All workflows | 100% efficiency    |
+| **Timeout Protection**   | 5 workflows                             | All workflows | 100% reliability   |
+| **Action Versions**      | Mixed (floating)                        | All pinned    | 100% deterministic |
 
 ---
 
@@ -30,16 +31,19 @@
 ### Workflows Discovered (7 files)
 
 **CI Workflows (4 files - REDUNDANT):**
+
 1. ✅ `ci-unified.yml` v26.2.0 - Modern, comprehensive (KEPT & UPGRADED)
 2. ❌ `ci.yml` - No version, basic, outdated (ARCHIVED)
 3. ❌ `ci-cd.yml` v22.0.0 - Outdated (ARCHIVED)
 4. ❌ `titane_ci.yml` v20Ω - Very outdated, different Rust action (ARCHIVED)
 
 **Release Workflows (2 files):**
+
 1. ✅ `release-unified.yml` v26.2.0 - Modern, multi-platform (KEPT & UPGRADED)
 2. ❌ `release.yml` v17.3.0 - Outdated (ARCHIVED)
 
 **Specialized Workflows (1 file):**
+
 1. ✅ `rust-docker.yml` - Docker-based Rust tests (KEPT & UPGRADED)
 
 ### Critical Issues Identified
@@ -85,6 +89,7 @@
 #### 1. ci-unified.yml (v26.2.0 → v26.3.0)
 
 **Changes:**
+
 - ✅ Added global `permissions: contents: read`
 - ✅ Added explicit permissions to ALL 7 jobs
 - ✅ Added `security-events: write` to security-audit job
@@ -100,6 +105,7 @@
 - ✅ Improved all job summaries with version info
 
 **Jobs:**
+
 1. lint-and-typecheck (15 min)
 2. test-frontend (20 min)
 3. test-backend (30 min)
@@ -109,6 +115,7 @@
 7. ci-status (5 min)
 
 **Rationale:**
+
 - Security: Explicit permissions prevent privilege escalation
 - Performance: Linux-only CI saves 2 OS builds (~30 min total)
 - Reliability: Swatinem/rust-cache is better optimized for Rust projects
@@ -118,6 +125,7 @@
 #### 2. release-unified.yml (v26.2.0 → v26.3.0)
 
 **Changes:**
+
 - ✅ Added global `permissions: contents: read`
 - ✅ Added concurrency control (`group`, `cancel-in-progress: false` for releases)
 - ✅ Added explicit permissions to ALL 4 jobs
@@ -126,12 +134,14 @@
 - ✅ All jobs already had timeouts (kept 60 min for builds)
 
 **Jobs:**
+
 1. build-linux (60 min, Ubuntu 22.04)
 2. build-windows (60 min, Windows Latest)
 3. build-macos (60 min, macOS Latest) - Matrix: Intel + Apple Silicon
 4. create-release (15 min, Ubuntu Latest)
 
 **Rationale:**
+
 - Security: Only release job can write (create releases)
 - Safety: cancel-in-progress: false prevents accidental release cancellations
 - Clarity: Better summaries with version tracking
@@ -139,6 +149,7 @@
 #### 3. rust-docker.yml (Modernized)
 
 **Changes:**
+
 - ✅ Added global `permissions: contents: read`
 - ✅ Added concurrency control
 - ✅ Added timeout-minutes (30 min)
@@ -151,6 +162,7 @@
 - ✅ Added env variable for Rust version
 
 **Rationale:**
+
 - Consistency: Same standards as other workflows
 - Reliability: Timeouts and explicit permissions
 - Clarity: Better summaries and unique artifact names
@@ -158,17 +170,20 @@
 ### Files Archived (4 files)
 
 Moved to `.github/workflows/archive/`:
+
 - ❌ ci.yml
 - ❌ ci-cd.yml
 - ❌ titane_ci.yml
 - ❌ release.yml
 
 Created `archive/README.md` with:
+
 - Explanation of why each file was archived
 - Migration notes
 - How to restore if needed (with warning to modernize first)
 
 **Rationale:**
+
 - Eliminate redundancy and confusion
 - Preserve history for reference
 - Clear documentation of what was removed and why
@@ -180,16 +195,18 @@ Created `archive/README.md` with:
 ### Caching Strategy (Standardized)
 
 **Node.js / pnpm:**
+
 ```yaml
 - uses: actions/setup-node@v4.1.0
   with:
     node-version: ${{ env.NODE_VERSION }}
-    cache: 'pnpm'  # Built-in, efficient
+    cache: 'pnpm' # Built-in, efficient
 ```
 
 **Rust / Cargo (UPGRADED):**
 
 **Before:**
+
 ```yaml
 - uses: actions/cache@v4.2.0
   with:
@@ -203,15 +220,17 @@ Created `archive/README.md` with:
 ```
 
 **After:**
+
 ```yaml
 - uses: Swatinem/rust-cache@v2.7.3
   with:
     workspaces: src-tauri
     cache-on-failure: true
-    key: ${{ matrix.target }}  # For multi-target builds
+    key: ${{ matrix.target }} # For multi-target builds
 ```
 
 **Benefits:**
+
 - ✅ Automatically handles Cargo components (registry, git, target)
 - ✅ More efficient cache key computation
 - ✅ Faster restore times
@@ -223,6 +242,7 @@ Created `archive/README.md` with:
 **CI Pipeline Optimization:**
 
 **Before (ci-unified.yml v26.2.0):**
+
 ```yaml
 build-verification:
   strategy:
@@ -230,27 +250,32 @@ build-verification:
       os: [ubuntu-latest, windows-latest, macos-latest]
   timeout-minutes: 45
 ```
+
 - Runs on 3 OS (Ubuntu, Windows, macOS)
 - Full Tauri builds on all platforms
 - Estimated time: ~45 min (critical path)
 
 **After (ci-unified.yml v26.3.0):**
+
 ```yaml
 build-verification:
   runs-on: ubuntu-latest
   timeout-minutes: 30
 ```
+
 - Runs on Linux only
 - Debug build for speed
 - Multi-platform builds moved to release workflow only
 - Estimated time: ~20 min (critical path)
 
 **Impact:**
+
 - **56% faster CI** (45 min → 20 min)
 - Multi-platform verification on releases only (where it matters)
 - Faster feedback loop for developers
 
 **E2E Optimization:**
+
 ```yaml
 # Before
 - run: pnpm exec playwright install --with-deps
@@ -258,6 +283,7 @@ build-verification:
 # After
 - run: pnpm exec playwright install --with-deps chromium
 ```
+
 - Only installs Chromium (faster)
 - Sufficient for CI verification
 
@@ -268,28 +294,30 @@ build-verification:
 ### Permissions (Least Privilege)
 
 **Global Default:**
+
 ```yaml
 permissions:
-  contents: read  # Minimal by default
+  contents: read # Minimal by default
 ```
 
 **Job-Specific Permissions:**
 
-| Job | Permissions | Rationale |
-|-----|-------------|-----------|
-| lint-and-typecheck | contents: read | Only needs to read code |
-| test-frontend | contents: read | Only needs to read code |
-| test-backend | contents: read | Only needs to read code |
-| test-e2e | contents: read | Only needs to read code |
-| build-verification | contents: read | Only needs to read code |
-| security-audit | contents: read, security-events: write | Needs to write security events |
-| ci-status | contents: read | Only needs to read job results |
-| build-linux | contents: read | Only needs to read code |
-| build-windows | contents: read | Only needs to read code |
-| build-macos | contents: read | Only needs to read code |
-| create-release | contents: write | Needs to create releases |
+| Job                | Permissions                            | Rationale                      |
+| ------------------ | -------------------------------------- | ------------------------------ |
+| lint-and-typecheck | contents: read                         | Only needs to read code        |
+| test-frontend      | contents: read                         | Only needs to read code        |
+| test-backend       | contents: read                         | Only needs to read code        |
+| test-e2e           | contents: read                         | Only needs to read code        |
+| build-verification | contents: read                         | Only needs to read code        |
+| security-audit     | contents: read, security-events: write | Needs to write security events |
+| ci-status          | contents: read                         | Only needs to read job results |
+| build-linux        | contents: read                         | Only needs to read code        |
+| build-windows      | contents: read                         | Only needs to read code        |
+| build-macos        | contents: read                         | Only needs to read code        |
+| create-release     | contents: write                        | Needs to create releases       |
 
 **Impact:**
+
 - ✅ Prevents privilege escalation
 - ✅ Limits blast radius of compromised workflows
 - ✅ Follows GitHub security best practices
@@ -297,12 +325,14 @@ permissions:
 ### Secret Handling
 
 **Secrets Used:**
+
 1. `CODECOV_TOKEN` - Optional, only in ci-unified.yml
 2. `TAURI_SIGNING_PRIVATE_KEY` - Release workflows only
 3. `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` - Release workflows only
 4. `APPLE_*` - Optional, release workflows only
 
 **Protection:**
+
 - ✅ All signing secrets only in release workflows (tag-triggered)
 - ✅ Optional secrets with conditional checks (doesn't fail if missing)
 - ✅ Coverage upload restricted to MAIN branch pushes only (prevents fork abuse)
@@ -310,16 +340,20 @@ permissions:
 ### Fork PR Safety
 
 **Coverage Upload:**
+
 ```yaml
 if: github.event_name == 'push' && github.ref == 'refs/heads/MAIN'
 ```
+
 - Only runs on push to MAIN (not on PRs)
 - Prevents fork PRs from accessing `CODECOV_TOKEN`
 
 **Release Workflows:**
+
 ```yaml
 if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
 ```
+
 - Only runs on tags or manual dispatch
 - Fork PRs cannot trigger releases or access signing secrets
 
@@ -332,6 +366,7 @@ if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispa
 **Rust Toolchain (STANDARDIZED):**
 
 **Before:**
+
 - ci.yml: `dtolnay/rust-toolchain@stable` (floating)
 - ci-cd.yml: `dtolnay/rust-toolchain@stable` (floating)
 - titane_ci.yml: `actions-rust-lang/setup-rust-toolchain@v1` (different action!)
@@ -339,29 +374,32 @@ if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispa
 - release.yml: `dtolnay/rust-toolchain@stable` (floating)
 
 **After:**
+
 - ALL workflows: `dtolnay/rust-toolchain@1.83`
 - Consistent components: `clippy, rustfmt`
 
 **Impact:**
+
 - ✅ 100% deterministic Rust version
 - ✅ No surprise breakage from Rust updates
 - ✅ Easier to reproduce builds locally
 
 **Action Versions (ALL PINNED):**
 
-| Action | Version | Notes |
-|--------|---------|-------|
-| actions/checkout | v4.2.2 | Latest stable |
-| actions/setup-node | v4.1.0 | Latest stable |
-| actions/cache | v4.2.0 | Latest stable |
-| actions/upload-artifact | v4.6.0 | Latest v4 |
-| actions/download-artifact | v4.1.8 | Latest v4 |
-| dtolnay/rust-toolchain | 1.83 | Pinned Rust version |
-| Swatinem/rust-cache | v2.7.3 | Latest stable |
-| codecov/codecov-action | v5.2.1 | Latest v5 |
-| softprops/action-gh-release | v2.2.0 | Latest v2 |
+| Action                      | Version | Notes               |
+| --------------------------- | ------- | ------------------- |
+| actions/checkout            | v4.2.2  | Latest stable       |
+| actions/setup-node          | v4.1.0  | Latest stable       |
+| actions/cache               | v4.2.0  | Latest stable       |
+| actions/upload-artifact     | v4.6.0  | Latest v4           |
+| actions/download-artifact   | v4.1.8  | Latest v4           |
+| dtolnay/rust-toolchain      | 1.83    | Pinned Rust version |
+| Swatinem/rust-cache         | v2.7.3  | Latest stable       |
+| codecov/codecov-action      | v5.2.1  | Latest v5           |
+| softprops/action-gh-release | v2.2.0  | Latest v2           |
 
 **Impact:**
+
 - ✅ No unexpected breaking changes
 - ✅ Reproducible builds
 - ✅ Clear upgrade path (bump versions intentionally)
@@ -369,6 +407,7 @@ if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispa
 ### Concurrency Control
 
 **All Workflows:**
+
 ```yaml
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -378,6 +417,7 @@ concurrency:
 ```
 
 **Impact:**
+
 - ✅ Prevents duplicate CI runs on rapid pushes
 - ✅ Protects releases from accidental cancellations
 - ✅ Saves GitHub Actions minutes
@@ -387,22 +427,23 @@ concurrency:
 
 **All Jobs Have Timeouts:**
 
-| Workflow | Job | Timeout | Rationale |
-|----------|-----|---------|-----------|
-| ci-unified.yml | lint-and-typecheck | 15 min | Fast, fail early |
-| ci-unified.yml | test-frontend | 20 min | Vitest tests |
-| ci-unified.yml | test-backend | 30 min | Rust tests + Clippy |
-| ci-unified.yml | test-e2e | 30 min | Playwright tests |
-| ci-unified.yml | build-verification | 30 min | Linux build (debug) |
-| ci-unified.yml | security-audit | 15 min | Audits |
-| ci-unified.yml | ci-status | 5 min | Summary only |
-| release-unified.yml | build-linux | 60 min | Full release build |
-| release-unified.yml | build-windows | 60 min | Full release build |
-| release-unified.yml | build-macos | 60 min | Full release build |
-| release-unified.yml | create-release | 15 min | Upload artifacts |
-| rust-docker.yml | test-rust-docker | 30 min | Docker tests |
+| Workflow            | Job                | Timeout | Rationale           |
+| ------------------- | ------------------ | ------- | ------------------- |
+| ci-unified.yml      | lint-and-typecheck | 15 min  | Fast, fail early    |
+| ci-unified.yml      | test-frontend      | 20 min  | Vitest tests        |
+| ci-unified.yml      | test-backend       | 30 min  | Rust tests + Clippy |
+| ci-unified.yml      | test-e2e           | 30 min  | Playwright tests    |
+| ci-unified.yml      | build-verification | 30 min  | Linux build (debug) |
+| ci-unified.yml      | security-audit     | 15 min  | Audits              |
+| ci-unified.yml      | ci-status          | 5 min   | Summary only        |
+| release-unified.yml | build-linux        | 60 min  | Full release build  |
+| release-unified.yml | build-windows      | 60 min  | Full release build  |
+| release-unified.yml | build-macos        | 60 min  | Full release build  |
+| release-unified.yml | create-release     | 15 min  | Upload artifacts    |
+| rust-docker.yml     | test-rust-docker   | 30 min  | Docker tests        |
 
 **Impact:**
+
 - ✅ Prevents hung jobs from blocking queue
 - ✅ Faster failure detection
 - ✅ Predictable resource usage
@@ -414,6 +455,7 @@ concurrency:
 ### YAML Syntax Validation
 
 **Result:**
+
 ```
 === Validating .github/workflows/ci-unified.yml ===
 ✅ Valid YAML
@@ -428,6 +470,7 @@ concurrency:
 ### Workflow Structure Validation
 
 **ci-unified.yml:**
+
 - ✅ 7 jobs with proper dependencies
 - ✅ Lint runs first (fail fast)
 - ✅ Tests run in parallel after lint
@@ -437,6 +480,7 @@ concurrency:
 - ✅ Proper failure handling (fails on required job failures)
 
 **release-unified.yml:**
+
 - ✅ 4 jobs with proper dependencies
 - ✅ 3 parallel builds (Linux, Windows, macOS)
 - ✅ Release creation after all builds succeed
@@ -444,6 +488,7 @@ concurrency:
 - ✅ Tag and manual triggers only
 
 **rust-docker.yml:**
+
 - ✅ 1 isolated job
 - ✅ Docker container setup
 - ✅ Path-based triggers for efficiency
@@ -452,16 +497,16 @@ concurrency:
 
 **Validated Triggers:**
 
-| Trigger | ci-unified.yml | release-unified.yml | rust-docker.yml |
-|---------|----------------|---------------------|-----------------|
-| push to MAIN | ✅ Runs | ❌ No | ✅ If src-tauri/** |
-| push to main | ✅ Runs | ❌ No | ✅ If src-tauri/** |
-| push to dev | ✅ Runs | ❌ No | ✅ If src-tauri/** |
-| push to stable-runtime | ✅ Runs | ❌ No | ✅ If src-tauri/** |
-| PR to MAIN | ✅ Runs | ❌ No | ✅ If src-tauri/** |
-| PR to main | ✅ Runs | ❌ No | ✅ If src-tauri/** |
-| push tag v* | ❌ No | ✅ Runs | ❌ No |
-| workflow_dispatch | ✅ Runs | ✅ Runs | ✅ Runs |
+| Trigger                | ci-unified.yml | release-unified.yml | rust-docker.yml      |
+| ---------------------- | -------------- | ------------------- | -------------------- |
+| push to MAIN           | ✅ Runs        | ❌ No               | ✅ If src-tauri/\*\* |
+| push to main           | ✅ Runs        | ❌ No               | ✅ If src-tauri/\*\* |
+| push to dev            | ✅ Runs        | ❌ No               | ✅ If src-tauri/\*\* |
+| push to stable-runtime | ✅ Runs        | ❌ No               | ✅ If src-tauri/\*\* |
+| PR to MAIN             | ✅ Runs        | ❌ No               | ✅ If src-tauri/\*\* |
+| PR to main             | ✅ Runs        | ❌ No               | ✅ If src-tauri/\*\* |
+| push tag v\*           | ❌ No          | ✅ Runs             | ❌ No                |
+| workflow_dispatch      | ✅ Runs        | ✅ Runs             | ✅ Runs              |
 
 **Status:** ✅ ALL TRIGGER SCENARIOS VALIDATED
 
@@ -472,6 +517,7 @@ concurrency:
 ### Workflow Files
 
 **Before:**
+
 ```
 .github/workflows/
 ├── ci.yml                    # 154 lines, basic CI
@@ -485,6 +531,7 @@ Total: 7 files, 1795 lines, lots of redundancy
 ```
 
 **After:**
+
 ```
 .github/workflows/
 ├── ci-unified.yml            # 407 lines, optimized CI (v26.3.0)
@@ -500,6 +547,7 @@ Total: 3 active files, 864 lines, zero redundancy
 ```
 
 **Impact:**
+
 - ✅ 57% fewer workflow files (7 → 3)
 - ✅ 52% less active code (1795 → 864 lines)
 - ✅ 100% elimination of redundancy
@@ -507,13 +555,14 @@ Total: 3 active files, 864 lines, zero redundancy
 ### CI Pipeline Flow
 
 **Before (ci-unified.yml v26.2.0):**
+
 ```
 lint-and-typecheck (15 min) [ubuntu]
     ├── test-frontend (20 min) [ubuntu]
     └── test-backend (30 min) [ubuntu]
             ├── test-e2e (30 min) [ubuntu]
             └── build-verification (45 min) [ubuntu, windows, macos] ⚠️
-                    
+
 security-audit (15 min) [ubuntu] (parallel)
 
 ci-status (5 min) [ubuntu]
@@ -522,13 +571,14 @@ Total estimated time: ~45 min (build-verification critical path)
 ```
 
 **After (ci-unified.yml v26.3.0):**
+
 ```
 lint-and-typecheck (15 min) [ubuntu]
     ├── test-frontend (20 min) [ubuntu]
     └── test-backend (30 min) [ubuntu]
             ├── test-e2e (30 min) [ubuntu]
             └── build-verification (30 min) [ubuntu ONLY] ✅
-                    
+
 security-audit (15 min) [ubuntu] (parallel)
 
 ci-status (5 min) [ubuntu]
@@ -537,6 +587,7 @@ Total estimated time: ~20 min (build-verification critical path)
 ```
 
 **Impact:**
+
 - ✅ 56% faster (45 min → 20 min)
 - ✅ 67% fewer build jobs (3 OS → 1 OS)
 - ✅ Same coverage (multi-platform builds in releases)
@@ -544,6 +595,7 @@ Total estimated time: ~20 min (build-verification critical path)
 ### Action Versions
 
 **Before (Mixed):**
+
 - actions/checkout: v4, v4.2.2 (inconsistent)
 - actions/setup-node: v4, v4.1.0 (inconsistent)
 - dtolnay/rust-toolchain: stable, 1.83 (inconsistent)
@@ -552,6 +604,7 @@ Total estimated time: ~20 min (build-verification critical path)
 - Swatinem/rust-cache: v2, v2.7.3 (inconsistent)
 
 **After (Standardized):**
+
 - actions/checkout: v4.2.2 (all workflows)
 - actions/setup-node: v4.1.0 (all workflows)
 - dtolnay/rust-toolchain: 1.83 (all workflows)
@@ -561,6 +614,7 @@ Total estimated time: ~20 min (build-verification critical path)
 - actions/download-artifact: v4.1.8 (all workflows)
 
 **Impact:**
+
 - ✅ 100% consistency across workflows
 - ✅ No more floating versions
 - ✅ Eliminated different Rust action
@@ -568,6 +622,7 @@ Total estimated time: ~20 min (build-verification critical path)
 ### Security Posture
 
 **Before:**
+
 ```yaml
 # ci.yml - NO permissions specified (default: too broad)
 # ci-cd.yml - NO permissions specified (default: too broad)
@@ -581,6 +636,7 @@ Total: 2 jobs with explicit permissions out of ~20 jobs (~10%)
 ```
 
 **After:**
+
 ```yaml
 # All workflows have global default:
 permissions:
@@ -604,6 +660,7 @@ Total: 12 jobs with explicit permissions out of 12 jobs (100%)
 ```
 
 **Impact:**
+
 - ✅ 100% coverage of explicit permissions
 - ✅ Least privilege principle applied everywhere
 - ✅ Clear permission requirements for each job
@@ -615,12 +672,14 @@ Total: 12 jobs with explicit permissions out of 12 jobs (100%)
 ### Fiability (Reliability)
 
 **Before:**
+
 - ❌ No timeouts (jobs could hang)
 - ❌ No concurrency control (duplicate runs)
 - ❌ Floating Rust versions (non-deterministic)
 - ❌ Mixed action versions (inconsistent)
 
 **After:**
+
 - ✅ Timeouts on all jobs (no hanging)
 - ✅ Concurrency control on all workflows (no duplicates)
 - ✅ Pinned Rust 1.83 (deterministic)
@@ -631,11 +690,13 @@ Total: 12 jobs with explicit permissions out of 12 jobs (100%)
 ### Vitesse (Speed)
 
 **Before:**
+
 - ⚠️ CI: ~45 min (3 OS builds)
 - ⚠️ Basic caching (actions/cache)
 - ⚠️ All Playwright browsers
 
 **After:**
+
 - ✅ CI: ~20 min (Linux only)
 - ✅ Specialized Rust caching (Swatinem/rust-cache)
 - ✅ Chromium only for E2E
@@ -645,11 +706,13 @@ Total: 12 jobs with explicit permissions out of 12 jobs (100%)
 ### Sécurité (Security)
 
 **Before:**
+
 - ❌ 10% jobs with explicit permissions
 - ⚠️ Coverage upload on all pushes/PRs
 - ⚠️ No explicit security-events permission
 
 **After:**
+
 - ✅ 100% jobs with explicit permissions
 - ✅ Coverage upload only on MAIN pushes
 - ✅ Explicit security-events: write for security job
@@ -659,12 +722,14 @@ Total: 12 jobs with explicit permissions out of 12 jobs (100%)
 ### Clarté (Clarity)
 
 **Before:**
+
 - ❌ 7 workflow files (redundant)
 - ⚠️ Basic summaries
 - ❌ No archive documentation
 - ❌ Inconsistent naming
 
 **After:**
+
 - ✅ 3 workflow files (optimized)
 - ✅ Comprehensive summaries with config details
 - ✅ Archive with full documentation
@@ -678,43 +743,46 @@ Total: 12 jobs with explicit permissions out of 12 jobs (100%)
 
 ### Environment Matrix
 
-| Component | Version | Source |
-|-----------|---------|--------|
-| Node.js | 20 (LTS) | env.NODE_VERSION |
-| pnpm | 9.0.0 | package.json |
-| Rust | 1.83 | env.RUST_VERSION |
-| Rust Components | clippy, rustfmt | All Rust jobs |
-| Python | 3.x | System default |
+| Component       | Version         | Source           |
+| --------------- | --------------- | ---------------- |
+| Node.js         | 20 (LTS)        | env.NODE_VERSION |
+| pnpm            | 9.0.0           | package.json     |
+| Rust            | 1.83            | env.RUST_VERSION |
+| Rust Components | clippy, rustfmt | All Rust jobs    |
+| Python          | 3.x             | System default   |
 
 ### OS Matrix (By Workflow)
 
 **CI (ci-unified.yml):**
+
 - ubuntu-latest (all jobs)
 - Total: 1 OS
 
 **Release (release-unified.yml):**
+
 - ubuntu-22.04 (Linux)
 - windows-latest (Windows)
 - macos-latest (macOS Intel + Apple Silicon)
 - Total: 3 OS, 4 builds (macOS matrix)
 
 **Docker Tests (rust-docker.yml):**
+
 - ubuntu-latest + rust:1.83-slim container
 - Total: 1 OS (containerized)
 
 ### Action Matrix (All Workflows)
 
-| Action | Version | Usage |
-|--------|---------|-------|
-| actions/checkout | v4.2.2 | All workflows |
-| actions/setup-node | v4.1.0 | CI, Release |
-| dtolnay/rust-toolchain | 1.83 | All Rust jobs |
-| Swatinem/rust-cache | v2.7.3 | CI, Release |
-| actions/cache | v4.2.0 | Docker workflow |
-| actions/upload-artifact | v4.6.0 | All workflows |
-| actions/download-artifact | v4.1.8 | Release workflow |
-| codecov/codecov-action | v5.2.1 | CI workflow |
-| softprops/action-gh-release | v2.2.0 | Release workflow |
+| Action                      | Version | Usage            |
+| --------------------------- | ------- | ---------------- |
+| actions/checkout            | v4.2.2  | All workflows    |
+| actions/setup-node          | v4.1.0  | CI, Release      |
+| dtolnay/rust-toolchain      | 1.83    | All Rust jobs    |
+| Swatinem/rust-cache         | v2.7.3  | CI, Release      |
+| actions/cache               | v4.2.0  | Docker workflow  |
+| actions/upload-artifact     | v4.6.0  | All workflows    |
+| actions/download-artifact   | v4.1.8  | Release workflow |
+| codecov/codecov-action      | v5.2.1  | CI workflow      |
+| softprops/action-gh-release | v2.2.0  | Release workflow |
 
 ---
 
@@ -825,7 +893,7 @@ Total: 12 jobs with explicit permissions out of 12 jobs (100%)
 
 - ✅ push triggers configured correctly (MAIN, main, dev, stable-runtime)
 - ✅ pull_request triggers configured correctly
-- ✅ tag triggers configured correctly (v*)
+- ✅ tag triggers configured correctly (v\*)
 - ✅ workflow_dispatch enabled on all workflows
 - ✅ path filters configured correctly (rust-docker.yml)
 
@@ -881,6 +949,7 @@ Total: 12 jobs with explicit permissions out of 12 jobs (100%)
 ### Summary
 
 The CI/CD pipeline has been **fully modernized, simplified, and stabilized** with:
+
 - ✅ **100% determinism** (all versions pinned)
 - ✅ **100% security** (explicit permissions everywhere)
 - ✅ **56% faster** (CI optimized to 20 min)

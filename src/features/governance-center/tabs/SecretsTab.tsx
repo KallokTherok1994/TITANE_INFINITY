@@ -594,7 +594,8 @@ export const SecretsTab: React.FC<SecretsTabProps> = ({
             </a>
             <br />
             <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>
-              Scopes recommandés: <code>read:user</code>, <code>copilot</code> (si disponible)
+              Scopes recommandés: <code>read:user</code>, <code>copilot</code> (si
+              disponible)
             </span>
           </div>
         </Card>

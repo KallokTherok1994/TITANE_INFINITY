@@ -223,9 +223,7 @@ class UnifiedVocalEngine {
       return;
     }
 
-    logger.debug(
-      '🚀 Initializing Unified Vocal Intelligence Engine v∞...'
-    );
+    logger.debug('🚀 Initializing Unified Vocal Intelligence Engine v∞...');
 
     // Initialiser les sous-systèmes
     await this.initializeSubsystems();

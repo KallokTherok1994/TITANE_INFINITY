@@ -3,6 +3,7 @@
 ## Prérequis
 
 1. **Ollama installé:**
+
    ```bash
    curl -fsSL https://ollama.com/install.sh | sh
    ```
@@ -25,6 +26,7 @@ cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
 ```
 
 **Avantages:**
+
 - ✅ Progression détaillée
 - ✅ Confirmation avant installation
 - ✅ Résumé complet à la fin
@@ -38,6 +40,7 @@ cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
 ```
 
 **Avantages:**
+
 - ✅ Aucune interaction requise
 - ✅ Parfait pour scripts/CI
 
@@ -50,6 +53,7 @@ cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
 ```
 
 Ou directement:
+
 ```bash
 ollama pull qwen2.5:latest && \
 ollama pull llama3.1:8b && \
@@ -62,11 +66,11 @@ ollama pull mistral:7b
 
 Les scripts installent:
 
-| Modèle | Taille | Usage |
-|--------|--------|-------|
+| Modèle           | Taille | Usage              |
+| ---------------- | ------ | ------------------ |
 | `qwen2.5:latest` | 4.7 GB | Principal (défaut) |
-| `llama3.1:8b` | 4.7 GB | Alternative |
-| `mistral:7b` | 4.1 GB | Backup français |
+| `llama3.1:8b`    | 4.7 GB | Alternative        |
+| `mistral:7b`     | 4.1 GB | Backup français    |
 
 **Total:** ~13.5 GB
 
@@ -79,6 +83,7 @@ ollama list
 ```
 
 Vous devriez voir:
+
 ```
 qwen2.5:latest     [...]    4.7 GB    [...]
 llama3.1:8b        [...]    4.7 GB    [...]
@@ -90,6 +95,7 @@ mistral:7b         [...]    4.1 GB    [...]
 ## 🎮 Utilisation dans TITANE∞
 
 1. **Lancer TITANE∞:**
+
    ```bash
    pnpm run dev
    ```
@@ -132,6 +138,7 @@ curl -I https://ollama.com
 ### Changer le modèle par défaut
 
 Éditez `.env`:
+
 ```env
 OLLAMA_DEFAULT_MODEL=llama3.1:8b
 ```

@@ -13,7 +13,11 @@ import type { DevSudoAction } from './types';
  * Total: 138 actions with 300+ regex patterns
  */
 export const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
-  'fix-deps': [/^fix\s+deps?$/i, /^install\s+(dependencies|deps)$/i, /^n\s*p\s*m\s+install$/i],
+  'fix-deps': [
+    /^fix\s+deps?$/i,
+    /^install\s+(dependencies|deps)$/i,
+    /^n\s*p\s*m\s+install$/i,
+  ],
   'restart-tauri': [
     /^restart\s+tauri$/i,
     /^relance\s+(l')?app(lication)?$/i,
@@ -1000,7 +1004,9 @@ export const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
  * Match a command string against all patterns
  * Returns the matching action and captured parameters
  */
-export function matchPattern(input: string): { action: DevSudoAction; params: Record<string, string> } | null {
+export function matchPattern(
+  input: string
+): { action: DevSudoAction; params: Record<string, string> } | null {
   const trimmed = input.trim();
 
   for (const [action, patterns] of Object.entries(DEV_SUDO_PATTERNS)) {
@@ -1036,7 +1042,9 @@ export function containsDevSudoCommand(input: string): boolean {
 /**
  * Get all actions that match a pattern
  */
-export function getAllMatches(input: string): Array<{ action: DevSudoAction; params: Record<string, string> }> {
+export function getAllMatches(
+  input: string
+): Array<{ action: DevSudoAction; params: Record<string, string> }> {
   const trimmed = input.trim();
   const matches: Array<{ action: DevSudoAction; params: Record<string, string> }> = [];
 
@@ -1080,11 +1088,14 @@ export function getPatternsForAction(action: DevSudoAction): RegExp[] {
  */
 export function getPatternStats() {
   const actionCount = Object.keys(DEV_SUDO_PATTERNS).length;
-  const patternCount = Object.values(DEV_SUDO_PATTERNS).reduce((sum, patterns) => sum + patterns.length, 0);
-  
+  const patternCount = Object.values(DEV_SUDO_PATTERNS).reduce(
+    (sum, patterns) => sum + patterns.length,
+    0
+  );
+
   return {
     actions: actionCount,
     patterns: patternCount,
-    averagePatternsPerAction: (patternCount / actionCount).toFixed(2)
+    averagePatternsPerAction: (patternCount / actionCount).toFixed(2),
   };
 }

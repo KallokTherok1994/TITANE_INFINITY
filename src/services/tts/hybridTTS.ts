@@ -543,7 +543,9 @@ class HybridTTSService {
         // Insérer après l'élément en cours (s'il y en a un)
         const insertIndex = this.currentItemId ? 1 : 0;
         this.queue.splice(insertIndex, 0, item);
-        logger.debug(`[HybridTTS] ⚡ HIGH priority item added at position ${insertIndex}`);
+        logger.debug(
+          `[HybridTTS] ⚡ HIGH priority item added at position ${insertIndex}`
+        );
       } else {
         this.queue.push(item);
       }

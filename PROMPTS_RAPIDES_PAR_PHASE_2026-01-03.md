@@ -12,11 +12,11 @@ Execute Phase 1 (P0) - Corrections Critiques TITANE∞
 Context: Repository TITANE_INFINITY needs TypeScript fix + test validation
 
 Tasks:
+
 1. Fix 29,128 TypeScript errors:
    - Try Solution A: rm -rf node_modules pnpm-lock.yaml && pnpm install && npx tsc --noEmit
    - If fails, try Solution B: Downgrade React 19 → 18 in package.json
    - If fails, try Solution C: Fix tsconfig.json JSX configuration
-   
 2. Run complete test suite:
    - npm test (frontend)
    - cd src-tauri && cargo test (backend)
@@ -26,6 +26,7 @@ Tasks:
 3. Document results in RAPPORT_TESTS_VALIDATION_2026-01-03.md
 
 Success criteria:
+
 - TypeScript errors: 0
 - Tests: 100% passed
 - Coverage: measured (baseline)
@@ -44,6 +45,7 @@ Execute Phase 2 (P1) - Améliorations Importantes TITANE∞
 Prerequisites: Phase 1 complete (TypeScript fixed, tests passing)
 
 Tasks:
+
 1. Security audits:
    - pnpm audit --audit-level=moderate
    - cargo audit
@@ -55,14 +57,14 @@ Tasks:
 
 3. TypeScript strict mode (progressive):
    - Enable exactOptionalPropertyTypes
-   - Enable noPropertyAccessFromIndexSignature  
+   - Enable noPropertyAccessFromIndexSignature
    - Enable noUnusedLocals
    - Enable noUnusedParameters
    - Fix errors after each
 
 4. ESLint strict:
    - Upgrade @typescript-eslint/no-explicit-any to 'error'
-   - Eliminate 'any' in src/engines/* and src/types/*
+   - Eliminate 'any' in src/engines/_ and src/types/_
 
 5. Test coverage:
    - npm run test:coverage
@@ -70,6 +72,7 @@ Tasks:
    - Target: >80% global coverage
 
 Success criteria:
+
 - Vulnerabilities: 0 critical/high
 - Clippy: 0 warnings
 - TypeScript strict: 4 options enabled
@@ -90,6 +93,7 @@ Execute Phase 3 (P2) - Excellence & Optimisations TITANE∞
 Prerequisites: Phase 2 complete (security hardened, strict types, high coverage)
 
 Tasks:
+
 1. Bundle optimization:
    - npm run build && npx vite-bundle-visualizer
    - Implement dynamic imports for heavy features
@@ -117,6 +121,7 @@ Tasks:
    - Target: 100% 4-Ring compliance
 
 Success criteria:
+
 - Bundle: <6 MB
 - CI/CD: <12 min
 - E2E: 15+ scenarios
@@ -135,6 +140,7 @@ Reference: PLAN_CORRECTION_PERFECTIONNEMENT_2026-01-03.md section P2
 Diagnose current TITANE∞ project status
 
 Run diagnostics:
+
 1. TypeScript: npx tsc --noEmit | wc -l
 2. Tests: npm test
 3. Coverage: npm run test:coverage
@@ -145,6 +151,7 @@ Run diagnostics:
 8. Architecture: npm run test:architecture
 
 Generate report with:
+
 - Current score /10
 - Blockers identified
 - Next recommended actions
@@ -161,6 +168,7 @@ Reference: RAPPORT_AUDIT_VERIFICATION_COMPLET_2026-01-03.md
 Setup TITANE∞ development environment
 
 Steps:
+
 1. Install pnpm globally:
    npm install -g pnpm@9.0.0
 
@@ -243,17 +251,18 @@ Measure TITANE∞ progression toward 10/10
 
 Calculate current score based on:
 
-1. Architecture: (violations / total) * 10
-2. Code Quality: (ts_errors / 29128) * 10 (inverse)
-3. Security: (vulns_critical / baseline) * 10 (inverse)
-4. Tests: (pass_rate) * 10
-5. Documentation: (completeness) * 10
-6. Performance: (bundle_size / 6MB) * 10 (inverse)
+1. Architecture: (violations / total) \* 10
+2. Code Quality: (ts_errors / 29128) \* 10 (inverse)
+3. Security: (vulns_critical / baseline) \* 10 (inverse)
+4. Tests: (pass_rate) \* 10
+5. Documentation: (completeness) \* 10
+6. Performance: (bundle_size / 6MB) \* 10 (inverse)
 7. Chat IA: 10 (already perfect)
 
 Average = Score /10
 
 Generate progress report:
+
 - Current score: X.X/10
 - Previous score: 7.2/10
 - Improvement: +X.X points
@@ -269,7 +278,7 @@ Reference: SYNTHESE_FINALE_2026-01-03.md section "Métriques Globales"
 
 ## 🚨 PROMPT URGENCE (TYPESCRIPT FIX)
 
-```markdown
+````markdown
 URGENT: Fix 29,128 TypeScript errors TITANE∞
 
 Priority: P0-1 (Critical blocker)
@@ -277,13 +286,16 @@ Priority: P0-1 (Critical blocker)
 Execute solutions in order until success:
 
 Solution A (Recommended - 2 min):
+
 ```bash
 rm -rf node_modules pnpm-lock.yaml .vite
 pnpm install
 npx tsc --noEmit
 ```
+````
 
 If still errors, Solution B (5 min):
+
 1. Edit package.json:
    - "react": "^18.3.1" (from ^19.x)
    - "react-dom": "^18.3.1"
@@ -293,6 +305,7 @@ If still errors, Solution B (5 min):
 3. npx tsc --noEmit
 
 If still errors, Solution C (10 min):
+
 1. Edit tsconfig.json:
    - "jsx": "react-jsx"
    - "jsxImportSource": "react"
@@ -303,6 +316,7 @@ Document which solution worked and commit:
 git commit -m "fix(typescript): resolve 29k errors - Solution [A/B/C]"
 
 Reference: PLAN_CORRECTION_PERFECTIONNEMENT_2026-01-03.md section P0-1
+
 ```
 
 ---
@@ -324,3 +338,4 @@ Reference: PLAN_CORRECTION_PERFECTIONNEMENT_2026-01-03.md section P0-1
 
 **AIDE:**
 Si bloqué, utiliser "Prompt Diagnostic" pour identifier le problème
+```

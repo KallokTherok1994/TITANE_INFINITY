@@ -213,9 +213,7 @@ export async function checkCognitiveAvailability(): Promise<{
     results.sqlite = true;
   } catch (error) {
     // Mode navigateur pur ou Tauri sans SQLite
-    logger.warn(
-      'SQLite not available (browser mode or Tauri backend not ready)'
-    );
+    logger.warn('SQLite not available (browser mode or Tauri backend not ready)');
     results.sqlite = false;
   }
 

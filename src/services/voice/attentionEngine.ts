@@ -206,10 +206,7 @@ export class AttentionEngine {
    */
   handleWakeWord(wakeEvent: WakeWordEvent): void {
     if (this.state !== 'armed') {
-      logger.warn(
-        '⚠️ Wake word detected but not in armed state:',
-        this.state
-      );
+      logger.warn('⚠️ Wake word detected but not in armed state:', this.state);
       return;
     }
 

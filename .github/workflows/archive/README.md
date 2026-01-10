@@ -6,23 +6,27 @@
 ## Files Archived
 
 ### ci.yml
-- **Version:** No version tag  
-- **Status:** LEGACY - Replaced by ci-unified.yml  
+
+- **Version:** No version tag
+- **Status:** LEGACY - Replaced by ci-unified.yml
 - **Reason:** Basic CI workflow with no concurrency control, floating Rust version, missing timeouts and permissions
 
 ### ci-cd.yml
-- **Version:** v22.0.0  
-- **Status:** LEGACY - Replaced by ci-unified.yml  
+
+- **Version:** v22.0.0
+- **Status:** LEGACY - Replaced by ci-unified.yml
 - **Reason:** Outdated version, redundant with ci-unified.yml, missing modern features
 
 ### titane_ci.yml
-- **Version:** v20Ω  
-- **Status:** LEGACY - Replaced by ci-unified.yml  
+
+- **Version:** v20Ω
+- **Status:** LEGACY - Replaced by ci-unified.yml
 - **Reason:** Very outdated, uses different Rust action (actions-rust-lang instead of dtolnay), heavy use of continue-on-error
 
 ### release.yml
-- **Version:** v17.3.0  
-- **Status:** LEGACY - Replaced by release-unified.yml  
+
+- **Version:** v17.3.0
+- **Status:** LEGACY - Replaced by release-unified.yml
 - **Reason:** Outdated version, redundant with release-unified.yml, missing workflow_dispatch trigger
 
 ## Modern Workflows (Active)
@@ -53,6 +57,7 @@ The following workflows are now active and maintained:
 ## Rationale for Modernization
 
 The archived workflows had the following issues:
+
 - **Redundancy:** 4 CI workflows doing essentially the same thing
 - **Version Inconsistency:** Mix of floating ("stable") and pinned Rust versions
 - **Missing Security:** No explicit permissions (too permissive by default)
@@ -77,6 +82,7 @@ If you need to reference the old workflows for any reason, they are preserved he
 ## Restoration
 
 If you need to restore any of these workflows:
+
 1. Copy the file from this archive directory back to `.github/workflows/`
 2. Update it with modern practices (see CI_PIPELINE_CURRENT_STATE.md and PIPELINE_UPDATE_REPORT.md)
 3. Test thoroughly before relying on it

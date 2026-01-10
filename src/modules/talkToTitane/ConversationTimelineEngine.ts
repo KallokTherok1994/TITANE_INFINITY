@@ -529,7 +529,9 @@ class ConversationTimelineEngine {
       const timestamp = new Date(entry.timestamp).toLocaleString();
       const majorFlag = entry.isMajorEvent ? ' [MAJOR]' : '';
 
-      logger.debug(`[${timestamp}] ${entry.engineName} - ${entry.intentType}${majorFlag}`);
+      logger.debug(
+        `[${timestamp}] ${entry.engineName} - ${entry.intentType}${majorFlag}`
+      );
       logger.debug(`  Input:  ${entry.input.substring(0, 80)}...`);
       logger.debug(`  Output: ${entry.output.substring(0, 80)}...`);
       logger.debug('');

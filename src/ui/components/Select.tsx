@@ -196,7 +196,10 @@ export const Select = memo(function Select({
         aria-describedby={error ? errorId : helperText ? helperId : undefined}
       >
         <span
-          className={clsx('select__value', !selectedOption && 'select__value--placeholder')}
+          className={clsx(
+            'select__value',
+            !selectedOption && 'select__value--placeholder'
+          )}
         >
           {selectedOption?.label || placeholder}
         </span>

@@ -84,10 +84,7 @@ class ChatModeService {
       await this.syncWithBackend();
 
       this.initialized = true;
-      logger.debug(
-        '✅ Initialized with mode:',
-        this.state.current_mode_id
-      );
+      logger.debug('✅ Initialized with mode:', this.state.current_mode_id);
     } catch (error) {
       logger.error('❌ Initialization failed:', error);
       // Fallback: utiliser l'état par défaut

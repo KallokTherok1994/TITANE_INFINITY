@@ -38,7 +38,9 @@ export function getMessageText(message: AIMessage): string {
   }
   // For multimodal content, concatenate all text parts
   return message.content
-    .map(part => (typeof part === 'string' ? part : part.type === 'text' ? part.text : ''))
+    .map(part =>
+      typeof part === 'string' ? part : part.type === 'text' ? part.text : ''
+    )
     .join(' ');
 }
 
@@ -52,7 +54,7 @@ export function createTextMessage(
   return {
     role,
     content,
-    timestamp: Date.now()
+    timestamp: Date.now(),
   };
 }
 
@@ -77,7 +79,14 @@ export type AIProviderName =
 
 // ✨ v21 - Provider choice for UI selection
 // ✨ v26.3 - Added GitHub Copilot provider
-export type ProviderChoice = 'auto' | 'openai' | 'claude' | 'gemini' | 'ollama' | 'copilot' | 'local';
+export type ProviderChoice =
+  | 'auto'
+  | 'openai'
+  | 'claude'
+  | 'gemini'
+  | 'ollama'
+  | 'copilot'
+  | 'local';
 
 /** Response metadata interface with known fields */
 export interface AIResponseMetadata {
@@ -148,7 +157,13 @@ export const DEFAULT_AI_CONFIG: AIConfig = {
  * Identifiant normalisé des providers IA
  * Utilisé pour router les requêtes, gérer les clés, et afficher l'UI
  */
-export type AIProviderId = 'openai' | 'anthropic' | 'gemini' | 'ollama' | 'copilot' | 'local';
+export type AIProviderId =
+  | 'openai'
+  | 'anthropic'
+  | 'gemini'
+  | 'ollama'
+  | 'copilot'
+  | 'local';
 
 /**
  * Informations sur un modèle IA

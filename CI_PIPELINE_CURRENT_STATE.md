@@ -1,4 +1,5 @@
 # CI/CD Pipeline Current State Analysis
+
 **TITANE∞ Repository - Complete Audit**  
 **Date:** 2026-01-03  
 **Auditor:** Principal CI/CD Engineer
@@ -20,6 +21,7 @@
 ### 1.1 CI Workflows (4 files - REDUNDANT)
 
 #### ci-unified.yml ⭐ RECOMMENDED
+
 - **Version:** v26.2.0 (latest)
 - **Triggers:** push (MAIN, main, dev, stable-runtime), pull_request, workflow_dispatch
 - **Jobs:** 7 (lint-and-typecheck, test-frontend, test-backend, test-e2e, build-verification, security-audit, ci-status)
@@ -34,6 +36,7 @@
 - **Weaknesses:** Missing global permissions, some jobs continue-on-error
 
 #### ci.yml (LEGACY - CANDIDATE FOR REMOVAL)
+
 - **Version:** No version tag
 - **Triggers:** push (MAIN, dev, stable-runtime), pull_request (MAIN)
 - **Jobs:** 5 (test-frontend, test-backend, test-e2e, security-scan, accessibility)
@@ -47,6 +50,7 @@
 - **Issues:** Outdated, no concurrency control, floating Rust version, missing timeouts
 
 #### ci-cd.yml (LEGACY - CANDIDATE FOR REMOVAL)
+
 - **Version:** v22.0.0 (outdated)
 - **Triggers:** push, pull_request
 - **Jobs:** 6 (lint, test-frontend, test-backend, e2e-tests, build, security, performance)
@@ -59,6 +63,7 @@
 - **Issues:** Redundant with ci-unified.yml, outdated actions, continue-on-error overused
 
 #### titane_ci.yml (LEGACY - CANDIDATE FOR REMOVAL)
+
 - **Version:** v20Ω (very outdated)
 - **Triggers:** push, pull_request
 - **Jobs:** 4 (frontend, backend, tauri-build, quality-summary)
@@ -73,8 +78,9 @@
 ### 1.2 Release Workflows (2 files)
 
 #### release-unified.yml ⭐ RECOMMENDED
+
 - **Version:** v26.2.0 (latest)
-- **Triggers:** push tags (v*), workflow_dispatch
+- **Triggers:** push tags (v\*), workflow_dispatch
 - **Jobs:** 5 (build-linux, build-windows, build-macos[matrix], create-release)
 - **OS Matrix:** ubuntu-22.04, windows-latest, macos-latest (x86_64 + aarch64)
 - **Node:** 20 (env var)
@@ -87,8 +93,9 @@
 - **Weaknesses:** Missing concurrency control, some continue-on-error
 
 #### release.yml (LEGACY - CANDIDATE FOR REMOVAL)
+
 - **Version:** v17.3.0 (very outdated)
-- **Triggers:** push tags (v*)
+- **Triggers:** push tags (v\*)
 - **Jobs:** 5 (build-linux, build-windows, build-macos[matrix], create-release, post-release)
 - **Similar structure to release-unified.yml but outdated**
 - **Issues:** Outdated, redundant, no workflow_dispatch, floating Rust version
@@ -96,8 +103,9 @@
 ### 1.3 Specialized Workflows
 
 #### rust-docker.yml (KEEP & MODERNIZE)
+
 - **Version:** No version tag
-- **Triggers:** workflow_dispatch, push (src-tauri/** paths), pull_request
+- **Triggers:** workflow_dispatch, push (src-tauri/\*\* paths), pull_request
 - **Jobs:** 1 (test-rust-docker)
 - **Container:** rust:1.83-slim
 - **Purpose:** Isolated Rust testing in Docker with full Tauri deps
@@ -203,30 +211,33 @@ env:
 ### 3.2 Node.js Setup (Standard Pattern)
 
 ```yaml
-- uses: actions/setup-node@v4.1.0  # ✅ Pinned
+- uses: actions/setup-node@v4.1.0 # ✅ Pinned
   with:
-    node-version: ${{ env.NODE_VERSION }}  # ✅ From env
-    cache: 'pnpm'  # ✅ Correct manager
-- run: corepack enable  # ✅ Required for pnpm
+    node-version: ${{ env.NODE_VERSION }} # ✅ From env
+    cache: 'pnpm' # ✅ Correct manager
+- run: corepack enable # ✅ Required for pnpm
 ```
 
 ### 3.3 Rust Setup (Multiple Patterns - NEEDS STANDARDIZATION)
 
 **Pattern A (RECOMMENDED):**
+
 ```yaml
-- uses: dtolnay/rust-toolchain@1.83  # ✅ Pinned version
+- uses: dtolnay/rust-toolchain@1.83 # ✅ Pinned version
   with:
-    components: clippy, rustfmt  # ✅ Explicit components
+    components: clippy, rustfmt # ✅ Explicit components
 ```
 
 **Pattern B (LEGACY - NEEDS FIX):**
+
 ```yaml
-- uses: dtolnay/rust-toolchain@stable  # ❌ Floating
+- uses: dtolnay/rust-toolchain@stable # ❌ Floating
 ```
 
 **Pattern C (LEGACY - NEEDS FIX):**
+
 ```yaml
-- uses: actions-rust-lang/setup-rust-toolchain@v1  # ❌ Different action
+- uses: actions-rust-lang/setup-rust-toolchain@v1 # ❌ Different action
   with:
     components: clippy, rustfmt
 ```
@@ -234,22 +245,25 @@ env:
 ### 3.4 Caching Strategies
 
 **pnpm cache (Standard):**
+
 ```yaml
 - uses: actions/setup-node@v4.1.0
   with:
-    cache: 'pnpm'  # ✅ Built-in, good
+    cache: 'pnpm' # ✅ Built-in, good
 ```
 
 **Cargo cache (Pattern A - BETTER):**
+
 ```yaml
-- uses: Swatinem/rust-cache@v2.7.3  # ✅ Specialized Rust caching
+- uses: Swatinem/rust-cache@v2.7.3 # ✅ Specialized Rust caching
   with:
     workspaces: src-tauri
     cache-on-failure: true
-    key: ${{ matrix.target }}  # For multi-target builds
+    key: ${{ matrix.target }} # For multi-target builds
 ```
 
 **Cargo cache (Pattern B - BASIC):**
+
 ```yaml
 - uses: actions/cache@v4
   with:
@@ -272,32 +286,33 @@ env:
 
 ### 4.1 Trigger Matrix
 
-| Workflow | push | pull_request | tags | workflow_dispatch | paths | schedule |
-|----------|------|--------------|------|-------------------|-------|----------|
-| ci-unified.yml | ✅ MAIN,main,dev,stable-runtime | ✅ MAIN,main | ❌ | ✅ | ❌ | ❌ |
-| ci.yml | ✅ MAIN,dev,stable-runtime | ✅ MAIN | ❌ | ❌ | ❌ | ❌ |
-| ci-cd.yml | ✅ MAIN,dev,stable-runtime | ✅ MAIN | ❌ | ❌ | ❌ | ❌ |
-| titane_ci.yml | ✅ main,MAIN,develop | ✅ main,MAIN,develop | ❌ | ❌ | ❌ | ❌ |
-| release-unified.yml | ❌ | ❌ | ✅ v* | ✅ | ❌ | ❌ |
-| release.yml | ❌ | ❌ | ✅ v* | ❌ | ❌ | ❌ |
-| rust-docker.yml | ✅ MAIN,dev,stable-runtime | ✅ MAIN | ❌ | ✅ | ✅ src-tauri/** | ❌ |
+| Workflow            | push                            | pull_request         | tags   | workflow_dispatch | paths             | schedule |
+| ------------------- | ------------------------------- | -------------------- | ------ | ----------------- | ----------------- | -------- |
+| ci-unified.yml      | ✅ MAIN,main,dev,stable-runtime | ✅ MAIN,main         | ❌     | ✅                | ❌                | ❌       |
+| ci.yml              | ✅ MAIN,dev,stable-runtime      | ✅ MAIN              | ❌     | ❌                | ❌                | ❌       |
+| ci-cd.yml           | ✅ MAIN,dev,stable-runtime      | ✅ MAIN              | ❌     | ❌                | ❌                | ❌       |
+| titane_ci.yml       | ✅ main,MAIN,develop            | ✅ main,MAIN,develop | ❌     | ❌                | ❌                | ❌       |
+| release-unified.yml | ❌                              | ❌                   | ✅ v\* | ✅                | ❌                | ❌       |
+| release.yml         | ❌                              | ❌                   | ✅ v\* | ❌                | ❌                | ❌       |
+| rust-docker.yml     | ✅ MAIN,dev,stable-runtime      | ✅ MAIN              | ❌     | ✅                | ✅ src-tauri/\*\* | ❌       |
 
 **Issues:**
+
 - Branch name inconsistency: "MAIN" vs "main", "develop" vs "dev"
 - No scheduled runs (could add weekly dependency checks)
 - Path filtering only in rust-docker.yml (could optimize others)
 
 ### 4.2 Concurrency Configuration
 
-| Workflow | Concurrency Group | Cancel in Progress |
-|----------|-------------------|-------------------|
-| ci-unified.yml | ✅ `${{ github.workflow }}-${{ github.ref }}` | ✅ true |
-| ci.yml | ❌ None | ❌ |
-| ci-cd.yml | ❌ None | ❌ |
-| titane_ci.yml | ❌ None | ❌ |
-| release-unified.yml | ❌ None | ❌ |
-| release.yml | ❌ None | ❌ |
-| rust-docker.yml | ❌ None | ❌ |
+| Workflow            | Concurrency Group                             | Cancel in Progress |
+| ------------------- | --------------------------------------------- | ------------------ |
+| ci-unified.yml      | ✅ `${{ github.workflow }}-${{ github.ref }}` | ✅ true            |
+| ci.yml              | ❌ None                                       | ❌                 |
+| ci-cd.yml           | ❌ None                                       | ❌                 |
+| titane_ci.yml       | ❌ None                                       | ❌                 |
+| release-unified.yml | ❌ None                                       | ❌                 |
+| release.yml         | ❌ None                                       | ❌                 |
+| rust-docker.yml     | ❌ None                                       | ❌                 |
 
 **Recommendation:** Add concurrency to ALL workflows
 
@@ -307,28 +322,28 @@ env:
 
 ### 5.1 Core Actions (All Workflows)
 
-| Action | Versions Used | Latest | Status |
-|--------|--------------|--------|--------|
-| actions/checkout | v4, v4.2.2 | v4.2.2 | ✅ Update all to v4.2.2 |
-| actions/setup-node | v4, v4.1.0 | v4.1.0 | ✅ Update all to v4.1.0 |
-| actions/cache | v4, v4.2.0 | v4.2.0 | ✅ Update all to v4.2.0 |
-| actions/upload-artifact | v4, v4.6.0 | v4.6.0 | ✅ Update all to v4.6.0 |
-| actions/download-artifact | v4, v4.1.8 | v4.1.8 | ✅ Update all to v4.1.8 |
+| Action                    | Versions Used | Latest | Status                  |
+| ------------------------- | ------------- | ------ | ----------------------- |
+| actions/checkout          | v4, v4.2.2    | v4.2.2 | ✅ Update all to v4.2.2 |
+| actions/setup-node        | v4, v4.1.0    | v4.1.0 | ✅ Update all to v4.1.0 |
+| actions/cache             | v4, v4.2.0    | v4.2.0 | ✅ Update all to v4.2.0 |
+| actions/upload-artifact   | v4, v4.6.0    | v4.6.0 | ✅ Update all to v4.6.0 |
+| actions/download-artifact | v4, v4.1.8    | v4.1.8 | ✅ Update all to v4.1.8 |
 
 ### 5.2 Rust Toolchain Actions
 
-| Action | Versions Used | Latest | Status | Recommendation |
-|--------|--------------|--------|--------|----------------|
-| dtolnay/rust-toolchain | @stable, @1.83 | @1.83 | ⚠️ Mixed | ✅ Standardize to @1.83 |
-| actions-rust-lang/setup-rust-toolchain | @v1 | @v1 | ❌ Less maintained | ❌ Replace with dtolnay |
-| Swatinem/rust-cache | v2, v2.7.3 | v2.7.3 | ✅ Good | ✅ Use v2.7.3 everywhere |
+| Action                                 | Versions Used  | Latest | Status             | Recommendation           |
+| -------------------------------------- | -------------- | ------ | ------------------ | ------------------------ |
+| dtolnay/rust-toolchain                 | @stable, @1.83 | @1.83  | ⚠️ Mixed           | ✅ Standardize to @1.83  |
+| actions-rust-lang/setup-rust-toolchain | @v1            | @v1    | ❌ Less maintained | ❌ Replace with dtolnay  |
+| Swatinem/rust-cache                    | v2, v2.7.3     | v2.7.3 | ✅ Good            | ✅ Use v2.7.3 everywhere |
 
 ### 5.3 Specialized Actions
 
-| Action | Versions Used | Latest | Status |
-|--------|--------------|--------|--------|
-| codecov/codecov-action | v4, v5.2.1 | v5.2.1 | ✅ Update to v5.2.1 |
-| softprops/action-gh-release | v2, v2.2.0 | v2.2.0 | ✅ Update to v2.2.0 |
+| Action                      | Versions Used | Latest | Status              |
+| --------------------------- | ------------- | ------ | ------------------- |
+| codecov/codecov-action      | v4, v5.2.1    | v5.2.1 | ✅ Update to v5.2.1 |
+| softprops/action-gh-release | v2, v2.2.0    | v2.2.0 | ✅ Update to v2.2.0 |
 
 ---
 
@@ -342,19 +357,21 @@ lint-and-typecheck (15 min)
     └── test-backend (30 min) ──┤
                                  ├── test-e2e (30 min)
                                  └── build-verification (45 min, matrix 3 OS)
-    
+
 security-audit (15 min, parallel to main flow)
 
 ci-status (5 min, depends on all)
 ```
 
 **Strengths:**
+
 - Parallel frontend/backend after lint
 - E2E and build after tests (logical)
 - Security runs in parallel (efficient)
 - Final status check
 
 **Optimization Opportunities:**
+
 - Build-verification could be Linux-only in CI (save 2 OS builds)
 - Windows/macOS builds only needed for release
 
@@ -367,6 +384,7 @@ build-macos (60 min x2 matrix) ┘
 ```
 
 **Strengths:**
+
 - Parallel OS builds (efficient)
 - All builds required before release (safe)
 
@@ -376,17 +394,18 @@ build-macos (60 min x2 matrix) ┘
 
 ### 7.1 Secrets Usage
 
-| Secret | Workflows | Purpose | Status |
-|--------|-----------|---------|--------|
-| CODECOV_TOKEN | ci.yml, ci-unified.yml | Coverage upload | ✅ Optional (fail_ci_if_error: false) |
-| TAURI_SIGNING_PRIVATE_KEY | release workflows | Code signing | ✅ Release-only |
-| TAURI_SIGNING_PRIVATE_KEY_PASSWORD | release workflows | Code signing | ✅ Release-only |
-| GPG_PRIVATE_KEY | release.yml | .deb signing | ✅ Optional, release-only |
-| APPLE_CERTIFICATE | release workflows | macOS signing | ✅ Optional, release-only |
-| APPLE_* | release workflows | macOS notarization | ✅ Optional, release-only |
-| GITHUB_TOKEN | create-release jobs | Release creation | ✅ Automatic, safe |
+| Secret                             | Workflows              | Purpose            | Status                                |
+| ---------------------------------- | ---------------------- | ------------------ | ------------------------------------- |
+| CODECOV_TOKEN                      | ci.yml, ci-unified.yml | Coverage upload    | ✅ Optional (fail_ci_if_error: false) |
+| TAURI_SIGNING_PRIVATE_KEY          | release workflows      | Code signing       | ✅ Release-only                       |
+| TAURI_SIGNING_PRIVATE_KEY_PASSWORD | release workflows      | Code signing       | ✅ Release-only                       |
+| GPG_PRIVATE_KEY                    | release.yml            | .deb signing       | ✅ Optional, release-only             |
+| APPLE_CERTIFICATE                  | release workflows      | macOS signing      | ✅ Optional, release-only             |
+| APPLE\_\*                          | release workflows      | macOS notarization | ✅ Optional, release-only             |
+| GITHUB_TOKEN                       | create-release jobs    | Release creation   | ✅ Automatic, safe                    |
 
 **Assessment:**
+
 - ✅ All signing secrets only in release workflows (tag-triggered)
 - ✅ Optional secrets handled with conditional checks
 - ✅ No hardcoded secrets detected
@@ -395,11 +414,13 @@ build-macos (60 min x2 matrix) ┘
 ### 7.2 Permissions Analysis
 
 **Current State:**
+
 - Only ci-unified.yml::security-audit has explicit permissions (contents: read)
 - Only release-unified.yml::create-release has explicit permissions (contents: write)
 - All other jobs use default permissions (too broad)
 
 **Required Permissions by Job Type:**
+
 - **CI jobs (lint, test, build):** contents: read ONLY
 - **E2E jobs:** contents: read ONLY
 - **Security audit:** contents: read, security-events: write (if using CodeQL)
@@ -414,16 +435,19 @@ build-macos (60 min x2 matrix) ┘
 ### 8.1 Current Matrices
 
 **build-verification (ci-unified.yml):**
+
 ```yaml
 matrix:
   os: [ubuntu-latest, windows-latest, macos-latest]
 fail-fast: false
 ```
+
 - **Purpose:** Verify build works on all platforms
 - **Issue:** Expensive for CI (3x builds, ~45 min each)
 - **Recommendation:** Keep only ubuntu-latest for CI, move others to release-only
 
 **build-macos (release workflows):**
+
 ```yaml
 matrix:
   target:
@@ -431,16 +455,19 @@ matrix:
     - aarch64-apple-darwin
 fail-fast: false
 ```
+
 - **Purpose:** Intel + Apple Silicon binaries
 - **Status:** ✅ Good, necessary for releases
 
 ### 8.2 Optimization Recommendations
 
 **CI (Fast feedback):**
+
 - ubuntu-latest only (90% of developers use Linux/WSL)
 - Windows/macOS builds on release tags only
 
 **Release (Comprehensive):**
+
 - Keep all OS matrices
 - Keep macOS architecture matrix
 
@@ -450,27 +477,30 @@ fail-fast: false
 
 ### 9.1 Current CI Times (ci-unified.yml)
 
-| Job | Timeout | Est. Actual | Parallel? |
-|-----|---------|-------------|-----------|
-| lint-and-typecheck | 15 min | ~5 min | Yes (start) |
-| test-frontend | 20 min | ~10 min | Yes (after lint) |
-| test-backend | 30 min | ~15 min | Yes (after lint) |
-| test-e2e | 30 min | ~10 min | No (after tests) |
-| build-verification (3x) | 45 min each | ~30 min | Yes (after tests) |
-| security-audit | 15 min | ~8 min | Yes (parallel) |
-| **Total wall time** | - | **~45 min** | (critical path: build-verification) |
+| Job                     | Timeout     | Est. Actual | Parallel?                           |
+| ----------------------- | ----------- | ----------- | ----------------------------------- |
+| lint-and-typecheck      | 15 min      | ~5 min      | Yes (start)                         |
+| test-frontend           | 20 min      | ~10 min     | Yes (after lint)                    |
+| test-backend            | 30 min      | ~15 min     | Yes (after lint)                    |
+| test-e2e                | 30 min      | ~10 min     | No (after tests)                    |
+| build-verification (3x) | 45 min each | ~30 min     | Yes (after tests)                   |
+| security-audit          | 15 min      | ~8 min      | Yes (parallel)                      |
+| **Total wall time**     | -           | **~45 min** | (critical path: build-verification) |
 
 ### 9.2 Optimization Potential
 
 **Option A: Remove multi-OS from CI**
+
 - Remove Windows/macOS from build-verification
 - **New wall time: ~25 min** (45% faster)
 
 **Option B: Parallel E2E with Build**
+
 - Make test-e2e and build-verification parallel (both depend on tests)
 - **New wall time: ~35 min** (22% faster)
 
 **Option C: Both A + B**
+
 - **New wall time: ~20 min** (56% faster)
 
 **Recommendation:** Option C with Optional Windows/macOS builds on push to MAIN only
@@ -581,6 +611,7 @@ fail-fast: false
 ## 12. Migration Plan
 
 ### Phase 1: Modernize & Consolidate (Week 1)
+
 - Update ci-unified.yml (all fixes)
 - Update release-unified.yml (all fixes)
 - Update rust-docker.yml (all fixes)
@@ -588,12 +619,14 @@ fail-fast: false
 - Test all triggers
 
 ### Phase 2: Security & Performance (Week 2)
+
 - Add CodeQL workflow
 - Add Dependabot config
 - Optimize caches
 - Add coverage gates
 
 ### Phase 3: Documentation & Automation (Week 3)
+
 - Auto-deploy docs
 - Auto-generate changelogs
 - Add benchmark tracking
@@ -604,6 +637,7 @@ fail-fast: false
 ## 13. Success Criteria (Definition of Done)
 
 ✅ **REQUIRED for 100/100:**
+
 1. All workflows pass without errors
 2. No deprecated actions
 3. All versions pinned (no floating)
@@ -615,12 +649,7 @@ fail-fast: false
 9. Fork PR safety validated
 10. No redundant workflows
 
-✅ **BONUS:**
-11. CodeQL enabled
-12. Dependabot configured
-13. Coverage gates enforced
-14. CI optimized (< 25 min wall time)
-15. Documentation deployed
+✅ **BONUS:** 11. CodeQL enabled 12. Dependabot configured 13. Coverage gates enforced 14. CI optimized (< 25 min wall time) 15. Documentation deployed
 
 ---
 
@@ -635,6 +664,7 @@ fail-fast: false
 ---
 
 **Next Steps:**
+
 1. Begin Phase 2: Modernize ci-unified.yml
 2. Archive legacy workflows
 3. Validate all triggers

@@ -367,7 +367,7 @@ describe('devSudoExecutor', () => {
       // Execute commands from different domains
       const results = await Promise.all(commands.map(executeDevSudoCommand));
 
-      results.forEach((result) => {
+      results.forEach(result => {
         expect(result).toBeDefined();
         expect(result.handled).toBe(true);
       });
@@ -406,7 +406,7 @@ describe('devSudoExecutor', () => {
       const endTime = Date.now();
 
       expect(results.length).toBe(10);
-      results.forEach((result) => {
+      results.forEach(result => {
         expect(result).toBeDefined();
         expect(result.handled).toBe(true);
       });

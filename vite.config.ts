@@ -116,7 +116,6 @@ export default defineConfig({
   publicDir: resolve(ROOT_DIR, 'public'),
   base: './',
 
-
   // 🔧 Server configuration with proper headers
   server: {
     port: 5173,
@@ -329,7 +328,12 @@ export default defineConfig({
             if (pkg === 'web-vitals') {
               return 'web-vitals';
             }
-            if (pkg && (pkg.startsWith('remark') || pkg.startsWith('rehype') || pkg === 'markdown-it')) {
+            if (
+              pkg &&
+              (pkg.startsWith('remark') ||
+                pkg.startsWith('rehype') ||
+                pkg === 'markdown-it')
+            ) {
               return 'markdown';
             }
 

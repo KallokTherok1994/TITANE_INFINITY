@@ -38,7 +38,11 @@ function runOrFallback(primaryCmd, primaryArgs, fallbackCmd, fallbackArgs) {
 }
 
 // 1) Validate (fast)
-runOrFallback('pnpm', ['run', 'copilot-xs:validate'], 'corepack', ['pnpm', 'run', 'copilot-xs:validate']);
+runOrFallback('pnpm', ['run', 'copilot-xs:validate'], 'corepack', [
+  'pnpm',
+  'run',
+  'copilot-xs:validate',
+]);
 
 // 2) Full test gate (can be slow; set COPILOT_XS_SKIP_TESTS=1 to bypass locally)
 if (process.env.COPILOT_XS_SKIP_TESTS !== '1') {

@@ -18,6 +18,7 @@
 ### 1. Mode PLAN Obligatoire
 
 **TOUJOURS analyser avant d'agir:**
+
 1. Comprendre le contexte complet
 2. Identifier les dépendances et impacts
 3. Proposer un plan d'action détaillé
@@ -25,6 +26,7 @@
 5. Exécuter étape par étape
 
 **Jamais d'action automatique sans:**
+
 - Plan approuvé
 - Vérification des impacts
 - Confirmation explicite
@@ -32,6 +34,7 @@
 ### 2. Déploiement INTERDIT
 
 **❌ COMMANDES BLOQUÉES (sans "GO FOR PRODUCTION DEPLOY"):**
+
 - `pnpm run build`
 - `tauri build`
 - `./runtime/stable/build.sh`
@@ -39,6 +42,7 @@
 - Installation système (`dpkg`, `sudo`)
 
 **✅ MODE DEV UNIQUEMENT:**
+
 - `pnpm run dev`
 - Tests (`pnpm test`, `pnpm run test:all`)
 - Validation (`pnpm run copilot-xs:validate`)
@@ -64,6 +68,7 @@ const data: ApiResponse = await fetch();
 ### 4. Tests Obligatoires
 
 **Avant toute modification importante:**
+
 ```bash
 pnpm run check     # TypeScript
 pnpm run lint      # ESLint
@@ -71,6 +76,7 @@ pnpm test -- --run # Tests unitaires
 ```
 
 **Si modification backend Rust:**
+
 ```bash
 pnpm run test:rust
 ```
@@ -80,30 +86,37 @@ pnpm run test:rust
 ## 💻 Workflow Standard
 
 ### Étape 1: Analyse
+
 ```
 "Je vais analyser [contexte] avant de proposer des modifications"
 ```
+
 - Lire les fichiers pertinents
 - Identifier les patterns existants
 - Vérifier les dépendances
 
 ### Étape 2: Plan
+
 ```markdown
 ## 📋 Plan d'Action
 
 ### Modifications proposées:
+
 1. [Action 1] → Impact: [description]
 2. [Action 2] → Impact: [description]
 
 ### Fichiers affectés:
+
 - `src/components/X.tsx` (modification)
 - `src/types/Y.ts` (ajout)
 
 ### Tests requis:
+
 - Test unitaire pour fonction X
 - Test d'intégration pour workflow Y
 
 ### Validation:
+
 - [ ] TypeScript check
 - [ ] Linting
 - [ ] Tests passent
@@ -112,11 +125,13 @@ pnpm run test:rust
 ```
 
 ### Étape 3: Exécution (après approval)
+
 - Appliquer modifications une par une
 - Vérifier après chaque étape
 - Reporter tout problème immédiatement
 
 ### Étape 4: Validation
+
 ```bash
 pnpm run check
 pnpm run lint
@@ -325,7 +340,7 @@ pnpm run test:all         # Complete suite
 
 ```typescript
 // ❌ BAD
-const apiKey = "sk-1234567890";
+const apiKey = 'sk-1234567890';
 
 // ✅ GOOD
 const apiKey = import.meta.env.VITE_API_KEY;
@@ -419,6 +434,7 @@ const HeavyComponent = lazy(
 **Analyse:** [Ce que j'ai trouvé/vérifié]
 
 **Plan:** [Ce que je propose]
+
 1. Action 1
 2. Action 2
 3. Action 3
@@ -433,18 +449,21 @@ const HeavyComponent = lazy(
 ### Demander Clarification
 
 **Quand:**
+
 - Contexte incomplet
 - Multiple solutions possibles
 - Impact important/incertain
 - Breaking changes potentiels
 
 **Comment:**
+
 ```markdown
 ## 🤔 Clarification Nécessaire
 
 **Situation:** [Description]
 
 **Options:**
+
 1. Option A: [avantages/inconvénients]
 2. Option B: [avantages/inconvénients]
 
@@ -496,6 +515,7 @@ pnpm run verify
 ## 🎯 Objectif Final
 
 **Produire du code:**
+
 - ✅ Fonctionnel et testé
 - ✅ Performant et sécurisé
 - ✅ Maintenable et documenté
@@ -503,6 +523,7 @@ pnpm run verify
 - ✅ Respectueux des règles TITANE∞
 
 **En tant que Cline:**
+
 - 🧠 Analyser avant d'agir
 - 📋 Planifier méthodiquement
 - 🤝 Communiquer clairement
@@ -513,6 +534,6 @@ pnpm run verify
 
 **Version:** 1.0.0  
 **Created:** 2026-01-03  
-**Owner:** Kevin Thibault  
+**Owner:** Kevin Thibault
 
-*Ces instructions guident Cline pour travailler efficacement et en sécurité sur TITANE∞.*
+_Ces instructions guident Cline pour travailler efficacement et en sécurité sur TITANE∞._

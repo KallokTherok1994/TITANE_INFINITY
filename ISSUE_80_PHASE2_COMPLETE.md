@@ -18,11 +18,12 @@ Activer les tests SQLite avec bindings natifs `better-sqlite3` pour tests de sto
 
 ### Vérifications Effectuées
 
-1. **Package Check**: 
+1. **Package Check**:
    - ✅ `better-sqlite3@11.7.0` déjà installé
    - ✅ `@types/better-sqlite3@7.6.11` disponible
 
 2. **Runtime Test**:
+
    ```bash
    node -e "import('better-sqlite3').then(() => console.log('✅ better-sqlite3 available'))"
    # Output: ✅ better-sqlite3 available
@@ -56,6 +57,7 @@ describe.skipIf(!hasSQLiteBindings)('SQLiteVectorStore [Native Bindings]', () =>
 ## 📊 Résultats Phase 2
 
 ### État Actuel Tests
+
 ```
 Tests:        2306 passed | 16 skipped (2322 total)
 Test Files:   108 passed | 2 skipped (110 total)
@@ -63,10 +65,12 @@ Duration:     ~35s
 ```
 
 ### Détails Tests SQLite
+
 - **SQLiteVectorStore.unit.test.ts**: 24 tests ✅ (vector operations, stats, queries)
 - **UnifiedMemory.perf.test.ts**: 6 tests ✅ (consolidation, decay, memory benchmarks)
 
 ### Impact Coverage
+
 Les **30 tests SQLite** sont déjà **inclus** dans les **2306 tests passing**.
 
 ---
@@ -86,6 +90,7 @@ Les **30 tests SQLite** sont déjà **inclus** dans les **2306 tests passing**.
 **Phase 2 Complete Instantanément** — Aucune action requise!
 
 Les tests SQLite (30 tests) fonctionnent déjà grâce aux bindings natifs précompilés:
+
 - Platform: `linux-x64`
 - Node: `22.x` (compatible bindings)
 - Better-sqlite3: `11.7.0` (dernière version stable)
@@ -97,6 +102,7 @@ Les **16 tests skipped** proviennent d'autres sources (E2E Vitest, Three.js) —
 ## 📈 Prochaine Étape
 
 **Phase 3**: Activer les tests Three.js/WebGL restants
+
 - Cible: ~5-10 tests dans floating window modules
 - Méthode: Setup browser mode ou mocking Three.js renderer
 

@@ -199,9 +199,7 @@ export const LogViewer: React.FC<LogViewerProps> = ({
               </span>
 
               {/* Level */}
-              <span
-                className={`${getLevelColor(log.level)} font-semibold shrink-0 w-12`}
-              >
+              <span className={`${getLevelColor(log.level)} font-semibold shrink-0 w-12`}>
                 {log.level.toUpperCase()}
               </span>
 

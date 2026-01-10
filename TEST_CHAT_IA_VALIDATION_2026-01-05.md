@@ -36,6 +36,7 @@ Valider que le chat IA affiche maintenant **des réponses VISIBLES et COMPLÈTES
 - [ ] ✅ Temps de réponse affiché (ex: "234ms")
 
 **Si le test échoue:**
+
 - Vérifier la console DevTools (F12) pour erreurs
 - Voir section "Diagnostic" ci-dessous
 
@@ -74,10 +75,12 @@ Valider que le chat IA affiche maintenant **des réponses VISIBLES et COMPLÈTES
 ```
 
 **Erreurs acceptables (non-bloquantes):**
+
 - `OMEGA pipeline not initialized` → Fallback normal vers Legacy
 - `Ollama connection failed` → Fallback normal vers Cloud APIs
 
 **Erreurs CRITIQUES (doivent être ABSENTES):**
+
 - ❌ `BLOCKED: Unauthorized command: ollama` → **DOIT être RÉSOLU**
 - ❌ `No provider available` → **DOIT être RÉSOLU**
 
@@ -114,16 +117,19 @@ Valider que le chat IA affiche maintenant **des réponses VISIBLES et COMPLÈTES
 **Résultats attendus:**
 
 **Si Ollama installé:**
+
 ```
 ✅ Ollama: Available (http://127.0.0.1:11434)
 ```
 
 **Si Ollama pas installé:**
+
 ```
 ⚠️ Ollama: Not available (service not running)
 ```
 
 **Autres providers:**
+
 ```
 ⚠️ OpenAI: Not configured (no API key)
 ⚠️ Gemini: Not configured (no API key)
@@ -140,24 +146,30 @@ Valider que le chat IA affiche maintenant **des réponses VISIBLES et COMPLÈTES
 **Actions de diagnostic:**
 
 1. **Vérifier console DevTools:**
+
    ```javascript
    // Dans Console DevTools, taper:
-   localStorage.getItem('titane_ai_provider')
+   localStorage.getItem('titane_ai_provider');
    ```
+
    - Doit retourner: `"ollama"` ou `"gemini"` ou `"openai"`
 
 2. **Vérifier logs backend:**
+
    ```bash
    # Dans terminal où tourne `npm run dev:tauri`
    # Rechercher:
    grep -i "BLOCKED" runtime/dev/logs/*.log
    ```
+
    - **Ne doit PAS retourner:** `BLOCKED: Unauthorized command: ollama`
 
 3. **Vérifier Ollama service:**
+
    ```bash
    curl http://127.0.0.1:11434/api/tags
    ```
+
    - **Si erreur ECONNREFUSED:** Ollama pas installé/lancé → Normal, fallback vers Cloud
    - **Si réponse JSON:** Ollama fonctionne ✅
 
@@ -219,18 +231,21 @@ export ANTHROPIC_API_KEY="sk-ant-..."
 ## ✅ CHECKLIST DE VALIDATION FINALE
 
 ### Corrections Appliquées
+
 - [x] ✅ Ollama ajouté à la whitelist sécurité
 - [x] ✅ Curl ajouté à la whitelist (pour APIs cloud)
 - [x] ✅ Backend recompilé avec succès
 - [x] ✅ Application redémarrée avec corrections
 
 ### Tests à Effectuer (Par Utilisateur)
+
 - [ ] ✅ Test #1: Message simple affiche réponse visible
 - [ ] ✅ Test #2: Console DevTools sans erreur "BLOCKED"
 - [ ] ✅ Test #3: Réponse longue fonctionne (streaming)
 - [ ] ✅ Test #4: Provider status correct dans Settings
 
 ### Configuration Optionnelle
+
 - [ ] ⚙️ Installer Ollama (ou configurer clé API cloud)
 - [ ] ⚙️ Tester avec plusieurs providers
 - [ ] ⚙️ Ajuster préférences dans Settings
@@ -242,23 +257,25 @@ export ANTHROPIC_API_KEY="sk-ant-..."
 ### ✅ SUCCÈS = Tous les critères validés
 
 ```yaml
-Chat IA Fonctionnel:     ✅ 100%
-Réponses Affichées:      ✅ Visibles et complètes
-Console DevTools:        ✅ Pas d'erreur "BLOCKED"
-Provider Ollama:         ✅ Autorisé (utilisable si installé)
-Provider Cloud APIs:     ✅ Autorisés (curl disponible)
-Expérience Utilisateur:  ✨ Excellente
+Chat IA Fonctionnel: ✅ 100%
+Réponses Affichées: ✅ Visibles et complètes
+Console DevTools: ✅ Pas d'erreur "BLOCKED"
+Provider Ollama: ✅ Autorisé (utilisable si installé)
+Provider Cloud APIs: ✅ Autorisés (curl disponible)
+Expérience Utilisateur: ✨ Excellente
 ```
 
 ### ❌ ÉCHEC = Problèmes persistants
 
 **Si réponses toujours vides:**
+
 1. Capturer screenshot de la console DevTools (erreurs)
 2. Copier logs du terminal `npm run dev:tauri`
 3. Vérifier `runtime/dev/logs/*.log`
 4. Créer issue GitHub avec détails
 
 **Fichiers de logs à vérifier:**
+
 ```
 runtime/dev/logs/vite.log
 runtime/dev/logs/tauri.log (si existe)

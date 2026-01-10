@@ -153,7 +153,7 @@ export const AppShellWithDevTools = ({
             <>
               {/* Overlay */}
               <motion.div
-                className="absolute inset-0 bg-black/50 z-[9990]"
+                className="absolute inset-0 bg-black/50 z-9990"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -162,7 +162,7 @@ export const AppShellWithDevTools = ({
 
               {/* Drawer */}
               <motion.div
-                className="absolute top-0 right-0 h-full shadow-2xl z-[9991] border-l"
+                className="absolute top-0 right-0 h-full shadow-2xl z-9991 border-l"
                 style={{
                   width: DEVTOOLS_WIDTH_TABLET,
                   background: 'var(--bg-base, #050607)',
@@ -191,7 +191,7 @@ export const AppShellWithDevTools = ({
         <AnimatePresence>
           {devToolsOpen && (
             <motion.div
-              className="absolute inset-0 z-[9990]"
+              className="absolute inset-0 z-9990"
               style={{
                 background: 'var(--bg-base, #050607)',
               }}

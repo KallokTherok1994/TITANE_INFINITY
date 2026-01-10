@@ -189,11 +189,7 @@ export class AppearanceFloatingIntegration {
     // Apply outfit colors
     this.applyOutfitState(resolvedOutfit);
 
-    if (DEBUG)
-      logger.debug(
-        'Appearance applied:',
-        appearance.mode_preset
-      );
+    if (DEBUG) logger.debug('Appearance applied:', appearance.mode_preset);
   }
 
   /**
@@ -269,12 +265,7 @@ export class AppearanceFloatingIntegration {
     // 6. Fallback: Keep default palette colors if parsing fails
     // For now, keep default palette colors
 
-    if (DEBUG)
-      logger.debug(
-        'Outfit applied:',
-        outfit.top,
-        outfit.bottom
-      );
+    if (DEBUG) logger.debug('Outfit applied:', outfit.top, outfit.bottom);
   }
 
   /**

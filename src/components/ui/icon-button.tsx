@@ -16,19 +16,23 @@ export interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEl
 
 const variantStyles = {
   // Default (ghost) - transparent with hover
-  default: 'bg-transparent text-titanium-text-secondary hover:bg-titanium-bg-interactive hover:text-titanium-text-primary',
-  
+  default:
+    'bg-transparent text-titanium-text-secondary hover:bg-titanium-bg-interactive hover:text-titanium-text-primary',
+
   // Primary CTA - cool gray accent
-  primary: 'bg-titanium-accent-cool text-titanium-bg-base hover:bg-titanium-accent-bright',
-  
+  primary:
+    'bg-titanium-accent-cool text-titanium-bg-base hover:bg-titanium-accent-bright',
+
   // Destructive - error color
   destructive: 'bg-error-500 text-white hover:bg-error-700',
-  
+
   // Outline - border with transparent background
-  outline: 'border border-titanium-border-default bg-transparent text-titanium-text-primary hover:bg-titanium-bg-interactive hover:border-titanium-border-strong',
-  
+  outline:
+    'border border-titanium-border-default bg-transparent text-titanium-text-primary hover:bg-titanium-bg-interactive hover:border-titanium-border-strong',
+
   // Ghost - minimal styling
-  ghost: 'bg-transparent text-titanium-text-secondary hover:bg-titanium-bg-interactive hover:text-titanium-text-primary',
+  ghost:
+    'bg-transparent text-titanium-text-secondary hover:bg-titanium-bg-interactive hover:text-titanium-text-primary',
 };
 
 const sizeStyles = {

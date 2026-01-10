@@ -301,7 +301,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
   // FIX v19.3Ω: Guard flag pour verrouiller l'état pendant les opérations
   const operationLockRef = useRef(false);
-  
+
   // ✅ FIX P0-2: Timestamp de la dernière opération pour cooldown
   const lastOperationTimestampRef = useRef<number>(0);
 
@@ -319,7 +319,10 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       // ✅ v26.2.3: Force 'auto' (cascade mode) par défaut
       const stored = readStoredPreferredProvider();
       // Si aucune préférence stockée, forcer 'auto' dans localStorage
-      if (typeof window !== 'undefined' && !window.localStorage.getItem(PREFERRED_PROVIDER_STORAGE_KEY)) {
+      if (
+        typeof window !== 'undefined' &&
+        !window.localStorage.getItem(PREFERRED_PROVIDER_STORAGE_KEY)
+      ) {
         window.localStorage.setItem(PREFERRED_PROVIDER_STORAGE_KEY, 'auto');
       }
       return stored;
@@ -386,9 +389,10 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   // ✅ v26.3.1 - MEMORY FIX: Skip provider checks in test environment
   useEffect(() => {
     // ✅ v26.3.1: Skip entirely in test environment to prevent memory leaks
-    const isTestEnv = import.meta.env.MODE === 'test' ||
-                      typeof process !== 'undefined' && process.env?.NODE_ENV === 'test' ||
-                      typeof (globalThis as Record<string, unknown>).__TEST_WRAPPER__ !== 'undefined';
+    const isTestEnv =
+      import.meta.env.MODE === 'test' ||
+      (typeof process !== 'undefined' && process.env?.NODE_ENV === 'test') ||
+      typeof (globalThis as Record<string, unknown>).__TEST_WRAPPER__ !== 'undefined';
     if (isTestEnv) {
       return;
     }
@@ -414,7 +418,9 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     const checkProvidersAvailability = async () => {
       // 🔒 v26.2.1: Skip if already checking or unmounted
       if (checkInProgress || !isMounted) {
-        chatLogger.debug('Provider readiness check skipped - already in progress or unmounted');
+        chatLogger.debug(
+          'Provider readiness check skipped - already in progress or unmounted'
+        );
         return;
       }
 
@@ -474,7 +480,9 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
     const enabled = import.meta.env.DEV || envEnabled || userEnabled;
     if (!enabled) {
-      return () => { isMounted = false; };
+      return () => {
+        isMounted = false;
+      };
     }
 
     // Re-check every 30s (in case API keys are added dynamically)
@@ -1027,18 +1035,23 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           });
 
           // ✅ FIX P0-3: FALLBACK - Ajouter le message au lieu de updater
-          chatLogger.warn('⚠️ updateAssistant: FALLBACK TRIGGERED - investigate root cause', {
-            targetUiId,
-            context,
-            timestamp: Date.now(),
-          });
+          chatLogger.warn(
+            '⚠️ updateAssistant: FALLBACK TRIGGERED - investigate root cause',
+            {
+              targetUiId,
+              context,
+              timestamp: Date.now(),
+            }
+          );
 
           // ✅ FIX AUDIT: Monitorer fréquence fallback
           try {
             if (typeof window !== 'undefined') {
-              const monitoring = (window as unknown as { monitoring?: unknown }).monitoring;
-              const trackEvent =
-                (monitoring as { trackEvent?: unknown } | null | undefined)?.trackEvent;
+              const monitoring = (window as unknown as { monitoring?: unknown })
+                .monitoring;
+              const trackEvent = (
+                monitoring as { trackEvent?: unknown } | null | undefined
+              )?.trackEvent;
 
               if (typeof trackEvent === 'function') {
                 (trackEvent as (name: string, data: Record<string, unknown>) => void)(
@@ -1267,7 +1280,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         let chatServiceResponse: ChatResponse | null = null;
         let chatServiceError: string | null = null;
 
-        const withTimeout = async <T,>(promise: Promise<T>, label: string): Promise<T> => {
+        const withTimeout = async <T>(promise: Promise<T>, label: string): Promise<T> => {
           let timeoutHandle: ReturnType<typeof setTimeout> | null = null;
 
           const timeoutPromise = new Promise<never>((_, reject) => {
@@ -1388,7 +1401,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
             typeof chatServiceResponse.content === 'string'
               ? chatServiceResponse.content
               : '';
-          
+
           // ✅ v26.2.3 CRITICAL FIX: Détecter réponse vide du backend
           if (legacyContent.trim().length === 0) {
             chatLogger.warn('⚠️ Backend returned empty content - triggering fallback');
@@ -1406,7 +1419,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
               metadata: chatServiceResponse.metadata,
               omegaMetadata: resolvedOmegaMetadata,
             } satisfies ChatEngineResponse;
-            
+
             aggregatedContent = legacyContent;
           }
         }
@@ -1435,16 +1448,17 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         // ✅ v26.2.3 - CRITICAL FIX: Fallback robuste si aucun provider disponible
         if (!finalResponse) {
           chatLogger.warn('⚠️ No finalResponse - creating fallback response');
-          
+
           // Déterminer le message approprié selon la cause
           const fallbackContent = (() => {
             if (chatAttempts.length > 0) {
               const allFailed = chatAttempts.every(attempt => !attempt.success);
               if (allFailed) {
                 const ollamaAttempt = chatAttempts.find(a => a.provider === 'ollama');
-                const hasOllamaTimeout = ollamaAttempt?.error?.includes('timed out') || 
-                                       ollamaAttempt?.error?.includes('ECONNREFUSED');
-                
+                const hasOllamaTimeout =
+                  ollamaAttempt?.error?.includes('timed out') ||
+                  ollamaAttempt?.error?.includes('ECONNREFUSED');
+
                 if (hasOllamaTimeout) {
                   return `🤖 **TITANE∞ — Configuration IA Requise**
 
@@ -1471,7 +1485,7 @@ ${chatAttempts.map(a => `- ${a.provider}: ${a.success ? '✅' : '❌ ' + (a.erro
                 }
               }
             }
-            
+
             return `🤖 **TITANE∞ — Initialisation IA**
 
 Le système IA est en cours de configuration. Aucune réponse n'a pu être générée pour le moment.
@@ -1482,7 +1496,7 @@ Le système IA est en cours de configuration. Aucune réponse n'a pu être gén�
 
 Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
           })();
-          
+
           finalResponse = {
             content: fallbackContent,
             provider: 'titane-local',
@@ -1492,15 +1506,15 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
             suggestions: [
               'Comment installer Ollama ?',
               'Quels sont les providers IA disponibles ?',
-              'Comment configurer une clé API cloud ?'
+              'Comment configurer une clé API cloud ?',
             ],
             metadata: {
               fallbackReason: 'no_provider_available',
               attemptedProviders: attemptedProviders,
               chatAttempts: chatAttempts,
-            }
+            },
           } satisfies ChatEngineResponse;
-          
+
           aggregatedContent = fallbackContent;
           chatLogger.info('✅ Fallback response created for no provider scenario');
         }
@@ -1546,7 +1560,9 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
           metadataPatch
         );
 
-        chatLogger.debug('updateAssistant terminé', { messagesCount: messagesRef.current.length });
+        chatLogger.debug('updateAssistant terminé', {
+          messagesCount: messagesRef.current.length,
+        });
 
         const assistantFromState = getAssistantFromState();
         const assistantMessage: AIMessage =

@@ -116,7 +116,9 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
         compressed: stats.compressed,
       });
 
-      logger.debug(`Message saved (mode: ${options.mode}, total: ${updatedMessages.length})`);
+      logger.debug(
+        `Message saved (mode: ${options.mode}, total: ${updatedMessages.length})`
+      );
     },
     [options.mode]
   );

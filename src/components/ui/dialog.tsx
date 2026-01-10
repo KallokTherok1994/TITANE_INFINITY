@@ -148,7 +148,9 @@ export function DialogTitle({
   children: React.ReactNode;
 }) {
   return (
-    <h2 className={`text-xl font-semibold leading-tight text-titanium-text-primary ${className}`}>
+    <h2
+      className={`text-xl font-semibold leading-tight text-titanium-text-primary ${className}`}
+    >
       {children}
     </h2>
   );
@@ -162,9 +164,7 @@ export function DialogDescription({
   children: React.ReactNode;
 }) {
   return (
-    <p className={`text-base text-titanium-text-secondary ${className}`}>
-      {children}
-    </p>
+    <p className={`text-base text-titanium-text-secondary ${className}`}>{children}</p>
   );
 }
 

@@ -930,9 +930,8 @@ Que souhaites-tu explorer ?`;
     try {
       pipelineSteps.push('backend-dispatch');
 
-      const { chatEngineCommands } = await import(
-        '@/services/tauri/chatEngine.commands.dynamic'
-      );
+      const { chatEngineCommands } =
+        await import('@/services/tauri/chatEngine.commands.dynamic');
 
       const payload: ChatEngineRequestArgs = {
         conversationId: this.getConversationId(finalConfig.mode),
@@ -1134,9 +1133,8 @@ Que souhaites-tu explorer ?`;
     };
 
     try {
-      const { chatEngineCommands } = await import(
-        '@/services/tauri/chatEngine.commands.dynamic'
-      );
+      const { chatEngineCommands } =
+        await import('@/services/tauri/chatEngine.commands.dynamic');
 
       chunkUnlisten = await chatEngineCommands.onStreamChunk(chunk => {
         if (!conversationId || !messageId) {

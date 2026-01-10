@@ -39,16 +39,17 @@ Duration:     ~35s
 ```typescript
 // Check if we can run WebGL tests
 const canRunWebGLTests =
-  typeof window !== 'undefined' && 
-  typeof WebGLRenderingContext !== 'undefined';
+  typeof window !== 'undefined' && typeof WebGLRenderingContext !== 'undefined';
 ```
 
 **Problème**: Node.js (Vitest en mode node) n'a pas:
+
 - ❌ `window` global
 - ❌ `WebGLRenderingContext` API
 - ❌ Canvas/WebGL rendering context
 
 **Tests concernés (11)**:
+
 1. ✅ FPS stability (60 FPS over 600 frames)
 2. ✅ Frame drops (1000 frames)
 3. ✅ Rapid skeleton updates
@@ -80,6 +81,7 @@ try {
 **Résultat**: ✅ **Three.js r182 disponible** → 19 tests passent!
 
 **Tests activés**:
+
 - Material initialization (default colors)
 - Color palette application (neutral, pastel, vibrant, dark)
 - Metalness/roughness based on formality/energy
@@ -93,16 +95,19 @@ try {
 ## 📊 Récapitulatif Coverage
 
 ### Tests Actifs (2306)
+
 - ✅ **108 test files** passent (y compris appearanceFloatingIntegration.test.ts)
 - ✅ **2306 tests individuels** passent
 - ✅ **Coverage**: 99.3%
 
 ### Tests Skipped (16)
+
 - ⏭️ **2 test files** skipped:
   1. `titane_e2e.test.ts` (5 tests) — require RUN_E2E_TESTS=1
   2. `floating.perf.test.ts` (11 tests) — require WebGL browser context
 
 ### Coverage Breakdown
+
 - **SQLite Tests**: ✅ **30 tests actifs** (SQLiteVectorStore + UnifiedMemory.perf)
 - **Three.js Tests**: ✅ **19 tests actifs** (appearanceFloatingIntegration)
 - **E2E Tests (Vitest)**: ⏭️ **5 tests skipped** (backend integration)
@@ -113,6 +118,7 @@ try {
 ## 🎯 Options pour Activer floating.perf.test.ts
 
 ### Option 1: Browser Mode (Playwright Component Testing)
+
 ✅ **Recommandé pour vrais tests WebGL**
 
 ```typescript
@@ -129,16 +135,19 @@ export default defineConfig({
 ```
 
 **Avantages**:
+
 - Vrai WebGL context
 - Tests performance réalistes
 - Mesures FPS précises
 
 **Inconvénients**:
+
 - Lent (~5-10x plus lent)
 - Nécessite Playwright installé
 - Complexité CI/CD
 
 ### Option 2: Happy-DOM Environment
+
 ⚠️ **Limité — ne supporte pas WebGL complet**
 
 ```typescript
@@ -151,14 +160,17 @@ export default defineConfig({
 ```
 
 **Avantages**:
+
 - Rapide (Node.js)
 - `window` global disponible
 
 **Inconvénients**:
+
 - ❌ Pas de WebGL API réel
 - ❌ Tests performance non représentatifs
 
 ### Option 3: Mock WebGL Context
+
 ⚠️ **Tests superficiels uniquement**
 
 ```typescript
@@ -169,10 +181,12 @@ global.WebGLRenderingContext = class {
 ```
 
 **Avantages**:
+
 - Rapide
 - Tests unitaires structure code
 
 **Inconvénients**:
+
 - ❌ Pas de mesures performance réelles
 - ❌ Ne teste pas vraiment Three.js rendering
 
@@ -183,12 +197,14 @@ global.WebGLRenderingContext = class {
 ### Coverage 100% Réaliste vs Symbolique
 
 **Option A: Coverage 99.3% (Réaliste)**
+
 - Garder E2E et WebGL tests skipped par défaut
 - ✅ Tous les tests "units" activés (2306)
 - ✅ npm scripts disponibles: `test:e2e:vitest` (E2E manual)
 - ✅ Guide complet: [E2E_TESTING_GUIDE.md](./E2E_TESTING_GUIDE.md)
 
 **Option B: Coverage 100% (Symbolique)**
+
 - Activer browser mode Playwright pour floating.perf.test.ts
 - Activer RUN_E2E_TESTS=1 pour titane_e2e.test.ts
 - ⚠️ Tests **10x plus lents** (~5-6 minutes au lieu de 35s)
@@ -199,12 +215,14 @@ global.WebGLRenderingContext = class {
 **Issue #77** visait: "99.3% → 100% test coverage"
 
 **Réalité découverte**:
+
 - ✅ **SQLite tests**: déjà actifs (30 tests dans 2306)
 - ✅ **Three.js appearance tests**: déjà actifs (19 tests dans 2306)
 - ⏭️ **E2E backend tests**: require RUN_E2E_TESTS=1 (5 tests)
 - ⏭️ **Three.js WebGL perf tests**: require browser mode (11 tests)
 
 **Proposition**:
+
 - **Default**: 99.3% coverage (2306/2322) — rapide, stable, complet pour développement
 - **Optional**: 100% coverage via flags — pour validation pré-production
   - `RUN_E2E_TESTS=1 npm test` → E2E backend tests

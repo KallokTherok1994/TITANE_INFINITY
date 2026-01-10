@@ -10,39 +10,39 @@
 
 ### 🔒 Sécurité (CRITIQUE)
 
-| Paramètre | Avant | Après | Impact |
-|-----------|-------|-------|--------|
-| **mode** | act | **plan** | 🔒 Réflexion avant action |
-| **yolo-mode** | N/A | **false** | 🔒 Confirmations activées |
-| **strict-plan-mode** | true | **true** | ✅ Maintenu |
-| **telemetry** | unset | **disabled** | 🔐 Privacy protégée |
+| Paramètre            | Avant | Après        | Impact                    |
+| -------------------- | ----- | ------------ | ------------------------- |
+| **mode**             | act   | **plan**     | 🔒 Réflexion avant action |
+| **yolo-mode**        | N/A   | **false**    | 🔒 Confirmations activées |
+| **strict-plan-mode** | true  | **true**     | ✅ Maintenu               |
+| **telemetry**        | unset | **disabled** | 🔐 Privacy protégée       |
 
 ### ⚡ Performance
 
-| Paramètre | Avant | Après | Gain |
-|-----------|-------|-------|------|
-| **thinking-budget** (plan) | 1024 | **2048** | +100% qualité |
-| **thinking-budget** (act) | 1024 | **2048** | +100% qualité |
-| **terminal-output** | 500 | **1000** | +100% visibilité |
-| **shell-timeout** | 4000ms | **6000ms** | +50% stabilité |
-| **auto-condense** | false | **true** | Mémoire optimisée |
-| **condense-threshold** | 0.75 | **0.65** | Condensation précoce |
+| Paramètre                  | Avant  | Après      | Gain                 |
+| -------------------------- | ------ | ---------- | -------------------- |
+| **thinking-budget** (plan) | 1024   | **2048**   | +100% qualité        |
+| **thinking-budget** (act)  | 1024   | **2048**   | +100% qualité        |
+| **terminal-output**        | 500    | **1000**   | +100% visibilité     |
+| **shell-timeout**          | 4000ms | **6000ms** | +50% stabilité       |
+| **auto-condense**          | false  | **true**   | Mémoire optimisée    |
+| **condense-threshold**     | 0.75   | **0.65**   | Condensation précoce |
 
 ### 🌐 Localization
 
-| Paramètre | Avant | Après |
-|-----------|-------|-------|
-| **preferred-language** | English | **French** |
-| **openai-reasoning-effort** | medium | **high** |
+| Paramètre                   | Avant   | Après      |
+| --------------------------- | ------- | ---------- |
+| **preferred-language**      | English | **French** |
+| **openai-reasoning-effort** | medium  | **high**   |
 
 ### ✅ Développement
 
-| Paramètre | Status |
-|-----------|--------|
-| **enable-checkpoints** | ✅ Activé |
-| **mcp-marketplace** | ✅ Activé |
-| **terminal-reuse** | ✅ Activé |
-| **focus-chain** | ✅ Activé (interval: 6) |
+| Paramètre              | Status                  |
+| ---------------------- | ----------------------- |
+| **enable-checkpoints** | ✅ Activé               |
+| **mcp-marketplace**    | ✅ Activé               |
+| **terminal-reuse**     | ✅ Activé               |
+| **focus-chain**        | ✅ Activé (interval: 6) |
 
 ---
 
@@ -51,21 +51,23 @@
 ### 🔐 Auto-Approval (Sécurité Critique)
 
 **État actuel:**
+
 ```yaml
 auto-approval-settings:
-  enabled: true              # ⚠️  À évaluer
-  max-requests: 20           # ⚠️  Recommandé: 5-10
+  enabled: true # ⚠️  À évaluer
+  max-requests: 20 # ⚠️  Recommandé: 5-10
   enable-notifications: false # ⚠️  Recommandé: true
   actions:
-    use-mcp: true            # ✅ OK
+    use-mcp: true # ✅ OK
     execute-safe-commands: true # ✅ OK
     execute-all-commands: false # ✅ OK
-    edit-files: false        # ✅ OK
+    edit-files: false # ✅ OK
     edit-files-externally: false # ✅ OK
-    read-files: true         # ✅ OK
+    read-files: true # ✅ OK
 ```
 
 **Actions recommandées:**
+
 1. Réduire `max-requests` de 20 à 5-10
 2. Activer `enable-notifications: true` pour transparence
 3. Évaluer si `enabled: true` est nécessaire
@@ -78,11 +80,12 @@ auto-approval-settings:
 ### 🗣️ Dictation
 
 **État actuel:**
+
 ```yaml
 dictation-settings:
   feature-enabled: true
   dictation-enabled: false
-  dictation-language: en    # ⚠️  Devrait être 'fr'
+  dictation-language: en # ⚠️  Devrait être 'fr'
 ```
 
 ---
@@ -107,6 +110,7 @@ dictation-settings:
 ### 🔒 Commandes Bloquées (Respect de la Règle Critique)
 
 ❌ **INTERDITES sans autorisation explicite:**
+
 - `pnpm run build`
 - `pnpm run build:production`
 - `tauri build`
@@ -115,6 +119,7 @@ dictation-settings:
 - Tout build AppImage/DEB
 
 ✅ **AUTORISÉES:**
+
 - `pnpm run dev`
 - `pnpm test` / `pnpm run test:all`
 - `pnpm run lint` / `pnpm run format`
@@ -125,6 +130,7 @@ dictation-settings:
 ### 🔑 Keyword Requis pour Production
 
 **Seul Kevin Thibault peut autoriser un déploiement production avec:**
+
 ```
 GO FOR PRODUCTION DEPLOY
 ```
@@ -135,17 +141,18 @@ GO FOR PRODUCTION DEPLOY
 
 ### Amélioration Globale
 
-| Catégorie | Score Avant | Score Après | Amélioration |
-|-----------|-------------|-------------|--------------|
-| **Sécurité** | 70% | **95%** | +25% |
-| **Performance** | 60% | **90%** | +30% |
-| **Qualité Reasoning** | 70% | **95%** | +25% |
-| **Visibilité** | 50% | **85%** | +35% |
-| **Localization** | 40% | **90%** | +50% |
+| Catégorie             | Score Avant | Score Après | Amélioration |
+| --------------------- | ----------- | ----------- | ------------ |
+| **Sécurité**          | 70%         | **95%**     | +25%         |
+| **Performance**       | 60%         | **90%**     | +30%         |
+| **Qualité Reasoning** | 70%         | **95%**     | +25%         |
+| **Visibilité**        | 50%         | **85%**     | +35%         |
+| **Localization**      | 40%         | **90%**     | +50%         |
 
 ### Impact sur le Workflow
 
 **Avant:**
+
 - Thinking budget limité (1024 tokens)
 - Mode "act" → actions immédiates sans planification
 - Output terminal tronqué (500 lignes)
@@ -153,6 +160,7 @@ GO FOR PRODUCTION DEPLOY
 - Langue English
 
 **Après:**
+
 - Thinking budget doublé (2048 tokens) → **meilleure qualité**
 - Mode "plan" → **analyse d'abord, action ensuite**
 - Output terminal étendu (1000 lignes) → **meilleur debugging**
@@ -227,6 +235,7 @@ cline "explain complex algorithm X with detailed reasoning"
 ### Court Terme (aujourd'hui)
 
 1. ✅ **Tester la configuration**
+
    ```bash
    cline "test new configuration"
    ```
@@ -275,12 +284,14 @@ A: Vérifier `mode=plan` → c'est normal, validation manuelle requise
 
 **Q: Thinking budget dépassé**  
 A: Augmenter à 4096 si nécessaire avec:
+
 ```bash
 cline config set plan-mode-thinking-budget-tokens=4096
 ```
 
 **Q: Output tronqué**  
 A: Augmenter terminal-output-line-limit:
+
 ```bash
 cline config set terminal-output-line-limit=2000
 ```
@@ -288,6 +299,7 @@ cline config set terminal-output-line-limit=2000
 ### Réinitialisation
 
 Si problème, ré-appliquer la config:
+
 ```bash
 /home/titane-os/Documents/GitHub/TITANE_INFINITY/.cline/config-optimized.sh
 ```
@@ -295,6 +307,7 @@ Si problème, ré-appliquer la config:
 ### Contact
 
 En cas de blocage critique:
+
 - Consulter [.cline/README.md](.cline/README.md)
 - Vérifier [deployment-safeguards.json](.cline/deployment-safeguards.json)
 - Contacter Kevin Thibault
@@ -310,12 +323,12 @@ En cas de blocage critique:
 ✅ Qualité maximale (reasoning: high)  
 ✅ Localization French  
 ✅ Règle critique deployment respectée  
-✅ Documentation complète  
+✅ Documentation complète
 
 **Status: PRÊT POUR UTILISATION PRODUCTION (dev mode)**
 
 ---
 
-*Dernière mise à jour: 2026-01-03*  
-*Version: 1.0.0*  
-*Auteur: GitHub Copilot (Claude Sonnet 4.5) pour TITANE∞*
+_Dernière mise à jour: 2026-01-03_  
+_Version: 1.0.0_  
+_Auteur: GitHub Copilot (Claude Sonnet 4.5) pour TITANE∞_

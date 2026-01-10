@@ -12,15 +12,18 @@
 ### Problème Initial Résolu
 
 **Symptôme original :**
+
 - Message envoyé dans le chat IA → traitement visible → case de réponse apparaît mais **VIDE**
 - Aucun contenu affiché malgré le traitement
 
 **Cause racine identifiée :**
+
 1. ❌ **Ollama bloqué par whitelist sécurité** → Backend ne pouvait pas appeler Ollama
 2. ❌ **Backend retournait chaîne vide** quand aucun provider disponible
 3. ❌ **Frontend ne détectait pas les réponses vides** → Créait un message avec `content: ""`
 
 **Solutions appliquées :**
+
 1. ✅ Ajout Ollama + curl à la whitelist sécurité (`src-tauri/src/security/mod.rs`)
 2. ✅ Backend recompilé avec nouvelles règles
 3. ✅ Frontend améliore détection réponses vides + fallback informatif (`src/hooks/useChat.ts`)
@@ -35,6 +38,7 @@
 **Lignes:** ~103-121
 
 **Avant (BLOQUANT):**
+
 ```rust
 allowed_shell_commands: vec![
     "espeak".into(),
@@ -47,6 +51,7 @@ allowed_shell_commands: vec![
 ```
 
 **Après (RÉSOLU):**
+
 ```rust
 allowed_shell_commands: vec![
     // TTS engines
@@ -70,6 +75,7 @@ allowed_shell_commands: vec![
 ```
 
 **Compilation:**
+
 ```bash
 $ cargo build --manifest-path src-tauri/Cargo.toml
 Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.26s
@@ -77,6 +83,7 @@ Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.26s
 ```
 
 **Impact:**
+
 - ✅ Ollama peut maintenant être appelé sans blocage sécurité
 - ✅ curl disponible pour OpenAI, Gemini, Anthropic
 - ✅ Aucune régression sécurité (commandes validées et sûres)
@@ -89,6 +96,7 @@ Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.26s
 **Lignes:** ~1355-1380
 
 **Problème détecté:**
+
 ```typescript
 // ❌ AVANT: Backend retournait { content: "" } (pas null)
 // Frontend créait finalResponse avec content vide
@@ -96,11 +104,10 @@ Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.26s
 ```
 
 **Solution appliquée:**
+
 ```typescript
 const legacyContent =
-  typeof chatServiceResponse.content === 'string'
-    ? chatServiceResponse.content
-    : '';
+  typeof chatServiceResponse.content === 'string' ? chatServiceResponse.content : '';
 
 // ✅ v26.2.3 CRITICAL FIX: Détecter réponse vide du backend
 if (legacyContent.trim().length === 0) {
@@ -124,6 +131,7 @@ if (legacyContent.trim().length === 0) {
 ```
 
 **Impact:**
+
 - ✅ Si backend retourne `content: ""` → `finalResponse = null`
 - ✅ Déclenche le fallback avec message informatif
 - ✅ L'utilisateur voit TOUJOURS du contenu (jamais de case vide)
@@ -136,17 +144,19 @@ if (legacyContent.trim().length === 0) {
 **Lignes:** ~1480-1530
 
 **Amélioration fallback:**
+
 ```typescript
 // ✅ v26.2.3 - CRITICAL FIX: Fallback robuste si aucun provider
 if (!finalResponse) {
   chatLogger.warn('⚠️ No finalResponse - creating fallback response');
-  
+
   const fallbackContent = (() => {
     if (chatAttempts.length > 0) {
       const ollamaAttempt = chatAttempts.find(a => a.provider === 'ollama');
-      const hasOllamaTimeout = ollamaAttempt?.error?.includes('timed out') || 
-                             ollamaAttempt?.error?.includes('ECONNREFUSED');
-      
+      const hasOllamaTimeout =
+        ollamaAttempt?.error?.includes('timed out') ||
+        ollamaAttempt?.error?.includes('ECONNREFUSED');
+
       if (hasOllamaTimeout) {
         return `🤖 **TITANE∞ — Configuration IA Requise**
 
@@ -162,7 +172,7 @@ ${chatAttempts.map(a => `- ${a.provider}: ${a.success ? '✅' : '❌ ' + (a.erro
 📚 Documentation : \`docs/OLLAMA_GUIDE.md\``;
       }
     }
-    
+
     return `🤖 **TITANE∞ — Initialisation IA**
     
 Le système IA est en cours de configuration.
@@ -171,7 +181,7 @@ Le système IA est en cours de configuration.
 - Installer Ollama (local) : \`docs/OLLAMA_GUIDE.md\`
 - Ou configurer une clé API cloud dans Settings`;
   })();
-  
+
   finalResponse = {
     content: fallbackContent,
     provider: 'titane-local',
@@ -181,20 +191,21 @@ Le système IA est en cours de configuration.
     suggestions: [
       'Comment installer Ollama ?',
       'Quels sont les providers IA disponibles ?',
-      'Comment configurer une clé API cloud ?'
+      'Comment configurer une clé API cloud ?',
     ],
     metadata: {
       fallbackReason: 'no_provider_available',
       attemptedProviders: attemptedProviders,
       chatAttempts: chatAttempts,
-    }
+    },
   };
-  
+
   aggregatedContent = fallbackContent;
 }
 ```
 
 **Impact:**
+
 - ✅ Message informatif TOUJOURS affiché (jamais de case vide)
 - ✅ Instructions claires pour l'utilisateur
 - ✅ Suggestions interactives pour aide
@@ -259,11 +270,13 @@ Le système IA est en cours de configuration.
 ### ✅ TEST #1: Message Simple
 
 **Steps:**
+
 1. Ouvrir le Chat IA
 2. Taper: `"Bonjour, quel est ton nom?"`
 3. Envoyer
 
 **Résultats attendus:**
+
 - [ ] Spinner de traitement apparaît
 - [ ] Case de réponse IA apparaît
 - [ ] **CONTENU VISIBLE** (pas vide!)
@@ -275,17 +288,20 @@ Le système IA est en cours de configuration.
 ### ✅ TEST #2: Console DevTools
 
 **Steps:**
+
 1. Ouvrir DevTools (F12)
 2. Onglet Console
 3. Observer logs pendant envoi message
 
 **Résultats attendus (AVANT correction):**
+
 ```log
 ❌ [SECURITY:SHELL] BLOCKED: Unauthorized command: ollama
 ❌ [AI Router] ✗ No provider available
 ```
 
 **Résultats attendus (APRÈS correction - MAINTENANT):**
+
 ```log
 ✅ [AI Router v20.1] Query: prompt_len=XXX
 ✅ [AI Router] Trying provider: ollama (ou auto)
@@ -294,6 +310,7 @@ Le système IA est en cours de configuration.
 ```
 
 **OU si Ollama pas installé (ACCEPTABLE):**
+
 ```log
 ⚠️ [Ollama] Connection failed: ECONNREFUSED 127.0.0.1:11434
 ✅ [AI Router] Fallback to provider: gemini/openai (si configuré)
@@ -301,6 +318,7 @@ Le système IA est en cours de configuration.
 ```
 
 **❌ ERREURS QUI NE DOIVENT PLUS APPARAÎTRE:**
+
 - `BLOCKED: Unauthorized command: ollama` → **DOIT ÊTRE RÉSOLU**
 - `No provider available` sans fallback → **DOIT ÊTRE RÉSOLU**
 - Case de réponse vide → **DOIT ÊTRE RÉSOLU**
@@ -308,6 +326,7 @@ Le système IA est en cours de configuration.
 ### ✅ TEST #3: Provider Status
 
 **Steps:**
+
 1. Ouvrir Settings (⚙️)
 2. Section: AI Providers
 3. Observer statuts
@@ -315,17 +334,20 @@ Le système IA est en cours de configuration.
 **Résultats attendus:**
 
 **Si Ollama installé:**
+
 ```
 ✅ Ollama: Available (http://127.0.0.1:11434)
 ```
 
 **Si Ollama pas installé:**
+
 ```
 ⚠️ Ollama: Not available (service not running)
 ✅ Local: Available (fallback)
 ```
 
 **Autres providers:**
+
 ```
 ⚠️ OpenAI: Not configured (no API key)
 ⚠️ Gemini: Not configured (no API key)
@@ -382,11 +404,11 @@ Frontend:          ✅ Active fallback informatif
 UI Display:        ✅ Message d'aide visible:
                    "🤖 TITANE∞ — Configuration IA Requise
                     Aucun provider IA disponible.
-                    
+
                     Solutions:
                     1. Installer Ollama (local, gratuit)
                     2. Configurer clé API cloud
-                    
+
                     Documentation: docs/OLLAMA_GUIDE.md"
 Provider Badge:    ✅ "titane-local" affiché
 Suggestions:       ✅ 3 suggestions interactives
@@ -447,23 +469,23 @@ Suggestions:       ✅ 3 suggestions interactives
 ### Avant Corrections
 
 ```yaml
-Ollama Access:          ❌ BLOQUÉ (security whitelist)
-Providers Available:    0/4 (tous échouent)
-Chat IA Fonctionnel:    ❌ 0%
-Réponses Affichées:     ❌ Vides (case vide)
+Ollama Access: ❌ BLOQUÉ (security whitelist)
+Providers Available: 0/4 (tous échouent)
+Chat IA Fonctionnel: ❌ 0%
+Réponses Affichées: ❌ Vides (case vide)
 Expérience Utilisateur: 💔 Catastrophique
-Taux de Réussite:       0%
+Taux de Réussite: 0%
 ```
 
 ### Après Corrections (MAINTENANT)
 
 ```yaml
-Ollama Access:          ✅ AUTORISÉ (whitelist)
-Providers Available:    1-4/4 (selon config)
-Chat IA Fonctionnel:    ✅ 100%
-Réponses Affichées:     ✅ TOUJOURS visibles (réelle ou fallback)
+Ollama Access: ✅ AUTORISÉ (whitelist)
+Providers Available: 1-4/4 (selon config)
+Chat IA Fonctionnel: ✅ 100%
+Réponses Affichées: ✅ TOUJOURS visibles (réelle ou fallback)
 Expérience Utilisateur: ✨ Excellente
-Taux de Réussite:       100% (avec fallback graceful)
+Taux de Réussite: 100% (avec fallback graceful)
 ```
 
 **🎉 AMÉLIORATION:** +100% fonctionnalité, 100% uptime avec fallback
@@ -490,9 +512,9 @@ Taux de Réussite:       100% (avec fallback graceful)
    - Nécessaire pour APIs cloud (OpenAI, Gemini, Anthropic)
    - Arguments validés par `ShellGuard::validate_args()`
    - Protection contre injection:
-     * Filtrage caractères dangereux: `|`, `;`, `&`, `$`, `` ` ``
-     * Blocage opérateurs: `&&`, `||`, `>>`, `>`
-     * Protection path traversal: `..`
+     - Filtrage caractères dangereux: `|`, `;`, `&`, `$`, `` ` ``
+     - Blocage opérateurs: `&&`, `||`, `>>`, `>`
+     - Protection path traversal: `..`
    - Usage restreint aux appels HTTPS validés
 
 3. **Protection Multicouche:**
@@ -593,9 +615,11 @@ Frontend: Detect empty content (v26.2.3 FIX)
 ### Impact Utilisateur
 
 **AVANT:**
+
 - 😢 Message envoyé → Case vide → Frustration
 
 **APRÈS:**
+
 - 😊 Message envoyé → Réponse visible (IA ou aide) → Satisfaction
 
 ### Prochaines Étapes

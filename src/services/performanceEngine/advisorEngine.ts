@@ -232,9 +232,7 @@ export class PerformanceAdvisor {
   async applyRecommendation(recommendationId: string): Promise<boolean> {
     const rec = this.state.recommendations.find(r => r.id === recommendationId);
     if (!rec) {
-      logger.warn(
-        `[PerformanceAdvisor] Recommandation non trouvée: ${recommendationId}`
-      );
+      logger.warn(`[PerformanceAdvisor] Recommandation non trouvée: ${recommendationId}`);
       return false;
     }
 

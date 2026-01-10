@@ -20,17 +20,21 @@ test.describe('Feature: Audio Center', () => {
     await page.waitForSelector('nav, [role="navigation"]', { timeout: 10000 });
 
     // Look for Audio Center link
-    const audioLink = page.locator('a[href*="audio"], button:has-text("Audio"), button:has-text("🎙")').first();
-    
+    const audioLink = page
+      .locator('a[href*="audio"], button:has-text("Audio"), button:has-text("🎙")')
+      .first();
+
     if (await audioLink.isVisible({ timeout: 5000 }).catch(() => false)) {
       await audioLink.click();
     } else {
       // Direct navigation fallback
       await page.goto('http://localhost:5173/#/admin');
       await page.waitForTimeout(1000);
-      
+
       // Navigate to Audio tab if in Admin Center
-      const audioTab = page.locator('button:has-text("Audio"), [data-tab="audio"]').first();
+      const audioTab = page
+        .locator('button:has-text("Audio"), [data-tab="audio"]')
+        .first();
       if (await audioTab.isVisible({ timeout: 2000 }).catch(() => false)) {
         await audioTab.click();
       }
@@ -38,9 +42,11 @@ test.describe('Feature: Audio Center', () => {
 
     // Verify Audio Center loaded
     await page.waitForTimeout(1000);
-    
+
     // Look for audio-specific elements
-    const audioHeader = page.locator('h1:has-text("Audio"), h2:has-text("Audio"), h1:has-text("🎙")').first();
+    const audioHeader = page
+      .locator('h1:has-text("Audio"), h2:has-text("Audio"), h1:has-text("🎙")')
+      .first();
     await expect(audioHeader).toBeVisible({ timeout: 10000 });
   });
 
@@ -58,12 +64,21 @@ test.describe('Feature: Audio Center', () => {
 
     // Look for device selection dropdowns
     const deviceSelects = page.locator('select, [role="combobox"]');
-    const outputDeviceSelect = page.locator('select:has-option([value*="output"]), select:has-option([value*="speaker"])').first();
-    const inputDeviceSelect = page.locator('select:has-option([value*="input"]), select:has-option([value*="micro"])').first();
+    const outputDeviceSelect = page
+      .locator(
+        'select:has-option([value*="output"]), select:has-option([value*="speaker"])'
+      )
+      .first();
+    const inputDeviceSelect = page
+      .locator('select:has-option([value*="input"]), select:has-option([value*="micro"])')
+      .first();
 
     // At least one device selector should be visible
     const deviceSelectorVisible = await Promise.race([
-      deviceSelects.first().isVisible({ timeout: 5000 }).catch(() => false),
+      deviceSelects
+        .first()
+        .isVisible({ timeout: 5000 })
+        .catch(() => false),
       outputDeviceSelect.isVisible({ timeout: 5000 }).catch(() => false),
       inputDeviceSelect.isVisible({ timeout: 5000 }).catch(() => false),
     ]);
@@ -83,8 +98,12 @@ test.describe('Feature: Audio Center', () => {
     }
 
     // Look for TTS settings (Text-to-Speech)
-    const ttsSection = page.locator('text=/TTS|Text.*Speech|Synthèse vocale|Voice/i').first();
-    const voiceSelect = page.locator('select:has-option([value*="voice"]), select[name*="voice"]').first();
+    const ttsSection = page
+      .locator('text=/TTS|Text.*Speech|Synthèse vocale|Voice/i')
+      .first();
+    const voiceSelect = page
+      .locator('select:has-option([value*="voice"]), select[name*="voice"]')
+      .first();
 
     const ttsSectionVisible = await Promise.race([
       ttsSection.isVisible({ timeout: 5000 }).catch(() => false),
@@ -106,8 +125,12 @@ test.describe('Feature: Audio Center', () => {
     }
 
     // Look for voice calibration/fingerprinting button
-    const calibrationButton = page.locator('button:has-text("Calibr"), button:has-text("Voice"), button:has-text("Empreinte")').first();
-    
+    const calibrationButton = page
+      .locator(
+        'button:has-text("Calibr"), button:has-text("Voice"), button:has-text("Empreinte")'
+      )
+      .first();
+
     if (await calibrationButton.isVisible({ timeout: 5000 }).catch(() => false)) {
       await expect(calibrationButton).toBeVisible();
     } else {
@@ -127,14 +150,20 @@ test.describe('Feature: Audio Center', () => {
     }
 
     // Look for test audio button
-    const testAudioButton = page.locator('button:has-text("Test"), button:has-text("Tester"), button:has-text("🔊")').first();
-    
+    const testAudioButton = page
+      .locator(
+        'button:has-text("Test"), button:has-text("Tester"), button:has-text("🔊")'
+      )
+      .first();
+
     if (await testAudioButton.isVisible({ timeout: 5000 }).catch(() => false)) {
       await testAudioButton.click();
       await page.waitForTimeout(1000);
 
       // Verify no crash
-      const audioHeader = page.locator('h1:has-text("Audio"), h2:has-text("Audio")').first();
+      const audioHeader = page
+        .locator('h1:has-text("Audio"), h2:has-text("Audio")')
+        .first();
       await expect(audioHeader).toBeVisible({ timeout: 5000 });
     } else {
       console.log('⚠️ Test audio button not found');
@@ -153,17 +182,25 @@ test.describe('Feature: Audio Center', () => {
     }
 
     // Look for microphone test button
-    const micTestButton = page.locator('button:has-text("Micro"), button:has-text("Test.*micro"), button:has-text("🎤")').first();
-    
+    const micTestButton = page
+      .locator(
+        'button:has-text("Micro"), button:has-text("Test.*micro"), button:has-text("🎤")'
+      )
+      .first();
+
     if (await micTestButton.isVisible({ timeout: 5000 }).catch(() => false)) {
       await micTestButton.click();
       await page.waitForTimeout(1500);
 
       // Look for microphone level indicator or waveform
-      const micIndicator = page.locator('canvas, svg, [class*="waveform"], [class*="level"]').first();
-      
-      const micIndicatorVisible = await micIndicator.isVisible({ timeout: 3000 }).catch(() => false);
-      
+      const micIndicator = page
+        .locator('canvas, svg, [class*="waveform"], [class*="level"]')
+        .first();
+
+      const micIndicatorVisible = await micIndicator
+        .isVisible({ timeout: 3000 })
+        .catch(() => false);
+
       if (micIndicatorVisible) {
         await expect(micIndicator).toBeVisible();
       } else {
@@ -186,8 +223,10 @@ test.describe('Feature: Audio Center', () => {
     }
 
     // Look for voice fingerprint status (calibrated/not calibrated)
-    const fingerprintStatus = page.locator('text=/Empreinte|Fingerprint|Calibr|Profil vocal/i').first();
-    
+    const fingerprintStatus = page
+      .locator('text=/Empreinte|Fingerprint|Calibr|Profil vocal/i')
+      .first();
+
     if (await fingerprintStatus.isVisible({ timeout: 5000 }).catch(() => false)) {
       await expect(fingerprintStatus).toBeVisible();
     } else {
@@ -208,7 +247,7 @@ test.describe('Feature: Audio Center', () => {
 
     // Look for volume sliders (input[type="range"])
     const volumeSlider = page.locator('input[type="range"]').first();
-    
+
     if (await volumeSlider.isVisible({ timeout: 5000 }).catch(() => false)) {
       // Get current value
       const initialValue = await volumeSlider.inputValue();
@@ -237,14 +276,20 @@ test.describe('Feature: Audio Center', () => {
     }
 
     // Look for save button
-    const saveButton = page.locator('button:has-text("Enregistrer"), button:has-text("Save"), button:has-text("Sauvegarder")').first();
-    
+    const saveButton = page
+      .locator(
+        'button:has-text("Enregistrer"), button:has-text("Save"), button:has-text("Sauvegarder")'
+      )
+      .first();
+
     if (await saveButton.isVisible({ timeout: 5000 }).catch(() => false)) {
       await saveButton.click();
       await page.waitForTimeout(500);
 
       // Verify no crash
-      const audioHeader = page.locator('h1:has-text("Audio"), h2:has-text("Audio")').first();
+      const audioHeader = page
+        .locator('h1:has-text("Audio"), h2:has-text("Audio")')
+        .first();
       await expect(audioHeader).toBeVisible({ timeout: 5000 });
     } else {
       console.log('⚠️ Save button not found (settings may auto-save)');
@@ -263,10 +308,15 @@ test.describe('Feature: Audio Center', () => {
     }
 
     // Look for status indicators (connected, calibrated, etc.)
-    const statusIndicators = page.locator('text=/Connecté|Connected|Calibré|Calibrated|Actif|Active/i');
-    
-    const statusVisible = await statusIndicators.first().isVisible({ timeout: 5000 }).catch(() => false);
-    
+    const statusIndicators = page.locator(
+      'text=/Connecté|Connected|Calibré|Calibrated|Actif|Active/i'
+    );
+
+    const statusVisible = await statusIndicators
+      .first()
+      .isVisible({ timeout: 5000 })
+      .catch(() => false);
+
     if (statusVisible) {
       await expect(statusIndicators.first()).toBeVisible();
     } else {

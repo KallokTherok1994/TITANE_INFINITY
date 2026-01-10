@@ -190,16 +190,10 @@ class ChatService {
         {},
         { ...LONG_COMMAND_OPTIONS, context: 'StartConversation' }
       );
-      logger.debug(
-        '✅ Conversation créée avec ID:',
-        response.conversation_id
-      );
+      logger.debug('✅ Conversation créée avec ID:', response.conversation_id);
       return response.conversation_id;
     } catch (error) {
-      logger.error(
-        '❌ Erreur lors de la création de la conversation:',
-        error
-      );
+      logger.error('❌ Erreur lors de la création de la conversation:', error);
       throw new Error('Impossible de démarrer une nouvelle conversation.');
     }
   }
@@ -224,7 +218,9 @@ class ChatService {
       logger.warn('Tauri unavailable - using chatEngine (web backend)');
 
       try {
-        const engineResponse = await chatEngine.generate(message, [], { mode: 'default' });
+        const engineResponse = await chatEngine.generate(message, [], {
+          mode: 'default',
+        });
         return {
           content: engineResponse.content,
           finishReason:
@@ -242,7 +238,8 @@ class ChatService {
             selectedProvider: config?.provider ?? 'auto',
           },
           omegaMetadata:
-            typeof engineResponse.omegaMetadata === 'object' && engineResponse.omegaMetadata
+            typeof engineResponse.omegaMetadata === 'object' &&
+            engineResponse.omegaMetadata
               ? (engineResponse.omegaMetadata as Record<string, unknown>)
               : undefined,
         };
@@ -327,7 +324,7 @@ class ChatService {
         }
 
         // Format OMEGA direct: { content, conversationId, messageId, latencyMs, metadata }
-        const latencyMs = backendResponse.latencyMs || (Date.now() - startedAt);
+        const latencyMs = backendResponse.latencyMs || Date.now() - startedAt;
         monitoring.trackPipelineLatency(latencyMs);
 
         logger.debug('✅ Format OMEGA direct détecté:', {
@@ -420,7 +417,7 @@ class ChatService {
     // Utiliser l'API OMEGA conversation_generate via sendMessage
     // On va créer une conversation si nécessaire
     let conversationId = config?.conversationId;
-    
+
     // Si pas d'ID de conversation, en créer une nouvelle
     if (!conversationId) {
       try {
@@ -815,7 +812,8 @@ class ChatService {
             ? fallbackCompletion.content
             : '';
         const finalContent =
-          fallbackContent || (accumulated.length > 0 ? accumulated : streamResult.content);
+          fallbackContent ||
+          (accumulated.length > 0 ? accumulated : streamResult.content);
 
         if (finalContent.trim().length === 0) {
           throw new Error('Réponse vide du backend (stream fallback)');
@@ -839,10 +837,7 @@ class ChatService {
         try {
           onComplete(response);
         } catch (callbackError) {
-          logger.warn(
-            'onComplete callback error (fallback):',
-            callbackError
-          );
+          logger.warn('onComplete callback error (fallback):', callbackError);
         }
 
         cleanup();

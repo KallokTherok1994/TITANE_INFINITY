@@ -268,17 +268,26 @@ describe('🚀 Deployment Configuration Verification', () => {
     });
 
     it('release workflow should build for Linux', () => {
-      const releaseWorkflow = fs.readFileSync('.github/workflows/release-unified.yml', 'utf-8');
+      const releaseWorkflow = fs.readFileSync(
+        '.github/workflows/release-unified.yml',
+        'utf-8'
+      );
       expect(releaseWorkflow).toContain('ubuntu');
     });
 
     it('release workflow should reference AppImage', () => {
-      const releaseWorkflow = fs.readFileSync('.github/workflows/release-unified.yml', 'utf-8');
+      const releaseWorkflow = fs.readFileSync(
+        '.github/workflows/release-unified.yml',
+        'utf-8'
+      );
       expect(releaseWorkflow.toLowerCase()).toContain('appimage');
     });
 
     it('release workflow should upload artifacts', () => {
-      const releaseWorkflow = fs.readFileSync('.github/workflows/release-unified.yml', 'utf-8');
+      const releaseWorkflow = fs.readFileSync(
+        '.github/workflows/release-unified.yml',
+        'utf-8'
+      );
       expect(releaseWorkflow).toContain('actions/upload-artifact');
     });
   });

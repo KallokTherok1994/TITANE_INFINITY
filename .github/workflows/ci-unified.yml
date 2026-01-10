@@ -418,7 +418,15 @@ jobs:
   ci-status:
     name: ✅ CI Pipeline Status
     runs-on: ubuntu-latest
-    needs: [lint-and-typecheck, test-frontend, test-backend, test-e2e, build-verification, security-audit]
+    needs:
+      [
+        lint-and-typecheck,
+        test-frontend,
+        test-backend,
+        test-e2e,
+        build-verification,
+        security-audit,
+      ]
     if: always()
     timeout-minutes: 5
     permissions:

@@ -61,39 +61,39 @@ winget install Git.Git
 
 ### Required (All Platforms)
 
-| Dependency | Purpose | Installation |
-|------------|---------|--------------|
-| **Rust 1.83+** | Backend compilation | `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \| sh` |
-| **Node.js 18+** | Frontend build | `curl -fsSL https://deb.nodesource.com/setup_18.x \| sudo -E bash - && sudo apt install -y nodejs` |
-| **pnpm 8+** | Package manager | `npm install -g pnpm` |
+| Dependency      | Purpose             | Installation                                                                                       |
+| --------------- | ------------------- | -------------------------------------------------------------------------------------------------- |
+| **Rust 1.83+**  | Backend compilation | `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \| sh`                                  |
+| **Node.js 18+** | Frontend build      | `curl -fsSL https://deb.nodesource.com/setup_18.x \| sudo -E bash - && sudo apt install -y nodejs` |
+| **pnpm 8+**     | Package manager     | `npm install -g pnpm`                                                                              |
 
 ### Platform-Specific
 
 #### Linux (Ubuntu/Debian)
 
-| Dependency | Purpose | Feature | Installation |
-|------------|---------|---------|--------------|
-| **build-essential** | Compilation tools | Core | `sudo apt install build-essential` |
-| **libssl-dev** | SSL/TLS support | Core | `sudo apt install libssl-dev` |
-| **pkg-config** | Library detection | Core | `sudo apt install pkg-config` |
-| **libwebkit2gtk-4.0-dev** | Tauri webview | Core | `sudo apt install libwebkit2gtk-4.0-dev` |
-| **libgtk-3-dev** | GTK windowing | Core | `sudo apt install libgtk-3-dev` |
-| **libayatana-appindicator3-dev** | System tray | Core | `sudo apt install libayatana-appindicator3-dev` |
-| **librsvg2-dev** | SVG rendering | Core | `sudo apt install librsvg2-dev` |
-| **libasound2-dev** | Audio capture | Optional | `sudo apt install libasound2-dev` |
+| Dependency                       | Purpose           | Feature  | Installation                                    |
+| -------------------------------- | ----------------- | -------- | ----------------------------------------------- |
+| **build-essential**              | Compilation tools | Core     | `sudo apt install build-essential`              |
+| **libssl-dev**                   | SSL/TLS support   | Core     | `sudo apt install libssl-dev`                   |
+| **pkg-config**                   | Library detection | Core     | `sudo apt install pkg-config`                   |
+| **libwebkit2gtk-4.0-dev**        | Tauri webview     | Core     | `sudo apt install libwebkit2gtk-4.0-dev`        |
+| **libgtk-3-dev**                 | GTK windowing     | Core     | `sudo apt install libgtk-3-dev`                 |
+| **libayatana-appindicator3-dev** | System tray       | Core     | `sudo apt install libayatana-appindicator3-dev` |
+| **librsvg2-dev**                 | SVG rendering     | Core     | `sudo apt install librsvg2-dev`                 |
+| **libasound2-dev**               | Audio capture     | Optional | `sudo apt install libasound2-dev`               |
 
 #### macOS
 
-| Dependency | Purpose | Feature | Installation |
-|------------|---------|---------|--------------|
-| **Xcode CLI Tools** | Compilation | Core | `xcode-select --install` |
+| Dependency          | Purpose     | Feature | Installation             |
+| ------------------- | ----------- | ------- | ------------------------ |
+| **Xcode CLI Tools** | Compilation | Core    | `xcode-select --install` |
 
 #### Windows
 
-| Dependency | Purpose | Feature | Installation |
-|------------|---------|---------|--------------|
-| **Visual Studio Build Tools** | Compilation | Core | Download from Microsoft |
-| **WebView2 Runtime** | Tauri webview | Core | Auto-installed by Tauri |
+| Dependency                    | Purpose       | Feature | Installation            |
+| ----------------------------- | ------------- | ------- | ----------------------- |
+| **Visual Studio Build Tools** | Compilation   | Core    | Download from Microsoft |
+| **WebView2 Runtime**          | Tauri webview | Core    | Auto-installed by Tauri |
 
 ---
 
@@ -105,6 +105,7 @@ winget install Git.Git
 **Feature Flag:** `onnx`
 
 #### Linux
+
 ```bash
 # Download ONNX Runtime
 wget https://github.com/microsoft/onnxruntime/releases/download/v1.16.3/onnxruntime-linux-x64-1.16.3.tgz
@@ -115,6 +116,7 @@ export LD_LIBRARY_PATH=/path/to/onnxruntime/lib:$LD_LIBRARY_PATH
 ```
 
 #### macOS
+
 ```bash
 # Download ONNX Runtime for macOS
 wget https://github.com/microsoft/onnxruntime/releases/download/v1.16.3/onnxruntime-osx-x86_64-1.16.3.tgz
@@ -125,6 +127,7 @@ export DYLD_LIBRARY_PATH=/path/to/onnxruntime/lib:$DYLD_LIBRARY_PATH
 ```
 
 #### Windows
+
 ```powershell
 # Download and extract ONNX Runtime
 # Add to PATH in System Environment Variables
@@ -284,13 +287,13 @@ xcode-select --install
 
 ## 📋 Dependency Matrix
 
-| Feature | Linux Packages | macOS | Windows | Optional |
-|---------|---------------|-------|---------|----------|
-| **Core Build** | build-essential, libssl-dev, pkg-config | Xcode CLI | VS Build Tools | ❌ |
-| **Tauri UI** | libwebkit2gtk-4.0-dev, libgtk-3-dev | Built-in | WebView2 | ❌ |
-| **Audio Capture** | libasound2-dev | Core Audio | WinAPI | ✅ |
-| **ONNX Runtime** | Download from GitHub | Download from GitHub | Download from GitHub | ✅ |
-| **System Tray** | libayatana-appindicator3-dev | Built-in | Built-in | ❌ |
+| Feature           | Linux Packages                          | macOS                | Windows              | Optional |
+| ----------------- | --------------------------------------- | -------------------- | -------------------- | -------- |
+| **Core Build**    | build-essential, libssl-dev, pkg-config | Xcode CLI            | VS Build Tools       | ❌       |
+| **Tauri UI**      | libwebkit2gtk-4.0-dev, libgtk-3-dev     | Built-in             | WebView2             | ❌       |
+| **Audio Capture** | libasound2-dev                          | Core Audio           | WinAPI               | ✅       |
+| **ONNX Runtime**  | Download from GitHub                    | Download from GitHub | Download from GitHub | ✅       |
+| **System Tray**   | libayatana-appindicator3-dev            | Built-in             | Built-in             | ❌       |
 
 ---
 

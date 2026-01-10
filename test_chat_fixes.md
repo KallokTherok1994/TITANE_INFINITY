@@ -1,7 +1,9 @@
 # Test Plan: Chat IA Fixes P0-1, P0-2, P0-3
 
 ## Date: 2026-01-04
+
 ## Auteur: GitHub Copilot Agent
+
 ## Objectif: Valider les corrections critiques du chat IA
 
 ---
@@ -9,13 +11,16 @@
 ## Corrections Appliquées
 
 ### P0-1: Format de Réponse Backend/Frontend
+
 **Fichier:** `src/services/api/chat.ts` (lignes 261-326)
 **Changement:**
+
 - Détection automatique du format de réponse (OMEGA direct vs Legacy)
 - Support des deux formats: `{ content, conversationId, ... }` et `{ success, message, ... }`
 - Logs détaillés pour identifier le format reçu
 
 **Test:**
+
 ```javascript
 // Backend retourne format OMEGA:
 {
@@ -38,13 +43,16 @@
 ```
 
 ### P0-2: Protection Anti-Reset avec Cooldown
+
 **Fichier:** `src/hooks/useChat.ts` (lignes 289-291, 626-688, 815-820)
 **Changement:**
+
 - Ajout de `lastOperationTimestampRef` pour tracker les opérations
 - Cooldown de 3000ms après chaque envoi de message
 - useEffect vérifie le cooldown avant tout reset
 
 **Test:**
+
 ```javascript
 // Scénario 1: Envoi message simple
 1. User envoie "Bonjour"
@@ -67,8 +75,10 @@
 ```
 
 ### P0-3: Logging Exhaustif + Fallback updateAssistant
+
 **Fichier:** `src/hooks/useChat.ts` (lignes 917-1009)
 **Changement:**
+
 - Logs AVANT recherche du placeholder (targetUiId, messagesCount)
 - Logs QUAND trouvé (currentContent, uiId)
 - Logs APRÈS update (newContentLength, newContentPreview)
@@ -76,6 +86,7 @@
 - Logs d'erreur avec liste des uiIds disponibles
 
 **Test:**
+
 ```javascript
 // Scénario 1: Placeholder trouvé (normal)
 Logs attendus:
@@ -99,6 +110,7 @@ Logs attendus:
 ## Test Checklist
 
 ### Test 1: Message Simple
+
 - [ ] Ouvrir l'app TITANE∞ en mode dev
 - [ ] Ouvrir DevTools Console
 - [ ] Envoyer message "Bonjour"
@@ -111,6 +123,7 @@ Logs attendus:
 - [ ] **VÉRIFIER:** Pas de reset du chat
 
 ### Test 2: Messages Rapides (Race Condition)
+
 - [ ] Envoyer "Message 1"
 - [ ] Attendre 1s
 - [ ] Envoyer "Message 2"
@@ -121,6 +134,7 @@ Logs attendus:
 - [ ] **VÉRIFIER:** Aucun reset entre les messages
 
 ### Test 3: Cooldown Protection
+
 - [ ] Envoyer "Test cooldown"
 - [ ] **VÉRIFIER:** Console log `🔒 Operation lock ACTIVATED { timestamp: ... }`
 - [ ] **VÉRIFIER:** Pendant les 3s suivant la réponse, logs `🛡️ CRITICAL PROTECTED: Skipping sync`
@@ -128,6 +142,7 @@ Logs attendus:
 - [ ] **VÉRIFIER:** Pas de reset même après le cooldown
 
 ### Test 4: Format Backend (OMEGA vs Legacy)
+
 - [ ] Modifier config provider: `auto` → Observer format détecté
 - [ ] **VÉRIFIER:** Format OMEGA: `{ content, conversationId, messageId, latencyMs }`
 - [ ] **VÉRIFIER:** OU Format Legacy: `{ success, message: { content, ... } }`
@@ -135,6 +150,7 @@ Logs attendus:
 - [ ] **VÉRIFIER:** Pas d'erreur `Réponse invalide du backend OMEGA`
 
 ### Test 5: Placeholder Non Trouvé (Fallback)
+
 - [ ] (Scénario difficile à reproduire naturellement)
 - [ ] **SI LOG:** `❌ updateAssistant: Target NOT FOUND`
 - [ ] **VÉRIFIER:** Log suivant: `⚠️ updateAssistant: Attempting fallback`
@@ -145,16 +161,19 @@ Logs attendus:
 ## Critères de Succès
 
 ### ✅ SUCCESS Complet:
+
 - [x] P0-1: Réponses backend affichées (100%)
 - [x] P0-2: Aucun reset intempestif sur 10 messages rapides
 - [x] P0-3: Logs visibles pour chaque updateAssistant + fallback si besoin
 
 ### ⚠️ SUCCESS Partiel:
+
 - [ ] 1-2 resets sur 10 messages (cooldown à ajuster)
 - [ ] Logs incomplets mais réponses affichées
 - [ ] Fallback non testé (scénario rare)
 
 ### ❌ ÉCHEC:
+
 - [ ] Réponses toujours invisibles
 - [ ] Resets fréquents (> 3 sur 10 messages)
 - [ ] Erreurs console `Réponse invalide du backend`
@@ -165,6 +184,7 @@ Logs attendus:
 ## Commandes Utiles
 
 ### Lancer en mode dev:
+
 ```bash
 cd /home/runner/work/TITANE_INFINITY/TITANE_INFINITY
 pnpm run dev
@@ -173,11 +193,13 @@ npm run dev:tauri
 ```
 
 ### Vérifier logs console:
+
 1. Ouvrir DevTools (F12)
 2. Onglet Console
 3. Filtrer: `[ChatService]` OU `🔄 updateAssistant`
 
 ### Vérifier backend Rust:
+
 ```bash
 cd src-tauri
 cargo build --release
@@ -190,16 +212,19 @@ cargo run --release
 ## Notes Post-Test
 
 ### Problèmes Résiduels (à documenter):
-1. 
-2. 
-3. 
+
+1.
+2.
+3.
 
 ### Observations:
-1. 
-2. 
-3. 
+
+1.
+2.
+3.
 
 ### Prochaines Actions:
+
 - [ ] Corriger P1-1: Timeout adaptatif
 - [ ] Corriger P1-2: Cascade errors logging
 - [ ] Corriger P1-3: Backend Rust logs

@@ -80,10 +80,7 @@ export function Tabs({ tabs, defaultTab, onTabChange, children }: TabsProps) {
   return (
     <div className="w-full">
       {/* Tabs Header */}
-      <div
-        role="tablist"
-        className="flex border-b border-titanium-border-default"
-      >
+      <div role="tablist" className="flex border-b border-titanium-border-default">
         {tabs.map((tab, index) => {
           const isActive = activeTab === tab.id;
           return (
@@ -103,16 +100,21 @@ export function Tabs({ tabs, defaultTab, onTabChange, children }: TabsProps) {
                 transition-colors duration-200
                 focus-visible:outline-none focus-visible:shadow-focus
                 disabled:cursor-not-allowed disabled:opacity-50
-                ${isActive 
-                  ? 'text-titanium-text-primary border-b-2 border-titanium-accent-cool bg-titanium-bg-interactive' 
-                  : tab.disabled 
-                    ? 'text-titanium-text-disabled' 
-                    : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-interactive'
+                ${
+                  isActive
+                    ? 'text-titanium-text-primary border-b-2 border-titanium-accent-cool bg-titanium-bg-interactive'
+                    : tab.disabled
+                      ? 'text-titanium-text-disabled'
+                      : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-interactive'
                 }
               `}
             >
               <div className="flex items-center gap-2">
-                {tab.icon && <span className="w-4 h-4" aria-hidden="true">{tab.icon}</span>}
+                {tab.icon && (
+                  <span className="w-4 h-4" aria-hidden="true">
+                    {tab.icon}
+                  </span>
+                )}
                 <span>{tab.label}</span>
               </div>
             </button>

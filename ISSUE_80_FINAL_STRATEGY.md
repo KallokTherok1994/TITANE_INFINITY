@@ -13,14 +13,14 @@
 
 ### Why 99.3% is Better Than 100%
 
-| Criterion | 99.3% (Current) | 100% (Theoretical) | Winner |
-|-----------|-----------------|-------------------|--------|
-| **Unit Test Coverage** | ✅ Complete | ✅ Complete | Tie |
-| **Integration Tests** | ✅ Complete | ✅ Complete | Tie |
-| **CI/CD Efficiency** | ✅ Fast (<45s) | ❌ Slow (>5min) | **99.3%** |
-| **Maintenance Burden** | ✅ Low | ❌ High | **99.3%** |
-| **Real-World Value** | ✅ Maximum | ⚠️ Marginal | **99.3%** |
-| **Production Readiness** | ✅ Ready | ⚠️ Complex | **99.3%** |
+| Criterion                | 99.3% (Current) | 100% (Theoretical) | Winner    |
+| ------------------------ | --------------- | ------------------ | --------- |
+| **Unit Test Coverage**   | ✅ Complete     | ✅ Complete        | Tie       |
+| **Integration Tests**    | ✅ Complete     | ✅ Complete        | Tie       |
+| **CI/CD Efficiency**     | ✅ Fast (<45s)  | ❌ Slow (>5min)    | **99.3%** |
+| **Maintenance Burden**   | ✅ Low          | ❌ High            | **99.3%** |
+| **Real-World Value**     | ✅ Maximum      | ⚠️ Marginal        | **99.3%** |
+| **Production Readiness** | ✅ Ready        | ⚠️ Complex         | **99.3%** |
 
 ---
 
@@ -42,12 +42,14 @@
 **File:** `src/tests/e2e/titane_e2e.test.ts`
 
 **Why Skipped:**
+
 - ❌ Require full Tauri backend running (2-5 min startup)
 - ❌ Dependency on external services (ollama, whisper)
 - ❌ Non-deterministic (network, timing, OS-specific)
 - ❌ CI/CD would be 10x slower
 
 **Alternative Coverage:**
+
 - ✅ **11 Playwright E2E tests** (active, cover critical paths)
 - ✅ **Integration tests** (2306 tests validate all core logic)
 - ✅ **Manual E2E testing** (developer validation before releases)
@@ -59,12 +61,14 @@
 **File:** `src/modules/avatar/floating/floating.perf.test.ts`
 
 **Why Skipped:**
+
 - ❌ Require real WebGL rendering context
 - ❌ Not available in happy-dom/jsdom (Node.js test runners)
 - ❌ Would need headless-gl (native bindings, OS-specific)
 - ❌ Brittle: GPU-dependent, non-reproducible across systems
 
 **Alternative Coverage:**
+
 - ✅ **Unit tests** for ThreeJSAvatarRenderer logic (active)
 - ✅ **Mock-based tests** for Three.js integrations (active)
 - ✅ **Manual browser testing** (developer validation)
@@ -78,13 +82,13 @@
 
 ### What Leading Projects Do
 
-| Project | Test Coverage | Approach | CI Time |
-|---------|--------------|----------|---------|
-| **React** | 97-99% | Skip browser-specific tests | <5 min |
-| **Vue.js** | 98-99% | Mock WebGL, skip E2E | <3 min |
-| **Angular** | 96-98% | E2E separate pipeline | <10 min |
-| **Vite** | 95-97% | Focus on unit/integration | <2 min |
-| **TITANE∞** | **99.3%** | **Optimal balance** | **<1 min** |
+| Project     | Test Coverage | Approach                    | CI Time    |
+| ----------- | ------------- | --------------------------- | ---------- |
+| **React**   | 97-99%        | Skip browser-specific tests | <5 min     |
+| **Vue.js**  | 98-99%        | Mock WebGL, skip E2E        | <3 min     |
+| **Angular** | 96-98%        | E2E separate pipeline       | <10 min    |
+| **Vite**    | 95-97%        | Focus on unit/integration   | <2 min     |
+| **TITANE∞** | **99.3%**     | **Optimal balance**         | **<1 min** |
 
 **Industry consensus:** 95-99% coverage is ideal for production codebases.
 
@@ -94,14 +98,14 @@
 
 ### Test Categories
 
-| Category | Count | Status | CI Inclusion | Rationale |
-|----------|-------|--------|--------------|-----------|
-| **Unit Tests** | 1800+ | ✅ Active | Yes | Fast, deterministic, high value |
-| **Integration Tests** | 400+ | ✅ Active | Yes | Validate component interactions |
-| **Functional Tests** | 100+ | ✅ Active | Yes | User-facing scenarios |
-| **E2E (Playwright)** | 11 | ✅ Active | Yes | Critical path validation |
-| **E2E (Vitest Backend)** | 5 | ⏭️ Skip | No | Slow, non-deterministic |
-| **WebGL Perf Tests** | 11 | ⏭️ Skip | No | GPU-dependent, brittle |
+| Category                 | Count | Status    | CI Inclusion | Rationale                       |
+| ------------------------ | ----- | --------- | ------------ | ------------------------------- |
+| **Unit Tests**           | 1800+ | ✅ Active | Yes          | Fast, deterministic, high value |
+| **Integration Tests**    | 400+  | ✅ Active | Yes          | Validate component interactions |
+| **Functional Tests**     | 100+  | ✅ Active | Yes          | User-facing scenarios           |
+| **E2E (Playwright)**     | 11    | ✅ Active | Yes          | Critical path validation        |
+| **E2E (Vitest Backend)** | 5     | ⏭️ Skip   | No           | Slow, non-deterministic         |
+| **WebGL Perf Tests**     | 11    | ⏭️ Skip   | No           | GPU-dependent, brittle          |
 
 **Total Active:** 2306 tests ✅  
 **Total Skipped:** 16 tests ⏭️
@@ -141,14 +145,14 @@
 
 ### 📊 Metrics Dashboard
 
-| Metric | Value | Target | Status |
-|--------|-------|--------|--------|
-| Unit Tests | 1800+ | >1500 | ✅ 120% |
-| Integration Tests | 400+ | >300 | ✅ 133% |
-| Test Coverage | 99.3% | >95% | ✅ 104% |
-| CI Duration | <45s | <60s | ✅ 75% |
-| Zero Errors | ✅ | ✅ | ✅ 100% |
-| Bundle Size | 950KB | <1MB | ✅ 105% |
+| Metric            | Value | Target | Status  |
+| ----------------- | ----- | ------ | ------- |
+| Unit Tests        | 1800+ | >1500  | ✅ 120% |
+| Integration Tests | 400+  | >300   | ✅ 133% |
+| Test Coverage     | 99.3% | >95%   | ✅ 104% |
+| CI Duration       | <45s  | <60s   | ✅ 75%  |
+| Zero Errors       | ✅    | ✅     | ✅ 100% |
+| Bundle Size       | 950KB | <1MB   | ✅ 105% |
 
 ---
 
@@ -167,6 +171,7 @@ RUN_E2E_TESTS=1 npm test -- src/tests/e2e/titane_e2e.test.ts
 ```
 
 **When to run:**
+
 - Before major releases
 - When backend APIs change
 - Manual validation after deployment
@@ -182,6 +187,7 @@ npm test -- --browser src/modules/avatar/floating/floating.perf.test.ts
 ```
 
 **When to run:**
+
 - Before graphics-related releases
 - When Three.js version changes
 - Performance regression investigation
@@ -193,6 +199,7 @@ npm test -- --browser src/modules/avatar/floating/floating.perf.test.ts
 ### Final Decision: 99.3% Coverage is Optimal ✅
 
 **Reasoning:**
+
 1. ✅ **Maximum value:** All critical paths tested
 2. ✅ **Fast CI/CD:** <45s build time (industry-leading)
 3. ✅ **Low maintenance:** No brittle/flaky tests
@@ -200,6 +207,7 @@ npm test -- --browser src/modules/avatar/floating/floating.perf.test.ts
 5. ✅ **Developer-friendly:** Quick feedback loops
 
 **The 16 skipped tests:**
+
 - ✅ Documented with clear rationale
 - ✅ Activatable for manual/local validation
 - ✅ Not required for production confidence

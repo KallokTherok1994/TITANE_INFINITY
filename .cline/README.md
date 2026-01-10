@@ -9,6 +9,7 @@ Configuration optimisée de Cline MCP pour le projet TITANE∞, avec safeguards 
 **INTERDICTION ABSOLUE** de déployer sans autorisation explicite de Kevin Thibault.
 
 ### Commandes bloquées
+
 - `pnpm run build` / `pnpm run build:production`
 - `tauri build`
 - `./runtime/stable/build.sh`
@@ -16,6 +17,7 @@ Configuration optimisée de Cline MCP pour le projet TITANE∞, avec safeguards 
 - Tout build AppImage/DEB
 
 ### Commandes autorisées
+
 - `pnpm run dev` - Développement
 - `pnpm test` - Tests
 - `pnpm run lint` / `pnpm run format` - Quality checks
@@ -47,6 +49,7 @@ cat .cline/deployment-safeguards.json
 ## 🔧 Paramètres optimisés
 
 ### Sécurité
+
 - ✅ Auto-approval: **DÉSACTIVÉ**
 - ✅ Max requests: **5** (au lieu de 20)
 - ✅ Notifications: **ACTIVÉES**
@@ -54,12 +57,14 @@ cat .cline/deployment-safeguards.json
 - ✅ Telemetry: **DISABLED**
 
 ### Performance
+
 - ✅ Thinking budget: **2048 tokens** (↑ de 1024)
 - ✅ Terminal output: **1000 lignes** (↑ de 500)
 - ✅ Auto-condense: **ACTIVÉ** (threshold 0.65)
 - ✅ Shell timeout: **6000ms** (↑ de 4000)
 
 ### Développement
+
 - ✅ Mode: **plan** (réflexion avant action)
 - ✅ Strict plan mode: **ACTIVÉ**
 - ✅ Checkpoints: **ACTIVÉS**
@@ -67,10 +72,12 @@ cat .cline/deployment-safeguards.json
 - ✅ MCP marketplace: **ACTIVÉ**
 
 ### Localization
+
 - ✅ Language: **French**
 - ✅ Dictation: **fr**
 
 ### Reasoning
+
 - ✅ Effort: **high** (↑ de medium)
 
 ## 🎯 Workflow recommandé
@@ -181,6 +188,7 @@ En cas de problème :
 ## 📝 Changelog
 
 ### v1.0.0 - 2026-01-03
+
 - Configuration initiale optimisée
 - Safeguards de déploiement
 - Respect règle critique TITANE∞

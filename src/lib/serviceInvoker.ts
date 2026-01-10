@@ -74,7 +74,10 @@ export class ValidationError extends Error {
 /**
  * Promise avec timeout
  */
-function createTimeout<T>(ms: number, command: string): {
+function createTimeout<T>(
+  ms: number,
+  command: string
+): {
   promise: Promise<T>;
   cancel: () => void;
 } {

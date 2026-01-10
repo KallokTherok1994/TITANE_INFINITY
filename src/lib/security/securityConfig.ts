@@ -274,8 +274,11 @@ export function getCircuitBreakerConfig() {
  */
 export function getProviderConfig(provider: string) {
   if (SECURITY_MODE.mode === 'permissive' || SECURITY_MODE.mode === 'disabled') {
-    return UNRESTRICTED_PROVIDER_CONFIG[provider as keyof typeof UNRESTRICTED_PROVIDER_CONFIG]
-      || UNRESTRICTED_PROVIDER_CONFIG['titane-local'];
+    return (
+      UNRESTRICTED_PROVIDER_CONFIG[
+        provider as keyof typeof UNRESTRICTED_PROVIDER_CONFIG
+      ] || UNRESTRICTED_PROVIDER_CONFIG['titane-local']
+    );
   }
   return null; // Use defaults
 }

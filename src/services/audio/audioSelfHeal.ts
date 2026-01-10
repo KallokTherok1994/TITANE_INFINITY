@@ -232,10 +232,9 @@ class AudioSelfHeal {
         }
       }
 
-      logger.debug(
-        `✅ Auto-heal completed, attempt ${this.healthStatus.healAttempts}`,
-        { module: 'AudioSelfHeal' }
-      );
+      logger.debug(`✅ Auto-heal completed, attempt ${this.healthStatus.healAttempts}`, {
+        module: 'AudioSelfHeal',
+      });
 
       // Reset heal attempts after successful recovery
       setTimeout(() => {

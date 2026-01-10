@@ -47,7 +47,9 @@ describe('H2: ChatMemoryCompactor - Memory Leak Protection', () => {
 
     // Also mock on window for browser code that checks window.requestIdleCallback
     if (typeof window !== 'undefined') {
-      (window as unknown as { requestIdleCallback: typeof global.requestIdleCallback }).requestIdleCallback = global.requestIdleCallback;
+      (
+        window as unknown as { requestIdleCallback: typeof global.requestIdleCallback }
+      ).requestIdleCallback = global.requestIdleCallback;
     }
 
     compactor = new ChatMemoryCompactor();

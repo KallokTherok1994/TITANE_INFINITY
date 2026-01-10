@@ -60,16 +60,12 @@ export const Tabs = memo(function Tabs({
         case 'ArrowLeft':
           e.preventDefault();
           nextIndex =
-            currentEnabledIndex > 0
-              ? currentEnabledIndex - 1
-              : enabledTabs.length - 1;
+            currentEnabledIndex > 0 ? currentEnabledIndex - 1 : enabledTabs.length - 1;
           break;
         case 'ArrowRight':
           e.preventDefault();
           nextIndex =
-            currentEnabledIndex < enabledTabs.length - 1
-              ? currentEnabledIndex + 1
-              : 0;
+            currentEnabledIndex < enabledTabs.length - 1 ? currentEnabledIndex + 1 : 0;
           break;
         case 'Home':
           e.preventDefault();

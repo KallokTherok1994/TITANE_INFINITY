@@ -13,12 +13,12 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
 
-export function Card({ 
-  className = '', 
+export function Card({
+  className = '',
   hoverable = false,
   elevated = false,
-  children, 
-  ...props 
+  children,
+  ...props
 }: CardProps) {
   return (
     <div
