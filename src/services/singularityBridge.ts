@@ -132,7 +132,9 @@ export class SingularityBridge {
 
     // Log périodique pour monitoring
     if (this.updateCount % 100 === 0) {
-      logger.debug(`[SingularityBridge v∞.Ω] ${this.updateCount} state updates processed`);
+      logger.debug(
+        `[SingularityBridge v∞.Ω] ${this.updateCount} state updates processed`
+      );
     }
 
     this.subscribers.forEach(callback => {
@@ -259,10 +261,7 @@ export class SingularityBridge {
         if (this.state) {
           // Merge delta into current state (only changed fields)
           this.state = { ...this.state, ...event.payload };
-          logger.debug(
-            'v24.20: Delta update applied',
-            Object.keys(event.payload)
-          );
+          logger.debug('v24.20: Delta update applied', Object.keys(event.payload));
           this.notifySubscribers();
         }
       }
@@ -305,9 +304,7 @@ export class SingularityBridge {
       return result;
     }
 
-    logger.warn(
-      'singularity_get_symbolic unavailable, using fallback state'
-    );
+    logger.warn('singularity_get_symbolic unavailable, using fallback state');
     return createFallbackSymbolic();
   }
 
@@ -317,9 +314,7 @@ export class SingularityBridge {
       return result;
     }
 
-    logger.warn(
-      'singularity_get_adaptive unavailable, using fallback state'
-    );
+    logger.warn('singularity_get_adaptive unavailable, using fallback state');
     return createFallbackAdaptive();
   }
 
@@ -329,9 +324,7 @@ export class SingularityBridge {
       return result;
     }
 
-    logger.warn(
-      'singularity_get_meta unavailable, using fallback state'
-    );
+    logger.warn('singularity_get_meta unavailable, using fallback state');
     return createFallbackMeta();
   }
 

@@ -3,52 +3,52 @@ version: 2
 updates:
   # npm dependencies
   - package-ecosystem: npm
-    directory: "/"
+    directory: '/'
     schedule:
       interval: weekly
       day: monday
-      time: "06:00"
-      timezone: "Etc/UTC"
+      time: '06:00'
+      timezone: 'Etc/UTC'
     open-pull-requests-limit: 5
     labels:
       - dependencies
       - automated
       - npm
     commit-message:
-      prefix: "chore(deps)"
+      prefix: 'chore(deps)'
       include: scope
     versioning-strategy: increase
 
   # Cargo dependencies
   - package-ecosystem: cargo
-    directory: "/src-tauri"
+    directory: '/src-tauri'
     schedule:
       interval: weekly
       day: monday
-      time: "06:00"
-      timezone: "Etc/UTC"
+      time: '06:00'
+      timezone: 'Etc/UTC'
     open-pull-requests-limit: 3
     labels:
       - dependencies
       - automated
       - rust
     commit-message:
-      prefix: "chore(deps)"
+      prefix: 'chore(deps)'
       include: scope
 
   # GitHub Actions
   - package-ecosystem: github-actions
-    directory: "/"
+    directory: '/'
     schedule:
       interval: weekly
       day: monday
-      time: "06:00"
-      timezone: "Etc/UTC"
+      time: '06:00'
+      timezone: 'Etc/UTC'
     open-pull-requests-limit: 3
     labels:
       - dependencies
       - automated
       - github-actions
     commit-message:
-      prefix: "chore(deps)"
+      prefix: 'chore(deps)'
       include: scope

@@ -26,7 +26,9 @@ cline "implement feature X with tests and validation"
 ## 📁 Documentation Structure
 
 ### 🔴 RÈGLES CRITIQUES
+
 **[rules.md](./rules.md)** (3 KB)
+
 - ⛔ Déploiement INTERDIT
 - 🧠 Mode PLAN obligatoire
 - 🚫 Pas de TypeScript "any"
@@ -34,7 +36,9 @@ cline "implement feature X with tests and validation"
 - 📋 Workflow standard
 
 ### 🔵 INSTRUCTIONS DÉTAILLÉES
+
 **[custom-instructions.md](./custom-instructions.md)** (10 KB)
+
 - 💻 Standards de code complets
 - 🎯 Workflow étape par étape
 - 📝 Templates et patterns
@@ -43,7 +47,9 @@ cline "implement feature X with tests and validation"
 - 🧪 Tests et validation
 
 ### 📖 GUIDE UTILISATEUR
+
 **[README.md](./README.md)** (4 KB)
+
 - 📦 Installation et configuration
 - 🔧 Paramètres optimisés
 - ⚠️ Règle critique déploiement
@@ -51,7 +57,9 @@ cline "implement feature X with tests and validation"
 - 🆘 Support et troubleshooting
 
 ### 📊 ÉTAT CONFIGURATION
+
 **[STATUS.md](./STATUS.md)** (8 KB)
+
 - ✅ Configuration appliquée
 - 📊 Comparaison avant/après
 - ⚠️ Actions manuelles recommandées
@@ -59,7 +67,9 @@ cline "implement feature X with tests and validation"
 - 📈 Métriques d'amélioration
 
 ### 🛡️ SAFEGUARDS SÉCURITÉ
+
 **[deployment-safeguards.json](./deployment-safeguards.json)** (3 KB)
+
 - 🚨 Règles critiques JSON
 - ❌ Commandes bloquées
 - ✅ Commandes autorisées
@@ -67,14 +77,18 @@ cline "implement feature X with tests and validation"
 - ⚙️ Paramètres recommandés
 
 ### ⚙️ SCRIPT AUTO-CONFIG
+
 **[config-optimized.sh](./config-optimized.sh)** (4 KB)
+
 - 🔧 Application automatique
 - ✅ Paramètres testés
 - 📋 Résumé des changements
 - 🔄 Réutilisable
 
 ### 🗑️ GITIGNORE
+
 **[.gitignore](./.gitignore)** (0.3 KB)
+
 - Exclusion logs
 - Exclusion données sensibles
 - Exclusion runtime
@@ -86,11 +100,13 @@ cline "implement feature X with tests and validation"
 ### 🆕 Première Utilisation
 
 1. **Lire les règles**
+
    ```bash
    cline "read .cline/rules.md"
    ```
 
 2. **Comprendre le workflow**
+
    ```bash
    cline "read .cline/custom-instructions.md sections Workflow"
    ```
@@ -104,6 +120,7 @@ cline "implement feature X with tests and validation"
 ### 💻 Développement Quotidien
 
 **Commandes fréquentes:**
+
 ```bash
 # Analyse code
 cline "analyze [file/folder] for improvements"
@@ -119,6 +136,7 @@ cline "document [API/function] with JSDoc"
 ```
 
 **Workflow recommandé:**
+
 1. Mode PLAN: Analyse et proposition
 2. Validation humaine
 3. Exécution contrôlée
@@ -127,6 +145,7 @@ cline "document [API/function] with JSDoc"
 ### 🔧 Maintenance & Debugging
 
 **Références rapides:**
+
 - Standards TypeScript → `custom-instructions.md` section "Standards Code"
 - Error handling → `custom-instructions.md` section "Error Handling"
 - Tests patterns → `custom-instructions.md` section "Tests"
@@ -138,6 +157,7 @@ cline "document [API/function] with JSDoc"
 → Voir `rules.md` section "DÉPLOIEMENT INTERDIT"
 
 **Configuration corrompue:**
+
 ```bash
 ./.cline/config-optimized.sh  # Réappliquer config
 ```
@@ -149,16 +169,16 @@ cline "document [API/function] with JSDoc"
 
 ## 📊 Statistiques Documentation
 
-| Fichier | Taille | Lignes | Contenu |
-|---------|--------|--------|---------|
-| **rules.md** | 3 KB | ~100 | Règles critiques |
-| **custom-instructions.md** | 10 KB | ~500 | Guide complet |
-| **README.md** | 4 KB | ~200 | Guide utilisateur |
-| **STATUS.md** | 8 KB | ~350 | État configuration |
-| **deployment-safeguards.json** | 3 KB | ~150 | Safeguards JSON |
-| **config-optimized.sh** | 4 KB | ~80 | Script config |
-| **INDEX.md** | 2 KB | ~150 | Navigation |
-| **TOTAL** | **~35 KB** | **~1530** | Documentation complète |
+| Fichier                        | Taille     | Lignes    | Contenu                |
+| ------------------------------ | ---------- | --------- | ---------------------- |
+| **rules.md**                   | 3 KB       | ~100      | Règles critiques       |
+| **custom-instructions.md**     | 10 KB      | ~500      | Guide complet          |
+| **README.md**                  | 4 KB       | ~200      | Guide utilisateur      |
+| **STATUS.md**                  | 8 KB       | ~350      | État configuration     |
+| **deployment-safeguards.json** | 3 KB       | ~150      | Safeguards JSON        |
+| **config-optimized.sh**        | 4 KB       | ~80       | Script config          |
+| **INDEX.md**                   | 2 KB       | ~150      | Navigation             |
+| **TOTAL**                      | **~35 KB** | **~1530** | Documentation complète |
 
 ---
 
@@ -199,11 +219,13 @@ cline "document [API/function] with JSDoc"
 ## 🚀 Prochaines Étapes
 
 1. **Tester Cline avec règles:**
+
    ```bash
    cline "verify alignment with TITANE∞ rules and standards"
    ```
 
 2. **Développer une feature test:**
+
    ```bash
    cline "create a simple component following all TITANE∞ standards"
    ```
@@ -240,4 +262,4 @@ cline "document [API/function] with JSDoc"
 
 ---
 
-*Navigation rapide: [Rules](./rules.md) | [Instructions](./custom-instructions.md) | [README](./README.md) | [Status](./STATUS.md) | [Safeguards](./deployment-safeguards.json)*
+_Navigation rapide: [Rules](./rules.md) | [Instructions](./custom-instructions.md) | [README](./README.md) | [Status](./STATUS.md) | [Safeguards](./deployment-safeguards.json)_

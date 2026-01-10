@@ -24,7 +24,7 @@ MAIN (local) ──────────────────────�
        5a6560b4 fix(security): élimination unwrap│
        bd27c680 feat: Window Controls            │
        42ac0101 fix(deps): Node v24              ─┘
-    
+
                                     ╱
 origin/MAIN ─────────────────────────── 9 commits non intégrés
     │                                   (PR #82 + autres)
@@ -40,6 +40,7 @@ DIVERGENCE: Les branches ont divergé au commit dbaf3ef1
 ### Fichiers Non Commités (Working Directory)
 
 **Modifications en attente (8 fichiers):**
+
 1. `src-tauri/src/commands/copilot_commands.rs` — Possibles conflits
 2. `src-tauri/src/conversation_engine/commands.rs` — Liés aux fixes PR #82
 3. `src/hooks/useChat.ts` — Liés aux fixes PR #82
@@ -50,6 +51,7 @@ DIVERGENCE: Les branches ont divergé au commit dbaf3ef1
 8. `PLAN_CORRECTION_PERFECTIONNEMENT_2026-01-03.md` — Documentation
 
 **Fichiers non suivis (12+):**
+
 - `AUDIT_CHAT_IA_2026-01-04.md`
 - `AUDIT_FINAL_110_PERCENT.md`
 - `CHAT_FIX_FINAL_REPORT.md`
@@ -66,11 +68,13 @@ DIVERGENCE: Les branches ont divergé au commit dbaf3ef1
 ### 1. Divergence Structurelle
 
 **Problème:**
+
 - **MAIN local** et **origin/MAIN** ont divergé depuis `dbaf3ef1`
 - 4 commits locaux vs 9 commits distants
 - PR #82 (chat fixes) déjà mergé sur origin mais absent localement
 
 **Conséquences:**
+
 - Push direct impossible (`git push` rejeté)
 - Risque de conflits lors du rebase/merge
 - Duplication potentielle de fixes (si travaux similaires)
@@ -80,12 +84,14 @@ DIVERGENCE: Les branches ont divergé au commit dbaf3ef1
 ### 2. Stratégie de Branching Incohérente
 
 **Observation:**
+
 ```
 feature/window-controls-zoom-fix ← Correctement créée et pushée ✅
 MAIN (local)                     ← Contient les mêmes commits ⚠️
 ```
 
 **Problème:**
+
 - Commits de la feature branch également présents sur MAIN local
 - MAIN local devrait pointer vers origin/MAIN
 - Confusion entre branche de travail et branche stable
@@ -116,11 +122,13 @@ MAIN (local)                     ← Contient les mêmes commits ⚠️
 ### 4. Prolifération de Documents d'Audit
 
 **Observation:**
+
 - 80+ fichiers markdown d'audit/documentation
 - Noms similaires, versions multiples
 - Difficulté à identifier le document "source de vérité"
 
 **Exemples redondants:**
+
 ```
 AUDIT_COMPLET_2026-01-02.md
 AUDIT_COMPLET_APPROFONDI_v26.2.0.md
@@ -132,6 +140,7 @@ AUDIT_COMPLET_v26.2.3_2025-01-02.md
 ```
 
 **Impact:**
+
 - Difficile de trouver l'information pertinente
 - Git repo volumineux (100+ MB rien qu'en markdown)
 - Confusion pour les nouveaux contributeurs
@@ -145,6 +154,7 @@ AUDIT_COMPLET_v26.2.3_2025-01-02.md
 ### Option A: REBASE Agressif (Recommandé pour Historique Propre)
 
 **Principe:**
+
 ```bash
 # 1. Sauvegarder le contexte
 git stash push -m "WIP: chat fixes + local changes"
@@ -162,12 +172,14 @@ git stash pop
 ```
 
 **Avantages:**
+
 - ✅ Historique git propre et linéaire
 - ✅ MAIN local = origin/MAIN (aligné)
 - ✅ Feature branch séparée et propre
 - ✅ Pas de merge commit parasites
 
 **Inconvénients:**
+
 - ⚠️ Modifications locales temporairement perdues (mais en stash)
 - ⚠️ Nécessite résolution manuelle des conflits potentiels
 - ⚠️ Commits locaux sur MAIN "perdus" (mais présents sur feature branch)
@@ -179,6 +191,7 @@ git stash pop
 ### Option B: MERGE Conservateur (Plus Sûr)
 
 **Principe:**
+
 ```bash
 # 1. Sauvegarder le contexte
 git stash
@@ -192,11 +205,13 @@ git stash pop
 ```
 
 **Avantages:**
+
 - ✅ Aucune perte de commits (tout préservé)
 - ✅ Moins risqué pour les débutants
 - ✅ Historique complet (audit trail)
 
 **Inconvénients:**
+
 - ❌ Historique non linéaire (merge commits)
 - ❌ MAIN local contient des commits qui devraient être sur feature
 - ❌ Moins "propre" professionnellement
@@ -208,6 +223,7 @@ git stash pop
 ### Option C: Cherry-Pick Sélectif (Avancé)
 
 **Principe:**
+
 ```bash
 # 1. Reset MAIN vers origin/MAIN
 git checkout MAIN
@@ -220,10 +236,12 @@ git reset --hard origin/MAIN
 ```
 
 **Avantages:**
+
 - ✅ Contrôle granulaire total
 - ✅ Historique ultra-propre
 
 **Inconvénients:**
+
 - ❌ Complexe et sujet aux erreurs
 - ❌ Requiert expertise Git avancée
 - ❌ Temps de réalisation élevé
@@ -288,6 +306,7 @@ git diff src/hooks/useChat.ts | head -n 50
 **Actions selon résultats:**
 
 **Cas 1: Pas de conflit**
+
 ```bash
 # Commiter les changements
 git add -A
@@ -296,6 +315,7 @@ git push origin feature/integrate-chat-fixes-and-local-changes
 ```
 
 **Cas 2: Conflits détectés**
+
 ```bash
 # Résoudre manuellement (fichier par fichier)
 # Utiliser VS Code pour merger les diff
@@ -467,12 +487,14 @@ MAIN (protected)
 ```
 
 **Avantages:**
+
 - Historique git propre
 - Code review systématique
 - Rollback facile
 - CI/CD par branche
 
 **Mise en œuvre:**
+
 ```bash
 # .github/workflows/branch-protection.yml
 # + GitHub UI: Settings → Branches → Add rule
@@ -484,6 +506,7 @@ MAIN (protected)
 ### 2. Automatiser la Synchronisation
 
 **Script quotidien:**
+
 ```bash
 #!/bin/bash
 # scripts/git/daily-sync.sh
@@ -510,6 +533,7 @@ echo "✅ MAIN is in sync with origin"
 ```
 
 **Hook pre-push:**
+
 ```bash
 #!/bin/bash
 # .husky/pre-push
@@ -523,6 +547,7 @@ echo "✅ MAIN is in sync with origin"
 ### 3. Nettoyage Documentaire Automatisé
 
 **Script mensuel:**
+
 ```bash
 #!/bin/bash
 # scripts/maintenance/archive-old-docs.sh
@@ -542,32 +567,33 @@ echo "✅ Documentation archived"
 ### 4. Métriques de Qualité Continue
 
 **Dashboard Git (proposé):**
+
 ```yaml
 # .github/workflows/quality-dashboard.yml
 name: Quality Dashboard
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Daily
+    - cron: '0 0 * * *' # Daily
 
 jobs:
   metrics:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Calculate metrics
         run: |
           # Branch divergence
           git fetch origin
           echo "Divergence: $(git rev-list --count MAIN..origin/MAIN) commits"
-          
+
           # Stale branches
           echo "Stale branches: $(git branch -r --no-merged origin/MAIN | wc -l)"
-          
+
           # Documentation count
           echo "Markdown files: $(find . -maxdepth 1 -name '*.md' | wc -l)"
-          
+
           # Uncommitted changes
           echo "Modified files: $(git status --short | wc -l)"
 ```
@@ -581,12 +607,14 @@ jobs:
 **OPÉRATION: "CLEAN SLATE" (Option A — Rebase)**
 
 **Justification:**
+
 1. ✅ Historique git propre requis pour projet professionnel
 2. ✅ Feature branch déjà pushée (travail sauvegardé)
 3. ✅ Backup automatique via stash (zéro risque)
 4. ✅ Alignement avec best practices Git
 
 **Timeline:**
+
 - **T+0min:** Backup & stash (Phase 1)
 - **T+5min:** Reset MAIN vers origin (Phase 2)
 - **T+7min:** Nouvelle branche pour modifications locales (Phase 3)
@@ -620,12 +648,14 @@ Avant de lancer "OPÉRATION CLEAN SLATE":
 ### État Actuel
 
 **Points forts:**
+
 - ✅ Code sécurisé (unwrap fixes)
 - ✅ Features fonctionnelles (window controls)
 - ✅ Tests robustes (6605 tests)
 - ✅ Documentation exhaustive
 
 **Points faibles:**
+
 - 🔴 Divergence Git (4 vs 9 commits)
 - 🔴 Modifications non commitées (8 fichiers)
 - 🟡 Documentation surabondante (80+ MD)
@@ -634,6 +664,7 @@ Avant de lancer "OPÉRATION CLEAN SLATE":
 ### État Cible (Post-Opération)
 
 **Résultat attendu:**
+
 - ✅ MAIN local = origin/MAIN (synchronisé)
 - ✅ Toutes modifications sur feature branches
 - ✅ PRs créées et prêtes pour review
@@ -644,16 +675,19 @@ Avant de lancer "OPÉRATION CLEAN SLATE":
 ### Impact sur le Projet
 
 **Court terme (24h):**
+
 - Stabilité Git restaurée
 - Workflow clarifié
 - PRs en review
 
 **Moyen terme (1 semaine):**
+
 - PRs mergées dans MAIN
 - Release v26.2.1 possible
 - Équipe alignée
 
 **Long terme (1 mois):**
+
 - Git Flow adopté
 - Automatisation synchronisation
 - Qualité continue

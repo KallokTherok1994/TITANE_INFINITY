@@ -11,6 +11,7 @@
 Les fonctions de zoom (CTRL+Scroll, CTRL+Plus/Moins, CTRL+0) et de fullscreen (F11, F12) étaient implémentées mais **non fonctionnelles** en raison d'une absence dans la **whitelist de sécurité**.
 
 ### Symptômes
+
 - ❌ `[Security] Command "window_zoom_in" not in whitelist`
 - ❌ `[Security] Command "window_zoom_out" not in whitelist`
 - ❌ `[Security] Command "window_set_zoom" not in whitelist`
@@ -47,6 +48,7 @@ Les fonctions de zoom (CTRL+Scroll, CTRL+Plus/Moins, CTRL+0) et de fullscreen (F
 **Fichier:** `src-tauri/src/commands/window_controls_commands.rs`
 
 8 fonctions Rust implémentées:
+
 - ✅ `window_get_zoom()` - Récupère le niveau de zoom actuel
 - ✅ `window_set_zoom(level)` - Définit le niveau de zoom (0.5-5.0)
 - ✅ `window_zoom_in()` - Zoom avant (+0.1)
@@ -77,6 +79,7 @@ commands_v21::window_controls_commands::window_is_fullscreen,
 **Fichier:** `src/hooks/useWindowControls.ts`
 
 Hook React avec gestion complète des événements:
+
 - ✅ Écoute `wheel` (CTRL+Scroll)
 - ✅ Écoute `keydown` (raccourcis clavier)
 - ✅ Gestion des événements `zoom-change` depuis Tauri
@@ -96,21 +99,24 @@ useWindowControls({ enableZoom: true, enableFullscreen: true });
 ## 🎯 FONCTIONNALITÉS DISPONIBLES
 
 ### Zoom
-| Raccourci | Action |
-|-----------|--------|
-| **CTRL + Molette Haut** | Zoom avant (increment +10%) |
-| **CTRL + Molette Bas** | Zoom arrière (decrement -10%) |
-| **CTRL + Plus** (`+` ou `=`) | Zoom avant (increment +10%) |
-| **CTRL + Moins** (`-`) | Zoom arrière (decrement -10%) |
-| **CTRL + 0** | Reset zoom à 100% |
+
+| Raccourci                    | Action                        |
+| ---------------------------- | ----------------------------- |
+| **CTRL + Molette Haut**      | Zoom avant (increment +10%)   |
+| **CTRL + Molette Bas**       | Zoom arrière (decrement -10%) |
+| **CTRL + Plus** (`+` ou `=`) | Zoom avant (increment +10%)   |
+| **CTRL + Moins** (`-`)       | Zoom arrière (decrement -10%) |
+| **CTRL + 0**                 | Reset zoom à 100%             |
 
 ### Fullscreen
-| Raccourci | Action |
-|-----------|--------|
-| **F11** | Basculer plein écran (toggle) |
-| **F12** | DevTools (mode dev uniquement) |
+
+| Raccourci | Action                         |
+| --------- | ------------------------------ |
+| **F11**   | Basculer plein écran (toggle)  |
+| **F12**   | DevTools (mode dev uniquement) |
 
 ### Limites
+
 - **Zoom Min:** 50% (0.5)
 - **Zoom Max:** 500% (5.0)
 - **Incrément:** 10% (0.1) par action
@@ -133,6 +139,7 @@ useWindowControls({ enableZoom: true, enableFullscreen: true });
 ### Tests Manuels
 
 1. **Lancer l'app dev:**
+
    ```bash
    pnpm run dev
    ```
@@ -158,12 +165,14 @@ useWindowControls({ enableZoom: true, enableFullscreen: true });
 ## 🔒 SÉCURITÉ
 
 ### Validation Frontend
+
 - ✅ Whitelist stricte dans `security.ts`
 - ✅ Timeout configurable (10s par défaut)
 - ✅ Validation des payloads
 - ✅ Sanitization des réponses
 
 ### Protection Backend
+
 - ✅ Clamp des valeurs de zoom (0.5-5.0)
 - ✅ Validation des types Rust
 - ✅ Gestion d'erreurs complète
@@ -174,12 +183,15 @@ useWindowControls({ enableZoom: true, enableFullscreen: true });
 ## 📝 NOTES TECHNIQUES
 
 ### Architecture
+
 Le système de zoom utilise une **approche hybride**:
+
 1. **Backend (Rust):** Stocke l'état du zoom dans un HashMap global thread-safe
 2. **Frontend (CSS):** Applique le zoom via CSS `zoom` property
 3. **Communication:** Events Tauri (`zoom-change`) pour synchronisation
 
 ### Pourquoi CSS zoom?
+
 - ✅ Performance: Le zoom CSS est hardware-accelerated
 - ✅ Simplicité: Pas de gestion manuelle du scaling
 - ✅ Compatibilité: Fonctionne avec tous les éléments DOM
@@ -190,13 +202,17 @@ Le système de zoom utilise une **approche hybride**:
 ## 🚀 DÉPLOIEMENT
 
 ### En développement
+
 Les fonctionnalités sont **immédiatement disponibles** après compilation:
+
 ```bash
 pnpm run dev
 ```
 
 ### En production
+
 1. Build Tauri:
+
    ```bash
    pnpm run build
    ```

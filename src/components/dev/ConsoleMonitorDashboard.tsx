@@ -37,7 +37,7 @@ export const ConsoleMonitorDashboard: React.FC = () => {
         : 'text-green-500';
 
   return (
-    <div className="fixed bottom-4 right-4 bg-gray-950 text-white rounded-xl shadow-2xl border-2 border-gray-700 z-50 min-w-[420px] backdrop-blur-sm">
+    <div className="fixed bottom-4 right-4 bg-gray-950 text-white rounded-xl shadow-2xl border-2 border-gray-700 z-50 min-w-105 backdrop-blur-sm">
       {/* Header - Always visible */}
       <div
         className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-800/80 transition-all duration-200 rounded-t-xl"
@@ -144,7 +144,7 @@ export const ConsoleMonitorDashboard: React.FC = () => {
                       </span>
                     </div>
                     <div
-                      className="text-gray-200 font-mono text-xs leading-relaxed break-words"
+                      className="text-gray-200 font-mono text-xs leading-relaxed wrap-break-word"
                       title={entry.message}
                     >
                       {entry.message}

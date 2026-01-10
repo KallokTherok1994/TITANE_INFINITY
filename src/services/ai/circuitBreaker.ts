@@ -52,38 +52,38 @@ export interface CircuitStats {
 
 // v26.4.0: Configuration très tolérante pour éviter les blocages
 export const DEFAULT_CIRCUIT_CONFIG: CircuitBreakerConfig = {
-  failureThreshold: 100,       // Était 5 - beaucoup plus tolérant
-  recoveryTimeoutMs: 5000,     // Était 30000 - recovery plus rapide
-  successThreshold: 1,         // Était 2 - 1 succès suffit
-  failureWindowMs: 300000,     // Était 60000 - fenêtre plus large
-  minimumCalls: 50,            // Était 3 - plus de calls avant évaluation
+  failureThreshold: 100, // Était 5 - beaucoup plus tolérant
+  recoveryTimeoutMs: 5000, // Était 30000 - recovery plus rapide
+  successThreshold: 1, // Était 2 - 1 succès suffit
+  failureWindowMs: 300000, // Était 60000 - fenêtre plus large
+  minimumCalls: 50, // Était 3 - plus de calls avant évaluation
 };
 
 // v26.4.0: Provider-specific configs - TRÈS TOLÉRANT
 export const PROVIDER_CIRCUIT_CONFIGS: Record<string, Partial<CircuitBreakerConfig>> = {
   claude: {
-    failureThreshold: 50,        // Était 3
-    recoveryTimeoutMs: 2000,     // Était 20000
+    failureThreshold: 50, // Était 3
+    recoveryTimeoutMs: 2000, // Était 20000
   },
   openai: {
-    failureThreshold: 50,        // Était 3
-    recoveryTimeoutMs: 2000,     // Était 20000
+    failureThreshold: 50, // Était 3
+    recoveryTimeoutMs: 2000, // Était 20000
   },
   gemini: {
-    failureThreshold: 50,        // Était 4
-    recoveryTimeoutMs: 2000,     // Était 25000
+    failureThreshold: 50, // Était 4
+    recoveryTimeoutMs: 2000, // Était 25000
   },
   'tauri-backend': {
-    failureThreshold: 100,       // Était 5
-    recoveryTimeoutMs: 1000,     // Était 15000
+    failureThreshold: 100, // Était 5
+    recoveryTimeoutMs: 1000, // Était 15000
   },
   ollama: {
-    failureThreshold: 100,       // Était 6
-    recoveryTimeoutMs: 1000,     // Était 10000
+    failureThreshold: 100, // Était 6
+    recoveryTimeoutMs: 1000, // Était 10000
   },
   'titane-local': {
-    failureThreshold: 1000,      // Était 10
-    recoveryTimeoutMs: 500,      // Était 5000
+    failureThreshold: 1000, // Était 10
+    recoveryTimeoutMs: 500, // Était 5000
   },
 };
 

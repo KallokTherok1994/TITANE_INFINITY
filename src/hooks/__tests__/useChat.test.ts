@@ -1,7 +1,7 @@
 /**
  * TITANE∞ v26.2.3+ — Test Suite
  * Tests unitaires pour useChat.ts (KERNEL OMNIS)
- * 
+ *
  * Coverage ciblée:
  * - normalizeMessages
  * - deduplicateMessages
@@ -56,8 +56,8 @@ vi.mock('../useChatMemory', () => ({
 
 vi.mock('@/services/ai/cognitiveKernel', () => ({
   cognitiveKernel: {
-    harmonizeChatMessages: vi.fn((messages) => messages),
-    harmonizeError: vi.fn((error) => ({
+    harmonizeChatMessages: vi.fn(messages => messages),
+    harmonizeError: vi.fn(error => ({
       message: error.message,
       type: 'unknown',
       recovery: 'retry',
@@ -205,7 +205,7 @@ describe('useChat - KERNEL OMNIS Tests', () => {
       });
 
       // Devrait avoir au moins le message utilisateur
-      const userMessage = result.current.messages.find((m) => m.role === 'user');
+      const userMessage = result.current.messages.find(m => m.role === 'user');
       expect(userMessage).toBeDefined();
       expect(userMessage?.content).toBe('Hello TITANE');
     });
@@ -227,11 +227,14 @@ describe('useChat - KERNEL OMNIS Tests', () => {
         await result.current.sendMessage('Test');
       });
 
-      await waitFor(() => {
-        expect(result.current.messages.length).toBeGreaterThanOrEqual(2);
-      }, { timeout: 5000 });
+      await waitFor(
+        () => {
+          expect(result.current.messages.length).toBeGreaterThanOrEqual(2);
+        },
+        { timeout: 5000 }
+      );
 
-      const roles = result.current.messages.map((m) => m.role);
+      const roles = result.current.messages.map(m => m.role);
       expect(roles).toContain('user');
       expect(roles).toContain('assistant');
     });
@@ -265,14 +268,15 @@ describe('useChat - KERNEL OMNIS Tests', () => {
         await result.current.sendMessage('Test response');
       });
 
-      await waitFor(() => {
-        expect(result.current.messages.length).toBeGreaterThan(0);
-      }, { timeout: 5000 });
+      await waitFor(
+        () => {
+          expect(result.current.messages.length).toBeGreaterThan(0);
+        },
+        { timeout: 5000 }
+      );
 
       // Devrait toujours avoir une réponse (soit du mock, soit du fallback)
-      const assistantMessage = result.current.messages.find(
-        (m) => m.role === 'assistant'
-      );
+      const assistantMessage = result.current.messages.find(m => m.role === 'assistant');
       expect(assistantMessage).toBeDefined();
       expect(assistantMessage?.content).toBeTruthy();
     });
@@ -394,9 +398,7 @@ describe('useChat - KERNEL OMNIS Tests', () => {
 
       const stats = result.current.omnisStats;
       expect(stats.pipelineHealth).toBeDefined();
-      expect(['optimal', 'stable', 'degraded', 'error']).toContain(
-        stats.pipelineHealth
-      );
+      expect(['optimal', 'stable', 'degraded', 'error']).toContain(stats.pipelineHealth);
     });
   });
 
@@ -412,14 +414,15 @@ describe('useChat - KERNEL OMNIS Tests', () => {
         await result.current.sendMessage('Test error');
       });
 
-      await waitFor(() => {
-        expect(result.current.isLoading).toBe(false);
-      }, { timeout: 5000 });
+      await waitFor(
+        () => {
+          expect(result.current.isLoading).toBe(false);
+        },
+        { timeout: 5000 }
+      );
 
       // Devrait avoir créé un message de fallback
-      const assistantMessage = result.current.messages.find(
-        (m) => m.role === 'assistant'
-      );
+      const assistantMessage = result.current.messages.find(m => m.role === 'assistant');
       expect(assistantMessage).toBeDefined();
     });
   });
@@ -495,11 +498,9 @@ describe('useChat - Message Normalization', () => {
     });
 
     await waitFor(() => {
-      const uiIds = result.current.messages
-        .map((m) => m.metadata?.uiId)
-        .filter(Boolean);
+      const uiIds = result.current.messages.map(m => m.metadata?.uiId).filter(Boolean);
       const uniqueUiIds = new Set(uiIds);
-      
+
       // Pas de doublons
       expect(uiIds.length).toBe(uniqueUiIds.size);
     });
@@ -518,9 +519,12 @@ describe('useChat - Performance', () => {
       });
     }
 
-    await waitFor(() => {
-      expect(result.current.isLoading).toBe(false);
-    }, { timeout: 10000 });
+    await waitFor(
+      () => {
+        expect(result.current.isLoading).toBe(false);
+      },
+      { timeout: 10000 }
+    );
 
     // Devrait avoir traité tous les messages sans erreur
     expect(result.current.messages.length).toBeGreaterThan(0);

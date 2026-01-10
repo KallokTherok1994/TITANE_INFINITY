@@ -26,7 +26,8 @@ const ICONS: Record<ToastType, string> = {
 };
 
 const TYPE_STYLES: Record<ToastType, string> = {
-  default: 'bg-titanium-bg-overlay border-titanium-border-default text-titanium-text-primary',
+  default:
+    'bg-titanium-bg-overlay border-titanium-border-default text-titanium-text-primary',
   info: 'bg-info-100 border-info-500/30 text-info-700',
   success: 'bg-success-100 border-success-500/30 text-success-700',
   warning: 'bg-warning-100 border-warning-500/30 text-warning-700',

@@ -66,7 +66,11 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({
   // Expose addToast globally for easy access
   useMemo(() => {
     if (typeof window !== 'undefined') {
-      (window as Window & { __titaneToast?: Record<string, (msg: string, dur?: number) => void> }).__titaneToast = {
+      (
+        window as Window & {
+          __titaneToast?: Record<string, (msg: string, dur?: number) => void>;
+        }
+      ).__titaneToast = {
         default: (message: string, duration?: number) =>
           addToast('default', message, duration),
         info: (message: string, duration?: number) => addToast('info', message, duration),
@@ -109,7 +113,9 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({
 // Helper hook for easy toast usage
 export const useToast = () => {
   return useMemo(() => {
-    const w = window as Window & { __titaneToast?: Record<string, (msg: string, dur?: number) => void> };
+    const w = window as Window & {
+      __titaneToast?: Record<string, (msg: string, dur?: number) => void>;
+    };
     if (typeof window !== 'undefined' && w.__titaneToast) {
       return w.__titaneToast;
     }

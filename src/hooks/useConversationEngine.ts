@@ -125,7 +125,11 @@ export function useConversationEngine(
             logger.warn('État critique détecté, auto-réparation en cours...');
           }
         } catch (err) {
-          logger.error('Health check failed:', { module: 'useConversationEngine' }, err instanceof Error ? err : new Error(String(err)));
+          logger.error(
+            'Health check failed:',
+            { module: 'useConversationEngine' },
+            err instanceof Error ? err : new Error(String(err))
+          );
         }
       }, 30000);
     }
@@ -143,7 +147,11 @@ export function useConversationEngine(
       const report = await healthCheck();
       setHealthReport(report);
     } catch (err) {
-      logger.error('Health check error:', { module: 'useConversationEngine' }, err instanceof Error ? err : new Error(String(err)));
+      logger.error(
+        'Health check error:',
+        { module: 'useConversationEngine' },
+        err instanceof Error ? err : new Error(String(err))
+      );
     }
   }, []);
 
@@ -227,7 +235,9 @@ export function useConversationEngine(
         // Retry logic avec backoff exponentiel
         if (retryCount < MAX_RETRIES && errorMessage.includes('network')) {
           const delay = RETRY_DELAY * Math.pow(2, retryCount);
-          logger.warn(`Tentative ${retryCount + 1}/${MAX_RETRIES} échouée, retry dans ${delay}ms`);
+          logger.warn(
+            `Tentative ${retryCount + 1}/${MAX_RETRIES} échouée, retry dans ${delay}ms`
+          );
 
           await new Promise(resolve => setTimeout(resolve, delay));
           isProcessingRef.current = false;
@@ -238,7 +248,11 @@ export function useConversationEngine(
         setError(errorMessage);
         options.onError?.(err as Error);
 
-        logger.error('Erreur finale:', { module: 'useConversationEngine' }, err instanceof Error ? err : new Error(String(err)));
+        logger.error(
+          'Erreur finale:',
+          { module: 'useConversationEngine' },
+          err instanceof Error ? err : new Error(String(err))
+        );
         return null;
       } finally {
         setIsLoading(false);

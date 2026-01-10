@@ -9,6 +9,7 @@
 ## 📦 Composants Installés
 
 ### 1. Cline CLI
+
 - **Version:** 1.0.8
 - **Core Version:** 3.39.2
 - **Plateforme:** Linux x86_64
@@ -16,20 +17,20 @@
 
 ### 2. Hooks Projet (.clinerules/hooks/)
 
-| Hook | Statut | Fonction |
-|------|--------|----------|
-| TaskStart | ✅ | Injection règles projet au démarrage |
-| PreToolUse | ✅ | Blocage déploiements non autorisés |
-| PostToolUse | ✅ | Surveillance performances |
-| UserPromptSubmit | ✅ | Injection contexte selon mots-clés |
+| Hook             | Statut | Fonction                             |
+| ---------------- | ------ | ------------------------------------ |
+| TaskStart        | ✅     | Injection règles projet au démarrage |
+| PreToolUse       | ✅     | Blocage déploiements non autorisés   |
+| PostToolUse      | ✅     | Surveillance performances            |
+| UserPromptSubmit | ✅     | Injection contexte selon mots-clés   |
 
 ### 3. Documentation
 
-| Fichier | Taille | Description |
-|---------|--------|-------------|
-| [CLINE_CLI_INSTALLATION.md](CLINE_CLI_INSTALLATION.md) | 4.9 KB | Guide d'installation complet |
-| [CLINE_QUICKSTART.md](CLINE_QUICKSTART.md) | 5.0 KB | Guide de démarrage rapide |
-| [.clinerules/hooks/README.md](.clinerules/hooks/README.md) | 4.5 KB | Documentation des hooks |
+| Fichier                                                    | Taille | Description                  |
+| ---------------------------------------------------------- | ------ | ---------------------------- |
+| [CLINE_CLI_INSTALLATION.md](CLINE_CLI_INSTALLATION.md)     | 4.9 KB | Guide d'installation complet |
+| [CLINE_QUICKSTART.md](CLINE_QUICKSTART.md)                 | 5.0 KB | Guide de démarrage rapide    |
+| [.clinerules/hooks/README.md](.clinerules/hooks/README.md) | 4.5 KB | Documentation des hooks      |
 
 ### 4. Scripts NPM
 
@@ -50,7 +51,7 @@ Tous les tests ont réussi :
 ✅ Cline CLI installé (v1.0.8)
 ✅ 4/4 hooks exécutables
 ✅ TaskStart: injection règles TITANE∞
-✅ PreToolUse: blocage "npm run build" 
+✅ PreToolUse: blocage "npm run build"
 ✅ PreToolUse: autorisation "npm run dev"
 ✅ UserPromptSubmit: contexte React injecté
 ✅ Répertoire logs créé
@@ -62,6 +63,7 @@ Tous les tests ont réussi :
 ### ❌ Commandes Bloquées Automatiquement
 
 Les hooks bloquent immédiatement :
+
 - `npm run build`
 - `tauri build`
 - `./runtime/stable/build.sh`
@@ -70,6 +72,7 @@ Les hooks bloquent immédiatement :
 - Installations système non autorisées
 
 **Message affiché:**
+
 ```
 ⚠️ VIOLATION CRITIQUE: Tentative de déploiement production non autorisée.
 Le déploiement production nécessite:
@@ -138,6 +141,7 @@ TITANE_INFINITY/
 ### 1. Injection Automatique de Contexte
 
 Quand vous mentionnez:
+
 - "component" ou "React" → Standards React injectés
 - "api" ou "endpoint" → Patterns Tauri injectés
 - "test" → Patterns de test injectés
@@ -172,6 +176,7 @@ Quand vous mentionnez:
 ## ⚙️ Configuration VS Code
 
 Pour utiliser les hooks dans l'extension VS Code Cline:
+
 1. Ouvrir Cline dans VS Code
 2. Aller dans l'onglet "Hooks"
 3. Les hooks apparaissent dans "Project-Specific Hooks"
@@ -180,16 +185,19 @@ Pour utiliser les hooks dans l'extension VS Code Cline:
 ## 🎓 Prochaines Étapes
 
 1. **Lire le guide rapide**
+
    ```bash
    cat CLINE_QUICKSTART.md
    ```
 
 2. **Tester avec une question simple**
+
    ```bash
    cline "Expliquer le système de mémoire TITANE∞" -s hooks_enabled=true
    ```
 
 3. **Monitorer les logs**
+
    ```bash
    npm run cline:logs
    ```
@@ -219,6 +227,7 @@ Pour utiliser les hooks dans l'extension VS Code Cline:
 ## 📞 Support
 
 En cas de problème:
+
 1. Vérifier: `npm run cline:verify`
 2. Logs: `.clinerules/logs/operations.log`
 3. Réinstaller: `npm run cline:install`

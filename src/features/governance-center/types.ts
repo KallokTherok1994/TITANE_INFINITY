@@ -131,7 +131,8 @@ export const KNOWN_SECRETS: {
     key: 'copilot_api_key',
     label: 'GitHub Copilot API Key',
     category: 'api_key',
-    description: 'GitHub Copilot / GitHub Models API (https://github.com/marketplace/models)',
+    description:
+      'GitHub Copilot / GitHub Models API (https://github.com/marketplace/models)',
   },
   {
     key: 'ollama_url',

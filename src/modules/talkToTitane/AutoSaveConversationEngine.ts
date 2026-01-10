@@ -122,9 +122,7 @@ class AutoSaveConversationEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   async initialize(): Promise<void> {
-    logger.debug(
-      'Initializing Auto-Save Conversation Engine v∞...'
-    );
+    logger.debug('Initializing Auto-Save Conversation Engine v∞...');
 
     // Create directories if they don't exist
     await this.ensureDirectories();

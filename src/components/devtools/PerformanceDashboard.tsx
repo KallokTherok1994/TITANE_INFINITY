@@ -7,8 +7,16 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { performanceMonitor, MetricCategory, type MetricStats } from '@/services/ai/performanceMonitor';
-import { performanceAlerts, AlertSeverity, type PerformanceAlert } from '@/services/ai/performanceAlerts';
+import {
+  performanceMonitor,
+  MetricCategory,
+  type MetricStats,
+} from '@/services/ai/performanceMonitor';
+import {
+  performanceAlerts,
+  AlertSeverity,
+  type PerformanceAlert,
+} from '@/services/ai/performanceAlerts';
 
 interface DashboardData {
   aiGeneration?: {
@@ -125,14 +133,21 @@ export function PerformanceDashboard() {
         <div className="flex items-center space-x-4">
           <h2 className="text-2xl font-bold">⚡ Performance Dashboard</h2>
           {healthStatus && (
-            <div className={`px-3 py-1 rounded text-sm font-semibold ${
-              healthStatus.status === 'healthy' ? 'bg-green-600' :
-              healthStatus.status === 'warning' ? 'bg-yellow-600' :
-              'bg-red-600'
-            }`}>
-              {healthStatus.status === 'healthy' ? '✓ Healthy' :
-               healthStatus.status === 'warning' ? '⚠ Warning' :
-               '✗ Critical'} ({healthStatus.score.toFixed(0)}%)
+            <div
+              className={`px-3 py-1 rounded text-sm font-semibold ${
+                healthStatus.status === 'healthy'
+                  ? 'bg-green-600'
+                  : healthStatus.status === 'warning'
+                    ? 'bg-yellow-600'
+                    : 'bg-red-600'
+              }`}
+            >
+              {healthStatus.status === 'healthy'
+                ? '✓ Healthy'
+                : healthStatus.status === 'warning'
+                  ? '⚠ Warning'
+                  : '✗ Critical'}{' '}
+              ({healthStatus.score.toFixed(0)}%)
             </div>
           )}
         </div>
@@ -140,7 +155,9 @@ export function PerformanceDashboard() {
           <button
             onClick={() => setIsAutoRefresh(!isAutoRefresh)}
             className={`px-3 py-2 rounded text-sm ${
-              isAutoRefresh ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-600 hover:bg-gray-700'
+              isAutoRefresh
+                ? 'bg-green-600 hover:bg-green-700'
+                : 'bg-gray-600 hover:bg-gray-700'
             }`}
           >
             {isAutoRefresh ? '⏸ Pause' : '▶ Resume'}
@@ -281,20 +298,30 @@ export function PerformanceDashboard() {
       )}
 
       {/* Health Status Panel */}
-      {healthStatus && healthStatus.status !== 'healthy' && healthStatus.reasons.length > 0 && (
-        <div className={`p-4 rounded-lg ${
-          healthStatus.status === 'critical' ? 'bg-red-900/30 border-2 border-red-600' : 'bg-yellow-900/30 border-2 border-yellow-600'
-        }`}>
-          <h3 className="text-lg font-semibold mb-3">
-            {healthStatus.status === 'critical' ? '🚨 Critical Issues' : '⚠️ Performance Warnings'}
-          </h3>
-          <ul className="space-y-2">
-            {healthStatus.reasons.map((reason, idx) => (
-              <li key={idx} className="text-sm">• {reason}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+      {healthStatus &&
+        healthStatus.status !== 'healthy' &&
+        healthStatus.reasons.length > 0 && (
+          <div
+            className={`p-4 rounded-lg ${
+              healthStatus.status === 'critical'
+                ? 'bg-red-900/30 border-2 border-red-600'
+                : 'bg-yellow-900/30 border-2 border-yellow-600'
+            }`}
+          >
+            <h3 className="text-lg font-semibold mb-3">
+              {healthStatus.status === 'critical'
+                ? '🚨 Critical Issues'
+                : '⚠️ Performance Warnings'}
+            </h3>
+            <ul className="space-y-2">
+              {healthStatus.reasons.map((reason, idx) => (
+                <li key={idx} className="text-sm">
+                  • {reason}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
       {/* Real-time Alerts Panel */}
       <div className="bg-gray-800 p-4 rounded-lg">
@@ -311,7 +338,9 @@ export function PerformanceDashboard() {
             <button
               onClick={toggleAlerts}
               className={`px-3 py-1 rounded text-sm ${
-                alertsEnabled ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-600 hover:bg-gray-700'
+                alertsEnabled
+                  ? 'bg-green-600 hover:bg-green-700'
+                  : 'bg-gray-600 hover:bg-gray-700'
               }`}
             >
               {alertsEnabled ? '🔔 Enabled' : '🔕 Disabled'}
@@ -335,25 +364,30 @@ export function PerformanceDashboard() {
         {showAlerts && (
           <>
             {alerts.length === 0 ? (
-              <p className="text-gray-400 text-sm">No alerts. System running smoothly! ✓</p>
+              <p className="text-gray-400 text-sm">
+                No alerts. System running smoothly! ✓
+              </p>
             ) : (
               <div className="space-y-2 max-h-96 overflow-y-auto">
-                {alerts.map((alert) => (
+                {alerts.map(alert => (
                   <div
                     key={alert.id}
                     className={`p-3 rounded border-l-4 ${
                       alert.severity === AlertSeverity.CRITICAL
                         ? 'bg-red-900/20 border-red-600'
                         : alert.severity === AlertSeverity.WARNING
-                        ? 'bg-yellow-900/20 border-yellow-600'
-                        : 'bg-blue-900/20 border-blue-600'
+                          ? 'bg-yellow-900/20 border-yellow-600'
+                          : 'bg-blue-900/20 border-blue-600'
                     }`}
                   >
                     <div className="flex justify-between items-start mb-1">
                       <span className="font-semibold text-sm">
-                        {alert.severity === AlertSeverity.CRITICAL ? '🚨' :
-                         alert.severity === AlertSeverity.WARNING ? '⚠️' : 'ℹ️'}
-                        {' '}{alert.metricName}
+                        {alert.severity === AlertSeverity.CRITICAL
+                          ? '🚨'
+                          : alert.severity === AlertSeverity.WARNING
+                            ? '⚠️'
+                            : 'ℹ️'}{' '}
+                        {alert.metricName}
                       </span>
                       <span className="text-xs text-gray-400">
                         {new Date(alert.timestamp).toLocaleTimeString()}
@@ -361,7 +395,8 @@ export function PerformanceDashboard() {
                     </div>
                     <p className="text-sm text-gray-300">{alert.message}</p>
                     <div className="mt-2 text-xs text-gray-400">
-                      Value: {alert.value.toFixed(2)} | Threshold: {alert.threshold.toFixed(2)}
+                      Value: {alert.value.toFixed(2)} | Threshold:{' '}
+                      {alert.threshold.toFixed(2)}
                     </div>
                   </div>
                 ))}
@@ -396,7 +431,9 @@ export function PerformanceDashboard() {
                 {performanceMonitor.getTopSlowest(10).map((op, idx) => (
                   <tr key={idx} className="border-b border-gray-700/50">
                     <td className="py-2 px-3 font-mono text-xs">{op.name}</td>
-                    <td className={`text-right py-2 px-3 ${getLatencyColor(op.avgLatency)}`}>
+                    <td
+                      className={`text-right py-2 px-3 ${getLatencyColor(op.avgLatency)}`}
+                    >
                       {formatLatency(op.avgLatency)}
                     </td>
                     <td className={`text-right py-2 px-3 ${getLatencyColor(op.p95)}`}>
@@ -431,7 +468,10 @@ export function PerformanceDashboard() {
               {Object.entries(detailedMetrics)
                 .sort(([a], [b]) => a.localeCompare(b))
                 .map(([name, stats]) => (
-                  <tr key={name} className="border-b border-gray-700/50 hover:bg-gray-750">
+                  <tr
+                    key={name}
+                    className="border-b border-gray-700/50 hover:bg-gray-750"
+                  >
                     <td className="py-2 px-3 font-mono text-xs">{name}</td>
                     <td className="text-right py-2 px-3">{formatNumber(stats.count)}</td>
                     <td className={`text-right py-2 px-3 ${getLatencyColor(stats.avg)}`}>
@@ -444,8 +484,12 @@ export function PerformanceDashboard() {
                     <td className={`text-right py-2 px-3 ${getLatencyColor(stats.p99)}`}>
                       {formatLatency(stats.p99)}
                     </td>
-                    <td className="text-right py-2 px-3 text-green-400">{formatLatency(stats.min)}</td>
-                    <td className="text-right py-2 px-3 text-red-400">{formatLatency(stats.max)}</td>
+                    <td className="text-right py-2 px-3 text-green-400">
+                      {formatLatency(stats.min)}
+                    </td>
+                    <td className="text-right py-2 px-3 text-red-400">
+                      {formatLatency(stats.max)}
+                    </td>
                   </tr>
                 ))}
             </tbody>
@@ -454,12 +498,15 @@ export function PerformanceDashboard() {
       )}
 
       {/* No Data Message */}
-      {Object.keys(dashboardData).length === 0 && Object.keys(detailedMetrics).length === 0 && (
-        <div className="text-center py-12 text-gray-400">
-          <p className="text-lg">No performance data yet.</p>
-          <p className="text-sm mt-2">Metrics will appear as you use the application.</p>
-        </div>
-      )}
+      {Object.keys(dashboardData).length === 0 &&
+        Object.keys(detailedMetrics).length === 0 && (
+          <div className="text-center py-12 text-gray-400">
+            <p className="text-lg">No performance data yet.</p>
+            <p className="text-sm mt-2">
+              Metrics will appear as you use the application.
+            </p>
+          </div>
+        )}
 
       {/* Settings */}
       <div className="bg-gray-800 p-4 rounded-lg">
@@ -469,7 +516,7 @@ export function PerformanceDashboard() {
             <label className="text-sm">Auto-refresh interval (ms):</label>
             <select
               value={refreshInterval}
-              onChange={(e) => setRefreshInterval(Number(e.target.value))}
+              onChange={e => setRefreshInterval(Number(e.target.value))}
               className="px-3 py-1 bg-gray-700 rounded"
             >
               <option value={1000}>1s</option>

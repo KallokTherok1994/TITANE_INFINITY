@@ -772,8 +772,9 @@ class AIOrchestrator {
           `Context truncated: ${history.length} → ${managedHistory.length} messages`,
           {
             originalTokens: contextStats.currentTokens,
-            newTokens: contextWindowManager.getStats(managedHistory, targetModel).currentTokens,
-            strategy: 'RECENT'
+            newTokens: contextWindowManager.getStats(managedHistory, targetModel)
+              .currentTokens,
+            strategy: 'RECENT',
           }
         );
       } else {
@@ -997,13 +998,17 @@ class AIOrchestrator {
             success: true,
             historyLength: history.length,
             managedHistoryLength: managedHistory.length,
-            requestId
+            requestId,
           });
 
-          performanceMonitor.record(`${MetricCategory.AI_PROVIDER}.${providerName}`, providerLatency, {
-            success: true,
-            model: config?.model || 'default'
-          });
+          performanceMonitor.record(
+            `${MetricCategory.AI_PROVIDER}.${providerName}`,
+            providerLatency,
+            {
+              success: true,
+              model: config?.model || 'default',
+            }
+          );
           rateLimiter.recordRequest(providerName, response.tokens || estimatedTokens);
 
           // 📊 METRICS: Enregistrer succès

@@ -1172,7 +1172,7 @@ export const Chat: React.FC = () => {
                   isLoading={isLoading}
                   error={error}
                 />
-                
+
                 {/* ✨ v26.2: OMEGA Reflection Panel v2 - Compact mode by default */}
                 {(thinking.isThinking || thinking.steps.length > 0) && (
                   <ThinkingPanel

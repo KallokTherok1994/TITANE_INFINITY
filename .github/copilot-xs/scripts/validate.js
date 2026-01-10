@@ -29,7 +29,8 @@ const prohibitedAllowRegex = prohibitedAllowRegexRaw
   ? new RegExp(prohibitedAllowRegexRaw)
   : null;
 
-const prohibitedAllowPathRegexRaw = process.env.COPILOT_XS_PROHIBITED_ALLOW_PATH_REGEX ?? '';
+const prohibitedAllowPathRegexRaw =
+  process.env.COPILOT_XS_PROHIBITED_ALLOW_PATH_REGEX ?? '';
 const prohibitedAllowPathRegex = prohibitedAllowPathRegexRaw
   ? new RegExp(prohibitedAllowPathRegexRaw)
   : null;

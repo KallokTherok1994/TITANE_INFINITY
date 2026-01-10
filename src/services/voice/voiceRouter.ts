@@ -188,10 +188,7 @@ class VoiceRouterService {
       );
 
       const responseText = getMessageText(aiResponse);
-      logger.debug(
-        '✅ AI response received:',
-        responseText.substring(0, 60)
-      );
+      logger.debug('✅ AI response received:', responseText.substring(0, 60));
       config.onAIResponse?.(aiResponse);
 
       // ═══ PHASE 2 : EMOTIONAL ANALYSIS ═══

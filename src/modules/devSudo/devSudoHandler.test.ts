@@ -196,7 +196,7 @@ describe('devSudoHandler', () => {
       it('should parse case-insensitive commands', () => {
         const variations = ['fix deps', 'FIX DEPS', 'Fix Deps', 'FiX dEpS'];
 
-        variations.forEach((variant) => {
+        variations.forEach(variant => {
           const result = parseDevSudoCommand(variant);
           expect(result).not.toBeNull();
           expect(result?.action).toBe('fix-deps');
@@ -339,12 +339,7 @@ describe('devSudoHandler', () => {
     });
 
     it('should handle quick commands', async () => {
-      const quickCommands = [
-        'fix deps',
-        'restart',
-        'menu',
-        'fix all',
-      ];
+      const quickCommands = ['fix deps', 'restart', 'menu', 'fix all'];
 
       // Some might not match - that's expected
       for (const cmd of quickCommands) {
@@ -385,7 +380,7 @@ describe('devSudoHandler', () => {
       const endTime = Date.now();
 
       expect(results.length).toBe(10);
-      results.forEach((result) => {
+      results.forEach(result => {
         expect(result.handled).toBe(true);
       });
 

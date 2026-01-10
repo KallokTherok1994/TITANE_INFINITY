@@ -12,6 +12,7 @@
 TITANE∞ v26.2.0 represents an **ambitious cognitive operating system** with 20 unified engines, 280K+ lines of Rust, and 50K+ lines of TypeScript. After comprehensive analysis, the system exhibits both **genuine innovation** and **significant complexity debt**.
 
 ### Headline Metrics
+
 - **Grade:** B+ (85/100) - Production-capable with technical debt
 - **Innovation Score:** A (92/100) - Genuinely novel cognitive architecture
 - **Complexity Risk:** C+ (72/100) - Over-engineered in critical areas
@@ -19,7 +20,9 @@ TITANE∞ v26.2.0 represents an **ambitious cognitive operating system** with 20
 - **Maintenance Burden:** C (70/100) - High cognitive load for developers
 
 ### Critical Finding
+
 **The "Cognitive OS" concept is well-implemented architecturally, but undermined by:**
+
 1. Excessive abstraction layers (20 engines may be 8-10 too many)
 2. Incomplete migrations (deprecated systems still active)
 3. Missing CI/CD (quality maintained through manual discipline)
@@ -33,6 +36,7 @@ TITANE∞ v26.2.0 represents an **ambitious cognitive operating system** with 20
 ### 1.1 The 20 Unified Engines: Innovation or Over-Engineering?
 
 **Inventory of Engines Found:**
+
 ```
 Core Cognitive (5):
 1. conversation_engine    - Conversational AI orchestration
@@ -68,6 +72,7 @@ Specialized (4):
 **Analysis:**
 
 ✅ **Genuinely Necessary (12 engines):**
+
 - memory_os: Multi-tiered memory with HNSW vector search is core differentiator
 - conversation_engine: French literary mastery, emotional subtlety is unique
 - identity: Mode system, personality matrix is essential for "cognitive" OS
@@ -82,6 +87,7 @@ Specialized (4):
 - cognitive_learning: Reinforcement learning adds value
 
 ⚠️ **Questionable Value (5 engines):**
+
 - cycle_engine: Could be merged into temporal_engine (90% overlap)
 - hyper_evolution: Could be evolution_engine Phase 2 (same domain)
 - harmonic_os: 2 files (mod.rs, dissonance_detector.rs) - overabstracted
@@ -89,11 +95,13 @@ Specialized (4):
 - creation: Could be conversation_engine creative mode
 
 🔴 **Over-Engineering (3 engines):**
+
 - engine (generic): Health/repair duplicates singularity_fusion functionality
 - avatar: 15 files for visual representation - could be identity subsystem
 - meta_orchestrator: Priority scheduler duplicates kernel scheduler
 
 **Recommendation:** Consolidate to **12-14 core engines** (33% reduction)
+
 - Merge: cycle_engine → temporal_engine
 - Merge: hyper_evolution → evolution (phases)
 - Merge: harmonic_os → cognitive_learning (coherence module)
@@ -122,6 +130,7 @@ pub struct SingularityState {
 ```
 
 ✅ **Strengths:**
+
 1. **Clean abstraction:** 5-layer model is conceptually elegant
 2. **Cognitive coherence:** `global_coherence()` method provides system-wide health metric
 3. **Event-driven sync:** `EventSyncLayer` enables Rust ↔ React communication
@@ -129,6 +138,7 @@ pub struct SingularityState {
 5. **Meta-cognition integration:** Self-awareness through introspection
 
 ⚠️ **Weaknesses:**
+
 1. **Synchronization overhead:** Every layer update triggers 5-layer recomputation
 2. **Clone-heavy:** 2,819 `.clone()` calls across 494 files (performance impact unclear)
 3. **Duplicate state:** Singularity state vs. per-engine state (who is source of truth?)
@@ -136,6 +146,7 @@ pub struct SingularityState {
 5. **Signature generation cost:** `generate_signature()` on every update (cryptographic overhead?)
 
 **Critical Issue:**
+
 ```rust
 // From CORRECTION_LOGS_CONSOLE_2026-01-04.md:
 // singularity_get_state - NON TROUVÉE
@@ -143,11 +154,13 @@ pub struct SingularityState {
 ```
 
 **The centerpiece of the architecture has no registered Tauri command?** This suggests:
+
 - Singularity state is conceptually complete but operationally disconnected
 - Frontend maintains its own state copy (defeats purpose of unified backend state)
 - Integration incomplete despite being "v14+ legacy, opérationnel depuis nov 2025"
 
 **Recommendation:**
+
 1. **Immediate (P0):** Register `singularity_get_state` in main.rs invoke_handler
 2. **Short-term (P1):** Performance profiling of clone overhead (use `Arc` where appropriate)
 3. **Medium-term (P2):** Re-enable SingularityBridge or document why it's disabled
@@ -159,9 +172,11 @@ pub struct SingularityState {
 
 **Reality Check:**
 From AUDIT_SECURITE_APPROFONDI_2026-01-03.md:
+
 > **Status:** ✅ ACCEPTABLE - Contrairement à l'estimation initiale (1002), seules 37 permissions sont dans main-capability
 
 **Actual Numbers:**
+
 - **37 active permissions** in tauri.conf.json (NOT 1,002)
 - **196 invoke calls** registered in src-tauri/src/main.rs
 - **1,248 total commands** defined across codebase (many internal/unused)
@@ -169,15 +184,18 @@ From AUDIT_SECURITE_APPROFONDI_2026-01-03.md:
 **Analysis:**
 
 ✅ **Permission model is reasonable:**
+
 - 37 frontend-accessible commands is manageable
 - Initial estimate of 1,002 was counting internal functions, not exposed permissions
 
 ⚠️ **Command sprawl:**
+
 - 196 registered vs. 37 used = **81% waste**
 - Many commands registered but never called from frontend
 - No automated testing to detect dead commands
 
 **Evidence from logs (CORRECTION_LOGS_CONSOLE_2026-01-04.md):**
+
 ```
 get_runtime_config        - Exists but NOT registered
 get_permission_audit      - Exists but NOT registered
@@ -186,6 +204,7 @@ tts_speak                 - Registered but INVALID signature
 ```
 
 **Root Cause:** Organic growth without architectural governance
+
 - Commands added reactively as features developed
 - No command registry centralization
 - No deprecation policy (old commands linger indefinitely)
@@ -193,11 +212,13 @@ tts_speak                 - Registered but INVALID signature
 **Recommendation:**
 
 **Phase 1: Command Audit (2 weeks)**
+
 1. Generate command usage map (frontend calls → backend handlers)
 2. Tag commands: [ACTIVE | DEPRECATED | DEAD]
 3. Remove DEAD commands (estimated 80-100 commands)
 
 **Phase 2: Command Registry (3 weeks)**
+
 ```rust
 // src-tauri/src/commands/registry.rs
 pub struct CommandRegistry {
@@ -214,6 +235,7 @@ pub struct CommandMeta {
 ```
 
 **Phase 3: Automated Testing (2 weeks)**
+
 - Generate integration tests from CommandRegistry
 - Detect signature mismatches (like `tts_speak`)
 - Alert on unused commands (usage_count = 0 after 30 days)
@@ -223,6 +245,7 @@ pub struct CommandMeta {
 ### 1.4 Code Splitting Strategy: 104 Chunks vs Typical 20-30
 
 **Findings:**
+
 - **104 chunks** in dist/assets (TypeScript build)
 - **9.3MB** total dist size
 - **173 code-split chunks** mentioned in previous audits (Rust + TS combined?)
@@ -230,6 +253,7 @@ pub struct CommandMeta {
 **Analysis:**
 
 From vite.config.ts:
+
 ```typescript
 visualizer({
   open: false,
@@ -242,6 +266,7 @@ visualizer({
 Bundle analysis is configured but stats.html not reviewed recently.
 
 **Questions:**
+
 1. Are 104 chunks optimal or over-split?
    - **Over-split** if each chunk < 10KB (HTTP/2 overhead)
    - **Optimal** if chunks 50-200KB (cache granularity vs. latency)
@@ -257,17 +282,20 @@ Bundle analysis is configured but stats.html not reviewed recently.
 **Recommendation:**
 
 **Immediate (P1):** Run bundle analyzer (stats.html exists but not reviewed)
+
 ```bash
 pnpm build
 open dist/stats.html
 ```
 
 **Analyze:**
+
 - Largest chunks (should be vendor code: React, Framer Motion, Three.js)
 - Smallest chunks (candidates for merging)
 - Route-based splitting (each page should be separate chunk)
 
 **Target:**
+
 - **Main bundle:** < 500KB (critical path)
 - **Vendor bundle:** 2-3MB (cached long-term)
 - **Route chunks:** 50-200KB each (lazy-loaded)
@@ -300,15 +328,18 @@ src-tauri/src/core/* (core primitives)
 **Analysis:**
 
 ✅ **Appropriate for:**
+
 - Security boundaries (Tauri IPC inherently sandboxed)
 - Type conversion (TypeScript ↔ Rust)
 - Error translation (TauriError → UserFacingError)
 
 ⚠️ **Excessive for:**
+
 - Simple getters (e.g., `get_config()` doesn't need API + Engine layers)
 - Pure computations (could be inline in command handler)
 
 **Example of Over-Abstraction:**
+
 ```rust
 // commands/system_health_commands.rs
 #[tauri::command]
@@ -330,6 +361,7 @@ pub async fn get_state() -> Result<HealthState> {
 **3 layers of indirection for a simple getter.**
 
 **Better Pattern:**
+
 ```rust
 #[tauri::command]
 pub async fn get_system_health() -> Result<HealthState> {
@@ -340,10 +372,12 @@ pub async fn get_system_health() -> Result<HealthState> {
 **Recommendation:**
 
 **Short-term (P2):** Audit top 20 most-called commands
+
 - Flatten unnecessary layers (remove API layer for simple getters)
 - Keep layers for complex operations (authentication, validation, transformation)
 
 **Long-term (P3):** Architectural principle
+
 - **Rule:** Max 3 layers (Command → Engine → Core)
 - **Exception:** Security/validation requires 4th layer
 
@@ -360,6 +394,7 @@ pub async fn get_system_health() -> Result<HealthState> {
 **Evidence of OS-like Patterns:**
 
 ✅ **Kernel:**
+
 ```rust
 // src-tauri/src/kernel/core_loop.rs
 pub async fn run_kernel_loop(state: Arc<KernelState>) {
@@ -371,9 +406,11 @@ pub async fn run_kernel_loop(state: Arc<KernelState>) {
     }
 }
 ```
+
 - **Verdict:** Genuine OS-style event loop with scheduler
 
 ✅ **Memory Management:**
+
 ```rust
 // src-tauri/src/memory_os/core.rs
 pub struct MemoryOS {
@@ -382,9 +419,11 @@ pub struct MemoryOS {
     ltm: LongTermMemory,     // Persistent memory (SQLite + HNSW)
 }
 ```
+
 - **Verdict:** 3-tier memory hierarchy mirrors CPU cache (L1/L2/L3)
 
 ✅ **Process Scheduling:**
+
 ```rust
 // src-tauri/src/meta_orchestrator/priority_scheduler.rs
 pub fn schedule_task(task: Task) {
@@ -395,9 +434,11 @@ pub fn schedule_task(task: Task) {
     }
 }
 ```
+
 - **Verdict:** Priority-based scheduling like Linux CFS
 
 ✅ **Inter-Process Communication:**
+
 - Tauri IPC = System calls
 - Event-driven messaging = Signals
 - State synchronization = Shared memory
@@ -405,16 +446,19 @@ pub fn schedule_task(task: Task) {
 **Weaknesses:**
 
 ⚠️ **No Resource Isolation:**
+
 - Traditional OS: Processes can't crash each other
 - TITANE: All engines share same Rust process (one panic = crash)
 - **Missing:** Engine sandboxing (each engine in separate thread with panic handlers)
 
 ⚠️ **No Resource Limits:**
+
 - Traditional OS: CPU/memory quotas per process
 - TITANE: No limits on memory consumption per engine
 - **Missing:** Resource governor (max memory per engine, CPU time slicing)
 
 ⚠️ **No Filesystem Abstraction:**
+
 - Traditional OS: Virtual filesystem (mount points, permissions)
 - TITANE: Direct SQLite + file I/O
 - **Missing:** Virtual memory storage (engines shouldn't know about SQLite vs. Postgres)
@@ -424,6 +468,7 @@ pub fn schedule_task(task: Task) {
 **Recommendation:**
 
 **Phase 1: Sandboxing (4 weeks)**
+
 ```rust
 pub struct EngineContainer {
     engine: Box<dyn Engine>,
@@ -449,6 +494,7 @@ impl EngineContainer {
 ```
 
 **Phase 2: Resource Governor (3 weeks)**
+
 - Integrate with meta_orchestrator
 - Track memory per engine (jemalloc profiling)
 - Implement CPU time limits (tokio task budgets)
@@ -460,6 +506,7 @@ impl EngineContainer {
 **Coordination Mechanisms Found:**
 
 **1. Singularity State (Global Sync):**
+
 ```rust
 pub async fn singularity_deep_sync(&mut self) -> Result<MetaCognitiveReport> {
     // Synchronizes all engines via shared state
@@ -468,10 +515,12 @@ pub async fn singularity_deep_sync(&mut self) -> Result<MetaCognitiveReport> {
     DEEP_SYNC_ENGINE.sync_all_engines();
 }
 ```
+
 - **Mechanism:** Centralized state with periodic sync
 - **Weakness:** Disabled/incomplete (see logs)
 
 **2. OMEGA Pipeline (AI Routing):**
+
 ```rust
 // src-tauri/src/omega/pipeline.rs
 pub async fn execute_pipeline(request: Request) -> Response {
@@ -481,31 +530,37 @@ pub async fn execute_pipeline(request: Request) -> Response {
     merger::merge_results(results)
 }
 ```
+
 - **Mechanism:** Map-reduce style AI orchestration
 - **Coverage:** AI-related engines only (chat, memory, conversation)
 
 **3. Event Bus (Implicit):**
+
 ```rust
 // No central event bus found, but events scattered:
 // - omega/events.rs
 // - kernel/signals.rs
 // - temporal_engine/temporal_events.rs
 ```
+
 - **Mechanism:** Decentralized events per subsystem
 - **Weakness:** No unified pub/sub for cross-engine communication
 
 **4. Direct Function Calls:**
+
 ```rust
 // Most common pattern (found in 80%+ of inter-engine calls):
 let memory_result = memory_os::store(data).await;
 let cognitive_state = cognitive::analyze(memory_result).await;
 ```
+
 - **Mechanism:** Direct coupling via function imports
 - **Weakness:** Tight coupling (changing one engine breaks others)
 
 **Analysis:**
 
 🔴 **Critical Gap:** No unified orchestration layer
+
 - Engines coordinate ad-hoc via direct calls
 - Singularity state is intended orchestrator but incomplete
 - OMEGA pipeline only handles AI subset
@@ -513,6 +568,7 @@ let cognitive_state = cognitive::analyze(memory_result).await;
 **Recommendation:**
 
 **Design: Unified Event Bus (6 weeks)**
+
 ```rust
 // src-tauri/src/bus/mod.rs
 pub struct EventBus {
@@ -538,6 +594,7 @@ impl EventBus {
 ```
 
 **Benefits:**
+
 - **Decoupling:** Engines don't import each other directly
 - **Debugging:** All inter-engine communication logged
 - **Evolution:** New engines subscribe to existing events (no code changes to publishers)
@@ -547,6 +604,7 @@ impl EventBus {
 ### 2.3 True Cognitive Emergence vs. Layered Complexity?
 
 **Defining Emergence:**
+
 > Emergent behavior: System exhibits properties not present in individual components
 
 **Testing for Emergence:**
@@ -554,7 +612,9 @@ impl EventBus {
 **Test 1: Does TITANE exhibit behaviors not programmed explicitly?**
 
 ✅ **Evidence of Emergence:**
+
 1. **Meta-cognition:** System reflects on its own state
+
    ```rust
    // cognitive_learning/reinforcement_loop.rs
    pub fn learn_from_interaction(feedback: Feedback) {
@@ -563,9 +623,11 @@ impl EventBus {
        adjust_behavior_weights(pattern);
    }
    ```
+
    - Not just following rules; adapting rules based on experience
 
 2. **Temporal anticipation:**
+
    ```rust
    // temporal_engine/anticipator.rs
    pub fn predict_next_action(context: Context) -> Action {
@@ -574,6 +636,7 @@ impl EventBus {
        sample_action(probabilities)
    }
    ```
+
    - Predicting user behavior from patterns (not hardcoded responses)
 
 3. **Harmonic regulation:**
@@ -584,9 +647,11 @@ impl EventBus {
        apply_corrections(dissonances);
    }
    ```
+
    - Self-correcting system balance (emergent homeostasis)
 
 ⚠️ **Evidence of Complexity Layering:**
+
 1. **Doc engine:** 9 specialized document generators (legal, technical, editorial)
    - Not emergence; just feature accumulation
 2. **Avatar fullbody:** 15 files for visual representation
@@ -597,6 +662,7 @@ impl EventBus {
 **Test 2: Could you remove engines without losing emergent properties?**
 
 **Hypothetical:**
+
 - Remove `harmonic_os` → System still coherent (singularity_fusion handles)
 - Remove `cycle_engine` → System still rhythmic (temporal_engine handles)
 - Remove `doc_engine` → No impact on cognition
@@ -606,10 +672,12 @@ impl EventBus {
 **Verdict:** **60% True Emergence / 40% Layered Complexity**
 
 **Genuine Cognitive Architecture:**
+
 - memory_os + cognitive_learning + temporal_engine + conversation_engine = Emergent intelligence
 - These 4 engines create feedback loops that produce non-programmed behaviors
 
 **Feature Accumulation:**
+
 - doc_engine, avatar, cycle_engine = Nice-to-have features, not cognitive core
 
 **Recommendation:**
@@ -617,20 +685,25 @@ impl EventBus {
 **Strategy: Identify and Isolate Cognitive Core**
 
 **Tier 1 - Cognitive Core (Cannot Remove):**
+
 - memory_os, cognitive_learning, conversation_engine, temporal_engine, identity, kernel
 
 **Tier 2 - Cognitive Enhancement (Can Degrade Gracefully):**
+
 - evolution, neuro_symbolic, singularity_fusion, performance
 
 **Tier 3 - Feature Layer (Can Disable):**
+
 - doc_engine, avatar, cycle_engine, harmonic_os, creation
 
 **Architectural Principle:**
+
 - Tier 1 engines required for boot
 - Tier 2 engines load after boot (system degraded but functional if missing)
 - Tier 3 engines optional (feature flags)
 
 **Implementation:**
+
 ```rust
 // src-tauri/src/kernel/boot_orchestrator.rs
 pub async fn boot() -> Result<SystemState> {
@@ -659,11 +732,13 @@ pub async fn boot() -> Result<SystemState> {
 ### 3.1 1,440 Unwrap/Expect Calls: Time Bomb or Acceptable?
 
 **Findings:**
+
 - **1,440 occurrences** across 241 Rust files
 - **Average:** 5.97 unwrap/expect per file
 - **Highest concentration:** memory_os (ltm.rs: 24), identity (identity_matrix.rs: 30)
 
 **Rust Community Standards:**
+
 - **Production code:** 0 unwrap/expect in hot paths
 - **Prototypes/tools:** Unwrap acceptable
 - **Desktop apps:** Expect with messages acceptable (user-facing error dialogs)
@@ -671,32 +746,39 @@ pub async fn boot() -> Result<SystemState> {
 **Risk Assessment:**
 
 🔴 **Critical Paths (Must Fix):**
+
 ```rust
 // memory_os/ltm.rs - Line 24 unwrap calls in persistent storage
 let data = db.query("SELECT * FROM memories").unwrap();  // DB query can fail!
 ```
+
 - **Impact:** Panic → data loss
 - **Probability:** Medium (DB corruption, disk full)
 - **Priority:** P0
 
 🟡 **UI Paths (Should Fix):**
+
 ```rust
 // avatar/appearance_commands.rs - 41 unwrap calls
 let texture = load_texture(path).unwrap();  // File I/O can fail
 ```
+
 - **Impact:** Panic → app crash → bad UX
 - **Probability:** Low (asset files bundled, rarely missing)
 - **Priority:** P1
 
 ✅ **Internal APIs (Acceptable):**
+
 ```rust
 // tests/*
 let result = function_under_test().unwrap();
 ```
+
 - **Impact:** Test failure (expected)
 - **Priority:** P3 (document why unwrap is safe)
 
 **Distribution Analysis Needed:**
+
 ```bash
 # Group unwrap/expect by risk category
 grep -rn "unwrap()\|expect(" src-tauri/src --include="*.rs" \
@@ -708,10 +790,12 @@ grep -rn "unwrap()\|expect(" src-tauri/src --include="*.rs" \
 **Recommendation:**
 
 **Phase 1: Triage (2 weeks)**
+
 1. Categorize 1,440 calls: [CRITICAL_PATH | UI_PATH | INTERNAL | TEST]
 2. Estimate: 200 critical, 400 UI, 600 internal, 240 test
 
 **Phase 2: Fix Critical (6 weeks)**
+
 ```rust
 // BEFORE
 let data = db.query("SELECT ...").unwrap();
@@ -726,6 +810,7 @@ let data = db.query("SELECT ...")
 ```
 
 **Phase 3: Automated Detection (1 week)**
+
 ```toml
 # Cargo.toml
 [lints.rust]
@@ -734,6 +819,7 @@ expect_used = "warn"
 ```
 
 **Phase 4: Gradual Migration (12 weeks)**
+
 - Convert 50 unwrap/week
 - Target: < 200 unwrap total (86% reduction)
 - Remaining unwrap: Documented with SAFETY comments
@@ -747,6 +833,7 @@ expect_used = "warn"
 **Hypothesis: Strict Mode Not Enabled**
 
 From package.json:
+
 ```json
 "check": "tsc --noEmit"
 ```
@@ -754,6 +841,7 @@ From package.json:
 **Missing:** `"strict": true` in tsconfig.json
 
 **Recommended Investigation:**
+
 ```bash
 # Check current TypeScript config
 cat tsconfig.json | grep strict
@@ -766,44 +854,51 @@ wc -l typescript-errors.log
 **Common TypeScript Error Categories (Based on Similar Projects):**
 
 1. **Implicit any (40%):**
+
    ```typescript
-   function process(data) {  // Missing: data: unknown
-       return data.value;
+   function process(data) {
+     // Missing: data: unknown
+     return data.value;
    }
    ```
 
 2. **Null/undefined checks (30%):**
+
    ```typescript
-   const value = obj.property.nested;  // obj.property might be undefined
+   const value = obj.property.nested; // obj.property might be undefined
    ```
 
 3. **Type assertions (20%):**
+
    ```typescript
-   const result = apiCall() as MyType;  // Unsafe cast
+   const result = apiCall() as MyType; // Unsafe cast
    ```
 
 4. **Missing return types (10%):**
    ```typescript
-   async function fetchData() {  // Missing: Promise<Data>
-       // ...
+   async function fetchData() {
+     // Missing: Promise<Data>
+     // ...
    }
    ```
 
 **Recommendation:**
 
 **Phase 1: Baseline (1 week)**
+
 ```json
 // tsconfig.json
 {
   "compilerOptions": {
-    "strict": false,  // Current state
-    "noImplicitAny": true,  // Enable first strict check
-    "strictNullChecks": false,  // Keep disabled for now
+    "strict": false, // Current state
+    "noImplicitAny": true, // Enable first strict check
+    "strictNullChecks": false // Keep disabled for now
   }
 }
 ```
 
 **Phase 2: Incremental Strictness (8 weeks)**
+
 ```json
 // Week 2-3: Fix implicit any
 "noImplicitAny": true
@@ -819,6 +914,7 @@ wc -l typescript-errors.log
 ```
 
 **Phase 3: Automated Migration (use TypeScript codemod)**
+
 ```bash
 npx ts-migrate src/
 ```
@@ -828,6 +924,7 @@ npx ts-migrate src/
 ### 3.3 Deprecated Modules: Migration Completion Estimate
 
 **Findings:**
+
 ```
 memory v1 → v2 migration incomplete
 ModuleHealth → ModuleHealthInfo (type alias, but original still used)
@@ -836,6 +933,7 @@ omega/context_v2.rs: #![allow(deprecated)]
 ```
 
 **Evidence of Migration Fatigue:**
+
 - `#![allow(deprecated)]` = "We know it's deprecated, we'll fix it later"
 - v1 modules still exist alongside v2
 
@@ -872,12 +970,14 @@ find src-tauri/src -name "*_v2.rs" -o -name "*_v1.rs"
 **Recommendation:**
 
 **Policy: Deprecation Timeline**
+
 ```rust
 #[deprecated(since = "26.3.0", note = "Use UnifiedMemoryV2. Will be removed in 27.0.0")]
 pub struct UnifiedMemory { /* ... */ }
 ```
 
 **Enforcement:**
+
 1. **Warning period:** 2 versions (e.g., 26.2 → 26.4)
 2. **Removal:** Major version bump (27.0)
 3. **No `#![allow(deprecated)]`** - Forces migration
@@ -887,6 +987,7 @@ pub struct UnifiedMemory { /* ... */ }
 ### 3.4 Dead Code Allowed Globally: Impact on Bundle Size
 
 **Finding:**
+
 ```rust
 // src-tauri/src/main.rs (line 11)
 #![allow(dead_code)]
@@ -895,12 +996,14 @@ pub struct UnifiedMemory { /* ... */ }
 **Impact:**
 
 **Rust (Backend):**
+
 - Dead code in Rust is eliminated by compiler (`--release` mode)
 - `#![allow(dead_code)]` only suppresses warnings
 - **Bundle size impact:** Near zero (dead code not included in binary)
 - **Developer impact:** High (warnings provide valuable signal)
 
 **TypeScript (Frontend):**
+
 - Tree-shaking eliminates unused exports
 - But requires ES modules and proper `sideEffects: false`
 - **Actual impact:** Unknown without bundle analysis
@@ -908,6 +1011,7 @@ pub struct UnifiedMemory { /* ... */ }
 **Recommendation:**
 
 **Phase 1: Remove Global Allow (1 week)**
+
 ```rust
 // Remove: #![allow(dead_code)]
 // Add per-module:
@@ -916,6 +1020,7 @@ pub struct UnifiedMemory { /* ... */ }
 ```
 
 **Phase 2: Dead Code Audit (2 weeks)**
+
 ```bash
 # Rust
 cargo +nightly udeps  # Finds unused dependencies
@@ -926,6 +1031,7 @@ npx ts-prune  # Finds unused exports
 ```
 
 **Phase 3: Removal (4 weeks)**
+
 - Estimate: 10-15% of code is dead
 - **Rust:** ~28K lines
 - **TypeScript:** ~7K lines
@@ -937,6 +1043,7 @@ npx ts-prune  # Finds unused exports
 ### 3.5 Large Files: Refactoring Priority Analysis
 
 **Largest Files Found:**
+
 ```
 src-tauri/src/omega/executor.rs (2000+ lines, estimated)
 src-tauri/src/conversation_engine/french_mastery.rs (1500+ lines, estimated)
@@ -948,6 +1055,7 @@ src-tauri/src/overdrive/chat_orchestrator.rs (42 clones, high complexity)
 **Analysis:**
 
 **Size Thresholds:**
+
 - **< 300 lines:** Ideal
 - **300-600 lines:** Acceptable (single responsibility)
 - **600-1000 lines:** Refactor recommended
@@ -955,17 +1063,18 @@ src-tauri/src/overdrive/chat_orchestrator.rs (42 clones, high complexity)
 
 **Priority Matrix:**
 
-| File | Size | Complexity | Change Frequency | Priority |
-|------|------|------------|------------------|----------|
-| executor.rs | 2000+ | High | Medium | P0 |
-| french_mastery.rs | 1500+ | Medium | Low | P2 |
-| ltm.rs | 1200+ | High | High | P0 |
-| identity_matrix.rs | 1000+ | Medium | Medium | P1 |
-| chat_orchestrator.rs | 800+ | High | High | P0 |
+| File                 | Size  | Complexity | Change Frequency | Priority |
+| -------------------- | ----- | ---------- | ---------------- | -------- |
+| executor.rs          | 2000+ | High       | Medium           | P0       |
+| french_mastery.rs    | 1500+ | Medium     | Low              | P2       |
+| ltm.rs               | 1200+ | High       | High             | P0       |
+| identity_matrix.rs   | 1000+ | Medium     | Medium           | P1       |
+| chat_orchestrator.rs | 800+  | High       | High             | P0       |
 
 **Refactoring Strategy:**
 
 **Example: executor.rs (2000 lines)**
+
 ```
 BEFORE:
 executor.rs (2000 lines)
@@ -989,6 +1098,7 @@ executor/
 **Recommendation:**
 
 **Phase 1: Automated Split (3 weeks)**
+
 ```bash
 # Use Rust refactoring tool
 cargo install rust-refactor
@@ -996,12 +1106,14 @@ rust-refactor --split-by-function executor.rs
 ```
 
 **Phase 2: Manual Cleanup (2 weeks per file)**
+
 - Identify logical modules within large file
 - Extract to separate files
 - Preserve tests
 - Update imports
 
 **Phase 3: Validation (1 week per file)**
+
 - Run full test suite
 - Benchmark performance (ensure no regression)
 - Code review
@@ -1015,6 +1127,7 @@ rust-refactor --split-by-function executor.rs
 ### 4.1 CSP Too Permissive: How Did This Happen?
 
 **Finding (from runtime/dev/tauri.conf.json):**
+
 ```json
 "security": {
   "csp": null  // Completely disabled!
@@ -1024,17 +1137,20 @@ rust-refactor --split-by-function executor.rs
 **Historical Analysis:**
 
 **Root Cause Hypothesis:**
+
 1. **Development Friction:** CSP blocked Vite HMR (Hot Module Replacement)
 2. **React/Vite Compatibility:** Default CSP breaks `eval()` used by dev tools
 3. **Temporary Workaround:** "Let's disable CSP just for development..."
 4. **Configuration Drift:** Dev config became template for production config
 
 **Evidence:**
+
 - File is `runtime/dev/tauri.conf.json` (development config)
 - Comment: "TITANE∞ Dev Runtime - Development environment with full debugging"
 - **Assumption:** Production config is stricter (need to verify)
 
 **Verification Needed:**
+
 ```bash
 # Check production config
 cat runtime/production/tauri.conf.json | grep -A 5 "security"
@@ -1043,24 +1159,26 @@ cat tauri.conf.json | grep -A 5 "security"  # If exists
 ```
 
 **Recommended CSP for Tauri App:**
+
 ```json
 {
   "security": {
     "csp": {
       "default-src": "'self'",
-      "script-src": ["'self'", "'unsafe-inline'"],  // React needs inline scripts
-      "style-src": ["'self'", "'unsafe-inline'"],   // Styled-components
+      "script-src": ["'self'", "'unsafe-inline'"], // React needs inline scripts
+      "style-src": ["'self'", "'unsafe-inline'"], // Styled-components
       "img-src": ["'self'", "data:", "blob:"],
       "connect-src": ["'self'", "tauri://localhost"],
       "font-src": ["'self'", "data:"],
       "worker-src": ["'self'", "blob:"]
     },
-    "dangerousDisableAssetCspModification": false  // CRITICAL
+    "dangerousDisableAssetCspModification": false // CRITICAL
   }
 }
 ```
 
 **Why `dangerousDisableAssetCspModification`?**
+
 - Found in codebase (mentioned in audits)
 - Disables CSP for bundled assets (fonts, images)
 - **Needed for:** Custom fonts, Three.js textures, avatar assets
@@ -1069,16 +1187,18 @@ cat tauri.conf.json | grep -A 5 "security"  # If exists
 **Recommendation:**
 
 **Phase 1: Production Verification (1 day)**
+
 - Confirm production config has CSP enabled
 - If not: **P0 BLOCKER** (cannot deploy without CSP)
 
 **Phase 2: Development CSP (1 week)**
+
 ```json
 // runtime/dev/tauri.conf.json
 {
   "security": {
     "csp": {
-      "default-src": "'self' 'unsafe-eval' 'unsafe-inline'",  // Permissive for dev
+      "default-src": "'self' 'unsafe-eval' 'unsafe-inline'" // Permissive for dev
       // But still blocks external resources
     }
   }
@@ -1086,10 +1206,11 @@ cat tauri.conf.json | grep -A 5 "security"  # If exists
 ```
 
 **Phase 3: CSP Reporting (2 weeks)**
+
 ```json
 {
   "csp": {
-    "report-uri": "/api/csp-report",  // Log violations
+    "report-uri": "/api/csp-report", // Log violations
     "report-to": "csp-endpoint"
   }
 }
@@ -1100,6 +1221,7 @@ cat tauri.conf.json | grep -A 5 "security"  # If exists
 ### 4.2 API Keys in Memory Without Zeroize: Architectural Oversight?
 
 **Finding:**
+
 ```rust
 // src-tauri/src/ai/gemini.rs
 pub struct GeminiClient {
@@ -1151,10 +1273,12 @@ pub struct GeminiClient {
 **Analysis:**
 
 **Severity:** Medium-High
+
 - **Likelihood:** Low (requires system access or crash dump)
 - **Impact:** Critical (API key compromise → $$ billing, data breach)
 
 **Broader Pattern:**
+
 ```bash
 grep -rn "api_key: String" src-tauri/src --include="*.rs"
 # Found in: gemini.rs, openai.rs, anthropic.rs, copilot.rs
@@ -1165,16 +1289,19 @@ grep -rn "api_key: String" src-tauri/src --include="*.rs"
 **Recommendation:**
 
 **Phase 1: SecureString Implementation (1 week)**
+
 - Add `zeroize` dependency
 - Implement SecureString wrapper
 - Add tests (verify memory is zeroed)
 
 **Phase 2: Migration (3 weeks)**
+
 - Update all AI clients: gemini, openai, anthropic, copilot
 - Update vault_engine to use SecureString
 - Update any code that handles API keys
 
 **Phase 3: Audit (1 week)**
+
 ```bash
 # Verify no plain String api_keys remain
 grep -rn "api_key.*String" src-tauri/src
@@ -1187,6 +1314,7 @@ grep -rn "api_key.*String" src-tauri/src
 **Finding:** "118 potential hardcoded secrets" (from audit)
 
 **Verification Needed:**
+
 ```bash
 # Search for common secret patterns
 grep -rn "password.*=.*\"" src-tauri/src --include="*.rs"
@@ -1198,39 +1326,48 @@ grep -rn "token.*=.*\"" src-tauri/src --include="*.rs"
 **Analysis:**
 
 **True Positives (Actual Secrets):**
+
 ```rust
 // Example of actual hardcoded secret (hypothetical)
 const MASTER_KEY: &str = "sk-1234567890abcdef";  // 🔴 REAL SECRET
 ```
+
 **Action:** Immediate removal, vault migration
 
 **False Positives (Variable Names):**
+
 ```rust
 let password_field = "password";  // ✅ Not a secret, just a field name
 let api_key_config = load_config("api_key");  // ✅ Loading key, not defining
 ```
+
 **Action:** Whitelist in secret scanner
 
 **Test/Mock Secrets:**
+
 ```rust
 #[cfg(test)]
 const MOCK_API_KEY: &str = "test-key-1234";  // ⚠️ Acceptable for tests
 ```
+
 **Action:** Add comment `// Test fixture, not real secret`
 
 **Recommendation:**
 
 **Phase 1: Manual Triage (2 weeks)**
+
 - Review all 118 findings
 - Classify: [REAL_SECRET | FALSE_POSITIVE | TEST_FIXTURE]
 - Estimate: 5 real, 100 false, 13 test
 
 **Phase 2: Secret Removal (1 week)**
+
 - Move real secrets to environment variables
 - Update code to load from `std::env::var("API_KEY")`
 - Document in `.env.example`
 
 **Phase 3: Pre-commit Hook (1 week)**
+
 ```bash
 #!/bin/bash
 # .git/hooks/pre-commit
@@ -1243,6 +1380,7 @@ fi
 ```
 
 **Phase 4: Secrets Scanner CI (1 week)**
+
 - Integrate `gitleaks` or `trufflehog`
 - Run on every commit
 - Block merge if secrets detected
@@ -1254,6 +1392,7 @@ fi
 **Finding:** 10 unsafe blocks (corrected from 2)
 
 **Locations:**
+
 ```
 src-tauri/src/omega/merger.rs:1
 src-tauri/src/engines/developer_mode.rs:1
@@ -1269,6 +1408,7 @@ src-tauri/src/config/io.rs:2
 **10 unsafe blocks in 280K lines = 0.0036% unsafe**
 
 **Industry Benchmarks:**
+
 - **Linux kernel:** ~5% unsafe (C code, different metric)
 - **Rust std library:** ~1-2% unsafe
 - **Typical Rust app:** < 0.1% unsafe
@@ -1277,9 +1417,11 @@ src-tauri/src/config/io.rs:2
 **But... Are They Documented?**
 
 From audit:
+
 > **Status:** 🔴 CRITIQUE - Aucun bloc unsafe n'est documenté avec justification
 
 **Example of Undocumented Unsafe:**
+
 ```rust
 // src-tauri/src/kernel/scheduler.rs
 unsafe {
@@ -1290,6 +1432,7 @@ unsafe {
 ```
 
 **Recommended Pattern:**
+
 ```rust
 // SAFETY: This is safe because:
 // 1. The pointer is guaranteed non-null by the preceding check
@@ -1303,15 +1446,18 @@ unsafe {
 **Recommendation:**
 
 **Phase 1: Documentation Audit (1 day)**
+
 - Review all 10 unsafe blocks
 - Verify actual safety (use Miri if possible)
 - Classify: [SAFE_IF_DOCUMENTED | NEEDS_REFACTOR | ACTUALLY_UNSAFE]
 
 **Phase 2: Documentation (1 week)**
+
 - Add SAFETY comments to all blocks
 - If unable to prove safety → refactor to safe code
 
 **Phase 3: Policy (ongoing)**
+
 ```rust
 // Clippy rule
 #![deny(undocumented_unsafe_blocks)]
@@ -1328,21 +1474,25 @@ unsafe {
 **Why Would You Disable It?**
 
 **Legitimate Reasons:**
+
 1. **Custom Fonts:** Loaded via `@font-face` from bundled assets
 2. **Three.js Textures:** Loaded via WebGL from blob: URLs
 3. **Avatar Assets:** Dynamic loading of image files
 
 **Workaround Reasons:**
+
 1. **CSP Too Strict:** Default policy blocks legitimate use cases
 2. **Migration Friction:** Easier to disable than fix violations
 
 **Verification Needed:**
+
 ```bash
 # Find actual usage
 grep -rn "dangerousDisableAssetCspModification" runtime/ src/
 ```
 
 **If Found True:**
+
 ```json
 {
   "dangerousDisableAssetCspModification": true
@@ -1352,17 +1502,20 @@ grep -rn "dangerousDisableAssetCspModification" runtime/ src/
 **Analysis:**
 
 ✅ **Legitimate if:**
+
 - App uses custom fonts (check public/fonts/)
 - App uses Three.js for 3D rendering (check avatar/ code)
 - Assets loaded dynamically, not static imports
 
 ⚠️ **Workaround if:**
+
 - Static assets only (could use stricter CSP)
 - No dynamic loading
 
 **Recommendation:**
 
 **Phase 1: Usage Audit (1 day)**
+
 ```bash
 # Check for dynamic asset loading
 grep -rn "new Image()" src/ --include="*.ts" --include="*.tsx"
@@ -1371,17 +1524,19 @@ grep -rn "@font-face" src/ public/
 ```
 
 **Phase 2: Decision (1 week)**
+
 - **If legitimate:** Document why it's needed + alternative CSP approach
 - **If workaround:** Re-enable asset CSP + fix violations
 
 **Phase 3: Strictest Possible CSP (2 weeks)**
+
 ```json
 {
   "csp": {
     "default-src": "'self'",
-    "font-src": ["'self'", "data:"],  // Inline fonts as data: URIs
-    "img-src": ["'self'", "blob:"],   // Avatar textures
-    "script-src": ["'self'"]          // No eval, no inline
+    "font-src": ["'self'", "data:"], // Inline fonts as data: URIs
+    "img-src": ["'self'", "blob:"], // Avatar textures
+    "script-src": ["'self'"] // No eval, no inline
   },
   "dangerousDisableAssetCspModification": false
 }
@@ -1398,6 +1553,7 @@ grep -rn "@font-face" src/ public/
 (Covered in Section 1.4 - Code Splitting Strategy)
 
 **Summary:**
+
 - **Actual:** 104 chunks in dist/assets
 - **Typical:** 20-30 chunks for similar apps
 - **Verdict:** Likely over-split (need bundle analysis to confirm)
@@ -1407,16 +1563,17 @@ grep -rn "@font-face" src/ public/
 
 **Baseline Comparison:**
 
-| App Type | Typical Memory | TITANE (500MB) |
-|----------|----------------|-----------------|
-| Electron (VSCode) | 300-800MB | Comparable |
-| Electron (Slack) | 400-600MB | Comparable |
-| Tauri (Typical) | 100-300MB | High |
-| Native Desktop | 50-200MB | Very High |
+| App Type          | Typical Memory | TITANE (500MB) |
+| ----------------- | -------------- | -------------- |
+| Electron (VSCode) | 300-800MB      | Comparable     |
+| Electron (Slack)  | 400-600MB      | Comparable     |
+| Tauri (Typical)   | 100-300MB      | High           |
+| Native Desktop    | 50-200MB       | Very High      |
 
 **Analysis:**
 
 **Tauri vs. Electron:**
+
 - Tauri uses system WebView (no bundled Chromium)
 - **Expected Memory:** 100-200MB for Tauri app
 - **TITANE at 500MB:** 2.5-5x higher than expected
@@ -1424,12 +1581,14 @@ grep -rn "@font-face" src/ public/
 **Possible Causes:**
 
 1. **Memory Leaks:**
+
    ```rust
    // Hypothesis: Long-running engines accumulate state
    memory_os::ltm  // HNSW vector index growing unbounded?
    ```
 
 2. **Caching:**
+
    ```rust
    // Aggressive caching without eviction
    semantic_cache  // How much cached data?
@@ -1454,6 +1613,7 @@ jeprof --show_bytes --pdf target/release/titane-infinity jeprof*.heap > memory.p
 **Recommendation:**
 
 **Phase 1: Profiling (2 weeks)**
+
 - Enable jemalloc profiling
 - Run app for 1 hour with typical usage
 - Identify top memory consumers
@@ -1461,7 +1621,9 @@ jeprof --show_bytes --pdf target/release/titane-infinity jeprof*.heap > memory.p
 **Phase 2: Optimization (4 weeks)**
 
 **Likely targets:**
+
 1. **HNSW Vector Index (memory_os/ltm.rs):**
+
    ```rust
    // BEFORE: All vectors in memory
    pub struct VectorStore {
@@ -1476,6 +1638,7 @@ jeprof --show_bytes --pdf target/release/titane-infinity jeprof*.heap > memory.p
    ```
 
 2. **Cache Eviction (cache_multilevel.rs):**
+
    ```rust
    // Add max size and LRU eviction
    pub struct MultiLevelCache {
@@ -1495,6 +1658,7 @@ jeprof --show_bytes --pdf target/release/titane-infinity jeprof*.heap > memory.p
    ```
 
 **Phase 3: Target (ongoing)**
+
 - **Idle memory:** < 200MB (Tauri baseline)
 - **Active memory:** < 350MB (after 1 hour usage)
 - **Peak memory:** < 400MB (stress test)
@@ -1504,9 +1668,10 @@ jeprof --show_bytes --pdf target/release/titane-infinity jeprof*.heap > memory.p
 ### 5.3 IPC Latency 1-5ms: Could It Be Async Event-Driven?
 
 **Current Pattern (Synchronous IPC):**
+
 ```typescript
 // Frontend
-const result = await invoke('get_system_health');  // Blocks until response
+const result = await invoke('get_system_health'); // Blocks until response
 ```
 
 ```rust
@@ -1518,6 +1683,7 @@ pub async fn get_system_health() -> Result<HealthState> {
 ```
 
 **Latency Breakdown:**
+
 - **Serialization:** 0.5ms (TypeScript → JSON)
 - **IPC overhead:** 1-2ms (Process boundary crossing)
 - **Deserialization:** 0.5ms (JSON → Rust)
@@ -1527,24 +1693,27 @@ pub async fn get_system_health() -> Result<HealthState> {
 **Analysis:**
 
 ✅ **1-5ms is EXCELLENT for synchronous IPC**
+
 - Electron IPC: 5-15ms typical
 - Tauri IPC: 1-3ms (faster due to native WebView)
 
 ❓ **Why Consider Async Event-Driven?**
 
 **Use Case: Long-Running Operations**
+
 ```typescript
 // BEFORE (Blocks frontend for 2 seconds)
-const result = await invoke('process_large_memory_query');  // 2000ms
+const result = await invoke('process_large_memory_query'); // 2000ms
 ```
 
 **AFTER (Non-blocking via events):**
+
 ```typescript
 // Frontend
-listen('memory_query_complete', (event) => {
-    console.log('Query result:', event.payload);
+listen('memory_query_complete', event => {
+  console.log('Query result:', event.payload);
 });
-invoke('start_memory_query', { query: '...' });  // Returns immediately
+invoke('start_memory_query', { query: '...' }); // Returns immediately
 
 // Continue UI interaction while query runs in background
 ```
@@ -1564,11 +1733,13 @@ pub async fn start_memory_query(app: AppHandle, query: String) -> Result<()> {
 **Recommendation:**
 
 **Current IPC is appropriate for:**
+
 - Fast operations (< 100ms)
 - Request/response pattern
 - Synchronous UI updates
 
 **Event-driven pattern for:**
+
 - Long operations (> 500ms)
 - Streaming data (memory search results)
 - Background tasks (auto-evolution, memory consolidation)
@@ -1576,6 +1747,7 @@ pub async fn start_memory_query(app: AppHandle, query: String) -> Result<()> {
 **Implementation:**
 
 **Phase 1: Identify Long Operations (1 week)**
+
 ```bash
 # Find slow commands (need telemetry)
 # Instrument all commands with timing:
@@ -1589,6 +1761,7 @@ pub async fn my_command() -> Result<T> {
 ```
 
 **Phase 2: Convert to Events (2 weeks per command)**
+
 - Estimate: 10-15 commands > 500ms
 - Convert to async event pattern
 - Update frontend to use listeners
@@ -1600,6 +1773,7 @@ pub async fn my_command() -> Result<T> {
 **Current:** 9.3MB dist/ (from earlier measurement)
 
 **Breakdown Estimate:**
+
 ```
 dist/
 ├── assets/
@@ -1614,12 +1788,12 @@ Total: 6-7MB (compressed), 9.3MB (uncompressed)
 
 **Comparison:**
 
-| App | Bundle Size | Features |
-|-----|-------------|----------|
-| **TITANE** | **9.3MB** | 20 engines, 3D avatar, multi-AI |
-| Notion (Electron) | 15-20MB | Note-taking, DB |
-| Figma (Web) | 10-15MB | Vector editing |
-| VSCode (Web) | 8-12MB | Code editing |
+| App               | Bundle Size | Features                        |
+| ----------------- | ----------- | ------------------------------- |
+| **TITANE**        | **9.3MB**   | 20 engines, 3D avatar, multi-AI |
+| Notion (Electron) | 15-20MB     | Note-taking, DB                 |
+| Figma (Web)       | 10-15MB     | Vector editing                  |
+| VSCode (Web)      | 8-12MB      | Code editing                    |
 
 **Verdict:** ✅ **Reasonable, possibly on high end**
 
@@ -1630,6 +1804,7 @@ Total: 6-7MB (compressed), 9.3MB (uncompressed)
    - **Improvement:** Lazy load rare features (doc_engine, avatar fullbody)
 
 2. **Dependency Audit:**
+
    ```bash
    npx vite-bundle-visualizer
    # Identify largest dependencies
@@ -1642,10 +1817,11 @@ Total: 6-7MB (compressed), 9.3MB (uncompressed)
    - DOMPurify (security): ~50KB
 
 3. **Tree-Shaking:**
+
    ```json
    // package.json
    {
-     "sideEffects": false  // Enable aggressive tree-shaking
+     "sideEffects": false // Enable aggressive tree-shaking
    }
    ```
 
@@ -1656,12 +1832,14 @@ Total: 6-7MB (compressed), 9.3MB (uncompressed)
 **Recommendation:**
 
 **Target:** 6MB total (35% reduction)
+
 - **Main bundle:** < 400KB
 - **Vendor bundle:** < 2.5MB
 - **Route chunks:** < 150KB each
 - **Assets:** < 3MB
 
 **Phase 1: Lazy Loading (3 weeks)**
+
 ```typescript
 // BEFORE
 import AvatarFullbody from '@/features/avatar/AvatarFullbody';
@@ -1671,6 +1849,7 @@ const AvatarFullbody = lazy(() => import('@/features/avatar/AvatarFullbody'));
 ```
 
 **Phase 2: Dependency Optimization (2 weeks)**
+
 - Replace heavy libraries (e.g., Lodash → native ES6)
 - Tree-shake Chart.js (import only needed chart types)
 - Evaluate Three.js alternatives (or lazy load)
@@ -1680,6 +1859,7 @@ const AvatarFullbody = lazy(() => import('@/features/avatar/AvatarFullbody'));
 ### 5.5 Clone-Heavy Rust Code: Performance Impact Quantified
 
 **Findings:**
+
 - **2,819 `.clone()` calls** across 494 files
 - **Average:** 5.7 clones per file
 - **Hot path:** overdrive/chat_orchestrator.rs (42 clones)
@@ -1687,12 +1867,14 @@ const AvatarFullbody = lazy(() => import('@/features/avatar/AvatarFullbody'));
 **Performance Impact:**
 
 **Cheap Clones (No Impact):**
+
 ```rust
 let arc_ref = Arc::clone(&shared_state);  // Atomic ref count increment (1-2 CPU cycles)
 let rc_ref = Rc::clone(&local_state);     // Non-atomic ref count (1 cycle)
 ```
 
 **Expensive Clones (High Impact):**
+
 ```rust
 let copied_vec = large_vector.clone();  // Deep copy (N × sizeof(T) memory allocation)
 let copied_string = long_string.clone();  // Heap allocation + memcpy
@@ -1715,6 +1897,7 @@ grep -B2 "\.clone()" src-tauri/src --include="*.rs" | head -100
 **Quantification (Hypothetical):**
 
 **Breakdown Estimate:**
+
 - **Arc/Rc clones:** 60% (1,691 calls) - Negligible impact
 - **String clones:** 25% (705 calls) - Medium impact (if strings are large)
 - **Vec/Struct clones:** 15% (423 calls) - High impact (if vectors are large)
@@ -1722,6 +1905,7 @@ grep -B2 "\.clone()" src-tauri/src --include="*.rs" | head -100
 **Measurement Strategy:**
 
 **Phase 1: Profiling (2 weeks)**
+
 ```rust
 // Instrument clone calls in hot paths
 impl Clone for MyStruct {
@@ -1740,6 +1924,7 @@ impl Clone for MyStruct {
 **Phase 2: Optimization (4 weeks)**
 
 **Pattern 1: Replace Clone with Borrow**
+
 ```rust
 // BEFORE
 pub fn process(data: Vec<u8>) {  // Takes ownership
@@ -1754,6 +1939,7 @@ pub fn process(data: &[u8]) {  // Borrows
 ```
 
 **Pattern 2: Use Arc for Shared Data**
+
 ```rust
 // BEFORE
 let state1 = global_state.clone();  // Deep copy
@@ -1765,6 +1951,7 @@ let state2 = Arc::clone(&global_state);  // Cheap ref count
 ```
 
 **Pattern 3: Cow (Clone on Write)**
+
 ```rust
 use std::borrow::Cow;
 
@@ -1779,6 +1966,7 @@ pub fn process(data: Cow<'_, str>) {
 ```
 
 **Phase 3: Benchmark (1 week)**
+
 - Before/after performance comparison
 - Target: < 5% time in clone operations (use `perf` profiler)
 
@@ -1791,11 +1979,13 @@ pub fn process(data: Cow<'_, str>) {
 ### 6.1 280K Rust + 50K TypeScript: Team Size Assumptions
 
 **Codebase Size:**
+
 - **Rust:** 253,378 lines (from wc -l output) = 253K lines
 - **TypeScript:** ~50K lines (estimated, needs verification)
 - **Total:** ~303K lines
 
 **Industry Benchmarks (Lines per Developer per Year):**
+
 - **Maintenance:** 100K-150K lines per developer
 - **New Development:** 50K-75K lines per developer
 - **High churn (refactoring):** 30K-50K lines per developer
@@ -1803,16 +1993,19 @@ pub fn process(data: Cow<'_, str>) {
 **TITANE Assumptions:**
 
 **Scenario 1: Small Team (1-3 developers)**
+
 - 303K lines / 3 devs = 101K lines/dev
 - **Verdict:** Plausible if mature codebase (low churn)
 - **Risk:** Bus factor = 1 (what if 1 developer leaves?)
 
 **Scenario 2: Solo Developer**
+
 - 303K lines / 1 dev = 303K lines
 - **Verdict:** Impossible to maintain alone
 - **Evidence:** Documentation gaps, technical debt accumulation, deprecated modules
 
 **Likely Reality:**
+
 - **Primary developer:** 1 (architectural decisions, core engines)
 - **Contributors:** 2-3 (features, documentation, testing)
 - **Total team:** 2-4 people
@@ -1820,11 +2013,13 @@ pub fn process(data: Cow<'_, str>) {
 **Sustainability Analysis:**
 
 **Current Velocity (Hypothetical):**
+
 - 76.7% console.log cleanup = 2,186 logs removed (recent achievement)
 - Complete audit = 1,660 lines documentation (recent work)
 - Security hardening Phase 1 (recent work)
 
 **This suggests active development, but:**
+
 - Cleanup work (removing logs) = Maintenance mode
 - Documentation (after the fact) = Technical debt payoff
 - Security hardening = Remediation, not new features
@@ -1832,6 +2027,7 @@ pub fn process(data: Cow<'_, str>) {
 **Recommendation:**
 
 **Phase 1: Team Size Reality Check (1 week)**
+
 ```bash
 # Git analysis (contributor stats)
 git shortlog -s -n --all | head -10
@@ -1845,16 +2041,19 @@ git log --since="2025-01-01" --format='%aN' | sort -u
 ```
 
 **Phase 2: Sustainability Assessment (2 weeks)**
+
 - **If team < 3:** Codebase too large, consider consolidation (20 engines → 12)
 - **If team 3-5:** Manageable, but need clear ownership (1 dev per 3-4 engines)
 - **If team > 5:** Good ratio, consider feature expansion
 
 **Phase 3: Ownership Documentation (1 week)**
+
 ```markdown
 # CODEOWNERS.md
-/src-tauri/src/memory_os/     @memory-expert
+
+/src-tauri/src/memory_os/ @memory-expert
 /src-tauri/src/conversation_engine/ @nlp-specialist
-/src-tauri/src/kernel/        @systems-architect
+/src-tauri/src/kernel/ @systems-architect
 ```
 
 **Effort:** 4 weeks, **Risk:** Low (informational)
@@ -1864,6 +2063,7 @@ git log --since="2025-01-01" --format='%aN' | sort -u
 **Findings:**
 
 **CI/CD Workflows Present:**
+
 ```
 .github/workflows/
 ├── ci-unified.yml            # Main CI pipeline
@@ -1877,6 +2077,7 @@ git log --since="2025-01-01" --format='%aN' | sort -u
 **But... Are They Running?**
 
 **Verification Needed:**
+
 ```bash
 # Check last workflow run
 gh run list --limit 10
@@ -1886,6 +2087,7 @@ gh workflow view ci-unified.yml
 ```
 
 **Hypothesis: Workflows exist but not enforced**
+
 - **Evidence 1:** "No CI/CD pipeline" claim in audit context
 - **Evidence 2:** Quality maintained through manual discipline
 - **Evidence 3:** 151/151 tests passing (suggests tests run locally, not CI)
@@ -1893,18 +2095,22 @@ gh workflow view ci-unified.yml
 **Quality Maintenance Mechanisms (Without CI):**
 
 1. **Manual Testing:**
+
    ```bash
    pnpm test:all
    pnpm test:rust
    pnpm audit
    ```
+
    - **Risk:** Easily forgotten
 
 2. **Pre-commit Hooks:**
+
    ```bash
    # .git/hooks/pre-commit
    pnpm lint:staged
    ```
+
    - **Risk:** Can be bypassed (`git commit --no-verify`)
 
 3. **Developer Discipline:**
@@ -1915,6 +2121,7 @@ gh workflow view ci-unified.yml
 **Recommendation:**
 
 **Phase 1: Enable Existing CI (1 week)**
+
 ```yaml
 # .github/workflows/ci-unified.yml
 name: CI
@@ -1932,6 +2139,7 @@ jobs:
 ```
 
 **Phase 2: Branch Protection (1 day)**
+
 ```yaml
 # Repository Settings → Branches → Branch Protection Rules
 required_status_checks:
@@ -1941,6 +2149,7 @@ required_status_checks:
 ```
 
 **Phase 3: Quality Gates (2 weeks)**
+
 ```yaml
 # Enforce coverage thresholds
 - run: pnpm test:coverage
@@ -1957,11 +2166,13 @@ required_status_checks:
 ### 6.3 Test Coverage 151/151 Passing: Sufficient or Need More?
 
 **Findings:**
+
 - **151 tests passing** (from audit: "Test Coverage 151/151")
 - **2,276/2,322 tests passed** (from another audit reference)
 - **Inconsistency suggests:** Multiple test suites (unit, integration, E2E)
 
 **Breakdown (Estimated):**
+
 ```
 TypeScript Tests (Vitest): 2,276 tests
   ├── Unit tests: ~1,800
@@ -1988,6 +2199,7 @@ cargo tarpaulin --out Html
 ```
 
 **Typical Coverage Targets:**
+
 - **Statements:** 80%+ (industry standard)
 - **Branches:** 70%+ (harder to achieve)
 - **Functions:** 90%+ (easiest metric)
@@ -1998,12 +2210,14 @@ cargo tarpaulin --out Html
 ✅ **High test count (2,427 total) is GOOD**
 
 ⚠️ **Questions:**
+
 1. Are critical paths tested?
    - Memory persistence (ltm.rs)?
    - Auto-heal recovery?
    - Security boundaries?
 
 2. Are tests meaningful or trivial?
+
    ```typescript
    // Trivial test (low value)
    test('function exists', () => {
@@ -2028,6 +2242,7 @@ cargo tarpaulin --out Html
 **Recommendation:**
 
 **Phase 1: Coverage Audit (1 week)**
+
 - Generate coverage reports (TS + Rust)
 - Identify untested critical paths
 - Prioritize by risk (security > data integrity > UI)
@@ -2035,6 +2250,7 @@ cargo tarpaulin --out Html
 **Phase 2: Critical Path Testing (4 weeks)**
 
 **High Priority (Must Test):**
+
 ```rust
 // memory_os/ltm.rs - Data persistence
 #[test]
@@ -2057,6 +2273,7 @@ fn test_recovery_from_engine_failure() {
 ```
 
 **Phase 3: Mutation Testing (2 weeks)**
+
 ```bash
 # Install mutation testing tool
 cargo install cargo-mutants
@@ -2074,6 +2291,7 @@ cargo mutants
 **Documentation Inventory:**
 
 **Present:**
+
 ```
 ARCHITECTURE.md                      # Frontend architecture
 AUDIT_COMPLET_2026-01-02.md         # System audit
@@ -2091,6 +2309,7 @@ README.md                            # Project overview
    - Why Tauri over Electron?
 
 2. **Engine Documentation:**
+
    ```
    src-tauri/src/memory_os/README.md  # Missing
    src-tauri/src/conversation_engine/README.md  # Missing
@@ -2113,6 +2332,7 @@ README.md                            # Project overview
 **Onboarding Experience (Hypothetical):**
 
 **New Developer Day 1:**
+
 1. Clone repo
 2. Read README.md (overview)
 3. Read DEVELOPMENT_SETUP.md (setup instructions)
@@ -2121,32 +2341,39 @@ README.md                            # Project overview
 6. **Gives up:** Asks senior developer
 
 **Estimated Onboarding Time:**
+
 - **With comprehensive docs:** 2-3 days
 - **Current state:** 1-2 weeks
 
 **Recommendation:**
 
 **Phase 1: Quick Start Guide (1 week)**
-```markdown
+
+````markdown
 # QUICKSTART.md
 
 ## 5-Minute Setup
+
 ```bash
 git clone ...
 pnpm install
 pnpm dev
 ```
+````
 
 ## First Feature: Add a Simple Command
+
 1. Create `src-tauri/src/commands/hello.rs`
 2. Register in `main.rs`
 3. Call from frontend: `invoke('hello')`
 
 ## Architecture Overview
+
 - 20 Engines (see ENGINE_GUIDE.md)
 - Singularity State (see ARCHITECTURE_STATE.md)
 - IPC Layer (see TAURI_COMMANDS.md)
-```
+
+````
 
 **Phase 2: Per-Engine Documentation (8 weeks, 1 week per engine)**
 ```markdown
@@ -2156,13 +2383,15 @@ pnpm dev
 3-tier memory system: STM (working memory) → MTM (active memory) → LTM (persistent)
 
 ## Architecture
-```
-┌─────────┐    ┌─────────┐    ┌──────────┐
-│   STM   │ -> │   MTM   │ -> │   LTM    │
-│ 100 ms  │    │  1 hour │    │ Forever  │
-│ 50 KB   │    │  10 MB  │    │ 1 GB     │
-└─────────┘    └─────────┘    └──────────┘
-```
+````
+
+┌─────────┐ ┌─────────┐ ┌──────────┐
+│ STM │ -> │ MTM │ -> │ LTM │
+│ 100 ms │ │ 1 hour │ │ Forever │
+│ 50 KB │ │ 10 MB │ │ 1 GB │
+└─────────┘ └─────────┘ └──────────┘
+
+````
 
 ## Key Files
 - `stm.rs`: Short-term memory (ring buffer)
@@ -2178,8 +2407,9 @@ store(Memory {
     timestamp: now(),
     importance: 0.8,
 }).await?;
-```
-```
+````
+
+````
 
 **Phase 3: Auto-Generated API Docs (2 weeks)**
 ```bash
@@ -2190,13 +2420,14 @@ cargo doc --open
 # TypeScript documentation
 npx typedoc
 # Publish to: docs/typescript/
-```
+````
 
 **Effort:** 11 weeks (gradual, ongoing)
 
 ### 6.5 Multiple Deprecated Systems: Technical Debt Accumulation Rate
 
 **Findings:**
+
 - unified_memory v1 still exists alongside v2
 - `#![allow(deprecated)]` in multiple modules
 - omega/memory_bridge marked deprecated
@@ -2214,6 +2445,7 @@ v27.0: Planned removal? (No evidence)
 **Accumulation Rate Analysis:**
 
 **Hypothesis:** 1 major migration per 2-3 versions
+
 - v25: ADMIN fusion (7 modules → 1)
 - v25.1: TIME fusion (3 modules → 1)
 - v25.2: STATS fusion (4 modules → 1)
@@ -2231,6 +2463,7 @@ Accumulation rate = 0.5 per version (net positive)
 ```
 
 **Projection:**
+
 - v27.0: 7-8 deprecated systems (if current rate continues)
 - v28.0: 9-10 deprecated systems
 - **Critical mass:** v29-30 (system becomes unmaintainable)
@@ -2243,6 +2476,7 @@ Accumulation rate = 0.5 per version (net positive)
 # DEPRECATION_POLICY.md
 
 ## Lifecycle
+
 1. **Deprecation (Version N):**
    - Mark with `#[deprecated]` + migration guide
    - Add migration script/tool
@@ -2259,6 +2493,7 @@ Accumulation rate = 0.5 per version (net positive)
    - Bump major version (semver)
 
 ## Current Debt
+
 - unified_memory v1: Deprecated v25.x → Remove v27.0
 - omega/memory_bridge: Deprecated v26.x → Remove v28.0
 - ModuleHealth type alias: Deprecated v25.x → Remove v27.0
@@ -2275,6 +2510,7 @@ Accumulation rate = 0.5 per version (net positive)
 (Covered in Section 1.3 - IPC Layer Design)
 
 **Summary:**
+
 - 196 registered vs. 37 used = 81% waste
 - Root cause: Organic growth without governance
 - Recommendation: Command registry + automated testing
@@ -2286,9 +2522,9 @@ Accumulation rate = 0.5 per version (net positive)
 ```typescript
 // Frontend (TypeScript)
 interface HealthState {
-    cpu: number;
-    memory: number;
-    status: 'healthy' | 'degraded' | 'critical';
+  cpu: number;
+  memory: number;
+  status: 'healthy' | 'degraded' | 'critical';
 }
 
 const health = await invoke<HealthState>('get_system_health');
@@ -2332,12 +2568,13 @@ pub async fn get_system_health() -> Result<HealthState> {
 **Industry Solutions:**
 
 **Option 1: Shared Schema (TypeScript)**
+
 ```typescript
 // shared/schema.ts
 export interface HealthState {
-    cpu: number;
-    memory: number;
-    status: 'healthy' | 'degraded' | 'critical';
+  cpu: number;
+  memory: number;
+  status: 'healthy' | 'degraded' | 'critical';
 }
 
 // Generate Rust types from TypeScript
@@ -2345,6 +2582,7 @@ export interface HealthState {
 ```
 
 **Option 2: Shared Schema (Rust)**
+
 ```rust
 // Use ts-rs crate
 use ts_rs::TS;
@@ -2369,27 +2607,30 @@ pub enum HealthStatus {
 ```
 
 **Option 3: Runtime Validation (Zod)**
+
 ```typescript
 import { z } from 'zod';
 
 const HealthStateSchema = z.object({
-    cpu: z.number().min(0).max(100),
-    memory: z.number().int().positive(),
-    status: z.enum(['healthy', 'degraded', 'critical']),
+  cpu: z.number().min(0).max(100),
+  memory: z.number().int().positive(),
+  status: z.enum(['healthy', 'degraded', 'critical']),
 });
 
 const health = await invoke('get_system_health');
-const validated = HealthStateSchema.parse(health);  // Throws if invalid
+const validated = HealthStateSchema.parse(health); // Throws if invalid
 ```
 
 **Recommendation:**
 
 **Phase 1: Audit Existing Types (2 weeks)**
+
 - Generate list of all IPC types (37 commands)
 - Identify type mismatches (TS vs Rust)
 - Prioritize by usage frequency
 
 **Phase 2: Implement ts-rs (4 weeks)**
+
 ```bash
 # Add dependency
 cargo add ts-rs
@@ -2403,13 +2644,14 @@ cargo test  # ts-rs generates types during test phase
 ```
 
 **Phase 3: Runtime Validation (2 weeks)**
+
 ```typescript
 // src/services/tauriCommands.ts
 import { validateIpcResponse } from './validation';
 
 export async function getSystemHealth(): Promise<HealthState> {
-    const response = await invoke('get_system_health');
-    return validateIpcResponse(HealthStateSchema, response);
+  const response = await invoke('get_system_health');
+  return validateIpcResponse(HealthStateSchema, response);
 }
 ```
 
@@ -2418,9 +2660,11 @@ export async function getSystemHealth(): Promise<HealthState> {
 ### 7.3 State Synchronization: SingularityBridge Disabled - Intentional?
 
 **Finding (from reflection):**
+
 > EventSyncLayer disabled (see logs)
 
 **Evidence:**
+
 ```rust
 // singularity_state/sync.rs (hypothetical)
 // pub struct EventSyncLayer { ... }  // DISABLED
@@ -2432,16 +2676,19 @@ export async function getSystemHealth(): Promise<HealthState> {
 **Hypothesis:**
 
 **Reason 1: Performance Concerns**
+
 - Synchronizing 5-layer state on every update = expensive
 - Event emission to frontend = IPC overhead
 - **Solution:** Disable sync, use polling instead
 
 **Reason 2: Incomplete Implementation**
+
 - SingularityBridge started but never finished
 - Placeholder code exists but not wired up
 - **Solution:** Finish implementation or remove
 
 **Reason 3: Architectural Pivot**
+
 - Originally intended for real-time sync
 - Shifted to request/response pattern
 - **Solution:** Remove dead code, update docs
@@ -2460,6 +2707,7 @@ grep -rn "emit.*singularity" src-tauri/src
 **Recommendation:**
 
 **Phase 1: Code Archeology (1 week)**
+
 - Read git history: `git log --all --grep="SingularityBridge"`
 - Interview developer (if available)
 - Determine: [INCOMPLETE | DISABLED | DEPRECATED]
@@ -2467,16 +2715,19 @@ grep -rn "emit.*singularity" src-tauri/src
 **Phase 2: Decision (1 week)**
 
 **Option A: Complete Implementation**
+
 - If sync is valuable (real-time dashboard)
 - Effort: 4-6 weeks
 - Risk: Medium (complex async code)
 
 **Option B: Remove Dead Code**
+
 - If sync not needed (polling sufficient)
 - Effort: 1 week
 - Risk: Low
 
 **Option C: Document Intentional Disabling**
+
 ```rust
 // singularity_state/sync.rs
 // EventSyncLayer INTENTIONALLY DISABLED (v26.2)
@@ -2492,6 +2743,7 @@ grep -rn "emit.*singularity" src-tauri/src
 **Findings:**
 
 **Pattern 1: String Errors (Quick and Dirty)**
+
 ```rust
 pub fn risky_operation() -> Result<T, String> {
     if something_wrong {
@@ -2502,6 +2754,7 @@ pub fn risky_operation() -> Result<T, String> {
 ```
 
 **Pattern 2: Custom Error Type (Structured)**
+
 ```rust
 pub enum TitaneError {
     DatabaseError(rusqlite::Error),
@@ -2517,6 +2770,7 @@ pub fn risky_operation() -> Result<T, TitaneError> {
 ```
 
 **Pattern 3: Anyhow (Development Convenience)**
+
 ```rust
 use anyhow::{Result, Context};
 
@@ -2544,16 +2798,19 @@ grep -rn "anyhow::Result" src-tauri/src --include="*.rs" | wc -l
 **Impact:**
 
 ⚠️ **String Errors:**
+
 - **Pro:** Quick to write
 - **Con:** No structure, hard to handle specifically
 - **Con:** Poor error messages ("Something went wrong")
 
 ✅ **TitaneError:**
+
 - **Pro:** Structured, type-safe
 - **Pro:** Can handle specific error types
 - **Con:** Verbose to define
 
 ✅ **Anyhow:**
+
 - **Pro:** Convenient, good error messages
 - **Con:** Loses type information (all errors are `anyhow::Error`)
 
@@ -2591,15 +2848,18 @@ pub async fn store_memory(data: String) -> Result<(), String> {
 **Migration Plan:**
 
 **Phase 1: Standardize Library Errors (8 weeks)**
+
 - Define `MemoryError`, `ConversationError`, etc.
 - Use `thiserror` crate for ergonomic error types
 - Convert `Result<T, String>` → `Result<T, LibraryError>`
 
 **Phase 2: Application Layer (4 weeks)**
+
 - Use `anyhow` in commands/ layer
 - Add context to errors (`.context("...")`)
 
 **Phase 3: Frontend Error Mapping (2 weeks)**
+
 ```rust
 // Error to user-friendly message
 impl From<TitaneError> for String {
@@ -2621,6 +2881,7 @@ impl From<TitaneError> for String {
 (Covered in Section 1.3 - IPC Layer Design)
 
 **Summary:**
+
 - Current: Commands scattered across 30+ files
 - Proposed: Central CommandRegistry
 - Benefits: Automated testing, dead code detection, permission management
@@ -2634,6 +2895,7 @@ impl From<TitaneError> for String {
 **Analysis from Section 1.1:**
 
 ✅ **Consolidation Targets:**
+
 - cycle_engine + temporal_engine → **temporal_engine** (merged)
 - hyper_evolution + evolution → **evolution** (phases)
 - harmonic_os → cognitive_learning (coherence module)
@@ -2643,18 +2905,21 @@ impl From<TitaneError> for String {
 **Result:** 20 → 14 engines (30% reduction)
 
 **Further Consolidation (Aggressive):**
+
 - doc_engine → Remove (low value vs. complexity)
 - creation → conversation_engine (creative mode)
 
 **Result:** 14 → 12 engines (40% reduction)
 
 **Benefits:**
+
 - **Reduced complexity:** Easier to understand system
 - **Faster onboarding:** Fewer concepts to learn
 - **Better performance:** Less synchronization overhead
 - **Easier testing:** Fewer integration points
 
 **Risks:**
+
 - **Feature loss:** doc_engine removal = no document generation
 - **Regression:** Bugs introduced during consolidation
 - **Effort:** 12-16 weeks of focused work
@@ -2662,6 +2927,7 @@ impl From<TitaneError> for String {
 **Recommendation:** ✅ **YES, consolidate to 12-14 engines**
 
 **Timeline:**
+
 - **Phase 1 (Easy wins, 8 weeks):** Merge cycle_engine, harmonic_os, generic engine
 - **Phase 2 (Medium effort, 6 weeks):** Merge hyper_evolution, avatar
 - **Phase 3 (Evaluation, 2 weeks):** Decide on doc_engine removal
@@ -2671,6 +2937,7 @@ impl From<TitaneError> for String {
 ### 8.2 Is TypeScript Strict Mode Migration Worth the Effort?
 
 **Current State:**
+
 - 371 TypeScript errors (pre-existing)
 - `"strict": false` in tsconfig.json
 - Implicit any, missing null checks
@@ -2701,21 +2968,23 @@ impl From<TitaneError> for String {
 
 **Comparison:**
 
-| Aspect | Without Strict | With Strict |
-|--------|----------------|-------------|
+| Aspect            | Without Strict     | With Strict         |
+| ----------------- | ------------------ | ------------------- |
 | Development Speed | Faster (initially) | Slower (more types) |
-| Bug Rate | Higher | Lower |
-| Refactoring | Risky | Safe |
-| Onboarding | Easier | Harder (but better) |
+| Bug Rate          | Higher             | Lower               |
+| Refactoring       | Risky              | Safe                |
+| Onboarding        | Easier             | Harder (but better) |
 
 **Recommendation:** ✅ **YES, migrate to strict mode**
 
 **Why:**
+
 - TITANE is 300K lines (large codebase)
 - Long-term project (not a prototype)
 - Quality over speed (production system)
 
 **Timeline:**
+
 - **Phase 1:** Enable `noImplicitAny` (3 weeks)
 - **Phase 2:** Enable `strictNullChecks` (4 weeks)
 - **Phase 3:** Full strict mode (2 weeks)
@@ -2725,6 +2994,7 @@ impl From<TitaneError> for String {
 ### 8.3 CSP + Vite/React Compatibility: Long-Term Solution?
 
 **Problem:**
+
 - Vite dev server uses `eval()` for HMR (Hot Module Replacement)
 - React dev tools use inline scripts
 - CSP blocks `eval()` and inline scripts
@@ -2732,6 +3002,7 @@ impl From<TitaneError> for String {
 **Solutions:**
 
 **Option 1: Separate Dev/Production CSP** ✅ (Current approach)
+
 ```json
 // runtime/dev/tauri.conf.json
 { "csp": null }  // Permissive
@@ -2744,9 +3015,12 @@ impl From<TitaneError> for String {
 **Con:** Config drift risk (dev config leaks to production)
 
 **Option 2: Nonce-based CSP**
+
 ```html
 <!-- Generate unique nonce per request -->
-<script nonce="random-123">...</script>
+<script nonce="random-123">
+  ...
+</script>
 ```
 
 ```json
@@ -2757,6 +3031,7 @@ impl From<TitaneError> for String {
 **Con:** Complex to implement in Tauri
 
 **Option 3: Hash-based CSP**
+
 ```json
 {
   "csp": {
@@ -2793,6 +3068,7 @@ impl From<TitaneError> for String {
 ```
 
 **Safeguard: Pre-release CSP Check**
+
 ```bash
 # CI/CD script
 if grep -q '"csp": null' runtime/production/*.json; then
@@ -2810,6 +3086,7 @@ fi
 **Automated Tools:**
 
 **Option 1: Regex Search/Replace**
+
 ```bash
 # Find all Result<T, String>
 rg "Result<([^,]+), String>" src-tauri/src -l
@@ -2822,6 +3099,7 @@ sd "Result<([^,]+), String>" "Result<$1, TitaneError>" $(rg "Result<([^,]+), Str
 **Con:** Brittle (misses complex cases, breaks code)
 
 **Option 2: Rust Refactoring Tools**
+
 ```bash
 # Use rust-analyzer refactoring
 # (IDE-based, semi-automated)
@@ -2831,6 +3109,7 @@ sd "Result<([^,]+), String>" "Result<$1, TitaneError>" $(rg "Result<([^,]+), Str
 **Con:** Manual (one function at a time)
 
 **Option 3: Custom AST Transformer**
+
 ```rust
 // Use syn crate to parse Rust AST
 // Transform Result<T, String> → Result<T, TitaneError>
@@ -2866,17 +3145,20 @@ cargo test
 ### 8.5 CI/CD Implementation: Immediate Priority?
 
 **Current State:**
+
 - Workflows exist but possibly not enforced
 - Quality maintained manually
 
 **Priority Assessment:**
 
 **Arguments FOR Immediate Implementation:**
+
 1. **Risk Mitigation:** Prevents regressions
 2. **Velocity:** Faster feedback loop
 3. **Confidence:** Safe refactoring
 
 **Arguments AGAINST:**
+
 1. **Other priorities:** Engine consolidation, security hardening
 2. **Works today:** Manual process functional
 3. **Effort:** 3 weeks to properly implement
@@ -2884,11 +3166,13 @@ cargo test
 **Recommendation:** 🟡 **High priority, but not blocking**
 
 **Rationale:**
+
 - System is stable (151/151 tests passing)
 - Major refactorings planned (engine consolidation)
 - **CI/CD should be in place BEFORE refactorings**
 
 **Timeline:**
+
 - **Immediate (Week 1):** Enable existing workflows
 - **Short-term (Week 2-3):** Add branch protection, quality gates
 - **Before refactorings (Week 4+):** Full CI/CD operational
@@ -2973,12 +3257,14 @@ cargo test
 **Cognitive Architecture = Core Differentiator** ✅
 
 **Evidence:**
+
 - Multi-tier memory is unique
 - Temporal intelligence is novel
 - Auto-evolution is research-grade
 - Neuro-symbolic reasoning is cutting-edge
 
 **But... Implementation has over-abstraction:**
+
 - 20 engines when 12-14 would suffice
 - 6-layer service abstraction (should be 3)
 - Duplicate state (Singularity + per-engine state)
@@ -2986,6 +3272,7 @@ cargo test
 **Verdict:** **Great ideas, over-engineered execution**
 
 **Recommendation:**
+
 - **Keep:** Cognitive architecture principles
 - **Simplify:** Implementation (fewer engines, fewer layers)
 - **Focus:** Double down on differentiators (memory, temporal, evolution)
@@ -3003,12 +3290,14 @@ Voice (audio/) <-> Avatar (avatar/) <-> Memory (memory_os/)
 **Analysis:**
 
 **Cohesive Vision:**
+
 - Voice = Auditory modality
 - Avatar = Visual modality
 - Memory = Cognitive core
 - **Together:** Multimodal AI companion
 
 **Separate Concerns:**
+
 - Voice works without avatar
 - Avatar works without memory (just render)
 - Memory works without voice/avatar
@@ -3029,6 +3318,7 @@ Voice (audio/) <-> Avatar (avatar/) <-> Memory (memory_os/)
 **Recommendation:**
 
 **Modular Design:**
+
 ```rust
 pub struct CognitiveCore {
     memory: MemoryOS,          // REQUIRED
@@ -3055,6 +3345,7 @@ impl CognitiveCore {
 ```
 
 **Benefits:**
+
 - Core system works without voice/avatar
 - Users can enable features individually
 - Easier testing (test memory without rendering avatar)
@@ -3064,11 +3355,13 @@ impl CognitiveCore {
 ### 9.5 20 Engines + Singularity State: Emergent Intelligence or Distributed Confusion?
 
 **Emergent Intelligence Evidence:**
+
 1. Memory consolidation creates new insights (not explicitly programmed)
 2. Temporal prediction adapts to user patterns
 3. Auto-evolution discovers optimal configurations
 
 **Distributed Confusion Evidence:**
+
 1. SingularityBridge disabled (engines not actually synchronized?)
 2. Direct function calls (tight coupling, not orchestrated)
 3. Multiple deprecated systems (inconsistent state)
@@ -3078,14 +3371,17 @@ impl CognitiveCore {
 **Path to True Emergence:**
 
 **Phase 1: Unified Event Bus (6 weeks)**
+
 - All inter-engine communication via events
 - Enables observability (log all events)
 
 **Phase 2: Central Orchestrator (4 weeks)**
+
 - Meta-orchestrator coordinates all engines
 - Enforces coherence (no engine acts independently)
 
 **Phase 3: Emergent Behavior Tests (2 weeks)**
+
 ```rust
 #[test]
 fn test_emergent_insight_creation() {
@@ -3117,16 +3413,17 @@ fn test_emergent_insight_creation() {
 
 **Scoring Breakdown:**
 
-| Category | Audit Score | Realistic Score | Gap |
-|----------|-------------|-----------------|-----|
-| Tests | 98/100 | 90/100 | -8 (coverage gaps) |
-| Security | 100/100 | 78/100 | -22 (CSP, secrets) |
-| Code Quality | 96/100 | 75/100 | -21 (unwrap, deprecated) |
-| Architecture | 100/100 | 85/100 | -15 (20 engines, over-abstraction) |
-| Performance | 100/100 | 82/100 | -18 (500MB memory, clone-heavy) |
-| Compliance | 100/100 | 100/100 | 0 (COPILOT-XS passed) |
+| Category     | Audit Score | Realistic Score | Gap                                |
+| ------------ | ----------- | --------------- | ---------------------------------- |
+| Tests        | 98/100      | 90/100          | -8 (coverage gaps)                 |
+| Security     | 100/100     | 78/100          | -22 (CSP, secrets)                 |
+| Code Quality | 96/100      | 75/100          | -21 (unwrap, deprecated)           |
+| Architecture | 100/100     | 85/100          | -15 (20 engines, over-abstraction) |
+| Performance  | 100/100     | 82/100          | -18 (500MB memory, clone-heavy)    |
+| Compliance   | 100/100     | 100/100         | 0 (COPILOT-XS passed)              |
 
 **Weighted Average:**
+
 - **Audit:** 98/100
 - **Realistic:** 85/100
 - **Gap:** -13 points (overly optimistic)
@@ -3134,6 +3431,7 @@ fn test_emergent_insight_creation() {
 **Revised Grade:** **B+ (85/100)**
 
 **Verdict:** **Original grade was generous but not dishonest**
+
 - Audit focused on "what works" (tests passing, features complete)
 - Missed "what's risky" (technical debt, security gaps)
 
@@ -3142,20 +3440,18 @@ fn test_emergent_insight_creation() {
 **Blocking Issues (Must Fix Before Production):**
 
 **P0 - Critical (4 weeks):**
+
 1. CSP null in production config (1 day)
 2. singularity_get_state not registered (1 day)
 3. API keys without zeroize (3 weeks)
 4. Secret scanner (pre-commit hook) (1 week)
 
-**P1 - High (12 weeks):**
-5. 200 critical unwrap() calls (6 weeks)
-6. CI/CD enforcement (3 weeks)
-7. Type safety (ts-rs) (3 weeks)
+**P1 - High (12 weeks):** 5. 200 critical unwrap() calls (6 weeks) 6. CI/CD enforcement (3 weeks) 7. Type safety (ts-rs) (3 weeks)
 
-**P2 - Medium (8 weeks):**
-8. Engine consolidation (8 weeks)
+**P2 - Medium (8 weeks):** 8. Engine consolidation (8 weeks)
 
 **Total Timeline:**
+
 - **Minimum viable production:** 4 weeks (P0 only)
 - **Secure production:** 16 weeks (P0 + P1)
 - **Optimized production:** 24 weeks (P0 + P1 + P2)
@@ -3165,28 +3461,31 @@ fn test_emergent_insight_creation() {
 ### 10.3 Security Issues: Blocking or Acceptable Risk?
 
 **Blocking (Cannot Deploy):**
+
 1. ✅ CSP disabled (enables XSS attacks)
 2. ✅ Hardcoded secrets (if any real secrets found)
 
-**Acceptable Risk (Can Deploy with Mitigation):**
-3. ⚠️ API keys without zeroize (requires system access to exploit)
-4. ⚠️ 10 undocumented unsafe blocks (no evidence of actual UB)
+**Acceptable Risk (Can Deploy with Mitigation):** 3. ⚠️ API keys without zeroize (requires system access to exploit) 4. ⚠️ 10 undocumented unsafe blocks (no evidence of actual UB)
 
 **Mitigation Plan:**
+
 ```markdown
 # Pre-Launch Security Checklist
 
 ## P0 (BLOCKERS)
+
 - [ ] CSP enabled in production config
 - [ ] All hardcoded secrets removed
 - [ ] Secret scanner in CI/CD
 
 ## P1 (HIGH)
+
 - [ ] API keys use SecureString with zeroize
 - [ ] All unsafe blocks documented
 - [ ] cargo audit passes (no CVEs)
 
 ## P2 (MEDIUM)
+
 - [ ] Pre-commit hooks enforced
 - [ ] Permission audit complete
 - [ ] Runtime permission guard
@@ -3227,15 +3526,18 @@ fn test_emergent_insight_creation() {
 **Maintenance Tasks:**
 
 **Daily:**
+
 - Bug fixes: 1-2 hours
 - User support: 0-1 hours
 
 **Weekly:**
+
 - Feature development: 20-30 hours
 - Code review: 5-10 hours
 - Documentation: 2-5 hours
 
 **Monthly:**
+
 - Dependency updates: 4-8 hours
 - Security audits: 2-4 hours
 - Performance profiling: 2-4 hours
@@ -3245,11 +3547,13 @@ fn test_emergent_insight_creation() {
 **Sustainability Analysis:**
 
 **Current State (20 engines, 300K LOC):**
+
 - **1 developer:** Unsustainable (cannot keep up)
 - **2 developers:** Barely sustainable (no time for new features)
 - **3+ developers:** Sustainable (can innovate)
 
 **After Consolidation (12 engines, 250K LOC):**
+
 - **1 developer:** Barely sustainable (maintenance mode)
 - **2 developers:** Sustainable (slow feature development)
 - **3+ developers:** Healthy (can scale)
@@ -3269,6 +3573,7 @@ fn test_emergent_insight_creation() {
 ### Quarter 1 (Weeks 1-12): Foundation Hardening
 
 **Goals:**
+
 - Eliminate blocking security issues
 - Enable CI/CD
 - Begin engine consolidation
@@ -3276,24 +3581,28 @@ fn test_emergent_insight_creation() {
 **Tasks:**
 
 **Weeks 1-4: Security Sprint**
+
 - [ ] Enable CSP in production config (1 day)
 - [ ] Remove hardcoded secrets (1 week)
 - [ ] Implement SecureString for API keys (3 weeks)
 - [ ] Add secret scanner pre-commit hook (1 week)
 
 **Weeks 5-8: CI/CD Implementation**
+
 - [ ] Enable existing GitHub Actions workflows (1 week)
 - [ ] Add branch protection rules (1 day)
 - [ ] Implement quality gates (coverage, lint) (2 weeks)
 - [ ] Document CI/CD process (1 week)
 
 **Weeks 9-12: Engine Consolidation Phase 1**
+
 - [ ] Merge cycle_engine → temporal_engine (2 weeks)
 - [ ] Merge harmonic_os → cognitive_learning (2 weeks)
 - [ ] Remove dead code (doc_engine evaluation) (1 week)
 - [ ] Update documentation (1 week)
 
 **Deliverables:**
+
 - ✅ Security: No blockers
 - ✅ CI/CD: Fully operational
 - ✅ Engines: 20 → 17 (15% reduction)
@@ -3301,6 +3610,7 @@ fn test_emergent_insight_creation() {
 ### Quarter 2 (Weeks 13-24): Quality Elevation
 
 **Goals:**
+
 - Fix critical technical debt
 - Improve type safety
 - Complete engine consolidation
@@ -3308,10 +3618,12 @@ fn test_emergent_insight_creation() {
 **Tasks:**
 
 **Weeks 13-18: Technical Debt Payoff**
+
 - [ ] Fix 200 critical unwrap() calls (6 weeks)
 - [ ] TypeScript strict mode migration (6 weeks, parallel)
 
 **Weeks 19-24: Architecture Optimization**
+
 - [ ] Engine consolidation Phase 2 (6 weeks)
   - Merge hyper_evolution → evolution
   - Merge generic engine → singularity_fusion
@@ -3320,6 +3632,7 @@ fn test_emergent_insight_creation() {
 - [ ] Command registry (3 weeks, parallel)
 
 **Deliverables:**
+
 - ✅ Unwrap calls: < 200 (86% reduction)
 - ✅ TypeScript: Full strict mode
 - ✅ Engines: 17 → 12 (40% total reduction)
@@ -3328,6 +3641,7 @@ fn test_emergent_insight_creation() {
 ### Quarter 3 (Weeks 25-36): Performance & Scalability
 
 **Goals:**
+
 - Optimize memory usage
 - Improve performance
 - Implement unified event bus
@@ -3335,17 +3649,20 @@ fn test_emergent_insight_creation() {
 **Tasks:**
 
 **Weeks 25-30: Performance Optimization**
+
 - [ ] Memory profiling (jemalloc) (2 weeks)
 - [ ] HNSW vector paging (2 weeks)
 - [ ] Cache eviction policies (2 weeks)
 - [ ] Target: < 350MB active memory
 
 **Weeks 31-36: Event-Driven Architecture**
+
 - [ ] Unified event bus implementation (6 weeks)
 - [ ] Migrate critical paths to event-driven (6 weeks, parallel)
 - [ ] Observable telemetry (2 weeks, parallel)
 
 **Deliverables:**
+
 - ✅ Memory: 500MB → 350MB (30% reduction)
 - ✅ Performance: All metrics green
 - ✅ Architecture: Event-driven coordination
@@ -3353,6 +3670,7 @@ fn test_emergent_insight_creation() {
 ### Quarter 4 (Weeks 37-48): Production Launch
 
 **Goals:**
+
 - Final hardening
 - Documentation complete
 - Production deployment
@@ -3360,17 +3678,20 @@ fn test_emergent_insight_creation() {
 **Tasks:**
 
 **Weeks 37-42: Final Hardening**
+
 - [ ] Security penetration testing (2 weeks)
 - [ ] Performance benchmarking (1 week)
 - [ ] Edge case testing (2 weeks)
 - [ ] Documentation completion (1 week)
 
 **Weeks 43-48: Launch Preparation**
+
 - [ ] Beta testing (3 weeks)
 - [ ] Bug fixes (2 weeks)
 - [ ] Production deployment (1 week)
 
 **Deliverables:**
+
 - ✅ Production-ready: Grade A (95/100)
 - ✅ Documentation: Complete
 - ✅ Users: Beta program launched
@@ -3425,16 +3746,16 @@ fn test_emergent_insight_creation() {
 
 **Overall: B+ (85/100)**
 
-| Category | Score | Rationale |
-|----------|-------|-----------|
-| Innovation | A (92/100) | Genuinely novel cognitive architecture |
-| Code Quality | B- (80/100) | Solid but technical debt present |
-| Security | C+ (78/100) | Good foundations, critical gaps |
-| Performance | B+ (87/100) | Good but memory usage high |
-| Architecture | B (82/100) | Over-engineered but coherent |
-| Testing | A- (90/100) | High coverage, some gaps |
-| Documentation | C+ (75/100) | Present but incomplete |
-| Maintainability | C+ (72/100) | High complexity burden |
+| Category        | Score       | Rationale                              |
+| --------------- | ----------- | -------------------------------------- |
+| Innovation      | A (92/100)  | Genuinely novel cognitive architecture |
+| Code Quality    | B- (80/100) | Solid but technical debt present       |
+| Security        | C+ (78/100) | Good foundations, critical gaps        |
+| Performance     | B+ (87/100) | Good but memory usage high             |
+| Architecture    | B (82/100)  | Over-engineered but coherent           |
+| Testing         | A- (90/100) | High coverage, some gaps               |
+| Documentation   | C+ (75/100) | Present but incomplete                 |
+| Maintainability | C+ (72/100) | High complexity burden                 |
 
 ### Is This Production-Ready?
 
@@ -3443,21 +3764,25 @@ fn test_emergent_insight_creation() {
 **Long Answer:**
 
 **Today (Week 0):**
+
 - ❌ Production-ready: No (security blockers)
 - ✅ Beta-ready: Yes (features complete, stable)
 - ✅ Demo-ready: Yes (impressive capabilities)
 
 **After P0 (Week 4):**
+
 - ✅ Minimum viable production (security fixed)
 - ⚠️ High maintenance burden
 - ⚠️ Performance concerns on low-end hardware
 
 **After P0+P1 (Week 16):**
+
 - ✅ Recommended production (secure + stable)
 - ✅ Maintainable (CI/CD + type safety)
 - ⚠️ Still complex (20 engines)
 
 **After P0+P1+P2 (Week 24):**
+
 - ✅ Optimized production (12 engines, performant)
 - ✅ Sustainable (clear architecture)
 - ✅ Grade: A (95/100)
@@ -3465,11 +3790,13 @@ fn test_emergent_insight_creation() {
 ### Final Recommendation
 
 **TITANE∞ is a remarkable achievement:**
+
 - **Ambitious vision** (Cognitive Operating System)
 - **Novel architecture** (20 engines, Singularity state)
 - **Solid execution** (2,400+ tests, 0 vulns)
 
 **But it needs focused work:**
+
 - **Security hardening** (4 weeks, P0)
 - **Technical debt payoff** (12 weeks, P1)
 - **Architectural simplification** (8 weeks, P2)
@@ -3491,6 +3818,7 @@ fn test_emergent_insight_creation() {
 **End of Deep Reflection**
 
 **Document Stats:**
+
 - **Lines:** 1,458
 - **Sections:** 10 major + 50 subsections
 - **Code Examples:** 87
@@ -3498,6 +3826,7 @@ fn test_emergent_insight_creation() {
 - **Effort Estimates:** 42 (totaling ~100 weeks of work)
 
 **Next Steps:**
+
 1. Review this reflection with team
 2. Prioritize recommendations (agree on P0/P1/P2)
 3. Create GitHub issues from recommendations

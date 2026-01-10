@@ -32,7 +32,7 @@ dpkg -i *.deb
 ### 🧠 MODE PLAN OBLIGATOIRE
 
 1. **Analyser** le contexte complet
-2. **Proposer** un plan détaillé  
+2. **Proposer** un plan détaillé
 3. **Attendre** validation humaine
 4. **Exécuter** étape par étape
 5. **Valider** avec tests
@@ -44,7 +44,9 @@ dpkg -i *.deb
 const data: any = fetch();
 
 // ✅ REQUIS
-interface Data { id: string; }
+interface Data {
+  id: string;
+}
 const data: Data = fetch();
 ```
 
@@ -52,7 +54,7 @@ const data: Data = fetch();
 
 ```bash
 pnpm run check      # TypeScript
-pnpm run lint       # ESLint  
+pnpm run lint       # ESLint
 pnpm test -- --run  # Tests unitaires
 ```
 
@@ -104,16 +106,19 @@ pnpm test -- --run  # Tests unitaires
 ## 💻 STANDARDS CODE
 
 ### TypeScript
+
 - Types stricts (pas de `any`)
 - Interfaces explicites
 - Error handling complet
 
 ### Naming
+
 - Classes/Types: `PascalCase`
 - Functions/Variables: `camelCase`
 - Constants: `UPPER_SNAKE_CASE`
 
 ### Imports
+
 ```typescript
 // 1. External (React, Tauri)
 // 2. Internal (@/ paths)

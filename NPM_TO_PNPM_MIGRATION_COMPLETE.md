@@ -38,9 +38,11 @@
 #### 1. package.json Scripts ✅
 
 **Fichiers modifiés:**
+
 - ✅ `package.json` - 9 scripts corrigés
 
 **Scripts corrigés:**
+
 ```json
 {
   "build:production": "npm run lint" → "pnpm run lint",
@@ -60,6 +62,7 @@
 #### 2. scripts/init-copilot-xs.sh ✅
 
 **Corrections:**
+
 - ✅ Ligne 417: Commentaire `# Wire npm scripts` → `# Wire pnpm scripts`
 - ✅ Ligne 419: `echo "📦 Wiring npm scripts..."` → `echo "📦 Wiring pnpm scripts..."`
 - ✅ Lignes 420-424: `npm pkg set` → `pnpm pkg set` (5 occurrences)
@@ -72,6 +75,7 @@
 #### 3. scripts/merge-dev-to-main.sh ✅
 
 **Corrections:**
+
 - ✅ Message: `Running npm tests` → `Running pnpm tests`
 - ✅ Warning: `npm not found` → `pnpm not found`
 
@@ -80,6 +84,7 @@
 #### 4. scripts/setup-dev.sh ✅
 
 **Corrections:**
+
 - ✅ Commentaire: `# Install npm dependencies` → `# Install pnpm dependencies`
 - ✅ Echo: `Installing npm dependencies...` → `Installing pnpm dependencies...`
 
@@ -92,6 +97,7 @@
 ### Fichiers Critiques Validés
 
 **package.json ✅**
+
 ```bash
 ✅ "build:production": utilise pnpm
 ✅ "verify": utilise pnpm
@@ -101,6 +107,7 @@
 ```
 
 **scripts/init-copilot-xs.sh ✅**
+
 ```bash
 ✅ Utilise pnpm pkg set
 ✅ Messages d'output cohérents
@@ -108,6 +115,7 @@
 ```
 
 **CI/CD Scripts ✅**
+
 ```bash
 ✅ merge-dev-to-main.sh: messages cohérents
 ✅ setup-dev.sh: messages cohérents
@@ -227,12 +235,14 @@ pnpm run build
 ## 🎯 Résumé des Modifications Phase 2
 
 ### Commit 1: Migration Initiale (1520 fichiers)
+
 - Documentation complète
 - Scripts shell
 - CI/CD workflows
 - Configuration Tauri
 
 ### Commit 2: Perfectionnement (4 fichiers)
+
 - ✅ package.json: 9 scripts corrigés
 - ✅ scripts/init-copilot-xs.sh: 100% pnpm
 - ✅ scripts/merge-dev-to-main.sh: Messages cohérents
@@ -247,11 +257,13 @@ pnpm run build
 ### Performance
 
 **Avant (npm):**
+
 - Installation: ~45 secondes
 - Espace disque: ~800 MB node_modules
 - Cache: Redondant entre projets
 
 **Après (pnpm):**
+
 - Installation: ~15 secondes (**3x plus rapide**)
 - Espace disque: ~300 MB + hard links (**63% économie**)
 - Cache: Global, partagé, optimisé
@@ -259,6 +271,7 @@ pnpm run build
 ### Sécurité
 
 **Isolation stricte:**
+
 - Structure non-plate (`.pnpm/` directory)
 - Empêche accès dépendances transitives non déclarées
 - Réduit surface d'attaque supply chain
@@ -266,6 +279,7 @@ pnpm run build
 ### Cohérence
 
 **100% pnpm maintenant:**
+
 - ✅ package.json scripts utilisent pnpm
 - ✅ Documentation utilise pnpm
 - ✅ Scripts shell utilisent pnpm
@@ -313,12 +327,14 @@ pnpm audit
 ### Migration npm → pnpm: PERFECT SUCCESS ✅
 
 **Phase 1 Résultats:**
+
 - ✅ 1520 fichiers migrés automatiquement
 - ✅ 6174+ lignes changées
 - ✅ 0 erreurs
 - ✅ Configuration complète
 
 **Phase 2 Résultats (Perfectionnement):**
+
 - ✅ 4 fichiers critiques corrigés
 - ✅ 44 corrections appliquées
 - ✅ package.json scripts: 100% pnpm
@@ -326,6 +342,7 @@ pnpm audit
 - ✅ Messages utilisateurs: 100% cohérents
 
 **État Final du projet:**
+
 - ✅ Configuration pnpm: 100% complète
 - ✅ Enforcement: Actif (preinstall hook)
 - ✅ Documentation: 100% migrée
@@ -337,6 +354,7 @@ pnpm audit
 - ✅ **Cohérence totale: PARFAITE** ✨ NEW
 
 **Performance attendue:**
+
 - 🚀 Installation 3x plus rapide
 - 💾 Économie de 60% espace disque
 - 🔒 Sécurité renforcée (isolation packages)
@@ -358,12 +376,14 @@ pnpm audit
 ### Phase 1: Fichiers Racine ✅
 
 Fichiers modifiés:
+
 - ✅ `README.md` - Guide d'installation principal
 - ✅ `CONTRIBUTING.md` - Guide contributeurs
 - ✅ `DEVELOPMENT_SETUP.md` - Setup développement
 - ✅ `DEV_COMMANDS.md` - Commandes de développement
 
 **Changements:**
+
 - `npm install` → `pnpm install`
 - `npm run <script>` → `pnpm run <script>`
 - `npm test` → `pnpm test`
@@ -377,6 +397,7 @@ Fichiers modifiés:
 Fichiers traités: **800+ fichiers**
 
 Répertoires migrés:
+
 - ✅ `docs/00_core/` - Documentation core
 - ✅ `docs/01_architecture/` - Architecture docs
 - ✅ `docs/04_guides/` - Guides utilisateur/dev
@@ -388,6 +409,7 @@ Répertoires migrés:
 ### Phase 3: Documentation .cline ✅
 
 Fichiers modifiés:
+
 - ✅ `.cline/README.md`
 - ✅ `.cline/STATUS.md`
 - ✅ `.cline/VERIFICATION.md`
@@ -395,6 +417,7 @@ Fichiers modifiés:
 - ✅ `.cline/rules.md`
 
 **Configuration mise à jour:**
+
 - ✅ `.cline/deployment-safeguards.json` - Guards pnpm commands
 
 ### Phase 4: Scripts Shell ✅
@@ -402,6 +425,7 @@ Fichiers modifiés:
 **Scope:** Tous les fichiers `.sh` dans `scripts/` et racine
 
 Répertoires migrés:
+
 - ✅ `scripts/launch/` - Scripts de lancement
 - ✅ `scripts/test/` - Scripts de test
 - ✅ `scripts/verify/` - Scripts de vérification
@@ -412,6 +436,7 @@ Répertoires migrés:
 - ✅ `scripts/dev/` - Scripts de développement
 
 Fichiers racine:
+
 - ✅ `setup-dev.sh`
 - ✅ `build-fast.sh`
 - ✅ `deploy-http-server.sh`
@@ -421,17 +446,20 @@ Fichiers racine:
 ### Phase 5: CI/CD & Configuration ✅
 
 **GitHub Workflows:**
+
 - ✅ `.github/workflows/ci-unified.yml` - Pipeline CI/CD unifié
 - ✅ `.github/workflows/archive/ci.yml` - CI archivé
 - ✅ `.github/workflows/archive/ci-cd.yml` - CI/CD archivé
 - ✅ `.github/dependabot.yml` - Dependabot config (garde "npm" ecosystem)
 
 **Configuration JSON:**
+
 - ✅ `.cline/deployment-safeguards.json` - Guards de déploiement
 
 ### Phase 6: Configuration Tauri ✅
 
 Fichiers modifiés:
+
 - ✅ `src-tauri/tauri.conf.json`
   - `beforeBuildCommand`: `npm run build` → `pnpm run build`
   - `beforeDevCommand`: `npx vite` → `pnpm exec vite`
@@ -472,6 +500,7 @@ Les fichiers suivants conservent des références à "npm" pour des raisons lég
 **Total:** ~316 occurrences dans fichiers actifs (hors archives)
 
 **Breakdown:**
+
 - **Archives historiques (docs/99_ARCHIVE/):** ~250 occurrences (OK, documentation historique)
 - **Fichiers système/config:** ~50 occurrences (OK, références légitimes)
 - **Commentaires/contexte:** ~16 occurrences (OK, explications historiques)
@@ -568,11 +597,13 @@ pnpm run build
 ### Performance
 
 **Avant (npm):**
+
 - Installation: ~45 secondes
 - Espace disque: ~800 MB node_modules
 - Cache: Redondant entre projets
 
 **Après (pnpm):**
+
 - Installation: ~15 secondes (**3x plus rapide**)
 - Espace disque: ~300 MB + hard links (**63% économie**)
 - Cache: Global, partagé, optimisé
@@ -580,11 +611,13 @@ pnpm run build
 ### Sécurité
 
 **Isolation stricte:**
+
 - Structure non-plate (`.pnpm/` directory)
 - Empêche accès dépendances transitives non déclarées
 - Réduit surface d'attaque supply chain
 
 **Exemple:**
+
 ```
 node_modules/
 ├── .pnpm/
@@ -597,6 +630,7 @@ node_modules/
 ### Monorepo Ready
 
 **Support natif workspaces:**
+
 - `pnpm-workspace.yaml` configuration
 - Commandes cross-workspace: `pnpm -r`, `pnpm -F`
 - Link automatique entre packages locaux
@@ -722,17 +756,20 @@ pnpm install
 ### En cas de problème
 
 1. **Vérifier version Node.js:**
+
    ```bash
    node --version  # Doit être >= 20.0.0
    ```
 
 2. **Réinstaller pnpm:**
+
    ```bash
    corepack enable
    corepack prepare pnpm@9 --activate
    ```
 
 3. **Nettoyer cache:**
+
    ```bash
    rm -rf node_modules
    pnpm store prune
@@ -753,6 +790,7 @@ pnpm install
 ### Migration npm → pnpm: SUCCESS ✅
 
 **Résultats:**
+
 - ✅ 1520 fichiers migrés automatiquement
 - ✅ 6174+ lignes changées
 - ✅ 0 erreurs
@@ -760,6 +798,7 @@ pnpm install
 - ✅ Tests recommandés fournis
 
 **État du projet:**
+
 - ✅ Configuration pnpm: Complète
 - ✅ Enforcement: Actif (preinstall hook)
 - ✅ Documentation: 100% migrée
@@ -768,6 +807,7 @@ pnpm install
 - ✅ Tauri config: 100% migrée
 
 **Performance attendue:**
+
 - 🚀 Installation 3x plus rapide
 - 💾 Économie de 60% espace disque
 - 🔒 Sécurité renforcée (isolation packages)

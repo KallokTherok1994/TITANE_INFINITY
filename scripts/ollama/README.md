@@ -5,6 +5,7 @@ Scripts pour gérer l'intégration d'Ollama (IA locale) avec TITANE∞.
 ## 📁 Fichiers
 
 ### Scripts principaux
+
 - **`run-ollama.sh`** — Launcher complet (serve, pull, status, test...)
 - **`install-models.sh`** — Installation interactive des modèles TITANE∞
 - **`install-models-auto.sh`** — Installation automatique (CI/CD)
@@ -12,6 +13,7 @@ Scripts pour gérer l'intégration d'Ollama (IA locale) avec TITANE∞.
 - **`setup-ollama-alias.sh`** — Configure l'alias global `/ollama`
 
 ### Fichiers annexes
+
 - `README.md` — Ce fichier
 - `ACTIVATION.md` — Guide d'activation de l'alias
 - `bashrc-snippet.sh` — Snippet pour ~/.bashrc

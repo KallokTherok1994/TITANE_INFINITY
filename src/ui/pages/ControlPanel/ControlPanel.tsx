@@ -22,34 +22,54 @@ import type { ControlPanelSection } from './types';
 // ═══════════════════════════════════════════════════════════════════
 
 const SystemSection = lazy(() =>
-  import('@/ui/pages/ControlPanel/sections/SystemSection').then(m => ({ default: m.SystemSection }))
+  import('@/ui/pages/ControlPanel/sections/SystemSection').then(m => ({
+    default: m.SystemSection,
+  }))
 );
 const AppearanceSection = lazy(() =>
-  import('@/ui/pages/ControlPanel/sections/AppearanceSection').then(m => ({ default: m.AppearanceSection }))
+  import('@/ui/pages/ControlPanel/sections/AppearanceSection').then(m => ({
+    default: m.AppearanceSection,
+  }))
 );
 const SingularitySection = lazy(() =>
-  import('@/ui/pages/ControlPanel/sections/SingularitySection').then(m => ({ default: m.SingularitySection }))
+  import('@/ui/pages/ControlPanel/sections/SingularitySection').then(m => ({
+    default: m.SingularitySection,
+  }))
 );
 const AISection = lazy(() =>
-  import('@/ui/pages/ControlPanel/sections/AISection').then(m => ({ default: m.AISection }))
+  import('@/ui/pages/ControlPanel/sections/AISection').then(m => ({
+    default: m.AISection,
+  }))
 );
 const MemorySection = lazy(() =>
-  import('@/ui/pages/ControlPanel/sections/MemorySection').then(m => ({ default: m.MemorySection }))
+  import('@/ui/pages/ControlPanel/sections/MemorySection').then(m => ({
+    default: m.MemorySection,
+  }))
 );
 const ModulesSection = lazy(() =>
-  import('@/ui/pages/ControlPanel/sections/ModulesSection').then(m => ({ default: m.ModulesSection }))
+  import('@/ui/pages/ControlPanel/sections/ModulesSection').then(m => ({
+    default: m.ModulesSection,
+  }))
 );
 const NetworkSection = lazy(() =>
-  import('@/ui/pages/ControlPanel/sections/NetworkSection').then(m => ({ default: m.NetworkSection }))
+  import('@/ui/pages/ControlPanel/sections/NetworkSection').then(m => ({
+    default: m.NetworkSection,
+  }))
 );
 const UpdatesSection = lazy(() =>
-  import('@/ui/pages/ControlPanel/sections/UpdatesSection').then(m => ({ default: m.UpdatesSection }))
+  import('@/ui/pages/ControlPanel/sections/UpdatesSection').then(m => ({
+    default: m.UpdatesSection,
+  }))
 );
 const LogsSection = lazy(() =>
-  import('@/ui/pages/ControlPanel/sections/LogsSection').then(m => ({ default: m.LogsSection }))
+  import('@/ui/pages/ControlPanel/sections/LogsSection').then(m => ({
+    default: m.LogsSection,
+  }))
 );
 const SecuritySection = lazy(() =>
-  import('@/ui/pages/ControlPanel/sections/SecuritySection').then(m => ({ default: m.SecuritySection }))
+  import('@/ui/pages/ControlPanel/sections/SecuritySection').then(m => ({
+    default: m.SecuritySection,
+  }))
 );
 
 // ═══════════════════════════════════════════════════════════════════

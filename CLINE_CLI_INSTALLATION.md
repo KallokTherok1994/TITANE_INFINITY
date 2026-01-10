@@ -5,6 +5,7 @@
 Cline CLI est installé et configuré avec les hooks d'intégration pour TITANE∞.
 
 ### 📦 Version Installée
+
 - **Cline CLI Version:** 1.0.8
 - **Cline Core Version:** 3.39.2
 - **OS/Arch:** linux/amd64
@@ -12,6 +13,7 @@ Cline CLI est installé et configuré avec les hooks d'intégration pour TITANE�
 - **Date d'installation:** 2 janvier 2026
 
 ### 🔑 Authentification
+
 - **Provider:** OpenRouter
 - **Mode Plan:** openrouter
 - **Mode Act:** openrouter
@@ -61,6 +63,7 @@ cline "Corriger les tests" -s hooks_enabled=true -m act
 ### Avec VS Code Extension
 
 Les hooks fonctionnent automatiquement si activés dans les paramètres Cline de VS Code :
+
 1. Ouvrir Cline dans VS Code
 2. Aller dans l'onglet "Hooks"
 3. Les hooks du projet apparaissent dans la section "Project-Specific Hooks"
@@ -71,6 +74,7 @@ Les hooks fonctionnent automatiquement si activés dans les paramètres Cline de
 Les hooks appliquent automatiquement la **RÈGLE CRITIQUE DE DÉPLOIEMENT** :
 
 ### ❌ Bloqué Automatiquement
+
 - `npm run build`
 - `tauri build`
 - `./runtime/stable/build.sh`
@@ -79,6 +83,7 @@ Les hooks appliquent automatiquement la **RÈGLE CRITIQUE DE DÉPLOIEMENT** :
 - Installations système non autorisées
 
 ### ✅ Autorisé
+
 - `npm run dev`
 - Tâche "🟢 Launch Titan-Dev"
 - `npm test`
@@ -116,6 +121,7 @@ export CLINE_HOOKS_VERBOSE=1
 ### Personnalisation des Hooks
 
 Pour modifier un hook :
+
 1. Éditer le fichier dans `.clinerules/hooks/`
 2. Tester avec : `echo '{"test":"data"}' | .clinerules/hooks/HookName`
 3. Vérifier que le JSON de sortie est valide
@@ -129,6 +135,7 @@ cline "Analyser les composants React" -s hooks_enabled=true
 ```
 
 Le hook `UserPromptSubmit` détecte "React" et injecte automatiquement :
+
 - Standards de composants fonctionnels
 - Patterns TypeScript appropriés
 - Références aux composants existants
@@ -140,6 +147,7 @@ cline "Build production pour déploiement" -s hooks_enabled=true
 ```
 
 Le hook `PreToolUse` bloque immédiatement avec le message :
+
 ```
 ⚠️ VIOLATION CRITIQUE: Tentative de déploiement production non autorisée.
 Le déploiement production nécessite:
@@ -155,6 +163,7 @@ cline "Exécuter tous les tests" -s hooks_enabled=true
 ```
 
 Le hook `PostToolUse` surveille et log :
+
 - Temps d'exécution des tests
 - Échecs détectés
 - Suggestions d'optimisation

@@ -622,8 +622,8 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
         </div>
 
         {/* ═══ THINKING PANEL ═══ */}
-        <ThinkingPanel 
-          steps={thinking.steps} 
+        <ThinkingPanel
+          steps={thinking.steps}
           isThinking={thinking.isThinking}
           compact={thinking.compact}
           inline={false}

@@ -32,7 +32,7 @@ describe('devSudoPatterns', () => {
       Object.entries(DEV_SUDO_PATTERNS).forEach(([action, patterns]) => {
         expect(patterns).toBeInstanceOf(Array);
         expect(patterns.length).toBeGreaterThan(0);
-        patterns.forEach((pattern) => {
+        patterns.forEach(pattern => {
           expect(pattern).toBeInstanceOf(RegExp);
         });
       });
@@ -182,10 +182,12 @@ describe('devSudoPatterns', () => {
         'extended',
       ];
 
-      domains.forEach((domain) => {
+      domains.forEach(domain => {
         // Each domain should have at least one action
         const actions = Object.keys(DEV_SUDO_PATTERNS) as DevSudoAction[];
-        const domainActions = actions.filter((action) => getActionDomain(action) === domain);
+        const domainActions = actions.filter(
+          action => getActionDomain(action) === domain
+        );
         expect(domainActions.length).toBeGreaterThan(0);
       });
     });
@@ -229,7 +231,7 @@ describe('devSudoPatterns', () => {
         'analyze-camera',
       ];
 
-      keyActions.forEach((action) => {
+      keyActions.forEach(action => {
         const patterns = DEV_SUDO_PATTERNS[action];
         expect(patterns).toBeDefined();
         expect(patterns.length).toBeGreaterThan(0);
@@ -240,7 +242,7 @@ describe('devSudoPatterns', () => {
       // Common actions should have 2+ pattern variations
       const commonActions: DevSudoAction[] = ['fix-deps', 'restart-tauri', 'fix-all'];
 
-      commonActions.forEach((action) => {
+      commonActions.forEach(action => {
         const patterns = DEV_SUDO_PATTERNS[action];
         expect(patterns.length).toBeGreaterThanOrEqual(2);
       });
@@ -250,18 +252,13 @@ describe('devSudoPatterns', () => {
   describe('Pattern Conflicts', () => {
     it('should not have ambiguous patterns', () => {
       // Test that each command matches to only one action
-      const testCommands = [
-        'fix deps',
-        'restart tauri',
-        'show menu',
-        'test bubble',
-      ];
+      const testCommands = ['fix deps', 'restart tauri', 'show menu', 'test bubble'];
 
-      testCommands.forEach((cmd) => {
+      testCommands.forEach(cmd => {
         const matches: DevSudoAction[] = [];
 
         Object.entries(DEV_SUDO_PATTERNS).forEach(([action, patterns]) => {
-          if (patterns.some((p) => p.test(cmd))) {
+          if (patterns.some(p => p.test(cmd))) {
             matches.push(action as DevSudoAction);
           }
         });
@@ -275,7 +272,7 @@ describe('devSudoPatterns', () => {
   describe('Regex Flags', () => {
     it('should use case-insensitive flag where appropriate', () => {
       Object.entries(DEV_SUDO_PATTERNS).forEach(([action, patterns]) => {
-        patterns.forEach((pattern) => {
+        patterns.forEach(pattern => {
           // Most patterns should be case-insensitive
           expect(pattern.flags).toContain('i');
         });

@@ -14,8 +14,9 @@ export interface AlertProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const variantStyles = {
   // Default - monochrome
-  default: 'bg-titanium-bg-interactive border-titanium-border-default text-titanium-text-primary',
-  
+  default:
+    'bg-titanium-bg-interactive border-titanium-border-default text-titanium-text-primary',
+
   // Semantic variants
   error: 'bg-error-100 border-error-500/30 text-error-700',
   success: 'bg-success-100 border-success-500/30 text-success-700',
@@ -46,10 +47,7 @@ export function AlertTitle({
   ...props
 }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
-    <h5
-      className={`mb-2 font-semibold leading-tight text-base ${className}`}
-      {...props}
-    >
+    <h5 className={`mb-2 font-semibold leading-tight text-base ${className}`} {...props}>
       {children}
     </h5>
   );

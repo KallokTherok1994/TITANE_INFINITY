@@ -540,8 +540,19 @@ fn main() {
             // 🎯 Initialize OMEGA Conversation Engine (v19.5.2)
             let storage_dir = app.path().app_data_dir()
                 .unwrap_or_else(|_| std::path::PathBuf::from("/tmp/titane"));
-            let password = std::env::var("TITANE_SECRETS_PASSPHRASE")
-                .unwrap_or_else(|_| "default-dev-passphrase-change-in-production".to_string());
+            let password = match std::env::var("TITANE_SECRETS_PASSPHRASE") {
+                Ok(value) => value,
+                Err(_) if cfg!(debug_assertions) => {
+                    "default-dev-passphrase-change-in-production".to_string()
+                }
+                Err(_) => {
+                    eprintln!(
+                        "❌ TITANE∞ FATAL: Missing TITANE_SECRETS_PASSPHRASE in non-dev build"
+                    );
+                    eprintln!("   → Please set TITANE_SECRETS_PASSPHRASE and restart.");
+                    std::process::exit(1);
+                }
+            };
 
             // AIRouter initialization (for OMEGA pipeline)
             let ai_router = Arc::new(tokio::sync::RwLock::new(

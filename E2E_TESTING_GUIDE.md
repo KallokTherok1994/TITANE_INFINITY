@@ -26,6 +26,7 @@ npm run test:e2e
 ```
 
 **What it tests:**
+
 - App launch & initialization
 - Chat interactions
 - Visual engine rendering
@@ -33,6 +34,7 @@ npm run test:e2e
 - System resilience
 
 **Test files:**
+
 - `e2e/critical/app-launch.spec.ts`
 - `e2e/critical/chat-interaction.spec.ts`
 - `e2e/critical/visual-engine.spec.ts`
@@ -54,6 +56,7 @@ npm run test:e2e:vitest
 ```
 
 **What it tests:**
+
 - New user onboarding flow
 - Legal designer workflow
 - Advanced web search
@@ -61,6 +64,7 @@ npm run test:e2e:vitest
 - Complex multi-module interactions
 
 **Test file:**
+
 - `src/tests/e2e/titane_e2e.test.ts` (5 scenarios, 16 tests)
 
 ---
@@ -69,11 +73,11 @@ npm run test:e2e:vitest
 
 ### Currently Active
 
-| Test Type | Status | Count | Coverage |
-|-----------|--------|-------|----------|
-| Unit Tests | ✅ Active | 2306 | 99.3% |
-| Playwright E2E | ✅ Active | 11 | UI Critical Path |
-| Vitest E2E | ⏭️ Skipped | 16 | Backend Integration |
+| Test Type      | Status     | Count | Coverage            |
+| -------------- | ---------- | ----- | ------------------- |
+| Unit Tests     | ✅ Active  | 2306  | 99.3%               |
+| Playwright E2E | ✅ Active  | 11    | UI Critical Path    |
+| Vitest E2E     | ⏭️ Skipped | 16    | Backend Integration |
 
 ### Why Vitest E2E Tests Are Skipped
 
@@ -193,6 +197,7 @@ jobs:
 **File:** `playwright.config.ts`
 
 Key settings:
+
 - `baseURL`: `http://localhost:5173`
 - `timeout`: 30s per test
 - `retries`: 2 in CI, 0 locally
@@ -203,6 +208,7 @@ Key settings:
 **File:** `src/tests/e2e/titane_e2e.test.ts`
 
 Key features:
+
 - Conditional skip: `describe.skipIf(!process.env.RUN_E2E_TESTS)`
 - Performance tracing: `measureStep()` utility
 - JSON traces: Logs detailed step-by-step execution
@@ -216,6 +222,7 @@ Key features:
 **Cause:** Tauri backend not running
 
 **Solution:**
+
 ```bash
 # Check if dev server is running
 curl http://localhost:5173
@@ -229,6 +236,7 @@ npm run dev
 **Cause:** Playwright browsers not installed
 
 **Solution:**
+
 ```bash
 npx playwright install chromium
 ```
@@ -238,6 +246,7 @@ npx playwright install chromium
 **Cause:** `RUN_E2E_TESTS` environment variable not set
 
 **Solution:**
+
 ```bash
 # Linux/macOS
 RUN_E2E_TESTS=1 npm run test:e2e:vitest
@@ -254,6 +263,7 @@ set RUN_E2E_TESTS=1 && npm run test:e2e:vitest
 **Cause:** Slow backend initialization or race conditions
 
 **Solutions:**
+
 1. Increase timeout: `expect(...).timeout(10000)`
 2. Add explicit waits: `await page.waitForSelector('.chat-ready')`
 3. Disable parallelization: `fullyParallel: false` in Playwright config
@@ -272,13 +282,13 @@ import { test, expect } from '@playwright/test';
 test.describe('My Feature', () => {
   test('should perform action', async ({ page }) => {
     await page.goto('/');
-    
+
     // Wait for app initialization
     await page.waitForSelector('.app-ready', { timeout: 10000 });
-    
+
     // Interact with UI
     await page.click('[data-testid="my-button"]');
-    
+
     // Assert result
     await expect(page.locator('.result')).toHaveText('Success');
   });
@@ -295,7 +305,7 @@ import { invoke } from '@tauri-apps/api/core';
 describe.skipIf(!process.env.RUN_E2E_TESTS)('My Integration', () => {
   it('should call backend command', async () => {
     const result = await invoke('my_command', { param: 'value' });
-    
+
     expect(result).toBeDefined();
     expect(result.status).toBe('success');
   });
@@ -307,16 +317,19 @@ describe.skipIf(!process.env.RUN_E2E_TESTS)('My Integration', () => {
 ## Best Practices
 
 ### 1. Test Isolation
+
 - Each test should be independent
 - Clean up state in `afterEach` hooks
 - Use unique identifiers (timestamps, UUIDs)
 
 ### 2. Explicit Waits
+
 - Avoid `page.waitForTimeout()` (flaky)
 - Use `page.waitForSelector()` instead
 - Set reasonable timeouts (5-10s)
 
 ### 3. Descriptive Assertions
+
 ```typescript
 // ❌ Bad
 expect(result).toBe(true);
@@ -326,6 +339,7 @@ expect(result.success, 'Command should succeed').toBe(true);
 ```
 
 ### 4. Visual Debugging
+
 ```typescript
 // Playwright
 test('my test', async ({ page }) => {
@@ -335,6 +349,7 @@ test('my test', async ({ page }) => {
 ```
 
 ### 5. Selective Test Execution
+
 ```bash
 # Run specific test file
 npx playwright test chat-interaction.spec.ts
@@ -351,6 +366,7 @@ npx playwright test --headed
 ## Performance Tips
 
 ### 1. Parallel Execution
+
 Playwright runs tests in parallel by default. Disable for debugging:
 
 ```typescript
@@ -360,6 +376,7 @@ workers: 1,
 ```
 
 ### 2. Browser Reuse
+
 Reuse browser context across tests:
 
 ```typescript
@@ -368,6 +385,7 @@ test.use({ storageState: 'state.json' });
 ```
 
 ### 3. Skip Heavy Tests in CI
+
 Use `@slow` tag for optional tests:
 
 ```typescript
@@ -390,6 +408,7 @@ npx playwright test --grep-invert @slow
 See `.github/workflows/e2e-tests.yml` (template above)
 
 ### Key Considerations
+
 - Use `ubuntu-latest` for consistency
 - Install Playwright with `--with-deps`
 - Use `wait-on` to ensure server readiness
@@ -402,12 +421,12 @@ See `.github/workflows/e2e-tests.yml` (template above)
 
 ### Current E2E Coverage
 
-| Category | Tests | Status | Runtime |
-|----------|-------|--------|---------|
-| Playwright Critical Path | 5 | ✅ Active | ~30s |
-| Playwright Extended | 6 | ✅ Active | ~45s |
-| Vitest Backend Integration | 16 | ⏭️ Skipped | ~60s |
-| **Total E2E Tests** | **27** | **11 active** | **~2min** |
+| Category                   | Tests  | Status        | Runtime   |
+| -------------------------- | ------ | ------------- | --------- |
+| Playwright Critical Path   | 5      | ✅ Active     | ~30s      |
+| Playwright Extended        | 6      | ✅ Active     | ~45s      |
+| Vitest Backend Integration | 16     | ⏭️ Skipped    | ~60s      |
+| **Total E2E Tests**        | **27** | **11 active** | **~2min** |
 
 ### Target Coverage
 

@@ -97,9 +97,7 @@ class VoiceFingerprintTauriService {
    */
   async checkIsTitaneSpeaking(samples: Float32Array): Promise<VoiceFingerprintResult> {
     if (!this.isCalibrated) {
-      logger.warn(
-        '⚠️ TITANE profile not calibrated, returning false'
-      );
+      logger.warn('⚠️ TITANE profile not calibrated, returning false');
       return { isTitane: false, similarity: 0.0 };
     }
 

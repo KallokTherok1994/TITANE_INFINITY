@@ -13,6 +13,7 @@
 ### Explication
 
 **Mode Développement (`tauri dev`):**
+
 - Démarre un serveur Vite local sur http://localhost:5173
 - Ce serveur est **uniquement accessible par le Tauri WebView**
 - **PAS** un serveur HTTP standalone accessible depuis l'extérieur
@@ -20,6 +21,7 @@
 - L'application reste 100% native via l'encapsulation Tauri
 
 **Mode Production (`tauri build`):**
+
 - Utilise `frontendDist: "../dist"` (fichiers statiques)
 - **AUCUN serveur HTTP**
 - 100% application native pure
@@ -30,7 +32,7 @@ La règle "AUCUN serveur HTTP" signifie:
 ❌ Pas de serveur HTTP **standalone accessible**
 ✅ Serveur Vite **wrappé par Tauri** OK (dev seulement)
 
-**Analogie:** 
+**Analogie:**
 C'est comme un moteur de voiture. Le moteur tourne (serveur Vite), mais il est **encapsulé dans la voiture** (Tauri). Personne ne peut accéder au moteur directement depuis l'extérieur.
 
 ### Architecture Technique

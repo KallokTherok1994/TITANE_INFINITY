@@ -58,50 +58,50 @@ export interface RateLimitStats {
 
 // v26.4.0: Configuration très permissive pour éviter les blocages
 export const DEFAULT_RATE_CONFIG: RateLimitConfig = {
-  requestsPerMinute: 1000,      // Était 60
-  requestsPerHour: 100000,      // Était 1000
-  tokensPerMinute: 10000000,    // Était 100000
-  burstAllowance: 500,          // Était 10
-  cooldownMs: 100,              // Était 5000
+  requestsPerMinute: 1000, // Était 60
+  requestsPerHour: 100000, // Était 1000
+  tokensPerMinute: 10000000, // Était 100000
+  burstAllowance: 500, // Était 10
+  cooldownMs: 100, // Était 5000
 };
 
 // v26.4.0: Provider-specific rate limits - TRÈS PERMISSIF
 export const PROVIDER_RATE_CONFIGS: Record<string, Partial<RateLimitConfig>> = {
   claude: {
-    requestsPerMinute: 500,       // Était 50
-    requestsPerHour: 50000,       // Était 500
-    tokensPerMinute: 5000000,     // Était 80000
-    cooldownMs: 100,              // Était 10000
+    requestsPerMinute: 500, // Était 50
+    requestsPerHour: 50000, // Était 500
+    tokensPerMinute: 5000000, // Était 80000
+    cooldownMs: 100, // Était 10000
   },
   openai: {
-    requestsPerMinute: 500,       // Était 60
-    requestsPerHour: 50000,       // Était 1000
-    tokensPerMinute: 5000000,     // Était 90000
-    cooldownMs: 100,              // Était 8000
+    requestsPerMinute: 500, // Était 60
+    requestsPerHour: 50000, // Était 1000
+    tokensPerMinute: 5000000, // Était 90000
+    cooldownMs: 100, // Était 8000
   },
   gemini: {
-    requestsPerMinute: 500,       // Était 60
-    requestsPerHour: 50000,       // Était 1500
-    tokensPerMinute: 5000000,     // Était 100000
-    cooldownMs: 100,              // Était 5000
+    requestsPerMinute: 500, // Était 60
+    requestsPerHour: 50000, // Était 1500
+    tokensPerMinute: 5000000, // Était 100000
+    cooldownMs: 100, // Était 5000
   },
   'tauri-backend': {
-    requestsPerMinute: 10000,     // Était 120
-    requestsPerHour: 1000000,     // Était 3000
-    tokensPerMinute: 100000000,   // Était 200000
-    cooldownMs: 10,               // Était 2000
+    requestsPerMinute: 10000, // Était 120
+    requestsPerHour: 1000000, // Était 3000
+    tokensPerMinute: 100000000, // Était 200000
+    cooldownMs: 10, // Était 2000
   },
   ollama: {
-    requestsPerMinute: 10000,     // Était 100
-    requestsPerHour: 1000000,     // Était 5000
-    tokensPerMinute: 100000000,   // Était 500000
-    cooldownMs: 10,               // Était 1000
+    requestsPerMinute: 10000, // Était 100
+    requestsPerHour: 1000000, // Était 5000
+    tokensPerMinute: 100000000, // Était 500000
+    cooldownMs: 10, // Était 1000
   },
   'titane-local': {
-    requestsPerMinute: 100000,    // Était 200
-    requestsPerHour: 10000000,    // Était 10000
-    tokensPerMinute: 1000000000,  // Était 1000000
-    cooldownMs: 1,                // Était 500
+    requestsPerMinute: 100000, // Était 200
+    requestsPerHour: 10000000, // Était 10000
+    tokensPerMinute: 1000000000, // Était 1000000
+    cooldownMs: 1, // Était 500
   },
 };
 

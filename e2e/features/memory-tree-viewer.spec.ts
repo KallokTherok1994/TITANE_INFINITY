@@ -20,8 +20,10 @@ test.describe('Feature: Memory Tree Viewer', () => {
     await page.waitForSelector('nav, [role="navigation"]', { timeout: 10000 });
 
     // Navigate to TitanePage (may use button, link, or direct navigation)
-    const titanePageLink = page.locator('a[href*="titane"], button:has-text("TITANE")').first();
-    
+    const titanePageLink = page
+      .locator('a[href*="titane"], button:has-text("TITANE")')
+      .first();
+
     if (await titanePageLink.isVisible({ timeout: 2000 }).catch(() => false)) {
       await titanePageLink.click();
     } else {
@@ -33,15 +35,21 @@ test.describe('Feature: Memory Tree Viewer', () => {
     await page.waitForSelector('.titane-section', { timeout: 10000 });
 
     // Look for Memory tab/button
-    const memoryTab = page.locator('button:has-text("Mémoire"), button:has-text("💾"), [data-tab="memory-map"]').first();
-    
+    const memoryTab = page
+      .locator(
+        'button:has-text("Mémoire"), button:has-text("💾"), [data-tab="memory-map"]'
+      )
+      .first();
+
     if (await memoryTab.isVisible({ timeout: 5000 }).catch(() => false)) {
       await memoryTab.click();
       await page.waitForTimeout(500);
     }
 
     // Verify Memory section elements are present
-    const memorySection = page.locator('.titane-section-memory, .memory-tree-container').first();
+    const memorySection = page
+      .locator('.titane-section-memory, .memory-tree-container')
+      .first();
     await expect(memorySection).toBeVisible({ timeout: 10000 });
   });
 
@@ -51,7 +59,9 @@ test.describe('Feature: Memory Tree Viewer', () => {
     await page.waitForTimeout(2000);
 
     // Click Memory tab if available
-    const memoryTab = page.locator('button:has-text("Mémoire"), button:has-text("💾")').first();
+    const memoryTab = page
+      .locator('button:has-text("Mémoire"), button:has-text("💾")')
+      .first();
     if (await memoryTab.isVisible({ timeout: 2000 }).catch(() => false)) {
       await memoryTab.click();
       await page.waitForTimeout(500);
@@ -75,15 +85,21 @@ test.describe('Feature: Memory Tree Viewer', () => {
     await page.goto('http://localhost:5173/#/titane');
     await page.waitForTimeout(2000);
 
-    const memoryTab = page.locator('button:has-text("Mémoire"), button:has-text("💾")').first();
+    const memoryTab = page
+      .locator('button:has-text("Mémoire"), button:has-text("💾")')
+      .first();
     if (await memoryTab.isVisible({ timeout: 2000 }).catch(() => false)) {
       await memoryTab.click();
       await page.waitForTimeout(500);
     }
 
     // Wait for search input
-    const searchInput = page.locator('.memory-tree-search input, input[placeholder*="recherche"], input[placeholder*="Recherche"]').first();
-    
+    const searchInput = page
+      .locator(
+        '.memory-tree-search input, input[placeholder*="recherche"], input[placeholder*="Recherche"]'
+      )
+      .first();
+
     if (await searchInput.isVisible({ timeout: 5000 }).catch(() => false)) {
       // Type search query
       await searchInput.fill('Court Terme');
@@ -102,15 +118,21 @@ test.describe('Feature: Memory Tree Viewer', () => {
     await page.goto('http://localhost:5173/#/titane');
     await page.waitForTimeout(2000);
 
-    const memoryTab = page.locator('button:has-text("Mémoire"), button:has-text("💾")').first();
+    const memoryTab = page
+      .locator('button:has-text("Mémoire"), button:has-text("💾")')
+      .first();
     if (await memoryTab.isVisible({ timeout: 2000 }).catch(() => false)) {
       await memoryTab.click();
       await page.waitForTimeout(500);
     }
 
     // Wait for zoom controls
-    const zoomInButton = page.locator('button[title*="Zoom avant"], button:has-text("+")').first();
-    const zoomOutButton = page.locator('button[title*="Zoom arrière"], button:has-text("-")').first();
+    const zoomInButton = page
+      .locator('button[title*="Zoom avant"], button:has-text("+")')
+      .first();
+    const zoomOutButton = page
+      .locator('button[title*="Zoom arrière"], button:has-text("-")')
+      .first();
     const resetButton = page.locator('button[title*="Réinitialiser"]').first();
 
     // Test zoom controls if available
@@ -137,7 +159,9 @@ test.describe('Feature: Memory Tree Viewer', () => {
     await page.goto('http://localhost:5173/#/titane');
     await page.waitForTimeout(2000);
 
-    const memoryTab = page.locator('button:has-text("Mémoire"), button:has-text("💾")').first();
+    const memoryTab = page
+      .locator('button:has-text("Mémoire"), button:has-text("💾")')
+      .first();
     if (await memoryTab.isVisible({ timeout: 2000 }).catch(() => false)) {
       await memoryTab.click();
       await page.waitForTimeout(1000);
@@ -145,11 +169,11 @@ test.describe('Feature: Memory Tree Viewer', () => {
 
     // Wait for tree container
     const treeContainer = page.locator('.memory-tree-container').first();
-    
+
     if (await treeContainer.isVisible({ timeout: 5000 }).catch(() => false)) {
       // Try to click a tree node (D3 tree nodes)
       const treeNode = treeContainer.locator('g.rd3t-node, foreignObject').first();
-      
+
       if (await treeNode.isVisible({ timeout: 3000 }).catch(() => false)) {
         await treeNode.click();
         await page.waitForTimeout(500);
@@ -168,7 +192,9 @@ test.describe('Feature: Memory Tree Viewer', () => {
     await page.goto('http://localhost:5173/#/titane');
     await page.waitForTimeout(2000);
 
-    const memoryTab = page.locator('button:has-text("Mémoire"), button:has-text("💾")').first();
+    const memoryTab = page
+      .locator('button:has-text("Mémoire"), button:has-text("💾")')
+      .first();
     if (await memoryTab.isVisible({ timeout: 2000 }).catch(() => false)) {
       await memoryTab.click();
       await page.waitForTimeout(500);
@@ -176,7 +202,7 @@ test.describe('Feature: Memory Tree Viewer', () => {
 
     // Look for filter dropdown (type: short, mid, long)
     const filterSelect = page.locator('select, .memory-tree-filter select').first();
-    
+
     if (await filterSelect.isVisible({ timeout: 5000 }).catch(() => false)) {
       // Select "Court terme"
       await filterSelect.selectOption({ label: /Court terme/ });

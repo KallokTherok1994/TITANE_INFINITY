@@ -102,7 +102,9 @@ export function useChatStreaming(
             setStreamedContent(fullContent);
 
             options.onChunk?.(value);
-            logger.trace(`Chunk ${chunkCount}: +${value.length} chars (total: ${fullContent.length})`);
+            logger.trace(
+              `Chunk ${chunkCount}: +${value.length} chars (total: ${fullContent.length})`
+            );
           }
 
           nextResult = await stream.next();
@@ -119,7 +121,9 @@ export function useChatStreaming(
               ? finalResponse.metadata.latencyMs
               : (finalResponse.omegaMetadata?.processingTime ?? 0);
 
-          logger.debug(`Stream complete: ${chunkCount} chunks, ${fullContent.length} chars, Provider: ${finalResponse.provider}, Latency: ${latencyMs}ms`);
+          logger.debug(
+            `Stream complete: ${chunkCount} chunks, ${fullContent.length} chars, Provider: ${finalResponse.provider}, Latency: ${latencyMs}ms`
+          );
 
           options.onComplete?.({
             content: finalResponse.content,

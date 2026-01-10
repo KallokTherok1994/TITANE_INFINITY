@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Test de validation Chat IA TITANE∞ - Post-corrections P0
- * 
+ *
  * Ce script valide les 6 corrections critiques appliquées:
  * - P0-1: Format backend/frontend
  * - P0-2: Race condition useEffect
@@ -50,18 +50,24 @@ console.log('\n✅ Tous les fichiers existent\n');
 
 // Test 2: Vérifier présence de conversationId persistant dans useChat.ts
 console.log('📝 Test 2: Vérification conversationId persistant (P0-4)...');
-const useChatContent = fs.readFileSync(path.join(__dirname, 'src/hooks/useChat.ts'), 'utf8');
+const useChatContent = fs.readFileSync(
+  path.join(__dirname, 'src/hooks/useChat.ts'),
+  'utf8'
+);
 
 const checks = {
-  'conversationId state': useChatContent.includes('const [conversationId]') && 
-                           useChatContent.includes('useState<string>'),
+  'conversationId state':
+    useChatContent.includes('const [conversationId]') &&
+    useChatContent.includes('useState<string>'),
   'localStorage persist': useChatContent.includes('titane_current_conversation_id'),
   'cooldown timestamp': useChatContent.includes('lastOperationTimestampRef'),
   'cooldown check': useChatContent.includes('const COOLDOWN_MS = 3000'),
-  'updateAssistant logs': useChatContent.includes('updateAssistant called') &&
-                          useChatContent.includes('Target found'),
-  'fallback monitoring': useChatContent.includes('chat_fallback_triggered') ||
-                         useChatContent.includes('FALLBACK TRIGGERED'),
+  'updateAssistant logs':
+    useChatContent.includes('updateAssistant called') &&
+    useChatContent.includes('Target found'),
+  'fallback monitoring':
+    useChatContent.includes('chat_fallback_triggered') ||
+    useChatContent.includes('FALLBACK TRIGGERED'),
 };
 
 Object.entries(checks).forEach(([name, passed]) => {
@@ -77,16 +83,23 @@ console.log(useChatPassed ? '\n✅ useChat.ts validé' : '\n⚠️ useChat.ts a 
 
 // Test 3: Vérifier format detection dans chat.ts
 console.log('\n📝 Test 3: Vérification format detection guards (P0-6)...');
-const chatContent = fs.readFileSync(path.join(__dirname, 'src/services/api/chat.ts'), 'utf8');
+const chatContent = fs.readFileSync(
+  path.join(__dirname, 'src/services/api/chat.ts'),
+  'utf8'
+);
 
 const chatChecks = {
   'null check': chatContent.includes('!backendResponse || typeof backendResponse'),
-  'error check': chatContent.includes('backendResponse.error && !backendResponse.content'),
-  'empty content check': chatContent.includes('content.trim() === \'\'') ||
-                         chatContent.includes('content.trim() === ""'),
+  'error check': chatContent.includes(
+    'backendResponse.error && !backendResponse.content'
+  ),
+  'empty content check':
+    chatContent.includes("content.trim() === ''") ||
+    chatContent.includes('content.trim() === ""'),
   'OMEGA format': chatContent.includes('Format OMEGA direct détecté'),
-  'conversationId fallback': chatContent.includes('conversationId || conversationId') ||
-                             chatContent.includes('backendResponse.conversationId || conversationId'),
+  'conversationId fallback':
+    chatContent.includes('conversationId || conversationId') ||
+    chatContent.includes('backendResponse.conversationId || conversationId'),
 };
 
 Object.entries(chatChecks).forEach(([name, passed]) => {
@@ -109,10 +122,12 @@ const commandsContent = fs.readFileSync(
 
 const backendChecks = {
   'empty check': commandsContent.includes('trim().is_empty()'),
-  'error log': commandsContent.includes('AI generated empty response') ||
-               commandsContent.includes('empty response'),
-  'success log': commandsContent.includes('Success | msg_id=') ||
-                 commandsContent.includes('content_len='),
+  'error log':
+    commandsContent.includes('AI generated empty response') ||
+    commandsContent.includes('empty response'),
+  'success log':
+    commandsContent.includes('Success | msg_id=') ||
+    commandsContent.includes('content_len='),
 };
 
 Object.entries(backendChecks).forEach(([name, passed]) => {
@@ -124,7 +139,9 @@ Object.entries(backendChecks).forEach(([name, passed]) => {
 });
 
 const backendPassed = Object.values(backendChecks).every(v => v);
-console.log(backendPassed ? '\n✅ commands.rs validé' : '\n⚠️ commands.rs a des problèmes');
+console.log(
+  backendPassed ? '\n✅ commands.rs validé' : '\n⚠️ commands.rs a des problèmes'
+);
 
 // Test 5: Vérifier documentation
 console.log('\n📝 Test 5: Vérification documentation...');

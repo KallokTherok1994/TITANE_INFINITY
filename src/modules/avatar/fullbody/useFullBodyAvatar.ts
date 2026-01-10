@@ -164,8 +164,7 @@ export function useFullBodyAvatar(
 
       try {
         await bridgeRef.current.updateExpression(expression, intensity);
-        if (enableLogging)
-          logger.debug('Expression updated:', expression);
+        if (enableLogging) logger.debug('Expression updated:', expression);
       } catch (error) {
         logger.error('Expression update failed:', error);
         throw error;

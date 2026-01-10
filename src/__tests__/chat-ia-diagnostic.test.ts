@@ -125,7 +125,7 @@ describe('Chat IA Diagnostic Tests - Bug Resolution Validation', () => {
       await act(async () => {
         await result.current.sendMessage('Message 1');
       });
-      
+
       await act(async () => {
         await result.current.sendMessage('Message 2');
       });
@@ -175,7 +175,7 @@ describe('Chat IA Diagnostic Tests - Bug Resolution Validation', () => {
 
       // Vérifier qu'un message utilisateur et un fallback sont générés
       expect(result.current.messages.length).toBeGreaterThanOrEqual(1);
-      
+
       // Le message utilisateur doit être présent
       expect(result.current.messages[0]).toMatchObject({
         role: 'user',

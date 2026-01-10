@@ -28,7 +28,7 @@ export interface MetricStats {
   avg: number;
   min: number;
   max: number;
-  p50: number;  // Median
+  p50: number; // Median
   p90: number;
   p95: number;
   p99: number;
@@ -56,7 +56,7 @@ const DEFAULT_CONFIG: MetricConfig = {
   maxDataPoints: 1000,
   timeWindow: 3600000, // 1 hour
   autoCleanup: true,
-  cleanupInterval: 60000 // 1 minute
+  cleanupInterval: 60000, // 1 minute
 };
 
 /**
@@ -84,7 +84,7 @@ class PerformanceMetric {
     const dataPoint: MetricDataPoint = {
       timestamp: Date.now(),
       value,
-      metadata
+      metadata,
     };
 
     this.dataPoints.push(dataPoint);
@@ -115,7 +115,7 @@ class PerformanceMetric {
         p90: 0,
         p95: 0,
         p99: 0,
-        stdDev: 0
+        stdDev: 0,
       };
     }
 
@@ -134,11 +134,11 @@ class PerformanceMetric {
       avg,
       min: values[0] ?? 0,
       max: values[count - 1] ?? 0,
-      p50: this.percentile(values, 0.50),
-      p90: this.percentile(values, 0.90),
+      p50: this.percentile(values, 0.5),
+      p90: this.percentile(values, 0.9),
       p95: this.percentile(values, 0.95),
       p99: this.percentile(values, 0.99),
-      stdDev
+      stdDev,
     };
   }
 
@@ -221,7 +221,7 @@ export enum MetricCategory {
   IPC_CALLS = 'ipc.calls',
   DATABASE = 'database',
   NETWORK = 'network',
-  SYSTEM = 'system'
+  SYSTEM = 'system',
 }
 
 /**
@@ -255,7 +255,10 @@ export class PerformanceMonitor {
 
     // Log slow operations
     if (duration > 1000) {
-      logger.warn(`Slow operation: ${metricName} took ${duration.toFixed(2)}ms`, metadata);
+      logger.warn(
+        `Slow operation: ${metricName} took ${duration.toFixed(2)}ms`,
+        metadata
+      );
     }
 
     return duration;
@@ -346,7 +349,7 @@ export class PerformanceMonitor {
         p95Latency: Math.round(aiGen.p95),
         totalRequests: aiGen.count,
         minLatency: Math.round(aiGen.min),
-        maxLatency: Math.round(aiGen.max)
+        maxLatency: Math.round(aiGen.max),
       };
     }
 
@@ -356,7 +359,7 @@ export class PerformanceMonitor {
       summary.contextManagement = {
         truncationEvents: contextStats.count,
         avgTokensRemoved: Math.round(contextStats.avg),
-        totalTokensSaved: Math.round(contextStats.sum)
+        totalTokensSaved: Math.round(contextStats.sum),
       };
     }
 
@@ -366,7 +369,7 @@ export class PerformanceMonitor {
       summary.memoryOperations = {
         avgLatency: Math.round(memoryStats.avg),
         p95Latency: Math.round(memoryStats.p95),
-        totalOps: memoryStats.count
+        totalOps: memoryStats.count,
       };
     }
 
@@ -376,7 +379,7 @@ export class PerformanceMonitor {
       summary.ipcCalls = {
         avgLatency: Math.round(ipcStats.avg),
         p95Latency: Math.round(ipcStats.p95),
-        totalCalls: ipcStats.count
+        totalCalls: ipcStats.count,
       };
     }
 
@@ -446,12 +449,12 @@ export class PerformanceMonitor {
       dashboard,
       metrics: Object.entries(report).map(([name, stats]) => ({
         name,
-        ...stats
+        ...stats,
       })),
       meta: {
         totalMetrics: this.metrics.size,
-        activeTimers: this.timers.size
-      }
+        activeTimers: this.timers.size,
+      },
     };
 
     return JSON.stringify(exportData, null, 2);
@@ -463,15 +466,13 @@ export class PerformanceMonitor {
    */
   exportToCSV(): string {
     const report = this.getDetailedReport();
-    const lines: string[] = [
-      'Metric Name,Count,Average,Min,Max,P50,P90,P95,P99,Std Dev'
-    ];
+    const lines: string[] = ['Metric Name,Count,Average,Min,Max,P50,P90,P95,P99,Std Dev'];
 
     for (const [name, stats] of Object.entries(report)) {
       lines.push(
         `"${name}",${stats.count},${stats.avg.toFixed(2)},${stats.min.toFixed(2)},` +
-        `${stats.max.toFixed(2)},${stats.p50.toFixed(2)},${stats.p90.toFixed(2)},` +
-        `${stats.p95.toFixed(2)},${stats.p99.toFixed(2)},${stats.stdDev.toFixed(2)}`
+          `${stats.max.toFixed(2)},${stats.p50.toFixed(2)},${stats.p90.toFixed(2)},` +
+          `${stats.p95.toFixed(2)},${stats.p99.toFixed(2)},${stats.stdDev.toFixed(2)}`
       );
     }
 
@@ -484,7 +485,9 @@ export class PerformanceMonitor {
    */
   downloadMetrics(format: 'json' | 'csv' = 'json'): void {
     const content = format === 'json' ? this.exportToJSON() : this.exportToCSV();
-    const blob = new Blob([content], { type: format === 'json' ? 'application/json' : 'text/csv' });
+    const blob = new Blob([content], {
+      type: format === 'json' ? 'application/json' : 'text/csv',
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -507,13 +510,15 @@ export class PerformanceMonitor {
   /**
    * Get top N slowest operations
    */
-  getTopSlowest(n: number = 10): Array<{ name: string; avgLatency: number; p95: number }> {
+  getTopSlowest(
+    n: number = 10
+  ): Array<{ name: string; avgLatency: number; p95: number }> {
     const report = this.getDetailedReport();
     return Object.entries(report)
       .map(([name, stats]) => ({
         name,
         avgLatency: stats.avg,
-        p95: stats.p95
+        p95: stats.p95,
       }))
       .sort((a, b) => b.avgLatency - a.avgLatency)
       .slice(0, n);
@@ -574,11 +579,7 @@ export const performanceMonitor = new PerformanceMonitor();
  * Convenience decorator for measuring method performance
  */
 export function Measure(metricName: string) {
-  return function (
-    target: any,
-    propertyKey: string,
-    descriptor: PropertyDescriptor
-  ) {
+  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value;
 
     descriptor.value = async function (...args: any[]) {
@@ -600,11 +601,19 @@ export function startTimer(operationId: string): void {
   performanceMonitor.start(operationId);
 }
 
-export function endTimer(operationId: string, metricName: string, metadata?: Record<string, any>): number {
+export function endTimer(
+  operationId: string,
+  metricName: string,
+  metadata?: Record<string, any>
+): number {
   return performanceMonitor.end(operationId, metricName, metadata);
 }
 
-export function recordMetric(metricName: string, value: number, metadata?: Record<string, any>): void {
+export function recordMetric(
+  metricName: string,
+  value: number,
+  metadata?: Record<string, any>
+): void {
   performanceMonitor.record(metricName, value, metadata);
 }
 

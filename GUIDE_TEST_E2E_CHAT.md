@@ -26,6 +26,7 @@ pnpm run dev
 **Objectif:** Vérifier que le format backend est correctement détecté et la réponse s'affiche
 
 **Étapes:**
+
 1. Ouvrir DevTools → Console
 2. Dans le chat, envoyer: `Bonjour TITANE`
 3. Observer les logs console
@@ -33,10 +34,11 @@ pnpm run dev
 **Résultat Attendu:**
 
 Console logs:
+
 ```
 [ChatService-OMEGA] 📤 Envoi message via OMEGA: { conversationId: "conv-...", message: "Bonjour TITANE" }
 [ChatService-OMEGA] 📥 Réponse brute reçue: { hasContent: true, hasError: false, ... }
-[ChatService-OMEGA] ✅ Format OMEGA direct détecté: { 
+[ChatService-OMEGA] ✅ Format OMEGA direct détecté: {
   contentLength: 200-300,
   conversationId: "conv-...",
   messageId: "msg-...",
@@ -49,11 +51,13 @@ Console logs:
 ```
 
 UI:
+
 - ✅ Message utilisateur visible
 - ✅ Réponse IA visible (non vide)
 - ✅ Pas de reset du chat
 
 **Validation:**
+
 - [ ] Logs console présents
 - [ ] Réponse visible dans UI
 - [ ] Format OMEGA détecté
@@ -66,6 +70,7 @@ UI:
 **Objectif:** Vérifier conversationId persistant et protection anti-reset
 
 **Étapes:**
+
 1. Ouvrir DevTools → Console
 2. Envoyer rapidement 3 messages (< 3 secondes entre chaque):
    - `Message 1`
@@ -76,6 +81,7 @@ UI:
 **Résultat Attendu:**
 
 Console logs:
+
 ```
 // Message 1
 [ChatService-OMEGA] 📤 Envoi message: { conversationId: "conv-1735954582-abc123", ... }
@@ -88,7 +94,7 @@ Console logs:
 [ChatService-OMEGA] 📤 Envoi message: { conversationId: "conv-1735954582-abc123", ... }
 
 // Protection anti-reset activée
-🛡️ CRITICAL PROTECTED: Skipping sync during/after operation { 
+🛡️ CRITICAL PROTECTED: Skipping sync during/after operation {
   loading: true,
   lock: true,
   timeSinceOp: 1500,
@@ -97,12 +103,14 @@ Console logs:
 ```
 
 UI:
+
 - ✅ 3 messages utilisateur visibles
 - ✅ 3 réponses IA visibles
 - ✅ Pas de reset entre les messages
 - ✅ Historique complet préservé
 
 **Validation:**
+
 - [ ] **conversationId IDENTIQUE pour les 3 messages** ⭐ CRITIQUE
 - [ ] Logs "CRITICAL PROTECTED" présents
 - [ ] Aucun reset du chat
@@ -115,6 +123,7 @@ UI:
 **Objectif:** Vérifier validation backend
 
 **Étapes:**
+
 1. Ce test nécessite un scénario spécial
 2. Option A: Modifier temporairement backend pour retourner content=""
 3. Option B: Observer logs backend Rust pendant utilisation normale
@@ -122,20 +131,24 @@ UI:
 **Résultat Attendu (si content vide):**
 
 Backend Rust logs:
+
 ```
 [Ω:CMD] ❌ AI generated empty response
 ```
 
 Frontend logs:
+
 ```
 [ChatService-OMEGA] ❌ Erreur sendMessage: Backend error: AI response content is empty
 ```
 
 UI:
+
 - ✅ Message d'erreur clair affiché
 - ✅ Pas de réponse vide/fantôme
 
 **Validation:**
+
 - [ ] Erreur backend loggée
 - [ ] Erreur frontend gérée gracefully
 - [ ] Message utilisateur visible pour l'utilisateur
@@ -149,12 +162,14 @@ UI:
 **Scénarios:**
 
 #### A. Backend retourne null
+
 ```javascript
 // Simuler (impossible en utilisation normale)
 // Vérifier que guards empêchent crash
 ```
 
 #### B. Backend retourne error explicite
+
 ```javascript
 // Si provider indisponible
 ```
@@ -162,6 +177,7 @@ UI:
 **Résultat Attendu:**
 
 Logs:
+
 ```
 [ChatService-OMEGA] ❌ Format de réponse invalide: ...
 // OU
@@ -169,10 +185,12 @@ Logs:
 ```
 
 UI:
+
 - ✅ Message d'erreur clair (pas de crash)
 - ✅ Application reste fonctionnelle
 
 **Validation:**
+
 - [ ] Pas de crash TypeError
 - [ ] Erreur gérée gracefully
 - [ ] Message utilisateur compréhensible
@@ -184,6 +202,7 @@ UI:
 **Objectif:** Vérifier protection contre resets pendant 3s après opération
 
 **Étapes:**
+
 1. Envoyer un message
 2. Observer logs console pendant 3 secondes après la réponse
 3. Vérifier protection active
@@ -191,6 +210,7 @@ UI:
 **Résultat Attendu:**
 
 Logs (pendant les 3s):
+
 ```
 🛡️ CRITICAL PROTECTED: Skipping sync during/after operation {
   loading: false,
@@ -208,11 +228,13 @@ Logs (pendant les 3s):
 ```
 
 Après 3s:
+
 ```
 📥 Syncing from memory: 2 messages
 ```
 
 **Validation:**
+
 - [ ] Protection active pendant 3s
 - [ ] Logs "CRITICAL PROTECTED" présents
 - [ ] Sync autorisé après 3s
@@ -229,6 +251,7 @@ Après 3s:
 **Résultat Attendu (si fallback déclenché):**
 
 Logs:
+
 ```
 ❌ updateAssistant: Target NOT FOUND {
   targetUiId: "chat-ui-...",
@@ -245,10 +268,12 @@ Logs:
 ```
 
 UI:
+
 - ✅ Réponse s'affiche quand même (via fallback)
 - ✅ Pas de réponse invisible
 
 **Validation:**
+
 - [ ] Logs d'erreur présents
 - [ ] Fallback déclenché
 - [ ] Réponse visible malgré problème
@@ -259,6 +284,7 @@ UI:
 ## 📊 Checklist Complète
 
 ### Tests Fonctionnels
+
 - [ ] Test 1: Message simple → Réponse visible
 - [ ] Test 2: Messages rapides → Même conversationId ⭐
 - [ ] Test 2: Messages rapides → Aucun reset ⭐
@@ -268,6 +294,7 @@ UI:
 - [ ] Test 6: Fallback → Réponse visible
 
 ### Logs Console
+
 - [ ] Format OMEGA détecté
 - [ ] conversationId identique (messages rapides)
 - [ ] updateAssistant: Target found
@@ -276,6 +303,7 @@ UI:
 - [ ] Backend logs Success
 
 ### UI/UX
+
 - [ ] Messages utilisateur visibles
 - [ ] Réponses IA visibles
 - [ ] Pas de reset intempestif
@@ -287,6 +315,7 @@ UI:
 ## 🎯 Critères de Succès
 
 ### ✅ Success Complet
+
 - [x] 7/7 tests fonctionnels passés
 - [x] conversationId identique pour tous les messages d'une session
 - [x] Aucun reset pendant/après messages
@@ -294,11 +323,13 @@ UI:
 - [x] Logs exhaustifs présents
 
 ### ⚠️ Success Partiel
+
 - [ ] 5-6/7 tests passés
 - [ ] 1-2 resets occasionnels (< 10%)
 - [ ] Logs incomplets mais réponses OK
 
 ### ❌ Échec
+
 - [ ] < 5/7 tests passés
 - [ ] Resets fréquents (> 10%)
 - [ ] Réponses invisibles
@@ -309,18 +340,21 @@ UI:
 ## 🐛 Debugging
 
 ### Si réponse invisible:
+
 1. Vérifier logs console: "Format OMEGA direct détecté"?
 2. Vérifier logs: "updateAssistant: Target found"?
 3. Vérifier logs backend Rust: "Success | content_len=..."?
 4. Si aucun log → Vérifier connexion backend
 
 ### Si reset intempestif:
+
 1. Vérifier logs: "CRITICAL PROTECTED" absent?
 2. Vérifier cooldown: timeSinceOp < 3000?
 3. Vérifier conversationId: identique ou différent?
 4. Si différent → Bug P0-4 non résolu
 
 ### Si conversationId différent:
+
 1. Vérifier localStorage: `titane_current_conversation_id`
 2. Vérifier code: `const [conversationId] = useState<string>(() => ...)`
 3. Vérifier logs: conversationId dans chaque envoi
@@ -332,11 +366,12 @@ UI:
 
 Remplir après tests:
 
-**Date:** ____________  
-**Testeur:** ____________  
+**Date:** ****\_\_\_\_****  
+**Testeur:** ****\_\_\_\_****  
 **Version:** 26.2.0
 
 **Résultats:**
+
 - Test 1: ☐ Pass ☐ Fail
 - Test 2: ☐ Pass ☐ Fail
 - Test 3: ☐ Pass ☐ Fail
@@ -344,14 +379,17 @@ Remplir après tests:
 - Test 5: ☐ Pass ☐ Fail
 - Test 6: ☐ Pass ☐ Fail
 
-**conversationId session:** ____________  
-**Nombre de resets:** ____________  
-**Réponses visibles:** ____/____  
+**conversationId session:** ****\_\_\_\_****  
+**Nombre de resets:** ****\_\_\_\_****  
+**Réponses visibles:** \_**\_/\_\_**
 
 **Notes:**
-_______________________________________
-_______________________________________
-_______________________________________
+
+---
+
+---
+
+---
 
 **Verdict:** ☐ PRODUCTION-READY ☐ NEEDS FIXES
 

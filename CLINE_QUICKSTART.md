@@ -76,6 +76,7 @@ cline "Créer un composant Button avec TypeScript et tests" -s hooks_enabled=tru
 ```
 
 **Ce qui se passe:**
+
 1. Hook `TaskStart` injecte les règles du projet
 2. Hook `UserPromptSubmit` détecte "composant" et ajoute les standards React
 3. Hook `PreToolUse` valide chaque fichier créé
@@ -88,6 +89,7 @@ cline "Refactorer MemoryCore pour améliorer les performances" -s hooks_enabled=
 ```
 
 **Ce qui se passe:**
+
 1. Mode `plan` analyse d'abord sans modifier
 2. Hooks valident chaque modification proposée
 3. Vous approuvez avant l'exécution
@@ -100,6 +102,7 @@ cline "Corriger les erreurs TypeScript dans src/utils" -s hooks_enabled=true -m 
 ```
 
 **Ce qui se passe:**
+
 1. Mode `act` exécute directement
 2. Hook `PostToolUse` détecte les opérations lentes
 3. Suggestions d'optimisation automatiques
@@ -186,6 +189,7 @@ alias chy='cline -s hooks_enabled=true --yolo'
 Puis sourcez: `source ~/.bashrc`
 
 Utilisation:
+
 ```bash
 ch "Votre question"
 chp "Planifier une feature"
@@ -203,6 +207,7 @@ export CLINE_LOG_LEVEL=info
 ### 3. Fichiers de Configuration
 
 Créez `~/.cline/config.yaml`:
+
 ```yaml
 hooks:
   enabled: true
@@ -229,6 +234,7 @@ npm run cline:logs           # Voir les logs en temps réel
 ## Support
 
 En cas de problème:
+
 1. Vérifier les logs: `.clinerules/logs/operations.log`
 2. Tester les hooks: `npm run cline:test-hooks`
 3. Consulter la documentation: [CLINE_CLI_INSTALLATION.md](CLINE_CLI_INSTALLATION.md)

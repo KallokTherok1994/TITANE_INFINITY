@@ -13,7 +13,8 @@ export async function warmChatEngineCache(params: {
   message: string;
   mode?: string;
 }): Promise<void> {
-  const mode = typeof params.mode === 'string' && params.mode.trim() ? params.mode : 'default';
+  const mode =
+    typeof params.mode === 'string' && params.mode.trim() ? params.mode : 'default';
 
   await chatEngine.generate(params.message, [], {
     mode: mode as any,

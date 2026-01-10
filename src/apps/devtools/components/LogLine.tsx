@@ -80,10 +80,7 @@ export function LogLine({ log, onFilter, onCopy, className = '' }: LogLineProps)
       </span>
 
       {/* Level */}
-      <span
-        className="shrink-0 w-12 font-bold text-xs"
-        style={{ color: styles.text }}
-      >
+      <span className="shrink-0 w-12 font-bold text-xs" style={{ color: styles.text }}>
         {styles.label}
       </span>
 
@@ -100,7 +97,7 @@ export function LogLine({ log, onFilter, onCopy, className = '' }: LogLineProps)
       {/* Message */}
       <div className="flex-1 min-w-0">
         <p
-          className="text-xs break-words"
+          className="text-xs wrap-break-word"
           style={{ color: 'var(--text-primary, #e0e0e0)' }}
         >
           {log.message}

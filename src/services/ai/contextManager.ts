@@ -40,12 +40,12 @@ export const MODEL_TOKEN_LIMITS: Record<string, number> = {
 
   // Local models (Ollama)
   'qwen2.5': 32_768,
-  'llama3': 8_192,
-  'mistral': 8_192,
-  'mixtral': 32_768,
+  llama3: 8_192,
+  mistral: 8_192,
+  mixtral: 32_768,
 
   // Default fallback
-  'default': 8_192
+  default: 8_192,
 };
 
 /**
@@ -59,7 +59,7 @@ export enum TruncationStrategy {
   /** Keep only messages above importance threshold */
   IMPORTANCE = 'importance',
   /** Sliding window, drop oldest first */
-  SLIDING = 'sliding'
+  SLIDING = 'sliding',
 }
 
 export interface ContextWindowConfig {
@@ -80,7 +80,7 @@ export const DEFAULT_CONFIG: ContextWindowConfig = {
   targetRatio: 0.75, // Use 75% of limit
   strategy: TruncationStrategy.RECENT,
   keepRecentCount: 10,
-  importanceThreshold: 0.7
+  importanceThreshold: 0.7,
 };
 
 /**
@@ -171,13 +171,15 @@ function summarizeMessages(messages: AIMessage[]): AIMessage {
         .join(' ');
     }
 
-    contentParts.push(`${msg.role}: ${content.substring(0, 200)}${content.length > 200 ? '...' : ''}`);
+    contentParts.push(
+      `${msg.role}: ${content.substring(0, 200)}${content.length > 200 ? '...' : ''}`
+    );
   }
 
   return {
     role: 'system',
     content: `[Summary of ${messages.length} messages]\n${contentParts.join('\n')}`,
-    timestamp: Date.now()
+    timestamp: Date.now(),
   };
 }
 
@@ -224,7 +226,9 @@ function truncateRecent(
     }
   }
 
-  logger.info(`Truncated ${messages.length} → ${result.length} messages (${totalTokens} → ${currentTokens} tokens)`);
+  logger.info(
+    `Truncated ${messages.length} → ${result.length} messages (${totalTokens} → ${currentTokens} tokens)`
+  );
   return result;
 }
 
@@ -264,7 +268,9 @@ function truncateSummarize(
       ? [systemMessage, summaryMessage, ...recentMessages]
       : [summaryMessage, ...recentMessages];
 
-    logger.info(`Summarized ${middleMessages.length} messages, kept ${recentMessages.length} recent`);
+    logger.info(
+      `Summarized ${middleMessages.length} messages, kept ${recentMessages.length} recent`
+    );
     return result;
   }
 
@@ -368,11 +374,15 @@ export class ContextWindowManager {
     const currentTokens = countHistoryTokens(messages);
 
     if (currentTokens <= targetTokens) {
-      logger.debug(`No truncation needed: ${currentTokens}/${targetTokens} tokens (${model})`);
+      logger.debug(
+        `No truncation needed: ${currentTokens}/${targetTokens} tokens (${model})`
+      );
       return messages;
     }
 
-    logger.info(`Truncating: ${currentTokens}/${targetTokens} tokens (${model}), strategy: ${this.config.strategy}`);
+    logger.info(
+      `Truncating: ${currentTokens}/${targetTokens} tokens (${model}), strategy: ${this.config.strategy}`
+    );
 
     let result: AIMessage[];
 
@@ -407,26 +417,38 @@ export class ContextWindowManager {
     const tokensRemoved = currentTokens - countHistoryTokens(result);
     const messagesRemoved = messages.length - result.length;
 
-    performanceMonitor.record(`${MetricCategory.CONTEXT_MANAGEMENT}.truncation.duration`, duration, {
-      model,
-      strategy: this.config.strategy,
-      originalMessages: messages.length,
-      resultMessages: result.length,
-      originalTokens: currentTokens,
-      resultTokens: countHistoryTokens(result),
+    performanceMonitor.record(
+      `${MetricCategory.CONTEXT_MANAGEMENT}.truncation.duration`,
+      duration,
+      {
+        model,
+        strategy: this.config.strategy,
+        originalMessages: messages.length,
+        resultMessages: result.length,
+        originalTokens: currentTokens,
+        resultTokens: countHistoryTokens(result),
+        tokensRemoved,
+        messagesRemoved,
+      }
+    );
+
+    performanceMonitor.record(
+      `${MetricCategory.CONTEXT_MANAGEMENT}.truncation.tokens_removed`,
       tokensRemoved,
-      messagesRemoved
-    });
+      {
+        model,
+        strategy: this.config.strategy,
+      }
+    );
 
-    performanceMonitor.record(`${MetricCategory.CONTEXT_MANAGEMENT}.truncation.tokens_removed`, tokensRemoved, {
-      model,
-      strategy: this.config.strategy
-    });
-
-    performanceMonitor.record(`${MetricCategory.CONTEXT_MANAGEMENT}.truncation.messages_removed`, messagesRemoved, {
-      model,
-      strategy: this.config.strategy
-    });
+    performanceMonitor.record(
+      `${MetricCategory.CONTEXT_MANAGEMENT}.truncation.messages_removed`,
+      messagesRemoved,
+      {
+        model,
+        strategy: this.config.strategy,
+      }
+    );
 
     return result;
   }
@@ -447,7 +469,7 @@ export class ContextWindowManager {
       messageCount: messages.length,
       utilizationPercent: (tokens / limit) * 100,
       needsTruncation: tokens > targetTokens,
-      roomForTokens: Math.max(0, targetTokens - tokens)
+      roomForTokens: Math.max(0, targetTokens - tokens),
     };
   }
 

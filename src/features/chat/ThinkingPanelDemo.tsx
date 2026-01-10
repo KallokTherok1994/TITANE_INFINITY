@@ -19,11 +19,17 @@ export const ThinkingPanelDemo: React.FC = () => {
     }, 500);
 
     setTimeout(() => {
-      thinking.addStep('reasoning', 'Recherche dans la base de connaissances et raisonnement...');
+      thinking.addStep(
+        'reasoning',
+        'Recherche dans la base de connaissances et raisonnement...'
+      );
     }, 1500);
 
     setTimeout(() => {
-      thinking.addStep('synthesis', 'Synthèse de la réponse et vérification cohérence...');
+      thinking.addStep(
+        'synthesis',
+        'Synthèse de la réponse et vérification cohérence...'
+      );
     }, 2500);
 
     setTimeout(() => {
@@ -109,9 +115,10 @@ export const ThinkingPanelDemo: React.FC = () => {
                   <div className="mock-old-footer">2/4 étapes • 3s</div>
                 </div>
                 <p className="comparison-note">
-                  ❌ Toujours visible et encombrant<br/>
-                  ❌ Prend beaucoup d&apos;espace<br/>
-                  ❌ Distrait l&apos;utilisateur
+                  ❌ Toujours visible et encombrant
+                  <br />
+                  ❌ Prend beaucoup d&apos;espace
+                  <br />❌ Distrait l&apos;utilisateur
                 </p>
               </div>
             </div>
@@ -119,14 +126,14 @@ export const ThinkingPanelDemo: React.FC = () => {
             <div className="comparison-column">
               <h4>✅ APRÈS (v2)</h4>
               <div className="comparison-box new">
-                <div className="mock-new-panel">
-                  🧠 Thinking... ▼
-                </div>
+                <div className="mock-new-panel">🧠 Thinking... ▼</div>
                 <p className="comparison-note">
-                  ✅ Discret et professionnel<br/>
-                  ✅ Style ChatGPT/Claude/Gemini<br/>
-                  ✅ Expandable sur demande<br/>
-                  ✅ Animation subtile
+                  ✅ Discret et professionnel
+                  <br />
+                  ✅ Style ChatGPT/Claude/Gemini
+                  <br />
+                  ✅ Expandable sur demande
+                  <br />✅ Animation subtile
                 </p>
               </div>
             </div>
@@ -142,12 +149,18 @@ export const ThinkingPanelDemo: React.FC = () => {
         <div className="stat">
           <span className="stat-label">Status:</span>
           <span className="stat-value">
-            {thinking.isThinking ? '⏳ En cours' : thinking.steps.length > 0 ? '✅ Terminé' : '⏸ Inactif'}
+            {thinking.isThinking
+              ? '⏳ En cours'
+              : thinking.steps.length > 0
+                ? '✅ Terminé'
+                : '⏸ Inactif'}
           </span>
         </div>
         <div className="stat">
           <span className="stat-label">Mode:</span>
-          <span className="stat-value">{thinking.compact ? '📕 Compact' : '📖 Étendu'}</span>
+          <span className="stat-value">
+            {thinking.compact ? '📕 Compact' : '📖 Étendu'}
+          </span>
         </div>
       </div>
     </div>

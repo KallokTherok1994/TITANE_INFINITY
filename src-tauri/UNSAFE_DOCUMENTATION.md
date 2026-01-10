@@ -10,10 +10,10 @@
 
 ### Total: 2 Blocs Unsafe Réels Documentés
 
-| Fichier | Ligne | Type | Justification | Risque | Status |
-|---------|-------|------|---------------|--------|--------|
-| kernel/scheduler.rs | 46-47 | `unsafe impl Send/Sync` | BoxFuture thread safety | ✅ LOW | Documenté |
-| config/io.rs | 148-151 | `unsafe { set_var }` | Global env modification | 🟡 MEDIUM | Documenté + TODO |
+| Fichier             | Ligne   | Type                    | Justification           | Risque    | Status           |
+| ------------------- | ------- | ----------------------- | ----------------------- | --------- | ---------------- |
+| kernel/scheduler.rs | 46-47   | `unsafe impl Send/Sync` | BoxFuture thread safety | ✅ LOW    | Documenté        |
+| config/io.rs        | 148-151 | `unsafe { set_var }`    | Global env modification | 🟡 MEDIUM | Documenté + TODO |
 
 ---
 
@@ -24,12 +24,14 @@
 **Localisation:** Lines 46-47
 
 **Code:**
+
 ```rust
 unsafe impl Send for SchedulerJob {}
 unsafe impl Sync for SchedulerJob {}
 ```
 
 **Justification SAFETY:**
+
 1. ✅ Tous les champs sont `Send + Sync` (String, CognitivePriority)
 2. ✅ `BoxFuture` est explicitement Send-safe (heap allocation)
 3. ✅ Contrainte type garantit future Send
@@ -39,6 +41,7 @@ unsafe impl Sync for SchedulerJob {}
 **Risque:** ✅ **LOW** - Safe par construction
 
 **Validation:**
+
 - Tous les invariants respectés
 - Pas de shared mutable state
 - Type constraints enforce safety
@@ -54,6 +57,7 @@ unsafe impl Sync for SchedulerJob {}
 **Localisation:** Lines 148-151
 
 **Code:**
+
 ```rust
 unsafe {
     std::env::set_var("OLLAMA_BASE_URL", &config.runtime.ollama_url);
@@ -62,6 +66,7 @@ unsafe {
 ```
 
 **Justification SAFETY:**
+
 1. ✅ Appelé pendant initialisation (single-threaded)
 2. ✅ Avant spawn de worker threads
 3. ✅ Variables read-only après init
@@ -70,11 +75,13 @@ unsafe {
 **Risque:** 🟡 **MEDIUM** - Safe dans contexte actuel, mais fragile
 
 **Limitations:**
+
 - ⚠️ Modification état global (side effect)
 - ⚠️ Data race si appelé concurrently
 - ⚠️ Difficile à tester (global state)
 
 **TODO (v27.0.0):**
+
 ```rust
 // Alternative safe: Configuration service
 pub struct ConfigService {
@@ -99,31 +106,39 @@ impl ConfigService {
 ### Patterns Détectés mais Non-Unsafe
 
 1. **src/engines/developer_mode.rs:255**
+
    ```rust
    "unsafe {",  // String pattern dans scan de code
    ```
+
    **Type:** String literal (scan de patterns dangereux)  
    **Action:** Aucune (pas un vrai unsafe block)
 
 2. **src/security/csp.rs:10-11**
+
    ```rust
    "script-src 'self' 'unsafe-inline'",  // CSP header
    "style-src 'self' 'unsafe-inline'",
    ```
+
    **Type:** CSP directives (sécurité web, pas Rust unsafe)  
    **Action:** Aucune (configuration Tauri CSP)
 
 3. **src/omega/merger.rs:737**
+
    ```rust
    fn test_calculate_quality_with_unsafe() {  // Nom de fonction
    ```
+
    **Type:** Nom de fonction de test  
    **Action:** Aucune (pas de code unsafe)
 
 4. **src/constitution/enforcement.rs:418**
+
    ```rust
    action_type: "unsafe_action".to_string(),  // String value
    ```
+
    **Type:** String literal dans test  
    **Action:** Aucune (pas de code unsafe)
 
@@ -176,15 +191,15 @@ unsafe {
 
 ### Coverage
 
-| Métrique | Valeur |
-|----------|--------|
-| **Unsafe blocks réels** | 2 |
-| **Unsafe documentés** | 2 (100%) |
-| **Faux positifs** | 7 |
-| **Risque LOW** | 1 (50%) |
-| **Risque MEDIUM** | 1 (50%) |
-| **Risque HIGH** | 0 (0%) |
-| **TODOs créés** | 1 |
+| Métrique                | Valeur   |
+| ----------------------- | -------- |
+| **Unsafe blocks réels** | 2        |
+| **Unsafe documentés**   | 2 (100%) |
+| **Faux positifs**       | 7        |
+| **Risque LOW**          | 1 (50%)  |
+| **Risque MEDIUM**       | 1 (50%)  |
+| **Risque HIGH**         | 0 (0%)   |
+| **TODOs créés**         | 1        |
 
 ### Compliance
 
@@ -198,6 +213,7 @@ unsafe {
 ## 🚀 RECOMMANDATIONS
 
 ### Court Terme (v26.2.3)
+
 - [x] Documenter tous les unsafe existants ✅
 - [ ] Ajouter pre-commit hook validation
   ```bash
@@ -209,10 +225,12 @@ unsafe {
   ```
 
 ### Moyen Terme (v27.0.0)
+
 - [ ] Migrer config/io.rs vers ConfigService (éliminer unsafe)
 - [ ] Target: 0 unsafe blocks (100% safe Rust)
 
 ### Long Terme
+
 - [ ] Audit externe sécurité
 - [ ] Fuzzing sur chemins critiques
 - [ ] Formal verification (si critique)

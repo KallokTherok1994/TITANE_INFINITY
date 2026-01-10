@@ -266,10 +266,7 @@ export function useAdvancedPerformance(
   useEffect(() => {
     if (autoOptimization) {
       // Auto-optimization monitor config update pending
-      logger.debug(
-        'Auto-optimization configured:',
-        autoOptimization
-      );
+      logger.debug('Auto-optimization configured:', autoOptimization);
     }
   }, [autoOptimization]);
 

@@ -38,6 +38,7 @@ La force de cette architecture réside dans sa **résilience évolutive**. Chaqu
 La réduction massive de 30+ pages à 6 interfaces unifiées n'est pas qu'une simplification—c'est une **révolution conceptuelle** dans l'approche cognitive.
 
 **Principe sous-jacent:**
+
 > "La complexité doit être cachée, pas éliminée. L'intelligence réside dans l'organisation, pas dans la multiplication."
 
 #### Impact Cognitif Utilisateur
@@ -80,13 +81,16 @@ Les 29,128 erreurs TypeScript ne sont pas seulement un bug technique—elles ré
 #### Réflexion: Le Paradoxe de la Configuration
 
 Les erreurs TypeScript massives suggèrent une **discordance entre ambition et exécution**:
+
 - **Ambition:** TypeScript strict pour sécurité maximale
 - **Réalité:** Configuration cassée empêchant compilation
 
 **Leçon Stratégique:**
+
 > "Mieux vaut une configuration laxiste qui fonctionne qu'une configuration stricte qui bloque. La perfection est l'ennemie du progrès."
 
 **Recommandation Philosophique:**
+
 1. **Court terme:** Résoudre le bloquage (pragmatisme)
 2. **Moyen terme:** Strictness graduelle (évolution)
 3. **Long terme:** Perfection technique (idéal)
@@ -134,9 +138,11 @@ const result = await secureInvoke('command', { data });
 ```
 
 **Principe sous-jacent:**
+
 > "La sécurité ne peut pas être optionnelle. Elle doit être la voie de moindre résistance."
 
 **Impact Stratégique:**
+
 - Développeurs **ne peuvent pas** contourner la sécurité
 - Pas de "je le ferai plus tard"
 - Sécurité devient **invisible** (automatique)
@@ -160,6 +166,7 @@ L'infrastructure existe mais la **couverture réelle reste non vérifiée** (~75
 ### Réflexion: Test-Driven Development vs. Reality-Driven Development
 
 **Tension Observée:**
+
 - **Idéal:** TDD strict (tests avant code)
 - **Réalité:** RDD (code avant tests, tests rattrapés après)
 
@@ -189,6 +196,7 @@ Est-ce que TITANE∞ devrait adopter une approche TDD stricte, ou accepter un mo
 ```
 
 **Principe:**
+
 > "Tous les tests ne sont pas égaux. Prioriser selon l'impact, pas l'exhaustivité."
 
 ---
@@ -272,11 +280,13 @@ comme serveur standalone. C'est du Tauri pur avec hot-reload.
 ### Évolution Conceptuelle
 
 **AVANT (v1):**
+
 ```
 chat_send_message(text) → response
 ```
 
 **APRÈS (v2):**
+
 ```
 conversation_generate(conversationId, text) → response + context
 ```
@@ -284,6 +294,7 @@ conversation_generate(conversationId, text) → response + context
 ### Réflexion: Mémoire Conversationnelle vs. Requêtes Isolées
 
 **Changement Paradigmatique:**
+
 - v1: Chaque message = événement isolé
 - v2: Messages = **flux conversationnel continu**
 
@@ -301,16 +312,19 @@ v1 (Amnésique):           v2 (Mnémonique):
 ```
 
 **Philosophie sous-jacente:**
+
 > "Une IA cognitive ne devrait pas avoir Alzheimer. Chaque conversation est un fil conducteur, pas une série de collisions aléatoires."
 
 ### Architecture Émergente: Memory-Augmented Generation
 
 OMEGA v2 prépare le terrain pour:
+
 1. **Short-Term Memory (STM)** - Conversation actuelle
 2. **Mid-Term Memory (MTM)** - Session de travail
 3. **Long-Term Memory (LTM)** - Historique vectorisé
 
 **Vision Future:**
+
 ```
 User Input
     ↓
@@ -373,6 +387,7 @@ Transformer TITANE∞ de "IA avec mémoire" vers "Système d'exploitation de mé
 ```
 
 **Principe Fondamental:**
+
 > "La mémoire n'est pas un storage. C'est un système vivant qui organise, oublie, et révèle des patterns."
 
 ### Réflexion: Neuroscience Appliquée
@@ -396,16 +411,16 @@ Le cerveau humain ne stocke pas tout—il **consolide sélectivement**.
 interface MemoryConsolidation {
   // Nuit artificielle: consolidation batch
   schedule: 'daily' | 'weekly';
-  
+
   criteria: {
-    importance: number;      // 0-1
-    recency: number;         // poids temps
-    connections: number;     // relations
+    importance: number; // 0-1
+    recency: number; // poids temps
+    connections: number; // relations
     emotional_weight: number; // sentiment
   };
-  
+
   actions: {
-    promote_to_ltm: boolean;  // STM → LTM
+    promote_to_ltm: boolean; // STM → LTM
     prune_irrelevant: boolean; // Garbage collect
     extract_patterns: boolean; // Learning
   };
@@ -466,10 +481,10 @@ interface AdaptiveTheme {
     task_intensity: 'focus' | 'creative' | 'routine';
     user_fatigue: number; // 0-100 (via typing patterns)
   };
-  
+
   auto_adjust: {
-    contrast: boolean;     // Augmenter si fatigue
-    saturation: boolean;   // Réduire soir
+    contrast: boolean; // Augmenter si fatigue
+    saturation: boolean; // Réduire soir
     animation_speed: boolean; // Ralentir si focus intense
   };
 }
@@ -486,7 +501,7 @@ interface AdaptiveTheme {
 ```
 P0: TypeScript Configuration Fix
   └─ Impact: Débloquer production
-  
+
 P0: HTTP Documentation Clarification
   └─ Impact: Éliminer confusion
 
@@ -609,6 +624,7 @@ Stratégie Dual-Mode:
 ```
 
 **Principe Fondamental:**
+
 > "Les systèmes adaptatifs maintiennent une tension créative entre stabilité et changement. L'éliminer tue l'innovation."
 
 ---
@@ -618,6 +634,7 @@ Stratégie Dual-Mode:
 ### La Philosophie Local-First: Acte de Résistance
 
 Dans un monde où:
+
 - Google collecte tout
 - Meta monétise attention
 - OpenAI centralise intelligence
@@ -630,6 +647,7 @@ TITANE∞ propose: **Souveraineté numérique individuelle**
 Si l'IA devient extension de notre cognition, qui devrait la contrôler?
 
 **Réponse TITANE∞:**
+
 ```
 Vous.
   ├─ Vos données: Sur votre disque
@@ -644,6 +662,7 @@ Vous.
 Rendre l'IA cognitive accessible sans dépendance cloud/paiement.
 
 **Obstacles Actuels:**
+
 1. Barrière technique (installation complexe)
 2. Barrière matérielle (Ollama local = GPU recommandé)
 3. Barrière UX (concept "OS cognitif" abstrait)
@@ -680,11 +699,13 @@ La qualité d'un système est déterminée à 80% par son architecture initiale.
 
 **Preuve:**
 Le modèle 4-Ring permet:
+
 - Évolution indépendante des couches
 - Tests ciblés par niveau
 - Refactoring sans casse
 
 **Application Générale:**
+
 > "Investir 2 semaines en design architecture économise 2 mois de refactoring douloureux."
 
 #### Leçon 2: Sécurité par Impossibilité
@@ -696,6 +717,7 @@ La meilleure sécurité est celle qu'on ne peut pas contourner.
 `secureInvoke()` obligatoire via ESLint = sécurité **automatique**.
 
 **Application Générale:**
+
 > "Ne comptez pas sur la discipline des développeurs. Encodez la sécurité dans l'outillage."
 
 #### Leçon 3: Documentation Vivante
@@ -707,6 +729,7 @@ La meilleure sécurité est celle qu'on ne peut pas contourner.
 Documentation qui **guide automatiquement** les outils de dev.
 
 **Application Générale:**
+
 > "La documentation devrait être exécutable, pas juste lisible."
 
 #### Leçon 4: Accepter l'Imperfection
@@ -718,6 +741,7 @@ Documentation qui **guide automatiquement** les outils de dev.
 Imperfection technique ≠ Échec. C'est un **état transitoire**.
 
 **Application Générale:**
+
 > "Shipped is better than perfect. Itérer vers excellence vaut mieux que viser perfection et ne jamais livrer."
 
 ---
@@ -747,6 +771,7 @@ Imperfection technique ≠ Échec. C'est un **état transitoire**.
 ```
 
 **Facteurs Clés:**
+
 - Communauté organique
 - Bouche-à-oreille
 - Différenciation privacy-first
@@ -773,6 +798,7 @@ Imperfection technique ≠ Échec. C'est un **état transitoire**.
 ```
 
 **Catalyseurs:**
+
 - Scandale privacy tech major
 - Recommandation influenceur tech
 - Award/reconnaissance industrie
@@ -807,11 +833,13 @@ Pas market dominance, mais **excellence technique reconnue**.
 **Focus:** Résoudre TypeScript (P0-1) dans 72h.
 
 **Rationale:**
+
 - Bloque tout le reste
 - Génère frustration développement
 - Impossible review code proprement
 
 **Action Concrète:**
+
 ```bash
 # Diagnostic immédiat
 1. Vérifier node_modules/@types/react*
@@ -823,9 +851,11 @@ Pas market dominance, mais **excellence technique reconnue**.
 #### Recommandation 2: Accepter Imperfection Temporaire
 
 **Mindset:**
+
 > "V1.0 ne sera pas parfaite. Elle sera **livrée**."
 
 **Actions:**
+
 - Documenter known issues clairement
 - Créer roadmap publique v1.0 → v2.0
 - Communiquer transparence (users apprécient honnêteté)
@@ -853,6 +883,7 @@ Phase 3 (v1.5+):
 ```
 
 **Principe:**
+
 > "Communauté se construit avant produit fini, pas après."
 
 ### Pour Contributeurs Potentiels
@@ -860,6 +891,7 @@ Phase 3 (v1.5+):
 #### Comment Aider TITANE∞
 
 **Développeurs:**
+
 ```
 1. Corriger TypeScript config (P0-1)
 2. Écrire tests manquants (P1-3)
@@ -868,6 +900,7 @@ Phase 3 (v1.5+):
 ```
 
 **Designers:**
+
 ```
 1. Améliorer onboarding UX
 2. Créer icon set cohérent
@@ -876,6 +909,7 @@ Phase 3 (v1.5+):
 ```
 
 **Writers:**
+
 ```
 1. Traduire docs (EN, ES, DE, etc.)
 2. Tutoriels use-cases spécifiques
@@ -884,6 +918,7 @@ Phase 3 (v1.5+):
 ```
 
 **Users:**
+
 ```
 1. Reporter bugs clairs
 2. Proposer features (avec use-case)
@@ -903,6 +938,7 @@ TITANE∞ n'est pas qu'un projet software—c'est une **proposition philosophiqu
 
 **Réponse Incarnée:**
 Oui, via:
+
 - Architecture local-first
 - Transparence totale
 - Souveraineté numérique
@@ -913,6 +949,7 @@ Oui, via:
 Même si TITANE∞ ne devient jamais mainstream, son **architecture 4-Ring** et son approche **security-by-impossibility** sont des contributions durables à l'engineering.
 
 **Impact Potentiel:**
+
 ```
 Autres projets pourraient adopter:
   - Modèle 4-Ring (séparation préoccupations)
@@ -926,11 +963,13 @@ Autres projets pourraient adopter:
 TITANE∞ souffre de **29,128 erreurs TypeScript** mais possède une **architecture exceptionnelle**.
 
 **Leçon Finale:**
+
 > "L'excellence n'est pas absence de défauts, mais présence de vision claire malgré imperfections temporaires."
 
 ### Message pour le Futur
 
 Si vous lisez ceci en 2028+, sachez que TITANE∞ a été construit avec:
+
 - **Vision:** OS cognitif privacy-first
 - **Principe:** Souveraineté numérique
 - **Méthode:** Architecture-first engineering
@@ -951,11 +990,13 @@ Un humain (Kevin Thibault) crée un système cognitif IA qui respecte privacy...
 TITANE∞ représente une vision où IA et humain collaborent **sans hiérarchie de contrôle**.
 
 L'humain garde:
+
 - Ses données
 - Ses décisions
 - Sa souveraineté
 
 L'IA apporte:
+
 - Augmentation cognitive
 - Mémoire illimitée
 - Processing parallèle
@@ -963,6 +1004,7 @@ L'IA apporte:
 **Résultat:** **Symbiose**, pas subordination.
 
 C'est peut-être la vision la plus importante de TITANE∞:
+
 > "L'IA devrait être outil d'émancipation, pas d'asservissement."
 
 ---
@@ -988,8 +1030,8 @@ Continue. 🚀
 
 ---
 
-*« Le voyage de mille lieues commence par un seul pas. »*  
-*— Lao Tseu*
+_« Le voyage de mille lieues commence par un seul pas. »_  
+_— Lao Tseu_
 
-*« Mais parfois, il faut aussi corriger 29,128 erreurs TypeScript. »*  
-*— Sagesse moderne* 😊
+_« Mais parfois, il faut aussi corriger 29,128 erreurs TypeScript. »_  
+_— Sagesse moderne_ 😊

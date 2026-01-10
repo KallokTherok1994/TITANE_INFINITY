@@ -426,7 +426,7 @@ if (typeof window !== 'undefined') {
 import { ErrorBoundary } from './components/ErrorBoundary'; // ✨ v24.3.0 - Unified Error Boundary
 // import { PerformanceMonitor } from './lib/performanceBudget'; // DÉSACTIVÉ pour diagnostic progressif
 import { injectSROnlyStyles } from './lib/accessibility';
-import { safeInvokeTauri } from './utils/tauriProtector';
+import { isTauriRuntimeAvailable, safeInvokeTauri } from './utils/tauriProtector';
 import { TAURI_COMMANDS } from './core/commands/TAURI_COMMANDS';
 
 // Phase 3 (v19): UI Logger - Isolate frontend logs from backend
@@ -486,11 +486,7 @@ async function initializeRuntimeConfig(): Promise<void> {
     return;
   }
 
-  const tauriCandidate = window as Window & {
-    __TAURI__?: Record<string, unknown>;
-    __TAURI_INTERNALS__?: Record<string, unknown>;
-  };
-  const isTauri = Boolean(tauriCandidate.__TAURI__ || tauriCandidate.__TAURI_INTERNALS__);
+  const isTauri = isTauriRuntimeAvailable();
   if (!isTauri) {
     // Mode navigateur - utiliser la config par défaut (normal, pas une erreur)
     console.log(
@@ -546,19 +542,18 @@ const getTauriWindowAPI = () => {
 };
 
 const isTauriRuntime = (): boolean => {
-  if (typeof window === 'undefined') {
-    return false;
-  }
-
-  const candidate = window as Window & {
-    __TAURI__?: unknown;
-    __TAURI_INTERNALS__?: unknown;
-  };
-
-  return Boolean(candidate.__TAURI__ || candidate.__TAURI_INTERNALS__);
+  // Ne pas se baser sur la simple présence de __TAURI__/__TAURI_INTERNALS__.
+  // Certains contextes peuvent exposer des stubs (tests/fallbacks).
+  return isTauriRuntimeAvailable();
 };
 
 const openDevtoolsSafe = async (): Promise<void> => {
+  // Hors Tauri, @tauri-apps/api peut être importable mais inutilisable (ipc://...).
+  // L'ouverture DevTools doit être best-effort et ne jamais throw.
+  if (!isTauriRuntime()) {
+    return;
+  }
+
   // Preferred path for Tauri v2
   try {
     const { getCurrentWebviewWindow } = await import('@tauri-apps/api/webviewWindow');
@@ -572,7 +567,7 @@ const openDevtoolsSafe = async (): Promise<void> => {
 
   const legacyWindowAPI = getTauriWindowAPI();
   if (!legacyWindowAPI) {
-    throw new Error('Tauri window API unavailable');
+    return;
   }
   await legacyWindowAPI.getCurrent().openDevtools();
 };

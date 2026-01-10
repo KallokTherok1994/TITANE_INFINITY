@@ -21,11 +21,7 @@ import { withCache, CACHE_TTL } from '../apiCache';
 /**
  * Modèles Copilot disponibles (via GitHub Models API)
  */
-export const COPILOT_MODELS = [
-  'gpt-4',
-  'gpt-4o',
-  'gpt-3.5-turbo',
-] as const;
+export const COPILOT_MODELS = ['gpt-4', 'gpt-4o', 'gpt-3.5-turbo'] as const;
 
 export type CopilotModel = (typeof COPILOT_MODELS)[number];
 
@@ -122,9 +118,7 @@ export const copilotProvider: AIProvider = {
               });
 
               if (!result.ok || !result.data) {
-                throw new Error(
-                  result.error || 'Erreur Copilot inconnue'
-                );
+                throw new Error(result.error || 'Erreur Copilot inconnue');
               }
 
               return result;
@@ -134,17 +128,17 @@ export const copilotProvider: AIProvider = {
               shouldRetry: (error: unknown) => {
                 // Retry sur rate limits uniquement
                 const message = error instanceof Error ? error.message : String(error);
-                return message.includes('Limite de taux') ||
-                       message.includes('429') ||
-                       message.includes('rate limit');
+                return (
+                  message.includes('Limite de taux') ||
+                  message.includes('429') ||
+                  message.includes('rate limit')
+                );
               },
             }
           );
 
           if (!response.ok || !response.data) {
-            throw new Error(
-              response.error || 'Réponse Copilot invalide'
-            );
+            throw new Error(response.error || 'Réponse Copilot invalide');
           }
 
           const latency = Date.now() - startTime;
@@ -175,7 +169,7 @@ export const copilotProvider: AIProvider = {
           };
         } catch (error) {
           const latency = Date.now() - startTime;
-          
+
           // Log error
           logger.error('Copilot generation failed', {
             error,
@@ -190,7 +184,7 @@ export const copilotProvider: AIProvider = {
                 'copilot',
                 error instanceof Error ? error : new Error(String(error))
               );
-              
+
               if (healError) {
                 logger.info('Auto-healing: error detected', {
                   errorId: healError.id,
@@ -204,8 +198,8 @@ export const copilotProvider: AIProvider = {
 
           // Propagate error with context
           throw new Error(
-            error instanceof Error 
-              ? error.message 
+            error instanceof Error
+              ? error.message
               : 'Erreur lors de la génération Copilot'
           );
         }
@@ -224,7 +218,7 @@ export const copilotProvider: AIProvider = {
   }> {
     try {
       const startTime = Date.now();
-      
+
       const result = await secureInvoke<{
         success: boolean;
         message: string;

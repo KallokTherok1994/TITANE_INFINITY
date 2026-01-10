@@ -23,7 +23,7 @@
 /* ═══════════════════════════════════════════════════════════════ */
 /* TAILWIND CSS v4 — With Configuration                             */
 /* ═══════════════════════════════════════════════════════════════ */
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @config "../tailwind.config.ts";
 

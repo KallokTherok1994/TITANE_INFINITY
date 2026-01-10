@@ -49,19 +49,19 @@ const config: Config = {
           'bg-elevated': '#1a1a1a',
           'bg-interactive': '#242424',
           'bg-overlay': '#2e2e2e',
-          
+
           // Text (high contrast)
           'text-primary': '#f5f5f5',
           'text-secondary': '#b8b8b8',
           'text-tertiary': '#8a8a8a',
           'text-disabled': '#5a5a5a',
           'text-inverse': '#0f0f0f',
-          
+
           // Borders
           'border-subtle': 'rgba(255, 255, 255, 0.06)',
           'border-default': 'rgba(255, 255, 255, 0.12)',
           'border-strong': 'rgba(255, 255, 255, 0.18)',
-          
+
           // Accent (minimal cool gray)
           'accent-cool': '#9ca3af',
           'accent-bright': '#d1d5db',
@@ -79,7 +79,7 @@ const config: Config = {
           800: '#343a40',
           900: '#212529',
         },
-        
+
         violet: {
           300: '#d8b4fe',
           400: '#c084fc',
@@ -175,13 +175,13 @@ const config: Config = {
       borderRadius: {
         none: '0',
         sm: '8px',
-        DEFAULT: '16px',   // Base radius for premium feel
-        md: '16px',        // Alias for DEFAULT
+        DEFAULT: '16px', // Base radius for premium feel
+        md: '16px', // Alias for DEFAULT
         lg: '24px',
         xl: '32px',
-        '2xl': '32px',     // Alias for xl
-        '4xl': '2rem',     // Legacy support
-        full: '9999px',    // Circles
+        '2xl': '32px', // Alias for xl
+        '4xl': '2rem', // Legacy support
+        full: '9999px', // Circles
       },
 
       /* ═══════════════════════════════════════════════════════════════ */
@@ -195,14 +195,14 @@ const config: Config = {
         lg: '0 8px 16px rgba(0, 0, 0, 0.6)',
         xl: '0 12px 24px rgba(0, 0, 0, 0.7)',
         '2xl': '0 16px 32px rgba(0, 0, 0, 0.8)',
-        
+
         // Focus shadow (WCAG 2.2: 3px solid, 3:1 contrast)
         focus: '0 0 0 3px rgba(209, 213, 219, 0.5)',
-        
+
         // Metallic effects (rare usage)
         metal: '0 0 20px rgba(255, 255, 255, 0.1)',
         'metal-strong': '0 0 40px rgba(255, 255, 255, 0.15)',
-        
+
         // Legacy glow effects (deprecated - use metal instead)
         'glow-violet': '0 0 20px rgba(124, 58, 237, 0.4)',
         'glow-sage': '0 0 20px rgba(132, 204, 22, 0.4)',

@@ -285,7 +285,7 @@ await invoke('reset_onboarding');
 2. Vérifier les logs Tauri :
 
    ```bash
-  corepack pnpm run dev
+   corepack pnpm run dev
    # Ouvrir DevTools → Console
    ```
 

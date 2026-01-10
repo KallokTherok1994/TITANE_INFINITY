@@ -252,10 +252,10 @@ export class AIRateLimiter {
  * Limites très élevées pour éviter les blocages
  */
 export const globalAIRateLimiter = new AIRateLimiter({
-  maxRequests: 1000,      // 1000 req/min (était 50)
+  maxRequests: 1000, // 1000 req/min (était 50)
   windowMs: 60000,
-  maxTokens: 10000000,    // 10M tokens/min (était 100k)
-  maxCost: 1000.0,        // $1000/min (était $1)
+  maxTokens: 10000000, // 10M tokens/min (était 100k)
+  maxCost: 1000.0, // $1000/min (était $1)
 });
 
 // ═══════════════════════════════════════════════════════════════

@@ -3,12 +3,15 @@
 ## ✅ Scripts créés
 
 ### 1. `install-models.sh` — Installation interactive
+
 **Utilisation:**
+
 ```bash
 ./scripts/ollama/install-models.sh
 ```
 
 **Fonctionnalités:**
+
 - ✅ Vérifications complètes (Ollama installé, serveur actif)
 - ✅ Confirmation avant installation
 - ✅ Progression détaillée pour chaque modèle
@@ -20,12 +23,15 @@
 ---
 
 ### 2. `install-models-auto.sh` — Installation automatique
+
 **Utilisation:**
+
 ```bash
 ./scripts/ollama/install-models-auto.sh
 ```
 
 **Fonctionnalités:**
+
 - ✅ Aucune interaction requise
 - ✅ Vérifications de base
 - ✅ Sortie propre pour logs
@@ -35,12 +41,15 @@
 ---
 
 ### 3. `quick-install.sh` — One-liner
+
 **Utilisation:**
+
 ```bash
 ./scripts/ollama/quick-install.sh
 ```
 
 **Fonctionnalités:**
+
 - ✅ Installation ultra-rapide
 - ✅ Minimal, direct
 
@@ -49,12 +58,15 @@
 ---
 
 ### 4. `run-ollama.sh` — Launcher complet
+
 **Utilisation:**
+
 ```bash
 ./scripts/ollama/run-ollama.sh [command]
 ```
 
 **Commandes:**
+
 - `setup` — Configuration complète
 - `serve` — Démarrer serveur
 - `pull` — Installer modèles
@@ -67,7 +79,9 @@
 ---
 
 ### 5. `setup-ollama-alias.sh` — Configuration alias
+
 **Utilisation:**
+
 ```bash
 ./scripts/ollama/setup-ollama-alias.sh
 ```
@@ -79,6 +93,7 @@ Configure l'alias global `/ollama` dans `~/.bashrc`
 ## 🎯 Quel script utiliser?
 
 ### Première installation
+
 ```bash
 # 1. Installer les modèles
 ./scripts/ollama/install-models.sh
@@ -92,11 +107,13 @@ source ~/.bashrc
 ```
 
 ### Installation rapide
+
 ```bash
 ./scripts/ollama/quick-install.sh
 ```
 
 ### Utilisation quotidienne
+
 ```bash
 /ollama status
 /ollama test

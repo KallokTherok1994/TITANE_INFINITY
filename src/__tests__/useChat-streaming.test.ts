@@ -41,7 +41,13 @@ describe('useChat streaming flow', () => {
   test('streaming updates replace placeholder with final content', async () => {
     let apiRef: any = null;
 
-    render(React.createElement(TestHost, { onReady: (api: any) => { apiRef = api; } }));
+    render(
+      React.createElement(TestHost, {
+        onReady: (api: any) => {
+          apiRef = api;
+        },
+      })
+    );
 
     await act(async () => {
       // send 10 messages sequentially and verify final responses

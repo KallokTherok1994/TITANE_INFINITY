@@ -9,6 +9,7 @@ Configurer Ollama pour qu'il démarre automatiquement et reste toujours actif.
 ## ✅ Option 1: Service systemd (Recommandé)
 
 **Avantages:**
+
 - ✅ Démarrage automatique au boot système
 - ✅ Redémarrage automatique en cas de crash
 - ✅ Gestion centralisée via systemctl
@@ -51,6 +52,7 @@ sudo systemctl disable ollama-titane
 ## ⚡ Option 2: Auto-start bashrc (Simple)
 
 **Avantages:**
+
 - ✅ Aucun besoin de sudo
 - ✅ Compatible tous systèmes
 - ✅ Simple à installer/désinstaller
@@ -90,6 +92,7 @@ tail -f /tmp/ollama-serve.log
 ### Désinstaller
 
 Éditez `~/.bashrc` et supprimez:
+
 ```bash
 # ═══════════════════════════════════════════════════════════════════════════
 # TITANE∞ Ollama Auto-Start
@@ -101,14 +104,14 @@ tail -f /tmp/ollama-serve.log
 
 ## 🔍 Comparaison
 
-| Critère | systemd | bashrc |
-|---------|---------|--------|
-| **Démarrage** | Au boot système | À l'ouverture de terminal |
-| **Sudo requis** | Oui (installation) | Non |
-| **Redémarrage auto** | Oui | Non |
-| **Logs système** | Oui (journalctl) | Non (fichier) |
-| **Compatibilité** | Linux avec systemd | Tous systèmes |
-| **Désinstallation** | systemctl disable | Éditer ~/.bashrc |
+| Critère              | systemd            | bashrc                    |
+| -------------------- | ------------------ | ------------------------- |
+| **Démarrage**        | Au boot système    | À l'ouverture de terminal |
+| **Sudo requis**      | Oui (installation) | Non                       |
+| **Redémarrage auto** | Oui                | Non                       |
+| **Logs système**     | Oui (journalctl)   | Non (fichier)             |
+| **Compatibilité**    | Linux avec systemd | Tous systèmes             |
+| **Désinstallation**  | systemctl disable  | Éditer ~/.bashrc          |
 
 ---
 
@@ -117,6 +120,7 @@ tail -f /tmp/ollama-serve.log
 ### Vérifier qu'Ollama est permanent
 
 **Option 1 (systemd):**
+
 ```bash
 # Redémarrer le système
 sudo reboot
@@ -127,6 +131,7 @@ curl http://localhost:11434/api/version
 ```
 
 **Option 2 (bashrc):**
+
 ```bash
 # Ouvrir un nouveau terminal
 # → Message "🚀 Ollama démarré automatiquement"
@@ -197,6 +202,7 @@ tail -f /tmp/ollama-serve.log
 Une fois Ollama permanent configuré:
 
 1. **Lancer TITANE∞:**
+
    ```bash
    pnpm run dev
    ```
@@ -214,12 +220,15 @@ Une fois Ollama permanent configuré:
 ## 💡 Recommandation
 
 **Pour développement:**
+
 - ✅ Option 2 (bashrc) — Simple, sans sudo
 
 **Pour production/serveur:**
+
 - ✅ Option 1 (systemd) — Robuste, redémarrage auto
 
 **Pour laptop/desktop personnel:**
+
 - ✅ Option 2 (bashrc) — Démarre quand vous travaillez
 
 ---

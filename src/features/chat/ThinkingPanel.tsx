@@ -130,7 +130,7 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
           role="button"
           tabIndex={0}
           aria-label="Afficher les détails de réflexion OMEGA"
-          onKeyDown={(e) => e.key === 'Enter' && setIsExpanded(true)}
+          onKeyDown={e => e.key === 'Enter' && setIsExpanded(true)}
         >
           <div className="thinking-compact-content">
             {isThinking ? (

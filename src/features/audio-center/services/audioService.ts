@@ -533,9 +533,7 @@ class AudioService {
             logger.debug('Falling back to Web Speech API...');
             await this.speakWithWebSpeech(text);
           } else {
-            logger.warn(
-              'No TTS available (Tauri failed, Web Speech not supported)'
-            );
+            logger.warn('No TTS available (Tauri failed, Web Speech not supported)');
             throw error;
           }
         }

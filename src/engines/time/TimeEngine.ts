@@ -272,10 +272,7 @@ export class TimeEngine {
 
     // Notifier si changement heures de travail
     if (previousIsWorkHours !== this.state.isWorkHours) {
-      logger.debug(
-        '💼 Heures de travail:',
-        this.state.isWorkHours ? 'DÉBUT' : 'FIN'
-      );
+      logger.debug('💼 Heures de travail:', this.state.isWorkHours ? 'DÉBUT' : 'FIN');
     }
   }
 

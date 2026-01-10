@@ -65,7 +65,8 @@ export class TitaneVisualEngine extends EventEmitter {
 
     const isVitest =
       typeof process !== 'undefined' && typeof process.env?.['VITEST'] === 'string';
-    const isNodeTest = typeof process !== 'undefined' && process.env?.['NODE_ENV'] === 'test';
+    const isNodeTest =
+      typeof process !== 'undefined' && process.env?.['NODE_ENV'] === 'test';
     const isTestEnv = viteMode === 'test' || isVitest || isNodeTest;
 
     // En tests, on évite les fuites d'état d'un singleton entre suites.

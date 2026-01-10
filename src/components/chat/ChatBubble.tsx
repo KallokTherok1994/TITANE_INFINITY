@@ -689,17 +689,20 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.05 }}
                   >
-                      {msg.role === 'assistant' &&
-                      getMessageText(msg).trim().length === 0 &&
-                      msg.metadata?.status === 'streaming' ? (
-                        <div className="message-content typing" aria-label="Réponse en cours">
-                          <span />
-                          <span />
-                          <span />
-                        </div>
-                      ) : (
-                        <div className="message-content">{getMessageText(msg)}</div>
-                      )}
+                    {msg.role === 'assistant' &&
+                    getMessageText(msg).trim().length === 0 &&
+                    msg.metadata?.status === 'streaming' ? (
+                      <div
+                        className="message-content typing"
+                        aria-label="Réponse en cours"
+                      >
+                        <span />
+                        <span />
+                        <span />
+                      </div>
+                    ) : (
+                      <div className="message-content">{getMessageText(msg)}</div>
+                    )}
                   </motion.div>
                 ))
               )}

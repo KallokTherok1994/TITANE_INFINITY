@@ -173,11 +173,7 @@ export const Slider = memo(function Slider({
 
   const displayMarks: SliderMark[] = useMemo(
     () =>
-      showMarks
-        ? marks.length > 0
-          ? marks
-          : generateAutoMarks(min, max, step)
-        : [],
+      showMarks ? (marks.length > 0 ? marks : generateAutoMarks(min, max, step)) : [],
     [showMarks, marks, min, max, step]
   );
 

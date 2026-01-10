@@ -153,16 +153,18 @@ impl OmegaConversationBridge {
         }
 
         let health = self.omega_pipeline.health_check().await;
+        let stats = self.omega_pipeline.get_stats().await;
+
+        let latency_avg_ms = if stats.avg_latency_ms.is_finite() && stats.avg_latency_ms > 0.0 {
+            stats.avg_latency_ms.round() as u64
+        } else {
+            0
+        };
 
         OmegaHealthReport {
             enabled: true,
             healthy: health.health_status == crate::omega::diagnostics::HealthStatus::Healthy,
-            latency_avg_ms: 0, // Implementation: Calculate average latency from diagnostics history
-            // - Source: health.latency_samples vector from last N requests
-            // - Calculation: latency_samples.iter().sum() / latency_samples.len()
-            // - Window: Use last 100 requests for rolling average
-            // - Percentiles: Also compute p50, p95, p99 for detailed monitoring
-            // - Fallback: Return 0 if latency_samples is empty (no recent requests)
+            latency_avg_ms,
             requests_processed: health.requests_processed,
         }
     }

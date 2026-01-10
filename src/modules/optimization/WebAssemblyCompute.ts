@@ -301,10 +301,7 @@ export class WebAssemblyCompute {
         result = await this.executeWASM(task);
         this.metrics.tasksExecutedWASM++;
       } catch (error) {
-        logger.warn(
-          'WASM execution failed, falling back to JS:',
-          error
-        );
+        logger.warn('WASM execution failed, falling back to JS:', error);
         result = this.executeJS(task);
         this.metrics.tasksExecutedJS++;
       }

@@ -171,7 +171,9 @@ class AudioStateMachine {
 
       // ✅ AUTO-RECOVERY: Reset to idle on invalid transitions for critical events
       if (event === 'RESET' || event === 'ERROR') {
-        logger.warn(`🛡️ Forcing state to idle due to ${event}`, { module: 'AudioStateMachine' });
+        logger.warn(`🛡️ Forcing state to idle due to ${event}`, {
+          module: 'AudioStateMachine',
+        });
         this.state = 'idle';
         this.notifyListeners('idle', previousState, event);
         return true;

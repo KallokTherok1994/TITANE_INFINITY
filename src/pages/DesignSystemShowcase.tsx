@@ -6,7 +6,13 @@
 
 import React, { useState } from 'react';
 import { Button } from '../components/ui/button';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../components/ui/card';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Badge } from '../components/ui/badge';
 
@@ -35,7 +41,7 @@ export default function DesignSystemShowcase() {
           <h2 className="text-2xl font-semibold text-titanium-text-primary">
             Color Palette
           </h2>
-          
+
           {/* Backgrounds */}
           <Card>
             <CardHeader>
@@ -95,20 +101,22 @@ export default function DesignSystemShowcase() {
 
         {/* Button Section */}
         <section className="space-y-6">
-          <h2 className="text-2xl font-semibold text-titanium-text-primary">
-            Buttons
-          </h2>
-          
+          <h2 className="text-2xl font-semibold text-titanium-text-primary">Buttons</h2>
+
           <Card>
             <CardHeader>
               <CardTitle>Button Variants</CardTitle>
-              <CardDescription>All button styles with Titanium Dark palette</CardDescription>
+              <CardDescription>
+                All button styles with Titanium Dark palette
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
                 {/* Default size */}
                 <div className="space-y-3">
-                  <p className="text-sm font-medium text-titanium-text-secondary">Default Size</p>
+                  <p className="text-sm font-medium text-titanium-text-secondary">
+                    Default Size
+                  </p>
                   <div className="flex flex-wrap gap-3">
                     <Button variant="primary">Primary Action</Button>
                     <Button variant="default">Default</Button>
@@ -121,13 +129,17 @@ export default function DesignSystemShowcase() {
 
                 {/* States */}
                 <div className="space-y-3">
-                  <p className="text-sm font-medium text-titanium-text-secondary">States</p>
+                  <p className="text-sm font-medium text-titanium-text-secondary">
+                    States
+                  </p>
                   <div className="flex flex-wrap gap-3">
                     <Button variant="primary" loading={loading}>
                       {loading ? 'Loading...' : 'Click to Load'}
                     </Button>
-                    <Button variant="primary" disabled>Disabled</Button>
-                    <Button 
+                    <Button variant="primary" disabled>
+                      Disabled
+                    </Button>
+                    <Button
                       variant="primary"
                       onClick={() => {
                         setLoading(true);
@@ -141,11 +153,19 @@ export default function DesignSystemShowcase() {
 
                 {/* Sizes */}
                 <div className="space-y-3">
-                  <p className="text-sm font-medium text-titanium-text-secondary">Sizes</p>
+                  <p className="text-sm font-medium text-titanium-text-secondary">
+                    Sizes
+                  </p>
                   <div className="flex flex-wrap items-center gap-3">
-                    <Button variant="primary" size="sm">Small</Button>
-                    <Button variant="primary" size="default">Default</Button>
-                    <Button variant="primary" size="lg">Large</Button>
+                    <Button variant="primary" size="sm">
+                      Small
+                    </Button>
+                    <Button variant="primary" size="default">
+                      Default
+                    </Button>
+                    <Button variant="primary" size="lg">
+                      Large
+                    </Button>
                     <Button variant="primary" size="icon" aria-label="Icon button">
                       ✨
                     </Button>
@@ -158,10 +178,8 @@ export default function DesignSystemShowcase() {
 
         {/* Card Section */}
         <section className="space-y-6">
-          <h2 className="text-2xl font-semibold text-titanium-text-primary">
-            Cards
-          </h2>
-          
+          <h2 className="text-2xl font-semibold text-titanium-text-primary">Cards</h2>
+
           <div className="grid md:grid-cols-3 gap-6">
             <Card>
               <CardHeader>
@@ -203,14 +221,14 @@ export default function DesignSystemShowcase() {
 
         {/* Input Section */}
         <section className="space-y-6">
-          <h2 className="text-2xl font-semibold text-titanium-text-primary">
-            Inputs
-          </h2>
-          
+          <h2 className="text-2xl font-semibold text-titanium-text-primary">Inputs</h2>
+
           <Card>
             <CardHeader>
               <CardTitle>Input States</CardTitle>
-              <CardDescription>Accessible form inputs with WCAG 2.2 compliance</CardDescription>
+              <CardDescription>
+                Accessible form inputs with WCAG 2.2 compliance
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-6 max-w-md">
@@ -220,7 +238,7 @@ export default function DesignSystemShowcase() {
                   placeholder="John Doe"
                   helper="Enter your full name"
                   value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
+                  onChange={e => setInputValue(e.target.value)}
                 />
 
                 <Input
@@ -259,10 +277,8 @@ export default function DesignSystemShowcase() {
 
         {/* Badge Section */}
         <section className="space-y-6">
-          <h2 className="text-2xl font-semibold text-titanium-text-primary">
-            Badges
-          </h2>
-          
+          <h2 className="text-2xl font-semibold text-titanium-text-primary">Badges</h2>
+
           <Card>
             <CardHeader>
               <CardTitle>Badge Variants</CardTitle>
@@ -271,7 +287,9 @@ export default function DesignSystemShowcase() {
             <CardContent>
               <div className="space-y-6">
                 <div className="space-y-3">
-                  <p className="text-sm font-medium text-titanium-text-secondary">Default Size</p>
+                  <p className="text-sm font-medium text-titanium-text-secondary">
+                    Default Size
+                  </p>
                   <div className="flex flex-wrap gap-3">
                     <Badge>Default</Badge>
                     <Badge variant="success">Success</Badge>
@@ -282,13 +300,23 @@ export default function DesignSystemShowcase() {
                 </div>
 
                 <div className="space-y-3">
-                  <p className="text-sm font-medium text-titanium-text-secondary">Small Size</p>
+                  <p className="text-sm font-medium text-titanium-text-secondary">
+                    Small Size
+                  </p>
                   <div className="flex flex-wrap gap-3">
                     <Badge size="sm">Tag</Badge>
-                    <Badge size="sm" variant="success">Active</Badge>
-                    <Badge size="sm" variant="error">Failed</Badge>
-                    <Badge size="sm" variant="warning">Pending</Badge>
-                    <Badge size="sm" variant="info">Beta</Badge>
+                    <Badge size="sm" variant="success">
+                      Active
+                    </Badge>
+                    <Badge size="sm" variant="error">
+                      Failed
+                    </Badge>
+                    <Badge size="sm" variant="warning">
+                      Pending
+                    </Badge>
+                    <Badge size="sm" variant="info">
+                      Beta
+                    </Badge>
                   </div>
                 </div>
               </div>
@@ -301,7 +329,7 @@ export default function DesignSystemShowcase() {
           <h2 className="text-2xl font-semibold text-titanium-text-primary">
             Typography
           </h2>
-          
+
           <Card>
             <CardHeader>
               <CardTitle>Type Scale</CardTitle>
@@ -310,32 +338,60 @@ export default function DesignSystemShowcase() {
             <CardContent>
               <div className="space-y-4">
                 <div>
-                  <p className="text-xs text-titanium-text-tertiary mb-1">text-3xl • 31px • Hero</p>
-                  <p className="text-3xl font-bold text-titanium-text-primary">The quick brown fox</p>
+                  <p className="text-xs text-titanium-text-tertiary mb-1">
+                    text-3xl • 31px • Hero
+                  </p>
+                  <p className="text-3xl font-bold text-titanium-text-primary">
+                    The quick brown fox
+                  </p>
                 </div>
                 <div>
-                  <p className="text-xs text-titanium-text-tertiary mb-1">text-2xl • 25px • H1</p>
-                  <h1 className="text-2xl font-bold text-titanium-text-primary">Page Title</h1>
+                  <p className="text-xs text-titanium-text-tertiary mb-1">
+                    text-2xl • 25px • H1
+                  </p>
+                  <h1 className="text-2xl font-bold text-titanium-text-primary">
+                    Page Title
+                  </h1>
                 </div>
                 <div>
-                  <p className="text-xs text-titanium-text-tertiary mb-1">text-xl • 20px • H2</p>
-                  <h2 className="text-xl font-semibold text-titanium-text-primary">Section Heading</h2>
+                  <p className="text-xs text-titanium-text-tertiary mb-1">
+                    text-xl • 20px • H2
+                  </p>
+                  <h2 className="text-xl font-semibold text-titanium-text-primary">
+                    Section Heading
+                  </h2>
                 </div>
                 <div>
-                  <p className="text-xs text-titanium-text-tertiary mb-1">text-lg • 18px • Subheading</p>
-                  <p className="text-lg text-titanium-text-primary">Large emphasis text</p>
+                  <p className="text-xs text-titanium-text-tertiary mb-1">
+                    text-lg • 18px • Subheading
+                  </p>
+                  <p className="text-lg text-titanium-text-primary">
+                    Large emphasis text
+                  </p>
                 </div>
                 <div>
-                  <p className="text-xs text-titanium-text-tertiary mb-1">text-base • 16px • Body</p>
-                  <p className="text-base text-titanium-text-secondary">This is standard body text with good readability.</p>
+                  <p className="text-xs text-titanium-text-tertiary mb-1">
+                    text-base • 16px • Body
+                  </p>
+                  <p className="text-base text-titanium-text-secondary">
+                    This is standard body text with good readability.
+                  </p>
                 </div>
                 <div>
-                  <p className="text-xs text-titanium-text-tertiary mb-1">text-sm • 14px • Small</p>
-                  <p className="text-sm text-titanium-text-secondary">Secondary information and captions.</p>
+                  <p className="text-xs text-titanium-text-tertiary mb-1">
+                    text-sm • 14px • Small
+                  </p>
+                  <p className="text-sm text-titanium-text-secondary">
+                    Secondary information and captions.
+                  </p>
                 </div>
                 <div>
-                  <p className="text-xs text-titanium-text-tertiary mb-1">text-xs • 12px • Metadata</p>
-                  <p className="text-xs text-titanium-text-tertiary">Labels and metadata only.</p>
+                  <p className="text-xs text-titanium-text-tertiary mb-1">
+                    text-xs • 12px • Metadata
+                  </p>
+                  <p className="text-xs text-titanium-text-tertiary">
+                    Labels and metadata only.
+                  </p>
                 </div>
               </div>
             </CardContent>

@@ -91,18 +91,19 @@ afterAll(() => {
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // ✅ v26.3.1: Function to create fresh QueryClient for each test
-const createQueryClient = () => new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-      gcTime: 0,
-      staleTime: 0,
+const createQueryClient = () =>
+  new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+        gcTime: 0,
+        staleTime: 0,
+      },
+      mutations: {
+        retry: false,
+      },
     },
-    mutations: {
-      retry: false,
-    },
-  },
-});
+  });
 
 // Global QueryClient (will be cleared between tests)
 const globalQueryClient = createQueryClient();

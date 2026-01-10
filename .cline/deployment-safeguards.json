@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "created": "2026-01-03",
   "author": "Kevin Thibault (TITANE∞)",
-  
+
   "critical_rules": {
     "deployment_lock": {
       "enabled": true,
@@ -41,7 +41,7 @@
         "🧩 COPILOT-XS: Test Gate"
       ]
     },
-    
+
     "approval_required": {
       "enabled": true,
       "description": "Validation humaine obligatoire pour actions critiques",
@@ -58,7 +58,7 @@
         "EXPLICIT APPROVAL"
       ]
     },
-    
+
     "development_mode": {
       "enabled": true,
       "description": "Mode développement OBLIGATOIRE jusqu'à validation 100% des tests",
@@ -71,21 +71,21 @@
       }
     }
   },
-  
+
   "recommended_settings": {
     "security": {
       "auto-approval-max-requests": 5,
       "enable-notifications": true,
       "telemetry": "disabled"
     },
-    
+
     "performance": {
       "thinking-budget-tokens": 2048,
       "terminal-output-line-limit": 1000,
       "auto-condense-threshold": 0.65,
       "shell-integration-timeout": 6000
     },
-    
+
     "development": {
       "enable-checkpoints": true,
       "use-auto-condense": true,
@@ -93,18 +93,18 @@
       "focus-chain-enabled": true,
       "focus-chain-remind-interval": 8
     },
-    
+
     "localization": {
       "preferred-language": "French",
       "dictation-language": "fr"
     },
-    
+
     "reasoning": {
       "openai-reasoning-effort": "high",
       "plan-act-separate-models": false
     }
   },
-  
+
   "validation_gates": {
     "pre_deploy": {
       "required_checks": [
@@ -120,7 +120,7 @@
       ]
     }
   },
-  
+
   "monitoring": {
     "log_critical_actions": true,
     "alert_on_blocked_commands": true,

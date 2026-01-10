@@ -15,8 +15,9 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 
 const variantStyles = {
   // Default - monochrome
-  default: 'bg-titanium-bg-interactive text-titanium-text-primary border border-titanium-border-default',
-  
+  default:
+    'bg-titanium-bg-interactive text-titanium-text-primary border border-titanium-border-default',
+
   // Semantic colors (for status only)
   success: 'bg-success-100 text-success-700 border border-success-500/30',
   error: 'bg-error-100 text-error-700 border border-error-500/30',
