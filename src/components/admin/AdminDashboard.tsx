@@ -107,7 +107,7 @@ const VitalCard: React.FC<{
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
-      className="p-4 rounded-lg bg-[#1a1a1a] border"
+      className="p-4 rounded-lg bg-bg-secondary border"
       style={{ borderColor }}
     >
       <div className="flex items-center justify-between mb-2">
@@ -163,7 +163,7 @@ const ModuleCard: React.FC<{
     <motion.div
       whileHover={{ scale: 1.02 }}
       onClick={onClick}
-      className="p-3 rounded-lg bg-[#1a1a1a] border border-[#333] cursor-pointer"
+      className="p-3 rounded-lg bg-bg-secondary border border-[#333] cursor-pointer"
     >
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
@@ -213,7 +213,7 @@ const NavBar: React.FC<{
           className={`flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
             activeView === view.id
               ? 'bg-[#333] text-white'
-              : 'text-[#727B81] hover:text-[#C4C4C4] hover:bg-[#1a1a1a]'
+              : 'text-[#727B81] hover:text-[#C4C4C4] hover:bg-bg-secondary'
           }`}
         >
           {view.icon}
@@ -387,7 +387,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           {activeView === 'OVERVIEW' && (
             <div className="space-y-6">
               {/* Status message */}
-              <div className="p-4 bg-[#1a1a1a] rounded-lg border border-[#333]">
+              <div className="p-4 bg-bg-secondary rounded-lg border border-[#333]">
                 <p className="text-[#C4C4C4]">{snapshot.statusMessage}</p>
                 <p className="text-xs text-[#727B81] mt-1">
                   Mode: {snapshot.systemMode} | Uptime:{' '}
@@ -481,7 +481,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     {snapshot.activeAnomalies.slice(0, 5).map(anomaly => (
                       <div
                         key={anomaly.id}
-                        className="p-3 bg-[#1a1a1a] rounded-lg border border-[#ef4444] flex items-center justify-between"
+                        className="p-3 bg-bg-secondary rounded-lg border border-error-500 flex items-center justify-between"
                       >
                         <div className="flex items-center gap-3">
                           <AlertTriangle size={18} className="text-[#ef4444]" />
@@ -509,7 +509,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   Providers IA
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 bg-[#1a1a1a] rounded-lg border border-[#333]">
+                  <div className="p-4 bg-bg-secondary rounded-lg border border-[#333]">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Bot size={20} className="text-[#8b5cf6]" />
@@ -527,7 +527,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         : 'Offline'}
                     </p>
                   </div>
-                  <div className="p-4 bg-[#1a1a1a] rounded-lg border border-[#333]">
+                  <div className="p-4 bg-bg-secondary rounded-lg border border-[#333]">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Bot size={20} className="text-[#3b82f6]" />
@@ -559,7 +559,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 {activeModules.map(module => (
                   <div
                     key={module.id}
-                    className="p-4 bg-[#1a1a1a] rounded-lg border border-[#333]"
+                    className="p-4 bg-bg-secondary rounded-lg border border-[#333]"
                   >
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-3">
