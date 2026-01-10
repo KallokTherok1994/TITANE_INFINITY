@@ -140,7 +140,7 @@ export function getModelLimit(model: string): number {
   // Exact match
   if (model in MODEL_TOKEN_LIMITS) {
     const limit = MODEL_TOKEN_LIMITS[model];
-    return limit ?? MODEL_TOKEN_LIMITS.default;
+    return limit ?? MODEL_TOKEN_LIMITS.default ?? 8192;
   }
 
   // Fuzzy match (e.g., "gpt-4o-2024-05-13" → "gpt-4o")
