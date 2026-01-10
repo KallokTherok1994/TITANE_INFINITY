@@ -293,16 +293,34 @@ const handleTauriInvoke = async (
     case 'secure_list_files':
       return clone(storedFiles);
     case 'store_file': {
-      const file = payload?.file;
-      if (file?.name) {
+      // Support legacy payload shape: { file: { name, category, content, metadata } }
+      const legacyFile = payload?.file;
+
+      // Support current payload shape: { path, category, content }
+      const path = typeof payload?.path === 'string' ? payload.path : undefined;
+      const category = typeof payload?.category === 'string' ? payload.category : undefined;
+      const content = typeof payload?.content === 'string' ? payload.content : undefined;
+
+      const normalized = legacyFile?.name
+        ? {
+            name: legacyFile.name,
+            category: legacyFile.category ?? 'general',
+            content: legacyFile.content ?? '',
+            metadata: legacyFile.metadata,
+          }
+        : path
+          ? {
+              name: path,
+              category: category ?? 'general',
+              content: content ?? '',
+              metadata: undefined,
+            }
+          : null;
+
+      if (normalized?.name) {
         storedFiles = [
-          ...storedFiles.filter(f => f.name !== file.name),
-          {
-            name: file.name,
-            category: file.category ?? 'general',
-            content: file.content ?? '',
-            metadata: file.metadata,
-          },
+          ...storedFiles.filter(f => f.name !== normalized.name),
+          normalized,
         ];
       }
       memoryStatsState.totalEntries += 1;
@@ -314,16 +332,69 @@ const handleTauriInvoke = async (
     }
     case 'memory_get_active_projects':
       return clone(memoryProjects);
+    case 'detect_file_format': {
+      const filePath = String(payload?.file_path ?? payload?.filePath ?? '');
+      const lower = filePath.toLowerCase();
+      if (lower.endsWith('.json')) return 'JSON';
+      if (lower.endsWith('.md') || lower.endsWith('.markdown')) return 'Markdown';
+      if (lower.endsWith('.txt')) return 'PlainText';
+      if (lower.endsWith('.pdf')) return 'PDF';
+      if (lower.endsWith('.docx')) return 'DOCX';
+      return 'Unknown';
+    }
     case 'parse_document': {
-      const content = String(payload?.content ?? '');
-      const sections = content
-        .split(/\n+/)
-        .map((line: string) => line.trim())
-        .filter(Boolean);
+      // Real Tauri API uses { file_path }, but older tests used { content, format }.
+      let content = '';
+
+      const filePath = payload?.file_path ?? payload?.filePath;
+      if (typeof filePath === 'string' && filePath.length > 0) {
+        try {
+          const fs = await import('node:fs/promises');
+          content = await fs.readFile(filePath, 'utf8');
+        } catch {
+          content = '';
+        }
+      } else {
+        content = String(payload?.content ?? '');
+      }
+
+      const firstLine = content.split(/\r?\n/).find(Boolean) ?? 'Untitled';
+      const lower = content.toLowerCase();
+      const categories: string[] = [];
+      if (lower.includes('function') || lower.includes('class') || lower.includes('impl')) {
+        categories.push('code');
+      }
+      if (lower.includes('config') || lower.includes('settings')) {
+        categories.push('configuration');
+      }
+      if (lower.includes('bug') || lower.includes('fix')) {
+        categories.push('development');
+      }
+      if (lower.includes('doc') || lower.includes('guide') || lower.includes('readme')) {
+        categories.push('documentation');
+      }
+      if (categories.length === 0) categories.push('general');
+
+      const format = await handleTauriInvoke('detect_file_format', {
+        file_path: payload?.file_path ?? payload?.filePath ?? '',
+      });
+
       return {
-        format: payload?.format ?? 'text',
-        sections,
-        tokens: content.length,
+        id: `doc_${Date.now()}`,
+        title: String(firstLine).replace(/^#+\s*/, '').trim() || 'Untitled',
+        content,
+        format,
+        metadata: {
+          author: null,
+          created: null,
+          modified: null,
+          size_bytes: content.length,
+          language: 'en',
+          keywords: [],
+        },
+        categories,
+        confidence: 0.9,
+        timestamp: Date.now(),
       };
     }
     case 'memory_get_state':
@@ -514,16 +585,25 @@ const handleTauriInvoke = async (
         provider: 'mock',
         suggestions: ['Continuer'],
       };
+    case 'create_new_conversation':
+      return `mock-conv-${Date.now()}`;
     case 'conversation_generate': {
-      const request = (payload ?? {}) as { conversation_id?: string; provider?: string };
+      const envelope = (payload ?? {}) as {
+        request?: { conversation_id?: string; config?: { provider?: string } };
+        conversation_id?: string;
+        provider?: string;
+      };
+      const conversationId =
+        envelope.request?.conversation_id ?? envelope.conversation_id ?? 'mock-conversation';
+      const provider = envelope.request?.config?.provider ?? envelope.provider ?? 'mock';
       return {
         content: 'Réponse mock TITANE∞',
-        conversationId: request.conversation_id ?? 'mock-conversation',
+        conversationId,
         messageId: 'mock-message',
         frenchMasteryApplied: true,
         latencyMs: 5,
         metadata: {
-          provider: request.provider ?? 'mock',
+          provider,
         },
       };
     }

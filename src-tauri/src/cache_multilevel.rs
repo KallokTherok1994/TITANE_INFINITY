@@ -12,6 +12,7 @@ use std::time::Duration;
 use tokio::sync::RwLock;
 
 use crate::error::{TitaneError, TitaneResult};
+use crate::bounded::BoundedHashMap;
 
 // ═══════════════════════════════════════════════════════════════
 //   CACHE KEY & VALUE
@@ -113,22 +114,17 @@ impl CacheMetrics {
 //   L1 CACHE (FAST IN-MEMORY)
 // ═══════════════════════════════════════════════════════════════
 
-use lru::LruCache;
-use std::num::NonZeroUsize;
-
 pub struct L1Cache<V> {
-    cache: LruCache<CacheKey, V>,
+    cache: BoundedHashMap<CacheKey, V>,
     ttl: Duration,
     access_times: HashMap<CacheKey, std::time::Instant>,
 }
 
 impl<V: Clone> L1Cache<V> {
     pub fn new(capacity: usize, ttl_seconds: u64) -> Self {
+        let capacity = if capacity == 0 { 1000 } else { capacity };
         Self {
-            cache: LruCache::new(
-                NonZeroUsize::new(capacity)
-                    .unwrap_or_else(|| NonZeroUsize::new(1000).expect("1000 is non-zero")),
-            ),
+            cache: BoundedHashMap::new(capacity),
             ttl: Duration::from_secs(ttl_seconds),
             access_times: HashMap::new(),
         }
@@ -138,7 +134,7 @@ impl<V: Clone> L1Cache<V> {
         // Check if expired
         if let Some(access_time) = self.access_times.get(key) {
             if access_time.elapsed() > self.ttl {
-                self.cache.pop(key);
+                self.cache.remove(key);
                 self.access_times.remove(key);
                 return None;
             }
@@ -148,7 +144,7 @@ impl<V: Clone> L1Cache<V> {
     }
 
     pub fn insert(&mut self, key: CacheKey, value: V) {
-        self.cache.put(key.clone(), value);
+        self.cache.insert(key.clone(), value);
         self.access_times.insert(key, std::time::Instant::now());
     }
 
@@ -159,6 +155,11 @@ impl<V: Clone> L1Cache<V> {
     pub fn is_empty(&self) -> bool {
         self.cache.is_empty()
     }
+
+    pub fn clear(&mut self) {
+        self.cache.clear();
+        self.access_times.clear();
+    }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -166,16 +167,14 @@ impl<V: Clone> L1Cache<V> {
 // ═══════════════════════════════════════════════════════════════
 
 pub struct L2Cache {
-    cache: LruCache<CacheKey, Vec<u8>>,
+    cache: BoundedHashMap<CacheKey, Vec<u8>>,
 }
 
 impl L2Cache {
     pub fn new(capacity: usize) -> Self {
+        let capacity = if capacity == 0 { 5000 } else { capacity };
         Self {
-            cache: LruCache::new(
-                NonZeroUsize::new(capacity)
-                    .unwrap_or_else(|| NonZeroUsize::new(5000).expect("5000 is non-zero")),
-            ),
+            cache: BoundedHashMap::new(capacity),
         }
     }
 
@@ -184,7 +183,7 @@ impl L2Cache {
     }
 
     pub fn insert(&mut self, key: CacheKey, compressed_data: Vec<u8>) {
-        self.cache.put(key, compressed_data);
+        self.cache.insert(key, compressed_data);
     }
 
     pub fn len(&self) -> usize {
@@ -193,6 +192,10 @@ impl L2Cache {
 
     pub fn is_empty(&self) -> bool {
         self.cache.is_empty()
+    }
+
+    pub fn clear(&mut self) {
+        self.cache.clear();
     }
 }
 
@@ -218,7 +221,7 @@ impl L3Cache {
         }
     }
 
-    pub async fn get(&self, key: &CacheKey) -> TitaneResult<Option<Vec<u8>>> {
+    pub async fn get(&self, key: &CacheKey) -> TitaneResult<Option<(PathBuf, Vec<u8>)>> {
         let path = self.key_to_path(key);
 
         if !path.exists() {
@@ -226,7 +229,7 @@ impl L3Cache {
         }
 
         match tokio::fs::read(&path).await {
-            Ok(data) => Ok(Some(data)),
+            Ok(data) => Ok(Some((path, data))),
             Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(None),
             Err(e) => Err(TitaneError::InternalError(format!(
                 "Failed to read cache file: {}",
@@ -317,18 +320,28 @@ where
         }
 
         // Try L3
-        if let Some(disk_data) = self.l3.get(key).await? {
-            let value: V = bincode::deserialize(&disk_data).map_err(|e| {
-                TitaneError::InternalError(format!("Deserialization failed: {}", e))
-            })?;
+        if let Some((disk_path, disk_data)) = self.l3.get(key).await? {
+            match serde_json::from_slice::<V>(&disk_data) {
+                Ok(value) => {
+                    // Populate L2 and L1
+                    let compressed = self.compress(&value)?;
+                    self.l2.write().await.insert(key.clone(), compressed);
+                    self.l1.write().await.insert(key.clone(), value.clone());
 
-            // Populate L2 and L1
-            let compressed = self.compress(&value)?;
-            self.l2.write().await.insert(key.clone(), compressed);
-            self.l1.write().await.insert(key.clone(), value.clone());
-
-            self.metrics.write().await.record_l3_hit();
-            return Ok(value);
+                    self.metrics.write().await.record_l3_hit();
+                    return Ok(value);
+                }
+                Err(e) => {
+                    // Ancien format (ex: bincode) ou fichier corrompu : invalidation best-effort.
+                    log::warn!(
+                        "[cache_multilevel] L3 invalid format for key={}, deleting file: {} ({})",
+                        key.as_ref(),
+                        disk_path.display(),
+                        e
+                    );
+                    let _ = tokio::fs::remove_file(&disk_path).await;
+                }
+            }
         }
 
         // Cache miss - compute
@@ -341,7 +354,7 @@ where
         let compressed = self.compress(&value)?;
         self.l2.write().await.insert(key.clone(), compressed);
 
-        let serialized = bincode::serialize(&value)
+        let serialized = serde_json::to_vec(&value)
             .map_err(|e| TitaneError::InternalError(format!("Serialization failed: {}", e)))?;
         self.l3.insert(key, &serialized).await?;
 
@@ -355,7 +368,7 @@ where
 
     /// Compress value
     fn compress(&self, value: &V) -> TitaneResult<Vec<u8>> {
-        let serialized = bincode::serialize(value)
+        let serialized = serde_json::to_vec(value)
             .map_err(|e| TitaneError::InternalError(format!("Serialization failed: {}", e)))?;
 
         // Implementation: Fast compression with lz4 or zstd
@@ -372,14 +385,14 @@ where
     /// Decompress value
     fn decompress(&self, compressed: &[u8]) -> TitaneResult<V> {
         // Simple decompression
-        bincode::deserialize(compressed)
+        serde_json::from_slice(compressed)
             .map_err(|e| TitaneError::InternalError(format!("Deserialization failed: {}", e)))
     }
 
     /// Clear all caches
     pub async fn clear(&self) {
-        self.l1.write().await.cache.clear();
-        self.l2.write().await.cache.clear();
+        self.l1.write().await.clear();
+        self.l2.write().await.clear();
         // L3 clear would require filesystem operations
     }
 }

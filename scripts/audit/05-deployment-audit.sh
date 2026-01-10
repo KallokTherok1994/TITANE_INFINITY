@@ -61,17 +61,17 @@ log_section() {
 
 log_success() {
     echo -e "${GREEN}✓ $1${NC}"
-    ((PASSED++))
+    ((PASSED+=1))
 }
 
 log_error() {
     echo -e "${RED}✗ $1${NC}"
-    ((ERRORS++))
+    ((ERRORS+=1))
 }
 
 log_warning() {
     echo -e "${YELLOW}⚠ $1${NC}"
-    ((WARNINGS++))
+    ((WARNINGS+=1))
 }
 
 log_info() {

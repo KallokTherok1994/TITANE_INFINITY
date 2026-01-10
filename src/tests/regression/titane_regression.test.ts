@@ -5,6 +5,9 @@
 
 import { describe, it, expect } from 'vitest';
 import { invoke } from '@tauri-apps/api/core';
+import { writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 /**
  * Alerte de régression détectée
@@ -248,10 +251,9 @@ describe('Regression Test 5: Template Modifications', () => {
     const alerts: RegressionAlert[] = [];
 
     try {
-      await invoke('parse_document', {
-        content: 'test',
-        format: 'text',
-      });
+      const filePath = join(tmpdir(), `titane-parse-document-${Date.now()}.txt`);
+      await writeFile(filePath, 'test', 'utf8');
+      await invoke('parse_document', { file_path: filePath });
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       if (errorMsg.includes('missing field') || errorMsg.includes('unknown field')) {
@@ -259,7 +261,7 @@ describe('Regression Test 5: Template Modifications', () => {
           module: 'knowledge',
           cause: 'Signature parse_document modifiée',
           severity: 'MEDIUM',
-          solution_suggeree: 'Vérifier paramètres parse_document(content, format)',
+          solution_suggeree: 'Vérifier paramètres parse_document(file_path)',
           timestamp: new Date().toISOString(),
         });
       }

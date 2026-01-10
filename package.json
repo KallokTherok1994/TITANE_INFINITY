@@ -45,7 +45,7 @@
     "test:compliance": "cross-env NODE_OPTIONS='--max-old-space-size=8192 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run src/__tests__/compliance",
     "test:omega": "cross-env NODE_OPTIONS='--max-old-space-size=8192 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run src/__tests__/*omega*.test.ts",
     "test:all": "cross-env NODE_OPTIONS='--max-old-space-size=8192' pnpm run test && pnpm run test:rust && pnpm run test:architecture && pnpm run test:compliance",
-    "audit": "pnpm audit && cd src-tauri && cargo audit",
+    "audit": "pnpm run copilot-xs:security-scan",
     "audit:master": "./scripts/audit/00-master-audit.sh",
     "audit:security": "./scripts/audit/01-security-audit.sh",
     "audit:architecture": "./scripts/audit/02-architecture-audit.sh",
