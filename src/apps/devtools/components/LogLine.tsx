@@ -72,7 +72,7 @@ export function LogLine({ log, onFilter, onCopy, className = '' }: LogLineProps)
     >
       {/* Timestamp */}
       <span
-        className="flex-shrink-0 w-16 text-xs"
+        className="shrink-0 w-16 text-xs"
         style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
         title={new Date(log.timestamp).toLocaleString()}
       >
@@ -81,7 +81,7 @@ export function LogLine({ log, onFilter, onCopy, className = '' }: LogLineProps)
 
       {/* Level */}
       <span
-        className="flex-shrink-0 w-12 font-bold text-xs"
+        className="shrink-0 w-12 font-bold text-xs"
         style={{ color: styles.text }}
       >
         {styles.label}
@@ -90,7 +90,7 @@ export function LogLine({ log, onFilter, onCopy, className = '' }: LogLineProps)
       {/* Source */}
       <button
         onClick={() => onFilter?.(log.source)}
-        className="flex-shrink-0 w-24 text-left text-xs font-medium hover:underline truncate"
+        className="shrink-0 w-24 text-left text-xs font-medium hover:underline truncate"
         style={{ color: 'var(--text-primary, #e0e0e0)' }}
         title={`Filter by ${log.source}`}
       >
@@ -116,7 +116,7 @@ export function LogLine({ log, onFilter, onCopy, className = '' }: LogLineProps)
       </div>
 
       {/* Actions */}
-      <div className="flex-shrink-0 flex items-center gap-1">
+      <div className="shrink-0 flex items-center gap-1">
         {onCopy && (
           <button
             onClick={() => onCopy(log.message)}

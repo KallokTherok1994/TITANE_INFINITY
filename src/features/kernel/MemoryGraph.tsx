@@ -168,7 +168,7 @@ export function MemoryGraph() {
 
       {/* Last Event */}
       {state.last_event && (
-        <Card className="p-6 bg-gradient-to-r from-purple-900/20 to-blue-900/20">
+        <Card className="p-6 bg-linear-to-r from-purple-900/20 to-blue-900/20">
           <h3 className="font-semibold mb-2 flex items-center gap-2">
             ⚡ Dernier Événement
             <Badge color="purple" size="sm">

@@ -115,12 +115,12 @@ export const GovernanceCenter: React.FC = () => {
   ].filter(Boolean).length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
+    <div className="min-h-screen bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
       <div className="mx-auto max-w-7xl space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 p-3 shadow-lg shadow-blue-500/25">
+            <div className="rounded-2xl bg-linear-to-br from-blue-500 to-purple-600 p-3 shadow-lg shadow-blue-500/25">
               <Brain className="h-8 w-8 text-white" />
             </div>
             <div>

@@ -39,7 +39,7 @@ export const PredictiveDashboard: React.FC = () => {
     return (
       <button
         onClick={() => setIsExpanded(true)}
-        className="fixed bottom-24 right-4 z-[9999] bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all font-mono text-sm"
+        className="fixed bottom-24 right-4 z-9999 bg-linear-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all font-mono text-sm"
       >
         🔮 Predictive AI
       </button>
@@ -54,9 +54,9 @@ export const PredictiveDashboard: React.FC = () => {
         : 'text-red-400';
 
   return (
-    <div className="fixed bottom-24 right-4 z-[9999] bg-gray-900/95 backdrop-blur-sm border border-purple-500/30 rounded-lg shadow-2xl p-4 max-w-md max-h-[500px] overflow-y-auto font-mono text-xs">
+    <div className="fixed bottom-24 right-4 z-9999 bg-gray-900/95 backdrop-blur-sm border border-purple-500/30 rounded-lg shadow-2xl p-4 max-w-md max-h-125 overflow-y-auto font-mono text-xs">
       <div className="flex justify-between items-center mb-3 pb-2 border-b border-purple-500/20">
-        <h3 className="text-sm font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+        <h3 className="text-sm font-bold bg-linear-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
           🔮 Predictive Intelligence
         </h3>
         <button
@@ -101,7 +101,7 @@ export const PredictiveDashboard: React.FC = () => {
             </div>
             <div className="w-full bg-gray-700 rounded-full h-2">
               <div
-                className="h-2 rounded-full bg-gradient-to-r from-orange-500 to-red-500 transition-all"
+                className="h-2 rounded-full bg-linear-to-r from-orange-500 to-red-500 transition-all"
                 style={{ width: `${healthPrediction.criticalityScore}%` }}
               />
             </div>

@@ -467,7 +467,7 @@ const IdentitySection: React.FC = () => {
               <div className="text-sm text-gray-400 mt-2">{dim.dimension}</div>
               <div className="w-full bg-gray-700 rounded-full h-2 mt-3">
                 <div
-                  className="h-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500"
+                  className="h-2 rounded-full bg-linear-to-r from-blue-500 to-cyan-500"
                   style={{ width: `${dim.value * 100}%` }}
                 />
               </div>
@@ -642,7 +642,7 @@ const MemoryMapSection: React.FC<MemoryMapSectionProps> = ({ stats }) => {
                 </div>
                 <div className="w-full bg-gray-700 rounded-full h-3">
                   <div
-                    className="h-3 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500"
+                    className="h-3 rounded-full bg-linear-to-r from-cyan-500 to-blue-500"
                     style={{ width: `${(stats.memoryShortTerm / 500) * 100}%` }}
                   />
                 </div>
@@ -1135,7 +1135,7 @@ const TransformationSection: React.FC = () => {
               </div>
               <div className="w-full bg-gray-700 rounded-full h-3">
                 <div
-                  className="h-3 rounded-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500"
+                  className="h-3 rounded-full bg-linear-to-r from-red-500 via-yellow-500 to-green-500"
                   style={{ width: `${line.progress}%` }}
                 />
               </div>

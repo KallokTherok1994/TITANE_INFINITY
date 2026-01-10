@@ -102,7 +102,7 @@ export const HyperEvolutionDashboard = memo(function HyperEvolutionDashboard() {
   }, []);
 
   return (
-    <div className="min-h-screen p-6 bg-gradient-to-br from-[#111416] to-[#1a1d20]">
+    <div className="min-h-screen p-6 bg-linear-to-br from-[#111416] to-[#1a1d20]">
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-2">

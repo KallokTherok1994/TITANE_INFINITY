@@ -171,7 +171,7 @@ export const TimePage: React.FC = () => {
       <div className="header mb-8">
         <div className="flex items-center gap-3 mb-2">
           <span className="text-5xl">🕐</span>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-cyan-500 to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold bg-linear-to-r from-blue-400 via-cyan-500 to-purple-600 bg-clip-text text-transparent">
             TIME — Centre Temporel Unifié
           </h1>
         </div>
@@ -309,7 +309,7 @@ const NowSection: React.FC<NowSectionProps> = ({
 
       {/* Bloc actuel */}
       {currentBlock && (
-        <div className="bg-gradient-to-r from-blue-900 to-cyan-900 rounded-lg p-6 border border-blue-700">
+        <div className="bg-linear-to-r from-blue-900 to-cyan-900 rounded-lg p-6 border border-blue-700">
           <h3 className="text-xl font-semibold mb-2 text-blue-300">🎯 En ce moment</h3>
           <div className="flex items-center justify-between">
             <div>
@@ -379,7 +379,7 @@ const NowSection: React.FC<NowSectionProps> = ({
       </div>
 
       {/* Suggestion TITANE */}
-      <div className="bg-gradient-to-r from-purple-900 to-pink-900 rounded-lg p-6 border border-purple-700">
+      <div className="bg-linear-to-r from-purple-900 to-pink-900 rounded-lg p-6 border border-purple-700">
         <h3 className="text-xl font-semibold mb-2 text-purple-300">
           ✨ Suggestion TITANE
         </h3>
@@ -560,7 +560,7 @@ const TimelineSection: React.FC = () => {
       {/* Timeline Visualization */}
       <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
         <div className="relative">
-          <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500 via-cyan-500 to-purple-500" />
+          <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-linear-to-b from-blue-500 via-cyan-500 to-purple-500" />
 
           <div className="space-y-6">
             {mockEvents
@@ -634,7 +634,7 @@ const TimelineSection: React.FC = () => {
       </div>
 
       {/* Projection Future */}
-      <div className="bg-gradient-to-r from-purple-900 to-indigo-900 rounded-lg p-6 border border-purple-700">
+      <div className="bg-linear-to-r from-purple-900 to-indigo-900 rounded-lg p-6 border border-purple-700">
         <h3 className="text-xl font-semibold mb-4 text-purple-300">
           🔮 Projection Future
         </h3>
@@ -922,7 +922,7 @@ const IntelligenceSection: React.FC = () => {
       </div>
 
       {/* Recommandations */}
-      <div className="bg-gradient-to-r from-cyan-900 to-blue-900 rounded-lg p-6 border border-cyan-700">
+      <div className="bg-linear-to-r from-cyan-900 to-blue-900 rounded-lg p-6 border border-cyan-700">
         <h3 className="text-xl font-semibold mb-4 text-cyan-300">
           💡 Recommandations TITANE
         </h3>
@@ -1014,7 +1014,7 @@ const FlowSection: React.FC<FlowSectionProps> = ({ flowState }) => {
 
       {/* État actuel */}
       <div
-        className={`rounded-lg p-6 border ${flowState.isInFlow ? 'bg-gradient-to-r from-green-900 to-emerald-900 border-green-600' : 'bg-gray-800 border-gray-700'}`}
+        className={`rounded-lg p-6 border ${flowState.isInFlow ? 'bg-linear-to-r from-green-900 to-emerald-900 border-green-600' : 'bg-gray-800 border-gray-700'}`}
       >
         <h3 className="text-xl font-semibold mb-4 text-green-300">
           {flowState.isInFlow ? '🌊 EN FLOW ACTUELLEMENT' : '⏸️ Pas en Flow'}
@@ -1081,7 +1081,7 @@ const FlowSection: React.FC<FlowSectionProps> = ({ flowState }) => {
       </div>
 
       {/* Recommandations Flow */}
-      <div className="bg-gradient-to-r from-indigo-900 to-purple-900 rounded-lg p-6 border border-indigo-700">
+      <div className="bg-linear-to-r from-indigo-900 to-purple-900 rounded-lg p-6 border border-indigo-700">
         <h3 className="text-xl font-semibold mb-4 text-indigo-300">
           ✨ Optimisation Flow
         </h3>
