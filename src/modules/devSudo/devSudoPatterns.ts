@@ -1015,7 +1015,7 @@ export function matchPattern(input: string): { action: DevSudoAction; params: Re
         // Add positional captures
         for (let i = 1; i < match.length; i++) {
           if (match[i] !== undefined) {
-            params[`capture${i}`] = match[i];
+            params[`capture${i}`] = match[i]!;
           }
         }
         return { action: action as DevSudoAction, params };
@@ -1050,7 +1050,7 @@ export function getAllMatches(input: string): Array<{ action: DevSudoAction; par
         }
         for (let i = 1; i < match.length; i++) {
           if (match[i] !== undefined) {
-            params[`capture${i}`] = match[i];
+            params[`capture${i}`] = match[i]!;
           }
         }
         matches.push({ action: action as DevSudoAction, params });
