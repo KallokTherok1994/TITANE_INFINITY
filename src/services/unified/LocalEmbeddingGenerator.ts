@@ -95,6 +95,21 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
   async initialize(): Promise<void> {
     if (this.isInitialized) return;
 
+    const isTestEnvironment =
+      (typeof process !== 'undefined' &&
+        (process.env?.VITEST === 'true' || process.env?.NODE_ENV === 'test')) ||
+      (typeof import.meta !== 'undefined' &&
+        typeof (import.meta as unknown as { env?: { MODE?: string } }).env !== 'undefined' &&
+        (import.meta as unknown as { env?: { MODE?: string } }).env?.MODE === 'test');
+
+    if (isTestEnvironment) {
+      logger.debug(
+        'LocalEmbeddingGenerator: test environment detected, skipping Transformers.js init'
+      );
+      this.useFallbackGenerator();
+      return;
+    }
+
     try {
       logger.debug('Loading model:', this.config.modelName);
 

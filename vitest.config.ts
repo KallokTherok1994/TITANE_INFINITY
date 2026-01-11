@@ -102,7 +102,7 @@ export const sharedTestConfig = defineConfig({
     exclude: ['node_modules', 'dist', 'src-tauri'],
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'html'],
+      reporter: ['text', 'json', 'json-summary', 'html'],
       reportsDirectory: 'coverage/unit',
       exclude: [
         'node_modules/',

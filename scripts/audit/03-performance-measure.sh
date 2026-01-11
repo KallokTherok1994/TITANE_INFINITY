@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ⚡ TITANE∞ Performance Measurement - Baseline Metrics
-# Duration: 10-15 minutes (includes build)
+# Duration: 5-10 minutes (no production build by policy)
 # Output: reports/performance-YYYYMMDD-HHMMSS/
 
 set -e
@@ -28,24 +28,14 @@ echo "================================================"
 # 1. Build Time Measurement
 echo ""
 echo "🏗️ [1/8] Measuring build time..."
-echo "   └─ Build step is gated (no production build by default)."
+echo "   └─ Production build is forbidden by repo policy (dev-mode only)."
+{
+    echo "Build step not executed."
+    echo "Reason: Repo policy forbids production builds (pnpm run build / tauri build)."
+} > "$REPORT_DIR/build-output.txt"
+BUILD_TIME=0
 
-BUILD_START=$(date +%s)
-if [ "${TITANE_PERF_ALLOW_BUILD:-0}" = "1" ]; then
-    echo "   └─ Running production build (TITANE_PERF_ALLOW_BUILD=1)..."
-    pnpm run build > "$REPORT_DIR/build-output.txt" 2>&1 || {
-        echo "   ⚠️ Build failed - check build-output.txt"
-    }
-else
-    {
-        echo "Build step skipped by policy."
-        echo "Set TITANE_PERF_ALLOW_BUILD=1 to enable build timing."
-    } > "$REPORT_DIR/build-output.txt"
-fi
-BUILD_END=$(date +%s)
-BUILD_TIME=$((BUILD_END - BUILD_START))
-
-echo "   ✅ Step completed in ${BUILD_TIME}s"
+echo "   ✅ Step completed (no build)"
 
 # 2. Bundle Size Analysis
 echo ""
@@ -216,7 +206,7 @@ echo "📊 Generating performance summary..."
 cat > "$REPORT_DIR/PERFORMANCE_SUMMARY.md" << EOF
 # ⚡ TITANE∞ Performance Report
 **Date**: $(date)
-**Build Time**: ${BUILD_TIME}s
+**Build Time**: Not measured (production build forbidden by policy)
 
 ---
 
@@ -224,8 +214,8 @@ cat > "$REPORT_DIR/PERFORMANCE_SUMMARY.md" << EOF
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| Build Time | ${BUILD_TIME}s | <60s | $([ "$BUILD_TIME" -lt 60 ] && echo "✅" || echo "❌") |
-| Bundle Size | ${DIST_SIZE}MB | <10MB | $([ "$DIST_SIZE" -lt 10 ] && echo "✅" || echo "⚠️") |
+| Build Time | N/A | <60s | ℹ️ |
+| Bundle Size | ${DIST_SIZE}MB | <10MB | $([ "$DIST_SIZE" -gt 0 ] && [ "$DIST_SIZE" -lt 10 ] && echo "✅" || echo "⚠️") |
 | node_modules | ${NODE_MODULES_SIZE}MB | <500MB | $([ "$NODE_MODULES_SIZE" -lt 500 ] && echo "✅" || echo "⚠️") |
 | IPC Commands | $IPC_COMMANDS | - | ℹ️ |
 | IPC Calls | $IPC_CALLS | - | ℹ️ |
@@ -240,7 +230,7 @@ cat > "$REPORT_DIR/PERFORMANCE_SUMMARY.md" << EOF
 ## 🎯 Priority Optimizations
 
 ### P0 (Critical - Do First)
-$([ "$BUILD_TIME" -gt 60 ] && echo "- ❌ **Reduce build time** - Currently ${BUILD_TIME}s, target <60s" || echo "- ✅ Build time OK")
+$([ "$DIST_SIZE" -eq 0 ] && echo "- ⚠️ **No bundle size baseline** - dist/ not present (build forbidden by policy)" || echo "- ✅ Bundle size baseline present")
 $([ "$WILDCARD_IMPORTS" -gt 0 ] && echo "- ❌ **Replace wildcard imports** - $WILDCARD_IMPORTS found" || echo "- ✅ No wildcard imports")
 $([ "$DYNAMIC_IMPORTS" -lt 10 ] && echo "- ⚠️ **Add code splitting** - Only $DYNAMIC_IMPORTS dynamic imports" || echo "- ✅ Code splitting present")
 
@@ -273,11 +263,10 @@ $([ "$DEEP_IMPORTS" -gt 10 ] && echo "- ⚠️ **Fix deep imports** - $DEEP_IMPO
 
 ## 🚀 Next Steps
 
-1. Run \`pnpm run build -- --analyze\` for visual bundle analysis
-2. Implement code splitting for routes
-3. Replace wildcard imports
-4. Add performance tests
-5. Setup monitoring dashboard
+1. Implement code splitting for routes
+2. Replace wildcard imports
+3. Add performance tests
+4. Setup monitoring dashboard
 
 ---
 
@@ -299,7 +288,7 @@ echo "================================================"
 echo "✅ Performance Measurement Complete!"
 echo ""
 echo "📊 Summary:"
-echo "   ├─ Build Time: ${BUILD_TIME}s $([ "$BUILD_TIME" -lt 60 ] && echo "(✅)" || echo "(❌ >60s)")"
+echo "   ├─ Build Time: Not measured (policy)"
 echo "   ├─ Bundle Size: ${DIST_SIZE}MB $([ "$DIST_SIZE" -lt 10 ] && echo "(✅)" || echo "(⚠️ >10MB)")"
 echo "   ├─ Dependencies: ${NODE_MODULES_SIZE}MB"
 echo "   ├─ IPC: $IPC_COMMANDS commands, $IPC_CALLS calls"
@@ -312,24 +301,19 @@ echo ""
 # Deterministic score (0-100)
 PERF_SCORE=100
 
-# If build is skipped, apply a small penalty (missing measured baseline)
-if [ "${TITANE_PERF_ALLOW_BUILD:-0}" != "1" ]; then
-    PERF_SCORE=$((PERF_SCORE - 10))
-fi
-
-# Penalize slow build if measured
-if [ "$BUILD_TIME" -gt 60 ]; then
-    over=$((BUILD_TIME - 60))
-    bt_penalty=$((over / 5))
-    if [ "$bt_penalty" -gt 25 ]; then bt_penalty=25; fi
-    PERF_SCORE=$((PERF_SCORE - bt_penalty))
-fi
+# Build metrics are unavailable by policy; apply a baseline penalty.
+PERF_SCORE=$((PERF_SCORE - 10))
 
 # Bundle size penalty
 if [ "$DIST_SIZE" -gt 10 ]; then
     bs_penalty=$(((DIST_SIZE - 10) * 3))
     if [ "$bs_penalty" -gt 30 ]; then bs_penalty=30; fi
     PERF_SCORE=$((PERF_SCORE - bs_penalty))
+fi
+
+# If dist/ missing, we cannot assess bundle size; apply a penalty.
+if [ "$DIST_SIZE" -eq 0 ]; then
+    PERF_SCORE=$((PERF_SCORE - 10))
 fi
 
 # Import hygiene penalties
