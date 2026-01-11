@@ -30,9 +30,7 @@ TOTAL_PASSED=0
 TOTAL_WARNINGS=0
 TOTAL_ERRORS=0
 
-# Score extraction regex pattern
-# Expected format: "Score: XX" where XX is a number
-SCORE_REGEX='Score:\s*\K[0-9]+'
+ # Score extraction: portable (no grep -P) and ANSI-safe
 
 # Audit configuration
 AUDITS=(
@@ -65,7 +63,7 @@ run_audit() {
     
     if [[ ! -f "$script_path" ]]; then
         echo -e "${RED}✗ Script not found: ${script_path}${NC}"
-        AUDIT_SCORES[$name]=0
+        AUDIT_SCORES["$name"]=0
         return 1
     fi
     
@@ -78,17 +76,25 @@ run_audit() {
         local duration=$((end_time - start_time))
         echo -e "${GREEN}✓ ${name} completed in ${duration}s${NC}"
         
-        # Extract score from log using defined pattern.
-        # Default to 100 only if the audit did not emit any parsable score.
-        local score
-        score=$(grep -oP "$SCORE_REGEX" "$audit_log" 2>/dev/null | tail -1 || true)
-        if [[ -z "${score:-}" ]]; then
-            score=100
+        # Extract score from log (portable; handles ANSI escape sequences)
+        local score=""
+        local score_line=""
+        local score_line_clean=""
+        local esc=""
+        if score_line=$(grep -E 'Score:' "$audit_log" 2>/dev/null | tail -1); then
+            esc=$(printf '\033')
+            score_line_clean=$(printf '%s' "$score_line" | sed -E "s/${esc}\\[[0-9;]*[A-Za-z]//g")
+            score=$(echo "$score_line_clean" | grep -Eo '[0-9]+' | head -1)
         fi
-        AUDIT_SCORES[$name]=$score
+        if [[ -z "${score:-}" ]]; then
+            echo -e "${YELLOW}⚠ ${name} did not emit a parsable Score: line (setting score=0)${NC}"
+            score=0
+        fi
+        # Store score (key may contain spaces)
+        AUDIT_SCORES["$name"]=$score
     else
         echo -e "${YELLOW}⚠ ${name} completed with warnings${NC}"
-        AUDIT_SCORES[$name]=50
+        AUDIT_SCORES["$name"]=50
     fi
 }
 
@@ -98,7 +104,7 @@ calculate_final_score() {
     
     for audit_info in "${AUDITS[@]}"; do
         IFS=':' read -r script name weight <<< "$audit_info"
-        local score=${AUDIT_SCORES[$name]:-0}
+        local score=${AUDIT_SCORES["$name"]:-0}
         weighted_sum=$((weighted_sum + (score * weight)))
         total_weight=$((total_weight + weight))
     done
@@ -170,7 +176,7 @@ EOF
 
     for audit_info in "${AUDITS[@]}"; do
         IFS=':' read -r script name weight <<< "$audit_info"
-        local score=${AUDIT_SCORES[$name]:-0}
+        local score=${AUDIT_SCORES["$name"]:-0}
         local weighted=$((score * weight / 100))
         local grade_item=$(get_grade $score)
         echo "| ${name} | ${score}/100 (${grade_item}) | ${weight}% | ${weighted} |" >> "$report_file"
@@ -190,35 +196,35 @@ EOF
     
     if [[ ${AUDIT_SCORES[Security]:-0} -ge 80 ]]; then
         echo "- [x] **Security Gate**: Score ≥ 80 ✅" >> "$report_file"
-        ((gates_passed++))
+        gates_passed=$((gates_passed + 1))
     else
         echo "- [ ] **Security Gate**: Score ≥ 80 ❌ (Current: ${AUDIT_SCORES[Security]:-0})" >> "$report_file"
     fi
     
     if [[ ${AUDIT_SCORES[Architecture]:-0} -ge 75 ]]; then
         echo "- [x] **Architecture Gate**: Score ≥ 75 ✅" >> "$report_file"
-        ((gates_passed++))
+        gates_passed=$((gates_passed + 1))
     else
         echo "- [ ] **Architecture Gate**: Score ≥ 75 ❌ (Current: ${AUDIT_SCORES[Architecture]:-0})" >> "$report_file"
     fi
     
     if [[ ${AUDIT_SCORES[Performance]:-0} -ge 70 ]]; then
         echo "- [x] **Performance Gate**: Score ≥ 70 ✅" >> "$report_file"
-        ((gates_passed++))
+        gates_passed=$((gates_passed + 1))
     else
         echo "- [ ] **Performance Gate**: Score ≥ 70 ❌ (Current: ${AUDIT_SCORES[Performance]:-0})" >> "$report_file"
     fi
     
     if [[ ${AUDIT_SCORES["Test Coverage"]:-0} -ge 70 ]]; then
         echo "- [x] **Test Coverage Gate**: Score ≥ 70 ✅" >> "$report_file"
-        ((gates_passed++))
+        gates_passed=$((gates_passed + 1))
     else
         echo "- [ ] **Test Coverage Gate**: Score ≥ 70 ❌ (Current: ${AUDIT_SCORES["Test Coverage"]:-0})" >> "$report_file"
     fi
     
     if [[ ${AUDIT_SCORES[Deployment]:-0} -ge 90 ]]; then
         echo "- [x] **Deployment Gate**: Score ≥ 90 ✅" >> "$report_file"
-        ((gates_passed++))
+        gates_passed=$((gates_passed + 1))
     else
         echo "- [ ] **Deployment Gate**: Score ≥ 90 ❌ (Current: ${AUDIT_SCORES[Deployment]:-0})" >> "$report_file"
     fi
@@ -300,7 +306,13 @@ print_summary() {
     
     for audit_info in "${AUDITS[@]}"; do
         IFS=':' read -r script name weight <<< "$audit_info"
-        local score=${AUDIT_SCORES[$name]:-0}
+        local score=${AUDIT_SCORES["$name"]:-0}
+
+        # Coerce to integer to avoid printf "invalid number" under `set -e`
+        score="${score//[^0-9]/}"
+        if [[ -z "${score:-}" ]]; then
+            score=0
+        fi
         local grade_item=$(get_grade $score)
         
         # Color based on score
