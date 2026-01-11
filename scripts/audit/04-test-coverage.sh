@@ -42,21 +42,39 @@ echo "   └─ Rust tests: $RUST_TESTS"
 echo ""
 echo "🏃 [2/7] Running test suite..."
 if [ -f "package.json" ]; then
-    pnpm test -- --coverage --json --outputFile="$REPORT_DIR/test-results.json" > "$REPORT_DIR/test-output.txt" 2>&1 || {
-        echo "   ⚠️ Tests failed or no test command configured"
-    }
-    
-    if [ -f "coverage/coverage-summary.json" ]; then
-        cp coverage/coverage-summary.json "$REPORT_DIR/"
-        COVERAGE=$(jq -r '.total.lines.pct' "$REPORT_DIR/coverage-summary.json" 2>/dev/null || echo "0")
-        echo "   └─ Coverage: ${COVERAGE}%"
-    else
-        COVERAGE="0"
-        echo "   └─ No coverage data generated"
+  if command -v corepack >/dev/null 2>&1; then
+    PNPM=(corepack pnpm)
+  elif command -v pnpm >/dev/null 2>&1; then
+    PNPM=(pnpm)
+  else
+    PNPM=()
+  fi
+
+  if [ ${#PNPM[@]} -gt 0 ]; then
+    set +e
+    "${PNPM[@]}" run test:coverage > "$REPORT_DIR/test-output.txt" 2>&1
+    TEST_EXIT=$?
+    set -e
+
+    if [ "$TEST_EXIT" -ne 0 ]; then
+      echo "   ⚠️ Tests/coverage failed (exit=$TEST_EXIT)"
     fi
-else
+  else
+    echo "   ⚠️ pnpm/corepack introuvable - tests ignorés"
+    echo "pnpm/corepack introuvable" > "$REPORT_DIR/test-output.txt"
+  fi
+
+  if [ -f "coverage/coverage-summary.json" ]; then
+    cp coverage/coverage-summary.json "$REPORT_DIR/"
+    COVERAGE=$(jq -r '.total.lines.pct // 0' "$REPORT_DIR/coverage-summary.json" 2>/dev/null || echo "0")
+    echo "   └─ Coverage: ${COVERAGE}%"
+  else
     COVERAGE="0"
-    echo "   ⚠️ package.json not found"
+    echo "   └─ No coverage data generated"
+  fi
+else
+  COVERAGE="0"
+  echo "   ⚠️ package.json not found"
 fi
 
 # 3. Rust Test Coverage
@@ -425,3 +443,17 @@ echo ""
 echo "📁 Full report: $REPORT_DIR/TEST_COVERAGE_SUMMARY.md"
 echo "📋 Coverage matrix: $REPORT_DIR/COVERAGE_MATRIX.md"
 echo ""
+
+# Deterministic score (0-100)
+COVERAGE_INT="${COVERAGE%.*}"
+if [ -z "${COVERAGE_INT:-}" ]; then COVERAGE_INT=0; fi
+
+RUST_COMPONENT=$((RUST_TESTS >= 50 ? 10 : (RUST_TESTS * 10 / 50)))
+E2E_COMPONENT=$((E2E_TESTS >= 10 ? 10 : E2E_TESTS))
+ASSERT_COMPONENT=$((ASSERTIONS >= 200 ? 10 : (ASSERTIONS * 10 / 200)))
+
+SCORE=$(( (COVERAGE_INT * 70 / 100) + RUST_COMPONENT + E2E_COMPONENT + ASSERT_COMPONENT ))
+if [ "$SCORE" -gt 100 ]; then SCORE=100; fi
+if [ "$SCORE" -lt 0 ]; then SCORE=0; fi
+
+echo "Score: $SCORE"

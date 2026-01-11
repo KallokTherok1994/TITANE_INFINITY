@@ -84,17 +84,26 @@ cd ..
 echo ""
 echo "🔑 [3/8] Detecting hardcoded secrets..."
 {
-    echo "=== API Keys ==="
-    grep -r "api[_-]key\|apikey" --include="*.ts" --include="*.tsx" --include="*.js" --include="*.rs" src/ src-tauri/ 2>/dev/null || echo "None found"
+    echo "=== Suspicious hardcoded secrets (high-signal heuristics) ==="
+    echo "# Notes: avoids matching common words like 'token' in types/comments."
     echo ""
-    echo "=== Tokens ==="
-    grep -r "token\|secret\|password" --include="*.ts" --include="*.tsx" --include="*.js" --include="*.rs" src/ src-tauri/ 2>/dev/null | grep -v "// " | grep -v "password:" | head -20 || echo "None found"
+    echo "--- Known key prefixes / tokens ---"
+    grep -RInE "(AKIA[0-9A-Z]{16}|ASIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{36,}|github_pat_[A-Za-z0-9_]{40,}|xox[baprs]-[A-Za-z0-9-]{10,}|sk-[A-Za-z0-9]{20,}|eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,})" \
+        --include="*.ts" --include="*.tsx" --include="*.js" --include="*.rs" \
+        src src-tauri 2>/dev/null | head -50 || echo "None found"
     echo ""
-    echo "=== URLs with credentials ==="
-    grep -r "http.*://.*:.*@" --include="*.ts" --include="*.tsx" --include="*.js" --include="*.rs" src/ src-tauri/ 2>/dev/null || echo "None found"
+    echo "--- String literal assignments (apiKey/token/secret/password) ---"
+    grep -RInE "\b(api[_-]?key|token|secret|password)\b\s*[:=]\s*(['\"][^'\"]{16,}['\"])" \
+        --include="*.ts" --include="*.tsx" --include="*.js" \
+        src 2>/dev/null | head -50 || echo "None found"
+    echo ""
+    echo "--- URLs with credentials ---"
+    grep -RInE "https?://[^\s/:]+:[^\s/@]+@" \
+        --include="*.ts" --include="*.tsx" --include="*.js" --include="*.rs" \
+        src src-tauri 2>/dev/null | head -50 || echo "None found"
 } > "$REPORT_DIR/secrets-scan.txt"
 
-SECRETS_COUNT=$(grep -c "http\|api\|token" "$REPORT_DIR/secrets-scan.txt" || echo "0")
+SECRETS_COUNT=$( (grep -vE '^(===|---|#|None found$|$)' "$REPORT_DIR/secrets-scan.txt" || true) | wc -l | xargs )
 echo "   └─ Potential secrets: $SECRETS_COUNT findings"
 
 # 4. Tauri Commands Audit
@@ -273,3 +282,30 @@ echo "   └─ expect() calls: $EXPECT_COUNT"
 echo ""
 echo "📁 Full report: $REPORT_DIR/SECURITY_SUMMARY.md"
 echo ""
+
+# Deterministic score (0-100)
+SEC_SCORE=100
+
+crit_penalty=$((NODE_CRITICAL * 30))
+if [ "$crit_penalty" -gt 60 ]; then crit_penalty=60; fi
+
+high_penalty=$((NODE_HIGH * 10))
+if [ "$high_penalty" -gt 30 ]; then high_penalty=30; fi
+
+strict_penalty=0
+if [ "${CARGO_AUDIT_STRICT_STATUS:-⚠️}" = "❌" ]; then strict_penalty=20; fi
+if [ "${CARGO_AUDIT_STRICT_STATUS:-⚠️}" = "⚠️" ]; then strict_penalty=10; fi
+
+unwrap_penalty=$((UNWRAP_COUNT * 2))
+if [ "$unwrap_penalty" -gt 30 ]; then unwrap_penalty=30; fi
+
+secrets_penalty=0
+if [ "$SECRETS_COUNT" -gt 0 ]; then secrets_penalty=15; fi
+
+total_penalty=$((crit_penalty + high_penalty + strict_penalty + unwrap_penalty + secrets_penalty))
+if [ "$total_penalty" -gt 100 ]; then total_penalty=100; fi
+
+SEC_SCORE=$((SEC_SCORE - total_penalty))
+if [ "$SEC_SCORE" -lt 0 ]; then SEC_SCORE=0; fi
+
+echo "Score: $SEC_SCORE"
