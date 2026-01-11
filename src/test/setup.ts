@@ -45,7 +45,9 @@ if (typeof process !== 'undefined' && typeof process.exit === 'function') {
   const ensureNotCoveragePath = (target: unknown, op: string) => {
     const value = typeof target === 'string' ? target : String(target ?? '');
     if (value.includes(coverageRoot)) {
-      throw new Error(`Forbidden filesystem operation (${op}) on coverage path: ${value}`);
+      throw new Error(
+        `Forbidden filesystem operation (${op}) on coverage path: ${value}`
+      );
     }
   };
 
@@ -347,7 +349,8 @@ const handleTauriInvoke = async (
 
       // Support current payload shape: { path, category, content }
       const path = typeof payload?.path === 'string' ? payload.path : undefined;
-      const category = typeof payload?.category === 'string' ? payload.category : undefined;
+      const category =
+        typeof payload?.category === 'string' ? payload.category : undefined;
       const content = typeof payload?.content === 'string' ? payload.content : undefined;
 
       const normalized = legacyFile?.name
@@ -410,7 +413,11 @@ const handleTauriInvoke = async (
       const firstLine = content.split(/\r?\n/).find(Boolean) ?? 'Untitled';
       const lower = content.toLowerCase();
       const categories: string[] = [];
-      if (lower.includes('function') || lower.includes('class') || lower.includes('impl')) {
+      if (
+        lower.includes('function') ||
+        lower.includes('class') ||
+        lower.includes('impl')
+      ) {
         categories.push('code');
       }
       if (lower.includes('config') || lower.includes('settings')) {
@@ -430,7 +437,10 @@ const handleTauriInvoke = async (
 
       return {
         id: `doc_${Date.now()}`,
-        title: String(firstLine).replace(/^#+\s*/, '').trim() || 'Untitled',
+        title:
+          String(firstLine)
+            .replace(/^#+\s*/, '')
+            .trim() || 'Untitled',
         content,
         format,
         metadata: {
@@ -643,7 +653,9 @@ const handleTauriInvoke = async (
         provider?: string;
       };
       const conversationId =
-        envelope.request?.conversation_id ?? envelope.conversation_id ?? 'mock-conversation';
+        envelope.request?.conversation_id ??
+        envelope.conversation_id ??
+        'mock-conversation';
       const provider = envelope.request?.config?.provider ?? envelope.provider ?? 'mock';
       return {
         content: 'Réponse mock TITANE∞',

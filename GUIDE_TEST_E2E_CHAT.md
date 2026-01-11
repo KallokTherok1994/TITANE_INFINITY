@@ -366,8 +366,8 @@ UI:
 
 Remplir après tests:
 
-**Date:** ****\_\_\_\_****  
-**Testeur:** ****\_\_\_\_****  
+**Date:** \***\*\_\_\_\_\*\***  
+**Testeur:** \***\*\_\_\_\_\*\***  
 **Version:** 26.2.0
 
 **Résultats:**
@@ -379,8 +379,8 @@ Remplir après tests:
 - Test 5: ☐ Pass ☐ Fail
 - Test 6: ☐ Pass ☐ Fail
 
-**conversationId session:** ****\_\_\_\_****  
-**Nombre de resets:** ****\_\_\_\_****  
+**conversationId session:** \***\*\_\_\_\_\*\***  
+**Nombre de resets:** \***\*\_\_\_\_\*\***  
 **Réponses visibles:** \_**\_/\_\_**
 
 **Notes:**

@@ -114,9 +114,7 @@ describe('UILogger', () => {
   describe('Sanitization', () => {
     it('should redact OpenAI API keys', () => {
       const openAiKey = `sk-${'a'.repeat(48)}`;
-      logger.info(
-        `API call with key ${openAiKey}`
-      );
+      logger.info(`API call with key ${openAiKey}`);
       const logs = logger.getLogs();
 
       expect(logs[0].message).toContain('[REDACTED]');
@@ -137,9 +135,7 @@ describe('UILogger', () => {
       const jwtSignature = 'dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U';
       const jwtToken = `${jwtHeader}.${jwtPayload}.${jwtSignature}`;
 
-      logger.info(
-        `Token: ${jwtToken}`
-      );
+      logger.info(`Token: ${jwtToken}`);
       const logs = logger.getLogs();
 
       expect(logs[0].message).toContain('[REDACTED]');
@@ -189,9 +185,7 @@ describe('UILogger', () => {
     it('should handle multiple sensitive patterns in one message', () => {
       const openAiKey = `sk-${'a'.repeat(48)}`;
       const jwtHeader = ['ey', 'J', 'hbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'].join('');
-      logger.info(
-        `User user@example.com with key ${openAiKey} and token ${jwtHeader}`
-      );
+      logger.info(`User user@example.com with key ${openAiKey} and token ${jwtHeader}`);
       const logs = logger.getLogs();
 
       const message = logs[0].message;

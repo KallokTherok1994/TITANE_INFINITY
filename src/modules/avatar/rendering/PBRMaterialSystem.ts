@@ -4,13 +4,7 @@
 //   Physically-Based Rendering materials for avatar (skin, cloth, hair)
 // ═════════════════════════════════════════════════════════════════════════════
 
-import {
-  Color,
-  FrontSide,
-  MeshStandardMaterial,
-  TextureLoader,
-  Vector2,
-} from 'three';
+import { Color, FrontSide, MeshStandardMaterial, TextureLoader, Vector2 } from 'three';
 import type { ColorRepresentation } from 'three';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -98,10 +92,7 @@ export class PBRMaterialSystem {
   /**
    * Create PBR material from config
    */
-  public createMaterial(
-    name: string,
-    config: PBRMaterialConfig
-  ): MeshStandardMaterial {
+  public createMaterial(name: string, config: PBRMaterialConfig): MeshStandardMaterial {
     // Check if already exists
     const existing = this.materials.get(name);
     if (existing) {

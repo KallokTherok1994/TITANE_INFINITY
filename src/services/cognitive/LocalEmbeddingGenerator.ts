@@ -94,7 +94,8 @@ export class LocalEmbeddingGenerator implements EmbeddingGenerator {
       (typeof process !== 'undefined' &&
         (process.env?.VITEST === 'true' || process.env?.NODE_ENV === 'test')) ||
       (typeof import.meta !== 'undefined' &&
-        typeof (import.meta as unknown as { env?: { MODE?: string } }).env !== 'undefined' &&
+        typeof (import.meta as unknown as { env?: { MODE?: string } }).env !==
+          'undefined' &&
         (import.meta as unknown as { env?: { MODE?: string } }).env?.MODE === 'test');
 
     if (isTestEnvironment) {

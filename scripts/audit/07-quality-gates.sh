@@ -383,17 +383,17 @@ print_summary() {
     # Overall status
     if [[ $GATES_FAILED -eq 0 && $GATES_WARNING -eq 0 ]]; then
         echo -e "  ${GREEN}╔═══════════════════════════════════════╗${NC}"
-        echo -e "  ${GREEN}║   🎉 ALL GATES PASSED - READY TO DEPLOY   ║${NC}"
+        echo -e "  ${GREEN}║   🎉 ALL GATES PASSED - READY (DEV MODE)  ║${NC}"
         echo -e "  ${GREEN}╚═══════════════════════════════════════╝${NC}"
         return 0
     elif [[ $GATES_FAILED -eq 0 ]]; then
         echo -e "  ${YELLOW}╔═══════════════════════════════════════╗${NC}"
-        echo -e "  ${YELLOW}║   ⚠️  DEPLOY WITH CAUTION (Warnings)   ║${NC}"
+        echo -e "  ${YELLOW}║   ⚠️  WARNINGS PRESENT (DEV MODE)      ║${NC}"
         echo -e "  ${YELLOW}╚═══════════════════════════════════════╝${NC}"
         return 0
     else
         echo -e "  ${RED}╔═══════════════════════════════════════╗${NC}"
-        echo -e "  ${RED}║   ❌ DEPLOYMENT BLOCKED - Fix Issues   ║${NC}"
+        echo -e "  ${RED}║   ❌ QUALITY GATES FAILED - Fix Issues ║${NC}"
         echo -e "  ${RED}╚═══════════════════════════════════════╝${NC}"
         return 1
     fi
