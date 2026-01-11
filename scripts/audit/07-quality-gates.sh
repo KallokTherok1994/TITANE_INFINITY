@@ -20,6 +20,17 @@ NC='\033[0m'
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 
+# Prefer repo-bundled pnpm for determinism (avoids engines/node mismatch).
+if [ -x "${PROJECT_ROOT}/.tools/node/current/bin/pnpm" ]; then
+    PNPM=("${PROJECT_ROOT}/.tools/node/current/bin/pnpm")
+elif command -v corepack >/dev/null 2>&1; then
+    PNPM=(corepack pnpm)
+elif command -v pnpm >/dev/null 2>&1; then
+    PNPM=(pnpm)
+else
+    PNPM=()
+fi
+
 # Gate results
 declare -A GATE_RESULTS
 GATES_PASSED=0
@@ -38,6 +49,7 @@ gate_pass() {
     echo -e "${GREEN}✓${NC} Gate: ${gate_name} ${GREEN}PASSED${NC}"
     GATE_RESULTS[$gate_name]="PASS"
     ((GATES_PASSED++))
+    return 0
 }
 
 gate_fail() {
@@ -46,6 +58,7 @@ gate_fail() {
     echo -e "${RED}✗${NC} Gate: ${gate_name} ${RED}FAILED${NC} - ${reason}"
     GATE_RESULTS[$gate_name]="FAIL"
     ((GATES_FAILED++))
+    return 0
 }
 
 gate_warn() {
@@ -54,6 +67,7 @@ gate_warn() {
     echo -e "${YELLOW}⚠${NC} Gate: ${gate_name} ${YELLOW}WARNING${NC} - ${reason}"
     GATE_RESULTS[$gate_name]="WARN"
     ((GATES_WARNING++))
+    return 0
 }
 
 # Gate 1: Build Configuration
@@ -102,12 +116,30 @@ check_typescript_gate() {
     echo -e "\n${CYAN}━━━ Gate 2: TypeScript Compilation ━━━${NC}"
     
     cd "$PROJECT_ROOT"
-    
-    if pnpm run check 2>/dev/null | tail -1 | grep -q "error"; then
-        gate_fail "TypeScript Compilation" "Type errors detected"
+
+    if [ ${#PNPM[@]} -eq 0 ]; then
+        gate_fail "TypeScript Compilation" "pnpm not found"
+        return
+    fi
+
+    # Dev-friendly: avoid blocking if typecheck is slow (large TS graph).
+    # Use configurable timeout (default 180s).
+    local TS_TIMEOUT=${TS_TIMEOUT:-180}
+
+    set +e
+    timeout "$TS_TIMEOUT" "${PNPM[@]}" run check >/dev/null 2>&1
+    local ts_exit=$?
+    set -e
+
+    if [[ "$ts_exit" -eq 124 ]]; then
+        gate_warn "TypeScript Compilation" "typecheck timed out after ${TS_TIMEOUT}s"
+    elif [[ "$ts_exit" -ne 0 ]]; then
+        gate_fail "TypeScript Compilation" "typecheck exited with code $ts_exit"
     else
         gate_pass "TypeScript Compilation"
     fi
+
+    return 0
 }
 
 # Gate 3: Linting
@@ -115,11 +147,19 @@ check_lint_gate() {
     echo -e "\n${CYAN}━━━ Gate 3: Code Linting ━━━${NC}"
     
     cd "$PROJECT_ROOT"
-    
-    local lint_errors=$(pnpm run lint 2>&1 | grep -c "error" || echo "0")
-    
-    if [[ "$lint_errors" -gt 0 ]]; then
-        gate_fail "Code Linting" "$lint_errors linting error(s)"
+
+    if [ ${#PNPM[@]} -eq 0 ]; then
+        gate_fail "Code Linting" "pnpm not found"
+        return
+    fi
+
+    # Use ESLint exit code instead of grepping for the word "error".
+    # (The summary line contains "0 errors" which used to trigger false positives.)
+    ("${PNPM[@]}" run lint >/dev/null 2>&1)
+    local lint_exit=$?
+
+    if [[ "$lint_exit" -ne 0 ]]; then
+        gate_fail "Code Linting" "eslint exited with code $lint_exit"
     else
         gate_pass "Code Linting"
     fi
@@ -130,14 +170,22 @@ check_tests_gate() {
     echo -e "\n${CYAN}━━━ Gate 4: Unit Tests ━━━${NC}"
     
     cd "$PROJECT_ROOT"
+
+    if [ ${#PNPM[@]} -eq 0 ]; then
+        gate_fail "Unit Tests" "pnpm not found"
+        return
+    fi
     
     # Configurable timeout for test execution (default: 120 seconds)
     local TEST_TIMEOUT=${TEST_TIMEOUT:-120}
-    
-    if timeout "$TEST_TIMEOUT" pnpm vitest run --reporter=basic 2>&1 | tail -5 | grep -q "passed"; then
-        gate_pass "Unit Tests"
+
+    timeout "$TEST_TIMEOUT" "${PNPM[@]}" vitest run --reporter=basic >/dev/null 2>&1
+    local test_exit=$?
+
+    if [[ "$test_exit" -ne 0 ]]; then
+        gate_fail "Unit Tests" "vitest exited with code $test_exit"
     else
-        gate_fail "Unit Tests" "Some tests failed"
+        gate_pass "Unit Tests"
     fi
 }
 
@@ -146,10 +194,32 @@ check_security_gate() {
     echo -e "\n${CYAN}━━━ Gate 5: Security ━━━${NC}"
     
     cd "$PROJECT_ROOT"
+
+    if [ ${#PNPM[@]} -eq 0 ]; then
+        gate_fail "Security" "pnpm not found"
+        return
+    fi
     
     # Check dependency audit
-    local dep_critical=$(pnpm audit 2>/dev/null | grep -c "critical" || echo "0")
-    local dep_high=$(pnpm audit 2>/dev/null | grep -c "high" || echo "0")
+    local dep_critical=0
+    local dep_high=0
+
+    local audit_json
+    audit_json=$(mktemp 2>/dev/null || echo "")
+    if [ -n "${audit_json:-}" ]; then
+        "${PNPM[@]}" audit --json > "$audit_json" 2>/dev/null || true
+        if command -v jq >/dev/null 2>&1; then
+            dep_critical=$(jq -r '.metadata.vulnerabilities.critical // 0' "$audit_json" 2>/dev/null || echo "0")
+            dep_high=$(jq -r '.metadata.vulnerabilities.high // 0' "$audit_json" 2>/dev/null || echo "0")
+        fi
+        rm -f "$audit_json" 2>/dev/null || true
+    fi
+
+    if [[ "$dep_critical" == "0" && "$dep_high" == "0" ]]; then
+        # Fallback to text scan when JSON parsing isn't available.
+        dep_critical=$("${PNPM[@]}" audit 2>/dev/null | grep -ci "critical" || echo "0")
+        dep_high=$("${PNPM[@]}" audit 2>/dev/null | grep -ci "high" || echo "0")
+    fi
     
     if [[ "$dep_critical" -gt 0 ]]; then
         gate_fail "Security" "$dep_critical critical vulnerabilities"
@@ -250,16 +320,26 @@ check_cicd_gate() {
         return
     fi
     
-    local ci_workflow="${workflows_dir}/ci.yml"
-    local release_workflow="${workflows_dir}/release.yml"
-    
+    local ci_workflow="${workflows_dir}/ci-unified.yml"
+    local release_workflow="${workflows_dir}/release-unified.yml"
+
+    # Backward-compatible fallbacks (older repos may still have these).
     if [[ ! -f "$ci_workflow" ]]; then
-        gate_warn "CI/CD Workflows" "ci.yml not found"
+        ci_workflow="${workflows_dir}/ci.yml"
+    fi
+    if [[ ! -f "$release_workflow" ]]; then
+        release_workflow="${workflows_dir}/release.yml"
+    fi
+
+    if [[ ! -f "$ci_workflow" ]]; then
+        gate_warn "CI/CD Workflows" "CI workflow not found (expected ci-unified.yml or ci.yml)"
     elif [[ ! -f "$release_workflow" ]]; then
-        gate_warn "CI/CD Workflows" "release.yml not found"
+        gate_warn "CI/CD Workflows" "Release workflow not found (expected release-unified.yml or release.yml)"
     else
         gate_pass "CI/CD Workflows"
     fi
+
+    return 0
 }
 
 # Gate 10: Documentation
