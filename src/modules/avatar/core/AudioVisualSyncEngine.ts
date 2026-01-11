@@ -3,7 +3,7 @@
 //   Central coordination pipeline: Audio → Phonemes → Morphs → Expressions → Render
 // ═══════════════════════════════════════════════════════════════════════════
 
-import * as THREE from 'three';
+import { Euler, Vector3 } from 'three';
 import {
   LipSyncPrecisionEngine,
   type Phoneme,
@@ -69,7 +69,6 @@ export interface SyncConfig {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export class AudioVisualSyncEngine {
-  private THREE = THREE; // Now directly imported
   private config: SyncConfig;
 
   // Sub-engines
@@ -352,8 +351,8 @@ export class AudioVisualSyncEngine {
       },
       currentExpression: 'soft-smile',
       physicalReactions: {
-        headRotation: new THREE.Euler(0, 0, 0),
-        torsoPosition: new THREE.Vector3(0, 0, 0),
+        headRotation: new Euler(0, 0, 0),
+        torsoPosition: new Vector3(0, 0, 0),
         shoulderOffset: 0,
         chestExpansion: 0,
       },

@@ -11,7 +11,26 @@ import type {
   ScreenInfo,
 } from './AvatarDisplayState';
 import { DEFAULT_DISPLAY_STATE } from './AvatarDisplayState';
-import * as FloatingEngine from './avatarFloatingEngine';
+import {
+  getDisplayState,
+  listScreens,
+  moveToScreen as engineMoveToScreen,
+  resetDisplayState as engineResetDisplayState,
+  setAlwaysOnTop as engineSetAlwaysOnTop,
+  setAnchor as engineSetAnchor,
+  setAnchorByName as engineSetAnchorByName,
+  setClickThrough as engineSetClickThrough,
+  setLocked as engineSetLocked,
+  setMirrorMode as engineSetMirrorMode,
+  setModeEmbed as engineSetModeEmbed,
+  setModeFloating as engineSetModeFloating,
+  setModeHidden as engineSetModeHidden,
+  setOpacity as engineSetOpacity,
+  setPosition as engineSetPosition,
+  setScale as engineSetScale,
+  setSize as engineSetSize,
+  updateDisplayState as engineUpdateDisplayState,
+} from './avatarFloatingEngine';
 import { useSingularityState } from '@/core/state/SingularityState';
 
 export interface UseFloatingWindowResult {
@@ -112,7 +131,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
 
   const refreshState = useCallback(async () => {
     try {
-      const state = await FloatingEngine.getDisplayState();
+      const state = await getDisplayState();
       setDisplayState(state);
       syncToSingularity(state); // Sync vers SingularityState
       setError(null);
@@ -124,7 +143,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
 
   const refreshScreens = useCallback(async () => {
     try {
-      const screenList = await FloatingEngine.listScreens();
+      const screenList = await listScreens();
       setScreens(screenList);
       setError(null);
     } catch (err) {
@@ -157,7 +176,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
 
   const setModeFloating = useCallback(async () => {
     try {
-      const state = await FloatingEngine.setModeFloating();
+      const state = await engineSetModeFloating();
       setDisplayState(state);
       syncToSingularity(state); // Sync vers SingularityState
       setError(null);
@@ -169,7 +188,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
 
   const setModeEmbed = useCallback(async () => {
     try {
-      const state = await FloatingEngine.setModeEmbed();
+      const state = await engineSetModeEmbed();
       setDisplayState(state);
       syncToSingularity(state); // Sync vers SingularityState
       setError(null);
@@ -181,7 +200,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
 
   const setModeHidden = useCallback(async () => {
     try {
-      const state = await FloatingEngine.setModeHidden();
+      const state = await engineSetModeHidden();
       setDisplayState(state);
       syncToSingularity(state); // Sync vers SingularityState
       setError(null);
@@ -198,7 +217,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
   const setPosition = useCallback(
     async (x: number, y: number) => {
       try {
-        const state = await FloatingEngine.setPosition(x, y);
+        const state = await engineSetPosition(x, y);
         setDisplayState(state);
         syncToSingularity(state); // Sync vers SingularityState
         setError(null);
@@ -213,7 +232,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
   const setSize = useCallback(
     async (width: number, height: number) => {
       try {
-        const state = await FloatingEngine.setSize(width, height);
+        const state = await engineSetSize(width, height);
         setDisplayState(state);
         syncToSingularity(state); // Sync vers SingularityState
         setError(null);
@@ -228,7 +247,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
   const setScale = useCallback(
     async (scale: number) => {
       try {
-        const state = await FloatingEngine.setScale(scale);
+        const state = await engineSetScale(scale);
         setDisplayState(state);
         syncToSingularity(state); // Sync vers SingularityState
         setError(null);
@@ -243,7 +262,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
   const setOpacity = useCallback(
     async (opacity: number) => {
       try {
-        const state = await FloatingEngine.setOpacity(opacity);
+        const state = await engineSetOpacity(opacity);
         setDisplayState(state);
         syncToSingularity(state); // Sync vers SingularityState
         setError(null);
@@ -261,7 +280,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
 
   const toggleAlwaysOnTop = useCallback(async () => {
     try {
-      const state = await FloatingEngine.setAlwaysOnTop(!displayState.always_on_top);
+      const state = await engineSetAlwaysOnTop(!displayState.always_on_top);
       setDisplayState(state);
       syncToSingularity(state); // Sync vers SingularityState
       setError(null);
@@ -273,7 +292,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
 
   const toggleLocked = useCallback(async () => {
     try {
-      const state = await FloatingEngine.setLocked(!displayState.locked);
+      const state = await engineSetLocked(!displayState.locked);
       setDisplayState(state);
       syncToSingularity(state); // Sync vers SingularityState
       setError(null);
@@ -285,7 +304,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
 
   const toggleMirrorMode = useCallback(async () => {
     try {
-      const state = await FloatingEngine.setMirrorMode(!displayState.mirror_mode);
+      const state = await engineSetMirrorMode(!displayState.mirror_mode);
       setDisplayState(state);
       syncToSingularity(state); // Sync vers SingularityState
       setError(null);
@@ -297,7 +316,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
 
   const toggleClickThrough = useCallback(async () => {
     try {
-      const state = await FloatingEngine.setClickThrough(!displayState.click_through);
+      const state = await engineSetClickThrough(!displayState.click_through);
       setDisplayState(state);
       syncToSingularity(state); // Sync vers SingularityState
       setError(null);
@@ -314,7 +333,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
   const setAnchor = useCallback(
     async (anchor: AnchorPosition) => {
       try {
-        const state = await FloatingEngine.setAnchor(anchor);
+        const state = await engineSetAnchor(anchor);
         setDisplayState(state);
         syncToSingularity(state); // Sync vers SingularityState
         setError(null);
@@ -329,7 +348,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
   const setAnchorByName = useCallback(
     async (name: string) => {
       try {
-        const state = await FloatingEngine.setAnchorByName(name);
+        const state = await engineSetAnchorByName(name);
         setDisplayState(state);
         syncToSingularity(state); // Sync vers SingularityState
         setError(null);
@@ -344,7 +363,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
   const moveToScreen = useCallback(
     async (screenIndex: number) => {
       try {
-        const state = await FloatingEngine.moveToScreen(screenIndex);
+        const state = await engineMoveToScreen(screenIndex);
         setDisplayState(state);
         syncToSingularity(state); // Sync vers SingularityState
         setError(null);
@@ -363,7 +382,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
   const updateState = useCallback(
     async (update: AvatarDisplayStateUpdate) => {
       try {
-        const state = await FloatingEngine.updateDisplayState(update);
+        const state = await engineUpdateDisplayState(update);
         setDisplayState(state);
         syncToSingularity(state); // Sync vers SingularityState
         setError(null);
@@ -377,7 +396,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
 
   const resetState = useCallback(async () => {
     try {
-      const state = await FloatingEngine.resetDisplayState();
+      const state = await engineResetDisplayState();
       setDisplayState(state);
       syncToSingularity(state); // Sync vers SingularityState
       setError(null);

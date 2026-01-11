@@ -9,7 +9,7 @@ import { logger } from '@/lib/logger';
 /**
  * Three.js Lazy Loader
  *
- * AVANT: `import * as THREE from 'three'` dans 11+ fichiers → 38 MB chargé au boot
+ * AVANT: import en namespace (THREE) dans 11+ fichiers → 38 MB chargé au boot
  * APRÈS: Dynamic import uniquement quand avatar activé → -400 KB gzip bundle
  *
  * Usage:

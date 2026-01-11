@@ -19,7 +19,6 @@ import {
   afterAll,
   vi,
 } from 'vitest';
-import * as THREE from 'three';
 
 // Check if we can run WebGL tests (requires proper Three.js mock)
 const canRunWebGLTests =
