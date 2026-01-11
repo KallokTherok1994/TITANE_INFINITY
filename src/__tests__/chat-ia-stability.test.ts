@@ -4,10 +4,9 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { renderHook, act, waitFor } from '@/test-utils';
+import { renderHook, act, waitFor } from '../test-utils';
 import { useChat } from '../hooks/useChat';
 import { chatService } from '../services/api';
-import * as experienceService from '../services/experienceService';
 import type { ChatMode } from '../services/ai';
 import type { AIMessage } from '../services/ai/types';
 
@@ -163,20 +162,23 @@ vi.mock('../services/errorTracker', () => ({
 }));
 
 describe('Chat IA - Stabilité des Messages (FIX v15.1)', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks();
     sendMessageLegacySpy = vi
       .spyOn(chatService, 'sendMessageLegacy')
       .mockImplementation(async () => ({
         content: 'Réponse IA (mock)',
+        finishReason: 'stop',
+        model: 'gemini-mock',
         provider: 'gemini',
         latencyMs: 1,
         metadata: {},
       }));
 
+    const experienceService = await import('../services/experienceService');
     awardExperienceSpy = vi
       .spyOn(experienceService, 'awardExperience')
-      .mockResolvedValue(undefined);
+      .mockResolvedValue(null);
 
     resetCurrentMode();
     memoryMessages.length = 0;
@@ -276,7 +278,7 @@ describe('Chat IA - Stabilité des Messages (FIX v15.1)', () => {
     });
 
     const messages = result.current.messages;
-    const messageContents = messages.map(m => m.content);
+    const messageContents = messages.map((m: AIMessage) => m.content);
 
     // Vérifier qu'il n'y a pas de doublons exacts
     const uniqueContents = new Set(messageContents);
@@ -357,9 +359,15 @@ describe('Chat IA - Stabilité des Messages (FIX v15.1)', () => {
     // Vérifier qu'un message d'erreur a été ajouté
     expect(
       result.current.messages.some(
-        m =>
-          m.role === 'assistant' &&
-          /Auto-R\u00e9cup\u00e9ration Cognitive|Type d'erreur/i.test(m.content)
+        (m: AIMessage) => {
+          const contentText =
+            typeof m.content === 'string' ? m.content : JSON.stringify(m.content);
+
+          return (
+            m.role === 'assistant' &&
+            /Auto-R\u00e9cup\u00e9ration Cognitive|Type d'erreur/i.test(contentText)
+          );
+        }
       )
     ).toBe(true);
 

@@ -6,6 +6,7 @@
 import { VectorStoreClient } from '../VectorStoreClient';
 import { MemoryTier } from '@/services/mcp/mcp.types';
 import type { UnifiedMemoryEntry } from '../UnifiedMemory';
+import { logger } from '@/utils/logger';
 import { vi, beforeEach, afterEach, describe, test, expect } from 'vitest';
 
 // Mock Tauri API inline (pattern ConversationManager)
@@ -113,7 +114,7 @@ describe('VectorStoreClient P0 Tests', () => {
 
   describe('✅ Stub Methods', () => {
     test('deleteWhere should warn', async () => {
-      const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const spy = vi.spyOn(logger, 'warn').mockImplementation(() => {});
       const result = await client.deleteWhere({ importance: { $lt: 0.3 } });
       expect(result).toBe(0);
       expect(spy).toHaveBeenCalled();
