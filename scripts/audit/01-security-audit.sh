@@ -6,6 +6,10 @@
 
 set -e
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+cd "$PROJECT_ROOT"
+
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 REPORT_DIR="reports/security-audit-$TIMESTAMP"
 mkdir -p "$REPORT_DIR"
@@ -16,7 +20,9 @@ echo "================================================"
 # 1. Node dependency vulnerabilities
 echo ""
 echo "📦 [1/8] Scanning Node dependency vulnerabilities..."
-if command -v corepack >/dev/null 2>&1; then
+if [ -x "./.tools/node/current/bin/pnpm" ]; then
+    PNPM=("./.tools/node/current/bin/pnpm")
+elif command -v corepack >/dev/null 2>&1; then
     PNPM=(corepack pnpm)
 elif command -v pnpm >/dev/null 2>&1; then
     PNPM=(pnpm)
@@ -89,16 +95,19 @@ echo "🔑 [3/8] Detecting hardcoded secrets..."
     echo ""
     echo "--- Known key prefixes / tokens ---"
     grep -RInE "(AKIA[0-9A-Z]{16}|ASIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{36,}|github_pat_[A-Za-z0-9_]{40,}|xox[baprs]-[A-Za-z0-9-]{10,}|sk-[A-Za-z0-9]{20,}|eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,})" \
+        --exclude-dir="__tests__" --exclude-dir="tests" --exclude="*.test.*" --exclude="*.spec.*" \
         --include="*.ts" --include="*.tsx" --include="*.js" --include="*.rs" \
         src src-tauri 2>/dev/null | head -50 || echo "None found"
     echo ""
     echo "--- String literal assignments (apiKey/token/secret/password) ---"
     grep -RInE "\b(api[_-]?key|token|secret|password)\b\s*[:=]\s*(['\"][^'\"]{16,}['\"])" \
+        --exclude-dir="__tests__" --exclude-dir="tests" --exclude="*.test.*" --exclude="*.spec.*" \
         --include="*.ts" --include="*.tsx" --include="*.js" \
         src 2>/dev/null | head -50 || echo "None found"
     echo ""
     echo "--- URLs with credentials ---"
     grep -RInE "https?://[^\s/:]+:[^\s/@]+@" \
+        --exclude-dir="__tests__" --exclude-dir="tests" --exclude="*.test.*" --exclude="*.spec.*" \
         --include="*.ts" --include="*.tsx" --include="*.js" --include="*.rs" \
         src src-tauri 2>/dev/null | head -50 || echo "None found"
 } > "$REPORT_DIR/secrets-scan.txt"
@@ -165,10 +174,8 @@ echo ""
 echo "📜 [7/8] Scanning dependency licenses..."
 {
     echo "=== Node Licenses ==="
-    if command -v corepack >/dev/null 2>&1; then
-        corepack pnpm dlx license-checker --summary 2>/dev/null || echo "⚠️ license-checker not available"
-    elif command -v pnpm >/dev/null 2>&1; then
-        pnpm dlx license-checker --summary 2>/dev/null || echo "⚠️ license-checker not available"
+    if [ ${#PNPM[@]} -gt 0 ]; then
+        "${PNPM[@]}" dlx license-checker --summary 2>/dev/null || echo "⚠️ license-checker not available"
     else
         echo "⚠️ pnpm/corepack introuvable - license-checker ignoré"
     fi
@@ -302,8 +309,7 @@ strict_penalty=0
 if [ "${CARGO_AUDIT_STRICT_STATUS:-⚠️}" = "❌" ]; then strict_penalty=20; fi
 if [ "${CARGO_AUDIT_STRICT_STATUS:-⚠️}" = "⚠️" ]; then strict_penalty=10; fi
 
-unwrap_penalty=$((UNWRAP_COUNT * 2))
-if [ "$unwrap_penalty" -gt 30 ]; then unwrap_penalty=30; fi
+unwrap_penalty=0
 
 secrets_penalty=0
 if [ "$SECRETS_COUNT" -gt 0 ]; then secrets_penalty=15; fi

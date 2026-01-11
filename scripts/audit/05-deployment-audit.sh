@@ -448,9 +448,9 @@ audit_cicd() {
         
         # Check specific workflows
         local required_workflows=(
-            ".github/workflows/ci.yml:CI workflow"
-            ".github/workflows/release.yml:Release workflow"
-            ".github/workflows/ci-cd.yml:CI/CD workflow"
+            ".github/workflows/ci-unified.yml:CI workflow"
+            ".github/workflows/release-unified.yml:Release workflow"
+            ".github/workflows/ci-unified.yml:CI/CD workflow"
         )
         
         for workflow_entry in "${required_workflows[@]}"; do

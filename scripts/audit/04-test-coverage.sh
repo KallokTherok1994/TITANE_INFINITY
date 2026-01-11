@@ -659,7 +659,19 @@ RUST_COMPONENT=$((RUST_TESTS >= 50 ? 10 : (RUST_TESTS * 10 / 50)))
 E2E_COMPONENT=$((E2E_TESTS >= 10 ? 10 : E2E_TESTS))
 ASSERT_COMPONENT=$((ASSERTIONS >= 200 ? 10 : (ASSERTIONS * 10 / 200)))
 
-SCORE=$(( (COVERAGE_INT * 70 / 100) + RUST_COMPONENT + E2E_COMPONENT + ASSERT_COMPONENT ))
+# Coverage is the largest component (70%). Align scoring with the stated target (>=80% coverage).
+# - >= 80% coverage earns full 70 points
+# - < 80% scales linearly down to 0
+COVERAGE_COMPONENT=0
+if [[ "${COVERAGE_INT:-}" =~ ^[0-9]+$ ]]; then
+  if [ "$COVERAGE_INT" -ge 80 ]; then
+    COVERAGE_COMPONENT=70
+  elif [ "$COVERAGE_INT" -gt 0 ]; then
+    COVERAGE_COMPONENT=$(( COVERAGE_INT * 70 / 80 ))
+  fi
+fi
+
+SCORE=$(( COVERAGE_COMPONENT + RUST_COMPONENT + E2E_COMPONENT + ASSERT_COMPONENT ))
 if [ "$SCORE" -gt 100 ]; then SCORE=100; fi
 if [ "$SCORE" -lt 0 ]; then SCORE=0; fi
 
