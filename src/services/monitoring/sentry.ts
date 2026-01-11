@@ -24,7 +24,6 @@ import {
   setUser as sentrySetUser,
   startInactiveSpan as sentryStartInactiveSpan,
 } from '@sentry/react';
-import type { SeverityLevel, Span } from '@sentry/types';
 import type {
   ErrorContext as _ErrorContext,
   ClassifiedError,
@@ -32,12 +31,18 @@ import type {
 } from '@/lib/errorHandler';
 import { logger } from '@/utils/logger';
 
+export type SeverityLevel = 'fatal' | 'error' | 'warning' | 'log' | 'info' | 'debug';
+type Span = ReturnType<typeof sentryStartInactiveSpan>;
+
+let sentryInitialized = false;
+
 // Minimal Sentry surface (évite l'import en namespace tout en gardant l'API existante)
 export const Sentry = {
   init: sentryInit,
   browserTracingIntegration: sentryBrowserTracingIntegration,
   replayIntegration: sentryReplayIntegration,
   breadcrumbsIntegration: sentryBreadcrumbsIntegration,
+  isEnabled: () => sentryInitialized,
   setTag: sentrySetTag,
   captureException: sentryCaptureException,
   captureMessage: sentryCaptureMessage,
@@ -202,6 +207,8 @@ export function initSentry(): void {
   Sentry.setTag('app', 'titane-infinity');
   Sentry.setTag('version', config.release);
 
+  sentryInitialized = true;
+
   logger.debug('✅ [SENTRY] Monitoring initialisé avec succès');
 }
 
@@ -235,6 +242,10 @@ export function captureClassifiedError(
   }
 
   const errorToCapture = originalError || new Error(classifiedError.message);
+
+  // Marque le module comme initialisé dès qu'on tente d'émettre un évènement.
+  // `initSentry()` est idempotent et positionne aussi ce flag en fin d'init.
+  sentryInitialized = true;
 
   return Sentry.captureException(errorToCapture, {
     level: toSentrySeverity(classifiedError.severity),

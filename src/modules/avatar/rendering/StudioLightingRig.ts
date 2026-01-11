@@ -3,7 +3,13 @@
 //   Professional 3-point lighting with appearance style adaptation
 // ═══════════════════════════════════════════════════════════════════════════
 
-import type { AmbientLight, ColorRepresentation, DirectionalLight, Scene } from 'three';
+import type {
+  AmbientLight,
+  ColorRepresentation,
+  DirectionalLight,
+  Light,
+  Scene,
+} from 'three';
 import { loadThreeJS } from '../core/ThreeJSLazyLoader';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -278,7 +284,7 @@ export class StudioLightingRig {
   /**
    * Get all lights
    */
-  public getLights(): THREE.Light[] {
+  public getLights(): Light[] {
     return [this.keyLight, this.fillLight, this.rimLight, this.ambientLight];
   }
 

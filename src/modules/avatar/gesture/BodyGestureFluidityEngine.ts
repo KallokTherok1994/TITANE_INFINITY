@@ -199,10 +199,7 @@ export class BodyGestureFluidityEngine {
       const velocity = this.boneVelocities.get(boneName) || new Vector3();
 
       // Position interpolation with velocity limit
-      const positionDelta = new Vector3().subVectors(
-        target.position,
-        current.position
-      );
+      const positionDelta = new Vector3().subVectors(target.position, current.position);
       const distance = positionDelta.length();
 
       if (distance > 0.001) {

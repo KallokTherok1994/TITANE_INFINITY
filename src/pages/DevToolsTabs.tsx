@@ -18,15 +18,10 @@ import type { SystemStatus } from '../components/monitoring/SystemStatusCard';
 // Magic comments force Vite to create separate chunks
 const SystemTab = lazy(
   () =>
-    import(
-      /* webpackChunkName: "devtools-system" */ './tabs/DeveloperTools/SystemTab'
-    )
+    import(/* webpackChunkName: "devtools-system" */ './tabs/DeveloperTools/SystemTab')
 );
 const LogsTab = lazy(
-  () =>
-    import(
-      /* webpackChunkName: "devtools-logs" */ './tabs/DeveloperTools/LogsTab'
-    )
+  () => import(/* webpackChunkName: "devtools-logs" */ './tabs/DeveloperTools/LogsTab')
 );
 const PerformanceTab = lazy(
   () =>

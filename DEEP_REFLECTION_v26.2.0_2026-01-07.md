@@ -640,6 +640,7 @@ impl EventBus {
    - Predicting user behavior from patterns (not hardcoded responses)
 
 3. **Harmonic regulation:**
+
    ```rust
    // harmonic_os/harmonic_regulator.rs
    pub fn maintain_coherence(state: SystemState) {

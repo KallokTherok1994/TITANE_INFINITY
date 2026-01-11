@@ -24,8 +24,8 @@ Validator knobs:
 Security scan knobs:
 
 - Report output directory: `COPILOT_XS_SECURITY_REPORT_DIR=reports/security pnpm run copilot-xs:security-scan`
-	- writes `pnpm-audit.json`
-	- writes `cargo-audit.sarif`
+  - writes `pnpm-audit.json`
+  - writes `cargo-audit.sarif`
 
 RustSec baseline:
 

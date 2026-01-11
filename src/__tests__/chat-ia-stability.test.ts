@@ -358,17 +358,15 @@ describe('Chat IA - Stabilité des Messages (FIX v15.1)', () => {
 
     // Vérifier qu'un message d'erreur a été ajouté
     expect(
-      result.current.messages.some(
-        (m: AIMessage) => {
-          const contentText =
-            typeof m.content === 'string' ? m.content : JSON.stringify(m.content);
+      result.current.messages.some((m: AIMessage) => {
+        const contentText =
+          typeof m.content === 'string' ? m.content : JSON.stringify(m.content);
 
-          return (
-            m.role === 'assistant' &&
-            /Auto-R\u00e9cup\u00e9ration Cognitive|Type d'erreur/i.test(contentText)
-          );
-        }
-      )
+        return (
+          m.role === 'assistant' &&
+          /Auto-R\u00e9cup\u00e9ration Cognitive|Type d'erreur/i.test(contentText)
+        );
+      })
     ).toBe(true);
 
     console.log('✅ SCÉNARIO E: Erreur gérée proprement');
