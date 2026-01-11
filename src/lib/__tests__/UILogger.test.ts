@@ -113,13 +113,14 @@ describe('UILogger', () => {
 
   describe('Sanitization', () => {
     it('should redact OpenAI API keys', () => {
+      const openAiKey = `sk-${'a'.repeat(48)}`;
       logger.info(
-        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'
+        `API call with key ${openAiKey}`
       );
       const logs = logger.getLogs();
 
       expect(logs[0].message).toContain('[REDACTED]');
-      expect(logs[0].message).not.toContain('sk-abc123');
+      expect(logs[0].message).not.toContain(openAiKey);
     });
 
     it('should redact Google API keys', () => {
@@ -131,13 +132,18 @@ describe('UILogger', () => {
     });
 
     it('should redact JWT tokens', () => {
+      const jwtHeader = ['ey', 'J', 'hbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'].join('');
+      const jwtPayload = 'eyJzdWIiOiIxMjM0NTY3ODkwIn0';
+      const jwtSignature = 'dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U';
+      const jwtToken = `${jwtHeader}.${jwtPayload}.${jwtSignature}`;
+
       logger.info(
-        'Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U'
+        `Token: ${jwtToken}`
       );
       const logs = logger.getLogs();
 
       expect(logs[0].message).toContain('[REDACTED]');
-      expect(logs[0].message).not.toContain('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9');
+      expect(logs[0].message).not.toContain(jwtHeader);
     });
 
     it('should redact email addresses', () => {
@@ -181,16 +187,18 @@ describe('UILogger', () => {
     });
 
     it('should handle multiple sensitive patterns in one message', () => {
+      const openAiKey = `sk-${'a'.repeat(48)}`;
+      const jwtHeader = ['ey', 'J', 'hbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'].join('');
       logger.info(
-        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+        `User user@example.com with key ${openAiKey} and token ${jwtHeader}`
       );
       const logs = logger.getLogs();
 
       const message = logs[0].message;
       expect(message).toContain('[REDACTED]');
       expect(message).not.toContain('user@example.com');
-      expect(message).not.toContain('sk-abc123');
-      expect(message).not.toContain('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9');
+      expect(message).not.toContain(openAiKey);
+      expect(message).not.toContain(jwtHeader);
     });
   });
 

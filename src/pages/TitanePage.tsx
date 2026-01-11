@@ -47,14 +47,14 @@ import { TBadge, TMetric, TSectionHeader } from '../design-system';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import { xpEngine } from '@/cognitive/progression/xpEngine';
 import { CameraPreview } from '@/components/vision/CameraPreview';
-import { ChatProviderSelector } from '@/features/chat/ChatProviderSelector';
+import { ChatProviderSelector } from '@/features/conversation/ChatProviderSelector';
 import { ChatToolbar } from '@/components/chat/ChatToolbar';
-import { ThinkingPanel, useThinkingSteps } from '@/features/chat/ThinkingPanel';
+import { ThinkingPanel, useThinkingSteps } from '@/features/conversation/ThinkingPanel';
 import {
   downloadConversation,
   downloadMarkdown,
   copyToClipboard,
-} from '@/features/chat/exportImport';
+} from '@/features/conversation/exportImport';
 import { hybridTTS } from '@/services/tts/hybridTTS';
 import { AchievementCard } from '@/features/progression/AchievementCard';
 import { ACHIEVEMENTS } from '@/features/progression/achievements';

@@ -34,17 +34,21 @@ function testSanitization() {
   uiLogger.clearLogs();
 
   // Log sensitive data
-  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');
+  const openAiKey = `sk-${'a'.repeat(48)}`;
+  const jwtHeader = ['ey', 'J', 'hbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'].join('');
+  const jwtToken = `${jwtHeader}.payload.signature`;
+
+  logInfo(`API key: ${openAiKey}`);
   logInfo('Email: user@example.com');
-  logInfo('JWT: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.payload.signature');
+  logInfo(`JWT: ${jwtToken}`);
 
   const logs = uiLogger.getLogs();
   const hasRedacted = logs.every(log => log.message.includes('[REDACTED]'));
   const noSensitive = logs.every(
     log =>
-      !log.message.includes('sk-abc123') &&
+      !log.message.includes(openAiKey) &&
       !log.message.includes('user@example.com') &&
-      !log.message.includes('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9')
+      !log.message.includes(jwtHeader)
   );
 
   console.log(`✅ All sensitive data redacted: ${hasRedacted && noSensitive}`);

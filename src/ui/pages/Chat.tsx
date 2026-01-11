@@ -47,7 +47,7 @@ import { useFocusTrap } from '../../hooks/useFocusTrap';
 // ✨ v25.7.4: Responsive Chat Layout wrapper
 import { ResponsiveChatLayout } from '../../layouts/ResponsiveChatLayout';
 // ✨ v26.2: OMEGA Reflection Panel v2 - Compact mode
-import { ThinkingPanel, useThinkingSteps } from '../../features/chat/ThinkingPanel';
+import { ThinkingPanel, useThinkingSteps } from '../../features/conversation/ThinkingPanel';
 import './styles/Chat.css';
 
 const isDev = process.env.NODE_ENV === 'development';

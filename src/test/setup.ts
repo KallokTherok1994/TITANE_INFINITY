@@ -18,6 +18,55 @@ import '@testing-library/jest-dom';
 import { cleanup } from '@testing-library/react';
 import { afterEach, vi } from 'vitest';
 
+import fs from 'node:fs';
+import path from 'node:path';
+
+// Interdit `process.exit()` dans les tests : ça termine Vitest prématurément et empêche
+// la génération des rapports (notamment couverture). On préfère un crash explicite avec stack.
+if (typeof process !== 'undefined' && typeof process.exit === 'function') {
+  const originalExit = process.exit.bind(process);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (globalThis as any).__TITANE_ORIGINAL_PROCESS_EXIT__ ??= originalExit;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (process as any).exit = (code?: number) => {
+    throw new Error(
+      `process.exit(${code ?? 'undefined'}) was called during Vitest execution (forbidden)`
+    );
+  };
+}
+
+// Empêche la suppression du dossier coverage pendant l'exécution des tests.
+// Sinon, le provider v8 peut échouer en écrivant les fragments `.tmp/coverage-*.json`.
+(() => {
+  const coverageRoot = path.join(process.cwd(), 'coverage');
+
+  const ensureNotCoveragePath = (target: unknown, op: string) => {
+    const value = typeof target === 'string' ? target : String(target ?? '');
+    if (value.includes(coverageRoot)) {
+      throw new Error(`Forbidden filesystem operation (${op}) on coverage path: ${value}`);
+    }
+  };
+
+  const wrapSync = <T extends (...args: any[]) => any>(op: string, fn: T): T => {
+    return ((...args: any[]) => {
+      ensureNotCoveragePath(args[0], op);
+      return fn(...args);
+    }) as T;
+  };
+
+  if (typeof (fs as any).rmSync === 'function') {
+    (fs as any).rmSync = wrapSync('fs.rmSync', (fs as any).rmSync);
+  }
+  if (typeof (fs as any).rmdirSync === 'function') {
+    (fs as any).rmdirSync = wrapSync('fs.rmdirSync', (fs as any).rmdirSync);
+  }
+  if (typeof (fs as any).unlinkSync === 'function') {
+    (fs as any).unlinkSync = wrapSync('fs.unlinkSync', (fs as any).unlinkSync);
+  }
+})();
+
 type MockResponseInit = {
   status?: number;
   headers?: Record<string, string>;

@@ -111,10 +111,16 @@ echo ""
 echo "⚙️ [4/8] Auditing Tauri commands..."
 {
     echo "=== All Tauri Commands ==="
-    grep -r "#\[tauri::command\]" src-tauri/src/ --include="*.rs" | wc -l
+    TAURI_ATTR_COUNT=$(grep -r "#\[tauri::command\]" src-tauri/src/ --include="*.rs" | wc -l | xargs)
+    echo "Attributes found: $TAURI_ATTR_COUNT"
     echo ""
     echo "=== Commands List ==="
-    grep -r -A1 "#\[tauri::command\]" src-tauri/src/ --include="*.rs" | grep "pub fn" | sed 's/pub fn //' | sed 's/(.*$//' | sort
+    # Support `pub fn`, `pub async fn`, and `async fn` patterns.
+    grep -r -A2 "#\[tauri::command\]" src-tauri/src/ --include="*.rs" \
+        | grep -E "\bfn\s+" \
+        | sed -E 's/.*\bfn\s+//' \
+        | sed -E 's/\(.*$//' \
+        | sort
     echo ""
     echo "=== Allowlist Check ==="
     if [ -f "tauri.base.json" ]; then
@@ -122,7 +128,7 @@ echo "⚙️ [4/8] Auditing Tauri commands..."
     fi
 } > "$REPORT_DIR/tauri-commands.txt"
 
-COMMANDS_COUNT=$(grep -c "pub fn" "$REPORT_DIR/tauri-commands.txt" || echo "0")
+COMMANDS_COUNT=${TAURI_ATTR_COUNT:-0}
 echo "   └─ Total commands: $COMMANDS_COUNT"
 
 # 5. Unwrap() Count (Rust panic risk)

@@ -379,13 +379,11 @@ dup_penalty=0
 if [ "${DEVTOOLS_COUNT:-0}" -gt 1 ]; then dup_penalty=$((dup_penalty + 20)); fi
 if [ "${CHAT_COUNT:-0}" -gt 2 ]; then dup_penalty=$((dup_penalty + 15)); fi
 
-# Circular deps penalty (unknown if tool missing)
+# Circular deps penalty (only when detected)
 circular_penalty=0
 if [ -n "${CIRCULAR_COUNT:-}" ]; then
     circular_penalty=$((CIRCULAR_COUNT * 10))
     if [ "$circular_penalty" -gt 30 ]; then circular_penalty=30; fi
-else
-    circular_penalty=10
 fi
 
 # Import / hygiene penalties

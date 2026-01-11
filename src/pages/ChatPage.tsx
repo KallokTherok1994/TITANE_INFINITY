@@ -11,8 +11,8 @@
  */
 
 import React, { useState } from 'react';
-import { ChatMessage as _ChatMessage } from '@/features/chat/ChatMessage';
-import { ChatProviderSelector } from '@/features/chat/ChatProviderSelector';
+import { ChatMessage as _ChatMessage } from '@/features/conversation/ChatMessage';
+import { ChatProviderSelector } from '@/features/conversation/ChatProviderSelector';
 import { ChatErrorBoundary } from '@/components/ChatErrorBoundary';
 import { logger } from '@/lib/logger';
 
