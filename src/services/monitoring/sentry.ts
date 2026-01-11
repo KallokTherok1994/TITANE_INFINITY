@@ -10,13 +10,43 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import * as Sentry from '@sentry/react';
+import {
+  addBreadcrumb as sentryAddBreadcrumb,
+  browserTracingIntegration as sentryBrowserTracingIntegration,
+  breadcrumbsIntegration as sentryBreadcrumbsIntegration,
+  captureException as sentryCaptureException,
+  captureMessage as sentryCaptureMessage,
+  init as sentryInit,
+  replayIntegration as sentryReplayIntegration,
+  setContext as sentrySetContext,
+  setMeasurement as sentrySetMeasurement,
+  setTag as sentrySetTag,
+  setUser as sentrySetUser,
+  startInactiveSpan as sentryStartInactiveSpan,
+} from '@sentry/react';
+import type { SeverityLevel, Span } from '@sentry/types';
 import type {
   ErrorContext as _ErrorContext,
   ClassifiedError,
   ErrorSeverity,
 } from '@/lib/errorHandler';
 import { logger } from '@/utils/logger';
+
+// Minimal Sentry surface (évite l'import en namespace tout en gardant l'API existante)
+export const Sentry = {
+  init: sentryInit,
+  browserTracingIntegration: sentryBrowserTracingIntegration,
+  replayIntegration: sentryReplayIntegration,
+  breadcrumbsIntegration: sentryBreadcrumbsIntegration,
+  setTag: sentrySetTag,
+  captureException: sentryCaptureException,
+  captureMessage: sentryCaptureMessage,
+  addBreadcrumb: sentryAddBreadcrumb,
+  setUser: sentrySetUser,
+  setContext: sentrySetContext,
+  startInactiveSpan: sentryStartInactiveSpan,
+  setMeasurement: sentrySetMeasurement,
+} as const;
 
 /**
  * Configuration Sentry par environnement
@@ -178,7 +208,7 @@ export function initSentry(): void {
 /**
  * Convertit ErrorSeverity vers Sentry Severity
  */
-function toSentrySeverity(severity: ErrorSeverity): Sentry.SeverityLevel {
+function toSentrySeverity(severity: ErrorSeverity): SeverityLevel {
   switch (severity) {
     case 'info':
       return 'info';
@@ -236,7 +266,7 @@ export function captureClassifiedError(
  */
 export function captureMessage(
   message: string,
-  level: Sentry.SeverityLevel = 'info',
+  level: SeverityLevel = 'info',
   context?: Record<string, unknown>
 ): string {
   if (!getSentryConfig().enabled) {
@@ -256,7 +286,7 @@ export function addBreadcrumb(
   message: string,
   category: string,
   data?: Record<string, unknown>,
-  level: Sentry.SeverityLevel = 'info'
+  level: SeverityLevel = 'info'
 ): void {
   if (!getSentryConfig().enabled) {
     return;
@@ -322,7 +352,7 @@ export function setContext(name: string, context: Record<string, unknown>): void
 /**
  * Démarre une transaction de performance
  */
-export function startTransaction(name: string, op: string): Sentry.Span | undefined {
+export function startTransaction(name: string, op: string): Span | undefined {
   if (!getSentryConfig().enabled) {
     return undefined;
   }
@@ -460,11 +490,6 @@ export function testSentry(): void {
     logger.debug('   Vérifiez votre dashboard Sentry dans quelques secondes');
   }
 }
-
-/**
- * Export du module Sentry complet pour usage avancé
- */
-export { Sentry };
 
 /**
  * Export de React.useEffect, useLocation, etc. pour l'instrumentation React Router

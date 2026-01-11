@@ -4,7 +4,7 @@
 //   NOTE: Nécessite three-stdlib ou three@latest pour imports postprocessing
 // ═══════════════════════════════════════════════════════════════════════════
 
-import * as THREE from 'three';
+import type { Camera, Scene, WebGLRenderer } from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { TAARenderPass } from 'three/examples/jsm/postprocessing/TAARenderPass';
@@ -68,10 +68,10 @@ export interface PostProcessingConfig {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export class PostProcessingPipeline {
-  private THREE!: typeof THREE; // YOLO OPT-1: Lazy-loaded Three.js
-  private renderer!: THREE.WebGLRenderer;
-  private scene!: THREE.Scene;
-  private camera!: THREE.Camera;
+  private THREE!: typeof import('three'); // YOLO OPT-1: Lazy-loaded Three.js
+  private renderer!: WebGLRenderer;
+  private scene!: Scene;
+  private camera!: Camera;
   private composer!: EffectComposer;
   private config: PostProcessingConfig;
 
@@ -82,15 +82,15 @@ export class PostProcessingPipeline {
   private vignettePass: ShaderPass | null = null;
 
   // Constructor params storage
-  private _renderer: THREE.WebGLRenderer;
-  private _scene: THREE.Scene;
-  private _camera: THREE.Camera;
+  private _renderer: WebGLRenderer;
+  private _scene: Scene;
+  private _camera: Camera;
   private _config: Partial<PostProcessingConfig>;
 
   constructor(
-    renderer: THREE.WebGLRenderer,
-    scene: THREE.Scene,
-    camera: THREE.Camera,
+    renderer: WebGLRenderer,
+    scene: Scene,
+    camera: Camera,
     config: Partial<PostProcessingConfig> = {}
   ) {
     this._renderer = renderer;
@@ -148,7 +148,7 @@ export class PostProcessingPipeline {
 
     // Bloom (subtle glow)
     if (this.config.enableBloom) {
-      const resolution = new THREE.Vector2(
+      const resolution = new this.THREE.Vector2(
         this.renderer.domElement.width,
         this.renderer.domElement.height
       );

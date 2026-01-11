@@ -3,7 +3,8 @@
 //   Intelligent camera with vocal zoom, breathing parallax, 3 modes
 // ═══════════════════════════════════════════════════════════════════════════
 
-import * as THREE from 'three';
+import { MathUtils, Vector3 } from 'three';
+import type { PerspectiveCamera } from 'three';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -70,15 +71,15 @@ const CAMERA_MODE_PRESETS: Record<CameraMode, CameraModeConfig> = {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export class CameraDynamismEngine {
-  private camera: THREE.PerspectiveCamera;
+  private camera: PerspectiveCamera;
   private config: CameraConfig;
 
   // Current state
   private currentMode: CameraMode;
-  private currentPosition: THREE.Vector3;
-  private targetPosition: THREE.Vector3;
-  private currentLookAt: THREE.Vector3;
-  private targetLookAt: THREE.Vector3;
+  private currentPosition: Vector3;
+  private targetPosition: Vector3;
+  private currentLookAt: Vector3;
+  private targetLookAt: Vector3;
   private currentFOV: number;
   private targetFOV: number;
 
@@ -92,7 +93,7 @@ export class CameraDynamismEngine {
   // Vocal zoom state
   private vocalIntensity: number = 0; // 0.0-1.0
 
-  constructor(camera: THREE.PerspectiveCamera, config: Partial<CameraConfig> = {}) {
+  constructor(camera: PerspectiveCamera, config: Partial<CameraConfig> = {}) {
     this.camera = camera;
 
     this.config = {
@@ -112,9 +113,9 @@ export class CameraDynamismEngine {
     const preset = CAMERA_MODE_PRESETS[this.currentMode];
 
     // Initialize positions
-    this.currentPosition = new THREE.Vector3(0, preset.height, preset.distance);
+    this.currentPosition = new Vector3(0, preset.height, preset.distance);
     this.targetPosition = this.currentPosition.clone();
-    this.currentLookAt = new THREE.Vector3(0, preset.lookAtY, 0);
+    this.currentLookAt = new Vector3(0, preset.lookAtY, 0);
     this.targetLookAt = this.currentLookAt.clone();
     this.currentFOV = preset.fov;
     this.targetFOV = preset.fov;
@@ -157,7 +158,7 @@ export class CameraDynamismEngine {
    * Update vocal intensity (for zoom effect)
    */
   public setVocalIntensity(intensity: number): void {
-    this.vocalIntensity = THREE.MathUtils.clamp(intensity, 0, 1);
+    this.vocalIntensity = MathUtils.clamp(intensity, 0, 1);
   }
 
   /**
